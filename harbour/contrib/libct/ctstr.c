@@ -59,232 +59,225 @@
 /* -------------- */
 /* initialization */
 /* -------------- */
-int ct_str_init (void)
+int ct_str_init( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ctstr_init()"));
-  return(1);
+   HB_TRACE( HB_TR_DEBUG, ( "ctstr_init()" ) );
+   return 1;
 }
 
-int ct_str_exit (void)
+int ct_str_exit( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ctstr_exit()"));
-  return(1);
+   HB_TRACE( HB_TR_DEBUG, ( "ctstr_exit()" ) );
+   return 1;
 }
 
 
 /* -------------------------- */
 /* search for exact substring */
 /* -------------------------- */
-char *ct_at_exact_forward (char *pcString, size_t sStrLen,
-                           char *pcMatch, size_t sMatchLen,
-                           size_t *psMatchStrLen)
+char *ct_at_exact_forward( char *pcString, size_t sStrLen,
+                           char *pcMatch, size_t sMatchLen, size_t * psMatchStrLen )
 {
 
-  size_t sPos;
-  
-  HB_TRACE(HB_TR_DEBUG, ("ct_at_exact_forward (\"%s\", %u, \"%s\", %u, %p)",
-                          pcString, sStrLen, pcMatch, sMatchLen, psMatchStrLen));
-  
-  if ((sMatchLen == 0) || (sStrLen < sMatchLen))
-    return (NULL);
+   size_t sPos;
 
-  sPos = hb_strAt (pcMatch, sMatchLen, pcString, sStrLen);
-  if (sPos == 0)
-  {
-    return (NULL);
-  }
-  else
-  {
-    if (psMatchStrLen != NULL)
-      *psMatchStrLen = sMatchLen;
-    return (pcString+sPos-1);
-  }
+   HB_TRACE( HB_TR_DEBUG, ( "ct_at_exact_forward (\"%s\", %u, \"%s\", %u, %p)",
+                            pcString, sStrLen, pcMatch, sMatchLen, psMatchStrLen ) );
+
+   if( ( sMatchLen == 0 ) || ( sStrLen < sMatchLen ) )
+      return NULL;
+
+   sPos = hb_strAt( pcMatch, sMatchLen, pcString, sStrLen );
+   if( sPos == 0 )
+   {
+      return NULL;
+   }
+   else
+   {
+      if( psMatchStrLen != NULL )
+         *psMatchStrLen = sMatchLen;
+      return pcString + sPos - 1;
+   }
 
 }
-  
+
 
 /* ------------------------------------------------ */
 /* search for exact substring in backward direction */
 /* ------------------------------------------------ */
-char *ct_at_exact_backward (char *pcString, size_t sStrLen,
-                            char *pcMatch, size_t sMatchLen,
-                            size_t *psMatchStrLen)
+char *ct_at_exact_backward( char *pcString, size_t sStrLen,
+                            char *pcMatch, size_t sMatchLen, size_t * psMatchStrLen )
 {
 
-  size_t sIndex;
-  char *pcRet;
+   size_t sIndex;
+   char *pcRet;
 
-  HB_TRACE(HB_TR_DEBUG, ("ct_at_exact_backward (\"%s\", %u, \"%s\", %u, %p)",
-                         pcString, sStrLen, pcMatch, sMatchLen, psMatchStrLen));
-  
-  if ((sMatchLen == 0) || (sStrLen < sMatchLen))
-    return (NULL);
-  
-  for (pcRet = pcString+sStrLen-sMatchLen; pcRet >= pcString; pcRet--)
-  {
-    for (sIndex = 0; sIndex < sMatchLen; sIndex++)
-      if (*(pcRet+sIndex) != *(pcMatch+sIndex))
-        break;
-    if (sIndex == sMatchLen)
-    {
-      /* last match found */
-      if (psMatchStrLen != NULL)
-        *psMatchStrLen = sMatchLen;
-      return (pcRet);
-    }
-  }
+   HB_TRACE( HB_TR_DEBUG, ( "ct_at_exact_backward (\"%s\", %u, \"%s\", %u, %p)",
+                            pcString, sStrLen, pcMatch, sMatchLen, psMatchStrLen ) );
 
-  return (NULL);
+   if( ( sMatchLen == 0 ) || ( sStrLen < sMatchLen ) )
+      return NULL;
 
+   for( pcRet = pcString + sStrLen - sMatchLen; pcRet >= pcString; pcRet-- )
+   {
+      for( sIndex = 0; sIndex < sMatchLen; sIndex++ )
+         if( *( pcRet + sIndex ) != *( pcMatch + sIndex ) )
+            break;
+      if( sIndex == sMatchLen )
+      {
+         /* last match found */
+         if( psMatchStrLen != NULL )
+            *psMatchStrLen = sMatchLen;
+         return pcRet;
+      }
+   }
+
+   return NULL;
 }
 
 
 /* ----------------------------------- */
 /* search for substring using wildcard */
 /* ----------------------------------- */
-char *ct_at_wildcard_forward (char *pcString, size_t sStrLen,
+char *ct_at_wildcard_forward( char *pcString, size_t sStrLen,
                               char *pcMatch, size_t sMatchLen,
-                              char cWildCard, size_t *psMatchStrLen)
+                              char cWildCard, size_t * psMatchStrLen )
 {
 
-  size_t sIndex;
-  char *pcRet, *pcStop;
+   size_t sIndex;
+   char *pcRet, *pcStop;
 
-  HB_TRACE(HB_TR_DEBUG, ("ct_at_wildcard_forward (\"%s\", %u, \"%s\", %u, \'%c\', %p)",
-                         pcString, sStrLen, pcMatch, sMatchLen, cWildCard, psMatchStrLen));
+   HB_TRACE( HB_TR_DEBUG, ( "ct_at_wildcard_forward (\"%s\", %u, \"%s\", %u, \'%c\', %p)",
+                            pcString, sStrLen, pcMatch, sMatchLen, cWildCard, psMatchStrLen ) );
 
-  if ((sMatchLen == 0) || (sStrLen < sMatchLen))
-    return (NULL);
+   if( ( sMatchLen == 0 ) || ( sStrLen < sMatchLen ) )
+      return NULL;
 
-  pcStop = pcString+sStrLen-sMatchLen;
-  for (pcRet = pcString; pcRet < pcStop; pcRet++)
-  {
-    for (sIndex = 0; sIndex < sMatchLen; sIndex++)
-    {
-      char c = *(pcMatch+sIndex);
-      if ((c != cWildCard) && (c != *(pcRet+sIndex)))
-        break;
-    }
-    if (sIndex == sMatchLen)
-    {
-      if (psMatchStrLen != NULL)
-        *psMatchStrLen = sMatchLen;
-      return (pcRet);
-    }
-  }
+   pcStop = pcString + sStrLen - sMatchLen;
+   for( pcRet = pcString; pcRet < pcStop; pcRet++ )
+   {
+      for( sIndex = 0; sIndex < sMatchLen; sIndex++ )
+      {
+         char c = *( pcMatch + sIndex );
 
-  return (NULL);
+         if( ( c != cWildCard ) && ( c != *( pcRet + sIndex ) ) )
+            break;
+      }
+      if( sIndex == sMatchLen )
+      {
+         if( psMatchStrLen != NULL )
+            *psMatchStrLen = sMatchLen;
+         return pcRet;
+      }
+   }
 
+   return NULL;
 }
 
 
 /* --------------------------------------------------------- */
 /* search for substring using wildcard in backward direction */
 /* --------------------------------------------------------- */
-char *ct_at_wildcard_backward (char *pcString, size_t sStrLen,
+char *ct_at_wildcard_backward( char *pcString, size_t sStrLen,
                                char *pcMatch, size_t sMatchLen,
-                               char cWildCard, size_t *psMatchStrLen)
+                               char cWildCard, size_t * psMatchStrLen )
 {
 
-  size_t sIndex;
-  char *pcRet;
+   size_t sIndex;
+   char *pcRet;
 
-  HB_TRACE(HB_TR_DEBUG, ("ct_at_wildcard_backward (\"%s\", %u, \"%s\", %u, \'%c\', %p)",
-                         pcString, sStrLen, pcMatch, sMatchLen, cWildCard, psMatchStrLen));
+   HB_TRACE( HB_TR_DEBUG, ( "ct_at_wildcard_backward (\"%s\", %u, \"%s\", %u, \'%c\', %p)",
+                            pcString, sStrLen, pcMatch, sMatchLen, cWildCard, psMatchStrLen ) );
 
-  if ((sMatchLen == 0) || (sStrLen < sMatchLen))
-    return (NULL);
+   if( ( sMatchLen == 0 ) || ( sStrLen < sMatchLen ) )
+      return NULL;
 
-  for (pcRet = pcString+sStrLen-sMatchLen; pcRet >= pcString; pcRet--)
-  {
-    for (sIndex = 0; sIndex < sMatchLen; sIndex++)
-    {
-      char c = *(pcMatch+sIndex);
-      if ((c != cWildCard) && (c != *(pcRet+sIndex)))
-        break;
-    }
-    if (sIndex == sMatchLen)
-    {
-      /* last match found */
-      if (psMatchStrLen != NULL)
-        *psMatchStrLen = sMatchLen;
-      return (pcRet);
-    }
-  }
-  
-  return (NULL);
+   for( pcRet = pcString + sStrLen - sMatchLen; pcRet >= pcString; pcRet-- )
+   {
+      for( sIndex = 0; sIndex < sMatchLen; sIndex++ )
+      {
+         char c = *( pcMatch + sIndex );
 
+         if( ( c != cWildCard ) && ( c != *( pcRet + sIndex ) ) )
+            break;
+      }
+      if( sIndex == sMatchLen )
+      {
+         /* last match found */
+         if( psMatchStrLen != NULL )
+            *psMatchStrLen = sMatchLen;
+         return pcRet;
+      }
+   }
+
+   return NULL;
 }
 
 
 /* ------------------------------- */
 /* search for character from a set */
 /* ------------------------------- */
-char *ct_at_charset_forward (char *pcString, size_t sStrLen,
-                             char *pcCharSet, size_t sCharSetLen,
-                             size_t *psMatchedCharPos)
+char *ct_at_charset_forward( char *pcString, size_t sStrLen,
+                             char *pcCharSet, size_t sCharSetLen, size_t * psMatchedCharPos )
 {
-  
-  char *pcRet, *pcSet, *pcStop1, *pcStop2;
 
-  HB_TRACE(HB_TR_DEBUG, ("ct_at_charset_forward (\"%s\", %u, \"%s\", %u, %p)",
-                          pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos));
-  
-  *(psMatchedCharPos) = sCharSetLen;
-                        
-  if ((sCharSetLen == 0) || (sStrLen == 0))
-    return (NULL);
-  
-  pcStop1 = pcString+sStrLen;
-  pcStop2 = pcCharSet+sCharSetLen;
-  for (pcRet = pcString; pcRet < pcStop1; pcRet++)
-  {
-    for (pcSet = pcCharSet; pcSet < pcStop2; pcSet++)
-      if (*pcSet == *pcRet)
-      {
-        if (psMatchedCharPos != NULL)
-          *(psMatchedCharPos) = pcSet-pcCharSet;
-        return (pcRet);
-      }
-  }
-  
-  return (NULL);
+   char *pcRet, *pcSet, *pcStop1, *pcStop2;
 
+   HB_TRACE( HB_TR_DEBUG, ( "ct_at_charset_forward (\"%s\", %u, \"%s\", %u, %p)",
+                            pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos ) );
+
+   *( psMatchedCharPos ) = sCharSetLen;
+
+   if( ( sCharSetLen == 0 ) || ( sStrLen == 0 ) )
+      return NULL;
+
+   pcStop1 = pcString + sStrLen;
+   pcStop2 = pcCharSet + sCharSetLen;
+   for( pcRet = pcString; pcRet < pcStop1; pcRet++ )
+   {
+      for( pcSet = pcCharSet; pcSet < pcStop2; pcSet++ )
+         if( *pcSet == *pcRet )
+         {
+            if( psMatchedCharPos != NULL )
+               *( psMatchedCharPos ) = pcSet - pcCharSet;
+            return pcRet;
+         }
+   }
+
+   return NULL;
 }
 
 
 /* ----------------------------------------------------- */
 /* search for character from a set in backward direction */
 /* ----------------------------------------------------- */
-char *ct_at_charset_backward (char *pcString, size_t sStrLen,
-                              char *pcCharSet, size_t sCharSetLen,
-                              size_t *psMatchedCharPos)
+char *ct_at_charset_backward( char *pcString, size_t sStrLen,
+                              char *pcCharSet, size_t sCharSetLen, size_t * psMatchedCharPos )
 {
 
-  char *pcRet, *pcSet, *pcStop;
+   char *pcRet, *pcSet, *pcStop;
 
-  HB_TRACE(HB_TR_DEBUG, ("ct_at_charset_backward (\"%s\", %u, \"%s\", %u, %p)",
-                          pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos));
-  
-  *(psMatchedCharPos) = sCharSetLen;
+   HB_TRACE( HB_TR_DEBUG, ( "ct_at_charset_backward (\"%s\", %u, \"%s\", %u, %p)",
+                            pcString, sStrLen, pcCharSet, sCharSetLen, psMatchedCharPos ) );
 
-  if ((sCharSetLen == 0) || (sStrLen == 0))
-    return (NULL);
-  
-  pcStop = pcCharSet+sCharSetLen;
-  for (pcRet = pcString+sStrLen-1; pcRet >= pcString; pcRet--)
-  {
-    for (pcSet = pcCharSet; pcSet < pcStop; pcSet++)
-      if (*pcSet == *pcRet)
-      {
-        if (psMatchedCharPos != NULL)
-          *(psMatchedCharPos) = pcSet-pcCharSet;
-        return (pcRet);
-      }
-  }
-  
-  return (NULL);
+   *( psMatchedCharPos ) = sCharSetLen;
 
+   if( ( sCharSetLen == 0 ) || ( sStrLen == 0 ) )
+      return NULL;
+
+   pcStop = pcCharSet + sCharSetLen;
+   for( pcRet = pcString + sStrLen - 1; pcRet >= pcString; pcRet-- )
+   {
+      for( pcSet = pcCharSet; pcSet < pcStop; pcSet++ )
+         if( *pcSet == *pcRet )
+         {
+            if( psMatchedCharPos != NULL )
+               *( psMatchedCharPos ) = pcSet - pcCharSet;
+            return pcRet;
+         }
+   }
+
+   return NULL;
 }
 
 
@@ -292,20 +285,19 @@ char *ct_at_charset_backward (char *pcString, size_t sStrLen,
  *  CSETREF() stuff
  */
 
-static int siRefSwitch = 0; /* TODO: make this tread safe */
+static int siRefSwitch = 0;     /* TODO: make this tread safe */
 
-void ct_setref (int iNewSwitch)
+void ct_setref( int iNewSwitch )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_setref(%i)",iNewSwitch));
-  siRefSwitch = iNewSwitch;
-  return;
+   HB_TRACE( HB_TR_DEBUG, ( "ct_setref(%i)", iNewSwitch ) );
+   siRefSwitch = iNewSwitch;
 }
 
 
-int ct_getref (void)
+int ct_getref( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_getref()"));
-  return (siRefSwitch);
+   HB_TRACE( HB_TR_DEBUG, ( "ct_getref()" ) );
+   return siRefSwitch;
 }
 
 
@@ -369,27 +361,24 @@ int ct_getref (void)
  *  $END$
  */
 
-HB_FUNC (CSETREF)
+HB_FUNC( CSETREF )
 {
+   hb_retl( ct_getref() );
 
-  hb_retl (ct_getref());
+   if( ISLOG( 1 ) )
+   {
+      ct_setref( hb_parl( 1 ) );
+   }
+   else if( hb_pcount() > 0 ) /* 1 params, but is not logical ! */
+   {
+      int iArgErrorMode = ct_getargerrormode();
 
-  if (ISLOG (1))
-  {
-    ct_setref (hb_parl (1));
-  }
-  else if (hb_pcount() > 0)  /* 1 params, but is not logical ! */
-  {
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CSETREF,
-                NULL, "CSETREF", 0, EF_CANDEFAULT, 1, hb_paramError (1));
-    }
-  }
-
-  return;
-
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETREF,
+                   NULL, "CSETREF", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+      }
+   }
 }
 
 
@@ -397,20 +386,19 @@ HB_FUNC (CSETREF)
  * CSETATMUPA() stuff
  */
 
-static int siAtMupaSwitch = 0; /* TODO: make this tread safe */
+static int siAtMupaSwitch = 0;  /* TODO: make this tread safe */
 
-void ct_setatmupa (int iNewSwitch)
+void ct_setatmupa( int iNewSwitch )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_setatmupa(%i)",iNewSwitch));
-  siAtMupaSwitch = iNewSwitch;
-  return;
+   HB_TRACE( HB_TR_DEBUG, ( "ct_setatmupa(%i)", iNewSwitch ) );
+   siAtMupaSwitch = iNewSwitch;
 }
 
 
-int ct_getatmupa (void)
+int ct_getatmupa( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_getatmupa()"));
-  return (siAtMupaSwitch);
+   HB_TRACE( HB_TR_DEBUG, ( "ct_getatmupa()" ) );
+   return siAtMupaSwitch;
 }
 
 
@@ -457,27 +445,24 @@ int ct_getatmupa (void)
  */
 
 
-HB_FUNC (CSETATMUPA)
+HB_FUNC( CSETATMUPA )
 {
+   hb_retl( ct_getatmupa() );
 
-  hb_retl (ct_getatmupa());
+   if( ISLOG( 1 ) )
+   {
+      ct_setatmupa( hb_parl( 1 ) );
+   }
+   else if( hb_pcount() > 0 ) /* 1 params, but is not logical ! */
+   {
+      int iArgErrorMode = ct_getargerrormode();
 
-  if (ISLOG (1))
-  {
-    ct_setatmupa (hb_parl (1));
-  }
-  else if (hb_pcount() > 0)  /* 1 params, but is not logical ! */
-  {
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CSETATMUPA,
-                NULL, "CSETATMUPA", 0, EF_CANDEFAULT, 1, hb_paramError (1));
-    }
-  }
-
-  return;
-
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETATMUPA, NULL,
+                   "CSETATMUPA", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+      }
+   }
 }
 
 
@@ -485,36 +470,34 @@ HB_FUNC (CSETATMUPA)
  * SETATLIKE() stuff
  */
 
-static int siAtLikeMode = 0;   /* TODO: make this tread safe */
-static int scAtLikeChar = '?'; /* TODO: make this tread safe */
+static int siAtLikeMode = 0;    /* TODO: make this tread safe */
+static int scAtLikeChar = '?';  /* TODO: make this tread safe */
 
-void ct_setatlike (int iNewMode)
+void ct_setatlike( int iNewMode )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_setatlike(%i)",iNewMode));
-  siAtLikeMode = iNewMode;
-  return;
+   HB_TRACE( HB_TR_DEBUG, ( "ct_setatlike(%i)", iNewMode ) );
+   siAtLikeMode = iNewMode;
 }
 
 
-int ct_getatlike (void)
+int ct_getatlike( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_getatlike()"));
-  return (siAtLikeMode);
+   HB_TRACE( HB_TR_DEBUG, ( "ct_getatlike()" ) );
+   return siAtLikeMode;
 }
 
 
-void ct_setatlikechar (char cNewChar)
+void ct_setatlikechar( char cNewChar )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_setatlikechar(\'%c\')",cNewChar));
-  scAtLikeChar = cNewChar;
-  return;
+   HB_TRACE( HB_TR_DEBUG, ( "ct_setatlikechar(\'%c\')", cNewChar ) );
+   scAtLikeChar = cNewChar;
 }
 
 
-char ct_getatlikechar (void)
+char ct_getatlikechar( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_getatlikechar()"));
-  return (scAtLikeChar);
+   HB_TRACE( HB_TR_DEBUG, ( "ct_getatlikechar()" ) );
+   return scAtLikeChar;
 }
 
 
@@ -577,74 +560,61 @@ char ct_getatlikechar (void)
  *  $END$
  */
 
-HB_FUNC (SETATLIKE)
+HB_FUNC( SETATLIKE )
 {
 
-  hb_retni (ct_getatlike());
+   hb_retni( ct_getatlike() );
 
-  /* set new mode if first parameter is CT_SETATLIKE_EXACT (==0)
-                                     or CT_SETATLIKE_WILDCARD (==1) */
-  if (ISNUM (1))
-  {
-    int iNewMode = hb_parni (1);
-    if ((iNewMode == CT_SETATLIKE_EXACT) ||
-        (iNewMode == CT_SETATLIKE_WILDCARD))
-    {
-      ct_setatlike (iNewMode);
-    }
-    else
-    {
-      int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
+   /* set new mode if first parameter is CT_SETATLIKE_EXACT (==0)
+      or CT_SETATLIKE_WILDCARD (==1) */
+   if( ISNUM( 1 ) )
+   {
+      int iNewMode = hb_parni( 1 );
+
+      if( ( iNewMode == CT_SETATLIKE_EXACT ) || ( iNewMode == CT_SETATLIKE_WILDCARD ) )
       {
-        ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_SETATLIKE,
-                  NULL, "SETATLIKE", 0, EF_CANDEFAULT, 2,
-                  hb_paramError (1), hb_paramError (2));
+         ct_setatlike( iNewMode );
       }
-    }
-  }
+      else
+      {
+         int iArgErrorMode = ct_getargerrormode();
 
-  /* set new wildcard character, if ISCHAR(2) but !ISBYREF(2) */
-  if (ISCHAR (2))
-  {
-    if (ISBYREF (2))
-    {
-      /* new behaviour: store the current wildcard char in second parameter */
-      char cResult;
-      cResult = ct_getatlikechar();
-      hb_storclen (&cResult, 1, 2);
-    }
-    else
-    {
-      char *pcNewChar = hb_parc (2);
-      if (hb_parclen (2) > 0)
-        ct_setatlikechar (*pcNewChar);
-    }
-  }
-  else if (hb_pcount() > 1)  /* more than 2 params, but second is not string ! */
-  {
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_SETATLIKE,
-                NULL, "SETATLIKE", 0, EF_CANDEFAULT, 2,
-                hb_paramError (1), hb_paramError (2));
-    }
-  }
+         if( iArgErrorMode != CT_ARGERR_IGNORE )
+         {
+            ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_SETATLIKE,
+                      NULL, "SETATLIKE", 0, EF_CANDEFAULT,
+                      HB_ERR_ARGS_BASEPARAMS );
+         }
+      }
+   }
 
-  return;
+   /* set new wildcard character, if ISCHAR(2) but !ISBYREF(2) */
+   if( ISCHAR( 2 ) )
+   {
+      if( ISBYREF( 2 ) )
+      {
+         /* new behaviour: store the current wildcard char in second parameter */
+         char cResult;
 
+         cResult = ct_getatlikechar();
+         hb_storclen( &cResult, 1, 2 );
+      }
+      else
+      {
+         char *pcNewChar = hb_parc( 2 );
+
+         if( hb_parclen( 2 ) > 0 )
+            ct_setatlikechar( *pcNewChar );
+      }
+   }
+   else if( hb_pcount() > 1 ) /* more than 2 params, but second is not string ! */
+   {
+      int iArgErrorMode = ct_getargerrormode();
+
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_SETATLIKE, NULL,
+                   "SETATLIKE", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+      }
+   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

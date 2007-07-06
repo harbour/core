@@ -96,7 +96,8 @@ const char * hb_comp_szErrors[] =
    "String too long",
    "Code block size too big",
    "%s not declared with variable number of parameters",
-   "Can't find %s file"
+   "Can't find %s file",
+   "Invalid ALWAYS after %s in RECOVER code"
 };
 
 /* Table with parse warnings */

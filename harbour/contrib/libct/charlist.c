@@ -56,9 +56,7 @@
  *
  */
 
-
 #include "ct.h"
-
 
 /* defines */
 #define DO_LIST_CHARLIST        0
@@ -67,128 +65,107 @@
 #define DO_LIST_CHARSLIST       3
 
 /* helper function for the list function */
-static void do_list (int iSwitch)
+static void do_list( int iSwitch )
 {
+   char *pcString;
+   size_t sStrLen;
 
-  char *pcString;
-  size_t sStrLen;
+   size_t asCharCnt[256];
+   size_t sCnt;
 
-  size_t asCharCnt[256];
-  size_t sCnt;
+   /* init asCharCnt */
+   for( sCnt = 0; sCnt < 256; sCnt++ )
+   {
+      asCharCnt[sCnt] = 0;
+   }
 
-  /* init asCharCnt */
-  for (sCnt = 0; sCnt < 256; sCnt++)
-  {
-    asCharCnt[sCnt] = 0;
-  }
+   /* init params */
+   if( ISCHAR( 1 ) )
+   {
+      pcString = hb_parc( 1 );
+      sStrLen = ( size_t ) hb_parclen( 1 );
+   }
+   else
+   {
+      pcString = "";
+      sStrLen = 0;
+   }
 
-  /* init params */
-  if (ISCHAR (1))
-  {
-    pcString = hb_parc (1);
-    sStrLen = (size_t)hb_parclen (1);
-  }
-  else
-  {
-    pcString = "";
-    sStrLen = 0;
-  }
+   /* count characters */
+   if( iSwitch == DO_LIST_CHARLIST )
+   {
+      char pcRet[256];
+      size_t sRetStrLen = 0;
 
-  /* count characters */
-  if (iSwitch == DO_LIST_CHARLIST)
-  {
-
-    char pcRet[256];
-    size_t sRetStrLen = 0;
-    
-    for (sCnt = 0; sCnt < sStrLen; sCnt++)
-    {
-      if (asCharCnt[(size_t)(pcString[sCnt])] == 0)
+      for( sCnt = 0; sCnt < sStrLen; sCnt++ )
       {
-        pcRet[sRetStrLen++] = pcString[sCnt];
-        asCharCnt[(size_t)(pcString[sCnt])] = 1;
+         if( asCharCnt[( size_t ) ( pcString[sCnt] )] == 0 )
+         {
+            pcRet[sRetStrLen++] = pcString[sCnt];
+            asCharCnt[( size_t ) ( pcString[sCnt] )] = 1;
+         }
       }
-    }
-
-    hb_retclen (pcRet, sRetStrLen);
-
-  }
-  else
-  {
-    
-    for (sCnt = 0; sCnt < sStrLen; sCnt++)
-    {
-      size_t sIndex = (size_t)(unsigned char)(*(pcString+sCnt));
-      asCharCnt[sIndex] = asCharCnt[sIndex]+1;
-    }
-
-    switch (iSwitch)
-    {
-      case DO_LIST_CHARSLIST:
+      hb_retclen( pcRet, sRetStrLen );
+   }
+   else
+   {
+      for( sCnt = 0; sCnt < sStrLen; sCnt++ )
       {
-        
-        char *pcRet;
-        size_t sRetStrLen = 0;
+         size_t sIndex = ( size_t ) ( unsigned char ) ( *( pcString + sCnt ) );
+         asCharCnt[sIndex] = asCharCnt[sIndex] + 1;
+      }
 
-        pcRet = ( char *) hb_xgrab (256);
-
-        for (sCnt = 0; sCnt < 256; sCnt++)
-        {
-          if (asCharCnt[sCnt] != 0)
-          {
-            *(pcRet+sRetStrLen) = (unsigned char)sCnt;
-            sRetStrLen++;
-          }
-        }
-
-        hb_retclen (pcRet, sRetStrLen);
-        hb_xfree (pcRet);
-
-      }; break;
-     
-      case DO_LIST_CHARNOLIST:
+      switch ( iSwitch )
       {
-        
-        char *pcRet;
-        size_t sRetStrLen = 0;
-    
-        pcRet = ( char * ) hb_xgrab (256);
+         case DO_LIST_CHARSLIST:
+         {
+            char *pcRet;
+            size_t sRetStrLen = 0;
 
-        for (sCnt = 0; sCnt < 256; sCnt++)
-        {
-          if (asCharCnt[sCnt] == 0)
-          {
-            *(pcRet+sRetStrLen) = (unsigned char)sCnt;
-            sRetStrLen++;
-          }
-        }
-        
-        hb_retclen (pcRet, sRetStrLen);
-        hb_xfree (pcRet);
+            pcRet = ( char * ) hb_xgrab( 256 );
 
-      }; break;
+            for( sCnt = 0; sCnt < 256; sCnt++ )
+            {
+               if( asCharCnt[sCnt] != 0 )
+                  pcRet[ sRetStrLen++ ] = ( unsigned char ) sCnt;
+            }
 
-      case DO_LIST_CHARHIST:
-      {
-        PHB_ITEM pArray, pCount;
+            hb_retclen( pcRet, sRetStrLen );
+            hb_xfree( pcRet );
+            break;
+         }
 
-        pArray = hb_itemArrayNew (256);
-        for (sCnt = 0; sCnt < 256; sCnt++)
-        {
-          pCount = hb_itemPutNL (NULL, asCharCnt[sCnt]);
-          hb_itemArrayPut (pArray, sCnt+1, pCount);
-          hb_itemRelease (pCount);
-        }
-        hb_itemReturn (pArray);
-        hb_itemRelease (pArray);
-      }; break;
+         case DO_LIST_CHARNOLIST:
+         {
+            char *pcRet;
+            size_t sRetStrLen = 0;
 
-    }
+            pcRet = ( char * ) hb_xgrab( 256 );
 
-  }
+            for( sCnt = 0; sCnt < 256; sCnt++ )
+            {
+               if( asCharCnt[sCnt] == 0 )
+               {
+                  *( pcRet + sRetStrLen ) = ( unsigned char ) sCnt;
+                  sRetStrLen++;
+               }
+            }
 
-  return;
+            hb_retclen( pcRet, sRetStrLen );
+            hb_xfree( pcRet );
+            break;
+         }
+         case DO_LIST_CHARHIST:
+         {
+            PHB_ITEM pArray = hb_itemArrayNew( 256 );
 
+            for( sCnt = 0; sCnt < 256; sCnt++ )
+               hb_arraySetNL( pArray, sCnt + 1, asCharCnt[sCnt] );
+            hb_itemReturnRelease( pArray );
+            break;
+         }
+      }
+   }
 }
 
 
@@ -230,12 +207,9 @@ static void do_list (int iSwitch)
  *  $END$
  */
 
-HB_FUNC (CHARLIST)
+HB_FUNC( CHARLIST )
 {
-
-  do_list (DO_LIST_CHARLIST);
-  return;
-
+   do_list( DO_LIST_CHARLIST );
 }
 
 
@@ -278,12 +252,9 @@ HB_FUNC (CHARLIST)
  *  $END$
  */
 
-HB_FUNC (CHARSLIST)
+HB_FUNC( CHARSLIST )
 {
-
-  do_list (DO_LIST_CHARSLIST);
-  return;
-
+   do_list( DO_LIST_CHARSLIST );
 }
 
 
@@ -325,12 +296,9 @@ HB_FUNC (CHARSLIST)
  *  $END$
  */
 
-HB_FUNC (CHARNOLIST)
+HB_FUNC( CHARNOLIST )
 {
-
-  do_list (DO_LIST_CHARNOLIST);
-  return;
-
+   do_list( DO_LIST_CHARNOLIST );
 }
 
 
@@ -373,12 +341,7 @@ HB_FUNC (CHARNOLIST)
  *  $END$
  */
 
-HB_FUNC (CHARHIST)
+HB_FUNC( CHARHIST )
 {
-
-  do_list (DO_LIST_CHARHIST);
-  return;
-
+   do_list( DO_LIST_CHARHIST );
 }
-
-

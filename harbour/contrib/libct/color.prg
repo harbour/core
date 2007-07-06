@@ -5,6 +5,10 @@
 /*
  * Harbour Project source code:
  *   CT3 video functions (color-like functions)
+ *
+ *     Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>:
+ *                        - INVERTATTR()
+ *
  *     Copyright 2002 Walter Negro <anegro@overnet.com.ar>:
  *                        - NTOCOLOR()
  *                        - COLORTON()
@@ -60,6 +64,12 @@
 #include "color.ch"
 #include "common.ch"
 
+
+FUNCTION INVERTATTR( xAttr )
+  LOCAL n := ColorToN( xAttr )
+RETURN HB_BITSHIFT( HB_BITAND( n, 0x0F ), 4 ) + HB_BITSHIFT( n, -4 )
+
+
 /*  $DOC$
  *  $FUNCNAME$
  *      NTOCOLOR()
@@ -110,7 +120,7 @@ FUNCTION NTOCOLOR( nColor, lChar )
 
   DEFAULT lChar TO .f.
 
-  if valtype( nColor ) == "N" .and. nColor > 0 .and. nColor < 256
+  if valtype( nColor ) == "N" .and. nColor >= 0 .and. nColor < 256
 
      nColorFore = nColor % 16
      nColorBack = INT( nColor / 16 )
@@ -223,9 +233,14 @@ FUNCTION COLORTON( cColor )
 
   if valtype( cColor ) == "C"
 
+     if ( nSep := at( ",", cColor ) ) <> 0
+        cColor := left( cColor, nSep - 1 )
+     endif
+
      if ( nSep := at( "/", cColor ) ) == 0
 
         cColorFore = cColor
+        cColorBack = ""
      else
 
         cColorFore = alltrim( substr( cColor, 1, nSep - 1 ) )

@@ -57,7 +57,7 @@
 
 static BOOL __numParam( int iParam, HB_LONG * plNum )
 {
-   char * szHex = hb_parc( iParam );
+   char *szHex = hb_parc( iParam );
 
    if( szHex )
    {
@@ -67,6 +67,7 @@ static BOOL __numParam( int iParam, HB_LONG * plNum )
       while( *szHex )
       {
          char c = *szHex++;
+
          if( c >= '0' && c <= '9' )
             c -= '0';
          else if( c >= 'A' && c <= 'F' )
@@ -163,7 +164,7 @@ HB_FUNC( NUMHIGH )
 {
    HB_LONG lValue;
 
-   if( __numParam( 1, &lValue ) /* && lValue == lValue & 0xffff */ )
+   if( __numParam( 1, &lValue ) /* && lValue == lValue & 0xffff */  )
       lValue = ( lValue >> 8 ) & 0xff;
 
    hb_retnint( lValue );
@@ -173,12 +174,13 @@ HB_FUNC( NUMROL )
 {
    HB_LONG lValue, lShift;
 
-   if( __numParam( 1, &lValue ) && lValue == ( lValue & 0xffff ) &&
-       __numParam( 2, &lShift ) && lShift == ( lShift & 0xffff ) )
+   if( __numParam( 1, &lValue ) && lValue == ( lValue & 0xffff ) && __numParam( 2, &lShift )
+       && lShift == ( lShift & 0xffff ) )
    {
       if( ISLOG( 3 ) && hb_parl( 3 ) )
       {
          USHORT us = ( USHORT ) ( lValue & 0xff ) << ( lShift & 0x07 );
+
          lValue = ( lValue & 0xff00 ) | ( us & 0xff ) | ( us >> 8 );
       }
       else
@@ -207,7 +209,7 @@ HB_FUNC( NUMMIRR )
       {
          usResult <<= 1;
          if( lValue && 1 )
-            usResult |=1;
+            usResult |= 1;
          lValue >>= 1;
       }
       while( --usBits );
@@ -271,11 +273,12 @@ HB_FUNC( ISBIT )
    if( __numParam( 1, &lValue ) )
    {
       int iBit = hb_parni( 2 );
+
       if( iBit )
          --iBit;
       lValue &= ( ( HB_LONG ) 1 ) << iBit;
    }
-   else 
+   else
       lValue = 0;
 
    hb_retl( lValue != 0 );

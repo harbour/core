@@ -57,83 +57,74 @@
  *
  */
 
-
 #include "ct.h"
-
 
 #define DO_CHAREVOD_CHAREVEN   0
 #define DO_CHAREVOD_CHARODD    1
 
 /* helper function */
-static void do_charevod (int iSwitch)
+static void do_charevod( int iSwitch )
 {
-  
-  if (ISCHAR (1))
-  {
+   if( ISCHAR( 1 ) )
+   {
+      char *pcString = hb_parc( 1 );
+      size_t sLen = hb_parclen( 1 );
+      char *pcResult;
+      size_t sPos, sResultPos;
 
-    char *pcString = hb_parc (1);
-    size_t sLen = hb_parclen (1);
-    char *pcResult;
-    size_t sPos, sResultPos;
-
-    if (sLen == 0)
-    {
-      int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
+      if( sLen == 0 )
       {
-        ct_error ((USHORT)iArgErrorMode, EG_ARG,
-                  (iSwitch == DO_CHAREVOD_CHAREVEN ? CT_ERROR_CHAREVEN : CT_ERROR_CHARODD),
-                  NULL,
-                  (iSwitch == DO_CHAREVOD_CHAREVEN ? "CHAREVEN" : "CHARODD"),
-                  0, EF_CANDEFAULT, 1, hb_paramError (1));
+         int iArgErrorMode = ct_getargerrormode();
+
+         if( iArgErrorMode != CT_ARGERR_IGNORE )
+         {
+            ct_error( ( USHORT ) iArgErrorMode, EG_ARG,
+                      iSwitch == DO_CHAREVOD_CHAREVEN ?
+                      CT_ERROR_CHAREVEN : CT_ERROR_CHARODD,
+                      NULL, &hb_errFuncName, 0, EF_CANDEFAULT,
+                      HB_ERR_ARGS_BASEPARAMS );
+         }
+         hb_retc( NULL );
+         return;
       }
-      hb_retc ("");
-      return;
-    }
-    
-    pcResult = ( char * ) hb_xgrab ((sLen+1)/2);
 
-    if (iSwitch == DO_CHAREVOD_CHAREVEN)
-      sPos = 1;
-    else
-      sPos = 0;
+      pcResult = ( char * ) hb_xgrab( ( sLen + 1 ) / 2 );
 
-    sResultPos = 0;
-    for (; sPos < sLen; sPos+=2)
-      pcResult[sResultPos++] = pcString[sPos];
+      if( iSwitch == DO_CHAREVOD_CHAREVEN )
+         sPos = 1;
+      else
+         sPos = 0;
 
-    if (sResultPos == 0)
-      hb_retc ("");
-    else
-      hb_retclen (pcResult, sResultPos);
-  
-    hb_xfree (pcResult);
+      sResultPos = 0;
+      for( ; sPos < sLen; sPos += 2 )
+         pcResult[sResultPos++] = pcString[sPos];
 
-  }
-  else
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, 
-                               (iSwitch == DO_CHAREVOD_CHAREVEN ? CT_ERROR_CHAREVEN : CT_ERROR_CHARODD),
-                               NULL,
-                               (iSwitch == DO_CHAREVOD_CHAREVEN ? "CHAREVEN" : "CHARODD"),
-                               0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
-    }
-     
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      hb_retc ("");
-    }
-  }
+      if( sResultPos == 0 )
+         hb_retc( NULL );
+      else
+         hb_retclen( pcResult, sResultPos );
 
+      hb_xfree( pcResult );
+   }
+   else
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
+
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  iSwitch == DO_CHAREVOD_CHAREVEN ?
+                                  CT_ERROR_CHAREVEN : CT_ERROR_CHARODD, NULL,
+                                  &hb_errFuncName, 0, EF_CANSUBSTITUTE,
+                                  HB_ERR_ARGS_BASEPARAMS );
+      }
+
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
+      else
+         hb_retc( NULL );
+   }
 }
 
 
@@ -173,12 +164,9 @@ static void do_charevod (int iSwitch)
  *  $END$
  */
 
-HB_FUNC (CHAREVEN)
+HB_FUNC( CHAREVEN )
 {
-
-  do_charevod (DO_CHAREVOD_CHAREVEN);
-  return;
-
+   do_charevod( DO_CHAREVOD_CHAREVEN );
 }
 
 
@@ -217,13 +205,7 @@ HB_FUNC (CHAREVEN)
  *  $END$
  */
 
-HB_FUNC (CHARODD)
+HB_FUNC( CHARODD )
 {
-
-  do_charevod (DO_CHAREVOD_CHARODD);
-  return;
-
+   do_charevod( DO_CHAREVOD_CHARODD );
 }
-
-
-

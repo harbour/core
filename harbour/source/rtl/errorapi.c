@@ -868,7 +868,7 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, const char * szDescripti
       }
       va_end( va );
    }
-   if ( pArray )
+   if( pArray )
    {
       /* Assign the new array to the object data item. */
       hb_vmPushDynSym( s_msg_ARGS );
@@ -927,7 +927,7 @@ USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
       }
       va_end( va );
    }
-   if ( pArray )
+   if( pArray )
    {
       /* Assign the new array to the object data item. */
       hb_vmPushDynSym( s_msg_ARGS );
@@ -985,7 +985,7 @@ PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, const char * szD
       }
       va_end( va );
    }
-   if ( pArray )
+   if( pArray )
    {
       /* Assign the new array to the object data item. */
       hb_vmPushDynSym( s_msg_ARGS );
@@ -1042,7 +1042,7 @@ void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
       }
       va_end( va );
    }
-   if ( pArray )
+   if( pArray )
    {
       /* Assign the new array to the object data item. */
       hb_vmPushDynSym( s_msg_ARGS );

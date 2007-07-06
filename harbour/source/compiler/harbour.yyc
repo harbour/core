@@ -356,6 +356,7 @@ static void hb_compLoopEnd( HB_COMP_DECL );
 static void hb_compLoopLoop( HB_COMP_DECL );
 static void hb_compLoopExit( HB_COMP_DECL );
 static void hb_compLoopHere( HB_COMP_DECL );
+static long hb_compLoopCount( HB_COMP_DECL );
 
 static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirstElseIf, ULONG ulOffset ); /* generates a support structure for elseifs pcode fixups */
 static void hb_compElseIfFix( HB_COMP_DECL, void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
@@ -410,7 +411,7 @@ static void hb_compDebugStart( void ) { };
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 105 "harbour.y"
+#line 106 "harbour.y"
 {
    char *  string;      /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
@@ -453,7 +454,7 @@ typedef union YYSTYPE
    } asMessage;
 }
 /* Line 193 of yacc.c.  */
-#line 457 "harboury.c"
+#line 458 "harboury.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -463,7 +464,7 @@ typedef union YYSTYPE
 
 
 /* Copy the second part of user declarations.  */
-#line 147 "harbour.y"
+#line 148 "harbour.y"
 
 /* This must be placed after the above union - the union is
  * typedef-ined to YYSTYPE
@@ -473,7 +474,7 @@ extern void yyerror( HB_COMP_DECL, char * );     /* parsing error management fun
 
 
 /* Line 216 of yacc.c.  */
-#line 477 "harboury.c"
+#line 478 "harboury.c"
 
 #ifdef short
 # undef short
@@ -1009,69 +1010,69 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   266,   266,   267,   270,   271,   272,   273,   274,   275,
-     276,   277,   278,   279,   280,   281,   284,   289,   297,   297,
-     298,   298,   299,   299,   300,   300,   303,   304,   305,   306,
-     309,   310,   311,   312,   315,   316,   319,   320,   323,   324,
-     325,   326,   327,   328,   329,   330,   331,   334,   335,   336,
-     337,   338,   339,   340,   341,   342,   345,   346,   354,   355,
-     356,   357,   358,   359,   365,   371,   372,   373,   374,   375,
-     376,   377,   378,   380,   380,   386,   387,   388,   400,   400,
-     423,   425,   423,   429,   431,   429,   435,   436,   437,   438,
-     439,   440,   440,   454,   457,   465,   478,   478,   481,   482,
-     483,   484,   485,   486,   498,   499,   500,   501,   504,   505,
-     506,   507,   510,   511,   514,   515,   518,   519,   522,   523,
-     526,   527,   528,   529,   530,   531,   532,   533,   534,   535,
-     536,   537,   538,   539,   540,   541,   542,   543,   548,   549,
-     552,   555,   556,   561,   564,   569,   575,   580,   585,   586,
-     589,   594,   597,   608,   611,   616,   619,   622,   623,   626,
-     629,   630,   635,   638,   643,   644,   647,   652,   655,   662,
-     663,   668,   669,   670,   671,   672,   673,   674,   675,   676,
-     677,   678,   679,   680,   681,   684,   685,   686,   689,   690,
-     691,   692,   693,   694,   695,   696,   697,   698,   699,   700,
-     701,   702,   703,   704,   705,   706,   707,   708,   717,   718,
-     719,   720,   721,   722,   727,   728,   729,   730,   731,   732,
-     733,   734,   735,   736,   737,   738,   739,   740,   741,   742,
-     743,   744,   747,   750,   750,   753,   754,   754,   755,   755,
-     759,   762,   765,   766,   769,   770,   773,   774,   775,   776,
-     777,   780,   781,   786,   787,   788,   794,   795,   796,   799,
-     802,   807,   807,   810,   819,   820,   821,   822,   823,   824,
-     825,   826,   826,   827,   828,   829,   830,   831,   832,   833,
-     834,   835,   836,   836,   837,   838,   839,   839,   840,   841,
-     841,   842,   843,   844,   845,   846,   847,   848,   849,   852,
-     853,   854,   855,   855,   856,   856,   857,   860,   861,   864,
-     865,   868,   869,   870,   871,   872,   873,   874,   881,   882,
-     883,   884,   885,   886,   887,   888,   889,   890,   891,   892,
-     893,   894,   895,   896,   897,   898,   899,   900,   901,   907,
-     908,   911,   914,   915,   918,   919,   920,   923,   924,   925,
-     926,   927,   928,   929,   930,   931,   932,   933,   934,   935,
-     936,   937,   938,   939,   940,   941,   942,   943,   946,   949,
-     952,   955,   958,   961,   964,   967,   968,   969,   970,   971,
-     972,   975,   976,   977,   978,   979,   980,   983,   984,   987,
-     988,   989,   990,   991,   992,   993,   994,   995,   998,  1004,
-    1005,  1006,  1009,  1010,  1013,  1013,  1019,  1020,  1021,  1022,
-    1025,  1026,  1029,  1030,  1033,  1035,  1034,  1070,  1071,  1073,
-    1076,  1085,  1089,  1092,  1092,  1094,  1094,  1096,  1096,  1106,
-    1107,  1110,  1111,  1119,  1120,  1122,  1126,  1135,  1135,  1152,
-    1155,  1152,  1184,  1190,  1193,  1194,  1195,  1198,  1198,  1206,
-    1207,  1210,  1211,  1214,  1214,  1217,  1218,  1221,  1221,  1244,
-    1244,  1245,  1246,  1247,  1247,  1250,  1251,  1254,  1255,  1256,
-    1257,  1260,  1260,  1282,  1282,  1338,  1339,  1340,  1341,  1344,
-    1345,  1348,  1351,  1352,  1353,  1354,  1355,  1356,  1359,  1360,
-    1361,  1362,  1363,  1364,  1367,  1368,  1369,  1370,  1371,  1372,
-    1373,  1374,  1377,  1378,  1379,  1380,  1384,  1386,  1383,  1391,
-    1391,  1395,  1397,  1395,  1405,  1407,  1405,  1416,  1419,  1424,
-    1428,  1432,  1435,  1441,  1446,  1453,  1453,  1456,  1457,  1465,
-    1466,  1465,  1477,  1478,  1477,  1490,  1490,  1490,  1492,  1492,
-    1497,  1502,  1496,  1516,  1519,  1520,  1524,  1536,  1541,  1523,
-    1582,  1583,  1586,  1587,  1590,  1593,  1596,  1599,  1604,  1605,
-    1608,  1609,  1612,  1613,  1616,  1617,  1622,  1628,  1637,  1621,
-    1657,  1658,  1662,  1661,  1674,  1681,  1690,  1689,  1699,  1700,
-    1709,  1709,  1712,  1712,  1715,  1717,  1720,  1720,  1720,  1725,
-    1733,  1743,  1753,  1724,  1777,  1778,  1786,  1787,  1790,  1798,
-    1799,  1800,  1803,  1814,  1832,  1833,  1837,  1836,  1844,  1843,
-    1854,  1855,  1858,  1859,  1860,  1861,  1862,  1865,  1866,  1867,
-    1868,  1869,  1873,  1872,  1895,  1896
+       0,   267,   267,   268,   271,   272,   273,   274,   275,   276,
+     277,   278,   279,   280,   281,   282,   285,   290,   298,   298,
+     299,   299,   300,   300,   301,   301,   304,   305,   306,   307,
+     310,   311,   312,   313,   316,   317,   320,   321,   324,   325,
+     326,   327,   328,   329,   330,   331,   332,   335,   336,   337,
+     338,   339,   340,   341,   342,   343,   346,   347,   355,   356,
+     357,   358,   359,   360,   366,   372,   373,   374,   375,   376,
+     377,   378,   379,   381,   381,   387,   388,   389,   401,   401,
+     424,   426,   424,   430,   432,   430,   436,   437,   438,   439,
+     440,   441,   441,   455,   458,   466,   479,   479,   482,   483,
+     484,   485,   486,   487,   499,   500,   501,   502,   505,   506,
+     507,   508,   511,   512,   515,   516,   519,   520,   523,   524,
+     527,   528,   529,   530,   531,   532,   533,   534,   535,   536,
+     537,   538,   539,   540,   541,   542,   543,   544,   549,   550,
+     553,   556,   557,   562,   565,   570,   576,   581,   586,   587,
+     590,   595,   598,   609,   612,   617,   620,   623,   624,   627,
+     630,   631,   636,   639,   644,   645,   648,   653,   656,   663,
+     664,   669,   670,   671,   672,   673,   674,   675,   676,   677,
+     678,   679,   680,   681,   682,   685,   686,   687,   690,   691,
+     692,   693,   694,   695,   696,   697,   698,   699,   700,   701,
+     702,   703,   704,   705,   706,   707,   708,   709,   718,   719,
+     720,   721,   722,   723,   728,   729,   730,   731,   732,   733,
+     734,   735,   736,   737,   738,   739,   740,   741,   742,   743,
+     744,   745,   748,   751,   751,   754,   755,   755,   756,   756,
+     760,   763,   766,   767,   770,   771,   774,   775,   776,   777,
+     778,   781,   782,   787,   788,   789,   795,   796,   797,   800,
+     803,   808,   808,   811,   820,   821,   822,   823,   824,   825,
+     826,   827,   827,   828,   829,   830,   831,   832,   833,   834,
+     835,   836,   837,   837,   838,   839,   840,   840,   841,   842,
+     842,   843,   844,   845,   846,   847,   848,   849,   850,   853,
+     854,   855,   856,   856,   857,   857,   858,   861,   862,   865,
+     866,   869,   870,   871,   872,   873,   874,   875,   882,   883,
+     884,   885,   886,   887,   888,   889,   890,   891,   892,   893,
+     894,   895,   896,   897,   898,   899,   900,   901,   902,   908,
+     909,   912,   915,   916,   919,   920,   921,   924,   925,   926,
+     927,   928,   929,   930,   931,   932,   933,   934,   935,   936,
+     937,   938,   939,   940,   941,   942,   943,   944,   947,   950,
+     953,   956,   959,   962,   965,   968,   969,   970,   971,   972,
+     973,   976,   977,   978,   979,   980,   981,   984,   985,   988,
+     989,   990,   991,   992,   993,   994,   995,   996,   999,  1005,
+    1006,  1007,  1010,  1011,  1014,  1014,  1020,  1021,  1022,  1023,
+    1026,  1027,  1030,  1031,  1034,  1036,  1035,  1071,  1072,  1074,
+    1077,  1086,  1090,  1093,  1093,  1095,  1095,  1097,  1097,  1107,
+    1108,  1111,  1112,  1120,  1121,  1123,  1127,  1136,  1136,  1153,
+    1156,  1153,  1185,  1191,  1194,  1195,  1196,  1199,  1199,  1207,
+    1208,  1211,  1212,  1215,  1215,  1218,  1219,  1222,  1222,  1245,
+    1245,  1246,  1247,  1248,  1248,  1251,  1252,  1255,  1256,  1257,
+    1258,  1261,  1261,  1283,  1283,  1339,  1340,  1341,  1342,  1345,
+    1346,  1349,  1352,  1353,  1354,  1355,  1356,  1357,  1360,  1361,
+    1362,  1363,  1364,  1365,  1368,  1369,  1370,  1371,  1372,  1373,
+    1374,  1375,  1378,  1379,  1380,  1381,  1385,  1387,  1384,  1392,
+    1392,  1396,  1398,  1396,  1406,  1408,  1406,  1417,  1420,  1425,
+    1429,  1433,  1436,  1442,  1447,  1454,  1454,  1457,  1458,  1466,
+    1467,  1466,  1478,  1479,  1478,  1491,  1491,  1491,  1493,  1493,
+    1498,  1503,  1497,  1517,  1520,  1521,  1525,  1537,  1542,  1524,
+    1583,  1584,  1587,  1588,  1591,  1594,  1597,  1600,  1605,  1606,
+    1609,  1610,  1613,  1614,  1617,  1618,  1623,  1629,  1638,  1622,
+    1658,  1659,  1663,  1662,  1675,  1682,  1691,  1690,  1700,  1701,
+    1710,  1710,  1713,  1713,  1716,  1718,  1721,  1721,  1721,  1726,
+    1734,  1745,  1755,  1725,  1786,  1787,  1795,  1796,  1799,  1808,
+    1809,  1810,  1813,  1824,  1842,  1843,  1847,  1846,  1854,  1853,
+    1864,  1865,  1868,  1869,  1870,  1871,  1872,  1875,  1876,  1877,
+    1878,  1879,  1883,  1882,  1905,  1906
 };
 #endif
 
@@ -3925,14 +3926,14 @@ yydestruct (yymsg, yytype, yyvaluep, pComp)
   switch (yytype)
     {
       case 19: /* "LITERAL" */
-#line 262 "harbour.y"
+#line 263 "harbour.y"
 	{ if( (yyvaluep->valChar).dealloc ) hb_xfree( (yyvaluep->valChar).string ); };
-#line 3931 "harboury.c"
+#line 3932 "harboury.c"
 	break;
       case 95: /* "CBSTART" */
-#line 261 "harbour.y"
+#line 262 "harbour.y"
 	{ if( (yyvaluep->asCodeblock).string )  hb_xfree( (yyvaluep->asCodeblock).string ); };
-#line 3936 "harboury.c"
+#line 3937 "harboury.c"
 	break;
 
       default:
@@ -4242,17 +4243,17 @@ yyreduce:
   switch (yyn)
     {
         case 9:
-#line 275 "harbour.y"
+#line 276 "harbour.y"
     { yyclearin; yyerrok; ;}
     break;
 
   case 15:
-#line 281 "harbour.y"
+#line 282 "harbour.y"
     { yyclearin; yyerrok; ;}
     break;
 
   case 16:
-#line 285 "harbour.y"
+#line 286 "harbour.y"
     { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, (yyvsp[(3) - (4)].valChar).string, (yyvsp[(3) - (4)].valChar).dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
                     HB_COMP_PARAM->currLine = (yyvsp[(2) - (4)].valLong).lNumber;
                     HB_COMP_PARAM->pLex->fEol = FALSE;
@@ -4260,7 +4261,7 @@ yyreduce:
     break;
 
   case 17:
-#line 290 "harbour.y"
+#line 291 "harbour.y"
     { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, (yyvsp[(5) - (6)].valChar).string, (yyvsp[(5) - (6)].valChar).dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
                     HB_COMP_PARAM->currLine = (yyvsp[(2) - (6)].valLong).lNumber;
                     HB_COMP_PARAM->pLex->fEol = FALSE;
@@ -4269,187 +4270,187 @@ yyreduce:
     break;
 
   case 18:
-#line 297 "harbour.y"
+#line 298 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, (yyvsp[(3) - (3)].string), ( HB_SYMBOLSCOPE ) (yyvsp[(1) - (3)].iNumber), 0 ); ;}
     break;
 
   case 20:
-#line 298 "harbour.y"
+#line 299 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, (yyvsp[(3) - (3)].string), ( HB_SYMBOLSCOPE ) (yyvsp[(1) - (3)].iNumber), FUN_PROCEDURE ); ;}
     break;
 
   case 22:
-#line 299 "harbour.y"
+#line 300 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, (yyvsp[(3) - (3)].string), ( HB_SYMBOLSCOPE ) (yyvsp[(1) - (3)].iNumber), 0 ); HB_COMP_PARAM->iVarScope = VS_PARAMETER; ;}
     break;
 
   case 24:
-#line 300 "harbour.y"
+#line 301 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' '; hb_compFunctionAdd( HB_COMP_PARAM, (yyvsp[(3) - (3)].string), ( HB_SYMBOLSCOPE ) (yyvsp[(1) - (3)].iNumber), FUN_PROCEDURE ); HB_COMP_PARAM->iVarScope = VS_PARAMETER;;}
     break;
 
   case 26:
-#line 303 "harbour.y"
+#line 304 "harbour.y"
     { (yyval.iNumber) = HB_FS_PUBLIC; ;}
     break;
 
   case 27:
-#line 304 "harbour.y"
+#line 305 "harbour.y"
     { (yyval.iNumber) = HB_FS_STATIC; ;}
     break;
 
   case 28:
-#line 305 "harbour.y"
+#line 306 "harbour.y"
     { (yyval.iNumber) = HB_FS_INIT; ;}
     break;
 
   case 29:
-#line 306 "harbour.y"
+#line 307 "harbour.y"
     { (yyval.iNumber) = HB_FS_EXIT; ;}
     break;
 
   case 30:
-#line 309 "harbour.y"
+#line 310 "harbour.y"
     { (yyval.iNumber) = 0; ;}
     break;
 
   case 31:
-#line 310 "harbour.y"
+#line 311 "harbour.y"
     { HB_COMP_PARAM->functions.pLast->fVParams = TRUE; (yyval.iNumber) = 0; ;}
     break;
 
   case 33:
-#line 312 "harbour.y"
+#line 313 "harbour.y"
     { HB_COMP_PARAM->functions.pLast->fVParams = TRUE; (yyval.iNumber) = (yyvsp[(1) - (3)].iNumber); ;}
     break;
 
   case 34:
-#line 315 "harbour.y"
+#line 316 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' '; ;}
     break;
 
   case 36:
-#line 319 "harbour.y"
+#line 320 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' '; ;}
     break;
 
   case 38:
-#line 323 "harbour.y"
+#line 324 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'N'; ;}
     break;
 
   case 39:
-#line 324 "harbour.y"
+#line 325 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'C'; ;}
     break;
 
   case 40:
-#line 325 "harbour.y"
+#line 326 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'D'; ;}
     break;
 
   case 41:
-#line 326 "harbour.y"
+#line 327 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'L'; ;}
     break;
 
   case 42:
-#line 327 "harbour.y"
+#line 328 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'B'; ;}
     break;
 
   case 43:
-#line 328 "harbour.y"
+#line 329 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'O'; ;}
     break;
 
   case 44:
-#line 329 "harbour.y"
+#line 330 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'S'; HB_COMP_PARAM->szFromClass = (yyvsp[(2) - (2)].string); ;}
     break;
 
   case 45:
-#line 330 "harbour.y"
+#line 331 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' '; ;}
     break;
 
   case 47:
-#line 334 "harbour.y"
+#line 335 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'A'; ;}
     break;
 
   case 48:
-#line 335 "harbour.y"
+#line 336 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'n'; ;}
     break;
 
   case 49:
-#line 336 "harbour.y"
+#line 337 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'c'; ;}
     break;
 
   case 50:
-#line 337 "harbour.y"
+#line 338 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'd'; ;}
     break;
 
   case 51:
-#line 338 "harbour.y"
+#line 339 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'l'; ;}
     break;
 
   case 52:
-#line 339 "harbour.y"
+#line 340 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'a'; ;}
     break;
 
   case 53:
-#line 340 "harbour.y"
+#line 341 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'b'; ;}
     break;
 
   case 54:
-#line 341 "harbour.y"
+#line 342 "harbour.y"
     { HB_COMP_PARAM->cVarType = 'o'; ;}
     break;
 
   case 55:
-#line 342 "harbour.y"
+#line 343 "harbour.y"
     { HB_COMP_PARAM->cVarType = 's'; HB_COMP_PARAM->szFromClass = (yyvsp[(2) - (2)].string); ;}
     break;
 
   case 56:
-#line 345 "harbour.y"
+#line 346 "harbour.y"
     { hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[(1) - (2)].string), HB_COMP_PARAM->cVarType ); (yyval.iNumber) = 1; ;}
     break;
 
   case 57:
-#line 346 "harbour.y"
+#line 347 "harbour.y"
     { hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[(3) - (4)].string), HB_COMP_PARAM->cVarType ); (yyval.iNumber)++; ;}
     break;
 
   case 59:
-#line 355 "harbour.y"
-    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
-    break;
-
-  case 60:
 #line 356 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
-  case 61:
+  case 60:
 #line 357 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
-  case 62:
+  case 61:
 #line 358 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
-  case 63:
+  case 62:
 #line 359 "harbour.y"
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    break;
+
+  case 63:
+#line 360 "harbour.y"
     { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
                                          HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) );
                                       else
@@ -4459,7 +4460,7 @@ yyreduce:
     break;
 
   case 64:
-#line 365 "harbour.y"
+#line 366 "harbour.y"
     { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
                                          HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) );
                                       else
@@ -4469,53 +4470,53 @@ yyreduce:
     break;
 
   case 65:
-#line 371 "harbour.y"
-    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
-    break;
-
-  case 66:
 #line 372 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
-  case 67:
+  case 66:
 #line 373 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
-  case 68:
+  case 67:
 #line 374 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
-  case 69:
+  case 68:
 #line 375 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
-  case 70:
+  case 69:
 #line 376 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
-  case 71:
+  case 70:
 #line 377 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
-  case 72:
+  case 71:
 #line 378 "harbour.y"
+    { HB_COMP_EXPR_DELETE( hb_compExprGenStatement( (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
+    break;
+
+  case 72:
+#line 379 "harbour.y"
     { hb_compGenBreak( HB_COMP_PARAM ); hb_compGenPCode2( HB_P_DOSHORT, 0, HB_COMP_PARAM );
                                       HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE; ;}
     break;
 
   case 73:
-#line 380 "harbour.y"
+#line 381 "harbour.y"
     { hb_compLinePushIfInside( HB_COMP_PARAM ); ;}
     break;
 
   case 74:
-#line 381 "harbour.y"
+#line 382 "harbour.y"
     {
                                        hb_compGenBreak( HB_COMP_PARAM ); HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ) );
                                        hb_compGenPCode2( HB_P_DOSHORT, 1, HB_COMP_PARAM );
@@ -4524,17 +4525,17 @@ yyreduce:
     break;
 
   case 75:
-#line 386 "harbour.y"
+#line 387 "harbour.y"
     { hb_compLoopExit( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE; ;}
     break;
 
   case 76:
-#line 387 "harbour.y"
+#line 388 "harbour.y"
     { hb_compLoopLoop( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->bFlags |= FUN_BREAK_CODE; ;}
     break;
 
   case 77:
-#line 388 "harbour.y"
+#line 389 "harbour.y"
     {
                         if( HB_COMP_PARAM->wSeqCounter )
                         {
@@ -4550,12 +4551,12 @@ yyreduce:
     break;
 
   case 78:
-#line 400 "harbour.y"
+#line 401 "harbour.y"
     {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; ;}
     break;
 
   case 79:
-#line 402 "harbour.y"
+#line 403 "harbour.y"
     {
                         HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType;
                         HB_COMP_PARAM->cVarType = ' ';
@@ -4580,12 +4581,12 @@ yyreduce:
     break;
 
   case 80:
-#line 423 "harbour.y"
+#line 424 "harbour.y"
     { hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PUBLIC; ;}
     break;
 
   case 81:
-#line 425 "harbour.y"
+#line 426 "harbour.y"
     {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPUBLIC" ); 
                         HB_COMP_PARAM->cVarType = ' ';  HB_COMP_PARAM->iVarScope = VS_NONE; 
                         HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
@@ -4593,12 +4594,12 @@ yyreduce:
     break;
 
   case 83:
-#line 429 "harbour.y"
+#line 430 "harbour.y"
     {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PRIVATE; ;}
     break;
 
   case 84:
-#line 431 "harbour.y"
+#line 432 "harbour.y"
     {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPRIVATE" ); 
                         HB_COMP_PARAM->cVarType = ' '; HB_COMP_PARAM->iVarScope = VS_NONE; 
                         HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
@@ -4606,7 +4607,7 @@ yyreduce:
     break;
 
   case 91:
-#line 440 "harbour.y"
+#line 441 "harbour.y"
     {
                   if( HB_COMP_PARAM->szAnnounce == NULL )
                   {
@@ -4624,12 +4625,12 @@ yyreduce:
     break;
 
   case 93:
-#line 454 "harbour.y"
+#line 455 "harbour.y"
     { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN; ;}
     break;
 
   case 94:
-#line 457 "harbour.y"
+#line 458 "harbour.y"
     {
                if( (yyvsp[(1) - (1)].valChar).dealloc )
                {
@@ -4641,7 +4642,7 @@ yyreduce:
     break;
 
   case 95:
-#line 465 "harbour.y"
+#line 466 "harbour.y"
     {
                {
                   char szFileName[ _POSIX_PATH_MAX + 1 ];
@@ -4656,37 +4657,37 @@ yyreduce:
     break;
 
   case 96:
-#line 478 "harbour.y"
+#line 479 "harbour.y"
     { hb_compLinePushIfInside( HB_COMP_PARAM ); ;}
     break;
 
   case 98:
-#line 481 "harbour.y"
+#line 482 "harbour.y"
     { (yyval.lNumber) = 0; ;}
     break;
 
   case 99:
-#line 482 "harbour.y"
-    { (yyval.lNumber) = 1; ;}
-    break;
-
-  case 100:
 #line 483 "harbour.y"
     { (yyval.lNumber) = 1; ;}
     break;
 
-  case 101:
+  case 100:
 #line 484 "harbour.y"
+    { (yyval.lNumber) = 1; ;}
+    break;
+
+  case 101:
+#line 485 "harbour.y"
     { (yyval.lNumber) = 0; ;}
     break;
 
   case 102:
-#line 485 "harbour.y"
+#line 486 "harbour.y"
     { (yyval.lNumber) = 0; hb_compCheckUnclosedStru( HB_COMP_PARAM ); ;}
     break;
 
   case 103:
-#line 486 "harbour.y"
+#line 487 "harbour.y"
     { if( HB_COMP_PARAM->ilastLineErr && HB_COMP_PARAM->ilastLineErr == HB_COMP_PARAM->currLine )
                              {
                                  yyclearin; 
@@ -4700,152 +4701,152 @@ yyreduce:
     break;
 
   case 113:
-#line 511 "harbour.y"
+#line 512 "harbour.y"
     { (yyval.lNumber) += (yyvsp[(2) - (2)].lNumber); ;}
     break;
 
   case 114:
-#line 514 "harbour.y"
+#line 515 "harbour.y"
     { (yyval.lNumber) = 0; ;}
     break;
 
   case 116:
-#line 518 "harbour.y"
+#line 519 "harbour.y"
     { hb_compExternAdd( HB_COMP_PARAM, (yyvsp[(1) - (1)].string), 0 ); ;}
     break;
 
   case 117:
-#line 519 "harbour.y"
+#line 520 "harbour.y"
     { hb_compExternAdd( HB_COMP_PARAM, (yyvsp[(3) - (3)].string), 0 ); ;}
     break;
 
   case 118:
-#line 522 "harbour.y"
+#line 523 "harbour.y"
     { hb_compExternAdd( HB_COMP_PARAM, (yyvsp[(1) - (1)].string), HB_FS_DEFERRED ); ;}
     break;
 
   case 119:
-#line 523 "harbour.y"
+#line 524 "harbour.y"
     { hb_compExternAdd( HB_COMP_PARAM, (yyvsp[(3) - (3)].string), HB_FS_DEFERRED ); ;}
     break;
 
   case 121:
-#line 527 "harbour.y"
+#line 528 "harbour.y"
     { (yyval.string) = "STEP"; ;}
     break;
 
   case 122:
-#line 528 "harbour.y"
+#line 529 "harbour.y"
     { (yyval.string) = "TO"; ;}
     break;
 
   case 123:
-#line 529 "harbour.y"
+#line 530 "harbour.y"
     { (yyval.string) = "LOOP"; ;}
     break;
 
   case 124:
-#line 530 "harbour.y"
+#line 531 "harbour.y"
     { (yyval.string) = "EXIT"; ;}
     break;
 
   case 125:
-#line 531 "harbour.y"
+#line 532 "harbour.y"
     { (yyval.string) = "IN"; ;}
     break;
 
   case 126:
-#line 532 "harbour.y"
-    { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
-    break;
-
-  case 127:
 #line 533 "harbour.y"
     { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
     break;
 
-  case 128:
+  case 127:
 #line 534 "harbour.y"
     { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
     break;
 
-  case 129:
+  case 128:
 #line 535 "harbour.y"
     { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
     break;
 
-  case 130:
+  case 129:
 #line 536 "harbour.y"
     { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
     break;
 
-  case 131:
+  case 130:
 #line 537 "harbour.y"
     { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
     break;
 
-  case 132:
+  case 131:
 #line 538 "harbour.y"
     { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
     break;
 
-  case 133:
+  case 132:
 #line 539 "harbour.y"
     { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
     break;
 
-  case 134:
+  case 133:
 #line 540 "harbour.y"
     { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
     break;
 
-  case 135:
+  case 134:
 #line 541 "harbour.y"
     { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
     break;
 
-  case 136:
+  case 135:
 #line 542 "harbour.y"
     { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
     break;
 
-  case 137:
+  case 136:
 #line 543 "harbour.y"
     { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
     break;
 
+  case 137:
+#line 544 "harbour.y"
+    { (yyval.string) = (yyvsp[(1) - (1)].string); ;}
+    break;
+
   case 138:
-#line 548 "harbour.y"
+#line 549 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewDouble( (yyvsp[(1) - (1)].valDouble).dNumber, (yyvsp[(1) - (1)].valDouble).bWidth, (yyvsp[(1) - (1)].valDouble).bDec, HB_COMP_PARAM ); ;}
     break;
 
   case 139:
-#line 549 "harbour.y"
+#line 550 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewLong( (yyvsp[(1) - (1)].valLong).lNumber, HB_COMP_PARAM ); ;}
     break;
 
   case 140:
-#line 552 "harbour.y"
+#line 553 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewDate( (yyvsp[(1) - (1)].valLong).lNumber, HB_COMP_PARAM ); ;}
     break;
 
   case 141:
-#line 555 "harbour.y"
+#line 556 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewLong( (yyvsp[(1) - (2)].valLong).lNumber, HB_COMP_PARAM ); ;}
     break;
 
   case 142:
-#line 556 "harbour.y"
+#line 557 "harbour.y"
     { (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, hb_compExprNewDouble( (yyvsp[(1) - (2)].valDouble).dNumber, (yyvsp[(1) - (2)].valDouble).bWidth, (yyvsp[(1) - (2)].valDouble).bDec, HB_COMP_PARAM ) ); ;}
     break;
 
   case 143:
-#line 561 "harbour.y"
+#line 562 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewNil( HB_COMP_PARAM ); ;}
     break;
 
   case 145:
-#line 569 "harbour.y"
+#line 570 "harbour.y"
     {
                                  (yyval.asExpr) = hb_compExprNewString( (yyvsp[(1) - (1)].valChar).string, (yyvsp[(1) - (1)].valChar).length, (yyvsp[(1) - (1)].valChar).dealloc, HB_COMP_PARAM );
                                  (yyvsp[(1) - (1)].valChar).dealloc = FALSE;
@@ -4853,467 +4854,467 @@ yyreduce:
     break;
 
   case 148:
-#line 585 "harbour.y"
+#line 586 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewLogical( TRUE, HB_COMP_PARAM ); ;}
     break;
 
   case 149:
-#line 586 "harbour.y"
+#line 587 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewLogical( FALSE, HB_COMP_PARAM ); ;}
     break;
 
   case 151:
-#line 594 "harbour.y"
+#line 595 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewSelf( HB_COMP_PARAM ); ;}
     break;
 
   case 153:
-#line 608 "harbour.y"
+#line 609 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewArray( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 155:
-#line 616 "harbour.y"
+#line 617 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 157:
-#line 622 "harbour.y"
+#line 623 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewHash( NULL, HB_COMP_PARAM ); ;}
     break;
 
   case 158:
-#line 623 "harbour.y"
+#line 624 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewHash( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 160:
-#line 629 "harbour.y"
+#line 630 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprNewList( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 161:
-#line 630 "harbour.y"
+#line 631 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprAddListExpr( (yyvsp[(1) - (5)].asExpr), (yyvsp[(3) - (5)].asExpr) ), (yyvsp[(5) - (5)].asExpr) ); ;}
     break;
 
   case 162:
-#line 635 "harbour.y"
+#line 636 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewVar( (yyvsp[(1) - (1)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 163:
-#line 638 "harbour.y"
+#line 639 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewAlias( (yyvsp[(1) - (2)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 164:
-#line 643 "harbour.y"
+#line 644 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewMacro( NULL, '&', (yyvsp[(1) - (1)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 165:
-#line 644 "harbour.y"
+#line 645 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewMacro( NULL, 0, (yyvsp[(1) - (1)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 167:
-#line 652 "harbour.y"
+#line 653 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewMacro( (yyvsp[(2) - (2)].asExpr), 0, NULL, HB_COMP_PARAM ); ;}
     break;
 
   case 169:
-#line 662 "harbour.y"
+#line 663 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewAlias( "FIELD", HB_COMP_PARAM ); ;}
     break;
 
   case 170:
-#line 663 "harbour.y"
+#line 664 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(3) - (3)].asExpr); ;}
     break;
 
   case 171:
-#line 668 "harbour.y"
-    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 172:
 #line 669 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 173:
+  case 172:
 #line 670 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 174:
+  case 173:
 #line 671 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 175:
+  case 174:
 #line 672 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 176:
+  case 175:
 #line 673 "harbour.y"
-    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 177:
+  case 176:
 #line 674 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
-  case 178:
+  case 177:
 #line 675 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
-  case 179:
+  case 178:
 #line 676 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
-  case 180:
+  case 179:
 #line 677 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
-  case 181:
+  case 180:
 #line 678 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
-  case 182:
+  case 181:
 #line 679 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
-  case 183:
+  case 182:
 #line 680 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
-  case 184:
+  case 183:
 #line 681 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
+  case 184:
+#line 682 "harbour.y"
+    { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
+    break;
+
   case 185:
-#line 684 "harbour.y"
+#line 685 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewVar( (yyvsp[(1) - (1)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 188:
-#line 689 "harbour.y"
-    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 189:
 #line 690 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 190:
+  case 189:
 #line 691 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 191:
+  case 190:
 #line 692 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 192:
+  case 191:
 #line 693 "harbour.y"
-    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
+    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 193:
+  case 192:
 #line 694 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 194:
+  case 193:
 #line 695 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 195:
+  case 194:
 #line 696 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 196:
+  case 195:
 #line 697 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 197:
+  case 196:
 #line 698 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 198:
+  case 197:
 #line 699 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 199:
+  case 198:
 #line 700 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 200:
+  case 199:
 #line 701 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 201:
+  case 200:
 #line 702 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 202:
+  case 201:
 #line 703 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 203:
+  case 202:
 #line 704 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 204:
+  case 203:
 #line 705 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 205:
+  case 204:
 #line 706 "harbour.y"
-    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
+    { HB_COMP_EXPR_DELETE( (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(1) - (2)].asExpr) ); ;}
     break;
 
-  case 206:
+  case 205:
 #line 707 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 207:
+  case 206:
 #line 708 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 208:
-#line 717 "harbour.y"
-    { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
+  case 207:
+#line 709 "harbour.y"
+    { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 209:
+  case 208:
 #line 718 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 210:
+  case 209:
 #line 719 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 211:
+  case 210:
 #line 720 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 212:
+  case 211:
 #line 721 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 213:
+  case 212:
 #line 722 "harbour.y"
+    { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[(1) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 213:
+#line 723 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (2)].asExpr) ); (yyval.asExpr) = hb_compErrorAlias( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 214:
-#line 727 "harbour.y"
-    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
-    break;
-
-  case 215:
 #line 728 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 216:
+  case 215:
 #line 729 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 217:
+  case 216:
 #line 730 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 218:
+  case 217:
 #line 731 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 219:
+  case 218:
 #line 732 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 220:
+  case 219:
 #line 733 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 221:
+  case 220:
 #line 734 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 222:
+  case 221:
 #line 735 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 223:
+  case 222:
 #line 736 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 224:
+  case 223:
 #line 737 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 225:
+  case 224:
 #line 738 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 226:
+  case 225:
 #line 739 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 227:
+  case 226:
 #line 740 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 228:
+  case 227:
 #line 741 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 229:
+  case 228:
 #line 742 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 230:
+  case 229:
 #line 743 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
-  case 231:
+  case 230:
 #line 744 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
+  case 231:
+#line 745 "harbour.y"
+    { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
+    break;
+
   case 233:
-#line 750 "harbour.y"
+#line 751 "harbour.y"
     { (yyval.bTrue) = HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;;}
     break;
 
   case 234:
-#line 750 "harbour.y"
+#line 751 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewFunCall( hb_compExprNewFunName( (yyvsp[(1) - (5)].string), HB_COMP_PARAM ), (yyvsp[(4) - (5)].asExpr), HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef = (yyvsp[(3) - (5)].bTrue); ;}
     break;
 
   case 236:
-#line 754 "harbour.y"
+#line 755 "harbour.y"
     { (yyval.bTrue) = HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;;}
     break;
 
   case 237:
-#line 754 "harbour.y"
+#line 755 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewFunCall( (yyvsp[(1) - (5)].asExpr), (yyvsp[(4) - (5)].asExpr), HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef = (yyvsp[(3) - (5)].bTrue); ;}
     break;
 
   case 238:
-#line 755 "harbour.y"
+#line 756 "harbour.y"
     { (yyval.bTrue) = HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;;}
     break;
 
   case 239:
-#line 755 "harbour.y"
+#line 756 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewFunCall( (yyvsp[(1) - (5)].asExpr), (yyvsp[(4) - (5)].asExpr), HB_COMP_PARAM ); HB_COMP_PARAM->iPassByRef = (yyvsp[(3) - (5)].bTrue); ;}
     break;
 
   case 240:
-#line 759 "harbour.y"
+#line 760 "harbour.y"
     { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 242:
-#line 765 "harbour.y"
+#line 766 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 243:
-#line 766 "harbour.y"
+#line 767 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 246:
-#line 773 "harbour.y"
+#line 774 "harbour.y"
     { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewVarRef( (yyvsp[(2) - (2)].string), HB_COMP_PARAM ) ); ;}
     break;
 
   case 247:
-#line 774 "harbour.y"
-    { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ) ); ;}
-    break;
-
-  case 248:
 #line 775 "harbour.y"
     { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ) ); ;}
     break;
 
-  case 249:
+  case 248:
 #line 776 "harbour.y"
     { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ) ); ;}
     break;
 
-  case 250:
+  case 249:
 #line 777 "harbour.y"
+    { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, hb_compExprNewRef( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ) ); ;}
+    break;
+
+  case 250:
+#line 778 "harbour.y"
     { (yyval.asExpr) = hb_compCheckPassByRef( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); (yyval.asExpr)->value.asList.reference = TRUE; ;}
     break;
 
   case 251:
-#line 780 "harbour.y"
+#line 781 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewArgRef( HB_COMP_PARAM ); ;}
     break;
 
   case 253:
-#line 786 "harbour.y"
-    { (yyval.asExpr) = ((yyvsp[(3) - (3)].asMessage).bMacro ? hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), NULL, (yyvsp[(3) - (3)].asMessage).value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asMessage).value.string, NULL, HB_COMP_PARAM )); ;}
-    break;
-
-  case 254:
 #line 787 "harbour.y"
     { (yyval.asExpr) = ((yyvsp[(3) - (3)].asMessage).bMacro ? hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), NULL, (yyvsp[(3) - (3)].asMessage).value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asMessage).value.string, NULL, HB_COMP_PARAM )); ;}
     break;
 
-  case 255:
+  case 254:
 #line 788 "harbour.y"
+    { (yyval.asExpr) = ((yyvsp[(3) - (3)].asMessage).bMacro ? hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), NULL, (yyvsp[(3) - (3)].asMessage).value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asMessage).value.string, NULL, HB_COMP_PARAM )); ;}
+    break;
+
+  case 255:
+#line 789 "harbour.y"
     {  if( HB_COMP_PARAM->wWithObjectCnt == 0 )
                                                 hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_WITHOBJECT, NULL, NULL );
                                              (yyval.asExpr) = ((yyvsp[(2) - (2)].asMessage).bMacro ? hb_compExprNewSend( NULL, NULL, (yyvsp[(2) - (2)].asMessage).value.macro, HB_COMP_PARAM ) : hb_compExprNewSend( NULL, (yyvsp[(2) - (2)].asMessage).value.string, NULL, HB_COMP_PARAM ));
@@ -5321,457 +5322,457 @@ yyreduce:
     break;
 
   case 256:
-#line 794 "harbour.y"
+#line 795 "harbour.y"
     { (yyval.asMessage).value.string = (yyvsp[(1) - (1)].string); (yyval.asMessage).bMacro=FALSE; ;}
     break;
 
   case 257:
-#line 795 "harbour.y"
-    { (yyval.asMessage).value.macro  = (yyvsp[(1) - (1)].asExpr); (yyval.asMessage).bMacro=TRUE;  ;}
-    break;
-
-  case 258:
 #line 796 "harbour.y"
     { (yyval.asMessage).value.macro  = (yyvsp[(1) - (1)].asExpr); (yyval.asMessage).bMacro=TRUE;  ;}
     break;
 
+  case 258:
+#line 797 "harbour.y"
+    { (yyval.asMessage).value.macro  = (yyvsp[(1) - (1)].asExpr); (yyval.asMessage).bMacro=TRUE;  ;}
+    break;
+
   case 259:
-#line 799 "harbour.y"
+#line 800 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewVarRef( (yyvsp[(3) - (4)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 261:
-#line 807 "harbour.y"
+#line 808 "harbour.y"
     {(yyval.bTrue)=HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL;;}
     break;
 
   case 262:
-#line 807 "harbour.y"
+#line 808 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewMethodCall( (yyvsp[(1) - (5)].asExpr), (yyvsp[(4) - (5)].asExpr) ); HB_COMP_PARAM->iPassByRef=(yyvsp[(3) - (5)].bTrue); ;}
     break;
 
   case 271:
-#line 826 "harbour.y"
+#line 827 "harbour.y"
     {HB_COMP_PARAM->cVarType = ' ';;}
     break;
 
   case 272:
-#line 826 "harbour.y"
+#line 827 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(1) - (3)].asExpr); ;}
     break;
 
   case 282:
-#line 836 "harbour.y"
+#line 837 "harbour.y"
     {HB_COMP_PARAM->cVarType = ' ';;}
     break;
 
   case 283:
-#line 836 "harbour.y"
+#line 837 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(1) - (3)].asExpr); ;}
     break;
 
   case 286:
-#line 839 "harbour.y"
+#line 840 "harbour.y"
     {HB_COMP_PARAM->cVarType = ' ';;}
     break;
 
   case 287:
-#line 839 "harbour.y"
+#line 840 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(1) - (3)].asExpr); ;}
     break;
 
   case 289:
-#line 841 "harbour.y"
+#line 842 "harbour.y"
     {HB_COMP_PARAM->cVarType = ' ';;}
     break;
 
   case 290:
-#line 841 "harbour.y"
+#line 842 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(1) - (3)].asExpr); ;}
     break;
 
   case 302:
-#line 855 "harbour.y"
+#line 856 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' ';;}
     break;
 
   case 303:
-#line 855 "harbour.y"
+#line 856 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(1) - (3)].asExpr); ;}
     break;
 
   case 304:
-#line 856 "harbour.y"
+#line 857 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' ';;}
     break;
 
   case 305:
-#line 856 "harbour.y"
+#line 857 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(1) - (3)].asExpr); ;}
     break;
 
   case 307:
-#line 860 "harbour.y"
+#line 861 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewArgRef( HB_COMP_PARAM ); ;}
     break;
 
   case 309:
-#line 864 "harbour.y"
+#line 865 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewEmpty( HB_COMP_PARAM ); ;}
     break;
 
   case 311:
-#line 868 "harbour.y"
+#line 869 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewVar( (yyvsp[(1) - (1)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 317:
-#line 874 "harbour.y"
+#line 875 "harbour.y"
     { (yyval.asExpr) = hb_compExprListStrip( (yyvsp[(1) - (1)].asExpr), NULL ); ;}
     break;
 
   case 339:
-#line 907 "harbour.y"
+#line 908 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewPostInc( (yyvsp[(0) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 340:
-#line 908 "harbour.y"
+#line 909 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewPostDec( (yyvsp[(0) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 341:
-#line 911 "harbour.y"
+#line 912 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 342:
-#line 914 "harbour.y"
+#line 915 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewPreInc( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 343:
-#line 915 "harbour.y"
+#line 916 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewPreDec( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 344:
-#line 918 "harbour.y"
+#line 919 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewNot( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 345:
-#line 919 "harbour.y"
+#line 920 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewNegate( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 346:
-#line 920 "harbour.y"
+#line 921 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 347:
-#line 923 "harbour.y"
-    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 348:
 #line 924 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 349:
+  case 348:
 #line 925 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 350:
+  case 349:
 #line 926 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 351:
+  case 350:
 #line 927 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 352:
+  case 351:
 #line 928 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 353:
+  case 352:
 #line 929 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 354:
+  case 353:
 #line 930 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 355:
+  case 354:
 #line 931 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 356:
+  case 355:
 #line 932 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 357:
+  case 356:
 #line 933 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 358:
+  case 357:
 #line 934 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 359:
+  case 358:
 #line 935 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 360:
+  case 359:
 #line 936 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 361:
+  case 360:
 #line 937 "harbour.y"
-    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType; HB_COMP_PARAM->cVarType = ' ';;}
+    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 362:
+  case 361:
 #line 938 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType; HB_COMP_PARAM->cVarType = ' ';;}
     break;
 
-  case 363:
+  case 362:
 #line 939 "harbour.y"
-    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType; HB_COMP_PARAM->cVarType = ' ';;}
     break;
 
-  case 364:
+  case 363:
 #line 940 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 365:
+  case 364:
 #line 941 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 366:
+  case 365:
 #line 942 "harbour.y"
+    { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 366:
+#line 943 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType; HB_COMP_PARAM->cVarType = ' ';;}
     break;
 
   case 367:
-#line 943 "harbour.y"
+#line 944 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 368:
-#line 946 "harbour.y"
+#line 947 "harbour.y"
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 369:
-#line 949 "harbour.y"
+#line 950 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 370:
-#line 952 "harbour.y"
+#line 953 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 371:
-#line 955 "harbour.y"
+#line 956 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 372:
-#line 958 "harbour.y"
+#line 959 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 373:
-#line 961 "harbour.y"
+#line 962 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 374:
-#line 964 "harbour.y"
+#line 965 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 381:
-#line 975 "harbour.y"
+#line 976 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlus( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 382:
-#line 976 "harbour.y"
+#line 977 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinus( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 383:
-#line 977 "harbour.y"
+#line 978 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMult( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 384:
-#line 978 "harbour.y"
+#line 979 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDiv( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 385:
-#line 979 "harbour.y"
+#line 980 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMod( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 386:
-#line 980 "harbour.y"
+#line 981 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPower( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 387:
-#line 983 "harbour.y"
+#line 984 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewAnd( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 388:
-#line 984 "harbour.y"
+#line 985 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewOr( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 389:
-#line 987 "harbour.y"
+#line 988 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewEQ( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 390:
-#line 988 "harbour.y"
+#line 989 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewLT( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 391:
-#line 989 "harbour.y"
+#line 990 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewGT( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 392:
-#line 990 "harbour.y"
+#line 991 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewLE( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 393:
-#line 991 "harbour.y"
+#line 992 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewGE( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 394:
-#line 992 "harbour.y"
-    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewNE( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
-    break;
-
-  case 395:
 #line 993 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewNE( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
-  case 396:
+  case 395:
 #line 994 "harbour.y"
+    { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewNE( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
+    break;
+
+  case 396:
+#line 995 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewIN( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 397:
-#line 995 "harbour.y"
+#line 996 "harbour.y"
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewEqual( (yyvsp[(1) - (3)].asExpr), HB_COMP_PARAM ), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 399:
-#line 1004 "harbour.y"
+#line 1005 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[(0) - (2)].asExpr), (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 400:
-#line 1005 "harbour.y"
+#line 1006 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 401:
-#line 1006 "harbour.y"
+#line 1007 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewArrayAt( (yyvsp[(1) - (4)].asExpr), (yyvsp[(4) - (4)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 402:
-#line 1009 "harbour.y"
+#line 1010 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewList( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 403:
-#line 1010 "harbour.y"
+#line 1011 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 404:
-#line 1013 "harbour.y"
+#line 1014 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewCodeBlock( (yyvsp[(1) - (1)].asCodeblock).string, (yyvsp[(1) - (1)].asCodeblock).length, (yyvsp[(1) - (1)].asCodeblock).flags, HB_COMP_PARAM ); (yyvsp[(1) - (1)].asCodeblock).string = NULL; ;}
     break;
 
   case 405:
-#line 1014 "harbour.y"
+#line 1015 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (4)].asExpr); ;}
     break;
 
   case 406:
-#line 1019 "harbour.y"
+#line 1020 "harbour.y"
     { (yyval.asExpr) = NULL; ;}
     break;
 
   case 407:
-#line 1020 "harbour.y"
+#line 1021 "harbour.y"
     { (yyval.asExpr) = NULL; (yyvsp[(0) - (1)].asExpr)->value.asCodeblock.flags |= HB_BLOCK_VPARAMS; ;}
     break;
 
   case 408:
-#line 1021 "harbour.y"
+#line 1022 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(1) - (1)].asExpr);   ;}
     break;
 
   case 409:
-#line 1022 "harbour.y"
+#line 1023 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(1) - (3)].asExpr);   (yyvsp[(0) - (3)].asExpr)->value.asCodeblock.flags |= HB_BLOCK_VPARAMS; ;}
     break;
 
   case 410:
-#line 1025 "harbour.y"
+#line 1026 "harbour.y"
     { HB_COMP_PARAM->iVarScope = VS_LOCAL; (yyval.asExpr) = hb_compExprCBVarAdd( (yyvsp[(0) - (2)].asExpr), (yyvsp[(1) - (2)].string), HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; ;}
     break;
 
   case 411:
-#line 1026 "harbour.y"
+#line 1027 "harbour.y"
     { HB_COMP_PARAM->iVarScope = VS_LOCAL; (yyval.asExpr) = hb_compExprCBVarAdd( (yyvsp[(0) - (4)].asExpr), (yyvsp[(3) - (4)].string), HB_COMP_PARAM->cVarType, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; ;}
     break;
 
   case 412:
-#line 1029 "harbour.y"
+#line 1030 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddCodeblockExpr( (yyvsp[(0) - (1)].asExpr), (yyvsp[(1) - (1)].asExpr) ); ;}
     break;
 
   case 413:
-#line 1030 "harbour.y"
+#line 1031 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddCodeblockExpr( (yyvsp[(0) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 415:
-#line 1035 "harbour.y"
+#line 1036 "harbour.y"
     {  /* 3 */
                HB_CBVAR_PTR pVar;
                (yyval.lNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
@@ -5799,7 +5800,7 @@ yyreduce:
     break;
 
   case 416:
-#line 1060 "harbour.y"
+#line 1061 "harbour.y"
     {  /* 6 */
                hb_compCodeBlockEnd( HB_COMP_PARAM );
                (yyval.asExpr) = hb_compExprSetCodeblockBody( (yyvsp[(1) - (5)].asExpr),
@@ -5811,47 +5812,47 @@ yyreduce:
     break;
 
   case 417:
-#line 1070 "harbour.y"
+#line 1071 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewList( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 418:
-#line 1071 "harbour.y"
+#line 1072 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 419:
-#line 1073 "harbour.y"
+#line 1074 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (3)].asExpr) ;}
     break;
 
   case 421:
-#line 1086 "harbour.y"
+#line 1087 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( (yyvsp[(3) - (8)].asExpr), HB_COMP_PARAM ), (yyvsp[(5) - (8)].asExpr) ), (yyvsp[(7) - (8)].asExpr) ) ); ;}
     break;
 
   case 423:
-#line 1092 "harbour.y"
+#line 1093 "harbour.y"
     { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP_PARAM ); ;}
     break;
 
   case 424:
-#line 1093 "harbour.y"
+#line 1094 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' '; ;}
     break;
 
   case 425:
-#line 1094 "harbour.y"
+#line 1095 "harbour.y"
     { HB_COMP_PARAM->iVarScope = VS_STATIC; hb_compLinePush( HB_COMP_PARAM ); ;}
     break;
 
   case 426:
-#line 1095 "harbour.y"
+#line 1096 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' '; ;}
     break;
 
   case 427:
-#line 1096 "harbour.y"
+#line 1097 "harbour.y"
     { if( HB_COMP_PARAM->functions.pLast->bFlags & FUN_USES_LOCAL_PARAMS )
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
                         else
@@ -5863,44 +5864,44 @@ yyreduce:
     break;
 
   case 428:
-#line 1103 "harbour.y"
+#line 1104 "harbour.y"
     { HB_COMP_PARAM->iVarScope = VS_NONE; ;}
     break;
 
   case 429:
-#line 1106 "harbour.y"
+#line 1107 "harbour.y"
     { (yyval.iNumber) = 1; ;}
     break;
 
   case 430:
-#line 1107 "harbour.y"
+#line 1108 "harbour.y"
     { (yyval.iNumber)++; ;}
     break;
 
   case 431:
-#line 1110 "harbour.y"
+#line 1111 "harbour.y"
     { (yyval.iNumber) = 1; ;}
     break;
 
   case 432:
-#line 1111 "harbour.y"
+#line 1112 "harbour.y"
     { (yyval.iNumber)++; ;}
     break;
 
   case 434:
-#line 1121 "harbour.y"
+#line 1122 "harbour.y"
     { hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, (yyvsp[(1) - (2)].asExpr), HB_COMP_PARAM ), FALSE ); ;}
     break;
 
   case 435:
-#line 1123 "harbour.y"
+#line 1124 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(4) - (4)].asExpr), HB_COMP_PARAM ) );
                  hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, (yyvsp[(1) - (4)].asExpr), HB_COMP_PARAM ), TRUE );
                ;}
     break;
 
   case 436:
-#line 1127 "harbour.y"
+#line 1128 "harbour.y"
     {
                   USHORT uCount = (USHORT) hb_compExprListLen( (yyvsp[(2) - (3)].asExpr) );
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ) );
@@ -5910,12 +5911,12 @@ yyreduce:
     break;
 
   case 437:
-#line 1135 "harbour.y"
+#line 1136 "harbour.y"
     { hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[(1) - (2)].string), HB_COMP_PARAM->cVarType ); ;}
     break;
 
   case 438:
-#line 1136 "harbour.y"
+#line 1137 "harbour.y"
     {
                   if( HB_COMP_PARAM->iVarScope == VS_STATIC )
                   {
@@ -5935,19 +5936,19 @@ yyreduce:
     break;
 
   case 439:
-#line 1152 "harbour.y"
+#line 1153 "harbour.y"
     { (yyval.iNumber) = HB_COMP_PARAM->iVarScope;
                                 hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[(1) - (2)].string), HB_COMP_PARAM->cVarType );
                               ;}
     break;
 
   case 440:
-#line 1155 "harbour.y"
+#line 1156 "harbour.y"
     {HB_COMP_PARAM->cVarType = ' ';;}
     break;
 
   case 441:
-#line 1156 "harbour.y"
+#line 1157 "harbour.y"
     {
                   HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType;
                   HB_COMP_PARAM->cVarType = ' ';
@@ -5978,32 +5979,32 @@ yyreduce:
     break;
 
   case 442:
-#line 1184 "harbour.y"
+#line 1185 "harbour.y"
     { hb_compVariableDim( (yyvsp[(1) - (3)].string), (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 444:
-#line 1193 "harbour.y"
+#line 1194 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 445:
-#line 1194 "harbour.y"
+#line 1195 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 446:
-#line 1195 "harbour.y"
+#line 1196 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (4)].asExpr), (yyvsp[(4) - (4)].asExpr) ); ;}
     break;
 
   case 447:
-#line 1198 "harbour.y"
+#line 1199 "harbour.y"
     { HB_COMP_PARAM->iVarScope = VS_FIELD; ;}
     break;
 
   case 448:
-#line 1200 "harbour.y"
+#line 1201 "harbour.y"
     {
                if( (yyvsp[(4) - (5)].string) ) hb_compFieldSetAlias( HB_COMP_PARAM, (yyvsp[(4) - (5)].string), (yyvsp[(3) - (5)].iNumber) );
                HB_COMP_PARAM->cVarType = ' ';
@@ -6011,52 +6012,52 @@ yyreduce:
     break;
 
   case 449:
-#line 1206 "harbour.y"
+#line 1207 "harbour.y"
     { (yyval.iNumber)=hb_compFieldsCount( HB_COMP_PARAM ); hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[(1) - (2)].string), HB_COMP_PARAM->cVarType ); ;}
     break;
 
   case 450:
-#line 1207 "harbour.y"
+#line 1208 "harbour.y"
     { hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[(3) - (4)].string), HB_COMP_PARAM->cVarType ); ;}
     break;
 
   case 451:
-#line 1210 "harbour.y"
+#line 1211 "harbour.y"
     { (yyval.string) = NULL; ;}
     break;
 
   case 452:
-#line 1211 "harbour.y"
+#line 1212 "harbour.y"
     { (yyval.string) = (yyvsp[(2) - (2)].string); ;}
     break;
 
   case 453:
-#line 1214 "harbour.y"
+#line 1215 "harbour.y"
     { HB_COMP_PARAM->iVarScope = VS_MEMVAR; ;}
     break;
 
   case 454:
-#line 1214 "harbour.y"
+#line 1215 "harbour.y"
     { HB_COMP_PARAM->cVarType = ' '; ;}
     break;
 
   case 455:
-#line 1217 "harbour.y"
+#line 1218 "harbour.y"
     { hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[(1) - (2)].string), HB_COMP_PARAM->cVarType ); ;}
     break;
 
   case 456:
-#line 1218 "harbour.y"
+#line 1219 "harbour.y"
     { hb_compVariableAdd( HB_COMP_PARAM, (yyvsp[(3) - (4)].string), HB_COMP_PARAM->cVarType ); ;}
     break;
 
   case 457:
-#line 1221 "harbour.y"
+#line 1222 "harbour.y"
     { hb_compDeclaredAdd( HB_COMP_PARAM, (yyvsp[(2) - (3)].string) ); HB_COMP_PARAM->szDeclaredFun = (yyvsp[(2) - (3)].string); ;}
     break;
 
   case 458:
-#line 1222 "harbour.y"
+#line 1223 "harbour.y"
     {
                if( HB_COMP_PARAM->pLastDeclared )
                {
@@ -6082,42 +6083,42 @@ yyreduce:
     break;
 
   case 459:
-#line 1244 "harbour.y"
+#line 1245 "harbour.y"
     { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, (yyvsp[(2) - (2)].string) ); ;}
     break;
 
   case 460:
-#line 1244 "harbour.y"
+#line 1245 "harbour.y"
     { HB_COMP_PARAM->iVarScope = VS_NONE; ;}
     break;
 
   case 461:
-#line 1245 "harbour.y"
+#line 1246 "harbour.y"
     { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, (yyvsp[(2) - (3)].string) ); HB_COMP_PARAM->iVarScope = VS_NONE; ;}
     break;
 
   case 462:
-#line 1246 "harbour.y"
+#line 1247 "harbour.y"
     { HB_COMP_PARAM->iVarScope = VS_NONE; ;}
     break;
 
   case 463:
-#line 1247 "harbour.y"
+#line 1248 "harbour.y"
     { HB_COMP_PARAM->cDataListType = HB_COMP_PARAM->cVarType; ;}
     break;
 
   case 464:
-#line 1247 "harbour.y"
+#line 1248 "harbour.y"
     { HB_COMP_PARAM->cDataListType = 0; HB_COMP_PARAM->iVarScope = VS_NONE; ;}
     break;
 
   case 471:
-#line 1260 "harbour.y"
+#line 1261 "harbour.y"
     { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass, (yyvsp[(1) - (2)].string) ); ;}
     break;
 
   case 472:
-#line 1261 "harbour.y"
+#line 1262 "harbour.y"
     {
                if( HB_COMP_PARAM->pLastMethod )
                {
@@ -6140,12 +6141,12 @@ yyreduce:
     break;
 
   case 473:
-#line 1282 "harbour.y"
+#line 1283 "harbour.y"
     { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_PARAM, HB_COMP_PARAM->pLastClass, (yyvsp[(1) - (1)].string) ); ;}
     break;
 
   case 474:
-#line 1283 "harbour.y"
+#line 1284 "harbour.y"
     {
                if( HB_COMP_PARAM->pLastMethod )
                {
@@ -6202,174 +6203,174 @@ yyreduce:
     break;
 
   case 481:
-#line 1348 "harbour.y"
+#line 1349 "harbour.y"
     { HB_COMP_EXPR_DELETE( (yyvsp[(1) - (1)].asExpr) ); ;}
     break;
 
   case 482:
-#line 1351 "harbour.y"
+#line 1352 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(1) - (2)].string), HB_COMP_PARAM->cVarType ); ;}
     break;
 
   case 483:
-#line 1352 "harbour.y"
+#line 1353 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(2) - (3)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ); ;}
     break;
 
   case 484:
-#line 1353 "harbour.y"
+#line 1354 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(2) - (5)].string), 'F' ); ;}
     break;
 
   case 485:
-#line 1354 "harbour.y"
+#line 1355 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(3) - (4)].string), HB_COMP_PARAM->cVarType ); ;}
     break;
 
   case 486:
-#line 1355 "harbour.y"
+#line 1356 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(4) - (5)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ); ;}
     break;
 
   case 487:
-#line 1356 "harbour.y"
+#line 1357 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(4) - (7)].string), 'F' ); ;}
     break;
 
   case 488:
-#line 1359 "harbour.y"
+#line 1360 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(2) - (3)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ); ;}
     break;
 
   case 489:
-#line 1360 "harbour.y"
+#line 1361 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(3) - (4)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); ;}
     break;
 
   case 490:
-#line 1361 "harbour.y"
+#line 1362 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(3) - (6)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); ;}
     break;
 
   case 491:
-#line 1362 "harbour.y"
+#line 1363 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(4) - (5)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ); ;}
     break;
 
   case 492:
-#line 1363 "harbour.y"
+#line 1364 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(5) - (6)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); ;}
     break;
 
   case 493:
-#line 1364 "harbour.y"
+#line 1365 "harbour.y"
     { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(5) - (8)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); ;}
     break;
 
   case 502:
-#line 1377 "harbour.y"
+#line 1378 "harbour.y"
     { hb_compGenJumpHere( (yyvsp[(1) - (2)].iNumber), HB_COMP_PARAM ); ;}
     break;
 
   case 503:
-#line 1378 "harbour.y"
+#line 1379 "harbour.y"
     { hb_compGenJumpHere( (yyvsp[(1) - (3)].iNumber), HB_COMP_PARAM ); ;}
     break;
 
   case 504:
-#line 1379 "harbour.y"
+#line 1380 "harbour.y"
     { hb_compGenJumpHere( (yyvsp[(1) - (3)].iNumber), HB_COMP_PARAM ); hb_compElseIfFix( HB_COMP_PARAM, (yyvsp[(2) - (3)].pVoid) ); ;}
     break;
 
   case 505:
-#line 1380 "harbour.y"
+#line 1381 "harbour.y"
     { hb_compGenJumpHere( (yyvsp[(1) - (4)].iNumber), HB_COMP_PARAM ); hb_compElseIfFix( HB_COMP_PARAM, (yyvsp[(2) - (4)].pVoid) ); ;}
     break;
 
   case 506:
-#line 1384 "harbour.y"
+#line 1385 "harbour.y"
     { ++HB_COMP_PARAM->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); ;}
     break;
 
   case 507:
-#line 1386 "harbour.y"
+#line 1387 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(2) - (4)].asExpr), HB_COMP_PARAM ) ); (yyval.iNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); ;}
     break;
 
   case 508:
-#line 1388 "harbour.y"
+#line 1389 "harbour.y"
     { (yyval.iNumber) = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( (yyvsp[(5) - (6)].iNumber), HB_COMP_PARAM ); ;}
     break;
 
   case 509:
-#line 1391 "harbour.y"
+#line 1392 "harbour.y"
     { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; ;}
     break;
 
   case 511:
-#line 1395 "harbour.y"
+#line 1396 "harbour.y"
     { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); ;}
     break;
 
   case 512:
-#line 1397 "harbour.y"
+#line 1398 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ) );
                   (yyval.iNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                 ;}
     break;
 
   case 513:
-#line 1401 "harbour.y"
+#line 1402 "harbour.y"
     { (yyval.pVoid) = hb_compElseIfGen( HB_COMP_PARAM, NULL, hb_compGenJump( 0, HB_COMP_PARAM ) );
                   hb_compGenJumpHere( (yyvsp[(5) - (6)].iNumber), HB_COMP_PARAM );
                 ;}
     break;
 
   case 514:
-#line 1405 "harbour.y"
+#line 1406 "harbour.y"
     { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); ;}
     break;
 
   case 515:
-#line 1407 "harbour.y"
+#line 1408 "harbour.y"
     { HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(4) - (5)].asExpr), HB_COMP_PARAM ) );
                   (yyval.iNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                 ;}
     break;
 
   case 516:
-#line 1411 "harbour.y"
+#line 1412 "harbour.y"
     { (yyval.pVoid) = hb_compElseIfGen( HB_COMP_PARAM, (yyvsp[(1) - (7)].pVoid), hb_compGenJump( 0, HB_COMP_PARAM ) );
                   hb_compGenJumpHere( (yyvsp[(6) - (7)].iNumber), HB_COMP_PARAM );
                 ;}
     break;
 
   case 517:
-#line 1416 "harbour.y"
+#line 1417 "harbour.y"
     { if( HB_COMP_PARAM->wIfCounter )
                            --HB_COMP_PARAM->wIfCounter; 
                         HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE ); ;}
     break;
 
   case 518:
-#line 1419 "harbour.y"
+#line 1420 "harbour.y"
     { if( HB_COMP_PARAM->wIfCounter )
                            --HB_COMP_PARAM->wIfCounter; 
                         HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE ); ;}
     break;
 
   case 519:
-#line 1426 "harbour.y"
+#line 1427 "harbour.y"
     { hb_compElseIfFix( HB_COMP_PARAM, (yyvsp[(2) - (3)].pVoid) ); ;}
     break;
 
   case 522:
-#line 1438 "harbour.y"
+#line 1439 "harbour.y"
     { hb_compElseIfFix( HB_COMP_PARAM, (yyvsp[(2) - (4)].pVoid) ); ;}
     break;
 
   case 523:
-#line 1442 "harbour.y"
+#line 1443 "harbour.y"
     {  if( HB_COMP_PARAM->wCaseCounter )
                      --HB_COMP_PARAM->wCaseCounter;
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
@@ -6377,7 +6378,7 @@ yyreduce:
     break;
 
   case 524:
-#line 1447 "harbour.y"
+#line 1448 "harbour.y"
     {  if( HB_COMP_PARAM->wCaseCounter )
                      --HB_COMP_PARAM->wCaseCounter;
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
@@ -6385,12 +6386,12 @@ yyreduce:
     break;
 
   case 525:
-#line 1453 "harbour.y"
+#line 1454 "harbour.y"
     { ++HB_COMP_PARAM->wCaseCounter; hb_compLinePushIfDebugger( HB_COMP_PARAM );;}
     break;
 
   case 528:
-#line 1457 "harbour.y"
+#line 1458 "harbour.y"
     {
                         if( (yyvsp[(2) - (2)].lNumber) > 0 )
                         {
@@ -6400,12 +6401,12 @@ yyreduce:
     break;
 
   case 529:
-#line 1465 "harbour.y"
+#line 1466 "harbour.y"
     { hb_compLinePushIfInside( HB_COMP_PARAM ); ;}
     break;
 
   case 530:
-#line 1466 "harbour.y"
+#line 1467 "harbour.y"
     {
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ) );
                   (yyval.iNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
@@ -6413,7 +6414,7 @@ yyreduce:
     break;
 
   case 531:
-#line 1471 "harbour.y"
+#line 1472 "harbour.y"
     {
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   (yyval.pVoid) = hb_compElseIfGen( HB_COMP_PARAM, NULL, hb_compGenJump( 0, HB_COMP_PARAM ) );
@@ -6422,12 +6423,12 @@ yyreduce:
     break;
 
   case 532:
-#line 1477 "harbour.y"
+#line 1478 "harbour.y"
     { hb_compLinePushIfInside( HB_COMP_PARAM ); ;}
     break;
 
   case 533:
-#line 1478 "harbour.y"
+#line 1479 "harbour.y"
     {
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(4) - (5)].asExpr), HB_COMP_PARAM ) );
                   (yyval.iNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
@@ -6435,7 +6436,7 @@ yyreduce:
     break;
 
   case 534:
-#line 1483 "harbour.y"
+#line 1484 "harbour.y"
     {
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   (yyval.pVoid) = hb_compElseIfGen( HB_COMP_PARAM, (yyvsp[(1) - (7)].pVoid), hb_compGenJump( 0, HB_COMP_PARAM ) );
@@ -6444,22 +6445,22 @@ yyreduce:
     break;
 
   case 535:
-#line 1490 "harbour.y"
+#line 1491 "harbour.y"
     {hb_compLinePushIfDebugger( HB_COMP_PARAM ); ;}
     break;
 
   case 536:
-#line 1490 "harbour.y"
+#line 1491 "harbour.y"
     { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; ;}
     break;
 
   case 538:
-#line 1492 "harbour.y"
+#line 1493 "harbour.y"
     { hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL ); ;}
     break;
 
   case 540:
-#line 1497 "harbour.y"
+#line 1498 "harbour.y"
     {
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ) );
                   (yyval.lNumber) = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
@@ -6467,7 +6468,7 @@ yyreduce:
     break;
 
   case 541:
-#line 1502 "harbour.y"
+#line 1503 "harbour.y"
     {
                   hb_compLoopHere( HB_COMP_PARAM );
                   hb_compGenJump( (yyvsp[(1) - (5)].lNumber) - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
@@ -6475,7 +6476,7 @@ yyreduce:
     break;
 
   case 542:
-#line 1507 "harbour.y"
+#line 1508 "harbour.y"
     {
                   hb_compGenJumpHere( (yyvsp[(4) - (7)].lNumber), HB_COMP_PARAM ); 
                   if( HB_COMP_PARAM->wWhileCounter )
@@ -6486,22 +6487,22 @@ yyreduce:
     break;
 
   case 543:
-#line 1516 "harbour.y"
+#line 1517 "harbour.y"
     { (yyval.lNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos; hb_compLinePushIfInside( HB_COMP_PARAM ); ++HB_COMP_PARAM->wWhileCounter; hb_compLoopStart( HB_COMP_PARAM, TRUE ); ;}
     break;
 
   case 544:
-#line 1519 "harbour.y"
-    { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; ;}
-    break;
-
-  case 545:
 #line 1520 "harbour.y"
     { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; ;}
     break;
 
+  case 545:
+#line 1521 "harbour.y"
+    { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; ;}
+    break;
+
   case 546:
-#line 1524 "harbour.y"
+#line 1525 "harbour.y"
     {                                      /* 5 */
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   (yyvsp[(1) - (4)].lNumber) = HB_COMP_PARAM->currLine;
@@ -6516,7 +6517,7 @@ yyreduce:
     break;
 
   case 547:
-#line 1536 "harbour.y"
+#line 1537 "harbour.y"
     {                                      /* 9 */
                   hb_compLoopStart( HB_COMP_PARAM, TRUE );
                   (yyval.lNumber) = hb_compGenJump( 0, HB_COMP_PARAM );
@@ -6524,14 +6525,14 @@ yyreduce:
     break;
 
   case 548:
-#line 1541 "harbour.y"
+#line 1542 "harbour.y"
     {                                      /* 11 */
                   (yyval.lNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
                ;}
     break;
 
   case 549:
-#line 1545 "harbour.y"
+#line 1546 "harbour.y"
     {
                   int iSign, iLine;
 
@@ -6570,80 +6571,80 @@ yyreduce:
     break;
 
   case 552:
-#line 1586 "harbour.y"
+#line 1587 "harbour.y"
     { (yyval.asExpr) = NULL; ;}
     break;
 
   case 553:
-#line 1587 "harbour.y"
+#line 1588 "harbour.y"
     { (yyval.asExpr) = hb_compExprReduce( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 554:
-#line 1590 "harbour.y"
+#line 1591 "harbour.y"
     { hb_compLinePush( HB_COMP_PARAM );
                                                       if( HB_COMP_PARAM->wForCounter )
                                                          --HB_COMP_PARAM->wForCounter; ;}
     break;
 
   case 555:
-#line 1593 "harbour.y"
+#line 1594 "harbour.y"
     { hb_compLinePush( HB_COMP_PARAM );
                                                       if( HB_COMP_PARAM->wForCounter )
                                                          --HB_COMP_PARAM->wForCounter; ;}
     break;
 
   case 556:
-#line 1596 "harbour.y"
+#line 1597 "harbour.y"
     { hb_compLinePush( HB_COMP_PARAM );
                                                       if( HB_COMP_PARAM->wForCounter )
                                                          --HB_COMP_PARAM->wForCounter; ;}
     break;
 
   case 557:
-#line 1599 "harbour.y"
+#line 1600 "harbour.y"
     { hb_compLinePush( HB_COMP_PARAM );
                                                       if( HB_COMP_PARAM->wForCounter )
                                                          --HB_COMP_PARAM->wForCounter; ;}
     break;
 
   case 558:
-#line 1604 "harbour.y"
+#line 1605 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewVarRef( (yyvsp[(1) - (1)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 559:
-#line 1605 "harbour.y"
+#line 1606 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewRef( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 560:
-#line 1608 "harbour.y"
+#line 1609 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 561:
-#line 1609 "harbour.y"
+#line 1610 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 562:
-#line 1612 "harbour.y"
+#line 1613 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewVarRef( (yyvsp[(2) - (2)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 564:
-#line 1616 "harbour.y"
+#line 1617 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 565:
-#line 1617 "harbour.y"
+#line 1618 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 566:
-#line 1622 "harbour.y"
+#line 1623 "harbour.y"
     {
                 ++HB_COMP_PARAM->wForCounter;              /* 5 */
                 hb_compLinePushIfInside( HB_COMP_PARAM );
@@ -6652,7 +6653,7 @@ yyreduce:
     break;
 
   case 567:
-#line 1628 "harbour.y"
+#line 1629 "harbour.y"
     {
                 /* 7
                 */
@@ -6664,7 +6665,7 @@ yyreduce:
     break;
 
   case 568:
-#line 1637 "harbour.y"
+#line 1638 "harbour.y"
     {
                 /* 9
                 */
@@ -6673,7 +6674,7 @@ yyreduce:
     break;
 
   case 569:
-#line 1643 "harbour.y"
+#line 1644 "harbour.y"
     {
                 hb_compLoopHere( HB_COMP_PARAM );
                 hb_compEnumNext( HB_COMP_PARAM, (yyvsp[(2) - (10)].asExpr), (yyvsp[(6) - (10)].iNumber) );
@@ -6689,17 +6690,17 @@ yyreduce:
     break;
 
   case 570:
-#line 1657 "harbour.y"
+#line 1658 "harbour.y"
     { (yyval.iNumber) =  1; ;}
     break;
 
   case 571:
-#line 1658 "harbour.y"
+#line 1659 "harbour.y"
     { (yyval.iNumber) = -1; ;}
     break;
 
   case 572:
-#line 1662 "harbour.y"
+#line 1663 "harbour.y"
     {
                   hb_compLoopStart( HB_COMP_PARAM, FALSE );
                   hb_compSwitchStart( HB_COMP_PARAM );
@@ -6708,7 +6709,7 @@ yyreduce:
     break;
 
   case 573:
-#line 1669 "harbour.y"
+#line 1670 "harbour.y"
     {
                   hb_compSwitchEnd( HB_COMP_PARAM );
                   hb_compLoopEnd( HB_COMP_PARAM );
@@ -6716,14 +6717,14 @@ yyreduce:
     break;
 
   case 574:
-#line 1676 "harbour.y"
+#line 1677 "harbour.y"
     {
                   hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
                ;}
     break;
 
   case 575:
-#line 1682 "harbour.y"
+#line 1683 "harbour.y"
     {
                   if( HB_COMP_PARAM->wSwitchCounter )
                      --HB_COMP_PARAM->wSwitchCounter; 
@@ -6732,21 +6733,21 @@ yyreduce:
     break;
 
   case 576:
-#line 1690 "harbour.y"
+#line 1691 "harbour.y"
     { ++HB_COMP_PARAM->wSwitchCounter; 
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                ;}
     break;
 
   case 577:
-#line 1694 "harbour.y"
+#line 1695 "harbour.y"
     {
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(3) - (4)].asExpr), HB_COMP_PARAM ) );
                ;}
     break;
 
   case 579:
-#line 1701 "harbour.y"
+#line 1702 "harbour.y"
     {
                   if( (yyvsp[(2) - (2)].lNumber) > 0 )
                   {
@@ -6756,27 +6757,27 @@ yyreduce:
     break;
 
   case 580:
-#line 1709 "harbour.y"
+#line 1710 "harbour.y"
     { hb_compSwitchAdd( HB_COMP_PARAM, (yyvsp[(2) - (2)].asExpr) ); hb_compLinePush( HB_COMP_PARAM ); ;}
     break;
 
   case 582:
-#line 1712 "harbour.y"
+#line 1713 "harbour.y"
     { hb_compSwitchAdd( HB_COMP_PARAM, (yyvsp[(3) - (3)].asExpr) ); hb_compLinePush( HB_COMP_PARAM ); ;}
     break;
 
   case 586:
-#line 1720 "harbour.y"
+#line 1721 "harbour.y"
     { hb_compSwitchAdd( HB_COMP_PARAM, NULL ); hb_compLinePush( HB_COMP_PARAM ); ;}
     break;
 
   case 587:
-#line 1720 "harbour.y"
+#line 1721 "harbour.y"
     { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; ;}
     break;
 
   case 589:
-#line 1725 "harbour.y"
+#line 1726 "harbour.y"
     {              /* 2 */
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   ++HB_COMP_PARAM->wSeqCounter;
@@ -6785,7 +6786,7 @@ yyreduce:
     break;
 
   case 590:
-#line 1733 "harbour.y"
+#line 1734 "harbour.y"
     {              /* 6 */
                   /* Set jump address for HB_P_SEQBEGIN opcode - this address
                    * will be used in BREAK code if there is no RECOVER clause
@@ -6794,11 +6795,12 @@ yyreduce:
                      hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
                   hb_compGenJumpHere( (yyvsp[(2) - (5)].lNumber), HB_COMP_PARAM );
                   (yyval.lNumber) = hb_compSequenceEnd( HB_COMP_PARAM );
+                  (yyvsp[(4) - (5)].lNumber) = hb_compLoopCount( HB_COMP_PARAM );
                ;}
     break;
 
   case 591:
-#line 1743 "harbour.y"
+#line 1745 "harbour.y"
     {              /* 8 */
                   /* Replace END address with RECOVER address in
                    * HB_P_SEQBEGIN opcode if there is RECOVER clause
@@ -6811,11 +6813,18 @@ yyreduce:
     break;
 
   case 592:
-#line 1753 "harbour.y"
+#line 1755 "harbour.y"
     {              /* 10 */
+                  long lLoopCount = hb_compLoopCount( HB_COMP_PARAM );
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                   if( (yyvsp[(9) - (9)].lNumber) )
                   {
+                     if( (yyvsp[(4) - (9)].lNumber) != lLoopCount )
+                     {
+                        /* ALWAYS statement after RECOVER with EXIT/LOOP statments */
+                        hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_ALWAYS_AFTER_EXIT, "EXIT/LOOP", NULL );
+                     }
+                     --HB_COMP_PARAM->wAlwaysCounter;
                      /* replace END address with ALWAYS address in
                         HB_P_SEQEND opcode */
                      hb_compGenJumpThere( (yyvsp[(6) - (9)].lNumber), (yyvsp[(9) - (9)].lNumber), HB_COMP_PARAM );
@@ -6831,17 +6840,17 @@ yyreduce:
                      hb_compGenJumpHere( (yyvsp[(6) - (9)].lNumber), HB_COMP_PARAM );
                   }
                   hb_compSequenceFinish( HB_COMP_PARAM, (yyvsp[(2) - (9)].lNumber), (yyvsp[(6) - (9)].lNumber), (yyvsp[(9) - (9)].lNumber),
-                                         (yyvsp[(5) - (9)].lNumber) != 0, (yyvsp[(7) - (9)].lNumber) != 0 );
+                                         (yyvsp[(5) - (9)].lNumber) != 0, (yyvsp[(7) - (9)].lNumber) != 0, (yyvsp[(4) - (9)].lNumber) == lLoopCount );
                ;}
     break;
 
   case 594:
-#line 1777 "harbour.y"
+#line 1786 "harbour.y"
     { (yyval.lNumber) = 0; ;}
     break;
 
   case 595:
-#line 1779 "harbour.y"
+#line 1788 "harbour.y"
     {
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(2) - (2)].asExpr), HB_COMP_PARAM ) );
                   hb_compGenPCode1( HB_P_SEQBLOCK, HB_COMP_PARAM );
@@ -6850,26 +6859,27 @@ yyreduce:
     break;
 
   case 596:
-#line 1786 "harbour.y"
+#line 1795 "harbour.y"
     { (yyval.lNumber) = 0; ;}
     break;
 
   case 598:
-#line 1791 "harbour.y"
+#line 1800 "harbour.y"
     {
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                   (yyval.lNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
+                  ++HB_COMP_PARAM->wAlwaysCounter;
                   hb_compSequenceAlways( HB_COMP_PARAM );
                ;}
     break;
 
   case 599:
-#line 1798 "harbour.y"
+#line 1808 "harbour.y"
     { (yyval.lNumber) = 0; HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; ;}
     break;
 
   case 602:
-#line 1804 "harbour.y"
+#line 1814 "harbour.y"
     {
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   (yyval.lNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
@@ -6881,7 +6891,7 @@ yyreduce:
     break;
 
   case 603:
-#line 1815 "harbour.y"
+#line 1825 "harbour.y"
     {
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE;
                   (yyval.lNumber) = HB_COMP_PARAM->functions.pLast->lPCodePos;
@@ -6894,12 +6904,12 @@ yyreduce:
     break;
 
   case 606:
-#line 1837 "harbour.y"
+#line 1847 "harbour.y"
     {  (yyval.bTrue) = HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL; ;}
     break;
 
   case 607:
-#line 1839 "harbour.y"
+#line 1849 "harbour.y"
     {
                   (yyval.asExpr) = hb_compExprNewFunCall( (yyvsp[(2) - (4)].asExpr), (yyvsp[(4) - (4)].asExpr), HB_COMP_PARAM );
                   HB_COMP_PARAM->iPassByRef = (yyvsp[(3) - (4)].bTrue);
@@ -6907,12 +6917,12 @@ yyreduce:
     break;
 
   case 608:
-#line 1844 "harbour.y"
+#line 1854 "harbour.y"
     {  (yyval.bTrue) = HB_COMP_PARAM->iPassByRef;HB_COMP_PARAM->iPassByRef=HB_PASSBYREF_FUNCALL; ;}
     break;
 
   case 609:
-#line 1846 "harbour.y"
+#line 1856 "harbour.y"
     {
                   hb_compAutoOpenAdd( HB_COMP_PARAM, (yyvsp[(1) - (3)].string) );
                   /* DOIDENT is the only one identifier which can be returned in lower letters */
@@ -6922,47 +6932,47 @@ yyreduce:
     break;
 
   case 610:
-#line 1854 "harbour.y"
+#line 1864 "harbour.y"
     { (yyval.asExpr) = NULL; ;}
     break;
 
   case 611:
-#line 1855 "harbour.y"
+#line 1865 "harbour.y"
     { (yyval.asExpr) = (yyvsp[(2) - (2)].asExpr); ;}
     break;
 
   case 612:
-#line 1858 "harbour.y"
+#line 1868 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM ), hb_compExprNewNil( HB_COMP_PARAM ) ); ;}
     break;
 
   case 613:
-#line 1859 "harbour.y"
+#line 1869 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprNewArgList( hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM ), (yyvsp[(2) - (2)].asExpr) ); ;}
     break;
 
   case 614:
-#line 1860 "harbour.y"
+#line 1870 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[(1) - (1)].asExpr), HB_COMP_PARAM ); ;}
     break;
 
   case 615:
-#line 1861 "harbour.y"
+#line 1871 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (2)].asExpr), hb_compExprNewNil( HB_COMP_PARAM ) ); ;}
     break;
 
   case 616:
-#line 1862 "harbour.y"
+#line 1872 "harbour.y"
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[(1) - (3)].asExpr), (yyvsp[(3) - (3)].asExpr) ); ;}
     break;
 
   case 617:
-#line 1865 "harbour.y"
+#line 1875 "harbour.y"
     { (yyval.asExpr) = hb_compExprNewVarRef( (yyvsp[(1) - (1)].string), HB_COMP_PARAM ); ;}
     break;
 
   case 622:
-#line 1873 "harbour.y"
+#line 1883 "harbour.y"
     {
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(2) - (3)].asExpr), HB_COMP_PARAM ) );
@@ -6973,7 +6983,7 @@ yyreduce:
     break;
 
   case 623:
-#line 1882 "harbour.y"
+#line 1892 "harbour.y"
     {  if( HB_COMP_PARAM->wWithObjectCnt )
                     --HB_COMP_PARAM->wWithObjectCnt;
                   if( (yyvsp[(5) - (6)].lNumber) )
@@ -6988,13 +6998,13 @@ yyreduce:
     break;
 
   case 624:
-#line 1895 "harbour.y"
+#line 1905 "harbour.y"
     { HB_COMP_PARAM->fError = FALSE; ;}
     break;
 
 
 /* Line 1268 of yacc.c.  */
-#line 6998 "harboury.c"
+#line 7008 "harboury.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -7213,7 +7223,7 @@ yyreturn:
 }
 
 
-#line 1899 "harbour.y"
+#line 1909 "harbour.y"
 
 
 /*
@@ -7251,12 +7261,52 @@ static void hb_compLoopStart( HB_COMP_DECL, BOOL fCanLoop )
    else
       HB_COMP_PARAM->pLoops = pLoop;
 
-   pLoop->ulOffset    = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the start position */
-   pLoop->fCanLoop    = fCanLoop;   /* can we use LOOP inside */
-   pLoop->wSeqCounter = HB_COMP_PARAM->wSeqCounter;  /* store current SEQUENCE counter */
-   pLoop->pExitList   = NULL;
-   pLoop->pLoopList   = NULL;
-   pLoop->pNext       = NULL;
+   pLoop->ulOffset         = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the start position */
+   pLoop->fCanLoop         = fCanLoop;   /* can we use LOOP inside */
+   pLoop->wSeqCounter      = HB_COMP_PARAM->wSeqCounter;    /* store current SEQUENCE counter */
+   pLoop->wWithObjectCnt   = HB_COMP_PARAM->wWithObjectCnt; /* store current WITH OBJECT counter */
+   pLoop->wAlwaysCounter   = HB_COMP_PARAM->wAlwaysCounter; /* store current ALWAYS counter */
+   pLoop->pExitList        = NULL;
+   pLoop->pLoopList        = NULL;
+   pLoop->pNext            = NULL;
+}
+
+/*
+ * return number of LOOP of EXIT statement in the top most structure
+ */
+static long hb_compLoopCount( HB_COMP_DECL )
+{
+   HB_LOOPEXIT_PTR pLastLoop, pLastExit, pLoop;
+   long lCount = 0;
+
+   pLastLoop = pLastExit = NULL;
+   pLoop = HB_COMP_PARAM->pLoops;
+   while( pLoop )
+   {
+      if( pLoop->fCanLoop )
+         pLastLoop = pLoop;
+      pLastExit = pLoop;
+      pLoop = pLoop->pNext;
+   }
+
+   if( pLastLoop )
+   {
+      while( pLastLoop->pLoopList )
+      {
+         ++lCount;
+         pLastLoop = pLastLoop->pLoopList;
+      }
+   }
+   if( pLastExit )
+   {
+      while( pLastExit->pExitList )
+      {
+         ++lCount;
+         pLastExit = pLastExit->pExitList;
+      }
+   }
+
+   return lCount;
 }
 
 /*
@@ -7283,23 +7333,35 @@ static void hb_compLoopLoop( HB_COMP_DECL )
       if( pLast->wSeqCounter != HB_COMP_PARAM->wSeqCounter )
       {
          /* Attempt to LOOP from BEGIN/END sequence
-         * Current SEQUENCE counter is different then at the beginning of loop
-         * Notice that LOOP is allowed in RECOVER code.
-         */
+          * Current SEQUENCE counter is different then at the beginning of loop
+          * Notice that LOOP is allowed in RECOVER code when there is no
+          * ALWAYS block
+          */
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
+      }
+      else if( pLast->wAlwaysCounter != HB_COMP_PARAM->wAlwaysCounter )
+      {
+         /* Attempt to LOOP from ALWAYS block of BEGIN/END sequence
+          */
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "LOOP", NULL );
       }
       else
       {
+         USHORT wWithObjectCnt = pLast->wWithObjectCnt;
+
          pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
-
          pLoop->pLoopList = NULL;
-         pLoop->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the position to fix */
-
          while( pLast->pLoopList )
             pLast = pLast->pLoopList;
-
          pLast->pLoopList = pLoop;
 
+         while( wWithObjectCnt < HB_COMP_PARAM->wWithObjectCnt )
+         {
+            hb_compGenPCode1( HB_P_WITHOBJECTEND, HB_COMP_PARAM );
+            wWithObjectCnt++;
+         }
+         /* store the position to fix */
+         pLoop->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;
          hb_compGenJump( 0, HB_COMP_PARAM );
       }
    }
@@ -7325,23 +7387,35 @@ static void hb_compLoopExit( HB_COMP_DECL )
       if( pLast->wSeqCounter != HB_COMP_PARAM->wSeqCounter )
       {
          /* Attempt to EXIT from BEGIN/END sequence
-         * Current SEQUENCE counter is different then at the beginning of loop
-         * Notice that EXIT is allowed in RECOVER code.
-         */
+          * Current SEQUENCE counter is different then at the beginning of loop
+          * Notice that EXIT is allowed in RECOVER code when there is no
+          * ALWAYS block
+          */
+         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
+      }
+      else if( pLast->wAlwaysCounter != HB_COMP_PARAM->wAlwaysCounter )
+      {
+         /* Attempt to EXIT from ALWAYS block of BEGIN/END sequence
+          */
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "EXIT", NULL );
       }
       else
       {
+         USHORT wWithObjectCnt = pLast->wWithObjectCnt;
+
          pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
-
          pLoop->pExitList = NULL;
-         pLoop->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;  /* store the position to fix */
-
          while( pLast->pExitList )
             pLast = pLast->pExitList;
-
          pLast->pExitList = pLoop;
 
+         while( wWithObjectCnt < HB_COMP_PARAM->wWithObjectCnt )
+         {
+            hb_compGenPCode1( HB_P_WITHOBJECTEND, HB_COMP_PARAM );
+            wWithObjectCnt++;
+         }
+         /* store the position to fix */
+         pLoop->ulOffset = HB_COMP_PARAM->functions.pLast->lPCodePos;
          hb_compGenJump( 0, HB_COMP_PARAM );
       }
    }
@@ -7987,7 +8061,7 @@ BOOL hb_compCheckUnclosedStru( HB_COMP_DECL )
       HB_COMP_PARAM->wSeqCounter = 0;
    }
    else if( HB_COMP_PARAM->functions.pLast &&
-       ( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
+            ( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
    {
       HB_COMP_PARAM->functions.pLast->bFlags &= ~FUN_EXTBLOCK;
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "{||...}", NULL );

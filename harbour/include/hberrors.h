@@ -126,6 +126,7 @@ HB_EXTERN_BEGIN
 #define HB_COMP_ERR_BLOCK_TOO_BIG               64
 #define HB_COMP_ERR_NOT_VPARAMS                 65
 #define HB_COMP_ERR_OPEN_CFG                    66
+#define HB_COMP_ERR_ALWAYS_AFTER_EXIT           67
 
 #define HB_COMP_WARN_AMBIGUOUS_VAR              1
 #define HB_COMP_WARN_MEMVAR_ASSUMED             2

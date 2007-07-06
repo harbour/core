@@ -91,46 +91,47 @@
 
 #if defined(HB_OS_WIN_32)
 
-#include <windows.h>
-#include <winnetwk.h>
+#   include <windows.h>
+#   include <winnetwk.h>
 
-#define HB_OS_WIN_32_USED
+#   define HB_OS_WIN_32_USED
 
-BOOL WINAPI WNetErrorHandler(DWORD dwErrorCode, LPSTR lpszFunction) 
-{ 
-    DWORD dwWNetResult, dwLastError; 
-    CHAR szDescription[256]; 
-    CHAR szProvider[256];
+BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
+{
+   DWORD dwWNetResult, dwLastError;
+   CHAR szDescription[256];
+   CHAR szProvider[256];
 
-    HB_ITEM_PTR pError; 
- 
-    if (dwErrorCode != ERROR_EXTENDED_ERROR) 
-    { 
-        pError = hb_errRT_New(
-             ES_ERROR, 
-             HB_ERR_SS_TOOLS, 
-             9999, 
-             9999, 
-             "Windows Network operation failed",
-             lpszFunction,
-             (USHORT) dwErrorCode,
-             EF_NONE ); 
-        hb_errLaunch( pError );
-        hb_itemRelease( pError );
-    } 
-    else 
-    { 
-        dwWNetResult = WNetGetLastError(&dwLastError, (LPSTR) szDescription, sizeof(szDescription), 
-                           (LPSTR) szProvider,   
-                           sizeof(szProvider)); 
- 
-        if(dwWNetResult != NO_ERROR) { 
-            pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_TOOLS, 9999, 9999, "WNetGetLastError failed", "see OS error", (USHORT) dwWNetResult, EF_NONE ); 
-            hb_errLaunch( pError );
-            hb_itemRelease( pError );
-            return FALSE; 
-        } 
- 
+   HB_ITEM_PTR pError;
+
+   if( dwErrorCode != ERROR_EXTENDED_ERROR )
+   {
+      pError = hb_errRT_New( ES_ERROR,
+                             HB_ERR_SS_TOOLS,
+                             9999,
+                             9999,
+                             "Windows Network operation failed",
+                             lpszFunction, ( USHORT ) dwErrorCode, EF_NONE );
+      hb_errLaunch( pError );
+      hb_itemRelease( pError );
+   }
+   else
+   {
+      dwWNetResult = WNetGetLastError( &dwLastError, ( LPSTR ) szDescription,
+                                       sizeof( szDescription ),
+                                       ( LPSTR ) szProvider,
+                                       sizeof( szProvider ) );
+
+      if( dwWNetResult != NO_ERROR )
+      {
+         pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_TOOLS, 9999, 9999,
+                                "WNetGetLastError failed", "see OS error",
+                                ( USHORT ) dwWNetResult, EF_NONE );
+         hb_errLaunch( pError );
+         hb_itemRelease( pError );
+         return FALSE;
+      }
+
 /*
 extern PHB_ITEM HB_EXPORT hb_errRT_New(
    USHORT uiSeverity,
@@ -142,51 +143,52 @@ extern PHB_ITEM HB_EXPORT hb_errRT_New(
    USHORT uiOsCode,
    USHORT uiFlags );
 */
-        pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_TOOLS, 9999, 9999, szDescription, szProvider, (USHORT) dwLastError, EF_NONE ); 
-        hb_errLaunch( pError );
-        hb_itemRelease( pError );
-    } 
-
-    return TRUE; 
-}
-
-static BOOL hb_IsNetShared(LPSTR szLocalDevice )
-{
-   char szRemoteDevice[80] ;
-   DWORD dwResult;
-   DWORD cchBuff = sizeof(szRemoteDevice) ;
-
-   dwResult = WNetGetConnection( (LPSTR) szLocalDevice , (LPSTR) szRemoteDevice , &cchBuff) ;
-
-   if ( dwResult == NO_ERROR )
-   {
-      return TRUE;
+      pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_TOOLS, 9999, 9999,
+                             szDescription, szProvider,
+                             ( USHORT ) dwLastError, EF_NONE );
+      hb_errLaunch( pError );
+      hb_itemRelease( pError );
    }
 
-   return FALSE;
+   return TRUE;
 }
 
-HB_FUNC ( NETCANCEL )
+static BOOL hb_IsNetShared( LPSTR szLocalDevice )
+{
+   char szRemoteDevice[80];
+   DWORD dwResult;
+   DWORD cchBuff = sizeof( szRemoteDevice );
+
+   dwResult = WNetGetConnection( ( LPSTR ) szLocalDevice,
+                                 ( LPSTR ) szRemoteDevice, &cchBuff );
+
+   return dwResult == NO_ERROR;
+}
+
+HB_FUNC( NETCANCEL )
 {
    DWORD dwResult;
-   char *cDevice = (char *)hb_parc (1);
+   char *cDevice = ( char * ) hb_parc( 1 );
 
-   dwResult = WNetCancelConnection( cDevice , TRUE ) ; // FALSE = fail if exist open files or print jobs.
-                                                       // TRUE = force cancel connection even if exist														
-                                                       //         open files or print jobs.
-   hb_retl( dwResult == NO_ERROR ? TRUE : FALSE );
+   dwResult = WNetCancelConnection( cDevice, TRUE ); /* FALSE = fail if exist open files or print jobs. */
+   /* TRUE = force cancel connection even if exist                                                                                                          
+    *        open files or print jobs.
+    */
+   hb_retl( dwResult == NO_ERROR );
 }
 
 
-HB_FUNC ( NETPRINTER )
+HB_FUNC( NETPRINTER )
 {
-   char *cPrn = hb_set.HB_SET_PRINTFILE ;  // query default local printer port.
+   char *cPrn = hb_set.HB_SET_PRINTFILE;   /* query default local printer port. */
 
+   if( !cPrn || !*cPrn || stricmp( cPrn, "PRN" ) == 0 )
+      cPrn = "LPT1";
    hb_retl( hb_IsNetShared( cPrn ) );
 }
 
 
-HB_FUNC ( NETDISK )
+HB_FUNC( NETDISK )
 {
    char cDrive[3];
 
@@ -198,22 +200,22 @@ HB_FUNC ( NETDISK )
 }
 
 
-HB_FUNC ( NETREDIR )
+HB_FUNC( NETREDIR )
 {
    DWORD dwResult;
-   char *cLocalDev  = hb_parcx( 1 );
+   char *cLocalDev = hb_parcx( 1 );
    char *cSharedRes = hb_parcx( 2 );
-   char *cPassword  = hb_parcx( 3 );
-   BOOL  bShowError = ( ISLOG(4) ? hb_parl(4) : FALSE );
+   char *cPassword = hb_parcx( 3 );
+   BOOL bShowError = ( ISLOG( 4 ) ? hb_parl( 4 ) : FALSE );
    char szCommand[80];
 
-   if ( hb_pcount() >= 3 && ISCHAR( 3 ) )
+   if( hb_pcount() >= 3 && ISCHAR( 3 ) )
    {
-      dwResult = WNetAddConnection( cSharedRes, cPassword, cLocalDev ) ;
+      dwResult = WNetAddConnection( cSharedRes, cPassword, cLocalDev );
    }
    else
    {
-      dwResult = WNetAddConnection( cSharedRes, NULL, cLocalDev ) ;
+      dwResult = WNetAddConnection( cSharedRes, NULL, cLocalDev );
    }
 
    if( dwResult == NO_ERROR )
@@ -222,60 +224,64 @@ HB_FUNC ( NETREDIR )
    }
    else
    {
-      if ( bShowError )
-        {
-        snprintf( szCommand, 80, "NETREDIR( \"%s\", \"%s\", \"%s\" )", cLocalDev, cSharedRes, cPassword ); 
-        WNetErrorHandler( dwResult, szCommand );
-        }
+      if( bShowError )
+      {
+         snprintf( szCommand, 80, "NETREDIR( \"%s\", \"%s\", \"%s\" )",
+                   cLocalDev, cSharedRes, cPassword );
+         WNetErrorHandler( dwResult, szCommand );
+      }
       hb_retl( FALSE );
    }
-
 }
 
-HB_FUNC ( NETRMTNAME )
+HB_FUNC( NETRMTNAME )
 {
-   char szRemoteDevice[ 80 ];
-   char *szLocalDevice = ( char * )hb_parc ( 1 ) ;
+   char szRemoteDevice[80];
+   char *szLocalDevice = ( char * ) hb_parc( 1 );
    DWORD dwResult;
    DWORD cchBuff = sizeof( szRemoteDevice );
 
-   dwResult = WNetGetConnection( (LPSTR) szLocalDevice, (LPSTR) szRemoteDevice, &cchBuff);
+   dwResult = WNetGetConnection( ( LPSTR ) szLocalDevice,
+                                 ( LPSTR ) szRemoteDevice, &cchBuff );
 
-   hb_retc( dwResult == NO_ERROR ? szRemoteDevice : "" ) ;
+   hb_retc( dwResult == NO_ERROR ? szRemoteDevice : "" );
 }
 
 
-HB_FUNC ( NETWORK )
+HB_FUNC( NETWORK )
 {
    DWORD dwResult;
    char szProviderName[80];
-   DWORD cchBuff = sizeof(szProviderName);
+   DWORD cchBuff = sizeof( szProviderName );
 
-   dwResult = WNetGetProviderName( WNNC_NET_MSNET, (LPSTR) szProviderName, &cchBuff);
+   dwResult = WNetGetProviderName( WNNC_NET_MSNET, ( LPSTR ) szProviderName,
+                                   &cchBuff );
 
-   if ( dwResult != NO_ERROR )
+   if( dwResult != NO_ERROR )
    {
-      dwResult = WNetGetProviderName( WNNC_NET_LANMAN, (LPSTR) szProviderName, &cchBuff);
+      dwResult = WNetGetProviderName( WNNC_NET_LANMAN,
+                                      ( LPSTR ) szProviderName, &cchBuff );
 
-      if ( dwResult != NO_ERROR )
+      if( dwResult != NO_ERROR )
       {
-         dwResult = WNetGetProviderName( WNNC_NET_NETWARE, (LPSTR) szProviderName, &cchBuff);
+         dwResult = WNetGetProviderName( WNNC_NET_NETWARE,
+                                         ( LPSTR ) szProviderName, &cchBuff );
       }
    }
-
-   hb_retl( dwResult == NO_ERROR ? TRUE : FALSE );
+   hb_retl( dwResult == NO_ERROR );
 }
 
 
-HB_FUNC ( NNETWORK )
+HB_FUNC( NNETWORK )
 {
    DWORD dwResult;
    char szProviderName[80];
-   DWORD cchBuff = sizeof(szProviderName);
+   DWORD cchBuff = sizeof( szProviderName );
 
-   dwResult = WNetGetProviderName( WNNC_NET_NETWARE, (LPSTR) szProviderName, &cchBuff);
+   dwResult = WNetGetProviderName( WNNC_NET_NETWARE, ( LPSTR ) szProviderName,
+                                   &cchBuff );
 
-   hb_retl( dwResult == NO_ERROR ? TRUE : FALSE );
+   hb_retl( dwResult == NO_ERROR );
 }
 
 #endif

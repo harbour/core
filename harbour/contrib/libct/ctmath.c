@@ -52,39 +52,38 @@
  *
  */
 
-
 #include "ct.h"
 
 /* ---------------- */
 /*  initialization  */
 /* ---------------- */
-int ct_math_init()
+int ct_math_init( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_math_init()"));
-  return (1);
+   HB_TRACE( HB_TR_DEBUG, ( "ct_math_init()" ) );
+   return 1;
 }
 
-int ct_math_exit()
+int ct_math_exit( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_math_exit()"));
-  return (1);
+   HB_TRACE( HB_TR_DEBUG, ( "ct_math_exit()" ) );
+   return 1;
 }
 
 /* ---------------- */
 /*  math precision  */
 /* ---------------- */
-static int s_ct_precision = 16;  /* TODO: make this thread safe */
+static int s_ct_precision = 16; /* TODO: make this thread safe */
 
-void ct_setprecision (int iPrecision)
+void ct_setprecision( int iPrecision )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_setprecision (%i)", iPrecision));
-  s_ct_precision = iPrecision;
-  return;
+   HB_TRACE( HB_TR_DEBUG, ( "ct_setprecision (%i)", iPrecision ) );
+   s_ct_precision = iPrecision;
 }
-int ct_getprecision (void)
+
+int ct_getprecision( void )
 {
-  HB_TRACE(HB_TR_DEBUG, ("ct_getprecision()"));
-  return (s_ct_precision);
+   HB_TRACE( HB_TR_DEBUG, ( "ct_getprecision()" ) );
+   return s_ct_precision;
 }
 
 
@@ -118,27 +117,21 @@ int ct_getprecision (void)
  *  $END$
  */
 
-HB_FUNC (SETPREC)
+HB_FUNC( SETPREC )
 {
+   int iPrec = hb_parni( 1 );
 
-  if ((ISNUM (1)) &&
-      (hb_parni (1) >= 1) &&
-      (hb_parni (1) <= 16))
-  {
-    ct_setprecision (hb_parni (1));
-  }
-  else
-  {
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_SETPREC,
-                NULL, "SETPREC", 0, EF_CANDEFAULT, 1, hb_paramError (1));
-    }
-  }
+   if( iPrec >= 1 && iPrec <= 16 )
+      ct_setprecision( iPrec );
+   else
+   {
+      int iArgErrorMode = ct_getargerrormode();
 
-  hb_retc ("");
-
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+         ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_SETPREC, NULL,
+                   "SETPREC", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+   }
+   hb_retc( NULL );
 }
 
 
@@ -171,18 +164,15 @@ HB_FUNC (SETPREC)
  *  $END$
  */
 
-HB_FUNC (GETPREC)
+HB_FUNC( GETPREC )
 {
+   hb_retni( ct_getprecision() );
+   if( hb_pcount() > 0 )
+   {
+      int iArgErrorMode = ct_getargerrormode();
 
-  hb_retni (ct_getprecision ());
-  if (hb_pcount() > 0)
-  {
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_GETPREC,
-                NULL, "GETPREC", 0, EF_CANDEFAULT, 1, hb_paramError (1));
-    }
-  }
-
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+         ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_GETPREC, NULL,
+                   "GETPREC", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+   }
 }

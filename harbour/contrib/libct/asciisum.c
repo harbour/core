@@ -94,46 +94,40 @@
  *  $END$
  */
 
-HB_FUNC (ASCIISUM)
+HB_FUNC( ASCIISUM )
 {
 
-  if (ISCHAR (1))
-  {
-    size_t sStrSize = hb_parclen (1);
-    char *pcString  = hb_parc (1);
-    size_t sPos;
-    ULONG ulResult = 0;
+   if( ISCHAR( 1 ) )
+   {
+      size_t sStrSize = hb_parclen( 1 );
+      char *pcString = hb_parc( 1 );
+      size_t sPos;
+      ULONG ulResult = 0;
 
-    for (sPos = 0; sPos < sStrSize; sPos++)
-      ulResult += (ULONG)pcString[sPos];
+      for( sPos = 0; sPos < sStrSize; sPos++ )
+         ulResult += ( ULONG ) pcString[sPos];
 
-    hb_retnl (ulResult);
+      hb_retnl( ulResult );
+   }
+   else
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
 
-  }
-  else
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_ASCIISUM,
-                               NULL, "ASCIISUM", 0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
-    }
-    
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      hb_retnl (0);
-    }
-  }
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  CT_ERROR_ASCIISUM, NULL, "ASCIISUM", 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
+      }
 
-  return;
-
+      if( pSubst != NULL )
+      {
+         hb_itemReturnRelease( pSubst );
+      }
+      else
+      {
+         hb_retni( 0 );
+      }
+   }
 }
-
-
-

@@ -120,159 +120,127 @@
  *  $END$
  */
 
-HB_FUNC (CHARREPL)
+HB_FUNC( CHARREPL )
 {
+   int iNoRet;
+   size_t sSearchLen, sReplaceLen;
 
-  int iNoRet;
+   /* suppressing return value ? */
+   iNoRet = ct_getref() && ISBYREF( 2 );
 
-  size_t sSearchLen, sReplaceLen;
+   /* param check */
+   if( ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) > 0 && ISCHAR( 2 ) &&
+       ( sReplaceLen = ( size_t ) hb_parclen( 3 ) ) > 0 )
+   {
+      /* get parameters */
+      char *pcSearch = hb_parc( 1 );
+      char *pcString = hb_parc( 2 );
+      size_t sStrLen = ( size_t ) hb_parclen( 2 );
+      char *pcReplace = hb_parc( 3 );
+      int iMode;
+      char *pcRet;
+      size_t sIndex;
 
-  /* suppressing return value ? */
-  iNoRet = ct_getref();
-
-  /* param check */
-  if (((sSearchLen = (size_t)hb_parclen (1)) > 0) &&
-      (ISCHAR (2)) &&
-      ((sReplaceLen = (size_t)hb_parclen (3)) > 0))
-  {
-
-    /* get parameters */
-    char *pcSearch = hb_parc (1);
-    char *pcString = hb_parc (2);
-    size_t sStrLen = (size_t)hb_parclen (2);
-    char *pcReplace = hb_parc (3);
-    int iMode;
-    char *pcRet;
-    size_t sIndex;
-
-    /* if sStrLen == 0, we can return immediately */
-    if (sStrLen == 0)
-    {
-      if (iNoRet)
+      /* if sStrLen == 0, we can return immediately */
+      if( sStrLen == 0 )
       {
-        hb_retl (0);
+         if( iNoRet )
+         {
+            hb_retl( 0 );
+         }
+         else
+         {
+            hb_retc( NULL );
+         }
+         return;
+      }
+
+      if( ISLOG( 4 ) )
+      {
+         iMode = hb_parl( 4 );
       }
       else
       {
-        hb_retc ("");
-      }
-      return;
-    }
-
-    if (ISLOG (4))
-    {
-      iMode = hb_parl (4);
-    }
-    else
-    {
-      iMode = 0;
-    }
-
-    pcRet = ( char * ) hb_xgrab (sStrLen);
-    hb_xmemcpy (pcRet, pcString, sStrLen);
-
-    for (sIndex = 0; sIndex < sSearchLen; sIndex++)
-    {
-    
-      size_t sMatchStrLen;
-      char *pc;
-      size_t sReplIndex = sIndex;
-
-      if (sReplIndex > sReplaceLen-1)
-      {
-        sReplIndex = sReplaceLen-1;
+         iMode = 0;
       }
 
-      if (iMode)
-      {
-        /* no multiple replacements: searching in pcString,
-                                     replacing in pcRet     */
-        pc = pcString;
+      pcRet = ( char * ) hb_xgrab( sStrLen + 1 );
+      hb_xmemcpy( pcRet, pcString, sStrLen );
 
-        while ((pc = ct_at_exact_forward (pc, sStrLen-(pc-pcString),
-                                          pcSearch+sIndex, 1,
-                                          &sMatchStrLen)) != NULL)
-        {
-          *(pcRet+(pc-pcString)) = *(pcReplace+sReplIndex);
-          pc++;
-        }
+      for( sIndex = 0; sIndex < sSearchLen; sIndex++ )
+      {
+         size_t sMatchStrLen;
+         char *pc;
+         size_t sReplIndex = sIndex;
+
+         if( sReplIndex > sReplaceLen - 1 )
+         {
+            sReplIndex = sReplaceLen - 1;
+         }
+
+         if( iMode )
+         {
+            /* no multiple replacements: searching in pcString,
+               replacing in pcRet     */
+            pc = pcString;
+
+            while( ( pc = ct_at_exact_forward( pc, sStrLen - ( pc - pcString ),
+                                               pcSearch + sIndex, 1,
+                                               &sMatchStrLen ) ) != NULL )
+            {
+               *( pcRet + ( pc - pcString ) ) = *( pcReplace + sReplIndex );
+               pc++;
+            }
+         }
+         else
+         {
+            /* multiple replacements: searching & replacing in pcRet */
+            pc = pcRet;
+            while( ( pc = ct_at_exact_forward( pc, sStrLen - ( pc - pcRet ),
+                                               pcSearch + sIndex, 1,
+                                               &sMatchStrLen ) ) != NULL )
+            {
+               *pc++ = *( pcReplace + sReplIndex );
+            }
+         }
+      }
+
+      /* return string */
+      if( ISBYREF( 2 ) )
+      {
+         hb_storclen( pcRet, sStrLen, 2 );
+      }
+
+      if( iNoRet )
+      {
+         hb_retl( 0 );
+         hb_xfree( pcRet );
       }
       else
       {
-        /* multiple replacements: searching & replacing in pcRet */
-        pc = pcRet;
-        while ((pc = ct_at_exact_forward (pc, sStrLen-(pc-pcRet),
-                                          pcSearch+sIndex, 1,
-                                          &sMatchStrLen)) != NULL)
-        {
-          *pc = *(pcReplace+sReplIndex);
-          pc++;
-        }
+         hb_retclen_buffer( pcRet, sStrLen );
       }
+   }
+   else  /* ( ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) > 0 && ISCHAR( 2 ) &&
+              ( sReplaceLen = ( size_t ) hb_parclen( 3 ) ) > 0 ) */
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
 
-    }
-
-    /* return string */
-    if (ISBYREF (2))
-    {
-      hb_storclen (pcRet, sStrLen, 2);
-    }
-
-    if (iNoRet)
-    {
-      hb_retl (0);
-    }
-    else
-    {
-      hb_retclen (pcRet, sStrLen);
-    }
-
-    hb_xfree (pcRet);
-
-  }
-  else /* ((sSearchLen = (size_t)hb_parclen (1)) > 0) &&
-          (ISCHAR (2)) &&
-          ((sReplaceLen = (size_t)hb_parclen (3)) > 0))   */
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARREPL,
-                               NULL, "CHARREPL", 0, EF_CANSUBSTITUTE, 4,
-                               hb_paramError (1), hb_paramError (2),
-                               hb_paramError (3), hb_paramError (4));
-    }
-
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      if (iNoRet)
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
-        hb_retl (0);
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  CT_ERROR_CHARREPL, NULL, "CHARREPL", 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
+
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
+      else if( iNoRet )
+         hb_retl( 0 );
+      else if( ISCHAR( 2 ) )
+         hb_retclen( hb_parc( 2 ), hb_parclen( 2 ) );
       else
-      {
-        if (ISCHAR (2))
-        {
-          hb_retclen (hb_parc (2), hb_parclen (2));
-        }
-        else
-        {
-          hb_retc ("");
-        }
-      }
-    }
-  }
-
-  return;
-
+         hb_retc( NULL );
+   }
 }
-
-
-
-

@@ -4,10 +4,9 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Harbour header file
+ *   CT3 BLANK function
  *
- * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
- *        Author: Martin Vogel <vogel@inttec.de>
+ * Copyright 2003 Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
  *
  * www - http://www.harbour-project.org
  *
@@ -53,35 +52,41 @@
  */
 
 
-#ifndef _CT_CH
-#   define _CT_CH 1
+#include "common.ch"
 
-/* subsystem name */
-#   define CT_SUBSYSTEM "CT"
+FUNCTION BLANK( xItem, xMode )
+   LOCAL cType: = ValType( xItem )
+   LOCAL xRet
 
-/* CSETARGERR() argument error behaviour */
-#   include "error.ch"
-#   define CT_ARGERR_WHOCARES      ES_WHOCARES
-#   define CT_ARGERR_WARNING       ES_WARNING
-#   define CT_ARGERR_ERROR         ES_ERROR
-#   define CT_ARGERR_CATASTROPHIC  ES_CATASTROPHIC
-#   define CT_ARGERR_IGNORE        -1
+   SWITCH cType
+      CASE "D"
+         xRet := CTOD( "" )
+         EXIT
 
-/* SETMATHERR() stati and modes for math error correction */
-#   define CT_MATHERR_STATUS_NOTFOUND   -1
-                                        /* math handler is not installed */
-#   define CT_MATHERR_STATUS_INACTIVE   0
-                                        /* math handler is installed but inactive */
-#   define CT_MATHERR_STATUS_ACTIVE     1
-                                        /* math handler is installed and active */
+      CASE "L"
+         xRet :=.F.
+         EXIT
 
-#   define CT_MATHERR_MODE_NONE        0/* no correction at all, program will exit */
-#   define CT_MATHERR_MODE_DEFAULT     1/* default return value will be used, no error msgs ! */
-#   define CT_MATHERR_MODE_USER        2/* error will be thrown to user who is responsible for error correction */
-#   define CT_MATHERR_MODE_USERDEFAULT 3/* error will be thrown, but if user fails, default correction will be used */
+      CASE "N"
+         xRet := 0
+         EXIT
 
-/* SETATLIKE() modes */
-#   define CT_SETATLIKE_EXACT     0
-#   define CT_SETATLIKE_WILDCARD  1
+      CASE "C"
+      CASE "M"
+         xRet: = xItem:= IIF( ISLOGICAL( xMode ) .and. xMode, ;
+                  Space( Len( xItem ) ), "" )
+         EXIT
 
-#endif
+      CASE "A"
+         xRet := {}
+         EXIT
+
+      CASE "H"
+         xRet := {=>}
+         EXIT
+
+      OTHERWISE
+         xRet:=.F.
+   END
+
+RETURN xRet

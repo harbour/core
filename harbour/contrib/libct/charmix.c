@@ -108,87 +108,79 @@
  *  $END$
  */
 
-HB_FUNC (CHARMIX)
+HB_FUNC( CHARMIX )
 {
-  
-  if (ISCHAR (1))
-  {
-    char *pcString1 = hb_parc (1);
-    char *pcString2, *pcResult;
-    size_t sLen1 = hb_parclen (1);
-    size_t sLen2, sPos1, sPos2, sResultPos;
+   if( ISCHAR( 1 ) )
+   {
+      char *pcString1 = hb_parc( 1 );
+      char *pcString2, *pcResult;
+      size_t sLen1 = hb_parclen( 1 );
+      size_t sLen2, sPos1, sPos2, sResultPos;
 
-    if (sLen1 == 0)
-    {
+      if( sLen1 == 0 )
+      {
+         int iArgErrorMode = ct_getargerrormode();
+
+         if( iArgErrorMode != CT_ARGERR_IGNORE )
+         {
+            ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX, NULL, "CHARMIX", 0,
+                      EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+         }
+         hb_retc( NULL );
+         return;
+      }
+
+      if( ISCHAR( 2 ) )
+      {
+         pcString2 = hb_parc( 2 );
+         sLen2 = hb_parclen( 2 );
+         if( sLen2 == 0 )
+         {
+            int iArgErrorMode = ct_getargerrormode();
+
+            if( iArgErrorMode != CT_ARGERR_IGNORE )
+            {
+               ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX,
+                         NULL, "CHARMIX", 0,
+                         EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+            }
+            hb_retclen( pcString1, sLen1 );
+            return;
+         }
+      }
+      else
+      {
+         pcString2 = " ";     /* NOTE: The original CT3 uses " " as 2nd string
+                                 if the 2nd param is not a string ! */
+         sLen2 = 1;
+      }
+
+      pcResult = ( char * ) hb_xgrab( sLen1 * 2 + 1 );
+      sPos2 = sResultPos = 0;
+      for( sPos1 = 0; sPos1 < sLen1; )
+      {
+         pcResult[sResultPos++] = pcString1[sPos1++];
+         pcResult[sResultPos++] = pcString2[sPos2++];
+         sPos2 %= sLen2;
+      }
+
+      hb_retclen_buffer( pcResult, sLen1 * 2 );
+   }
+   else
+   {
+      PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
+
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
-        ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX,
-                  NULL, "CHARMIX", 0, EF_CANDEFAULT, 2,
-                  hb_paramError (1), hb_paramError (2));
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  CT_ERROR_CHARMIX, NULL, "CHARMIX", 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
-      hb_retc ("");
-      return;
-    }
-    
-    if (ISCHAR (2))
-    {
-      pcString2 = hb_parc (2);
-      sLen2 = hb_parclen (2);
-      if (sLen2 == 0)
-      {
-        int iArgErrorMode = ct_getargerrormode();
-        if (iArgErrorMode != CT_ARGERR_IGNORE)
-        {
-          ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX,
-                    NULL, "CHARMIX", 0, EF_CANDEFAULT, 2,
-                    hb_paramError (1), hb_paramError (2));
-        }
-        hb_retclen (pcString1, sLen1);
-        return;
-      }
-    }
-    else
-    {
-      pcString2 = " ";  /* NOTE: The original CT3 uses " " as 2nd string
-                           if the 2nd param is not a string ! */
-      sLen2 = 1;
-    }
 
-    pcResult = ( char * ) hb_xgrab (sLen1 * 2);
-    sPos2 = sResultPos = 0;
-    for (sPos1 = 0; sPos1 < sLen1;)
-    {
-      pcResult[sResultPos++] = pcString1[sPos1++];
-      pcResult[sResultPos++] = pcString2[sPos2++];
-      sPos2 %= sLen2;
-    }
-
-    hb_retclen (pcResult, sLen1 * 2);
-    hb_xfree (pcResult);
-
-  }
-  else
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX,
-                               NULL, "CHARMIX", 0, EF_CANSUBSTITUTE, 2,
-                               hb_paramError (1), hb_paramError (2));
-    }
-  
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      hb_retc ("");
-    }
-  }
-
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
+      else
+         hb_retc( NULL );
+   }
 }
-  

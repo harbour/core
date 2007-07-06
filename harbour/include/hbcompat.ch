@@ -74,6 +74,7 @@
    #xtranslate hb_libFree([<x,...>])   => libFree(<x>)
 
    #xtranslate hb_CStr([<x,...>])      => CStr(<x>)
+   #xtranslate hb_checksum([<x,...>])  => hb_adler(<x>)
 
 #else
 
@@ -96,6 +97,7 @@
    #xtranslate libFree([<x,...>])      => hb_libFree(<x>)
 
    #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
+   #xtranslate hb_adler([<x,...>])     => hb_checksum(<x>)
 
    #xtranslate HASH([<x,...>])         => HB_HASH(<x>)
    #xtranslate HHASKEY([<x,...>])      => HB_HHASKEY(<x>)
@@ -116,9 +118,9 @@
    #xtranslate HMERGE([<x,...>])       => HB_HMERGE(<x>)
    #xtranslate HEVAL([<x,...>])        => HB_HEVAL(<x>)
    #xtranslate HSCAN([<x,...>])        => HB_HSCAN(<x>)
-   #xtranslate HSETCASEMATCH( <h>,<l> )=> ( HB_HCASEMATCH( <h>,<l> ), <h> )
+   #xtranslate HSETCASEMATCH([<x,...>])=> HB_HSETCASEMATCH(<x>)
    #xtranslate HGETCASEMATCH([<x,...>])=> HB_HCASEMATCH(<x>)
-   #xtranslate HSETAUTOADD( <h>,<l> )  => ( HB_HAUTOADD( <h>,<l> ), <h> )
+   #xtranslate HSETAUTOADD([<x,...>])  => HB_HSETAUTOADD(<x>)
    #xtranslate HGETAUTOADD([<x,...>])  => HB_HAUTOADD(<x>)
    #xtranslate HALLOCATE([<x,...>])    => HB_HALLOCATE(<x>)
    #xtranslate HDEFAULT([<x,...>])     => HB_HDEFAULT(<x>)

@@ -710,4 +710,3 @@
 /* TODO: add network functions */
 
 #endif /* _CTERROR_CH */
-

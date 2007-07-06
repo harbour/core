@@ -222,7 +222,7 @@ extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_COMP_DECL ); /* c
 extern ULONG hb_compSequenceBegin( HB_COMP_DECL );
 extern ULONG hb_compSequenceEnd( HB_COMP_DECL );
 extern ULONG hb_compSequenceAlways( HB_COMP_DECL );
-extern void hb_compSequenceFinish( HB_COMP_DECL, ULONG, ULONG, ULONG, BOOL, BOOL );
+extern void hb_compSequenceFinish( HB_COMP_DECL, ULONG, ULONG, ULONG, BOOL, BOOL, BOOL );
 
 /* support for FIELD declaration */
 extern void hb_compFieldSetAlias( HB_COMP_DECL, char *, int );

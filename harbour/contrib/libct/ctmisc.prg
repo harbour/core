@@ -56,8 +56,13 @@
 
 MEMVAR GetList
 
-FUNCTION CENTER( c, n, p )
-   RETURN PadC( AllTrim( c ), n, p )
+FUNCTION CENTER( c, n, p, lMode )
+   LOCAL cRet
+   DEFAULT n TO MaxCol() + 1 - Col()*2
+   DEFAULT c TO ""
+   DEFAULT lMode TO .F.
+   cRet := PadC( AllTrim( c ), n, p )
+   RETURN if(lMode, cRet, RTrim( cRet ) )
 
 FUNCTION CSETCURS( l )
 
@@ -78,7 +83,6 @@ FUNCTION CSETCENT( nCentury )
    endif
    RETURN NIL
 
-
 FUNCTION LTOC( l )
    RETURN iif( l, "T", "F" )
 
@@ -95,3 +99,14 @@ FUNCTION SAVEGETS()
 
    RETURN aGetList
 
+FUNCTION DOSPARAM
+   LOCAL cRet := ""
+   LOCAL nCount := HB_ARGC(), i
+
+   FOR i := 1 TO nCount
+      cRet += if(i==1, "", " ") + HB_ARGV( i )
+   NEXT
+   RETURN cRet
+
+FUNCTION EXENAME()
+   RETURN HB_ARGV( 0 )

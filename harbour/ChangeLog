@@ -8,6 +8,74 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-06 23:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/bitnum.c
+  * harbour/contrib/libct/charlist.c
+  * harbour/contrib/libct/ctnet.c
+  * harbour/contrib/libct/charonly.c
+  * harbour/contrib/libct/atadjust.c
+  * harbour/contrib/libct/ctmath.c
+  * harbour/contrib/libct/ctset.c
+  * harbour/contrib/libct/charsort.c
+  * harbour/contrib/libct/ctmath.h
+  * harbour/contrib/libct/ctset.h
+  * harbour/contrib/libct/cterror.ch
+  * harbour/contrib/libct/charmix.c
+  * harbour/contrib/libct/charevod.c
+  * harbour/contrib/libct/charrepl.c
+  * harbour/contrib/libct/charswap.c
+  * harbour/contrib/libct/charop.c
+  * harbour/contrib/libct/color.prg
+  + harbour/contrib/libct/blank.prg
+  * harbour/contrib/libct/ct.prg
+  * harbour/contrib/libct/ct.ch
+  * harbour/contrib/libct/charone.c
+  * harbour/contrib/libct/ctchksum.c
+  * harbour/contrib/libct/ascpos.c
+  * harbour/contrib/libct/charmirr.c
+  * harbour/contrib/libct/ctc.c
+  * harbour/contrib/libct/ct.h
+  * harbour/contrib/libct/atnum.c
+  * harbour/contrib/libct/ctmisc.prg
+  * harbour/contrib/libct/count.c
+  * harbour/contrib/libct/ctcrypt.c
+  * harbour/contrib/libct/addascii.c
+  * harbour/contrib/libct/ctmath2.c
+  * harbour/contrib/libct/ctextern.ch
+  * harbour/contrib/libct/asciisum.c
+  * harbour/contrib/libct/atrepl.c
+  * harbour/contrib/libct/ctstr.c
+  * harbour/contrib/libct/ctstr.h
+    * synced with xHarbour modifications and fixes
+    ! some fixes
+    * indenting
+
+  * harbour/source/rtl/errorapi.c
+    * indenting
+
+  * harbour/source/vm/hashfunc.c
+    + added HB_HSETCASEMATCH(), HB_HSETAUTOADD()
+    % some minor optimizations
+
+  * harbour/include/hbcompat.ch
+    + added hb_checksum() <=> hb_adler()
+    * use new HB_HSET*() function to avoid warnings
+
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/include/hberrors.h
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyh
+  * harbour/source/compiler/hbgenerr.c
+    ! fixed using EXIT/LOOP inside WITH OBJECT / END statement
+    ! fixed optimization of empty BEGIN/END sequence when recover has
+      EXIT or LOOP statement
+    ! forbidden using EXIT and LOOP inside ALWAYS code in BEGIN/END sequence
+    ! forbidden using ALWAYS statement if RECOVER code has EXIT or LOOP
+      statement
+
 2007-07-04 21:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/listbox.prg
     * synced with some xHarbour modifications

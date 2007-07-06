@@ -439,6 +439,8 @@ typedef struct HB_LOOPEXIT_
    ULONG    ulOffset;
    BOOL     fCanLoop;
    USHORT   wSeqCounter;
+   USHORT   wAlwaysCounter;
+   USHORT   wWithObjectCnt;
    struct HB_LOOPEXIT_ * pLoopList;
    struct HB_LOOPEXIT_ * pExitList;
    struct HB_LOOPEXIT_ * pNext;
@@ -661,13 +663,13 @@ typedef struct _HB_COMP
    BOOL              fMeaningful;         /* do not generate warnings about meaningless expression usage */
 
    USHORT            wSeqCounter;
+   USHORT            wAlwaysCounter;
    USHORT            wForCounter;
    USHORT            wIfCounter;
    USHORT            wWhileCounter;
    USHORT            wCaseCounter;
    USHORT            wSwitchCounter;
    USHORT            wWithObjectCnt;
-
 }
 HB_COMP, * HB_COMP_PTR;
 

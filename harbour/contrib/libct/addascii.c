@@ -120,37 +120,36 @@
  *  $END$
  */
 
-
 HB_FUNC( ADDASCII )
 {
    int iNoRet;
 
    /* suppressing return value ? */
-   iNoRet = ct_getref();
+   iNoRet = ct_getref() && ISBYREF( 1 );
+
    if( ISCHAR( 1 ) )
    {
       char *pcSource = hb_parc( 1 );
       size_t sLen = hb_parclen( 1 );
       char *pcResult;
       size_t sPos;
-      long lValue;
+      LONG lValue;
+      int iCarryOver;
 
       if( ISNUM( 3 ) )
          sPos = hb_parnl( 3 );
       else
          sPos = sLen;
 
-      if( sPos > sLen || !ISNUM( 2 ) )
+      if( sPos > sLen || !ISNUM( 2 ) || sLen == 0 )
       {
          int iArgErrorMode = ct_getargerrormode();
+
          if( iArgErrorMode != CT_ARGERR_IGNORE )
          {
-            ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ADDASCII,
-                      NULL, "ADDASCII", 0, EF_CANDEFAULT, 4,
-                      hb_paramError( 1 ), hb_paramError( 2 ),
-                      hb_paramError( 3 ), hb_paramError( 4 ) );
+            ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ADDASCII, NULL,
+                      "ADDASCII", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
          }
-
          /* return string unchanged */
          if( iNoRet )
             hb_retl( 0 );
@@ -159,61 +158,62 @@ HB_FUNC( ADDASCII )
          return;
       }
 
-      pcResult = ( char * ) hb_xgrab( sLen );
+      pcResult = ( char * ) hb_xgrab( sLen + 1 );
       hb_xmemcpy( pcResult, pcSource, sLen );
 
       lValue = hb_parnl( 2 );
+      if( ISLOG( 4 ) )
+         iCarryOver = hb_parl( 4 );
+      else
+         iCarryOver = 0;
 
-      if( ISLOG( 4 ) && hb_parl( 4 ) )
+      if( iCarryOver )
       {
          size_t sCurrent;
-         long lResult;
+         LONG lResult;
 
-         for( sCurrent = sPos; sCurrent > 0 && lValue != 0; --sCurrent )
+         for( sCurrent = sPos; sCurrent > 0 && lValue != 0; sCurrent-- )
          {
-            lResult = ( lValue % 256 ) + ( UCHAR ) pcSource[ sCurrent - 1 ];
-            pcResult[ sCurrent - 1 ] = ( char ) lResult;
-            lValue /= 0x100;
-            if( lResult > 0xff )
-            {
-               if( lValue < 0 )
-                  --lValue;
-               else
-                  ++lValue;
-            }
+            lResult = ( LONG ) pcSource[sCurrent - 1] + ( lValue % 256 );
+
+            lValue /= 256;
+            if( lResult > 255 )
+               lValue++;
+            else if( lResult < 0 )
+               lValue--;
+
+            pcResult[sCurrent - 1] = ( char ) ( lResult % 256 );
          }
       }
       else
       {
-         pcResult[ sPos - 1 ] = ( char ) ( pcResult[ sPos - 1 ] + lValue );
+         pcResult[sPos - 1] = ( char ) ( ( ( LONG ) pcResult[sPos - 1] + lValue ) % 256 );
       }
-
-      if( iNoRet )
-         hb_retl( 0 );
-      else
-         hb_retclen (pcResult, sLen);
 
       if( ISBYREF( 1 ) )
          hb_storclen( pcResult, sLen, 1 );
 
-      hb_xfree( pcResult );
+      if( iNoRet )
+      {
+         hb_retl( 0 );
+         hb_xfree( pcResult );
+      }
+      else
+         hb_retclen_buffer( pcResult, sLen );
    }
    else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
+
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ADDASCII,
-                                  NULL, "ADDASCII", 0, EF_CANSUBSTITUTE, 4,
-                                  hb_paramError( 1 ), hb_paramError( 2 ),
-                                  hb_paramError( 3 ), hb_paramError( 4 ) );
+                                  NULL, "ADDASCII", 0, EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
+
       if( pSubst != NULL )
-      {
-         hb_itemReturn( pSubst );
-         hb_itemRelease( pSubst );
-      }
+         hb_itemReturnRelease( pSubst );
       else if( iNoRet )
          hb_retl( 0 );
       else

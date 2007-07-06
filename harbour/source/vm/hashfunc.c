@@ -79,7 +79,7 @@ HB_FUNC( HB_HASH )
             break;
          }
       }
-      hb_itemRelease( hb_itemReturnForward( pHash ) );
+      hb_itemReturnRelease( pHash );
    }
 }
 
@@ -214,9 +214,9 @@ HB_FUNC( HB_HPAIRAT )
          else
          {
             PHB_ITEM pResult = hb_itemArrayNew( 2 );
-            hb_itemCopy( hb_arrayGetItemPtr( pResult, 1 ), pKey );
-            hb_itemCopy( hb_arrayGetItemPtr( pResult, 2 ), pValue );
-            hb_itemRelease( hb_itemReturnForward( pResult ) );
+            hb_arraySet( pResult, 1, pKey );
+            hb_arraySet( pResult, 2, pValue );
+            hb_itemReturnRelease( pResult );
          }
       }
       else
@@ -246,7 +246,7 @@ HB_FUNC( HB_HKEYS )
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
 
    if( pHash )
-      hb_itemRelease( hb_itemReturnForward( hb_hashGetKeys( pHash ) ) );
+      hb_itemReturnRelease( hb_hashGetKeys( pHash ) );
    else
       hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -256,7 +256,7 @@ HB_FUNC( HB_HVALUES )
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
 
    if( pHash )
-      hb_itemRelease( hb_itemReturnForward( hb_hashGetValues( pHash ) ) );
+      hb_itemReturnRelease( hb_hashGetValues( pHash ) );
    else
       hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -285,7 +285,7 @@ HB_FUNC( HB_HCLONE )
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
 
    if( pHash )
-      hb_itemRelease( hb_itemReturnForward( hb_hashClone( pHash ) ) );
+      hb_itemReturnRelease( hb_hashClone( pHash ) );
    else
       hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -402,7 +402,7 @@ HB_FUNC( HB_HEVAL )
 HB_FUNC( HB_HSCAN )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pValue = hb_param( 2, HB_IT_BLOCK );
+   PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
 
    if( pHash && pValue )
    {
@@ -677,6 +677,9 @@ HB_FUNC( HB_HDEFAULT )
    else
       hb_errRT_BASE( EG_ARG, 2017, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
+
+HB_FUNC( HB_HSETAUTOADD )     { HB_FUNC_EXEC( HB_HAUTOADD ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
+HB_FUNC( HB_HSETCASEMATCH )   { HB_FUNC_EXEC( HB_HCASEMATCH ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
 
 #ifdef HB_COMPAT_XHB
 

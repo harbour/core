@@ -91,19 +91,19 @@ static sbInitialized := .F.
 
 function CTINIT()
 
-  if !sbInitialized
-    sbInitialized := ctcinit()
-  endif
+   if !sbInitialized
+      sbInitialized := ctcinit()
+   endif
 
-return (sbInitialized)
+return sbInitialized
 
 init function _CTINIT()
 
-  if !sbInitialized
-    sbInitialized := ctcinit()
-  endif
+   if !sbInitialized
+      sbInitialized := ctcinit()
+   endif
 
-return (sbInitialized)
+return sbInitialized
 
 
 /*  $DOC$
@@ -141,22 +141,22 @@ return (sbInitialized)
 
 function CTEXIT()
 
-  if (sbInitialized)
-    /* call tokenexit to release static token environment */
-    tokenexit()
-    ctcexit()
-    sbInitialized := .F.
-  endif
+   if sbInitialized
+      /* call tokenexit to release static token environment */
+      tokenexit()
+      ctcexit()
+      sbInitialized := .F.
+   endif
 
-return (nil)
+return nil
 
 exit function _CTEXIT()
 
-  if (sbInitialized)
+  if sbInitialized
     /* call tokenexit to release static token environment */
     tokenexit()
     ctcexit()
     sbInitialized := .F.
   endif
 
-return (nil)
+return nil

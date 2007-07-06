@@ -3485,12 +3485,13 @@ void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL
  * _ONLY_ in very limited situations when there is no jumps over the
  * removed block
  */
-static void hb_compRemovePCODE( HB_COMP_DECL, ULONG ulPos, ULONG ulCount )
+static void hb_compRemovePCODE( HB_COMP_DECL, ULONG ulPos, ULONG ulCount,
+                                BOOL fCanMove )
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
    ULONG ul;
 
-   if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) )
+   if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) || !fCanMove )
    {
       /*
        * We can safely remove the dead code when Jump Optimization
@@ -3615,11 +3616,12 @@ ULONG hb_compSequenceAlways( HB_COMP_DECL )
  * beetwen BEGIN and RECOVER sequence
  */
 void hb_compSequenceFinish( HB_COMP_DECL, ULONG ulStartPos, ULONG ulEndPos,
-                            ULONG ulAlways, BOOL fUsualStmts, BOOL fRecover )
+                            ULONG ulAlways, BOOL fUsualStmts, BOOL fRecover,
+                            BOOL fCanMove )
 {
    --ulStartPos;  /* HB_P_SEQBEGIN address */
 
-   if( !fUsualStmts && !HB_COMP_PARAM->fDebugInfo )
+   if( !fUsualStmts && fCanMove && !HB_COMP_PARAM->fDebugInfo )
    {
       ulStartPos -= 4;
       if( ulAlways )
@@ -3628,28 +3630,28 @@ void hb_compSequenceFinish( HB_COMP_DECL, ULONG ulStartPos, ULONG ulEndPos,
          HB_COMP_PARAM->functions.pLast->lPCodePos--;
          /* remove HB_P_SEQALWAYS ... HB_P_ALWAYSBEGIN opcodes */
          hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos,
-                             ulAlways - ulStartPos + 4 );
+                             ulAlways - ulStartPos + 4, fCanMove );
       }
       else
       {
          hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos,
                              HB_COMP_PARAM->functions.pLast->lPCodePos -
-                             ulStartPos );
+                             ulStartPos, fCanMove );
       }
       HB_COMP_PARAM->lastLinePos = ulStartPos - 3;
    }
    else if( !ulAlways )
    {
       /* remove HB_P_SEQALWAYS opcode */
-      hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos - 4, 4 );
+      hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos - 4, 4, fCanMove );
    }
    else
    {
       if( !fRecover )
       {
          /* remove HB_P_SEQBEGIN and HB_P_SEQEND */
-         hb_compRemovePCODE( HB_COMP_PARAM, ulEndPos - 1, 4 );
-         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos, 4 );
+         hb_compRemovePCODE( HB_COMP_PARAM, ulEndPos - 1, 4, fCanMove );
+         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos, 4, fCanMove );
          if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) )
          {
             /* Fix ALWAYS address in HB_P_SEQALWAYS opcode */
@@ -3662,9 +3664,9 @@ void hb_compSequenceFinish( HB_COMP_DECL, ULONG ulStartPos, ULONG ulEndPos,
           !HB_COMP_PARAM->fDebugInfo )
       {
          /* remove HB_P_ALWAYSBEGIN and HB_P_ALWAYSEND opcodes */
-         hb_compRemovePCODE( HB_COMP_PARAM, ulAlways, 5 );
+         hb_compRemovePCODE( HB_COMP_PARAM, ulAlways, 5, TRUE );
          /* remove HB_P_SEQALWAYS opcode */
-         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos - 4, 4 );
+         hb_compRemovePCODE( HB_COMP_PARAM, ulStartPos - 4, 4, fCanMove );
       }
    }
 }

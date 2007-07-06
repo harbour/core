@@ -64,67 +64,61 @@
 #define DO_ASCPOS_VALPOS    1
 
 /* helper function */
-static void do_ascpos (int iSwitch)
+static void do_ascpos( int iSwitch )
 {
+   if( ISCHAR( 1 ) )
+   {
+      size_t sStrSize = hb_parclen( 1 );
+      BYTE *pcString = ( BYTE * ) hb_parc( 1 );
+      size_t sPos;
 
-  if (ISCHAR (1))
-  {
-  
-    size_t sStrSize = hb_parclen (1);
-    char *pcString = hb_parc (1);
-    size_t sPos;
+      if( ISNUM( 2 ) )
+         sPos = hb_parnl( 2 );
+      else
+         sPos = sStrSize;
 
-    if (ISNUM (2))
-      sPos = hb_parnl (2);
-    else
-      sPos = sStrSize;
-
-    if ((sPos==0) || (sPos > sStrSize))
-    {
-      hb_retnl (0);
-    }
-    else
-    {
-      if (iSwitch == DO_ASCPOS_VALPOS)
+      if( ( sPos == 0 ) || ( sPos > sStrSize ) )
       {
-        if (isdigit ((size_t)pcString[sPos-1]))
-          hb_retnl (pcString[sPos-1]-48);
-        else
-          hb_retnl (0);
+         hb_retni( 0 );
       }
-      else /* iSwitch == DO_ASCPOS_ASCPOS */
+      else
       {
-        hb_retnl (pcString[sPos-1]);
+         if( iSwitch == DO_ASCPOS_VALPOS )
+         {
+            if( isdigit( ( size_t ) pcString[sPos - 1] ) )
+               hb_retnl( pcString[sPos - 1] - 48 );
+            else
+               hb_retni( 0 );
+         }
+         else                   /* iSwitch == DO_ASCPOS_ASCPOS */
+         {
+            hb_retnl( pcString[sPos - 1] );
+         }
       }
-    }
+   }
+   else
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
 
-  }
-  else
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG,
-                               (iSwitch == DO_ASCPOS_VALPOS ? CT_ERROR_VALPOS : CT_ERROR_ASCPOS),
-                               NULL,
-                               (iSwitch == DO_ASCPOS_VALPOS ? "VALPOS" : "ASCPOS"),
-                               0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
-    }
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  iSwitch == DO_ASCPOS_VALPOS ?
+                                  CT_ERROR_VALPOS : CT_ERROR_ASCPOS, NULL,
+                                  &hb_errFuncName, 0, EF_CANSUBSTITUTE,
+                                  HB_ERR_ARGS_BASEPARAMS );
+      }
 
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      hb_retnl (0);
-    }
-  }
-
-  return;
-
+      if( pSubst != NULL )
+      {
+         hb_itemReturnRelease( pSubst );
+      }
+      else
+      {
+         hb_retni( 0 );
+      }
+   }
 }
 
 
@@ -168,12 +162,9 @@ static void do_ascpos (int iSwitch)
  *  $END$
  */
 
-HB_FUNC (ASCPOS)
+HB_FUNC( ASCPOS )
 {
-
-  do_ascpos (DO_ASCPOS_ASCPOS);
-  return;
-
+   do_ascpos( DO_ASCPOS_ASCPOS );
 }
 
 
@@ -219,13 +210,7 @@ HB_FUNC (ASCPOS)
  *  $END$
  */
 
-HB_FUNC (VALPOS)
+HB_FUNC( VALPOS )
 {
-
-  do_ascpos (DO_ASCPOS_VALPOS);
-  return;
-
+   do_ascpos( DO_ASCPOS_VALPOS );
 }
-
-
-
