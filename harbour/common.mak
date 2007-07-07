@@ -739,6 +739,7 @@ RDD_LIB_OBJS = \
     $(OBJ_DIR)\wafunc$(HB_OBJ_EXT)   \
     $(OBJ_DIR)\dbf1$(HB_OBJ_EXT)     \
     $(OBJ_DIR)\dbnubs$(HB_OBJ_EXT)   \
+    $(OBJ_DIR)\dbsql$(HB_OBJ_EXT)    \
     $(OBJ_DIR)\delim1$(HB_OBJ_EXT)   \
     $(OBJ_DIR)\sdf1$(HB_OBJ_EXT)     \
     \
