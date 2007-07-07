@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-07 04:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/contrib/libct/dbftools.c
+  - harbour/contrib/libct/dattime2.prg
+  * harbour/contrib/libct/ctmath.h
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/exponent.c
+  + harbour/contrib/libct/cttime.prg
+  * harbour/contrib/libct/ctstr.h
+  * harbour/contrib/libct/ct.h
+  + harbour/contrib/libct/disk.c
+  + harbour/contrib/libct/ctstrfil.c
+  + harbour/contrib/libct/ctstrfil.h
+  - harbour/contrib/libct/datetime.prg
+  - harbour/contrib/libct/pad.c
+  + harbour/contrib/libct/dattime2.c
+  + harbour/contrib/libct/ctpad.c
+  + harbour/contrib/libct/datetime.c
+    * synced with xHarbour modifications and fixes
+    ! some fixes
+    * indenting
+
 2007-07-06 23:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libct/bitnum.c
   * harbour/contrib/libct/charlist.c

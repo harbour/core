@@ -54,24 +54,32 @@
 
 
 #ifndef _CT_H
-#   define _CT_H 1
+#define _CT_H 1
 
 /* NOTE: we need this to prevent base types redefinition */
-#   define _CLIPDEFS_H
+#define _CLIPDEFS_H
 
-#   include "hbapi.h"
-#   include "hbapiitm.h"
-#   include "hbapierr.h"
-#   include "error.ch"
-#   include "hbmath.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "error.ch"
+#include "hbmath.h"
 
-#   include "ctstr.h"
-#   include "ctmath.h"
-#   include "ctset.h"
+#include "ctstr.h"
+#include "ctmath.h"
+#include "ctset.h"
 
-#   include "cterror.ch"
+#include "cterror.ch"
 
-#   define CT_SUBSYSTEM "CT"
+#define CT_SUBSYSTEM "CT"
+
+#define CT_ARGERR_WHOCARES      ES_WHOCARES
+#define CT_ARGERR_WARNING       ES_WARNING
+#define CT_ARGERR_ERROR         ES_ERROR
+#define CT_ARGERR_CATASTROPHIC  ES_CATASTROPHIC
+#define CT_ARGERR_IGNORE        -1
+
+HB_EXTERN_BEGIN
 
 /* CT subsystem error throwing functions */
 extern USHORT ct_error( USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
@@ -84,10 +92,6 @@ extern PHB_ITEM ct_error_subst( USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubC
 extern void ct_setargerrormode( int iMode );
 extern int ct_getargerrormode( void );
 
-#   define CT_ARGERR_WHOCARES      ES_WHOCARES
-#   define CT_ARGERR_WARNING       ES_WARNING
-#   define CT_ARGERR_ERROR         ES_ERROR
-#   define CT_ARGERR_CATASTROPHIC  ES_CATASTROPHIC
-#   define CT_ARGERR_IGNORE        -1
+HB_EXTERN_END
 
 #endif

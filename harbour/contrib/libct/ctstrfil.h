@@ -3,12 +3,10 @@
  */
 
 /*
- * Harbour Project source code: 
- *   internal function header for CT3 string functions
+ * Harbour Project source code:
+ * Header file for Clipper Tools like window system
  *
- * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
- *        Author: Martin Vogel <vogel@inttec.de>
- *
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,46 +50,14 @@
  *
  */
 
-
-#ifndef _CTSTR_H
-#define _CTSTR_H 1
+#ifndef HB_CTSTRFIL_H_
+#define HB_CTSTRFIL_H_
 
 HB_EXTERN_BEGIN
 
-extern int ct_str_init( void );
-extern int ct_str_exit( void );
-
-extern char *ct_at_exact_forward( char *pcString, size_t sStrLen,
-                                  char *pcMatch, size_t sMatchLen,
-                                  size_t *psMatchStrLen );
-extern char *ct_at_exact_backward( char *pcString, size_t sStrLen,
-                                   char *pcMatch, size_t sMatchLen,
-                                   size_t *psMatchStrLen );
-extern char *ct_at_wildcard_forward( char *pcString, size_t sStrLen,
-                                     char *pcMatch, size_t sMatchLen,
-                                     char cWildCard, size_t *psMatchStrLen );
-extern char *ct_at_wildcard_backward( char *pcString, size_t sStrLen,
-                                      char *pcMatch, size_t sMatchLen,
-                                      char cWildCard, size_t *psMatchStrLen );
-extern char *ct_at_charset_forward( char *pcString, size_t sStrLen,
-                                    char *pcCharSet, size_t sCharSetLen,
-                                    size_t *psMatchedCharPos );
-extern char *ct_at_charset_backward( char *pcString, size_t sStrLen,
-                                     char *pcCharSet, size_t sCharSetLen,
-                                     size_t *psMatchedCharPos );
-
-extern void ct_setref( int iNewSwitch );
-extern int  ct_getref( void );
-extern void ct_setatmupa( int iNewSwitch );
-extern int  ct_getatmupa( void );
-extern void ct_setatlike( int iNewSwitch );
-extern int  ct_getatlike( void );
-extern void ct_setatlikechar( char cNewChar );
-extern char ct_getatlikechar( void );
-
-#define CT_SETATLIKE_EXACT     0
-#define CT_SETATLIKE_WILDCARD  1
+extern BOOL ct_getsafety( void );
+extern void ct_setsafety( BOOL bSafety );
 
 HB_EXTERN_END
 
-#endif
+#endif /* HB_CTSTRFIL_H_ */

@@ -27,12 +27,17 @@ C_SOURCES = \
 	ctmath.c \
 	ctmath2.c \
 	ctnet.c \
+	ctpad.c \
 	ctset.c \
 	ctstr.c \
 	ctchksum.c \
 	ctcrypt.c \
+	ctstrfil.c \
 	ctwfunc.c \
 	ctwin.c \
+	datetime.c \
+	dattime2.c \
+	disk.c \
 	exponent.c \
 	files.c \
 	finan.c \
@@ -42,7 +47,6 @@ C_SOURCES = \
 	misc1.c \
 	num1.c \
 	numat.c \
-	pad.c \
 	pos1.c \
 	pos2.c \
 	posdiff.c \
@@ -65,8 +69,7 @@ PRG_SOURCES= \
 	color.prg \
 	ct.prg \
 	ctmisc.prg \
-	datetime.prg \
-	dattime2.prg \
+	cttime.prg \
 	invrtwin.prg \
 	numconv.prg \
 	screen2.prg \
@@ -75,4 +78,3 @@ PRG_SOURCES= \
 LIBNAME=ct
 
 include $(TOP)$(ROOT)config/lib.cf
-

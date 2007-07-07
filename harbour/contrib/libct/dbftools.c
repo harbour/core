@@ -3,12 +3,10 @@
  */
 
 /*
- * Harbour Project source code: 
- *   internal function header for CT3 string functions
+ * Harbour Project source code:
+ * Some dbf structure related functions
  *
- * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
- *        Author: Martin Vogel <vogel@inttec.de>
- *
+ * Copyright 2000 Alexander Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,46 +50,53 @@
  *
  */
 
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapirdd.h"
 
-#ifndef _CTSTR_H
-#define _CTSTR_H 1
+HB_FUNC_EXTERN( FIELDPOS );
+HB_FUNC_EXTERN( FIELDLEN );
+HB_FUNC_EXTERN( FIELDDEC );
 
-HB_EXTERN_BEGIN
+HB_FUNC( FIELDSIZE )
+{
+   HB_FUNC_EXEC( FIELDLEN );
+}
 
-extern int ct_str_init( void );
-extern int ct_str_exit( void );
+HB_FUNC( FIELDDECI )
+{
+   HB_FUNC_EXEC( FIELDDEC );
+}
 
-extern char *ct_at_exact_forward( char *pcString, size_t sStrLen,
-                                  char *pcMatch, size_t sMatchLen,
-                                  size_t *psMatchStrLen );
-extern char *ct_at_exact_backward( char *pcString, size_t sStrLen,
-                                   char *pcMatch, size_t sMatchLen,
-                                   size_t *psMatchStrLen );
-extern char *ct_at_wildcard_forward( char *pcString, size_t sStrLen,
-                                     char *pcMatch, size_t sMatchLen,
-                                     char cWildCard, size_t *psMatchStrLen );
-extern char *ct_at_wildcard_backward( char *pcString, size_t sStrLen,
-                                      char *pcMatch, size_t sMatchLen,
-                                      char cWildCard, size_t *psMatchStrLen );
-extern char *ct_at_charset_forward( char *pcString, size_t sStrLen,
-                                    char *pcCharSet, size_t sCharSetLen,
-                                    size_t *psMatchedCharPos );
-extern char *ct_at_charset_backward( char *pcString, size_t sStrLen,
-                                     char *pcCharSet, size_t sCharSetLen,
-                                     size_t *psMatchedCharPos );
+HB_FUNC( FIELDNUM )
+{
+   HB_FUNC_EXEC( FIELDPOS );
+}
 
-extern void ct_setref( int iNewSwitch );
-extern int  ct_getref( void );
-extern void ct_setatmupa( int iNewSwitch );
-extern int  ct_getatmupa( void );
-extern void ct_setatlike( int iNewSwitch );
-extern int  ct_getatlike( void );
-extern void ct_setatlikechar( char cNewChar );
-extern char ct_getatlikechar( void );
+HB_FUNC( DBFSIZE )
+{
+   HB_LONG llSize = 0;
+   AREAP pArea;
 
-#define CT_SETATLIKE_EXACT     0
-#define CT_SETATLIKE_WILDCARD  1
+   if( ( pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer() ) != NULL )
+   {
+      PHB_ITEM pSize = hb_itemNew( NULL );
+      ULONG ulRecSize, ulRecCount;
 
-HB_EXTERN_END
+      if( SELF_INFO( pArea, DBI_GETHEADERSIZE, pSize ) == SUCCESS )
+      {
+         llSize = hb_itemGetNL( pSize ) + 1;
+         if( SELF_INFO( pArea, DBI_GETRECSIZE, pSize ) == SUCCESS )
+         {
+            ulRecSize = hb_itemGetNL( pSize );
+            if( SELF_RECCOUNT( pArea, &ulRecCount ) == SUCCESS )
+            {
+               llSize += ( HB_LONG ) ulRecCount *ulRecSize;
+            }
+         }
+      }
+      hb_itemRelease( pSize );
+   }
 
-#endif
+   hb_retnint( llSize );
+}

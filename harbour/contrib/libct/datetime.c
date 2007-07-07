@@ -7,9 +7,9 @@
  *   CT3 Date & Time functions: - BOM() / EOM()
  *                              - BOQ() / EOQ()
  *                              - BOY() / EOY()
- *                              - STOD()
+ *                              - WOM() 
  *
- * Copyright 1999-2001 Marek Horodyski <homar@altkom.com.pl>
+ * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -54,6 +54,22 @@
  */
 
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *   Wom()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbdate.h"
+
 /*  $DOC$
  *  $FUNCNAME$
  *      BOM()
@@ -81,12 +97,32 @@
  *      EOM(),BOQ(),EOQ(),BOY(),EOY()
  *  $END$
  */
-Function BOM( date)
- date := If( ValType( date) == 'D', date, Date())
- if (empty(date))
-   return (date)
- endif
- Return StoD( SubStr( DtoS( date), 1, 6) + '01')
+
+HB_FUNC( BOM )
+{
+   LONG lDate;
+   int iYear, iMonth, iDay;
+
+   if( ISNIL( 1 ) )
+   {
+      hb_dateToday( &iYear, &iMonth, &iDay );
+      lDate = hb_dateEncode( iYear, iMonth, iDay );
+   }
+   else
+   {
+      lDate = hb_pardl( 1 );
+   }
+
+   if( lDate != 0 )
+   {
+      hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
+      hb_retd( iYear, iMonth, 1 );
+   }
+   else
+   {
+      hb_retdl( 0 );
+   }
+}
 
 
 /*  $DOC$
@@ -116,16 +152,38 @@ Function BOM( date)
  *      BOM(),BOQ(),EOQ(),BOY(),EOY()
  *  $END$
  */
-Function EOM( date)
- Local m
- date := If( ValType( date) == 'D', date, Date())
- if (empty(date))
-   return (date)
- endif
- m := Month( date)
- While Month( ++date) == m
- End
- Return --date
+
+HB_FUNC( EOM )
+{
+   LONG lDate;
+   int iYear, iMonth, iDay;
+
+   if( ISNIL( 1 ) )
+   {
+      hb_dateToday( &iYear, &iMonth, &iDay );
+      lDate = hb_dateEncode( iYear, iMonth, iDay );
+   }
+   else
+   {
+      lDate = hb_pardl( 1 );
+   }
+
+   if( lDate != 0 )
+   {
+      hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
+      iMonth++;
+      if( iMonth > 12 )
+      {
+         iMonth = 1;
+         iYear++;
+      }
+      hb_retdl( hb_dateEncode( iYear, iMonth, 1 ) - 1 );
+   }
+   else
+   {
+      hb_retdl( 0 );
+   }
+}
 
 
 /*  $DOC$
@@ -155,23 +213,34 @@ Function EOM( date)
  *      BOM(),EOM(),EOQ(),BOY(),EOY()
  *  $END$
  */
-Function BOQ( date)
- Local boq AS DATE, m AS NUMERIC, yyyy AS STRING
- date := If( ValType( date) == 'D', date, Date())
- if (empty(date))
-   return (date)
- endif
- yyyy := Str( Year( date), 4, 0)
- If     ( m := Month( date)) <= 3
-  boq := StoD( yyyy + '0101')
- ElseIf m <= 6
-  boq := StoD( yyyy + '0401')
- ElseIf m <= 9
-  boq := StoD( yyyy + '0701')
- Else
-  boq := StoD( yyyy + '1001')
- End
-Return boq
+
+HB_FUNC( BOQ )
+{
+   LONG lDate;
+   int iYear, iMonth, iDay;
+
+   if( ISNIL( 1 ) )
+   {
+      hb_dateToday( &iYear, &iMonth, &iDay );
+      lDate = hb_dateEncode( iYear, iMonth, iDay );
+   }
+   else
+   {
+      lDate = hb_pardl( 1 );
+   }
+
+   if( lDate != 0 )
+   {
+      hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
+      iMonth -= ( iMonth - 1 ) % 3;
+
+      hb_retd( iYear, iMonth, 1 );
+   }
+   else
+   {
+      hb_retdl( 0 );
+   }
+}
 
 
 /*  $DOC$
@@ -201,23 +270,39 @@ Return boq
  *      BOM(),EOM(),BOQ(),BOY(),EOY()
  *  $END$
  */
-Function EOQ( date)
- Local m AS NUMERIC, eoq AS DATE, yyyy AS STRING
- date := If( ValType( date) == 'D', date, Date())
- if (empty(date))
-  return (date)
- endif
- yyyy := Str( Year( date), 4, 0)
- If ( m := Month( date)) <= 3
-  eoq := StoD( yyyy + '0331')
- ElseIf m <= 6
-  eoq := StoD( yyyy + '0630')
- ElseIf m <= 9
-  eoq := StoD( yyyy + '0930')
- Else
-  eoq := StoD( yyyy + '1231')
- End
- Return eoq
+
+HB_FUNC( EOQ )
+{
+   LONG lDate;
+   int iYear, iMonth, iDay;
+
+   if( ISNIL( 1 ) )
+   {
+      hb_dateToday( &iYear, &iMonth, &iDay );
+      lDate = hb_dateEncode( iYear, iMonth, iDay );
+   }
+   else
+   {
+      lDate = hb_pardl( 1 );
+   }
+
+   if( lDate != 0 )
+   {
+
+      hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
+      iMonth += 3 - ( ( iMonth - 1 ) % 3 );
+      if( iMonth > 12 )
+      {
+         iMonth = 1;
+         iYear++;
+      }
+      hb_retdl( hb_dateEncode( iYear, iMonth, 1 ) - 1 );
+   }
+   else
+   {
+      hb_retdl( 0 );
+   }
+}
 
 
 /*  $DOC$
@@ -247,12 +332,32 @@ Function EOQ( date)
  *      BOM(),EOM(),BOQ(),EOQ(),EOY()
  *  $END$
  */
-Function BOY( date)
- date := If( ValType( date) == 'D', date, Date())
- if (empty(date))
-  return (date)
- endif
- Return StoD( Str( Year( date), 4, 0) + '0101')
+
+HB_FUNC( BOY )
+{
+   LONG lDate;
+   int iYear, iMonth, iDay;
+
+   if( ISNIL( 1 ) )
+   {
+      hb_dateToday( &iYear, &iMonth, &iDay );
+      lDate = hb_dateEncode( iYear, iMonth, iDay );
+   }
+   else
+   {
+      lDate = hb_pardl( 1 );
+   }
+
+   if( lDate != 0 )
+   {
+      hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
+      hb_retd( iYear, 1, 1 );
+   }
+   else
+   {
+      hb_retdl( 0 );
+   }
+}
 
 
 /*  $DOC$
@@ -282,12 +387,72 @@ Function BOY( date)
  *      BOM(),EOM(),BOQ(),EOQ(),BOY()
  *  $END$
  */
-Function EOY( date)
- date := If( ValType( date) == 'D', date, Date())
- if (empty(date))
-  return (date)
- endif
- Return StoD( Str( Year( date), 4, 0) + '1231')
+
+HB_FUNC( EOY )
+{
+   LONG lDate;
+   int iYear, iMonth, iDay;
+
+   if( ISNIL( 1 ) )
+   {
+      hb_dateToday( &iYear, &iMonth, &iDay );
+      lDate = hb_dateEncode( iYear, iMonth, iDay );
+   }
+   else
+   {
+      lDate = hb_pardl( 1 );
+   }
+
+   if( lDate != 0 )
+   {
+      hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
+      hb_retdl( hb_dateEncode( iYear + 1, 1, 1 ) - 1 );
+   }
+   else
+   {
+      hb_retdl( 0 );
+   }
+}
+
+
+static int hb_wom( int iYear, int iMonth, int iDay )
+{
+   int iWom;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_wom(%d, %d, %d)", iYear, iMonth, iDay ) );
+
+   iWom = iDay + hb_dateDOW( iYear, iMonth, 1 ) - 1;
+   if( iWom > 0 )
+      return ( iWom - hb_dateDOW( iYear, iMonth, iDay ) ) / 7 + 1;
+   else
+      return 0;
+}
+
+HB_FUNC( WOM )
+{
+   LONG lDate;
+   int iYear, iMonth, iDay;
+
+   if( ISNIL( 1 ) )
+   {
+      hb_dateToday( &iYear, &iMonth, &iDay );
+      lDate = hb_dateEncode( iYear, iMonth, iDay );
+   }
+   else
+   {
+      lDate = hb_pardl( 1 );
+   }
+
+   if( lDate != 0 )
+   {
+      hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
+      hb_retni( hb_wom( iYear, iMonth, iDay ) );
+   }
+   else
+   {
+      hb_retni( 0 );
+   }
+}
 
 
 /*  $DOC$
@@ -316,12 +481,11 @@ Function EOY( date)
  *  $SEEALSO$
  *  $END$
  */
-/* this function is allready implemented in RTL */
-/*
-Function StoD( cdate)
- Local ofd := Set( _SET_DATEFORMAT, 'dd.mm.yyyy'), rvd
- cdate := If( ValType( cdate) == 'C', cdate, DtoS( Date()))
- rvd := CtoD( SubStr( cDate, 7, 2) + '.' + SubStr( cDate, 5, 2)  + '.' + SubStr( cDate, 1, 4))
- Set( _SET_DATEFORMAT, ofd)
- Return rvd
-*/
+
+/* this function is allready implemented in RTL when HB_COMPAT_XPP is set */
+#ifndef HB_COMPAT_XPP
+HB_FUNC( STOD )
+{
+   hb_retds( hb_parclen( 1 ) >= 7 ? hb_parc( 1 ) : NULL );
+}
+#endif

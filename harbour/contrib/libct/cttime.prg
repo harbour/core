@@ -3,13 +3,12 @@
  */
 
 /*
- * Harbour Project source code: 
- *   internal function header for CT3 string functions
+ * xHarbour Project source code:
+ * TIMETOSEC(), SECTOTIME(), MILLISEC()
  *
- * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
- *        Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://www.harbour-project.org
+ * Copyright 2003 Piero Vincenzo Lupano <pierovincenzo1956@supereva.it>
+ * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,46 +51,49 @@
  *
  */
 
+function TIMETOSEC( cTime )
+local nSec := 0, nLen, i, aLim, aMod, nInd, n
+if cTime == NIL
+   nSec := seconds()
+elseif valtype( cTime ) == "C"
+   nLen := len( cTime )
+   if ( nLen + 1 ) % 3 == 0 .and. nLen <= 11
+      nInd := 1
+      aLim := { 24, 60, 60, 100 }
+      aMod := { 3600, 60, 1, 1/100 }
+      for i := 1 to nLen step 3
+         if isdigit( substr( cTime, i,     1 ) ) .and. ;
+            isdigit( substr( cTime, i + 1, 1 ) ) .and. ;
+            ( i == nLen - 1 .or. substr( cTime, i + 2, 1 ) == ":" ) .and. ;
+            ( n := val( substr( cTime, i, 2 ) ) ) < aLim[ nInd ]
+            nSec += n * aMod[ nInd ] 
+         else
+            nSec := 0
+            exit
+         endif
+         ++nInd
+      next
+   endif
+endif
+return round( nSec, 2) /* round FL val to be sure that you can compare it */
 
-#ifndef _CTSTR_H
-#define _CTSTR_H 1
 
-HB_EXTERN_BEGIN
+function SECTOTIME( nSec, lHundr )
+local i, h, n
+n := iif( !valtype( nSec ) == "N", seconds(), nSec )
+if valtype( lHundr ) == "L" .and. lHundr
+   h := ":" + strzero( ( nSec * 100 ) % 100, 2 )
+else
+   h := ""
+endif
+n := int( n % 86400 )
+for i := 1 to 3
+   h := strzero( n % 60, 2 ) + h
+   n := int( n / 60 )
+next
+return h
 
-extern int ct_str_init( void );
-extern int ct_str_exit( void );
 
-extern char *ct_at_exact_forward( char *pcString, size_t sStrLen,
-                                  char *pcMatch, size_t sMatchLen,
-                                  size_t *psMatchStrLen );
-extern char *ct_at_exact_backward( char *pcString, size_t sStrLen,
-                                   char *pcMatch, size_t sMatchLen,
-                                   size_t *psMatchStrLen );
-extern char *ct_at_wildcard_forward( char *pcString, size_t sStrLen,
-                                     char *pcMatch, size_t sMatchLen,
-                                     char cWildCard, size_t *psMatchStrLen );
-extern char *ct_at_wildcard_backward( char *pcString, size_t sStrLen,
-                                      char *pcMatch, size_t sMatchLen,
-                                      char cWildCard, size_t *psMatchStrLen );
-extern char *ct_at_charset_forward( char *pcString, size_t sStrLen,
-                                    char *pcCharSet, size_t sCharSetLen,
-                                    size_t *psMatchedCharPos );
-extern char *ct_at_charset_backward( char *pcString, size_t sStrLen,
-                                     char *pcCharSet, size_t sCharSetLen,
-                                     size_t *psMatchedCharPos );
-
-extern void ct_setref( int iNewSwitch );
-extern int  ct_getref( void );
-extern void ct_setatmupa( int iNewSwitch );
-extern int  ct_getatmupa( void );
-extern void ct_setatlike( int iNewSwitch );
-extern int  ct_getatlike( void );
-extern void ct_setatlikechar( char cNewChar );
-extern char ct_getatlikechar( void );
-
-#define CT_SETATLIKE_EXACT     0
-#define CT_SETATLIKE_WILDCARD  1
-
-HB_EXTERN_END
-
-#endif
+function MILLISEC( nDelay )
+HB_IDLESLEEP( nDelay / 1000 )
+return ""

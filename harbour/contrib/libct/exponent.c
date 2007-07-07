@@ -101,46 +101,46 @@ HB_FUNC( MANTISSA )
 
 #ifdef CT_EXPONENT_MANTISSA_BIT
 
-  union 
-  {
-     double value;
-     char   string[ sizeof( double )];
-  }  xConvert;
+   union
+   {
+      double value;
+      char string[sizeof( double )];
+   } xConvert;
 
-  xConvert.value = hb_parnd( 1 );
+   xConvert.value = hb_parnd( 1 );
 
-  if( xConvert.value != 0 )
-  {
-     xConvert.string[6] |= 0xF0;
-     xConvert.string[7] |= 0x3F;
-     xConvert.string[7] &= 0xBF;
-  }
+   if( xConvert.value != 0 )
+   {
+      xConvert.string[6] |= 0xF0;
+      xConvert.string[7] |= 0x3F;
+      xConvert.string[7] &= 0xBF;
+   }
 
-  hb_retnd( xConvert.value );
+   hb_retnd( xConvert.value );
 
 #else
 
-  double dValue;
+   double dValue;
 
-  dValue = hb_parnd( 1 );
+   dValue = hb_parnd( 1 );
 
-  if (dValue == 0.0)
-  {
-    hb_retnd( 0.0 );
-    return;
-  }
+   if( dValue == 0.0 )
+   {
+      hb_retnd( 0.0 );
+      return;
+   }
 
-  if (fabs(dValue)<1.0)
-  {
-    while (fabs(dValue)<1.0)
-      dValue *= 2.0;
-  }
-  else if (fabs(dValue)>=2.0)
-  {
-    while (fabs(dValue)>=2.0)
-      dValue /= 2.0;
-  }
-  hb_retnd( dValue );
+   if( fabs( dValue ) < 1.0 )
+   {
+      while( fabs( dValue ) < 1.0 )
+         dValue *= 2.0;
+   }
+   else if( fabs( dValue ) >= 2.0 )
+   {
+      while( fabs( dValue ) >= 2.0 )
+         dValue /= 2.0;
+   }
+   hb_retnd( dValue );
 
 #endif
 
@@ -197,58 +197,57 @@ HB_FUNC( EXPONENT )
 
 #ifdef CT_EXPONENT_MANTISSA_BIT
 
-  int  iExponent = 0;
+   int iExponent = 0;
 
-  union 
-  {
-     double value;
-     char   string[ sizeof( double )];
-  }  xConvert;
+   union
+   {
+      double value;
+      char string[sizeof( double )];
+   } xConvert;
 
-  xConvert.value = hb_parnd( 1 );
+   xConvert.value = hb_parnd( 1 );
 
-  if( xConvert.value != 0 ) 
-  {
-     iExponent = ( int ) ( xConvert.string[7] & 0x07F );
-     iExponent = iExponent << 4;
-     iExponent += ( int ) ( ( xConvert.string[6] & 0xF0 ) >> 4 );
-     iExponent -= 1023;
-  }
+   if( xConvert.value != 0 )
+   {
+      iExponent = ( int ) ( xConvert.string[7] & 0x07F );
+      iExponent = iExponent << 4;
+      iExponent += ( int ) ( ( xConvert.string[6] & 0xF0 ) >> 4 );
+      iExponent -= 1023;
+   }
 
-  hb_retni( iExponent );
+   hb_retni( iExponent );
 
 #else
 
-  int iExponent = 0;
-  double dValue;
+   int iExponent = 0;
+   double dValue;
 
-  dValue = hb_parnd( 1 );
+   dValue = hb_parnd( 1 );
 
-  if (dValue == 0.0)
-  {
-    hb_retni( 0 );
-    return;
-  }
+   if( dValue == 0.0 )
+   {
+      hb_retni( 0 );
+      return;
+   }
 
-  if( fabs( dValue ) < 1.0 )
-  {
-    while ( fabs( dValue ) < 1.0 )
-    {
-      dValue *= 2.0;
-      iExponent--;
-    }
-  }
-  else if ( fabs( dValue ) >= 2.0 )
-  {
-    while ( fabs( dValue ) >= 2.0 )
-    {
-      dValue /= 2.0;
-      iExponent++;
-    }
-  }
-  hb_retni( iExponent );
+   if( fabs( dValue ) < 1.0 )
+   {
+      while( fabs( dValue ) < 1.0 )
+      {
+         dValue *= 2.0;
+         iExponent--;
+      }
+   }
+   else if( fabs( dValue ) >= 2.0 )
+   {
+      while( fabs( dValue ) >= 2.0 )
+      {
+         dValue /= 2.0;
+         iExponent++;
+      }
+   }
+   hb_retni( iExponent );
 
 #endif
 
 }
-
