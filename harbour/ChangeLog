@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-07 11:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * common.mak
+     ! OBJEXT  -> HB_OBJ_EXT   
+       EXEEXT  -> HB_EXE_EXT   
+       DLLEXT  -> HB_DLL_EXT   
+       LIBEXT  -> HB_LIB_EXT   
+       LIBPREF -> HB_LIB_PREFIX
+
+   - contrib/libct/alt
+   - contrib/libct/token1.prg
+   - contrib/libct/ctcolton.c
+     - Removed obsolete files.
+       QUESTION: Shouldn't LIBCT's COLORTON() simply 
+       pass the call to HB_COLORTON() instead of replicating 
+       the functionality there (in .prg code)?
+
+   * source/rtl/scrollbr.prg
+     ! Formatting.
+ 
 2007-07-07 04:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/contrib/libct/dbftools.c
   - harbour/contrib/libct/dattime2.prg
