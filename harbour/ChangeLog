@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-07 11:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbusage.c
+    * added to credits list some Harbour developers which were missing
+      and also some xHarbour developers which are authors of modules
+      we borrowed and ported to xHarbour. It's highly possible that
+      still some people are missing. If you fill that you or someone
+      else should be added to this list then please send a message
+      to harbour devel list
+
 2007-07-07 11:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * common.mak
      ! OBJEXT  -> HB_OBJ_EXT   
