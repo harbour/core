@@ -604,7 +604,7 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
                      ::aRow[i] := hb_SToD("")
                   else
                      // Date format YYYY-MM-DD
-                     ::aRow[i] := hb_SToD(SubStr(::aRow[i], 6, 2) + Right(::aRow[i], 2) + Left(::aRow[i], 4))
+                     ::aRow[i] := hb_SToD(Left(::aRow[i], 4) + SubStr(::aRow[i], 6, 2) + Right(::aRow[i], 2))
                   endif
 
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
@@ -1756,7 +1756,7 @@ static function ClipValue2SQL(Value)
       case Valtype(Value) == "D"
          if !Empty(Value)
             // MySQL dates are like YYYY-MM-DD
-            cValue := "'"+StrZero(Year(Value), 4)  + "." + StrZero(Month(Value), 2) + "." + StrZero(Day(Value), 2) + "'"
+            cValue := "'"+StrZero(Year(Value), 4) + "-" + StrZero(Month(Value), 2) + "-" + StrZero(Day(Value), 2) + "'"
          else
             cValue := "''"
          endif
