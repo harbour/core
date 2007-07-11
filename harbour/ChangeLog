@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-11 09:58 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/mysql/tmysql.prg
+     ! Some further date fixes. (pls test)
+
 2007-07-11 09:53 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - doc/howtocvs.txt
    + doc/howtosvn.txt

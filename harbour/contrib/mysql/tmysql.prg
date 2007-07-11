@@ -529,7 +529,6 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
 
    //DAVID: replaced by ::aRow   local aRow := NIL
    local oRow := NIL
-   local cFormatoDaData := set(4)  //ACRESCENTEI
    local i
 
    //DAVID: use current row  default nRow to 0
@@ -1748,8 +1747,8 @@ return aStruct
 // Returns an SQL string with clipper value converted ie. Date() -> "'YYYY-MM-DD'"
 static function ClipValue2SQL(Value)
 
-   local cValue := ""
-    local cFormatoDaData := set(4)
+   local cValue
+
    do case
       case Valtype(Value) == "N"
          cValue := AllTrim(Str(Value))
@@ -1757,27 +1756,7 @@ static function ClipValue2SQL(Value)
       case Valtype(Value) == "D"
          if !Empty(Value)
             // MySQL dates are like YYYY-MM-DD
-            if cFormatoDaData = 'mm-dd-yyyy' // USA
-            cValue := "'"+PadL(Month(Value), 2, "0") + '-'+ PadL(Day(Value), 2, "0") + "-" + Str(Year(Value), 4) + "'"
-
-            elseif  cFormatoDaData = 'dd/mm/yyyy' // BRITISH ou FRENCH
-            cValue := "'"+PadL(Day(Value), 2, "0") + "/" + PadL(Month(Value), 2, "0") + "/" + Str(Year(Value), 4) + "'"
-
-            elseif cFormatoDaData = 'yyyy.mm.dd' // ANSI
-            cValue := "'"+Str(Year(Value), 4)  + "." + PadL(Month(Value), 2, "0") + "." + PadL(Day(Value), 2, "0") + "'"
-
-            elseif cFormatoDaData = 'dd.mm.yyyy' //GERMAN
-            cValue := "'"+PadL(Day(Value), 2, "0") + "." + PadL(Month(Value), 2, "0") + "." + Str(Year(Value), 4) +  "'"
-
-            elseif cFormatoDaData = 'dd-mm-yyyy'  //ITALIAN
-            cValue := "'"+PadL(Day(Value), 2, "0") + "-" + PadL(Month(Value), 2, "0") + "-" + Str(Year(Value), 4)  + "'"
-
-            elseif cFormatoDaData = 'yyyy/mm/dd' //JAPAN
-            cValue := "'"+Str(Year(Value), 4)  + "/" + PadL(Month(Value), 2, "0") + "/" + PadL(Day(Value), 2, "0") + "'"
-
-            elseif cFormatoDaData = 'mm/dd/yyyy' // AMERICAN
-             cValue := "'"+Str(Year(Value), 4)     + "/" + PadL(Month(Value), 2, "0") + "/" + PadL(Day(Value), 2, "0") + "'"
-            endif
+            cValue := "'"+StrZero(Year(Value), 4)  + "." + StrZero(Month(Value), 2) + "." + StrZero(Day(Value), 2) + "'"
          else
             cValue := "''"
          endif
