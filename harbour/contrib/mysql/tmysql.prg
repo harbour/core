@@ -602,37 +602,11 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
 
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
                   if Empty(::aRow[i])
-                     ::aRow[i] := CToD("")
-                  *else
+                     ::aRow[i] := hb_SToD("")
+                  else
                      // Date format YYYY-MM-DD
-
-                  * abaixo presume que o se utiliza (set date USA)
-                  *   ::aRow[i] := CToD(SubStr(::aRow[i], 6, 2) + "/" + Right(::aRow[i], 2) + "/" + Left(::aRow[i], 4))
-
-                   elseif cFormatoDaData = 'mm-dd-yyyy' // USA
-                    ::aRow[i] := ctod(substr(::aRow[i],6,2)+"-"+right(::aRow[i],2,0)+ "-" + Left(::aRow[i], 4))
-
-                    elseif  cFormatoDaData = 'dd/mm/yyyy' // BRITISH ou FRENCH
-                    ::aRow[i] :=  ctod(right(::aRow[i],2,0)+ "/"+ substr(::aRow[i],6,2)+"/"+ Left(::aRow[i], 4))
-
-                    elseif cFormatoDaData = 'yyyy.mm.dd' // ANSI
-                    ::aRow[i] := ctod(Left(::aRow[i], 4)+ "."+substr(::aRow[i],6,2)+"."+right(::aRow[i],2,0))
-
-                    elseif cFormatoDaData = 'dd.mm.yyyy' //GERMAN
-                    ::aRow[i] :=ctod(right(::aRow[i],2,0)+ "."+ substr(::aRow[i],6,2)+"."+ Left(::aRow[i], 4 ))
-
-                    elseif cFormatoDaData = 'dd-mm-yyyy'  //ITALIAN
-                    ::aRow[i] :=ctod(right(::aRow[i],2,0)+ "-"+ substr(::aRow[i],6,2)+"-"+ Left(::aRow[i], 4))
-
-                    elseif cFormatoDaData = 'yyyy/mm/dd' //JAPAN
-                    ::aRow[i] :=  ctod(Left(::aRow[i], 4)+ "/"+substr(::aRow[i],6,2)+"/"+right(::aRow[i],2,0))
-
-                    elseif cFormatoDaData = 'mm/dd/yyyy' // AMERICAN
-                    ::aRow[i] :=  ctod(substr(::aRow[i],6,2)+"/"+right(::aRow[i],2,0)+ "/" + Left(::aRow[i], 4))
-                    else
-                      ::aRow[i] := "''"
-                    endif
-
+                     ::aRow[i] := hb_SToD(SubStr(::aRow[i], 6, 2) + Right(::aRow[i], 2) + Left(::aRow[i], 4))
+                  endif
 
                case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_BLOB_TYPE
                   // Memo field
@@ -1253,7 +1227,6 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
            ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_LONGLONG_TYPE .OR.;
            ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_INT24_TYPE .OR. ;
            ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DECIMAL_TYPE
-
          aRow[i] := 0
 
       case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_TINY_TYPE
@@ -1264,7 +1237,7 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
          aRow[i] := 0.0
 
       case ::aFieldStruct[i][MYSQL_FS_TYPE] == MYSQL_DATE_TYPE
-         aRow[i] := CToD("")
+         aRow[i] := hb_SToD("")
 
       otherwise
          aRow[i] := nil

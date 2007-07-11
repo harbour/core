@@ -2,99 +2,92 @@
  * $Id$
  */
 
-HOW TO USE THE CVS
+HOW TO USE THE SVN
 ------------------
 
 Content
 =======
 
-1.1 Here's how to prepare for uploading to the CVS server
-1.2 Here's how to upload your changes to the CVS server
+1.1 Here's how to prepare for uploading to the SVN server
+1.2 Here's how to upload your changes to the SVN server
 1.3 Here's how to format your ChangeLog entries
-1.4 Here's how to use the CVS server in anonymous read-only mode
-1.5 Switching from anonymous access to read/write access
-1.6 Things to do to avoid damaging the SourceForge CVS tree
-1.7 How I got SSH and CVS to work together
-1.8 How to add CVS ID to new files
+1.4 Here's how to use the SVN server in anonymous read-only mode
+1.5 Things to do to avoid damaging the SourceForge SVN tree
+1.6 How to add SVN ID to new files
 
-1.1 Here's how to prepare for uploading to the CVS server
+1.1 Here's how to prepare for uploading to the SVN server
 =========================================================
-by Viktor Szakats <viktor.szakats@syenar.hu>
+by Viktor Szakats
 
  1) Read the Harbour FAQ (http://www.harbour-project.org/faq), monitor the
     mailing-list (http://www.harbour-project.org/faq/harbour34.html),
     consult with the developers, make contributions. This way your chances
-    are high to get a RW access to the CVS.
+    are high to get a RW access to the repository.
  2) Before uploading anything you'll need Developer (RW) status for the
-    Harbour CVS server. To get this please make a request on the list,
+    Harbour SVN server. To get this please make a request on the list,
     or contact the Harbour Administrators. Note that getting Developer
     status is not an automatic process.
- 3) You'll need a CVS client for your platform.
- 4) You'll need an SSH client for your platform.
- 5) You'll need to configure CVS and SSH for the Harbour Project.
-    (see section 1.7)
- 6) Do a complete checkout to get the fresh source tree.
+ 3) You'll need an SVN client for your platform.
+ 4) Do a complete checkout to get the fresh source tree.
 
-1.2 Here's how to upload your changes to the CVS server
+1.2 Here's how to upload your changes to the SVN server
 =======================================================
-by Viktor Szakats <viktor.szakats@syenar.hu>
+by Viktor Szakats
 
  1) Do the changes in the source, and in parallel modify ChangeLog
  2) Go online (if needed)
- 3) CVS LOGIN (if needed)
- 4) CVS UPDATE
- 5) Resolve all conflicts (mostly ChangeLog)
- 6) Copy the last ChangeLog entry to the clipboard
- 7) CVS COMMIT (starts another task on my system)
- 8) New email message, paste the new ChangeLog entry
- 9) Copy and paste the ChangeLog entry header to the subject after
+ 3) SVN UPDATE
+ 4) Resolve all conflicts
+ 5) Copy the last ChangeLog entry to the clipboard
+ 6) SVN COMMIT --editor-cmd notepad.exe --username sfuser
+    Change notepad.exe to the editor of your choice and platform.
+    Change "sfuser" to your sf.net username.
+ 7) New email message, paste the new ChangeLog entry
+ 8) Copy and paste the ChangeLog entry header to the subject after
     "CHANGELOG: "
-10) The CVS pops up a window with the changed filenames
-11) Check if all the changed filenames are referred in the ChangeLog entry,
+ 9) The SVN pops up a window with the changed filenames
+10) Check if all the changed filenames are referred in the ChangeLog entry,
     if not, make the corrections and start again
-12) Paste the ChangeLog entry header to the CVS window, save, exit
-13) CVS is now uploading,
+11) Paste the ChangeLog entry header to the SVN window, save, exit
+12) SVN is now uploading,
     if there are any errors, make the corrections and start again
-14) Always check if the upload session ended without errors.
-15) Send the email message containing the changes
-16) Go offline (if needed)
+13) Always check if the upload session ended without errors.
+14) Send the email message containing the changes
+15) Go offline (if needed)
 
 alternative method:
-by Ryszard Glab <rglab@imid.med.pl>
+by Ryszard Glab
 
  1) Do the changes in the source
- 2) Run CVS UPDATE redirecting the output into a file
-    (for example: "cvs -z3 update -d >.log"
- 3) Resolve all conflicts, run cvs update again (see point 2), recompile
+ 2) Run SVN UPDATE redirecting the output into a file
+    (for example: "SVN update -d >.log"
+ 3) Resolve all conflicts, run SVN update again (see point 2), recompile
     all sources, fix all errors
  4) Copy all names of modifed, added or deleted files (files marked with
     'M', 'A' or 'D' flag) from update log into a ChangeLog
  5) Write necessary comments in the ChangeLog
  6) Save all your changes from ChangeLog into a file
- 7) Run CVS UPDATE again
+ 7) Run SVN UPDATE again
  8) Commit changes running:
-    cvs commit -F file_with_saved_ChangeLog_changes
+    SVN commit -F file_with_saved_ChangeLog_changes --username sfuser
  9) Mail file_with_saved_ChangeLog_changes as an email body (do not
     send it as an attachment) to the harbour list
 
 Important notes:
 
- 1) *Always* add a ChangeLog entry when committing to the CVS.
- 2) When adding a new file to the CVS, always use lower case 8.3
-    filenames (*), add a CVS ID header to the file, don't use tabs
+ 1) *Always* add a ChangeLog entry when committing to the SVN.
+ 2) When adding a new file to the SVN, always use lower case 8.3
+    filenames (*), add a SVN ID header to the file, don't use tabs
     in the file, end the file with a newline char.
     Possibly consult other Developers about the new filename and file
     placement.
     Add the new filename to the related makefiles.
     (*) There are some exceptions: ChangeLog.*, Makefile, COPYING,
         ERRATA and TODO for example.
- 3) When adding a new directory, always consult the Developers about
-    the name and placing of it. On the CVS, there's no way to completely
-    remove a directory, that's why this is important.
 
 1.3 Here's how to format your ChangeLog entries
 ===============================================
-by Viktor Szakats <viktor.szakats@syenar.hu>
+by Viktor Szakats
 
 - Always add new entries to the top of the ChangeLog file.
 
@@ -102,7 +95,7 @@ by Viktor Szakats <viktor.szakats@syenar.hu>
   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email_address>
 
   For example:
-    2000-05-27 23:12 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
+    2000-05-27 23:12 UTC+0100 Viktor Szakats <harbour.01 syenar.hu>
 
 - Add a entry body which lists all filenames changed, all of
   them with full path spec. Mention the name of the changed function or
@@ -129,45 +122,27 @@ by Viktor Szakats <viktor.szakats@syenar.hu>
 
 - Leave an empty line between the header and body and one after the body.
 
-1.4 Here's how to use the CVS server in anonymous read-only mode
+1.4 Here's how to use the SVN server in anonymous read-only mode
 ================================================================
 
 Please read the following FAQ entry:
 http://www.harbour-project.org/faq/harbour25.html
 
-1.5 Switching from anonymous access to read/write access
-========================================================
-by David G. Holm <Harbour@SpaceMoose.com>
-
-1) Change your CVSROOT variable from
-      :pserver:anonymous@harbour-project.cvs.sourceforge.net:/cvsroot/harbour-project
-   to
-      :ext:your_source_forge_ID_in_lower_case@harbour-project.cvs.sourceforge.net:/cvsroot/harbour-project
-
-2) Set up CVS to use SSH (see section 1.7 for details).
-
-3) Visit each and every one of the CVS subdirectories in your local
-   CVS tree and change the contents of the 'Root' file from your old
-   CVSROOT contents to your new CVSROOT contents.
-
-Note: Every time you issue a CVS command, you will have to enter your
-SourceForge password.
-
-1.6 Things to do to avoid damaging the SourceForge CVS tree
+1.5 Things to do to avoid damaging the SourceForge SVN tree
 ===========================================================
-by David G. Holm <Harbour@SpaceMoose.com>
+by David G. Holm
 
-1) Always do your Harbour development using your local CVS tree. Do not
-   do your development outside your local CVS tree and then copy your
-   changes into your local CVS tree to commit them, because that leads
+1) Always do your Harbour development using your local SVN tree. Do not
+   do your development outside your local SVN tree and then copy your
+   changes into your local SVN tree to commit them, because that leads
    easily to accidentally overwriting changes made by others, because
    you didn't notice that a module that you were also working on was
    changed by someone else. By always doing Harbour development using
-   your local CVS tree, changes made by others will be merged with your
+   your local SVN tree, changes made by others will be merged with your
    changes and you only need to recompile and retest before committing.
 
-2) Always run 'cvs update' from the 'harbour' directory before you run
-   'cvs commit'. Ideally, you should redirect the output from the update
+2) Always run 'SVN update' from the 'harbour' directory before you run
+   'SVN commit'. Ideally, you should redirect the output from the update
    to a file and look at the results to confirm that you are ready to do
    a commit. Any files marked M, A or D are files that you have modified
    or are adding or deleting. Confirm that you have comments for all of
@@ -175,86 +150,20 @@ by David G. Holm <Harbour@SpaceMoose.com>
    then you need to recompile and retest before you commit your changes.
 
    If you see any conflicts reported in the update output, then you need
-   to resolve them before committing. CVS is generally good at merging
+   to resolve them before committing. SVN is generally good at merging
    changes, so you probably won't see conflicts very often, but if you
-   edit the ChangeLog file before you run 'cvs update' and other changes
+   edit the ChangeLog file before you run 'SVN update' and other changes
    have been committed by others, then ChangeLog will have conflicts. To
    resolve those conflicts, simply remove the conflict markers. What I do
    to avoid conflicts to ChangeLog is to record my changes in changes.txt
    and then copy them into ChangeLog between the update and the commit.
 
-1.7 How I got SSH and CVS to work together
-==========================================
-by David G. Holm <Harbour@SpaceMoose.com>
-
-The trick was in how to set up the CVSROOT variable.
-I did this on Windows 2000, but it should be similar
-for OS/2, Windows 95, 98, ME, NT, and XP.
-
-Note: Your CVS ID is the same as your SourceForge login ID, with one
-      very important difference: Any and all upper case letters are
-      converted to lower case. So if your SourceForge login ID is
-      MyFullName, then your CVS ID will be myfullname. To make use
-      of this procedure, be sure to replace all instances of dholm
-      with your actual CVS ID.
-
-First I set up SSH, using the following steps:
-
-1) I pointed my web browser to ftp://ftp.cs.hut.fi/pub/ssh/contrib/
-2) I downloaded the ssh-1.2.14-win32bin.zip file
-3) I unzipped the file into a directory that was already on my PATH
-4) I created a directory E:\hb-dev\ for my Harbour development CVS tree
-5) I created a batch file LOGIN.BAT, in the E:\hb-dev\ directory, with
-   the following commands in it:
-      @echo off
-      SET HOME=D:\hb-dev\
-      ssh -l dholm harbour-project.cvs.sourceforge.net
-      ssh -l dholm Harbour-project.sourceforge.net
-6) I ran the LOGIN batch file, which automatically created a .ssh
-   directory under D:\hb-dev\, automatically added SourceForge to
-   my list of known hosts, created a random seed, and prompted me
-   for my  password.
-7) I entered my password and SourceForge told me that I was logged
-   into a restricted shell where I can't do anything and kicked me
-   off of the CVS server. A second password prompt then appeared.
-8) I entered my password and got logged into a SourceForge shell,
-   thus confirming that SSH is configured properly.
-9) I entered "exit" to quit back to the DOS prompt.
-
-Next I set up CVS, using the following steps:
-
-1) I pointed my browser to http://download.cyclic.com/pub/cvs-1.10/windows/
-2) I downloaded the cvs-1.10-win.zip file
-3) I renamed my old CVS.EXE to CVS-OLD.EXE
-4) I unzipped the new file into a directory that was already on my PATH
-5) I created a batch file CHECKOUT.BAT, in my E:\hb-dev\ directory,
-      with the following commands in it:
-      @echo off
-      SET HOMEDRIVE=D:
-      SET HOMEPATH=/hb-dev/
-      SET HOME=D:\hb-dev\
-      SET CVSROOT=:ext:dholm@harbour-project.cvs.sourceforge.net:/cvsroot/harbour-project
-      SET CVS_RSH=ssh
-      cvs co harbour
-6) I ran the CHECKOUT batch file and was prompted for my SourceForge
-   password. And it checked out the entire harbour CVS tree!
-
-So all you have to do is make the obvious substitions for drive letters,
-path names, and user IDs, and this procedure should work for you.
-You may not even have to download a new copy of CVS, but you may
-have to have a text mode version of SSH.
-
-I found the trick to setting up the CVSROOT properly by doing a search for
-"CVS SSH NT" at http://www.google.com/ and following the third link, named
-"Configuring WinCVS and Secure SHell on Windows NT" and located at
-http://www.cc.gatech.edu/classes/RWL/Projects/scenicview/Web/cvs-ssh-config.html
-
-1.8 How to add CVS ID to new files
+1.6 How to add SVN ID to new files
 ==================================
-by Maurilio Longo <maurilio.longo@libero.it>
+by Maurilio Longo
 
-When a new file is added to cvs tree it has not a CVS ID.
-CVS IDs look like this:
+When a new file is added to SVN tree it has not a SVN ID.
+SVN IDs look like this:
 
 /*
  * $Id$
@@ -267,12 +176,14 @@ To add one to a file lacking it simply put as first lines:
  * Chr(36) + "Id" + Chr(36)
  */
 
-I can't write it here because cvs server would change it as soon as I
+I can't write it here because SVN server would change it as soon as I
 commit this file, but second line should not have Chr(36) but $ signs
 and no spaces between dollar sign and Id.
 
-as soon as you commit your file cvs ID string will be expanded
-by cvs server to full length.
+as soon as you commit your file SVN ID string will be expanded
+by SVN server to full length.
 
 Note that last dollar sign is mandatory.
 
+Run this command and commit:
+svn propset svn:keywords Id "filename"
