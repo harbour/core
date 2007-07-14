@@ -93,7 +93,8 @@ static int ct_daysinmonth( int iMonth, BOOL bLeap )
 
 static int ct_daystomonth( int iMonth, BOOL bLeap )
 {
-   int iMonthes[] = { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
+   static const int iMonthes[] =
+               { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
 
    return ( ( iMonth < 1 && iMonth > 12 ) ? 0 : iMonthes[iMonth - 1] +
             ( ( bLeap && iMonth > 2 ) ? 1 : 0 ) );
@@ -909,7 +910,7 @@ HB_FUNC( WEEK )
    int iYear, iMonth, iDay, iWeek;
    PHB_ITEM pDate = hb_param( 1, HB_IT_DATE );
    LONG lDate = 0;
-   BOOL bSWN = ( ISLOG( 2 ) ? hb_parl( 2 ) : 0 );
+   BOOL bSWN = ( ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
 
    if( ISDATE( 1 ) )
    {
@@ -942,7 +943,13 @@ HB_FUNC( WEEK )
    }
    else
    {
-      LONG lDate2 = lDate + 3 - ( ( hb_dateDOW( iYear, iMonth, iDay ) + 5 ) % 7 );
+      LONG lDate2;
+
+      if( hb_set.HB_SET_DATEFORMAT && ( hb_set.HB_SET_DATEFORMAT[0] == 'd' ||
+                                        hb_set.HB_SET_DATEFORMAT[0] == 'D' ) )
+         lDate2 = lDate + 3 - ( hb_dateDOW( iYear, iMonth, iDay ) + 5 ) % 7;
+      else
+         lDate2 = lDate + 4 - hb_dateDOW( iYear, iMonth, iDay );
 
       iWeek = ( ct_doy( lDate2 ) - 1 ) / 7 + 1;
    }

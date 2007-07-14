@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-14 12:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompat.ch
+    ! changed hb_adler() to hb_adler32()
+
+  * harbour/contrib/libct/dattime2.c
+    * changed WEEK() to be exactly CT3 compatible. I do not know why
+      but in CT3 WEEK() checks if the first character of date format
+      is 'd' or 'D' and in such case uses differ algorithm to calculate
+      week number.
+
 2007-07-11 12:04 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/mysql/tmysql.prg
      ! Some fixes for the previous fixes.
