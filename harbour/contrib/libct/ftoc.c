@@ -51,9 +51,7 @@
  *
  */
 
-
 #include "ct.h"
-
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -94,15 +92,15 @@
 
 HB_FUNC( FTOC )
 {
-   union 
+   union
    {
       double value;
-      char   string[ sizeof( double )];
-   }  xConvert;
+      char   string[sizeof( double )];
+   } xConvert;
 
-  xConvert.value = hb_parnd( 1 );
+   xConvert.value = hb_parnd( 1 );
 
-  hb_retclen( xConvert.string, sizeof( double ) );
+   hb_retclen( xConvert.string, sizeof( double ) );
 }
 
 
@@ -146,24 +144,17 @@ HB_FUNC( FTOC )
 
 HB_FUNC( CTOF )
 {
-   union 
+   union
    {
       double value;
-      char   string[ sizeof( double )];
-   }  xConvert;
-  char *   pcString;
-  int      i;
+      char   string[sizeof( double )];
+   } xConvert;
 
-  if (hb_parclen( 1 ) == sizeof( double ))
-  {
-    pcString = hb_parc( 1 );
-
-    for (i=0; i < (int) sizeof(double); i++)
-      xConvert.string[i] = pcString[i];
-
-    hb_retnd( xConvert.value );
-  }
-  else
-    hb_retnd( 0.0 );
+   if( hb_parclen( 1 ) >= sizeof( double ) )
+   {
+      memcpy( xConvert.string, hb_parc( 1 ), sizeof( double ) );
+      hb_retnd( xConvert.value );
+   }
+   else
+      hb_retnd( 0.0 );
 }
-

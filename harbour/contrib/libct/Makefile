@@ -22,6 +22,7 @@ C_SOURCES = \
 	charrepl.c \
 	charsort.c \
 	charswap.c \
+	color.c \
 	count.c \
 	ctc.c \
 	ctmath.c \
@@ -66,11 +67,9 @@ C_SOURCES = \
 	wordtoch.c \
 
 PRG_SOURCES= \
-	color.prg \
 	ct.prg \
 	ctmisc.prg \
 	cttime.prg \
-	invrtwin.prg \
 	numconv.prg \
 	screen2.prg \
 	setlast.prg \

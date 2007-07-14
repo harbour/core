@@ -3036,6 +3036,7 @@ static void hb_gt_trm_Redraw( int iRow, int iCol, int iSize )
       if( !hb_gt_GetScrChar( iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
          break;
 
+      usChar &= 0xff;
       if( bAttr & HB_GT_ATTR_BOX )
       {
          iColor = bColor | ( s_termState.boxattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );

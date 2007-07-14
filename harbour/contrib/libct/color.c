@@ -4,20 +4,9 @@
 
 /*
  * Harbour Project source code:
- *   CT3 video functions (color-like functions)
+ *   CT3 video function: - INVERTATTR(), INVERTWIN(), COLORTON()
  *
- *     Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>:
- *                        - INVERTATTR()
- *
- *     Copyright 2002 Walter Negro <anegro@overnet.com.ar>:
- *                        - NTOCOLOR()
- *                        - COLORTON()
- *                       
- *     Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>:
- *                        - ENHANCED()
- *                        - STANDARD()
- *                        - UNSELECTED()
- *	 
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -61,125 +50,104 @@
  *
  */
 
-#include "color.ch"
-#include "common.ch"
-
-
-FUNCTION INVERTATTR( xAttr )
-  LOCAL n := ColorToN( xAttr )
-RETURN HB_BITSHIFT( HB_BITAND( n, 0x0F ), 4 ) + HB_BITSHIFT( n, -4 )
-
+#include "hbapi.h"
+#include "hbapigt.h"
 
 /*  $DOC$
  *  $FUNCNAME$
- *      NTOCOLOR()
+ *      INVERTATTR()
  *  $CATEGORY$
  *      CT3 video functions
  *  $ONELINER$
+ *     
  *  $SYNTAX$
- *      NTOCOLOR ( <nAttr>, [<lColorCode>] ) -> <cAttr>
+ *     
  *  $ARGUMENTS$
- *      <nAttr>    Designates the value for the combined numeric color
- *                 attributes.
- *
- *   <lColorCode>  If designated as .F. or if the parameter is omitted,
- *                 NTOCOLOR() returns a string with a numeric color code.
- *                 When designated as .T., NTOCOLOR() returns a string with 
- *                 the CA-Clipper alpha color coding.
- *
  *  $RETURNS$
- *      NTOCOLOR() returns the designated color attribute in the NN/NN 
- *      or CC/CC form.
- *
  *  $DESCRIPTION$
- *      NTOCOLOR() converts a color attribute returned from another function 
- *      in numeric form, into the alphanumeric data format.  Use this 
- *      attribute in conjunction with the CA-Clipper SET COLOR TO command.
- *
  *      TODO: add documentation
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
+ *      INVERTATTR() is compatible with CT3's INVERTATTR().
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.prg, library is libct.
+ *      Source is invertcl.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */
 
-FUNCTION NTOCOLOR( nColor, lChar )
+HB_FUNC( INVERTATTR )
+{
+   int iAttr;
 
-  local nColorFore
-  local nColorBack
-  local lHiColor
-  local lBlinking
-  local cColor := ""
+   iAttr = ISCHAR( 1 ) ? hb_gtColorToN( hb_parc( 1 ) ) : hb_parni( 1 );
+   hb_retni( ( iAttr & 0x88 ) |
+             ( ( iAttr & 0x07 ) << 4 ) |
+             ( ( iAttr >> 4 ) & 0x07 ) );
+}
 
-  DEFAULT lChar TO .f.
 
-  if valtype( nColor ) == "N" .and. nColor >= 0 .and. nColor < 256
+/*  $DOC$
+ *  $FUNCNAME$
+ *      INVERTWIN()
+ *  $CATEGORY$
+ *      CT3 video functions
+ *  $ONELINER$
+ *     
+ *  $SYNTAX$
+ *     
+ *  $ARGUMENTS$
+ *  $RETURNS$
+ *  $DESCRIPTION$
+ *      TODO: add documentation
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      Started
+ *  $COMPLIANCE$
+ *      INVERTWIN() is compatible with CT3's INVERTWIN().
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Source is invertcl.c, library is libct.
+ *  $SEEALSO$
+ *  $END$
+ */
 
-     nColorFore = nColor % 16
-     nColorBack = INT( nColor / 16 )
+HB_FUNC( INVERTWIN )
+{
+   int iTop, iLeft, iBottom, iRight;
+   SHORT sTop, sLeft;
 
-     if !lChar
+   hb_gtGetPos( &sTop, &sLeft );
 
-        cColor = strzero( nColorFore, 2 ) + "/" + strzero( nColorBack, 2 )
+   iTop    = ISNUM( 1 ) ? hb_parni( 1 ) : sTop;
+   iLeft   = ISNUM( 2 ) ? hb_parni( 2 ) : sLeft;
+   iBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
+   iRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
 
-     else
-       
-        lHiColor  = nColorFore > 7
-        lBlinking = nColorBack > 7
+   while( iTop <= iBottom )
+   {
+      int iCol = iLeft;
+      while( iCol <= iRight )
+      {
+         BYTE bColor, bAttr;
+         USHORT usChar;
 
-        nColorFore = nColorFore % 8
-        nColorBack = nColorBack % 8
-
-        cColor = n2c( nColorFore ) + if( lHiColor, "+", "" ) + "/" +;
-                 n2c( nColorBack ) + if( lBlinking, "*", "" )
-
-     endif
-  endif
-
-  return cColor
-
-static function n2c( nColor )
-
-  do case
-  case nColor = 0
-     return "N"
-  case nColor = 1
-     return "B"
-  case nColor = 2
-     return "G"
-  case nColor = 3
-     return "BG"
-  case nColor = 4
-     return "R"
-  case nColor = 5
-     return "BR"
-  case nColor = 6
-     return "GR"
-  case nColor = 7
-     return "W"
-  endcase
-
-  return ""
-
-static function c2n( cColor )
-  
-  local nColor := 0
-
-  cColor = upper( cColor )
-
-  nColor += if( "B" $ cColor, 1, 0 )
-  nColor += if( "G" $ cColor, 2, 0 )
-  nColor += if( "R" $ cColor, 4, 0 )
-  nColor += if( "W" $ cColor, 7, 0 )
-
-  return nColor
+         hb_gtGetChar( iTop, iCol, &bColor, &bAttr, &usChar );
+         bColor = ( bColor & 0x88 ) |
+                  ( ( bColor & 0x07 ) << 4 ) |
+                  ( ( bColor >> 4 ) & 0x07 );
+         hb_gtPutChar( iTop, iCol, bColor, bAttr, usChar );
+         ++iCol;
+      }
+      ++iTop;
+   }
+}
 
 
 /*  $DOC$
@@ -220,70 +188,71 @@ static function c2n( cColor )
  *  $END$
  */
 
-FUNCTION COLORTON( cColor )
+HB_FUNC( COLORTON )
+{
+   if( ISCHAR( 1 ) )
+      hb_retni( hb_gtColorToN( hb_parc( 1 ) ) );
+   else
+      hb_retni( hb_parni( 1 ) );
+}
 
-  local cColorFore, cColorBack
-  local nColorFore, nColorBack
-  local lHiColor := .f., lBlinking := .f.
-  local nSep
 
-  if valtype( cColor ) == "N"
-     return cColor
-  endif
+/*  $DOC$
+ *  $FUNCNAME$
+ *      COLORTON()
+ *  $CATEGORY$
+ *      CT3 video functions
+ *  $ONELINER$
+ *  $SYNTAX$
+ *      COLORTON ( <cAttr> ) -> <nAttr>
+ *  $ARGUMENTS$
+ *      <cAttr>    Designates the alphanumeric color attribute that is
+ *                 converted in NN/NN or CC/CC form.
+ *
+ *  $RETURNS$
+ *      COLORTON() returns a number that corresponds to the combined numeric
+ *      color attribute.
+ *
+ *  $DESCRIPTION$
+ *      COLOR TO (N)umeric
+ *      The function changes an alphanumeric color attribute from NN/NN or 
+ *      CC/CC into a combined numeric attribute.  These combined attribute 
+ *      values are useful with the CA-Clipper Tools functions STRSCREEN(), 
+ *      SCREENMIX(), SCREENATTR(), and the CA-Clipper commands 
+ *      SAVE/RESTORE SCREEN.
+ *
+ *      TODO: add documentation
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      Started
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Source is color.prg, library is libct.
+ *  $SEEALSO$
+ *  $END$
+ */
 
-  if valtype( cColor ) == "C"
+HB_FUNC( NTOCOLOR )
+{
+   char szColorString[ 10 ];
+   int iColor;
 
-     if ( nSep := at( ",", cColor ) ) <> 0
-        cColor := left( cColor, nSep - 1 )
-     endif
+   iColor = ISNUM( 1 ) ? hb_parni( 1 ) : -1;
 
-     if ( nSep := at( "/", cColor ) ) == 0
-
-        cColorFore = cColor
-        cColorBack = ""
-     else
-
-        cColorFore = alltrim( substr( cColor, 1, nSep - 1 ) )
-        cColorBack = alltrim( substr( cColor, nSep + 1 ) )
-     endif
-
-     if "+" $ cColorFore .or. "+" $ cColorBack
-        lHiColor  = .t.
-        cColorFore = strtran( cColorFore, "+", "" )
-        cColorBack = strtran( cColorBack, "+", "" )
-     endif
-
-     if "*" $ cColorFore .or. "*" $ cColorBack
-        lBlinking = .t.
-        cColorFore = strtran( cColorFore, "*", "" )
-        cColorBack = strtran( cColorBack, "*", "" )
-     endif
-
-     nColorFore = val( cColorFore )
-     nColorBack = val( cColorBack )
-
-     if nColorFore > 0 .or. nColorBack > 0
-        return nColorFore + nColorBack * 16
-     endif
-
-     if len( cColorFore ) > 2 .or. len( cColorBack ) > 2
-        return 0
-     endif
-
-     nColorFore = c2n( cColorFore )
-     nColorBack = c2n( cColorBack )
-
-     if nColorFore > 7 .or. nColorBack > 7
-        return 0
-     endif
-
-     nColorFore += if( lHiColor, 8, 0 )
-     nColorBack += if( lBlinking, 8, 0 )
-
-     return nColorFore + nColorBack * 16
-  endif
-
-  return 0
+   if( iColor >= 0x00 && iColor <= 0xff )
+   {
+      if( ISLOG( 2 ) && hb_parl( 2 ) )
+         hb_gtColorsToString( &iColor, 1, szColorString, 10 );
+      else
+         snprintf( szColorString, 10, "%02d/%02d", iColor & 0x0f, iColor >> 4 );
+      hb_retc( szColorString );
+   }
+   else
+      hb_retc( NULL );
+}
 
 
 /*  $DOC$
@@ -314,11 +283,12 @@ FUNCTION COLORTON( cColor )
  *  $END$
  */
 
-FUNCTION ENHANCED()
+HB_FUNC( ENHANCED )
+{
+   hb_gtColorSelect( HB_CLR_ENHANCED );
+   hb_retc( NULL );
+}
 
-   ColorSelect( CLR_ENHANCED )
-
-   RETURN ""
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -348,11 +318,12 @@ FUNCTION ENHANCED()
  *  $END$
  */
 
-FUNCTION STANDARD()
+HB_FUNC( STANDARD )
+{
+   hb_gtColorSelect( HB_CLR_STANDARD );
+   hb_retc( NULL );
+}
 
-   ColorSelect( CLR_STANDARD )
-
-   RETURN ""
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -382,8 +353,8 @@ FUNCTION STANDARD()
  *  $END$
  */
 
-FUNCTION UNSELECTED()
-
-   ColorSelect( CLR_UNSELECTED )
-
-   RETURN ""
+HB_FUNC( UNSELECTED )
+{
+   hb_gtColorSelect( HB_CLR_UNSELECTED );
+   hb_retc( NULL );
+}

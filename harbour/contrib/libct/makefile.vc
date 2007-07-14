@@ -127,6 +127,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\charrepl.obj \
    $(OBJ_DIR)\charsort.obj \
    $(OBJ_DIR)\charswap.obj \
+   $(OBJ_DIR)\color.obj \
    $(OBJ_DIR)\count.obj \
    $(OBJ_DIR)\ctc.obj \
    $(OBJ_DIR)\ctmath.obj \
@@ -135,6 +136,11 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
    $(OBJ_DIR)\ctcrypt.obj \
+   $(OBJ_DIR)\ctpad.obj \
+   $(OBJ_DIR)\cttime.obj \
+   $(OBJ_DIR)\datetime.obj \
+   $(OBJ_DIR)\dattime2.obj \
+   $(OBJ_DIR)\dbftools.obj \
    $(OBJ_DIR)\exponent.obj \
    $(OBJ_DIR)\finan.obj \
    $(OBJ_DIR)\ftoc.obj \
@@ -143,7 +149,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\misc1.obj \
    $(OBJ_DIR)\num1.obj \
    $(OBJ_DIR)\numat.obj \
-   $(OBJ_DIR)\pad.obj \
    $(OBJ_DIR)\pos1.obj \
    $(OBJ_DIR)\pos2.obj \
    $(OBJ_DIR)\posdiff.obj \
@@ -162,12 +167,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\wordrepl.obj \
    $(OBJ_DIR)\wordtoch.obj \
    \
-   $(OBJ_DIR)\color.obj \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
-   $(OBJ_DIR)\datetime.obj \
-   $(OBJ_DIR)\dattime2.obj \
-   $(OBJ_DIR)\invertwin.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen2.obj \
    $(OBJ_DIR)\setlast.obj \
@@ -198,6 +199,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\charrepl.* del $(OBJ_DIR)\charrepl.*
    -@if exist $(OBJ_DIR)\charsort.* del $(OBJ_DIR)\charsort.*
    -@if exist $(OBJ_DIR)\charswap.* del $(OBJ_DIR)\charswap.*
+   -@if exist $(OBJ_DIR)\color.* del $(OBJ_DIR)\color.*
    -@if exist $(OBJ_DIR)\count.* del $(OBJ_DIR)\count.*
    -@if exist $(OBJ_DIR)\ctc.* del $(OBJ_DIR)\ctc.*
    -@if exist $(OBJ_DIR)\ctmath.* del $(OBJ_DIR)\ctmath.*
@@ -206,6 +208,11 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ctstr.* del $(OBJ_DIR)\ctstr.*
    -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctchksum.*
    -@if exist $(OBJ_DIR)\ctcrypt.* del $(OBJ_DIR)\ctcrypt.*
+   -@if exist $(OBJ_DIR)\cttime.* del $(OBJ_DIR)\cttime.*
+   -@if exist $(OBJ_DIR)\ctpad.* del $(OBJ_DIR)\ctpad.*
+   -@if exist $(OBJ_DIR)\datetime.* del $(OBJ_DIR)\datetime.*
+   -@if exist $(OBJ_DIR)\dattime2.* del $(OBJ_DIR)\dattime2.*
+   -@if exist $(OBJ_DIR)\dbftools.* del $(OBJ_DIR)\dbftools.*
    -@if exist $(OBJ_DIR)\exponent.* del $(OBJ_DIR)\exponent.*
    -@if exist $(OBJ_DIR)\finan.* del $(OBJ_DIR)\finan.*
    -@if exist $(OBJ_DIR)\ftoc.* del $(OBJ_DIR)\ftoc.*
@@ -213,7 +220,6 @@ CLEAN:
    -@if exist $(OBJ_DIR)\misc1.* del $(OBJ_DIR)\misc1.*
    -@if exist $(OBJ_DIR)\num1.* del $(OBJ_DIR)\num1.*
    -@if exist $(OBJ_DIR)\numat.* del $(OBJ_DIR)\numat.*
-   -@if exist $(OBJ_DIR)\pad.* del $(OBJ_DIR)\pad.*
    -@if exist $(OBJ_DIR)\pos1.* del $(OBJ_DIR)\pos1.*
    -@if exist $(OBJ_DIR)\pos2.* del $(OBJ_DIR)\pos2.*
    -@if exist $(OBJ_DIR)\posdiff.* del $(OBJ_DIR)\posdiff.*
@@ -230,12 +236,8 @@ CLEAN:
    -@if exist $(OBJ_DIR)\trig.* del $(OBJ_DIR)\trig.*
    -@if exist $(OBJ_DIR)\wordrepl.* del $(OBJ_DIR)\wordrepl.*
    -@if exist $(OBJ_DIR)\wordtoch.* del $(OBJ_DIR)\wordtoch.*
-   -@if exist $(OBJ_DIR)\color.* del $(OBJ_DIR)\color.*
    -@if exist $(OBJ_DIR)\ct.* del $(OBJ_DIR)\ct.*
    -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
-   -@if exist $(OBJ_DIR)\datetime.* del $(OBJ_DIR)\datetime.*
-   -@if exist $(OBJ_DIR)\dattime2.* del $(OBJ_DIR)\dattime2.*
-   -@if exist $(OBJ_DIR)\invertwin.* del $(OBJ_DIR)\invertwin.*
    -@if exist $(OBJ_DIR)\numconv.* del $(OBJ_DIR)\numconv.*
    -@if exist $(OBJ_DIR)\screen2.* del $(OBJ_DIR)\screen2.*
    -@if exist $(OBJ_DIR)\setlast.* del $(OBJ_DIR)\setlast.*

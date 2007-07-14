@@ -107,6 +107,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\charrepl.obj \
    $(OBJ_DIR)\charsort.obj \
    $(OBJ_DIR)\charswap.obj \
+   $(OBJ_DIR)\color.obj \
    $(OBJ_DIR)\count.obj \
    $(OBJ_DIR)\ctc.obj \
    $(OBJ_DIR)\ctmath.obj \
@@ -115,8 +116,13 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
    $(OBJ_DIR)\ctcrypt.obj \
+   $(OBJ_DIR)\ctpad.obj \
+   $(OBJ_DIR)\cttime.obj \
    $(OBJ_DIR)\ctwfunc.obj \
    $(OBJ_DIR)\ctwin.obj \
+   $(OBJ_DIR)\datetime.obj \
+   $(OBJ_DIR)\dattime2.obj \
+   $(OBJ_DIR)\dbftools.obj \
    $(OBJ_DIR)\exponent.obj \
    $(OBJ_DIR)\files.obj \
    $(OBJ_DIR)\finan.obj \
@@ -126,7 +132,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\misc1.obj \
    $(OBJ_DIR)\num1.obj \
    $(OBJ_DIR)\numat.obj \
-   $(OBJ_DIR)\pad.obj \
    $(OBJ_DIR)\pos1.obj \
    $(OBJ_DIR)\pos2.obj \
    $(OBJ_DIR)\posdiff.obj \
@@ -145,12 +150,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\wordrepl.obj \
    $(OBJ_DIR)\wordtoch.obj \
    \
-   $(OBJ_DIR)\color.obj \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
-   $(OBJ_DIR)\datetime.obj \
-   $(OBJ_DIR)\dattime2.obj \
-   $(OBJ_DIR)\invrtwin.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen2.obj \
    $(OBJ_DIR)\setlast.obj \
@@ -240,6 +241,10 @@ $(OBJ_DIR)\charswap.obj : $(TOOLS_DIR)\charswap.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\color.obj : $(OBJ_DIR)\color.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\count.obj : $(TOOLS_DIR)\count.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -280,6 +285,26 @@ $(OBJ_DIR)\ctwin.obj : $(TOOLS_DIR)\ctwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\ctpad.obj : $(TOOLS_DIR)\ctpad.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\cttime.obj : $(TOOLS_DIR)\cttime.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\datetime.obj : $(OBJ_DIR)\datetime.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dattime2.obj : $(OBJ_DIR)\dattime2.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\dbftools.obj : $(OBJ_DIR)\dbftools.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\exponent.obj : $(TOOLS_DIR)\exponent.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -313,10 +338,6 @@ $(OBJ_DIR)\num1.obj : $(TOOLS_DIR)\num1.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\numat.obj : $(TOOLS_DIR)\numat.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\pad.obj : $(TOOLS_DIR)\pad.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -395,38 +416,10 @@ $(OBJ_DIR)\ct.obj : $(OBJ_DIR)\ct.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\color.c : $(TOOLS_DIR)\color.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\color.obj : $(OBJ_DIR)\color.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
 $(OBJ_DIR)\ctmisc.c : $(TOOLS_DIR)\ctmisc.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\ctmisc.obj : $(OBJ_DIR)\ctmisc.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\datetime.c : $(TOOLS_DIR)\datetime.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\datetime.obj : $(OBJ_DIR)\datetime.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\dattime2.c : $(TOOLS_DIR)\dattime2.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\dattime2.obj : $(OBJ_DIR)\dattime2.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\invrtwin.c : $(TOOLS_DIR)\invrtwin.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\invrtwin.obj : $(OBJ_DIR)\invrtwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

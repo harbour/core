@@ -8,6 +8,30 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-14 22:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gttrm/gttrm.c
+    * added protection against corrupted by programmer screen buffer
+
+  * harbour/source/rtl/hbgtcore.c
+    * extended hb_gtColorToN() to recognize also "I", "N", "U" and
+      numeric NN/NN attributes
+
+  * harbour/contrib/libct/ftoc.c
+    * cleanup
+
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/makefile.vc
+  - harbour/contrib/libct/color.prg
+  - harbour/contrib/libct/invrtwin.prg
+  + harbour/contrib/libct/color.c
+    * rewritten INVERTATTR(), INVERTWIN(), COLORTON(), NTOCOLOR(),
+      ENHANCED(), STANDARD(), UNSELECTED() in C code. Now COLORTON()
+      and NTOCOLOR() use GT functions for color translations.
+    ! fixed INVERTATTR() to not change blink and highlight attributes
+    ! fixed INVERTWIN() to work with GT divers which do not use VGA
+      compatible screen buffer
+
 2007-07-14 12:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompat.ch
     ! changed hb_adler() to hb_adler32()

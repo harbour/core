@@ -352,6 +352,38 @@ static int  hb_gt_def_ColorNum( const char * szColorString )
          case 'W':
             nColor |= bFore ? 0x07: 0x70;
             break;
+
+         case 'N':
+            nColor &= bFore ? 0xF8: 0x8F;
+            break;
+
+         case 'I':
+            nColor |= 0x70;
+            break;
+
+         case 'U':
+            nColor |= 0x01;
+            break;
+
+         case ' ':
+            break;
+
+         case ',':
+            return nColor;
+
+         default:
+            if( c >= '0' && c <= '9' &&
+                ( nColor & ( bFore ? 0xFF : 0xF0 ) ) == 0 )
+            {
+               int iColor = c - '0';
+               while( *szColorString >= '0' && *szColorString <= '9' )
+                  iColor = iColor * 10 + ( *szColorString++ - '0' );
+               if( !bFore )
+                  iColor <<= 4;
+               nColor |= iColor & 0xff;
+            }
+            else
+               return 0;
       }
    }
 
@@ -498,7 +530,7 @@ static void hb_gt_def_StringToColors( const char * szColorString, int ** pColors
                   nFore &= 0x888F;
                }
             }
-            if( ( nFore & 0x8800 ) != 0 && ( ( nFore | nColor ) & 0x0077 ) == 0)
+            if( ( nFore & 0x8800 ) != 0 && ( ( nFore | nColor ) & 0x0077 ) == 0 )
                nFore |= 1;
 
             if( bSlash )
