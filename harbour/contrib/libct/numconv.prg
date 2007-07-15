@@ -85,22 +85,28 @@
 FUNCTION NTOC( xNum, nBase, nLenght, cPad )
 LOCAL cNum
 
-Default cPad to "0"
+Default cPad to " "
 Default nBase to 10
 
 IF VALTYPE( xNum ) == "C"
-   xNum = ALLTRIM( xNum )
-   xNum = UPPER( xNum )
+   xNum = UPPER( ALLTRIM( xNum ) )
    xNum = CTON( xNum, 16 )
 ENDIF
 IF nBase > 36 .OR. nBase < 2
    RETURN ""
 ENDIF
 
+if xNum < 0
+  xNum += 4294967296
+endif
 cNum = B10TOBN( xNum, @nBase )
 
-IF ISNUMBER( nLenght ) .AND. ISCHARACTER( cPad ) .AND. LEN( cNum ) < nLenght
-   cNum = REPLICATE( cPad, nLenght - LEN( cNum ) ) + cNum
+IF ISNUMBER( nLenght )
+   IF LEN(cNum) > nLenght
+      cNum = REPLICATE( "*", nLenght )
+   ELSEIF ISCHARACTER( cPad ) .AND. LEN( cNum ) < nLenght
+      cNum = REPLICATE( cPad, nLenght - LEN( cNum ) ) + cNum
+   ENDIF
 ENDIF
 
 RETURN cNum
@@ -133,22 +139,27 @@ RETURN cNum
  */
 
 FUNCTION CTON( xNum, nBase, lMode )
-LOCAL i, nNum:=0
+LOCAL i, nNum := 0, nPos
 
 Default lMode TO .F.
 Default nBase TO 10
 
-xNum = ALLTRIM(xNum)
+IF ISCHARACTER(xNum) .and. nBase >= 2 .and. nBase <= 36
 
-IF nBase >= 2 .AND. nBase <= 36
+   xNum := UPPER( ALLTRIM( xNum) )
 
    FOR i=1 TO LEN( xNum )
-      nNum += (nBase ** (i-1)) * ( AT( SUBSTR( xNum, -i, 1 ), WORLD ) - 1 )
+      nPos := AT( SUBSTR( xNum, i, 1 ), WORLD )
+      IF nPos == 0 .or. nPos > nBase
+         EXIT
+      ELSE
+         nNum := nNum * nBase + ( nPos - 1 )
+      ENDIF
    NEXT
 
    IF lMode
       IF nNum > 32767
-         nNum = nNum - 65536
+         nNum := nNum - 65536
       ENDIF
    ENDIF
 
@@ -158,11 +169,15 @@ RETURN nNum
 
 
 STATIC FUNCTION B10TOBN( nNum, nBase )
+LOCAL nInt
 IF nNum > 0
    
-   RETURN B10TOBN( INT( nNum / nBase), @nBase ) +;
+   nInt := INT( nNum / nBase)
+   RETURN IIF(nInt==0, "", B10TOBN( nInt, @nBase )) +;
           SUBSTR( WORLD, ( nNum % nBase ) + 1, 1 )
 
+ELSEIF nNum == 0
+   RETURN "0"
 ENDIF
 RETURN ""
 

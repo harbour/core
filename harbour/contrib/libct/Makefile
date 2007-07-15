@@ -46,8 +46,12 @@ C_SOURCES = \
 	justify.c \
 	keyset.c \
 	misc1.c \
+	misc2.c \
+	misc3.c \
 	num1.c \
 	numat.c \
+	numcount.c \
+	numline.c \
 	pos1.c \
 	pos2.c \
 	posdiff.c \

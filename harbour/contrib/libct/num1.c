@@ -61,7 +61,7 @@
  * 
  */
 
- 
+
 #include "ct.h"
 
 
@@ -104,36 +104,31 @@
 
 HB_FUNC( CELSIUS )
 {
-  if( ISNUM(1) )
-  {
-    double dInput = hb_parnd(1);
-    double dResult;
-    
-    dResult = (5.0 / 9.0) * ( dInput - 32.0 );  
-    hb_retnd( dResult );
-  }
-  else
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_CELSIUS,
-                               NULL, "CELSIUS", 0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
-    }
-    
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      hb_retnd (0.0);
-    }
-  }
+   if( ISNUM( 1 ) )
+   {
+      double dInput = hb_parnd( 1 );
+      double dResult;
 
-  return;
+      dResult = ( 5.0 / 9.0 ) * ( dInput - 32.0 );
+      hb_retnd( dResult );
+   }
+   else
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
+
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  CT_ERROR_CELSIUS, NULL, "CELSIUS", 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
+      }
+
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
+      else
+         hb_retnd( 0.0 );
+   }
 }
 
 
@@ -176,39 +171,34 @@ HB_FUNC( CELSIUS )
 
 HB_FUNC( FAHRENHEIT )
 {
-  if( ISNUM(1) )
-  {
-    double dInput = hb_parnd(1);
-    double dResult;
+   if( ISNUM( 1 ) )
+   {
+      double dInput = hb_parnd( 1 );
+      double dResult;
 
-    dResult = (( 9.0 / 5.0) * dInput ) + 32.0 ;  
-    hb_retnd( dResult );
-  }
-  else
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_FAHRENHEIT,
-                               NULL, "FAHRENHEIT", 0, EF_CANSUBSTITUTE, 1, hb_paramError (1));
-    }
-    
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      hb_retnd (0.0);
-    }
-  }
+      dResult = ( ( 9.0 / 5.0 ) * dInput ) + 32.0;
+      hb_retnd( dResult );
+   }
+   else
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
 
-  return;
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  CT_ERROR_FAHRENHEIT, NULL, "FAHRENHEIT", 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
+      }
+
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
+      else
+         hb_retnd( 0.0 );
+   }
 }
 
- 
+
 /*  $DOC$
  *  $FUNCNAME$
  *      INFINITY()
@@ -244,19 +234,10 @@ HB_FUNC( FAHRENHEIT )
  *  $END$
  */
 
-HB_FUNC( INFINITY ) 
+HB_FUNC( INFINITY )
 {
-  
-  if (ISLOG (1) && hb_parl(1))
-  {
-    hb_retnd (DBL_MAX);
-  }
-  else
-  {
-    hb_retnd (93786976294838206460.00);
-  }
-  return;
-
+   if( ISLOG( 1 ) && hb_parl( 1 ) )
+      hb_retnd( DBL_MAX );
+   else
+      hb_retnd( 93786976294838206460.00 );
 }
- 
-

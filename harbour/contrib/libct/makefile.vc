@@ -147,8 +147,12 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\keyset.obj \
    $(OBJ_DIR)\misc1.obj \
+   $(OBJ_DIR)\misc2.obj \
+   $(OBJ_DIR)\misc3.obj \
    $(OBJ_DIR)\num1.obj \
    $(OBJ_DIR)\numat.obj \
+   $(OBJ_DIR)\numcount.obj \
+   $(OBJ_DIR)\numline.obj \
    $(OBJ_DIR)\pos1.obj \
    $(OBJ_DIR)\pos2.obj \
    $(OBJ_DIR)\posdiff.obj \
@@ -218,8 +222,12 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ftoc.* del $(OBJ_DIR)\ftoc.*
    -@if exist $(OBJ_DIR)\justify.* del $(OBJ_DIR)\justify.*
    -@if exist $(OBJ_DIR)\misc1.* del $(OBJ_DIR)\misc1.*
+   -@if exist $(OBJ_DIR)\misc2.* del $(OBJ_DIR)\misc2.*
+   -@if exist $(OBJ_DIR)\misc3.* del $(OBJ_DIR)\misc3.*
    -@if exist $(OBJ_DIR)\num1.* del $(OBJ_DIR)\num1.*
    -@if exist $(OBJ_DIR)\numat.* del $(OBJ_DIR)\numat.*
+   -@if exist $(OBJ_DIR)\numcount.* del $(OBJ_DIR)\numcount.*
+   -@if exist $(OBJ_DIR)\numline.* del $(OBJ_DIR)\numline.*
    -@if exist $(OBJ_DIR)\pos1.* del $(OBJ_DIR)\pos1.*
    -@if exist $(OBJ_DIR)\pos2.* del $(OBJ_DIR)\pos2.*
    -@if exist $(OBJ_DIR)\posdiff.* del $(OBJ_DIR)\posdiff.*

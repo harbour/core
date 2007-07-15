@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Miscellaneous functions: - XTOC()
+ *   CT3 Miscellaneous functions: - KBDSTAT()
  *
- * Copyright 2002 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
+ * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,75 +50,41 @@
  *
  */
 
-#include "ct.h"
+#include "hbapi.h"
+#include "hbapigt.h"
+#include "hbapiitm.h"
+#include "hbset.h"
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      XTOC()
- *  $CATEGORY$
- *      CT3 miscellaneous functions
- *  $ONELINER$
- *  $SYNTAX$
- *      XTOC( <expValue> ) --> cValue
- *           
- *  $ARGUMENTS$
- *      <expValue> Designate an expression of some of the following data
- *      type: NUMBER, CHARACTER, DATE, LOGICAL.
- *
- *  $RETURNS$
- *      XTOC() return a string with the representation of data type of 
- *      expValue.
- *      ATTENTION: different implementations or platforms of Harbour, they 
- *      could produce different format in the string returned by XTOC() for
- *      data type NUMBER.
- *
- *  $DESCRIPTION$
- *      Each data type always returns a string with a particular fixed length:
- *      
- *      -----------------------------------------------------------
- *      Data Type    Result Length      Similar function
- *      -----------------------------------------------------------
- *      Numeric      sizeof( DOUBLE )   FTOC()
- *      Logical      1
- *      Date         8                  DTOS()
- *      String       Unchanged
- *      -----------------------------------------------------------
- *      
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is misc1.c, library is libct.
- *  $SEEALSO$
- *      CTOF(), FTOC()
- *  $END$
- */
-
-HB_FUNC( XTOC )
+HB_FUNC( KBDSTAT )
 {
-   union
-   {
-      double value;
-      char string[sizeof( double )];
-   } xConvert;
+   int iRet = 0;
+   HB_GT_INFO gtInfo;
 
-   if( ISCHAR( 1 ) )
-      hb_retc( hb_parc( 1 ) );
-   else if( ISDATE( 1 ) )
-      hb_retc( hb_pards( 1 ) );
-   else if( ISNUM( 1 ) )
+   gtInfo.pNewVal = NULL;
+   gtInfo.pResult = NULL;
+
+   hb_gtInfo( GTI_KBDSHIFTS, &gtInfo );
+
+   if( gtInfo.pResult )
    {
-      xConvert.value = hb_parnd( 1 );
-      hb_retclen( xConvert.string, sizeof( double ) );
+      int iState = hb_itemGetNI( gtInfo.pResult );
+
+      hb_itemRelease( gtInfo.pResult );
+      if( iState & GTI_KBD_SHIFT )
+         iRet |= 0x01;
+      if( iState & GTI_KBD_CTRL )
+         iRet |= 0x04;
+      if( iState & GTI_KBD_ALT )
+         iRet |= 0x08;
+      if( iState & GTI_KBD_SCROLOCK )
+         iRet |= 0x10;
+      if( iState & GTI_KBD_NUMLOCK )
+         iRet |= 0x20;
+      if( iState & GTI_KBD_CAPSLOCK )
+         iRet |= 0x40;
+      if( hb_set.HB_SET_INSERT )
+         iRet |= 0x80;
    }
-   else if( ISLOG( 1 ) )
-      hb_retclen( hb_parl( 1 ) ? "T" : "F", 1 );
-   else
-      hb_retc( NULL );
+
+   hb_retni( iRet );
 }

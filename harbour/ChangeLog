@@ -8,6 +8,28 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-15 09:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/makefile.vc
+  * harbour/contrib/libct/misc1.c
+  + harbour/contrib/libct/misc2.c
+  + harbour/contrib/libct/misc3.c
+  * harbour/contrib/libct/num1.c
+  * harbour/contrib/libct/numconv.prg
+  + harbour/contrib/libct/numcount.c
+  + harbour/contrib/libct/numline.c
+  * harbour/contrib/libct/numat.c
+    * synced with xHarbour modifications and fixes
+    + added some missing functions borrowed from xHarbour, in most
+      cases it was Pavel Tsarenko code
+    ! some fixes
+    * indenting
+
+  * harbour/source/rtl/gtfunc.c
+    * replaced hb_itemRelease( hb_itemReturn( pItem ) ) by
+      hb_itemReturnRelease( pItem )
+
 2007-07-14 22:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gttrm/gttrm.c
     * added protection against corrupted by programmer screen buffer

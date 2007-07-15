@@ -113,7 +113,7 @@ HB_FUNC( HB_GTINFO )
 
       hb_gtInfo( hb_parni( 1 ), &gtInfo );
       if( gtInfo.pResult )
-         hb_itemRelease( hb_itemReturn( gtInfo.pResult ) );
+         hb_itemReturnRelease( gtInfo.pResult );
       else
          hb_ret();
    }
