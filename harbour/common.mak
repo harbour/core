@@ -187,10 +187,17 @@ GTWIN_LIB    = $(LIB_DIR)\$(HB_LIB_PREFIX)gtwin$(HB_LIB_EXT)
 GTWVT_LIB    = $(LIB_DIR)\$(HB_LIB_PREFIX)gtwvt$(HB_LIB_EXT)
 GTGUI_LIB    = $(LIB_DIR)\$(HB_LIB_PREFIX)gtgui$(HB_LIB_EXT)
 
-HARBOUR_EXE  = $(BIN_DIR)\harbour$(HB_EXE_EXT)
-# required (intermediate) utility
-#     to generate pptable.c
-HBPPGEN_EXE  = $(BIN_DIR)\ppgen$(HB_EXE_EXT)
+# allows to do cross-compiling if neccesary.
+!ifndef HB_HARBOUR_EXE
+     HB_HARBOUR_EXE = $(BIN_DIR)\harbour$(HB_EXE_EXT)
+!endif
+
+# required (intermediate) utility to generate pptable.c
+# allows to do cross-compiling if neccesary.
+!ifndef HB_PPGEN_EXE
+     HB_PPGEN_EXE = $(BIN_DIR)\ppgen$(HB_EXE_EXT)
+!endif
+
 HBPP_EXE     = $(BIN_DIR)\hbpp$(HB_EXE_EXT)
 HBPPTEST_EXE = $(BIN_DIR)\hbpptest$(HB_EXE_EXT)
 HBRUN_EXE    = $(BIN_DIR)\hbrun$(HB_EXE_EXT)
@@ -986,11 +993,11 @@ DISABLED_SHARED_MODULES=    \
 
 HB_BUILD_TARGETS = \
     $(COMMON_LIB)           \
-    $(HBPPGEN_EXE)          \
+    $(HB_PPGEN_EXE)         \
     $(PP_LIB)               \
     \
     $(COMPILER_LIB)         \
-    $(HARBOUR_EXE)          \
+    $(HB_HARBOUR_EXE)       \
     $(HBPP_EXE)             \
     \
     $(VM_LIB)               \
