@@ -9,8 +9,8 @@
 */
 
 2007-07-17 16:48 UTC+0100 Miguel Angel Marchuet <miguelangel/at/marchuet.net>
-  * source/tip/client.prg
-  * source/tip/ftpcln.prg
+  * contrib/tip/client.prg
+  * contrib/tip/ftpcln.prg
     + Added support to PORT transfer mode, alternative to PASV transfer mode. When :bUsePasv will be false
       PORT mode will be used. and cleaned some unused variables.
     + Added method :NoOp()
