@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-17 16:48 UTC+0100 Miguel Angel Marchuet <miguelangel/at/marchuet.net>
+  * source/tip/client.prg
+  * source/tip/ftpcln.prg
+    + Added support to PORT transfer mode, alternative to PASV transfer mode. When :bUsePasv will be false
+      PORT mode will be used. and cleaned some unused variables.
+    + Added method :NoOp()
+    + Added method :Rest( nPos )
+    * Changed method :LS( cSpec )
+    * Changed method :List( cSpec )
+    * Changed method :TransferStart()
+    * Changed method :Stor( cFile )
+    * Changed method :UploadFile( cLocalFile, cRemoteFile )
+    * Changed method :DownloadFile( cLocalFile, cRemoteFile )
+    + Added method :Port()
+    + Added method :SendPort()
+
 2007-07-16 9:02 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * common.mak
    * makefile.vc

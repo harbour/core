@@ -348,7 +348,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
 
    ENDDO
 
-   IF nSent >0
+   IF nSent > 0
       ::Commit()
    Endif
 
