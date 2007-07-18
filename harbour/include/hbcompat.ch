@@ -74,7 +74,7 @@
    #xtranslate hb_libFree([<x,...>])   => libFree(<x>)
 
    #xtranslate hb_CStr([<x,...>])      => CStr(<x>)
-   #xtranslate hb_checksum([<x,...>])  => hb_adler32(<x>)
+   #xtranslate hb_adler32([<x,...>])   => hb_checksum(<x>)
 
 #else
 
@@ -97,7 +97,7 @@
    #xtranslate libFree([<x,...>])      => hb_libFree(<x>)
 
    #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
-   #xtranslate hb_adler32([<x,...>])   => hb_checksum(<x>)
+   #xtranslate hb_checksum([<x,...>])  => hb_adler32(<x>)
 
    #xtranslate HASH([<x,...>])         => HB_HASH(<x>)
    #xtranslate HHASKEY([<x,...>])      => HB_HHASKEY(<x>)

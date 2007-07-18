@@ -8,6 +8,31 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-18 16:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/gtchars.prg
+  * harbour/tests/gtcolors.prg
+  * harbour/tests/gtkeys.prg
+  * harbour/contrib/tip/thtml.prg
+  * harbour/contrib/tip/thtml.ch
+  * harbour/contrib/libct/misc2.c
+  * harbour/contrib/libct/color.c
+  * harbour/contrib/libct/numcount.c
+  * harbour/contrib/libct/numline.c
+  * harbour/contrib/libct/misc3.c
+  * harbour/source/rtl/hbhex.c
+  * harbour/source/rtl/hbbit.c
+    * set valid Id svn:keyword
+
+  * harbour/include/hbcompat.ch
+    * reverted hb_adler32() <=> hb_checksum() translations
+
+  * harbour/contrib/libct/keyset.c
+  + harbour/contrib/libct/like.c
+  * harbour/contrib/libct/finan.c
+  * harbour/contrib/libct/justify.c
+    * synced with xHarbour modifications and fixes
+    * indenting
+
 2007-07-17 16:48 UTC+0100 Miguel Angel Marchuet <miguelangel/at/marchuet.net>
   * contrib/tip/client.prg
   * contrib/tip/ftpcln.prg

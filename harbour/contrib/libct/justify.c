@@ -61,112 +61,105 @@
 #define DO_JUSTIFY_JUSTRIGHT  1
 
 /* helper function for the justxxx() functions */
-static void do_justify (int iSwitch)
+static void do_justify( int iSwitch )
 {
 
-  int iNoRet;
+   int iNoRet;
 
-  iNoRet = ct_getref();
+   iNoRet = ct_getref() && ISBYREF( 1 );
 
-  if (ISCHAR (1))
-  {
+   if( ISCHAR( 1 ) )
+   {
 
-    char *pcString = hb_parc (1);
-    size_t sStrLen = hb_parclen (1);
-    char cJustChar;
-    char *pc, *pcRet;
-    size_t sJustOffset;
+      char *pcString = hb_parc( 1 );
+      size_t sStrLen = hb_parclen( 1 );
+      char cJustChar;
+      char *pc, *pcRet;
+      size_t sJustOffset;
 
-    if (hb_parclen (2) > 0)
-      cJustChar = *(hb_parc (2));
-    else if (ISNUM (2))
-      cJustChar = hb_parnl (2) % 256;
-    else
-      cJustChar = 0x20;
-
-    pcRet = ( char *)hb_xgrab (sStrLen);
-
-    switch (iSwitch)
-    {
-      case DO_JUSTIFY_JUSTLEFT:
+      if( sStrLen == 0 )
       {
-        pc = pcString;
-        sJustOffset = 0;
-        while ((*pc == cJustChar) && (pc < pcString+sStrLen))
-        {
-          sJustOffset++;
-          pc++;
-        }
+         if( iNoRet )
+            hb_ret();
+         else
+            hb_retc( NULL );
+         return;
+      }
 
-        hb_xmemcpy (pcRet, pcString+sJustOffset, sStrLen-sJustOffset);
-        for (pc = pcRet+sStrLen-sJustOffset; pc < pcRet+sStrLen; pc++)
-        {
-          *pc = cJustChar;
-        }
-
-      }; break;
-
-      case DO_JUSTIFY_JUSTRIGHT:
-      {
-        pc = pcString+sStrLen-1;
-        sJustOffset = 0;
-        while ((*pc == cJustChar) && (pc >= pcString))
-        {
-          sJustOffset++;
-          pc--;
-        }
-      
-        for (pc = pcRet; pc < pcRet+sJustOffset; pc++)
-        {
-          *pc = cJustChar;
-        }
-        hb_xmemcpy (pcRet+sJustOffset, pcString, sStrLen-sJustOffset);
-
-      }; break;
-
-    }
-
-    if (ISBYREF (1))
-      hb_storclen (pcRet, sStrLen, 1);
-
-    if (iNoRet)
-      hb_ret();
-    else
-      hb_retclen (pcRet, sStrLen);
-
-    hb_xfree (pcRet);
-
-  }
-  else /* ISCHAR (1) */
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG,
-                               (iSwitch == DO_JUSTIFY_JUSTLEFT ? CT_ERROR_JUSTLEFT : CT_ERROR_JUSTRIGHT),
-                               NULL,
-                               (iSwitch == DO_JUSTIFY_JUSTLEFT ? "JUSTLEFT" : "JUSTRIGHT"),
-                               0, EF_CANSUBSTITUTE, 2,
-                               hb_paramError (1), hb_paramError (2));
-    }
-    
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      if (iNoRet)
-        hb_ret();
+      if( hb_parclen( 2 ) > 0 )
+         cJustChar = *( hb_parc( 2 ) );
+      else if( ISNUM( 2 ) )
+         cJustChar = ( char ) ( hb_parnl( 2 ) % 256 );
       else
-        hb_retc ("");
-    }
-  }
+         cJustChar = 0x20;
 
-  return;
+      pcRet = ( char * ) hb_xgrab( sStrLen + 1 );
 
+      switch ( iSwitch )
+      {
+         case DO_JUSTIFY_JUSTLEFT:
+            pc = pcString;
+            sJustOffset = 0;
+            while( ( *pc == cJustChar ) && ( pc < pcString + sStrLen ) )
+            {
+               sJustOffset++;
+               pc++;
+            }
+            hb_xmemcpy( pcRet, pcString + sJustOffset, sStrLen - sJustOffset );
+            for( pc = pcRet + sStrLen - sJustOffset; pc < pcRet + sStrLen; pc++ )
+            {
+               *pc = cJustChar;
+            }
+            break;
+
+         case DO_JUSTIFY_JUSTRIGHT:
+            pc = pcString + sStrLen - 1;
+            sJustOffset = 0;
+            while( ( *pc == cJustChar ) && ( pc >= pcString ) )
+            {
+               sJustOffset++;
+               pc--;
+            }
+            for( pc = pcRet; pc < pcRet + sJustOffset; pc++ )
+            {
+               *pc = cJustChar;
+            }
+            hb_xmemcpy( pcRet + sJustOffset, pcString, sStrLen - sJustOffset );
+            break;
+      }
+
+      if( ISBYREF( 1 ) )
+         hb_storclen( pcRet, sStrLen, 1 );
+
+      if( iNoRet )
+      {
+         hb_ret();
+         hb_xfree( pcRet );
+      }
+      else
+         hb_retclen_buffer( pcRet, sStrLen );
+   }
+   else  /* ISCHAR( 1 ) */
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
+
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  iSwitch == DO_JUSTIFY_JUSTLEFT ?
+                                  CT_ERROR_JUSTLEFT : CT_ERROR_JUSTRIGHT,
+                                  NULL, &hb_errFuncName, 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
+      }
+
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
+      else if( iNoRet )
+         hb_ret();
+      else
+         hb_retc( NULL );
+   }
 }
 
 
@@ -198,12 +191,9 @@ static void do_justify (int iSwitch)
  *  $END$
  */
 
-HB_FUNC (JUSTLEFT)
+HB_FUNC( JUSTLEFT )
 {
-
-  do_justify (DO_JUSTIFY_JUSTLEFT);
-  return;
-
+   do_justify( DO_JUSTIFY_JUSTLEFT );
 }
 
 
@@ -235,12 +225,7 @@ HB_FUNC (JUSTLEFT)
  *  $END$
  */
 
-HB_FUNC (JUSTRIGHT)
+HB_FUNC( JUSTRIGHT )
 {
-
-  do_justify (DO_JUSTIFY_JUSTRIGHT);
-  return;
-
+   do_justify( DO_JUSTIFY_JUSTRIGHT );
 }
-
-
