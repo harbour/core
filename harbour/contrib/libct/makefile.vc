@@ -146,6 +146,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ftoc.obj \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\keyset.obj \
+   $(OBJ_DIR)\like.obj \
    $(OBJ_DIR)\misc1.obj \
    $(OBJ_DIR)\misc2.obj \
    $(OBJ_DIR)\misc3.obj \
@@ -221,6 +222,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\finan.* del $(OBJ_DIR)\finan.*
    -@if exist $(OBJ_DIR)\ftoc.* del $(OBJ_DIR)\ftoc.*
    -@if exist $(OBJ_DIR)\justify.* del $(OBJ_DIR)\justify.*
+   -@if exist $(OBJ_DIR)\like.* del $(OBJ_DIR)\like.*
    -@if exist $(OBJ_DIR)\misc1.* del $(OBJ_DIR)\misc1.*
    -@if exist $(OBJ_DIR)\misc2.* del $(OBJ_DIR)\misc2.*
    -@if exist $(OBJ_DIR)\misc3.* del $(OBJ_DIR)\misc3.*

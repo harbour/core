@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-18 16:43 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/makefile.vc
+    * added new files and Juan Gálvez fixes
+  * harbour/contrib/libct/like.c
+  * harbour/contrib/libct/keyset.c
+    ! fixed typo
+
 2007-07-18 16:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/gtchars.prg
   * harbour/tests/gtcolors.prg

@@ -55,7 +55,7 @@
 
 HB_FUNC( LIKE )
 {
-   char * szPattern = hb_parc( 1 );
+   char * szPattern = hb_parc( 1 ),
         * szString  = hb_parc( 2 );
    hb_retl( szPattern && szString &&
             hb_strMatchWildExact( szString, szPattern ) );

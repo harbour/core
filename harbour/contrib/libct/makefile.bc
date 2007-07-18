@@ -117,7 +117,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctchksum.obj \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctpad.obj \
-   $(OBJ_DIR)\cttime.obj \
    $(OBJ_DIR)\ctwfunc.obj \
    $(OBJ_DIR)\ctwin.obj \
    $(OBJ_DIR)\datetime.obj \
@@ -129,6 +128,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ftoc.obj \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\keyset.obj \
+   $(OBJ_DIR)\like.obj \
    $(OBJ_DIR)\misc1.obj \
    $(OBJ_DIR)\misc2.obj \
    $(OBJ_DIR)\misc3.obj \
@@ -156,6 +156,7 @@ TOOLS_LIB_OBJS = \
    \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
+   $(OBJ_DIR)\cttime.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen2.obj \
    $(OBJ_DIR)\setlast.obj \
@@ -245,7 +246,7 @@ $(OBJ_DIR)\charswap.obj : $(TOOLS_DIR)\charswap.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\color.obj : $(OBJ_DIR)\color.c
+$(OBJ_DIR)\color.obj : $(TOOLS_DIR)\color.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -293,19 +294,15 @@ $(OBJ_DIR)\ctpad.obj : $(TOOLS_DIR)\ctpad.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\cttime.obj : $(TOOLS_DIR)\cttime.c
+$(OBJ_DIR)\datetime.obj : $(TOOLS_DIR)\datetime.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\datetime.obj : $(OBJ_DIR)\datetime.c
+$(OBJ_DIR)\dattime2.obj : $(TOOLS_DIR)\dattime2.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\dattime2.obj : $(OBJ_DIR)\dattime2.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\dbftools.obj : $(OBJ_DIR)\dbftools.c
+$(OBJ_DIR)\dbftools.obj : $(TOOLS_DIR)\dbftools.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -330,6 +327,10 @@ $(OBJ_DIR)\justify.obj : $(TOOLS_DIR)\justify.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\keyset.obj : $(TOOLS_DIR)\keyset.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\like.obj : $(TOOLS_DIR)\like.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -440,6 +441,13 @@ $(OBJ_DIR)\ctmisc.c : $(TOOLS_DIR)\ctmisc.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\ctmisc.obj : $(OBJ_DIR)\ctmisc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\cttime.c : $(TOOLS_DIR)\cttime.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\cttime.obj : $(OBJ_DIR)\cttime.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

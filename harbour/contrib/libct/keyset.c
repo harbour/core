@@ -112,7 +112,6 @@ static void SetGet( char cKey )
 static void SetGet( char cKey )
 {
    BYTE kbBuffer[256];
-   BOOL bRetval;
    USHORT uKey = 0;
 
    switch( cKey )
@@ -126,11 +125,11 @@ static void SetGet( char cKey )
          break;
 
       case 0x40:
-         uKey = HB_VK_CAPITAL
+         uKey = HB_VK_CAPITAL;
          break;
 
       case 0x80:
-         uKey = HB_VK_INSERT
+         uKey = HB_VK_INSERT;
          break;
    }
 

@@ -45,6 +45,7 @@ C_SOURCES = \
 	ftoc.c \
 	justify.c \
 	keyset.c \
+	like.c \
 	misc1.c \
 	misc2.c \
 	misc3.c \
