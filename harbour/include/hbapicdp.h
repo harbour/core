@@ -191,6 +191,8 @@ extern HB_EXPORT ULONG         hb_cdpStrnToU16( PHB_CODEPAGE, BOOL, const BYTE *
 extern HB_EXPORT ULONG         hb_cdpStringInUTF8Length( PHB_CODEPAGE, BOOL, const BYTE *, ULONG );
 extern HB_EXPORT ULONG         hb_cdpUTF8ToStrn( PHB_CODEPAGE, BOOL, const BYTE *, ULONG, BYTE *, ULONG );
 extern HB_EXPORT ULONG         hb_cdpUTF8StringLength( const BYTE *, ULONG );
+extern HB_EXPORT BYTE *        hb_cdpUTF8StringSubstr( const BYTE *, ULONG, ULONG, ULONG, ULONG * );
+extern HB_EXPORT ULONG         hb_cdpUTF8StringPeek( const BYTE *, ULONG, ULONG );
 
 extern PHB_CODEPAGE hb_cdp_page;
 

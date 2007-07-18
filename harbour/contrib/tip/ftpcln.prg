@@ -274,7 +274,7 @@ RETURN ::GetReply()
 
 
 METHOD Rest( nPos ) CLASS tIPClientFTP
-   ::InetSendall( ::SocketCon, "REST " + Str( If( Empty( nPos ), 0, nPos ),,, .T. ) + ::cCRLF )
+   ::InetSendall( ::SocketCon, "REST " + LTrim( Str( If( Empty( nPos ), 0, nPos ) ) ) + ::cCRLF )
 RETURN ::GetReply()
 
 

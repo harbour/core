@@ -8,6 +8,26 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-18 21:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicdp.h
+  * harbour/source/rtl/cdpapi.c
+    + added C functions: hb_cdpUTF8StringSubstr(), hb_cdpUTF8StringPeek()
+    + added .prg functions: HB_UTF8SUBSTR(), HB_UTF8LEFT(), HB_UTF8RIGHT(),
+                            HB_UTF8LEN(), HB_UTF8PEEK()
+      They are working like corresponding functions: SUBSTR(), LEFT(),
+      RIGHT(), LEN(), STRPEEK() but operates on UTF-8 strings.
+      TODO: HB_UTF8STUFF(), HB_UTF8TRAN(), HB_UTF8POKE()
+
+  * harbour/include/hbcompat.ch
+    + added translation rule for str(<x>,,,.t.)
+
+  * harbour/contrib/tip/ftpcln.prg
+    ! changed str(<x>,,,.t.) to ltrim(str(<x>))
+
+  * harbour/source/rtl/right.c
+  * harbour/source/rtl/left.c
+    % minor optimization
+
 2007-07-18 16:43 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libct/Makefile
   * harbour/contrib/libct/makefile.bc

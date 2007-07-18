@@ -96,8 +96,10 @@
    #xtranslate libLoad([<x,...>])      => hb_libLoad(<x>)
    #xtranslate libFree([<x,...>])      => hb_libFree(<x>)
 
-   #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
    #xtranslate hb_checksum([<x,...>])  => hb_adler32(<x>)
+
+   #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
+   #xtranslate str(<x>,[<y>],[<y>],<z>)=> iif(<z>, ltrim(str(<x>)), str(<x>))
 
    #xtranslate HASH([<x,...>])         => HB_HASH(<x>)
    #xtranslate HHASKEY([<x,...>])      => HB_HHASKEY(<x>)
