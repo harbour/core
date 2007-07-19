@@ -64,13 +64,14 @@
 
 
 /* static const data */
-static const char *spcSeparatorStr = "\x00""\x09""\x0A""\x0C""\x1A""\x20""\x8A""\x8C"",.;:!\?/\\<>()#&%+-*";
+static const char *spcSeparatorStr =
+   "\x00" "\x09" "\x0A" "\x0C" "\x1A" "\x20" "\x8A" "\x8C" ",.;:!\?/\\<>()#&%+-*";
 static const size_t ssSeparatorStrLen = 26;
 
 /* static data */
 /* even if these are chars, variable must be int, since we need an extra -1 */
-static int siPreSeparator = -1;    /* TODO: make this threadsafe */
-static int siPostSeparator = -1;   /* TODO: make this threadsafe */
+static int siPreSeparator = -1;     /* TODO: make this threadsafe */
+static int siPostSeparator = -1;    /* TODO: make this threadsafe */
 
 /* defines */
 #define DO_TOKEN1_TOKEN         0
@@ -80,403 +81,360 @@ static int siPostSeparator = -1;   /* TODO: make this threadsafe */
 #define DO_TOKEN1_TOKENUPPER    4
 
 /* helper function for the token function group I */
-static void do_token1 (int iSwitch)
+static void do_token1( int iSwitch )
 {
+   int iParamCheck = 0;
+   int iNoRef = ct_getref() && ISBYREF( 1 );
 
-  int iParamCheck = 0;
-  int iNoRef = ct_getref();
+   switch ( iSwitch )
+   {
+      case DO_TOKEN1_TOKEN:
+         siPreSeparator = siPostSeparator = -1;
+         /* no "break" here !! */
+      case DO_TOKEN1_ATTOKEN:
+      case DO_TOKEN1_NUMTOKEN:
+      case DO_TOKEN1_TOKENLOWER:
+      case DO_TOKEN1_TOKENUPPER:
+         iParamCheck = ( ISCHAR( 1 ) );
+         break;
+   }
 
-  switch (iSwitch)
-  {
-    case DO_TOKEN1_TOKEN:
-    {
-      siPreSeparator = siPostSeparator = -1;
-    };   /* no "break" here !! */
+   if( iParamCheck )
+   {
+      char *pcString = hb_parc( 1 );
+      size_t sStrLen = ( size_t ) hb_parclen( 1 );
+      char *pcSeparatorStr;
+      size_t sSeparatorStrLen;
+      ULONG ulTokenCounter = 0;
+      ULONG ulSkip;
+      char *pcSubStr;
+      char *pcRet = NULL;
+      size_t sSubStrLen;
+      size_t sRetStrLen = 0;
+      ULONG ulToken = 0;
+      ULONG ulSkipCnt;
+      char *pc;
 
-    case DO_TOKEN1_ATTOKEN:
-    case DO_TOKEN1_NUMTOKEN:
-    case DO_TOKEN1_TOKENLOWER:
-    case DO_TOKEN1_TOKENUPPER:
-    {
-      iParamCheck = (ISCHAR (1));
-    }; break;
-
-  }
-
-  if (iParamCheck)
-  {
-
-    char *pcString = hb_parc (1);
-    size_t sStrLen = (size_t)hb_parclen (1);
-    char *pcSeparatorStr;
-    size_t sSeparatorStrLen;
-    ULONG ulTokenCounter = 0;
-    ULONG ulSkip;
-
-    char *pcSubStr;
-    char *pcRet = NULL;
-    size_t sSubStrLen;
-    size_t sRetStrLen = 0;
-
-    ULONG ulToken = 0;
-    ULONG ulSkipCnt;
-    char *pc;
-    
-    /* separator string */
-    if (ISCHAR (2) && ((sSeparatorStrLen = hb_parclen (2)) != 0))
-    {
-      pcSeparatorStr = hb_parc (2);
-    }
-    else
-    {
-      pcSeparatorStr = (char *)spcSeparatorStr;
-      sSeparatorStrLen = ssSeparatorStrLen;
-    }
-
-    /* token counter */
-    if (iSwitch != DO_TOKEN1_NUMTOKEN)
-    {
-      if (ISNUM (3))
-        ulTokenCounter = hb_parnl (3);
+      /* separator string */
+      sSeparatorStrLen = hb_parclen( 2 );
+      if( sSeparatorStrLen != 0 )
+         pcSeparatorStr = hb_parc( 2 );
       else
-        ulTokenCounter = 0;
-    }
-    if (ulTokenCounter == 0)
-      ulTokenCounter = HB_MKULONG (255,255,255,255); 
-
-    /* skip width */
-    if (iSwitch == DO_TOKEN1_NUMTOKEN)
-    {
-      if (ISNUM (3))
-        ulSkip = hb_parnl (3);
-      else
-        ulSkip = HB_MKULONG (255,255,255,255);
-    }
-    else
-    {
-      if (ISNUM (4))
-        ulSkip = hb_parnl (4);
-      else
-        ulSkip = HB_MKULONG (255,255,255,255);
-    }
-    if (ulSkip == 0)
-      ulSkip = HB_MKULONG (255,255,255,255);
-
-    /* prepare return value for TOKENUPPER/TOKENLOWER */
-    if ((iSwitch == DO_TOKEN1_TOKENLOWER) || (iSwitch == DO_TOKEN1_TOKENUPPER))
-    {
-      pcRet = ( char * ) hb_xgrab (sRetStrLen = sStrLen);
-      hb_xmemcpy (pcRet, pcString, sRetStrLen);
-    }
-
-    /* find the <ulTokenCounter>th token */
-    pcSubStr = pcString;
-    sSubStrLen = sStrLen;
-
-    /* scan start condition */
-    pc = pcSubStr-1;
-
-    while (ulToken < ulTokenCounter)
-    {
-    
-      size_t sMatchedPos = sSeparatorStrLen;
-
-      /* ulSkip */
-      ulSkipCnt = 0;
-      do
       {
-        sSubStrLen -= (pc-pcSubStr)+1;
-        pcSubStr = pc+1;
-        pc = ct_at_charset_forward (pcSubStr, sSubStrLen,
-                                    pcSeparatorStr, sSeparatorStrLen,
-                                    &sMatchedPos);
-        if (iSwitch == DO_TOKEN1_TOKEN)
-        {
-          siPreSeparator = siPostSeparator;
-          if (sMatchedPos < sSeparatorStrLen)
-            siPostSeparator = pcSeparatorStr[sMatchedPos];
-          else
-            siPostSeparator = -1;
-        }
+         pcSeparatorStr = ( char * ) spcSeparatorStr;
+         sSeparatorStrLen = ssSeparatorStrLen;
+      }
 
-        ulSkipCnt++;
-      } while ((ulSkipCnt < ulSkip) && (pc == pcSubStr));
+      /* token counter */
+      if( iSwitch != DO_TOKEN1_NUMTOKEN )
+         ulTokenCounter = hb_parnl( 3 );
+      if( ulTokenCounter == 0 )
+         ulTokenCounter = ULONG_MAX;
 
-      if (sSubStrLen == 0)
+      /* skip width */
+      if( iSwitch == DO_TOKEN1_NUMTOKEN )
       {
-        /* string ends with tokenizer (null string after tokenizer at 
-           end of string is not a token) */
-        switch (iSwitch)
-        {
-          case DO_TOKEN1_TOKEN:
-          {
+         if( ISNUM( 3 ) )
+            ulSkip = hb_parnl( 3 );
+         else
+            ulSkip = ULONG_MAX;
+      }
+      else
+      {
+         if( ISNUM( 4 ) )
+            ulSkip = hb_parnl( 4 );
+         else
+            ulSkip = ULONG_MAX;
+      }
+      if( ulSkip == 0 )
+         ulSkip = ULONG_MAX;
+
+      /* prepare return value for TOKENUPPER/TOKENLOWER */
+      if( iSwitch == DO_TOKEN1_TOKENLOWER || iSwitch == DO_TOKEN1_TOKENUPPER )
+      {
+         if( sStrLen == 0 )
+         {
+            if( iNoRef )
+               hb_retl( 0 );
+            else
+               hb_retc( NULL );
+            return;
+         }
+         sRetStrLen = sStrLen;
+         pcRet = ( char * ) hb_xgrab( sRetStrLen + 1 );
+         hb_xmemcpy( pcRet, pcString, sRetStrLen );
+      }
+
+      /* find the <ulTokenCounter>th token */
+      pcSubStr = pcString;
+      sSubStrLen = sStrLen;
+
+      /* scan start condition */
+      pc = pcSubStr - 1;
+
+      while( ulToken < ulTokenCounter )
+      {
+         size_t sMatchedPos = sSeparatorStrLen;
+
+         /* Skip the left ulSkip successive separators */
+         ulSkipCnt = 0;
+         do
+         {
+            sSubStrLen -= ( pc - pcSubStr ) + 1;
+            pcSubStr = pc + 1;
+            pc = ct_at_charset_forward( pcSubStr, sSubStrLen,
+                                        pcSeparatorStr, sSeparatorStrLen, &sMatchedPos );
+            if( iSwitch == DO_TOKEN1_TOKEN )
+            {
+               siPreSeparator = siPostSeparator;
+               if( sMatchedPos < sSeparatorStrLen )
+                  siPostSeparator = pcSeparatorStr[sMatchedPos];
+               else
+                  siPostSeparator = -1;
+            }
+            ulSkipCnt++;
+         }
+         while( ulSkipCnt < ulSkip && pc == pcSubStr );
+
+         if( sSubStrLen == 0 )
+         {
+            /* string ends with tokenizer (null string after tokenizer at 
+               end of string is not a token) */
+            switch ( iSwitch )
+            {
+               case DO_TOKEN1_TOKEN:
+               {
+                  char cRet;
+
+                  hb_retc( NULL );
+                  if( ISBYREF( 5 ) )
+                  {
+                     cRet = ( char ) siPreSeparator;
+                     hb_storclen( &cRet, ( siPreSeparator != -1 ? 1 : 0 ), 5 );
+                  }
+                  if( ISBYREF( 6 ) )
+                  {
+                     cRet = ( char ) siPostSeparator;
+                     hb_storclen( &cRet, ( siPostSeparator != -1 ? 1 : 0 ), 6 );
+                  }
+                  break;
+               }
+               case DO_TOKEN1_NUMTOKEN:
+                  hb_retnl( ulToken );
+                  break;
+
+               case DO_TOKEN1_ATTOKEN:
+                  hb_retni( 0 );
+                  break;
+
+               case DO_TOKEN1_TOKENLOWER:
+               case DO_TOKEN1_TOKENUPPER:
+                  if( ISBYREF( 1 ) )
+                     hb_storclen( pcRet, sRetStrLen, 1 );
+
+                  if( iNoRef )
+                  {
+                     hb_xfree( pcRet );
+                     hb_retl( 0 );
+                  }
+                  else
+                     hb_retclen_buffer( pcRet, sRetStrLen );
+                  break;
+            }
+            return;
+         }
+
+         switch ( iSwitch )
+         {
+            case DO_TOKEN1_TOKEN:
+            case DO_TOKEN1_NUMTOKEN:
+            case DO_TOKEN1_ATTOKEN:
+               break;
+
+            case DO_TOKEN1_TOKENLOWER:
+               if( pcSubStr != pc )     /* letters can be tokenizers, too,
+                                           but they should not be lowercase'd */
+                  *( pcRet + ( pcSubStr - pcString ) ) = hb_charLower( ( UCHAR ) *pcSubStr );
+               break;
+
+            case DO_TOKEN1_TOKENUPPER:
+               if( pcSubStr != pc )     /* letters can be tokenizers, too, 
+                                           but they should not be uppercase'd */
+                  *( pcRet + ( pcSubStr - pcString ) ) = hb_charUpper( ( UCHAR ) *pcSubStr );
+               break;
+
+            default:
+               break;
+         }
+
+         ulToken++;
+
+         if( pc == NULL )
+         {
+            pc = pcSubStr + sSubStrLen; /* little trick for return values */
+            break;              /* we must leave the while loop even if we have not
+                                   yet found the <ulTokenCounter>th token */
+         }
+
+         /* should we find the last token, but string ends with tokenizer, i.e.
+            pc points to the last character at the moment ?
+            -> break here ! */
+         if( ulTokenCounter == HB_MKULONG( 255, 255, 255, 255 ) )
+         {
+            if( ulSkip == HB_MKULONG( 255, 255, 255, 255 ) )
+            {
+               char *t;
+               BOOL bLast = TRUE;
+
+               for( t = pc + 1; t < pcString + sStrLen; t++ )
+               {
+                  if( !memchr( pcSeparatorStr, *t, sSeparatorStrLen ) )
+                  {
+                     bLast = FALSE;
+                     break;
+                  }
+               }
+               if( bLast )
+                  break;
+            }
+            else if( pc + 1 == pcString + sStrLen )
+               break;
+         }
+      }  /* while( ulToken < ulTokenCounter ) */
+
+      switch ( iSwitch )
+      {
+         case DO_TOKEN1_TOKEN:
+         {
             char cRet;
-            hb_retc ("");
-            if (ISBYREF (5))
-            {
-              cRet = (char)siPreSeparator;
-              hb_storclen (&cRet, (siPreSeparator != -1 ? 1 : 0), 5);
-            }
-            if (ISBYREF (6))
-            {
-              cRet = (char)siPostSeparator;
-              hb_storclen (&cRet, (siPostSeparator != -1 ? 1 : 0), 6);
-            }
-          }; break;
 
-          case DO_TOKEN1_NUMTOKEN:
-          {
-            hb_retnl (ulToken);
-          }; break;
-    
-          case DO_TOKEN1_ATTOKEN:
-          {
-            hb_retnl (0);
-          }; break;
+            if( ( ulTokenCounter == HB_MKULONG( 255, 255, 255, 255 ) ) ||
+                ( ulToken == ulTokenCounter ) )
+               hb_retclen( pcSubStr, pc - pcSubStr );
+            else
+               hb_retc( NULL );
 
-          case DO_TOKEN1_TOKENLOWER:
-          case DO_TOKEN1_TOKENUPPER:
-          {
-            if (!iNoRef)
+            if( ISBYREF( 5 ) )
             {
-              hb_retclen (pcRet, sRetStrLen);
+               cRet = ( char ) siPreSeparator;
+               hb_storclen( &cRet, ( siPreSeparator != -1 ? 1 : 0 ), 5 );
+            }
+            if( ISBYREF( 6 ) )
+            {
+               cRet = ( char ) siPostSeparator;
+               hb_storclen( &cRet, ( siPostSeparator != -1 ? 1 : 0 ), 6 );
+            }
+            break;
+         }
+         case DO_TOKEN1_NUMTOKEN:
+            hb_retnl( ulToken );
+            break;
+
+         case DO_TOKEN1_ATTOKEN:
+            if( ( ulTokenCounter == HB_MKULONG( 255, 255, 255, 255 ) ) ||
+                ( ulToken == ulTokenCounter ) )
+               hb_retnl( pcSubStr - pcString + 1 );
+            else
+               hb_retni( 0 );
+            break;
+
+         case DO_TOKEN1_TOKENLOWER:
+         case DO_TOKEN1_TOKENUPPER:
+            if( ISBYREF( 1 ) )
+               hb_storclen( pcRet, sRetStrLen, 1 );
+
+            if( iNoRef )
+            {
+               hb_xfree( pcRet );
+               hb_retl( 0 );
             }
             else
+               hb_retclen_buffer( pcRet, sRetStrLen );
+            break;
+      }
+   }
+   else  /* iParamCheck */
+   {
+      switch ( iSwitch )
+      {
+         case DO_TOKEN1_TOKEN:
+         {
+            PHB_ITEM pSubst = NULL;
+            int iArgErrorMode = ct_getargerrormode();
+            char cRet;
+
+            if( ISBYREF( 5 ) )
             {
-              hb_retl (0);
+               cRet = ( char ) siPreSeparator;
+               hb_storclen( &cRet, ( siPreSeparator != -1 ? 1 : 0 ), 5 );
             }
-            if (ISBYREF (1))
+            if( ISBYREF( 6 ) )
             {
-              hb_storclen (pcRet, sRetStrLen, 1);
+               cRet = ( char ) siPostSeparator;
+               hb_storclen( &cRet, ( siPostSeparator != -1 ? 1 : 0 ), 6 );
             }
-            hb_xfree (pcRet);
-          }; break;
 
-        }
-        return;
+            if( iArgErrorMode != CT_ARGERR_IGNORE )
+            {
+               pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                        CT_ERROR_TOKEN, NULL, "TOKEN", 0,
+                                        EF_CANSUBSTITUTE,
+                                        HB_ERR_ARGS_BASEPARAMS );
+            }
+
+            if( pSubst != NULL )
+               hb_itemReturnRelease( pSubst );
+            else if( !iNoRef )
+               hb_retc( NULL );
+            else
+               hb_retl( 0 );
+            break;
+         }
+         case DO_TOKEN1_TOKENLOWER:
+         case DO_TOKEN1_TOKENUPPER:
+         {
+            PHB_ITEM pSubst = NULL;
+            int iArgErrorMode = ct_getargerrormode();
+
+            if( iArgErrorMode != CT_ARGERR_IGNORE )
+            {
+               pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                        iSwitch == DO_TOKEN1_TOKENLOWER ?
+                                        CT_ERROR_TOKENLOWER : CT_ERROR_TOKENUPPER,
+                                        NULL, &hb_errFuncName, 0,
+                                        EF_CANSUBSTITUTE,
+                                        HB_ERR_ARGS_BASEPARAMS );
+            }
+            if( pSubst != NULL )
+               hb_itemReturnRelease( pSubst );
+            else if( !iNoRef )
+               hb_retc( NULL );
+            else
+               hb_retl( 0 );
+            break;
+         }
+         case DO_TOKEN1_NUMTOKEN:
+         case DO_TOKEN1_ATTOKEN:
+         {
+            PHB_ITEM pSubst = NULL;
+            int iArgErrorMode = ct_getargerrormode();
+
+            if( iArgErrorMode != CT_ARGERR_IGNORE )
+            {
+               pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                        iSwitch == DO_TOKEN1_NUMTOKEN ?
+                                        CT_ERROR_NUMTOKEN : CT_ERROR_ATTOKEN,
+                                        NULL, &hb_errFuncName, 0,
+                                        EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
+            }
+            if( pSubst != NULL )
+               hb_itemReturnRelease( pSubst );
+            else
+               hb_retni( 0 );
+            break;
+         }
       }
-        
-      switch (iSwitch)
-      {
-        case DO_TOKEN1_TOKEN:
-        case DO_TOKEN1_NUMTOKEN:
-        case DO_TOKEN1_ATTOKEN:
-          break;
-       
-        case DO_TOKEN1_TOKENLOWER:
-        {
-          if (pcSubStr != pc)  /* letters can be tokenizers, too,
-                                     but they should not be lowercase'd */
-            *(pcRet+(pcSubStr-pcString)) = tolower (*pcSubStr);
-        }; break;
-
-        case DO_TOKEN1_TOKENUPPER:
-        {
-          if (pcSubStr != pc)  /* letters can be tokenizers, too, 
-                                     but they should not be uppercase'd */
-            *(pcRet+(pcSubStr-pcString)) = toupper (*pcSubStr);
-        }; break;
-
-        default:
-          break;
-      }
-    
-      ulToken++;
-
-      /* should we find the last token, but string ends with tokenizer, i.e.
-         pc points to a the last character at the moment ?
-         -> break here ! */
-      if ((ulTokenCounter == HB_MKULONG (255,255,255,255)) &&
-          (pc+1==pcString+sStrLen))
-      {
-        break;
-      }
-
-      if (pc == NULL)
-      {
-        pc = pcSubStr+sSubStrLen;  /* little trick for return values */
-        break;  /* we must leave the while loop even if we have not
-                   yet found the <ulTokenCounter>th token */
-      }
- 
-    } /* while (ulToken < ulTokenCounter) */
-
-    switch (iSwitch)
-    {
-      case DO_TOKEN1_TOKEN:
-      {
-        char cRet;
-      
-        if ((ulTokenCounter == HB_MKULONG (255,255,255,255)) ||
-            (ulToken == ulTokenCounter))
-          hb_retclen (pcSubStr, pc-pcSubStr);
-        else
-          hb_retc ("");
-        
-        if (ISBYREF (5))
-        {
-          cRet = (char)siPreSeparator;
-          hb_storclen (&cRet, (siPreSeparator != -1 ? 1 : 0), 5);
-        }
-        if (ISBYREF (6))
-        {
-          cRet = (char)siPostSeparator;
-          hb_storclen (&cRet, (siPostSeparator != -1 ? 1 : 0), 6);
-        }
-
-      }; break;
-      
-      case DO_TOKEN1_NUMTOKEN:
-      {
-        hb_retnl (ulToken);
-      }; break;
-
-      case DO_TOKEN1_ATTOKEN:
-      {
-        if ((ulTokenCounter == HB_MKULONG (255,255,255,255)) ||
-            (ulToken == ulTokenCounter))
-          hb_retnl (pcSubStr-pcString+1);
-        else
-          hb_retnl (0);
-      }; break;
-    
-      case DO_TOKEN1_TOKENLOWER:
-      case DO_TOKEN1_TOKENUPPER:
-      {
-        if (!iNoRef)
-        {
-          hb_retclen (pcRet, sRetStrLen);
-        }
-        else
-        {
-          hb_retl (0);
-        }
-        if (ISBYREF (1))
-        {
-          hb_storclen (pcRet, sRetStrLen, 1);
-        }
-        hb_xfree (pcRet);
-      }; break;
-
-    }
-
-  }
-  else /* iParamCheck */
-  {
-    switch (iSwitch)
-    {
-      case DO_TOKEN1_TOKEN:
-      {
-        PHB_ITEM pSubst  = NULL;
-        int iArgErrorMode = ct_getargerrormode();
-        char cRet;
-        
-        if (ISBYREF (5))
-        {
-          cRet = (char)siPreSeparator;
-          hb_storclen (&cRet, (siPreSeparator != -1 ? 1 : 0),
-                       5);
-        }
-        if (ISBYREF (6))
-        {
-          cRet = (char)siPostSeparator;
-          hb_storclen (&cRet, (siPostSeparator != -1 ? 1 : 0),
-                       6);
-        }
-
-        if (iArgErrorMode != CT_ARGERR_IGNORE)
-        {
-          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_TOKEN,
-                                   NULL, "TOKEN", 0, EF_CANSUBSTITUTE, 6,
-                                   hb_paramError (1), hb_paramError (2),
-                                   hb_paramError (3), hb_paramError (4),
-                                   hb_paramError (5), hb_paramError (6));
-        }
-
-        if (pSubst != NULL)
-        {
-          hb_itemReturn (pSubst);
-          hb_itemRelease (pSubst);
-        }
-        else
-        {
-          if (!iNoRef)
-          {
-            hb_retc ("");
-          }
-          else
-          {
-            hb_retl (0);
-          }
-        }
-      }; break;  
-
-      case DO_TOKEN1_TOKENLOWER:
-      case DO_TOKEN1_TOKENUPPER:
-      {
-        PHB_ITEM pSubst = NULL;
-        int iArgErrorMode = ct_getargerrormode();
-        if (iArgErrorMode != CT_ARGERR_IGNORE)
-        {
-          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG,
-                                   (iSwitch == DO_TOKEN1_TOKENLOWER ? CT_ERROR_TOKENLOWER : CT_ERROR_TOKENUPPER),
-                                   NULL,
-                                   (iSwitch == DO_TOKEN1_TOKENLOWER ? "TOKENLOWER" : "TOKENUPPER"),
-                                   0, EF_CANSUBSTITUTE, 4,
-                                   hb_paramError (1), hb_paramError (2),
-                                   hb_paramError (3), hb_paramError (4));
-        }
-
-        if (pSubst != NULL)
-        {
-          hb_itemReturn (pSubst);
-          hb_itemRelease (pSubst);
-        }
-        else
-        {
-          if (!iNoRef)
-          {
-            hb_retc ("");
-          }
-          else
-          {
-            hb_retl (0);
-          }
-        }
-      }; break;
-
-      case DO_TOKEN1_NUMTOKEN:
-      case DO_TOKEN1_ATTOKEN:
-      {
-        PHB_ITEM pSubst = NULL;
-        int iArgErrorMode = ct_getargerrormode();
-        if (iArgErrorMode != CT_ARGERR_IGNORE)
-        {
-          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG,
-                                   (iSwitch == DO_TOKEN1_NUMTOKEN ? CT_ERROR_NUMTOKEN : CT_ERROR_ATTOKEN),
-                                   NULL,
-                                   (iSwitch == DO_TOKEN1_NUMTOKEN ? "NUMTOKEN" : "ATTOKEN"),
-                                   0, EF_CANSUBSTITUTE,
-                                   (iSwitch == DO_TOKEN1_NUMTOKEN ? 3 : 4),
-                                   hb_paramError (1), hb_paramError (2),
-                                   hb_paramError (3), hb_paramError (4));
-        }
-
-        if (pSubst != NULL)
-        {
-          hb_itemReturn (pSubst);
-          hb_itemRelease (pSubst);
-        }
-        else
-        {
-          hb_retnl (0);
-        }
-      }; break;
-    }
-  }
-
-  return;
-
+   }
 }
 
 
@@ -542,12 +500,9 @@ static void do_token1 (int iSwitch)
  *  $END$
  */
 
-HB_FUNC (ATTOKEN)
+HB_FUNC( ATTOKEN )
 {
-
-  do_token1 (DO_TOKEN1_ATTOKEN);
-  return;
-
+   do_token1( DO_TOKEN1_ATTOKEN );
 }
 
 
@@ -619,12 +574,9 @@ HB_FUNC (ATTOKEN)
  *  $END$
  */
 
-HB_FUNC (TOKEN)
+HB_FUNC( TOKEN )
 {
-
-  do_token1 (DO_TOKEN1_TOKEN);
-  return;
-
+   do_token1( DO_TOKEN1_TOKEN );
 }
 
 
@@ -658,12 +610,9 @@ HB_FUNC (TOKEN)
  *  $END$
  */
 
-HB_FUNC (NUMTOKEN)
+HB_FUNC( NUMTOKEN )
 {
-
-  do_token1 (DO_TOKEN1_NUMTOKEN);
-  return;
-
+   do_token1( DO_TOKEN1_NUMTOKEN );
 }
 
 /*  $DOC$
@@ -727,12 +676,9 @@ HB_FUNC (NUMTOKEN)
  *  $END$
  */
 
-HB_FUNC (TOKENLOWER)
+HB_FUNC( TOKENLOWER )
 {
-
-  do_token1 (DO_TOKEN1_TOKENLOWER);
-  return;
-
+   do_token1( DO_TOKEN1_TOKENLOWER );
 }
 
 
@@ -797,12 +743,9 @@ HB_FUNC (TOKENLOWER)
  *  $END$
  */
 
-HB_FUNC (TOKENUPPER)
+HB_FUNC( TOKENUPPER )
 {
-
-  do_token1 (DO_TOKEN1_TOKENUPPER);
-  return;
-
+   do_token1( DO_TOKEN1_TOKENUPPER );
 }
 
 
@@ -846,42 +789,30 @@ HB_FUNC (TOKENUPPER)
  *  $END$
  */
 
-HB_FUNC (TOKENSEP)
+HB_FUNC( TOKENSEP )
 {
+   char cRet;
 
-  char cRet;
-
-  if (ISLOG (1) && hb_parl (1))
-  {
-    /* return the separator char BEHIND the last token */
-    if (siPostSeparator != -1)
-    {
-      cRet = (char)siPostSeparator;
-      hb_retclen (&cRet, 1);
-    }
-    else
-    {
-      hb_retc ("");
-    }
-  }
-  else
-  {
-    /* return the separator char BEFORE the last token */
-    if (siPreSeparator != -1)
-    {
-      cRet = (char)siPreSeparator;
-      hb_retclen (&cRet, 1);
-    }
-    else
-    {
-      hb_retc ("");
-    }
-  }
-
-  return;
-
+   if( ISLOG( 1 ) && hb_parl( 1 ) )
+   {
+      /* return the separator char BEHIND the last token */
+      if( siPostSeparator != -1 )
+      {
+         cRet = ( char ) siPostSeparator;
+         hb_retclen( &cRet, 1 );
+      }
+      else
+         hb_retc( NULL );
+   }
+   else
+   {
+      /* return the separator char BEFORE the last token */
+      if( siPreSeparator != -1 )
+      {
+         cRet = ( char ) siPreSeparator;
+         hb_retclen( &cRet, 1 );
+      }
+      else
+         hb_retc( NULL );
+   }
 }
-
-
-
-

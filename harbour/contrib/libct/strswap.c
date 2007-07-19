@@ -83,100 +83,84 @@
  *  $END$
  */
 
-HB_FUNC (STRSWAP)
+HB_FUNC( STRSWAP )
 {
+   size_t sStrLen1, sStrLen2;
 
-  size_t sStrLen1, sStrLen2;
+   /* param check */
+   if( ( sStrLen1 = ( size_t ) hb_parclen( 1 ) ) > 0 &&
+       ( sStrLen2 = ( size_t ) hb_parclen( 2 ) ) > 0 )
+   {
+      /* get parameters */
+      char *pcString1 = ( char * ) hb_parc( 1 );
+      char *pcString2 = ( char * ) hb_parc( 2 );
+      char *pcRet1 = NULL, *pcRet2 = NULL;
+      int iChange1, iChange2;
+      size_t sIndex, sCmpLen;
 
-  /* param check */
-  if (((sStrLen1 = (size_t)hb_parclen (1)) > 0) &&
-      ((sStrLen2 = (size_t)hb_parclen (2)) > 0))
-  {
-
-    /* get parameters */
-    char *pcString1 = (char *)hb_parc (1);
-    char *pcString2 = (char *)hb_parc (2);
-    char *pcRet1 = NULL, *pcRet2 = NULL;
-    int iChange1, iChange2;
-    size_t sIndex, sCmpLen;
-
-    if ((iChange1=ISBYREF(1)) != 0)
-    {
-      pcRet1 = ( char * )hb_xgrab (sStrLen1);
-      hb_xmemcpy (pcRet1, pcString1, sStrLen1);
-    }
-
-    if ((iChange2=ISBYREF(2)) != 0)
-    {
-      pcRet2 = ( char * )hb_xgrab (sStrLen2);
-      hb_xmemcpy (pcRet2, pcString2, sStrLen2);
-    }
-
-    sCmpLen = (sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2);
-    for (sIndex = 0; sIndex < sCmpLen; sIndex++)
-    {
-      char cExchange;
-
-      if (iChange1)
+      if( ( iChange1 = ISBYREF( 1 ) ) != 0 )
       {
-        cExchange = *(pcString1+sIndex);
-        *(pcRet1+sIndex) = *(pcString2+sIndex);
-        if (iChange2)
-        {
-          *(pcRet2+sIndex) = cExchange;
-        }
+         pcRet1 = ( char * ) hb_xgrab( sStrLen1 );
+         hb_xmemcpy( pcRet1, pcString1, sStrLen1 );
       }
+
+      if( ( iChange2 = ISBYREF( 2 ) ) != 0 )
+      {
+         pcRet2 = ( char * ) hb_xgrab( sStrLen2 );
+         hb_xmemcpy( pcRet2, pcString2, sStrLen2 );
+      }
+
+      sCmpLen = ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 );
+      for( sIndex = 0; sIndex < sCmpLen; sIndex++ )
+      {
+         char cExchange;
+
+         if( iChange1 )
+         {
+            cExchange = *( pcString1 + sIndex );
+            *( pcRet1 + sIndex ) = *( pcString2 + sIndex );
+            if( iChange2 )
+            {
+               *( pcRet2 + sIndex ) = cExchange;
+            }
+         }
+         else
+         {
+            *( pcRet2 + sIndex ) = *( pcString1 + sIndex );
+         }
+      }
+
+      /* strings */
+      if( iChange1 )
+      {
+         hb_storclen( pcRet1, sStrLen1, 1 );
+         hb_xfree( pcRet1 );
+      }
+
+      if( iChange2 )
+      {
+         hb_storclen( pcRet2, sStrLen2, 2 );
+         hb_xfree( pcRet2 );
+      }
+
+      hb_retc( NULL );
+   }
+   else  /* ( sStrLen1 = ( size_t ) hb_parclen( 1 ) ) > 0 &&
+            ( sStrLen2 = ( size_t ) hb_parclen( 2 ) ) > 0 */
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
+
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  CT_ERROR_STRSWAP, NULL, "STRSWAP", 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
+      }
+
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
       else
-      {
-        *(pcRet2+sIndex) = *(pcString1+sIndex);
-      }
-    }
-
-    /* strings */
-    if (iChange1)
-    {
-      hb_storclen (pcRet1, sStrLen1, 1);
-      hb_xfree (pcRet1);
-    }
-
-    if (iChange2)
-    {
-      hb_storclen (pcRet2, sStrLen2, 2);
-      hb_xfree (pcRet2);
-    }
-
-    hb_retc ("");
-
-
-  }
-  else /* ((sStrLen1 = (size_t)hb_parclen (1)) > 0) &&
-          ((sStrLen2 = (size_t)hb_parclen (2)) > 0))   */
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_STRSWAP,
-                               NULL, "STRSWAP", 0, EF_CANSUBSTITUTE, 2,
-                               hb_paramError (1), hb_paramError (2));
-    }
-    
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      hb_retc ("");
-    }
-    return;
-  }
-
-  return;
-
+         hb_retc( NULL );
+   }
 }
-
-
-
-

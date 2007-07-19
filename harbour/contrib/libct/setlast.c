@@ -6,8 +6,8 @@
  * Harbour Project source code:
  *   CT3 Set Status functions: - SETLASTKEY()
  *
- * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
- * www - http://www.harbour-project.org
+ * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,37 +50,11 @@
  *
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      SETLASTKEY()
- *  $CATEGORY$
- *      CT3 Set Status functions
- *  $ONELINER$
- *  $SYNTAX$
- *      SETLASTKEY( <nKeyValue> ) -> <cNull>
- *  $ARGUMENTS$
- *      <nKeyValue> Designates the character code passed to LASTKEY().
- *  $RETURNS$
- *      SETLASTKEY() always returns a null string.
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is setlast.prg, library is libct.
- *  $SEEALSO$
- *      LASTKEY()
- *  $END$
- */
 
-FUNCTION SETLASTKEY( nKey )
+#include "hbapigt.h"
 
-   HB_SETLASTKEY( nKey )
-
-RETURN ""
-
+HB_FUNC( SETLASTKEY )
+{
+    hb_setInkeyLast( hb_parni( 1 ) );
+    hb_retc( NULL );
+}

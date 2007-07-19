@@ -85,116 +85,89 @@
  *  $END$
  */
 
-HB_FUNC (WORDTOCHAR)
+HB_FUNC( WORDTOCHAR )
 {
+   int iMultiPass;
+   size_t sSearchLen, sStrLen, sReplaceLen;
 
-  int iMultiPass;
+   iMultiPass = ct_getatmupa();
 
-  size_t sSearchLen, sStrLen, sReplaceLen;
+   /* param check */
+   if( ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) / 2 > 0 &&
+       ( sStrLen = ( size_t ) hb_parclen( 2 ) ) / 2 > 0 &&
+       ( sReplaceLen = ( size_t ) hb_parclen( 3 ) ) > 0 )
+   {
 
-  iMultiPass = ct_getatmupa();
+      /* get parameters */
+      char *pcSearch = ( char * ) hb_parc( 1 );
+      char *pcString = ( char * ) hb_parc( 2 );
+      char *pcReplace = ( char * ) hb_parc( 3 );
+      char *pcRet;
+      size_t sRetIndex, sIndex;
+      int iNoReplace;
 
-  /* param check */
-  if (((sSearchLen = (size_t)hb_parclen (1))/2 > 0) &&
-      ((sStrLen = (size_t)hb_parclen (2))/2 > 0) &&
-      ((sReplaceLen = (size_t)hb_parclen (3)) > 0))
-  {
+      pcRet = ( char * ) hb_xgrab( sStrLen );
+      sRetIndex = 0;
+      sIndex = 0;
+      iNoReplace = 0;
 
-    /* get parameters */
-    char *pcSearch = (char *)hb_parc (1);
-    char *pcString = (char *)hb_parc (2);
-    char *pcReplace = (char *)hb_parc (3);
-    char *pcRet;
-    size_t sRetIndex, sIndex;
-    int iNoReplace;
+      *pcRet = *pcString;       /* copy first char */
 
-    pcRet = ( char * )hb_xgrab (sStrLen);
-
-    sRetIndex = 0;
-    sIndex = 0;
-    iNoReplace = 0;
-
-    *pcRet = *pcString;  /* copy first char */
-    do
-    {
-      
-      size_t sMatchStrLen;
-      char *pc;
-      size_t sReplIndex;
-
-      *(pcRet+sRetIndex+1) = *(pcString+sIndex+1);
-
-      if (!iNoReplace &&
-          ((pc = ct_at_exact_forward (pcSearch, sSearchLen,
-                                      pcRet+sRetIndex, 2,
-                                      &sMatchStrLen)) != NULL) &&
-          (((sReplIndex=(pc-pcSearch)) & 1) != 1))
+      do
       {
-        sReplIndex /= 2;
-        if (sReplIndex >= sReplaceLen)
-        {
-          sReplIndex = sReplaceLen-1;
-        }
-        *(pcRet+sRetIndex) = *(pcReplace+sReplIndex);
-        
-        if (!iMultiPass)
-        {
-          iNoReplace = 1;  /* just copy next char without searching & replacing */
-        }
+         size_t sMatchStrLen;
+         char *pc;
+         size_t sReplIndex;
+
+         *( pcRet + sRetIndex + 1 ) = *( pcString + sIndex + 1 );
+
+         if( !iNoReplace &&
+             ( ( pc = ct_at_exact_forward( pcSearch, sSearchLen,
+                                           pcRet + sRetIndex, 2,
+                                           &sMatchStrLen ) ) != NULL ) &&
+             ( ( ( sReplIndex = ( pc - pcSearch ) ) & 1 ) != 1 ) )
+         {
+            sReplIndex /= 2;
+            if( sReplIndex >= sReplaceLen )
+               sReplIndex = sReplaceLen - 1;
+
+            *( pcRet + sRetIndex ) = *( pcReplace + sReplIndex );
+
+            if( !iMultiPass )
+               iNoReplace = 1;  /* just copy next char without searching & replacing */
+         }
+         else
+         {
+            iNoReplace = 0;
+            sRetIndex++;
+         }
+         sIndex++;
       }
+      while( sIndex < sStrLen - 1 );
+
+      /* return string */
+      hb_retclen( pcRet, sRetIndex + 1 );
+      hb_xfree( pcRet );
+   }
+   else  /* ( sSearchLen = ( size_t ) hb_parclen( 1 ) ) / 2 > 0 &&
+            ( sStrLen = ( size_t ) hb_parclen( 2 ) ) / 2 > 0 &&
+            ( sReplaceLen = ( size_t ) hb_parclen( 3 ) ) > 0 */
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
+
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  CT_ERROR_WORDTOCHAR, NULL, "WORDTOCHAR", 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
+      }
+
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
+      else if( ISCHAR( 2 ) )
+         hb_retclen( hb_parc( 2 ), hb_parclen( 2 ) );
       else
-      {
-        iNoReplace = 0;
-        sRetIndex++;
-      }
-
-      sIndex++;
-
-    } while (sIndex < sStrLen-1);
-
-    /* return string */
-
-    hb_retclen (pcRet, sRetIndex+1);
-    hb_xfree (pcRet);
-
-  }
-  else /* ((sSearchLen = (size_t)hb_parclen (1))/2 > 0) 
-          ((sStrLen = (size_t)hb_parclen (2))/2 > 0 &&
-          ((sReplaceLen = (size_t)hb_parclen (3)) > 0)) */
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_WORDTOCHAR,
-                               NULL, "WORDTOCHAR", 0, EF_CANSUBSTITUTE, 3,
-                               hb_paramError (1), hb_paramError (2),
-                               hb_paramError (3));
-    }
-    
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      if (ISCHAR (2))
-      {
-        hb_retclen (hb_parc (2), hb_parclen (2));
-      }
-      else
-      {
-        hb_retc ("");
-      }
-    }
-    return;
-  }
-
-  return;
-
+         hb_retc( NULL );
+   }
 }
-
-
-
-

@@ -52,43 +52,48 @@
 
 #include "hbapi.h"
 #include "hbapigt.h"
+#include "hbgtcore.h"
 #include "ctwin.h"
-
-extern int hb_gt_GetClearColor( void );
-extern int hb_gt_GetClearChar( void );
-extern void hb_gt_SetClearColor( int );
-extern void hb_gt_SetClearChar( int );
-extern void hb_gt_Flush( void );
 
 HB_FUNC( CTWINIT )
 {
    hb_retl( hb_ctw_Init() );
 }
 
+HB_FUNC( GETCLEARA )
+{
+   hb_retni( hb_gt_GetClearColor() );
+}
+
 HB_FUNC( SETCLEARA )
 {
-   int iRet = hb_gt_GetClearColor();
-
    if( ISNUM( 1 ) )
-   {
-      int iNew = hb_parni( 1 );
-      if( iNew >= 0 )
-         hb_gt_SetClearColor( iNew );
-   }
-   hb_retni( iRet );
+      hb_gt_SetClearColor( hb_parni( 1 ) & 0xff );
+   else if( hb_parclen( 1 ) > 0 )
+      hb_gt_SetClearColor( hb_gtColorToN( hb_parc( 1 ) ) );
+
+   hb_retc( NULL );
 }
 
 HB_FUNC( SETCLEARB )
 {
-   int iRet = hb_gt_GetClearChar();
+   int iNew;
 
    if( ISNUM( 1 ) )
-   {
-      int iNew = hb_parni( 1 );
-      if( iNew >= 0 )
-         hb_gt_SetClearChar( iNew );
-   }
-   hb_retni( iRet );
+      iNew = hb_parni( 1 );
+   else if( ISCHAR( 1 ) )
+      iNew = hb_parc( 1 )[0];
+   else
+      iNew = 255;
+
+   hb_gt_SetClearChar( iNew & 0xff );
+
+   hb_retc( NULL );
+}
+
+HB_FUNC( GETCLEARB )
+{
+   hb_retni( hb_gt_GetClearChar() );
 }
 
 HB_FUNC( WSETSHADOW )

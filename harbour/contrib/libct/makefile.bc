@@ -145,6 +145,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\remove.obj \
    $(OBJ_DIR)\replace.obj \
    $(OBJ_DIR)\screen1.obj \
+   $(OBJ_DIR)\setlast.obj \
    $(OBJ_DIR)\strdiff.obj \
    $(OBJ_DIR)\strswap.obj \
    $(OBJ_DIR)\tab.obj \
@@ -159,7 +160,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\cttime.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen2.obj \
-   $(OBJ_DIR)\setlast.obj \
 
 #
 # Our default target
@@ -398,6 +398,10 @@ $(OBJ_DIR)\screen1.obj : $(TOOLS_DIR)\screen1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\setlast.obj : $(TOOLS_DIR)\setlast.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\strswap.obj : $(TOOLS_DIR)\strswap.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -462,12 +466,5 @@ $(OBJ_DIR)\screen2.c : $(TOOLS_DIR)\screen2.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\screen2.obj : $(OBJ_DIR)\screen2.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\setlast.c : $(TOOLS_DIR)\setlast.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\setlast.obj : $(OBJ_DIR)\setlast.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,

@@ -61,116 +61,102 @@
 #define DO_REPLACE_REPLLEFT     1
 #define DO_REPLACE_REPLRIGHT    2
 
-static const ULONG sulErrorSubcodes[] = {CT_ERROR_REPLALL,
-                                         CT_ERROR_REPLLEFT,
-                                         CT_ERROR_REPLRIGHT};
-static const char * spcErrorOperation[] = {"REPLALL",
-                                           "REPLLEFT",
-                                           "REPLRIGHT"};
+static const ULONG sulErrorSubcodes[] = {
+   CT_ERROR_REPLALL,
+   CT_ERROR_REPLLEFT,
+   CT_ERROR_REPLRIGHT
+};
 
 /* helper function for the replxxx functions */
-static void do_replace (int iSwitch)
+static void do_replace( int iSwitch )
 {
 
-  /* suppressing return value ? */
-  int iNoRet = ct_getref();
+   /* suppressing return value ? */
+   int iNoRet = ct_getref() && ISBYREF( 1 );
 
-  /* param check */
-  if ((ISCHAR (1)) &&
-      ((hb_parclen (2) > 0) || (ISNUM(2))))
-  {
+   /* param check */
+   if( ISCHAR( 1 ) && ( hb_parclen( 2 ) > 0 || ISNUM( 2 ) ) )
+   {
+      char *pcString = ( char * ) hb_parc( 1 );
+      size_t sStrLen = ( size_t ) hb_parclen( 1 );
+      char *pcRet, *pc;
+      char cSearch, cReplace;
 
-    char *pcString = (char *)hb_parc (2);
-    size_t sStrLen = (size_t)hb_parclen (2);
-    char *pcRet, *pc;
-    char cSearch, cReplace;
-    
-    if (ISNUM (2))
-    {
-      cReplace = hb_parnl (2) % 256;
-    }
-    else
-    {
-      cReplace = *((char *)hb_parc (2));
-    }
-
-    if (hb_parclen (3) > 0)
-    {
-      cSearch = *((char *)hb_parc (3));
-    }
-    else if (ISNUM (3))
-    {
-      cSearch = hb_parnl (3) % 256;
-    }
-    else
-    {
-      cSearch = 0x20;
-    }
-
-    pcRet = ( char * )hb_xgrab (sStrLen);
-    hb_xmemcpy (pcRet, pcString, sStrLen);
-
-    if (iSwitch != DO_REPLACE_REPLRIGHT)
-    {
-      pc = pcRet;
-      while ((*pc == cSearch) && (pc < pcRet+sStrLen))
+      if( sStrLen == 0 )
       {
-        *pc = cReplace;
-        pc++;
+         if( iNoRet )
+            hb_ret();
+         else
+            hb_retc( NULL );
+         return;
       }
-    }
 
-    if (iSwitch != DO_REPLACE_REPLLEFT)
-    {
-      pc = pcRet+sStrLen-1;
-      while ((*pc == cSearch) && (pc >= pcRet))
-      {
-        *pc = cReplace;
-        pc--;
-      }
-    }
-
-    if (ISBYREF (1))
-      hb_storclen (pcRet, sStrLen, 1);
-
-    if (iNoRet)
-      hb_ret();
-    else
-      hb_retclen (pcRet, sStrLen);
-
-    hb_xfree (pcRet);
-
-  }
-  else /* if ((ISCHAR (1)) &&
-              ((hb_parclen (2) > 0) || (ISNUM(2)))) */
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, sulErrorSubcodes[iSwitch],
-                               NULL, (char *)spcErrorOperation[iSwitch], 0, EF_CANSUBSTITUTE, 3,
-                               hb_paramError (1), hb_paramError (2),
-                               hb_paramError (3));
-    }
-    
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      if (iNoRet)
-        hb_ret();
+      if( ISNUM( 2 ) )
+         cReplace = ( char ) ( hb_parnl( 2 ) % 256 );
       else
-        hb_retc ("");
-    }
-    return;
-  }
+         cReplace = *( ( char * ) hb_parc( 2 ) );
 
-  return;
+      if( hb_parclen( 3 ) > 0 )
+         cSearch = *( ( char * ) hb_parc( 3 ) );
+      else if( ISNUM( 3 ) )
+         cSearch = ( char ) ( hb_parnl( 3 ) % 256 );
+      else
+         cSearch = 0x20;
 
+      pcRet = ( char * ) hb_xgrab( sStrLen + 1 );
+      hb_xmemcpy( pcRet, pcString, sStrLen );
+
+      if( iSwitch != DO_REPLACE_REPLRIGHT )
+      {
+         pc = pcRet;
+         while( *pc == cSearch && pc < pcRet + sStrLen )
+         {
+            *pc = cReplace;
+            pc++;
+         }
+      }
+
+      if( iSwitch != DO_REPLACE_REPLLEFT )
+      {
+         pc = pcRet + sStrLen - 1;
+         while( *pc == cSearch && pc >= pcRet )
+         {
+            *pc = cReplace;
+            pc--;
+         }
+      }
+
+      if( ISBYREF( 1 ) )
+         hb_storclen( pcRet, sStrLen, 1 );
+
+      if( iNoRet )
+      {
+         hb_xfree( pcRet );
+         hb_ret();
+      }
+      else
+         hb_retclen_buffer( pcRet, sStrLen );
+   }
+   else  /* ISCHAR( 1 ) && ( hb_parclen( 2 ) > 0 || ISNUM( 2 ) ) */
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
+
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  sulErrorSubcodes[iSwitch],
+                                  NULL, &hb_errFuncName, 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
+      }
+
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
+      else if( iNoRet )
+         hb_ret();
+      else
+         hb_retc( NULL );
+   }
 }
 
 
@@ -202,12 +188,9 @@ static void do_replace (int iSwitch)
  *  $END$
  */
 
-HB_FUNC (REPLALL)
+HB_FUNC( REPLALL )
 {
-
-  do_replace (DO_REPLACE_REPLALL);
-  return;
-
+   do_replace( DO_REPLACE_REPLALL );
 }
 
 
@@ -239,12 +222,9 @@ HB_FUNC (REPLALL)
  *  $END$
  */
 
-HB_FUNC (REPLLEFT)
+HB_FUNC( REPLLEFT )
 {
-
-  do_replace (DO_REPLACE_REPLLEFT);
-  return;
-
+   do_replace( DO_REPLACE_REPLLEFT );
 }
 
 
@@ -276,10 +256,7 @@ HB_FUNC (REPLLEFT)
  *  $END$
  */
 
-HB_FUNC (REPLRIGHT)
+HB_FUNC( REPLRIGHT )
 {
-
-  do_replace (DO_REPLACE_REPLRIGHT);
-  return;
-
+   do_replace( DO_REPLACE_REPLRIGHT );
 }

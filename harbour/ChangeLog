@@ -8,6 +8,29 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-19 18:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/strdiff.c
+  * harbour/contrib/libct/token2.c
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/wordrepl.c
+  * harbour/contrib/libct/strswap.c
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/screen1.c
+  * harbour/contrib/libct/token1.c
+  * harbour/contrib/libct/makefile.vc
+  * harbour/contrib/libct/ctwfunc.c
+  * harbour/contrib/libct/relation.c
+  + harbour/contrib/libct/setlast.c
+  * harbour/contrib/libct/tab.c
+  * harbour/contrib/libct/replace.c
+  - harbour/contrib/libct/setlast.prg
+  * harbour/contrib/libct/wordtoch.c
+  * harbour/contrib/libct/remove.c
+    * synced with xHarbour modifications and fixes
+    * new functions or .prg functions rewritten in C
+    ! some fixes
+    * indenting
+
 2007-07-19 11:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/contrib/libct/ctdisk.ch
     + added missing file I forgot to add in previous commit

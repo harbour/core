@@ -124,14 +124,11 @@ HB_FUNC( FLOOR )
             ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_FLOOR, NULL, "FLOOR", 0,
                             EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
-
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
          hb_retnd( 0.0 );
    }
-
-   return;
 }
 
 
@@ -193,7 +190,6 @@ HB_FUNC( CEILING )
                                   CT_ERROR_CEILING, NULL, "CEILING", 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
-
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -269,7 +265,6 @@ HB_FUNC( SIGN )
                                   CT_ERROR_SIGN, NULL, "SIGN", 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
-
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -364,7 +359,6 @@ HB_FUNC( LOG10 )
                                   CT_ERROR_LOG10, NULL, "LOG10", 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
-
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -422,15 +416,11 @@ HB_FUNC( FACT )
       if( ( iInput >= 0 ) && ( iInput < 22 ) )
       {
          for( i = 1; i <= iInput; i++ )
-         {
             dResult *= ( double ) i;
-         }
          hb_retnd( dResult );
       }
       else
-      {
          hb_retnd( -1.0 );
-      }
    }
    else
    {
@@ -443,7 +433,6 @@ HB_FUNC( FACT )
                                   CT_ERROR_FACT, NULL, "FACT", 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
-
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else

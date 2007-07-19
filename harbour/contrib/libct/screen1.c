@@ -4,9 +4,14 @@
 
 /*
  * Harbour Project source code:
- *   CT3 video functions: - SCREENATTR()
+ *   CT3 video functions:
  *
+ * SCREENATTR()
  * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
+ *
+ * CLEARWIN()
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,6 +58,7 @@
 #include "hbdefs.h"
 #include "hbapi.h"
 #include "hbapigt.h"
+#include "hbgtcore.h"
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -93,30 +99,68 @@
 
 HB_FUNC( SCREENATTR )
 {
+   SHORT sRow, sCol;
+   int iRow, iCol;
+   BYTE bColor, bAttr;
+   USHORT usChar;
 
-  ULONG  ulSize;
-  int    iRow, iCol;
-  char * pcPos;
+   hb_gtGetPos( &sRow, &sCol );
+   iRow = ISNUM( 1 ) ? hb_parni( 1 ) : sRow;
+   iCol = ISNUM( 2 ) ? hb_parni( 2 ) : sCol;
 
-  iRow = hb_parni( 1 );
-  iCol = hb_parni( 2 );
+   if( ! hb_gtGetChar( iRow, iCol, &bColor, &bAttr, &usChar ) )
+      bColor = 0;
 
-  hb_gtRectSize( iRow, iCol, iRow, iCol, &ulSize );
-  pcPos = (char * ) hb_xalloc( ulSize + 1 );
-
-  if( pcPos != NULL )
-  {
-     hb_gtSave( iRow, iCol, iRow, iCol, pcPos );
-
-
-     hb_retni( ( int ) pcPos[1] );
-  }
-  else
-     hb_retni( 0 );
-
-  hb_xfree( pcPos );
-
+   hb_retni( ( int ) bColor );
 }
 
+HB_FUNC( CLEARWIN )
+{
+   int iMaxRow = hb_gtMaxRow();
+   int iMaxCol = hb_gtMaxCol();
+   int iTop, iLeft, iBottom, iRight;
+   BYTE bColor, bChar;
 
+   hb_gt_GetPos( &iTop, &iLeft );
 
+   if( ISNUM( 1 ) )
+      iTop = hb_parni( 1 );
+   if( ISNUM( 2 ) )
+      iLeft   = hb_parni( 2 );
+   if( ISNUM( 3 ) )
+   {
+      iBottom = hb_parni( 3 );
+      if( iBottom > iMaxRow )
+         iBottom = iMaxRow;
+   }
+   else
+      iBottom = iMaxRow;
+   if( ISNUM( 4 ) )
+   {
+      iRight = hb_parni( 4 );
+      if( iRight > iMaxCol )
+         iRight = iMaxCol;
+   }
+   else
+      iRight = iMaxCol;
+
+   if( ISNUM( 5 ) )
+      bColor = ( BYTE ) hb_parni( 5 );
+   else if( hb_parclen( 5 ) > 0 )
+      bColor = ( BYTE ) hb_gtColorToN( hb_parc( 5 ) );
+   else
+      bColor = ( BYTE ) hb_gt_GetClearColor();
+
+   if( ISNUM( 6 ) )
+      bChar = ( BYTE ) hb_parni( 6 );
+   else if( ISCHAR( 6 ) )
+      bChar = ( BYTE ) hb_parc( 6 )[0];
+   else
+      bChar = ( BYTE ) hb_gt_GetClearChar();
+
+   if( iTop >= 0 && iLeft >= 0 && iTop < iBottom && iLeft <= iRight )
+   {
+      hb_gt_Scroll( iTop, iLeft, iBottom, iRight, bColor, bChar, 0, 0 );
+      hb_gt_Flush();
+   }
+}

@@ -62,6 +62,7 @@ C_SOURCES = \
 	remove.c \
 	replace.c \
 	screen1.c \
+	setlast.c \
 	strdiff.c \
 	strswap.c \
 	tab.c \
@@ -77,7 +78,6 @@ PRG_SOURCES= \
 	cttime.prg \
 	numconv.prg \
 	screen2.prg \
-	setlast.prg \
 
 LIBNAME=ct
 

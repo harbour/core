@@ -163,6 +163,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\remove.obj \
    $(OBJ_DIR)\replace.obj \
    $(OBJ_DIR)\screen1.obj \
+   $(OBJ_DIR)\setlast.obj \
    $(OBJ_DIR)\strdiff.obj \
    $(OBJ_DIR)\strswap.obj \
    $(OBJ_DIR)\tab.obj \
@@ -176,7 +177,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen2.obj \
-   $(OBJ_DIR)\setlast.obj \
 
 #
 # Our default target
@@ -239,6 +239,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\replace.* del $(OBJ_DIR)\replace.*
    -@if exist $(OBJ_DIR)\strdiff.* del $(OBJ_DIR)\strdiff.*
    -@if exist $(OBJ_DIR)\screen1.* del $(OBJ_DIR)\screen1.*
+   -@if exist $(OBJ_DIR)\setlast.* del $(OBJ_DIR)\setlast.*
    -@if exist $(OBJ_DIR)\strswap.* del $(OBJ_DIR)\strswap.*
    -@if exist $(OBJ_DIR)\tab.* del $(OBJ_DIR)\tab.*
    -@if exist $(OBJ_DIR)\token1.* del $(OBJ_DIR)\token1.*
@@ -250,7 +251,6 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
    -@if exist $(OBJ_DIR)\numconv.* del $(OBJ_DIR)\numconv.*
    -@if exist $(OBJ_DIR)\screen2.* del $(OBJ_DIR)\screen2.*
-   -@if exist $(OBJ_DIR)\setlast.* del $(OBJ_DIR)\setlast.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 
 #
