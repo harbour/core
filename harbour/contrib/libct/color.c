@@ -130,6 +130,7 @@ HB_FUNC( INVERTWIN )
    iBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
    iRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
 
+   hb_gtBeginWrite();
    while( iTop <= iBottom )
    {
       int iCol = iLeft;
@@ -147,6 +148,7 @@ HB_FUNC( INVERTWIN )
       }
       ++iTop;
    }
+   hb_gtEndWrite();
 }
 
 

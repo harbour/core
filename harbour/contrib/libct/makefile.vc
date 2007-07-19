@@ -147,6 +147,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\keyset.obj \
    $(OBJ_DIR)\like.obj \
+   $(OBJ_DIR)\lton.obj \
+   $(OBJ_DIR)\maxline.obj \
    $(OBJ_DIR)\misc1.obj \
    $(OBJ_DIR)\misc2.obj \
    $(OBJ_DIR)\misc3.obj \
@@ -154,6 +156,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\numat.obj \
    $(OBJ_DIR)\numcount.obj \
    $(OBJ_DIR)\numline.obj \
+   $(OBJ_DIR)\pack.obj \
    $(OBJ_DIR)\pos1.obj \
    $(OBJ_DIR)\pos2.obj \
    $(OBJ_DIR)\posdiff.obj \
@@ -176,7 +179,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\numconv.obj \
-   $(OBJ_DIR)\screen2.obj \
 
 #
 # Our default target
@@ -223,6 +225,8 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ftoc.* del $(OBJ_DIR)\ftoc.*
    -@if exist $(OBJ_DIR)\justify.* del $(OBJ_DIR)\justify.*
    -@if exist $(OBJ_DIR)\like.* del $(OBJ_DIR)\like.*
+   -@if exist $(OBJ_DIR)\lton.* del $(OBJ_DIR)\lton.*
+   -@if exist $(OBJ_DIR)\maxline.* del $(OBJ_DIR)\maxline.*
    -@if exist $(OBJ_DIR)\misc1.* del $(OBJ_DIR)\misc1.*
    -@if exist $(OBJ_DIR)\misc2.* del $(OBJ_DIR)\misc2.*
    -@if exist $(OBJ_DIR)\misc3.* del $(OBJ_DIR)\misc3.*
@@ -230,6 +234,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\numat.* del $(OBJ_DIR)\numat.*
    -@if exist $(OBJ_DIR)\numcount.* del $(OBJ_DIR)\numcount.*
    -@if exist $(OBJ_DIR)\numline.* del $(OBJ_DIR)\numline.*
+   -@if exist $(OBJ_DIR)\pack.* del $(OBJ_DIR)\pack.*
    -@if exist $(OBJ_DIR)\pos1.* del $(OBJ_DIR)\pos1.*
    -@if exist $(OBJ_DIR)\pos2.* del $(OBJ_DIR)\pos2.*
    -@if exist $(OBJ_DIR)\posdiff.* del $(OBJ_DIR)\posdiff.*
@@ -250,7 +255,6 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ct.* del $(OBJ_DIR)\ct.*
    -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
    -@if exist $(OBJ_DIR)\numconv.* del $(OBJ_DIR)\numconv.*
-   -@if exist $(OBJ_DIR)\screen2.* del $(OBJ_DIR)\screen2.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 
 #

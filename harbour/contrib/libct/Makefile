@@ -46,6 +46,8 @@ C_SOURCES = \
 	justify.c \
 	keyset.c \
 	like.c \
+	lton.c \
+	maxline.c \
 	misc1.c \
 	misc2.c \
 	misc3.c \
@@ -53,6 +55,7 @@ C_SOURCES = \
 	numat.c \
 	numcount.c \
 	numline.c \
+	pack.c \
 	pos1.c \
 	pos2.c \
 	posdiff.c \
@@ -77,7 +80,6 @@ PRG_SOURCES= \
 	ctmisc.prg \
 	cttime.prg \
 	numconv.prg \
-	screen2.prg \
 
 LIBNAME=ct
 

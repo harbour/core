@@ -393,18 +393,16 @@ HB_EXPORT ERRCODE hb_gtGetChar( USHORT uiRow, USHORT uiCol, BYTE * pbColor, BYTE
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtGetChar(%hu, %hu, %p, %p, %p)", uiRow, uiCol, pbColor, pbAttr, pusChar));
 
-   hb_gt_GetChar( uiRow, uiCol, pbColor, pbAttr, pusChar );
-
-   return SUCCESS;
+   return hb_gt_GetChar( uiRow, uiCol, pbColor, pbAttr, pusChar ) ?
+          SUCCESS : FAILURE;
 }
 
 HB_EXPORT ERRCODE hb_gtPutChar( USHORT uiRow, USHORT uiCol, BYTE bColor, BYTE bAttr, USHORT usChar )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gtPutChar(%hu, %hu, %hu, %hu, %hu)", uiRow, uiCol, bColor, bAttr, usChar));
 
-   hb_gt_PutChar( uiRow, uiCol, bColor, bAttr, usChar );
-
-   return SUCCESS;
+   return hb_gt_PutChar( uiRow, uiCol, bColor, bAttr, usChar ) ?
+          SUCCESS : FAILURE;
 }
 
 HB_EXPORT ERRCODE hb_gtBeginWrite( void )

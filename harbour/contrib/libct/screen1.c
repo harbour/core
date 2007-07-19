@@ -6,10 +6,8 @@
  * Harbour Project source code:
  *   CT3 video functions:
  *
- * SCREENATTR()
- * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
+ * SCREENATTR(), SCREENMIX(), SAYSCREEN(), CLEARWIN()
  *
- * CLEARWIN()
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * www - http://www.harbour-project.org
@@ -108,10 +106,121 @@ HB_FUNC( SCREENATTR )
    iRow = ISNUM( 1 ) ? hb_parni( 1 ) : sRow;
    iCol = ISNUM( 2 ) ? hb_parni( 2 ) : sCol;
 
-   if( ! hb_gtGetChar( iRow, iCol, &bColor, &bAttr, &usChar ) )
+   if( hb_gtGetChar( iRow, iCol, &bColor, &bAttr, &usChar ) != SUCCESS )
       bColor = 0;
 
    hb_retni( ( int ) bColor );
+}
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      SCREENMIX()
+ *  $CATEGORY$
+ *      CT3 video functions
+ *  $ONELINER$
+ *  $SYNTAX$
+ *      SCREENMIX (<cCharString>, <cAttributeString>, [<nRow>], [<nCol>]) -> <cEmptyString>
+ *  $ARGUMENTS$
+ *  $RETURNS$
+ *  $DESCRIPTION$
+ *      TODO: add documentation
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      Started
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Source is screen2.prg, library is libct.
+ *  $SEEALSO$
+ *  $END$
+ */
+
+HB_FUNC( SCREENMIX )
+{
+   ULONG ulLen = hb_parclen( 1 );
+
+   if( ulLen )
+   {
+      char * szText = hb_parc( 1 ), * szAttr;
+      ULONG ulAttr = hb_parclen( 2 ), ul = 0;
+      SHORT sRow, sCol;
+      int iRow, iCol, i;
+
+      if( ulAttr == 0 )
+      {
+         szAttr = " ";
+         ulAttr = 1;
+      }
+      else
+         szAttr = hb_parc( 2 );
+
+      hb_gtGetPos( &sRow, &sCol );
+      iRow = ISNUM( 3 ) ? hb_parni( 3 ) : sRow;
+      iCol = ISNUM( 4 ) ? hb_parni( 4 ) : sCol;
+
+      if( iRow >= 0 && iCol >= 0 &&
+          iRow <= hb_gtMaxRow() && iCol <= hb_gtMaxCol() )
+      {
+         hb_gtBeginWrite();
+         i = iCol;
+         do
+         {
+            if( hb_gtPutChar( iRow, i++, szAttr[ ul ], 0, *szText++ ) != SUCCESS )
+            {
+               if( ++iRow > hb_gtMaxRow() )
+                  break;
+               --szText;
+               ++ulLen;
+               i = iCol;
+            }
+            else if( ++ul == ulAttr )
+               ul = 0;
+         }
+         while( --ulLen );
+         hb_gtEndWrite();
+      }
+   }
+}
+
+HB_FUNC( SAYSCREEN )
+{
+   ULONG ulLen = hb_parclen( 1 );
+
+   if( ulLen )
+   {
+      char * szText = hb_parc( 1 );
+      SHORT sRow, sCol;
+      int iRow, iCol, i;
+
+      hb_gtGetPos( &sRow, &sCol );
+      iRow = ISNUM( 2 ) ? hb_parni( 2 ) : sRow;
+      iCol = ISNUM( 3 ) ? hb_parni( 3 ) : sCol;
+
+      if( iRow >= 0 && iCol >= 0 &&
+          iRow <= hb_gtMaxRow() && iCol <= hb_gtMaxCol() )
+      {
+         hb_gtBeginWrite();
+         i = iCol;
+         do
+         {
+            BYTE bColor, bAttr;
+            USHORT usChar;
+            if( hb_gtGetChar( iRow, i, &bColor, &bAttr, &usChar ) != SUCCESS )
+            {
+               if( ++iRow > hb_gtMaxRow() )
+                  break;
+               ++ulLen;
+               i = iCol;
+            }
+            else
+               hb_gtPutChar( iRow, i++, bColor, bAttr, *szText++ );
+         }
+         while( --ulLen );
+         hb_gtEndWrite();
+      }
+   }
 }
 
 HB_FUNC( CLEARWIN )

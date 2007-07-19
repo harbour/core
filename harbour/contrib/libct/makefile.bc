@@ -129,6 +129,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\justify.obj \
    $(OBJ_DIR)\keyset.obj \
    $(OBJ_DIR)\like.obj \
+   $(OBJ_DIR)\lton.obj \
+   $(OBJ_DIR)\maxline.obj \
    $(OBJ_DIR)\misc1.obj \
    $(OBJ_DIR)\misc2.obj \
    $(OBJ_DIR)\misc3.obj \
@@ -136,6 +138,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\numat.obj \
    $(OBJ_DIR)\numcount.obj \
    $(OBJ_DIR)\numline.obj \
+   $(OBJ_DIR)\pack.obj \
    $(OBJ_DIR)\pos1.obj \
    $(OBJ_DIR)\pos2.obj \
    $(OBJ_DIR)\posdiff.obj \
@@ -159,7 +162,6 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\cttime.obj \
    $(OBJ_DIR)\numconv.obj \
-   $(OBJ_DIR)\screen2.obj \
 
 #
 # Our default target
@@ -334,6 +336,14 @@ $(OBJ_DIR)\like.obj : $(TOOLS_DIR)\like.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\lton.obj : $(TOOLS_DIR)\lton.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\maxline.obj : $(TOOLS_DIR)\maxline.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\misc1.obj : $(TOOLS_DIR)\misc1.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -359,6 +369,10 @@ $(OBJ_DIR)\numcount.obj : $(TOOLS_DIR)\numcount.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\numline.obj : $(TOOLS_DIR)\numline.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\pack.obj : $(TOOLS_DIR)\pack.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -459,12 +473,5 @@ $(OBJ_DIR)\numconv.c : $(TOOLS_DIR)\numconv.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\numconv.obj : $(OBJ_DIR)\numconv.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
-
-$(OBJ_DIR)\screen2.c : $(TOOLS_DIR)\screen2.prg
-   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-
-$(OBJ_DIR)\screen2.obj : $(OBJ_DIR)\screen2.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,

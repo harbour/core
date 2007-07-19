@@ -3,11 +3,12 @@
  */
 
 /*
- * Harbour Project source code:
- *   CT3 video functions (screen-like functions): - SCREENMIX()
- * 
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>:
- * www - http://www.harbour-project.org
+ * xHarbour Project source code:
+ *   CT3 numeric functions
+ *
+ * MAXLINE()
+ * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,40 +51,33 @@
  *
  */
 
-#include "color.ch"
-#include "common.ch"
+#include "hbapi.h"
 
-/*  $DOC$
- *  $FUNCNAME$
- *      SCREENMIX()
- *  $CATEGORY$
- *      CT3 video functions
- *  $ONELINER$
- *  $SYNTAX$
- *      SCREENMIX (<cCharString>, <cAttributeString>, [<nRow>], [<nCol>]) -> <cEmptyString>
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is screen2.prg, library is libct.
- *  $SEEALSO$
- *  $END$
- */
+HB_FUNC( MAXLINE )
+{
+   LONG lLength = 0;
 
-FUNCTION SCREENMIX( c, a, row, col )
+   if( ISCHAR( 1 ) )
+   {
+      char *pcString = hb_parc( 1 );
+      char *pBuffer;
+      LONG lStrLen = hb_parclen( 1 );
 
-   DEFAULT row TO Row()
-   DEFAULT col TO Col()
+      while( lStrLen > 0 )
+      {
+         pBuffer = ( char * ) memchr( pcString, 13, lStrLen );
+         if( !pBuffer )
+            pBuffer = pcString + lStrLen;
 
-   RestScreen( row, col, row, col + Len( a ) - 1, CHARMIX( c, a ) )
+         if( pBuffer - pcString > lLength )
+            lLength = pBuffer - pcString;
 
-   RETURN ""
-
+         pBuffer++;
+         if( *pBuffer == 10 )
+            pBuffer++;
+         lStrLen -= pBuffer - pcString;
+         pcString = pBuffer;
+      }
+   }
+   hb_retnl( lLength );
+}

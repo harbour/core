@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-19 20:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/Makefile
+  + harbour/contrib/libct/maxline.c
+  + harbour/contrib/libct/lton.c
+  + harbour/contrib/libct/pack.c
+  * harbour/contrib/libct/color.c
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/screen1.c
+  - harbour/contrib/libct/screen2.prg
+  * harbour/contrib/libct/makefile.vc
+  * harbour/source/rtl/gtapi.c
+    * synced with xHarbour modifications and fixes
+    * new functions or .prg functions rewritten in C
+    ! some fixes
+    * indenting
+
 2007-07-19 18:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libct/strdiff.c
   * harbour/contrib/libct/token2.c
