@@ -66,7 +66,7 @@
 
 #if defined( HB_OS_WIN_32 )
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__WATCOMC__)
    #include <conio.h>
 #endif   
 

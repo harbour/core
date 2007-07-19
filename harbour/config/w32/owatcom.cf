@@ -11,8 +11,6 @@ EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 
-$(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP = $(subst /,\,$(GRANDP))
-
 CC = wpp386
 CC_IN =
 CC_OUT = -fo=
@@ -51,11 +49,12 @@ endef
 
 define link_exe_file
 echo. $(LDFLAGS) NAME $@ > __link__.tmp
-echo. LIB kernel32.lib, user32.lib, winspool.lib, oleaut32.lib, uuid.lib, comctl32.lib, mapi32.lib, wsock32.lib >> __link__.tmp
 $(foreach file, $(^F), $(link_file))
 $(foreach lib, $(LINKLIBS), $(link_lib))
 $(foreach lib, $(RDDLIBS), $(link_lib))
 $(foreach lib, $(GTLIBS), $(link_lib))
+echo. @%watcom%/binnt/wlink.lnk >> __link__.tmp
+echo. LIB kernel32.lib, user32.lib, winspool.lib, oleaut32.lib, uuid.lib, comctl32.lib, mapi32.lib, wsock32.lib >> __link__.tmp
 -$(LD) @__link__.tmp
 endef
 
@@ -63,11 +62,11 @@ LD = wlink
 LDFLAGS = debug all OP osn=NT OP stack=65536 OP CASEEXACT
 
 ifeq ($(HB_LIB_COMPILE),)
-   LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib))))
-   LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib)))
+   LINKLIBS := $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib)))
+   LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib))
 else
-   LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
-   LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
+   LINKLIBS := $(foreach lib, $(CONTRIBS), $(HB_LIB_COMPILE)/$(lib))
+   LINKLIBS += $(foreach lib, $(LIBS), $(HB_LIB_COMPILE)/$(lib))
 endif
 
 # If LIBS specifies the rdd library, add all DB drivers.
@@ -77,7 +76,6 @@ ifeq ($(findstring rdd,$(LIBS)),rdd)
    else
       RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(HB_LIB_COMPILE)/$(drv))
    endif
-   RDDLIBS := $(subst /,\,$(RDDLIBS))
 endif
 
 ifeq ($(findstring rtl,$(LIBS)),rtl)
@@ -95,7 +93,6 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
          endif
       endif
    endif
-   GTLIBS := $(subst /,\,$(GTLIBS))
 endif
 
 LD_RULE = $(link_exe_file)
@@ -117,9 +114,6 @@ ARFLAGS = -p=64 -c -n $(A_USR)
 AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf
-
-HB := $(subst /,\,$(HB))
-HB_FLAGS := $(subst /,\,$(HB_FLAGS))
 
 # work arround to DOS command line size limit
 export HARBOURCMD := $(HB_FLAGS)

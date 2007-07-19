@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-19 04:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hb_io.h
+    + added #include <dos.h> for DOS builds
+
+  * harbour/source/rtl/gttone.c
+    + #include <conio.h> for WATCOM builds
+
+  * harbour/config/w32/watcom.cf
+    * cleanup
+
+  + harbour/config/w32/owatcom.cf
+    + added OpenWatcom support
+
+  * harbour/contrib/libct/files.c
+    * rewritten FILESEEK(), FILESIZE(), FILEATTR(), FILETIME(), FILEDATE()
+      now they should work on all supported platforms
+    + added FILESMAX() for POSIX systems
+    * added FILEDELETE() - It's Phil Krylov code from xHarbour modified
+      to be MT safe
+    * indenting, cleanup and some minor fixes
+
 2007-07-18 21:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapicdp.h
   * harbour/source/rtl/cdpapi.c
