@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-19 11:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/contrib/libct/ctdisk.ch
+    + added missing file I forgot to add in previous commit
+
+  * harbour/contrib/libct/pos1.c
+  * harbour/contrib/libct/ct.h
+  * harbour/contrib/libct/posdiff.c
+  * harbour/contrib/libct/range.c
+  * harbour/contrib/libct/pos2.c
+  * harbour/contrib/libct/print.c
+    * synced with xHarbour modifications and fixes
+    ! some fixes
+    * indenting
+
 2007-07-19 04:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hb_io.h
     + added #include <dos.h> for DOS builds

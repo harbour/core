@@ -57,8 +57,18 @@
 
 
 #include "ct.h"
-#include <ctype.h>   
+#include <ctype.h>
 
+#ifndef HB_CDP_SUPPORT_OFF
+#   include "hbapicdp.h"
+#   define ISUPPER(c)    ( isupper( ( UCHAR ) c ) || ( hb_cdp_page->nChars && strchr( hb_cdp_page->CharsUpper, ( UCHAR ) c ) != NULL ) )
+#   define ISLOWER(c)    ( islower( ( UCHAR ) c ) || ( hb_cdp_page->nChars && strchr( hb_cdp_page->CharsLower, ( UCHAR ) c ) != NULL ) )
+#   define ISALPHA(c)    ( isalpha( ( UCHAR ) c ) || ( hb_cdp_page->nChars && ( strchr( hb_cdp_page->CharsUpper, ( UCHAR ) c ) != NULL || strchr( hb_cdp_page->CharsLower, c ) != NULL ) ) )
+#else
+#   define ISUPPER(c)    isupper( ( UCHAR ) c )
+#   define ISLOWER(c)    islower( ( UCHAR ) c )
+#   define ISALPHA(c)    isalpha( ( UCHAR ) c )
+#endif
 
 /* defines */
 #define DO_POS1_POSALPHA       0
@@ -67,157 +77,126 @@
 #define DO_POS1_POSUPPER       3
 
 /* helper function for the posxxx() functions */
-static void do_pos1 (int iSwitch)
+static void do_pos1( int iSwitch )
 {
+   if( ISCHAR( 1 ) &&                     /* all functions need string as 1st param */
+       ( iSwitch != DO_POS1_POSRANGE ||   /* that's the only condition for all funcs _except_ POSRANGE */
+         ( iSwitch == DO_POS1_POSRANGE && /* In addition, POSRANGE needs .. */
+           ISCHAR( 2 ) &&                 /* .. string as 2nd .. */
+           ISCHAR( 3 ) ) ) )              /* .. and 3rd param */
+   {
+      unsigned char *pcString;
+      size_t sStrLen;
+      unsigned char *puc, ucChar1 = ' ', ucChar2 = ' ';
+      int iMode;
+      size_t sIgnore;
+      int iParamShift = 0;
 
-  if ((ISCHAR (1))       /* all functions need string as 1st param */
-      &&
-      ((iSwitch != DO_POS1_POSRANGE)  /* that's the only condition for all funcs _except_ POSRANGE */
-       ||
-       ((iSwitch == DO_POS1_POSRANGE) /* In addition, POSRANGE needs .. */
-        &&
-        (ISCHAR (2))     /* .. string as 2nd .. */
-        &&
-        (ISCHAR (3))     /* .. and 3rd param */
-       )
-      )
-     )
-  {
-
-    unsigned char *pcString;
-    size_t sStrLen;
-    unsigned char *puc, ucChar1 = ' ', ucChar2 = ' ';
-    int iMode;
-    size_t sIgnore;
-    int iParamShift = 0;
-
-    if (iSwitch == DO_POS1_POSRANGE)
-    {
-      
-      if (hb_parclen (1) == 0)
+      if( iSwitch == DO_POS1_POSRANGE )
       {
-        hb_retnl (0);
-        return;
+
+         if( hb_parclen( 1 ) == 0 )
+         {
+            hb_retni( 0 );
+            return;
+         }
+         else
+         {
+            ucChar1 = *( hb_parc( 1 ) );
+         }
+
+         if( hb_parclen( 2 ) == 0 )
+         {
+            hb_retni( 0 );
+            return;
+         }
+         else
+         {
+            ucChar2 = *( hb_parc( 2 ) );
+         }
+
+         iParamShift += 2;
       }
+
+      pcString = ( unsigned char * ) hb_parc( iParamShift + 1 );
+      sStrLen = ( size_t ) hb_parclen( iParamShift + 1 );
+
+      if( ISLOG( iParamShift + 2 ) )
+         iMode = hb_parl( iParamShift + 2 );
       else
-      {
-        ucChar1 = *(hb_parc (1));
-      }
+         iMode = 0;
 
-      if (hb_parclen (2) == 0)
-      {
-        hb_retnl (0);
-        return;
-      }
+      if( ISNUM( iParamShift + 3 ) )
+         sIgnore = ( size_t ) hb_parnl( iParamShift + 3 );
       else
+         sIgnore = 0;
+
+      for( puc = pcString + sIgnore; puc < pcString + sStrLen; puc++ )
       {
-        ucChar2 = *(hb_parc (2));
+         int iDoRet = 0;
+
+         switch ( iSwitch )
+         {
+            case DO_POS1_POSALPHA:
+               iDoRet = ISALPHA( *puc );
+               break;
+
+            case DO_POS1_POSLOWER:
+               iDoRet = ISLOWER( *puc );
+               break;
+
+            case DO_POS1_POSRANGE:
+               iDoRet = ( ( ucChar1 <= *puc ) && ( ucChar2 >= *puc ) );
+               break;
+
+            case DO_POS1_POSUPPER:
+               iDoRet = ISUPPER( *puc );
+               break;
+         }
+
+         if( ( iMode && !iDoRet ) || ( !iMode && iDoRet ) )
+         {
+            hb_retnl( puc - pcString + 1 );
+            return;
+         }
       }
-      
-      iParamShift += 2;
-    }
+      hb_retni( 0 );
+   }
+   else                         /* ISCHAR (1) etc. */
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode(), iError = 0;
 
-    pcString = (unsigned char *)hb_parc (iParamShift+1);
-    sStrLen = (size_t)hb_parclen (iParamShift+1);
-
-    if (ISLOG (iParamShift+2))
-      iMode = hb_parl (iParamShift+2);
-    else
-      iMode = 0;
-
-    if (ISNUM (iParamShift+3))
-      sIgnore = (size_t)hb_parnl (iParamShift+3);
-    else
-      sIgnore = 0;
-
-    for (puc = pcString+sIgnore; puc < pcString+sStrLen; puc++)
-    {
-      int iDoRet = 0;
-      switch (iSwitch)
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
-        case DO_POS1_POSALPHA:
-        {
-          iDoRet = isalpha(*puc);
-        }; break;
+         switch ( iSwitch )
+         {
+            case DO_POS1_POSALPHA:
+               iError = CT_ERROR_POSALPHA;
+               break;
 
-        case DO_POS1_POSLOWER:
-        {
-          iDoRet = islower(*puc);
-        }; break;
+            case DO_POS1_POSLOWER:
+               iError = CT_ERROR_POSLOWER;
+               break;
 
-        case DO_POS1_POSRANGE:
-        {
-          iDoRet = ((ucChar1 <= *puc) && (ucChar2 >= *puc));
-        }; break;
-        
-        case DO_POS1_POSUPPER:
-        {
-          iDoRet = isupper(*puc);
-        }; break;
+            case DO_POS1_POSRANGE:
+               iError = CT_ERROR_POSRANGE;
+               break;
+
+            case DO_POS1_POSUPPER:
+               iError = CT_ERROR_POSUPPER;
+               break;
+         }
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG, iError,
+                                  NULL, &hb_errFuncName, 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
-  
-      if ((iMode && !iDoRet) || (!iMode && iDoRet))
-      {
-        hb_retnl (puc-pcString+1);
-        return;
-      }
-    }
 
-    hb_retnl (0);
-
-  }
-  else /* ISCHAR (1) etc. */
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      switch (iSwitch)
-      {
-        case DO_POS1_POSALPHA:
-        {
-          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_POSALPHA,
-                                   NULL, "POSALPHA", 0, EF_CANSUBSTITUTE, 3,
-                                   hb_paramError (1), hb_paramError (2), hb_paramError (3));
-        }; break;
-
-        case DO_POS1_POSLOWER:
-        {
-          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_POSLOWER,
-                                   NULL, "POSLOWER", 0, EF_CANSUBSTITUTE, 3,
-                                   hb_paramError (1), hb_paramError (2), hb_paramError (3));
-        }; break;
-
-        case DO_POS1_POSRANGE:
-        {
-          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_POSRANGE,
-                                   NULL, "POSRANGE", 0, EF_CANSUBSTITUTE, 5,
-                                   hb_paramError (1), hb_paramError (2), hb_paramError (3),
-                                   hb_paramError (4), hb_paramError (5));
-        }; break;
-        
-        case DO_POS1_POSUPPER:
-        {
-          pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_POSUPPER,
-                                   NULL, "POSUPPER", 0, EF_CANSUBSTITUTE, 3,
-                                   hb_paramError (1), hb_paramError (2), hb_paramError (3));
-        }; break;
-      }
-    }
-    
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      hb_retnl (0);
-    }
-  }
-
-  return;
-
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
+      else
+         hb_retni( 0 );
+   }
 }
 
 
@@ -249,12 +228,9 @@ static void do_pos1 (int iSwitch)
  *  $END$
  */
 
-HB_FUNC (POSALPHA)
+HB_FUNC( POSALPHA )
 {
-
-  do_pos1 (DO_POS1_POSALPHA);
-  return;
-
+   do_pos1( DO_POS1_POSALPHA );
 }
 
 
@@ -286,12 +262,9 @@ HB_FUNC (POSALPHA)
  *  $END$
  */
 
-HB_FUNC (POSLOWER)
+HB_FUNC( POSLOWER )
 {
-
-  do_pos1 (DO_POS1_POSLOWER);
-  return;
-
+   do_pos1( DO_POS1_POSLOWER );
 }
 
 
@@ -324,12 +297,9 @@ HB_FUNC (POSLOWER)
  *  $END$
  */
 
-HB_FUNC (POSRANGE)
+HB_FUNC( POSRANGE )
 {
-
-  do_pos1 (DO_POS1_POSRANGE);
-  return;
-
+   do_pos1( DO_POS1_POSRANGE );
 }
 
 
@@ -361,10 +331,7 @@ HB_FUNC (POSRANGE)
  *  $END$
  */
 
-HB_FUNC (POSUPPER)
+HB_FUNC( POSUPPER )
 {
-
-  do_pos1 (DO_POS1_POSUPPER);
-  return;
-
+   do_pos1( DO_POS1_POSUPPER );
 }

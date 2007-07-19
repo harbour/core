@@ -4,11 +4,9 @@
 
 /*
  * Harbour Project source code:
- *   header for CT3 functions
+ *   Header file for CT for floppy / hard disk functions
  *
- * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
- *        Author: Martin Vogel <vogel@inttec.de>
- *
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,47 +50,27 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
 
-#ifndef _CT_H
-#define _CT_H 1
+#ifndef _CTDISK_CH
+#define _CTDISK_CH
 
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
+#define FA_NORMAL           0       /*   */
+#define FA_READONLY         1       /* R */
+#define FA_HIDDEN           2       /* H */
+#define FA_SYSTEM           4       /* S */
+#define FA_VOLUME           8       /* V */
+#define FA_DIRECTORY       16       /* D */
+#define FA_ARCHIVE         32       /* A */
 
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapicdp.h"
-#include "hbapierr.h"
-#include "error.ch"
-#include "hbmath.h"
+#define FA_DEVICE          64       /* I */
+#define FA_TEMPORARY      256       /* T */
+#define FA_SPARSE         512       /* P */
+#define FA_REPARSE       1024       /* L */
+#define FA_COMPRESSED    2048       /* C */
+#define FA_OFFLINE       4096       /* O */
+#define FA_NOTINDEXED    8192       /* X */
+#define FA_ENCRYPTED    16384       /* E */
+#define FA_VOLCOMP      32768       /* M */
 
-#include "ctstr.h"
-#include "ctmath.h"
-#include "ctset.h"
-
-#include "cterror.ch"
-
-#define CT_SUBSYSTEM "CT"
-
-#define CT_ARGERR_WHOCARES      ES_WHOCARES
-#define CT_ARGERR_WARNING       ES_WARNING
-#define CT_ARGERR_ERROR         ES_ERROR
-#define CT_ARGERR_CATASTROPHIC  ES_CATASTROPHIC
-#define CT_ARGERR_IGNORE        -1
-
-HB_EXTERN_BEGIN
-
-/* CT subsystem error throwing functions */
-extern USHORT ct_error( USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
-                        const char *szDescription, const char *szOperation, USHORT uiOsCode, USHORT uiFlags, ULONG uiArgCount, ... );
-
-extern PHB_ITEM ct_error_subst( USHORT uiSeverity, ULONG ulGenCode, ULONG ulSubCode,
-                                const char *szDescription, const char *szOperation, USHORT uiOsCode, USHORT uiFlags, ULONG uiArgCount, ... );
-
-/* set argument error behaviour */
-extern void ct_setargerrormode( int iMode );
-extern int ct_getargerrormode( void );
-
-HB_EXTERN_END
-
-#endif
+#endif /* _CTDISK_CH */

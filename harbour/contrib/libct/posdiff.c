@@ -84,91 +84,73 @@
  *  $END$
  */
 
-HB_FUNC (POSDIFF)
+HB_FUNC( POSDIFF )
 {
+   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   {
+      char *pcString1 = hb_parc( 1 );
+      size_t sStrLen1 = hb_parclen( 1 );
+      char *pcString2 = hb_parc( 2 );
+      size_t sStrLen2 = hb_parclen( 2 );
+      char *pc1, *pc2;
+      size_t sIgnore;
 
-  if (ISCHAR (1) && ISCHAR (2))
-  {
-    
-    char *pcString1 = hb_parc (1);
-    size_t sStrLen1 = hb_parclen (1);
-    char *pcString2 = hb_parc (2);
-    size_t sStrLen2 = hb_parclen (2);
-    char *pc1, *pc2;
-
-    size_t sIgnore;
-
-    if (ISNUM (3))
-      sIgnore = hb_parnl (3);
-    else
-      sIgnore = 0;
-
-    if ((sIgnore > sStrLen1) || (sIgnore > sStrLen2))
-    {
-      int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
-      {
-        ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_POSDIFF,
-                  NULL, "POSDIFF", 0, EF_CANDEFAULT, 3,
-                  hb_paramError (1), hb_paramError (2),
-                  hb_paramError (3));
-      }
-
-      hb_retnl (0);
-      return;
-    }
-    
-    if (sStrLen1 != sStrLen2)
-    {
-      hb_retnl ((sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2)+1);
-      return;
-    }
-    
-    pc1 = pcString1+sIgnore;
-    pc2 = pcString2+sIgnore;
-
-    while (pc1 < pcString1+sStrLen1)
-    {
-      if (*pc1 != *pc2)
-      {
-        hb_retnl ((pc1-pcString1)+1);
-        return;
-      }
-      pc1++;
-      pc2++;
-    }
-
-    hb_retnl (0);
-
-  }
-  else /* (ISCHAR (1) && ISCHAR (2)) */
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_POSDIFF,
-                               NULL, "POSDIFF", 0, EF_CANSUBSTITUTE, 3,
-                               hb_paramError (1), hb_paramError (2), hb_paramError (3));
-    }
-    
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      if (ISCHAR (1) || ISCHAR (2))
-        hb_retnl (1);
+      if( ISNUM( 3 ) )
+         sIgnore = hb_parnl( 3 );
       else
-        hb_retnl (0);
-    }
+         sIgnore = 0;
 
-  }
+      if( ( sIgnore > sStrLen1 ) || ( sIgnore > sStrLen2 ) )
+      {
+         int iArgErrorMode = ct_getargerrormode();
 
-  return;
+         if( iArgErrorMode != CT_ARGERR_IGNORE )
+         {
+            ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_POSDIFF, NULL,
+                      "POSDIFF", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+         }
+         hb_retni( 0 );
+         return;
+      }
 
+      pc1 = pcString1 + sIgnore;
+      pc2 = pcString2 + sIgnore;
+
+      while( ( pc1 < pcString1 + sStrLen1 ) && ( pc2 < pcString2 + sStrLen2 ) )
+      {
+         if( *pc1 != *pc2 )
+         {
+            hb_retnl( ( pc1 - pcString1 ) + 1 );
+            return;
+         }
+         pc1++;
+         pc2++;
+      }
+
+      if( sStrLen1 != sStrLen2 )
+         hb_retnl( ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 ) + 1 );
+      else
+         hb_retni( 0 );
+   }
+   else  /* ( ISCHAR( 1 ) && ISCHAR( 2 ) ) */
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
+
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  CT_ERROR_POSDIFF, NULL, "POSDIFF", 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
+      }
+
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
+      else if( ISCHAR( 1 ) || ISCHAR( 2 ) )
+         hb_retnl( 1 );
+      else
+         hb_retni( 0 );
+   }
 }
 
 
@@ -200,116 +182,97 @@ HB_FUNC (POSDIFF)
  *  $END$
  */
 
-HB_FUNC (POSEQUAL)
+HB_FUNC( POSEQUAL )
 {
+   if( ISCHAR( 1 ) && ISCHAR( 2 ) )
+   {
+      char *pcString1 = hb_parc( 1 );
+      size_t sStrLen1 = hb_parclen( 1 );
+      char *pcString2 = hb_parc( 2 );
+      size_t sStrLen2 = hb_parclen( 2 );
+      char *pc1, *pc2;
+      size_t sIgnore, sCompare, sCompareCnt, sRet = 0;
 
-  if (ISCHAR (1) && ISCHAR (2))
-  {
-    
-    char *pcString1 = hb_parc (1);
-    size_t sStrLen1 = hb_parclen (1);
-    char *pcString2 = hb_parc (2);
-    size_t sStrLen2 = hb_parclen (2);
-    char *pc1, *pc2;
-
-    size_t sIgnore, sCompare, sCompareCnt, sRet = 0;
-
-    if (ISNUM (4))
-      sIgnore = hb_parnl (4);
-    else
-      sIgnore = 0;
-
-    if (ISNUM (3))
-      sCompare = hb_parnl (3);
-    else
-      sCompare = (sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2)-sIgnore;
-
-    if ((sCompare == 0) || (sIgnore > sStrLen1) || (sIgnore > sStrLen2))
-    {
-      int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
-      {
-        ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_POSEQUAL,
-                  NULL, "POSEQUAL", 0, EF_CANDEFAULT, 4,
-                  hb_paramError (1), hb_paramError (2),
-                  hb_paramError (3), hb_paramError (4));
-      }
-
-      hb_retnl (0);
-      return;
-    }
-    
-    if ((sStrLen1 < (sCompare+sIgnore)) || (sStrLen2 < (sCompare+sIgnore)))
-    {
-      int iArgErrorMode = ct_getargerrormode();
-      if (iArgErrorMode != CT_ARGERR_IGNORE)
-      {
-        ct_error ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_POSEQUAL,
-                  NULL, "POSEQUAL", 0, EF_CANDEFAULT, 4,
-                  hb_paramError (1), hb_paramError (2),
-                  hb_paramError (3), hb_paramError (4));
-      }
-
-      hb_retnl (0);
-      return;
-    }
-    
-    pc1 = pcString1+sIgnore;
-    pc2 = pcString2+sIgnore;
-    sCompareCnt = 0;
-
-    while (pc1 < pcString1+sStrLen1)
-    {
-      if (*pc1 == *pc2)
-      {
-        /* save possible return value */
-        if (sCompareCnt == 0)
-          sRet = pc1-pcString1+1;
-        
-        sCompareCnt++;
-        if (sCompareCnt == sCompare)
-        {
-          hb_retnl (sRet);
-          return;
-        }
-      }
+      if( ISNUM( 4 ) )
+         sIgnore = hb_parnl( 4 );
       else
+         sIgnore = 0;
+
+      if( ISNUM( 3 ) )
+         sCompare = hb_parnl( 3 );
+      else
+         sCompare = ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 ) - sIgnore;
+
+      if( ( sCompare == 0 ) || ( sIgnore > sStrLen1 ) || ( sIgnore > sStrLen2 ) )
       {
-        /* reset compare counter */
-        sCompareCnt = 0;
+         int iArgErrorMode = ct_getargerrormode();
+
+         if( iArgErrorMode != CT_ARGERR_IGNORE )
+         {
+            ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_POSEQUAL, NULL,
+                      "POSEQUAL", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+         }
+         hb_retni( 0 );
+         return;
       }
-      pc1++;
-      pc2++;
-    }
 
-    hb_retnl (0);
+      if( ( sStrLen1 < ( sCompare + sIgnore ) ) || ( sStrLen2 < ( sCompare + sIgnore ) ) )
+      {
+         int iArgErrorMode = ct_getargerrormode();
 
-  }
-  else /* (ISCHAR (1) && ISCHAR (2)) */
-  {
-    PHB_ITEM pSubst = NULL;
-    int iArgErrorMode = ct_getargerrormode();
-    if (iArgErrorMode != CT_ARGERR_IGNORE)
-    {
-      pSubst = ct_error_subst ((USHORT)iArgErrorMode, EG_ARG, CT_ERROR_POSEQUAL,
-                               NULL, "POSEQUAL", 0, EF_CANSUBSTITUTE, 4,
-                               hb_paramError (1), hb_paramError (2),
-                               hb_paramError (3), hb_paramError (4));
-    }
-    
-    if (pSubst != NULL)
-    {
-      hb_itemReturn (pSubst);
-      hb_itemRelease (pSubst);
-    }
-    else
-    {
-      hb_retnl (0);
-    }
-  }
+         if( iArgErrorMode != CT_ARGERR_IGNORE )
+         {
+            ct_error( ( USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_POSEQUAL, NULL,
+                      "POSEQUAL", 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
+         }
+         hb_retni( 0 );
+         return;
+      }
 
-  return;
+      pc1 = pcString1 + sIgnore;
+      pc2 = pcString2 + sIgnore;
+      sCompareCnt = 0;
 
+      while( pc1 < pcString1 + sStrLen1 )
+      {
+         if( *pc1 == *pc2 )
+         {
+            /* save possible return value */
+            if( sCompareCnt == 0 )
+               sRet = pc1 - pcString1 + 1;
+
+            sCompareCnt++;
+            if( sCompareCnt == sCompare )
+            {
+               hb_retnl( sRet );
+               return;
+            }
+         }
+         else
+         {
+            /* reset compare counter */
+            sCompareCnt = 0;
+         }
+         pc1++;
+         pc2++;
+      }
+      hb_retni( 0 );
+   }
+   else  /* ( ISCHAR( 1 ) && ISCHAR( 2 ) ) */
+   {
+      PHB_ITEM pSubst = NULL;
+      int iArgErrorMode = ct_getargerrormode();
+
+      if( iArgErrorMode != CT_ARGERR_IGNORE )
+      {
+         pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
+                                  CT_ERROR_POSEQUAL, NULL, "POSEQUAL", 0,
+                                  EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
+      }
+
+      if( pSubst != NULL )
+         hb_itemReturnRelease( pSubst );
+      else
+         hb_retni( 0 );
+   }
 }
-
-
