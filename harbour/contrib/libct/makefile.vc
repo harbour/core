@@ -140,6 +140,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\cttime.obj \
    $(OBJ_DIR)\datetime.obj \
    $(OBJ_DIR)\dattime2.obj \
+   $(OBJ_DIR)\dattime3.obj \
    $(OBJ_DIR)\dbftools.obj \
    $(OBJ_DIR)\exponent.obj \
    $(OBJ_DIR)\finan.obj \
@@ -173,6 +174,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\token1.obj \
    $(OBJ_DIR)\token2.obj \
    $(OBJ_DIR)\trig.obj \
+   $(OBJ_DIR)\video.obj \
    $(OBJ_DIR)\wordrepl.obj \
    $(OBJ_DIR)\wordtoch.obj \
    \
@@ -219,6 +221,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ctpad.* del $(OBJ_DIR)\ctpad.*
    -@if exist $(OBJ_DIR)\datetime.* del $(OBJ_DIR)\datetime.*
    -@if exist $(OBJ_DIR)\dattime2.* del $(OBJ_DIR)\dattime2.*
+   -@if exist $(OBJ_DIR)\dattime3.* del $(OBJ_DIR)\dattime3.*
    -@if exist $(OBJ_DIR)\dbftools.* del $(OBJ_DIR)\dbftools.*
    -@if exist $(OBJ_DIR)\exponent.* del $(OBJ_DIR)\exponent.*
    -@if exist $(OBJ_DIR)\finan.* del $(OBJ_DIR)\finan.*
@@ -250,6 +253,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\token1.* del $(OBJ_DIR)\token1.*
    -@if exist $(OBJ_DIR)\token2.* del $(OBJ_DIR)\token2.*
    -@if exist $(OBJ_DIR)\trig.* del $(OBJ_DIR)\trig.*
+   -@if exist $(OBJ_DIR)\video.* del $(OBJ_DIR)\video.*
    -@if exist $(OBJ_DIR)\wordrepl.* del $(OBJ_DIR)\wordrepl.*
    -@if exist $(OBJ_DIR)\wordtoch.* del $(OBJ_DIR)\wordtoch.*
    -@if exist $(OBJ_DIR)\ct.* del $(OBJ_DIR)\ct.*

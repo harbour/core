@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-20 18:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/makefile.vc
+  + harbour/contrib/libct/ctvideo.ch
+  + harbour/contrib/libct/video.c
+   + added CHARPIX(), VGAPALETTE(), VIDEOTYPE(), SETFONT()
+     code by Phil Krylov borrowed from xHarbour
+  + harbour/contrib/libct/dattime3.c
+   + added WAITPERIOD(), TIMEVALID(), SETTIME(), SETDATE()
+
 2007-07-19 20:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libct/Makefile
   + harbour/contrib/libct/maxline.c

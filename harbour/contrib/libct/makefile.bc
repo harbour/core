@@ -121,6 +121,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctwin.obj \
    $(OBJ_DIR)\datetime.obj \
    $(OBJ_DIR)\dattime2.obj \
+   $(OBJ_DIR)\dattime3.obj \
    $(OBJ_DIR)\dbftools.obj \
    $(OBJ_DIR)\exponent.obj \
    $(OBJ_DIR)\files.obj \
@@ -155,6 +156,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\token1.obj \
    $(OBJ_DIR)\token2.obj \
    $(OBJ_DIR)\trig.obj \
+   $(OBJ_DIR)\video.obj \
    $(OBJ_DIR)\wordrepl.obj \
    $(OBJ_DIR)\wordtoch.obj \
    \
@@ -304,6 +306,10 @@ $(OBJ_DIR)\dattime2.obj : $(TOOLS_DIR)\dattime2.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\dattime3.obj : $(TOOLS_DIR)\dattime3.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\dbftools.obj : $(TOOLS_DIR)\dbftools.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -437,6 +443,10 @@ $(OBJ_DIR)\token2.obj : $(TOOLS_DIR)\token2.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\trig.obj : $(TOOLS_DIR)\trig.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\video.obj : $(TOOLS_DIR)\video.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

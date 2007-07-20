@@ -38,6 +38,7 @@ C_SOURCES = \
 	ctwin.c \
 	datetime.c \
 	dattime2.c \
+	dattime3.c \
 	disk.c \
 	exponent.c \
 	files.c \
@@ -72,6 +73,7 @@ C_SOURCES = \
 	token1.c \
 	token2.c \
 	trig.c \
+	video.c \
 	wordrepl.c \
 	wordtoch.c \
 
