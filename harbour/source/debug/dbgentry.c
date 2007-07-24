@@ -1472,6 +1472,11 @@ hb_dbgQuit( HB_DEBUGINFO *info )
       }
       ARRAY_DEL( HB_MODULEINFO, info->aModules, info->nModules, nModules );
    }
+   if ( info->bToCursor )
+   {
+      info->bToCursor = FALSE;
+      FREE( info->szToCursorModule );
+   }
 }
 
 
