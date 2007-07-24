@@ -1,5 +1,5 @@
 /*
- * $Id: cpbgmik.c,v 1.1 2005/11/19 15:52:04 likewolf Exp $
+ * $Id$
  */
 
 /*
