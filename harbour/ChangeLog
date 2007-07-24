@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-24 20:30 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * common.mak
+   * include/hbapicdp.h
+   * source/codepage/Makefile
+   + source/codepage/ucmik.c
+   + source/codepage/cpbgmik.c
+     + Added BGMIK codepage and Bulgarian MIK unicode conversion 
+       table from xHarbour.
+     ! Changed internal ID "MIK" to "bg-mik".
+
+   * include/hbapicdp.h
+   * source/codepage/uckam.c
+     ! Changed internal ID "CSKAM" to "Kamenicky".
+
 2007-07-24 20:11 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * common.mak
    * source/codepage/Makefile

@@ -8,6 +8,7 @@ ROOT = ../../
 C_SOURCES=\
 	cpbg866.c     \
 	cpbgiso.c     \
+	cpbgmik.c     \
 	cpbgwin.c     \
 	cpcs852.c     \
 	cpcsiso.c     \
@@ -76,6 +77,7 @@ C_SOURCES=\
 	uckoi8.c      \
 	uckoi8u.c     \
 	ucmaz.c       \
+	ucmik.c       \
 
 LIBNAME=codepage
 

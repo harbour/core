@@ -679,6 +679,7 @@ PCRE_LIB_OBJS = \
 CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpbg866$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cpbgiso$(HB_OBJ_EXT)  \
+    $(OBJ_DIR)\cpbgmik$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cpbgwin$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cpcs852$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cpcsiso$(HB_OBJ_EXT)  \
@@ -747,6 +748,7 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\uckoi8u$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\ucmaz$(HB_OBJ_EXT)    \
     $(OBJ_DIR)\uckam$(HB_OBJ_EXT)    \
+    $(OBJ_DIR)\ucmik$(HB_OBJ_EXT)    \
 
 #**********************************************************
 

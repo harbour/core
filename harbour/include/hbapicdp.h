@@ -130,8 +130,9 @@ typedef struct _HB_CODEPAGE
 #define HB_CPID_8859_5     "iso8859-5"
 #define HB_CPID_KOI_8      "koi-8"
 #define HB_CPID_KOI_8U     "koi-8u"
+#define HB_CPID_KAM        "kamenicky"
 #define HB_CPID_MAZ        "plmaz"
-#define HB_CPID_KAM        "cskam"
+#define HB_CPID_MIK        "bg-mik"
 #define HB_UNITB_437       &hb_uniTbl_437
 #define HB_UNITB_737       &hb_uniTbl_737
 #define HB_UNITB_850       &hb_uniTbl_850
@@ -149,8 +150,9 @@ typedef struct _HB_CODEPAGE
 #define HB_UNITB_8859_5    &hb_uniTbl_8859_5
 #define HB_UNITB_KOI_8     &hb_uniTbl_KOI_8
 #define HB_UNITB_KOI_8U    &hb_uniTbl_KOI_8U
-#define HB_UNITB_KAM       &hb_uniTbl_kam
+#define HB_UNITB_KAM       &hb_uniTbl_kamenicky
 #define HB_UNITB_MAZ       &hb_uniTbl_mazovia
+#define HB_UNITB_MIK       &hb_uniTbl_MIK
 #define HB_UNITB_UNDEF     NULL /* ((PHB_UNITABLE) (-1)) */
 
 extern HB_UNITABLE hb_uniTbl_437;
@@ -170,8 +172,9 @@ extern HB_UNITABLE hb_uniTbl_8859_2;
 extern HB_UNITABLE hb_uniTbl_8859_5;
 extern HB_UNITABLE hb_uniTbl_KOI_8;
 extern HB_UNITABLE hb_uniTbl_KOI_8U;
+extern HB_UNITABLE hb_uniTbl_kamenicky;
 extern HB_UNITABLE hb_uniTbl_mazovia;
-extern HB_UNITABLE hb_uniTbl_kam;
+extern HB_UNITABLE hb_uniTbl_MIK;
 
 extern HB_EXPORT BOOL          hb_cdpRegister( PHB_CODEPAGE );
 extern HB_EXPORT char *        hb_cdpSelectID( const char * );
