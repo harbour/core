@@ -715,6 +715,10 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpru866$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cprukoi$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cpruwin$(HB_OBJ_EXT)  \
+    $(OBJ_DIR)\cpsk852$(HB_OBJ_EXT)  \
+    $(OBJ_DIR)\cpskiso$(HB_OBJ_EXT)  \
+    $(OBJ_DIR)\cpskkam$(HB_OBJ_EXT)  \
+    $(OBJ_DIR)\cpskwin$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cpsl437$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cpsl852$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cpsliso$(HB_OBJ_EXT)  \

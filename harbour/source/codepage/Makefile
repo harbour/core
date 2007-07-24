@@ -44,6 +44,10 @@ C_SOURCES=\
 	cpru866.c     \
 	cprukoi.c     \
 	cpruwin.c     \
+	cpsk852.c     \
+	cpskiso.c     \
+	cpskkam.c     \
+	cpskwin.c     \
 	cpsl437.c     \
 	cpsl852.c     \
 	cpsliso.c     \

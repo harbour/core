@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-24 20:11 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * common.mak
+   * source/codepage/Makefile
+   + source/codepage/cpsk852.c
+   + source/codepage/cpskiso.c
+   + source/codepage/cpskwin.c
+   + source/codepage/cpskkam.c
+     + Added Slovak codepages. Pls. test them if you are 
+       familiar with the language rules.
+
 2007-07-24 19:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * common.mak
    * makefile.vc
