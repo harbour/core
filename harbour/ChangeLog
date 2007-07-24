@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-24 19:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * common.mak
+   * makefile.vc
+   * makefile.bc
+     * PPGEN -> HBPPGEN
+     * Some redundancies removed.
+     ! Redone and fixed my previous modifications.
+       (Thanks Marek and pls test this.)
+
 2007-07-24 14:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/dbgentry.c
     ! cleaned memory leak in not freed trap on debugger exit

@@ -164,7 +164,7 @@ ARFLAGS = /P32
 
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
 {$(ALL_SRC_DIRS)}.prg{$(OBJ_DIR)}.obj:
-     $(HB_HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\  $**
+     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\  $**
      $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)\$&.c
 
 #**********************************************************
@@ -177,7 +177,7 @@ ARFLAGS = /P32
 
 # General *.prg --> *.obj COMPILE rule for SHARED Libraries
 {$(ALL_LIB_SRC_DIRS)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB_HARBOUR_EXE) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\  $**
+     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\  $**
      $(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)\$&.c
 
 #**********************************************************
@@ -192,7 +192,7 @@ ARFLAGS = /P32
 # General *.prg --> *.obj COMPILE rules for EXECUTABLES,
 # which use Harbour SHARED Library compiled as DLL
 {$(ALL_EXE_SRC_DIRS)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB_HARBOUR_EXE) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\  $**
+     $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\  $**
      $(CC) $(CEXEFLAGSDLL) -o$@ $(DLL_OBJ_DIR)\$&.c
 
 #**********************************************************
@@ -226,7 +226,7 @@ all : $(HB_DEST_DIRS) $(HB_BUILD_TARGETS)
 #
 
 BasicLibs : $(COMMON_LIB) $(COMPILER_LIB) $(PP_LIB)
-BasicExes : $(HB_HARBOUR_EXE)
+BasicExes : $(HARBOUR_EXE)
 StdLibs   : $(STANDARD_STATIC_HBLIBS)
 
 #**********************************************************
@@ -469,12 +469,12 @@ $(GTGUI_LIB)    : $(GTGUI_LIB_OBJS)
 #
 # HARBOUR build rule
 #
-$(HB_HARBOUR_EXE) :: BasicLibs
-$(HB_HARBOUR_EXE) :: $(HARBOUR_EXE_OBJS)
-     IF EXIST "$(HB_HARBOUR_EXE)" $(DEL) "$(HB_HARBOUR_EXE)" > NUL
+$(HARBOUR_EXE) :: BasicLibs
+$(HARBOUR_EXE) :: $(HARBOUR_EXE_OBJS)
+     IF EXIST "$(HARBOUR_EXE)" $(DEL) "$(HARBOUR_EXE)" > NUL
      $(CC) @&&!
 $(CFLAGS)
--e$(HB_HARBOUR_EXE)
+-e$(HARBOUR_EXE)
 $(**: = ^
 )
 $(COMPILER_LIB)
@@ -485,12 +485,12 @@ $(PP_LIB)
 #
 # HBPPGEN build rule
 #
-$(HB_PPGEN_EXE) :: $(COMMON_LIB)
-$(HB_PPGEN_EXE) :: $(HBPPGEN_EXE_OBJS)
-     IF EXIST "$(HB_PPGEN_EXE)" $(DEL) "$(HB_PPGEN_EXE)" > NUL
+$(HBPPGEN_EXE) :: $(COMMON_LIB)
+$(HBPPGEN_EXE) :: $(HBPPGEN_EXE_OBJS)
+     IF EXIST "$(HBPPGEN_EXE)" $(DEL) "$(HBPPGEN_EXE)" > NUL
      $(CC) @&&!
 $(CFLAGS)
--e$(HB_PPGEN_EXE)
+-e$(HBPPGEN_EXE)
 $(**: = ^
 )
 $(COMMON_LIB)
@@ -617,7 +617,7 @@ c0x32.obj $**, $@,,$(HARBOUR_DLL:.dll=.lib) cw32mt$(RTLIBSUFFIX).lib import32.li
 !
 #----------------------------------------------------------
 #$(DLL_OBJ_DIR)\hbtest.obj : $(HBTEST_DIR)\hbtest.prg
-#    $(HB_HARBOUR_EXE) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\  $**
+#    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\  $**
 #    $(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)\$&.c
 #----------------------------------------------------------
 $(DLL_OBJ_DIR)\mainstd.obj : $(VM_DIR)\mainstd.c
@@ -634,9 +634,9 @@ $(DLL_OBJ_DIR)\mainstd.obj : $(VM_DIR)\mainstd.c
 # built at the initial phase of build process
 $(OBJ_DIR)\pptable.obj : $(PP_DIR)\pptable.c
 $(PP_DIR)\pptable.c    : include\hbstdgen.ch
-     echo $(HB_PPGEN_EXE)
+     echo $(HBPPGEN)
      IF EXIST "$(PP_DIR)\pptable.c" $(DEL) "$(PP_DIR)\pptable.c" > nul
-     $(HB_PPGEN_EXE) include/hbstdgen.ch -o$(PP_DIR)/pptable.c -q
+     $(HBPPGEN) include/hbstdgen.ch -o$(PP_DIR)/pptable.c -q
 
 #**********************************************************
 
@@ -727,4 +727,3 @@ $(DLL_OBJ_DIR)\harbourl.obj : $(DLL_OBJ_DIR)\harbourl.c
      $(DEL) $(DLL_OBJ_DIR)\unistd.h
 
 #**********************************************************
-

@@ -187,17 +187,10 @@ GTWIN_LIB    = $(LIB_DIR)\$(HB_LIB_PREFIX)gtwin$(HB_LIB_EXT)
 GTWVT_LIB    = $(LIB_DIR)\$(HB_LIB_PREFIX)gtwvt$(HB_LIB_EXT)
 GTGUI_LIB    = $(LIB_DIR)\$(HB_LIB_PREFIX)gtgui$(HB_LIB_EXT)
 
-# allows to do cross-compiling if neccesary.
-!ifndef HB_HARBOUR_EXE
-     HB_HARBOUR_EXE = $(BIN_DIR)\harbour$(HB_EXE_EXT)
-!endif
-
-# required (intermediate) utility to generate pptable.c
-# allows to do cross-compiling if neccesary.
-!ifndef HB_PPGEN_EXE
-     HB_PPGEN_EXE = $(BIN_DIR)\ppgen$(HB_EXE_EXT)
-!endif
-
+HARBOUR_EXE  = $(BIN_DIR)\harbour$(HB_EXE_EXT)
+# required (intermediate) utility
+#     to generate pptable.c
+HBPPGEN_EXE  = $(BIN_DIR)\ppgen$(HB_EXE_EXT)
 HBPP_EXE     = $(BIN_DIR)\hbpp$(HB_EXE_EXT)
 HBPPTEST_EXE = $(BIN_DIR)\hbpptest$(HB_EXE_EXT)
 HBRUN_EXE    = $(BIN_DIR)\hbrun$(HB_EXE_EXT)
@@ -208,6 +201,20 @@ HBVER_EXE    = $(BIN_DIR)\hbverfix$(HB_EXE_EXT)
 
 HARBOUR_DLL  = $(BIN_DIR)\harbour-$(CC_DIRNAME)$(HB_DLL_EXT)
 HBTESTDLL_EXE= $(BIN_DIR)\hbtest-dll$(HB_EXE_EXT)
+
+#**********************************************************
+#**********************************************************
+#**********************************************************
+
+# allows to do cross-compiling if neccesary.
+!ifndef HB
+HB = $(HARBOUR_EXE)
+!endif
+
+# allows to do cross-compiling if neccesary.
+!ifndef HBPPGEN
+HBPPGEN = $(HBPPGEN_EXE)
+!endif
 
 #**********************************************************
 
@@ -993,11 +1000,11 @@ DISABLED_SHARED_MODULES=    \
 
 HB_BUILD_TARGETS = \
     $(COMMON_LIB)           \
-    $(HB_PPGEN_EXE)         \
+    $(HBPPGEN_EXE)          \
     $(PP_LIB)               \
     \
     $(COMPILER_LIB)         \
-    $(HB_HARBOUR_EXE)       \
+    $(HARBOUR_EXE)          \
     $(HBPP_EXE)             \
     \
     $(VM_LIB)               \
@@ -1035,3 +1042,4 @@ HB_BUILD_TARGETS = $(HB_BUILD_TARGETS) $(HARBOUR_DLL) $(HBTESTDLL_EXE)
 #**********************************************************
 #**********************************************************
 #**********************************************************
+
