@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-25 18:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtchrmap.c
+    * indenting
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    * added some key sequences I used in patch for PuTTY/PTerm
+      CTRL+{INS,DEL,HOME,END,PGUP,PGDN} - they are gnome-terminal
+      compatible
+
 2007-07-25 16:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbgtcore.h
     + added translation for HB_GT_trm

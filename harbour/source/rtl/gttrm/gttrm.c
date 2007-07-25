@@ -77,17 +77,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <fcntl.h>
-#include <time.h>
-#include <signal.h>
-#include <termios.h>
-#include <errno.h>
-#include <sys/ioctl.h>
-#include <sys/time.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+
+#if defined( OS_UNIX_COMPATIBLE )
+# include <errno.h>
+# include <time.h>
+# include <unistd.h>
+# include <signal.h>
+# include <termios.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <sys/time.h>
+# include <sys/ioctl.h>
+# include <sys/wait.h>
+#endif
 #ifdef HAVE_GPM_H
 # include <gpm.h>
 #endif
@@ -613,10 +616,13 @@ static void set_signals( void )
    }
 }
 
+#endif
+
 static int hb_gt_trm_getSize( int * piRows, int * piCols )
 {
    *piRows = *piCols = 0;
 
+#if defined( OS_UNIX_COMPATIBLE )
    if( s_termState.fOutTTY )
    {
       struct winsize win;
@@ -627,6 +633,7 @@ static int hb_gt_trm_getSize( int * piRows, int * piCols )
          *piCols = win.ws_col;
       }
    }
+#endif
 
    if( *piRows <= 0 || *piCols <= 0 )
    {
@@ -639,8 +646,6 @@ static int hb_gt_trm_getSize( int * piRows, int * piCols )
 
    return *piRows > 0 && *piCols > 0;
 }
-
-#endif
 
 static void hb_gt_trm_termFlush( void )
 {
@@ -1266,11 +1271,13 @@ static int wait_key( int milisec )
    int nKey, esc, n, i, ch, counter;
    keyTab *ptr;
 
+#if defined( OS_UNIX_COMPATIBLE )
    if( s_termState.fWinSizeChangeFlag )
    {
       s_termState.fWinSizeChangeFlag = FALSE;
       return K_RESIZE;
    }
+#endif
 
    counter = ++( s_termState.key_counter );
 restart:
@@ -1508,11 +1515,13 @@ static BOOL hb_gt_trm_XtermSetMode( int * piRows, int * piCols )
    hb_gt_trm_termOut( ( BYTE * ) escseq, strlen( escseq ) );
    hb_gt_trm_termFlush();
 
+#if defined( OS_UNIX_COMPATIBLE )
    /* dirty hack - wait for SIGWINCH */
    if( *piRows != iHeight || *piCols != iWidth )
       sleep( 3 );
    if( s_termState.fWinSizeChangeFlag )
       s_termState.fWinSizeChangeFlag = FALSE;
+#endif
 
    hb_gt_trm_getSize( piRows, piCols );
 
@@ -2228,7 +2237,10 @@ static void init_keys( void )
       { EXKEY_END   |KEY_CTRLMASK, "\033[1;5F" },
       { EXKEY_HOME  |KEY_CTRLMASK, "\033[1;5H" },
 
+      { EXKEY_HOME  |KEY_CTRLMASK, "\033[1;5~" },
       { EXKEY_INS   |KEY_CTRLMASK, "\033[2;5~" },
+      { EXKEY_DEL   |KEY_CTRLMASK, "\033[3;5~" },
+      { EXKEY_END   |KEY_CTRLMASK, "\033[4;5~" },
       { EXKEY_PGUP  |KEY_CTRLMASK, "\033[5;5~" },
       { EXKEY_PGDN  |KEY_CTRLMASK, "\033[6;5~" },
 
@@ -2237,7 +2249,6 @@ static void init_keys( void )
 
       /* key added for gnome-terminal and teraterm */
       { EXKEY_ENTER |KEY_CTRLMASK, "\033[7;5~" }, 
-      { EXKEY_DEL   |KEY_CTRLMASK, "\033[3;5~" },
       { EXKEY_TAB   |KEY_CTRLMASK, "\033[8;5~" },
 
       { EXKEY_UP    |KEY_ALTMASK, "\033[1;3A" },
@@ -2423,11 +2434,24 @@ static void init_keys( void )
       { EXKEY_BS,     "\177"    }, /* kbs   */
       { EXKEY_TAB | KEY_ALTMASK, "\033[Z" }, /* kcbt */
 
+      /* PuTTY keys */
+      { EXKEY_F1,  "\033[11~" },
+      { EXKEY_F2,  "\033[12~" },
+      { EXKEY_F3,  "\033[13~" },
+      { EXKEY_F4,  "\033[14~" },
+      { EXKEY_F5,  "\033[15~" },
       { EXKEY_UP    |KEY_CTRLMASK, "\033OA" },
       { EXKEY_DOWN  |KEY_CTRLMASK, "\033OB" },
       { EXKEY_RIGHT |KEY_CTRLMASK, "\033OC" },
       { EXKEY_LEFT  |KEY_CTRLMASK, "\033OD" },
       { EXKEY_CENTER|KEY_CTRLMASK, "\033OG" },
+
+      { EXKEY_HOME  |KEY_CTRLMASK, "\033[1;5~" },
+      { EXKEY_INS   |KEY_CTRLMASK, "\033[2;5~" },
+      { EXKEY_DEL   |KEY_CTRLMASK, "\033[3;5~" },
+      { EXKEY_END   |KEY_CTRLMASK, "\033[4;5~" },
+      { EXKEY_PGUP  |KEY_CTRLMASK, "\033[5;5~" },
+      { EXKEY_PGDN  |KEY_CTRLMASK, "\033[6;5~" },
 
       { 0, NULL } };
 
