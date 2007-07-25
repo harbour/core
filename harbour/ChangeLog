@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-26 01:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtcrs/gtcrs.c
+    * added protection against misleading mouse wheel and mouse drag
+      events
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    * added protection against misleading mouse wheel and mouse drag
+      events
+    * enable XTERM like mouse reporting also for Linux terminal - it's
+      possible with external mouse driver
+    * added some CTRL+Fx escape sequences XTERM and gnome-terminal
+      compatible
+    * disabled some escape sequences mapped to simple cursor keys
+      which are used as CTRL+[cursor key] in recent XTerm versions
+
 2007-07-25 18:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtchrmap.c
     * indenting

@@ -1098,7 +1098,7 @@ static void set_tmevt( unsigned char *cMBuf, mouseEvent * mEvt )
       mEvt->col = col;
    }
 
-   switch ( cMBuf[0] & 0xC3 )
+   switch( cMBuf[0] & 0xC3 )
    {
       case 0x0:
          mEvt->buttonstate |= M_BUTTON_LEFT;
@@ -1113,10 +1113,12 @@ static void set_tmevt( unsigned char *cMBuf, mouseEvent * mEvt )
          mEvt->buttonstate &= ~(M_BUTTON_KEYMASK|M_BUTTON_DBLMASK);
          break;
       case 0x40:
-         mEvt->buttonstate |= M_BUTTON_WHEELUP;
+         if( cMBuf[0] & 0x20 )
+            mEvt->buttonstate |= M_BUTTON_WHEELUP;
          break;
       case 0x41:
-         mEvt->buttonstate |= M_BUTTON_WHEELDOWN;
+         if( cMBuf[0] & 0x20 )
+            mEvt->buttonstate |= M_BUTTON_WHEELDOWN;
          break;
    }
    chk_mevtdblck( mEvt );

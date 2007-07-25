@@ -960,10 +960,12 @@ static void set_tmevt( unsigned char *cMBuf, mouseEvent * mEvt )
          mEvt->buttonstate &= ~(M_BUTTON_KEYMASK|M_BUTTON_DBLMASK);
          break;
       case 0x40:
-         mEvt->buttonstate |= M_BUTTON_WHEELUP;
+         if( cMBuf[0] & 0x20 )
+            mEvt->buttonstate |= M_BUTTON_WHEELUP;
          break;
       case 0x41:
-         mEvt->buttonstate |= M_BUTTON_WHEELDOWN;
+         if( cMBuf[0] & 0x20 )
+            mEvt->buttonstate |= M_BUTTON_WHEELDOWN;
          break;
    }
    chk_mevtdblck( mEvt );
@@ -1036,7 +1038,7 @@ static void flush_gpmevt( mouseEvent * mEvt )
 static void disp_mousecursor( void )
 {
 #ifdef HAVE_GPM_H
-   if( s_termState.mouse_type == MOUSE_GPM && gpm_visiblepointer )
+   if( (s_termState.mouse_type & MOUSE_GPM) && gpm_visiblepointer )
    {
       Gpm_DrawPointer( s_termState.mLastEvt.col, s_termState.mLastEvt.row,
                        gpm_consolefd );
@@ -1046,18 +1048,19 @@ static void disp_mousecursor( void )
 
 static void mouse_init( void )
 {
-   if( s_termState.terminal_type == TERM_XTERM )
+   if( s_termState.terminal_type == TERM_XTERM ||
+       s_termState.terminal_type == TERM_LINUX )
    {
       /* save old hilit tracking & enable mouse tracking */
       static const char * szMouseOn = "\033[?1001s\033[?1002h";
       hb_gt_trm_termOut( ( BYTE * ) szMouseOn, strlen( szMouseOn ) );
       hb_gt_trm_termFlush();
       memset( ( void * ) &s_termState.mLastEvt, 0, sizeof( s_termState.mLastEvt ) );
-      s_termState.mouse_type = MOUSE_XTERM;
+      s_termState.mouse_type |= MOUSE_XTERM;
       s_termState.mButtons = 3;
    }
 #ifdef HAVE_GPM_H
-   else if( s_termState.terminal_type == TERM_LINUX )
+   if( s_termState.terminal_type == TERM_LINUX )
    {
       s_termState.Conn.eventMask =
          GPM_MOVE | GPM_DRAG | GPM_UP | GPM_DOWN | GPM_DOUBLE;
@@ -1077,7 +1080,7 @@ static void mouse_init( void )
          memset( ( void * ) &s_termState.mLastEvt, 0, sizeof( s_termState.mLastEvt ) );
          flush_gpmevt( &s_termState.mLastEvt );
          add_efds( gpm_fd, O_RDONLY, set_gpmevt, ( void * ) &s_termState.mLastEvt );
-         s_termState.mouse_type = MOUSE_GPM;
+         s_termState.mouse_type |= MOUSE_GPM;
 
          /*
           * In recent GPM versions it produce unpleasure noice on the screen
@@ -1095,7 +1098,7 @@ static void mouse_init( void )
 
 static void mouse_exit( void )
 {
-   if( s_termState.mouse_type == MOUSE_XTERM )
+   if( s_termState.mouse_type & MOUSE_XTERM )
    {
       /* disable mouse tracking & restore old hilit tracking */
       static const char * szMouseOff = "\033[?1002l\033[?1001r";
@@ -1103,7 +1106,7 @@ static void mouse_exit( void )
       hb_gt_trm_termFlush();
    }
 #ifdef HAVE_GPM_H
-   else if( s_termState.mouse_type == MOUSE_GPM && gpm_fd >= 0 )
+   if( (s_termState.mouse_type & MOUSE_GPM) && gpm_fd >= 0 )
    {
       del_efds( gpm_fd );
       Gpm_Close();
@@ -2184,6 +2187,7 @@ static void init_keys( void )
       { EXKEY_LEFT  , "\033[D" },
       { EXKEY_CENTER, "\033[E" },
       { EXKEY_END   , "\033[F" },
+      { EXKEY_CENTER, "\033[G" },
       { EXKEY_HOME  , "\033[H" },
 
       { EXKEY_HOME  , "\033[1~" },
@@ -2194,6 +2198,7 @@ static void init_keys( void )
       { EXKEY_DEL,    "\033[3~" }, /* kdch1 */
       { EXKEY_PGUP,   "\033[5~" }, /* kpp   */
       { EXKEY_PGDN,   "\033[6~" }, /* knp   */
+#if 0
       { EXKEY_UP,     "\033OA"  }, /* kcuu1 */
       { EXKEY_DOWN,   "\033OB"  }, /* kcud1 */
       { EXKEY_RIGHT,  "\033OC"  }, /* kcuf1 */
@@ -2202,8 +2207,24 @@ static void init_keys( void )
       { EXKEY_END,    "\033OF"  }, /* kend  */
       { EXKEY_HOME,   "\033OH"  }, /* khome */
       { EXKEY_ENTER,  "\033OM"  }, /* kent  */
+#endif
+
       { EXKEY_TAB,    "\011"    }, /* ht    */
       { EXKEY_BS,     "\010"    }, /* kbs   */
+
+      /* PuTTY */
+      { EXKEY_UP    |KEY_CTRLMASK, "\033OA" },
+      { EXKEY_DOWN  |KEY_CTRLMASK, "\033OB" },
+      { EXKEY_RIGHT |KEY_CTRLMASK, "\033OC" },
+      { EXKEY_LEFT  |KEY_CTRLMASK, "\033OD" },
+      { EXKEY_CENTER|KEY_CTRLMASK, "\033OG" },
+
+#if 0
+      { EXKEY_CENTER|KEY_CTRLMASK, "\033OE" },
+      { EXKEY_END   |KEY_CTRLMASK, "\033OF" },
+      { EXKEY_HOME  |KEY_CTRLMASK, "\033OH" },
+      { EXKEY_ENTER |KEY_CTRLMASK, "\033OM" },
+#endif
 
       { EXKEY_UP    |KEY_CTRLMASK, "\033[5A" },
       { EXKEY_DOWN  |KEY_CTRLMASK, "\033[5B" },
@@ -2310,6 +2331,23 @@ static void init_keys( void )
       { EXKEY_F10, "\033[21~" },        /* kf10 */
       { EXKEY_F11, "\033[23~" },        /* kf11 */
       { EXKEY_F12, "\033[24~" },        /* kf12 */
+
+      { EXKEY_F1 |KEY_CTRLMASK, "\033O5P" },
+      { EXKEY_F2 |KEY_CTRLMASK, "\033O5Q" },
+      { EXKEY_F3 |KEY_CTRLMASK, "\033O5R" },
+      { EXKEY_F4 |KEY_CTRLMASK, "\033O5S" },
+      { EXKEY_F1 |KEY_CTRLMASK, "\033[11;5~" },
+      { EXKEY_F2 |KEY_CTRLMASK, "\033[12;5~" },
+      { EXKEY_F3 |KEY_CTRLMASK, "\033[13;5~" },
+      { EXKEY_F4 |KEY_CTRLMASK, "\033[14;5~" },
+      { EXKEY_F5 |KEY_CTRLMASK, "\033[15;5~" },
+      { EXKEY_F6 |KEY_CTRLMASK, "\033[17;5~" },
+      { EXKEY_F7 |KEY_CTRLMASK, "\033[18;5~" },
+      { EXKEY_F8 |KEY_CTRLMASK, "\033[19;5~" },
+      { EXKEY_F9 |KEY_CTRLMASK, "\033[20;5~" },
+      { EXKEY_F10|KEY_CTRLMASK, "\033[21;5~" },
+      { EXKEY_F11|KEY_CTRLMASK, "\033[23;5~" },
+      { EXKEY_F12|KEY_CTRLMASK, "\033[24;5~" },
 
       { EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2P" },
       { EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033O2Q" },
@@ -2440,6 +2478,19 @@ static void init_keys( void )
       { EXKEY_F3,  "\033[13~" },
       { EXKEY_F4,  "\033[14~" },
       { EXKEY_F5,  "\033[15~" },
+      { EXKEY_F1 |KEY_CTRLMASK, "\033[11;5~" },
+      { EXKEY_F2 |KEY_CTRLMASK, "\033[12;5~" },
+      { EXKEY_F3 |KEY_CTRLMASK, "\033[13;5~" },
+      { EXKEY_F4 |KEY_CTRLMASK, "\033[14;5~" },
+      { EXKEY_F5 |KEY_CTRLMASK, "\033[15;5~" },
+      { EXKEY_F6 |KEY_CTRLMASK, "\033[17;5~" },
+      { EXKEY_F7 |KEY_CTRLMASK, "\033[18;5~" },
+      { EXKEY_F8 |KEY_CTRLMASK, "\033[19;5~" },
+      { EXKEY_F9 |KEY_CTRLMASK, "\033[20;5~" },
+      { EXKEY_F10|KEY_CTRLMASK, "\033[21;5~" },
+      { EXKEY_F11|KEY_CTRLMASK, "\033[23;5~" },
+      { EXKEY_F12|KEY_CTRLMASK, "\033[24;5~" },
+
       { EXKEY_UP    |KEY_CTRLMASK, "\033OA" },
       { EXKEY_DOWN  |KEY_CTRLMASK, "\033OB" },
       { EXKEY_RIGHT |KEY_CTRLMASK, "\033OC" },
@@ -2831,7 +2882,7 @@ static void hb_gt_trm_mouse_Show( void )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_mouse_Show()" ) );
 
 #ifdef HAVE_GPM_H
-   if( s_termState.mouse_type == MOUSE_GPM )
+   if( s_termState.mouse_type & MOUSE_GPM )
       gpm_visiblepointer = 1;
 #endif
    disp_mousecursor();
@@ -2842,7 +2893,7 @@ static void hb_gt_trm_mouse_Hide( void )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_mouse_Hide()" ) );
 
 #ifdef HAVE_GPM_H
-   if( s_termState.mouse_type == MOUSE_GPM )
+   if( s_termState.mouse_type & MOUSE_GPM )
    {
       gpm_visiblepointer = 0;
    }
