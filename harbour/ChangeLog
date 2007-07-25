@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-25 16:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtcore.h
+    + added translation for HB_GT_trm
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    + map some Linux key codes also in XTerm - they will be usable
+      in terminals like PuTTY/PTerm
+
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtpca/gtpca.c
+    + changed the order of checking HB_WIN32_IO and OS_UNIX_COMPATIBLE
+      macros for CYGWIN compilation
+
 2007-07-25 09:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * common.mak
    * source/codepage/Makefile

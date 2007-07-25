@@ -78,6 +78,7 @@
 #define HB_GT_dos    HB_GT_DOS
 #define HB_GT_os2    HB_GT_OS2
 #define HB_GT_tpl    HB_GT_TPL
+#define HB_GT_trm    HB_GT_TRM
 #define HB_GT_QTc    HB_GT_QTC
 #define HB_GT_xvt    HB_GT_XVT
 #define HB_GT_xwc    HB_GT_XWC

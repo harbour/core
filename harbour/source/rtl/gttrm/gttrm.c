@@ -2312,6 +2312,46 @@ static void init_keys( void )
       { EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[21;2~" },
       { EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[23;2~" },
       { EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[24;2~" },
+
+      { EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033[25~" }, /* kf13 */
+      { EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033[26~" }, /* kf14 */
+      { EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033[28~" }, /* kf15 */
+      { EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033[29~" }, /* kf16 */
+      { EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, "\033[31~" }, /* kf17 */
+      { EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, "\033[32~" }, /* kf18 */
+      { EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, "\033[33~" }, /* kf19 */
+      { EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[34~" }, /* kf20 */
+      { EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[35~" }, /* kf21 */
+      { EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[36~" }, /* kf22 */
+      { EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[37~" }, /* kf23 */
+      { EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[38~" }, /* kf24 */
+
+      { EXKEY_F1 |KEY_CTRLMASK, "\033[39~" },        /* kf25 */
+      { EXKEY_F2 |KEY_CTRLMASK, "\033[40~" },        /* kf26 */
+      { EXKEY_F3 |KEY_CTRLMASK, "\033[41~" },        /* kf27 */
+      { EXKEY_F4 |KEY_CTRLMASK, "\033[42~" },        /* kf28 */
+      { EXKEY_F5 |KEY_CTRLMASK, "\033[43~" },        /* kf29 */
+      { EXKEY_F6 |KEY_CTRLMASK, "\033[44~" },        /* kf30 */
+      { EXKEY_F7 |KEY_CTRLMASK, "\033[45~" },        /* kf31 */
+      { EXKEY_F8 |KEY_CTRLMASK, "\033[46~" },        /* kf32 */
+      { EXKEY_F9 |KEY_CTRLMASK, "\033[47~" },        /* kf33 */
+      { EXKEY_F10|KEY_CTRLMASK, "\033[48~" },        /* kf34 */
+      { EXKEY_F11|KEY_CTRLMASK, "\033[49~" },        /* kf35 */
+      { EXKEY_F12|KEY_CTRLMASK, "\033[50~" },        /* kf36 */
+
+      { EXKEY_F1 |KEY_ALTMASK , "\033[51~" },        /* kf37 */
+      { EXKEY_F2 |KEY_ALTMASK , "\033[52~" },        /* kf38 */
+      { EXKEY_F3 |KEY_ALTMASK , "\033[53~" },        /* kf39 */
+      { EXKEY_F4 |KEY_ALTMASK , "\033[54~" },        /* kf40 */
+      { EXKEY_F5 |KEY_ALTMASK , "\033[55~" },        /* kf41 */
+      { EXKEY_F6 |KEY_ALTMASK , "\033[56~" },        /* kf42 */
+      { EXKEY_F7 |KEY_ALTMASK , "\033[57~" },        /* kf43 */
+      { EXKEY_F8 |KEY_ALTMASK , "\033[58~" },        /* kf44 */
+      { EXKEY_F9 |KEY_ALTMASK , "\033[59~" },        /* kf45 */
+      { EXKEY_F10|KEY_ALTMASK , "\033[70~" },        /* kf46 */
+      { EXKEY_F11|KEY_ALTMASK , "\033[71~" },        /* kf47 */
+      { EXKEY_F12|KEY_ALTMASK , "\033[72~" },        /* kf48 */
+
       { 0, NULL } };
 
    static const keySeq linuxKeySeq[] = {
@@ -2382,8 +2422,14 @@ static void init_keys( void )
       { EXKEY_TAB,    "\011"    }, /* ht    */
       { EXKEY_BS,     "\177"    }, /* kbs   */
       { EXKEY_TAB | KEY_ALTMASK, "\033[Z" }, /* kcbt */
-      { 0, NULL } };
 
+      { EXKEY_UP    |KEY_CTRLMASK, "\033OA" },
+      { EXKEY_DOWN  |KEY_CTRLMASK, "\033OB" },
+      { EXKEY_RIGHT |KEY_CTRLMASK, "\033OC" },
+      { EXKEY_LEFT  |KEY_CTRLMASK, "\033OD" },
+      { EXKEY_CENTER|KEY_CTRLMASK, "\033OG" },
+
+      { 0, NULL } };
 
    static const keySeq ansiKeySeq[] = {
       /* cursor keys */

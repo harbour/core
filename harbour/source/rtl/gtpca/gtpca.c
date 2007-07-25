@@ -672,15 +672,15 @@ static int hb_gt_pca_ReadKey( int iEventMask )
       if( _read( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
-#elif defined( HB_WIN32_IO )
-   if( !s_bStdinConsole ||
-       WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0 ) == 0x0000 )
+#elif defined( OS_UNIX_COMPATIBLE )
    {
       BYTE bChar;
       if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
-#elif defined( OS_UNIX_COMPATIBLE )
+#elif defined( HB_WIN32_IO )
+   if( !s_bStdinConsole ||
+       WaitForSingleObject( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0 ) == 0x0000 )
    {
       BYTE bChar;
       if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
