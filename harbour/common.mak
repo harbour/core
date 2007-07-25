@@ -725,6 +725,9 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpsliso$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cpslwin$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cpsrwin$(HB_OBJ_EXT)  \
+    $(OBJ_DIR)\cpsv850$(HB_OBJ_EXT)  \
+    $(OBJ_DIR)\cpsvclip$(HB_OBJ_EXT) \
+    $(OBJ_DIR)\cpsvwin$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cptrdos$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cptrwin$(HB_OBJ_EXT)  \
     $(OBJ_DIR)\cpua866$(HB_OBJ_EXT)  \

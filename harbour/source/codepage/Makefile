@@ -54,6 +54,9 @@ C_SOURCES=\
 	cpsliso.c     \
 	cpslwin.c     \
 	cpsrwin.c     \
+	cpsv850.c     \
+	cpsvclip.c    \
+	cpsvwin.c     \
 	cptrdos.c     \
 	cptrwin.c     \
 	cpua866.c     \

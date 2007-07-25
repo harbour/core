@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-25 09:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * common.mak
+   * source/codepage/Makefile
+   + source/codepage/cpsv850.c
+   + source/codepage/cpsvclip.c
+   + source/codepage/cpsvwin.c
+     + Added Swedish codapages from xHarbour.
+     ; The codepages are now synced.
+
 2007-07-24 20:30 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * common.mak
    * include/hbapicdp.h
