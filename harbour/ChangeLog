@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-26 13:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gttrm/gttrm.c
+    * removed old XTerm (XFree 3.x.x) key sequences which are used in
+      current XTerm implementation as for keys with modifiers
+
 2007-07-26 01:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtcrs/gtcrs.c
     * added protection against misleading mouse wheel and mouse drag
