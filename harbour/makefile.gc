@@ -406,7 +406,7 @@ $(HBVER_EXE)    :: $(HBVER_EXE_OBJS)
 # built at the initial phase of build process
 $(OBJ_DIR)/pptable$(OBJEXT) : $(OBJ_DIR)/pptable.c
 $(OBJ_DIR)/pptable.c        : $(HBPPGEN) include/hbstdgen.ch include/std.ch $(PP_DIR)/ppcore.c $(PP_DIR)/ppgen.c
-	$(HBPPGEN) include/hbstdgen.ch -o$(OBJ_DIR)/pptable.c -q
+	$< include/hbstdgen.ch -o$@ -q
 
 #**********************************************************
 

@@ -106,19 +106,32 @@ GTCRS=""
 GTXWC=""
 for dir in /usr /usr/local /sw /opt/local
 do
-    if [ -f ${dir}/include/slang.h ] || \
-       [ -f ${dir}/include/slang/slang.h ]; then
-        GTSLN=yes
+    if [ "$GTSLN" != yes ]; then
+        if [ -f $dir/include/slang.h ]; then
+            [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
+            GTSLN=yes
+        elif [ -f $dir/include/slang/slang.h ]; then
+            C_USR="$C_USR -I$dir/include/slang"
+            GTSLN=yes
+        fi
     fi
-    if [ -f ${dir}/include/curses.h ] || \
-       [ -f ${dir}/include/${CRSLIB}/curses.h ]; then
-        GTCRS=yes
+    if [ "$GTCRS" != yes ]; then
+        if [ -f ${dir}/include/curses.h ]; then
+            [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
+            GTCRS=yes
+        elif [ -f ${dir}/include/${CRSLIB}/curses.h ]; then
+            C_USR="$C_USR -I$dir/include/${CRSLIB}"
+            GTCRS=yes
+        fi
     fi
-    if [ -f ${dir}/include/X11/Xlib.h ] && \
-       [ -f ${dir}/include/X11/Xcms.h ] && \
-       [ -f ${dir}/include/X11/Xutil.h ] && \
-       [ -f ${dir}/include/X11/keysym.h ]; then
-        GTXWC=yes
+    if [ "$GTXWC" != yes ]; then
+        if [ -f ${dir}/include/X11/Xlib.h ] && \
+           [ -f ${dir}/include/X11/Xcms.h ] && \
+           [ -f ${dir}/include/X11/Xutil.h ] && \
+           [ -f ${dir}/include/X11/keysym.h ]; then
+            [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
+            GTXWC=yes
+        fi
     fi
 done
 
@@ -146,7 +159,9 @@ export CC LD EXEEXT
 
 #export HB_BUILD_VERBOSE=yes
 
+mkdir -p obj/$CC_DIRNAME lib/$CC_DIRNAME bin/$CC_DIRNAME
+
 . ./bldcmncf.sh
-#make -n -p -r -f makefile.gc 1>EOK 2>ERR
+#$MAKE -n -p -r -f makefile.gc 1>EOK 2>ERR
 $MAKE -r -f makefile.gc $*
 rm -f common.cf
