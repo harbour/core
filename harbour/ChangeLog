@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-26 21:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/bldcmncf.sh
+  + harbour/make_gcc.sh
+  + harbour/makefile.gc
+  * harbour/common.mak
+  * harbour/makefile.bc
+  * harbour/makefile.vc
+  * harbour/make_vc.bat
+  * harbour/make_b32.bat
+    * added support for GCC and common make file. The extension created
+      by Marek Paliwoda with some modifications added by me.
+      Victor this commit removed the HB_* prefix from some of internal
+      make variables. I've done it temporary to avoid synchronization
+      problems with files in SVN, used by me and Marek. I hope we will
+      clean the code and restore necessary prefixes when Marek will have
+      returned so we can test it in different environments - such
+      modification have to be done in all of the above files.
+
 2007-07-26 13:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gttrm/gttrm.c
     * removed old XTerm (XFree 3.x.x) key sequences which are used in

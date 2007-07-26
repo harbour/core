@@ -28,6 +28,12 @@ set COPYCMD=/Y
 
 rem ---------------------------------------------------------------
 
+rem IMPORTANT ! It has to be declared here
+if "%CC_DIRNAME%" == "" set CC_DIRNAME=vc
+if "%HB_GT_LIB%"  == "" set HB_GT_LIB=gtwin
+
+rem ---------------------------------------------------------------
+
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
 
@@ -38,7 +44,7 @@ rem ---------------------------------------------------------------
 
 :BUILD
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc %1 %2 %3 > make_vc.log
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc %1 %2 %3 > make_%CC_DIRNAME%.log
    if errorlevel 1 goto BUILD_ERR
    goto EXIT
 
@@ -46,18 +52,20 @@ rem ---------------------------------------------------------------
 
 :BUILD_ERR
 
-   notepad make_vc.log
+   notepad make_%CC_DIRNAME%.log
    goto EXIT
 
 rem ---------------------------------------------------------------
 
 :CLEAN
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc CLEAN > make_vc.log
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc CLEAN > make_%CC_DIRNAME%.log
 
    rem In this case, the makefile handles most cleanup.
 
-   if exist make_vc.log del make_vc.log
+   if exist make_%CC_DIRNAME%.log del make_%CC_DIRNAME%.log > nul
+   if exist inst_%CC_DIRNAME%.log del inst_%CC_DIRNAME%.log > nul
+
    goto EXIT
 
 rem ---------------------------------------------------------------
@@ -66,11 +74,12 @@ rem ---------------------------------------------------------------
 
    if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=.
 
-   if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
-   if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
-   if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
+   if "%HB_BIN_INSTALL%"    == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
+   if "%HB_INC_INSTALL%"    == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
+   if "%HB_LIB_INSTALL%"    == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc INSTALL > nul
+
    goto EXIT
 
 rem ---------------------------------------------------------------
@@ -79,3 +88,4 @@ rem ---------------------------------------------------------------
 rem Restore user value
 set COPYCMD=%HB_ORGENV_COPYCMD%
 set HB_ORGENV_COPYCMD=
+set CC_DIRNAME=

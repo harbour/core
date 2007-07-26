@@ -59,7 +59,7 @@
 # The macros are referenced in makefile.bc
 # ---------------------------------------------------------------
 
-.SUFFIXES: .exe .lib .obj .prg .c .l .y .ch
+.SUFFIXES:
 
 #**********************************************************
 
@@ -83,15 +83,6 @@ CC     = cl.exe
 LINKER = link.exe
 MKLIB  = lib.exe
 
-# Subdir name for objs,libs,exes.
-# Based on chosen compiler type
-#      Bcc=b32, Msvc=vc
-!ifndef CC_DIRNAME
-CC_DIRNAME = vc
-!endif
-
-#**********************************************************
-#**********************************************************
 #**********************************************************
 
 # Include Common Object list files
@@ -101,20 +92,39 @@ CC_DIRNAME = vc
 
 #**********************************************************
 
+.SUFFIXES: $(EXEEXT) $(LIBEXT) $(OBJEXT) .prg .c .l .y
+
+#**********************************************************
+
 # Some definitions cannot be kept in Common.mak
 # due to serious limitations of Microsoft Nmake
 
 # Nmake does not support macros in string
 # substitution, so we have to hardcode it
+
 DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
 
 #**********************************************************
 #**********************************************************
 #**********************************************************
 
-#
-# C compiler definition and C flags. These should never have to change.
-#
+# allows to do cross-compiling if neccesary.
+!ifndef HB
+HB = $(HARBOUR_EXE)
+!endif
+
+# allows to do cross-compiling if neccesary.
+!ifndef HBPPGEN
+HBPPGEN = $(HBPPGEN_EXE)
+!endif
+
+#**********************************************************
+#**********************************************************
+#**********************************************************
+
+#**********************************************************
+# C compiler, Harbour compiler and Linker flags.
+#**********************************************************
 
 # Main "Include" directory
 INCLUDE_DIR    = include
@@ -134,12 +144,20 @@ CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX -FD -Gs
 !endif
 
 CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) -W3 -nologo -D__WINDOWS__ -DWIN32 -D__WIN32__ $(C_USR) $(CFLAGS) -Iobj\$(CC_DIRNAME)
-
+#-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
 CFLAGS         = -Zi $(CFLAGS)
 DBGMARKER      = d
 !endif
-
+#-----------
+!if "$(HB_GT_DEFAULT)" != ""
+CFLAGS         = -D"HB_GT_DEFAULT=$(HB_GT_DEFAULT:gt=)" $(CFLAGS)
+!endif
+#-----------
+!if "$(HB_GT_LIB)" != ""
+CFLAGS         = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)
+!endif
+#-----------
 CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
 
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
@@ -169,497 +187,494 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 #*******************************************************
 # General *.c --> *.obj COMPILE rules for STATIC Libraries
 #*******************************************************
-{$(OBJ_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(OBJ_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(MAIN_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(MAIN_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(COMMON_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(COMMON_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(COMPILER_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(COMPILER_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(PP_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(PP_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(VM_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(VM_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(RTL_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(RTL_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(MACRO_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(MACRO_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(DEBUG_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(DEBUG_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(LANG_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(LANG_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(CODEPAGE_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(CODEPAGE_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(PCRE_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(PCRE_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(RDD_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(RDD_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(NULSYS_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(NULSYS_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(DBFNTX_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(DBFNTX_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(DBFCDX_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(DBFCDX_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(DBFFPT_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(DBFFPT_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBSIX_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(HBSIX_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HSX_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(HSX_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(USRRDD_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(USRRDD_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(GTCGI_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(GTCGI_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(GTPCA_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(GTPCA_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(GTSTD_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(GTSTD_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(GTWIN_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(GTWIN_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(GTWVT_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(GTWVT_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(GTGUI_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(GTGUI_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HARBOUR_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(COMPILER_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBPP_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(HBPP_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBPPTEST_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(HBPPTEST_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBRUN_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(HBRUN_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBTEST_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(HBTEST_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBDOC_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(HBDOC_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBMAKE_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(HBMAKE_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBVER_DIR)}.c{$(OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+{$(HBVER_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
 
 #*******************************************************
 # General *.prg --> *.obj COMPILE rules for STATIC Libraries
 #*******************************************************
-{$(OBJ_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(OBJ_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(COMMON_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(COMMON_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(PP_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(PP_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(VM_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(VM_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(RTL_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(RTL_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(MACRO_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(MACRO_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(DEBUG_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(DEBUG_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(LANG_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(LANG_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(CODEPAGE_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(CODEPAGE_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(PCRE_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(PCRE_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(RDD_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(RDD_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(NULSYS_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(NULSYS_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(DBFNTX_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(DBFNTX_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(DBFCDX_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(DBFCDX_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(DBFFPT_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(DBFFPT_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBSIX_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(HBSIX_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HSX_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(HSX_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(USRRDD_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(USRRDD_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTCGI_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(GTCGI_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTPCA_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(GTPCA_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTSTD_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(GTSTD_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTWIN_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(GTWIN_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTWVT_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(GTWVT_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTGUI_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(GTGUI_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HARBOUR_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(COMPILER_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBPP_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(HBPP_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBPPTEST_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) $< -o$(OBJ_DIR)\\
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(HBPPTEST_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) $< -o$(OBJ_DIR)\\
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBRUN_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(HBRUN_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBTEST_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(HBTEST_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBDOC_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(HBDOC_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBMAKE_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(HBMAKE_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBVER_DIR)}.prg{$(OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+{$(HBVER_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 
 #*******************************************************
 # General *.c --> *.obj COMPILE rules for SHARED Libraries
 #*******************************************************
-{$(DLL_OBJ_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(DLL_OBJ_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(MAIN_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(MAIN_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(COMMON_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(COMMON_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(COMPILER_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(COMPILER_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(PP_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(PP_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(VM_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(VM_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(RTL_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(RTL_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(MACRO_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(MACRO_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(DEBUG_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(DEBUG_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(LANG_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(LANG_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(CODEPAGE_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(CODEPAGE_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(PCRE_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(PCRE_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(RDD_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(RDD_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(NULSYS_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(NULSYS_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(DBFNTX_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(DBFNTX_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(DBFCDX_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(DBFCDX_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(DBFFPT_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(DBFFPT_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(HBSIX_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(HBSIX_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(HSX_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(HSX_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(USRRDD_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(USRRDD_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(GTCGI_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(GTCGI_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(GTPCA_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(GTPCA_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(GTSTD_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(GTSTD_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(GTWIN_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(GTWIN_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(GTWVT_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(GTWVT_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(GTGUI_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(GTGUI_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
 
 #*******************************************************
 # General *.c --> *.obj COMPILE rules for EXECUTABLES,
 # which use Harbour SHARED Library compiled as DLL
 #*******************************************************
-#{$(HARBOUR_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
+#{$(COMPILER_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-#{$(HBPP_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
+#{$(HBPP_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(HBPPTEST_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(HBPPTEST_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(HBRUN_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(HBRUN_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(HBTEST_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(HBTEST_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(HBDOC_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(HBDOC_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(HBMAKE_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(HBMAKE_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
-{$(HBVER_DIR)}.c{$(DLL_OBJ_DIR)}.obj::
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+{$(HBVER_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
 
 #*******************************************************
 # General *.prg --> *.obj COMPILE rules for SHARED Libraries
 #*******************************************************
-{$(DLL_OBJ_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(DLL_OBJ_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(COMMON_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(COMMON_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(PP_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(PP_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(VM_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(VM_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(RTL_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(RTL_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(MACRO_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(MACRO_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(DEBUG_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(DEBUG_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(LANG_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(LANG_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(PCRE_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(PCRE_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(CODEPAGE_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(CODEPAGE_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(RDD_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(RDD_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(NULSYS_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(NULSYS_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(DBFNTX_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(DBFNTX_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(DBFCDX_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(DBFCDX_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(DBFFPT_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(DBFFPT_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBSIX_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(HBSIX_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HSX_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(HSX_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(USRRDD_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(USRRDD_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTCGI_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(GTCGI_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTPCA_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(GTPCA_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTSTD_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(GTSTD_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTWIN_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(GTWIN_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTWVT_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(GTWVT_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(GTGUI_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(GTGUI_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 
 #*******************************************************
 # General *.prg --> *.obj COMPILE rules for EXECUTABLES,
 # which use Harbour SHARED Library compiled as DLL
 #*******************************************************
-#{$(HARBOUR_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
+#{$(COMPILER_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
 #    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-#{$(HBPP_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
+#{$(HBPP_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
 #    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBPPTEST_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(HBPPTEST_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBRUN_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(HBRUN_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBTEST_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(HBTEST_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBDOC_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(HBDOC_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBMAKE_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(HBMAKE_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBVER_DIR)}.prg{$(DLL_OBJ_DIR)}.obj:
-     $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+{$(HBVER_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+#**********************************************************
 
 #**********************************************************
-#**********************************************************
-#**********************************************************
-#
 # General BUILD rules (not used !)
-#
 #**********************************************************
 # General Library BUILD rule
-#{$(OBJ_DIR)}.obj{$(COMMON_DIR)}.lib:
+#{$(OBJ_DIR)}$(OBJEXT){$(COMMON_DIR)}.lib:
 #    IF EXIST "$@" $(DEL) "$@" > nul
 #    $(MKLIB) /out:$@ <<
 #$**
@@ -668,15 +683,15 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 #**********************************************************
 #**********************************************************
 
+#**********************************************************
 # TARGET dependencies
-
 #**********************************************************
 
 all : $(HB_DEST_DIRS) $(HB_BUILD_TARGETS)
 
-#
+#**********************************************************
 # Helper targets - disabled for Msvc
-#
+#**********************************************************
 
 #BasicLibs : $(COMMON_LIB) $(COMPILER_LIB) $(PP_LIB)
 #BasicExes : $(HARBOUR_EXE)
@@ -684,55 +699,8 @@ all : $(HB_DEST_DIRS) $(HB_BUILD_TARGETS)
 
 #**********************************************************
 
-clean: doClean
-Clean: doClean
-CLEAN: doClean
-
-doClean:
-     -if exist *.idb            $(DEL) *.idb > nul
-     -if exist *.pch            $(DEL) *.pch > nul
-     -if exist *.pdb            $(DEL) *.pdb > nul
-     -if exist $(OBJ_DIR)\*.obj $(DEL) $(OBJ_DIR)\*.obj > nul
-     -if exist $(OBJ_DIR)\*.c   $(DEL) $(OBJ_DIR)\*.c   > nul
-     -if exist $(OBJ_DIR)\*.h   $(DEL) $(OBJ_DIR)\*.h   > nul
-     -if exist $(OBJ_DIR)\*.pch $(DEL) $(OBJ_DIR)\*.pch > nul
-     -if exist $(LIB_DIR)\*.lib $(DEL) $(LIB_DIR)\*.lib > nul
-     -if exist $(BIN_DIR)\*.exe $(DEL) $(BIN_DIR)\*.exe > nul
-     -if exist $(BIN_DIR)\*.pdb $(DEL) $(BIN_DIR)\*.pdb > nul
-     -if exist $(BIN_DIR)\*.ilk $(DEL) $(BIN_DIR)\*.ilk > nul
-     -if exist $(BIN_DIR)\*.map $(DEL) $(BIN_DIR)\*.map > nul
-     -if exist $(BIN_DIR)\*.dll $(DEL) $(BIN_DIR)\*.dll > nul
-     -if exist $(BIN_DIR)\*.lib $(DEL) $(BIN_DIR)\*.lib > nul
-     -if exist $(BIN_DIR)\*.exp $(DEL) $(BIN_DIR)\*.exp > nul
-     -if exist $(PP_DIR)\pptable.c    $(DEL) $(PP_DIR)\pptable.c    > nul
-     -if exist $(DLL_OBJ_DIR)\*.obj   $(DEL) $(DLL_OBJ_DIR)\*.obj   > nul
-     -if exist $(DLL_OBJ_DIR)\*.c     $(DEL) $(DLL_OBJ_DIR)\*.c     > nul
-     -if exist $(DLL_OBJ_DIR)\*.h     $(DEL) $(DLL_OBJ_DIR)\*.h     > nul
-     -if exist inst_$(CC_DIRNAME).log $(DEL) inst_$(CC_DIRNAME).log > nul
-     -if exist bin\*.exe        $(DEL) bin\*.exe > nul
-     -if exist lib\*.lib        $(DEL) lib\*.lib > nul
-
-#**********************************************************
-
-install : doInstall
-Install : doInstall
-INSTALL : doInstall
-
-doInstall: $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL)
-     -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.exe   copy /B /Y $(BIN_DIR)\*.exe $(HB_BIN_INSTALL) >  inst_$(CC_DIRNAME).log
-     -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.dll   copy /B /Y $(BIN_DIR)\*.dll $(HB_BIN_INSTALL) >> inst_$(CC_DIRNAME).log
-     -if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B /Y $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(CC_DIRNAME).log
-     -if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B /Y $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(CC_DIRNAME).log
-!if "$(HB_INSTALL_PREFIX)" != "."
-     -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.api $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
-     -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.ch  $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
-     -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.h   $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
-!endif
-
-#**********************************************************
-
 $(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
-     !if not exist $@\nul mkdir $@
+    !if not exist $@\nul mkdir $@
 
 #**********************************************************
 #
@@ -740,90 +708,91 @@ $(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
 #
 #**********************************************************
 $(COMMON_LIB)   : $(COMMON_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(PP_LIB)       : $(PP_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(VM_LIB)       : $(VM_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(RTL_LIB)      : $(RTL_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(MACRO_LIB)    : $(MACRO_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(DEBUG_LIB)    : $(DEBUG_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(LANG_LIB)     : $(LANG_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(CODEPAGE_LIB) : $(CODEPAGE_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(PCRE_LIB)     : $(PCRE_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(RDD_LIB)      : $(RDD_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(NULSYS_LIB)   : $(NULSYS_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(DBFNTX_LIB)   : $(DBFNTX_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(DBFCDX_LIB)   : $(DBFCDX_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(DBFFPT_LIB)   : $(DBFFPT_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(HBSIX_LIB)    : $(HBSIX_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(HSX_LIB)      : $(HSX_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(USRRDD_LIB)   : $(USRRDD_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(GTCGI_LIB)    : $(GTCGI_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(GTDOS_LIB)    : $(GTDOS_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(GTPCA_LIB)    : $(GTPCA_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(GTSTD_LIB)    : $(GTSTD_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(GTWIN_LIB)    : $(GTWIN_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(GTWVT_LIB)    : $(GTWVT_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
 $(GTGUI_LIB)    : $(GTGUI_LIB_OBJS)
-     $(MKLIB) /out:$@ $**
+    $(MKLIB) /out:$@ $**
 #**********************************************************
-#
+
+#**********************************************************
 # EXECUTABLE Targets
-#
 #**********************************************************
-#
+
+#**********************************************************
 # HARBOUR build rule
-#
+#**********************************************************
 $(HARBOUR_EXE) : $(HARBOUR_EXE_OBJS)
-     IF EXIST "$(HARBOUR_EXE)" $(DEL) "$(HARBOUR_EXE)" > nul
-     $(LINKER) @<<
+    IF EXIST "$(HARBOUR_EXE)" $(DEL) "$(HARBOUR_EXE)" > nul
+    $(LINKER) @<<
 $(LDFLAGS)
 /OUT:$(HARBOUR_EXE)
 $(**: = ^
@@ -833,12 +802,11 @@ $(COMPILER_LIB)
 $(PP_LIB)
 <<$(KEEPSTATE)
 #**********************************************************
-#
 # HBPPGEN build rule
-#
+#**********************************************************
 $(HBPPGEN_EXE) : $(HBPPGEN_EXE_OBJS)
-     IF EXIST "$(HBPPGEN_EXE)" $(DEL) "$(HBPPGEN_EXE)" > nul
-     $(LINKER) @<<
+    IF EXIST "$(HBPPGEN_EXE)" $(DEL) "$(HBPPGEN_EXE)" > nul
+    $(LINKER) @<<
 $(LDFLAGS)
 /OUT:$(HBPPGEN_EXE)
 $(**: = ^
@@ -846,12 +814,11 @@ $(**: = ^
 $(COMMON_LIB)
 <<$(KEEPSTATE)
 #**********************************************************
-#
 # HBPP build rule
-#
+#**********************************************************
 $(HBPP_EXE) : $(HBPP_EXE_OBJS)
-     IF EXIST "$(HBPP_EXE)" $(DEL) "$(HBPP_EXE)" > nul
-     $(LINKER) @<<
+    IF EXIST "$(HBPP_EXE)" $(DEL) "$(HBPP_EXE)" > nul
+    $(LINKER) @<<
 $(LDFLAGS)
 /OUT:$(HBPP_EXE)
 $(**: = ^
@@ -859,12 +826,37 @@ $(**: = ^
 $(COMMON_LIB)
 <<$(KEEPSTATE)
 #**********************************************************
-#
+# HBRUN build rule
+#**********************************************************
+$(HBRUN_EXE)  : $(HBRUN_EXE_OBJS)
+    IF EXIST "$(HBRUN_EXE)" $(DEL) "$(HBRUN_EXE)" > nul
+    $(LINKER) @<<
+$(LDFLAGS)
+/OUT:$(HBRUN_EXE)
+$(**: = ^
+)
+$(STANDARD_STATIC_HBLIBS)
+user32.lib winspool.lib wsock32.lib advapi32.lib
+<<$(KEEPSTATE)
+#**********************************************************
+# HBTEST build rule
+#**********************************************************
+$(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
+    IF EXIST "$(HBTEST_EXE)" $(DEL) "$(HBTEST_EXE)" > nul
+    $(LINKER) @<<
+$(LDFLAGS)
+/OUT:$(HBTEST_EXE)
+$(**: = ^
+)
+$(STANDARD_STATIC_HBLIBS)
+user32.lib winspool.lib
+<<$(KEEPSTATE)
+#**********************************************************
 # HBPPTEST build rule
-#
+#**********************************************************
 $(HBPPTEST_EXE) : $(HBPPTEST_EXE_OBJS)
-     IF EXIST "$(HBPPTEST_EXE)" $(DEL) "$(HBPPTEST_EXE)" > nul
-     $(LINKER) @<<
+    IF EXIST "$(HBPPTEST_EXE)" $(DEL) "$(HBPPTEST_EXE)" > nul
+    $(LINKER) @<<
 $(LDFLAGS)
 /OUT:$(HBPPTEST_EXE)
 $(**: = ^
@@ -874,40 +866,11 @@ $(STANDARD_STATIC_HBLIBS)
 user32.lib winspool.lib
 <<$(KEEPSTATE)
 #**********************************************************
-#
-# HBRUN build rule
-#
-$(HBRUN_EXE)  : $(HBRUN_EXE_OBJS)
-     IF EXIST "$(HBRUN_EXE)" $(DEL) "$(HBRUN_EXE)" > nul
-     $(LINKER) @<<
-$(LDFLAGS)
-/OUT:$(HBRUN_EXE)
-$(**: = ^
-)
-$(STANDARD_STATIC_HBLIBS)
-user32.lib winspool.lib wsock32.lib advapi32.lib
-<<$(KEEPSTATE)
-#**********************************************************
-#
-# HBTEST build rule
-#
-$(HBTEST_EXE) : $(HBTEST_EXE_OBJS)
-     IF EXIST "$(HBTEST_EXE)" $(DEL) "$(HBTEST_EXE)" > nul
-     $(LINKER) @<<
-$(LDFLAGS)
-/OUT:$(HBTEST_EXE)
-$(**: = ^
-)
-$(STANDARD_STATIC_HBLIBS)
-user32.lib winspool.lib
-<<$(KEEPSTATE)
-#**********************************************************
-#
 # HBDOC build rule
-#
+#**********************************************************
 $(HBDOC_EXE)  : $(HBDOC_EXE_OBJS)
-     IF EXIST "$(HBDOC_EXE)" $(DEL) "$(HBDOC_EXE)" > nul
-     $(LINKER) @<<
+    IF EXIST "$(HBDOC_EXE)" $(DEL) "$(HBDOC_EXE)" > nul
+    $(LINKER) @<<
 $(LDFLAGS)
 /OUT:$(HBDOC_EXE)
 $(**: = ^
@@ -916,12 +879,11 @@ $(STANDARD_STATIC_HBLIBS)
 user32.lib winspool.lib
 <<$(KEEPSTATE)
 #**********************************************************
-#
 # HBMAKE build rule
-#
+#**********************************************************
 $(HBMAKE_EXE) : $(HBMAKE_EXE_OBJS)
-     IF EXIST "$(HBMAKE_EXE)" $(DEL) "$(HBMAKE_EXE)" > nul
-     $(LINKER) @<<
+    IF EXIST "$(HBMAKE_EXE)" $(DEL) "$(HBMAKE_EXE)" > nul
+    $(LINKER) @<<
 $(LDFLAGS)
 /OUT:$(HBMAKE_EXE)
 $(**: = ^
@@ -930,12 +892,11 @@ $(STANDARD_STATIC_HBLIBS)
 user32.lib winspool.lib
 <<$(KEEPSTATE)
 #**********************************************************
-#
 # HBVER build rule
-#
+#**********************************************************
 $(HBVER_EXE)  : $(HBVER_EXE_OBJS)
-     IF EXIST "$(HBVER_EXE)" $(DEL) "$(HBVER_EXE)" > nul
-     $(LINKER) @<<
+    IF EXIST "$(HBVER_EXE)" $(DEL) "$(HBVER_EXE)" > nul
+    $(LINKER) @<<
 $(LDFLAGS)
 /OUT:$(HBVER_EXE)
 $(**: = ^
@@ -944,13 +905,13 @@ $(STANDARD_STATIC_HBLIBS)
 user32.lib winspool.lib
 <<$(KEEPSTATE)
 #**********************************************************
-#
+
+#**********************************************************
 # DLL Targets
-#
 #**********************************************************
 #$(HARBOUR_DLL) : $(HARBOUR_EXE) $(DLL_OBJS)
 $(HARBOUR_DLL) : $(HB) $(DLL_OBJS)
-     $(LINKER) @<<
+    $(LINKER) @<<
 $(LDFLAGSDLL) /OUT:$(@)
 /IMPLIB:$(@:.dll=.lib)
 $(DLL_OBJS: = ^
@@ -958,13 +919,11 @@ $(DLL_OBJS: = ^
 advapi32.lib gdi32.lib user32.lib winspool.lib wsock32.lib
 <<$(KEEPSTATE)
 #**********************************************************
-#
 # DLL EXECUTABLE Targets
-#
 #**********************************************************
 HBTESTDLL_OBJS =  $(DLL_OBJ_DIR)\mainstd.obj $(HBTEST_EXE_OBJS:obj\vc=obj\dll\vc)
 $(HBTESTDLL_EXE) : $(HARBOUR_DLL) $(HBTESTDLL_OBJS)
-     $(LINKER) @<<
+    $(LINKER) @<<
 $(LDFLAGS)
 /OUT:$(HBTESTDLL_EXE)
 $(HBTESTDLL_OBJS: = ^
@@ -977,90 +936,117 @@ $(HARBOUR_DLL:.dll=.lib)
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #----------------------------------------------------------
 $(DLL_OBJ_DIR)\mainstd.obj : $(VM_DIR)\mainstd.c
-     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $**
+    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $**
 #**********************************************************
 #**********************************************************
 #**********************************************************
-#
+
+
+#**********************************************************
 # EXTRA Object's DEPENDENCIES
-#
 #**********************************************************
 
 # Generated by an intermediate utility ppgen.exe
 # built at the initial phase of build process
 $(OBJ_DIR)\pptable.obj : $(PP_DIR)\pptable.c
 $(PP_DIR)\pptable.c    : include\hbstdgen.ch
-     IF EXIST "$(PP_DIR)\pptable.c" $(DEL) "$(PP_DIR)\pptable.c" > nul
-     $(HBPPGEN) include/hbstdgen.ch -o$(PP_DIR)/pptable.c -q
+    IF EXIST "$(PP_DIR)\pptable.c" $(DEL) "$(PP_DIR)\pptable.c" > nul
+    $(HBPPGEN) include/hbstdgen.ch -o$(PP_DIR)/pptable.c -q
 
 #**********************************************************
 
 !if "$(HB_REBUILD_PARSER)" == "yes"
 
-$(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
-     bison --no-line -d $** -o$@
+$(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
+    bison --no-line -d $** -o$@
 
-$(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
-     bison --no-line -d $** -o$@
+$(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
+    bison --no-line -d $** -o$@
+
+$(DLL_OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.y
+    bison --no-line -d $** -o$@
+
+$(DLL_OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
+    bison --no-line -d $** -o$@
 
 !else
 
-$(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.yyc
-     copy /A $** $@
-     copy /A $(**:.yyc=.yyh) $(@:.c=.h)
+$(OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.yyc
+    copy /A $** $@
+    copy /A $(**:.yyc=.yyh) $(@:.c=.h)
 
-$(OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.yyc
-     copy /A $** $@
-     copy /A $(**:.yyc=.yyh) $(@:.c=.h)
+$(OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.yyc
+    copy /A $** $@
+    copy /A $(**:.yyc=.yyh) $(@:.c=.h)
+
+$(DLL_OBJ_DIR)\harboury.c : $(COMPILER_DIR)\harbour.yyc
+    copy /A $** $@
+    copy /A $(**:.yyc=.yyh) $(@:.c=.h)
+
+$(DLL_OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.yyc
+    copy /A $** $@
+    copy /A $(**:.yyc=.yyh) $(@:.c=.h)
 
 !endif
 
-
-$(OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
-     flex -Phb_macro -i -8 -o$@ $**
-
-$(OBJ_DIR)\macroy.obj : $(OBJ_DIR)\macroy.c
-$(OBJ_DIR)\macrol.obj : $(OBJ_DIR)\macrol.c
-     $(ECHO) > $(OBJ_DIR)\unistd.h
-     $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ $**
-     $(DEL) $(OBJ_DIR)\unistd.h
-
-
-$(OBJ_DIR)\harbourl.c : $(HARBOUR_DIR)\harbour.l
-     flex -Phb_comp -i -8 -o$@ $**
-
 $(OBJ_DIR)\harboury.obj : $(OBJ_DIR)\harboury.c
-$(OBJ_DIR)\harbourl.obj : $(OBJ_DIR)\harbourl.c
-     $(ECHO)  > $(OBJ_DIR)\unistd.h
-     $(CC) $(CLIBFLAGS) -I$(OBJ_DIR) -Fo$(OBJ_DIR)\ $**
-     $(DEL) $(OBJ_DIR)\unistd.h
-
-#**********************************************************
-
-$(DLL_OBJ_DIR)\macroy.c : $(MACRO_DIR)\macro.y
-     bison --no-line -d $** -o$@
-
-$(DLL_OBJ_DIR)\macrol.c : $(MACRO_DIR)\macro.l
-     flex -Phb_macro -i -8 -o$@ $**
-
-$(DLL_OBJ_DIR)\macroy.obj : $(DLL_OBJ_DIR)\macroy.c
-$(DLL_OBJ_DIR)\macrol.obj : $(DLL_OBJ_DIR)\macrol.c
-     $(ECHO) > $(DLL_OBJ_DIR)\unistd.h
-     $(CC) $(CLIBFLAGSDLL) -I$(DLL_OBJ_DIR) -Fo$(DLL_OBJ_DIR)\ $**
-     $(DEL) $(DLL_OBJ_DIR)\unistd.h
-
-#**********************************************************
-
-$(DLL_OBJ_DIR)\harboury.c : $(HARBOUR_DIR)\harbour.y
-     bison --no-line -d $** -o$@
-
-$(DLL_OBJ_DIR)\harbourl.c : $(HARBOUR_DIR)\harbour.l
-     flex -Phb_comp -i -8 -o$@ $**
+$(OBJ_DIR)\macroy.obj   : $(OBJ_DIR)\macroy.c
 
 $(DLL_OBJ_DIR)\harboury.obj : $(DLL_OBJ_DIR)\harboury.c
-$(DLL_OBJ_DIR)\harbourl.obj : $(DLL_OBJ_DIR)\harbourl.c
-     $(ECHO)  > $(DLL_OBJ_DIR)\unistd.h
-     $(CC) $(CLIBFLAGSDLL) -I$(DLL_OBJ_DIR) -Fo$(DLL_OBJ_DIR)\ $**
-     $(DEL) $(DLL_OBJ_DIR)\unistd.h
+$(DLL_OBJ_DIR)\macroy.obj   : $(DLL_OBJ_DIR)\macroy.c
+
+#**********************************************************
+
+
+#**********************************************************
+# CLEAN rules
+#**********************************************************
+
+clean: doClean
+Clean: doClean
+CLEAN: doClean
+
+doClean:
+    -if exist *.idb            $(DEL) *.idb > nul
+    -if exist *.pch            $(DEL) *.pch > nul
+    -if exist *.pdb            $(DEL) *.pdb > nul
+    -if exist $(OBJ_DIR)\*.obj $(DEL) $(OBJ_DIR)\*.obj > nul
+    -if exist $(OBJ_DIR)\*.c   $(DEL) $(OBJ_DIR)\*.c   > nul
+    -if exist $(OBJ_DIR)\*.h   $(DEL) $(OBJ_DIR)\*.h   > nul
+    -if exist $(OBJ_DIR)\*.pch $(DEL) $(OBJ_DIR)\*.pch > nul
+    -if exist $(LIB_DIR)\*.lib $(DEL) $(LIB_DIR)\*.lib > nul
+    -if exist $(BIN_DIR)\*.exe $(DEL) $(BIN_DIR)\*.exe > nul
+    -if exist $(BIN_DIR)\*.pdb $(DEL) $(BIN_DIR)\*.pdb > nul
+    -if exist $(BIN_DIR)\*.ilk $(DEL) $(BIN_DIR)\*.ilk > nul
+    -if exist $(BIN_DIR)\*.map $(DEL) $(BIN_DIR)\*.map > nul
+    -if exist $(BIN_DIR)\*.dll $(DEL) $(BIN_DIR)\*.dll > nul
+    -if exist $(BIN_DIR)\*.lib $(DEL) $(BIN_DIR)\*.lib > nul
+    -if exist $(BIN_DIR)\*.exp $(DEL) $(BIN_DIR)\*.exp > nul
+    -if exist $(PP_DIR)\pptable.c    $(DEL) $(PP_DIR)\pptable.c    > nul
+    -if exist $(DLL_OBJ_DIR)\*.obj   $(DEL) $(DLL_OBJ_DIR)\*.obj   > nul
+    -if exist $(DLL_OBJ_DIR)\*.c     $(DEL) $(DLL_OBJ_DIR)\*.c     > nul
+    -if exist $(DLL_OBJ_DIR)\*.h     $(DEL) $(DLL_OBJ_DIR)\*.h     > nul
+    -if exist inst_$(CC_DIRNAME).log $(DEL) inst_$(CC_DIRNAME).log > nul
+    -if exist bin\*.exe        $(DEL) bin\*.exe > nul
+    -if exist lib\*.lib        $(DEL) lib\*.lib > nul
+
+#**********************************************************
+# INSTALL rules
+#**********************************************************
+
+install : doInstall
+Install : doInstall
+INSTALL : doInstall
+
+doInstall: $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL)
+    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.exe   copy /B /Y $(BIN_DIR)\*.exe $(HB_BIN_INSTALL) >  inst_$(CC_DIRNAME).log
+    -if exist $(HB_BIN_INSTALL)\nul if exist $(BIN_DIR)\*.dll   copy /B /Y $(BIN_DIR)\*.dll $(HB_BIN_INSTALL) >> inst_$(CC_DIRNAME).log
+    -if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B /Y $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(CC_DIRNAME).log
+    -if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B /Y $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(CC_DIRNAME).log
+!if "$(HB_INSTALL_PREFIX)" != "."
+    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.api $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
+    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.ch  $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
+    -if exist $(HB_INC_INSTALL)\nul   copy /A /Y include\*.h   $(HB_INC_INSTALL) >> inst_$(CC_DIRNAME).log
+!endif
 
 #**********************************************************
