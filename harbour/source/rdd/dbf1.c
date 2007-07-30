@@ -2290,6 +2290,19 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       hb_itemRelease( pItem );
    }
 
+   if( pArea->uiFieldCount * sizeof( DBFFIELD ) + sizeof( DBFHEADER ) +
+       ( pArea->bTableType == DB_DBF_VFP ? 1 : 2 ) > UINT16_MAX )
+   {
+      pError = hb_errNew();
+      hb_errPutGenCode( pError, EG_CREATE );
+      hb_errPutSubCode( pError, EDBF_DATAWIDTH );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CREATE ) );
+      hb_errPutFileName( pError, ( char * ) pCreateInfo->abName );
+      SELF_ERROR( ( AREAP ) pArea, pError );
+      hb_itemRelease( pError );
+      return FAILURE;
+   }
+
    if( !fRawBlob )
    {
       pError = NULL;

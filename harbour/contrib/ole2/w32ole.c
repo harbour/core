@@ -221,7 +221,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
      if( nConvertedLen )
      {
-        LPWSTR wString = (LPWSTR) hb_xgrab( nConvertedLen * 2 );
+        LPWSTR wString = (LPWSTR) hb_xgrab( nConvertedLen * 2 + 1 );
 
         if( MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cString, -1, wString, nConvertedLen ) )
         {
@@ -296,7 +296,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
         if( wString )
         {
-           hb_retclenAdoptRaw( (char *) wString, SysStringLen( wString ) );
+           hb_retclen_buffer( (char *) wString, SysStringLen( wString ) );
            return;
         }
      }

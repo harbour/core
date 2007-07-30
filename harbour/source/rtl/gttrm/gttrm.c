@@ -147,16 +147,26 @@ static HB_GT_FUNCS SuperTable;
 #define MOUSE_GPM       1
 #define MOUSE_XTERM     2
 
-#define TIMEVAL_GET(tv)             gettimeofday(&(tv), NULL);
+#if defined( OS_UNIX_COMPATIBLE )
+
+#define TIMEVAL_GET(tv)             gettimeofday(&(tv), NULL)
 #define TIMEVAL_LESS(tv1, tv2)      (((tv1).tv_sec == (tv2).tv_sec ) ?  \
                                      ((tv1).tv_usec < (tv2).tv_usec) :  \
                                      ((tv1).tv_sec  < (tv2).tv_sec ))
-#define TIMEVAL_ADD(dst, src, n)    {                                   \
-            (dst).tv_sec = (src).tv_sec + n / 1000;                     \
+#define TIMEVAL_ADD(dst, src, n)    do {                                \
+            (dst).tv_sec = (src).tv_sec + (n) / 1000;                   \
             if(((dst).tv_usec = (src).tv_usec+(n%1000)*1000)>=1000000) {\
             (dst).tv_usec -= 1000000; (dst).tv_sec++;                   \
          } \
-      }
+      } while( 0 )
+
+#else
+
+#define TIMEVAL_GET(tv)             do { (tv) = hb_dateSeconds(); } while( 0 )
+#define TIMEVAL_LESS(tv1, tv2)      ((tv1) < (tv2))
+#define TIMEVAL_ADD(dst, src, n)    do { (dst) = (src) + n / 1000; } while( 0 )
+
+#endif
 
 #define KEY_ALTMASK     0x10000000
 #define KEY_CTRLMASK    0x20000000
@@ -250,9 +260,15 @@ typedef struct {
    int mbup_row, mbup_col;
    int mbdn_row, mbdn_col;
    /* to analize DBLCLK on xterm */
+#if defined( OS_UNIX_COMPATIBLE )
    struct timeval BL_time;
    struct timeval BR_time;
    struct timeval BM_time;
+#else
+   double BL_time;
+   double BR_time;
+   double BM_time;
+#endif
 } mouseEvent;
 
 typedef struct _keyTab {
@@ -509,7 +525,7 @@ static const ClipKeyCode extdKeyTab[NO_EXTDKEYS] = {
 
 static int getClipKey( int nKey )
 {
-   int nRet = 0, nFlag = 0, n;
+   int nRet = 0, nFlag, n;
 
    if( IS_CLIPKEY( nKey ) )
       nRet = GET_CLIPKEY( nKey );
@@ -731,18 +747,23 @@ static int add_efds( int fd, int mode,
                      int ( *eventFunc ) ( int, int, void * ), void *data )
 {
    evtFD *pefd = NULL;
-   int i, fl;
+   int i;
 
    if( eventFunc == NULL && mode != O_RDONLY )
       return -1;
 
-   if( ( fl = fcntl( fd, F_GETFL, 0 ) ) == -1 )
-      return -1;
+#if defined( OS_UNIX_COMPATIBLE )
+   {
+      int fl;
+      if( ( fl = fcntl( fd, F_GETFL, 0 ) ) == -1 )
+         return -1;
 
-   fl &= O_ACCMODE;
-   if( ( fl == O_RDONLY && mode == O_WRONLY ) ||
-        ( fl == O_WRONLY && mode == O_RDONLY ) )
-      return -1;
+      fl &= O_ACCMODE;
+      if( ( fl == O_RDONLY && mode == O_WRONLY ) ||
+           ( fl == O_WRONLY && mode == O_RDONLY ) )
+         return -1;
+   }
+#endif
 
    for( i = 0; i < s_termState.efds_no && !pefd; i++ )
       if( s_termState.event_fds[i]->fd == fd )
@@ -908,7 +929,11 @@ static void chk_mevtdblck( mouseEvent * mEvt )
 
    if( newbuttons != 0 )
    {
+#if defined( OS_UNIX_COMPATIBLE )
       struct timeval tv;
+#else
+      double tv;
+#endif
 
       TIMEVAL_GET( tv );
       if( newbuttons & M_BUTTON_LEFT )
@@ -1175,8 +1200,13 @@ static int get_inch( int milisec )
                   {
                      unsigned char buf[STDIN_BUFLEN];
 
+#if defined( OS_UNIX_COMPATIBLE )
                      n = read( s_termState.event_fds[i]->fd, buf,
                                STDIN_BUFLEN - s_termState.stdin_inbuf );
+#else
+                     n = hb_fsRead( s_termState.event_fds[i]->fd, buf,
+                                    STDIN_BUFLEN - s_termState.stdin_inbuf );
+#endif
                      if( n == 0 )
                         s_termState.event_fds[i]->status = EVTFDSTAT_STOP;
                      else
@@ -2064,7 +2094,7 @@ static void hb_gt_trm_SetDispTrans( char * src, char * dst, int box )
 
    if( src && dst )
    {
-      for( i = 0; i < 256 && ( c = ( unsigned char ) src[i] ); i++ )
+      for( i = 0; i < 256 && ( c = ( unsigned char ) src[i] ) != 0; i++ )
       {
          d = ( unsigned char ) dst[i];
          s_termState.chrattr[c] = d | HB_GTTRM_ATTR_STD;

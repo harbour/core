@@ -597,7 +597,6 @@ extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns
 /* xHarbour compatible function */
 #define hb_retcAdopt( szText )               hb_retc_buffer( (szText) )
 #define hb_retclenAdopt( szText, ulLen )     hb_retclen_buffer( (szText), (ulLen) )
-#define hb_retclenAdoptRaw( szText, ulLen )  hb_retclen_buffer( (szText), (ulLen) )
 #define hb_retcStatic( szText )              hb_retc_const( (szText) )
 
 #ifdef HB_API_MACROS

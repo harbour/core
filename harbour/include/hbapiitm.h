@@ -195,6 +195,7 @@ extern HB_EXPORT void       hb_itemSwap     ( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 
 /* xHarbour compatible function */
 #define hb_itemForwardValue( dst, src )   hb_itemMove( (dst), (src) )
+#define hb_itemPutCStatic( itm, str )     hb_itemPutCConst( (itm), (str) )
 
 HB_EXTERN_END
 

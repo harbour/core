@@ -8,6 +8,30 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-30 18:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompat.ch
+    + added #xtranslate ISPOINTER( <xValue> )
+    * simplified bit operator translations
+
+  * harbour/include/hbapi.h
+    + added #define hb_itemPutCStatic(...) hb_itemPutCConst(...)
+
+  * harbour/include/hbapiitm.h
+    - removed #define hb_retclenAdoptRaw(...) hb_retclen_buffer(...)
+      it's not _exactly_ the same and in some cases it cannot be
+      replaced so users should know what exactly they are doing
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    + added some #ifdef OS_UNIX_COMPATIBLE for future non *nix ports
+
+  * harbour/source/rdd/dbf1.c
+    ! added RT error when someone tires to create DBF with more then
+      2046 fields - without it corrupted files were created or GPF
+      appeared
+
+  * harbour/contrib/ole2/w32ole.c
+    * changed hb_retclenAdoptRaw() to hb_retclen_buffer()
+
 2007-07-27 01:52 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gcc.sh
   * harbour/makefile.gc
