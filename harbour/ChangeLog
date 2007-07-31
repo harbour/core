@@ -8,6 +8,31 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-31 21:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_rpm.sh
+    * removed not longer necessary flex and bison from dependences list
+
+  + harbour/debian
+  + harbour/debian/control
+  + harbour/debian/harbour.cfg
+  + harbour/debian/harbour.1
+  + harbour/debian/dirs
+  + harbour/debian/rules.cf
+  + harbour/debian/compat
+  + harbour/debian/hbmake.1
+  + harbour/debian/changelog
+  + harbour/debian/copyright
+  + harbour/debian/hbtest.1
+  + harbour/debian/hbpp.1
+  + harbour/debian/hbrun.1
+  + harbour/debian/hbdoc.1
+  + harbour/make_deb.sh
+    + added rules to generate DEB packages - rules by Luis Mayoral
+      taken from Debian distribution updated for current code but
+      not tested at all. Please make some test running make_deb.sh
+      in Debian and Ubuntu distribution and give me an information
+      about results.
+
 2007-07-31 21:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
     * disable CTOD("") optimization when -kc switch is used

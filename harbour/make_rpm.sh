@@ -53,7 +53,7 @@ get_rpmmacro()
     echo -n "${R}"
 }
 
-NEED_RPM="make gcc binutils bison flex bash ncurses ncurses-devel"
+NEED_RPM="make gcc binutils bash ncurses ncurses-devel"
 
 FORCE=""
 BUGGY_RPM=""
