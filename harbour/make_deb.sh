@@ -10,15 +10,15 @@
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
-test_reqrpm()
+test_reqpkg()
 {
     dpkg -s "$1" &> /dev/null
 }
 
 TOINST_LST=""
-for i in gcc binutils bash debmake libncurses-dev libslang2-dev libx11-dev unixodbc-dev
+for i in gcc binutils bash debmake libncurses5-dev libslang2-dev libgpmg1-dev libx11-dev unixodbc-dev
 do
-    test_reqrpm "$i" || TOINST_LST="${TOINST_LST} $i"
+    test_reqpkg "$i" || TOINST_LST="${TOINST_LST} $i"
 done
 
 if [ -z "${TOINST_LST}" ] || [ "$1" = "--force" ]
@@ -42,7 +42,11 @@ then
     fi
 else
     echo "If you want to build Harbour compiler"
-    echo "you have to install the folowing RPM files:"
+    echo "you have to install the folowing packages:"
+    echo ""
     echo "${TOINST_LST}"
+    echo ""
+    echo "you can do that executing:"
+    echo "sudo apt-get install ${TOINST_LST}"
     exit 1
 fi
