@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-31 12:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/tip/utils.c
+  * harbour/contrib/tip/encmthd.c
+    * changed hb_retclenAdoptRaw() to hb_retclen_buffer()
+
 2007-07-30 18:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/tests/foreach2.prg
     * added example for FOR EACH overloading

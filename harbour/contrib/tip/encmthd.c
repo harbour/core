@@ -497,9 +497,7 @@ HB_FUNC( TIPENCODERURL_ENCODE )
       nPos++;
    }
 
-   cRet[ nPosRet ] = 0;
-   /* this function also adds a zero */
-   hb_retclenAdoptRaw( cRet, nPosRet );
+   hb_retclen_buffer( cRet, nPosRet );
 }
 
 HB_FUNC( TIPENCODERURL_DECODE )

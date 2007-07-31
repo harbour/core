@@ -139,7 +139,7 @@ HB_FUNC( TIP_TIMESTAMP )
    {
       szRet = (char *) hb_xrealloc( szRet, nLen + 1 );
    }
-   hb_retclenAdoptRaw( szRet, nLen );
+   hb_retclen_buffer( szRet, nLen );
 
 }
 
@@ -199,7 +199,7 @@ HB_FUNC( TIP_TIMESTAMP )
    {
       szRet = (char *) hb_xrealloc( szRet, nLen + 1 );
    }
-   hb_retclenAdoptRaw( szRet, nLen );
+   hb_retclen_buffer( szRet, nLen );
 }
 
 #endif
