@@ -15,8 +15,6 @@
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
-name="harbour"
-
 if [ -z "$HB_ARCHITECTURE" ]; then
     if [ "$OSTYPE" = "msdosdjgpp" ]; then
         hb_arch="dos"
@@ -111,7 +109,7 @@ fi
 
 case "$HB_INSTALL_PREFIX" in
     /usr|/usr/local|/opt)
-        hb_instsubdir="/$name"
+        hb_instsubdir="/harbour"
         ;;
     *)
         hb_instsubdir=""
@@ -121,7 +119,6 @@ esac
 if [ -z "$HB_BIN_INSTALL" ]; then export HB_BIN_INSTALL=$HB_INSTALL_PREFIX/bin; fi
 if [ -z "$HB_LIB_INSTALL" ]; then export HB_LIB_INSTALL=$HB_INSTALL_PREFIX/lib$hb_instsubdir; fi
 if [ -z "$HB_INC_INSTALL" ]; then export HB_INC_INSTALL=$HB_INSTALL_PREFIX/include$hb_instsubdir; fi
-
 
 
 if [ -z "$HB_ARCHITECTURE" ]; then
@@ -201,8 +198,7 @@ else
    # ---------------------------------------------------------------
    # Start the GNU make system
 
-   if [ "$HB_ARCHITECTURE" = "bsd" ] || [ "$HB_ARCHITECTURE" = "hpux" ] || \
-      uname|grep "BSD$" &> /dev/null
+   if [ "$HB_ARCHITECTURE" = "bsd" ] || [ "$HB_ARCHITECTURE" = "hpux" ]
    then
       gmake $*
    else

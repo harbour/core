@@ -17,10 +17,20 @@ if [ -z "$HB_ARCHITECTURE" ]; then
     export HB_ARCHITECTURE="$hb_arch"
 fi
 
+if [ -z "$CC_DIRNAME" ]; then
+    case "$HB_ARCHITECTURE" in
+        w32) CC_DIRNAME="mingw" ;;
+        dos) CC_DIRNAME="djgpp" ;;
+        *)   CC_DIRNAME="gcc" ;;
+    esac
+    export CC_DIRNAME
+fi
+
 if [ -z "$HB_GT_LIB" ]; then
     case "$HB_ARCHITECTURE" in
         w32) HB_GT_LIB="gtwin" ;;
         dos) HB_GT_LIB="gtdos" ;;
+        os2) HB_GT_LIB="gtos2" ;;
         *)   HB_GT_LIB="gtstd" ;;
     esac
     export HB_GT_LIB
@@ -34,15 +44,6 @@ if [ -z "$HB_GPM_MOUSE" ]; then
         HB_GPM_MOUSE=no
     fi
     export HB_GPM_MOUSE
-fi
-
-if [ -z "$CC_DIRNAME" ]; then
-    case "$HB_ARCHITECTURE" in
-        w32) CC_DIRNAME="mingw" ;;
-        dos) CC_DIRNAME="djgpp" ;;
-        *)   CC_DIRNAME="gcc" ;;
-    esac
-    export CC_DIRNAME
 fi
 
 # default lib dir name
@@ -135,10 +136,12 @@ do
     fi
 done
 
+[ "${HB_WITHOUT_GTSLN}" != "yes" ] || GTSLN=""
 if [ "$HB_COMMERCE" = yes ]; then
    export HB_GPM_MOUSE=no
    GTSLN=""
 fi
+
 if [ "$GTCRS" = "yes" ]; then
     GT_LIST="$GT_LIST CRS"
     OS_LIBS="$OS_LIBS -l${CRSLIB}"

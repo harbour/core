@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-31 23:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gcc.sh
+    * cleanup
+  - harbour/make_drw.sh
+  - harbour/make_bsd.sh
+    - removed not longer necessary files - make_gnu.sh can be used
+      instead with exactly the same effect
+
 2007-07-31 22:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_deb.sh
     * cleanup
