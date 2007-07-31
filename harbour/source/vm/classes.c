@@ -278,7 +278,7 @@ static HB_SYMB s_opSymbols[ HB_OO_MAX_OPERATOR + 1 ] = {
    { "__OPLESSEQUAL",         {HB_FS_MESSAGE}, {NULL}, NULL },  /* 12 */
    { "__OPGREATER",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 13 */
    { "__OPGREATEREQUAL",      {HB_FS_MESSAGE}, {NULL}, NULL },  /* 14 */
-   { "__OPADDIGN",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 15 */
+   { "__OPASSIGN",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 15 */
    { "__OPINSTRING",          {HB_FS_MESSAGE}, {NULL}, NULL },  /* 16 */
    { "__OPNOT",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 17 */
    { "__OPAND",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 18 */

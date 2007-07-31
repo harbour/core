@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-07-31 21:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    * disable CTOD("") optimization when -kc switch is used
+
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.y
+    * fixed typo reported by Mindaugas
+
+  * harbour/source/vm/classes.c
+    * fixed typo reported by Lost
+
 2007-07-31 12:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/tip/utils.c
   * harbour/contrib/tip/encmthd.c

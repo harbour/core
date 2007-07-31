@@ -919,8 +919,8 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
       case HB_PP_TOKEN_KEYWORD:
          if( pToken->len >= 4 && pToken->len <= 6 && pToken->pNext &&
              HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_ALIAS &&
-             ( hb_strnicmp( "_FILED", pToken->value, pToken->len ) == 0 ||
-               hb_strnicmp( "FILED", pToken->value, pToken->len ) == 0 ) )
+             ( hb_strnicmp( "_FIELD", pToken->value, pToken->len ) == 0 ||
+               hb_strnicmp( "FIELD", pToken->value, pToken->len ) == 0 ) )
          {
             return FIELD;
          }
