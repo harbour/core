@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-01 14:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapifs.h
+  * harbour/source/rtl/file.c
+    + added xHarbour compatible C function hb_fsIsDirectory()
+
+  * harbour/contrib/libct/color.c
+  * harbour/contrib/libct/screen1.c
+    + added UNTEXTWIN(), CHARWIN(), COLORWIN(), COLORREPL()
+    * changed CLEARWIN(), INVERTWIN() to use common helper functions
+
 2007-07-31 23:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gcc.sh
     * cleanup

@@ -4,7 +4,9 @@
 
 /*
  * Harbour Project source code:
- *   CT3 video function: - INVERTATTR(), INVERTWIN(), COLORTON()
+ * CT3 video function:
+ *    INVERTATTR(), COLORTON(), NTOCOLOR(),
+ *    ENHANCED(), STANDARD(), UNSELECTED()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -75,7 +77,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is invertcl.c, library is libct.
+ *      Source is color.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */
@@ -93,67 +95,6 @@ HB_FUNC( INVERTATTR )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      INVERTWIN()
- *  $CATEGORY$
- *      CT3 video functions
- *  $ONELINER$
- *     
- *  $SYNTAX$
- *     
- *  $ARGUMENTS$
- *  $RETURNS$
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      INVERTWIN() is compatible with CT3's INVERTWIN().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Source is invertcl.c, library is libct.
- *  $SEEALSO$
- *  $END$
- */
-
-HB_FUNC( INVERTWIN )
-{
-   int iTop, iLeft, iBottom, iRight;
-   SHORT sTop, sLeft;
-
-   hb_gtGetPos( &sTop, &sLeft );
-
-   iTop    = ISNUM( 1 ) ? hb_parni( 1 ) : sTop;
-   iLeft   = ISNUM( 2 ) ? hb_parni( 2 ) : sLeft;
-   iBottom = ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow();
-   iRight  = ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol();
-
-   hb_gtBeginWrite();
-   while( iTop <= iBottom )
-   {
-      int iCol = iLeft;
-      while( iCol <= iRight )
-      {
-         BYTE bColor, bAttr;
-         USHORT usChar;
-
-         hb_gtGetChar( iTop, iCol, &bColor, &bAttr, &usChar );
-         bColor = ( bColor & 0x88 ) |
-                  ( ( bColor & 0x07 ) << 4 ) |
-                  ( ( bColor >> 4 ) & 0x07 );
-         hb_gtPutChar( iTop, iCol, bColor, bAttr, usChar );
-         ++iCol;
-      }
-      ++iTop;
-   }
-   hb_gtEndWrite();
-}
-
-
-/*  $DOC$
- *  $FUNCNAME$
  *      COLORTON()
  *  $CATEGORY$
  *      CT3 video functions
@@ -185,7 +126,7 @@ HB_FUNC( INVERTWIN )
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.prg, library is libct.
+ *      Source is color.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */
@@ -201,27 +142,29 @@ HB_FUNC( COLORTON )
 
 /*  $DOC$
  *  $FUNCNAME$
- *      COLORTON()
+ *      NTOCOLOR()
  *  $CATEGORY$
- *      CT3 video functions
+ *      HBCT video functions
  *  $ONELINER$
  *  $SYNTAX$
- *      COLORTON ( <cAttr> ) -> <nAttr>
+ *      NTOCOLOR ( <nAttr>, [<lColorCode>] ) -> <cAttr>
  *  $ARGUMENTS$
- *      <cAttr>    Designates the alphanumeric color attribute that is
- *                 converted in NN/NN or CC/CC form.
+ *      <nAttr>    Designates the value for the combined numeric color
+ *                 attributes.
+ *
+ *   <lColorCode>  If designated as .F. or if the parameter is omitted,
+ *                 NTOCOLOR() returns a string with a numeric color code.
+ *                 When designated as .T., NTOCOLOR() returns a string with 
+ *                 the CA-Clipper alpha color coding.
  *
  *  $RETURNS$
- *      COLORTON() returns a number that corresponds to the combined numeric
- *      color attribute.
+ *      NTOCOLOR() returns the designated color attribute in the NN/NN 
+ *      or CC/CC form.
  *
  *  $DESCRIPTION$
- *      COLOR TO (N)umeric
- *      The function changes an alphanumeric color attribute from NN/NN or 
- *      CC/CC into a combined numeric attribute.  These combined attribute 
- *      values are useful with the CA-Clipper Tools functions STRSCREEN(), 
- *      SCREENMIX(), SCREENATTR(), and the CA-Clipper commands 
- *      SAVE/RESTORE SCREEN.
+ *      NTOCOLOR() converts a color attribute returned from another function 
+ *      in numeric form, into the alphanumeric data format.  Use this 
+ *      attribute in conjunction with the CA-Clipper SET COLOR TO command.
  *
  *      TODO: add documentation
  *  $EXAMPLES$
@@ -232,7 +175,7 @@ HB_FUNC( COLORTON )
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.prg, library is libct.
+ *      Source is color.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */
@@ -279,7 +222,7 @@ HB_FUNC( NTOCOLOR )
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.prg, library is libct.
+ *      Source is color.c, library is libct.
  *  $SEEALSO$
  *      STANDARD(),UNSELECTED()
  *  $END$
@@ -314,7 +257,7 @@ HB_FUNC( ENHANCED )
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.prg, library is libct.
+ *      Source is color.c, library is libct.
  *  $SEEALSO$
  *      ENHANCED(),UNSELECTED()
  *  $END$
@@ -349,7 +292,7 @@ HB_FUNC( STANDARD )
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.prg, library is libct.
+ *      Source is color.c, library is libct.
  *  $SEEALSO$
  *      ENHANCED(),STANDARD()
  *  $END$

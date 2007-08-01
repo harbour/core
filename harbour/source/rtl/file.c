@@ -59,7 +59,7 @@ HB_EXPORT BOOL hb_fsFile( BYTE * pFilename )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFile(%s)", ( char * ) pFilename));
 
-   pFilename = hb_fileNameConv( hb_strdup( ( char * ) pFilename) );
+   pFilename = hb_fileNameConv( hb_strdup( ( char * ) pFilename ) );
 
    if( ( ffind = hb_fsFindFirst( ( char * ) pFilename, HB_FA_ALL ) ) != NULL )
    {
@@ -72,3 +72,29 @@ HB_EXPORT BOOL hb_fsFile( BYTE * pFilename )
       return FALSE;
 }
 
+HB_EXPORT BOOL hb_fsIsDirectory( BYTE * pFilename )
+{
+   BOOL bResult = FALSE;
+   PHB_FFIND ffind;
+   int iLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDirectory(%s)", ( char * ) pFilename));
+
+   pFilename = hb_fileNameConv( hb_strdup( ( char * ) pFilename ) );
+   iLen = strlen( ( char * ) pFilename );
+   while( iLen && strchr( OS_PATH_DELIMITER_LIST, pFilename[ iLen - 1 ] ) )
+      pFilename[ --iLen ] = '\0';
+
+   if( iLen && iLen <= _POSIX_PATH_MAX )
+   {
+      if( ( ffind = hb_fsFindFirst( ( char * ) pFilename, HB_FA_DIRECTORY ) ) != NULL )
+      {
+         if( ( ffind->attr & HB_FA_DIRECTORY ) == HB_FA_DIRECTORY )
+            bResult = TRUE;
+         hb_fsFindClose( ffind );
+      }
+   }
+
+   hb_xfree( pFilename );
+   return bResult;
+}
