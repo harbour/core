@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-02 12:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapifs.h
+  * harbour/source/rtl/file.c
+    + added xHarbour compatible C function hb_fsIsDirectory()
+
+  * harbour/contrib/libct/color.c
+  * harbour/contrib/libct/screen1.c
+    + added UNTEXTWIN(), CHARWIN(), COLORWIN(), COLORREPL()
+    * changed CLEARWIN(), INVERTWIN() to use common helper functions
+
+  + harbour/contrib/libct/screen2.c
+    + added SAYDOWN(), SAYSPREAD(), SAYMOVEIN()
+
+  + harbour/contrib/libct/cursor.c
+    + added SAVECURSOR(), RESTCURSOR()
+
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/makefile.vc
+    * updated for new files
+
+  * harbour/contrib/libct/ctmisc.prg
+    ! fixed CSETCURS() when called with non logical parameter
+
+  * harbour/source/vm/classes.c
+    + added basic version for executing all known inherited destructors
+      final version in the future after some testes
+
+  * harbour/source/codepage/cpsv850.c
+  * harbour/source/codepage/cpsk852.c
+  * harbour/source/codepage/ucmik.c
+  * harbour/source/codepage/cpbgmik.c
+  * harbour/source/codepage/cpsvwin.c
+  * harbour/source/codepage/cpskiso.c
+  * harbour/source/codepage/cpskwin.c
+  * harbour/source/codepage/cpsvclip.c
+    * removed hardcoded CHR(13)+CHR(10) EOLs
+
 2007-08-01 14:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapifs.h
   * harbour/source/rtl/file.c

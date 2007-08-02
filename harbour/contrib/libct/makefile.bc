@@ -119,6 +119,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctpad.obj \
    $(OBJ_DIR)\ctwfunc.obj \
    $(OBJ_DIR)\ctwin.obj \
+   $(OBJ_DIR)\cursor.obj \
    $(OBJ_DIR)\datetime.obj \
    $(OBJ_DIR)\dattime2.obj \
    $(OBJ_DIR)\dattime3.obj \
@@ -149,6 +150,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\remove.obj \
    $(OBJ_DIR)\replace.obj \
    $(OBJ_DIR)\screen1.obj \
+   $(OBJ_DIR)\screen2.obj \
    $(OBJ_DIR)\setlast.obj \
    $(OBJ_DIR)\strdiff.obj \
    $(OBJ_DIR)\strswap.obj \
@@ -294,6 +296,10 @@ $(OBJ_DIR)\ctwin.obj : $(TOOLS_DIR)\ctwin.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\cursor.obj : $(TOOLS_DIR)\cursor.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\ctpad.obj : $(TOOLS_DIR)\ctpad.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -415,6 +421,10 @@ $(OBJ_DIR)\replace.obj : $(TOOLS_DIR)\replace.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\screen1.obj : $(TOOLS_DIR)\screen1.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\screen2.obj : $(TOOLS_DIR)\screen2.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

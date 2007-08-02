@@ -138,6 +138,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctcrypt.obj \
    $(OBJ_DIR)\ctpad.obj \
    $(OBJ_DIR)\cttime.obj \
+   $(OBJ_DIR)\ctwin.obj \
+   $(OBJ_DIR)\cursor.obj \
    $(OBJ_DIR)\datetime.obj \
    $(OBJ_DIR)\dattime2.obj \
    $(OBJ_DIR)\dattime3.obj \
@@ -167,6 +169,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\remove.obj \
    $(OBJ_DIR)\replace.obj \
    $(OBJ_DIR)\screen1.obj \
+   $(OBJ_DIR)\screen2.obj \
    $(OBJ_DIR)\setlast.obj \
    $(OBJ_DIR)\strdiff.obj \
    $(OBJ_DIR)\strswap.obj \
@@ -217,8 +220,10 @@ CLEAN:
    -@if exist $(OBJ_DIR)\ctstr.* del $(OBJ_DIR)\ctstr.*
    -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctchksum.*
    -@if exist $(OBJ_DIR)\ctcrypt.* del $(OBJ_DIR)\ctcrypt.*
-   -@if exist $(OBJ_DIR)\cttime.* del $(OBJ_DIR)\cttime.*
    -@if exist $(OBJ_DIR)\ctpad.* del $(OBJ_DIR)\ctpad.*
+   -@if exist $(OBJ_DIR)\cttime.* del $(OBJ_DIR)\cttime.*
+   -@if exist $(OBJ_DIR)\ctwin.* del $(OBJ_DIR)\ctwin.*
+   -@if exist $(OBJ_DIR)\cursor.* del $(OBJ_DIR)\cursor.*
    -@if exist $(OBJ_DIR)\datetime.* del $(OBJ_DIR)\datetime.*
    -@if exist $(OBJ_DIR)\dattime2.* del $(OBJ_DIR)\dattime2.*
    -@if exist $(OBJ_DIR)\dattime3.* del $(OBJ_DIR)\dattime3.*
@@ -247,6 +252,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\replace.* del $(OBJ_DIR)\replace.*
    -@if exist $(OBJ_DIR)\strdiff.* del $(OBJ_DIR)\strdiff.*
    -@if exist $(OBJ_DIR)\screen1.* del $(OBJ_DIR)\screen1.*
+   -@if exist $(OBJ_DIR)\screen2.* del $(OBJ_DIR)\screen2.*
    -@if exist $(OBJ_DIR)\setlast.* del $(OBJ_DIR)\setlast.*
    -@if exist $(OBJ_DIR)\strswap.* del $(OBJ_DIR)\strswap.*
    -@if exist $(OBJ_DIR)\tab.* del $(OBJ_DIR)\tab.*

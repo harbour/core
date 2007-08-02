@@ -4,9 +4,12 @@
 
 /*
  * Harbour Project source code:
- * Misc CA-Tools functions
+ *   CT3 video functions:
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * SAVECURSOR(), RESTCURSOR()
+ *
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,63 +53,33 @@
  *
  */
 
-#include "color.ch"
-#include "common.ch"
-#include "setcurs.ch"
+#include "hbapigt.h"
 
-MEMVAR GetList
+HB_FUNC( SAVECURSOR )
+{
+   SHORT sRow, sCol;
+   USHORT usCursor;
 
-FUNCTION CENTER( c, n, p, lMode )
-   LOCAL cRet
-   DEFAULT n TO MaxCol() + 1 - Col()*2
-   DEFAULT c TO ""
-   DEFAULT lMode TO .F.
-   cRet := PadC( AllTrim( c ), n, p )
-   RETURN if(lMode, cRet, RTrim( cRet ) )
+   hb_gtGetPos( &sRow, &sCol );
+   hb_gtGetCursor( &usCursor );
 
-FUNCTION CSETCURS( l )
+#ifdef HB_C52_STRICT 
+   usCursor = ( usCursor != 0 );
+#endif
+   hb_retnl( ( long ) sCol | ( sRow << 8 ) | ( usCursor << 16 ) );
+}
 
-   IF ! ISLOGICAL( l )
-      RETURN SetCursor() != SC_NONE
-   ENDIF
 
-   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
+HB_FUNC( RESTCURSOR )
+{
+   long lCursor = hb_parnl( 1 );
 
-FUNCTION CSETKEY( n )
-   RETURN SetKey( n )
+   hb_gtSetPos( ( lCursor >> 8 ) & 0xff, lCursor & 0xff );
+#ifdef HB_C52_STRICT 
+   hb_gtSetCursor( ( lCursor >> 16 ) & 0x01 );
+#else
+   hb_gtSetCursor( ( lCursor >> 16 ) & 0xff );
+#endif
 
-FUNCTION CSETCENT( nCentury )
-   if nCentury == NIL
-      RETURN __SETCENTURY()
-   else
-      RETURN __SETCENTURY( nCentury )
-   endif
-   RETURN NIL
-
-FUNCTION LTOC( l )
-   RETURN iif( l, "T", "F" )
-
-FUNCTION RESTGETS( aGetList )
-
-   GetList := aGetList
-
-   RETURN .T.
-
-FUNCTION SAVEGETS()
-   LOCAL aGetList := GetList
-
-   GetList := {}
-
-   RETURN aGetList
-
-FUNCTION DOSPARAM
-   LOCAL cRet := ""
-   LOCAL nCount := HB_ARGC(), i
-
-   FOR i := 1 TO nCount
-      cRet += if(i==1, "", " ") + HB_ARGV( i )
-   NEXT
-   RETURN cRet
-
-FUNCTION EXENAME()
-   RETURN HB_ARGV( 0 )
+   hb_retc( NULL );
+}

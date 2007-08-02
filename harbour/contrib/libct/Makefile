@@ -36,6 +36,7 @@ C_SOURCES = \
 	ctstrfil.c \
 	ctwfunc.c \
 	ctwin.c \
+	cursor.c \
 	datetime.c \
 	dattime2.c \
 	dattime3.c \
@@ -66,6 +67,7 @@ C_SOURCES = \
 	remove.c \
 	replace.c \
 	screen1.c \
+	screen2.c \
 	setlast.c \
 	strdiff.c \
 	strswap.c \

@@ -1756,6 +1756,51 @@ BOOL hb_clsHasDestructor( USHORT uiClass )
 }
 
 /*
+ * Call all known supper destructors
+ */
+static void hb_objSupperDestructorCall( PHB_ITEM pObject, PCLASS pClass )
+{
+   PMETHOD pMethod = pClass->pMethods;
+   ULONG   ulLimit = hb_clsMthNum( pClass );
+   BYTE * pbClasses;
+   USHORT uiClass;
+
+   pbClasses = ( BYTE * ) hb_xgrab( s_uiClasses + 1 );
+   memset( pbClasses, 0, s_uiClasses + 1 );
+
+   do
+   {
+      if( pMethod->pMessage )
+      {
+         if( pMethod->pFuncSym == &s___msgSuper )
+         {
+            PCLASS pSupperClass = &s_pClasses[ pMethod->uiSprClass ];
+            if( pSupperClass->fHasDestructor && pSupperClass != pClass )
+               pbClasses[ pMethod->uiSprClass ] |= 1;
+         }
+         else if( pMethod->pMessage == s___msgDestructor.pDynSym )
+            pbClasses[ pMethod->uiSprClass ] |= 2;
+      }
+      ++pMethod;
+   }
+   while( --ulLimit );
+
+   for( uiClass = s_uiClasses; uiClass; --uiClass )
+   {
+      if( pbClasses[ uiClass ] == 1 )
+      {
+         hb_vmPushSymbol( &s___msgDestructor );
+         hb_clsMakeSuperObject( hb_stackAllocItem(), pObject, uiClass );
+         hb_vmSend( 0 );
+         if( hb_vmRequestQuery() != 0 )
+            break;
+      }
+   }
+
+   hb_xfree( pbClasses );
+}
+
+/*
  * Call object destructor
  */
 void hb_objDestructorCall( PHB_ITEM pObject )
@@ -1772,6 +1817,8 @@ void hb_objDestructorCall( PHB_ITEM pObject )
             hb_vmPushSymbol( &s___msgDestructor );
             hb_vmPush( pObject );
             hb_vmSend( 0 );
+            if( hb_vmRequestQuery() == 0 )
+               hb_objSupperDestructorCall( pObject, pClass );
             hb_vmRequestRestore();
          }
       }
