@@ -8,6 +8,77 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-02 17:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/keyset.c
+    * cleaned warning
+
+  * harbour/bldcmncf.sh
+  * harbour/debian/control
+  * harbour/debian/harbour.cfg
+  * harbour/debian/harbour.1
+  * harbour/debian/dirs
+  * harbour/debian/rules.cf
+  * harbour/debian/compat
+  * harbour/debian/hbmake.1
+  * harbour/debian/changelog
+  * harbour/debian/copyright
+  * harbour/debian/hbtest.1
+  * harbour/debian/hbpp.1
+  * harbour/debian/hbrun.1
+  * harbour/debian/hbdoc.1
+  * harbour/make_deb.sh
+  * harbour/tests/foreach2.prg
+  * harbour/tests/gtchars.prg
+  * harbour/tests/gtcolors.prg
+  * harbour/tests/gtkeys.prg
+  * harbour/make_gcc.sh
+  * harbour/doc/howtosvn.txt
+  * harbour/makefile.gc
+  * harbour/contrib/tip/thtml.prg
+  * harbour/contrib/tip/thtml.ch
+  * harbour/contrib/libct/screen2.c
+  * harbour/contrib/libct/dbftools.c
+  * harbour/contrib/libct/ctdisk.ch
+  * harbour/contrib/libct/maxline.c
+  * harbour/contrib/libct/video.c
+  * harbour/contrib/libct/dattime3.c
+  * harbour/contrib/libct/lton.c
+  * harbour/contrib/libct/cursor.c
+  * harbour/contrib/libct/misc2.c
+  * harbour/contrib/libct/color.c
+  * harbour/contrib/libct/cttime.prg
+  * harbour/contrib/libct/ctvideo.ch
+  * harbour/contrib/libct/numcount.c
+  * harbour/contrib/libct/pack.c
+  * harbour/contrib/libct/setlast.c
+  * harbour/contrib/libct/like.c
+  * harbour/contrib/libct/disk.c
+  * harbour/contrib/libct/ctstrfil.c
+  * harbour/contrib/libct/ctstrfil.h
+  * harbour/contrib/libct/numline.c
+  * harbour/contrib/libct/dattime2.c
+  * harbour/contrib/libct/misc3.c
+  * harbour/contrib/libct/ctpad.c
+  * harbour/contrib/libct/datetime.c
+  * harbour/contrib/libct/blank.prg
+  * harbour/source/rtl/gtchrmap.c
+  * harbour/source/rtl/gttrm/Makefile
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/hbhex.c
+  * harbour/source/rtl/hbbit.c
+  * harbour/source/codepage/cpsv850.c
+  * harbour/source/codepage/cpsk852.c
+  * harbour/source/codepage/ucmik.c
+  * harbour/source/codepage/cpbgmik.c
+  * harbour/source/codepage/cpsvwin.c
+  * harbour/source/codepage/cpskiso.c
+  * harbour/source/codepage/cpskwin.c
+  * harbour/source/codepage/cpsvclip.c
+  * harbour/source/codepage/cpskkam.c
+  * harbour/config/w32/owatcom.cf
+    + set svn:eol-style property to native
+    + add some missing svn:keywords Id property
+
 2007-08-02 12:29 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
     - removed mixed ChangeLog entry

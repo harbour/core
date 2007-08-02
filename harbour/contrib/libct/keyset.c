@@ -70,7 +70,7 @@
 #   endif
 
 
-static void SetGet( char cKey )
+static void SetGet( unsigned char cKey )
 {
 #if defined(__WATCOMC__) && defined(__386__)
    hb_retl( *( ( char * ) 0x0417 ) & cKey );

@@ -1,5 +1,5 @@
 /*
- * $Id: numline.c,v 1.1 2004/11/29 22:11:31 ptsarenko Exp $
+ * $Id$
  */
 
 /*
