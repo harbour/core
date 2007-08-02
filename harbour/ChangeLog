@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-02 18:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/contrib/libct/keyset.c
+     ! Fixed gcc 4.1.2 warning in SetGet() (Win32 branch).
+
 2007-08-02 17:57 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbfixdj.h
      ! Added blank copyright header.

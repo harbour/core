@@ -109,7 +109,7 @@ static void SetGet( unsigned char cKey )
 #   define HB_VK_NUMLOCK        0x90
 #   define HB_VK_SCROLL         0x91
 
-static void SetGet( char cKey )
+static void SetGet( unsigned char cKey )
 {
    BYTE kbBuffer[256];
    USHORT uKey = 0;
