@@ -88,7 +88,7 @@ HB_EXPORT double hb_dateSeconds( void )
 
 #if defined(HB_OS_BSD)
    gettimeofday( &tv, &tz );
-   seconds = tv.tv_sec;
+   seconds = tv.tv_sec - tz.tz_minuteswest * 60;
    fraction = tv.tv_usec / 1000U;
 #else
    ftime( &tb );

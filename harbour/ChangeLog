@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-03 04:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/screen2.c
+    + added SCREENSTR(), STRSCREEN()
+
+  * harbour/contrib/libct/keyset.c
+    * casting to fix warnings in DOS builds
+
+  * harbour/source/rtl/seconds.c
+    * update timezone in BSD systems when clock is stored in UTC
+
 2007-08-02 18:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/contrib/libct/keyset.c
      ! Fixed gcc 4.1.2 warning in SetGet() (Win32 branch).

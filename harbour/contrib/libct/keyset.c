@@ -73,11 +73,11 @@
 static void SetGet( unsigned char cKey )
 {
 #if defined(__WATCOMC__) && defined(__386__)
-   hb_retl( *( ( char * ) 0x0417 ) & cKey );
+   hb_retl( *( ( unsigned char * ) 0x0417 ) & cKey );
 #elif defined(__DJGPP__)
    hb_retl( _farpeekb( 0x0040, 0x0017 ) & cKey );
 #else
-   hb_retl( *( ( char FAR * ) MK_FP( 0x0040, 0x0017 ) ) & cKey );
+   hb_retl( *( ( unsigned char FAR * ) MK_FP( 0x0040, 0x0017 ) ) & cKey );
 #endif
 
    if( hb_pcount() >= 1 )
@@ -85,12 +85,12 @@ static void SetGet( unsigned char cKey )
       cKey = hb_parl( 1 ) * cKey;
 
 #if defined(__WATCOMC__) && defined(__386__)
-      *( ( char * ) 0x0417 ) = ( *( ( char * ) 0x0417 ) & ( !cKey ) ) | cKey;
+      *( ( unsigned char * ) 0x0417 ) = ( *( ( unsigned char * ) 0x0417 ) & ( !cKey ) ) | cKey;
 #elif defined(__DJGPP__)
       _farpokeb( 0x0040, 0x0017, ( _farpeekb( 0x0040, 0x0017 ) & ( !cKey ) ) | cKey );
 #else
-      *( ( char FAR * ) MK_FP( 0x0040, 0x0017 ) ) =
-         ( *( ( char FAR * ) MK_FP( 0x0040, 0x0017 ) ) & ( !cKey ) ) | cKey;
+      *( ( unsigned char FAR * ) MK_FP( 0x0040, 0x0017 ) ) =
+         ( *( ( unsigned char FAR * ) MK_FP( 0x0040, 0x0017 ) ) & ( !cKey ) ) | cKey;
 #endif
    }
 }

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *   CT3 video functions:
  *
- * SAYDOWN(), SAYSPREAD(), SAYMOVEIN()
+ * SAYDOWN(), SAYSPREAD(), SAYMOVEIN(), SCREENSTR(), STRSCREEN()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -218,6 +218,94 @@ HB_FUNC( SAYMOVEIN )
          }
          while( --ulLen );
          hb_gtSetPos( sRow, sCol );
+         hb_gtEndWrite();
+      }
+   }
+
+   hb_retc( NULL );
+}
+
+HB_FUNC( SCREENSTR )
+{
+   SHORT sRow, sCol, sMaxRow, sMaxCol, sC;
+   char * pBuffer, * szText;
+   ULONG ulSize, ulCount = ULONG_MAX;
+
+   hb_gtGetPos( &sRow, &sCol );
+   if( ISNUM( 1 ) )
+      sRow = ( SHORT ) hb_parni( 1 );
+   if( ISNUM( 2 ) )
+      sCol = ( SHORT ) hb_parni( 2 );
+   if( ISNUM( 3 ) )
+      ulCount = hb_parnl( 3 );
+   sMaxRow = ( SHORT ) hb_gtMaxRow();
+   sMaxCol = ( SHORT ) hb_gtMaxCol();
+
+   if( sRow >= 0 && sRow <= sMaxRow && sCol >= 0 && sCol <= sMaxCol && ulCount )
+   {
+      ulSize = ( ULONG ) ( sMaxRow - sRow + 1 ) * ( sMaxCol - sCol + 1 );
+      if( ulSize > ulCount )
+         ulSize = ulCount;
+      ulCount = ulSize;
+      ulSize <<= 1;
+      szText = pBuffer = ( char * ) hb_xgrab( ulSize + 1 );
+      do
+      {
+         sC = sCol;
+         do
+         {
+            BYTE bColor, bAttr;
+            USHORT usChar;
+            hb_gtGetChar( sRow, sC, &bColor, &bAttr, &usChar );
+            *szText++ = ( char ) usChar;
+            *szText++ = ( char ) bColor;
+         }
+         while( ++sC <= sMaxCol && --ulCount );
+      }
+      while( ++sRow <= sMaxRow && ulCount );
+
+      hb_retclen_buffer( pBuffer, ulSize );
+   }
+   else
+      hb_retc( NULL );
+}
+
+HB_FUNC( STRSCREEN )
+{
+   ULONG ulLen = hb_parclen( 1 );
+
+   if( ulLen & 1 )
+      ulLen--;
+
+   if( ulLen )
+   {
+      UCHAR * szText = ( UCHAR * ) hb_parc( 1 );
+      SHORT sRow, sCol, sMaxRow, sMaxCol, sC;
+
+      hb_gtGetPos( &sRow, &sCol );
+      if( ISNUM( 2 ) )
+         sRow = ( SHORT ) hb_parni( 2 );
+      if( ISNUM( 3 ) )
+         sCol = ( SHORT ) hb_parni( 3 );
+      sMaxRow = ( SHORT ) hb_gtMaxRow();
+      sMaxCol = ( SHORT ) hb_gtMaxCol();
+
+      if( sRow >= 0 && sRow <= sMaxRow && sCol >= 0 && sCol <= sMaxCol )
+      {
+         hb_gtBeginWrite();
+         do
+         {
+            sC = sCol;
+            do
+            {
+               USHORT usChar = *szText++;
+               BYTE bColor = *szText++;
+               hb_gtPutChar( sRow, sC, bColor, 0, usChar );
+               ulLen -= 2;
+            }
+            while( ulLen && ++sC <= sMaxCol );
+         }
+         while( ulLen && ++sRow <= sMaxRow );
          hb_gtEndWrite();
       }
    }
