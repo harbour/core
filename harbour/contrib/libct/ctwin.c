@@ -1293,12 +1293,14 @@ static BOOL hb_ctw_gt_PutChar( int iRow, int iCol,
 
    if( iWindow > 0 )
    {
-      int iWndRow, iWndCol;
+      int iWndRow, iWndCol, iWndHeight, iWndWidth;
 
       if( s_iCurrWindow == 0 )
       {
          iWndRow = iRow - s_windows[ iWindow ]->iFirstRow;
          iWndCol = iCol - s_windows[ iWindow ]->iFirstCol;
+         iWndHeight = s_windows[ iWindow ]->iWidth;
+         iWndWidth  = s_windows[ iWindow ]->iWidth;
       }
       else
       {
@@ -1306,10 +1308,14 @@ static BOOL hb_ctw_gt_PutChar( int iRow, int iCol,
          iWndCol = iCol + s_windows[ iWindow ]->iLeftMargin;
          iRow = iWndRow + s_windows[ iWindow ]->iFirstRow;
          iCol = iWndCol + s_windows[ iWindow ]->iFirstCol;
+         iWndHeight = s_windows[ iWindow ]->iHeight -
+                      s_windows[ iWindow ]->iBottomMargin;
+         iWndWidth  = s_windows[ iWindow ]->iWidth -
+                      s_windows[ iWindow ]->iRightMargin;
       }
       if( iWndCol >= 0 && iWndRow >= 0 &&
-          iWndRow < s_windows[ iWindow ]->iHeight &&
-          iWndCol < s_windows[ iWindow ]->iWidth )
+          iWndRow < iWndHeight &&
+          iWndCol < iWndWidth )
       {
          long lIndex = ( long ) iWndRow * s_windows[ iWindow ]->iWidth + iWndCol;
 

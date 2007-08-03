@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-03 13:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/ctwin.c
+    * added protection against overwriting right and bottom WBOX border
+      directly inside GTCTW so now other screen functions does not have
+      to check maximum window coordinates. Please remeber that CTWIN from
+      CT3 has a bug which allows to damage top and left border which I
+      partialy replicated because peope used it to set window title.
+
 2007-08-03 04:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libct/screen2.c
     + added SCREENSTR(), STRSCREEN()
