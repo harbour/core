@@ -84,6 +84,8 @@ PRG_SOURCES= \
 	ctmisc.prg \
 	cttime.prg \
 	numconv.prg \
+	screen3.prg \
+	showtime.prg \
 
 LIBNAME=ct
 

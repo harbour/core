@@ -184,6 +184,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\numconv.obj \
+   $(OBJ_DIR)\screen3.obj \
+   $(OBJ_DIR)\showtime.obj \
 
 #
 # Our default target

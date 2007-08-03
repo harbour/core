@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-03 22:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/screen1.c
+    * removed unnecessary casting
+
+  + harbour/contrib/libct/screen3.prg
+    + added CLEAREOL(), CLEOL(), CLWIN()
+
+  * harbour/contrib/libct/screen2.c
+  + harbour/contrib/libct/showtime.prg
+    + added SHOWTIME()
+
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/makefile.vc
+    * updated for new files
+
 2007-08-03 13:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libct/ctwin.c
     * added protection against overwriting right and bottom WBOX border

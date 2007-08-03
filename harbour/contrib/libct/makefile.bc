@@ -166,6 +166,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\cttime.obj \
    $(OBJ_DIR)\numconv.obj \
+   $(OBJ_DIR)\screen3.obj \
+   $(OBJ_DIR)\showtime.obj \
 
 #
 # Our default target
@@ -493,5 +495,19 @@ $(OBJ_DIR)\numconv.c : $(TOOLS_DIR)\numconv.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\numconv.obj : $(OBJ_DIR)\numconv.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\screen3.c : $(TOOLS_DIR)\screen3.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\screen3.obj : $(OBJ_DIR)\screen3.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\showtime.c : $(TOOLS_DIR)\showtime.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\showtime.obj : $(OBJ_DIR)\showtime.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,

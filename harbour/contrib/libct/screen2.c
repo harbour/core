@@ -55,6 +55,7 @@
 
 #include "hbapigt.h"
 #include "hbgtcore.h"
+#include "hbdate.h"
 
 HB_FUNC( SAYDOWN )
 {
@@ -311,4 +312,50 @@ HB_FUNC( STRSCREEN )
    }
 
    hb_retc( NULL );
+}
+
+/*
+ * _HB_CTDSPTIME() is helper functions for SHOWTIME()
+ */
+HB_FUNC( _HB_CTDSPTIME )
+{
+   SHORT sRow, sCol;
+   int iColor, iLen, i;
+   char szTime[ 10 ];
+
+   sRow = ( SHORT ) hb_parni( 1 );
+   sCol = ( SHORT ) hb_parni( 2 );
+   if( ISNUM( 4 ) )
+      iColor = hb_parni( 4 );
+   else if( ISCHAR( 4 ) )
+      iColor = hb_gtColorToN( hb_parc( 4 ) );
+   else
+      iColor = hb_gt_GetClearColor();
+
+   hb_dateTimeStr( szTime );
+   iLen = 8;
+
+   if( ISLOG( 3 ) && hb_parl( 3 ) )
+      iLen -= 3;
+
+   if( ISLOG( 5 ) && hb_parl( 5 ) )
+   {
+      int iHour = ( szTime[0] - '0' ) * 10 + ( szTime[1] - '0' );
+
+      if( ISLOG( 6 ) && hb_parl( 6 ) )
+         szTime[iLen++] = iHour >= 12 ? 'p' : 'a';
+      if( iHour > 12 )
+         iHour -= 12;
+      else if( iHour == 0 )
+         iHour = 12;
+      szTime[0] = ( iHour / 10 ) + '0';
+      szTime[1] = ( iHour % 10 ) + '0';
+   }
+
+   if( szTime[0] == '0' )
+      szTime[0] = ' ';
+
+   for( i = 0; i < iLen; ++sCol, ++i )
+      hb_gt_PutScrChar( sRow, sCol, iColor, 0, szTime[i] );
+   hb_gt_Flush();
 }
