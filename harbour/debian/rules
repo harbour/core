@@ -9,7 +9,7 @@
 export _DEFAULT_BIN_DIR=/usr/bin
 export _DEFAULT_INC_DIR=/usr/include/harbour
 export _DEFAULT_LIB_DIR=/usr/lib/harbour
-export INSTDIR=$(CURDIR)/debian/harbour/tmp
+export INSTDIR=$(CURDIR)/debian/harbour
 export HB_BIN_INSTALL=$(INSTDIR)$(_DEFAULT_BIN_DIR)
 export HB_LIB_INSTALL=$(INSTDIR)$(_DEFAULT_LIB_DIR)
 export HB_INC_INSTALL=$(INSTDIR)$(_DEFAULT_INC_DIR)
@@ -52,7 +52,7 @@ install: build
 	dh_installdirs
 
 	bash make_gnu.sh install
-	rm $(HB_BIN_INSTALL)/hbverfix
+	rm -f $(HB_BIN_INSTALL)/hbverfix
 	install -m644 debian/harbour.cfg $(HB_ETC_DIR)/harbour.cfg
 	install -m644 source/rtl/gtcrs/hb-charmap.def $(HB_ETC_DIR)/harbour
 	install -m644 doc/*.txt $(HB_DOC_INSTALL)/harbour
@@ -72,7 +72,7 @@ binary-arch: build install
 	dh_installdocs
 	dh_installexamples
 #	dh_install
-	dh_installman debian/harbour.1 debian/hbdoc.1 debian/hbmake.1 debian/hbpp.1 debian/hbrun.1 debian/hbtest.1 debian/hbverfix.1
+	dh_installman debian/harbour.1 debian/hbdoc.1 debian/hbmake.1 debian/hbpp.1 debian/hbrun.1 debian/hbtest.1
 	dh_link
 	dh_strip
 	dh_compress
