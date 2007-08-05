@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-05 15:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/Makefile
+  + harbour/contrib/libct/keysec.prg
+  + harbour/contrib/libct/keytime.prg
+    + added KEYSEC() and KEYTIME() modified code by Pavel Tsarenko
+      borrowed from xHarbour
+
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/makefile.vc
+    * updated for new files
+
 2007-08-05 11:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libct/screen2.c
     + added CLEARSLOW()

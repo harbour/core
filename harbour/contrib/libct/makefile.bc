@@ -169,6 +169,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\getinput.obj \
    $(OBJ_DIR)\getsecrt.obj \
    $(OBJ_DIR)\keysave.obj \
+   $(OBJ_DIR)\keysec.obj \
+   $(OBJ_DIR)\keytime.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen3.obj \
    $(OBJ_DIR)\showtime.obj \
@@ -520,6 +522,20 @@ $(OBJ_DIR)\keysave.c : $(TOOLS_DIR)\keysave.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\keysave.obj : $(OBJ_DIR)\keysave.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\keysec.c : $(TOOLS_DIR)\keysec.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\keysec.obj : $(OBJ_DIR)\keysec.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\keytime.c : $(TOOLS_DIR)\keytime.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\keytime.obj : $(OBJ_DIR)\keytime.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

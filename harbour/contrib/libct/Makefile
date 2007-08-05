@@ -87,6 +87,8 @@ PRG_SOURCES= \
 	getinput.prg \
 	getsecrt.prg \
 	keysave.prg \
+	keysec.prg \
+	keytime.prg \
 	numconv.prg \
 	screen3.prg \
 	showtime.prg \

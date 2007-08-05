@@ -187,6 +187,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\getinput.obj \
    $(OBJ_DIR)\getsecrt.obj \
    $(OBJ_DIR)\keysave.obj \
+   $(OBJ_DIR)\keysec.obj \
+   $(OBJ_DIR)\keytime.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen3.obj \
    $(OBJ_DIR)\showtime.obj \
@@ -274,6 +276,8 @@ CLEAN:
    -@if exist $(OBJ_DIR)\getinput.* del $(OBJ_DIR)\getinput.*
    -@if exist $(OBJ_DIR)\getsecrt.* del $(OBJ_DIR)\getsecrt.*
    -@if exist $(OBJ_DIR)\keysave.* del $(OBJ_DIR)\keysave.*
+   -@if exist $(OBJ_DIR)\keysec.* del $(OBJ_DIR)\keysec.*
+   -@if exist $(OBJ_DIR)\keytime.* del $(OBJ_DIR)\keytime.*
    -@if exist $(OBJ_DIR)\numconv.* del $(OBJ_DIR)\numconv.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 
