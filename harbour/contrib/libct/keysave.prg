@@ -1,13 +1,12 @@
 /*
  * $Id$
  */
-
 /*
- * Harbour Project source code:
- * Misc CA-Tools functions
+ * xHarbour Project source code:
+ *   CT3 SETKEY Functions
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
- * www - http://www.harbour-project.org
+ * SAVESETKEY(), RESTSETKEY()
+ * Copyright 2004 Philip Chee <philip@aleytys.pc.my>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,50 +49,9 @@
  *
  */
 
-#include "color.ch"
-#include "common.ch"
-#include "setcurs.ch"
+FUNCTION SAVESETKEY()
+RETURN HB_SETKEYSAVE()
 
-MEMVAR GetList
-
-FUNCTION CENTER( c, n, p, lMode )
-   LOCAL cRet
-   DEFAULT n TO MaxCol() + 1 - Col()*2
-   DEFAULT c TO ""
-   DEFAULT lMode TO .F.
-   cRet := PadC( AllTrim( c ), n, p )
-   RETURN if(lMode, cRet, RTrim( cRet ) )
-
-FUNCTION CSETCURS( l )
-
-   IF ! ISLOGICAL( l )
-      RETURN SetCursor() != SC_NONE
-   ENDIF
-
-   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
-
-FUNCTION CSETKEY( n )
-   RETURN SetKey( n )
-
-FUNCTION CSETCENT( nCentury )
-   if nCentury == NIL
-      RETURN __SETCENTURY()
-   else
-      RETURN __SETCENTURY( nCentury )
-   endif
-   RETURN NIL
-
-FUNCTION LTOC( l )
-   RETURN iif( l, "T", "F" )
-
-FUNCTION DOSPARAM
-   LOCAL cRet := ""
-   LOCAL nCount := HB_ARGC(), i
-
-   FOR i := 1 TO nCount
-      cRet += if(i==1, "", " ") + HB_ARGV( i )
-   NEXT
-   RETURN cRet
-
-FUNCTION EXENAME()
-   RETURN HB_ARGV( 0 )
+FUNCTION RESTSETKEY( aSavedTraps )
+   HB_SETKEYSAVE( aSavedTraps )
+RETURN .T.

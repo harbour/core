@@ -83,6 +83,10 @@ PRG_SOURCES= \
 	ct.prg \
 	ctmisc.prg \
 	cttime.prg \
+	getinfo.prg \
+	getinput.prg \
+	getsecrt.prg \
+	keysave.prg \
 	numconv.prg \
 	screen3.prg \
 	showtime.prg \

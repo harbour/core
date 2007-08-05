@@ -1,13 +1,16 @@
 /*
  * $Id$
  */
-
 /*
- * Harbour Project source code:
- * Misc CA-Tools functions
+ * xHarbour Project source code:
+ *   CT3 GET/READ Functions
  *
+ * SAVEGETS(), RESTGETS()
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
+ *
+ * COUNTGETS(), CURRENTGET(), GETFLDROW(), GETFLDCOL(), GETFLDVAR()
+ * Copyright 2004 Philip Chee <philip@aleytys.pc.my>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,50 +53,48 @@
  *
  */
 
-#include "color.ch"
 #include "common.ch"
-#include "setcurs.ch"
 
 MEMVAR GetList
 
-FUNCTION CENTER( c, n, p, lMode )
-   LOCAL cRet
-   DEFAULT n TO MaxCol() + 1 - Col()*2
-   DEFAULT c TO ""
-   DEFAULT lMode TO .F.
-   cRet := PadC( AllTrim( c ), n, p )
-   RETURN if(lMode, cRet, RTrim( cRet ) )
+FUNCTION SAVEGETS()
+   LOCAL aGetList := GetList
+   GetList := {}
+RETURN aGetList
 
-FUNCTION CSETCURS( l )
+FUNCTION RESTGETS( aGetList )
+RETURN ( GetList := aGetList ) <> NIL
 
-   IF ! ISLOGICAL( l )
-      RETURN SetCursor() != SC_NONE
+FUNCTION COUNTGETS()
+RETURN LEN( GetList )
+
+FUNCTION CURRENTGET()
+   LOCAL oActive := GetActive()
+RETURN ASCAN( GetList, {|oGet| oGet == oActive } )
+
+FUNCTION GETFLDROW( nField )
+   LOCAL oGet
+   IF !ISNUMBER( nField )
+      oGet := GetActive()
+   ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
+      oGet := GetList[ nField ]
    ENDIF
+RETURN IIF( oGet != NIL, oGet:Row, -1 )
 
-   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
+FUNCTION GETFLDCOL( nField )
+   LOCAL oGet
+   IF !ISNUMBER( nField )
+      oGet := GetActive()
+   ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
+      oGet := GetList[ nField ]
+   ENDIF
+RETURN IIF( oGet != NIL, oGet:Col, -1 )
 
-FUNCTION CSETKEY( n )
-   RETURN SetKey( n )
-
-FUNCTION CSETCENT( nCentury )
-   if nCentury == NIL
-      RETURN __SETCENTURY()
-   else
-      RETURN __SETCENTURY( nCentury )
-   endif
-   RETURN NIL
-
-FUNCTION LTOC( l )
-   RETURN iif( l, "T", "F" )
-
-FUNCTION DOSPARAM
-   LOCAL cRet := ""
-   LOCAL nCount := HB_ARGC(), i
-
-   FOR i := 1 TO nCount
-      cRet += if(i==1, "", " ") + HB_ARGV( i )
-   NEXT
-   RETURN cRet
-
-FUNCTION EXENAME()
-   RETURN HB_ARGV( 0 )
+FUNCTION GETFLDVAR( nField )
+   LOCAL oGet
+   IF !ISNUMBER( nField )
+      oGet := GetActive()
+   ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
+      oGet := GetList[ nField ]
+   ENDIF
+RETURN IIF( oGet != NIL, oGet:Name, -1 )

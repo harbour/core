@@ -226,6 +226,90 @@ HB_FUNC( SAYMOVEIN )
    hb_retc( NULL );
 }
 
+HB_FUNC( CLEARSLOW )
+{
+   int iMaxRow = hb_gtMaxRow();
+   int iMaxCol = hb_gtMaxCol();
+   int iTop, iLeft, iBottom, iRight;
+   UCHAR ucChar;
+   long lDelay;
+
+   lDelay  = hb_parnl( 1 );
+
+   iTop    = hb_parni( 2 );
+   iLeft   = hb_parni( 3 );
+   iBottom = ISNUM( 4 ) ? hb_parni( 4 ) : iMaxRow;
+   iRight  = ISNUM( 5 ) ? hb_parni( 5 ) : iMaxCol;
+
+   if( ISNUM( 6 ) )
+      ucChar = ( UCHAR ) hb_parni( 6 );
+   else if( ISCHAR( 6 ) )
+      ucChar = ( UCHAR ) hb_parc( 6 )[0];
+   else
+      ucChar = ( UCHAR ) hb_gt_GetClearChar();
+
+   if( iTop >= 0 && iLeft >= 0 && iTop <= iBottom && iLeft <= iRight )
+   {
+      BYTE pbFrame[2], bColor = ( BYTE ) hb_gt_GetColor();
+      double dX, dY, dXX, dYY;
+
+      pbFrame[0] = ucChar;
+      pbFrame[1] = '\0';
+
+      dX = iRight - iLeft + 1;
+      dY = iBottom - iTop + 1;
+      if( dX > dY )
+      {
+         dY /= dX;
+         dX = 1;
+      }
+      else
+      {
+         dX /= dY;
+         dY = 1;
+      }
+      dXX = dYY = 0;
+
+      hb_gtBeginWrite();
+      while( TRUE )
+      {
+         hb_gt_Box( iTop, iLeft, iBottom, iRight, pbFrame, bColor );
+         if( lDelay )
+         {
+            hb_gtEndWrite();
+            hb_idleSleep( ( double ) lDelay / 1000 );
+            hb_gtBeginWrite();
+         }
+
+         if( iTop >= iBottom && iLeft >= iRight )
+            break;
+
+         if( iTop < iBottom )
+         {
+            dYY += dY;
+            if( dYY >= 1 )
+            {
+               iTop++;
+               if( iBottom > iTop )
+                  iBottom--;
+               dYY -= 1;
+            }
+         }
+         if( iLeft < iRight )
+         {
+            dXX += dX;
+            if( dXX >= 1 )
+            {
+               iLeft++;
+               if( iRight > iLeft )
+                  iRight--;
+            }
+         }
+      }
+      hb_gtEndWrite();
+   }
+}
+
 HB_FUNC( SCREENSTR )
 {
    SHORT sRow, sCol, sMaxRow, sMaxCol, sC;

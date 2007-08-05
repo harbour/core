@@ -165,6 +165,10 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\cttime.obj \
+   $(OBJ_DIR)\getinfo.obj \
+   $(OBJ_DIR)\getinput.obj \
+   $(OBJ_DIR)\getsecrt.obj \
+   $(OBJ_DIR)\keysave.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen3.obj \
    $(OBJ_DIR)\showtime.obj \
@@ -488,6 +492,34 @@ $(OBJ_DIR)\cttime.c : $(TOOLS_DIR)\cttime.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\cttime.obj : $(OBJ_DIR)\cttime.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\getinfo.c : $(TOOLS_DIR)\getinfo.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\getinfo.obj : $(OBJ_DIR)\getinfo.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\getinput.c : $(TOOLS_DIR)\getinput.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\getinput.obj : $(OBJ_DIR)\getinput.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\getsecrt.c : $(TOOLS_DIR)\getsecrt.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\getsecrt.obj : $(OBJ_DIR)\getsecrt.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\keysave.c : $(TOOLS_DIR)\keysave.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\keysave.obj : $(OBJ_DIR)\keysave.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

@@ -8,6 +8,37 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-05 11:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/screen2.c
+    + added CLEARSLOW()
+
+  + harbour/contrib/libct/getsecrt.prg
+    + added GETSECRET()
+
+  + harbour/contrib/libct/getinput.prg
+    + added GETINPUT()
+
+  * harbour/contrib/libct/ctmisc.prg
+    * moved SAVEGETS() and RESTGETS() to getinfo.prg file
+
+  + harbour/contrib/libct/getinfo.prg
+    + added COUNTGETS(), CURRENTGET(), GETFLDROW(), GETFLDCOL(), GETFLDVAR()
+      modified code by Philip Chee borrowed from xHarbour
+    + added SAVEGETS() and RESTGETS() from ctmisc.prg
+
+  + harbour/contrib/libct/keysave.prg
+    + SAVESETKEY(), RESTSETKEY() - code by Philip Chee borrowed from
+      xHarbour
+
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/makefile.vc
+    * updated for new files
+
+  * harbour/contrib/libct/screen3.prg
+  * harbour/contrib/libct/showtime.prg
+    * set svn:eol-style=native
+
 2007-08-03 23:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   - harbour/debian/rules.cf
   + harbour/debian/rules

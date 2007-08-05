@@ -4,9 +4,12 @@
 
 /*
  * Harbour Project source code:
- * Misc CA-Tools functions
+ *   CT3 GET function:
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * GETINPUT()
+ *
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,50 +53,38 @@
  *
  */
 
-#include "color.ch"
 #include "common.ch"
-#include "setcurs.ch"
 
-MEMVAR GetList
+FUNCTION GETINPUT( xVar, nRow, nCol, lSay, xPrompt )
+   LOCAL nCursorRow := ROW()
+   LOCAL nCursorCol := COL()
+   LOCAL GetList := {}
 
-FUNCTION CENTER( c, n, p, lMode )
-   LOCAL cRet
-   DEFAULT n TO MaxCol() + 1 - Col()*2
-   DEFAULT c TO ""
-   DEFAULT lMode TO .F.
-   cRet := PadC( AllTrim( c ), n, p )
-   RETURN if(lMode, cRet, RTrim( cRet ) )
-
-FUNCTION CSETCURS( l )
-
-   IF ! ISLOGICAL( l )
-      RETURN SetCursor() != SC_NONE
+   IF !ISNUMBER( nRow )
+      nRow := ROW()
+   ENDIF
+   IF !ISNUMBER( nCol )
+      nCol := COL()
+   ENDIF
+   IF !ISLOGICAL( lSay )
+      lSay := .F.
    ENDIF
 
-   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
+   SETPOS( nRow, nCol )
+   IF xPrompt <> Nil
+      DEVOUT( xPrompt )
+      nRow := ROW()
+      nCol := COL() + 1
+   ENDIF
 
-FUNCTION CSETKEY( n )
-   RETURN SetKey( n )
+   @ nRow, nCol GET xVar
+   READ
 
-FUNCTION CSETCENT( nCentury )
-   if nCentury == NIL
-      RETURN __SETCENTURY()
-   else
-      RETURN __SETCENTURY( nCentury )
-   endif
-   RETURN NIL
+   IF lSay
+      SETPOS( nRow, nCol )
+      DEVOUT( xVar )
+   ENDIF
 
-FUNCTION LTOC( l )
-   RETURN iif( l, "T", "F" )
+   SETPOS( nCursorRow, nCursorCol )
 
-FUNCTION DOSPARAM
-   LOCAL cRet := ""
-   LOCAL nCount := HB_ARGC(), i
-
-   FOR i := 1 TO nCount
-      cRet += if(i==1, "", " ") + HB_ARGV( i )
-   NEXT
-   RETURN cRet
-
-FUNCTION EXENAME()
-   RETURN HB_ARGV( 0 )
+RETURN xVar

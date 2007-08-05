@@ -183,6 +183,10 @@ TOOLS_LIB_OBJS = \
    \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
+   $(OBJ_DIR)\getinfo.obj \
+   $(OBJ_DIR)\getinput.obj \
+   $(OBJ_DIR)\getsecrt.obj \
+   $(OBJ_DIR)\keysave.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen3.obj \
    $(OBJ_DIR)\showtime.obj \
@@ -266,6 +270,10 @@ CLEAN:
    -@if exist $(OBJ_DIR)\wordtoch.* del $(OBJ_DIR)\wordtoch.*
    -@if exist $(OBJ_DIR)\ct.* del $(OBJ_DIR)\ct.*
    -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
+   -@if exist $(OBJ_DIR)\getinfo.* del $(OBJ_DIR)\getinfo.*
+   -@if exist $(OBJ_DIR)\getinput.* del $(OBJ_DIR)\getinput.*
+   -@if exist $(OBJ_DIR)\getsecrt.* del $(OBJ_DIR)\getsecrt.*
+   -@if exist $(OBJ_DIR)\keysave.* del $(OBJ_DIR)\keysave.*
    -@if exist $(OBJ_DIR)\numconv.* del $(OBJ_DIR)\numconv.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 
