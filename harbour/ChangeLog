@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-05 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/screen3.prg
+    ! fixed typo ISNUMERIC was used instead of ISNUMBER
+
 2007-08-05 15:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libct/Makefile
   + harbour/contrib/libct/keysec.prg

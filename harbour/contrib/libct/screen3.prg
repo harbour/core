@@ -56,13 +56,13 @@
 #include "common.ch"
 
 FUNCTION CLEAREOL( nRow, nCol, xAttr, xChar )
-   IF !ISNUMERIC( nRow )
+   IF !ISNUMBER( nRow )
       nRow := ROW()
    ENDIF
 RETURN CLEARWIN( nRow, nCol, nRow, /*MAXCOL()*/, xAttr, xChar )
 
 FUNCTION CLEOL( nRow, nCol )
-   IF !ISNUMERIC( nRow )
+   IF !ISNUMBER( nRow )
       nRow := ROW()
    ENDIF
 RETURN CLEARWIN( nRow, nCol, nRow, /*MAXCOL()*/, 7 /*"W/N"*/, " " )
