@@ -106,17 +106,20 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\charop.obj \
    $(OBJ_DIR)\charrepl.obj \
    $(OBJ_DIR)\charsort.obj \
+   $(OBJ_DIR)\charsprd.obj \
    $(OBJ_DIR)\charswap.obj \
    $(OBJ_DIR)\color.obj \
    $(OBJ_DIR)\count.obj \
    $(OBJ_DIR)\ctc.obj \
-   $(OBJ_DIR)\ctmath.obj \
-   $(OBJ_DIR)\ctmath2.obj \
-   $(OBJ_DIR)\ctset.obj \
-   $(OBJ_DIR)\ctstr.obj \
    $(OBJ_DIR)\ctchksum.obj \
    $(OBJ_DIR)\ctcrypt.obj \
+   $(OBJ_DIR)\ctmath.obj \
+   $(OBJ_DIR)\ctmath2.obj \
+   $(OBJ_DIR)\ctnet.obj \
    $(OBJ_DIR)\ctpad.obj \
+   $(OBJ_DIR)\ctset.obj \
+   $(OBJ_DIR)\ctstr.obj \
+   $(OBJ_DIR)\ctstrfil.obj \
    $(OBJ_DIR)\ctwfunc.obj \
    $(OBJ_DIR)\ctwin.obj \
    $(OBJ_DIR)\cursor.obj \
@@ -124,6 +127,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\dattime2.obj \
    $(OBJ_DIR)\dattime3.obj \
    $(OBJ_DIR)\dbftools.obj \
+   $(OBJ_DIR)\disk.obj \
+   $(OBJ_DIR)\expand.obj \
    $(OBJ_DIR)\exponent.obj \
    $(OBJ_DIR)\files.obj \
    $(OBJ_DIR)\finan.obj \
@@ -162,9 +167,11 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\wordrepl.obj \
    $(OBJ_DIR)\wordtoch.obj \
    \
+   $(OBJ_DIR)\blank.obj \
    $(OBJ_DIR)\ct.obj \
    $(OBJ_DIR)\ctmisc.obj \
    $(OBJ_DIR)\cttime.obj \
+   $(OBJ_DIR)\fcopy.obj \
    $(OBJ_DIR)\getinfo.obj \
    $(OBJ_DIR)\getinput.obj \
    $(OBJ_DIR)\getsecrt.obj \
@@ -173,6 +180,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\keytime.obj \
    $(OBJ_DIR)\numconv.obj \
    $(OBJ_DIR)\screen3.obj \
+   $(OBJ_DIR)\scrmark.obj \
    $(OBJ_DIR)\showtime.obj \
 
 #
@@ -256,6 +264,10 @@ $(OBJ_DIR)\charsort.obj : $(TOOLS_DIR)\charsort.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\charsprd.obj : $(TOOLS_DIR)\charsprd.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\charswap.obj : $(TOOLS_DIR)\charswap.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
@@ -325,6 +337,10 @@ $(OBJ_DIR)\dattime3.obj : $(TOOLS_DIR)\dattime3.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\dbftools.obj : $(TOOLS_DIR)\dbftools.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\expand.obj : $(TOOLS_DIR)\expand.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
@@ -497,6 +513,13 @@ $(OBJ_DIR)\cttime.obj : $(OBJ_DIR)\cttime.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\fcopy.c : $(TOOLS_DIR)\fcopy.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\fcopy.obj : $(OBJ_DIR)\fcopy.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
 $(OBJ_DIR)\getinfo.c : $(TOOLS_DIR)\getinfo.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
@@ -550,6 +573,13 @@ $(OBJ_DIR)\screen3.c : $(TOOLS_DIR)\screen3.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\screen3.obj : $(OBJ_DIR)\screen3.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\scrmark.c : $(TOOLS_DIR)\scrmark.prg
+   $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
+
+$(OBJ_DIR)\scrmark.obj : $(OBJ_DIR)\scrmark.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 

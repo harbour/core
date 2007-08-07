@@ -9,10 +9,13 @@
  * SETFATTR
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
  *
- * SETFDATI, FILEDELETE, FILESMAX
+ * SETFDATI, FILESMAX, FILEDELETE
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
  *
- * FILESEEK, FILESIZE, FILEATTR, FILETIME, FILEDATE, FILESMAX
+ * FILESEEK, FILESIZE, FILEATTR, FILETIME, FILEDATE
+ * FILEMOVE, FILESMAX,
+ * DELETEFILE, RENAMEFILE
+ * 
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * www - http://www.harbour-project.org
@@ -347,6 +350,25 @@ HB_FUNC( FILEDELETE )
    }
 
    hb_retl( bReturn );
+}
+
+
+HB_FUNC( FILEMOVE )
+{
+   hb_retni( hb_fsRename( ( BYTE * ) hb_parcx( 1 ),
+                          ( BYTE * ) hb_parcx( 2 ) ) ? 0 : -hb_fsOsError() );
+}
+
+
+HB_FUNC( RENAMEFILE )
+{
+   HB_FUNC_EXEC( FILEMOVE );
+}
+
+
+HB_FUNC( DELETEFILE )
+{
+   hb_retni( hb_fsDelete( ( BYTE * ) hb_parcx( 1 ) ) ? 0 : -hb_fsOsError() );
 }
 
 

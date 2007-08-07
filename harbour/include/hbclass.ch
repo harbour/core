@@ -192,7 +192,7 @@ DECLARE HBClass ;
         New( cName AS String, OPTIONAL SuperParams ) AS CLASS HBClass ;
         Create() AS Object ;
         Instance() AS Object ;
-        AddClsMthds( cName AS String, @MethodName(), nScope AS Numeric, n2 AS Numeric, n3 AS Numeric ) ;
+        AddClsMethod( cName AS String, @MethodName(), nScope AS Numeric, n2 AS Numeric, n3 AS Numeric ) ;
         AddMultiClsData( cType AS String, uVal, nScope AS Numeric, aDatas AS Array OF String ) ;
         AddMultiData( cType AS String, uVal, nScope AS Numeric, aDatas AS Array OF String, x AS LOGICAL, lPer AS LOGICAL ) ;
         AddMethod( cName AS String, @MethodName(), nScope AS Numeric ) ;
@@ -243,9 +243,9 @@ DECLARE HBClass ;
              [ <modulfriend: MODULE FRIENDLY> ] ;
              [ <static: STATIC> ] [ FUNCTION <FuncName> ] => ;
    _HB_CLASS <ClassName> ;;
-   <static> function __HB_CLS_OPT([<FuncName>,] <ClassName>) ;;
+   <static> function __HB_CLS_OPT([<FuncName>,] <ClassName>) ( ... ) ;;
       static s_oClass ;;
-      local nScope ;;
+      local nScope, oInstance ;;
       if s_oClass == NIL ;;
          nScope := HB_OO_CLSTP_EXPORTED ;;
          s_oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR( [ @<SuperClass1>() ] [ , @<SuperClassN>() ] ), @__HB_CLS_OPT([__HB_CLS_ASID(<FuncName>),] <ClassName>)() [, <.modulfriend.> ] ) ) ;;
@@ -259,6 +259,11 @@ DECLARE HBClass ;
 
 #xcommand ENDCLASS [<lck: LOCK, LOCKED>] => ;
          s_oClass:Create() ; [<-lck-> __clsLock( s_oClass:hClass ) ] ;;
+         oInstance := s_oClass:Instance() ;;
+         if __ObjHasMsg( oInstance, "InitClass" ) ;;
+            oInstance:InitClass( ... ) ;;
+         end ;;
+         return oInstance ;;
       end ;;
       return s_oClass:Instance() AS CLASS _CLASS_NAME_ ;;
    #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_IMPLEMENTATION_
@@ -524,7 +529,7 @@ DECLARE HBClass ;
 #xcommand CLASSMETHOD <MethodName> [ AS <type> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<share: SHARED>] [<persistent: PERSISTENT, PROPERTY>] => ;
    _HB_MEMBER __HB_CLS_ASFUNC(<MethodName>) [ AS <type> ];;
    __HB_CLS_DECLARE_METHOD __HB_CLS_PARAMS(<MethodName>) _CLASS_NAME_ ;;
-   s_oClass:AddClsMthds( __HB_CLS_ASSTRING(<MethodName>), @__HB_CLS_ASID( __HB_CLS_MTHNAME _CLASS_NAME_ <MethodName> )(), __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) )
+   s_oClass:AddClsMethod( __HB_CLS_ASSTRING(<MethodName>), @__HB_CLS_ASID( __HB_CLS_MTHNAME _CLASS_NAME_ <MethodName> )(), __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) )
 
 #xcommand CLASSVAR <!DataName1!> [, <!DataNameN!>] [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] [<persistent: PERSISTENT, PROPERTY>] => ;
    _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;

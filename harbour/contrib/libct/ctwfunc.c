@@ -234,8 +234,8 @@ HB_FUNC( WBOX )
 HB_FUNC( WFORMAT )
 {
    hb_retni( hb_ctw_ChangeMargins( hb_ctw_CurrentWindow(),
-                                   hb_parni( 1 ), hb_parni( 1 ),
-                                   hb_parni( 2 ), hb_parni( 3 ) ) );
+                                   hb_parni( 1 ), hb_parni( 2 ),
+                                   hb_parni( 3 ), hb_parni( 4 ) ) );
 }
 
 HB_FUNC( WROW )

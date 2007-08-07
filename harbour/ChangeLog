@@ -8,6 +8,53 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-07 03:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    ! fixed typo: AddClsMthds() => AddClsMethod()
+    + added support for executing InitClass() constructor - it's not
+      exact Class(y) behavior but rather sth what xHarbour does now.
+      It will be change in the future when we will have real class
+      methods and variables.
+
+  * harbour/contrib/libct/blank.prg
+    ! fixed typo
+
+  * harbour/contrib/libct/dbftools.c
+    * added function list in header
+
+  * harbour/contrib/libct/screen1.c
+    + added SCREENTEXT()
+
+  * harbour/contrib/libct/disk.c
+    - removed DELETEFILE() and FILEMOVE()
+
+  * harbour/contrib/libct/files.c
+    + added DELETEFILE(), RENAMEFILE(), FILEMOVE()
+
+  * harbour/contrib/libct/ctwfunc.c
+    ! fixed typo in parameters numbers in WFORMAT()
+
+  + harbour/contrib/libct/charsprd.c
+    + added CHARSPREAD()
+
+  + harbour/contrib/libct/scrmark.prg
+    + added SCREENMARK()
+
+  + harbour/contrib/libct/expand.c
+    + added EXPAND()
+
+  + harbour/contrib/libct/fcopy.prg
+    + added FILECOPY(), FILECOPEN(), FILECCLOSE(), FILEAPPEND(), FILECDATI()
+      it's modified and fixed code by Frederic J. Bell borrowed from
+      xHarbour
+
+  * harbour/contrib/libct/Makefile
+  * harbour/contrib/libct/makefile.bc
+  * harbour/contrib/libct/makefile.vc
+    * update for new files. makefile.bc will have to be modified yet
+      (some files were missing and I added them to file list) but I'd
+      like to leave it for BCC users who can test modifications
+
 2007-08-05 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libct/screen3.prg
     ! fixed typo ISNUMERIC was used instead of ISNUMBER

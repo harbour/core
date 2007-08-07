@@ -7,12 +7,10 @@
  *
  * Copyright 2004-2005 Eduardo Fernandes <modalsist@yahoo.com.br>
  *
- * DeleteFile()  - Ready. Source is in "disk.c"
  * DirMake()     - Ready. Already exist a MakeDir() function in xHarbour RTL Lib,
  *                        but DirMake returns a more compatible error codes.
  * DirName()     - Ready.
  * DriveType()   - Ready.  corrected <ptucker@sympatico.ca>
- * FileMove()    - Ready.
  * Volume()      - Ready.
  * GetVolInfo()  - Ready.  This function is new.
  * VolSerial()   - Ready.
@@ -85,20 +83,6 @@
 
 #endif
 
-
-HB_FUNC( DELETEFILE )
-{
-   BYTE *pFileName = ( BYTE * ) hb_parcx( 1 );
-
-   if( hb_fsDelete( pFileName ) )
-   {
-      hb_retni( 0 );
-   }
-   else
-   {
-      hb_retni( -hb_fsOsError() );
-   }
-}
 
 HB_FUNC( DIRMAKE )
 {
@@ -175,21 +159,6 @@ HB_FUNC( DRIVETYPE )
    hb_retni( 9 );
 #endif
 
-}
-
-HB_FUNC( FILEMOVE )
-{
-   BYTE *pSourceFile = ( BYTE * ) hb_parcx( 1 );
-   BYTE *pTargetFile = ( BYTE * ) hb_parcx( 2 );
-
-   if( hb_fsRename( pSourceFile, pTargetFile ) )
-   {
-      hb_retni( 0 );
-   }
-   else
-   {
-      hb_retni( -hb_fsOsError() );
-   }
 }
 
 

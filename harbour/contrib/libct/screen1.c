@@ -9,6 +9,10 @@
  * SCREENATTR(), SCREENMIX(), SAYSCREEN(),
  * CLEARWIN(), INVERTWIN(), UNTEXTWIN(), CHARWIN(), COLORWIN(), COLORREPL()
  *
+ *   and Harbour extension:
+ *
+ * SCREENTEXT()
+ *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * www - http://www.harbour-project.org
@@ -134,7 +138,7 @@ HB_FUNC( SCREENATTR )
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen2.prg, library is libct.
+ *      Source is screen1.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */
@@ -193,7 +197,7 @@ HB_FUNC( SCREENMIX )
  *  $FUNCNAME$
  *      SAYSCREEN()
  *  $CATEGORY$
- *      HBCT video functions
+ *      CT3 video functions
  *  $ONELINER$
  *  $SYNTAX$
  *      SAYSCREEN( <cString>, [<nRow>], [<nCol>] ) -> <cEmptyString>
@@ -214,7 +218,7 @@ HB_FUNC( SCREENMIX )
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen2.prg, library is libct.
+ *      Source is screen1.c, library is libct.
  *  $SEEALSO$
  *      SCREENMIX()
  *  $END$
@@ -403,7 +407,7 @@ HB_FUNC( INVERTWIN )
  *  $FUNCNAME$
  *      UNTEXTWIN()
  *  $CATEGORY$
- *      HBCT video functions
+ *      CT3 video functions
  *  $ONELINER$
  *  $SYNTAX$
  *      UNTEXTWIN(<nTopLine>, <nLeftColumn>, <nBottomLine>, <nRightColumn>,
@@ -442,7 +446,7 @@ HB_FUNC( INVERTWIN )
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is untext.prg, library is hbct.
+ *      Source is screen1.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */
@@ -497,7 +501,7 @@ HB_FUNC( UNTEXTWIN )
  *  $FUNCNAME$
  *      CHARWIN()
  *  $CATEGORY$
- *      HBCT video functions
+ *      CT3 video functions
  *  $ONELINER$
  *  $SYNTAX$
  *      CHARWIN (<nTop>, <nLeft>, <nBottom>, <nRight>, [<cNewChar|nNewChar>],
@@ -526,7 +530,7 @@ HB_FUNC( UNTEXTWIN )
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen3.prg, library is hbbct.
+ *      Source is screen1.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */
@@ -576,7 +580,7 @@ HB_FUNC( CHARWIN )
  *  $FUNCNAME$
  *      COLORWIN()
  *  $CATEGORY$
- *      HBCT video functions
+ *      CT3 video functions
  *  $ONELINER$
  *  $SYNTAX$
  *      COLORWIN([<nTopLine>], [<nLeftCol>], [<nBottomLine>], [<nRightCol>],
@@ -607,7 +611,7 @@ HB_FUNC( CHARWIN )
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen3.prg, library is hbct.
+ *      Source is screen1.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */
@@ -653,9 +657,69 @@ HB_FUNC( COLORWIN )
 
 /*  $DOC$
  *  $FUNCNAME$
+ *      SCREENTEXT()
+ *  $CATEGORY$
+ *      CT video functions (Harbour extension)
+ *  $ONELINER$
+ *  $SYNTAX$
+ *      SCREENTEXT(<nTop>, <nLeft>, <nBottom>, <nRight>)
+ *  $ARGUMENTS$
+ *    <nTop> - top row number, default 0
+ *    <nLeft> - left column number, default 0
+ *    <nBottom> - top row number, default MaxRow()
+ *    <nRight> - right column number, default MaxCol()
+ *  $RETURNS$
+ *      Returns string with characters taken from given screen region.
+ *  $DESCRIPTION$
+ *      Returns string with characters taken from given screen region.
+ *      TODO: add documentation
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      Started
+ *  $COMPLIANCE$
+ *  $PLATFORMS$
+ *      All
+ *  $FILES$
+ *      Source is screen1.c, library is libct.
+ *  $SEEALSO$
+ *  $END$
+ */
+
+HB_FUNC( SCREENTEXT )
+{
+   int iTop, iLeft, iBottom, iRight;
+   char * pBuffer, * szText;
+   ULONG ulSize;
+
+   if( hb_ctGetWinCord( &iTop, &iLeft, &iBottom, &iRight ) )
+   {
+      ulSize = ( ULONG ) ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
+      szText = pBuffer = ( char * ) hb_xgrab( ulSize + 1 );
+      while( iTop <= iBottom )
+      {
+         int iCol = iLeft;
+         while( iCol <= iRight )
+         {
+            BYTE bColor, bAttr;
+            USHORT usChar;
+            hb_gtGetChar( iTop, iCol, &bColor, &bAttr, &usChar );
+            *szText++ = ( char ) usChar;
+            ++iCol;
+         }
+         ++iTop;
+      }
+      hb_retclen_buffer( pBuffer, ulSize );
+   }
+   else
+      hb_retc( NULL );
+}
+
+/*  $DOC$
+ *  $FUNCNAME$
  *      COLORREPL()
  *  $CATEGORY$
- *      HBCT video functions
+ *      CT3 video functions
  *  $ONELINER$
  *  $SYNTAX$
  *      COLORREPL([<cNewAttr|nNewAttr>], [<cOldAttr|nOldAttr>]) --> cNull
@@ -677,7 +741,7 @@ HB_FUNC( COLORWIN )
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen3.prg, library is hbct.
+ *      Source is screen1.c, library is libct.
  *  $SEEALSO$
  *  $END$
  */

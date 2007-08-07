@@ -4,11 +4,15 @@
 
 /*
  * Harbour Project source code:
- *   CT3 BLANK function
+ *   CT3 video functions (screen-like functions):
  *
- * Copyright 2003 Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
- *
+ * SCREENMARK()
+ * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru>
  * www - http://www.harbour-project.org
+ *
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *   modified for better CT3 compatibility and GT drivers which do not use
+ *   VGA compatible video buffer
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,42 +55,57 @@
  *
  */
 
-
 #include "common.ch"
 
-FUNCTION BLANK( xItem, xMode )
-   LOCAL cType := ValType( xItem )
-   LOCAL xRet
+FUNCTION SCREENMARK( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
+   LOCAL lFound := .f., nCount := 1
+   LOCAL nAt, nLen, nLast, nRow, nCol, nEnd, nCols
+   LOCAL cScreen
 
-   SWITCH cType
-      CASE "D"
-         xRet := CTOD( "" )
-         EXIT
+   IF !ISLOGICAL( lUpperLower )
+      lUpperLower := .F.
+   ENDIF
+   IF !ISLOGICAL( lAll )
+      lAll := .F.
+   ENDIF
+   IF !ISCHARACTER( cForward ) .OR. cForward == ""
+      cForward := NIL
+   ENDIF
+   IF !ISCHARACTER( cTrailing ) .OR. cTrailing == ""
+      cTrailing := NIL
+   ENDIF
 
-      CASE "L"
-         xRet :=.F.
-         EXIT
+   nCols := MAXCOL()
+   cScreen := SCREENTEXT( 0, 0, MAXROW(), nCols++ )
+   nLen := LEN( cSearch )
+   nLast := LEN( cScreen ) - nLen + 1
 
-      CASE "N"
-         xRet := 0
-         EXIT
+   IF ! lUpperLower
+      cSearch := UPPER( cSearch )
+      cScreen := UPPER( cScreen )
+   ENDIF
 
-      CASE "C"
-      CASE "M"
-         xRet := xItem := IIF( ISLOGICAL( xMode ) .and. xMode, ;
-                               Space( Len( xItem ) ), "" )
-         EXIT
-
-      CASE "A"
-         xRet := {}
-         EXIT
-
-      CASE "H"
-         xRet := {=>}
-         EXIT
-
-      OTHERWISE
-         xRet:=.F.
-   END
-
-RETURN xRet
+   DO WHILE ( nAt := ATNUM( cSearch, cScreen, nCount ) ) != 0
+      IF ( nAt == 1 .OR. cForward == NIL .OR. ;
+           SUBSTR( cScreen, nAt, 1 ) $ cForward ) .AND. ;
+         ( nAt == nLast .OR. cTrailing == NIL .OR. ;
+           SUBSTR( cScreen, nAt + nLen ) $ cTrailing )
+         lFound := .t.
+         --nAt
+         nRow := INT( nAt / nCols )
+         nCol := INT( nAt % nCols )
+         nEnd := nCol + LEN( cSearch ) - 1
+         COLORWIN( nRow, nCol, nRow, nEnd, xAttr )
+         DO WHILE nEnd >= nCols
+            nEnd -= nCols
+            nCol := 0
+            ++nRow
+            COLORWIN( nRow, nCol, nRow, nEnd, xAttr )
+         ENDDO
+         IF ! lAll
+            EXIT
+         ENDIF
+      ENDIF
+      nCount++
+   ENDDO
+RETURN lFound

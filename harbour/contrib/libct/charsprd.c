@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- *   CT3 BLANK function
+ *   CT3 string function:  CHARSPREAD()
  *
- * Copyright 2003 Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * www - http://www.harbour-project.org
  *
@@ -51,42 +51,75 @@
  *
  */
 
+#include "hbapi.h"
+#include "hbapiitm.h"
 
-#include "common.ch"
+HB_FUNC( CHARSPREAD )
+{
+   ULONG ulLen = hb_parclen( 1 );
 
-FUNCTION BLANK( xItem, xMode )
-   LOCAL cType := ValType( xItem )
-   LOCAL xRet
+   if( ulLen == 0 )
+      hb_retc( NULL );
+   else
+   {
+      long lSize = hb_parnl( 2 );
 
-   SWITCH cType
-      CASE "D"
-         xRet := CTOD( "" )
-         EXIT
+      if( lSize < 0 || ( ULONG ) lSize <= ulLen )
+         hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
+      else
+      {
+         char * szText = hb_parc( 1 ), * szDest, cDelim = ' ';
+         int iTokens = 0, iRepl, iRest, iFirst, i;
+         ULONG ul, ulDst, ulRest;
 
-      CASE "L"
-         xRet :=.F.
-         EXIT
+         if( ISCHAR( 3 ) )
+            cDelim = hb_parc( 3 )[0];
+         else if( ISNUM( 3 ) )
+            cDelim = ( char ) hb_parni( 3 );
 
-      CASE "N"
-         xRet := 0
-         EXIT
-
-      CASE "C"
-      CASE "M"
-         xRet := xItem := IIF( ISLOGICAL( xMode ) .and. xMode, ;
-                               Space( Len( xItem ) ), "" )
-         EXIT
-
-      CASE "A"
-         xRet := {}
-         EXIT
-
-      CASE "H"
-         xRet := {=>}
-         EXIT
-
-      OTHERWISE
-         xRet:=.F.
-   END
-
-RETURN xRet
+         for( ul = 0; ul < ulLen; ++ul )
+         {
+            if( szText[ul] == cDelim )
+            {
+               iTokens++;
+               while( ul + 1 < ulLen && szText[ul + 1] == cDelim )
+                  ++ul;
+            }
+         }
+         if( iTokens == 0 )
+         {
+            hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
+         }
+         else
+         {
+            ulRest = ( ULONG ) lSize - ulLen;
+            iRepl = ulRest / iTokens;
+            iRest = ulRest % iTokens;
+            iFirst = ( iRest + 1 ) >> 1;
+            iRest >>= 1;
+            szDest = ( char * ) hb_xgrab( lSize + 1 );
+            for( ulDst = ul = 0; ul < ulLen; ++ul )
+            {
+               szDest[ulDst++] = szText[ul];
+               if( szText[ul] == cDelim )
+               {
+                  while( ul + 1 < ulLen && szText[ul + 1] == cDelim )
+                     szDest[ulDst++] = szText[++ul];
+                  i = iRepl;
+                  if( iFirst )
+                  {
+                     --iFirst;
+                     ++i;
+                  }
+                  else if( iTokens <= iRest )
+                     ++i;
+                  while( --i >= 0 )
+                     szDest[ulDst++] = cDelim;
+                  iTokens--;
+               }
+            }
+            hb_retclen_buffer( szDest, lSize );
+         }
+      }
+   }
+}

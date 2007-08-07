@@ -21,18 +21,19 @@ C_SOURCES = \
 	charop.c \
 	charrepl.c \
 	charsort.c \
+	charsprd.c \
 	charswap.c \
 	color.c \
 	count.c \
 	ctc.c \
+	ctchksum.c \
+	ctcrypt.c \
 	ctmath.c \
 	ctmath2.c \
 	ctnet.c \
 	ctpad.c \
 	ctset.c \
 	ctstr.c \
-	ctchksum.c \
-	ctcrypt.c \
 	ctstrfil.c \
 	ctwfunc.c \
 	ctwin.c \
@@ -40,7 +41,9 @@ C_SOURCES = \
 	datetime.c \
 	dattime2.c \
 	dattime3.c \
+	dbftools.c \
 	disk.c \
+	expand.c \
 	exponent.c \
 	files.c \
 	finan.c \
@@ -80,9 +83,11 @@ C_SOURCES = \
 	wordtoch.c \
 
 PRG_SOURCES= \
+	blank.prg \
 	ct.prg \
 	ctmisc.prg \
 	cttime.prg \
+	fcopy.prg \
 	getinfo.prg \
 	getinput.prg \
 	getsecrt.prg \
@@ -91,6 +96,7 @@ PRG_SOURCES= \
 	keytime.prg \
 	numconv.prg \
 	screen3.prg \
+	scrmark.prg \
 	showtime.prg \
 
 LIBNAME=ct

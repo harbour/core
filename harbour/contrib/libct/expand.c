@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- *   CT3 BLANK function
+ *   CT3 string function:  EXPAND()
  *
- * Copyright 2003 Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * www - http://www.harbour-project.org
  *
@@ -51,42 +51,57 @@
  *
  */
 
+#include "hbapi.h"
 
-#include "common.ch"
+HB_FUNC( EXPAND )
+{
+   ULONG ulLen = hb_parclen( 1 ), ulSize, ul;
 
-FUNCTION BLANK( xItem, xMode )
-   LOCAL cType := ValType( xItem )
-   LOCAL xRet
+   if( ulLen > 0 )
+   {
+      char * szText = hb_parc( 1 );
+      if( ulLen == 1 )
+         hb_retclen( szText, 1 );
+      else
+      {
+         char * szDest, *szPtr, cRepl;
+         int iRepl, i;
 
-   SWITCH cType
-      CASE "D"
-         xRet := CTOD( "" )
-         EXIT
-
-      CASE "L"
-         xRet :=.F.
-         EXIT
-
-      CASE "N"
-         xRet := 0
-         EXIT
-
-      CASE "C"
-      CASE "M"
-         xRet := xItem := IIF( ISLOGICAL( xMode ) .and. xMode, ;
-                               Space( Len( xItem ) ), "" )
-         EXIT
-
-      CASE "A"
-         xRet := {}
-         EXIT
-
-      CASE "H"
-         xRet := {=>}
-         EXIT
-
-      OTHERWISE
-         xRet:=.F.
-   END
-
-RETURN xRet
+         iRepl = hb_parni( 2 );
+         i = hb_pcount();
+         if( i == 2 && ISCHAR( 2 ) )
+         {
+            iRepl = 1;
+            cRepl = hb_parc( 2 )[0];
+         }
+         else if( i == 2 && iRepl == 0 && ISNUM( 2 ) )
+         {
+            iRepl = 1;
+            cRepl = 0;
+         }
+         else
+         {
+            if( iRepl < 1 )
+               iRepl = 1;
+            if( ISNUM( 3 ) )
+               cRepl = ( char ) hb_parni( 3 );
+            else if( ISCHAR( 3 ) )
+               cRepl = hb_parc( 3 )[0];
+            else
+               cRepl = ' ';
+         }
+         ulSize = ( ulLen - 1 ) * ( iRepl + 1 ) + 1;
+         szPtr = szDest = ( char * ) hb_xgrab( ulSize + 1 );
+         *szPtr++ = szText[0];
+         for( ul = 1; ul < ulLen; ++ul )
+         {
+            for( i = 0; i < iRepl; ++i )
+               *szPtr++ = cRepl;
+            *szPtr++ = szText[ul];
+         }
+         hb_retclen_buffer( szDest, ulSize );
+      }
+   }
+   else
+      hb_retc( NULL );
+}
