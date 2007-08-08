@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-08 15:44 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/libnf/make_b32.bat
+   - contrib/libnf/nanfor.bc
+   + contrib/libnf/makefile.bc
+     * BC makefile name made uniform.
+
 2007-08-08 15:41 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/libnf/makefile.vc
    * contrib/libnf/nanfor.bc
