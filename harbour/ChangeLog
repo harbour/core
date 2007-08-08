@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-08 16:31 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbcompat.ch
+   * include/hbextern.ch
+   * contrib/libnf/fttext.c
+   * source/vm/arrayshb.c
+     + xhb RASCAN() added to Harbour without HB_COMPAT_XHB 
+       switch, under the name HB_RASCAN().
+       Translation from RASCAN() is done via hbcompat.ch
+     ! NFLib/FT_FRSEEK() now works in Harbour regardless 
+       of the HB_COMPAT switches.
+
 2007-08-08 15:44 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/libnf/make_b32.bat
    - contrib/libnf/nanfor.bc

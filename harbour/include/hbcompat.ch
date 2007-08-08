@@ -129,6 +129,7 @@
 
    #xtranslate HEXTONUM([<c,...>])     => HB_HEXTONUM(<c>)
    #xtranslate NUMTOHEX([<n,...>])     => HB_NUMTOHEX(<n>)
+   #xtranslate RASCAN([<x,...>])       => HB_RASCAN(<x>)
 
 
    #xtranslate ISPOINTER( <xValue> )   => HB_ISPOINTER( <xValue> )

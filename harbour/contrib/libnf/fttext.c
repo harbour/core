@@ -97,7 +97,7 @@ HB_FUNC( FT_FCLOSE );
 HB_FUNC( FT_FCLOSEALL );
 
 HB_FUNC_EXTERN( ASCAN );
-HB_FUNC_EXTERN( RASCAN );
+HB_FUNC_EXTERN( HB_RASCAN );
 
 HB_FUNC_INIT( FT_FINIT );
 HB_FUNC_EXIT( FT_FEXIT );
@@ -108,7 +108,7 @@ HB_FUNC_EXIT( FT_FEXIT );
 HB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_FTEXT )
 { "FT_FUSE",   {HB_FS_PUBLIC}, {HB_FUNCNAME( FT_FUSE )}, NULL },
 { "ASCAN",     {HB_FS_PUBLIC}, {HB_FUNCNAME( ASCAN )}, NULL },
-{ "RASCAN",    {HB_FS_PUBLIC}, {HB_FUNCNAME( RASCAN )}, NULL },
+{ "HB_RASCAN", {HB_FS_PUBLIC}, {HB_FUNCNAME( HB_RASCAN )}, NULL },
 { "FT_FINIT$", {HB_FS_INIT},   {HB_INIT_FUNCNAME( FT_FINIT )}, NULL },
 { "FT_FEXIT$", {HB_FS_EXIT},   {HB_EXIT_FUNCNAME( FT_FEXIT )}, NULL }
 HB_INIT_SYMBOLS_END( hb_vm_SymbolInit_FTEXT )
@@ -379,7 +379,7 @@ HB_FUNC( FT_FRSEEK )
 
    if ( pCurFile && pSeek )
    {
-      PHB_ITEM pResult = hb_itemDoC( "RASCAN", 2, pCurFile->pArray, pSeek );
+      PHB_ITEM pResult = hb_itemDoC( "HB_RASCAN", 2, pCurFile->pArray, pSeek );
 
       if( pResult )
       {

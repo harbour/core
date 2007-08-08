@@ -301,8 +301,7 @@ HB_FUNC( ASCAN )
       hb_retni( 0 );
 }
 
-#if defined( HB_COMPAT_XHB )
-HB_FUNC( RASCAN )
+HB_FUNC( HB_RASCAN )
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
    PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
@@ -319,7 +318,6 @@ HB_FUNC( RASCAN )
    else
       hb_retni( 0 );
 }
-#endif
 
 /* TODO: In Xbase++ fifth parameter determines whether array elements
          are passed by reference to the code block. [vszakats] */
