@@ -53,12 +53,5 @@
 
 HB_FUNC(FT_STOD)
 {
-#if defined(HB_OS_DOS) || defined(HB_OS_WIN_32)
-   {
-
-      hb_retds( hb_parc(1) ) ;
-
-      return;
-   }
-#endif
+   hb_retds( hb_parclen( 1 ) >= 8 ? hb_parc( 1 ) : NULL );
 }

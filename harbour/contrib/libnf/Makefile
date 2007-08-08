@@ -13,6 +13,8 @@ C_SOURCES = \
 	descend.c \
 	dispc.c \
 	ftattr.c \
+	fttext.c \
+	ftshadow.c \
 	getenvrn.c \
 	getver.c \
 	getvid.c \
@@ -25,6 +27,7 @@ C_SOURCES = \
 	origin.c \
 	proper.c \
 	prtscr.c \
+	putkey.c \
 	rmdir.c \
 	shift.c \
 	stod.c \

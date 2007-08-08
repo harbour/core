@@ -51,9 +51,6 @@
  *
 */
 
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
 #include "extend.h"
 #if defined(HB_OS_DOS)
 #include "dos.h"
@@ -500,6 +497,29 @@ HB_FUNC( _M_MBUTPRS)
    }
 }
 
+HB_FUNC( _M_MBUTREL )
+{
+#if defined(HB_OS_DOS)
+   union REGS regs;
+   regs.HB_XREGS.ax=0x0A;
+   regs.HB_XREGS.bx=hb_parni(1);
+
+   HB_DOS_INT86(0x33,&regs,&regs);
+
+   hb_reta( 4 );
+   hb_storni( regs.HB_XREGS.bx, -1, 1 );
+   hb_storni( regs.HB_XREGS.cx, -1, 2 );
+   hb_storni( regs.HB_XREGS.dx, -1, 3 );
+   hb_storni( regs.HB_XREGS.ax, -1, 4 );
+#else
+   hb_reta( 4 );
+   hb_storni( 0, -1, 1 );
+   hb_storni( 0, -1, 2 );
+   hb_storni( 0, -1, 3 );
+   hb_storni( 0, -1, 4 );
+#endif
+}
+
 HB_FUNC( _M_MDEFCRS)
 {
 #if defined(HB_OS_DOS)
@@ -563,4 +583,3 @@ int inButton;
       hb_itemRelease(pnButton);
    }
 }
-

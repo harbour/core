@@ -52,134 +52,14 @@
  */
 
 #include "hbapi.h"
+#include "hbapigt.h"
 
-static int _ftColor2I( char * cColor );
-static int _ftGetColorNum( char * cColor );
-static char * _ftStripIt( char * cColor );
-
-HB_FUNC(FT_COLOR2N)
+HB_FUNC( FT_COLOR2N )
 {
-/* #if defined(HB_OS_DOS) || defined(HB_OS_WIN_32)
-   { */
+   int iRet = 0;
 
-       int iRet = 0;
+   if( ISCHAR( 1 ) )
+      iRet = hb_gtColorToN( hb_parc( 1 ) );
 
-       // make sure parameter is a char type and that it is 8 chars or less
-
-       if ( ISCHAR( 1 )  && hb_parclen( 1 ) < 8 )
-          iRet = _ftColor2I( hb_parc( 1 ) );
-
-       hb_retni( iRet );
-
-       return;
-/*   }
-#endif */
-}
-
-
-// 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-// Function  :  _ftColor2I
-// Purpose   :  Converts an Xbase color string to an int
-// Parameters:  cColor  -  a pointer to the color string
-// Returns   :  int complement of color string, or 0 if string is invalid
-// 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-
-static int _ftColor2I( char * cColor )
-{
-    char * cFore = "         ", * cBack = "      ";
-    unsigned int iBlink = 0, iIntense = 0, iBack = 0, i = 0;
-
-    // copy the Clipper string to buffer, check for attributes, and
-    // make lower case
-
-    while ( ( cFore[ i ] = cColor[ i ] ) != 0 )
-    {
-       // check for a blink attrib
-
-       if ( cFore[ i ] == '*' && iBlink == 0 ) iBlink = 128;
-
-       // check for an intensity attrib
-
-       if ( cFore[ i ] == '+' && iIntense == 0 ) iIntense = 8;
-
-        // make sure all chars are lower case
-
-       if ( 91 > cFore[ i ] && cFore[ i ] > 64 ) cFore[ i ] += 32;
-
-       i++;
-    }
-
-    // check for the background color
-
-    while ( cColor[ iBack++ ] != '/' && cColor[ iBack ] != 0 );
-
-    if ( cColor[--iBack ] == '/' )
-    {
-       cBack = cFore + iBack + 1;
-       cFore[ iBack ] = 0;
-    }
-
-    // calculate and return the value
-
-    return ( iIntense + iBlink + _ftGetColorNum( _ftStripIt( cFore ) ) +
-                          ( 16 * _ftGetColorNum( _ftStripIt( cBack ) ) ) );
-
-}
-
-
-// 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-// Function  :  _ftGetColorNum
-// Purpose   :  Returns the corresponding number for an Xbase color
-// Parameters:  cColor  -  a pointer to the color string
-// Returns   :  int complement of a single color
-// 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-
-static int _ftGetColorNum( char * cColor )
-{
-   unsigned * iColor = ( unsigned * ) cColor;
-
-   if ( cColor[ 1 ] == 0 ) switch ( cColor[ 0 ] )
-   {
-         case 'n' : *iColor = 0; break;
-         case 'b' : *iColor = 1; break;
-         case 'g' : *iColor = 2; break;
-         case 'r' : *iColor = 4; break;
-         case 'w' : *iColor = 7; break;
-   }
-   else
-   {
-      if ( ( cColor[ 0 ] == 'b' ) && cColor[ 1 ] == 'g' ) *iColor = 3;
-      if ( ( cColor[ 0 ] == 'r' ) && cColor[ 1 ] == 'b' ) *iColor = 5;
-      if ( ( cColor[ 0 ] == 'g' ) && cColor[ 1 ] == 'r' ) *iColor = 6;
-   }
-
-   return *iColor;
-}
-
-
-
-// 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-// Function  :  _ftStripIt
-// Purpose   :  Removes the intensity/blink chars from the passed string
-// Parameters:  cColor  -  a pointer to the color string
-// Returns   :  a pointer to the modified color string
-// 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-
-static char * _ftStripIt( char * cColor )
-{
-   unsigned i = 0;
-
-   // move past any leading markers
-
-   while ( *cColor == '+' || *cColor == '*' ) cColor++;
-
-   // truncate any trailing markers
-
-   while ( cColor[ i ] && cColor[ i ] != '+' && cColor[ i ] != '*' ) i++;
-
-   // null terminate the string
-
-   cColor[ i ] = 0;
-
-   return cColor;
+   hb_retni( iRet );
 }

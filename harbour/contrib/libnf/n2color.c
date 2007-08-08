@@ -52,118 +52,18 @@
  */
 
 #include "hbapi.h"
+#include "hbapigt.h"
 
-static void _ftI2Color( int iColor, char * cColor );
-static int _ftGetColorStr( int iColor, char * cColor );
-
-HB_FUNC(FT_N2COLOR )
+HB_FUNC( FT_N2COLOR )
 {
-/* #if defined(HB_OS_DOS)
-   { */
-   char * cColor = "       ";
+   int iColor = ISNUM( 1 ) ? hb_parni( 1 ) : -1;
 
-   // make sure parameter is a numeric type
-   if ( ISNUM(1))
-      _ftI2Color( hb_parni( 1 ), cColor );
+   if( iColor >= 0x00 && iColor <= 0xff )
+   {
+      char szColorString[ 10 ];
+      hb_gtColorsToString( &iColor, 1, szColorString, 10 );
+      hb_retc( szColorString );
+   }
    else
-      cColor = NULL;
-
-   hb_retc( cColor );
-
-   return;
-/*   }
-#endif */
-}
-
-
-
-// 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-// Function  :  _ftI2Color
-// Purpose   :  Converts a color int to an Xbase color string
-// Parameters:  iColor  -  the color number
-//              *cColor -  pointer to the color string
-// Returns   :  void (string is modified directly)
-// 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-
-static void _ftI2Color( int iColor, char * cColor )
-{
-   unsigned int iBack, iFore, i = 0;
-
-   // check for blink attribute
-
-   if ( iColor > 127 )
-   {
-      cColor[ i++ ] = '*';
-
-      iColor %= 128;
-   }
-
-   // check for background and foreground colors
-
-// if ( iColor > 15 )
-// {
-      iFore = iColor % 16;
-
-      iBack = ( iColor - iFore ) / 16;
-// }
-
-    // check for intensity attrib
-
-   if ( iFore > 7 )
-   {
-      cColor[ i++ ] = '+';
-
-      iFore %= 8;
-   }
-
-   // get forground color
-
-   i += _ftGetColorStr( iFore, ( cColor + i ) );
-
-   // add the seperator
-
-   cColor[ i++ ] = '/';
-
-   // get background color
-
-   i += _ftGetColorStr( iBack, ( cColor + i ) );
-
-   // null terminate the color string
-
-   cColor[ i ] = 0;
-
-   return ;
-}
-
-
-
-// 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-// Function  :  _ftGetColorStr
-// Purpose   :  Returns the corresponding Xbase color for passed number
-// Parameters:  iColor  -  a color number
-//              *cColor -  pointer to the color string
-// Returns   :  length of added color string
-// 컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
-
-static int _ftGetColorStr( int iColor, char * cColor )
-{
-    int iLen = 0;
-
-    switch ( iColor )
-    {
-       case  0 : cColor[iLen++] = 'n';  break;
-       case  1 : cColor[iLen++] = 'b';  break;
-       case  2 : cColor[iLen++] = 'g';  break;
-       case  3 : cColor[iLen++] = 'b';
-                 cColor[iLen++] = 'g';  break;
-       case  4 : cColor[iLen++] = 'r';  break;
-       case  5 : cColor[iLen++] = 'r';
-                 cColor[iLen++] = 'b';  break;
-       case  6 : cColor[iLen++] = 'g';
-                 cColor[iLen++] = 'r';  break;
-       case  7 : cColor[iLen++] = 'w';
-     }
-
-    return iLen;
-
+      hb_retc( NULL );
 }

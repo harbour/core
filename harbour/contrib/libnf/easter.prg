@@ -1,7 +1,7 @@
 /*
  * File......: EASTER.PRG
  * Author....: Paul Tucker
- * CIS ID....: ?
+ * Email.....: <ptucker@sympatico.ca>
  *
  * While I can say that I wrote the program, the algorithm is from Donald
  * Knuth's The Art of Computer Programming, Section 1.3.2.  So, the source
@@ -52,11 +52,7 @@
 
 FUNCTION FT_EASTER (nYear)
   local nGold, nCent, nCorx, nCorz, nSunday, nEpact, nMoon,;
-        nMonth := 0, nDay := 0, lCent := __SetCentury( .t. )
-
-  // --------------------------------
-  // NOTE: __SetCentury() is internal
-  // --------------------------------
+        nMonth := 0, nDay := 0
 
   IF VALTYPE (nYear) == "C"
      nYear = VAL(nYear)
@@ -121,7 +117,4 @@ FUNCTION FT_EASTER (nYear)
      nYear = 0
   ENDIF
 
-  set century (lCent)
-
-RETURN  CTOD (RIGHT ("00"+LTRIM (STR (nMonth)),2) + "/" +;
-         RIGHT ("00"+LTRIM (STR (INT (nDay))) ,2) + "/" +STR (nYear,4))
+RETURN StoD( Str( nYear,4) + PadL( nMonth, 2, "0" ) + PadL( Int( nDay ), 2, "0" ) )

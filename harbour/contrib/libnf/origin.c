@@ -64,14 +64,5 @@
 
 HB_FUNC(FT_ORIGIN)
 {
-#if defined(HB_OS_DOS) || defined(HB_OS_WIN_32)
-   {
-
-   extern char **_argv;
-
-   hb_retc(  *_argv  );
-
-   return;
-}
-#endif
+   hb_retc( hb_cmdargARGV()[0] );
 }

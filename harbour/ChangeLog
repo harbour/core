@@ -8,6 +8,57 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-08 15:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libnf/at2.prg
+  * harbour/contrib/libnf/min2dhm.prg
+  * harbour/contrib/libnf/ontick.c
+  * harbour/contrib/libnf/sqzn.prg
+  * harbour/contrib/libnf/bytexor.prg
+  * harbour/contrib/libnf/asum.prg
+  * harbour/contrib/libnf/sleep.prg
+  * harbour/contrib/libnf/any2any.prg
+  * harbour/contrib/libnf/origin.c
+  * harbour/contrib/libnf/mouse.c
+  * harbour/contrib/libnf/stod.c
+  * harbour/contrib/libnf/vertmenu.prg
+  * harbour/contrib/libnf/aredit.prg
+  * harbour/contrib/libnf/n2color.c
+  * harbour/contrib/libnf/xbox.prg
+  * harbour/contrib/libnf/hex2dec.prg
+  * harbour/contrib/libnf/getver.c
+  * harbour/contrib/libnf/Makefile
+  * harbour/contrib/libnf/invclr.prg
+  * harbour/contrib/libnf/popadder.prg
+  * harbour/contrib/libnf/d2e.prg
+  * harbour/contrib/libnf/anomatch.prg
+  * harbour/contrib/libnf/color2n.c
+  * harbour/contrib/libnf/datecnfg.prg
+  * harbour/contrib/libnf/easter.prg
+  * harbour/contrib/libnf/ntow.prg
+  * harbour/contrib/libnf/floptst.prg
+  * harbour/contrib/libnf/pchr.prg
+  * harbour/contrib/libnf/tbwhile.prg
+  * harbour/contrib/libnf/e2d.prg
+  * harbour/contrib/libnf/sysmem.prg
+  * harbour/contrib/libnf/dfile.prg
+  * harbour/contrib/libnf/clrsel.prg
+  + harbour/contrib/libnf/fttext.c
+  + harbour/contrib/libnf/putkey.c
+    * basic cleanup and syncing with some of xHarbour fixes and extensions.
+      I'd like to ask Windows users to update non GNU make file
+
+  * harbour/source/pp/ppcore.c
+    + added support for .T., .F., .Y., .N. in PP and #IF ... / #ELIF ...
+      expressions. It was reported by Nick Van Dyck on xHarbour devel list
+      that old PP supported it. I haven't known that old PP suported .T.
+      and .F. in #IF directive. Please not that there are other diferences
+      between new PP and the old one in expresions which can be used in
+      #IF ... / #ELIF directives. New PP supports C like expressions with
+      support for pseudo functions like defined(), operates on integer
+      numbers only to not damage 64bit values during conversion to double
+      and keep C compatible results (the old one used double values) and
+      is much more restrictive in checking for valid expression.
+
 2007-08-07 03:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbclass.ch
     ! fixed typo: AddClsMthds() => AddClsMethod()

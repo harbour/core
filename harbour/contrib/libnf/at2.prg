@@ -59,7 +59,7 @@
  *
  *     FT_AT2( cSearch, cTarget, 2, .F. )    // Returns ( 9 )
  *  $SEEALSO$
- *    FT_FINDITH()
+ *    FT_FINDITH(), FT_RAT2()
  *  $END$
  */
 
@@ -134,3 +134,69 @@ FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
 
    RETURN ( nPos2 )
 
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_RAT2()
+ *  $CATEGORY$
+ *     String
+ *  $ONELINER$
+ *     Find position of the reversed nth occurrence of a substring
+ *  $SYNTAX$
+ *     FT_RAT2( <cSearch>, <cTarget> [, <nOccurs> [, <lCaseSens> ] ] ) -> nPos
+ *  $ARGUMENTS$
+ *     <cSearch> is the character substring to search for.
+ *
+ *     <cTarget> is the character string to search.
+ *
+ *     <nOccurs> is the occurrence of cSearch to look for,
+ *                defaults to 1.
+ *
+ *     <lCaseSens> is a logical value denoting case sensitivity.
+ *                If .F., then search is NOT sensitive to case,
+ *                defaults to .T.
+ *  $RETURNS$
+ *     The position of the nth occurrence of a reversed substring
+ *  $DESCRIPTION$
+ *     This function will find the nth occurrence of a reversed
+ *     substring within a string.
+ *  $EXAMPLES$
+ *     cSearch := "t"
+ *     cTarget := "This is the day that the Lord has made."
+ *
+ *     FT_RAT2( cSearch, cTarget )           // Returns ( 22 )
+ *
+ *     FT_RAT2( cSearch, cTarget, 2 )        // Returns ( 20 )
+ *
+ *     FT_RAT2( cSearch, cTarget, 2, .F. )   // Returns ( 22 )
+ *  $SEEALSO$
+ *    FT_FINDITH(), FT_AT2()
+ *  $END$
+ */
+
+FUNCTION FT_RAT2( cSearch, cTarget, nOccurs, lCaseSens )
+   LOCAL nCount, nPos, nPos2 := 0
+   LOCAL cSubstr := cTarget
+   // Set default parameters as necessary.
+   IF lCaseSens == NIL
+      lCaseSens := .T.
+   ENDIF
+   IF nOccurs == NIL
+      nOccurs := 1
+   ENDIF
+   FOR nCount := 1 TO nOccurs
+      // Store position of next occurrence of cSearch.
+      IF lCaseSens
+         nPos := RAT( cSearch, cSubstr )
+      ELSE
+         nPos := RAT( UPPER( cSearch ), UPPER( cSubstr ) )
+      ENDIF
+      // Store position of cSearch relative to original string.
+      nPos2 := nPos
+      // Resize cSubstr
+      cSubstr := SUBSTR( cSubstr, 1, RAT( cSearch, cSubstr ) - 1 )
+      // Breakout if there are no occurences here
+      IF nPos == 0
+           EXIT
+      ENDIF
+   NEXT
+   RETURN ( nPos2 )

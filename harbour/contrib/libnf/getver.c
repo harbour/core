@@ -66,7 +66,7 @@ HB_FUNC(_GET_DOSVER)
       char * pszPlatform;
       union REGS regs;
       pszPlatform = ( char * ) hb_xgrab( 256 );
- 
+
       regs.h.ah = 0x30;
       HB_DOS_INT86( 0x21, &regs, &regs );
 
@@ -123,7 +123,7 @@ HB_FUNC(_FT_NWKSTAT)
 HB_FUNC(_FT_SETMODE)
 {
 #if defined(HB_OS_DOS)
-   {  
+   {
       union REGS regs;
       regs.h.ah=0;
       regs.h.al=hb_parni(1);
@@ -135,7 +135,7 @@ HB_FUNC(_FT_GETMODE)
 {
    int iMode;
 #if defined(HB_OS_DOS)
-   {  
+   {
       union REGS regs;
       regs.h.ah=0x0F;
       HB_DOS_INT86(0x10,&regs,&regs);
@@ -164,7 +164,7 @@ HB_FUNC(_FT_TEMPFIL)
       union REGS regs;
       struct SREGS sregs;
       segread(&sregs);
-      cPath=hb_parc(1);
+      cPath=hb_parcx(1);
       regs.h.ah=0x5A;
       regs.HB_XREGS.cx=iMode;
       sregs.ds=FP_SEG(cPath);
@@ -178,7 +178,7 @@ HB_FUNC(_FT_TEMPFIL)
 
       nax=0;
       iflags=0;
-      cPath=hb_parc(1);
+      cPath=hb_parcx(1);
    }
 #endif
    {

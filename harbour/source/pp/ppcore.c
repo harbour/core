@@ -4422,6 +4422,12 @@ static PHB_PP_TOKEN hb_pp_calcValue( PHB_PP_TOKEN pToken, int iPrecedense,
          pToken = pToken->pNext;
       }
    }
+   else if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_LOGICAL )
+   {
+      *plValue = HB_PP_ISTRUE( pToken->value[ 1 ] ) ? 1 : 0;
+      * pfError = FALSE;
+      pToken = pToken->pNext;
+   }
    else
       * pfError = TRUE;
 
