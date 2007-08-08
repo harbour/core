@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-08 15:41 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/libnf/makefile.vc
+   * contrib/libnf/nanfor.bc
+     * Updated.
+
 2007-08-08 15:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libnf/at2.prg
   * harbour/contrib/libnf/min2dhm.prg

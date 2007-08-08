@@ -132,6 +132,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\getver.obj \
    $(OBJ_DIR)\ftattr.obj \
    $(OBJ_DIR)\dispc.obj \
+   $(OBJ_DIR)\fttext.obj \
+   $(OBJ_DIR)\putkey.obj \
    \
    $(OBJ_DIR)\aading.obj \
    $(OBJ_DIR)\aavg.obj \
@@ -269,6 +271,8 @@ CLEAN:
    -@if exist $(OBJ_DIR)\getver.obj del $(OBJ_DIR)\getver.obj
    -@if exist $(OBJ_DIR)\ftattr.obj del $(OBJ_DIR)\ftattr.obj
    -@if exist $(OBJ_DIR)\dispc.obj del $(OBJ_DIR)\dispc.obj
+   -@if exist $(OBJ_DIR)\fttext.obj del $(OBJ_DIR)\fttext.obj
+   -@if exist $(OBJ_DIR)\putkey.obj del $(OBJ_DIR)\putkey.obj
    -@if exist $(OBJ_DIR)\aading.* del $(OBJ_DIR)\aading.*
    -@if exist $(OBJ_DIR)\aavg.* del $(OBJ_DIR)\aavg.*
    -@if exist $(OBJ_DIR)\acctadj.* del $(OBJ_DIR)\acctadj.*

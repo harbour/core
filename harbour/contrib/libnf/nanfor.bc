@@ -200,7 +200,9 @@ NANFOR_LIB_OBJ = \
    $(OBJ_DIR)\mkdir.obj \
    $(OBJ_DIR)\getver.obj \
    $(OBJ_DIR)\ftattr.obj \
-   $(OBJ_DIR)\dispc.obj
+   $(OBJ_DIR)\dispc.obj \
+   $(OBJ_DIR)\fttext.obj \
+   $(OBJ_DIR)\putkey.obj
 
 
 #   $(OBJ_DIR)\sysmem.obj \
@@ -929,3 +931,10 @@ $(OBJ_DIR)\ftattr.obj  : ftattr.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
 
+$(OBJ_DIR)\fttext.obj  : fttext.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\putkey.obj  : putkey.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
