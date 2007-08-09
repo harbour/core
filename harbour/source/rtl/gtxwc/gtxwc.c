@@ -3576,6 +3576,17 @@ static BOOL hb_gt_xwc_SetKeyCP( char * pszTermCDP, char * pszHostCDP )
 
 /* *********************************************************************** */
 
+static int hb_gt_xwc_getKbdState( PXWND_DEF wnd )
+{
+   int iKbdState = 0;
+
+   if( wnd->keyModifiers.bShift ) iKbdState |= GTI_KBD_SHIFT;
+   if( wnd->keyModifiers.bCtrl  ) iKbdState |= GTI_KBD_CTRL;
+   if( wnd->keyModifiers.bAlt   ) iKbdState |= GTI_KBD_ALT;
+
+   return iKbdState;
+}
+
 static BOOL hb_gt_xwc_Info( int iType, PHB_GT_INFO pInfo )
 {
    int iVal;
@@ -3729,6 +3740,11 @@ static BOOL hb_gt_xwc_Info( int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_cursorBlinkRate );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             s_cursorBlinkRate = hb_itemGetNI( pInfo->pNewVal );
+         break;
+
+      case GTI_KBDSHIFTS:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult,
+                                        hb_gt_xwc_getKbdState( s_wnd ) );
          break;
 
       default:
