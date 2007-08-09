@@ -224,7 +224,7 @@ HB_FUNC( FT_GETE )
             buffer = ( char * ) hb_xalloc( buffsize );
             strcpy( buffer, "\0" );
             while( *sCurEnv )
-               *sCurEnv++;
+               sCurEnv++;
          }
       }
       x = 0;
@@ -249,7 +249,7 @@ HB_FUNC( FT_GETE )
             hb_storc( ( char * ) sCurEnv, 1, x + 1 );
          x++;
          while( *sCurEnv )
-            *sCurEnv++;
+            sCurEnv++;
       }
 
       if( rettype == CHARTYPE )
