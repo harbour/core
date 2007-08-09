@@ -54,98 +54,38 @@
  */
 
 #include "ct.h"
+#include "hbapigt.h"
 
-#if defined( HB_OS_DOS )
-
-#   if defined(__DJGPP__)
-#      include "pc.h"
-#      include "sys\exceptn.h"
-#      include "sys\farptr.h"
-#   elif defined(__MSC_VER)
-#      include "signal.h"
-#   elif defined(__BORLANDC__)
-#      ifndef FAR
-#         define FAR far        /* Because FAR is not defined for Borland C 3.x */
-#      endif
-#   endif
-
-
-static void SetGet( unsigned char cKey )
+static void SetGet( int iFlag )
 {
-#if defined(__WATCOMC__) && defined(__386__)
-   hb_retl( *( ( unsigned char * ) 0x0417 ) & cKey );
-#elif defined(__DJGPP__)
-   hb_retl( _farpeekb( 0x0040, 0x0017 ) & cKey );
-#else
-   hb_retl( *( ( unsigned char FAR * ) MK_FP( 0x0040, 0x0017 ) ) & cKey );
-#endif
+   int iState = 0, iNewState;
+   HB_GT_INFO gtInfo;
 
-   if( hb_pcount() >= 1 )
+   gtInfo.pNewVal = gtInfo.pResult = NULL;
+
+   hb_gtInfo( GTI_KBDSHIFTS, &gtInfo );
+   if( gtInfo.pResult )
    {
-      cKey = hb_parl( 1 ) * cKey;
-
-#if defined(__WATCOMC__) && defined(__386__)
-      *( ( unsigned char * ) 0x0417 ) = ( *( ( unsigned char * ) 0x0417 ) & ( !cKey ) ) | cKey;
-#elif defined(__DJGPP__)
-      _farpokeb( 0x0040, 0x0017, ( _farpeekb( 0x0040, 0x0017 ) & ( !cKey ) ) | cKey );
-#else
-      *( ( unsigned char FAR * ) MK_FP( 0x0040, 0x0017 ) ) =
-         ( *( ( unsigned char FAR * ) MK_FP( 0x0040, 0x0017 ) ) & ( !cKey ) ) | cKey;
-#endif
+      iState = hb_itemGetNI( gtInfo.pResult );
+      gtInfo.pNewVal = gtInfo.pResult;
+      gtInfo.pResult = NULL;
    }
+
+   if( ISLOG( 1 ) )
+   {
+      iNewState = hb_parl( 1 ) ? ( iState | iFlag ) : ( iState & ~iFlag );
+      gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iState );
+      hb_gtInfo( GTI_KBDSHIFTS, &gtInfo );
+   }
+
+   if( gtInfo.pNewVal )
+      hb_itemRelease( gtInfo.pNewVal );
+   if( gtInfo.pResult )
+      hb_itemRelease( gtInfo.pResult );
+
+   hb_retl( ( iState & iFlag ) != 0 );
 }
 
-#elif defined( HB_OS_WIN_32 )
-
-/*
- The following function ONLY works with GTWVT/GTWVW/GTALLEG.
- They will NOT WORK on pure CONSOLE mode
-*/
-#   include "hbapi.h"
-#   include <windows.h>
-
-#   define HB_VK_INSERT         0x2D
-#   define HB_VK_CAPITAL        0x14
-#   define HB_VK_NUMLOCK        0x90
-#   define HB_VK_SCROLL         0x91
-
-static void SetGet( unsigned char cKey )
-{
-   BYTE kbBuffer[256];
-   USHORT uKey = 0;
-
-   switch( cKey )
-   {
-      case 0x10:
-         uKey = HB_VK_SCROLL;
-         break;
-
-      case 0x20:
-         uKey = HB_VK_NUMLOCK;
-         break;
-
-      case 0x40:
-         uKey = HB_VK_CAPITAL;
-         break;
-
-      case 0x80:
-         uKey = HB_VK_INSERT;
-         break;
-   }
-
-   GetKeyboardState( kbBuffer );
-   hb_retl( ( kbBuffer[uKey] & 0x01 ) != 0 );
-
-   if( hb_pcount() >= 1 )
-   {
-      kbBuffer[uKey] = hb_parl( 1 ) ? 1 : 0;
-      SetKeyboardState( kbBuffer );
-   }
-}
-
-#endif
-
-#if defined( HB_OS_DOS ) || defined( HB_OS_WIN_32 )
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -174,7 +114,7 @@ static void SetGet( unsigned char cKey )
 
 HB_FUNC( KSETINS )
 {
-   SetGet( 0x80 );
+   SetGet( GTI_KBD_INSERT );
 }
 
 
@@ -205,7 +145,7 @@ HB_FUNC( KSETINS )
 
 HB_FUNC( KSETCAPS )
 {
-   SetGet( 0x40 );
+   SetGet( GTI_KBD_CAPSLOCK );
 }
 
 
@@ -236,7 +176,7 @@ HB_FUNC( KSETCAPS )
 
 HB_FUNC( KSETNUM )
 {
-   SetGet( 0x20 );
+   SetGet( GTI_KBD_NUMLOCK );
 }
 
 
@@ -267,7 +207,5 @@ HB_FUNC( KSETNUM )
 
 HB_FUNC( KSETSCROLL )
 {
-   SetGet( 0x10 );
+   SetGet( GTI_KBD_SCROLOCK );
 }
-
-#endif /* defined( HB_OS_DOS ) || defined( HB_OS_WIN_32 ) */

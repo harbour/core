@@ -114,8 +114,8 @@
 
 #if defined(__DJGPP__)
    #include <pc.h>
-   #include <sys\exceptn.h>
-   #include <sys\farptr.h>
+   #include <sys/exceptn.h>
+   #include <sys/farptr.h>
    #include <dpmi.h>
 #elif defined(_MSC_VER) || defined(__WATCOMC__)
    #include <signal.h>
@@ -136,6 +136,17 @@
          ((void FAR *)(((unsigned long)(seg) << 16)|(unsigned)(off)))
    #endif
    static unsigned char FAR * s_pScreenAddres;
+#endif
+
+#if defined(__WATCOMC__) && defined(__386__)
+   #define HB_PEEK_BYTE(s,o)     ( *( ( UCHAR * ) ( ( (s) << 4 ) | (o) ) ) )
+   #define HB_POKE_BYTE(s,o,b)   *( ( UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = (b)
+#elif defined(__DJGPP__)
+   #define HB_PEEK_BYTE(s,o)     _farpeekb( (s), (o) )
+   #define HB_POKE_BYTE(s,o,b)   _farpokeb( (s), (o), (b) )
+#else
+   #define HB_PEEK_BYTE(s,o)     ( *( ( UCHAR FAR * ) MK_FP( (s), (o) ) ) )
+   #define HB_POKE_BYTE(s,o,b)   *( ( UCHAR FAR * ) MK_FP( (s), (o) ) ) = (b)
 #endif
 
 static HB_GT_FUNCS SuperTable;
@@ -1451,6 +1462,52 @@ static void hb_gt_dos_Refresh( void )
    hb_gt_dos_SetCursorStyle( iStyle );
 }
 
+#define HB_BIOS_LSHIFT     0x01
+#define HB_BIOS_RSHIFT     0x02
+#define HB_BIOS_CTRL       0x04
+#define HB_BIOS_ALT        0x08
+#define HB_BIOS_SHIFT      ( HB_BIOS_LSHIFT | HB_BIOS_RSHIFT )
+#define HB_BIOS_SCROLL     0x10
+#define HB_BIOS_NUMLOCK    0x20
+#define HB_BIOS_CAPSLOCK   0x40
+#define HB_BIOS_INSERT     0x80
+
+//   #define HB_PEEK_BYTE(s,o)     ( *( ( UCHAR * ) ( ( (s) << 4 ) | (o) ) ) )
+//   #define HB_POKE_BYTE(s,o,b)   *( ( UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = (b)
+
+static int hb_gt_dos_getKbdState( void )
+{
+   int iKbdState = 0;
+   UCHAR ucStat;
+
+   ucStat = HB_PEEK_BYTE( 0x0040, 0x0017 );
+
+   if( ucStat & HB_BIOS_SHIFT    ) iKbdState |= GTI_KBD_SHIFT;
+   if( ucStat & HB_BIOS_CTRL     ) iKbdState |= GTI_KBD_CTRL;
+   if( ucStat & HB_BIOS_ALT      ) iKbdState |= GTI_KBD_ALT;
+   if( ucStat & HB_BIOS_SCROLL   ) iKbdState |= GTI_KBD_SCROLOCK;
+   if( ucStat & HB_BIOS_NUMLOCK  ) iKbdState |= GTI_KBD_NUMLOCK;
+   if( ucStat & HB_BIOS_CAPSLOCK ) iKbdState |= GTI_KBD_CAPSLOCK;
+   if( ucStat & HB_BIOS_INSERT   ) iKbdState |= GTI_KBD_INSERT;
+
+   return iKbdState;
+}
+
+static void hb_gt_dos_setKbdState( int iKbdState )
+{
+   UCHAR ucStat = 0;
+
+   ucStat |= ( iKbdState & GTI_KBD_SHIFT    ) ? HB_BIOS_SHIFT    : 0;
+   ucStat |= ( iKbdState & GTI_KBD_CTRL     ) ? HB_BIOS_CTRL     : 0;
+   ucStat |= ( iKbdState & GTI_KBD_ALT      ) ? HB_BIOS_ALT      : 0;
+   ucStat |= ( iKbdState & GTI_KBD_SCROLOCK ) ? HB_BIOS_SCROLL   : 0;
+   ucStat |= ( iKbdState & GTI_KBD_NUMLOCK  ) ? HB_BIOS_NUMLOCK  : 0;
+   ucStat |= ( iKbdState & GTI_KBD_CAPSLOCK ) ? HB_BIOS_CAPSLOCK : 0;
+   ucStat |= ( iKbdState & GTI_KBD_INSERT   ) ? HB_BIOS_INSERT   : 0;
+
+   HB_POKE_BYTE( 0x0040, 0x0017, ucStat );
+}
+
 static BOOL hb_gt_dos_Info( int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Info(%d,%p)", iType, pInfo ) );
@@ -1460,6 +1517,12 @@ static BOOL hb_gt_dos_Info( int iType, PHB_GT_INFO pInfo )
       case GTI_FULLSCREEN:
       case GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         break;
+
+      case GTI_KBDSHIFTS:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_dos_getKbdState() );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+            hb_gt_dos_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
       default:

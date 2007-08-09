@@ -148,6 +148,7 @@
 #define GTI_KBD_LWIN          8
 #define GTI_KBD_RWIN         16
 #define GTI_KBD_MENU         32
+#define GTI_KBD_INSERT      128
 #define GTI_KBD_SCROLOCK    256
 #define GTI_KBD_NUMLOCK     512
 #define GTI_KBD_CAPSLOCK   1024

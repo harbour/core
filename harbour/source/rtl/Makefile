@@ -44,9 +44,10 @@ C_SOURCES=\
 	gtapi.c      \
 	gtchrmap.c   \
 	gtclip.c     \
+	gtfunc.c     \
+	gtkbstat.c   \
 	gtsys.c      \
 	gttone.c     \
-	gtfunc.c     \
 	gx.c         \
 	hardcr.c     \
 	hbadler.c    \

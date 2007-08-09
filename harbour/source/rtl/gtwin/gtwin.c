@@ -1565,23 +1565,6 @@ static BOOL hb_gt_win_SetKeyCP( char *pszTermCDP, char *pszHostCDP )
    return TRUE;
 }
 
-static int kbdShiftsState( void )
-{
-   int  kbdShifts = 0;
-
-   if ( GetKeyState( VK_SHIFT )   & 0x80 ) kbdShifts |= GTI_KBD_SHIFT;
-   if ( GetKeyState( VK_CONTROL ) & 0x80 ) kbdShifts |= GTI_KBD_CTRL;
-   //if ( GetKeyState( VK_MENU )    & 0x80 ) kbdShifts |= GTI_KBD_ALT;
-   if ( GetKeyState( VK_LWIN )    & 0x80 ) kbdShifts |= GTI_KBD_LWIN;
-   if ( GetKeyState( VK_RWIN )    & 0x80 ) kbdShifts |= GTI_KBD_RWIN;
-   if ( GetKeyState( VK_APPS )    & 0x80 ) kbdShifts |= GTI_KBD_MENU;
-   if ( GetKeyState( VK_SCROLL )  & 0x01 ) kbdShifts |= GTI_KBD_SCROLOCK;
-   if ( GetKeyState( VK_NUMLOCK ) & 0x01 ) kbdShifts |= GTI_KBD_NUMLOCK;
-   if ( GetKeyState( VK_CAPITAL ) & 0x01 ) kbdShifts |= GTI_KBD_CAPSLOCK;
-
-   return kbdShifts;
-}
-
 /* *********************************************************************** */
 
 static BOOL hb_gt_win_Info( int iType, PHB_GT_INFO pInfo )
@@ -1629,7 +1612,9 @@ static BOOL hb_gt_win_Info( int iType, PHB_GT_INFO pInfo )
          break;
 
       case GTI_KBDSHIFTS:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, kbdShiftsState() );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_w32_getKbdState() );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+            hb_gt_w32_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
       case GTI_KBDSPECIAL:

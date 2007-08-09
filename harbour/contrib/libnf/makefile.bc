@@ -202,6 +202,7 @@ NANFOR_LIB_OBJ = \
    $(OBJ_DIR)\ftattr.obj \
    $(OBJ_DIR)\dispc.obj \
    $(OBJ_DIR)\fttext.obj \
+   $(OBJ_DIR)\ftshadow.obj \
    $(OBJ_DIR)\putkey.obj
 
 
@@ -932,6 +933,10 @@ $(OBJ_DIR)\ftattr.obj  : ftattr.c
    tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\fttext.obj  : fttext.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\ftshadow.obj  : ftshadow.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
 

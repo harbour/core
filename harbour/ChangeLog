@@ -8,6 +8,42 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-09 02:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtinfo.ch
+    + added GTI_KBD_INSERT
+
+  * harbour/common.mak
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/gtkbstat.c
+    + added common for W32 GT drivers: hb_gt_w32_getKbdState() and
+      hb_gt_w32_setKbdState()
+
+  * harbour/source/rtl/gtgui/gtgui.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtwin/gtwin.c
+    * use hb_gt_w32_getKbdState() and hb_gt_w32_setKbdState() for
+      GTI_KBDSHIFTS
+
+  * harbour/source/rtl/gtdos/gtdos.c
+    + added support for GTI_KBDSHIFTS
+
+  * harbour/contrib/libct/keyset.c
+    * use GTI_KBDSHIFTS to get/set keyboard flags
+
+  * harbour/contrib/libnf/prtscr.c
+  * harbour/contrib/libnf/numlock.c
+  * harbour/contrib/libnf/shift.c
+  * harbour/contrib/libnf/alt.c
+  * harbour/contrib/libnf/ctrl.c
+  * harbour/contrib/libnf/caplock.c
+    * use GTI_KBDSHIFTS to get/set keyboard flags
+
+  + harbour/contrib/libnf/ftshadow.c
+  * harbour/contrib/libnf/makefile.bc
+  * harbour/contrib/libnf/makefile.vc
+    + added missing file I forgot to add in previous commit
+
 2007-08-08 16:31 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbcompat.ch
    * include/hbextern.ch

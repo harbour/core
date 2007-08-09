@@ -61,11 +61,9 @@
 
 #define pbyte *( ( char * ) 0x00400100 )
 
-HB_FUNC(FT_PRTSCR)
+HB_FUNC( FT_PRTSCR )
 {
 #if defined(HB_OS_DOS)
-   {
-
    if ( hb_pcount() && ISLOG( 1 ) )
    {      
       if ( hb_parl( 1 ) )
@@ -78,8 +76,7 @@ HB_FUNC(FT_PRTSCR)
       hb_retl( FALSE );
    else
       hb_retl( TRUE );
-
-   return;
-   }
+#else
+   hb_retl( FALSE );
 #endif
 }

@@ -122,6 +122,12 @@ static BOOL hb_gt_gui_Info( int iType, PHB_GT_INFO pInfo )
             }
          }
          break;
+
+      case GTI_KBDSPECIAL:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bSpecialKeyHandling );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+            s_bSpecialKeyHandling = hb_itemGetL( pInfo->pNewVal );
+         break;
 #endif
       default:
          return HB_GTSUPER_INFO( iType, pInfo );

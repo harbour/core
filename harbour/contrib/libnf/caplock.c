@@ -62,24 +62,35 @@
  *  $END$
  */
 
-#include <hbapi.h>
+#include "hbapigt.h"
+#include "hbapiitm.h"
 
-#define status_byte ( *( unsigned char * ) ( 0x00400017 ) )
-
-HB_FUNC(FT_CAPLOCK)
+HB_FUNC( FT_CAPLOCK )
 {
-#if defined(HB_OS_DOS) 
-   {
-   hb_retl( ( int ) ( status_byte & 0x40 ) );
+   int iState = 0, iNewState;
+   HB_GT_INFO gtInfo;
 
-   if ( hb_pcount() )
+   gtInfo.pNewVal = gtInfo.pResult = NULL;
+   hb_gtInfo( GTI_KBDSHIFTS, &gtInfo );
+   if( gtInfo.pResult )
    {
-      if ( ISLOG(1) )
-         status_byte = ( status_byte | ( unsigned char ) 0x40 );
-      else
-         status_byte = ( status_byte & ( unsigned char ) 0xBF );
+      iState = hb_itemGetNI( gtInfo.pResult );
+      gtInfo.pNewVal = gtInfo.pResult;
+      gtInfo.pResult = NULL;
    }
-   return;
+
+   if( ISLOG( 1 ) )
+   {
+      iNewState = hb_parl( 1 ) ? ( iState | GTI_KBD_CAPSLOCK ) :
+                                 ( iState & ~GTI_KBD_CAPSLOCK );
+      gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iState );
+      hb_gtInfo( GTI_KBDSHIFTS, &gtInfo );
    }
-#endif
+
+   if( gtInfo.pNewVal )
+      hb_itemRelease( gtInfo.pNewVal );
+   if( gtInfo.pResult )
+      hb_itemRelease( gtInfo.pResult );
+
+   hb_retl( ( iState & GTI_KBD_CAPSLOCK ) != 0 );
 }

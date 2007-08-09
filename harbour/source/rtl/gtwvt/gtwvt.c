@@ -895,26 +895,6 @@ static BOOL hb_gt_wvt_KeyEvent( HWND hWnd, UINT message, WPARAM wParam, LPARAM l
    return 0;
 }
 
-static int kbdShiftsState( void )
-{
-   BYTE kbBuffer[ 256 ];
-   int  kbdShifts;
-
-   kbdShifts = 0;
-   GetKeyboardState( kbBuffer );
-   if ( kbBuffer[ VK_SHIFT ]   & 0x080 ) kbdShifts += GTI_KBD_SHIFT;
-   if ( kbBuffer[ VK_CONTROL ] & 0x080 ) kbdShifts += GTI_KBD_CTRL;
-   if ( kbBuffer[ VK_MENU ]    & 0x080 ) kbdShifts += GTI_KBD_ALT;
-   if ( kbBuffer[ VK_LWIN ]    & 0x080 ) kbdShifts += GTI_KBD_LWIN;
-   if ( kbBuffer[ VK_RWIN ]    & 0x080 ) kbdShifts += GTI_KBD_RWIN;
-   if ( kbBuffer[ VK_APPS ]    & 0x080 ) kbdShifts += GTI_KBD_MENU;
-   if ( kbBuffer[ VK_SCROLL ]  & 0x001 ) kbdShifts += GTI_KBD_SCROLOCK;
-   if ( kbBuffer[ VK_NUMLOCK ] & 0x001 ) kbdShifts += GTI_KBD_NUMLOCK;
-   if ( kbBuffer[ VK_CAPITAL ] & 0x001 ) kbdShifts += GTI_KBD_CAPSLOCK;
-
-   return kbdShifts;
-}
-
 /*
  * hb_gt_wvt_TextOut converts col and row to x and y ( pixels ) and calls
  * the Windows function TextOut with the expected coordinates
@@ -1724,7 +1704,10 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
          break;
 
       case GTI_KBDSHIFTS:
-         return kbdShiftsState();
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_w32_getKbdState() );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+            hb_gt_w32_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
+         break;
 
       case GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )

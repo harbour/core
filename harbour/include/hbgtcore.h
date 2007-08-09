@@ -526,6 +526,8 @@ extern int  hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACS
 extern void hb_gt_w32_Tone( double dFrequency, double dDuration );
 extern void hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen );
 extern BOOL hb_gt_w32_GetClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen );
+extern int  hb_gt_w32_getKbdState( void );
+extern void hb_gt_w32_setKbdState( int kbdShifts );
 #endif /* HB_OS_WIN_32 */
 
 
