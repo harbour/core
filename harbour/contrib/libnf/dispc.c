@@ -575,7 +575,7 @@ HB_FUNC( _FT_DFINIT )
 
     isallocated = !(buffer == NULL || lbuff == NULL || vseg == NULL);
                                               /* memory allocated? */
-    if (isallocated == FALSE)
+    if (!isallocated)
     {
         rval = 8;                   /* return error code 8 (memory) */
         if (buffer != NULL) hb_xfree(buffer);
@@ -589,7 +589,7 @@ HB_FUNC( _FT_DFINIT )
         norm   = hb_parni(7);                 /* normal color attribute    */
         hlight = hb_parni(8);                 /* highlight color attribute */
 
-        if ((hb_parinfo(9) && 512) == 512)       /* if array */
+        if (hb_parinfo(9) & HB_IT_ARRAY)       /* if array */
         {
            keytype = K_LIST;
            kcount  = hb_parinfa( 9, 0 );
@@ -604,7 +604,7 @@ HB_FUNC( _FT_DFINIT )
            kcount  = hb_parclen( 9 );
            if (kcount > 24)
               kcount = 24;
-           strcpyn(kstr, hb_parc(9), kcount);    /* get exit key string */
+           strcpyn(kstr, hb_parcx(9), kcount);    /* get exit key string */
         }
 
         brows = hb_parl(10);                  /* get browse flag   */
@@ -659,7 +659,7 @@ HB_FUNC( _FT_DFINIT )
 
 HB_FUNC ( _FT_DFCLOS )
 {
-  if (isallocated == TRUE)
+  if (isallocated)
     {
       if (buffer != NULL) hb_xfree(buffer); /* free up allocated buffer memory */
       if (lbuff != NULL)  hb_xfree(lbuff);
@@ -737,7 +737,7 @@ HB_FUNC( FT_DISPFILE )
 
 
     /* make sure buffers were allocated and file was opened */
-    if (isallocated == TRUE && infile > 0)
+    if (isallocated && infile > 0)
       {
         done    = NO;
         refresh = YES;
@@ -910,20 +910,7 @@ HB_FUNC( FT_DISPFILE )
 
 static int keyin()
 {
-    int ch;
-
-
-    ch = 0;
-    while ( ch == 0x00 )                   /* check to see if it's extended */
-    {
-        ch = hb_inkeyTranslate( hb_gtReadKey( 0 ),  0 );
-        if (ch == 257)   /* error compiling with bcc55 */
-           ch = 27;      /* ESC with CapsLock ON = 257, with CapsLock OFF = 27 */
-        hb_idleState();
-    }
-
-
-    return ( ch );
+    return hb_inkey( TRUE, 0.0, INKEY_ALL );
 }
 
 

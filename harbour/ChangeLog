@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-09 13:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libnf/ftattr.c
+    ! fixed to work with GT drivers which do not use VGA compatible
+      screen buffer
+
+  * harbour/contrib/libnf/proper.c
+    ! fixed to not change passed string and possible buffer overflow
+
+  * harbour/contrib/libnf/dispc.c
+    ! fixed hard coded item type and updated some old code for current GTs
+
+  * harbour/contrib/libnf/getenvrn.c
+    + added support for nixes
+    * borrowed W32 version from xHarbour
+
 2007-08-09 08:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtxwc/gtxwc.c
     + added support for GTI_KBDSHIFTS

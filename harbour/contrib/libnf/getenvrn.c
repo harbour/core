@@ -96,10 +96,27 @@
  */
 
 /* NOTE: we need this to prevent base types redefinition */
+/*
 #define _CLIPDEFS_H
-
 #include <extend.api>
 #include <fm.api>
+*/
+#include "hbapi.h"
+
+#if defined(OS_UNIX_COMPATIBLE)
+#   include <unistd.h>
+#   if defined( HB_OS_DARWIN )
+#      include <crt_externs.h>
+#      define environ (*_NSGetEnviron())
+#   elif !defined( __WATCOMC__ )
+extern char **environ;
+#   endif
+#elif defined(HB_OS_DOS)
+#   define environ _environ
+extern char **_environ;
+#elif defined(HB_OS_WIN_32)
+#   include <windows.h>
+#endif
 
 #define NORETURN   0
 #define CHARTYPE   1
@@ -110,73 +127,143 @@ unsigned int strlen( char * );
 char * strcpy( char *, char * );
 char * strcat( char *, char * );
 */
-HB_FUNC(FT_GETE)
+HB_FUNC( FT_GETE )
 {
-    /* INTERNALS WARNING: All references to 'environ', strlen(), ;
-       strcpy(), and strcat() are undocumented Clipper 5.0 internals.
+   /* INTERNALS WARNING: All references to 'environ', strlen(), ;
+      strcpy(), and strcat() are undocumented Clipper 5.0 internals.
     */
-#if defined(HB_OS_DOS) || defined(HB_OS_WIN_32)
+#if defined(HB_OS_DOS) || defined(OS_UNIX_COMPATIBLE)
    {
 
-    extern char **_environ;
-    char *buffer = NULL;
-    int x;
-    int buffsize = 0;
-    int rettype  = NORETURN;
+      char *buffer = NULL;
+      int x;
+      int buffsize = 0;
+      int rettype = NORETURN;
 
-    if (ISCHAR(1))
-        rettype = CHARTYPE;
-    if (ISARRAY(1))
-        rettype = ARRAYTYPE;
+      if( ISCHAR( 1 ) )
+         rettype = CHARTYPE;
+      if( ISARRAY( 1 ) )
+         rettype = ARRAYTYPE;
 
-    if (rettype == CHARTYPE)
-        // scan strings first and add up total size
-        {
-        for (x = 0; ;x++)
-            {
-            if (! _environ[x])
-                // null string, we're done
-                break;
-            // add length of this string plus 2 for the crlf
-            buffsize += (strlen(_environ[x]) + 2);
-            }
-        // add 1 more byte for final nul character
-        buffsize++;
+      /* scan strings first and add up total size */
+      if( rettype == CHARTYPE )
+      {
+         for( x = 0; environ[x]; x++ )
+         {
+            /* add length of this string plus 2 for the crlf */
+            buffsize += ( strlen( environ[x] ) + 2 );
+         }
+         /* add 1 more byte for final nul character */
+         buffsize++;
+         /* now allocate that much memory and make sure 1st byte is a nul */
+         buffer = ( char * ) hb_xalloc( buffsize + 1 );
+         buffer[0] = '\0';
+      }
 
-        //  now allocate that much memory and make sure 1st byte is a nul
-        buffer = ( char * ) hb_xalloc(buffsize);
-        strcpy(buffer,"\0");
-        }
-
-    for (x = 0; ;x++)
-        {
-        if (! _environ[x])
-            // null string, we're done
+      for( x = 0; environ[x]; x++ )
+      {
+         if( !environ[x] )
+            /* null string, we're done */
             break;
 
-        if (rettype == CHARTYPE)
-            {
-            // tack string onto end of buffer
-            strcat( buffer, _environ[x] );
-            // add crlf at end of each string
+         if( rettype == CHARTYPE )
+         {
+            /* tack string onto end of buffer */
+            strcat( buffer, environ[x] );
+            /* add crlf at end of each string */
             strcat( buffer, CRLF );
+         }
+         else if( rettype == ARRAYTYPE )
+            /* store string to next array element */
+            hb_storc( environ[x], 1, x + 1 );
+      }
+
+      if( rettype == CHARTYPE )
+      {
+         /* return buffer to app and free memory */
+         hb_storc( buffer, 1 );
+         hb_xfree( buffer );
+      }
+
+      /* return number of strings found */
+      hb_retni( x );
+   }
+#elif defined(HB_OS_WIN_32)
+   {
+
+
+      char *buffer = NULL;
+      LPVOID lpEnviron = GetEnvironmentStrings();
+      char *sCurEnv;
+      int x;
+      int buffsize = 0;
+      int rettype = NORETURN;
+
+      if( ISCHAR( 1 ) )
+         rettype = CHARTYPE;
+      if( ISARRAY( 1 ) )
+         rettype = ARRAYTYPE;
+
+      if( rettype == CHARTYPE )
+         /* scan strings first and add up total size */
+      {
+         for( sCurEnv = ( LPTSTR ) lpEnviron; *sCurEnv; sCurEnv++ )
+         {
+
+            {
+               if( !*sCurEnv )
+                  /* null string, we're done */
+                  break;
+               /* add length of this string plus 2 for the crlf */
+               buffsize += ( strlen( ( char * ) sCurEnv ) + 2 );
             }
+            /* add 1 more byte for final nul character */
+            buffsize++;
 
-        if (rettype == ARRAYTYPE)
-            // store string to next array element
-            hb_storc(_environ[x],1,x + 1);
+            /* now allocate that much memory and make sure 1st byte is a nul */
+            buffer = ( char * ) hb_xalloc( buffsize );
+            strcpy( buffer, "\0" );
+            while( *sCurEnv )
+               *sCurEnv++;
+         }
+      }
+      x = 0;
+      for( sCurEnv = ( LPTSTR ) lpEnviron; *sCurEnv; sCurEnv++ )
+      {
 
-        }
 
-    if (rettype == CHARTYPE)
-        {
-        // return buffer to app and free memory
-        hb_storc(buffer,1);
-        hb_xfree(buffer);
-        }
+         if( !*sCurEnv )
+            /* null string, we're done */
+            break;
 
-    // return number of strings found
-    hb_retni(x);
-}
+         if( rettype == CHARTYPE )
+         {
+            /* tack string onto end of buffer */
+            strcat( buffer, ( char * ) sCurEnv );
+            /* add crlf at end of each string */
+            strcat( buffer, CRLF );
+         }
+
+         if( rettype == ARRAYTYPE )
+            /* store string to next array element */
+            hb_storc( ( char * ) sCurEnv, 1, x + 1 );
+         x++;
+         while( *sCurEnv )
+            *sCurEnv++;
+      }
+
+      if( rettype == CHARTYPE )
+      {
+         /* return buffer to app and free memory */
+         hb_storc( buffer, 1 );
+         hb_xfree( buffer );
+      }
+
+      /* return number of strings found */
+      hb_retni( x );
+
+      FreeEnvironmentStrings( ( LPCH ) lpEnviron );
+   }
+
 #endif
 }
