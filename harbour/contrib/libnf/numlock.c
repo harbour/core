@@ -94,7 +94,7 @@ HB_FUNC( FT_NUMLOCK )
    {
       iNewState = hb_parl( 1 ) ? ( iState | GTI_KBD_NUMLOCK ) :
                                  ( iState & ~GTI_KBD_NUMLOCK );
-      gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iState );
+      gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iNewState );
       hb_gtInfo( GTI_KBDSHIFTS, &gtInfo );
    }
 

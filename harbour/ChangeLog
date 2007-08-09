@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-09 03:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libnf/numlock.c
+  * harbour/contrib/libnf/caplock.c
+  * harbour/contrib/libct/keyset.c
+    ! fixed typo
+
 2007-08-09 02:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtgui/gtgui.c
     ! fixed typo in copy and past in previous commit

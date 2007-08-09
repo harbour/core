@@ -83,7 +83,7 @@ HB_FUNC( FT_CAPLOCK )
    {
       iNewState = hb_parl( 1 ) ? ( iState | GTI_KBD_CAPSLOCK ) :
                                  ( iState & ~GTI_KBD_CAPSLOCK );
-      gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iState );
+      gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iNewState );
       hb_gtInfo( GTI_KBDSHIFTS, &gtInfo );
    }
 
