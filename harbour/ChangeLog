@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-09 13:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libct/misc3.c
+    * changed hb_set.HB_SET_INSERT to GTI_KBD_INSERT - thanks to Saulius
+      for information
+
 2007-08-09 13:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libnf/ftattr.c
     ! fixed to work with GT drivers which do not use VGA compatible

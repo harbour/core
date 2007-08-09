@@ -53,7 +53,6 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 #include "hbapiitm.h"
-#include "hbset.h"
 
 HB_FUNC( KBDSTAT )
 {
@@ -82,7 +81,7 @@ HB_FUNC( KBDSTAT )
          iRet |= 0x20;
       if( iState & GTI_KBD_CAPSLOCK )
          iRet |= 0x40;
-      if( hb_set.HB_SET_INSERT )
+      if( iState & GTI_KBD_INSERT )
          iRet |= 0x80;
    }
 
