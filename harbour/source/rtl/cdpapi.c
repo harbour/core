@@ -241,6 +241,30 @@ static int utf8tou16( const BYTE *szUTF8, USHORT *uc )
 }
 #endif
 
+static ULONG utf8pos( const BYTE *szUTF8, ULONG ulLen, ULONG ulUTF8Pos )
+{
+   if( ulUTF8Pos )
+   {
+      ULONG ul, ul2;
+      USHORT uc;
+      int n = 0;
+
+      for( ul = ul2 = 0; ul < ulLen; ++ul )
+      {
+         if( utf8tou16nextchar( szUTF8[ ul ], &n, &uc ) )
+         {
+            if( n == 0 )
+            {
+               if( --ulUTF8Pos == 0 )
+                  return ul2 + 1;
+               ul2 = ul + 1;
+            }
+         }
+      }
+   }
+   return 0;
+}
+
 static int hb_cdpFindPos( const char * pszID )
 {
    int iPos;
@@ -1269,10 +1293,109 @@ HB_FUNC( HB_UTF8PEEK )
       ULONG ulPos = hb_parnl( 2 );
       ULONG ulLen = hb_parclen( 1 );
 
-      if( ulPos > 0 && ulPos < ulLen )
+      if( ulPos > 0 && ulPos <= ulLen )
          hb_retnint( hb_cdpUTF8StringPeek( ( BYTE * ) szString, ulLen, ulPos - 1 ) );
       else
          hb_retni( 0 );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName,
+                            HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_UTF8POKE )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+
+   if( pText && ISNUM( 2 ) && ISNUM( 3 ) )
+   {
+      char * szString = hb_itemGetCPtr( pText );
+      ULONG ulLen = hb_parclen( 1 ), ulPos;
+
+      ulPos = utf8pos( ( BYTE * ) szString, ulLen, hb_parnl( 2 ) );
+      if( ulPos )
+      {
+         USHORT uc, uc2;
+         int n, n2;
+
+         --ulPos;
+         uc = ( USHORT ) hb_parni( 3 );
+         n = utf8Size( uc );
+         n2 = 0;
+         utf8tou16nextchar( ( BYTE ) szString[ ulPos ], &n2, &uc2 );
+         ++n2;
+         if( n == n2 )
+         {
+            pText = hb_itemUnShareString( pText );
+            u16toutf8( ( BYTE * ) &hb_itemGetCPtr( pText )[ ulPos ], uc );
+            hb_itemReturn( pText );
+         }
+         else
+         {
+            char * szResult = ( char * ) hb_xgrab( ulLen - n2 + n + 1 );
+            memcpy( szResult, szString, ulPos );
+            u16toutf8( ( BYTE * ) &szResult[ ulPos ], uc );
+            memcpy( szResult + ulPos + n, szString + ulPos + n2,
+                    ulLen - ulPos - n2 );
+            if( ISBYREF( 1 ) )
+               hb_storclen( szResult, ulLen - n2 + n, 1 );
+            hb_retclen_buffer( szResult, ulLen - n2 + n );
+         }
+      }
+      else
+         hb_itemReturn( pText );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName,
+                            HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_UTF8STUFF )
+{
+   char * szString = hb_parc( 1 );
+
+   if( szString && ISNUM( 2 ) && ISNUM( 3 ) && ISCHAR( 4 ) )
+   {
+      ULONG ulLen = hb_parclen( 1 );
+      ULONG ulPos = hb_parnl( 2 );
+      ULONG ulDel = hb_parnl( 3 );
+      ULONG ulIns = hb_parclen( 4 );
+      ULONG ulTot;
+
+      if( ulPos )
+      {
+         ulPos = utf8pos( ( BYTE * ) szString, ulLen, ulPos );
+         if( ulPos == 0 )
+            ulPos = ulLen;
+         else
+            ulPos--;
+      }
+      if( ulDel )
+      {
+         if( ulPos < ulLen )
+         {
+            ulDel = utf8pos( ( BYTE * ) szString + ulPos, ulLen - ulPos, ulDel + 1 );
+            if( ulDel == 0 )
+               ulDel = ulLen - ulPos;
+            else
+               ulDel--;
+         }
+         else
+            ulDel = 0;
+      }
+
+      if( ( ulTot = ulLen + ulIns - ulDel ) > 0 )
+      {
+         char * szResult = ( char * ) hb_xgrab( ulTot + 1 );
+
+         hb_xmemcpy( szResult, szString, ulPos );
+         hb_xmemcpy( szResult + ulPos, hb_parc( 4 ), ulIns );
+         hb_xmemcpy( szResult + ulPos + ulIns, szString + ulPos + ulDel,
+                     ulLen - ( ulPos + ulDel ) );
+         hb_retclen_buffer( szResult, ulTot );
+      }
+      else
+         hb_retc( NULL );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName,
@@ -1290,6 +1413,15 @@ HB_FUNC( HB_UTF8LEN )
                             HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* TODO: HB_UTF8TRAN, HB_UTF8STUFF, HB_UTF8POKE */
+/* non of numeric parameters in STRTRAN() (4-th and 5-th) refers to
+ * character position in string so we do not need to create new
+ * HB_UTF8STRTRAN() but we can safely use normal STRTRAN() function
+ */
+HB_FUNC_EXTERN( STRTRAN );
+
+HB_FUNC( HB_UTF8STRTRAN )
+{
+   HB_FUNC_EXEC( STRTRAN )
+}
 
 #endif /* HB_CDP_SUPPORT_OFF */
