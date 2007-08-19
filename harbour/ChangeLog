@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-19 05:14 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tget.prg
+     ! Fixed bug where mask was missing for date var type when 
+       no explicit picture was used.
+
+   * contrib/libct/makefile.bc
+     ! Added missing lines.
+
 2007-08-14 15:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/cdpapi.c
     + added HB_UTF8TRAN(), HB_UTF8STUFF(), HB_UTF8POKE()
