@@ -8,21 +8,28 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-19 18:35 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/makefile.bc
+  * harbour/makefile.vc
+  * harbour/makefile.gc
+     + Added more descripion in a makefile's headers
+     % Minor makefile cleanup
+
 2007-08-19 17:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tgetlist.prg
-     ! Fixed crash when bad date is detected. (:TypeOut was 
+     ! Fixed crash when bad date is detected. (:TypeOut was
        used in an assignment)
 
 2007-08-19 12:58 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tget.prg
-     ! Fixed bug where negative number in get buffer beginning 
-       with a decimal sign was erroneously converted back to 
+     ! Fixed bug where negative number in get buffer beginning
+       with a decimal sign was erroneously converted back to
        a numeric. (like: -.58)
      % Minor optimization in @E handling.
 
 2007-08-19 05:14 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tget.prg
-     ! Fixed bug where mask was missing for date var type when 
+     ! Fixed bug where mask was missing for date var type when
        no explicit picture was used.
 
    * contrib/libct/makefile.bc
@@ -111,10 +118,10 @@
    * include/hbextern.ch
    * contrib/libnf/fttext.c
    * source/vm/arrayshb.c
-     + xhb RASCAN() added to Harbour without HB_COMPAT_XHB 
+     + xhb RASCAN() added to Harbour without HB_COMPAT_XHB
        switch, under the name HB_RASCAN().
        Translation from RASCAN() is done via hbcompat.ch
-     ! NFLib/FT_FRSEEK() now works in Harbour regardless 
+     ! NFLib/FT_FRSEEK() now works in Harbour regardless
        of the HB_COMPAT switches.
 
 2007-08-08 15:44 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -600,7 +607,7 @@
    * source/codepage/Makefile
    + source/codepage/ucmik.c
    + source/codepage/cpbgmik.c
-     + Added BGMIK codepage and Bulgarian MIK unicode conversion 
+     + Added BGMIK codepage and Bulgarian MIK unicode conversion
        table from xHarbour.
      ! Changed internal ID "MIK" to "bg-mik".
 
@@ -615,7 +622,7 @@
    + source/codepage/cpskiso.c
    + source/codepage/cpskwin.c
    + source/codepage/cpskkam.c
-     + Added Slovak codepages. Pls. test them if you are 
+     + Added Slovak codepages. Pls. test them if you are
        familiar with the language rules.
 
 2007-07-24 19:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)

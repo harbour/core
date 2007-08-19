@@ -3,7 +3,7 @@
 #
 
 #
-# Makefile for Harbour Project for Msvc 6.0/7.1 compilers
+# Makefile for Harbour Project for Msvc compilers
 #
 
 # ---------------------------------------------------------------
@@ -30,6 +30,8 @@
 #       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
 #       PRG_USR           - Extra Harbour compiler options
 #                           (GNU make compatible envvar)
+#       HB_GT_DEFAULT     - The default GT driver, Choose between :
+#                           gtstd (default),gtcgi,gtwin,gtwvt
 #       HB_GT_LIB         - To override the default GT driver
 #                           (search for HB_GT_LIBS for a list of values)
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
