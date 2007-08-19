@@ -413,8 +413,7 @@ METHOD GetPostValidate() CLASS HBGetList
    endif
 
    if oGet:BadDate
-//      oGet:SetFocus()
-      oGet:TypeOut := .f.
+      oGet:home()
       ::DateMsg()
       ::ShowScoreboard()
       return .f.
@@ -995,8 +994,7 @@ METHOD GUIPostValidate( oGUI ) CLASS HBGetList
    endif
 
    if oGet:BadDate
-//      oGet:SetFocus()
-      oGet:TypeOut := .f.
+      oGet:home()
       ::DateMsg()
       ::ShowScoreboard()
       return .f.

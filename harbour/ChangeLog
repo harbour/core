@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-19 17:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tgetlist.prg
+     ! Fixed crash when bad date is detected. (:TypeOut was 
+       used in an assignment)
+
 2007-08-19 12:58 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tget.prg
      ! Fixed bug where negative number in get buffer beginning 
