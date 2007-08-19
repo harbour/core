@@ -10,7 +10,7 @@
 
 2007-08-19 12:58 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tget.prg
-     ! Fixed bug where negativ number in ge buffer beginning 
+     ! Fixed bug where negative number in get buffer beginning 
        with a decimal sign was erroneously converted back to 
        a numeric. (like: -.58)
      % Minor optimization in @E handling.
