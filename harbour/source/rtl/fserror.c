@@ -123,6 +123,11 @@ static int hb_errnoToDosError( int ErrCode )
          iResult = 25;  /* Seek error */
          break;
 #endif
+#if defined( ENOSPC )
+      case ENOSPC:
+         iResult = 29;  /* Write fault */
+         break;
+#endif
       case EPIPE:
          iResult = 29;  /* Write fault */
          break;
