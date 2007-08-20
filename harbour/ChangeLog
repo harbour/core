@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-20 17:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tget.prg
+     ! Recent missing date picture mask bug fixed in another 
+       different way. Now without any side-effects, tested with 
+       the regression test suit.
+     ! Fixed a minor incompatibility in some rare situations.
+       This is grey area even in C5.2 so compatibility is not 100% 
+       here.
+
 2007-08-20 15:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
     * do not generate error for QSELF()[...] - Clipper allows such
