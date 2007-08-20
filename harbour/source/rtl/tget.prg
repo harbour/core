@@ -217,14 +217,15 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    DEFAULT nCol       TO Col()
    DEFAULT cVarName   TO ""
    DEFAULT bVarBlock  TO iif( ISCHARACTER( cVarName ), MemvarBlock( cVarName ), NIL )
-   DEFAULT cPicture   TO ""
    DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + hb_ColorIndex( SetColor(), CLR_ENHANCED )
 
    ::nRow      := nRow
    ::nCol      := nCol
    ::bBlock    := bVarBlock
    ::cName     := cVarName
-   ::Picture   := cPicture
+   if cPicture != NIL
+      ::Picture   := cPicture
+   endif
    ::ColorSpec := cColorSpec
    if Set( _SET_DELIMITERS )
       ::cDelimit  := Set( _SET_DELIMCHARS )
@@ -367,6 +368,7 @@ METHOD End() CLASS Get
          endif
       next
       ::lClear := .f.
+      ::TypeOut := ( ::nPos == 0 )
       ::Display( .f. )
    endif
 
@@ -379,6 +381,7 @@ METHOD Home() CLASS Get
    if ::HasFocus
       ::Pos := ::FirstEditable()
       ::lClear := .f.
+      ::TypeOut := ( ::nPos == 0 )
       ::Display( .f. )
    endif
 
@@ -395,7 +398,7 @@ METHOD Reset() CLASS Get
       ::lEdit     := .f.
       ::lMinus    := .f.
       ::Rejected  := .f.
-      ::TypeOut   := ( ::nPos == 0 ) /* ; Simple .f. in CA-Cl*pper [vszakats] */
+      ::TypeOut   := !( ::Type $ "CNDL" ) .or. ( ::nPos == 0 ) /* ; Simple .f. in CA-Cl*pper [vszakats] */
       ::Display()
    endif
 
@@ -1759,8 +1762,6 @@ METHOD FirstEditable() CLASS Get
 
    endif
 
-   ::TypeOut := .t.
-
    return 0
 
 /* ------------------------------------------------------------------------- */
@@ -1778,8 +1779,6 @@ METHOD LastEditable() CLASS Get
       next
 
    endif
-
-   ::TypeOut := .t.
 
    return 0
 

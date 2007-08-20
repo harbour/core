@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-20 04:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tget.prg
+     ! Fixed incompatible setting of ::TypeOut in certain 
+       situations. As an example this could cause infinite 
+       loops in the get reader when a bad date was entered 
+       like: 2007.12.32 (very old bug)
+     ! Recent missing date picture mask bug fixed in a different 
+       way, because the previous one caused some regressions.
+     ! Fixed ::TypeOut behaviour for non-editable types.
+
 2007-08-19 18:35 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/makefile.bc
   * harbour/makefile.vc
