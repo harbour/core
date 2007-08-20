@@ -8,6 +8,38 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-20 15:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    * do not generate error for QSELF()[...] - Clipper allows such
+      operation and because some valid Clipper code needs it then
+      I disabled error message.
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/einstvar.prg
+    + added undocumented CA-Cl*pper function _eInstVar() used to validate
+      variable type in assign messages.
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/arrays.c
+    * changed 'char *' to 'const char *' in hb_arraySetC() and hb_arraySetCL()
+
+  * harbour/source/rdd/dbcmd.c
+    * cleaned DBSKIPPER() code
+
+  * harbour/source/rtl/browdb.prg
+    * use written in C DBSKIPPER() function instead of static .prg Skipped()
+      when HB_COMPAT_XPP macro is enabled
+
+  * harbour/source/rtl/browse.prg
+    ! fixes in BROWSE() function:
+      ! displaying box characters
+      + added CL53 compatible mouse actions
+      + added mouse wheel actions
+      + added support for deleting records (K_DEL)
+      + added support for edit mode
+      + added support for append mode
+
 2007-08-20 15:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/fserror.c
     + added translation (errno=>dosError) for ENOSPC

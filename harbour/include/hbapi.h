@@ -683,8 +683,8 @@ extern HB_EXPORT BOOL      hb_arraySetNL( PHB_ITEM pArray, ULONG ulIndex, LONG l
 extern HB_EXPORT BOOL      hb_arraySetNLL( PHB_ITEM pArray, ULONG ulIndex, LONGLONG llNumber );
 extern HB_EXPORT BOOL      hb_arraySetNInt( PHB_ITEM pArray, ULONG ulIndex, HB_LONG lNumber );
 extern HB_EXPORT BOOL      hb_arraySetND( PHB_ITEM pArray, ULONG ulIndex, double dNumber );
-extern HB_EXPORT BOOL      hb_arraySetC( PHB_ITEM pArray, ULONG ulIndex, char * szText );
-extern HB_EXPORT BOOL      hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen );
+extern HB_EXPORT BOOL      hb_arraySetC( PHB_ITEM pArray, ULONG ulIndex, const char * szText );
+extern HB_EXPORT BOOL      hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, const char * szText, ULONG ulLen );
 extern HB_EXPORT BOOL      hb_arraySetCPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen );
 extern HB_EXPORT BOOL      hb_arraySetPtr( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
 extern HB_EXPORT BOOL      hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* fill an array with a given item */

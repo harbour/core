@@ -4,9 +4,10 @@
 
 /*
  * Harbour Project source code:
- * TBROWSEDB() function
+ *    Undocumented CA-Cl*pper function used to validate
+ *    instance variable type in assign messages.
  *
- * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,47 +51,27 @@
  *
  */
 
-FUNCTION TBrowseDB( nTop, nLeft, nBottom, nRight )
+#include "common.ch"
 
-   LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
+FUNCTION _eInstVar( oVar, cMethod, xValue, cType, nSubCode, bValid )
 
-#ifdef HB_COMPAT_XPP
-   oBrowse:SkipBlock     := { | nRecs | DbSkipper( nRecs ) }
-#else
-   oBrowse:SkipBlock     := { | nRecs | Skipped( nRecs ) }
-#endif
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
+   LOCAL oError
 
-   RETURN oBrowse
-
-#ifndef HB_COMPAT_XPP
-STATIC FUNCTION Skipped( nRecs )
-
-   LOCAL nSkipped := 0
-
-   IF LastRec() != 0
-      IF nRecs == 0
-         dbSkip( 0 )
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
-         DO WHILE nSkipped < nRecs
-            dbSkip( 1 )
-            IF Eof()
-               dbSkip( -1 )
-               EXIT
-            ENDIF
-            nSkipped++
-         ENDDO
-      ELSEIF nRecs < 0
-         DO WHILE nSkipped > nRecs
-            dbSkip( -1 )
-            IF Bof()
-               EXIT
-            ENDIF
-            nSkipped--
-         ENDDO
+   IF VALTYPE( xValue ) != cType .OR. ;
+      ( bValid != NIL .AND. !EVAL( bValid, oVar, xValue ) )
+      oError := errornew()
+      oError:description := HB_LANGERRMSG( 1 )
+      oError:gencode := 1
+      oError:severity := 2
+      oError:cansubstitute := .T.
+      oError:subsystem := oVar:classname
+      oError:operation := cMethod
+      oError:subcode := nSubCode
+      oError:args := { xValue }
+      xValue := EVAL( ERRORBLOCK(), oError )
+      IF VALTYPE( xValue ) != cType
+         __errInHandler()
       ENDIF
    ENDIF
 
-   RETURN nSkipped
-#endif
+   RETURN xValue

@@ -51,139 +51,394 @@
  */
 
 #include "inkey.ch"
+#include "setcurs.ch"
+#include "box.ch"
 
-function Browse( nTop, nLeft, nBottom, nRight )
+FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
-   local oBrw
-   local cOldScreen
-   local n, nOldCursor
-   local nKey := 0
-   local lExit := .f.
-   local lGotKey := .f.
-   local bAction
+   LOCAL oBrw
+   LOCAL lExit, lGotKey, lAppend, lKeyPressed, lRefresh
+   LOCAL n, nOldCursor, nKey
+   LOCAL cOldScreen
+   LOCAL bAction
 
-   if ! Used()
-      return .f.
-   end
+   IF ! Used()
+      RETURN .F.
+   ENDIF
 
-   if PCount() < 4
+   lExit := lGotKey := lAppend := lKeyPressed := lRefresh := .F.
+
+   IF PCount() < 4
       nTop    := 1
       nLeft   := 0
       nBottom := MaxRow()
       nRight  := MaxCol()
-   endif
+   ENDIF
 
-   nOldCursor := SetCursor( 0 )
+   DispBegin()
+
+   nOldCursor := SetCursor( SC_NONE )
    cOldScreen := SaveScreen( nTop, nLeft, nBottom, nRight )
 
-   @ nTop, nLeft TO nBottom, nRight
-   @ nTop + 3, nLeft SAY Chr( 198 )
-   @ nTop + 3, nRight SAY Chr( 181 )
-   @ nTop + 1, nLeft + 1 SAY Space( nRight - nLeft - 1 )
+   DispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE )
+   DispBox( nTop + 3, nLeft, nTop + 3, nLeft, chr( 198 ) )
+   DispBox( nTop + 3, nRight, nTop + 3, nRight, chr( 181 ) )
+   DispOutAt( nTop + 1, nLeft + 1, Space( nRight - nLeft - 1 ) )
 
    oBrw := TBrowseDB( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
-   oBrw:HeadSep := " " + Chr( 205 )
+   oBrw:HeadSep   := " " + Chr( 205 )
+   oBrw:SkipBlock := { | nRecs | Skipped( nRecs, lAppend ) }
 
-   for n := 1 to FCount()
+   FOR n := 1 to FCount()
       oBrw:AddColumn( TBColumnNew( FieldName( n ), FieldBlock( FieldName( n ) ) ) )
-   next
+   NEXT
+
+   IF Eof()
+      DbGoTop()
+   ENDIF
 
    oBrw:ForceStable()
 
-   while ! lExit
+   DispEnd()
 
-      if nKey == 0
-         while !oBrw:stabilize() .and. NextKey() == 0
-         enddo
-      endif
+   IF LastRec() == 0
+      nKey := K_DOWN
+      lKeyPressed := .T.
+   ENDIF
 
-      if NextKey() == 0
+   WHILE ! lExit
 
-         oBrw:forceStable()
-         Statline( oBrw )
+      WHILE ! lKeyPressed .AND. ! oBrw:Stabilize()
+         lKeyPressed := ( nKey := Inkey() ) != 0
+      ENDDO
 
-         nKey := Inkey( 0 )
+      IF ! lKeyPressed
 
-         if ( bAction := SetKey( nKey ) ) != nil
-            Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "" )
-            loop
-         endif
-      else
-         nKey := Inkey()
-      endif
-
-      do case
-         case nKey == K_ESC
-            lExit := .t.
-
-         case nKey == K_UP
-            oBrw:Up()
-
-         case nKey == K_DOWN
+         IF oBrw:HitBottom() .AND. ( ! lAppend .OR. RecNo() != LastRec() + 1 )
+            IF lAppend
+               oBrw:RefreshCurrent()
+               oBrw:ForceStable()
+               dbGoBottom()
+            ELSE
+               lAppend := .T.
+               SetCursor( IIF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+            ENDIF
             oBrw:Down()
+            oBrw:ForceStable()
+            oBrw:ColorRect( { oBrw:RowPos, 1, oBrw:RowPos, oBrw:ColCount() }, ;
+                            { 2, 2 } )
+         ENDIF
 
-         case nKey == K_END
-            oBrw:End()
+         StatLine( oBrw, lAppend )
 
-         case nKey == K_HOME
-            oBrw:Home()
+         oBrw:ForceStable()
 
-         case nKey == K_LEFT
+         nKey := InKey( 0 )
+         IF ( bAction := SetKey( nKey ) ) != NIL
+            Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "")
+            LOOP
+         ENDIF
+      ELSE
+         lKeyPressed := .F.
+      ENDIF
+
+      SWITCH nKey
+
+#ifdef HB_COMPAT_C53
+         CASE K_LBUTTONDOWN
+         CASE K_LDBLCLK
+            TBMOUSE( oBrw, MRow(), MCol() )
+            EXIT
+#endif
+#ifdef HB_EXTENSION
+         CASE K_MWFORWARD
+#endif
+         CASE K_UP
+            IF lAppend
+               lRefresh := .T.
+            ELSE
+               oBrw:Up()
+            ENDIF
+            EXIT
+
+#ifdef HB_EXTENSION
+         CASE K_MWBACKWARD
+#endif
+         CASE K_DOWN
+            IF lAppend
+               oBrw:HitBottom( .T. )
+            ELSE
+               oBrw:Down()
+            ENDIF
+            EXIT
+
+         CASE K_PGUP
+            IF lAppend
+               lRefresh := .T.
+            ELSE
+               oBrw:PageUp()
+            ENDIF
+            EXIT
+
+         CASE K_PGDN
+            IF lAppend
+               oBrw:HitBottom( .T. )
+            ELSE
+               oBrw:PageDown()
+            ENDIF
+            EXIT
+
+         CASE K_CTRL_PGUP
+            IF lAppend
+               lRefresh := .T.
+            ELSE
+               oBrw:GoTop()
+            ENDIF
+            EXIT
+
+         CASE K_CTRL_PGDN
+            IF lAppend
+               lRefresh := .T.
+            ELSE
+               oBrw:GoBottom()
+            ENDIF
+            EXIT
+
+         CASE K_LEFT
             oBrw:Left()
+            EXIT
 
-         case nKey == K_RIGHT
+         CASE K_RIGHT
             oBrw:Right()
+            EXIT
 
-         case nKey == K_PGUP
-            oBrw:PageUp()
+         CASE K_HOME
+            oBrw:Home()
+            EXIT
 
-         case nKey == K_PGDN
-            oBrw:PageDown()
+         CASE K_END
+            oBrw:End()
+            EXIT
 
-         case nKey == K_CTRL_PGUP
-            oBrw:GoTop()
-
-         case nKey == K_CTRL_PGDN
-            oBrw:GoBottom()
-
-         case nKey == K_CTRL_LEFT
+         CASE K_CTRL_LEFT
             oBrw:panLeft()
+            EXIT
 
-         case nKey == K_CTRL_RIGHT
+         CASE K_CTRL_RIGHT
             oBrw:panRight()
+            EXIT
 
-         case nKey == K_CTRL_HOME
+         CASE K_CTRL_HOME
             oBrw:panHome()
+            EXIT
 
-         case nKey == K_CTRL_END
+         CASE K_CTRL_END
             oBrw:panEnd()
+            EXIT
 
-      endcase
-   end
+         CASE K_INS
+            IF lAppend
+               SetCursor( IIF( ReadInsert( ! ReadInsert() ), ;
+                               SC_NORMAL, SC_INSERT ) )
+            ENDIF
+            EXIT
+
+         CASE K_DEL
+            IF RecNo() != LastRec() + 1
+               IF Deleted()
+                  DbRecall()
+               ELSE
+                  DbDelete()
+               ENDIF
+            ENDIF
+            EXIT
+
+         CASE K_ENTER
+            IF lAppend .OR. RecNo() != LastRec() + 1
+               lKeyPressed := ( nKey := DoGet( oBrw, lAppend ) ) != 0
+            ELSE
+               nKey := K_DOWN
+               lKeyPressed := .T.
+            ENDIF
+            EXIT
+
+         CASE K_ESC
+            lExit := .t.
+            EXIT
+
+         OTHERWISE
+            IF nKey >= 32 .AND. nKey <= 255
+               KEYBOARD Chr( nKey )
+               nKey := K_ENTER
+               lKeyPressed := .T.
+            ENDIF
+            EXIT
+      END
+
+      IF lRefresh
+         lRefresh := lAppend := .F.
+         FreshOrder( oBrw )
+         SetCursor( SC_NONE )
+      ENDIF
+
+   ENDDO
 
    RestScreen( nTop, nLeft, nBottom, nRight, cOldScreen )
    SetCursor( nOldCursor )
 
-return .t.
+   RETURN .T.
 
-static procedure Statline( oBrw )
+STATIC FUNCTION StatLine( oBrw, lAppend )
 
-   local nTop   := oBrw:nTop - 1
-   local nRight := oBrw:nRight
+   LOCAL nTop   := oBrw:nTop - 1
+   LOCAL nRight := oBrw:nRight
 
-   @ nTop, nRight - 27 SAY "Record "
+   DispOutAt( nTop, nRight - 27, "Record " )
 
-   if LastRec() == 0
-      @ nTop, nRight - 20 SAY "<none>               "
-   elseif RecNo() == LastRec() + 1
-      @ nTop, nRight - 40 SAY "         "
-      @ nTop, nRight - 20 SAY "                <new>"
-   else
-      @ nTop, nRight - 40 SAY iif( Deleted(), "<Deleted>", "         " )
-      @ nTop, nRight - 20 SAY PadR( LTrim( Str( RecNo() ) ) + "/" +;
-                                    Ltrim( Str( LastRec() ) ), 16 ) +;
-                              iif( oBrw:hitTop, "<bof>", "     " )
-   endif
+   IF LastRec() == 0 .and. ! lAppend
+      DispOutAt( nTop, nRight - 20, "<none>               " )
+   ELSEIF RecNo() == LastRec() + 1
+      DispOutAt( nTop, nRight - 40, "         " )
+      DispOutAt( nTop, nRight - 20, "                <new>" )
+   ELSE
+      DispOutAt( nTop, nRight - 40, IIF( Deleted(), "<Deleted>", "         " ) )
+      DispOutAt( nTop, nRight - 20, PadR( LTrim( Str( RecNo() ) ) + "/" + ;
+                                          LTrim( Str( LastRec() ) ), 16 ) + ;
+                                    IIF( oBrw:HitTop(), "<bof>", "     " ) )
+   ENDIF
 
-return
+   RETURN NIL
 
+STATIC FUNCTION DoGet( oBrw, lAppend )
+
+   LOCAL lScore, lExit, bIns, nCursor
+   LOCAL oCol, oGet
+   LOCAL cIndexKey, cForExp, xKeyValue
+   LOCAL lSuccess, nKey, xValue
+
+   oBrw:HitTop( .F. )
+   StatLine( oBrw, lAppend )
+   oBrw:ForceStable()
+
+   lScore := Set( _SET_SCOREBOARD, .F. )
+   lExit := Set( _SET_EXIT, .T. )
+   bIns := SetKey( K_INS, {|| SetCursor( IIF( ReadInsert( ! ReadInsert() ), ;
+                                              SC_NORMAL, SC_INSERT ) ) } )
+   nCursor := SetCursor( IIF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+   IF !Empty( cIndexKey := IndexKey( 0 ) )
+      xKeyValue := &cIndexKey
+   ENDIF
+
+   oCol := oBrw:GetColumn( oBrw:ColPos )
+   xValue := Eval( oCol:Block )
+   oGet := GetNew( Row(), Col(), ;
+               { |xNewVal| IIF( PCount() == 0, xValue, xValue := xNewVal ) }, ;
+               "mGetVar", NIL, oBrw:ColorSpec )
+   lSuccess := .F.
+   IF ReadModal( { oGet } )
+      IF lAppend .AND. RecNo() == LastRec() + 1
+         dbAppend()
+      ENDIF
+      Eval( oCol:Block, xValue )
+
+      IF !lAppend .AND. !Empty( cForExp := OrdFor( IndexOrd() ) ) .AND. ;
+         ! &cForExp
+         dbGoTop()
+      ENDIF
+      IF !lAppend .AND. !Empty( cIndexKey ) .AND. ! xKeyValue == &cIndexKey
+         lSuccess := .T.
+      ENDIF
+   ENDIF
+
+   IF lSuccess
+      FreshOrder( oBrw )
+      nKey := 0
+   ELSE
+      oBrw:RefreshCurrent()
+      nKey := ExitKey( lAppend )
+   ENDIF
+
+   IF lAppend
+      oBrw:ColorRect( { oBrw:rowpos, 1, oBrw:rowpos, oBrw:colcount }, ;
+                      { 2, 2 } )
+   ENDIF
+
+   SetCursor( nCursor )
+   SetKey( K_INS, bIns )
+   Set( _SET_EXIT, lExit )
+   Set( _SET_SCOREBOARD, lScore )
+
+   RETURN nKey
+
+STATIC FUNCTION ExitKey( lAppend )
+
+   LOCAL nKey := LastKey()
+
+   SWITCH nKey
+      CASE K_PGDN
+         nKey := IIF( lAppend, 0, K_DOWN )
+         EXIT
+
+      CASE K_PGUP
+         nKey := IIF( lAppend, 0, K_UP )
+
+      CASE K_DOWN
+      CASE K_UP
+         EXIT
+
+      OTHERWISE
+         nKey := IIF( nKey == 13 .OR. ;
+                      ( nKey >= 32 .AND. nKey <= 255 ), K_RIGHT, 0 )
+         EXIT
+   END
+
+   RETURN nKey
+
+STATIC FUNCTION FreshOrder( oBrw )
+
+   LOCAL nRec := RecNo()
+
+   oBrw:RefreshAll()
+   oBrw:ForceStable()
+
+   IF nRec != LastRec() + 1
+      WHILE RecNo() != nRec .AND. !BOF()
+         oBrw:Up()
+         oBrw:ForceStable()
+      ENDDO
+   ENDIF
+
+   RETURN NIL
+
+STATIC FUNCTION Skipped( nRecs, lAppend )
+
+   LOCAL nSkipped := 0
+
+   IF LastRec() != 0
+      IF nRecs == 0
+         dbSkip( 0 )
+      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
+         DO WHILE nSkipped < nRecs
+            dbSkip()
+            IF Eof()
+               IF lAppend
+                  nSkipped++
+               ELSE
+                  dbSkip( -1 )
+               ENDIF
+               EXIT
+            ENDIF
+            nSkipped++
+         ENDDO
+      ELSEIF nRecs < 0
+         DO WHILE nSkipped > nRecs
+            dbSkip( -1 )
+            IF Bof()
+               EXIT
+            ENDIF
+            nSkipped--
+         ENDDO
+      ENDIF
+   ENDIF
+
+   RETURN nSkipped

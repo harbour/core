@@ -715,7 +715,7 @@ HB_EXPORT BOOL hb_arraySetND( PHB_ITEM pArray, ULONG ulIndex, double dNumber )
       return FALSE;
 }
 
-HB_EXPORT BOOL hb_arraySetC( PHB_ITEM pArray, ULONG ulIndex, char * szText )
+HB_EXPORT BOOL hb_arraySetC( PHB_ITEM pArray, ULONG ulIndex, const char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySetC(%p, %lu, %p)", pArray, ulIndex, szText));
 
@@ -728,7 +728,7 @@ HB_EXPORT BOOL hb_arraySetC( PHB_ITEM pArray, ULONG ulIndex, char * szText )
       return FALSE;
 }
 
-HB_EXPORT BOOL hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen )
+HB_EXPORT BOOL hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, const char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arraySetC(%p, %lu, %p, %lu)", pArray, ulIndex, szText, ulLen));
 

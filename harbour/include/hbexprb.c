@@ -492,7 +492,10 @@ static HB_EXPR_FUNC( hb_compExprUseSelf )
       case HB_EA_REDUCE:
          break;
       case HB_EA_ARRAY_AT:
-         HB_COMP_ERROR_TYPE( pSelf );   /* QUESTION: Is this OK ? */
+         /* Clipper allows such operation and because some valid Clipper
+          * code needs it then I disabled error message, [druzus]
+          */
+         /* HB_COMP_ERROR_TYPE( pSelf ); */
          break;
       case HB_EA_ARRAY_INDEX:
          hb_compErrorIndex( HB_COMP_PARAM, pSelf );     /* SELF cannot be used as array index element */

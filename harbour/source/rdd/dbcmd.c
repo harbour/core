@@ -2668,61 +2668,52 @@ HB_FUNC( DBSKIPPER )
 
    if( pArea )
    {
-      LONG nSkipped    = 0;
-      LONG nRecs       = 1;
-      BOOL bBEof       = TRUE;
-      if( hb_pcount() > 0 )
-      {
-         nRecs = hb_parnl( 1 ) ;
-      }
+      LONG lSkipped = 0;
+      LONG lRecs = 1;
+      BOOL fBEof;
+      ULONG ulRecords = 0;
 
-      if( SELF_EOF( pArea, &bBEof ) != SUCCESS )
-         return;
+      if( SELF_RECCOUNT( pArea, &ulRecords ) == SUCCESS && ulRecords > 0 )
+      {
+         if( ISNUM( 1 ) )
+            lRecs = hb_parnl( 1 ) ;
 
-      if( nRecs == 0 )
-      {
-         if( SELF_SKIP( pArea, 0 ) != SUCCESS )
-            return;
-      }
-      else if( nRecs > 0 && !bBEof  )
-      {
-         while( nSkipped < nRecs )
+         if( lRecs == 0 )
+            SELF_SKIP( pArea, 0 );
+         else if( lRecs > 0 )
          {
-            if( SELF_SKIP( pArea, 1 ) != SUCCESS )
-               return;
-            if( SELF_EOF( pArea, &bBEof ) != SUCCESS )
-               return;
-            if( bBEof )
+            if( SELF_EOF( pArea, &fBEof ) == SUCCESS )
+            {
+               while( lSkipped < lRecs )
+               {
+                  if( SELF_SKIP( pArea, 1 ) != SUCCESS )
+                     break;
+                  if( SELF_EOF( pArea, &fBEof ) != SUCCESS )
+                     break;
+                  if( fBEof )
+                  {
+                     SELF_SKIP( pArea, -1 );
+                     break;
+                  }
+                  lSkipped++;
+               }
+            }
+         }
+         else /* if( lRecs < 0 ) */
+         {
+            while( lSkipped > lRecs )
             {
                if( SELF_SKIP( pArea, -1 ) != SUCCESS )
-                  return;
-               nRecs = nSkipped ;
-            }
-            else
-            {
-               nSkipped++ ;
-            }
-         }
-      }
-      else if( nRecs < 0 )
-      {
-         while( nSkipped > nRecs )
-         {
-            if( SELF_SKIP( pArea, -1 ) != SUCCESS )
-               return;
-            if( SELF_BOF( pArea, &bBEof ) != SUCCESS )
-               return;
-            if( bBEof )
-            {
-               nRecs = nSkipped ;
-            }
-            else
-            {
-               nSkipped-- ;
+                  break;
+               if( SELF_BOF( pArea, &fBEof ) != SUCCESS )
+                  break;
+               if( fBEof )
+                  break;
+               lSkipped--;
             }
          }
+         hb_retnl( lSkipped );
       }
-      hb_retnl( nSkipped );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBSKIPPER" );
