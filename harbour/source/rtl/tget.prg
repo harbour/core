@@ -223,9 +223,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::nCol      := nCol
    ::bBlock    := bVarBlock
    ::cName     := cVarName
-   if cPicture != NIL
-      ::Picture   := cPicture
-   endif
+   ::Picture   := cPicture
    ::ColorSpec := cColorSpec
    if Set( _SET_DELIMITERS )
       ::cDelimit  := Set( _SET_DELIMCHARS )
@@ -1545,11 +1543,13 @@ METHOD Picture( cPicture ) CLASS Get
    local nFor
    local cNum
 
-   if PCount() == 0 .or. cPicture == NIL
+   if PCount() == 0
       return ::cPicture
    endif
 
-   ::cPicture    := cPicture
+   if cPicture != NIL
+      ::cPicture    := cPicture
+   endif
    ::cPicFunc    := ""
    ::cPicMask    := ""
    ::lPicComplex := .f.
@@ -1674,7 +1674,7 @@ METHOD Picture( cPicture ) CLASS Get
       next
    endif
 
-return cPicture
+return ::cPicture
 
 /* ------------------------------------------------------------------------- */
 
