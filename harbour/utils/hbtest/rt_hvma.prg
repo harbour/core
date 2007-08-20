@@ -418,7 +418,7 @@ FUNCTION Main_HVMA()
    TEST_LINE( Len( w_TEST->TYPE_M_E )         , 0                                      )
    TEST_LINE( Len( saArray )                  , 1                                      )
 #ifdef __HARBOUR__
-   TEST_LINE( Len( ErrorNew() )               , 14                                     )
+   TEST_LINE( Len( ErrorNew() )               , 12                                     )
    TEST_LINE( Len( Space( 1000000 ) )         , 1000000                                )
 #else
    TEST_LINE( Len( ErrorNew() )               , 7                                      )

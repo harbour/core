@@ -576,7 +576,6 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\tbrowse$(OBJEXT)  \
     $(OBJ_DIR)\tclass$(OBJEXT)   \
     $(OBJ_DIR)\teditor$(OBJEXT)  \
-    $(OBJ_DIR)\terror$(OBJEXT)   \
     $(OBJ_DIR)\text$(OBJEXT)     \
     $(OBJ_DIR)\tget$(OBJEXT)     \
     $(OBJ_DIR)\tgetint$(OBJEXT)  \

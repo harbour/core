@@ -8,6 +8,26 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-20 23:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour.spec
+    ! added workaround for undefined Epoch tag
+
+  * harbour/source/rtl/Makefile
+  * harbour/common.mak
+  - harbour/source/rtl/terror.prg
+    - removed .prg level ERROR class
+
+  * harbour/include/hbapierr.h
+  * harbour/source/rtl/errorapi.c
+    + added ERROR class supported at .c level and updated all necessary
+      functions to work without PCODE execution - it should allow to
+      create and update ERROR object when HVM has active exceptions
+
+  * harbour/utils/hbtest/rt_hvma.prg
+  * harbour/utils/hbtest/rt_misc.prg
+  * harbour/utils/hbtest/rt_array.prg
+    * update HBTEST for new ERROR object structure
+
 2007-08-20 17:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tget.prg
      ! Recent missing date picture mask bug fixed in another 

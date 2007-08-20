@@ -101,6 +101,8 @@ extern const char hb_errFuncName;
 
 /* Standard API */
 
+extern PHB_ITEM hb_errGetCargo( PHB_ITEM pError );
+extern PHB_ITEM hb_errGetArgs( PHB_ITEM pError );
 extern char *   hb_errGetDescription    ( PHB_ITEM pError );
 extern char *   hb_errGetFileName       ( PHB_ITEM pError );
 extern USHORT   hb_errGetFlags          ( PHB_ITEM pError );
@@ -113,6 +115,8 @@ extern char *   hb_errGetSubSystem      ( PHB_ITEM pError );
 extern USHORT   hb_errGetTries          ( PHB_ITEM pError );
 extern USHORT   hb_errLaunch            ( PHB_ITEM pError );
 extern PHB_ITEM hb_errNew               ( void );
+extern PHB_ITEM hb_errPutCargo          ( PHB_ITEM pError, PHB_ITEM pCargo );
+extern PHB_ITEM hb_errPutArgsArray      ( PHB_ITEM pError, PHB_ITEM pArgs );
 extern PHB_ITEM hb_errPutArgs           ( PHB_ITEM pError, ULONG ulArgCount, ... );
 extern PHB_ITEM hb_errPutDescription    ( PHB_ITEM pError, const char * szDescription );
 extern PHB_ITEM hb_errPutFileName       ( PHB_ITEM pError, const char * szFileName );

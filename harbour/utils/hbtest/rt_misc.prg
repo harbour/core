@@ -73,7 +73,7 @@ FUNCTION Main_MISC()
    TEST_LINE( Len( oError )                   , 7                         )
 #endif
 #ifdef __HARBOUR__
-   TEST_LINE( Len( oError )                   , 14                        )
+   TEST_LINE( Len( oError )                   , 12                        )
 #endif
 
    /* "Samples" function tests (AMPM(), DAYS(), ELAPTIME(), ... ) */

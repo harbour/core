@@ -157,11 +157,7 @@ FUNCTION Main_ARRAY()
    TEST_LINE( aTail( "" )                     , NIL                                        )
    TEST_LINE( aTail( {} )                     , NIL                                        )
    TEST_LINE( aTail( { 1, 2 } )               , 2                                          )
-#ifdef __HARBOUR__
-   TEST_LINE( aTail( ErrorNew() )             , 0                                          )
-#else
    TEST_LINE( aTail( ErrorNew() )             , NIL                                        )
-#endif
 #ifndef __XPP__
    TEST_LINE( aSize()                         , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( aSize( NIL )                    , "E BASE 2023 Argument error ASIZE "        )

@@ -105,7 +105,7 @@ URL:            http://%{hb_host}/
 Source:         %{name}-%{version}.src.tar.gz
 Packager:       PrzemysЁaw Czerpak <druzus@polbox.com> Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
 BuildPrereq:    gcc binutils bash ncurses ncurses-devel %{!?_without_gpm: gpm-devel}
-Requires:       gcc binutils bash sh-utils %{name}-lib = %{epoch}:%{version}-%{release}
+Requires:       gcc binutils bash sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:       %{name} harbour
 BuildRoot:      /tmp/%{name}-%{version}-root
 
@@ -176,7 +176,7 @@ Summary:        Static runtime libaries for %{dname} compiler
 Summary(pl):    Statyczne bilioteki dla kompilatora %{dname}
 Summary(ru):    Статические библиотеки для компилятора %{dname}
 Group:          Development/Languages
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description static
 %{dname} is a Clipper compatible compiler.
@@ -205,7 +205,7 @@ Summary(pl):    Bilioteki z drzewa contrib dla kompilatora %{dname}
 Summary(pt_BR): Libs contrib para %{dname}
 Summary(ru):    Библиотеки из дерева contrib для компилятора %{dname}
 Group:          Development/Languages
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description contrib
 %{dname} is a Clipper compatible compiler.
@@ -236,7 +236,7 @@ Summary(pl):    Kompatybilny z Clipper/Harbour/xBase Preprocesor i interpreter
 Summary(ru):    Совместимый с Clipper/Harbour/xBase препроцессор и интерпретатор
 License:        GPL
 Group:          Development/Languages
-Requires:       %{name} = %{epoch}:%{version}-%{release}
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
 %description pp
 %{dname} is a Clipper compatible compiler.

@@ -183,7 +183,6 @@ PRG_SOURCES=\
 	tbcolumn.prg \
 	tbrowse.prg  \
 	teditor.prg  \
-	terror.prg   \
 	text.prg     \
 	tget.prg     \
 	tgetint.prg  \
