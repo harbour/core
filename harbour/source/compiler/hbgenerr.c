@@ -139,18 +139,34 @@ const char * hb_comp_szWarnings[] =
    "0Invalid variable '%s' for enumerator message"
 };
 
+static void hb_compDispMessage( HB_COMP_DECL, char cPrefix, int iValue,
+                                const char * szText, const char * szPar1, const char * szPar2 )
+{
+   char buffer[ 512 ];
+
+   if( HB_COMP_PARAM->currModule )
+   {
+      snprintf( buffer, sizeof( buffer ), "\r%s(%i) ",
+                HB_COMP_PARAM->currModule, HB_COMP_PARAM->currLine );
+      hb_compOutErr( HB_COMP_PARAM, buffer );
+   }
+
+   snprintf( buffer, sizeof( buffer ), "%s %c%04i  ",
+             cPrefix == 'W' ? "Warning" : "Error", cPrefix, iValue );
+   hb_compOutErr( HB_COMP_PARAM, buffer );
+   snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
+   hb_compOutErr( HB_COMP_PARAM, buffer );
+   hb_compOutErr( HB_COMP_PARAM, "\n" );
+}
+
 void hb_compGenError( HB_COMP_DECL, const char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 )
 {
    if( !HB_COMP_PARAM->fExit && ( cPrefix == 'F' || !HB_COMP_PARAM->fError ) )
    {
       PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
 
-      if( HB_COMP_PARAM->currModule )
-         fprintf( hb_comp_errFile, "\r%s(%i) ", HB_COMP_PARAM->currModule, HB_COMP_PARAM->currLine );
-
-      fprintf( hb_comp_errFile, "Error %c%04i  ", cPrefix, iError );
-      fprintf( hb_comp_errFile, szErrors[ iError - 1 ], szError1, szError2 );
-      fprintf( hb_comp_errFile, "\n" );
+      hb_compDispMessage( HB_COMP_PARAM, cPrefix, iError,
+                          szErrors[ iError - 1 ], szError1, szError2 );
 
       HB_COMP_PARAM->iErrorCount++;
       HB_COMP_PARAM->fError = TRUE;
@@ -171,12 +187,8 @@ void hb_compGenWarning( HB_COMP_DECL, const char * szWarnings[], char cPrefix, i
 
    if( !HB_COMP_PARAM->fExit && ( szText[ 0 ] - '0' <= HB_COMP_PARAM->iWarnings ) )
    {
-      if( HB_COMP_PARAM->currModule )
-         fprintf( hb_comp_errFile, "\r%s(%i) ", HB_COMP_PARAM->currModule, HB_COMP_PARAM->currLine );
-
-      fprintf( hb_comp_errFile, "Warning %c%04i  ", cPrefix, iWarning );
-      fprintf( hb_comp_errFile, szText + 1, szWarning1, szWarning2 );
-      fprintf( hb_comp_errFile, "\n" );
+      hb_compDispMessage( HB_COMP_PARAM, cPrefix, iWarning,
+                          szText + 1, szWarning1, szWarning2 );
 
       HB_COMP_PARAM->fAnyWarning = TRUE;    /* report warnings at exit */
    }

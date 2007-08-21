@@ -83,8 +83,10 @@ void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
 
    if( ! HB_COMP_PARAM->fQuiet )
    {
-      printf( "Generating Java source output to \'%s\'... ", szFileName );
-      fflush( stdout );
+      char buffer[ 80 + _POSIX_PATH_MAX ];
+      snprintf( buffer, sizeof( buffer ),
+                "Generating Java source output to \'%s\'... ", szFileName );
+      hb_compOutStd( HB_COMP_PARAM, buffer );
    }
 
    nChar = 0;
@@ -178,5 +180,5 @@ void hb_compGenJava( HB_COMP_DECL, PHB_FNAME pFileName )
    fclose( fOut );
 
    if( ! HB_COMP_PARAM->fQuiet )
-      printf( "Done.\n" );
+      hb_compOutStd( HB_COMP_PARAM, "Done.\n" );
 }

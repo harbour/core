@@ -219,10 +219,7 @@ void hb_compInitPP( HB_COMP_DECL, int argc, char * argv[] )
       else if( HB_COMP_PARAM->szStdCh[ 0 ] > ' ' )
          hb_pp_readRules( HB_COMP_PARAM->pLex->pPP, HB_COMP_PARAM->szStdCh );
       else if( ! HB_COMP_PARAM->fQuiet )
-      {
-         printf( "Standard command definitions excluded.\n" );
-         fflush( stdout );
-      }
+         hb_compOutStd( HB_COMP_PARAM, "Standard command definitions excluded.\n" );
 
       hb_pp_initDynDefines( HB_COMP_PARAM->pLex->pPP );
 

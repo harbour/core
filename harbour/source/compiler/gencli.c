@@ -85,8 +85,10 @@ void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL 
 
    if( ! HB_COMP_PARAM->fQuiet )
    {
-      printf( "Generating IL source output to \'%s\'... ", szFileName );
-      fflush( stdout );
+      char buffer[ 80 + _POSIX_PATH_MAX ];
+      snprintf( buffer, sizeof( buffer ),
+                "Generating IL source output to \'%s\'... ", szFileName );
+      hb_compOutStd( HB_COMP_PARAM, buffer );
    }
 
    szVer = hb_verHarbour();
@@ -175,7 +177,7 @@ void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL 
    fclose( yyc );
 
    if( ! HB_COMP_PARAM->fQuiet )
-      printf( "Done.\n" );
+      hb_compOutStd( HB_COMP_PARAM, "Done.\n" );
 }
 
 static HB_GENC_FUNC( hb_p_and )

@@ -8,6 +8,31 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-21 16:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/memvars.c
+    + added __MVSETBASE() function
+
+  * harbour/source/pp/ppcore.c
+    * redirect error messages when error trap is not defined into
+      user dispout function
+
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/genjava.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/hbcmplib.c
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/compiler/gencli.c
+  * harbour/source/compiler/genhrb.c
+  * harbour/source/compiler/gencobj.c
+  * harbour/source/compiler/genobj32.c
+  * harbour/source/compiler/hbusage.c
+  * harbour/source/compiler/hbgenerr.c
+    + added hb_compOutStd() and hb_compOutErr()
+    * redirected all compiler output to above functions
+
 2007-08-20 23:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour.spec
     ! added workaround for undefined Epoch tag

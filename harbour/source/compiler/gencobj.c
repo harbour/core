@@ -136,6 +136,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    char szCommandLine[ HB_CFG_LINE_LEN * 2 + 1 ];
    char szOutPath[ _POSIX_PATH_MAX + 1 ] = "\0";
    char pszTemp[ _POSIX_PATH_MAX + 1 ] = "";
+   char buffer[ HB_CFG_LINE_LEN * 2 + 1024 ];
 #if defined( HOST_OS_UNIX_COMPATIBLE )
    char * pszEnv = hb_strdup( "/etc:/usr/local/etc" );
 #elif defined( OS_DOS_COMPATIBLE )
@@ -235,22 +236,22 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       fclose( filecfg );
 
    } else {
-     
-      printf( "\nError: Can't find %s file in %s.\n", pszCfgFileName, pszEnv ); 
-      printf( "%s should be a text file that contains:\n", pszCfgFileName ); 
-      printf( "CC=C compiler binary name eg. CC=gcc\n" );
-      printf( "CFLAGS=C compiler options eg. -c -I<includes>\n" );
-      printf( "       ( 'compile only' and harbour include dir are mandatory )\n" );
-      printf( "VERBOSE=NO|YES to show steps messages default is NO\n" );
-      printf( "DELTMP=NO|YES to delete generated C source default is YES\n" );
-      printf( "remember also to properly set the C compiler env.\n" );
+      snprintf( buffer, sizeof( buffer ),
+                "\nError: Can't find %s file in %s.\n"
+                "%s should be a text file that contains:\n"
+                "CC=C compiler binary name eg. CC=gcc\n"
+                "CFLAGS=C compiler options eg. -c -I<includes>\n"
+                "       ( 'compile only' and harbour include dir are mandatory )\n"
+                "VERBOSE=NO|YES to show steps messages default is NO\n"
+                "DELTMP=NO|YES to delete generated C source default is YES\n"
+                "remember also to properly set the C compiler env.\n",
+                pszCfgFileName, pszEnv, pszCfgFileName );
+      hb_compOutStd( HB_COMP_PARAM, buffer );
 
       if( pszEnv )
          hb_xfree( ( void * ) pszEnv );
       hb_xfree( ( void * ) pszCfgFileName );
-      
       return;
-      
    }
 
    if( pszEnv )
@@ -258,8 +259,10 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 
    if( ! HB_COMP_PARAM->fQuiet )
    {
-      printf( "\nBuilding object module for \'%s\'\nusing C compiler \'%s\' as defined in \'%s\'...\n", szFileName, szCompiler, pszCfgFileName );               
-      fflush( stdout );
+      snprintf( buffer, sizeof( buffer ),
+                "\nBuilding object module for \'%s\'\nusing C compiler \'%s\' as defined in \'%s\'...\n",
+                szFileName, szCompiler, pszCfgFileName );
+      hb_compOutStd( HB_COMP_PARAM, buffer );
    }
 
    /* Check if -o<path> was used */
@@ -293,9 +296,12 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
    if( *szCompiler )
    {
       snprintf( szCommandLine, sizeof( szCommandLine ), "%s %s %s %s", szCompiler, szOptions, szOutPath, szFileName );
-      
+
       if( bVerbose )
-         printf( "Exec: %s\n", szCommandLine ) ;         
+      {
+         snprintf( buffer, sizeof( buffer ), "Exec: %s\n", szCommandLine );
+         hb_compOutStd( HB_COMP_PARAM, buffer );
+      }
       else
          hb_strncat( szCommandLine, HB_NULL_STR, sizeof( szCommandLine ) - 1 );
 
@@ -307,20 +313,31 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
       if( bDelTmp ) /* && iSuccess ) */
       {
          if( bVerbose )
-            printf( "Deleting: \"%s\"\n", szFileName );            
+         {
+            snprintf( buffer, sizeof( buffer ), "Deleting: \"%s\"\n", szFileName );
+            hb_compOutStd( HB_COMP_PARAM, buffer );
+         }
          remove( ( char * ) szFileName );
       }
 
       if( ! HB_COMP_PARAM->fQuiet )
       {
          if( iSuccess )
-            printf( "Done.\n" );
+            hb_compOutStd( HB_COMP_PARAM, "Done.\n" );
          else
-            printf( "\nFailed to execute: \"%s\"\n", szCommandLine );
+         {
+            snprintf( buffer, sizeof( buffer ),
+                      "\nFailed to execute: \"%s\"\n", szCommandLine );
+            hb_compOutErr( HB_COMP_PARAM, buffer );
+         }
       }
    }
    else
-      printf( "\nError: No compiler defined in %s\n", pszCfgFileName );
+   {
+      snprintf( buffer, sizeof( buffer ),
+                "\nError: No compiler defined in %s\n", pszCfgFileName );
+      hb_compOutErr( HB_COMP_PARAM, buffer );
+   }
 
    hb_xfree( ( void * ) pszCfgFileName );
 }

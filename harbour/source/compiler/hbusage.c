@@ -55,7 +55,7 @@
 /*
  * Prints available options
  */
-void hb_compPrintUsage( char * szSelf )
+void hb_compPrintUsage( HB_COMP_DECL, char * szSelf )
 {
    static const char * szOptions [] =
    {
@@ -101,20 +101,25 @@ void hb_compPrintUsage( char * szSelf )
            "\n          @<file>          compile list of modules in <file>",
            "\n"
    };
-
+   char buffer[ 256 ];
    int iLine;
 
-   printf( "\nSyntax:  %s <file[s][.prg]|@file> [options]"
-           "\n", szSelf );
+   snprintf( buffer, sizeof( buffer ),
+             "\nSyntax:  %s <file[s][.prg]|@file> [options]\n", szSelf );
+   hb_compOutStd( HB_COMP_PARAM, buffer );
 
    for( iLine = 0; iLine < ( int ) ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
-      printf( szOptions[ iLine ], OS_OPT_DELIMITER_LIST[ 0 ] );
+   {
+      snprintf( buffer, sizeof( buffer ),
+                szOptions[ iLine ], OS_OPT_DELIMITER_LIST[ 0 ] );
+      hb_compOutStd( HB_COMP_PARAM, buffer );
+   }
 }
 
 /*
  * List of compatibility/features modes
  */
-void hb_compPrintModes( void )
+void hb_compPrintModes( HB_COMP_DECL )
 {
    static const char * szOptions [] =
    {
@@ -129,91 +134,93 @@ void hb_compPrintModes( void )
            "\n          ?               this info",
            "\n"
    };
-
    int iLine;
 
-   printf( "\nCompatibility flags (lowercase/uppercase significant): -k[options]\n" );
+   hb_compOutStd( HB_COMP_PARAM,
+                  "\nCompatibility flags (lowercase/uppercase significant): -k[options]\n" );
 
    for( iLine = 0; iLine < ( int ) ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
-      printf( szOptions[ iLine ] );
+      hb_compOutStd( HB_COMP_PARAM, szOptions[ iLine ] );
 }
 
 /*
  * Prints credits
  */
-void hb_compPrintCredits( void )
+void hb_compPrintCredits( HB_COMP_DECL )
 {
-   printf( "\n"
-           "Credits:  The Harbour Team at www.harbour-project.org\n"
-           "          (replace space with @ in e-mail addresses)\n"
-           "\n"
-           "April White <awhite mail.rosecom.ca>\n"
-           "Alejandro de Garate <alex_degarate hotmail.com>\n"
-           "Alexander S. Kresin <alex belacy.belgorod.su>\n"
-           "Andi Jahja <xharbour cbn.net.id>\n"
-           "Antonio Carlos Pantaglione <toninho fwi.com.br>\n"
-           "Antonio Linares <alinares fivetechsoft.com>\n"
-           "Bil Simser <bsimser home.com>\n"
-           "Brian Hays <bhays abacuslaw.com>\n"
-           "Bruno Cantero <bruno issnet.net>\n"
-           "Chen Kedem <niki actcom.co.il>\n"
-           "Dave Pearson <davep davep.org>\n"
-           "David Arturo Macias Corona <dmacias mail.udg.mx>\n"
-           "David G. Holm <dholm jsd-llc.com>\n"
-           "Davor Siklic <siki msoft.cz>\n"
-           "Dmitry V. Korzhov <dk april26.spb.ru>\n"
-           "Eddie Runia <eddie runia.com>\n"
-           "Enrico Maria Giordano <e.m.giordano emagsoftware.it>\n"
-           "Felipe G. Coury <fcoury creation.com.br>\n"
-           "Francesco Saverio Giudice <info fsgiudice.com>\n"
-           "Giancarlo Niccolai <gc niccolai.ws>\n"
-           "Gonzalo A. Diethelm <gonzalo.diethelm iname.com>\n"
-           "Hannes Ziegler <hz knowleXbase.com>\n"
-           "Horacio D. Roldan Kasimatis <harbour_ar yahoo.com.ar>\n"
-           "Ignacio Ortiz de Zuniga <ignacio fivetech.com>\n"
-           "Janica Lubos <janica fornax.elf.stuba.sk>\n"
-           "Jean-Francois Lefebvre (mafact) <jfl mafact.com>\n"
-           "Jose Lalin <dezac corevia.com>\n"
-           "Leslee Griffith <les.griffith vantagesystems.ca>\n"
-           "Lorenzo Fiorini <lorenzo_fiorini teamwork.it>\n"
-           "Luis Krause Mantilla <lkrausem shaw.ca>\n"
-           "Luiz Rafael Culik <culik sl.conex.net>\n"
-           "Manuel Ruiz <mrt joca.es>\n"
-           "Marek Paliwoda <paliwoda inetia.pl>\n"
-           "Martin Vogel <vogel inttec.de>\n"
-           "Matteo Baccan <baccan isanet.it>\n"
-           "Matthew Hamilton <mhamilton bunge.com.au>\n"
-           "Mauricio Abre <maurifull datafull.com>\n"
-           "Maurilio Longo <maurilio.longo libero.it>\n"
-           "Miguel Angel Marchuet Frutos <miguelangel marchuet.net>\n"
-           "Mindaugas Kavaliauskas <dbtopas dbtopas.lt>\n"
-           "Nicolas del Pozo <niko geroa.com>\n"
-           "Patrick Mast <harbour winfakt.com>\n"
-           "Paul Tucker <ptucker sympatico.ca>\n"
-           "Pavel Tsarenko <tpe2 mail.ru>\n"
-           "Peter Rees <peter rees.co.nz>\n"
-           "Peter Townsend <cephas tpgi.com.au>\n"
-           "Phil Barnett <philb iag.net>\n"
-           "Phil Krylov <phil newstar.rinet.ru>\n"
-           "Przemyslaw Czerpak <druzus priv.onet.pl>\n"
-           "Ron Pinkas <ron profit-master.com>\n"
-           "Ryszard Glab <rglab imid.med.pl>\n"
-           "Tim Stone <timstone mstrlink.com>\n"
-           "Toma¾ Zupan <tomaz.zupan orpo.si>\n"
-           "Viktor Szakats <harbour.01 syenar.hu>\n"
-           "Vladimir Kazimirchik <v_kazimirchik yahoo.com>\n"
-           "Walter Negro <anegro overnet.com.ar>\n"
-         );
+   hb_compOutStd( HB_COMP_PARAM,
+         "\n"
+         "Credits:  The Harbour Team at www.harbour-project.org\n"
+         "          (replace space with @ in e-mail addresses)\n"
+         "\n"
+         "April White <awhite mail.rosecom.ca>\n"
+         "Alejandro de Garate <alex_degarate hotmail.com>\n"
+         "Alexander S. Kresin <alex belacy.belgorod.su>\n"
+         "Andi Jahja <xharbour cbn.net.id>\n"
+         "Antonio Carlos Pantaglione <toninho fwi.com.br>\n"
+         "Antonio Linares <alinares fivetechsoft.com>\n"
+         "Bil Simser <bsimser home.com>\n"
+         "Brian Hays <bhays abacuslaw.com>\n"
+         "Bruno Cantero <bruno issnet.net>\n"
+         "Chen Kedem <niki actcom.co.il>\n"
+         "Dave Pearson <davep davep.org>\n"
+         "David Arturo Macias Corona <dmacias mail.udg.mx>\n"
+         "David G. Holm <dholm jsd-llc.com>\n"
+         "Davor Siklic <siki msoft.cz>\n"
+         "Dmitry V. Korzhov <dk april26.spb.ru>\n"
+         "Eddie Runia <eddie runia.com>\n"
+         "Enrico Maria Giordano <e.m.giordano emagsoftware.it>\n"
+         "Felipe G. Coury <fcoury creation.com.br>\n"
+         "Francesco Saverio Giudice <info fsgiudice.com>\n"
+         "Giancarlo Niccolai <gc niccolai.ws>\n"
+         "Gonzalo A. Diethelm <gonzalo.diethelm iname.com>\n"
+         "Hannes Ziegler <hz knowleXbase.com>\n"
+         "Horacio D. Roldan Kasimatis <harbour_ar yahoo.com.ar>\n"
+         "Ignacio Ortiz de Zuniga <ignacio fivetech.com>\n"
+         "Janica Lubos <janica fornax.elf.stuba.sk>\n"
+         "Jean-Francois Lefebvre (mafact) <jfl mafact.com>\n"
+         "Jose Lalin <dezac corevia.com>\n"
+         "Leslee Griffith <les.griffith vantagesystems.ca>\n"
+         "Lorenzo Fiorini <lorenzo_fiorini teamwork.it>\n"
+         "Luis Krause Mantilla <lkrausem shaw.ca>\n"
+         "Luiz Rafael Culik <culik sl.conex.net>\n"
+         "Manuel Ruiz <mrt joca.es>\n"
+         "Marek Paliwoda <paliwoda inetia.pl>\n"
+         "Martin Vogel <vogel inttec.de>\n"
+         "Matteo Baccan <baccan isanet.it>\n"
+         "Matthew Hamilton <mhamilton bunge.com.au>\n"
+         "Mauricio Abre <maurifull datafull.com>\n"
+         "Maurilio Longo <maurilio.longo libero.it>\n"
+         "Miguel Angel Marchuet Frutos <miguelangel marchuet.net>\n"
+         "Mindaugas Kavaliauskas <dbtopas dbtopas.lt>\n"
+         "Nicolas del Pozo <niko geroa.com>\n"
+         "Patrick Mast <harbour winfakt.com>\n"
+         "Paul Tucker <ptucker sympatico.ca>\n"
+         "Pavel Tsarenko <tpe2 mail.ru>\n"
+         "Peter Rees <peter rees.co.nz>\n"
+         "Peter Townsend <cephas tpgi.com.au>\n"
+         "Phil Barnett <philb iag.net>\n"
+         "Phil Krylov <phil newstar.rinet.ru>\n"
+         "Przemyslaw Czerpak <druzus priv.onet.pl>\n"
+         "Ron Pinkas <ron profit-master.com>\n"
+         "Ryszard Glab <rglab imid.med.pl>\n"
+         "Tim Stone <timstone mstrlink.com>\n"
+         "Toma¾ Zupan <tomaz.zupan orpo.si>\n"
+         "Viktor Szakats <harbour.01 syenar.hu>\n"
+         "Vladimir Kazimirchik <v_kazimirchik yahoo.com>\n"
+         "Walter Negro <anegro overnet.com.ar>\n"
+      );
 }
 
 /*
  * Prints logo
  */
-void hb_compPrintLogo( void )
+void hb_compPrintLogo( HB_COMP_DECL )
 {
    char * szVer = hb_verHarbour();
 
-   printf( "%s\n", szVer );
-   printf( "Copyright 1999-2007, http://www.harbour-project.org/\n" );
+   hb_compOutStd( HB_COMP_PARAM, szVer );
+   hb_compOutStd( HB_COMP_PARAM,
+                  "\nCopyright 1999-2007, http://www.harbour-project.org/\n" );
    hb_xfree( szVer );
 }

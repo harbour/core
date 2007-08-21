@@ -64,41 +64,43 @@ static char * szPrefix = "_HB_FUN_";
 
 void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
 {
-  char szFileName[ _POSIX_PATH_MAX + 1 ];
-  FILE * hObjFile;  /* file handle for OBJ output */
-  char * szVer;
+   char szFileName[ _POSIX_PATH_MAX + 1 ];
+   FILE * hObjFile;  /* file handle for OBJ output */
+   char * szVer;
 
-  if( ! pFileName->szExtension )
-    pFileName->szExtension = ".obj";
-  hb_fsFNameMerge( szFileName, pFileName );
+   if( ! pFileName->szExtension )
+      pFileName->szExtension = ".obj";
+   hb_fsFNameMerge( szFileName, pFileName );
 
-  if( ( hObjFile = fopen( szFileName, "wb" ) ) == NULL )
-    {
+   if( ( hObjFile = fopen( szFileName, "wb" ) ) == NULL )
+   {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;
-    }
+   }
 
-  if( ! HB_COMP_PARAM->fQuiet )
-  {
-    printf( "Generating Windows/DOS OBJ32 output to \'%s\'... ", szFileName );
-    fflush( stdout );
-  }
+   if( ! HB_COMP_PARAM->fQuiet )
+   {
+      char buffer[ 80 + _POSIX_PATH_MAX ];
+      snprintf( buffer, sizeof( buffer ),
+                "Generating Windows/DOS OBJ32 output to \'%s\'... ", szFileName );
+      hb_compOutStd( HB_COMP_PARAM, buffer );
+   }
 
-  CompiledFileName( hObjFile, szFileName );
-  szVer = hb_verHarbour();
-  CompilerVersion( hObjFile, szVer );
-  hb_xfree( szVer );
-  GenerateLocalNames( hObjFile );
-  GenerateExternals( HB_COMP_PARAM, hObjFile );
-  GenerateCodeSegment( HB_COMP_PARAM, hObjFile );
-  GenerateDataSegment( HB_COMP_PARAM, hObjFile );
-  GenerateSymbolsSegment( HB_COMP_PARAM, hObjFile );
-  End( hObjFile );
+   CompiledFileName( hObjFile, szFileName );
+   szVer = hb_verHarbour();
+   CompilerVersion( hObjFile, szVer );
+   hb_xfree( szVer );
+   GenerateLocalNames( hObjFile );
+   GenerateExternals( HB_COMP_PARAM, hObjFile );
+   GenerateCodeSegment( HB_COMP_PARAM, hObjFile );
+   GenerateDataSegment( HB_COMP_PARAM, hObjFile );
+   GenerateSymbolsSegment( HB_COMP_PARAM, hObjFile );
+   End( hObjFile );
 
-  fclose( hObjFile );
+   fclose( hObjFile );
 
-  if( ! HB_COMP_PARAM->fQuiet )
-    printf( "Done.\n" );
+   if( ! HB_COMP_PARAM->fQuiet )
+      hb_compOutStd( HB_COMP_PARAM, "Done.\n" );
 }
 
 static USHORT hb_compFunctionGetPos( HB_COMP_DECL, char * szFunctionName ) /* return 0 if not found or order + 1 */

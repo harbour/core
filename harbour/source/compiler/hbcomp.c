@@ -289,3 +289,19 @@ void hb_comp_free( HB_COMP_PTR pComp )
       hb_xfree( pComp->szStdCh );
    hb_xfree( pComp );
 }
+
+void hb_compOutStd( HB_COMP_DECL, const char * szMessage )
+{
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
+
+   fprintf( stderr, "%s", szMessage );
+   fflush( stdout );
+}
+
+void hb_compOutErr( HB_COMP_DECL, const char * szMessage )
+{
+   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
+
+   fprintf( hb_comp_errFile, "%s", szMessage );
+   fflush( hb_comp_errFile );
+}

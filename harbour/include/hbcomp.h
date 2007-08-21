@@ -267,6 +267,9 @@ extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL );
 #define HB_GEN_FUNC4( func, p1,p2,p3,p4 ) hb_compGen##func( p1, p2, p3, p4, HB_COMP_PARAM )
 
 extern int  hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize );
+extern void hb_compOutStd( HB_COMP_DECL, const char * szMessage );
+extern void hb_compOutErr( HB_COMP_DECL, const char * szMessage );
+
 extern void hb_compExprLstDealloc( HB_COMP_DECL );
 
 extern HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR, HB_COMP_DECL );
@@ -304,12 +307,10 @@ extern void hb_compChkCompilerSwitch( HB_COMP_DECL, int, char * Args[] );
 extern void hb_compChkPaths( HB_COMP_DECL );
 extern void hb_compChkDefines( HB_COMP_DECL, int iArg, char * Args[] );
 
-extern void hb_compPrintUsage( char * );
-extern void hb_compPrintCredits( void );
-extern void hb_compFileInfo( void );
-extern void hb_compPrintLogo( void );
-extern void hb_compPrintModes( void );
-
+extern void hb_compPrintUsage( HB_COMP_DECL, char * );
+extern void hb_compPrintCredits( HB_COMP_DECL );
+extern void hb_compPrintLogo( HB_COMP_DECL );
+extern void hb_compPrintModes( HB_COMP_DECL );
 
 /* Misc functions defined in harbour.c */
 extern void hb_compNOOPfill( PFUNCTION pFunc, ULONG ulFrom, int iCount, BOOL fPop, BOOL fCheck );

@@ -1568,6 +1568,22 @@ HB_FUNC( __MVRESTORE )
       hb_errRT_BASE( EG_ARG, 2007, NULL, "__MRESTORE", HB_ERR_ARGS_BASEPARAMS );
 }
 
+/*
+ * This is a hacking function which changes base private offset so
+ * PRIVATE variables created in function which calls __MVSETBASE()
+ * will not be released when the function exit but will be inherited
+ * by its caller. [druzus]
+ */
+HB_FUNC( __MVSETBASE )
+{
+   long lOffset = hb_stackBaseProcOffset( 0 );
+
+   if( lOffset > 0 )
+      hb_stackItem( lOffset )->item.asSymbol.stackstate->ulPrivateBase =
+                                                hb_memvarGetPrivatesBase();
+}
+
+
 /* ----------------------------------------------------------------------- */
 /* The garbage collector interface */
 /* ----------------------------------------------------------------------- */

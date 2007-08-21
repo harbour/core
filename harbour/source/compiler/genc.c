@@ -79,8 +79,10 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
    if( ! HB_COMP_PARAM->fQuiet )
    {
-      printf( "Generating C source output to \'%s\'... ", szFileName );
-      fflush( stdout );
+      char buffer[ 80 + _POSIX_PATH_MAX ];
+      snprintf( buffer, sizeof( buffer ),
+                "Generating C source output to \'%s\'... ", szFileName );
+      hb_compOutStd( HB_COMP_PARAM, buffer );
    }
 
    {
@@ -361,7 +363,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
    fclose( yyc );
 
    if( ! HB_COMP_PARAM->fQuiet )
-      printf( "Done.\n" );
+      hb_compOutStd( HB_COMP_PARAM, "Done.\n" );
 }
 
 static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, char * szModulname, char * szSourceFile )

@@ -224,12 +224,18 @@ static void hb_pp_error( PHB_PP_STATE pState, char type, int iError, const char 
    }
    else
    {
+      char line[ 16 ];
+      char msg[ 200 ];
+      char buffer[ 256 ];
+
       if( pState->pFile )
-         fprintf( stderr, "(%d) ", pState->pFile->iCurrentLine );
-      fprintf( stderr, "%s: ", type == 'F' ? "Fatal" : type == 'W' ? "Warning" : "Error" );
-      fprintf( stderr, szMsgTable[ iError - 1 ], szParam );
-      fprintf( stderr, "\n" );
-      fflush( stderr );
+         snprintf( line, sizeof( line ), "(%d) ", pState->pFile->iCurrentLine );
+      else
+         line[ 0 ] = '\0';
+      snprintf( msg, sizeof( msg ), szMsgTable[ iError - 1 ], szParam );
+      snprintf( buffer, sizeof( buffer ), "%s%s: %s\n", line,
+                type == 'F' ? "Fatal" : type == 'W' ? "Warning" : "Error", msg );
+      hb_pp_disp( pState, buffer );
    }
    if( type != 'W' )
       pState->fError = TRUE;

@@ -53,14 +53,15 @@
 #include "hbapi.h"
 #include "hbcomp.h"
 
-static void hb_compGenArgList( int iFirst, int * pArgC, char *** pArgV )
+static void hb_compGenArgList( int iFirst, int iLast,
+                               int * pArgC, char *** pArgV )
 {
    PHB_ITEM pParam, pItem;
    ULONG ul;
-   int iPCount = hb_pcount(), argc = 0, i;
+   int argc = 0, i;
    char ** argv;
 
-   for( i = iFirst; i <= iPCount; ++i )
+   for( i = iFirst; i <= iLast; ++i )
    {
       pParam = hb_param( i, HB_IT_ARRAY | HB_IT_STRING );
       if( pParam )
@@ -83,7 +84,7 @@ static void hb_compGenArgList( int iFirst, int * pArgC, char *** pArgV )
 
    argv = ( char ** ) hb_xgrab( sizeof( char * ) * ( argc + 1 ) );
    argc = 0;
-   for( i = iFirst; i <= iPCount; ++i )
+   for( i = iFirst; i <= iLast; ++i )
    {
       pParam = hb_param( i, HB_IT_ARRAY | HB_IT_STRING );
       if( pParam )
@@ -114,7 +115,7 @@ HB_FUNC( HB_COMPILE )
    int argc;
    char ** argv;
 
-   hb_compGenArgList( 1, &argc, &argv );
+   hb_compGenArgList( 1, hb_pcount(), &argc, &argv );
 
    hb_retni( hb_compMain( argc, argv, NULL, NULL ) );
    hb_xfree( argv );
@@ -127,7 +128,7 @@ HB_FUNC( HB_COMPILEBUF )
    BYTE * pBuffer;
    ULONG ulLen;
 
-   hb_compGenArgList( 1, &argc, &argv );
+   hb_compGenArgList( 1, hb_pcount(), &argc, &argv );
    iResult = hb_compMain( argc, argv, &pBuffer, &ulLen );
    hb_xfree( argv );
    if( iResult == EXIT_SUCCESS && pBuffer )
