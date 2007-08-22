@@ -57,7 +57,7 @@ int main( int argc, char * argv[] )
 {
    int iResult;
 
-   iResult = hb_compMain( argc, argv, NULL, NULL );
+   iResult = hb_compMain( argc, argv, NULL, NULL, NULL );
    hb_xexit();
 
    return iResult;
@@ -353,15 +353,7 @@ void hb_conOutErr( const char * pStr, ULONG ulLen )
    if( ulLen == 0 )
       ulLen = strlen( pStr );
 
-   fprintf( hb_comp_errFile, "%.*s", ( int ) ulLen, pStr );
-}
-
-void hb_conOutStd( const char * pStr, ULONG ulLen )
-{
-   if( ulLen == 0 )
-      ulLen = strlen( pStr );
-
-   printf( "%.*s", ( int ) ulLen, pStr );
+   fprintf( stderr, "%.*s", ( int ) ulLen, pStr );
 }
 
 char * hb_conNewLine( void )

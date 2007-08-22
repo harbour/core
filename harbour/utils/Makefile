@@ -9,6 +9,7 @@ DIRS=\
 	hbpptest \
 	hbver \
 	hbrun \
+	hbdot \
 	hbdoc \
 	hbtest \
 	hbmake \

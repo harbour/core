@@ -449,10 +449,15 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
 
             case 'q':
             case 'Q':
-               if( *( s + 1 ) == '0' )
-                  HB_COMP_PARAM->fLogo = FALSE;
-
-               HB_COMP_PARAM->fQuiet = TRUE;
+               switch( *( s + 1 ) )
+               {
+                  case '2':
+                     HB_COMP_PARAM->fFullQuiet = TRUE;
+                  case '0':
+                     HB_COMP_PARAM->fLogo = FALSE;
+                  default:
+                     HB_COMP_PARAM->fQuiet = TRUE;
+               }
                break;
 
             case 'r':

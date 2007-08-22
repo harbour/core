@@ -379,6 +379,10 @@ typedef struct
 
 static HB_TERM_STATE s_termState;
 
+/* save old hilit tracking & enable mouse tracking */
+static const char * s_szMouseOn  = "\033[?1001s\033[?1002h";
+/* disable mouse tracking & restore old hilit tracking */
+static const char * s_szMouseOff = "\033[?1002l\033[?1001r";
 static const BYTE s_szBell[] = { HB_CHAR_BEL, 0 };
 static BYTE *  s_szCrLf;
 static ULONG   s_ulCrLf;
@@ -1076,9 +1080,7 @@ static void mouse_init( void )
    if( s_termState.terminal_type == TERM_XTERM ||
        s_termState.terminal_type == TERM_LINUX )
    {
-      /* save old hilit tracking & enable mouse tracking */
-      static const char * szMouseOn = "\033[?1001s\033[?1002h";
-      hb_gt_trm_termOut( ( BYTE * ) szMouseOn, strlen( szMouseOn ) );
+      hb_gt_trm_termOut( ( BYTE * ) s_szMouseOn, strlen( s_szMouseOn ) );
       hb_gt_trm_termFlush();
       memset( ( void * ) &s_termState.mLastEvt, 0, sizeof( s_termState.mLastEvt ) );
       s_termState.mouse_type |= MOUSE_XTERM;
@@ -1125,9 +1127,7 @@ static void mouse_exit( void )
 {
    if( s_termState.mouse_type & MOUSE_XTERM )
    {
-      /* disable mouse tracking & restore old hilit tracking */
-      static const char * szMouseOff = "\033[?1002l\033[?1001r";
-      hb_gt_trm_termOut( ( BYTE * ) szMouseOff, strlen( szMouseOff ) );
+      hb_gt_trm_termOut( ( BYTE * ) s_szMouseOff, strlen( s_szMouseOff ) );
       hb_gt_trm_termFlush();
    }
 #ifdef HAVE_GPM_H
@@ -3044,6 +3044,10 @@ static BOOL hb_gt_trm_Resume( void )
       tcsetattr( s_termState.hFilenoStdin, TCSANOW, &s_termState.curr_TIO );
    }
 #endif
+
+   if( s_termState.mouse_type & MOUSE_XTERM )
+      hb_gt_trm_termOut( ( BYTE * ) s_szMouseOn, strlen( s_szMouseOn ) );
+
    s_termState.Init();
 
    hb_gt_GetSize( &iHeight, &iWidth );

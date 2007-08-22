@@ -67,29 +67,26 @@
    extern unsigned _stklen = UINT_MAX;
 #endif
 
-static int  hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile );
+#define HB_COMP_SINGLEFILE    1
+#define HB_COMP_AUTOADDFILE   2
+#define HB_COMP_MEMBUFFER     3
+
+static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType );
 static int hb_compProcessRSPFile( HB_COMP_DECL, char * ); /* process response file */
-static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * bSkipGen, BOOL bSingleFile );
+static int hb_compAutoOpen( HB_COMP_DECL, const char * szPrg, BOOL * bSkipGen, int iFileType );
 
 static void hb_compDeclaredInit( HB_COMP_DECL );
 
-/* global variables */
-FILE *         hb_comp_errFile = NULL;
 
 /* ************************************************************************* */
 
-int hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize )
+int hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize,
+                 const char * szSource )
 {
    HB_COMP_DECL;
    int iStatus = EXIT_SUCCESS;
    BOOL bAnyFiles = FALSE;
    int i;
-
-#if defined( HOST_OS_UNIX_COMPATIBLE )
-   hb_comp_errFile = stderr;
-#else
-   hb_comp_errFile = stdout;
-#endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_compMain()"));
 
@@ -142,21 +139,27 @@ int hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize )
          hb_compDeclaredInit( HB_COMP_PARAM );
    }
 
-   /* Process all files passed via the command line. */
-   for( i = 1; i < argc && !HB_COMP_PARAM->fExit; i++ )
+   if( szSource )
    {
-      HB_TRACE(HB_TR_DEBUG, ("main LOOP(%i,%s)", i, argv[i]));
-      if( ! HB_ISOPTSEP( argv[ i ][ 0 ] ) )
+      bAnyFiles = TRUE;
+      iStatus = hb_compCompile( HB_COMP_PARAM, szSource, HB_COMP_MEMBUFFER );
+   }
+   else
+   {
+      /* Process all files passed via the command line. */
+      for( i = 1; i < argc && !HB_COMP_PARAM->fExit; i++ )
       {
-         bAnyFiles = TRUE;
-
-         if( argv[ i ][ 0 ] == '@' )
-            iStatus = hb_compProcessRSPFile( HB_COMP_PARAM, argv[ i ] + 1 );
-         else
-            iStatus = hb_compCompile( HB_COMP_PARAM, argv[ i ], TRUE );
-
-         if( iStatus != EXIT_SUCCESS )
-            break;
+         HB_TRACE(HB_TR_DEBUG, ("main LOOP(%i,%s)", i, argv[i]));
+         if( ! HB_ISOPTSEP( argv[ i ][ 0 ] ) )
+         {
+            bAnyFiles = TRUE;
+            if( argv[ i ][ 0 ] == '@' )
+               iStatus = hb_compProcessRSPFile( HB_COMP_PARAM, argv[ i ] + 1 );
+            else
+               iStatus = hb_compCompile( HB_COMP_PARAM, argv[ i ], HB_COMP_SINGLEFILE );
+            if( iStatus != EXIT_SUCCESS )
+               break;
+         }
       }
    }
 
@@ -265,7 +268,7 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, char * szRspName )
       HB_COMP_PARAM->fAutoOpen = bAutoOpen;
       
       hb_fsFNameMerge( szFile, pFileName );
-      hb_compCompile( HB_COMP_PARAM, szFile, FALSE );
+      hb_compCompile( HB_COMP_PARAM, szFile, HB_COMP_AUTOADDFILE );
    }
 
    hb_xfree( pFileName );
@@ -4229,11 +4232,18 @@ void hb_compCompileEnd( HB_COMP_DECL )
    }
 }
 
-static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
+static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
 {
+   const char * szBuffer = NULL;
    int iStatus = EXIT_SUCCESS;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compCompile(%s,%d)", szPrg, bSingleFile));
+   HB_TRACE(HB_TR_DEBUG, ("hb_compCompile(%s,%d)", szPrg, iFileType));
+
+   if( iFileType == HB_COMP_MEMBUFFER )
+   {
+      szBuffer = szPrg;
+      szPrg = "{SOURCE}";
+   }
 
    HB_COMP_PARAM->pMainFileName = hb_fsFNameSplit( szPrg );
    HB_COMP_PARAM->pFileName = HB_COMP_PARAM->pMainFileName;
@@ -4257,14 +4267,22 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
          HB_COMP_PARAM->pFileName->szExtension = ".prg";
       hb_fsFNameMerge( szFileName, HB_COMP_PARAM->pFileName );
 
-      if( !hb_pp_inFile( HB_COMP_PARAM->pLex->pPP, szFileName, FALSE, NULL, FALSE ) )
+      if( iFileType == HB_COMP_MEMBUFFER )
+      {
+         if( !hb_pp_inBuffer( HB_COMP_PARAM->pLex->pPP, szBuffer, strlen( szBuffer ) ) )
+         {
+            hb_compOutErr( HB_COMP_PARAM, "Cannot create preprocessor buffer." );
+            iStatus = EXIT_FAILURE;
+         }
+      }
+      else if( !hb_pp_inFile( HB_COMP_PARAM->pLex->pPP, szFileName, FALSE, NULL, FALSE ) )
       {
          snprintf( buffer, sizeof( buffer ),
                    "Cannot open input file: %s\n", szFileName );
          hb_compOutErr( HB_COMP_PARAM, buffer );
          iStatus = EXIT_FAILURE;
       }
-      else if( bSingleFile )
+      else if( iFileType == HB_COMP_SINGLEFILE )
       {
          if( HB_COMP_PARAM->fPPT )
          {
@@ -4289,7 +4307,13 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
             hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY );
          HB_COMP_PARAM->currLine = 1;
 
-         if( bSingleFile )
+         if( iFileType == HB_COMP_MEMBUFFER )
+         {
+            hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE );
+            hb_compparse( HB_COMP_PARAM );
+            hb_compCheckUnclosedStru( HB_COMP_PARAM );
+         }
+         else if( iFileType == HB_COMP_SINGLEFILE )
          {
             if( ! HB_COMP_PARAM->fQuiet )
             {
@@ -4336,7 +4360,7 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
             PAUTOOPEN pAutoOpen = HB_COMP_PARAM->autoopen;
 
             if( ! hb_compFunctionFind( HB_COMP_PARAM, pAutoOpen->szName ) )
-               hb_compAutoOpen( HB_COMP_PARAM, pAutoOpen->szName, &bSkipGen, bSingleFile );
+               hb_compAutoOpen( HB_COMP_PARAM, pAutoOpen->szName, &bSkipGen, iFileType );
 
             HB_COMP_PARAM->autoopen = HB_COMP_PARAM->autoopen->pNext;
             hb_xfree( pAutoOpen );
@@ -4504,7 +4528,7 @@ static int hb_compCompile( HB_COMP_DECL, char * szPrg, BOOL bSingleFile )
    return HB_COMP_PARAM->fExit ? EXIT_FAILURE : iStatus;
 }
 
-static BOOL hb_compAutoOpenFind( HB_COMP_DECL, char * szName )
+static BOOL hb_compAutoOpenFind( HB_COMP_DECL, const char * szName )
 {
    PAUTOOPEN pLast = HB_COMP_PARAM->autoopen;
 
@@ -4528,7 +4552,7 @@ static BOOL hb_compAutoOpenFind( HB_COMP_DECL, char * szName )
    return FALSE;
 }
 
-void hb_compAutoOpenAdd( HB_COMP_DECL, char * szName )
+void hb_compAutoOpenAdd( HB_COMP_DECL, const char * szName )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_compAutoOpenAdd(%p,%s)", HB_COMP_PARAM, szName));
 
@@ -4536,7 +4560,7 @@ void hb_compAutoOpenAdd( HB_COMP_DECL, char * szName )
    {
       PAUTOOPEN pAutoOpen = ( PAUTOOPEN ) hb_xgrab( sizeof( AUTOOPEN ) ), pLast;
 
-      pAutoOpen->szName = szName;
+      pAutoOpen->szName = ( char * ) szName;
       pAutoOpen->pNext  = NULL;
 
       if( HB_COMP_PARAM->autoopen == NULL )
@@ -4552,7 +4576,7 @@ void hb_compAutoOpenAdd( HB_COMP_DECL, char * szName )
    }
 }
 
-static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * pbSkipGen, BOOL bSingleFile )
+static int hb_compAutoOpen( HB_COMP_DECL, const char * szPrg, BOOL * pbSkipGen, int iFileType )
 {
    int iStatus = EXIT_SUCCESS;
    PHB_FNAME pMainFileName = HB_COMP_PARAM->pFileName;
@@ -4616,7 +4640,7 @@ static int hb_compAutoOpen( HB_COMP_DECL, char * szPrg, BOOL * pbSkipGen, BOOL b
          /* Generate the starting procedure frame */
          if( HB_COMP_PARAM->fStartProc )
             hb_compFunctionAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, hb_strupr( hb_strdup( HB_COMP_PARAM->pFileName->szName ) ), HB_IDENT_FREE ), HB_FS_PUBLIC, FUN_PROCEDURE );
-         else if( ! bSingleFile )
+         else if( iFileType != HB_COMP_SINGLEFILE )
             hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE );
 
          if( !HB_COMP_PARAM->fExit )

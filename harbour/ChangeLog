@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-22 19:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/source/pp/ppcore.c
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/main/harbour.c
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/compiler/hbcmplib.c
+  * harbour/source/compiler/ppcomp.c
+    * added 'const' to some 'char *' declarations
+    + added hb_pp_inBuffer()
+    + extended hb_compMain() to accept source code passed as ASCIIZ
+      string
+    + .prg function HB_COMPILEFROMBUF()
+    + added support for -q2 compiler switch - it disables _ALL_ stdout/stderr
+      messages
+
+  * harbour/utils/Makefile
+  + harbour/utils/hbdot
+  + harbour/utils/hbdot/hbdot.prg
+  + harbour/utils/hbdot/Makefile
+    + added hbdot utility program.
+      It's a "DOt Prompt" Console for the Harbour Language
+         Syntax:  hbdot [<hrbfile[.prg]> [<parameters,...>]]
+      It should look and work in similar way to pp/xBaseScript
+      by Ron Pinkas but unlike xBaseScript is does not have preprocessor
+      or simulated runtime environment but simply uses Harbour pp and
+      compiler libraries to preprocess and compile commands. It means
+      that it supports all language constructions also statements, f.e.:
+         "for i:=1 to 10; ? i; next"
+      Additionally it can also compile and execute .prg files given as
+      first parameter just like hbrun.
+      Please test it. If it will work as expected then we can remove
+      'pp' (contrib/dot) from standard packages
+
 2007-08-21 16:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/memvars.c
     + added __MVSETBASE() function

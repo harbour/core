@@ -292,16 +292,30 @@ void hb_comp_free( HB_COMP_PTR pComp )
 
 void hb_compOutStd( HB_COMP_DECL, const char * szMessage )
 {
-   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
-
-   fprintf( stderr, "%s", szMessage );
-   fflush( stdout );
+   if( ! HB_COMP_PARAM->fFullQuiet )
+   {
+      if( HB_COMP_PARAM->outStdFunc )
+         HB_COMP_PARAM->outStdFunc( HB_COMP_PARAM->cargo, szMessage );
+      else
+      {
+         fprintf( stderr, "%s", szMessage ); fflush( stdout );
+      }
+   }
 }
 
 void hb_compOutErr( HB_COMP_DECL, const char * szMessage )
 {
-   HB_SYMBOL_UNUSED( HB_COMP_PARAM );
-
-   fprintf( hb_comp_errFile, "%s", szMessage );
-   fflush( hb_comp_errFile );
+   if( ! HB_COMP_PARAM->fFullQuiet )
+   {
+      if( HB_COMP_PARAM->outErrFunc )
+         HB_COMP_PARAM->outErrFunc( HB_COMP_PARAM->cargo, szMessage );
+      else
+      {
+#if defined( HOST_OS_UNIX_COMPATIBLE )
+         fprintf( stderr, "%s", szMessage ); fflush( stderr );
+#else
+         fprintf( stdout, "%s", szMessage ); fflush( stdout );
+#endif
+      }
+   }
 }

@@ -608,6 +608,10 @@ typedef struct _HB_COMP
    PHB_FNAME         pOutPath;
    PHB_FNAME         pPpoPath;
 
+   void              ( * outStdFunc ) ( void *, const char* );
+   void              ( * outErrFunc ) ( void *, const char* );
+   void *            cargo;
+   
    ULONG             ulOutBufSize;        /* memory output buffer size */
    BYTE *            pOutBuf;             /* memory output buffer address */
 
@@ -642,6 +646,7 @@ typedef struct _HB_COMP
    int               ilastLineErr;        /* line numer with last syntax error */
 
    BOOL              fQuiet;              /* be quiet during compilation (-q) */
+   BOOL              fFullQuiet;          /* be quiet during compilation disable all messages */
    BOOL              fExit;               /* force breaking compilation process */
    BOOL              fPPO;                /* flag indicating, is ppo output needed */
    BOOL              fPPT;                /* flag indicating, is ppt output needed */
