@@ -494,6 +494,19 @@ $(**: = ^
 $(STANDARD_STATIC_HBLIBS)
 !
 #**********************************************************
+# HBDOT build rule
+#**********************************************************
+$(HBDOT_EXE)  :: BasicLibs BasicExes StdLibs
+$(HBDOT_EXE)  :: $(HBDOT_EXE_OBJS)
+    IF EXIST "$(HBDOT_EXE)" $(DEL) "$(HBDOT_EXE)" > NUL
+    $(CC) @&&!
+$(CFLAGS)
+-e$(HBDOT_EXE)
+$(**: = ^
+)
+$(STANDARD_STATIC_HBLIBS)
+!
+#**********************************************************
 # HBTEST build rule
 #**********************************************************
 $(HBTEST_EXE) :: BasicLibs BasicExes StdLibs

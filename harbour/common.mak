@@ -100,6 +100,7 @@ GTXWC_DIR    = source\rtl\gtxwc
 HBPP_DIR     = utils\hbpp
 HBPPTEST_DIR = utils\hbpptest
 HBRUN_DIR    = utils\hbrun
+HBDOT_DIR    = utils\hbdot
 HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 HBMAKE_DIR   = utils\hbmake
@@ -147,6 +148,7 @@ $(GTXWC_DIR)\
 ALL_EXE_SRC_DIRS_TMP=\
 $(HBPPTEST_DIR);\
 $(HBRUN_DIR);\
+$(HBDOT_DIR);\
 $(HBTEST_DIR);\
 $(HBDOC_DIR);\
 $(HBMAKE_DIR);\
@@ -209,6 +211,7 @@ HBPPGEN_EXE  = $(BIN_DIR)\ppgen$(EXEEXT)
 HBPP_EXE     = $(BIN_DIR)\hbpp$(EXEEXT)
 HBPPTEST_EXE = $(BIN_DIR)\hbpptest$(EXEEXT)
 HBRUN_EXE    = $(BIN_DIR)\hbrun$(EXEEXT)
+HBDOT_EXE    = $(BIN_DIR)\hbdot$(EXEEXT)
 HBTEST_EXE   = $(BIN_DIR)\hbtest$(EXEEXT)
 HBDOC_EXE    = $(BIN_DIR)\hbdoc$(EXEEXT)
 HBMAKE_EXE   = $(BIN_DIR)\hbmake$(EXEEXT)
@@ -244,13 +247,6 @@ HB_GT_LIBS = $(HB_STD_GT) $(HB_WINOS_GT)
 
 !if "$(HB_GT_LIB)" == ""
 HB_GT_LIB = gtstd
-HB_GT_LIB_FULLNAME = $(GTSTD_LIB)
-!else
-HB_GT_LIB_FULLNAME = $(LIB_DIR)\$(LIBPREF)$(HB_GT_LIB)$(LIBEXT)
-!endif
-
-!if "$(HB_GT_DEFAULT)" != ""
-HB_GT_DEF_FULLNAME = $(LIB_DIR)\$(LIBPREF)$(HB_GT_DEFAULT)$(LIBEXT)
 !endif
 
 #**********************************************************
@@ -264,8 +260,7 @@ STANDARD_STATIC_HBLIBS = \
     $(COMPILER_LIB)      \
     $(VM_LIB)            \
     $(RTL_LIB)           \
-    $(HB_GT_DEF_FULLNAME)\
-    $(HB_GT_LIB_FULLNAME)\
+    $(HB_GT_LIBS)        \
     $(LANG_LIB)          \
     $(CODEPAGE_LIB)      \
     $(PCRE_LIB)          \
@@ -940,6 +935,11 @@ HBRUN_EXE_OBJS = \
 
 #**********************************************************
 
+HBDOT_EXE_OBJS = \
+    $(OBJ_DIR)\hbdot$(OBJEXT)    \
+
+#**********************************************************
+
 HBTEST_EXE_OBJS = \
     $(OBJ_DIR)\hbtest$(OBJEXT)   \
     $(OBJ_DIR)\rt_hvm$(OBJEXT)   \
@@ -1080,6 +1080,7 @@ HB_BUILD_TARGETS = \
     $(HB_GT_LIBS)           \
     \
     $(HBRUN_EXE)            \
+    $(HBDOT_EXE)            \
     $(HBTEST_EXE)           \
     $(HBPPTEST_EXE)         \
     $(HBDOC_EXE)            \

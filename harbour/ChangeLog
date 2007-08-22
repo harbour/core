@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-22 22:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/makefile.bc
+  * harbour/makefile.vc
+  * harbour/makefile.gc
+  * harbour/common.mak
+    * always pass all GT libraries to linked library list so compiled
+      programs can use REQUEST HB_GT_*
+    + added HBDOT
+
 2007-08-22 19:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
   * harbour/include/hbcomp.h
