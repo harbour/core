@@ -18,6 +18,7 @@ LIBS=\
 	vm \
 	rtl \
 	lang \
+	codepage \
 	rdd \
 	rtl \
 	vm \

@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-23 17:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gttrm/gttrm.c
+    * set cursor position at beginning of new line on application exit
+
+  * harbour/include/hbextern.ch
+    + added missing functions (CDPs, LANGs, HSX, ...)
+
+  * harbour/utils/hbdot/Makefile
+  * harbour/utils/hbrun/Makefile
+    + added codepage library
+
 2007-08-23 14:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbgtcore.h
   * harbour/source/rtl/hbgtcore.c

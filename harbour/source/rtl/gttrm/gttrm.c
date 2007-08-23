@@ -2878,6 +2878,8 @@ static void hb_gt_trm_Exit( void )
       removeAllKeyMap( &s_termState.pKeyTab );
 
    s_termState.Exit();
+   if( s_termState.fStdoutTTY && s_termState.iCol > 0 )
+      hb_gt_trm_termOut( ( BYTE * ) "\n\r", 2 );
    hb_gt_trm_termFlush();
 
    HB_GTSUPER_EXIT();
