@@ -2050,6 +2050,17 @@ static void hb_gt_def_GetSize( int * piRows, int  * piCols )
    }
 }
 
+void hb_gt_def_SemiCold( void )
+{
+   if( s_curGT )
+   {
+      int i;
+      for( i = 0; i < s_curGT->iHeight; ++i )
+         s_curGT->pLines[ i ]  = FALSE;
+      s_curGT->fRefresh = FALSE;
+   }
+}
+
 static void hb_gt_def_ColdArea( int iTop, int iLeft, int iBottom, int iRight )
 {
    if( s_curGT )
@@ -2080,6 +2091,8 @@ static void hb_gt_def_ColdArea( int iTop, int iLeft, int iBottom, int iRight )
                                                    ~HB_GT_ATTR_REFRESH );
             }
          }
+         if( iLeft == 0 && iRight == s_curGT->iWidth - 1 )
+            s_curGT->pLines[ iTop ] = FALSE;
          ++iTop;
       }
    }
@@ -2477,6 +2490,7 @@ static HB_GT_FUNCS gtCoreFunc =
    Resize                     : hb_gt_def_Resize                        ,
    SetMode                    : hb_gt_def_SetMode                       ,
    GetSize                    : hb_gt_def_GetSize                       ,
+   SemiCold                   : hb_gt_def_SemiCold                      ,
    ColdArea                   : hb_gt_def_ColdArea                      ,
    ExposeArea                 : hb_gt_def_ExposeArea                    ,
    ScrollArea                 : hb_gt_def_ScrollArea                    ,
@@ -2584,6 +2598,7 @@ static HB_GT_FUNCS gtCoreFunc =
    hb_gt_def_Resize                       ,
    hb_gt_def_SetMode                      ,
    hb_gt_def_GetSize                      ,
+   hb_gt_def_SemiCold                     ,
    hb_gt_def_ColdArea                     ,
    hb_gt_def_ExposeArea                   ,
    hb_gt_def_ScrollArea                   ,
@@ -2982,6 +2997,11 @@ BOOL   hb_gt_Resize( int iRows, int iCols )
 void   hb_gt_GetSize( int * piRows, int * piCols )
 {
    gtCoreFunc.GetSize( piRows, piCols );
+}
+
+void   hb_gt_SemiCold( void )
+{
+   gtCoreFunc.SemiCold();
 }
 
 void   hb_gt_ColdArea( int iTop, int iLeft, int iBottom, int iRight )

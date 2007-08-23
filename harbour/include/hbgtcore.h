@@ -116,6 +116,7 @@ typedef struct
    BOOL     (* Resize ) ( int, int );
    BOOL     (* SetMode) ( int, int );
    void     (* GetSize) ( int *, int * );
+   void     (* SemiCold) ( void );
    void     (* ColdArea) ( int, int, int, int );
    void     (* ExposeArea) ( int, int, int, int );
    void     (* ScrollArea) ( int, int, int, int, BYTE, BYTE, int, int );
@@ -365,6 +366,7 @@ extern void   hb_gt_VertLine( int iCol, int iTop, int iBottom, BYTE bChar, BYTE 
 extern BOOL   hb_gt_SetMode( int iRows, int iCols );
 extern BOOL   hb_gt_Resize( int iRows, int iCols );
 extern void   hb_gt_GetSize( int * piRows, int * piCols );
+extern void   hb_gt_SemiCold( void );
 extern void   hb_gt_ColdArea( int iTop, int iLeft, int iBottom, int iRight );
 extern void   hb_gt_ExposeArea( int iTop, int iLeft, int iBottom, int iRight );
 extern void   hb_gt_ScrollArea( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor, BYTE bChar, int iRows, int iCols );
@@ -471,6 +473,7 @@ extern void   hb_gt_WhoCares( void * pCargo );
 #define HB_GTSUPER_SETMODE(r,c)              (HB_GTSUPER)->SetMode(r,c)
 #define HB_GTSUPER_RESIZE(r,c)               (HB_GTSUPER)->Resize(r,c)
 #define HB_GTSUPER_GETSIZE(pr,pc)            (HB_GTSUPER)->GetSize(pr,pc)
+#define HB_GTSUPER_SEMICOLD()                (HB_GTSUPER)->SemiCold()
 #define HB_GTSUPER_COLDAREA(t,l,b,r)         (HB_GTSUPER)->ColdArea(t,l,b,r)
 #define HB_GTSUPER_EXPOSEAREA(t,l,b,r)       (HB_GTSUPER)->ExposeArea(t,l,b,r)
 #define HB_GTSUPER_SCROLLAREA(t,l,b,r,m,u,v,h) (HB_GTSUPER)->ScrollArea(t,l,b,r,m,u,v,h)

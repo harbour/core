@@ -58,7 +58,8 @@ if [ -z "$HB_GT_LIB" ]; then
     case "$HB_ARCHITECTURE" in
         w32) HB_GT_LIB="gtwin" ;;
         dos) HB_GT_LIB="gtdos" ;;
-        *)   HB_GT_LIB="gtcrs" ;;
+        os2) HB_GT_LIB="gtos2" ;;
+        *)   HB_GT_LIB="gttrm" ;;
     esac
     export HB_GT_LIB
 fi

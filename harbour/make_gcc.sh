@@ -31,7 +31,7 @@ if [ -z "$HB_GT_LIB" ]; then
         w32) HB_GT_LIB="gtwin" ;;
         dos) HB_GT_LIB="gtdos" ;;
         os2) HB_GT_LIB="gtos2" ;;
-        *)   HB_GT_LIB="gtstd" ;;
+        *)   HB_GT_LIB="gttrm" ;;
     esac
     export HB_GT_LIB
 fi

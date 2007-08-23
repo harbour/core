@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-23 14:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+    + added new GT method: SEMICOLD()
+
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    * use SEMICOLD() for late console window initialization
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    * use SEMICOLD() to not erase startup screen contnts.
+      Now applications which uses GTTRM and only simple QOUT()/QQOUT()
+      output will work like with GTSTD. It means that in *nixes we can
+      use GTTRM as default GT driver for all Harbour utilities.
+
+  * harbour/make_gcc.sh
+  * harbour/make_tgz.sh
+  * harbour/harbour.spec
+    * changed default GT driver for *nixes from to GTSTD to GTTRM
+
 2007-08-23 02:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/darwin/gcc.cf
   * harbour/config/darwin/global.cf

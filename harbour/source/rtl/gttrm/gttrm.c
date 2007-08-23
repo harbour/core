@@ -1766,8 +1766,8 @@ static BOOL hb_gt_trm_AnsiGetCursorPos( int * iRow, int * iCol )
 #endif
       if( s_termState.fPosAnswer )
       {
-         *iRow = y;
-         *iCol = x;
+         *iRow = y - 1;
+         *iCol = x - 1;
       }
       else
       {
@@ -2010,11 +2010,16 @@ static BOOL hb_trm_isUTF8( void )
    if( s_termState.fPosAnswer )
    {
       int iRow = 0, iCol = 0;
+      BOOL fSize;
 
       hb_gt_trm_termOut( ( BYTE * ) "\r\303\255", 3 );
       hb_gt_trm_termFlush();
-      if( s_termState.GetCursorPos( &iRow, &iCol ) )
-         return iCol == 2;
+      fSize = s_termState.GetCursorPos( &iRow, &iCol );
+      hb_gt_trm_termOut( ( BYTE * ) "\r  \r", 4 );
+      hb_gt_trm_termFlush();
+      s_termState.iCol = 0;
+      if( fSize )
+         return iCol == 1;
    }
    szLang = getenv( "LANG" );
    return szLang && strstr( szLang, "UTF-8" ) != NULL;
@@ -2857,6 +2862,8 @@ static void hb_gt_trm_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    s_termState.fUTF8 = hb_trm_isUTF8();
    hb_gt_trm_SetKeyTrans( NULL, NULL );
    hb_gt_trm_SetDispTrans( NULL, NULL, 0 );
+   if( s_termState.fStdoutTTY )
+      hb_gt_SemiCold();
 }
 
 static void hb_gt_trm_Exit( void )
@@ -3053,7 +3060,36 @@ static BOOL hb_gt_trm_Resume( void )
    hb_gt_GetSize( &iHeight, &iWidth );
    hb_gt_ExposeArea( 0, 0, iHeight, iWidth );
 
+   hb_gt_Refresh();
+
    return TRUE;
+}
+
+static void hb_gt_trm_Scroll( int iTop, int iLeft, int iBottom, int iRight,
+                              BYTE bColor, BYTE bChar, int iRows, int iCols )
+{
+   int iHeight, iWidth;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Scroll(%d,%d,%d,%d,%d,%d,%d,%d)", iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols ) );
+
+   /* Provide some basic scroll support for full screen */
+   if( iCols == 0 && iRows > 0 && iTop == 0 && iLeft == 0 )
+   {
+      hb_gt_GetSize( &iHeight, &iWidth );
+      if( iBottom >= iHeight - 1 && iRight >= iWidth - 1 &&
+          s_termState.iRow == iHeight - 1 )
+      {
+         /* scroll up the internal screen buffer */
+         HB_GTSUPER_SCROLLUP( iRows, bColor, bChar );
+         /* update our internal row position */
+         do
+            hb_gt_trm_termOut( ( BYTE * ) "\n", 1 );
+         while( --iRows > 0 );
+         return;
+      }
+   }
+
+   HB_GTSUPER_SCROLL( iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols );
 }
 
 static BOOL hb_gt_trm_SetMode( int iRows, int iCols )
@@ -3296,6 +3332,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Exit                       = hb_gt_trm_Exit;
    pFuncTable->Redraw                     = hb_gt_trm_Redraw;
    pFuncTable->Refresh                    = hb_gt_trm_Refresh;
+   pFuncTable->Scroll                     = hb_gt_trm_Scroll;
    pFuncTable->Version                    = hb_gt_trm_Version;
    pFuncTable->Suspend                    = hb_gt_trm_Suspend;
    pFuncTable->Resume                     = hb_gt_trm_Resume;

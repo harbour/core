@@ -3329,6 +3329,7 @@ static void hb_gt_xwc_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
 
    HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSUPER_RESIZE( s_wnd->rows, s_wnd->cols );
+   hb_gt_SemiCold();
 
    /* For immediate connection to XSarver and screen Window show */
    /* hb_gt_xwc_Initialize( s_wnd ); */
@@ -3914,6 +3915,7 @@ static void hb_gt_xwc_Redraw( int iRow, int iCol, int iSize )
                                   iRow + s_wnd->fontHeight - 1 );
 #endif
       }
+#if 0
       else if( !s_wnd->fData )
       {
          BYTE bDefColor = hb_gt_GetColor();
@@ -3931,6 +3933,10 @@ static void hb_gt_xwc_Redraw( int iRow, int iCol, int iSize )
             }
          }
       }
+#else
+      else
+         s_wnd->fData = TRUE;
+#endif
    }
 }
 

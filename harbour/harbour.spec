@@ -25,7 +25,7 @@
 # --without gpl      - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
 # --without x11      - do not build GTXWC
-# --without gpm      - build GTSLN and GTCRS without GPM support
+# --without gpm      - build GTTRM, GTSLN and GTCRS without GPM support
 # --without gtsln    - do not build GTSLN
 ######################################################################
 
@@ -72,7 +72,7 @@
 %define hb_cflag export C_USR="-O3 -DHB_FM_STATISTICS_OFF"
 %define hb_lflag export L_USR="${CC_L_USR} %{?_with_static:-static}"
 %define hb_mt    export HB_MT=no
-%define hb_gt    export HB_GT_LIB=gtcrs
+%define hb_gt    export HB_GT_LIB=gttrm
 %define hb_defgt export HB_GT_DEFAULT="${HB_GT_DEFAULT}"
 %define hb_gpm   export HB_GPM_MOUSE=%{!?_without_gpm:yes}
 %define hb_sln   export HB_WITHOUT_GTSLN=%{?_without_gtsln:yes}
