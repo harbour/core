@@ -2831,7 +2831,9 @@ static void hb_gt_trm_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       s_termState.curr_TIO.c_cflag |= CS8 | CREAD;
       s_termState.curr_TIO.c_iflag &= ~( IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON );
       s_termState.curr_TIO.c_oflag &= ~OPOST;
-      /* s_termState.curr_TIO.c_oflag |= ONLCR | OPOST; */
+      /* Enable LF->CR+LF translation */
+      s_termState.curr_TIO.c_oflag |= ONLCR | OPOST;
+
       memset( s_termState.curr_TIO.c_cc, 0, NCCS );
       /* s_termState.curr_TIO.c_cc[ VMIN ] = 0; */
       /* s_termState.curr_TIO.c_cc[ VTIME ] = 0; */
@@ -3085,8 +3087,9 @@ static void hb_gt_trm_Scroll( int iTop, int iLeft, int iBottom, int iRight,
          HB_GTSUPER_SCROLLUP( iRows, bColor, bChar );
          /* update our internal row position */
          do
-            hb_gt_trm_termOut( ( BYTE * ) "\n", 1 );
+            hb_gt_trm_termOut( ( BYTE * ) "\n\r", 2 );
          while( --iRows > 0 );
+         s_termState.iCol = 0;
          return;
       }
    }

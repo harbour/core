@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-23 18:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gttrm/gttrm.c
+    * enable automatic LF->CR+LF translation on TTY device
+
+  * harbour/utils/hbdot/hbdot.prg
+    * do not clear screen when hbdot executed with -h or --help switch
+
+  * harbour/utils/hbtest/hbtest.prg
+    * use stdout(<cMsg>) instead of fwrite(1,<cMsg>) - now GT driver
+      can catch and redirect output if necessary
+
 2007-08-23 17:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gttrm/gttrm.c
     * set cursor position at beginning of new line on application exit

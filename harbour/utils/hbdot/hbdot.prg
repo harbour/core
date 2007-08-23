@@ -82,8 +82,6 @@ PROCEDURE _APPMAIN( cFile, ... )
    AADD( s_aIncDir, "-I/usr/local/include/harbour" )
 #endif
 
-   CLEAR SCREEN
-
    IF PCount() > 0
       SWITCH cFile
          CASE "-?"
@@ -104,6 +102,7 @@ PROCEDURE _APPMAIN( cFile, ... )
       END
    ELSE
 
+      CLEAR SCREEN
       SET SCOREBOARD OFF
       GetList := {}
       cCommand := ""

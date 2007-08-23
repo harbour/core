@@ -238,19 +238,19 @@ STATIC FUNCTION TEST_BEGIN( cParam )
 
    /* Feedback */
 
-   FWrite( s_nFhnd, "---------------------------------------------------------------------------" + HB_OSNewLine() +;
+   OutMsg( s_nFhnd, "---------------------------------------------------------------------------" + HB_OSNewLine() +;
                     "      Version: " + Version() + HB_OSNewLine() )
 #ifdef __HARBOUR__
-   FWrite( s_nFhnd, "     Compiler: " + HB_Compiler() + HB_OSNewLine() )
+   OutMsg( s_nFhnd, "     Compiler: " + HB_Compiler() + HB_OSNewLine() )
 #endif
-   FWrite( s_nFhnd, "           OS: " + OS() + HB_OSNewLine() +;
+   OutMsg( s_nFhnd, "           OS: " + OS() + HB_OSNewLine() +;
                     "   Date, Time: " + DToC( Date() ) + " " + Time() + HB_OSNewLine() +;
                     "       Output: " + s_cFileName + HB_OSNewLine() +;
                     "Shortcut opt.: " + iif( s_lShortcut, "ON", "OFF" ) + HB_OSNewLine() +;
                     "     Switches: " + cParam + HB_OSNewLine() +;
                     "===========================================================================" + HB_OSNewLine() )
 
-   FWrite( s_nFhnd, PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
+   OutMsg( s_nFhnd, PadR( "R", TEST_RESULT_COL1_WIDTH ) + " " +;
                     PadR( "No.  Line", TEST_RESULT_COL2_WIDTH ) + " " +;
                     PadR( "TestCall()", TEST_RESULT_COL3_WIDTH ) + " -> " +;
                     PadR( "Result", TEST_RESULT_COL4_WIDTH ) + " | " +;
@@ -371,7 +371,7 @@ FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
 
       IF lFailed
 
-         FWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
+         OutMsg( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
                           PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
                           PadR( cBlock, TEST_RESULT_COL3_WIDTH ) +;
                           HB_OSNewLine() +;
@@ -382,7 +382,7 @@ FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
 
       ELSE
 
-         FWrite( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
+         OutMsg( s_nFhnd, PadR( iif( lFailed, "!", iif( lSkipped, "S", " " ) ), TEST_RESULT_COL1_WIDTH ) + " " +;
                           PadR( Str( s_nCount, 4 ) + " " + ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
                           PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
                           PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
@@ -412,7 +412,7 @@ STATIC FUNCTION TEST_END()
 
    s_nEndTime := Seconds()
 
-   FWrite( s_nFhnd, "===========================================================================" + HB_OSNewLine() +;
+   OutMsg( s_nFhnd, "===========================================================================" + HB_OSNewLine() +;
                     "Test calls passed: " + Str( s_nPass ) + " ( " + LTrim( Str( ( 1 - ( s_nFail / s_nPass ) ) * 100, 6, 2 ) ) + " % )" + HB_OSNewLine() +;
                     "Test calls failed: " + Str( s_nFail ) + " ( " + LTrim( Str( ( s_nFail / s_nPass ) * 100, 6, 2 ) ) + " % )" + HB_OSNewLine() +;
                     "                   ----------" + HB_OSNewLine() +;
@@ -422,10 +422,10 @@ STATIC FUNCTION TEST_END()
 
    IF s_nFail != 0
       IF "CLIPPER (R)" $ Upper( Version() )
-         FWrite( s_nFhnd, "WARNING ! Failures detected using CA-Clipper." + HB_OSNewLine() +;
+         OutMsg( s_nFhnd, "WARNING ! Failures detected using CA-Clipper." + HB_OSNewLine() +;
                           "Please fix those expected results which are not bugs in CA-Clipper itself." + HB_OSNewLine() )
       ELSE
-         FWrite( s_nFhnd, "WARNING ! Failures detected" + HB_OSNewLine() )
+         OutMsg( s_nFhnd, "WARNING ! Failures detected" + HB_OSNewLine() )
       ENDIF
    ENDIF
 
@@ -606,11 +606,22 @@ FUNCTION HB_SToD( cDate )
 
 STATIC FUNCTION BADFNAME()
 #ifdef __PLATFORM__UNIX
-   return "*BADNAM/*.MEM"
+   RETURN "*BADNAM/*.MEM"
 #else
-   return "*BADNAM*.MEM"
+   RETURN "*BADNAM*.MEM"
 #endif
 
+STATIC FUNCTION OutMsg( hFile, cMsg )
+
+   IF hFile == 1
+      OutStd( cMsg )
+   ELSEIF hFile == 2
+      OutErr( cMsg )
+   ELSE
+      FWrite( hFile, cMsg )
+   ENDIF
+
+   RETURN NIL
 
 /* Don't change the position of this #include. */
 #include "rt_init.ch"
