@@ -47,16 +47,8 @@ endif
 
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)
-LINKLIBS += -l$(HB_GT_LIB)
-
-ifneq ($(HB_GT_DEFAULT),)
-ifneq ($(HB_GT_DEFAULT),$(HB_GT_LIB))
-LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_DEFAULT)/$(HB_ARCH)
-LINKLIBS += -l$(HB_GT_DEFAULT)
-endif
-endif
-
+LINKPATHS += $(foreach gt, $(HB_GT_LIBS), -L$(TOP)$(ROOT)source/rtl/$(gt)/$(HB_ARCH))
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 endif
 
 # HB_SCREEN_LIB: empty, or one of ncurses, slang

@@ -61,15 +61,9 @@ LINKLIBS += -l$(HB_GT_LIB)
 LINKPATHS += -L$(TOP)$(ROOT)source/rtl/gtos2/$(HB_ARCH)
 LINKLIBS += -lgtos2
 else
-LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)
-LINKLIBS += -l$(HB_GT_LIB)
 
-ifneq ($(HB_GT_DEFAULT),)
-ifneq ($(HB_GT_DEFAULT),$(HB_GT_LIB))
-LINKPATHS += -L$(TOP)$(ROOT)source/rtl/$(HB_GT_DEFAULT)/$(HB_ARCH)
-LINKLIBS += -l$(HB_GT_DEFAULT)
-endif
-endif
+LINKPATHS += $(foreach gt, $(HB_GT_LIBS), -L$(TOP)$(ROOT)source/rtl/$(gt)/$(HB_ARCH))
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
 
 endif
 endif

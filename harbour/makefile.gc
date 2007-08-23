@@ -170,34 +170,6 @@ HARBOURFLAGSDLL:= -D__EXPORT__ -n1 -l $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 
 LDFLAGS    := $(L_USR) -Wl,--start-group $(STANDARD_STATIC_HBLIBS)
 
-ifneq ($(HB_GT_DEFAULT),)
-ifneq ($(HB_GT_DEFAULT),$(HB_GT_LIB))
-ifeq ($(HB_GT_DEFAULT),gtcrs)
-LDFLAGS += -lncurses
-else
-ifeq ($(HB_GT_DEFAULT),gtsln)
-LDFLAGS += -lslang
-else
-ifeq ($(HB_GT_DEFAULT),gtxwc)
-LDFLAGS += -lX11 -L/usr/X11R6/lib
-endif
-endif
-endif
-endif
-endif
-
-ifeq ($(HB_GT_LIB),gtcrs)
-LDFLAGS += -lncurses
-else
-ifeq ($(HB_GT_LIB),gtsln)
-LDFLAGS += -lslang
-else
-ifeq ($(HB_GT_LIB),gtxwc)
-LDFLAGS += -lX11 -L/usr/X11R6/lib
-endif
-endif
-endif
-
 # HB_GPM_MOUSE: use gpm mouse driver
 ifeq ($(HB_GPM_MOUSE),yes)
 LDFLAGS += -lgpm

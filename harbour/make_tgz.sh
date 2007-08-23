@@ -262,7 +262,7 @@ then
     export L_USR="-L${HB_LIB_INSTALL} -l${name} ${ADD_LIBS}"
     export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${PRG_USR}"
 
-    for utl in hbmake hbrun hbpp hbdoc hbtest
+    for utl in hbmake hbrun hbdot hbpp hbdoc hbtest
     do
         (cd "utils/${utl}"
          rm -fR "./${HB_ARCHITECTURE}"
@@ -270,16 +270,6 @@ then
          strip "${HB_BIN_INSTALL}/${utl}${hb_exesuf}")
     done
 fi
-
-# Create and install PP
-(cd contrib/dot
-export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\""
-$HB_BIN_INSTALL/${hb_pref}mk pp -n -w
-strip pp${hb_exesuf}
-$INSTALL -m755 pp${hb_exesuf} $HB_BIN_INSTALL/pp${hb_exesuf}
-ln -s pp${hb_exesuf} $HB_BIN_INSTALL/pprun${hb_exesuf}
-$INSTALL -m644 rp_dot.ch $HB_INC_INSTALL/
-rm -f pp${hb_exesuf})
 
 chmod 644 $HB_INC_INSTALL/*
 

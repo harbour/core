@@ -56,8 +56,7 @@ ifeq ($(findstring rdd,$(LIBS)),rdd)
 RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH)/$(drv)))
 endif
 
-GTLIBS := $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)
-GTLIBS := $(subst /,\,$(GTLIBS))
+GTLIBS := $(foreach gt, $(HB_GT_LIBS), $(subst /,\,$(TOP)$(ROOT)source/rtl/$(gt)/$(HB_ARCH)/$(gt)))
 
 LD_RULE = $(link_exe_file)
 

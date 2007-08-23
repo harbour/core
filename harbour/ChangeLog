@@ -8,6 +8,47 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-23 02:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/darwin/global.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/hpux/global.cf
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/dos/watcom.cf
+  * harbour/config/dos/bcc16.cf
+  * harbour/config/dos/global.cf
+  * harbour/config/dos/rsx32.cf
+  * harbour/config/dos/djgpp.cf
+  * harbour/config/linux/owatcom.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/linux/global.cf
+  * harbour/config/os2/gcc.cf
+  * harbour/config/os2/icc.cf
+  * harbour/config/os2/global.cf
+  * harbour/config/sunos/global.cf
+  * harbour/config/bsd/gcc.cf
+  * harbour/config/bsd/global.cf
+  * harbour/config/w32/msvc.cf
+  * harbour/config/w32/owatcom.cf
+  * harbour/config/w32/watcom.cf
+  * harbour/config/w32/bcc32.cf
+  * harbour/config/w32/gcc.cf
+  * harbour/config/w32/xcc.cf
+  * harbour/config/w32/rsxnt.cf
+  * harbour/config/w32/global.cf
+  * harbour/config/w32/mingw32.cf
+    + added support for linking with all GT libraries - please test
+
+  * harbour/makefile.gc
+    * removed system screen libraries - they are set by make_gcc.sh
+
+  * harbour/bin/pack_src.sh
+    + added HBDOT
+
+  * harbour/harbour.spec
+  * harbour/make_tgz.sh
+    * replaced PP with HBDOT
+
 2007-08-22 22:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/makefile.bc
   * harbour/makefile.vc

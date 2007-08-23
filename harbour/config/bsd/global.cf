@@ -4,31 +4,40 @@
 
 all : first
 
-HB_GT_LIBS=\
+HB_GT_LIST=\
 	gtcgi \
-	gtcrs \
 	gtpca \
 	gtstd \
 	gttrm \
 
+ifneq ($(HB_WITHOUT_GTCRS),yes)
+   HB_GT_LIST += gtcrs
+endif
 ifeq ($(HB_COMMERCE),yes)
-	HB_GPM_MOUSE = no
+   HB_GPM_MOUSE = no
 else
 ifneq ($(HB_WITHOUT_GTSLN),yes)
-	HB_GT_LIBS += gtsln
+   HB_GT_LIST += gtsln
 endif
+endif
+ifneq ($(HB_WITHOUT_X11),yes)
+   HB_GT_LIST += gtxwc
+endif
+ifeq ($(HB_GTALLEG),yes)
+   HB_GT_LIST += gtalleg
 endif
 
+# verify if GT drivers exist
+HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
+
 ifeq ($(HB_GT_LIB),)
-	HB_GT_LIB = gtstd
+   HB_GT_LIB = gtstd
 endif
 
 MAKE = gmake
 
-ARCH_DIR = $(HB_ARCH)/
-
+ARCH_DIR = $(HB_ARCH)
 MK = $(MAKE)
-
 RM = rm -f
 RD = rm -f -r
 CP = cp -f

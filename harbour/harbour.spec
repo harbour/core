@@ -227,65 +227,6 @@ dos programas.
 
 
 ######################################################################
-## PP
-######################################################################
-
-%package pp
-Summary:        Clipper/Harbour/xBase compatible Pre-Processor, DOT prompt and interpreter
-Summary(pl):    Kompatybilny z Clipper/Harbour/xBase Preprocesor i interpreter
-Summary(ru):    Совместимый с Clipper/Harbour/xBase препроцессор и интерпретатор
-License:        GPL
-Group:          Development/Languages
-Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
-
-%description pp
-%{dname} is a Clipper compatible compiler.
-This package provides %{dname} PP. It has 3 personalities which are tied
-tightly together.
-1. What is supposed to be 100% Clipper compatible Pre-Processor
-   (with some extensions).
-2. DOT prompt, which suppose to allow most of Clipper syntax.
-3. Finally, PP is a limited Clipper/Harbour/xBase Interpreter. Subject
-   to those same few limitations it can execute most of Harbour syntax.
-   You can write your own xBase scripts by adding to your .prg files
-   #!/usr/bin/pprun
-
-%description -l pl pp
-%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.
-Ten pakiet udostЙpnia %{dname} PP, ktСry daje trzy narzЙdzia w jednym.
-1. W 100% kompatybilny z Clipperem preprocesor (z pewnymi rozeszerzeniami)
-2. ╕rodowisko DOT, w ktСrym mo©na u©ywaФ wiЙkszo╤ci skЁadni Clippera
-3. PP to tak©e nieco ograniczony interpreter Clippera. Z uwzglЙdnieniem
-   wspomnianych kilku ograniczeЯ potrafi on uruchomiФ wiЙkszo╤Ф skЁadni
-   Harbour. Mo©esz napisaФ swСj wЁasny skrypt xBase dodaj╠c do pliku .prg
-   #!/usr/bin/pprun
-
-%description -l pt_BR pp
-%{dname} ┌ um compilador Clipper compativel.
-Esse pacote provem o %{dname} PP. Ele tem 3 caracteristicas dependentes
-uma da outra.
-1. Que e supostamente ser um Pre-Processor 100% compativel com o Clipper
-   (com algumas extenssДes).
-2. DOT prompt, que supostamente permite a maioria das syntaxes do Clipper.
-3. Finalmente, PP ┌ um limitado Interpretador Clipper/Harbour/xBase . Sujeito
-   com algumas limita┤Дes que pode executar a maioria da syntaxe do Harbour.
-   Voce pode escrever seus proprios scritps em .prg ao adicionar as seus arquivos
-   .prg #!/usr/bin/pprun
-
-%description -l ru pp
-%{dname} - компилятор, совместимый с языком CA-Clipper.
-Этот пакет содержит препроцессор %{dname}, который состоит из трех тесно
-связанных частей.
-1. 100%-совместимый с Clipper препроцессор (с некоторыми расширениями).
-2. DOT Prompt, в котором можно использовать большинство конструкций Clipper.
-3. Кроме того, PP - ограниченный интерпретатор Clipper. За исключением
-   нескольких описанных ограничений, он может выполнять большинство
-   конструкций Harbour. Можно создавать собственные xBase-скрипты путем
-   добавления в начало .prg-файла строки:
-      #!/usr/bin/pprun
-
-
-######################################################################
 ## Preperation.
 ######################################################################
 
@@ -359,14 +300,6 @@ VERBOSE=YES
 DELTMP=YES
 EOF
 
-# Create PP
-pushd contrib/dot
-$HB_BIN_INSTALL/%{hb_pref}mk pp -q0 -n -w %{?_with_pgsql:-lpq} %{?_with_gd:-lgd} -D_DEFAULT_INC_DIR=\"$_DEFAULT_INC_DIR\"
-install -m755 -s pp $HB_BIN_INSTALL/pp
-ln -s pp $HB_BIN_INSTALL/pprun
-install -m644 rp_dot.ch $HB_INC_INSTALL/
-popd
-
 # check if we should rebuild tools with shared libs
 if [ "%{!?_with_static:1}" ]
 then
@@ -374,7 +307,7 @@ then
     export L_USR="${CC_L_USR} -L${HB_LIB_INSTALL} -l%{name} -lncurses %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11} %{?_with_pgsql4:/usr/lib/libpq.so.4} %{?_with_pgsql:-lpq} %{?_with_gd:-lgd}"
     export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${PRG_USR}"
 
-    for utl in hbmake hbrun hbpp hbdoc
+    for utl in hbmake hbrun hbdot hbpp hbdoc
     do
         pushd utils/${utl}
         rm -fR "./${HB_ARCHITECTURE}"
@@ -550,6 +483,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/harbour-link
 #%{_bindir}/hbtest
 %{_bindir}/hbrun
+%{_bindir}/hbdot
 %{_bindir}/hbpp
 %{_bindir}/hbmake
 %dir %{_includedir}/%{name}
@@ -601,17 +535,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/*.so
 %{_libdir}/*.so
 
-%files pp
-%defattr(-,root,root,755)
-%doc contrib/dot/pp.txt
-%{_bindir}/pp
-%{_bindir}/pprun
-
 ######################################################################
 ## Spec file Changelog.
 ######################################################################
 
 %changelog
+* Thu Aug 23 2007 Przemyslaw Czerpak <druzus@priv.onet.pl>
++ added hbdot
+- removed PP package
+
 * Fri Mar 23 2005 Przemyslaw Czerpak <druzus@priv.onet.pl>
 - removed bison and flex from dependences list
 

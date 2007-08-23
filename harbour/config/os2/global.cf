@@ -4,11 +4,14 @@
 
 all : first
 
-HB_GT_LIBS=\
+HB_GT_LIST=\
 	gtcgi \
 	gtos2 \
 	gtpca \
 	gtstd \
+
+# verify if GT drivers exist
+HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
 
 ifeq ($(HB_GT_LIB),)
 	HB_GT_LIB = gtos2

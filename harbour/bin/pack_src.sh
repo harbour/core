@@ -297,6 +297,10 @@ $hb_collect utils/hbpptest/*.prg
 $hb_collect utils/hbrun/Makefile
 $hb_collect utils/hbrun/*.prg
 
+# UTILS\HBDOT
+$hb_collect utils/hbdot/Makefile
+$hb_collect utils/hbdot/*.prg
+
 # UTILS\HBTEST
 $hb_collect utils/hbtest/Makefile
 $hb_collect utils/hbtest/*.ch
