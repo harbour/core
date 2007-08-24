@@ -149,7 +149,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                AADD( aHistory, cLine )
             ELSE
                ADEL( aHistory, 1 )
-               aHistory[ 1 ] := cLine
+               aHistory[ LEN( aHistory ) ] := cLine
             ENDIF
          ENDIF
          nHistIndex := LEN( aHistory ) + 1
