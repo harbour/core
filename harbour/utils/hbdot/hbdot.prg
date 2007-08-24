@@ -66,7 +66,7 @@ STATIC s_aIncDir := {}
 /* ********************************************************************** */
 
 PROCEDURE _APPMAIN( cFile, ... )
-   LOCAL GetList, cLine, cCommand, cPath
+   LOCAL GetList, cLine, cCommand, cPath, nMaxRow, nMaxCol
    LOCAL aHistory, nHistIndex
    LOCAL bKeyUP, bKeyDown, bKeyIns
 
@@ -83,8 +83,9 @@ PROCEDURE _APPMAIN( cFile, ... )
 #endif
 
    IF PCount() > 0
-      SWITCH cFile
+      SWITCH lower( cFile )
          CASE "-?"
+         CASE "-h"
          CASE "-h"
          CASE "--help"
          CASE "/?"
@@ -117,8 +118,11 @@ PROCEDURE _APPMAIN( cFile, ... )
 
          HB_DotInfo( cCommand )
 
-         @ MaxRow(), 00 SAY HB_PROMPT
-         @ Row(), Col() GET cLine PICTURE "@KS79"
+         nMaxRow := MaxRow()
+         nMaxCol := MaxCol()
+         @ nMaxRow, 0 SAY HB_PROMPT
+         @ nMaxRow, Col() GET cLine ;
+                          PICTURE "@KS" + LTrim( Str( nMaxCol - Col() + 1 ) )
 
          SetCursor( IIF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
@@ -141,6 +145,9 @@ PROCEDURE _APPMAIN( cFile, ... )
 
          IF LastKey() == K_ESC .OR. EMPTY( cLine )
             cLine := NIL
+            IF nMaxRow != MaxRow() .OR. nMaxCol != MaxCol()
+               @ nMaxRow, 0 CLEAR
+            ENDIF
             LOOP
          ENDIF
 
@@ -156,7 +163,7 @@ PROCEDURE _APPMAIN( cFile, ... )
 
          cCommand := AllTrim( cLine, " " )
          cLine := NIL
-         @ MaxRow(), 0 CLEAR
+         @ nMaxRow, 0 CLEAR
          HB_DotInfo( cCommand )
 
          HB_DotExec( cCommand )
@@ -306,11 +313,11 @@ RETURN
 
 /* ********************************************************************** */
 
-/* request about full screen GT driver */
-#if defined( __PLATFORM__UNIX )
-REQUEST HB_GT_TRM_DEFAULT
-#elif defined( __PLATFORM__Windows )
+/* request for full screen GT driver */
+#if   defined( __PLATFORM__Windows )
 REQUEST HB_GT_WIN_DEFAULT
+#elif defined( __PLATFORM__UNIX )
+REQUEST HB_GT_TRM_DEFAULT
 #elif defined( __PLATFORM__DOS )
 REQUEST HB_GT_DOS_DEFAULT
 #elif defined( __PLATFORM__OS2 )
