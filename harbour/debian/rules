@@ -72,7 +72,7 @@ binary-arch: build install
 	dh_installdocs
 	dh_installexamples
 #	dh_install
-	dh_installman debian/harbour.1 debian/hbdoc.1 debian/hbmake.1 debian/hbpp.1 debian/hbrun.1 debian/hbtest.1
+	dh_installman debian/harbour.1 debian/hbdoc.1 debian/hbmake.1 debian/hbpp.1 debian/hbrun.1 debian/hbdot.1 debian/hbtest.1
 	dh_link
 	dh_strip
 	dh_compress

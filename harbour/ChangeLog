@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-24 14:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/debian/hbdot.1
+  * harbour/debian/rules
+    + added man page for hbdot
+
 2007-08-24 14:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/utils/hbdot/hbdot.prg
     ! fixed typo in history updating
