@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-24 20:35 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/makefile.gc
+     ! Fixed compilation of hbverfix
+  * harbour/make_gcc.gc
+     * Changed the way CC and LD envvars are set
+
 2007-08-24 14:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/debian/hbdot.1
   * harbour/debian/rules
@@ -198,11 +204,11 @@
 
 2007-08-20 17:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tget.prg
-     ! Recent missing date picture mask bug fixed in another 
-       different way. Now without any side-effects, tested with 
+     ! Recent missing date picture mask bug fixed in another
+       different way. Now without any side-effects, tested with
        the regression test suit.
      ! Fixed a minor incompatibility in some rare situations.
-       This is grey area even in C5.2 so compatibility is not 100% 
+       This is grey area even in C5.2 so compatibility is not 100%
        here.
 
 2007-08-20 15:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -243,11 +249,11 @@
 
 2007-08-20 04:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tget.prg
-     ! Fixed incompatible setting of ::TypeOut in certain 
-       situations. As an example this could cause infinite 
-       loops in the get reader when a bad date was entered 
+     ! Fixed incompatible setting of ::TypeOut in certain
+       situations. As an example this could cause infinite
+       loops in the get reader when a bad date was entered
        like: 2007.12.32 (very old bug)
-     ! Recent missing date picture mask bug fixed in a different 
+     ! Recent missing date picture mask bug fixed in a different
        way, because the previous one caused some regressions.
      ! Fixed ::TypeOut behaviour for non-editable types.
 

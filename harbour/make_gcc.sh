@@ -63,8 +63,9 @@ then
     esac
 fi
 
-CC="gcc"
-LD="gcc"
+[ -z "$CC" ] && CC="gcc"
+[ -z "$LD" ] && LD="gcc"
+
 MAKE="make"
 EXEEXT=""
 CRSLIB="ncurses"
