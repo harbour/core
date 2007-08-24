@@ -404,7 +404,6 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
             hb_errRT_BASE( EG_CORRUPTION, 9998, NULL, "__HRBLOAD", 0 );
             return NULL;
          }
-
       }
 
       /* End of PCODE loading, now linking */
@@ -439,7 +438,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
                   pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC;
                }
             }
-            else
+            else if( ( pSymRead[ ul ].scope.value & HB_FS_DEFERRED ) == 0 )
             {
                char szName[ HB_SYMBOL_NAME_LEN + 1 ];
 

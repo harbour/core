@@ -2822,7 +2822,7 @@ static void hb_gt_trm_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
 #endif
       sigaction( SIGTTOU, &act, 0 );
 
-      tcgetattr( hFilenoStdin, &s_termState.saved_TIO );
+      tcgetattr( s_termState.hFilenoStdin, &s_termState.saved_TIO );
       memcpy( &s_termState.curr_TIO, &s_termState.saved_TIO, sizeof( struct termios ) );
       /* atexit( restore_input_mode ); */
       s_termState.curr_TIO.c_lflag &= ~( ECHO | ECHONL | ICANON | ISIG | IEXTEN );
@@ -2832,12 +2832,12 @@ static void hb_gt_trm_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       s_termState.curr_TIO.c_iflag &= ~( IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON );
       s_termState.curr_TIO.c_oflag &= ~OPOST;
       /* Enable LF->CR+LF translation */
-      s_termState.curr_TIO.c_oflag |= ONLCR | OPOST;
+      s_termState.curr_TIO.c_oflag = ONLCR | OPOST;
 
       memset( s_termState.curr_TIO.c_cc, 0, NCCS );
       /* s_termState.curr_TIO.c_cc[ VMIN ] = 0; */
       /* s_termState.curr_TIO.c_cc[ VTIME ] = 0; */
-      tcsetattr( hFilenoStdin, TCSAFLUSH, &s_termState.curr_TIO );
+      tcsetattr( s_termState.hFilenoStdin, TCSAFLUSH, &s_termState.curr_TIO );
       act.sa_handler = SIG_DFL;
 
       sigaction( SIGTTOU, &old, 0 );
@@ -2864,7 +2864,7 @@ static void hb_gt_trm_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    s_termState.fUTF8 = hb_trm_isUTF8();
    hb_gt_trm_SetKeyTrans( NULL, NULL );
    hb_gt_trm_SetDispTrans( NULL, NULL, 0 );
-   if( s_termState.fStdoutTTY )
+   if( s_termState.fOutTTY )
       hb_gt_SemiCold();
 }
 
@@ -2880,7 +2880,7 @@ static void hb_gt_trm_Exit( void )
       removeAllKeyMap( &s_termState.pKeyTab );
 
    s_termState.Exit();
-   if( s_termState.fStdoutTTY && s_termState.iCol > 0 )
+   if( s_termState.fOutTTY && s_termState.iCol > 0 )
       hb_gt_trm_termOut( ( BYTE * ) "\n\r", 2 );
    hb_gt_trm_termFlush();
 
@@ -2900,7 +2900,8 @@ static void hb_gt_trm_Exit( void )
       hb_xfree( s_termState.pOutBuf );
       s_termState.iOutBufSize = s_termState.iOutBufIndex = 0;
    }
-   s_termState.fStdinTTY = s_termState.fStdoutTTY = s_termState.fStderrTTY = FALSE;
+   s_termState.fStdinTTY = s_termState.fStdoutTTY = s_termState.fStderrTTY =
+   s_termState.fOutTTY = FALSE;
 }
 
 static BOOL hb_gt_trm_mouse_IsPresent( void )
