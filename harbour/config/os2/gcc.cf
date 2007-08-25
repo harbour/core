@@ -63,7 +63,7 @@ LINKLIBS += -lgtos2
 else
 
 LINKPATHS += $(foreach gt, $(HB_GT_LIBS), -L$(TOP)$(ROOT)source/rtl/$(gt)/$(HB_ARCH))
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lrtl
 
 endif
 endif

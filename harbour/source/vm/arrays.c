@@ -767,6 +767,19 @@ HB_EXPORT BOOL hb_arraySetPtr( PHB_ITEM pArray, ULONG ulIndex, void * pValue )
       return FALSE;
 }
 
+HB_EXPORT BOOL hb_arraySetPtrGC( PHB_ITEM pArray, ULONG ulIndex, void * pValue )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_arraySetPtrGC(%p, %lu, %p)", pArray, ulIndex, pValue));
+
+   if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
+   {
+      hb_itemPutPtrGC( pArray->item.asArray.value->pItems + ulIndex - 1, pValue );
+      return TRUE;
+   }
+   else
+      return FALSE;
+}
+
 BOOL hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayLast(%p, %p)", pArray, pResult));

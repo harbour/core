@@ -633,6 +633,7 @@ extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns
 
 extern HB_EXPORT int    hb_storc( char * szText, int iParam, ... ); /* stores a szString on a variable by reference */
 extern HB_EXPORT int    hb_storclen( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string on a variable by reference */
+extern HB_EXPORT int    hb_storclen_buffer( char * szText, ULONG ulLength, int iParam, ... ); /* stores a fixed length string buffer on a variable by reference */
 extern HB_EXPORT int    hb_stords( char * szDate, int iParam, ... );   /* szDate must have yyyymmdd format */
 extern HB_EXPORT int    hb_storl( int iLogical, int iParam, ... ); /* stores a logical integer on a variable by reference */
 extern HB_EXPORT int    hb_storni( int iValue, int iParam, ... ); /* stores an integer on a variable by reference */
@@ -687,6 +688,7 @@ extern HB_EXPORT BOOL      hb_arraySetC( PHB_ITEM pArray, ULONG ulIndex, const c
 extern HB_EXPORT BOOL      hb_arraySetCL( PHB_ITEM pArray, ULONG ulIndex, const char * szText, ULONG ulLen );
 extern HB_EXPORT BOOL      hb_arraySetCPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, ULONG ulLen );
 extern HB_EXPORT BOOL      hb_arraySetPtr( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
+extern HB_EXPORT BOOL      hb_arraySetPtrGC( PHB_ITEM pArray, ULONG ulIndex, void * pValue );
 extern HB_EXPORT BOOL      hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ); /* fill an array with a given item */
 extern HB_EXPORT ULONG     hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE */
 extern HB_EXPORT ULONG     hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount, BOOL fExact ); /* scan an array for a given item, or until code-block item returns TRUE in reverted order */

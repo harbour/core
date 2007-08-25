@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-25 12:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/arrays.c
+  * harbour/source/vm/extend.c
+    ! fixed hb_stor*() functions return value to be Clipper compatible.
+      These functions should return 1 _ONLY_ when the operation is really
+      successful; otherwise, they return zero.
+    + added hb_storclen_buffer(), hb_arraySetPtrGC()
+
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/dos/rsx32.cf
+  * harbour/config/os2/gcc.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/config/w32/gcc.cf
+  * harbour/config/w32/rsxnt.cf
+    + added rtl library after gt drivers for linker which do not support
+      backward references
+
 2007-08-24 22:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/utils/hbdot/hbdot.prg
     * some minor modifications for GT drivers which allow to change

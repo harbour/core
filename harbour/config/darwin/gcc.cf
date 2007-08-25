@@ -55,7 +55,7 @@ endif
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 
 LINKPATHS += $(foreach gt, $(HB_GT_LIBS), -L$(TOP)$(ROOT)source/rtl/$(gt)/$(HB_ARCH))
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt))
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lrtl
 
 # screen driver libraries
 ifneq ($(findstring gtcrs, $(HB_GT_LIBS)),)
