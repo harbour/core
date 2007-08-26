@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-26 18:15 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/makefile.gc
+     * Added a DIRTY hack for Windows systems to allow
+       building either CONSOLE or GUI programs with gcc.
+       A new library libmainstd.a is created. This library
+       should be added to a link libraries if programs are
+       CONSOLE based.
+
 2007-08-25 12:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/source/vm/arrays.c

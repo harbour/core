@@ -96,6 +96,25 @@ include common.cf
 
 #**********************************************************
 
+# Hack for WINDOWS systems. We're removing mainstd file
+# from VM lib and we're putting it into a new library
+# libmainstd.a to allow building either CONSOLE or GUI
+# programs, depending on which library we're linking
+# against. If we're linking against libmainstd we're
+# building CONSOLE programs. Otherwise we're building
+# GUI programs without console. Please note IT IS A
+# DIRTY HACK and any better solution is HIGHLY WELCOME
+ifeq ($(HB_ARCHITECTURE),w32)
+MAIN_LIB      = $(LIB_DIR)/$(LIBPREF)mainstd$(LIBEXT)
+MAIN_LIB_OBJS = $(OBJ_DIR)/mainstd$(OBJEXT)
+
+VM_STATIC_LIB_OBJS     := $(VM_STATIC_LIB_OBJS:$(OBJ_DIR)/mainstd$(OBJEXT)=)
+STANDARD_STATIC_HBLIBS := $(STANDARD_STATIC_HBLIBS) $(MAIN_LIB)
+HB_BUILD_TARGETS       := $(MAIN_LIB) $(HB_BUILD_TARGETS)
+endif
+
+#**********************************************************
+
 #.SUFFIXES: $(EXEEXT) $(LIBEXT) $(OBJEXT) .prg .c .l .y
 
 #**********************************************************
@@ -254,6 +273,11 @@ $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
 #**********************************************************
 $(VM_LIB)       : $(VM_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
+#**********************************************************
+ifeq ($(HB_ARCHITECTURE),w32)
+$(MAIN_LIB)     : $(MAIN_LIB_OBJS)
+	$(MKLIB) $(ARFLAGS) $@ $^
+endif
 #**********************************************************
 $(RTL_LIB)      : $(RTL_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
