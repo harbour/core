@@ -45,7 +45,7 @@ HB_FUNC( BIN2W )
       char * pszString = hb_itemGetCPtr( pItem );
       ULONG ulLen = hb_itemGetCLen( pItem );
 
-      hb_retni( HB_MKUSHORT( ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0,
+      hb_retnl( HB_MKUSHORT( ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0,
                              ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0 ) );
    }
    else

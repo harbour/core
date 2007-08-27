@@ -62,19 +62,15 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 
-#if defined( HB_OS_BSD )
-   #include <sys/param.h>
-   #include <sys/mount.h>
-#elif defined(HB_OS_SUNOS)
+#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
    #include <sys/statvfs.h>
-#elif defined( HB_OS_UNIX ) && !defined(__WATCOMC__)
-   #include <sys/vfs.h>
 #endif
 
 #ifdef HB_EXTENSION
 
 HB_FUNC( HB_DISKSPACE )
 {
+   char szPathBuf[ 4 ];
    char * szPath = hb_parc( 1 );
    USHORT uiType = ISNUM( 2 ) ? hb_parni( 2 ) : HB_DISK_AVAIL;
    double dSpace = 0.0;
@@ -82,11 +78,31 @@ HB_FUNC( HB_DISKSPACE )
    if( uiType > HB_DISK_TOTAL )
       uiType = HB_DISK_AVAIL;
 
-#if defined(HB_OS_DOS)
-
+   if( !szPath )
    {
-      USHORT uiDrive = ( szPath[ 0 ] == '\0' ) ? 0 : ( toupper( szPath[ 0 ] ) - 'A' + 1 );
+#ifdef OS_HAS_DRIVE_LETTER
+      if( ISNUM( 1 ) )
+      {
+         szPathBuf[ 0 ] = ( char ) hb_parni( 1 );
+         szPathBuf[ 1 ] = OS_DRIVE_DELIMITER;
+         szPathBuf[ 2 ] = OS_PATH_DELIMITER;
+         szPathBuf[ 3 ] = '\0';
+      }
+      else
+#endif
+      {
+         szPathBuf[ 0 ] = OS_PATH_DELIMITER;
+         szPathBuf[ 1 ] = '\0';
+      }
+      szPath = szPathBuf;
+   }
 
+#if defined(HB_OS_DOS)
+   {
+      USHORT uiDrive = ( szPath[ 0 ] >= 'A' && szPath[ 0 ] <= 'Z' ?
+                         szPath[ 0 ] - 'A' + 1 :
+                       ( szPath[ 0 ] >= 'a' && szPath[ 0 ] <= 'z' ?
+                         szPath[ 0 ] - 'a' + 1 : 0 ) );
       while( TRUE )
       {
          union REGS regs;
@@ -132,9 +148,7 @@ HB_FUNC( HB_DISKSPACE )
          break;
       }
    }
-
 #elif defined(HB_OS_WIN_32)
-
    {
       while( TRUE )
       {
@@ -267,13 +281,14 @@ HB_FUNC( HB_DISKSPACE )
          break;
       }
    }
-
 #elif defined(HB_OS_OS2)
-
    {
       struct _FSALLOCATE fsa;
       USHORT rc;
-      USHORT uiDrive = ( szPath[ 0 ] == '\0' ) ? 0 : ( toupper( szPath[ 0 ] ) - 'A' + 1 );
+      USHORT uiDrive = ( szPath[ 0 ] >= 'A' && szPath[ 0 ] <= 'Z' ?
+                         szPath[ 0 ] - 'A' + 1 :
+                       ( szPath[ 0 ] >= 'a' && szPath[ 0 ] <= 'z' ?
+                         szPath[ 0 ] - 'a' + 1 : 0 ) );
 
       /* Query level 1 info from filesystem */
       while( ( rc = DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa ) ) ) != 0 )
@@ -310,17 +325,12 @@ HB_FUNC( HB_DISKSPACE )
       else
          hb_fsSetIOError( FALSE, 0 );
    }
-
 #elif defined(HB_OS_UNIX) && !defined(__WATCOMC__)
-
    {
-#if defined(HB_OS_SUNOS)
       struct statvfs sf;
+
+      szPath = hb_fileNameConv( hb_strdup( szPath ) );
       if( statvfs( szPath, &sf ) == 0 )
-#else
-      struct statfs sf;
-      if( statfs( szPath, &sf ) == 0 )
-#endif
       {
          switch( uiType )
          {
@@ -345,20 +355,16 @@ HB_FUNC( HB_DISKSPACE )
       }
       else
          hb_fsSetIOError( FALSE, 0 );
+      hb_xfree( szPath );
    }
-
 #else
-
    {
       HB_SYMBOL_UNUSED( szPath );
       HB_SYMBOL_UNUSED( uiType );
    }
-
 #endif
 
    hb_retnlen( dSpace, -1, 0 );
 }
 
 #endif
-
-

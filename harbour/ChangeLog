@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-27 17:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/disksphb.c
+    * use statvfs() instead of statfs() in *nixes - unlike statfs()
+      statvfs() is  documented POSIX function
+    * respect superuser status in calculating free space in DISKSPACE()
+    * respect _SET_FILECASE, _SET_DIRCASE in HB_DISKSPACE()
+    * accept numeric parameter with driver number in systems
+      which supports drive letters
+
+  * harbour/source/rtl/binnum.c
+  * harbour/source/rtl/binnumx.c
+    * force positive return value in BIN2W() and BIN2U()
+
 2007-08-26 18:15 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/makefile.gc
      * Added a DIRTY hack for Windows systems to allow

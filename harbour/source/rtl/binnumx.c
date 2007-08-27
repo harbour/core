@@ -66,10 +66,10 @@ HB_FUNC( BIN2U )
       char * pszString = hb_itemGetCPtr( pItem );
       ULONG ulLen = hb_itemGetCLen( pItem );
 
-      hb_retnl( HB_MKULONG( ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0,
-                            ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0,
-                            ( ulLen >= 3 ) ? ( BYTE ) pszString[ 2 ] : 0,
-                            ( ulLen >= 4 ) ? ( BYTE ) pszString[ 3 ] : 0 ) );
+      hb_retnint( HB_MKULONG( ( ulLen >= 1 ) ? ( BYTE ) pszString[ 0 ] : 0,
+                              ( ulLen >= 2 ) ? ( BYTE ) pszString[ 1 ] : 0,
+                              ( ulLen >= 3 ) ? ( BYTE ) pszString[ 2 ] : 0,
+                              ( ulLen >= 4 ) ? ( BYTE ) pszString[ 3 ] : 0 ) );
    }
    else
       hb_retnl( 0 );

@@ -64,24 +64,24 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 
-#if defined(HB_OS_BSD)
-   #include <sys/param.h>
-   #include <sys/mount.h>
-#elif defined(HB_OS_SUNOS)
-   #include <sys/statvfs.h>
-#elif defined(HB_OS_UNIX) && !defined(__WATCOMC__)
-   #include <sys/vfs.h>
+#if defined(HB_OS_UNIX)
+#  include <unistd.h>
+#  include <sys/types.h>
+#  if defined(__WATCOMC__)
+#     include <sys/stat.h>
+#  else
+#     include <sys/statvfs.h>
+#  endif
 #endif
 
 HB_FUNC( DISKSPACE )
 {
-   USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
    double dSpace = 0.0;
    BOOL bError = FALSE;
 
 #if defined(HB_OS_DOS)
-
    {
+      USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
       union REGS regs;
 
       regs.HB_XREGS.dx = uiDrive;
@@ -95,13 +95,11 @@ HB_FUNC( DISKSPACE )
       else
          bError = TRUE;
    }
-
 #elif defined(HB_OS_WIN_32)
-
    {
+      USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
       typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
                                          PULARGE_INTEGER, PULARGE_INTEGER );
-
       char szPath[ 4 ];
       P_GDFSE pGetDiskFreeSpaceEx;
       UINT uiErrMode;
@@ -137,7 +135,7 @@ HB_FUNC( DISKSPACE )
          {
             memcpy( &i64RetVal, &i64FreeBytesToCaller, sizeof( ULARGE_INTEGER ) );
 
-            #if (defined(__GNUC__) || defined(_MSC_VER)) && !defined(__RSXNT__)
+            #if ( defined(__GNUC__) || defined(_MSC_VER) || defined(__LCC__) ) && !defined(__RSXNT__)
 
                dSpace  = ( double ) i64RetVal.LowPart +
                          ( double ) i64RetVal.HighPart +
@@ -182,10 +180,9 @@ HB_FUNC( DISKSPACE )
       if( GetLastError() != 0 )
          bError = TRUE;
    }
-
 #elif defined(HB_OS_OS2)
-
    {
+      USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
       struct _FSALLOCATE fsa;
 
       /* Query level 1 info from filesystem */
@@ -196,31 +193,43 @@ HB_FUNC( DISKSPACE )
       else
          bError = TRUE;
    }
-
-#elif defined(HB_OS_UNIX) && !defined(__WATCOMC__)
-
+#elif defined(HB_OS_UNIX)
    {
-      char *szName = ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) "/";
-#if defined(HB_OS_SUNOS)
-      struct statvfs st;
-      if ( statvfs( szName, &st ) == 0 )
-#else
-      struct statfs st;
-      if ( statfs( szName, &st ) == 0 )
-#endif
-         dSpace = ( double ) st.f_bfree * ( double ) st.f_bsize;
+#if defined(__WATCOMC__)
+      struct stat st;
+      char *szName = hb_parc( 1 );
+
+      if( !szName )
+         szName = ( char * ) "/";
+      szName = hb_fileNameConv( hb_strdup( szName ) );
+
+      if( stat( szName, &st) == 0 )
+         dSpace = ( double ) st.st_blocks * ( double ) st.st_blksize;
       else
          bError = TRUE;
 
-      HB_SYMBOL_UNUSED( uiDrive );
-   }
-
+      hb_xfree( szName );
 #else
+      struct statvfs st;
+      char *szName = hb_parc( 1 );
 
-   {
-      HB_SYMBOL_UNUSED( uiDrive );
+      if( !szName )
+         szName = ( char * ) "/";
+      szName = hb_fileNameConv( hb_strdup( szName ) );
+
+      if( statvfs( szName, &st ) == 0 )
+      {
+         if( getuid() == 0 )
+            dSpace = ( double ) st.f_bfree * ( double ) st.f_bsize;
+         else
+            dSpace = ( double ) st.f_bavail * ( double ) st.f_bsize;
+      }
+      else
+         bError = TRUE;
+
+      hb_xfree( szName );
+#endif
    }
-
 #endif
 
    if( bError )
