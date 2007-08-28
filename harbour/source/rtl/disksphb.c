@@ -83,7 +83,7 @@ HB_FUNC( HB_DISKSPACE )
 #ifdef OS_HAS_DRIVE_LETTER
       if( ISNUM( 1 ) )
       {
-         szPathBuf[ 0 ] = ( char ) hb_parni( 1 );
+         szPathBuf[ 0 ] = ( char ) hb_parni( 1 ) + 'A' - 1;
          szPathBuf[ 1 ] = OS_DRIVE_DELIMITER;
          szPathBuf[ 2 ] = OS_PATH_DELIMITER;
          szPathBuf[ 3 ] = '\0';
@@ -99,7 +99,8 @@ HB_FUNC( HB_DISKSPACE )
 
 #if defined(HB_OS_DOS)
    {
-      USHORT uiDrive = ( szPath[ 0 ] >= 'A' && szPath[ 0 ] <= 'Z' ?
+      USHORT uiDrive = szPath[ 1 ] != OS_DRIVE_DELIMITER ? 0 :
+                       ( szPath[ 0 ] >= 'A' && szPath[ 0 ] <= 'Z' ?
                          szPath[ 0 ] - 'A' + 1 :
                        ( szPath[ 0 ] >= 'a' && szPath[ 0 ] <= 'z' ?
                          szPath[ 0 ] - 'a' + 1 : 0 ) );
@@ -285,7 +286,8 @@ HB_FUNC( HB_DISKSPACE )
    {
       struct _FSALLOCATE fsa;
       USHORT rc;
-      USHORT uiDrive = ( szPath[ 0 ] >= 'A' && szPath[ 0 ] <= 'Z' ?
+      USHORT uiDrive = szPath[ 1 ] != OS_DRIVE_DELIMITER ? 0 :
+                       ( szPath[ 0 ] >= 'A' && szPath[ 0 ] <= 'Z' ?
                          szPath[ 0 ] - 'A' + 1 :
                        ( szPath[ 0 ] >= 'a' && szPath[ 0 ] <= 'z' ?
                          szPath[ 0 ] - 'a' + 1 : 0 ) );

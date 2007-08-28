@@ -105,7 +105,6 @@ HB_FUNC( DISKSPACE )
       UINT uiErrMode;
 
       /* Get the default drive */
-
       if( uiDrive == 0 )
          uiDrive = hb_fsCurDrv() + 1;
 

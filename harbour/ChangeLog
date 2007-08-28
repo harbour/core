@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-28 14:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/diskspac.c
+    * formatting
+  * harbour/source/rtl/disksphb.c
+    ! fixed typo in numeric drive parameter, now 1->A, 2->B, ..., 0->default
+    * extract drive letter only when second letter in path is
+      OS_DRIVE_DELIMITER
+
 2007-08-28 03:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/diskspac.c
   * harbour/source/rtl/disksphb.c
