@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-28 03:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/disksphb.c
+    ! casting for C++ compilers
+
+  * harbour/source/rtl/hbinet.c
+    * added hack for unimplemented in Linux OpenWatcom version
+      h_errno and hstrerror()
+
+  * harbour/source/rtl/hbregex.c
+  * harbour/source/hbpcre/pcreglob.c
+  * harbour/contrib/btree/hb_btree.c
+    * workaround for C/C++ compilers which may use different calling
+      convention for standard C functions
+
 2007-08-27 17:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/diskspac.c
   * harbour/source/rtl/disksphb.c

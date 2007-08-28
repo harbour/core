@@ -329,7 +329,7 @@ HB_FUNC( HB_DISKSPACE )
    {
       struct statvfs sf;
 
-      szPath = hb_fileNameConv( hb_strdup( szPath ) );
+      szPath = ( char * ) hb_fileNameConv( hb_strdup( szPath ) );
       if( statvfs( szPath, &sf ) == 0 )
       {
          switch( uiType )

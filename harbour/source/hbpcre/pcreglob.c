@@ -47,24 +47,29 @@ all threads. However, when compiling for Virtual Pascal, things are done
 differently, and global variables are not used (see pcre.in). */
 
 
+#include "hbapi.h"
 #include "pcreinal.h"
 
+static void * hb_pcre_grab( size_t size )
+{
+   return hb_xgrab( size );
+}
 
 #ifndef VPCOMPAT
 #ifdef __cplusplus
 extern "C"
 {
-   void *(*pcre_malloc)(size_t) = malloc;
-   void  (*pcre_free)(void *) = free;
-   void *(*pcre_stack_malloc)(size_t) = malloc;
-   void  (*pcre_stack_free)(void *) = free;
+   void *(*pcre_malloc)(size_t) = hb_pcre_grab;
+   void  (*pcre_free)(void *) = hb_xfree;
+   void *(*pcre_stack_malloc)(size_t) = hb_pcre_grab;
+   void  (*pcre_stack_free)(void *) = hb_xfree;
    int   (*pcre_callout)(pcre_callout_block *) = NULL;
 }
 #else
-void *(*pcre_malloc)(size_t) = malloc;
-void  (*pcre_free)(void *) = free;
-void *(*pcre_stack_malloc)(size_t) = malloc;
-void  (*pcre_stack_free)(void *) = free;
+void *(*pcre_malloc)(size_t) = hb_pcre_grab;
+void  (*pcre_free)(void *) = hb_xfree;
+void *(*pcre_stack_malloc)(size_t) = hb_pcre_grab;
+void  (*pcre_stack_free)(void *) = hb_xfree;
 int   (*pcre_callout)(pcre_callout_block *) = NULL;
 #endif
 #endif

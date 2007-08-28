@@ -1556,6 +1556,11 @@ BOOL hb_BTreeSeek( struct hb_BTree * pBTree, BYTE *szKey, LONG lData, BOOL bSoft
 }
 
 
+static int hb_BTstrncmp( const char *s1, const char *s2, size_t n )
+{
+   return strncmp( s1, s2, n );
+}
+
 /* allocate hb_BTree structure */
 struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeySize, ULONG ulFlags, USHORT usBuffers )
 {
@@ -1643,7 +1648,7 @@ struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeyS
   }
   else
   {
-    pBTree->pStrCompare = ( BTreeCmpFunc ) strncmp;
+    pBTree->pStrCompare = ( BTreeCmpFunc ) hb_BTstrncmp;
   }
 
   if ( GETFLAG( pBTree, IsInMemory ) == FALSE )
@@ -1729,7 +1734,7 @@ struct hb_BTree *hb_BTreeOpen( BYTE *FileName, ULONG ulFlags, USHORT usBuffers )
   }
   else
   {
-    pBTree->pStrCompare = ( BTreeCmpFunc ) strncmp;
+    pBTree->pStrCompare = ( BTreeCmpFunc ) hb_BTstrncmp;
   }
 
   return pBTree;

@@ -215,7 +215,7 @@ HB_FUNC( DISKSPACE )
 
       if( !szName )
          szName = ( char * ) "/";
-      szName = hb_fileNameConv( hb_strdup( szName ) );
+      szName = ( char * ) hb_fileNameConv( hb_strdup( szName ) );
 
       if( statvfs( szName, &st ) == 0 )
       {

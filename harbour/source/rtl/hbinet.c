@@ -78,8 +78,6 @@
       #include <windows.h>
 
       #define HB_INET_CLOSE( x )    closesocket( x )
-
-      extern char *hstrerror( int i );
    #else
 
       #if defined( HB_OS_HPUX )
@@ -94,7 +92,11 @@
       #include <netinet/in.h>
       #include <arpa/inet.h>
 
-      extern int h_errno;
+      #if defined(__WATCOMC__)
+         #define h_errno errno
+      #else
+         extern int h_errno;
+      #endif
       #define HB_INET_CLOSE( x )    close( x )
       #include <errno.h>
    #endif
@@ -333,7 +335,7 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
 #if defined(HB_OS_WIN_32)
       HB_SOCKET_SET_ERROR2( Socket, WSAGetLastError() , "Generic error in GetHostByName()" );
       WSASetLastError( 0 );
-#elif defined(HB_OS_OS2) || defined(HB_OS_HPUX)
+#elif defined(HB_OS_OS2) || defined(HB_OS_HPUX) || defined(__WATCOMC__)
       HB_SOCKET_SET_ERROR2( Socket, h_errno, "Generic error in GetHostByName()" );
 #else
       HB_SOCKET_SET_ERROR2( Socket, h_errno, (char *) hstrerror( h_errno ) );
