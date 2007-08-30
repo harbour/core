@@ -329,18 +329,18 @@ if [ "\${HB_WITHOUT_X11}" != "yes" ]; then
 fi
 [ -n "\${HB_GPM_LIB}" ] && SYSTEM_LIBS="\${SYSTEM_LIBS} -l\${HB_GPM_LIB}"
 
-if [ "\${HB_STATIC}" = "full" ]; then
-    if [ "\${HB_ARCHITECTURE}" = "linux" ]; then
-        SYSTEM_LIBS="\${SYSTEM_LIBS} -lpthread"
-    fi
-    LN_OPT="\${LN_OPT} -static"
-    HB_STATIC="yes"
-fi
-
 if [ "\${HB_XBGTK}" = "yes" ]; then
     SYSTEM_LIBS="\${SYSTEM_LIBS} \`pkg-config --libs gtk+-2.0\`"
 elif [ "\${HB_HWGUI}" = "yes" ]; then
     SYSTEM_LIBS="\${SYSTEM_LIBS} \`pkg-config --libs gtk+-2.0 --libs libgnomeprint-2.2\`"
+fi
+
+if [ "\${HB_STATIC}" = "full" ]; then
+    if [ "\${HB_ARCHITECTURE}" = "linux" ]; then
+        SYSTEM_LIBS="\${SYSTEM_LIBS} -ldl -lpthread"
+    fi
+    LN_OPT="\${LN_OPT} -static"
+    HB_STATIC="yes"
 fi
 
 HB_LNK_REQ=""
