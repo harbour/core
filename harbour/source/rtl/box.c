@@ -65,6 +65,7 @@ HB_FUNC( DISPBOX )
    {
       char * pszColor = hb_parc( 6 );
       char szOldColor[ CLR_STRLEN ];
+      char * pszBox = hb_parc( 5 );
 
       if( pszColor )
       {
@@ -72,14 +73,14 @@ HB_FUNC( DISPBOX )
          hb_gtSetColorStr( pszColor );
       }
 
-      if( ISCHAR( 5 ) )
+      if( pszBox )
          hb_gtBox( hb_itemGetNI( pTop ),
                    hb_itemGetNI( pLeft),
                    hb_itemGetNI( pBottom ),
                    hb_itemGetNI( pRight ),
-                   ( BYTE * ) hb_parc( 5 ) );
+                   ( BYTE * ) ( *pszBox ? pszBox : "         " ) );
 
-      else if( ISNUM( 5 ) && hb_parni( 5 ) == 2 )
+      else if( hb_parni( 5 ) == 2 )
          hb_gtBoxD( hb_itemGetNI( pTop ),
                     hb_itemGetNI( pLeft),
                     hb_itemGetNI( pBottom ),

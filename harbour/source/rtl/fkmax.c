@@ -76,11 +76,8 @@ HB_FUNC( FKLABEL )
 
          snprintf( szName, sizeof( szName ), "F%i", uiFKey );
          hb_retc( szName );
+         return;
       }
-      else
-         hb_retc( NULL );
    }
-   else
-      hb_retc( NULL );
+   hb_retc( NULL );
 }
-

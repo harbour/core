@@ -62,6 +62,7 @@
  */
 
 #include "hbapi.h"
+#include "hbvm.h"
 #include "hbapigt.h"
 #include "inkey.ch"
 
@@ -83,9 +84,8 @@ HB_FUNC( __ACCEPTSTR )
 HB_FUNC( __ACCEPT )
 {
    char szAcceptResult[ ACCEPT_BUFFER_LEN ];
-
-   int input;
    ULONG ulLen;
+   int input;
 
    /* cPrompt(s) passed ? */
    if( hb_pcount() >= 1 )
@@ -96,7 +96,7 @@ HB_FUNC( __ACCEPT )
 
    szAcceptResult[ 0 ] = '\0';
 
-   while( input != K_ENTER )
+   while( input != K_ENTER && hb_vmRequestQuery() == 0 )
    {
       /* Wait forever, for keyboard events only */
       input = hb_inkey( TRUE, 0.0, INKEY_KEYBOARD );
@@ -106,16 +106,16 @@ HB_FUNC( __ACCEPT )
          case K_LEFT:
             if( ulLen > 0 )
             {
-               hb_gtWriteCon( ( BYTE * ) "\x8 \x8", 3 ); /* Erase it from the screen. */
+               hb_conOutAlt( "\x8", sizeof( char ) ); /* Erase it from the screen. */
                ulLen--; /* Adjust input count to get rid of last character */
             }
             break;
 
          default:
-            if( ulLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 )
+            if( ulLen < ( ACCEPT_BUFFER_LEN - 1 ) && input >= 32 && input <= 255 )
             {
                szAcceptResult[ ulLen ] = input; /* Accept the input */
-               hb_gtWriteCon( ( BYTE * ) &szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
+               hb_conOutAlt( &szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
                ulLen++;  /* Then adjust the input count */
             }
       }

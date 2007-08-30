@@ -57,20 +57,15 @@
 
 HB_FUNC( DEFPATH )
 {
-   char buffer[ _POSIX_PATH_MAX + 1 ];
-   char delimiter[ 2 ] = ":";
-   int size;
-
-   buffer[0] = '\0';
+   char buffer[ _POSIX_PATH_MAX + 2 ];
+   int size = 0;
 
    if( hb_set.HB_SET_DEFAULT )
    {
       /* Leave enough space to append a path delimiter */
-      strncat( buffer, hb_set.HB_SET_DEFAULT, sizeof( buffer ) - 1 );
-      size = sizeof( buffer ) - 2; /* ? */
-      buffer[ size ] = '\0';
+      hb_strncpy( buffer, hb_set.HB_SET_DEFAULT, sizeof( buffer ) - 1 );
+      size = strlen( buffer );
    }
-   size = strlen( buffer );
 
    HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: buffer is |%s|, size is %d, last char is |%c|", buffer, size, buffer[ size - 1]));
    HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: OS_PATH_DELIMITER is |%c| and OS_PATH_LIST_SEPARATOR is |%c|", OS_PATH_DELIMITER, OS_PATH_LIST_SEPARATOR));
@@ -81,14 +76,21 @@ HB_FUNC( DEFPATH )
       the path delimiter. This allows the use of a drive letter delimiter
       for DOS compatible operating systems while preventing it from being
       with a Unix compatible OS. */
-   if( size && buffer[ size - 1 ] != ':' && buffer[ size - 1 ] != OS_PATH_DELIMITER )
+#ifdef OS_HAS_DRIVE_LETTER
+   if( size && buffer[ size - 1 ] != OS_PATH_DELIMITER &&
+               buffer[ size - 1 ] != OS_DRIVE_DELIMITER )
    {
-      if( size > 1 || OS_PATH_LIST_SEPARATOR == ':' )
-         delimiter[ 0 ] = OS_PATH_DELIMITER;
-      hb_strncat( buffer, delimiter, _POSIX_PATH_MAX );
+      if( size == 1 )
+         buffer[ size++ ] = OS_DRIVE_DELIMITER;
+      else
+         buffer[ size++ ] = OS_PATH_DELIMITER;
    }
+#else
+   if( size && buffer[ size - 1 ] != OS_PATH_DELIMITER )
+      buffer[ size++ ] = OS_PATH_DELIMITER;
+#endif
 
-   hb_retc( buffer );
+   hb_retclen( buffer, size );
 }
 
 HB_FUNC( __DEFPATH )

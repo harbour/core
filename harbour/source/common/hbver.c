@@ -546,3 +546,15 @@ char * hb_verPCode( void )
 
    return pszPCode;
 }
+
+char * hb_verBuildDate( void )
+{
+   char * pszDate;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_verBuildDate()"));
+
+   pszDate = ( char * ) hb_xgrab( 64 );
+   snprintf( pszDate, 64, "%s %s", __DATE__, __TIME__ );
+
+   return  pszDate;
+}

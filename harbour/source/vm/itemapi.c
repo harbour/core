@@ -2352,9 +2352,9 @@ HB_EXPORT char * hb_itemString( PHB_ITEM pItem, ULONG * ulLen, BOOL * bFreeReq )
          if( hb_set.HB_SET_FIXED )
          {
             /* If fixed mode is enabled, use the default number of decimal places. */
-            PHB_ITEM pDec = hb_itemPutNI( NULL, hb_set.HB_SET_DECIMALS );
-            buffer = hb_itemStr( pItem, NULL, pDec );
-            hb_itemRelease( pDec );
+            hb_itemPutNI( hb_stackAllocItem(), hb_set.HB_SET_DECIMALS );
+            buffer = hb_itemStr( pItem, NULL, hb_stackItemFromTop( -1 ) );
+            hb_stackPop();
          }
          else
             buffer = hb_itemStr( pItem, NULL, NULL );
@@ -2478,9 +2478,10 @@ HB_EXPORT PHB_ITEM hb_itemValToStr( PHB_ITEM pItem )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemValToStr(%p)", pItem));
 
    buffer = hb_itemString( pItem, &ulLen, &bFreeReq );
-   pResult = hb_itemPutCL( NULL, buffer, ulLen );
    if( bFreeReq )
-      hb_xfree( buffer );
+      pResult = hb_itemPutCPtr( NULL, buffer, ulLen );
+   else
+      pResult = hb_itemPutCL( NULL, buffer, ulLen );
 
    return pResult;
 }

@@ -366,9 +366,13 @@ char * hb_langDGetErrorDesc( ULONG ulIndex )
 
 HB_FUNC( HB_LANGSELECT )
 {
+   char * szNewLang;
+
    hb_retc( hb_langID() );
 
-   hb_langSelectID( hb_parc( 1 ) );
+   szNewLang = hb_parc( 1 );
+   if( szNewLang )
+      hb_langSelectID( szNewLang );
 }
 
 HB_FUNC( HB_LANGNAME )

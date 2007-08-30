@@ -107,7 +107,7 @@ HB_FUNC( GETENV )
          {
             if( szValue )
                hb_xfree( szValue );
-            hb_retc( hb_parcx( 2 ) );
+            hb_retc( hb_parc( 2 ) );
          }
       }
       else

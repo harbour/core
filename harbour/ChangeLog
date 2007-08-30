@@ -8,6 +8,96 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-30 03:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/rtl/console.c
+    * changed hb_conOutAlt() from static to global function.
+
+  * harbour/include/hbapi.h
+  * harbour/source/common/hbver.c
+    + added hb_verBuildDate()
+
+  * harbour/source/rtl/accept.c
+    ! Fixed ACCEPT to respect SET CONSOLE and similar sets.
+
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/contrib/libct/ctwin.c
+    ! fixed chr(8) console output - it should erase character on the screen
+
+  * harbour/include/set.ch
+  * harbour/include/hbset.h
+  * harbour/source/rtl/set.c
+  * harbour/source/rtl/filesys.c
+    + added _SET_TRIMFILENAME - when enabled low level hb_fs*() functions
+      strip trailing and leading spaces from file names to emulate DOS
+      like behavior - switch compatible with xHarbour
+
+
+  * harbour/source/rtl/run.c
+    * remove compiler type checking - if system() is not supported by
+      some platform/compiler then I'd prefer to exclude it explicitly.
+
+  * harbour/source/rtl/dircmd.prg
+    + added support for extended DBF types and replaced some of
+      Bin2W() by ASC()
+
+  * harbour/source/rtl/defpath.c
+    * use OS_HAS_DRIVE_LETTER macro to detect if platform supports drive
+      letters
+
+  * harbour/source/rtl/philes.c
+    + added HB_FCOMMIT(), HB_OSERROR(), HB_OSDRIVESEPARATOR()
+      Question: why we have HB_F_EOF() instead HB_FEOF()
+
+  * harbour/source/rtl/oldbox.c
+  * harbour/source/rtl/box.c
+    ! fixed __BOX() to be Clipper compatible
+
+  * harbour/source/rtl/math.c
+  * harbour/source/rtl/dateshb.c
+    * formatting and some minor improvements
+
+  * harbour/source/rtl/isprint.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/rtl/ampm.c
+  * harbour/source/rtl/inkey.c
+  * harbour/source/rtl/gete.c
+  * harbour/source/rtl/fkmax.c
+  * harbour/source/rtl/langapi.c
+  * harbour/source/rtl/colorind.c
+  * harbour/source/rtl/mouseapi.c
+  * harbour/source/rtl/readvar.prg
+  * harbour/source/rtl/devoutp.prg
+  * harbour/source/rtl/readkey.prg
+    * code checking and formatting
+    ! some minor fixes
+    % some speed improvements
+
+  * harbour/source/rtl/menuto.prg
+  * harbour/source/rtl/radiogrp.prg
+  * harbour/source/rtl/listbox.prg
+  * harbour/source/rtl/checkbox.prg
+  * harbour/source/rtl/pushbtn.prg
+  * harbour/source/rtl/radiobtn.prg
+    * code checking and formatting
+    ! added fixes borrowed from xHarbour 
+    ! some other fixes
+    % some speed improvements
+
+  * harbour/source/rtl/filehb.c
+    + added commment
+
+  * harbour/source/rtl/transfrm.c
+    ! fixed integer numbers transformation when _SET_FIXED is on to
+      be Clipper compatible
+
+  * harbour/source/rtl/version.c
+    + added HB_PCODEVER() and HB_BUILDDATE()
+
+  * harbour/source/rtl/copyfile.c
+    ! fixed __COPYFILE() - source and destination files should respect
+      _SET_DEFAULT
+
 2007-08-28 14:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/diskspac.c
     * formatting

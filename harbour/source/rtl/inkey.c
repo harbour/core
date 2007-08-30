@@ -599,11 +599,5 @@ HB_FUNC( LASTKEY )
 HB_FUNC( HB_SETLASTKEY )
 {
    if( ISNUM(1) )
-   {
-      hb_retni( hb_setInkeyLast( hb_parni(1) ) );
-   }
-   else
-   {
-      hb_ret();
-   }
+      hb_retni( hb_setInkeyLast( hb_parni( 1 ) ) );
 }

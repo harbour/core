@@ -131,7 +131,8 @@ typedef enum
    HB_SET_FORCEOPT      = 107,
    HB_SET_DBFLOCKSCHEME = 108,
    HB_SET_DEFEXTENSIONS = 109,
-   HB_SET_EOL           = 110
+   HB_SET_EOL           = 110,
+   HB_SET_TRIMFILENAME  = 111
 
 } HB_set_enum;
 
@@ -200,6 +201,7 @@ typedef struct
    BOOL    HB_SET_FORCEOPT;
    BOOL    HB_SET_DEFEXTENSIONS;
    char *  HB_SET_EOL;
+   BOOL    HB_SET_TRIMFILENAME;
 
 } HB_SET_STRUCT;
 

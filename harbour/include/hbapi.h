@@ -897,6 +897,7 @@ extern void     hb_conRelease( void ); /* release the console API system */
 extern char *   hb_conNewLine( void ); /* retrieve a pointer to a static buffer containing new-line characters */
 extern void     hb_conOutStd( const char * pStr, ULONG ulLen ); /* output an string to STDOUT */
 extern void     hb_conOutErr( const char * pStr, ULONG ulLen ); /* output an string to STDERR */
+extern void     hb_conOutAlt( const char * pStr, ULONG ulLen ); /* output an string to the screen and/or printer and/or alternate */
 extern USHORT   hb_conSetCursor( BOOL bSetCursor, USHORT usNewCursor ); /* retrieve and optionally set cursor shape */
 extern char *   hb_conSetColor( const char * szColor ); /* retrieve and optionally set console color */
 extern void     hb_conXSaveRestRelease( void ); /* release the save/restore API */
@@ -942,6 +943,7 @@ extern char * hb_verPlatform( void ); /* retrieves a newly allocated buffer cont
 extern char * hb_verCompiler( void ); /* retrieves a newly allocated buffer containing compiler version */
 extern char * hb_verHarbour( void ); /* retrieves a newly allocated buffer containing harbour version */
 extern char * hb_verPCode( void ); /* retrieves a newly allocated buffer containing PCode version */
+extern char * hb_verBuildDate( void ); /* retrieves a newly allocated buffer containing build date and time */
 extern void   hb_verBuildInfo( void ); /* display harbour, compiler, and platform versions to standard console */
 
 extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == WinNt, 2000, XP */

@@ -273,7 +273,7 @@ HB_FUNC( CURDIR )
 
 HB_FUNC( HB_F_EOF )
 {
-   USHORT uiError = 0;
+   USHORT uiError = 6;
 
    if( ISNUM( 1 ) )
    {
@@ -283,6 +283,24 @@ HB_FUNC( HB_F_EOF )
    else
       hb_retl( TRUE );
    hb_setFError( uiError );
+}
+
+HB_FUNC( HB_FCOMMIT )
+{
+   USHORT uiError = 6;
+
+   if( ISNUM( 1 ) )
+   {
+      hb_fsCommit( hb_parni(1) );
+      uiError = hb_fsError();
+   }
+
+   hb_setFError( uiError );
+}
+
+HB_FUNC( HB_OSERROR )
+{
+   hb_retni( hb_fsOsError() );
 }
 
 HB_FUNC( HB_OSPATHSEPARATOR )
@@ -300,6 +318,16 @@ HB_FUNC( HB_OSPATHLISTSEPARATOR )
 HB_FUNC( HB_OSPATHDELIMITERS )
 {
    hb_retc( OS_PATH_DELIMITER_LIST );
+}
+
+HB_FUNC( HB_OSDRIVESEPARATOR )
+{
+#ifdef OS_HAS_DRIVE_LETTER
+   char ret[ 2 ] = { OS_DRIVE_DELIMITER, 0 };
+   hb_retc( ret );
+#else
+   hb_retc( NULL );
+#endif
 }
 
 #endif

@@ -58,8 +58,7 @@ FUNCTION ReadVar( cVarName )
    LOCAL cOldVarName
    LOCAL oGetList
 
-   oGetList := __GetListActive()
-   IF oGetList != NIL
+   IF ( oGetList := __GetListActive() ) != NIL
       RETURN oGetList:ReadVar( cVarName )
    ENDIF
 
@@ -69,5 +68,4 @@ FUNCTION ReadVar( cVarName )
       s_cVarName := cVarName
    ENDIF
 
-   RETURN cOldVarName
-
+RETURN cOldVarName

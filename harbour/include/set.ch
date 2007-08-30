@@ -125,8 +125,9 @@
 #define _SET_DBFLOCKSCHEME    108 /* Harbour extension */
 #define _SET_DEFEXTENSIONS    109 /* Harbour extension */
 #define _SET_EOL              110 /* Harbour extension */
+#define _SET_TRIMFILENAME     111 /* Harbour extension */
 
 #define HB_SET_BASE           100
-#define HB_SET_COUNT          11
+#define HB_SET_COUNT          12
 
 #endif /* _SET_CH */

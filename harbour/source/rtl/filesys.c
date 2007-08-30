@@ -1905,14 +1905,12 @@ HB_EXPORT USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen
     * It will allow us to add drive emulation in hb_fsCurDrv()/hb_fsChDrv()
     * and hb_fileNameConv()
     */
-#if !defined(HB_OS_OS2)
+#if !defined(HB_OS_OS2) && !defined(__MINGW32__)
    if( uiDrive )
    {
       uiCurDrv = hb_fsCurDrv() + 1;
       if( uiDrive != uiCurDrv )
-      {
          hb_fsChDrv( uiDrive - 1 );
-      }
    }
 #endif
 
@@ -2016,7 +2014,7 @@ HB_EXPORT USHORT hb_fsChDrv( BYTE nDrive )
          uiResult = (USHORT) FS_ERROR;
          hb_fsSetError( (USHORT) FS_ERROR );
       }
-    }
+   }
 #else
 
    HB_SYMBOL_UNUSED( nDrive );
@@ -2061,7 +2059,6 @@ HB_EXPORT USHORT hb_fsIsDrv( BYTE nDrive )
       }
       HB_FS_SETDRIVE( uiSave );
    }
-
 #else
 
    HB_SYMBOL_UNUSED( nDrive );
@@ -2344,7 +2341,7 @@ HB_EXPORT BYTE * hb_fileNameConv( char *str ) {
    char *filename;
    ULONG ulDirLen, ulFileLen;
 
-#ifdef __XHARBOUR__
+   /* strip trailing and leading spaces */
    if( hb_set.HB_SET_TRIMFILENAME )
    {
       char *szFileTrim;
@@ -2358,7 +2355,6 @@ HB_EXPORT BYTE * hb_fileNameConv( char *str ) {
       }
       str[ulLen] = '\0';
    }
-#endif
 
    if( hb_set.HB_SET_DIRSEPARATOR != '\\' )
    {

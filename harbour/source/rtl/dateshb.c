@@ -221,7 +221,7 @@ HB_FUNC( YEAR )
 
       hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
 
-      hb_retnllen( iYear, 5 );
+      hb_retnilen( iYear, 5 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1112, NULL, "YEAR", HB_ERR_ARGS_BASEPARAMS );

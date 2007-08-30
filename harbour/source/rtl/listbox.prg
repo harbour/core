@@ -57,7 +57,9 @@
 #include "button.ch"
 
 #ifdef HB_COMPAT_C53
-Class HBListBox
+CREATE CLASS LISTBOX FUNCTION HBListBox
+
+Exported:
 
    Method New( nTop, nLeft, nBottom, nRight, lDrop )
 
@@ -83,7 +85,6 @@ Class HBListBox
    Method SetFocus()
    Method SetItem( nPos, aitem )
    Method SetText( nPos, xValue )
-   Data ClassName Init "LISTBOX"
    Data Buffer
    Data CapCol
    Data CapRow
@@ -126,7 +127,7 @@ Class HBListBox
    ACCESS TypeOut inline ::itemCount == 0
    ASSIGN TypeOut( x ) inline IIF( x != nil, x, ::itemCount == 0 )
 
-  Hidden:
+Hidden:
 
    Method SetScroll( xData )
    Data xTop Init 0
@@ -144,7 +145,8 @@ Class HBListBox
    Method SetTopItem( xTop )
    Data cSaveScreen Init NIL
    Data nSaveTop, nSaveLeft, nSaveBottom, nSaveRight
-Endclass
+
+ENDCLASS
 
 Method New( nTop, nLeft, nBottom, nRight, lDrop )
 
@@ -210,7 +212,7 @@ RETURN SELF
 
 /**** Get/Set Datas ****/
 
-Method SetScroll( xData ) Class HBListBox
+Method SetScroll( xData ) Class ListBox
 
    IF ISOBJECT( xData ) /*.and. xData:Classname=="SCROLLBAR" .and. xData:orient==1)*/
       ::vScrolls  := xData
@@ -219,7 +221,7 @@ Method SetScroll( xData ) Class HBListBox
 
 RETURN ::vScrolls
 
-Method SetTop( xData ) Class HBListBox
+Method SetTop( xData ) Class ListBox
 
    IF ISNUMBER( ::xTop := xData ) .and. ISOBJECT( ::vScroll )
       ::vScroll:start := xData + 1
@@ -227,7 +229,7 @@ Method SetTop( xData ) Class HBListBox
 
 RETURN ::xTop
 
-Method SetRight( xData ) Class HBListBox
+Method SetRight( xData ) Class ListBox
 
    IF !( ISNIL( xData ) ) .and. ISOBJECT( ( ::xRight := xData, ::vScroll ) )
       ::vScroll:offset := xData
@@ -235,7 +237,7 @@ Method SetRight( xData ) Class HBListBox
 
 RETURN ::xRight
 
-Method SetDropDown( xData ) Class HBListBox
+Method SetDropDown( xData ) Class ListBox
 
    IF ISLOGICAL( xData )
       ::xDropDown := xData
@@ -249,7 +251,7 @@ Method SetDropDown( xData ) Class HBListBox
 
 RETURN ::xDropDown
 
-Method SetCaption( xData ) Class HBListBox
+Method SetCaption( xData ) Class ListBox
 
    IF ISCHARACTER( xData ) .and. ISNIL( ::Capcol )
       ::cCaption := xData
@@ -259,7 +261,7 @@ Method SetCaption( xData ) Class HBListBox
 
 RETURN ::cCaption
 
-Method SetBottom( xData ) Class HBListBox
+Method SetBottom( xData ) Class ListBox
 
    Local nBottom
 
@@ -272,7 +274,7 @@ RETURN ::xBottom
 
 /*** Class Methods ***/
 
-Method ADDITEM( cText, xValue ) Class HBListBox
+Method ADDITEM( cText, xValue ) Class ListBox
 
    IF ! ISCHARACTER( cText )
    ELSEIF Valtype( xValue ) $ "CUN"
@@ -288,7 +290,7 @@ Method ADDITEM( cText, xValue ) Class HBListBox
 
 RETURN SELF
 
-Method Close() Class HBListBox
+Method Close() Class ListBox
 
    IF ::isOpen
 
@@ -341,7 +343,7 @@ Method DELITEM( xitem )
 
 RETURN SELF
 
-Method Getdata( xData ) Class HBListBox
+Method Getdata( xData ) Class ListBox
 
    Local xRet := Nil
 
@@ -352,7 +354,7 @@ Method Getdata( xData ) Class HBListBox
 
 RETURN xRet
 
-Method FindData( cText, nPos, lCaseSensitive, lExact ) Class HBListBox
+Method FindData( cText, nPos, lCaseSensitive, lExact ) Class ListBox
 
    Local nPosFound
    Local lOldExact
@@ -414,7 +416,7 @@ Method FindData( cText, nPos, lCaseSensitive, lExact ) Class HBListBox
 
 RETURN nPosFound
 
-Method FindText( cText, nPos, lCaseSensitive, lExact ) Class HBListBox
+Method FindText( cText, nPos, lCaseSensitive, lExact ) Class ListBox
 
    Local nPosFound
    Local lOldExact
@@ -476,7 +478,7 @@ Method FindText( cText, nPos, lCaseSensitive, lExact ) Class HBListBox
 
 RETURN nPosFound
 
-Method NEXTITEM() Class HBListBox
+Method NEXTITEM() Class ListBox
 
    Local nCurValue
    Local nValue
@@ -496,7 +498,7 @@ Method NEXTITEM() Class HBListBox
 
 RETURN SELF
 
-Method PREVITEM() Class HBListBox
+Method PREVITEM() Class ListBox
 
    Local nCurValue
    Local nValue
@@ -518,7 +520,7 @@ Method PREVITEM() Class HBListBox
 
 RETURN SELF
 
-Method _SCROLL( nMethod ) Class HBListBox
+Method _SCROLL( nMethod ) Class ListBox
 
    Local nPos
    Local nTopItem
@@ -622,7 +624,7 @@ Method _SCROLL( nMethod ) Class HBListBox
    End
 RETURN SELF
 
-Method SELECTS( nPosition ) Class HBListBox
+Method SELECTS( nPosition ) Class ListBox
 
    Local nValue
    Local nPos
@@ -689,7 +691,7 @@ Method SELECTS( nPosition ) Class HBListBox
 
 RETURN ::value
 
-Method SetTOPITEM( xData ) Class HBListBox
+Method SetTOPITEM( xData ) Class ListBox
 
    Local nSize
    Local nPos
@@ -714,7 +716,7 @@ Method SetTOPITEM( xData ) Class HBListBox
    ENDIF
 RETURN ::xtopitem
 
-Method Display() Class HBListBox
+Method Display() Class ListBox
 
    Local nCurRow       := Row()
    Local nCurCol       := Col()
@@ -835,7 +837,7 @@ Method Display() Class HBListBox
 
 RETURN SELF
 
-Method GetItem( xItem ) Class HBListBox
+Method GetItem( xItem ) Class ListBox
 
    Local xRet := Nil
 
@@ -846,7 +848,7 @@ Method GetItem( xItem ) Class HBListBox
 
 RETURN xRet
 
-Method GetText( xItem ) Class HBListBox
+Method GetText( xItem ) Class ListBox
 
    Local xRet := Nil
 
@@ -878,14 +880,13 @@ Method InsItem( nPosition, cText, xExp )
    ENDIF
 RETURN SELF
 
-Method HitTest( nMouseRow, nMouseCol ) Class HBListBox
+Method HitTest( nMouseRow, nMouseCol ) Class ListBox
 
    Local nRet, nTop
    Local nHit := 0
 
-   IF ! ::isopen
-   ELSEIF ! ISOBJECT( ::vScroll )
-   ELSEIF ( nHit := ::vScroll:hittest( nMouseRow, nMouseCol ) ) != 0
+   IF ::isopen .AND. ISOBJECT( ::vScroll ) .AND. ;
+      ( nHit := ::vScroll:hittest( nMouseRow, nMouseCol ) ) != 0
       RETURN nHit
    ENDIF
 
@@ -959,7 +960,7 @@ Method HitTest( nMouseRow, nMouseCol ) Class HBListBox
 
 RETURN 0
 
-Method KillFocus() Class HBListBox
+Method KillFocus() Class ListBox
 
    IF ::hasfocus
       ::hasfocus := .F.
@@ -983,7 +984,7 @@ Method KillFocus() Class HBListBox
 
 RETURN SELF
 
-Method Open() Class HBListBox
+Method Open() Class ListBox
 
    IF ! ::isopen
 
@@ -998,7 +999,7 @@ Method Open() Class HBListBox
    ENDIF
 RETURN SELF
 
-Method SetText( nPos, cText ) Class HBListBox
+Method SetText( nPos, cText ) Class ListBox
 
    IF nPos < 1
    ELSEIF nPos <= ::itemCount
@@ -1006,7 +1007,7 @@ Method SetText( nPos, cText ) Class HBListBox
    ENDIF
 RETURN SELF
 
-Method SetItem( nPos, cText ) Class HBListBox
+Method SetItem( nPos, cText ) Class ListBox
 
    Do CASE
        CASE nPos < 1
@@ -1017,7 +1018,7 @@ Method SetItem( nPos, cText ) Class HBListBox
    ENDCASE
 RETURN SELF
 
-Method SetFocus() Class HBListBox
+Method SetFocus() Class ListBox
 
    IF ! ::hasfocus
       ::nCursor  := Setcursor( 0 )
@@ -1034,7 +1035,7 @@ Method SetFocus() Class HBListBox
 
 RETURN SELF
 
-Method SetData( nPos, xData ) Class HBListBox
+Method SetData( nPos, xData ) Class ListBox
 
    IF nPos >= 1 .and. nPos <= ::itemCount
       ::aitems[ nPos, 2 ] := xData
@@ -1205,5 +1206,3 @@ Function __CapLength( cCaption )
 RETURN nRet
 
 #endif
-
-*+ EOF: LISTBOX.PRG

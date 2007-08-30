@@ -180,26 +180,6 @@ HB_FUNC( HB_OSNEWLINE )
    hb_retc( s_szCrLf );
 }
 
-typedef void hb_out_func_typedef( const char *, ULONG );
-
-/* Format items for output, then call specified output function */
-static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
-{
-   char * pszString;
-   ULONG ulLen;
-   BOOL bFreeReq;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOut(%hu, %p)", uiParam, pOutFunc));
-
-   pszString = hb_itemString( hb_param( uiParam, HB_IT_ANY ), &ulLen, &bFreeReq );
-
-   if ( ulLen )
-      pOutFunc( pszString, ulLen );
-
-   if( bFreeReq )
-      hb_xfree( pszString );
-}
-
 /* Output an item to STDOUT */
 void hb_conOutStd( const char * pStr, ULONG ulLen )
 {
@@ -225,7 +205,7 @@ void hb_conOutErr( const char * pStr, ULONG ulLen )
 }
 
 /* Output an item to the screen and/or printer and/or alternate */
-static void hb_conOutAlt( const char * pStr, ULONG ulLen )
+void hb_conOutAlt( const char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutAlt(%s, %lu)", pStr, ulLen));
 
@@ -257,7 +237,8 @@ static void hb_conOutDev( const char * pStr, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_conOutDev(%s, %lu)", pStr, ulLen));
 
-   if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
+   if( hb_set.hb_set_printhan != FS_ERROR &&
+       hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
       hb_fsWriteLarge( hb_set.hb_set_printhan, ( BYTE * ) pStr, ulLen );
@@ -266,6 +247,45 @@ static void hb_conOutDev( const char * pStr, ULONG ulLen )
    else
       /* Otherwise, display to console */
       hb_gtWrite( ( BYTE * ) pStr, ulLen );
+}
+
+typedef void hb_out_func_typedef( const char *, ULONG );
+
+static char * hb_itemStringCon( PHB_ITEM pItem, ULONG * pulLen, BOOL * pfFreeReq )
+{
+   /* logical values in device output (not console, stdout or stderr) are
+      shown as single letter */
+   if( HB_IS_LOGICAL( pItem ) )
+   {
+      *pulLen = 1;
+      *pfFreeReq = FALSE;
+      return ( char * ) ( hb_itemGetL( pItem ) ? "T" : "F" );
+   }
+   return hb_itemString( pItem, pulLen, pfFreeReq );
+}
+
+/* Format items for output, then call specified output function */
+static void hb_conOut( USHORT uiParam, hb_out_func_typedef * pOutFunc )
+{
+   char * pszString;
+   ULONG ulLen;
+   BOOL bFreeReq;
+   PHB_ITEM pItem;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_conOut(%hu, %p)", uiParam, pOutFunc));
+
+   pItem = hb_param( uiParam, HB_IT_ANY );
+
+   if( pOutFunc == hb_conOutDev )
+      pszString = hb_itemStringCon( pItem, &ulLen, &bFreeReq );
+   else
+      pszString = hb_itemString( pItem, &ulLen, &bFreeReq );
+
+   if ( ulLen )
+      pOutFunc( pszString, ulLen );
+
+   if( bFreeReq )
+      hb_xfree( pszString );
 }
 
 HB_FUNC( OUTSTD ) /* writes a list of values to the standard output device */
@@ -365,7 +385,8 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
 
-   if( hb_set.hb_set_printhan != FS_ERROR && hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
+   if( hb_set.hb_set_printhan != FS_ERROR &&
+       hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 )
    {
       USHORT uiPRow = ( USHORT ) iRow;
       USHORT uiPCol = ( USHORT ) iCol + hb_set.HB_SET_MARGIN;
@@ -474,7 +495,7 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 2 ) );
 
-      pszString = hb_itemString( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
+      pszString = hb_itemStringCon( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
 
       hb_gtWrite( ( BYTE * ) pszString, ulLen );
 
@@ -485,7 +506,7 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
    }
    else if( hb_pcount() >= 1 )
    {
-      pszString = hb_itemString( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
+      pszString = hb_itemStringCon( hb_param( 1, HB_IT_ANY ), &ulLen, &bFreeReq );
 
       hb_gtWrite( ( BYTE * ) pszString, ulLen );
 
@@ -511,7 +532,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 4 ) );
 
-      pszString = hb_itemString( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
+      pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
 
       hb_gtWriteAt( hb_parni( 1 ), hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
 
@@ -522,7 +543,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
    }
    else if( hb_pcount() >= 3 )
    {
-      pszString = hb_itemString( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
+      pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
 
       hb_gtWriteAt( hb_parni( 1 ), hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
 

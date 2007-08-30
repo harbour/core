@@ -938,6 +938,16 @@ static void hb_gt_def_WriteCon( BYTE * pText, ULONG ulLength )
                --iRow;
                bDisp = TRUE;
             }
+            if( bDisp )
+            {
+               if( iLen )
+                  szString[ iLen - 1 ] = ' ';
+               else
+               {
+                  hb_gt_SetPos( iRow, iCol );
+                  szString[ iLen++ ] = ' ';
+               }
+            }
             break;
 
          case HB_CHAR_LF:

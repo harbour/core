@@ -64,7 +64,7 @@ PROCEDURE __Dir( cFileMask )
 
       /* NOTE: Although Cl*pper has this string in the national language
                modul, it will not use it from here.
-               This is hard wired to English. So this is a small 
+               This is hard wired to English. So this is a small
                incompatibility */
 
 #ifdef HB_C52_STRICT
@@ -101,13 +101,13 @@ STATIC PROCEDURE PutDBF( aDirEntry )
       buffer := Replicate( Chr( 0 ), 8 )
 
       IF FRead( fhnd, @buffer, 8 ) == 8 .AND. ;
-         ( Bin2W( Left( buffer, 1 ) ) == 3 .OR. ;
-           Bin2W( Left( buffer, 1 ) ) == 131 )
+         AScan( { 0x03, 0x06, 0x30, 0x31, 0x83, 0x86, 0xE5, 0xE6, 0xF5, 0xF6 }, ;
+                ASC( buffer ) ) != 0
 
          nRecCount := Bin2L( SubStr( buffer, 5, 4 ) )
-         dLastUpdate := hb_SToD( StrZero( Bin2W( SubStr( buffer, 2, 1 ) ) + 1900, 4 ) +;
-                                 StrZero( Bin2W( SubStr( buffer, 3, 1 ) ), 2 ) +;
-                                 StrZero( Bin2W( SubStr( buffer, 4, 1 ) ), 2 ) )
+         dLastUpdate := SToD( StrZero( ASC( SubStr( buffer, 2, 1 ) ) + 1900, 4 ) +;
+                              StrZero( ASC( SubStr( buffer, 3, 1 ) ), 2 ) +;
+                              StrZero( ASC( SubStr( buffer, 4, 1 ) ), 2 ) )
 
       ENDIF
 

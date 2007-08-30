@@ -54,7 +54,6 @@
 
 HB_FUNC( AMPM )
 {
-   char * pszTime = hb_parc( 1 );
    ULONG  ulTimeLen = hb_parclen( 1 );
    char * pszResult = ( char * ) hb_xgrab( HB_MAX( ulTimeLen, 2 ) + 3 + 1 );
    USHORT uiHour = 0;
@@ -62,6 +61,7 @@ HB_FUNC( AMPM )
 
    if( ulTimeLen )
    {
+      char * pszTime = hb_parc( 1 );
       memcpy( pszResult, pszTime, ulTimeLen );
       uiHour = ( USHORT ) hb_strVal( pszTime, ulTimeLen );
    }

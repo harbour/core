@@ -294,7 +294,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
          else
             uiAction = E_DEFAULT;
 
-         if( uiAction == E_DEFAULT || uiAction == E_BREAK )
+         if( uiAction != E_RETRY )
             break;
       }
    }
@@ -876,6 +876,11 @@ HB_FUNC( SET )
          else hb_retc( NULL );
          if( args > 1 ) hb_set.HB_SET_EOL = set_string( pArg2, hb_set.HB_SET_EOL );
          break;
+      case HB_SET_TRIMFILENAME:
+         hb_retl( hb_set.HB_SET_TRIMFILENAME );
+         if( args > 1 ) hb_set.HB_SET_TRIMFILENAME = set_logical( pArg2, hb_set.HB_SET_TRIMFILENAME );
+         break;
+
       case HB_SET_INVALID_:
          /* Return NIL if called with invalid SET specifier */
          break;
@@ -995,6 +1000,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_DBFLOCKSCHEME = 0;
    hb_set.HB_SET_DEFEXTENSIONS = TRUE;
    hb_set.HB_SET_EOL = hb_strdup( hb_conNewLine() );
+   hb_set.HB_SET_TRIMFILENAME = FALSE;
 
    sp_sl_first = sp_sl_last = NULL;
    s_next_listener = 1;

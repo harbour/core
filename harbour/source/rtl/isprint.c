@@ -66,10 +66,13 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-#if defined(HB_OS_WIN_32) && !defined(__RSXNT__)
 
-   #include <stdio.h>
-   #include <winspool.h>
+#undef HB_WIN_32_PRINTERS
+#if defined(HB_OS_WIN_32) && !defined(__RSXNT__) && !defined(__CYGWIN__)
+
+#  define HB_WIN_32_PRINTERS
+#  include <stdio.h>
+#  include <winspool.h>
 
    static BOOL IsPrinterError(HANDLE hPrinter);
 
@@ -79,6 +82,8 @@
                        DWORD *pStatus);
    static BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize);
 #endif
+
+#define MAXBUFFERSIZE 255
 
 HB_EXPORT BOOL hb_printerIsReady( char * pszPrinterName )
 {
@@ -119,14 +124,17 @@ HB_EXPORT BOOL hb_printerIsReady( char * pszPrinterName )
          bIsPrinter = FALSE;
    }
 
-#elif defined(HB_OS_WIN_32) && !defined(__RSXNT__)
+#elif defined(HB_WIN_32_PRINTERS)
 
    {
       HANDLE hPrinter;
 
-      OpenPrinter( pszPrinterName, &hPrinter, NULL );
-
-      bIsPrinter = ! IsPrinterError( hPrinter );
+      bIsPrinter = FALSE;
+      if( *pszPrinterName && OpenPrinter( pszPrinterName, &hPrinter, NULL ) )
+      {
+         bIsPrinter = ! IsPrinterError( hPrinter );
+         CloseHandle( hPrinter );
+      }
    }
 
 #else
@@ -154,21 +162,21 @@ HB_EXPORT BOOL hb_printerIsReady( char * pszPrinterName )
 
 HB_FUNC( ISPRINTER )
 {
-   #if defined(HB_OS_WIN_32) && !defined(__RSXNT__)
-   {
-      char DefaultPrinter[ 80 ];
-      DWORD pdwBufferSize = 80;
-      DPGetDefaultPrinter( ( LPTSTR ) &DefaultPrinter, &pdwBufferSize);
-      hb_retl( hb_printerIsReady( ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) DefaultPrinter ) );
-   }
-   #else
-      hb_retl( hb_printerIsReady( ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) "LPT1" ) );
-   #endif
+#if defined(HB_WIN_32_PRINTERS)
+   char DefaultPrinter[MAXBUFFERSIZE];
+   DWORD pdwBufferSize = MAXBUFFERSIZE;
+   DPGetDefaultPrinter( ( LPTSTR ) &DefaultPrinter, &pdwBufferSize );
+   hb_retl( hb_printerIsReady( ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) DefaultPrinter ) );
+#else
+   char * pszPrinter = hb_parc( 1 );
+   hb_retl( hb_printerIsReady( pszPrinter ? pszPrinter : ( char * ) "LPT1" ) );
+#endif
 }
+
 
 /* The code below does the check for the printer under Win32 */
 
-#if defined(HB_OS_WIN_32) && !defined(__RSXNT__)
+#if defined(HB_WIN_32_PRINTERS)
 
 static BOOL IsPrinterError( HANDLE hPrinter )
 {
@@ -322,7 +330,7 @@ static BOOL GetJobs(HANDLE hPrinter,        /* Handle to the printer. */
 
     return TRUE;
 }
-#define MAXBUFFERSIZE 250
+
 static BOOL DPGetDefaultPrinter(LPTSTR pPrinterName, LPDWORD pdwBufferSize)
 {
   BOOL bFlag;

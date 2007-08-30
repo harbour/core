@@ -823,14 +823,35 @@ HB_FUNC( TRANSFORM )
       }
       else if( HB_IS_NUMERIC( pValue ) )
       {
-         ULONG ulLen;
-         BOOL bFreeReq;
-         char * szStr = hb_itemString( pValue, &ulLen, &bFreeReq );
+         int iWidth = 10, iDec;
+         char * szStr;
 
-         if( bFreeReq )
-            hb_retclen_buffer( szStr, ulLen );
-         else
-            hb_retclen( szStr, ulLen );
+         if( !HB_IS_DOUBLE( pValue ) && hb_set.HB_SET_FIXED )
+         {
+            hb_itemGetNLen( pValue, &iWidth, &iDec );
+            if( iWidth < 10 )
+            {
+               PHB_ITEM pWidth = hb_itemPutNI( NULL, 2 + iWidth +
+                                               ( hb_set.HB_SET_DECIMALS << 1 ) );
+               szStr = hb_itemStr( pValue, pWidth, NULL );
+               hb_itemRelease( pWidth );
+               if( szStr )
+                  hb_retc_buffer( szStr );
+               else
+                  hb_retc( NULL );
+            }
+         }
+         if( iWidth >= 10 )
+         {
+            ULONG ulLen;
+            BOOL bFreeReq;
+
+            szStr = hb_itemString( pValue, &ulLen, &bFreeReq );
+            if( bFreeReq )
+               hb_retclen_buffer( szStr, ulLen );
+            else
+               hb_retclen( szStr, ulLen );
+         }
       }
       else if( HB_IS_DATE( pValue ) )
       {
