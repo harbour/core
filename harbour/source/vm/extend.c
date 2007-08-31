@@ -82,7 +82,7 @@ HB_EXPORT PHB_ITEM hb_param( int iParam, long lMask )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_param(%d, %ld)", iParam, lMask));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam  );
 
@@ -162,7 +162,7 @@ HB_EXPORT char * hb_parc( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parc(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -191,7 +191,7 @@ HB_EXPORT char * hb_parcx( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parc(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -220,7 +220,7 @@ HB_EXPORT ULONG  hb_parclen( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parclen(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -253,7 +253,7 @@ HB_EXPORT ULONG  hb_parcsiz( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parcsiz(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -290,7 +290,7 @@ HB_EXPORT char  * hb_pards( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_pards(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -321,7 +321,7 @@ HB_EXPORT char  * hb_pardsbuff( char * szDate, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_pardsbuff(%p, %d, ...)", szDate, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -352,7 +352,7 @@ HB_EXPORT LONG  hb_pardl( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_pardl(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -386,7 +386,7 @@ HB_EXPORT int  hb_parl( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parl(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -421,7 +421,7 @@ HB_EXPORT double  hb_parnd( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parnd(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -454,7 +454,7 @@ HB_EXPORT int  hb_parni( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parni(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -487,7 +487,7 @@ HB_EXPORT long  hb_parnl( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parnl(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -527,7 +527,7 @@ HB_EXPORT LONGLONG  hb_parnll( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parnll(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -567,7 +567,7 @@ HB_EXPORT HB_LONG  hb_parnint( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parnint(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -606,7 +606,7 @@ HB_EXPORT void * hb_parptr( int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parptr(%d, ...)", iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -635,7 +635,7 @@ HB_EXPORT void * hb_parptrGC( HB_GARBAGE_FUNC_PTR pFunc, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_parptrGC(%p,%d, ...)", pFunc, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
 
@@ -917,7 +917,7 @@ HB_EXPORT int hb_storc( char * szText, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storc(%s, %d, ...)", szText, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );
@@ -948,7 +948,7 @@ HB_EXPORT int hb_storclen( char * szText, ULONG ulLen, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storclen(%s, %lu, %d, ...)", szText, ulLen, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );
@@ -979,7 +979,7 @@ HB_EXPORT int hb_storclen_buffer( char * szText, ULONG ulLen, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storclen_buffer(%s, %lu, %d, ...)", szText, ulLen, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );
@@ -1012,7 +1012,7 @@ HB_EXPORT int hb_stords( char * szDate, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stords(%s, %d, ...)", szDate, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );
@@ -1043,7 +1043,7 @@ HB_EXPORT int hb_storl( int iLogical, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storl(%d, %d, ...)", iLogical, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );
@@ -1074,7 +1074,7 @@ HB_EXPORT int hb_storni( int iValue, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storni(%d, %d, ...)", iValue, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );
@@ -1105,7 +1105,7 @@ HB_EXPORT int hb_stornl( long lValue, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stornl(%ld, %d, ...)", lValue, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );
@@ -1137,7 +1137,7 @@ HB_EXPORT int hb_stornll( LONGLONG llValue, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stornll(%" PFLL "d, %d, ...)", llValue, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );
@@ -1169,7 +1169,7 @@ HB_EXPORT int hb_stornint( HB_LONG lValue, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stornint(%" PFHL "d, %d, ...)", lValue, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );
@@ -1200,7 +1200,7 @@ HB_EXPORT int hb_stornd( double dNumber, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_stornd(%lf, %d, ...)", dNumber, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );
@@ -1231,7 +1231,7 @@ HB_EXPORT int hb_storptr( void * pointer, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storptr(%p, %d, ...)", pointer, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );
@@ -1262,7 +1262,7 @@ HB_EXPORT int hb_storptrGC( void * pointer, int iParam, ... )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_storptrGC(%p, %d, ...)", pointer, iParam));
 
-   if( ( iParam >= 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+   if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       BOOL bByRef = HB_IS_BYREF( pItem );

@@ -161,7 +161,7 @@ HB_FUNC( HB_STRTOHEX )
          if( --ulStr && ulSep )
          {
             memcpy( szPtr, szSep, ulSep );
-            ulStr += ulSep;
+            szPtr += ulSep;
          }
       }
       while( ulStr );
