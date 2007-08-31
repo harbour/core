@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-31 11:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbhex.c
+    + added HB_HEXTOSTR() and HB_STRTOHEX() - they are compatible with
+      HEXTOSTR() and STRTOHEX() in xHarbour
+
+  * harbour/include/hbcompat.ch
+    + added translations for HB_HEXTOSTR(), HB_STRTOHEX()
+
+  * harbour/include/hbextern.ch
+    + added new functions
+
+  * harbour/contrib/libct/ctextern.ch
+    * updated function list
+
 2007-08-31 03:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/dircmd.prg
     * changed STOD() to HB_STOD()

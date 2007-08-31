@@ -76,6 +76,7 @@
    #xtranslate hb_CStr([<x,...>])      => CStr(<x>)
    #xtranslate hb_adler32([<x,...>])   => hb_checksum(<x>)
 
+   #xtranslate hb_setLastKey([<x,...>])=> setLastKey(<x>)
 #else
 
    #xtranslate gtSys                   => hb_gtSys
@@ -97,6 +98,7 @@
    #xtranslate libFree([<x,...>])      => hb_libFree(<x>)
 
    #xtranslate hb_checksum([<x,...>])  => hb_adler32(<x>)
+   #xtranslate setLastKey([<x,...>])   => hb_setLastKey(<x>)
 
    #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
    #xtranslate str(<x>,[<y>],[<y>],<z>)=> iif(<z>, ltrim(str(<x>)), str(<x>))
@@ -129,6 +131,8 @@
 
    #xtranslate HEXTONUM([<c,...>])     => HB_HEXTONUM(<c>)
    #xtranslate NUMTOHEX([<n,...>])     => HB_NUMTOHEX(<n>)
+   #xtranslate HEXTOSTR([<c,...>])     => HB_HEXTOSTR(<c>)
+   #xtranslate STRTOHEX([<c,...>])     => HB_STRTOHEX(<c>)
    #xtranslate RASCAN([<x,...>])       => HB_RASCAN(<x>)
 
 

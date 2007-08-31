@@ -70,9 +70,9 @@ HB_FUNC( HB_HEXTONUM )
          if ( c >= '0' && c <= '9' )
             iDigit = c - '0';
          else if ( c >= 'A' && c <= 'F' )
-            iDigit = c - 'A' + 10;
+            iDigit = c - ( 'A' - 10 );
          else if ( c >= 'a' && c <= 'f' )
-            iDigit = c - 'a' + 10;
+            iDigit = c - ( 'a' - 10 );
          else
          {
             ulNum = 0;
@@ -125,4 +125,106 @@ HB_FUNC( HB_NUMTOHEX )
    while( fDefaultLen ? ulNum != 0 : iLen != 0 );
 
    hb_retc( &ret[ iLen ] );
+}
+
+HB_FUNC( HB_STRTOHEX )
+{
+   char * szStr = hb_parc( 1 ), * szSep = "";
+   ULONG ulStr, ulSep = 0;
+
+   if( hb_pcount() > 1 )
+   {
+      szSep = hb_parc( 2 );
+      ulSep = hb_parclen( 2 );
+   }
+
+   if( !szStr || !szSep )
+   {
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      return;
+   }
+
+   ulStr = hb_parclen( 1 );
+   if( ulStr )
+   {
+      ULONG ulDest = ( ulStr << 1 ) + ( ulStr - 1 ) * ulSep;
+      char * szDest, * szPtr;
+
+      szPtr = szDest = ( char * ) hb_xgrab( ulDest + 1 );
+      do
+      {
+         UCHAR uc = ( UCHAR ) *szStr++, ud;
+         ud = uc >> 4;
+         *szPtr++ = ud + ( ud < 10 ? '0' : 'A' - 10 );
+         ud = uc & 0x0F;
+         *szPtr++ = ud + ( ud < 10 ? '0' : 'A' - 10 );
+         if( --ulStr && ulSep )
+         {
+            memcpy( szPtr, szSep, ulSep );
+            ulStr += ulSep;
+         }
+      }
+      while( ulStr );
+      hb_retclen_buffer( szDest, ulDest );
+   }
+   else
+      hb_retc( NULL );
+}
+
+HB_FUNC( HB_HEXTOSTR )
+{
+   char * szStr = hb_parc( 1 );
+   ULONG ulStr;
+
+   if( !szStr )
+   {
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      return;
+   }
+
+   ulStr = hb_parclen( 1 );
+   if( ulStr > 1 )
+   {
+      ULONG ulDest, ul;
+      char * szDest, * szPtr;
+      UCHAR uc;
+
+      szDest = szStr;
+      ul = ulStr;
+      ulDest = 0;
+      do
+      {
+         char c = *szDest++;
+         if( ( c >= '0' && c <= '9' ) ||
+             ( c >= 'A' && c <= 'F' ) ||
+             ( c >= 'a' && c <= 'f' ) )
+            ++ulDest;
+      }
+      while( --ul );
+
+      ulDest >>= 1;
+      if( ulDest )
+      {
+         szPtr = szDest = ( char * ) hb_xgrab( ulDest + 1 );
+         uc = 0;
+         for( ul = 0; ul < ulStr; ++ul )
+         {
+            char c = szStr[ ul ];
+            if( c >= '0' && c <= '9' )
+               uc += c - '0';
+            else if( c >= 'A' && c <= 'F' )
+               uc += c - ( 'A' - 10 );
+            else if( c >= 'a' && c <= 'f' )
+               uc += c - ( 'a' - 10 );
+            if( ul & 1 )
+               *szPtr++ = ( char ) uc;
+            else
+               uc <<= 4;
+         }
+         hb_retclen_buffer( szDest, ulDest );
+         return;
+      }
+   }
+
+   hb_retc( NULL );
 }
