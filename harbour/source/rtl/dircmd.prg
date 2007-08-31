@@ -105,9 +105,9 @@ STATIC PROCEDURE PutDBF( aDirEntry )
                 ASC( buffer ) ) != 0
 
          nRecCount := Bin2L( SubStr( buffer, 5, 4 ) )
-         dLastUpdate := SToD( StrZero( ASC( SubStr( buffer, 2, 1 ) ) + 1900, 4 ) +;
-                              StrZero( ASC( SubStr( buffer, 3, 1 ) ), 2 ) +;
-                              StrZero( ASC( SubStr( buffer, 4, 1 ) ), 2 ) )
+         dLastUpdate := hb_SToD( StrZero( ASC( SubStr( buffer, 2, 1 ) ) + 1900, 4 ) +;
+                                 StrZero( ASC( SubStr( buffer, 3, 1 ) ), 2 ) +;
+                                 StrZero( ASC( SubStr( buffer, 4, 1 ) ), 2 ) )
 
       ENDIF
 
