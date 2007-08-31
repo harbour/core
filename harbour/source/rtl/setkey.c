@@ -114,6 +114,11 @@ static void sk_add( BOOL bReturn, SHORT iKeyCode, PHB_ITEM pAction, PHB_ITEM pIs
    {
       PHB_SETKEY sk_list_tmp, sk_list_end;
 
+      if( pIsActive && !HB_IS_BLOCK( pIsActive ) )
+         pIsActive = NULL;
+      if( pAction && !HB_IS_BLOCK( pAction ) )
+         pAction = NULL;
+
       sk_list_tmp = sk_findkey( iKeyCode, &sk_list_end );
       if( sk_list_tmp == NULL )
       {
@@ -256,7 +261,7 @@ HB_FUNC( HB_SETKEYGET )
 
 HB_FUNC( HB_SETKEYSAVE )
 {
-   PHB_ITEM pKeys, pParam;
+   PHB_ITEM pKeys, pKeyElements, pParam;
    PHB_SETKEY sk_list_tmp;
    ULONG itemcount, nitem;
 
@@ -269,35 +274,21 @@ HB_FUNC( HB_SETKEYSAVE )
       ;
 
    pKeys = hb_itemArrayNew( itemcount );
+   pKeyElements = hb_itemNew( NULL );
 
    for( nitem = 1, sk_list_tmp = s_sk_list;
         nitem <= itemcount;
         nitem++, sk_list_tmp = sk_list_tmp->next )
    {
-      PHB_ITEM pKeyElements, pTmp;
-
-      pKeyElements = hb_itemArrayNew( 3 );
-
-      pTmp = hb_itemPutNI( NULL, sk_list_tmp->iKeyCode );
-      hb_itemArrayPut( pKeyElements, 1, pTmp );
-      hb_itemRelease( pTmp );
-
-      pTmp = hb_itemNew( sk_list_tmp->pAction );
-      hb_itemArrayPut( pKeyElements, 2, pTmp );
-      hb_itemRelease( pTmp );
-
+      hb_arrayNew( pKeyElements, 3 );
+      hb_arraySetNI( pKeyElements, 1, sk_list_tmp->iKeyCode );
+      hb_arraySet( pKeyElements, 2, sk_list_tmp->pAction );
       if( sk_list_tmp->pIsActive )
-      {
-         pTmp = hb_itemNew( sk_list_tmp->pIsActive );
-         hb_itemArrayPut( pKeyElements, 3, pTmp );
-         hb_itemRelease( pTmp );
-      }
-
-      hb_itemArrayPut( pKeys, nitem, pKeyElements );
-      hb_itemRelease( pKeyElements );
+         hb_arraySet( pKeyElements, 3, sk_list_tmp->pIsActive );
+      hb_arraySetForward( pKeys, nitem, pKeyElements );
    }
-
-   hb_itemRelease( hb_itemReturn( pKeys ) );
+   hb_itemRelease( pKeyElements );
+   hb_itemReturnRelease( pKeys );
 
    pParam = hb_param( 1, HB_IT_ANY );
    if( pParam )

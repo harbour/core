@@ -67,9 +67,9 @@ HB_EXPORT BOOL hb_fsFile( BYTE * pFilename )
       hb_xfree(pFilename);
       return TRUE;
    }
-   else
-      hb_xfree(pFilename);
-      return FALSE;
+
+   hb_xfree( pFilename );
+   return FALSE;
 }
 
 HB_EXPORT BOOL hb_fsIsDirectory( BYTE * pFilename )

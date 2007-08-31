@@ -41,7 +41,7 @@
  *    CURDIR()
  *
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
- *    HB_F_EOF()
+ *    HB_FEOF()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -271,7 +271,7 @@ HB_FUNC( CURDIR )
 
 #ifdef HB_EXTENSION
 
-HB_FUNC( HB_F_EOF )
+HB_FUNC( HB_FEOF )
 {
    USHORT uiError = 6;
 

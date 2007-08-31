@@ -52,28 +52,31 @@
 
 #include "hbapi.h"
 #include "hbvm.h"
+#include "hbstack.h"
 
 HB_FUNC( __XHELP )
 {
-   PHB_SYMB pSym = hb_dynsymFindSymbol( "HELP" );
+   static PHB_DYNS s_pDynSym = NULL;
 
-   if( pSym )
+   if( s_pDynSym == NULL )
+      s_pDynSym = hb_dynsymGetCase( "HELP" );
+
+   if( hb_dynsymIsFunction( s_pDynSym ) )
    {
       /* awhite: push the existing params after the dyn symbol */
 
       USHORT uiPCount = hb_pcount();
       USHORT uiParam;
 
-      hb_vmPushSymbol( pSym );
+      hb_vmPushDynSym( s_pDynSym );
       hb_vmPushNil();
+      /* CA-Cl*pper respects references so hb_stackItemFromBase() is
+       * used insted of hb_param() [druzus]
+       */
       for( uiParam = 1; uiParam <= uiPCount; uiParam++ )
-         hb_vmPush( hb_param( uiParam, HB_IT_ANY ) );
+         hb_vmPush( hb_stackItemFromBase( uiParam ) );
+
       hb_vmDo( uiPCount );
-/*
-      hb_vmPushSymbol( pSym );
-      hb_vmPushNil();
-      hb_vmDo( 0 );
-*/
       /* NOTE: Leave the return value as it is. */
    }
 }

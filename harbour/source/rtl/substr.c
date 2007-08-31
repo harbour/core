@@ -101,7 +101,7 @@ HB_FUNC( SUBSTR )
 
          if( lLen > 0 )
          {
-            if( lPos == 0 && lLen == lSize )
+            if( lLen == lSize )
                hb_itemReturn( pText );
             else
                hb_retclen( hb_itemGetCPtr( pText ) + lPos, lLen );

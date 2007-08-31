@@ -59,9 +59,10 @@
 /* NOTE: CA-Cl*pper RTrim()s the filename before doing the existence check.
          This is not multiplatform friendly, so Harbour doesn't do any 
          modification on the filename. [vszakats]
-         It seems to be rather DOS not Clipper behavior. In Harbour we have
-         _SET_TRIMFILENAME which can enable emulation of such behavior in
-         other OS-es. [druzus] */
+         For easier portability in Harbour user can optionally enable
+         leading and trailing spaces stripping by
+            SET( _SET_TRIMFILENAME, .T. )
+         [druzus] */
 
 HB_FUNC( FILE )
 {

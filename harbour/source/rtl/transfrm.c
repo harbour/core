@@ -748,7 +748,7 @@ HB_FUNC( TRANSFORM )
                {
                   if( !bDone )
                   {
-                     szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? ( char ) 'Y' : ( char ) 'N';
+                     szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? 'Y' : 'N';
                      bDone = TRUE;           /* Logical written          */
                   }
                   else
@@ -763,7 +763,7 @@ HB_FUNC( TRANSFORM )
                {
                   if( !bDone )
                   {
-                     szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? ( char ) 'T' : ( char ) 'F';
+                     szResult[ ulResultPos ] = hb_itemGetL( pValue ) ? 'T' : 'F';
                      bDone = TRUE;
                   }
                   else

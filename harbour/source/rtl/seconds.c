@@ -70,6 +70,18 @@
 
 HB_EXPORT double hb_dateSeconds( void )
 {
+#if defined(HB_OS_WIN_32)
+   SYSTEMTIME SystemTime;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateSeconds()"));
+
+   GetLocalTime( &SystemTime );
+
+   return ( SystemTime.wHour * 3600 ) +
+          ( SystemTime.wMinute * 60 ) +
+            SystemTime.wSecond +
+          ( ( double ) SystemTime.wMilliseconds / 1000.0 );
+#else
 #if defined(_MSC_VER)
    #define timeb _timeb
    #define ftime _ftime
@@ -102,6 +114,7 @@ HB_EXPORT double hb_dateSeconds( void )
           ( oTime->tm_min * 60 ) +
             oTime->tm_sec +
           ( ( double ) fraction / 1000.0 );
+#endif
 }
 
 HB_FUNC( SECONDS )

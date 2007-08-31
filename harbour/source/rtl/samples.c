@@ -104,8 +104,8 @@ HB_FUNC( DAYS )
 
 HB_FUNC( ELAPTIME )
 {
-   ULONG ulStart = hb_TimeStrToSec( hb_parc( 1 ) );
-   ULONG ulEnd = hb_TimeStrToSec( hb_parc( 2 ) );
+   ULONG ulStart = hb_TimeStrToSec( hb_parcx( 1 ) );
+   ULONG ulEnd = hb_TimeStrToSec( hb_parcx( 2 ) );
    char szTime[ 9 ];
 
    hb_retc( hb_SecToTimeStr( szTime, ( ulEnd < ulStart ? 86400 : 0 ) + ulEnd - ulStart ) );
@@ -113,7 +113,7 @@ HB_FUNC( ELAPTIME )
 
 HB_FUNC( SECS )
 {
-   hb_retnl( hb_TimeStrToSec( hb_parc( 1 ) ) );
+   hb_retnl( hb_TimeStrToSec( hb_parcx( 1 ) ) );
 }
 
 HB_FUNC( TSTRING )

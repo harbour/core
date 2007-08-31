@@ -82,14 +82,13 @@ PROCEDURE __TypeFile( cFile, lPrint )
    IF Empty( cDir )
       cTmp := SET( _SET_DEFAULT ) + ";" + SET( _SET_PATH )
       cTmp := StrTran( cTmp, ",", ";" )
-      i := len( cTmp )
-      IF substr( cTmp, i, 1 ) == ";"            // remove last ";"
-         cTmp := substr( cTmp, 1, i - 1 )
-      ENDIF
-      aPath := aDvd( cTmp )
+      i := Len( cTmp )
+      WHILE SubStr( cTmp, i, 1 ) == ";"            // remove last ";"
+         cTmp := LEFT( cTmp, --i )
+      ENDDO
+      aPath := HB_ATOKENS( cTmp, ";" )
       FOR i := 1 TO len( aPath )
-         cTmp := hb_FNameMerge( aPath[ i ], cName, cExt )
-         IF file( cTmp )
+         IF File( cTmp := hb_FNameMerge( aPath[ i ], cName, cExt ) )
             cFile := cTmp
             EXIT
          ENDIF
@@ -146,27 +145,6 @@ PROCEDURE __TypeFile( cFile, lPrint )
    ENDIF
 
    RETURN
-
-/*----------------------------------------------------------------------------*/
-/*         Function aDvd : Divide string to tokens and put tokens into array  */
-/*         Parameters : cString - String to be splited          ( C )         */
-/*                      cDelim  - Delimiter of tokens in string ( C )         */
-/*         Return :     Array of tokens or empty array                        */
-/*----------------------------------------------------------------------------*/
-
-STATIC FUNCTION aDvd( cString, cDelim )
-   LOCAL aProm := {}
-   LOCAL nPos
-
-   DEFAULT cDelim TO ";"
-
-   DO WHILE ( nPos := at( cDelim, cString ) ) != 0
-      AAdd( aProm, substr( cString, 1, nPos - 1 ) )
-      cString := substr( cString, nPos + len( cDelim ) )
-   ENDDO
-   AAdd( aProm, cString )
-
-   RETURN aProm
 
 #ifdef HB_COMPAT_XPP
 

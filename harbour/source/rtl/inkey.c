@@ -575,6 +575,17 @@ HB_FUNC( __KEYBOARD )
    {
       hb_inkeyPut( hb_parni(1) );
    }
+   else if( ISARRAY( 1 ) )
+   {
+      PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+      ULONG ulElements = hb_arrayLen( pArray ), ulIndex;
+
+      for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
+      {
+         if( hb_arrayGetType( pArray, ulIndex ) & HB_IT_NUMERIC )
+            hb_inkeyPut( hb_arrayGetNI( pArray, ulIndex ) );
+      }
+   }
 #endif
 }
 

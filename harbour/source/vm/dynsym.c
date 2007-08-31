@@ -341,6 +341,13 @@ HB_EXPORT const char * hb_dynsymName( PHB_DYNS pDynSym )
    return pDynSym->pSymbol->szName;
 }
 
+HB_EXPORT BOOL hb_dynsymIsFunction( PHB_DYNS pDynSym )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_dynsymIsFunction(%p)", pDynSym));
+
+   return pDynSym->pSymbol->value.pFunPtr != NULL;
+}
+
 HB_EXPORT HB_HANDLE hb_dynsymMemvarHandle( PHB_DYNS pDynSym )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dynsymMemvarHandle(%p)", pDynSym));
@@ -435,7 +442,7 @@ HB_FUNC( __DYNSISFUN ) /* returns .t. if a symbol has a function/procedure point
    long lIndex = hb_parnl( 1 ); /* NOTE: This will return zero if the parameter is not numeric */
 
    if( lIndex >= 1 && lIndex <= s_uiDynSymbols )
-      hb_retl( s_pDynItems[ lIndex - 1 ].pDynSym->pSymbol->value.pFunPtr != NULL );
+      hb_retl( hb_dynsymIsFunction( s_pDynItems[ lIndex - 1 ].pDynSym ) );
    else
       hb_retl( FALSE );
 }
@@ -455,7 +462,7 @@ HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or proc
 #ifndef HB_NO_PROFILER
    if( lIndex >= 1 && lIndex <= s_uiDynSymbols )
    {
-      if( s_pDynItems[ lIndex - 1 ].pDynSym->pSymbol->value.pFunPtr ) /* it is a function or procedure */
+      if( hb_dynsymIsFunction( s_pDynItems[ lIndex - 1 ].pDynSym ) ) /* it is a function or procedure */
       {
          hb_stornl( s_pDynItems[ lIndex - 1 ].pDynSym->ulCalls, -1, 1 );
          hb_stornl( s_pDynItems[ lIndex - 1 ].pDynSym->ulTime,  -1, 2 );

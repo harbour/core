@@ -8,6 +8,64 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-31 03:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/dynsym.c
+    + added hb_dynsymIsFunction()
+
+  * harbour/source/rtl/filehb.c
+    * updated comment
+
+  * harbour/source/rtl/philes.c
+    * renamed HB_F_EOF() to HB_FEOF()
+
+  * harbour/source/rtl/scroll.c
+  * harbour/source/rtl/transfrm.c
+  * harbour/source/rtl/file.c
+    * formatting
+
+  * harbour/source/rtl/substr.c
+  * harbour/source/rtl/trim.c
+    % optimization
+
+  * harbour/source/rtl/typefile.prg
+    % use HB_ATOKENS() instead of static .prg function
+
+  * harbour/source/rtl/setkey.c
+    % optimization and protection aganst possible GPF when wrong array
+      is passed to HB_SETKEYSAVE()
+
+  * harbour/source/rtl/xhelp.c
+    ! do not generate RT error when HELP symbol exist
+      (f.e. after PUBLIC HELP) but HELP() function doesn't
+    ! keep reference in parametes passed by reference to __XHELP()
+    * use only PHB_DYNS instead of PHB_SYMB
+
+  * harbour/source/rtl/seconds.c
+    + added WIN32 version borrowed from XHARBOUR
+
+  * harbour/source/rtl/trace.c
+    ! protection against possible GPF when wrong parameters are passed
+
+  * harbour/source/rtl/samples.c
+    ! protection against possible GPF when wrong parameters are passed
+      Warning! We have in this file few functions without HB_ prefix.
+      Some of them may create conflicts with future functions for TIMEDATE
+      items.
+
+  * harbour/source/rtl/inkey.c
+    + added support for passing array with key codes as __KEYBOARD()
+      parameter, covered by HB_EXTENSION macro - this is xHarbour compatible
+      extension. I do not like it but we already had extension with numeric
+      parameters and probably it would be hard to remove it now and keep
+      __KEYBOARD() code clean so I decided to add support also for arrays
+      instead of creating new function and adding conditional code covered
+      by HB_COMPAT_XHB macro.
+
+  * harbour/source/rtl/setfunc.prg
+    * accept extended __KEYBOARD() parameters when HB_EXTENSION macro
+      is set.
+
 2007-08-30 18:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * repeated -ldl at the end of linked library list in linux for

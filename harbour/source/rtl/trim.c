@@ -96,10 +96,16 @@ HB_FUNC( LTRIM )
 
    if( pText )
    {
-      ULONG ulLen = hb_itemGetCLen( pText );
-      char * szText = hb_strLTrim( hb_itemGetCPtr( pText ), &ulLen );
+      ULONG ulLen, ulSrc;
+      char * szText;
 
-      hb_retclen( szText, ulLen );
+      ulLen = ulSrc = hb_itemGetCLen( pText );
+      szText = hb_strLTrim( hb_itemGetCPtr( pText ), &ulLen );
+
+      if( ulLen == ulSrc )
+         hb_itemReturn( pText );
+      else
+         hb_retclen( szText, ulLen );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1101, NULL, "LTRIM", HB_ERR_ARGS_BASEPARAMS );
@@ -115,14 +121,20 @@ HB_FUNC( RTRIM )
 
    if( pText )
    {
-      char * pszText = hb_itemGetCPtr( pText );
+      ULONG ulLen, ulSrc;
+      char * szText = hb_itemGetCPtr( pText );
 
+      ulSrc = hb_itemGetCLen( pText );
 #ifdef HB_EXTENSION
-      hb_retclen( pszText, hb_strRTrimLen( pszText, hb_itemGetCLen( pText ),
-         ISLOG( 2 ) ? hb_parl( 2 ) : FALSE ) );
+      ulLen = hb_strRTrimLen( szText, ulSrc, ISLOG( 2 ) && hb_parl( 2 ) );
 #else
-      hb_retclen( pszText, hb_strRTrimLen( pszText, hb_itemGetCLen( pText ), FALSE ) );
+      ulLen = hb_strRTrimLen( szText, ulSrc, FALSE );
 #endif
+
+      if( ulLen == ulSrc )
+         hb_itemReturn( pText );
+      else
+         hb_retclen( szText, ulLen );
    }
    else
       /* NOTE: "TRIM" is right here [vszakats] */
@@ -145,12 +157,21 @@ HB_FUNC( ALLTRIM )
 
    if( pText )
    {
-      char * pszText = hb_itemGetCPtr( pText );
-      ULONG ulLen = hb_strRTrimLen( pszText, hb_itemGetCLen( pText ),
-         ISLOG( 2 ) ? hb_parl( 2 ) : FALSE );
+      ULONG ulLen, ulSrc;
+      char * szText = hb_itemGetCPtr( pText );
 
-      pszText = hb_strLTrim( pszText, &ulLen );
-      hb_retclen( pszText, ulLen );
+      ulSrc = hb_itemGetCLen( pText );
+#ifdef HB_EXTENSION
+      ulLen = hb_strRTrimLen( szText, ulSrc, ISLOG( 2 ) && hb_parl( 2 ) );
+#else
+      ulLen = hb_strRTrimLen( szText, ulSrc, FALSE );
+#endif
+      szText = hb_strLTrim( szText, &ulLen );
+
+      if( ulLen == ulSrc )
+         hb_itemReturn( pText );
+      else
+         hb_retclen( szText, ulLen );
    }
    else
 #ifdef HB_COMPAT_C53
@@ -159,4 +180,3 @@ HB_FUNC( ALLTRIM )
       hb_retc( NULL );
 #endif
 }
-
