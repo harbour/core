@@ -186,8 +186,7 @@ HB_FUNC( HB_HEXTOSTR )
    if( ulStr > 1 )
    {
       ULONG ulDest, ul;
-      char * szDest, * szPtr;
-      UCHAR uc;
+      char * szDest;
 
       szDest = szStr;
       ul = ulStr;
@@ -205,22 +204,31 @@ HB_FUNC( HB_HEXTOSTR )
       ulDest >>= 1;
       if( ulDest )
       {
-         szPtr = szDest = ( char * ) hb_xgrab( ulDest + 1 );
-         uc = 0;
-         for( ul = 0; ul < ulStr; ++ul )
+         int iVal = 0x10;
+
+         szDest = ( char * ) hb_xgrab( ulDest + 1 );
+         /* ul = 0; see above stop condition */
+         do
          {
-            char c = szStr[ ul ];
+            char c = *szStr++;
             if( c >= '0' && c <= '9' )
-               uc += c - '0';
+               iVal += c - '0';
             else if( c >= 'A' && c <= 'F' )
-               uc += c - ( 'A' - 10 );
+               iVal += c - ( 'A' - 10 );
             else if( c >= 'a' && c <= 'f' )
-               uc += c - ( 'a' - 10 );
-            if( ul & 1 )
-               *szPtr++ = ( char ) uc;
+               iVal += c - ( 'a' - 10 );
             else
-               uc <<= 4;
+               continue;
+	    
+            if( iVal & 0x100 )
+	    {
+               szDest[ul++] = ( char ) iVal & 0xff;
+	       iVal = 0x1;
+	    }
+	    iVal <<= 4;
          }
+         while( --ulStr );
+
          hb_retclen_buffer( szDest, ulDest );
          return;
       }

@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-08-31 17:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompat.ch
+    + added some reverted translation rules for xHarbour
+
+  * harbour/source/rtl/hbhex.c
+    ! fixed HB_HEXTOSTR() - I had really bad day, sorry
+
 2007-08-31 18:01 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/rtl/hbhex.c
     * fixed typo in HB_STRTOHEX()

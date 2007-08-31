@@ -69,19 +69,27 @@
 
    #xtranslate hb_isregex([<x>])       => hb_isregexstring(<x>)
    #xtranslate hb_pvalue([<x,...>])    => pvalue(<x>)
-
    #xtranslate hb_libLoad([<x,...>])   => libLoad(<x>)
    #xtranslate hb_libFree([<x,...>])   => libFree(<x>)
-
-   #xtranslate hb_CStr([<x,...>])      => CStr(<x>)
    #xtranslate hb_adler32([<x,...>])   => hb_checksum(<x>)
-
    #xtranslate hb_setLastKey([<x,...>])=> setLastKey(<x>)
+   #xtranslate hb_CStr([<x,...>])      => CStr(<x>)
+
+   #xtranslate HB_HEXTONUM([<c,...>])  => HEXTONUM(<c>)
+   #xtranslate HB_NUMTOHEX([<n,...>])  => NUMTOHEX(<n>)
+   #xtranslate HB_HEXTOSTR([<c,...>])  => HEXTOSTR(<c>)
+   #xtranslate HB_STRTOHEX([<c,...>])  => STRTOHEX(<c>)
+
+   #xtranslate HB_RASCAN([<x,...>])    => RASCAN(<x>)
+
+   #xtranslate HB_ISPOINTER( <xValue> )   => ISPOINTER( <xValue> )
+
 #else
 
    #xtranslate gtSys                   => hb_gtSys
    #xtranslate gtInfo([<x,...>])       => hb_gtInfo(<x>)
    #xtranslate hb_gt_Version([<x>])    => hb_gtVersion(<x>)
+
    #xtranslate gtSetClipboard(<x>)     => hb_gtInfo( GTI_CLIPBOARDDATA, <x> )
    #xtranslate gtGetClipboard()        => hb_gtInfo( GTI_CLIPBOARDDATA )
    #xtranslate gtGetClipBoardSize()    => len( hb_gtInfo( GTI_CLIPBOARDDATA ) )
@@ -91,16 +99,13 @@
    #xtranslate gfxText([<x,...>])      => hb_gfxText(<x>)
 
    #xtranslate hb_isregexstring([<x>]) => hb_isregex(<x>)
-
    #xtranslate pvalue([<x,...>])       => hb_pvalue(<x>)
-
    #xtranslate libLoad([<x,...>])      => hb_libLoad(<x>)
    #xtranslate libFree([<x,...>])      => hb_libFree(<x>)
-
    #xtranslate hb_checksum([<x,...>])  => hb_adler32(<x>)
    #xtranslate setLastKey([<x,...>])   => hb_setLastKey(<x>)
-
    #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
+
    #xtranslate str(<x>,[<y>],[<y>],<z>)=> iif(<z>, ltrim(str(<x>)), str(<x>))
 
    #xtranslate HASH([<x,...>])         => HB_HASH(<x>)
@@ -133,14 +138,14 @@
    #xtranslate NUMTOHEX([<n,...>])     => HB_NUMTOHEX(<n>)
    #xtranslate HEXTOSTR([<c,...>])     => HB_HEXTOSTR(<c>)
    #xtranslate STRTOHEX([<c,...>])     => HB_STRTOHEX(<c>)
-   #xtranslate RASCAN([<x,...>])       => HB_RASCAN(<x>)
 
+   #xtranslate RASCAN([<x,...>])       => HB_RASCAN(<x>)
 
    #xtranslate ISPOINTER( <xValue> )   => HB_ISPOINTER( <xValue> )
 
 
+   /* TEXT INTO <varname> */
    #xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
-
 
    /* SWITCH ... ; case ... ; DEFAULT ; ... ; END */
    #xcommand DEFAULT => OTHERWISE
