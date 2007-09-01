@@ -69,6 +69,7 @@
 
    #xtranslate hb_isregex([<x>])       => hb_isregexstring(<x>)
    #xtranslate hb_pvalue([<x,...>])    => pvalue(<x>)
+   #xtranslate hb_methodName([<x,...>])=> methodName(<x>)
    #xtranslate hb_libLoad([<x,...>])   => libLoad(<x>)
    #xtranslate hb_libFree([<x,...>])   => libFree(<x>)
    #xtranslate hb_adler32([<x,...>])   => hb_checksum(<x>)
@@ -100,13 +101,24 @@
 
    #xtranslate hb_isregexstring([<x>]) => hb_isregex(<x>)
    #xtranslate pvalue([<x,...>])       => hb_pvalue(<x>)
+   #xtranslate methodName([<x,...>])   => hb_methodName(<x>)
    #xtranslate libLoad([<x,...>])      => hb_libLoad(<x>)
    #xtranslate libFree([<x,...>])      => hb_libFree(<x>)
    #xtranslate hb_checksum([<x,...>])  => hb_adler32(<x>)
    #xtranslate setLastKey([<x,...>])   => hb_setLastKey(<x>)
    #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
 
+   #xtranslate HEXTONUM([<c,...>])     => HB_HEXTONUM(<c>)
+   #xtranslate NUMTOHEX([<n,...>])     => HB_NUMTOHEX(<n>)
+   #xtranslate HEXTOSTR([<c,...>])     => HB_HEXTOSTR(<c>)
+   #xtranslate STRTOHEX([<c,...>])     => HB_STRTOHEX(<c>)
+
+   #xtranslate RASCAN([<x,...>])       => HB_RASCAN(<x>)
+
+   #xtranslate ISPOINTER( <xValue> )   => HB_ISPOINTER( <xValue> )
+
    #xtranslate str(<x>,[<y>],[<y>],<z>)=> iif(<z>, ltrim(str(<x>)), str(<x>))
+   #xtranslate HB_CMDARGARGV([<x,...>])=> HB_ARGV(0)
 
    #xtranslate HASH([<x,...>])         => HB_HASH(<x>)
    #xtranslate HHASKEY([<x,...>])      => HB_HHASKEY(<x>)
@@ -134,15 +146,8 @@
    #xtranslate HALLOCATE([<x,...>])    => HB_HALLOCATE(<x>)
    #xtranslate HDEFAULT([<x,...>])     => HB_HDEFAULT(<x>)
 
-   #xtranslate HEXTONUM([<c,...>])     => HB_HEXTONUM(<c>)
-   #xtranslate NUMTOHEX([<n,...>])     => HB_NUMTOHEX(<n>)
-   #xtranslate HEXTOSTR([<c,...>])     => HB_HEXTOSTR(<c>)
-   #xtranslate STRTOHEX([<c,...>])     => HB_STRTOHEX(<c>)
-
-   #xtranslate RASCAN([<x,...>])       => HB_RASCAN(<x>)
-
-   #xtranslate ISPOINTER( <xValue> )   => HB_ISPOINTER( <xValue> )
-
+   /* THROW => generate error */
+   #xtranslate THROW(<oErr>) => (Eval(ErrorBlock(), <oErr>), Break(<oErr>))
 
    /* TEXT INTO <varname> */
    #xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""

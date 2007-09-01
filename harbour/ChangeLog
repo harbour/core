@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-01 16:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcompat.ch
+    + added some new translation rules
+  * harbour/source/vm/proc.c
+    * fixed buffer size to protect against possible overflow
+
 2007-09-01 14:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbhex.c
     * replaced TAB by spaces

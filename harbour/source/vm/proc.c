@@ -77,7 +77,7 @@
 
 HB_FUNC( HB_METHODNAME )
 {
-   char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 2 ];
+   char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
 
    hb_retc( hb_procname( hb_parni( 1 ) + 1, szName, TRUE ) );
 }
