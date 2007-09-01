@@ -221,11 +221,11 @@ HB_FUNC( HB_HEXTOSTR )
                continue;
 	    
             if( iVal & 0x100 )
-	    {
+            {
                szDest[ul++] = ( char ) iVal & 0xff;
-	       iVal = 0x1;
-	    }
-	    iVal <<= 4;
+               iVal = 0x1;
+            }
+            iVal <<= 4;
          }
          while( --ulStr );
 
