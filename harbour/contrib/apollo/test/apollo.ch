@@ -134,14 +134,14 @@
 #define SDE_SP_GETDRIVER     2000   //Get the active driver
 
 #define SDE_SP_SETSTRDEFLEN  2001   //Set the default lenght for STR, if 2nd parameter is absent and field lenght zero
-#define SDE_SP_SETSTRDEFDEC	 2002	//Set the default decimals for STR, if 3d parameter is absent and field lenght zero
+#define SDE_SP_SETSTRDEFDEC  2002   //Set the default decimals for STR, if 3d parameter is absent and field lenght zero
 
-#define SDE_SP_SETDEFAPPEND		2003   //Set default behavior for ordering ordering for non-unique key like FOX/Clipper
-#define SDE_SP_SETMEMOMIXED		2004   //Set pure Clipper's memo for NSX driver
-#define SDE_SP_BDESPECIFIC		2005	//Set the treatment of LIKE operator in accoring to BDE
-#define SDE_SP_DBASEDATEHEADER	2006	//Set the using of DBF header in according to DbaseIII+ specification
-#define SDE_SP_SETAUTOPAD		2007
-#define SDE_SP_GETAUTOPAD		2008
+#define SDE_SP_SETDEFAPPEND         2003  //Set default behavior for ordering ordering for non-unique key like FOX/Clipper
+#define SDE_SP_SETMEMOMIXED         2004  //Set pure Clipper's memo for NSX driver
+#define SDE_SP_BDESPECIFIC          2005  //Set the treatment of LIKE operator in accoring to BDE
+#define SDE_SP_DBASEDATEHEADER      2006  //Set the using of DBF header in according to DbaseIII+ specification
+#define SDE_SP_SETAUTOPAD           2007
+#define SDE_SP_GETAUTOPAD           2008
 
 
 //Index information for current workarea

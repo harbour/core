@@ -61,11 +61,11 @@
 
 #define VARHDRSZ              4
 #define BOOLOID               16
-#define INT8OID			20
-#define INT2OID			21
-#define INT4OID			23
-#define TEXTOID			25
-#define OIDOID			26
+#define INT8OID               20
+#define INT2OID               21
+#define INT4OID               23
+#define TEXTOID               25
+#define OIDOID                26
 #define FLOAT4OID             700
 #define FLOAT8OID             701
 #define CASHOID               790                                                                
@@ -833,13 +833,13 @@ HB_FUNC(PQESCAPEBYTEACONN)
 TODO: Implement Full Large Objects Support
 TODO: Implement Prepared Query handling
 
-extern int	lo_open(PGconn *conn, Oid lobjId, int mode);
-extern int	lo_close(PGconn *conn, int fd);
-extern int	lo_read(PGconn *conn, int fd, char *buf, size_t len);
-extern int	lo_write(PGconn *conn, int fd, char *buf, size_t len);
-extern int	lo_lseek(PGconn *conn, int fd, int offset, int whence);
-extern Oid	lo_creat(PGconn *conn, int mode);
-extern int	lo_tell(PGconn *conn, int fd);
+extern int  lo_open(PGconn *conn, Oid lobjId, int mode);
+extern int  lo_close(PGconn *conn, int fd);
+extern int  lo_read(PGconn *conn, int fd, char *buf, size_t len);
+extern int  lo_write(PGconn *conn, int fd, char *buf, size_t len);
+extern int  lo_lseek(PGconn *conn, int fd, int offset, int whence);
+extern Oid  lo_creat(PGconn *conn, int mode);
+extern int  lo_tell(PGconn *conn, int fd);
 
 PGresult *PQprepare(PGconn *conn,
                     const char *stmtName,

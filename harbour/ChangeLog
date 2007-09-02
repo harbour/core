@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-03 01:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  - harbour/contrib/apollo/makefile
+  + harbour/contrib/apollo/Makefile
+    * renamed
+
+  * harbour/contrib/apollo/test/apollo.ch
+  * harbour/contrib/pgsql/postgres.c
+  * harbour/contrib/htmllib/errorsys.prg
+  * harbour/contrib/adordd/adordd.ch
+    * converted TABs to SPACEs
+
 2007-09-02 17:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/hbgtmk.sh
   * harbour/tests/codebl.prg

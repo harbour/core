@@ -5,7 +5,7 @@
 
 /***
 *
-*	Errorsys.prg
+*     Errorsys.prg
 *
 *  Standard Clipper error handler
 *
@@ -84,9 +84,9 @@ STATIC scErrFooter := " "
 
 
 /***
-*	ErrorSys()
+*     ErrorSys()
 *
-*	Note:  automatically executes at startup
+*     Note:  automatically executes at startup
 */
 
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
@@ -98,7 +98,7 @@ return
 
 
 /***
-*	DefError()
+*     DefError()
 */
 
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
@@ -124,7 +124,7 @@ LOCAL nH := IF( PageHandle() == NIL, 0, PageHandle() )
               ENDIF
       ENDIF
 
-	// for network open error, set NETERR() and subsystem default
+     // for network open error, set NETERR() and subsystem default
      IF ( e:genCode == EG_OPEN .and. (e:osCode == 32 .OR. e:osCode == 5);
           .and. e:canDefault )
 
@@ -142,11 +142,11 @@ LOCAL nH := IF( PageHandle() == NIL, 0, PageHandle() )
 
      END
 
-	// build error message
+     // build error message
      cMessage   += ErrorMessage(e)
 
 
-	// display message and traceback
+     // display message and traceback
      IF ( !Empty(e:osCode) )
           cMessage += " (DOS Error   : " + NTRIM(e:osCode) + ")"
      END
@@ -192,7 +192,7 @@ LOCAL nH := IF( PageHandle() == NIL, 0, PageHandle() )
           cErrString += "Called from "+ Trim(ProcName(i)) + ;
                "(" + NTRIM(ProcLine(i)) + ") <BR>" + CRLF()
 
-		i++
+          i++
      END
 
      cErrstring += '</EM>'
@@ -248,45 +248,45 @@ RETURN( scErrFooter )
 
 
 /***
-*	ErrorMessage()
+*     ErrorMessage()
 */
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
 STATIC FUNC ErrorMessage(e)
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
 local cMessage :=""
 
-	// start error message
+     // start error message
      cMessage += if( e:severity > ES_WARNING, "Error ", "Warning " )
 
 
-	// add subsystem name if available
+     // add subsystem name if available
      IF ( ValType(e:subsystem) == "C" )
-		cMessage += e:subsystem()
+         cMessage += e:subsystem()
      ELSE
-		cMessage += "???"
+         cMessage += "???"
      END
 
 
-	// add subsystem's error code if available
-	if ( ValType(e:subCode) == "N" )
-		cMessage += ("/" + NTRIM(e:subCode))
+     // add subsystem's error code if available
+     IF ( ValType(e:subCode) == "N" )
+         cMessage += ("/" + NTRIM(e:subCode))
      ELSE
-		cMessage += "/???"
+         cMessage += "/???"
      END
 
 
-	// add error description if available
-	if ( ValType(e:description) == "C" )
-          cMessage += ("<BR>  " + e:description)
+     // add error description if available
+     IF ( ValType(e:description) == "C" )
+         cMessage += ("<BR>  " + e:description)
      END
 
 
-	// add either filename or operation
-	if ( !Empty(e:filename) )
-          cMessage += (": " + e:filename)
+     // add either filename or operation
+     IF ( !Empty(e:filename) )
+         cMessage += (": " + e:filename)
 
      ELSEIF ( !Empty(e:operation) )
-		cMessage += (": " + e:operation)
+         cMessage += (": " + e:operation)
 
      END
      cMessage += CRLF()
