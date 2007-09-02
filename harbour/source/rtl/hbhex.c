@@ -104,7 +104,7 @@ HB_FUNC( HB_NUMTOHEX )
       iLen = 32;
       fDefaultLen = 1;
    }
-                    
+
    if( ISNUM( 1 ) )
       ulNum = hb_parnint( 1 );
    else if( ISPOINTER( 1 ) )
@@ -219,7 +219,7 @@ HB_FUNC( HB_HEXTOSTR )
                iVal += c - ( 'a' - 10 );
             else
                continue;
-	    
+
             if( iVal & 0x100 )
             {
                szDest[ul++] = ( char ) iVal & 0xff;

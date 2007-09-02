@@ -109,7 +109,7 @@ Requires:       gcc binutils bash sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{ve
 Provides:       %{name} harbour
 BuildRoot:      /tmp/%{name}-%{version}-root
 
-%define		_noautoreq	'libharbour.*'
+%define         _noautoreq    'libharbour.*'
 
 %description
 %{dname} is a CA-Clipper compatible compiler for multiple platforms. This

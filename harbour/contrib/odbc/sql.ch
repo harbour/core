@@ -32,7 +32,7 @@
 #define SQL_BIGINT                          -5
 #define SQL_TINYINT                         -6
 
-#define SQL_NVARCHAR 		                 -9
+#define SQL_NVARCHAR                        -9
 
 #define SQL_TYPE_NULL                   0
 #define SQL_TYPE_MIN                                    SQL_BIT
@@ -113,9 +113,9 @@ nullablity of a column in a table. */
 
 /* SQL Options */
 
-#define SQL_AUTOCOMMIT_OFF		               0
-#define SQL_AUTOCOMMIT_ON		               1
-#define SQL_AUTOCOMMIT		                102
+#define SQL_AUTOCOMMIT_OFF                   0
+#define SQL_AUTOCOMMIT_ON                    1
+#define SQL_AUTOCOMMIT                       102
 
 #define SQL_INFO_FIRST                       0
 #define SQL_ACTIVE_CONNECTIONS               0

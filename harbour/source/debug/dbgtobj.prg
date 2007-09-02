@@ -236,10 +236,10 @@ method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class t
                   endif
                elseif valtype(aArray[nSet,2])=="O"
                   tdbgObject():New(aArray[nSet,2],::pitems[nSet,1])
-	       elseif ( ( ValType( aArray[ nSet, 2 ] ) == "C" ;
-	                  .AND. aArray[ nSet, 2 ] == "Method" ) ;
-			.OR. ValType( aArray[ nSet, 2 ] ) == "B";
-                        .OR. ValType( aArray[ nSet, 2 ] ) == "P" )
+               elseif ( ValType( aArray[ nSet, 2 ] ) == "C" .AND. ;
+                        aArray[ nSet, 2 ] == "Method" ) .OR. ;
+                      ValType( aArray[ nSet, 2 ] ) == "B" .OR. ;
+                      ValType( aArray[ nSet, 2 ] ) == "P"
                   Alert("Value cannot be edited")
 
               else

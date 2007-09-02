@@ -60,7 +60,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_CHAR_VAL	0xff
+#define MAX_CHAR_VAL    0xff
 #define HB_CHRMAP(a,c)  ( ( (a) << 16 ) | (c) )
 
 char * s_szDefaultCharMapFile = "/etc/harbour/hb-charmap.def";

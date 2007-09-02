@@ -260,14 +260,14 @@ static HB_DBGENTRY_FUNC s_pFunDbgEntry;   /* C level debugger entry */
 
 /* Various compatibility flags
 */
-static ULONG	s_VMFlags = HB_VMFLAG_HARBOUR;
+static ULONG      s_VMFlags = HB_VMFLAG_HARBOUR;
 #undef hb_vmFlagEnabled
-#define hb_vmFlagEnabled(flag)	(s_VMFlags & (flag))
+#define hb_vmFlagEnabled(flag)      (s_VMFlags & (flag))
 
 /* Keycodes to stop virtual machine
 */
-static int 		s_VMCancelKey = K_ALT_C;
-static int		s_VMCancelKeyEx = HB_K_ALT_C;
+static int        s_VMCancelKey = K_ALT_C;
+static int        s_VMCancelKeyEx = HB_K_ALT_C;
 
 /* SEQUENCE envelope items position from stack top active
  */

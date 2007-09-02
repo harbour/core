@@ -57,7 +57,7 @@
 #ifndef HB_GTXWC_H
 #define HB_GTXWC_H
 
-#define HB_GT_NAME	XWC
+#define HB_GT_NAME      XWC
 
 #include "hbgtcore.h"
 #include "hbinit.h"

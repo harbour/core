@@ -89,7 +89,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_GT_NAME	DOS
+#define HB_GT_NAME      DOS
 
 #include "hbgtcore.h"
 #include "hbinit.h"

@@ -135,7 +135,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
       iCount = ( int ) hb_compExprParamListLen( pParms );
 
       /* TODO: EMPTY() (not done by Clipper) */
-	if( iCount == 0 )
+      if( iCount == 0 )
       {
 #if !defined( HB_MACRO_SUPPORT ) && defined( HB_COMPAT_XHB )
          if( strcmp( "HB_ENUMINDEX", pName->value.asSymbol ) == 0 )

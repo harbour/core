@@ -57,7 +57,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_GT_NAME	PCA
+#define HB_GT_NAME      PCA
 
 #include "hbgtcore.h"
 #include "hbinit.h"

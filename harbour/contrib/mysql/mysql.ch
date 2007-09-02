@@ -100,18 +100,18 @@
 
 #define  NOT_NULL_FLAG           1     /* Field can't be NULL */
 #define  PRI_KEY_FLAG            2     /* Field is part of a primary key */
-#define  UNIQUE_KEY_FLAG         4		/* Field is part of a unique key */
-#define  MULTIPLE_KEY_FLAG       8		/* Field is part of a key */
-#define  BLOB_FLAG               16		/* Field is a blob */
-#define  UNSIGNED_FLAG           32		/* Field is unsigned */
-#define  ZEROFILL_FLAG           64		/* Field is zerofill */
+#define  UNIQUE_KEY_FLAG         4     /* Field is part of a unique key */
+#define  MULTIPLE_KEY_FLAG       8     /* Field is part of a key */
+#define  BLOB_FLAG               16    /* Field is a blob */
+#define  UNSIGNED_FLAG           32    /* Field is unsigned */
+#define  ZEROFILL_FLAG           64    /* Field is zerofill */
 #define  BINARY_FLAG             128
 /* The following are only sent to new clients */
-#define  ENUM_FLAG               256		/* field is an enum */
-#define  AUTO_INCREMENT_FLAG     512		/* field is a autoincrement field */
-#define  TIMESTAMP_FLAG          1024		/* Field is a timestamp */
-#define  PART_KEY_FLAG           16384		/* Intern; Part of some key */
-#define  GROUP_FLAG              32768		/* Intern group field */
+#define  ENUM_FLAG               256   /* field is an enum */
+#define  AUTO_INCREMENT_FLAG     512   /* field is a autoincrement field */
+#define  TIMESTAMP_FLAG          1024  /* Field is a timestamp */
+#define  PART_KEY_FLAG           16384 /* Intern; Part of some key */
+#define  GROUP_FLAG              32768 /* Intern group field */
 
 
 // Extension to DBS_xxx defines to encompass NOT NULL fields, needed by indexes

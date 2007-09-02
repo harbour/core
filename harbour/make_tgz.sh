@@ -92,7 +92,7 @@ case "$HB_ARCHITECTURE" in
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr/local"
         HB_INSTALL_GROUP=wheel
         ETC="/private/etc"
-	;;
+        ;;
     linux)
         [ -z "$HB_INSTALL_PREFIX" ] && HB_INSTALL_PREFIX="/usr"
         [ -d "$HB_INSTALL_PREFIX/lib64" ] && [ "${HB_ARCH64}" = yes ] && HB_LIBDIRNAME="lib64"

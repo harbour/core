@@ -52,7 +52,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_GT_NAME	CGI
+#define HB_GT_NAME      CGI
 
 /*
  * HB_GT_CGI_RAWOUTPUT controls the behavior of GTCGI output

@@ -56,7 +56,7 @@
  *
  */
 
-#define HB_GT_NAME	NUL
+#define HB_GT_NAME      NUL
 
 #include <ctype.h>
 #include "hbgtcore.h"

@@ -101,7 +101,7 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 /*------------*/
-	//REGULAR
+      //REGULAR
   in := "#command _REGULAR_(<z>) => rm( <z> )"
   __PreProcess( in )
 
@@ -158,7 +158,7 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 
-	//NORMAL
+      //NORMAL
   in := '#command _NORMAL_M(<z>) => nm( <"z"> )'
   __PreProcess( in )
   
@@ -215,7 +215,7 @@ ENDTEXT
   nRes += PreResult( pre, PreRun( in, pre ), @nCnt )
 
 
-	//SMART
+      //SMART
   in := '#command _SMART_M(<z>) => sm( <(z)> )'
   __PreProcess( in )
   
@@ -273,7 +273,7 @@ ENDTEXT
 
 
 
-	//DUMB
+      //DUMB
   in := '#command _DUMB_M(<z>) => dm( #<z> )'
   __PreProcess( in )
 
@@ -332,7 +332,7 @@ ENDTEXT
 
   // REGULAR list
 XTEXT TO VAR in
-#command _REGULAR_L(<z,...>)	=> rl( <z> )
+#command _REGULAR_L(<z,...>)  => rl( <z> )
 _REGULAR_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a.  [2],&a&a, &a.a,  a, a)
 ENDTEXT
 CTEXT TO VAR pre

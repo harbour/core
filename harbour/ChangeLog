@@ -8,6 +8,61 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-02 17:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/hbgtmk.sh
+  * harbour/tests/codebl.prg
+  * harbour/tests/testprof.prg
+  * harbour/tests/keywords.prg
+  * harbour/tests/testpp.prg
+  * harbour/make_rpm.sh
+  * harbour/makefile.gc
+  * harbour/bin/hb-mkslib.sh
+  * harbour/include/hbexpra.c
+  * harbour/include/hbmath.ch
+  * harbour/include/hbrddntx.h
+  * harbour/include/hbexprb.c
+  * harbour/harbour.spec
+  * harbour/contrib/dot/pp.prg
+  * harbour/contrib/libct/ctwin.c
+  * harbour/contrib/ole2/w32ole.c
+  * harbour/contrib/hgf/win32/win32.c
+  * harbour/contrib/mysql/mysql.ch
+  * harbour/contrib/odbc/todbc.prg
+  * harbour/contrib/odbc/sql.ch
+  * harbour/contrib/hb_struc/hbstruc.ch
+  * harbour/contrib/bmdbfcdx/bmdbfcdx1.c
+  * harbour/contrib/msql/msql.ch
+  * harbour/contrib/msql/readme.txt
+  * harbour/source/pp/ppcore.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtxwc/gtxwc.h
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtcrs/gtcrs.h
+  * harbour/source/rtl/gtalleg/gtalleg.c
+  * harbour/source/rtl/gtalleg/ssf.h
+  * harbour/source/rtl/gtalleg/fixedth.sfc
+  * harbour/source/rtl/gtchrmap.c
+  * harbour/source/rtl/itemseri.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtsln/gtsln.h
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/hbhex.c
+  * harbour/source/rtl/tget.prg
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/hbinet.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/debug/dbgtobj.prg
+  * harbour/source/debug/dbgwa.prg
+  * harbour/source/common/expropt2.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/utils/hbpptest/pp_test.prg
+  * harbour/utils/hbpptest/pretest.prg
+  * harbour/make_tgz.sh
+    * converted TABs to SPACEs
+
 2007-09-01 16:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompat.ch
     + added some new translation rules

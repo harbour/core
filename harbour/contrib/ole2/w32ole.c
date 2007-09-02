@@ -1582,7 +1582,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
         s_nOleError = CoCreateInstance( (REFCLSID) &ClassID, NULL, CLSCTX_SERVER, (REFIID) riid, &pDisp );
         // TraceLog( NULL, "Result: %p\n", s_nOleError );
      }
-     	 
+
      hb_retnl( ( LONG ) pDisp );
   }
 
@@ -2052,7 +2052,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
            PHB_ITEM pReturn = hb_itemNew( NULL );
            PHB_ITEM pOleClassName = hb_itemNew( NULL );
            char *sOleClassName;
-		   int iClassNameLen, iMsgNameLen;
+           int iClassNameLen, iMsgNameLen;
 
            hb_itemForwardValue( pReturn, hb_stackReturnItem() );
 
@@ -2063,7 +2063,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
            iClassNameLen = hb_parclen( -1 );
            iMsgNameLen = strlen( hb_itemGetSymbol( hb_stackBaseItem() )->szName );
 
-		   sOleClassName = (char *) hb_xgrab( iClassNameLen + 1 + iMsgNameLen + 1 );
+           sOleClassName = (char *) hb_xgrab( iClassNameLen + 1 + iMsgNameLen + 1 );
 
            strncpy( sOleClassName, hb_parc( - 1 ), iClassNameLen );
            sOleClassName[ iClassNameLen ] = ':';

@@ -112,7 +112,7 @@ CCCC c
   _REGULAR_(a[1])
   _REGULAR_("['']")
 
-	//NORMAL
+      //NORMAL
 /* test for normal match marker */
 #command _NORMAL_M(<z>) => nm( <"z"> )
   _NORMAL_M(a)
@@ -127,7 +127,7 @@ CCCC c
   _NORMAL_M(a[1])
   _NORMAL_M("['']")
 
-	//SMART
+      //SMART
 /* test for smart match marker */
 #command _SMART_M(<z>) => sm( <(z)> )
   _SMART_M(a)
@@ -142,7 +142,7 @@ CCCC c
   _SMART_M(a[1])
   _SMART_M("['']")
 
-	//DUMB
+      //DUMB
 /* test for dumb match marker */
 #command _DUMB_M(<z>) => dm( #<z> )
   _DUMB_M(a)
@@ -160,7 +160,7 @@ CCCC c
 /* ---------------------------------------------------------------------*/
   // REGULAR list
 /* test for regular match marker */
-#command _REGULAR_L(<z,...>)	=> rl( <z> )
+#command _REGULAR_L(<z,...>) => rl( <z> )
 _REGULAR_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a.  [2],&a&a, &a.a,  a, a)
 
   // NORMAL list
@@ -487,9 +487,9 @@ DEFINE CLIPBOARD oC OF oD FORMAT TEXT
 
 #xcommand DECLARE WINDOW <w> ;
 =>;
-#xtranslate <w>	. <p:Name,Title,f1,f2,f3,f4,f5,f6,f7,f8,f9> := <n> => SProp( <"w">, <"p"> , <n> )
+#xtranslate <w> . <p:Name,Title,f1,f2,f3,f4,f5,f6,f7,f8,f9> := <n> => SProp( <"w">, <"p"> , <n> )
 #xcommand DEFINE WINDOW <w> [ON INIT <IProc>] =>;
-	DECLARE WINDOW <w>  ; _DW( <"w">, <{IProc}> )
+      DECLARE WINDOW <w>  ; _DW( <"w">, <{IProc}> )
 
    DEFINE WINDOW &oW
    DEFINE WINDOW &oW ON INIT &oW.Title:= "My title"

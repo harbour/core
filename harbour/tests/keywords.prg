@@ -575,7 +575,7 @@ FIEL fiel
   FIELD( FIEL(0) )
 
 #ifndef HB_CLIPPER_COMPATIBLE
-  DO field	//Incorrect number of arguments
+  DO field  //Incorrect number of arguments
   DO field WITH field     //field cannot be passed by a reference
 #endif
   WHILE field

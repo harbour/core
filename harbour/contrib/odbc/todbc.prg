@@ -163,12 +163,12 @@ CLASS TODBC FROM HBClass
 
    METHOD SQLErrorMessage()
 
-	METHOD SetCnnOptions( nType, uBuffer )
-	METHOD GetCnnOptions( nType )
-	METHOD Commit()
-	METHOD RollBack()
-	METHOD SetStmtOptions( nType, uBuffer )
-	METHOD GetStmtOptions( nType )
+   METHOD SetCnnOptions( nType, uBuffer )
+   METHOD GetCnnOptions( nType )
+   METHOD Commit()
+   METHOD RollBack()
+   METHOD SetStmtOptions( nType, uBuffer )
+   METHOD GetStmtOptions( nType )
    METHOD SetAutocommit( lEnable )
 
 ENDCLASS
@@ -259,8 +259,8 @@ RETURN ( NIL )
 
 METHOD GetCnnOptions( nType ) CLASS TODBC
 
-	local cBuffer:=space(256)
-	::nRetCode := SQLGETCONNECTOPTION( ::hDbc, nType, @cBuffer )
+   local cBuffer:=space(256)
+   ::nRetCode := SQLGETCONNECTOPTION( ::hDbc, nType, @cBuffer )
 
 return cBuffer
 
@@ -286,7 +286,7 @@ return ( ::nRetCode := SQLRollBack( ::hEnv, ::hDbc ) )
 
 METHOD GetStmtOptions( nType ) CLASS TODBC
 
-	local cBuffer := Space( 256 )
+   local cBuffer := Space( 256 )
 
    ::nRetCode := SQLGetStmtOption( ::hStmt, nType, @cBuffer )
 

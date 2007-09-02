@@ -94,7 +94,7 @@ HB_EXTERN_BEGIN
 #define NTX_TAGITEMSIZE                  16     /* Size of tag item in CTX header */
 #define NTX_HDR_UNUSED                  473     /* the unused part of header */
 #define NTX_PAGES_PER_TAG                 8
-#define NTX_STACKSIZE                    32	/* Maximum page stack size */
+#define NTX_STACKSIZE                    32     /* Maximum page stack size */
 
 /* index file structures - defined as BYTEs to avoid alignment problems */
 

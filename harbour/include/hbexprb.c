@@ -407,7 +407,7 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
          break;
       case HB_EA_PUSH_PCODE:
       {
-#if defined(HB_MACRO_SUPPORT)	 
+#if defined(HB_MACRO_SUPPORT)
          HB_EXPR_PCODE1( hb_compExprCodeblockPush, pSelf );
 #else
          if( pSelf->value.asCodeblock.flags & HB_BLOCK_EXT )

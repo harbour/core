@@ -67,7 +67,7 @@
 #define MSQL_MONEY_TYPE       9
 #define MSQL_TIME_TYPE        10
 #define MSQL_LAST_REAL_TYPE   10
-#define MSQL_IDX_TYPE	      253
+#define MSQL_IDX_TYPE         253
 #define MSQL_SYSVAR_TYPE      254
 #define MSQL_ANY_TYPE         255
 

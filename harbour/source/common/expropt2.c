@@ -456,7 +456,7 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          {
             pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
             HB_COMP_EXPR_FREE( pSelf );
-         	pSelf = hb_compExprReduceMinusStrings( pLeft, pRight, HB_COMP_PARAM );
+            pSelf = hb_compExprReduceMinusStrings( pLeft, pRight, HB_COMP_PARAM );
          }
       }
    }
@@ -638,7 +638,7 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          {
             pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
             HB_COMP_EXPR_FREE( pSelf );
-         	pSelf = hb_compExprReducePlusStrings( pLeft, pRight, HB_COMP_PARAM );
+            pSelf = hb_compExprReducePlusStrings( pLeft, pRight, HB_COMP_PARAM );
          }
       }
    }

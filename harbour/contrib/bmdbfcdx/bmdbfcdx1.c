@@ -1763,7 +1763,7 @@ static void hb_cdxPageCheckDupTrl( LPCDXPAGE pPage, BYTE * pKeyBuf, SHORT iKeys,
             printf( "\r\npbValPrev=[%s] pbVal=[%s], [%d], pKeyBuf=%p",
                     &pKeyBuf[ iPos - iLen ], &pKeyBuf[ iPos ],
                     memcmp( &pKeyBuf[ iPos - iLen ], &pKeyBuf[ iPos ], iNum ),
-		        pKeyBuf );
+                    pKeyBuf );
             fflush(stdout);
             bErr = TRUE;
          }
@@ -2057,7 +2057,7 @@ static int hb_cdxPageLeafDelKey( LPCDXPAGE pPage )
    printf("\r\ndelkey: Page=%lx, iKey=%d/%d, rec=%ld, iFree=%d",
           pPage->Page, iKey, pPage->iKeys,
           (ULONG) HB_GET_LE_UINT32( &pPage->pKeyBuf[ ( iKey + 1 ) * iLen - 6 ] ),
-	  pPage->iFree );
+          pPage->iFree );
    fflush(stdout);
 #endif
    iSpc = pPage->ReqByte + pPage->TagParent->uiLen -

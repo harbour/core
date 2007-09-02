@@ -77,30 +77,30 @@ cd "${OTMPDIR}"
 for f in $*
 do
     case "${f}" in
-	*.o)
-	    if [ ! -r "${dir}/${f}" ]
-	    then
-	        echo "cannot read file: ${f}"
-	        exit 1
-	    fi
-	    cp "${dir}/${f}" "${OTMPDIR}" || exit 1
-	    ;;
-	*.a)
+        *.o)
             if [ ! -r "${dir}/${f}" ]
-	    then
-	        echo "cannot read file: ${f}"
-	        exit 1
-	    fi
-	    d="${f%.a}"
-	    d="${f##*/}"
-	    mkdir $d
-	    cd $d
-	    ${CCPREFIX}ar -x "${dir}/${f}" || exit 1
-	    cd ..
-	    ;;
-	*)
+            then
+                echo "cannot read file: ${f}"
+                exit 1
+            fi
+            cp "${dir}/${f}" "${OTMPDIR}" || exit 1
+            ;;
+        *.a)
+            if [ ! -r "${dir}/${f}" ]
+            then
+                echo "cannot read file: ${f}"
+                exit 1
+            fi
+            d="${f%.a}"
+            d="${f##*/}"
+            mkdir $d
+            cd $d
+            ${CCPREFIX}ar -x "${dir}/${f}" || exit 1
+            cd ..
+            ;;
+        *)
             linker_options="${linker_options} ${f}"
-	    ;;
+            ;;
     esac
 done
 OBJLST=`find . -name \*.o`

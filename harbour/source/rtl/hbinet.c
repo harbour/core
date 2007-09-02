@@ -738,7 +738,7 @@ HB_FUNC( HB_INETPERIODCALLBACK )
       if( pExec )
       {
          if( Socket->caPeriodic )
-   	      hb_itemRelease( Socket->caPeriodic );
+            hb_itemRelease( Socket->caPeriodic );
          Socket->caPeriodic = hb_itemClone( pExec );
       }
    }

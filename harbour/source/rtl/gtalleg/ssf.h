@@ -212,10 +212,10 @@ typedef enum {
 #define SSF_MAXFRAMES 128
 #endif
 
-#define THICK_LEFT	0
-#define THICK_UP	1
-#define THICK_RIGHT	2
-#define THICK_DOWN	3
+#define THICK_LEFT      0
+#define THICK_UP        1
+#define THICK_RIGHT     2
+#define THICK_DOWN      3
 
 typedef struct _ssfFrame {
     char ftype;

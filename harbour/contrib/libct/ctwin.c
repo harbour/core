@@ -53,7 +53,7 @@
 /* NOTE: User programs should never call this layer directly! */
 
 /* This definition has to be placed before #include "hbapigt.h" */
-#define HB_GT_NAME	CTW
+#define HB_GT_NAME      CTW
 
 #include "hbgtcore.h"
 #include "hbinit.h"

@@ -54,7 +54,7 @@
 
 /* *********************************************************************** */
 
-#define HB_GT_NAME	CRS
+#define HB_GT_NAME      CRS
 
 #include "hbgtcore.h"
 #include "hbinit.h"
@@ -124,28 +124,28 @@
 
 /* #define HB_GT_CRS_TTYHACK */
 
-#define MAX_SIGNO	64
+#define MAX_SIGNO       64
 
-#define BASE_INFD	0
-#define BASE_OUTFD	1
-#define BASE_ERRFD	2
-#define MAXFD		1024
+#define BASE_INFD       0
+#define BASE_OUTFD      1
+#define BASE_ERRFD      2
+#define MAXFD           1024
 
 
-#define ESC_DELAY	25
-/* #define DBLCLK_DELAY	250 */
-#define DBLCLK_DELAY	hb_mouse_GetDoubleClickSpeed();
+#define ESC_DELAY       25
+/* #define DBLCLK_DELAY 250 */
+#define DBLCLK_DELAY    hb_mouse_GetDoubleClickSpeed();
 
-#define MAX_IOBASE	32
-#define STDIN_BUFLEN	128
+#define MAX_IOBASE      32
+#define STDIN_BUFLEN    128
 
-#define TERM_LINUX	1
-#define TERM_XTERM	2
+#define TERM_LINUX      1
+#define TERM_XTERM      2
 
-#define IS_EVTFDSTAT(x)	((x) >= 0x01 && (x) <= 0x03)
-#define EVTFDSTAT_RUN	0x01
-#define EVTFDSTAT_STOP	0x02
-#define EVTFDSTAT_DEL	0x03
+#define IS_EVTFDSTAT(x) ((x) >= 0x01 && (x) <= 0x03)
+#define EVTFDSTAT_RUN   0x01
+#define EVTFDSTAT_STOP  0x02
+#define EVTFDSTAT_DEL   0x03
 
 #define CTRL_SEQ        "\036"
 #define ALT_SEQ         "\037"
@@ -165,55 +165,55 @@
 #define K_PAUSE         0x10007
 
 #ifndef SC_UNDEF
-#  define SC_UNDEF	-1
+#  define SC_UNDEF      -1
 #endif
 
-#define KEY_ALTMASK	0x10000000
-#define KEY_CTRLMASK	0x20000000
-#define KEY_EXTDMASK	0x40000000
-#define KEY_CLIPMASK	0x80000000
-#define KEY_MASK	0xF0000000
+#define KEY_ALTMASK     0x10000000
+#define KEY_CTRLMASK    0x20000000
+#define KEY_EXTDMASK    0x40000000
+#define KEY_CLIPMASK    0x80000000
+#define KEY_MASK        0xF0000000
 
-#define CLR_KEYMASK(x)	((x) & ~KEY_MASK)
-#define GET_KEYMASK(x)	((x) & KEY_MASK)
+#define CLR_KEYMASK(x)  ((x) & ~KEY_MASK)
+#define GET_KEYMASK(x)  ((x) & KEY_MASK)
 
-#define IS_CLIPKEY(x)	((((x) & ~0xffff) ^ KEY_CLIPMASK) == 0)
-#define SET_CLIPKEY(x)	(((x) & 0xffff) | KEY_CLIPMASK)
-#define GET_CLIPKEY(x)	((((x) & 0x8000) ? ~0xffff : 0) | ((x) & 0xffff))
+#define IS_CLIPKEY(x)   ((((x) & ~0xffff) ^ KEY_CLIPMASK) == 0)
+#define SET_CLIPKEY(x)  (((x) & 0xffff) | KEY_CLIPMASK)
+#define GET_CLIPKEY(x)  ((((x) & 0x8000) ? ~0xffff : 0) | ((x) & 0xffff))
 
-#define NO_STDKEYS	96
-#define NO_EXTDKEYS	30
+#define NO_STDKEYS      96
+#define NO_EXTDKEYS     30
 
-#define EXKEY_F1	( 0 | KEY_EXTDMASK)
-#define EXKEY_F2	( 1 | KEY_EXTDMASK)
-#define EXKEY_F3	( 2 | KEY_EXTDMASK)
-#define EXKEY_F4	( 3 | KEY_EXTDMASK)
-#define EXKEY_F5	( 4 | KEY_EXTDMASK)
-#define EXKEY_F6	( 5 | KEY_EXTDMASK)
-#define EXKEY_F7	( 6 | KEY_EXTDMASK)
-#define EXKEY_F8	( 7 | KEY_EXTDMASK)
-#define EXKEY_F9	( 8 | KEY_EXTDMASK)
-#define EXKEY_F10	( 9 | KEY_EXTDMASK)
-#define EXKEY_F11	(10 | KEY_EXTDMASK)
-#define EXKEY_F12	(11 | KEY_EXTDMASK)
-#define EXKEY_UP	(12 | KEY_EXTDMASK)
-#define EXKEY_DOWN	(13 | KEY_EXTDMASK)
-#define EXKEY_LEFT	(14 | KEY_EXTDMASK)
-#define EXKEY_RIGHT	(15 | KEY_EXTDMASK)
-#define EXKEY_INS	(16 | KEY_EXTDMASK)
-#define EXKEY_DEL	(17 | KEY_EXTDMASK)
-#define EXKEY_HOME	(18 | KEY_EXTDMASK)
-#define EXKEY_END	(19 | KEY_EXTDMASK)
-#define EXKEY_PGUP	(20 | KEY_EXTDMASK)
-#define EXKEY_PGDN	(21 | KEY_EXTDMASK)
-#define EXKEY_BS	(22 | KEY_EXTDMASK)
-#define EXKEY_TAB	(23 | KEY_EXTDMASK)
-#define EXKEY_ESC	(24 | KEY_EXTDMASK)
-#define EXKEY_ENTER	(25 | KEY_EXTDMASK)
-#define EXKEY_KPENTER	(26 | KEY_EXTDMASK)
-#define EXKEY_CENTER	(27 | KEY_EXTDMASK)
-#define EXKEY_PRTSCR	(28 | KEY_EXTDMASK)
-#define EXKEY_PAUSE	(29 | KEY_EXTDMASK)
+#define EXKEY_F1        ( 0 | KEY_EXTDMASK)
+#define EXKEY_F2        ( 1 | KEY_EXTDMASK)
+#define EXKEY_F3        ( 2 | KEY_EXTDMASK)
+#define EXKEY_F4        ( 3 | KEY_EXTDMASK)
+#define EXKEY_F5        ( 4 | KEY_EXTDMASK)
+#define EXKEY_F6        ( 5 | KEY_EXTDMASK)
+#define EXKEY_F7        ( 6 | KEY_EXTDMASK)
+#define EXKEY_F8        ( 7 | KEY_EXTDMASK)
+#define EXKEY_F9        ( 8 | KEY_EXTDMASK)
+#define EXKEY_F10       ( 9 | KEY_EXTDMASK)
+#define EXKEY_F11       (10 | KEY_EXTDMASK)
+#define EXKEY_F12       (11 | KEY_EXTDMASK)
+#define EXKEY_UP        (12 | KEY_EXTDMASK)
+#define EXKEY_DOWN      (13 | KEY_EXTDMASK)
+#define EXKEY_LEFT      (14 | KEY_EXTDMASK)
+#define EXKEY_RIGHT     (15 | KEY_EXTDMASK)
+#define EXKEY_INS       (16 | KEY_EXTDMASK)
+#define EXKEY_DEL       (17 | KEY_EXTDMASK)
+#define EXKEY_HOME      (18 | KEY_EXTDMASK)
+#define EXKEY_END       (19 | KEY_EXTDMASK)
+#define EXKEY_PGUP      (20 | KEY_EXTDMASK)
+#define EXKEY_PGDN      (21 | KEY_EXTDMASK)
+#define EXKEY_BS        (22 | KEY_EXTDMASK)
+#define EXKEY_TAB       (23 | KEY_EXTDMASK)
+#define EXKEY_ESC       (24 | KEY_EXTDMASK)
+#define EXKEY_ENTER     (25 | KEY_EXTDMASK)
+#define EXKEY_KPENTER   (26 | KEY_EXTDMASK)
+#define EXKEY_CENTER    (27 | KEY_EXTDMASK)
+#define EXKEY_PRTSCR    (28 | KEY_EXTDMASK)
+#define EXKEY_PAUSE     (29 | KEY_EXTDMASK)
 
 /* xHarbour compatible definitions */
 #define K_SH_LEFT            K_LEFT   /* Shift-Left  == Left  */
@@ -231,24 +231,24 @@
 
 /* mouse button states */
 #define M_BUTTON_LEFT      0x0001
-#define M_BUTTON_RIGHT	   0x0002
-#define M_BUTTON_MIDDLE	   0x0004
-#define M_BUTTON_LDBLCK	   0x0010
-#define M_BUTTON_RDBLCK	   0x0020
-#define M_BUTTON_MDBLCK	   0x0040
+#define M_BUTTON_RIGHT     0x0002
+#define M_BUTTON_MIDDLE    0x0004
+#define M_BUTTON_LDBLCK    0x0010
+#define M_BUTTON_RDBLCK    0x0020
+#define M_BUTTON_MDBLCK    0x0040
 #define M_BUTTON_WHEELUP   0x0100
 #define M_BUTTON_WHEELDOWN 0x0200
 #define M_CURSOR_MOVE      0x0400
 #define M_BUTTON_KEYMASK   (M_BUTTON_LEFT | M_BUTTON_RIGHT | M_BUTTON_MIDDLE)
 #define M_BUTTON_DBLMASK   (M_BUTTON_LDBLCK | M_BUTTON_RDBLCK | M_BUTTON_MDBLCK)
 
-#define TIMEVAL_GET(tv)		gettimeofday(&(tv), NULL);
-#define TIMEVAL_LESS(tv1, tv2)	(((tv1).tv_sec == (tv2).tv_sec ) ?	\
-				 ((tv1).tv_usec < (tv2).tv_usec) :	\
-				 ((tv1).tv_sec  < (tv2).tv_sec ))
-#define TIMEVAL_ADD(dst, src, n)	{				\
-	(dst).tv_sec = (src).tv_sec + n / 1000;				\
-	if (((dst).tv_usec = (src).tv_usec+(n%1000)*1000)>=1000000) {	\
-	    (dst).tv_usec -= 1000000; (dst).tv_sec++;			\
-	} \
-    }
+#define TIMEVAL_GET(tv)          gettimeofday(&(tv), NULL);
+#define TIMEVAL_LESS(tv1, tv2)   (((tv1).tv_sec == (tv2).tv_sec ) ?     \
+                                  ((tv1).tv_usec < (tv2).tv_usec) :     \
+                                  ((tv1).tv_sec  < (tv2).tv_sec ))
+#define TIMEVAL_ADD(dst, src, n) {                                      \
+      (dst).tv_sec = (src).tv_sec + n / 1000;                           \
+      if (((dst).tv_usec = (src).tv_usec+(n%1000)*1000)>=1000000) {     \
+         (dst).tv_usec -= 1000000; (dst).tv_sec++;                      \
+      } \
+   }

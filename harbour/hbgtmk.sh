@@ -35,9 +35,9 @@ if ! which ${_cvs_RSH} &>/dev/null
 then
     if [ "${_cvs_RSH}" = "ssh" ]
     then
-	TOINST_LST="${TOINST_LST} [open]ssh-clients"
+        TOINST_LST="${TOINST_LST} [open]ssh-clients"
     else
-	TOINST_LST="${TOINST_LST} ${_cvs_RSH}"
+        TOINST_LST="${TOINST_LST} ${_cvs_RSH}"
     fi
 fi
 
@@ -47,8 +47,8 @@ then
     mkdir -p CVS
     cd CVS
     if cvs -z3 co "${PROJECT}"; then
-	cd "${PROJECT}"
-	./make_rpm.sh "$*"
+        cd "${PROJECT}"
+        ./make_rpm.sh "$*"
     fi
 else
     echo "If you want to build Harbour compilers"

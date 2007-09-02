@@ -881,7 +881,7 @@ static BOOL hb_gt_alleg_Info( int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, al_key_shifts );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
-	      al_set_keyboard_leds( hb_itemGetNI( pInfo->pNewVal ) );
+            al_set_keyboard_leds( hb_itemGetNI( pInfo->pNewVal ) );
          }
          break;
 

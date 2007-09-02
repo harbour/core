@@ -37,7 +37,7 @@ LOCAL cb
    mqout( 4, EVAL( cb, 3 ) )
 
    ReferParam()
-	
+
 Return( NIL )
 
 Static Function TestBlocks()

@@ -428,7 +428,7 @@ STATIC s_aSwitchDefs := {}
       sSwitch += [    -FIX     = Do not clone Clipper PreProcessor bugs.] + CRLF
       sSwitch += [    -U       = Use command definitions set in <ch-file> (or none).] + CRLF
 
-     	? sSwitch
+      ? sSwitch
       ?
       QUIT
    endif
@@ -2346,7 +2346,7 @@ FUNCTION RP_Run_Err( oErr, aProcedures, nLine )
             Alert( [Must Default: ] + "'" + oErr:Operation + "' '" + oErr:Description + ;
                    sArgs + ";" + ;
                    PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ");" + ;
-									 ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
+                   ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
 
             RETURN  ( .F. )
          ELSE
@@ -2367,7 +2367,7 @@ FUNCTION RP_Run_Err( oErr, aProcedures, nLine )
           oErr:Description + ;
           sArgs + ;
           PP_ProcName() + '(' + LTrim( Str( PP_ProcLine() ) ) + ");" + ;
-					ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
+          ProcName(2)  + "(" + LTrim( Str( ProcLine(2) ) ) + ")" )
    //BREAK oErr
    __Quit()
 
@@ -9067,6 +9067,7 @@ FUNCTION PP_PreProText( sLines, asLines, bBlanks )
             sTemp := asLines[nLine]
          ELSE
             aDel( asLines, nLine )
+
             nLines--
             aSize( asLines, nLines )
             IF nLine > nLines
@@ -9075,9 +9076,9 @@ FUNCTION PP_PreProText( sLines, asLines, bBlanks )
          ENDIF
       ENDDO
 
-			IF nLine > nLines
-			 	EXIT
-			ENDIF
+      IF nLine > nLines
+         EXIT
+      ENDIF
 
       //TraceLog( nLine, nLines, sTemp )
 

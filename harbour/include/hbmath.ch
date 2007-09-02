@@ -71,7 +71,7 @@
 #define HB_MATH_ERRMODE_USER              2   /* throw Harbour error, user MUST correct math error within Harbour error
                                                  handling */
 #define HB_MATH_ERRMODE_USERDEFAULT       3   /* dito, but if user does not correct math error, default 
-						 error handling, i.e. by individual function applies */
+                                                 error handling, i.e. by individual function applies */
 #define HB_MATH_ERRMODE_USERCDEFAULT      4   /* as ERRMODE_USER, but if user does not correct math error, C RTL 
                                                  correction values are used */
 

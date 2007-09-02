@@ -64,7 +64,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_GT_NAME	TRM
+#define HB_GT_NAME      TRM
 
 #include "hbgtcore.h"
 #include "hbinit.h"
@@ -132,11 +132,11 @@ static HB_GT_FUNCS SuperTable;
 
 /* mouse button states */
 #define M_BUTTON_LEFT      0x0001
-#define M_BUTTON_RIGHT	   0x0002
-#define M_BUTTON_MIDDLE	   0x0004
-#define M_BUTTON_LDBLCK	   0x0010
-#define M_BUTTON_RDBLCK	   0x0020
-#define M_BUTTON_MDBLCK	   0x0040
+#define M_BUTTON_RIGHT     0x0002
+#define M_BUTTON_MIDDLE    0x0004
+#define M_BUTTON_LDBLCK    0x0010
+#define M_BUTTON_RDBLCK    0x0020
+#define M_BUTTON_MDBLCK    0x0040
 #define M_BUTTON_WHEELUP   0x0100
 #define M_BUTTON_WHEELDOWN 0x0200
 #define M_CURSOR_MOVE      0x0400

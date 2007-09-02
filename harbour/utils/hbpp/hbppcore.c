@@ -4172,10 +4172,10 @@ static int IsInStr( char symb, char *s )
 }
 
 /* ptri = string for inserting
-	ptro = output string
-	len1 = length of ptri string
-	len2 = length of ptro string that will be replaced
-	lenres = length of ptro string
+   ptro = output string
+   len1 = length of ptri string
+   len2 = length of ptro string that will be replaced
+   lenres = length of ptro string
 */
 void hb_pp_Stuff( char *ptri, char *ptro, int len1, int len2, int lenres )
 {

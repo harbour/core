@@ -1381,7 +1381,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             if( pOperator )
             {
                hb_pp_tokenAddNext( pState, pOperator->value,
-					     strlen( pOperator->value ),
+                                   strlen( pOperator->value ),
                                    pOperator->type );
                ul = pOperator->len;
             }

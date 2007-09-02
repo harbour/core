@@ -991,7 +991,7 @@ METHOD ToDecPos() CLASS Get
    endif
 
 return Self
-	
+
 /* ------------------------------------------------------------------------- */
 
 METHOD IsEditable( nPos ) CLASS Get

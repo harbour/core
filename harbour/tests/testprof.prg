@@ -77,38 +77,38 @@ Local lBrowsing := .T.
 Local nKey
 
    Do While lBrowsing
-   
+
       oBrowse:forceStable()
-      
+
       nKey := inkey( 0 )
-      
+
       Do Case
-      
+
          Case nKey == K_ESC
-	    lBrowsing := .F.
-	    
-	 Case nKey == K_DOWN
-	    oBrowse:down()
-	    
-	 Case nKey == K_UP
-	    oBrowse:up()
-	    
-	 Case nKey == K_LEFT
-	    oBrowse:left()
-	    
-	 Case nKey == K_RIGHT
-	    oBrowse:right()
-	    
-	 Case nKey == K_PGDN
-	    oBrowse:pageDown()
-	    
-	 Case nKey == K_PGUP
-	    oBrowse:pageUp()
-	    
-	 // And so on.... (not really necessary for this test)
-	    
+            lBrowsing := .F.
+
+         Case nKey == K_DOWN
+            oBrowse:down()
+
+         Case nKey == K_UP
+            oBrowse:up()
+
+         Case nKey == K_LEFT
+            oBrowse:left()
+
+         Case nKey == K_RIGHT
+            oBrowse:right()
+
+         Case nKey == K_PGDN
+            oBrowse:pageDown()
+
+         Case nKey == K_PGUP
+            oBrowse:pageUp()
+
+         // And so on.... (not really necessary for this test)
+
       EndCase
-      
+
    EndDo
 
 Return( NIL )

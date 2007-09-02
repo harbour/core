@@ -197,10 +197,10 @@ HB_FUNC( SETMENU )
 HB_FUNC( SENDMESSAGE )
 {
    hb_retnl( (LONG) SendMessage(
-                       (HWND) hb_parnl( 1 ),	// handle of destination window
-                       (UINT) hb_parni( 2 ),	// message to send
-                       (WPARAM) hb_parnl( 3 ),	// first message parameter
-                       (LPARAM) hb_parnl( 4 ) 	// second message parameter
+                       (HWND) hb_parnl( 1 ),    // handle of destination window
+                       (UINT) hb_parni( 2 ),    // message to send
+                       (WPARAM) hb_parnl( 3 ),  // first message parameter
+                       (LPARAM) hb_parnl( 4 )   // second message parameter
                      ) );
 }
 

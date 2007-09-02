@@ -74,12 +74,12 @@ function __dbgShowWorkAreas()
 
    /* We can't determine the last used area, so use 512 here */
    for n1 := 1 to 512
-     if ( n1 )->( Used() )
-       AAdd(aAlias, { n1, Alias(n1) })
-       if n1 == nOldArea
-	 cur_id = Len(aAlias)
-       endif
-     endif
+      if ( n1 )->( Used() )
+         AAdd(aAlias, { n1, Alias(n1) })
+         if n1 == nOldArea
+            cur_id = Len(aAlias)
+         endif
+      endif
    next
 
    if len( aAlias ) == 0

@@ -9,15 +9,15 @@ LOCAL b
 MEMVAR a
 PRIVATE a
 
-#command _REGULAR_(<z>) => ? <z>		//REGULAR
-#command _NORMAL_(<z>) => ? <"z">	//NORMAL
-#command _SMART_(<z>) => ? <(z)>	//SMART
-#command _DUMB_(<z>) => ? #<z>	//DUMB
+#command _REGULAR_(<z>) => ? <z>    //REGULAR
+#command _NORMAL_(<z>) => ? <"z">   //NORMAL
+#command _SMART_(<z>) => ? <(z)>    //SMART
+#command _DUMB_(<z>) => ? #<z>      //DUMB
 
-#command _REGULAR_L(<z,...>)	=> s( <z> )
-#command _NORMAL_L(<z,...>) => s( <"z"> )	//NORMAL
-#command _SMART_L(<z,...>) => s( <(z)> )	//SMART
-#command _DUMB_L(<z,...>) => s( #<z> )	//DUMB
+#command _REGULAR_L(<z,...>) => s( <z> )
+#command _NORMAL_L(<z,...>) => s( <"z"> ) //NORMAL
+#command _SMART_L(<z,...>) => s( <(z)> )  //SMART
+#command _DUMB_L(<z,...>) => s( #<z> )    //DUMB
 
 USE &b ALIAS &a.1 INDEX &a.aa, &b, &c, &b.
 

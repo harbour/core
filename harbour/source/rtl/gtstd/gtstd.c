@@ -52,7 +52,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_GT_NAME	STD
+#define HB_GT_NAME      STD
 
 #include "hbgtcore.h"
 #include "hbinit.h"
