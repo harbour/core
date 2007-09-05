@@ -2708,7 +2708,9 @@ static void hb_gt_trm_SetTerm( void )
          szTerm = "ansi";
    }
 
-   if( strncmp( szTerm, "linux", 5 ) == 0 )
+   if( strncmp( szTerm, "linux", 5 ) == 0 ||
+       strcmp( szTerm, "tterm" ) == 0 ||
+       strcmp( szTerm, "teraterm" ) == 0 )
    {
       s_termState.Init           = hb_gt_trm_AnsiInit;
       s_termState.Exit           = hb_gt_trm_AnsiExit;

@@ -65,7 +65,8 @@ HB_EXPORT BOOL hb_fsFile( BYTE * pFilename )
    if( ( ffind = hb_fsFindFirst( ( char * ) pFilename, HB_FA_ALL ) ) != NULL )
    {
       hb_fsFindClose( ffind );
-      hb_xfree(pFilename);
+      if( fFree )
+         hb_xfree( pFilename );
       return TRUE;
    }
 

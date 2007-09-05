@@ -2368,7 +2368,9 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 
       if( pfFree )
       {
-         szFileName = ( BYTE * ) hb_strdup( ( char * ) szFileName );
+         BYTE * szNew = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+         hb_strncpy( ( char * ) szNew, ( char * ) szFileName, _POSIX_PATH_MAX );
+         szFileName = szNew;
          *pfFree = TRUE;
       }
 
@@ -2430,6 +2432,7 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
       }
 
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+      hb_xfree( pFileName );
    }
    else if( pfFree )
       *pfFree = FALSE;

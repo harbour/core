@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-06 00:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gttrm/gttrm.c
+    * use for teraterm Linux controle codes
+
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rtl/file.c
+    ! fixed GPF trap which appeared after my last modifications
+
 2007-09-05 16:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/hbgtmk.sh
     * replaced CVS checkout commands by SVN checkout
