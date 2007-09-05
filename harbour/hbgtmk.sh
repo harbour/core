@@ -6,15 +6,13 @@
 # ---------------------------------------------------------------
 # Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>
 # This script checks you have all tools to build Harbour binaries
-# installed then takes current Harbour sources from SourceForge CVS
-# and build binary RPMs at your local host
+# installed then takes current Harbour sources from SourceForge SVN
+# repository and build binary RPMs at your local host
 #
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
-# ssh is not necessary for anonymous access on SourceForge
-# export CVS_RSH=ssh
-export CVSROOT=":pserver:anonymous@harbour-project.cvs.sourceforge.net:/cvsroot/harbour-project"
+export SVNURL="https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour"
 export PROJECT=harbour
 
 test_reqrpm()
@@ -23,30 +21,17 @@ test_reqrpm()
 }
 
 TOINST_LST=""
-for i in cvs make gcc binutils bash ncurses ncurses-devel
+for i in subversion make gcc binutils bash ncurses ncurses-devel
 do
     test_reqrpm "$i" || TOINST_LST="${TOINST_LST} $i"
 done
 
-_cvs_RSH="${CVS_RSH}"
-[ -n "${_cvs_RSH}" ] || _cvs_RSH="rsh"
-
-if ! which ${_cvs_RSH} &>/dev/null
-then
-    if [ "${_cvs_RSH}" = "ssh" ]
-    then
-        TOINST_LST="${TOINST_LST} [open]ssh-clients"
-    else
-        TOINST_LST="${TOINST_LST} ${_cvs_RSH}"
-    fi
-fi
-
 if [ -z "${TOINST_LST}" ] || [ "$1" = "--force" ]
 then
     cd
-    mkdir -p CVS
-    cd CVS
-    if cvs -z3 co "${PROJECT}"; then
+    mkdir -p SVN
+    cd SVN
+    if svn co "${SVNURL}"; then
         cd "${PROJECT}"
         ./make_rpm.sh "$*"
     fi

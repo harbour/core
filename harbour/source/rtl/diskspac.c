@@ -194,40 +194,37 @@ HB_FUNC( DISKSPACE )
    }
 #elif defined(HB_OS_UNIX)
    {
-#if defined(__WATCOMC__)
-      struct stat st;
       char *szName = hb_parc( 1 );
+      BOOL fFree = FALSE;
 
       if( !szName )
          szName = ( char * ) "/";
-      szName = hb_fileNameConv( hb_strdup( szName ) );
-
-      if( stat( szName, &st) == 0 )
-         dSpace = ( double ) st.st_blocks * ( double ) st.st_blksize;
       else
-         bError = TRUE;
+         szName = ( char * ) hb_fsNameConv( ( BYTE * ) szName, &fFree );
 
-      hb_xfree( szName );
-#else
-      struct statvfs st;
-      char *szName = hb_parc( 1 );
-
-      if( !szName )
-         szName = ( char * ) "/";
-      szName = ( char * ) hb_fileNameConv( hb_strdup( szName ) );
-
-      if( statvfs( szName, &st ) == 0 )
       {
-         if( getuid() == 0 )
-            dSpace = ( double ) st.f_bfree * ( double ) st.f_bsize;
+#if defined(__WATCOMC__)
+         struct stat st;
+         if( stat( szName, &st) == 0 )
+            dSpace = ( double ) st.st_blocks * ( double ) st.st_blksize;
          else
-            dSpace = ( double ) st.f_bavail * ( double ) st.f_bsize;
-      }
-      else
-         bError = TRUE;
-
-      hb_xfree( szName );
+            bError = TRUE;
+#else
+         struct statvfs st;
+         if( statvfs( szName, &st ) == 0 )
+         {
+            if( getuid() == 0 )
+               dSpace = ( double ) st.f_bfree * ( double ) st.f_bsize;
+            else
+               dSpace = ( double ) st.f_bavail * ( double ) st.f_bsize;
+         }
+         else
+            bError = TRUE;
 #endif
+      }
+
+      if( fFree )
+         hb_xfree( szName );
    }
 #endif
 

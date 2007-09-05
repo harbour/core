@@ -225,6 +225,7 @@ extern USHORT    hb_fsAttrFromRaw( ULONG raw_attr );
 extern ULONG     hb_fsAttrToRaw( USHORT uiAttr );
 extern USHORT    hb_fsAttrEncode( const char * szAttr );
 extern char *    hb_fsAttrDecode( USHORT uiAttr, char * szAttr );
+extern HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree );
 extern HB_EXPORT BYTE * hb_fileNameConv( char *str );
 
 HB_EXTERN_END

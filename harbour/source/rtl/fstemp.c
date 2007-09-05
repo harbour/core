@@ -229,7 +229,7 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
             d = modf( d, &x );
             pszName[ iLen++ ] = n + ( n > 9 ? 'a' - 10 : '0' );
          }
-         hb_fileNameConv( ( char * ) pszName );
+         hb_fsNameConv( pszName, NULL );
          fd = hb_fsCreateEx( pszName, uiAttr, FO_EXCLUSIVE | FO_EXCL );
       }
 

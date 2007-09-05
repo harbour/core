@@ -1237,14 +1237,17 @@ HB_FUNC( SDF_GETFUNCTABLE )
    RDDFUNCS * pTable;
    USHORT * uiCount;
 
-   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-   * uiCount = RDDFUNCSCOUNT;
-   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
+   uiCount = ( USHORT * ) hb_parptr( 1 );
+   pTable = ( RDDFUNCS * ) hb_parptr( 2 );
 
-   HB_TRACE(HB_TR_DEBUG, ("SDF_GETFUNCTABLE(%i, %p)", uiCount, pTable));
+   HB_TRACE(HB_TR_DEBUG, ("SDF_GETFUNCTABLE(%p, %p)", uiCount, pTable));
 
    if( pTable )
+   {
+      if( uiCount )
+         * uiCount = RDDFUNCSCOUNT;
       hb_retni( hb_rddInherit( pTable, &sdfTable, &sdfSuper, NULL ) );
+   }
    else
       hb_retni( FAILURE );
 }

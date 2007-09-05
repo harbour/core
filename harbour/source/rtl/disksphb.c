@@ -330,8 +330,10 @@ HB_FUNC( HB_DISKSPACE )
 #elif defined(HB_OS_UNIX) && !defined(__WATCOMC__)
    {
       struct statvfs sf;
+      BOOL fFree = FALSE;
 
-      szPath = ( char * ) hb_fileNameConv( hb_strdup( szPath ) );
+      szPath = ( char * ) hb_fsNameConv( ( BYTE * ) szPath, &fFree );
+
       if( statvfs( szPath, &sf ) == 0 )
       {
          switch( uiType )
@@ -357,7 +359,9 @@ HB_FUNC( HB_DISKSPACE )
       }
       else
          hb_fsSetIOError( FALSE, 0 );
-      hb_xfree( szPath );
+
+      if( fFree )
+         hb_xfree( szPath );
    }
 #else
    {

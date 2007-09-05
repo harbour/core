@@ -55,7 +55,7 @@
 
 #include <time.h>
 
-#if defined( HB_OS_BSD)
+#if ( defined( HB_OS_BSD ) || defined( HB_OS_LINUX ) ) && !defined( __WATCOMC__ )
    #include <sys/time.h>
 #else
    #include <sys/timeb.h>
@@ -66,7 +66,65 @@
 #endif
 #if defined( HB_OS_WIN_32 )
    #include <windows.h>
+#elif defined(_MSC_VER)
+   #define timeb _timeb
+   #define ftime _ftime
 #endif
+
+HB_EXPORT void hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec )
+{
+#if defined(HB_OS_WIN_32)
+   SYSTEMTIME st;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateTimeStamp(%p,%p)", plJulian, plMilliSec));
+
+   GetLocalTime( &st );
+
+   *plJulian = hb_dateEncode( st.wYear, st.wMonth, st.wDay );
+   *plMilliSec = ( ( st.wHour * 60 + st.wMinute ) * 60 + st.wSecond ) * 1000 +
+                 st.wMilliseconds;
+#elif defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
+   struct timeval tv;
+   struct tm st;
+   time_t seconds;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateTimeStamp(%p,%p)", plJulian, plMilliSec));
+
+   gettimeofday( &tv, NULL );
+   seconds = tv.tv_sec;
+   localtime_r( &seconds, &st );
+   *plJulian = hb_dateEncode( st.tm_year + 1900, st.tm_mon + 1, st.tm_mday );
+   *plMilliSec = ( ( st.tm_hour * 60 + st.tm_min ) * 60 + st.tm_sec ) * 1000 +
+                 tv.tv_usec / 1000;
+#elif defined( HB_OS_BSD )
+   struct timeval tv;
+   struct tm * st;
+   time_t seconds;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateTimeStamp(%p,%p)", plJulian, plMilliSec));
+
+   gettimeofday( &tv, NULL );
+   seconds = tv.tv_sec;
+   st = localtime( &seconds );
+   *plJulian = hb_dateEncode( st->tm_year + 1900, st->tm_mon + 1, st->tm_mday );
+   *plMilliSec = ( ( st->tm_hour * 60 + st->tm_min ) * 60 + st->tm_sec ) * 1000 +
+                 tv->tv_usec / 1000.0;
+#else
+   struct timeb tb;
+   struct tm * st;
+   time_t seconds;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateTimeStamp(%p,%p)", plJulian, plMilliSec));
+
+   ftime( &tb );
+   seconds = tb.time;
+   st = localtime( &seconds );
+
+   *plJulian = hb_dateEncode( st->tm_year + 1900, st->tm_mon + 1, st->tm_mday );
+   *plMilliSec = ( ( st->tm_hour * 60 + st->tm_min ) * 60 + st->tm_sec ) * 1000 +
+                 tb.millitm;
+#endif
+}
 
 HB_EXPORT double hb_dateSeconds( void )
 {
@@ -81,39 +139,49 @@ HB_EXPORT double hb_dateSeconds( void )
           ( SystemTime.wMinute * 60 ) +
             SystemTime.wSecond +
           ( ( double ) SystemTime.wMilliseconds / 1000.0 );
-#else
-#if defined(_MSC_VER)
-   #define timeb _timeb
-   #define ftime _ftime
-#endif
-#if defined(HB_OS_BSD)
+#elif defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
    struct timeval tv;
-   struct timezone tz;
-#else
-   struct timeb tb;
-#endif
+   struct tm oTime;
    time_t seconds;
-   time_t fraction;
-   struct tm * oTime;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dateSeconds()"));
 
-#if defined(HB_OS_BSD)
-   gettimeofday( &tv, &tz );
-   seconds = tv.tv_sec - tz.tz_minuteswest * 60;
-   fraction = tv.tv_usec / 1000U;
+   gettimeofday( &tv, NULL );
+   seconds = tv.tv_sec;
+   localtime_r( &seconds, &oTime );
+   return ( oTime.tm_hour * 3600 ) +
+          ( oTime.tm_min * 60 ) +
+            oTime.tm_sec +
+          ( ( double ) tv.tv_usec / 1000000.0 );
+#elif defined( HB_OS_BSD )
+   struct timeval tv;
+   struct tm * oTime;
+   time_t seconds;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateSeconds()"));
+
+   gettimeofday( &tv, NULL );
+   seconds = tv.tv_sec;
+   oTime = localtime( &seconds );
+   return ( oTime->tm_hour * 3600 ) +
+          ( oTime->tm_min * 60 ) +
+            oTime->tm_sec +
+          ( ( double ) tv.tv_usec / 1000000.0 );
 #else
+   struct timeb tb;
+   struct tm * oTime;
+   time_t seconds;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateSeconds()"));
+
    ftime( &tb );
    seconds = tb.time;
-   fraction = tb.millitm;
-#endif
-
    oTime = localtime( &seconds );
 
    return ( oTime->tm_hour * 3600 ) +
           ( oTime->tm_min * 60 ) +
             oTime->tm_sec +
-          ( ( double ) fraction / 1000.0 );
+          ( ( double ) tb.millitm / 1000.0 );
 #endif
 }
 

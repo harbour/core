@@ -268,6 +268,18 @@ HB_EXPORT void hb_dateToday( int * piYear, int * piMonth, int * piDay )
    *piMonth = st.wMonth;
    *piDay   = st.wDay;
 
+#elif defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
+
+   time_t t;
+   struct tm st;
+
+   time( &t );
+   localtime_r( &t, &st );
+
+   *piYear  = st.tm_year + 1900;
+   *piMonth = st.tm_mon + 1;
+   *piDay   = st.tm_mday;
+
 #else
 
    time_t t;
@@ -293,6 +305,16 @@ HB_EXPORT void hb_dateTimeStr( char * pszTime )
       GetLocalTime( &st );
       snprintf( pszTime, 9, "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond );
    }
+#elif defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
+   {
+      time_t t;
+      struct tm st;
+
+      time( &t );
+      localtime_r( &t, &st );
+
+      snprintf( pszTime, 9, "%02d:%02d:%02d", st.tm_hour, st.tm_min, st.tm_sec );
+   }
 #else
    {
       time_t t;
@@ -303,4 +325,115 @@ HB_EXPORT void hb_dateTimeStr( char * pszTime )
       snprintf( pszTime, 9, "%02d:%02d:%02d", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
    }
 #endif
+}
+
+HB_EXPORT void hb_timeStampDecode( LONG lMillisec, int * piHour, int * piMinutes,
+                                   int * piSeconds, int * piMSec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampDecode(%ld, %p, %p, %p, %p)", lMillisec, piHour, piMinutes, piSeconds, piMSec));
+
+   if( lMillisec <= 0 )
+   {
+      *piHour = *piMinutes = *piSeconds = *piMSec = 0;
+   }
+   else
+   {
+      *piMSec = lMillisec % 1000;
+      lMillisec /= 1000;
+      *piSeconds = lMillisec % 60;
+      lMillisec /= 60;
+      *piMinutes = lMillisec % 60;
+      lMillisec /= 60;
+      if( lMillisec >= 24 )
+         *piHour = *piMinutes = *piSeconds = *piMSec = 0;
+      else
+         *piHour = ( int ) lMillisec;
+   }
+}
+
+/* This function always closes the time with a zero byte, so it needs a
+   13 character long buffer. */
+
+HB_EXPORT char * hb_timeStampStr( char * szTime, LONG lMillisec )
+{
+   int iHour, iMinutes, iSeconds, iMSec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampStr(%p, %ld)", szTime, lMillisec));
+
+   hb_timeStampDecode( lMillisec, &iHour, &iMinutes, &iSeconds, &iMSec );
+   snprintf( szTime, 13, "%02d:%02d:%02d.%03d",
+             iHour, iMinutes, iSeconds, iMSec );
+   szTime[ 12 ] = '\0';
+
+   return szTime;
+}
+
+/* This function always closes the time with a zero byte, so it needs a
+   24 character long buffer. */
+
+HB_EXPORT char * hb_dateTimeStampStr( char * szDateTime, LONG lJulian, LONG lMillisec )
+{
+   int iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateTimeStampStr(%p, %ld, %ld)", szDateTime, lJulian, lMillisec));
+
+   hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
+   hb_timeStampDecode( lMillisec, &iHour, &iMinutes, &iSeconds, &iMSec );
+   snprintf( szDateTime, 24, "%04d-%02d-%02d %02d:%02d:%02d.%03d",
+             iYear, iMonth, iDay, iHour, iMinutes, iSeconds, iMSec );
+   szDateTime[ 23 ] = '\0';
+
+   return szDateTime;
+}
+
+HB_EXPORT void hb_dateTimeStampStrGet( const char * szDateTime, LONG * plJulian, LONG * plMillisec )
+{
+   int iLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateTimeStampStr(%s, %p, %p)", szDateTime, plJulian, plMillisec));
+
+   *plJulian = *plMillisec = 0;
+   iLen = szDateTime ? hb_strnlen( szDateTime, 23 ) : 0;
+   if( iLen >= 10 )
+   {
+      int iYear, iMonth, iDay;
+
+      iYear  = ( ( ( int ) ( szDateTime[ 0 ] - '0' )   * 10 +
+                   ( int ) ( szDateTime[ 1 ] - '0' ) ) * 10 +
+                   ( int ) ( szDateTime[ 2 ] - '0' ) ) * 10 +
+                   ( int ) ( szDateTime[ 3 ] - '0' );
+      iMonth = ( szDateTime[ 5 ] - '0' ) * 10 + ( szDateTime[ 6 ] - '0' );
+      iDay   = ( szDateTime[ 8 ] - '0' ) * 10 + ( szDateTime[ 9 ] - '0' );
+
+      *plJulian = hb_dateEncode( iYear, iMonth, iDay );
+      if( iLen >= 16 )
+      {
+         int iHour, iMinutes, iSeconds = 0, iMSec = 0;
+
+         iHour    = ( szDateTime[ 11 ] - '0' ) * 10 +
+                    ( szDateTime[ 12 ] - '0' );
+         iMinutes = ( szDateTime[ 14 ] - '0' ) * 10 +
+                    ( szDateTime[ 15 ] - '0' );
+         if( iHour >= 0 && iHour < 24 && iMinutes >= 0 && iMinutes < 60 )
+         {
+            if( iLen >= 19 )
+            {
+               iSeconds = ( szDateTime[ 17 ] - '0' ) * 10 +
+                          ( szDateTime[ 18 ] - '0' );
+               if( iSeconds < 0 || iSeconds >= 60 )
+                  iSeconds = 0;
+               else if( iLen >= 23 )
+               {
+                  iMSec = ( ( szDateTime[ 20 ] - '0' )   * 10 +
+                            ( szDateTime[ 21 ] - '0' ) ) * 10 +
+                            ( szDateTime[ 22 ] - '0' );
+                  if( iMSec < 0 || iMSec >= 1000 )
+                     iMSec = 0;
+               }
+            }
+            *plMillisec = ( ( ( iHour * 60 ) + iMinutes ) * 60 + iSeconds ) *
+                          1000 + iMSec;
+         }
+      }
+   }
 }

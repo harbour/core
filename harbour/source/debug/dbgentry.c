@@ -1034,6 +1034,41 @@ hb_dbgEvalMacro( char *szExpr, PHB_ITEM pItem )
 #define IS_IDENT_START( c ) ( isalpha( (UCHAR) (c) ) || (c) == '_' )
 #define IS_IDENT_CHAR( c ) ( IS_IDENT_START( (c) ) || isdigit( (UCHAR) (c) ) )
 
+static int
+hb_dbgEvalSubstituteVar( HB_WATCHPOINT *watch, char *szWord, int nStart, int nLen )
+{
+   int j;
+   char *t;
+
+   for ( j = 0; j < watch->nVars; j++ )
+   {
+      if ( !strcmp( szWord, watch->aVars[ j ] ) )
+      {
+         break;
+      }
+   }
+   if ( j == watch->nVars )
+   {
+      *ARRAY_ADD( char *, watch->aVars, watch->nVars ) = szWord;
+   }
+   else
+   {
+      FREE( szWord );
+   }
+   
+   t = (char *) ALLOC( strlen( watch->szExpr ) - nLen + 9 + 1 );
+   memmove( t, watch->szExpr, nStart );
+   memmove( t + nStart, "__dbg[", 6 );
+   t[ nStart + 6 ] = '0' + ( ( j + 1 ) / 10 );
+   t[ nStart + 7 ] = '0' + ( ( j + 1 ) % 10 );
+   t[ nStart + 8 ] = ']';
+   strcpy( t + nStart + 9, watch->szExpr + nStart + nLen );
+   FREE( watch->szExpr );
+   watch->szExpr = t;
+   return nStart + 9;
+}
+
+
 static PHB_ITEM
 hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
 {
@@ -1084,34 +1119,7 @@ hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
             }
          }
          hb_strupr( szWord );
-         for ( j = 0; j < watch->nVars; j++ )
-         {
-            if ( !strcmp( szWord, watch->aVars[ j ] ) )
-            {
-               break;
-            }
-         }
-         if ( j == watch->nVars )
-         {
-            *ARRAY_ADD( char *, watch->aVars, watch->nVars ) = szWord;
-         }
-         else
-         {
-            FREE( szWord );
-         }
-         {
-            char *t = (char *) ALLOC( strlen( watch->szExpr ) - nLen + 9 + 1 );
-
-            memmove( t, watch->szExpr, nStart );
-            memmove( t + nStart, "__dbg[", 6 );
-            t[ nStart + 6 ] = '0' + ( ( j + 1 ) / 10 );
-            t[ nStart + 7 ] = '0' + ( ( j + 1 ) % 10 );
-            t[ nStart + 8 ] = ']';
-            strcpy( t + nStart + 9, watch->szExpr + nStart + nLen );
-            FREE( watch->szExpr );
-            watch->szExpr = t;
-            i = nStart + 9;
-         }
+         i = hb_dbgEvalSubstituteVar( watch, szWord, nStart, nLen );
          bAfterId = TRUE;
          continue;
       }
@@ -1143,6 +1151,12 @@ hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
            || ( c == '-' && watch->szExpr[ i + 1 ] == '>'
                 && IS_IDENT_START( watch->szExpr[ i + 2 ] ) ) )
       {
+         if ( c == ':' && watch->szExpr[ i + 1 ] == ':' )
+         {
+            i = hb_dbgEvalSubstituteVar( watch, hb_strdup( "SELF" ), i, 1 );
+            bAfterId = TRUE;
+            continue;
+         }
          if ( c == '-' )
          {
             i++;

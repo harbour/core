@@ -4615,11 +4615,11 @@ HB_FUNC( DBF_GETFUNCTABLE )
    RDDFUNCS * pTable;
    USHORT * uiCount, uiRddId;
 
-   uiCount = ( USHORT * ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-   pTable = ( RDDFUNCS * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
+   uiCount = ( USHORT * ) hb_parptr( 1 );
+   pTable = ( RDDFUNCS * ) hb_parptr( 2 );
    uiRddId = hb_parni( 4 );
 
-   HB_TRACE(HB_TR_DEBUG, ("DBF_GETFUNCTABLE(%i, %p)", uiCount, pTable));
+   HB_TRACE(HB_TR_DEBUG, ("DBF_GETFUNCTABLE(%p, %p)", uiCount, pTable));
 
    if( pTable )
    {

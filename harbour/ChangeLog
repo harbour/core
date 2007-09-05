@@ -8,6 +8,56 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-05 16:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/hbgtmk.sh
+    * replaced CVS checkout commands by SVN checkout
+        # This script checks you have all tools to build Harbour binaries
+        # installed then takes current Harbour sources from SourceForge SVN
+        # repository and build binary RPMs at your local host
+
+      If possible I think it will be good to put this script on
+      Harbour home page so Linux users using RPM based distributions
+      can simply download it and execute. It should greatly help them
+      and it will reduce some repeated questions.
+
+  * harbour/include/hbapifs.h
+  * harbour/source/rtl/filesys.c
+    + added hb_fsNameConv() function, hb_fileNameConv() kept only for
+      backward compatibility - it should not be used
+    * use hb_fsNameConv() instead of hb_fileNameConv()
+    * updated conversion code to use hb_fsFNameSplit()/hb_fsFNameMerge()
+      and respect some other DOS like conditions
+
+  * harbour/include/hbdate.h
+  * harbour/source/common/hbdate.c
+  * harbour/source/rtl/seconds.c
+    * use MT safe localtime_r() instead of localtime() in Linux
+    + hb_dateTimeStamp(), hb_timeStampStr(), hb_timeStampDecode(),
+      hb_dateTimeStampStr(), hb_dateTimeStampStrGet()
+
+  * harbour/contrib/libct/files.c
+  * harbour/contrib/libct/disk.c
+  * harbour/contrib/hbzlib/hbcomprs.c
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/disksphb.c
+  * harbour/source/rtl/file.c
+    * use hb_fsNameConv() instead of hb_fileNameConv()
+
+  * harbour/source/debug/dbgentry.c
+    + added modifications by Phil Krylow borowed from xHarbour for
+      supporting :: in command line expressions
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/sdf1.c
+    * minor clenup:
+      use hb_parptr(n) instead of hb_itemGetPtr(hb_param(n,HB_IT_POINTER))
+
 2007-09-03 01:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   - harbour/contrib/apollo/makefile
   + harbour/contrib/apollo/Makefile

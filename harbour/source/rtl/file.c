@@ -56,10 +56,11 @@
 HB_EXPORT BOOL hb_fsFile( BYTE * pFilename )
 {
    PHB_FFIND ffind;
+   BOOL fFree;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFile(%s)", ( char * ) pFilename));
 
-   pFilename = hb_fileNameConv( hb_strdup( ( char * ) pFilename ) );
+   pFilename = hb_fsNameConv( pFilename, &fFree );
 
    if( ( ffind = hb_fsFindFirst( ( char * ) pFilename, HB_FA_ALL ) ) != NULL )
    {
@@ -68,22 +69,36 @@ HB_EXPORT BOOL hb_fsFile( BYTE * pFilename )
       return TRUE;
    }
 
-   hb_xfree( pFilename );
+   if( fFree )
+      hb_xfree( pFilename );
+
    return FALSE;
 }
 
 HB_EXPORT BOOL hb_fsIsDirectory( BYTE * pFilename )
 {
-   BOOL bResult = FALSE;
+   BOOL bResult = FALSE, fFree;
    PHB_FFIND ffind;
    int iLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDirectory(%s)", ( char * ) pFilename));
 
-   pFilename = hb_fileNameConv( hb_strdup( ( char * ) pFilename ) );
+   pFilename = hb_fsNameConv( pFilename, &fFree );
+
    iLen = strlen( ( char * ) pFilename );
    while( iLen && strchr( OS_PATH_DELIMITER_LIST, pFilename[ iLen - 1 ] ) )
-      pFilename[ --iLen ] = '\0';
+      --iLen;
+
+   if( pFilename[ iLen ] )
+   {
+      if( fFree )
+         pFilename[ iLen ] = '\0';
+      else
+      {
+         pFilename = ( BYTE * ) hb_strndup( ( char * ) pFilename, iLen );
+         fFree = TRUE;
+      }
+   }
 
    if( iLen && iLen <= _POSIX_PATH_MAX )
    {
@@ -95,6 +110,8 @@ HB_EXPORT BOOL hb_fsIsDirectory( BYTE * pFilename )
       }
    }
 
-   hb_xfree( pFilename );
+   if( fFree )
+      hb_xfree( pFilename );
+
    return bResult;
 }

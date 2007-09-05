@@ -4223,8 +4223,7 @@ void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttribute
 
    if ( szSkleton && strlen( szSkleton ) > 0 )
    {
-      szDirSpec = (BYTE *) hb_fileNameConv( hb_strdup( szSkleton ) );
-      bAlloc = TRUE;
+      szDirSpec = hb_fsNameConv( szSkleton, &bAlloc );
    }
    else
    {

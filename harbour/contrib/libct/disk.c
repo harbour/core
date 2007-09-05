@@ -212,10 +212,11 @@ HB_FUNC( VOLUME )
       char *sRoot = NULL;
       char *sVolName = NULL;
       char sRootBuf[3], sVolNameBuf[12];
+      BOOL fFree;
 
       if( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 )
       {
-         sDiskName = hb_fileNameConv( hb_strdup( hb_parcx( 1 ) ) );
+         sDiskName = hb_fsNameConv( ( BYTE * ) hb_parc( 1 ), &fFree );
 
          if( ( fname = hb_fsFNameSplit( ( char * ) sDiskName ) ) != NULL )
          {
@@ -237,6 +238,8 @@ HB_FUNC( VOLUME )
             strncpy( sVolNameBuf, ( char * ) sDiskName, 11 );
             sVolName = sVolNameBuf;
          }
+         if( fFree )
+            hb_xfree( sDiskName );
       }
 #if defined(HB_OS_WIN_32)
       bReturn = SetVolumeLabel( sRoot, sVolName );
