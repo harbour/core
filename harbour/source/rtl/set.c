@@ -462,7 +462,7 @@ HB_FUNC( SET )
             if( set_number( pArg2, hb_set.HB_SET_AUTOSHARE ) < 0 )
                hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", HB_ERR_ARGS_BASEPARAMS );
             else
-               hb_set.HB_SET_MARGIN = set_number( pArg2, hb_set.HB_SET_AUTOSHARE );
+               hb_set.HB_SET_AUTOSHARE = set_number( pArg2, hb_set.HB_SET_AUTOSHARE );
          }
          break;
       case HB_SET_BELL       :
