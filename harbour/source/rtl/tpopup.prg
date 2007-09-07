@@ -51,424 +51,762 @@
  */
 
 #include "hbclass.ch"
+
 #include "box.ch"
 #include "button.ch"
 #include "color.ch"
 #include "common.ch"
 
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+         it has all related variables and methods. */
+
+/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*() 
+         functions to generate screen output. Harbour uses Disp*() 
+         functions only. [vszakats] */
+
 #ifdef HB_COMPAT_C53
 
-/* TOFIX: Harbour doesn't check if the colorSpec instance
-          var has always six pairs of colors. It should
-          do so and throw an error. [jlalin]
-*/
+CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
 
-/* NOTE: In the Get* methods we are breaking the "only one return" rule. I
-         know this isn't a good practice however we are eliminating a variable,
-         an exit statement and two assigments which is good for speed critical
-         and small functions. [jlalin]
-*/
-//--------------------------------------------------------------------------//
-FUNCTION PopUp( nTop, nLeft, nBottom, nRight )
-RETURN PopUpMenu():New( nTop, nLeft, nBottom, nRight )
-//--------------------------------------------------------------------------//
-CLASS PopUpMenu STATIC FUNCTION PopUpMenu
+   EXPORT:
 
-   DATA aItems          init    {}
-   DATA border          init    B_SINGLE + SEPARATOR_SINGLE
-   DATA bottom
-   DATA cargo
-   DATA colorSpec       init    "N/W,W/N,W+/W,W+/N,N+/W,W/N"
-   DATA current         init    0
-   DATA itemCount       init    0
-   DATA left
-   DATA opened          init    FALSE PROTECTED
-   DATA right
-   DATA saveScr         init    ""    PROTECTED
-   DATA top
-   DATA width           init    0
+   VAR ClassName  INIT "POPUPMENU"
 
+   VAR cargo
 #ifdef HB_EXTENSION
-   DATA shadowed        init    FALSE
+   VAR shadowed   INIT .F. AS LOGICAL         /* NOTE: This method is a Harbour extension [vszakats] */
 #endif
 
-   METHOD New( nTop, nLeft, nBottom, nRight )
+   METHOD addItem( oItem )
+   METHOD close( lCloseChild )
+   METHOD delItem( nPos )
+   METHOD display()
+   METHOD getAccel( xKey )
+   METHOD getFirst()
+   METHOD getItem( nPos )
+   METHOD getLast()
+   METHOD getNext()
+   METHOD getPrev()
+   METHOD getShortCt( nKey )
+   METHOD hitTest( nMouseRow, nMouseCol )
+   METHOD insItem( nPos, oItem )
+   METHOD isOpen()
+   METHOD open()
+   METHOD select( nPos )
+   METHOD setItem( nPos, oItem )
 
-   METHOD AddItem( oItem )
-   METHOD Close( lClose )
-   METHOD DelItem( nPos )
-   METHOD Display()
-   METHOD GetAccel( nKey )
-   METHOD GetFirst()
-   METHOD GetItem( nPos )
-   METHOD GetLast()
-   METHOD GetNext()
-   METHOD GetPrev()
-   METHOD GetShortct( nKey )
-   METHOD HitTest( nRow, nCol )
-   METHOD InsItem( nPos, oItem )
-   METHOD IsOpen()
-   METHOD Open()
-   MESSAGE Select( nPos )       METHOD _Select( nPos )
-   METHOD SetItem( nPos, oItem )
+   METHOD border( cBorder ) SETGET
+   METHOD bottom( nBottom ) SETGET
+   METHOD colorSpec( cColorSpec ) SETGET
+   METHOD itemCount() SETGET
+   METHOD left( nLeft ) SETGET
+   METHOD right( nRight ) SETGET
+   METHOD top( nTop ) SETGET
+   METHOD width() SETGET
 
-   /* NOTE: This method is new in Harbour */
+   METHOD New( nTop, nLeft, nBottom, nRight ) /* NOTE: This method is a Harbour extension [vszakats] */
+   
 #ifdef HB_EXTENSION
-   METHOD SetCoors( nRow, nCol, lTop )
+   METHOD setCoors( nRow, nCol, lTop )        /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD isShortCut( nKey, nID )             /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD isQuick( nKey, nID )                /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD current() SETGET                    /* NOTE: This method is a Harbour extension [vszakats] */
 #endif
+
+   PROTECTED:
+
+   VAR cBorder    INIT B_SINGLE + SEPARATOR_SINGLE
+   VAR nBottom
+   VAR cColorSpec
+   VAR nCurrent   INIT 0
+   VAR nItemCount INIT 0
+   VAR nLeft
+   VAR nRight
+   VAR nTop
+   VAR nWidth     INIT 0
+
+   VAR aItems     INIT {}
+   VAR aSaveScr
+
+   METHOD setMetrics()
 
 ENDCLASS
-//--------------------------------------------------------------------------//
-METHOD New( nTop, nLeft, nBottom, nRight ) CLASS PopUpMenu
 
-   /* NOTE: When a PopUp is created and attached to a TopBar object, its
-            coords are initialized to -1, so the TopBar can update them
-            accordingly to its own position on to the screen. [jlalin]
-   */
-   DEFAULT nTop    TO -1
-   DEFAULT nLeft   TO -1
-   DEFAULT nBottom TO  0
-   DEFAULT nRight  TO  0
+METHOD addItem( oItem ) CLASS POPUPMENU
 
-   ::bottom    := nBottom
-   ::left      := nLeft
-   ::opened    := FALSE
-   ::right     := nRight
-   ::top       := nTop
+   IF ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
 
+      AAdd( ::aItems, oItem )
+      ::nItemCount++
+      
+      ::nWidth := Max( __CapMetrics( oItem ), ::nWidth )
+
+   ENDIF
+
+   RETURN Self
+
+METHOD close( lCloseChild ) CLASS POPUPMENU
+
+   DEFAULT lCloseChild TO .T.
+
+   IF ::isOpen()
+
+      ::setMetrics()
+
+      IF ::nCurrent > 0 .AND. ;
+         ::aItems[ ::nCurrent ]:isPopUp() .AND. ;
+         ::aItems[ ::nCurrent ]:data:isOpen()
+
+         ::aItems[ ::nCurrent ]:data:Close()
+      ENDIF
+
+      RestScreen( ::aSaveScr[ 1 ], ::aSaveScr[ 2 ], ::aSaveScr[ 3 ], ::aSaveScr[ 4 ], ::aSaveScr[ 5 ] )
+
+      ::aSaveScr := NIL
+      ::nCurrent := 0
+   ENDIF
+
+   RETURN Self
+
+METHOD delItem( nPos ) CLASS POPUPMENU
+   LOCAL nLen
+   LOCAL aItems
+   LOCAL nWidth
+
+   IF nPos >= 1 .AND. nPos <= ::nItemCount
+
+      nLen := Len( ::aItems[ nPos ]:caption )
+
+      ADel( ::aItems, nPos )
+      ASize( ::aItems, --::nItemCount )
+
+      IF ::nWidth == nLen + 2
+          aItems := ::aItems
+          nLen := ::nItemCount
+          nWidth := 0
+          FOR nPos := 1 TO nLen
+             nWidth := Max( __CapMetrics( aItems[ nPos ] ), nWidth )
+          NEXT
+          ::nWidth := nWidth
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+METHOD display() CLASS POPUPMENU
+
+   LOCAL nOldRow
+   LOCAL nOldCol
+   LOCAL lOldMCur
+
+   LOCAL nTop    
+   LOCAL nLeft   
+   LOCAL aItems  
+   LOCAL nCurrent
+   LOCAL nLen    
+   LOCAL nPos
+   LOCAL nWidth  
+   LOCAL oPopup
+   LOCAL nHotKeyPos
+   LOCAL cCaption
+   LOCAL nCharPos
+
+   IF ::isOpen()
+
+      nOldRow := Row()             
+      nOldCol := Col()             
+      lOldMCur := MSetCursor( .F. )
+
+      ::setMetrics()
+
+      nTop     := ::nTop
+      nLeft    := ::nLeft
+      aItems   := ::aItems
+      nCurrent := ::nCurrent
+      nLen     := ::nItemCount
+      nWidth   := ::nWidth
+
+      DispBegin()
+      
+      DispBox( nTop, nLeft, ::nBottom, ::nRight, ;
+               SubStr( ::cBorder, 1, 8 ) + " ", ;
+               __GUIColor( ::cColorSpec, 6 ) )
+      
 #ifdef HB_EXTENSION
-   ::shadowed  := FALSE
+      IF ::shadowed
+         hb_Shadow( nTop + 1, nLeft + 1, ::nBottom + 1, ::nRight + 1 )
+      ENDIF
 #endif
 
-return Self
-//--------------------------------------------------------------------------//
-METHOD AddItem( oItem ) CLASS PopUpMenu
+      nLeft++
+      FOR nPos := 1 TO nLen
 
-   LOCAL nLen
+         nTop++
 
-   aAdd( ::aItems, oItem )
-   ::itemCount++
+         IF aItems[ nPos ]:caption == MENU_SEPARATOR
 
-   nLen := Len( StrTran( oItem:caption, "&", "" ) )
-   ::width := Max( nLen + 4, ::width ) // 4 is for box margins
+            DispOutAt( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), __GUIColor( ::cColorSpec, 6 ) )
 
-return Self
-//--------------------------------------------------------------------------//
-METHOD Close( lClose ) CLASS PopUpMenu
+         ELSE
+            cCaption := PadR( aItems[ nPos ]:caption, nWidth - 1 )
 
-   DEFAULT lClose TO TRUE
+            IF aItems[ nPos ]:checked
+               cCaption := SubStr( aItems[ nPos ]:style, 1, 1 ) + cCaption
+            ELSE
+               cCaption := " " + cCaption
+            ENDIF
 
-   if ::opened
-      if lClose
-         if ::current > 0
-            if ::aItems[ ::current ]:isPopUp()
-               ::aItems[ ::current ]:data:Close( lClose )
-            endif
-         endif
-      endif
-      ::current := 0
-      ::opened := FALSE
-      RestScreen( ::top, ::left, ::bottom, ::right, ::saveScr )
-      ::saveScr := nil
-   endif
+            IF aItems[ nPos ]:isPopup()
 
-return Self
-//--------------------------------------------------------------------------//
-METHOD DelItem( nPos ) CLASS PopUpMenu
+               oPopup := aItems[ nPos ]:data
+               oPopup:top    := nTop
+               oPopup:left   := ::nRight + 1
+               oPopup:bottom := NIL
+               oPopup:right  := NIL
 
-   if nPos > 0 .and. nPos <= ::itemCount
-      aDel( ::aItems, nPos )
-      aSize( ::aItems, Len( ::aItems ) - 1 )
-      ::itemCount--
+               cCaption += SubStr( aItems[ nPos ]:style, 2, 1 )
+            ELSE
+               cCaption += " "
+            ENDIF
 
-      aEval( ::aItems, ;
-         {|oItem| ::width := Max( Len( StrTran( oItem:caption, "&", "" ) ) + 4, ::width ) } )
+            aItems[ nPos ]:row := nTop
+            aItems[ nPos ]:col := nLeft
 
-   endif
+            IF ( nHotKeyPos := At( "&", cCaption ) ) == 0
+               IF ( nCharPos := RAt( SubStr( aItems[ nPos ]:style, 2, 1 ), cCaption ) ) > 0
+                  cCaption := Stuff( cCaption, nCharPos - 1, 1, "" )
+               ELSE
+                  cCaption := SubStr( cCaption, 1, Len( cCaption ) - 1 )
+               ENDIF
+            ELSEIF nHotKeyPos == Len( Trim( cCaption ) )
+               cCaption := SubStr( cCaption, 1, Len( cCaption ) - 1 )
+               nHotKeyPos := 0
+            ELSE
+               cCaption := Stuff( cCaption, nHotKeyPos, 1, "" )
+            ENDIF
 
-return Self
-//--------------------------------------------------------------------------//
-/* NOTE: This method corrects two bugs in Cl*pper:
-         1) when two menuitems have the same key and the
-            first item is disabled
-         2) when a menuitem is disabled it will ignore the key [jlalin]
-*/
-METHOD GetAccel( nKey ) CLASS PopUpMenu
+            DispOutAt( nTop, nLeft, cCaption, __GUIColor( ::cColorSpec, iif( nPos == nCurrent, 2, iif( aItems[ nPos ]:enabled, 1, 5 ) ) ) )
 
-   LOCAL nAt   := 0
-   LOCAL cKey  := Upper( Chr( nKey ) )
-   LOCAL n
+            IF aItems[ nPos ]:enabled .AND. nHotKeyPos != 0
+               DispOutAt( nTop, nLeft + nHotKeyPos - 1, SubStr( cCaption, nHotKeyPos, 1 ), __GUIColor( ::cColorSpec, iif( nPos == nCurrent, 4, 3 ) ) )
+            ENDIF
+         ENDIF
+      NEXT
+      
+      DispEnd()
 
-   for n := 1 to ::itemCount
-      nAt := At( "&", ::aItems[ n ]:caption )
-      if nAt > 0 .and. ::aItems[ n ]:enabled .and. ;
-            Upper( SubStr( ::aItems[ n ]:caption, nAt + 1, 1 ) ) == cKey
-         return n
-      endif
-   next
+      MSetCursor( lOldMCur )
+      SetPos( nOldRow, nOldCol )
 
-return 0
-//--------------------------------------------------------------------------//
-METHOD GetFirst() CLASS PopUpMenu
+   ENDIF
 
-   LOCAL n
+   RETURN Self
 
-   for n := 1 to ::itemCount
-      if ::aItems[ n ]:caption != MENU_SEPARATOR .and. ::aItems[ n ]:enabled
-         return n
-      endif
-   next
+METHOD getAccel( xKey ) CLASS POPUPMENU
+   LOCAL nLen := ::nItemCount
+   LOCAL aItems := ::aItems
+   LOCAL nPos
+   LOCAL tmp
+   LOCAL cCaption
 
-return 0
-//--------------------------------------------------------------------------//
-METHOD GetItem( nPos ) CLASS PopUpMenu
+   IF ISNUMBER( xKey )
+      xKey := Chr( xKey )
+   ENDIF
 
+   xKey := Lower( xKey )
+
+   FOR tmp := 1 TO nLen
+
+      cCaption := aItems[ tmp ]:caption
+
+      IF ( nPos := At( "&", cCaption ) ) > 0 .AND. ;
+         nPos != Len( cCaption ) .AND. ;
+         xKey == Lower( SubStr( cCaption, nPos + 1, 1 ) )
+
+         RETURN nPos
+      ENDIF
+   NEXT
+
+   RETURN 0
+
+METHOD getFirst() CLASS POPUPMENU
+   LOCAL nPos
+   LOCAL nLen := ::nItemCount
+   LOCAL aItems := ::aItems
+
+   FOR nPos := 1 TO nLen
+      IF aItems[ nPos ]:enabled
+         RETURN nPos
+      ENDIF
+   NEXT
+
+   RETURN 0
+
+METHOD getItem( nPos ) CLASS POPUPMENU
+   RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ], NIL )
+
+METHOD getLast() CLASS POPUPMENU
+   LOCAL nPos
+   LOCAL nLen := ::nItemCount
+   LOCAL aItems := ::aItems
+
+   FOR nPos := nLen TO 1 STEP -1
+      IF aItems[ nPos ]:enabled
+         RETURN nPos
+      ENDIF
+   NEXT
+
+   RETURN 0
+
+METHOD getNext() CLASS POPUPMENU
+   LOCAL nPos
+
+   IF ::nCurrent < ::nItemCount
+      FOR nPos := ::nCurrent + 1 TO ::nItemCount
+         IF ::aItems[ nPos ]:enabled
+            RETURN nPos
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN 0
+
+METHOD getPrev() CLASS POPUPMENU
+   LOCAL nPos
+
+   IF ::nCurrent > 1
+      FOR nPos := ::nCurrent - 1 TO 1 STEP -1
+         IF ::aItems[ nPos ]:enabled
+            RETURN nPos
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN 0
+
+/* NOTE: This method corrects a bug in Cl*pper:
+         1) when a menuitem is disabled it will ignore the key [jlalin] */
+
+METHOD getShortCt( nKey ) CLASS POPUPMENU
+   LOCAL nPos
+   LOCAL nLen := ::nItemCount
+   LOCAL aItems := ::aItems
+
+   FOR nPos := 1 TO nLen
+      IF aItems[ nPos ]:shortcut == nKey
+#ifdef HB_EXTENSION
+         IF aItems[ nPos ]:enabled
+            RETURN nPos
+         ENDIF
+#else
+         RETURN nPos
+#endif
+      ENDIF
+   NEXT
+
+   RETURN 0
+
+/* NOTE: This method corrects one bug in CA-Cl*pper:
+         1) when a menuitem is disabled it will ignore the click [jlalin] */
+
+METHOD hitTest( nMouseRow, nMouseCol ) CLASS POPUPMENU
+   LOCAL nPos
+
+   ::setMetrics()
+
+   DO CASE
+   CASE nMouseRow == ::nTop
+      IF nMouseCol == ::nLeft
+         RETURN HTTOPLEFT
+      ELSEIF nMouseCol == ::nRight
+         RETURN HTTOPRIGHT
+      ELSEIF nMouseCol >= ::nLeft .AND. nMouseCol <= ::nRight
+         RETURN HTTOP
+      ENDIF
+   CASE nMouseRow == ::nBottom
+      IF nMouseCol == ::nLeft
+         RETURN HTBOTTOMLEFT
+      ELSEIF nMouseCol == ::nRight
+         RETURN HTBOTTOMRIGHT
+      ELSEIF nMouseCol >= ::nLeft .AND. nMouseCol <= ::nRight
+         RETURN HTBOTTOM
+      ENDIF
+   CASE nMouseCol == ::nLeft
+      IF nMouseRow >= ::nTop .AND. nMouseRow <= ::nBottom
+         RETURN HTLEFT
+      ELSE
+         RETURN HTNOWHERE
+      ENDIF
+   CASE nMouseCol == ::nRight
+      IF nMouseRow >= ::nTop .AND. nMouseRow <= ::nBottom
+         RETURN HTRIGHT
+      ELSE
+         RETURN HTNOWHERE
+      ENDIF
+   CASE nMouseRow > ::nTop .AND. ;
+        nMouseRow < ::nBottom .AND. ;
+        nMouseCol > ::nLeft .AND. ;
+        nMouseCol < ::nRight
+
+      nPos := nMouseRow - ::nTop
+#ifdef HB_EXTENSION
+      IF !::aItems[ nPos ]:enabled
+         RETURN HTNOWHERE
+#endif
+      ELSEIF ::aItems[ nPos ]:caption == MENU_SEPARATOR
+         RETURN HTSEPARATOR
+      ELSE
+         RETURN nPos
+      ENDIF
+   ENDCASE
+
+   RETURN HTNOWHERE
+
+METHOD insItem( nPos, oItem ) CLASS POPUPMENU
+
+   IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
+      ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
+
+      ASize( ::aItems, ++::nItemCount )
+      AIns( ::aItems, nPos )
+      ::aItems[ nPos ] := oItem
+
+      ::nWidth := Max( __CapMetrics( oItem ), ::nWidth )
+
+   ENDIF
+
+   RETURN Self
+
+METHOD isOpen() CLASS POPUPMENU
+   RETURN ::aSaveScr != NIL
+
+METHOD open() CLASS POPUPMENU
+
+   LOCAL nTop
+   LOCAL nLeft
+   LOCAL nBottom
+   LOCAL nRight
+
+   ::setMetrics()
+
+   nTop := ::nTop
+   nLeft := ::nLeft
+
+   IF ( nBottom := ::nBottom ) < 0
+      nBottom := nTop + ::nItemCount + 1
+   ENDIF
+   IF ( nRight := ::nRight ) < 0
+      nRight := nLeft + ::nWidth + 1
+   ENDIF
+   IF nRight < 0 .OR. nRight > MaxCol()
+      ::nLeft := MaxCol() - ::nWidth - 1
+      ::nRight := MaxCol()
+      ::nTop++
+      ::nBottom++
+      nLeft := ::nLeft
+      nRight := ::nRight
+      nTop := ::nTop
+      nBottom := ::nBottom
+   ENDIF
+
+   ::aSaveScr := { nTop, nLeft, nBottom, nRight, SaveScreen( nTop, nLeft, nBottom, nRight ) }
+
+   ::display()
+
+   RETURN Self
+
+METHOD select( nPos ) CLASS POPUPMENU
+
+   IF ( nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
+      ::nCurrent != nPos .AND. ;
+      ::aItems[ nPos ]:enabled ) .OR. nPos == 0
+
+//    IF ::isOpen() .AND. ;
+//       ::nCurrent > 0 .AND. ;
+//       ::aItems[ ::nCurrent ]:isPopUp()
+//
+//       ::aItems[ ::nCurrent ]:data:close()
+//    ENDIF
+
+      ::nCurrent := nPos
+   ENDIF
+
+   RETURN Self
+
+METHOD setItem( nPos, oItem ) CLASS POPUPMENU
+
+   IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
+      ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
+
+      ::aItems[ nPos ] := oItem
+      ::nWidth := Max( __CapMetrics( oItem ), ::nWidth )
+   ENDIF
+
+   RETURN Self /* NOTE: CA-Cl*pper returns NIL, which is wrong. */
+
+#ifdef HB_EXTENSION
+
+METHOD setCoors( nRow, nCol, lTop ) CLASS POPUPMENU
+   LOCAL oItem
+   LOCAL nDif
+
+   ::setMetrics()
+
+   IF ::nTop == -1 .OR. ::nLeft == -1
+      ::nTop    := nRow
+      ::nLeft   := nCol
+      ::nBottom := ::nTop + ::nItemCount + 1
+      ::nRight  := ::nLeft + ::nWidth - 1
+
+      IF ::nRight > MaxCol()
+         nDif     := ::nRight - MaxCol()
+         ::nRight -= nDif
+         ::nLeft  -= nDif
+         IF !lTop
+            ::nTop++
+            ::nBottom++
+         ENDIF
+      ENDIF
+
+      IF ::nLeft < 0
+         nDif     := ::nLeft
+         ::nRight -= nDif
+         ::nLeft  -= nDif
+      ENDIF
+
+      IF ::nBottom > MaxRow()
+         nDif      := ::nBottom - MaxRow()
+         ::nBottom -= nDif
+         ::nTop    -= nDif
+      ENDIF
+
+      IF ::nTop < 0
+         nDif      := ::nTop
+         ::nBottom -= nDif
+         ::nTop    -= nDif
+      ENDIF
+
+      FOR EACH oItem IN ::aItems
+         IF oItem:isPopup()
+            oItem:data:setCoors( nRow + oItem:__enumIndex(), ::nRight + 1, .F. )
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN Self
+
+METHOD isShortCut( nKey, nID ) CLASS POPUPMENU
+
+   LOCAL nItem
+   LOCAL nTotal
+   LOCAL nShortCut
+   LOCAL oItem
+   LOCAL i
+
+   DO CASE
+   // Test and assign top menu item shortCut, enabled, and !PopUp:
+   // Changed by enclosing assignment before ':Enabled':
+   CASE ( ( nShortCut := ::getShortCt( nKey ) ) > 0 ) .AND. ;
+          ( ( oItem := ::getItem( nShortcut ) ):enabled ) .AND. ;
+          ( !( oItem:isPopUp() ) )
+      ::select( nShortCut )
+      Eval( oItem:data, oItem )
+      nID := oItem:id
+
+      RETURN .T.
+
+   // Test and assignment for TopBar MenuItem:
+   CASE nShortCut == 0
+      nTotal := ::nItemCount
+      nItem  := ::nCurrent
+      IF nItem == 0
+         nItem := 1
+      ENDIF
+
+      // Loop to wrap around through TopMenu from Current Item:
+      FOR i := 1 TO nTotal
+         IF !( oItem := ::getItem( nItem ) ):enabled
+         ELSEIF !oItem:isPopUp()
+         ELSEIF oItem:data:isQuick( nKey, @nID )
+            RETURN .T.
+         ENDIF
+         IF ++nItem > nTotal
+            nItem := 1
+         ENDIF
+      NEXT
+
+   ENDCASE
+
+   RETURN .F.
+
+METHOD isQuick( nKey, nID ) CLASS POPUPMENU
+
+   LOCAL nItem
+   LOCAL nTotal
+   LOCAL nShortCut
    LOCAL oItem
 
-   if nPos > 0 .and. nPos <= ::itemCount
-      oItem := ::aItems[ nPos ]
-   endif
+   IF ( nShortCut := ::getShortCt( nKey ) ) == 0
 
-return oItem
-//--------------------------------------------------------------------------//
-METHOD GetLast() CLASS PopUpMenu
+      nTotal := ::nItemCount
 
-   LOCAL n
+      FOR nItem := 1 TO nTotal
+         IF !( oItem := ::getItem( nItem ) ):Enabled
+         ELSEIF ! oItem:isPopUp()
+         ELSEIF oItem:Data:isQuick( nKey, @nID )
+            RETURN .T.
+         ENDIF
+      NEXT
 
-   for n := ::itemCount to 1 step -1
-      if ::aItems[ n ]:caption != MENU_SEPARATOR .and. ::aItems[ n ]:enabled
-         return n
-      endif
-   next
+   ELSEIF !( oItem := ::getItem( nShortCut ) ):IsPopUp()
 
-return 0
-//--------------------------------------------------------------------------//
-METHOD GetNext() CLASS PopUpMenu
+      IF oItem:enabled
+         ::select( nShortCut )
+         Eval( oItem:Data, oItem )
+         nID := oItem:id
+         RETURN .T.
+      ENDIF
 
-   LOCAL n
+   ENDIF
 
-   if ::current < ::itemCount
-      for n := ::current + 1 to ::itemCount
-         if ::aItems[ n ]:caption != MENU_SEPARATOR .and. ::aItems[ n ]:enabled
-            return n
-         endif
-      next
-  endif
+   RETURN .F.
 
-return 0
-//--------------------------------------------------------------------------//
-METHOD GetPrev() CLASS PopUpMenu
-
-   LOCAL n
-
-   if ::current > 1
-      for n := ::current - 1 to 1 step -1
-         if ::aItems[ n ]:caption != MENU_SEPARATOR .and. ::aItems[ n ]:enabled
-            return n
-         endif
-      next
-  endif
-
-return 0
-//--------------------------------------------------------------------------//
-/* NOTE: This method corrects a bug in Cl*pper:
-         1) when a menuitem is disabled it will ignore the key [jlalin]
-*/
-METHOD GetShortct( nKey ) CLASS PopUpMenu
-
-   LOCAL n
-
-   for n := 1 to ::itemCount
-      if ::aItems[ n ]:enabled .and. ::aItems[ n ]:shortcut == nKey
-         return n
-      endif
-   next
-
-return 0
-//--------------------------------------------------------------------------//
-/* NOTE: This method corrects two bugs in Cl*pper:
-         1) when two menuitems have the same key and the first item
-            is disabled
-         2) when a menuitem is disabled it will ignore the click [jlalin]
-*/
-METHOD HitTest( nRow, nCol ) CLASS PopUpMenu
-
-   LOCAL nHit  := HTNOWHERE
-
-   do case
-      case nRow == ::top
-         if nCol == ::left
-            nHit := HTTOPLEFT
-         elseif nCol == ::right
-            nHit := HTTOPRIGHT
-         else
-            nHit := HTTOP
-         endif
-      case nRow == ::bottom
-         if nCol == ::left
-            nHit := HTBOTTOMLEFT
-         elseif nCol == ::right
-            nHit := HTBOTTOMRIGHT
-         else
-            nHit := HTBOTTOM
-         endif
-      case nRow > ::top .and. nCol > ::left .and. nRow < ::bottom .and. nCol < ::right
-         if ::aItems[ nRow - ::top ]:enabled .and. ::aItems[ nRow - ::top ]:caption != MENU_SEPARATOR
-            nHit := nRow - ::top
-         else
-            nHit := HTSEPARATOR
-         endif
-      case nRow > ::top .and. nRow < ::bottom
-         if nCol == ::left
-            nHit := HTLEFT
-         elseif nCol == ::right
-            nHit := HTRIGHT
-         endif
-   endcase
-
-return nHit
-//--------------------------------------------------------------------------//
-METHOD InsItem( nPos, oItem ) CLASS PopUpMenu
-
-   if nPos > 0 .and. nPos <= ::itemCount
-      aSize( ::aItems, ::itemCount )
-      aIns( ::aItems, nPos )
-      ::aItems[ nPos ] := oItem
-      ::itemCount++
-
-      aEval( ::aItems, ;
-         {|oItem| ::width := Max( Len( StrTran( oItem:caption, "&", "" ) ) + 4, ::width ) } )
-
-   endif
-
-return Self
-//--------------------------------------------------------------------------//
-METHOD IsOpen() CLASS PopUpMenu
-
-return ::opened
-//--------------------------------------------------------------------------//
-METHOD Open() CLASS PopUpMenu
-
-   if !::opened
-      ::opened := TRUE
-      ::saveScr := SaveScreen( ::top, ::left, ::bottom, ::right )
-      ::Display()
-   endif
-
-return Self
-//--------------------------------------------------------------------------//
-METHOD _Select( nPos ) CLASS PopUpMenu
-
-   if ( nPos > 0 .and. nPos <= ::itemCount ) .and. ;
-         ::current != nPos .and. ::aItems[ nPos ]:enabled
-
-      if ::opened .and. ::current > 0
-         if ::aItems[ ::current ]:isPopUp()
-            ::aItems[ ::current ]:data:Close()
-         endif
-      endif
-
-      ::current := nPos
-   endif
-
-return Self
-//--------------------------------------------------------------------------//
-METHOD SetItem( nPos, oItem ) CLASS PopUpMenu
-
-   if nPos > 0 .and. nPos <= ::itemCount
-      ::aItems[ nPos ] := oItem
-      ::width := Max( Len( StrTran( oItem:caption, "&", "" ) ) + 4, ::width )
-   endif
-
-return Self
-//--------------------------------------------------------------------------//
-METHOD Display() CLASS PopUpMenu
-
-   LOCAL nTop     := ::top
-   LOCAL nAt      := 0
-   LOCAL lPopup   := FALSE
-   LOCAL cPrompt
-   LOCAL n
-
-   DispBegin()
-
-   DEFAULT ::border  TO Space( 8 )
-
-   DispBox( ::top, ::left, ::bottom, ::right, ;
-            SubStr( ::border, 1, 8 ) + " ", ;
-            hb_ColorIndex( ::colorSpec, 5 ) )
-
-#ifdef HB_EXTENSION
-   if ::shadowed
-      hb_Shadow( ::top + 1, ::left + 1, ::bottom + 1, ::right + 1 )
-   endif
 #endif
 
-   for n := 1 to ::itemCount
+METHOD setMetrics() CLASS POPUPMENU
 
-      nAt := At( "&", ::aItems[ n ]:caption )
-      cPrompt := StrTran( ::aItems[ n ]:caption, "&", "" )
+   IF ::nTop != NIL
+   ELSEIF ::nBottom == NIL
+      ::nTop := Int( ( MaxRow() - ( ::nItemCount + 2 ) ) / 2 )
+   ELSE
+      ::nTop := ::nBottom - ::nItemCount - 1
+   ENDIF
 
-      if cPrompt == MENU_SEPARATOR
-         DispOutAt( ;
-            ::aItems[ n ]:row + nTop + n, ::left, ;
-            SubStr( ::border, 9, 1 ) + ;
-            Replicate( SubStr( ::border, 10, 1 ), ::right - ::left - 1 ) + ;
-            SubStr( ::border, 11, 1 ), ;
-            hb_ColorIndex( ::colorspec, 5 ) )
-      else
-         lPopUp := ::aItems[ n ]:isPopUp()
+   IF ::nLeft != NIL
+   ELSEIF ::nRight == NIL
+      ::nLeft := Int( ( MaxCol() - ( ::nWidth + 2 ) ) / 2 )
+   ELSE
+      ::nLeft := ::nRight - ::nWidth - 1
+   ENDIF
 
-         DispOutAt( ;
-            ::aItems[ n ]:row + nTop + n, ::left + 1, ;
-            iif( ::aItems[ n ]:checked, SubStr( ::aItems[ n ]:style, 1, 1 ), " " ) + ;
-               PadR( cPrompt + " ", ::width - 4 ) + ;
-               iif( lPopUp, SubStr( ::aItems[ n ]:style, 2, 1 ), " " ), ;
-            hb_ColorIndex( ::colorSpec, ;
-               iif( ::aItems[ n ]:enabled, ;
-                  iif( n == ::current, CLR_ENHANCED, CLR_STANDARD ), ;
-                     CLR_UNSELECTED ) ) )
+   ::nBottom := ::nTop + ::nItemCount + 1
+   ::nRight := ::nLeft + ::nWidth + 1
 
-         if nAt > 0
-            DispOutAt( ;
-               ::aItems[ n ]:row + nTop + n, ::left + nAt + 1, ;
-               SubStr( cPrompt, nAt, 1 ), ;
-               hb_ColorIndex( ::colorSpec, ;
-                  iif( ::aItems[ n ]:enabled, ;
-                     iif( n == ::current, CLR_BACKGROUND, CLR_BORDER ), ;
-                     CLR_UNSELECTED ) ) )
-         endif
-      endif
-   next
+   RETURN Self
 
-   DispEnd()
+METHOD border( cBorder ) CLASS POPUPMENU
 
-return Self
-//--------------------------------------------------------------------------//
-#ifdef HB_EXTENSION
-METHOD SetCoors( nItem, nRow, nCol ) CLASS PopUpMenu
+   IF cBorder != NIL
+      ::cBorder := _eInstVar( Self, "BORDER", cBorder, "C", 1001, {|| Len( cBorder ) == 0 .OR. Len( cBorder ) == 11 } )
+   ENDIF
 
-   if ::top == -1 .or. ::left == -1
-      ::top    := nRow
-      ::left   := nCol
-      ::bottom := ::top + ::itemCount + 1
-      ::right  := ::left + ::width - 1
+   RETURN ::cBorder
 
-      /* Just to avoid the warning by now (compiling with -w2) */
-      HB_SYMBOL_UNUSED( nItem )
+METHOD bottom( nBottom ) CLASS POPUPMENU
 
-/* UNTESTED: I will wait until the bug in the classes.c module is fixed.
-             However it should work this way.
-             This updates the child popup coords of a given popup.
-      if nItem > 0 .and. ::aItems[ nItem ]:isPopup()
-         ::aItems[ nItem ]:data:SetCoors( 0, row, ::right + 1 )
-      endif
-*/
-
-   endif
-
-return Self
+#ifdef HB_C52_STRICT
+   IF nBottom != NIL
+      ::nBottom := _eInstVar( Self, "BOTTOM", nBottom, "N", 1001 )
+   ENDIF
+#else
+   IF PCount() > 0
+      ::nBottom := iif( nBottom == NIL, NIL, _eInstVar( Self, "BOTTOM", nBottom, "N", 1001 ) )
+   ENDIF
 #endif
-//--------------------------------------------------------------------------//
+
+   RETURN ::nBottom
+
+METHOD colorSpec( cColorSpec ) CLASS POPUPMENU
+
+   IF cColorSpec != NIL
+      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+         {|| !Empty( __GUIColor( cColorSpec, 6 ) ) .AND. Empty( __GUIColor( cColorSpec, 7 ) ) } )
+   ENDIF
+
+   RETURN ::cColorSpec
+
+METHOD current() CLASS POPUPMENU
+   RETURN ::nCurrent
+
+METHOD itemCount() CLASS POPUPMENU
+   RETURN ::nItemCount
+
+METHOD left( nLeft ) CLASS POPUPMENU
+
+#ifdef HB_C52_STRICT
+   IF nLeft != NIL
+      ::nLeft := _eInstVar( Self, "LEFT", nLeft, "N", 1001 )
+   ENDIF
+#else
+   IF PCount() > 0
+      ::nLeft := iif( nLeft == NIL, NIL, _eInstVar( Self, "LEFT", nLeft, "N", 1001 ) )
+   ENDIF
+#endif
+
+   RETURN ::nLeft
+
+METHOD right( nRight ) CLASS POPUPMENU
+
+#ifdef HB_C52_STRICT
+   IF nRight != NIL
+      ::nRight := _eInstVar( Self, "RIGHT", nRight, "N", 1001 )
+   ENDIF
+#else
+   IF PCount() > 0
+      ::nRight := iif( nRight == NIL, NIL, _eInstVar( Self, "RIGHT", nRight, "N", 1001 ) )
+   ENDIF
+#endif
+
+   RETURN ::nRight
+
+METHOD top( nTop ) CLASS POPUPMENU
+
+#ifdef HB_C52_STRICT
+   IF nTop != NIL
+      ::nTop := _eInstVar( Self, "TOP", nTop, "N", 1001 )
+   ENDIF
+#else
+   IF PCount() > 0
+      ::nTop := iif( nTop == NIL, NIL, _eInstVar( Self, "TOP", nTop, "N", 1001 ) )
+   ENDIF
+#endif
+
+   RETURN ::nTop
+
+METHOD width() CLASS POPUPMENU
+   RETURN ::nWidth
+
+METHOD New( nTop, nLeft, nBottom, nRight ) CLASS POPUPMENU
+   LOCAL cColor
+
+   IF ISNUMBER( nTop )
+      ::nTop := nTop
+   ENDIF
+   IF ISNUMBER( nLeft )
+      ::nLeft := nLeft
+   ENDIF
+   IF ISNUMBER( nBottom )
+      ::nBottom := nBottom
+   ENDIF
+   IF ISNUMBER( nRight )
+      ::nRight := nRight
+   ENDIF
+
+   IF IsDefColor()
+      ::cColorSpec := "N/W,W/N,W+/W,W+/N,N+/W,W/N"
+   ELSE
+      cColor := SetColor()
+      ::cColorSpec := __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_BACKGROUND + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_BORDER     + 1 )
+   ENDIF
+
+   RETURN Self
+
+FUNCTION PopUp( nTop, nLeft, nBottom, nRight )
+   RETURN HBPopUpMenu():New( nTop, nLeft, nBottom, nRight )
 
 #endif

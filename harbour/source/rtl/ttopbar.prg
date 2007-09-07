@@ -50,1074 +50,441 @@
  *
  */
 
-#include "box.ch"
+#include "hbclass.ch"
+
 #include "button.ch"
 #include "color.ch"
 #include "common.ch"
 #include "inkey.ch"
-#include "setcurs.ch"
-#include "getexit.ch"
-#include "hbclass.ch"
+
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+         it has all related variables and methods. */
 
 #ifdef HB_COMPAT_C53
 
-#define HB_DEBUG_MENU_COLORS  "N/BG, W+/N, GR+/BG, GR+/N, N/BG, N/BG"
+CREATE CLASS TOPBARMENU FUNCTION HBTopBarMenu
 
-/* TOFIX: Harbour doesn't check if the colorSpec instance
-          var has always six pairs of colors. It should
-          do so and throw an error. [jlalin]
-*/
+   EXPORT:
 
-/* NOTE: In the Get* methods we are breaking the "only one return" rule. I
-         know this isn't a good practice however we are eliminating a variable,
-         an exit statement and two assigments which is good for speed critical
-         and small functions. [jlalin]
-*/
+   METHOD addItem( oItem )
+   METHOD delItem( nPos )
+   METHOD display()
+   METHOD getFirst()
+   METHOD getItem( nPos )
+   METHOD getLast()
+   METHOD getNext()
+   METHOD getPrev()
+   METHOD getAccel( nKey )
+   METHOD getShortCt( nKey )                        /* NOTE: This method exists but it is not documented in the manuals nor the NG's [jlalin] */
+   METHOD hitTest( nRow, nCol )
+   METHOD insItem( nPos, oItem )
+   METHOD select( nPos )
+   METHOD setItem( nPos, oItem )
 
-/*
-*
-*  (according to MenuSys of Clipper 5.3b)
-*  Code in C-style comment blocks may be uncommented to test non-CUA
-*  menuing behavior which permits returning to the selected menu item.
-*
-*/
+   METHOD colorSpec( cColorSpec ) SETGET
+   METHOD current() SETGET
+   METHOD itemCount() SETGET
+   METHOD left( nLeft ) SETGET
+   METHOD right( nRight ) SETGET
+   METHOD row( nRow ) SETGET
 
-/***
-*
-*  MenuModal( <oTopMenu>, <nSelection>, <nMsgRow>, <nMsgLeft>, ;
-*             <nMsgRight>, cMsgColor, GetList ) --> nReturn
-*
-*  Standard Menu System Modal handling for Menu Items
-*
-***/
+   METHOD New( nRow, nLeft, nRight )                /* NOTE: This method is a Harbour extension [vszakats] */
 
-FUNCTION MenuModal( oTopMenu, nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
-                    cMsgColor, GetList )
+   PROTECTED:
 
-RETURN oTopMenu:Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
-                       cMsgColor, GetList )
+   VAR cColorSpec
+   VAR nCurrent   INIT 0
+   VAR nItemCount INIT 0
+   VAR nLeft
+   VAR nRight
+   VAR nRow
 
-//--------------------------------------------------------------------------//
-function TopBar( nRow, nLeft, nRight )
-
-   local oTopBar := nil
-
-   if ISNUMBER( nRow ) .and. ISNUMBER( nLeft ) .and. ISNUMBER( nRight )
-      oTopBar := TopBarMenu():New( nRow, nLeft, nRight )
-   endif
-
-return oTopBar
-
-//--------------------------------------------------------------------------//
-CLASS TopBarMenu
-
-   DATA ClassName       init    "TOPBARMENU"
-   DATA aItems          init    {}
-   DATA cargo
-   DATA colorSpec       init    "N/W,W/N,W+/W,W+/N,N+/W,W/N"
-   DATA current         init    0
-   DATA itemCount       init    0
-   DATA left
-   DATA right
-   DATA row
-
-   // Additional Data to simulate MenuSys.prg of C53
-
-   DATA oMenu
-   DATA aMenuList
-   DATA nMenuLevel
-   DATA nOldRow         PROTECTED
-   DATA nOldCol         PROTECTED
-   DATA nOldCursor      PROTECTED
-   DATA lOldMsgFlag
-   DATA cOldMessage
-
-   /* Hold the value of the last TopBarItem position:
-   DATA nTopBar         INIT 1
-   Array of PopUp MenuItem positions.
-   DATA aPopUp          INIT {} */
-
-   METHOD New( nRow, nLeft, nRight )
-   METHOD AddItem( oItem )
-   METHOD DelItem( nPos )
-   METHOD Display()
-   METHOD GetAccel( nKey )
-   METHOD GetFirst()
-   METHOD GetItem( nPos )
-   METHOD GetLast()
-   METHOD GetNext()
-   METHOD GetPrev()
-
-   /* NOTE: This method exists but it is not
-            documented in the manuals nor the NG's [jlalin]
-   */
-   METHOD GetShortct( nKey )
-
-   METHOD HitTest( nRow, nCol )
-   METHOD InsItem( nPos, oItem )
-   MESSAGE Select( nPos )       METHOD _Select( nPos )
-   METHOD SetItem( nPos, oItem )
-   METHOD __AltToKey( nKey )    PROTECTED
-
-   // Additional Data to simulate MenuSys.prg of C53
-
-   METHOD ModalGet( nSelect, oMenuMsg )
-   METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
-                 cMsgColor, GetList )
-   METHOD IsShortCut( nKey, nID )
-   METHOD IsQuick( nKey, nID )
-   METHOD PushMenu( lSelect )
-   METHOD PopMenu()
-   METHOD PopChild( nNewLevel )
-   METHOD PopAll()
-   METHOD Execute()
-   METHOD MHitTest( oNewMenu, nNewLevel, nNewItem )
+   VAR aItems     INIT {}
+   VAR nWidth     INIT 0
 
 ENDCLASS
 
-//--------------------------------------------------------------------------//
-METHOD New( nRow, nLeft, nRight ) CLASS TopBarMenu
+METHOD addItem( oItem ) CLASS TOPBARMENU
 
-   ::aItems    := {}
-   ::colorSpec := "N/W,W/N,W+/W,W+/N,N+/W,W/N"
-   ::current   := 0
-   ::itemCount := 0
-   ::left      := nLeft
-   ::right     := nRight
-   ::row       := nRow
+   IF ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
 
-return Self
+      ::nItemCount++
+      AAdd( ::aItems, oItem )
 
-//--------------------------------------------------------------------------//
-METHOD AddItem( oItem ) CLASS TopBarMenu
+      ::nWidth := Max( __CapMetrics( oItem ), ::nWidth )
+   ENDIF
 
-   LOCAL oLast
+   RETURN Self
 
-   ::itemCount++
+METHOD delItem( nPos ) CLASS TOPBARMENU
+   LOCAL nLen
+   LOCAL aItems
+   LOCAL nWidth
 
-   if ::itemCount > 1
-      oLast := ATail( ::aItems )
-      oItem:column := oLast:column + Len( StrTran( oLast:caption, "&", "" ) ) + 2
-   endif
+   IF nPos >= 1 .AND. nPos <= ::nItemCount
 
-   aAdd( ::aItems, oItem )
+      nLen := Len( ::aItems[ nPos ]:caption )
 
-return Self
+      ADel( ::aItems, nPos )
+      ASize( ::aItems, --::nItemCount )
 
-//--------------------------------------------------------------------------//
-METHOD DelItem( nPos ) CLASS TopBarMenu
+      IF ::nWidth == nLen + 2
+          aItems := ::aItems
+          nLen := ::nItemCount
+          nWidth := 0
+          FOR nPos := 1 TO nLen
+             nWidth := Max( __CapMetrics( aItems[ nPos ] ), nWidth )
+          NEXT
+          ::nWidth := nWidth
+      ENDIF
+   ENDIF
 
-   if nPos > 0 .and. nPos <= Len( ::aItems )
-      aDel( ::aItems, nPos, .T. )
-      ::itemCount--
-   endif
+   RETURN Self
 
-return Self
+METHOD display() CLASS TOPBARMENU
 
-//--------------------------------------------------------------------------//
-METHOD GetFirst() CLASS TopBarMenu
+   LOCAL nOldRow := Row()
+   LOCAL nOldCol := Col()
+   LOCAL lOldMCur := MSetCursor( .F. )
+
+   LOCAL nRow := ::nRow
+   LOCAL nLeft := ::nLeft
+   LOCAL nRight := ::nRight
+   LOCAL aItems := ::aItems
+   LOCAL nItemCount := ::nItemCount
+   LOCAL nCurrent := ::nCurrent
+
+   LOCAL cColor1 := __GUIColor( ::cColorSpec, 1 )
+   LOCAL cColor2 := __GUIColor( ::cColorSpec, 2 )
+
+   LOCAL oPopUp
+   LOCAL nItem
+   LOCAL cCaption
+   LOCAL nCaptionLen
+   LOCAL nPos
+
+   DispBegin()
+
+   DispOutAt( nRow, nLeft, Space( nRight - nLeft + 1 ), cColor1 )
+
+   FOR nItem := 1 TO nItemCount
+
+      cCaption := " " + RTrim( aItems[ nItem ]:caption ) + " "
+      nCaptionLen := Len( cCaption )
+
+      IF nCaptionLen == 0
+         LOOP
+      ENDIF
+
+      IF nLeft > nRight - nCaptionLen
+         nLeft := nRight - nCaptionLen
+      ENDIF
+
+      aItems[ nItem ]:row := nRow
+      aItems[ nItem ]:col := nLeft
+
+      IF aItems[ nItem ]:isPopUp()
+         oPopUp := aItems[ nItem ]:data
+         oPopUp:top := nRow + 1
+         oPopUp:left := nLeft
+         oPopUp:bottom := NIL
+         oPopUp:right := NIL
+      ENDIF
+
+      IF ( nPos := At( "&", cCaption ) ) > 0
+         IF nPos == Len( cCaption )
+            nPos := 0
+         ELSE
+            cCaption := Stuff( cCaption, nPos, 1, "" )
+            nCaptionLen--
+         ENDIF
+      ENDIF
+
+      DispOutAt( nRow, nLeft, cCaption,;
+         iif( nItem == nCurrent, cColor2,;
+            iif( aItems[ nItem ]:enabled, cColor1, __GUIColor( ::cColorSpec, 5 ) ) ) )
+
+      IF aItems[ nItem ]:enabled .AND. nPos > 0
+         DispOutAt( nRow, nLeft + nPos - 1, SubStr( cCaption, nPos, 1 ),;
+            iif( nItem == nCurrent, __GUIColor( ::cColorSpec, 4 ), __GUIColor( ::cColorSpec, 3 ) ) )
+      ENDIF
+
+      nLeft += nCaptionLen
+   NEXT
+
+   IF nCurrent != 0 .AND. ;
+      ::aItems[ nCurrent ]:isPopUp() .AND. ;
+      ::aItems[ nCurrent ]:data:isOpen
+
+      ::aItems[ nCurrent ]:data:display()
+   ENDIF
+
+   DispEnd()
+
+   SetPos( nOldRow, nOldCol )
+   MSetCursor( lOldMCur )
+
+   RETURN Self
+
+METHOD getFirst() CLASS TOPBARMENU
 
    LOCAL n
 
-   FOR n = 1 to Len( ::aItems )
-      if ::aItems[ n ]:enabled
-         return n
-      endif
-   next
+   FOR n := 1 TO ::nItemCount
+      IF ::aItems[ n ]:enabled
+         RETURN n
+      ENDIF
+   NEXT
 
-return 0
+   RETURN 0
 
-//--------------------------------------------------------------------------//
-METHOD GetItem( nPos ) CLASS TopBarMenu
+METHOD getItem( nPos ) CLASS TOPBARMENU
+   RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ], NIL )
 
-   LOCAL oItem
-
-   if nPos > 0 .and. nPos <= ::itemCount
-      oItem := ::aItems[ nPos ]
-   endif
-
-return oItem
-
-//--------------------------------------------------------------------------//
-METHOD GetLast() CLASS TopBarMenu
+METHOD getLast() CLASS TOPBARMENU
 
    LOCAL n
 
-   for n := ::itemCount to 1 step -1
-      if ::aItems[ n ]:enabled
-         return n
-      endif
-   next
+   FOR n := ::nItemCount TO 1 STEP -1
+      IF ::aItems[ n ]:enabled
+         RETURN n
+      ENDIF
+   NEXT
 
-return 0
+   RETURN 0
 
-//--------------------------------------------------------------------------//
-METHOD GetNext() CLASS TopBarMenu
-
-   LOCAL n
-
-   if ::current < ::itemCount
-      for n := ::current + 1 to ::itemCount
-         if ::aItems[ n ]:enabled
-            return n
-         endif
-      next
-  endif
-
-return 0
-
-//--------------------------------------------------------------------------//
-METHOD GetPrev() CLASS TopBarMenu
+METHOD getNext() CLASS TOPBARMENU
 
    LOCAL n
 
-   if ::current > 1
-      for n := ::current - 1 to 1 step -1
-         if ::aItems[ n ]:enabled
-            return n
-         endif
-      next
-   endif
+   IF ::nCurrent < ::nItemCount
+      FOR n := ::nCurrent + 1 TO ::nItemCount
+         IF ::aItems[ n ]:enabled
+            RETURN n
+         ENDIF
+      NEXT
+   ENDIF
 
-return 0
+   RETURN 0
 
-//--------------------------------------------------------------------------//
+METHOD getPrev() CLASS TOPBARMENU
+
+   LOCAL n
+
+   IF ::nCurrent > 1
+      FOR n := ::nCurrent - 1 TO 1 STEP -1
+         IF ::aItems[ n ]:enabled
+            RETURN n
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN 0
+
 /* NOTE: This method corrects two bugs in Cl*pper:
          1) when two menuitems have the same key and the
             first item is disabled
-         2) when a menuitem is disabled it will ignore the key [jlalin]
-*/
-METHOD GetAccel( nKey ) CLASS TopBarMenu
+         2) when a menuitem is disabled it will ignore the key [jlalin] */
 
-   LOCAL nAt   := 0
-   LOCAL cKey  := Upper( ::__AltToKey( nKey ) ) /* By now */
+METHOD getAccel( nKey ) CLASS TOPBARMENU
+
+   LOCAL nIndex := AScan( { K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F,;
+                            K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L,;
+                            K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R,;
+                            K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
+                            K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4,;
+                            K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey )
+
+   LOCAL cKey
+   LOCAL nAt
    LOCAL n
 
-   FOR n = 1 to Len( ::aItems )
-      nAt := At( "&", ::aItems[ n ]:caption )
-      if nAt > 0 .and. ::aItems[ n ]:enabled .and. ;
+   IF nIndex > 0
+
+      cKey := SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 )
+
+      FOR n := 1 TO ::nItemCount
+      
+         IF ( nAt := At( "&", ::aItems[ n ]:caption ) ) > 0 .AND. ;
             Upper( SubStr( ::aItems[ n ]:caption, nAt + 1, 1 ) ) == cKey
-         return n
-      endif
-   next
+      
+#ifndef HB_C52_STRICT
+            IF ::aItems[ n ]:enabled
+#endif
+               RETURN n
+#ifndef HB_C52_STRICT
+            ENDIF
+#endif
+         ENDIF
+      NEXT
+   ENDIF
 
-return 0
+   RETURN 0
 
-//--------------------------------------------------------------------------//
+METHOD getShortCt( nKey ) CLASS TOPBARMENU
+
+   LOCAL n
+
+   FOR n := 1 TO ::nItemCount
+      IF ::aItems[ n ]:shortcut == nKey
+         RETURN n
+      ENDIF
+   NEXT
+
+   RETURN 0
+
 /* NOTE: In my tests I can't get other values than HTNOWHERE or a value
          greather than 0 (selected item), althought the NG's says that
          it returns other HT* values [jlalin]
 
          This method correct a bug in Cl*pper:
-         when click on a disabled menuitem it will ignore it [jlalin]
-*/
-METHOD HitTest( nRow, nCol ) CLASS TopBarMenu
+         when click on a disabled menuitem it will ignore it [jlalin] */
 
+METHOD hitTest( nRow, nCol ) CLASS TOPBARMENU
+
+   LOCAL aItems
+   LOCAL nColumn
    LOCAL n
 
-   if ::row == nRow
-      FOR n = 1 to Len( ::aItems )
-         if nCol >= ::aItems[ n ]:column .and. ;
-               nCol <= ::aItems[ n ]:column + Len( ::aItems[ n ]:caption ) .and. ;
-                       ::aItems[ n ]:enabled
-            return n
-         endif
-      next
-   endif
+   IF ::nRow == nRow
 
-return HTNOWHERE
+      aItems := ::aItems
 
-//--------------------------------------------------------------------------//
-METHOD InsItem( nPos, oItem ) CLASS TopBarMenu
+      FOR n := 1 TO ::nItemCount
 
-   if nPos > 0 .and. nPos <= ::itemCount
-      aIns( ::aItems, nPos, oItem, .T. )
-      ::itemCount++
-   endif
+         nColumn := aItems[ n ]:col
 
-return Self
-
-//--------------------------------------------------------------------------//
-METHOD _Select( nPos ) CLASS TopBarMenu
-
-   if ( nPos > 0 .and. nPos <= ::itemCount ) .and. ;
-         nPos != ::current .and. ::aItems[ nPos ]:enabled
-
-      if ::current > 0
-         if ::aItems[ ::current ]:isPopUp()
-            ::aItems[ ::current ]:data:Close()
-         endif
-      endif
-
-      ::current := nPos
-   else
-      ::current := 0
-   endif
-
-return Self
-
-//--------------------------------------------------------------------------//
-METHOD SetItem( nPos, oItem ) CLASS TopBarMenu
-
-   if nPos > 0 .and. nPos <= ::itemCount
-      ::aItems[ nPos ] := oItem
-   endif
-
-return Self
-
-//--------------------------------------------------------------------------//
-METHOD GetShortct( nKey ) CLASS TopBarMenu
-
-   LOCAL n
-
-   FOR n = 1 to Len( ::aItems )
-      if ::aItems[ n ]:shortcut == nKey
-         return n
-      endif
-   next
-
-return 0
-
-//--------------------------------------------------------------------------//
-METHOD Display() CLASS TopBarMenu
-
-   LOCAL oPopup
-   LOCAL nAt
-   LOCAL n
-   LOCAL cPrompt
-
-   LOCAL nOldRow  := Row()
-   LOCAL nOldCol  := Col()
-   LOCAL lOldCur  := MSetCursor( FALSE )
-
-   DispBegin()
-
-   DispOutAt( ::row, ::left, ;
-              Space( ::right - ::left + 1 ), hb_ColorIndex( ::colorSpec, CLR_STANDARD ) )
-
-   FOR n = 1 to Len( ::aItems )
-
-      nAt := At( "&", ::aItems[ n ]:caption )
-      cPrompt := " " + StrTran( ::aItems[ n ]:caption, "&", "" ) + " "
-
-      DispOutAt( ;
-         ::row, ::aItems[ n ]:column, ;
-         cPrompt, ;
-         hb_ColorIndex( ::colorSpec, ;
-            iif( ::aItems[ n ]:enabled, ;
-               iif( n == ::current, CLR_ENHANCED, CLR_STANDARD ), ;
-               CLR_UNSELECTED ) ) )
-
-      if nAt > 0
-         DispOutAt( ::row, ::aItems[ n ]:column + nAt, ;
-            SubStr( ::aItems[ n ]:caption, nAt + 1, 1 ), ;
-            hb_ColorIndex( ::colorSpec, ;
-               iif( n == ::current, CLR_BACKGROUND, CLR_BORDER ) ) )
-      endif
-
-      if ::aItems[ n ]:isPopup()
-         ::aItems[ n ]:data:SetCoors( ::row + 1, ::aItems[ n ]:column, .t. )
-      endif
-
-   next
-
-   if ::current > 0 .and. ::aItems[ ::current ]:isPopup()
-      oPopUp  := ::aItems[ ::current ]:data
-      if oPopUp:isOpen()
-         oPopUp:display()
-      endif
-   endif
-
-   SetPos( nOldRow, nOldCol )
-   MSetCursor( lOldCur )
-
-   DispEnd()
-
-return Self
-//--------------------------------------------------------------------------//
-
-METHOD __AltToKey( nKey ) CLASS TopBarMenu
-
-   local nIndex := AScan( { K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F,;
-                            K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L,;
-                            K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R,;
-                            K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
-                            K_ALT_Y, K_ALT_Z }, nKey )
-
-return iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 ), "" )
-
-//--------------------------------------------------------------------------//
-
-/* The routines below were added by Larry Sevilla <lsevilla@nddc.edu.ph> */
-/* based on the MenuSys.prg of Clipper 5.3b                              */
-
-/***
-*
-*  IsShortCut( <oMenu>, <nKey>, <nID> ) -> .T. | .F.
-*
-*  ShortCut processing for initial Get or Menu Item.
-*
-***/
-METHOD IsShortCut( nKey, nID ) CLASS TopBarMenu
-
-      RETURN ( ::IsQuick( nKey, @nID ) )
-
-
-/***
-*
-*  IsQuick( <oMenu>, <nKey>, <nID> ) --> .T. | .F.
-*
-*  IsShortCut() for secondary ShortCut processing.
-*  Navigates to the next Get or Menu Item from the
-*  Current if more than one uses the same ShortCut.
-*
-***/
-METHOD IsQuick( nKey, nID ) CLASS TopBarMenu
-
-   LOCAL nItem, nTotal, nShortCut, oItem // , i
-
-   IF ( ( nShortCut := ::GetShortCt( nKey ) ) == 0 )
-      nTotal := ::ItemCount
-
-      FOR nItem := 1 TO nTotal
-         IF ( !( oItem := ::GetItem( nItem ) ):Enabled )
-         ELSEIF ( !( oItem:IsPopUp() ) )
-         ELSEIF ( oItem:Data:IsQuick( nKey, @nID ) )
-            RETURN ( .T. )
+         IF nCol >= nColumn .AND. nCol <= nColumn + Len( aItems[ n ]:caption )
+#ifndef HB_C52_STRICT
+            IF aItems[ n ]:enabled
+#endif
+               RETURN n
+#ifndef HB_C52_STRICT
+            ENDIF
+#endif
          ENDIF
       NEXT
-
-   ELSEIF ( !( oItem := ::GetItem( nShortCut ) ):IsPopUp() )
-      IF oItem:Enabled
-         ::Select( nShortCut )
-         EVAL( oItem:Data, oItem )
-         nID := oItem:ID
-         RETURN ( .T. )
-      ENDIF
-
    ENDIF
 
-   RETURN ( .F. )
+   RETURN HTNOWHERE
 
-/***
-*  ModalGet
-***/
-METHOD ModalGet( nSelect, oMsg ) CLASS TopBarMenu
+METHOD insItem( nPos, oItem ) CLASS TOPBARMENU
 
-RETURN ::Modal( nSelect, oMsg:Row, oMsg:Left, oMsg:Right, oMsg:Color )
+   IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
+      ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
 
-/***
-*
-*  MenuModal( <oTopMenu>, <nSelection>, <nMsgRow>, <nMsgLeft>, ;
-*             <nMsgRight>, cMsgColor, GetList ) --> nReturn
-*
-*  Standard Menu System Modal handling for Menu Items
-*
-***/
-METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, ;
-                    cMsgColor, GetList ) CLASS TopBarMenu
+      ASize( ::aItems, ++::nItemCount )
+      AIns( ::aItems, nPos )
+      ::aItems[ nPos ] := oItem
 
-   LOCAL nKey, nNewItem, lLeftDown, oNewMenu, nNewLevel, ;
-         nEvent, oMenuItem, nMenuItem, nReturn, oMenuMsg, ;
-         nTemp, bKeyBlock, lSubMenu, cColor, lWhile
-
-   nReturn     := 0
-
-   ::nOldRow    := ROW()
-   ::nOldCol    := COL()
-   ::nOldCursor := SetCursor( SC_NONE )
-
-   oMenuMsg := MenuMssgLine():new( nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
-
-   IF oMenuMsg:Flag
-      cColor := setColor( oMenuMsg:Color )
-      @ oMenuMsg:Row, oMenuMsg:Left CLEAR TO oMenuMsg:Row, oMenuMsg:Right
-      setColor(cColor)
-      oMenuMsg:SaveScreen()
+      ::nWidth := Max( __CapMetrics( oItem ), ::nWidth )
    ENDIF
 
-   ::Select( nSelection )
+   RETURN Self
 
-   ::Display()
+METHOD select( nPos ) CLASS TOPBARMENU
 
-   IF nSelection <= 0
-      WHILE ( nSelection <= 0 )
+   IF ( nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
+      ::nCurrent != nPos .AND. ;
+      ::aItems[ nPos ]:enabled ) .OR. nPos == 0
 
-         nEvent := SET( _SET_EVENTMASK, INKEY_KEYBOARD + INKEY_LDOWN )
-         nKey   :=  Inkey( 0 )
-         SET( _SET_EVENTMASK, nEvent )
+//    IF ::isOpen() .AND. ;
+//       ::nCurrent > 0 .AND. ;
+//       ::aItems[ ::nCurrent ]:isPopUp()
+//
+//       ::aItems[ ::nCurrent ]:data:close()
+//    ENDIF
 
-         IF ( nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK )
-            nSelection := ::HitTest( MRow(), MCol() )
-
-         ELSEIF ( ( nSelection := ::GetAccel( nKey ) ) != 0 )
-
-         ELSEIF ( ::IsShortCut( nKey, @nReturn ) )
-            // Restore system entry state settings from file-wide array:
-            // saStatics := ACLONE( aSavMenuSys )
-            RETURN ( nReturn )
-
-         ELSE
-            nSelection := 1
-
-         ENDIF
-
-      ENDDO
-
-      ::Select( nSelection )
-      ::Display()
-
+      ::nCurrent := nPos
    ENDIF
 
-   IF ( !::GetItem( nSelection ):Enabled )
-      // Restore system entry state settings from file-wide array:
-      // saStatics := ACLONE( aSavMenuSys )
-      RETURN ( 0 )
+   RETURN Self
+
+METHOD setItem( nPos, oItem ) CLASS TOPBARMENU
+
+   IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
+      ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
+
+      ::aItems[ nPos ] := oItem
+
+      ::nWidth := Max( __CapMetrics( oItem ), ::nWidth )
    ENDIF
 
-   ::oMenu        := Self
-   ::aMenuList    := array( 16 )
-   ::nMenuLevel   := 1
-   ::aMenuList[1] := ::oMenu
+   RETURN Self
 
-   lLeftDown := mLeftDown()
+METHOD colorSpec( cColorSpec ) CLASS TOPBARMENU
 
-   /* Continue pushing MenuItems until there are no more to push:
-   DO WHILE ( ::PushMenu( .T. ) )
-   ENDDO */
-
-   oMenuMsg:Show( Self, .T. )
-
-   lWhile := .T.
-   WHILE lWhile
-      /* Save Current TopBar MenuItem:
-      nTopBar := ::Current
-      // Save Current PopUp MenuItem:
-      ::aPopUp[::nMenuLevel] := ::oMenu:Current */
-      nKey := INKEY( 0 )
-      // Check for SET KEY first
-      IF !( ( bKeyBlock := SETKEY( nKey ) ) == NIL )
-         EVAL( bKeyBlock, PROCNAME(1), PROCLINE(1), "" )
-         LOOP
-      ENDIF
-
-      do case
-      case nKey == K_MOUSEMOVE
-         //====== mouse movement.
-
-         IF ( lLeftDown )
-            // Changed '!HitTest' to '!MHitTest':
-            IF ( ! ::MHitTest( @oNewMenu, @nNewLevel, @nNewItem ) )
-               //------------ hit nowhere.
-
-            ELSEIF ( nNewLevel != ::nMenuLevel )
-               //------------ menu level change.
-
-               IF ( nNewItem == oNewMenu:Current )
-               ELSEIF ( oNewMenu:GetItem( nNewItem ):Enabled )
-                  ::oMenu := oNewMenu
-                  ::PopChild( nNewLevel )
-                  ::oMenu:Select( nNewItem )
-                  ::oMenu:Display()
-                  ::PushMenu( .T. )
-                  oMenuMsg:Show( Self, .T. )
-               ENDIF
-
-            ELSEIF ( nNewItem != oNewMenu:Current() )
-               //------------ menu item change.
-
-               ::PopChild( ::nMenuLevel )
-
-               IF ( ::oMenu:GetItem( nNewItem ):Enabled )
-                  ::oMenu:Select( nNewItem )
-                  ::oMenu:Display()
-                  ::PushMenu( .T. )
-                  oMenuMsg:Show( Self, .T. )
-               ENDIF
-
-            ENDIF
-
-         ENDIF
-         EXIT
-
-      case nKey == K_DOWN
-         //====== down arrow key.
-
-         IF ::oMenu:ClassName() == "TOPBARMENU"
-            IF ( ::PushMenu( .T. ) )
-               oMenuMsg:Show( Self, .T. )
-            ENDIF
-         ELSE  // IF ( saStatics[ SNMENULEVEL ] > 1 )
-            nTemp := ::oMenu:GetNext()
-            IF ( nTemp == 0 )
-               nTemp := ::oMenu:GetFirst()
-            ENDIF
-            ::oMenu:Select( nTemp )
-            ::oMenu:Display()
-            oMenuMsg:Show( Self, .T. )
-
-         ENDIF
-         EXIT
-
-      case nKey == K_UP
-         //====== up arrow key.
-
-         IF ::oMenu:ClassName() != "TOPBARMENU"
-            nTemp := ::oMenu:GetPrev()
-            IF ( nTemp == 0 )
-               nTemp := ::oMenu:GetLast()
-            ENDIF
-            ::oMenu:Select( nTemp )
-            ::oMenu:Display()
-            oMenuMsg:Show( Self, .T. )
-
-         ENDIF
-         EXIT
-
-      case nKey == K_LEFT
-         //====== left arrow key.
-         /** Reset PopUp MenuItem to 1:
-         ::aPopUp[::nMenuLevel] := 1 **/
-         IF ( lSubMenu := ::nMenuLevel > 1 )
-            ::PopMenu()
-         ENDIF
-         IF ::oMenu:ClassName() == "TOPBARMENU"
-            nTemp := ::oMenu:GetPrev()
-            IF ( nTemp == 0 )
-              nTemp := ::oMenu:GetLast()
-            ENDIF
-            ::oMenu:Select( nTemp )
-            ::oMenu:Display()
-            IF lSubMenu
-               ::PushMenu( .T. )
-            ENDIF
-         ENDIF
-         oMenuMsg:Show( Self, .T. )
-         EXIT
-
-      case nKey == K_RIGHT
-         //====== right arrow key.
-         /* Reset PopUp MenuItem to 1:
-         ::aPopUp[ ::nMenuLevel ] := 1 */
-         IF ( lSubMenu := ::nMenuLevel > 1 )
-            /* Test !PopMenu() to determine calling PopAll():
-            IF !( ::PopMenu() )
-               ::PopAll()
-            ENDIF */
-            ::PopMenu()
-         ENDIF
-
-         IF ::oMenu:ClassName() == "TOPBARMENU"
-            nTemp := ::oMenu:GetNext()
-            IF ( nTemp == 0 )
-               nTemp := ::oMenu:GetFirst()
-            ENDIF
-            ::oMenu:Select( nTemp )
-            ::oMenu:Display()
-            IF lSubMenu
-               ::PushMenu( .T. )
-            ENDIF
-         ENDIF
-         oMenuMsg:Show( Self, .T. )
-         EXIT
-
-      case nKey == K_ENTER
-         //====== enter key .
-
-         IF ( ::PushMenu( .T. ) )
-            oMenuMsg:Show( Self, .T. )
-
-         ELSE
-            oMenuMsg:Show( Self, .F. )
-            nReturn := ::Execute()
-            IF ( nReturn != 0 )
-               lWhile := .F.
-               EXIT
-            ENDIF
-
-         ENDIF
-         EXIT
-
-      case nKey == K_ESC
-         //====== escape key - go to previous menu
-
-         IF ::PopMenu()
-            ::oMenu:Display()
-            oMenuMsg:Show( Self, .T. )
-         ELSE
-
-            IF ::oMenu:ClassName() == "POPUPMENU"
-               ::oMenu:Close()
-            ENDIF
-            // Bail out if at the top menu item:
-            nReturn := -1
-            lWhile  := .F.
-            EXIT
-
-         ENDIF
-         EXIT
-
-      case nKey == K_LBUTTONDOWN
-         //====== mouse left button press.
-
-         // Changed '!HitTest' to '!MHitTest':
-         IF ( ! ::MHitTest( @oNewMenu, @nNewLevel, @nNewItem ) )
-            // Added the following to test Get System HitTest():
-            IF ( !( GetList == NIL ) .AND. ;
-               HitTest( GetList, MROW(), MCOL(), oMenuMsg:aMsg ) != 0 )
-               GETACTIVE():ExitState := GE_MOUSEHIT
-               // Reset Get System values:
-               // ReadStats( SNLASTEXIT, GE_MOUSEHIT )
-               __GetListActive():nLastExitState := GE_MOUSEHIT
-               // IF ReadStats( SOMENU ):ClassName() == "POPUPMENU"
-               IF ::oMenu:ClassName() == "POPUPMENU"
-                  ::PopMenu()
-               ENDIF
-               // ENDIF
-               nReturn := -1
-               lWhile  := .F.
-               EXIT
-            ENDIF
-
-            //// Warning: New test for hitting NOWHERE on the Canvas area!!!
-            IF ::oMenu:ClassName() == "POPUPMENU"
-               ::PopMenu()
-            ENDIF
-
-         ELSEIF ( nNewLevel == ::nMenuLevel )
-            ::oMenu:Select( nNewItem )
-            ::oMenu:Display()
-            ::PushMenu(.T.)
-            oMenuMsg:Show( Self, .T. )
-
-         ELSE
-            ::nMenuLevel := nNewLevel
-            ::oMenu      := ::aMenuList[ ::nMenuLevel ]
-
-            nMenuItem := ::oMenu:Current
-            oMenuItem := ::oMenu:GetItem( nMenuItem )
-            IF ( ( oMenuItem := ::oMenu:GetItem( ::oMenu:Current ) ):IsPopUp() )
-               oMenuItem:Data:Close()
-            ENDIF
-
-            IF !( nMenuItem == nNewItem )
-               nMenuItem := nNewItem
-               ::oMenu:Select( nNewItem )
-               ::oMenu:Display()
-               ::PushMenu( .T. )
-            ENDIF
-
-            oMenuMsg:Show( Self, .T. )
-         ENDIF
-
-         lLeftDown := .T.
-         EXIT
-
-      case nKey == K_LBUTTONUP
-         //====== mouse left button release.
-
-         lLeftDown := .F.
-
-         // Changed '!HitTest' to '!MHitTest':
-         IF ( ! ::MHitTest( @oNewMenu, @nNewLevel, @nNewItem ) )
-         ELSEIF ( nNewLevel == ::nMenuLevel )
-            IF ( nNewItem == ::oMenu:Current )
-               oMenuMsg:Show( Self, .F. )
-               nReturn := ::Execute()
-               IF ( nReturn != 0 )
-                  lWhile := .F.
-                  EXIT
-               ENDIF
-            ENDIF
-
-         ELSE
-
-            /* This may not be necessary:
-            nNewItem := ::oMenu:GetFirst()
-            IF ( nNewItem == 0 )
-            ELSE
-               ::oMenu:Select(  nNewItem )
-               ::oMenu:Display()
-               oMenuMsg:Show( Self, .T. )
-            ENDIF */
-
-         ENDIF
-         EXIT
-
-      otherwise
-
-         if ( ( nNewItem := ::oMenu:GetAccel( nKey ) ) != 0 )
-            //=== check for menu item accelerator key.
-
-            IF ::oMenu:GetItem( nNewItem ):Enabled
-               ::oMenu:Select( nNewItem )
-               ::oMenu:Display()
-
-               /* Code insert to Debug selected menu item in graphics mode:
-               @ 20, 70 SAY STR( nNewItem, 3 )
-               INKEY(0)
-               @ 20, 70 SAY SPACE( 3 ) */
-
-               IF ( ! ::PushMenu( .T. ) )
-                  oMenuMsg:Show( Self, .F. )
-                  nReturn := ::Execute()
-                  IF ( nReturn != 0 )
-                     lWhile := .F.
-                     EXIT
-                  ENDIF
-               ENDIF
-               oMenuMsg:Show( Self, .T. )
-
-            ENDIF
-
-         elseif ::IsShortCut( nKey, @nReturn )
-
-            IF ( nReturn != 0 )
-               lWhile := .F.
-               EXIT
-            ENDIF
-
-         // Added the following to test Get System HitTest():
-         elseif !( GetList == NIL ) .AND. ;
-            ( ( nNewItem := Accelerator( GetList, nKey, oMenuMsg:aMsg ) ) != 0 )
-            GETACTIVE():ExitState := GE_SHORTCUT
-
-            // Reset Get System values:
-            // ReadStats( SNNEXTGET, nNewItem )
-            __GetListActive():nNextGet := nNewItem
-            // IF ReadStats( SOMENU ):ClassName() == "POPUPMENU"
-            IF ::oMenu:ClassName() == "POPUPMENU"
-               ::PopMenu()
-            ENDIF
-            // ENDIF
-            nReturn := -1
-            lWhile  := .F.
-            EXIT
-
-         elseif ( nNewItem := ::GetAccel( nKey ) ) != 0
-            //=== check for the top menu item accelerator key
-
-            IF ::GetItem( nNewItem ):Enabled
-               ::PopAll()
-               ::oMenu:Select( nNewItem )
-               ::Display()
-               IF ( ::GetItem( nNewItem ):IsPopUp() )
-                  ::PushMenu( .T. )
-               ELSE
-                  oMenuMsg:Show( Self, .F. )
-                  nReturn := ::Execute()
-                  IF ( nReturn != 0 )
-                     lWhile := .F.
-                     EXIT
-                  ENDIF
-               ENDIF
-               oMenuMsg:Show( Self, .T. )
-            ENDIF
-         ENDIF
-
-      ENDCASE
-
-   ENDDO
-
-   IF oMenuMsg:Flag
-      oMenuMsg:RestScreen()
+   IF cColorSpec != NIL
+      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+         {|| !Empty( __GUIColor( cColorSpec, 6 ) ) .AND. Empty( __GUIColor( cColorSpec, 7 ) ) } )
    ENDIF
 
-   ::PopAll()
-   SetPos( ::nOldRow, ::nOldCol )
-   SetCursor( ::nOldCursor )
-   // Restore system entry state settings from file-wide array:
-   // saStatics := ACLONE( aSavMenuSys )
+   RETURN ::cColorSpec
 
-   RETURN ( nReturn )
+METHOD current() CLASS TOPBARMENU
+   RETURN ::nCurrent
 
-/***
-*
-*  PushMenu( <lSelect>, <oTopMenu> ) --> .T. | .F.
-*
-*  Increment saStatics[ SNMENULEVEL ] and optionally select first item.
-*  If selected MenuItem IsPopUp, assign saStatics[ SOMENU ].
-*
-***/
-METHOD PushMenu( lSelect ) CLASS TopBarMenu
-   LOCAL oNewMenu
+METHOD itemCount() CLASS TOPBARMENU
+   RETURN ::nItemCount
 
-   oNewMenu := ::oMenu:GetItem( ::oMenu:Current )
+METHOD left( nLeft ) CLASS TOPBARMENU
 
-   IF ( !( ValType( oNewMenu ) == "O" ) )
-   ELSEIF ( oNewMenu:IsPopUp )
-
-      IF ( !( ValType( lSelect ) == "L" ) )
-         lSelect := .F.
-      ENDIF
-
-      ::oMenu := oNewMenu:Data
-      ::aMenuList[ ++::nMenuLevel ] := ::oMenu
-
-      /* If entering a new level:
-      IF LEN( ::aPopUp ) < ::nMenuLevel
-         // Resize the array:
-         ASIZE( ::aPopUp, ::nMenuLevel )
-         // Reset MenuItem to 1:
-         ::aPopUp[ ::nMenuLevel ] := 1
-      ENDIF */
-
-      IF ( lSelect )
-         ::oMenu:Select( ::oMenu:GetFirst() )
-         /* Select previous item:
-         ::oMenu:Select( ::aPopUp[ ::nMenuLevel ) */
-      ELSE
-         ::oMenu:Select( 0 )
-
-      ENDIF
-
-      IF !( ::oMenu:IsOpen )
-         ::oMenu:Open()
-      ENDIF
-
-      RETURN ( .T. )
-
+   IF nLeft != NIL
+      ::nLeft := _eInstVar( Self, "LEFT", nLeft, "N", 1001 )
    ENDIF
 
-   RETURN ( .F. )
+   RETURN ::nLeft
 
+METHOD right( nRight ) CLASS TOPBARMENU
 
-/***
-*
-*  PopMenu( <oTopMenu> ) --> .T. | .F.
-*
-*  Close SubMenuItem and Return to the upper MenuItem level.
-*
-***/
-METHOD PopMenu() CLASS TopBarMenu
-   IF ( ::nMenuLevel > 1 )
-      ::oMenu:Select(0)
-      ::oMenu:Close(.T.)
-      // Decrement MenuItem level and assign:
-      ::oMenu := ::aMenuList[ --::nMenuLevel ]
-      RETURN ( .T. )
-
+   IF nRight != NIL
+      ::nRight := _eInstVar( Self, "RIGHT", nRight, "N", 1001 )
    ENDIF
 
-   RETURN ( .F. )
+   RETURN ::nRight
 
+METHOD row( nRow ) CLASS TOPBARMENU
 
-/***
-*
-*  PopChild( <nNewLevel>, <oTopMenu> ) --> .T. | .F.
-*
-*  Close PopUp Child MenuItem and Return to the upper MenuItem level.
-*
-***/
-METHOD PopChild( nNewLevel ) CLASS TopBarMenu
-   LOCAL oOldMenuItem, nCurrent
-
-   IF ( ( nCurrent := ::oMenu:Current ) != 0 )
-      oOldMenuItem := ::oMenu:GetItem( nCurrent )
-      IF ( oOldMenuItem:IsPopUp )
-         oOldMenuItem:Data:Close()
-         ::nMenuLevel := nNewLevel
-         RETURN ( .T. )
-      ENDIF
-
+   IF nRow != NIL
+      /* NOTE: CA-Clipper 5.3 has a bug, where it would show "TOP" in case of an error. */
+      ::nRow := _eInstVar( Self, "ROW", nRow, "N", 1001 )
    ENDIF
 
-   RETURN ( .F. )
+   RETURN ::nRow
 
+/* -------------------------------------------- */
 
-/***
-*
-*  PopAll( <oTopMenu> ) --> .T.
-*
-*  Close all Menus below Top Menu and Return to upper MenuItem level.
-*
-***/
-METHOD PopAll( ) CLASS TopBarMenu
-   IF ::aMenuList[2] != NIL
-      ::aMenuList[2]:Close()
-   ENDIF
-   // Set the menu level and position relative to the top menu item:
-   ::nMenuLevel := 1
-   ::oMenu      := ::aMenuList[ 1 ]
+METHOD New( nRow, nLeft, nRight ) CLASS TOPBARMENU
 
-   RETURN ( .T. )
+   LOCAL cColor
 
-/***
-*
-*  Execute( <oTopMenu> ) --> oNewMenu:Id | 0
-*
-*  EVAL()uate the Data block if selected MenuItem is !IsPopUp.
-*
-***/
-METHOD Execute() CLASS TopBarMenu
-
-   LOCAL oNewMenu, nCurrent := 0, lPas := .T.
-
-   oNewMenu := ::oMenu:GetItem( ::oMenu:Current )
-
-   IF ( !( ValType( oNewMenu ) == "O" ) )
-   // Execute the Data block if selected MenuItem is !IsPopUp:
-   ELSEIF ( !oNewMenu:IsPopUp )
-      IF ( ::oMenu:ClassName() $ "TOPBARMENU_POPUPMENU" )
-         SETPOS( ::nOldRow, ::nOldCol )
-         SETCURSOR( ::nOldCursor )
-         EVAL( oNewMenu:Data, oNewMenu )
-         SETCURSOR( SC_NONE )
-         lPas := .F.
-      ENDIF
-
-      // Pop the Menu:
-      IF ::PopMenu()
-         nCurrent := ::oMenu:Current
-      ENDIF
-
-      ::oMenu:Select( nCurrent )
-      // Display newly selected current menu item:
-      IF ( ::oMenu:ClassName() == "POPUPMENU" .AND. ;
-         ::nMenuLevel == 1 .AND. ! ::oMenu:IsOpen )
-         ::oMenu:Open()
-      ENDIF
-
-      IF lPas
-         ::oMenu:Close()
-         SETPOS( ::nOldRow, ::nOldCol )
-         SETCURSOR( ::nOldCursor )
-         EVAL( oNewMenu:Data, oNewMenu )
-         SETCURSOR( SC_NONE )
-
-      ENDIF
-
-      RETURN ( oNewMenu:Id )
-
+   IF !ISNUMBER( nRow ) .OR. ;
+      !ISNUMBER( nLeft ) .OR. ;
+      !ISNUMBER( nRight )
+      RETURN NIL
    ENDIF
 
-   RETURN ( 0 )
+   ::nLeft  := nLeft
+   ::nRight := nRight
+   ::nRow   := nRow
 
-/***
-*
-*  MHitTest( <oNewMenu>, <nNewLevel>, <nNewItem>, <oTopMenu> ) --> .T. | .F.
-*
-*  Test to find the Mouse location.
-*  Note: Formal parameters received here were passed by reference.
-*
-***/
-METHOD MHitTest( oNewMenu, nNewLevel, nNewItem ) CLASS TopBarMenu
+   IF IsDefColor()
+      ::cColorSpec := "N/W,W/N,W+/W,W+/N,N+/W,W/N"
+   ELSE
+      cColor := SetColor()
+      ::cColorSpec := __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_BACKGROUND + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_BORDER     + 1 )
+   ENDIF
 
-   FOR nNewLevel := ::nMenuLevel TO 1 STEP -1
-      oNewMenu   := ::aMenuList[ nNewLevel ]
-      nNewItem   := oNewMenu:HitTest( mRow(), mCol() )
-      if ( nNewItem < 0 )
-         // Test for the mouse on Menu separator or border
-         RETURN ( .F. )
+   RETURN Self
 
-      elseif   ( nNewItem > 0 ) .AND. oNewMenu:GetItem( nNewItem ):Enabled
-         // Test for the mouse on an enabled item in the menu
-         RETURN ( .T. )
+/* -------------------------------------------- */
 
-      endif
-
-   NEXT
-
-   RETURN ( .F. )
+FUNCTION TopBar( nRow, nLeft, nRight )
+   RETURN HBTopBarMenu():New( nRow, nLeft, nRight )
 
 #endif

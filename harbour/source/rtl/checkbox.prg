@@ -51,238 +51,328 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
+
 #include "button.ch"
+#include "color.ch"
+#include "common.ch"
+#include "setcurs.ch"
+
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+         it has all related variables and methods. */
+
+/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*() 
+         functions to generate screen output. Harbour uses Disp*() 
+         functions only. [vszakats] */
 
 #ifdef HB_COMPAT_C53
 
-CREATE CLASS CHECKBOX FUNCTION HBCHECKBOX
+CREATE CLASS CHECKBOX FUNCTION HBCheckBox
 
-   VAR Buffer    INIT .f.
-   VAR Caption
-   VAR CapRow
-   VAR CapCol
-   VAR Cargo
-   VAR Col
-   VAR colorspec
-   VAR FBlock
-   VAR HasFocus  INIT  .f.
-   VAR Message   INIT ""
-   VAR Row
-   VAR SBlock
-   VAR Style     INIT "[û ]"
-   VAR lCursor
-   VAR Typeout   INIT   .f.
+   EXPORT:
 
-   METHOD New( nRow, nCol, cCaption )
-   METHOD SetFocus()
-   MESSAGE Select( lState )    METHOD _Select( lState )
-   METHOD KillFocus()
-   METHOD Display()
-   METHOD HitTest( nMouseRow, nMouseCol )
+   VAR cargo
+
+   METHOD display()
+   METHOD hitTest( nMouseRow, nMouseCol )
+   METHOD killFocus()
+   METHOD select()
+   METHOD setFocus()
+
+   METHOD bitmaps( aBitmaps ) SETGET
+   METHOD buffer() SETGET
+   METHOD capCol( nCapCol ) SETGET
+   METHOD capRow( nCapRow ) SETGET
+   METHOD caption( cCaption ) SETGET
+   METHOD col( nCol ) SETGET
+   METHOD colorSpec( cColorSpec ) SETGET
+   METHOD fBlock( bFBlock ) SETGET
+   METHOD hasFocus() SETGET
+   METHOD message( cMessage ) SETGET
+   METHOD row( nRow ) SETGET
+   METHOD sBlock( bSBlock ) SETGET
+   METHOD style( cStyle ) SETGET
+   METHOD typeOut() SETGET
+
+   METHOD New( nRow, nCol, cCaption ) /* NOTE: This method is a Harbour extension [vszakats] */
+
+   PROTECTED:
+
+   VAR aBitmaps   INIT { "check_f.bmu", "check_e.bmu" }
+   VAR lBuffer    INIT .F.
+   VAR nCapCol
+   VAR nCapRow
+   VAR cCaption
+   VAR nCol
+   VAR cColorSpec
+   VAR bFBlock
+   VAR lHasFocus  INIT .F.
+   VAR cMessage   INIT ""
+   VAR nRow
+   VAR bSBlock
+   VAR cStyle     INIT "[" + Chr( 251 ) + " ]"
+
+   VAR nCursor
 
 ENDCLASS
 
-METHOD New( nRow, nCol, cCaption ) CLASS CHECKBOX
+METHOD setFocus() CLASS CHECKBOX
 
-   LOCAL cColor := ""
+   IF !::lHasFocus
+      ::nCursor := SetCursor( SC_NONE )
+      ::lHasFocus := .T.
+      ::display()
 
-   ::Buffer   := .f.
-   ::Caption  := cCaption
-   ::CapRow   := nRow
-   ::CapCol   := nCol + 3 + 1
-   ::Col      := nCol
-
-   IF IsDefColor()
-      ::ColorSpec:="W/N,W+/N,W/N,W+/N"
-   ELSE
-      cColor  := SetColor()
-      ::ColorSpec := __guicolor( cColor, 5 ) + "," + ;
-                     __guicolor( cColor, 2 ) + "," + ;
-                     __guicolor( cColor, 1 ) + "," + ;
-                     __guicolor( cColor, 4 )
-   ENDIF
-
-   ::HasFocus := .f.
-   ::Message  := ""
-   ::Row      := nRow
-
-   ::Style    := "[û ]"
-
-   ::Typeout  := .f.
-
-RETURN Self
-
-METHOD SetFocus() CLASS CHECKBOX
-
-   IF !::HasFocus
-      ::lCursor := SetCursor( 0 )
-      ::HasFocus := .T.
-      ::Display()
-      IF ISBLOCK( ::FBlock )
-         Eval( ::FBlock )
+      IF ISBLOCK( ::bFBlock )
+         Eval( ::bFBlock )
       ENDIF
    ENDIF
 
-RETURN Self
+   RETURN Self
 
-METHOD _Select( lState ) CLASS CHECKBOX
+METHOD select( lState ) CLASS CHECKBOX
 
-   LOCAL lStatus := ::Buffer
+   LOCAL lOldState := ::lBuffer
 
-   IF ISLOGICAL( lState )
-      ::Buffer := lState
-   ELSE
-      ::Buffer := !::Buffer
-   ENDIF
+   ::lBuffer := iif( ISLOGICAL( lState ), lState, !::lBuffer )
 
-   IF lStatus != ::Buffer
-      ::Display()
-      IF ISBLOCK( ::SBlock )
-         Eval( ::SBlock )
+   IF lOldState != ::lBuffer
+      ::display()
+
+      IF ISBLOCK( ::bSBlock )
+         Eval( ::bSBlock )
       ENDIF
    ENDIF
 
-RETURN Self
+   RETURN Self
 
-METHOD KillFocus() CLASS CHECKBOX
+METHOD killFocus() CLASS CHECKBOX
 
-   IF ::HasFocus
-      ::HasFocus := .F.
+   IF ::lHasFocus
+      ::lHasFocus := .F.
 
-      IF ISBLOCK( ::FBlock )
-         Eval( ::FBlock )
+      IF ISBLOCK( ::bFBlock )
+         Eval( ::bFBlock )
       ENDIF
 
-      ::Display()
-      SetCursor( ::lCursor )
+      ::display()
+      SetCursor( ::nCursor )
 
    ENDIF
 
-RETURN Self
+   RETURN Self
 
-METHOD HitTest( nMouseRow, nMouseCol ) CLASS CHECKBOX
+METHOD hitTest( nMouseRow, nMouseCol ) CLASS CHECKBOX
 
-   LOCAL nPosAccel, nLenCaption
+   LOCAL nPosAccel
+   LOCAL nLenCaption
 
-   IF nMouseRow == ::Row .AND. ;
-      nMouseCol >= ::Col .AND. nMouseCol < ::Col + 3
+   IF nMouseRow == ::nRow .AND. ;
+      nMouseCol >= ::nCol .AND. ;
+      nMouseCol < ::nCol + 3
       RETURN HTCLIENT
    ENDIF
-
-   IF ISCHARACTER( ::Caption )
-      nLenCaption := Len( ::Caption )
-      IF ( nPosAccel := At( "&", ::Caption ) ) != 0 .AND. ;
-         nPosAccel < nLenCaption
-         nLenCaption--
-      ENDIF
-
-      IF nMouseRow == ::CapRow .AND. ;
-         nMouseCol >= ::CapCol .AND. nMouseCol < ::CapCol + nLenCaption
-         RETURN HTCAPTION
-      ENDIF
+   
+   nLenCaption := Len( ::cCaption )
+   
+   IF ( nPosAccel := At( "&", ::cCaption ) ) > 0 .AND. ;
+      nPosAccel < nLenCaption
+      nLenCaption--
    ENDIF
 
-RETURN HTNOWHERE
+   IF nMouseRow == ::nCapRow .AND. ;
+      nMouseCol >= ::nCapCol .AND. ;
+      nMouseCol < ::nCapCol + nLenCaption
+      RETURN HTCAPTION
+   ENDIF
 
-METHOD Display() CLASS CHECKBOX
+   RETURN HTNOWHERE
 
-   LOCAL cColor := SetColor(), ;
-         nCurRow := Row(), nCurCol := Col(), ;
-         cOldStyle := ::Style, ;
-         cCaption, nPos
+METHOD display() CLASS CHECKBOX
+
+   LOCAL cOldColor := SetColor()      
+   LOCAL nOldRow := Row()             
+   LOCAL nOldCol := Col()             
+   LOCAL lOldMCur := MSetCursor( .F. )
+
+   LOCAL cStyle := ::cStyle
+   LOCAL cCaption
+   LOCAL nPos
 
    DispBegin()
 
-   IF ::HasFocus
-      SET COLOR TO ( __GuiColor( ::ColorSpec, 2 ) )
-   ELSE
-      SET COLOR TO ( __GuiColor( ::ColorSpec, 1 ) )
-   ENDIF
+   DispOutAt( ::nRow, ::nCol + 1, iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ),;
+      __GUIColor( ::cColorSpec, iif( ::lHasFocus, 2, 1 ) ) )
 
-   SetPos(::Row, ::Col + 1)
-   IF ::Buffer
-      ?? Substr( cOldStyle, 2, 1 )
-   ELSE
-      ?? Substr( cOldStyle, 3, 1 )
-   ENDIF
+   SetColor( __GUIColor( ::cColorSpec, 3 ) )
+   DispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ) )
+   DispOutAt( ::nRow, ::nCol + 2, Right( cStyle, 1 ) )
 
-   SET COLOR TO ( __GuiColor( ::ColorSpec, 3 ) )
-   SetPos( ::Row, ::Col )
-   ?? Left( cOldStyle, 1 )
-   SetPos( ::Row, ::Col + 2 )
-   ?? Right( cOldStyle, 1 )
+   IF !Empty( cCaption := ::cCaption )
 
-   IF !Empty( cCaption := ::Caption )
-      IF ( nPos := At( "&", cCaption ) ) != 0
-         IF nPos == Len( cCaption )
-            nPos := 0
-         ELSE
-            cCaption := Stuff( cCaption, nPos, 1, "" )
-         ENDIF
+      IF ( nPos := At( "&", cCaption ) ) == 0
+      ELSEIF nPos == Len( cCaption )
+         nPos := 0
+      ELSE
+         cCaption := Stuff( cCaption, nPos, 1, "" )
       ENDIF
 
-      IF ::HasFocus
-         SET COLOR TO ( __GuiColor( ::ColorSpec, 4 ) )
+      IF ::lHasFocus
+         SetColor( __GUIColor( ::cColorSpec, 4 ) )
       ENDIF
 
-      SetPos( ::CapRow, ::CapCol )
-      ?? cCaption
+      DispOutAt( ::nCapRow, ::nCapCol, cCaption )
 
-      IF !::HasFocus .and. nPos != 0
-         SET COLOR TO ( __GuiColor( ::ColorSpec, 4 ) )
-         SetPos( ::CapRow, ::CapCol + nPos - 1 )
-         ?? SubStr( cCaption, nPos, 1 )
+      IF !::lHasFocus .AND. nPos != 0
+         DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), __GUIColor( ::cColorSpec, 4 ) )
       ENDIF
 
    ENDIF
 
    DispEnd()
 
-   SET COLOR TO ( cColor )
-   SetPos( nCurRow, nCurCol )
+   MSetCursor( lOldMCur )
+   SetColor( cOldColor )
+   SetPos( nOldRow, nOldCol )
 
-RETURN Self
+   RETURN Self
 
+METHOD bitmaps( aBitmaps ) CLASS CHECKBOX
 
-FUNCTION _CHECKBOX_( lState, cCaption, cMessage, cColor, FBlock, SBlock, cStyle )
-
-   LOCAL oCheck
-
-   oCheck := hbCheckBox():New( Row(), Col(), cCaption )
-
-   IF !ISNIL( oCheck )
-
-      oCheck:Select( lState )
-      oCheck:Caption := cCaption
-
-      IF cColor != NIL
-         oCheck:ColorSpec := cColor
-      ENDIF
-
-      oCheck:Message := cMessage
-
-      IF cStyle != NIL
-         oCheck:Style := cStyle
-      ENDIF
-
-      oCheck:FBlock := FBlock
-      oCheck:SBlock := SBlock
-
+   IF aBitmaps != NIL
+      ::aBitmaps := _eInstVar( Self, "BITMAPS", aBitmaps, "A", 1001 )
    ENDIF
 
-RETURN oCheck
+   RETURN ::aBitmaps
 
-FUNCTION Checkbox( nRow, nCol, cCaption )
+METHOD buffer() CLASS CHECKBOX
+   RETURN ::lBuffer
 
-   Default cCaption to ''
+METHOD capCol( nCapCol ) CLASS CHECKBOX
 
-RETURN hbCheckBox():New( nRow, nCol, cCaption )
+   IF nCapCol != NIL
+      ::nCapCol := _eInstVar( Self, "CAPCOL", nCapCol, "N", 1001 )
+   ENDIF
 
-FUNCTION __GuiColor( cPair, nPos )
-RETURN hb_colorindex( cpair, npos - 1 )
+   RETURN ::nCapCol
 
-FUNCTION IsDefColor()
-RETURN UPPER( SetColor() ) == "W/N,N/W,N/N,N/N,N/W"
+METHOD capRow( nCapRow ) CLASS CHECKBOX
+
+   IF nCapRow != NIL
+      ::nCapRow := _eInstVar( Self, "CAPROW", nCapRow, "N", 1001 )
+   ENDIF
+
+   RETURN ::nCapRow
+
+METHOD caption( cCaption ) CLASS CHECKBOX
+
+   IF cCaption != NIL
+      ::cCaption := _eInstVar( Self, "CAPTION", cCaption, "C", 1001 )
+   ENDIF
+
+   RETURN ::cCaption
+
+METHOD col( nCol ) CLASS CHECKBOX
+
+   IF nCol != NIL
+      ::nCol := _eInstVar( Self, "COL", nCol, "N", 1001 )
+   ENDIF
+
+   RETURN ::nCol
+
+METHOD colorSpec( cColorSpec ) CLASS CHECKBOX
+
+   IF cColorSpec != NIL
+      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+         {|| !Empty( __GUIColor( cColorSpec, 4 ) ) .AND. Empty( __GUIColor( cColorSpec, 5 ) ) } )
+   ENDIF
+
+   RETURN ::cColorSpec
+
+METHOD fBlock( bFBlock ) CLASS CHECKBOX
+   
+   IF PCount() > 0
+      ::bFBlock := iif( bFBlock == NIL, NIL, _eInstVar( Self, "FBLOCK", bFBlock, "B", 1001 ) )
+   ENDIF
+
+   RETURN ::bFBlock
+
+METHOD hasFocus() CLASS CHECKBOX
+   RETURN ::lHasFocus
+
+METHOD message( cMessage ) CLASS CHECKBOX
+
+   IF cMessage != NIL
+      ::cMessage := _eInstVar( Self, "MESSAGE", cMessage, "C", 1001 )
+   ENDIF
+
+   RETURN ::cMessage
+
+METHOD row( nRow ) CLASS CHECKBOX
+
+   IF nRow != NIL
+      ::nRow := _eInstVar( Self, "ROW", nRow, "N", 1001 )
+   ENDIF
+
+   RETURN ::nRow
+
+METHOD sBlock( bSBlock ) CLASS CHECKBOX
+   
+   IF PCount() > 0
+      ::bSBlock := iif( bSBlock == NIL, NIL, _eInstVar( Self, "SBLOCK", bSBlock, "B", 1001 ) )
+   ENDIF
+
+   RETURN ::bSBlock
+
+METHOD style( cStyle ) CLASS CHECKBOX
+
+   IF cStyle != NIL
+      ::cStyle := _eInstVar( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 4 } )
+   ENDIF
+
+   RETURN ::cStyle
+
+METHOD typeOut() CLASS CHECKBOX
+   RETURN .F.
+
+METHOD New( nRow, nCol, cCaption ) CLASS CHECKBOX
+
+   LOCAL cColor
+
+   DEFAULT cCaption TO ""
+
+   ::caption  := cCaption
+   ::capRow   := nRow
+   ::capCol   := nCol + 3 + 1
+   ::row      := nRow
+   ::col      := nCol
+
+   IF IsDefColor()
+      ::cColorSpec := "W/N,W+/N,W/N,W+/N"
+   ELSE
+      cColor := SetColor()
+      ::cColorSpec := __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_BACKGROUND + 1 )
+   ENDIF
+
+   RETURN Self
+
+FUNCTION _CHECKBOX_( lState, cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, aBitmaps )
+   LOCAL o := HBCheckBox():New( Row(), Col(), cCaption )
+   
+   o:select( lState )
+   o:caption   := cCaption
+   o:message   := cMessage
+   o:colorSpec := cColorSpec
+   o:fBlock    := bFBlock
+   o:sBlock    := bSBlock
+   o:style     := cStyle
+   o:bitmaps   := aBitmaps
+
+   RETURN o
+
+FUNCTION CheckBox( nRow, nCol, cCaption )
+   RETURN HBCheckBox():New( nRow, nCol, cCaption )
 
 #endif

@@ -109,6 +109,13 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
 
    FWrite( s_fhnd, Set( _SET_DATEFORMAT ) + hb_OSNewLine() )
 
+   // ; Minus
+
+   SetPos( 14, 14 ) ; o := _GET_( nInt01, "nInt01", "9999.99",, )
+   TEST_LINE( o:SetFocus() )
+   TEST_LINE( o:Minus := .T. )
+   TEST_LINE( o:Minus := .F. )
+
    // ; Picture
 
    SetPos( 14, 14 ) ; o := _GET_( cStr01, "cStr01", "9999999999",, )
@@ -276,7 +283,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    // ; Type change N -> C
 
    SetPos( 14, 14 ) ; o := _GET_( nInt01, "nInt01" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:KillFocus() )
    TEST_LINE( o:block := {| h | LogMe( h ), iif( h == NIL, cStr01, cStr01 := h ) } )
@@ -285,7 +292,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    // ; Reform
 
    SetPos( 14, 14 ) ; o := _GET_( cStr01, "cStr01" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:picture := "!!!!!!!!" )
    TEST_LINE( o:Reform() )
@@ -296,7 +303,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    // ; Minus
 
    SetPos( 14, 14 ) ; o := _GET_( nInt01, "nInt01" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    bOldBlock := o:block
    TEST_LINE( o:block := {| h | LogMe( h ), iif( h == NIL, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
    TEST_LINE( o:SetFocus() )
@@ -312,14 +319,14 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
 
    SetPos( 14, 14 ) ; dDate01 := hb_SToD( "20070425" )
    o := _GET_( dDate01, "dDate01" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:OverStrike("12345678") )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 14 ) ; dDate01 := hb_SToD( "20070425" )
    o := _GET_( dDate01, "dDate01", "@E" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:OverStrike("12345678") )
    TEST_LINE( o:KillFocus() )
@@ -328,42 +335,42 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
 
    SetPos( 14, 14 ) ; dDate01 := hb_SToD( "20070425" )
    o := _GET_( dDate01, "dDate01" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:OverStrike("12345678") )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 14 ) ; dDate01 := hb_SToD( "20070425" )
    o := _GET_( dDate01, "dDate01", "@E" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:OverStrike("12345678") )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 14 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "!!LY!!!!!!" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:OverStrike("12345678") )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 14 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "!!!.!!!!!!" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:OverStrike("12345678") )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 14 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "@R !!LY!!!!!!" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:OverStrike("12345678") )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 14 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "@R !!!.!!!!!!" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:OverStrike("12345678") )
    TEST_LINE( o:KillFocus() )
@@ -697,7 +704,7 @@ PROCEDURE TGetTest( xVar, cPic )
    s_cTest := "Display Var: " + ValType( xVar ) + " Pic: " + iif( cPic == NIL, "(none)", cPic )
 
    SetPos( 14, 14 ) ; o := _GET_( s_xVar, "s_xVar" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:Display() )
 
    // ; In focus
@@ -705,7 +712,7 @@ PROCEDURE TGetTest( xVar, cPic )
    s_cTest := "InFocus Var: " + ValType( xVar ) + " Pic: " + iif( cPic == NIL, "(none)", cPic )
 
    SetPos( 14, 14 ) ; o := _GET_( s_xVar, "s_xVar" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    bOldBlock := o:block
    TEST_LINE( o:block := {| h | LogMe( h ), iif( h == NIL, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
    TEST_LINE( o:SetFocus() )
@@ -725,7 +732,7 @@ PROCEDURE TGetTest( xVar, cPic )
    s_cTest := "NotFocus Var: " + ValType( xVar ) + " Pic: " + iif( cPic == NIL, "(none)", cPic )
 
    SetPos( 14, 14 ) ; o := _GET_( s_xVar, "s_xVar" )
-   TEST_LINE( GET_CREATE() )
+   TEST_LINE( OBJ_CREATE() )
    bOldBlock := o:block
    TEST_LINE( o:block := {| h | LogMe( h ), iif( h == NIL, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
    IF cPic != NIL
@@ -873,14 +880,14 @@ PROCEDURE LogGETVars( o, desc, xResult )
    FWrite( s_fhnd, "   TypeOut       " + XToStr( o:TypeOut   ) + hb_OSNewLine() )
 #ifndef __HARBOUR__
    IF s_lC5xDump
-      FWrite( s_fhnd, "   _dump_        " + GetToList( o ) + hb_OSNewLine() )
+      FWrite( s_fhnd, "   _dump_        " + ObjToList( o ) + hb_OSNewLine() )
    ENDIF
 #endif
    FWrite( s_fhnd, "---------------------" + hb_OSNewLine() )
 
    RETURN
 
-STATIC FUNCTION GetToList( o )
+STATIC FUNCTION ObjToList( o )
    LOCAL cString := ""
    LOCAL tmp
 
@@ -946,10 +953,12 @@ FUNCTION XToStrE( xValue )
    RETURN ""
 
 STATIC FUNCTION ErrorMessage( oError )
-   LOCAL cMessage := ""
+   LOCAL cMessage
    LOCAL tmp
 
    IF s_lRTEDetails
+
+      cMessage := ""
 
       IF ValType( oError:severity ) == "N"
          DO CASE
@@ -1001,6 +1010,8 @@ STATIC FUNCTION ErrorMessage( oError )
             cMessage += "S"
          ENDIF
       ENDIF
+   ELSE
+      cMessage := "(ERROR)"
    ENDIF
 
    RETURN cMessage
@@ -1036,7 +1047,7 @@ FUNCTION hb_SToD( cDate )
 #endif
 #endif
 
-PROCEDURE GET_CREATE()
+PROCEDURE OBJ_CREATE()
 
    // ; Dummy
 

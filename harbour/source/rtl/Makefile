@@ -156,13 +156,14 @@ PRG_SOURCES=\
 	fieldbl.prg  \
 	getlist.prg  \
 	getsys.prg   \
+	gui.prg      \
 	input.prg    \
 	listbox.prg  \
 	logical.prg  \
 	memoedit.prg \
 	memvarbl.prg \
 	menuto.prg   \
-	mssgline.prg \
+	menusys.prg  \
 	nil.prg      \
 	numeric.prg  \
 	objfunc.prg  \
@@ -189,6 +190,7 @@ PRG_SOURCES=\
 	tgetlist.prg \
 	tlabel.prg   \
 	tmenuitm.prg \
+	tmenusys.prg \
 	tobject.prg  \
 	tpopup.prg   \
 	treport.prg  \

@@ -55,18 +55,19 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2001 Luiz Rafael Culik
- *    Support for Ca-Clipper 5.3 Getsystem
+ *    Support for CA-Cl*pper 5.3 Getsystem
  *
  * See doc/license.txt for licensing terms.
  *
  */
 
 #include "hbclass.ch"
+
+#include "button.ch"
 #include "common.ch"
 #include "getexit.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
-#include "button.ch"
 #include "tbrowse.ch"
 
 #define SCORE_ROW       0
@@ -78,27 +79,12 @@
 
 #define K_UNDO          K_CTRL_U
 
-CLASS HBGetList
+CREATE CLASS HBGetList
 
-   DATA aGetList
-   DATA oGet
-   DATA nPos            INIT 1
-   DATA bFormat
-   DATA lUpdated        INIT .f.
-   DATA lKillRead       INIT .f.
-   DATA lBumpTop        INIT .f.
-   DATA lBumpBot        INIT .f.
-   DATA nLastExitState  INIT 0
-   DATA nLastPos        INIT 0
-   DATA oActiveGet
-   DATA cReadProcName   INIT ""
-   DATA nReadProcLine
-   DATA cVarName
-   DATA lHasFocus       INIT .f.
-   DATA nHitCode        INIT 0
-   DATA nNextGet
+   EXPORT:
 
-   METHOD New( GetList )
+   VAR HasFocus        AS LOGICAL   INIT .F.
+
    METHOD Settle( nPos )
    METHOD Reader()
    METHOD GetApplyKey( nKey )
@@ -119,24 +105,37 @@ CLASS HBGetList
    METHOD Updated()
 
 #ifdef HB_COMPAT_C53
-   METHOD GUIReader( oGet, GetList, oMenu, aMsg )
-   METHOD GUIApplyKey( oGUI, nKey )
-   METHOD GUIPreValidate( oGUI )
-   METHOD GUIPostValidate( oGUI )
-   METHOD TBApplyKey( oGet, oTB,  nKey )
-   METHOD TBReader( oGet)
-   METHOD Accelerator( nKey )
+   METHOD GUIReader( oGet, oMenu, aMsg )
+   METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg )
+   METHOD GUIPreValidate( oGUI, aMsg )
+   METHOD GUIPostValidate( oGUI, aMsg )
+   METHOD TBApplyKey( oGet, oTB, nKey, aMsg )
+   METHOD TBReader( oGet, oMenu, aMsg )
+   METHOD Accelerator( nKey, aMsg )
    METHOD HitTest( nMouseRow, nMouseColumn, aMsg )
 #endif
 
+   METHOD New( GetList )
+
+   VAR lUpdated        AS LOGICAL   INIT .F.
+   VAR bFormat
+   VAR lKillRead       AS LOGICAL   INIT .F.
+   VAR lBumpTop        AS LOGICAL   INIT .F.
+   VAR lBumpBot        AS LOGICAL   INIT .F.
+   VAR nLastExitState  AS NUMERIC   INIT 0
+   VAR nLastPos        AS NUMERIC   INIT 0
+   VAR oActiveGet
+   VAR cVarName
+   VAR cReadProcName   AS CHARACTER INIT ""
+   VAR nReadProcLine
+   VAR nNextGet
+   VAR nHitCode        AS NUMERIC   INIT 0
+   VAR nPos            AS NUMERIC   INIT 1
+
+   VAR aGetList
+   VAR oGet
+
 ENDCLASS
-
-METHOD New( GetList ) CLASS HBGetList
-
-   ::aGetList       := GetList
-   ::oGet           := iif( ISARRAY( GetList ) .AND. Len( GetList ) >= 1, GetList[ 1 ], NIL )
-
-return Self
 
 METHOD ReadExit( lNew ) CLASS HBGetList
    return iif( ISLOGICAL( lNew ), Set( _SET_EXIT, lNew ), Set( _SET_EXIT ) )
@@ -160,7 +159,7 @@ METHOD Reader() CLASS HBGetList
 
       oGet:SetFocus()
 
-      while oGet:ExitState == GE_NOEXIT
+      do while oGet:ExitState == GE_NOEXIT
          if oGet:typeOut
             oGet:ExitState := GE_ENTER
          endif
@@ -169,19 +168,19 @@ METHOD Reader() CLASS HBGetList
             oGet:ExitState := GE_ENTER
          endif
 
-         while oGet:exitState == GE_NOEXIT
+         do while oGet:exitState == GE_NOEXIT
             ::GetApplyKey( Inkey( 0 ) )
-         end
+         enddo
 
          if ! ::GetPostValidate()
             oGet:ExitState := GE_NOEXIT
          endif
-      end
+      enddo
 
       oGet:killFocus()
    endif
 
-return Self
+   return Self
 
 METHOD GetApplyKey( nKey ) CLASS HBGetList
 
@@ -203,7 +202,7 @@ METHOD GetApplyKey( nKey ) CLASS HBGetList
 
       oGet:ExitState := GE_SHORTCUT
       ::nNextGet       := nHotItem
-      ::nLastExitState := GE_SHORTCUT  // Added.
+      ::nLastExitState := GE_SHORTCUT
 
    endif
 
@@ -251,14 +250,14 @@ METHOD GetApplyKey( nKey ) CLASS HBGetList
          ::ShowScoreboard()
 
       case nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
-         nMouseRow    := mROW()
-         nMouseColumn := mCOL()
+         nMouseRow    := MRow()
+         nMouseColumn := MCol()
 
          nButton := 0
 
          if ( nButton := oGet:HitTest( nMouseRow, nMouseColumn ) ) == HTCLIENT
 
-            do while oGet:Col+oGet:Pos-1 > nMouseColumn
+            do while oGet:Col + oGet:Pos - 1 > nMouseColumn
                oGet:Left()
 
                // Handle editing buffer if first character is non-editable:
@@ -284,9 +283,9 @@ METHOD GetApplyKey( nKey ) CLASS HBGetList
 
          elseif nButton != HTNOWHERE
 
-         elseif ::aGetList != NIL .AND. ::HitTest( nMouseRow, nMouseColumn ) != 0   // Changed.
+         elseif ::aGetList != NIL .AND. ::HitTest( nMouseRow, nMouseColumn ) != 0
             oGet:ExitState := GE_MOUSEHIT
-            ::nLastExitState := GE_MOUSEHIT  // Added.
+            ::nLastExitState := GE_MOUSEHIT
 
          else
             oGet:ExitState := GE_NOEXIT
@@ -356,12 +355,12 @@ METHOD GetApplyKey( nKey ) CLASS HBGetList
          endif
       endcase
 
-return Self
+   return Self
 
 METHOD GetPreValidate() CLASS HBGetList
 
    local oGet := ::oGet
-   local lUpdated, lWhen := .t.
+   local lUpdated, lWhen := .T.
    local xValue
 
    if oGet:PreBlock != NIL
@@ -391,37 +390,37 @@ METHOD GetPreValidate() CLASS HBGetList
    endif
 
    if ::lKillRead
-      lWhen := .f.
+      lWhen := .F.
       oGet:ExitState := GE_ESCAPE
    elseif ! lWhen
       oGet:ExitState := GE_WHEN
    else
       oGet:ExitState := GE_NOEXIT
-   end
+   endif
 
-return lWhen
+   return lWhen
 
 METHOD GetPostValidate() CLASS HBGetList
 
    local oGet := ::oGet
    local lUpdated
-   local lValid := .t.
+   local lValid := .T.
    local xValue
 
    if oGet:ExitState == GE_ESCAPE
-      return .t.
+      return .T.
    endif
 
    if oGet:BadDate
       oGet:home()
       ::DateMsg()
       ::ShowScoreboard()
-      return .f.
+      return .F.
    endif
 
    if oGet:Changed
       oGet:Assign()
-      ::lUpdated := .t.
+      ::lUpdated := .T.
    endif
 
    oGet:Reset():Display()
@@ -454,11 +453,11 @@ METHOD GetPostValidate() CLASS HBGetList
 
       if ::lKillRead
          oGet:ExitState := GE_ESCAPE
-         lValid := .t.
+         lValid := .T.
       endif
    endif
 
-return lValid
+   return lValid
 
 METHOD GetDoSetKey( bKeyBlock ) CLASS HBGetList
 
@@ -466,7 +465,7 @@ METHOD GetDoSetKey( bKeyBlock ) CLASS HBGetList
 
    if oGet:Changed
       oGet:Assign()
-      ::lUpdated := .t.
+      ::lUpdated := .T.
    endif
 
    xValue   := oGet:VarGet()
@@ -495,7 +494,7 @@ METHOD GetDoSetKey( bKeyBlock ) CLASS HBGetList
       oGet:ExitState := GE_ESCAPE
    endif
 
-return Self
+   return Self
 
 METHOD Settle( nPos ) CLASS HBGetList
 
@@ -517,8 +516,8 @@ METHOD Settle( nPos ) CLASS HBGetList
 
    if nExitState != GE_WHEN
       ::nLastPos := nPos
-      ::lBumpTop := .f.
-      ::lBumpBot := .f.
+      ::lBumpTop := .F.
+      ::lBumpBot := .F.
    else
       if ::nLastExitState != 0
          nExitState := ::nLastExitState
@@ -531,43 +530,43 @@ METHOD Settle( nPos ) CLASS HBGetList
    endif
 
    do case
-      case nExitState == GE_UP
-         nPos--
+   case nExitState == GE_UP
+      nPos--
 
-      case nExitState == GE_DOWN
-         nPos++
+   case nExitState == GE_DOWN
+      nPos++
 
-      case nExitState == GE_TOP
-         nPos := 1
-         ::lBumpTop := .T.
-         nExitState := GE_DOWN
+   case nExitState == GE_TOP
+      nPos := 1
+      ::lBumpTop := .T.
+      nExitState := GE_DOWN
 
-      case nExitState == GE_BOTTOM
-         nPos := Len( ::aGetList )
-         ::lBumpBot := .t.
-         nExitState := GE_UP
+   case nExitState == GE_BOTTOM
+      nPos := Len( ::aGetList )
+      ::lBumpBot := .T.
+      nExitState := GE_UP
 
-      case nExitState == GE_ENTER
-         nPos++
+   case nExitState == GE_ENTER
+      nPos++
 
-      case nExitState == GE_SHORTCUT 
-         return ::nNextGet
+   case nExitState == GE_SHORTCUT 
+      return ::nNextGet
 
-      case nExitState == GE_MOUSEHIT
-         return ::nNextGet
+   case nExitState == GE_MOUSEHIT
+      return ::nNextGet
 
    endcase
 
    if nPos == 0
       if ! ::ReadExit() .and. ! ::lBumpBot
-         ::lBumpTop := .t.
+         ::lBumpTop := .T.
          nPos       := ::nLastPos
          nExitState := GE_DOWN
       endif
 
    elseif nPos == Len( ::aGetList ) + 1
       if ! ::ReadExit() .and. nExitState != GE_ENTER .and. ! ::lBumpTop
-         ::lBumpBot := .t.
+         ::lBumpBot := .T.
          nPos       := ::nLastPos
          nExitState := GE_UP
       else
@@ -581,7 +580,7 @@ METHOD Settle( nPos ) CLASS HBGetList
       ::aGetList[ nPos ]:ExitState := nExitState
    endif
 
-return nPos
+   return nPos
 
 METHOD PostActiveGet() CLASS HBGetList
 
@@ -589,7 +588,7 @@ METHOD PostActiveGet() CLASS HBGetList
    ::ReadVar( ::GetReadVar() )
    ::ShowScoreBoard()
 
-return Self
+   return Self
 
 METHOD GetReadVar() CLASS HBGetList
 
@@ -601,9 +600,9 @@ METHOD GetReadVar() CLASS HBGetList
       for n := 1 TO Len( oGet:Subscript )
          cName += "[" + LTrim( Str( oGet:Subscript[ n ] ) ) + "]"
       next
-   end
+   endif
 
-return cName
+   return cName
 
 METHOD SetFormat( bFormat ) CLASS HBGetList
 
@@ -611,7 +610,7 @@ METHOD SetFormat( bFormat ) CLASS HBGetList
 
    ::bFormat := bFormat
 
-return bSavFormat
+   return bSavFormat
 
 METHOD KillRead( lKill ) CLASS HBGetList
 
@@ -621,7 +620,7 @@ METHOD KillRead( lKill ) CLASS HBGetList
       ::lKillRead := lKill
    endif
 
-return lSavKill
+   return lSavKill
 
 METHOD GetActive( oGet ) CLASS HBGetList
 
@@ -631,7 +630,7 @@ METHOD GetActive( oGet ) CLASS HBGetList
       ::oActiveGet := oGet
    endif
 
-return oOldGet
+   return oOldGet
 
 METHOD ShowScoreboard() CLASS HBGetList
 
@@ -651,7 +650,7 @@ METHOD ShowScoreboard() CLASS HBGetList
 
    endif
 
-return Self
+   return Self
 
 METHOD DateMsg() CLASS HBGetList
 
@@ -674,7 +673,7 @@ METHOD DateMsg() CLASS HBGetList
 
    endif
 
-return Self
+   return Self
 
 METHOD ReadVar( cNewVarName ) CLASS HBGetList
 
@@ -684,7 +683,7 @@ METHOD ReadVar( cNewVarName ) CLASS HBGetList
       ::cVarName := cNewVarName
    endif
 
-return cOldName
+   return cOldName
 
 METHOD ReadUpdated( lUpdated ) CLASS HBGetList
 
@@ -694,18 +693,17 @@ METHOD ReadUpdated( lUpdated ) CLASS HBGetList
       ::lUpdated := lUpdated
    endif
 
-return lSavUpdated
+   return lSavUpdated
 
 #ifdef HB_COMPAT_C53
 
-METHOD GuiReader( oGet, GetList, oMenu, aMsg ) CLASS HBGetList
-   Local oGUI
+METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
+   LOCAL oGUI
 
-   HB_SYMBOL_UNUSED( GetList )
    HB_SYMBOL_UNUSED( oMenu )
    HB_SYMBOL_UNUSED( aMsg )
 
-   if ! ::GUIPreValidate( oGet:Control )
+   if ! ::GUIPreValidate( oGet:Control, aMsg )
 
    elseif ISOBJECT( oGet:Control )
 
@@ -723,12 +721,12 @@ METHOD GuiReader( oGet, GetList, oMenu, aMsg ) CLASS HBGetList
 
          // Apply keystrokes until exit
          do while oGet:exitState == GE_NOEXIT .AND. !::lKillRead
-            ::GUIApplyKey( oGUI, inkey(0) )
+            ::GUIApplyKey( oGet, oGUI, Inkey( 0 ) )
          enddo
 
          // Disallow exit if the VALID condition is not satisfied
 
-         if !::GUIPostValidate( oGUI )
+         if !::GUIPostValidate( oGUI, aMsg )
             oGet:exitState := GE_NOEXIT
          endif
       enddo
@@ -747,20 +745,21 @@ METHOD GuiReader( oGet, GetList, oMenu, aMsg ) CLASS HBGetList
 
    return Self
 
-METHOD GUIApplyKey( oGUI, nKey ) CLASS HBGetList
-   Local oGet := ::oGet
+METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
    Local bKeyBlock
    Local oTheClass
    Local nHotItem
    Local lClose
    Local nMouseRow, nMouseColumn, nButton
 
+   HB_SYMBOL_UNUSED( oMenu )
+
    // Check for SET KEY first
    if ( bKeyBlock := SetKey( nKey ) ) != NIL
       ::GetDoSetKey( bKeyBlock, oGet )
    endif
 
-   if ( nHotItem := ::Accelerator( nKey ) ) != 0
+   if ( nHotItem := ::Accelerator( nKey, aMsg ) ) != 0
       oGet:ExitState := GE_SHORTCUT
       ::nNextGet := nHotItem
    endif 
@@ -815,7 +814,7 @@ METHOD GUIApplyKey( oGUI, nKey ) CLASS HBGetList
             nKey := 0
          endif
 
-      elseif ( nButton := oGUI:FindText( chr(nKey), oGUI:Value+1, .f., .f. ) ) != 0
+      elseif ( nButton := oGUI:FindText( chr(nKey), oGUI:Value+1, .F., .F. ) ) != 0
          oGUI:Select( nButton )
 
       endif
@@ -882,7 +881,7 @@ METHOD GUIApplyKey( oGUI, nKey ) CLASS HBGetList
          // Changed test:
          if ::HitTest( nMouseRow, nMouseColumn  ) != 0
             oGet:ExitState := GE_MOUSEHIT
-            ::nLastExitState := GE_MOUSEHIT  // Added.
+            ::nLastExitState := GE_MOUSEHIT
          else
             oGet:ExitState := GE_NOEXIT
          endif
@@ -914,6 +913,126 @@ METHOD GUIApplyKey( oGUI, nKey ) CLASS HBGetList
 
    return Self
 
+METHOD GUIPostValidate( oGUI, aMsg ) CLASS HBGetList
+   Local oGet := ::oGet
+   Local lUpdated
+   Local lValid := .T.
+   Local xValue
+
+   if oGet:exitState == GE_ESCAPE
+      return .T.                   // NOTE
+   endif
+
+   if oGet:BadDate
+      oGet:home()
+      ::DateMsg()
+      ::ShowScoreboard()
+      return .F.
+   endif
+
+   if oGet:Changed
+      oGet:UpdateBuffer()
+      ::lUpdated := .T.
+   endif
+
+   oGet:Reset():Display()
+
+/*
+   // If editing occurred, assign the new value to the variable
+   if !( uOldData == uNewData )
+      oGet:VarPut( uNewData )
+      ::lUpdated := .T.
+   endif
+*/
+
+   // Check VALID condition if specified
+   if oGet:postBlock != NIL
+
+      xValue   := oGet:VarGet()
+      lUpdated := ::lUpdated
+
+      lValid := Eval( oGet:postBlock, oGet, aMsg )
+
+      // Reset S'87 compatibility cursor position
+      SetPos( oGet:Row, oGet:Col )
+
+      if !( ValType( xValue ) == ValType( oGet:VarGet() ) ) .or.;
+         !( oGet:VarGet() == xValue )
+         oGet:VarPut( oGet:VarGet() )
+      endif
+      oGet:UpdateBuffer()
+
+      ::ShowScoreBoard()
+      if ! ( oGUI:ClassName == "TBROWSE" )
+         oGUI:Select( oGet:VarGet() )
+      endif
+
+      ::lUpdated := lUpdated
+
+/*
+      if __GetListActive() != Self
+         __GetListSetActive( Self )
+      endif
+*/
+      __GetListLast( Self )
+
+      if ::lKillRead
+         oGet:ExitState := GE_ESCAPE      // Provokes ReadModal() exit
+         lValid := .T.
+      endif
+
+   endif
+
+   return lValid 
+
+METHOD GUIPreValidate( oGUI, aMsg ) CLASS HBGetList
+   Local oGet := ::oGet
+   Local lUpdated
+   Local lWhen := .T.
+   Local xValue
+
+   HB_SYMBOL_UNUSED( oGUI )
+
+   if oGet:preBlock != NIL
+
+      xValue   := oGet:VarGet()
+      lUpdated := ::lUpdated
+
+      lWhen := Eval( oGet:preBlock, oGet, aMsg )
+
+      if !( ValType( xValue ) == ValType( oGet:VarGet() ) ) .or.;
+         !( oGet:VarGet() == xValue )
+         oGet:VarPut( oGet:VarGet() )
+      else
+         oGet:Display()
+      endif
+
+      ::ShowScoreBoard()
+
+      ::lUpdated := lUpdated
+
+/*
+      if __GetListActive() != Self
+         __GetListSetActive( Self )
+      endif
+*/
+      __GetListLast( Self )
+   endif
+
+   if ::lKillRead
+      lWhen := .F.
+      oGet:ExitState := GE_ESCAPE
+
+   elseif !lWhen
+      oGet:ExitState := GE_WHEN
+
+   else
+      oGet:ExitState := GE_NOEXIT
+
+   endif
+
+   return lWhen
+
 METHOD TBApplyKey( oGet, oTB, nKey, aMsg ) CLASS HBGetList
 
    Local bKeyBlock
@@ -929,7 +1048,7 @@ METHOD TBApplyKey( oGet, oTB, nKey, aMsg ) CLASS HBGetList
       endif
    endif
 
-   if ( nHotItem := ::Accelerator(  nKey) ) != 0
+   if ( nHotItem := ::Accelerator( nKey, aMsg ) ) != 0
       oGet:ExitState := GE_SHORTCUT
    endif
 
@@ -970,8 +1089,8 @@ METHOD TBApplyKey( oGet, oTB, nKey, aMsg ) CLASS HBGetList
       nMouseColumn := mCOL()
       nButton      := 0
 
-      if ( nButton := oTB:HitTest( nMouseRow, nMouseColumn ) ) == HTNOWHERE // Changed test:
-         if ::HitTest(  nMouseRow, nMouseColumn, aMsg ) != 0
+      if ( nButton := oTB:HitTest( nMouseRow, nMouseColumn ) ) == HTNOWHERE
+         if ::HitTest( nMouseRow, nMouseColumn, aMsg ) != 0
             oGet:ExitState := GE_MOUSEHIT
          else
             oGet:ExitState := GE_NOEXIT
@@ -982,141 +1101,20 @@ METHOD TBApplyKey( oGet, oTB, nKey, aMsg ) CLASS HBGetList
 
    return self
 
-
-METHOD GUIPostValidate( oGUI ) CLASS HBGetList
-   Local oGet := ::oGet
-   Local lUpdated
-   Local lValid := .T.
-   Local xValue
-
-   if oGet:exitState == GE_ESCAPE
-      return .t.                   // NOTE
-   endif
-
-   if oGet:BadDate
-      oGet:home()
-      ::DateMsg()
-      ::ShowScoreboard()
-      return .f.
-   endif
-
-   if oGet:Changed
-      oGet:UpdateBuffer()
-      ::lUpdated := .t.
-   endif
-
-   oGet:Reset():Display()
-
-/*
-   // If editing occurred, assign the new value to the variable
-   if !( uOldData == uNewData )
-      oGet:VarPut( uNewData )
-      ::lUpdated := .T.
-   endif
-*/
-
-   // Check VALID condition if specified
-   if oGet:postBlock != NIL
-
-      xValue   := oGet:VarGet()
-      lUpdated := ::lUpdated
-
-      lValid := Eval( oGet:postBlock, oGet )
-
-      // Reset S'87 compatibility cursor position
-      setpos( oGet:Row, oGet:Col )
-
-      if !( ValType( xValue ) == ValType( oGet:VarGet() ) ) .or.;
-         !( oGet:VarGet() == xValue )
-         oGet:VarPut( oGet:VarGet() )
-      endif
-      oGet:UpdateBuffer()
-
-      ::ShowScoreBoard()
-      if ! ( oGUI:ClassName == "TBROWSE" )
-         oGUI:Select( oGet:VarGet() )
-      endif
-
-      ::lUpdated := lUpdated
-
-/*
-      if __GetListActive() != Self
-         __GetListSetActive( Self )
-      endif
-*/
-      __GetListLast( Self )
-
-      if ::lKillRead
-         oGet:ExitState := GE_ESCAPE      // Provokes ReadModal() exit
-         lValid := .T.
-      endif
-
-   endif
-
-   return  lValid 
-
-METHOD GUIPreValidate( oGUI ) CLASS HBGetList
-   Local oGet := ::oGet
-   Local lUpdated
-   Local lWhen := .T.
-   Local xValue
-
-   HB_SYMBOL_UNUSED( oGUI )
-
-   if oGet:preBlock != NIL
-
-      xValue   := oGet:VarGet()
-      lUpdated := ::lUpdated
-
-      lWhen := eval( oGet:preBlock, oGet )
-
-      if !( ValType( xValue ) == ValType( oGet:VarGet() ) ) .or.;
-         !( oGet:VarGet() == xValue )
-         oGet:VarPut( oGet:VarGet() )
-      else
-         oGet:Display()
-      endif
-
-      ::ShowScoreBoard()
-
-      ::lUpdated := lUpdated
-
-/*
-      if __GetListActive() != Self
-         __GetListSetActive( Self )
-      endif
-*/
-      __GetListLast( Self )
-   endif
-
-   if ::lKillRead
-      lWhen := .F.
-      oGet:ExitState := GE_ESCAPE
-
-   elseif !lWhen
-      oGet:ExitState := GE_WHEN
-
-   else
-      oGet:ExitState := GE_NOEXIT
-
-   endif
-
-   return lWhen
-
-METHOD TBReader( oGet, oGetsys, aMsg ) CLASS HBGetList
+METHOD TBReader( oGet, oMenu, aMsg ) CLASS HBGetList
    Local oTB, nKey, lAutoLite, nSaveCursor, nProcessed
 //   Local oGUI := oGet:control
 
-   HB_SYMBOL_UNUSED( oGetsys )
+   HB_SYMBOL_UNUSED( oMenu )
 
    // Read the GET if the WHEN condition is satisfied
-   if ISOBJECT( oGet:control ) .AND. ;    // Moved up 2 lines.
-      ::nLastExitState == GE_SHORTCUT .OR. ;  // Added.
-      ::nLastExitState == GE_MOUSEHIT .OR. ;  // Added.
+   if ISOBJECT( oGet:control ) .AND. ;
+      ::nLastExitState == GE_SHORTCUT .OR. ;
+      ::nLastExitState == GE_MOUSEHIT .OR. ;
       ::GetPreValidate( oGet, aMsg )
 
 //      ShowGetMsg( oGet, aMsg )
-      ::nLastExitState := 0  // Added.
+      ::nLastExitState := 0
 
       nSaveCursor := SetCursor( SC_NONE )
 
@@ -1127,15 +1125,14 @@ METHOD TBReader( oGet, oGetsys, aMsg ) CLASS HBGetList
       oTB:Autolite := .T.
       oTB:Hilite()
 
-      if oGet:exitState == GE_NOEXIT  // Added.
+      if oGet:exitState == GE_NOEXIT
          if ::nHitcode == HTCELL
-            //   tracelog('hitcode ',::nHitcode )
             // Replaces call to TBMouse( oTB, mROW(), mCOL() ):
             oTB:RowPos := oTb:mRowPos
             oTB:ColPos := oTb:mColPos
             oTB:Invalidate()
          endif
-      endif  // Added.
+      endif
 
       ::nHitcode := 0
 
@@ -1159,7 +1156,7 @@ METHOD TBReader( oGet, oGetsys, aMsg ) CLASS HBGetList
                exit
 
             elseif nProcessed == TBR_EXCEPTION
-               ::TBApplyKey( oGet, oTB,  nKey, aMsg )
+               ::TBApplyKey( oGet, oTB, nKey, aMsg )
 
                // nRow := ROW()  // Commented out.
                // nCol := COL()  // Commented out.
@@ -1171,10 +1168,9 @@ METHOD TBReader( oGet, oGetsys, aMsg ) CLASS HBGetList
          enddo
 
          // Disallow exit if the VALID condition is not satisfied
-         if ::nLastExitState == GE_SHORTCUT       // Added.
-         elseif ::nLastExitState == GE_MOUSEHIT   // Added.
-         elseif !::GetPostValidate( oGet, aMsg )  // Changed.
-         // if !::GUIPostValidate( oGet, oGUI, aMsg ) // Old test.
+         if ::nLastExitState == GE_SHORTCUT
+         elseif ::nLastExitState == GE_MOUSEHIT
+         elseif !::GetPostValidate( oGet, aMsg )
             oGet:ExitState := GE_NOEXIT
          endif
 
@@ -1189,10 +1185,12 @@ METHOD TBReader( oGet, oGetsys, aMsg ) CLASS HBGetList
 
    return Self
 
-METHOD Accelerator( nKey ) CLASS HBGetList
+METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
 
-   Local nGet, oGet, nHotPos, cKey, cCaption, nStart, nEnd
-   Local nIteration, lGUI
+   local nGet, oGet, nHotPos, cKey, cCaption, nStart, nEnd
+   local nIteration, lGUI
+
+   HB_SYMBOL_UNUSED( aMsg )
 
    if nKey >= K_ALT_Q .and. nKey <= K_ALT_P
       cKey := substr( "qwertyuiop", nKey - K_ALT_Q + 1, 1 )
@@ -1236,10 +1234,10 @@ METHOD Accelerator( nKey ) CLASS HBGetList
              // Test the current GUI-GET or Get PostValidation:
              lGUI := ISOBJECT( ::aGetList[ ::nPos ]:Control )
 
-             if lGUI .and. !::GUIPostValidate( ::aGetList[ ::nPos ]:Control )
+             if lGUI .and. !::GUIPostValidate( ::aGetList[ ::nPos ]:Control, aMsg )
                 return 0
 
-             elseif !lGUI .and. !::GetPostValidate( ::aGetList[ ::nPos ] )
+             elseif !lGUI .and. !::GetPostValidate( ::aGetList[ ::nPos ], aMsg )
                 return 0
 
              endif
@@ -1247,32 +1245,31 @@ METHOD Accelerator( nKey ) CLASS HBGetList
              // Test the next GUI-GET or Get PreValidation:
              lGUI := ISOBJECT( oGet:Control )
 
-             if lGUI .and. !::GUIPreValidate( oGet:Control )
+             if lGUI .and. !::GUIPreValidate( oGet:Control, aMsg )
                 // return 0  // Commented out.
                 return nGet  // Changed.
 
-             elseif !lGUI .and. !::GetPreValidate( oGet )
+             elseif !lGUI .and. !::GetPreValidate( oGet, aMsg )
                 // return 0  // Commented out.
                 return nGet  // Changed.
 
              endif
 
-             return ( nGet )
+             return nGet
           endif
        next
 
        nStart := 1
        nEnd   := ::nPos - 1
-
    next
 
-   return  0
+   return 0
 
 METHOD HitTest( nMouseRow, nMouseCol, aMsg ) CLASS HBGetList
    Local nCount, nTotal, lGUI
 
    ::nNextGet := 0
-   nTotal  := len( ::aGetList )
+   nTotal := len( ::aGetList )
 
    for nCount := 1 to nTotal
       if ( ::nHitCode := ::aGetList[ nCount ]:HitTest( nMouseRow, nMouseCol ) ) != HTNOWHERE
@@ -1329,3 +1326,13 @@ METHOD HitTest( nMouseRow, nMouseCol, aMsg ) CLASS HBGetList
    return 0  // Changed.
 
 #endif
+
+METHOD New( GetList ) CLASS HBGetList
+
+   ::aGetList := GetList
+
+   IF ISARRAY( GetList ) .AND. Len( GetList ) >= 1
+      ::oGet := GetList[ 1 ]
+   ENDIF
+
+   return Self

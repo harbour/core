@@ -8,6 +8,65 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-07 03:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * tests/Makefile
+   * tests/rto_get.prg
+   + tests/rto_tb.prg
+   * include/button.ch
+   * include/hbextern.ch
+   * common.mak
+   * source/rtl/Makefile
+   - source/rtl/mssgline.prg
+   + source/rtl/gui.prg
+   + source/rtl/menusys.prg
+   + source/rtl/tmenusys.prg
+   * source/rtl/checkbox.prg
+   * source/rtl/einstvar.prg
+   * source/rtl/getlist.prg
+   * source/rtl/getsys.prg
+   * source/rtl/listbox.prg
+   * source/rtl/memoedit.prg
+   * source/rtl/pushbtn.prg
+   * source/rtl/radiobtn.prg
+   * source/rtl/radiogrp.prg
+   * source/rtl/scrollbr.prg
+   * source/rtl/tbcolumn.prg
+   * source/rtl/tbrowse.prg
+   * source/rtl/teditor.prg
+   * source/rtl/tget.prg
+   * source/rtl/tgetlist.prg
+   * source/rtl/tlabel.prg
+   * source/rtl/tmenuitm.prg
+   * source/rtl/tpopup.prg
+   * source/rtl/treport.prg
+   * source/rtl/ttopbar.prg
+     ; These changes mainly targeted the .prg 
+       level UI classes of Harbour.
+     + Code standardization, cleanup, formatting.
+       (formatting is not fully complete yet)
+     ! Lots of compatibility fixes.
+     ! Lots of bugfixes (crashes, wrongly passed 
+       parameters, etc).
+     ! Minor fix in one of the methods of HBReportForm()
+     - Non-Clipper classes removed (the MENUSYS/msgline 
+       related ones).
+     ! Some fixes adapted from xHarbour's TBrowse()
+     + Class VARs properly scoped.
+     + TBColumn() is now fully compatible.
+     * The mess in the TTopBar and related classes was 
+       cleaned up, some small non-Clipper compatible 
+       classes were removed and a new TMenuSys class 
+       was created of the related parts.
+     % Optimizations.
+     + TBrowse/TBColumn regression test suite 
+       added (far from complete at this point).
+     ; NOTE: No C5.3 GUI support is implemented in Harbour.
+     ; NOTE: Harbour uses Disp*() functions in UI functions 
+             to update screen. C5.x uses a mixture of Dev*(), 
+             Q?Out() and Disp*().
+     ; NOTE: TBrowse() fixing is still a work in progress.
+     ; Please test.
+
 2007-09-06 13:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/set.c
     ! fixed typo in SET name

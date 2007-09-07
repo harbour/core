@@ -104,6 +104,7 @@ PRG_SOURCES=\
 	recursiv.prg \
 	returns.prg \
 	rto_get.prg \
+	rto_tb.prg \
 	round.prg \
 	say.prg \
 	scroll.prg \

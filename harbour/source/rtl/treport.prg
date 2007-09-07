@@ -52,6 +52,7 @@
 
 #include "hbclass.ch"
 
+#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 #include "inkey.ch"
@@ -149,35 +150,46 @@
 #define PE_OFFSET               23
 #define OPTION_OFFSET           24
 
-CLASS HBReportForm
+CREATE CLASS HBReportForm
 
-   DATA aReportData AS ARRAY init {}
-   DATA aReportTotals AS ARRAY init {}
-   DATA aGroupTotals AS ARRAY init {}
-   DATA nPageNumber AS NUMERIC
-   DATA nLinesLeft AS NUMERIC
-   DATA lFirstPass AS LOGICAL
-   DATA lFormFeeds AS LOGICAL
-   DATA nMaxLinesAvail AS NUMERIC
-   DATA cExprBuff AS STRING
-   DATA cOffsetsBuff AS STRING
-   DATA cLengthsBuff AS STRING
+   VAR aReportData    AS ARRAY   INIT {}
+   VAR aReportTotals  AS ARRAY   INIT {}
+   VAR aGroupTotals   AS ARRAY   INIT {}
+   VAR nPageNumber    AS NUMERIC
+   VAR nLinesLeft     AS NUMERIC
+   VAR lFirstPass     AS LOGICAL
+   VAR lFormFeeds     AS LOGICAL
+   VAR nMaxLinesAvail AS NUMERIC
+   VAR cExprBuff      AS STRING
+   VAR cOffsetsBuff   AS STRING
+   VAR cLengthsBuff   AS STRING
 
-   METHOD NEW( cFrmName AS STRING, lPrinter AS LOGICAL ,cAltFile AS STRING, lNoConsole AS LOGICAL ,bFor AS CODEBLOCK, ;
-               bWhile AS CODEBLOCK, nNext AS NUMERIC, nRecord AS NUMERIC, lRest AS LOGICAL ,lPlain AS LOGICAL, ;
-               cHeading AS STRING ,lBEject AS LOGICAL, lSummary AS LOGICAL )
+   METHOD New( cFrmName AS STRING,;
+               lPrinter AS LOGICAL,;
+               cAltFile AS STRING,;
+               lNoConsole AS LOGICAL,;
+               bFor AS CODEBLOCK,;
+               bWhile AS CODEBLOCK,;
+               nNext AS NUMERIC,;
+               nRecord AS NUMERIC,;
+               lRest AS LOGICAL,;
+               lPlain AS LOGICAL, ;
+               cHeading AS STRING,;
+               lBEject AS LOGICAL,;
+               lSummary AS LOGICAL )
+
    METHOD ExecuteReport()
    METHOD ReportHeader()
    METHOD EjectPage()
-   METHOD PrintIt(cString AS STRING)
-   METHOD LoadReportFile(cFile AS STRING)
-   METHOD GetExpr( nPointer AS NUMERIC)
-   METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC)
+   METHOD PrintIt( cString AS STRING )
+   METHOD LoadReportFile( cFile AS STRING )
+   METHOD GetExpr( nPointer AS NUMERIC )
+   METHOD GetColumn( cFieldsBuffer AS STRING, nOffset AS NUMERIC )
 
 ENDCLASS
 
-METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
-           lRest,lPlain,cHeading,lBEject,lSummary) CLASS HBReportForm
+METHOD New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nRecord,;
+           lRest, lPlain, cHeading, lBEject, lSummary ) CLASS HBReportForm
 
    LOCAL lPrintOn, lConsoleOn // Status of PRINTER and CONSOLE
    LOCAL cExtraFile, lExtraState // Status of EXTRA
@@ -197,7 +209,8 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
       err:subSystem := "FRMLBL"
       Eval(ErrorBlock(), err)
    ELSE
-      cFRMName := RTrim( cFRMName ) // ; TOFIX: Not very multiplatform.
+      /* NOTE: CA-Cl*pper does an RTrim() on the filename here, 
+               but in Harbour we're using _SET_TRIMFILENAME. [vszakats] */
       IF Set( _SET_DEFEXTENSIONS )
          hb_FNameSplit( cFRMName, NIL, NIL, @cExt )
          IF Empty( cExt )
@@ -207,22 +220,15 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
    ENDIF
 
 #ifdef OLDCODE
-   IF lPrinter == NIL
-      lPrinter   := .F.
-   ENDIF
+   DEFAULT lPrinter TO .F.
 #endif
-
-   IF cHeading == NIL
-      cHeading := ""
-   ENDIF
+   DEFAULT cHeading TO ""
 
    // Set output devices
 
-   lPrintOn   := iif( lPrinter,   SET( _SET_PRINTER, lPrinter ), ;
-                                       SET( _SET_PRINTER ) )
+   lPrintOn   := iif( lPrinter, SET( _SET_PRINTER, lPrinter ), SET( _SET_PRINTER ) )
 
-   lConsoleOn := iif( lNoConsole, SET( _SET_CONSOLE, .F.),       ;
-                           SET( _SET_CONSOLE) )
+   lConsoleOn := iif( lNoConsole, SET( _SET_CONSOLE, .F.), SET( _SET_CONSOLE ) )
 
    IF lPrinter                   // To the printer
       ::lFormFeeds := .T.
@@ -230,7 +236,7 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
       ::lFormFeeds := .F.
    ENDIF
 
-   IF (!Empty(cAltFile))            // To file
+   IF !Empty(cAltFile)            // To file
       lExtraState := SET( _SET_EXTRA, .T. )
       cExtraFile := SET( _SET_EXTRAFILE, cAltFile )
    ENDIF
@@ -250,8 +256,8 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
       ENDIF
       IF lPlain                      // Set plain report flag
          ::aReportData[ RPT_PLAIN ]   := .T.
-         cHeading               := ""
-         ::lFormFeeds             := .F.
+         cHeading                     := ""
+         ::lFormFeeds                 := .F.
       ENDIF
       ::aReportData[ RPT_HEADING ]    := cHeading
 
@@ -327,9 +333,9 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
          ENDIF
 
          // Print the first line
-         ::PrintIt( SPACE(::aReportData[RPT_LMARGIN]) + ;
-               iif(nGroup==1,NationMsg(_RFRM_SUBTOTAL),;
-                            NationMsg(_RFRM_SUBSUBTOTAL) ) )
+         ::PrintIt( SPACE( ::aReportData[RPT_LMARGIN] ) + ;
+               iif( nGroup == 1, NationMsg( _RFRM_SUBTOTAL ),;
+                                 NationMsg( _RFRM_SUBSUBTOTAL ) ) )
 
          // Print the second line
          QQOUT( SPACE(::aReportData[RPT_LMARGIN]) )
@@ -421,7 +427,7 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
    SET( _SET_PRINTER, lPrintOn )    // Set the printer back to prior state
    SET( _SET_CONSOLE, lConsoleOn )     // Set the console back to prior state
 
-   IF (!Empty(cAltFile))            // Set extrafile back
+   IF !Empty(cAltFile)            // Set extrafile back
       SET( _SET_EXTRAFILE, cExtraFile )
       SET( _SET_EXTRA, lExtraState )
    ENDIF
@@ -429,17 +435,15 @@ METHOD NEW(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
    IF lBroke
       // keep the break value going
       BREAK xBreakVal
-   END
+   ENDIF
 
    RETURN NIL
 
-METHOD PrintIt(cString) CLASS HBReportForm
+METHOD PrintIt( cString ) CLASS HBReportForm
 
-   IF cString == NIL
-      cString := ""
-   ENDIF
+   DEFAULT cString TO ""
 
-   QQOUT(cString)
+   QQOUT( cString )
    QOUT()
 
    RETURN Self
@@ -597,7 +601,7 @@ METHOD ExecuteReport() CLASS HBReportForm
          NEXT
 
          // retrieve group eject state from report form
-         IF ( nGroup == 1 )
+         IF nGroup == 1
             lEjectGrp := ::aReportData[ RPT_GROUPS, nGroup, RGT_AEJECT ]
          ENDIF
 
@@ -615,8 +619,8 @@ METHOD ExecuteReport() CLASS HBReportForm
          IF lGroupChanged .OR. MakeAStr(EVAL(::aReportData[RPT_GROUPS,nGroup,RGT_EXP]),;
              ::aReportData[RPT_GROUPS,nGroup,RGT_TYPE]) != ::aGroupTotals[nGroup]
 
-            AADD( aRecordHeader, iif(nGroup==1,NationMsg(_RFRM_SUBTOTAL),;
-                                              NationMsg(_RFRM_SUBSUBTOTAL)) )
+            AADD( aRecordHeader, iif( nGroup == 1, NationMsg(_RFRM_SUBTOTAL),;
+                                                   NationMsg(_RFRM_SUBSUBTOTAL) ) )
             AADD( aRecordHeader, "" )
 
 
@@ -646,11 +650,11 @@ METHOD ExecuteReport() CLASS HBReportForm
    ENDIF
 
 
-   IF ( LEN( aRecordHeader ) > 0 ) .AND. lEjectGrp .AND. lGroupChanged
+   IF LEN( aRecordHeader ) > 0 .AND. lEjectGrp .AND. lGroupChanged
       IF LEN( aRecordHeader ) > ::nLinesLeft
          ::EjectPage()
 
-         IF ( ::aReportData[ RPT_PLAIN ] )
+         IF ::aReportData[ RPT_PLAIN ]
             ::nLinesLeft := 1000
          ELSE
             ::ReportHeader()
@@ -659,13 +663,13 @@ METHOD ExecuteReport() CLASS HBReportForm
       ENDIF
 
       AEVAL( aRecordHeader, { | HeaderLine | ;
-   ::PrintIt( SPACE( ::aReportData[ RPT_LMARGIN ] ) + HeaderLine ) } )
+         ::PrintIt( SPACE( ::aReportData[ RPT_LMARGIN ] ) + HeaderLine ) } )
 
       aRecordHeader := {}
 
       ::EjectPage()
 
-      IF ( ::aReportData[ RPT_PLAIN ] )
+      IF ::aReportData[ RPT_PLAIN ]
          ::nLinesLeft := 1000
 
       ELSE
@@ -696,7 +700,7 @@ METHOD ExecuteReport() CLASS HBReportForm
          ENDIF
 
 
-         AADD( aRecordHeader, iif(nGroup==1,"** ","* ") +;
+         AADD( aRecordHeader, iif( nGroup == 1, "** ", "* " ) +;
                ::aReportData[RPT_GROUPS,nGroup,RGT_HEADER] + " " +;
                MakeAStr(EVAL(::aReportData[RPT_GROUPS,nGroup,RGT_EXP]), ;
                ::aReportData[RPT_GROUPS,nGroup,RGT_TYPE]) )
@@ -869,7 +873,7 @@ METHOD ExecuteReport() CLASS HBReportForm
 
    RETURN NIL
 
-METHOD LoadReportFile(cFrmFile) CLASS HBReportForm
+METHOD LoadReportFile( cFrmFile ) CLASS HBReportForm
    LOCAL cFieldsBuff
    LOCAL cParamsBuff
    LOCAL nFieldOffset   := 0
@@ -917,7 +921,7 @@ METHOD LoadReportFile(cFrmFile) CLASS HBReportForm
    // Open the report file
    nFrmHandle := FOPEN( cFrmFile )
 
-   IF ( !EMPTY( nFileError := FERROR() ) ) .AND. !( "\" $ cFrmFile .OR. ":" $ cFrmFile )
+   IF !EMPTY( nFileError := FERROR() ) .AND. !( "\" $ cFrmFile .OR. ":" $ cFrmFile )
 
       // Search through default path; attempt to open report file
       cDefPath := SET( _SET_DEFAULT ) + ";" + SET( _SET_PATH )
@@ -1017,11 +1021,11 @@ METHOD LoadReportFile(cFrmFile) CLASS HBReportForm
 
       // Line spacing
       // Spacing is 1, 2, or 3
-      aReport[ RPT_SPACING ] := iif(SUBSTR(cParamsBuff, ;
+      aReport[ RPT_SPACING ] := iif( SUBSTR( cParamsBuff, ;
        DBL_SPACE_OFFSET, 1) $ "YyTt", 2, 1)
 
       // Summary report flag
-      aReport[ RPT_SUMMARY ] := iif(SUBSTR(cParamsBuff, ;
+      aReport[ RPT_SUMMARY ] := iif( SUBSTR( cParamsBuff, ;
        SUMMARY_RPT_OFFSET, 1) $ "YyTt", .T., .F.)
 
       // Process report eject and plain attributes option byte
@@ -1083,7 +1087,7 @@ METHOD LoadReportFile(cFrmFile) CLASS HBReportForm
          aReport[ RPT_GROUPS ][1][ RGT_HEADER ] := ::GetExpr( nPointer )
 
          // Page eject after group
-         aReport[ RPT_GROUPS ][1][ RGT_AEJECT ] := iif(SUBSTR(cParamsBuff, ;
+         aReport[ RPT_GROUPS ][1][ RGT_AEJECT ] := iif( SUBSTR( cParamsBuff, ;
          PE_OFFSET, 1) $ "YyTt", .T., .F.)
 
       ENDIF
@@ -1194,14 +1198,15 @@ STATIC FUNCTION Occurs( cSearch, cTarget )
    RETURN nCount
 
 STATIC FUNCTION XMLCOUNT( cString, nLineLength, nTabSize, lWrap )
-   // Set defaults if none specified
-   nLineLength := iif( nLineLength == NIL, 79, nLineLength )
-   nTabSize := iif( nTabSize == NIL, 4, nTabSize )
-   lWrap := iif( lWrap == NIL, .T., .F. )
+
+   DEFAULT nLineLength TO 79
+   DEFAULT nTabSize TO 4
+   DEFAULT lWrap TO .T.
 
    IF nTabSize >= nLineLength
       nTabSize := nLineLength - 1
    ENDIF
+
    RETURN MLCOUNT( TRIM(cString), nLineLength, nTabSize, lWrap )
 
 /***
@@ -1212,17 +1217,16 @@ STATIC FUNCTION XMLCOUNT( cString, nLineLength, nTabSize, lWrap )
 */
 STATIC FUNCTION XMEMOLINE( cString, nLineLength, nLineNumber, nTabSize, lWrap )
 
-   // Set defaults if none specified
-   nLineLength := iif( nLineLength == NIL, 79, nLineLength )
-   nLineNumber := iif( nLineNumber == NIL, 1, nLineNumber )
-   nTabSize := iif( nTabSize == NIL, 4, nTabSize )
-   lWrap := iif( lWrap == NIL, .T., lWrap )
+   DEFAULT nLineLength TO 79
+   DEFAULT nLineNumber TO 1
+   DEFAULT nTabSize TO 4
+   DEFAULT lWrap TO .T.
 
    IF nTabSize >= nLineLength
       nTabSize := nLineLength - 1
    ENDIF
 
-   RETURN( MEMOLINE( cString, nLineLength, nLineNumber, nTabSize, lWrap ) )
+   RETURN MEMOLINE( cString, nLineLength, nLineNumber, nTabSize, lWrap )
 
 STATIC FUNCTION ParseHeader( cHeaderString, nFields )
    LOCAL cItem
@@ -1231,7 +1235,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
    LOCAL nHeaderLen := 254
    LOCAL nPos
 
-   DO WHILE ( ++nItemCount <= nFields )
+   DO WHILE ++nItemCount <= nFields
 
       cItem := SUBSTR( cHeaderString, 1, nHeaderLen )
 
@@ -1342,11 +1346,9 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
    LOCAL aList := {}                  // Define an empty array
    LOCAL lDelimLast := .F.
 
-   IF cDelimiter == NIL
-      cDelimiter := ","
-   ENDIF
+   DEFAULT cDelimiter TO ","
 
-   DO WHILE LEN(cList) <> 0
+   DO WHILE LEN(cList) != 0
 
       nPos := AT(cDelimiter, cList)
 
@@ -1393,5 +1395,5 @@ STATIC FUNCTION MakeAStr( uVar, cType )
 FUNCTION __ReportForm( cFRMName, lPrinter, cAltFile, lNoConsole, bFor, ;
                        bWhile, nNext, nRecord, lRest, lPlain, cHeading, ;
                        lBEject, lSummary )
-   RETURN HBReportForm():New(cFrmName,lPrinter,cAltFile,lNoConsole,bFor,bWhile,nNext,nRecord,;
-              lRest,lPlain,cHeading,lBEject,lSummary)
+   RETURN HBReportForm():New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nRecord,;
+              lRest, lPlain, cHeading, lBEject, lSummary)

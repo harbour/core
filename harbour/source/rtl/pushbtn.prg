@@ -51,333 +51,347 @@
  */
 
 #include 'hbclass.ch'
-#include "common.ch"
+
 #include "button.ch"
+#include "color.ch"
+#include "common.ch"
+#include "setcurs.ch"
+
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+         it has all related variables and methods. */
+
+/* NOTE: CA-Cl*pper 5.3 uses a mixture of QQOut(), DevOut(), Disp*() 
+         functions to generate screen output. Harbour uses Disp*() 
+         functions only. [vszakats] */
 
 #ifdef HB_COMPAT_C53
+
 CREATE CLASS PUSHBUTTON FUNCTION HBPushButton
 
    EXPORT:
 
-   DATA Buffer
-   DATA Caption
-   DATA Cargo
-   DATA Col
-   DATA fBlock
-   DATA HasFocus
-   DATA Message
-   DATA Row
-   DATA sBlock
-   DATA TypeOut INIT .F.
+   VAR cargo                          /* NOTE: CA-Clipper 5.3 has a bug, where this var cannot be assigned NIL. */
 
-   METHOD DISPLAY()
-   METHOD HitTest( nRow, nCol )
-   METHOD KillFocus()
-   MESSAGE SELECT() METHOD _Select()
-   METHOD SetFocus()
-   METHOD New( nRow, nCol, cCaption )
-   ACCESS ColorSpec INLINE ::GetColor()
-   ASSIGN ColorSpec( xColor ) INLINE IIF( xColor != Nil, ::GetColor( xColor ), )
-   ACCESS Style INLINE ::GetStyle()
-   ASSIGN Style( cStyle ) INLINE IIF( cStyle != Nil, ::GetStyle( cStyle ), )
+   VAR bmpXOff    INIT -1             /* NOTE: Fully compatible behaviour not implemented. */
+   VAR bmpYOff    INIT -1             /* NOTE: Fully compatible behaviour not implemented. */
+   VAR capXOff    INIT -1             /* NOTE: Fully compatible behaviour not implemented. */
+   VAR capYOff    INIT -1             /* NOTE: Fully compatible behaviour not implemented. */
+   VAR sizeX      INIT 0              /* NOTE: Fully compatible behaviour not implemented. */
+   VAR sizeY      INIT 0              /* NOTE: Fully compatible behaviour not implemented. */
 
-   Hidden:
+   METHOD display()
+   METHOD hitTest( nRow, nCol )
+   METHOD killFocus()
+   METHOD select()
+   METHOD setFocus()
 
-   DATA CurStyle
-   DATA COLOR
-   DATA lCursor
-   METHOD Getcolor( xColor )
-   METHOD GetStyle( xStyle )
+   METHOD bitmap( cBitmap ) SETGET
+   METHOD buffer() SETGET
+   METHOD caption( cCaption ) SETGET
+   METHOD col( nCol ) SETGET
+   METHOD colorSpec( cColorSpec ) SETGET
+   METHOD fBlock( bFBlock ) SETGET
+   METHOD hasFocus() SETGET
+   METHOD message( cMessage ) SETGET
+   METHOD row( nRow ) SETGET
+   METHOD sBlock( bSBlock ) SETGET
+   METHOD typeOut() SETGET
+   METHOD style( cStyle ) SETGET
+
+   METHOD New( nRow, nCol, cCaption ) /* NOTE: This method is a Harbour extension [vszakats] */
+
+   PROTECTED:
+
+   VAR cBitmap    INIT ""
+   VAR lBuffer    INIT .F.
+   VAR cCaption
+   VAR nCol
+   VAR cColorSpec
+   VAR bFBlock
+   VAR lHasFocus  INIT .F.
+   VAR cMessage   INIT ""
+   VAR nRow
+   VAR bSBlock
+   VAR cStyle     INIT "<>"
+   VAR lTypeOut   INIT .F.
 
 ENDCLASS
 
-METHOD GetColor( xColor ) CLASS PushButton
+METHOD setFocus() CLASS PUSHBUTTON
 
-   IF ! ISNIL( xColor )
-      ::Color := IIF( Valtype( xColor ) == "C" .and. ;
-                     !Empty( __GuiColor( xColor, 4 ) ) .and. ;
-                      Empty( __GuiColor( xColor, 6 ) ), xColor, )
-
-   ENDIF
-
-RETURN ::Color
-
-METHOD GetStyle( cStyle ) CLASS PushButton
-
-   IF ! ISNIL( cStyle )
-      ::curStyle := IIF( Valtype( cStyle ) == "C" .and. ;
-                         Ltrim( Str( Len( cStyle ) ) ) $ "0�2�8", cStyle, )
-   ENDIF
-
-RETURN ::curStyle
-
-METHOD New( nRow, nCol, cCaption ) CLASS PushButton
-
-   LOCAL cColor
-   DEFAULT cCaption TO ""
-
-   ::Buffer   := .F.
-   ::Caption  := cCaption
-   ::Cargo    := Nil
-   ::Col      := nCol
-   ::fBlock   := Nil
-   ::sBlock   := Nil
-   ::HasFocus := .F.
-   ::Message  := ""
-   ::Row      := nRow
-   ::lCursor  := Nil
-   ::Style    := "<>"
-
-   IF Isdefcolor()
-      ::ColorSpec := "W/N,N/W,W+/N,W+/N"
-   ELSE
-      cColor      := Setcolor()
-      ::ColorSpec := __GuiColor( cColor, 5 ) + "," + ;
-                     __GuiColor( cColor, 2 ) + "," + ;
-                     __GuiColor( cColor, 1 ) + "," + ;
-                     __GuiColor( cColor, 4 )
-   ENDIF
-
-RETURN Self
-
-METHOD SetFocus() CLASS PushButton
-
-   IF !::HasFocus
-      ::lCursor := Setcursor( 0 )
-      ::HasFocus := .T.
+   IF !::lHasFocus
+      ::lHasFocus := .T.
       ::display()
-      IF ISBLOCK( ::fBlock )
-         Eval( ::fBlock )
+
+      IF ISBLOCK( ::bFBlock )
+         Eval( ::bFBlock )
       ENDIF
    ENDIF
 
-RETURN Self
+   RETURN Self
 
-METHOD _Select( nPos ) CLASS PushButton
+METHOD select( nPos ) CLASS PUSHBUTTON
 
    LOCAL nCurPos := nPos
 
-   IF ::HasFocus
-      ::Buffer := .T.
+   IF ::lHasFocus
+      ::lbuffer := .T.
       ::display()
 
-      IF Isnumber( nPos )
+      IF ISNUMBER( nPos )
 
          IF nPos == 32
-            Inkey( 0.4 )
 
+            Inkey( 0.4 )
             DO WHILE nCurPos == 32
                nCurPos := Inkey( 0.1 )
             ENDDO
-
          ELSE
-
             DO WHILE nPos == Inkey( 0 )
             ENDDO
-
          ENDIF
-
       ENDIF
 
-      IF ISBLOCK( ::sBlock )
-         Eval( ::sBlock )
+      IF ISBLOCK( ::bSBlock )
+         Eval( ::bSBlock )
       ENDIF
 
-      ::Buffer := .F.
+      ::lBuffer := .F.
       ::display()
    ENDIF
 
-RETURN Self
+   RETURN Self
 
-METHOD KillFocus() CLASS PushButton
+METHOD killFocus() CLASS PUSHBUTTON
 
-   IF ::HasFocus
+   IF ::lHasFocus
+      ::lHasFocus := .F.
 
-      ::HasFocus := .F.
-
-      IF ISBLOCK( ::fBlock )
-         Eval( ::fBlock )
+      IF ISBLOCK( ::bFBlock )
+         Eval( ::bFBlock )
       ENDIF
 
       ::display()
-      Setcursor( ::lCursor )
    ENDIF
 
-RETURN Self
+   RETURN Self
 
-METHOD HitTest( nRow, nCol ) CLASS PushButton
+METHOD hitTest( nRow, nCol ) CLASS PUSHBUTTON
 
    LOCAL nCurrentPos := 1
-   LOCAL nLen        := Len( ::Caption )
-   LOCAL cStyle
-   LOCAL nAmpPos
+   LOCAL nLen := Len( ::cCaption )
+   LOCAL nStyleLen
+   LOCAL nAccelPos
 
-   IF ( nAmpPos := At( "&", ::Caption ) ) != 0 .AND. nAmpPos < nLen
+   IF ( nAccelPos := At( "&", ::cCaption ) ) > 0 .AND. nAccelPos < nLen
       nLen--
    ENDIF
 
-   IF ( cStyle := Len( ::Style ) ) == 2
+   IF ( nStyleLen := Len( ::cStyle ) ) == 2
       nLen += 2
-   ELSEIF cStyle == 8
+   ELSEIF nStyleLen == 8
       nCurrentPos := 3
-      nLen        += 2
+      nLen += 2
    ENDIF
 
-   IF nRow >= ::Row .AND. nCol >= ::Col .AND. ;
-      nRow < ::Row + nCurrentPos .AND. nCol < ::Col + nLen
+   IF nRow >= ::Row .AND. ;
+      nCol >= ::Col .AND. ;
+      nRow < ::Row + nCurrentPos .AND. ;
+      nCol < ::Col + nLen
       RETURN HTCLIENT
    ENDIF
 
-RETURN HTNOWHERE
+   RETURN HTNOWHERE
 
-METHOD DISPLAY() CLASS PushButton
+METHOD display() CLASS PUSHBUTTON
 
-   LOCAL cOldColor := Setcolor()
-   LOCAL cStyle
-   LOCAL nCurCol
-   LOCAL cCaption
-   LOCAL nRow      := Row()
-   LOCAL nCol      := Col()
-   LOCAL nCurRow
-   LOCAL nAmpPos
-   LOCAL cColor4
-   LOCAL nColorNum
-   LOCAL nBuffer
+   LOCAL cOldColor := SetColor()      
+   LOCAL nOldRow := Row()             
+   LOCAL nOldCol := Col()             
+   LOCAL lOldMCur := MSetCursor( .F. )
 
-   cStyle := ::Style
+   LOCAL cStyle := ::cStyle
+   LOCAL cCaption := ::cCaption
+   LOCAL nRow := ::nRow
+   LOCAL nCol := ::nCol
+   LOCAL nPos
 
-   Dispbegin()
+   DispBegin()
 
-   IF ::Buffer
-      SET COLOR TO (__GuiColor(::ColorSpec, 3))
-      cColor4 := __GuiColor( ::ColorSpec, 4 )
-
-      IF Len( cColor4 ) == 0
-         nColorNum := 0
-      ELSE
-         nColorNum := _getnumcol( cColor4 )
-      ENDIF
-
-   ELSEIF ::HasFocus
-      SET COLOR TO (__GuiColor(::ColorSpec, 2))
-      cColor4 := __GuiColor( ::ColorSpec, 4 )
-
-      IF Len( cColor4 ) == 0
-         nColorNum := 0
-      ELSE
-         nColorNum := _getnumcol( cColor4 )
-      ENDIF
-
+   IF ::lBuffer
+      SetColor( __GUIColor( ::cColorSpec, 3 ) )
+   ELSEIF ::lHasFocus
+      SetColor( __GUIColor( ::cColorSpec, 2 ) )
    ELSE
-      SET COLOR TO (__GuiColor(::ColorSpec, 1))
-      cColor4 := __GuiColor( ::ColorSpec, 4 )
-
-      IF Len( cColor4 ) == 0
-         nColorNum := 0
-      ELSE
-         nColorNum := _getnumcol( cColor4 )
-      ENDIF
-
+      SetColor( __GUIColor( ::cColorSpec, 1 ) )
    ENDIF
 
-   nCurRow  := ::Row
-   nCurCol  := ::Col
-   cCaption := ::Caption
-
-   IF ( nAmpPos := At( "&", cCaption ) ) != 0
-      IF nAmpPos == Len( cCaption )
-         nAmpPos := 0
-      ELSE
-         cCaption := Stuff( cCaption, nAmpPos, 1, "" )
-      ENDIF
+   IF ( nPos := At( "&", cCaption ) ) == 0
+   ELSEIF nPos == Len( cCaption )
+      nPos := 0
+   ELSE
+      cCaption := Stuff( cCaption, nPos, 1, "" )
    ENDIF
 
    IF !Empty( cStyle )
-      nCurCol ++
+
+      nCol++
 
       IF Len( cStyle ) == 2
-         Setpos( ::Row, ::Col )
-         ?? Substr( cStyle, 1, 1 )
-         Setpos( ::Row, ::Col + Len( cCaption ) + 1 )
-         ?? Substr( cStyle, 2, 1 )
+         DispOutAt( ::nRow, ::nCol, SubStr( cStyle, 1, 1 ) )
+         DispOutAt( ::nRow, ::nCol + Len( cCaption ) + 1, SubStr( cStyle, 2, 1 ) )
       ELSE
-         nCurRow ++
-         Dispbox( ::Row, ::Col, ::Row + 2, ::Col + Len( cCaption ) + 1, cStyle )
+         nRow++
+         DispBox( ::nRow, ::nCol, ::nRow + 2, ::nCol + Len( cCaption ) + 1, cStyle )
       ENDIF
-
-   ENDIF
-
-   IF ::Buffer
-      nBuffer := 1
-   ELSE
-      nBuffer := 0
    ENDIF
 
    IF !Empty( cCaption )
 
-      Setpos( nCurRow, nCurCol )
-      ?? cCaption
+      DispOutAt( nRow, nCol, cCaption )
 
-      IF nAmpPos != 0
-         Set COLOR TO (cColor4)
-         Setpos( nCurRow, nCurCol + nAmpPos - 1 )
-         ?? Substr( cCaption, nAmpPos, 1 )
+      IF nPos != 0
+         DispOutAt( nRow, nCol + nPos - 1, SubStr( cCaption, nPos, 1 ), __GUIColor( ::cColorSpec, 4 ) )
       ENDIF
 
    ENDIF
 
-   Dispend()
+   DispEnd()
 
-   SET COLOR TO (cOldColor)
-   Setpos( nRow, nCol )
+   MSetCursor( lOldMCur )
+   SetColor( cOldColor )
+   SetPos( nOldRow, nOldCol )
 
-RETURN Self
+   RETURN Self
 
-FUNCTION PushButton( nRow, nCol, cCaption )
+METHOD bitmap( cBitmap ) CLASS PUSHBUTTON
 
-   IF ISNUMBER( nRow ) .AND. ISNUMBER( nCol )
-      DEFAULT cCaption TO ""
-      RETURN HBPushButton():New( nRow, nCol, cCaption )
+   IF cBitmap != NIL
+      ::cBitmap := _eInstVar( Self, "BITMAP", cBitmap, "C", 1001 )
    ENDIF
 
-RETURN Nil
+   RETURN ::cBitmap
 
-FUNCTION _PUSHBUTT_( cCaption, cMessage, cColor, bFBlock, bSBlock, cStyle )
+METHOD buffer() CLASS PUSHBUTTON
+   RETURN ::lBuffer
 
-   LOCAL oPushButton
+METHOD caption( cCaption ) CLASS PUSHBUTTON
+
+   IF cCaption != NIL
+      ::cCaption := _eInstVar( Self, "CAPTION", cCaption, "C", 1001 )
+   ENDIF
+
+   RETURN ::cCaption
+
+METHOD col( nCol ) CLASS PUSHBUTTON
+
+   IF nCol != NIL
+      ::nCol := _eInstVar( Self, "COL", nCol, "N", 1001 )
+   ENDIF
+
+   RETURN ::nCol
+
+METHOD colorSpec( cColorSpec ) CLASS PUSHBUTTON
+
+   IF cColorSpec != NIL
+      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+         {|| !Empty( __GUIColor( cColorSpec, 4 ) ) .AND. Empty( __GUIColor( cColorSpec, 6 ) ) } )
+   ENDIF
+
+   RETURN ::cColorSpec
+
+METHOD fBlock( bFBlock ) CLASS PUSHBUTTON
+   
+   IF PCount() > 0
+      ::bFBlock := iif( bFBlock == NIL, NIL, _eInstVar( Self, "FBLOCK", bFBlock, "B", 1001 ) )
+   ENDIF
+
+   RETURN ::bFBlock
+
+METHOD hasFocus() CLASS PUSHBUTTON
+   RETURN ::lHasFocus
+
+METHOD message( cMessage ) CLASS PUSHBUTTON
+
+   IF cMessage != NIL
+      ::cMessage := _eInstVar( Self, "MESSAGE", cMessage, "C", 1001 )
+   ENDIF
+
+   RETURN ::cMessage
+
+METHOD row( nRow ) CLASS PUSHBUTTON
+
+   IF nRow != NIL
+      ::nRow := _eInstVar( Self, "ROW", nRow, "N", 1001 )
+   ENDIF
+
+   RETURN ::nRow
+
+METHOD sBlock( bSBlock ) CLASS PUSHBUTTON
+   
+   IF PCount() > 0
+      ::bSBlock := iif( bSBlock == NIL, NIL, _eInstVar( Self, "SBLOCK", bSBlock, "B", 1001 ) )
+   ENDIF
+
+   RETURN ::bSBlock
+
+METHOD typeOut() CLASS PUSHBUTTON
+   RETURN .F.
+
+METHOD style( cStyle ) CLASS PUSHBUTTON
+
+   IF cStyle != NIL
+      ::cStyle := _eInstVar( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 2 .OR. Len( cStyle ) == 8 } )
+   ENDIF
+
+   RETURN ::cStyle
+
+METHOD New( nRow, nCol, cCaption ) CLASS PUSHBUTTON
+
+   LOCAL cColor
+
+   IF !ISNUMBER( nRow ) .OR. ;
+      !ISNUMBER( nCol )
+      RETURN NIL
+   ENDIF
+
    DEFAULT cCaption TO ""
 
-   oPushButton := Pushbutton( Row(), Col(), cCaption )
+   ::caption  := cCaption
+   ::nCol     := nCol
+   ::nRow     := nRow
 
-   IF ! ISNIL( oPushButton )
-      oPushButton:Caption   := cCaption
-      oPushButton:ColorSpec := cColor
-      oPushButton:Message   := cMessage
-      oPushButton:Style     := cStyle
-      oPushButton:fBlock    := bFBlock
-      oPushButton:sBlock    := bSBlock
+   IF IsDefColor()
+      ::cColorSpec := "W/N,N/W,W+/N,W+/N"
+   ELSE
+      cColor := SetColor()
+      ::cColorSpec := __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," +;
+                      __GUIColor( cColor, CLR_BACKGROUND + 1 )
    ENDIF
 
-RETURN oPushButton
+   RETURN Self
 
-FUNCTION _GETNUMCOL( cColor )
+FUNCTION PushButton( nRow, nCol, cCaption )
+   RETURN HBPushButton():New( nRow, nCol, cCaption )
 
-   STATIC s_aColors := { { "N+",   8 }, { "B+",  9 }, { "G+",  10 }, ;
-                         { "BG+", 11 }, { "R+", 12 }, { "RB+", 13 }, ;
-                         { "GR+", 14 }, { "W+", 15 }, { "BG",   3 }, ;
-                         { "RB",   5 }, { "GR",  6 }, { "B",    1 }, ;
-                         { "G",    2 }, { "R",   4 }, { "W",    7 } }
-   LOCAL nPos
+FUNCTION _PUSHBUTT_( cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, nSizeX, nSizeY, nCapXOff, nCapYOff, cBitmap, nBmpXOff, nBmpYOff )
+   LOCAL o := HBPushButton():New( Row(), Col(), cCaption )
 
-   IF ( nPos := At( "/", cColor ) ) > 0
-      cColor := LEFT( cColor, nPos - 1 )
-   ENDIF
+   o:message   := cMessage
+   o:colorSpec := cColorSpec
+   o:fBlock    := bFBlock
+   o:sBlock    := bSBlock
+   o:style     := cStyle
+   o:sizeX     := nSizeX
+   o:sizeY     := nSizeY
+   o:capXOff   := nCapXOff
+   o:capYOff   := nCapYOff
+   o:bitmap    := cBitmap
+   o:bmpXOff   := nBmpXOff
+   o:bmpYOff   := nBmpYOff
 
-   nPos := AScan( s_aColors, { | a | a[ 1 ] == cColor } )
+   RETURN o
 
-   IF nPos > 0
-      RETURN s_aColors[ nPos, 2 ]
-   ENDIF
-
-RETURN 0
 #endif

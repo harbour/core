@@ -58,13 +58,13 @@ STATIC s_oGetListLast
 PROCEDURE __GetListSetActive( oGetList )
 
    IF s_oGetListActive != NIL
-      s_oGetListActive:lHasFocus := .F.
+      s_oGetListActive:HasFocus := .F.
    ENDIF
 
    s_oGetListActive := oGetList
 
    IF s_oGetListActive != NIL
-      s_oGetListActive:lHasFocus := .T.
+      s_oGetListActive:HasFocus := .T.
    ENDIF
 
    RETURN
@@ -76,8 +76,8 @@ FUNCTION __GetListActive()
 
 FUNCTION __GetListLast( oGetListLast )
 
-   if oGetListLast != NIL
+   IF oGetListLast != NIL
       s_oGetListLast := oGetListLast
-   endif
-   RETURN s_oGetListLast
+   ENDIF
 
+   RETURN s_oGetListLast

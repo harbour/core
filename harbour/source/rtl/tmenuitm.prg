@@ -51,66 +51,179 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
+
 #include "button.ch"
+#include "common.ch"
+
+/* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but 
+         it has all related variables and methods. */
 
 #ifdef HB_COMPAT_C53
 
-//--------------------------------------------------------------------------//
-FUNCTION MenuItem( cCaption, boData, nShortcut, cMsg, nID )
-RETURN __MenuItem():New( cCaption, boData, nShortcut, cMsg, nID )
-//--------------------------------------------------------------------------//
-CLASS MenuItem STATIC FUNCTION __MenuItem
+CREATE CLASS MENUITEM FUNCTION HBMenuItem
 
-   DATA caption   init ""
-   DATA cargo
-   DATA checked   init FALSE
-   DATA column    init 0
-   DATA data
-   DATA enabled
-   DATA id
-   DATA message
-   DATA row       init 0
-   DATA shortcut
-   DATA style     init HB_TMENUITEM_STYLE
+   EXPORT:
 
-   METHOD New( cCaption, boData, nShortcut, cMsg, nID )
+   VAR cargo
+
+   METHOD caption( cCaption ) SETGET
+   METHOD checked( lChecked ) SETGET
+   METHOD data( boData ) SETGET
+   METHOD enabled( lEnabled ) SETGET
+   METHOD id( nID ) SETGET
+   METHOD message( cMessage ) SETGET
+   METHOD shortcut( nShortcut ) SETGET
+   METHOD style( cStyle ) SETGET
+
+   VAR col        INIT -1 AS NUMERIC                    /* NOTE: This is a Harbour extension. */
+   VAR row        INIT -1 AS NUMERIC                    /* NOTE: This is a Harbour extension. */
+
    METHOD isPopUp()
 
+   METHOD New( cCaption, boData, nShortcut, cMsg, nID ) /* NOTE: This method is a Harbour extension [vszakats] */
+
+   PROTECTED:
+
+   VAR cCaption   INIT ""
+   VAR lChecked   INIT .F.
+   VAR boData
+   VAR lEnabled   INIT .T.
+   VAR nID
+   VAR cMessage
+   VAR nShortcut
+   VAR cStyle     INIT Chr( 251 ) + Chr( 16 )
+
 ENDCLASS
-//--------------------------------------------------------------------------//
-METHOD New( cCaption, boData, nShortcut, cMsg, nID ) CLASS MenuItem
 
-   if ISBLOCK( boData ) .or. ISOBJECT( boData )
-      boData := iif( cCaption != MENU_SEPARATOR, boData, nil )
-   endif
+METHOD caption( cCaption ) CLASS MENUITEM
 
-   DEFAULT cCaption  TO ""
-   DEFAULT boData    TO nil
-   DEFAULT nShortcut TO 0
-   DEFAULT cMsg      TO ""
-   DEFAULT nID       TO 0
+   IF cCaption != NIL
 
-   ::caption  := cCaption
-   ::checked  := FALSE
-   ::column   := 0
-   ::data     := boData
-   ::enabled  := iif( cCaption != MENU_SEPARATOR, TRUE, FALSE )
-   ::id       := nID
-   ::message  := cMsg
-   ::row      := 0
-   ::shortcut := nShortcut
-   ::style    := HB_TMENUITEM_STYLE
+      ::cCaption := _eInstVar( Self, "CAPTION", cCaption, "C", 1001 )
 
-return Self
-//--------------------------------------------------------------------------//
-METHOD isPopUp() CLASS MenuItem
+      IF ::cCaption == MENU_SEPARATOR
+         ::boData   := NIL
+         ::lChecked := .F.
+         ::lEnabled := .F.
+      ENDIF
+   ENDIF
 
-   if ISOBJECT( ::data ) .and. ::data:ClassName() == "POPUPMENU"
-      return TRUE
-   endif
+   RETURN ::cCaption
 
-return FALSE
-//--------------------------------------------------------------------------//
+METHOD checked( lChecked ) CLASS MENUITEM
+
+   IF lChecked != NIL .AND. !( ::cCaption == MENU_SEPARATOR )
+      ::lChecked := _eInstVar( Self, "CHECKED", lChecked, "L", 1001 )
+   ENDIF
+
+   RETURN ::lChecked
+
+METHOD data( boData ) CLASS MENUITEM
+
+   IF boData != NIL
+      IF ISBLOCK( boData )
+         ::boData := boData
+      ELSE
+         ::boData := _eInstVar( Self, "DATA", boData, "O", 1001, {|| boData:ClassName() == "POPUPMENU" } )
+      ENDIF
+   ENDIF
+
+   RETURN ::boData
+
+METHOD enabled( lEnabled ) CLASS MENUITEM
+
+   IF lEnabled != NIL .AND. !( ::cCaption == MENU_SEPARATOR )
+      ::lEnabled := _eInstVar( Self, "ENABLED", lEnabled, "L", 1001 )
+   ENDIF
+
+   RETURN ::lEnabled
+
+METHOD id( nID ) CLASS MENUITEM
+
+   IF nID != NIL
+      ::nID := _eInstVar( Self, "ID", nID, "N", 1001 )
+   ENDIF
+
+   RETURN ::nID
+
+METHOD message( cMessage ) CLASS MENUITEM
+
+   IF cMessage != NIL
+      ::cMessage := _eInstVar( Self, "MESSAGE", cMessage, "C", 1001 )
+   ENDIF
+
+   RETURN ::cMessage
+
+METHOD shortcut( nShortcut ) CLASS MENUITEM
+
+   IF nShortcut != NIL
+      ::nShortcut := _eInstVar( Self, "SHORTCUT", nShortcut, "N", 1001 )
+   ENDIF
+
+   RETURN ::nShortcut
+
+METHOD style( cStyle ) CLASS MENUITEM
+
+   IF cStyle != NIL
+      ::cStyle := _eInstVar( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 2 } )
+   ENDIF
+
+   RETURN ::cStyle
+
+METHOD isPopUp() CLASS MENUITEM
+   RETURN ISOBJECT( ::data ) .AND. ::data:ClassName() == "POPUPMENU"
+
+METHOD New( cCaption, boData, nShortcut, cMessage, nID ) CLASS MENUITEM
+
+   IF !ISNUMBER( nShortcut )
+      nShortcut := 0
+   ENDIF
+   IF !ISCHARACTER( cMessage )
+      cMessage := ""
+   ENDIF
+   IF !ISNUMBER( nID )
+      nID := 0
+   ENDIF
+
+   ::data      := boData
+   ::nID       := nID
+   ::cMessage  := cMessage
+   ::nShortcut := nShortcut
+   ::caption   := cCaption
+
+   RETURN Self
+
+FUNCTION MenuItem( cCaption, boData, nShortcut, cMessage, nID )
+   RETURN HBMenuItem():New( cCaption, boData, nShortcut, cMessage, nID )
+
+#ifdef HB_C52_UNDOC
+
+FUNCTION __miColumn( o, nColumn )
+
+   IF ISOBJECT( o ) .AND. o:ClassName() == "MENUITEM"
+
+      IF ISNUMBER( nColumn )
+         o:col := nColumn
+      ENDIF
+
+      RETURN o:col
+   ENDIF
+
+   RETURN -1
+
+FUNCTION __miRow( o, nRow )
+
+   IF ISOBJECT( o ) .AND. o:ClassName() == "MENUITEM"
+
+      IF ISNUMBER( nRow )
+         o:row := nRow
+      ENDIF
+
+      RETURN o:row
+   ENDIF
+
+   RETURN -1
+
+#endif
 
 #endif
