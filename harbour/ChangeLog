@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-07 12:55 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbextern.ch
+     ! Fix of some corrected public function names.
+
 2007-09-07 03:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * tests/Makefile
    * tests/rto_get.prg
