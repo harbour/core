@@ -97,7 +97,6 @@ GTCRS_DIR    = source\rtl\gtcrs
 GTSLN_DIR    = source\rtl\gtsln
 GTXWC_DIR    = source\rtl\gtxwc
 
-HBDOT_DIR    = utils\hbdot
 HBPP_DIR     = utils\hbpp
 HBPPTEST_DIR = utils\hbpptest
 HBRUN_DIR    = utils\hbrun
@@ -147,7 +146,6 @@ $(GTSLN_DIR);\
 $(GTXWC_DIR)\
 
 ALL_EXE_SRC_DIRS_TMP=\
-$(HBDOT_DIR);\
 $(HBPPTEST_DIR);\
 $(HBRUN_DIR);\
 $(HBDOT_DIR);\
@@ -209,7 +207,6 @@ GTXWC_LIB    = $(LIB_DIR)\$(LIBPREF)gtxwc$(LIBEXT)
 HARBOUR_EXE  = $(BIN_DIR)\harbour$(EXEEXT)
 # required (intermediate) utility
 #     to generate pptable.c
-HBDOT_EXE    = $(BIN_DIR)\hbdot$(EXEEXT)
 HBPPGEN_EXE  = $(BIN_DIR)\ppgen$(EXEEXT)
 HBPP_EXE     = $(BIN_DIR)\hbpp$(EXEEXT)
 HBPPTEST_EXE = $(BIN_DIR)\hbpptest$(EXEEXT)
@@ -913,11 +910,6 @@ HARBOUR_EXE_OBJS = \
 
 #**********************************************************
 
-HBDOT_EXE_OBJS = \
-    $(OBJ_DIR)\hbdot$(OBJEXT)    \
-
-#**********************************************************
-
 HBPP_EXE_OBJS = \
     $(OBJ_DIR)\hbpp$(OBJEXT)     \
     $(OBJ_DIR)\hbpptbl$(OBJEXT)  \
@@ -1089,7 +1081,6 @@ HB_BUILD_TARGETS = \
     $(USRRDD_LIB)           \
     $(HB_GT_LIBS)           \
     \
-    $(HBDOT_EXE)            \
     $(HBRUN_EXE)            \
     $(HBDOT_EXE)            \
     $(HBTEST_EXE)           \
