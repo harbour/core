@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-08 15:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/dbinfo.ch
+    * updated comment
+
+  * harbour/contrib/rdd_ads/ads1.c
+    * replaced hb_itemGetPtr(hb_param(n,HB_IT_POINTER)) with hb_parptr(1)
+
+  * harbour/contrib/hbzlib/hbcomprs.c
+    * changed variable name: PHB_FNAME fDirSpec to PHB_FNAME pDirSpec
+
+  * harbour/source/rdd/dbcmd.c
+    ! fixed parameter checking in OrdNumber() to generate Clipper compatible
+      RT error
+    * code cleanup
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * do not evaluate KEY expresion in custom indexes in KEYDEL operation.
+      It may interact with MULTIKEY/TEMPLATE indexes.
+    * updated default order in DBOI_BAGNUMBER and DBOI_BAGORDER
+
 2007-09-07 12:55 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbextern.ch
      ! Fix of some corrected public function names.

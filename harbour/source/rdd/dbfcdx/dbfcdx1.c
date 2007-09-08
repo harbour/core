@@ -7835,16 +7835,18 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
             pIndexSeek = hb_cdxFindBag( pArea,
                                   hb_itemGetCPtr( pOrderInfo->atomBagName ) );
          else
-            pIndexSeek = pIndex;
+         {
+            pTag = hb_cdxGetTagByNumber( pArea, pArea->uiTag );
+            pIndexSeek = pTag ? pTag->pIndex : NULL;
+         }
 
          if( pIndexSeek )
          {
-            ++uiTag;
             do
             {
+               ++uiTag;
                if( pIndex == pIndexSeek )
                   break;
-               ++uiTag;
                pIndex = pIndex->pNext;
             }
             while ( pIndex );
@@ -7862,7 +7864,10 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
             pIndexSeek = hb_cdxFindBag( pArea,
                                   hb_itemGetCPtr( pOrderInfo->atomBagName ) );
          else
-            pIndexSeek = pIndex;
+         {
+            pTag = hb_cdxGetTagByNumber( pArea, pArea->uiTag );
+            pIndexSeek = pTag ? pTag->pIndex : NULL;
+         }
 
          if( pIndexSeek )
          {
@@ -8297,7 +8302,15 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pO
                   if ( pOrderInfo->itmNewVal && !HB_IS_NIL( pOrderInfo->itmNewVal ) )
                      pKey = hb_cdxKeyPutItem( NULL, pOrderInfo->itmNewVal, pArea->ulRecNo, pTag, TRUE, TRUE );
                   else
-                     pKey = hb_cdxKeyEval( NULL, pTag );
+                  {
+                     if ( pTag->CurKey->rec != pArea->ulRecNo )
+                        hb_cdxCurKeyRefresh( pArea, pTag );
+
+                     if ( pTag->CurKey->rec == pArea->ulRecNo )
+                        pKey = hb_cdxKeyCopy( NULL, pTag->CurKey );
+                     else
+                        pKey = hb_cdxKeyEval( NULL, pTag );
+                  }
                   pOrderInfo->itmResult = hb_itemPutL( pOrderInfo->itmResult,
                                                 hb_cdxTagKeyDel( pTag, pKey ) );
                   hb_cdxIndexUnLockWrite( pTag->pIndex );

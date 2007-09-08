@@ -4426,7 +4426,7 @@ static BOOL hb_ntxOrdKeyDel( LPTAGINFO pTag, PHB_ITEM pItem )
 {
    NTXAREAP pArea = pTag->Owner->Owner;
    BOOL fResult = FALSE;
-   LPKEYINFO pKey;
+   LPKEYINFO pKey = NULL;
 
    if( pArea->lpdbPendingRel )
       SELF_FORCEREL( ( AREAP ) pArea );
@@ -4441,13 +4441,16 @@ static BOOL hb_ntxOrdKeyDel( LPTAGINFO pTag, PHB_ITEM pItem )
    {
       pKey = hb_ntxKeyPutItem( NULL, pItem, pArea->ulRecNo, pTag, TRUE, NULL );
    }
-   else
-   {
-      pKey = hb_ntxEvalKey( NULL, pTag );
-   }
 
    if( hb_ntxTagLockWrite( pTag ) )
    {
+      if( pKey == NULL )
+      {
+         if( hb_ntxCurKeyRefresh( pTag ) )
+            pKey = hb_ntxKeyCopy( NULL, pTag->CurKeyInfo, pTag->KeyLength );
+         else
+            pKey = hb_ntxEvalKey( NULL, pTag );
+      }
       if( hb_ntxTagKeyDel( pTag, pKey ) )
       {
          fResult = TRUE;
@@ -6635,14 +6638,14 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
       }
       case DBOI_BAGORDER:
       {
-         LPNTXINDEX pIndex = pArea->lpIndexes, pIndexSeek;
+         LPNTXINDEX pIndex = pArea->lpIndexes, pIndexSeek = NULL;
          int i = 0;
 
          if( hb_itemGetCLen( pInfo->atomBagName ) > 0 )
             pIndexSeek = hb_ntxFindBag( pArea,
                                         hb_itemGetCPtr( pInfo->atomBagName ) );
-         else
-            pIndexSeek = pIndex;
+         else if( pArea->lpCurTag )
+            pIndexSeek = pArea->lpCurTag->Owner;
 
          if( pIndexSeek )
          {

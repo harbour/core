@@ -4186,7 +4186,7 @@ void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttribute
 #endif
 */
 
-   PHB_FNAME fDirSpec = NULL;
+   PHB_FNAME pDirSpec = NULL;
    BOOL bAlloc = FALSE;
    /* Get the passed attributes and convert them to Harbour Flags */
 
@@ -4232,28 +4232,28 @@ void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttribute
 
    if( bDirOnly || bFullPath )
    {
-      if ( (fDirSpec = hb_fsFNameSplit( (char*) szDirSpec )) !=NULL )
+      if ( ( pDirSpec = hb_fsFNameSplit( (char*) szDirSpec ) ) !=NULL )
       {
-         if( fDirSpec->szDrive )
-            hb_fsChDrv( (BYTE) ( fDirSpec->szDrive[0] - 'A' ) );
+         if( pDirSpec->szDrive )
+            hb_fsChDrv( (BYTE) ( pDirSpec->szDrive[0] - 'A' ) );
 
-         if( fDirSpec->szPath )
-            hb_fsChDir( (BYTE *) fDirSpec->szPath );
+         if( pDirSpec->szPath )
+            hb_fsChDir( (BYTE *) pDirSpec->szPath );
       }
    }
 
    /* Get the file list */
-   hb_fsGrabDirectory( pDir, (const char*) szDirSpec, uiMask, fDirSpec, bFullPath, bDirOnly );
+   hb_fsGrabDirectory( pDir, (const char*) szDirSpec, uiMask, pDirSpec, bFullPath, bDirOnly );
 
    if ( uiMask == HB_FA_LABEL )
    {
       uiMaskNoLabel |= hb_fsAttrEncode( szAttributes );
       uiMaskNoLabel &= ~HB_FA_LABEL;
-      hb_fsGrabDirectory( pDir, (const char*) szDirSpec, uiMaskNoLabel, fDirSpec, bFullPath, bDirOnly );
+      hb_fsGrabDirectory( pDir, (const char*) szDirSpec, uiMaskNoLabel, pDirSpec, bFullPath, bDirOnly );
    }
 
-   if ( fDirSpec != NULL )
-      hb_xfree( fDirSpec );
+   if ( pDirSpec != NULL )
+      hb_xfree( pDirSpec );
 
    if( bAlloc )
       hb_xfree( szDirSpec );

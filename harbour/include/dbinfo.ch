@@ -72,7 +72,7 @@
 #define RDDI_REMOTE               11   /* Remote table access? */
 #define RDDI_CONNECTION           12   /* Get/Set default connection */
 #define RDDI_TABLETYPE            13   /* Type of table file */
-#define RDDI_MEMOTYPE             14   /* Type of MEMO file: DBT, SMT, FPT(FP,SIX3,FLEXIII) */
+#define RDDI_MEMOTYPE             14   /* Type of MEMO file DB_MEMO_*: DBT, SMT, FPT(FP,SIX3,FLEXIII) */
 #define RDDI_LARGEFILE            15   /* Is large file size (>=4GB) supported */
 #define RDDI_LOCKSCHEME           16   /* Locking scheme used by RDD */
 #define RDDI_RECORDMAP            17   /* Does RDD support record map functionality? */

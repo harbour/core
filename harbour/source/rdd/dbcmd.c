@@ -1012,7 +1012,7 @@ HB_FUNC( FIELDTYPE )
       }
    }
 
-   hb_retc("");
+   hb_retc( NULL );
 }
 
 HB_FUNC( FLOCK )
@@ -1508,7 +1508,7 @@ HB_FUNC( ORDFINDREC )
       memset( &pOrderInfo, 0, sizeof( DBORDERINFO ) );
       pOrderInfo.itmNewVal = hb_param( 1 , HB_IT_NUMERIC );
       pOrderInfo.itmResult = hb_itemPutL( NULL, FALSE );
-      SELF_ORDINFO( pArea, hb_parl( 2 ) ? DBOI_FINDRECCONT :
+      SELF_ORDINFO( pArea, ISLOG( 2 ) && hb_parl( 2 ) ? DBOI_FINDRECCONT :
                                           DBOI_FINDREC, &pOrderInfo );
       hb_itemReturn( pOrderInfo.itmResult );
       hb_itemRelease( pOrderInfo.itmResult );
@@ -1704,9 +1704,9 @@ HB_FUNC( ORDWILDSEEK )
 
    if( pArea )
    {
-      char * szPatern = hb_parc( 1 );
+      char * szPattern = hb_parc( 1 );
 
-      if( szPatern )
+      if( szPattern )
       {
          BOOL fCont = hb_parl( 2 ), fBack = hb_parl( 3 ), fFound = FALSE;
          DBORDERINFO OrderInfo;
@@ -1730,7 +1730,7 @@ HB_FUNC( ORDWILDSEEK )
                if( errCode == SUCCESS )
                {
                   szKey = hb_itemGetCPtr( OrderInfo.itmResult );
-                  fFound = hb_strMatchWild( szKey, szPatern );
+                  fFound = hb_strMatchWild( szKey, szPattern );
                }
             }
          }
@@ -1855,7 +1855,8 @@ HB_FUNC( ORDNUMBER )
       memset( &pOrderInfo, 0, sizeof( DBORDERINFO ) );
       pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder && ! ISNIL( 1 ) )
+      if( !( pOrderInfo.itmOrder || ISNIL( 1 ) ) ||
+          !( pOrderInfo.atomBagName || ISNIL( 2 ) ) )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_REL_BADPARAMETER, NULL, "ORDNUMBER" );
          return;
@@ -2407,6 +2408,9 @@ HB_FUNC( DBRECORDINFO )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBRECORDINFO" );
 }
 
+/*
+ * DBFILEPUT/BLOB2FILE - retrieve memo contents into file
+ */
 HB_FUNC( DBFILEGET )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -2437,6 +2441,9 @@ HB_FUNC( DBFILEGET )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBFILEGET" );
 }
 
+/*
+ * DBFILEPUT/FILE2BLOB - store file contents in MEMO
+ */
 HB_FUNC( DBFILEPUT )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
