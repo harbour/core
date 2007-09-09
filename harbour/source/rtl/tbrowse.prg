@@ -422,7 +422,7 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
 
          AAdd( ::aColumns, oCol )
          AAdd( ::aColsWidth, ::SetColumnWidth( oCol ) )
-         AAdd( ::aColsPos, 100 )
+         AAdd( ::aColsPos, 0 )
          AAdd( ::aColsInfo, ::InitColumn( oCol, .F. ) )
 
       else

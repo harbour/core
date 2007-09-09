@@ -36,6 +36,8 @@
    * source/rtl/tbrowse.prg
      + Some work in progress towards better C5.x compatibility
        (borrowed from xhb)
+     ! Fixed crash in TBMouse() (due to recent changes)
+       (Thanks to Guillermo)
 
    * source/rtl/getsys.prg
    * source/rtl/tgetlist.prg
@@ -61,7 +63,7 @@
      ! Added :End() to HBBrwText to avoid using some 
        internals vars of the class.
      ! Fixed problem with HBDebugger:SaveAppScreen() 
-       where it crashed due to wrong initialization 
+       where it crashed due to wrong initialization order 
        of TBrowse() screen coordinates. Bug appeared 
        due to the now more compatible TBrowse() behaviour.
      % Optimizations and cleanups.
