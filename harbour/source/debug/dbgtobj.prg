@@ -50,344 +50,283 @@
  *
  */
 
-
-#include "setcurs.ch"
-#include "common.ch"
 #include "hbclass.ch"
+
+#include "common.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
-//#pragma -es0
+CREATE CLASS HBDbObject
 
-Class TDBGobject
-//export:
-data aWindows
-data Theobj
-data objname
-data nCurWindow
-data pItems
-Data ArrayReference
-Data ArrayIndex
-Data AllNames
-data lEditable
-Method new
-method addWindows
-method doget
-method SetsKeyPressed
-endclass
+   VAR aWindows       INIT {}
+   VAR Theobj
+   VAR objname
+   VAR nCurWindow     INIT 0
+   VAR pItems         INIT {}
+   VAR ArrayReference INIT {}
+   VAR ArrayIndex     INIT 1
+   VAR AllNames       INIT {}
+   VAR lEditable
 
-method new(aArray,pArName,lEditable) class tdbgObject
-Local aTemp
+   METHOD New( aArray, cVarName, lEditable )
+   METHOD addWindows( aArray, nRow )
+   METHOD doGet( oBrowse, pItem, nSet )
+   METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray )
 
-DEFAULT lEditable TO .t.
-::pItems:={}
-::AllNames:={}
-for each aTemp in __objGetValueList(aArray)
-   aadd(::pItems,{aTemp[1],aTemp[2]})
-   aadd(::AllNames,aTemp[1])
-next
-for each aTemp in __objGetMethodList(aArray)
-   if !empty(aTemp)
-      aadd(::pItems,{aTemp,"Method"})
-      aadd(::AllNames,aTemp)
-   endif
-next
-::aWindows:={}
-::objname:=parName
-::TheObj:=aArray
+ENDCLASS
 
-::nCurWindow:=0
-::ArrayReference:={}
-::ArrayIndex:=1
-::lEditable = lEditable
+METHOD New( aArray, cVarName, lEditable ) CLASS HBDbObject
 
-::addWindows(::pItems)
-Return Self
+   LOCAL aTemp
 
-Method addWindows(aArray,nRow) class tdbgObject
-local oBrwSets,nSize:=Len(AArray)
-//local n:=1
-Local owndsets
-   local nWidth
-   local oCol
-   local nMaxElem
+   DEFAULT lEditable TO .T.
 
-   if (nsize<maxrow()-2)
-      if nRow <> nil
-         owndsets:=TDbWindow():New( nRow, 5, if(nRow+nsize+1<maxrow()-2,nRow+nsize+1,maxrow()-2), maxcol()-5, ::objname +" is of class: " +::TheObj:classname() ,"N/W" )
-      else
-         owndsets:=TDbWindow():New( 1, 5, 2+nsize, maxcol()-5, ::objname +" is of class: " +::TheObj:classname()  ,"N/W")
-      endif
-   else
-      owndsets:=TDbWindow():New( 1, 5, maxrow()-2, maxcol()-5, ::objname +" is of class: " +::TheObj:classname() ,"N/W")
-   endif
+   FOR EACH aTemp IN __objGetValueList( aArray )
+      AAdd( ::pItems, { aTemp[ 1 ], aTemp[ 2 ] } )
+      AAdd( ::AllNames, aTemp[ 1 ] )
+   NEXT
+
+   FOR EACH aTemp IN __objGetMethodList( aArray )
+      IF !Empty( aTemp )
+         AAdd( ::pItems, { aTemp, "Method" } )
+         AAdd( ::AllNames, aTemp )
+      ENDIF
+   NEXT
+
+   ::objname := cVarName
+   ::TheObj := aArray
+   ::lEditable := lEditable
+
+   ::addWindows( ::pItems )
+
+   RETURN Self
+
+METHOD addWindows( aArray, nRow ) CLASS HBDbObject
+
+   LOCAL oBrwSets
+   LOCAL nSize := Len( aArray )
+   LOCAL oWndSets
+   LOCAL nWidth
+   LOCAL oCol
+   LOCAL nMaxLen
+
+   IF nSize < MaxRow()-2
+      IF nRow != NIL
+         oWndSets := HBDbWindow():New( nRow, 5, iif( nRow + nSize + 1 < MaxRow() - 2, nRow + nSize + 1, MaxRow() - 2 ), MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+      ELSE
+         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+      ENDIF
+   ELSE
+      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
+   ENDIF
 
    ::nCurWindow++
-   oWndSets:lFocused:=.t.
-   aadd(::aWindows,owndsets)
+   oWndSets:lFocused := .T.
+   AAdd( ::aWindows, oWndSets )
 
    nWidth := oWndSets:nRight - oWndSets:nLeft - 1
 
-   oBrwSets:=TbrowseNew(owndsets:nTop+1, owndsets:nLeft+1, owndsets:nBottom-1, owndsets:nRight-1)
-   ::ArrayReference:=aarray
+   oBrwSets := TBrowseNew( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
+   ::ArrayReference := aarray
 
    oBrwSets:ColorSpec := __Dbg():ClrModal()
    oBrwSets:GoTopBlock := { || ::Arrayindex := 1 }
-   oBrwSets:GoBottomBlock := { || ::arrayindex := Len( ::ArrayReference) }
+   oBrwSets:GoBottomBlock := { || ::arrayindex := Len( ::ArrayReference ) }
    oBrwSets:SkipBlock := { | nSkip, nPos | nPos := ::arrayindex,;
-                          ::arrayindex := iif( nSkip > 0, Min( ::arrayindex+nSkip, Len(::arrayreference)),;
+                          ::arrayindex := iif( nSkip > 0, Min( ::arrayindex + nSkip, Len( ::arrayreference ) ),;
                           Max( 1, ::arrayindex + nSkip ) ), ::arrayindex - nPos }
 
-   nMaxElem := maxelem(::AllNames)
-   oBrwSets:AddColumn( ocol := TBColumnNew( "",;
-                    { || PadR( ::ArrayReference[ ::arrayindex, 1 ], nMaxElem ) } ) )
-   ocol:width := nMaxElem
-   ocol:ColorBlock :=    { || { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
-   oBrwSets:Freeze:=1
+   nMaxLen := ArrayMaxLen( ::AllNames )
+   oBrwSets:AddColumn( oCol := TBColumnNew( "",;
+                    { || PadR( ::ArrayReference[ ::arrayindex, 1 ], nMaxLen ) } ) )
+   oCol:width := nMaxLen
+   oCol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
+   oBrwSets:Freeze := 1
 
-   oBrwSets:AddColumn( ocol:=TBColumnNew( "", { || iif( ValType( ;
-   ::ArrayReference[ ::ArrayIndex, 2 ] ) == "C" .and. ;
-   ::ArrayReference[ ::ArrayIndex, 2 ] == "Method",;
-   "Method", PadR( ValToStr( __ObjSendMsg( ::TheObj, ::ArrayReference[ ::arrayindex ,1] ) ),;
-   nWidth  - 12 ) ) } ) )
+   oBrwSets:AddColumn( oCol := TBColumnNew( "", { || iif( ISCHARACTER( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. ::ArrayReference[ ::ArrayIndex, 2 ] == "Method",;
+      "Method",;
+      PadR( __dbgValToStr( __ObjSendMsg( ::TheObj, ::ArrayReference[ ::arrayindex, 1 ] ) ), nWidth  - 12 ) ) } ) )
 
    oBrwSets:Cargo := 1 // Actual highligthed row
-   ocol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
-   ocol:width:= MaxCol() - 14 - nMaxElem
-   oBrwsets:colpos:=2
-   ::aWindows[::nCurWindow]:bPainted    := { || oBrwSets:ForceStable() }
-   ::aWindows[::nCurWindow]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ),;
-                            ::aWindows[::nCurWindow],::objname ,Len(::Arrayreference),::pitems) }
-   ::aWindows[::nCurwindow]:cCaption := ::objname +" is of class: " +::TheObj:classname()
+   oCol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
+   oCol:width := MaxCol() - 14 - nMaxLen
+   oBrwSets:colpos := 2
+   ::aWindows[ ::nCurWindow ]:bPainted    := { || oBrwSets:ForceStable() }
+   ::aWindows[ ::nCurWindow ]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ),;
+                                               ::aWindows[ ::nCurWindow ], ::objname, Len( ::Arrayreference ), ::pitems ) }
+   ::aWindows[ ::nCurwindow ]:cCaption := ::objname + " is of class: " +::TheObj:ClassName()
 
    SetCursor( SC_NONE )
-   ::aWindows[::nCurWindow]:ShowModal()
 
-return self
+   ::aWindows[ ::nCurWindow ]:ShowModal()
 
-method SetsKeyPressed( nKey, oBrwSets, nSets, oWnd ,cName,LenArr,aArray) class tdbgObject
+   RETURN Self
 
-   local nSet := oBrwSets:Cargo
-   local cTemp:=str(nSet,4)
-   local cOldname:= ::objname
-
-   HB_SYMBOL_UNUSED( nSets )
-   HB_SYMBOL_UNUSED( oWnd )
-   HB_SYMBOL_UNUSED( cName )
-   HB_SYMBOL_UNUSED( LenArr )
-
-   Switch nKey
-      case K_UP
-           if oBrwSets:Cargo > 1
-              oBrwSets:Cargo--
-              oBrwSets:RefreshCurrent()
-              oBrwSets:Up()
-              oBrwSets:ForceStable()
-           endif
-           exit
-
-      case K_DOWN
-           if oBrwSets:Cargo < nSets
-              oBrwSets:Cargo++
-              oBrwSets:RefreshCurrent()
-              oBrwSets:Down()
-              oBrwSets:ForceStable()
-           endif
-           exit
-
-      case K_HOME
-           if oBrwSets:Cargo > 1
-              oBrwSets:Cargo := 1
-              oBrwSets:GoTop()
-              oBrwSets:ForceStable()
-           endif
-           exit
-
-      case K_END
-           if oBrwSets:Cargo < nSets
-              oBrwSets:Cargo := nSets
-              oBrwSets:GoBottom()
-              oBrwSets:ForceStable()
-           endif
-           exit
-
-      case K_PGUP
-           oBrwSets:PageUp()
-           oBrwSets:Cargo := ::ArrayIndex
-           oBrwSets:RefreshCurrent()
-           oBrwSets:ForceStable()
-           exit
-
-      case K_PGDN
-           oBrwSets:PageDown()
-           oBrwSets:Cargo := ::ArrayIndex
-           oBrwSets:RefreshCurrent()
-           oBrwSets:ForceStable()
-           exit
-
-      Case K_ENTER
-            if nSet==oBrwSets:Cargo
-               if valtype(aArray[nSet,2])=="A"
-                  if len(   aArray[nSet,2])>0
-                     TDBGArray():New(aArray[nSet,2],::pitems[nSet,1])
-                  endif
-               elseif valtype(aArray[nSet,2])=="H"
-                  if len(   aArray[nSet,2])>0
-                     TDBGHash():New(aArray[nSet,2],::pitems[nSet,1])
-                  endif
-               elseif valtype(aArray[nSet,2])=="O"
-                  tdbgObject():New(aArray[nSet,2],::pitems[nSet,1])
-               elseif ( ValType( aArray[ nSet, 2 ] ) == "C" .AND. ;
-                        aArray[ nSet, 2 ] == "Method" ) .OR. ;
-                      ValType( aArray[ nSet, 2 ] ) == "B" .OR. ;
-                      ValType( aArray[ nSet, 2 ] ) == "P"
-                  Alert("Value cannot be edited")
-
-              else
-                 if ::lEditable
-                    oBrwSets:RefreshCurrent()
-                    cTemp:=::doget(oBrwsets,::arrayreference,nSet)
-                    oBrwSets:RefreshCurrent()
-                    oBrwSets:ForceStable()
-                 else
-                    Alert( "Value cannot be edited" )
-                 endif
-
-               endif
-
-            endif
-            exit
-
-   end
-
-return nil
-
-static function ValToStr( uVal )
-
-   local cType := ValType( uVal )
-   local cResult := "U"
-
-   Switch cType
-      case "U"
-           cResult := "NIL"
-           exit
-
-      case "A"
-           cResult := "{ ... }"
-           exit
-
-      case "H"
-           cResult := "Hash of " + AllTrim( Str( Len( uVal ) ) ) + " elements"
-           exit
-
-      case "C"
-      case "M"
-           cResult := '"' + uVal + '"'
-           exit
-
-      case "L"
-           cResult := iif( uVal, ".T.", ".F." )
-           exit
-
-      case "D"
-           cResult := DToC( uVal )
-           exit
-
-      case "N"
-           cResult := AllTrim( Str( uVal ) )
-           exit
-
-      case "O"
-           cResult := "Class " + uVal:ClassName() + " object"
-           exit
-
-      case "B"
-           cResult:= "{ || ... }"
-           exit
-
-      case "P"
-           cResult := "Pointer"
-           exit
-
-   end
-
-return cResult
-
-METHOD doGet(oBro,pItem,nSet) class tdbgObject
+METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
 
 #ifndef HB_NO_READDBG
 
-    LOCAL column,  nKey
-    local getlist:={}
-    // save state
-    LOCAL lScoreSave := Set( _SET_SCOREBOARD, .f. )
-    LOCAL lExitSave  := Set( _SET_EXIT, .t. )
-    LOCAL bInsSave   := SetKey( K_INS )
-    local cValue
+   LOCAL column
+   LOCAL nKey
+   LOCAL GetList := {}
+   LOCAL lScoreSave := Set( _SET_SCOREBOARD, .F. )
+   LOCAL lExitSave  := Set( _SET_EXIT, .T. )
+   LOCAL bInsSave   := SetKey( K_INS )
+   LOCAL cValue
 
-    // make sure browse is stable
-    obro:forcestable()
-    // if confirming new record, append blank
-
-
-
-    // set insert key to toggle insert mode and cursor
-    SetKey( K_INS, ;
-        { || SetCursor( if(ReadInsert(!ReadInsert()), SC_NORMAL, SC_INSERT)) };
-          )
-
-    // initial cursor setting
-    SetCursor( IF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
-
-    // get column object from browse
-    column := oBro:getColumn( oBro:colPos )
-
-    // create a corresponding GET
-    cValue := PadR( ValToStr( pitem[nSet,2] ), column:Width )
-    @ row(),col() GET cValue ;
-        VALID If( Type( cValue ) == "UE", ( Alert( "Expression error" ), .f. ), .t. )
+   // make sure browse is stable
+   oBrowse:forceStable()
+   // if confirming new record, append blank
 
 
-    // read it
-    ReadModal(getlist )
-//    eval(column:block,get:Buffer)
-    // restore state
-    SetCursor( 0 )
-    Set( _SET_SCOREBOARD, lScoreSave )
-    Set( _SET_EXIT, lExitSave )
-    SetKey( K_INS, bInsSave )
 
-    if LastKey() == K_ENTER
-       __ObjSendMsg( ::TheObj, "_" + pitem[ nSet, 1 ], &cValue )
-    endif
+   // set insert key to toggle insert mode and cursor
+   SetKey( K_INS, { || SetCursor( iif( ReadInsert( ! ReadInsert() ),;
+           SC_NORMAL, SC_INSERT ) ) } )
 
-    // check exit key from get
-    nKey := LastKey()
-    IF nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_PGUP .OR. nKey == K_PGDN
-        KEYBOARD CHR( nKey )
-    END
+   // initial cursor setting
+   SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+
+   // get column object from browse
+   column := oBrowse:getColumn( oBrowse:colPos )
+
+   // create a corresponding GET
+   cValue := PadR( __dbgValToStr( pitem[ nSet, 2 ] ), column:Width )
+   @ Row(), Col() GET cValue ;
+       VALID iif( Type( cValue ) == "UE", ( Alert( "Expression error" ), .F. ), .T. )
+
+   READ
+
+   SetCursor( SC_NONE )
+   Set( _SET_SCOREBOARD, lScoreSave )
+   Set( _SET_EXIT, lExitSave )
+   SetKey( K_INS, bInsSave )
+
+   IF LastKey() == K_ENTER
+      __ObjSendMsg( ::TheObj, "_" + pitem[ nSet, 1 ], &cValue )
+   ENDIF
+
+   // check exit key from get
+   nKey := LastKey()
+   IF nKey == K_UP .OR. nKey == K_DOWN .OR. nKey == K_PGUP .OR. nKey == K_PGDN
+      KEYBOARD Chr( nKey )
+   ENDIF
 
 #else
 
-    HB_SYMBOL_UNUSED( oBro )
-    HB_SYMBOL_UNUSED( pItem )
-    HB_SYMBOL_UNUSED( nSet )
+   HB_SYMBOL_UNUSED( oBrowse )
+   HB_SYMBOL_UNUSED( pItem )
+   HB_SYMBOL_UNUSED( nSet )
 
 #endif
 
-RETURN nil
+   RETURN NIL
 
-static FUNC maxelem( a )
+METHOD SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cName, aArray ) CLASS HBDbObject
 
-   LOCAL max     := 0
-   LOCAL tam     := 0
-   LOCAL elem
+   LOCAL nSet := oBrwSets:Cargo
+   LOCAL cOldname := ::objname
 
-   for each elem in a
-      tam := LEN( elem )
-      max := IF( tam > max, tam, max )
+   HB_SYMBOL_UNUSED( oWnd )
+   HB_SYMBOL_UNUSED( cName )
+
+   DO CASE
+   CASE nKey == K_UP
+
+      IF oBrwSets:Cargo > 1
+         oBrwSets:Cargo--
+         oBrwSets:RefreshCurrent()
+         oBrwSets:Up()
+         oBrwSets:ForceStable()
+      ENDIF
+
+   CASE nKey == K_DOWN
+
+      IF oBrwSets:Cargo < nSets
+         oBrwSets:Cargo++
+         oBrwSets:RefreshCurrent()
+         oBrwSets:Down()
+         oBrwSets:ForceStable()
+      ENDIF
+
+   CASE nKey == K_HOME
+
+      IF oBrwSets:Cargo > 1
+         oBrwSets:Cargo := 1
+         oBrwSets:GoTop()
+         oBrwSets:ForceStable()
+      ENDIF
+
+   CASE nKey == K_END
+
+      IF oBrwSets:Cargo < nSets
+         oBrwSets:Cargo := nSets
+         oBrwSets:GoBottom()
+         oBrwSets:ForceStable()
+      ENDIF
+
+   CASE nKey == K_PGUP
+
+      oBrwSets:PageUp()
+      oBrwSets:Cargo := ::ArrayIndex
+      oBrwSets:RefreshCurrent()
+      oBrwSets:ForceStable()
+
+   CASE nKey == K_PGDN
+
+      oBrwSets:PageDown()
+      oBrwSets:Cargo := ::ArrayIndex
+      oBrwSets:RefreshCurrent()
+      oBrwSets:ForceStable()
+
+   CASE nKey == K_ENTER
+
+      IF nSet == oBrwSets:Cargo
+         IF ISARRAY( aArray[ nSet, 2 ] )
+            IF Len( aArray[ nSet, 2 ] ) > 0
+               HBDbArray():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
+            ENDIF
+         ELSEIF ValType( aArray[ nSet, 2 ] ) == "H"
+            IF Len( aArray[ nSet, 2 ] ) > 0
+               HBDbHash():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
+            ENDIF
+         ELSEIF ISOBJECT( aArray[ nSet, 2 ] )
+            HBDbObject():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
+         ELSEIF ( ISCHARACTER( aArray[ nSet, 2 ] ) .AND. ;
+                  aArray[ nSet, 2 ] == "Method" ) .OR. ;
+                ISBLOCK( aArray[ nSet, 2 ] ) .OR. ;
+                ValType( aArray[ nSet, 2 ] ) == "P"
+            Alert( "Value cannot be edited" )
+         ELSE
+            IF ::lEditable
+               oBrwSets:RefreshCurrent()
+               ::doGet( oBrwSets, ::arrayreference, nSet )
+               oBrwSets:RefreshCurrent()
+               oBrwSets:ForceStable()
+            else
+               Alert( "Value cannot be edited" )
+            ENDIF
+         ENDIF
+      ENDIF
+
+   ENDCASE
+
+   RETURN NIL
+
+FUNCTION __dbgObject( aArray, cVarName, lEditable )
+   RETURN HBDbObject():New( aArray, cVarName, lEditable )
+
+STATIC FUNCTION ArrayMaxLen( aArray )
+
+   LOCAL nMaxLen := 0
+   LOCAL nLen
+   LOCAL cItem
+
+   FOR EACH cItem IN aArray
+      nLen := Len( cItem )
+      IF nMaxLen < nLen
+         nMaxLen := nLen
+      ENDIF
    NEXT
 
-RETURN max
-
-function __DbgObject(aArray,pArName,lEditable)
-return TDBGObject():New(aArray,pArName,lEditable)
+   RETURN nMaxLen

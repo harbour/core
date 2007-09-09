@@ -8,6 +8,69 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-09 19:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/setcurs.ch
+   * include/hbapigt.h
+     * SC_UNDEF moved to .prg level.
+     ! SC_* defs not duplicated on C level.
+
+   * include/hbcompat.ch
+     + Added debugger class compatibility translations.
+
+   * source/rtl/tmenusys.prg
+   * source/rtl/menusys.prg
+     * Formatting.
+
+   * source/rtl/teditor.prg
+   * source/debug/debugger.prg
+     + Added :RowPow(), :ColPos(), :IsWordWrap(), :WordWrapCol()
+     ! Changed debugger to use the above methods instead of direct 
+       instance var access.
+
+   * source/rtl/tbcolumn.prg
+   * source/rtl/tget.prg
+   * source/rtl/tbrowse.prg
+     ! Public class initializator names hidden when in strict 
+       (and non-XPP) mode.
+
+   * source/rtl/tbrowse.prg
+     + Some work in progress towards better C5.x compatibility
+       (borrowed from xhb)
+
+   * source/rtl/getsys.prg
+   * source/rtl/tgetlist.prg
+     + (Better) C5.3 message line support, several 5.3 fixes, 
+       some of them borrowed from xhb.
+
+   * include/hbcompat.ch
+   * source/debug/dbgtobj.prg
+   * source/debug/dbgbrwsr.prg
+   * source/debug/dbgtwin.prg
+   * source/debug/dbgmenu.prg
+   * source/debug/dbgthsh.prg
+   * source/debug/tbrwtext.prg
+   * source/debug/dbgwa.prg
+   * source/debug/debugger.prg
+   * source/debug/dbghelp.prg
+   * source/debug/dbgtarr.prg
+   * source/debug/dbgtmenu.prg
+   * source/debug/dbgtmitm.prg
+     ! Class names named to be in the Harbour namespace.
+       xhb compatibility translations added to hbcompat.ch
+     ! Unneeded BEGINDUMP and .h inclusions removed.
+     ! Added :End() to HBBrwText to avoid using some 
+       internals vars of the class.
+     ! Fixed problem with HBDebugger:SaveAppScreen() 
+       where it crashed due to wrong initialization 
+       of TBrowse() screen coordinates. Bug appeared 
+       due to the now more compatible TBrowse() behaviour.
+     % Optimizations and cleanups.
+     % Unused vars/functions removed.
+     * Formatting (except large parts of debugger.prg and 
+       those files which were okey).
+     ; Majority of formatting, optimization and code cleanup 
+       work is still left to do.
+
 2007-09-08 15:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/dbinfo.ch
     * updated comment

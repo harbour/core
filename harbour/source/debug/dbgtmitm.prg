@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * The Debugger (TDbMenuItem Class)
+ * The Debugger (HBDbMenuItem Class)
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -55,18 +55,20 @@
          redirection, and is also slower. [vszakats] */
 
 #include "hbclass.ch"
+
 #include "common.ch"
 
-CLASS TDbMenuItem
+CREATE CLASS HBDbMenuItem
 
-   DATA nRow, nCol
-   DATA cPrompt
-   DATA bAction
-   DATA lChecked
-   DATA Ident
+   VAR nRow
+   VAR nCol
+   VAR cPrompt
+   VAR bAction
+   VAR lChecked
+   VAR Ident
 
-   ACCESS Checked() INLINE ::lChecked
-   ASSIGN Checked(lOnOff) INLINE ::lChecked:=lOnOff
+   ACCESS Checked()           INLINE ::lChecked
+   ASSIGN Checked( lChecked ) INLINE ::lChecked := lChecked
 
    METHOD New( cPrompt, bAction, lChecked, xIdent )
    METHOD Display( cClrText, cClrHotKey )
@@ -74,23 +76,22 @@ CLASS TDbMenuItem
 
 ENDCLASS
 
-METHOD New( cPrompt, bAction, lChecked, xIdent ) CLASS TDbMenuItem
+METHOD New( cPrompt, bAction, lChecked, xIdent ) CLASS HBDbMenuItem
 
-   DEFAULT lChecked TO .f.
+   DEFAULT lChecked TO .F.
 
    ::cPrompt  := cPrompt
    ::bAction  := bAction
    ::lChecked := lChecked
    ::Ident    := xIdent
 
-return Self
+   RETURN Self
 
-METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
+METHOD Display( cClrText, cClrHotKey ) CLASS HBDbMenuItem
 
-   local nAt
+   LOCAL nAt
 
-   DispOutAt( ::nRow, ::nCol ,;
-      StrTran( ::cPrompt, "~", "" ), cClrText )
+   DispOutAt( ::nRow, ::nCol, StrTran( ::cPrompt, "~", "" ), cClrText )
 
    DispOutAt( ::nRow, ::nCol + ;
      ( nAt := At( "~", ::cPrompt ) ) - 1,;
@@ -98,4 +99,4 @@ METHOD Display( cClrText, cClrHotKey ) CLASS TDbMenuItem
 
    DispOutAt( ::nRow, ::nCol, iif( ::lChecked, Chr( 251 ), "" ), cClrText )
 
-return Self
+   RETURN Self

@@ -55,176 +55,186 @@
  *
  */
 
+/* NOTE: Don't use SAY/DevOut()/DevPos() for screen output, otherwise
+         the debugger output may interfere with the applications output
+         redirection, and is also slower. [vszakats] */
+
 #include "common.ch"
 #include "inkey.ch"
 
-function __dbgHelp( nTopic )
+FUNCTION __dbgHelp( nTopic )
 
-   local oDlg
-   local cColor := If( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N",;
-                       "N/W, N/BG, R/W, R/BG" )
-   local oBrw, aTopics := GetTopics()
+   LOCAL oDlg
+   LOCAL cColor := iif( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N", "N/W, N/BG, R/W, R/BG" )
+   LOCAL oBrw
+   LOCAL aTopics := GetTopics()
 
    DEFAULT nTopic TO 1
 
-   oDlg = TDbWindow():New( 2, 2, MaxRow() - 2, MaxCol() - 2, "Help", cColor )
+   oDlg := HBDbWindow():New( 2, 2, MaxRow() - 2, MaxCol() - 2, "Help", cColor )
 
-   oBrw = TBrowseNew( oDlg:nTop + 1, oDlg:nLeft + 1, oDlg:nBottom - 1,;
-                      oDlg:nLeft + 12 )
-   oBrw:Cargo = 1
+   oBrw := TBrowseNew( oDlg:nTop + 1, oDlg:nLeft + 1, oDlg:nBottom - 1, oDlg:nLeft + 12 )
+   oBrw:Cargo := 1
    oBrw:AddColumn( TBColumnNew( "", { || aTopics[ oBrw:Cargo ][ 1 ] }, 12 ) )
-   oBrw:ColorSpec = StrTran( __Dbg():ClrModal(), ", R/W", "" )
-   oBrw:SkipBlock = { | nSkip, nOld | nOld := oBrw:Cargo, oBrw:Cargo += nSkip,;
+   oBrw:ColorSpec := StrTran( __Dbg():ClrModal(), ", R/W", "" )
+   oBrw:SkipBlock := { | nSkip, nOld | nOld := oBrw:Cargo, oBrw:Cargo += nSkip,;
                   oBrw:Cargo := Min( Max( oBrw:Cargo, 1 ), Len( aTopics ) ),;
                   oBrw:Cargo - nOld }
-   oBrw:GoTopBlock = { || oBrw:Cargo := 1 }
-   oBrw:GoBottomBlock = { || oBrw:Cargo := Len( aTopics ) }
+   oBrw:GoTopBlock := { || oBrw:Cargo := 1 }
+   oBrw:GoBottomBlock := { || oBrw:Cargo := Len( aTopics ) }
 
-   if nTopic > 1
+   IF nTopic > 1
       Eval( oBrw:SkipBlock, nTopic - 1 )
-   endif
+   ENDIF
 
-   oDlg:bPainted = { || PaintWindow( oDlg, oBrw, aTopics ) }
-   oDlg:bKeyPressed = { | nKey | ProcessKey( nKey, oDlg, oBrw, aTopics, oDlg:cColor ) }
+   oDlg:bPainted := { || PaintWindow( oDlg, oBrw, aTopics ) }
+   oDlg:bKeyPressed := { | nKey | ProcessKey( nKey, oDlg, oBrw, aTopics, oDlg:cColor ) }
 
    oDlg:ShowModal()
 
-return nil
+   RETURN NIL
 
-static procedure PaintWindow( oDlg, oBrw, aTopics )
+STATIC PROCEDURE PaintWindow( oDlg, oBrw, aTopics )
 
-   @ oDlg:nTop + 1, oDlg:nLeft + 13 TO ;
-     oDlg:nBottom - 1, oDlg:nLeft + 13 ;
-     COLOR oDlg:cColor
-
+   DispBox( oDlg:nTop + 1, oDlg:nLeft + 13, oDlg:nBottom - 1, oDlg:nLeft + 13, 1, oDlg:cColor )
    DispOutAt( oDlg:nTop , oDlg:nLeft + 13 , Chr( 194 ), oDlg:cColor )
    DispOutAt( oDlg:nBottom , oDlg:nLeft + 13 , Chr( 193 ), oDlg:cColor )
 
    oBrw:ForceStable()
    ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 ) // Start on page 1
 
-return
+   RETURN
 
-static procedure ProcessKey( nKey, oDlg, oBrw, aTopics )
+STATIC PROCEDURE ProcessKey( nKey, oDlg, oBrw, aTopics )
 
-   local n, nSkip
+   LOCAL n
+   LOCAL nSkip
 
-   do case
-      case nKey == K_UP
-           if oBrw:Cargo > 1
-              oBrw:Up()
-              oBrw:ForceStable()
-              ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
-           endif
+   DO CASE
+   CASE nKey == K_UP
 
-      case nKey == K_DOWN
-           if oBrw:Cargo < Len( aTopics )
-              oBrw:Down()
-              oBrw:ForceStable()
-              ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
-           endif
+      IF oBrw:Cargo > 1
+         oBrw:Up()
+         oBrw:ForceStable()
+         ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
+      ENDIF
 
-      case nKey == K_HOME
-           if oBrw:Cargo > 1
-              oBrw:GoTop()
-              oBrw:ForceStable()
-              ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
-           endif
+   CASE nKey == K_DOWN
 
-      case nKey == K_END
-           if oBrw:Cargo < Len( aTopics )
-              oBrw:GoBottom()
-              oBrw:ForceStable()
-              ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
-           endif
+      IF oBrw:Cargo < Len( aTopics )
+         oBrw:Down()
+         oBrw:ForceStable()
+         ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
+      ENDIF
 
-      case nKey == K_PGUP .OR. nKey == K_CTRL_B
-           ShowTopic( oDlg, aTopics, oBrw:Cargo, -1 ) // Skip to prev page
+   CASE nKey == K_HOME
 
-      case nKey == K_PGDN .OR. nKey == K_CTRL_F .OR. nKey == K_SPACE
-           ShowTopic( oDlg, aTopics, oBrw:Cargo, 1 )  // Skip to next page
+      IF oBrw:Cargo > 1
+         oBrw:GoTop()
+         oBrw:ForceStable()
+         ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
+      ENDIF
 
-      case nKey == K_LBUTTONDOWN
-           if ( nSkip := MRow() - oDlg:nTop - oBrw:RowPos ) != 0
-              if nSkip > 0
-                 for n = 1 to nSkip
-                    oBrw:Down()
-                    oBrw:Stabilize()
-                 next
-              else
-                 for n = 1 to nSkip + 2 step -1
-                    oBrw:Up()
-                    oBrw:Stabilize()
-                 next
-              endif
-              oBrw:ForceStable()
-              ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
-           endif
-   endcase
+   CASE nKey == K_END
 
-return
+      IF oBrw:Cargo < Len( aTopics )
+         oBrw:GoBottom()
+         oBrw:ForceStable()
+         ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
+      ENDIF
 
-procedure ShowTopic( oDlg, aTopics, nTopic, nPageOp )
+   CASE nKey == K_PGUP .OR. nKey == K_CTRL_B
 
-   local n
-   local nRows  := oDlg:nBottom - oDlg:nTop - 1
-   local nPages := Len( aTopics[ nTopic ][ 2 ] ) / nRows
-   local nRowsToPaint
+      ShowTopic( oDlg, aTopics, oBrw:Cargo, -1 ) // Skip to prev page
 
-   static nPage
+   CASE nKey == K_PGDN .OR. nKey == K_CTRL_F .OR. nKey == K_SPACE
 
-   if nPages > 1 .and. Int( nPages ) < nPages
-      nPages = Int( nPages ) + 1
-   endif
+      ShowTopic( oDlg, aTopics, oBrw:Cargo, 1 )  // Skip to next page
 
-   if nPages == 1
-      if nPageOp == -1 .or. nPageOp == 1
-         return
-      endif
-      nPage = 1
-   else
-      do case
-         case nPageOp == 0 // Show first page
-              nPage = 1
+   CASE nKey == K_LBUTTONDOWN
 
-         case nPageOp == 1 // Show next page
-              if nPage < nPages
-                 nPage++
-              else
-                 return
-              endif
+      IF ( nSkip := MRow() - oDlg:nTop - oBrw:RowPos ) != 0
+         IF nSkip > 0
+            FOR n := 1 TO nSkip
+               oBrw:Down()
+               oBrw:Stabilize()
+            NEXT
+         ELSE
+            FOR n := 1 TO nSkip + 2 STEP -1
+               oBrw:Up()
+               oBrw:Stabilize()
+            NEXT
+         ENDIF
+         oBrw:ForceStable()
+         ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 )  // Start on page 1
+      ENDIF
 
-         case nPageOp == -1 // Show prev page
-              if nPage > 1
-                 nPage--
-              else
-                 return
-              endif
-      endcase
-   endif
+   ENDCASE
 
-   @ oDlg:nTop + 1, oDlg:nLeft + 14 CLEAR TO oDlg:nBottom - 1,;
-     oDlg:nRight - 1
+   RETURN
 
-   nRowsToPaint = Min( nRows, Len( aTopics[ nTopic ][ 2 ] ) - ( ( nPage - 1 ) * ;
-                       nRows ) )
+STATIC PROCEDURE ShowTopic( oDlg, aTopics, nTopic, nPageOp )
 
-   for n = 1 to nRowsToPaint
-      @ 2 + n, 16 SAY aTopics[ nTopic ][ 2 ][ ( ( nPage - 1 ) * nRows ) + n ]
-   next
+   STATIC s_nPage
 
-   if Len( aTopics[ nTopic ][ 2 ] ) <= nRows
-      @ oDlg:nBottom, oDlg:nRight - 16 SAY " Page 1 of 1 "
-   else
-      @ oDlg:nBottom, oDlg:nRight - 16 SAY " Page " + Str( nPage, 1 ) + " of " + ;
-        Str( nPages, 1 ) + " "
-   endif
+   LOCAL nRows  := oDlg:nBottom - oDlg:nTop - 1
+   LOCAL nPages := Len( aTopics[ nTopic ][ 2 ] ) / nRows
+   LOCAL nRowsToPaint
+   LOCAL n
 
-return
+   IF nPages > 1 .AND. Int( nPages ) < nPages
+      nPages := Int( nPages ) + 1
+   ENDIF
 
-static function GetTopics()
+   IF nPages == 1
+      IF nPageOp == -1 .OR. nPageOp == 1
+         RETURN
+      ENDIF
+      s_nPage := 1
+   ELSE
+      DO CASE
+      CASE nPageOp == 0 // Show first page
 
-   local aTopics := { { "About Help  ", },;
+         s_nPage := 1
+
+      CASE nPageOp == 1 // Show next page
+
+         IF s_nPage < nPages
+            s_nPage++
+         ELSE
+            RETURN
+         ENDIF
+
+      CASE nPageOp == -1 // Show prev page
+
+         IF s_nPage > 1
+            s_nPage--
+         ELSE
+            RETURN
+         ENDIF
+
+      ENDCASE
+   ENDIF
+
+   Scroll( oDlg:nTop + 1, oDlg:nLeft + 14, oDlg:nBottom - 1, oDlg:nRight - 1 )
+
+   nRowsToPaint := Min( nRows, Len( aTopics[ nTopic ][ 2 ] ) - ( ( s_nPage - 1 ) * nRows ) )
+
+   FOR n := 1 TO nRowsToPaint
+      DispOutAt( 2 + n, 16, aTopics[ nTopic ][ 2 ][ ( ( s_nPage - 1 ) * nRows ) + n ] )
+   NEXT
+
+   IF Len( aTopics[ nTopic ][ 2 ] ) <= nRows
+      DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page 1 of 1 " )
+   ELSE
+      DispOutAt( oDlg:nBottom, oDlg:nRight - 16, " Page " + Str( s_nPage, 1 ) + " of " + Str( nPages, 1 ) + " " )
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION GetTopics()
+
+   LOCAL aTopics := { { "About Help  ", },;
                       { "Keys        ", },;
                       { "   Function ", },;
                       { "   Window   ", },;
@@ -247,13 +257,13 @@ static function GetTopics()
                       { "Commands    ", },;
                       { "Script files", } }
 
-   aTopics[ 1 ][ 2 ] = ;
+   aTopics[ 1 ][ 2 ] := ;
       { " " + Chr( 24 ) + Chr( 25 ) + "             Select help topic.",;
         " PageUp         Page help text down.",;
         " PageDn         Page help text down.",;
         " Esc            Returns to debugger." }
 
-   aTopics[ 2 ][ 2 ] = ;
+   aTopics[ 2 ][ 2 ] := ;
       { "Special debugger keys fall into the following",;
         "categories:",;
         "",;
@@ -270,7 +280,7 @@ static function GetTopics()
         "Other keys (typeable characters) are sent to",;
         "the Command window and treated as input text." }
 
-   aTopics[ 3 ][ 2 ] = ;
+   aTopics[ 3 ][ 2 ] := ;
       { "F1     Help",;
         "F2     Zoom active window",;
         "",;
@@ -286,7 +296,7 @@ static function GetTopics()
         "F9     Set breakpoint on cursor line",;
         "F10    Trace" }
 
-   aTopics[ 4 ][ 2 ] = ;
+   aTopics[ 4 ][ 2 ] := ;
       { "Enter        If input is pending in the Command window,",;
         "             <Enter> will execute the command, regardless",;
         "             of which window is active. Otherwise, if the",;
@@ -340,7 +350,7 @@ static function GetTopics()
         "Esc          In Command window, clears command line.",;
         "             In other windows, does nothing." }
 
-   aTopics[ 5 ][ 2 ] = ;
+   aTopics[ 5 ][ 2 ] := ;
       { "TAB         Next window",;
         "",;
         "SHIFT-TAB   Previous window",;
@@ -357,7 +367,7 @@ static function GetTopics()
         "",;
         "ALT-X       Exit" }
 
-   aTopics[ 6 ][ 2 ] = ;
+   aTopics[ 6 ][ 2 ] := ;
       { "The Debugger display consists of the following five",;
         "windows:",;
         "",;
@@ -402,7 +412,7 @@ static function GetTopics()
         "menu option will restore the windows to their original",;
         "size and location." }
 
-   aTopics[ 7 ][ 2 ] = ;
+   aTopics[ 7 ][ 2 ] := ;
       { "The Command window accepts debugger commands as line",;
         "input, and displays the response from an executed",;
         "command, if any.",;
@@ -418,7 +428,7 @@ static function GetTopics()
         "When the Command window is active, the UP and DOWN",;
         "arrow keys can be used to recall previous commands." }
 
-   aTopics[ 8 ][ 2 ] = ;
+   aTopics[ 8 ][ 2 ] := ;
       { "The Code window displays Clipper source code for",;
         "the program being debugged.",;
         "",;
@@ -452,7 +462,7 @@ static function GetTopics()
         "the viewed file for a specific string, or go to a particular",;
         "line within it, using options found in the Locate menu." }
 
-   aTopics[ 9 ][ 2 ] = ;
+   aTopics[ 9 ][ 2 ] := ;
       { "The Watch window displays Watchpoint and Tracepoint",;
         "expressions, and their current values.",;
         "",;
@@ -471,7 +481,7 @@ static function GetTopics()
         "activation level represented by the selected call in the",;
         "CallStack window." }
 
-   aTopics[ 10 ][ 2 ] = ;
+   aTopics[ 10 ][ 2 ] := ;
       { "The Monitor window displays monitored variables.",;
         "",;
         "Classes of variables may be monitored via options in the",;
@@ -487,7 +497,7 @@ static function GetTopics()
         "activation level represented by the selected call in the",;
         "CallStack window." }
 
-   aTopics[ 11 ][ 2 ] = ;
+   aTopics[ 11 ][ 2 ] := ;
       { "The CallStack window displays the program's call stack.",;
         "It is opened and closed via the View:CallStack menu",;
         "option.",;
@@ -505,7 +515,7 @@ static function GetTopics()
         "window are all in the context of the activation level",;
         "selected in the CallStack window." }
 
-   aTopics[ 12 ][ 2 ] = ;
+   aTopics[ 12 ][ 2 ] := ;
       { "The debugger menus contain various debugger functions.",;
         "",;
         "Each menu may be accessed at any time by pressing the",;
@@ -536,7 +546,7 @@ static function GetTopics()
         "For more information on this class of commands, see",;
         "the 'Commands' section of this help." }
 
-   aTopics[ 13 ][ 2 ] = ;
+   aTopics[ 13 ][ 2 ] := ;
       { "Options:",;
         "",;
         "    Open...",;
@@ -548,7 +558,7 @@ static function GetTopics()
         "    Exit    Alt-X",;
         "    Exit the debugger" }
 
-   aTopics[ 14 ][ 2 ] = ;
+   aTopics[ 14 ][ 2 ] := ;
       { "Facilites for navigating the file in the Code window",;
         "",;
         "Options:",;
@@ -572,7 +582,7 @@ static function GetTopics()
         "    Toggles case sensitivity in searches. Default is",;
         "    OFF." }
 
-   aTopics[ 15 ][ 2 ] = ;
+   aTopics[ 15 ][ 2 ] := ;
       { "Options:",;
         "",;
         "    Sets",;
@@ -587,7 +597,7 @@ static function GetTopics()
         "    CallStack",;
         "    Toggles the CallStack window. Default is OFF" }
 
-   aTopics[ 16 ][ 2 ] = ;
+   aTopics[ 16 ][ 2 ] := ;
       { "Options:",;
         "",;
         "    Restart",;
@@ -617,7 +627,7 @@ static function GetTopics()
         "    sPeed...",;
         "    Set step speed for Animate mode execution" }
 
-   aTopics[ 17 ][ 2 ] = ;
+   aTopics[ 17 ][ 2 ] := ;
       { "Options:",;
         "",;
         "    Watchpoint...",;
@@ -655,7 +665,7 @@ static function GetTopics()
         "",;
         "    Delete Tracepoint or Watchpoint." }
 
-   aTopics[ 18 ][ 2 ] = ;
+   aTopics[ 18 ][ 2 ] := ;
       { "Options:",;
         "",;
         "    Public",;
@@ -680,7 +690,7 @@ static function GetTopics()
         "    Toggles whether monitored variables are sorted by",;
         "    name. Default is OFF." }
 
-   aTopics[ 19 ][ 2 ] = ;
+   aTopics[ 19 ][ 2 ] := ;
       { "Options:",;
         "",;
         "    Preprocessed code",;
@@ -738,7 +748,7 @@ static function GetTopics()
         "    Restore debugger settings from a previously",;
         "    saved script file." }
 
-   aTopics[ 20 ][ 2 ] = ;
+   aTopics[ 20 ][ 2 ] := ;
       { "Options:",;
         "",;
         "    Next       Tab",;
@@ -769,7 +779,7 @@ static function GetTopics()
         "    Tile",;
         "    Restore all windows to original size and position." }
 
-   aTopics[ 21 ][ 2 ] = ;
+   aTopics[ 21 ][ 2 ] := ;
       { "There are two sets of debugger commands:",;
         "",;
         "1. Menu option commands. These commands are formed",;
@@ -892,7 +902,7 @@ static function GetTopics()
         "    Establish <exp> as a Watchpoint. <exp> may be a",;
         "    variable or expression." }
 
-   aTopics[ 22 ][ 2 ] = ;
+   aTopics[ 22 ][ 2 ] := ;
       { "Script files contain debugger commands, in the same",;
         "form they would take as input in the Command window.",;
         "By default, script files use the extension CLD, as in",;
@@ -940,4 +950,4 @@ static function GetTopics()
         "preferences in INIT.CLD -- specifying colors,",;
         "turning on the CallStack window, and so on." }
 
-return aTopics
+   RETURN aTopics

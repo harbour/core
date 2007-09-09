@@ -83,7 +83,17 @@
 
    #xtranslate HB_RASCAN([<x,...>])    => RASCAN(<x>)
 
-   #xtranslate HB_ISPOINTER( <xValue> )   => ISPOINTER( <xValue> )
+   #xtranslate HB_ISPOINTER( <xValue> )=> ISPOINTER( <xValue> )
+
+   #xtranslate HBDebugger()            => TDebugger()
+   #xtranslate HBBrwText()             => TBrwText()
+   #xtranslate HBDbMenu()              => TDbMenu()
+   #xtranslate HBDbMenuItem()          => TDbMenuItem()
+   #xtranslate HBDbWindow()            => TDbWindow()
+   #xtranslate HBDbBrowse()            => TDBGBrowser()
+   #xtranslate HBDbArray()             => TDBGArray()
+   #xtranslate HBDbHash()              => TDBGHash()
+   #xtranslate HBDbObject()            => TDBGobject()
 
 #else
 
@@ -165,14 +175,24 @@
    #xcommand > [<*x*>]       => } <x>
 
    /* xHarbour operators: IN, HAS, LIKE, >>, <<, |, &, ^^ */
-   #translate ( <exp1> IN <exp2> )    => ( (<exp1>) $ (<exp2>) )
-   #translate ( <exp1> HAS <exp2> )   => ( HB_REGEXHAS( (<exp2>), (<exp1>) ) )
-   #translate ( <exp1> LIKE <exp2> )  => ( HB_REGEXLIKE( (<exp2>), (<exp1>) ) )
-   #translate ( <exp1> \<\< <exp2> )  => ( HB_BITSHIFT( (<exp1>), (<exp2>) ) )
-   #translate ( <exp1> >> <exp2> )    => ( HB_BITSHIFT( (<exp1>), -(<exp2>) ) )
-   #translate ( <exp1> | <exp2> )     => ( HB_BITOR( (<exp1>), (<exp2>) ) )
-   #translate ( <exp1> & <exp2> )     => ( HB_BITAND( (<exp1>), (<exp2>) ) )
-   #translate ( <exp1> ^^ <exp2> )    => ( HB_BITXOR( (<exp1>), (<exp2>) ) )
+   #translate ( <exp1> IN <exp2> )     => ( (<exp1>) $ (<exp2>) )
+   #translate ( <exp1> HAS <exp2> )    => ( HB_REGEXHAS( (<exp2>), (<exp1>) ) )
+   #translate ( <exp1> LIKE <exp2> )   => ( HB_REGEXLIKE( (<exp2>), (<exp1>) ) )
+   #translate ( <exp1> \<\< <exp2> )   => ( HB_BITSHIFT( (<exp1>), (<exp2>) ) )
+   #translate ( <exp1> >> <exp2> )     => ( HB_BITSHIFT( (<exp1>), -(<exp2>) ) )
+   #translate ( <exp1> | <exp2> )      => ( HB_BITOR( (<exp1>), (<exp2>) ) )
+   #translate ( <exp1> & <exp2> )      => ( HB_BITAND( (<exp1>), (<exp2>) ) )
+   #translate ( <exp1> ^^ <exp2> )     => ( HB_BITXOR( (<exp1>), (<exp2>) ) )
+
+   #xtranslate TDebugger()             => HBDebugger()
+   #xtranslate TBrwText()              => HBBrwText()
+   #xtranslate TDbMenu()               => HBDbMenu()
+   #xtranslate TDbMenuItem()           => HBDbMenuItem()
+   #xtranslate TDbWindow()             => HBDbWindow()
+   #xtranslate TDBGBrowser()           => HBDbBrowse()
+   #xtranslate TDBGArray()             => HBDbArray()
+   #xtranslate TDBGHash()              => HBDbHash()
+   #xtranslate TDBGobject()            => HBDbObject()
 
 #endif
 

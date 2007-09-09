@@ -88,31 +88,37 @@ FUNCTION IsShortCut( oMenu, nKey, nID )
 
    // Test for top menu item not a TopBar Menu:
    IF !( oMenu:ClassName() == "TOPBARMENU" )
+
       RETURN IsQuick( oMenu, nKey, @nID )
 
    // Test and assign top menu item shortCut, enabled, and !PopUp:
    // Changed by enclosing assignment before ':Enabled':
-   ELSEIF ( nShortCut := oMenu:GetShortCt( nKey ) ) > 0 .AND. ;
-          ( oItem := oMenu:GetItem( nShortcut ) ):Enabled .AND. ;
-          !oItem:IsPopUp()
-      oMenu:Select( nShortCut )
-      Eval( oItem:Data, oItem )
+   ELSEIF ( nShortCut := oMenu:getShortCt( nKey ) ) > 0 .AND. ;
+          ( oItem := oMenu:getItem( nShortcut ) ):enabled .AND. ;
+          !oItem:isPopUp()
+
+      oMenu:select( nShortCut )
+      Eval( oItem:data, oItem )
       nID := oItem:ID
+
       RETURN .T.
 
    // Test and assignment for TopBar MenuItem:
    ELSEIF nShortCut == 0
-      nTotal := oMenu:ItemCount()
-      nItem  := oMenu:Current
+
+      nTotal := oMenu:itemCount
+      nItem  := oMenu:current
+
       IF nItem == 0
          nItem := 1
       ENDIF
 
       // Loop to wrap around through TopMenu from Current Item:
       FOR i := 1 TO nTotal
-         IF ( oItem := oMenu:GetItem( nItem ) ):Enabled .AND. ;
-            oItem:IsPopUp() .AND. ;
-            IsQuick( oItem:Data, nKey, @nID )
+
+         IF ( oItem := oMenu:getItem( nItem ) ):enabled .AND. ;
+            oItem:isPopUp() .AND. ;
+            IsQuick( oItem:data, nKey, @nID )
 
             RETURN .T.
          ENDIF
@@ -138,23 +144,24 @@ FUNCTION IsQuick( oMenu, nKey, nID )
    LOCAL nShortCut
    LOCAL oItem
 
-   IF ( nShortCut := oMenu:GetShortCt( nKey ) ) == 0
+   IF ( nShortCut := oMenu:getShortCt( nKey ) ) == 0
 
-      nTotal := oMenu:ItemCount()
+      nTotal := oMenu:itemCount
 
       FOR nItem := 1 TO nTotal
-         IF ( oItem := oMenu:GetItem( nItem ) ):Enabled .AND. ;
-            oItem:IsPopUp() .AND. ;
-            IsQuick( oItem:Data, nKey, @nID )
+
+         IF ( oItem := oMenu:getItem( nItem ) ):enabled .AND. ;
+            oItem:isPopUp() .AND. ;
+            IsQuick( oItem:data, nKey, @nID )
 
             RETURN .T.
          ENDIF
       NEXT
 
-   ELSEIF !( oItem := oMenu:GetItem( nShortCut ) ):IsPopUp() .AND. oItem:Enabled
+   ELSEIF !( oItem := oMenu:getItem( nShortCut ) ):isPopUp() .AND. oItem:enabled
 
-      oMenu:Select( nShortCut )
-      Eval( oItem:Data, oItem )
+      oMenu:select( nShortCut )
+      Eval( oItem:data, oItem )
       nID := oItem:ID
 
       RETURN .T.

@@ -100,7 +100,11 @@ CREATE CLASS HBEditor
    METHOD SetPos( nRow, nCol )                           // Updates ::nPhysRow, ::nPhysCol and then calls SetPos() to move hardware cursor
    METHOD Row()                                          // Same as clipper ones, returns ::nPhysRow value
    METHOD Col()                                          // Same as clipper ones, returns ::nPhysCol value
+   METHOD RowPos()                                       // Returns ::nRow value
+   METHOD ColPos()                                       // Returns ::nCol value
    METHOD Saved()                                        // Returns saved status
+   METHOD IsWordWrap()                                   // Returns ::lWordWrap
+   METHOD WordWrapCol()                                  // Returns ::nWordWrapCol
 
    PROTECTED:
 
@@ -910,6 +914,12 @@ METHOD Row() CLASS HBEditor
 METHOD Col() CLASS HBEditor
    return ::nPhysCol
 
+METHOD RowPos() CLASS HBEditor
+   return ::nRow
+
+METHOD ColPos() CLASS HBEditor
+   return ::nCol
+
 /*
 METHOD LineColor( nRow ) CLASS HBEditor
    return ::cColorSpec
@@ -917,6 +927,12 @@ METHOD LineColor( nRow ) CLASS HBEditor
 
 METHOD Saved() CLASS HBEditor
    return ::lSaved
+
+METHOD IsWordWrap() CLASS HBEditor
+   return ::lWordWrap
+
+METHOD WordWrapCol() CLASS HBEditor
+   return ::nWordWrapCol
 
 // Returns EOL char (be it either CR or LF or both)
 STATIC FUNCTION WhichEOL( cString )

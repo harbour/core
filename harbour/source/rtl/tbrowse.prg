@@ -117,7 +117,11 @@
          and there is no public class function like TBrowse(). There is 
          in XPP though. */ 
 
+#if defined(HB_C52_STRICT) && !defined(HB_COMPAT_XPP)
+CREATE CLASS TBrowse STATIC
+#else
 CREATE CLASS TBrowse
+#endif
 
    EXPORT:
 
@@ -223,6 +227,7 @@ CREATE CLASS TBrowse
    VAR aColumns         INIT {}                             // Array to hold all browse columns
    VAR aColsWidth       INIT {}                             // Array with width of TBrowse's columns
    VAR aColsPos         INIT {}                             // Array with position of TBrowse's columns
+   VAR aColsInfo        INIT {}                             // Array with column data
    VAR lHeaders         INIT .F.                            // Internal variable which indicates whether there are column footers to paint
    VAR lFooters         INIT .F.                            // Internal variable which indicates whether there are column footers to paint
    VAR lRedrawFrame     INIT .T.                            // True if I need to redraw Headers/Footers
@@ -252,6 +257,7 @@ CREATE CLASS TBrowse
    VAR aSetStyle        INIT { .F., .F., .F., .F., .F. }    /* TBR_APPEND, TBR_APPENDING, TBR_MODIFY, TBR_MOVE, TBR_SIZE */
 #endif
 
+   METHOD InitColumn( oCol, lAddColumn )
    METHOD PosCursor()                                       // Positions the cursor to the beginning of the call, used only when autolite==.F.
    METHOD LeftDetermine()                                   // Determine leftmost unfrozen column in display
    METHOD DispCell( nRow, nCol, nMode )                     // Displays a single cell and returns cell type as a single letter like Valtype()
@@ -324,6 +330,8 @@ METHOD configure( nMode ) CLASS TBrowse
    // Find out highest header and footer
    for n := 1 to ::nColumns
 
+      // ...
+
       if ::lHeaders .and. ! Empty( ::aColumns[ n ]:Heading )
          nHeight := Len( ::aColumns[ n ]:Heading ) - Len( StrTran( ::aColumns[ n ]:Heading, ";" ) ) + 1
 
@@ -390,6 +398,7 @@ METHOD addColumn( oCol ) CLASS TBrowse
    AAdd( ::aColumns, oCol )
    AAdd( ::aColsWidth, ::SetColumnWidth( oCol ) )
    AAdd( ::aColsPos, 0 )
+   AAdd( ::aColsInfo, ::InitColumn( oCol, .T. ) )
 
    if ::nColumns == 1
       ::leftVisible := 1
@@ -413,7 +422,8 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
 
          AAdd( ::aColumns, oCol )
          AAdd( ::aColsWidth, ::SetColumnWidth( oCol ) )
-         AAdd( ::aColsPos, 0 )
+         AAdd( ::aColsPos, 100 )
+         AAdd( ::aColsInfo, ::InitColumn( oCol, .F. ) )
 
       else
 
@@ -425,6 +435,8 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
          AIns( ::aColsWidth, nPos )
          ASize( ::aColsPos, ::nColumns )
          AIns( ::aColsPos, nPos )
+         ASize( ::aColsInfo, ::nColumns )
+         AIns( ::aColsInfo, ::InitColumn( oCol, .F. ) )
 
          ::aColumns[ nPos ] := oCol
          ::aColsWidth[ nPos ] := ::SetColumnWidth( oCol )
@@ -449,6 +461,7 @@ METHOD setColumn( nPos, oCol ) CLASS TBrowse
       ::aColumns[ nPos ] := oCol
       ::aColsWidth[ nPos ] := ::SetColumnWidth( oCol )
       ::aColsPos[ nPos ] := 0
+      ::aColsInfo[ nPos ] := ::InitColumn( oCol, .F. )
 
       ::Configure( 2 )
       ::HowManyCol()
@@ -1159,6 +1172,40 @@ METHOD colorRect( aRect, aRectColor ) CLASS TBrowse
    return Self
 
 /* -------------------------------------------- */
+
+METHOD InitColumn( oCol, lAddColumn ) CLASS TBrowse
+
+   IF !lAddColumn .AND. ISOBJECT( oCol ) .AND. ISBLOCK( oCol:block )
+      RETURN {;
+         oCol                          ,; // TBCI_OBJ      
+         ValType( Eval( oCol:block ) ) ,; // TBCI_TYPE     
+         ::SetColumnWidth( oCol )      ,; // TBCI_WIDTH    
+         ""                            ,; // TBCI_HEADING  
+         ""                            ,; // TBCI_FOOTING  
+         ""                            ,; // TBCI_PICT     
+         0                             ,; // TBCI_WIDTHCELL
+         ""                            ,; // TBCI_COLSEP   
+         0                             ,; // TBCI_SEPWIDTH 
+         oCol:defColor                 ,; // TBCI_DEFCOLOR 
+         .F.                           ,; // TBCI_SETWIDTH 
+         .T.                           ,; // TBCI_LCOLSEP
+         0                             }  // TBCI_SCRCOLPOS
+   ENDIF
+
+   RETURN {;
+      oCol                          ,; // TBCI_OBJ      
+      ""                            ,; // TBCI_TYPE     
+      0                             ,; // TBCI_WIDTH    
+      ""                            ,; // TBCI_HEADING  
+      ""                            ,; // TBCI_FOOTING  
+      ""                            ,; // TBCI_PICT     
+      0                             ,; // TBCI_WIDTHCELL
+      ""                            ,; // TBCI_COLSEP   
+      0                             ,; // TBCI_SEPWIDTH 
+      {}                            ,; // TBCI_DEFCOLOR 
+      .F.                           ,; // TBCI_SETWIDTH 
+      .T.                           ,; // TBCI_LCOLSEP  
+      0                             }  // TBCI_SCRCOLPOS
 
 METHOD PosCursor() CLASS TBrowse
 
@@ -1979,7 +2026,7 @@ FUNCTION TBMouse( oBrowse, nMouseRow, nMouseCol )
 
    if oBrowse:hitTest( nMouseRow, nMouseCol ) == HTCELL
 
-      n := oBrowse:mRowPos - oBrowse:nRowPos
+      n := oBrowse:mRowPos - oBrowse:rowPos
 
       do while n < 0
          n++
@@ -1991,7 +2038,7 @@ FUNCTION TBMouse( oBrowse, nMouseRow, nMouseCol )
          oBrowse:down():forceStable()
       enddo
 
-      n := oBrowse:mColPos - oBrowse:nColPos
+      n := oBrowse:mColPos - oBrowse:colPos
       if n < oBrowse:leftVisible - oBrowse:colPos .and. oBrowse:freeze + 1 < oBrowse:leftVisible
          n += oBrowse:freeze + 1 - oBrowse:leftVisible // hidden columns
       endif

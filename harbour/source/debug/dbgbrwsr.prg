@@ -52,44 +52,45 @@
 
 #include "hbclass.ch"
 
-CLASS TDbgBrowser FROM TBrowse  // Debugger browser
+CREATE CLASS HBDbBrowser FROM TBrowse  // Debugger browser
 
-   DATA   Window
+   VAR    Window
 
    METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow )
    METHOD Resize( nTop, nLeft, nBottom, nRight )
-   METHOD ForceStable() INLINE IIf( ::RowCount > 0, ::Super:ForceStable(), )
-   METHOD RefreshAll() INLINE IIf( ::RowCount > 0, ::Super:RefreshAll(), )
+   METHOD ForceStable() INLINE iif( ::RowCount > 0, ::Super:ForceStable(), )
+   METHOD RefreshAll() INLINE iif( ::RowCount > 0, ::Super:RefreshAll(), )
 
 ENDCLASS
 
-METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow ) CLASS TDbgBrowser
+METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow ) CLASS HBDbBrowser
 
    ::Window := oParentWindow
    ::super:New( nTop, nLeft, nBottom, nRight )
    
-RETURN Self
+   RETURN Self
 
 METHOD Resize( nTop, nLeft, nBottom, nRight )
-LOCAL lResize:=.F.
+   LOCAL lResize := .F.
 
-   IF( nTop != NIL .AND. nTop != ::nTop )
+   IF nTop != NIL .AND. nTop != ::nTop
       ::nTop := nTop
       lResize := .T.
    ENDIF
-   IF( nLeft != NIL .AND. nLeft != ::nLeft )
+   IF nLeft != NIL .AND. nLeft != ::nLeft
       ::nLeft := nLeft
       lResize := .T.
    ENDIF
-   IF( nBottom != NIL .AND. nBottom != ::nBottom )
+   IF nBottom != NIL .AND. nBottom != ::nBottom
       ::nBottom := nBottom
       lResize := .T.
    ENDIF
-   IF( nRight != NIL .AND. nRight != ::nRight )
+   IF nRight != NIL .AND. nRight != ::nRight
       ::nRight := nRight
       lResize := .T.
    ENDIF
-   IF( lResize )
+
+   IF lResize
       /* The following check prevents a "High limit exceeded" error. Maybe it
        * would be wiser to make TBrowse handle height of 0 rows -- Ph.K. */
       IF ::nBottom >= ::nTop
@@ -97,4 +98,4 @@ LOCAL lResize:=.F.
       ENDIF
    ENDIF
       
-RETURN self
+   RETURN self

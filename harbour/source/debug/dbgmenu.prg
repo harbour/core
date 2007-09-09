@@ -52,18 +52,18 @@
 
 #include "hbclass.ch"
 
-#xcommand MENU [<oMenu>] => [ <oMenu> := ] TDbMenu():New()
+#xcommand MENU [<oMenu>] => [ <oMenu> := ] HBDbMenu():New()
 #xcommand MENUITEM [ <oMenuItem> PROMPT ] <cPrompt> ;
           [ IDENT <nIdent> ] [ ACTION <uAction,...> ] ;
           [ CHECKED <bChecked> ] => ;
-   [ <oMenuItem> := ] TDbMenu():AddItem( TDbMenuItem():New( <cPrompt>,;
+   [ <oMenuItem> := ] HBDbMenu():AddItem( HBDbMenuItem():New( <cPrompt>,;
    [{||<uAction>}], [<bChecked>], [<nIdent>] ) )
-#xcommand SEPARATOR => TDbMenu():AddItem( TDbMenuItem():New( "-" ) )
-#xcommand ENDMENU => ATail( TDbMenu():aMenus ):Build()
+#xcommand SEPARATOR => HBDbMenu():AddItem( HBDbMenuItem():New( "-" ) )
+#xcommand ENDMENU => ATail( HBDbMenu():aMenus ):Build()
 
-function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
+FUNCTION __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
-   local oMenu
+   LOCAL oMenu
 
    MENU oMenu
       MENUITEM " ~File "
@@ -207,4 +207,4 @@ function __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
 
    ENDMENU
 
-return oMenu
+   RETURN oMenu

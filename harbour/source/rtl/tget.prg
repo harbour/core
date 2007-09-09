@@ -81,7 +81,11 @@
          and there is no public class function like Get(). There is 
          in XPP though. */ 
 
+#if defined(HB_C52_STRICT) && !defined(HB_COMPAT_XPP)
+CREATE CLASS Get STATIC
+#else
 CREATE CLASS Get
+#endif
 
    EXPORT:
 
@@ -89,7 +93,7 @@ CREATE CLASS Get
    VAR decPos         INIT 0   READONLY /* ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
    VAR exitState
    VAR hasFocus       INIT .F. READONLY
-   VAR original       READONLY
+   VAR original                READONLY
    VAR postBlock
    VAR preBlock
    VAR reader

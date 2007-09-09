@@ -80,14 +80,6 @@ HB_EXTERN_BEGIN
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
 
-/* Cursor style constants */
-#define SC_UNDEF       -1     /* undefined */
-#define SC_NONE         0     /* None */
-#define SC_NORMAL       1     /* Underline */
-#define SC_INSERT       2     /* Lower half block */
-#define SC_SPECIAL1     3     /* Full block */
-#define SC_SPECIAL2     4     /* Upper half block */
-
 /* maximum length of color string */
 #define CLR_STRLEN              64
 

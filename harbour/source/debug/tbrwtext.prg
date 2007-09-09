@@ -51,10 +51,10 @@
  */
 
 #include "hbclass.ch"
+
 #include "common.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-
 
 // Color definitions and positions inside ::cColorSpec
 #define  CLR_CODE       0        // color of code
@@ -62,218 +62,209 @@
 #define  CLR_BKPT       2        // color of breakpoint line
 #define  CLR_HIBKPT     3        // color of highlighted breakpoint line
 
+CREATE CLASS HBBrwText FROM HBEditor
 
-CLASS TBrwText FROM HBEditor
+   VAR cFileName                                   // the name of the browsed file
+   VAR nActiveLine  INIT 1                         // Active line inside Code Window (the line to be executed)
+   VAR aBreakPoints INIT {}                        // Array with line numbers of active Break Points
+   VAR lLineNumbers                                // If .T. source code lines are preceded by their number
 
-   DATA  cFileName      // the name of the browsed file
-   DATA  nActiveLine    // Active line inside Code Window (the line to be executed)
+   ACCESS colorSpec         INLINE ::cColorSpec
+   ASSIGN colorSpec( cClr ) INLINE ::cColorSpec := cClr
 
-   DATA  aBreakPoints   // Array with line numbers of active Break Points
+   METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor )
 
-   DATA  lLineNumbers   // If .T. source code lines are preceded by their number
-
-   ACCESS colorSpec INLINE ::cColorSpec
-   ASSIGN colorSpec(cClr) INLINE ::cColorSpec:=cClr
-
-   METHOD   New(nTop, nLeft, nBottom, nRight, cFileName, cColor)
-
-   METHOD   GoTop()           // Methods available on a standard TBrowse, needed to handle a HBEditor like a TBrowse
-   METHOD   GoBottom()
-   METHOD   Up()
-   METHOD   Down()
-   METHOD   Left()
-   METHOD   Right()
-   METHOD   PageUp()
-   METHOD   PageDown()
-   METHOD   RefreshAll()
-   METHOD   RefreshCurrent()
-   METHOD   ForceStable() INLINE NIL
-
-   METHOD   GotoLine(n)                      // Moves active line cursor
-   METHOD   SetActiveLine( n )               // Sets the line to be executed
-
-   METHOD   GetLine(nRow)                    // Redefine HBEditor method to add line number
-   METHOD   LineColor(nRow)                  // Redefine HBEditor method to handle line coloring
-
-   METHOD   ToggleBreakPoint(nRow, lSet)     // if lSet is .T. there is a BreakPoint active at nRow,
-                                             // if lSet is .F. BreakPoint at nRow has to be removed
-   METHOD   Search( cString, lCaseSensitive, nMode ) // 0 from Begining to end, 1 Forward, 2 Backwards
-
-   METHOD   LoadFile(cFileName)
+   METHOD GoTop()                                  // Methods available on a standard TBrowse, needed to handle a HBEditor like a TBrowse
+   METHOD GoBottom()
+   METHOD Up()
+   METHOD Down()
+   METHOD Left()
+   METHOD Right()
+   METHOD End()
+   METHOD PageUp()
+   METHOD PageDown()
+   METHOD RefreshAll()
+   METHOD RefreshCurrent()
+   METHOD ForceStable() INLINE NIL
+   METHOD GotoLine( n )                            // Moves active line cursor
+   METHOD SetActiveLine( n )                       // Sets the line to be executed
+   METHOD GetLine( nRow )                          // Redefine HBEditor method to add line number
+   METHOD LineColor( nRow )                        // Redefine HBEditor method to handle line coloring
+   METHOD ToggleBreakPoint( nRow, lSet )           // if lSet is .T. there is a BreakPoint active at nRow, if lSet is .F. BreakPoint at nRow has to be removed
+   METHOD Search( cString, lCaseSensitive, nMode ) // 0 from Begining to end, 1 Forward, 2 Backwards
+   METHOD LoadFile( cFileName )
 
 ENDCLASS
 
-
-METHOD New(nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers) CLASS TBrwText
+METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers) CLASS HBBrwText
 
    DEFAULT cColor TO SetColor()
    DEFAULT lLineNumbers TO .T.
 
    ::cFileName := cFileName
-   ::nActiveLine := 1
-
-   ::aBreakPoints := {}
-
    ::lLineNumbers := lLineNumbers
 
-   ::Super:New("", nTop, nLeft, nBottom, nRight, .T.)
-   ::Super:SetColor(cColor)
+   ::Super:New( "", nTop, nLeft, nBottom, nRight, .T. )
+   ::Super:SetColor( cColor )
+   ::Super:LoadFile( cFileName )
 
-   ::Super:LoadFile(cFileName)
+   RETURN Self
 
-return Self
+METHOD LoadFile( cFileName ) CLASS HBBrwText
 
+   ::Super:LoadFile( cFileName )
 
-METHOD LoadFile(cFileName) CLASS TBrwText
+   RETURN Self
 
-   ::Super:LoadFile(cFileName)
+METHOD GoTop() CLASS HBBrwText
 
-return Self
+   ::MoveCursor( K_CTRL_PGUP )
 
+   RETURN Self
 
-METHOD GoTop() CLASS TBrwText
-   ::MoveCursor(K_CTRL_PGUP)
-return Self
+METHOD GoBottom() CLASS HBBrwText
 
+   ::MoveCursor( K_CTRL_PGDN )
 
-METHOD GoBottom() CLASS TBrwText
-   ::MoveCursor(K_CTRL_PGDN)
-return Self
+   RETURN Self
 
+METHOD Up() CLASS HBBrwText
 
-METHOD Up() CLASS TBrwText
-   ::MoveCursor(K_UP)
-return Self
+   ::MoveCursor( K_UP )
 
+   RETURN Self
 
-METHOD Left() CLASS TBrwText
-   ::MoveCursor(K_LEFT)
-return Self
+METHOD Left() CLASS HBBrwText
 
+   ::MoveCursor( K_LEFT )
 
-METHOD Right() CLASS TBrwText
-   ::MoveCursor(K_RIGHT)
-return Self
+   RETURN Self
 
+METHOD Right() CLASS HBBrwText
 
-METHOD Down() CLASS TBrwText
-   ::MoveCursor(K_DOWN)
-return Self
+   ::MoveCursor( K_RIGHT )
 
+   RETURN Self
 
-METHOD PageUp() CLASS TBrwText
-   ::MoveCursor(K_PGUP)
-return Self
+METHOD End() CLASS HBBrwText
 
+   ::MoveCursor( K_END )
 
-METHOD PageDown() CLASS TBrwText
-   ::MoveCursor(K_PGDN)
-return Self
+   RETURN Self
 
+METHOD Down() CLASS HBBrwText
 
-METHOD RefreshAll() CLASS TBrwText
+   ::MoveCursor( K_DOWN )
+
+   RETURN Self
+
+METHOD PageUp() CLASS HBBrwText
+
+   ::MoveCursor( K_PGUP )
+
+   RETURN Self
+
+METHOD PageDown() CLASS HBBrwText
+
+   ::MoveCursor( K_PGDN )
+
+   RETURN Self
+
+METHOD RefreshAll() CLASS HBBrwText
+
    ::RefreshWindow()
-return Self
 
+   RETURN Self
 
-METHOD RefreshCurrent() CLASS TBrwText
+METHOD RefreshCurrent() CLASS HBBrwText
+
    ::RefreshLine()
-return Self
 
+   return Self
 
-METHOD SetActiveLine( n ) CLASS TBrwText
+METHOD SetActiveLine( n ) CLASS HBBrwText
+
    ::nActiveLine := n
    ::RefreshWindow()
-return Self
 
+   RETURN Self
 
-METHOD GotoLine(n) CLASS TBrwText
+METHOD GotoLine( n ) CLASS HBBrwText
 
-   ::Super:GotoLine(n)
+   ::Super:GotoLine( n )
 
-return Self
+   RETURN Self
 
+METHOD GetLine( nRow ) CLASS HBBrwText
+   RETURN iif( ::lLineNumbers, AllTrim( Str( nRow ) ) + ": ", "" ) + ::Super:GetLine( nRow )
 
-METHOD GetLine(nRow) CLASS TBrwText
+METHOD LineColor( nRow ) CLASS HBBrwText
 
-return iif(::lLineNumbers, AllTrim(Str(nRow)) + ": ", "") + ::Super:GetLine(nRow)
+   LOCAL lHilited := ( nRow == ::nActiveLine )
+   LOCAL lBreak := AScan( ::aBreakPoints, nRow ) > 0
+   LOCAL nIndex := CLR_CODE
 
+   IF lHilited
+      nIndex += CLR_CURSOR
+   ENDIF
+   IF lBreak
+      nIndex += CLR_BKPT
+   ENDIF
 
-METHOD LineColor(nRow) CLASS TBrwText
+   RETURN hb_ColorIndex( ::cColorSpec, nIndex )
 
-   local cColor, lHilited, lBreak, nIndex := CLR_CODE
+METHOD ToggleBreakPoint( nRow, lSet ) CLASS HBBrwText
 
-   lHilited := (nRow == ::nActiveLine)
-   lBreak := AScan(::aBreakPoints, nRow) > 0
+   LOCAL nAt := AScan( ::aBreakPoints, nRow )
 
-   if lHilited
-     nIndex += CLR_CURSOR
-   endif
-   if lBreak
-     nIndex += CLR_BKPT
-   endif
-
-   cColor := hb_ColorIndex(::cColorSpec, nIndex)
-
-return cColor
-
-
-METHOD ToggleBreakPoint(nRow, lSet) CLASS TBrwText
-
-   local nAt := AScan(::aBreakPoints, nRow)
-
-   if lSet
+   IF lSet
       // add it only if not present
-      if nAt == 0
-         AAdd(::aBreakPoints, nRow)
-      endif
+      IF nAt == 0
+         AAdd( ::aBreakPoints, nRow )
+      ENDIF
+   ELSEIF nAt != 0
+      ADel( ::aBreakPoints, nAt )
+      ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
+   ENDIF
 
-   else
-      if nAt <> 0
-         ADel( ::aBreakPoints, nAt )
-         ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
-      endif
+   RETURN Self
 
-   endif
+METHOD Search( cString, lCaseSensitive, nMode ) CLASS HBBrwText
 
-return Self
+   LOCAL nFrom
+   LOCAL nTo
+   LOCAL nStep
+   LOCAL nFor
+   LOCAL lFound := .F.
 
-METHOD Search( cString, lCaseSensitive, nMode ) CLASS TBrwText
+   DEFAULT lCaseSensitive TO .F.
+   DEFAULT nMode          TO 0
 
-   local nFrom, nTo, nStep, nFor
-   local lFound
-
-   DEFAULT lCaseSensitive TO .f., ;
-           nMode          TO 0
-
-   lFound := .f.
-
-   if !lCaseSensitive
+   IF !lCaseSensitive
       cString := Upper( cString )
-   endif
+   ENDIF
 
-   do case
-   case nMode == 0 // From Top
+   DO CASE
+   CASE nMode == 0 // From Top
       nFrom := 1
       nTo   := ::naTextLen
       nStep := 1
-   case nMode == 1 // Forward
+   CASE nMode == 1 // Forward
       nFrom := Min( ::nRow + 1, ::naTextLen )
       nTo   := ::naTextLen
       nStep := 1
-   case nMode == 2 // Backward
+   CASE nMode == 2 // Backward
       nFrom := Max( ::nRow - 1, 1 )
       nTo   := 1
       nStep := -1
-   end case
+   ENDCASE
 
-   for nFor := nFrom to nTo Step nStep
-      if cString $ iif( lCaseSensitive, ::GetLine( nFor ), Upper( ::GetLine( nFor ) ) )
-         lFound := .t.
+   FOR nFor := nFrom TO nTo STEP nStep
+      IF cString $ iif( lCaseSensitive, ::GetLine( nFor ), Upper( ::GetLine( nFor ) ) )
+         lFound := .T.
          ::GotoLine( nFor )
-         exit
-      endif
-   next
+         EXIT
+      ENDIF
+   NEXT
 
-return lFound
-
+   RETURN lFound

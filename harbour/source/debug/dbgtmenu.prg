@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * The Debugger (TDbMenu class)
+ * The Debugger (HBDbMenu class)
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -56,21 +56,28 @@
 
 #include "hbclass.ch"
 #include "hbmemvar.ch"
+
 #include "box.ch"
-#include "inkey.ch"
 #include "common.ch"
+#include "inkey.ch"
 #include "setcurs.ch"
 
-CLASS TDbMenu  /* debugger menu */
+CREATE CLASS HBDbMenu
 
    CLASSDATA aMenus
 
-   DATA   nTop, nLeft, nBottom, nRight
-   DATA   aItems
-   DATA   cClrHilite, cClrHotKey, cClrHotFocus, cClrPopup
-   DATA   nOpenPopup             // zero if no popup is shown
-   DATA   lPopup
-   DATA   cBackImage
+   VAR nTop
+   VAR nLeft
+   VAR nBottom
+   VAR nRight
+   VAR aItems
+   VAR cClrHilite
+   VAR cClrHotKey
+   VAR cClrHotFocus
+   VAR cClrPopup
+   VAR nOpenPopup                                      // zero if no popup is shown
+   VAR lPopup
+   VAR cBackImage
 
    METHOD New( aItems )
    METHOD AddItem( oMenuItem )
@@ -90,14 +97,14 @@ CLASS TDbMenu  /* debugger menu */
    METHOD GoTop()
    METHOD GoUp() INLINE ::aItems[ ::nOpenPopup ]:bAction:GoLeft()
    METHOD IsOpen() INLINE ::nOpenPopup != 0
-   METHOD LoadColors()  // Load current debugger colors settings
+   METHOD LoadColors()                                 // Load current debugger colors settings
    METHOD ProcessKey( nKey )
-   METHOD Refresh() // Repaints the top bar
+   METHOD Refresh()                                    // Repaints the top bar
    METHOD ShowPopup( nPopup )
 
 ENDCLASS
 
-METHOD New() CLASS TDbMenu
+METHOD New() CLASS HBDbMenu
 
    local nCol := 0
 
@@ -120,9 +127,10 @@ METHOD New() CLASS TDbMenu
 
 return Self
 
-METHOD AddItem( oMenuItem ) CLASS TDbMenu
+METHOD AddItem( oMenuItem ) CLASS HBDbMenu
 
-   local oLastMenu := ATail( ::aMenus ), oLastMenuItem
+   local oLastMenu := ATail( ::aMenus )
+   local oLastMenuItem
 
    if oLastMenu:lPopup
       oMenuItem:nRow := Len( oLastMenu:aItems )
@@ -142,9 +150,11 @@ METHOD AddItem( oMenuItem ) CLASS TDbMenu
 
 return oMenuItem
 
-METHOD Build() CLASS TDbMenu
+METHOD Build() CLASS HBDbMenu
 
-   local n, nPos := 0, oMenuItem
+   local n
+   local nPos := 0
+   local oMenuItem
 
    if Len( ::aMenus ) == 1           // pulldown menu
       for n := 1 to Len( ::aItems )
@@ -175,7 +185,7 @@ METHOD Build() CLASS TDbMenu
 
 return nil
 
-METHOD ClosePopup( nPopup ) CLASS TDbMenu
+METHOD ClosePopup( nPopup ) CLASS HBDbMenu
 
    local oPopup
 
@@ -191,7 +201,7 @@ METHOD ClosePopup( nPopup ) CLASS TDbMenu
 
 return nil
 
-METHOD DeHilite() CLASS TDbMenu
+METHOD DeHilite() CLASS HBDbMenu
 
    local oMenuItem := ::aItems[ ::nOpenPopup ]
 
@@ -199,7 +209,7 @@ METHOD DeHilite() CLASS TDbMenu
 
 return nil
 
-METHOD Display() CLASS TDbMenu
+METHOD Display() CLASS HBDbMenu
 
    local n
 
@@ -225,7 +235,7 @@ METHOD Display() CLASS TDbMenu
 
 return nil
 
-METHOD EvalAction() CLASS TDbMenu
+METHOD EvalAction() CLASS HBDbMenu
 
    local oPopup, oMenuItem
 
@@ -239,7 +249,7 @@ METHOD EvalAction() CLASS TDbMenu
 
 return nil
 
-METHOD GetHotKeyPos( cKey ) CLASS TDbMenu
+METHOD GetHotKeyPos( cKey ) CLASS HBDbMenu
 
    local n
 
@@ -252,7 +262,7 @@ METHOD GetHotKeyPos( cKey ) CLASS TDbMenu
 
 return 0
 
-METHOD GetItemOrdByCoors( nRow, nCol ) CLASS TDbMenu
+METHOD GetItemOrdByCoors( nRow, nCol ) CLASS HBDbMenu
 
    local n
 
@@ -265,9 +275,10 @@ METHOD GetItemOrdByCoors( nRow, nCol ) CLASS TDbMenu
 
 return 0
 
-METHOD GetItemByIdent( uIdent ) CLASS TDbMenu
+METHOD GetItemByIdent( uIdent ) CLASS HBDbMenu
   
-   local n, oItem
+   local n
+   local oItem
   
    for n := 1 to Len( ::aItems )
       IF( VALTYPE(::aItems[n]:bAction) == 'O' )
@@ -283,9 +294,9 @@ METHOD GetItemByIdent( uIdent ) CLASS TDbMenu
       endif
    next
 
-return NIL
+return nil
 
-METHOD GoBottom() CLASS TDbMenu
+METHOD GoBottom() CLASS HBDbMenu
 
    local oPopup
 
@@ -297,7 +308,7 @@ METHOD GoBottom() CLASS TDbMenu
 
 return nil
 
-METHOD GoLeft() CLASS TDbMenu
+METHOD GoLeft() CLASS HBDbMenu
 
    local oMenuItem := ::aItems[ ::nOpenPopup ]
 
@@ -321,7 +332,7 @@ METHOD GoLeft() CLASS TDbMenu
 
 return nil
 
-METHOD GoRight() CLASS TDbMenu
+METHOD GoRight() CLASS HBDbMenu
 
    local oMenuItem := ::aItems[ ::nOpenPopup ]
 
@@ -345,7 +356,7 @@ METHOD GoRight() CLASS TDbMenu
 
 return nil
 
-METHOD GoTop() CLASS TDbMenu
+METHOD GoTop() CLASS HBDbMenu
 
    local oPopup
 
@@ -357,7 +368,7 @@ METHOD GoTop() CLASS TDbMenu
 
 return nil
 
-METHOD LoadColors() CLASS TDbMenu
+METHOD LoadColors() CLASS HBDbMenu
 
    local aColors := __DbgColors()
    local n
@@ -375,7 +386,7 @@ METHOD LoadColors() CLASS TDbMenu
 
 return nil
 
-METHOD Refresh() CLASS TDbMenu
+METHOD Refresh() CLASS HBDbMenu
 
    local n
 
@@ -394,7 +405,7 @@ METHOD Refresh() CLASS TDbMenu
 
 return nil
 
-METHOD ShowPopup( nPopup ) CLASS TDbMenu
+METHOD ShowPopup( nPopup ) CLASS HBDbMenu
 
    ::aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
    ::nOpenPopup := nPopup
@@ -406,9 +417,10 @@ METHOD ShowPopup( nPopup ) CLASS TDbMenu
 
 return nil
 
-METHOD ProcessKey( nKey ) CLASS TDbMenu
+METHOD ProcessKey( nKey ) CLASS HBDbMenu
 
-   local nPopup, oPopup
+   local nPopup
+   local oPopup
 
    do case
       case nKey == K_LBUTTONDOWN
@@ -486,6 +498,7 @@ function __dbgAltToKey( nKey )
                             K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L,;
                             K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R,;
                             K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
-                            K_ALT_Y, K_ALT_Z }, nKey )
+                            K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4,;
+                            K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey )
 
-return iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ", nIndex, 1 ), "" )
+return iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 ), "" )

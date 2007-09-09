@@ -50,29 +50,52 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ *    :Move()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 /* NOTE: Don't use SAY/DevOut()/DevPos() for screen output, otherwise
          the debugger output may interfere with the applications output
          redirection, and is also slower. [vszakats] */
 
 #include "hbclass.ch"
 #include "hbmemvar.ch"
+
 #include "box.ch"
-#include "inkey.ch"
 #include "common.ch"
+#include "inkey.ch"
 #include "setcurs.ch"
 
-CLASS TDbWindow  // Debugger windows and dialogs
+CREATE CLASS HBDbWindow // Debugger windows and dialogs
 
-   DATA   nTop, nLeft, nBottom, nRight
-   DATA   cCaption
-   DATA   cBackImage, cColor
-   DATA   lFocused, bGotFocus, bLostFocus
-   DATA   bKeyPressed, bPainted, bLButtonDown, bLDblClick
-   DATA   lShadow, lVisible
-   DATA   Cargo
-   DATA   Browser
+   VAR nTop
+   VAR nLeft
+   VAR nBottom
+   VAR nRight
+   VAR cCaption
+   VAR cBackImage
+   VAR cColor
+   VAR lFocused     INIT .F.
+   VAR bGotFocus
+   VAR bLostFocus
+   VAR bKeyPressed
+   VAR bPainted
+   VAR bLButtonDown
+   VAR bLDblClick
+   VAR lShadow      INIT .F.
+   VAR lVisible     INIT .F.
+   VAR Cargo
+   VAR Browser
 
    METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor )
+
    METHOD Hide()
    METHOD IsOver( nRow, nCol )
    METHOD nWidth() INLINE ::nRight - ::nLeft + 1
@@ -94,14 +117,7 @@ CLASS TDbWindow  // Debugger windows and dialogs
 
 ENDCLASS
 
-METHOD Clear() CLASS TDbWindow
-  
-  SetColor( ::cColor )
-  Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1 )
-
-RETURN nil
-
-METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
+METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS HBDbWindow
 
    DEFAULT cColor TO __DbgColors()[ 1 ]
 
@@ -111,13 +127,17 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS TDbWindow
    ::nRight   := nRight
    ::cCaption := cCaption
    ::cColor   := cColor
-   ::lShadow  := .f.
-   ::lVisible := .f.
-   ::lFocused := .f.
 
 return Self
 
-METHOD Hide() CLASS TDbWindow
+METHOD Clear() CLASS HBDbWindow
+  
+   SetColor( ::cColor )
+   Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1 )
+
+return nil
+
+METHOD Hide() CLASS HBDbWindow
 
    RestScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
                ::nRight + iif( ::lShadow, 2, 0 ), ::cBackImage )
@@ -126,12 +146,12 @@ METHOD Hide() CLASS TDbWindow
 
 return nil
 
-METHOD IsOver( nRow, nCol ) CLASS TDbWindow
+METHOD IsOver( nRow, nCol ) CLASS HBDbWindow
 
 return nRow >= ::nTop .and. nRow <= ::nBottom .and. ;
        nCol >= ::nLeft .and. nCol <= ::nRight
 
-METHOD ScrollUp( nLines ) CLASS TDbWindow
+METHOD ScrollUp( nLines ) CLASS HBDbWindow
 
    DEFAULT nLines TO 1
 
@@ -140,12 +160,14 @@ METHOD ScrollUp( nLines ) CLASS TDbWindow
 
 return nil
 
-METHOD SetCaption( cCaption ) CLASS TDbWindow
+METHOD SetCaption( cCaption ) CLASS HBDbWindow
 
    ::cCaption := cCaption
+
 return nil
   
-METHOD ShowCaption CLASS TDbWindow
+METHOD ShowCaption CLASS HBDbWindow
+
    if ! Empty( ::cCaption )
       DispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;
          ( ( Len( ::cCaption ) + 2 ) / 2 ),;
@@ -154,7 +176,7 @@ METHOD ShowCaption CLASS TDbWindow
 
 return nil
 
-METHOD SetFocus( lOnOff ) CLASS TDbWindow
+METHOD SetFocus( lOnOff ) CLASS HBDbWindow
   
    if ! lOnOff .and. ::bLostFocus != nil
       Eval( ::bLostFocus, Self )
@@ -168,7 +190,7 @@ METHOD SetFocus( lOnOff ) CLASS TDbWindow
 
 return nil
 
-METHOD Refresh() CLASS TDbWindow
+METHOD Refresh() CLASS HBDbWindow
 
    DispBegin()
 
@@ -187,13 +209,11 @@ METHOD Refresh() CLASS TDbWindow
 
 return nil
 
-METHOD Show( lFocused ) CLASS TDbWindow
-   LOCAL nRow, nCol
+METHOD Show( lFocused ) CLASS HBDbWindow
+   LOCAL nRow := Row()
+   LOCAL nCol := Col()
 
    DEFAULT lFocused TO ::lFocused
-
-   nRow := Row()
-   nCol := Col()
    
    ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
                               ::nRight + iif( ::lShadow, 2, 0 ) )
@@ -201,7 +221,7 @@ METHOD Show( lFocused ) CLASS TDbWindow
    Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
    ::SetFocus( lFocused )
 
-   If ::lShadow
+   if ::lShadow
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    endif
 
@@ -209,9 +229,10 @@ METHOD Show( lFocused ) CLASS TDbWindow
    ::lVisible := .t.
 
    SetPos( nRow, nCol )
+
 return nil
 
-METHOD ShowModal() CLASS TDbWindow
+METHOD ShowModal() CLASS HBDbWindow
 
    local lExit := .f.
    local nKey
@@ -219,30 +240,30 @@ METHOD ShowModal() CLASS TDbWindow
    ::lShadow := .t.
    ::Show()
 
-   while ! lExit
-      nKey := InKey( 0, INKEY_ALL )
+   do while ! lExit
+      nKey := Inkey( 0, INKEY_ALL )
 
       if ::bKeyPressed != nil
          Eval( ::bKeyPressed, nKey )
       endif
 
       do case
-         case nKey == K_ESC
-              lExit := .t.
+      case nKey == K_ESC
+         lExit := .t.
 
-         case nKey == K_LBUTTONDOWN
-              if MRow() == ::nTop .and. MCol() >= ::nLeft + 1 .and. ;
-                 MCol() <= ::nLeft + 3
-                 lExit := .t.
-              endif
+      case nKey == K_LBUTTONDOWN
+         if MRow() == ::nTop .and. MCol() >= ::nLeft + 1 .and. ;
+            MCol() <= ::nLeft + 3
+            lExit := .t.
+         endif
       endcase
-   end
+   enddo
 
    ::Hide()
 
 return nil
 
-METHOD LButtonDown( nMRow, nMCol ) CLASS TDbWindow
+METHOD LButtonDown( nMRow, nMCol ) CLASS HBDbWindow
 
    if ::bLButtonDown != nil
       Eval( ::bLButtonDown, nMRow, nMCol )
@@ -250,7 +271,7 @@ METHOD LButtonDown( nMRow, nMCol ) CLASS TDbWindow
 
 return nil
 
-METHOD LDblClick( nMRow, nMCol ) CLASS TDbWindow
+METHOD LDblClick( nMRow, nMCol ) CLASS HBDbWindow
 
    if ::bLDblClick != nil
       Eval( ::bLDblClick, nMRow, nMCol )
@@ -258,11 +279,7 @@ METHOD LDblClick( nMRow, nMCol ) CLASS TDbWindow
 
 return nil
 
-/*Method move()
-Move a window across the screen
-Copyright Luiz Rafael Culik 1999
-*/
-METHOD Move() Class TDbWindow
+METHOD Move() Class HBDbWindow
 
    local nOldTop    := ::nTop
    local nOldLeft   := ::nLeft
@@ -270,101 +287,113 @@ METHOD Move() Class TDbWindow
    local nOldRight  := ::nright
    local nKey
 
-   while .t.
+   do while .t.
       RestScreen( ,,,, ::cbackimage )
       DispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( Chr( 176 ), 8 ) + " " )
 
       nKey := Inkey( 0 )
 
       do case
-         case nkey == K_UP
-              if ::ntop != 0
-                 ::ntop--
-                 ::nbottom--
-              endif
+      case nKey == K_UP
 
-         case nKey == K_DOWN
-              if ::nBottom != MaxRow()
-                 ::nTop++
-                 ::nBottom++
-              endif
+         if ::ntop != 0
+            ::ntop--
+            ::nbottom--
+         endif
 
-         case nKey == K_LEFT
-              if ::nLeft != 0
-                 ::nLeft--
-                 ::nRight--
-              endif
+      case nKey == K_DOWN
 
-         case nKey == K_RIGHT
-              if ::nBottom != MaxRow()
-                 ::nLeft++
-                 ::nRight++
-              endif
+         if ::nBottom != MaxRow()
+            ::nTop++
+            ::nBottom++
+         endif
 
-         case nKey == K_ESC
-              ::nTop    := nOldTop
-              ::nLeft   := nOldLeft
-              ::nBottom := nOldBottom
-              ::nRight  := nOldRight
+      case nKey == K_LEFT
+
+         if ::nLeft != 0
+            ::nLeft--
+            ::nRight--
+         endif
+
+      case nKey == K_RIGHT
+
+         if ::nBottom != MaxRow()
+            ::nLeft++
+            ::nRight++
+         endif
+
+      case nKey == K_ESC
+
+         ::nTop    := nOldTop
+         ::nLeft   := nOldLeft
+         ::nBottom := nOldBottom
+         ::nRight  := nOldRight
+
       endcase
 
       if nKey == K_ESC .or. nKey == K_ENTER
          exit
-      end
-   end
+      endif
+   enddo
 
-   // __keyboard( chr( 0 ) ), inkey() )
+   // __Keyboard( Chr( 0 ) ), Inkey() )
 
 return nil
 
-METHOD KeyPressed( nKey ) CLASS TDbWindow
+METHOD KeyPressed( nKey ) CLASS HBDbWindow
 
-   if ::bKeyPressed != nil
+   if ::bKeyPressed != NIL
       Eval( ::bKeyPressed, nKey, Self )
    endif
 
 return nil
 
-METHOD LoadColors() CLASS TDbWindow
-   LOCAL aClr:=__DbgColors()
+METHOD LoadColors() CLASS HBDbWindow
+
+   local aClr := __DbgColors()
   
    ::cColor := aClr[ 1 ]
-   IF( ::Browser!=NIL )
+
+   IF ::Browser != NIL
       ::Browser:ColorSpec := aClr[ 2 ] + "," + aClr[ 5 ] + "," + aClr[ 3 ]
    ENDIF
 
-RETURN nil
+return nil
 
-METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS TDbWindow
-  LOCAL lShow
+METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBDbWindow
 
-  IF ( nTop == NIL .OR. nTop == ::nTop ) .AND. ( nLeft == NIL .OR. nLeft == ::nLeft ) ;
-    .AND. ( nBottom == NIL .OR. nBottom == ::nBottom ) .AND. ( nRight == NIL .OR. nRight == ::nRight )
-    RETURN Self
-  ENDIF
+   local lShow
+  
+   if ( nTop == NIL .OR. nTop == ::nTop ) .AND. ;
+      ( nLeft == NIL .OR. nLeft == ::nLeft ) .AND. ;
+      ( nBottom == NIL .OR. nBottom == ::nBottom ) .AND. ;
+      ( nRight == NIL .OR. nRight == ::nRight )
+      return Self
+   endif
+  
+   if ( lShow := ::lVisible )
+      ::Hide()
+   endif
 
-  IF lShow:=::lVisible
-    ::Hide()
-  ENDIF
-  IF nTop != NIL
-    ::nTop := nTop
-  ENDIF
-  IF nBottom != NIL
-    ::nBottom := nBottom
-  ENDIF
-  IF nLeft != NIL
-    ::nLeft := nLeft
-  ENDIF
-  IF nRight != NIL
-    ::nRight := nRight
-  ENDIF
+   if nTop != NIL
+      ::nTop := nTop
+   endif
+   if nBottom != NIL
+      ::nBottom := nBottom
+   endif
+   if nLeft != NIL
+      ::nLeft := nLeft
+   endif
+   if nRight != NIL
+      ::nRight := nRight
+   endif
+  
+   if ::Browser != NIL
+      ::Browser:Resize( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1 )
+   endif
+  
+   if lShow
+      ::Show( ::lFocused )
+   endif
 
-  IF ::Browser != NIL
-    ::Browser:Resize( ::nTop+1, ::nLeft+1, ::nBottom-1, ::nRight-1 )
-  ENDIF
-
-  IF lShow
-    ::Show( ::lFocused )
-  ENDIF
-
-RETURN self
+return self

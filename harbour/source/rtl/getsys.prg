@@ -64,7 +64,11 @@
 #include "common.ch"
 
 #ifdef HB_COMPAT_C53
-FUNCTION ReadModal( GetList, nPos, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
+#include "setcurs.ch"
+#endif
+
+#ifdef HB_COMPAT_C53
+FUNCTION ReadModal( GetList, nPos, oMenu, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
 #else
 FUNCTION ReadModal( GetList, nPos )
 #endif
@@ -73,9 +77,9 @@ FUNCTION ReadModal( GetList, nPos )
    LOCAL oSaveGetList
 
 #ifdef HB_COMPAT_C53
-   LOCAL lMsgFlag
-   LOCAL cOldMsg
    LOCAL oGet
+   LOCAL lMsgFlag
+   LOCAL aMsg
 #endif
 
    IF Empty( GetList )
@@ -84,6 +88,9 @@ FUNCTION ReadModal( GetList, nPos )
    ENDIF
 
    oGetList := HBGetList():New( GetList )
+#ifdef HB_COMPAT_C53
+   oGetList:nSaveCursor   := SetCursor( SC_NONE )
+#endif
    oGetList:cReadProcName := ProcName( 1 )
    oGetList:nReadProcLine := ProcLine( 1 )
 
@@ -91,16 +98,33 @@ FUNCTION ReadModal( GetList, nPos )
    __GetListSetActive( oGetList )
    __GetListLast( oGetList )
 
+#ifdef HB_COMPAT_C53
+   oGetList:nPos := oGetList:Settle( iif( ISNUMBER( nPos ), nPos, 0 ), .T. )
+#else
    IF ! ( ISNUMBER( nPos ) .AND. nPos > 0 )
       oGetList:nPos := oGetList:Settle( 0 )
    ENDIF
+#endif
 
 #ifdef HB_COMPAT_C53
-   if ( lMsgFlag := ISNUMBER( nMsgRow ) .AND. ;
+   IF ( lMsgFlag := ISNUMBER( nMsgRow ) .AND. ;
                     ISNUMBER( nMsgLeft ) .AND. ;
                     ISNUMBER( nMsgRight ) )
-      cOldMsg := SaveScreen( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
-   endif
+
+      IF !ISCHARACTER( cMsgColor )
+         cMsgColor := GetClrPair( SetColor(), 1 )
+      ENDIF
+
+      Scroll( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
+
+      oGetList:cMsgSaveS := SaveScreen( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
+   ENDIF
+
+   oGetList:nNextGet := 0
+   oGetList:nHitCode := 0
+   oGetList:nMenuID := 0
+
+   aMsg := { , nMsgRow, nMsgLeft, nMsgRight, cMsgColor, , , , , }
 #endif
 
    DO WHILE oGetList:nPos != 0
@@ -109,43 +133,61 @@ FUNCTION ReadModal( GetList, nPos )
       oGetList:PostActiveGet()
 
 #ifdef HB_COMPAT_C53
-      if lMsgFlag
+      IF lMsgFlag
          oGet := oGetList:aGetList[ oGetList:nPos ]
 
          DispOutAt( nMsgRow, nMsgLeft, PadC( iif( ISOBJECT( oGet:Control ), oGet:Control:Message, oGet:Message ), nMsgRight - nMsgLeft + 1 ), iif( ISCHARACTER( cMsgColor ), cMsgColor, NIL ) )
-      endif
-#endif
+      ENDIF
 
       IF ISBLOCK( oGetList:oGet:Reader )
-#ifdef HB_COMPAT_C53
-         Eval( oGetList:oGet:Reader, oGetList:oGet, oGetlist)
+         Eval( oGetList:oGet:Reader, oGetList:oGet, oGetlist, oMenu, aMsg )
+      ELSE
+         oGetList:Reader( aMsg )
+      ENDIF
+
+      oGetList:nPos := oGetList:Settle( NIL, .F. )
 #else
+      IF ISBLOCK( oGetList:oGet:Reader )
          Eval( oGetList:oGet:Reader, oGetList:oGet )
-#endif
       ELSE
          oGetList:Reader()
       ENDIF
 
       oGetList:nPos := oGetList:Settle()
+#endif
 
    ENDDO
 
 #ifdef HB_COMPAT_C53
-   if lMsgFlag
-      RestScreen( nMsgRow, nMsgLeft, nMsgRow, nMsgRight, cOldMsg )
-   endif
+   IF lMsgFlag
+      RestScreen( nMsgRow, nMsgLeft, nMsgRow, nMsgRight, oGetList:cMsgSaveS )
+   ENDIF
 #endif
 
    __GetListSetActive( oSaveGetList )
 
    SetPos( MaxRow() - 1, 0 )
+#ifdef HB_COMPAT_C53
+   SetCursor( oGetList:nSaveCursor )
+#endif
 
    RETURN oGetList:lUpdated
 
+#ifdef HB_COMPAT_C53
+PROCEDURE GetReader( oGet, oGetList, oMenu, aMsg )
+
+   HB_SYMBOL_UNUSED( oGetList )
+
+   oGet:Reader( oMenu, aMsg )
+
+   RETURN
+#else
 PROCEDURE GetReader( oGet )
+
    oGet:Reader()
 
    RETURN
+#endif
 
 FUNCTION GetActive( oGet )
    LOCAL oGetList := __GetListActive()
@@ -172,40 +214,59 @@ PROCEDURE GetDoSetKey( keyBlock, oGet )
 
    RETURN
 
+#ifdef HB_COMPAT_C53
+PROCEDURE GetApplyKey( oGet, nKey, oGetList, oMenu, aMsg )
+   IF !ISOBJECT( oGetList )
+      oGetList := __GetListActive()
+   ENDIF
+#else
 PROCEDURE GetApplyKey( oGet, nKey )
    LOCAL oGetList := __GetListActive()
+#endif
 
    IF oGetList != NIL
       IF oGet != NIL
          oGetList:oGet := oGet
       ENDIF
+#ifdef HB_COMPAT_C53
+      oGetList:GetApplyKey( nKey, oMenu, aMsg )
+#else
       oGetList:GetApplyKey( nKey )
+#endif
    ENDIF
 
    RETURN
 
+#ifdef HB_COMPAT_C53
+FUNCTION GetPreValidate( oGet, aMsg )
+#else
 FUNCTION GetPreValidate( oGet )
+#endif
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
-      IF oGet != NIL
-         oGetList:oGet := oGet
-      ENDIF
-
-      RETURN oGetList:GetPreValidate()
+#ifdef HB_COMPAT_C53
+      RETURN oGetList:GetPreValidate( oGet, aMsg )
+#else
+      RETURN oGetList:GetPreValidate( oGet )
+#endif
    ENDIF
 
    RETURN .F.
 
+#ifdef HB_COMPAT_C53
+FUNCTION GetPostValidate( oGet, aMsg )
+#else
 FUNCTION GetPostValidate( oGet )
+#endif
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
-      IF oGet != NIL
-         oGetList:oGet := oGet
-      ENDIF
-      
-      RETURN oGetList:GetPostValidate()
+#ifdef HB_COMPAT_C53
+      RETURN oGetList:GetPostValidate( oGet, aMsg )
+#else
+      RETURN oGetList:GetPostValidate( oGet )
+#endif
    ENDIF
 
    RETURN .F.
@@ -451,9 +512,9 @@ FUNCTION ReadStats( nElement, xNewValue )
    CASE nElement == SNNEXTGET      ; xRetVal := __GetListActive():nNextGet     
    CASE nElement == SNHITCODE      ; xRetVal := __GetListActive():nHitCode     
    CASE nElement == SNPOS          ; xRetVal := __GetListActive():nPos
-   CASE nElement == SCSCRSVMSG     ; xRetVal := ""
-   CASE nElement == SNMENUID       ; xRetVal := 0
-   CASE nElement == SNSVCURSOR     ; xRetVal := 0
+   CASE nElement == SCSCRSVMSG     ; xRetVal := __GetListActive():cMsgSaveS  
+   CASE nElement == SNMENUID       ; xRetVal := __GetListActive():nMenuID    
+   CASE nElement == SNSVCURSOR     ; xRetVal := __GetListActive():nSaveCursor
    OTHERWISE                       ; xRetVal := NIL
    ENDCASE
 
@@ -474,26 +535,37 @@ FUNCTION ReadStats( nElement, xNewValue )
       CASE nElement == SNNEXTGET      ; __GetListActive():nNextGet       := xNewValue
       CASE nElement == SNHITCODE      ; __GetListActive():nHitCode       := xNewValue
       CASE nElement == SNPOS          ; __GetListActive():nPos           := xNewValue
+      CASE nElement == SCSCRSVMSG     ; __GetListActive():cMsgSaveS      := xNewValue
+      CASE nElement == SNMENUID       ; __GetListActive():nMenuID        := xNewValue
+      CASE nElement == SNSVCURSOR     ; __GetListActive():nSaveCursor    := xNewValue
       ENDCASE
    ENDIF
 
    RETURN xRetVal
 
 FUNCTION ShowGetMsg( oGet, aMsg )
+   LOCAL oGetList := __GetListActive()
 
-   /* Dummy function */
-
-   HB_SYMBOL_UNUSED( oGet )
-   HB_SYMBOL_UNUSED( aMsg )
+   IF oGetList != NIL
+      IF oGet != NIL
+         oGetList:oGet := oGet
+      ENDIF
+      
+      oGetList:ShowGetMsg( aMsg )
+   ENDIF
 
    RETURN NIL
 
 FUNCTION EraseGetMsg( oGet, aMsg )
+   LOCAL oGetList := __GetListActive()
 
-   /* Dummy function */
-
-   HB_SYMBOL_UNUSED( oGet )
-   HB_SYMBOL_UNUSED( aMsg )
+   IF oGetList != NIL
+      IF oGet != NIL
+         oGetList:oGet := oGet
+      ENDIF
+      
+      oGetList:EraseGetMsg( aMsg )
+   ENDIF
 
    RETURN NIL
 
