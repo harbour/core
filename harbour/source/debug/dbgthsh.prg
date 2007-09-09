@@ -228,7 +228,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
    CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
       oBrwSets:GoTop()
 
-   CASE nKey == K_END .OR. nkey == K_CTRL_PGDN .OR. nkey == K_CTRL_END
+   CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
       oBrwSets:GoBottom()
 
    CASE nKey == K_PGDN

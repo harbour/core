@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-10 01:53 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tgetlist.prg
+     ! Fixed two typos in previous commit.
+
+   * source/debug/dbgtobj.prg
+   * source/debug/dbgthsh.prg
+   * source/debug/dbgwa.prg
+   * source/debug/debugger.prg
+   * source/debug/dbgtarr.prg
+     * Further formatting, cleanup, minor optimizations.
+     + Added Ctrl+PgUp/PgDn + Ctrl+Home/End everywhere as 
+       synonyms to Home/End.
+
 2007-09-09 19:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/setcurs.ch
    * include/hbapigt.h
@@ -66,6 +79,7 @@
        where it crashed due to wrong initialization order 
        of TBrowse() screen coordinates. Bug appeared 
        due to the now more compatible TBrowse() behaviour.
+     ! Locally used function (named ShowTopic()) made STATIC.
      % Optimizations and cleanups.
      % Unused vars/functions removed.
      * Formatting (except large parts of debugger.prg and 

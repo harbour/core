@@ -287,7 +287,7 @@ static procedure WorkAreasKeyPressed( nKey, oBrw, oDlg, nTotal )
          oBrw:ForceStable()
       endif
 
-   case nKey == K_HOME
+   case nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
 
       if oBrw:Cargo > 1
          oBrw:Cargo := 1
@@ -295,7 +295,7 @@ static procedure WorkAreasKeyPressed( nKey, oBrw, oDlg, nTotal )
          oBrw:ForceStable()
       endif
 
-   case nKey == K_END
+   case nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
 
       if oBrw:Cargo < nTotal
          oBrw:Cargo := nTotal

@@ -249,7 +249,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cName, aArray ) CLASS HBDbOb
          oBrwSets:ForceStable()
       ENDIF
 
-   CASE nKey == K_HOME
+   CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
 
       IF oBrwSets:Cargo > 1
          oBrwSets:Cargo := 1
@@ -257,7 +257,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cName, aArray ) CLASS HBDbOb
          oBrwSets:ForceStable()
       ENDIF
 
-   CASE nKey == K_END
+   CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
 
       IF oBrwSets:Cargo < nSets
          oBrwSets:Cargo := nSets

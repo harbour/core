@@ -169,12 +169,12 @@ METHOD Reader( oMenu, aMsg ) CLASS HBGetList
    LOCAL oGet := ::oGet
    LOCAL nRow
    LOCAL nCol
-#ifdef HB_COMPAT_53
+#ifdef HB_COMPAT_C53
    LOCAL nOldCursor
    LOCAL nKey
 #endif
 
-#ifdef HB_COMPAT_53
+#ifdef HB_COMPAT_C53
    IF ::nLastExitState == GE_SHORTCUT .OR.;
       ::nLastExitState == GE_MOUSEHIT .OR.;
       ::GetPreValidate( oGet, aMsg )
@@ -196,7 +196,7 @@ METHOD Reader( oMenu, aMsg ) CLASS HBGetList
          ENDIF
 
          DO WHILE oGet:exitState == GE_NOEXIT
-#ifdef HB_COMPAT_53
+#ifdef HB_COMPAT_C53
             SetCursor( iif( ::nSaveCursor == SC_NONE, SC_NORMAL, ::nSaveCursor ) )
             nKey := Inkey( 0 )
             SetCursor( SC_NONE )
@@ -210,7 +210,7 @@ METHOD Reader( oMenu, aMsg ) CLASS HBGetList
             SetPos( nRow, nCol )
          ENDDO
 
-#ifdef HB_COMPAT_53
+#ifdef HB_COMPAT_C53
          IF !::nLastExitState == GE_SHORTCUT .AND. ;
             !::nLastExitState == GE_MOUSEHIT .AND. ;
             !::GetPostValidate( oGet, aMsg )
@@ -221,13 +221,13 @@ METHOD Reader( oMenu, aMsg ) CLASS HBGetList
          ENDIF
       ENDDO
 
-#ifdef HB_COMPAT_53
+#ifdef HB_COMPAT_C53
       nRow := Row()
       nCol := Col()
-      nOldCursor := SetCurosr()
+      nOldCursor := SetCursor()
 #endif
       oGet:killFocus()
-#ifdef HB_COMPAT_53
+#ifdef HB_COMPAT_C53
       SetCursor( nOldCursor )
       SetPos( nRow, nCol )
 #endif
