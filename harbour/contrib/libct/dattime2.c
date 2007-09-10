@@ -152,7 +152,7 @@ HB_FUNC( CTODOW )
          szDow = hb_strdup( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + iDow ) );
          hb_strupr( szDow );
 
-         if( hb_set.HB_SET_EXACT )
+         if( hb_setGetL( HB_SET_EXACT ) )
          {
             iEqual = ( strlen( szDow ) == strlen( szParam ) )
                && !memcmp( szDow, szParam, strlen( szParam ) );
@@ -227,7 +227,7 @@ HB_FUNC( CTOMONTH )
          szMonth = hb_strdup( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 ) );
          hb_strupr( szMonth );
 
-         if( hb_set.HB_SET_EXACT )
+         if( hb_setGetL( HB_SET_EXACT ) )
          {
             iEqual = ( strlen( szMonth ) == strlen( szParam ) )
                && !memcmp( szMonth, szParam, strlen( szParam ) );
@@ -339,7 +339,7 @@ HB_FUNC( DMY )
       szMDY[iLen] = ' ';
       iLen++;
 
-      if( hb_set.hb_set_century )
+      if( hb_setGetL( hb_set_century ) )
       {
          snprintf( szMDY + iLen, 5, "%04d", iYear );
          iLen += 4;
@@ -425,7 +425,7 @@ HB_FUNC( MDY )
       }
       szMDY[iLen++] = ' ';
 
-      if( hb_set.hb_set_century )
+      if( hb_setGetL( hb_set_century ) )
       {
          snprintf( szMDY + iLen, 5, "%04d", iYear );
          iLen += 4;
@@ -945,8 +945,8 @@ HB_FUNC( WEEK )
    {
       LONG lDate2;
 
-      if( hb_set.HB_SET_DATEFORMAT && ( hb_set.HB_SET_DATEFORMAT[0] == 'd' ||
-                                        hb_set.HB_SET_DATEFORMAT[0] == 'D' ) )
+      if( hb_setGetCPtr( HB_SET_DATEFORMAT ) && ( hb_setGetCPtr( HB_SET_DATEFORMAT )[0] == 'd' ||
+                                                  hb_setGetCPtr( HB_SET_DATEFORMAT )[0] == 'D' ) )
          lDate2 = lDate + 3 - ( hb_dateDOW( iYear, iMonth, iDay ) + 5 ) % 7;
       else
          lDate2 = lDate + 4 - hb_dateDOW( iYear, iMonth, iDay );

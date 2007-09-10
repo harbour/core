@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-10 22:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/libct/ctnet.c
+   * contrib/libct/dattime2.c
+   * contrib/samples/date.c
+   * contrib/bmdbfcdx/bmdbfcdx1.c
+     * Changed hb_set. access to hb_setGet*() in all 
+       contrib code.
+
+   * source/rtl/hbini.prg
+     + Further cleanup.
+
 2007-09-10 22:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbtoken.c
     ! fixed bad typo in hb_tokenCount()

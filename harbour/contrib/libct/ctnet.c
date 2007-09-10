@@ -1,45 +1,14 @@
 /*
  * $Id$
- *
+ */
+
+/*
  * xHarbour Project source code:
  * CT3 NET functions to PC-LAN/MS-NET.
  *
  * Copyright 2004 Eduardo Fernandes <eduardo@modalsistemas.com.br>
  * www - http://www.xharbour.org
  *
- *******
- *
- * CT3 NET Functions Comments:
- *
- * NETCANCEL( <cLocalDevice> ) -> lReleased
- * Return true if <cLocalDevice> was disconnected.
- *
- * NETDISK( cDrive ) -> lSuccess
- * Return true if <cDrive> is a network drive, otherwise return false if is a local drive.
- *
- * NETLOCNAME( cSahredDevice ) -> cLocalDevice
- * Not implemented yet.
- *
- * NETPRINTER() -> lSuccess
- * Return true if a current local printer seted by SET PRINTER TO was connected to a
- * network printer.
- *
- * NETREDIR( cLocalDevice, cSharedDevice, [ cPassword ], [ lShowError] ) -> lSuccess
- * Return true if <cLocalDevice> was connected to <cSharedDevice> with <cPassword>, if any.
- *
- * NETRMTNAME( cLocalDevice ) -> cSharedName
- * Return the shared resource name connected to a <cLocalDevice>.
- * The original parameter <nDevice> in CA-Clipper Tools was changed to <cLocalName> in
- * xHarbour because in Windows Network I didn´t find a number table like in MS-DOS. See
- * CA-Tools help for more details.
- *
- * NETWORK() -> lSuccess
- * Return true if a PC-LAN/MS-NET or Netware type is active.
- *
- * NNETWORK() -> lSuccess
- * Return true if a Netware type is active.
- *
- ******
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -79,8 +48,38 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
+ */
+
+/*
+ * CT3 NET Functions Comments:
  *
- * See doc/license.txt for licensing terms.
+ * NETCANCEL( <cLocalDevice> ) -> lReleased
+ * Return true if <cLocalDevice> was disconnected.
+ *
+ * NETDISK( cDrive ) -> lSuccess
+ * Return true if <cDrive> is a network drive, otherwise return false if is a local drive.
+ *
+ * NETLOCNAME( cSahredDevice ) -> cLocalDevice
+ * Not implemented yet.
+ *
+ * NETPRINTER() -> lSuccess
+ * Return true if a current local printer seted by SET PRINTER TO was connected to a
+ * network printer.
+ *
+ * NETREDIR( cLocalDevice, cSharedDevice, [ cPassword ], [ lShowError] ) -> lSuccess
+ * Return true if <cLocalDevice> was connected to <cSharedDevice> with <cPassword>, if any.
+ *
+ * NETRMTNAME( cLocalDevice ) -> cSharedName
+ * Return the shared resource name connected to a <cLocalDevice>.
+ * The original parameter <nDevice> in CA-Clipper Tools was changed to <cLocalName> in
+ * xHarbour because in Windows Network I didn´t find a number table like in MS-DOS. See
+ * CA-Tools help for more details.
+ *
+ * NETWORK() -> lSuccess
+ * Return true if a PC-LAN/MS-NET or Netware type is active.
+ *
+ * NNETWORK() -> lSuccess
+ * Return true if a Netware type is active.
  *
  */
 
@@ -180,7 +179,7 @@ HB_FUNC( NETCANCEL )
 
 HB_FUNC( NETPRINTER )
 {
-   char *cPrn = hb_set.HB_SET_PRINTFILE;   /* query default local printer port. */
+   char * cPrn = hb_setGetCPtr( HB_SET_PRINTFILE );   /* query default local printer port. */
 
    if( !cPrn || !*cPrn || stricmp( cPrn, "PRN" ) == 0 )
       cPrn = "LPT1";

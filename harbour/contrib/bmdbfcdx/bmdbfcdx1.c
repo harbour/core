@@ -3883,7 +3883,7 @@ static BOOL hb_cdxCheckRecordFilter( CDXAREAP pArea, ULONG ulRecNo )
          if( pArea->ulRecNo != ulRecNo || pArea->lpdbPendingRel )
             SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
-         if( hb_set.HB_SET_DELETED )
+         if( hb_setGetL( HB_SET_DELETED ) )
             SUPER_DELETED( ( AREAP ) pArea, &lResult );
 
          if( !lResult && pArea->dbfi.itmCobExpr )
@@ -3903,12 +3903,12 @@ static BOOL hb_cdxCheckRecordFilter( CDXAREAP pArea, ULONG ulRecNo )
       else
          lResult = TRUE;
    }
-   else if ( pArea->dbfi.itmCobExpr || hb_set.HB_SET_DELETED )
+   else if ( pArea->dbfi.itmCobExpr || hb_setGetL( HB_SET_DELETED ) )
    {
       if( pArea->ulRecNo != ulRecNo || pArea->lpdbPendingRel )
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
-      if( hb_set.HB_SET_DELETED )
+      if( hb_setGetL( HB_SET_DELETED ) )
          SUPER_DELETED( ( AREAP ) pArea, &lResult );
 
       if( !lResult && pArea->dbfi.itmCobExpr )
@@ -6852,7 +6852,7 @@ HB_FUNC( BM_DBSEEKWILD )
        if( !ISNIL( 1 ) )
        {
           pKey = hb_param( 1, HB_IT_ANY );
-          bSoftSeek = ISLOG( 2 ) ? (BOOL) hb_parl( 2 ) : hb_set.HB_SET_SOFTSEEK;
+          bSoftSeek = ISLOG( 2 ) ? (BOOL) hb_parl( 2 ) : hb_setGetL( HB_SET_SOFTSEEK );
           bFindLast = ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
           bNext     = ISLOG( 4 ) ? hb_parl( 4 ) : FALSE;
           bAll      = ISLOG( 5 ) ? hb_parl( 5 ) : FALSE;
@@ -6974,7 +6974,7 @@ ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, LONG lUpDown )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxSkipFilter(%p, %ld)", pArea, lUpDown));
 
-   if( !hb_set.HB_SET_DELETED && pArea->dbfi.itmCobExpr == NULL )
+   if( !hb_setGetL( HB_SET_DELETED ) && pArea->dbfi.itmCobExpr == NULL )
       return SUCCESS;
 
    /* Since lToSkip is passed to SkipRaw, it should never request more than
@@ -6990,7 +6990,7 @@ ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, LONG lUpDown )
    while( !pArea->fBof && !pArea->fEof )
    {
       /* SET DELETED */
-      if( hb_set.HB_SET_DELETED )
+      if( hb_setGetL( HB_SET_DELETED ) )
       {
          LPCDXTAG pTag = hb_cdxGetActiveTag( pArea );
 
@@ -7239,7 +7239,7 @@ static ERRCODE hb_cdxFlush( CDXAREAP pArea )
 
    uiError = SUPER_FLUSH( ( AREAP ) pArea );
 
-   if ( hb_set.HB_SET_HARDCOMMIT )
+   if ( hb_setGetL( HB_SET_HARDCOMMIT ) )
    {
       pIndex = pArea->lpIndexes;
       while ( pIndex )
@@ -7583,9 +7583,9 @@ static ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    /* If SET_AUTOPEN open index */
 #ifdef HB_CDX_CLIP_AUTOPEN
-   if ( hb_set.HB_SET_AUTOPEN )
+   if ( hb_setGetL( HB_SET_AUTOPEN ) )
 #else
-   if ( pArea->fHasTags && hb_set.HB_SET_AUTOPEN )
+   if ( pArea->fHasTags && hb_setGetL( HB_SET_AUTOPEN ) )
 #endif
    {
       char szFileName[ _POSIX_PATH_MAX + 1 ];
@@ -7603,7 +7603,7 @@ static ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
          errCode = SELF_ORDLSTADD( ( AREAP ) pArea, &pOrderInfo );
          if( errCode == SUCCESS )
          {
-            pOrderInfo.itmOrder  = hb_itemPutNI( NULL, hb_set.HB_SET_AUTORDER );
+            pOrderInfo.itmOrder  = hb_itemPutNI( NULL, hb_setGetNI( HB_SET_AUTORDER ) );
             errCode = SELF_ORDLSTFOCUS( ( AREAP ) pArea, &pOrderInfo );
             hb_itemRelease( pOrderInfo.itmOrder );
             if( errCode == SUCCESS )
@@ -7803,9 +7803,9 @@ static ERRCODE hb_cdxOrderListClear( CDXAREAP pArea )
       return FAILURE;
 
 #ifdef HB_CDX_CLIP_AUTOPEN
-   hb_cdxOrdListClear( pArea, !hb_set.HB_SET_AUTOPEN, NULL );
+   hb_cdxOrdListClear( pArea, !hb_setGetL( HB_SET_AUTOPEN ), NULL );
 #else
-   hb_cdxOrdListClear( pArea, !pArea->fHasTags || !hb_set.HB_SET_AUTOPEN, NULL );
+   hb_cdxOrdListClear( pArea, !pArea->fHasTags || !hb_setGetL( HB_SET_AUTOPEN ), NULL );
 #endif
    pArea->uiTag = 0;
 
@@ -8043,9 +8043,9 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    if ( !pArea->lpdbOrdCondInfo ||
         ( pArea->lpdbOrdCondInfo->fAll && !pArea->lpdbOrdCondInfo->fAdditive ) )
 #ifdef HB_CDX_CLIP_AUTOPEN
-      hb_cdxOrdListClear( pArea, !hb_set.HB_SET_AUTOPEN, NULL );
+      hb_cdxOrdListClear( pArea, !hb_setGetL( HB_SET_AUTOPEN ), NULL );
 #else
-      hb_cdxOrdListClear( pArea, !pArea->fHasTags || !hb_set.HB_SET_AUTOPEN, NULL );
+      hb_cdxOrdListClear( pArea, !pArea->fHasTags || !hb_setGetL( HB_SET_AUTOPEN ), NULL );
 #endif
 
    pIndex = hb_cdxFindBag( pArea, szFileName );
@@ -8166,9 +8166,9 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
                                     !pArea->lpdbOrdCondInfo->fAdditive ) )
    {
 #ifdef HB_CDX_CLIP_AUTOPEN
-      hb_cdxOrdListClear( pArea, !hb_set.HB_SET_AUTOPEN, pIndex );
+      hb_cdxOrdListClear( pArea, !hb_setGetL( HB_SET_AUTOPEN ), pIndex );
 #else
-      hb_cdxOrdListClear( pArea, !pArea->fHasTags || !hb_set.HB_SET_AUTOPEN, pIndex );
+      hb_cdxOrdListClear( pArea, !pArea->fHasTags || !hb_setGetL( HB_SET_AUTOPEN ), pIndex );
 #endif
    }
    hb_cdxIndexUnLockWrite( pIndex );
@@ -8179,7 +8179,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       if ( !pArea->fReadonly && ( pArea->dbfHeader.bHasTags & 0x01 ) == 0 )
       {
 #ifdef HB_CDX_CLIP_AUTOPEN
-         if ( hb_set.HB_SET_AUTOPEN )
+         if ( hb_setGetL( HB_SET_AUTOPEN ) )
 #endif
             SELF_WRITEDBHEADER( ( AREAP ) pArea );
       }
@@ -8250,7 +8250,7 @@ static ERRCODE hb_cdxOrderDestroy( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
                      if ( !pArea->fReadonly && ( pArea->dbfHeader.bHasTags & 0x01 ) != 0 )
                      {
 #ifdef HB_CDX_CLIP_AUTOPEN
-                        if ( hb_set.HB_SET_AUTOPEN )
+                        if ( hb_setGetL( HB_SET_AUTOPEN ) )
 #endif
                            SELF_WRITEDBHEADER( ( AREAP ) pArea );
                      }
@@ -9014,7 +9014,7 @@ static ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo )
     if ( SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo ) != SUCCESS )
         return FAILURE;
 
-    pArea->dbfi.fOptimized = hb_set.HB_SET_OPTIMIZE;
+    pArea->dbfi.fOptimized = hb_setGetL( HB_SET_OPTIMIZE );
 
     if ( pArea->dbfi.fOptimized )
     {
@@ -9882,7 +9882,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
             pArea->uiTag = 0;
          }
       }
-      fDirectRead = !hb_set.HB_SET_STRICTREAD && /* !pArea->lpdbRelations && */
+      fDirectRead = !hb_setGetL( HB_SET_STRICTREAD ) && /* !pArea->lpdbRelations && */
                     ( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll ||
                       ( pArea->uiTag == 0 && !fUseFilter ) );
 
