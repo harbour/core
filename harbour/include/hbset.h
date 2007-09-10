@@ -232,7 +232,7 @@ extern int hb_setListenerRemove( int );
 #if defined( HB_SET_IMPORT )
    extern HB_IMPORT HB_SET_STRUCT hb_set;
 #else
-   extern HB_SET_STRUCT hb_set;
+   extern HB_EXPORT HB_SET_STRUCT hb_set;
 #endif
 
 /* These macros will be replaced by functions */
