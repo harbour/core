@@ -20,10 +20,10 @@
    * source/debug/debugger.prg
      * Formatting.
 
-   * source/rtl/memoedit.prg
+   * source/rtl/teditor.prg
      % Minor optimization.
 
-   * source/rtl/teditor.prg
+   * source/rtl/memoedit.prg
      ! Fixed to not ask for confirmation when pressing 
        <Esc> on an unedited buffer.
 
