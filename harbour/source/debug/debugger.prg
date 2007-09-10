@@ -75,18 +75,10 @@
 #include "setcurs.ch"
 
 /* A macro to compare filenames on different platforms. */
-#ifdef __PLATFORM__DOS
-#define FILENAME_EQUAL(s1, s2) ( Lower( s1 ) == Lower( s2 ) )
+#if defined(__PLATFORM__DOS) || defined(__PLATFORM__OS2) || defined(__PLATFORM__Windows)
+   #define FILENAME_EQUAL( s1, s2 ) ( Lower( s1 ) == Lower( s2 ) )
 #else
-#ifdef __PLATFORM__OS2
-#define FILENAME_EQUAL(s1, s2) ( Lower( s1 ) == Lower( s2 ) )
-#else
-#ifdef __PLATFORM__Windows
-#define FILENAME_EQUAL(s1, s2) ( Lower( s1 ) == Lower( s2 ) )
-#else
-#define FILENAME_EQUAL(s1, s2) ( s1 == s2 )
-#endif
-#endif
+   #define FILENAME_EQUAL( s1, s2 ) ( s1 == s2 )
 #endif
 
 
@@ -115,8 +107,7 @@
 #define MODULE_GLOBALS          3
 #define MODULE_EXTERNGLOBALS    4
 
-
-* The dimension of the debugger window
+/* The dimensions of the debugger window */
 #define DEBUGGER_MINROW         0
 #define DEBUGGER_MINCOL         0
 #define DEBUGGER_MAXROW         22
@@ -735,10 +726,10 @@ METHOD Colors() CLASS HBDebugger
 
    oBrwColors:AddColumn( oCol := TBColumnNew( "", { || PadR( aColors[ oBrwColors:Cargo[ 1 ] ], 14 ) } ) )
    oCol:DefColor := { 1, 2 }
-   AAdd(oBrwColors:Cargo[ 2 ],acolors)
+   AAdd( oBrwColors:Cargo[ 2 ],acolors)
    oBrwColors:AddColumn( oCol := TBColumnNew( "",;
                        { || PadR( '"' + ::aColors[ oBrwColors:Cargo[ 1 ] ] + '"', nWidth - 15 ) } ) )
-   AAdd(oBrwColors:Cargo[ 2 ],acolors)
+   AAdd( oBrwColors:Cargo[ 2 ],acolors)
    oCol:DefColor := { 1, 3 }
    ocol:width := 50
    oBrwColors:autolite:=.F.
@@ -862,14 +853,14 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
 
    DO CASE
    CASE cCommand == "??" .OR. cCommand == "?"
-      aCmnd[WP_TYPE] := cCommand
-      aCmnd[WP_EXPR] := cParam
+      aCmnd[ WP_TYPE ] := cCommand
+      aCmnd[ WP_EXPR ] := cParam
 
       ::RestoreAppState()
       cResult := ::GetExprValue( cParam, @lValid )
       ::SaveAppState()
 
-      IF aCmnd[WP_TYPE] == "??"
+      IF aCmnd[ WP_TYPE ] == "??"
          IF lValid
             ::Inspect( aCmnd[ WP_EXPR ], cResult )
          ENDIF
@@ -1124,15 +1115,15 @@ METHOD EditColor( nColor, oBrwColors ) CLASS HBDebugger
    READ
    SetCursor( SC_NONE )
 #else
-   cColor := getdbginput( Row(), Col() + 15, cColor,  { |cColor| iif( Type( cColor ) != "C", ( Alert( "Must be string" ), .F. ), .T. ) }, SubStr( ::ClrModal(), 5 ) )
+   cColor := getdbginput( Row(), Col() + 15, cColor, {| cColor | iif( Type( cColor ) != "C", ( Alert( "Must be string" ), .F. ), .T. ) }, SubStr( ::ClrModal(), 5 ) )
 #endif
 
    Set( _SET_SCOREBOARD, lPrevScore )
    Set( _SET_EXIT, lPrevExit )
 
-   if LastKey() != K_ESC
+   IF LastKey() != K_ESC
       ::aColors[ nColor ] := &cColor
-   endif
+   ENDIF
 
    oBrwColors:RefreshCurrent()
    oBrwColors:ForceStable()
@@ -1153,7 +1144,7 @@ METHOD EditSet( nSet, oBrwSets ) CLASS HBDebugger
 #ifndef HB_NO_READDBG
    SetCursor( SC_NORMAL )
    @ Row(), Col() + 13 GET cSet COLOR SubStr( ::ClrModal(), 5 ) ;
-      VALID iif( Type(cSet) != cType, ( Alert( "Must be of type '" + cType + "'" ), .F. ), .T. )
+      VALID iif( Type( cSet ) != cType, ( Alert( "Must be of type '" + cType + "'" ), .F. ), .T. )
 
    READ
    SetCursor( SC_NONE )
@@ -1183,25 +1174,23 @@ METHOD EditVar( nVar ) CLASS HBDebugger
 
    uVarValue := ::VarGetValue( ::aVars[ nVar ] )
 
-   DO CASE
-   CASE ValType( uVarValue ) $ "AHOP"
-
+   IF ValType( uVarValue ) $ "AHOP"
       ::InputBox( cVarName, uVarValue, NIL, .F. )
-
-   OTHERWISE
+   ELSE
       cVarStr := ::InputBox( cVarName, __dbgValToStr( uVarValue ),;
                 { | u | iif( Type( u ) == "UE", ( Alert( "Expression error" ), .F. ), .T. ) } )
-   ENDCASE
+   ENDIF
 
-   if LastKey() != K_ESC
+   IF LastKey() != K_ESC
+
       DO CASE
       CASE cVarStr == "{ ... }"
          //aArray := ::VarGetValue( ::aVars[ nVar ] )
-         if Len( uVarValue ) > 0
+         IF Len( uVarValue ) > 0
             __DbgArrays( uVarValue, cVarName )
-         else
+         ELSE
             Alert( "Array is empty" )
-         endif
+         ENDIF
 
       CASE Upper( Left( cVarStr, 5 ) ) == "CLASS"
          __DbgObject( uVarValue, cVarName )
@@ -1209,7 +1198,7 @@ METHOD EditVar( nVar ) CLASS HBDebugger
       OTHERWISE
          ::VarSetValue( ::aVars[ nVar ], &cVarStr )
       ENDCASE
-   endif
+   ENDIF
 
    ::oBrwVars:RefreshCurrent()
    ::oBrwVars:ForceStable()
@@ -1568,11 +1557,11 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
       endif
 
       nOldCursor := SetCursor( SC_NORMAL )
-      oGet := ATAIL( GetList )
-      bMouseSave := Setkey( K_LBUTTONDOWN, {|| iif(MRow() == nTop .AND. MCol() == nLeft + 2,;
-         (oGet:undo(), oGet:exitState := GE_ESCAPE, .T.), .F.)})
+      oGet := ATail( GetList )
+      bMouseSave := SetKey( K_LBUTTONDOWN, {|| iif( MRow() == nTop .AND. MCol() == nLeft + 2,;
+         ( oGet:undo(), oGet:exitState := GE_ESCAPE, .T. ), .F. ) } )
       READ
-      Setkey( K_LBUTTONDOWN, bMouseSave)
+      SetKey( K_LBUTTONDOWN, bMouseSave)
       SetCursor( nOldCursor )
 #else
       uTemp := getdbginput( nTop + 1, nLeft + 1, uTemp, bValid, __DbgColors()[ 5 ] )
@@ -2047,7 +2036,7 @@ METHOD OSShell() CLASS HBDebugger
 
    RECOVER USING oE
 
-      Alert("Error: " + oE:description)
+      Alert( "Error: " + oE:description )
 
    END SEQUENCE
 
@@ -2915,7 +2904,7 @@ METHOD VarSetValue( aVar, uValue ) CLASS HBDebugger
      hb_dbg_vmVarGSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
   
    ELSEIF cType == "L"
-     nProcLevel := hb_dbg_procLevel() - aVar[VAR_LEVEL]   //skip debugger stack
+     nProcLevel := hb_dbg_procLevel() - aVar[ VAR_LEVEL ]   //skip debugger stack
      hb_dbg_vmVarLSet( nProcLevel, aVar[ VAR_POS ], uValue )
   
    ELSEIF cType == "S"

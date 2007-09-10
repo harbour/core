@@ -149,19 +149,23 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
 
    if nKey == K_ESC
 
-      cBackScr := SaveScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight )
-
-      nRow := Row()
-      nCol := Col()
-      @ ::nTop, ::nRight - 18 SAY "Abort Edit? (Y/N)"
-
-      nYesNoKey := Inkey( 0 )
-
-      RestScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight, cBackScr )
-      SetPos( nRow, nCol )
-
-      if Upper( Chr( nYesNoKey ) ) == "Y"
-         ::lSaved := .F.
+      if ::lDirty
+         cBackScr := SaveScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight )
+         
+         nRow := Row()
+         nCol := Col()
+         @ ::nTop, ::nRight - 18 SAY "Abort Edit? (Y/N)"
+         
+         nYesNoKey := Inkey( 0 )
+         
+         RestScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight, cBackScr )
+         SetPos( nRow, nCol )
+         
+         if Upper( Chr( nYesNoKey ) ) == "Y"
+            ::lSaved := .F.
+            ::lExitEdit := .T.
+         endif
+      else
          ::lExitEdit := .T.
       endif
    endif

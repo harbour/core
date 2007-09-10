@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-11 00:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbcompat.ch
+   * include/hbextern.ch
+   * source/rtl/hbini.prg
+     + .ini functions added to hbextern.ch.
+     * .ini functions renamed so that all of them reside 
+       in the hb_ini*() namespace. xhb compatibility translates 
+       added.
+
+   * source/debug/debugger.prg
+     * Formatting.
+
+   * source/rtl/memoedit.prg
+     % Minor optimization.
+
+   * source/rtl/teditor.prg
+     ! Fixed to not ask for confirmation when pressing 
+       <Esc> on an unedited buffer.
+
 2007-09-10 22:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/libct/ctnet.c
    * contrib/libct/dattime2.c

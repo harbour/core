@@ -136,7 +136,7 @@ CREATE CLASS HBEditor
    VAR lSaved         AS LOGICAL     INIT .F.            // True if user exited editor with K_CTRL_W
    VAR lWordWrap      AS LOGICAL     INIT .F.            // True if word wrapping is active
    VAR nWordWrapCol   AS NUMERIC     INIT 0              // At which column word wrapping occurs
-   VAR lDirty         AS LOGICAL                         // .T. if there are changes not saved
+   VAR lDirty         AS LOGICAL     INIT .F.            // .T. if there are changes not saved
    VAR lExitEdit      AS LOGICAL     INIT .F.            // .T. if user requested to end Edit() method
                                                            
    VAR cColorSpec     AS CHARACTER   INIT SetColor()     // Color string used for screen writes
@@ -180,9 +180,6 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    if ::lEditAllow
       ::InsertState( ::lInsert )
    endif
-
-   // No need to save
-   ::lDirty := .F.
 
    // is word wrap required?
    if ISNUMBER( nLineLength )

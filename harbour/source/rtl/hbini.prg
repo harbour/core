@@ -82,13 +82,13 @@ STATIC s_cLineComment := ";"
 STATIC s_cHalfLineComment := "#"
 
 
-PROCEDURE hb_SetIniComment( cLc, cHlc )
+PROCEDURE hb_IniSetComment( cLc, cHlc )
    s_cLineComment := cLc
    s_cHalfLineComment := cHlc
 RETURN
 
 
-FUNCTION hb_ReadIni( cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
+FUNCTION hb_IniRead( cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
    LOCAL hIni := hb_Hash()
 
    /* Default case sensitiveness for keys */
@@ -103,9 +103,9 @@ FUNCTION hb_ReadIni( cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
       hIni[ "MAIN" ] := hb_Hash()
    ENDIF
 
-RETURN hb_ReadIni2( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
+RETURN hb_IniRdLow( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
 
-STATIC FUNCTION hb_ReadIni2( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
+STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
    LOCAL aFiles
    LOCAL cFile, nLen
    LOCAL aKeyVal, hCurrentSection
@@ -208,7 +208,7 @@ STATIC FUNCTION hb_ReadIni2( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMai
          IF Len( aKeyVal[ 2 ] ) == 0
             LOOP
          ENDIF
-         hb_ReadIni2( hIni, aKeyVal[ 2 ], bKeyCaseSens, cSplitters, bAutoMain )
+         hb_IniRdLow( hIni, aKeyVal[ 2 ], bKeyCaseSens, cSplitters, bAutoMain )
          cLine := ""
          LOOP
       ENDIF
@@ -248,7 +248,7 @@ STATIC FUNCTION hb_ReadIni2( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMai
 RETURN hIni
 
 
-FUNCTION hb_WriteIni( xFileName, hIni, cCommentBegin, cCommentEnd, bAutoMain )
+FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, bAutoMain )
    LOCAL hFile
    LOCAL lClose
    LOCAL cNewLine := hb_OSNewLine()
