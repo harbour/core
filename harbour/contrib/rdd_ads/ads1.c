@@ -51,8 +51,9 @@
  */
 
 
-#define SUPERTABLE ( &adsSuper )
 #define HB_OS_WIN_32_USED
+#define HB_SET_IMPORT
+#define SUPERTABLE ( &adsSuper )
 #define MAX_STR_LEN 255
 
 #include "hbapi.h"
@@ -68,6 +69,18 @@
 #include "rddsys.ch"
 
 #include <ctype.h>
+
+/*
+ * This code is a workaround for not working HB_IMPORT attribute
+ * it should not be necessary
+ */
+#ifndef HB_SET_IMPORT
+   static HB_SET_STRUCT * s_hb_set_ptr = NULL;
+#  define hb_set              ( * s_hb_set_ptr )
+#  define HB_ADS_SET_INIT()   do { s_hb_set_ptr = hb_GetSetStructPtr(); } while(0)
+#else
+#  define HB_ADS_SET_INIT()   do { } while(0)
+#endif
 
 static int s_iSetListenerHandle = 0;
 
@@ -92,37 +105,37 @@ static void adsSetListener_callback( HB_set_enum setting, HB_set_listener_enum w
       switch( setting )
       {
          case HB_SET_DATEFORMAT :
-            AdsSetDateFormat( (UNSIGNED8*) hb_set.HB_SET_DATEFORMAT );
+            AdsSetDateFormat( (UNSIGNED8*) hb_setGetCPtr( HB_SET_DATEFORMAT ) );
             break;
          case HB_SET_DEFAULT    :
-            AdsSetDefault( (UNSIGNED8*) hb_set.HB_SET_DEFAULT );
+            AdsSetDefault( (UNSIGNED8*) hb_setGetCPtr( HB_SET_DEFAULT ) );
             break;
          case HB_SET_DELETED    :
-            AdsShowDeleted( ! hb_set.HB_SET_DELETED );
+            AdsShowDeleted( ! hb_setGetL( HB_SET_DELETED ) );
             break;
          case HB_SET_EPOCH      :
-            AdsSetEpoch( hb_set.HB_SET_EPOCH );
+            AdsSetEpoch( hb_setGetNI( HB_SET_EPOCH ) );
             break;
          case HB_SET_EXACT      :
-            AdsSetExact( hb_set.HB_SET_EXACT );
+            AdsSetExact( hb_setGetL( HB_SET_EXACT ) );
             break;
          case HB_SET_PATH       :
-            AdsSetSearchPath( (UNSIGNED8*) hb_set.HB_SET_PATH );
+            AdsSetSearchPath( (UNSIGNED8*) hb_setGetCPtr( HB_SET_PATH ) );
             break;
 
          case HB_SET_DECIMALS   :
-            AdsSetDecimals( (UNSIGNED16) hb_set.HB_SET_DECIMALS );
+            AdsSetDecimals( (UNSIGNED16) hb_setGetNI( HB_SET_DECIMALS ) );
             break;
 
 /* Possible TODO?
          case HB_SET_MFILEEXT   :
-            if( hb_set.HB_SET_MFILEEXT )
+            if( hb_setGetCPtr( HB_SET_MFILEEXT ) )
             {
-               hb_retc( hb_set.HB_SET_MFILEEXT );
+               hb_retc( hb_setGetCPtr( HB_SET_MFILEEXT ) );
             }
             break;
          case HB_SET_STRICTREAD :
-            hb_retl( hb_set.HB_SET_STRICTREAD );
+            hb_retl( hb_setGetL( HB_SET_STRICTREAD ) );
             break;
 */
          default:
@@ -135,13 +148,13 @@ static void adsSetSend( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsSetSend()"));
 
-   AdsSetDateFormat( (UNSIGNED8*) hb_set.HB_SET_DATEFORMAT );
-   AdsSetDefault( (UNSIGNED8*) hb_set.HB_SET_DEFAULT );
-   AdsShowDeleted( ! hb_set.HB_SET_DELETED );
-   AdsSetEpoch( hb_set.HB_SET_EPOCH );
-   AdsSetExact( hb_set.HB_SET_EXACT );
-   AdsSetSearchPath( (UNSIGNED8*) hb_set.HB_SET_PATH );
-   AdsSetDecimals( (UNSIGNED16) hb_set.HB_SET_DECIMALS );
+   AdsSetDateFormat( (UNSIGNED8*) hb_setGetCPtr( HB_SET_DATEFORMAT ) );
+   AdsSetDefault( (UNSIGNED8*) hb_setGetCPtr( HB_SET_DEFAULT ) );
+   AdsShowDeleted( ! hb_setGetL( HB_SET_DELETED ) );
+   AdsSetEpoch( hb_setGetNI( HB_SET_EPOCH ) );
+   AdsSetExact( hb_setGetL( HB_SET_EXACT ) );
+   AdsSetSearchPath( (UNSIGNED8*) hb_setGetCPtr( HB_SET_PATH ) );
+   AdsSetDecimals( (UNSIGNED16) hb_setGetNI( HB_SET_DECIMALS ) );
 }
 
 static ERRCODE commonError( ADSAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
@@ -1742,7 +1755,7 @@ static ERRCODE adsFlush( ADSAREAP pArea )
    {
       AdsWriteRecord( pArea->hTable );
 #if ADS_REQUIRE_VERSION >= 6
-      if( hb_set.HB_SET_HARDCOMMIT )
+      if( hb_setGetL( HB_SET_HARDCOMMIT ) )
       {
          AdsFlushFileBuffers( pArea->hTable );
       }
@@ -2531,7 +2544,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    uRetVal = AdsCreateTable( hConnection, pCreateInfo->abName, pCreateInfo->atomAlias,
                              pArea->iFileType, adsCharType,
                              adsLockType, adsRights,
-                             hb_set.HB_SET_MBLOCKSIZE,
+                             hb_setGetNL( HB_SET_MBLOCKSIZE ),
                              ucfieldDefs, &hTable );
    hb_xfree( ucfieldDefs );
 
@@ -2969,12 +2982,12 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       return FAILURE;
    }
 
-   if( hb_set.HB_SET_AUTORDER )
+   if( hb_setGetNI( HB_SET_AUTORDER ) )
    {
       DBORDERINFO pOrderInfo;
       pOrderInfo.itmResult = hb_itemPutNI( NULL, 0 );
       pOrderInfo.itmNewVal = NULL;
-      pOrderInfo.itmOrder  = hb_itemPutNI( NULL, hb_set.HB_SET_AUTORDER );
+      pOrderInfo.itmOrder  = hb_itemPutNI( NULL, hb_setGetNI( HB_SET_AUTORDER ) );
       pOrderInfo.atomBagName = NULL;
       SELF_ORDLSTFOCUS( ( AREAP ) pArea, &pOrderInfo );
       hb_itemRelease( pOrderInfo.itmOrder );
@@ -4093,7 +4106,7 @@ static ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
          char * szFilter = hb_adsOemToAnsi( pucFilter,
                                  hb_itemGetCLen( pFilterInfo->abFilterText ) );
 
-         if( hb_set.HB_SET_OPTIMIZE )
+         if( hb_setGetL( HB_SET_OPTIMIZE ) )
          {
             u32RetVal = AdsSetAOF( pArea->hTable, (UNSIGNED8*) szFilter, usResolve );
          }
@@ -4700,6 +4713,8 @@ HB_FUNC( ADS ) { ; }
 static void hb_adsRddInit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
+
+   HB_ADS_SET_INIT();
 
    if( hb_rddRegister( "ADS", RDT_FULL ) > 1 ||
        hb_rddRegister( "ADT", RDT_FULL ) > 1 ||

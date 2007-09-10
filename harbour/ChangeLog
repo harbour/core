@@ -8,6 +8,32 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-10 19:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+    + added HB_IMPORT macro
+
+  * harbour/include/hbset.h
+    * declare hb_set with HB_IMPORT attribute when HB_SET_IMPORT macro is set
+    + added macros to retrieve information from hb_set structure:
+      hb_setGetCPtr(), hb_setGetNI(), hb_setGetNL(), hb_setGetL()
+      In the future these macros will be replaced by functions and
+      direct access to hb_set structure from non core code will be
+      forbidden so please update your code and and replace all
+         hb_set.HB_SET_*
+      with
+         hb_setGet*( HB_SET_* )
+      f.e. replace:
+         hb_set.HB_SET_SOFTSEEK
+      with:
+         hb_setGetL( HB_SET_SOFTSEEK )
+      I'll also add hb_setPut*() functions to assign some set values.
+      Both hb_setGet*() and hb_setPut*() functions will validate parameters
+      and in future MT mode will operate on global or thread local structures.
+
+  * harbour/contrib/rdd_ads/ads1.c
+    * define HB_SET_IMPORT before #include "hbset.h"
+    * use hb_setGet*() to access SET values
+
 2007-09-10 17:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/dbinfo.ch
   * harbour/source/rdd/workarea.c

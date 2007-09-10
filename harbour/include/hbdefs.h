@@ -1155,6 +1155,35 @@ typedef PHB_FUNC HB_FUNC_PTR;
    #define HB_EXPORT
 #endif
 
+#if defined( __RSXNT__ )
+   /* RSXNT does not support any type of export keyword.
+      Exported (i.e., public) names can be obtained via
+      the emxexp utility and the output can be used for
+      input to a module definition file. See emxdev.doc
+      in the RSXNT doc/ directory for more information. */
+   #define HB_IMPORT
+
+#elif defined( __GNUC__ ) && defined( HB_OS_WIN_32 )
+   #define HB_IMPORT __attribute__ (( dllimport ))
+
+#elif defined( __BORLANDC__ )
+   #define HB_IMPORT _declspec( dllimport )
+
+#elif defined( __WATCOMC__ )
+   #define HB_IMPORT __declspec( dllimport )
+
+#elif defined( ASANLM ) || defined( ASANT )
+   #define HB_IMPORT
+
+#elif defined( WIN32 )
+   #define HB_IMPORT _declspec( dllimport )
+
+#else
+   #define HB_IMPORT
+
+#endif
+
+
 /* Function declaration macros */
 
 /* NOTE: The prefix is "HB_FUN_" currently, this is needed to

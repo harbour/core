@@ -214,8 +214,6 @@ typedef struct
 #define HB_SET_DBFLOCK_CL53       2
 #define HB_SET_DBFLOCK_VFP        3
 
-extern HB_SET_STRUCT hb_set;
-
 extern void hb_setInitialize( void );
 extern void hb_setRelease( void );
 extern HB_PATHNAMES * hb_setGetFirstSetPath( void );
@@ -230,6 +228,18 @@ typedef void HB_SET_LISTENER_CALLBACK( HB_set_enum, HB_set_listener_enum );
 extern int hb_setListenerAdd( HB_SET_LISTENER_CALLBACK * );
 extern void hb_setListenerNotify( HB_set_enum, HB_set_listener_enum );
 extern int hb_setListenerRemove( int );
+
+#if defined( HB_SET_IMPORT )
+   extern HB_IMPORT HB_SET_STRUCT hb_set;
+#else
+   extern HB_SET_STRUCT hb_set;
+#endif
+
+/* These macros will be replaced by functions */
+#define hb_setGetCPtr( set )        ( ( char * ) hb_set.set )
+#define hb_setGetNI( set )          ( ( int ) hb_set.set )
+#define hb_setGetNL( set )          ( ( long ) hb_set.set )
+#define hb_setGetL( set )           ( ( BOOL ) hb_set.set )
 
 HB_EXTERN_END
 
