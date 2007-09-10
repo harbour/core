@@ -658,7 +658,7 @@ ERRCODE adsCloseCursor( ADSAREAP pArea )
 
       if( u32RetVal != AE_SUCCESS )
       {
-         HB_TRACE(HB_TR_ALWAYS, ("adsCloseTable failed (%lu, %s)", u32RetVal, pArea->szDataFileName));
+         HB_TRACE(HB_TR_DEBUG, ("adsCloseTable failed (%lu, %s)", u32RetVal, pArea->szDataFileName));
       }
       pArea->hTable = 0;
    }
@@ -1316,16 +1316,7 @@ static ERRCODE adsAppend( ADSAREAP pArea, BOOL fUnLockAll )
       if( pArea->fShared && !pArea->fFLocked )
       {
          ULONG ulRecNo;
-         /*
-          * Brian, please ask about it ExtSys guys.
-          * Does it create race condition (the implicit lock is removed
-          * and then the explicit one set) or just simply the flag indicating
-          * lock type is changed only. We have to know that.
-          * Without explicit locking the lock on appended record will be
-          * removed on any record movement or flushing. It may cause very
-          * serious synchronization problems in programs written for other
-          * RDDs and then ported to ADS. Druzus.
-          */
+
          if( SELF_RECNO( ( AREAP ) pArea, &ulRecNo ) == SUCCESS )
          {
             /* to avoid unnecessary record refreshing after locking */
@@ -3020,7 +3011,7 @@ static ERRCODE adsSysName( ADSAREAP pArea, BYTE * pBuffer )
       u32RetVal = AdsGetTableType( pArea->hTable, &u16TableType );
       if( u32RetVal != AE_SUCCESS )
       {
-         HB_TRACE(HB_TR_ALWAYS, ("Error in adsSysName: %d  pArea->hTable %d\n", u32RetVal, pArea->hTable));
+         HB_TRACE(HB_TR_DEBUG, ("Error in adsSysName: %d  pArea->hTable %d\n", u32RetVal, pArea->hTable));
          u16TableType = (UNSIGNED16) pArea->iFileType;
       }
    }
