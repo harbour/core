@@ -1444,7 +1444,7 @@ METHOD ShowGetMsg( aMsg ) CLASS HBGetList
    HB_SYMBOL_UNUSED( aMsg )
 #endif
 
-   RETURN NIL
+   RETURN Self
 
 METHOD EraseGetMsg( aMsg ) CLASS HBGetList
 
@@ -1464,7 +1464,7 @@ METHOD EraseGetMsg( aMsg ) CLASS HBGetList
    HB_SYMBOL_UNUSED( aMsg )
 #endif
 
-   RETURN NIL
+   RETURN Self
 
 #endif
 

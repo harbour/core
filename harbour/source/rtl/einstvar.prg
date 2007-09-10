@@ -73,7 +73,11 @@ FUNCTION _eInstVar( oVar, cMethod, xValue, cType, nSubCode, bValid )
       oError:severity := 2
       oError:cansubstitute := .T.
       oError:subsystem := oVar:classname
+#ifdef HB_C52_STRICT
+      HB_SYMBOL_UNUSED( cMethod )
+#else
       oError:operation := cMethod
+#endif
       oError:subcode := nSubCode
       oError:args := { xValue }
       xValue := EVAL( ERRORBLOCK(), oError )

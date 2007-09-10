@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-10 12:01 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/color53.prg
+     + Added HB_COMPAT_C53 guards.
+
+   * source/rtl/tgetlist.prg
+     + Two new methods to return Self rather than NIL.
+
+   * source/rtl/einstvar.prg
+     + Added HB_C52_STRICT branch.
+
+   * source/rtl/tbrowse.prg
+     + Continued prev. changed.
+
 2007-09-10 03:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/scrollbr.prg
    * source/rtl/tpopup.prg

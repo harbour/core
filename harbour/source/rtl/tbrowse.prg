@@ -503,6 +503,8 @@ METHOD delColumn( nPos ) CLASS TBrowse
    ASize( ::aColsWidth, ::nColumns )
    ADel( ::aColsPos, nPos )
    ASize( ::aColsPos, ::nColumns )
+   ADel( ::aColsInfo, nPos )
+   ASize( ::aColsInfo, ::nColumns )
 
    if ::nColumns < ::nFrozenCols
       ::nFrozenCols := 0
