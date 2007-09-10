@@ -69,8 +69,6 @@ CREATE CLASS SCROLLBAR FUNCTION HBScrollBar
 
    EXPORT:
 
-   VAR ClassName  INIT "SCROLLBAR"
-
    VAR cargo
 
    METHOD barLength() SETGET

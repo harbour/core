@@ -70,8 +70,6 @@ CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
 
    EXPORT:
 
-   VAR ClassName  INIT "POPUPMENU"
-
    VAR cargo
 #ifdef HB_EXTENSION
    VAR shadowed   INIT .F. AS LOGICAL         /* NOTE: This method is a Harbour extension [vszakats] */
