@@ -77,7 +77,8 @@ static ULONG hb_tokenCount( char * szLine, ULONG ulLen,
          ++ulTokens;
          if( ulDelim == 1 && *szDelim == ' ' )
          {
-            while( ++ul < ulLen && szLine[ ul ] == ' ' );
+            while( ul + 1 < ulLen && szLine[ ul + 1 ] == ' ' )
+               ++ul;
          }
          ul += ulDelim - 1;
       }
@@ -115,7 +116,7 @@ static char * hb_tokenGet( char * szLine, ULONG ulLen,
          }
          if( ulDelim == 1 && *szDelim == ' ' )
          {
-            while( ul < ulLen && szLine[ ul + 1 ] == ' ' )
+            while( ul + 1 < ulLen && szLine[ ul + 1 ] == ' ' )
                ++ul;
          }
          ulStart = ul + ulDelim;
@@ -159,7 +160,7 @@ static PHB_ITEM hb_tokenArray( char * szLine, ULONG ulLen,
             hb_itemPutCL( hb_arrayGetItemPtr( pArray, ++ulToken ), szLine + ulStart, ul - ulStart );
             if( ulDelim == 1 && *szDelim == ' ' )
             {
-               while( ul < ulLen && szLine[ ul + 1 ] == ' ' )
+               while( ul + 1 < ulLen && szLine[ ul + 1 ] == ' ' )
                   ++ul;
             }
             ulStart = ul + ulDelim;
