@@ -157,6 +157,7 @@ PRG_SOURCES=\
 	getlist.prg  \
 	getsys.prg   \
 	gui.prg      \
+	hbini.prg    \
 	input.prg    \
 	listbox.prg  \
 	logical.prg  \

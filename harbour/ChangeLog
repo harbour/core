@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-10 17:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/dbinfo.ch
+  * harbour/source/rdd/workarea.c
+    * renamed RDDI_TRIGGERS to RDDI_TRIGGER
+    + added RDDI_PENDINGTRIGGER, RDDI_PENDINGPASSWORD,
+      DBI_TRIGGER, DBI_OPENINFO
+    * do not generate RT error in WA default ORDERINFO() method
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/hbini.prg
+    + added HB_ReadIni()/HB_WriteIni() - code by Giancarlo Niccolai
+      borowed from xHarbour with some minor fixes
+
 2007-09-10 12:01 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/color53.prg
      + Added HB_COMPAT_C53 guards.

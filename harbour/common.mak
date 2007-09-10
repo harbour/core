@@ -545,6 +545,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\getlist$(OBJEXT)  \
     $(OBJ_DIR)\getsys$(OBJEXT)   \
     $(OBJ_DIR)\gui$(OBJEXT)      \
+    $(OBJ_DIR)\hbini$(OBJEXT)    \
     $(OBJ_DIR)\input$(OBJEXT)    \
     $(OBJ_DIR)\listbox$(OBJEXT)  \
     $(OBJ_DIR)\logical$(OBJEXT)  \
