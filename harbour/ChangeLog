@@ -13,7 +13,7 @@
    * contrib/libct/dattime2.c
    * contrib/samples/date.c
    * contrib/bmdbfcdx/bmdbfcdx1.c
-     * Changed hb_set. access to hb_setGet*() in all 
+     * Changed hb_set.* access to hb_setGet*() in all 
        contrib code.
 
    * source/rtl/hbini.prg
@@ -86,7 +86,7 @@
      + Added HB_C52_STRICT branch.
 
    * source/rtl/tbrowse.prg
-     + Continued prev. changed.
+     + Continued prev. changes.
 
 2007-09-10 03:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/scrollbr.prg
