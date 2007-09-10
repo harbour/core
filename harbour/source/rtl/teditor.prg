@@ -463,7 +463,7 @@ METHOD RefreshWindow() CLASS HBEditor
 
    // Clear rest of editor window (needed when deleting lines of text)
    if ::naTextLen < ::nNumRows
-      cOldColor = SetColor( ::cColorSpec )
+      cOldColor := SetColor( ::cColorSpec )
       Scroll( ::nTop + ::naTextLen, ::nLeft, ::nBottom, ::nRight )
       SetColor( cOldColor )
    endif
@@ -1048,7 +1048,7 @@ STATIC PROCEDURE BrowseText( oSelf, nPassedKey )
 
          nKey := InKey( 0 )
       else
-         nKey = nPassedKey
+         nKey := nPassedKey
       endif
 
       if ( bKeyBlock := Setkey( nKey ) ) != NIL

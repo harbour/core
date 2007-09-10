@@ -61,7 +61,7 @@ CREATE CLASS HBMemoEditor FROM HBEditor
 
    VAR xUserFunction                      // User Function called to change default MemoEdit() behaviour
 
-   METHOD MemoInit( cUserFunction )       // This method is called after ::New() returns to perform ME_INIT actions
+   METHOD MemoInit( xUserFunction )       // This method is called after ::New() returns to perform ME_INIT actions
    METHOD Edit()                          // Calls super:Edit(nKey) but is needed to handle configurable keys
    METHOD KeyboardHook( nKey )            // Gets called every time there is a key not handled directly by HBEditor
    METHOD IdleHook()                      // Gets called every time there are no more keys to hanlde
@@ -73,12 +73,12 @@ CREATE CLASS HBMemoEditor FROM HBEditor
 
 ENDCLASS
 
-METHOD MemoInit( cUserFunction ) CLASS HBMemoEditor
+METHOD MemoInit( xUserFunction ) CLASS HBMemoEditor
 
    LOCAL nKey
 
    // Save/Init object internal representation of user function
-   ::xUserFunction := cUserFunction
+   ::xUserFunction := xUserFunction
 
    if ISCHARACTER( ::xUserFunction )
       // Keep calling user function until it returns 0
@@ -149,13 +149,13 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
 
    if nKey == K_ESC
 
-      cBackScr = SaveScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight )
+      cBackScr := SaveScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight )
 
-      nRow = Row()
-      nCol = Col()
+      nRow := Row()
+      nCol := Col()
       @ ::nTop, ::nRight - 18 SAY "Abort Edit? (Y/N)"
 
-      nYesNoKey = Inkey( 0 )
+      nYesNoKey := Inkey( 0 )
 
       RestScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight, cBackScr )
       SetPos( nRow, nCol )
@@ -241,7 +241,7 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
 METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 
    if nKey == K_CTRL_END // same value as CTRL-W
-      ::lSaved = .t.
+      ::lSaved := .t.
       ::lExitEdit := .T.
    else
       RETURN ::Super:MoveCursor( nKey )
@@ -255,7 +255,7 @@ FUNCTION MemoEdit( cString,;
                    nTop, nLeft,;
                    nBottom, nRight,;
                    lEditMode,;
-                   cUserFunction,;
+                   xUserFunction,;
                    nLineLength,;
                    nTabSize,;
                    nTextBuffRow,;
@@ -280,15 +280,15 @@ FUNCTION MemoEdit( cString,;
 
    // Original MemoEdit() converts Tabs into spaces;
    oEd := HBMemoEditor():New( StrTran( cString, Chr( K_TAB ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize )
-   oEd:MemoInit( cUserFunction )
+   oEd:MemoInit( xUserFunction )
    oEd:RefreshWindow()
 
-   if ! ISLOGICAL( cUserFunction ) .OR. cUserFunction == .T.
+   if ! ISLOGICAL( xUserFunction ) .OR. xUserFunction == .T.
       oEd:Edit()
       if oEd:Saved()
          cString := oEd:GetText()
          // dbu tests for LastKey() == K_CTRL_END, so I try to make it happy
-         KEYBOARD Chr(K_CTRL_END)
+         KEYBOARD Chr( K_CTRL_END )
          Inkey()
       endif
    endif

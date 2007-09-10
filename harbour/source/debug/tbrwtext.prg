@@ -96,7 +96,7 @@ CREATE CLASS HBBrwText FROM HBEditor
 
 ENDCLASS
 
-METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers) CLASS HBBrwText
+METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers ) CLASS HBBrwText
 
    DEFAULT cColor TO SetColor()
    DEFAULT lLineNumbers TO .T.

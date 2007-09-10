@@ -52,230 +52,162 @@
 
 #include "common.ch"
 
-Function GETCLRPAIR( cColor, nColor )
-   Local nPos
+FUNCTION GetClrPair( cColor, nColor )
+   LOCAL nPos
 
-   if ( nPos := getpairpos( cColor, nColor ) ) == 0
-      Return ""
-   endif
+   IF ( nPos := GetPairPos( cColor, nColor ) ) == 0
+      RETURN ""
+   ENDIF
 
-   Return SubStr( cColor, nPos, getpairlen( cColor, nColor ) )
+   RETURN SubStr( cColor, nPos, GetPairLen( cColor, nColor ) )
 
-****************************************************************
-Function SETCLRPAIR( cColor, nColor, cNewColor )
-   Local nPos
+FUNCTION SetClrPair( cColor, nColor, cNewColor )
+   LOCAL nPos
 
-   if ( nPos := getpairpos( cColor, nColor ) ) == 0
-      Return ""
-   endif
+   IF ( nPos := GetPairPos( cColor, nColor ) ) == 0
+      RETURN ""
+   ENDIF
 
-   Return stuff( cColor, nPos, getpairlen( cColor, nColor ), cNewColor )
+   RETURN Stuff( cColor, nPos, GetPairLen( cColor, nColor ), cNewColor )
 
-****************************************************************
-Function GETPAIRPOS( cColor, nColor )
-   Local n, nPos := 1, nSep
+FUNCTION GetPairPos( cColor, nColor )
+   LOCAL nPos := 1
+   LOCAL nSep
+   LOCAL n
 
-   For n := 2 To nColor
-      nSep := At( ",", SubStr( cColor, nPos) )
-      if nSep == 0
-         nPos := 0
-         Exit
-      endif
+   FOR n := 2 TO nColor
+      IF ( nSep := At( ",", SubStr( cColor, nPos ) ) ) == 0
+         RETURN 0
+      ENDIF
       nPos += nSep
-   Next
+   NEXT
 
-   Return nPos
+   RETURN nPos
 
-****************************************************************
-Function GETPAIRLEN( cColor, nColor )
-   Local nPos := getpairpos( cColor, nColor ), nLen
+FUNCTION GetPairLen( cColor, nColor )
+   LOCAL nPos := GetPairPos( cColor, nColor )
+   LOCAL nLen
 
-   if nPos == 0
-      Return 0
-   endif
+   IF nPos == 0
+      RETURN 0
+   ENDIF
 
    nLen := At( ",", SubStr( cColor, nPos ) )
+   
+   RETURN iif( nLen == 0, Len( cColor ) - nPos + 1, nLen - 1 )
 
-   if nLen == 0
-      nLen := Len( cColor ) - nPos + 1
-   Else
-      nLen--
-   endif
+FUNCTION GetClrFore( cColor )
+   LOCAL nPos
 
-   Return nLen
+   IF ( nPos := At( "/", cColor ) ) == 0
+      RETURN ""
+   ENDIF
 
-****************************************************************
-Function GETCLRFORE( cColor )
-   Local nPos
+   RETURN SubStr( cColor, 1, nPos - 1 )
 
-   if ( nPos := At( "/", cColor ) ) == 0
-      Return ""
-   endif
+FUNCTION GetClrBack( cColor )
+   LOCAL nPos
 
-   Return SubStr( cColor, 1, nPos - 1 )
+   IF ( nPos := At( "/", cColor ) ) == 0
+      RETURN ""
+   ENDIF
 
-****************************************************************
-Function GETCLRBACK( cColor )
-   Local nPos
+   RETURN SubStr( cColor, nPos + 1 )
 
-   if ( nPos := At( "/", cColor ) ) == 0
-      Return ""
-   endif
+FUNCTION RADGRDefCo( cColor )
+   RETURN iif( IsDefColor(),;
+      ApplyDefau( cColor, "W/N", "W/N", "W+/N" ),;
+      ApplyDefau( cColor, 3, 1, 4 ) )
 
-   Return SubStr( cColor, nPos + 1 )
+FUNCTION RADITDefCo( cColor )
+   RETURN iif( IsDefColor(),;
+      ApplyDefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N" ),;
+      ApplyDefau( cColor, 5, 5, 2, 2, 1, 1, 4 ) )
 
-****************************************************************
-Function RADGRDEFCO( cColor )
+FUNCTION LISTBDefCo( cColor )
+   RETURN iif( IsDefColor(),;
+      ApplyDefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N" ),;
+      ApplyDefau( cColor, 5, 5, 5, 2, 3, 1, 4 ) )
 
-   if isdefcolor()
-      Return applydefau( cColor, "W/N", "W/N", "W+/N")
-   Else
-      Return applydefau( cColor, 3, 1, 4)
-   endif
+FUNCTION COMBODefCo( cColor )
+   RETURN iif( IsDefColor(),;
+      ApplyDefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N", "W/N" ),;
+      ApplyDefau( cColor, 5, 5, 5, 2, 3, 1, 4, 1 ) )
 
-   Return nil
+FUNCTION CHECKDefCo( cColor )
+   RETURN iif( IsDefColor(),;
+      ApplyDefau( cColor, "W/N", "W+/N", "W/N", "W+/N" ),;
+      ApplyDefau( cColor, 5, 2, 1, 4 ) )
 
-****************************************************************
-Function RADITDEFCO( cColor )
+FUNCTION BUTTNDefCo( cColor )
+   RETURN iif( IsDefColor(),;
+      ApplyDefau( cColor, "W/N", "N/W", "W+/N", "W+/N" ),;
+      ApplyDefau( cColor, 5, 2, 1, 4 ) )
 
-   if isdefcolor()
-      Return applydefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N")
-   Else
-      Return applydefau( cColor, 5, 5, 2, 2, 1, 1, 4)
-   endif
+FUNCTION MENUDefCol( cColor )
+   RETURN iif( IsDefColor(),;
+      ApplyDefau( cColor, "N/W", "W/N", "W+/W", "W+/N", "N+/W", "W/N" ),;
+      ApplyDefau( cColor, 5, 2, 4, 2, 1, 3 ) )
 
-   Return nil
+FUNCTION ApplyDefau( cColor, xClr1, xClr2, xClr3, xClr4, xClr5, xClr6, xClr7, xClr8 )
 
-****************************************************************
-Function LISTBDEFCO( cColor )
+   LOCAL cSetColor
+   LOCAL aSetColor
+   LOCAL aNewcolor
+   LOCAL nColors
+   LOCAL cClrDefa
+   LOCAL cClrToSet
+   LOCAL cClrFore
+   LOCAL cClrBack
+   LOCAL xNewColor
+   LOCAL n
 
-   if isdefcolor()
-      Return applydefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N")
-   Else
-      Return applydefau( cColor, 5, 5, 5, 2, 3, 1, 4)
-   endif
+   IF PCount() == 0
+      RETURN ""
+   ELSEIF PCount() == 1
+      RETURN cColor
+   ENDIF
 
-   Return nil
+   cSetColor := SetColor()
 
-****************************************************************
-Function COMBODEFCO( cColor )
+   aSetColor := {;
+      GetClrPair( cSetColor, 1 ) ,;
+      GetClrPair( cSetColor, 2 ) ,;
+      GetClrPair( cSetColor, 3 ) ,;
+      GetClrPair( cSetColor, 4 ) ,;
+      GetClrPair( cSetColor, 5 ) }
 
-   if isdefcolor()
-      Return applydefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N", "W/N")
-   Else
-      Return applydefau( cColor, 5, 5, 5, 2, 3, 1, 4, 1)
-   endif
-
-   Return nil
-
-****************************************************************
-Function CHECKDEFCO( cColor )
-
-   if isdefcolor()
-      Return applydefau( cColor, "W/N", "W+/N", "W/N", "W+/N")
-   Else
-      Return applydefau( cColor, 5, 2, 1, 4)
-   endif
-
-   Return nil
-
-****************************************************************
-Function BUTTNDEFCO( cColor )
-
-   if isdefcolor()
-      Return applydefau( cColor, "W/N", "N/W", "W+/N", "W+/N")
-   Else
-      Return applydefau( cColor, 5, 2, 1, 4)
-   endif
-
-   Return nil
-
-****************************************************************
-Function MENUDEFCOL( cColor )
-
-   if isdefcolor()
-      Return applydefau( cColor, "N/W", "W/N", "W+/W", "W+/N", "N+/W", "W/N")
-   Else
-      Return applydefau( cColor, 5, 2, 4, 2, 1, 3)
-   endif
-
-   Return nil
-
-****************************************************************
-Function APPLYDEFAU( cColor, xClr1, xClr2, xClr3, xClr4, xClr5, xClr6, xClr7, xClr8 )
-   Local cSetColor, aSetColor := {}, aNewcolor := {}, nColors, cClrDefa
-   Local cClrToSet, cClrFore, cClrBack
-   Local cNewClrFore, cNewClrBack, xNewColor, n
-
-   if PCount() == 0
-      Return ""
-   endif
-
-   if PCount() == 1
-      Return cColor
-   endif
-
-   cSetColor := setcolor()
-
-   asize( aSetColor, 5)
-   aSetColor[1] := getclrpair( cSetColor, 1 )
-   aSetColor[2] := getclrpair( cSetColor, 2 )
-   aSetColor[3] := getclrpair( cSetColor, 3 )
-   aSetColor[4] := getclrpair( cSetColor, 4 )
-   aSetColor[5] := getclrpair( cSetColor, 5 )
-
-   asize( aNewColor, 8)
-   aNewColor[1] := xClr1
-   aNewColor[2] := xClr2
-   aNewColor[3] := xClr3
-   aNewColor[4] := xClr4
-   aNewColor[5] := xClr5
-   aNewColor[6] := xClr6
-   aNewColor[7] := xClr7
-   aNewColor[8] := xClr8
+   aNewColor := {;
+      xClr1 ,;
+      xClr2 ,;
+      xClr3 ,;
+      xClr4 ,;
+      xClr5 ,;
+      xClr6 ,;
+      xClr7 ,;
+      xClr8 }
 
    nColors  := PCount() - 1
    cClrDefa := cColor
 
-   for n = 1 to Len( aNewColor )
-       xNewColor = aNewColor[ n ]
+   FOR n := 1 TO nColors
 
-      cClrToSet := getclrpair( cClrDefa, n )
+      xNewColor := aNewColor[ n ]
+      cClrToSet := GetClrPair( cClrDefa, n )
 
-      if At( "/", cClrToSet ) == 0
+      IF "/" $ cClrToSet
 
-         if ISNUMBER( xNewColor )
-            cClrDefa := setclrpair( cClrDefa, n, aSetColor[ xNewColor ] )
-         Else
-            cClrDefa := setclrpair( cClrDefa, n, xNewColor )
-         endif
+         IF ( cClrFore := GetClrFore( cClrToSet ) ) == ""
+            cClrFore := GetClrFore( iif( ISNUMBER( xNewColor ), aSetColor[ xNewColor ], xNewColor ) )
+         ENDIF
+         IF ( cClrBack := GetClrBack( cClrToSet ) ) == ""
+            cClrBack := GetClrBack( iif( ISNUMBER( xNewColor ), aSetColor[ xNewColor ], xNewColor ) )
+         ENDIF
 
-      else
+         cClrDefa := SetClrPair( cClrDefa, n, cClrFore + "/" + cClrBack )
+      ELSE
+         cClrDefa := SetClrPair( cClrDefa, n, iif( ISNUMBER( xNewColor ), aSetColor[ xNewColor ], xNewColor ) )
+      ENDIF
+   NEXT
 
-         cClrFore := getclrfore( cClrToSet )
-         cClrBack := getclrback( cClrToSet )
-
-         if ISNUMBER( xNewColor )
-            cNewClrFore := getclrfore( aSetColor[ xNewColor ] )
-            cNewClrBack := getclrback( aSetColor[ xNewColor ] )
-         else
-            cNewClrFore := getclrfore( xNewColor )
-            cNewClrBack := getclrback( xNewColor )
-         endif
-
-         if cClrFore == ""
-            cClrFore := cNewClrFore
-         endif
-
-         if cClrBack == ""
-            cClrBack := cNewClrBack
-         endif
-
-         cClrToSet := cClrFore + "/" + cClrBack
-         cClrDefa  := setclrpair( cClrDefa, n, cClrToSet )
-
-      endif
-
-   Next
-   Return cClrDefa
-
+   RETURN cClrDefa

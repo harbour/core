@@ -116,7 +116,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
    oBrwSets:AddColumn( oCol := TBColumnNew( "", { || ::arrayName + "[" + LTrim( Str( oBrwSets:cargo[ 1 ], 6 ) ) + "]" } ) )
    oCol:width := Len( ::arrayName + "[" + LTrim( Str( Len( aArray ), 6 ) ) + "]" )
    oCol:DefColor := { 1, 2 }
-   nColWidth = oCol:Width
+   nColWidth := oCol:Width
 
    oBrwSets:AddColumn( oCol := TBColumnNew( "", { || PadR( __dbgValToStr( aArray[ oBrwSets:cargo[ 1 ] ] ), nWidth - nColWidth - 1 ) } ) )
 
@@ -182,7 +182,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
    READ
 
    IF LastKey() == K_ENTER
-      pItem[ nSet ] = &cValue
+      pItem[ nSet ] := &cValue
    ENDIF
 
    SetCursor( SC_NONE )

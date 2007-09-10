@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-10 03:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/color53.prg
+     ! Fixed ApplyDefau().
+     % Optimized.
+
+   * source/debug/tbrwtext.prg
+     ! Minor formatting.
+
+   * source/rtl/memoedit.prg
+     ! Variable name cleanup.
+
+   * source/rtl/memoedit.prg
+   * source/rtl/symbol.prg
+   * source/rtl/color53.prg
+   * source/rtl/teditor.prg
+   * source/debug/dbgthsh.prg
+   * source/debug/dbgtarr.prg
+     ! "=" operators changed to ":=" (or "==" as per context)
+
 2007-09-10 01:53 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tgetlist.prg
      ! Fixed two typos in previous commit.

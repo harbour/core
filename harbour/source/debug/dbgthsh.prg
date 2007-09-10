@@ -122,7 +122,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
    hb_HEval( hHash, {| k, v, p | HB_SYMBOL_UNUSED( k ), HB_SYMBOL_UNUSED( v ), nKeyLen := Max( nKeyLen, Len( ::hashName + "[" + HashKeyString( hHash, p ) + "]" ) ) } )
    oCol:width := nKeyLen
    oCol:DefColor := { 1, 2 }
-   nColWidth = oCol:Width
+   nColWidth := oCol:Width
 
    oBrwSets:AddColumn( oCol := TBColumnNew( "" ,{ || PadR( __dbgValToStr( hb_HValueAt( hHash, oBrwSets:cargo[ 1 ] ) ), nWidth - nColWidth - 1 ) } ) )
 
