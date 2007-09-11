@@ -148,7 +148,7 @@ function __dbgShowWorkAreas()
                                   n3 := iif( nSkip > 0, Min( Len( aStruc ), n3 + nSkip ),;
                                           Max( 1, n3 + nSkip ) ), n3 - nPos }
 
-   aBrw[ 3 ]:AddColumn( TBColumnNew( "", { || PadR( aStruc[ n3, 1 ], 11) + ;
+   aBrw[ 3 ]:AddColumn( TBColumnNew( "", { || PadR( aStruc[ n3, 1 ], 11 ) + ;
                                               aStruc[ n3, 2 ] + ;
                                               Str( aStruc[ n3, 3 ], 4 ) + ;
                                               Str( aStruc[ n3, 4 ], 3 ) } ) )
@@ -165,9 +165,9 @@ static function DlgWorkAreaPaint( oDlg, aBrw )
 
    /* Display captions */
 
-   DispOutAt( oDlg:nTop, oDlg:nLeft + 5 , " Area ", oDlg:cColor )
-   DispOutAt( oDlg:nTop, oDlg:nLeft + 28 , " Status ", oDlg:cColor )
-   DispOutAt( oDlg:nTop, oDlg:nLeft + 56 , " Structure ", oDlg:cColor )
+   DispOutAt( oDlg:nTop, oDlg:nLeft + 5, " Area ", oDlg:cColor )
+   DispOutAt( oDlg:nTop, oDlg:nLeft + 28, " Status ", oDlg:cColor )
+   DispOutAt( oDlg:nTop, oDlg:nLeft + 56, " Structure ", oDlg:cColor )
 
    /* Display separator lines */
 
@@ -220,7 +220,7 @@ static function DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
 
    if nKey == K_TAB .or. nKey == K_SH_TAB
       aBrw[ s_nFocus ]:Dehilite()
-      s_nFocus := s_nFocus + iif( nKey == K_TAB, 1, -1)
+      s_nFocus := s_nFocus + iif( nKey == K_TAB, 1, -1 )
       if s_nFocus < 1
          s_nFocus := 3
       endif
@@ -328,7 +328,7 @@ static function DbfInfo( aInfo )
    AAdd( aInfo, Space( 8 ) + "Index order: " + LTrim( Str( IndexOrd() ) ) )
    AAdd( aInfo, Space( 4 ) + "Current Record" )
 
-   for nFor := 1 to Fcount()
+   for nFor := 1 to FCount()
 
       xValue := FieldGet( nFor )
       xType  := ValType( xValue )
@@ -365,10 +365,10 @@ static function UpdateInfo( oDlg, cAlias )
               PadR( LTrim( Str( RecNo() ) ) + "/" + LTrim( Str( LastRec() ) ), 9 ),;
               oDlg:cColor )
 
-   DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 21, iif( Bof(),"Yes" , "No "), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 38, iif( Deleted(),"Yes" , "No "), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 21, iif( Eof(),"Yes" , "No "), oDlg:cColor )
-   DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 38, iif( Found(),"Yes" , "No "), oDlg:cColor )
+   DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 21, iif( Bof(), "Yes", "No " ), oDlg:cColor )
+   DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 38, iif( Deleted(), "Yes", "No " ), oDlg:cColor )
+   DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 21, iif( Eof(), "Yes", "No " ), oDlg:cColor )
+   DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 38, iif( Found(), "Yes", "No " ), oDlg:cColor )
    DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 21, PadR( dbFilter(), 29 ), oDlg:cColor )
    DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 21, PadR( ordKey(), 29 ), oDlg:cColor )
 

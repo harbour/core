@@ -70,6 +70,7 @@ STATIC s_lRTEDetails
 STATIC s_lC5xDump
 
 FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
+   LOCAL uNIL := NIL
    LOCAL nInt01 := 98
    LOCAL cStr01 := "AbC DF 974"
    LOCAL cStr02E := ""
@@ -108,6 +109,18 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    ENDIF
 
    FWrite( s_fhnd, Set( _SET_DATEFORMAT ) + hb_OSNewLine() )
+
+   // ; colorDisp / VarPut / display (::nDispLen recalc)
+
+   SetPos( 14, 14 ) ; o := _GET_( uNIL, "uNIL" )
+   TEST_LINE( o:colorDisp( "GR/N" ) )
+   TEST_LINE( o:VarPut( "<hello>" ) )
+   TEST_LINE( o:display() )
+
+   SetPos( 14, 14 ) ; o := _GET_( uNIL, "uNIL" )
+   TEST_LINE( o:colorSpec := "GR/N" )
+   TEST_LINE( o:VarPut( "<hello>" ) )
+   TEST_LINE( o:display() )
 
    // ; Minus
 

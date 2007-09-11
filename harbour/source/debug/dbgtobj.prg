@@ -68,25 +68,25 @@ CREATE CLASS HBDbObject
    VAR AllNames       INIT {}
    VAR lEditable
 
-   METHOD New( aArray, cVarName, lEditable )
+   METHOD New( oObject, cVarName, lEditable )
    METHOD addWindows( aArray, nRow )
    METHOD doGet( oBrowse, pItem, nSet )
    METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray )
 
 ENDCLASS
 
-METHOD New( aArray, cVarName, lEditable ) CLASS HBDbObject
+METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
 
    LOCAL aTemp
 
    DEFAULT lEditable TO .T.
 
-   FOR EACH aTemp IN __objGetValueList( aArray )
+   FOR EACH aTemp IN __objGetValueList( oObject )
       AAdd( ::pItems, { aTemp[ 1 ], aTemp[ 2 ] } )
       AAdd( ::AllNames, aTemp[ 1 ] )
    NEXT
 
-   FOR EACH aTemp IN __objGetMethodList( aArray )
+   FOR EACH aTemp IN __objGetMethodList( oObject )
       IF !Empty( aTemp )
          AAdd( ::pItems, { aTemp, "Method" } )
          AAdd( ::AllNames, aTemp )
@@ -94,7 +94,7 @@ METHOD New( aArray, cVarName, lEditable ) CLASS HBDbObject
    NEXT
 
    ::objname := cVarName
-   ::TheObj := aArray
+   ::TheObj := oObject
    ::lEditable := lEditable
 
    ::addWindows( ::pItems )
@@ -127,7 +127,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
    nWidth := oWndSets:nRight - oWndSets:nLeft - 1
 
    oBrwSets := TBrowseNew( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
-   ::ArrayReference := aarray
+   ::ArrayReference := aArray
 
    oBrwSets:ColorSpec := __Dbg():ClrModal()
    oBrwSets:GoTopBlock := { || ::Arrayindex := 1 }
@@ -145,12 +145,12 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
 
    oBrwSets:AddColumn( oCol := TBColumnNew( "", { || iif( ISCHARACTER( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. ::ArrayReference[ ::ArrayIndex, 2 ] == "Method",;
       "Method",;
-      PadR( __dbgValToStr( __ObjSendMsg( ::TheObj, ::ArrayReference[ ::arrayindex, 1 ] ) ), nWidth  - 12 ) ) } ) )
+      PadR( __dbgValToStr( __objSendMsg( ::TheObj, ::ArrayReference[ ::arrayindex, 1 ] ) ), nWidth  - 12 ) ) } ) )
 
    oBrwSets:Cargo := 1 // Actual highligthed row
    oCol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
    oCol:width := MaxCol() - 14 - nMaxLen
-   oBrwSets:colpos := 2
+   oBrwSets:colPos := 2
    ::aWindows[ ::nCurWindow ]:bPainted    := { || oBrwSets:ForceStable() }
    ::aWindows[ ::nCurWindow ]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ),;
                                                ::aWindows[ ::nCurWindow ], ::objname, Len( ::Arrayreference ), ::pitems ) }
@@ -203,7 +203,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    SetKey( K_INS, bInsSave )
 
    IF LastKey() == K_ENTER
-      __ObjSendMsg( ::TheObj, "_" + pitem[ nSet, 1 ], &cValue )
+      __objSendMsg( ::TheObj, "_" + pitem[ nSet, 1 ], &cValue )
    ENDIF
 
    // check exit key from get

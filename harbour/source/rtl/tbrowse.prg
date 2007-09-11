@@ -308,6 +308,13 @@ METHOD configure( nMode ) CLASS TBrowse
    ::lFooters := .F.
    ::lRedrawFrame := .T.
 
+   if nMode == 2 .AND. ::nColumns == 1
+      ::leftVisible := 1
+   endif
+   if ::nColumns < ::nFrozenCols
+      ::nFrozenCols := 0
+   endif
+
    // Are there column headers to paint ?
    for n := 1 to ::nColumns
       if ! Empty( ::aColumns[ n ]:Heading )
@@ -375,6 +382,10 @@ METHOD configure( nMode ) CLASS TBrowse
       ::freeze := ::nFrozenCols
    endif
 
+   if nMode == 2
+      ::HowManyCol()
+   endif
+
    #ifdef HB_COMPAT_C53
 
       nLeft := ::n_Left
@@ -391,7 +402,7 @@ METHOD configure( nMode ) CLASS TBrowse
 // Adds a TBColumn object to the TBrowse object
 METHOD addColumn( oCol ) CLASS TBrowse
 
-   ::Moved()
+   ::Moved() /* TOFIX: This logic should go inside ::configure() */
 
    ::nColumns++
 
@@ -400,12 +411,7 @@ METHOD addColumn( oCol ) CLASS TBrowse
    AAdd( ::aColsPos, 0 )
    AAdd( ::aColsInfo, ::InitColumn( oCol, .T. ) )
 
-   if ::nColumns == 1
-      ::leftVisible := 1
-   endif
-
    ::Configure( 2 )
-   ::HowManyCol()
 
    return Self
 
@@ -414,9 +420,11 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
 
    if nPos >= 1
 
-      ::Moved()
+      ::Moved() /* TOFIX: This logic should go inside ::configure() */
       
       if nPos > ::nColumns
+
+         /* NOTE: CA-Cl*pper doesn't do this, but crashes instead. */
 
          ::nColumns++
 
@@ -445,7 +453,6 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
       endif
    
       ::Configure( 2 )
-      ::HowManyCol()
 
    endif
 
@@ -454,9 +461,11 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
 // Replaces one TBColumn object with another
 METHOD setColumn( nPos, oCol ) CLASS TBrowse
 
+   /* NOTE: CA-Cl*pper doesn't check this, but crashes instead. */
+
    if nPos >= 1 .and. nPos <= ::nColumns
 
-      ::Moved()
+      ::Moved() /* TOFIX: This logic should go inside ::configure() */
 
       ::aColumns[ nPos ] := oCol
       ::aColsWidth[ nPos ] := ::SetColumnWidth( oCol )
@@ -464,7 +473,6 @@ METHOD setColumn( nPos, oCol ) CLASS TBrowse
       ::aColsInfo[ nPos ] := ::InitColumn( oCol, .F. )
 
       ::Configure( 2 )
-      ::HowManyCol()
 
    endif
 
@@ -474,9 +482,11 @@ METHOD delColumn( nPos ) CLASS TBrowse
 
    local oCol := ::aColumns[ nPos ] /* NOTE: To keep CA-Cl*pper compatible runtime error generation. [vszakats] */
 
-   ::Moved()
+   ::Moved() /* TOFIX: This logic should go inside ::configure() */
 
    /* Need to adjust variables in case last column is deleted. */
+
+   /* TOFIX: This logic should go inside ::configure() */
 
    if nPos == ::nColPos .or. ;
       nPos == ::nColumns .or.;
@@ -506,12 +516,7 @@ METHOD delColumn( nPos ) CLASS TBrowse
    ADel( ::aColsInfo, nPos )
    ASize( ::aColsInfo, ::nColumns )
 
-   if ::nColumns < ::nFrozenCols
-      ::nFrozenCols := 0
-   endif
-
    ::Configure( 2 )
-   ::HowManyCol()
 
    return oCol
 
@@ -1771,6 +1776,7 @@ METHOD colorSpec( cColorSpec ) CLASS TBrowse
 
    if cColorSpec != NIL
       ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001 )
+      ::Configure( 1 )
    endif
 
    return ::cColorSpec

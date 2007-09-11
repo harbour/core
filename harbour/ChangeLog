@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-11 15:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * tests/rto_get.prg
+   * source/rtl/tget.prg
+     ! Fixed display issue when using display->varput->display 
+       sequence. (Thanks Lorenzo)
+     + Above case added to test suite.
+
+   * source/rtl/tbrowse.prg
+     + Some scattered logic moved inside :Configure()
+     ! Some TOFIX-es added.
+     ! ::ColorSpec() to call Configure().
+
+   * source/debug/dbgtobj.prg
+   * source/debug/dbgwa.prg
+     + Formatting, var name cleanup.
+
 2007-09-11 00:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbcompat.ch
    * include/hbextern.ch
