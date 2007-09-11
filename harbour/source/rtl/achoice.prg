@@ -45,7 +45,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    LOCAL bAction
    LOCAL cKey
 
-   LOCAL bSelect   := {|x,y| if(ISLOGICAL(x), x, if(!Empty( x ), (y := &( x ),if(ISLOGICAL(y), y, .T.)), .T.)) }
+   LOCAL bSelect   := { | x, y | iif( ISLOGICAL( x ), x, iif( !Empty( x ), ( y := &( x ), iif( ISLOGICAL( y ), y, .T. ) ), .T.) ) }
 
    ColorSelect( CLR_STANDARD )
 
@@ -535,16 +535,11 @@ STATIC PROCEDURE DispLine( cLine, nRow, nCol, lSelect, lHiLite, nNumCols )
    ColorSelect( iif( lSelect .AND. ISCHARACTER( cLine ), ;
                 iif( lHiLite, CLR_ENHANCED, CLR_STANDARD ), CLR_UNSELECTED ) )
 
-   IF ISCHARACTER( cLine )
-      DispOutAt( nRow, nCol, PadR( cLine, nNumCols ) )
-   ELSE
-      DispOutAt( nRow, nCol, Space( nNumCols ) )
-   ENDIF
+   DispOutAt( nRow, nCol, iif( ISCHARACTER( cLine ), PadR( cLine, nNumCols ), Space( nNumCols ) ) )
 
    ColorSelect( CLR_STANDARD )
 
    RETURN
-
 
 STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, bSelect, alSelect, acItems )
 
@@ -577,6 +572,4 @@ STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, bSelect, alSelect, acI
       nLastItem := nItems
    ENDIF
 
-
    RETURN nMode
-

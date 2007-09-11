@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-11 23:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/hbgtcore.c
+     ! Fixed handling of some strangely formatted colorstrings
+       mainly inside TGet(). The low-level functionality 
+       modified is the colorstring to number conversion. The 
+       only change is to continue (and not exit) on a non-std 
+       char.
+
+   * utils/hbtest/rt_misc.prg
+     + Added some color string parsing tests. Some of them fail.
+
+   * source/rtl/achoice.prg
+   * source/debug/debugger.prg
+   * utils/hbtest/hbtest.prg
+   * utils/hbtest/rt_array.prg
+     * Formatting.
+
 2007-09-11 15:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * tests/rto_get.prg
    * source/rtl/tget.prg
@@ -17,7 +34,7 @@
 
    * source/rtl/tbrowse.prg
      + Some scattered logic moved inside :Configure()
-     ! Some TOFIX-es added.
+     + Some TOFIXes added.
      ! ::ColorSpec() to call Configure().
 
    * source/debug/dbgtobj.prg

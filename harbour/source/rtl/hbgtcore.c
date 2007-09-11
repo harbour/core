@@ -382,8 +382,6 @@ static int  hb_gt_def_ColorNum( const char * szColorString )
                   iColor <<= 4;
                nColor |= iColor & 0xff;
             }
-            else
-               return 0;
       }
    }
 

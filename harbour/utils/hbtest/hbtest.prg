@@ -407,8 +407,8 @@ STATIC FUNCTION TEST_END()
 
    dbSelectArea( "w_TEST" )
    dbCloseArea()
-   fErase( "!TEMP!.dbf" )
-   fErase( "!TEMP!.dbt" )
+   FErase( "!TEMP!.dbf" )
+   FErase( "!TEMP!.dbt" )
 
    s_nEndTime := Seconds()
 
