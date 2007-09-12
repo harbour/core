@@ -192,6 +192,7 @@ typedef struct _DBFAREA
    BOOL     fAutoInc;               /* WorkArea with auto increment fields */
    BOOL     fHasMemo;               /* WorkArea with Memo fields */
    BOOL     fHasTags;               /* WorkArea with MDX or CDX index */
+   BOOL     fModStamp;              /* WorkArea with modification autoupdate fields */
    BOOL     fDataFlush;             /* data was written to DBF and not commited */
    BOOL     fMemoFlush;             /* data was written to MEMO and not commited */
    BOOL     fShared;                /* Shared file */
@@ -206,6 +207,7 @@ typedef struct _DBFAREA
    BOOL     fUpdateHeader;          /* Update header of file */
    BOOL     fFLocked;               /* TRUE if file is locked */
    BOOL     fHeaderLocked;          /* TRUE if DBF header is locked */
+   BOOL     fTrigger;               /* Execute trigger function */
    LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
    ULONG *  pLocksPos;              /* List of records locked */
    ULONG    ulNumLocksPos;          /* Number of records locked */

@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-12 11:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbrdddbf.h
+  * harbour/source/rdd/dbf1.c
+    + added two new members to DBFAREA structure: fModStamp and fTrigger
+
+  * harbour/include/hbrddntx.h
+  * harbour/include/hbrddcdx.h
+  * harbour/contrib/bmdbfcdx/hbrddbmcdx.h
+    * updated for DBFAREA structure modifications
+
+  * harbour/contrib/libct/ctnet.c
+    * use hb_stricmp() instead of stricmp()
+
+  * harbour/include/hbrddcdx.h
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * updated for DBFAREA structure modifications
+    + added some very basic support for order temperature flags
+
 2007-09-12 08:29 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/getsys.prg
      ! Fix for crash in TGetList():ShowGetMsg() reported by Lorenzo.

@@ -4180,7 +4180,8 @@ static ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea )
       }
       else
       {
-         pArea->fAutoInc = pArea->fTableEncrypted = pArea->fHasMemo = FALSE;
+         pArea->fAutoInc = pArea->fModStamp =
+         pArea->fTableEncrypted = pArea->fHasMemo = FALSE;
          pArea->bTableType = DB_DBF_STD;
          pArea->bMemoType  = DB_MEMO_NONE;
          pArea->bCryptType = DB_CRYPT_NONE;

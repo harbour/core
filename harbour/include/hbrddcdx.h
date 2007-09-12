@@ -150,7 +150,7 @@ HB_EXTERN_BEGIN
 #define CDX_TYPE_STRUCTURE     0x80    /* FoxPro */
 
 /*
- TODO like in SIXCDX:
+ SIx3 order temperature flags:
    switch ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) )
       case CDX_TYPE_TEMPORARY:
          PARTIAL_RYO
@@ -325,7 +325,10 @@ typedef struct _CDXTAG
    BOOL     UniqueKey;        /* unique order flag */
    BOOL     Temporary;        /* temporary order flag */
    BOOL     Custom;           /* custom order flag */
-
+   BOOL     Template;         /* user keyadata in ordKeyAdd()/ordKeyDel() accepted */
+   BOOL     MultiKey;         /* repeated key values in custom indexes accepted */
+   BOOL     Partial;          /* order is updated only partially - missing keys possible */
+   BOOL     ChgOnly;          /* only existing key modifications are updated, no new key added */
    BOOL     UsrAscend;        /* user settable ascending/descending order flag */
    BOOL     UsrUnique;        /* user settable unique order flag */
 
@@ -496,6 +499,7 @@ typedef struct _CDXAREA
    BOOL     fAutoInc;               /* WorkArea with auto increment fields */
    BOOL     fHasMemo;               /* WorkArea with Memo fields */
    BOOL     fHasTags;               /* WorkArea with MDX or CDX index */
+   BOOL     fModStamp;              /* WorkArea with modification autoupdate fields */
    BOOL     fDataFlush;             /* data was written to DBF and not commited */
    BOOL     fMemoFlush;             /* data was written to MEMO and not commited */
    BOOL     fShared;                /* Shared file */
@@ -510,6 +514,7 @@ typedef struct _CDXAREA
    BOOL     fUpdateHeader;          /* Update header of file */
    BOOL     fFLocked;               /* TRUE if file is locked */
    BOOL     fHeaderLocked;          /* TRUE if DBF header is locked */
+   BOOL     fTrigger;               /* Execute trigger function */
    LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
    ULONG *  pLocksPos;              /* List of records locked */
    ULONG    ulNumLocksPos;          /* Number of records locked */
