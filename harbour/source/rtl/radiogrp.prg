@@ -181,7 +181,7 @@ METHOD display() CLASS RADIOGROUP
       cUnSelBox := ::cHotBox
    ENDIF
 
-   SetColor( __GUIColor( ::cColorSpec, 1 ) )
+   SetColor( hb_ColorIndex( ::cColorSpec, 0 ) )
 
    IF !Empty( cSelBox )
       DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cSelBox )
@@ -199,10 +199,10 @@ METHOD display() CLASS RADIOGROUP
          ENDIF
       ENDIF
 
-      DispOutAt( ::nCapRow, ::nCapCol, cCaption, __GUIColor( ::cColorSpec, 2 ) )
+      DispOutAt( ::nCapRow, ::nCapCol, cCaption, hb_ColorIndex( ::cColorSpec, 1 ) )
 
       IF nPos != 0
-         DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), __GUIColor( ::cColorSpec, 3 ) )
+         DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 2 ) )
       ENDIF
 
    ENDIF
@@ -551,7 +551,7 @@ METHOD colorSpec( cColorSpec ) CLASS RADIOGROUP
 
    IF cColorSpec != NIL
       ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
-         {|| !Empty( __GUIColor( cColorSpec, 3 ) ) .AND. Empty( __GUIColor( cColorSpec, 4 ) ) } )
+         {|| !Empty( hb_ColorIndex( cColorSpec, 2 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 3 ) ) } )
    ENDIF
 
    RETURN ::cColorSpec
@@ -641,9 +641,9 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS RADIOGROUP
       ::cColorSpec := "W/N,W/N,W+/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := __GUIColor( cColor, CLR_BORDER     + 1 ) + "," + ;
-                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," + ;
-                      __GUIColor( cColor, CLR_BACKGROUND + 1 )
+      ::cColorSpec := hb_ColorIndex( cColor, CLR_BORDER     ) + "," + ;
+                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," + ;
+                      hb_ColorIndex( cColor, CLR_BACKGROUND )
    ENDIF
 
    RETURN Self

@@ -76,6 +76,8 @@
 
 #define GET_CLR_UNSELECTED      0
 #define GET_CLR_ENHANCED        1
+#define GET_CLR_CAPTION         2
+#define GET_CLR_ACCEL           3
 
 /* NOTE: In CA-Cl*pper TGET class does not inherit from any other classes
          and there is no public class function like Get(). There is 
@@ -100,13 +102,6 @@ CREATE CLASS Get
    VAR rejected       INIT .F. READONLY
    VAR subScript
    VAR typeOut        INIT .F. READONLY
-#ifdef HB_COMPAT_C53
-   VAR control
-   VAR message
-   VAR caption        INIT ""
-   VAR capRow         INIT 0
-   VAR capCol         INIT 0
-#endif
 
    METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) /* NOTE: This method is a Harbour extension [vszakats] */
 
@@ -122,6 +117,11 @@ CREATE CLASS Get
    METHOD display( lForced ) /* NOTE: lForced is an undocumented Harbour parameter. Should not be used by app code. [vszakats] */
 #ifdef HB_COMPAT_C53
    METHOD hitTest( nMRow, nMCol )
+   METHOD control( oControl ) SETGET    /* NOTE: Undocumented CA-Cl*pper 5.3 method. */
+   METHOD message( cMessage ) SETGET    /* NOTE: Undocumented CA-Cl*pper 5.3 method. */
+   METHOD caption( cCaption ) SETGET    /* NOTE: Undocumented CA-Cl*pper 5.3 method. */
+   METHOD capRow( nCapRow ) SETGET      /* NOTE: Undocumented CA-Cl*pper 5.3 method. */
+   METHOD capCol( nCapCol ) SETGET      /* NOTE: Undocumented CA-Cl*pper 5.3 method. */
 #endif
    METHOD killFocus()
    METHOD minus( lMinus ) SETGET
@@ -190,6 +190,11 @@ CREATE CLASS Get
    VAR cBuffer
    VAR lHideInput     INIT .F.
    VAR cStyle         INIT "*" /* NOTE: First char is to be used as mask character when :hideInput is .T. [vszakats] */
+   VAR oControl
+   VAR cMessage       INIT ""
+   VAR cCaption       INIT ""
+   VAR nCapRow        INIT 0
+   VAR nCapCol        INIT 0
 
    VAR cPicMask       INIT ""
    VAR cPicFunc       INIT ""
@@ -242,6 +247,9 @@ METHOD display( lForced ) CLASS Get
    local cBuffer
    local nDispPos
 
+   local cCaption
+   local nPos
+
    DEFAULT lForced TO .T.
 
    if ! ISCHARACTER( ::cBuffer )
@@ -280,6 +288,27 @@ METHOD display( lForced ) CLASS Get
    else
       nDispPos := 1
    endif
+
+   /* Handle C5.3 caption. */
+
+   if !Empty( ::cCaption )
+
+      cCaption := ::cCaption
+      if ( nPos := At( "&", cCaption ) ) > 0
+         if nPos == Len( cCaption )
+            nPos := 0
+         else
+            cCaption := Stuff( cCaption, nPos, 1, "" )
+         endif
+      endif
+
+      DispOutAt( ::nCapRow, ::nCapCol, cCaption, hb_ColorIndex( ::cColorSpec, GET_CLR_CAPTION ) )
+      if nPos > 0
+         DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_ACCEL ) )
+      endif
+   endif
+
+   /* Display the GET */
 
    if cBuffer != NIL .and. ( lForced .or. nDispPos != ::nOldPos )
       DispOutAt( ::nRow, ::nCol,;
@@ -1117,8 +1146,8 @@ METHOD delWordRight() CLASS Get
 METHOD colorSpec( cColorSpec ) CLASS Get
 
    local nClrUns
-   local nClrEnh
-   local cClrEnh
+   local nClrOth
+   local cClrOth
 
    if PCount() == 0
       return ::cColorSpec
@@ -1126,12 +1155,15 @@ METHOD colorSpec( cColorSpec ) CLASS Get
 
    if ISCHARACTER( cColorSpec )
 
-      nClrUns := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) )
-      nClrEnh := hb_ColorToN( cClrEnh := hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) )
-
-      ::cColorSpec := hb_NToColor( nClrUns ) +;
-                      "," +;
-                      hb_NToColor( iif( ( nClrEnh != 0 .or. Upper( StrTran( cClrEnh, " ", "" ) ) == "N/N" ), nClrEnh, nClrUns ) )
+#ifdef HB_COMPAT_C53
+      ::cColorSpec := hb_NToColor( nClrUns := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ) ) +;
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != 0 .or. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) ) +;
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_CAPTION  ) ) ) != 0 .or. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) ) +;
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ACCEL    ) ) ) != 0 .or. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) )
+#else
+      ::cColorSpec := hb_NToColor( nClrUns := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ) ) +;
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != 0 .or. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) )
+#endif
 
       return cColorSpec
 
@@ -1447,14 +1479,62 @@ METHOD reform() CLASS Get
 
 METHOD hitTest( nMRow, nMCol ) CLASS Get
 
-   if ::nRow == nMRow .and. ;
-      nMCol >= ::nCol - iif( Set( _SET_DELIMITERS ), 1, 0 ) .and. ;
-      nMCol <= ::nCol + ::nDispLen + iif( Set( _SET_DELIMITERS ), 1, 0 )
-
-      return HTCLIENT
+   if ISOBJECT( ::oControl )
+      return ::oControl:hitTest( nMRow, nMCol )
+   else
+      do case
+      case nMRow == ::nRow .and. ;
+           nMCol >= ::nCol .and. ;
+           nMCol <  ::nCol + iif( ::nDispLen == NIL, 0, ::nDispLen )
+         return HTCLIENT
+      case nMRow == ::nCapRow .and. ;
+           nMCol >= ::nCapCol .and. ;
+           nMCol <  ::nCapCol + Len( ::cCaption ) /* NOTE: C5.3 doesn't care about the shortcut key. */
+         return HTCAPTION
+      endcase
    endif
 
    return HTNOWHERE
+
+METHOD control( oControl ) CLASS Get
+
+   if PCount() == 1 .and. ( oControl == NIL .or. ISOBJECT( oControl ) )
+      ::oControl := oControl
+   endif
+
+   return ::oControl
+
+METHOD caption( cCaption ) CLASS Get
+
+   if ISCHARACTER( cCaption )
+      ::cCaption := cCaption
+   endif
+
+   return ::cCaption
+
+METHOD capRow( nCapRow ) CLASS Get
+
+   if ISNUMBER( nCapRow )
+      ::nCapRow := nCapRow
+   endif
+
+   return ::nCapRow
+
+METHOD capCol( nCapCol ) CLASS Get
+
+   if ISNUMBER( nCapCol )
+      ::nCapCol := nCapCol
+   endif
+
+   return ::nCapCol
+
+METHOD message( cMessage ) CLASS Get
+
+   if ISCHARACTER( cMessage )
+      ::cMessage := cMessage
+   endif
+
+   return ::cMessage
 
 #endif
 
@@ -1831,7 +1911,15 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    DEFAULT nCol       TO Col() + iif( Set( _SET_DELIMITERS ), 1, 0 )
    DEFAULT cVarName   TO ""
    DEFAULT bVarBlock  TO iif( ISCHARACTER( cVarName ), MemvarBlock( cVarName ), NIL )
-   DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + hb_ColorIndex( SetColor(), CLR_ENHANCED )
+#ifdef HB_COMPAT_C53
+   DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +;
+                         hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," +;
+                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
+                         iif( IsDefColor(), iif( Set( _SET_INTENSITY ), "W+/N", "W/N" ), hb_ColorIndex( SetColor(), CLR_BACKGROUND ) )
+#else
+   DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +;
+                         hb_ColorIndex( SetColor(), CLR_ENHANCED )
+#endif
 
    ::nRow      := nRow
    ::nCol      := nCol

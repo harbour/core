@@ -154,8 +154,8 @@ METHOD display() CLASS TOPBARMENU
    LOCAL nItemCount := ::nItemCount
    LOCAL nCurrent := ::nCurrent
 
-   LOCAL cColor1 := __GUIColor( ::cColorSpec, 1 )
-   LOCAL cColor2 := __GUIColor( ::cColorSpec, 2 )
+   LOCAL cColor1 := hb_ColorIndex( ::cColorSpec, 0 )
+   LOCAL cColor2 := hb_ColorIndex( ::cColorSpec, 1 )
 
    LOCAL oPopUp
    LOCAL nItem
@@ -202,11 +202,11 @@ METHOD display() CLASS TOPBARMENU
 
       DispOutAt( nRow, nLeft, cCaption,;
          iif( nItem == nCurrent, cColor2,;
-            iif( aItems[ nItem ]:enabled, cColor1, __GUIColor( ::cColorSpec, 5 ) ) ) )
+            iif( aItems[ nItem ]:enabled, cColor1, hb_ColorIndex( ::cColorSpec, 4 ) ) ) )
 
       IF aItems[ nItem ]:enabled .AND. nPos > 0
          DispOutAt( nRow, nLeft + nPos - 1, SubStr( cCaption, nPos, 1 ),;
-            iif( nItem == nCurrent, __GUIColor( ::cColorSpec, 4 ), __GUIColor( ::cColorSpec, 3 ) ) )
+            iif( nItem == nCurrent, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 2 ) ) )
       ENDIF
 
       nLeft += nCaptionLen
@@ -416,7 +416,7 @@ METHOD colorSpec( cColorSpec ) CLASS TOPBARMENU
 
    IF cColorSpec != NIL
       ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
-         {|| !Empty( __GUIColor( cColorSpec, 6 ) ) .AND. Empty( __GUIColor( cColorSpec, 7 ) ) } )
+         {|| !Empty( hb_ColorIndex( cColorSpec, 5 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 6 ) ) } )
    ENDIF
 
    RETURN ::cColorSpec
@@ -472,12 +472,12 @@ METHOD New( nRow, nLeft, nRight ) CLASS TOPBARMENU
       ::cColorSpec := "N/W,W/N,W+/W,W+/N,N+/W,W/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_BACKGROUND + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_BORDER     + 1 )
+      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
+                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_BACKGROUND ) + "," +;
+                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_BORDER     )
    ENDIF
 
    RETURN Self

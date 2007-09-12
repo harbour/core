@@ -201,9 +201,9 @@ METHOD display() CLASS CHECKBOX
    DispBegin()
 
    DispOutAt( ::nRow, ::nCol + 1, iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ),;
-      __GUIColor( ::cColorSpec, iif( ::lHasFocus, 2, 1 ) ) )
+      hb_ColorIndex( ::cColorSpec, iif( ::lHasFocus, 1, 0 ) ) )
 
-   SetColor( __GUIColor( ::cColorSpec, 3 ) )
+   SetColor( hb_ColorIndex( ::cColorSpec, 2 ) )
    DispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ) )
    DispOutAt( ::nRow, ::nCol + 2, Right( cStyle, 1 ) )
 
@@ -217,13 +217,13 @@ METHOD display() CLASS CHECKBOX
       ENDIF
 
       IF ::lHasFocus
-         SetColor( __GUIColor( ::cColorSpec, 4 ) )
+         SetColor( hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
 
       DispOutAt( ::nCapRow, ::nCapCol, cCaption )
 
       IF !::lHasFocus .AND. nPos != 0
-         DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), __GUIColor( ::cColorSpec, 4 ) )
+         DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
 
    ENDIF
@@ -283,7 +283,7 @@ METHOD colorSpec( cColorSpec ) CLASS CHECKBOX
 
    IF cColorSpec != NIL
       ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
-         {|| !Empty( __GUIColor( cColorSpec, 4 ) ) .AND. Empty( __GUIColor( cColorSpec, 5 ) ) } )
+         {|| !Empty( hb_ColorIndex( cColorSpec, 3 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 4 ) ) } )
    ENDIF
 
    RETURN ::cColorSpec
@@ -350,10 +350,10 @@ METHOD New( nRow, nCol, cCaption ) CLASS CHECKBOX
       ::cColorSpec := "W/N,W+/N,W/N,W+/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_BACKGROUND + 1 )
+      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
+                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_BACKGROUND )
    ENDIF
 
    RETURN Self

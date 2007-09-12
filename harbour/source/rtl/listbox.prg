@@ -248,14 +248,14 @@ METHOD display() CLASS LISTBOX
 
    IF ::lHasFocus
       cHotBox   := ::cHotBox
-      cColor3   := __GUIColor( ::cColorSpec, 3 )
-      cColor4   := __GUIColor( ::cColorSpec, 4 )
-      cColorAny := iif( ::lIsOpen, __GUIColor( ::cColorSpec, 2 ), __GUIColor( ::cColorSpec, 4 ) )
+      cColor3   := hb_ColorIndex( ::cColorSpec, 2 )
+      cColor4   := hb_ColorIndex( ::cColorSpec, 3 )
+      cColorAny := iif( ::lIsOpen, hb_ColorIndex( ::cColorSpec, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
    ELSE
       cHotBox   := ::cColdBox
-      cColor3   := __GUIColor( ::cColorSpec, 1 )
-      cColor4   := __GUIColor( ::cColorSpec, 2 )
-      cColorAny := __GUIColor( ::cColorSpec, 2 )
+      cColor3   := hb_ColorIndex( ::cColorSpec, 0 )
+      cColor4   := hb_ColorIndex( ::cColorSpec, 1 )
+      cColorAny := hb_ColorIndex( ::cColorSpec, 1 )
    ENDIF
 
    DispBegin()
@@ -268,7 +268,7 @@ METHOD display() CLASS LISTBOX
          iif( ::nValue == 0, Space( nSize - 1 ), PadR( ::aItems[ ::nValue ][ _ITEM_cTEXT ], nSize - 1 ) ),;
          cColorAny )
 
-      DispOut( ::cStyle, __GUIColor( ::cColorSpec, 8 ) )
+      DispOut( ::cStyle, hb_ColorIndex( ::cColorSpec, 7 ) )
 
       nEnd--
    ENDIF
@@ -276,7 +276,7 @@ METHOD display() CLASS LISTBOX
    IF ::lIsOpen
       IF !Empty( cHotBox )
 
-         SetColor( __GUIColor( ::cColorSpec, 5 ) )
+         SetColor( hb_ColorIndex( ::cColorSpec, 4 ) )
          Scroll( nTop, nLeft, ::nBottom, ::nRight )
          DispBox( nTop, nLeft, ::nBottom, ::nRight, cHotBox )
 
@@ -309,10 +309,10 @@ METHOD display() CLASS LISTBOX
          cCaption := Stuff( cCaption, nPos, 1, "" )
       ENDIF
 
-      DispOutAt( ::nCapRow, ::nCapCol - 1, cCaption, __GUIColor( ::cColorSpec, 6 ) )
+      DispOutAt( ::nCapRow, ::nCapCol - 1, cCaption, hb_ColorIndex( ::cColorSpec, 5 ) )
 
       IF nPos != 0
-         DispOutAt( ::nCapRow, ::nCapCol + nPos - 2, SubStr( cCaption, nPos, 1 ), __GUIColor( ::cColorSpec, 7 ) )
+         DispOutAt( ::nCapRow, ::nCapCol + nPos - 2, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 6 ) )
       ENDIF
 
    ENDIF
@@ -916,8 +916,8 @@ METHOD colorSpec( cColorSpec ) CLASS LISTBOX
    IF cColorSpec != NIL
       ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
          iif( ::lDropDown,;
-            {|| !Empty( __GUIColor( cColorSpec, 8 ) ) .AND. Empty( __GUIColor( cColorSpec, 9 ) ) },;
-            {|| !Empty( __GUIColor( cColorSpec, 7 ) ) .AND. Empty( __GUIColor( cColorSpec, 8 ) ) } ) )
+            {|| !Empty( hb_ColorIndex( cColorSpec, 7 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 8 ) ) },;
+            {|| !Empty( hb_ColorIndex( cColorSpec, 6 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 7 ) ) } ) )
    ENDIF
 
    RETURN ::cColorSpec
@@ -1088,13 +1088,13 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )
       ::cColorSpec := "W/N,W+/N,W+/N,N/W,W/N,W/N,W+/N,W/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_BORDER     + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_BACKGROUND + 1 )
+      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
+                      hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
+                      hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
+                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_BORDER     ) + "," +;
+                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_BACKGROUND )
    ENDIF
 
    RETURN Self

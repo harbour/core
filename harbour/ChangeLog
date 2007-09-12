@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-12 19:27 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tget.prg
+     ! :HitTest() crash fix.
+     ! :HitTest() made more compatible.
+     + Added proper wrappers for undocumented C5.3 vars.
+     + Added support for Caption.
+     + Added support for C5.3 color handling (it's quite ugly, 
+       but it's on by default).
+     ; Some snippets from xhb but heavily fixed.
+
+   * source/rtl/scrollbr.prg
+   * source/rtl/tpopup.prg
+   * source/rtl/radiogrp.prg
+   * source/rtl/listbox.prg
+   * source/rtl/checkbox.prg
+   * source/rtl/tget.prg
+   * source/rtl/ttopbar.prg
+   * source/rtl/pushbtn.prg
+   * source/rtl/radiobtn.prg
+     % __GUIColor() -> hb_ColorSelect()
+
 2007-09-12 13:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbgtcore.c
     * changed default UNSELECTED collor from W/N to N/W
@@ -17,7 +38,7 @@
    * source/rtl/tbrowse.prg
      ! Fixed to assign SetColor() in New() rather than in INIT.
        (INIT value gets evaluated and stored on first class usage, 
-       not on every instantiantion.)
+       not on every instantiation.)
 
    * source/rtl/tget.prg
    * tests/rto_get.prg

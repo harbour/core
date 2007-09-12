@@ -228,7 +228,7 @@ METHOD display() CLASS POPUPMENU
       
       DispBox( nTop, nLeft, ::nBottom, ::nRight, ;
                SubStr( ::cBorder, 1, 8 ) + " ", ;
-               __GUIColor( ::cColorSpec, 6 ) )
+               hb_ColorIndex( ::cColorSpec, 5 ) )
       
 #ifdef HB_EXTENSION
       IF ::shadowed
@@ -243,7 +243,7 @@ METHOD display() CLASS POPUPMENU
 
          IF aItems[ nPos ]:caption == MENU_SEPARATOR
 
-            DispOutAt( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), __GUIColor( ::cColorSpec, 6 ) )
+            DispOutAt( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
 
          ELSE
             cCaption := PadR( aItems[ nPos ]:caption, nWidth - 1 )
@@ -283,10 +283,10 @@ METHOD display() CLASS POPUPMENU
                cCaption := Stuff( cCaption, nHotKeyPos, 1, "" )
             ENDIF
 
-            DispOutAt( nTop, nLeft, cCaption, __GUIColor( ::cColorSpec, iif( nPos == nCurrent, 2, iif( aItems[ nPos ]:enabled, 1, 5 ) ) ) )
+            DispOutAt( nTop, nLeft, cCaption, hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 1, iif( aItems[ nPos ]:enabled, 0, 4 ) ) ) )
 
             IF aItems[ nPos ]:enabled .AND. nHotKeyPos != 0
-               DispOutAt( nTop, nLeft + nHotKeyPos - 1, SubStr( cCaption, nHotKeyPos, 1 ), __GUIColor( ::cColorSpec, iif( nPos == nCurrent, 4, 3 ) ) )
+               DispOutAt( nTop, nLeft + nHotKeyPos - 1, SubStr( cCaption, nHotKeyPos, 1 ), hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 3, 2 ) ) )
             ENDIF
          ENDIF
       NEXT
@@ -718,7 +718,7 @@ METHOD colorSpec( cColorSpec ) CLASS POPUPMENU
 
    IF cColorSpec != NIL
       ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
-         {|| !Empty( __GUIColor( cColorSpec, 6 ) ) .AND. Empty( __GUIColor( cColorSpec, 7 ) ) } )
+         {|| !Empty( hb_ColorIndex( cColorSpec, 5 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 6 ) ) } )
    ENDIF
 
    RETURN ::cColorSpec
@@ -794,12 +794,12 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS POPUPMENU
       ::cColorSpec := "N/W,W/N,W+/W,W+/N,N+/W,W/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_BACKGROUND + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_BORDER     + 1 )
+      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
+                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_BACKGROUND ) + "," +;
+                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_BORDER     )
    ENDIF
 
    RETURN Self

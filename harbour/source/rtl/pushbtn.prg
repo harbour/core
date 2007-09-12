@@ -219,11 +219,11 @@ METHOD display() CLASS PUSHBUTTON
    DispBegin()
 
    IF ::lBuffer
-      SetColor( __GUIColor( ::cColorSpec, 3 ) )
+      SetColor( hb_ColorIndex( ::cColorSpec, 2 ) )
    ELSEIF ::lHasFocus
-      SetColor( __GUIColor( ::cColorSpec, 2 ) )
+      SetColor( hb_ColorIndex( ::cColorSpec, 1 ) )
    ELSE
-      SetColor( __GUIColor( ::cColorSpec, 1 ) )
+      SetColor( hb_ColorIndex( ::cColorSpec, 0 ) )
    ENDIF
 
    IF ( nPos := At( "&", cCaption ) ) == 0
@@ -251,7 +251,7 @@ METHOD display() CLASS PUSHBUTTON
       DispOutAt( nRow, nCol, cCaption )
 
       IF nPos != 0
-         DispOutAt( nRow, nCol + nPos - 1, SubStr( cCaption, nPos, 1 ), __GUIColor( ::cColorSpec, 4 ) )
+         DispOutAt( nRow, nCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
 
    ENDIF
@@ -295,7 +295,7 @@ METHOD colorSpec( cColorSpec ) CLASS PUSHBUTTON
 
    IF cColorSpec != NIL
       ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
-         {|| !Empty( __GUIColor( cColorSpec, 4 ) ) .AND. Empty( __GUIColor( cColorSpec, 6 ) ) } )
+         {|| !Empty( hb_ColorIndex( cColorSpec, 3 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 5 ) ) } )
    ENDIF
 
    RETURN ::cColorSpec
@@ -365,10 +365,10 @@ METHOD New( nRow, nCol, cCaption ) CLASS PUSHBUTTON
       ::cColorSpec := "W/N,N/W,W+/N,W+/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_BACKGROUND + 1 )
+      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
+                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_BACKGROUND )
    ENDIF
 
    RETURN Self

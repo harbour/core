@@ -166,7 +166,7 @@ METHOD display() CLASS RADIOBUTTN
 
    DispBegin()
 
-   SetColor( iif( ::lBuffer, __GUIColor( ::cColorSpec, 4 ), __GUIColor( ::cColorSpec, 2 ) ) )
+   SetColor( iif( ::lBuffer, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 1 ) ) )
    SetPos( ::nRow, ::nCol )
    DispOut( Left( cStyle, 1 ) )
    DispOut( iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ) )
@@ -181,10 +181,10 @@ METHOD display() CLASS RADIOBUTTN
          cOldCaption := Stuff( cOldCaption, nPos, 1, "" )
       ENDIF
 
-      DispOutAt( ::nCapRow, ::nCapCol, cOldCaption, __GUIColor( ::cColorSpec, 5 ) )
+      DispOutAt( ::nCapRow, ::nCapCol, cOldCaption, hb_ColorIndex( ::cColorSpec, 4 ) )
 
       IF nPos != 0
-         DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cOldCaption, nPos, 1 ), iif( ::lHasfocus, __GUIColor( ::cColorSpec, 7 ), __GUIColor( ::cColorSpec, 6 ) ) )
+         DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cOldCaption, nPos, 1 ), iif( ::lHasfocus, hb_ColorIndex( ::cColorSpec, 6 ), hb_ColorIndex( ::cColorSpec, 5 ) ) )
       ENDIF
    ENDIF
 
@@ -292,7 +292,7 @@ METHOD colorSpec( cColorSpec ) CLASS RADIOBUTTN
 
    IF cColorSpec != NIL
       ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
-         {|| !Empty( __GUIColor( cColorSpec, 7 ) ) .AND. Empty( __GUIColor( cColorSpec, 8 ) ) } )
+         {|| !Empty( hb_ColorIndex( cColorSpec, 6 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 7 ) ) } )
    ENDIF
 
    RETURN ::cColorSpec
@@ -356,13 +356,13 @@ METHOD New( nRow, nCol, cCaption, cData ) CLASS RADIOBUTTN
       ::cColorSpec := "W/N,W+/N,W+/N,N/W,W/N,W/N,W+/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_UNSELECTED + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_ENHANCED   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_STANDARD   + 1 ) + "," +;
-                      __GUIColor( cColor, CLR_BACKGROUND + 1 )
+      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
+                      hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
+                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
+                      hb_ColorIndex( cColor, CLR_BACKGROUND )
    ENDIF
 
    RETURN Self
