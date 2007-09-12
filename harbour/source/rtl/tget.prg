@@ -163,6 +163,11 @@ CREATE CLASS Get
    METHOD insert( cChar )
    METHOD overStrike( cChar )
 
+#ifdef HB_EXTENSION
+   METHOD hideInput( lHideInput ) SETGET
+   METHOD style( cStyle ) SETGET
+#endif
+
 #ifdef HB_COMPAT_XPP
    MESSAGE _end() METHOD end()
    MESSAGE _assign() METHOD assign()
@@ -183,6 +188,8 @@ CREATE CLASS Get
    VAR cName
    VAR lRejected      INIT .F.
    VAR cBuffer
+   VAR lHideInput     INIT .F.
+   VAR cStyle         INIT "*" /* NOTE: First char is to be used as mask character when :hideInput is .T. [vszakats] */
 
    VAR cPicMask       INIT ""
    VAR cPicFunc       INIT ""
@@ -194,7 +201,6 @@ CREATE CLASS Get
    VAR nDispPos       INIT 1
    VAR nOldPos        INIT 0
    VAR lCleanZero     INIT .F.
-   VAR cDelimit
    VAR nMaxEdit
    VAR lMinus         INIT .F.
    VAR lMinus2        INIT .F.
@@ -276,17 +282,17 @@ METHOD display( lForced ) CLASS Get
    endif
 
    if cBuffer != NIL .and. ( lForced .or. nDispPos != ::nOldPos )
-      DispOutAt( ::nRow, ::nCol + iif( ::cDelimit == NIL, 0, 1 ),;
-                 SubStr( cBuffer, nDispPos, ::nDispLen ),;
+      DispOutAt( ::nRow, ::nCol,;
+                 iif( ::lHideInput, PadR( Replicate( SubStr( ::cStyle, 1, 1 ), Len( RTrim( cBuffer ) ) ), ::nDispLen ), SubStr( cBuffer, nDispPos, ::nDispLen ) ),;
                  hb_ColorIndex( ::cColorSpec, iif( ::hasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
-      if ::cDelimit != NIL
-         DispOutAt( ::nRow, ::nCol, Left( ::cDelimit, 1 ), hb_ColorIndex( ::cColorSpec, iif( ::hasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
-         DispOutAt( ::nRow, ::nCol + ::nDispLen + 1, SubStr( ::cDelimit, 2, 1 ), hb_ColorIndex( ::cColorSpec, iif( ::hasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
+      if Set( _SET_DELIMITERS ) .AND. !::hasFocus
+         DispOutAt( ::nRow, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ) )
+         DispOutAt( ::nRow, ::nCol + ::nDispLen, SubStr( Set( _SET_DELIMCHARS ), 2, 1 ) )
       endif
    endif
 
    if ::nPos != 0
-      SetPos( ::nRow, ::nCol + ::nPos - nDispPos + iif( ::cDelimit == NIL, 0, 1 ) )
+      SetPos( ::nRow, ::nCol + ::nPos - nDispPos )
    endif
 
    ::nOldPos := nDispPos
@@ -1442,8 +1448,8 @@ METHOD reform() CLASS Get
 METHOD hitTest( nMRow, nMCol ) CLASS Get
 
    if ::nRow == nMRow .and. ;
-      nMCol >= ::nCol .and. ;
-      nMCol <= ::nCol + ::nDispLen + iif( ::cDelimit == NIL, 0, 2 )
+      nMCol >= ::nCol - iif( Set( _SET_DELIMITERS ), 1, 0 ) .and. ;
+      nMCol <= ::nCol + ::nDispLen + iif( Set( _SET_DELIMITERS ), 1, 0 )
 
       return HTCLIENT
    endif
@@ -1797,12 +1803,32 @@ METHOD name( cName ) CLASS Get
 
    return ::cName
 
+#ifdef HB_EXTENSION
+
+METHOD hideInput( lHideInput ) CLASS Get
+
+   if lHideInput != NIL
+      ::lHideInput := _eInstVar( Self, "HIDEINPUT", lHideInput, "L", 1001 )
+   endif
+
+   return ::lHideInput
+
+METHOD style( cStyle ) CLASS Get
+
+   if cStyle != NIL
+      ::cStyle := _eInstVar( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 1 } )
+   endif
+
+   return ::cStyle
+
+#endif
+
 /* ------------------------------------------------------------------------- */
 
 METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
 
    DEFAULT nRow       TO Row()
-   DEFAULT nCol       TO Col()
+   DEFAULT nCol       TO Col() + iif( Set( _SET_DELIMITERS ), 1, 0 )
    DEFAULT cVarName   TO ""
    DEFAULT bVarBlock  TO iif( ISCHARACTER( cVarName ), MemvarBlock( cVarName ), NIL )
    DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + hb_ColorIndex( SetColor(), CLR_ENHANCED )
@@ -1813,8 +1839,5 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::cName     := cVarName
    ::Picture   := cPicture
    ::ColorSpec := cColorSpec
-   if Set( _SET_DELIMITERS )
-      ::cDelimit  := Set( _SET_DELIMCHARS )
-   endif
 
    return Self

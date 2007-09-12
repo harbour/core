@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-12 12:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/teditor.prg
+   * source/rtl/tbrowse.prg
+     ! Fixed to assign SetColor() in New() rather than in INIT.
+       (INIT value gets evaluated and stored on first class usage, 
+       not on every instantiantion.)
+
+   * source/rtl/tget.prg
+   * tests/rto_get.prg
+     + Added Harbour extensions:
+       :hideInput (logical value)
+       :style (1 char long string to control mask character when :hideInput is .T.)
+       QUESTION: Is there any need to support multiple hiding styles?
+                 (like always fully masked or masked with random chars?)
+     ! Fixed several bugs in SET DELIMITERS handling.
+       (color, focus behaviour, "caching", positioning)
+     + Added test cases for SET DELIMITERS issues.
+
 2007-09-12 11:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbrdddbf.h
   * harbour/source/rdd/dbf1.c

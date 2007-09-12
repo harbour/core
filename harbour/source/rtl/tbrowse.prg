@@ -210,7 +210,7 @@ CREATE CLASS TBrowse
    VAR n_Left           INIT 0                              // Leftmost column for the TBrowse display
    VAR n_Bottom         INIT 0                              // Bottom row number for the TBrowse display
    VAR n_Right          INIT 0                              // Rightmost column for the TBrowse display
-   VAR cColorSpec       INIT SetColor()                     // Color table for the TBrowse display
+   VAR cColorSpec                                           // Color table for the TBrowse display
    VAR cColSep          INIT " "                            // Column separator character
    VAR cFootSep         INIT ""                             // Footing separator character
    VAR cHeadSep         INIT ""                             // Heading separator character
@@ -2081,6 +2081,8 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS TBrowse
    ::nLeft   := nLeft
    ::nBottom := nBottom
    ::nRight  := nRight
+
+   ::cColorSpec := SetColor()
 
    #ifdef HB_COMPAT_C53
       ::rect := { ::n_Top, ::n_Left, ::n_Bottom, ::n_Right }

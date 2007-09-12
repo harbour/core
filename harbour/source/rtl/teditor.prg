@@ -63,9 +63,6 @@ CREATE CLASS HBEditor
 
    EXPORT:
 
-   METHOD New( cString, nTop, nLeft, nBottom,;           // Converts a string to an array of strings splitting input string at EOL boundaries
-              nRight, lEditMode, nLineLength, nTabSize )
-
    METHOD LoadFile( cFileName )                          // Load cFileName into active editor
    METHOD LoadText( cString )                            // Load cString into active editor
    METHOD SaveFile()                                     // Save active file (not for MemoEdit() emulation)
@@ -106,6 +103,9 @@ CREATE CLASS HBEditor
    METHOD IsWordWrap()                                   // Returns ::lWordWrap
    METHOD WordWrapCol()                                  // Returns ::nWordWrapCol
 
+   METHOD New( cString, nTop, nLeft, nBottom,;           // Converts a string to an array of strings splitting input string at EOL boundaries
+               nRight, lEditMode, nLineLength, nTabSize )
+
    PROTECTED:
 
    VAR cFile          AS STRING      INIT ""             // name of file being edited
@@ -139,66 +139,11 @@ CREATE CLASS HBEditor
    VAR lDirty         AS LOGICAL     INIT .F.            // .T. if there are changes not saved
    VAR lExitEdit      AS LOGICAL     INIT .F.            // .T. if user requested to end Edit() method
                                                            
-   VAR cColorSpec     AS CHARACTER   INIT SetColor()     // Color string used for screen writes
+   VAR cColorSpec     AS CHARACTER                       // Color string used for screen writes
 
 ENDCLASS
 
-METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize ) CLASS HBEditor
-
-   DEFAULT cString     TO ""
-   DEFAULT nTop        TO 0
-   DEFAULT nLeft       TO 0
-   DEFAULT nBottom     TO MaxRow()
-   DEFAULT nRight      TO MaxCol()
-   DEFAULT lEditMode   TO .T.
-   DEFAULT nLineLength TO NIL
-   DEFAULT nTabSize    TO NIL
-
-   ::aText := Text2Array( cString, nLineLength )
-   ::naTextLen := Len( ::aText )
-
-   if ::naTextLen == 0
-      AAdd( ::aText, HBTextLine():New() )
-      ::naTextLen++
-   endif
-
-   // editor window boundaries
-   ::nTop := nTop
-   ::nLeft := nLeft
-   ::nBottom := nBottom
-   ::nRight := nRight
-
-   // How many cols and rows are available
-   ::nNumCols := nRight - nLeft + 1
-   ::nNumRows := nBottom - nTop + 1
-
-   if ISLOGICAL( lEditMode )
-      ::lEditAllow := lEditMode
-   endif
-
-   // set correct insert state
-   if ::lEditAllow
-      ::InsertState( ::lInsert )
-   endif
-
-   // is word wrap required?
-   if ISNUMBER( nLineLength )
-      ::lWordWrap := .T.
-      ::nWordWrapCol := nLineLength
-   endif
-
-   // how many spaces for each tab?
-   if ISNUMBER( nTabSize )
-      ::nTabWidth := nTabSize
-   endif
-
-   // Empty area of screen which will hold editor window
-   Scroll( nTop, nLeft, nBottom, nRight )
-
-   // Set cursor upper left corner
-   ::SetPos( ::nTop, ::nLeft )
-
-   return Self
+/* -------------------------------------------- */
 
 // Redefines editor window size and refreshes it
 METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBEditor
@@ -930,6 +875,69 @@ METHOD IsWordWrap() CLASS HBEditor
 
 METHOD WordWrapCol() CLASS HBEditor
    return ::nWordWrapCol
+
+/* -------------------------------------------- */
+
+METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize ) CLASS HBEditor
+
+   DEFAULT cString     TO ""
+   DEFAULT nTop        TO 0
+   DEFAULT nLeft       TO 0
+   DEFAULT nBottom     TO MaxRow()
+   DEFAULT nRight      TO MaxCol()
+   DEFAULT lEditMode   TO .T.
+   DEFAULT nLineLength TO NIL
+   DEFAULT nTabSize    TO NIL
+
+   ::aText := Text2Array( cString, nLineLength )
+   ::naTextLen := Len( ::aText )
+
+   if ::naTextLen == 0
+      AAdd( ::aText, HBTextLine():New() )
+      ::naTextLen++
+   endif
+
+   // editor window boundaries
+   ::nTop := nTop
+   ::nLeft := nLeft
+   ::nBottom := nBottom
+   ::nRight := nRight
+
+   ::cColorSpec := SetColor()
+
+   // How many cols and rows are available
+   ::nNumCols := nRight - nLeft + 1
+   ::nNumRows := nBottom - nTop + 1
+
+   if ISLOGICAL( lEditMode )
+      ::lEditAllow := lEditMode
+   endif
+
+   // set correct insert state
+   if ::lEditAllow
+      ::InsertState( ::lInsert )
+   endif
+
+   // is word wrap required?
+   if ISNUMBER( nLineLength )
+      ::lWordWrap := .T.
+      ::nWordWrapCol := nLineLength
+   endif
+
+   // how many spaces for each tab?
+   if ISNUMBER( nTabSize )
+      ::nTabWidth := nTabSize
+   endif
+
+   // Empty area of screen which will hold editor window
+   Scroll( nTop, nLeft, nBottom, nRight )
+
+   // Set cursor upper left corner
+   ::SetPos( ::nTop, ::nLeft )
+
+   return Self
+
+/* -------------------------------------------- */
 
 // Returns EOL char (be it either CR or LF or both)
 STATIC FUNCTION WhichEOL( cString )
