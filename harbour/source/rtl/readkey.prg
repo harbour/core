@@ -69,10 +69,10 @@ FUNCTION ReadKey()
          IF nKey >= K_SPACE ; nKey := 15
          ELSE               ; RETURN 0
          ENDIF
-   END
+   ENDSWITCH
 
    IF Updated()
       nKey += 256
    ENDIF
 
-RETURN nKey
+   RETURN nKey

@@ -50,10 +50,10 @@
  *
  */
 
-FUNCTION HB_VALTOEXP( xVal )
-   LOCAL cVal, v
+FUNCTION hb_VALTOEXP( xVal )
+   LOCAL cVal
+   LOCAL v := VALTYPE( xVal )
 
-   v := VALTYPE( xVal )
    SWITCH v
       CASE "C"
       CASE "M"
@@ -103,14 +103,13 @@ FUNCTION HB_VALTOEXP( xVal )
          ELSE
             cVal := "???:" + v
          ENDIF
-   END
+   ENDSWITCH
 
    RETURN cVal
 
-FUNCTION HB_CSTR( xVal )
-   LOCAL v
+FUNCTION hb_CSTR( xVal )
+   LOCAL v := VALTYPE( xVal )
 
-   v := VALTYPE( xVal )
    SWITCH v
       CASE "C"
       CASE "M"
@@ -128,15 +127,15 @@ FUNCTION HB_CSTR( xVal )
       CASE "O"
          RETURN "{ " + xVal:className + " Object }"
       CASE "A"
-         RETURN "{ Array of " +  LTRIM( STR( LEN( xVal ) ) ) + " Items }"
+         RETURN "{ Array of " + LTRIM( STR( LEN( xVal ) ) ) + " Items }"
       CASE "H"
-         RETURN "{ Hash of " +  LTRIM( STR( LEN( xVal ) ) ) + " Items }"
+         RETURN "{ Hash of " + LTRIM( STR( LEN( xVal ) ) ) + " Items }"
       CASE "P"
          RETURN "<pointer>"
       OTHERWISE
          IF xVal == NIL
             RETURN "NIL"
          ENDIF
-   END
+   ENDSWITCH
 
    RETURN "???:" + v

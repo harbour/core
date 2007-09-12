@@ -124,7 +124,7 @@ FUNCTION ReadModal( GetList, nPos )
    oGetList:nHitCode := 0
    oGetList:nMenuID := 0
 
-   aMsg := { , nMsgRow, nMsgLeft, nMsgRight, cMsgColor, , , , , }
+   aMsg := { lMsgFlag, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, , , , , }
 #endif
 
    DO WHILE oGetList:nPos != 0

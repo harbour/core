@@ -87,6 +87,7 @@ FUNCTION BLANK( xItem, xMode )
 
       OTHERWISE
          xRet:=.F.
-   END
+
+   ENDSWITCH
 
 RETURN xRet

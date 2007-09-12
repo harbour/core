@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-12 08:29 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/getsys.prg
+     ! Fix for crash in TGetList():ShowGetMsg() reported by Lorenzo.
+
+   * contrib/libct/blank.prg
+   * source/rtl/menuto.prg
+   * source/rtl/valtoexp.prg
+   * source/rtl/readkey.prg
+   * source/rtl/browse.prg
+   * source/debug/debugger.prg
+     + Replaced END with ENDSWITCH and ENDWITH
+
 2007-09-12 02:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/std.ch
     * cover ENDSEQUENCE translation with HB_C52_STRICT macro

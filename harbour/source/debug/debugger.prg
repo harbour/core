@@ -1046,7 +1046,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
             ENDIF
             :Resize( Val( cParam1 ), n, ;
                      :nBottom + Val( cParam1 ) - :nTop, :nRight + n - :nLeft )
-         END
+         ENDWITH
       CASE starts( "NEXT", cParam )
          ::NextWindow()
       CASE starts( "SIZE", cParam )
@@ -1056,7 +1056,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
                :Resize( :nTop, :nLeft, Val( cParam1 ) - 1 + :nTop, ;
                         Val( SubStr( cParam1, n ) ) - 1 + :nLeft )
             ENDIF
-         END
+         ENDWITH
       ENDCASE
 
    CASE starts( "WP", cCommand )

@@ -273,7 +273,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
                lKeyPressed := .T.
             ENDIF
             EXIT
-      END
+      ENDSWITCH
 
       IF lRefresh
          lRefresh := lAppend := .F.
@@ -390,7 +390,7 @@ STATIC FUNCTION ExitKey( lAppend )
          nKey := IIF( nKey == 13 .OR. ;
                       ( nKey >= 32 .AND. nKey <= 255 ), K_RIGHT, 0 )
          EXIT
-   END
+   ENDSWITCH
 
    RETURN nKey
 
