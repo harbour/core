@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-12 13:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbgtcore.c
+    * changed default UNSELECTED collor from W/N to N/W
+
 2007-09-12 12:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/teditor.prg
    * source/rtl/tbrowse.prg

@@ -432,7 +432,7 @@ static void hb_gt_def_StringToColors( const char * szColorString, int ** pColors
       pColors[ HB_CLR_ENHANCED   ] = 0x70;
       pColors[ HB_CLR_BORDER     ] = 0;
       pColors[ HB_CLR_BACKGROUND ] = 0;
-      pColors[ HB_CLR_UNSELECTED ] = 0x07;
+      pColors[ HB_CLR_UNSELECTED ] = 0x70;
    }
    else do
    {
@@ -448,9 +448,9 @@ static void hb_gt_def_StringToColors( const char * szColorString, int ** pColors
    }
    while( szColorString );
 
-   if( nPos >= 1 && nPos <= 3 )
+   if( nPos >= HB_CLR_ENHANCED && nPos < HB_CLR_UNSELECTED &&
+       *piColorCount > HB_CLR_UNSELECTED )
       pColors[ HB_CLR_UNSELECTED ] = pColors[ HB_CLR_ENHANCED ];
-   
 }
 
 static void hb_gt_def_ColorsToString( int * pColors, int iColorCount, char * pszColorString, int iBufSize )
