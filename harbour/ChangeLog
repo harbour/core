@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-12 02:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/std.ch
+    * cover ENDSEQUENCE translation with HB_C52_STRICT macro
+    + added translations for END SWITCH, END WITH, END OBJECT
+
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+    + added support for ENDSEQ[UENCE], ENDSW[ITCH] and ENDW[ITH]
+
+  * harbour/source/rtl/hbgtcore.c
+    ! changed string to color number translation to be fully Clipper
+      compatible. Now I do not know any examples which we translate
+      differently - if someone will find any them then please inform me.
+      The only one intentional difference between Harbour and Clipper
+      is in color number to string translation and background highlighting
+      attribute "*", Clipper put it just before "/" as part of foreground
+      color (f.e.: 248 => "N*+/W") but Harbour as part background color
+      (f.e.: 248 => "N+/W*") - Clipper compatible behavior is enabled when
+      Harbour is compiled with HB_C52_STRICT macro
+
+  * harbour/utils/hbtest/rt_misc.prg
+    * control the position of background highlighting attribute (*) in
+      expected results depending on HB_C52_STRICT. Harbour passes correctly
+      all included color translation tests.
+
 2007-09-11 23:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/hbgtcore.c
      ! Fixed handling of some strangely formatted colorstrings

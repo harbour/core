@@ -57,6 +57,13 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
+#undef HB_C52_STRICT_OFF
+#ifdef __HARBOUR__
+   #ifndef HB_C52_STRICT
+      #define HB_C52_STRICT_OFF
+   #endif
+#endif
+
 FUNCTION Main_MISC()
    LOCAL oError
 #ifdef __HARBOUR__
@@ -131,9 +138,15 @@ FUNCTION Main_MISC()
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( ","                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( ",,"                         ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "+"                          ), SetColor() ) , "N+/N,N/N,N/N,N/N,N/N"  )
+#ifdef HB_C52_STRICT_OFF
+   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "+*"                         ), SetColor() ) , "N+/N*,N/N,N/N,N/N,N/N" )
+   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*"                          ), SetColor() ) , "N/N*,N/N,N/N,N/N,N/N"  )
+   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*+"                         ), SetColor() ) , "N+/N*,N/N,N/N,N/N,N/N" )
+#else
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "+*"                         ), SetColor() ) , "N*+/N,N/N,N/N,N/N,N/N" )
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*"                          ), SetColor() ) , "N*/N,N/N,N/N,N/N,N/N"  )
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*+"                         ), SetColor() ) , "N*+/N,N/N,N/N,N/N,N/N" )
+#endif
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "BR/W+"                      ), SetColor() ) , "BR+/W,N/N,N/N,N/N,N/N" )
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "BR/W+"                      ), SetColor() ) , "BR+/W,N/N,N/N,N/N,N/N" )
    TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "RB/W+"                      ), SetColor() ) , "BR+/W,N/N,N/N,N/N,N/N" )
@@ -207,9 +220,15 @@ FUNCTION Main_MISC()
    TEST_LINE( ( o:colorSpec := ","                         , o:colorSpec ) , "N/N,N/N"                )
    TEST_LINE( ( o:colorSpec := ",,"                        , o:colorSpec ) , "N/N,N/N"                )
    TEST_LINE( ( o:colorSpec := "+"                         , o:colorSpec ) , "N+/N,N+/N"              )
+#ifdef HB_C52_STRICT_OFF
+   TEST_LINE( ( o:colorSpec := "+*"                        , o:colorSpec ) , "N+/N*,N+/N*"            )
+   TEST_LINE( ( o:colorSpec := "*"                         , o:colorSpec ) , "N/N*,N/N*"              )
+   TEST_LINE( ( o:colorSpec := "*+"                        , o:colorSpec ) , "N+/N*,N+/N*"            )
+#else
    TEST_LINE( ( o:colorSpec := "+*"                        , o:colorSpec ) , "N*+/N,N*+/N"            )
    TEST_LINE( ( o:colorSpec := "*"                         , o:colorSpec ) , "N*/N,N*/N"              )
    TEST_LINE( ( o:colorSpec := "*+"                        , o:colorSpec ) , "N*+/N,N*+/N"            )
+#endif
    TEST_LINE( ( o:colorSpec := "BR/W+"                     , o:colorSpec ) , "BR+/W,BR+/W"            )
    TEST_LINE( ( o:colorSpec := "BR/W+"                     , o:colorSpec ) , "BR+/W,BR+/W"            )
    TEST_LINE( ( o:colorSpec := "RB/W+"                     , o:colorSpec ) , "BR+/W,BR+/W"            )

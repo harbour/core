@@ -55,15 +55,25 @@
 
 #include "set.ch"
 
+#ifdef HB_C52_STRICT
+   #command END SEQUENCE      => end
+   #command ENDSEQUENCE       => end
+#else
+   #command END SEQUENCE      => endsequence
+#endif
+/* Harbour extensions */
+#command END SWITCH        => endswitch
+#command END WITH          => endwith
+#command END OBJECT        => endwith
+
 #command DO WHILE <exp>    => while <exp>
 #command END <x>           => end
-#command END SEQUENCE      => end
-#command ENDSEQUENCE       => end
 #command ENDDO <*x*>       => enddo
 #command ENDIF <*x*>       => endif
 #command ENDCASE <*x*>     => endcase
 #command ENDFOR [<*x*>]    => next
 #command NEXT <v> [TO <x>] [STEP <s>]  => next
+
 #command DO <proc>.prg [WITH <p,...>]  => do <proc> [ WITH <p>]
 #command CALL <proc>() [WITH <p,...>]  => call <proc> [ WITH <p>]
 #command STORE <v> TO <v1> [,<vN>]     => <v1> := [ <vN> :=] <v>

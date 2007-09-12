@@ -103,46 +103,49 @@
      RECOVER = 319,
      RECOVERUSING = 320,
      ALWAYS = 321,
-     DO = 322,
-     WITH = 323,
-     SELF = 324,
-     LINE = 325,
-     MACROVAR = 326,
-     MACROTEXT = 327,
-     AS_ARRAY = 328,
-     AS_BLOCK = 329,
-     AS_CHARACTER = 330,
-     AS_CLASS = 331,
-     AS_DATE = 332,
-     AS_LOGICAL = 333,
-     AS_NUMERIC = 334,
-     AS_OBJECT = 335,
-     AS_VARIANT = 336,
-     DECLARE = 337,
-     OPTIONAL = 338,
-     DECLARE_CLASS = 339,
-     DECLARE_MEMBER = 340,
-     AS_ARRAY_ARRAY = 341,
-     AS_BLOCK_ARRAY = 342,
-     AS_CHARACTER_ARRAY = 343,
-     AS_CLASS_ARRAY = 344,
-     AS_DATE_ARRAY = 345,
-     AS_LOGICAL_ARRAY = 346,
-     AS_NUMERIC_ARRAY = 347,
-     AS_OBJECT_ARRAY = 348,
-     PROCREQ = 349,
-     CBSTART = 350,
-     DOIDENT = 351,
-     FOREACH = 352,
-     DESCEND = 353,
-     DOSWITCH = 354,
-     WITHOBJECT = 355,
-     NUM_DATE = 356,
-     EPSILON = 357,
-     HASHOP = 358,
-     POST = 359,
-     UNARY = 360,
-     PRE = 361
+     ENDSEQ = 322,
+     DO = 323,
+     WITH = 324,
+     SELF = 325,
+     LINE = 326,
+     MACROVAR = 327,
+     MACROTEXT = 328,
+     AS_ARRAY = 329,
+     AS_BLOCK = 330,
+     AS_CHARACTER = 331,
+     AS_CLASS = 332,
+     AS_DATE = 333,
+     AS_LOGICAL = 334,
+     AS_NUMERIC = 335,
+     AS_OBJECT = 336,
+     AS_VARIANT = 337,
+     DECLARE = 338,
+     OPTIONAL = 339,
+     DECLARE_CLASS = 340,
+     DECLARE_MEMBER = 341,
+     AS_ARRAY_ARRAY = 342,
+     AS_BLOCK_ARRAY = 343,
+     AS_CHARACTER_ARRAY = 344,
+     AS_CLASS_ARRAY = 345,
+     AS_DATE_ARRAY = 346,
+     AS_LOGICAL_ARRAY = 347,
+     AS_NUMERIC_ARRAY = 348,
+     AS_OBJECT_ARRAY = 349,
+     PROCREQ = 350,
+     CBSTART = 351,
+     DOIDENT = 352,
+     FOREACH = 353,
+     DESCEND = 354,
+     DOSWITCH = 355,
+     ENDSWITCH = 356,
+     WITHOBJECT = 357,
+     ENDWITH = 358,
+     NUM_DATE = 359,
+     EPSILON = 360,
+     HASHOP = 361,
+     POST = 362,
+     UNARY = 363,
+     PRE = 364
    };
 #endif
 /* Tokens.  */
@@ -210,46 +213,49 @@
 #define RECOVER 319
 #define RECOVERUSING 320
 #define ALWAYS 321
-#define DO 322
-#define WITH 323
-#define SELF 324
-#define LINE 325
-#define MACROVAR 326
-#define MACROTEXT 327
-#define AS_ARRAY 328
-#define AS_BLOCK 329
-#define AS_CHARACTER 330
-#define AS_CLASS 331
-#define AS_DATE 332
-#define AS_LOGICAL 333
-#define AS_NUMERIC 334
-#define AS_OBJECT 335
-#define AS_VARIANT 336
-#define DECLARE 337
-#define OPTIONAL 338
-#define DECLARE_CLASS 339
-#define DECLARE_MEMBER 340
-#define AS_ARRAY_ARRAY 341
-#define AS_BLOCK_ARRAY 342
-#define AS_CHARACTER_ARRAY 343
-#define AS_CLASS_ARRAY 344
-#define AS_DATE_ARRAY 345
-#define AS_LOGICAL_ARRAY 346
-#define AS_NUMERIC_ARRAY 347
-#define AS_OBJECT_ARRAY 348
-#define PROCREQ 349
-#define CBSTART 350
-#define DOIDENT 351
-#define FOREACH 352
-#define DESCEND 353
-#define DOSWITCH 354
-#define WITHOBJECT 355
-#define NUM_DATE 356
-#define EPSILON 357
-#define HASHOP 358
-#define POST 359
-#define UNARY 360
-#define PRE 361
+#define ENDSEQ 322
+#define DO 323
+#define WITH 324
+#define SELF 325
+#define LINE 326
+#define MACROVAR 327
+#define MACROTEXT 328
+#define AS_ARRAY 329
+#define AS_BLOCK 330
+#define AS_CHARACTER 331
+#define AS_CLASS 332
+#define AS_DATE 333
+#define AS_LOGICAL 334
+#define AS_NUMERIC 335
+#define AS_OBJECT 336
+#define AS_VARIANT 337
+#define DECLARE 338
+#define OPTIONAL 339
+#define DECLARE_CLASS 340
+#define DECLARE_MEMBER 341
+#define AS_ARRAY_ARRAY 342
+#define AS_BLOCK_ARRAY 343
+#define AS_CHARACTER_ARRAY 344
+#define AS_CLASS_ARRAY 345
+#define AS_DATE_ARRAY 346
+#define AS_LOGICAL_ARRAY 347
+#define AS_NUMERIC_ARRAY 348
+#define AS_OBJECT_ARRAY 349
+#define PROCREQ 350
+#define CBSTART 351
+#define DOIDENT 352
+#define FOREACH 353
+#define DESCEND 354
+#define DOSWITCH 355
+#define ENDSWITCH 356
+#define WITHOBJECT 357
+#define ENDWITH 358
+#define NUM_DATE 359
+#define EPSILON 360
+#define HASHOP 361
+#define POST 362
+#define UNARY 363
+#define PRE 364
 
 
 
@@ -299,7 +305,7 @@ typedef union YYSTYPE
    } asMessage;
 }
 /* Line 1533 of yacc.c.  */
-#line 303 "harboury.h"
+#line 309 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

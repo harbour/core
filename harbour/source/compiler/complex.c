@@ -123,6 +123,9 @@ static const HB_LEX_KEY s_keytable[] =
    { "ENDCASE",     4,  7, ENDCASE        },
    { "ENDDO",       4,  5, ENDDO          },
    { "ENDIF",       4,  5, ENDIF          },
+   { "ENDSEQUENCE", 6, 11, ENDSEQ         },
+   { "ENDSWITCH",   5,  9, ENDSWITCH      },
+   { "ENDWITH",     4,  7, ENDWITH        },
    { "EXIT",        4,  4, EXIT           },
    { "EXTERNAL",    4,  8, EXTERN         },
    { "FIELD",       4,  5, FIELD          },
@@ -741,6 +744,13 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                if( HB_COMP_PARAM->wWhileCounter == 0 )
                   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                    HB_COMP_ERR_ENDDO, NULL, NULL );
+               break;
+
+            case ENDSEQ:
+            case ENDSWITCH:
+            case ENDWITH:
+               if( pLex->iState != LOOKUP || !HB_PP_TOKEN_ISEOC( pToken->pNext ) )
+                  iType = IDENTIFIER;
                break;
 
             case INIT:
