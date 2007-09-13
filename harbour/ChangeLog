@@ -8,6 +8,34 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-13 16:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/Makefile
+  + harbour/include/hbsxdef.ch
+  * harbour/include/dbinfo.ch
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbrddcdx.h
+  * harbour/include/hbrddntx.h
+  * harbour/contrib/bmdbfcdx/hbrddbmcdx.h
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/workarea.c
+    + added SIx3 compatible triggers support
+      They should work like in SIx3 with some intentional excpetions:
+         1) if 4-th parameter exists (PREUSE/GET/PUT) then it's passed by
+            reference otherwise is not passed at all and PCOUNT() in trigger
+            functions returns 3
+            SIx3 do not pass 4-th parameter by reference and if it not
+            exist then passes 0
+         2) EVENT_POSTCLOSE is executed after SUPER_CLOSE()
+            SIx3 executes EVENT_POSTCLOSE just before SUPER_CLOSE()
+         3) EVENT_UPDATE is executed _ALWAYS_ when DBF is updated also
+            when WA does not have open indexes
+            SIx3 executes EVENT_UPDATE only when at least one index is
+            open without checking if it's updated or not
+         4) EVENT_POSTUSE is executed from OPEN() method in "DBF" RDD not
+            from index RDDs so before the indexes are open
+            SIx3 executes EVENT_POSTUSE after opening indexes
+            It's possible that I'll change this condition in the future
+
 2007-09-13 13:30 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * makefile.vc
    * makefile.gc

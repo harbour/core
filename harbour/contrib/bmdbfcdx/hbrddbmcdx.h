@@ -515,6 +515,7 @@ typedef struct _CDXAREA
    BOOL     fFLocked;               /* TRUE if file is locked */
    BOOL     fHeaderLocked;          /* TRUE if DBF header is locked */
    BOOL     fTrigger;               /* Execute trigger function */
+   LPDBOPENINFO lpdbOpenInfo;       /* Pointer to current dbOpenInfo structure in OPEN/CREATE methods */
    LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
    ULONG *  pLocksPos;              /* List of records locked */
    ULONG    ulNumLocksPos;          /* Number of records locked */

@@ -1680,6 +1680,7 @@ static ERRCODE hb_waRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnection,
             hb_itemPutC( pItem, hb_set.HB_SET_MFILEEXT );
             break;
          }
+         /* no break - return FAILURE */
       case RDDI_TABLEEXT:
       case RDDI_ORDBAGEXT:
       case RDDI_ORDEREXT:

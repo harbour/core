@@ -104,6 +104,7 @@
 /* misc */
 #define RDDI_PENDINGTRIGGER       40   /* set pending trigger for next open operation */
 #define RDDI_PENDINGPASSWORD      41   /* set pending password for next open operation */
+#define RDDI_PASSWORD             42   /* Get/Set default password */
 
 /*
    Constants for SELF_ORDINFO ()

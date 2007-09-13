@@ -50,6 +50,8 @@
  *
  */
 
+#define HB_TRIGVAR_BYREF
+
 #include "hbapi.h"
 #include "hbinit.h"
 #include "hbvm.h"
@@ -65,9 +67,15 @@
 #include "hbsxfunc.h"
 #include "error.ch"
 #include "rddsys.ch"
+#include "hbsxdef.ch"
 
 #ifndef HB_CDP_SUPPORT_OFF
 #  include "hbapicdp.h"
+#endif
+
+#ifdef HB_TRIGVAR_BYREF
+#include "hbxvm.h"
+#include "hbstack.h"
 #endif
 
 static USHORT s_uiRddId = ( USHORT ) -1;
@@ -218,6 +226,137 @@ static void hb_dbfSetBlankRecord( DBFAREAP pArea )
    ulSize = pArea->pRecord - pPtr - ulSize;
    if( ulSize < ( ULONG ) pArea->uiRecordLen )
       memset( pPtr, '\0', ( ULONG ) pArea->uiRecordLen - ulSize );
+}
+
+/*
+ * Executes user trigger function
+ */
+static BOOL hb_dbfTriggerDo( DBFAREAP pArea, int iEvent,
+                             int iField, PHB_ITEM pItem )
+{
+   BOOL fResult = TRUE;
+
+   if( hb_vmRequestQuery() == 0 )
+   {
+      if( hb_vmRequestReenter() )
+      {
+#ifdef HB_TRIGVAR_BYREF
+         LONG lOffset = 0;
+
+         if( pItem )
+         {
+            lOffset = hb_stackTopOffset() - hb_stackBaseOffset();
+            hb_vmPush( pItem );
+         }
+#endif
+
+         hb_vmPushDynSym( pArea->pTriggerSym );
+         hb_vmPushNil();
+         /* nEvent */
+         hb_vmPushInteger( iEvent );
+         /* nArea */
+         hb_vmPushInteger( pArea->uiArea );
+         /* nFieldPos (GET/PUT) */
+         hb_vmPushInteger( iField );
+         /* xTrigVal (PREUSE/GET/PUT) */
+         if( pItem )
+         {
+            hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+            hb_vmDo( 4 );
+         }
+         else
+         {
+            /* SIx3 makes: hb_vmPushInteger( 0 ); */
+            hb_vmDo( 3 );
+         }
+
+#ifdef HB_TRIGVAR_BYREF
+         if( pItem )
+         {
+            hb_itemMove( pItem, hb_stackItemFromBase( lOffset ) );
+            hb_stackPop();
+         }
+#endif
+         fResult = hb_parl( -1 );
+         hb_vmRequestRestore();
+      }
+   }
+
+   return fResult;
+}
+
+/*
+ * Set user trigger function
+ */
+static void hb_dbfTriggerSet( DBFAREAP pArea, PHB_ITEM pTrigger )
+{
+   char * szName = hb_itemGetCPtr( pTrigger );
+
+   pArea->pTriggerSym = *szName ? hb_dynsymFindName( szName ) : NULL;
+   if( pArea->pTriggerSym && !hb_dynsymIsFunction( pArea->pTriggerSym ) )
+      pArea->pTriggerSym = NULL;
+   pArea->fTrigger = pArea->pTriggerSym != NULL;
+}
+
+/*
+ * Set encryption password
+ */
+static BOOL hb_dbfPasswordSet( DBFAREAP pArea, PHB_ITEM pPasswd )
+{
+   BYTE byBuffer[ 8 ];
+   ULONG ulLen = 0;
+   BOOL fSet = !pArea->fHasMemo && HB_IS_STRING( pPasswd );
+   BOOL fKeySet = FALSE;
+
+   if( fSet )
+   {
+      ulLen = hb_itemGetCLen( pPasswd );
+      if( ulLen > 0 )
+      {
+         if( ulLen < 8 )
+         {
+            memcpy( byBuffer, hb_itemGetCPtr( pPasswd ), ulLen );
+            memset( byBuffer + ulLen, '\0', 8 - ulLen );
+         }
+         else
+            memcpy( byBuffer, hb_itemGetCPtr( pPasswd ), 8 );
+      }
+   }
+
+   if( pArea->pCryptKey )
+      hb_itemPutCL( pPasswd, ( char * ) pArea->pCryptKey, 8 );
+   else
+      hb_itemClear( pPasswd );
+
+   if( fSet )
+   {
+      if( pArea->pRecord && pArea->fPositioned )
+      {
+         SELF_GOCOLD( ( AREAP ) pArea );
+         pArea->fValidBuffer = FALSE;
+      }
+      if( pArea->pCryptKey )
+      {
+         /* clean the memory with password key - though it's not
+          * a serious actions in such case ;-)
+          */
+         memset( pArea->pCryptKey, '\0', 8 );
+         hb_xfree( pArea->pCryptKey );
+         pArea->pCryptKey = NULL;
+      }
+      if( ulLen > 0 )
+      {
+         /* at this moment only one encryption method is used,
+            I'll add other later, [druzus] */
+         pArea->bCryptType = DB_CRYPT_SIX;
+         pArea->pCryptKey = ( BYTE * ) hb_xgrab( 8 );
+         /* SIX encode the key with its own value before use */
+         hb_sxEnCrypt( byBuffer, pArea->pCryptKey, byBuffer, 8 );
+         fKeySet = TRUE;
+      }
+   }
+
+   return fKeySet;
 }
 
 /*
@@ -1213,7 +1352,11 @@ static ERRCODE hb_dbfAppend( DBFAREAP pArea, BOOL bUnLockAll )
    if( SELF_GOCOLD( ( AREAP ) pArea ) == FAILURE )
       return FAILURE;
 
-   /* TODO: EVENT_APPEND call (stopped) */
+   if( pArea->fTrigger )
+   {
+      if( !hb_dbfTriggerDo( pArea, EVENT_APPEND, 0, NULL ) )
+         return FAILURE;
+   }
 
    if( pArea->fReadonly )
    {
@@ -1295,7 +1438,11 @@ static ERRCODE hb_dbfDeleteRec( DBFAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfDeleteRec(%p)", pArea));
 
-   /* TODO: EVENT_DELETE call (stopped) */
+   if( pArea->fTrigger )
+   {
+      if( !hb_dbfTriggerDo( pArea, EVENT_DELETE, 0, NULL ) )
+         return FAILURE;
+   }
 
    if( pArea->lpdbPendingRel )
    {
@@ -1615,6 +1762,13 @@ static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       hb_itemRelease( pError );
       return FAILURE;
    }
+
+   if( pArea->fTrigger )
+   {
+      if( !hb_dbfTriggerDo( pArea, EVENT_GET, uiIndex + 1, pItem ) )
+         return FAILURE;
+   }
+
    return SUCCESS;
 }
 
@@ -1639,6 +1793,19 @@ static ERRCODE hb_dbfGoCold( DBFAREAP pArea )
 
    if( pArea->fRecordChanged )
    {
+      if( pArea->fTrigger )
+      {
+         /* The pending relation may move the record pointer so we should
+            disable them for trigger evaluation */
+         LPDBRELINFO lpdbPendingRel = pArea->lpdbPendingRel;
+         pArea->lpdbPendingRel = NULL;
+
+         hb_dbfTriggerDo( pArea, EVENT_UPDATE, 0, NULL );
+
+         /* Restore disabled pending relation */
+         pArea->lpdbPendingRel = lpdbPendingRel;
+      }
+
       /* Write current record */
       if( ! hb_dbfWriteRecord( pArea ) )
          return FAILURE;
@@ -1778,13 +1945,20 @@ static ERRCODE hb_dbfPutValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    LPFIELD pField;
    /* this buffer is for date and number conversion,
     * DBASE documentation defines maximum numeric field size as 20
-    * but Clipper allows to create longer fields so I remove this limit, Druzus
+    * but Clipper allows to create longer fields so I removed this
+    * limit [druzus]
     */
    char szBuffer[ 256 ];
    PHB_ITEM pError;
    ERRCODE uiError;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfPutValue(%p, %hu, %p)", pArea, uiIndex, pItem));
+
+   if( pArea->fTrigger )
+   {
+      if( !hb_dbfTriggerDo( pArea, EVENT_PUT, uiIndex, pItem ) )
+         return FAILURE;
+   }
 
    if( pArea->lpdbPendingRel )
    {
@@ -2020,6 +2194,12 @@ static ERRCODE hb_dbfRecall( DBFAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfRecall(%p)", pArea));
 
+   if( pArea->fTrigger )
+   {
+      if( !hb_dbfTriggerDo( pArea, EVENT_RECALL, 0, NULL ) )
+         return FAILURE;
+   }
+
    if( pArea->lpdbPendingRel )
    {
       if( SELF_FORCEREL( ( AREAP ) pArea ) != SUCCESS )
@@ -2129,10 +2309,15 @@ static ERRCODE hb_dbfSetFieldExtent( DBFAREAP pArea, USHORT uiFieldExtent )
 static ERRCODE hb_dbfClose( DBFAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfClose(%p)", pArea));
+
+   if( pArea->fTrigger )
+   {
+      if( !hb_dbfTriggerDo( pArea, EVENT_PRECLOSE, 0, NULL ) )
+         return FAILURE;
+   }
+
    /* Reset parent rel struct */
    pArea->lpdbPendingRel = NULL;
-
-   SUPER_CLOSE( ( AREAP ) pArea );
 
    /* Update record and unlock records */
    if( pArea->hDataFile != FS_ERROR )
@@ -2145,16 +2330,18 @@ static ERRCODE hb_dbfClose( DBFAREAP pArea )
 
       /* Update header */
       if( pArea->fUpdateHeader )
-      {
          SELF_WRITEDBHEADER( ( AREAP ) pArea );
-      }
 
       /* It's not Clipper compatible but it reduces the problem with
          byggy Windows network setting */
       if( hb_set.HB_SET_HARDCOMMIT )
-      {
          SELF_FLUSH( ( AREAP ) pArea );
-      }
+   }
+
+   SUPER_CLOSE( ( AREAP ) pArea );
+
+   if( pArea->hDataFile != FS_ERROR )
+   {
       hb_fsClose( pArea->hDataFile );
       pArea->hDataFile = FS_ERROR;
    }
@@ -2200,6 +2387,12 @@ static ERRCODE hb_dbfClose( DBFAREAP pArea )
       pArea->szMemoFileName = NULL;
    }
 
+   if( pArea->fTrigger )
+   {
+      hb_dbfTriggerDo( pArea, EVENT_POSTCLOSE, 0, NULL );
+      pArea->fTrigger = FALSE;
+   }
+
    return SUCCESS;
 }
 
@@ -2218,7 +2411,10 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfCreate(%p, %p)", pArea, pCreateInfo));
 
+   pArea->lpdbOpenInfo = pCreateInfo;
+
    pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
+
    if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
    {
       pItem = hb_itemPutC( pItem, "" );
@@ -2226,6 +2422,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       {
          hb_itemRelease( pItem );
          hb_xfree( pFileName );
+         pArea->lpdbOpenInfo = NULL;
          return FAILURE;
       }
       pFileName->szExtension = hb_itemGetCPtr( pItem );
@@ -2238,7 +2435,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    hb_xfree( pFileName );
 
    pItem = hb_itemPutL( pItem, FALSE );
-   fRawBlob = SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_BLOB_SUPPORT, 0, pItem ) == SUCCESS &&
+   fRawBlob = SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_BLOB_SUPPORT, pCreateInfo->ulConnection, pItem ) == SUCCESS &&
               hb_itemGetL( pItem );
 
    if( pArea->bTableType == 0 )
@@ -2247,6 +2444,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       if( SELF_INFO( ( AREAP ) pArea, DBI_TABLETYPE, pItem ) != SUCCESS )
       {
          hb_itemRelease( pItem );
+         pArea->lpdbOpenInfo = NULL;
          return FAILURE;
       }
       pArea->bTableType = hb_itemGetNI( pItem );
@@ -2258,6 +2456,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       if( SELF_INFO( ( AREAP ) pArea, DBI_LOCKSCHEME, pItem ) != SUCCESS )
       {
          hb_itemRelease( pItem );
+         pArea->lpdbOpenInfo = NULL;
          return FAILURE;
       }
       pArea->bLockType = hb_itemGetNI( pItem );
@@ -2278,6 +2477,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       if( SELF_INFO( ( AREAP ) pArea, DBI_MEMOTYPE, pItem ) != SUCCESS )
       {
          hb_itemRelease( pItem );
+         pArea->lpdbOpenInfo = NULL;
          return FAILURE;
       }
       pArea->bMemoType = ( BYTE ) hb_itemGetNI( pItem );
@@ -2286,9 +2486,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    pArea->bCryptType = DB_CRYPT_NONE;
 
    if( pItem )
-   {
       hb_itemRelease( pItem );
-   }
 
    if( pArea->uiFieldCount * sizeof( DBFFIELD ) + sizeof( DBFHEADER ) +
        ( pArea->bTableType == DB_DBF_VFP ? 1 : 2 ) > UINT16_MAX )
@@ -2300,6 +2498,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       hb_errPutFileName( pError, ( char * ) pCreateInfo->abName );
       SELF_ERROR( ( AREAP ) pArea, pError );
       hb_itemRelease( pError );
+      pArea->lpdbOpenInfo = NULL;
       return FAILURE;
    }
 
@@ -2338,6 +2537,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
       if( pArea->hDataFile == FS_ERROR )
       {
+         pArea->lpdbOpenInfo = NULL;
          return FAILURE;
       }
    }
@@ -2474,6 +2674,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          hb_errPutFileName( pError, ( char * ) pCreateInfo->abName );
          SELF_ERROR( ( AREAP ) pArea, pError );
          hb_itemRelease( pError );
+         pArea->lpdbOpenInfo = NULL;
          return FAILURE;
       }
       pThisField++ ;
@@ -2504,6 +2705,25 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       pArea->cdPage = hb_cdp_page;
 #endif
 
+   pItem = hb_itemNew( NULL );
+   if( SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_PENDINGPASSWORD,
+                     pCreateInfo->ulConnection, pItem ) == SUCCESS )
+   {
+      if( hb_dbfPasswordSet( pArea, pItem ) )
+         pArea->fTableEncrypted = TRUE;
+   }
+   else
+   {
+      hb_itemClear( pItem );
+      if( SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_PASSWORD,
+                        pCreateInfo->ulConnection, pItem ) == SUCCESS )
+      {
+         if( hb_dbfPasswordSet( pArea, pItem ) )
+            pArea->fTableEncrypted = TRUE;
+      }
+   }
+   hb_itemRelease( pItem );
+
    if( !fRawBlob )
    {
       /* Force write new header */
@@ -2515,6 +2735,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          if( pBuffer )
             hb_xfree( pBuffer );
          SELF_CLOSE( ( AREAP ) pArea );
+         pArea->lpdbOpenInfo = NULL;
          return errCode;
       }
 
@@ -2528,6 +2749,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
          if( pBuffer )
             hb_xfree( pBuffer );
          SELF_CLOSE( ( AREAP ) pArea );
+         pArea->lpdbOpenInfo = NULL;
          return FAILURE;
       }
 
@@ -2555,6 +2777,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    if( errCode != SUCCESS )
    {
       SELF_CLOSE( ( AREAP ) pArea );
+      pArea->lpdbOpenInfo = NULL;
       return errCode;
    }
 
@@ -2564,6 +2787,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    /* Update the number of record for corrupted headers */
    pArea->ulRecCount = hb_dbfCalcRecCount( pArea );
+   pArea->lpdbOpenInfo = NULL;
 
    /* Position cursor at the first record */
    return SELF_GOTOP( ( AREAP ) pArea );
@@ -2714,60 +2938,23 @@ static ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_PASSWORD:
+         hb_dbfPasswordSet( pArea, pItem );
+         break;
+
+      case DBI_TRIGGER:
+         if( HB_IS_LOGICAL( pItem ) )
+            pArea->fTrigger = hb_itemGetL( pItem );
+         else
          {
-            BYTE byBuffer[ 8 ];
-            ULONG ulLen = 0;
-            BOOL fSet = !pArea->fHasMemo && HB_IS_STRING( pItem );
-
-            if( fSet )
-            {
-               ulLen = hb_itemGetCLen( pItem );
-               if( ulLen > 0 )
-               {
-                  if( ulLen < 8 )
-                  {
-                     memcpy( byBuffer, hb_itemGetCPtr( pItem ), ulLen );
-                     memset( byBuffer + ulLen, '\0', 8 - ulLen );
-                  }
-                  else
-                  {
-                     memcpy( byBuffer, hb_itemGetCPtr( pItem ), 8 );
-                  }
-               }
-            }
-
-            if( pArea->pCryptKey )
-               hb_itemPutCL( pItem, ( char * ) pArea->pCryptKey, 8 );
-            else
-               hb_itemClear( pItem );
-
-            if( fSet )
-            {
-               if( pArea->fPositioned )
-               {
-                  errCode = SELF_GOCOLD( ( AREAP ) pArea );
-                  pArea->fValidBuffer = FALSE;
-               }
-               if( pArea->pCryptKey )
-               {
-                  /* clean the memory with password key - though it's not
-                   * a serious actions in such case ;-)
-                   */
-                  memset( pArea->pCryptKey, '\0', 8 );
-                  hb_xfree( pArea->pCryptKey );
-                  pArea->pCryptKey = NULL;
-               }
-               if( ulLen > 0 )
-               {
-                  /* at this moment only one encryption method is used,
-                     I'll add other later, [druzus] */
-                  pArea->bCryptType = DB_CRYPT_SIX;
-                  pArea->pCryptKey = ( BYTE * ) hb_xgrab( 8 );
-                  /* SIX encode the key with its own value before use */
-                  hb_sxEnCrypt( byBuffer, pArea->pCryptKey, byBuffer, 8 );
-               }
-            }
+            PHB_DYNS pTriggerSym = pArea->pTriggerSym;
+            if( HB_IS_STRING( pItem ) )
+               hb_dbfTriggerSet( pArea, pItem );
+            hb_itemPutC( pItem, pTriggerSym ? hb_dynsymName( pTriggerSym ) : NULL );
          }
+         break;
+
+      case DBI_OPENINFO:
+         hb_itemPutPtr( pItem, pArea->lpdbOpenInfo );
          break;
 
       case DBI_DB_VERSION:
@@ -2955,7 +3142,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    ERRCODE errCode;
    USHORT uiFlags, uiFields, uiSize, uiCount, uiSkip;
    BOOL fRetry, fRawBlob;
-   PHB_ITEM pError, pFileExt, pItem;
+   PHB_ITEM pError, pItem;
    PHB_FNAME pFileName;
    BYTE * pBuffer;
    LPDBFFIELD pField;
@@ -2965,19 +3152,53 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfOpen(%p, %p)", pArea, pOpenInfo));
 
+   pArea->lpdbOpenInfo = pOpenInfo;
+
+   pItem = hb_itemNew( NULL );
+   
+   if( SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_PENDINGTRIGGER,
+                     pOpenInfo->ulConnection, pItem ) == SUCCESS )
+   {
+      if( HB_IS_STRING( pItem ) )
+         hb_dbfTriggerSet( pArea, pItem );
+   }
+
+   if( !pArea->fTrigger )
+   {
+      if( SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_TRIGGER,
+                        pOpenInfo->ulConnection, pItem ) == SUCCESS )
+      {
+         if( HB_IS_STRING( pItem ) )
+            hb_dbfTriggerSet( pArea, pItem );
+      }
+   }
+
+   if( pArea->fTrigger )
+   {
+      hb_itemPutC( pItem, ( char * ) pOpenInfo->abName );
+      if( !hb_dbfTriggerDo( pArea, EVENT_PREUSE, 0, pItem ) )
+      {
+         hb_itemRelease( pItem );
+         pArea->lpdbOpenInfo = NULL;
+         return FAILURE;
+      }
+      hb_strncpy( ( char * ) szFileName, hb_itemGetCPtr( pItem ), _POSIX_PATH_MAX );
+   }
+   else
+      hb_strncpy( ( char * ) szFileName, ( char * ) pOpenInfo->abName, _POSIX_PATH_MAX );
+
    if( !pArea->bLockType )
    {
-      PHB_ITEM pItem = hb_itemNew( NULL );
-
+      hb_itemClear( pItem );
       if( SELF_INFO( ( AREAP ) pArea, DBI_LOCKSCHEME, pItem ) != SUCCESS )
       {
          hb_itemRelease( pItem );
+         pArea->lpdbOpenInfo = NULL;
          return FAILURE;
       }
       pArea->bLockType = hb_itemGetNI( pItem );
       if( !pArea->bLockType )
          pArea->bLockType = DB_DBFLOCK_CLIP;
-      hb_itemRelease( pItem );
    }
 #ifndef HB_CDP_SUPPORT_OFF
    if( pOpenInfo->cdpId )
@@ -3002,24 +3223,20 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
              (pArea->fShared ? FO_DENYNONE : FO_EXCLUSIVE);
    pError = NULL;
 
-   pFileName = hb_fsFNameSplit( ( char * ) pOpenInfo->abName );
+   pFileName = hb_fsFNameSplit( ( char * ) szFileName );
    /* Add default file name extension if necessary */
    if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
    {
-      pFileExt = hb_itemPutC( NULL, "" );
-      if( SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pFileExt ) != SUCCESS )
+      hb_itemClear( pItem );
+      if( SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem ) != SUCCESS )
       {
-         hb_itemRelease( pFileExt );
          hb_xfree( pFileName );
+         hb_itemRelease( pItem );
+         pArea->lpdbOpenInfo = NULL;
          return FAILURE;
       }
-      pFileName->szExtension = hb_itemGetCPtr( pFileExt );
+      pFileName->szExtension = hb_itemGetCPtr( pItem );
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );
-      hb_itemRelease( pFileExt );
-   }
-   else
-   {
-      hb_strncpy( ( char * ) szFileName, ( char * ) pOpenInfo->abName, _POSIX_PATH_MAX );
    }
 
    /* Create default alias if necessary */
@@ -3030,9 +3247,10 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
    hb_xfree( pFileName );
 
-   pItem = hb_itemPutL( NULL, FALSE );
-   fRawBlob = SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_BLOB_SUPPORT, 0, pItem ) == SUCCESS &&
+   hb_itemClear( pItem );
+   fRawBlob = SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_BLOB_SUPPORT, pOpenInfo->ulConnection, pItem ) == SUCCESS &&
               hb_itemGetL( pItem );
+
    hb_itemRelease( pItem );
 
    if( fRawBlob )
@@ -3077,6 +3295,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       if( pArea->hDataFile == FS_ERROR )
       {
          SELF_CLOSE( ( AREAP ) pArea );
+         pArea->lpdbOpenInfo = NULL;
          return FAILURE;
       }
 
@@ -3088,6 +3307,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       if( errCode != SUCCESS )
       {
          SELF_CLOSE( ( AREAP ) pArea );
+         pArea->lpdbOpenInfo = NULL;
          return errCode;
       }
 
@@ -3133,6 +3353,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
          if( pBuffer )
             hb_xfree( pBuffer );
          SELF_CLOSE( ( AREAP ) pArea );
+         pArea->lpdbOpenInfo = NULL;
          return errCode;
       }
 
@@ -3180,6 +3401,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       if( errCode != SUCCESS )
       {
          SELF_CLOSE( ( AREAP ) pArea );
+         pArea->lpdbOpenInfo = NULL;
          return errCode;
       }
    }
@@ -3311,8 +3533,26 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
          hb_itemRelease( pError );
       }
       SELF_CLOSE( ( AREAP ) pArea );
+      pArea->lpdbOpenInfo = NULL;
       return errCode;
    }
+
+   pItem = hb_itemNew( NULL );
+   if( SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_PENDINGPASSWORD,
+                     pOpenInfo->ulConnection, pItem ) == SUCCESS )
+   {
+      hb_dbfPasswordSet( pArea, pItem );
+   }
+   else
+   {
+      hb_itemClear( pItem );
+      if( SELF_RDDINFO( SELF_RDDNODE( pArea ), RDDI_PASSWORD,
+                        pOpenInfo->ulConnection, pItem ) == SUCCESS )
+      {
+         hb_dbfPasswordSet( pArea, pItem );
+      }
+   }
+   hb_itemRelease( pItem );
 
    /* Open memo file if exists */
    if( pArea->fHasMemo )
@@ -3334,6 +3574,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    if( errCode != SUCCESS )
    {
       SELF_CLOSE( ( AREAP ) pArea );
+      pArea->lpdbOpenInfo = NULL;
       return FAILURE;
    }
 
@@ -3345,7 +3586,14 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    pArea->ulRecCount = hb_dbfCalcRecCount( pArea );
 
    /* Position cursor at the first record */
-   return SELF_GOTOP( ( AREAP ) pArea );
+   errCode = SELF_GOTOP( ( AREAP ) pArea );
+
+   if( pArea->fTrigger )
+      hb_dbfTriggerDo( pArea, EVENT_POSTUSE, 0, NULL );
+
+   pArea->lpdbOpenInfo = NULL;
+
+   return errCode;
 }
 
 /*
@@ -3417,6 +3665,12 @@ static ERRCODE hb_dbfPack( DBFAREAP pArea )
       SELF_ERROR( ( AREAP ) pArea, pError );
       hb_itemRelease( pError );
       return FAILURE;
+   }
+
+   if( pArea->fTrigger )
+   {
+      if( !hb_dbfTriggerDo( pArea, EVENT_PACK, 0, NULL ) )
+         return FAILURE;
    }
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) != SUCCESS )
@@ -3665,6 +3919,12 @@ static ERRCODE hb_dbfZap( DBFAREAP pArea )
       SELF_ERROR( ( AREAP ) pArea, pError );
       hb_itemRelease( pError );
       return FAILURE;
+   }
+
+   if( pArea->fTrigger )
+   {
+      if( !hb_dbfTriggerDo( pArea, EVENT_ZAP, 0, NULL ) )
+         return FAILURE;
    }
 
    if( SELF_GOCOLD( ( AREAP ) pArea ) != SUCCESS )
@@ -4527,6 +4787,17 @@ static ERRCODE hb_dbfExit( LPRDDNODE pRDD )
 
    if( pRDD->lpvCargo )
    {
+      LPDBFDATA pData = ( LPDBFDATA ) pRDD->lpvCargo;
+
+      if( pData->szTrigger )
+         hb_xfree( pData->szTrigger );
+      if( pData->szPendingTrigger )
+         hb_xfree( pData->szPendingTrigger );
+      if( pData->szPasswd )
+         hb_xfree( pData->szPasswd );
+      if( pData->szPendingPasswd )
+         hb_xfree( pData->szPendingPasswd );
+
       hb_xfree( pRDD->lpvCargo );
       pRDD->lpvCargo = NULL;
    }
@@ -4599,6 +4870,92 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
          }
          break;
       }
+
+      case RDDI_TRIGGER:
+      {
+         char * szTrigger = pData->szTrigger;
+         BOOL fFree = FALSE;
+
+         if( HB_IS_STRING( pItem ) )
+         {
+            fFree = TRUE;
+            pData->szTrigger = hb_itemGetCLen( pItem ) > 0 ?
+                               hb_itemGetC( pItem ) : NULL;
+         }
+
+         if( fFree && szTrigger )
+            hb_itemPutCPtr( pItem, szTrigger, strlen( szTrigger ) );
+         else
+            hb_itemPutC( pItem, szTrigger );
+
+         if( !szTrigger && !fFree )
+            return FAILURE;
+
+         break;
+      }
+      case RDDI_PENDINGTRIGGER:
+         if( HB_IS_STRING( pItem ) )
+         {
+            if( pData->szPendingTrigger )
+            {
+               hb_xfree( pData->szPendingTrigger );
+               pData->szPendingTrigger = NULL;
+            }
+            if( hb_itemGetCLen( pItem ) > 0 )
+               pData->szPendingTrigger = hb_itemGetC( pItem );
+         }
+         else if( pData->szPendingTrigger )
+         {
+            hb_itemPutCPtr( pItem, pData->szPendingTrigger,
+                            strlen( pData->szPendingTrigger ) );
+            pData->szPendingTrigger = NULL;
+         }
+         else
+            return FAILURE;
+         break;
+
+      case RDDI_PASSWORD:
+      {
+         char * szPasswd = pData->szPasswd;
+         BOOL fFree = FALSE;
+
+         if( HB_IS_STRING( pItem ) )
+         {
+            fFree = TRUE;
+            pData->szPasswd = hb_itemGetCLen( pItem ) > 0 ?
+                              hb_itemGetC( pItem ) : NULL;
+         }
+
+         if( fFree && szPasswd )
+            hb_itemPutCPtr( pItem, szPasswd, strlen( szPasswd ) );
+         else
+            hb_itemPutC( pItem, szPasswd );
+
+         if( !szPasswd && !fFree )
+            return FAILURE;
+
+         break;
+      }
+      case RDDI_PENDINGPASSWORD:
+         if( HB_IS_STRING( pItem ) )
+         {
+            if( pData->szPendingPasswd )
+            {
+               hb_xfree( pData->szPendingPasswd );
+               pData->szPendingPasswd = NULL;
+            }
+            if( hb_itemGetCLen( pItem ) > 0 )
+               pData->szPendingPasswd = hb_itemGetC( pItem );
+         }
+         else if( pData->szPendingPasswd )
+         {
+            hb_itemPutCPtr( pItem, pData->szPendingPasswd,
+                            strlen( pData->szPendingPasswd ) );
+            pData->szPendingPasswd = NULL;
+         }
+         else
+            return FAILURE;
+         break;
 
       default:
          return SUPER_RDDINFO( pRDD, uiIndex, ulConnect, pItem );

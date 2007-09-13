@@ -113,6 +113,11 @@ typedef struct _DBFDATA
    char     szIndexExt[ HB_MAX_FILE_EXT + 1 ];
    char     szMemoExt[ HB_MAX_FILE_EXT + 1 ];
 
+   char *   szPasswd;
+   char *   szPendingPasswd;
+   char *   szTrigger;
+   char *   szPendingTrigger;
+
    BYTE     bLockType;        /* 0 */
    BYTE     bTableType;       /* DB_DBF_STD */
    BYTE     bCryptType;       /* DB_CRYPT_NONE */
@@ -208,6 +213,7 @@ typedef struct _DBFAREA
    BOOL     fFLocked;               /* TRUE if file is locked */
    BOOL     fHeaderLocked;          /* TRUE if DBF header is locked */
    BOOL     fTrigger;               /* Execute trigger function */
+   LPDBOPENINFO lpdbOpenInfo;       /* Pointer to current dbOpenInfo structure in OPEN/CREATE methods */
    LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
    ULONG *  pLocksPos;              /* List of records locked */
    ULONG    ulNumLocksPos;          /* Number of records locked */

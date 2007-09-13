@@ -100,7 +100,8 @@ PRG_HEADERS=\
 	setcurs.ch   \
 	simpleio.ch  \
 	std.ch       \
-	tbrowse.ch
+	hbsxdef.ch   \
+	tbrowse.ch   \
 
 API_HEADERS=\
 	error.api    \
