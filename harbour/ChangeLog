@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-13 13:30 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * makefile.vc
+   * makefile.gc
+   * makefile.bc
+   * config/rules.cf
+     + Using Harbour -kM switch when building Harbour itself.
+       (this switch will turn off macro substitution in string 
+       literals.)
+
 2007-09-13 13:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * tests/rto_get.prg
      * Changes missed from previous commit.
