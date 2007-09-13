@@ -1,4 +1,4 @@
-@echo off
+rem @echo off
 rem
 rem $Id$
 rem
@@ -10,6 +10,8 @@ set hb_linkopt=li hbclip
 set lib=..\..\contrib\hbclip\;%lib%
 
 :NO_HBCLIP
+
+rem set hb_clipopt=%hb_clipopt% /DHB_COMPAT_C53
 
 clipper hbtest.prg   /w /n %hb_clipopt%
 clipper rt_array.prg /w /n %hb_clipopt%
@@ -23,7 +25,7 @@ clipper rt_str.prg   /w /n %hb_clipopt%
 clipper rt_stra.prg  /w /n %hb_clipopt%
 clipper rt_trans.prg /w /n %hb_clipopt%
 
-if     "%1" == "" set hb_linker=rtlink 
+if     "%1" == "" set hb_linker=rtlink
 if not "%1" == "" set hb_linker=exospace
 
 %hb_linker% out hbtest5x fi hbtest,rt_array,rt_date,rt_file,rt_hvm,rt_hvma,rt_math,rt_misc,rt_str,rt_stra,rt_trans %hb_linkopt%
