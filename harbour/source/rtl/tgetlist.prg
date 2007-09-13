@@ -576,9 +576,13 @@ METHOD GetPostValidate( oGet, aMsg ) CLASS HBGetList
       ::lUpdated := .T.
    ENDIF
 
+#ifdef HB_COMPAT_C53
    nOldCursor := SetCursor()
+#endif
    oGet:Reset()
+#ifdef HB_COMPAT_C53
    SetCursor( nOldCursor )
+#endif
 
    IF oGet:PostBlock != NIL
 
@@ -593,7 +597,11 @@ METHOD GetPostValidate( oGet, aMsg ) CLASS HBGetList
       ::ShowScoreBoard()
       oGet:UpdateBuffer()
       
+#ifdef HB_COMPAT_C53
       ::lUpdated := iif( oGet:changed, .T., lUpdated )
+#else
+      ::lUpdated := lUpdated
+#endif
 
       __GetListLast( Self )
 
