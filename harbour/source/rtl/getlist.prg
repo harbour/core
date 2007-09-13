@@ -53,7 +53,6 @@
 /* NOTE: Harbour internal function to set and get the active GetList */
 
 STATIC s_oGetListActive
-STATIC s_oGetListLast
 
 PROCEDURE __GetListSetActive( oGetList )
 
@@ -75,6 +74,7 @@ FUNCTION __GetListActive()
    RETURN s_oGetListActive
 
 FUNCTION __GetListLast( oGetListLast )
+   STATIC s_oGetListLast
 
    IF oGetListLast != NIL
       s_oGetListLast := oGetListLast

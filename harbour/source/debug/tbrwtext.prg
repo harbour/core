@@ -172,7 +172,7 @@ METHOD PageDown() CLASS HBBrwText
 
 METHOD RefreshAll() CLASS HBBrwText
 
-   ::RefreshWindow()
+   ::display()
 
    RETURN Self
 
@@ -185,7 +185,7 @@ METHOD RefreshCurrent() CLASS HBBrwText
 METHOD SetActiveLine( n ) CLASS HBBrwText
 
    ::nActiveLine := n
-   ::RefreshWindow()
+   ::display()
 
    RETURN Self
 

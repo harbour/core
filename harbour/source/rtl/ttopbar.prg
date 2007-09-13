@@ -76,7 +76,7 @@ CREATE CLASS TOPBARMENU FUNCTION HBTopBarMenu
    METHOD getPrev()
    METHOD getAccel( nKey )
    METHOD getShortCt( nKey )                        /* NOTE: This method exists but it is not documented in the manuals nor the NG's [jlalin] */
-   METHOD hitTest( nRow, nCol )
+   METHOD hitTest( nMRow, nMCol )
    METHOD insItem( nPos, oItem )
    METHOD select( nPos )
    METHOD setItem( nPos, oItem )
@@ -340,13 +340,13 @@ METHOD getShortCt( nKey ) CLASS TOPBARMENU
          This method correct a bug in Cl*pper:
          when click on a disabled menuitem it will ignore it [jlalin] */
 
-METHOD hitTest( nRow, nCol ) CLASS TOPBARMENU
+METHOD hitTest( nMRow, nMCol ) CLASS TOPBARMENU
 
    LOCAL aItems
    LOCAL nColumn
    LOCAL n
 
-   IF ::nRow == nRow
+   IF nMRow == ::nRow
 
       aItems := ::aItems
 
@@ -354,7 +354,7 @@ METHOD hitTest( nRow, nCol ) CLASS TOPBARMENU
 
          nColumn := aItems[ n ]:col
 
-         IF nCol >= nColumn .AND. nCol <= nColumn + Len( aItems[ n ]:caption )
+         IF nMCol >= nColumn .AND. nMCol <= nColumn + Len( aItems[ n ]:caption )
 #ifndef HB_C52_STRICT
             IF aItems[ n ]:enabled
 #endif

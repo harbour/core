@@ -1485,11 +1485,11 @@ METHOD hitTest( nMRow, nMCol ) CLASS Get
       do case
       case nMRow == ::nRow .and. ;
            nMCol >= ::nCol .and. ;
-           nMCol <  ::nCol + iif( ::nDispLen == NIL, 0, ::nDispLen )
+           nMCol < ::nCol + iif( ::nDispLen == NIL, 0, ::nDispLen )
          return HTCLIENT
       case nMRow == ::nCapRow .and. ;
            nMCol >= ::nCapCol .and. ;
-           nMCol <  ::nCapCol + Len( ::cCaption ) /* NOTE: C5.3 doesn't care about the shortcut key. */
+           nMCol < ::nCapCol + Len( ::cCaption ) /* NOTE: C5.3 doesn't care about the shortcut key. */
          return HTCAPTION
       endcase
    endif
@@ -1515,7 +1515,7 @@ METHOD caption( cCaption ) CLASS Get
 METHOD capRow( nCapRow ) CLASS Get
 
    if ISNUMBER( nCapRow )
-      ::nCapRow := nCapRow
+      ::nCapRow := Int( nCapRow )
    endif
 
    return ::nCapRow
@@ -1523,7 +1523,7 @@ METHOD capRow( nCapRow ) CLASS Get
 METHOD capCol( nCapCol ) CLASS Get
 
    if ISNUMBER( nCapCol )
-      ::nCapCol := nCapCol
+      ::nCapCol := Int( nCapCol )
    endif
 
    return ::nCapCol

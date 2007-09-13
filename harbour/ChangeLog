@@ -8,6 +8,56 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-13 04:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/memoedit.prg
+   * source/rtl/teditor.prg
+   * source/debug/tbrwtext.prg
+     + HBEditor():RefreshWindow() renamed to :display()
+       old message name kept for compatibility.
+     + HBEditor():hitTest() added.
+     + HBEditor():changed() added. (returns internal 
+       ::lDirty which got renamed to ::lChanged)
+       
+   * source/rtl/getlist.prg
+   * source/rtl/getsys.prg
+   * source/rtl/tgetlist.prg
+     ! Fixes for UI problems reported by Lorenzo 
+       and more. Mostly from xhb.
+     + ReadModal() core functionality moved inside 
+       HBGetList()
+     + ReadStats() functionality moved indide 
+       HBGetList()
+     + All HBGetList() vars made protected.
+     + Cleaned up the .prg and class interfaces.
+     ! Fixed crashes of several GETSYS compatibility 
+       functions, when no getlist was active.
+       We're still not fully C5.x compatible though.
+
+   * source/rtl/tmenusys.prg
+     + Uses ReadStats() instead of direct 
+       HBGetList() var access.
+
+   * source/rtl/tbrowse.prg
+     ! :hitTest() fixed.
+
+   * source/rtl/tget.prg
+     ! Minor fixes to :capCol() and :capRow()
+
+   * source/rtl/checkbox.prg
+   * source/rtl/listbox.prg
+   * source/rtl/menuto.prg
+   * source/rtl/pushbtn.prg
+   * source/rtl/radiobtn.prg
+   * source/rtl/radiogrp.prg
+   * source/rtl/scrollbr.prg
+   * source/rtl/tbcolumn.prg
+   * source/rtl/tbrowse.prg
+   * source/rtl/tget.prg
+   * source/rtl/tgetlist.prg
+   * source/rtl/tpopup.prg
+   * source/rtl/ttopbar.prg
+     * Formatting (some varnames uniformized).
+
 2007-09-12 19:27 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tget.prg
      ! :HitTest() crash fix.

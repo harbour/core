@@ -62,6 +62,10 @@
 
 #ifdef HB_COMPAT_C53
 
+/* Some helper contants for the ReadStats() calls. */
+#define SNLASTEXIT      6
+#define SNNEXTGET       12
+
 /* Class to simulate menusys.prg of CA-Cl*pper 5.3 */
 
 CREATE CLASS HBMenuSys
@@ -335,7 +339,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
             IF GetList != NIL .AND. HitTest( GetList, MRow(), MCol(), ::GetMsgArray() ) != 0
                GetActive():ExitState := GE_MOUSEHIT
-               __GetListActive():nLastExitState := GE_MOUSEHIT // Reset Get System values
+               ReadStats( SNLASTEXIT, GE_MOUSEHIT ) // Reset Get System values
                IF ::oMenu:ClassName() == "POPUPMENU"
                   ::PopMenu()
                ENDIF
@@ -417,7 +421,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
       CASE GetList != NIL .AND. ( nNewItem := Accelerator( GetList, nKey, ::GetMsgArray() ) ) != 0
 
          GetActive():ExitState := GE_SHORTCUT
-         __GetListActive():nNextGet := nNewItem // Reset Get System values
+         ReadStats( SNNEXTGET, nNewItem ) // Reset Get System values
          IF ::oMenu:ClassName() == "POPUPMENU"
             ::PopMenu()
          ENDIF

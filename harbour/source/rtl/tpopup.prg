@@ -86,7 +86,7 @@ CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
    METHOD getNext()
    METHOD getPrev()
    METHOD getShortCt( nKey )
-   METHOD hitTest( nMouseRow, nMouseCol )
+   METHOD hitTest( nMRow, nMCol )
    METHOD insItem( nPos, oItem )
    METHOD isOpen()
    METHOD open()
@@ -407,46 +407,46 @@ METHOD getShortCt( nKey ) CLASS POPUPMENU
 /* NOTE: This method corrects one bug in CA-Cl*pper:
          1) when a menuitem is disabled it will ignore the click [jlalin] */
 
-METHOD hitTest( nMouseRow, nMouseCol ) CLASS POPUPMENU
+METHOD hitTest( nMRow, nMCol ) CLASS POPUPMENU
    LOCAL nPos
 
    ::setMetrics()
 
    DO CASE
-   CASE nMouseRow == ::nTop
-      IF nMouseCol == ::nLeft
+   CASE nMRow == ::nTop
+      IF nMCol == ::nLeft
          RETURN HTTOPLEFT
-      ELSEIF nMouseCol == ::nRight
+      ELSEIF nMCol == ::nRight
          RETURN HTTOPRIGHT
-      ELSEIF nMouseCol >= ::nLeft .AND. nMouseCol <= ::nRight
+      ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
          RETURN HTTOP
       ENDIF
-   CASE nMouseRow == ::nBottom
-      IF nMouseCol == ::nLeft
+   CASE nMRow == ::nBottom
+      IF nMCol == ::nLeft
          RETURN HTBOTTOMLEFT
-      ELSEIF nMouseCol == ::nRight
+      ELSEIF nMCol == ::nRight
          RETURN HTBOTTOMRIGHT
-      ELSEIF nMouseCol >= ::nLeft .AND. nMouseCol <= ::nRight
+      ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
          RETURN HTBOTTOM
       ENDIF
-   CASE nMouseCol == ::nLeft
-      IF nMouseRow >= ::nTop .AND. nMouseRow <= ::nBottom
+   CASE nMCol == ::nLeft
+      IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
          RETURN HTLEFT
       ELSE
          RETURN HTNOWHERE
       ENDIF
-   CASE nMouseCol == ::nRight
-      IF nMouseRow >= ::nTop .AND. nMouseRow <= ::nBottom
+   CASE nMCol == ::nRight
+      IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
          RETURN HTRIGHT
       ELSE
          RETURN HTNOWHERE
       ENDIF
-   CASE nMouseRow > ::nTop .AND. ;
-        nMouseRow < ::nBottom .AND. ;
-        nMouseCol > ::nLeft .AND. ;
-        nMouseCol < ::nRight
+   CASE nMRow > ::nTop .AND. ;
+        nMRow < ::nBottom .AND. ;
+        nMCol > ::nLeft .AND. ;
+        nMCol < ::nRight
 
-      nPos := nMouseRow - ::nTop
+      nPos := nMRow - ::nTop
 #ifdef HB_EXTENSION
       IF !::aItems[ nPos ]:enabled
          RETURN HTNOWHERE

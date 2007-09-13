@@ -270,14 +270,14 @@ FUNCTION __MenuTo( bBlock, cVariable )
 
    RETURN n
 
-STATIC FUNCTION HitTest( aMenu, nMouseRow, nMouseCol )
+STATIC FUNCTION HitTest( aMenu, nMRow, nMCol )
 
    LOCAL aMenuItem
 
    FOR EACH aMenuItem IN aMenu
-      IF nMouseRow == aMenuItem[ 1 ] .AND. ;
-         nMouseCol >= aMenuItem[ 2 ] .AND. ;
-         nMouseCol < aMenuItem[ 2 ] + LEN( aMenuItem[ 3 ] )
+      IF nMRow == aMenuItem[ 1 ] .AND. ;
+         nMCol >= aMenuItem[ 2 ] .AND. ;
+         nMCol < aMenuItem[ 2 ] + LEN( aMenuItem[ 3 ] )
 
          RETURN aMenuItem:__enumIndex()
       ENDIF

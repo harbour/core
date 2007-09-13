@@ -80,7 +80,7 @@ CREATE CLASS PUSHBUTTON FUNCTION HBPushButton
    VAR sizeY      INIT 0              /* NOTE: Fully compatible behaviour not implemented. */
 
    METHOD display()
-   METHOD hitTest( nRow, nCol )
+   METHOD hitTest( nMRow, nMCol )
    METHOD killFocus()
    METHOD select()
    METHOD setFocus()
@@ -176,7 +176,7 @@ METHOD killFocus() CLASS PUSHBUTTON
 
    RETURN Self
 
-METHOD hitTest( nRow, nCol ) CLASS PUSHBUTTON
+METHOD hitTest( nMRow, nMCol ) CLASS PUSHBUTTON
 
    LOCAL nCurrentPos := 1
    LOCAL nLen := Len( ::cCaption )
@@ -194,10 +194,10 @@ METHOD hitTest( nRow, nCol ) CLASS PUSHBUTTON
       nLen += 2
    ENDIF
 
-   IF nRow >= ::Row .AND. ;
-      nCol >= ::Col .AND. ;
-      nRow < ::Row + nCurrentPos .AND. ;
-      nCol < ::Col + nLen
+   IF nMRow >= ::Row .AND. ;
+      nMCol >= ::Col .AND. ;
+      nMRow < ::Row + nCurrentPos .AND. ;
+      nMCol < ::Col + nLen
       RETURN HTCLIENT
    ENDIF
 

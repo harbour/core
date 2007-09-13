@@ -73,7 +73,7 @@ CREATE CLASS CHECKBOX FUNCTION HBCheckBox
    VAR cargo
 
    METHOD display()
-   METHOD hitTest( nMouseRow, nMouseCol )
+   METHOD hitTest( nMRow, nMCol )
    METHOD killFocus()
    METHOD select()
    METHOD setFocus()
@@ -161,14 +161,14 @@ METHOD killFocus() CLASS CHECKBOX
 
    RETURN Self
 
-METHOD hitTest( nMouseRow, nMouseCol ) CLASS CHECKBOX
+METHOD hitTest( nMRow, nMCol ) CLASS CHECKBOX
 
    LOCAL nPosAccel
    LOCAL nLenCaption
 
-   IF nMouseRow == ::nRow .AND. ;
-      nMouseCol >= ::nCol .AND. ;
-      nMouseCol < ::nCol + 3
+   IF nMRow == ::nRow .AND. ;
+      nMCol >= ::nCol .AND. ;
+      nMCol < ::nCol + 3
       RETURN HTCLIENT
    ENDIF
    
@@ -179,9 +179,9 @@ METHOD hitTest( nMouseRow, nMouseCol ) CLASS CHECKBOX
       nLenCaption--
    ENDIF
 
-   IF nMouseRow == ::nCapRow .AND. ;
-      nMouseCol >= ::nCapCol .AND. ;
-      nMouseCol < ::nCapCol + nLenCaption
+   IF nMRow == ::nCapRow .AND. ;
+      nMCol >= ::nCapCol .AND. ;
+      nMCol < ::nCapCol + nLenCaption
       RETURN HTCAPTION
    ENDIF
 

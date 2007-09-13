@@ -52,6 +52,7 @@
 
 #include "hbclass.ch"
 
+#include "button.ch"
 #include "color.ch"
 #include "common.ch"
 #include "error.ch"
@@ -77,7 +78,7 @@ CREATE CLASS HBEditor
 
    METHOD GetText()                                      // Returns aText as a string (for MemoEdit())
 
-   METHOD RefreshWindow()                                // Redraw a window
+   METHOD display()                                      // Redraw a window
    METHOD RefreshLine()                                  // Redraw a line
    METHOD RefreshColumn()                                // Redraw a column of text
    METHOD LineColor( nRow )                              // Returns color string to use to draw nRow (current line if nRow is empty)
@@ -95,13 +96,18 @@ CREATE CLASS HBEditor
    METHOD DeHilite()                                     // Stop Hilighting
 
    METHOD SetPos( nRow, nCol )                           // Updates ::nPhysRow, ::nPhysCol and then calls SetPos() to move hardware cursor
-   METHOD Row()                                          // Same as clipper ones, returns ::nPhysRow value
-   METHOD Col()                                          // Same as clipper ones, returns ::nPhysCol value
-   METHOD RowPos()                                       // Returns ::nRow value
+   METHOD Row()                                          // Same as clipper ones, returns ::nPhysRow
+   METHOD Col()                                          // Same as clipper ones, returns ::nPhysCol
+   METHOD RowPos()                                       // Returns ::nRow
    METHOD ColPos()                                       // Returns ::nCol value
-   METHOD Saved()                                        // Returns saved status
+   METHOD Saved()                                        // Returns ::lSaved
+   METHOD Changed()                                      // Returns ::lDirty
    METHOD IsWordWrap()                                   // Returns ::lWordWrap
    METHOD WordWrapCol()                                  // Returns ::nWordWrapCol
+   METHOD hitTest( nMRow, nMCol )                        // UI control compatible method
+
+   MESSAGE RefreshWindow() METHOD display()              // for compatibility
+
 
    METHOD New( cString, nTop, nLeft, nBottom,;           // Converts a string to an array of strings splitting input string at EOL boundaries
                nRight, lEditMode, nLineLength, nTabSize )
@@ -175,7 +181,7 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBEditor
    // Set cursor upper left corner
    ::SetPos( ::nTop + ::nRow - ::nFirstRow, ::nLeft )
 
-   ::RefreshWindow()
+   ::display()
 
    return Self
 
@@ -310,7 +316,7 @@ METHOD GotoLine( nRow ) CLASS HBEditor
             ::nFirstRow := Max( 1, nRow - ( ::Row() - ::nTop ) )
          endif
 
-         ::RefreshWindow()
+         ::display()
       endif
    endif
 
@@ -385,13 +391,13 @@ METHOD SplitLine( nRow ) CLASS HBEditor
       else
          ::SetPos( nORow, nOCol )
       endif
-      ::RefreshWindow()
+      ::display()
    endif
 
    return Self
 
 // Redraws a screenfull of text
-METHOD RefreshWindow() CLASS HBEditor
+METHOD display() CLASS HBEditor
 
    LOCAL i
    LOCAL nOCol := ::Col()
@@ -490,7 +496,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
          ::nRow := ::naTextLen
          ::SetPos( Min( ::nTop + ::naTextLen - 1, ::nBottom ), ::Col() )
       endif
-      ::RefreshWindow()
+      ::display()
 
    case nKey == K_CTRL_PGDN
       ::nRow := ::naTextLen
@@ -498,7 +504,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ::nFirstRow := Max( ::naTextLen - ::nNumRows + 1, 1 )
       ::nFirstCol := Max( ::nCol - ::nNumCols + 1, 1 )
       ::SetPos( Min( ::nTop + ::naTextLen - 1, ::nBottom ), Min( ::nLeft + ::nCol - 1, ::nRight ) )
-      ::RefreshWindow()
+      ::display()
 
    case nKey == K_UP
       if ! ::lEditAllow
@@ -531,7 +537,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
          ::nRow := 1
          ::SetPos( ::nTop, ::Col() )
       endif
-      ::RefreshWindow()
+      ::display()
 
    case nKey == K_CTRL_PGUP
       ::nRow := 1
@@ -539,7 +545,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ::nFirstCol := 1
       ::nFirstRow := 1
       ::SetPos( ::nTop, ::nLeft )
-      ::RefreshWindow()
+      ::display()
 
    case nKey == K_RIGHT
       if ::Col() == ::nRight
@@ -588,21 +594,21 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ::nCol := 1
       ::nFirstCol := 1
       ::SetPos( ::Row(), ::nLeft )
-      ::RefreshWindow()
+      ::display()
 
    case nKey == K_CTRL_HOME
       ::nCol := 1
       ::nFirstCol := 1
       ::nRow -= ( ::Row() - ::nTop )
       ::SetPos( ::nTop, ::nLeft )
-      ::RefreshWindow()
+      ::display()
 
    case nKey == K_END
       // Empty lines have 0 len
       ::nCol := Max( ::LineLen( ::nRow ) + 1, 1 )
       ::nFirstCol := Max( ::nCol - ::nNumCols + 1, 1 )
       ::SetPos( ::Row(), Min( ::nLeft + ::nCol - 1, ::nRight ) )
-      ::RefreshWindow()
+      ::display()
 
    case nKey == K_CTRL_END
       ::nRow += ::nBottom - ::Row()
@@ -612,7 +618,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ::nCol := Max( ::LineLen( ::nRow ), 1 )
       ::nFirstCol := Max( ::nCol - ::nNumCols + 1, 1 )
       ::SetPos( Min( ::nTop + ::naTextLen - 1, ::nBottom ), Min( ::nLeft + ::nCol - 1, ::nRight ) )
-      ::RefreshWindow()
+      ::display()
 
    otherwise
       lMoveKey := .F.
@@ -722,7 +728,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
                      ::aText[ ::nRow ]:cText += ::GetLine( ::nRow + 1 )
                      ::RemoveLine( ::nRow + 1 )
                      ::SplitLine( ::nRow )
-                     ::RefreshWindow()
+                     ::display()
                   else
                      ::RefreshLine()
                   endif
@@ -767,7 +773,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
                      ::nFirstRow := Max( ::nFirstRow - 1, 1 )
                   endif
                endif
-               ::RefreshWindow()
+               ::display()
             else
                ::aText[ ::nRow ]:cText := ""
                ::RefreshLine()
@@ -870,11 +876,25 @@ METHOD LineColor( nRow ) CLASS HBEditor
 METHOD Saved() CLASS HBEditor
    return ::lSaved
 
+METHOD Changed() CLASS HBEditor
+   return ::lDirty
+
 METHOD IsWordWrap() CLASS HBEditor
    return ::lWordWrap
 
 METHOD WordWrapCol() CLASS HBEditor
    return ::nWordWrapCol
+
+METHOD hitTest( nMRow, nMCol ) CLASS HBEditor
+
+   if nMRow >= ::nTop .and. ;
+      nMRow <= ::nBottom .and. ;
+      nMCol >= ::nLeft .and. ;
+      nMCol <= ::nRight
+      return HTCLIENT
+   endif
+
+   return HTNOWHERE
 
 /* -------------------------------------------- */
 

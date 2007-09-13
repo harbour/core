@@ -77,7 +77,7 @@ CREATE CLASS RADIOGROUP FUNCTION HBRadioGroup
    METHOD display()
    METHOD getAccel( oRadioButton )
    METHOD getItem( oRadioButton )
-   METHOD hitTest( nMouseRow, nMouseCol )
+   METHOD hitTest( nMRow, nMCol )
    METHOD insItem( nPos, oRadioButton )
    METHOD killFocus()
    METHOD nextItem()
@@ -233,7 +233,7 @@ METHOD getAccel( xValue ) CLASS RADIOGROUP
 METHOD getItem( nPos ) CLASS RADIOGROUP
    RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ], NIL )
 
-METHOD hitTest( nMouseRow, nMouseCol ) CLASS RADIOGROUP
+METHOD hitTest( nMRow, nMCol ) CLASS RADIOGROUP
 
    LOCAL nLen
    LOCAL nPos
@@ -241,30 +241,30 @@ METHOD hitTest( nMouseRow, nMouseCol ) CLASS RADIOGROUP
 
    DO CASE
    CASE Empty( ::cColdbox + ::cHotBox )
-   CASE nMouseRow == ::nTop
-      IF nMouseCol == ::nLeft
+   CASE nMRow == ::nTop
+      IF nMCol == ::nLeft
          RETURN HTTOPLEFT
-      ELSEIF nMouseCol == ::nRight
+      ELSEIF nMCol == ::nRight
          RETURN HTTOPRIGHT
-      ELSEIF nMouseCol >= ::nLeft .AND. nMouseCol <= ::nRight
+      ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
          RETURN HTTOP
       ENDIF
-   CASE nMouseRow == ::nBottom
-      IF nMouseCol == ::nLeft
+   CASE nMRow == ::nBottom
+      IF nMCol == ::nLeft
          RETURN HTBOTTOMLEFT
-      ELSEIF nMouseCol == ::nRight
+      ELSEIF nMCol == ::nRight
          RETURN HTBOTTOM
-      ELSEIF nMouseCol >= ::nLeft .AND. nMouseCol <= ::nRight
+      ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
          RETURN HTBOTTOMRIGHT
       ENDIF
-   CASE nMouseCol == ::nLeft
-      IF nMouseRow >= ::nTop .AND. nMouseRow <= ::nBottom
+   CASE nMCol == ::nLeft
+      IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
          RETURN HTLEFT
       ELSE
          RETURN HTNOWHERE
       ENDIF
-   CASE nMouseCol == ::nRight
-      IF nMouseRow >= ::nTop .AND. nMouseRow <= ::nBottom
+   CASE nMCol == ::nRight
+      IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
          RETURN HTRIGHT
       ELSE
          RETURN HTNOWHERE
@@ -280,21 +280,21 @@ METHOD hitTest( nMouseRow, nMouseCol ) CLASS RADIOGROUP
 
    DO CASE
    CASE Empty( ::cCaption )
-   CASE nMouseRow != ::nCapRow
-   CASE nMouseCol < ::nCapCol
-   CASE nMouseCol < ::nCapCol + nLen
+   CASE nMRow != ::nCapRow
+   CASE nMCol < ::nCapCol
+   CASE nMCol < ::nCapCol + nLen
       RETURN HTCAPTION
    ENDCASE
 
    DO CASE
-   CASE nMouseRow < ::nTop
-   CASE nMouseRow > ::nBottom
-   CASE nMouseCol < ::nLeft
-   CASE nMouseCol <= ::nRight
+   CASE nMRow < ::nTop
+   CASE nMRow > ::nBottom
+   CASE nMCol < ::nLeft
+   CASE nMCol <= ::nRight
       aItems := ::aItems
       nLen := ::nItemCount
       FOR nPos := 1 TO nLen
-         IF aItems[ nPos ]:hitTest( nMouseRow, nMouseCol ) != HTNOWHERE
+         IF aItems[ nPos ]:hitTest( nMRow, nMCol ) != HTNOWHERE
             RETURN nPos
          ENDIF
       NEXT

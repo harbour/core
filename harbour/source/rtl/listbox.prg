@@ -88,7 +88,7 @@ CREATE CLASS LISTBOX FUNCTION HBListBox
    METHOD getData( nPos )
    METHOD getItem( nPos )
    METHOD getText( nPos )
-   METHOD hitTest( nMouseRow, nMouseCol )
+   METHOD hitTest( nMRow, nMCol )
    METHOD insItem( nPos, cText, cData )
    METHOD killFocus()
    METHOD nextItem()
@@ -426,7 +426,7 @@ METHOD getItem( nPos ) CLASS LISTBOX
 METHOD getText( nPos ) CLASS LISTBOX
    RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ][ _ITEM_cTEXT ], NIL )
 
-METHOD hitTest( nMouseRow, nMouseCol ) CLASS LISTBOX
+METHOD hitTest( nMRow, nMCol ) CLASS LISTBOX
 
    LOCAL nRet
    LOCAL nTop
@@ -435,7 +435,7 @@ METHOD hitTest( nMouseRow, nMouseCol ) CLASS LISTBOX
    /* Check hit on the scrollbar */
    IF ::lIsOpen .AND. ;
       ::oVScroll != NIL .AND. ;
-      ( nHit := ::oVScroll:hittest( nMouseRow, nMouseCol ) ) != 0
+      ( nHit := ::oVScroll:hittest( nMRow, nMCol ) ) != 0
 
       RETURN nHit
    ENDIF
@@ -449,30 +449,30 @@ METHOD hitTest( nMouseRow, nMouseCol ) CLASS LISTBOX
       ENDIF
 
       DO CASE
-      CASE nMouseRow == nTop
-         IF nMouseCol == ::nLeft
+      CASE nMRow == nTop
+         IF nMCol == ::nLeft
             RETURN HTTOPLEFT
-         ELSEIF nMouseCol == ::nRight
+         ELSEIF nMCol == ::nRight
             RETURN HTTOPRIGHT
-         ELSEIF nMouseCol >= ::nLeft .AND. nMouseCol <= ::nRight
+         ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
             RETURN HTTOP
          ENDIF
-      CASE nMouseRow == ::nBottom
-         IF nMouseCol == ::nLeft
+      CASE nMRow == ::nBottom
+         IF nMCol == ::nLeft
             RETURN HTBOTTOMLEFT
-         ELSEIF nMouseCol == ::nRight
+         ELSEIF nMCol == ::nRight
             RETURN HTBOTTOMRIGHT
-         ELSEIF nMouseCol >= ::nLeft .AND. nMouseCol <= ::nRight
+         ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
             RETURN HTBOTTOM
          ENDIF
-      CASE nMouseCol == ::nLeft
-         IF nMouseRow >= ::nTop .AND. nMouseRow <= ::nBottom
+      CASE nMCol == ::nLeft
+         IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
             RETURN HTLEFT
          ELSE
             RETURN HTNOWHERE
          ENDIF
-      CASE nMouseCol == ::nRight
-         IF nMouseRow >= ::nTop .AND. nMouseRow <= ::nBottom
+      CASE nMCol == ::nRight
+         IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
             RETURN HTRIGHT
          ELSE
             RETURN HTNOWHERE
@@ -483,28 +483,28 @@ METHOD hitTest( nMouseRow, nMouseCol ) CLASS LISTBOX
 
    DO CASE
    CASE ! ::lIsOpen
-   CASE nMouseRow < nTop + nRet
-   CASE nMouseRow > ::nBottom - nRet
-   CASE nMouseCol < ::nLeft + nRet
-   CASE nMouseCol <= ::nRight - nRet
-      RETURN ::nTopItem + nMouseRow - ( nTop + nRet )
+   CASE nMRow < nTop + nRet
+   CASE nMRow > ::nBottom - nRet
+   CASE nMCol < ::nLeft + nRet
+   CASE nMCol <= ::nRight - nRet
+      RETURN ::nTopItem + nMRow - ( nTop + nRet )
    ENDCASE
 
    DO CASE
    CASE ! ::lDropDown
-   CASE nMouseRow != ::nTop
-   CASE nMouseCol < ::nLeft
-   CASE nMouseCol < ::nRight
+   CASE nMRow != ::nTop
+   CASE nMCol < ::nLeft
+   CASE nMCol < ::nRight
       RETURN HTCLIENT
-   CASE nMouseCol == ::nRight
+   CASE nMCol == ::nRight
       RETURN HTDROPBUTTON
    ENDCASE
 
    DO CASE
    CASE Empty( ::cCaption )
-   CASE nMouseRow != ::nCapRow
-   CASE nMouseCol < ::nCapCol
-   CASE nMouseCol < ::nCapCol + __CapLength( ::cCaption )
+   CASE nMRow != ::nCapRow
+   CASE nMCol < ::nCapCol
+   CASE nMCol < ::nCapCol + __CapLength( ::cCaption )
       RETURN HTCAPTION
    ENDCASE
 

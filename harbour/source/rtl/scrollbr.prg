@@ -86,7 +86,7 @@ CREATE CLASS SCROLLBAR FUNCTION HBScrollBar
 
    METHOD display()
    METHOD update()
-   METHOD hitTest()
+   METHOD hitTest( nMRow, nMCol )
 
    METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient ) /* NOTE: This method is a Harbour extension [vszakats] */
 
@@ -212,41 +212,41 @@ METHOD update() CLASS SCROLLBAR
 
    RETURN .F.
 
-METHOD hitTest( nRow, nCol ) CLASS SCROLLBAR
+METHOD hitTest( nMRow, nMCol ) CLASS SCROLLBAR
 
    IF ::nOrient == SCROLL_VERTICAL
 
       DO CASE
-      CASE nCol != ::nOffset
-      CASE nRow < ::nStart
-      CASE nRow > ::nEnd
-      CASE nRow == ::nStart
+      CASE nMCol != ::nOffset
+      CASE nMRow < ::nStart
+      CASE nMRow > ::nEnd
+      CASE nMRow == ::nStart
          RETURN HTSCROLLUNITDEC
-      CASE nRow == ::nEnd
+      CASE nMRow == ::nEnd
          RETURN HTSCROLLUNITINC
-      CASE nRow < ::nThumbPos + ::nStart
+      CASE nMRow < ::nThumbPos + ::nStart
          RETURN HTSCROLLBLOCKDEC
-      CASE nRow > ::nThumbPos + ::nStart
+      CASE nMRow > ::nThumbPos + ::nStart
          RETURN HTSCROLLBLOCKINC
-      CASE nRow == ::nThumbPos + ::nStart
+      CASE nMRow == ::nThumbPos + ::nStart
          RETURN HTSCROLLTHUMBDRAG
       ENDCASE
 
-      IF nCol == ::nOffset + 1 .OR. nCol == ::nOffset
+      IF nMCol == ::nOffset + 1 .OR. nMCol == ::nOffset
 
          DO CASE
-         CASE nCol != ::nOffset .AND. nCol != ::nOffset + 1
-         CASE nRow < ::nStart
-         CASE nRow > ::nEnd
-         CASE nRow == ::nStart
+         CASE nMCol != ::nOffset .AND. nMCol != ::nOffset + 1
+         CASE nMRow < ::nStart
+         CASE nMRow > ::nEnd
+         CASE nMRow == ::nStart
             RETURN HTSCROLLUNITDEC
-         CASE nRow == ::nEnd
+         CASE nMRow == ::nEnd
             RETURN HTSCROLLUNITINC
-         CASE nRow < ::nThumbPos + ::nStart
+         CASE nMRow < ::nThumbPos + ::nStart
             RETURN HTSCROLLBLOCKDEC
-         CASE nRow > ::nThumbPos + ::nStart
+         CASE nMRow > ::nThumbPos + ::nStart
             RETURN HTSCROLLBLOCKINC
-         CASE nRow == ::nThumbPos + ::nStart
+         CASE nMRow == ::nThumbPos + ::nStart
             RETURN HTSCROLLTHUMBDRAG
          ENDCASE
 
@@ -255,18 +255,18 @@ METHOD hitTest( nRow, nCol ) CLASS SCROLLBAR
    ELSE
 
       DO CASE
-      CASE nRow != ::nOffset
-      CASE nCol < ::nStart
-      CASE nCol > ::nEnd
-      CASE nCol == ::nStart
+      CASE nMRow != ::nOffset
+      CASE nMCol < ::nStart
+      CASE nMCol > ::nEnd
+      CASE nMCol == ::nStart
          RETURN HTSCROLLUNITDEC
-      CASE nCol == ::nEnd
+      CASE nMCol == ::nEnd
          RETURN HTSCROLLUNITINC
-      CASE nCol < ::nThumbPos + ::nStart
+      CASE nMCol < ::nThumbPos + ::nStart
          RETURN HTSCROLLBLOCKDEC
-      CASE nCol > ::nThumbPos + ::nStart
+      CASE nMCol > ::nThumbPos + ::nStart
          RETURN HTSCROLLBLOCKINC
-      CASE nCol == ::nThumbPos + ::nStart
+      CASE nMCol == ::nThumbPos + ::nStart
          RETURN HTSCROLLTHUMBDRAG
       ENDCASE
 

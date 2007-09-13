@@ -79,13 +79,14 @@
          Determines the coordinates for the data area of a TBrowse object.
          Xbase++ compatible method */
 
-#include "common.ch"
 #include "hbclass.ch"
+
+#include "button.ch"
 #include "color.ch"
+#include "common.ch"
 #include "error.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
-#include "button.ch"
 #include "tbrowse.ch"
 
 /* TBColumn info constants */
@@ -166,7 +167,7 @@ CREATE CLASS TBrowse
    METHOD setKey( nKey, bBlock )
    METHOD applyKey( nKey )
    METHOD TApplyKey( nKey, o )                              /* NOTE: Undocumented CA-Cl*pper 5.3 method. */
-   METHOD hitTest( nMouseRow, nMouseCol )
+   METHOD hitTest( nMRow, nMCol )
    METHOD setStyle( nStyle, lNewValue )
 #endif
 #ifdef HB_COMPAT_XPP
@@ -390,7 +391,12 @@ METHOD configure( nMode ) CLASS TBrowse
 
       nLeft := ::n_Left
       nRight := ::n_Right
-      ::rect := { ::n_Top + ::nHeaderHeight + iif( Empty( ::cHeadSep ), 0, 1 ), ::n_Left, ::n_Bottom - ::nFooterHeight - iif( Empty( ::cFootSep ), 0, 1 ), ::n_Right }
+
+      ::rect := { ::n_Top    + iif( ::lHeaders, ::nHeaderHeight + iif( Empty( ::cHeadSep ), 0, 1 ), 0 ),;
+                  ::n_Left,;
+                  ::n_Bottom - iif( ::lFooters, ::nFooterHeight - iif( Empty( ::cFootSep ), 0, 1 ), 0 ),;
+                  ::n_Right }
+
       for n := nLeft To nRight
          AAdd( ::aVisibleCols, n )
       next
@@ -1969,25 +1975,26 @@ METHOD TApplyKey( nKey, oBrowse ) CLASS TBrowse
 
    return Eval( bBlock, oBrowse, nKey )
 
-METHOD hitTest( mRow, mCol ) CLASS TBrowse
+METHOD hitTest( nMRow, nMCol ) CLASS TBrowse
    local i
 
    ::nmRowPos := ::nRowPos
    ::nmColPos := ::nColPos
   
-   if mRow < ::rect[ 1 ] .or. mRow > ::rect[ 3 ]
+   if nMRow < ::rect[ 1 ] .or. nMRow > ::rect[ 3 ]
       return HTNOWHERE
    endif
   
-   if mCol < ::rect[ 2 ] .or. mCol > ::rect[ 4 ]
+   if nMCol < ::rect[ 2 ] .or. nMCol > ::rect[ 4 ]
       return HTNOWHERE
    endif
   
-   ::nmRowPos := mRow - ::rect[ 1 ] + 1
-   for i := 1 to len( ::aVisibleCols )
-       if ::aVisibleCols[ i ] > mcol
-          exit
-       endif
+   ::nmRowPos := nMRow - ::rect[ 1 ] + 1
+
+   for i := 1 to Len( ::aVisibleCols )
+      if nMCol < ::aVisibleCols[ i ]
+         exit
+      endif
    next
   
    ::mColPos := ::aVisibleCols[ i ]
@@ -2029,10 +2036,10 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBrowse
 
    return ::aSetStyle[ nStyle ]
 
-FUNCTION TBMouse( oBrowse, nMouseRow, nMouseCol )
+FUNCTION TBMouse( oBrowse, nMRow, nMCol )
    local n
 
-   if oBrowse:hitTest( nMouseRow, nMouseCol ) == HTCELL
+   if oBrowse:hitTest( nMRow, nMCol ) == HTCELL
 
       n := oBrowse:mRowPos - oBrowse:rowPos
 

@@ -72,7 +72,7 @@ CREATE CLASS RADIOBUTTN FUNCTION HBRadioButton
    VAR cargo                                 /* NOTE: CA-Clipper 5.3 has a bug, where this var is filled with NIL everytime its value is read ( cargo := o:cargo ). */
 
    METHOD display()
-   METHOD hitTest( nRow, nCol )
+   METHOD hitTest( nMRow, nMCol )
    METHOD isAccel( xKey )
    METHOD killFocus()
    METHOD select( lState )
@@ -212,14 +212,14 @@ METHOD isAccel( xKey ) CLASS RADIOBUTTN
    RETURN ( nPos := At( "&", cCaption ) ) > 0 .AND. ;
           Lower( SubStr( cCaption, nPos + 1, 1 ) ) == Lower( xKey )
 
-METHOD hitTest( nRow, nCol ) CLASS RADIOBUTTN
+METHOD hitTest( nMRow, nMCol ) CLASS RADIOBUTTN
 
    LOCAL nPos
    LOCAL nLen
 
-   IF nRow == ::Row .AND. ;
-      nCol >= ::Col .AND. ;
-      nCol < ::Col + 3
+   IF nMRow == ::Row .AND. ;
+      nMCol >= ::Col .AND. ;
+      nMCol < ::Col + 3
       RETURN HTCLIENT
    ENDIF
 
@@ -229,9 +229,9 @@ METHOD hitTest( nRow, nCol ) CLASS RADIOBUTTN
       nLen--
    ENDIF
 
-   IF nRow == ::CapRow .AND. ;
-      nCol >= ::CapCol .AND. ;
-      nCol < ::CapCol + nLen
+   IF nMRow == ::CapRow .AND. ;
+      nMCol >= ::CapCol .AND. ;
+      nMCol < ::CapCol + nLen
       RETURN HTCLIENT
    ENDIF
 
