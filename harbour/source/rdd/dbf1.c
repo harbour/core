@@ -3146,7 +3146,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    PHB_FNAME pFileName;
    BYTE * pBuffer;
    LPDBFFIELD pField;
-   DBFIELDINFO pFieldInfo;
+   DBFIELDINFO dbFieldInfo;
    BYTE szFileName[ _POSIX_PATH_MAX + 1 ];
    char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
 
@@ -3406,38 +3406,41 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       }
    }
 
+   /* Clear dbFieldInfo structure */
+   memset( &dbFieldInfo, 0, sizeof( dbFieldInfo ) );
+
    /* Size for deleted flag */
    pArea->uiRecordLen = 1;
 
    for( uiCount = 0; uiCount < uiFields + uiSkip; uiCount++ )
    {
       pField = ( LPDBFFIELD ) ( pBuffer + uiCount * sizeof( DBFFIELD ) );
-      pFieldInfo.atomName = pField->bName;
-      pFieldInfo.atomName[10] = '\0';
-      /* hb_strUpper( (char *) pFieldInfo.atomName, 11 ); */
-      pFieldInfo.uiLen = pField->bLen;
-      pFieldInfo.uiDec = 0;
-      pFieldInfo.uiTypeExtended = 0;
+      dbFieldInfo.atomName = pField->bName;
+      dbFieldInfo.atomName[10] = '\0';
+      /* hb_strUpper( (char *) dbFieldInfo.atomName, 11 ); */
+      dbFieldInfo.uiLen = pField->bLen;
+      dbFieldInfo.uiDec = 0;
+      dbFieldInfo.uiTypeExtended = 0;
       switch( pField->bType )
       {
          case 'C':
-            pFieldInfo.uiType = HB_IT_STRING;
-            pFieldInfo.uiLen = pField->bLen + pField->bDec * 256;
+            dbFieldInfo.uiType = HB_IT_STRING;
+            dbFieldInfo.uiLen = pField->bLen + pField->bDec * 256;
             break;
 
          case 'L':
-            pFieldInfo.uiType = HB_IT_LOGICAL;
-            pFieldInfo.uiLen = 1;
+            dbFieldInfo.uiType = HB_IT_LOGICAL;
+            dbFieldInfo.uiLen = 1;
             break;
 
          case 'M':
-            pFieldInfo.uiType = HB_IT_MEMO;
+            dbFieldInfo.uiType = HB_IT_MEMO;
             pArea->fHasMemo = TRUE;
             break;
 
          case 'V':
-            pFieldInfo.uiType = HB_IT_ANY;
-            if( pFieldInfo.uiLen >= 6 )
+            dbFieldInfo.uiType = HB_IT_ANY;
+            if( dbFieldInfo.uiLen >= 6 )
             {
                pArea->uiMemoVersion = DB_MEMOVER_SIX;
                pArea->fHasMemo = TRUE;
@@ -3445,29 +3448,29 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
             break;
 
          case 'D':
-            pFieldInfo.uiType = HB_IT_DATE;
-            if( pFieldInfo.uiLen != 3 && pFieldInfo.uiLen != 4 )
-               pFieldInfo.uiLen = 8;
+            dbFieldInfo.uiType = HB_IT_DATE;
+            if( dbFieldInfo.uiLen != 3 && dbFieldInfo.uiLen != 4 )
+               dbFieldInfo.uiLen = 8;
             break;
 
          case 'I':
          case 'Y':
-            pFieldInfo.uiType = HB_IT_INTEGER;
-            if( ( pFieldInfo.uiLen > 4 && pFieldInfo.uiLen != 8 ) ||
-                pFieldInfo.uiLen == 0 )
-               pFieldInfo.uiLen = 4;
-            pFieldInfo.uiDec = pField->bDec;
+            dbFieldInfo.uiType = HB_IT_INTEGER;
+            if( ( dbFieldInfo.uiLen > 4 && dbFieldInfo.uiLen != 8 ) ||
+                dbFieldInfo.uiLen == 0 )
+               dbFieldInfo.uiLen = 4;
+            dbFieldInfo.uiDec = pField->bDec;
             break;
 
          case '2':
          case '4':
-            pFieldInfo.uiType = HB_IT_INTEGER;
-            pFieldInfo.uiLen = pField->bType - '0';
+            dbFieldInfo.uiType = HB_IT_INTEGER;
+            dbFieldInfo.uiLen = pField->bType - '0';
             break;
 
          case 'N':
          case 'F':
-            pFieldInfo.uiType = HB_IT_LONG;
+            dbFieldInfo.uiType = HB_IT_LONG;
          /* DBASE documentation defines maximum numeric field size as 20
           * but Clipper allows to create longer fields so I removed this
           * limit, Druzus
@@ -3477,30 +3480,30 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
                errCode = FAILURE;
             else
           */
-            pFieldInfo.uiDec = pField->bDec;
+            dbFieldInfo.uiDec = pField->bDec;
             break;
 
          case '8':
          case 'B':
-            pFieldInfo.uiType = HB_IT_DOUBLE;
-            pFieldInfo.uiLen = 8;
-            pFieldInfo.uiDec = pField->bDec;
+            dbFieldInfo.uiType = HB_IT_DOUBLE;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiDec = pField->bDec;
             break;
 
          /* types which are not supported by VM - mapped to different ones */
          case 'T':
          case '@':
-            pFieldInfo.uiType = HB_IT_INTEGER;
+            dbFieldInfo.uiType = HB_IT_INTEGER;
             break;
 
          default:
             if( pArea->bTableType == DB_DBF_VFP && pField->bFieldFlags & 0x01 )
             {
-               if( memcmp( pFieldInfo.atomName, "_NullFlags", 10 ) == 0 )
+               if( memcmp( dbFieldInfo.atomName, "_NullFlags", 10 ) == 0 )
                {
                   /* TODO: NULLABLE and VARLENGTH support */
                }
-               pArea->uiRecordLen += pFieldInfo.uiLen;
+               pArea->uiRecordLen += dbFieldInfo.uiLen;
                continue;
             }
             errCode = FAILURE;
@@ -3509,7 +3512,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
       /* Add field */
       if( errCode == SUCCESS )
-         errCode = SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo );
+         errCode = SELF_ADDFIELD( ( AREAP ) pArea, &dbFieldInfo );
 
       /* Exit if error */
       if( errCode != SUCCESS )

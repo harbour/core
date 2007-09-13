@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-13 19:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/source/rdd/dbf1.c
+    * variable name clean-up
+
 2007-09-13 16:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/Makefile
   + harbour/include/hbsxdef.ch
