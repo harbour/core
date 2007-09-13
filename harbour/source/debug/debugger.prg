@@ -760,35 +760,35 @@ METHOD CommandWindowProcessKey( nKey ) CLASS HBDebugger
    CASE nKey == K_UP .OR. nKey == K_F3
 
       IF ::nCommand > 1
-         ::oGetListCommand:oGet:Assign()
-         ::aLastCommands[ ::nCommand ] := Trim( ::oGetListCommand:oGet:VarGet() )
+         ::oGetListCommand:Get():Assign()
+         ::aLastCommands[ ::nCommand ] := Trim( ::oGetListCommand:Get():VarGet() )
          ::nCommand--
          cCommand := PadR( ::aLastCommands[ ::nCommand ], nWidth )
-         ::oGetListCommand:oGet:VarPut( cCommand )
-         ::oGetListCommand:oGet:Buffer := cCommand
-         ::oGetListCommand:oGet:Pos := Len( ::aLastCommands[ ::nCommand ] ) + 1
-         ::oGetListCommand:oGet:Display()
+         ::oGetListCommand:Get():VarPut( cCommand )
+         ::oGetListCommand:Get():Buffer := cCommand
+         ::oGetListCommand:Get():Pos := Len( ::aLastCommands[ ::nCommand ] ) + 1
+         ::oGetListCommand:Get():Display()
       ENDIF
 
    CASE nKey == K_DOWN
 
       IF ::nCommand < Len( ::aLastCommands )
-         ::oGetListCommand:oGet:Assign()
-         ::aLastCommands[ ::nCommand ] := Trim( ::oGetListCommand:oGet:VarGet() )
+         ::oGetListCommand:Get():Assign()
+         ::aLastCommands[ ::nCommand ] := Trim( ::oGetListCommand:Get():VarGet() )
          ::nCommand++
          cCommand := PadR( ::aLastCommands[ ::nCommand ], nWidth )
-         ::oGetListCommand:oGet:VarPut( cCommand )
-         ::oGetListCommand:oGet:Buffer := cCommand
-         ::oGetListCommand:oGet:Pos := Len( ::aLastCommands[ ::nCommand ] ) + 1
-         ::oGetListCommand:oGet:Display()
+         ::oGetListCommand:Get():VarPut( cCommand )
+         ::oGetListCommand:Get():Buffer := cCommand
+         ::oGetListCommand:Get():Pos := Len( ::aLastCommands[ ::nCommand ] ) + 1
+         ::oGetListCommand:Get():Display()
       ENDIF
 
    CASE nKey == K_ENTER
 
       /* We must call :Assign() before :VarGet(), because it's no longer
        * called on every change */
-      ::oGetListCommand:oGet:Assign()
-      cCommand := Trim( ::oGetListCommand:oGet:VarGet() )
+      ::oGetListCommand:Get():Assign()
+      cCommand := Trim( ::oGetListCommand:Get():VarGet() )
 
       IF ! Empty( cCommand )
          IF ( n := AScan( ::aLastCommands, cCommand ) ) > 0 .AND. n < Len( ::aLastCommands )
@@ -805,10 +805,10 @@ METHOD CommandWindowProcessKey( nKey ) CLASS HBDebugger
       DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ",;
          __DbgColors()[ 2 ] )
       cCommand := Space( nWidth )
-      ::oGetListCommand:oGet:VarPut( cCommand )
-      ::oGetListCommand:oGet:Buffer := cCommand
-      ::oGetListCommand:oGet:Pos := 1
-      ::oGetListCommand:oGet:Display()
+      ::oGetListCommand:Get():VarPut( cCommand )
+      ::oGetListCommand:Get():Buffer := cCommand
+      ::oGetListCommand:Get():Pos := 1
+      ::oGetListCommand:Get():Display()
 
    OTHERWISE
       ::oGetListCommand:GetApplyKey( nKey )
@@ -2289,8 +2289,8 @@ METHOD SaveAppScreen() CLASS HBDebugger
       nTop := 1
       nRight := ::nMaxCol
       ::oWndCommand:Resize( ::nMaxRow - 5, 0, ::nMaxRow - 1, ::nMaxCol )
-      ::oGetListCommand:oGet:Row := ::oWndCommand:nBottom - 1
-      ::oGetListCommand:oGet:Col := ::oWndCommand:nLeft + 3
+      ::oGetListCommand:Get():Row := ::oWndCommand:nBottom - 1
+      ::oGetListCommand:Get():Col := ::oWndCommand:nLeft + 3
       ::oBrwStack:nTop := 2
       ::oBrwStack:nLeft := ::nMaxCol - 14
       ::oBrwStack:nRight := ::nMaxCol - 1

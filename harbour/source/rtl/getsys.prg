@@ -64,6 +64,11 @@
 #include "common.ch"
 
 #ifdef HB_COMPAT_C53
+
+#define SLUPDATED       1
+#define SOACTIVEGET     8
+#define SXREADVAR       9
+
 FUNCTION ReadModal( GetList, nPos, oMenu, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
 #else
 FUNCTION ReadModal( GetList, nPos )
@@ -80,9 +85,11 @@ FUNCTION ReadModal( GetList, nPos )
    oGetList := HBGetList():New( GetList )
 
    oSaveGetList := __GetListActive( )
-// oSaveGetList:lUpdated := .F.
-// oSaveGetList:xReadVar := ReadVar( "" )
-// oSaveGetList:oActiveGet := GetActive( NIL )
+#ifdef HB_COMPAT_C53
+// oSaveGetList:ReadStats( SLUPDATED, .F. )
+// oSaveGetList:ReadStats( SXREADVAR, ReadVar( "" ) )
+// oSaveGetList:ReadStats( SOACTIVEGET, GetActive( NIL ) )
+#endif
 
    __GetListSetActive( oGetList )
    __GetListLast( oGetList )
@@ -94,9 +101,11 @@ FUNCTION ReadModal( GetList, nPos )
 #endif
 
    __GetListSetActive( oSaveGetList )
-// oSaveGetList:lUpdated := oGetList:Updated()
-// ReadVar( oSaveGetList:xReadVar )
-// GetActive( oSaveGetList:oActiveGet )
+#ifdef HB_COMPAT_C53
+// oSaveGetList:ReadStats( SLUPDATED, oGetList:Updated() )
+// ReadVar( oSaveGetList:ReadStats( SXREADVAR ) )
+// GetActive( oSaveGetList:ReadStats( SOACTIVEGET ) )
+#endif
 
    SetPos( MaxRow() - 1, 0 )
 
@@ -152,9 +161,9 @@ PROCEDURE GetApplyKey( oGet, nKey )
 
    IF oGetList != NIL
 #ifdef HB_COMPAT_C53
-      oGetList:GetApplyKey( oGet, nKey, oMenu, aMsg )
+      oGetList:GetApplyKey( nKey, oGet, oMenu, aMsg )
 #else
-      oGetList:GetApplyKey( oGet, nKey )
+      oGetList:GetApplyKey( nKey, oGet )
 #endif
    ENDIF
 
@@ -203,11 +212,7 @@ FUNCTION ReadInsert( lInsert )
 FUNCTION Updated()
    LOCAL oGetList := __GetListLast()
 
-   IF oGetList != NIL
-      RETURN oGetList:Updated()
-   ENDIF
-
-   RETURN .F.
+   RETURN iif( oGetList != NIL, oGetList:Updated(), .F. )
 
 PROCEDURE __KillRead()
    LOCAL oGetList := __GetListActive()
@@ -369,20 +374,12 @@ PROCEDURE GUIApplyKey( oGet, oGUI, oGetList, nKey, oMenu, aMsg )
 FUNCTION GUIPreValidate( oGet, oGUI, aMsg )
    LOCAL oGetList := __GetListActive()
 
-   IF oGetList != NIL
-      RETURN oGetList:GUIPreValidate( oGet, oGUI, aMsg )
-   ENDIF
-
-   RETURN .F.
+   RETURN iif( oGetList != NIL, oGetList:GUIPreValidate( oGet, oGUI, aMsg ), .F. )
 
 FUNCTION GUIPostValidate( oGet, oGUI, aMsg )
    LOCAL oGetList := __GetListActive()
 
-   IF oGetList != NIL
-      RETURN oGetList:GUIPostValidate( oGet, oGUI, aMsg )
-   ENDIF
-
-   RETURN .F.
+   RETURN iif( oGetList != NIL, oGetList:GUIPostValidate( oGet, oGUI, aMsg ), .F. )
 
 PROCEDURE TBApplyKey( oGet, oTB, oGetList, nKey, aMsg )
 

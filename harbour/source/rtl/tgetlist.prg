@@ -98,7 +98,7 @@ CREATE CLASS HBGetList
 #endif
    METHOD Settle( nPos, lInit )
    METHOD Reader( oMenu, aMsg )
-   METHOD GetApplyKey( oGet, nKey, oMenu, aMsg )
+   METHOD GetApplyKey( nKey, oGet, oMenu, aMsg )
    METHOD GetPreValidate( oGet, aMsg )
    METHOD GetPostValidate( oGet, aMsg )
    METHOD GetDoSetKey( bKeyBlock, oGet )
@@ -111,9 +111,9 @@ CREATE CLASS HBGetList
    METHOD ShowScoreBoard()
    METHOD ReadUpdated( lUpdated )
    METHOD ReadVar( cNewVarName )
-   METHOD ReadExit( lNew )
    METHOD SetFocus()
-   METHOD Updated()
+   METHOD Updated()                                  // returns ::lUpdated
+   METHOD Get()                                      // returns ::oGet
 
    METHOD GUIReader( oGet, oMenu, aMsg )
    METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg )
@@ -236,11 +236,11 @@ METHOD ReadModal( nPos ) CLASS HBGetList
 
    RETURN Self
 
-METHOD ReadExit( lNew ) CLASS HBGetList
-   RETURN iif( ISLOGICAL( lNew ), Set( _SET_EXIT, lNew ), Set( _SET_EXIT ) )
-
 METHOD Updated() CLASS HBGetList
    RETURN ::lUpdated
+
+METHOD Get() CLASS HBGetList
+   RETURN ::oGet
 
 METHOD SetFocus() CLASS HBGetList
 
@@ -288,9 +288,9 @@ METHOD Reader( oMenu, aMsg ) CLASS HBGetList
             SetCursor( iif( ::nSaveCursor == SC_NONE, SC_NORMAL, ::nSaveCursor ) )
             nKey := Inkey( 0 )
             SetCursor( SC_NONE )
-            ::GetApplyKey( oGet, nKey, oMenu, aMsg )
+            ::GetApplyKey( nKey, oGet, oMenu, aMsg )
 #else
-            ::GetApplyKey( oGet, Inkey( 0 ), oMenu, aMsg )
+            ::GetApplyKey( Inkey( 0 ), oGet, oMenu, aMsg )
 #endif
             nRow := Row()
             nCol := Col()
@@ -325,7 +325,7 @@ METHOD Reader( oMenu, aMsg ) CLASS HBGetList
 
    RETURN Self
 
-METHOD GetApplyKey( oGet, nKey, oMenu, aMsg ) CLASS HBGetList
+METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
 
    LOCAL cKey
    LOCAL bKeyBlock
@@ -709,14 +709,14 @@ METHOD Settle( nPos, lInit ) CLASS HBGetList
    ENDCASE
 
    IF nPos == 0
-      IF ! ::ReadExit() .AND. ! ::lBumpBot
+      IF ! Set( _SET_EXIT ) .AND. ! ::lBumpBot
          ::lBumpTop := .T.
          nPos       := ::nLastPos
          nExitState := GE_DOWN
       ENDIF
 
    ELSEIF nPos == Len( ::aGetList ) + 1
-      IF ! ::ReadExit() .AND. nExitState != GE_ENTER .AND. ! ::lBumpTop
+      IF ! Set( _SET_EXIT ) .AND. nExitState != GE_ENTER .AND. ! ::lBumpTop
          ::lBumpBot := .T.
          nPos       := ::nLastPos
          nExitState := GE_UP
@@ -1577,7 +1577,7 @@ METHOD ReadStats( nElement, xNewValue ) CLASS HBGetList
       CASE nElement == SNLASTEXIT     ; ::nLastExitState := xNewValue
       CASE nElement == SNLASTPOS      ; ::nLastPos       := xNewValue
       CASE nElement == SOACTIVEGET    ; ::oActiveGet     := xNewValue
-      CASE nElement == SXREADVAR      ; ::cVarName       := xNewValue
+      CASE nElement == SXREADVAR      ; ::xReadVar       := xNewValue
       CASE nElement == SCREADPROCNAME ; ::cReadProcName  := xNewValue
       CASE nElement == SNREADPROCLINE ; ::nReadProcLine  := xNewValue
       CASE nElement == SNNEXTGET      ; ::nNextGet       := xNewValue
