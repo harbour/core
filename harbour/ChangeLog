@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-13 13:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * tests/rto_get.prg
+     * Changes missed from previous commit.
+
 2007-09-13 10:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/getsys.prg
    * source/rtl/tgetlist.prg
@@ -30,8 +34,7 @@
      + HBEditor():RefreshWindow() renamed to :display()
        old message name kept for compatibility.
      + HBEditor():hitTest() added.
-     + HBEditor():changed() added. (returns internal 
-       ::lDirty which got renamed to ::lChanged)
+     + HBEditor():changed() added. (returns internal ::lDirty)
        
    * source/rtl/getlist.prg
    * source/rtl/getsys.prg
