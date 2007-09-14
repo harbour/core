@@ -49,7 +49,7 @@
 
 #ifdef WIN32
 
-#define PDFLIB_CALL	__cdecl
+#define PDFLIB_CALL     __cdecl
 
 #ifdef PDFLIB_EXPORTS
 #define PDFLIB_API __declspec(dllexport) /* prepare a DLL (PDFlib-internal use only) */
@@ -57,17 +57,17 @@
 #elif defined(PDFLIB_DLL)
 #define PDFLIB_API __declspec(dllimport) /* PDFlib clients - import PDFlib DLL fcts. */
 
-#else	/* !PDFLIB_DLL */	
-#define PDFLIB_API /* */		 /* default: generate or use static library */
+#else /* !PDFLIB_DLL */
+#define PDFLIB_API /* */            /* default: generate or use static library */
 
-#endif	/* !PDFLIB_DLL */
+#endif      /* !PDFLIB_DLL */
 
-#else	/* !WIN32 */
+#else /* !WIN32 */
 
 #if (((defined __IBMC__) || (defined __IBMCPP__)) && (defined __DLL__))
     #define PDFLIB_CALL _Export
     #define PDFLIB_API
-#endif	/* IBM VisualAge C++ DLL */
+#endif      /* IBM VisualAge C++ DLL */
 
 #ifndef PDFLIB_CALL
 #define PDFLIB_CALL
@@ -76,7 +76,7 @@
 #define PDFLIB_API
 #endif
 
-#endif	/* !WIN32 */
+#endif      /* !WIN32 */
 
 /* Make our declarations C++ compatible */
 #ifdef __cplusplus
@@ -103,11 +103,11 @@ typedef struct PDF_s PDF;
  */
 
 /* PDFlib version number, major part */
-#define PDFLIB_MAJORVERSION	3
+#define PDFLIB_MAJORVERSION   3
 
 /* PDFlib version number, minor part (must use two decimal places if != 0) */
-#define PDFLIB_MINORVERSION	02
-#define PDFLIB_VERSIONSTRING	"3.02"
+#define PDFLIB_MINORVERSION   02
+#define PDFLIB_VERSIONSTRING  "3.02"
 
 /*
  * ActiveX uses the Class ID;
@@ -152,7 +152,7 @@ PDF_new2(errorproc errorhandler,
 PDFLIB_API void * PDFLIB_CALL
 PDF_get_opaque(PDF *p);
 
-#endif	/* !SWIG */
+#endif      /* !SWIG */
 
 /* Create a new PDF object. */
 PDFLIB_API PDF * PDFLIB_CALL
@@ -180,7 +180,7 @@ PDF_open_fp(PDF *p, FILE *fp);
 /* Open a new PDF in memory, and install a callback for fetching the data */
 PDFLIB_API void PDFLIB_CALL
 PDF_open_mem(PDF *p, size_t (*writeproc)(PDF *p, void *data, size_t size));
-#endif	/* !defined(SWIG) */
+#endif      /* !defined(SWIG) */
 
 /* Get the contents of the PDF output buffer. The result must be used
  by the client before calling any other PDFlib function.  Must not be
@@ -211,7 +211,7 @@ PDF_end_page(PDF *p);
 #define PDF_NonfatalError 11
 #define PDF_UnknownError  12
 
-#endif	/* !SWIG */
+#endif      /* !SWIG */
 
 /* Set some PDFlib parameter with string type */
 PDFLIB_API void PDFLIB_CALL
@@ -332,7 +332,7 @@ PDF_setpolydash(PDF *p, float *dasharray, int length);
 
 #ifndef SWIG
 /* Maximum length of dash arrays */
-#define MAX_DASH_LENGTH	8
+#define MAX_DASH_LENGTH 8
 #endif
 
 /* Set the flatness to a value between 0 and 100 inclusive. */
@@ -536,7 +536,7 @@ PDF_close_image(PDF *p, int image);
 help with preparing the thumbnail, but simply places it in the output. */
 PDFLIB_API void PDFLIB_CALL
 PDF_add_thumbnail(PDF *p, int im);
-#endif	/* PDF_THUMBNAILS_SUPPORTED */
+#endif      /* PDF_THUMBNAILS_SUPPORTED */
 
 /* 
  * ----------------------------------------------------------------------
@@ -648,34 +648,34 @@ Acrobat 4 maximum page size: 200" = 14400 pt = 508 cm
 
 /* The page sizes are only available to the C and C++ bindings */
 #ifndef SWIG
-#define a0_width	 (float) 2380.0
-#define a0_height	 (float) 3368.0
-#define a1_width	 (float) 1684.0
-#define a1_height	 (float) 2380.0
-#define a2_width	 (float) 1190.0
-#define a2_height	 (float) 1684.0
-#define a3_width	 (float) 842.0
-#define a3_height	 (float) 1190.0
-#define a4_width	 (float) 595.0
-#define a4_height	 (float) 842.0
-#define a5_width	 (float) 421.0
-#define a5_height	 (float) 595.0
-#define a6_width	 (float) 297.0
-#define a6_height	 (float) 421.0
-#define b5_width	 (float) 501.0
-#define b5_height	 (float) 709.0
-#define letter_width	 (float) 612.0
-#define letter_height	 (float) 792.0
-#define legal_width 	 (float) 612.0
-#define legal_height 	 (float) 1008.0
-#define ledger_width	 (float) 1224.0
-#define ledger_height	 (float) 792.0
-#define p11x17_width	 (float) 792.0
-#define p11x17_height	 (float) 1224.0
+#define a0_width   (float) 2380.0
+#define a0_height  (float) 3368.0
+#define a1_width   (float) 1684.0
+#define a1_height  (float) 2380.0
+#define a2_width   (float) 1190.0
+#define a2_height  (float) 1684.0
+#define a3_width   (float) 842.0
+#define a3_height  (float) 1190.0
+#define a4_width   (float) 595.0
+#define a4_height  (float) 842.0
+#define a5_width   (float) 421.0
+#define a5_height  (float) 595.0
+#define a6_width   (float) 297.0
+#define a6_height  (float) 421.0
+#define b5_width   (float) 501.0
+#define b5_height  (float) 709.0
+#define letter_width     (float) 612.0
+#define letter_height    (float) 792.0
+#define legal_width      (float) 612.0
+#define legal_height     (float) 1008.0
+#define ledger_width     (float) 1224.0
+#define ledger_height    (float) 792.0
+#define p11x17_width     (float) 792.0
+#define p11x17_height    (float) 1224.0
 #endif
 
 #ifdef __cplusplus
-} // extern "C"
+} /* extern "C" */
 #endif
 
-#endif	/* PDFLIB_H */
+#endif      /* PDFLIB_H */

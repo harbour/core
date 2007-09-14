@@ -74,11 +74,11 @@
 /*
  * Trigger Toggle Values
  */
-#define  TRIGGER_ENABLE       1
-#define  TRIGGER_DISABLE      2
-#define  TRIGGER_REMOVE	      3
-#define  TRIGGER_INSTALL      4
-#define  TRIGGER_PENDING      5  /* Internal Use Only */
+#define TRIGGER_ENABLE        1
+#define TRIGGER_DISABLE       2
+#define TRIGGER_REMOVE        3
+#define TRIGGER_INSTALL       4
+#define TRIGGER_PENDING       5  /* Internal Use Only */
 
 
 /*

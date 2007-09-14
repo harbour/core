@@ -103,7 +103,7 @@
 #define TBCI_SETWIDTH           11   // If True, only SetFrozen can change TBCI_WIDTH
 #define TBCI_LCOLSEP            12   // Should column separator be drawn
 #define TBCI_SCRCOLPOS          13   // Temporary column position on screen
-								
+
 #define TBC_CLR_STANDARD        1    // first index value to set unselected data color.
 #define TBC_CLR_ENHANCED        2    // second index value to set selected data color.
 #ifdef HB_COMPAT_C53

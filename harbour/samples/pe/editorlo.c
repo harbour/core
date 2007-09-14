@@ -71,36 +71,36 @@
 
 typedef struct
 {
-   int		top;		/* topmost row of editor's window */
-   int		left;		/* leftmost column of the editor's window */
-   int		bottom;		/* bottom row position */
-   int		right;		/* rightmost column */
-   int		line_length;	/* maximal line length */
-   long int line_number;   /* the number of lines stored in text buffer */
-   long int	current_line;	/* the offset in memory buffer where the current line starts (where the cursor is positioned) */
-   long int	first_line;	/* offset of the first line (usually 0) */
-   long int 	last_line;	/* the offset in memory buffer of the last line */
-   int		cursor_row;	/* current cursor row in the window */
-   int		cursor_col;	/* current cursor column in the window */
-   long int	first_display;	/* the offset of first visible (displayed) line */
-   long int	last_display;	/* the offset of last visible line */
-   int		first_col;	/* first visible column */
-   int		stable;		/* is the editor stabilized? */
-   int		current_stabil; /* currently displayed row (during stabilisation) */
-   int		stabil;		/* number of rows to stabilize */
-   int		space;		/* should spaces at the end of line be removed */
-   char		escape;		/* ASCII code of color escaspe character (the next character after this will be used as color index */
-   long int	next_stabil;	/* the offset in memory buffer of next line to display */
-   int		dir;		/* the direction of line stabilization */
-   int		tab_size;	/* the number of spaces the replaces TAB character */
-   long int	active;		/* the line number where the cursor is positioned */
-   int		IsConfigured;
-   long int	next_line;	/* the offset of next line to return by ED_GetNextLine() */
-   long int	text_length;	/* the size (in bytes) of edited text */
-   long int	bufor_size;	/* the size of allocated memory buffer */
-   char		*begin;		/* the memory buffer */
+   int      top;              /* topmost row of editor's window */
+   int      left;             /* leftmost column of the editor's window */
+   int      bottom;           /* bottom row position */
+   int      right;            /* rightmost column */
+   int      line_length;      /* maximal line length */
+   long int line_number;      /* the number of lines stored in text buffer */
+   long int current_line;     /* the offset in memory buffer where the current line starts (where the cursor is positioned) */
+   long int first_line;       /* offset of the first line (usually 0) */
+   long int last_line;        /* the offset in memory buffer of the last line */
+   int      cursor_row;       /* current cursor row in the window */
+   int      cursor_col;       /* current cursor column in the window */
+   long int first_display;    /* the offset of first visible (displayed) line */
+   long int last_display;     /* the offset of last visible line */
+   int      first_col;        /* first visible column */
+   int      stable;           /* is the editor stabilized? */
+   int      current_stabil;   /* currently displayed row (during stabilisation) */
+   int      stabil;           /* number of rows to stabilize */
+   int      space;            /* should spaces at the end of line be removed */
+   char     escape;           /* ASCII code of color escaspe character (the next character after this will be used as color index */
+   long int next_stabil;      /* the offset in memory buffer of next line to display */
+   int      dir;              /* the direction of line stabilization */
+   int      tab_size;         /* the number of spaces the replaces TAB character */
+   long int active;           /* the line number where the cursor is positioned */
+   int      IsConfigured;
+   long int next_line;        /* the offset of next line to return by ED_GetNextLine() */
+   long int text_length;      /* the size (in bytes) of edited text */
+   long int bufor_size;       /* the size of allocated memory buffer */
+   char     *begin;           /* the memory buffer */
 
-} EDITOR ;
+} EDITOR;
 
 
 
@@ -109,7 +109,7 @@ static EDITOR *EStack[] ={ NULL, NULL, NULL, NULL, NULL };
 /* table of created editors */
 static EDITOR *ETab[] ={ NULL, NULL, NULL, NULL, NULL,
                          NULL, NULL, NULL, NULL, NULL, NULL };
-static EDITOR *ED;	/* currently serviced editor */
+static EDITOR *ED;      /* currently serviced editor */
 
 
 
