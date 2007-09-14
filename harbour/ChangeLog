@@ -172,10 +172,8 @@
    * source/rtl/tgetlist.prg
      ! Fixes for UI problems reported by Lorenzo 
        and more. Mostly from xhb.
-     + ReadModal() core functionality moved inside 
-       HBGetList()
-     + ReadStats() functionality moved indide 
-       HBGetList()
+     + ReadModal() core functionality moved inside HBGetList()
+     + ReadStats() functionality moved inside HBGetList()
      + All HBGetList() vars made protected.
      + Cleaned up the .prg and class interfaces.
      ! Fixed crashes of several GETSYS compatibility 
