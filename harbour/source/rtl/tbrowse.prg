@@ -1458,6 +1458,7 @@ METHOD DispCell( nRow, nCol, nMode ) CLASS TBrowse
    local ftmp   := Eval( oCol:block )
    local cType  := ValType( ftmp )
    local cPict  := iif( Empty( oCol:Picture ), "", oCol:Picture )
+   local aDefColor
 
    local tmp
 
@@ -1471,7 +1472,12 @@ METHOD DispCell( nRow, nCol, nMode ) CLASS TBrowse
       ! Empty( ::aRectColor )
       cColor := tbr_GetColor( ::cColorSpec, ::aRectColor, nMode )
    else
-      cColor := tbr_GetColor( ::cColorSpec, iif( oCol:ColorBlock == NIL, oCol:defColor, Eval( oCol:ColorBlock, ftmp ) ), nMode )
+      /* NOTE: Not very optimal that we're evaluating this block all the time. 
+               But CA-Cl*pper always has a block here, and there is no other way 
+               to tell if the code in it is NIL (the default) or something valuable. 
+               [vszakats] */
+      aDefColor := Eval( oCol:colorBlock, ftmp )
+      cColor := tbr_GetColor( ::cColorSpec, iif( ISARRAY( aDefColor ), aDefColor, oCol:defColor ), nMode )
    endif
 
    do case

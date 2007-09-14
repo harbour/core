@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-14 18:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour/source/rtl/tbrowse.prg
+     ! Fixed cell color. This was needed because the oCol:colorBlock() 
+       now always contains a block (it cannot be NIL) to be CA-Cl*pper 
+       compatible, so the logic had to be adjusted in :DispCell() 
+       accordingly.
+
 2007-09-14 07:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbsxdef.ch
   * harbour/contrib/pdflib/pdflib.h
