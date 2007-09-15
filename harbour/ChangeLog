@@ -8,7 +8,7 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2007-09-14 13:53 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+2007-09-15 13:53 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tbrowse.prg
      ! Color handling made fully C5.x compatible. Pls test.
      + One C5.3 bug replicated where no special header/footer 
