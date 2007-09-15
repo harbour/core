@@ -55,16 +55,12 @@
 
 extern HB_STOD
 
-CLASS HBPersistent
+CREATE CLASS HBPersistent
 
    METHOD CreateNew() INLINE Self
-
    METHOD LoadFromFile( cFileName ) INLINE ::LoadFromText( MemoRead( cFileName ) )
-
    METHOD LoadFromText( cObjectText )
-
    METHOD SaveToText( cObjectName )
-
    METHOD SaveToFile( cFileName ) INLINE MemoWrit( cFileName, ::SaveToText() )
 
 ENDCLASS
@@ -79,10 +75,10 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
       return .F.
    endif
 
-   while Empty( ExtractLine( cObjectText, @nFrom ) ) // We skip the first empty lines
-   end
+   do while Empty( ExtractLine( cObjectText, @nFrom ) ) // We skip the first empty lines
+   enddo
 
-   while nFrom <= Len( cObjectText )
+   do while nFrom <= Len( cObjectText )
       cLine  := ExtractLine( cObjectText, @nFrom )
 
       do case
@@ -108,7 +104,7 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
       endcase
 
-   end
+   enddo
 
 return .T.
 
@@ -122,9 +118,9 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
    DEFAULT cObjectName TO "o" + ::ClassName()
 
    nIndent += 3
-   cObject := iif( nIndent > 0, hb_OsNewLine(), "" ) + Space( nIndent ) + ;
+   cObject := iif( nIndent > 0, hb_OSNewLine(), "" ) + Space( nIndent ) + ;
               "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
-              ::ClassName() + hb_OsNewLine()
+              ::ClassName() + hb_OSNewLine()
 
    aProperties := __ClsGetProperties( ::ClassH )
 
@@ -141,7 +137,7 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
                  cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
                  nIndent -= 3
                  if n < Len( aProperties )
-                    cObject += hb_OsNewLine()
+                    cObject += hb_OSNewLine()
                  endif
 
             case cType == "O"
@@ -149,31 +145,31 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
                     cObject += uValue:SaveToText( aProperties[ n ] )
                  endif
                  if n < Len( aProperties )
-                    cObject += hb_OsNewLine()
+                    cObject += hb_OSNewLine()
                  endif
 
             otherwise
                  if n == 1
-                    cObject += hb_OsNewLine()
+                    cObject += hb_OSNewLine()
                  endif
                  cObject += Space( nIndent ) + "   ::" + ;
                             aProperties[ n ] + " = " + ValToText( uValue ) + ;
-                            hb_OsNewLine()
+                            hb_OSNewLine()
          endcase
 
       endif
 
    next
 
-   cObject += hb_OsNewLine() + Space( nIndent ) + "ENDOBJECT" + hb_OsNewLine()
+   cObject += hb_OSNewLine() + Space( nIndent ) + "ENDOBJECT" + hb_OSNewLine()
    nIndent -= 3
 
 return cObject
 
 static function ArrayToText( aArray, cName, nIndent )
 
-   local cArray := hb_OsNewLine() + Space( nIndent ) + "ARRAY ::" + cName + ;
-                   " LEN " + AllTrim( Str( Len( aArray ) ) ) + hb_OsNewLine()
+   local cArray := hb_OSNewLine() + Space( nIndent ) + "ARRAY ::" + cName + ;
+                   " LEN " + AllTrim( Str( Len( aArray ) ) ) + hb_OSNewLine()
    local n, uValue, cType
 
    for n := 1 to Len( aArray )
@@ -184,7 +180,7 @@ static function ArrayToText( aArray, cName, nIndent )
          case cType == "A"
               nIndent += 3
               cArray += ArrayToText( uValue, cName + "[ " + ;
-                        AllTrim( Str( n ) ) + " ]", nIndent ) + hb_OsNewLine()
+                        AllTrim( Str( n ) ) + " ]", nIndent ) + hb_OSNewLine()
               nIndent -= 3
 
          case cType == "O"
@@ -195,15 +191,15 @@ static function ArrayToText( aArray, cName, nIndent )
 
          otherwise
               if n == 1
-                 cArray += hb_OsNewLine()
+                 cArray += hb_OSNewLine()
               endif
               cArray += Space( nIndent ) + "   ::" + cName + ;
                         + "[ " + AllTrim( Str( n ) ) + " ]" + " = " + ;
-                        ValToText( uValue ) + hb_OsNewLine()
+                        ValToText( uValue ) + hb_OSNewLine()
       endcase
    next
 
-   cArray += hb_OsNewLine() + Space( nIndent ) + "ENDARRAY" + hb_OsNewLine()
+   cArray += hb_OSNewLine() + Space( nIndent ) + "ENDARRAY" + hb_OSNewLine()
 
 return cArray
 
@@ -214,7 +210,7 @@ static function ValToText( uValue )
 
    do case
       case cType == "C"
-           cText := HB_StrToExp( uValue )
+           cText := hb_StrToExp( uValue )
 
       case cType == "N"
            cText := AllTrim( Str( uValue ) )
@@ -224,7 +220,7 @@ static function ValToText( uValue )
            cText := "0d" + iif( Empty( cText ), "00000000", cText )
 
       otherwise
-           cText := HB_ValToStr( uValue )
+           cText := hb_ValToStr( uValue )
    endcase
 
 return cText
@@ -233,14 +229,14 @@ return cText
 
 static function ExtractLine( cText, nFrom )
 
-  local nAt := At( hb_OsNewLine(), cText, nFrom )
-
-  if nAt > 0
-    cText := Substr( cText, nFrom, nAt - nFrom )
-    nFrom := nAt + 2
-  else
-    cText := Substr( cText, nFrom )
-    nFrom := Len( cText ) + 1
-  endif
+   local nAt := At( hb_OSNewLine(), cText, nFrom )
+  
+   if nAt > 0
+      cText := Substr( cText, nFrom, nAt - nFrom )
+      nFrom := nAt + 2
+   else
+      cText := Substr( cText, nFrom )
+      nFrom := Len( cText ) + 1
+   endif
 
 return cText

@@ -52,7 +52,7 @@
 
 #include "hbclass.ch"
 
-CLASS Array FROM ScalarObject FUNCTION _Array
+CREATE CLASS Array INHERIT ScalarObject FUNCTION HBArray
 
    METHOD  Init()
 
@@ -73,17 +73,17 @@ CLASS Array FROM ScalarObject FUNCTION _Array
    METHOD  Scan()
    METHOD  _Size                          // assignment method
 
-END CLASS
+ENDCLASS
 
 METHOD Init( nElements ) CLASS Array
 
-   ::size := If( nElements == nil, 0, nElements )
+   ::size := iif( nElements == NIL, 0, nElements )
 
 return Self
 
 METHOD AddAll( aOtherCollection ) CLASS Array
 
-    aOtherCollection:Do( { |e| ::Add( e ) } )
+    aOtherCollection:Do( {| e | ::Add( e ) } )
 
 return Self
 
@@ -115,7 +115,7 @@ METHOD Collect( b ) CLASS Array
       currElem := Self[ i ]
       if Eval( b, currElem )
          AAdd( result, currElem )
-      end
+      endif
    next
 
 return result
@@ -129,7 +129,7 @@ METHOD DeleteAt( n ) CLASS Array
    if n > 0 .and. n <= Len( Self )
       ADel( Self, n )
       ASize( Self, Len( Self ) - 1 )
-   end
+   endif
 
 return Self
 
@@ -138,11 +138,11 @@ METHOD InsertAt( n, x ) CLASS Array
    if n > Len( Self )
       ASize( Self, n )
       Self[ n ] := x
-  elseif n > 0
+   elseif n > 0
       ASize( Self, Len( Self ) + 1 )
       AIns( Self, n )
       Self[ n ] := x
-  end
+   endif
 
 return Self
 
@@ -168,7 +168,7 @@ METHOD IndexOf( x ) CLASS Array
    for i := 1 to nElems
       if Self[ i ] == x
          return i
-      end
+      endif
    next
 
 return 0
@@ -177,7 +177,7 @@ METHOD Remove( e ) CLASS Array
 
    ::DeleteAt( ::IndexOf( e ) )
 
-return nil
+return NIL
 
 METHOD Scan( b ) CLASS Array
 
@@ -188,4 +188,3 @@ METHOD _Size( newSize ) CLASS Array
    ASize( Self, newSize )
 
 return newSize  // so that assignment works according to standard rules
-

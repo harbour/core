@@ -62,7 +62,7 @@
 #define  CLR_BKPT       2        // color of breakpoint line
 #define  CLR_HIBKPT     3        // color of highlighted breakpoint line
 
-CREATE CLASS HBBrwText FROM HBEditor
+CREATE CLASS HBBrwText INHERIT HBEditor
 
    VAR cFileName                                   // the name of the browsed file
    VAR nActiveLine  INIT 1                         // Active line inside Code Window (the line to be executed)

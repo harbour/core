@@ -83,7 +83,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
       cTmp := SET( _SET_DEFAULT ) + ";" + SET( _SET_PATH )
       cTmp := StrTran( cTmp, ",", ";" )
       i := Len( cTmp )
-      WHILE SubStr( cTmp, i, 1 ) == ";"            // remove last ";"
+      DO WHILE SubStr( cTmp, i, 1 ) == ";"            // remove last ";"
          cTmp := LEFT( cTmp, --i )
       ENDDO
       aPath := HB_ATOKENS( cTmp, ";" )

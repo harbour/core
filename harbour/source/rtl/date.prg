@@ -52,7 +52,7 @@
 
 #include "hbclass.ch"
 
-CLASS Date FROM ScalarObject FUNCTION _Date
+CREATE CLASS Date INHERIT ScalarObject FUNCTION HBDate
 
    METHOD AsString()
    METHOD AsExpStr()

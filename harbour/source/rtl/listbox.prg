@@ -435,7 +435,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS LISTBOX
    /* Check hit on the scrollbar */
    IF ::lIsOpen .AND. ;
       ::oVScroll != NIL .AND. ;
-      ( nHit := ::oVScroll:hittest( nMRow, nMCol ) ) != 0
+      ( nHit := ::oVScroll:hitTest( nMRow, nMCol ) ) != 0
 
       RETURN nHit
    ENDIF
@@ -532,7 +532,7 @@ METHOD insItem( nPos, cText, cData )
    RETURN Self
 
 METHOD killFocus() CLASS LISTBOX
-   LOCAL nCurMCur
+   LOCAL nOldMCur
 
    IF ::lHasFocus
       ::lHasFocus := .F.
@@ -541,7 +541,7 @@ METHOD killFocus() CLASS LISTBOX
          Eval( ::bFBlock )
       ENDIF
 
-      nCurMCur := MSetCursor( .F. )
+      nOldMCur := MSetCursor( .F. )
       DispBegin()
 
       IF ::lDropDown .AND. ::lIsOpen
@@ -550,7 +550,7 @@ METHOD killFocus() CLASS LISTBOX
       ::display()
 
       DispEnd()
-      MSetCursor( nCurMCur )
+      MSetCursor( nOldMCur )
 
       SetCursor( ::nCursor )
    ENDIF
@@ -719,7 +719,7 @@ METHOD select( xPos ) CLASS LISTBOX
       RETURN ::nValue
    CASE xPos == ::nValue
       RETURN ::nValue
-   Otherwise
+   OTHERWISE
       nPos := xPos
       IF Valtype( ::xBuffer ) $ "NU"
          ::xBuffer := nPos

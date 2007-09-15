@@ -8,6 +8,45 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-14 13:53 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tbrowse.prg
+     ! Color handling made fully C5.x compatible. Pls test.
+     + One C5.3 bug replicated where no special header/footer 
+       colors are being used if there is not header/footer separator 
+       sepcified.
+     ! Fixed compile error (because of unused var warning) when 
+       HB_COMPAT_C53 is not defined.
+
+   * source/rtl/numeric.prg
+   * source/rtl/memoedit.prg
+   * source/rtl/typefile.prg
+   * source/rtl/block.prg
+   * source/rtl/symbol.prg
+   * source/rtl/errorsys.prg
+   * source/rtl/scalar.prg
+   * source/rtl/nil.prg
+   * source/rtl/radiogrp.prg
+   * source/rtl/logical.prg
+   * source/rtl/array.prg
+   * source/rtl/listbox.prg
+   * source/rtl/browse.prg
+   * source/rtl/characte.prg
+   * source/rtl/pushbtn.prg
+   * source/rtl/ttextlin.prg
+   * source/rtl/profiler.prg
+   * source/rtl/date.prg
+   * source/rtl/persist.prg
+   * source/debug/dbgbrwsr.prg
+   * source/debug/tbrwtext.prg
+   * source/debug/dbgtmenu.prg
+     + Enabled "PROTECTED:" keyword in profiler.prg
+     * Finished CLASS declarations to use a more or less consistent syntax 
+       inside Harbour (Class(y) compatible except SETGET and the METHOD 
+       parameter lists, maybe some more).
+     * Finished WHILE, iif(), END, string quotation to be consistent along Harbour.
+     ! Fixed some indentations.
+     * Some other minor cleanups.
+
 2007-09-14 18:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/tbrowse.prg
      ! Fixed cell color. This was needed because the oCol:colorBlock() 

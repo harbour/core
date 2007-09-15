@@ -50,7 +50,7 @@
  *
  */
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 #include "button.ch"
 #include "color.ch"

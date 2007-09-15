@@ -52,7 +52,7 @@
 
 #include "hbclass.ch"
 
-CLASS Numeric FROM ScalarObject
+CREATE CLASS Numeric INHERIT ScalarObject
 
    METHOD AsString()
 

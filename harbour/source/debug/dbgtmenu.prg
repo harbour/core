@@ -281,14 +281,14 @@ METHOD GetItemByIdent( uIdent ) CLASS HBDbMenu
    local oItem
   
    for n := 1 to Len( ::aItems )
-      IF( VALTYPE(::aItems[n]:bAction) == 'O' )
-         oItem := ::aItems[n]:bAction:GetItemByIdent( uIdent )
-         IF( oItem != NIL )
+      IF ISOBJECT( ::aItems[ n ]:bAction )
+         oItem := ::aItems[ n ]:bAction:GetItemByIdent( uIdent )
+         IF oItem != NIL
             RETURN oItem
          ENDIF
       ELSE
-         if VALTYPE(::aItems[ n ]:Ident) == VALTYPE(uIdent) .AND.;
-            ::aItems[n]:Ident == uIdent
+         if VALTYPE( ::aItems[ n ]:Ident ) == VALTYPE( uIdent ) .AND.;
+            ::aItems[ n ]:Ident == uIdent
             return ::aItems[ n ]
          ENDIF
       endif
@@ -320,10 +320,10 @@ METHOD GoLeft() CLASS HBDbMenu
       endif
       if ::nOpenPopup > 1
          --::nOpenPopup
-         while ::nOpenPopup > 1 .and. ;
+         do while ::nOpenPopup > 1 .and. ;
             SubStr( ::aItems[ ::nOpenPopup ]:cPrompt, 1, 1 ) == "-"
             --::nOpenPopup
-         end
+         enddo
          ::ShowPopup( ::nOpenPopup )
       else
          ::ShowPopup( ::nOpenPopup := Len( ::aItems ) )
@@ -344,10 +344,10 @@ METHOD GoRight() CLASS HBDbMenu
       endif
       if ::nOpenPopup < Len( ::aItems )
          ++::nOpenPopup
-         while ::nOpenPopup < Len( ::aItems ) .and. ;
+         do while ::nOpenPopup < Len( ::aItems ) .and. ;
             SubStr( ::aItems[ ::nOpenPopup ]:cPrompt, 1, 1 ) == "-"
             ++::nOpenPopup
-         end
+         enddo
          ::ShowPopup( ::nOpenPopup )
       else
          ::ShowPopup( ::nOpenPopup := 1 )

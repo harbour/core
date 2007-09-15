@@ -105,7 +105,6 @@ STATIC FUNCTION DefError( oError )
 
    aOptions := {}
 
-// AAdd( aOptions, "Break" )
    AAdd( aOptions, "Quit" )
 
    IF oError:canRetry
@@ -119,7 +118,7 @@ STATIC FUNCTION DefError( oError )
    // Show alert box
 
    nChoice := 0
-   WHILE nChoice == 0
+   DO WHILE nChoice == 0
 
       IF ISNIL( cDOSError )
          nChoice := Alert( cMessage, aOptions )
@@ -150,7 +149,7 @@ STATIC FUNCTION DefError( oError )
    OutErr( cMessage )
 
    n := 1
-   WHILE ! Empty( ProcName( ++n ) )
+   DO WHILE ! Empty( ProcName( ++n ) )
 
       OutErr( hb_OSNewLine() )
       OutErr( "Called from " + ProcName( n ) + ;
@@ -158,16 +157,10 @@ STATIC FUNCTION DefError( oError )
 
    ENDDO
 
-/// For some strange reason, the DOS prompt gets written on the first line
-/// *of* the message instead of on the first line *after* the message after
-/// the program quits, unless the screen has scrolled. - dgh
-
    ErrorLevel( 1 )
    QUIT
 
    RETURN .F.
-
-// [vszakats]
 
 STATIC FUNCTION ErrorMessage( oError )
    LOCAL cMessage

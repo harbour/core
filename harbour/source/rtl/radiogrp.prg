@@ -321,7 +321,7 @@ METHOD killFocus() CLASS RADIOGROUP
    LOCAL nLen
    LOCAL aItems
 
-   LOCAL nCurMCur
+   LOCAL nOldMCur
 
    IF ::lHasFocus
 
@@ -334,7 +334,7 @@ METHOD killFocus() CLASS RADIOGROUP
       aItems := ::aItems
       nLen := ::nItemCount
 
-      nCurMCur := MSetCursor( .F. )
+      nOldMCur := MSetCursor( .F. )
 
       DispBegin()
 
@@ -346,7 +346,7 @@ METHOD killFocus() CLASS RADIOGROUP
 
       DispEnd()
 
-      MSetCursor( nCurMCur )
+      MSetCursor( nOldMCur )
       SetCursor( ::nCursor )
 
    ENDIF
@@ -359,7 +359,7 @@ METHOD setFocus() CLASS RADIOGROUP
    LOCAL nLen
    LOCAL aItems
 
-   LOCAL nCurMCur
+   LOCAL nOldMCur
 
    IF !::lHasFocus
 
@@ -369,7 +369,7 @@ METHOD setFocus() CLASS RADIOGROUP
       aItems := ::aItems
       nLen := ::nItemCount
 
-      nCurMCur := MSetCursor( .F. )
+      nOldMCur := MSetCursor( .F. )
 
       DispBegin()
 
@@ -381,7 +381,7 @@ METHOD setFocus() CLASS RADIOGROUP
 
       DispEnd()
 
-      MSetCursor( nCurMCur )
+      MSetCursor( nOldMCur )
 
       IF ISBLOCK( ::bFBlock )
          Eval( ::bFBlock )
@@ -477,7 +477,7 @@ METHOD setStyle( cStyle ) CLASS RADIOGROUP
    RETURN Self
 
 METHOD changeButton( nUnselect, nSelect ) CLASS RADIOGROUP
-   LOCAL nCurMCur := MSetCursor( .F. )
+   LOCAL nOldMCur := MSetCursor( .F. )
 
    IF nUnselect != nSelect
 
@@ -500,7 +500,7 @@ METHOD changeButton( nUnselect, nSelect ) CLASS RADIOGROUP
 
    ENDIF
 
-   MSetCursor( nCurMCur )
+   MSetCursor( nOldMCur )
 
    RETURN Self
 

@@ -106,9 +106,9 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
       lKeyPressed := .T.
    ENDIF
 
-   WHILE ! lExit
+   DO WHILE ! lExit
 
-      WHILE ! lKeyPressed .AND. ! oBrw:Stabilize()
+      DO WHILE ! lKeyPressed .AND. ! oBrw:Stabilize()
          lKeyPressed := ( nKey := Inkey() ) != 0
       ENDDO
 
@@ -402,7 +402,7 @@ STATIC FUNCTION FreshOrder( oBrw )
    oBrw:ForceStable()
 
    IF nRec != LastRec() + 1
-      WHILE RecNo() != nRec .AND. !BOF()
+      DO WHILE RecNo() != nRec .AND. !BOF()
          oBrw:Up()
          oBrw:ForceStable()
       ENDDO

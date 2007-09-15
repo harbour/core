@@ -57,7 +57,7 @@
 #include "memoedit.ch"
 
 // A specialized HBEditor which can simulate MemoEdit() behaviour
-CREATE CLASS HBMemoEditor FROM HBEditor
+CREATE CLASS HBMemoEditor INHERIT HBEditor
 
    VAR xUserFunction                      // User Function called to change default MemoEdit() behaviour
 
@@ -80,18 +80,18 @@ METHOD MemoInit( xUserFunction ) CLASS HBMemoEditor
    // Save/Init object internal representation of user function
    ::xUserFunction := xUserFunction
 
-   if ISCHARACTER( ::xUserFunction )
+   IF ISCHARACTER( ::xUserFunction )
       // Keep calling user function until it returns 0
-      do while ( nKey := ::xDo( ME_INIT ) ) != ME_DEFAULT
+      DO WHILE ( nKey := ::xDo( ME_INIT ) ) != ME_DEFAULT
 
          // At this time there is no input from user of MemoEdit() only handling
          // of values returned by ::xUserFunction, so I pass these value on both
          // parameters of ::HandleUserKey()
          ::HandleUserKey( nKey, nKey )
 
-      enddo
+      ENDDO
 
-   endif
+   ENDIF
 
    RETURN Self
 
@@ -106,35 +106,35 @@ METHOD Edit() CLASS HBMemoEditor
 
    // If I have an user function I need to trap configurable keys and ask to
    // user function if handle them the standard way or not
-   if ::lEditAllow .AND. ISCHARACTER( ::xUserFunction )
+   IF ::lEditAllow .AND. ISCHARACTER( ::xUserFunction )
 
-      do while ! ::lExitEdit
+      DO WHILE ! ::lExitEdit
 
          // I need to test this condition here since I never block inside HBEditor:Edit()
          // if there is an user function
-         if NextKey() == 0
+         IF NextKey() == 0
             ::IdleHook()
-         endif
+         ENDIF
 
          nKey := Inkey( 0 )
 
-         if ( bKeyBlock := SetKey( nKey ) ) != NIL
+         IF ( bKeyBlock := SetKey( nKey ) ) != NIL
             Eval( bKeyBlock )
-            loop
-         endif
+            LOOP
+         ENDIF
 
          // Is it a configurable key ?
-         if AScan( aConfigurableKeys, nKey ) > 0
+         IF AScan( aConfigurableKeys, nKey ) > 0
             ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
-         else
+         ELSE
             ::super:Edit( nKey )
-         endif
-      enddo
-   else
+         ENDIF
+      ENDDO
+   ELSE
       // If I can't edit text buffer or there is not a user function enter standard HBEditor
       // ::Edit() method which is able to handle everything
       ::super:Edit()
-   endif
+   ENDIF
 
    RETURN Self
 
@@ -147,9 +147,9 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
    LOCAL nRow
    LOCAL nCol
 
-   if nKey == K_ESC
+   IF nKey == K_ESC
 
-      if ::lDirty
+      IF ::lDirty
          cBackScr := SaveScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight )
          
          nRow := Row()
@@ -161,26 +161,26 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
          RestScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight, cBackScr )
          SetPos( nRow, nCol )
          
-         if Upper( Chr( nYesNoKey ) ) == "Y"
+         IF Upper( Chr( nYesNoKey ) ) == "Y"
             ::lSaved := .F.
             ::lExitEdit := .T.
-         endif
-      else
+         ENDIF
+      ELSE
          ::lExitEdit := .T.
-      endif
-   endif
+      ENDIF
+   ENDIF
 
-   if ISCHARACTER( ::xUserFunction )
+   IF ISCHARACTER( ::xUserFunction )
       ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
-   endif
+   ENDIF
 
    RETURN Self
 
 METHOD IdleHook() CLASS HBMemoEditor
 
-   if ISCHARACTER( ::xUserFunction )
+   IF ISCHARACTER( ::xUserFunction )
       ::xDo( ME_IDLE )
-   endif
+   ENDIF
 
    RETURN Self
 
@@ -190,42 +190,42 @@ METHOD HandleUserKey( nKey, nUserKey ) CLASS HBMemoEditor
    LOCAL aUnHandledKeys := { K_CTRL_J, K_CTRL_K, K_CTRL_L, K_CTRL_N, K_CTRL_O,;
                              K_CTRL_P, K_CTRL_Q, K_CTRL_T, K_CTRL_U, K_F1 }
 
-   do case
+   DO CASE
    // I won't reach this point during ME_INIT since ME_DEFAULT ends initialization phase of MemoEdit()
-   case nUserKey == ME_DEFAULT
+   CASE nUserKey == ME_DEFAULT
 
       // HBEditor is not able to handle keys with a value higher than 256, but I have to tell him
       // that user wants to save text
-      if ( nKey <= 256 .OR. nKey == K_ALT_W ) .AND. AScan( aUnHandledKeys, nKey ) == 0
+      IF ( nKey <= 256 .OR. nKey == K_ALT_W ) .AND. AScan( aUnHandledKeys, nKey ) == 0
          ::super:Edit( nKey )
-      endif
+      ENDIF
 
    // TOFIX: Not clipper compatible, see teditor.prg
-   case ( nUserKey >= 1 .AND. nUserKey <= 31 ) .OR. nUserKey == K_ALT_W
-      if AScan( aUnHandledKeys, nUserKey ) == 0
+   CASE ( nUserKey >= 1 .AND. nUserKey <= 31 ) .OR. nUserKey == K_ALT_W
+      IF AScan( aUnHandledKeys, nUserKey ) == 0
          ::super:Edit( nUserKey )
-      endif
+      ENDIF
 
-   case nUserKey == ME_DATA
-      if nKey <= 256 .AND. AScan( aUnHandledKeys, nKey ) == 0
+   CASE nUserKey == ME_DATA
+      IF nKey <= 256 .AND. AScan( aUnHandledKeys, nKey ) == 0
          ::super:Edit( nKey )
-      endif
+      ENDIF
 
-   case nUserKey == ME_TOGGLEWRAP
+   CASE nUserKey == ME_TOGGLEWRAP
       ::lWordWrap := !::lWordWrap
 
-   case nUserKey == ME_TOGGLESCROLL
+   CASE nUserKey == ME_TOGGLESCROLL
       // TODO: HBEditor does not support vertical scrolling of text inside window without moving cursor position
 
-   case nUserKey == ME_WORDRIGHT
+   CASE nUserKey == ME_WORDRIGHT
       ::MoveCursor( K_CTRL_RIGHT )
 
-   case nUserKey == ME_BOTTOMRIGHT
+   CASE nUserKey == ME_BOTTOMRIGHT
       ::MoveCursor( K_CTRL_END )
 
-   otherwise
+   OTHERWISE
       // Do nothing
-   endcase
+   ENDCASE
 
    RETURN Self
 
@@ -244,12 +244,12 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
 
 METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 
-   if nKey == K_CTRL_END // same value as CTRL-W
+   IF nKey == K_CTRL_END // same value as CTRL-W
       ::lSaved := .T.
       ::lExitEdit := .T.
-   else
+   ELSE
       RETURN ::Super:MoveCursor( nKey )
-   endif
+   ENDIF
 
    RETURN .f.
 
@@ -287,14 +287,14 @@ FUNCTION MemoEdit( cString,;
    oEd:MemoInit( xUserFunction )
    oEd:display()
 
-   if ! ISLOGICAL( xUserFunction ) .OR. xUserFunction == .T.
+   IF ! ISLOGICAL( xUserFunction ) .OR. xUserFunction == .T.
       oEd:Edit()
-      if oEd:Changed()
+      IF oEd:Changed()
          cString := oEd:GetText()
          // dbu tests for LastKey() == K_CTRL_END, so I try to make it happy
          KEYBOARD Chr( K_CTRL_END )
          Inkey()
-      endif
-   endif
+      ENDIF
+   ENDIF
 
    RETURN cString

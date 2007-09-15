@@ -55,7 +55,7 @@
 
 #include "hbclass.ch"
 
-CLASS ScalarObject
+CREATE CLASS ScalarObject
 
    MESSAGE Become    METHOD BecomeErr()  // a scalar cannot "become" another object
    METHOD  Copy()
@@ -79,22 +79,22 @@ METHOD AsString() CLASS ScalarObject
    local cType := ValType( Self )
 
    do case
-      case cType == 'B'
+      case cType == "B"
            return "{ || ... }"
 
-      case cType == 'C'
+      case cType == "C"
            return Self
 
-      case cType == 'D'
+      case cType == "D"
            return DToC( Self )
 
-      case cType == 'L'
-           return If( Self, ".T.", ".F." )
+      case cType == "L"
+           return iif( Self, ".T.", ".F." )
 
-      case cType == 'N'
+      case cType == "N"
            return LTrim( Str( Self ) )
 
-      case cType == 'U'
+      case cType == "U"
            return "NIL"
    endcase
 
@@ -104,16 +104,15 @@ METHOD AsExpStr() CLASS ScalarObject
 
    local cType := ValType( Self )
 
-   if cType == 'C'
+   if cType == "C"
       return ["] + Self + ["]
-
-   elseif cType == 'D'
+   elseif cType == "D"
       return [CToD("] + DToC( Self ) + [")]
-   end
+   endif
 
 return ::AsString()
 
 METHOD BecomeErr() CLASS ScalarObject
     // Not implemented yet
-    // ::error(CSYERR_BECOME, "Message 'become' illegally sent to scalar", ::className)
-return nil
+    // ::error( CSYERR_BECOME, "Message 'become' illegally sent to scalar", ::ClassName() )
+return NIL

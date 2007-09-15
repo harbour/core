@@ -52,7 +52,7 @@
 
 #include "hbclass.ch"
 
-CLASS Character FROM ScalarObject
+CREATE CLASS Character INHERIT ScalarObject
 
    METHOD AsString()
    METHOD AsExpStr()

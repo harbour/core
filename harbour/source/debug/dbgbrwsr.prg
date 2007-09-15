@@ -52,7 +52,7 @@
 
 #include "hbclass.ch"
 
-CREATE CLASS HBDbBrowser FROM TBrowse  // Debugger browser
+CREATE CLASS HBDbBrowser INHERIT TBrowse  // Debugger browser
 
    VAR    Window
 

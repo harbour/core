@@ -52,7 +52,7 @@
 
 #include "hbclass.ch"
 
-CLASS Block FROM ScalarObject
+CREATE CLASS Block INHERIT ScalarObject
 
    METHOD AsString()
 

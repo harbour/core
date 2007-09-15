@@ -63,8 +63,12 @@
  * Copyright 2001 Manu Exposito <maex14@dipusevilla.es>
  * Activate data PICTURE DispCell( nColumn, nColor )
  *
+ * Copyright 2007 Viktor Szakats <harbour.01 syenar.hu>
+ *    tbr_CookColor(), tbr_GetColor()
+ *
+ * See doc/license.txt for licensing terms.
+ *
  */
-
 
 /* NOTE: Don't use SAY in this module, use DispOut(), DispOutAt() instead,
          otherwise it will not be CA-Cl*pper compatible.
@@ -212,6 +216,7 @@ CREATE CLASS TBrowse
    VAR n_Bottom         INIT 0                              // Bottom row number for the TBrowse display
    VAR n_Right          INIT 0                              // Rightmost column for the TBrowse display
    VAR cColorSpec                                           // Color table for the TBrowse display
+   VAR aColorSpec                                           // Color table for the TBrowse display (preprocessed)
    VAR cColSep          INIT " "                            // Column separator character
    VAR cFootSep         INIT ""                             // Footing separator character
    VAR cHeadSep         INIT ""                             // Heading separator character
@@ -302,8 +307,10 @@ METHOD configure( nMode ) CLASS TBrowse
 
    local n
    local nHeight
+#ifdef HB_COMPAT_C53
    local nLeft
    local nRight
+#endif
 
    ::lHeaders := .F.
    ::lFooters := .F.
@@ -1070,7 +1077,7 @@ METHOD stabilize() CLASS TBrowse
          if ::aRedraw[ nRow ]
 
             DispOutAt( ::n_Top + nRow + iif( ::lHeaders, ::nHeaderHeight, 0 ) + iif( Empty( ::cHeadSep ) .or. !::lHeaders, 0, 1 ) - 1, ::n_Left,;
-                      Space( ( nWidth - ::nColsWidth ) / 2 ), ::cColorSpec )
+                      Space( ( nWidth - ::nColsWidth ) / 2 ), ::aColorSpec[ 1 ] )
 
             for n := iif( ::nFrozenCols > 0, 1, ::leftVisible ) to ::rightVisible
 
@@ -1097,21 +1104,21 @@ METHOD stabilize() CLASS TBrowse
                   ::DispCell( nRow, n, TBC_CLR_STANDARD )
                else
                   // Clear cell
-                  DispOut( Space( ::aColsWidth[ n ] ), tbr_GetColor( ::cColorSpec, ::aColumns[ n ]:defColor, TBC_CLR_STANDARD ) )
+                  DispOut( Space( ::aColsWidth[ n ] ), tbr_GetColor( ::aColorSpec, ::aColumns[ n ]:defColor, TBC_CLR_STANDARD ) )
                endif
 
                if n < ::rightVisible
                   if ::aColumns[ n + 1 ]:ColSep != NIL
-                     DispOut( ::aColumns[ n + 1 ]:ColSep, ::cColorSpec )
+                     DispOut( ::aColumns[ n + 1 ]:ColSep, ::aColorSpec[ 1 ] )
 
                   elseif ::cColSep != NIL
-                     DispOut( ::cColSep, ::cColorSpec )
+                     DispOut( ::cColSep, ::aColorSpec[ 1 ] )
 
                   endif
                endif
             next
 
-            DispOut( Space( Int( Round( ( nWidth - ::nColsWidth ) / 2, 0 ) ) ), ::cColorSpec )
+            DispOut( Space( Int( Round( ( nWidth - ::nColsWidth ) / 2, 0 ) ) ), ::aColorSpec[ 1 ] )
 
             // doesn't need to be redrawn
             ::aRedraw[ nRow ] := .F.
@@ -1470,14 +1477,14 @@ METHOD DispCell( nRow, nCol, nMode ) CLASS TBrowse
       nRow >= ::aRect[ 1 ] .and. ;
       nRow <= ::aRect[ 3 ] .and. ;
       ! Empty( ::aRectColor )
-      cColor := tbr_GetColor( ::cColorSpec, ::aRectColor, nMode )
+      cColor := tbr_GetColor( ::aColorSpec, ::aRectColor, nMode )
    else
       /* NOTE: Not very optimal that we're evaluating this block all the time. 
                But CA-Cl*pper always has a block here, and there is no other way 
                to tell if the code in it is NIL (the default) or something valuable. 
                [vszakats] */
       aDefColor := Eval( oCol:colorBlock, ftmp )
-      cColor := tbr_GetColor( ::cColorSpec, iif( ISARRAY( aDefColor ), aDefColor, oCol:defColor ), nMode )
+      cColor := tbr_GetColor( ::aColorSpec, iif( ISARRAY( aDefColor ), aDefColor, oCol:defColor ), nMode )
    endif
 
    do case
@@ -1518,7 +1525,7 @@ METHOD WriteMLineText( cStr, nPadLen, lHeader, cColor ) CLASS TBrowse
          DispOut( PadR( cStr, nPadLen ), cColor )
       else
          // Headers are aligned to bottom
-         cStr := Replicate( ";", ::nHeaderHeight - hb_TokenCount( cStr, ";" ) + 1 ) + cStr
+         cStr := Replicate( ";", ::nHeaderHeight - hb_TokenCount( cStr, ";" ) ) + cStr
 
          for n := ::nHeaderHeight to 1 step -1
             SetPos( nRow + n - 1, nCol )
@@ -1592,11 +1599,22 @@ METHOD redrawHeaders() CLASS TBrowse
    local nScreenRowB
    local nLCS             // Len( ColSep )
    local nWidth := ::n_Right - ::n_Left + 1
+   local nColor
 
-   if ::lHeaders          // Drawing headers
+   if ::lHeaders // Drawing headers
 
       // Clear area of screen occupied by headers
-      DispBox( ::n_Top, ::n_Left, ::n_Top + ::nHeaderHeight - 1, ::n_Right, cBlankBox, ::cColorSpec )
+      DispBox( ::n_Top, ::n_Left, ::n_Top + ::nHeaderHeight - 1, ::n_Right, cBlankBox, ::aColorSpec[ 1 ] )
+
+      if Empty( ::cHeadSep ) // Draw horizontal heading separator line
+         nScreenRowT := NIL
+         /* ; NOTE: This is a bug in CA-Cl*pper 5.3. [vszakats] */
+         nColor := TBC_CLR_STANDARD
+      else
+         DispOutAt( ( nScreenRowT := ::n_Top + ::nHeaderHeight ), ::n_Left,;
+                   Replicate( Right( ::cHeadSep, 1 ), nWidth ), ::aColorSpec[ 1 ] )
+         nColor := TBC_CLR_HEADING
+      endif
 
       // Set cursor at first field start of description
       SetPos( ::n_Top, ::n_Left + ( ( nWidth - ::nColsWidth ) / 2 ) )
@@ -1606,7 +1624,7 @@ METHOD redrawHeaders() CLASS TBrowse
             n := ::leftVisible
          endif
 
-         ::WriteMLineText( ::aColumns[ n ]:Heading, ::aColsWidth[ n ], .T., tbr_GetColor( ::cColorSpec, ::aColumns[ n ]:defColor, TBC_CLR_HEADING ) )
+         ::WriteMLineText( ::aColumns[ n ]:Heading, ::aColsWidth[ n ], .T., tbr_GetColor( ::aColorSpec, ::aColumns[ n ]:defColor, nColor ) )
 
          if n < ::rightVisible
             // Set cursor at start of next field description
@@ -1615,49 +1633,20 @@ METHOD redrawHeaders() CLASS TBrowse
       next
    endif
 
-   if ! Empty( ::cHeadSep ) .and. ::lHeaders // Draw horizontal heading separator line
-      DispOutAt( ( nScreenRowT := ::n_Top + ::nHeaderHeight ), ::n_Left,;
-                Replicate( Right( ::cHeadSep, 1 ), nWidth ), ::cColorSpec )
-   else
-      nScreenRowT := NIL
-   endif
-
-   if ! Empty( ::cFootSep ) .and. ::lFooters // Draw horizontal footing separator line
-      DispOutAt( ( nScreenRowB := ::n_Bottom - ::nFooterHeight ), ::n_Left,;
-                Replicate( Right( ::cFootSep, 1 ), nWidth ), ::cColorSpec )
-   else
-      nScreenRowB := NIL
-   endif
-
-   nTPos := nBPos := ::n_Left + ( ( nWidth - ::nColsWidth ) / 2 )
-
-   // Draw headin/footing column separator
-   for n := iif( ::nFrozenCols > 0, 1, ::leftVisible ) to ::rightVisible
-      if ::nFrozenCols > 0 .and. n == ::nFrozenCols + 1
-         n := ::leftVisible
-      endif
-
-      if n < ::rightVisible
-
-         nLCS := iif( ::aColumns[ n + 1 ]:ColSep != NIL, Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::cColSep ) )
-
-         if nScreenRowT != NIL
-            DispOutAt( nScreenRowT, ( nTPos += ::aColsWidth[ n ] ), Left( ::cHeadSep, nLCS ), ::cColorSpec )
-            nTPos += nLCS
-         endif
-
-         if nScreenRowB != NIL
-            DispOutAt( nScreenRowB, ( nBPos += ::aColsWidth[ n ] ), Left( ::cFootSep, nLCS ), ::cColorSpec )
-            nBPos += nLCS
-         endif
-
-      endif
-   next
-
-   if ::lFooters                // Drawing footers
+   if ::lFooters // Drawing footers
 
       // Clear area of screen occupied by footers
-      DispBox( ::n_Bottom - ::nFooterHeight + 1, ::n_Left, ::n_Bottom, ::n_Right, cBlankBox, ::cColorSpec )
+      DispBox( ::n_Bottom - ::nFooterHeight + 1, ::n_Left, ::n_Bottom, ::n_Right, cBlankBox, ::aColorSpec[ 1 ] )
+
+      if Empty( ::cFootSep ) // Draw horizontal footing separator line
+         nScreenRowB := NIL
+         /* ; NOTE: This is a bug in CA-Cl*pper 5.3. [vszakats] */
+         nColor := TBC_CLR_STANDARD
+      else
+         DispOutAt( ( nScreenRowB := ::n_Bottom - ::nFooterHeight ), ::n_Left,;
+                   Replicate( Right( ::cFootSep, 1 ), nWidth ), ::aColorSpec[ 1 ] )
+         nColor := TBC_CLR_FOOTING
+      endif
 
       // Set cursor at first field start of description
       SetPos( ::n_Bottom, ::n_Left + ( ( nWidth - ::nColsWidth ) / 2 ) )
@@ -1667,7 +1656,7 @@ METHOD redrawHeaders() CLASS TBrowse
             n := ::leftVisible
          endif
 
-         ::WriteMLineText( ::aColumns[ n ]:Footing, ::aColsWidth[ n ], .F., tbr_GetColor( ::cColorSpec, ::aColumns[ n ]:defColor, TBC_CLR_FOOTING ) )
+         ::WriteMLineText( ::aColumns[ n ]:Footing, ::aColsWidth[ n ], .F., tbr_GetColor( ::aColorSpec, ::aColumns[ n ]:defColor, nColor ) )
 
          if n < ::rightVisible
             // Set cursor at start of next field description
@@ -1675,6 +1664,32 @@ METHOD redrawHeaders() CLASS TBrowse
          endif
       next
    endif
+
+   nTPos := nBPos := ::n_Left + ( ( nWidth - ::nColsWidth ) / 2 )
+
+   // Draw headin/footing column separator
+   for n := iif( ::nFrozenCols > 0, 1, ::leftVisible ) to ::rightVisible
+
+      if ::nFrozenCols > 0 .and. n == ::nFrozenCols + 1
+         n := ::leftVisible
+      endif
+
+      if n < ::rightVisible
+
+         nLCS := iif( ::aColumns[ n + 1 ]:ColSep != NIL, Len( ::aColumns[ n + 1 ]:ColSep ), Len( ::cColSep ) )
+
+         if nScreenRowT != NIL
+            DispOutAt( nScreenRowT, ( nTPos += ::aColsWidth[ n ] ), Left( ::cHeadSep, nLCS ), ::aColorSpec[ 1 ] )
+            nTPos += nLCS
+         endif
+
+         if nScreenRowB != NIL
+            DispOutAt( nScreenRowB, ( nBPos += ::aColsWidth[ n ] ), Left( ::cFootSep, nLCS ), ::aColorSpec[ 1 ] )
+            nBPos += nLCS
+         endif
+
+      endif
+   next
 
    return Self
 
@@ -1692,10 +1707,10 @@ METHOD MGotoYX( nRow, nCol ) CLASS TBrowse
       // if not stable force repositioning of data source; maybe this is not first Stabilize() call after
       // TBrowse became unstable, but we need to call Stabilize() al least one time before moving again to be sure
       // data source is under cursor position
-      if ! ::lStable
-         ::Stabilize()
-      else
+      if ::lStable
          ::Moved()
+      else
+         ::stabilize()
       endif
 
       // Set new row position
@@ -1788,6 +1803,7 @@ METHOD colorSpec( cColorSpec ) CLASS TBrowse
 
    if cColorSpec != NIL
       ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001 )
+      ::aColorSpec := tbr_CookColor( ::cColorSpec )
       ::Configure( 1 )
    endif
 
@@ -2096,6 +2112,7 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS TBrowse
    ::nRight  := nRight
 
    ::cColorSpec := SetColor()
+   ::aColorSpec := tbr_CookColor( ::cColorSpec )
 
    #ifdef HB_COMPAT_C53
       ::rect := { ::n_Top, ::n_Left, ::n_Bottom, ::n_Right }
@@ -2108,9 +2125,53 @@ FUNCTION TBrowseNew( nTop, nLeft, nBottom, nRight )
 
 /* -------------------------------------------- */
 
+/* NOTE: Preprocess user-supplied colorstring for internal usage. This is 
+         needed to keep full C5.x compatibility while maintaining performace.
+         C5.x would always have at least two items, defaulted to the 
+         current SetColor() values, the rest of the items are defaulted 
+         to "N/N". [vszakats] */
+STATIC FUNCTION tbr_CookColor( cColorSpec )
+
+   local nCount := Max( hb_TokenCount( cColorSpec, "," ), 2 )
+   local aColorSpec := Array( nCount )
+   local cColor
+   local nPos
+
+   for nPos := 1 TO nCount
+      cColor := hb_TokenGet( @cColorSpec, nPos, "," )
+      if nPos <= 2
+         aColorSpec[ nPos ] := iif( hb_ColorToN( cColor ) == 0 .AND. !( Upper( StrTran( cColor, " ", "" ) ) == "N/N" ), hb_ColorIndex( SetColor( "" ), nPos - 1 ), cColor )
+      else
+         aColorSpec[ nPos ] := iif( hb_ColorToN( cColor ) == 0, "N/N", cColor )
+      endif
+   next
+
+   return aColorSpec
+
 /* NOTE: nMode can be 1/2 or 1/2/3/4 when compiled with HB_COMPAT_C53 (default) [vszakats] */
-STATIC FUNCTION tbr_GetColor( cColorSpec, aDefColor, nMode )
-   return hb_ColorIndex( cColorSpec, iif( ISARRAY( aDefColor ) .and. nMode <= Len( aDefColor ), aDefColor, { 1, 2, 1, 1 } )[ nMode ] - 1 )
+STATIC FUNCTION tbr_GetColor( aColorSpec, aDefColor, nMode )
+
+   /* NOTE: This is what C5.x does when the specified index is out of range 
+            in the color items sepcified in ::cColorSpec. See in tbr_CookColor()
+            that we always have at least two color items. [vszakats] */
+   #define _COLORPOS_COOK( nPos ) iif( nPos > Len( aColorSpec ), 2 - ( nPos % 2 ), nPos )
+
+   if !ISARRAY( aDefColor )
+      /* NOTE: This fits both C5.2 and C5.3. In C5.2 nMode is 1 or 2. [vszakats] */
+      return aColorSpec[ { 1, 2, 1, 1 }[ nMode ] ]
+   elseif nMode > Len( aDefColor )
+      /* NOTE: C5.3 and C5.2 compatible method. To be backwards compatible, 
+               C5.3 will fall back to C5.2 colors if the extra HEADING/FOOTING 
+               positions are not specified. [vszakats] */
+      switch nMode
+      case TBC_CLR_STANDARD ; return aColorSpec[ 1 ]
+      case TBC_CLR_ENHANCED ; return aColorSpec[ 2 ]
+      case TBC_CLR_HEADING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1, _COLORPOS_COOK( aDefColor[ 1 ] ), 1 ) ]
+      case TBC_CLR_FOOTING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1, _COLORPOS_COOK( aDefColor[ 1 ] ), 1 ) ]
+      endswitch
+   endif
+
+   return aColorSpec[ _COLORPOS_COOK( aDefColor[ nMode ] ) ]
 
 STATIC FUNCTION tbr_CalcWidth( xValue, cType, cPicture )
 

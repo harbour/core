@@ -52,10 +52,10 @@
 
 #include "hbclass.ch"
 
-CLASS HBTextLine
+CREATE CLASS HBTextLine
 
-   DATA cText       // A line of text
-   DATA lSoftCR     // true if line doesn't end with a HB_OSNewLine() char (word wrapping)
+   VAR cText       // A line of text
+   VAR lSoftCR     // true if line doesn't end with a hb_OSNewLine() char (word wrapping)
 
    METHOD New( cLine, lSoftCR )
 
@@ -68,4 +68,3 @@ METHOD New( cLine, lSoftCR ) CLASS HBTextLine
    ::lSoftCR := iif( Empty( lSoftCR ), .F., lSoftCR )
 
    RETURN Self
-

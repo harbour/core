@@ -52,7 +52,7 @@
 
 #include "hbclass.ch"
 
-CLASS _Nil FROM ScalarObject
+CREATE CLASS _Nil INHERIT ScalarObject
 
    METHOD AsString()
 

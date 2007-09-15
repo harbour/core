@@ -52,7 +52,7 @@
 
 #include "hbclass.ch"
 
-CLASS Logical FROM ScalarObject
+CREATE CLASS Logical INHERIT ScalarObject
 
    METHOD AsString()
 
@@ -60,5 +60,5 @@ ENDCLASS
 
 METHOD AsString() CLASS Logical
 
-return If( Self, ".T.", ".F." )
+return iif( Self, ".T.", ".F." )
 
