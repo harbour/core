@@ -16,6 +16,7 @@
        sepcified.
      ! Fixed compile error (because of unused var warning) when 
        HB_COMPAT_C53 is not defined.
+     ! Fixed recently introduced vertical header aligning.
 
    * source/rtl/numeric.prg
    * source/rtl/memoedit.prg
