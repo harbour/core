@@ -265,14 +265,23 @@ HB_EXPORT USHORT hb_rddFieldExpIndex( AREAP pArea, const char * szField )
       do
       {
          j = n;
-         if( hb_strnicmp( &szField[ n ], "FIELD", 5 ) == 0 )
-            i = 5;
-         else if( hb_strnicmp( &szField[ n ], "_FIELD", 6 ) == 0 )
-            i = 6;
-         else if( l > 0 && hb_strnicmp( &szField[ n ], szAlias, l ) == 0 )
-            i = l;
-         else
-            i = 0;
+         i = 0;
+         if( HB_ISFIRSTIDCHAR( szField[ n ] ) )
+         {
+            ++i;
+            while( HB_ISNEXTIDCHAR( szField[ n + i ] ) )
+               ++i;
+
+            if( !( ( i == l &&
+                       hb_strnicmp( &szField[ n ], szAlias, l ) == 0 ) ) &&
+                !( i >=4 && i <= 5 &&
+                   hb_strnicmp( &szField[ n ], "FIELD", i ) == 0 ) &&
+                !( i >=4 && i <= 6 &&
+                   hb_strnicmp( &szField[ n ], "_FIELD", i ) == 0 ) )
+            {
+               i = 0;
+            }
+         }
 
          if( i > 0 )
          {

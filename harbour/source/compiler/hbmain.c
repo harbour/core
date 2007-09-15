@@ -2003,6 +2003,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
       if( iPass <= 1 )
       {
          hb_compOptimizePCode( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast );
+         hb_compCodeTraceMarkDead( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast );
       }
    }
 }

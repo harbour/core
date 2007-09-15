@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-15 22:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+    + HB_ISFIRSTIDCHAR() and HB_ISNEXTIDCHAR() macros
+
+  * harbour/source/rdd/wafunc.c
+    * changed FIELD->, _FIELD->, <alias>-> stripping from expressions
+      to respect shortcuts
+
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/hbopt.c
+    * jump joining optimization changed to work also for code with line
+      numbers
+
 2007-09-15 13:53 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tbrowse.prg
      ! Color handling made fully C5.x compatible. Pls test.

@@ -460,6 +460,7 @@ static HB_OPT_FUNC( hb_p_jumpfar )
    BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    LONG lOffset = HB_PCODE_MKINT24( pAddr );
    ULONG ulNewPos = lPCodePos + lOffset;
+   BOOL fLine = FALSE;
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -467,30 +468,42 @@ static HB_OPT_FUNC( hb_p_jumpfar )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
    }
-   else switch( pFunc->pCode[ ulNewPos ] )
+   else
    {
-      case HB_P_JUMPFAR:
-         lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-         HB_PUT_LE_UINT24( pAddr, lOffset );
-         break;
+      if( pFunc->pCode[ ulNewPos ] == HB_P_LINE )
+      {
+         fLine = TRUE;
+         ulNewPos += 3;
+         lOffset += 3;
+      }
+      switch( pFunc->pCode[ ulNewPos ] )
+      {
+         case HB_P_JUMPFAR:
+            lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+            if( !fLine || pFunc->pCode[ lPCodePos + lOffset ] == HB_P_LINE )
+               HB_PUT_LE_UINT24( pAddr, lOffset );
+            break;
 
-      case HB_P_JUMPFALSEFAR:
-         ulNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-         if( ulNewPos == lPCodePos + 4 )
-         {
-            pFunc->pCode[ lPCodePos ] = HB_P_JUMPTRUEFAR;
-            HB_PUT_LE_UINT24( pAddr, lOffset + 4 );
-         }
-         break;
+         case HB_P_JUMPFALSEFAR:
+            ulNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+            if( ulNewPos == lPCodePos + 4 &&
+                ( !fLine || pFunc->pCode[ ulNewPos ] == HB_P_LINE ) )
+            {
+               pFunc->pCode[ lPCodePos ] = HB_P_JUMPTRUEFAR;
+               HB_PUT_LE_UINT24( pAddr, lOffset + 4 );
+            }
+            break;
 
-      case HB_P_JUMPTRUEFAR:
-         ulNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-         if( ulNewPos == lPCodePos + 4 )
-         {
-            pFunc->pCode[ lPCodePos ] = HB_P_JUMPFALSEFAR;
-            HB_PUT_LE_UINT24( pAddr, lOffset + 4 );
-         }
-         break;
+         case HB_P_JUMPTRUEFAR:
+            ulNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+            if( ulNewPos == lPCodePos + 4 &&
+                ( !fLine || pFunc->pCode[ ulNewPos ] == HB_P_LINE ) )
+            {
+               pFunc->pCode[ lPCodePos ] = HB_P_JUMPFALSEFAR;
+               HB_PUT_LE_UINT24( pAddr, lOffset + 4 );
+            }
+            break;
+      }
    }
    return 4;
 }
@@ -500,6 +513,7 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
    BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    LONG lOffset = HB_PCODE_MKINT24( pAddr );
    ULONG ulNewPos = lPCodePos + lOffset;
+   BOOL fLine = FALSE;
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -509,10 +523,30 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
       hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
       pFunc->pCode[ lPCodePos + 4 ] = HB_P_JUMPTRUEFAR;
    }
-   else if( pFunc->pCode[ ulNewPos ] == HB_P_JUMPFAR )
+   else if( lOffset == 11 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_LINE &&
+            pFunc->pCode[ lPCodePos + 7 ] == HB_P_JUMPFAR &&
+            pFunc->pCode[ lPCodePos + 7 +
+               HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 8 ] ) ] == HB_P_LINE &&
+            ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 4 ) &&
+            ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 7 ) )
    {
-      lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-      HB_PUT_LE_UINT24( pAddr, lOffset );
+      hb_compNOOPfill( pFunc, lPCodePos, 7, FALSE, FALSE );
+      pFunc->pCode[ lPCodePos + 7 ] = HB_P_JUMPFALSEFAR;
+   }
+   else
+   {
+      if( pFunc->pCode[ ulNewPos ] == HB_P_LINE )
+      {
+         fLine = TRUE;
+         ulNewPos += 3;
+         lOffset += 3;
+      }
+      if( pFunc->pCode[ ulNewPos ] == HB_P_JUMPFAR )
+      {
+         lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+         if( !fLine || pFunc->pCode[ lPCodePos + lOffset ] == HB_P_LINE )
+            HB_PUT_LE_UINT24( pAddr, lOffset );
+      }
    }
    return 4;
 }
@@ -522,6 +556,7 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
    BYTE * pAddr = &pFunc->pCode[ lPCodePos + 1 ];
    LONG lOffset = HB_PCODE_MKINT24( pAddr );
    ULONG ulNewPos = lPCodePos + lOffset;
+   BOOL fLine = FALSE;
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -531,12 +566,90 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
       hb_compNOOPfill( pFunc, lPCodePos, 4, FALSE, FALSE );
       pFunc->pCode[ lPCodePos + 4 ] = HB_P_JUMPFALSEFAR;
    }
-   else if( pFunc->pCode[ ulNewPos ] == HB_P_JUMPFAR )
+   else if( lOffset == 11 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_LINE &&
+            pFunc->pCode[ lPCodePos + 7 ] == HB_P_JUMPFAR &&
+            pFunc->pCode[ lPCodePos + 7 +
+               HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 8 ] ) ] == HB_P_LINE &&
+            ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 4 ) &&
+            ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 7 ) )
    {
-      lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-      HB_PUT_LE_UINT24( pAddr, lOffset );
+      hb_compNOOPfill( pFunc, lPCodePos, 7, FALSE, FALSE );
+      pFunc->pCode[ lPCodePos + 7 ] = HB_P_JUMPFALSEFAR;
+   }
+   else
+   {
+      if( pFunc->pCode[ ulNewPos ] == HB_P_LINE )
+      {
+         fLine = TRUE;
+         ulNewPos += 3;
+         lOffset += 3;
+      }
+      if( pFunc->pCode[ ulNewPos ] == HB_P_JUMPFAR )
+      {
+         lOffset += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
+         if( !fLine || pFunc->pCode[ lPCodePos + lOffset ] == HB_P_LINE )
+            HB_PUT_LE_UINT24( pAddr, lOffset );
+      }
    }
    return 4;
+}
+
+static HB_OPT_FUNC( hb_p_switch )
+{
+   USHORT usCases = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] ), us;
+   ULONG ulStart = lPCodePos;
+
+   HB_SYMBOL_UNUSED( cargo );
+
+   lPCodePos += 3;
+   for( us = 0; us < usCases; ++us )
+   {
+      switch( pFunc->pCode[ lPCodePos ] )
+      {
+         case HB_P_PUSHBYTE:
+            lPCodePos += 2;
+            break;
+         case HB_P_PUSHINT:
+            lPCodePos += 3;
+            break;
+         case HB_P_PUSHLONG:
+         case HB_P_PUSHDATE:
+            lPCodePos += 5;
+            break;
+         case HB_P_PUSHLONGLONG:
+            lPCodePos += 9;
+            break;
+         case HB_P_PUSHSTRSHORT:
+            lPCodePos += 2 + pFunc->pCode[ lPCodePos + 1 ];
+            break;
+         case HB_P_PUSHSTR:
+            lPCodePos += 3 + HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos + 1 ] );
+            break;
+         case HB_P_PUSHSTRLARGE:
+            lPCodePos += 4 + HB_PCODE_MKUINT24( &pFunc->pCode[ lPCodePos + 1 ] );
+            break;
+         case HB_P_PUSHNIL:
+            /* default clause */
+            us = usCases;
+            lPCodePos++;
+            break;
+      }
+      switch( pFunc->pCode[ lPCodePos ] )
+      {
+         case HB_P_JUMPNEAR:
+            lPCodePos += 2;
+            break;
+         case HB_P_JUMP:
+            lPCodePos += 3;
+            break;
+         /*case HB_P_JUMPFAR:*/
+         default:
+            lPCodePos += 4;
+            break;
+      }
+   }
+
+   return lPCodePos - ulStart;
 }
 
 static HB_OPT_FUNC( hb_p_function )
@@ -735,7 +848,7 @@ static const HB_OPT_FUNC_PTR s_opt_table[] =
    NULL,                       /* HB_P_ENUMNEXT              */
    NULL,                       /* HB_P_ENUMPREV              */
    NULL,                       /* HB_P_ENUMEND               */
-   NULL,                       /* HB_P_SWITCH                */
+   hb_p_switch,                /* HB_P_SWITCH                */
    NULL,                       /* HB_P_PUSHDATE              */
    NULL,                       /* HB_P_PLUSEQPOP             */
    NULL,                       /* HB_P_MINUSEQPOP            */
