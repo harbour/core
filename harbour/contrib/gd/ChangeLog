@@ -8,6 +8,10 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-16 22:30 UTC+0200 Francesco Saverio Giudice <info/at/fsgiudice.com>
+  * contrib/gd/source/gdwrp.c
+    * changed pointers handling, thanks to Przemek for code
+
 2007-04-05 10:00 UTC+0200 Lorenzo Fiorini <lorenzo.fiorini/at/gmail.com>
   * ported from xHarbour/contrib/gd
     * changed name of the lib from gdlib to hbgd
