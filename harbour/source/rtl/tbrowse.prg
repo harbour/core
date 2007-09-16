@@ -2148,7 +2148,6 @@ STATIC FUNCTION tbr_CookColor( cColorSpec )
 
    return aColorSpec
 
-/* NOTE: nMode can be 1/2 or 1/2/3/4 when compiled with HB_COMPAT_C53 (default) [vszakats] */
 STATIC FUNCTION tbr_GetColor( aColorSpec, aDefColor, nMode )
 
    if !ISARRAY( aDefColor )
@@ -2161,12 +2160,12 @@ STATIC FUNCTION tbr_GetColor( aColorSpec, aDefColor, nMode )
       switch nMode
       case TBC_CLR_STANDARD ; return aColorSpec[ 1 ]
       case TBC_CLR_ENHANCED ; return aColorSpec[ 2 ]
-      case TBC_CLR_HEADING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1 .AND. aDefColor[ 1 ] <= Len( aColorSpec ), aDefColor[ 1 ], 1 ) ]
-      case TBC_CLR_FOOTING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1 .AND. aDefColor[ 1 ] <= Len( aColorSpec ), aDefColor[ 1 ], 1 ) ]
+      case TBC_CLR_HEADING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1 .AND. ISNUMBER( aDefColor[ 1 ] ) .AND. aDefColor[ 1 ] <= Len( aColorSpec ), aDefColor[ 1 ], 1 ) ]
+      case TBC_CLR_FOOTING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1 .AND. ISNUMBER( aDefColor[ 1 ] ) .AND. aDefColor[ 1 ] <= Len( aColorSpec ), aDefColor[ 1 ], 1 ) ]
       endswitch
    endif
 
-   return aColorSpec[ iif( aDefColor[ nMode ] <= Len( aColorSpec ), aDefColor[ nMode ], { 1, 2, 1, 1 }[ nMode ] ) ]
+   return aColorSpec[ iif( ISNUMBER( aDefColor[ nMode ] ) .AND. aDefColor[ nMode ] <= Len( aColorSpec ), aDefColor[ nMode ], { 1, 2, 1, 1 }[ nMode ] ) ]
 
 STATIC FUNCTION tbr_CalcWidth( xValue, cType, cPicture )
 
