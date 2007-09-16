@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-16 22:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbopt.c
+    ! fixed bad typo in last modification - thanks to Viktor
+    * added additional line number validation to not make optimizations
+      which will change line numbers
+
 2007-09-16 20:14 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tbrowse.prg
      ! C5.x compatible fix for non-numeric values inside the 

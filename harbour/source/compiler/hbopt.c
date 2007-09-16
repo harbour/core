@@ -486,8 +486,9 @@ static HB_OPT_FUNC( hb_p_jumpfar )
 
          case HB_P_JUMPFALSEFAR:
             ulNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-            if( ulNewPos == lPCodePos + 4 &&
-                ( !fLine || pFunc->pCode[ ulNewPos ] == HB_P_LINE ) )
+            if( ulNewPos == lPCodePos + 4 && ( !fLine ||
+                ( pFunc->pCode[ ulNewPos ] == HB_P_LINE &&
+                  pFunc->pCode[ lPCodePos + lOffset + 4 ] == HB_P_LINE ) ) )
             {
                pFunc->pCode[ lPCodePos ] = HB_P_JUMPTRUEFAR;
                HB_PUT_LE_UINT24( pAddr, lOffset + 4 );
@@ -496,8 +497,9 @@ static HB_OPT_FUNC( hb_p_jumpfar )
 
          case HB_P_JUMPTRUEFAR:
             ulNewPos += HB_PCODE_MKINT24( &pFunc->pCode[ ulNewPos + 1 ] );
-            if( ulNewPos == lPCodePos + 4 &&
-                ( !fLine || pFunc->pCode[ ulNewPos ] == HB_P_LINE ) )
+            if( ulNewPos == lPCodePos + 4 && ( !fLine ||
+                ( pFunc->pCode[ ulNewPos ] == HB_P_LINE &&
+                  pFunc->pCode[ lPCodePos + lOffset + 4 ] == HB_P_LINE ) ) )
             {
                pFunc->pCode[ lPCodePos ] = HB_P_JUMPFALSEFAR;
                HB_PUT_LE_UINT24( pAddr, lOffset + 4 );
@@ -524,6 +526,7 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
       pFunc->pCode[ lPCodePos + 4 ] = HB_P_JUMPTRUEFAR;
    }
    else if( lOffset == 11 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_LINE &&
+            pFunc->pCode[ lPCodePos + 11 ] == HB_P_LINE &&
             pFunc->pCode[ lPCodePos + 7 ] == HB_P_JUMPFAR &&
             pFunc->pCode[ lPCodePos + 7 +
                HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 8 ] ) ] == HB_P_LINE &&
@@ -531,7 +534,7 @@ static HB_OPT_FUNC( hb_p_jumpfalsefar )
             ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 7 ) )
    {
       hb_compNOOPfill( pFunc, lPCodePos, 7, FALSE, FALSE );
-      pFunc->pCode[ lPCodePos + 7 ] = HB_P_JUMPFALSEFAR;
+      pFunc->pCode[ lPCodePos + 7 ] = HB_P_JUMPTRUEFAR;
    }
    else
    {
@@ -567,6 +570,7 @@ static HB_OPT_FUNC( hb_p_jumptruefar )
       pFunc->pCode[ lPCodePos + 4 ] = HB_P_JUMPFALSEFAR;
    }
    else if( lOffset == 11 && pFunc->pCode[ lPCodePos + 4 ] == HB_P_LINE &&
+            pFunc->pCode[ lPCodePos + 11 ] == HB_P_LINE &&
             pFunc->pCode[ lPCodePos + 7 ] == HB_P_JUMPFAR &&
             pFunc->pCode[ lPCodePos + 7 +
                HB_PCODE_MKINT24( &pFunc->pCode[ lPCodePos + 8 ] ) ] == HB_P_LINE &&
