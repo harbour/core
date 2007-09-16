@@ -8,7 +8,13 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2007-09-16 22:30 UTC+0200 Francesco Saverio Giudice <info/at/fsgiudice.com>
+2007-09-16 22:28 UTC+0200 Francesco Saverio Giudice <info/at/fsgiudice.com>
+  * contrib/gd/source/gdwrp.c
+    * cleaned some comments
+  * contrib/gd/ChangeLog
+    * adjusted time of previous commit
+
+2007-09-16 22:25 UTC+0200 Francesco Saverio Giudice <info/at/fsgiudice.com>
   * contrib/gd/source/gdwrp.c
     * changed pointers handling, thanks to Przemek for code
 

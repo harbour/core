@@ -2563,7 +2563,6 @@ HB_FUNC( GDIMAGESTRING ) // void gdImageChar(gdImagePtr im, gdFontPtr font, int 
 
       /* Retrieve font pointer */
       font = hb_parGdFont( 2 );
-      //font = (gdFontPtr)hb_parptr( 2 );
 
       /* Retrieve coord value */
       x = hb_parni( 3 );
@@ -2624,7 +2623,6 @@ HB_FUNC( GDIMAGESTRINGUP ) // void gdImageCharUp(gdImagePtr im, gdFontPtr font, 
 
       /* Retrieve font pointer */
       font = hb_parGdFont( 2 );
-      //font = (gdFontPtr)hb_parptr( 2 );
 
       /* Retrieve coord value */
       x = hb_parni( 3 );
@@ -2907,7 +2905,6 @@ HB_FUNC( GDFONTGETWIDTH )
 
       /* Retrieve font pointer */
       font = hb_parGdFont( 1 );
-      //font = (gdFontPtr)hb_parptr( 1 );
 
       /* Return value */
       hb_retni( font->w );
@@ -2937,7 +2934,6 @@ HB_FUNC( GDFONTGETHEIGHT )
 
       /* Retrieve font pointer */
       font = hb_parGdFont( 1 );
-      //font = (gdFontPtr)hb_parptr( 1 );
 
       /* Return value */
       hb_retni( font->h );
