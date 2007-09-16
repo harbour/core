@@ -2140,7 +2140,7 @@ STATIC FUNCTION tbr_CookColor( cColorSpec )
    for nPos := 1 TO nCount
       cColor := hb_TokenGet( @cColorSpec, nPos, "," )
       if nPos <= 2
-         aColorSpec[ nPos ] := iif( hb_ColorToN( cColor ) == 0 .AND. !( Upper( StrTran( cColor, " ", "" ) ) == "N/N" ), hb_ColorIndex( SetColor( "" ), nPos - 1 ), cColor )
+         aColorSpec[ nPos ] := iif( hb_ColorToN( cColor ) == 0 .AND. !( Upper( StrTran( cColor, " ", "" ) ) == "N/N" ), hb_ColorIndex( "W/N,N/W", nPos - 1 ), cColor )
       else
          aColorSpec[ nPos ] := iif( hb_ColorToN( cColor ) == 0, "N/N", cColor )
       endif
