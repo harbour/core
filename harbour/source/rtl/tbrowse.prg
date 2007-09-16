@@ -2151,11 +2151,6 @@ STATIC FUNCTION tbr_CookColor( cColorSpec )
 /* NOTE: nMode can be 1/2 or 1/2/3/4 when compiled with HB_COMPAT_C53 (default) [vszakats] */
 STATIC FUNCTION tbr_GetColor( aColorSpec, aDefColor, nMode )
 
-   /* NOTE: This is what C5.x does when the specified index is out of range 
-            in the color items sepcified in ::cColorSpec. See in tbr_CookColor()
-            that we always have at least two color items. [vszakats] */
-   #define _COLORPOS_COOK( nPos ) iif( nPos > Len( aColorSpec ), 2 - ( nPos % 2 ), nPos )
-
    if !ISARRAY( aDefColor )
       /* NOTE: This fits both C5.2 and C5.3. In C5.2 nMode is 1 or 2. [vszakats] */
       return aColorSpec[ { 1, 2, 1, 1 }[ nMode ] ]
@@ -2166,12 +2161,12 @@ STATIC FUNCTION tbr_GetColor( aColorSpec, aDefColor, nMode )
       switch nMode
       case TBC_CLR_STANDARD ; return aColorSpec[ 1 ]
       case TBC_CLR_ENHANCED ; return aColorSpec[ 2 ]
-      case TBC_CLR_HEADING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1, _COLORPOS_COOK( aDefColor[ 1 ] ), 1 ) ]
-      case TBC_CLR_FOOTING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1, _COLORPOS_COOK( aDefColor[ 1 ] ), 1 ) ]
+      case TBC_CLR_HEADING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1 .AND. aDefColor[ 1 ] <= Len( aColorSpec ), aDefColor[ 1 ], 1 ) ]
+      case TBC_CLR_FOOTING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1 .AND. aDefColor[ 1 ] <= Len( aColorSpec ), aDefColor[ 1 ], 1 ) ]
       endswitch
    endif
 
-   return aColorSpec[ _COLORPOS_COOK( aDefColor[ nMode ] ) ]
+   return aColorSpec[ iif( aDefColor[ nMode ] <= Len( aColorSpec ), aDefColor[ nMode ], { 1, 2, 1, 1 }[ nMode ] ) ]
 
 STATIC FUNCTION tbr_CalcWidth( xValue, cType, cPicture )
 

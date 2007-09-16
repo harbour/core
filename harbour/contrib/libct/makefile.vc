@@ -214,94 +214,94 @@ all: \
 CLEAN:
    -@if exist $(OBJ_DIR)\addascii.* del $(OBJ_DIR)\addascii.*
    -@if exist $(OBJ_DIR)\asciisum.* del $(OBJ_DIR)\asciisum.*
-   -@if exist $(OBJ_DIR)\ascpos.* del $(OBJ_DIR)\ascpos.*
+   -@if exist $(OBJ_DIR)\ascpos.*   del $(OBJ_DIR)\ascpos.*
    -@if exist $(OBJ_DIR)\atadjust.* del $(OBJ_DIR)\atadjust.*
-   -@if exist $(OBJ_DIR)\atnum.* del $(OBJ_DIR)\atnum.*
-   -@if exist $(OBJ_DIR)\atrepl.* del $(OBJ_DIR)\atrepl.*
-   -@if exist $(OBJ_DIR)\bitnum.* del $(OBJ_DIR)\bitnum.*
+   -@if exist $(OBJ_DIR)\atnum.*    del $(OBJ_DIR)\atnum.*
+   -@if exist $(OBJ_DIR)\atrepl.*   del $(OBJ_DIR)\atrepl.*
+   -@if exist $(OBJ_DIR)\bitnum.*   del $(OBJ_DIR)\bitnum.*
    -@if exist $(OBJ_DIR)\charevod.* del $(OBJ_DIR)\charevod.*
    -@if exist $(OBJ_DIR)\charlist.* del $(OBJ_DIR)\charlist.*
    -@if exist $(OBJ_DIR)\charmirr.* del $(OBJ_DIR)\charmirr.*
-   -@if exist $(OBJ_DIR)\charmix.* del $(OBJ_DIR)\charmix.*
-   -@if exist $(OBJ_DIR)\charone.* del $(OBJ_DIR)\charone.*
+   -@if exist $(OBJ_DIR)\charmix.*  del $(OBJ_DIR)\charmix.*
+   -@if exist $(OBJ_DIR)\charone.*  del $(OBJ_DIR)\charone.*
    -@if exist $(OBJ_DIR)\charonly.* del $(OBJ_DIR)\charonly.*
-   -@if exist $(OBJ_DIR)\charop.* del $(OBJ_DIR)\charop.*
+   -@if exist $(OBJ_DIR)\charop.*   del $(OBJ_DIR)\charop.*
    -@if exist $(OBJ_DIR)\charrepl.* del $(OBJ_DIR)\charrepl.*
    -@if exist $(OBJ_DIR)\charsort.* del $(OBJ_DIR)\charsort.*
    -@if exist $(OBJ_DIR)\charsprd.* del $(OBJ_DIR)\charsprd.*
    -@if exist $(OBJ_DIR)\charswap.* del $(OBJ_DIR)\charswap.*
-   -@if exist $(OBJ_DIR)\color.* del $(OBJ_DIR)\color.*
-   -@if exist $(OBJ_DIR)\count.* del $(OBJ_DIR)\count.*
-   -@if exist $(OBJ_DIR)\ctc.* del $(OBJ_DIR)\ctc.*
+   -@if exist $(OBJ_DIR)\color.*    del $(OBJ_DIR)\color.*
+   -@if exist $(OBJ_DIR)\count.*    del $(OBJ_DIR)\count.*
+   -@if exist $(OBJ_DIR)\ctc.*      del $(OBJ_DIR)\ctc.*
    -@if exist $(OBJ_DIR)\ctchksum.* del $(OBJ_DIR)\ctchksum.*
-   -@if exist $(OBJ_DIR)\ctcrypt.* del $(OBJ_DIR)\ctcrypt.*
-   -@if exist $(OBJ_DIR)\ctmath.* del $(OBJ_DIR)\ctmath.*
-   -@if exist $(OBJ_DIR)\ctmath2.* del $(OBJ_DIR)\ctmath2.*
-   -@if exist $(OBJ_DIR)\ctnet.* del $(OBJ_DIR)\ctnet.*
-   -@if exist $(OBJ_DIR)\ctpad.* del $(OBJ_DIR)\ctpad.*
-   -@if exist $(OBJ_DIR)\ctset.* del $(OBJ_DIR)\ctset.*
-   -@if exist $(OBJ_DIR)\ctstr.* del $(OBJ_DIR)\ctstr.*
+   -@if exist $(OBJ_DIR)\ctcrypt.*  del $(OBJ_DIR)\ctcrypt.*
+   -@if exist $(OBJ_DIR)\ctmath.*   del $(OBJ_DIR)\ctmath.*
+   -@if exist $(OBJ_DIR)\ctmath2.*  del $(OBJ_DIR)\ctmath2.*
+   -@if exist $(OBJ_DIR)\ctnet.*    del $(OBJ_DIR)\ctnet.*
+   -@if exist $(OBJ_DIR)\ctpad.*    del $(OBJ_DIR)\ctpad.*
+   -@if exist $(OBJ_DIR)\ctset.*    del $(OBJ_DIR)\ctset.*
+   -@if exist $(OBJ_DIR)\ctstr.*    del $(OBJ_DIR)\ctstr.*
    -@if exist $(OBJ_DIR)\ctstrfil.* del $(OBJ_DIR)\ctstrfil.*
-   -@if exist $(OBJ_DIR)\ctwfunc.* del $(OBJ_DIR)\ctwfunc.*
-   -@if exist $(OBJ_DIR)\ctwin.* del $(OBJ_DIR)\ctwin.*
-   -@if exist $(OBJ_DIR)\cursor.* del $(OBJ_DIR)\cursor.*
+   -@if exist $(OBJ_DIR)\ctwfunc.*  del $(OBJ_DIR)\ctwfunc.*
+   -@if exist $(OBJ_DIR)\ctwin.*    del $(OBJ_DIR)\ctwin.*
+   -@if exist $(OBJ_DIR)\cursor.*   del $(OBJ_DIR)\cursor.*
    -@if exist $(OBJ_DIR)\datetime.* del $(OBJ_DIR)\datetime.*
    -@if exist $(OBJ_DIR)\dattime2.* del $(OBJ_DIR)\dattime2.*
    -@if exist $(OBJ_DIR)\dattime3.* del $(OBJ_DIR)\dattime3.*
    -@if exist $(OBJ_DIR)\dbftools.* del $(OBJ_DIR)\dbftools.*
-   -@if exist $(OBJ_DIR)\disk.* del $(OBJ_DIR)\disk.*
-   -@if exist $(OBJ_DIR)\expand.* del $(OBJ_DIR)\expand.*
+   -@if exist $(OBJ_DIR)\disk.*     del $(OBJ_DIR)\disk.*
+   -@if exist $(OBJ_DIR)\expand.*   del $(OBJ_DIR)\expand.*
    -@if exist $(OBJ_DIR)\exponent.* del $(OBJ_DIR)\exponent.*
-   -@if exist $(OBJ_DIR)\files.* del $(OBJ_DIR)\files.*
-   -@if exist $(OBJ_DIR)\finan.* del $(OBJ_DIR)\finan.*
-   -@if exist $(OBJ_DIR)\ftoc.* del $(OBJ_DIR)\ftoc.*
-   -@if exist $(OBJ_DIR)\justify.* del $(OBJ_DIR)\justify.*
-   -@if exist $(OBJ_DIR)\keyset.* del $(OBJ_DIR)\keyset.*
-   -@if exist $(OBJ_DIR)\like.* del $(OBJ_DIR)\like.*
-   -@if exist $(OBJ_DIR)\lton.* del $(OBJ_DIR)\lton.*
-   -@if exist $(OBJ_DIR)\maxline.* del $(OBJ_DIR)\maxline.*
-   -@if exist $(OBJ_DIR)\misc1.* del $(OBJ_DIR)\misc1.*
-   -@if exist $(OBJ_DIR)\misc2.* del $(OBJ_DIR)\misc2.*
-   -@if exist $(OBJ_DIR)\misc3.* del $(OBJ_DIR)\misc3.*
-   -@if exist $(OBJ_DIR)\num1.* del $(OBJ_DIR)\num1.*
-   -@if exist $(OBJ_DIR)\numat.* del $(OBJ_DIR)\numat.*
+   -@if exist $(OBJ_DIR)\files.*    del $(OBJ_DIR)\files.*
+   -@if exist $(OBJ_DIR)\finan.*    del $(OBJ_DIR)\finan.*
+   -@if exist $(OBJ_DIR)\ftoc.*     del $(OBJ_DIR)\ftoc.*
+   -@if exist $(OBJ_DIR)\justify.*  del $(OBJ_DIR)\justify.*
+   -@if exist $(OBJ_DIR)\keyset.*   del $(OBJ_DIR)\keyset.*
+   -@if exist $(OBJ_DIR)\like.*     del $(OBJ_DIR)\like.*
+   -@if exist $(OBJ_DIR)\lton.*     del $(OBJ_DIR)\lton.*
+   -@if exist $(OBJ_DIR)\maxline.*  del $(OBJ_DIR)\maxline.*
+   -@if exist $(OBJ_DIR)\misc1.*    del $(OBJ_DIR)\misc1.*
+   -@if exist $(OBJ_DIR)\misc2.*    del $(OBJ_DIR)\misc2.*
+   -@if exist $(OBJ_DIR)\misc3.*    del $(OBJ_DIR)\misc3.*
+   -@if exist $(OBJ_DIR)\num1.*     del $(OBJ_DIR)\num1.*
+   -@if exist $(OBJ_DIR)\numat.*    del $(OBJ_DIR)\numat.*
    -@if exist $(OBJ_DIR)\numcount.* del $(OBJ_DIR)\numcount.*
-   -@if exist $(OBJ_DIR)\numline.* del $(OBJ_DIR)\numline.*
-   -@if exist $(OBJ_DIR)\pack.* del $(OBJ_DIR)\pack.*
-   -@if exist $(OBJ_DIR)\pos1.* del $(OBJ_DIR)\pos1.*
-   -@if exist $(OBJ_DIR)\pos2.* del $(OBJ_DIR)\pos2.*
-   -@if exist $(OBJ_DIR)\posdiff.* del $(OBJ_DIR)\posdiff.*
-   -@if exist $(OBJ_DIR)\print.* del $(OBJ_DIR)\print.*
-   -@if exist $(OBJ_DIR)\range.* del $(OBJ_DIR)\range.*
+   -@if exist $(OBJ_DIR)\numline.*  del $(OBJ_DIR)\numline.*
+   -@if exist $(OBJ_DIR)\pack.*     del $(OBJ_DIR)\pack.*
+   -@if exist $(OBJ_DIR)\pos1.*     del $(OBJ_DIR)\pos1.*
+   -@if exist $(OBJ_DIR)\pos2.*     del $(OBJ_DIR)\pos2.*
+   -@if exist $(OBJ_DIR)\posdiff.*  del $(OBJ_DIR)\posdiff.*
+   -@if exist $(OBJ_DIR)\print.*    del $(OBJ_DIR)\print.*
+   -@if exist $(OBJ_DIR)\range.*    del $(OBJ_DIR)\range.*
    -@if exist $(OBJ_DIR)\relation.* del $(OBJ_DIR)\relation.*
-   -@if exist $(OBJ_DIR)\remove.* del $(OBJ_DIR)\remove.*
-   -@if exist $(OBJ_DIR)\replace.* del $(OBJ_DIR)\replace.*
-   -@if exist $(OBJ_DIR)\screen1.* del $(OBJ_DIR)\screen1.*
-   -@if exist $(OBJ_DIR)\screen2.* del $(OBJ_DIR)\screen2.*
-   -@if exist $(OBJ_DIR)\setlast.* del $(OBJ_DIR)\setlast.*
-   -@if exist $(OBJ_DIR)\strdiff.* del $(OBJ_DIR)\strdiff.*
-   -@if exist $(OBJ_DIR)\strswap.* del $(OBJ_DIR)\strswap.*
-   -@if exist $(OBJ_DIR)\tab.* del $(OBJ_DIR)\tab.*
-   -@if exist $(OBJ_DIR)\token1.* del $(OBJ_DIR)\token1.*
-   -@if exist $(OBJ_DIR)\token2.* del $(OBJ_DIR)\token2.*
-   -@if exist $(OBJ_DIR)\trig.* del $(OBJ_DIR)\trig.*
-   -@if exist $(OBJ_DIR)\video.* del $(OBJ_DIR)\video.*
+   -@if exist $(OBJ_DIR)\remove.*   del $(OBJ_DIR)\remove.*
+   -@if exist $(OBJ_DIR)\replace.*  del $(OBJ_DIR)\replace.*
+   -@if exist $(OBJ_DIR)\screen1.*  del $(OBJ_DIR)\screen1.*
+   -@if exist $(OBJ_DIR)\screen2.*  del $(OBJ_DIR)\screen2.*
+   -@if exist $(OBJ_DIR)\setlast.*  del $(OBJ_DIR)\setlast.*
+   -@if exist $(OBJ_DIR)\strdiff.*  del $(OBJ_DIR)\strdiff.*
+   -@if exist $(OBJ_DIR)\strswap.*  del $(OBJ_DIR)\strswap.*
+   -@if exist $(OBJ_DIR)\tab.*      del $(OBJ_DIR)\tab.*
+   -@if exist $(OBJ_DIR)\token1.*   del $(OBJ_DIR)\token1.*
+   -@if exist $(OBJ_DIR)\token2.*   del $(OBJ_DIR)\token2.*
+   -@if exist $(OBJ_DIR)\trig.*     del $(OBJ_DIR)\trig.*
+   -@if exist $(OBJ_DIR)\video.*    del $(OBJ_DIR)\video.*
    -@if exist $(OBJ_DIR)\wordrepl.* del $(OBJ_DIR)\wordrepl.*
    -@if exist $(OBJ_DIR)\wordtoch.* del $(OBJ_DIR)\wordtoch.*
-   -@if exist $(OBJ_DIR)\blank.* del $(OBJ_DIR)\blank.*
-   -@if exist $(OBJ_DIR)\ct.* del $(OBJ_DIR)\ct.*
-   -@if exist $(OBJ_DIR)\ctmisc.* del $(OBJ_DIR)\ctmisc.*
-   -@if exist $(OBJ_DIR)\cttime.* del $(OBJ_DIR)\cttime.*
-   -@if exist $(OBJ_DIR)\fcopy.* del $(OBJ_DIR)\fcopy.*
-   -@if exist $(OBJ_DIR)\getinfo.* del $(OBJ_DIR)\getinfo.*
+   -@if exist $(OBJ_DIR)\blank.*    del $(OBJ_DIR)\blank.*
+   -@if exist $(OBJ_DIR)\ct.*       del $(OBJ_DIR)\ct.*
+   -@if exist $(OBJ_DIR)\ctmisc.*   del $(OBJ_DIR)\ctmisc.*
+   -@if exist $(OBJ_DIR)\cttime.*   del $(OBJ_DIR)\cttime.*
+   -@if exist $(OBJ_DIR)\fcopy.*    del $(OBJ_DIR)\fcopy.*
+   -@if exist $(OBJ_DIR)\getinfo.*  del $(OBJ_DIR)\getinfo.*
    -@if exist $(OBJ_DIR)\getinput.* del $(OBJ_DIR)\getinput.*
    -@if exist $(OBJ_DIR)\getsecrt.* del $(OBJ_DIR)\getsecrt.*
-   -@if exist $(OBJ_DIR)\keysave.* del $(OBJ_DIR)\keysave.*
-   -@if exist $(OBJ_DIR)\keysec.* del $(OBJ_DIR)\keysec.*
-   -@if exist $(OBJ_DIR)\keytime.* del $(OBJ_DIR)\keytime.*
-   -@if exist $(OBJ_DIR)\numconv.* del $(OBJ_DIR)\numconv.*
-   -@if exist $(OBJ_DIR)\screen3.* del $(OBJ_DIR)\screen3.*
-   -@if exist $(OBJ_DIR)\scrmark.* del $(OBJ_DIR)\scrmark.*
+   -@if exist $(OBJ_DIR)\keysave.*  del $(OBJ_DIR)\keysave.*
+   -@if exist $(OBJ_DIR)\keysec.*   del $(OBJ_DIR)\keysec.*
+   -@if exist $(OBJ_DIR)\keytime.*  del $(OBJ_DIR)\keytime.*
+   -@if exist $(OBJ_DIR)\numconv.*  del $(OBJ_DIR)\numconv.*
+   -@if exist $(OBJ_DIR)\screen3.*  del $(OBJ_DIR)\screen3.*
+   -@if exist $(OBJ_DIR)\scrmark.*  del $(OBJ_DIR)\scrmark.*
    -@if exist $(OBJ_DIR)\showtime.* del $(OBJ_DIR)\showtime.*
    -@if exist $(TOOLS_LIB) del $(TOOLS_LIB)
 

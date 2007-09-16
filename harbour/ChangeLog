@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-16 12:53 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/libct/makefile.vc
+     * Some alignment.
+
+   * source/rtl/listbox.prg
+     ! Using manifest constant.
+
+   * source/rtl/tbrowse.prg
+     ! Some final fixes for full color compatibility.
+
+   * source/common/hbver.c
+     + Added NOTE about what CA-Cl*ppers are returning 
+       for Version().
+
 2007-09-15 22:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
     + HB_ISFIRSTIDCHAR() and HB_ISNEXTIDCHAR() macros
@@ -27,7 +41,7 @@
      ! Color handling made fully C5.x compatible. Pls test.
      + One C5.3 bug replicated where no special header/footer 
        colors are being used if there is not header/footer separator 
-       sepcified.
+       specified.
      ! Fixed compile error (because of unused var warning) when 
        HB_COMPAT_C53 is not defined.
      ! Fixed recently introduced vertical header aligning.

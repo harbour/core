@@ -1142,7 +1142,7 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, nSelect, aItems, cCaption,;
          IF ISLOGICAL( lDropDown ) .AND. lDropDown
             nTop++
          ENDIF
-         o:VScroll := ScrollBar( nTop + 1, nBottom - 1, nRight,, 1 )
+         o:VScroll := ScrollBar( nTop + 1, nBottom - 1, nRight,, SCROLL_VERTICAL )
       ENDIF
 
       IF ISCHARACTER( cBitmap )
