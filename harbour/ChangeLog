@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-18 00:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/hvm.c
+    + added hb_clsDoInit() function to initialize classy .prg functions
+
+  * harbour/source/compiler/complex.c
+    * allow to use NIL as class name
+
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyh
+    % optimize automatically var[0] declaration and generate the same
+      PCODE as for var:={}
+
+  * harbour/source/rtl/tscalar.prg
+    + added HASH, POINTER and SYMBOL scalar classes
+    * changed NIL class to not use any instance variables
+
+  * harbour/source/vm/classes.c
+    + added support for scalar classes. Now at startup classy code looks
+      for hb<TYPENAME> functions and try to execute them to register
+      scalar classes. It's Class(y) compatible behavior and only the prefix
+      of scalar ceases class function is different: 'CSY' in class(y) and
+      'HB' in Harbour, f.e.: hbNumeric()
+      If you prefer xHarbour like not automatic scalar class registration
+      with some PP commands:
+         ASSOCIATE CLASS <ClassName> WITH TYPE
+                           ARRAY|BLOCK|CHARACTER|DATE|HASH|LOGICAL|NIL|
+                           NUMERIC|POINTER|SYMBOL
+         ENABLE CLASS TYPE ALL
+         ENABLE TYPE CLASS ARRAY|BLOCK|CHARACTER|DATE|HASH|LOGICAL|NIL|
+                           NUMERIC|POINTER|SYMBOL
+         EXTEND [TYPE] ARRAY|BLOCK|CHARACTER|DATE|HASH|LOGICAL|NIL|
+                       NUMERIC|POINTER|SYMBOL WITH METHOD <SomeFunc>
+      Then I can replace current code with it. If not then we should
+      divide scalar cases definitions into separated files to allow
+      easier overloading. I'm interesting in your opinions.
+
 2007-09-17 18:41 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tbrowsys.prg
    * source/rtl/getsys.prg

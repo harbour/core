@@ -64,7 +64,7 @@ CREATE CLASS ScalarObject FUNCTION HBScalar
    METHOD AsString()
    METHOD AsExpStr()
 
-   MESSAGE Become    METHOD BecomeErr()  // a scalar cannot "become" another object
+   MESSAGE Become    METHOD BecomeErr()  /* a scalar cannot "become" another object */
    MESSAGE DeepCopy  METHOD Copy()
 
 ENDCLASS
@@ -79,10 +79,14 @@ METHOD AsString() CLASS ScalarObject
 
    SWITCH ValType( Self )
    CASE "B" ; RETURN "{ || ... }"
+   CASE "M"
    CASE "C" ; RETURN Self
    CASE "D" ; RETURN DToC( Self )
+   CASE "H" ; RETURN "{ ... => ... }"
    CASE "L" ; RETURN iif( Self, ".T.", ".F." )
    CASE "N" ; RETURN LTrim( Str( Self ) )
+   CASE "S" ; RETURN "@" + Self:name + "()"
+   CASE "P" ; RETURN "<0x...>"
    CASE "U" ; RETURN "NIL"
    ENDSWITCH
 
@@ -91,6 +95,7 @@ METHOD AsString() CLASS ScalarObject
 METHOD AsExpStr() CLASS ScalarObject
 
    SWITCH ValType( Self )
+   CASE "M"
    CASE "C" ; RETURN '"' + Self + '"'
    CASE "D" ; RETURN 'CToD("' + DToC( Self ) + '")'
    ENDSWITCH
@@ -209,12 +214,11 @@ METHOD Do( b ) CLASS Array
 
 METHOD IndexOf( x ) CLASS Array
 
-   LOCAL nElems := Len( Self )
-   LOCAL i
+   LOCAL elem
 
-   FOR i := 1 TO nElems
-      IF Self[ i ] == x
-         RETURN i
+   FOR EACH elem IN Self
+      IF elem == x
+         RETURN elem:__enumIndex()
       ENDIF
    NEXT
 
@@ -278,6 +282,17 @@ METHOD AsExpStr() CLASS Date
 
 /* -------------------------------------------- */
 
+CREATE CLASS Hash INHERIT HBScalar FUNCTION HBHash
+
+   METHOD AsString()
+
+ENDCLASS
+
+METHOD AsString() CLASS Hash
+   RETURN "{ ... => ... }"
+
+/* -------------------------------------------- */
+
 CREATE CLASS Logical INHERIT HBScalar FUNCTION HBLogical
 
    METHOD AsString()
@@ -289,15 +304,13 @@ METHOD AsString() CLASS Logical
 
 /* -------------------------------------------- */
 
-CREATE CLASS HBNil INHERIT HBScalar
-
-   VAR ClassName INIT "NIL"
+CREATE CLASS Nil INHERIT HBScalar FUNCTION HBNil
 
    METHOD AsString()
 
 ENDCLASS
 
-METHOD AsString() CLASS HBNil
+METHOD AsString() CLASS Nil
    RETURN "NIL"
 
 /* -------------------------------------------- */
@@ -310,5 +323,27 @@ ENDCLASS
 
 METHOD AsString() CLASS Numeric
    RETURN LTrim( Str( Self ) )
+
+/* -------------------------------------------- */
+
+CREATE CLASS Symbol INHERIT HBScalar FUNCTION HBSymbol
+
+   METHOD AsString()
+
+ENDCLASS
+
+METHOD AsString() CLASS Symbol
+   RETURN "@" + Self:name + "()"
+
+/* -------------------------------------------- */
+
+CREATE CLASS Pointer INHERIT HBScalar FUNCTION HBPointer
+
+   METHOD AsString()
+
+ENDCLASS
+
+METHOD AsString() CLASS Pointer
+   RETURN "<0x...>"
 
 /* -------------------------------------------- */

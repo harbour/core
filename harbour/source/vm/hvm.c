@@ -439,6 +439,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
     * and not depends on INIT clause.
     */
    hb_vmDoInitClip();
+   hb_clsDoInit();                  /* initialize Classy .prg functions */
 
    hb_vmDoModuleInitFunctions();    /* process AtInit registered functions */
    hb_vmDoInitFunctions();          /* process defined INIT functions */

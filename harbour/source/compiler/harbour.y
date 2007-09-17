@@ -75,6 +75,7 @@ static void hb_compElseIfFix( HB_COMP_DECL, void * pIfElseIfs ); /* implements t
 static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR, BOOL );
 static void hb_compRTVariableGen( HB_COMP_DECL, char * );
 
+static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL );
 static void hb_compVariableDim( char *, HB_EXPR_PTR, HB_COMP_DECL );
 
 static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach );
@@ -1127,9 +1128,7 @@ ExtVarDef  : VarDef
                }
            | MacroVar DimList AsArrayType
                {
-                  USHORT uCount = (USHORT) hb_compExprListLen( $2 );
-                  HB_COMP_EXPR_DELETE( hb_compExprGenPush( $2, HB_COMP_PARAM ) );
-                  hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
+                  HB_COMP_EXPR_DELETE( hb_compArrayDimPush( $2, HB_COMP_PARAM ) );
                   hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( NULL, $1, HB_COMP_PARAM ), TRUE );
                }
            ;
@@ -2345,50 +2344,59 @@ void hb_compRTVariableKill( HB_COMP_DECL )
    HB_COMP_PARAM->rtvars = NULL;
 }
 
+static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL )
+{
+   USHORT uCount = (USHORT) hb_compExprListLen( pInitValue );
+
+   if( uCount == 1 && hb_compExprIsInteger( pInitValue->value.asList.pExprList ) &&
+       hb_compExprAsInteger( pInitValue->value.asList.pExprList ) == 0 )
+   {
+      hb_compGenPCode3( HB_P_ARRAYGEN, 0, 0, HB_COMP_PARAM );
+   }
+   else
+   {
+      pInitValue = hb_compExprGenPush( pInitValue, HB_COMP_PARAM );
+      hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
+   }
+   return pInitValue;
+}
+
 static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_DECL )
 {
-  if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
-  {
-     USHORT uCount = (USHORT) hb_compExprListLen( pInitValue );
-     hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
-     HB_COMP_EXPR_DELETE( hb_compExprGenPush( pInitValue, HB_COMP_PARAM ) );
-     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
-     hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( szName, NULL, HB_COMP_PARAM ), TRUE );
-  }
-  else if( HB_COMP_PARAM->iVarScope == VS_STATIC )
-  {
-     USHORT uCount = (USHORT) hb_compExprListLen( pInitValue );
-     HB_EXPR_PTR pVar = hb_compExprNewVar( szName, HB_COMP_PARAM );
-     HB_EXPR_PTR pAssign;
+   if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
+   {
+      hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
+      HB_COMP_EXPR_DELETE( hb_compArrayDimPush( pInitValue, HB_COMP_PARAM ) );
+      hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( szName, NULL, HB_COMP_PARAM ), TRUE );
+   }
+   else if( HB_COMP_PARAM->iVarScope == VS_STATIC )
+   {
+      HB_EXPR_PTR pVar = hb_compExprNewVar( szName, HB_COMP_PARAM );
+      HB_EXPR_PTR pAssign;
 
-     /* create a static variable */
-     hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
-     hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
-     /* create an array */
-     hb_compExprGenPush( pInitValue, HB_COMP_PARAM );
-     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
-     /* check if valid initializers were used but don't generate any code */
-     pAssign = hb_compExprAssignStatic( pVar, pInitValue, HB_COMP_PARAM );
-     /* now pop an array */
-     hb_compExprGenPop( pVar, HB_COMP_PARAM );
-     /* delete all used expressions */
-     HB_COMP_EXPR_DELETE( pAssign );
-     hb_compStaticDefEnd( HB_COMP_PARAM, szName );
-  }
-  else
-  {
-     USHORT uCount = (USHORT) hb_compExprListLen( pInitValue );
-
-     hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
-     HB_COMP_EXPR_DELETE( hb_compExprGenPush( pInitValue, HB_COMP_PARAM ) );
-     hb_compGenPCode3( HB_P_ARRAYDIM, HB_LOBYTE( uCount ), HB_HIBYTE( uCount ), HB_COMP_PARAM );
-
-     if( HB_COMP_PARAM->iVarScope != VS_LOCAL ||
-         !( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
-     {
-        HB_COMP_EXPR_DELETE( hb_compExprGenPop( hb_compExprNewVar( szName, HB_COMP_PARAM ), HB_COMP_PARAM ) );
-     }
-  }
+      /* create a static variable */
+      hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
+      hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
+      /* create an array */
+      pInitValue = hb_compArrayDimPush( pInitValue, HB_COMP_PARAM );
+      /* check if valid initializers were used but don't generate any code */
+      pAssign = hb_compExprAssignStatic( pVar, pInitValue, HB_COMP_PARAM );
+      /* now pop an array */
+      hb_compExprGenPop( pVar, HB_COMP_PARAM );
+      /* delete all used expressions */
+      HB_COMP_EXPR_DELETE( pAssign );
+      hb_compStaticDefEnd( HB_COMP_PARAM, szName );
+   }
+   else
+   {
+      hb_compVariableAdd( HB_COMP_PARAM, szName, 'A' );
+      HB_COMP_EXPR_DELETE( hb_compArrayDimPush( pInitValue, HB_COMP_PARAM ) );
+      if( HB_COMP_PARAM->iVarScope != VS_LOCAL ||
+          !( HB_COMP_PARAM->functions.pLast->bFlags & FUN_EXTBLOCK ) )
+      {
+         HB_COMP_EXPR_DELETE( hb_compExprGenPop( hb_compExprNewVar( szName, HB_COMP_PARAM ), HB_COMP_PARAM ) );
+      }
+   }
 }
 
 static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach )

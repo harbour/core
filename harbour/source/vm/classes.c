@@ -339,6 +339,20 @@ static HB_SYMB s___msgWithObjectPop  = { "___WITHOBJECT", {HB_FS_MESSAGE}, {hb__
 static PCLASS   s_pClasses     = NULL;
 static USHORT   s_uiClasses    = 0;
 
+/*
+ * Scalar classes' handles
+ */
+static USHORT   s_uiArrayClass     = 0;
+static USHORT   s_uiBlockClass     = 0;
+static USHORT   s_uiCharacterClass = 0;
+static USHORT   s_uiDateClass      = 0;
+static USHORT   s_uiHashClass      = 0;
+static USHORT   s_uiLogicalClass   = 0;
+static USHORT   s_uiNilClass       = 0;
+static USHORT   s_uiNumericClass   = 0;
+static USHORT   s_uiSymbolClass    = 0;
+static USHORT   s_uiPointerClass   = 0;
+
 /* ================================================ */
 
 
@@ -985,6 +999,39 @@ void hb_clsInit( void )
 }
 
 /*
+ * initialize Classy/OO system .prg functions
+ */
+void hb_clsDoInit( void )
+{
+   static const char * s_pszFuncNames[] = 
+      { "HBARRAY", "HBBLOCK", "HBCHARACTER", "HBDATE",
+        "HBHASH", "HBLOGICAL", "HBNIL", "HBNUMERIC",
+        "HBSYMBOL", "HBPOINTER" };
+   static USHORT * s_puiHandles[] =
+      { &s_uiArrayClass, &s_uiBlockClass, &s_uiCharacterClass, &s_uiDateClass,
+        &s_uiHashClass, &s_uiLogicalClass, &s_uiNilClass, &s_uiNumericClass,
+        &s_uiSymbolClass, &s_uiPointerClass };
+   int i;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_clsDoInit()"));
+
+   for( i = 0; i < ( int ) ( sizeof( s_puiHandles ) / sizeof( USHORT * ) ); ++i )
+   {
+      PHB_DYNS pFuncSym = hb_dynsymFindName( s_pszFuncNames[i] );
+      if( pFuncSym && hb_dynsymIsFunction( pFuncSym ) )
+      {
+         PHB_ITEM pObject;
+         hb_vmPushDynSym( pFuncSym );
+         hb_vmPushNil();
+         hb_vmDo(0);
+         pObject = hb_stackReturnItem();
+         if( HB_IS_OBJECT( pObject ) )
+            *( s_puiHandles[i] ) = pObject->item.asArray.value->uiClass;
+      }
+   }
+}
+
+/*
  * hb_clsRelease( <pClass> )
  *
  * Release a class from memory
@@ -1407,6 +1454,26 @@ static PHB_SYMB hb_clsValidScope( PMETHOD pMethod, PHB_STACK_STATE pStack )
    return pMethod->pFuncSym;
 }
 
+static PHB_SYMB hb_clsScalarMethod( PCLASS pClass, PHB_DYNS pMsg,
+                                    PHB_STACK_STATE pStack )
+{
+   PMETHOD pMethod = hb_clsFindMsg( pClass, pMsg );
+
+   if( pStack )
+   {
+      pStack->uiClass = pClass - s_pClasses;
+      if( pMethod )
+      {
+         pStack->uiMethod = ( USHORT ) ( pMethod - pClass->pMethods );
+         return hb_clsValidScope( pMethod, pStack );
+      }
+   }
+   else if( pMethod )
+      return pMethod->pFuncSym;
+
+   return NULL;
+}
+
 static void hb_clsMakeSuperObject( PHB_ITEM pDest, PHB_ITEM pObject,
                                    USHORT uiSuperClass )
 {
@@ -1445,18 +1512,23 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
          pClass = &s_pClasses[ pObject->item.asArray.value->uiClass ];
          if( pStack )
          {
-
             pStack->uiClass = pObject->item.asArray.value->uiClass;
             if( pObject->item.asArray.value->uiPrevCls )
             {
-               /*
-                * Copy real object - do not move! the same super casted
-                * object can be used more then once and we mustn't destroy it.
-                * We can safely use hb_stackReturnItem() here.
-                */
-               hb_itemCopy( hb_stackReturnItem(), pObject->item.asArray.value->pItems );
-               /* move real object back to the stack */
-               hb_itemMove( pObject, hb_stackReturnItem() );
+	         if( pObject->item.asArray.value->ulLen )
+               {
+                  /*
+                   * Copy real object - do not move! the same super casted
+                   * object can be used more then once and we mustn't
+                   * destroy it. We can safely use hb_stackReturnItem() here.
+                   */
+                  hb_itemCopy( hb_stackReturnItem(), pObject->item.asArray.value->pItems );
+                  /* move real object back to the stack */
+                  hb_itemMove( pObject, hb_stackReturnItem() );
+               }
+               else
+                  /* Someone tried to manipulate with supercast array */
+                  hb_itemClear( pObject );
             }
 #ifdef HB_MSG_POOL
             {
@@ -1493,11 +1565,25 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
                return pMethod->pFuncSym;
          }
       }
+      else if( s_uiArrayClass )
+      {
+         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiArrayClass ],
+                                                 pMsg, pStack );
+         if( pExecSym )
+            return pExecSym;
+      }
    }
    else if( HB_IS_BLOCK( pObject ) )
    {
       if( pMsg == hb_symEval.pDynSym )
          return &hb_symEval;
+      else if( s_uiBlockClass )
+      {
+         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiBlockClass ],
+                                                 pMsg, pStack );
+         if( pExecSym )
+            return pExecSym;
+      }
    }
    else if( HB_IS_BYREF( pObject ) )
    {
@@ -1561,6 +1647,13 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
    }
    else if( HB_IS_SYMBOL( pObject ) )
    {
+      if( s_uiSymbolClass )
+      {
+         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiSymbolClass ],
+                                                 pMsg, pStack );
+         if( pExecSym )
+            return pExecSym;
+      }
       if( pMsg == s___msgExec.pDynSym || pMsg == hb_symEval.pDynSym )
       {
          if( ! pObject->item.asSymbol.value->value.pFunPtr &&
@@ -1578,6 +1671,14 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
    }
    else if( HB_IS_HASH( pObject ) )
    {
+      if( s_uiHashClass )
+      {
+         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiHashClass ],
+                                                 pMsg, pStack );
+         if( pExecSym )
+            return pExecSym;
+      }
+
       if( pMsg == s___msgKeys.pDynSym )
       {
          hb_itemRelease( hb_itemReturnForward( hb_hashGetKeys( pObject ) ) );
@@ -1617,6 +1718,66 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
          }
       }
 #endif
+   }
+   else if( HB_IS_STRING( pObject ) )
+   {
+      if( s_uiCharacterClass )
+      {
+         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiCharacterClass ],
+                                                 pMsg, pStack );
+         if( pExecSym )
+            return pExecSym;
+      }
+   }
+   else if( HB_IS_DATE( pObject ) )
+   {
+      if( s_uiDateClass )
+      {
+         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiDateClass ],
+                                                 pMsg, pStack );
+         if( pExecSym )
+            return pExecSym;
+      }
+   }
+   else if( HB_IS_NUMERIC( pObject ) )
+   {
+      if( s_uiNumericClass )
+      {
+         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiNumericClass ],
+                                                 pMsg, pStack );
+         if( pExecSym )
+            return pExecSym;
+      }
+   }
+   else if( HB_IS_LOGICAL( pObject ) )
+   {
+      if( s_uiLogicalClass )
+      {
+         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiLogicalClass ],
+                                                 pMsg, pStack );
+         if( pExecSym )
+            return pExecSym;
+      }
+   }
+   else if( HB_IS_POINTER( pObject ) )
+   {
+      if( s_uiPointerClass )
+      {
+         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiPointerClass ],
+                                                 pMsg, pStack );
+         if( pExecSym )
+            return pExecSym;
+      }
+   }
+   else if( HB_IS_NIL( pObject ) )
+   {
+      if( s_uiNilClass )
+      {
+         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiNilClass ],
+                                                 pMsg, pStack );
+         if( pExecSym )
+            return pExecSym;
+      }
    }
 
    /* Default messages here */

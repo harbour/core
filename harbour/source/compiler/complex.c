@@ -94,6 +94,7 @@
 #define LARRAY          -7
 #define RARRAY          -8
 #define AS_TYPE         -9
+#define DECLARE_TYPE    -10
 
 
 typedef struct
@@ -383,6 +384,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
             case RETURN:
             case WITH:
             case WHILE:
+            case DECLARE_TYPE:
                pLex->iState = LITERAL;
                hb_pp_tokenToString( pLex->pPP, pToken );
                pLex->lasttok = hb_comp_tokenString( yylval_ptr, HB_COMP_PARAM,
@@ -1075,6 +1077,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                int iAs = hb_comp_asType( pToken->pNext, FALSE );
                if( iAs )
                {
+                  pLex->iState = DECLARE_TYPE;
                   pToken = hb_pp_tokenGet( pLex->pPP );
                   if( iAs == AS_ARRAY && pToken->pNext &&
                       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
@@ -1094,6 +1097,8 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                break;
             }
             case DECLARE_CLASS:
+               pLex->iState = DECLARE_TYPE;
+               return iType;
             case DECLARE_MEMBER:
                pLex->iState = OPERATOR;
                return iType;
@@ -1107,9 +1112,12 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                }
                break;
 
+            case NIL:
+               if( pLex->iState == DECLARE_TYPE )
+                  iType = IDENTIFIER;
+               break;
             case IN:
             case LOOP:
-            case NIL:
             case STEP:
             case TO:
             case ANNOUNCE:

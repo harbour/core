@@ -90,6 +90,7 @@ HB_EXTERN_BEGIN
 #define HB_OO_MAX_OPERATOR    26
 
 extern void       hb_clsInit( void );           /* initialize Classy/OO system at HVM startup */
+extern void       hb_clsDoInit( void );         /* initialize Classy/OO system .prg functions */
 extern void       hb_clsReleaseAll( void );     /* releases all defined classes */
 extern void       hb_clsIsClassRef( void );     /* classes.c - mark all class internals as used */
 extern BOOL       hb_clsHasDestructor( USHORT uiClass );
