@@ -56,58 +56,11 @@
 #include "common.ch"
 #include "tbrowse.ch"
 
-PROCEDURE TBReader( oGet, oGetList, oMenu, aMsg )
-
-   IF !ISOBJECT( oGetList )
-      oGetList := __GetListActive()
-   ENDIF
-
-   IF oGetList != NIL
-      oGetlist:TBReader( oGet, oMenu, aMsg )
-   ENDIF
-
-   RETURN
-
-FUNCTION TBMouse( oBrowse, nMRow, nMCol )
-
-   LOCAL n
-
-   IF oBrowse:hitTest( nMRow, nMCol ) == HTCELL
-
-      n := oBrowse:mRowPos - oBrowse:rowPos
-      DO WHILE n < 0
-         n++
-         oBrowse:up()
-      ENDDO
-      DO WHILE n > 0
-         n--
-         oBrowse:down()
-      ENDDO
-
-      n := oBrowse:mColPos - oBrowse:colPos
-      DO WHILE n < 0
-         n++
-         oBrowse:left()
-      ENDDO
-      DO WHILE n > 0
-         n--
-         oBrowse:right()
-      ENDDO
-
-      RETURN TBR_CONTINUE
-   ENDIF
-
-   RETURN TBR_EXCEPTION
-
 FUNCTION TApplyKey( nKey, oBrowse )
 
    RETURN oBrowse:applyKey( nKey )
 
 FUNCTION TBAddCol()
-   /* TODO */
-   RETURN NIL
-
-FUNCTION TBApplyKey()
    /* TODO */
    RETURN NIL
 

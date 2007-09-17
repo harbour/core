@@ -369,6 +369,18 @@ FUNCTION GUIPostValidate( oGet, oGUI, aMsg )
 
    RETURN iif( oGetList != NIL, oGetList:GUIPostValidate( oGet, oGUI, aMsg ), .F. )
 
+PROCEDURE TBReader( oGet, oGetList, oMenu, aMsg )
+
+   IF !ISOBJECT( oGetList )
+      oGetList := __GetListActive()
+   ENDIF
+
+   IF oGetList != NIL
+      oGetlist:TBReader( oGet, oMenu, aMsg )
+   ENDIF
+
+   RETURN
+
 PROCEDURE TBApplyKey( oGet, oTB, oGetList, nKey, aMsg )
 
    IF !ISOBJECT( oGetList )

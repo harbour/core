@@ -451,6 +451,8 @@ METHOD configure( nMode ) CLASS TBrowse
 // Adds a TBColumn object to the TBrowse object
 METHOD addColumn( oCol ) CLASS TBrowse
 
+   /* NOTE: CA-Cl*pper does no checks at all on the parameters. */
+
    ::Moved() /* TOFIX: This logic should go inside ::configure() */
 
    ::nColumns++
@@ -469,11 +471,13 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
 
    /* NOTE: CA-Cl*pper does no checks at all on the parameters. */
 
+#ifndef HB_C52_STRICT
    if nPos >= 1
-
-      ::Moved() /* TOFIX: This logic should go inside ::configure() */
-      
+   
       if nPos > ::nColumns
+#endif      
+
+         ::Moved() /* TOFIX: This logic should go inside ::configure() */
 
          /* NOTE: CA-Cl*pper doesn't do this, but crashes instead. */
 
@@ -484,7 +488,10 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
          AAdd( ::aColsPos, 0 )
          AAdd( ::aColsInfo, ::InitColumn( oCol, .F. ) )
 
+#ifndef HB_C52_STRICT
       else
+
+         ::Moved() /* TOFIX: This logic should go inside ::configure() */
 
          ::nColumns++
          
@@ -503,10 +510,13 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
          ::aColsInfo[ nPos ] := ::InitColumn( oCol, .F. )
 
       endif
+#endif
    
       ::Configure( 2 )
 
+#ifndef HB_C52_STRICT
    endif
+#endif
 
    return oCol
 
@@ -520,9 +530,12 @@ METHOD setColumn( nPos, oCol ) CLASS TBrowse
       nPos := _eInstVar( Self, "COLUMN", nPos, "N", 1001 )
       oCol := _eInstVar( Self, "COLUMN", oCol, "O", 1001 )
 
-      /* NOTE: CA-Cl*pper doesn't check nPos range (and type in C5.3), but crashes instead. */
+      /* NOTE: CA-Cl*pper doesn't check nPos range (and type in C5.3 - I didn't implement this behaviour), 
+               but crashes instead. */
 
+#ifndef HB_C52_STRICT
       if nPos >= 1 .AND. nPos <= ::nColumns
+#endif      
 
          ::Moved() /* TOFIX: This logic should go inside ::configure() */
       
@@ -535,7 +548,9 @@ METHOD setColumn( nPos, oCol ) CLASS TBrowse
       
          ::Configure( 2 )
 
+#ifndef HB_C52_STRICT
       endif
+#endif      
    endif
 
    /* NOTE: CA-Cl*pper 5.2 NG says this will return the previously set 
@@ -592,7 +607,11 @@ METHOD delColumn( nPos ) CLASS TBrowse
 
 // Gets a specific TBColumn object
 METHOD getColumn( nColumn ) CLASS TBrowse
+#ifdef HB_C52_STRICT
+   return ::aColumns[ nColumn ]
+#else
    return iif( nColumn > 0 .and. nColumn <= ::nColumns, ::aColumns[ nColumn ], NIL )
+#endif   
 
 // Returns the display width of a particular column
 METHOD colWidth( nColumn ) CLASS TBrowse
@@ -2313,3 +2332,36 @@ STATIC FUNCTION tbr_CalcWidth( xValue, cType, cPicture )
    ENDSWITCH
 
    RETURN 0
+
+/* -------------------------------------------- */
+
+FUNCTION TBMouse( oBrowse, nMRow, nMCol )
+
+   LOCAL n
+
+   IF oBrowse:hitTest( nMRow, nMCol ) == HTCELL
+
+      n := oBrowse:mRowPos - oBrowse:rowPos
+      DO WHILE n < 0
+         n++
+         oBrowse:up()
+      ENDDO
+      DO WHILE n > 0
+         n--
+         oBrowse:down()
+      ENDDO
+
+      n := oBrowse:mColPos - oBrowse:colPos
+      DO WHILE n < 0
+         n++
+         oBrowse:left()
+      ENDDO
+      DO WHILE n > 0
+         n--
+         oBrowse:right()
+      ENDDO
+
+      RETURN TBR_CONTINUE
+   ENDIF
+
+   RETURN TBR_EXCEPTION
