@@ -104,7 +104,7 @@ METHOD BecomeErr() CLASS ScalarObject
 
 /* -------------------------------------------- */
 
-CREATE CLASS Array INHERIT ScalarObject FUNCTION HBArray
+CREATE CLASS Array INHERIT HBScalar FUNCTION HBArray
 
    METHOD Init()
 
@@ -113,7 +113,6 @@ CREATE CLASS Array INHERIT ScalarObject FUNCTION HBArray
    METHOD AtPut()
    METHOD Add
    METHOD AddAll()
-   METHOD Append()
    METHOD Collect()
    METHOD Copy()
    METHOD Do()
@@ -238,7 +237,7 @@ METHOD _Size( newSize ) CLASS Array
 
 /* -------------------------------------------- */
 
-CREATE CLASS Block INHERIT ScalarObject FUNCTION HBBlock
+CREATE CLASS Block INHERIT HBScalar FUNCTION HBBlock
 
    METHOD AsString()
 
@@ -249,7 +248,7 @@ METHOD AsString() CLASS Block
 
 /* -------------------------------------------- */
 
-CREATE CLASS Character INHERIT ScalarObject FUNCTION HBCharacter
+CREATE CLASS Character INHERIT HBScalar FUNCTION HBCharacter
 
    METHOD AsString()
    METHOD AsExpStr()
@@ -264,7 +263,7 @@ METHOD AsExpStr() CLASS Character
 
 /* -------------------------------------------- */
 
-CREATE CLASS Date INHERIT ScalarObject FUNCTION HBDate
+CREATE CLASS Date INHERIT HBScalar FUNCTION HBDate
 
    METHOD AsString()
    METHOD AsExpStr()
@@ -279,7 +278,7 @@ METHOD AsExpStr() CLASS Date
 
 /* -------------------------------------------- */
 
-CREATE CLASS Logical INHERIT ScalarObject FUNCTION HBLogical
+CREATE CLASS Logical INHERIT HBScalar FUNCTION HBLogical
 
    METHOD AsString()
 
@@ -290,7 +289,7 @@ METHOD AsString() CLASS Logical
 
 /* -------------------------------------------- */
 
-CREATE CLASS HBNil INHERIT ScalarObject
+CREATE CLASS HBNil INHERIT HBScalar
 
    VAR ClassName INIT "NIL"
 
@@ -303,7 +302,7 @@ METHOD AsString() CLASS HBNil
 
 /* -------------------------------------------- */
 
-CREATE CLASS Numeric INHERIT ScalarObject FUNCTION HBNumeric
+CREATE CLASS Numeric INHERIT HBScalar FUNCTION HBNumeric
 
    METHOD AsString()
 

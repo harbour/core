@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-17 12:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tscalar.prg
+     ! Some fixes for previous commit regarding scalar classes.
+
 2007-09-17 12:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * common.mak
    + source/rtl/tbrowsys.prg
