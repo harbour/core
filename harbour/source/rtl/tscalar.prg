@@ -1,5 +1,5 @@
 /*
- * $Id: scalar.prg 7751 2007-09-15 11:54:39Z vszakats $
+ * $Id$
  */
 
 /*

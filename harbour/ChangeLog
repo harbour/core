@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-17 13:26 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * tests/rto_get.prg
+   * tests/rto_tb.prg
+   * source/rtl/gui.prg
+   + source/rtl/tbrowsys.prg
+   * source/rtl/tmenusys.prg
+   * source/rtl/menusys.prg
+   * source/rtl/tscalar.prg
+   * source/rtl/tbrowse.prg
+     + Added missing file from previous commit.
+     + Set Id keyword and eol-style to native on newly added files.
+
 2007-09-17 12:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tscalar.prg
      ! Some fixes for previous commit regarding scalar classes.

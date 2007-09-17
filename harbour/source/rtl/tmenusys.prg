@@ -1,5 +1,5 @@
 /*
- * $Id: mssgline.prg 7155 2007-04-14 10:41:54Z vszakats $
+ * $Id$
  */
 
 /*

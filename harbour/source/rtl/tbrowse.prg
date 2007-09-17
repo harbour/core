@@ -467,6 +467,8 @@ METHOD addColumn( oCol ) CLASS TBrowse
 // Insert a column object in a browse
 METHOD insColumn( nPos, oCol ) CLASS TBrowse
 
+   /* NOTE: CA-Cl*pper does no checks at all on the parameters. */
+
    if nPos >= 1
 
       ::Moved() /* TOFIX: This logic should go inside ::configure() */
@@ -513,21 +515,27 @@ METHOD setColumn( nPos, oCol ) CLASS TBrowse
 
    LOCAL oOldCol
 
-   /* NOTE: CA-Cl*pper doesn't check this, but crashes instead. */
+   if nPos != NIL .AND. oCol != NIL
 
-   if nPos >= 1 .and. nPos <= ::nColumns
+      nPos := _eInstVar( Self, "COLUMN", nPos, "N", 1001 )
+      oCol := _eInstVar( Self, "COLUMN", oCol, "O", 1001 )
 
-      ::Moved() /* TOFIX: This logic should go inside ::configure() */
+      /* NOTE: CA-Cl*pper doesn't check nPos range (and type in C5.3), but crashes instead. */
 
-      oOldCol := ::aColumns[ nPos ]
+      if nPos >= 1 .AND. nPos <= ::nColumns
 
-      ::aColumns[ nPos ] := oCol
-      ::aColsWidth[ nPos ] := ::SetColumnWidth( oCol )
-      ::aColsPos[ nPos ] := 0
-      ::aColsInfo[ nPos ] := ::InitColumn( oCol, .F. )
+         ::Moved() /* TOFIX: This logic should go inside ::configure() */
+      
+         oOldCol := ::aColumns[ nPos ]
+      
+         ::aColumns[ nPos ] := oCol
+         ::aColsWidth[ nPos ] := ::SetColumnWidth( oCol )
+         ::aColsPos[ nPos ] := 0
+         ::aColsInfo[ nPos ] := ::InitColumn( oCol, .F. )
+      
+         ::Configure( 2 )
 
-      ::Configure( 2 )
-
+      endif
    endif
 
    /* NOTE: CA-Cl*pper 5.2 NG says this will return the previously set 

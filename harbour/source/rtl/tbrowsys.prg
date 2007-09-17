@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * GUI helper functions
+ * TBrowse() CA-Cl*pper 5.3 functions
  *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ * Copyright 2007 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,57 +50,118 @@
  *
  */
 
-#include "common.ch"
-
 #ifdef HB_COMPAT_C53
 
-#define LLG_VIDEO_TXT   3
+#include "button.ch"
+#include "common.ch"
+#include "tbrowse.ch"
 
-FUNCTION _IsGraphic()
-   RETURN Set( _SET_VIDEOMODE ) != NIL .AND. ;
-          Set( _SET_VIDEOMODE ) != 0 .AND. ;
-          Set( _SET_VIDEOMODE ) != LLG_VIDEO_TXT
+PROCEDURE TBReader( oGet, oGetList, oMenu, aMsg )
 
-FUNCTION _SetVideoMode( nMode )
-
-   HB_SYMBOL_UNUSED( nMode )
-
-   RETURN 0
-
-FUNCTION _GetNumCol( cColor )
-   LOCAL nPos
-
-   IF ( nPos := At( "/", cColor ) ) > 0
-      cColor := Left( cColor, nPos - 1 )
+   IF !ISOBJECT( oGetList )
+      oGetList := __GetListActive()
    ENDIF
-   IF ( nPos := At( ",", cColor ) ) > 0
-      cColor := Left( cColor, nPos - 1 )
+
+   IF oGetList != NIL
+      oGetlist:TBReader( oGet, oMenu, aMsg )
    ENDIF
-   #ifndef HB_C52_STRICT
-      cColor := Upper( cColor )
-   #endif
 
-   RETURN AScan( { "B", "G", "BG", "R", "RB", "GR", "W", "N+", "B+", "G+", "BG+", "R+", "RB+", "GR+", "W+" }, {| tmp | tmp == cColor } )
+   RETURN
 
-FUNCTION __GUIColor( cColor, nPos )
-   RETURN hb_ColorIndex( cColor, nPos - 1 )
+FUNCTION TBMouse( oBrowse, nMRow, nMCol )
 
-FUNCTION IsDefColor()
-   RETURN SetColor() == "W/N,N/W,N/N,N/N,N/W" /* NOTE: Color must match with the one in set.c */
-   
-/* Removes the accelerator marker from a caption string */
-FUNCTION __Caption( cCaption )
-   LOCAL nPos
+   LOCAL n
 
-   RETURN iif( ( nPos := At( "&", cCaption ) ) > 0, Stuff( cCaption, nPos, 1, "" ), cCaption )
+   IF oBrowse:hitTest( nMRow, nMCol ) == HTCELL
 
-FUNCTION __CapLength( cCaption )
-   LOCAL nCaptionLen := Len( cCaption )
-   LOCAL nPos
+      n := oBrowse:mRowPos - oBrowse:rowPos
+      DO WHILE n < 0
+         n++
+         oBrowse:up()
+      ENDDO
+      DO WHILE n > 0
+         n--
+         oBrowse:down()
+      ENDDO
 
-   RETURN iif( ( nPos := At( "&", cCaption ) ) > 0 .AND. nPos < nCaptionLen, nCaptionLen - 1, nCaptionLen )
+      n := oBrowse:mColPos - oBrowse:colPos
+      DO WHILE n < 0
+         n++
+         oBrowse:left()
+      ENDDO
+      DO WHILE n > 0
+         n--
+         oBrowse:right()
+      ENDDO
 
-FUNCTION __CapMetrics( o )
-   RETURN __CapLength( o:caption ) + iif( o:isPopup(), 3, 2 )
+      RETURN TBR_CONTINUE
+   ENDIF
+
+   RETURN TBR_EXCEPTION
+
+FUNCTION TApplyKey( nKey, oBrowse )
+
+   RETURN oBrowse:applyKey( nKey )
+
+FUNCTION TBAddCol()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBApplyKey()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBBBlock()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBClose()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBCreate()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBDelCol()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBDisplay()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBEditCell()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBFBlock()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBGoBot()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBGoTop()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBInsCol()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBModal()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBSBlock()
+   /* TODO */
+   RETURN NIL
+
+FUNCTION TBSkip()
+   /* TODO */
+   RETURN NIL
 
 #endif
+
