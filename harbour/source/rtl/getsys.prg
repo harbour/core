@@ -335,18 +335,6 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
 
 #ifdef HB_COMPAT_C53
 
-PROCEDURE TBReader( oGet, oGetList, oMenu, aMsg )
-
-   IF !ISOBJECT( oGetList )
-      oGetList := __GetListActive()
-   ENDIF
-
-   IF oGetList != NIL
-      oGetlist:TBReader( oGet, oMenu, aMsg )
-   ENDIF
-
-   RETURN
-
 PROCEDURE GUIReader( oGet, oGetlist, oMenu, aMsg )
 
    IF !ISOBJECT( oGetList )

@@ -54,10 +54,6 @@
 
 CREATE CLASS Symbol
 
-   PROTECTED:
-
-   VAR    nSym               // internal pointer to the Symbols table symbol
-
    EXPORT:
 
    METHOD New( cSymName )    // Constructor. cSymName may already exists or not
@@ -65,18 +61,21 @@ CREATE CLASS Symbol
    METHOD isEqual( oSymbol ) // Compares two symbol objects
    METHOD exec()             // Executes the function referred to by the
                              // Symbol object, with an optional parameters list
+   PROTECTED:
+
+   VAR nSym                  // internal pointer to the Symbols table symbol
 
 ENDCLASS
 
 METHOD New( cSymName ) CLASS Symbol
    ::nSym := __DynSN2Sym( cSymName )
-return Self
+   RETURN Self
 
 METHOD name() CLASS Symbol
-return ::nSym:Name
+   RETURN ::nSym:Name
 
 METHOD isEqual( oSymbol ) CLASS Symbol
-return ::ClassH == oSymbol:ClassH .AND. ::nSym:Name == oSymbol:nSym:Name
+   RETURN ::ClassH == oSymbol:ClassH .AND. ::nSym:Name == oSymbol:nSym:Name
 
 METHOD exec( ... ) CLASS Symbol
-return ::nSym:exec( ... )
+   RETURN ::nSym:exec( ... )

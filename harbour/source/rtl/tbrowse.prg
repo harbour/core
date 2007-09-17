@@ -83,6 +83,9 @@
          Determines the coordinates for the data area of a TBrowse object.
          Xbase++ compatible method */
 
+/* NOTE: These TBColumn properties are _not_ cached inside TBrowse:
+         :picture, :block, :colorBlock */
+
 #include "hbclass.ch"
 
 #include "button.ch"
@@ -95,27 +98,34 @@
 
 /* TBColumn info constants */
 #define TBCI_OBJ                1    // Object TBColumn
-#define TBCI_TYPE               2    // Type of Data in Column
-#define TBCI_WIDTH              3    // Column Width
+#define TBCI_WIDTH              2    // Column Width
+#define TBCI_WIDTHCELL          3    // Width of the Cell
 #define TBCI_HEADING            4    // Column Headings
 #define TBCI_FOOTING            5    // Column Footings
-#define TBCI_PICT               6    // Column Picture
-#define TBCI_WIDTHCELL          7    // Width of the Cell
-#define TBCI_COLSEP             8    // Column Seperator
-#define TBCI_SEPWIDTH           9    // Width of the Separator
-#define TBCI_DEFCOLOR           10   // Array with index of color
-#define TBCI_SETWIDTH           11   // If True, only SetFrozen can change TBCI_WIDTH
-#define TBCI_LCOLSEP            12   // Should column separator be drawn
-#define TBCI_SCRCOLPOS          13   // Temporary column position on screen
+#define TBCI_COLSEP             6    // Column Seperator
+#define TBCI_SEPWIDTH           7    // Width of the Separator
+#define TBCI_DEFCOLOR           8    // Array with index of color
+#define TBCI_SETWIDTH           9    // If True, only SetFrozen can change TBCI_WIDTH
+#define TBCI_LCOLSEP            10   // Should column separator be drawn
+#define TBCI_SCRCOLPOS          11   // Temporary column position on screen
+
+//#define TBCI_COLOBJECT       1   // column object
+//#define TBCI_CELLWIDTH       2   // width of the cell
+//#define TBCI_COLWIDTH        3   // width of the column
+//#define TBCI_SCRCELLPOS      4   // cell position on screen
+//#define TBCI_SCRCOLPOS       5   // column position on screen
+//#define TBCI_SEPWIDTH        6   // width of the separator
 
 #define TBC_CLR_STANDARD        1    // first index value to set unselected data color.
 #define TBC_CLR_ENHANCED        2    // second index value to set selected data color.
 #ifdef HB_COMPAT_C53
 #define TBC_CLR_HEADING         3    // third index value to set heading color.
 #define TBC_CLR_FOOTING         4    // fourth index value to set footing color.
+#define TBC_CLR_MAX_            4
 #else
 #define TBC_CLR_HEADING         TBC_CLR_STANDARD
 #define TBC_CLR_FOOTING         TBC_CLR_STANDARD
+#define TBC_CLR_MAX_            2
 #endif
 
 /* NOTE: In CA-Cl*pper TBROWSE class does not inherit from any other classes
@@ -170,7 +180,6 @@ CREATE CLASS TBrowse
 #ifdef HB_COMPAT_C53
    METHOD setKey( nKey, bBlock )
    METHOD applyKey( nKey )
-   METHOD TApplyKey( nKey, o )                              /* NOTE: Undocumented CA-Cl*pper 5.3 method. */
    METHOD hitTest( nMRow, nMCol )
    METHOD setStyle( nStyle, lNewValue )
 #endif
@@ -199,6 +208,7 @@ CREATE CLASS TBrowse
    METHOD freeze( nFrozenCols ) SETGET
    METHOD skipBlock( bSkipBlock ) SETGET
 #ifdef HB_COMPAT_C53                                   
+   METHOD border( cBorder ) SETGET
    METHOD nRow( nRow ) SETGET                               /* NOTE: Undocumented CA-Cl*pper 5.3 method. */
    METHOD nCol( nCol ) SETGET                               /* NOTE: Undocumented CA-Cl*pper 5.3 method. */
    METHOD mRowPos( nMRowPos ) SETGET
@@ -215,6 +225,7 @@ CREATE CLASS TBrowse
    VAR n_Left           INIT 0                              // Leftmost column for the TBrowse display
    VAR n_Bottom         INIT 0                              // Bottom row number for the TBrowse display
    VAR n_Right          INIT 0                              // Rightmost column for the TBrowse display
+   VAR cBorder                                              // Character value defining characters drawn around object (C5.3)
    VAR cColorSpec                                           // Color table for the TBrowse display
    VAR aColorSpec                                           // Color table for the TBrowse display (preprocessed)
    VAR cColSep          INIT " "                            // Column separator character
@@ -251,6 +262,7 @@ CREATE CLASS TBrowse
    VAR nFrozenCols      INIT 0                              // Number of frozen columns on left side of TBrowse
    VAR nColumns         INIT 0                              // Number of columns added to TBrowse
    VAR lNeverDisplayed  INIT .T.                            // .T. if TBrowse has never been stabilized()
+   VAR lHiLited         INIT .F.
 #ifdef HB_COMPAT_C53                                        
    VAR n_Row            INIT 0                              // Row number for the actual cell
    VAR n_Col            INIT 0                              // Col number for the actual cell
@@ -311,6 +323,30 @@ METHOD configure( nMode ) CLASS TBrowse
    local nLeft
    local nRight
 #endif
+
+   // ; Fill the column info array
+/*
+   local xVal
+
+   if nMode == 2
+
+      for n := 1 to ::nColumns
+      
+         xVal := Eval( ::aColumns[ n ]:block )
+      
+         aCol[ TBCI_HEADING   ] := ::aColumns[ n ]:heading
+         aCol[ TBCI_FOOTING   ] := ::aColumns[ n ]:footing
+         aCol[ TBCI_WIDTH     ] := ::SetColumnWidth( ::aColumns[ n ] )
+         aCol[ TBCI_WIDTHCELL ] := Min( aCol[ TBCI_WIDTH ], tbr_CalcWidth( xVal, ValType( xValue ), ::aColumns[ n ]:picture ) )
+         aCol[ TBCI_COLSEP    ] := iif( aCol[ TBCI_OBJ ]:ColSep != NIL, aCol[ TBCI_OBJ ]:ColSep, ::ColSep )
+         aCol[ TBCI_DEFCOLOR  ] := tbr_DefColor( ::aColumns[ n ]:defColor, ::aColorSpec )
+         aCol[ TBCI_SEPWIDTH  ] := Len( aCol[ TBCI_COLSEP ] )
+         aCol[ TBCI_LCOLSEP   ] := aCol[ TBCI_WIDTH ] > 0
+         aCol[ TBCI_COLSEP    ] := iif( aCol[ TBCI_OBJ ]:ColSep != NIL, aCol[ TBCI_OBJ ]:ColSep, ::ColSep )
+      next
+   endif
+*/
+   // ;
 
    ::lHeaders := .F.
    ::lFooters := .F.
@@ -462,6 +498,7 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
          ::aColumns[ nPos ] := oCol
          ::aColsWidth[ nPos ] := ::SetColumnWidth( oCol )
          ::aColsPos[ nPos ] := 0
+         ::aColsInfo[ nPos ] := ::InitColumn( oCol, .F. )
 
       endif
    
@@ -474,11 +511,15 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
 // Replaces one TBColumn object with another
 METHOD setColumn( nPos, oCol ) CLASS TBrowse
 
+   LOCAL oOldCol
+
    /* NOTE: CA-Cl*pper doesn't check this, but crashes instead. */
 
    if nPos >= 1 .and. nPos <= ::nColumns
 
       ::Moved() /* TOFIX: This logic should go inside ::configure() */
+
+      oOldCol := ::aColumns[ nPos ]
 
       ::aColumns[ nPos ] := oCol
       ::aColsWidth[ nPos ] := ::SetColumnWidth( oCol )
@@ -489,7 +530,15 @@ METHOD setColumn( nPos, oCol ) CLASS TBrowse
 
    endif
 
-   return oCol
+   /* NOTE: CA-Cl*pper 5.2 NG says this will return the previously set 
+            column, but it's returning Self instead. In C5.3 this bug 
+            was fixed and it works as expected (except when wrong
+            parameter is passed, when it returns NIL). [vszakats] */
+#ifdef HB_C52_STRICT
+   return Self
+#else
+   return oOldCol
+#endif
 
 METHOD delColumn( nPos ) CLASS TBrowse
 
@@ -542,7 +591,7 @@ METHOD colWidth( nColumn ) CLASS TBrowse
    return iif( nColumn > 0 .and. nColumn <= ::nColumns, ::aColsWidth[ nColumn ], 0 )
 
 METHOD colCount() CLASS TBrowse
-   return ::nColumns
+   return Len( ::aColumns )
 
 METHOD freeze( nFrozenCols ) CLASS TBrowse
 
@@ -850,58 +899,63 @@ METHOD panRight() CLASS TBrowse
 
 METHOD forceStable() CLASS TBrowse
 
-   do while !::Stabilize()
-   enddo
+   DO WHILE !::Stabilize()
+   ENDDO
 
-   return Self
+   RETURN Self
 
 METHOD deHilite() CLASS TBrowse
 
    local nRow
-   local cType
+   LOCAL nCol
 
-   if ::nColPos > 0 .and. ::nColPos <= Len( ::aColumns )
+   IF ::rowPos < 1 .OR. ::rowPos > ::rowCount
+      ::rowPos := 0
+   ELSEIF ::nColPos > 0 .AND. ::nColPos <= Len( ::aColumns )
 
-      nRow := ::n_Top + ::nRowPos + iif( ::lHeaders, ::nHeaderHeight, 0 ) + iif( Empty( ::cHeadSep ) .or. ! ::lHeaders, 0, 1 ) - 1
+      nRow := ::n_Top +; // TOFIX
+              ::nRowPos +;
+              iif( ::lHeaders, ::nHeaderHeight, 0 ) +;
+              iif( Empty( ::cHeadSep ) .or. ! ::lHeaders, 0, 1 ) - 1
+      nCol := ::aColsPos[ ::nColPos ] // TOFIX
       
-      SetPos( nRow, ::aColsPos[ ::nColPos ] )
-      
-      cType := ::DispCell( ::nRowPos, ::nColPos, TBC_CLR_STANDARD )
-      
-      SetPos( nRow, ::aColsPos[ ::nColPos ] + iif( cType == "L", ::aColsWidth[ ::nColPos ] / 2, 0 ) )
+      SetPos( nRow, nCol ) // TOFIX
+      nCol += ::DispCell( ::nRowPos, ::nColPos, TBC_CLR_STANDARD )
+      SetPos( nRow, nCol )
+   ENDIF
 
-   endif
+   ::lHiLited := .F.
 
-   return Self
+   RETURN Self
 
 METHOD hilite() CLASS TBrowse
 
-   local nRow
-   local nCol
-   local cType
+   LOCAL nRow
+   LOCAL nCol
 
-   if ::nColPos > 0 .and. ::nColPos <= Len( ::aColumns )
+   IF ::rowPos < 1 .OR. ::rowPos > ::rowCount
+      ::rowPos := 0
+   ELSEIF ::nColPos >= 1 .AND. ::nColPos <= Len( ::aColumns )
 
-      nRow := ::n_Top + ::nRowPos + iif( ::lHeaders, ::nHeaderHeight, 0 ) + iif( Empty( ::cHeadSep ) .or. ! ::lHeaders, 0, 1 ) - 1
-      nCol := ::aColsPos[ ::nColPos ]
+      nRow := ::n_Top +; // TOFIX
+              ::nRowPos +;
+              iif( ::lHeaders, ::nHeaderHeight, 0 ) +;
+              iif( Empty( ::cHeadSep ) .or. ! ::lHeaders, 0, 1 ) - 1
+      nCol := ::aColsPos[ ::nColPos ] // TOFIX
       
-      // Start of cell
       SetPos( nRow, nCol )
-      
-      cType := ::DispCell( ::nRowPos, ::nColPos, TBC_CLR_ENHANCED )
-      nCol  += iif( cType == "L", ::aColsWidth[ ::nColPos ] / 2, 0 )
-      
-      // Put cursor back on first char of cell value
+      nCol += ::DispCell( ::nRowPos, ::nColPos, TBC_CLR_ENHANCED )
       SetPos( nRow, nCol )
+
+      ::lHiLited := .T.
+   ENDIF
       
-      #ifdef HB_COMPAT_C53
-         ::n_Row := nRow
-         ::n_Col := nCol
-      #endif
+   #ifdef HB_COMPAT_C53
+      ::n_Row := nRow
+      ::n_Col := nCol
+   #endif
 
-   endif
-
-   return Self
+   RETURN Self
 
 METHOD stabilize() CLASS TBrowse
 
@@ -923,6 +977,12 @@ METHOD stabilize() CLASS TBrowse
 
    // I need to set columns width If TBrowse was never displayed before
    if ::lNeverDisplayed
+
+      if !Empty( ::cBorder )
+         /* NOTE: Intentionally the external version of coordinate messages. */
+         DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cBorder, ::cColorSpec[ 1 ] )
+      endif
+
       ::Configure( 0 )
       //AEval( ::aColumns, {| oCol | ::SetColumnWidth( oCol ) } )
 
@@ -1198,15 +1258,13 @@ METHOD InitColumn( oCol, lAddColumn ) CLASS TBrowse
    IF !lAddColumn .AND. ISOBJECT( oCol ) .AND. ISBLOCK( oCol:block )
       RETURN {;
          oCol                          ,; // TBCI_OBJ      
-         ValType( Eval( oCol:block ) ) ,; // TBCI_TYPE     
          ::SetColumnWidth( oCol )      ,; // TBCI_WIDTH    
+         0                             ,; // TBCI_WIDTHCELL
          ""                            ,; // TBCI_HEADING  
          ""                            ,; // TBCI_FOOTING  
-         ""                            ,; // TBCI_PICT     
-         0                             ,; // TBCI_WIDTHCELL
          ""                            ,; // TBCI_COLSEP   
          0                             ,; // TBCI_SEPWIDTH 
-         oCol:defColor                 ,; // TBCI_DEFCOLOR 
+         oCol:defColor                 ,; // TBCI_DEFCOLOR
          .F.                           ,; // TBCI_SETWIDTH 
          .T.                           ,; // TBCI_LCOLSEP
          0                             }  // TBCI_SCRCOLPOS
@@ -1214,15 +1272,13 @@ METHOD InitColumn( oCol, lAddColumn ) CLASS TBrowse
 
    RETURN {;
       oCol                          ,; // TBCI_OBJ      
-      ""                            ,; // TBCI_TYPE     
       0                             ,; // TBCI_WIDTH    
+      0                             ,; // TBCI_WIDTHCELL
       ""                            ,; // TBCI_HEADING  
       ""                            ,; // TBCI_FOOTING  
-      ""                            ,; // TBCI_PICT     
-      0                             ,; // TBCI_WIDTHCELL
       ""                            ,; // TBCI_COLSEP   
       0                             ,; // TBCI_SEPWIDTH 
-      {}                            ,; // TBCI_DEFCOLOR 
+      {}                            ,; // TBCI_DEFCOLOR
       .F.                           ,; // TBCI_SETWIDTH 
       .T.                           ,; // TBCI_LCOLSEP  
       0                             }  // TBCI_SCRCOLPOS
@@ -1460,56 +1516,63 @@ METHOD Moved() CLASS TBrowse
 
 METHOD DispCell( nRow, nCol, nMode ) CLASS TBrowse
 
-   local oCol   := ::aColumns[ nCol ]
-   local nWidth := ::aColsWidth[ nCol ]
-   local ftmp   := Eval( oCol:block )
-   local cType  := ValType( ftmp )
-   local cPict  := iif( Empty( oCol:Picture ), "", oCol:Picture )
-   local aDefColor
+   LOCAL oCol     := ::aColumns[ nCol ]    // TOFIX
+   LOCAL nWidth   := ::aColsWidth[ nCol ]  // TOFIX
+   LOCAL ftmp     := Eval( oCol:block )
+   LOCAL cType    := ValType( ftmp )
+   LOCAL cPicture := oCol:Picture
+   LOCAL nSkip    := 0
+   LOCAL aDefColor
+   LOCAL cColor
 
-   local tmp
+   IF !ISCHARACTER( cPicture )
+      cPicture := ""
+   ENDIF
 
-   local cColor
-
-   if ! Empty( ::aRect ) .and. ;
-      nCol >= ::aRect[ 2 ] .and. ;
-      nCol <= ::aRect[ 4 ] .and. ;
-      nRow >= ::aRect[ 1 ] .and. ;
-      nRow <= ::aRect[ 3 ] .and. ;
-      ! Empty( ::aRectColor )
+   IF ! Empty( ::aRect ) .AND. ; // TOFIX: aRect validation ?
+      nCol >= ::aRect[ 2 ] .AND. ;
+      nCol <= ::aRect[ 4 ] .AND. ;
+      nRow >= ::aRect[ 1 ] .AND. ;
+      nRow <= ::aRect[ 3 ] .AND. ;
+      ! Empty( ::aRectColor ) // TOFIX: ISEMPTY ?
       cColor := tbr_GetColor( ::aColorSpec, ::aRectColor, nMode )
-   else
+   ELSE
       /* NOTE: Not very optimal that we're evaluating this block all the time. 
                But CA-Cl*pper always has a block here, and there is no other way 
                to tell if the code in it is NIL (the default) or something valuable. 
                [vszakats] */
       aDefColor := Eval( oCol:colorBlock, ftmp )
-      cColor := tbr_GetColor( ::aColorSpec, iif( ISARRAY( aDefColor ), aDefColor, oCol:defColor ), nMode )
-   endif
+      cColor := tbr_GetColor( ::aColorSpec, iif( ISARRAY( aDefColor ), aDefColor, oCol:defColor ), nMode ) // TOFIX: ISARRAY ?
+   ENDIF
 
-   do case
-   case cType $ "CM"
-      DispOut( PadR( Transform( ftmp, cPict ), nWidth ), cColor )
+   SWITCH cType
+   CASE "C"
+   CASE "M"
+      DispOut( PadR( Transform( ftmp, cPicture ), nWidth ), cColor )
+      EXIT
 
-   case cType == "N"
-      DispOut( PadL( Transform( ftmp, cPict ), nWidth ), cColor )
+   CASE "N"
+      DispOut( PadL( Transform( ftmp, cPicture ), nWidth ), cColor )
+      EXIT
 
-   case cType == "D"
-      cPict := iif( cPict == "", "@D", cPict )
-      DispOut( PadR( Transform( ftmp, cPict ), nWidth ), cColor )
+   CASE "D"
+      DispOut( PadR( Transform( ftmp, iif( cPicture == "", "@D", cPicture ) ), nWidth ), cColor )
+      EXIT
 
-   case cType == "L"
-      tmp := PadC( "X", nWidth )
-      DispOut( Space( Len( tmp ) - Len( LTrim( tmp ) ) ), cColor )
-      DispOut( iif( ftmp, "T", "F" ), cColor )
-      DispOut( Space( Len( tmp ) - Len( RTrim( tmp ) ) ), cColor )
+   CASE "L"
+      ftmp := PadC( iif( ftmp, "T", "F" ), nWidth )
+      nSkip := nWidth - Len( LTrim( ftmp ) ) - 1
+      DispOut( Space( Len( ftmp ) - Len( LTrim( ftmp ) ) ), ::aColorSpec[ 1 ] )
+      DispOut( ftmp, cColor )
+      DispOut( Space( Len( ftmp ) - Len( RTrim( ftmp ) ) ), ::aColorSpec[ 1 ] )
+      EXIT
 
-   otherwise
+   OTHERWISE
       DispOut( Space( nWidth ), cColor )
 
-   endcase
+   ENDSWITCH
 
-   return cType
+   RETURN nSkip
 
 METHOD WriteMLineText( cStr, nPadLen, lHeader, cColor ) CLASS TBrowse
 
@@ -1757,47 +1820,87 @@ METHOD autoLite( lAutoLite ) CLASS TBrowse
 
 METHOD nTop( nTop ) CLASS TBrowse
 
-   if nTop != NIL
+   IF nTop != NIL
       #ifdef HB_COMPAT_C53
          ::n_Top := _eInstVar( Self, "NTOP", nTop, "N", 1001 )
+         IF !Empty( ::cBorder )
+            ::n_Top++
+         ENDIF
       #else
          ::n_Top := _eInstVar( Self, "NTOP", nTop, "N", 1001, {| o, x | HB_SYMBOL_UNUSED( o ), x >= 0 } )
       #endif
       ::Configure( 2 )
-   endif
+   ENDIF
 
-   return ::n_Top
+   #ifdef HB_COMPAT_C53
+      IF !Empty( ::cBorder )
+         RETURN ::n_Top - 1
+      ENDIF
+   #endif
+
+   RETURN ::n_Top
 
 METHOD nLeft( nLeft ) CLASS TBrowse
 
-   if nLeft != NIL
+   IF nLeft != NIL
       #ifdef HB_COMPAT_C53
          ::n_Left := _eInstVar( Self, "NLEFT", nLeft, "N", 1001 )
+         IF !Empty( ::cBorder )
+            ::n_Left++
+         ENDIF
       #else
          ::n_Left := _eInstVar( Self, "NLEFT", nLeft, "N", 1001, {| o, x | HB_SYMBOL_UNUSED( o ), x >= 0 } )
       #endif
       ::Configure( 2 )
-   endif
+   ENDIF
 
-   return ::n_Left
+   #ifdef HB_COMPAT_C53
+      IF !Empty( ::cBorder )
+         RETURN ::n_Left - 1
+      ENDIF
+   #endif
+
+   RETURN ::n_Left
 
 METHOD nBottom( nBottom ) CLASS TBrowse
 
-   if nBottom != NIL
+   IF nBottom != NIL
       ::n_Bottom := _eInstVar( Self, "NBOTTOM", nBottom, "N", 1001, {| o, x | x >= o:nTop } )
+      #ifdef HB_COMPAT_C53
+         IF !Empty( ::cBorder )
+            ::n_Bottom--
+         ENDIF
+      #endif
       ::Configure( 2 )
-   endif
+   ENDIF
 
-   return ::n_Bottom
+   #ifdef HB_COMPAT_C53
+      IF !Empty( ::cBorder )
+         RETURN ::n_Bottom + 1
+      ENDIF
+   #endif
+
+   RETURN ::n_Bottom
 
 METHOD nRight( nRight ) CLASS TBrowse
 
-   if nRight != NIL
+   IF nRight != NIL
       ::n_Right := _eInstVar( Self, "NRIGHT", nRight, "N", 1001, {| o, x | x >= o:nLeft } )
+      #ifdef HB_COMPAT_C53
+         IF !Empty( ::cBorder )
+            ::n_Right--
+         ENDIF
+      #endif
       ::Configure( 2 )
-   endif
+   ENDIF
 
-   return ::n_Right
+   #ifdef HB_COMPAT_C53
+      IF !Empty( ::cBorder )
+         RETURN ::n_Right + 1
+      ENDIF
+   #endif
+
+   RETURN ::n_Right
 
 METHOD colorSpec( cColorSpec ) CLASS TBrowse
 
@@ -1928,74 +2031,72 @@ METHOD skipBlock( bSkipBlock ) CLASS TBrowse
 
 #ifdef HB_COMPAT_C53
 
-METHOD ApplyKey( nKey ) CLASS TBrowse
+#define _TBC_SETKEY_KEY         1
+#define _TBC_SETKEY_BLOCK       2
 
-   return ::TApplyKey( nKey, self )
+METHOD setKey( nKey, bBlock ) CLASS TBrowse
 
-METHOD SetKey( nKey, bBlock ) CLASS TBrowse
+   LOCAL bReturn
+   LOCAL nPos
 
-   local bReturn
-   local nPos
+   /* NOTE: Assigned codeblock receives two parameters:
+            {| oTBrowse, nKey | <action> } */
 
-   // ; Assigned codeblock receives two parameters: {| oTBrowse, nKey | <action> }
-
-   if ::aKeys == NIL
-      ::aKeys := { { K_DOWN       , {| oB | oB:Down()    , TBR_CONTINUE } },;
-                   { K_END        , {| oB | oB:End()     , TBR_CONTINUE } },;
-                   { K_CTRL_PGDN  , {| oB | oB:GoBottom(), TBR_CONTINUE } },;
-                   { K_CTRL_PGUP  , {| oB | oB:GoTop()   , TBR_CONTINUE } },;
-                   { K_HOME       , {| oB | oB:Home()    , TBR_CONTINUE } },;
-                   { K_LEFT       , {| oB | oB:Left()    , TBR_CONTINUE } },;
-                   { K_PGDN       , {| oB | oB:PageDown(), TBR_CONTINUE } },;
-                   { K_PGUP       , {| oB | oB:PageUp()  , TBR_CONTINUE } },;
-                   { K_CTRL_END   , {| oB | oB:PanEnd()  , TBR_CONTINUE } },;
-                   { K_CTRL_HOME  , {| oB | oB:PanHome() , TBR_CONTINUE } },;
-                   { K_CTRL_LEFT  , {| oB | oB:PanLeft() , TBR_CONTINUE } },;
-                   { K_CTRL_RIGHT , {| oB | oB:PanRight(), TBR_CONTINUE } },;
-                   { K_RIGHT      , {| oB | oB:Right()   , TBR_CONTINUE } },;
-                   { K_UP         , {| oB | oB:Up()      , TBR_CONTINUE } },;
-                   { K_ESC        , {|    | TBR_EXIT } },;
-                   { K_LBUTTONDOWN, {| oB | TBMouse( oB, MRow(), MCol() ) } } }
+   IF ::aKeys == NIL
+      ::aKeys := { { K_DOWN       , {| o | o:Down()    , TBR_CONTINUE   } },;
+                   { K_END        , {| o | o:End()     , TBR_CONTINUE   } },;
+                   { K_CTRL_PGDN  , {| o | o:GoBottom(), TBR_CONTINUE   } },;
+                   { K_CTRL_PGUP  , {| o | o:GoTop()   , TBR_CONTINUE   } },;
+                   { K_HOME       , {| o | o:Home()    , TBR_CONTINUE   } },;
+                   { K_LEFT       , {| o | o:Left()    , TBR_CONTINUE   } },;
+                   { K_PGDN       , {| o | o:PageDown(), TBR_CONTINUE   } },;
+                   { K_PGUP       , {| o | o:PageUp()  , TBR_CONTINUE   } },;
+                   { K_CTRL_END   , {| o | o:PanEnd()  , TBR_CONTINUE   } },;
+                   { K_CTRL_HOME  , {| o | o:PanHome() , TBR_CONTINUE   } },;
+                   { K_CTRL_LEFT  , {| o | o:PanLeft() , TBR_CONTINUE   } },;
+                   { K_CTRL_RIGHT , {| o | o:PanRight(), TBR_CONTINUE   } },;
+                   { K_RIGHT      , {| o | o:Right()   , TBR_CONTINUE   } },;
+                   { K_UP         , {| o | o:Up()      , TBR_CONTINUE   } },;
+                   { K_ESC        , {|   |               TBR_EXIT       } },;
+                   { K_LBUTTONDOWN, {| o | TBMouse( o, MRow(), MCol() ) } } }
 
       #ifdef HB_EXTENSION
-         AAdd( ::aKeys, { K_MWFORWARD  , {| oB | oB:Up()      , TBR_CONTINUE } } )
-         AAdd( ::aKeys, { K_MWBACKWARD , {| oB | oB:Down()    , TBR_CONTINUE } } )
+         AAdd( ::aKeys, { K_MWFORWARD  , {| o | o:Up()      , TBR_CONTINUE   } } )
+         AAdd( ::aKeys, { K_MWBACKWARD , {| o | o:Down()    , TBR_CONTINUE   } } )
       #endif
-   endif
+   ENDIF
 
-   if ( nPos := AScan( ::aKeys, {| x | x[ 1 ] == nKey } ) ) == 0
-      if ISBLOCK( bBlock )
+   IF ( nPos := AScan( ::aKeys, {| x | x[ _TBC_SETKEY_KEY ] == nKey } ) ) == 0
+      IF ISBLOCK( bBlock )
          AAdd( ::aKeys, { nKey, bBlock } )
-      endif
+      ENDIF
       bReturn := bBlock
-
-   elseif ISBLOCK( bBlock )
-      ::aKeys[ nPos ][ 2 ] := bBlock
+   ELSEIF ISBLOCK( bBlock )
+      ::aKeys[ nPos ][ _TBC_SETKEY_BLOCK ] := bBlock
       bReturn := bBlock
+   ELSEIF PCount() == 1
+      bReturn := ::aKeys[ nPos ][ _TBC_SETKEY_BLOCK ]
+   ELSE
+      bReturn := ::aKeys[ nPos ][ _TBC_SETKEY_BLOCK ]
+      IF PCount() == 2 .AND. bBlock == NIL .AND. nKey != 0
+         ADel( ::aKeys, nPos )
+         ASize( ::aKeys, Len( ::aKeys ) - 1 )
+      ENDIF
+   ENDIF
 
-   elseif PCount() == 1
-      bReturn := ::aKeys[ nPos ][ 2 ]
+   RETURN bReturn
 
-   elseif ( bReturn := ::aKeys[ nPos ][ 2 ], PCount() == 2 .and. ;
-          bBlock == NIL .and. nKey != 0 )
+METHOD applyKey( nKey ) CLASS TBrowse
 
-      ADel( ::aKeys, nPos )
-      ASize( ::aKeys, Len( ::aKeys ) - 1 )
-   endif
+   LOCAL bBlock := ::setKey( nKey )
 
-   return bReturn
+   DEFAULT bBlock TO ::setKey( 0 )
 
-METHOD TApplyKey( nKey, oBrowse ) CLASS TBrowse
+   IF bBlock == NIL
+      RETURN TBR_EXCEPTION
+   ENDIF
 
-   local bBlock := oBrowse:setKey( nKey )
-
-   DEFAULT bBlock TO oBrowse:setKey( 0 )
-
-   if bBlock == NIL
-      return TBR_EXCEPTION
-   endif
-
-   return Eval( bBlock, oBrowse, nKey )
+   RETURN Eval( bBlock, Self, nKey )
 
 METHOD hitTest( nMRow, nMCol ) CLASS TBrowse
    local i
@@ -2023,6 +2124,35 @@ METHOD hitTest( nMRow, nMCol ) CLASS TBrowse
 
    return HTCELL
 
+METHOD border( cBorder ) CLASS TBrowse
+
+   IF PCount() > 0
+
+      cBorder := _eInstVar( Self, "BORDER", cBorder, "C", 1001 )
+
+      IF Len( cBorder ) == 0 .OR. ;
+         Len( cBorder ) == 8
+      
+         IF Empty( ::cBorder ) .AND. !Empty( cBorder )
+            ::n_Top++
+            ::n_Left++
+            ::n_Bottom--
+            ::n_Right--
+            ::configure( 2 )
+         ELSEIF !Empty( ::cBorder ) .AND. Empty( cBorder )
+            ::n_Top--
+            ::n_Left--
+            ::n_Bottom++
+            ::n_Right++
+            ::configure( 2 )
+         ENDIF
+
+         ::cBorder := cBorder
+      ENDIF
+   ENDIF
+
+   RETURN ::cBorder
+
 METHOD nRow() CLASS TBrowse
    return ::n_Row
 
@@ -2037,63 +2167,26 @@ METHOD mColPos() CLASS TBrowse
 
 METHOD message( cMessage ) CLASS TBrowse
 
-   if cMessage != NIL
+   IF cMessage != NIL
       ::cMessage := _eInstVar( Self, "MESSAGE", cMessage, "C", 1001 )
-   endif
+   ENDIF
 
-   return ::cMessage
+   RETURN ::cMessage
 
 METHOD setStyle( nStyle, lNewValue ) CLASS TBrowse
 
    /* NOTE: CA-Cl*pper 5.3 does no checks on the value of nStyle, so in case 
             it is zero or non-numeric, a regular RTE will happen. [vszakats] */
   
-   if nStyle > Len( ::aSetStyle ) .and. nStyle <= 4096 /* Some reasonable limit for maximum number of styles */
+   IF nStyle > Len( ::aSetStyle ) .AND. nStyle <= 4096 /* Some reasonable limit for maximum number of styles */
       ASize( ::aSetStyle, nStyle )
-   endif
+   ENDIF
   
-   if ISLOGICAL( lNewValue )
+   IF ISLOGICAL( lNewValue )
       ::aSetStyle[ nStyle ] := lNewValue
-   endif
+   ENDIF
 
-   return ::aSetStyle[ nStyle ]
-
-FUNCTION TBMouse( oBrowse, nMRow, nMCol )
-   local n
-
-   if oBrowse:hitTest( nMRow, nMCol ) == HTCELL
-
-      n := oBrowse:mRowPos - oBrowse:rowPos
-
-      do while n < 0
-         n++
-         oBrowse:up():forceStable()
-      enddo
-
-      do while n > 0
-         n--
-         oBrowse:down():forceStable()
-      enddo
-
-      n := oBrowse:mColPos - oBrowse:colPos
-      if n < oBrowse:leftVisible - oBrowse:colPos .and. oBrowse:freeze + 1 < oBrowse:leftVisible
-         n += oBrowse:freeze + 1 - oBrowse:leftVisible // hidden columns
-      endif
-
-      do while n < 0
-         n++
-         oBrowse:left()
-      enddo
-
-      do while n > 0
-         n--
-         oBrowse:right()
-      enddo
-
-      return TBR_CONTINUE
-   endif
-
-   return TBR_EXCEPTION
+   RETURN ::aSetStyle[ nStyle ]
 
 #endif
 
@@ -2132,48 +2225,83 @@ FUNCTION TBrowseNew( nTop, nLeft, nBottom, nRight )
          to "N/N". [vszakats] */
 STATIC FUNCTION tbr_CookColor( cColorSpec )
 
-   local nCount := Max( hb_TokenCount( cColorSpec, "," ), 2 )
-   local aColorSpec := Array( nCount )
-   local cColor
-   local nPos
+   LOCAL nCount := Max( hb_TokenCount( cColorSpec, "," ), 2 )
+   LOCAL aColorSpec := Array( nCount )
+   LOCAL cColor
+   LOCAL nPos
 
-   for nPos := 1 TO nCount
+   FOR nPos := 1 TO nCount
       cColor := hb_TokenGet( @cColorSpec, nPos, "," )
-      if nPos <= 2
+      IF nPos <= 2
          aColorSpec[ nPos ] := iif( hb_ColorToN( cColor ) == 0 .AND. !( Upper( StrTran( cColor, " ", "" ) ) == "N/N" ), hb_ColorIndex( "W/N,N/W", nPos - 1 ), cColor )
-      else
+      ELSE
          aColorSpec[ nPos ] := iif( hb_ColorToN( cColor ) == 0, "N/N", cColor )
-      endif
-   next
+      ENDIF
+   NEXT
 
-   return aColorSpec
+   RETURN aColorSpec
 
+/* NOTE: Preprocess defColor so that it can be used "blindly" afterwards. */
+STATIC FUNCTION tbr_DefColor( aDefColor, aColorSpec )
+
+   IF !ISARRAY( aDefColor )
+      aDefColor := {}
+   ENDIF
+
+   ASize( aDefColor, TBC_CLR_MAX_ )
+
+   IF !ISNUMBER( aDefColor[ TBC_CLR_STANDARD ] ) .OR. aDefColor[ TBC_CLR_STANDARD ] > Len( aColorSpec )
+      aDefColor[ TBC_CLR_STANDARD ] := 1
+   ENDIF
+   IF !ISNUMBER( aDefColor[ TBC_CLR_ENHANCED ] ) .OR. aDefColor[ TBC_CLR_ENHANCED ] > Len( aColorSpec )
+      aDefColor[ TBC_CLR_ENHANCED ] := 2
+   ENDIF
+#ifdef HB_COMPAT_C53
+   /* NOTE: To be backwards compatible, C5.3 will fall back to C5.2 colors 
+            if the extra HEADING/FOOTING positions are not specified. [vszakats] */
+   IF !ISNUMBER( aDefColor[ TBC_CLR_HEADING ] ) .OR. aDefColor[ TBC_CLR_HEADING ] > Len( aColorSpec )
+      aDefColor[ TBC_CLR_HEADING ] := aDefColor[ TBC_CLR_STANDARD ]
+   ENDIF
+   IF !ISNUMBER( aDefColor[ TBC_CLR_FOOTING ] ) .OR. aDefColor[ TBC_CLR_FOOTING ] > Len( aColorSpec )
+      aDefColor[ TBC_CLR_FOOTING ] := aDefColor[ TBC_CLR_STANDARD ]
+   ENDIF
+#endif
+
+   RETURN aDefColor
+
+/* NOTE: Strict sanity check for a color array. We need to use this 
+         for the array returned by a :colorBlock. */
 STATIC FUNCTION tbr_GetColor( aColorSpec, aDefColor, nMode )
 
-   if !ISARRAY( aDefColor )
+   IF !ISARRAY( aDefColor )
       /* NOTE: This fits both C5.2 and C5.3. In C5.2 nMode is 1 or 2. [vszakats] */
-      return aColorSpec[ { 1, 2, 1, 1 }[ nMode ] ]
-   elseif nMode > Len( aDefColor )
+      RETURN aColorSpec[ { 1, 2, 1, 1 }[ nMode ] ]
+   ELSEIF nMode > Len( aDefColor )
       /* NOTE: C5.3 and C5.2 compatible method. To be backwards compatible, 
                C5.3 will fall back to C5.2 colors if the extra HEADING/FOOTING 
                positions are not specified. [vszakats] */
-      switch nMode
-      case TBC_CLR_STANDARD ; return aColorSpec[ 1 ]
-      case TBC_CLR_ENHANCED ; return aColorSpec[ 2 ]
-      case TBC_CLR_HEADING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1 .AND. ISNUMBER( aDefColor[ 1 ] ) .AND. aDefColor[ 1 ] <= Len( aColorSpec ), aDefColor[ 1 ], 1 ) ]
-      case TBC_CLR_FOOTING  ; return aColorSpec[ iif( Len( aDefColor ) >= 1 .AND. ISNUMBER( aDefColor[ 1 ] ) .AND. aDefColor[ 1 ] <= Len( aColorSpec ), aDefColor[ 1 ], 1 ) ]
-      endswitch
-   endif
+      SWITCH NMODE
+      CASE TBC_CLR_STANDARD ; RETURN aColorSpec[ 1 ]
+      CASE TBC_CLR_ENHANCED ; RETURN aColorSpec[ 2 ]
+      CASE TBC_CLR_HEADING  ; RETURN aColorSpec[ iif( Len( aDefColor ) >= TBC_CLR_STANDARD .AND. ISNUMBER( aDefColor[ TBC_CLR_STANDARD ] ) .AND. aDefColor[ 1 ] <= Len( aColorSpec ), aDefColor[ TBC_CLR_STANDARD ], 1 ) ]
+      CASE TBC_CLR_FOOTING  ; RETURN aColorSpec[ iif( Len( aDefColor ) >= TBC_CLR_STANDARD .AND. ISNUMBER( aDefColor[ TBC_CLR_STANDARD ] ) .AND. aDefColor[ 1 ] <= Len( aColorSpec ), aDefColor[ TBC_CLR_STANDARD ], 1 ) ]
+      ENDSWITCH
+   ENDIF
 
-   return aColorSpec[ iif( ISNUMBER( aDefColor[ nMode ] ) .AND. aDefColor[ nMode ] <= Len( aColorSpec ), aDefColor[ nMode ], { 1, 2, 1, 1 }[ nMode ] ) ]
+   RETURN aColorSpec[ iif( ISNUMBER( aDefColor[ nMode ] ) .AND. aDefColor[ nMode ] <= Len( aColorSpec ), aDefColor[ nMode ], { 1, 2, 1, 1 }[ nMode ] ) ]
 
 STATIC FUNCTION tbr_CalcWidth( xValue, cType, cPicture )
 
-   do case
-   case cType $ "CM" ; return Len( iif( Empty( cPicture ), xValue        , Transform( xValue, cPicture ) ) )
-   case cType == "N" ; return Len( iif( Empty( cPicture ), Str( xValue ) , Transform( xValue, cPicture ) ) )
-   case cType == "D" ; return Len( iif( Empty( cPicture ), DToC( xValue ), Transform( xValue, cPicture ) ) )
-   case cType == "L" ; return 1
-   endcase
+   IF !ISCHARACTER( cPicture )
+      cPicture := ""
+   ENDIF
 
-   return 0
+   SWITCH cType
+   CASE "M"
+   CASE "C" ; RETURN Len( iif( Empty( cPicture ), xValue        , Transform( xValue, cPicture ) ) )
+   CASE "N" ; RETURN Len( iif( Empty( cPicture ), Str( xValue ) , Transform( xValue, cPicture ) ) )
+   CASE "D" ; RETURN Len( iif( Empty( cPicture ), DToC( xValue ), Transform( xValue, cPicture ) ) )
+   CASE "L" ; RETURN 1
+   ENDSWITCH
+
+   RETURN 0

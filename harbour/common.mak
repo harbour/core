@@ -527,15 +527,11 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\adir$(OBJEXT)     \
     $(OBJ_DIR)\alert$(OBJEXT)    \
     $(OBJ_DIR)\altd$(OBJEXT)     \
-    $(OBJ_DIR)\array$(OBJEXT)    \
-    $(OBJ_DIR)\block$(OBJEXT)    \
     $(OBJ_DIR)\browdb$(OBJEXT)   \
     $(OBJ_DIR)\browdbx$(OBJEXT)  \
     $(OBJ_DIR)\browse$(OBJEXT)   \
-    $(OBJ_DIR)\characte$(OBJEXT) \
     $(OBJ_DIR)\checkbox$(OBJEXT) \
     $(OBJ_DIR)\color53$(OBJEXT)  \
-    $(OBJ_DIR)\date$(OBJEXT)     \
     $(OBJ_DIR)\dbedit$(OBJEXT)   \
     $(OBJ_DIR)\devoutp$(OBJEXT)  \
     $(OBJ_DIR)\dircmd$(OBJEXT)   \
@@ -548,13 +544,10 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbini$(OBJEXT)    \
     $(OBJ_DIR)\input$(OBJEXT)    \
     $(OBJ_DIR)\listbox$(OBJEXT)  \
-    $(OBJ_DIR)\logical$(OBJEXT)  \
     $(OBJ_DIR)\memoedit$(OBJEXT) \
     $(OBJ_DIR)\memvarbl$(OBJEXT) \
     $(OBJ_DIR)\menuto$(OBJEXT)   \
     $(OBJ_DIR)\menusys$(OBJEXT) \
-    $(OBJ_DIR)\nil$(OBJEXT)      \
-    $(OBJ_DIR)\numeric$(OBJEXT)  \
     $(OBJ_DIR)\objfunc$(OBJEXT)  \
     $(OBJ_DIR)\perfuncs$(OBJEXT) \
     $(OBJ_DIR)\persist$(OBJEXT)  \
@@ -564,13 +557,13 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\radiogrp$(OBJEXT) \
     $(OBJ_DIR)\readkey$(OBJEXT)  \
     $(OBJ_DIR)\readvar$(OBJEXT)  \
-    $(OBJ_DIR)\scalar$(OBJEXT)   \
     $(OBJ_DIR)\scrollbr$(OBJEXT) \
     $(OBJ_DIR)\setfunc$(OBJEXT)  \
     $(OBJ_DIR)\setta$(OBJEXT)    \
     $(OBJ_DIR)\symbol$(OBJEXT)   \
     $(OBJ_DIR)\tbcolumn$(OBJEXT) \
     $(OBJ_DIR)\tbrowse$(OBJEXT)  \
+    $(OBJ_DIR)\tbrowsys$(OBJEXT) \
     $(OBJ_DIR)\tclass$(OBJEXT)   \
     $(OBJ_DIR)\teditor$(OBJEXT)  \
     $(OBJ_DIR)\text$(OBJEXT)     \
@@ -583,6 +576,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\tobject$(OBJEXT)  \
     $(OBJ_DIR)\tpopup$(OBJEXT)   \
     $(OBJ_DIR)\treport$(OBJEXT)  \
+    $(OBJ_DIR)\tscalar$(OBJEXT)  \
     $(OBJ_DIR)\ttextlin$(OBJEXT) \
     $(OBJ_DIR)\ttopbar$(OBJEXT)  \
     $(OBJ_DIR)\typefile$(OBJEXT) \

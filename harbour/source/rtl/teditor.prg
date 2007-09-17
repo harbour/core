@@ -147,6 +147,9 @@ CREATE CLASS HBEditor
                                                            
    VAR cColorSpec     AS CHARACTER                       // Color string used for screen writes
 
+   METHOD GetParagraph( nRow )
+   METHOD BrowseText( nPassedKey )
+
 ENDCLASS
 
 /* -------------------------------------------- */
@@ -348,7 +351,7 @@ METHOD SplitLine( nRow ) CLASS HBEditor
       nPosInWord := Len( ::GetLine( nRow ) ) - ::nCol
 
       nStartRow := nRow
-      cLine := GetParagraph( Self, nRow )
+      cLine := ::GetParagraph( nRow )
 
       do while !Empty(cLine)
 
@@ -647,7 +650,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
    LOCAL lSingleKeyProcess := .F.         // .T. if I have to process passed key and then exit
 
    if ! ::lEditAllow
-      BrowseText( Self, nPassedKey )
+      ::BrowseText( nPassedKey )
 
    else
 
@@ -868,11 +871,6 @@ METHOD RowPos() CLASS HBEditor
 METHOD ColPos() CLASS HBEditor
    return ::nCol
 
-/*
-METHOD LineColor( nRow ) CLASS HBEditor
-   return ::cColorSpec
-*/
-
 METHOD Saved() CLASS HBEditor
    return ::lSaved
 
@@ -895,6 +893,66 @@ METHOD hitTest( nMRow, nMCol ) CLASS HBEditor
    endif
 
    return HTNOWHERE
+
+/* -------------------------------------------- */
+
+// Rebuild a long line from multiple short ones (wrapped at soft CR)
+METHOD GetParagraph( nRow )
+
+   LOCAL cLine := ""
+
+   do while nRow <= Len( ::aText ) .and. ::aText[ nRow ]:lSoftCR
+      cLine += ::aText[ nRow ]:cText
+      // I don't need to increment nRow since I'm removing lines, ie line n is
+      // a different line each time I add it to cLine
+      ::RemoveLine( nRow )
+   enddo
+
+   if nRow <= Len( ::aText )
+      // Last line, or only one line
+      cLine += ::aText[ nRow ]:cText
+      ::RemoveLine( nRow )
+   endif
+
+   return cLine
+
+// if editing isn't allowed we enter this loop which
+// handles only movement keys and discards all the others
+METHOD BrowseText( nPassedKey )
+
+   LOCAL nKey
+   LOCAL bKeyBlock
+
+   do while ! ::lExitEdit
+
+      // If I haven't been called with a key already preset, evaluate this key and then exit
+      if nPassedKey == NIL
+
+         if NextKey() == 0
+            ::IdleHook()
+         endif
+
+         nKey := InKey( 0 )
+      else
+         nKey := nPassedKey
+      endif
+
+      if ( bKeyBlock := Setkey( nKey ) ) != NIL
+         Eval( bKeyBlock )
+         loop
+      endif
+
+      if nKey == K_ESC
+         ::lExitEdit := .T.
+      else
+         if !::MoveCursor( nKey )
+            ::KeyboardHook( nKey )
+         endif
+      endif
+
+   enddo
+
+   return Self
 
 /* -------------------------------------------- */
 
@@ -1034,61 +1092,3 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
    enddo
 
    return aArray
-
-// Rebuild a long line from multiple short ones (wrapped at soft CR)
-STATIC FUNCTION GetParagraph( oSelf, nRow )
-
-   LOCAL cLine := ""
-
-   do while nRow <= Len( oSelf:aText ) .and. oSelf:aText[ nRow ]:lSoftCR
-      cLine += oSelf:aText[ nRow ]:cText
-      // I don't need to increment nRow since I'm removing lines, ie line n is
-      // a different line each time I add it to cLine
-      oSelf:RemoveLine( nRow )
-   enddo
-
-   if nRow <= Len( oSelf:aText )
-      // Last line, or only one line
-      cLine += oSelf:aText[ nRow ]:cText
-      oSelf:RemoveLine( nRow )
-   endif
-
-   return cLine
-
-// if editing isn't allowed we enter this loop which
-// handles only movement keys and discards all the others
-STATIC PROCEDURE BrowseText( oSelf, nPassedKey )
-
-   LOCAL nKey
-   LOCAL bKeyBlock
-
-   do while ! oSelf:lExitEdit
-
-      // If I haven't been called with a key already preset, evaluate this key and then exit
-      if nPassedKey == NIL
-
-         if NextKey() == 0
-            oSelf:IdleHook()
-         endif
-
-         nKey := InKey( 0 )
-      else
-         nKey := nPassedKey
-      endif
-
-      if ( bKeyBlock := Setkey( nKey ) ) != NIL
-         Eval( bKeyBlock )
-         loop
-      endif
-
-      if nKey == K_ESC
-         oSelf:lExitEdit := .T.
-      else
-         if !oSelf:MoveCursor( nKey )
-            oSelf:KeyboardHook( nKey )
-         endif
-      endif
-
-   enddo
-
-   return

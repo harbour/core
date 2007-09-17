@@ -8,6 +8,64 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-17 12:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * common.mak
+   + source/rtl/tbrowsys.prg
+   * source/rtl/Makefile
+   * source/rtl/getsys.prg
+   * source/rtl/tbrowse.prg
+     + Added new file for C5.3 TB*() functions.
+       Most of them is dummy, a few of them were moved 
+       here from existing files.
+
+   * include/hbextern.ch
+     + Added rest of C5.3 TB*() functions.
+
+   * source/rtl/teditor.prg
+     ! Fixed new scope violations reported by Guillermo.
+
+   * source/rtl/tbrowse.prg
+     + :border implemented (to be tested).
+     ! :setColumn() return value fixed, NOTE added.
+     ! Non-character :picture handled properly.
+       (to be tested for full compatibility)
+     % Some optimizations.
+     - :TApplyKey() removed (it is not a C5.3 method)
+     ; Some source cleanup and other changes.
+     ; Work in progress.
+
+   * include/hbextern.ch
+   * common.mak
+   * source/rtl/Makefile
+   + source/rtl/tscalar.prg
+   - source/rtl/array.prg
+   - source/rtl/block.prg
+   - source/rtl/characte.prg
+   - source/rtl/date.prg
+   - source/rtl/logical.prg
+   - source/rtl/nil.prg
+   - source/rtl/numeric.prg
+   - source/rtl/scalar.prg
+     + Consolidated scalar classes to one file.
+     + Minor optimizations and cleanup done on files.
+     + Class function names now consistently HB*()
+       (was non-Class(y) compatible and a mixed list 
+       of plain unprefixed class names and class names 
+       prefixed with an underscore). Notice however that 
+       Class(y) has only CsyArray() defined in its own 
+       library, the rest was seemingly made only 
+       available as additional source code.
+     ! Fixed NIL class to be named NIL (was _NIL).
+     % Some unneeded MESSAGE redirections removed.
+     % LOCAL var[0] -> LOCAL var := {}. This results 
+       in better pcode.
+     + Added all these symbols to hbextern.ch
+
+   * source/rtl/symbol.prg
+     * Some cleanup.
+     ; I believe this should be named HBSymbol() and 
+       added to hbextern.ch
+
 2007-09-16 22:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/hbopt.c
     ! fixed bad typo in last modification - thanks to Viktor

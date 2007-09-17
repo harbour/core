@@ -139,15 +139,11 @@ PRG_SOURCES=\
 	adir.prg     \
 	alert.prg    \
 	altd.prg     \
-	array.prg    \
-	block.prg    \
 	browdb.prg   \
 	browdbx.prg  \
 	browse.prg   \
-	characte.prg \
 	checkbox.prg \
 	color53.prg  \
-	date.prg     \
 	dbedit.prg   \
 	devoutp.prg  \
 	dircmd.prg   \
@@ -160,13 +156,10 @@ PRG_SOURCES=\
 	hbini.prg    \
 	input.prg    \
 	listbox.prg  \
-	logical.prg  \
 	memoedit.prg \
 	memvarbl.prg \
 	menuto.prg   \
 	menusys.prg  \
-	nil.prg      \
-	numeric.prg  \
 	objfunc.prg  \
 	perfuncs.prg \
 	persist.prg  \
@@ -176,7 +169,6 @@ PRG_SOURCES=\
 	radiogrp.prg \
 	readkey.prg  \
 	readvar.prg  \
-	scalar.prg   \
 	scrollbr.prg \
 	setfunc.prg  \
 	setta.prg    \
@@ -184,6 +176,7 @@ PRG_SOURCES=\
 	tclass.prg   \
 	tbcolumn.prg \
 	tbrowse.prg  \
+	tbrowsys.prg \
 	teditor.prg  \
 	text.prg     \
 	tget.prg     \
@@ -195,6 +188,7 @@ PRG_SOURCES=\
 	tobject.prg  \
 	tpopup.prg   \
 	treport.prg  \
+	tscalar.prg  \
 	ttextlin.prg \
 	ttopbar.prg  \
 	typefile.prg \
