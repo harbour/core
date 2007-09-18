@@ -535,4 +535,20 @@ DECLARE HBClass ;
    _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;
    s_oClass:AddMultiClsData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.share.>, HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ), {<(DataName1)> [, <(DataNameN)>]}, __HB_CLS_NOINI )
 
+
+/* Scalar classes support */
+#command ASSOCIATE CLASS <ClassFuncName> WITH TYPE <type: ;
+   ARRAY, BLOCK, CHARACTER, DATE, HASH, LOGICAL, NIL, NUMERIC, SYMBOL, POINTER> => ;
+      __clsAssocType( __clsInstSuper( @<ClassFuncName>() ), #<type> )
+
+#command ENABLE TYPE CLASS <type: ;
+   ARRAY, BLOCK, CHARACTER, DATE, HASH, LOGICAL, NIL, NUMERIC, SYMBOL, POINTER> ;
+   [, <typeN: ;
+   ARRAY, BLOCK, CHARACTER, DATE, HASH, LOGICAL, NIL, NUMERIC, SYMBOL, POINTER>] => ;
+      REQUEST HB<type> [, HB<typeN>]
+
+#command ENABLE TYPE CLASS ALL => ;
+      REQUEST HBArray, HBBlock, HBCharacter, HBDate, HBHash, ;
+              HBLogical, HBNil, HBNumeric, HBSymbol, HBPointer
+
 #endif /* HB_CLASS_CH_ */

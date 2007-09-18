@@ -8,6 +8,62 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-18 14:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    + added new commands for scalar classes:
+         ASSOCIATE CLASS <ClassName> WITH TYPE
+                           ARRAY|BLOCK|CHARACTER|DATE|HASH|LOGICAL|NIL|
+                           NUMERIC|POINTER|SYMBOL
+         ENABLE CLASS TYPE ALL
+         ENABLE TYPE CLASS ARRAY|BLOCK|CHARACTER|DATE|HASH|LOGICAL|NIL|
+                           NUMERIC|POINTER|SYMBOL
+      Please remeber that:
+          ENABLE CLASS TYPE ALL
+      and:
+          ENABLE TYPE CLASS ...
+      can be used in any place of code - this commands are translated to
+          REQUEST HB<TYPENAME>
+      so are not executed
+
+  * harbour/source/vm/classes.c
+    + added __clsAssocType( <hClass>, <cType> ) => <lOK>
+
+  * harbour/common.mak
+  * harbour/source/rtl/tscalar.prg
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/tscalars.c
+  + harbour/source/rtl/tscalard.c
+  + harbour/source/rtl/tscalarh.c
+  + harbour/source/rtl/tscalarl.c
+  + harbour/source/rtl/tscalarp.c
+  + harbour/source/rtl/tscalara.c
+  + harbour/source/rtl/tscalaru.c
+  + harbour/source/rtl/tscalarb.c
+  + harbour/source/rtl/tscalarn.c
+  + harbour/source/rtl/tscalarc.c
+    + added scalar classes for basic types,
+      Now it's possible to define messages also for basic item types.
+      It's even possible to overload some not defined in HVM operators,
+      f.e. in this example we overload operator "+" so it makes
+        AADD( <aValue>, <xValue> )
+      for code like <aValue> + <xValue>:
+        #include "hbclass.ch"
+        PROC MAIN()
+            LOCAL a:={}
+            ASSOCIATE CLASS MyArray WITH TYPE ARRAY
+            a := a + "elem1"
+            a += "elem2"
+            a := a + "elem3"
+            a += "elem4"
+            ? a:asString, a:isScalar
+            AEVAL(a,{|x,i|QOUT(i,x)})
+        RETURN
+        CREATE CLASS MyArray INHERIT __HBArray
+           OPERATOR "+" ARG xValue INLINE AADD( Self, xValue ), Self
+        ENDCLASS
+      Operators which have default actions for given types defined in HVM
+      cannot be overloaded.
+
 2007-09-18 00:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapicls.h
   * harbour/source/vm/hvm.c

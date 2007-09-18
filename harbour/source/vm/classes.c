@@ -1315,6 +1315,20 @@ HB_EXPORT USHORT hb_clsFindClass( const char * szClass, const char * szFunc )
    return 0;
 }
 
+static USHORT hb_clsFindClassByFunc( PHB_SYMB pClassFuncSym )
+{
+   USHORT uiClass;
+
+   for( uiClass = 1; uiClass <= s_uiClasses; uiClass++ )
+   {
+      if( s_pClasses[ uiClass ].pClassFuncSym == pClassFuncSym )
+      {
+         return uiClass;
+      }
+   }
+   return 0;
+}
+
 /*
  * Get the real class name of an object message
  * Will return the class name from wich the message is inherited in case
@@ -1557,7 +1571,7 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
             pStack->uiClass = pObject->item.asArray.value->uiClass;
             if( pObject->item.asArray.value->uiPrevCls )
             {
-	         if( pObject->item.asArray.value->ulLen )
+               if( pObject->item.asArray.value->ulLen )
                {
                   /*
                    * Copy real object - do not move! the same super casted
@@ -2228,7 +2242,7 @@ static USHORT hb_clsUpdateScope( USHORT uiScope, BOOL fAssign )
    return uiScope;
 }
 
-static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem )
+static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem, HB_TYPE nDefault )
 {
    if( pItem )
    {
@@ -2269,7 +2283,10 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem )
 
             case 'N':
             case 'n':
-               return HB_IT_NUMERIC;
+               if( hb_stricmp( hb_itemGetCPtr( pItem ), "nil" ) == 0 )
+                  return HB_IT_NIL;
+               else
+                  return HB_IT_NUMERIC;
 
             case 'A':
             case 'a':
@@ -2285,8 +2302,10 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem )
          }
       }
       else if( HB_IS_ARRAY( pItem ) )
-         return HB_IT_ARRAY;
-
+      {
+         if( pItem->item.asArray.value->uiClass == 0 )
+            return HB_IT_ARRAY;
+      }
       else if( HB_IS_NUMINT( pItem ) )
          return HB_IT_NUMINT;
 
@@ -2307,9 +2326,12 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem )
 
       else if( HB_IS_SYMBOL( pItem ) )
          return HB_IT_SYMBOL;
+
+      else if( HB_IS_NIL( pItem ) )
+         return HB_IT_NIL;
    }
 
-   return 0;
+   return nDefault;
 }
 
 /* ================================================ */
@@ -2570,7 +2592,7 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
                pNewMeth->pFuncSym = &s___msgSetData;
                pNewMeth->uiData = uiIndex;
                pNewMeth->uiOffset = pClass->uiDataFirst;
-               pNewMeth->itemType = hb_clsGetItemType( pInit );
+               pNewMeth->itemType = hb_clsGetItemType( pInit, 0 );
             }
             break;
 
@@ -2587,7 +2609,7 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
          case HB_OO_MSG_CLSASSIGN:
 
             pNewMeth->uiData = uiIndex;
-            pNewMeth->itemType = hb_clsGetItemType( pInit );
+            pNewMeth->itemType = hb_clsGetItemType( pInit, 0 );
             pNewMeth->uiScope = hb_clsUpdateScope( uiScope, TRUE );
             /* Class(y) does not allow to write to HIDDEN+READONLY
                instance variables, [druzus] */
@@ -3379,14 +3401,7 @@ HB_FUNC( __CLSINSTSUPER )
 
    if( pClassFuncSym )
    {
-      for( uiClass = 1; uiClass <= s_uiClasses; uiClass++ )
-      {
-         if( s_pClasses[ uiClass ].pClassFuncSym == pClassFuncSym )
-         {
-            uiClassH = uiClass;
-            break;
-         }
-      }
+      uiClassH = hb_clsFindClassByFunc( pClassFuncSym );
       if( uiClassH == 0 )
       {
          hb_vmPushSymbol( pClassFuncSym );
@@ -3405,14 +3420,7 @@ HB_FUNC( __CLSINSTSUPER )
                   uiClassH = uiClass;
                else
                {
-                  for( uiClass = 1; uiClass <= s_uiClasses; uiClass++ )
-                  { 
-                     if( s_pClasses[ uiClass ].pClassFuncSym == pClassFuncSym )
-                     {
-                        uiClassH = uiClass;
-                        break;
-                     }
-                  }
+                  uiClassH = hb_clsFindClassByFunc( pClassFuncSym );
                   /* still not found, try to send NEW() message */
                   if( uiClassH == 0 )
                   {
@@ -3435,9 +3443,7 @@ HB_FUNC( __CLSINSTSUPER )
             if( uiClassH && HB_IS_OBJECT( pObject ) )
                pObject->item.asArray.value->uiClass = 0;
             else if( hb_vmRequestQuery() == 0 )
-            {
                hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER", 0 );
-            }
          }
       }
    }
@@ -3447,6 +3453,64 @@ HB_FUNC( __CLSINSTSUPER )
    }
 
    hb_retni( uiClassH );
+}
+
+/*
+ * <lOK> = __clsAssocType( <hClass>, <cType> )
+ *
+ * Associate class with given basic type
+ */
+HB_FUNC( __CLSASSOCTYPE )
+{
+   USHORT uiClass = ( USHORT ) hb_parni( 1 );
+   PHB_ITEM pType = hb_param( 2, HB_IT_ANY );
+   BOOL fResult = FALSE;
+
+   if( uiClass && uiClass <= s_uiClasses && pType )
+   {
+      HB_TYPE nType = hb_clsGetItemType( pType, HB_IT_ANY );
+      if( nType != HB_IT_ANY )
+      {
+         switch( nType )
+         {
+            case HB_IT_ARRAY:
+               s_uiArrayClass = uiClass;
+               break;
+            case HB_IT_BLOCK:
+               s_uiBlockClass = uiClass;
+               break;
+            case HB_IT_STRING:
+               s_uiCharacterClass = uiClass;
+               break;
+            case HB_IT_DATE:
+               s_uiDateClass = uiClass;
+               break;
+            case HB_IT_HASH:
+               s_uiHashClass = uiClass;
+               break;
+            case HB_IT_LOGICAL:
+               s_uiLogicalClass = uiClass;
+               break;
+            case HB_IT_NIL:
+               s_uiNilClass = uiClass;
+               break;
+            case HB_IT_NUMERIC:
+               s_uiNumericClass = uiClass;
+               break;
+            case HB_IT_SYMBOL:
+               s_uiSymbolClass = uiClass;
+               break;
+            case HB_IT_POINTER:
+               s_uiPointerClass = uiClass;
+               break;
+            default:
+               uiClass = 0;
+         }
+         fResult = uiClass != 0;
+      }
+   }
+
+   hb_retl( fResult );
 }
 
 /*

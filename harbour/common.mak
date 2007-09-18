@@ -514,6 +514,16 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\trace$(OBJEXT)    \
     $(OBJ_DIR)\transfrm$(OBJEXT) \
     $(OBJ_DIR)\trim$(OBJEXT)     \
+    $(OBJ_DIR)\tscalara$(OBJEXT) \
+    $(OBJ_DIR)\tscalarb$(OBJEXT) \
+    $(OBJ_DIR)\tscalarc$(OBJEXT) \
+    $(OBJ_DIR)\tscalard$(OBJEXT) \
+    $(OBJ_DIR)\tscalarh$(OBJEXT) \
+    $(OBJ_DIR)\tscalarl$(OBJEXT) \
+    $(OBJ_DIR)\tscalarn$(OBJEXT) \
+    $(OBJ_DIR)\tscalarp$(OBJEXT) \
+    $(OBJ_DIR)\tscalars$(OBJEXT) \
+    $(OBJ_DIR)\tscalaru$(OBJEXT) \
     $(OBJ_DIR)\type$(OBJEXT)     \
     $(OBJ_DIR)\val$(OBJEXT)      \
     $(OBJ_DIR)\valtostr$(OBJEXT) \

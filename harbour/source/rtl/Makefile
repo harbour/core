@@ -124,6 +124,16 @@ C_SOURCES=\
 	trace.c      \
 	transfrm.c   \
 	trim.c       \
+	tscalara.c   \
+	tscalarb.c   \
+	tscalarc.c   \
+	tscalard.c   \
+	tscalarh.c   \
+	tscalarl.c   \
+	tscalarn.c   \
+	tscalarp.c   \
+	tscalars.c   \
+	tscalaru.c   \
 	type.c       \
 	val.c        \
 	valtostr.c   \
