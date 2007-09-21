@@ -115,7 +115,7 @@ METHOD Open( cUrl ) CLASS tIPClientPOP
       RETURN .F.
    ENDIF
 
-   InetSetTimeout( ::SocketCon, ::nConnTimeout )
+   HB_InetTimeout( ::SocketCon, ::nConnTimeout )
    IF ::GetOk()
       ::InetSendall( ::SocketCon, "USER " + ::oUrl:cUserid + ::cCRLF )
       IF ::GetOK()
@@ -133,7 +133,7 @@ METHOD GetOk() CLASS tIPClientPOP
    LOCAL nLen
 
    ::cReply := ::InetRecvLine( ::SocketCon, @nLen, 128 )
-   IF ::InetErrorCode( ::SocketCon ) != 0 .or. ::cReply[1] != '+'
+   IF ::InetErrorCode( ::SocketCon ) != 0 .or. SubStr( ::cReply, 1, 1 ) != '+'
       RETURN .F.
    ENDIF
 RETURN .T.
@@ -145,7 +145,7 @@ RETURN ::GetOk()
 
 
 METHOD Close() CLASS tIPClientPOP
-   InetSetTimeOut( ::SocketCon, ::nConnTimeout )
+   HB_InetTimeOut( ::SocketCon, ::nConnTimeout )
    if ::ltrace
       fClose(::nHandle)
    endif
@@ -353,7 +353,7 @@ METHOD countMail CLASS TIpClientPop
    IF ::isOpen
       ::reset()
       aMails := HB_ATokens( StrTran( ::list(), Chr(13),''), Chr(10) )
-      RETURN Len( aMails ) 
+      RETURN Len( aMails )
    ENDIF
 RETURN -1
 

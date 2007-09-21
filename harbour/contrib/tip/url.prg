@@ -169,7 +169,7 @@ METHOD BuildAddress() CLASS tURL
       ENDIF
    ENDIF
 
-   IF Len( ::cPath ) == 0 .or. ::cPath[-1] != "/"
+   IF Len( ::cPath ) == 0 .or. Right( ::cPath, 1 ) != "/"
       ::cPath += "/"
    ENDIF
 
@@ -189,7 +189,7 @@ RETURN cRet
 METHOD BuildQuery( ) CLASS tURL
    LOCAL cLine
 
-   IF Len( ::cPath ) == 0 .or. ::cPath[-1] != "/"
+   IF Len( ::cPath ) == 0 .or. Right( ::cPath, 1 ) != "/"
       ::cPath += "/"
    ENDIF
 
@@ -216,7 +216,7 @@ METHOD AddGetForm( cPostData )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp + "&"
       NEXT
-      cData[-1] = ""
+      cData := Left( cData, Len( cData ) - 1 )
    elseIF HB_IsArray( cPostData )
       y:=Len(cPostData)
       FOR nI := 1 TO y

@@ -78,7 +78,7 @@ CLASS tIPClientSMTP FROM tIPClient
    METHOD OpenSecure()
    METHOD AUTH( cUser, cPass) // Auth by login method
    METHOD AUTHplain( cUser, cPass) // Auth by plain method
-   METHOD ServerSuportSecure(lAuthp,lAuthl) 
+   METHOD ServerSuportSecure(lAuthp,lAuthl)
 
    METHOD sendMail
    HIDDEN:
@@ -102,7 +102,7 @@ local n:=1
            n++
          enddo
          ::nHandle := fcreate(cFile+alltrim(str(n,2))+".log")
-      endif        
+      endif
    endif
 RETURN Self
 
@@ -112,7 +112,7 @@ METHOD Open( cUrl ) CLASS tIPClientSMTP
       RETURN .F.
    ENDIF
 
-   InetSetTimeout( ::SocketCon, ::nConnTimeout )
+   HB_InetTimeout( ::SocketCon, ::nConnTimeout )
    IF .not. Empty ( ::oUrl:cUserid )
       ::InetSendall( ::SocketCon, "HELO " +  ::oUrl:cUserid + ::cCRLF )
    ELSE
@@ -133,7 +133,7 @@ RETURN .T.
 
 
 METHOD Close() CLASS tIPClientSMTP
-   InetSetTimeOut( ::SocketCon, ::nConnTimeout )
+   HB_InetTimeOut( ::SocketCon, ::nConnTimeout )
    if ::ltrace
       fClose(::nHandle)
    endif
@@ -179,7 +179,7 @@ METHOD OpenSecure( cUrl ) CLASS tIPClientSMTP
       RETURN .F.
    ENDIF
 
-   InetSetTimeout( ::SocketCon, ::nConnTimeout )
+   HB_InetTimeout( ::SocketCon, ::nConnTimeout )
 
    cUser := ::oUrl:cUserid
 
@@ -277,7 +277,7 @@ RETURN  lAuthLogin .OR. lAuthPlain
 
 METHOD sendMail( oTIpMail ) CLASS TIpClientSmtp
    LOCAL cFrom, cTo, aTo
- 
+
    IF .NOT. ::isOpen
       RETURN .F.
    ENDIF
@@ -289,10 +289,10 @@ METHOD sendMail( oTIpMail ) CLASS TIpClientSmtp
       ENDIF
    ENDIF
 
-   cFrom := oTIpMail:getFieldPart( "From" )   
-   cTo   := oTIpMail:getFieldPart( "To" )   
+   cFrom := oTIpMail:getFieldPart( "From" )
+   cTo   := oTIpMail:getFieldPart( "To" )
 
-   cTo   := StrTran( cTo, InetCRLF(), "" )
+   cTo   := StrTran( cTo, HB_InetCRLF(), "" )
    cTo   := StrTran( cTo, Chr(9)    , "" )
    cTo   := StrTran( cTo, Chr(32)   , "" )
 

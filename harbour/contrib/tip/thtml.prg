@@ -617,8 +617,8 @@ METHOD new( oParent, cTagName, cAttrib, cContent ) CLASS THtmlNode
       ::root           := oParent:root
       ::parent         := oParent
       IF Valtype( cAttrib ) == "C"
-         IF cAttrib[-1] == "/"
-            cAttrib[-1] := " "
+         IF Right( cAttrib, 1 ) == "/"
+            cAttrib := Stuff( cAttrib, Len( cAttrib ), 1, " " )
             ::htmlEndTagName := "/"
             ::htmlAttributes := Trim( cAttrib )
          ELSE
@@ -717,7 +717,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
          ELSEIF Chr(10) $ cText
             cText := Trim(cText)
             nPos := Len(cText) + 1
-            DO WHILE nPos > 0 .AND. cText[--nPos] $ Chr(9)+Chr(10)+Chr(13) ; ENDDO
+            DO WHILE nPos > 0 .AND. SubStr( cText, --nPos, 1 ) $ Chr(9)+Chr(10)+Chr(13) ; ENDDO
             oThisTag:addNode( THtmlNode():new( oThisTag, "_text_", , Left(cText,nPos) ) )
          ELSE
             oThisTag:addNode( THtmlNode():new( oThisTag, "_text_", , cText ) )
@@ -732,7 +732,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
       cTagName := StrTran( cTagName, ">", "" )
       cTagName := AllTrim( SubStr( cTagName, 2) )
 
-      SWITCH cTagName[1]
+      SWITCH Left( cTagName, 1 )
       CASE "!"
          // comment or PI
          oThisTag:addNode( THtmlNode():new( oThisTag, cTagName, Left(cAttr,Len(cAttr)-1) ) )
@@ -1080,7 +1080,7 @@ METHOD toString( nIndent ) CLASS THtmlNode
       IF ::isInline() .OR. ::keepFormatting() .OR. ::isType( CM_HEADING ) .OR. ::isType( CM_HEAD )
          RETURN cHtml += IIf( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
       ENDIF
-      IF cHtml[-1] <> Chr(10)
+      IF Right( cHtml, 1 ) <> Chr(10)
          cHtml += Chr(13)+Chr(10)
       ENDIF
       RETURN cHtml += cIndent + IIf( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
@@ -1248,12 +1248,12 @@ METHOD getAttributes() CLASS THtmlNode
       RETURN ::htmlAttributes
 
    ELSEIF ::htmlAttributes == NIL
-      ::htmlAttributes := Hash()
+      ::htmlAttributes := HB_HSetAutoAdd( {=>} )
       hb_hCaseMatch( ::htmlAttributes, .F. )
 
    ELSEIF Valtype( ::htmlAttributes ) == "C"
       IF ::htmlAttributes == "/"
-         ::htmlAttributes := Hash()
+         ::htmlAttributes := HB_HSetAutoAdd( {=>} )
          hb_hCaseMatch( ::htmlAttributes, .F. )
       ELSE
          ::htmlAttributes := __ParseAttr( P_PARSER( Alltrim(::htmlAttributes) ) )
@@ -1266,7 +1266,7 @@ RETURN ::htmlAttributes
 STATIC FUNCTION __ParseAttr( parser )
    LOCAL cChr, nMode := 1 // 1=name, 2=value
    LOCAL aAttr := { "", "" }
-   LOCAL hHash := Hash()
+   LOCAL hHash := HB_HSetAutoAdd( {=>} )
    LOCAL nStart, nEnd
    LOCAL lIsQuoted := .F.
 
@@ -1319,7 +1319,7 @@ STATIC FUNCTION __ParseAttr( parser )
 
          nStart := parser:p_pos
 
-         IF parser:p_str[nStart] == cChr
+         IF SubStr( parser:p_str, nStart, 1 ) == cChr
             // empty value ""
             hHash[ aAttr[1] ] := ""
             parser:p_end := parser:p_pos
@@ -1442,7 +1442,7 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
 
    cName := lower(cName)
 
-   IF cName[1] == "_"
+   IF Left( cName, 1 ) == "_"
       cName := SubStr( cName, 2 )
    ENDIF
 
@@ -1460,7 +1460,7 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
 
       RETURN oNode
 
-   ELSEIF cName[-1] == "s" .AND. HHasKey( shTagTypes, Left(cName, Len(cName)-1) )
+   ELSEIF Right( cName, 1 ) == "s" .AND. HHasKey( shTagTypes, Left(cName, Len(cName)-1) )
       // message is the plural of a html tag -> oNode:forms -> Array of <FORM> tags
       RETURN ::findNodesByTagName( Left(cName, Len(cName)-1), Atail(aValue) )
    ENDIF
@@ -1545,7 +1545,7 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
    ENDIF
 
    IF .NOT. HHasKey( shTagTypes, cName )
-      IF cName[1] == "/" .AND. HHasKey( shTagTypes, SubStr(cName,2) )
+      IF Left( cName, 1 ) == "/" .AND. HHasKey( shTagTypes, SubStr(cName,2) )
          IF .NOT. Lower( SubStr(cName,2) ) == Lower( ::htmlTagName )
             RETURN ::error( "Not a valid closing HTML tag for: <" + ::htmlTagName + ">", ::className(), "-", EG_ARG, {cName} )
          ENDIF
@@ -1571,7 +1571,7 @@ RETURN oNode
 METHOD popNode( cName ) CLASS THtmlNode
    cName := LTrim( cName )
 
-   IF cName[1] == "/"
+   IF Left( cName, 1 ) == "/"
       cName := SubStr( cName, 2 )
    ENDIF
 
@@ -1652,7 +1652,7 @@ RETURN lRet
   HTML Tag data are adopted for xHarbour from Tidy.exe (www.sourceforge.net/tidy)
 */
 STATIC PROCEDURE _Init_Html_TagTypes
-   shTagTypes := Hash()
+   shTagTypes := HB_HSetAutoAdd( {=>} )
 
    HSetCaseMatch( shTagTypes, .F. )
 

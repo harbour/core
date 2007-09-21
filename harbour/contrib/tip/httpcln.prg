@@ -67,9 +67,9 @@ CLASS tIPClientHTTP FROM tIPClient
    DATA nVersion     INIT  1
    DATA nSubversion  INIT  0
    DATA bChunked
-   DATA hHeaders     INIT  {=>}
-   DATA hCookies     INIT  {=>}
-   DATA hFields      INIT  {=>}
+   DATA hHeaders     INIT  HB_HSetAutoAdd( {=>} )
+   DATA hCookies     INIT  HB_HSetAutoAdd( {=>} )
+   DATA hFields      INIT  HB_HSetAutoAdd( {=>} )
    DATA cUserAgent   INIT  "Mozilla/3.0 compatible"
    DATA cAuthMode    INIT ""
    DATA cBoundary
@@ -182,7 +182,7 @@ METHOD Post( cPostData, cQuery ) CLASS tIPClientHTTP
       ::bInitialized := .T.
       RETURN ::ReadHeaders()
 /*   else
-      alert("Post InetErrorCode:"+winsockerrorcode(::InetErrorCode( ::SocketCon  )))*/
+      alert("Post HB_InetErrorCode:"+winsockerrorcode(::InetErrorCode( ::SocketCon  )))*/
    ENDIF
 RETURN .F.
 
@@ -250,7 +250,7 @@ METHOD ReadHeaders(lClear) CLASS tIPClientHTTP
    ::bChunked := .F.
    cLine := ::InetRecvLine( ::SocketCon, @nPos, 500 )
    IF !lClear=.f. .AND. !empty(::hHeaders)
-      ::hHeaders:={=>}
+      ::hHeaders:=HB_HSetAutoAdd( {=>} )
    ENDIF
    DO WHILE ::InetErrorCode( ::SocketCon ) == 0 .and. .not. Empty( cLine )
       aHead := HB_RegexSplit( ":", cLine,,, 1 )
@@ -414,10 +414,10 @@ METHOD setCookie(cLine) CLASS tIPClientHTTP
       //cookies are stored in hashes as host.path.name
       //check if we have a host hash yet
       if !HHASKEY(::hCookies,cHost)
-         ::hCookies[cHost]:={=>}
+         ::hCookies[cHost]:=HB_HSetAutoAdd( {=>} )
       endif
       if !HHASKEY(::hCookies[cHost],cPath)
-         ::hCookies[cHost][cPath]:={=>}
+         ::hCookies[cHost][cPath]:=HB_HSetAutoAdd( {=>} )
       endif
       ::hCookies[cHost][cPath][cName]:=cValue
    ENDIF
@@ -496,11 +496,11 @@ METHOD Boundary(nType) CLASS tIPClientHTTP
    LOCAL i
    IF nType=nil
       nType=0
-   ENDIF 
+   ENDIF
    IF empty(cBound)
       cBound:=replicate('-',27)+space(11)
       FOR i := 28 TO 38
-         cBound[i] := str(int(HB_Random(0, 9 )),1,0)
+         cBound := Stuff( cBound, i, 1, str(int(HB_Random(0, 9 )),1,0) )
       NEXT
       ::cBoundary:=cBound
    endif
@@ -565,7 +565,7 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
       cTmp:=substr(cFile,Len(cFilePath)+1)
       IF empty(cType)
          cType:='text/html'
-      ENDIF 
+      ENDIF
       cData += cBound+cCrlf+'Content-Disposition: form-data; name="'+cName +'"; filename="'+cTmp+'"'+cCrlf+'Content-Type: '+cType+cCrLf+cCrLf
       //hope this is not a big file....
       nFile:=fopen(cFile)
@@ -578,13 +578,13 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
          nRead:=len(cBuf)
 /*         IF nRead<nBuf
             cBuf:=pad(cBuf,nRead)
-         ENDIF 
+         ENDIF
 */
          cData+=cBuf
       end
       fClose(nFile)
       cData+=cCrlf
-   NEXT 
+   NEXT
    cData+=cBound+'--'+cCrlf
    IF .not. HB_IsString( cQuery )
       cQuery := ::oUrl:BuildQuery()
@@ -607,7 +607,7 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
       ::bInitialized := .T.
       RETURN ::ReadHeaders()
 /*   else
-      alert("Post InetErrorCode:"+winsockerrorcode(::InetErrorCode( ::SocketCon  )))*/
+      alert("Post HB_InetErrorCode:"+winsockerrorcode(::InetErrorCode( ::SocketCon  )))*/
    ENDIF
 RETURN .F.
 

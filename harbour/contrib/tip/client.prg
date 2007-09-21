@@ -84,7 +84,7 @@
 CLASS tIPClient
 
    CLASSDATA   bInitSocks  INIT .F.
-   CLASSDATA   cCRLF       INIT InetCRLF()
+   CLASSDATA   cCRLF       INIT HB_InetCRLF()
    DATA oUrl                                 // url to wich to connect
    DATA oCredentials                         // credential needed to access the service
    DATA nStatus                              // basic status
@@ -155,7 +155,7 @@ METHOD New( oUrl, lTrace, oCredentials ) CLASS tIPClient
    Default lTrace to .F.
 
    IF .not. ::bInitSocks
-      InetInit()
+      HB_InetInit()
       ::bInitSocks := .T.
    ENDIF
 
@@ -208,9 +208,9 @@ METHOD Open( cUrl ) CLASS tIPClient
       nPort := ::oUrl:nPort
    ENDIF
 
-   ::SocketCon := InetCreate()
+   ::SocketCon := HB_InetCreate()
 
-   InetSetTimeout( ::SocketCon, ::nConnTimeout )
+   HB_InetTimeout( ::SocketCon, ::nConnTimeout )
    ::InetConnect( ::oUrl:cServer, nPort, ::SocketCon )
 
    IF ::InetErrorCode( ::SocketCon ) != 0
@@ -228,7 +228,7 @@ METHOD Close() CLASS tIPClient
 
    IF .not. Empty( ::SocketCon )
 
-      nRet := InetClose( ::SocketCon )
+      nRet := HB_InetClose( ::SocketCon )
 
       ::SocketCon:=nil
       ::isOpen := .F.
@@ -276,8 +276,8 @@ METHOD Read( nLen ) CLASS tIPClient
       // read an amount of data
       cStr0 := Space( nLen )
 
-      // S.R. if len of file is less than 1024 InetRecvAll return 0
-      //      ::nLastRead := InetRecvAll( ::SocketCon, @cStr0, nLen )
+      // S.R. if len of file is less than 1024 HB_InetRecvAll return 0
+      //      ::nLastRead := HB_InetRecvAll( ::SocketCon, @cStr0, nLen )
 
       ::InetRecvAll( ::SocketCon, @cStr0, nLen )
       ::nLastRead := ::InetCount( ::SocketCon )
@@ -447,7 +447,7 @@ METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
       nLen := Len( cData )
    ENDIF
 
-   nRet := InetSendAll( SocketCon, cData, nLen )
+   nRet := HB_InetSendAll( SocketCon, cData, nLen )
 
    if ::lTrace
 
@@ -463,7 +463,7 @@ METHOD InetCount( SocketCon ) CLASS tIPClient
 
    Local nRet
 
-   nRet := InetCount( SocketCon )
+   nRet := HB_InetCount( SocketCon )
 
    if ::lTrace
 
@@ -479,7 +479,7 @@ METHOD InetRecv( SocketCon, cStr1, len ) CLASS tIPClient
 
    Local nRet
 
-   nRet := InetRecv( SocketCon, @cStr1, len )
+   nRet := HB_InetRecv( SocketCon, @cStr1, len )
 
    if ::lTrace
 
@@ -495,7 +495,7 @@ METHOD InetRecvLine( SocketCon, nLen, size ) CLASS tIPClient
 
    Local cRet
 
-   cRet := InetRecvLine( SocketCon, @nLen, size )
+   cRet := HB_InetRecvLine( SocketCon, @nLen, size )
 
    if ::lTrace
 
@@ -511,7 +511,7 @@ METHOD InetRecvAll( SocketCon, cStr1, len ) CLASS tIPClient
 
    Local nRet
 
-   nRet := InetRecvAll( SocketCon, @cStr1, len )
+   nRet := HB_InetRecvAll( SocketCon, @cStr1, len )
 
    if ::lTrace
 
@@ -527,7 +527,7 @@ METHOD InetErrorCode( SocketCon ) CLASS tIPClient
 
    Local nRet
 
-   ::nLastError := nRet := InetErrorCode( SocketCon )
+   ::nLastError := nRet := HB_InetErrorCode( SocketCon )
 
    if ::lTrace
 
@@ -545,7 +545,7 @@ METHOD InetErrorDesc( SocketCon ) CLASS tIPClient
 
    IF .not. Empty( SocketCon )
 
-      cMsg := InetErrorDesc( SocketCon )
+      cMsg := HB_InetErrorDesc( SocketCon )
 
    ENDIF
 RETURN cMsg
@@ -554,7 +554,7 @@ RETURN cMsg
 /* BROKEN, should test number of parameters and act accordingly, see doc\inet.txt */
 METHOD InetConnect( cServer, nPort, SocketCon ) CLASS tIPClient
 
-   InetConnect( cServer, nPort, SocketCon )
+   HB_InetConnect( cServer, nPort, SocketCon )
 
    if ::lTrace
 
@@ -580,18 +580,18 @@ METHOD Log( ... ) CLASS tIPClient
    for each xVar in hb_aParams()
 
       // Preserves CRLF on result
-      if hb_EnumIndex() < PCount()
+      if xVar:__enumIndex() < PCount()
          cMsg += StrTran( StrTran( AllTrim( CStr( xVar ) ), Chr( 13 ) ), Chr( 10 ) )
       else
          cMsg += CStr( xVar )
       endif
 
-      cMsg += iif ( hb_EnumIndex() < PCount() - 1, ", ", "" )
+      cMsg += iif ( xVar:__enumIndex() < PCount() - 1, ", ", "" )
 
-      if hb_EnumIndex() == PCount() - 1
+      if xVar:__enumIndex() == PCount() - 1
          cMsg += " )" + hb_OsNewLine() + ">> "
 
-      elseif hb_EnumIndex() == PCount()
+      elseif xVar:__enumIndex() == PCount()
          cMsg += " <<" + hb_OsNewLine() + hb_OsNewLine()
 
       endif
