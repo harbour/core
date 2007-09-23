@@ -1248,12 +1248,12 @@ METHOD getAttributes() CLASS THtmlNode
       RETURN ::htmlAttributes
 
    ELSEIF ::htmlAttributes == NIL
-      ::htmlAttributes := HB_HSetAutoAdd( {=>} )
+      ::htmlAttributes := HB_HSetAutoAdd( {=>}, .T. )
       hb_hCaseMatch( ::htmlAttributes, .F. )
 
    ELSEIF Valtype( ::htmlAttributes ) == "C"
       IF ::htmlAttributes == "/"
-         ::htmlAttributes := HB_HSetAutoAdd( {=>} )
+         ::htmlAttributes := HB_HSetAutoAdd( {=>}, .T. )
          hb_hCaseMatch( ::htmlAttributes, .F. )
       ELSE
          ::htmlAttributes := __ParseAttr( P_PARSER( Alltrim(::htmlAttributes) ) )
@@ -1266,7 +1266,7 @@ RETURN ::htmlAttributes
 STATIC FUNCTION __ParseAttr( parser )
    LOCAL cChr, nMode := 1 // 1=name, 2=value
    LOCAL aAttr := { "", "" }
-   LOCAL hHash := HB_HSetAutoAdd( {=>} )
+   LOCAL hHash := HB_HSetAutoAdd( {=>}, .T. )
    LOCAL nStart, nEnd
    LOCAL lIsQuoted := .F.
 
@@ -1652,7 +1652,7 @@ RETURN lRet
   HTML Tag data are adopted for xHarbour from Tidy.exe (www.sourceforge.net/tidy)
 */
 STATIC PROCEDURE _Init_Html_TagTypes
-   shTagTypes := HB_HSetAutoAdd( {=>} )
+   shTagTypes := HB_HSetAutoAdd( {=>}, .T. )
 
    HSetCaseMatch( shTagTypes, .F. )
 

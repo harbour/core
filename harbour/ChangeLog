@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-22 21:43 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * contrib/tip/thtml.prg
+  * contrib/tip/cgi.prg
+  * contrib/tip/httpcln.prg
+    ! Fixed missing logical parameter on HB_HSetAutoAdd
+
 2007-09-18 14:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbclass.ch
     + added new commands for scalar classes:
