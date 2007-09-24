@@ -337,11 +337,9 @@ METHOD GetActiveObject( cClass ) CLASS TOleAuto
 RETURN Self
 
 //--------------------------------------------------------------------
-METHOD Invoke( ... ) CLASS TOleAuto
+METHOD Invoke( cMethod, ... ) CLASS TOleAuto
 
-   LOCAL cMethod := HB_aParams()[1]
-
-RETURN HB_ExecFromArray( Self, cMethod, aDel( HB_aParams(), 1, .T. ) )
+RETURN HB_ExecFromArray( Self, cMethod, { ... } )
 
 //--------------------------------------------------------------------
 METHOD OleCollection( xIndex, xValue ) CLASS TOleAuto

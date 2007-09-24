@@ -336,6 +336,8 @@ typedef struct
    struct termios saved_TIO, curr_TIO;
 #endif
 
+   double   dToneSeconds;
+
    /* input events */
    keyTab *pKeyTab;
    int key_flag;
@@ -384,8 +386,6 @@ static const char * s_szMouseOn  = "\033[?1001s\033[?1002h";
 /* disable mouse tracking & restore old hilit tracking */
 static const char * s_szMouseOff = "\033[?1002l\033[?1001r";
 static const BYTE s_szBell[] = { HB_CHAR_BEL, 0 };
-static BYTE *  s_szCrLf;
-static ULONG   s_ulCrLf;
 
 /* The tables below are indexed by internal key value,
  * It cause that we don't have to make any linear scans
@@ -1958,7 +1958,6 @@ static void hb_gt_trm_AnsiBell( void )
 
 static void hb_gt_trm_AnsiTone( double dFrequency, double dDuration )
 {
-   static double s_dLastSeconds = 0;
    double dCurrentSeconds;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiTone(%lf, %lf)", dFrequency, dDuration));
@@ -1969,10 +1968,11 @@ static void hb_gt_trm_AnsiTone( double dFrequency, double dDuration )
    /* succession leading to BEL hell on the terminal */
 
    dCurrentSeconds = hb_dateSeconds();
-   if( dCurrentSeconds < s_dLastSeconds || dCurrentSeconds - s_dLastSeconds > 0.5 )
+   if( dCurrentSeconds < s_termState.dToneSeconds ||
+       dCurrentSeconds - s_termState.dToneSeconds > 0.5 )
    {
       hb_gt_trm_AnsiBell();
-      s_dLastSeconds = dCurrentSeconds;
+      s_termState.dToneSeconds = dCurrentSeconds;
    }
 
    HB_SYMBOL_UNUSED( dFrequency );
@@ -2793,9 +2793,6 @@ static void hb_gt_trm_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    int iRows = 24, iCols = 80;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr));
-
-   s_szCrLf = (BYTE *) hb_conNewLine();
-   s_ulCrLf = strlen( (char *) s_szCrLf );
 
    memset( &s_termState, 0, sizeof( s_termState ) );
    s_termState.hFilenoStdin  = hFilenoStdin;

@@ -8,6 +8,83 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-24 02:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/ole2/win32ole.prg
+    * changed Invoke() method to work with core code compiled without
+      HB_COMPAT_XHB
+
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rdd/dbcmd.c
+    * code clean-up
+
+  * harbour/include/hbset.h
+  * harbour/source/rtl/set.c
+    * code clean-up
+    + added functions to access set parameters:
+         hb_setAltHan()
+         hb_setCentury()
+         hb_setExtraHan()
+         hb_setPrintHan()
+         hb_setAlternate()
+         hb_setAltFile()
+         hb_setAutOpen()
+         hb_setAutOrder()
+         hb_setAutoShare()
+         hb_setBell()
+         hb_setCancel()
+         hb_setColor()
+         hb_setConfirm()
+         hb_setConsole()
+         hb_setDateFormat()
+         hb_setDebug()
+         hb_setDecimals()
+         hb_setDefault()
+         hb_setDeleted()
+         hb_setDelimChars()
+         hb_setDelimiters()
+         hb_setDevice()
+         hb_setEOF()
+         hb_setEpoch()
+         hb_setEscape()
+         hb_setEventMask()
+         hb_setExact()
+         hb_setExclusive()
+         hb_setExit()
+         hb_setExtra()
+         hb_setExtraFile()
+         hb_setFixed()
+         hb_setIdleRepeat()
+         hb_setInsert()
+         hb_setIntensity()
+         hb_setPath()
+         hb_setMargin()
+         hb_setMBlockSize()
+         hb_setMCenter()
+         hb_setMessage()
+         hb_setMFileExt()
+         hb_setOptimize()
+         hb_setPrinter()
+         hb_setPrintFile()
+         hb_setScoreBoard()
+         hb_setScrollBreak()
+         hb_setSoftSeek()
+         hb_setStrictRead()
+         hb_setTypeAhead()
+         hb_setUnique()
+         hb_setFileCase()
+         hb_setDirCase()
+         hb_setDirSeparator()
+         hb_setVideoMode()
+         hb_setWrap()
+         hb_setDBFLockScheme()
+         hb_setHardCommit()
+         hb_setForceOpt()
+         hb_setDefExtension()
+         hb_setEOL()
+         hb_setTrimFileName()
+      This is compatible with recent modifications by Andi Jahja
+      in xHarbour.
+
 2007-09-22 21:43 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * contrib/tip/thtml.prg
   * contrib/tip/cgi.prg

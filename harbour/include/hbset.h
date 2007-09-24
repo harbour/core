@@ -216,7 +216,6 @@ typedef struct
 
 extern void hb_setInitialize( void );
 extern void hb_setRelease( void );
-extern HB_PATHNAMES * hb_setGetFirstSetPath( void );
 
 typedef enum
 {
@@ -240,6 +239,70 @@ extern int hb_setListenerRemove( int );
 #define hb_setGetNI( set )          ( ( int ) hb_set.set )
 #define hb_setGetNL( set )          ( ( long ) hb_set.set )
 #define hb_setGetL( set )           ( ( BOOL ) hb_set.set )
+
+extern HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void );
+
+extern HB_EXPORT FHANDLE hb_setAltHan( void );
+extern HB_EXPORT BOOL    hb_setCentury( void );
+extern HB_EXPORT FHANDLE hb_setExtraHan( void );
+extern HB_EXPORT FHANDLE hb_setPrintHan( void );
+extern HB_EXPORT BOOL    hb_setAlternate( void );
+extern HB_EXPORT char *  hb_setAltFile( void );
+extern HB_EXPORT BOOL    hb_setAutOpen( void );
+extern HB_EXPORT int     hb_setAutOrder( void );
+extern HB_EXPORT int     hb_setAutoShare( void );
+extern HB_EXPORT BOOL    hb_setBell( void );
+extern HB_EXPORT BOOL    hb_setCancel( void );
+extern HB_EXPORT char *  hb_setColor( void );
+extern HB_EXPORT BOOL    hb_setConfirm( void );
+extern HB_EXPORT BOOL    hb_setConsole( void );
+extern HB_EXPORT char *  hb_setDateFormat( void );
+extern HB_EXPORT BOOL    hb_setDebug( void );
+extern HB_EXPORT int     hb_setDecimals( void );
+extern HB_EXPORT char *  hb_setDefault( void );
+extern HB_EXPORT BOOL    hb_setDeleted( void );
+extern HB_EXPORT char *  hb_setDelimChars( void );
+extern HB_EXPORT BOOL    hb_setDelimiters( void );
+extern HB_EXPORT char *  hb_setDevice( void );
+extern HB_EXPORT BOOL    hb_setEOF( void );
+extern HB_EXPORT int     hb_setEpoch( void );
+extern HB_EXPORT BOOL    hb_setEscape( void );
+extern HB_EXPORT int     hb_setEventMask( void );
+extern HB_EXPORT BOOL    hb_setExact( void );
+extern HB_EXPORT BOOL    hb_setExclusive( void );
+extern HB_EXPORT BOOL    hb_setExit( void );
+extern HB_EXPORT BOOL    hb_setExtra( void );
+extern HB_EXPORT char *  hb_setExtraFile( void );
+extern HB_EXPORT BOOL    hb_setFixed( void );
+extern HB_EXPORT BOOL    hb_setIdleRepeat( void );
+extern HB_EXPORT BOOL    hb_setInsert( void );
+extern HB_EXPORT BOOL    hb_setIntensity( void );
+extern HB_EXPORT char *  hb_setPath( void );
+extern HB_EXPORT int     hb_setMargin( void );
+extern HB_EXPORT int     hb_setMBlockSize( void );
+extern HB_EXPORT BOOL    hb_setMCenter( void );
+extern HB_EXPORT int     hb_setMessage( void );
+extern HB_EXPORT char *  hb_setMFileExt( void );
+extern HB_EXPORT BOOL    hb_setOptimize( void );
+extern HB_EXPORT BOOL    hb_setPrinter( void );
+extern HB_EXPORT char *  hb_setPrintFile( void );
+extern HB_EXPORT BOOL    hb_setScoreBoard( void );
+extern HB_EXPORT BOOL    hb_setScrollBreak( void );
+extern HB_EXPORT BOOL    hb_setSoftSeek( void );
+extern HB_EXPORT BOOL    hb_setStrictRead( void );
+extern HB_EXPORT int     hb_setTypeAhead( void );
+extern HB_EXPORT BOOL    hb_setUnique( void );
+extern HB_EXPORT int     hb_setFileCase( void );
+extern HB_EXPORT int     hb_setDirCase( void );
+extern HB_EXPORT int     hb_setDirSeparator( void );
+extern HB_EXPORT int     hb_setVideoMode( void );
+extern HB_EXPORT BOOL    hb_setWrap( void );
+extern HB_EXPORT int     hb_setDBFLockScheme( void );
+extern HB_EXPORT BOOL    hb_setHardCommit( void );
+extern HB_EXPORT BOOL    hb_setForceOpt( void );
+extern HB_EXPORT BOOL    hb_setDefExtension( void );
+extern HB_EXPORT char *  hb_setEOL( void );
+extern HB_EXPORT BOOL    hb_setTrimFileName( void );
 
 HB_EXTERN_END
 

@@ -2229,7 +2229,8 @@ HB_FUNC( __DBARRANGE )
       dbSortInfo.dbtri.dbsci.fIgnoreFilter =
       dbSortInfo.dbtri.dbsci.fLast =
       dbSortInfo.dbtri.dbsci.fIgnoreDuplicates =
-      dbSortInfo.dbtri.dbsci.fBackward = FALSE;
+      dbSortInfo.dbtri.dbsci.fBackward =
+      dbSortInfo.dbtri.dbsci.fOptimized = FALSE;
       dbSortInfo.dbtri.dbsci.fIncludeDeleted = TRUE;
 
       pFields = hb_param( 8, HB_IT_ARRAY );

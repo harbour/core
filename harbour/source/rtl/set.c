@@ -921,8 +921,7 @@ void hb_setInitialize( void )
    hb_strncpy( hb_set.HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", CLR_STRLEN );
    hb_set.HB_SET_CONFIRM = FALSE;
    hb_set.HB_SET_CONSOLE = TRUE;
-   hb_set.HB_SET_DATEFORMAT = ( char * ) hb_xgrab( 9 );
-   memcpy( hb_set.HB_SET_DATEFORMAT, "mm/dd/yy", 9 );
+   hb_set.HB_SET_DATEFORMAT = hb_strdup( "mm/dd/yy" );
    /*
     * Tests shows that Clipper has two different flags to control ALT+D
     * and ALTD() behavior and on startup these flags are not synchronized.
@@ -940,14 +939,11 @@ void hb_setInitialize( void )
    /* hb_set.HB_SET_DEBUG = FALSE; */
    hb_set.HB_SET_DEBUG = hb_dynsymFind( "__DBGENTRY" ) ? TRUE : FALSE;
    hb_set.HB_SET_DECIMALS = 2;
-   hb_set.HB_SET_DEFAULT = ( char * ) hb_xgrab( 1 );
-   hb_set.HB_SET_DEFAULT[ 0 ] = '\0';
+   hb_set.HB_SET_DEFAULT = hb_strdup( "" );
    hb_set.HB_SET_DELETED = FALSE;
-   hb_set.HB_SET_DELIMCHARS = ( char * ) hb_xgrab( 3 );
-   memcpy( hb_set.HB_SET_DELIMCHARS, "::", 3 );
+   hb_set.HB_SET_DELIMCHARS = hb_strdup( "::" );
    hb_set.HB_SET_DELIMITERS = FALSE;
-   hb_set.HB_SET_DEVICE = ( char * ) hb_xgrab( 7 );
-   memcpy( hb_set.HB_SET_DEVICE, "SCREEN", 7 );
+   hb_set.HB_SET_DEVICE = hb_strdup( "SCREEN" );
 #if defined(OS_UNIX_COMPATIBLE)
    hb_set.HB_SET_EOF = FALSE;
 #else
@@ -972,18 +968,14 @@ void hb_setInitialize( void )
    hb_set.HB_SET_MBLOCKSIZE = 0;
    hb_set.HB_SET_MCENTER = FALSE;
    hb_set.HB_SET_MESSAGE = 0;
-   hb_set.HB_SET_MFILEEXT = ( char * ) hb_xgrab( 1 );
-   hb_set.HB_SET_MFILEEXT[ 0 ] = '\0';
+   hb_set.HB_SET_MFILEEXT = hb_strdup( "" );
    hb_set.HB_SET_OPTIMIZE = TRUE;
-   hb_set.HB_SET_PATH = ( char * ) hb_xgrab( 1 );
-   hb_set.HB_SET_PATH[ 0 ] = '\0';
+   hb_set.HB_SET_PATH = hb_strdup( "" );
    hb_set.HB_SET_PRINTER = FALSE;
 #ifdef HB_OS_UNIX
-   hb_set.HB_SET_PRINTFILE = ( char * ) hb_xgrab( 5 );
-   memcpy( hb_set.HB_SET_PRINTFILE, "|lpr", 5 ); /* Default printer device */
+   hb_set.HB_SET_PRINTFILE = hb_strdup( "|lpr" );  /* Default printer device */
 #else
-   hb_set.HB_SET_PRINTFILE = ( char * ) hb_xgrab( 4 );
-   memcpy( hb_set.HB_SET_PRINTFILE, "PRN", 4 ); /* Default printer device */
+   hb_set.HB_SET_PRINTFILE = hb_strdup( "PRN" );   /* Default printer device */
 #endif
    hb_set.hb_set_printhan = FS_ERROR;
    hb_set.HB_SET_SCOREBOARD = TRUE;
@@ -1098,7 +1090,312 @@ int hb_setListenerRemove( int listener )
    return listener;
 }
 
-HB_PATHNAMES * hb_setGetFirstSetPath( void )
+HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void )
 {
    return sp_set_path;
+}
+
+HB_EXPORT FHANDLE hb_setAltHan( void )
+{
+   return hb_set.hb_set_althan;
+}
+
+HB_EXPORT BOOL    hb_setCentury( void )
+{
+   return hb_set.hb_set_century;
+}
+
+HB_EXPORT FHANDLE hb_setExtraHan( void )
+{
+   return hb_set.hb_set_extrahan;
+}
+
+HB_EXPORT FHANDLE hb_setPrintHan( void )
+{
+   return hb_set.hb_set_printhan;
+}
+
+HB_EXPORT BOOL    hb_setAlternate( void )
+{
+   return hb_set.HB_SET_ALTERNATE;
+}
+
+HB_EXPORT char *  hb_setAltFile( void )
+{
+   return hb_set.HB_SET_ALTFILE;
+}
+
+HB_EXPORT BOOL    hb_setAutOpen( void )
+{
+   return hb_set.HB_SET_AUTOPEN;
+}
+
+HB_EXPORT int     hb_setAutOrder( void )
+{
+   return hb_set.HB_SET_AUTORDER;
+}
+
+HB_EXPORT int     hb_setAutoShare( void )
+{
+   return hb_set.HB_SET_AUTOSHARE;
+}
+
+HB_EXPORT BOOL    hb_setBell( void )
+{
+   return hb_set.HB_SET_BELL;
+}
+
+HB_EXPORT BOOL    hb_setCancel( void )
+{
+   return hb_set.HB_SET_CANCEL;
+}
+
+HB_EXPORT char *  hb_setColor( void )
+{
+   return hb_set.HB_SET_COLOR;
+}
+
+HB_EXPORT BOOL    hb_setConfirm( void )
+{
+   return hb_set.HB_SET_CONFIRM;
+}
+
+HB_EXPORT BOOL    hb_setConsole( void )
+{
+   return hb_set.HB_SET_CONSOLE;
+}
+
+HB_EXPORT char *  hb_setDateFormat( void )
+{
+   return hb_set.HB_SET_DATEFORMAT;
+}
+
+HB_EXPORT BOOL    hb_setDebug( void )
+{
+   return hb_set.HB_SET_DEBUG;
+}
+
+HB_EXPORT int     hb_setDecimals( void )
+{
+   return hb_set.HB_SET_DECIMALS;
+}
+
+HB_EXPORT char *  hb_setDefault( void )
+{
+   return hb_set.HB_SET_DEFAULT;
+}
+
+HB_EXPORT BOOL    hb_setDeleted( void )
+{
+   return hb_set.HB_SET_DELETED;
+}
+
+HB_EXPORT char *  hb_setDelimChars( void )
+{
+   return hb_set.HB_SET_DELIMCHARS;
+}
+
+HB_EXPORT BOOL    hb_setDelimiters( void )
+{
+   return hb_set.HB_SET_DELIMITERS;
+}
+
+HB_EXPORT char *  hb_setDevice( void )
+{
+   return hb_set.HB_SET_DEVICE;
+}
+
+HB_EXPORT BOOL    hb_setEOF( void )
+{
+   return hb_set.HB_SET_EOF;
+}
+
+HB_EXPORT int     hb_setEpoch( void )
+{
+   return hb_set.HB_SET_EPOCH;
+}
+
+HB_EXPORT BOOL    hb_setEscape( void )
+{
+   return hb_set.HB_SET_ESCAPE;
+}
+
+HB_EXPORT int     hb_setEventMask( void )
+{
+   return hb_set.HB_SET_EVENTMASK;
+}
+
+HB_EXPORT BOOL    hb_setExact( void )
+{
+   return hb_set.HB_SET_EXACT;
+}
+
+HB_EXPORT BOOL    hb_setExclusive( void )
+{
+   return hb_set.HB_SET_EXCLUSIVE;
+}
+
+HB_EXPORT BOOL    hb_setExit( void )
+{
+   return hb_set.HB_SET_EXIT;
+}
+
+HB_EXPORT BOOL    hb_setExtra( void )
+{
+   return hb_set.HB_SET_EXTRA;
+}
+
+HB_EXPORT char *  hb_setExtraFile( void )
+{
+   return hb_set.HB_SET_EXTRAFILE;
+}
+
+HB_EXPORT BOOL    hb_setFixed( void )
+{
+   return hb_set.HB_SET_FIXED;
+}
+
+HB_EXPORT BOOL    hb_setIdleRepeat( void )
+{
+   return hb_set.HB_SET_IDLEREPEAT;
+}
+
+HB_EXPORT BOOL    hb_setInsert( void )
+{
+   return hb_set.HB_SET_INSERT;
+}
+
+HB_EXPORT BOOL    hb_setIntensity( void )
+{
+   return hb_set.HB_SET_INTENSITY;
+}
+
+HB_EXPORT char *  hb_setPath( void )
+{
+   return hb_set.HB_SET_PATH;
+}
+
+HB_EXPORT int     hb_setMargin( void )
+{
+   return hb_set.HB_SET_MARGIN;
+}
+
+HB_EXPORT int     hb_setMBlockSize( void )
+{
+   return hb_set.HB_SET_MBLOCKSIZE;
+}
+
+HB_EXPORT BOOL    hb_setMCenter( void )
+{
+   return hb_set.HB_SET_MCENTER;
+}
+
+HB_EXPORT int     hb_setMessage( void )
+{
+   return hb_set.HB_SET_MESSAGE;
+}
+
+HB_EXPORT char *  hb_setMFileExt( void )
+{
+   return hb_set.HB_SET_MFILEEXT;
+}
+
+HB_EXPORT BOOL    hb_setOptimize( void )
+{
+   return hb_set.HB_SET_OPTIMIZE;
+}
+
+HB_EXPORT BOOL    hb_setPrinter( void )
+{
+   return hb_set.HB_SET_PRINTER;
+}
+
+HB_EXPORT char *  hb_setPrintFile( void )
+{
+   return hb_set.HB_SET_PRINTFILE;
+}
+
+HB_EXPORT BOOL    hb_setScoreBoard( void )
+{
+   return hb_set.HB_SET_SCOREBOARD;
+}
+
+HB_EXPORT BOOL    hb_setScrollBreak( void )
+{
+   return hb_set.HB_SET_SCROLLBREAK;
+}
+
+HB_EXPORT BOOL    hb_setSoftSeek( void )
+{
+   return hb_set.HB_SET_SOFTSEEK;
+}
+
+HB_EXPORT BOOL    hb_setStrictRead( void )
+{
+   return hb_set.HB_SET_STRICTREAD;
+}
+
+HB_EXPORT int     hb_setTypeAhead( void )
+{
+   return hb_set.HB_SET_TYPEAHEAD;
+}
+
+HB_EXPORT BOOL    hb_setUnique( void )
+{
+   return hb_set.HB_SET_UNIQUE;
+}
+
+HB_EXPORT int     hb_setFileCase( void )
+{
+   return hb_set.HB_SET_FILECASE;
+}
+
+HB_EXPORT int     hb_setDirCase( void )
+{
+   return hb_set.HB_SET_DIRCASE;
+}
+
+HB_EXPORT int     hb_setDirSeparator( void )
+{
+   return hb_set.HB_SET_DIRSEPARATOR;
+}
+
+HB_EXPORT int     hb_setVideoMode( void )
+{
+   return hb_set.HB_SET_VIDEOMODE;
+}
+
+HB_EXPORT BOOL    hb_setWrap( void )
+{
+   return hb_set.HB_SET_WRAP;
+}
+
+HB_EXPORT int     hb_setDBFLockScheme( void )
+{
+   return hb_set.HB_SET_DBFLOCKSCHEME;
+}
+
+HB_EXPORT BOOL    hb_setHardCommit( void )
+{
+   return hb_set.HB_SET_HARDCOMMIT;
+}
+
+HB_EXPORT BOOL    hb_setForceOpt( void )
+{
+   return hb_set.HB_SET_FORCEOPT;
+}
+
+HB_EXPORT BOOL    hb_setDefExtension( void )
+{
+   return hb_set.HB_SET_DEFEXTENSIONS;
+}
+
+HB_EXPORT char *  hb_setEOL( void )
+{
+   return hb_set.HB_SET_EOL;
+}
+
+HB_EXPORT BOOL    hb_setTrimFileName( void )
+{
+   return hb_set.HB_SET_TRIMFILENAME;
 }
