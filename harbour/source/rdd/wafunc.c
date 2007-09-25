@@ -768,7 +768,7 @@ static void hb_fldStructure( AREAP pArea, USHORT uiField, USHORT uiSize,
    for( uiCount = 0; uiCount < uiSize; ++uiCount )
    {
       SELF_FIELDINFO( pArea, uiField, s_uiActions[uiCount],
-                      hb_arrayGetItemPtr( pField, 1 ) );
+                      hb_arrayGetItemPtr( pField, uiCount + 1 ) );
    }
 }
 

@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-25 13:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/wafunc.c
+    ! fixed typo which broke array returned by dbStrunct()
+
 2007-09-25 00:55 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * contrib/xhb/xhbcomp.prg
     + added "[]" operator overloading for the HBCharacter type class:
@@ -163,8 +167,8 @@
   * harbour/contrib/rdd_ads/ace.h
     + added support for ROWVERSION (^), and MODTIME (=) fields
 
-  ! harbour/source/rdd/dbcmd.c
-    * fixed bug in dbSkipper() reported by Viktor
+  * harbour/source/rdd/dbcmd.c
+    ! fixed bug in dbSkipper() reported by Viktor
 
   + harbour/include/hbsix.ch
   * harbour/source/rdd/hbsix/Makefile
