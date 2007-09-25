@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-25 00:55 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * contrib/xhb/xhbcomp.prg
+    + added "[]" operator overloading for the HBCharacter type class:
+      <string>[n] : access
+      assign is not implemented ( <string>[n] := <char> )
+      negative index is not implemented ( <string>[-n] )
+
+    + added "$" operator overloading for the following type classes:
+      HBCharacter : <char> $ <array|hash>
+      HBDate      : <date> $ <array|hash>
+      HBLogical   : <logical> $ <array|hash>
+      HBNil       : <nil> $ <array|hash>
+      HBNumeric   : <numeric> $ <array|hash>
+
+    ; all the new extended types, has a ::ClassName with the "HB" prefix.
+
 2007-09-25 04:30 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/xhb/Makefile
    * contrib/xhb/xhbfunc.c

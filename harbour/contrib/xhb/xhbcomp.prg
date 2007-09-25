@@ -51,6 +51,7 @@
  */
 
 #include "common.ch"
+#include "hbclass.ch"
 
 ANNOUNCE XHB_LIB
 
@@ -77,3 +78,124 @@ FUNCTION xhb_ADel( a, n, l )
    ENDIF
 
    RETURN a
+
+/*
+* Overloading of "$","[]" operators in scalar classes
+* "$" is done for types:
+*   HBCharacter
+*   HBDate
+*   HBLogical
+*   HBNil
+*   HBNumeric
+*   // HBPointer
+*   // HBSymbol
+* "[]" is only for HBCharacter type
+*   TODO: assign. in the form <string>[n] := <char>
+* 2007 tfonrouge
+*/
+/*
+  HBScalar
+*/
+CLASS HBScalar
+  METHOD IsIn OPERATOR "$"
+ENDCLASS
+
+/*
+  HBScalar:IsIn : "$" operator
+*/
+METHOD IsIn( itm ) CLASS HBScalar
+  IF HB_IsArray( itm )
+    RETURN AScan( itm, Self ) > 0
+  ENDIF
+  IF HB_IsHash( itm )
+    RETURN HB_HHasKey( itm, Self )
+  ENDIF
+  /*
+   * we need to raise a error here ? when ?
+   */
+RETURN .F. /*  */
+
+/*
+  HBArray
+*/
+CLASS HBArray FROM HBScalar
+  METHOD IsIn OPERATOR "$" // <array> $ <any>  returns .F.
+ENDCLASS
+
+/*
+  HBArray:IsIn : "$" operators
+*/
+METHOD IsIn CLASS HBArray
+RETURN .F.
+
+/*
+  HBCharacter
+*/
+CLASS HBCharacter FROM HBScalar
+  METHOD Index  OPERATOR "[]"
+ENDCLASS
+
+/*
+  HBCharacter:Index
+*/
+METHOD Index( n/*, char*/ ) CLASS HBCharacter
+  /*
+  IF PCount()>1
+    Self := Stuff( Self, n, Len( char ), char )
+    RETURN Self
+  ENDIF
+  */
+RETURN SubStr( Self, n , 1 )
+
+/*
+  HBDate
+*/
+CLASS HBDate FROM HBScalar
+ENDCLASS
+
+/*
+  HBHash
+*/
+CLASS HBHash FROM HBScalar
+  METHOD IsIn OPERATOR "$" // <hash> $ <any>  returns .F.
+ENDCLASS
+
+/*
+  HBHash:IsIn : "$" operators
+*/
+METHOD IsIn CLASS HBHash
+RETURN .F.
+
+/*
+  HBLogical
+*/
+CLASS HBLogical FROM HBScalar
+ENDCLASS
+
+/*
+  HBNil
+*/
+CLASS HBNil FROM HBScalar
+ENDCLASS
+
+/*
+  HBNumeric
+*/
+CLASS HBNumeric FROM HBScalar
+ENDCLASS
+
+/*
+  HBPointer
+*/
+/*
+CLASS HBPointer FROM HBScalar
+ENDCLASS
+*/
+
+/*
+  HBSymbol
+*/
+/*
+CLASS HBSymbol FROM HBScalar
+ENDCLASS
+*/
