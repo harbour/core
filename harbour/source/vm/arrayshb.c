@@ -180,19 +180,7 @@ HB_FUNC( AINS )
       if( lPos == 0 )
          lPos = 1;
 
-#if defined( HB_COMPAT_XHB )
-      if( hb_pcount() >= 4 && ISLOG( 4 ) && hb_parl( 4 ) &&
-          lPos >= 1 && ( ULONG ) lPos <= pArray->item.asArray.value->ulLen + 1 )
-         hb_arraySize( pArray, pArray->item.asArray.value->ulLen + 1 );
-
-      if( hb_arrayIns( pArray, lPos ) )
-      {
-         if( hb_pcount() >= 3 && !ISNIL( 3 ) )
-            hb_arraySet( pArray, lPos, hb_param( 3, HB_IT_ANY ) );
-      }
-#else
       hb_arrayIns( pArray, lPos );
-#endif
 
       hb_itemReturn( pArray ); /* AIns() returns the array itself */
    }
@@ -209,15 +197,7 @@ HB_FUNC( ADEL )
       if( lPos == 0 )
          lPos = 1;
 
-#if defined( HB_COMPAT_XHB )
-      if( hb_arrayDel( pArray, lPos ) )
-      {
-         if( hb_pcount() >= 3 && ISLOG( 3 ) && hb_parl( 3 ) )
-            hb_arraySize( pArray, pArray->item.asArray.value->ulLen - 1 );
-      }
-#else
       hb_arrayDel( pArray, lPos );
-#endif
 
       hb_itemReturn( pArray ); /* ADel() returns the array itself */
    }
@@ -285,17 +265,30 @@ HB_FUNC( ASCAN )
       ULONG ulStart = hb_parnl( 3 );
       ULONG ulCount = hb_parnl( 4 );
 
-#if defined( HB_COMPAT_XHB )
-      hb_retnint( hb_arrayScan( pArray, pValue,
-                                ISNUM( 3 ) ? &ulStart : NULL,
-                                ISNUM( 4 ) ? &ulCount : NULL,
-                                hb_parl( 5 ) ) );
-#else
       hb_retnint( hb_arrayScan( pArray, pValue,
                                 ISNUM( 3 ) ? &ulStart : NULL,
                                 ISNUM( 4 ) ? &ulCount : NULL,
                                 FALSE ) );
-#endif
+   }
+   else
+      hb_retni( 0 );
+}
+
+/* Same as ASCAN() but has an additional parameter to force exact comparison. */
+HB_FUNC( HB_ASCAN )
+{
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+   PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
+
+   if( pArray && pValue )
+   {
+      ULONG ulStart = hb_parnl( 3 );
+      ULONG ulCount = hb_parnl( 4 );
+
+      hb_retnint( hb_arrayScan( pArray, pValue,
+                                ISNUM( 3 ) ? &ulStart : NULL,
+                                ISNUM( 4 ) ? &ulCount : NULL,
+                                hb_parl( 5 ) ) );
    }
    else
       hb_retni( 0 );
@@ -310,6 +303,7 @@ HB_FUNC( HB_RASCAN )
    {
       ULONG ulStart = hb_parnl( 3 );
       ULONG ulCount = hb_parnl( 4 );
+
       hb_retnint( hb_arrayRevScan( pArray, pValue,
                                    ISNUM( 3 ) ? &ulStart : NULL,
                                    ISNUM( 4 ) ? &ulCount : NULL,

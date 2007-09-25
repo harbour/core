@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-25 18:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbcompat.ch
+   * source/vm/arrayshb.c
+   * contrib/xhb/xhb.ch
+   * contrib/xhb/xhbfunc.c
+     + Added HB_ASCAN() to Harbour, which does the same as 
+       the plain AScan() in xhb. I decided to do this 
+       because we already had hb_RAscan() implemented, and 
+       having hb_Ascan() is good to keep symetry.
+     * Modified xhb lib to use the Harbour one.
+     * Translations moved to hbcompat.ch.
+     - Removed HB_COMPAT_XHB from Harbour level array functions.
+
 2007-09-25 13:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/wafunc.c
     ! fixed typo which broke array returned by dbStrunct()

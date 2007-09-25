@@ -81,7 +81,8 @@
    #xtranslate hb_HexToStr([<c,...>])  => HexToStr(<c>)
    #xtranslate hb_StrToHex([<c,...>])  => StrToHex(<c>)
 
-   #xtranslate hb_RAScan([<x,...>])    => RAScan(<x>)
+   #xtranslate hb_AScan(<a>,<b>,[<c>],[<d>],<e>) => AScan(<a>,<b>,<c>,<d>,<e>)
+   #xtranslate hb_RAScan([<x,...>])              => RAScan(<x>)
 
    #xtranslate hb_ISPOINTER( <xValue> )=> ISPOINTER( <xValue> )
 
@@ -125,7 +126,8 @@
    #xtranslate HexToStr([<c,...>])     => hb_HexToStr(<c>)
    #xtranslate StrToHex([<c,...>])     => hb_StrToHex(<c>)
 
-   #xtranslate RAScan([<x,...>])       => hb_RAScan(<x>)
+   #xtranslate AScan(<a>,<b>,[<c>],[<d>],<e>) => hb_AScan(<a>,<b>,<c>,<d>,<e>)
+   #xtranslate RAScan([<x,...>])              => hb_RAScan(<x>)
 
    #xtranslate ISPOINTER( <xValue> )   => hb_ISPOINTER( <xValue> )
 
