@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-25 03:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbextern.ch
+  + harbour/contrib/xhb/xhbextrn.ch
+  * harbour/contrib/xhb/Makefile
+    * moved xHarbour compatible functions from hbextern.ch to xhbextrn.ch
+
 2007-09-25 03:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbset.h
   * harbour/source/rtl/set.c

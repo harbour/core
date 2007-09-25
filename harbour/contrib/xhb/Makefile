@@ -23,6 +23,7 @@ PRG_HEADERS=\
 	cstruct.ch  \
 	hbctypes.ch \
 	wintypes.ch \
+	xhbextrn.ch \
 
 LIBNAME=xhb
 
