@@ -784,7 +784,7 @@ HB_FUNC( SET )
          hb_retl( hb_set.HB_SET_IDLEREPEAT );
          if( args > 1 ) hb_set.HB_SET_IDLEREPEAT = set_logical( pArg2, hb_set.HB_SET_IDLEREPEAT );
          break;
-      case HB_SET_FILECASE :
+      case HB_SET_FILECASE   :
          hb_retni( hb_set.HB_SET_FILECASE );
          if( args > 1 )
          {
@@ -818,7 +818,7 @@ HB_FUNC( SET )
                hb_set.HB_SET_FILECASE = set_string( pArg2, hb_set.HB_SET_FILECASE );
          */
          break;
-      case HB_SET_DIRCASE :
+      case HB_SET_DIRCASE    :
          hb_retni( hb_set.HB_SET_DIRCASE );
          if( args > 1 )
          {
@@ -871,7 +871,7 @@ HB_FUNC( SET )
          hb_retl( hb_set.HB_SET_DEFEXTENSIONS );
          if( args > 1 ) hb_set.HB_SET_DEFEXTENSIONS = set_logical( pArg2, hb_set.HB_SET_DEFEXTENSIONS );
          break;
-      case HB_SET_EOL :
+      case HB_SET_EOL        :
          if( hb_set.HB_SET_EOL ) hb_retc( hb_set.HB_SET_EOL );
          else hb_retc( NULL );
          if( args > 1 ) hb_set.HB_SET_EOL = set_string( pArg2, hb_set.HB_SET_EOL );
@@ -881,7 +881,7 @@ HB_FUNC( SET )
          if( args > 1 ) hb_set.HB_SET_TRIMFILENAME = set_logical( pArg2, hb_set.HB_SET_TRIMFILENAME );
          break;
 
-      case HB_SET_INVALID_:
+      case HB_SET_INVALID_   :
          /* Return NIL if called with invalid SET specifier */
          break;
 
@@ -1090,312 +1090,615 @@ int hb_setListenerRemove( int listener )
    return listener;
 }
 
+HB_EXPORT BOOL    hb_setGetL( HB_set_enum set_specifier )
+{
+   switch( set_specifier )
+   {
+      case HB_SET_ALTERNATE:
+         return hb_set.HB_SET_ALTERNATE;
+      case HB_SET_AUTOPEN:
+         return hb_set.HB_SET_AUTOPEN;
+      case HB_SET_BELL:
+         return hb_set.HB_SET_BELL;
+      case HB_SET_CANCEL:
+         return hb_set.HB_SET_CANCEL;
+      case HB_SET_CONFIRM:
+         return hb_set.HB_SET_CONFIRM;
+      case HB_SET_CONSOLE:
+         return hb_set.HB_SET_CONSOLE;
+      case HB_SET_DEBUG:
+         return hb_set.HB_SET_DEBUG;
+      case HB_SET_DELETED:
+         return hb_set.HB_SET_DELETED;
+      case HB_SET_DELIMITERS:
+         return hb_set.HB_SET_DELIMITERS;
+      case HB_SET_EOF:
+         return hb_set.HB_SET_EOF;
+      case HB_SET_ESCAPE:
+         return hb_set.HB_SET_ESCAPE;
+      case HB_SET_EXACT:
+         return hb_set.HB_SET_EXACT;
+      case HB_SET_EXCLUSIVE:
+         return hb_set.HB_SET_EXCLUSIVE;
+      case HB_SET_EXIT:
+         return hb_set.HB_SET_EXIT;
+      case HB_SET_EXTRA:
+         return hb_set.HB_SET_EXTRA;
+      case HB_SET_FIXED:
+         return hb_set.HB_SET_FIXED;
+      case HB_SET_IDLEREPEAT:
+         return hb_set.HB_SET_IDLEREPEAT;
+      case HB_SET_INSERT:
+         return hb_set.HB_SET_INSERT;
+      case HB_SET_INTENSITY:
+         return hb_set.HB_SET_INTENSITY;
+      case HB_SET_MCENTER:
+         return hb_set.HB_SET_MCENTER;
+      case HB_SET_OPTIMIZE:
+         return hb_set.HB_SET_OPTIMIZE;
+      case HB_SET_FORCEOPT:
+         return hb_set.HB_SET_FORCEOPT;
+      case HB_SET_PRINTER:
+         return hb_set.HB_SET_PRINTER;
+      case HB_SET_SCOREBOARD:
+         return hb_set.HB_SET_SCOREBOARD;
+      case HB_SET_SCROLLBREAK:
+         return hb_set.HB_SET_SCROLLBREAK;
+      case HB_SET_SOFTSEEK:
+         return hb_set.HB_SET_SOFTSEEK;
+      case HB_SET_STRICTREAD:
+         return hb_set.HB_SET_STRICTREAD;
+      case HB_SET_UNIQUE:
+         return hb_set.HB_SET_UNIQUE;
+      case HB_SET_WRAP:
+         return hb_set.HB_SET_WRAP;
+      case HB_SET_HARDCOMMIT:
+         return hb_set.HB_SET_HARDCOMMIT;
+      case HB_SET_DEFEXTENSIONS:
+         return hb_set.HB_SET_DEFEXTENSIONS;
+      case HB_SET_TRIMFILENAME:
+         return hb_set.HB_SET_TRIMFILENAME;
+
+      case HB_SET_ALTFILE:
+      case HB_SET_AUTORDER:
+      case HB_SET_AUTOSHARE:
+      case HB_SET_COLOR:
+      case HB_SET_CURSOR:
+      case HB_SET_DATEFORMAT:
+      case HB_SET_DECIMALS:
+      case HB_SET_DEFAULT:
+      case HB_SET_DELIMCHARS:
+      case HB_SET_DEVICE:
+      case HB_SET_EPOCH:
+      case HB_SET_EVENTMASK:
+      case HB_SET_EXTRAFILE:
+      case HB_SET_MARGIN:
+      case HB_SET_MBLOCKSIZE:
+      case HB_SET_MESSAGE:
+      case HB_SET_MFILEEXT:
+      case HB_SET_PATH:
+      case HB_SET_PRINTFILE:
+      case HB_SET_TYPEAHEAD:
+      case HB_SET_VIDEOMODE:
+      case HB_SET_LANGUAGE:
+      case HB_SET_FILECASE:
+      case HB_SET_DIRCASE:
+      case HB_SET_DIRSEPARATOR:
+      case HB_SET_DBFLOCKSCHEME:
+      case HB_SET_EOL:
+      case HB_SET_INVALID_:
+         break;
+#if 0 
+      /*
+       * intentionally removed default: clause to enable C compiler warning
+       * when not all HB_SET_* cases are implemented. [druzus]
+       */
+      default:
+         break;
+#endif
+   }
+
+   hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 0 );
+   return FALSE;
+}
+
+HB_EXPORT char *  hb_setGetCPtr( HB_set_enum set_specifier )
+{
+   switch( set_specifier )
+   {
+      case HB_SET_ALTFILE:
+         return hb_set.HB_SET_ALTFILE;
+      case HB_SET_COLOR:
+         return hb_set.HB_SET_COLOR;
+      case HB_SET_DATEFORMAT:
+         return hb_set.HB_SET_DATEFORMAT;
+      case HB_SET_DEFAULT:
+         return hb_set.HB_SET_DEFAULT;
+      case HB_SET_DELIMCHARS:
+         return hb_set.HB_SET_DELIMCHARS;
+      case HB_SET_DEVICE:
+         return hb_set.HB_SET_DEVICE;
+      case HB_SET_EXTRAFILE:
+         return hb_set.HB_SET_EXTRAFILE;
+      case HB_SET_PATH:
+         return hb_set.HB_SET_PATH;
+      case HB_SET_MFILEEXT:
+         return hb_set.HB_SET_MFILEEXT;
+      case HB_SET_PRINTFILE:
+         return hb_set.HB_SET_PRINTFILE;
+      case HB_SET_EOL:
+         return hb_set.HB_SET_EOL;
+
+      case HB_SET_ALTERNATE:
+      case HB_SET_AUTOPEN:
+      case HB_SET_AUTORDER:
+      case HB_SET_AUTOSHARE:
+      case HB_SET_BELL:
+      case HB_SET_CANCEL:
+      case HB_SET_CONFIRM:
+      case HB_SET_CONSOLE:
+      case HB_SET_CURSOR:
+      case HB_SET_DEBUG:
+      case HB_SET_DECIMALS:
+      case HB_SET_DELETED:
+      case HB_SET_DELIMITERS:
+      case HB_SET_EOF:
+      case HB_SET_EPOCH:
+      case HB_SET_ESCAPE:
+      case HB_SET_EVENTMASK:
+      case HB_SET_EXACT:
+      case HB_SET_EXCLUSIVE:
+      case HB_SET_EXIT:
+      case HB_SET_EXTRA:
+      case HB_SET_FIXED:
+      case HB_SET_INSERT:
+      case HB_SET_INTENSITY:
+      case HB_SET_MARGIN:
+      case HB_SET_MBLOCKSIZE:
+      case HB_SET_MCENTER:
+      case HB_SET_MESSAGE:
+      case HB_SET_OPTIMIZE:
+      case HB_SET_FORCEOPT:
+      case HB_SET_STRICTREAD:
+      case HB_SET_HARDCOMMIT:
+      case HB_SET_PRINTER:
+      case HB_SET_SCOREBOARD:
+      case HB_SET_SCROLLBREAK:
+      case HB_SET_SOFTSEEK:
+      case HB_SET_TYPEAHEAD:
+      case HB_SET_UNIQUE:
+      case HB_SET_VIDEOMODE:
+      case HB_SET_WRAP:
+      case HB_SET_LANGUAGE:
+      case HB_SET_IDLEREPEAT:
+      case HB_SET_FILECASE:
+      case HB_SET_DIRCASE:
+      case HB_SET_DIRSEPARATOR:
+      case HB_SET_DBFLOCKSCHEME:
+      case HB_SET_DEFEXTENSIONS:
+      case HB_SET_TRIMFILENAME:
+      case HB_SET_INVALID_:
+         break;
+#if 0 
+      /*
+       * intentionally removed default: clause to enable C compiler warning
+       * when not all HB_SET_* cases are implemented. [druzus]
+       */
+      default:
+         break;
+#endif
+   }
+
+   hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 0 );
+   return FALSE;
+}
+
+HB_EXPORT int     hb_setGetNI( HB_set_enum set_specifier )
+{
+   switch( set_specifier )
+   {
+      case HB_SET_AUTORDER:
+         return hb_set.HB_SET_AUTORDER;
+      case HB_SET_AUTOSHARE:
+         return hb_set.HB_SET_AUTOSHARE;
+      case HB_SET_DECIMALS:
+         return hb_set.HB_SET_DECIMALS;
+      case HB_SET_EPOCH:
+         return hb_set.HB_SET_EPOCH;
+      case HB_SET_EVENTMASK:
+         return hb_set.HB_SET_EVENTMASK;
+      case HB_SET_MARGIN:
+         return hb_set.HB_SET_MARGIN;
+      case HB_SET_MBLOCKSIZE:
+         return hb_set.HB_SET_MBLOCKSIZE;
+      case HB_SET_MESSAGE:
+         return hb_set.HB_SET_MESSAGE;
+      case HB_SET_TYPEAHEAD:
+         return hb_set.HB_SET_TYPEAHEAD;
+      case HB_SET_FILECASE:
+         return hb_set.HB_SET_FILECASE;
+      case HB_SET_DIRCASE:
+         return hb_set.HB_SET_DIRCASE;
+      case HB_SET_DIRSEPARATOR:
+         return hb_set.HB_SET_DIRSEPARATOR;
+      case HB_SET_VIDEOMODE:
+         return hb_set.HB_SET_VIDEOMODE;
+      case HB_SET_DBFLOCKSCHEME:
+         return hb_set.HB_SET_DBFLOCKSCHEME;
+
+      case HB_SET_ALTERNATE:
+      case HB_SET_ALTFILE:
+      case HB_SET_AUTOPEN:
+      case HB_SET_BELL:
+      case HB_SET_CANCEL:
+      case HB_SET_COLOR:
+      case HB_SET_CONFIRM:
+      case HB_SET_CONSOLE:
+      case HB_SET_CURSOR:
+      case HB_SET_DATEFORMAT:
+      case HB_SET_DEBUG:
+      case HB_SET_DEFAULT:
+      case HB_SET_DELETED:
+      case HB_SET_DELIMCHARS:
+      case HB_SET_DELIMITERS:
+      case HB_SET_DEVICE:
+      case HB_SET_EOF:
+      case HB_SET_ESCAPE:
+      case HB_SET_EXACT:
+      case HB_SET_EXCLUSIVE:
+      case HB_SET_EXIT:
+      case HB_SET_EXTRA:
+      case HB_SET_EXTRAFILE:
+      case HB_SET_FIXED:
+      case HB_SET_INSERT:
+      case HB_SET_INTENSITY:
+      case HB_SET_MCENTER:
+      case HB_SET_MFILEEXT:
+      case HB_SET_OPTIMIZE:
+      case HB_SET_FORCEOPT:
+      case HB_SET_STRICTREAD:
+      case HB_SET_HARDCOMMIT:
+      case HB_SET_PATH:
+      case HB_SET_PRINTER:
+      case HB_SET_PRINTFILE:
+      case HB_SET_SCOREBOARD:
+      case HB_SET_SCROLLBREAK:
+      case HB_SET_SOFTSEEK:
+      case HB_SET_UNIQUE:
+      case HB_SET_WRAP:
+      case HB_SET_LANGUAGE:
+      case HB_SET_IDLEREPEAT:
+      case HB_SET_EOL:
+      case HB_SET_DEFEXTENSIONS:
+      case HB_SET_TRIMFILENAME:
+      case HB_SET_INVALID_:
+         break;
+#if 0 
+      /*
+       * intentionally removed default: clause to enable C compiler warning
+       * when not all HB_SET_* cases are implemented. [druzus]
+       */
+      default:
+         break;
+#endif
+   }
+
+   hb_errRT_BASE( EG_ARG, 2020, NULL, "SET", 0 );
+   return FALSE;
+}
+
+HB_EXPORT long    hb_setGetNL( HB_set_enum set_specifier )
+{
+   return hb_setGetNI( set_specifier );
+}
+
 HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void )
 {
    return sp_set_path;
 }
 
-HB_EXPORT FHANDLE hb_setAltHan( void )
+
+HB_EXPORT FHANDLE hb_setGetAltHan( void )
 {
    return hb_set.hb_set_althan;
 }
 
-HB_EXPORT BOOL    hb_setCentury( void )
+HB_EXPORT BOOL    hb_setGetCentury( void )
 {
    return hb_set.hb_set_century;
 }
 
-HB_EXPORT FHANDLE hb_setExtraHan( void )
+HB_EXPORT FHANDLE hb_setGetExtraHan( void )
 {
    return hb_set.hb_set_extrahan;
 }
 
-HB_EXPORT FHANDLE hb_setPrintHan( void )
+HB_EXPORT FHANDLE hb_setGetPrintHan( void )
 {
    return hb_set.hb_set_printhan;
 }
 
-HB_EXPORT BOOL    hb_setAlternate( void )
+HB_EXPORT BOOL    hb_setGetAlternate( void )
 {
    return hb_set.HB_SET_ALTERNATE;
 }
 
-HB_EXPORT char *  hb_setAltFile( void )
+HB_EXPORT char *  hb_setGetAltFile( void )
 {
    return hb_set.HB_SET_ALTFILE;
 }
 
-HB_EXPORT BOOL    hb_setAutOpen( void )
+HB_EXPORT BOOL    hb_setGetAutOpen( void )
 {
    return hb_set.HB_SET_AUTOPEN;
 }
 
-HB_EXPORT int     hb_setAutOrder( void )
+HB_EXPORT int     hb_setGetAutOrder( void )
 {
    return hb_set.HB_SET_AUTORDER;
 }
 
-HB_EXPORT int     hb_setAutoShare( void )
+HB_EXPORT int     hb_setGetAutoShare( void )
 {
    return hb_set.HB_SET_AUTOSHARE;
 }
 
-HB_EXPORT BOOL    hb_setBell( void )
+HB_EXPORT BOOL    hb_setGetBell( void )
 {
    return hb_set.HB_SET_BELL;
 }
 
-HB_EXPORT BOOL    hb_setCancel( void )
+HB_EXPORT BOOL    hb_setGetCancel( void )
 {
    return hb_set.HB_SET_CANCEL;
 }
 
-HB_EXPORT char *  hb_setColor( void )
+HB_EXPORT char *  hb_setGetColor( void )
 {
    return hb_set.HB_SET_COLOR;
 }
 
-HB_EXPORT BOOL    hb_setConfirm( void )
+HB_EXPORT BOOL    hb_setGetConfirm( void )
 {
    return hb_set.HB_SET_CONFIRM;
 }
 
-HB_EXPORT BOOL    hb_setConsole( void )
+HB_EXPORT BOOL    hb_setGetConsole( void )
 {
    return hb_set.HB_SET_CONSOLE;
 }
 
-HB_EXPORT char *  hb_setDateFormat( void )
+HB_EXPORT char *  hb_setGetDateFormat( void )
 {
    return hb_set.HB_SET_DATEFORMAT;
 }
 
-HB_EXPORT BOOL    hb_setDebug( void )
+HB_EXPORT BOOL    hb_setGetDebug( void )
 {
    return hb_set.HB_SET_DEBUG;
 }
 
-HB_EXPORT int     hb_setDecimals( void )
+HB_EXPORT int     hb_setGetDecimals( void )
 {
    return hb_set.HB_SET_DECIMALS;
 }
 
-HB_EXPORT char *  hb_setDefault( void )
+HB_EXPORT char *  hb_setGetDefault( void )
 {
    return hb_set.HB_SET_DEFAULT;
 }
 
-HB_EXPORT BOOL    hb_setDeleted( void )
+HB_EXPORT BOOL    hb_setGetDeleted( void )
 {
    return hb_set.HB_SET_DELETED;
 }
 
-HB_EXPORT char *  hb_setDelimChars( void )
+HB_EXPORT char *  hb_setGetDelimChars( void )
 {
    return hb_set.HB_SET_DELIMCHARS;
 }
 
-HB_EXPORT BOOL    hb_setDelimiters( void )
+HB_EXPORT BOOL    hb_setGetDelimiters( void )
 {
    return hb_set.HB_SET_DELIMITERS;
 }
 
-HB_EXPORT char *  hb_setDevice( void )
+HB_EXPORT char *  hb_setGetDevice( void )
 {
    return hb_set.HB_SET_DEVICE;
 }
 
-HB_EXPORT BOOL    hb_setEOF( void )
+HB_EXPORT BOOL    hb_setGetEOF( void )
 {
    return hb_set.HB_SET_EOF;
 }
 
-HB_EXPORT int     hb_setEpoch( void )
+HB_EXPORT int     hb_setGetEpoch( void )
 {
    return hb_set.HB_SET_EPOCH;
 }
 
-HB_EXPORT BOOL    hb_setEscape( void )
+HB_EXPORT BOOL    hb_setGetEscape( void )
 {
    return hb_set.HB_SET_ESCAPE;
 }
 
-HB_EXPORT int     hb_setEventMask( void )
+HB_EXPORT int     hb_setGetEventMask( void )
 {
    return hb_set.HB_SET_EVENTMASK;
 }
 
-HB_EXPORT BOOL    hb_setExact( void )
+HB_EXPORT BOOL    hb_setGetExact( void )
 {
    return hb_set.HB_SET_EXACT;
 }
 
-HB_EXPORT BOOL    hb_setExclusive( void )
+HB_EXPORT BOOL    hb_setGetExclusive( void )
 {
    return hb_set.HB_SET_EXCLUSIVE;
 }
 
-HB_EXPORT BOOL    hb_setExit( void )
+HB_EXPORT BOOL    hb_setGetExit( void )
 {
    return hb_set.HB_SET_EXIT;
 }
 
-HB_EXPORT BOOL    hb_setExtra( void )
+HB_EXPORT BOOL    hb_setGetExtra( void )
 {
    return hb_set.HB_SET_EXTRA;
 }
 
-HB_EXPORT char *  hb_setExtraFile( void )
+HB_EXPORT char *  hb_setGetExtraFile( void )
 {
    return hb_set.HB_SET_EXTRAFILE;
 }
 
-HB_EXPORT BOOL    hb_setFixed( void )
+HB_EXPORT BOOL    hb_setGetFixed( void )
 {
    return hb_set.HB_SET_FIXED;
 }
 
-HB_EXPORT BOOL    hb_setIdleRepeat( void )
+HB_EXPORT BOOL    hb_setGetIdleRepeat( void )
 {
    return hb_set.HB_SET_IDLEREPEAT;
 }
 
-HB_EXPORT BOOL    hb_setInsert( void )
+HB_EXPORT BOOL    hb_setGetInsert( void )
 {
    return hb_set.HB_SET_INSERT;
 }
 
-HB_EXPORT BOOL    hb_setIntensity( void )
+HB_EXPORT BOOL    hb_setGetIntensity( void )
 {
    return hb_set.HB_SET_INTENSITY;
 }
 
-HB_EXPORT char *  hb_setPath( void )
+HB_EXPORT char *  hb_setGetPath( void )
 {
    return hb_set.HB_SET_PATH;
 }
 
-HB_EXPORT int     hb_setMargin( void )
+HB_EXPORT int     hb_setGetMargin( void )
 {
    return hb_set.HB_SET_MARGIN;
 }
 
-HB_EXPORT int     hb_setMBlockSize( void )
+HB_EXPORT int     hb_setGetMBlockSize( void )
 {
    return hb_set.HB_SET_MBLOCKSIZE;
 }
 
-HB_EXPORT BOOL    hb_setMCenter( void )
+HB_EXPORT BOOL    hb_setGetMCenter( void )
 {
    return hb_set.HB_SET_MCENTER;
 }
 
-HB_EXPORT int     hb_setMessage( void )
+HB_EXPORT int     hb_setGetMessage( void )
 {
    return hb_set.HB_SET_MESSAGE;
 }
 
-HB_EXPORT char *  hb_setMFileExt( void )
+HB_EXPORT char *  hb_setGetMFileExt( void )
 {
    return hb_set.HB_SET_MFILEEXT;
 }
 
-HB_EXPORT BOOL    hb_setOptimize( void )
+HB_EXPORT BOOL    hb_setGetOptimize( void )
 {
    return hb_set.HB_SET_OPTIMIZE;
 }
 
-HB_EXPORT BOOL    hb_setPrinter( void )
+HB_EXPORT BOOL    hb_setGetPrinter( void )
 {
    return hb_set.HB_SET_PRINTER;
 }
 
-HB_EXPORT char *  hb_setPrintFile( void )
+HB_EXPORT char *  hb_setGetPrintFile( void )
 {
    return hb_set.HB_SET_PRINTFILE;
 }
 
-HB_EXPORT BOOL    hb_setScoreBoard( void )
+HB_EXPORT BOOL    hb_setGetScoreBoard( void )
 {
    return hb_set.HB_SET_SCOREBOARD;
 }
 
-HB_EXPORT BOOL    hb_setScrollBreak( void )
+HB_EXPORT BOOL    hb_setGetScrollBreak( void )
 {
    return hb_set.HB_SET_SCROLLBREAK;
 }
 
-HB_EXPORT BOOL    hb_setSoftSeek( void )
+HB_EXPORT BOOL    hb_setGetSoftSeek( void )
 {
    return hb_set.HB_SET_SOFTSEEK;
 }
 
-HB_EXPORT BOOL    hb_setStrictRead( void )
+HB_EXPORT BOOL    hb_setGetStrictRead( void )
 {
    return hb_set.HB_SET_STRICTREAD;
 }
 
-HB_EXPORT int     hb_setTypeAhead( void )
+HB_EXPORT int     hb_setGetTypeAhead( void )
 {
    return hb_set.HB_SET_TYPEAHEAD;
 }
 
-HB_EXPORT BOOL    hb_setUnique( void )
+HB_EXPORT BOOL    hb_setGetUnique( void )
 {
    return hb_set.HB_SET_UNIQUE;
 }
 
-HB_EXPORT int     hb_setFileCase( void )
+HB_EXPORT int     hb_setGetFileCase( void )
 {
    return hb_set.HB_SET_FILECASE;
 }
 
-HB_EXPORT int     hb_setDirCase( void )
+HB_EXPORT int     hb_setGetDirCase( void )
 {
    return hb_set.HB_SET_DIRCASE;
 }
 
-HB_EXPORT int     hb_setDirSeparator( void )
+HB_EXPORT int     hb_setGetDirSeparator( void )
 {
    return hb_set.HB_SET_DIRSEPARATOR;
 }
 
-HB_EXPORT int     hb_setVideoMode( void )
+HB_EXPORT int     hb_setGetVideoMode( void )
 {
    return hb_set.HB_SET_VIDEOMODE;
 }
 
-HB_EXPORT BOOL    hb_setWrap( void )
+HB_EXPORT BOOL    hb_setGetWrap( void )
 {
    return hb_set.HB_SET_WRAP;
 }
 
-HB_EXPORT int     hb_setDBFLockScheme( void )
+HB_EXPORT int     hb_setGetDBFLockScheme( void )
 {
    return hb_set.HB_SET_DBFLOCKSCHEME;
 }
 
-HB_EXPORT BOOL    hb_setHardCommit( void )
+HB_EXPORT BOOL    hb_setGetHardCommit( void )
 {
    return hb_set.HB_SET_HARDCOMMIT;
 }
 
-HB_EXPORT BOOL    hb_setForceOpt( void )
+HB_EXPORT BOOL    hb_setGetForceOpt( void )
 {
    return hb_set.HB_SET_FORCEOPT;
 }
 
-HB_EXPORT BOOL    hb_setDefExtension( void )
+HB_EXPORT BOOL    hb_setGetDefExtension( void )
 {
    return hb_set.HB_SET_DEFEXTENSIONS;
 }
 
-HB_EXPORT char *  hb_setEOL( void )
+HB_EXPORT char *  hb_setGetEOL( void )
 {
    return hb_set.HB_SET_EOL;
 }
 
-HB_EXPORT BOOL    hb_setTrimFileName( void )
+HB_EXPORT BOOL    hb_setGetTrimFileName( void )
 {
    return hb_set.HB_SET_TRIMFILENAME;
 }

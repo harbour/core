@@ -345,6 +345,12 @@ $hb_collect contrib/tip/*.prg
 $hb_collect contrib/tip/*.ch
 $hb_collect contrib/tip/*.txt
 
+# CONTRIB\XHB
+$hb_collect contrib/xhb/Makefile
+$hb_collect contrib/xhb/*.[ch]
+$hb_collect contrib/xhb/*.prg
+$hb_collect contrib/xhb/*.ch
+
 # CONTRIB\ODBC
 $hb_collect contrib/odbc/Makefile
 $hb_collect contrib/odbc/*.[ch]

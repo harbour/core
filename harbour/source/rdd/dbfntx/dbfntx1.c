@@ -1979,7 +1979,8 @@ static BOOL hb_ntxIndexLockRead( LPNTXINDEX pIndex )
 {
    BOOL fOK;
 
-   if( pIndex->lockRead > 0 || pIndex->lockWrite > 0 || !pIndex->fShared )
+   if( pIndex->lockRead > 0 || pIndex->lockWrite > 0 || !pIndex->fShared ||
+       HB_DIRTYREAD( pIndex->Owner ) )
    {
       fOK = TRUE;
       pIndex->lockRead++;
@@ -4734,19 +4735,22 @@ static void hb_ntxSortWritePage( LPNTXSORTINFO pSort )
       BYTE szName[ _POSIX_PATH_MAX + 1 ];
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->hTempFile == FS_ERROR )
-      {
-         /* TODO: add RT error */
-         hb_errInternal( 9999, "hb_ntxSortWritePage: Can't create temporary file.", "", "" );
-      }
-      pSort->szTempFileName = hb_strdup( ( char * ) szName );
+         hb_ntxErrorRT( pSort->pTag->Owner->Owner, EG_CREATE, EDBF_CREATE_TEMP,
+                        ( char * ) szName, 0, 0 );
+      else
+         pSort->szTempFileName = hb_strdup( ( char * ) szName );
    }
+
    pSort->pSwapPage[ pSort->ulCurPage ].ulKeys = pSort->ulKeys;
-   pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fsSeekLarge( pSort->hTempFile, 0, FS_END );
-   if( hb_fsWriteLarge( pSort->hTempFile, pSort->pStartKey, ulSize ) != ulSize )
+   if( pSort->hTempFile != FS_ERROR )
    {
-      /* TODO: add RT error */
-      hb_errInternal( 9999, "hb_ntxSortWritePage: Write error in temporary file.", "", "" );
+      pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fsSeekLarge( pSort->hTempFile, 0, FS_END );
+      if( hb_fsWriteLarge( pSort->hTempFile, pSort->pStartKey, ulSize ) != ulSize )
+         hb_ntxErrorRT( pSort->pTag->Owner->Owner, EG_WRITE, EDBF_WRITE_TEMP,
+                        pSort->szTempFileName, 0, 0 );
    }
+   else
+      pSort->pSwapPage[ pSort->ulCurPage ].nOffset = 0;
    pSort->ulKeys = 0;
    pSort->ulCurPage++;
 }
@@ -4761,11 +4765,12 @@ static void hb_ntxSortGetPageKey( LPNTXSORTINFO pSort, ULONG ulPage,
       ULONG ulKeys = HB_MIN( pSort->ulPgKeys, pSort->pSwapPage[ ulPage ].ulKeys );
       ULONG ulSize = ulKeys * ( iLen + 4 );
 
-      if( hb_fsSeekLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].nOffset, FS_SET ) != pSort->pSwapPage[ ulPage ].nOffset ||
-          hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, ulSize ) != ulSize )
+      if( pSort->hTempFile != FS_ERROR &&
+         ( hb_fsSeekLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].nOffset, FS_SET ) != pSort->pSwapPage[ ulPage ].nOffset ||
+           hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, ulSize ) != ulSize ) )
       {
-         /* TODO: add RT error */
-         hb_errInternal( 9999, "hb_ntxSortGetPageKey: Read error from temporary file.", "", "" );
+         hb_ntxErrorRT( pSort->pTag->Owner->Owner, EG_READ, EDBF_READ_TEMP,
+                        pSort->szTempFileName, 0, 0 );
       }
       pSort->pSwapPage[ ulPage ].nOffset += ulSize;
       pSort->pSwapPage[ ulPage ].ulKeyBuf = ulKeys;
@@ -5072,10 +5077,15 @@ static void hb_ntxSortOut( LPNTXSORTINFO pSort )
 
    hb_ntxSortOrderPages( pSort );
 
+   if( hb_vmRequestQuery() != 0 )
+      return;
+
    for( ulKey = 0; ulKey < pSort->ulTotKeys; ulKey++ )
    {
       if( ! hb_ntxSortKeyGet( pSort, &pKeyVal, &ulRec ) )
       {
+         if( hb_vmRequestQuery() != 0 )
+            return;
          hb_errInternal( 9999, "hb_ntxSortOut: memory structure corrupted.", "", "" );
       }
       if( fUnique )
@@ -5103,6 +5113,8 @@ static void hb_ntxSortOut( LPNTXSORTINFO pSort )
          {
             printf("\r\nulKey=%ld, pKeyVal=[%s][%ld], pKeyLast=[%s][%ld]\r\n",
                    ulKey, pKeyVal, ulRec, pSort->pLastKey, pSort->ulLastRec); fflush(stdout);
+            if( hb_vmRequestQuery() != 0 )
+               return;
             hb_errInternal( 9999, "hb_ntxSortOut: sorting fails.", "", "" );
          }
       }
@@ -5115,6 +5127,8 @@ static void hb_ntxSortOut( LPNTXSORTINFO pSort )
 #ifdef HB_NTX_DEBUG
    if( hb_ntxSortKeyGet( pSort, &pKeyVal, &ulRec ) )
    {
+      if( hb_vmRequestQuery() != 0 )
+         return;
       hb_errInternal( 9999, "hb_ntxSortOut: memory structure corrupted(2).", "", "" );
    }
 #endif
@@ -5315,6 +5329,12 @@ static ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, BOOL fReindex )
 
       while( errCode == SUCCESS && !pArea->fEof )
       {
+         if( hb_vmRequestQuery() != 0 )
+         {
+            errCode = FAILURE;
+            break;
+         }
+
          if( fDirectRead )
          {
             if( ulRecNo > ulRecCount )
@@ -5993,7 +6013,8 @@ static ERRCODE ntxOpen( NTXAREAP pArea, LPDBOPENINFO pOpenInfo )
       char szFileName[ _POSIX_PATH_MAX + 1 ];
 
       hb_ntxCreateFName( pArea, NULL, NULL, szFileName, NULL );
-      if ( hb_spFile( ( BYTE * ) szFileName, NULL ) )
+      if( hb_spFile( ( BYTE * ) szFileName, NULL ) ||
+          NTXAREA_DATA( pArea )->fStrictStruct )
       {
          DBORDERINFO pOrderInfo;
 
@@ -7038,6 +7059,14 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
          case DBOI_ISREADONLY:
             hb_itemPutL( pInfo->itmResult, pTag->Owner->fReadonly );
             break;
+         case DBOI_INDEXTYPE:
+#if defined( HB_NTX_NOMULTITAG )
+            hb_itemPutNI( pInfo->itmResult, DBOI_TYPE_NONCOMPACT );
+#else
+            hb_itemPutNI( pInfo->itmResult, pTag->Owner->Compound ?
+                          DBOI_TYPE_COMPOUND : DBOI_TYPE_NONCOMPACT );
+#endif
+            break;
       }
    }
    else if( pInfo->itmResult )
@@ -7165,6 +7194,9 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             break;
          case DBOI_FILEHANDLE:
             hb_itemPutNInt( pInfo->itmResult, FS_ERROR );
+            break;
+         case DBOI_INDEXTYPE:
+            hb_itemPutNI( pInfo->itmResult, DBOI_TYPE_UNDEF );
             break;
          case DBOI_BAGNAME:
          case DBOI_CONDITION:

@@ -94,6 +94,43 @@ HB_EXTERN_BEGIN
 
 
 
+/* FIeld types */
+
+#define HB_FT_NONE            0
+#define HB_FT_STRING          1     /* "C" */
+#define HB_FT_LOGICAL         2     /* "L" */
+#define HB_FT_DATE            3     /* "D" */
+#define HB_FT_LONG            4     /* "N" */
+#define HB_FT_FLOAT           5     /* "F" */
+#define HB_FT_INTEGER         6     /* "I" */
+#define HB_FT_DOUBLE          7     /* "B" */
+#define HB_FT_TIME            8     /* "T" */
+#define HB_FT_DAYTIME         9     /* "@" */
+#define HB_FT_MODTIME         10    /* "=" */
+#define HB_FT_ROWVER          11    /* "^" */
+#define HB_FT_AUTOINC         12    /* "+" */
+#define HB_FT_CURRENCY        13    /* "Y" */
+#define HB_FT_CURDOUBLE       14    /* "Z" */
+#define HB_FT_VARLENGTH       15    /* "Q" */
+#define HB_FT_MEMO            16    /* "M" */
+#define HB_FT_ANY             17    /* "V" */
+#define HB_FT_IMAGE           18    /* "P" */
+#define HB_FT_BLOB            19    /* "W" */
+#define HB_FT_OLE             20    /* "G" */
+
+
+
+/* FIeld flags */
+
+#define HB_FF_HIDDEN          0x0001 /* System Column (not visible to user) */
+#define HB_FF_NULLABLE        0x0002 /* Column can store null values */
+#define HB_FF_BINARY          0x0004 /* Binary column */
+#define HB_FF_AUTOINC         0x0008 /* Column is autoincrementing */
+#define HB_FF_COMPRESSED      0x0010 /* Column is compressed */
+#define HB_FF_ENCRYPTED       0x0020 /* Column is encrypted */
+
+
+
 /* Flags for DBTRANSINFO */
 
 #define DBTF_MATCH         0x0001
@@ -142,6 +179,7 @@ typedef struct
    USHORT   uiTypeExtended;   /* FIELD type extended */
    USHORT   uiLen;            /* Overall FIELD length */
    USHORT   uiDec;            /* Decimal places of numeric FIELD */
+   USHORT   uiFlags;          /* FIELD flags */
 } DBFIELDINFO;
 
 typedef DBFIELDINFO * LPDBFIELDINFO;
@@ -484,13 +522,14 @@ typedef DBLOCKINFO * LPDBLOCKINFO;
 
 typedef struct _FIELD
 {
-   HB_TYPE uiType;           /* Field type */
-   USHORT  uiTypeExtended;   /* Field type - extended */
-   USHORT  uiLen;            /* Field length */
-   USHORT  uiDec;            /* Decimal length */
-   USHORT  uiArea;           /* Area this field resides in */
-   void *  sym;              /* Symbol that represents the field */
-   struct _FIELD * lpfNext;  /* The next field in the list */
+   HB_TYPE  uiType;           /* Field type */
+   USHORT   uiTypeExtended;   /* Field type - extended */
+   USHORT   uiLen;            /* Field length */
+   USHORT   uiDec;            /* Decimal length */
+   USHORT   uiFlags;          /* FIELD flags */
+   USHORT   uiArea;           /* Area this field resides in */
+   void *   sym;              /* Symbol that represents the field */
+   struct _FIELD * lpfNext;   /* The next field in the list */
 } FIELD;
 
 typedef FIELD * LPFIELD;
@@ -1169,7 +1208,7 @@ extern HB_EXPORT ERRCODE   hb_rddTransRecords(
                               PHB_ITEM pRest,
                               const char *szCpId,
                               PHB_ITEM pDelim );
-extern HB_EXPORT void      hb_tblStructure( AREAP pArea, PHB_ITEM pStruct );
+extern HB_EXPORT void      hb_tblStructure( AREAP pArea, PHB_ITEM pStruct, USHORT uiSize );
 
 #if 0
 extern HB_EXPORT ERRCODE   hb_rddDisinherit( const char * drvName );

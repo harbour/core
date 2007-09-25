@@ -178,14 +178,29 @@
 
 
 /* FIELD types */
-#define HB_FT_STRING          0x0400
-#define HB_FT_LOGICAL         0x0080
-#define HB_FT_MEMO            0x0C00
-#define HB_FT_ANY             -1
-#define HB_FT_DATE            0x0020
-#define HB_FT_INTEGER         0x0002
-#define HB_FT_LONG            0x0008
-#define HB_FT_DOUBLE          0x0010
+#ifndef HB_FT_NONE
+#define HB_FT_NONE            0
+#define HB_FT_STRING          1     /* "C" */
+#define HB_FT_LOGICAL         2     /* "L" */
+#define HB_FT_DATE            3     /* "D" */
+#define HB_FT_LONG            4     /* "N" */
+#define HB_FT_FLOAT           5     /* "F" */
+#define HB_FT_INTEGER         6     /* "I" */
+#define HB_FT_DOUBLE          7     /* "B" */
+#define HB_FT_TIME            8     /* "T" */
+#define HB_FT_DAYTIME         9     /* "@" */
+#define HB_FT_MODTIME         10    /* "=" */
+#define HB_FT_ROWVER          11    /* "^" */
+#define HB_FT_AUTOINC         12    /* "+" */
+#define HB_FT_CURRENCY        13    /* "Y" */
+#define HB_FT_CURDOUBLE       14    /* "Z" */
+#define HB_FT_VARLENGTH       15    /* "Q" */
+#define HB_FT_MEMO            16    /* "M" */
+#define HB_FT_ANY             17    /* "V" */
+#define HB_FT_IMAGE           18    /* "P" */
+#define HB_FT_BLOB            19    /* "W" */
+#define HB_FT_OLE             20    /* "G" */
+#endif
 
 /* Flags for DBTRANSINFO */
 #define DBTF_MATCH         0x0001

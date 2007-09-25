@@ -339,7 +339,7 @@ HB_FUNC( DMY )
       szMDY[iLen] = ' ';
       iLen++;
 
-      if( hb_setGetL( hb_set_century ) )
+      if( hb_setGetCentury() )
       {
          snprintf( szMDY + iLen, 5, "%04d", iYear );
          iLen += 4;
@@ -425,7 +425,7 @@ HB_FUNC( MDY )
       }
       szMDY[iLen++] = ' ';
 
-      if( hb_setGetL( hb_set_century ) )
+      if( hb_setGetCentury() )
       {
          snprintf( szMDY + iLen, 5, "%04d", iYear );
          iLen += 4;

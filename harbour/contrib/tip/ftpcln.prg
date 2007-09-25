@@ -80,6 +80,7 @@
    Cleaned unused variables.
 */
 
+#include "hbcompat.ch"
 #include "directry.ch"
 #include "hbclass.ch"
 #include "tip.ch"

@@ -380,7 +380,7 @@ static ERRCODE hb_sdfGetValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    pField = pArea->lpFields + uiIndex;
    switch( pField->uiType )
    {
-      case HB_IT_STRING:
+      case HB_FT_STRING:
 #ifndef HB_CDP_SUPPORT_OFF
          if( pArea->cdPage != hb_cdp_page )
          {
@@ -398,7 +398,7 @@ static ERRCODE hb_sdfGetValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          }
          break;
 
-      case HB_IT_LOGICAL:
+      case HB_FT_LOGICAL:
          switch( pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] )
          {
             case 'T':
@@ -413,11 +413,11 @@ static ERRCODE hb_sdfGetValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          }
          break;
 
-      case HB_IT_DATE:
+      case HB_FT_DATE:
          hb_itemPutDS( pItem, ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
          break;
 
-      case HB_IT_LONG:
+      case HB_FT_LONG:
          {
             HB_LONG lVal;
             double dVal;
@@ -443,8 +443,12 @@ static ERRCODE hb_sdfGetValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          }
          break;
 
-      case HB_IT_MEMO:
+      case HB_FT_MEMO:
          hb_itemPutC( pItem, "" );
+         break;
+
+      case HB_FT_NONE:
+         hb_itemClear( pItem );
          break;
 
       default:
@@ -485,11 +489,11 @@ static ERRCODE hb_sdfPutValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    uiError = SUCCESS;
    --uiIndex;
    pField = pArea->lpFields + uiIndex;
-   if( pField->uiType != HB_IT_MEMO )
+   if( pField->uiType != HB_FT_MEMO && pField->uiType != HB_FT_NONE )
    {
       if( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) )
       {
-         if( pField->uiType == HB_IT_STRING )
+         if( pField->uiType == HB_FT_STRING )
          {
             uiSize = ( USHORT ) hb_itemGetCLen( pItem );
             if( uiSize > pField->uiLen )
@@ -507,7 +511,7 @@ static ERRCODE hb_sdfPutValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       }
       else if( HB_IS_DATE( pItem ) )
       {
-         if( pField->uiType == HB_IT_DATE )
+         if( pField->uiType == HB_FT_DATE )
          {
             hb_itemGetDS( pItem, szBuffer );
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], szBuffer, 8 );
@@ -517,7 +521,7 @@ static ERRCODE hb_sdfPutValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       }
       else if( HB_IS_NUMBER( pItem ) )
       {
-         if( pField->uiType == HB_IT_LONG )
+         if( pField->uiType == HB_FT_LONG )
          {
             if( hb_itemStrBuf( szBuffer, pItem, pField->uiLen, pField->uiDec ) )
             {
@@ -536,7 +540,7 @@ static ERRCODE hb_sdfPutValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       }
       else if( HB_IS_LOGICAL( pItem ) )
       {
-         if( pField->uiType == HB_IT_LOGICAL )
+         if( pField->uiType == HB_FT_LOGICAL )
             pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] = hb_itemGetL( pItem ) ? 'T' : 'F';
          else
             uiError = EDBF_DATATYPE;
@@ -771,31 +775,35 @@ static ERRCODE hb_sdfAddField( SDFAREAP pArea, LPDBFIELDINFO pFieldInfo )
 
    switch( pFieldInfo->uiType )
    {
-      case HB_IT_MEMO:
+      case HB_FT_MEMO:
+      case HB_FT_IMAGE:
+      case HB_FT_BLOB:
+      case HB_FT_OLE:
+         pFieldInfo->uiType = HB_FT_MEMO;
          pFieldInfo->uiLen = 0;
          pArea->fTransRec = FALSE;
          break;
 
-      case HB_IT_ANY:
+      case HB_FT_ANY:
          if( pFieldInfo->uiLen == 3 )
          {
-            pFieldInfo->uiType = HB_IT_DATE;
+            pFieldInfo->uiType = HB_FT_DATE;
             pFieldInfo->uiLen = 8;
          }
          else if( pFieldInfo->uiLen < 6 )
          {
-            pFieldInfo->uiType = HB_IT_LONG;
+            pFieldInfo->uiType = HB_FT_LONG;
             pFieldInfo->uiLen = s_uiNumLength[ pFieldInfo->uiLen ];
          }
          else
          {
-            pFieldInfo->uiType = HB_IT_MEMO;
+            pFieldInfo->uiType = HB_FT_MEMO;
             pFieldInfo->uiLen = 0;
          }
          pArea->fTransRec = FALSE;
          break;
 
-      case HB_IT_DATE:
+      case HB_FT_DATE:
          if( pFieldInfo->uiLen != 8 )
          {
             pFieldInfo->uiLen = 8;
@@ -803,20 +811,55 @@ static ERRCODE hb_sdfAddField( SDFAREAP pArea, LPDBFIELDINFO pFieldInfo )
          }
          break;
 
-      case HB_IT_INTEGER:
-         pFieldInfo->uiType = HB_IT_LONG;
+      case HB_FT_FLOAT:
+         pFieldInfo->uiType = HB_FT_LONG;
+         break;
+
+      case HB_FT_INTEGER:
+      case HB_FT_CURRENCY:
+      case HB_FT_ROWVER:
+      case HB_FT_AUTOINC:
+         pFieldInfo->uiType = HB_FT_LONG;
          pFieldInfo->uiLen = s_uiNumLength[ pFieldInfo->uiLen ];
          if( pFieldInfo->uiDec )
-         {
-            pFieldInfo->uiDec = 0;
             pFieldInfo->uiLen++;
-         }
          pArea->fTransRec = FALSE;
          break;
 
-      case HB_IT_DOUBLE:
-         pFieldInfo->uiType = HB_IT_LONG;
+      case HB_FT_DOUBLE:
+      case HB_FT_CURDOUBLE:
+         pFieldInfo->uiType = HB_FT_LONG;
          pFieldInfo->uiLen = 20;
+         pArea->fTransRec = FALSE;
+         break;
+
+      case HB_FT_VARLENGTH:
+         pFieldInfo->uiType = HB_FT_STRING;
+         pArea->fTransRec = FALSE;
+         break;
+
+      case HB_FT_LOGICAL:
+         if( pFieldInfo->uiLen != 1 )
+         {
+            pFieldInfo->uiLen = 1;
+            pArea->fTransRec = FALSE;
+         }
+         break;
+
+      case HB_FT_LONG:
+      case HB_FT_STRING:
+         break;
+
+      case HB_FT_DAYTIME:
+      case HB_FT_MODTIME:
+         pFieldInfo->uiType = HB_FT_STRING;
+         pFieldInfo->uiLen = 23;
+         pArea->fTransRec = FALSE;
+         break;
+
+      default:
+         pFieldInfo->uiType = HB_FT_NONE;
+         pFieldInfo->uiLen = 0;
          pArea->fTransRec = FALSE;
          break;
    }

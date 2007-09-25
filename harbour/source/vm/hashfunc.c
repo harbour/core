@@ -680,33 +680,3 @@ HB_FUNC( HB_HDEFAULT )
 
 HB_FUNC( HB_HSETAUTOADD )     { HB_FUNC_EXEC( HB_HAUTOADD ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
 HB_FUNC( HB_HSETCASEMATCH )   { HB_FUNC_EXEC( HB_HCASEMATCH ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
-
-#ifdef HB_COMPAT_XHB
-
-HB_FUNC( HASH )               { HB_FUNC_EXEC( HB_HASH ); }
-HB_FUNC( HHASKEY )            { HB_FUNC_EXEC( HB_HHASKEY ); }
-HB_FUNC( HGETPOS )            { HB_FUNC_EXEC( HB_HPOS ); }
-HB_FUNC( HGET )               { HB_FUNC_EXEC( HB_HGET ); }
-HB_FUNC( HSET )               { HB_FUNC_EXEC( HB_HSET ); }
-HB_FUNC( HDEL )               { HB_FUNC_EXEC( HB_HDEL ); }
-HB_FUNC( HGETKEYAT )          { HB_FUNC_EXEC( HB_HKEYAT ); }
-HB_FUNC( HGETVALUEAT )        { HB_FUNC_EXEC( HB_HVALUEAT ); }
-HB_FUNC( HSETVALUEAT )        { HB_FUNC_EXEC( HB_HVALUEAT ); }
-HB_FUNC( HGETPAIRAT )         { HB_FUNC_EXEC( HB_HPAIRAT ); }
-HB_FUNC( HDELAT )             { HB_FUNC_EXEC( HB_HDELAT ); }
-HB_FUNC( HGETKEYS )           { HB_FUNC_EXEC( HB_HKEYS ); }
-HB_FUNC( HGETVALUES )         { HB_FUNC_EXEC( HB_HVALUES ); }
-HB_FUNC( HFILL )              { HB_FUNC_EXEC( HB_HFILL ); }
-HB_FUNC( HCLONE )             { HB_FUNC_EXEC( HB_HCLONE ); }
-HB_FUNC( HCOPY )              { HB_FUNC_EXEC( HB_HCOPY ); }
-HB_FUNC( HMERGE )             { HB_FUNC_EXEC( HB_HMERGE ); }
-HB_FUNC( HEVAL )              { HB_FUNC_EXEC( HB_HEVAL ); }
-HB_FUNC( HSCAN )              { HB_FUNC_EXEC( HB_HSCAN ); }
-HB_FUNC( HSETCASEMATCH )      { HB_FUNC_EXEC( HB_HCASEMATCH ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
-HB_FUNC( HGETCASEMATCH )      { HB_FUNC_EXEC( HB_HCASEMATCH ); }
-HB_FUNC( HSETAUTOADD )        { HB_FUNC_EXEC( HB_HAUTOADD ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }
-HB_FUNC( HGETAUTOADD )        { HB_FUNC_EXEC( HB_HAUTOADD ); hb_retl( hb_parni( -1 ) == HB_HASH_AUTOADD_ALWAYS ); }
-HB_FUNC( HALLOCATE )          { HB_FUNC_EXEC( HB_HALLOCATE ); }
-HB_FUNC( HDEFAULT )           { HB_FUNC_EXEC( HB_HDEFAULT ); }
-
-#endif /* HB_COMPAT_XHB */

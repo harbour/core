@@ -3,7 +3,7 @@
  */
 
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  *    SIX compatible functions:
  *          hb_sxDtoP()
  *          hb_sxPtoD()
@@ -11,8 +11,8 @@
  *          SX_DTOP()
  *          SX_PTOD()
  *
- * Copyright 2005 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://www.xharbour.org
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

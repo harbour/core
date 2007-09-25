@@ -126,7 +126,7 @@ static ULONG hb_delimEncodeBuffer( DELIMAREAP pArea )
 
       switch( pField->uiType )
       {
-         case HB_IT_STRING:
+         case HB_FT_STRING:
             uiLen = pField->uiLen;
             while( uiLen && pFieldBuf[ uiLen - 1 ] == ' ' )
                --uiLen;
@@ -144,13 +144,13 @@ static ULONG hb_delimEncodeBuffer( DELIMAREAP pArea )
             }
             break;
 
-         case HB_IT_LOGICAL:
+         case HB_FT_LOGICAL:
             pBuffer[ ulSize++ ] = ( *pFieldBuf == 'T' || *pFieldBuf == 't' ||
                                     *pFieldBuf == 'Y' || *pFieldBuf == 'y' ) ?
                                   'T' : 'F';
             break;
 
-         case HB_IT_DATE:
+         case HB_FT_DATE:
             uiLen = 0;
             while( uiLen < 8 && pFieldBuf[ uiLen ] == ' ' )
                ++uiLen;
@@ -161,7 +161,7 @@ static ULONG hb_delimEncodeBuffer( DELIMAREAP pArea )
             }
             break;
 
-         case HB_IT_LONG:
+         case HB_FT_LONG:
             uiLen = 0;
             while( uiLen < pField->uiLen && pFieldBuf[ uiLen ] == ' ' )
                ++uiLen;
@@ -182,7 +182,7 @@ static ULONG hb_delimEncodeBuffer( DELIMAREAP pArea )
             }
             break;
 
-         case HB_IT_MEMO:
+         case HB_FT_MEMO:
          default:
             if( ulSize )
                --ulSize;
@@ -267,8 +267,8 @@ static ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
    {
       pField = pArea->lpFields + uiField;
       uiType = pField->uiType;
-      if( uiType == HB_IT_STRING || uiType == HB_IT_LOGICAL ||
-          uiType == HB_IT_DATE || uiType == HB_IT_LONG )
+      if( uiType == HB_FT_STRING || uiType == HB_FT_LOGICAL ||
+          uiType == HB_FT_DATE || uiType == HB_FT_LONG )
       {
          uiSize = 0;
          uiLen = pField->uiLen;
@@ -293,7 +293,7 @@ static ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
           * can be terminated only with valid stop character, when
           * other fields also by length
           */
-         if( pField->uiType == HB_IT_STRING )
+         if( pField->uiType == HB_FT_STRING )
          {
             while( ch >= 0 && ch != cStop )
             {
@@ -311,12 +311,12 @@ static ERRCODE hb_delimReadRecord( DELIMAREAP pArea )
             }
             buffer[ uiSize ] = '\0';
 
-            if( pField->uiType == HB_IT_LOGICAL )
+            if( pField->uiType == HB_FT_LOGICAL )
             {
                *pFieldBuf = ( *buffer == 'T' || *buffer == 't' ||
                               *buffer == 'Y' || *buffer == 'y' ) ? 'T' : 'F';
             }
-            else if( pField->uiType == HB_IT_DATE )
+            else if( pField->uiType == HB_FT_DATE )
             {
                if( uiSize == 8 && hb_dateEncStr( ( char * ) buffer ) != 0 )
                   memcpy( pFieldBuf, buffer, 8 );
@@ -555,7 +555,7 @@ static ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
    pField = pArea->lpFields + uiIndex;
    switch( pField->uiType )
    {
-      case HB_IT_STRING:
+      case HB_FT_STRING:
 #ifndef HB_CDP_SUPPORT_OFF
          if( pArea->cdPage != hb_cdp_page )
          {
@@ -573,7 +573,7 @@ static ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
          }
          break;
 
-      case HB_IT_LOGICAL:
+      case HB_FT_LOGICAL:
          switch( pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] )
          {
             case 'T':
@@ -588,11 +588,11 @@ static ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
          }
          break;
 
-      case HB_IT_DATE:
+      case HB_FT_DATE:
          hb_itemPutDS( pItem, ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ] );
          break;
 
-      case HB_IT_LONG:
+      case HB_FT_LONG:
          {
             HB_LONG lVal;
             double dVal;
@@ -619,8 +619,12 @@ static ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
          }
          break;
 
-      case HB_IT_MEMO:
+      case HB_FT_MEMO:
          hb_itemPutC( pItem, "" );
+         break;
+
+      case HB_FT_NONE:
+         hb_itemClear( pItem );
          break;
 
       default:
@@ -661,11 +665,11 @@ static ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
    uiError = SUCCESS;
    --uiIndex;
    pField = pArea->lpFields + uiIndex;
-   if( pField->uiType != HB_IT_MEMO )
+   if( pField->uiType != HB_FT_MEMO && pField->uiType != HB_FT_NONE )
    {
       if( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) )
       {
-         if( pField->uiType == HB_IT_STRING )
+         if( pField->uiType == HB_FT_STRING )
          {
             uiSize = ( USHORT ) hb_itemGetCLen( pItem );
             if( uiSize > pField->uiLen )
@@ -683,7 +687,7 @@ static ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
       }
       else if( HB_IS_DATE( pItem ) )
       {
-         if( pField->uiType == HB_IT_DATE )
+         if( pField->uiType == HB_FT_DATE )
          {
             hb_itemGetDS( pItem, szBuffer );
             memcpy( pArea->pRecord + pArea->pFieldOffset[ uiIndex ], szBuffer, 8 );
@@ -693,7 +697,7 @@ static ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
       }
       else if( HB_IS_NUMBER( pItem ) )
       {
-         if( pField->uiType == HB_IT_LONG )
+         if( pField->uiType == HB_FT_LONG )
          {
             if( hb_itemStrBuf( szBuffer, pItem, pField->uiLen, pField->uiDec ) )
             {
@@ -712,7 +716,7 @@ static ERRCODE hb_delimPutValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
       }
       else if( HB_IS_LOGICAL( pItem ) )
       {
-         if( pField->uiType == HB_IT_LOGICAL )
+         if( pField->uiType == HB_FT_LOGICAL )
             pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ] = hb_itemGetL( pItem ) ? 'T' : 'F';
          else
             uiError = EDBF_DATATYPE;
@@ -1022,35 +1026,39 @@ static ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
 
    switch( pFieldInfo->uiType )
    {
-      case HB_IT_STRING:
+      case HB_FT_STRING:
          uiDelim = 2;
          break;
 
-      case HB_IT_MEMO:
+      case HB_FT_MEMO:
+      case HB_FT_IMAGE:
+      case HB_FT_BLOB:
+      case HB_FT_OLE:
+         pFieldInfo->uiType = HB_FT_MEMO;
          pFieldInfo->uiLen = 0;
          pArea->fTransRec = FALSE;
          break;
 
-      case HB_IT_ANY:
+      case HB_FT_ANY:
          if( pFieldInfo->uiLen == 3 )
          {
-            pFieldInfo->uiType = HB_IT_DATE;
+            pFieldInfo->uiType = HB_FT_DATE;
             pFieldInfo->uiLen = 8;
          }
          else if( pFieldInfo->uiLen < 6 )
          {
-            pFieldInfo->uiType = HB_IT_LONG;
+            pFieldInfo->uiType = HB_FT_LONG;
             pFieldInfo->uiLen = s_uiNumLength[ pFieldInfo->uiLen ];
          }
          else
          {
-            pFieldInfo->uiType = HB_IT_MEMO;
+            pFieldInfo->uiType = HB_FT_MEMO;
             pFieldInfo->uiLen = 0;
          }
          pArea->fTransRec = FALSE;
          break;
 
-      case HB_IT_DATE:
+      case HB_FT_DATE:
          if( pFieldInfo->uiLen != 8 )
          {
             pFieldInfo->uiLen = 8;
@@ -1058,20 +1066,55 @@ static ERRCODE hb_delimAddField( DELIMAREAP pArea, LPDBFIELDINFO pFieldInfo )
          }
          break;
 
-      case HB_IT_INTEGER:
-         pFieldInfo->uiType = HB_IT_LONG;
+      case HB_FT_FLOAT:
+         pFieldInfo->uiType = HB_FT_LONG;
+         break;
+
+      case HB_FT_INTEGER:
+      case HB_FT_CURRENCY:
+      case HB_FT_ROWVER:
+      case HB_FT_AUTOINC:
+         pFieldInfo->uiType = HB_FT_LONG;
          pFieldInfo->uiLen = s_uiNumLength[ pFieldInfo->uiLen ];
          if( pFieldInfo->uiDec )
-         {
-            pFieldInfo->uiDec = 0;
             pFieldInfo->uiLen++;
-         }
          pArea->fTransRec = FALSE;
          break;
 
-      case HB_IT_DOUBLE:
-         pFieldInfo->uiType = HB_IT_LONG;
+      case HB_FT_DOUBLE:
+      case HB_FT_CURDOUBLE:
+         pFieldInfo->uiType = HB_FT_LONG;
          pFieldInfo->uiLen = 20;
+         pArea->fTransRec = FALSE;
+         break;
+
+      case HB_FT_VARLENGTH:
+         pFieldInfo->uiType = HB_FT_STRING;
+         pArea->fTransRec = FALSE;
+         uiDelim = 2;
+         break;
+
+      case HB_FT_LOGICAL:
+         if( pFieldInfo->uiLen != 1 )
+         {
+            pFieldInfo->uiLen = 1;
+            pArea->fTransRec = FALSE;
+         }
+         break;
+
+      case HB_FT_LONG:
+         break;
+
+      case HB_FT_DAYTIME:
+      case HB_FT_MODTIME:
+         pFieldInfo->uiType = HB_FT_STRING;
+         pFieldInfo->uiLen = 23;
+         pArea->fTransRec = FALSE;
+         break;
+
+      default:
+         pFieldInfo->uiType = HB_FT_NONE;
+         pFieldInfo->uiLen = 0;
          pArea->fTransRec = FALSE;
          break;
    }

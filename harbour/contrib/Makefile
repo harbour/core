@@ -71,6 +71,7 @@ endif
 
 #ifneq ($(HB_ARCHITECTURE),dos)
 #DIRS += tip
+#DIRS += xhb
 #endif
 
 include $(ROOT)config/dir.cf

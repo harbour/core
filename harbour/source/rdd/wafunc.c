@@ -748,17 +748,31 @@ ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
    return errCode;
 }
 
-static void hb_fldStructure( AREAP pArea, USHORT uiField, PHB_ITEM pField )
+static void hb_fldStructure( AREAP pArea, USHORT uiField, USHORT uiSize,
+                             PHB_ITEM pField )
 {
-   hb_arrayNew( pField, 4 );
+#define HB_DBS_ALEN ( sizeof( s_uiActions ) / sizeof( int ) )
+#ifdef DBS_FLAG
+   static const int s_uiActions[] =
+            { DBS_NAME, DBS_TYPE, DBS_LEN, DBS_DEC, DBS_FLAG };
+#else
+   static const int s_uiActions[] =
+            { DBS_NAME, DBS_TYPE, DBS_LEN, DBS_DEC };
+#endif
+   USHORT uiCount;
 
-   SELF_FIELDINFO( pArea, uiField, DBS_NAME, hb_arrayGetItemPtr( pField, 1 ) );
-   SELF_FIELDINFO( pArea, uiField, DBS_TYPE, hb_arrayGetItemPtr( pField, 2 ) );
-   SELF_FIELDINFO( pArea, uiField, DBS_LEN,  hb_arrayGetItemPtr( pField, 3 ) );
-   SELF_FIELDINFO( pArea, uiField, DBS_DEC,  hb_arrayGetItemPtr( pField, 4 ) );
+   if( uiSize == 0 || uiSize > HB_DBS_ALEN )
+      uiSize = HB_DBS_ALEN;
+
+   hb_arrayNew( pField, uiSize );
+   for( uiCount = 0; uiCount < uiSize; ++uiCount )
+   {
+      SELF_FIELDINFO( pArea, uiField, s_uiActions[uiCount],
+                      hb_arrayGetItemPtr( pField, 1 ) );
+   }
 }
 
-void hb_tblStructure( AREAP pArea, PHB_ITEM pStruct )
+void hb_tblStructure( AREAP pArea, PHB_ITEM pStruct, USHORT uiSize )
 {
    USHORT uiFields, uiCount;
 
@@ -767,7 +781,7 @@ void hb_tblStructure( AREAP pArea, PHB_ITEM pStruct )
       if( hb_arraySize( pStruct, uiFields ) )
       {
          for( uiCount = 1; uiCount <= uiFields; ++uiCount )
-            hb_fldStructure( pArea, uiCount,
+            hb_fldStructure( pArea, uiCount, uiSize,
                              hb_arrayGetItemPtr( pStruct, uiCount ) );
       }
    }
@@ -882,7 +896,7 @@ ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
       }
       else
       {
-         hb_tblStructure( lpaSource, *pStruct );
+         hb_tblStructure( lpaSource, *pStruct, 0 );
          uiSize = ( USHORT ) hb_arrayLen( *pStruct );
          for( uiCount = 0; uiCount < uiSize; ++uiCount )
          {
@@ -915,7 +929,7 @@ ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
                if( !lpaDest )
                {
                   hb_arraySize( *pStruct, uiSize );
-                  hb_fldStructure( lpaSource, uiPosSrc,
+                  hb_fldStructure( lpaSource, uiPosSrc, 0,
                                    hb_arrayGetItemPtr( *pStruct, uiSize ) );
                }
             }
@@ -966,6 +980,19 @@ ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
             uiSize = 0;
             break;
          }
+         if( hb_itemGetNL( pSrcItm ) != hb_itemGetNL( pDstItm ) )
+         {
+            fAll = FALSE;
+            break;
+         }
+#ifdef DBS_FLAG
+         if( SELF_FIELDINFO( lpaSource, uiCount, DBS_FLAG, pSrcItm ) != SUCCESS ||
+             SELF_FIELDINFO( lpaDest,   uiCount, DBS_FLAG, pDstItm ) != SUCCESS )
+         {
+            uiSize = 0;
+            break;
+         }
+#endif
          if( hb_itemGetNL( pSrcItm ) != hb_itemGetNL( pDstItm ) )
          {
             fAll = FALSE;

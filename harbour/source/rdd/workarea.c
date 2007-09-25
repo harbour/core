@@ -260,6 +260,7 @@ static ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    pField->uiTypeExtended = pFieldInfo->uiTypeExtended;
    pField->uiLen = pFieldInfo->uiLen;
    pField->uiDec = pFieldInfo->uiDec;
+   pField->uiFlags = pFieldInfo->uiFlags;
    pField->uiArea = pArea->uiArea;
    pArea->uiFieldCount ++;
    return SUCCESS;
@@ -286,21 +287,24 @@ static ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
    {
       pFieldInfo.uiTypeExtended = 0;
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
-      pFieldInfo.atomName = ( BYTE * ) hb_arrayGetCPtr( pFieldDesc, 1 );
-      iData = hb_arrayGetNI( pFieldDesc, 3 );
+      pFieldInfo.atomName = ( BYTE * ) hb_arrayGetCPtr( pFieldDesc, DBS_NAME );
+      iData = hb_arrayGetNI( pFieldDesc, DBS_LEN );
       if( iData < 0 )
          iData = 0;
       uiLen = pFieldInfo.uiLen = ( USHORT ) iData;
-      iData = hb_arrayGetNI( pFieldDesc, 4 );
+      iData = hb_arrayGetNI( pFieldDesc, DBS_DEC );
       if( iData < 0 )
          iData = 0;
       uiDec = ( USHORT ) iData;
       pFieldInfo.uiDec = 0;
-      iData = toupper( hb_arrayGetCPtr( pFieldDesc, 2 )[ 0 ] );
+#ifdef DBS_FLAG
+      pFieldInfo.uiFlags = hb_arrayGetNI( pFieldDesc, DBS_FLAG );
+#endif
+      iData = toupper( hb_arrayGetCPtr( pFieldDesc, DBS_TYPE )[ 0 ] );
       switch( iData )
       {
          case 'C':
-            pFieldInfo.uiType = HB_IT_STRING;
+            pFieldInfo.uiType = HB_FT_STRING;
             pFieldInfo.uiLen = uiLen;
 /* Too many people reported the behavior with code below as a
    Clipper compatibility bug so I commented this code. Druzus.
@@ -313,48 +317,48 @@ static ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             break;
 
          case 'L':
-            pFieldInfo.uiType = HB_IT_LOGICAL;
+            pFieldInfo.uiType = HB_FT_LOGICAL;
             pFieldInfo.uiLen = 1;
             break;
 
-         case 'M':
-            pFieldInfo.uiType = HB_IT_MEMO;
-            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
-            break;
-
-         case 'V':
-            pFieldInfo.uiType = HB_IT_ANY;
-            pFieldInfo.uiLen = ( uiLen < 3 || uiLen == 5 ) ? 6 : uiLen;
-            break;
-
          case 'D':
-            pFieldInfo.uiType = HB_IT_DATE;
+            pFieldInfo.uiType = HB_FT_DATE;
             pFieldInfo.uiLen = ( uiLen == 3 || uiLen == 4 ) ? uiLen : 8;
             break;
 
          case 'I':
-         case 'Y':
-            pFieldInfo.uiType = HB_IT_INTEGER;
+            pFieldInfo.uiType = HB_FT_INTEGER;
             pFieldInfo.uiLen = ( ( uiLen > 0 && uiLen <= 4 ) || uiLen == 8 ) ? uiLen : 4;
+            pFieldInfo.uiDec = uiDec;
+            break;
+
+         case 'Y':
+            pFieldInfo.uiType = HB_FT_CURRENCY;
+            pFieldInfo.uiLen = 8;
+            pFieldInfo.uiDec = 4;
+            break;
+
+         case 'Z':
+            pFieldInfo.uiType = HB_FT_CURDOUBLE;
+            pFieldInfo.uiLen = 8;
             pFieldInfo.uiDec = uiDec;
             break;
 
          case '2':
          case '4':
-            pFieldInfo.uiType = HB_IT_INTEGER;
+            pFieldInfo.uiType = HB_FT_INTEGER;
             pFieldInfo.uiLen = iData - '0';
             break;
 
          case 'B':
          case '8':
-            pFieldInfo.uiType = HB_IT_DOUBLE;
+            pFieldInfo.uiType = HB_FT_DOUBLE;
             pFieldInfo.uiLen = 8;
             pFieldInfo.uiDec = uiDec;
             break;
 
          case 'N':
-         case 'F':
-            pFieldInfo.uiType = HB_IT_LONG;
+            pFieldInfo.uiType = HB_FT_LONG;
             pFieldInfo.uiDec = uiDec;
             /* DBASE documentation defines maximum numeric field size as 20
              * but Clipper alows to create longer fileds so I remove this
@@ -365,6 +369,69 @@ static ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             */
             if( uiLen > 255 )
                errCode = FAILURE;
+            break;
+
+         case 'F':
+            pFieldInfo.uiType = HB_FT_FLOAT;
+            pFieldInfo.uiDec = uiDec;
+            /* see note above */
+            if( uiLen > 255 )
+               errCode = FAILURE;
+            break;
+
+         case 'T':
+            pFieldInfo.uiType = HB_FT_TIME;
+            pFieldInfo.uiLen = 4;
+            break;
+
+         case '@':
+            pFieldInfo.uiType = HB_FT_DAYTIME;
+            pFieldInfo.uiLen = 8;
+            break;
+
+         case '=':
+            pFieldInfo.uiType = HB_FT_MODTIME;
+            pFieldInfo.uiLen = 8;
+            break;
+
+         case '^':
+            pFieldInfo.uiType = HB_FT_ROWVER;
+            pFieldInfo.uiLen = 8;
+            break;
+
+         case '+':
+            pFieldInfo.uiType = HB_FT_AUTOINC;
+            pFieldInfo.uiLen = 4;
+            break;
+
+         case 'Q':
+            pFieldInfo.uiType = HB_FT_VARLENGTH;
+            pFieldInfo.uiLen = uiLen > 255 ? 255 : uiLen;
+            break;
+
+         case 'M':
+            pFieldInfo.uiType = HB_FT_MEMO;
+            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            break;
+
+         case 'V':
+            pFieldInfo.uiType = HB_FT_ANY;
+            pFieldInfo.uiLen = ( uiLen < 3 || uiLen == 5 ) ? 6 : uiLen;
+            break;
+
+         case 'P':
+            pFieldInfo.uiType = HB_FT_IMAGE;
+            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            break;
+
+         case 'W':
+            pFieldInfo.uiType = HB_FT_BLOB;
+            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            break;
+
+         case 'G':
+            pFieldInfo.uiType = HB_FT_OLE;
+            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
             break;
 
          default:
@@ -417,36 +484,84 @@ static ERRCODE hb_waFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_I
       case DBS_TYPE:
          switch( pField->uiType )
          {
-            case HB_IT_STRING:
+            case HB_FT_STRING:
                hb_itemPutC( pItem, "C" );
                break;
 
-            case HB_IT_LOGICAL:
+            case HB_FT_LOGICAL:
                hb_itemPutC( pItem, "L" );
                break;
 
-            case HB_IT_MEMO:
-               hb_itemPutC( pItem, "M" );
-               break;
-
-            case HB_IT_ANY:
-               hb_itemPutC( pItem, "V" );
-               break;
-
-            case HB_IT_DATE:
+            case HB_FT_DATE:
                hb_itemPutC( pItem, "D" );
                break;
 
-            case HB_IT_LONG:
+            case HB_FT_LONG:
                hb_itemPutC( pItem, "N" );
                break;
 
-            case HB_IT_INTEGER:
+            case HB_FT_INTEGER:
                hb_itemPutC( pItem, "I" );
                break;
 
-            case HB_IT_DOUBLE:
+            case HB_FT_DOUBLE:
                hb_itemPutC( pItem, "B" );
+               break;
+
+            case HB_FT_FLOAT:
+               hb_itemPutC( pItem, "F" );
+               break;
+
+            case HB_FT_TIME:
+               hb_itemPutC( pItem, "T" );
+               break;
+
+            case HB_FT_DAYTIME:
+               hb_itemPutC( pItem, "@" );
+               break;
+
+            case HB_FT_MODTIME:
+               hb_itemPutC( pItem, "=" );
+               break;
+
+            case HB_FT_ROWVER:
+               hb_itemPutC( pItem, "^" );
+               break;
+
+            case HB_FT_AUTOINC:
+               hb_itemPutC( pItem, "+" );
+               break;
+
+            case HB_FT_CURRENCY:
+               hb_itemPutC( pItem, "Y" );
+               break;
+
+            case HB_FT_CURDOUBLE:
+               hb_itemPutC( pItem, "Z" );
+               break;
+
+            case HB_FT_VARLENGTH:
+               hb_itemPutC( pItem, "Q" );
+               break;
+
+            case HB_FT_MEMO:
+               hb_itemPutC( pItem, "M" );
+               break;
+
+            case HB_FT_ANY:
+               hb_itemPutC( pItem, "V" );
+               break;
+
+            case HB_FT_IMAGE:
+               hb_itemPutC( pItem, "P" );
+               break;
+
+            case HB_FT_BLOB:
+               hb_itemPutC( pItem, "W" );
+               break;
+
+            case HB_FT_OLE:
+               hb_itemPutC( pItem, "G" );
                break;
 
             default:
@@ -462,6 +577,12 @@ static ERRCODE hb_waFieldInfo( AREAP pArea, USHORT uiIndex, USHORT uiType, PHB_I
       case DBS_DEC:
          hb_itemPutNL( pItem, pField->uiDec );
          break;
+
+#ifdef DBS_FLAG
+      case DBS_FLAG:
+         hb_itemPutNL( pItem, pField->uiFlags );
+         break;
+#endif
 
       default:
          return FAILURE;

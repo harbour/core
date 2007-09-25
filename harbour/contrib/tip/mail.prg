@@ -60,6 +60,7 @@
    Added method :getMultiParts()
 */
 
+#include "hbcompat.ch"
 #include "hbclass.ch"
 
 CLASS TipMail

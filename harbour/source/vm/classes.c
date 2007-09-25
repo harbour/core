@@ -1623,10 +1623,12 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
       }
       else if( s_uiArrayClass )
       {
-         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiArrayClass ],
-                                                 pMsg, pStack );
-         if( pExecSym )
-            return pExecSym;
+         pClass = &s_pClasses[ s_uiArrayClass ];
+         {
+            PHB_SYMB pExecSym = hb_clsScalarMethod( pClass, pMsg, pStack );
+            if( pExecSym )
+               return pExecSym;
+         }
       }
    }
    else if( HB_IS_BLOCK( pObject ) )
@@ -1635,10 +1637,12 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
          return &hb_symEval;
       else if( s_uiBlockClass )
       {
-         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiBlockClass ],
-                                                 pMsg, pStack );
-         if( pExecSym )
-            return pExecSym;
+         pClass = &s_pClasses[ s_uiBlockClass ];
+         {
+            PHB_SYMB pExecSym = hb_clsScalarMethod( pClass, pMsg, pStack );
+            if( pExecSym )
+               return pExecSym;
+         }
       }
    }
    else if( HB_IS_BYREF( pObject ) )
@@ -1705,10 +1709,12 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
    {
       if( s_uiSymbolClass )
       {
-         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiSymbolClass ],
-                                                 pMsg, pStack );
-         if( pExecSym )
-            return pExecSym;
+         pClass = &s_pClasses[ s_uiSymbolClass ];
+         {
+            PHB_SYMB pExecSym = hb_clsScalarMethod( pClass, pMsg, pStack );
+            if( pExecSym )
+               return pExecSym;
+         }
       }
       if( pMsg == s___msgExec.pDynSym || pMsg == hb_symEval.pDynSym )
       {
@@ -1729,10 +1735,12 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
    {
       if( s_uiHashClass )
       {
-         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiHashClass ],
-                                                 pMsg, pStack );
-         if( pExecSym )
-            return pExecSym;
+         pClass = &s_pClasses[ s_uiHashClass ];
+         {
+            PHB_SYMB pExecSym = hb_clsScalarMethod( pClass, pMsg, pStack );
+            if( pExecSym )
+               return pExecSym;
+         }
       }
 
       if( pMsg == s___msgKeys.pDynSym )
@@ -1779,60 +1787,72 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
    {
       if( s_uiCharacterClass )
       {
-         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiCharacterClass ],
-                                                 pMsg, pStack );
-         if( pExecSym )
-            return pExecSym;
+         pClass = &s_pClasses[ s_uiCharacterClass ];
+         {
+            PHB_SYMB pExecSym = hb_clsScalarMethod( pClass, pMsg, pStack );
+            if( pExecSym )
+               return pExecSym;
+         }
       }
    }
    else if( HB_IS_DATE( pObject ) )
    {
       if( s_uiDateClass )
       {
-         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiDateClass ],
-                                                 pMsg, pStack );
-         if( pExecSym )
-            return pExecSym;
+         pClass = &s_pClasses[ s_uiDateClass ];
+         {
+            PHB_SYMB pExecSym = hb_clsScalarMethod( pClass, pMsg, pStack );
+            if( pExecSym )
+               return pExecSym;
+         }
       }
    }
    else if( HB_IS_NUMERIC( pObject ) )
    {
       if( s_uiNumericClass )
       {
-         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiNumericClass ],
-                                                 pMsg, pStack );
-         if( pExecSym )
-            return pExecSym;
+         pClass = &s_pClasses[ s_uiNumericClass ];
+         {
+            PHB_SYMB pExecSym = hb_clsScalarMethod( pClass, pMsg, pStack );
+            if( pExecSym )
+               return pExecSym;
+         }
       }
    }
    else if( HB_IS_LOGICAL( pObject ) )
    {
       if( s_uiLogicalClass )
       {
-         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiLogicalClass ],
-                                                 pMsg, pStack );
-         if( pExecSym )
-            return pExecSym;
+         pClass = &s_pClasses[ s_uiLogicalClass ];
+         {
+            PHB_SYMB pExecSym = hb_clsScalarMethod( pClass, pMsg, pStack );
+            if( pExecSym )
+               return pExecSym;
+         }
       }
    }
    else if( HB_IS_POINTER( pObject ) )
    {
       if( s_uiPointerClass )
       {
-         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiPointerClass ],
-                                                 pMsg, pStack );
-         if( pExecSym )
-            return pExecSym;
+         pClass = &s_pClasses[ s_uiPointerClass ];
+         {
+            PHB_SYMB pExecSym = hb_clsScalarMethod( pClass, pMsg, pStack );
+            if( pExecSym )
+               return pExecSym;
+         }
       }
    }
    else if( HB_IS_NIL( pObject ) )
    {
       if( s_uiNilClass )
       {
-         PHB_SYMB pExecSym = hb_clsScalarMethod( &s_pClasses[ s_uiNilClass ],
-                                                 pMsg, pStack );
-         if( pExecSym )
-            return pExecSym;
+         pClass = &s_pClasses[ s_uiNilClass ];
+         {
+            PHB_SYMB pExecSym = hb_clsScalarMethod( pClass, pMsg, pStack );
+            if( pExecSym )
+               return pExecSym;
+         }
       }
    }
 

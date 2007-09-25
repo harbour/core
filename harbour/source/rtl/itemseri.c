@@ -1000,17 +1000,3 @@ HB_FUNC( HB_DESERIALIZE )
    else if( pParam )
       hb_itemClear( pParam );
 }
-
-#ifdef HB_COMPAT_XHB
-HB_FUNC( HB_DESERIALBEGIN )
-{
-   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
-   if( pItem )
-      hb_itemReturn( pItem );
-}
-
-HB_FUNC( HB_DESERIALNEXT )
-{
-   HB_FUNC_EXEC( HB_DESERIALIZE );
-}
-#endif

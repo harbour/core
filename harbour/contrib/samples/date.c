@@ -64,24 +64,25 @@ HB_FUNC( MDY )
    char szFormatted[ 11 ];
    char * szReturn;
    int iBufferLen;
+   int iYearLen;
    int iLen;
 
    hb_dateDecode( hb_parnl( 1 ), &iYear, &iMonth, &iDay );
    hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, "MM/DD/YYYY" );
 
    iLen = strlen( hb_dateCMonth( iMonth ) );
+   iYearLen = hb_setGetCentury() ? 4 : 2;
 
-   iBufferLen = iLen + ( hb_setGetL( hb_set_century ) ? 9 : 7 );
+   iBufferLen = iLen + 5 + iYearLen;
    szReturn = ( char * ) hb_xgrab( iBufferLen );
 
    memset( szReturn, ' ', iBufferLen + 1 );
    memcpy( szReturn, hb_dateCMonth( iMonth ), iLen );
    memcpy( szReturn + iLen + 1, szFormatted + 3, 2 );
    szReturn[ iLen + 3 ] = ',';
-   memcpy( szReturn + iLen + 5, szFormatted + 6 + ( hb_setGetL( hb_set_century ) ? 0 : 2 ), 2 + ( hb_setGetL( hb_set_century ) ? 2 : 0 ) );
+   memcpy( szReturn + iLen + 5, szFormatted + 10 - iYearLen, iYearLen );
 
-   hb_retclen( szReturn, iBufferLen );
-   hb_xfree( szReturn );
+   hb_retclen_buffer( szReturn, iBufferLen );
 }
 
 /* DMY( <dDate> ) --> "dd month yyyy" (european date format)
@@ -93,23 +94,24 @@ HB_FUNC( DMY )
    char szFormatted[ 11 ];
    char * szReturn;
    int iBufferLen;
+   int iYearLen;
    int iLen;
 
    hb_dateDecode( hb_parnl( 1 ), &iYear, &iMonth, &iDay );
    hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, "MM/DD/YYYY" );
 
    iLen = strlen( hb_dateCMonth( iMonth ) );
+   iYearLen = hb_setGetCentury() ? 4 : 2;
 
-   iBufferLen = iLen + ( hb_setGetL( hb_set_century ) ? 9 : 7 );
+   iBufferLen = iLen + 5 + iYearLen;
    szReturn = ( char * ) hb_xgrab( iBufferLen );
 
    memset( szReturn, ' ', iBufferLen );
    memcpy( szReturn, szFormatted + 3, 2 );
    memcpy( szReturn + 3, hb_dateCMonth( iMonth ), iLen );
-   memcpy( szReturn + iLen + 4, szFormatted + 6 + ( hb_setGetL( hb_set_century ) ? 0 : 2 ), 2 + ( hb_setGetL( hb_set_century ) ? 2 : 0 ) );
+   memcpy( szReturn + iLen + 4, szFormatted + 10 - iYearLen, iYearLen );
 
-   hb_retclen( szReturn, iBufferLen );
-   hb_xfree( szReturn );
+   hb_retclen_buffer( szReturn, iBufferLen );
 }
 
 /* DATEASAGE( <dDate> ) --> <nYears>

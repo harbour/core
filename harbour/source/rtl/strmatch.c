@@ -320,12 +320,3 @@ HB_FUNC( HB_WILDMATCH )
             hb_parl( 3 ) ? hb_strMatchWildExact( hb_parc( 2 ), hb_parc( 1 ) ) :
                            hb_strMatchWild( hb_parc( 2 ), hb_parc( 1 ) ) );
 }
-
-#ifdef HB_COMPAT_XHB
-
-HB_FUNC( WILDMATCH )
-{
-   HB_FUNC_EXEC( HB_WILDMATCH );
-}
-
-#endif

@@ -82,7 +82,7 @@
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_opt   export HB_GTALLEG=%{?_with_allegro:yes}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpl:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="%{?_with_gd:gd} %{?_with_tip:tip} %{?_with_pgsql:pgsql} %{?_with_mysql:mysql}"
+%define hb_ctrb  export HB_CONTRIBLIBS="%{?_with_gd:gd} %{?_with_tip:tip} %{?_with_xhb:xhb} %{?_with_pgsql:pgsql} %{?_with_mysql:mysql}"
 %define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_defgt} ; %{hb_gpm} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_opt} ; %{hb_ctrb} ; %{hb_cmrc}
 
 %define hb_host  www.harbour-project.org
@@ -523,6 +523,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_pgsql4: %{_libdir}/%{name}/libhbpg.a}
 %{?_with_gd: %{_libdir}/%{name}/libhbgd.a}
 %{?_with_tip: %{_libdir}/%{name}/libtip.a}
+%{?_with_xhb: %{_libdir}/%{name}/libxhb.a}
 
 %{_libdir}/%{name}/libhbbtree.a
 %{_libdir}/%{name}/libhtml.a

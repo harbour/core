@@ -8,6 +8,217 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-25 03:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbset.h
+  * harbour/source/rtl/set.c
+    * changed recently added hb_set*() functions to hb_setGet*()
+      Please do not use these functions yet - it's possible that
+      they will be removed soon.
+    + added hb_setGetL(), hb_setGetCPtr(), hb_setGetNI(), hb_setGetNL()
+
+  * harbour/contrib/libct/dattime2.c
+  * harbour/contrib/samples/date.c
+    * use hb_setGetCentury() instead of hb_setGetL( hb_set_century )
+      we do not have hb_set_century SET switch so hb_setGetL() cannot
+      be used
+
+  * harbour/harbour.spec
+  * harbour/bin/hb-func.sh
+  * harbour/bin/pack_src.sh
+  * harbour/contrib/Makefile
+  + harbour/contrib/xhb
+  + harbour/contrib/xhb/hboutdbg.c
+  + harbour/contrib/xhb/cstruct.ch
+  + harbour/contrib/xhb/hblog.prg
+  + harbour/contrib/xhb/hblog.ch
+  + harbour/contrib/xhb/hblognet.prg
+  + harbour/contrib/xhb/hbxml.c
+  + harbour/contrib/xhb/hbxml.h
+  + harbour/contrib/xhb/hbxml.ch
+  + harbour/contrib/xhb/hblogdef.ch
+  + harbour/contrib/xhb/hbctypes.ch
+  + harbour/contrib/xhb/wintypes.ch
+  + harbour/contrib/xhb/txml.prg
+  + harbour/contrib/xhb/hbsyslog.c
+  + harbour/contrib/xhb/cstructc.c
+  + harbour/contrib/xhb/Makefile
+  + harbour/contrib/xhb/cstruct.prg
+  + harbour/contrib/xhb/xhbfunc.c
+    + added XHB library with xharbour compatible functions borrowed from
+      xHarbour. Now it contains HBLOG, HBXML, HBCSTRUCT, HASH, INET*()
+      functions and classes.
+
+  * harbour/source/rtl/itemseri.c
+  * harbour/source/rtl/strmatch.c
+  * harbour/source/rtl/hbinet.c
+  * harbour/source/vm/hashfunc.c
+     * moved xHarbour compatible functions to XHB library
+
+  * harbour/source/vm/classes.c
+     + added support for ERROR HANDLER message in scalar classes
+
+  * harbour/contrib/tip/mail.prg
+  * harbour/contrib/tip/ftpcln.prg
+    + added #include "hbcompat.ch"
+
+  * harbour/include/hbdbferr.h
+    + added new RT errors: EDBF_CREATE_TEMP, EDBF_WRITE_TEMP, EDBF_READ_TEMP
+
+  * harbour/include/dbinfo.ch
+    + added DBI_ENCRYPT, DBI_DECRYPT, DBI_MEMOPACK, DBI_DIRTYREAD
+    + added DBOI_INDEXTYPE, DBOI_USECURRENT
+    + added RDDI_LOCKRETRY, RDDI_DIRTYREAD
+
+  * harbour/include/dbinfo.ch
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbrddfpt.h
+  * harbour/include/hbrddcdx.h
+  * harbour/include/hbrddntx.h
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    + added support for MEMOPACK, table ENCRYPT/DECRYPT, index DIRTYREAD
+
+  * harbour/include/hbapirdd.h
+  * harbour/include/dbstruct.ch
+  * harbour/include/hbusrrdd.ch
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/ace.h
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/wafunc.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/delim1.c
+    * changed HB_IT_* as field type to HB_FT_*
+    + added field flags HB_FF_*
+    + added support for new field types to core code
+
+  * harbour/source/rdd/dbf1.c
+    + added support for AUTOINC (+), ROWVERSION (^), TIME (T), DAYTIME (@)
+      and MODTIME (=) fields
+
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/ace.h
+    + added support for ROWVERSION (^), and MODTIME (=) fields
+
+  ! harbour/source/rdd/dbcmd.c
+    * fixed bug in dbSkipper() reported by Viktor
+
+  + harbour/include/hbsix.ch
+  * harbour/source/rdd/hbsix/Makefile
+  * harbour/source/rdd/hbsix/sxdate.c
+  * harbour/source/rdd/hbsix/sxcompr.c
+  * harbour/source/rdd/hbsix/sxcrypt.c
+  + harbour/source/rdd/hbsix/sxsem.c
+  + harbour/source/rdd/hbsix/sxord.c
+  + harbour/source/rdd/hbsix/sxredir.c
+  + harbour/source/rdd/hbsix/sxfname.c
+  + harbour/source/rdd/hbsix/sxtable.c
+  + harbour/source/rdd/hbsix/sxutil.c
+  + harbour/source/rdd/hbsix/sxcompat.prg
+  + harbour/source/rdd/hbsix/sxtrig.prg
+  + harbour/source/rdd/hbsix/sxini.prg
+    + added SIx3 compatible functions:
+         RDD_Count(), RDD_Name(), RDD_Info(), SetRDD(),
+         sxChar(), sxNum(), sxDate(), sxLog(),
+         Sx_DToP(), Sx_PToD(),
+         Sx_BLOB2File(), Sx_File2BLOB(),
+         Sx_Compress(), Sx_Decompress(),
+         Sx_FCompress(), Sx_FDecompress(),
+         Sx_AutoOpen(), Sx_AutoShare(),
+         Sx_MemoExt(), Sx_MemoBlk(), Sx_SetMemoBlock(), Sx_MemoPack(),
+         Sx_SetTrigger(), Sx_SetTrig(), Sx_DefTrigger(), 
+         Sx_INIheader(), _sx_INIinit(), _sxOpenInit(),
+         Sx_SetPass(),
+         Sx_Encrypt(), Sx_Decrypt(), Sx_DBFdecrypt(), Sx_DBFencrypt(),
+         sx_MakeSem(), sx_KillSem(), sx_IsSem(),
+         Sx_ClrScope(), Sx_SetScope(),
+         Sx_Freeze(), Sx_Warm(), Sx_Chill(), Sx_Thermometer(),
+         Sx_IsReindex(), Sx_Step(), Sx_KeysIncluded(),
+         Sx_I_IndexName(), Sx_I_TagName(),
+         Sx_IndexCount(), Sx_IndexName(), Sx_IndexType(), Sx_IndexFilter(),
+         Sx_ROXLock(), Sx_ROXUnLock(), Sx_IsMyROX(), Sx_IsROXLock(),
+         Sx_KeyAdd(), Sx_KeyDrop(), Sx_KeyData(),
+         Sx_KeySkip(), Sx_KeyCount(), Sx_KeyNo(), Sx_KeyGoto(),
+         Sx_WildSeek(), Sx_WildMatch(),
+         Sx_IsFLocked(), Sx_IsReadOnly(), Sx_IsShared(),
+         Sx_IsLocked(), Sx_IsDBT(),
+         Sx_IDtype(), Sx_TableType(), Sx_TableName(),
+         Sx_SetTurbo(), Sx_TurboArea(), Sx_SetDirty(), Sx_DirtyArea(),
+         Sx_RLock(), Sx_UnLock(), Sx_GetLocks(), Sx_LockRetry(),
+         Sx_SeekLast(), Sx_FindRec(),
+         Sx_SkipUnique(), Sx_TagUnique(),
+         Sx_TagCount(), Sx_TagOrder(), Sx_TagNo(), Sx_TagName(),
+         Sx_TagInfo(), Sx_Tags(),
+         Sx_SetTag(), Sx_SetTagOrder(), Sx_SetTagNo(),
+         Sx_KillTag(),
+         Sx_FileOrder(), Sx_SetFileOrd(), Sx_ClearOrder(),
+         Sx_VSigLen(), Sx_VFGet(),
+         Sx_dbCreate(), Sx_StrxCheck(), Sx_Rollback(), Sx_SortOption(),
+         _sxCondSet(),
+         Sx_FNameParser(), Sx_SlimFast(),
+         Sx_Version(), Sx_Error(),
+
+    + added SIx3 compatible commands:
+         SET DIRTYREAD ON|OFF
+         USE ... [TRIGGER <cTrigger>] [PASSWORD <cPassword>]
+         SORT ... USECURRENT
+         WILDSEEK <str>
+         WILDSEEKNEXT <str>
+         CLEAR ORDER <order>
+         SET TAGORDER TO [<order>]
+         SET ORDER TO TAG <(tag)> [OF <(bag)>]
+         SET TAG TO [<tag> [OF <(bag)>]]
+         REINDEX OPTION <eval> [STEP <step>]
+         DELETE TAG <(tag1)> [OF <(bag1)>] [, <(tagN)> [OF <(bagN)>]]
+         DELETE TAG ALL [OF <(bag)>]
+         CLEAR SCOPE
+         SET SCOPETOP TO [<value>]
+         SET SCOPEBOTTOM TO [<value>]
+         SET SCOPE TO [<value>]
+         SET TURBOREAD ON|OFF
+         MEMOPACK [BLOCK <size>] [OPTION <opt> [STEP <step>]]
+         SET MEMOBLOCK TO <value>
+         SUBINDEX ON <key> TO <(file)> ;
+               [OPTION <eval> [STEP <every>]] [FILTERON] [EMPTY]
+         SUBINDEX ON <key> TAG <(tag)> [OF <(bag)>] [TO <(bag)>] ;
+               [OPTION <eval> [STEP <every>]] [FILTERON] [EMPTY]
+         INDEX ON <key> [TAG <(tag)>] TO <(bag)> ;
+               [OPTION <eval> [STEP <every>]] [FILTERON] [EMPTY] [SUBINDEX]
+         INDEX ON <key> TAG <(tag)> [OF <(bag)>] [TO <(bag)>] ;
+               [OPTION <eval> [STEP <every>]] [FILTERON] [EMPTY] [SUBINDEX]
+
+      Unlike Ads*() functions the Sx_*() ones can be used with any RDD
+      and will work if RDD supports necessary functionality.
+
+      The global settings in SIx3 are RDD dependent in Harbour, f.e.
+      in SIx3 Sx_MemoExt() change MEMO file extensions in all SIX* RDDs
+      but in Harbour only in default RDD driver.
+      In Harbour default trigger function "Sx_DefTrigger" is not
+      enabled by default. If user needs such functionality then he
+      has to enable it himself using
+         rddInfo( RDDI_TRIGGER, "SX_DEFTRIGGER", [<cRDD>] )
+      f.e. this code:
+         init procedure sx_inittrig()
+            local aRDDs := { "DBF", "DBFNTX", "DBFCDX", "SIXCDX", ;
+                             "RMDBFNTX", "RMDBFCDX" }
+            local aRDDList := RddList(), cRdd
+
+            for each cRdd in aRDDs
+               if ascan( aRDDList, { |x| x == cRdd } ) != 0
+                  rddInfo( RDDI_TRIGGER, "SX_DEFTRIGGER", cRDD )
+               endif
+            next
+         return
+      sets SX_DEFTRIGGER as default trigger in DBF* based RDDs.
+
+      I still do not allow to encrypt tables with memo fields to not
+      replicate SIx3 bugs which may cause data corruption.
+
 2007-09-24 02:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/ole2/win32ole.prg
     * changed Invoke() method to work with core code compiled without

@@ -567,6 +567,9 @@
 #define ADS_CURDOUBLE            17    /* IEEE 8 byte floating point currency */
 #define ADS_MONEY                18    /* 8 byte, 4 implied decimal Currency Field */
 #define ADS_LONGLONG             19    /* 8 byte integer */
+#define ADS_CISTRING             20    /* CaSe INSensiTIVE character data */
+#define ADS_ROWVERSION           21    /* 8 byte integer, incremented for every update, unique to entire table */
+#define ADS_MODTIME              22    /* 8 byte timestamp, updated when record is updated */
 
 /*
  * supported User Defined Function types to be used with AdsRegisterUDF

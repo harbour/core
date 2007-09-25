@@ -1,0 +1,34 @@
+#
+# $Id$
+#
+
+ROOT = ../../
+
+C_SOURCES=\
+	hbxml.c    \
+	hbsyslog.c \
+	hboutdbg.c \
+	cstructc.c \
+	xhbfunc.c  \
+
+PRG_SOURCES=\
+	txml.prg     \
+	hblog.prg    \
+	hblognet.prg \
+	cstruct.prg  \
+
+PRG_HEADERS=\
+	hblog.ch    \
+	hblogdef.ch \
+	cstruct.ch  \
+	hbctypes.ch \
+	wintypes.ch \
+
+LIBNAME=xhb
+
+include $(TOP)$(ROOT)config/header.cf
+INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+include $(TOP)$(ROOT)config/lib.cf
+
+install::
+	$(INSTALL_RULE_HEADERS)

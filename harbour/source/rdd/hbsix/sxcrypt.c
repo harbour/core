@@ -3,7 +3,7 @@
  */
 
 /*
- * xHarbour Project source code:
+ * Harbour Project source code:
  *    SIX compatible functions:
  *          hb_sxEnCrypt()
  *          hb_sxDeCrypt()
@@ -11,8 +11,8 @@
  *          SX_ENCRYPT()
  *          SX_DECRYPT()
  *
- * Copyright 2005 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://www.xharbour.org
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@
 #include "hbsxfunc.h"
 
 #define rnd_mul1  0x0de6d
-#define rnd_mul2  0x0278D
+#define rnd_mul2  0x0278d
 
 static UINT32 hb_sxInitSeed( BYTE * pKeyVal, UINT16 * puiKey )
 {

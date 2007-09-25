@@ -70,23 +70,22 @@
 #include "hbvm.h"
 #include "hbset.h"
 
+/* The 5-th parameter is Harbour extensions */
 HB_FUNC( AFIELDS )
 {
-   PHB_ITEM pName, pType, pLen, pDec;
    USHORT uiFields, uiCount;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+   PHB_ITEM pName = hb_param( 1, HB_IT_ARRAY );
+   PHB_ITEM pType = hb_param( 2, HB_IT_ARRAY );
+   PHB_ITEM pLen = hb_param( 3, HB_IT_ARRAY );
+   PHB_ITEM pDec = hb_param( 4, HB_IT_ARRAY );
+#ifdef DBS_FLAG
+   PHB_ITEM pFlags = hb_param( 5, HB_IT_ARRAY );
+#else
+   PHB_ITEM pFlags = NULL;
+#endif
 
-   if( !pArea )
-   {
-      hb_retni( 0 );
-      return;
-   }
-
-   pName = hb_param( 1, HB_IT_ARRAY );
-   pType = hb_param( 2, HB_IT_ARRAY );
-   pLen = hb_param( 3, HB_IT_ARRAY );
-   pDec = hb_param( 4, HB_IT_ARRAY );
-   if( !pName && !pType && !pLen && !pDec )
+   if( !pArea || ( !pName && !pType && !pLen && !pDec && !pFlags ) )
    {
       hb_retni( 0 );
       return;
@@ -116,6 +115,13 @@ HB_FUNC( AFIELDS )
    if( pDec )
    {
       USHORT uiArrayLen = ( USHORT ) hb_arrayLen( pDec );
+      if( uiArrayLen < uiFields )
+         uiFields = uiArrayLen;
+   }
+
+   if( pFlags )
+   {
+      USHORT uiArrayLen = ( USHORT ) hb_arrayLen( pFlags );
       if( uiArrayLen < uiFields )
          uiFields = uiArrayLen;
    }
@@ -152,6 +158,16 @@ HB_FUNC( AFIELDS )
             return;
       }
    }
+#ifdef DBS_FLAG
+   if( pFlags )
+   {
+      for( uiCount = 1; uiCount <= uiFields; ++uiCount )
+      {
+         if( SELF_FIELDINFO( pArea, uiCount, DBS_FLAG, hb_arrayGetItemPtr( pFlags, uiCount ) ) != SUCCESS )
+            return;
+      }
+   }
+#endif
 
    hb_retni( uiFields );
 }
@@ -775,7 +791,7 @@ HB_FUNC( DBSTRUCT )
    PHB_ITEM pStruct = hb_itemArrayNew( 0 );
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
-      hb_tblStructure( pArea, pStruct );
+      hb_tblStructure( pArea, pStruct, DBS_ALEN );
    hb_itemRelease( hb_itemReturn( pStruct ) );
 }
 
@@ -2720,8 +2736,8 @@ HB_FUNC( DBSKIPPER )
                lSkipped--;
             }
          }
-         hb_retnl( lSkipped );
       }
+      hb_retnl( lSkipped );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBSKIPPER" );

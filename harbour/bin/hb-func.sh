@@ -74,7 +74,7 @@ mk_hbgetlibsctb()
 {
     if [ -z "$@" ]
     then
-        echo -n "rddads ct nf tip hbgd hbodbc hbole hbpg hbmysql"
+        echo -n "rddads ct nf tip xhb hbgd hbodbc hbole hbpg hbmysql"
     else
         echo -n "$@"
     fi

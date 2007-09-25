@@ -58,6 +58,9 @@
 #define DBS_TYPE        2
 #define DBS_LEN         3
 #define DBS_DEC         4
+/*
+#define DBS_FLAG        5
+*/
 
 /* Length of the field structure array */
 #define DBS_ALEN        4

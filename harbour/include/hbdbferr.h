@@ -89,6 +89,10 @@ HB_EXTERN_BEGIN
 #define EDBF_MEMOTYPE                              1056
 #define EDBF_MEMOTOOLONG                           1057
 
+#define EDBF_CREATE_TEMP                           1060
+#define EDBF_WRITE_TEMP                            1061
+#define EDBF_READ_TEMP                             1062
+
 HB_EXTERN_END
 
 #endif /* HB_DBFERR_H_ */
