@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-25 19:15 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/xhb/xhbcomp.prg
+     + Added "string as array" implementation. I didn't test 
+       it for 100% compatibility, but the base is there.
+       One problem though that Harbour won't allow an zero 
+       or negative index even with the -ks switch. (I find 
+       the error useful though, so we should keep it, but allow 
+       it with a switch -ks?)
+
 2007-09-25 18:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbcompat.ch
    * source/vm/arrayshb.c

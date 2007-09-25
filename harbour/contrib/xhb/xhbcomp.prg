@@ -59,6 +59,8 @@ INIT PROCEDURE xhb_Init()
 
    /* Add calls to do initial settings to Harbour to be more compatible with xhb. */
 
+   ASSOCIATE CLASS xhb_Character WITH TYPE Character
+
    RETURN
 
 FUNCTION xhb_AIns( a, n, x )
@@ -199,3 +201,17 @@ ENDCLASS
 CLASS HBSymbol FROM HBScalar
 ENDCLASS
 */
+
+CREATE CLASS Character INHERIT HBScalar FUNCTION xhb_Character
+
+   METHOD AsString()
+   METHOD AsExpStr()
+   OPERATOR "[]" ARG nIndex INLINE SubStr( Self, iif( nIndex < 0, Len( Self ) + nIndex, nIndex ), 1 )
+
+ENDCLASS
+
+METHOD AsString() CLASS Character
+   RETURN Self
+
+METHOD AsExpStr() CLASS Character
+   RETURN '"' + Self + '"'
