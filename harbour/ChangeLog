@@ -8,6 +8,42 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-25 04:30 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/xhb/Makefile
+   * contrib/xhb/xhbfunc.c
+   + contrib/xhb/xhb.ch
+   + contrib/xhb/xhbcomp.prg
+     + Added xhb_AScan(), xhb_AIns(), xhb_ADel() plus defines 
+       to redirect extended AScan(), AIns(), ADel() calls to these 
+       functions. They need to be tested as I'm no xhb user.
+     + Added compatibility header, which adds a the above translations 
+       and include hbcompat.ch.
+     + Added INIT PROC xhb_Init() as a future place for xhb specific 
+       startup settings.
+     ; TODO:
+       - Add $ and [] operator overloading.
+       - Add operator overloading for hash type.
+       - Add a way hash API call to control the default flag 
+         hb_hashNew() uses, then add this default setting to 
+         the xhb libs INIT PROC.
+     ; For better xhb compatibility, developers should add 
+       #ifndef __XHARBOUR__
+          #include "xhb.ch"
+       #endif
+       to every .prg file they use.
+
+   + contrib/xhb/make_b32.bat
+   + contrib/xhb/make_vc.bat
+   + contrib/xhb/makefile.bc
+   + contrib/xhb/makefile.vc
+     + Added non-GNU makefiles for xhb lib.
+
+   * include/hbcompat.ch
+     + Added xhb compatibility translates for ENDSWITCH end friends.
+
+   * source/rtl/scrollbr.prg
+     * Minor formatting.
+
 2007-09-25 03:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbextern.ch
   + harbour/contrib/xhb/xhbextrn.ch

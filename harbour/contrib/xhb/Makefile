@@ -16,6 +16,7 @@ PRG_SOURCES=\
 	hblog.prg    \
 	hblognet.prg \
 	cstruct.prg  \
+	xhbcomp.prg  \
 
 PRG_HEADERS=\
 	hblog.ch    \

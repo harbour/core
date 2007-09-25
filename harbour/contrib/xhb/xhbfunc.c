@@ -53,6 +53,25 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+HB_FUNC( XHB_ASCAN )
+{
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+   PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
+
+   if( pArray && pValue )
+   {
+      ULONG ulStart = hb_parnl( 3 );
+      ULONG ulCount = hb_parnl( 4 );
+
+      hb_retnint( hb_arrayScan( pArray, pValue,
+                                ISNUM( 3 ) ? &ulStart : NULL,
+                                ISNUM( 4 ) ? &ulCount : NULL,
+                                hb_parl( 5 ) ) );
+   }
+   else
+      hb_retni( 0 );
+}
+
 HB_FUNC_EXTERN( HB_DESERIALIZE );
 
 HB_FUNC( HB_DESERIALBEGIN )

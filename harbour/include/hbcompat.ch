@@ -89,15 +89,13 @@
    #xtranslate hb_IniRead([<x,...>])       => hb_ReadIni(<x>)
    #xtranslate hb_IniWrite([<x,...>])      => hb_WriteIni(<x>)
 
-   #xtranslate HBDebugger()            => TDebugger()
-   #xtranslate HBBrwText()             => TBrwText()
-   #xtranslate HBDbMenu()              => TDbMenu()
-   #xtranslate HBDbMenuItem()          => TDbMenuItem()
-   #xtranslate HBDbWindow()            => TDbWindow()
-   #xtranslate HBDbBrowse()            => TDBGBrowser()
-   #xtranslate HBDbArray()             => TDBGArray()
-   #xtranslate HBDbHash()              => TDBGHash()
-   #xtranslate HBDbObject()            => TDBGobject()
+   /* Some statement endings */
+   #xcommand ENDSEQUENCE => END
+   #xcommand ENDSWITCH => END
+   #xcommand END SWITCH => END
+   #xcommand ENDWITH => END
+   #xcommand END WITH => END
+   #xcommand END OBJECT => END
 
 #else
 
@@ -134,16 +132,6 @@
    #xtranslate hb_SetIniComment([<x,...>]) => hb_IniSetComment(<x>)
    #xtranslate hb_ReadIni([<x,...>])       => hb_IniRead(<x>)
    #xtranslate hb_WriteIni([<x,...>])      => hb_IniWrite(<x>)
-
-   #xtranslate TDebugger()             => HBDebugger()
-   #xtranslate TBrwText()              => HBBrwText()
-   #xtranslate TDbMenu()               => HBDbMenu()
-   #xtranslate TDbMenuItem()           => HBDbMenuItem()
-   #xtranslate TDbWindow()             => HBDbWindow()
-   #xtranslate TDBGBrowser()           => HBDbBrowse()
-   #xtranslate TDBGArray()             => HBDbArray()
-   #xtranslate TDBGHash()              => HBDbHash()
-   #xtranslate TDBGobject()            => HBDbObject()
 
    #xtranslate Str(<x>,[<y>],[<y>],<z>)=> iif(<z>, LTrim(Str(<x>)), Str(<x>))
    #xtranslate hb_CMDARGARGV([<x,...>])=> hb_ARGV(0)

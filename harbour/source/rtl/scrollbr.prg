@@ -461,7 +461,7 @@ METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient ) CLASS SCROLLBAR
 
    RETURN Self
 
-FUNCTION Scrollbar( nStart, nEnd, nOffset, bSBlock, nOrient )
+FUNCTION ScrollBar( nStart, nEnd, nOffset, bSBlock, nOrient )
    RETURN HBScrollBar():New( nStart, nEnd, nOffset, bSBlock, nOrient )
 
 #endif
