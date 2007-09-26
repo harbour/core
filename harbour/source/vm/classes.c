@@ -125,6 +125,7 @@
  ">"     = __OpGreater
  ">="    = __OpGreaterEqual
  "$"     = __OpInstring
+ "$$"    = __OpInclude
  "!"     = __OpNot
  ".NOT." = __OpNot (same as "!")
  ".AND." = __OpAnd
@@ -280,16 +281,17 @@ static HB_SYMB s_opSymbols[ HB_OO_MAX_OPERATOR + 1 ] = {
    { "__OPGREATEREQUAL",      {HB_FS_MESSAGE}, {NULL}, NULL },  /* 14 */
    { "__OPASSIGN",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 15 */
    { "__OPINSTRING",          {HB_FS_MESSAGE}, {NULL}, NULL },  /* 16 */
-   { "__OPNOT",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 17 */
-   { "__OPAND",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 18 */
-   { "__OPOR",                {HB_FS_MESSAGE}, {NULL}, NULL },  /* 19 */
-   { "__OPARRAYINDEX",        {HB_FS_MESSAGE}, {NULL}, NULL },  /* 20 */
-   { "__ENUMINDEX",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 21 */
-   { "__ENUMBASE",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 22 */
-   { "__ENUMVALUE",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 23 */
-   { "__ENUMSTART",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 24 */
-   { "__ENUMSKIP",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 25 */
-   { "__ENUMSTOP",            {HB_FS_MESSAGE}, {NULL}, NULL }   /* 26 */
+   { "__OPINCLUDE",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 17 */
+   { "__OPNOT",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 18 */
+   { "__OPAND",               {HB_FS_MESSAGE}, {NULL}, NULL },  /* 19 */
+   { "__OPOR",                {HB_FS_MESSAGE}, {NULL}, NULL },  /* 20 */
+   { "__OPARRAYINDEX",        {HB_FS_MESSAGE}, {NULL}, NULL },  /* 21 */
+   { "__ENUMINDEX",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 22 */
+   { "__ENUMBASE",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 23 */
+   { "__ENUMVALUE",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 24 */
+   { "__ENUMSTART",           {HB_FS_MESSAGE}, {NULL}, NULL },  /* 25 */
+   { "__ENUMSKIP",            {HB_FS_MESSAGE}, {NULL}, NULL },  /* 26 */
+   { "__ENUMSTOP",            {HB_FS_MESSAGE}, {NULL}, NULL }   /* 27 */
 };
 
 static HB_SYMB s___msgDestructor = { "__msgDestructor", {HB_FS_MESSAGE}, {NULL},               NULL };
@@ -2469,6 +2471,8 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
          pMessage = ( s_opSymbols + HB_OO_OP_ASSIGN )->pDynSym;
       else if (strcmp("$", szMessage) == 0)
          pMessage = ( s_opSymbols + HB_OO_OP_INSTRING )->pDynSym;
+      else if (strcmp("$$", szMessage) == 0)
+         pMessage = ( s_opSymbols + HB_OO_OP_INCLUDE )->pDynSym;
       else if (strcmp("!", szMessage) == 0)
          pMessage = ( s_opSymbols + HB_OO_OP_NOT )->pDynSym;
       else if (hb_stricmp(".NOT.", szMessage) == 0)

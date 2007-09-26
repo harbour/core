@@ -56,7 +56,7 @@
 
    REQUEST XHB_LIB
 
-   #xtranslate AIns(<a>,<n>,<x>)              => xhb_AIns(<a>,<n>,<x>)
+   #xtranslate AIns(<a>,<n>,[<x,...>])      => xhb_AIns(<a>,<n>,<x>)
    #xtranslate ADel(<a>,<n>,<l>)              => xhb_ADel(<a>,<n>,<l>)
 
 #endif

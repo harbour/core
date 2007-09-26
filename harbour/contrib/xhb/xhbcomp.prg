@@ -1,6 +1,6 @@
 /*
-* $Id$
-*/
+ * $Id$
+ */
 
 /*
  * Harbour Project source code:
@@ -56,162 +56,22 @@
 ANNOUNCE XHB_LIB
 
 INIT PROCEDURE xhb_Init()
-
    /* Add calls to do initial settings to Harbour to be more compatible with xhb. */
-
    ASSOCIATE CLASS xhb_Character WITH TYPE Character
-
-   RETURN
-
-FUNCTION xhb_AIns( a, n, x )
-
-   AIns( a, n )
-   IF PCount() > 2
-      a[ n ] := x
-   ENDIF
-
-   RETURN a
-
-FUNCTION xhb_ADel( a, n, l )
-
-   ADel( a, n )
-   IF PCount() > 2 .AND. ISLOGICAL( l ) .AND. l
-      ASize( a, Len( a ) - 1 )
-   ENDIF
-
-   RETURN a
-
-/*
-* Overloading of "$","[]" operators in scalar classes
-* "$" is done for types:
-*   HBCharacter
-*   HBDate
-*   HBLogical
-*   HBNil
-*   HBNumeric
-*   // HBPointer
-*   // HBSymbol
-* "[]" is only for HBCharacter type
-*   TODO: assign. in the form <string>[n] := <char>
-* 2007 tfonrouge
-*/
-/*
-  HBScalar
-*/
-CLASS HBScalar
-  METHOD IsIn OPERATOR "$"
-ENDCLASS
-
-/*
-  HBScalar:IsIn : "$" operator
-*/
-METHOD IsIn( itm ) CLASS HBScalar
-  IF HB_IsArray( itm )
-    RETURN AScan( itm, Self ) > 0
-  ENDIF
-  IF HB_IsHash( itm )
-    RETURN HB_HHasKey( itm, Self )
-  ENDIF
-  /*
-   * we need to raise a error here ? when ?
-   */
-RETURN .F. /*  */
-
-/*
-  HBArray
-*/
-CLASS HBArray FROM HBScalar
-  METHOD IsIn OPERATOR "$" // <array> $ <any>  returns .F.
-ENDCLASS
-
-/*
-  HBArray:IsIn : "$" operators
-*/
-METHOD IsIn CLASS HBArray
-RETURN .F.
-
-/*
-  HBCharacter
-*/
-CLASS HBCharacter FROM HBScalar
-  METHOD Index  OPERATOR "[]"
-ENDCLASS
-
-/*
-  HBCharacter:Index
-*/
-METHOD Index( n/*, char*/ ) CLASS HBCharacter
-  /*
-  IF PCount()>1
-    Self := Stuff( Self, n, Len( char ), char )
-    RETURN Self
-  ENDIF
-  */
-RETURN SubStr( Self, n , 1 )
-
-/*
-  HBDate
-*/
-CLASS HBDate FROM HBScalar
-ENDCLASS
-
-/*
-  HBHash
-*/
-CLASS HBHash FROM HBScalar
-  METHOD IsIn OPERATOR "$" // <hash> $ <any>  returns .F.
-ENDCLASS
-
-/*
-  HBHash:IsIn : "$" operators
-*/
-METHOD IsIn CLASS HBHash
-RETURN .F.
-
-/*
-  HBLogical
-*/
-CLASS HBLogical FROM HBScalar
-ENDCLASS
-
-/*
-  HBNil
-*/
-CLASS HBNil FROM HBScalar
-ENDCLASS
-
-/*
-  HBNumeric
-*/
-CLASS HBNumeric FROM HBScalar
-ENDCLASS
-
-/*
-  HBPointer
-*/
-/*
-CLASS HBPointer FROM HBScalar
-ENDCLASS
-*/
-
-/*
-  HBSymbol
-*/
-/*
-CLASS HBSymbol FROM HBScalar
-ENDCLASS
-*/
+   ASSOCIATE CLASS xhb_Array     WITH TYPE Array
+   ASSOCIATE CLASS xhb_Hash      WITH TYPE Hash
+RETURN
 
 CREATE CLASS Character INHERIT HBScalar FUNCTION xhb_Character
-
-   METHOD AsString()
-   METHOD AsExpStr()
-   OPERATOR "[]" ARG nIndex INLINE SubStr( Self, iif( nIndex < 0, Len( Self ) + nIndex, nIndex ), 1 )
-
+   OPERATOR "[]" FUNCTION XHB_INDEX()
 ENDCLASS
 
-METHOD AsString() CLASS Character
-   RETURN Self
+CREATE CLASS Array INHERIT HBScalar FUNCTION xhb_Array
+   OPERATOR "[]" FUNCTION XHB_INDEX()
+   OPERATOR "$$" FUNCTION XHB_INCLUDE()
+ENDCLASS
 
-METHOD AsExpStr() CLASS Character
-   RETURN '"' + Self + '"'
+CREATE CLASS Hash INHERIT HBScalar FUNCTION xhb_Hash
+   ON ERROR FUNCTION XHB_HASHERROR()
+   OPERATOR "$$" FUNCTION XHB_INCLUDE()
+ENDCLASS

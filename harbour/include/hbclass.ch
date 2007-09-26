@@ -318,6 +318,8 @@ DECLARE HBClass ;
    _HB_MEMBER __HB_CLS_ASFUNC(<MethodName>);;
    __HB_CLS_DECLARE_METHOD __HB_CLS_PARAMS(<MethodName>) _CLASS_NAME_ ;;
    s_oClass:SetOnError( @__HB_CLS_ASID( __HB_CLS_MTHNAME _CLASS_NAME_ <MethodName> )() )
+#xcommand ON ERROR FUNCTION <FuncName> => ;
+   s_oClass:SetOnError( @__HB_CLS_ASID( <FuncName> )() )
 
 /* Friend function/class definitions */
 #xcommand FRIEND CLASS <ClassName1> [, <ClassNameN> ] => ;
@@ -334,6 +336,9 @@ DECLARE HBClass ;
    _HB_MEMBER __HB_CLS_ASFUNC(<MethodName>) [ AS <type> ];;
    __HB_CLS_DECLARE_METHOD __HB_CLS_PARAMS(<MethodName>) _CLASS_NAME_ ;;
    s_oClass:AddMethod( <(op)>, @__HB_CLS_ASID( __HB_CLS_MTHNAME _CLASS_NAME_ <MethodName> )(), __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) )
+
+#xcommand OPERATOR <op> FUNCTION <FuncName> [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] => ;
+   s_oClass:AddMethod( <(op)>, @__HB_CLS_ASID( <FuncName> )(), __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) )
 
 /* Set/Get Method */
 #xcommand METHOD <MethodName> [ AS <type> ] SETGET [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;

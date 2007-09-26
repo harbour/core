@@ -8,6 +8,66 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-26 02:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    + added:
+         ON ERROR FUNCTION <FuncName>
+         OPERATOR <op> FUNCTION <FuncName> <scope>
+
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/hvm.c
+    + added support for overloading right side $ operator
+
+  * harbour/contrib/xhb/xhbfunc.c
+    * rewritten xhb_ains() and xhb_adel() in C
+
+  * harbour/contrib/xhb/xhb.ch
+    * changed AINS() conversion to be xHarbour compatible
+
+  * harbour/contrib/xhb/Makefile
+    + added xhb.ch to PRG_HEADERS so it's installed automatically
+      during 'make install'
+
+  * harbour/contrib/xhb/Makefile
+  + harbour/contrib/xhb/xhbmsgs.c
+  * harbour/contrib/xhb/xhbcomp.prg
+    + added support for $ operator used with hashes and arrays
+      on right side working _exactly_ like in xHarbour.
+    + added support for negative indexes in used in [] operator
+      for array and strings.
+      Please remember that standard harbour build (without
+      HB_COMPAT_XHB flag) generate warning for negative indexes,
+      if you wan to pacify them then instead of var[-1] use var[(-1)]
+    + added support for assign string characters with [] index.
+      Please remember that for standard harbour build (without
+      HB_COMPAT_XHB flag) you have to use -ks compile time switch
+      if you want to assign strings in such way because this feature
+      needs different PCODE, f.e. try to compile this code:
+         proc main()
+            local s:="ABC"
+            s[(-1)] := "*"
+            ? s
+         return
+      with and without -ks switch
+    + added support for accessing hash items using OO interface, f.e.:
+         proc main()
+            local h:={"ABC"=>123.45,"XYZ"=>567.89}
+            ? h["ABC"], h["XYZ"]
+            ? h:ABC, h:XYZ
+            h:ABC+=1000
+            h:XYZ:=-2000
+            ? h:ABC, h:XYZ
+         return
+
+      All of the above extensions are written in C code so the speed
+      overhead is very small. Harbour evaluates PCODE faster then xHarbour
+      so in speed tests where above operators are executed in loop without
+      any other code the xHarbour results with native support are comparable
+      with Harbour ones where above operators are overloaded using scalar
+      classes so in normal code you should not find any difference with
+      one exception for assigning characters in very long strings.
+
 2007-09-25 19:15 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/xhb/xhbcomp.prg
      + Added "string as array" implementation. I didn't test 

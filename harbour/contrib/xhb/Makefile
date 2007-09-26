@@ -10,6 +10,7 @@ C_SOURCES=\
 	hboutdbg.c \
 	cstructc.c \
 	xhbfunc.c  \
+	xhbmsgs.c  \
 
 PRG_SOURCES=\
 	txml.prg     \
@@ -19,6 +20,7 @@ PRG_SOURCES=\
 	xhbcomp.prg  \
 
 PRG_HEADERS=\
+	xhb.ch      \
 	hblog.ch    \
 	hblogdef.ch \
 	cstruct.ch  \

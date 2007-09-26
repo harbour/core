@@ -76,18 +76,19 @@ HB_EXTERN_BEGIN
 #define HB_OO_OP_GREATEREQUAL 14
 #define HB_OO_OP_ASSIGN       15
 #define HB_OO_OP_INSTRING     16
-#define HB_OO_OP_NOT          17
-#define HB_OO_OP_AND          18
-#define HB_OO_OP_OR           19
-#define HB_OO_OP_ARRAYINDEX   20
-#define HB_OO_OP_ENUMINDEX    21
-#define HB_OO_OP_ENUMBASE     22
-#define HB_OO_OP_ENUMVALUE    23
-#define HB_OO_OP_ENUMSTART    24
-#define HB_OO_OP_ENUMSKIP     25
-#define HB_OO_OP_ENUMSTOP     26
+#define HB_OO_OP_INCLUDE      17
+#define HB_OO_OP_NOT          18
+#define HB_OO_OP_AND          19
+#define HB_OO_OP_OR           20
+#define HB_OO_OP_ARRAYINDEX   21
+#define HB_OO_OP_ENUMINDEX    22
+#define HB_OO_OP_ENUMBASE     23
+#define HB_OO_OP_ENUMVALUE    24
+#define HB_OO_OP_ENUMSTART    25
+#define HB_OO_OP_ENUMSKIP     26
+#define HB_OO_OP_ENUMSTOP     27
 
-#define HB_OO_MAX_OPERATOR    26
+#define HB_OO_MAX_OPERATOR    27
 
 extern void       hb_clsInit( void );           /* initialize Classy/OO system at HVM startup */
 extern void       hb_clsDoInit( void );         /* initialize Classy/OO system .prg functions */
