@@ -11,6 +11,7 @@ C_SOURCES=\
 	cstructc.c \
 	xhbfunc.c  \
 	xhbmsgs.c  \
+	xhbwith.c  \
 
 PRG_SOURCES=\
 	txml.prg     \

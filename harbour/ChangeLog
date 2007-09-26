@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-26 05:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/xhb/Makefile
+  + harbour/contrib/xhb/xhbwith.c
+    + added HB_QWith( [<nLevel>] ), HB_QWithObjectCounter(),  HB_QResetWith()
+
 2007-09-26 02:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbclass.ch
     + added:
