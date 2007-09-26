@@ -258,3 +258,10 @@ HB_FUNC( XHB_ADEL )
       hb_itemReturn( pArray ); /* ADel() returns the array itself */
    }
 }
+
+HB_FUNC_EXTERN( __SENDER );
+
+HB_FUNC( HB_QSELF )
+{
+   HB_FUNC_EXEC( __SENDER )
+}
