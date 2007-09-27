@@ -3573,7 +3573,7 @@ static HB_GARBAGE_FUNC( hb_withObjectDestructor )
    LONG * plWithObjectBase = ( LONG * ) Cargo;
    hb_stackWithObjectSetOffset( * plWithObjectBase );
 }
-      
+
 static void hb_vmWithObjectStart( void )
 {
    LONG * plWithObjectBase;

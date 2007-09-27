@@ -1510,9 +1510,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiLen = 2;
             }
             else
-            {
                return FAILURE;
-            }
             break;
 
          case '@':
@@ -1523,9 +1521,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiLen = 8;
             }
             else
-            {
                return FAILURE;
-            }
             break;
 
          case '=':
@@ -1536,9 +1532,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiLen = 8;
             }
             else
-            {
                return FAILURE;
-            }
             break;
 
          case '^':
@@ -1549,25 +1543,26 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                dbFieldInfo.uiLen = 8;
             }
             else
-            {
                return FAILURE;
-            }
             break;
 
          case 'T':
-            if( ( iNameLen == 1 || hb_stricmp( szFieldType, "time" ) == 0 ) &&
-                  pArea->iFileType == ADS_ADT )
+            if( pArea->iFileType == ADS_ADT &&
+                ( iNameLen == 1 || ( iNameLen >= 4 &&
+                  hb_strnicmp( szFieldType, "timestamp", iNameLen ) == 0 ) ) )
             {
-               dbFieldInfo.uiType = HB_FT_TIME;
-               dbFieldInfo.uiTypeExtended = ADS_TIME;
-               dbFieldInfo.uiLen = 4;
-            }
-            else if( iNameLen >= 4 && hb_stricmp( szFieldType, "timestamp" ) == 0 &&
-                     pArea->iFileType == ADS_ADT )
-            {
-               dbFieldInfo.uiType = HB_FT_DAYTIME;
-               dbFieldInfo.uiTypeExtended = ADS_TIMESTAMP;
-               dbFieldInfo.uiLen = 8;
+               if( ( iNameLen == 1 && uiLen == 8 ) || iNameLen > 4 )
+               {
+                  dbFieldInfo.uiType = HB_FT_DAYTIME;
+                  dbFieldInfo.uiTypeExtended = ADS_TIMESTAMP;
+                  dbFieldInfo.uiLen = 8;
+               }
+               else
+               {
+                  dbFieldInfo.uiType = HB_FT_TIME;
+                  dbFieldInfo.uiTypeExtended = ADS_TIME;
+                  dbFieldInfo.uiLen = 4;
+               }
             }
             else
                return FAILURE;
@@ -1605,9 +1600,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             break;
 
          default:
-         {
             return FAILURE;
-         }
       }
       /* Add field */
       if( SELF_ADDFIELD( (AREAP)pArea, &dbFieldInfo ) == FAILURE )
@@ -2507,10 +2500,10 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
             cType = pField->uiTypeExtended == ADS_VARCHAR ? "VarC" : "M";
             break;
          case HB_FT_BLOB:
-            cType = "Binary";
+            cType = "Binary"; /* "W" */
             break;
          case HB_FT_IMAGE:
-            cType = "Image";
+            cType = "Image"; /* "P" */
             break;
          case HB_FT_LOGICAL:
             cType = "L";
@@ -2519,27 +2512,27 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
             cType = "N";
             break;
          case HB_FT_INTEGER:
-            cType = pField->uiLen == 2 ? "ShortI" : "Int";
+            cType = pField->uiLen == 2 ? "ShortI" : "Int"; /* "I" */
             break;
          case HB_FT_DOUBLE:
-            cType = "Double";
+            cType = "Double"; /* "B" */
             break;
          case HB_FT_TIME:
-            cType = "Time";
+            cType = "Time"; /* "T" */
             break;
-         case HB_FT_DAYTIME:
+         case HB_FT_DAYTIME: /* "@" */
             cType = "TimeSt";
             break;
-         case HB_FT_MODTIME:
+         case HB_FT_MODTIME: /* "=" */
             cType = "ModTime";
             break;
-         case HB_FT_AUTOINC:
+         case HB_FT_AUTOINC: /* "+" */
             cType = "Auto";
             break;
-         case HB_FT_ROWVER:
+         case HB_FT_ROWVER:  /* "^" */
             cType = "RowVer";
             break;
-         case HB_FT_CURDOUBLE:
+         case HB_FT_CURDOUBLE: /* "Z" */
             cType = "CurD";
             break;
       }

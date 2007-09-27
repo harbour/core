@@ -1899,16 +1899,20 @@ static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          }
          break;
 
+      case HB_FT_TIME:
+         if( pField->uiLen == 4 )
+         {
+            hb_itemPutC( pItem, hb_timeStampStr( szBuffer,
+                  HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ) ) );
+            break;
+         }
+         /* no break */
+
       case HB_FT_MODTIME:
       case HB_FT_DAYTIME:
          hb_itemPutC( pItem, hb_dateTimeStampStr( szBuffer,
                HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ),
                HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] + 4 ) ) );
-         break;
-
-      case HB_FT_TIME:
-         hb_itemPutC( pItem, hb_timeStampStr( szBuffer,
-               HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ) ) );
          break;
 
       case HB_FT_INTEGER:
@@ -2034,7 +2038,6 @@ static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          }
          else
          {
-            /* TODO: write into MEMO file */
             fError = TRUE;
          }
          break;
@@ -3016,7 +3019,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             break;
 
          case HB_FT_DAYTIME:
-            pThisField->bType = '@';
+            pThisField->bType = pArea->bTableType == DB_DBF_VFP ? 'T' : '@';
             pField->uiLen = 8;
             pThisField->bLen = ( BYTE ) pField->uiLen;
             pArea->uiRecordLen += pField->uiLen;
@@ -3908,8 +3911,11 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
          /* types which are not supported by VM - mapped to different ones */
          case 'T':
-            dbFieldInfo.uiType = HB_FT_TIME;
-            if( dbFieldInfo.uiLen != 4 )
+            if( dbFieldInfo.uiLen == 8 )
+               dbFieldInfo.uiType = HB_FT_DAYTIME;
+            else if( dbFieldInfo.uiLen == 4 )
+               dbFieldInfo.uiType = HB_FT_TIME;
+            else
                errCode = FAILURE;
             break;
 
@@ -3942,14 +3948,22 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
          case 'Q':
             dbFieldInfo.uiType = HB_FT_VARLENGTH;
+            dbFieldInfo.uiFlags |= HB_FF_BINARY;
             break;
 
          case 'V':
-            dbFieldInfo.uiType = HB_FT_ANY;
-            if( dbFieldInfo.uiLen >= 6 )
+            if( pArea->bTableType == DB_DBF_VFP )
             {
-               pArea->uiMemoVersion = DB_MEMOVER_SIX;
-               pArea->fHasMemo = TRUE;
+               dbFieldInfo.uiType = HB_FT_VARLENGTH;
+            }
+            else
+            {
+               dbFieldInfo.uiType = HB_FT_ANY;
+               if( dbFieldInfo.uiLen >= 6 )
+               {
+                  pArea->uiMemoVersion = DB_MEMOVER_SIX;
+                  pArea->fHasMemo = TRUE;
+               }
             }
             break;
 

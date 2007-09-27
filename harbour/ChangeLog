@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-27 14:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbf1.c
+    * recognize field { "T", 4, 0 } as TIME and { "T", 8, 0 } as DAYTIME
+
+  * harbour/source/vm/hvm.c
+    * formatting
+
 2007-09-26 05:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
     ! fixed typo in function names in previous commit description

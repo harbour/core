@@ -380,8 +380,16 @@ static ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             break;
 
          case 'T':
-            pFieldInfo.uiType = HB_FT_TIME;
-            pFieldInfo.uiLen = 4;
+            if( uiLen == 8 )
+            {
+               pFieldInfo.uiType = HB_FT_DAYTIME;
+               pFieldInfo.uiLen = 8;
+            }
+            else
+            {
+               pFieldInfo.uiType = HB_FT_TIME;
+               pFieldInfo.uiLen = 4;
+            }
             break;
 
          case '@':
