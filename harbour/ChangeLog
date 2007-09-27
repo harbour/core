@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-27 15:29 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/dbinfo.ch
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/delim1.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/sdf1.c
+    + added support for DBI_POSITIONED flag. Because some RDDs may not
+      support phantom record then checking for EOF() does not have to
+      be enough to detect that the cursor is positioned to phantom
+      record. Checking for RecNo() == LastRec() + 1 does not have to
+      work either because some RDD may use not use continuous record
+      numbers f.e. ADT. So in code like BROWSE() if you want to be sure
+      that current record is phantom one then (!dbInfo(DBI_POSITIONED))
+      should be used.
+
 2007-09-27 14:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/rdd_ads/ads1.c
   * harbour/source/rdd/workarea.c

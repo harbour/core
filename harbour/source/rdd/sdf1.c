@@ -743,6 +743,10 @@ static ERRCODE hb_sdfInfo( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemPutL( pItem, pArea->fReadonly );
          break;
 
+      case DBI_POSITIONED:
+         hb_itemPutL( pItem, pArea->fPositioned );
+         break;
+
       case DBI_DB_VERSION:
       case DBI_RDD_VERSION:
       {

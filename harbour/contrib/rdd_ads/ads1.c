@@ -2710,6 +2710,10 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemPutL( pItem, pArea->fReadonly );
          break;
 
+      case DBI_POSITIONED:
+         hb_itemPutL( pItem, pArea->fPositioned );
+         break;
+
       case DBI_LOCKCOUNT:
       {
          UNSIGNED16 u16Count;
