@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-28 23:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbf1.c
+    ! fixed typo in hb_dbfGetRowVer() reported by Mindaugas, many
+      thanks for information, it was side effect of some experiments
+      I hadn't cleanly removed before commit.
+
 2007-09-28 19:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
     * pass compile time -ks state to RT macro compiler flags.

@@ -205,7 +205,7 @@ static HB_LONG hb_dbfGetRowVer( DBFAREAP pArea, USHORT uiField, HB_LONG * pValue
    if( hb_fsRead( pArea->hDataFile, ( BYTE * ) &dbField,
                   sizeof( dbField ) ) == sizeof( dbField ) )
    {
-      *pValue = HB_GET_LE_UINT32( &dbField.bReserved2 ) + 1;
+      *pValue = HB_GET_LE_UINT64( &dbField.bReserved2 ) + 1;
       HB_PUT_LE_UINT64( dbField.bReserved2, *pValue );
       hb_fsSeek( pArea->hDataFile, sizeof( DBFHEADER ) +
                                    uiField * sizeof( DBFFIELD ), FS_SET );
