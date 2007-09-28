@@ -144,7 +144,7 @@ static const RDDFUNCS dbtTable =
    ( DBENTRYP_V )     hb_dbtForceRel,
    ( DBENTRYP_SVP )   hb_dbtRelArea,
    ( DBENTRYP_VR )    hb_dbtRelEval,
-   ( DBENTRYP_SVP )   hb_dbtRelText,
+   ( DBENTRYP_SI )    hb_dbtRelText,
    ( DBENTRYP_VR )    hb_dbtSetRel,
 
 

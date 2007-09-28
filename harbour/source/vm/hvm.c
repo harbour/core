@@ -221,6 +221,9 @@ static void    hb_vmDoInitFunctions( void );      /* executes all defined PRGs I
 static void    hb_vmDoExitFunctions( void );      /* executes all defined PRGs EXIT functions */
 static void    hb_vmReleaseLocalSymbols( void );  /* releases the memory of the local symbols linked list */
 
+static void    hb_vmStringReference( PHB_ITEM pRefer, ULONG ulIndex ); /* create string character reference */
+static void    hb_vmMsgIndexReference( PHB_ITEM pRefer, PHB_ITEM pObject, PHB_ITEM pIndex ); /* create object index reference */
+
 #ifndef HB_NO_PROFILER
 static ULONG hb_ulOpcodesCalls[ HB_P_LAST_PCODE ];/* array to profile opcodes calls */
 static ULONG hb_ulOpcodesTime[ HB_P_LAST_PCODE ]; /* array to profile opcodes consumed time */
@@ -2453,7 +2456,6 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
          {
             if( ulLen1 < ULONG_MAX - ulLen2 )
             {
-#if 1
                if( pResult != pItem1 )
                {
                   hb_itemMove( pResult, pItem1 );
@@ -2462,13 +2464,6 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
                hb_itemReSizeString( pItem1, ulLen1 + ulLen2 );
                hb_xmemcpy( pItem1->item.asString.value + ulLen1,
                            pItem2->item.asString.value, ulLen2 );
-#else
-               char * szNewString = ( char * ) hb_xgrab( ulLen1 + ulLen2 + 1 );
-
-               hb_xmemcpy( szNewString, pItem1->item.asString.value, ulLen1 );
-               hb_xmemcpy( szNewString + ulLen1, pItem2->item.asString.value, ulLen2 );
-               hb_itemPutCPtr( pResult, szNewString, ulLen1 + ulLen2 );
-#endif
             }
             else
                hb_errRT_BASE( EG_STROVERFLOW, 1209, NULL, "+", 2, pItem1, pItem2 );
@@ -4181,7 +4176,6 @@ static void hb_vmArrayPush( void )
       else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
    }
-/* #ifndef HB_C52_STRICT */
    else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) )
    {
       if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asString.length ) )
@@ -4202,7 +4196,6 @@ static void hb_vmArrayPush( void )
 
       return;
    }
-/* #endif */
    else if( hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, NULL ) )
       hb_stackPop();
 
@@ -4214,12 +4207,14 @@ static void hb_vmArrayPushRef( void )
 {
    PHB_ITEM pIndex;
    PHB_ITEM pArray;
+   PHB_ITEM pRefer;
    ULONG ulIndex;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayPushRef()"));
 
    pIndex = hb_stackItemFromTop( -1 );
-   pArray = hb_stackItemFromTop( -2 );
+   pRefer = hb_stackItemFromTop( -2 );
+   pArray = HB_IS_BYREF( pRefer ) ? hb_itemUnRef( pRefer ) : pRefer;
 
    if( HB_IS_HASH( pArray ) && HB_IS_HASHKEY( pIndex ) )
    {
@@ -4227,8 +4222,15 @@ static void hb_vmArrayPushRef( void )
       if( pValue )
       {
          hb_itemCopy( pIndex, pValue );
-         hb_itemMove( pArray, pIndex );
+         hb_itemMove( pRefer, pIndex );
          hb_stackDec();
+      }
+      else if( hb_objHasOperator( pArray, HB_OO_OP_ARRAYINDEX ) )
+      {
+         /* create extended object index reference */
+         hb_vmMsgIndexReference( pRefer, pArray, pIndex );
+         hb_stackPop();
+         return;
       }
       else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
@@ -4240,6 +4242,13 @@ static void hb_vmArrayPushRef( void )
       ulIndex = ( ULONG ) pIndex->item.asLong.value;
    else if( HB_IS_DOUBLE( pIndex ) )
       ulIndex = ( ULONG ) pIndex->item.asDouble.value;
+   else if( hb_objHasOperator( pArray, HB_OO_OP_ARRAYINDEX ) )
+   {
+      /* create extended object index reference */
+      hb_vmMsgIndexReference( pRefer, pArray, pIndex );
+      hb_stackPop();
+      return;
+   }
    else
    {
       PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
@@ -4247,7 +4256,7 @@ static void hb_vmArrayPushRef( void )
       if( pResult )
       {
          hb_stackPop();
-         hb_itemMove( pArray, pResult );
+         hb_itemMove( pRefer, pResult );
          hb_itemRelease( pResult );
       }
       return;
@@ -4255,28 +4264,53 @@ static void hb_vmArrayPushRef( void )
 
    if( HB_IS_ARRAY( pArray ) )
    {
-      /*
-       * TODO: operator overloading will need some deeper HVM modifications
-       *       to work well with references. It will be necessary to create
-       *       separate versions of hb_itemUnRef() for access and assign
-       *       operations, [druzus]
-       */
-#if 0
-      if( HB_IS_OBJECT( pArray ) &&
-          hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, NULL ) )
+      if( HB_IS_OBJECT( pArray ) && hb_objHasOperator( pArray, HB_OO_OP_ARRAYINDEX ) )
       {
+         /* create extended object index reference */
+         hb_vmMsgIndexReference( pRefer, pArray, pIndex );
          hb_stackPop();
          return;
       }
-#endif
-      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
+      else if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asArray.value->ulLen ) )
       {
          /* This function is safe for overwriting passed array, [druzus] */
-         hb_arrayGetItemRef( pArray, ulIndex, pArray );
+         hb_arrayGetItemRef( pArray, ulIndex, pRefer );
          hb_stackDec();
+      }
+      else if( !HB_IS_OBJECT( pArray ) && hb_objHasOperator( pArray, HB_OO_OP_ARRAYINDEX ) )
+      {
+         /* create extended object index reference */
+         hb_vmMsgIndexReference( pRefer, pArray, pIndex );
+         hb_stackPop();
+         return;
       }
       else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
+   }
+   else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) )
+   {
+      if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asString.length ) )
+      {
+         /* create extended string reference */
+         hb_vmStringReference( pRefer, ulIndex );
+         hb_stackDec();
+      }
+      else if( hb_objHasOperator( pArray, HB_OO_OP_ARRAYINDEX ) )
+      {
+         /* create extended object index reference */
+         hb_vmMsgIndexReference( pRefer, pArray, pIndex );
+         hb_stackPop();
+         return;
+      }
+      else
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
+   }
+   else if( hb_objHasOperator( pArray, HB_OO_OP_ARRAYINDEX ) )
+   {
+      /* create extended object index reference */
+      hb_vmMsgIndexReference( pRefer, pArray, pIndex );
+      hb_stackPop();
+      return;
    }
    else
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
@@ -4367,17 +4401,19 @@ static void hb_vmArrayPop( void )
       else
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
    }
-/* #ifndef HB_C52_STRICT */
-   else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) )
+#if defined( HB_COMPAT_XHB )
+   else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) &&
+            ( HB_IS_NUMERIC( pValue ) || HB_IS_STRING( pValue ) ) )
+#else
+   else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) &&
+            ( HB_IS_NUMERIC( pValue ) ||
+              ( HB_IS_STRING( pValue ) && pValue->item.asString.length == 1 ) ) )
+#endif
    {
       if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asString.length ) )
       {
-#if defined( HB_COMPAT_XHB )
          char cValue = HB_IS_STRING( pValue ) ? pValue->item.asString.value[ 0 ] :
                                                 hb_itemGetNI( pValue );
-#else
-         char cValue = hb_itemGetNI( pValue );
-#endif
          if( pArray->item.asString.length == 1 )
          {
             hb_itemPutCL( pArray, hb_szAscii[ ( unsigned char ) cValue ], 1 );
@@ -4402,7 +4438,6 @@ static void hb_vmArrayPop( void )
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
                         3, pArray, pIndex, pValue );
    }
-/* #endif */
    else if( hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, pValue ) )
    {
       hb_stackPop();
@@ -6779,7 +6814,402 @@ static void hb_vmDoInitFunctions( void )
    }
 }
 
-/* ----------------------------- */
+/* ------------------------------- */
+/* Extended references             */
+/* ------------------------------- */
+
+/*
+ * extended item reference functions
+ */
+static PHB_ITEM hb_vmItemRefRead( PHB_ITEM pRefer )
+{
+   return ( PHB_ITEM ) pRefer->item.asExtRef.value;
+}
+
+static PHB_ITEM hb_vmItemRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
+{
+   HB_SYMBOL_UNUSED( pSource );
+   return ( PHB_ITEM ) pRefer->item.asExtRef.value;
+}
+
+static void hb_vmItemRefCopy( PHB_ITEM pDest )
+{
+   pDest->type = HB_IT_NIL;
+   hb_itemCopy( pDest, ( PHB_ITEM ) pDest->item.asExtRef.value );
+}
+
+static void hb_vmItemRefDummy( void * value )
+{
+   HB_SYMBOL_UNUSED( value );
+}
+
+/*
+ * push extended item reference
+ */
+HB_EXPORT void hb_vmPushItemRef( PHB_ITEM pItem )
+{
+   static const HB_EXTREF s_ItmExtRef = {
+             hb_vmItemRefRead,
+             hb_vmItemRefWrite,
+             hb_vmItemRefCopy,
+             hb_vmItemRefDummy,
+             hb_vmItemRefDummy };
+
+   PHB_ITEM pRefer;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmPushItemRef(%p)", pItem));
+
+   pRefer = hb_stackAllocItem();
+   pRefer->type = HB_IT_BYREF | HB_IT_EXTREF;
+   pRefer->item.asExtRef.value = ( void * ) pItem;
+   pRefer->item.asExtRef.func = &s_ItmExtRef;
+}
+
+/* ------------------------------- */
+
+/*
+ * extended message reference structure
+ */
+typedef struct
+{
+   PHB_DYNS access;
+   PHB_DYNS assign;
+   HB_ITEM  object;
+   HB_ITEM  value;
+   BOOL     init;
+} HB_MSGREF, * PHB_MSGREF;
+
+/*
+ * extended message reference functions
+ */
+static PHB_ITEM hb_vmMsgRefRead( PHB_ITEM pRefer )
+{
+   PHB_MSGREF pMsgRef = ( PHB_MSGREF ) pRefer->item.asExtRef.value;
+
+   if( !pMsgRef->init )
+   {
+      pMsgRef->init = TRUE;
+      hb_vmPushDynSym( pMsgRef->access );
+      hb_vmPush( &pMsgRef->object );
+      hb_vmSend( 0 );
+      hb_itemMove( &pMsgRef->value, hb_stackReturnItem() );
+   }
+   return &pMsgRef->value;
+}
+
+static PHB_ITEM hb_vmMsgRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
+{
+   HB_SYMBOL_UNUSED( pSource );
+   return hb_vmMsgRefRead( pRefer );
+}
+
+static void hb_vmMsgRefCopy( PHB_ITEM pDest )
+{
+   hb_xRefInc( pDest->item.asExtRef.value );
+}
+
+static void hb_vmMsgRefClear( void * value )
+{
+   if( hb_xRefDec( value ) )
+   {
+      PHB_MSGREF pMsgRef = ( PHB_MSGREF ) value;
+      if( pMsgRef->init )
+      {
+         if( hb_vmRequestReenter() )
+         {
+            hb_vmPushDynSym( pMsgRef->assign );
+            hb_vmPush( &pMsgRef->object );
+            hb_vmPush( &pMsgRef->value );
+            hb_vmSend( 1 );
+            hb_vmRequestRestore();
+         }
+      }
+      if( HB_IS_COMPLEX( &pMsgRef->value ) )
+         hb_itemClear( &pMsgRef->value );
+      if( HB_IS_COMPLEX( &pMsgRef->object ) )
+         hb_itemClear( &pMsgRef->object );
+      hb_xfree( value );
+   }
+}
+
+static void hb_vmMsgRefMark( void * value )
+{
+   if( HB_IS_GCITEM( &( ( PHB_MSGREF ) value )->object ) )
+      hb_gcItemRef( &( ( PHB_MSGREF ) value )->object );
+   if( HB_IS_GCITEM( &( ( PHB_MSGREF ) value )->value ) )
+      hb_gcItemRef( &( ( PHB_MSGREF ) value )->value );
+}
+
+/*
+ * create extended message reference
+ */
+BOOL hb_vmMsgReference( PHB_ITEM pObject, PHB_SYMB pMessage )
+{
+   static const HB_EXTREF s_MsgExtRef = {
+             hb_vmMsgRefRead,
+             hb_vmMsgRefWrite,
+             hb_vmMsgRefCopy,
+             hb_vmMsgRefClear,
+             hb_vmMsgRefMark };
+
+   PHB_MSGREF pMsgRef;
+   PHB_DYNS pAccess;
+   PHB_ITEM pRefer;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmMsgReference(%p,%p)", pObject, pMessage));
+
+   pAccess = hb_dynsymFind( pMessage->szName + 1 );
+   if( pAccess )
+   {
+      pMsgRef = ( PHB_MSGREF ) hb_xgrab( sizeof( HB_MSGREF ) );
+      pMsgRef->access = pAccess;
+      pMsgRef->assign = pMessage->pDynSym;
+      pMsgRef->init = FALSE;
+      pMsgRef->value.type = HB_IT_NIL;
+      pMsgRef->object.type = HB_IT_NIL;
+      hb_itemCopy( &pMsgRef->object, pObject );
+      pRefer = hb_stackReturnItem();
+      pRefer->type = HB_IT_BYREF | HB_IT_EXTREF;
+      pRefer->item.asExtRef.value = ( void * ) pMsgRef;
+      pRefer->item.asExtRef.func = &s_MsgExtRef;
+      return TRUE;
+   }
+   return FALSE;
+}
+
+/* ------------------------------- */
+
+/*
+ * extended object index reference structure
+ */
+typedef struct
+{
+   HB_ITEM  object;
+   HB_ITEM  value;
+   HB_ITEM  index;
+   BOOL     init;
+} HB_MSGIDXREF, * PHB_MSGIDXREF;
+
+/*
+ * extended object index reference functions
+ */
+static PHB_ITEM hb_vmMsgIdxRefRead( PHB_ITEM pRefer )
+{
+   PHB_MSGIDXREF pMsgIdxRef = ( PHB_MSGIDXREF ) pRefer->item.asExtRef.value;
+
+   if( !pMsgIdxRef->init )
+   {
+      pMsgIdxRef->init = TRUE;
+      hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, &pMsgIdxRef->value,
+                          HB_IS_BYREF( &pMsgIdxRef->object ) ?
+                          hb_itemUnRef( &pMsgIdxRef->object ) :
+                          &pMsgIdxRef->object, &pMsgIdxRef->index, NULL );
+   }
+   return &pMsgIdxRef->value;
+}
+
+static PHB_ITEM hb_vmMsgIdxRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
+{
+   HB_SYMBOL_UNUSED( pSource );
+   return hb_vmMsgIdxRefRead( pRefer );
+}
+
+static void hb_vmMsgIdxRefCopy( PHB_ITEM pDest )
+{
+   hb_xRefInc( pDest->item.asExtRef.value );
+}
+
+static void hb_vmMsgIdxRefClear( void * value )
+{
+   if( hb_xRefDec( value ) )
+   {
+      PHB_MSGIDXREF pMsgIdxRef = ( PHB_MSGIDXREF ) value;
+      if( pMsgIdxRef->init )
+      {
+         PHB_ITEM pObject = HB_IS_BYREF( &pMsgIdxRef->object ) ?
+                            hb_itemUnRef( &pMsgIdxRef->object ) :
+                            &pMsgIdxRef->object;
+         if( hb_vmRequestReenter() )
+         {
+            hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pObject, pObject,
+                                &pMsgIdxRef->index, &pMsgIdxRef->value );
+            hb_vmRequestRestore();
+         }
+      }
+      if( HB_IS_COMPLEX( &pMsgIdxRef->value ) )
+         hb_itemClear( &pMsgIdxRef->value );
+      if( HB_IS_COMPLEX( &pMsgIdxRef->object ) )
+         hb_itemClear( &pMsgIdxRef->object );
+      if( HB_IS_COMPLEX( &pMsgIdxRef->index ) )
+         hb_itemClear( &pMsgIdxRef->index );
+      hb_xfree( value );
+   }
+}
+
+static void hb_vmMsgIdxRefMark( void * value )
+{
+   if( HB_IS_GCITEM( &( ( PHB_MSGIDXREF ) value )->object ) )
+      hb_gcItemRef( &( ( PHB_MSGIDXREF ) value )->object );
+   if( HB_IS_GCITEM( &( ( PHB_MSGIDXREF ) value )->index ) )
+      hb_gcItemRef( &( ( PHB_MSGIDXREF ) value )->index );
+   if( HB_IS_GCITEM( &( ( PHB_MSGIDXREF ) value )->value ) )
+      hb_gcItemRef( &( ( PHB_MSGIDXREF ) value )->value );
+}
+
+/*
+ * create extended message reference
+ */
+static void hb_vmMsgIndexReference( PHB_ITEM pRefer, PHB_ITEM pObject, PHB_ITEM pIndex )
+{
+   static const HB_EXTREF s_MsgIdxExtRef = {
+             hb_vmMsgIdxRefRead,
+             hb_vmMsgIdxRefWrite,
+             hb_vmMsgIdxRefCopy,
+             hb_vmMsgIdxRefClear,
+             hb_vmMsgIdxRefMark };
+
+   PHB_MSGIDXREF pMsgIdxRef;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmMsgIndexReference(%p,%p,%p)", pRefer, pObject, pIndex));
+
+   pMsgIdxRef = ( PHB_MSGIDXREF ) hb_xgrab( sizeof( HB_MSGIDXREF ) );
+   pMsgIdxRef->init = FALSE;
+   pMsgIdxRef->value.type = HB_IT_NIL;
+   pMsgIdxRef->object.type = HB_IT_NIL;
+   pMsgIdxRef->index.type = HB_IT_NIL;
+   hb_itemCopy( &pMsgIdxRef->object, HB_IS_STRING( pObject ) ? pRefer : pObject );
+   hb_itemCopy( &pMsgIdxRef->index, pIndex );
+
+   pIndex->type = HB_IT_BYREF | HB_IT_EXTREF;
+   pIndex->item.asExtRef.value = ( void * ) pMsgIdxRef;
+   pIndex->item.asExtRef.func = &s_MsgIdxExtRef;
+   hb_itemMove( pRefer, pIndex );
+}
+
+/* ------------------------------- */
+
+/*
+ * extended string reference structure
+ */
+typedef struct
+{
+   HB_ITEM  refer;
+   HB_ITEM  value;
+   ULONG    index;
+   BOOL     init;
+} HB_STRREF, * PHB_STRREF;
+
+/*
+ * extended string reference functions
+ */
+static PHB_ITEM hb_vmStringRefRead( PHB_ITEM pRefer )
+{
+   PHB_STRREF pStrRef = ( PHB_STRREF ) pRefer->item.asExtRef.value;
+
+   if( !pStrRef->init )
+   {
+      PHB_ITEM pItem;
+      pStrRef->init = TRUE;
+      pItem = hb_itemUnRef( &pStrRef->refer );
+      if( HB_IS_STRING( pItem ) && pItem->item.asString.length > pStrRef->index )
+      {
+         UCHAR uc = ( UCHAR ) pItem->item.asString.value[ pStrRef->index ];
+#if defined( HB_COMPAT_XHB )
+         hb_itemPutCL( &pStrRef->value, hb_szAscii[ uc ], 1 );
+#else
+         hb_itemPutNI( &pStrRef->value, uc );
+#endif
+      }
+   }
+   return &pStrRef->value;
+}
+
+static PHB_ITEM hb_vmStringRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
+{
+   HB_SYMBOL_UNUSED( pSource );
+   return hb_vmStringRefRead( pRefer );
+}
+
+static void hb_vmStringRefCopy( PHB_ITEM pDest )
+{
+   hb_xRefInc( pDest->item.asExtRef.value );
+}
+
+static void hb_vmStringRefClear( void * value )
+{
+   if( hb_xRefDec( value ) )
+   {
+      PHB_ITEM pItem = &( ( PHB_STRREF ) value )->value;
+
+#if defined( HB_COMPAT_XHB )
+      if( HB_IS_NUMERIC( pItem ) || HB_IS_STRING( pItem ) )
+#else
+      if( HB_IS_NUMERIC( pItem ) ||
+          ( HB_IS_STRING( pItem ) && pItem->item.asString.length == 1 ) )
+#endif
+      if( !HB_IS_NIL( pItem ) )
+      {
+         char cValue = HB_IS_STRING( pItem ) ? pItem->item.asString.value[ 0 ] :
+                                               hb_itemGetNI( pItem );
+         if( HB_IS_COMPLEX( pItem ) )
+            hb_itemClear( pItem );
+         pItem = hb_itemUnRef( &( ( PHB_STRREF ) value )->refer );
+         if( HB_IS_STRING( pItem ) && pItem->item.asString.length >
+             ( ( PHB_STRREF ) value )->index )
+         {
+            if( pItem->item.asString.length == 1 )
+               hb_itemPutCL( pItem, hb_szAscii[ ( unsigned char ) cValue ], 1 );
+            else
+            {
+               hb_itemUnShareString( pItem );
+               pItem->item.asString.value[ ( ( PHB_STRREF ) value )->index ] = cValue;
+            }
+         }
+      }
+      hb_itemClear( &( ( PHB_STRREF ) value )->refer );
+      hb_xfree( value );
+   }
+}
+
+static void hb_vmStringRefMark( void * value )
+{
+   if( HB_IS_GCITEM( &( ( PHB_STRREF ) value )->refer ) )
+      hb_gcItemRef( &( ( PHB_STRREF ) value )->refer );
+   if( HB_IS_GCITEM( &( ( PHB_STRREF ) value )->value ) )
+      hb_gcItemRef( &( ( PHB_STRREF ) value )->value );
+}
+
+/*
+ * create extended string reference
+ */
+static void hb_vmStringReference( PHB_ITEM pRefer, ULONG ulIndex )
+{
+   static const HB_EXTREF s_StrExtRef = {
+             hb_vmStringRefRead,
+             hb_vmStringRefWrite,
+             hb_vmStringRefCopy,
+             hb_vmStringRefClear,
+             hb_vmStringRefMark };
+
+   PHB_STRREF pStrRef;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmStringReference(%p,%lu)", pItem, ulIndex));
+
+   pStrRef = ( PHB_STRREF ) hb_xgrab( sizeof( HB_STRREF ) );
+
+   memcpy( &pStrRef->refer, pRefer, sizeof( HB_ITEM ) );
+   pStrRef->value.type = HB_IT_NIL;
+   pStrRef->index = ulIndex - 1;
+   pStrRef->init = FALSE;
+
+   pRefer->type = HB_IT_BYREF | HB_IT_EXTREF;
+   pRefer->item.asExtRef.value = ( void * ) pStrRef;
+   pRefer->item.asExtRef.func = &s_StrExtRef;
+}
+
+/* ------------------------------- */
+/* VM exceptions                   */
+/* ------------------------------- */
 
 void hb_vmRequestQuit( void )
 {
@@ -8843,7 +9273,6 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
       else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, hb_stackItemFromTop( -1 ) );
    }
-/* #ifndef HB_C52_STRICT */
    else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) )
    {
       if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asString.length ) )
@@ -8866,7 +9295,6 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
                            2, pArray, hb_stackItemFromTop( -1 ) );
       }
    }
-/* #endif */
    else
    {
       hb_vmPushNumInt( ulIndex );
@@ -8952,17 +9380,19 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
       else
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 3, pArray, hb_stackItemFromTop( -1 ), pValue );
    }
-/* #ifndef HB_C52_STRICT */
-   else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) )
+#if defined( HB_COMPAT_XHB )
+   else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) &&
+            ( HB_IS_NUMERIC( pValue ) || HB_IS_STRING( pValue ) ) )
+#else
+   else if( HB_IS_STRING( pArray ) && hb_vmFlagEnabled( HB_VMFLAG_ARRSTR ) &&
+            ( HB_IS_NUMERIC( pValue ) ||
+              ( HB_IS_STRING( pValue ) && pValue->item.asString.length == 1 ) ) )
+#endif
    {
       if( HB_IS_VALID_INDEX( ulIndex, pArray->item.asString.length ) )
       {
-#if defined( HB_COMPAT_XHB )
          char cValue = HB_IS_STRING( pValue ) ? pValue->item.asString.value[ 0 ] :
                                                 hb_itemGetNI( pValue );
-#else
-         char cValue = hb_itemGetNI( pValue );
-#endif
          if( pArray->item.asString.length == 1 )
          {
             hb_itemPutCL( pArray, hb_szAscii[ ( unsigned char ) cValue ], 1 );
@@ -8990,7 +9420,6 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
                            3, pArray, hb_stackItemFromTop( -1 ), pValue );
       }
    }
-/* #endif */
    else
    {
       hb_vmPushNumInt( ulIndex );
@@ -9261,9 +9690,19 @@ HB_EXPORT void hb_xvmWithObjectMessage( PHB_SYMB pSymbol )
 
 
 #undef hb_vmFlagEnabled
-ULONG hb_vmFlagEnabled( ULONG flags )
+HB_EXPORT ULONG hb_vmFlagEnabled( ULONG flags )
 {
-   return s_VMFlags & (flags);
+   return s_VMFlags & flags;
+}
+
+HB_EXPORT void hb_vmFlagSet( ULONG flags )
+{
+   s_VMFlags |= flags;
+}
+
+HB_EXPORT void hb_vmFlagClear( ULONG flags )
+{
+   s_VMFlags &= ~flags;
 }
 
 /* ------------------------------------------------------------------------ */

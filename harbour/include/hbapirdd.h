@@ -69,9 +69,6 @@ HB_EXTERN_BEGIN
 /* #define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        32 */
 #define HARBOUR_MAX_RDD_AREA_NUM                65535
 
-#define HARBOUR_MAX_RDD_RELTEXT_LENGTH            256
-
-
 /* DBCMD errors */
 
 #define EDBCMD_SEEK_BADPARAMETER          1001
@@ -710,7 +707,7 @@ typedef struct _RDDFUNCS
    DBENTRYP_V    forceRel;          /* Force relational seeks in the specified WorkArea. */
    DBENTRYP_SVP  relArea;           /*-Obtain the workarea number of the specified relation. */
    DBENTRYP_VR   relEval;           /*-Evaluate a block against the relation in specified WorkArea. */
-   DBENTRYP_SVP  relText;           /*-Obtain the character expression of the specified relation. */
+   DBENTRYP_SI   relText;           /*-Obtain the character expression of the specified relation. */
    DBENTRYP_VR   setRel;            /*-Set a relation in the parent file. */
 
 

@@ -54,6 +54,7 @@
 #include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbstack.h"
+#include "hbmath.h"
 
 HB_FUNC( XHB_HASHERROR )
 {
@@ -196,5 +197,241 @@ HB_FUNC( XHB_INDEX )
          if( pResult )
             hb_itemReturnRelease( pResult );
       }
+   }
+}
+
+HB_FUNC( XHB_PLUS )
+{
+   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
+
+   if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pValue )[0];
+      int iDec;
+      double dValue = hb_itemGetNDDec( pSelf, &iDec );
+      hb_retnlen( dValue + uc, 0, iDec  );
+   }
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
+            pValue && HB_IS_NUMERIC( pValue ) )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0];
+      uc += hb_itemGetNI( pValue );
+      hb_retclen( ( char * ) &uc, 1 );
+   }
+   else if( HB_IS_HASH( pSelf ) && HB_IS_HASH( pValue ) )
+   {
+      PHB_ITEM pHash = hb_hashClone( pSelf );
+      hb_hashJoin( pHash, pValue, HB_HASH_UNION );
+      hb_itemReturnRelease( pHash );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1081, NULL, "+", 2, pSelf, pValue );
+      if( pResult )
+         hb_itemReturnRelease( pResult );
+   }
+}
+
+HB_FUNC( XHB_MINUS )
+{
+   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
+
+   if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pValue )[0];
+      int iDec;
+      double dValue = hb_itemGetNDDec( pSelf, &iDec );
+      hb_retnlen( dValue - uc, 0, iDec  );
+   }
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
+            pValue && HB_IS_NUMERIC( pValue ) )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0];
+      uc -= hb_itemGetNI( pValue );
+      hb_retclen( ( char * ) &uc, 1 );
+   }
+   else if( HB_IS_HASH( pSelf ) && HB_IS_HASH( pValue ) )
+   {
+      PHB_ITEM pHash = hb_hashClone( pSelf );
+      hb_hashRemove( pHash, pValue );
+      hb_itemReturnRelease( pHash );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1082, NULL, "-", 2, pSelf, pValue );
+      if( pResult )
+         hb_itemReturnRelease( pResult );
+   }
+}
+
+HB_FUNC( XHB_INC )
+{
+   PHB_ITEM pSelf = hb_stackSelfItem();
+
+   if( HB_IS_NUMERIC( pSelf ) )
+      hb_retnd( hb_itemGetND( pSelf ) + 1 );
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0] + 1;
+      hb_retclen( ( char * ) &uc, 1 );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1086, NULL, "++", 1, pSelf );
+      if( pResult )
+         hb_itemReturnRelease( pResult );
+   }
+}
+
+HB_FUNC( XHB_DEC )
+{
+   PHB_ITEM pSelf = hb_stackSelfItem();
+
+   if( HB_IS_NUMERIC( pSelf ) )
+      hb_retnd( hb_itemGetND( pSelf ) - 1 );
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0] - 1;
+      hb_retclen( ( char * ) &uc, 1 );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1087, NULL, "--", 1, pSelf );
+      if( pResult )
+         hb_itemReturnRelease( pResult );
+   }
+}
+
+HB_FUNC( XHB_MULT )
+{
+   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
+
+   if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pValue )[0];
+      int iDec;
+      double dValue = hb_itemGetNDDec( pSelf, &iDec );
+      hb_retndlen( dValue * uc, 0, iDec );
+   }
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
+            pValue && HB_IS_NUMERIC( pValue ) )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0];
+      int iDec;
+      double dValue = hb_itemGetNDDec( pValue, &iDec );
+      hb_retndlen( ( double ) uc * dValue, 0, iDec );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1083, NULL, "*", 2, pSelf, pValue );
+      if( pResult )
+         hb_itemReturnRelease( pResult );
+   }
+}
+
+HB_FUNC( XHB_DIV )
+{
+   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
+
+   if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pValue )[0];
+      if( uc == 0 )
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1340, NULL, "/", 2, pSelf, pValue );
+         if( pResult )
+            hb_itemReturnRelease( pResult );
+      }
+      else
+         hb_retnd( hb_itemGetND( pSelf ) / uc );
+   }
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
+            pValue && HB_IS_NUMERIC( pValue ) )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0];
+      double dDivisor = hb_itemGetND( pValue );
+
+      if( dDivisor == 0 )
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1340, NULL, "/", 2, pSelf, pValue );
+         if( pResult )
+            hb_itemReturnRelease( pResult );
+      }
+      else
+         hb_retnd( ( double ) uc / dDivisor );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1084, NULL, "/", 2, pSelf, pValue );
+      if( pResult )
+         hb_itemReturnRelease( pResult );
+   }
+}
+
+HB_FUNC( XHB_MOD )
+{
+   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
+
+   if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pValue )[0];
+      if( uc == 0 )
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%", 2, pSelf, pValue );
+         if( pResult )
+            hb_itemReturnRelease( pResult );
+      }
+      else
+         hb_retnd( fmod( hb_itemGetND( pSelf ), ( double ) uc ) );
+   }
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
+            pValue && HB_IS_NUMERIC( pValue ) )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0];
+      double dDivisor = hb_itemGetND( pValue );
+
+      if( dDivisor == 0 )
+      {
+         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%", 2, pSelf, pValue );
+         if( pResult )
+            hb_itemReturnRelease( pResult );
+      }
+      else
+         hb_retnd( fmod( ( double ) uc, dDivisor ) );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1085, NULL, "%", 2, pSelf, pValue );
+      if( pResult )
+         hb_itemReturnRelease( pResult );
+   }
+}
+
+HB_FUNC( XHB_POW )
+{
+   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
+
+   if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pValue )[0];
+      hb_retnd( pow( hb_itemGetND( pSelf ), ( double ) uc ) );
+   }
+   else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
+            pValue && HB_IS_NUMERIC( pValue ) )
+   {
+      UCHAR uc = ( UCHAR ) hb_itemGetCPtr( pSelf )[0];
+      hb_retnd( pow( ( double ) uc, hb_itemGetND( pValue ) ) );
+   }
+   else
+   {
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1088, NULL, "^", 2, pSelf, pValue );
+      if( pResult )
+         hb_itemReturnRelease( pResult );
    }
 }

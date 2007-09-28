@@ -391,6 +391,11 @@ void hb_gcItemRef( HB_ITEM_PTR pItem )
    {
       if( HB_IS_ENUM( pItem ) )
          return;
+      else if( HB_IS_EXTREF( pItem ) )
+      {
+         pItem->item.asExtRef.func->mark( pItem->item.asExtRef.value );
+         return;
+      }
       else if( ! HB_IS_MEMVAR( pItem ) &&
                pItem->item.asRefer.offset == 0 &&
                pItem->item.asRefer.value >= 0 )

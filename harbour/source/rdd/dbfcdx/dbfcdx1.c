@@ -210,7 +210,7 @@ static const RDDFUNCS cdxTable =
    ( DBENTRYP_V )     hb_cdxForceRel,
    ( DBENTRYP_SVP )   hb_cdxRelArea,
    ( DBENTRYP_VR )    hb_cdxRelEval,
-   ( DBENTRYP_SVP )   hb_cdxRelText,
+   ( DBENTRYP_SI )    hb_cdxRelText,
    ( DBENTRYP_VR )    hb_cdxSetRel,
 
 
@@ -7140,7 +7140,7 @@ static ERRCODE hb_cdxZap ( CDXAREAP pArea )
 /* ( DBENTRYP_V )     hb_cdxForceRel        : NULL */
 /* ( DBENTRYP_SVP )   hb_cdxRelArea         : NULL */
 /* ( DBENTRYP_VR )    hb_cdxRelEval         : NULL */
-/* ( DBENTRYP_SVP )   hb_cdxRelText         : NULL */
+/* ( DBENTRYP_SI )    hb_cdxRelText         : NULL */
 /* ( DBENTRYP_VR )    hb_cdxSetRel          : NULL */
 
 /* ( DBENTRYP_OI )    hb_cdxOrderListAdd */

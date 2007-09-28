@@ -1978,6 +1978,10 @@ BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
       }
       else if( pExecSym->value.pFunPtr == hb___msgScopeErr )
          (pExecSym->value.pFunPtr)();
+      else
+      {
+         return hb_vmMsgReference( pObject, pMessage );
+      }
    }
 
    return FALSE;

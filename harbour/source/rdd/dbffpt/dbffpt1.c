@@ -156,7 +156,7 @@ static const RDDFUNCS fptTable =
    ( DBENTRYP_V )     hb_fptForceRel,
    ( DBENTRYP_SVP )   hb_fptRelArea,
    ( DBENTRYP_VR )    hb_fptRelEval,
-   ( DBENTRYP_SVP )   hb_fptRelText,
+   ( DBENTRYP_SI )    hb_fptRelText,
    ( DBENTRYP_VR )    hb_fptSetRel,
 
 

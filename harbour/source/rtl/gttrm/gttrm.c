@@ -1726,6 +1726,11 @@ static BOOL hb_gt_trm_AnsiGetCursorPos( int * iRow, int * iCol )
             i = read( s_termState.hFilenoStdin, rdbuf + n, sizeof( rdbuf ) - 1 - n );
             if( i <= 0 )
                break;
+            if( n == 0 )
+            {
+               while( i > 0 && rdbuf[0] != '\033' )
+                  memmove( rdbuf, rdbuf + 1, i-- );
+            }
             n += i;
             if( n >= 6 )
             {
@@ -1735,6 +1740,8 @@ static BOOL hb_gt_trm_AnsiGetCursorPos( int * iRow, int * iCol )
                   s_termState.fPosAnswer = TRUE;
                   break;
                }
+               else if( n == sizeof( rdbuf ) )
+                  break;
             }
          }
       }
@@ -1745,7 +1752,7 @@ static BOOL hb_gt_trm_AnsiGetCursorPos( int * iRow, int * iCol )
          do
          {
             i = getc( stdin );
-            if( i != EOF )
+            if( i != EOF && ( n || i == '\033' ) )
             {
                rdbuf[ n++ ] = ( char ) i;
                if( n >= 6 && i == 'R' )

@@ -1305,7 +1305,25 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          {
             fMacroIndex = pSelf->value.asList.pIndex->value.asList.reference;
          }
-         HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
+
+         if( pSelf->value.asList.reference && HB_SUPPORT_ARRSTR )
+         {
+            if( pSelf->value.asList.pExprList->ExprType == HB_ET_VARIABLE )
+            {
+               pSelf->value.asList.pExprList->ExprType = HB_ET_VARREF;
+               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
+               pSelf->value.asList.pExprList->ExprType = HB_ET_VARIABLE;
+            }
+            else if( pSelf->value.asList.pExprList->ExprType == HB_ET_SEND )
+            {
+               hb_compExprPushSendPop( pSelf->value.asList.pExprList, HB_COMP_PARAM );
+               HB_GEN_FUNC1( PCode1, HB_P_PUSHOVARREF );
+            }
+            else
+               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
+         }
+         else
+            HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
          HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
          if( fMacroIndex )
             HB_GEN_FUNC1( PCode1, HB_P_MACROPUSHINDEX );
@@ -1318,17 +1336,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
 
       case HB_EA_POP_PCODE:
       {
-         BOOL fMacroIndex = FALSE, bRemoveRef = FALSE;
-         /* to manage strings as bytes arrays, they must be pushed by reference */
-         /* arrays also are passed by reference */
-         if( pSelf->value.asList.pExprList->ExprType == HB_ET_VARIABLE )
-         {
-            if( HB_SUPPORT_ARRSTR )
-            {
-               pSelf->value.asList.pExprList->ExprType = HB_ET_VARREF;
-               bRemoveRef = TRUE;
-            }
-         }
+         BOOL fMacroIndex = FALSE;
          if( pSelf->value.asList.pIndex->ExprType == HB_ET_MACRO )
          {
             if( HB_SUPPORT_XBASE )
@@ -1346,13 +1354,31 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          {
             fMacroIndex = pSelf->value.asList.pIndex->value.asList.reference;
          }
-         HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
+         /* to manage strings as bytes arrays, they must be pushed by reference */
+         /* arrays also are passed by reference */
+         if( HB_SUPPORT_ARRSTR )
+         {
+            if( pSelf->value.asList.pExprList->ExprType == HB_ET_VARIABLE )
+            {
+               pSelf->value.asList.pExprList->ExprType = HB_ET_VARREF;
+               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
+               pSelf->value.asList.pExprList->ExprType = HB_ET_VARIABLE;
+            }
+            else if( pSelf->value.asList.pExprList->ExprType == HB_ET_SEND &&
+                     HB_SUPPORT_ARRSTR )
+            {
+               hb_compExprPushSendPop( pSelf->value.asList.pExprList, HB_COMP_PARAM );
+               HB_GEN_FUNC1( PCode1, HB_P_PUSHOVARREF );
+            }
+            else
+               HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
+         }
+         else
+            HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_PCODE );
          HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_PCODE );
          if( fMacroIndex )
             HB_GEN_FUNC1( PCode1, HB_P_MACROPUSHINDEX );
          HB_GEN_FUNC1( PCode1, HB_P_ARRAYPOP );
-         if( bRemoveRef )
-            pSelf->value.asList.pExprList->ExprType = HB_ET_VARIABLE;
          break;
       }
 

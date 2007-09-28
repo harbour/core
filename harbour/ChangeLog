@@ -8,6 +8,117 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-28 14:08 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/garbage.c
+    + added extended item references - it's universal reference which
+      can be used by HVM for many different things without introducing
+      new item types
+
+  * harbour/include/hbexprb.c
+    * respect -ks compiler also with <op>=, --, ++ operators
+
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/classes.c
+    + added extended references for SETGET methods used as object
+      item references
+    * use extended references to respect overloaded [] operator in
+      object item references
+    + added support for passing indexes to string item characters
+      ( @cValue[n] ) by reference using extended references - extension
+      enabled by -ks compiler switch and //flags:s RT switch. 
+    + added hb_vmPushItemRef()
+
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/usrrdd/usrrdd.c
+    * use hb_vmPushItemRef()
+
+  * harbour/contrib/xhb/xhbcomp.prg
+  * harbour/contrib/xhb/xhbmsgs.c
+    * overload +, -, *, %, ^, ++, -- in string and numeric scalar
+      classes to emulated xHarbour behavior when 1 byte string is
+      used as numeric value.
+      Note: <nun> + <char1> in XHB lib gives numeric value when in
+            xHarbour character. But because <nun> <anyOtherOper> <char1>
+            in xHarbour gives numeric value then I guess that it's
+            xHarbour bug and I should not replicate it, f.e.:
+               proc main()
+                  ? 1+"A", 131-"A", 33 * 2, 132 / chr(2), 133 % "C"
+               return
+    * overload +, - in hash scalar class to emulated xHarbour behavior
+      for <hash> + <hash> and <hash> - <hash>
+      Seems that now we can remove HB_COMPAT_XHB flag from HVM and keep
+      Harbour compatibility only with -ks compile time switch and XHB
+      library. Please make some tests with Harbour compiled without
+      HB_COMPAT_XHB and xHarbour code using REQUEST XHB_LIB. It's possible
+      that I missed sth but some basic test shows that our emulation is
+      better then original and addresses places where xHarbour does not
+      work at all or gives strange results, f.e.:
+
+         #ifndef __XHARBOUR__
+            request XHB_LIB
+         #endif
+         proc main()
+            local h:={"ABC"=>123.45}
+            ? h:abc
+            h:abc+=1000   ; ? h:abc
+            h["ABC"]+=1000; ? h:abc
+            p(@h:abc)     ; ? h:abc
+            p(@h["ABC"])  ; ? h:abc
+         return
+         proc p(x)
+            x+=1000
+         return
+
+      or:
+
+         #ifndef __XHARBOUR__
+            request XHB_LIB
+         #endif
+         #include "hbclass.ch"
+         proc main()
+            local o:=myClass():new()
+            o:setget:="ABC"; ? o:setget
+            o:setget[2]:=42; ? o:setget
+            o:setget[2]+=42; ? o:setget
+            ? o:setget[2]+=42; ? o:setget
+            ?
+            o:var:="ABC"; ? o:var
+            o:var[2]:=42; ? o:var
+            o:var[2]+=42; ? o:var
+            ? o:var[2]+=42; ? o:var
+         return
+         CREATE CLASS myClass
+            VAR    var
+            METHOD setget SETGET
+         END CLASS
+         METHOD setget( xNewVal ) CLASS myClass
+            IF pcount() > 0
+               ::var := xNewVal
+            ENDIF
+         RETURN ::var
+
+  * harbour/include/hbapirdd.h
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbfdbt/dbfdbt1.c
+  * harbour/source/rdd/usrrdd/usrrdd.c
+  * harbour/contrib/rdd_ads/ads1.c
+    * changed second parameter in RELTEXT() method to PHB_ITEM
+      Now RELTEXT() works like FILTERTEXT() and the size of
+      expression is not limited. It's a modification I wanted
+      to make for a long time and I think that now is a good
+      moment to make it together with HB_FT_* modifications
+    - rmoved not longer necessary HARBOUR_MAX_RDD_RELTEXT_LENGTH
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    * small cleanup
+
 2007-09-28 11:56 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/compiler/hbusage.c
      ! Show the -ks switch only when compiled with HB_COMPAT_XHB.

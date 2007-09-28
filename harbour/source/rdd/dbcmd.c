@@ -485,11 +485,9 @@ HB_FUNC( DBFILTER )
 
    if( pArea )
    {
-      PHB_ITEM pFilter = hb_itemNew( NULL );
-      hb_itemPutC( pFilter, "" );
+      PHB_ITEM pFilter = hb_itemPutC( NULL, "" );
       SELF_FILTERTEXT( pArea, pFilter );
-      hb_itemReturn( pFilter );
-      hb_itemRelease( pFilter );
+      hb_itemReturnRelease( pFilter );
    }
    else
       hb_retc( NULL );
@@ -2100,14 +2098,16 @@ HB_FUNC( ORDSCOPE )
 
 HB_FUNC( DBRELATION )  /* (<nRelation>) --> cLinkExp */
 {
-   char szExprBuff[ HARBOUR_MAX_RDD_RELTEXT_LENGTH + 1 ];
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
-   szExprBuff[ 0 ] = 0;
    if( pArea )
-      SELF_RELTEXT( pArea, hb_parni(1), szExprBuff ) ;
-
-   hb_retc( szExprBuff );
+   {
+      PHB_ITEM pRelExpr = hb_itemPutC( NULL, "" );
+      SELF_RELTEXT( pArea, hb_parni( 1 ), pRelExpr ) ;
+      hb_itemReturnRelease( pRelExpr );
+   }
+   else
+      hb_retc( NULL );
 }
 
 HB_FUNC( DBRSELECT )  /* (<nRelation>) --> nWorkArea */

@@ -145,11 +145,16 @@ extern HB_EXPORT void     hb_vmPushEvalSym( void ); /* pushes a codeblock eval s
 extern HB_EXPORT void     hb_vmPushPointer( void * ); /* push an item of HB_IT_POINTER type */
 extern HB_EXPORT void     hb_vmPushState( void ); /* push current VM state on stack */
 extern HB_EXPORT void     hb_vmPopState( void ); /* pop current VM state from stack */
+extern HB_EXPORT void     hb_vmPushItemRef( PHB_ITEM pItem ); /* push item reference */
+
+extern BOOL hb_vmMsgReference( PHB_ITEM pObject, PHB_SYMB pMessage ); /* create extended message reference */
 
 /* various flags for supported features */
 #define  HB_VMFLAG_HARBOUR    1     /* enable Harbour extension */
 #define  HB_VMFLAG_ARRSTR    16     /* support for string as array of bytes -ks */
-extern HB_EXPORT ULONG    hb_vmFlagEnabled( ULONG flag );
+extern HB_EXPORT ULONG  hb_vmFlagEnabled( ULONG flags );
+extern HB_EXPORT void   hb_vmFlagSet( ULONG flags );
+extern HB_EXPORT void   hb_vmFlagClear( ULONG flags );
 
 HB_EXTERN_END
 

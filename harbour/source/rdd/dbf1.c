@@ -73,11 +73,6 @@
 #  include "hbapicdp.h"
 #endif
 
-#ifdef HB_TRIGVAR_BYREF
-#include "hbxvm.h"
-#include "hbstack.h"
-#endif
-
 static USHORT s_uiRddId = ( USHORT ) -1;
 static RDDFUNCS dbfSuper;
 static const RDDFUNCS dbfTable = { ( DBENTRYP_BP ) hb_dbfBof,
@@ -138,7 +133,7 @@ static const RDDFUNCS dbfTable = { ( DBENTRYP_BP ) hb_dbfBof,
                                    ( DBENTRYP_V ) hb_dbfForceRel,
                                    ( DBENTRYP_SVP ) hb_dbfRelArea,
                                    ( DBENTRYP_VR ) hb_dbfRelEval,
-                                   ( DBENTRYP_SVP ) hb_dbfRelText,
+                                   ( DBENTRYP_SI ) hb_dbfRelText,
                                    ( DBENTRYP_VR ) hb_dbfSetRel,
                                    ( DBENTRYP_OI ) hb_dbfOrderListAdd,
                                    ( DBENTRYP_V ) hb_dbfOrderListClear,
@@ -434,16 +429,6 @@ static BOOL hb_dbfTriggerDo( DBFAREAP pArea, int iEvent,
    {
       if( hb_vmRequestReenter() )
       {
-#ifdef HB_TRIGVAR_BYREF
-         LONG lOffset = 0;
-
-         if( pItem )
-         {
-            lOffset = hb_stackTopOffset() - hb_stackBaseOffset();
-            hb_vmPush( pItem );
-         }
-#endif
-
          hb_vmPushDynSym( pArea->pTriggerSym );
          hb_vmPushNil();
          /* nEvent */
@@ -455,7 +440,11 @@ static BOOL hb_dbfTriggerDo( DBFAREAP pArea, int iEvent,
          /* xTrigVal (PREUSE/GET/PUT) */
          if( pItem )
          {
-            hb_xvmPushLocalByRef( ( SHORT ) lOffset );
+#ifdef HB_TRIGVAR_BYREF
+            hb_vmPushItemRef( pItem );
+#else
+            hb_vmPush( pItem );
+#endif
             hb_vmDo( 4 );
          }
          else
@@ -463,14 +452,6 @@ static BOOL hb_dbfTriggerDo( DBFAREAP pArea, int iEvent,
             /* SIx3 makes: hb_vmPushInteger( 0 ); */
             hb_vmDo( 3 );
          }
-
-#ifdef HB_TRIGVAR_BYREF
-         if( pItem )
-         {
-            hb_itemMove( pItem, hb_stackItemFromBase( lOffset ) );
-            hb_stackPop();
-         }
-#endif
          fResult = hb_parl( -1 );
          hb_vmRequestRestore();
       }

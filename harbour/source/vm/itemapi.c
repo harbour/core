@@ -975,6 +975,7 @@ HB_EXPORT double hb_itemGetNDDec( PHB_ITEM pItem, int * piDec )
 
       default:
          dNumber = 0;  /* To avoid GCC -O2 warning */
+         *piDec = 0;
          break;
    }
 
@@ -1301,6 +1302,9 @@ HB_EXPORT void hb_itemClear( PHB_ITEM pItem )
          hb_vmEnumRelease( pItem->item.asEnum.basePtr,
                            pItem->item.asEnum.valuePtr );
 
+      else if( type & HB_IT_EXTREF )
+         pItem->item.asExtRef.func->clear( pItem->item.asExtRef.value );
+
       else if( pItem->item.asRefer.offset == 0 && pItem->item.asRefer.value >= 0 )
          hb_gcRefFree( pItem->item.asRefer.BasePtr.array );
    }
@@ -1348,6 +1352,9 @@ HB_EXPORT void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
          else if( HB_IS_ENUM( pSource ) )    /* enumerators cannnot be copied */
             pDest->type = HB_IT_NIL;
+
+         else if( HB_IS_EXTREF( pSource ) )
+            pSource->item.asExtRef.func->copy( pDest );
 
          else if( pSource->item.asRefer.offset == 0 && pSource->item.asRefer.value >= 0 )
             hb_gcRefInc( pSource->item.asRefer.BasePtr.array );
@@ -1603,6 +1610,10 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
             return pItem->item.asEnum.valuePtr;
          }
       }
+      else if( HB_IS_EXTREF( pItem ) )
+      {
+         pItem = pItem->item.asExtRef.func->read( pItem );
+      }
       else
       {
          if( pItem->item.asRefer.value >= 0 )
@@ -1686,7 +1697,11 @@ PHB_ITEM hb_itemUnRefWrite( PHB_ITEM pItem, PHB_ITEM pSource )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemUnRefWrite(%p,%p)", pItem, pSource));
 
-   if( HB_IS_STRING( pSource ) &&
+   if( HB_IS_EXTREF( pItem ) )
+   {
+      pItem = pItem->item.asExtRef.func->write( pItem, pSource );
+   }
+   else if( HB_IS_STRING( pSource ) &&
        pSource->item.asString.length == 1 )
    {
       do

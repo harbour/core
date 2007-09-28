@@ -1442,7 +1442,7 @@ static ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
 /*
  * Obtain the character expression of the specified relation.
  */
-static ERRCODE hb_waRelText( AREAP pArea, USHORT uiRelNo, void * pExpr )
+static ERRCODE hb_waRelText( AREAP pArea, USHORT uiRelNo, PHB_ITEM pExpr )
 {
    LPDBRELINFO lpdbRelations;
    USHORT uiIndex = 1;
@@ -1455,13 +1455,12 @@ static ERRCODE hb_waRelText( AREAP pArea, USHORT uiRelNo, void * pExpr )
    {
       if( uiIndex++ == uiRelNo )
       {
-         hb_strncpy( ( char* ) pExpr, hb_itemGetCPtr( lpdbRelations->abKey ),
-                     HARBOUR_MAX_RDD_RELTEXT_LENGTH );
+         hb_itemCopy( pExpr, lpdbRelations->abKey );
          return SUCCESS;
       }
       lpdbRelations = lpdbRelations->lpdbriNext;
    }
-   * ( char * ) pExpr = 0;
+
    return FAILURE;
 }
 
@@ -1963,7 +1962,7 @@ static const RDDFUNCS waTable =
    ( DBENTRYP_V )       hb_waUnsupported,       /* ForceRel      */
 /* ( DBENTRYP_SVP )  */ hb_waRelArea,           /* RelArea       */
 /* ( DBENTRYP_VR )   */ hb_waRelEval,           /* RelEval       */
-/* ( DBENTRYP_SVP )  */ hb_waRelText,           /* RelText       */
+/* ( DBENTRYP_SI )   */ hb_waRelText,           /* RelText       */
 /* ( DBENTRYP_VR )   */ hb_waSetRel,            /* SetRel        */
 
    /* Order Management */

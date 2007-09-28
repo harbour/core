@@ -90,11 +90,12 @@ HB_EXTERN_BEGIN
 #define HB_IT_MEMVAR    ( ( HB_TYPE ) 0x04000 )
 #define HB_IT_ARRAY     ( ( HB_TYPE ) 0x08000 )
 #define HB_IT_ENUM      ( ( HB_TYPE ) 0x10000 )
+#define HB_IT_EXTREF    ( ( HB_TYPE ) 0x20000 )
 #define HB_IT_OBJECT    HB_IT_ARRAY
 #define HB_IT_NUMERIC   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
 #define HB_IT_NUMINT    ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG ) )
 #define HB_IT_ANY       ( ( HB_TYPE ) 0xFFFFFFFF )
-#define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_HASH | HB_IT_POINTER | /* HB_IT_MEMVAR | HB_IT_ENUM |*/ HB_IT_BYREF | HB_IT_STRING ) )
+#define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_HASH | HB_IT_POINTER | /* HB_IT_MEMVAR | HB_IT_ENUM | HB_IT_EXTREF |*/ HB_IT_BYREF | HB_IT_STRING ) )
 #define HB_IT_GCITEM    ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_HASH | HB_IT_POINTER | HB_IT_BYREF ) )
 #define HB_IT_HASHKEY   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE | HB_IT_DATE | HB_IT_STRING ) )
 
@@ -134,6 +135,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_MEMVAR( p )     HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
 #define HB_IS_MEMO( p )       HB_IS_OF_TYPE( p, HB_IT_MEMO )
 #define HB_IS_ENUM( p )       HB_IS_OF_TYPE( p, HB_IT_ENUM )
+#define HB_IS_EXTREF( p )     HB_IS_OF_TYPE( p, HB_IT_EXTREF )
 #define HB_IS_STRING( p )     ( ( HB_ITEM_TYPE( p ) & ~( HB_IT_BYREF | HB_IT_MEMOFLAG ) ) == HB_IT_STRING )
 #define HB_IS_BYREF( p )      ( ( HB_ITEM_TYPE( p ) & HB_IT_BYREF ) != 0 )
 #define HB_IS_NUMERIC( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
@@ -166,6 +168,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_MEMO( p )       ( HB_ITEM_TYPE( p ) == HB_IT_MEMO )
 #define HB_IS_MEMVAR( p )     ( HB_ITEM_TYPE( p ) == ( HB_IT_MEMVAR | HB_IT_BYREF ) )
 #define HB_IS_ENUM( p )       ( HB_ITEM_TYPE( p ) == ( HB_IT_ENUM | HB_IT_BYREF ) )
+#define HB_IS_EXTREF( p )     ( HB_ITEM_TYPE( p ) == ( HB_IT_EXTREF | HB_IT_BYREF ) )
 #define HB_IS_STRING( p )     ( ( HB_ITEM_TYPE( p ) & ~HB_IT_MEMOFLAG ) == HB_IT_STRING )
 #define HB_IS_BYREF( p )      ( ( HB_ITEM_TYPE( p ) & ~HB_IT_MEMVAR ) == HB_IT_BYREF )
 #define HB_IS_NUMERIC( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
@@ -197,6 +200,7 @@ HB_EXTERN_BEGIN
 #define HB_IS_STRING( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_STRING ) != 0 )
 #define HB_IS_MEMVAR( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_MEMVAR ) != 0 )
 #define HB_IS_ENUM( p )       ( ( HB_ITEM_TYPE( p ) & HB_IT_ENUM ) != 0 )
+#define HB_IS_EXTREF( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_EXTREF ) != 0 )
 #define HB_IS_BYREF( p )      ( ( HB_ITEM_TYPE( p ) & HB_IT_BYREF ) != 0 )
 #define HB_IS_NUMERIC( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMERIC ) != 0 )
 #define HB_IS_NUMINT( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_NUMINT ) != 0 )
@@ -233,6 +237,7 @@ struct _HB_BASEARRAY;
 struct _HB_BASEHASH;
 struct _HB_ITEM;
 struct _HB_VALUE;
+struct _HB_EXTREF;
 
 typedef struct _HB_STACK_STATE
 {
@@ -326,6 +331,12 @@ struct hb_struEnum
    LONG offset;
 };
 
+struct hb_struExtRef
+{
+   void * value;                          /* value item pointer */
+   const struct _HB_EXTREF * func;        /* extended reference functions */
+};
+
 struct hb_struString
 {
    ULONG length;
@@ -367,6 +378,7 @@ typedef struct _HB_ITEM
       struct hb_struMemvar    asMemvar;
       struct hb_struRefer     asRefer;
       struct hb_struEnum      asEnum;
+      struct hb_struExtRef    asExtRef;
       struct hb_struString    asString;
       struct hb_struSymbol    asSymbol;
       struct hb_struRecover   asRecover;
@@ -408,6 +420,20 @@ typedef struct _HB_VALUE
    HB_COUNTER  counter;
    HB_HANDLE   hPrevMemvar;
 } HB_VALUE, * PHB_VALUE, * HB_VALUE_PTR;
+
+typedef void     ( * HB_EXTREF_FUNC0 )( void * );
+typedef PHB_ITEM ( * HB_EXTREF_FUNC1 )( PHB_ITEM );
+typedef PHB_ITEM ( * HB_EXTREF_FUNC2 )( PHB_ITEM, PHB_ITEM );
+typedef void     ( * HB_EXTREF_FUNC3 )( PHB_ITEM );
+
+typedef struct _HB_EXTREF
+{
+   HB_EXTREF_FUNC1 read;
+   HB_EXTREF_FUNC2 write;
+   HB_EXTREF_FUNC3 copy;
+   HB_EXTREF_FUNC0 clear;
+   HB_EXTREF_FUNC0 mark;
+} HB_EXTREF, * PHB_EXTREF, * HB_EXTREF_PTR;
 
 typedef struct _HB_NESTED_CLONED
 {
