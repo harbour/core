@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-28 16:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    * respect -ks in macrovars and array item references
+
+  * harbour/source/vm/memvars.c
+    * do not detach array items during detaching enumerator variable
+      also in standard (without HB_COMPAT_XHB) build
+
 2007-09-28 14:08 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapi.h
   * harbour/source/vm/itemapi.c

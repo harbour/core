@@ -292,7 +292,6 @@ HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal )
       {
          if( HB_IS_MEMVAR( pLocal ) )
             break;
-#ifdef HB_COMPAT_XHB
          else if( HB_IS_ENUM( pLocal ) && !pLocal->item.asEnum.valuePtr )
          {
             PHB_ITEM pBase = HB_IS_BYREF( pLocal->item.asEnum.basePtr ) ?
@@ -310,7 +309,6 @@ HB_ITEM_PTR hb_memvarDetachLocal( HB_ITEM_PTR pLocal )
          else if( pLocal->item.asRefer.value >= 0 &&
                   pLocal->item.asRefer.offset == 0 )
             break;
-#endif
          pLocal = hb_itemUnRefOnce( pLocal );
       }
       while( HB_IS_BYREF( pLocal ) );
