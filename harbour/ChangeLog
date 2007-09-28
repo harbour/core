@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-28 17:26 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/Makefile
+   - include/hbcompat.ch
+   + contrib/xhb/hbcompat.ch
+   * contrib/xhb/xhb.ch
+   * contrib/xhb/Makefile
+     * Moved content or hbcompat.ch into xhb.ch.
+       Those who need compatibility, have to replace 
+     * Moved hbcompat.ch (for compatibility) to contrib/xhb
+
 2007-09-28 16:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
     * respect -ks in macrovars and array item references

@@ -22,6 +22,7 @@ PRG_SOURCES=\
 
 PRG_HEADERS=\
 	xhb.ch      \
+	hbcompat.ch \
 	hblog.ch    \
 	hblogdef.ch \
 	cstruct.ch  \
