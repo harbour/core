@@ -393,6 +393,7 @@ extern const BYTE    hb_comp_pcode_len[];
                                 ( HB_COMPFLAG_HARBOUR | \
                                   HB_COMPFLAG_XBASE | \
                                   HB_COMPFLAG_SHORTCUTS | \
+                                  HB_COMPFLAG_ARRSTR | \
                                   HB_COMPFLAG_RT_MACRO ) )
 #endif
 

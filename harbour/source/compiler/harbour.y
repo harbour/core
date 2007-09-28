@@ -2713,6 +2713,16 @@ static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr )
          }
          return pExpr;
       }
+      else
+      {
+         const char * szDesc;
+
+         szDesc = hb_compExprAsSymbol( pExpr );
+         if( ! szDesc )
+            szDesc = hb_compExprDescription( pExpr );
+
+         return hb_compErrorRefer( HB_COMP_PARAM, pExpr, szDesc );
+      }
    }
 #if 0
    else if( !( HB_COMP_PARAM->iPassByRef & ( HB_PASSBYREF_FUNCALL | HB_PASSBYREF_ARRAY ) ) )

@@ -204,7 +204,7 @@ static void hb_macroIdentNew( HB_COMP_DECL, char * );
 %type <valDouble>  NUM_DOUBLE
 %type <valLong>    NUM_LONG
 %type <valLong>    NUM_DATE
-%type <asExpr>  Argument ExtArgument ArgList ElemList
+%type <asExpr>  Argument ExtArgument RefArgument ArgList ElemList
 %type <asExpr>  BlockExpList BlockVarList BlockVars
 %type <asExpr>  NumValue NumAlias
 %type <asExpr>  NilValue
@@ -422,6 +422,7 @@ VariableAt  : NumValue      ArrayIndex    { $$ = $2; }
             | LiteralValue  ArrayIndex    { $$ = $2; }
             | CodeBlock     ArrayIndex    { $$ = $2; }
             | Logical       ArrayIndex    { $$ = $2; }
+            | Hash          ArrayIndex    { $$ = $2; }
             | SelfValue     ArrayIndex    { $$ = $2; }
             | Variable      ArrayIndex    { $$ = $2; }
             | AliasVar      ArrayIndex    { $$ = $2; }
@@ -445,7 +446,14 @@ FunCall     : IDENTIFIER '(' ArgList ')'  { $$ = hb_macroExprNewFunCall( hb_comp
                                           }
             ;
 
-FunRef      : '@' IDENTIFIER '(' ')'      { $$ = hb_compExprNewFunRef( $2, HB_COMP_PARAM ); }
+FunRef      : '@' IDENTIFIER '(' ArgList ')' {  if( hb_compExprParamListLen( $4 ) != 0 )
+                                                {
+                                                   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
+                                                   YYABORT;
+                                                }
+                                                else
+                                                   $$ = hb_compExprNewFunRef( $2, HB_COMP_PARAM );
+                                             }
             ;
 
 ArgList     : ExtArgument                 { $$ = hb_compExprNewArgList( $1, HB_COMP_PARAM ); }
@@ -453,8 +461,14 @@ ArgList     : ExtArgument                 { $$ = hb_compExprNewArgList( $1, HB_C
             ;
 
 Argument    : EmptyExpression
-            | '@' IDENTIFIER              { $$ = hb_compExprNewVarRef( $2, HB_COMP_PARAM ); }
+            | RefArgument
+            ;
+
+RefArgument : '@' IDENTIFIER              { $$ = hb_compExprNewVarRef( $2, HB_COMP_PARAM ); }
+            | '@' MacroVar                { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
             | '@' AliasVar                { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
+            | '@' ObjectData              { $$ = hb_compExprNewRef( $2, HB_COMP_PARAM ); }
+            | '@' VariableAt              { $$ = $2; $$->value.asList.reference = TRUE; }
             ;
 
 ExtArgument : EPSILON  { $$ = hb_compExprNewArgRef( HB_COMP_PARAM ); }

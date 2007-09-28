@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-28 19:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+    * pass compile time -ks state to RT macro compiler flags.
+      It means that if you compile some with which &macros
+      then -ks compile time switch will be passed also to
+      macro compiler and respected later at runtime
+
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.y
+    + added support for passing by reference array and object items
+
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    * generate compile time error for @func(<vars,...>)
+      only @func() is acceptable
+
 2007-09-28 17:26 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/Makefile
    - include/hbcompat.ch
