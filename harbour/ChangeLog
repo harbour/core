@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-28 11:56 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/compiler/hbusage.c
+     ! Show the -ks switch only when compiled with HB_COMPAT_XHB.
+
 2007-09-27 15:29 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/dbinfo.ch
   * harbour/contrib/rdd_ads/ads1.c
