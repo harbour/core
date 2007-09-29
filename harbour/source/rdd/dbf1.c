@@ -5147,7 +5147,7 @@ static ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIn
 
    pFileName = hb_fsFNameSplit( szFile );
 
-   if( !pFileName->szExtension )
+   if( hb_set.HB_SET_DEFEXTENSIONS && !pFileName->szExtension )
    {
       /* Add default extension if missing */
       pFileExt = hb_itemPutC( NULL, "" );
@@ -5228,7 +5228,7 @@ static ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItem
 
    pFileName = hb_fsFNameSplit( szFile );
 
-   if( !pFileName->szExtension )
+   if( hb_set.HB_SET_DEFEXTENSIONS && !pFileName->szExtension )
    {
       pFileExt = hb_itemPutC( NULL, "" );
       if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, 0, pFileExt ) == SUCCESS )

@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-29 11:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rdd/dbfntx/dbfntx1.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbf1.c
+     + Added support for _SET_DEFEXTENSIONS to RDD.
+
 2007-09-28 23:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbf1.c
     ! fixed typo in hb_dbfGetRowVer() reported by Mindaugas, many
