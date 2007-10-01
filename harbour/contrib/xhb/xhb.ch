@@ -84,8 +84,10 @@
    #xtranslate hb_HexToStr([<c,...>])  => HexToStr(<c>)
    #xtranslate hb_StrToHex([<c,...>])  => StrToHex(<c>)
 
-   #xtranslate hb_AScan(<a>,<b>,[<c>],[<d>],<e>) => AScan(<a>,<b>,<c>,<d>,<e>)
-   #xtranslate hb_RAScan([<x,...>])              => RAScan(<x>)
+   #xtranslate hb_AScan([<x,...>)      => AScan(<x>)
+   #xtranslate hb_RAScan([<x,...>])    => RAScan(<x>)
+   #xtranslate hb_AIns([<x,...>])      => AIns(<x>)
+   #xtranslate hb_ADel([<x,...>])      => ADel(<x>)
 
    #xtranslate hb_ISPOINTER( <xValue> )=> ISPOINTER( <xValue> )
 
@@ -103,10 +105,8 @@
 
 #else
 
+   #pragma -ks+
    REQUEST XHB_LIB
-
-   #xtranslate AIns(<a>,<n>,[<x,...>])      => xhb_AIns(<a>,<n>,<x>)
-   #xtranslate ADel(<a>,<n>,<l>)              => xhb_ADel(<a>,<n>,<l>)
 
    #xtranslate gtSys                   => hb_gtSys
    #xtranslate gtInfo([<x,...>])       => hb_gtInfo(<x>)
@@ -136,6 +136,8 @@
 
    #xtranslate AScan(<a>,<b>,[<c>],[<d>],<e>) => hb_AScan(<a>,<b>,<c>,<d>,<e>)
    #xtranslate RAScan([<x,...>])              => hb_RAScan(<x>)
+   #xtranslate AIns(<a>,<n>,[<x,...>])        => hb_AIns(<a>,<n>,<x>)
+   #xtranslate ADel(<a>,<n>,<l>)              => hb_ADel(<a>,<n>,<l>)
 
    #xtranslate ISPOINTER( <xValue> )   => hb_ISPOINTER( <xValue> )
 
@@ -226,6 +228,9 @@
    /* SWITCH ... ; case ... ; DEFAULT ; ... ; END */
    #xcommand DEFAULT => OTHERWISE
 
+   /* FOR EACH hb_enumIndex() */
+   #xtranslate hb_enumIndex(<!v!>) => <v>:__enumIndex()
+
    /* TRY / CATCH / FINALLY / END */
    #xcommand TRY  => BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
    #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
@@ -234,6 +239,7 @@
    /* EXTENDED CODEBLOCKs */
    #xtranslate \<|[<x,...>]| => {|<x>|
    #xcommand > [<*x*>]       => } <x>
+
 
    /* xHarbour operators: IN, HAS, LIKE, >>, <<, |, &, ^^ */
    #translate ( <exp1> IN <exp2> )     => ( (<exp1>) $ (<exp2>) )

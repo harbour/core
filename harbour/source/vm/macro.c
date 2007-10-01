@@ -957,8 +957,7 @@ HB_FUNC( HB_SETMACRO )
              hb_retl( s_macroFlags & ulFlags );
              pValue = hb_param( 2, HB_IT_LOGICAL );
              if( pValue )
-                hb_macroSetMacro( hb_itemGetL( pValue ) &&
-                                  hb_vmFlagEnabled(HB_VMFLAG_ARRSTR), ulFlags );
+                hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
              break;
 
           case HB_SM_SHORTCUTS:

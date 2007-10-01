@@ -8,6 +8,97 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-01 19:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/errorapi.c
+    + added protection against possible GPF when some assign methods
+      were called without parameters
+
+  * harbour/source/rdd/workarea.c
+    * initialize uiFalgs also when DBS_FLAGS is not set
+
+  * harbour/contrib/bmdbfcdx/bmdbfcdx1.c
+    * fixed hb_cdxSkipFilter() declaration - it should be 'static' function
+
+  * harbour/source/pp/ppcore.c
+  * harbour/source/compiler/ppcomp.c
+    + added support for changing all -k? switches by #pragma, f.e.;
+         #pragma -ks+
+         #pragma -kM-
+         #pragma -kx1
+         #pragma -kJ0
+
+  * harbour/source/compiler/hbusage.c
+    * changed -ks description
+
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+    * do not generate error message for negative indexes and
+      [] operators are used for simple types when -ks option
+      is used
+
+  * harbour/include/hbvmpub.h
+  * harbour/include/hbapi.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/extend.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/vm/memvars.c
+    + added HB_IT_DEFAULT flags - it allows to check if item was changed
+
+  * harbour/source/vm/memvars.c
+  * harbour/include/hbvm.h
+    ! fixed HB_IT_MEMOFLAG updating to be Clipper compatible. Here we are
+      not Clipper compatible in one place: in clodeblock local parameters
+      with memo values are marked as MEMO but if you leave function where
+      codeblock were created then Clipper during detaching removes MEMO
+      flag. In Harbour memo flag is kept.
+
+  * harbour/include/hbvm.h
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/hvm.c
+    % improved speed of extended references used for SETGET methods
+      and overloaded [] operators
+
+  * harbour/include/hbapi.h
+  * harbour/include/hbsetup.ch
+  * harbour/source/compiler/hbcomp.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/cmdarg.c
+    * removed HB_COMPAT_XHB flags - only one HB_COMPAT_XHB still exist
+      in HVM in hashes.c - it will be removed soon.
+
+  * harbour/source/common/hbverdsp.c
+    * removed information about xHarbour compatibility mode - it's not
+      longer used. We are emulating xHarbour behavior using external
+      XHB library and standard compiler/HVM features
+
+  * harbour/contrib/xhb/xhb.ch
+  * harbour/contrib/xhb/xhbfunc.c
+  * harbour/source/vm/arrayshb.c
+    * moved XHB_AINS(), XHB_ADEL() from XHB lib to HVM as HB_AINS(), HB_ADEL()
+
+  * harbour/contrib/xhb/xhb.ch
+    + added #pragma -ks+
+    + added transaltion for hb_enumindex( <enumvar> )
+
+  + harbour/contrib/xhb/xhbenum.c
+    + added emulation for HB_EUMMINDEX()
+
+  * harbour/contrib/xhb/xhbfunc.c
+    * do not add INET*() function wrappers for DOS builds or when
+      HB_NO_DEFAULT_INET macro is set
+
+  * harbour/contrib/xhb/xhbmsgs.c
+    * added comment
+
+  * harbour/contrib/Makefile
+    + added TIP and XHB
+
+  * harbour/make_rpm.sh
+  * harbour/harbour.spec
+    * removed HB_COMPAT_XHB, --with tip, --with xhb
+      they are not longer necessary
+
 2007-09-01 17:54 UTC+0100 Miguel Angel Marchuet <miguelangel/at/marchuet.net>
   * contrib/bmdbfcdx/bmdbfcdx1.c
   * contrib/bmdbfcdx/hbrddbmcdx.h

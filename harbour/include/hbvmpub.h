@@ -61,14 +61,15 @@ HB_EXTERN_BEGIN
 
 struct _HB_SYMB;
 
-#  define HB_ITEM_TYPE( p )   ( ( p )->type )
-#  define HB_OBJ_CLASS( p )   ( ( p )->item.asArray.value->uiClass )
-#  define HB_ARRAY_OBJ( p )   ( ( p )->item.asArray.value->uiClass != 0 )
+#  define HB_ITEM_TYPERAW( p )   ( ( p )->type )
+#  define HB_ITEM_TYPE( p )      ( HB_ITEM_TYPERAW( p ) & ~ HB_IT_DEFAULT )
+#  define HB_OBJ_CLASS( p )      ( ( p )->item.asArray.value->uiClass )
+#  define HB_ARRAY_OBJ( p )      ( ( p )->item.asArray.value->uiClass != 0 )
 
 #  if defined(__GNUC__)
-#     define HB_ITEM_NIL      { HB_IT_NIL, {} }
+#     define HB_ITEM_NIL         { HB_IT_NIL, {} }
 #  else
-#     define HB_ITEM_NIL      { HB_IT_NIL, NULL }
+#     define HB_ITEM_NIL         { HB_IT_NIL, NULL }
 #  endif
 
 #  define HB_ITEM_GET_NUMINTRAW( p )  ( HB_IS_INTEGER( p ) ? \
@@ -89,7 +90,7 @@ struct _HB_SYMB;
                      (p)->item.asLong.value = (v); \
                      (p)->item.asLong.length = HB_LONG_LENGTH( v ); \
                   } \
-               } while ( 0 )
+               } while( 0 )
 
    /* dynamic symbol structure */
    typedef struct _HB_DYNS
@@ -118,10 +119,11 @@ struct _HB_SYMB;
 #  undef HB_STACK_MACROS
 
 /* This is ugly trick but works without speed overhead */
-#  define HB_ITEM_TYPE( p )   ( * ( HB_TYPE * ) ( p ) )
-
+#  define HB_ITEM_TYPERAW( p )   ( * ( HB_TYPE * ) ( p ) )
 /* if you do not like it then use this definition */
-/* #  define HB_ITEM_TYPE( p )   ( hb_itemType( p ) ) */
+/* #  define HB_ITEM_TYPERAW( p )   ( hb_itemType( p ) ) */
+
+#  define HB_ITEM_TYPE( p )      ( HB_ITEM_TYPERAW( p ) & ~HB_IT_DEFAULT )
 
 #  define HB_OBJ_CLASS( p )   ( hb_objGetClass( p ) )
 #  define HB_ARRAY_OBJ( p )   ( hb_arrayIsObject( p ) )
@@ -153,7 +155,6 @@ struct _HB_SYMB;
 #endif
 
 #endif
-
 
 /* symbol support structure */
 typedef struct _HB_SYMB

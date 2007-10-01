@@ -251,7 +251,7 @@ HB_FUNC_STATIC( _DESCRIPTION )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-   if( HB_IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
       hb_errPutDescription( hb_stackSelfItem(), hb_itemGetCPtr( pItem ) );
 
    hb_itemReturn( pItem );
@@ -267,7 +267,7 @@ HB_FUNC_STATIC( _FILENAME )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-   if( HB_IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
       hb_errPutFileName( hb_stackSelfItem(), hb_itemGetCPtr( pItem ) );
 
    hb_itemReturn( pItem );
@@ -283,7 +283,7 @@ HB_FUNC_STATIC( _OPERATION )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-   if( HB_IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
       hb_errPutOperation( hb_stackSelfItem(), hb_itemGetCPtr( pItem ) );
 
    hb_itemReturn( pItem );
@@ -299,7 +299,7 @@ HB_FUNC_STATIC( _SUBSYSTEM )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-   if( HB_IS_STRING( pItem ) )
+   if( pItem && HB_IS_STRING( pItem ) )
       hb_errPutSubSystem( hb_stackSelfItem(), hb_itemGetCPtr( pItem ) );
 
    hb_itemReturn( pItem );

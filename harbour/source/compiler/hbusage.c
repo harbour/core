@@ -127,9 +127,7 @@ void hb_compPrintModes( HB_COMP_DECL )
            "\n          h               Harbour mode (default)",
            "\n          i               enable support for HB_INLINE",
            "\n          r               runtime settings enabled",
-#if defined( HB_COMPAT_XHB )
-           "\n          s               string as bytes array enabled",
-#endif
+           "\n          s               allow indexed assignment on all types",
            "\n          x               extended xbase mode",
            "\n          J               turn off jump optimization in pcode",
            "\n          M               turn off macrotext substitution",

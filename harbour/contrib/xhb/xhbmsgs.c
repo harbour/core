@@ -116,6 +116,11 @@ HB_FUNC( XHB_INCLUDE )
    }
 }
 
+/*
+ * check if array/string index is in valid range, update it if necessary
+ * in xHarbour compatibility mode where negative indexes are used to access
+ * data from tail
+ */
 #undef HB_IS_VALID_INDEX
 #define HB_IS_VALID_INDEX( idx, max )  ( ( ( LONG ) (idx) < 0 ? (idx) += (max) + 1 : (idx) ) > 0 && ( ULONG ) (idx) <= (max) )
 

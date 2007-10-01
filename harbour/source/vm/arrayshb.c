@@ -50,9 +50,6 @@
  *
  */
 
-#include <ctype.h>
-
-#include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbstack.h"
 #include "hbapiitm.h"
@@ -133,8 +130,8 @@ HB_FUNC( HB_ARRAYID )  /* for debugging: returns the array's "address" so dual r
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
-   if( HB_IS_ARRAY(pArray) )
-      hb_retnl( (long) pArray->item.asArray.value );
+   if( pArray )
+      hb_retnl( ( long ) hb_arrayId( pArray ) );
    else
       hb_retnl( -1 );
 }
@@ -312,6 +309,54 @@ HB_FUNC( HB_RASCAN )
    else
       hb_retni( 0 );
 }
+
+HB_FUNC( HB_AINS )
+{
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+
+   if( pArray )
+   {
+      long lPos = hb_parnl( 2 );
+
+      if( lPos == 0 )
+         lPos = 1;
+
+      if( hb_pcount() >= 4 && ISLOG( 4 ) && hb_parl( 4 ) )
+      {
+         ULONG ulLen = hb_arrayLen( pArray ) + 1;
+         if( lPos >= 1 && ( ULONG ) lPos <= ulLen )
+            hb_arraySize( pArray, ulLen );
+      }
+
+      if( hb_arrayIns( pArray, lPos ) )
+      {
+         if( hb_pcount() >= 3 && !ISNIL( 3 ) )
+            hb_arraySet( pArray, lPos, hb_param( 3, HB_IT_ANY ) );
+      }
+      hb_itemReturn( pArray ); /* AIns() returns the array itself */
+   }
+}
+
+HB_FUNC( HB_ADEL )
+{
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+
+   if( pArray )
+   {
+      long lPos = hb_parnl( 2 );
+
+      if( lPos == 0 )
+         lPos = 1;
+
+      if( hb_arrayDel( pArray, lPos ) )
+      {
+         if( hb_pcount() >= 3 && ISLOG( 3 ) && hb_parl( 3 ) )
+            hb_arraySize( pArray, hb_arrayLen( pArray ) - 1 );
+      }
+      hb_itemReturn( pArray ); /* ADel() returns the array itself */
+   }
+}
+
 
 /* TODO: In Xbase++ fifth parameter determines whether array elements
          are passed by reference to the code block. [vszakats] */

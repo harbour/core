@@ -169,14 +169,6 @@ void hb_verBuildInfo( void )
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "xHarbour compatible extensions: ", 0 );
-#if defined( HB_COMPAT_XHB )
-   hb_conOutErr( "Yes", 0 );
-#else
-   hb_conOutErr( "No", 0 );
-#endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
    hb_conOutErr( "Alaska Xbase++ compatible extensions: ", 0 );
 #if defined( HB_COMPAT_XPP )
    hb_conOutErr( "Yes", 0 );

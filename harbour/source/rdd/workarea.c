@@ -299,6 +299,8 @@ static ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
       pFieldInfo.uiDec = 0;
 #ifdef DBS_FLAG
       pFieldInfo.uiFlags = hb_arrayGetNI( pFieldDesc, DBS_FLAG );
+#else
+      pFieldInfo.uiFlags = 0;
 #endif
       iData = toupper( hb_arrayGetCPtr( pFieldDesc, DBS_TYPE )[ 0 ] );
       switch( iData )

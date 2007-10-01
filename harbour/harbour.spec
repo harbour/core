@@ -17,10 +17,8 @@
 # --with pgsql       - build pgsql lib 
 # --with pgsql4      - build pgsql4 lib
 # --with gd          - build gd lib 
-# --with tip         - build tip lib (needs --withxhb)
 # --with odbc        - build odbc lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
-# --with xhb         - build with xHarbour compatible extensions
 # --without adsrdd   - do not build ADS RDD
 # --without gpl      - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
@@ -82,7 +80,7 @@
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_opt   export HB_GTALLEG=%{?_with_allegro:yes}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpl:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="%{?_with_gd:gd} %{?_with_tip:tip} %{?_with_xhb:xhb} %{?_with_pgsql:pgsql} %{?_with_mysql:mysql}"
+%define hb_ctrb  export HB_CONTRIBLIBS="%{?_with_gd:gd} %{?_with_pgsql:pgsql} %{?_with_mysql:mysql}"
 %define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_defgt} ; %{hb_gpm} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_opt} ; %{hb_ctrb} ; %{hb_cmrc}
 
 %define hb_host  www.harbour-project.org
@@ -245,11 +243,7 @@ case "`uname -m`" in
         export C_USR="$C_USR -fPIC"
         ;;
 esac
-if [ "%{?_with_xhb:1}" ]; then
-    sed -e "s!/\* #define HB_COMPAT_XHB \*/!#define HB_COMPAT_XHB      !g" \
-        include/hbsetup.ch > include/hbsetup.ch-new && \
-    mv include/hbsetup.ch-new include/hbsetup.ch
-fi
+
 [ "%{?_with_odbc:1}" ] || rm -fR contrib/odbc
 
 make -r
@@ -522,13 +516,12 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_pgsql: %{_libdir}/%{name}/libhbpg.a}
 %{?_with_pgsql4: %{_libdir}/%{name}/libhbpg.a}
 %{?_with_gd: %{_libdir}/%{name}/libhbgd.a}
-%{?_with_tip: %{_libdir}/%{name}/libtip.a}
-%{?_with_xhb: %{_libdir}/%{name}/libxhb.a}
-
 %{_libdir}/%{name}/libhbbtree.a
 %{_libdir}/%{name}/libhtml.a
 %{_libdir}/%{name}/libmisc.a
 %{_libdir}/%{name}/libct.a
+%{_libdir}/%{name}/libtip.a
+%{_libdir}/%{name}/libxhb.a
 
 %files lib
 %defattr(755,root,root,755)

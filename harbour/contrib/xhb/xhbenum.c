@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Header file for runtime configuration, common for Harbour and C level.
+ *    xHarbour compatible HB_ENUMINDEX() internal FOR EACH function
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,37 +50,22 @@
  *
  */
 
-/* NOTE: This file is used by C code and at Harbour build time. 
-         Normally you never need to #include it in any .prg code. */
+#include "hbvmopt.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbstack.h"
 
-#ifndef HB_SETUP_CH_
-#define HB_SETUP_CH_
-
-/* NOTE: You can select here, which features you want to include of the
-         different Clipper implementations. */
-
-#define HB_EXTENSION              /* Enable Harbour extensions */
-
-#define HB_C52_UNDOC              /* Enable CA-Cl*pper 5.2e undocumented features */
-/* #define HB_C52_STRICT */       /* Enable CA-Cl*pper 5.2e strict compatibility */
-
-#define HB_COMPAT_C53             /* Enable CA-Cl*pper 5.3x extensions */
-#define HB_COMPAT_XPP             /* Enable Alaska Xbase++ extensions */
-/* #define HB_COMPAT_VO */        /* Enable CA-VO extensions */
-#define HB_COMPAT_FLAGSHIP        /* Enable Flagship extensions */
-/* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
-/* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
-/* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
-
-/* NOTE: HB_SHORTNAMES must be defined manually if the symbol name length is
-         set to 10 explicitly and not through the HB_C52_STRICT option
-         [vszakats] */
-
-/* Turn on short names support for the class engine */
-#ifdef HB_C52_STRICT
-   #define HB_SHORTNAMES
-#endif
-
-/* #define HB_FILE_VER_STATIC */  /* Enable inclusion of file version strings */
-
-#endif /* HB_SETUP_CH_ */
+HB_FUNC( HB_ENUMINDEX )
+{
+   LONG lFuncOffset = hb_stackBaseOffset() - 1, lIndex = 0;
+   while( --lFuncOffset > 0 )
+   {
+      PHB_ITEM pItem = hb_stackItem( lFuncOffset );
+      if( HB_IS_ENUM( pItem ) )
+      {
+         lIndex = pItem->item.asEnum.offset;
+         break;
+      }
+   }
+   hb_retnl( lIndex );
+}

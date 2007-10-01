@@ -137,7 +137,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
       /* TODO: EMPTY() (not done by Clipper) */
       if( iCount == 0 )
       {
-#if !defined( HB_MACRO_SUPPORT ) && defined( HB_COMPAT_XHB )
+#if !defined( HB_MACRO_SUPPORT ) && defined( HB_EMULATE_ENUMINDEX_FUNC )
          if( strcmp( "HB_ENUMINDEX", pName->value.asSymbol ) == 0 )
          {
             HB_ENUMERATOR_PTR pForVar, pEnumVar = NULL;
@@ -497,7 +497,8 @@ HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR pArray, HB_EXPR_PTR pIndex, HB_CO
    pExpr = HB_COMP_EXPR_NEW( HB_ET_ARRAYAT );
 
    /* Check if this expression can be indexed */
-   HB_EXPR_USE( pArray, HB_EA_ARRAY_AT );
+   if( ! HB_SUPPORT_ARRSTR )
+      HB_EXPR_USE( pArray, HB_EA_ARRAY_AT );
    /* Check if this expression can be an index */
    HB_EXPR_USE( pIndex, HB_EA_ARRAY_INDEX );
    pExpr->value.asList.pExprList = pArray;

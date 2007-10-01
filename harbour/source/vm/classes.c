@@ -165,11 +165,12 @@ typedef struct
 {
    PHB_DYNS pMessage;            /* Method symbolic name */
    PHB_SYMB pFuncSym;            /* Function symbol */
+   PHB_DYNS pAccMsg;             /* Corresponding access method symbolic name */
+   HB_TYPE  itemType;            /* Type of item in restricted assignment */
    USHORT   uiSprClass;          /* Originalclass'handel (super or current class'handel if not herited). */ /*Added by RAC&JF*/
    USHORT   uiScope;             /* Scoping value */
    USHORT   uiData;              /* Item position for instance data, class data and shared data (Harbour like, begin from 1) or delegated message index object */
    USHORT   uiOffset;            /* position in pInitData for class datas (from 1) or offset to instance area in inherited instance data and supercast messages (from 0) */
-   HB_TYPE  itemType;            /* Type of item in restricted assignment */
    USHORT   uiPrevCls;
    USHORT   uiPrevMth;
 #ifndef HB_NO_PROFILER
@@ -1977,10 +1978,18 @@ BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
                                     pMethod->uiData, hb_stackReturnItem() );
       }
       else if( pExecSym->value.pFunPtr == hb___msgScopeErr )
-         (pExecSym->value.pFunPtr)();
+      {
+         pExecSym->value.pFunPtr();
+      }
       else
       {
-         return hb_vmMsgReference( pObject, pMessage );
+         PCLASS pClass   = &s_pClasses[ pStack->uiClass ];
+         PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
+
+         if( !pMethod->pAccMsg )
+            pMethod->pAccMsg = hb_dynsymGetCase( pMessage->szName + 1 );
+
+         return hb_vmMsgReference( pObject, pMessage->pDynSym, pMethod->pAccMsg );
       }
    }
 
@@ -4094,7 +4103,8 @@ static HARBOUR hb___msgSetClsData( void )
 
    else
    {
-      if( pMethod->itemType && ! ( pMethod->itemType & pReturn->type ) )
+      if( pMethod->itemType &&
+          ! ( pMethod->itemType & HB_ITEM_TYPERAW( pReturn ) ) )
       {
          if( pMethod->itemType == HB_IT_NUMINT && HB_IS_NUMERIC( pReturn ) )
             hb_itemPutNInt( pReturn, hb_itemGetNInt( pReturn ) );
@@ -4144,7 +4154,8 @@ static HARBOUR hb___msgSetShrData( void )
                    pMethod->uiData, hb_stackReturnItem() );
    else
    {
-      if( pMethod->itemType && ! ( pMethod->itemType & pReturn->type ) )
+      if( pMethod->itemType &&
+          ! ( pMethod->itemType & HB_ITEM_TYPERAW( pReturn ) ) )
       {
          if( pMethod->itemType == HB_IT_NUMINT && HB_IS_NUMERIC( pReturn ) )
             hb_itemPutNInt( pReturn, hb_itemGetNInt( pReturn ) );
@@ -4227,7 +4238,8 @@ static HARBOUR hb___msgSetData( void )
 
       else
       {
-         if( pMethod->itemType && ! ( pMethod->itemType & pReturn->type ) )
+         if( pMethod->itemType &&
+             ! ( pMethod->itemType & HB_ITEM_TYPERAW( pReturn ) ) )
          {
             if( pMethod->itemType == HB_IT_NUMINT && HB_IS_NUMERIC( pReturn ) )
                hb_itemPutNInt( pReturn, hb_itemGetNInt( pReturn ) );

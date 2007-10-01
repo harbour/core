@@ -16,10 +16,8 @@
 # --with mysql       - build mysql lib
 # --with pgsql       - build pgsql lib
 # --with gd          - build gd lib
-# --with tip         - build tip lib (needs --withxhb)
 # --with odbc        - build odbc lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
-# --with xhb         - build with xHarbour compatible extensions
 # --without adsrdd   - do not build ADS RDD
 # --without gpl      - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
@@ -120,9 +118,6 @@ fi
 if ! test_reqrpm "XFree86-devel"
 then
     INST_PARAM="${INST_PARAM} --without X11"
-fi
-if [ "${C_USR//-DHB_COMPAT_XHB/}" = "${C_USR}" ]; then
-    INST_PARAM="${INST_PARAM} --without tip"
 fi
 
 TOINST_LST=""

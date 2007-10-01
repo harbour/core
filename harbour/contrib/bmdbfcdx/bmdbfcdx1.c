@@ -7016,7 +7016,7 @@ static ERRCODE hb_cdxSkip( CDXAREAP pArea, LONG lToSkip )
 /*
  * Reposition cursor respecting any filter setting.
  */
-ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, LONG lUpDown )
+static ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, LONG lUpDown )
 {
    BOOL fBottom, fDeleted;
    ERRCODE uiError;

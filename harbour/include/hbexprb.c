@@ -54,7 +54,7 @@
 #include "hbcomp.h"
 #include "hbmacro.ch"
 
-#if !defined( HB_HASH_USES_ARRAY_INDEXES ) /* && defined( HB_COMPAT_XHB ) */
+#if !defined( HB_HASH_USES_ARRAY_INDEXES )
 #  define HB_HASH_USES_ARRAY_INDEXES
 #endif
 
@@ -342,8 +342,7 @@ static HB_EXPR_FUNC( hb_compExprUseString )
       case HB_EA_REDUCE:
          break;
       case HB_EA_ARRAY_AT:
-         if( ! HB_SUPPORT_ARRSTR )
-            HB_COMP_ERROR_TYPE( pSelf );
+         HB_COMP_ERROR_TYPE( pSelf );
          break;
       case HB_EA_ARRAY_INDEX:
 #ifdef HB_HASH_USES_ARRAY_INDEXES
@@ -1210,11 +1209,6 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             else
                lIndex = ( LONG ) pIdx->value.asNum.val.d;
 
-#if !defined( HB_COMPAT_XHB )
-            if( lIndex <= 0 )
-               hb_compErrorBound( HB_COMP_PARAM, pIdx ); /* index <= 0 - bound error */
-            else
-#endif
             if( pExpr->ExprType == HB_ET_ARRAY )   /* is it a literal array */
             {
                ULONG ulSize = hb_compExprParamListCheck( HB_COMP_PARAM, pExpr );
@@ -1223,7 +1217,10 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                   /* restore original expression type */
                   pExpr->ExprType = HB_ET_ARRAY;
                else if( !HB_IS_VALID_INDEX( lIndex, ulSize ) )
-                  hb_compErrorBound( HB_COMP_PARAM, pIdx );
+               {
+                  if( !HB_SUPPORT_ARRSTR )
+                     hb_compErrorBound( HB_COMP_PARAM, pIdx );
+               }
                else
                {
                   pExpr = pExpr->value.asList.pExprList; /* the first element in the array */
@@ -1246,15 +1243,16 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                      HB_COMP_EXPR_DELETE( pSelf );
                      pSelf = pNew;
                   }
-                  else
+                  else if( !HB_SUPPORT_ARRSTR )
                      hb_compErrorBound( HB_COMP_PARAM, pIdx );
                }
             }
+#if 0
             else if( pExpr->ExprType == HB_ET_STRING && HB_SUPPORT_ARRSTR )   /* is it a literal string */
             {
                if( HB_IS_VALID_INDEX( lIndex, pExpr->ulLength ) )
                {
-#if defined( HB_COMPAT_XHB )
+#if defined( HB_COMPAT_X HB )
                   char * pszValue = ( char * ) hb_xgrab( 2 );
                   pszValue[ 0 ] = pExpr->value.asString.string[ lIndex - 1 ];
                   pszValue[ 1 ] = '\0';
@@ -1271,7 +1269,8 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                else
                   hb_compErrorBound( HB_COMP_PARAM, pIdx );
             }
-            else
+#endif
+            else if( !HB_SUPPORT_ARRSTR )
             {
                HB_EXPR_USE( pExpr, HB_EA_ARRAY_AT );
             }

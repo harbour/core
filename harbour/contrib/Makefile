@@ -12,6 +12,7 @@ DIRS=\
 	libmisc \
 	libnf \
 	samples \
+	xhb \
 	$(HB_CONTRIBLIBS)
 
 
@@ -69,9 +70,9 @@ endif
 endif
 endif
 
-#ifneq ($(HB_ARCHITECTURE),dos)
-#DIRS += tip
+ifneq ($(HB_ARCHITECTURE),dos)
+DIRS += tip
 #DIRS += xhb
-#endif
+endif
 
 include $(ROOT)config/dir.cf

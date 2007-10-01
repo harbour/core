@@ -309,10 +309,6 @@ ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
    char * cFlags;
    ULONG ulFlags = HB_VMFLAG_HARBOUR;
 
-#if defined( HB_COMPAT_XHB )
-   ulFlags |= HB_VMFLAG_ARRSTR;
-#endif
-
    if( hb_cmdargCheck( "INFO" ) )
    {
       {

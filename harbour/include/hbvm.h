@@ -147,7 +147,7 @@ extern HB_EXPORT void     hb_vmPushState( void ); /* push current VM state on st
 extern HB_EXPORT void     hb_vmPopState( void ); /* pop current VM state from stack */
 extern HB_EXPORT void     hb_vmPushItemRef( PHB_ITEM pItem ); /* push item reference */
 
-extern BOOL hb_vmMsgReference( PHB_ITEM pObject, PHB_SYMB pMessage ); /* create extended message reference */
+extern BOOL hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg ); /* create extended message reference */
 
 /* various flags for supported features */
 #define  HB_VMFLAG_HARBOUR    1     /* enable Harbour extension */

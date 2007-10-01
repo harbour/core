@@ -2183,15 +2183,17 @@ static PHB_PP_TOKEN hb_pp_pragmaGetSwitch( PHB_PP_TOKEN pToken, int * piValue )
 
    if( pToken && HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_KEYWORD )
    {
+      BOOL fNum = pToken->len > 1 && HB_PP_ISDIGIT( pToken->value[ pToken->len - 1 ] );
+
       if( HB_PP_TOKEN_ISEOC( pToken->pNext ) )
       {
-         if( pToken->len > 1 && HB_PP_ISDIGIT( pToken->value[ pToken->len - 1 ] ) )
+         if( fNum )
          {
             pValue = pToken;
             * piValue = pValue->value[ pToken->len - 1 ] - '0';
          }
       }
-      else if( HB_PP_TOKEN_ISEOC( pToken->pNext->pNext ) )
+      else if( HB_PP_TOKEN_ISEOC( pToken->pNext->pNext ) && !fNum )
       {
          if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_MINUS )
          {
@@ -2206,7 +2208,7 @@ static PHB_PP_TOKEN hb_pp_pragmaGetSwitch( PHB_PP_TOKEN pToken, int * piValue )
          else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_NUMBER )
          {
             pValue = pToken;
-            * piValue = atoi( pValue->value );
+            * piValue = atoi( pValue->pNext->value );
          }
       }
    }

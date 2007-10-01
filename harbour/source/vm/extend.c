@@ -695,17 +695,13 @@ HB_EXPORT ULONG  hb_parinfo( int iParam )
       return ( ULONG ) hb_pcount();
    else
    {
-      if( ( iParam > 0 && iParam <= hb_pcount() ) || ( iParam == -1 ) )
+      if( iParam >= -1 && iParam <= hb_pcount() )
       {
-         HB_TYPE uiType = ( iParam == -1 ) ? hb_stackReturnItem()->type : ( hb_stackItemFromBase( iParam ) )->type;
+         PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
+         HB_TYPE uiType = HB_ITEM_TYPE( pItem );
 
          if( uiType & HB_IT_BYREF )
-         {
-            PHB_ITEM pItem = hb_itemUnRef( ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam ) );
-
-            if( pItem )
-               uiType |= pItem->type;
-         }
+            uiType |= HB_ITEM_TYPE( hb_itemUnRef( pItem ) );
 
          return ( ULONG ) uiType;
       }
