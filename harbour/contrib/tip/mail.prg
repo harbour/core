@@ -60,7 +60,6 @@
    Added method :getMultiParts()
 */
 
-#include "hbcompat.ch"
 #include "hbclass.ch"
 
 CLASS TipMail
@@ -118,7 +117,7 @@ ENDCLASS
 METHOD New( cBody, oEncoder ) CLASS TipMail
 
    // Set header fileds to non-sensitive
-   ::hHeaders := HSetCaseMatch( {=>}, .F. )
+   ::hHeaders := hb_HSetCaseMatch( {=>}, .F. )
    ::aAttachments := {}
 
    IF Valtype( oEncoder ) $ "CO"
@@ -172,11 +171,11 @@ RETURN ::cBody
 METHOD GetFieldPart( cPart ) CLASS TipMail
    LOCAL nPos, cEnc
 
-   nPos := HGetPos( ::hHeaders, cPart )
+   nPos := hb_HGetPos( ::hHeaders, cPart )
    IF nPos == 0
       RETURN ""
    ELSE
-      cEnc := HGetValueAt( ::hHeaders, nPos )
+      cEnc := hb_HGetValueAt( ::hHeaders, nPos )
       nPos := At( ";", cEnc )
       IF nPos != 0
          cEnc := Substr( cEnc, 1, nPos - 1)
@@ -190,11 +189,11 @@ METHOD GetFieldOption( cPart, cOption ) CLASS TipMail
    LOCAL nPos, aMatch
    LOCAL cEnc
 
-   nPos := HGetPos( ::hHeaders, cPart )
+   nPos := hb_HGetPos( ::hHeaders, cPart )
    IF nPos == 0
       RETURN ""
    ELSE
-      cEnc := HGetValueAt( ::hHeaders, nPos )
+      cEnc := hb_HGetValueAt( ::hHeaders, nPos )
       // Case insensitive check
       aMatch := HB_Regex( ";\s*" + cOption +"\s*=\s*([^;]*)", cEnc, .F. )
       IF aMatch != NIL
@@ -209,11 +208,11 @@ RETURN cEnc
 METHOD SetFieldPart( cPart, cValue ) CLASS TipMail
    LOCAL nPos, cEnc
 
-   nPos := HGetPos( ::hHeaders, cPart )
+   nPos := hb_HGetPos( ::hHeaders, cPart )
    IF nPos == 0
       ::hHeaders[ cPart ] := cValue
    ELSE
-      cEnc := HGetValueAt( ::hHeaders, nPos )
+      cEnc := hb_HGetValueAt( ::hHeaders, nPos )
       nPos := At( ";", cEnc )
       IF nPos == 0
          ::hHeaders[ cPart ] := cValue
@@ -229,11 +228,11 @@ METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TipMail
    LOCAL nPos, aMatch
    LOCAL cEnc
 
-   nPos := HGetPos( ::hHeaders, cPart )
+   nPos := hb_HGetPos( ::hHeaders, cPart )
    IF nPos == 0
       Return .F.
    ELSE
-      cEnc := HGetValueAt( ::hHeaders, nPos )
+      cEnc := hb_HGetValueAt( ::hHeaders, nPos )
       aMatch := HB_Regex( "(.*?;\s*)" + cOption +"\s*=[^;]*(.*)?", cEnc, .F. )
       IF Empty( aMatch )
          ::hHeaders[ cPart ] := cEnc += "; "+ cOption + '="' + cValue + '"'
@@ -336,12 +335,12 @@ METHOD ToString() CLASS TipMail
     endif
 
    FOR i := 1 TO Len( ::hHeaders )
-      cElem := Lower(HGetKeyAt( ::hHeaders, i ))
+      cElem := Lower(hb_HGetKeyAt( ::hHeaders, i ))
       IF cElem != "return-path" .and. cElem != "delivered-to" .and.;
             cElem != "date" .and. cElem != "from" .and.;
             cElem != "to" .and. cElem != "subject" .and. cElem !="mime-version"
-         cRet += HGetKeyAt( ::hHeaders, i ) + ": " +;
-                HGetValueAt( ::hHeaders, i ) + e"\r\n"
+         cRet += hb_HGetKeyAt( ::hHeaders, i ) + ": " +;
+                 hb_HGetValueAt( ::hHeaders, i ) + e"\r\n"
       ENDIF
    NEXT
 
@@ -386,7 +385,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
    ENDIF
 
    IF Len( ::hHeaders ) > 0
-      ::hHeaders := HSetCaseMatch( {=>} , .F. )
+      ::hHeaders := hb_HSetCaseMatch( {=>} , .F. )
    ENDIF
 
    IF Len( ::aReceived ) > 0

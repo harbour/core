@@ -121,7 +121,7 @@ HB_FUNC( BUILDUSERPASSSTRING )
    strcpy( s + 1, szUser );
    strcpy( s + u_len + 2, szPass );
 
-   hb_retcAdopt( s );
+   hb_retc_buffer( s );
 }
 
 HB_FUNC( HB_BASE64 )

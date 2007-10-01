@@ -113,12 +113,12 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
             break;
          case 2:
             cElem1 = nPos < nLen -1 ? (unsigned char) cData[ nPos + 1] : 0;
-            cElem = ((cElem & 0x3) << 4) | cElem1 >> 4;
+            cElem = ((cElem & 0x3) << 4) | (cElem1 >> 4);
             nPos++;
             break;
          case 3:
             cElem1 = nPos < nLen -1 ? (unsigned char) cData[ nPos + 1] : 0;
-            cElem = ((cElem & 0xF) << 2) | cElem1 >> 6;
+            cElem = ((cElem & 0xF) << 2) | (cElem1 >> 6);
             nPos++;
             break;
          case 4:
@@ -183,7 +183,7 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
    }
 
    /* this function also adds a zero */
-   hb_retclenAdopt( cRet, nPosRet );
+   hb_retclen_buffer( cRet, nPosRet );
 }
 
 HB_FUNC( TIPENCODERBASE64_DECODE )
@@ -280,7 +280,7 @@ HB_FUNC( TIPENCODERBASE64_DECODE )
    /* this function also adds a zero */
    /* hopefully reduce the size of cRet */
    cRet = (unsigned char *) hb_xrealloc( cRet, nPosRet + 1 );
-   hb_retclenAdopt( (char *)cRet, nPosRet );
+   hb_retclen_buffer( (char *)cRet, nPosRet );
 }
 
 HB_FUNC( TIPENCODERQP_ENCODE )
@@ -354,7 +354,7 @@ HB_FUNC( TIPENCODERQP_ENCODE )
 
    /* this function also adds a zero */
    cRet = (char *) hb_xrealloc( cRet, nPosRet + 1 );
-   hb_retclenAdopt( cRet, nPosRet );
+   hb_retclen_buffer( cRet, nPosRet );
 }
 
 HB_FUNC( TIPENCODERQP_DECODE )
@@ -430,7 +430,7 @@ HB_FUNC( TIPENCODERQP_DECODE )
    /* this function also adds a zero */
    /* hopefully reduce the size of cRet */
    cRet = (char *) hb_xrealloc( cRet, nPosRet + 1 );
-   hb_retclenAdopt( cRet, nPosRet );
+   hb_retclen_buffer( cRet, nPosRet );
 }
 
 HB_FUNC( TIPENCODERURL_ENCODE )
@@ -564,5 +564,5 @@ HB_FUNC( TIPENCODERURL_DECODE )
    /* this function also adds a zero */
    /* hopefully reduce the size of cRet */
    cRet = (char *) hb_xrealloc( cRet, nPosRet + 1 );
-   hb_retclenAdopt( cRet, nPosRet );
+   hb_retclen_buffer( cRet, nPosRet );
 }

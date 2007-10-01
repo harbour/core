@@ -215,9 +215,8 @@
    #xtranslate INETDGRAMSEND([<x,...>])         => hb_INETDGRAMSEND(<x>)
    #xtranslate INETDGRAMRECV([<x,...>])         => hb_INETDGRAMRECV(<x>)
    #xtranslate INETCRLF([<x,...>])              => hb_INETCRLF(<x>)
-   #xtranslate ISINETSOCKET([<x,...>])          => HB_ISINETSOCKET(<x>)
-   #xtranslate INETDESTROY([<x,...>])           => IIF( HB_ISINETSOCKET( <x> ), ;
-                                                   hb_INETCLOSE( <x> ), )
+   #xtranslate ISINETSOCKET([<x,...>])          => HB_INETISSOCKET(<x>)
+   #xtranslate INETDESTROY([<x,...>])           => IIF( HB_INETISSOCKET( <x> ), hb_INETCLOSE( <x> ), )
 
    /* THROW => generate error */
    #xtranslate THROW(<oErr>) => (Eval(ErrorBlock(), <oErr>), Break(<oErr>))

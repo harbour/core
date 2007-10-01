@@ -49,7 +49,6 @@
  *
  */
 
-#include "hbcompat.ch"
 #include "common.ch"
 #include "error.ch"
 #include "hbclass.ch"
@@ -136,15 +135,13 @@ ENDCLASS
 METHOD new( cHtmlString ) CLASS THtmlDocument
    LOCAL cEmptyHtmlDoc, oNode, oSubNode, oErrNode, aHead, aBody, nMode := 0
 
-   TEXT INTO cEmptyHtmlDoc
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
- <head>
- </head>
- <body>
- </body>
-</html>
-   ENDTEXT
+   cEmptyHtmlDoc := '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' + hb_OSNewLine() +;
+                    '<html>' + hb_OSNewLine() +;
+                    ' <head>' + hb_OSNewLine() +;
+                    ' </head>' + hb_OSNewLine() +;
+                    ' <body>' + hb_OSNewLine() +;
+                    ' </body>' + hb_OSNewLine() +;
+                    '</html>'
 
    IF Valtype( cHtmlString ) <> "C"
       ::root := THtmlNode():new( cEmptyHtmlDoc )
@@ -407,13 +404,13 @@ METHOD Next() CLASS THtmlIterator
    LOCAL oFound, lExit := .F.
 
    DO WHILE .NOT. lExit
-      TRY
+      BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
          oFound := ::aNodes[ ++::nCurrent ]
          IF ::MatchCriteria( oFound )
             ::oNode := oFound
             lExit := .T.
          ENDIF
-      CATCH
+      RECOVER
          lExit      := .T.
          oFound     := NIL
          ::nCurrent := 0
@@ -447,13 +444,13 @@ METHOD MatchCriteria( oFound ) CLASS THtmlIteratorScan
       RETURN .F.
    ENDIF
 
-   IF ::cAttribute != NIL .and. .not. HHasKey( oFound:getAttributes(), ::cAttribute )
+   IF ::cAttribute != NIL .and. .not. hb_HHasKey( oFound:getAttributes(), ::cAttribute )
       RETURN .F.
    ENDIF
 
    IF ::cValue != NIL
       xData := oFound:getAttributes()
-      IF HScan( xData, {| xKey,cValue| HB_SYMBOL_UNUSED(xKey), Lower(::cValue) == Lower(cValue) }) == 0
+      IF hb_HScan( xData, {| xKey,cValue| HB_SYMBOL_UNUSED(xKey), Lower(::cValue) == Lower(cValue) }) == 0
          RETURN .F.
       ENDIF
    ENDIF
@@ -486,23 +483,23 @@ RETURN Self
 METHOD MatchCriteria( oFound ) CLASS THtmlIteratorRegex
    LOCAL xData
 
-   IF ::cName != NIL .and. .not. ( Lower(::cName) LIKE Lower(oFound:htmlTagName) )
+   IF ::cName != NIL .and. .not. hb_regexLike( Lower(oFound:htmlTagName), Lower(::cName) )
       RETURN .F.
    ENDIF
 
    IF ::cAttribute != NIL .and. ;
-         hScan( oFound:getAttributes(), {|cKey| ( cKey LIKE lower(::cAttribute) ) } ) == 0
+         hb_hScan( oFound:getAttributes(), {|cKey| hb_regexLike( lower(::cAttribute), cKey ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cValue != NIL .and.;
-       hScan( oFound:getAttributes(), {| xKey ,cValue| HB_SYMBOL_UNUSED(xKey), ( cValue LIKE ::cValue ) } ) == 0
+      hb_hScan( oFound:getAttributes(), {|xKey, cValue| HB_SYMBOL_UNUSED(xKey), hb_regexLike( ::cValue, cValue ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cData != NIL
       xData := oFound:getText(" ")
-      IF Empty(xData) .OR. .NOT. ( Alltrim(xData) HAS Alltrim(::cData) )
+      IF Empty(xData) .OR. .NOT. hb_regexHas( Alltrim(::cData), Alltrim(xData) )
          RETURN .F.
       ENDIF
    ENDIF
@@ -640,9 +637,9 @@ RETURN self
 METHOD isType( nType ) CLASS THtmlNode
    LOCAL lRet
 
-   TRY
-      lRet := ( ( ::htmlTagType[2] & nType ) > 0 )
-   CATCH
+   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+      lRet := hb_bitAnd( ::htmlTagType[2], nType ) > 0
+   RECOVER
       lRet := .F.
    END
 
@@ -651,17 +648,17 @@ RETURN lRet
 
 // checks if this is a node that is always empty and never has HTML text, e.g. <img>,<link>,<meta>
 METHOD isEmpty CLASS THtmlNode
-RETURN ( ( ::htmlTagType[2] & CM_EMPTY ) > 0 )
+RETURN hb_bitAnd( ::htmlTagType[2], CM_EMPTY ) > 0
 
 
 // checks if this is a node that may occur inline, eg. <b>,<font>
 METHOD isInline CLASS THtmlNode
-RETURN ( ( ::htmlTagType[2] & CM_INLINE ) > 0 )
+RETURN hb_bitAnd( ::htmlTagType[2], CM_INLINE ) > 0
 
 
 // checks if this is a node that may appear without a closing tag, eg. <p>,<tr>,<td>
 METHOD isOptional CLASS THtmlNode
-RETURN ( ( ::htmlTagType[2] & CM_OPT ) > 0 )
+RETURN hb_bitAnd( ::htmlTagType[2], CM_OPT ) > 0
 
 
 // checks if this is a node (leafs contain no further nodes, e.g. <br>,<hr>,_text_)
@@ -671,7 +668,7 @@ RETURN ( Valtype( ::htmlContent ) == "A" .AND. Len( ::htmlContent ) > 0 )
 
 // checks if this is a block node that must be closed with an ending tag: eg: <table></table>, <ul></ul>
 METHOD isBlock CLASS THtmlNode
-RETURN ( ( ::htmlTagType[2] & CM_BLOCK ) > 0 )
+RETURN hb_bitAnd( ::htmlTagType[2], CM_BLOCK ) > 0
 
 
 // checks if this is a node whose text line formatting must be preserved: <pre>,<script>,<textarea>
@@ -764,7 +761,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
          lRewind := .T.
          EXIT
 
-      DEFAULT
+      OTHERWISE
 
          IF oThisTag:isOptional()
             // this tag has no closing tag
@@ -907,7 +904,7 @@ METHOD insertBefore( oTHtmlNode ) CLASS THtmlNode
    ENDIF
 
    IF Valtype( ::parent:htmlContent ) == "A"
-      AIns( ::parent:htmlContent, 1, oTHtmlNode, .T. )
+      hb_AIns( ::parent:htmlContent, 1, oTHtmlNode, .T. )
    ENDIF
 RETURN oTHtmlNode
 
@@ -932,7 +929,7 @@ METHOD insertAfter( oTHtmlNode ) CLASS THtmlNode
    IF nPos > Len( ::parent:htmlContent )
       ::parent:addNode( oTHtmlNode )
    ELSE
-      AIns( ::parent:htmlContent, nPos, oTHtmlNode, .T. )
+      hb_AIns( ::parent:htmlContent, nPos, oTHtmlNode, .T. )
    ENDIF
 RETURN oTHtmlNode
 
@@ -951,7 +948,7 @@ METHOD delete()  CLASS THtmlNode
 
    IF Valtype( ::parent:htmlContent ) == "A"
       nPos := AScan( ::parent:htmlContent, self )
-      ADel( ::parent:htmlContent, nPos, .T. )
+      hb_ADel( ::parent:htmlContent, nPos, .T. )
    ENDIF
 
    ::parent := NIL
@@ -1102,14 +1099,14 @@ METHOD attrToString() CLASS THtmlNode
 
    ELSE
       // attributes are parsed into a Hash
-      TRY
+      BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
          aAttr := HB_Exec( ::htmlTagType[1] )
-      CATCH
+      RECOVER
          // Tag has no attributes
          aAttr := {}
       END
       cAttr := ""
-      HEval( ::htmlAttributes, {|cKey,cValue| cAttr+=__AttrToStr( cKey, cValue, aAttr, self ) } )
+      hb_HEval( ::htmlAttributes, {|cKey,cValue| cAttr+=__AttrToStr( cKey, cValue, aAttr, self ) } )
    ENDIF
 
 RETURN cAttr
@@ -1228,9 +1225,9 @@ METHOD getAttribute( cName ) CLASS THtmlNode
       RETURN hHash
    ENDIF
 
-   TRY
+   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
       cValue := hHash[cName]
-   CATCH
+   RECOVER
       cValue := NIL
    END
 RETURN cValue
@@ -1270,7 +1267,7 @@ STATIC FUNCTION __ParseAttr( parser )
    LOCAL nStart, nEnd
    LOCAL lIsQuoted := .F.
 
-   HSetCaseMatch( hHash, .F. )
+   hb_HSetCaseMatch( hHash, .F. )
 
    DO WHILE .NOT. ( cChr := P_NEXT( parser ) ) == ""
 
@@ -1347,7 +1344,7 @@ STATIC FUNCTION __ParseAttr( parser )
 
          EXIT
 
-      DEFAULT
+      OTHERWISE
          aAttr[nMode] += cChr
       END
    ENDDO
@@ -1371,9 +1368,9 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
       RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, {cName, cValue} )
    ENDIF
 
-   TRY
+   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
       aAttr := HB_Exec( ::htmlTagType[1] )
-   CATCH
+   RECOVER
       // Tag has no attributes
       aAttr := {}
    END
@@ -1403,10 +1400,10 @@ METHOD delAttribute( cName ) CLASS THtmlNode
    LOCAL xVal := ::getAttribute( cName )
    LOCAL lRet := .F.
    IF xVal <> NIL
-      TRY
-         HDel( ::htmlAttributes, cName )
+      BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+         hb_HDel( ::htmlAttributes, cName )
          lRet := .T.
-      CATCH
+      RECOVER
          lRet := .F.
       END
    ENDIF
@@ -1422,9 +1419,9 @@ RETURN .T.
 // Checks for the existence of an attribute
 METHOD isAttribute( cName ) CLASS THtmlNode
    LOCAL lRet
-   TRY
-      lRet := HHasKey( ::getAttributes(), cName )
-   CATCH
+   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+      lRet := hb_HHasKey( ::getAttributes(), cName )
+   RECOVER
       lRet := .F.
    END
 RETURN lRet
@@ -1446,7 +1443,7 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
       cName := SubStr( cName, 2 )
    ENDIF
 
-   IF HHasKey( shTagTypes, cName )
+   IF hb_HHasKey( shTagTypes, cName )
       // message identifies a html tag
       oNode := ::findNodeByTagName( cName )
 
@@ -1460,7 +1457,7 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
 
       RETURN oNode
 
-   ELSEIF Right( cName, 1 ) == "s" .AND. HHasKey( shTagTypes, Left(cName, Len(cName)-1) )
+   ELSEIF Right( cName, 1 ) == "s" .AND. hb_HHasKey( shTagTypes, Left(cName, Len(cName)-1) )
       // message is the plural of a html tag -> oNode:forms -> Array of <FORM> tags
       RETURN ::findNodesByTagName( Left(cName, Len(cName)-1), Atail(aValue) )
    ENDIF
@@ -1544,8 +1541,8 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
       RETURN ::error( "Cannot add HTML tag to: <" + ::htmlTagName + ">", ::className(), "+", EG_ARG, {cName} )
    ENDIF
 
-   IF .NOT. HHasKey( shTagTypes, cName )
-      IF Left( cName, 1 ) == "/" .AND. HHasKey( shTagTypes, SubStr(cName,2) )
+   IF .NOT. hb_HHasKey( shTagTypes, cName )
+      IF Left( cName, 1 ) == "/" .AND. hb_HHasKey( shTagTypes, SubStr(cName,2) )
          IF .NOT. Lower( SubStr(cName,2) ) == Lower( ::htmlTagName )
             RETURN ::error( "Not a valid closing HTML tag for: <" + ::htmlTagName + ">", ::className(), "-", EG_ARG, {cName} )
          ENDIF
@@ -1608,7 +1605,7 @@ FUNCTION THtmlInit( lInit )
       _Init_Html_Attributes()
       _Init_Html_TagTypes()
       slInit := .T.
-  ENDIF
+   ENDIF
 RETURN .T.
 
 
@@ -1622,9 +1619,9 @@ FUNCTION THtmlTagType( cTagName )
       THtmlInit()
    ENDIF
 
-   TRY
+   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
       aType := shTagTypes[ cTagName ]
-   CATCH
+   RECOVER
       aType := shTagTypes[ "_text_" ]
    END
 RETURN aType
@@ -1637,13 +1634,13 @@ FUNCTION THtmlIsValid( cTagName, cAttrName )
       THtmlInit()
    ENDIF
 
-   TRY
+   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
       aValue := shTagTypes[ cTagName ]
       IF cAttrName <> NIL
          aValue := HB_Exec( aValue[1] )
          lRet   := ( Ascan( aValue, {|a| Lower(a[1]) == Lower( cAttrName ) } ) > 0 )
       ENDIF
-   CATCH
+   RECOVER
       lRet := .F.
    END
 RETURN lRet
@@ -1654,130 +1651,130 @@ RETURN lRet
 STATIC PROCEDURE _Init_Html_TagTypes
    shTagTypes := HB_HSetAutoAdd( {=>}, .T. )
 
-   HSetCaseMatch( shTagTypes, .F. )
+   hb_HSetCaseMatch( shTagTypes, .F. )
 
-   shTagTypes[ "_root_"     ] := { NIL                         , (CM_INLINE)                                   }
-   shTagTypes[ "_text_"     ] := { NIL                         , (CM_INLINE)                                   }
-   shTagTypes[ "!--"        ] := { NIL                         , (CM_INLINE|CM_EMPTY)                          }
-   shTagTypes[ "a"          ] := { ( @THtmlAttr_A() )          , (CM_INLINE)                                   }
-   shTagTypes[ "abbr"       ] := { ( @THtmlAttr_ABBR() )       , (CM_INLINE)                                   }
-   shTagTypes[ "acronym"    ] := { ( @THtmlAttr_ACRONYM() )    , (CM_INLINE)                                   }
-   shTagTypes[ "address"    ] := { ( @THtmlAttr_ADDRESS() )    , (CM_BLOCK)                                    }
-   shTagTypes[ "align"      ] := { NIL                         , (CM_BLOCK)                                    }
-   shTagTypes[ "applet"     ] := { ( @THtmlAttr_APPLET() )     , (CM_OBJECT|CM_IMG|CM_INLINE|CM_PARAM)         }
-   shTagTypes[ "area"       ] := { ( @THtmlAttr_AREA() )       , (CM_BLOCK|CM_EMPTY)                           }
-   shTagTypes[ "b"          ] := { ( @THtmlAttr_B() )          , (CM_INLINE)                                   }
-   shTagTypes[ "base"       ] := { ( @THtmlAttr_BASE() )       , (CM_HEAD|CM_EMPTY)                            }
-   shTagTypes[ "basefont"   ] := { ( @THtmlAttr_BASEFONT() )   , (CM_INLINE|CM_EMPTY)                          }
-   shTagTypes[ "bdo"        ] := { ( @THtmlAttr_BDO() )        , (CM_INLINE)                                   }
-   shTagTypes[ "bgsound"    ] := { NIL                         , (CM_HEAD|CM_EMPTY)                            }
-   shTagTypes[ "big"        ] := { ( @THtmlAttr_BIG() )        , (CM_INLINE)                                   }
-   shTagTypes[ "blink"      ] := { NIL                         , (CM_INLINE)                                   }
-   shTagTypes[ "blockquote" ] := { ( @THtmlAttr_BLOCKQUOTE() ) , (CM_BLOCK)                                    }
-   shTagTypes[ "body"       ] := { ( @THtmlAttr_BODY() )       , (CM_HTML|CM_OPT|CM_OMITST)                    }
-   shTagTypes[ "br"         ] := { ( @THtmlAttr_BR() )         , (CM_INLINE|CM_EMPTY)                          }
-   shTagTypes[ "button"     ] := { ( @THtmlAttr_BUTTON() )     , (CM_INLINE)                                   }
-   shTagTypes[ "caption"    ] := { ( @THtmlAttr_CAPTION() )    , (CM_TABLE)                                    }
-   shTagTypes[ "center"     ] := { ( @THtmlAttr_CENTER() )     , (CM_BLOCK)                                    }
-   shTagTypes[ "cite"       ] := { ( @THtmlAttr_CITE() )       , (CM_INLINE)                                   }
-   shTagTypes[ "code"       ] := { ( @THtmlAttr_CODE() )       , (CM_INLINE)                                   }
-   shTagTypes[ "col"        ] := { ( @THtmlAttr_COL() )        , (CM_TABLE|CM_EMPTY)                           }
-   shTagTypes[ "colgroup"   ] := { ( @THtmlAttr_COLGROUP() )   , (CM_TABLE|CM_OPT)                             }
-   shTagTypes[ "comment"    ] := { NIL                         , (CM_INLINE)                                   }
-   shTagTypes[ "dd"         ] := { ( @THtmlAttr_DD() )         , (CM_DEFLIST|CM_OPT|CM_NO_INDENT)              }
-   shTagTypes[ "del"        ] := { ( @THtmlAttr_DEL() )        , (CM_INLINE|CM_BLOCK|CM_MIXED)                 }
-   shTagTypes[ "dfn"        ] := { ( @THtmlAttr_DFN() )        , (CM_INLINE)                                   }
-   shTagTypes[ "dir"        ] := { ( @THtmlAttr_DIR() )        , (CM_BLOCK|CM_OBSOLETE)                        }
-   shTagTypes[ "div"        ] := { ( @THtmlAttr_DIV() )        , (CM_BLOCK)                                    }
-   shTagTypes[ "dl"         ] := { ( @THtmlAttr_DL() )         , (CM_BLOCK)                                    }
-   shTagTypes[ "dt"         ] := { ( @THtmlAttr_DT() )         , (CM_DEFLIST|CM_OPT|CM_NO_INDENT)              }
-   shTagTypes[ "em"         ] := { ( @THtmlAttr_EM() )         , (CM_INLINE)                                   }
-   shTagTypes[ "embed"      ] := { NIL                         , (CM_INLINE|CM_IMG|CM_EMPTY)                   }
-   shTagTypes[ "fieldset"   ] := { ( @THtmlAttr_FIELDSET() )   , (CM_BLOCK)                                    }
-   shTagTypes[ "font"       ] := { ( @THtmlAttr_FONT() )       , (CM_INLINE)                                   }
-   shTagTypes[ "form"       ] := { ( @THtmlAttr_FORM() )       , (CM_BLOCK)                                    }
-   shTagTypes[ "frame"      ] := { ( @THtmlAttr_FRAME() )      , (CM_FRAMES|CM_EMPTY)                          }
-   shTagTypes[ "frameset"   ] := { ( @THtmlAttr_FRAMESET() )   , (CM_HTML|CM_FRAMES)                           }
-   shTagTypes[ "h1"         ] := { ( @THtmlAttr_H1() )         , (CM_BLOCK|CM_HEADING)                         }
-   shTagTypes[ "h2"         ] := { ( @THtmlAttr_H2() )         , (CM_BLOCK|CM_HEADING)                         }
-   shTagTypes[ "h3"         ] := { ( @THtmlAttr_H3() )         , (CM_BLOCK|CM_HEADING)                         }
-   shTagTypes[ "h4"         ] := { ( @THtmlAttr_H4() )         , (CM_BLOCK|CM_HEADING)                         }
-   shTagTypes[ "h5"         ] := { ( @THtmlAttr_H5() )         , (CM_BLOCK|CM_HEADING)                         }
-   shTagTypes[ "h6"         ] := { ( @THtmlAttr_H6() )         , (CM_BLOCK|CM_HEADING)                         }
-   shTagTypes[ "head"       ] := { ( @THtmlAttr_HEAD() )       , (CM_HTML|CM_OPT|CM_OMITST)                    }
-   shTagTypes[ "hr"         ] := { ( @THtmlAttr_HR() )         , (CM_BLOCK|CM_EMPTY)                           }
-   shTagTypes[ "html"       ] := { ( @THtmlAttr_HTML() )       , (CM_HTML|CM_OPT|CM_OMITST)                    }
-   shTagTypes[ "i"          ] := { ( @THtmlAttr_I() )          , (CM_INLINE)                                   }
-   shTagTypes[ "iframe"     ] := { ( @THtmlAttr_IFRAME() )     , (CM_INLINE)                                   }
-   shTagTypes[ "ilayer"     ] := { NIL                         , (CM_INLINE)                                   }
-   shTagTypes[ "img"        ] := { ( @THtmlAttr_IMG() )        , (CM_INLINE|CM_IMG|CM_EMPTY)                   }
-   shTagTypes[ "input"      ] := { ( @THtmlAttr_INPUT() )      , (CM_INLINE|CM_IMG|CM_EMPTY)                   }
-   shTagTypes[ "ins"        ] := { ( @THtmlAttr_INS() )        , (CM_INLINE|CM_BLOCK|CM_MIXED)                 }
-   shTagTypes[ "isindex"    ] := { ( @THtmlAttr_ISINDEX() )    , (CM_BLOCK|CM_EMPTY)                           }
-   shTagTypes[ "kbd"        ] := { ( @THtmlAttr_KBD() )        , (CM_INLINE)                                   }
-   shTagTypes[ "keygen"     ] := { NIL                         , (CM_INLINE|CM_EMPTY)                          }
-   shTagTypes[ "label"      ] := { ( @THtmlAttr_LABEL() )      , (CM_INLINE)                                   }
-   shTagTypes[ "layer"      ] := { NIL                         , (CM_BLOCK)                                    }
-   shTagTypes[ "legend"     ] := { ( @THtmlAttr_LEGEND() )     , (CM_INLINE)                                   }
-   shTagTypes[ "li"         ] := { ( @THtmlAttr_LI() )         , (CM_LIST|CM_OPT|CM_NO_INDENT)                 }
-   shTagTypes[ "link"       ] := { ( @THtmlAttr_LINK() )       , (CM_HEAD|CM_EMPTY)                            }
-   shTagTypes[ "listing"    ] := { ( @THtmlAttr_LISTING() )    , (CM_BLOCK|CM_OBSOLETE)                        }
-   shTagTypes[ "map"        ] := { ( @THtmlAttr_MAP() )        , (CM_INLINE)                                   }
-   shTagTypes[ "marquee"    ] := { NIL                         , (CM_INLINE|CM_OPT)                            }
-   shTagTypes[ "menu"       ] := { ( @THtmlAttr_MENU() )       , (CM_BLOCK|CM_OBSOLETE)                        }
-   shTagTypes[ "meta"       ] := { ( @THtmlAttr_META() )       , (CM_HEAD|CM_EMPTY)                            }
-   shTagTypes[ "multicol"   ] := { NIL                         , (CM_BLOCK)                                    }
-   shTagTypes[ "nextid"     ] := { ( @THtmlAttr_NEXTID() )     , (CM_HEAD|CM_EMPTY)                            }
-   shTagTypes[ "nobr"       ] := { NIL                         , (CM_INLINE)                                   }
-   shTagTypes[ "noembed"    ] := { NIL                         , (CM_INLINE)                                   }
-   shTagTypes[ "noframes"   ] := { ( @THtmlAttr_NOFRAMES() )   , (CM_BLOCK|CM_FRAMES)                          }
-   shTagTypes[ "nolayer"    ] := { NIL                         , (CM_BLOCK|CM_INLINE|CM_MIXED)                 }
-   shTagTypes[ "nosave"     ] := { NIL                         , (CM_BLOCK)                                    }
-   shTagTypes[ "noscript"   ] := { ( @THtmlAttr_NOSCRIPT() )   , (CM_BLOCK|CM_INLINE|CM_MIXED)                 }
-   shTagTypes[ "object"     ] := { ( @THtmlAttr_OBJECT() )     , (CM_OBJECT|CM_HEAD|CM_IMG|CM_INLINE|CM_PARAM) }
-   shTagTypes[ "ol"         ] := { ( @THtmlAttr_OL() )         , (CM_BLOCK)                                    }
-   shTagTypes[ "optgroup"   ] := { ( @THtmlAttr_OPTGROUP() )   , (CM_FIELD|CM_OPT)                             }
-   shTagTypes[ "option"     ] := { ( @THtmlAttr_OPTION() )     , (CM_FIELD|CM_OPT)                             }
-   shTagTypes[ "p"          ] := { ( @THtmlAttr_P() )          , (CM_BLOCK|CM_OPT)                             }
-   shTagTypes[ "param"      ] := { ( @THtmlAttr_PARAM() )      , (CM_INLINE|CM_EMPTY)                          }
-   shTagTypes[ "plaintext"  ] := { ( @THtmlAttr_PLAINTEXT() )  , (CM_BLOCK|CM_OBSOLETE)                        }
-   shTagTypes[ "pre"        ] := { ( @THtmlAttr_PRE() )        , (CM_BLOCK)                                    }
-   shTagTypes[ "q"          ] := { ( @THtmlAttr_Q() )          , (CM_INLINE)                                   }
-   shTagTypes[ "rb"         ] := { ( @THtmlAttr_RB() )         , (CM_INLINE)                                   }
-   shTagTypes[ "rbc"        ] := { ( @THtmlAttr_RBC() )        , (CM_INLINE)                                   }
-   shTagTypes[ "rp"         ] := { ( @THtmlAttr_RP() )         , (CM_INLINE)                                   }
-   shTagTypes[ "rt"         ] := { ( @THtmlAttr_RT() )         , (CM_INLINE)                                   }
-   shTagTypes[ "rtc"        ] := { ( @THtmlAttr_RTC() )        , (CM_INLINE)                                   }
-   shTagTypes[ "ruby"       ] := { ( @THtmlAttr_RUBY() )       , (CM_INLINE)                                   }
-   shTagTypes[ "s"          ] := { ( @THtmlAttr_S() )          , (CM_INLINE)                                   }
-   shTagTypes[ "samp"       ] := { ( @THtmlAttr_SAMP() )       , (CM_INLINE)                                   }
-   shTagTypes[ "script"     ] := { ( @THtmlAttr_SCRIPT() )     , (CM_HEAD|CM_MIXED|CM_BLOCK|CM_INLINE)         }
-   shTagTypes[ "select"     ] := { ( @THtmlAttr_SELECT() )     , (CM_INLINE|CM_FIELD)                          }
-   shTagTypes[ "server"     ] := { NIL                         , (CM_HEAD|CM_MIXED|CM_BLOCK|CM_INLINE)         }
-   shTagTypes[ "servlet"    ] := { NIL                         , (CM_OBJECT|CM_IMG|CM_INLINE|CM_PARAM)         }
-   shTagTypes[ "small"      ] := { ( @THtmlAttr_SMALL() )      , (CM_INLINE)                                   }
-   shTagTypes[ "spacer"     ] := { NIL                         , (CM_INLINE|CM_EMPTY)                          }
-   shTagTypes[ "span"       ] := { ( @THtmlAttr_SPAN() )       , (CM_INLINE)                                   }
-   shTagTypes[ "strike"     ] := { ( @THtmlAttr_STRIKE() )     , (CM_INLINE)                                   }
-   shTagTypes[ "strong"     ] := { ( @THtmlAttr_STRONG() )     , (CM_INLINE)                                   }
-   shTagTypes[ "style"      ] := { ( @THtmlAttr_STYLE() )      , (CM_HEAD)                                     }
-   shTagTypes[ "sub"        ] := { ( @THtmlAttr_SUB() )        , (CM_INLINE)                                   }
-   shTagTypes[ "sup"        ] := { ( @THtmlAttr_SUP() )        , (CM_INLINE)                                   }
-   shTagTypes[ "table"      ] := { ( @THtmlAttr_TABLE() )      , (CM_BLOCK)                                    }
-   shTagTypes[ "tbody"      ] := { ( @THtmlAttr_TBODY() )      , (CM_TABLE|CM_ROWGRP|CM_OPT)                   }
-   shTagTypes[ "td"         ] := { ( @THtmlAttr_TD() )         , (CM_ROW|CM_OPT|CM_NO_INDENT)                  }
-   shTagTypes[ "textarea"   ] := { ( @THtmlAttr_TEXTAREA() )   , (CM_INLINE|CM_FIELD)                          }
-   shTagTypes[ "tfoot"      ] := { ( @THtmlAttr_TFOOT() )      , (CM_TABLE|CM_ROWGRP|CM_OPT)                   }
-   shTagTypes[ "th"         ] := { ( @THtmlAttr_TH() )         , (CM_ROW|CM_OPT|CM_NO_INDENT)                  }
-   shTagTypes[ "thead"      ] := { ( @THtmlAttr_THEAD() )      , (CM_TABLE|CM_ROWGRP|CM_OPT)                   }
-   shTagTypes[ "title"      ] := { ( @THtmlAttr_TITLE() )      , (CM_HEAD)                                     }
-   shTagTypes[ "tr"         ] := { ( @THtmlAttr_TR() )         , (CM_TABLE|CM_OPT)                             }
-   shTagTypes[ "tt"         ] := { ( @THtmlAttr_TT() )         , (CM_INLINE)                                   }
-   shTagTypes[ "u"          ] := { ( @THtmlAttr_U() )          , (CM_INLINE)                                   }
-   shTagTypes[ "ul"         ] := { ( @THtmlAttr_UL() )         , (CM_BLOCK)                                    }
-   shTagTypes[ "var"        ] := { ( @THtmlAttr_VAR() )        , (CM_INLINE)                                   }
-   shTagTypes[ "wbr"        ] := { NIL                         , (CM_INLINE|CM_EMPTY)                          }
-   shTagTypes[ "xmp"        ] := { ( @THtmlAttr_XMP() )        , (CM_BLOCK|CM_OBSOLETE)                        }
+   shTagTypes[ "_root_"     ] := { NIL                         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "_text_"     ] := { NIL                         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "!--"        ] := { NIL                         , hb_bitOr(CM_INLINE, CM_EMPTY)                             }
+   shTagTypes[ "a"          ] := { ( @THtmlAttr_A() )          , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "abbr"       ] := { ( @THtmlAttr_ABBR() )       , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "acronym"    ] := { ( @THtmlAttr_ACRONYM() )    , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "address"    ] := { ( @THtmlAttr_ADDRESS() )    , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "align"      ] := { NIL                         , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "applet"     ] := { ( @THtmlAttr_APPLET() )     , hb_bitOr(CM_OBJECT, CM_IMG, CM_INLINE, CM_PARAM)          }
+   shTagTypes[ "area"       ] := { ( @THtmlAttr_AREA() )       , hb_bitOr(CM_BLOCK, CM_EMPTY)                              }
+   shTagTypes[ "b"          ] := { ( @THtmlAttr_B() )          , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "base"       ] := { ( @THtmlAttr_BASE() )       , hb_bitOr(CM_HEAD, CM_EMPTY)                               }
+   shTagTypes[ "basefont"   ] := { ( @THtmlAttr_BASEFONT() )   , hb_bitOr(CM_INLINE, CM_EMPTY)                             }
+   shTagTypes[ "bdo"        ] := { ( @THtmlAttr_BDO() )        , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "bgsound"    ] := { NIL                         , hb_bitOr(CM_HEAD, CM_EMPTY)                               }
+   shTagTypes[ "big"        ] := { ( @THtmlAttr_BIG() )        , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "blink"      ] := { NIL                         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "blockquote" ] := { ( @THtmlAttr_BLOCKQUOTE() ) , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "body"       ] := { ( @THtmlAttr_BODY() )       , hb_bitOr(CM_HTML, CM_OPT, CM_OMITST)                      }
+   shTagTypes[ "br"         ] := { ( @THtmlAttr_BR() )         , hb_bitOr(CM_INLINE, CM_EMPTY)                             }
+   shTagTypes[ "button"     ] := { ( @THtmlAttr_BUTTON() )     , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "caption"    ] := { ( @THtmlAttr_CAPTION() )    , hb_bitOr(CM_TABLE)                                        }
+   shTagTypes[ "center"     ] := { ( @THtmlAttr_CENTER() )     , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "cite"       ] := { ( @THtmlAttr_CITE() )       , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "code"       ] := { ( @THtmlAttr_CODE() )       , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "col"        ] := { ( @THtmlAttr_COL() )        , hb_bitOr(CM_TABLE, CM_EMPTY)                              }
+   shTagTypes[ "colgroup"   ] := { ( @THtmlAttr_COLGROUP() )   , hb_bitOr(CM_TABLE, CM_OPT)                                }
+   shTagTypes[ "comment"    ] := { NIL                         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "dd"         ] := { ( @THtmlAttr_DD() )         , hb_bitOr(CM_DEFLIST, CM_OPT, CM_NO_INDENT)                }
+   shTagTypes[ "del"        ] := { ( @THtmlAttr_DEL() )        , hb_bitOr(CM_INLINE, CM_BLOCK, CM_MIXED)                   }
+   shTagTypes[ "dfn"        ] := { ( @THtmlAttr_DFN() )        , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "dir"        ] := { ( @THtmlAttr_DIR() )        , hb_bitOr(CM_BLOCK, CM_OBSOLETE)                           }
+   shTagTypes[ "div"        ] := { ( @THtmlAttr_DIV() )        , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "dl"         ] := { ( @THtmlAttr_DL() )         , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "dt"         ] := { ( @THtmlAttr_DT() )         , hb_bitOr(CM_DEFLIST, CM_OPT, CM_NO_INDENT)                }
+   shTagTypes[ "em"         ] := { ( @THtmlAttr_EM() )         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "embed"      ] := { NIL                         , hb_bitOr(CM_INLINE, CM_IMG, CM_EMPTY)                     }
+   shTagTypes[ "fieldset"   ] := { ( @THtmlAttr_FIELDSET() )   , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "font"       ] := { ( @THtmlAttr_FONT() )       , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "form"       ] := { ( @THtmlAttr_FORM() )       , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "frame"      ] := { ( @THtmlAttr_FRAME() )      , hb_bitOr(CM_FRAMES, CM_EMPTY)                             }
+   shTagTypes[ "frameset"   ] := { ( @THtmlAttr_FRAMESET() )   , hb_bitOr(CM_HTML, CM_FRAMES)                              }
+   shTagTypes[ "h1"         ] := { ( @THtmlAttr_H1() )         , hb_bitOr(CM_BLOCK, CM_HEADING)                            }
+   shTagTypes[ "h2"         ] := { ( @THtmlAttr_H2() )         , hb_bitOr(CM_BLOCK, CM_HEADING)                            }
+   shTagTypes[ "h3"         ] := { ( @THtmlAttr_H3() )         , hb_bitOr(CM_BLOCK, CM_HEADING)                            }
+   shTagTypes[ "h4"         ] := { ( @THtmlAttr_H4() )         , hb_bitOr(CM_BLOCK, CM_HEADING)                            }
+   shTagTypes[ "h5"         ] := { ( @THtmlAttr_H5() )         , hb_bitOr(CM_BLOCK, CM_HEADING)                            }
+   shTagTypes[ "h6"         ] := { ( @THtmlAttr_H6() )         , hb_bitOr(CM_BLOCK, CM_HEADING)                            }
+   shTagTypes[ "head"       ] := { ( @THtmlAttr_HEAD() )       , hb_bitOr(CM_HTML, CM_OPT, CM_OMITST)                      }
+   shTagTypes[ "hr"         ] := { ( @THtmlAttr_HR() )         , hb_bitOr(CM_BLOCK, CM_EMPTY)                              }
+   shTagTypes[ "html"       ] := { ( @THtmlAttr_HTML() )       , hb_bitOr(CM_HTML, CM_OPT, CM_OMITST)                      }
+   shTagTypes[ "i"          ] := { ( @THtmlAttr_I() )          , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "iframe"     ] := { ( @THtmlAttr_IFRAME() )     , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "ilayer"     ] := { NIL                         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "img"        ] := { ( @THtmlAttr_IMG() )        , hb_bitOr(CM_INLINE, CM_IMG, CM_EMPTY)                     }
+   shTagTypes[ "input"      ] := { ( @THtmlAttr_INPUT() )      , hb_bitOr(CM_INLINE, CM_IMG, CM_EMPTY)                     }
+   shTagTypes[ "ins"        ] := { ( @THtmlAttr_INS() )        , hb_bitOr(CM_INLINE, CM_BLOCK, CM_MIXED)                   }
+   shTagTypes[ "isindex"    ] := { ( @THtmlAttr_ISINDEX() )    , hb_bitOr(CM_BLOCK, CM_EMPTY)                              }
+   shTagTypes[ "kbd"        ] := { ( @THtmlAttr_KBD() )        , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "keygen"     ] := { NIL                         , hb_bitOr(CM_INLINE, CM_EMPTY)                             }
+   shTagTypes[ "label"      ] := { ( @THtmlAttr_LABEL() )      , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "layer"      ] := { NIL                         , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "legend"     ] := { ( @THtmlAttr_LEGEND() )     , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "li"         ] := { ( @THtmlAttr_LI() )         , hb_bitOr(CM_LIST, CM_OPT, CM_NO_INDENT)                   }
+   shTagTypes[ "link"       ] := { ( @THtmlAttr_LINK() )       , hb_bitOr(CM_HEAD, CM_EMPTY)                               }
+   shTagTypes[ "listing"    ] := { ( @THtmlAttr_LISTING() )    , hb_bitOr(CM_BLOCK, CM_OBSOLETE)                           }
+   shTagTypes[ "map"        ] := { ( @THtmlAttr_MAP() )        , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "marquee"    ] := { NIL                         , hb_bitOr(CM_INLINE, CM_OPT)                               }
+   shTagTypes[ "menu"       ] := { ( @THtmlAttr_MENU() )       , hb_bitOr(CM_BLOCK, CM_OBSOLETE)                           }
+   shTagTypes[ "meta"       ] := { ( @THtmlAttr_META() )       , hb_bitOr(CM_HEAD, CM_EMPTY)                               }
+   shTagTypes[ "multicol"   ] := { NIL                         , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "nextid"     ] := { ( @THtmlAttr_NEXTID() )     , hb_bitOr(CM_HEAD, CM_EMPTY)                               }
+   shTagTypes[ "nobr"       ] := { NIL                         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "noembed"    ] := { NIL                         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "noframes"   ] := { ( @THtmlAttr_NOFRAMES() )   , hb_bitOr(CM_BLOCK, CM_FRAMES)                             }
+   shTagTypes[ "nolayer"    ] := { NIL                         , hb_bitOr(CM_BLOCK, CM_INLINE, CM_MIXED)                   }
+   shTagTypes[ "nosave"     ] := { NIL                         , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "noscript"   ] := { ( @THtmlAttr_NOSCRIPT() )   , hb_bitOr(CM_BLOCK, CM_INLINE, CM_MIXED)                   }
+   shTagTypes[ "object"     ] := { ( @THtmlAttr_OBJECT() )     , hb_bitOr(CM_OBJECT, CM_HEAD, CM_IMG, CM_INLINE, CM_PARAM) }
+   shTagTypes[ "ol"         ] := { ( @THtmlAttr_OL() )         , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "optgroup"   ] := { ( @THtmlAttr_OPTGROUP() )   , hb_bitOr(CM_FIELD, CM_OPT)                                }
+   shTagTypes[ "option"     ] := { ( @THtmlAttr_OPTION() )     , hb_bitOr(CM_FIELD, CM_OPT)                                }
+   shTagTypes[ "p"          ] := { ( @THtmlAttr_P() )          , hb_bitOr(CM_BLOCK, CM_OPT)                                }
+   shTagTypes[ "param"      ] := { ( @THtmlAttr_PARAM() )      , hb_bitOr(CM_INLINE, CM_EMPTY)                             }
+   shTagTypes[ "plaintext"  ] := { ( @THtmlAttr_PLAINTEXT() )  , hb_bitOr(CM_BLOCK, CM_OBSOLETE)                           }
+   shTagTypes[ "pre"        ] := { ( @THtmlAttr_PRE() )        , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "q"          ] := { ( @THtmlAttr_Q() )          , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "rb"         ] := { ( @THtmlAttr_RB() )         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "rbc"        ] := { ( @THtmlAttr_RBC() )        , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "rp"         ] := { ( @THtmlAttr_RP() )         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "rt"         ] := { ( @THtmlAttr_RT() )         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "rtc"        ] := { ( @THtmlAttr_RTC() )        , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "ruby"       ] := { ( @THtmlAttr_RUBY() )       , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "s"          ] := { ( @THtmlAttr_S() )          , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "samp"       ] := { ( @THtmlAttr_SAMP() )       , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "script"     ] := { ( @THtmlAttr_SCRIPT() )     , hb_bitOr(CM_HEAD, CM_MIXED, CM_BLOCK, CM_INLINE)          }
+   shTagTypes[ "select"     ] := { ( @THtmlAttr_SELECT() )     , hb_bitOr(CM_INLINE, CM_FIELD)                             }
+   shTagTypes[ "server"     ] := { NIL                         , hb_bitOr(CM_HEAD, CM_MIXED, CM_BLOCK, CM_INLINE)          }
+   shTagTypes[ "servlet"    ] := { NIL                         , hb_bitOr(CM_OBJECT, CM_IMG, CM_INLINE, CM_PARAM)          }
+   shTagTypes[ "small"      ] := { ( @THtmlAttr_SMALL() )      , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "spacer"     ] := { NIL                         , hb_bitOr(CM_INLINE, CM_EMPTY)                             }
+   shTagTypes[ "span"       ] := { ( @THtmlAttr_SPAN() )       , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "strike"     ] := { ( @THtmlAttr_STRIKE() )     , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "strong"     ] := { ( @THtmlAttr_STRONG() )     , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "style"      ] := { ( @THtmlAttr_STYLE() )      , hb_bitOr(CM_HEAD)                                         }
+   shTagTypes[ "sub"        ] := { ( @THtmlAttr_SUB() )        , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "sup"        ] := { ( @THtmlAttr_SUP() )        , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "table"      ] := { ( @THtmlAttr_TABLE() )      , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "tbody"      ] := { ( @THtmlAttr_TBODY() )      , hb_bitOr(CM_TABLE, CM_ROWGRP, CM_OPT)                     }
+   shTagTypes[ "td"         ] := { ( @THtmlAttr_TD() )         , hb_bitOr(CM_ROW, CM_OPT, CM_NO_INDENT)                    }
+   shTagTypes[ "textarea"   ] := { ( @THtmlAttr_TEXTAREA() )   , hb_bitOr(CM_INLINE, CM_FIELD)                             }
+   shTagTypes[ "tfoot"      ] := { ( @THtmlAttr_TFOOT() )      , hb_bitOr(CM_TABLE, CM_ROWGRP, CM_OPT)                     }
+   shTagTypes[ "th"         ] := { ( @THtmlAttr_TH() )         , hb_bitOr(CM_ROW, CM_OPT, CM_NO_INDENT)                    }
+   shTagTypes[ "thead"      ] := { ( @THtmlAttr_THEAD() )      , hb_bitOr(CM_TABLE, CM_ROWGRP, CM_OPT)                     }
+   shTagTypes[ "title"      ] := { ( @THtmlAttr_TITLE() )      , hb_bitOr(CM_HEAD)                                         }
+   shTagTypes[ "tr"         ] := { ( @THtmlAttr_TR() )         , hb_bitOr(CM_TABLE, CM_OPT)                                }
+   shTagTypes[ "tt"         ] := { ( @THtmlAttr_TT() )         , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "u"          ] := { ( @THtmlAttr_U() )          , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "ul"         ] := { ( @THtmlAttr_UL() )         , hb_bitOr(CM_BLOCK)                                        }
+   shTagTypes[ "var"        ] := { ( @THtmlAttr_VAR() )        , hb_bitOr(CM_INLINE)                                       }
+   shTagTypes[ "wbr"        ] := { NIL                         , hb_bitOr(CM_INLINE, CM_EMPTY)                             }
+   shTagTypes[ "xmp"        ] := { ( @THtmlAttr_XMP() )        , hb_bitOr(CM_BLOCK, CM_OBSOLETE)                           }
 RETURN
 
 

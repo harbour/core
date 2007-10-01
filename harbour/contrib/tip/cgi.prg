@@ -61,7 +61,6 @@
  *
  */
 
-#include "hbcompat.ch"
 #include 'hbclass.ch'
 #include 'tip.ch'
 #include 'common.ch'
@@ -183,7 +182,7 @@ METHOD New() CLASS TIpCgi
 METHOD Header( cValue ) CLASS TIpCgi
 
    if empty( cValue )
-     ::cCgiHeader += 'Content-Type: text/html' + _CRLF
+      ::cCgiHeader += 'Content-Type: text/html' + _CRLF
    else
       ::cCgiHeader += cValue + _CRLF
    endif
@@ -215,7 +214,7 @@ METHOD Flush() CLASS TIpCgi
    local cSID := ::cSID
    local cSession
 
-   hEval( ::hCookies, { |k,v| ::cCgiHeader += 'Set-Cookie: ' + k + '=' + v + ';' + _CRLF } )
+   hb_hEval( ::hCookies, { |k,v| ::cCgiHeader += 'Set-Cookie: ' + k + '=' + v + ';' + _CRLF } )
 
    cStream := ::cCgiHeader + _CRLF + ::cHtmlPage + _CRLF
 
@@ -246,11 +245,11 @@ METHOD Flush() CLASS TIpCgi
 
      if ( nH := FCreate( cFile, FC_NORMAL ) ) != -1
         if ( fwrite( nH, @cSession,  nFileSize ) ) != nFileSize
-           ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + cStr( FError() ) )
+           ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
         endif
         fclose( nH )
      else
-        ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + cStr( FError() ) )
+        ::Print( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
      endif
 
    endif
@@ -274,7 +273,7 @@ METHOD DestroySession( cID ) CLASS TIpCgi
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
       if !( lRet := ( FErase( cFile ) == 0 ) )
-         ::Print( "ERROR: On deleting session file : " + cFile + ", File error : " + cStr( FError() ) )
+         ::Print( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
       else
         ::hCookies[ 'SESSIONID' ] := cSID + "; expires= " + DateToGMT( DATE() - 1 )
         ::CreateSID()
@@ -394,12 +393,12 @@ METHOD StartSession( cSID ) CLASS TIpCgi
 
    if empty( cSID )
 
-   if ( nH := hGetPos( ::hGets, 'SESSIONID' ) ) != 0
-      cSID := hGetValueAt( ::hGets, nH )
-   elseif ( nH := hGetPos( ::hPosts, 'SESSIONID' ) ) != 0
-      cSID := hGetValueAt( ::hPosts, nH )
-   elseif ( nH := hGetPos( ::hCookies, 'SESSIONID' ) ) != 0
-      cSID := hGetValueAt( ::hCookies, nH )
+   if ( nH := hb_hGetPos( ::hGets, 'SESSIONID' ) ) != 0
+      cSID := hb_hGetValueAt( ::hGets, nH )
+   elseif ( nH := hb_hGetPos( ::hPosts, 'SESSIONID' ) ) != 0
+      cSID := hb_hGetValueAt( ::hPosts, nH )
+   elseif ( nH := hb_hGetPos( ::hCookies, 'SESSIONID' ) ) != 0
+      cSID := hb_hGetValueAt( ::hCookies, nH )
       endif
 
    endif
@@ -420,7 +419,7 @@ METHOD StartSession( cSID ) CLASS TIpCgi
             FSeek( nH, 0, FS_SET )
             cBuffer := Space( nFileSize )
             if ( FRead( nH, @cBuffer,  nFileSize ) ) != nFileSize
-               ::ErrHandler( "ERROR: On reading session file : " + cFile + ", File error : " + cStr( FError() ) )
+               ::ErrHandler( "ERROR: On reading session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
             else
                ::SessionDecode( cBuffer )
             endif
@@ -458,9 +457,9 @@ STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
    DEFAULT cDefault TO ''
 
    if !empty( xVal ) .and. !empty( cKey )
-      if hHasKey( xVal, cKey )
-         cVal := hGet( xVal, cKey )
-         hDel( xVal, cKey )
+      if hb_hHasKey( xVal, cKey )
+         cVal := hb_hGet( xVal, cKey )
+         hb_hDel( xVal, cKey )
       endif
    endif
 
@@ -480,7 +479,7 @@ STATIC FUNCTION HtmlAllTag( hTags, cSep )
 
    DEFAULT cSep TO ' '
 
-   hEval( hTags, { |k| cVal += HtmlTag( hTags, k ) + cSep } )
+   hb_hEval( hTags, { |k| cVal += HtmlTag( hTags, k ) + cSep } )
 
    return cVal
 
@@ -491,10 +490,10 @@ STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
    if !empty( xVal )
       if empty( cKey )
          cVal := xVal
-      elseif hHasKey( xVal, cKey )
-         cVal := hGet( xVal, cKey )
+      elseif hb_hHasKey( xVal, cKey )
+         cVal := hb_hGet( xVal, cKey )
          if empty( lScan )
-            hDel( xVal, cKey )
+            hb_hDel( xVal, cKey )
          endif
          cVal := cKey + '="' + cVal + '"'
          if cPre != nil
@@ -515,7 +514,7 @@ STATIC FUNCTION HtmlAllOption( hOptions, cSep )
    DEFAULT cSep TO ' '
 
    if !empty( hOptions )
-      hEval( hOptions, { |k| cVal += HtmlOption( hOptions, k,,, .t. ) + cSep } )
+      hb_hEval( hOptions, { |k| cVal += HtmlOption( hOptions, k,,, .t. ) + cSep } )
    endif
 
    return cVal
@@ -527,9 +526,9 @@ STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
    DEFAULT cDefault TO ''
 
    if !empty( xVal ) .and. !empty( cKey )
-      if hHasKey( xVal, cKey )
-         cVal := hGet( xVal, cKey )
-         hDel( xVal, cKey )
+      if hb_hHasKey( xVal, cKey )
+         cVal := hb_hGet( xVal, cKey )
+         hb_hDel( xVal, cKey )
       endif
    endif
 
@@ -546,7 +545,7 @@ STATIC FUNCTION HtmlAllValue( hValues, cSep )
    DEFAULT cSep TO ' '
 
    if !empty( hValues )
-      hEval( hValues, { |k| cVal += HtmlValue( hValues, k ) + cSep } )
+      hb_hEval( hValues, { |k| cVal += HtmlValue( hValues, k ) + cSep } )
    endif
 
    return cVal
@@ -560,11 +559,11 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
    DEFAULT cKey TO 'script'
 
    if !empty( xVal )
-      if ( nPos := hGetPos( xVal, cKey ) ) != 0
-         cVal := hGetValueAt( xVal, nPos )
+      if ( nPos := hb_hGetPos( xVal, cKey ) ) != 0
+         cVal := hb_hGetValueAt( xVal, nPos )
          if valtype( cVal ) == "H"
-            if ( nPos := hGetPos( cVal, 'src' ) ) != 0
-               cVal := hGetValueAt( cVal, nPos )
+            if ( nPos := hb_hGetPos( cVal, 'src' ) ) != 0
+               cVal := hb_hGetValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif
@@ -574,8 +573,8 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
                   cVal := cTmp
                endif
             endif
-            if ( nPos := hGetPos( cVal, 'var' ) ) != 0
-               cVal := hGetValueAt( cVal, nPos )
+            if ( nPos := hb_hGetPos( cVal, 'var' ) ) != 0
+               cVal := hb_hGetValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif
@@ -586,7 +585,7 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
                endif
             endif
          endif
-         hDel( xVal, cKey )
+         hb_hDel( xVal, cKey )
       endif
    endif
 
@@ -601,11 +600,11 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
    DEFAULT cKey TO 'style'
 
    if !empty( xVal )
-      if ( nPos := hGetPos( xVal, cKey ) ) != 0
-         cVal := hGetValueAt( xVal, nPos )
+      if ( nPos := hb_hGetPos( xVal, cKey ) ) != 0
+         cVal := hb_hGetValueAt( xVal, nPos )
          if valtype( cVal ) == "H"
-            if ( nPos := hGetPos( cVal, 'src' ) ) != 0
-               cVal := hGetValueAt( cVal, nPos )
+            if ( nPos := hb_hGetPos( cVal, 'src' ) ) != 0
+               cVal := hb_hGetValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif
@@ -615,8 +614,8 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
                   cVal := cTmp
                endif
             endif
-            if ( nPos := hGetPos( cVal, 'var' ) ) != 0
-               cVal := hGetValueAt( cVal, nPos )
+            if ( nPos := hb_hGetPos( cVal, 'var' ) ) != 0
+               cVal := hb_hGetValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif
@@ -627,7 +626,7 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
                endif
             endif
          endif
-         hDel( xVal, cKey )
+         hb_hDel( xVal, cKey )
       endif
    endif
 
@@ -658,7 +657,7 @@ STATIC FUNCTION GenerateSID( cCRCKey )
    cTemp   := StrZero( nSIDCRC, 5 )
    cSIDCRC := ""
    for n := 1 to Len( cTemp )
-       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
+      cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
    next
 
    cRet := cSID + cSIDCRC
@@ -688,30 +687,29 @@ STATIC FUNCTION CheckSID( cSID, cCRCKey )
    cTemp   := StrZero( nSIDCRC, 5 )
    cSIDCRC := ""
    for n := 1 to Len( cTemp )
-       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
+      cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
    next
 
    RETURN ( Right( cSID, 5 ) == cSIDCRC )
 
 STATIC FUNCTION DateToGMT( dDate, cTime )
-  LOCAL cStr := ""
-  LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "dd-mm-yy" )
-  LOCAL nDay, nMonth, nYear, nDoW
-  LOCAL aDays   := { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }
-  LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
+   LOCAL cStr := ""
+   LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "dd-mm-yy" )
+   LOCAL nDay, nMonth, nYear, nDoW
+   LOCAL aDays   := { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }
+   LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
+  
+   DEFAULT dDate TO DATE()
+   DEFAULT cTime TO TIME()
+  
+   nDay   := Day( dDate )
+   nMonth := Month( dDate )
+   nYear  := Year( dDate)
+   nDoW   := Dow( dDate )
+  
+   cStr := aDays[ nDow ] + ", " + StrZero( nDay, 2 ) + "-" + aMonths[ nMonth ] + "-" + ;
+           Right( StrZero( nYear, 4 ), 2 ) + " " + cTime + " GMT"
+  
+   Set( _SET_DATEFORMAT, cOldDateFormat )
 
-  DEFAULT dDate      TO DATE()
-  DEFAULT cTime      TO TIME()
-
-  nDay   := Day( dDate )
-  nMonth := Month( dDate )
-  nYear  := Year( dDate)
-  nDoW   := Dow( dDate )
-
-  cStr := aDays[ nDow ] + ", " + StrZero( nDay, 2 ) + "-" + aMonths[ nMonth ] + "-" + ;
-          Right( StrZero( nYear, 4 ), 2 ) + " " + cTime + " GMT"
-
-  Set( _SET_DATEFORMAT, cOldDateFormat )
-
-RETURN cStr
-
+   RETURN cStr

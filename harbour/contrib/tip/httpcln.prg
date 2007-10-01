@@ -125,12 +125,12 @@ METHOD Post( cPostData, cQuery ) CLASS tIPClientHTTP
       cData := ""
       FOR nI := 1 TO Len( cPostData )
          cTmp := HGetKeyAt( cPostData, nI )
-         cTmp := CStr( cTmp )
+         cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp +"="
          cTmp := HGetValueAt( cPostData, nI )
-         cTmp := CStr( cTmp )
+         cTmp := hb_cStr( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp + "&"
       NEXT
@@ -140,12 +140,12 @@ METHOD Post( cPostData, cQuery ) CLASS tIPClientHTTP
       y:=Len(cPostData)
       FOR nI := 1 TO y
          cTmp := cPostData[ nI ,1]
-         cTmp := CStr( cTmp )
+         cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp +"="
          cTmp := cPostData[ nI,2]
-         cTmp := CStr( cTmp )
+         cTmp := hb_cStr( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp
          IF nI!=y
@@ -337,7 +337,7 @@ METHOD Read( nLen ) CLASS tIPClientHTTP
 
       // Convert to length
       // Set length so that super::Read reads in at max cLine bytes.
-      ::nLength := HexToNum( cLine ) + ::nRead
+      ::nLength := hb_HexToNum( cLine ) + ::nRead
 
    ENDIF
 
@@ -522,12 +522,12 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
    elseif HB_IsHash( cPostData )
       FOR nI := 1 TO Len( cPostData )
          cTmp := HGetKeyAt( cPostData, nI )
-         cTmp := CStr( cTmp )
+         cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cBound+cCrlf+'Content-Disposition: form-data; name="'+cTmp +'"'+cCrlf+cCrLf
          cTmp := HGetValueAt( cPostData, nI )
-         cTmp := CStr( cTmp )
+         cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp+cCrLf
@@ -536,12 +536,12 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
       y:=Len(cPostData)
       FOR nI := 1 TO y
          cTmp := cPostData[ nI ,1]
-         cTmp := CStr( cTmp )
+         cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cBound+cCrlf+'Content-Disposition: form-data; name="'+cTmp +'"'+cCrlf+cCrLf
          cTmp := cPostData[ nI,2]
-         cTmp := CStr( cTmp )
+         cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp+cCrLf

@@ -71,7 +71,6 @@
    Added data ::nWrite to work like ::nRead
 */
 
-#include "hbcompat.ch"
 #include "hbclass.ch"
 #include "error.ch"
 #include "fileio.ch"
@@ -581,9 +580,9 @@ METHOD Log( ... ) CLASS tIPClient
 
       // Preserves CRLF on result
       if xVar:__enumIndex() < PCount()
-         cMsg += StrTran( StrTran( AllTrim( CStr( xVar ) ), Chr( 13 ) ), Chr( 10 ) )
+         cMsg += StrTran( StrTran( AllTrim( hb_CStr( xVar ) ), Chr( 13 ) ), Chr( 10 ) )
       else
-         cMsg += CStr( xVar )
+         cMsg += hb_CStr( xVar )
       endif
 
       cMsg += iif ( xVar:__enumIndex() < PCount() - 1, ", ", "" )

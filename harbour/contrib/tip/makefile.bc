@@ -27,7 +27,6 @@ $(LIB_DIR)\tip.lib :      \
    $(OBJ_DIR)\thtml.obj   \
    $(OBJ_DIR)\base64x.obj \
    $(OBJ_DIR)\encmthd.obj \
-   $(OBJ_DIR)\hbhex2n.obj \
    $(OBJ_DIR)\utils.obj
 
 $(OBJ_DIR)\popcln.c    : popcln.prg
@@ -71,7 +70,6 @@ $(OBJ_DIR)\thtml.obj   : $(OBJ_DIR)\thtml.c
 
 $(OBJ_DIR)\base64x.obj : base64x.c
 $(OBJ_DIR)\encmthd.obj : encmthd.c
-$(OBJ_DIR)\hbhex2n.obj : hbhex2n.c
 $(OBJ_DIR)\utils.obj   : utils.c
 
 .c.obj:
@@ -79,5 +77,5 @@ $(OBJ_DIR)\utils.obj   : utils.c
   tlib $(LIB_DIR)\tip.lib -+$@,,
 
 .prg.c:
-  $(BIN_DIR)\harbour.exe $< -q0 -w -es2 -gc0 -n -i$(INCLUDE_DIR) -o$@
+  $(BIN_DIR)\harbour.exe $< -q0 -w -es2 -gc0 -kM -n -i$(INCLUDE_DIR) -o$@
 

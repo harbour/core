@@ -80,7 +80,6 @@
    Cleaned unused variables.
 */
 
-#include "hbcompat.ch"
 #include "directry.ch"
 #include "hbclass.ch"
 #include "tip.ch"
@@ -844,7 +843,7 @@ METHOD listFiles( cFileSpec ) CLASS tIPClientFTP
       DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
 
       aFile[F_NAME] := SubStr( cEntry, nStart )
-      aFile[F_DATE] := StoD( cYear+cMonth+cDay )
+      aFile[F_DATE] := hb_StoD( cYear+cMonth+cDay )
       aFile[F_TIME] := cTime
 
       aList[ cEntry:__enumIndex() ] := aFile

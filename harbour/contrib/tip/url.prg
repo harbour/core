@@ -51,7 +51,6 @@
  *
  */
 
-#include "hbcompat.ch"
 #include "hbclass.ch"
 
 /*
@@ -150,7 +149,7 @@ METHOD BuildAddress() CLASS tURL
       ::cProto := Lower( ::cProto )
    ENDIF
 
-   IF .not. Empty( ::cProto ) .and. .not. Empty( ::cServer )
+   IF ! Empty( ::cProto ) .and. ! Empty( ::cServer )
       cRet := ::cProto + "://"
    ENDIF
 
@@ -174,7 +173,7 @@ METHOD BuildAddress() CLASS tURL
    ENDIF
 
    cRet += ::cPath + ::cFile
-   IF .not. Empty( ::cQuery )
+   IF ! Empty( ::cQuery )
       cRet += "?" + ::cQuery
    ENDIF
 
@@ -194,7 +193,7 @@ METHOD BuildQuery( ) CLASS tURL
    ENDIF
 
    cLine := ::cPath + ::cFile
-   IF .not. Empty( ::cQuery )
+   IF ! Empty( ::cQuery )
       cLine += "?" + ::cQuery
    ENDIF
 
@@ -205,13 +204,13 @@ METHOD AddGetForm( cPostData )
 
    IF HB_IsHash( cPostData )
       FOR nI := 1 TO Len( cPostData )
-         cTmp := HGetKeyAt( cPostData, nI )
-         cTmp := CStr( cTmp )
+         cTmp := hb_HGetKeyAt( cPostData, nI )
+         cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp +"="
-         cTmp := HGetValueAt( cPostData, nI )
-         cTmp := CStr( cTmp )
+         cTmp := hb_HGetValueAt( cPostData, nI )
+         cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp + "&"
@@ -221,12 +220,12 @@ METHOD AddGetForm( cPostData )
       y:=Len(cPostData)
       FOR nI := 1 TO y
          cTmp := cPostData[ nI ,1]
-         cTmp := CStr( cTmp )
+         cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp +"="
          cTmp := cPostData[ nI,2]
-         cTmp := CStr( cTmp )
+         cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp

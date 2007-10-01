@@ -1981,7 +1981,7 @@ HB_FUNC( HB_INETCRLF )
    hb_retc( "\r\n" );
 }
 
-HB_FUNC( HB_ISINETSOCKET )
+HB_FUNC( HB_INETISSOCKET )
 {
    hb_retl( HB_PARSOCKET( 1 ) != NULL );
 }

@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-01 23:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/tip/Makefile
+   * contrib/tip/makefile.bc
+   + contrib/tip/makefile.vc
+   + contrib/tip/make_vc.bat
+   * contrib/tip/tip.ch
+   * contrib/tip/utils.c
+   * contrib/tip/base64x.c
+   * contrib/tip/encmthd.c
+   - contrib/tip/hbhex2n.c
+   * contrib/tip/cgi.prg
+   * contrib/tip/client.prg
+   * contrib/tip/ftpcln.prg
+   * contrib/tip/httpcln.prg
+   * contrib/tip/mail.prg
+   * contrib/tip/thtml.prg
+   * contrib/tip/url.prg
+     + Code converted to not require xhb lib.
+     % Now compiled with -kM switch to avoid macro expansion 
+       of strings. This is important here, as "&" char is used 
+       quite often in the code, so expect a somewhat better 
+       performance.
+     - Removed hex number conversion functions, as compatible 
+       versions are now available in Harbour with am hb_ prefix.
+     + C code update to use Harbour API calls only.
+     + Added VC build script.
+     ! Fixed two C warnings.
+     ! Standardized SVN header in one file.
+     ! Set std SVN keywords and eol-style.
+     ; Please test it.
+
+   * include/hbextern.ch
+   * source/rtl/hbinet.c
+   * contrib/xhb/xhb.ch
+   * contrib/xhb/xhbfunc.c
+     * Renamed hb_IsInetSocket() to hb_inetIsSocket() to 
+       keep all inet related functions in one namespace.
+
 2007-10-01 19:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/errorapi.c
     + added protection against possible GPF when some assign methods
