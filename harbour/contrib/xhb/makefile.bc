@@ -100,6 +100,8 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\hblognet.obj \
    $(OBJ_DIR)\cstruct.obj  \
    $(OBJ_DIR)\xhbcomp.obj  \
+   $(OBJ_DIR)\xhbmsgs.obj  \
+   $(OBJ_DIR)\xhbwith.obj  \
 
 #
 # Our default target
@@ -170,5 +172,13 @@ $(OBJ_DIR)\xhbcomp.c : $(TOOLS_DIR)\xhbcomp.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 
 $(OBJ_DIR)\xhbcomp.obj : $(OBJ_DIR)\xhbcomp.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\xhbmsgs.obj : $(TOOLS_DIR)\xhbmsgs.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\xhbwith.obj : $(TOOLS_DIR)\xhbwith.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,

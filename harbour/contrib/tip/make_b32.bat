@@ -11,6 +11,7 @@ rem
    if errorlevel 1 goto BUILD_ERR
 
 :BUILD_OK
+   copy ..\..\lib\b32\tip.lib ..\..\lib > nul
    goto EXIT
 
 :BUILD_ERR

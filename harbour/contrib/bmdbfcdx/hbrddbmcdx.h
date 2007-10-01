@@ -153,7 +153,7 @@ HB_EXTERN_BEGIN
 #define CDX_TYPE_STRUCTURE     0x80    /* FoxPro */
 
 /*
- TODO like in SIXCDX:
+ SIx3 order temperature flags:
    switch ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) )
       case CDX_TYPE_TEMPORARY:
          PARTIAL_RYO
@@ -328,7 +328,10 @@ typedef struct _CDXTAG
    BOOL     UniqueKey;        /* unique order flag */
    BOOL     Temporary;        /* temporary order flag */
    BOOL     Custom;           /* custom order flag */
-
+   BOOL     Template;         /* user keyadata in ordKeyAdd()/ordKeyDel() accepted */
+   BOOL     MultiKey;         /* repeated key values in custom indexes accepted */
+   BOOL     Partial;          /* order is updated only partially - missing keys possible */
+   BOOL     ChgOnly;          /* only existing key modifications are updated, no new key added */
    BOOL     UsrAscend;        /* user settable ascending/descending order flag */
    BOOL     UsrUnique;        /* user settable unique order flag */
 
@@ -481,25 +484,28 @@ typedef struct _CDXAREA
 
    FHANDLE  hDataFile;              /* Data file handle */
    FHANDLE  hMemoFile;              /* Memo file handle */
+   FHANDLE  hMemoTmpFile;           /* Memo temporary file handle */
    char *   szDataFileName;         /* Name of data file */
    char *   szMemoFileName;         /* Name of memo file */
    USHORT   uiHeaderLen;            /* Size of header */
    USHORT   uiRecordLen;            /* Size of record */
    USHORT   uiMemoBlockSize;        /* Size of memo block */
+   USHORT   uiNewBlockSize;         /* Size of new memo block */
    USHORT   uiMemoVersion;          /* MEMO file version */
-   DBFHEADER dbfHeader;             /* DBF header buffer */
+   USHORT   uiDirtyRead;            /* Index dirty read bit filed */
    BYTE     bTableType;             /* DBF type */
    BYTE     bMemoType;              /* MEMO type used in DBF memo fields */
    BYTE     bLockType;              /* Type of locking shemes */
    BYTE     bCryptType;             /* Type of used encryption */
+   DBFHEADER dbfHeader;             /* DBF header buffer */
    USHORT * pFieldOffset;           /* Pointer to field offset array */
    BYTE *   pRecord;                /* Buffer of record data */
    ULONG    ulRecCount;             /* Total records */
    ULONG    ulRecNo;                /* Current record */
    BOOL     fAutoInc;               /* WorkArea with auto increment fields */
    BOOL     fHasMemo;               /* WorkArea with Memo fields */
-   BOOL     fModStamp;              /* WorkArea with modification autoupdate fields */
    BOOL     fHasTags;               /* WorkArea with MDX or CDX index */
+   BOOL     fModStamp;              /* WorkArea with modification autoupdate fields */
    BOOL     fDataFlush;             /* data was written to DBF and not commited */
    BOOL     fMemoFlush;             /* data was written to MEMO and not commited */
    BOOL     fShared;                /* Shared file */
@@ -514,6 +520,7 @@ typedef struct _CDXAREA
    BOOL     fUpdateHeader;          /* Update header of file */
    BOOL     fFLocked;               /* TRUE if file is locked */
    BOOL     fHeaderLocked;          /* TRUE if DBF header is locked */
+   BOOL     fPackMemo;              /* Pack memo file in pack operation */
    BOOL     fTrigger;               /* Execute trigger function */
    LPDBOPENINFO lpdbOpenInfo;       /* Pointer to current dbOpenInfo structure in OPEN/CREATE methods */
    LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */

@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-09-01 17:54 UTC+0100 Miguel Angel Marchuet <miguelangel/at/marchuet.net>
+  * contrib/bmdbfcdx/bmdbfcdx1.c
+  * contrib/bmdbfcdx/hbrddbmcdx.h
+    * synced with dbfcdx
+
+  * contrib/tip/make_b32.bat
+    * fixed copy of lib by Juan Galvez.
+
+  * contrib/xhb/makefile.bc
+    + added missing files by Juan Galvez.
+
 2007-09-29 11:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rdd/dbfntx/dbfntx1.c
    * source/rdd/dbfcdx/dbfcdx1.c
