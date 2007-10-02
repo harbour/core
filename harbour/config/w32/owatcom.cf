@@ -2,7 +2,7 @@
 # $Id$
 #
 # The Harbour project
-# GNU MAKE file for Watcom C/C++ 10.x
+# GNU MAKE file for Open Watcom C/C++ compiler
 
 include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
 

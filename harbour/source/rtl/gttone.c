@@ -86,7 +86,7 @@ static int hb_Inp9x( USHORT usPort )
       __emit__(0x32,0xE4);    /* ASM XOR AH, AH */
       usVal = _AX;
 
-   #elif defined( __XCC__ )
+   #elif ( defined( __XCC__ ) || defined( __POCC__ ) ) && defined( _M_IX86 )
 
       __asm {
                mov   dx, usPort
@@ -123,7 +123,7 @@ static int hb_Outp9x( USHORT usPort, USHORT usVal )
       _AL = usVal;
       __emit__(0xEE);        /* ASM OUT DX, AL */
 
-   #elif defined( __XCC__ )
+   #elif ( defined( __XCC__ ) || defined( __POCC__ ) ) && defined( _M_IX86 )
 
       __asm {
                mov   dx, usPort

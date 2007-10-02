@@ -123,7 +123,9 @@
 #if ( defined(__DMC__) || defined(__BORLANDC__) || defined(__IBMCPP__) || defined(_MSC_VER) || \
       defined(__MINGW32__) || defined(__WATCOMC__) ) && !defined( HB_OS_UNIX )
    #include <sys/stat.h>
-   #include <share.h>
+   #if !defined( __POCC__ ) && !defined( __XCC__ )
+      #include <share.h>
+   #endif
    #include <fcntl.h>
    #include <errno.h>
    #include <direct.h>

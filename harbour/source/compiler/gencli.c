@@ -60,7 +60,7 @@ void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL 
 {
    char szFileName[ _POSIX_PATH_MAX + 1 ], * szVer;
    PFUNCTION    pFunc = HB_COMP_PARAM->functions.pFirst;
-   PCOMSYMBOL   pSym = HB_COMP_PARAM->symbols.pFirst;
+   /* PCOMSYMBOL   pSym = HB_COMP_PARAM->symbols.pFirst; */
    PINLINE      pInline;
    FILE * yyc; /* file handle for IL output */
    BOOL bIsPublicFunction ;
@@ -70,7 +70,7 @@ void hb_compGenILCode( HB_COMP_DECL, PHB_FNAME pFileName )  /* generates the IL 
    BOOL bIsFirstFunction = TRUE;
 
    HB_SYMBOL_UNUSED( pFunc );
-   HB_SYMBOL_UNUSED( pSym );
+   /*HB_SYMBOL_UNUSED( pSym );*/
 
    if( ! pFileName->szExtension )
       pFileName->szExtension = ".il";

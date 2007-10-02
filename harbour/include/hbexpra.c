@@ -128,42 +128,70 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
        * at runtime - in this case pName is an expression of HB_ET_MACRO type
        * e.g. &MyVar()
        */
-      int iCount;
+      int iLen;
 
       HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunCall(%s)", pName->value.asSymbol));
 
-      iCount = ( int ) hb_compExprParamListLen( pParms );
+      iLen = strlen( pName->value.asSymbol );
 
-      /* TODO: EMPTY() (not done by Clipper) */
-      if( iCount == 0 )
+#if !defined( HB_MACRO_SUPPORT ) && defined( HB_USE_ENUM_FUNCTIONS )
+      if( iLen > 7 && memcmp( "HB_ENUM", pName->value.asSymbol, 7 ) == 0 )
       {
-#if !defined( HB_MACRO_SUPPORT ) && defined( HB_EMULATE_ENUMINDEX_FUNC )
-         if( strcmp( "HB_ENUMINDEX", pName->value.asSymbol ) == 0 )
+         char * szMessage = NULL;
+
+         if( iLen == 12 && memcmp( "INDEX", pName->value.asSymbol + 7, 5 ) == 0 )
+            szMessage = "__ENUMINDEX";
+         else if( iLen == 12 && memcmp( "VALUE", pName->value.asSymbol + 7, 5 ) == 0 )
+            szMessage = "__ENUMVALUE";
+         else if( iLen == 11 && memcmp( "BASE", pName->value.asSymbol + 7, 4 ) == 0 )
+            szMessage = "__ENUMBASE";
+         else if( iLen == 10 && memcmp( "KEY", pName->value.asSymbol + 7, 3 ) == 0 )
+            szMessage = "__ENUMKEY";
+
+         if( szMessage )
          {
-            HB_ENUMERATOR_PTR pForVar, pEnumVar = NULL;
-            pForVar = HB_COMP_PARAM->functions.pLast->pEnum;
-            if( pForVar )
+            int iCount = ( int ) hb_compExprParamListLen( pParms );
+            char * szName = NULL;
+
+            if( iCount == 0 )
             {
-               while( pForVar )
+               HB_ENUMERATOR_PTR pForVar, pEnumVar = NULL;
+               pForVar = HB_COMP_PARAM->functions.pLast->pEnum;
+               if( pForVar )
                {
-                  if( pForVar->bForEach )
-                     pEnumVar = pForVar;
-                  pForVar = pForVar->pNext;
-               }
-               if( pEnumVar )
-               {
-                  HB_COMP_EXPR_DELETE( pParms );
-                  HB_COMP_EXPR_DELETE( pName ); 
-                  return hb_compExprNewMethodCall( hb_compExprNewSend(
-                           hb_compExprNewVar( pEnumVar->szName, HB_COMP_PARAM ),
-                                 "__ENUMINDEX", NULL, HB_COMP_PARAM ), NULL );
+                  while( pForVar )
+                  {
+                     if( pForVar->bForEach )
+                        pEnumVar = pForVar;
+                     pForVar = pForVar->pNext;
+                  }
+                  if( pEnumVar )
+                     szName = pEnumVar->szName;
                }
             }
+            else if( iCount == 1 )
+            {
+               if( pParms->value.asList.pExprList->ExprType == HB_ET_VARIABLE ||
+                   pParms->value.asList.pExprList->ExprType == HB_ET_VARREF )
+                  szName = pParms->value.asList.pExprList->value.asSymbol;
+            }
+            if( szName )
+            {
+               HB_COMP_EXPR_DELETE( pParms );
+               HB_COMP_EXPR_DELETE( pName ); 
+               return hb_compExprNewMethodCall( hb_compExprNewSend(
+                        hb_compExprNewVar( szName, HB_COMP_PARAM ),
+                                    szMessage, NULL, HB_COMP_PARAM ), NULL );
+            }
          }
-#endif
       }
-      /* TODO: EMPTY() (not done by Clipper) */
-      else if( strcmp( "EVAL", pName->value.asSymbol ) == 0 )
+      else
+#endif
+      if( hb_compExprParamListLen( pParms ) == 0 )
+      {
+         /* nothing to do, both EVAL and _GET_ below need parameters */
+      }
+      else if( iLen == 4 && memcmp( "EVAL", pName->value.asSymbol, 4 ) == 0 )
       {
          HB_EXPR_PTR pEval;
          /* Optimize Eval( bBlock, [ArgList] ) to: bBlock:Eval( [ArgList] ) */
@@ -181,7 +209,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          HB_COMP_EXPR_DELETE( pName ); 
          return pEval;
       }
-      else if( strcmp( "_GET_", pName->value.asSymbol ) == 0 )
+      else if( iLen == 5 && memcmp( "_GET_", pName->value.asSymbol, 5 ) == 0 )
       {
          /* Reserved Clipper function used to handle GET variables
           */
