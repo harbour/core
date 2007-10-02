@@ -8,6 +8,28 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-02 10:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexpra.c
+    + added support for HB_ENUM*([@]<varname>) functions - disabled
+      by default can be enabled by HB_USE_ENUM_FUNCTIONS macro
+
+  * harbour/source/rtl/gttone.c
+    * use assembler code for tone emulation for POCC/XCC compiler only
+      for X86 platforms
+
+  * harbour/source/rtl/filesys.c
+    * do not include <share.h> for POCC/XCC
+
+  * harbour/source/compiler/gencli.c
+    * pacify warning
+
+  * harbour/config/w32/owatcom.cf
+  * harbour/config/w32/xcc.cf
+    * updated description in header files
+
+  + harbour/config/w32/pocc.cf
+    + added support for Pelles ISO C Compiler
+
 2007-10-02 10:49 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/ChangeLog
    + harbour/ChangeLog.019
