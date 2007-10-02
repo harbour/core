@@ -647,7 +647,7 @@ METHOD __enumStart( enum, lDescend ) CLASS TOleAuto
    /* TODO: add support for descend order */
    ::pOleEnumerator := ::OleNewEnumerator()
 
-RETURN ::__enumSkip( enum, lDescend )
+RETURN ::__enumSkip( @enum, lDescend )
 
 //--------------------------------------------------------------------
 

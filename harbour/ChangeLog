@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-02 14:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/ole2/win32ole.prg
+    ! fixed typo in __enumStart() - enum parameter has to be passed
+      by reference ro __enumSkip() method
+
 2007-10-02 10:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexpra.c
     + added support for HB_ENUM*([@]<varname>) functions - disabled
