@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-01 22:53 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * contrib/tip/httpcln.prg
+    * removed unnecesary include file hbcompat.ch
+
 2007-10-01 23:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/tip/Makefile
    * contrib/tip/makefile.bc

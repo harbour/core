@@ -51,7 +51,6 @@
  *
  */
 
-#include "hbcompat.ch"
 #include "common.ch"
 #include "hbclass.ch"
 #include "tip.ch"
