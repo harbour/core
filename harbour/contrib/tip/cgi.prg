@@ -393,12 +393,12 @@ METHOD StartSession( cSID ) CLASS TIpCgi
 
    if empty( cSID )
 
-   if ( nH := hb_hGetPos( ::hGets, 'SESSIONID' ) ) != 0
-      cSID := hb_hGetValueAt( ::hGets, nH )
-   elseif ( nH := hb_hGetPos( ::hPosts, 'SESSIONID' ) ) != 0
-      cSID := hb_hGetValueAt( ::hPosts, nH )
-   elseif ( nH := hb_hGetPos( ::hCookies, 'SESSIONID' ) ) != 0
-      cSID := hb_hGetValueAt( ::hCookies, nH )
+   if ( nH := hb_HPos( ::hGets, 'SESSIONID' ) ) != 0
+      cSID := hb_HValueAt( ::hGets, nH )
+   elseif ( nH := hb_HPos( ::hPosts, 'SESSIONID' ) ) != 0
+      cSID := hb_HValueAt( ::hPosts, nH )
+   elseif ( nH := hb_HPos( ::hCookies, 'SESSIONID' ) ) != 0
+      cSID := hb_HValueAt( ::hCookies, nH )
       endif
 
    endif
@@ -559,11 +559,11 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
    DEFAULT cKey TO 'script'
 
    if !empty( xVal )
-      if ( nPos := hb_hGetPos( xVal, cKey ) ) != 0
-         cVal := hb_hGetValueAt( xVal, nPos )
+      if ( nPos := hb_HPos( xVal, cKey ) ) != 0
+         cVal := hb_HValueAt( xVal, nPos )
          if valtype( cVal ) == "H"
-            if ( nPos := hb_hGetPos( cVal, 'src' ) ) != 0
-               cVal := hb_hGetValueAt( cVal, nPos )
+            if ( nPos := hb_HPos( cVal, 'src' ) ) != 0
+               cVal := hb_HValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif
@@ -573,8 +573,8 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
                   cVal := cTmp
                endif
             endif
-            if ( nPos := hb_hGetPos( cVal, 'var' ) ) != 0
-               cVal := hb_hGetValueAt( cVal, nPos )
+            if ( nPos := hb_HPos( cVal, 'var' ) ) != 0
+               cVal := hb_HValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif
@@ -600,11 +600,11 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
    DEFAULT cKey TO 'style'
 
    if !empty( xVal )
-      if ( nPos := hb_hGetPos( xVal, cKey ) ) != 0
-         cVal := hb_hGetValueAt( xVal, nPos )
+      if ( nPos := hb_HPos( xVal, cKey ) ) != 0
+         cVal := hb_HValueAt( xVal, nPos )
          if valtype( cVal ) == "H"
-            if ( nPos := hb_hGetPos( cVal, 'src' ) ) != 0
-               cVal := hb_hGetValueAt( cVal, nPos )
+            if ( nPos := hb_HPos( cVal, 'src' ) ) != 0
+               cVal := hb_HValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif
@@ -614,8 +614,8 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
                   cVal := cTmp
                endif
             endif
-            if ( nPos := hb_hGetPos( cVal, 'var' ) ) != 0
-               cVal := hb_hGetValueAt( cVal, nPos )
+            if ( nPos := hb_HPos( cVal, 'var' ) ) != 0
+               cVal := hb_HValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif

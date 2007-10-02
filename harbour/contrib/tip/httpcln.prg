@@ -123,12 +123,12 @@ METHOD Post( cPostData, cQuery ) CLASS tIPClientHTTP
    IF HB_IsHash( cPostData )
       cData := ""
       FOR nI := 1 TO Len( cPostData )
-         cTmp := HGetKeyAt( cPostData, nI )
+         cTmp := hb_HKeyAt( cPostData, nI )
          cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp +"="
-         cTmp := HGetValueAt( cPostData, nI )
+         cTmp := hb_HValueAt( cPostData, nI )
          cTmp := hb_cStr( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp + "&"
@@ -210,8 +210,8 @@ METHOD StandardFields() CLASS tIPClientHTTP
 
    //Send optional Fields
    FOR iCount := 1 TO Len( ::hFields )
-      ::InetSendall( ::SocketCon, HGetKeyAt( ::hFields, iCount ) +;
-         ": " + HGetValueAt( ::hFields, iCount ) + ::cCRLF )
+      ::InetSendall( ::SocketCon, hb_HKeyAt( ::hFields, iCount ) +;
+         ": " + hb_HValueAt( ::hFields, iCount ) + ::cCRLF )
    NEXT
 
 RETURN .T.
@@ -520,12 +520,12 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
    IF empty(cPostData)
    elseif HB_IsHash( cPostData )
       FOR nI := 1 TO Len( cPostData )
-         cTmp := HGetKeyAt( cPostData, nI )
+         cTmp := hb_HKeyAt( cPostData, nI )
          cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cBound+cCrlf+'Content-Disposition: form-data; name="'+cTmp +'"'+cCrlf+cCrLf
-         cTmp := HGetValueAt( cPostData, nI )
+         cTmp := hb_HValueAt( cPostData, nI )
          cTmp := hb_cStr( cTmp )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
