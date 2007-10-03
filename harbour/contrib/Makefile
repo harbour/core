@@ -28,22 +28,13 @@ ifeq ($(HB_ARCHITECTURE),w32)
 DIRS +=\
 	rdd_ads \
 
-ifeq ($(HB_COMPILER),msvc)
-
-DIRS +=\
-	odbc \
-
-else
-ifeq ($(HB_COMPILER),rsxnt)
-
-else
+ifneq ($(HB_COMPILER),rsxnt)
 
 DIRS +=\
 	ole2 \
 	odbc \
 	adordd \
 
-endif
 endif
 
 else
@@ -72,7 +63,6 @@ endif
 
 ifneq ($(HB_ARCHITECTURE),dos)
 DIRS += tip
-#DIRS += xhb
 endif
 
 include $(ROOT)config/dir.cf

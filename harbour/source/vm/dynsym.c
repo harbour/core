@@ -120,6 +120,86 @@ HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
 
    if( pDynSym )            /* If name exists */
    {
+      if( ( pDynSym->pSymbol->scope.value &
+            pSymbol->scope.value & HB_FS_LOCAL ) != 0 &&
+            pDynSym->pSymbol != pSymbol )
+      {
+         /* Someone is using linker which allows to create binaries
+          * with multiple function definitions. It's a big chance that
+          * wrong binaries are created in such case, f.e both functions
+          * linked and not all references updated. Anyhow now we will
+          * have to guess which symbol is the real local one [druzus]
+          */
+         /* Let's check if linker updated function address so both symbols
+          * refer to the same function
+          */
+         if( pDynSym->pSymbol->value.pFunPtr == pSymbol->value.pFunPtr )
+         {
+            /* The addresses have been updated, f.e. in such case works GCC
+             * in Linux (but not MinGW and DJGPP) if user will allow to create
+             * binaries with multiple symbols by
+             *    -Wl,--allow-multiple-definition
+             * when whole module cannot be cleanly replaced.
+             * OpenWatcom for Linux, DOS and Windows (I haven't testes OS2
+             * version), POCC and XCC (with /FORCE:MULTIPLE) also update
+             * addresses in such case.
+             *
+             * We are guessing that symbols are registered in reverted order
+             * so we remove the HB_FS_LOCAL flag from previously registered
+             * symbol but some linkers may use different order so it does
+             * not have to be true in all cases
+             */
+            pDynSym->pSymbol->scope.value &= ~HB_FS_LOCAL;
+         }
+         else
+         {
+            /* We have multiple symbol with the same name which refer
+             * to different public functions inside this single binary
+             * Let's check if this symbol is loaded from dynamic library
+             * (.so, .dll, .dyn, ...) or .hrb file
+             */
+            if( pSymbol->scope.value & HB_FS_PCODEFUNC )
+            {
+               /* It's dynamic module so we are guessing that HVM
+                * intentionally not updated function address allowing
+                * multiple functions, f.e. programmer asked about keeping
+                * local references using HB_LIBLOAD()/__HBRLOAD() parameter.
+                * In such case update pDynSym address in the new symbol but
+                * do not register it as the main one
+                */
+               pSymbol->pDynSym = pDynSym;    /* place a pointer to DynSym */
+               return pDynSym;                /* Return pointer to DynSym */
+            }
+            /* The multiple symbols comes from single binaries - we have to
+             * decide what to do with them. We can leave it as is or we can
+             * try to overload one symbol so both will point to the same
+             * function. For .prg code such overloading will work but not
+             * for C code which makes sth like: HB_FUNC_EXEC( funcname )
+             * In such case we cannot do anything - we cannot even detect
+             * such situation. In some cases even linker cannot detect it
+             * because C compiler can make autoinlining or some bindings
+             * which are not visible for linker
+             */
+            /* Let's try to overload one of the functions. Simple:
+             *    pDynSym->pSymbol->value.pFunPtr = pSymbol->value.pFunPtr;
+             * is not good idea because it's possible that this symbol will
+             * be overloaded yet another time after preprocessing rest of
+             * symbols so we will use HB_FS_DEFERRED flag which is updated
+             * dynamically in hb_vmSend()/hb_vmDo() functions
+             */
+#define HB_OVERLOAD_MULTIPLE_FUNC
+
+#if defined( HB_OVERLOAD_MULTIPLE_FUNC )
+#if defined( __GNUC__ ) && !defined( __DJGPP__ )
+            pDynSym->pSymbol->scope.value &= ~HB_FS_LOCAL;
+            pDynSym->pSymbol->scope.value |= HB_FS_DEFERRED;
+#else
+            pSymbol->scope.value &= ~HB_FS_LOCAL;
+            pSymbol->scope.value |= HB_FS_DEFERRED;
+#endif
+#endif
+         }
+      }
       if( ( !pDynSym->pSymbol->value.pFunPtr && pSymbol->value.pFunPtr ) ||
           ( pSymbol->scope.value & HB_FS_LOCAL ) != 0 )
       {

@@ -165,8 +165,13 @@ CLASS TOleAuto
    METHOD GetActiveObject( cClass ) CONSTRUCTOR
 
    METHOD Invoke()
-   MESSAGE Set METHOD Invoke()
-   MESSAGE Get METHOD Invoke()
+   MESSAGE CallMethod  METHOD Invoke()
+
+   METHOD Set()
+   MESSAGE SetProperty METHOD Set()
+
+   METHOD Get()
+   MESSAGE GetProperty METHOD Get()
 
    METHOD OleValue()
    METHOD _OleValue( xSetValue )
@@ -335,11 +340,6 @@ METHOD GetActiveObject( cClass ) CLASS TOleAuto
    ENDIF
 
 RETURN Self
-
-//--------------------------------------------------------------------
-METHOD Invoke( cMethod, ... ) CLASS TOleAuto
-
-RETURN HB_ExecFromArray( Self, cMethod, { ... } )
 
 //--------------------------------------------------------------------
 METHOD OleCollection( xIndex, xValue ) CLASS TOleAuto
@@ -580,7 +580,7 @@ METHOD OleValueEqual( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '%'
+      oErr:Operation     := '='
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1085
       oErr:SubSystem     := "BASE"
@@ -605,7 +605,7 @@ METHOD OleValueExactEqual( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '%'
+      oErr:Operation     := '=='
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1085
       oErr:SubSystem     := "BASE"
@@ -630,7 +630,7 @@ METHOD OleValueNotEqual( xArg ) CLASS TOleAuto
       oErr:CanSubstitute := .T.
       oErr:Description   := "argument error"
       oErr:GenCode       := EG_ARG
-      oErr:Operation     := '%'
+      oErr:Operation     := '!='
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 1085
       oErr:SubSystem     := "BASE"

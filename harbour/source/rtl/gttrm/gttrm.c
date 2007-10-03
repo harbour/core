@@ -1482,6 +1482,11 @@ static void hb_gt_trm_LinuxTone( double dFrequency, double dDuration )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_LinuxTone(%lf, %lf)", dFrequency, dDuration));
 
+   if( s_termState.iACSC )
+   {
+      hb_gt_trm_termOut( ( BYTE * ) "\033[10m", 5 );
+      s_termState.iACSC = 0;
+   }
    snprintf( escseq, sizeof( escseq ), "\033[10;%d]\033[11;%d]\007",
              ( int ) dFrequency, ( int ) ( dDuration * 1000.0 / 18.2 ) );
    hb_gt_trm_termOut( ( BYTE * ) escseq, strlen( escseq ) );

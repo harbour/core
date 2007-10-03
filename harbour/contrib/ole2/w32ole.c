@@ -89,6 +89,8 @@
    #define HB_LONG_LONG_OFF
 #endif
 
+static void RetValue( void );
+
 static HRESULT  s_nOleError;
 static HB_ITEM  OleAuto;
 
@@ -185,7 +187,6 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
   // -----------------------------------------------------------------------
   static EXCEPINFO excep;
 
-  static BSTR bstrMessage;
   static DISPID lPropPut = DISPID_PROPERTYPUT;
   static UINT uArgErr;
 
@@ -193,7 +194,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
   static PHB_ITEM SafeArrayToArray( SAFEARRAY *parray, UINT iDim, long* rgIndices, VARTYPE vt );
 
   //---------------------------------------------------------------------------//
-  HB_EXPORT BSTR hb_oleAnsiToSysString( LPSTR cString )
+  HB_EXPORT BSTR hb_oleAnsiToSysString( const char * cString )
   {
      int nConvertedLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cString, -1, NULL, 0 );
 
@@ -690,14 +691,14 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
   }
 
   //---------------------------------------------------------------------------//
-  static PHB_ITEM * GetParams( DISPPARAMS *pDispParams )
+  static PHB_ITEM * GetParams( DISPPARAMS *pDispParams, int nOffset )
   {
      VARIANTARG * pArgs = NULL;
      int n, nArgs, nArg;
      //BOOL bByRef;
      PHB_ITEM *aPrgParams = NULL;
 
-     nArgs = hb_pcount();
+     nArgs = hb_pcount() - nOffset;
 
      if( nArgs > 0 )
      {
@@ -712,7 +713,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
            nArg = nArgs - n;
            VariantInit( &( pArgs[ n ] ) );
 
-           aPrgParams[ n ] = hb_stackItemFromBase( nArg );
+           aPrgParams[ n ] = hb_stackItemFromBase( nArg + nOffset );
 
            //TraceLog( NULL, "N: %i Arg: %i Type: %i %i ByRef: %i\n", n, nArg, pParam->type, aPrgParams[ n ]->type, bByRef );
 
@@ -959,7 +960,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
            //printf( "   Sub: %i\n", i );
 
            pSubArray = SafeArrayToArray( parray, iDim - 1, rgIndices, vt );
-           hb_arraySet( pArray, i - iFrom + 1, pSubArray );
+           hb_arraySetForward( pArray, i - iFrom + 1, pSubArray );
            hb_itemRelease( pSubArray );
         }
      }
@@ -1558,7 +1559,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
      SysFreeString( bstrClassID );
 
-     // TraceLog( NULL, "Result: %p\n", s_nOleError );
+     //TraceLog( NULL, "Result: %p\n", s_nOleError );
 
      if( hb_pcount() == 2 )
      {
@@ -1578,9 +1579,9 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
      if( SUCCEEDED( s_nOleError ) )
      {
-        // TraceLog( NULL, "Class: %i\n", ClassID );
+        //TraceLog( NULL, "Class: %i\n", ClassID );
         s_nOleError = CoCreateInstance( (REFCLSID) &ClassID, NULL, CLSCTX_SERVER, (REFIID) riid, &pDisp );
-        // TraceLog( NULL, "Result: %p\n", s_nOleError );
+        //TraceLog( NULL, "Result: %p\n", s_nOleError );
      }
 
      hb_retnl( ( LONG ) pDisp );
@@ -1676,6 +1677,9 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
   //---------------------------------------------------------------------------//
   static HRESULT OleSetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDispParams )
   {
+     pDispParams->rgdispidNamedArgs = &lPropPut;
+     pDispParams->cNamedArgs = 1;
+
      // 1 Based!!!
      if( ( ISBYREF( 1 ) ) || ISARRAY( 1 ) )
      {
@@ -1708,6 +1712,9 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
                                           NULL,    // No return value
                                           &excep,
                                           &uArgErr );
+
+     pDispParams->rgdispidNamedArgs = NULL;
+     pDispParams->cNamedArgs = 0;
 
      return s_nOleError;
   }
@@ -1851,10 +1858,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
         VariantClear( &RetVal );
 
-        aPrgParams = GetParams( &DispParams );
-
-        DispParams.rgdispidNamedArgs = &lPropPut;
-        DispParams.cNamedArgs = 1;
+        aPrgParams = GetParams( &DispParams, 0 );
 
         OleSetProperty( pDisp, DISPID_VALUE, &DispParams );
         //TraceLog( NULL, "SetDefault: %p\n", s_nOleError );
@@ -1930,39 +1934,34 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
   }
 
   //---------------------------------------------------------------------------//
-  HB_FUNC( TOLEAUTO_ONERROR )
+  static HRESULT OleGetID( IDispatch *pDisp, const char *szName, DISPID *pDispID, BOOL *pbSetFirst )
   {
-     IDispatch *pDisp;
-     DISPID DispID;
-     DISPPARAMS DispParams;
-     BOOL bSetFirst = FALSE;
+     BSTR bstrMessage;
 
-     //TraceLog( NULL, "Class: '%s' Message: '%s', Params: %i Arg1: %i\n", hb_objGetClsName( hb_stackSelfItem() ), hb_itemGetSymbol( hb_stackBaseItem() )->szName, hb_pcount(), hb_parinfo(1) );
-
-     hb_vmPushSymbol( s_pSym_hObj->pSymbol );
-     hb_vmPush( hb_stackSelfItem() );
-     hb_vmSend( 0 );
-
-     pDisp = ( IDispatch * ) hb_parnl( -1 );
-
-    OleGetID :
+     if( pbSetFirst )
+     {
+        *pbSetFirst = FALSE;
+     }
 
      /*
-     if( strcmp( hb_itemGetSymbol( hb_stackBaseItem() )->szName, "OLEVALUE" ) == 0 || strcmp( hb_itemGetSymbol( hb_stackBaseItem() )->szName, "_OLEVALUE" ) == 0 )
+     if( strcmp( szName, "OLEVALUE" ) == 0 || strcmp( szName, "_OLEVALUE" ) == 0 )
      {
         DispID = DISPID_VALUE;
         s_nOleError = S_OK;
      }
-     else*/ if( hb_itemGetSymbol( hb_stackBaseItem() )->szName[0] == '_' && hb_itemGetSymbol( hb_stackBaseItem() )->szName[1] && hb_pcount() >= 1 )
+     else*/ if( szName[0] == '_' && szName[1] && hb_pcount() >= 1 )
      {
-        bstrMessage = hb_oleAnsiToSysString( ( LPSTR ) hb_itemGetSymbol( hb_stackBaseItem() )->szName + 1 );
-        s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, (REFIID) &IID_NULL, (wchar_t **) &bstrMessage, 1, LOCALE_SYSTEM_DEFAULT, &DispID );
+        bstrMessage = hb_oleAnsiToSysString( szName + 1 );
+        s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, (REFIID) &IID_NULL, (wchar_t **) &bstrMessage, 1, LOCALE_SYSTEM_DEFAULT, pDispID );
         SysFreeString( bstrMessage );
         //TraceLog( NULL, "1. ID of: '%s' -> %i Result: %p\n", hb_itemGetSymbol( hb_stackBaseItem() )->szName + 1, DispID, s_nOleError );
 
         if( SUCCEEDED( s_nOleError ) )
         {
-           bSetFirst = TRUE;
+           if( pbSetFirst )
+           {
+              *pbSetFirst = TRUE;
+           }
         }
      }
      else
@@ -1973,75 +1972,159 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
      if( FAILED( s_nOleError ) )
      {
         // Try again without removing the assign prefix (_).
-        bstrMessage = hb_oleAnsiToSysString( ( LPSTR ) hb_itemGetSymbol( hb_stackBaseItem() )->szName );
-        s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, (REFIID) &IID_NULL, (wchar_t **) &bstrMessage, 1, 0, &DispID );
+        bstrMessage = hb_oleAnsiToSysString( szName );
+        s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, (REFIID) &IID_NULL, (wchar_t **) &bstrMessage, 1, 0, pDispID );
         SysFreeString( bstrMessage );
-        //TraceLog( NULL, "2. ID of: '%s' -> %i Result: %p\n", hb_itemGetSymbol( hb_stackBaseItem() )->szName, DispID, s_nOleError );
+        //TraceLog( NULL, "2. ID of: '%s' -> %i Result: %p\n", szName, *pDispID, s_nOleError );
      }
 
-     if( SUCCEEDED( s_nOleError ) )
-     {
-        PHB_ITEM *aPrgParams = GetParams( &DispParams );
+     return s_nOleError;
+  }
 
+  //---------------------------------------------------------------------------//
+  HB_FUNC( TOLEAUTO_INVOKE )
+  {
+     IDispatch *pDisp;
+     char *szName = hb_parc(1);
+     DISPID DispID;
+     DISPPARAMS DispParams;
+
+     hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+     hb_vmPush( hb_stackSelfItem() );
+     hb_vmSend( 0 );
+
+     pDisp = ( IDispatch * ) hb_parnl( -1 );
+
+     if( szName && SUCCEEDED( OleGetID( pDisp, szName, &DispID, NULL ) ) )
+     {
+        PHB_ITEM *aPrgParams = GetParams( &DispParams, 1 );
+
+        if( SUCCEEDED( OleInvoke( pDisp, DispID, &DispParams ) ) )
+        {
+           RetValue();
+        }
+
+        FreeParams( &DispParams, aPrgParams );
+     }
+  }
+
+  //---------------------------------------------------------------------------//
+  HB_FUNC( TOLEAUTO_SET )
+  {
+     IDispatch *pDisp;
+     char *szName = hb_parc(1);
+     DISPID DispID;
+     DISPPARAMS DispParams;
+
+     hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+     hb_vmPush( hb_stackSelfItem() );
+     hb_vmSend( 0 );
+     pDisp = ( IDispatch * ) hb_parnl( -1 );
+
+     if( szName && SUCCEEDED( OleGetID( pDisp, szName, &DispID, NULL ) ) )
+     {
+        PHB_ITEM *aPrgParams = GetParams( &DispParams, 1 );
+
+        if( SUCCEEDED( OleSetProperty( pDisp, DispID, &DispParams ) ) )
+        {
+           RetValue();
+        }
+
+        FreeParams( &DispParams, aPrgParams );
+     }
+  }
+
+  //---------------------------------------------------------------------------//
+  HB_FUNC( TOLEAUTO_GET )
+  {
+     IDispatch *pDisp;
+     char *szName = hb_parc(1);
+     DISPID DispID;
+     DISPPARAMS DispParams;
+
+     hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+     hb_vmPush( hb_stackSelfItem() );
+     hb_vmSend( 0 );
+     pDisp = ( IDispatch * ) hb_parnl( -1 );
+
+     if( szName && SUCCEEDED( OleGetID( pDisp, szName, &DispID, NULL ) ) )
+     {
+        PHB_ITEM *aPrgParams = GetParams( &DispParams, 1 );
+
+        if( SUCCEEDED( OleGetProperty( pDisp, DispID, &DispParams ) ) )
+        {
+           RetValue();
+        }
+
+        FreeParams( &DispParams, aPrgParams );
+     }
+  }
+
+  //---------------------------------------------------------------------------//
+  HB_FUNC( TOLEAUTO_ONERROR )
+  {
+     IDispatch *pDisp;
+     DISPID DispID;
+     DISPPARAMS DispParams;
+     BOOL bSetFirst = FALSE, bTryDefault = TRUE;
+     PHB_ITEM *aPrgParams = GetParams( &DispParams, 0 );
+
+     //TraceLog( NULL, "Class: '%s' Message: '%s', Params: %i Arg1: %i\n", hb_objGetClsName( hb_stackSelfItem() ), hb_itemGetSymbol( hb_stackBaseItem() )->szName, hb_pcount(), hb_parinfo(1) );
+
+     hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+     hb_vmPush( hb_stackSelfItem() );
+     hb_vmSend( 0 );
+     pDisp = ( IDispatch * ) hb_parnl( -1 );
+
+    OleGetID :
+
+     if( SUCCEEDED( OleGetID( pDisp, hb_itemGetSymbol( hb_stackBaseItem() )->szName, &DispID, &bSetFirst ) ) )
+     {
         VariantClear( &RetVal );
 
         if( bSetFirst )
         {
-           DispParams.rgdispidNamedArgs = &lPropPut;
-           DispParams.cNamedArgs = 1;
-
-           OleSetProperty( pDisp, DispID, &DispParams );
-           //TraceLog( NULL, "OleSetProperty %i\n", s_nOleError );
-
-           if( SUCCEEDED( s_nOleError ) )
+           if( SUCCEEDED( OleSetProperty( pDisp, DispID, &DispParams ) ) )
            {
               hb_itemReturn( hb_stackItemFromBase( 1 ) );
            }
-           else
-           {
-              DispParams.rgdispidNamedArgs = NULL;
-              DispParams.cNamedArgs = 0;
-           }
+
+           //TraceLog( NULL, "FIRST OleSetProperty %i\n", s_nOleError );
+        }
+        else
+        {
+           s_nOleError = E_PENDING;
         }
 
-        if( bSetFirst == FALSE || FAILED( s_nOleError ) )
+        if( FAILED( s_nOleError ) )
         {
-           OleInvoke( pDisp, DispID, &DispParams );
+           if( SUCCEEDED( OleInvoke( pDisp, DispID, &DispParams ) ) )
+           {
+              RetValue();
+           }
+
            //TraceLog( NULL, "OleInvoke %i\n", s_nOleError );
+        }
 
-           if( SUCCEEDED( s_nOleError ) )
+        if( FAILED( s_nOleError ) )
+        {
+           if( SUCCEEDED( OleGetProperty( pDisp, DispID, &DispParams ) ) )
            {
               RetValue();
            }
-        }
 
-        // Collections are properties that do require arguments!
-        if( FAILED( s_nOleError ) /* && hb_pcount() == 0 */ )
-        {
-           OleGetProperty( pDisp, DispID, &DispParams );
            //TraceLog( NULL, "OleGetProperty(%i) %i\n", DispParams.cArgs, s_nOleError );
-
-           if( SUCCEEDED( s_nOleError ) )
-           {
-              RetValue();
-           }
         }
 
-        if( FAILED( s_nOleError ) && hb_pcount() >= 1 )
+        if( FAILED( s_nOleError ) && bSetFirst == FALSE && hb_pcount() >= 1 )
         {
-           DispParams.rgdispidNamedArgs = &lPropPut;
-           DispParams.cNamedArgs = 1;
-
-           OleSetProperty( pDisp, DispID, &DispParams );
-           //TraceLog( NULL, "OleSetProperty %i\n", s_nOleError );
-
-           if( SUCCEEDED( s_nOleError ) )
+           if( SUCCEEDED( OleSetProperty( pDisp, DispID, &DispParams ) ) )
            {
               hb_itemReturn( hb_stackItemFromBase( 1 ) );
            }
-        }
 
-        FreeParams( &DispParams, aPrgParams );
+           //TraceLog( NULL, "OleSetProperty %i\n", s_nOleError );
+        }
      }
 
      if( SUCCEEDED( s_nOleError ) )
@@ -2087,14 +2170,27 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
      else
      {
         // Try to apply the requested message to the DEFAULT Method of the object if any.
-        if( SUCCEEDED( ( s_nOleError = OleGetValue( pDisp ) ) ) )
+        if( bTryDefault )
         {
-           //TraceLog( NULL, "Try using DISPID_VALUE\n" );
-           pDisp = OleVal.n1.n2.n3.pdispVal;
-           goto OleGetID;
+           if( SUCCEEDED( ( /* s_nOleError = */ OleGetValue( pDisp ) ) ) )
+           {
+              bTryDefault = FALSE;
+
+              //TraceLog( NULL, "Try using DISPID_VALUE\n" );
+              pDisp = OleVal.n1.n2.n3.pdispVal;
+              goto OleGetID;
+           }
         }
 
         //TraceLog( NULL, "Invoke Failed!\n" );
         OleThrowError();
+     }
+
+     FreeParams( &DispParams, aPrgParams );
+
+     // We are responsible to release the Default Interface which we retrieved
+     if( bTryDefault == FALSE && pDisp )
+     {
+        pDisp->lpVtbl->Release( pDisp );
      }
   }

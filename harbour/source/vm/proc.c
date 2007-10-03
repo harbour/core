@@ -114,6 +114,13 @@ HB_FUNC( PROCFILE )
    {
       pSym = hb_itemGetSymbol( hb_param( 1, HB_IT_SYMBOL ) );
    }
+   else if( ISCHAR( 1 ) )
+   {
+      PHB_DYNS pDynSym = hb_dynsymFindName( hb_parc( 1 ) );
+
+      if( pDynSym )
+         pSym = pDynSym->pSymbol;
+   }
    else
    {
       long lOffset = hb_stackBaseProcOffset( hb_parni( 1 ) + 1 );

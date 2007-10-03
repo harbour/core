@@ -8,6 +8,93 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-03 17:04 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/tests/oleenum.prg
+    + added Enrico example and test code for enumerators and OLE objects
+
+  * harbour/contrib/Makefile
+    * enabled hbole, ado_rdd, hybodbc in most of Windows builds
+
+  * harbour/contrib/ole2/win32ole.prg
+  * harbour/contrib/ole2/w32ole.c
+    * synced with recent Ron's modifications in xHarbour
+      I'd like to ask Windows users to make tests with above
+      oleenum.prg and example sent by Luis
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    * disable ACS mode before sending BEL on Linux compatibile terminals
+      - some of them may try to display chr(7) instead of generating
+        sound when ACSC is enabled
+
+  * harbour/source/vm/proc.c
+    + added support for character parameter in PROCFILE() - now it can
+      accept <nLevel> | <sFuncSym> | <cFuncName> as first parameter
+
+  * harbour/source/vm/dynsym.c
+    * added support for detecting not cleanly overloaded by linker .prg
+      functions.
+      In such case hb_dynsymNew() checks if linker updated function
+      addresses and if yes then remove unnecessary HB_FS_LOCAL flag.
+      In such case works GCC (but not MinGW and DJGPP), OpwenWatcom
+      for Linux, DOS, Windows (and probably for OS2), POCC, XCC (with
+      /FORCE:MULTIPLE linker switch) and some other linkers I haven't
+      tested.
+      Otherwise (two different functions with the same name linked and
+      each accessible from different symbol, f.e. BCC32, MinGW, DJGPP)
+      it accept multiple HB_FS_LOCAL for dynamically loaded modules
+      (.hrb, .dll, .so, .dyn, ...) if HVM also accepted it (for future
+      KEEP_LOCAL_FUNC HB_LIBLOAD()/__HBRLOAD() parameter).
+      For statically linked modules it overloads one of the functions when
+      HB_OVERLOAD_MULTIPLE_FUNC macro is set (now by default to make tests
+      with different linkers). I left detail description in source code of
+      hb_dynsymNew() in source/vm/dynsym.c.
+      I hope it will also help Ron in recent xHarbour modifications - AFAIK
+      it's sth what he tires to do.
+      Anyhow please remember that that dirty overloading any symbols by
+      linker is very bad idea and in such case you have big chance that
+      wrong binaries will be created so the most preferable choice is
+      eliminating such situations and not using linker switches like
+      -Wl,--allow-multiple-definition or /FORCE:MULTIPLE
+
+  + harbour/tests/multifnc
+  + harbour/tests/multifnc/t0.prg
+  + harbour/tests/multifnc/t1.prg
+  + harbour/tests/multifnc/t2.prg
+  + harbour/tests/multifnc/Makefile
+    + added test code for results of dirty overloaded functions.
+      With recent modifications expected results are:
+            main t0.prg t0.prg
+            alert t1.prg t1.prg [ALERT]
+            p0 t0.prg t0.prg P0:t0.prg P0:t0.prg OK
+            p1 t0.prg t0.prg P1:t0.prg P1:t0.prg OK
+            p2 t1.prg t1.prg P2:t1.prg P2:t1.prg OK
+            p3 t0.prg t0.prg P3:t0.prg P3:t0.prg OK
+            p4 t1.prg t1.prg P4:t1.prg P4:t1.prg OK
+            p5 t2.prg t2.prg P5:t2.prg P5:t2.prg OK
+            ===
+            main2 t1.prg t1.prg
+            alert t1.prg t1.prg [ALERT]
+            p0 t0.prg t0.prg P0:t0.prg P0:t0.prg OK
+            p1 t0.prg t0.prg P1:t0.prg P1:t0.prg OK
+            p2 t1.prg t1.prg P2:t1.prg P2:t1.prg OK
+            p3 t0.prg t0.prg P3:t0.prg P3:t0.prg OK
+            p4 t1.prg t1.prg P4:t1.prg P4:t1.prg OK
+            p5 t2.prg t2.prg P5:t2.prg P5:t2.prg OK
+            ===
+            main3 t2.prg t2.prg
+            alert t1.prg t1.prg [ALERT]
+            p0 t0.prg t0.prg P0:t0.prg P0:t0.prg OK
+            p1 t0.prg t0.prg P1:t0.prg P1:t0.prg OK
+            p2 t1.prg t1.prg P2:t1.prg P2:t1.prg OK
+            p3 t0.prg t0.prg P3:t0.prg P3:t0.prg OK
+            p4 t1.prg t1.prg P4:t1.prg P4:t1.prg OK
+            p5 t2.prg t2.prg P5:t2.prg P5:t2.prg OK
+
+      I've tested only few compilers: GCC/G++ (Linux) MinGW (WINE-W32),
+      DJGPP (DOSEMU), OpenWatcom (Linux, WINE-W32, DOSEMU), XCC/POCC
+      (WINE-W32) and I'm interesting in results from other compiler/
+      platforms, f.e. from M[V]SC.
+
 2007-10-02 14:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/ole2/win32ole.prg
     ! fixed typo in __enumStart() - enum parameter has to be passed
