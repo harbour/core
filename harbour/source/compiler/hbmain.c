@@ -4493,17 +4493,10 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
 
             if( szFirstFunction )
             {
-               PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
-
-               while( pSym )
-               {
-                  if( strcmp( pSym->szName, szFirstFunction ) == 0 )
-                  {
-                     pSym->cScope |= HB_FS_FIRST;
-                     break;
-                  }
-                  pSym = pSym->pNext;
-               }
+               PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, szFirstFunction,
+                                                    NULL, HB_SYM_FUNCNAME );
+               if( pSym )
+                  pSym->cScope |= HB_FS_FIRST;
             }
 
             if( ! HB_COMP_PARAM->fQuiet )

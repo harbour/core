@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-04 02:54 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbmain.c
+    ! fixed setting HB_FS_FIRST flag
+
 2007-10-03 17:04 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/tests/oleenum.prg
     + added Enrico example and test code for enumerators and OLE objects
