@@ -70,7 +70,6 @@
  *
  */
 
-#define HB_CDX_CLIP_AUTOPEN
 #define HB_CDX_NEW_SORT
 
 #if !defined( HB_SIXCDX )
@@ -1313,26 +1312,26 @@ static BOOL hb_cdxIndexLockRead( LPCDXINDEX pIndex )
    pIndex->RdLck = TRUE;
 #endif
 
-   if ( bTurbo )
-   {
-        pIndex->lockRead++;
-        hb_cdxIndexCheckVersion( pIndex );
-        return TRUE;
-   }
-   else
-   {
-        ret = hb_dbfLockIdxFile( pIndex->hFile, pIndex->pArea->bLockType,
-                                 FL_LOCK | FLX_SHARED | FLX_WAIT, &pIndex->ulLockPos );
-        if ( !ret )
-           hb_cdxErrorRT( pIndex->pArea, EG_LOCK, EDBF_LOCK, pIndex->szFileName, hb_fsError(), 0 );
+  if ( bTurbo )
+  {
+   pIndex->lockRead++;
+   hb_cdxIndexCheckVersion( pIndex );
+   return TRUE;
+  }
+  else
+  {
+   ret = hb_dbfLockIdxFile( pIndex->hFile, pIndex->pArea->bLockType,
+                            FL_LOCK | FLX_SHARED | FLX_WAIT, &pIndex->ulLockPos );
+   if ( !ret )
+      hb_cdxErrorRT( pIndex->pArea, EG_LOCK, EDBF_LOCK, pIndex->szFileName, hb_fsError(), 0 );
 
-        if ( ret )
-        {
-           pIndex->lockRead++;
-           hb_cdxIndexCheckVersion( pIndex );
-        }
-        return ret;
+   if ( ret )
+   {
+      pIndex->lockRead++;
+      hb_cdxIndexCheckVersion( pIndex );
    }
+   return ret;
+  }
 
 }
 
@@ -3929,7 +3928,7 @@ static BOOL hb_cdxCheckRecordFilter( CDXAREAP pArea, ULONG ulRecNo )
          if( pArea->ulRecNo != ulRecNo || pArea->lpdbPendingRel )
             SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
-         if( hb_setGetL( HB_SET_DELETED ) )
+         if( hb_set.HB_SET_DELETED )
             SUPER_DELETED( ( AREAP ) pArea, &lResult );
 
          if( !lResult && pArea->dbfi.itmCobExpr )
@@ -3949,12 +3948,12 @@ static BOOL hb_cdxCheckRecordFilter( CDXAREAP pArea, ULONG ulRecNo )
       else
          lResult = TRUE;
    }
-   else if ( pArea->dbfi.itmCobExpr || hb_setGetL( HB_SET_DELETED ) )
+   else if ( pArea->dbfi.itmCobExpr || hb_set.HB_SET_DELETED )
    {
       if( pArea->ulRecNo != ulRecNo || pArea->lpdbPendingRel )
          SELF_GOTO( ( AREAP ) pArea, ulRecNo );
 
-      if( hb_setGetL( HB_SET_DELETED ) )
+      if( hb_set.HB_SET_DELETED )
          SUPER_DELETED( ( AREAP ) pArea, &lResult );
 
       if( !lResult && pArea->dbfi.itmCobExpr )
@@ -4885,7 +4884,7 @@ static void hb_cdxCreateFName( CDXAREAP pArea, char * szBagName, BOOL * fProd,
          szBaseName[ 0 ] = '\0';
    }
 
-   if( !pFileName->szExtension || !fName )
+   if( ( hb_set.HB_SET_DEFEXTENSIONS && !pFileName->szExtension ) || !fName )
    {
       DBORDERINFO pExtInfo;
       memset( &pExtInfo, 0, sizeof( pExtInfo ) );
@@ -7290,7 +7289,7 @@ static ERRCODE hb_cdxFlush( CDXAREAP pArea )
 
    uiError = SUPER_FLUSH( ( AREAP ) pArea );
 
-   if ( hb_setGetL( HB_SET_HARDCOMMIT ) )
+   if ( hb_set.HB_SET_HARDCOMMIT )
    {
       pIndex = pArea->lpIndexes;
       while ( pIndex )
@@ -7651,7 +7650,7 @@ static ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
          errCode = SELF_ORDLSTADD( ( AREAP ) pArea, &pOrderInfo );
          if( errCode == SUCCESS )
          {
-            pOrderInfo.itmOrder  = hb_itemPutNI( NULL, hb_setGetNI( HB_SET_AUTORDER ) );
+            pOrderInfo.itmOrder  = hb_itemPutNI( NULL, hb_set.HB_SET_AUTORDER );
             errCode = SELF_ORDLSTFOCUS( ( AREAP ) pArea, &pOrderInfo );
             hb_itemRelease( pOrderInfo.itmOrder );
             if( errCode == SUCCESS )
@@ -9971,7 +9970,7 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, BOOL fReindex )
             pArea->uiTag = 0;
          }
       }
-      fDirectRead = !hb_setGetL( HB_SET_STRICTREAD ) && /* !pArea->lpdbRelations && */
+      fDirectRead = !hb_set.HB_SET_STRICTREAD && /* !pArea->lpdbRelations && */
                     ( !pArea->lpdbOrdCondInfo || pArea->lpdbOrdCondInfo->fAll ||
                       ( pArea->uiTag == 0 && !fUseFilter ) );
 
@@ -10249,7 +10248,7 @@ HB_FUNC( BMDBFCDX_GETFUNCTABLE )
    pTable = ( RDDFUNCS * ) hb_parptr( 2 );
    uiRddId = hb_parni( 4 );
 
-   HB_TRACE(HB_TR_DEBUG, ("BMDBFCDX_GETFUNCTABLE(%i, %p)", uiCount, pTable));
+   HB_TRACE(HB_TR_DEBUG, ("BMDBFCDX_GETFUNCTABLE(%p, %p)", uiCount, pTable));
 
    if ( pTable )
    {
