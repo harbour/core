@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-04 19:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    ! fixed memo pack when DBF record were not updated but only memo file
+      Problem reported by Miguel
+
 2007-10-04 13:15 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel/at/marchuet.net>
   * contrib/bmdbfcdx/bmdbfcdx1.c
     * removed memory leak.
