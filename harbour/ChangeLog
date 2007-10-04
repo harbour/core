@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-04 12:36 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    ! removed one call to hb_vmRequestRestore() left by mistake
+    % minor optimization
+
 2007-10-04 02:54 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/hbmain.c
     ! fixed setting HB_FS_FIRST flag

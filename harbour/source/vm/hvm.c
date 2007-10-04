@@ -6793,7 +6793,7 @@ static PHB_ITEM hb_vmMsgRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
       hb_itemCopy( &pMsgRef->value, pSource );
       pMsgRef->value.type |= HB_IT_DEFAULT;
    }
-   return &pMsgRef->value;
+   return NULL; /*&pMsgIdxRef->value;*/
 }
 
 static void hb_vmMsgRefCopy( PHB_ITEM pDest )
@@ -6909,11 +6909,10 @@ static PHB_ITEM hb_vmMsgIdxRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
                          &pMsgIdxRef->object;
       hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pObject, pObject,
                           &pMsgIdxRef->index, pSource );
-      hb_vmRequestRestore();
       pMsgIdxRef->value.type |= HB_IT_DEFAULT;
    }
 
-   return &pMsgIdxRef->value;
+   return NULL; /*&pMsgIdxRef->value;*/
 }
 
 static void hb_vmMsgIdxRefCopy( PHB_ITEM pDest )
