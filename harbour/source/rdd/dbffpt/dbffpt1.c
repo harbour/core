@@ -4289,7 +4289,10 @@ static ERRCODE hb_fptDoPackRec( FPTAREAP pArea )
                                       &ulBlock, &ulSize, &ulType );
          if( errCode == SUCCESS && ulBlock != 0 )
          {
-            if( ulSize == 0 )
+            /* Buffer is hot? */
+            if( !pArea->fRecordChanged )
+               errCode = SELF_GOHOT( ( AREAP ) pArea );
+            if( ulSize == 0 && errCode == SUCCESS )
             {
                if( pArea->bMemoType == DB_MEMO_DBT )
                {
@@ -4308,7 +4311,7 @@ static ERRCODE hb_fptDoPackRec( FPTAREAP pArea )
                               sizeof( FPTBLOCK );
                }
             }
-            if( ulSize )
+            if( ulSize && errCode == SUCCESS )
             {
                hb_fsSeekLarge( pArea->hMemoFile, ( HB_FOFFSET ) ulBlock *
                                ( HB_FOFFSET ) pArea->uiMemoBlockSize, FS_SET );
@@ -4367,19 +4370,25 @@ static ERRCODE hb_fptDoPackRec( FPTAREAP pArea )
          }
          if( errCode == SUCCESS && ulSize )
          {
-            hb_fsSeekLarge( pArea->hMemoFile, ( HB_FOFFSET ) ulBlock *
-                            ( HB_FOFFSET ) pArea->uiMemoBlockSize, FS_SET );
-            pos = hb_fsSeekLarge( pArea->hMemoTmpFile, 0, FS_RELATIVE );
-            ulBlock = ( pos + pArea->uiNewBlockSize - 1 ) /
-                      pArea->uiNewBlockSize;
-            uiSkip = ( ( HB_FOFFSET ) ulBlock *
-                       ( HB_FOFFSET ) pArea->uiNewBlockSize ) - pos;
-            if( uiSkip )
-               hb_fsSeek( pArea->hMemoTmpFile, uiSkip, FS_RELATIVE );
-            errCode = hb_fptCopyToFile( pArea->hMemoFile,
-                                        pArea->hMemoTmpFile, ulSize );
+            /* Buffer is hot? */
+            if( !pArea->fRecordChanged )
+               errCode = SELF_GOHOT( ( AREAP ) pArea );
             if( errCode == SUCCESS )
-               HB_PUT_LE_UINT32( pFieldBuf + pField->uiLen - 6, ulBlock );
+            {
+               hb_fsSeekLarge( pArea->hMemoFile, ( HB_FOFFSET ) ulBlock *
+                               ( HB_FOFFSET ) pArea->uiMemoBlockSize, FS_SET );
+               pos = hb_fsSeekLarge( pArea->hMemoTmpFile, 0, FS_RELATIVE );
+               ulBlock = ( pos + pArea->uiNewBlockSize - 1 ) /
+                         pArea->uiNewBlockSize;
+               uiSkip = ( ( HB_FOFFSET ) ulBlock *
+                          ( HB_FOFFSET ) pArea->uiNewBlockSize ) - pos;
+               if( uiSkip )
+                  hb_fsSeek( pArea->hMemoTmpFile, uiSkip, FS_RELATIVE );
+               errCode = hb_fptCopyToFile( pArea->hMemoFile,
+                                           pArea->hMemoTmpFile, ulSize );
+               if( errCode == SUCCESS )
+                  HB_PUT_LE_UINT32( pFieldBuf + pField->uiLen - 6, ulBlock );
+            }
          }
       }
    }
@@ -4455,13 +4464,6 @@ static ERRCODE hb_fptDoPack( FPTAREAP pArea, USHORT uiBlockSize,
                   errCode = SELF_DELETED( ( AREAP ) pArea, &fDeleted );
                   if( errCode != SUCCESS )
                      break;
-                  /* Buffer is hot? */
-                  if( !pArea->fRecordChanged )
-                  {
-                     errCode = SELF_GOHOT( ( AREAP ) pArea );
-                     if( errCode != SUCCESS )
-                        break;
-                  }
                   errCode = hb_fptDoPackRec( pArea );
                   if( errCode != SUCCESS )
                      break;
