@@ -102,6 +102,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\xhbcomp.obj  \
    $(OBJ_DIR)\xhbmsgs.obj  \
    $(OBJ_DIR)\xhbwith.obj  \
+   $(OBJ_DIR)\xhbenum.obj  
 
 #
 # Our default target
@@ -180,5 +181,9 @@ $(OBJ_DIR)\xhbmsgs.obj : $(TOOLS_DIR)\xhbmsgs.c
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\xhbwith.obj : $(TOOLS_DIR)\xhbwith.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\xhbenum.obj : $(TOOLS_DIR)\xhbenum.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(TOOLS_LIB) $(ARFLAGS) -+$@,,

@@ -123,7 +123,7 @@ void hb_stackDec( void )
 #undef hb_stackDecrease
 void hb_stackDecrease( ULONG ulItems )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_stackDec()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_stackDecrease()"));
 
    if( ( hb_stack.pPos -= ulItems ) <= hb_stack.pBase )
       hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL );

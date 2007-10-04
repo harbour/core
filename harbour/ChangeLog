@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-04 13:15 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel/at/marchuet.net>
+  * contrib/bmdbfcdx/bmdbfcdx1.c
+    * removed memory leak.
+
+  * contrib/xhb/makefile.bc
+    * added missing file.
+
+  * source/vm/estack.c
+    * corrected sintax
+
 2007-10-04 13:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/multifnc/t0.prg
     * show information about Harbour version and used C compiler

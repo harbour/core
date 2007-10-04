@@ -6774,6 +6774,7 @@ HB_FUNC( BM_DBGETFILTERARRAY )
     {
         ULONG ulSize = ( ( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size+1) >> 5 ) + 1;
         ULONG ulLong, ulByte, ulBytes, ulRecno;
+        PHB_ITEM pItem = hb_itemNew( NULL );
 
         ulRecOld = pArea->ulRecNo;
 
@@ -6783,9 +6784,10 @@ HB_FUNC( BM_DBGETFILTERARRAY )
                     if ( ((char*)( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap)[ulByte] )
                         for ( ulRec=(ulByte<<3)+1, ulRecno=0; ulRecno < 8; ulRec++, ulRecno++ )
                             if ( hb_cdxCheckRecordFilter( pArea, ulRec ) )
-                               hb_arrayAdd( pList, hb_itemPutNL( NULL, ulRec ) );
+                               hb_arrayAddForward( pList, hb_itemPutNL( pItem, ulRec ) );
 
         SELF_GOTO( (AREAP) pArea, ulRecOld );
+        hb_itemRelease( pItem );
     }
     hb_itemRelease( hb_itemReturnForward( pList ) );
 }
