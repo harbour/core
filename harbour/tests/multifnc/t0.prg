@@ -1,4 +1,6 @@
 proc main()
+? OS(), VERSION(), DATE(), TIME()
+? HB_COMPILER()
 __NONOALERT()
 ? "main", procfile("main"), procfile(@main())
 ? "alert", procfile("alert"), procfile(@alert()), alert()
