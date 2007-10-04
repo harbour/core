@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-04 20:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbf1.c
+    * ignore Sx_SetTrigger( TRIGGER_ENABLE ) when trigger function not set
+
 2007-10-04 19:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbffpt/dbffpt1.c
     ! fixed memo pack when DBF record were not updated but only memo file

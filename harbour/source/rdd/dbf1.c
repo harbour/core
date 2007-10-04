@@ -3332,7 +3332,7 @@ static ERRCODE hb_dbfInfo( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
       case DBI_TRIGGER:
          if( HB_IS_LOGICAL( pItem ) )
-            pArea->fTrigger = hb_itemGetL( pItem );
+            pArea->fTrigger = pArea->pTriggerSym && hb_itemGetL( pItem );
          else
          {
             PHB_DYNS pTriggerSym = pArea->pTriggerSym;
