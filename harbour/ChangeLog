@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-05 14:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/dynsym.c
+    * added some additional comments. I still do not know MSVC behavior
+      can someone check the results from tests/multifnc in MS[V]C build?
+
 2007-10-04 20:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbf1.c
     * ignore Sx_SetTrigger( TRIGGER_ENABLE ) when trigger function not set
