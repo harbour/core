@@ -6769,6 +6769,7 @@ static PHB_ITEM hb_vmMsgRefRead( PHB_ITEM pRefer )
 
    if( hb_vmRequestQuery() == 0 )
    {
+      hb_stackPushReturn();
       if( !pMsgRef->access )
          pMsgRef->access = hb_dynsymGetCase( pMsgRef->assign->pSymbol->szName + 1 );
       hb_vmPushDynSym( pMsgRef->access );
@@ -6776,6 +6777,7 @@ static PHB_ITEM hb_vmMsgRefRead( PHB_ITEM pRefer )
       hb_vmSend( 0 );
       hb_itemMove( &pMsgRef->value, hb_stackReturnItem() );
       pMsgRef->value.type |= HB_IT_DEFAULT;
+      hb_stackPopReturn();
    }
    return &pMsgRef->value;
 }
@@ -6786,12 +6788,14 @@ static PHB_ITEM hb_vmMsgRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
 
    if( hb_vmRequestQuery() == 0 )
    {
+      hb_stackPushReturn();
       hb_vmPushDynSym( pMsgRef->assign );
       hb_vmPush( &pMsgRef->object );
       hb_vmPush( pSource );
       hb_vmSend( 1 );
       hb_itemCopy( &pMsgRef->value, pSource );
       pMsgRef->value.type |= HB_IT_DEFAULT;
+      hb_stackPopReturn();
    }
    return NULL; /*&pMsgIdxRef->value;*/
 }
@@ -6889,10 +6893,12 @@ static PHB_ITEM hb_vmMsgIdxRefRead( PHB_ITEM pRefer )
 
    if( hb_vmRequestQuery() == 0 )
    {
+      hb_stackPushReturn();
       hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, &pMsgIdxRef->value,
                           HB_IS_BYREF( &pMsgIdxRef->object ) ?
                           hb_itemUnRef( &pMsgIdxRef->object ) :
                           &pMsgIdxRef->object, &pMsgIdxRef->index, NULL );
+      hb_stackPopReturn();
       pMsgIdxRef->value.type |= HB_IT_DEFAULT;
    }
    return &pMsgIdxRef->value;
@@ -6907,8 +6913,10 @@ static PHB_ITEM hb_vmMsgIdxRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
       PHB_ITEM pObject = HB_IS_BYREF( &pMsgIdxRef->object ) ?
                          hb_itemUnRef( &pMsgIdxRef->object ) :
                          &pMsgIdxRef->object;
+      hb_stackPushReturn();
       hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pObject, pObject,
                           &pMsgIdxRef->index, pSource );
+      hb_stackPopReturn();
       pMsgIdxRef->value.type |= HB_IT_DEFAULT;
    }
 
