@@ -717,8 +717,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 #else
 
    {
-      HB_SYMBOL_UNUSED( ffind );
-      HB_SYMBOL_UNUSED( info );
+      /* HB_SYMBOL_UNUSED( ffind ); */
 
       HB_SYMBOL_UNUSED( nYear );
       HB_SYMBOL_UNUSED( nMonth );

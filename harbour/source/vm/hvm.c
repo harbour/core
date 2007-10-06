@@ -3553,21 +3553,6 @@ static void hb_vmWithObjectStart( void )
    hb_stackWithObjectSetOffset( hb_stackTopOffset() - 2 );
 }
 
-typedef struct _HB_ENUMHOLDER
-{
-   PHB_ITEM pOldValue;
-   PHB_ITEM pEnumRef;
-} HB_ENUMHOLDER, * PHB_ENUMHOLDER;
-
-static HB_GARBAGE_FUNC( hb_enumHolderRelease )
-{
-   PHB_ENUMHOLDER pHolder = ( PHB_ENUMHOLDER ) Cargo;
-
-   hb_itemMove( hb_itemUnRefOnce( pHolder->pEnumRef ), pHolder->pOldValue );
-   hb_itemRelease( pHolder->pOldValue );
-   hb_itemRelease( pHolder->pEnumRef );
-}
-
 /*
  * Relase enumerator items - called from hb_itemClear()
  */
@@ -3588,8 +3573,81 @@ void hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue )
       hb_stackPop();
       hb_stackPopReturn();
    }
+}
 
-   hb_itemRelease( pBase );
+/*
+ * extended reference used as enumerator destructor
+ */
+typedef struct
+{
+   HB_ITEM  basevalue;
+   HB_ITEM  oldvalue;
+   HB_ITEM  enumref;
+} HB_ENUMREF, * PHB_ENUMREF;
+
+static PHB_ITEM hb_vmEnumRefRead( PHB_ITEM pRefer )
+{
+   return &( ( PHB_ENUMREF ) pRefer->item.asExtRef.value )->oldvalue;
+}
+
+static PHB_ITEM hb_vmEnumRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
+{
+   HB_SYMBOL_UNUSED( pRefer );
+   HB_SYMBOL_UNUSED( pSource );
+   return NULL;
+}
+
+static void hb_vmEnumRefCopy( PHB_ITEM pDest )
+{
+   pDest->type = HB_IT_NIL;
+}
+
+static void hb_vmEnumRefClear( void * value )
+{
+   hb_itemMove( hb_itemUnRefOnce( &( ( PHB_ENUMREF ) value )->enumref ),
+                &( ( PHB_ENUMREF ) value )->oldvalue );
+   if( HB_IS_COMPLEX( &( ( PHB_ENUMREF ) value )->basevalue ) )
+      hb_itemClear( &( ( PHB_ENUMREF ) value )->basevalue );
+   if( HB_IS_COMPLEX( &( ( PHB_ENUMREF ) value )->enumref ) )
+      hb_itemClear( &( ( PHB_ENUMREF ) value )->enumref );
+
+   hb_xfree( value );
+}
+
+static void hb_vmEnumRefMark( void * value )
+{
+   if( HB_IS_GCITEM( &( ( PHB_ENUMREF ) value )->basevalue ) )
+      hb_gcItemRef( &( ( PHB_ENUMREF ) value )->basevalue );
+   if( HB_IS_GCITEM( &( ( PHB_ENUMREF ) value )->oldvalue ) )
+      hb_gcItemRef( &( ( PHB_ENUMREF ) value )->oldvalue );
+   if( HB_IS_GCITEM( &( ( PHB_ENUMREF ) value )->enumref ) )
+      hb_gcItemRef( &( ( PHB_ENUMREF ) value )->enumref );
+}
+
+/*
+ * create extended reference for enumerator destructor
+ */
+static void hb_vmEnumReference( PHB_ITEM pBase )
+{
+   static const HB_EXTREF s_EnumExtRef = {
+             hb_vmEnumRefRead,
+             hb_vmEnumRefWrite,
+             hb_vmEnumRefCopy,
+             hb_vmEnumRefClear,
+             hb_vmEnumRefMark };
+
+   PHB_ENUMREF pEnumExtRef;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmEnumReference(%p)", pEnumRef));
+
+   pEnumExtRef = ( PHB_ENUMREF ) hb_xgrab( sizeof( HB_ENUMREF ) );
+   pEnumExtRef->basevalue.type = HB_IT_NIL;
+   pEnumExtRef->oldvalue.type = HB_IT_NIL;
+   pEnumExtRef->enumref.type = HB_IT_NIL;
+   hb_itemMove( &pEnumExtRef->basevalue, pBase );
+   pBase->type = HB_IT_BYREF | HB_IT_EXTREF;
+   pBase->item.asExtRef.value = ( void * ) pEnumExtRef;
+   pBase->item.asExtRef.func = &s_EnumExtRef;
 }
 
 /* At this moment the eval stack should store:
@@ -3599,7 +3657,6 @@ void hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue )
  /* Test to check the start point of the FOR EACH loop */
 static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
 {
-   HB_ITEM_PTR pItem;
    BOOL fStart = TRUE;
    int i;
 
@@ -3614,97 +3671,80 @@ static void hb_vmEnumStart( BYTE nVars, BYTE nDescend )
 
    for( i = ( int ) nVars << 1; i > 0 && fStart; i -= 2 )
    {
-      HB_ITEM_PTR pValue, pOldValue, pEnum, pEnumRef;
-      PHB_ENUMHOLDER pHolder;
+      HB_ITEM_PTR pBase, pValue, pEnumRef, pEnum;
 
       pValue = hb_stackItemFromTop( -i );
-      /* copy value to iterate and clear the stack item for enumerator destructor */
-      pItem = hb_itemNew( pValue );
-      if( HB_IS_COMPLEX( pValue ) )
-         hb_itemClear( pValue );
-
+      /* create extended reference for enumerator destructor */
+      hb_vmEnumReference( pValue );
+      pBase = &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->basevalue;
       /* store the reference to control variable */
-      pEnumRef = hb_itemNew( hb_stackItemFromTop( -i + 1 ) );
+      pEnumRef = hb_stackItemFromTop( -i + 1 );
+      hb_itemCopy( &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->enumref,
+                   pEnumRef );
       /* the control variable */
       pEnum = hb_itemUnRefOnce( pEnumRef );
       /* store the old value of control variable and clear it */
-      pOldValue = hb_itemNew( NULL );
-      hb_itemMove( pOldValue, pEnum );
-
-      /* create enumerator destructor */
-      /*
-       * Here is a place for optimization - instead of allocating three new
-       * items we can keep them all in GC block and add mark/sweep function.
-       * I'll do that in the future when we will have final interface for it
-       * in our GC and mark/swap functions registered for extended
-       * HB_IT_POINTER items not allocated for each memory block. [druzus]
-       */
-      pHolder = ( PHB_ENUMHOLDER ) hb_gcAlloc( sizeof( HB_ENUMHOLDER ), hb_enumHolderRelease );
-      pHolder->pOldValue = pOldValue;
-      pHolder->pEnumRef  = pEnumRef;
-      pValue->type = HB_IT_POINTER;
-      pValue->item.asPointer.value = pHolder;
-      pValue->item.asPointer.collect = pValue->item.asPointer.single = TRUE;
-
+      hb_itemMove( &( ( PHB_ENUMREF ) pValue->item.asExtRef.value )->oldvalue,
+                   pEnum );
       /* set the iterator value */
       pEnum->type = HB_IT_BYREF | HB_IT_ENUM;
-      pEnum->item.asEnum.basePtr  = pItem;
+      pEnum->item.asEnum.basePtr = pBase;
       pEnum->item.asEnum.valuePtr = NULL;
 
-      if( HB_IS_BYREF( pItem ) )
-         pItem = hb_itemUnRef( pItem );
+      if( HB_IS_BYREF( pBase ) )
+         pBase = hb_itemUnRef( pBase );
 
-      if( HB_IS_OBJECT( pItem ) && hb_objHasOperator( pItem, HB_OO_OP_ENUMSTART ) )
+      if( HB_IS_OBJECT( pBase ) && hb_objHasOperator( pBase, HB_OO_OP_ENUMSTART ) )
       {
          pEnum->item.asEnum.offset = 0;
          pEnum->item.asEnum.valuePtr = hb_itemNew( NULL );
          hb_vmPushNil();
          hb_vmPushLogical( nDescend == 0 );
          hb_objOperatorCall( HB_OO_OP_ENUMSTART, hb_stackItemFromTop( -2 ),
-                             pItem, pEnumRef, hb_stackItemFromTop( -1 ) );
+                             pBase, pEnumRef, hb_stackItemFromTop( -1 ) );
          hb_stackPop();
          if( hb_vmRequestQuery() != 0 || ! hb_vmPopLogical() )
          {
             fStart = FALSE;
             break;
          }
-         else if( hb_objHasOperator( pItem, HB_OO_OP_ENUMSKIP ) )
+         else if( hb_objHasOperator( pBase, HB_OO_OP_ENUMSKIP ) )
             continue;
          hb_itemRelease( pEnum->item.asEnum.valuePtr );
          pEnum->item.asEnum.valuePtr = NULL;
       }
 
-      if( HB_IS_ARRAY( pItem ) )
+      if( HB_IS_ARRAY( pBase ) )
       {
          /* the index into an array */
          pEnum->item.asEnum.offset = ( nDescend > 0 ) ? 1 :
-                                             pItem->item.asArray.value->ulLen;
-         if( pItem->item.asArray.value->ulLen == 0 )
+                                       pBase->item.asArray.value->ulLen;
+         if( pBase->item.asArray.value->ulLen == 0 )
             fStart = FALSE;
       }
-      else if( HB_IS_HASH( pItem ) )
+      else if( HB_IS_HASH( pBase ) )
       {
-         ULONG ulLen = hb_hashLen( pItem );
+         ULONG ulLen = hb_hashLen( pBase );
          /* the index into a hash */
          pEnum->item.asEnum.offset = ( nDescend > 0 ) ? 1 : ulLen;
          if( ulLen == 0 )
             fStart = FALSE;
       }
-      else if( HB_IS_STRING( pItem ) )
+      else if( HB_IS_STRING( pBase ) )
       {
          /* storage item for single characters */
          pEnum->item.asEnum.offset = ( nDescend > 0 ) ? 1 :
-                                             pItem->item.asString.length;
-         if( pItem->item.asString.length )
+                                       pBase->item.asString.length;
+         if( pBase->item.asString.length )
             pEnum->item.asEnum.valuePtr =
-                        hb_itemPutCL( NULL, pItem->item.asString.value +
+                        hb_itemPutCL( NULL, pBase->item.asString.value +
                                             pEnum->item.asEnum.offset - 1, 1 );
          else
             fStart = FALSE;
       }
       else
       {
-         hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pItem );
+         hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pBase );
          return;
       }
    }

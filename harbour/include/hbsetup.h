@@ -57,7 +57,7 @@
 
 /* ***********************************************************************
  * Include settings common for .PRG and .C files
-*/
+ */
 #include "hbsetup.ch"
 
 /* ***********************************************************************
@@ -71,7 +71,7 @@
 /* ***********************************************************************
  * NOTE: You can select the default language modul used by Harbour, by
  *       defining this to a valid language modul identifier.
-*/
+ */
 
 #ifndef HB_LANG_DEFAULT
    #define HB_LANG_DEFAULT      EN
@@ -93,7 +93,7 @@
  * HB_CALL_ON_STARTUP that is defined in 'hbinit.h'
  *
  * By default we are using extensions to ANSI C (symbol is not defined)
-*/
+ */
 /*#define HARBOUR_STRICT_ANSI_C */
 
 /* ***********************************************************************
@@ -103,7 +103,7 @@
  * To use "pascal" mode, you should define this macro to "pascal".
  *
  * By default we are not using any special calling conventions.
-*/
+ */
 /*#define HB_FUNC_CALLCONV*/
 
 /* ***********************************************************************
@@ -114,7 +114,7 @@
  *
  * By default this is turned on.
  * TODO: This should be disabled, when the parser has matured.
-*/
+ */
 /*#define HARBOUR_YYDEBUG*/
 
 /* ***********************************************************************
@@ -128,7 +128,7 @@
  * and will consume more memory.
  *
  * By default this is turned on. Define HB_FM_STATISTICS_OFF to turn it off.
-*/
+ */
 #ifndef HB_FM_STATISTICS_OFF
    #define HB_FM_STATISTICS
 #endif
@@ -160,7 +160,7 @@
  * Borland C/C++ compilers.
  *
  * By default it is disabled (symbol is not defined)
-*/
+ */
 /*#define HARBOUR_OBJ_GENERATION*/
 
 /* ***********************************************************************
@@ -168,7 +168,7 @@
  * application (main() or WinMain()).
  *
  * By default the standard C main() function will be used.
-*/
+ */
 /*#define HARBOUR_MAIN_STD*/
 /*#define HARBOUR_MAIN_WIN*/
 
@@ -177,7 +177,7 @@
  * compiler and runtime. You can override this setting in the make process.
  *
  * By default this value is 63
-*/
+ */
 #ifndef HB_SYMBOL_NAME_LEN
 /* NOTE: For complete CA-Cl*pper compatibility you can set the maximum
          symbol name to 10. Sometimes this can be useful for compiling legacy
@@ -202,7 +202,7 @@
  * It's not Clipper compatible extension and it's not enabled by default
  * anyhow old Harbour PP worked in such way and people may have some code
  * which needs it
-*/
+ */
 /* #define HB_PP_MULTILINE_STRING */
 
 /* ***********************************************************************
@@ -212,7 +212,7 @@
  * disabled/enabled at runtime using HB_SETMACRO() function
  *
  * By default we do not support commands in the macro compiler.
-*/
+ */
 /* #define HB_MACRO_STATEMENTS */
 
 
@@ -221,7 +221,7 @@
  * beyond the destination array size
  *
  * By default we are 100% Clipper compatible
-*/
+ */
 /* #define HB_FIX_ACOPY_BUG */
 
 /* ***********************************************************************
@@ -236,7 +236,7 @@
  * items, just swapping) in this functions.
  * Using this option makes sorting *much* faster, but if you have a
  * problem, or the low level stuff changes, turn it off. [vszakats]
-*/
+ */
 /*
  * It's not longer used - current code which uses hb_itemSwap() should
  * give similar performance (probably a little bit worser due to some small
@@ -253,7 +253,7 @@
  * There is no data validation if this is enabled.
  *
  * By default we are using secure method.
-*/
+ */
 /* #define HB_FAST_STOD */
 
 /* ***********************************************************************
@@ -263,12 +263,12 @@
  *
  * By default we are not using the strong typing because it is not
  * complete code and can be erratic now.
-*/
+ */
 /* #define HB_COMP_STRONG_TYPES */
 
 /* ***********************************************************************
  *  Detect GCC/OS2
-*/
+ */
 #if defined(__EMX__) && ! defined(__RSXNT__)
    #define HARBOUR_GCC_OS2
 #endif
@@ -278,7 +278,7 @@
  */
 #if ( defined(__GNUC__) && \
       ! ( defined(__DJGPP__) || defined(__EMX__) || defined(__RSXNT__) || \
-          defined(_Windows) || defined(_WIN32) ) ) || \
+          defined(_Windows) || defined(_WIN32) || defined(_WINCE) ) ) || \
     ( defined(__WATCOMC__) && defined(__LINUX__) )
    #define HOST_OS_UNIX_COMPATIBLE
    #define OS_UNIX_COMPATIBLE
@@ -399,7 +399,7 @@
  * Here you can force the EOL string to be CRLF
  *
  * By default, the EOL string depends upon the detected platform.
-*/
+ */
 /* #define HB_EOL_CRLF */
 #ifdef HB_EOL_CRLF
    #undef OS_EOL_LEN
@@ -410,7 +410,7 @@
  * See also the following files for task specific definitions/settings
  *
  * hbmath.h    - math errors handling
-*/
+ */
 
 /* ***********************************************************************
  * some fixes in compiler header files

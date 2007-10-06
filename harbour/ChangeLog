@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-06 12:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbsetup.h
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/filesys.c
+    * cleanup
+
+  * harbour/source/vm/hvm.c
+    % use extended reference for enumerator destructor - it eliminates
+      3 hb_itemNew() calls reducing the cost of creating FOR EACH envelope
+      about 40%
+
 2007-10-05 23:44 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbsetup.h
     * minor cleanup comment

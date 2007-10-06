@@ -183,7 +183,8 @@
 #elif defined( HB_WIN32_IO )
    #include <windows.h>
 
-   #if ( defined(__DMC__) || defined( _MSC_VER ) || defined( __LCC__ ) ) && !defined( INVALID_SET_FILE_POINTER )
+   #if !defined( INVALID_SET_FILE_POINTER ) && \
+       ( defined(__DMC__) || defined( _MSC_VER ) || defined( __LCC__ ) )
       #define INVALID_SET_FILE_POINTER ((DWORD)-1)
    #endif
 #endif
