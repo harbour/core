@@ -631,7 +631,8 @@ HB_FUNC( HB_HAUTOADD )
          if( HB_IS_LOGICAL( pValue ) )
          {
             if( hb_itemGetL( pValue ) )
-               hb_hashSetFlags( pHash, HB_HASH_AUTOADD_ALWAYS );
+               hb_hashSetFlags( pHash, hb_hashGetDefault( pHash ) ?
+                           HB_HASH_AUTOADD_ALWAYS : HB_HASH_AUTOADD_ASSIGN );
             else if( iOldFlags )
                hb_hashClearFlags( pHash, iOldFlags );
          }
