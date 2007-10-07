@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-08 01:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/arrays.c
+    ! fixed value returned by HB_RASCAN( aVal, bCode ) - it was returning
+      index -1, f.e. hb_rascan({1,2,3},{|x|x==2}) returned 1 when it
+      should 2
+
 2007-10-06 21:28 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * contrib/tip/thtml.prg
   * contrib/tip/cgi.prg

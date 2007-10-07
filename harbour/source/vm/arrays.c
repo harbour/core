@@ -1024,7 +1024,7 @@ ULONG hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG
                   hb_vmDo( 2 );
 
                   if( HB_IS_LOGICAL( hb_stackReturnItem() ) && hb_stackReturnItem()->item.asLogical.value )
-                     return ulStart;
+                     return ulStart + 1;
                }
                while( --ulCount && ulStart-- );
             }
