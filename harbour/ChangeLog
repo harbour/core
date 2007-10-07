@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-06 21:28 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * contrib/tip/thtml.prg
+  * contrib/tip/cgi.prg
+  * contrib/tip/httpcln.prg
+    * removed HB_HSetAutoAdd, now Harbour hashes by default have AUTOADD on assign.
+
 2007-10-06 13:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hashes.c
     * set AUTOADD for assign operation by default in new arrays

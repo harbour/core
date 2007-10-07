@@ -81,10 +81,10 @@ CLASS TIpCgi
 
    DATA cCgiHeader
    DATA cHtmlPage
-   DATA hGets        INIT HB_HSetAutoAdd( {=>}, .T. )
-   DATA hPosts       INIT HB_HSetAutoAdd( {=>}, .T. )
-   DATA hCookies     INIT HB_HSetAutoAdd( {=>}, .T. )
-   DATA hSession     INIT HB_HSetAutoAdd( {=>}, .T. )
+   DATA hGets        INIT {=>}
+   DATA hPosts       INIT {=>}
+   DATA hCookies     INIT {=>}
+   DATA hSession     INIT {=>}
    DATA bSavedErrHandler
    DATA cSessionSavePath
    DATA cSID
@@ -268,7 +268,7 @@ METHOD DestroySession( cID ) CLASS TIpCgi
 
    if !empty( cSID )
 
-      ::hSession := HB_HSetAutoAdd( {=>}, .T. )
+      ::hSession := {=>}
 
       cFile := ::cSessionSavePath + "SESSIONID_" + cSID
 
@@ -432,7 +432,7 @@ METHOD StartSession( cSID ) CLASS TIpCgi
    else
 
       ::CreateSID()
-      ::hSession := HB_HSetAutoAdd( {=>}, .T. )
+      ::hSession := {=>}
 
    endif
 

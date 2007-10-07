@@ -66,9 +66,9 @@ CLASS tIPClientHTTP FROM tIPClient
    DATA nVersion     INIT  1
    DATA nSubversion  INIT  0
    DATA bChunked
-   DATA hHeaders     INIT  HB_HSetAutoAdd( {=>}, .T. )
-   DATA hCookies     INIT  HB_HSetAutoAdd( {=>}, .T. )
-   DATA hFields      INIT  HB_HSetAutoAdd( {=>}, .T. )
+   DATA hHeaders     INIT  {=>}
+   DATA hCookies     INIT  {=>}
+   DATA hFields      INIT  {=>}
    DATA cUserAgent   INIT  "Mozilla/3.0 compatible"
    DATA cAuthMode    INIT ""
    DATA cBoundary
@@ -249,7 +249,7 @@ METHOD ReadHeaders(lClear) CLASS tIPClientHTTP
    ::bChunked := .F.
    cLine := ::InetRecvLine( ::SocketCon, @nPos, 500 )
    IF !lClear=.f. .AND. !empty(::hHeaders)
-      ::hHeaders:=HB_HSetAutoAdd( {=>}, .T. )
+      ::hHeaders:={=>}
    ENDIF
    DO WHILE ::InetErrorCode( ::SocketCon ) == 0 .and. .not. Empty( cLine )
       aHead := HB_RegexSplit( ":", cLine,,, 1 )
@@ -413,10 +413,10 @@ METHOD setCookie(cLine) CLASS tIPClientHTTP
       //cookies are stored in hashes as host.path.name
       //check if we have a host hash yet
       if !HHASKEY(::hCookies,cHost)
-         ::hCookies[cHost]:=HB_HSetAutoAdd( {=>}, .T. )
+         ::hCookies[cHost]:={=>}
       endif
       if !HHASKEY(::hCookies[cHost],cPath)
-         ::hCookies[cHost][cPath]:=HB_HSetAutoAdd( {=>}, .T. )
+         ::hCookies[cHost][cPath]:={=>}
       endif
       ::hCookies[cHost][cPath][cName]:=cValue
    ENDIF
