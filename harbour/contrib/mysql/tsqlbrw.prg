@@ -105,7 +105,7 @@ METHOD Block() CLASS TBColumnSQL
 
    do case
       case xType == "N"
-         xValue := Str(xValue, ::oBrw:oCurRow:FieldLen(::nFieldNum), ::oBrw:oCurRow:FieldDec(::nFieldNum))
+         xValue := "'"+Str(xValue, ::oBrw:oCurRow:FieldLen(::nFieldNum), ::oBrw:oCurRow:FieldDec(::nFieldNum))+"'"
 
       case xType == "D"
          xValue :=  "'" + DToC(xValue) + "'"
@@ -124,6 +124,7 @@ METHOD Block() CLASS TBColumnSQL
          xValue := "' <MEMO> '"
 
       otherwise
+        xValue := "'"+xValue+"'"
    endcase
 
 return &("{||" + xValue + "}")

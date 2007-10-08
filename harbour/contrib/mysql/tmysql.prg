@@ -63,7 +63,7 @@
 #include "common.ch"
 #include "dbstruct.ch"
 #include "mysql.ch"
-
+#include "set.ch"
 
 
 // Every single row of an answer
@@ -216,11 +216,15 @@ METHOD FieldLen(nNum) CLASS TMySQLRow
 //DAVID: return ""
 return 0
 
-
 METHOD FieldDec(nNum) CLASS TMySQLRow
 
    if nNum >=1 .AND. nNum <= Len(::aFieldStruct)
-      return ::aFieldStruct[nNum][MYSQL_FS_DECIMALS]
+      if ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE .or. ;
+         ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE 
+       return set(_SET_DECIMALS)
+      else
+       return ::aFieldStruct[nNum][MYSQL_FS_DECIMALS]
+      endif
    endif
 
 //DAVID: return ""
@@ -727,11 +731,15 @@ METHOD FieldLen(nNum) CLASS TMySQLQuery
 
 return 0
 
-
 METHOD FieldDec(nNum) CLASS TMySQLQuery
 
    if nNum >=1 .AND. nNum <= Len(::aFieldStruct)
-      return ::aFieldStruct[nNum][MYSQL_FS_DECIMALS]
+      if ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_FLOAT_TYPE .or. ;
+         ::aFieldStruct[nNum][MYSQL_FS_TYPE] == MYSQL_DOUBLE_TYPE 
+       return set(_SET_DECIMALS)
+      else
+       return ::aFieldStruct[nNum][MYSQL_FS_DECIMALS]
+      endif
    endif
 
 return 0

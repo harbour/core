@@ -50,4 +50,199 @@
  *
  */
 
-#include "xhb.ch"
+#ifdef __HARBOUR__
+
+#ifdef __XHARBOUR__
+   #include "gtinfo.ch"
+   #include "gfx.ch"
+#else
+   #include "hbgtinfo.ch"
+   #include "hbgfx.ch"
+#endif
+
+#ifdef __XHARBOUR__
+
+   #xtranslate hb_gtSys                => gtSys
+   #xtranslate hb_gtInfo([<x,...>])    => gtInfo(<x>)
+   #xtranslate hb_gtVersion([<x>])     => hb_gt_Version(<x>)
+
+   #xtranslate hb_isregex([<x>])       => hb_isregexstring(<x>)
+   #xtranslate hb_pvalue([<x,...>])    => pvalue(<x>)
+   #xtranslate hb_methodName([<x,...>])=> methodName(<x>)
+   #xtranslate hb_libLoad([<x,...>])   => libLoad(<x>)
+   #xtranslate hb_libFree([<x,...>])   => libFree(<x>)
+   #xtranslate hb_adler32([<x,...>])   => hb_checksum(<x>)
+   #xtranslate hb_setLastKey([<x,...>])=> setLastKey(<x>)
+   #xtranslate hb_CStr([<x,...>])      => CStr(<x>)
+
+   #xtranslate hb_HexToNum([<c,...>])  => HexToNum(<c>)
+   #xtranslate hb_NumToHex([<n,...>])  => NumToHex(<n>)
+   #xtranslate hb_HexToStr([<c,...>])  => HexToStr(<c>)
+   #xtranslate hb_StrToHex([<c,...>])  => StrToHex(<c>)
+
+   #xtranslate hb_AScan([<x,...>)      => AScan(<x>)
+   #xtranslate hb_RAScan([<x,...>])    => RAScan(<x>)
+   #xtranslate hb_AIns([<x,...>])      => AIns(<x>)
+   #xtranslate hb_ADel([<x,...>])      => ADel(<x>)
+
+   #xtranslate hb_ISPOINTER( <xValue> )=> ISPOINTER( <xValue> )
+
+   #xtranslate hb_IniSetComment([<x,...>]) => hb_SetIniComment(<x>)
+   #xtranslate hb_IniRead([<x,...>])       => hb_ReadIni(<x>)
+   #xtranslate hb_IniWrite([<x,...>])      => hb_WriteIni(<x>)
+
+   /* Some statement endings */
+   #xcommand ENDSEQUENCE => END
+   #xcommand ENDSWITCH => END
+   #xcommand END SWITCH => END
+   #xcommand ENDWITH => END
+   #xcommand END WITH => END
+   #xcommand END OBJECT => END
+
+#else
+
+   #xtranslate gtSys                   => hb_gtSys
+   #xtranslate gtInfo([<x,...>])       => hb_gtInfo(<x>)
+   #xtranslate hb_gt_Version([<x>])    => hb_gtVersion(<x>)
+
+   #xtranslate gtSetClipboard(<x>)     => hb_gtInfo( GTI_CLIPBOARDDATA, <x> )
+   #xtranslate gtGetClipboard()        => hb_gtInfo( GTI_CLIPBOARDDATA )
+   #xtranslate gtGetClipBoardSize()    => Len( hb_gtInfo( GTI_CLIPBOARDDATA ) )
+   #xtranslate gtPasteClipBoard([<n>]) => hb_gtInfo( GTI_CLIPBOARDPAST )
+   #xtranslate gtProcessMessages()     => NextKey()
+   #xtranslate gfxPrimitive([<x,...>]) => hb_gfxPrimitive(<x>)
+   #xtranslate gfxText([<x,...>])      => hb_gfxText(<x>)
+
+   #xtranslate hb_isregexstring([<x>]) => hb_isregex(<x>)
+   #xtranslate pvalue([<x,...>])       => hb_pvalue(<x>)
+   #xtranslate methodName([<x,...>])   => hb_methodName(<x>)
+   #xtranslate libLoad([<x,...>])      => hb_libLoad(<x>)
+   #xtranslate libFree([<x,...>])      => hb_libFree(<x>)
+   #xtranslate hb_checksum([<x,...>])  => hb_adler32(<x>)
+   #xtranslate setLastKey([<x,...>])   => hb_setLastKey(<x>)
+   #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
+
+   #xtranslate HexToNum([<c,...>])     => hb_HexToNum(<c>)
+   #xtranslate NumToHex([<n,...>])     => hb_NumToHex(<n>)
+   #xtranslate HexToStr([<c,...>])     => hb_HexToStr(<c>)
+   #xtranslate StrToHex([<c,...>])     => hb_StrToHex(<c>)
+
+   #xtranslate AScan(<a>,<b>,[<c>],[<d>],<e>) => hb_AScan(<a>,<b>,<c>,<d>,<e>)
+   #xtranslate RAScan([<x,...>])              => hb_RAScan(<x>)
+   #xtranslate AIns(<a>,<n>,[<x,...>])        => hb_AIns(<a>,<n>,<x>)
+   #xtranslate ADel(<a>,<n>,<l>)              => hb_ADel(<a>,<n>,<l>)
+
+   #xtranslate ISPOINTER( <xValue> )   => hb_ISPOINTER( <xValue> )
+
+   #xtranslate hb_SetIniComment([<x,...>]) => hb_IniSetComment(<x>)
+   #xtranslate hb_ReadIni([<x,...>])       => hb_IniRead(<x>)
+   #xtranslate hb_WriteIni([<x,...>])      => hb_IniWrite(<x>)
+
+   #xtranslate Str(<x>,[<y>],[<y>],<z>)=> iif(<z>, LTrim(Str(<x>)), Str(<x>))
+   #xtranslate hb_CMDARGARGV([<x,...>])=> hb_ARGV(0)
+
+   /* Hash item functions */
+   #xtranslate HASH([<x,...>])         => hb_HASH(<x>)
+   #xtranslate HHASKEY([<x,...>])      => hb_HHASKEY(<x>)
+   #xtranslate HGETPOS([<x,...>])      => hb_HPOS(<x>)
+   #xtranslate HGET([<x,...>])         => hb_HGET(<x>)
+   #xtranslate HSET([<x,...>])         => hb_HSET(<x>)
+   #xtranslate HDEL([<x,...>])         => hb_HDEL(<x>)
+   #xtranslate HGETKEYAT([<x,...>])    => hb_HKEYAT(<x>)
+   #xtranslate HGETVALUEAT([<x,...>])  => hb_HVALUEAT(<x>)
+   #xtranslate HSETVALUEAT([<x,...>])  => hb_HVALUEAT(<x>)
+   #xtranslate HGETPAIRAT([<x,...>])   => hb_HPAIRAT(<x>)
+   #xtranslate HDELAT([<x,...>])       => hb_HDELAT(<x>)
+   #xtranslate HGETKEYS([<x,...>])     => hb_HKEYS(<x>)
+   #xtranslate HGETVALUES([<x,...>])   => hb_HVALUES(<x>)
+   #xtranslate HFILL([<x,...>])        => hb_HFILL(<x>)
+   #xtranslate HCLONE([<x,...>])       => hb_HCLONE(<x>)
+   #xtranslate HCOPY([<x,...>])        => hb_HCOPY(<x>)
+   #xtranslate HMERGE([<x,...>])       => hb_HMERGE(<x>)
+   #xtranslate HEVAL([<x,...>])        => hb_HEVAL(<x>)
+   #xtranslate HSCAN([<x,...>])        => hb_HSCAN(<x>)
+   #xtranslate HSETCASEMATCH([<x,...>])=> hb_HSETCASEMATCH(<x>)
+   #xtranslate HGETCASEMATCH([<x,...>])=> hb_HCASEMATCH(<x>)
+   #xtranslate HSETAUTOADD([<x,...>])  => hb_HSETAUTOADD(<x>)
+   #xtranslate HGETAUTOADD([<x,...>])  => hb_HAUTOADD(<x>)
+   #xtranslate HALLOCATE([<x,...>])    => hb_HALLOCATE(<x>)
+   #xtranslate HDEFAULT([<x,...>])     => hb_HDEFAULT(<x>)
+
+   /* Inet functions */
+   #xtranslate INETINIT([<x,...>])                => hb_INETINIT(<x>)
+   #xtranslate INETCLEANUP([<x,...>])             => hb_INETCLEANUP(<x>)
+   #xtranslate INETCREATE([<x,...>])              => hb_INETCREATE(<x>)
+   #xtranslate INETCLOSE([<x,...>])               => hb_INETCLOSE(<x>)
+   #xtranslate INETFD([<x,...>])                  => hb_INETFD(<x>)
+   #xtranslate INETSTATUS([<x,...>])              => hb_INETSTATUS(<x>)
+   #xtranslate INETERRORCODE([<x,...>])           => hb_INETERRORCODE(<x>)
+   #xtranslate INETERRORDESC([<x,...>])           => hb_INETERRORDESC(<x>)
+   #xtranslate INETCLEARERROR([<x,...>])          => hb_INETCLEARERROR(<x>)
+   #xtranslate INETCOUNT([<x,...>])               => hb_INETCOUNT(<x>)
+   #xtranslate INETADDRESS([<x,...>])             => hb_INETADDRESS(<x>)
+   #xtranslate INETPORT([<x,...>])                => hb_INETPORT(<x>)
+   #xtranslate INETSETTIMEOUT([<x,...>])          => hb_INETTIMEOUT(<x>)
+   #xtranslate INETGETTIMEOUT([<x,...>])          => hb_INETTIMEOUT(<x>)
+   #xtranslate INETCLEARTIMEOUT([<x,...>])        => hb_INETCLEARTIMEOUT(<x>)
+   #xtranslate INETSETTIMELIMIT([<x,...>])        => hb_INETTIMELIMIT(<x>)
+   #xtranslate INETGETTIMELIMIT([<x,...>])        => hb_INETTIMELIMIT(<x>)
+   #xtranslate INETCLEARTIMELIMIT([<x,...>])      => hb_INETCLEARTIMELIMIT(<x>)
+   #xtranslate INETSETPERIODCALLBACK([<x,...>])   => hb_INETPERIODCALLBACK(<x>)
+   #xtranslate INETGETPERIODCALLBACK([<x,...>])   => hb_INETPERIODCALLBACK(<x>)
+   #xtranslate INETCLEARPERIODCALLBACK([<x,...>]) => hb_INETCLEARPERIODCALLBACK(<x>)
+   #xtranslate INETRECV([<x,...>])                => hb_INETRECV(<x>)
+   #xtranslate INETRECVALL([<x,...>])             => hb_INETRECVALL(<x>)
+   #xtranslate INETRECVLINE([<x,...>])            => hb_INETRECVLINE(<x>)
+   #xtranslate INETRECVENDBLOCK([<x,...>])        => hb_INETRECVENDBLOCK(<x>)
+   #xtranslate INETDATAREADY([<x,...>])           => hb_INETDATAREADY(<x>)
+   #xtranslate INETSEND([<x,...>])                => hb_INETSEND(<x>)
+   #xtranslate INETSENDALL([<x,...>])             => hb_INETSENDALL(<x>)
+   #xtranslate INETGETHOSTS([<x,...>])            => hb_INETGETHOSTS(<x>)
+   #xtranslate INETGETALIAS([<x,...>])            => hb_INETGETALIAS(<x>)
+   #xtranslate INETSERVER([<x,...>])              => hb_INETSERVER(<x>)
+   #xtranslate INETACCEPT([<x,...>])              => hb_INETACCEPT(<x>)
+   #xtranslate INETCONNECT([<x,...>])             => hb_INETCONNECT(<x>)
+   #xtranslate INETCONNECTIP([<x,...>])           => hb_INETCONNECTIP(<x>)
+   #xtranslate INETDGRAMBIND([<x,...>])           => hb_INETDGRAMBIND(<x>)
+   #xtranslate INETDGRAM([<x,...>])               => hb_INETDGRAM(<x>)
+   #xtranslate INETDGRAMSEND([<x,...>])           => hb_INETDGRAMSEND(<x>)
+   #xtranslate INETDGRAMRECV([<x,...>])           => hb_INETDGRAMRECV(<x>)
+   #xtranslate INETCRLF([<x,...>])                => hb_INETCRLF(<x>)
+   #xtranslate ISINETSOCKET([<x,...>])            => HB_INETISSOCKET(<x>)
+   #xtranslate INETDESTROY([<x,...>])             => iif( HB_INETISSOCKET( <x> ), hb_INETCLOSE( <x> ), )
+
+   /* THROW => generate error */
+   #xtranslate THROW(<oErr>) => (Eval(ErrorBlock(), <oErr>), Break(<oErr>))
+
+   /* TEXT INTO <varname> */
+   #xcommand TEXT INTO <v> => #pragma __text|<v>+=%s+HB_OSNEWLINE();<v>:=""
+
+   /* SWITCH ... ; case ... ; DEFAULT ; ... ; END */
+   #xcommand DEFAULT => OTHERWISE
+
+   /* FOR EACH hb_enumIndex() */
+   #xtranslate hb_enumIndex(<!v!>) => <v>:__enumIndex()
+
+   /* TRY / CATCH / FINALLY / END */
+   #xcommand TRY  => BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+   #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
+   #xcommand FINALLY => ALWAYS
+
+   /* EXTENDED CODEBLOCKs */
+   #xtranslate \<|[<x,...>]| => {|<x>|
+   #xcommand > [<*x*>]       => } <x>
+
+
+   /* xHarbour operators: IN, HAS, LIKE, >>, <<, |, &, ^^ */
+   #translate ( <exp1> IN <exp2> )     => ( (<exp1>) $ (<exp2>) )
+   #translate ( <exp1> HAS <exp2> )    => ( HB_REGEXHAS( (<exp2>), (<exp1>) ) )
+   #translate ( <exp1> LIKE <exp2> )   => ( HB_REGEXLIKE( (<exp2>), (<exp1>) ) )
+   #translate ( <exp1> \<\< <exp2> )   => ( HB_BITSHIFT( (<exp1>), (<exp2>) ) )
+   #translate ( <exp1> >> <exp2> )     => ( HB_BITSHIFT( (<exp1>), -(<exp2>) ) )
+   #translate ( <exp1> | <exp2> )      => ( HB_BITOR( (<exp1>), (<exp2>) ) )
+   #translate ( <exp1> & <exp2> )      => ( HB_BITAND( (<exp1>), (<exp2>) ) )
+   #translate ( <exp1> ^^ <exp2> )     => ( HB_BITXOR( (<exp1>), (<exp2>) ) )
+
+#endif
+
+#endif /* __HARBOUR__ */
