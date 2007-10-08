@@ -287,6 +287,68 @@ static char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_PP_TOK
    return pToken->value;
 }
 
+#if 0
+static BOOL hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
+                                   YYSTYPE *yylval_ptr )
+{
+   /* TODO: decode datetime in VFP strict date form:
+    *    {^YYYY/MM/DD[,][HH[:MM[:SS][.CCC]][A|P]]}
+    * VFP accepts slash, dot or hyphen as date delimiter and
+    * 12 or 24-hour formatted time,
+    * If only hours are included in time part then comma have to
+    * be used to separate date and time parts or it's necesary
+    * to follow the hours with a colon.
+    *    { ^ <YEAR> <sep:/.-> <MONTH> <sep:/.-> <DAY> [[<sep2:,>]
+    *      [ <HOUR> [ : <MIN> [ : <SEC> [ . <FRAQ> ] ] ] [A|P] ] }
+    * We will not accept dot as date delimiter to avoid possible
+    * conflicts with PP.
+    */
+
+   /* Now support for dates constatns: {^YYYY/MM/DD} or {^YYYY-MM-DD} */
+   PHB_PP_TOKEN pYear, pMonth, pDay;
+   HB_LONG lYear, lMonth, lDay;
+   double dNumber;
+   int iDec, iWidth;
+
+   pYear = pToken->pNext->pNext;
+   if( pYear && HB_PP_TOKEN_TYPE( pYear->type ) == HB_PP_TOKEN_NUMBER &&
+       pYear->pNext &&
+       ( HB_PP_TOKEN_TYPE( pYear->pNext->type ) == HB_PP_TOKEN_DIV ||
+         HB_PP_TOKEN_TYPE( pYear->pNext->type ) == HB_PP_TOKEN_MINUS ) &&
+       !hb_compStrToNum( pYear->value, pYear->len, &lYear, &dNumber,
+                         &iDec, &iWidth ) )
+   {
+      pMonth = pYear->pNext->pNext;
+      if( pMonth && HB_PP_TOKEN_TYPE( pMonth->type ) == HB_PP_TOKEN_NUMBER &&
+          pMonth->pNext && HB_PP_TOKEN_TYPE( pYear->pNext->type ) ==
+                           HB_PP_TOKEN_TYPE( pMonth->pNext->type ) &&
+          !hb_compStrToNum( pMonth->value, pMonth->len, &lMonth, &dNumber,
+                            &iDec, &iWidth ) )
+      {
+         pDay = pMonth->pNext->pNext;
+         if( pDay && HB_PP_TOKEN_TYPE( pDay->type ) == HB_PP_TOKEN_NUMBER &&
+             pDay->pNext &&
+             HB_PP_TOKEN_TYPE( pDay->pNext->type ) == HB_PP_TOKEN_RIGHT_CB &&
+             !hb_compStrToNum( pDay->value, pDay->len, &lDay, &dNumber,
+                               &iDec, &iWidth ) )
+         {
+            LONG lDate = hb_dateEncode( lYear, lMonth, lDay );
+            if( lDate != 0 || ( lYear == 0 && lMonth == 0 && lDay == 0 ) )
+            {
+               while( HB_PP_TOKEN_TYPE( pToken->type ) != HB_PP_TOKEN_RIGHT_CB )
+                  pToken = hb_pp_tokenGet( pLex->pPP );
+               yylval_ptr->valLong.lNumber = lDate;
+               pLex->iState = LITERAL;
+               return NUM_DATE;
+            }
+         }
+      }
+   }
+
+   return 0;
+}
+#endif
+
 int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 {
    PHB_COMP_LEX pLex = HB_COMP_PARAM->pLex;
@@ -401,15 +463,25 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
          return ']';
 
       case HB_PP_TOKEN_LEFT_CB:
-         if( pToken->pNext &&
-             HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_PIPE )
+         if( pToken->pNext )
          {
-            yylval_ptr->asCodeblock.string = hb_strdup( 
+            if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_PIPE )
+            {
+               yylval_ptr->asCodeblock.string = hb_strdup( 
                   hb_pp_tokenBlockString( pLex->pPP, pToken,
                                           &yylval_ptr->asCodeblock.flags,
                                           &yylval_ptr->asCodeblock.length ) );
-            hb_pp_tokenGet( pLex->pPP );
-            return CBSTART;
+               hb_pp_tokenGet( pLex->pPP );
+               return CBSTART;
+            }
+#if 0
+            else if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_POWER )
+            {
+               int iType = hb_comp_dayTimeDecode( pLex, pToken, yylval_ptr );
+               if( iType )
+                  return iType;
+            }
+#endif
          }
          pLex->iState = LARRAY;
          return '{';

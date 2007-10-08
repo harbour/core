@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-08 23:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/hvm.c
+    * do not clear references to public functions in symbol tables used
+      by unloaded modules
+
+  * harbour/source/compiler/complex.c
+    + added disabled yet code to decode datetime in VFP strict date form
+         {^YYYY/MM/DD[,][HH[:MM[:SS[.CCC]]][A|P]]}
+      It's for future datetime implementation.
+
 2007-10-08 19:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/xhb/hbcompat.ch
    * contrib/xhb/xhb.ch

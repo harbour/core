@@ -6211,7 +6211,7 @@ static PHB_SYMBOLS hb_vmFindFreeModule( PHB_SYMB pSymbols, USHORT uiSymbols,
             for( ui = 0; ui < uiSymbols; ++ui )
             {
                if( ( pSymbols[ ui ].scope.value & ~( HB_FS_PCODEFUNC | HB_FS_DYNCODE ) ) !=
-                     pModuleSymbols[ ui ].scope.value ||
+                   ( pModuleSymbols[ ui ].scope.value & ~HB_FS_DEFERRED ) ||
                    strcmp( pSymbols[ ui ].szName, pModuleSymbols[ ui ].szName ) != 0 )
                {
                   break;
@@ -6245,7 +6245,11 @@ void hb_vmFreeSymbols( PHB_SYMBOLS pSymbols )
          /* do not overwrite already initialized statics' frame */
          if( scope != HB_FS_INITEXIT )
          {
-            pSymbols->pModuleSymbols[ ui ].value.pFunPtr = NULL;
+            PHB_SYMB pSymbol = &pSymbols->pModuleSymbols[ ui ];
+            pSymbol->value.pFunPtr = NULL;
+            if( pSymbol->pDynSym && pSymbol->pDynSym->pSymbol != pSymbol &&
+                ( pSymbol->scope.value & HB_FS_LOCAL ) == 0 )
+               pSymbol->scope.value |= HB_FS_DEFERRED;
          }
          pSymbols->pModuleSymbols[ ui ].scope.value &= ~( HB_FS_PCODEFUNC | HB_FS_DYNCODE );
       }
