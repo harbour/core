@@ -227,14 +227,10 @@ HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
    {                        /* We want more symbols ! */
       s_pDynItems = ( PDYNHB_ITEM ) hb_xrealloc( s_pDynItems, ( s_uiDynSymbols + 1 ) * sizeof( DYNHB_ITEM ) );
 
-      if( s_uiClosestDynSym <= s_uiDynSymbols )   /* Closest < current !! */
-      {                                     /* Here it goes :-) */
-         USHORT uiPos;
+      memmove( &s_pDynItems[ s_uiClosestDynSym + 1 ], 
+               &s_pDynItems[ s_uiClosestDynSym ], 
+               sizeof( DYNHB_ITEM ) * ( s_uiDynSymbols - s_uiClosestDynSym ) );
 
-         for( uiPos = 0; uiPos < ( s_uiDynSymbols - s_uiClosestDynSym ); uiPos++ )
-            memcpy( &s_pDynItems[ s_uiDynSymbols - uiPos ],
-                    &s_pDynItems[ s_uiDynSymbols - uiPos - 1 ], sizeof( DYNHB_ITEM ) );
-      }                                     /* Insert element in array */
       pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
       s_pDynItems[ s_uiClosestDynSym ].pDynSym = pDynSym;    /* Enter DynSym */
    }

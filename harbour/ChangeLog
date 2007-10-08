@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-09 00:11 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/vm/dynsym.c
+    * minor optimzation
+  * harbour/tests/multifnc/t0.prg
+  * harbour/tests/multifnc/t1.prg
+  * harbour/tests/multifnc/t2.prg
+    + one more test for function overload
+
 2007-10-08 23:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/hvm.c
     * do not clear references to public functions in symbol tables used

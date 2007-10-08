@@ -7,8 +7,10 @@ proc main3()
 ? "p3", procfile("p3"), procfile(@p3()), (@p3()):exec(), p3(), t("p3",@p3(),p3(),"t0.prg")
 ? "p4", procfile("p4"), procfile(@p4()), (@p4()):exec(), p4(), t("p4",@p4(),p4(),"t1.prg")
 ? "p5", procfile("p5"), procfile(@p5()), (@p5()):exec(), p5(), t("p5",@p5(),p5(),"t2.prg")
+? "p6", procfile("p6"), procfile(@p6()), (@p6()):exec(), p6(), t("p6",@p6(),p6(),"t0.prg")
 return
 
 func p2(); return "P2:t2.prg"
 func p3(); return "P3:t2.prg"
 func p5(); return "P5:t2.prg"
+func p6(); return "P6:t2.prg"
