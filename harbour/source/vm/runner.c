@@ -95,10 +95,11 @@ typedef struct
 static const BYTE szHead[] = { 192,'H','R','B' };
 
 
-#define SYM_NOLINK  0                           /* Symbol does not have to be linked */
-#define SYM_FUNC    1                           /* Defined function         */
-#define SYM_EXTERN  2                           /* Prev. defined function   */
-#define SYM_NOT_FOUND 0xFFFFFFFFUL              /* Symbol not found.        */
+#define SYM_NOLINK   0              /* symbol does not have to be linked */
+#define SYM_FUNC     1              /* function defined in this module   */
+#define SYM_EXTERN   2              /* function defined in other module  */
+#define SYM_DEFERRED 3              /* lately bound function             */
+#define SYM_NOT_FOUND 0xFFFFFFFFUL  /* Symbol not found.                 */
 
 static int hb_hrbReadHead( char * szBody, ULONG ulBodySize, ULONG * pulBodyOffset )
 {
@@ -423,6 +424,11 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
                pSymRead[ ul ].value.pCodeFunc = ( PHB_PCODEFUNC ) pHrbBody->pDynFunc[ ulPos ].pCodeFunc;
                pSymRead[ ul ].scope.value |= HB_FS_PCODEFUNC | HB_FS_LOCAL;
             }
+         }
+         else if( pSymRead[ ul ].value.pCodeFunc == ( PHB_PCODEFUNC ) SYM_DEFERRED )
+         {
+            pSymRead[ ul ].value.pCodeFunc = ( PHB_PCODEFUNC ) SYM_EXTERN;
+            pSymRead[ ul ].scope.value |= HB_FS_DEFERRED;
          }
 
          /* External function */

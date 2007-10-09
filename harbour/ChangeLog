@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-09 09:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/runner.c
+  * harbour/source/compiler/genhrb.c
+    ! added support for functions marked as DYNAMIC in .hrb format
+
+  * harbour/source/compiler/complex.c
+    + finished code (stil disabled) to decode datetime in
+       VFP strict date form
+
 2007-10-09 00:11 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/vm/dynsym.c
     * minor optimzation

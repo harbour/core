@@ -31,9 +31,10 @@
 
 #include "hbcomp.h"
 
-#define SYM_NOLINK  0              /* Symbol does not have to be linked */
-#define SYM_FUNC    1              /* Defined function                  */
-#define SYM_EXTERN  2              /* Previously defined function       */
+#define SYM_NOLINK   0              /* symbol does not have to be linked */
+#define SYM_FUNC     1              /* function defined in this module   */
+#define SYM_EXTERN   2              /* function defined in other module  */
+#define SYM_DEFERRED 3              /* lately bound function             */
 
 static PFUNCTION hb_compFirstFunc( HB_COMP_DECL )
 {
@@ -102,7 +103,9 @@ void hb_compGenBufPortObj( HB_COMP_DECL, BYTE ** pBufPtr, ULONG * pulSize )
       /* symbol type */
       /* if( hb_compFunctionFind( HB_COMP_PARAM, pSym->szName ) ) */
       if( pSym->cScope & HB_FS_LOCAL )
-         *ptr++ = SYM_FUNC;   /* function defined in this module */
+         *ptr++ = SYM_FUNC;      /* function defined in this module */
+      else if( pSym->cScope & HB_FS_DEFERRED )
+         *ptr++ = SYM_DEFERRED;  /* lately bound function */
       else if( hb_compFunCallFind( HB_COMP_PARAM, pSym->szName ) )
          *ptr++ = SYM_EXTERN; /* external function */
       else
