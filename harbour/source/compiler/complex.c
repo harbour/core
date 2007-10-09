@@ -288,6 +288,82 @@ static char * hb_comp_tokenString( YYSTYPE *yylval_ptr, HB_COMP_DECL, PHB_PP_TOK
 }
 
 #if 0
+static BOOL hb_comp_timeDecode( PHB_PP_TOKEN pTime, LONG * plTime )
+{
+   HB_LONG lHour, lMinute, lMilliSec;
+   double dNumber;
+   int iDec, iWidth;
+
+   if( !pTime || HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_NUMBER ||
+       hb_compStrToNum( pTime->value, pTime->len, &lHour, &dNumber,
+                        &iDec, &iWidth ) || lHour < 0 || lHour >= 24 )
+      return FALSE;
+
+   pTime = pTime->pNext;
+   if( !pTime || HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_SEND )
+      return FALSE;
+
+   pTime = pTime->pNext;
+   if( !pTime || HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_NUMBER ||
+       hb_compStrToNum( pTime->value, pTime->len, &lMinute, &dNumber,
+                        &iDec, &iWidth ) || lMinute < 0 || lMinute >= 60 )
+      return FALSE;
+
+   pTime = pTime->pNext;
+   if( !pTime )
+      return FALSE;
+
+   if( HB_PP_TOKEN_TYPE( pTime->type ) == HB_PP_TOKEN_SEND )
+   {
+      pTime = pTime->pNext;
+      if( !pTime || HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_NUMBER )
+         return FALSE;
+
+      if( hb_compStrToNum( pTime->value, pTime->len, &lMilliSec, &dNumber,
+                           &iDec, &iWidth ) )
+      {
+         if( dNumber < 0.0 || dNumber >= 60.0 )
+            return FALSE;
+         lMilliSec = ( HB_LONG ) ( dNumber * 1000 );
+      }
+      else if( lMilliSec < 0 || lMilliSec >= 60 )
+         return FALSE;
+      else
+         lMilliSec *= 1000;
+      pTime = pTime->pNext;
+   }
+   else
+      lMilliSec = 0;
+
+   if( HB_PP_TOKEN_TYPE( pTime->type ) == HB_PP_TOKEN_KEYWORD &&
+       lHour > 0 && lHour <= 12 )
+   {
+      if( ( pTime->len == 1 &&
+            ( pTime->value[0] == 'A' || pTime->value[0] == 'a' ) ) ||
+          ( pTime->len == 2 && hb_stricmp( pTime->value, "AM" ) == 0 ) )
+      {
+         if( lHour == 12 )
+            lHour = 0;
+         pTime = pTime->pNext;
+      }
+      else if( ( pTime->len == 1 &&
+                 ( pTime->value[0] == 'P' || pTime->value[0] == 'p' ) ) ||
+               ( pTime->len == 2 && hb_stricmp( pTime->value, "PM" ) == 0 ) )
+      {
+         if( lHour < 12 )
+            lHour += 12;
+         pTime = pTime->pNext;
+      }
+   }
+
+   if( !pTime || HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_RIGHT_CB )
+      return FALSE;
+
+   *plTime = ( lHour * 60 + lMinute ) * 60000 + lMilliSec;
+
+   return TRUE;
+}
+
 static BOOL hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
                                    YYSTYPE *yylval_ptr )
 {
@@ -305,108 +381,57 @@ static BOOL hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
     */
 
    /* Now support for dates constatns: {^YYYY/MM/DD} or {^YYYY-MM-DD} */
-   PHB_PP_TOKEN pYear, pMonth, pDay, pTime;
-   HB_LONG lYear, lMonth, lDay, lHour, lMinute, lMilliSec;
+   PHB_PP_TOKEN pYear, pMonth, pDay;
+   HB_LONG lYear, lMonth, lDay;
+   LONG lDate = 0, lTime = 0;
    double dNumber;
    int iDec, iWidth;
 
    pYear = pToken->pNext->pNext;
    if( pYear && HB_PP_TOKEN_TYPE( pYear->type ) == HB_PP_TOKEN_NUMBER &&
-       pYear->pNext &&
-       ( HB_PP_TOKEN_TYPE( pYear->pNext->type ) == HB_PP_TOKEN_DIV ||
-         HB_PP_TOKEN_TYPE( pYear->pNext->type ) == HB_PP_TOKEN_MINUS ) &&
-       !hb_compStrToNum( pYear->value, pYear->len, &lYear, &dNumber,
-                         &iDec, &iWidth ) )
+       pYear->pNext )
    {
-      pMonth = pYear->pNext->pNext;
-      if( pMonth && HB_PP_TOKEN_TYPE( pMonth->type ) == HB_PP_TOKEN_NUMBER &&
-          pMonth->pNext && HB_PP_TOKEN_TYPE( pYear->pNext->type ) ==
-                           HB_PP_TOKEN_TYPE( pMonth->pNext->type ) &&
-          !hb_compStrToNum( pMonth->value, pMonth->len, &lMonth, &dNumber,
+      if( ( HB_PP_TOKEN_TYPE( pYear->pNext->type ) == HB_PP_TOKEN_DIV ||
+            HB_PP_TOKEN_TYPE( pYear->pNext->type ) == HB_PP_TOKEN_MINUS ) &&
+          !hb_compStrToNum( pYear->value, pYear->len, &lYear, &dNumber,
                             &iDec, &iWidth ) )
       {
-         pDay = pMonth->pNext->pNext;
-         if( pDay && HB_PP_TOKEN_TYPE( pDay->type ) == HB_PP_TOKEN_NUMBER &&
-             pDay->pNext &&
-             !hb_compStrToNum( pDay->value, pDay->len, &lDay, &dNumber,
+         pMonth = pYear->pNext->pNext;
+         if( pMonth && HB_PP_TOKEN_TYPE( pMonth->type ) == HB_PP_TOKEN_NUMBER &&
+             pMonth->pNext && HB_PP_TOKEN_TYPE( pYear->pNext->type ) ==
+                              HB_PP_TOKEN_TYPE( pMonth->pNext->type ) &&
+             !hb_compStrToNum( pMonth->value, pMonth->len, &lMonth, &dNumber,
                                &iDec, &iWidth ) )
          {
-            LONG lDate, lTime = 0;
-            pTime = pDay->pNext;
-            if( HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_RIGHT_CB )
+            pDay = pMonth->pNext->pNext;
+            if( pDay && HB_PP_TOKEN_TYPE( pDay->type ) == HB_PP_TOKEN_NUMBER &&
+                pDay->pNext &&
+                !hb_compStrToNum( pDay->value, pDay->len, &lDay, &dNumber,
+                                  &iDec, &iWidth ) )
             {
-               if( HB_PP_TOKEN_TYPE( pTime->type ) == HB_PP_TOKEN_COMMA )
-                  pTime = pTime->pNext;
-               if( !pTime || HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_NUMBER ||
-                   hb_compStrToNum( pTime->value, pTime->len, &lHour, &dNumber,
-                                    &iDec, &iWidth ) ||
-                   lHour < 0 || lHour >= 24 )
-                  return 0;
-               pTime = pTime->pNext;
-               if( !pTime || HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_SEND )
-                  return 0;
-               pTime = pTime->pNext;
-               if( !pTime || HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_NUMBER ||
-                   hb_compStrToNum( pTime->value, pTime->len, &lMinute, &dNumber,
-                                    &iDec, &iWidth ) ||
-                   lMinute < 0 || lMinute >= 60 )
-                  return 0;
-               pTime = pTime->pNext;
-               if( !pTime )
-                  return 0;
-               if( HB_PP_TOKEN_TYPE( pTime->type ) == HB_PP_TOKEN_SEND )
+               pDay = pDay->pNext;
+               if( HB_PP_TOKEN_TYPE( pDay->type ) != HB_PP_TOKEN_RIGHT_CB )
                {
-                  pTime = pTime->pNext;
-                  if( !pTime || HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_NUMBER )
+                  if( HB_PP_TOKEN_TYPE( pDay->type ) == HB_PP_TOKEN_COMMA )
+                     pDay = pDay->pNext;
+                  if( !hb_comp_timeDecode( pDay, &lTime ) )
                      return 0;
-                  if( hb_compStrToNum( pTime->value, pTime->len, &lMilliSec, &dNumber,
-                                       &iDec, &iWidth ) )
-                  {
-                     if( dNumber < 0.0 || dNumber >= 60.0 )
-                        return 0;
-                     lMilliSec = ( HB_LONG ) ( dNumber * 1000 );
-                  }
-                  else if( lMilliSec < 0 || lMilliSec >= 60 )
-                     return 0;
-                  else
-                     lMilliSec *= 1000;
                }
-               else
-                  lMilliSec = 0;
-               if( HB_PP_TOKEN_TYPE( pTime->type ) == HB_PP_TOKEN_KEYWORD &&
-                   lHour > 0 && lHour <= 12 )
+               lDate = hb_dateEncode( lYear, lMonth, lDay );
+               if( lDate != 0 || ( lYear == 0 && lMonth == 0 && lDay == 0 ) )
                {
-                  if( ( pTime->len == 1 &&
-                        ( pTime->value[0] == 'A' || pTime->value[0] == 'a' ) ) ||
-                      ( pTime->len == 2 && hb_stricmp( pTime->value, "AM" ) == 0 ) )
-                  {
-                     if( lHour == 12 )
-                        lHour = 0;
-                     pTime = pTime->pNext;
-                  }
-                  else if( ( pTime->len == 1 &&
-                             ( pTime->value[0] == 'P' || pTime->value[0] == 'p' ) ) ||
-                           ( pTime->len == 2 && hb_stricmp( pTime->value, "PM" ) == 0 ) )
-                  {
-                     if( lHour < 12 )
-                        lHour += 12;
-                     pTime = pTime->pNext;
-                  }
+                  while( HB_PP_TOKEN_TYPE( pToken->type ) != HB_PP_TOKEN_RIGHT_CB )
+                     pToken = hb_pp_tokenGet( pLex->pPP );
+                  yylval_ptr->valLong.lNumber = lDate;
+                  pLex->iState = LITERAL;
+                  return NUM_DATE;
                }
-               if( !pTime || HB_PP_TOKEN_TYPE( pTime->type ) != HB_PP_TOKEN_RIGHT_CB )
-                  return 0;
-               lTime = ( lHour * 60 + lMinute ) * 60000 + lMilliSec;
-            }
-            lDate = hb_dateEncode( lYear, lMonth, lDay );
-            if( lDate != 0 || ( lYear == 0 && lMonth == 0 && lDay == 0 ) )
-            {
-               while( HB_PP_TOKEN_TYPE( pToken->type ) != HB_PP_TOKEN_RIGHT_CB )
-                  pToken = hb_pp_tokenGet( pLex->pPP );
-               yylval_ptr->valLong.lNumber = lDate;
-               pLex->iState = LITERAL;
-               return NUM_DATE;
             }
          }
+      }
+      else if( hb_comp_timeDecode( pDay, &lTime ) )
+      {
+         ;
       }
    }
 

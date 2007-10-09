@@ -295,7 +295,6 @@ static PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, char * szSymbolName, USHORT * 
 
       pSym->szName = szSymbolName;
       pSym->cScope = 0;
-      pSym->cType = HB_COMP_PARAM->cVarType;
       pSym->pNext = NULL;
       pSym->bFunc = bFunction;
 

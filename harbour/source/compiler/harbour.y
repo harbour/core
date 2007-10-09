@@ -403,7 +403,6 @@ Statement  : ExecFlow CrlfStmnt
            | RETURN  {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' '; }
              Expression Crlf
                      {
-                        HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType;
                         HB_COMP_PARAM->cVarType = ' ';
 
                         if( HB_COMP_PARAM->wSeqCounter )
@@ -937,12 +936,12 @@ ExprAssign  : NumValue     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $
             | AliasExpr    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | MacroVar     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | MacroExpr    INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | Variable     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType; HB_COMP_PARAM->cVarType = ' ';}
-            | VariableAt   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType; HB_COMP_PARAM->cVarType = ' ';}
+            | Variable     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' ';}
+            | VariableAt   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' ';}
             | PareExpList  INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | IfInline     INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             | FunCall      INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
-            | ObjectData   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType; HB_COMP_PARAM->cVarType = ' ';}
+            | ObjectData   INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); HB_COMP_PARAM->cVarType = ' ';}
             | ObjectMethod INASSIGN Expression   { $$ = hb_compExprAssign( $1, $3, HB_COMP_PARAM ); }
             ;
 
@@ -1155,7 +1154,6 @@ VarDef     : IdentName AsType { hb_compVariableAdd( HB_COMP_PARAM, $1, HB_COMP_P
                               }
              INASSIGN {HB_COMP_PARAM->cVarType = ' ';} Expression
                {
-                  HB_COMP_PARAM->cCastType = HB_COMP_PARAM->cVarType;
                   HB_COMP_PARAM->cVarType = ' ';
 
                   HB_COMP_PARAM->iVarScope = $<iNumber>3;

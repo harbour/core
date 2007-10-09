@@ -202,7 +202,6 @@ typedef struct _COMSYMBOL
 {
    char *         szName;               /* the name of the symbol */
    HB_SYMBOLSCOPE cScope;               /* the scope of the symbol */
-   BYTE           cType;
    BOOL           bFunc;      /* is it a function name (TRUE) or memvar (FALSE) */
    PCOMCLASS      pClass;
    struct _COMSYMBOL * pNext; /* pointer to the next defined symbol */
