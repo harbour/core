@@ -1,7 +1,6 @@
 proc main()
 ? OS(), VERSION(), DATE(), TIME()
 ? HB_COMPILER()
-? __DYNSCOUNT()
 __NONOALERT()
 ? "main", procfile("main"), procfile(@main())
 ? "alert", procfile("alert"), procfile(@alert()), alert()
@@ -12,6 +11,7 @@ __NONOALERT()
 ? "p4", procfile("p4"), procfile(@p4()), (@p4()):exec(), p4(), t("p4",@p4(),p4(),"t1.prg")
 ? "p5", procfile("p5"), procfile(@p5()), (@p5()):exec(), p5(), t("p5",@p5(),p5(),"t2.prg")
 ? "p6", procfile("p6"), procfile(@p6()), (@p6()):exec(), p6(), t("p6",@p6(),p6(),"t0.prg")
+? "p7", procfile("p7"), procfile(@p7()), (@p7()):exec(), p7(), t("p7",@p7(),p7(),"t1.prg")
 ? "==="
 main2()
 

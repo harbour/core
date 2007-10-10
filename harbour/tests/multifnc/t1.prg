@@ -8,6 +8,7 @@ proc main2()
 ? "p4", procfile("p4"), procfile(@p4()), (@p4()):exec(), p4(), t("p4",@p4(),p4(),"t1.prg")
 ? "p5", procfile("p5"), procfile(@p5()), (@p5()):exec(), p5(), t("p5",@p5(),p5(),"t2.prg")
 ? "p6", procfile("p6"), procfile(@p6()), (@p6()):exec(), p6(), t("p6",@p6(),p6(),"t0.prg")
+? "p7", procfile("p7"), procfile(@p7()), (@p7()):exec(), p7(), t("p7",@p7(),p7(),"t1.prg")
 ? "==="
 main3()
 return
@@ -19,3 +20,12 @@ func p4(); return "P4:t1.prg"
 
 func alert()
 return "[ALERT]"
+
+#pragma begindump
+#include "hbapi.h"
+
+HB_FUNC( P7 )
+{
+   hb_retc( "P7:t1.prg" );
+}
+#pragma enddump
