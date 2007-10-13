@@ -335,7 +335,8 @@ static HB_CODETRACE_FUNC( hb_p_switch )
    }
    hb_compCodeTraceMark( cargo, ulStart, lPCodePos - ulStart );
 
-   return hb_compCodeTraceNextPos( cargo, lPCodePos );
+   return hb_compCodeTraceNextPos( cargo, us > usCases ?
+                                   cargo->ulPCodeSize : lPCodePos );
 }
 
 static HB_CODETRACE_FUNC( hb_p_endblock )
