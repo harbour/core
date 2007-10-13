@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-13 02:13 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/macro/macro.yyc
+  * harbour/source/macro/macro.yyh
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.yyh
+    * updated for recent modifications
+
 2007-10-13 02:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/doc/destruct.txt
     * update description for multiple inherited destructors

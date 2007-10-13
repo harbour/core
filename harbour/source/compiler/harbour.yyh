@@ -262,7 +262,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 107 "harbour.y"
+#line 109 "harbour.y"
 {
    char *  string;      /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
@@ -304,7 +304,7 @@ typedef union YYSTYPE
       } value;
    } asMessage;
 }
-/* Line 1533 of yacc.c.  */
+/* Line 1535 of yacc.c.  */
 #line 309 "harboury.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
