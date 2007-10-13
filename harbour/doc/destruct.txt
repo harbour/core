@@ -105,13 +105,9 @@ overwrite the error object created before destructor.
 
 Inheritance
 -----------
-Destructors can be inherited from the first super class in the
-same way as ON ERROR message. Defining destructor in class overwrites
-the inherited ones so they will not be executed.
-Maybe in some spare time I'll add support for executing all inherited
-super destructors.
-
-
+If class has more then one destructor inherited from other classes
+then all destructors are executed in reverted order. First current
+class destructor (if any) and then super class destructors.
 
 
 Defining destructors in CLASS definition code

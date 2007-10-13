@@ -936,28 +936,26 @@ static HB_EXPR_FUNC( hb_compExprUseList )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
+         if( HB_SUPPORT_XBASE )
          {
-            if( HB_SUPPORT_XBASE )
+            if( hb_compExprListLen( pSelf ) == 1 )
             {
-               if( hb_compExprListLen( pSelf ) == 1 )
+               HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
+               if( pExpr->ExprType == HB_ET_MACRO &&
+                   pExpr->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
+                   pExpr->value.asMacro.SubType != HB_ET_MACRO_REFER &&
+                   pExpr->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
                {
-                  HB_EXPR_PTR pExpr = pSelf->value.asList.pExprList;
-                  if( pExpr->ExprType == HB_ET_MACRO &&
-                      pExpr->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
-                      pExpr->value.asMacro.SubType != HB_ET_MACRO_REFER &&
-                      pExpr->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
-                  {
-                     pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
-                  }
+                  pExpr->value.asMacro.SubType |= HB_ET_MACRO_PARE;
                }
             }
-
-            hb_compExprReduceList( pSelf, HB_COMP_PARAM );
-            /* NOTE: if the list contains a single expression then the list
-             * is not reduced to this expression - if you need that reduction
-             * then call hb_compExprListStrip() additionaly
-             */
          }
+
+         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
+         /* NOTE: if the list contains a single expression then the list
+          * is not reduced to this expression - if you need that reduction
+          * then call hb_compExprListStrip() additionaly
+          */
          break;
 
       case HB_EA_ARRAY_AT:

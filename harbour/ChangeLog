@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-13 02:12 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/doc/destruct.txt
+    * update description for multiple inherited destructors
+
+  * harbour/source/compiler/complex.c
+    * _HB_CLASS and _HB_MEMBER are not longer reserved words
+
+  * harbour/include/hbclass.ch
+  * harbour/include/hbexprop.h
+  * harbour/include/hbexprb.c
+  * harbour/source/macro/macro.y
+  * harbour/source/compiler/harbour.y
+    * formatting and minor code cleanup
+
+  * harbour/source/compiler/hbusage.c
+    * added missing information about -undef:<id> switch to usage
+      description
+
+  * harbour/source/compiler/gencc.c
+    ! fixed bug reported by Teo in code generated for SWITCH statement
+
 2007-10-10 21:11 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/tests/multifnc/t0.prg
   * harbour/tests/multifnc/t1.prg

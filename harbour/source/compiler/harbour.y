@@ -62,6 +62,8 @@
 #undef YYMALLOC
 #define YYMALLOC hb_xgrab
 
+#define NO_YYERROR
+
 static void hb_compLoopStart( HB_COMP_DECL, BOOL );
 static void hb_compLoopEnd( HB_COMP_DECL );
 static void hb_compLoopLoop( HB_COMP_DECL );
@@ -2253,7 +2255,7 @@ void hb_compElseIfKill( HB_COMP_DECL )
 {
    HB_ELSEIF_PTR pFix;
    HB_ELSEIF_PTR pDel;
-   
+
    while( HB_COMP_PARAM->elseif )
    {
       pFix = HB_COMP_PARAM->elseif;

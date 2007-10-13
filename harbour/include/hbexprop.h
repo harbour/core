@@ -60,7 +60,7 @@ HB_EXTERN_BEGIN
 /* Definitions of function templates used in expression's message
  * handling
  */
-#define  HB_EXPR_FUNC( proc )  HB_EXPR_PTR proc( HB_EXPR_PTR pSelf, int iMessage, HB_COMP_DECL )
+#define  HB_EXPR_FUNC( proc )  HB_EXPR_PTR proc( HB_EXPR_PTR pSelf, HB_EXPR_MESSAGE iMessage, HB_COMP_DECL )
 typedef  HB_EXPR_FUNC( HB_EXPR_FUNC_ );
 typedef  HB_EXPR_FUNC_ *HB_EXPR_FUNC_PTR;
 

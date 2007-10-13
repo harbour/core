@@ -1625,6 +1625,7 @@ static HB_GENC_FUNC( hb_p_switch )
 
    HB_GENC_LABEL();
 
+   lPCodePos += 3;
    for( us = 0; us < usCases; ++us )
    {
       switch( pFunc->pCode[ lPCodePos ] )
@@ -1660,18 +1661,20 @@ static HB_GENC_FUNC( hb_p_switch )
       }
    }
 
-   lPCodePos = ulStart;
    if( fStr || fNum )
    {
       fprintf( cargo->yyc, "\t{\n\t\tPHB_ITEM pSwitch = hb_stackItemFromTop( -1 );\n"
                            "\t\tHB_TYPE type = hb_itemType( pSwitch );\n" );
       if( fStr )
+      {
          fprintf( cargo->yyc, "\t\tchar * pszText = (type & HB_IT_STRING) ? hb_itemGetCPtr( pSwitch ) : NULL;\n" );
+         fprintf( cargo->yyc, "\t\tULONG ulLen = pszText ? hb_itemGetCLen( pSwitch ) : 0;\n" );
+      }
       if( fNum )
          fprintf( cargo->yyc, "\t\tlong lVal = (type & HB_IT_NUMINT) ? hb_itemGetNL( pSwitch ) : 0;\n\n" );
    }
 
-   lPCodePos += 3;
+   lPCodePos = ulStart + 3;
    for( us = 0; us < usCases; ++us )
    {
       switch( pFunc->pCode[ lPCodePos ] )
@@ -1682,8 +1685,11 @@ static HB_GENC_FUNC( hb_p_switch )
             lPCodePos += 5;
             break;
          case HB_P_PUSHSTRSHORT:
-            fprintf( cargo->yyc, "\t\tif( pszText && !strcmp( pszText, \"%s\" ) )\n",
-                     &pFunc->pCode[ lPCodePos + 2 ] );
+            fprintf( cargo->yyc, "\t\tif( pszText && ulLen == %d && !memcmp( pszText, ",
+                     pFunc->pCode[ lPCodePos + 1 ] - 1 );
+            hb_compGenCString( cargo->yyc, &pFunc->pCode[ lPCodePos + 2 ],
+                               pFunc->pCode[ lPCodePos + 1 ] - 1 );
+            fprintf( cargo->yyc, ", %d ) )\n", pFunc->pCode[ lPCodePos + 1 ] - 1 );
             lPCodePos += 2 + pFunc->pCode[ lPCodePos + 1 ];
             break;
          case HB_P_PUSHNIL:
@@ -1710,7 +1716,9 @@ static HB_GENC_FUNC( hb_p_switch )
       fprintf( cargo->yyc, "\t\t{\n\t\t\thb_stackPop();\n\t\t\tgoto lab%05ld;\n\t\t}\n",
                HB_GENC_GETLABEL( ulNewPos ) );
    }
-   fprintf( cargo->yyc, "\t}\n" );
+   if( fStr || fNum )
+      fprintf( cargo->yyc, "\t}\n" );
+
    return lPCodePos - ulStart;
 }
 

@@ -93,6 +93,8 @@
 #undef YYMALLOC
 #define YYMALLOC hb_xgrab
 
+#define NO_YYERROR
+
 /* yacc/lex related definitions
  */
 

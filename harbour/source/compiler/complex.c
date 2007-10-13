@@ -1259,11 +1259,24 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                break;
             }
             case DECLARE_CLASS:
-               pLex->iState = DECLARE_TYPE;
-               return iType;
+               if( pLex->iState == LOOKUP && !HB_PP_TOKEN_ISEOC( pToken->pNext ) &&
+                   HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD )
+               {
+                  pLex->iState = DECLARE_TYPE;
+                  return DECLARE_CLASS;
+               }
+               iType = IDENTIFIER;
+               break;
             case DECLARE_MEMBER:
-               pLex->iState = OPERATOR;
-               return iType;
+               if( pLex->iState == LOOKUP && !HB_PP_TOKEN_ISEOC( pToken->pNext ) &&
+                   ( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD ||
+                     HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_CB ) )
+               {
+                  pLex->iState = OPERATOR;
+                  return DECLARE_MEMBER;
+               }
+               iType = IDENTIFIER;
+               break;
 
             case EXIT:
             case STATIC:

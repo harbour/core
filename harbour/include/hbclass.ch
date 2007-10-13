@@ -157,7 +157,7 @@
 
 /* should we inherit from HBObject class by default ? */
 #ifdef HB_CLS_NOTOBJECT
-   #xtranslate __HB_CLS_PAR([<cls,...>])  => { [<cls>] }
+   #xtranslate __HB_CLS_PAR([<cls,...>])  => { <cls> }
 #else
    #xtranslate __HB_CLS_PAR([<cls,...>])  => iif( <.cls.>, { <cls> }, { @HBObject() } )
 #endif
@@ -204,7 +204,7 @@ DECLARE HBClass ;
  * bindings it casts object to class in which current method were defined.
  */
 #translate @:<MessageName>([<MsgParams,...>]) => ;
-                                ::realclass:<MessageName>([<MsgParams>])
+                                ::realclass:<MessageName>([ <MsgParams>])
 
 /* Indirect super casting translation */
 #xtranslate :Super( <SuperClass> ): => :<SuperClass>:
@@ -216,11 +216,11 @@ DECLARE HBClass ;
 #xtranslate __HB_CLS_ASSTRING( <FuncName> )                 => <(FuncName)>
 #xtranslate __HB_CLS_ASSTRING( <FuncName>([<params,...>]) ) => <(FuncName)>
 #xtranslate __HB_CLS_ASFUNC( <FuncName> )                   => <FuncName>()
-#xtranslate __HB_CLS_ASFUNC( <FuncName>([<params,...>]) )   => <FuncName>([<params>])
+#xtranslate __HB_CLS_ASFUNC( <FuncName>([<params,...>]) )   => <FuncName>([ <params>])
 #xtranslate __HB_CLS_ASID( <FuncName> )                     => <FuncName>
 #xtranslate __HB_CLS_ASID( <FuncName>([<params,...>]) )     => <FuncName>
 #xtranslate __HB_CLS_ASARGS( <FuncName> )                   =>
-#xtranslate __HB_CLS_ASARGS( <FuncName>([<Args,...>]) )     => [<Args>]
+#xtranslate __HB_CLS_ASARGS( <FuncName>([<Args,...>]) )     => [ <Args>]
 #xtranslate __HB_CLS_ASARGSOPT( <FuncName> )                =>
 #xtranslate __HB_CLS_ASARGSOPT( <FuncName>([<Args,...>]) )  => [, <Args>]
 #xtranslate __HB_CLS_ISVAR( <var> )                         => __HB_CLS_VARERR(<var>)
@@ -375,7 +375,7 @@ DECLARE HBClass ;
    MESSAGE <MessageName> [ AS <type> ] BLOCK {|Self __HB_CLS_ASARGSOPT(<MessageName>) [,<Locals>]| __HB_CLS_SYMBOL_UNUSED(Self), <Code>} <ctor> <export> <protect> <hidde> <persistent>
 
 #xcommand MESSAGE <MessageName> [ AS <type> ] <arg: ARG, ARGS> <Args,...> [LOCAL <Locals,...>] INLINE <Code,...> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
-   MESSAGE __HB_CLS_ASID(<MessageName>)([<Args>]) [ AS <type> ] [LOCAL <Locals>] INLINE <Code> <ctor> <export> <protect> <hidde> <persistent>
+   MESSAGE __HB_CLS_ASID(<MessageName>)(<Args>) [ AS <type> ] [LOCAL <Locals>] INLINE <Code> <ctor> <export> <protect> <hidde> <persistent>
 
 #xcommand MESSAGE <MessageName> [ AS <type> ] TO <oObject> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] =>;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<oObject>:<MessageName> <export> <protect> <hidde> <persistent>
@@ -425,7 +425,7 @@ DECLARE HBClass ;
 /* CLASSY SYNTAX */
 #ifdef HB_CLS_CSY
 
-   #xcommand CREATE CLASS <ClassName> [<*more*>] => CLASS <ClassName> [<more>]
+   #xcommand CREATE CLASS <ClassName> [<*more*>] => CLASS <ClassName> <more>
    #xcommand END CLASS [<*more*>]   => ENDCLASS <more>
    #xcommand CLASS VAR <*more*>     => CLASSVAR <more>
    #xcommand CLASS METHOD <*more*>  => CLASSMETHOD <more>
@@ -451,10 +451,10 @@ DECLARE HBClass ;
 
    // Classy compatibility... Added By JF Lefebvre (mafact) 2006/11/07
    #xcommand METHOD <MethodName> [ AS <type> ] INLINE [Local <v>,] <Code,...> [<other>] => ;
-             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [,<v>] | __HB_CLS_SYMBOL_UNUSED(Self), <Code>} [<other>]
+             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [,<v>] | __HB_CLS_SYMBOL_UNUSED(Self), <Code>} [ <other>]
 
    #xcommand METHOD <MethodName>( [<params,...>] ) [ AS <type> ] INLINE [Local <v>,] <Code,...> [<other>] => ;
-             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [,<params>] [,<v>] | __HB_CLS_SYMBOL_UNUSED(Self), <Code> } [<other>]
+             MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [, <params>] [, <v>] | __HB_CLS_SYMBOL_UNUSED(Self), <Code> } [ <other>]
 
 
    /* This definitions are not Class(y) compatible - I'm leaving them as is now */
