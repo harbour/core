@@ -1025,7 +1025,7 @@ Separator     {SpaceTab}
          }
          else
          {
-            if( hb_comp_iLanguage != LANG_C && hb_comp_iLanguage != LANG_OBJ_MODULE )
+            if( hb_comp_iLanguage != HB_LANG_C && hb_comp_iLanguage != HB_LANG_OBJ_MODULE )
             {
                hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_REQUIRES_C, NULL, NULL );
                hb_xfree( ( void * ) pInline->pCode );

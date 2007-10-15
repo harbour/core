@@ -8,6 +8,35 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-15 18:36 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tbcolumn.prg
+     ! Strict C5.2e compatible behaviour made the default.
+
+   * source/rtl/inkey.c
+     + Added handling of arrays of numbers in HB_KEYPUT().
+       (this was copied from __KEYBOARD()'s extended section)
+     + Added handling of string parameter in HB_KEYPUT().
+       (this way we don't really need the hidden extensions 
+       in __KEYBOARD() anymore. Also notice that __KEYBOARD() 
+       doesn't clear the keyboard buffer when numeric or 
+       array is passed, which is not consistent with the 
+       Clipper compatible behaviour when strings are passed.)
+
+   * common.mak
+   * include/hbcompdf.h
+   * source/compiler/hbmain.c
+   * source/compiler/cmdcheck.c
+   * source/compiler/hbcomp.c
+   * source/compiler/harbour.l
+   * source/compiler/Makefile
+   * source/compiler/ppcomp.c
+   * source/compiler/hbusage.c
+   - source/compiler/genjava.c
+   - source/compiler/gencli.c
+     - Removed two non-working (experimental) output types: 
+       Java, CLI
+     ! Prefixed LANG_* enums with HB_
+
 2007-10-15 17:39 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
   * harbour/include/hbmath.h

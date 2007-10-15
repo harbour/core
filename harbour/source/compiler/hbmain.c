@@ -104,7 +104,7 @@ int hb_compMain( int argc, char * argv[], BYTE ** pBufPtr, ULONG * pulSize,
    {
       if( pBufPtr && pulSize )
       {
-         HB_COMP_PARAM->iLanguage = LANG_PORT_OBJ_BUF;
+         HB_COMP_PARAM->iLanguage = HB_LANG_PORT_OBJ_BUF;
       }
 
       if( HB_COMP_PARAM->fLogo )
@@ -4054,31 +4054,23 @@ static void hb_compGenOutput( HB_COMP_DECL, int iLanguage )
 
    switch( iLanguage )
    {
-      case LANG_C:
+      case HB_LANG_C:
          hb_compGenCCode( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
          break;
 
-      case LANG_CLI:
-         hb_compGenILCode( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
-         break;
-
-      case LANG_OBJ32:
+      case HB_LANG_OBJ32:
          hb_compGenObj32( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
          break;
 
-      case LANG_JAVA:
-         hb_compGenJava( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
-         break;
-
-      case LANG_PORT_OBJ:
+      case HB_LANG_PORT_OBJ:
          hb_compGenPortObj( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
          break;
 
-      case LANG_PORT_OBJ_BUF:
+      case HB_LANG_PORT_OBJ_BUF:
          hb_compGenBufPortObj( HB_COMP_PARAM, &HB_COMP_PARAM->pOutBuf, &HB_COMP_PARAM->ulOutBufSize );
          break;
 
-      case LANG_OBJ_MODULE:
+      case HB_LANG_OBJ_MODULE:
          hb_compGenCObj( HB_COMP_PARAM, HB_COMP_PARAM->pFileName );
          break;
    }

@@ -28,9 +28,7 @@ C_SOURCES=\
 	gencc.c    \
 	gencobj.c  \
 	genhrb.c   \
-	genjava.c  \
 	genobj32.c \
-	gencli.c   \
 	hbcmplib.c \
 	hbcomp.c   \
 	hbdbginf.c \

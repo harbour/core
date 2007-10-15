@@ -72,8 +72,6 @@ void hb_compPrintUsage( HB_COMP_DECL, char * szSelf )
            "\n          %cgo              output type: Platform dependant object module",
            "\n          %cgw              output type: Windows/DOS OBJ32 (.obj)",
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
-           "\n          %cgj              output type: Java source (.java)",
-           "\n          %cgi              output type: .NET platform (.il)",
            "\n          %ci<path>         #include file search path",
            "\n          %ck               compilation mode (type -k? for more data)",
            "\n          %cl               suppress line number information",

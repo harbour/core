@@ -594,6 +594,26 @@ HB_FUNC( HB_KEYPUT )
 {
    if( ISNUM( 1 ) )
       hb_inkeyPut( hb_parni( 1 ) );
+   else if( ISCHAR( 1 ) )
+   {
+      PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+      char * szText = hb_itemGetCPtr( pText );
+      ULONG ulLen = hb_itemGetCLen( pText ), ulIndex;
+
+      for( ulIndex = 0; ulIndex < ulLen; ulIndex++ )
+         hb_inkeyPut( szText[ ulIndex ] );
+   }
+   else if( ISARRAY( 1 ) )
+   {
+      PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+      ULONG ulElements = hb_arrayLen( pArray ), ulIndex;
+
+      for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
+      {
+         if( hb_arrayGetType( pArray, ulIndex ) & HB_IT_NUMERIC )
+            hb_inkeyPut( hb_arrayGetNI( pArray, ulIndex ) );
+      }
+   }
 }
 #endif
 

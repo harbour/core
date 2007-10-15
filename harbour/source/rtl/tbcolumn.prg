@@ -215,17 +215,8 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBColumn
 
 METHOD New( cHeading, bBlock ) CLASS TBColumn
 
-   /* NOTE: CA-Cl*pper will allow any types for the heading.
-            In Harbour this would cause various errors inside the object, so we're 
-            not replicating this strange behaviour. [vszakats] */
-
-#ifdef HB_C52_STRICT
+   /* NOTE: CA-Cl*pper will allow any types for the heading here. [vszakats] */
    ::cHeading := cHeading
-#else
-   IF ISCHARACTER( cHeading )
-      ::cHeading := cHeading
-   ENDIF
-#endif
    ::bBlock := bBlock /* NOTE: CA-Cl*pper allows any types here. [vszakats] */
 
    RETURN Self

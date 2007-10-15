@@ -256,7 +256,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                {
                   case 'c':
                   case 'C':
-                     HB_COMP_PARAM->iLanguage = LANG_C;
+                     HB_COMP_PARAM->iLanguage = HB_LANG_C;
 
                      switch( *( s + 2 ) )
                      {
@@ -284,7 +284,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
 
                   case 'o':
                   case 'O':
-                     HB_COMP_PARAM->iLanguage = LANG_OBJ_MODULE;
+                     HB_COMP_PARAM->iLanguage = HB_LANG_OBJ_MODULE;
 
                      switch( *( s + 2 ) )
                      {
@@ -310,24 +310,14 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                      }
                      break;
 
-                  case 'j':
-                  case 'J':
-                     HB_COMP_PARAM->iLanguage = LANG_JAVA;
-                     break;
-
                   case 'h':
                   case 'H':
-                     HB_COMP_PARAM->iLanguage = LANG_PORT_OBJ;
-                     break;
-
-                  case 'i':
-                  case 'I':
-                     HB_COMP_PARAM->iLanguage = LANG_CLI;
+                     HB_COMP_PARAM->iLanguage = HB_LANG_PORT_OBJ;
                      break;
 
                   case 'w':
                   case 'W':
-                     HB_COMP_PARAM->iLanguage = LANG_OBJ32;
+                     HB_COMP_PARAM->iLanguage = HB_LANG_OBJ32;
                      break;
 
                   default:

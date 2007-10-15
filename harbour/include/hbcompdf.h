@@ -65,14 +65,12 @@ HB_EXTERN_BEGIN
 /* Output types */
 typedef enum
 {
-   LANG_C,                      /* C language (by default) <file.c> */
-   LANG_CLI,                    /* .NET IL language */
-   LANG_OBJ32,                  /* DOS/Windows 32 bits <file.obj> */
-   LANG_JAVA,                   /* Java <file.java> */
-   LANG_PORT_OBJ,               /* Portable objects <file.hrb> */
-   LANG_PORT_OBJ_BUF,           /* Portable objects in memory buffer */
-   LANG_OBJ_MODULE              /* Platform dependant object module <file.obj> */
-} LANGUAGES;                    /* supported Harbour output languages */
+   HB_LANG_C,                      /* C language (by default) <file.c> */
+   HB_LANG_OBJ32,                  /* DOS/Windows 32 bits <file.obj> */
+   HB_LANG_PORT_OBJ,               /* Portable objects <file.hrb> */
+   HB_LANG_PORT_OBJ_BUF,           /* Portable objects in memory buffer */
+   HB_LANG_OBJ_MODULE              /* Platform dependant object module <file.obj> */
+} HB_LANGUAGES;                    /* supported Harbour output languages */
 
 struct _COMCLASS;    /* forward declaration */
 
