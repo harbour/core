@@ -52,7 +52,6 @@
 
 
 #include "hbcomp.h"
-#include <errno.h>
 
 static void hb_pp_ErrorGen( void * cargo,
                             const char * szMsgTable[], char cPrefix, int iErrorCode,

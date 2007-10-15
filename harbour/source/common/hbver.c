@@ -88,7 +88,7 @@
       #define VER_PLATFORM_WIN32_CE 3
    #endif
 
-#elif defined(HB_OS_UNIX)
+#elif defined(HB_OS_UNIX) && !defined(__CEGCC__)
 
    #include <sys/utsname.h>
 
@@ -269,6 +269,10 @@ char * hb_verPlatform( void )
          snprintf( pszPlatform, 256, "Windows" );
    }
 
+#elif defined(__CEGCC__)
+   {
+      snprintf( pszPlatform, 256, "Windows" );
+   }
 #elif defined(HB_OS_UNIX)
 
    {

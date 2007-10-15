@@ -225,7 +225,6 @@ void hb_tr_trace( char * fmt, ... )
       if ( s_flush )
       {
          fflush( s_fp ) ;
-         close( dup( fileno( s_fp ))) ;
       }
    }
 }

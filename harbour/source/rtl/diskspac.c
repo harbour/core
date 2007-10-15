@@ -67,7 +67,7 @@
 #if defined(HB_OS_UNIX)
 #  include <unistd.h>
 #  include <sys/types.h>
-#  if defined(__WATCOMC__)
+#  if defined(__WATCOMC__) || defined(__CEGCC__)
 #     include <sys/stat.h>
 #  else
 #     include <sys/statvfs.h>
@@ -117,6 +117,7 @@ HB_FUNC( DISKSPACE )
 
       SetLastError( 0 );
 
+#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
       pGetDiskFreeSpaceEx = ( P_GDFSE ) GetProcAddress( GetModuleHandle( "kernel32.dll" ),
                                                         "GetDiskFreeSpaceExA");
 
@@ -156,6 +157,7 @@ HB_FUNC( DISKSPACE )
          }
       }
       else
+#endif
       {
          DWORD dwSectorsPerCluster;
          DWORD dwBytesPerSector;
@@ -203,7 +205,7 @@ HB_FUNC( DISKSPACE )
          szName = ( char * ) hb_fsNameConv( ( BYTE * ) szName, &fFree );
 
       {
-#if defined(__WATCOMC__)
+#if defined(__WATCOMC__) || defined(__CEGCC__)
          struct stat st;
          if( stat( szName, &st) == 0 )
             dSpace = ( double ) st.st_blocks * ( double ) st.st_blksize;

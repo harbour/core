@@ -86,10 +86,6 @@
 
 #include "gtwvt.h"
 
-#if defined(_MSC_VER)
-   #include <conio.h>
-#endif   
-
 static HB_GT_FUNCS SuperTable;
 #define HB_GTSUPER (&SuperTable)
 

@@ -58,12 +58,12 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
 HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
 {
+#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
    if( bUseDirEntry )
    {
       BOOL fResult;
@@ -84,6 +84,7 @@ HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
          return ( HB_FOFFSET ) statbuf.st_size;
    }
    else
+#endif
    {
       FHANDLE hFileHandle = hb_fsOpen( pszFileName, 0 );
 

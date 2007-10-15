@@ -73,9 +73,15 @@ static int    s_argc = 0;
 static char * s_argv[ MAX_ARGS ];
 static char   s_szAppName[ 256 ];
 
+#if defined(__MINGW32CE__) || defined(HB_WINCE)
+#  define HB_SYSSTR LPWSTR
+#else
+#  define HB_SYSSTR LPSTR
+#endif
+
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     HINSTANCE hPrevInstance,  /* handle to previous instance */
-                    LPSTR lpCmdLine,          /* pointer to command line */
+                    HB_SYSSTR lpCmdLine,      /* pointer to command line */
                     int iCmdShow )            /* show state of window */
 {
    LPSTR pArgs, pArg, pDst, pSrc;
@@ -97,9 +103,14 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    GetModuleFileName( hInstance, s_szAppName, sizeof( s_szAppName ) - 1 );
    s_argv[ s_argc++ ] = s_szAppName;
 
-   pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 );
    pArg = NULL;
+#if defined(__MINGW32CE__) || defined(HB_WINCE)
+   pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( ( LPSTR ) lpCmdLine ) + 1 );
+   pSrc = ( LPSTR ) lpCmdLine;
+#else
+   pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 );
    pSrc = lpCmdLine;
+#endif
    fQuoted = FALSE;
 
    while( *pSrc != 0 && s_argc < MAX_ARGS )

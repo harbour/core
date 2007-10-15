@@ -60,9 +60,11 @@
 #endif
 
 #include <ctype.h>
-#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#if ! defined(__MINGW32CE__)
+#  include <errno.h>
+#endif
 
 #include "hbcomp.h"
 
@@ -208,6 +210,10 @@ int main( int argc, char * argv[] )
       fhChangeLog = fopen( cszChangeLogName, "rt" );
       if( fhChangeLog == NULL )
       {
+#if defined(__MINGW32CE__)
+         fprintf( stderr, "error: %s\n", szErrBuf );
+         return 4;
+#else
          switch( errno )
          {
          case ENOENT:
@@ -217,6 +223,7 @@ int main( int argc, char * argv[] )
             perror( szErrBuf );
             return 4;
          }
+#endif
       }
       while( ! ( bFoundID && bFoundLog ) && ! feof( fhChangeLog ) )
       {

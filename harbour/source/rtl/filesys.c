@@ -123,13 +123,14 @@
 #if ( defined(__DMC__) || defined(__BORLANDC__) || defined(__IBMCPP__) || defined(_MSC_VER) || \
       defined(__MINGW32__) || defined(__WATCOMC__) ) && !defined( HB_OS_UNIX )
    #include <sys/stat.h>
+   #include <fcntl.h>
+   #include <process.h>
    #if !defined( __POCC__ ) && !defined( __XCC__ )
       #include <share.h>
    #endif
-   #include <fcntl.h>
-   #include <errno.h>
-   #include <direct.h>
-   #include <process.h>
+   #if !defined(__MINGW32CE__)
+      #include <direct.h>
+   #endif
    #if defined(__BORLANDC__)
       #include <dir.h>
       #include <dos.h>
@@ -153,7 +154,6 @@
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <fcntl.h>
-   #include <errno.h>
    #if defined(__CYGWIN__)
       #include <io.h>
    #elif defined(__DJGPP__)
@@ -1182,10 +1182,7 @@ HB_EXPORT void hb_fsCommit( FHANDLE hFileHandle )
 #elif defined(HB_OS_OS2)
 
    {
-      errno = 0;
-      /* TODO: what about error code from DosResetBuffer() call? */
-      DosResetBuffer( hFileHandle );
-      hb_fsSetIOError( errno == 0, 0 );
+      hb_fsSetIOError( DosResetBuffer( hFileHandle ) == 0, 0 );
    }
 
 #elif defined(HB_OS_UNIX)

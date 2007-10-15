@@ -76,7 +76,6 @@ HB_FILE_VER( "$Id$" )
 
    #if defined(__DJGPP__) || defined(__RSX32__)
       #include <sys/param.h>
-      #include <errno.h>
    #endif
    #if defined(__DJGPP__) || defined(__RSX32__) || defined(__BORLANDC__)
       #include <sys/stat.h>
@@ -127,8 +126,6 @@ HB_FILE_VER( "$Id$" )
 
 #elif defined(HB_OS_WIN_32)
 
-   #include <errno.h>
-
    typedef struct
    {
       HANDLE          hFindFile;
@@ -147,7 +144,6 @@ HB_FILE_VER( "$Id$" )
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <fcntl.h>
-   #include <errno.h>
    #include <dirent.h>
    #include <time.h>
 

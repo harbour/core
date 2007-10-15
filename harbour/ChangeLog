@@ -8,6 +8,35 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-15 17:39 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+  * harbour/include/hbmath.h
+  * harbour/source/pp/ppcore.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/pp/Makefile
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/fserror.c
+  * harbour/source/rtl/gtchrmap.c
+  * harbour/source/rtl/disksphb.c
+  * harbour/source/rtl/gttone.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/fssize.c
+  * harbour/source/rtl/hbinet.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/vm/mainwin.c
+  * harbour/source/common/hbver.c
+  * harbour/source/common/hbtrace.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/ppcomp.c
+  * harbour/utils/hbver/hbverfix.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/config/w32/pocc.cf
+    * code cleanup:
+      - eliminated unnecessary errno access
+      - use WinAPI functions instead of some standard C library functions
+        in Windows builds
+
 2007-10-13 12:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/hbdead.c
     % minor improvement

@@ -61,7 +61,6 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-
 /* HB_INET_H_ */
 #if defined( HB_OS_DOS )
 
@@ -70,6 +69,8 @@
    #endif
 
 #else
+
+   #include <string.h>
 
    #if defined( HB_OS_WIN_32 )
       #define _WINSOCKAPI_  /* Prevents inclusion of Winsock.h in Windows.h */
@@ -170,7 +171,9 @@
 #if !defined( HB_NO_DEFAULT_INET )
 
 #include <fcntl.h>
-#include <errno.h>
+#if !defined(__MINGW32CE__)
+   #include <errno.h>
+#endif
 
 #if defined( HB_OS_UNIX ) || defined( OS_UNIX_COMPATIBLE ) || defined( HB_OS_BSD ) || defined(HB_OS_OS2)
    #include <sys/time.h>
@@ -1513,6 +1516,9 @@ HB_FUNC( HB_INETSERVER )
 
 HB_FUNC( HB_INETACCEPT )
 {
+#if !defined(EAGAIN)
+#define EAGAIN -1
+#endif
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
    HB_SOCKET_STRUCT *NewSocket;
    HB_SOCKET_T incoming = 0;

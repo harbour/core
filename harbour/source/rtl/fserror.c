@@ -57,7 +57,9 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hb_io.h"
-#include <errno.h>
+#if !defined(__MINGW32CE__)
+#  include <errno.h>
+#endif
 
 static USHORT s_uiFError = 0;
 static USHORT s_uiErrorLast = 0;

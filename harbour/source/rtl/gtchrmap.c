@@ -403,24 +403,30 @@ static int hb_gt_chrmapread( const char *pszFile, const char *pszTerm, int *nTra
 
 int hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACSC )
 {
-   char *pszFile, szFile[ _POSIX_PATH_MAX + 1 ];
+   char *pszFree = NULL, *pszFile, szFile[ _POSIX_PATH_MAX + 1 ];
    int nRet = -1;
 
    chrmap_init( piTransTbl );
 
    if( pszTerm == NULL || *pszTerm == '\0' )
-      pszTerm = getenv("HB_TERM");
+      pszTerm = pszFree = hb_getenv("HB_TERM");
    if( pszTerm == NULL || *pszTerm == '\0' )
-      pszTerm = getenv("TERM");
+   {
+      if( pszFree )
+         hb_xfree( pszFree );
+      pszTerm = pszFree = hb_getenv("TERM");
+   }
 
    if( pszTerm != NULL && *pszTerm != '\0' )
    {
-      pszFile = getenv( "HB_CHARMAP" );
+      pszFile = hb_getenv( "HB_CHARMAP" );
       if( pszFile != NULL && *pszFile != '\0' )
          nRet = hb_gt_chrmapread( pszFile, pszTerm, piTransTbl );
       if( nRet == -1 )
       {
-         pszFile = getenv( "HB_ROOT" );
+         if( pszFile )
+            hb_xfree( pszFile );
+         pszFile = hb_getenv( "HB_ROOT" );
          if( pszFile != NULL && sizeof( szFile ) >
                         strlen( pszFile ) + strlen( s_szDefaultCharMapFile ) )
          {
@@ -429,9 +435,14 @@ int hb_gt_chrmapinit( int *piTransTbl, const char *pszTerm, BOOL fSetACSC )
             nRet = hb_gt_chrmapread( szFile, pszTerm, piTransTbl );
          }
       }
+      if( pszFile )
+         hb_xfree( pszFile );
       if( nRet == -1 )
          nRet = hb_gt_chrmapread( s_szDefaultCharMapFile, pszTerm, piTransTbl );
    }
+
+   if( pszFree )
+      hb_xfree( pszFree );
 
    if( nRet == -1 )
    {

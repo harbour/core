@@ -62,7 +62,7 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 
-#if defined( HB_OS_UNIX ) && !defined( __WATCOMC__ )
+#if defined( HB_OS_UNIX ) && !( defined( __WATCOMC__ ) || defined( __CEGCC__ ) )
    #include <sys/statvfs.h>
 #endif
 
@@ -163,6 +163,7 @@ HB_FUNC( HB_DISKSPACE )
 
          SetLastError( 0 );
 
+#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
          pGetDiskFreeSpaceEx = ( P_GDFSE ) GetProcAddress( GetModuleHandle( "kernel32.dll" ),
                                                            "GetDiskFreeSpaceExA");
 
@@ -231,6 +232,7 @@ HB_FUNC( HB_DISKSPACE )
             }
          }
          else
+#endif
          {
             DWORD dwSectorsPerCluster;
             DWORD dwBytesPerSector;
@@ -327,7 +329,7 @@ HB_FUNC( HB_DISKSPACE )
       else
          hb_fsSetIOError( FALSE, 0 );
    }
-#elif defined(HB_OS_UNIX) && !defined(__WATCOMC__)
+#elif defined(HB_OS_UNIX) && !( defined(__WATCOMC__) || defined(__CEGCC__) )
    {
       struct statvfs sf;
       BOOL fFree = FALSE;

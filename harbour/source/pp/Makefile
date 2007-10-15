@@ -22,5 +22,10 @@ endif
 
 include $(TOP)$(ROOT)config/lib.cf
 
+ifneq ($(HB_PP_RULES),)
+pptable.c : $(HB_PP_RULES)
+	$(CP) $(subst /,$(DIRSEP),$<) $@
+else
 pptable.c : ppgen$(EXE_EXT)
 	$(HB_PPGEN_PATH)/ppgen$(EXE_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q
+endif

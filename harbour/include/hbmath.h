@@ -82,7 +82,10 @@ HB_EXTERN_BEGIN
          #define exception _exception
       #endif
    #endif
-
+#elif defined(__MINGW32CE__)
+   #define HB_MATH_HANDLER
+   #define matherr _matherr
+   #define exception _exception
 /* it seems that MinGW has some problem with MATH HANDLER
    use HB_MATH_ERRNO instead */
 #elif defined(__MINGW32__) && 0

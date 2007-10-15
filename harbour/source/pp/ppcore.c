@@ -58,7 +58,9 @@
 
 #include "hbpp.h"
 #include "hbdate.h"
-#include <errno.h>
+#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
+#  include <errno.h>
+#endif
 
 #define HB_PP_WARN_DEFINE_REDEF                 1     /* C1005 */
 
@@ -1757,7 +1759,7 @@ static void hb_pp_defineDel( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
 }
 
 static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, char * szFileName,
-                                  BOOL fSysFile, FILE * file_in,
+                                  BOOL fSysFile, BOOL * pfNested, FILE * file_in,
                                   BOOL fSearchPath, PHB_PP_OPEN_FUNC pOpenFunc )
 {
    char szFileNameBuf[ _POSIX_PATH_MAX + 1 ];
@@ -1767,16 +1769,17 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, char * szFileName,
    {
       if( pOpenFunc )
       {
-         file_in = ( pOpenFunc )( pState->cargo, szFileName, fSysFile, szFileNameBuf );
+         file_in = ( pOpenFunc )( pState->cargo, szFileName, fSysFile,
+                                  pfNested, szFileNameBuf );
          szFileName = szFileNameBuf;
       }
       else
       {
          PHB_FNAME pFileName = hb_fsFNameSplit( szFileName );
+         BOOL fNested = FALSE;
 
          pFileName->szName = szFileName;
          pFileName->szExtension = NULL;
-         errno = 0;
          if( !fSysFile )
          {
             if( !pFileName->szPath || !pFileName->szPath[ 0 ] )
@@ -1800,18 +1803,29 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, char * szFileName,
             }
 
             file_in = fopen( szFileName, "r" );
+#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
+            fNested = errno == EMFILE;
+#endif
          }
 
-         if( !file_in && errno != EMFILE && pState->pIncludePath && fSearchPath )
+         if( !file_in )
          {
-            HB_PATHNAMES * pPath = pState->pIncludePath;
-
-            while( pPath && !file_in )
+            if( fNested )
             {
-               pFileName->szPath = pPath->szPath;
-               hb_fsFNameMerge( szFileNameBuf, pFileName );
-               file_in = fopen( szFileNameBuf, "r" );
-               pPath = pPath->pNext;
+               if( pfNested )
+                  * pfNested = TRUE;
+            }
+            else if( pState->pIncludePath && fSearchPath )
+            {
+               HB_PATHNAMES * pPath = pState->pIncludePath;
+
+               while( pPath && !file_in )
+               {
+                  pFileName->szPath = pPath->szPath;
+                  hb_fsFNameMerge( szFileNameBuf, pFileName );
+                  file_in = fopen( szFileNameBuf, "r" );
+                  pPath = pPath->pNext;
+               }
             }
          }
          hb_xfree( pFileName );
@@ -1962,8 +1976,9 @@ static void hb_pp_includeFile( PHB_PP_STATE pState, char * szFileName, BOOL fSys
    }
    else
    {
-      PHB_PP_FILE pFile = hb_pp_FileNew( pState, szFileName, fSysFile, NULL,
-                                         TRUE, pState->pOpenFunc );
+      BOOL fNested = FALSE;
+      PHB_PP_FILE pFile = hb_pp_FileNew( pState, szFileName, fSysFile, &fNested,
+                                         NULL, TRUE, pState->pOpenFunc );
       if( pFile )
       {
          pFile->pPrev = pState->pFile;
@@ -1971,7 +1986,7 @@ static void hb_pp_includeFile( PHB_PP_STATE pState, char * szFileName, BOOL fSys
          pState->iFiles++;
          pFile->fGenLineInfo = TRUE;
       }
-      else if( errno == EMFILE )
+      else if( fNested )
          hb_pp_error( pState, 'F', HB_PP_ERR_NESTED_INCLUDES, NULL );
       else
          hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_OPEN_FILE, szFileName );
@@ -5128,7 +5143,7 @@ void hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile )
    hb_fsFNameMerge( szFileName, pFileName );
    hb_xfree( pFileName );
 
-   pState->pFile = hb_pp_FileNew( pState, szFileName, FALSE, NULL,
+   pState->pFile = hb_pp_FileNew( pState, szFileName, FALSE, NULL, NULL,
                                   TRUE, pState->pOpenFunc );
    if( !pState->pFile )
    {
@@ -5179,7 +5194,7 @@ BOOL hb_pp_inFile( PHB_PP_STATE pState, const char * szFileName,
 
    pState->fError = FALSE;
 
-   pState->pFile = hb_pp_FileNew( pState, ( char * ) szFileName, FALSE,
+   pState->pFile = hb_pp_FileNew( pState, ( char * ) szFileName, FALSE, NULL,
                                   file_in, fSearchPath, NULL );
    if( pState->pFile )
    {

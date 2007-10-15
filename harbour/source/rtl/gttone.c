@@ -66,13 +66,14 @@
 
 #if defined( HB_OS_WIN_32 )
 
-#if defined(_MSC_VER) || defined(__WATCOMC__)
-   #include <conio.h>
-#endif   
-
-#if defined( HB_ARCH_32BIT ) && \
+#if defined( HB_ARCH_32BIT ) && !defined( _M_ARM ) && \
     ( defined(__BORLANDC__) || defined(_MSC_VER) || \
       defined(__WATCOMC__) || defined(__MINGW32__) )
+
+#if defined(_MSC_VER) || defined(__WATCOMC__)
+   #include <conio.h>
+#endif
+
 static int hb_Inp9x( USHORT usPort )
 {
    USHORT usVal;
@@ -258,7 +259,7 @@ void hb_gt_w32_Tone( double dFrequency, double dDuration )
    /* If Windows 95 or 98, use w9xTone for BCC32, MSVC */
    if( s_osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
    {
-      #if defined( HB_ARCH_32BIT ) && \
+      #if defined( HB_ARCH_32BIT ) && !defined( _M_ARM ) && \
            ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
              defined( __WATCOMC__ )  || defined(__MINGW32__) )
          hb_gt_w9xTone( dFrequency, dDuration );
