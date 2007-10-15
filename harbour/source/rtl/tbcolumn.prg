@@ -215,8 +215,7 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBColumn
 
 METHOD New( cHeading, bBlock ) CLASS TBColumn
 
-   /* NOTE: CA-Cl*pper will allow any types for the heading here. [vszakats] */
-   ::cHeading := cHeading
+   ::cHeading := cHeading /* NOTE: CA-Cl*pper will allow any types for the heading here. [vszakats] */
    ::bBlock := bBlock /* NOTE: CA-Cl*pper allows any types here. [vszakats] */
 
    RETURN Self
