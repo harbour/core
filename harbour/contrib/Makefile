@@ -34,6 +34,7 @@ DIRS +=\
 	ole2 \
 	odbc \
 	adordd \
+	win32prn \
 
 endif
 
