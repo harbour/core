@@ -162,10 +162,7 @@
        (this was copied from __KEYBOARD()'s extended section)
      + Added handling of string parameter in HB_KEYPUT().
        (this way we don't really need the hidden extensions 
-       in __KEYBOARD() anymore. Also notice that __KEYBOARD() 
-       doesn't clear the keyboard buffer when numeric or 
-       array is passed, which is not consistent with the 
-       Clipper compatible behaviour when strings are passed.)
+       in __KEYBOARD() anymore.)
 
    * common.mak
    * include/hbcompdf.h
