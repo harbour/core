@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-16 15:18 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   + contrib/win32prn
+   + contrib/win32prn/makefile.bc
+   + contrib/win32prn/make_b32.bat
+   + contrib/win32prn/w32_pcls.prg
+   + contrib/win32prn/w32_papi.c
+   + contrib/win32prn/tprinter.c
+   + contrib/win32prn/testw32p.prg
+     + Ported Win32 specific bitmap printing class from xharbour core.
+     ; Please test.
+
 2007-10-16 12:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/isprint.c
      ! Fixed ISPRINTER() on Win32 after last changes.
