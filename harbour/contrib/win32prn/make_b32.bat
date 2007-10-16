@@ -27,6 +27,7 @@ if "%1" == "CLEAN" goto CLEAN
    if exist ..\..\lib\b32\hbwin32prn.bak del ..\..\lib\b32\hbwin32prn.bak
    if exist ..\..\obj\b32\w32_papi.obj   del ..\..\obj\b32\w32_papi.obj
    if exist ..\..\obj\b32\w32_pcls.obj   del ..\..\obj\b32\w32_pcls.obj
+   if exist ..\..\obj\b32\tprinter.obj   del ..\..\obj\b32\tprinter.obj
 
    goto EXIT
 

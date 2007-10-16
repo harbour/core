@@ -51,6 +51,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapigt.h"
 #include "hbapiitm.h"
 
 HB_FUNC_EXTERN( __KEYBOARD );

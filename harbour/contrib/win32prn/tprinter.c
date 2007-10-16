@@ -435,8 +435,8 @@ HB_FUNC( GETPRINTERS )
                               pPrinterInfo2 = ( PRINTER_INFO_2 * ) hb_xgrab( needed ) ;
                               if ( pPrinterInfo2 )
                               {
-                                 hb_arrayNew( &SubItems, 0 );
-                                 hb_itemPutC( &File, pPrinterEnum4->pPrinterName );
+                                 hb_arrayNew( SubItems, 0 );
+                                 hb_itemPutC( File, pPrinterEnum4->pPrinterName );
 
                                  if ( GetPrinter( hPrinter, 2, (LPBYTE) pPrinterInfo2, needed, &needed ) )
                                  {
