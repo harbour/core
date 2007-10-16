@@ -243,8 +243,6 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
 
 #endif
 
-#ifdef HB_EXTENSION
-
 HB_FUNC( HB_FTEMPCREATE )
 {
    BYTE szName[ _POSIX_PATH_MAX + 1 ];
@@ -256,5 +254,3 @@ HB_FUNC( HB_FTEMPCREATE )
 
    hb_storc( ( char *) szName, 4 );
 }
-
-#endif

@@ -53,8 +53,6 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#ifdef HB_EXTENSION
-
 HB_FUNC( HB_VALTOSTR )
 {
    ULONG ulLen;
@@ -149,6 +147,3 @@ HB_FUNC( HB_STRTOEXP )
       hb_retclen_buffer( pszResult, ulRet );
    }
 }
-
-#endif
-

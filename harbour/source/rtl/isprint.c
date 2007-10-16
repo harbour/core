@@ -124,19 +124,6 @@ HB_EXPORT BOOL hb_printerIsReady( char * pszPrinterName )
          bIsPrinter = FALSE;
    }
 
-#elif defined(HB_WIN_32_PRINTERS)
-
-   {
-      HANDLE hPrinter;
-
-      bIsPrinter = FALSE;
-      if( *pszPrinterName && OpenPrinter( pszPrinterName, &hPrinter, NULL ) )
-      {
-         bIsPrinter = ! IsPrinterError( hPrinter );
-         CloseHandle( hPrinter );
-      }
-   }
-
 #else
 
    /* NOTE: Platform independent method, at least it will compile and run
@@ -172,10 +159,25 @@ HB_FUNC( ISPRINTER )
 HB_FUNC( HB_ISPRINTER )
 {
 #if defined(HB_WIN_32_PRINTERS)
+
+   /* NOTE: This Win32 specific bitmap printer support would have to 
+            go somewhere else. [vszakats] */
+
    char DefaultPrinter[MAXBUFFERSIZE];
    DWORD pdwBufferSize = MAXBUFFERSIZE;
+   HANDLE hPrinter;
+   char * pszPrinterName;
    DPGetDefaultPrinter( ( LPTSTR ) &DefaultPrinter, &pdwBufferSize );
-   hb_retl( hb_printerIsReady( ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) DefaultPrinter ) );
+   pszPrinterName = ISCHAR( 1 ) ? hb_parc( 1 ) : ( char * ) DefaultPrinter;
+
+   if( *pszPrinterName && OpenPrinter( pszPrinterName, &hPrinter, NULL ) )
+   {
+      hb_retl( ! IsPrinterError( hPrinter ) );
+      CloseHandle( hPrinter );
+   }
+   else
+      hb_retl( FALSE );
+
 #else
    char * pszPrinter = hb_parc( 1 );
    hb_retl( hb_printerIsReady( pszPrinter ? pszPrinter : ( char * ) "LPT1" ) );

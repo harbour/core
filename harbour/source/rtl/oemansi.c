@@ -58,8 +58,6 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#ifdef HB_EXTENSION
-
 HB_FUNC( HB_ANSITOOEM )
 {
    PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
@@ -101,8 +99,6 @@ HB_FUNC( HB_OEMTOANSI )
    else
       hb_retc( NULL );
 }
-
-#endif
 
 #ifdef HB_COMPAT_XPP
 

@@ -66,8 +66,6 @@
    #include <sys/statvfs.h>
 #endif
 
-#ifdef HB_EXTENSION
-
 HB_FUNC( HB_DISKSPACE )
 {
    char szPathBuf[ 4 ];
@@ -374,5 +372,3 @@ HB_FUNC( HB_DISKSPACE )
 
    hb_retnlen( dSpace, -1, 0 );
 }
-
-#endif

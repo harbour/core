@@ -73,16 +73,12 @@
 #include "hbstack.h"
 #include "hbvm.h"
 
-#ifdef HB_EXTENSION
-
 HB_FUNC( HB_METHODNAME )
 {
    char szName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
 
    hb_retc( hb_procname( hb_parni( 1 ) + 1, szName, TRUE ) );
 }
-
-#endif
 
 HB_FUNC( PROCNAME )
 {
@@ -108,6 +104,7 @@ HB_FUNC( PROCLINE )
 
 HB_FUNC( PROCFILE )
 {
+#ifdef HB_EXTENSION
    PHB_SYMB pSym = NULL;
 
    if( ISSYMBOL( 1 ) )
@@ -140,6 +137,9 @@ HB_FUNC( PROCFILE )
    }
 
    hb_retc( hb_vmFindModuleSymbolName( hb_vmGetRealFuncSym( pSym ) ) );
+#else
+   hb_retc( NULL );
+#endif
 }
 
 #endif

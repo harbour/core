@@ -67,6 +67,10 @@ FUNCTION _SetVideoMode( nMode )
 
    RETURN 0
 
+/* NOTE: Original _GetNumCol() will not recognize colors written 
+         in lowercase. We're replicating this behaviour in this 
+         compatibility function. [vszakats] */
+
 FUNCTION _GetNumCol( cColor )
    LOCAL nPos
 
@@ -76,9 +80,6 @@ FUNCTION _GetNumCol( cColor )
    IF ( nPos := At( ",", cColor ) ) > 0
       cColor := Left( cColor, nPos - 1 )
    ENDIF
-   #ifndef HB_C52_STRICT
-      cColor := Upper( cColor )
-   #endif
 
    RETURN AScan( { "B", "G", "BG", "R", "RB", "GR", "W", "N+", "B+", "G+", "BG+", "R+", "RB+", "GR+", "W+" }, {| tmp | tmp == cColor } )
 

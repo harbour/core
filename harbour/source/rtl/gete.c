@@ -107,7 +107,11 @@ HB_FUNC( GETENV )
          {
             if( szValue )
                hb_xfree( szValue );
+#ifdef HB_EXTENSION
             hb_retc( hb_parc( 2 ) );
+#else
+            hb_retc( NULL );
+#endif
          }
       }
       else

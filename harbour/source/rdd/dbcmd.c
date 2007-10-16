@@ -884,6 +884,47 @@ HB_FUNC( FCOUNT )
    hb_retni( uiFields );
 }
 
+HB_FUNC( FIELDGET )
+{
+   PHB_ITEM pItem = hb_itemNew( NULL );
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+   USHORT uiField = hb_parni( 1 );
+
+   if( pArea && uiField )
+   {
+      SELF_GETVALUE( pArea, uiField, pItem );
+   }
+
+   hb_itemReturnForward( pItem );
+   hb_itemRelease( pItem );
+}
+
+#ifdef HB_EXTENSION
+
+HB_FUNC( FIELDLEN )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+   {
+      USHORT uiIndex;
+      if( ( uiIndex = hb_parni( 1 ) ) > 0 )
+      {
+         PHB_ITEM pItem = hb_itemNew( NULL );
+
+         if( SELF_FIELDINFO( pArea, uiIndex, DBS_LEN, pItem ) == SUCCESS )
+         {
+            hb_itemReturnForward( pItem );
+            hb_itemRelease( pItem );
+            return;
+         }
+         hb_itemRelease( pItem );
+      }
+   }
+
+   hb_retni(0);
+}
+
 HB_FUNC( FIELDDEC )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -909,33 +950,19 @@ HB_FUNC( FIELDDEC )
    hb_retni(0);
 }
 
-HB_FUNC( FIELDGET )
-{
-   PHB_ITEM pItem = hb_itemNew( NULL );
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   USHORT uiField = hb_parni( 1 );
-
-   if( pArea && uiField )
-   {
-      SELF_GETVALUE( pArea, uiField, pItem );
-   }
-
-   hb_itemReturnForward( pItem );
-   hb_itemRelease( pItem );
-}
-
-HB_FUNC( FIELDLEN )
+HB_FUNC( FIELDTYPE )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
    {
       USHORT uiIndex;
+
       if( ( uiIndex = hb_parni( 1 ) ) > 0 )
       {
          PHB_ITEM pItem = hb_itemNew( NULL );
 
-         if( SELF_FIELDINFO( pArea, uiIndex, DBS_LEN, pItem ) == SUCCESS )
+         if( SELF_FIELDINFO( pArea, uiIndex, DBS_TYPE, pItem ) == SUCCESS )
          {
             hb_itemReturnForward( pItem );
             hb_itemRelease( pItem );
@@ -945,8 +972,10 @@ HB_FUNC( FIELDLEN )
       }
    }
 
-   hb_retni(0);
+   hb_retc( NULL );
 }
+
+#endif
 
 HB_FUNC( FIELDNAME )
 {
@@ -1002,31 +1031,6 @@ HB_FUNC( FIELDPUT )
          }
       }
    }
-}
-
-HB_FUNC( FIELDTYPE )
-{
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-
-   if( pArea )
-   {
-      USHORT uiIndex;
-
-      if( ( uiIndex = hb_parni( 1 ) ) > 0 )
-      {
-         PHB_ITEM pItem = hb_itemNew( NULL );
-
-         if( SELF_FIELDINFO( pArea, uiIndex, DBS_TYPE, pItem ) == SUCCESS )
-         {
-            hb_itemReturnForward( pItem );
-            hb_itemRelease( pItem );
-            return;
-         }
-         hb_itemRelease( pItem );
-      }
-   }
-
-   hb_retc( NULL );
 }
 
 HB_FUNC( FLOCK )
@@ -2489,6 +2493,8 @@ HB_FUNC( DBFILEPUT )
 }
 #endif
 
+#ifdef HB_EXTENSION
+
 /*******************************************/
 /* here we have the NEW RDD level functions DBDROP, DBEXISTS, RDDINFO */
 HB_FUNC( DBDROP )
@@ -2570,6 +2576,8 @@ HB_FUNC( RDDINFO )
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "RDDINFO" );
    }
 }
+
+#endif
 
 /* __dbTrans( nDstArea, aFieldsStru, bFor, bWhile, nNext, nRecord, lRest ) */
 HB_FUNC( __DBTRANS )

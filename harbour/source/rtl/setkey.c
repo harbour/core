@@ -216,8 +216,6 @@ HB_FUNC( SETKEY )
    }
 }
 
-#if defined( HB_EXTENSION )
-
 /* Sets the same block for an array of keycodes */
 
 HB_FUNC( HB_SETKEYARRAY )
@@ -344,5 +342,3 @@ HB_FUNC( HB_SETKEYCHECK )
 
    hb_retl( bIsKeySet );
 }
-
-#endif

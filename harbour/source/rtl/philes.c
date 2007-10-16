@@ -87,8 +87,6 @@ HB_FUNC( FCREATE )
    }
 }
 
-#ifdef HB_EXTENSION
-
 HB_FUNC( HB_FCREATE )
 {
    if( ISCHAR( 1 ) )
@@ -104,8 +102,6 @@ HB_FUNC( HB_FCREATE )
       hb_setFError( 0 );
    }
 }
-
-#endif
 
 HB_FUNC( FREAD )
 {
@@ -269,8 +265,6 @@ HB_FUNC( CURDIR )
    hb_retc( ( char * ) byBuffer );
 }
 
-#ifdef HB_EXTENSION
-
 HB_FUNC( HB_FEOF )
 {
    USHORT uiError = 6;
@@ -329,5 +323,3 @@ HB_FUNC( HB_OSDRIVESEPARATOR )
    hb_retc( NULL );
 #endif
 }
-
-#endif

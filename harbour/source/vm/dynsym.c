@@ -485,8 +485,6 @@ void hb_dynsymRelease( void )
    }
 }
 
-#ifdef HB_EXTENSION
-
 HB_FUNC( __DYNSCOUNT ) /* How much symbols do we have: dsCount = __dynsymCount() */
 {
    hb_retnl( ( long ) s_uiDynSymbols );
@@ -552,8 +550,6 @@ HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or proc
    }
 #endif
 }
-
-#endif
 
 HB_FUNC( __DYNSN2PTR )
 {

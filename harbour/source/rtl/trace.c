@@ -53,8 +53,6 @@
 #include "hbapi.h"
 #include "hbtrace.h"
 
-#ifdef HB_EXTENSION
-
 HB_FUNC( HB_TRACESTATE )
 {
    hb_retni( hb_tracestate( ISNUM( 1 ) ? hb_parni( 1 ) : -1 ) );
@@ -73,5 +71,3 @@ HB_FUNC( HB_TRACESTRING )
       HB_TRACE(HB_TR_ALWAYS, (szMessage) );
    }
 }
-
-#endif

@@ -89,8 +89,6 @@ HB_FUNC( SETBLINK )
    hb_retl( bPreviousBlink );
 }
 
-#ifdef HB_EXTENSION
-
 HB_FUNC( HB_COLORTON )
 {
    if( ISCHAR( 1 ) )
@@ -115,5 +113,3 @@ HB_FUNC( HB_NTOCOLOR )
    else
       hb_retc( "N/N" );
 }
-
-#endif

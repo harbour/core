@@ -149,7 +149,7 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
    int iEOLs = 0;
    char * szEOL;
 
-#ifndef HB_C52_STRICT
+#ifdef HB_EXTENSION
    ULONG ulLen, ul;
 
    szEOL = hb_parc( iParam );

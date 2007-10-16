@@ -8,6 +8,134 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-16 12:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/isprint.c
+     ! Fixed ISPRINTER() on Win32 after last changes.
+       Thanks Guillermo, pls test now.
+   
+   * source/rdd/dbcmd.c
+     ! Marked as HB_EXTENSION: FIELDLEN(), FIELDDEC(), FIELDTYPE()
+
+   * include/hbextern.ch
+   * source/rdd/dbcmd.c
+     ! Marked as HB_EXTENSION: DBDROP(), DBEXISTS(), RDDINFO()
+       (they were properly marked in hbextern.ch but not in source)
+
+   * include/hbextern.ch
+   * source/rtl/disksphb.c
+   * source/rtl/fssize.c
+   * source/rtl/fstemp.c
+   * source/rtl/inkey.c
+   * source/rtl/oemansi.c
+   * source/rtl/philes.c
+   * source/rtl/setcolor.c
+   * source/rtl/setfunc.prg
+   * source/rtl/setkey.c
+   * source/rtl/shadow.c
+   * source/rtl/trace.c
+   * source/rtl/valtostr.c
+   * source/vm/dynsym.c
+     + Removed HB_EXTENSION from all the .prg level functions 
+       prefixed with HB_.
+       (there was a mixed situation here, but there's no need 
+       to mark any HB_ functions as extensions, as it's obvious 
+       by their name. So as a rule, no HB_ prefixed function 
+       should ever be marked as HB_EXTENSION anymore.)
+     ! Fixed some inconsistencies in HB_EXTENSION between 
+       hbextern.ch and actual sources.
+
+   * source/rtl/tgetlist.prg
+     * One HB_EXTENSION changed to !HB_C52_STRICT because it 
+       was guarding a bugfix rather than a real extension.
+
+   * source/rtl/gui.prg
+     * _GetNumCol() is now always strictly compatible.
+       NOTE added about sloppy C5.3 behaviour.
+
+   * source/rtl/inkey.c
+   * contrib/xhb/xhb.ch
+   * contrib/xhb/xhbfunc.c
+     ! __KEYBOARD() xhb hidden parameter extension moved to 
+       xhb lib. For similar functionality inside Harbour 
+       pls use HB_KEYPUT(). __KEYBOARD is now 100% C5.x 
+       compatible.
+
+   * source/rtl/setfunc.prg
+     * __SetFunction() extension now uses HB_KEYPUT() instead 
+       of __KEYBOARD() extended parameters.
+
+   * source/compiler/hbfunchk.c
+   * source/rtl/at.c
+     ! AT() extra parameters handled when HB_EXTENSION is on 
+       (was !HB_C52_STRICT). (The first extra parameter is 
+       XPP and Flagship compatible. The three parameter version 
+       of this function is called AT3() in CAVO.)
+     ! TRIM()/RTRIM() extra parameters handled on compiler level 
+       when HB_EXTENSION is on (default).
+     ! FILE() parameter check turned off in compiler.
+       (to be C5.x compatible)
+
+   * source/rtl/alert.prg
+     ! ALERT() Harbour extended parameter (1st parameter type) 
+       is now guarded with HB_EXTENSION instead of HB_C52_STRICT.
+
+   * source/rtl/gete.c
+     ! GETE[NV]() Harbour extended parameter guarded with HB_EXTENSION.
+
+   * source/vm/proc.c
+     ! PROCFILE() Harbour extended parameter guarded with HB_EXTENSION.
+
+   * source/rtl/mlcfunc.c
+     ! Harbour extended parameters for MEMOLINE()/MLCOUNT()/
+       MLPOS()/MLCTOPOS()/MPOSTOLC() are now guarded with HB_EXTENSION 
+       (instead of HB_C52_STRICT). It seems to be possible to 
+       specify custom EOLs for all these functions. (Maybe simple 
+       automatic Unix/Win EOL style handling would be better here)
+
+   * source/vm/memvars.c
+     ! Guarded Harbour extension in __MVRESTORE() with HB_EXTENSION.
+
+   ; After this cleanup:
+     - HB_EXTENSION is marking extra features living inside existing C5.x 
+                    functions or classes, or Harbour extension functions 
+                    not complying with the HB_ prefix rule (we have six 
+                    such functions in RDD). If there are more extended 
+                    parameters in Harbour pls mark them with HB_EXTENSION 
+                    too.
+     - HB_C52_STRICT is guarding bugfixes compared to C5.x.
+     - No HB_ functions are guarded with HB_EXTENSION anymore.
+     - We'd pbly need to review each HB_EXTENSIONs to check whether they 
+       are safe or not.
+     - A list of HB_EXTENSIONs:
+       - MLCOUNT()
+         MEMOLINE()
+         MLPOS()
+         MLCPOS()
+         MPOSTOLC()      - 5th and up can specify custom EOLs.
+       - ALERT()         - 1st parameter type can be any type in Harbour, char only in C5.x
+       - SET FUNCTION TO
+         __SETFUNCTION   - 2nd parameter can be numeric or array of numeric in Harbour.
+       - SETKEY()        - 3rd codeblock parameter ("isactive" block)
+       - SAVESCREEN()    - 5th parameter: lNoCheck (?)
+         RESTSCREEN()    - 6th parameter: lNoCheck (?)
+       - AT()            - 3rd and 4th parameters to set search range. 3rd parameter is 
+                           also supported by XPP and FS. Results in compiler error in C5.x.
+                           (CAVO uses AT2() and AT3() for extended versions.)
+       - TRIM()
+         RTRIM()         - 2nd parameter is an extension regarding space trimming mode.
+                           Results in compiler error in C5.x.
+       - ALLTRIM()       - 2nd parameter is an extension regarding space trimming mode.
+       - GETE()
+         GETENV()        - 2nd parameter specifies a default value. Can be found in HB_GETENV().
+       - PROCFILE()      - 1st parameter is a Harbour extension. Undocumented function in C5.x.
+                           The extension looks similar to the one found in Flagship.
+       - __MVRESTORE()   - 3rd/4th parameters are Harbour extensions to set variable name 
+                           mask. Redirected from the internal 5.x function named __MRESTORE().
+       - DB*()           - cRDD, nConnection, cCodePage extra parameters in many DB*() functions.
+                           TOFIX: None of them is marked as HB_EXTENSION.
+       - SET()s          - These are not marked as HB_EXTENSION.
+       - ?               - Is there anything else?
+
 2007-10-16 09:29 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbextern.ch
    * source/rtl/gete.c

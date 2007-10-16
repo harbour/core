@@ -56,23 +56,7 @@
 
 /* locates a substring in a string */
 
-#if defined( HB_C52_STRICT )
-
-HB_FUNC( AT )
-{
-   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
-
-   if( pText && pSub )
-   {
-      hb_retnl( hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
-                          hb_itemGetCPtr( pText ), hb_itemGetCLen( pText ) ) );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", HB_ERR_ARGS_BASEPARAMS );
-}
-
-#else
+#if defined( HB_EXTENSION )
 
 HB_FUNC( AT )
 {
@@ -98,6 +82,22 @@ HB_FUNC( AT )
 
          hb_retnl( ulPos );
       }
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", HB_ERR_ARGS_BASEPARAMS );
+}
+
+#else
+
+HB_FUNC( AT )
+{
+   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
+
+   if( pText && pSub )
+   {
+      hb_retnl( hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                          hb_itemGetCPtr( pText ), hb_itemGetCLen( pText ) ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", HB_ERR_ARGS_BASEPARAMS );

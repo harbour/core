@@ -60,6 +60,8 @@
 #ifndef __XHARBOUR__
    #pragma -ks+
    REQUEST XHB_LIB
+
+   #xtranslate __Keyboard([<k>])              => xhb__Keyboard(<k>)
 #endif
 
 #endif /* __HARBOUR__ */

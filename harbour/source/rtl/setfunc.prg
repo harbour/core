@@ -72,7 +72,7 @@ PROCEDURE __SetFunction( nFunctionKey, xKeySeq )
 #else
    IF ISCHARACTER( xKeySeq )
 #endif
-      SetKey( nFunctionKey, {|| __Keyboard( xKeySeq ) } )
+      SetKey( nFunctionKey, {|| __Keyboard(), hb_KeyPut( xKeySeq ) } )
    ELSE
       SetKey( nFunctionKey, NIL )
    ENDIF

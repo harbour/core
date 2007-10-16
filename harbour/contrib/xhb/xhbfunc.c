@@ -53,6 +53,36 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+HB_FUNC_EXTERN( __KEYBOARD );
+
+HB_FUNC( XHB__KEYBOARD )
+{
+   if( ISCHAR( 1 ) )
+   {
+      HB_FUNC_EXEC( __KEYBOARD );
+   }
+   else if( ISNUM( 1 ) )
+   {
+      hb_inkeyReset();
+      hb_inkeyPut( hb_parni(1) );
+   }
+   else if( ISARRAY( 1 ) )
+   {
+      PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+      ULONG ulElements = hb_arrayLen( pArray ), ulIndex;
+
+      hb_inkeyReset();
+
+      for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
+      {
+         if( hb_arrayGetType( pArray, ulIndex ) & HB_IT_NUMERIC )
+            hb_inkeyPut( hb_arrayGetNI( pArray, ulIndex ) );
+      }
+   }
+   else
+      hb_inkeyReset();
+}
+
 HB_FUNC_EXTERN( HB_DESERIALIZE );
 
 HB_FUNC( HB_DESERIALBEGIN )

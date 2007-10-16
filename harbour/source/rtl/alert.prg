@@ -34,8 +34,7 @@
 /* NOTE: Clipper will return NIL if the first parameter is not a string, but
          this is not documented. This implementation converts the first
          parameter to a string if another type was passed. You can switch back
-         to Clipper compatible mode by defining constant
-         HB_C52_STRICT. [vszakats] */
+         to Clipper compatible mode by undefining constant HB_EXTENSION. [vszakats] */
 
 /* NOTE: Clipper handles these buttons { "Ok", "", "Cancel" } in a buggy way.
          This is fixed. [vszakats] */
@@ -62,15 +61,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 
 #endif
 
-#ifdef HB_C52_STRICT
-
-   IF !ISCHARACTER( xMessage )
-      RETURN NIL
-   ENDIF
-
-   cMessage := StrTran( xMessage, ";", Chr( 10 ) )
-
-#else
+#ifdef HB_EXTENSION
 
    IF PCount() == 0
       RETURN NIL
@@ -83,7 +74,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       lFirst := .T.
       FOR nEval := 1 TO Len( xMessage )
          IF ISCHARACTER( cLine := xMessage[ nEval ] )
-            cMessage += IIF( lFirst, "", Chr( 10 ) ) + cLine
+            cMessage += iif( lFirst, "", Chr( 10 ) ) + cLine
             lFirst := .F.
          ENDIF
       NEXT
@@ -102,6 +93,14 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       ENDCASE
 
    ENDIF
+
+#else
+
+   IF !ISCHARACTER( xMessage )
+      RETURN NIL
+   ENDIF
+
+   cMessage := StrTran( xMessage, ";", Chr( 10 ) )
 
 #endif
 
@@ -133,11 +132,11 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
 #ifdef HB_C52_STRICT
    /* NOTE: Clipper allows only four options [vszakats] */
    ELSEIF Len( aOptionsOK ) > 4
-      aSize( aOptionsOK, 4 )
+      ASize( aOptionsOK, 4 )
 #endif
    ENDIF
 
-   RETURN HB_gtAlert( cMessage, aOptionsOK, cColorNorm, cColorHigh, nDelay );
+   RETURN hb_gtAlert( cMessage, aOptionsOK, cColorNorm, cColorHigh, nDelay );
 
 #ifdef HB_C52_UNDOC
 
@@ -148,4 +147,3 @@ PROCEDURE __NONOALERT()
    RETURN
 
 #endif
-

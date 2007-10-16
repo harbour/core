@@ -47,10 +47,10 @@ static HB_FUNCINFO hb_StdFunc[] =
    { "AADD"      , 2,  2 },
    { "ABS"       , 1,  1 },
    { "ASC"       , 1,  1 },
-#if defined( HB_C52_STRICT )
-   { "AT"        , 2,  2 },
-#else
+#if defined( HB_EXTENSION )
    { "AT"        , 2,  4 },
+#else
+   { "AT"        , 2,  2 },
 #endif
    { "BOF"       , 0,  0 },
    { "BREAK"     , 0,  1 },
@@ -72,9 +72,7 @@ static HB_FUNCINFO hb_StdFunc[] =
    { "EXP"       , 1,  1 },
    { "FCOUNT"    , 0,  0 },
    { "FIELDNAME" , 1,  1 },
-#if !defined( HB_C52_STRICT )
    { "FILE"      , 1,  1 },
-#endif
    { "FLOCK"     , 0,  0 },
    { "FOUND"     , 0,  0 },
    { "INKEY"     , 0,  2 },
@@ -99,7 +97,11 @@ static HB_FUNCINFO hb_StdFunc[] =
    { "RLOCK"     , 0,  0 },
    { "ROUND"     , 2,  2 },
    { "ROW"       , 0,  0 },
+#if defined( HB_EXTENSION )
    { "RTRIM"     , 1,  2 }, /* Second parameter is a Harbour extension */
+#else
+   { "RTRIM"     , 1,  1 },
+#endif
    { "SECONDS"   , 0,  0 },
    { "SELECT"    , 0,  1 },
    { "SETPOS"    , 2,  2 },
@@ -110,7 +112,11 @@ static HB_FUNCINFO hb_StdFunc[] =
    { "SUBSTR"    , 2,  3 },
    { "TIME"      , 0,  0 },
    { "TRANSFORM" , 2,  2 },
+#if defined( HB_EXTENSION )
    { "TRIM"      , 1,  2 }, /* Second parameter is a Harbour extension */
+#else
+   { "TRIM"      , 1,  1 },
+#endif
    { "TYPE"      , 1,  1 },
    { "UPPER"     , 1,  1 },
    { "VAL"       , 1,  1 },
