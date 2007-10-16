@@ -125,3 +125,58 @@ HB_FUNC( GETE )
 {
    HB_FUNC_EXEC( GETENV );
 }
+
+/* NOTE: Harbour extended version of GETENV(). The 2nd parameter 
+         can be used to specify a default value, returned if the 
+         requested envvar doesn't exist. [vszakats] */
+
+HB_FUNC( HB_GETENV )
+{
+   PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
+
+   if( pName )
+   {
+      char * pszName = hb_itemGetC( pName );
+      ULONG ulName = strlen( pszName );
+      ULONG ulPos;
+
+      /* strip the '=' or else it will clear the variable! */
+
+      for( ulPos = 0; ulPos < ulName; ulPos++ )
+      {
+         if( pszName[ ulPos ] == '=' )
+         {
+            pszName[ ulPos ] = '\0';
+            break;
+         }
+      }
+
+      if( pszName[ 0 ] != '\0' )
+      {
+         char * szValue;
+
+         /* NOTE: Convert the envvar name to uppercase. This is required for
+                  DOS and OS/2 systems. [vszakats] */
+
+         #if defined(HB_OS_DOS) || defined(HB_OS_OS2)
+            hb_strupr( pszName );
+         #endif
+
+         szValue = hb_getenv( pszName );
+         if( szValue && szValue[ 0 ] != '\0' )
+            hb_retc_buffer( szValue );
+         else
+         {
+            if( szValue )
+               hb_xfree( szValue );
+            hb_retc( hb_parc( 2 ) );
+         }
+      }
+      else
+         hb_retc( NULL );
+
+      hb_itemFreeC( pszName );
+   }
+   else
+      hb_retc( NULL );
+}

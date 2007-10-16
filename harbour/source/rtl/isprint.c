@@ -157,10 +157,19 @@ HB_EXPORT BOOL hb_printerIsReady( char * pszPrinterName )
    return bIsPrinter;
 }
 
-/* NOTE: The parameter is an extension over CA-Cl*pper, it's also supported
-         by Xbase++. [vszakats] */
+/* NOTE: The parameter is an XBase++ extension over CA-Cl*pper. [vszakats] */
 
 HB_FUNC( ISPRINTER )
+{
+#ifdef HB_COMPAT_XPP
+   char * pszPrinter = hb_parc( 1 );
+   hb_retl( hb_printerIsReady( pszPrinter ? pszPrinter : ( char * ) "LPT1" ) );
+#else
+   hb_retl( hb_printerIsReady( "LPT1" ) );
+#endif
+}
+
+HB_FUNC( HB_ISPRINTER )
 {
 #if defined(HB_WIN_32_PRINTERS)
    char DefaultPrinter[MAXBUFFERSIZE];

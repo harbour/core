@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-16 09:29 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbextern.ch
+   * source/rtl/gete.c
+     + Added HB_GETENV(). There you have a 2nd parameter 
+       which will be returned in case the requested 
+       envvar doesn't exist. This extensions is still present 
+       in GETE[NV](), but we'd better remove it.
+
+   * include/hbextern.ch
+   * source/rtl/isprint.c
+     + Added HB_ISPRINTER() with support for extra parameter 
+       printer port name. This parameter also currently has 
+       support for Win32 printers. Win32 printer name support 
+       was removed from ISPRINTER() to keep compatibility.
+       ISPRINTER() extra parameter is enabled with HB_COMPAT_XPP 
+       (which is the default).
+
 2007-10-15 18:36 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tbcolumn.prg
      ! Strict C5.2e compatible behaviour made the default.
