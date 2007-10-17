@@ -229,10 +229,3 @@ STATIC FUNCTION __GetField( cField )
 
 FUNCTION __dbTransRec( nDstArea, aFieldsStru )
    RETURN __dbTrans( nDstArea, aFieldsStru, NIL, NIL, 1 )
-
-#ifdef HB_COMPAT_XPP
-
-FUNCTION dbTotal( cFile, xKey, aFields, xFor, xWhile, nNext, nRec, lRest )
-   RETURN __dbTotal( cFile, xKey, aFields, xFor, xWhile, nNext, nRec, lRest )
-
-#endif

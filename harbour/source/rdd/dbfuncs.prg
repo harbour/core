@@ -119,22 +119,3 @@ FUNCTION ordSetFocu( xOrder, cFile )
 
 FUNCTION ordSetRela( xArea, bRelation, cRelation )
    RETURN ordSetRelation( xArea, bRelation, cRelation )
-
-#ifdef HB_COMPAT_XPP
-
-FUNCTION _dbExport( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver, cDelimiter )
-
-   DO CASE
-   CASE cXPP_Driver == "SDFDBE"
-      RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF" )
-/*    Alternate CA-Cl*pper compatible call:
-      RETURN __dbSDF( .T., cFile, aFields, bFor, bWhile, nNext, nRecord, lRest ) */
-   CASE cXPP_Driver == "DELDBE"
-      RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM", , , cDelimiter )
-/*    Alternate CA-Cl*pper compatible call:
-      RETURN __dbDelim( .T., cFile, cDelimiter, aFields, bFor, bWhile, nNext, nRecord, lRest ) */
-   ENDCASE
-
-   RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver )
-
-#endif

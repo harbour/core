@@ -126,10 +126,3 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
    ENDIF
 
    RETURN
-
-#ifdef HB_COMPAT_XPP
-
-FUNCTION dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToPrint, cToFileName )
-   RETURN __dbList( abEval, lOff, lAll, bFor, bWhile, nNext, nRecord, lRest, lToPrint, cToFileName )
-
-#endif

@@ -8,6 +8,32 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-17 11:55 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * common.mak
+   * source/rtl/Makefile
+   * source/rtl/oemansi.c
+   + source/rtl/oemansix.c
+   * source/rtl/typefile.prg
+   + source/rtl/typefilx.prg
+   * source/rdd/Makefile
+   * source/rdd/dbjoin.prg
+   + source/rdd/dbjoinx.prg
+   * source/rdd/dblist.prg
+   + source/rdd/dblistx.prg
+   * source/rdd/dbtotal.prg
+   + source/rdd/dbtotalx.prg
+   * source/rdd/dbstrux.prg
+   + source/rdd/dbstruxx.prg
+   * source/rdd/dbfuncs.prg
+   + source/rdd/dbfuncsx.prg
+   * source/rdd/dbsort.prg
+   + source/rdd/dbsortx.prg
+   * source/rdd/dbcmd.c
+   + source/rdd/dbcmdx.c
+   * source/rdd/dbupdat.prg
+   + source/rdd/dbupdatx.prg
+     + Moved XPP compatible functions into separated source files.
+
 2007-10-17 00:33 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/Makefile
    + contrib/win32prn/Makefile

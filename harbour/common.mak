@@ -471,6 +471,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\natmsg$(OBJEXT)   \
     $(OBJ_DIR)\net$(OBJEXT)      \
     $(OBJ_DIR)\oemansi$(OBJEXT)  \
+    $(OBJ_DIR)\oemansix$(OBJEXT) \
     $(OBJ_DIR)\oldbox$(OBJEXT)   \
     $(OBJ_DIR)\oldclear$(OBJEXT) \
     $(OBJ_DIR)\pad$(OBJEXT)      \
@@ -588,6 +589,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\ttextlin$(OBJEXT) \
     $(OBJ_DIR)\ttopbar$(OBJEXT)  \
     $(OBJ_DIR)\typefile$(OBJEXT) \
+    $(OBJ_DIR)\typefilx$(OBJEXT) \
     $(OBJ_DIR)\valtoexp$(OBJEXT) \
     $(OBJ_DIR)\wait$(OBJEXT)     \
 
@@ -777,6 +779,7 @@ CODEPAGE_LIB_OBJS = \
 
 RDD_LIB_OBJS = \
     $(OBJ_DIR)\dbcmd$(OBJEXT)    \
+    $(OBJ_DIR)\dbcmdx$(OBJEXT)   \
     $(OBJ_DIR)\hbdbsort$(OBJEXT) \
     $(OBJ_DIR)\workarea$(OBJEXT) \
     $(OBJ_DIR)\wacore$(OBJEXT)   \
@@ -790,12 +793,19 @@ RDD_LIB_OBJS = \
     $(OBJ_DIR)\dbdelim$(OBJEXT)  \
     $(OBJ_DIR)\dbsdf$(OBJEXT)    \
     $(OBJ_DIR)\dbjoin$(OBJEXT)   \
+    $(OBJ_DIR)\dbjoinx$(OBJEXT)  \
     $(OBJ_DIR)\dbtotal$(OBJEXT)  \
+    $(OBJ_DIR)\dbtotalx$(OBJEXT) \
     $(OBJ_DIR)\dbfuncs$(OBJEXT)  \
+    $(OBJ_DIR)\dbfuncsx$(OBJEXT) \
     $(OBJ_DIR)\dblist$(OBJEXT)   \
+    $(OBJ_DIR)\dblistx$(OBJEXT)  \
     $(OBJ_DIR)\dbsort$(OBJEXT)   \
+    $(OBJ_DIR)\dbsortx$(OBJEXT)  \
     $(OBJ_DIR)\dbstrux$(OBJEXT)  \
+    $(OBJ_DIR)\dbstruxx$(OBJEXT) \
     $(OBJ_DIR)\dbupdat$(OBJEXT)  \
+    $(OBJ_DIR)\dbupdatx$(OBJEXT) \
     $(OBJ_DIR)\rddord$(OBJEXT)   \
     $(OBJ_DIR)\rddsys$(OBJEXT)   \
 

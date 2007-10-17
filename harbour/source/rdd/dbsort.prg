@@ -91,10 +91,3 @@ FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest,;
    ENDIF
 
    RETURN .T.
-
-#ifdef HB_COMPAT_XPP
-
-FUNCTION dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest )
-   RETURN __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest )
-
-#endif

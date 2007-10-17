@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * __DBUPDATE() function
+ * XPP compatible _dbExport() function
  *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ * Copyright 1999-2007 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,54 +50,21 @@
  *
  */
 
-#include "common.ch"
+#ifdef HB_COMPAT_XPP
 
-FUNCTION __dbUpdate( cAlias, bKey, lRandom, bAssign )
-   LOCAL nOldArea := Select()
-   LOCAL xKey
+FUNCTION _dbExport( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver, cDelimiter )
 
-   LOCAL oError
-   LOCAL lError := .F.
+   DO CASE
+   CASE cXPP_Driver == "SDFDBE"
+      RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF" )
+/*    Alternate CA-Cl*pper compatible call:
+      RETURN __dbSDF( .T., cFile, aFields, bFor, bWhile, nNext, nRecord, lRest ) */
+   CASE cXPP_Driver == "DELDBE"
+      RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM", , , cDelimiter )
+/*    Alternate CA-Cl*pper compatible call:
+      RETURN __dbDelim( .T., cFile, cDelimiter, aFields, bFor, bWhile, nNext, nRecord, lRest ) */
+   ENDCASE
 
-   DEFAULT lRandom TO .F.
+   RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver )
 
-   dbGoTop()
-
-   BEGIN SEQUENCE
-
-      dbSelectArea( cAlias )
-      dbGoTop()
-      DO WHILE !Eof()
-
-         xKey := Eval( bKey )
-
-         dbSelectArea( nOldArea )
-         IF lRandom
-            IF dbSeek( xKey )
-               Eval( bAssign )
-            ENDIF
-         ELSE
-            DO WHILE Eval( bKey ) < xKey .AND. !Eof()
-               dbSkip()
-            ENDDO
-
-            IF Eval( bKey ) == xKey .AND. !Eof()
-               Eval( bAssign )
-            ENDIF
-         ENDIF
-
-         dbSelectArea( cAlias )
-         dbSkip()
-      ENDDO
-
-   RECOVER USING oError
-      lError := .T.
-   END SEQUENCE
-
-   dbSelectArea( nOldArea )
-
-   IF lError
-      Break( oError )
-   ENDIF
-
-   RETURN .T.
+#endif

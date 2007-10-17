@@ -83,6 +83,7 @@ C_SOURCES=\
 	natmsg.c     \
 	net.c        \
 	oemansi.c    \
+	oemansix.c   \
 	oldbox.c     \
 	oldclear.c   \
 	pad.c        \
@@ -202,6 +203,7 @@ PRG_SOURCES=\
 	ttextlin.prg \
 	ttopbar.prg  \
 	typefile.prg \
+	typefilx.prg \
 	valtoexp.prg \
 	wait.prg     \
 

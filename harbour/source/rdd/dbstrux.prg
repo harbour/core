@@ -189,15 +189,3 @@ FUNCTION __dbStructFilter( aStruct, aFieldList )
          iif( nIndex == 0, NIL, AAdd( aStructFiltered, aStruct[ nIndex] ) ) } )
 
    RETURN aStructFiltered
-
-#ifdef HB_COMPAT_XPP
-
-/* Identical to __dbCopyStruct() */
-
-FUNCTION dbCopyStruct( cFileName, aFieldList )
-   RETURN dbCreate( cFileName, __dbStructFilter( dbStruct(), aFieldList ) )
-
-FUNCTION dbCopyExtStruct( cFileName )
-   RETURN __dbCopyXStruct( cFileName )
-
-#endif

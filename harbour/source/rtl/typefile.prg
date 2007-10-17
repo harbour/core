@@ -145,10 +145,3 @@ PROCEDURE __TypeFile( cFile, lPrint )
    ENDIF
 
    RETURN
-
-#ifdef HB_COMPAT_XPP
-
-FUNCTION _TypeFile( cFile, lPrint )
-   RETURN __TypeFile( cFile, lPrint )
-
-#endif

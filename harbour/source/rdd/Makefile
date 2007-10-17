@@ -6,6 +6,7 @@ ROOT = ../../
 
 C_SOURCES=\
 	dbcmd.c \
+	dbcmdx.c \
 	workarea.c \
 	wacore.c \
 	wafunc.c \
@@ -19,16 +20,23 @@ C_SOURCES=\
 PRG_SOURCES=\
 	dbdelim.prg \
 	dbfuncs.prg \
+	dbfuncsx.prg \
 	dbjoin.prg \
-	dbtotal.prg \
+	dbjoinx.prg \
 	dblist.prg \
+	dblistx.prg \
 	dbsdf.prg \
 	dbsort.prg \
+	dbsortx.prg \
 	dbstrux.prg \
+	dbstruxx.prg \
+	dbtotal.prg \
+	dbtotalx.prg \
 	dbupdat.prg \
+	dbupdatx.prg \
 	rddord.prg \
 	rddsys.prg \
- 
+
 ifeq ($(HB_MT),MT)
    MT_LIBNAME=rddmt
 endif

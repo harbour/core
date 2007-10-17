@@ -50,6 +50,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 /*
  * The following functions are added by
  *       Horacio Roldan <harbour_ar@yahoo.com.ar>
@@ -1715,61 +1716,6 @@ HB_FUNC( ORDCOUNT )
 
 #endif
 
-#ifdef HB_COMPAT_XPP
-HB_FUNC( ORDWILDSEEK )
-{
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-
-   if( pArea )
-   {
-      char * szPattern = hb_parc( 1 );
-
-      if( szPattern )
-      {
-         BOOL fCont = hb_parl( 2 ), fBack = hb_parl( 3 ), fFound = FALSE;
-         DBORDERINFO OrderInfo;
-         ERRCODE errCode = SUCCESS;
-
-         memset( &OrderInfo, 0, sizeof( DBORDERINFO ) );
-         OrderInfo.itmResult = hb_itemNew( NULL );
-
-         if( !fCont )
-         {
-            char * szKey;
-
-            if( fBack )
-               errCode = SELF_GOBOTTOM( pArea );
-            else
-               errCode = SELF_GOTOP( pArea );
-
-            if( errCode == SUCCESS )
-            {
-               errCode = SELF_ORDINFO( pArea, DBOI_KEYVAL, &OrderInfo );
-               if( errCode == SUCCESS )
-               {
-                  szKey = hb_itemGetCPtr( OrderInfo.itmResult );
-                  fFound = hb_strMatchWild( szKey, szPattern );
-               }
-            }
-         }
-         if( !fFound && errCode == SUCCESS )
-         {
-            OrderInfo.itmNewVal = hb_param( 1, HB_IT_STRING );
-            if( SELF_ORDINFO( pArea, fBack ? DBOI_SKIPWILDBACK : DBOI_SKIPWILD,
-                          &OrderInfo ) == SUCCESS )
-               fFound = hb_itemGetL( OrderInfo.itmResult );
-         }
-         hb_itemRelease( OrderInfo.itmResult );
-         hb_retl( fFound );
-      }
-      else
-         hb_errRT_DBCMD( EG_ARG, EDBCMD_DBFILEPUTBADPARAMETER, NULL, "ORDWILDSEEK" );
-   }
-   else
-      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "ORDWILDSEEK" );
-}
-#endif
-
 HB_FUNC( ORDLISTADD )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -2692,62 +2638,3 @@ HB_FUNC( __RDDGETTEMPALIAS )
    else
       hb_ret();
 }
-
-#ifdef HB_COMPAT_XPP
-HB_FUNC( DBSKIPPER )
-{
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-
-   if( pArea )
-   {
-      LONG lSkipped = 0;
-      LONG lRecs = 1;
-      BOOL fBEof;
-      ULONG ulRecords = 0;
-
-      if( SELF_RECCOUNT( pArea, &ulRecords ) == SUCCESS && ulRecords > 0 )
-      {
-         if( ISNUM( 1 ) )
-            lRecs = hb_parnl( 1 ) ;
-
-         if( lRecs == 0 )
-            SELF_SKIP( pArea, 0 );
-         else if( lRecs > 0 )
-         {
-            if( SELF_EOF( pArea, &fBEof ) == SUCCESS )
-            {
-               while( lSkipped < lRecs )
-               {
-                  if( SELF_SKIP( pArea, 1 ) != SUCCESS )
-                     break;
-                  if( SELF_EOF( pArea, &fBEof ) != SUCCESS )
-                     break;
-                  if( fBEof )
-                  {
-                     SELF_SKIP( pArea, -1 );
-                     break;
-                  }
-                  lSkipped++;
-               }
-            }
-         }
-         else /* if( lRecs < 0 ) */
-         {
-            while( lSkipped > lRecs )
-            {
-               if( SELF_SKIP( pArea, -1 ) != SUCCESS )
-                  break;
-               if( SELF_BOF( pArea, &fBEof ) != SUCCESS )
-                  break;
-               if( fBEof )
-                  break;
-               lSkipped--;
-            }
-         }
-      }
-      hb_retnl( lSkipped );
-   }
-   else
-      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "DBSKIPPER" );
-}
-#endif

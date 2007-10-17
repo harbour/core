@@ -169,10 +169,3 @@ STATIC PROCEDURE __doJoinList( aList )
    ENDIF
 
    RETURN
-
-#ifdef HB_COMPAT_XPP
-
-FUNCTION dbJoin( cAlias, cFile, aFields, bFor )
-   RETURN __dbJoin( cAlias, cFile, aFields, bFor )
-
-#endif

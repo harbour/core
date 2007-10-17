@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * __DBUPDATE() function
+ * XPP compatible dbList() function
  *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+ * Copyright 1999-2007 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -48,56 +48,11 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
+*/
 
-#include "common.ch"
+#ifdef HB_COMPAT_XPP
 
-FUNCTION __dbUpdate( cAlias, bKey, lRandom, bAssign )
-   LOCAL nOldArea := Select()
-   LOCAL xKey
+FUNCTION dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToPrint, cToFileName )
+   RETURN __dbList( abEval, lOff, lAll, bFor, bWhile, nNext, nRecord, lRest, lToPrint, cToFileName )
 
-   LOCAL oError
-   LOCAL lError := .F.
-
-   DEFAULT lRandom TO .F.
-
-   dbGoTop()
-
-   BEGIN SEQUENCE
-
-      dbSelectArea( cAlias )
-      dbGoTop()
-      DO WHILE !Eof()
-
-         xKey := Eval( bKey )
-
-         dbSelectArea( nOldArea )
-         IF lRandom
-            IF dbSeek( xKey )
-               Eval( bAssign )
-            ENDIF
-         ELSE
-            DO WHILE Eval( bKey ) < xKey .AND. !Eof()
-               dbSkip()
-            ENDDO
-
-            IF Eval( bKey ) == xKey .AND. !Eof()
-               Eval( bAssign )
-            ENDIF
-         ENDIF
-
-         dbSelectArea( cAlias )
-         dbSkip()
-      ENDDO
-
-   RECOVER USING oError
-      lError := .T.
-   END SEQUENCE
-
-   dbSelectArea( nOldArea )
-
-   IF lError
-      Break( oError )
-   ENDIF
-
-   RETURN .T.
+#endif
