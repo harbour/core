@@ -31,10 +31,9 @@ DIRS +=\
 ifneq ($(HB_COMPILER),rsxnt)
 
 DIRS +=\
-	ole2 \
+	win32 \
 	odbc \
 	adordd \
-	win32prn \
 
 endif
 
