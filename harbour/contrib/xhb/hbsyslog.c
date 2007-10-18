@@ -10,18 +10,6 @@
 
 static HANDLE s_RegHandle;
 
-/* Determines if this system is an NT, 2000 or XP windows */
-static BOOL s_IsWindowsNt( void )
-{
-   OSVERSIONINFO osVer;
-   osVer.dwOSVersionInfoSize = sizeof( osVer );
-   if( GetVersionEx( &osVer ) && osVer.dwPlatformId == VER_PLATFORM_WIN32_NT )
-   {
-      return TRUE;
-   }
-   return FALSE;
-}
-
 #elif ( defined( HB_OS_UNIX ) || defined( HB_OS_LINUX ) ) && !defined( __WATCOMC__ )
 
 #include <syslog.h>
@@ -34,7 +22,7 @@ HB_FUNC( HB_SYSLOGOPEN )
       #if (WINVER >= 0x0400)
       //Ok, we compiled under NT, but we must not use this function
       // when RUNNING on a win98.
-      if ( s_IsWindowsNt() )
+      if( hb_iswinnt() )
       {
          s_RegHandle = RegisterEventSource(NULL, (LPCTSTR) hb_parcx(1));
          hb_retl( TRUE );
@@ -58,7 +46,7 @@ HB_FUNC( HB_SYSLOGCLOSE )
 {
    #if defined( HB_OS_WIN_32 )
       #if (WINVER >= 0x0400)
-      if ( s_IsWindowsNt() )
+      if( hb_iswinnt() )
       {
          DeregisterEventSource( s_RegHandle);
          hb_retl( TRUE );
@@ -83,10 +71,10 @@ HB_FUNC( HB_SYSLOGMESSAGE )
    #if defined( HB_OS_WIN_32 )
       #if (WINVER >= 0x0400)
       WORD logval;
-      if ( s_IsWindowsNt() )
+      if( hb_iswinnt() )
       {
-         char *szMsg = hb_parcx(1);
-         switch( hb_parni(2) )
+         LPTSTR lpMsg = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+         switch( hb_parni( 2 ) )
          {
             case HB_LOG_CRITICAL: logval = EVENTLOG_ERROR_TYPE; break;
             case HB_LOG_ERROR: logval = EVENTLOG_ERROR_TYPE; break;
@@ -95,22 +83,17 @@ HB_FUNC( HB_SYSLOGMESSAGE )
             default:
                logval = EVENTLOG_AUDIT_SUCCESS;
          }
-         if( ReportEvent(s_RegHandle, // event log handle
-            logval,               // event type
-            0,                    // category zero
-            (DWORD) hb_parnl(3),  // event identifier
-            NULL,                 // no user security identifier
-            1,                    // one substitution string
-            0,                    // no data
-            (LPCTSTR *) &szMsg,   // pointer to string array
-            NULL))                // pointer to data
-         {
-            hb_retl( TRUE );
-         }
-         else
-         {
-            hb_retl( FALSE );
-         }
+         hb_retl( ReportEvent(s_RegHandle,         // event log handle
+                              logval,              // event type
+                              0,                   // category zero
+                              (DWORD) hb_parnl(3), // event identifier
+                              NULL,                // no user security identifier
+                              1,                   // one substitution string
+                              0,                   // no data
+                              (LPCTSTR *) &lpMsg,  // pointer to string array
+                              NULL                 // pointer to data
+                             ) ? TRUE : FALSE );
+         HB_TCHAR_FREE( lpMsg );
       }
       else
       {

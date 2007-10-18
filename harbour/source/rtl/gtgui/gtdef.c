@@ -63,7 +63,7 @@
  * to the default GT REQUESTed by our RTL library, [druzus]
  */
 
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN_32 ) && defined( HB_GTGUI_HACK )
 
 #if defined(HB_GT_DEFAULT)
 #  define HB_GT_NAME HB_GT_DEFAULT

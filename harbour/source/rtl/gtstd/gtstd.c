@@ -233,7 +233,7 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
          HB_GTSUPER_RESIZE( win.ws_row, win.ws_col );
       }
    }
-#elif defined( HB_WIN32_IO )
+#elif defined( HB_WIN32_IO ) && ! defined( HB_WINCE )
    if( s_bStdinConsole )
    {
       SetConsoleMode( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0x0000 );

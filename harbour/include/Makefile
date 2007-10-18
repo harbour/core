@@ -54,6 +54,7 @@ C_HEADERS=\
 	hbvmopt.h    \
 	hbvmpub.h    \
 	hbxvm.h      \
+	hbwince.h    \
 	hb_io.h      \
 
 PRG_HEADERS=\

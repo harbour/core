@@ -64,7 +64,7 @@ mk_hbgetlibs()
 {
     if [ -z "$@" ]
     then
-        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix usrrdd ${HB_DB_DRVEXT} macro common lang codepage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm gtwin gtwvt gtdos gtos2 debug profiler compiler hbpcre"
+        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix usrrdd ${HB_DB_DRVEXT} macro common lang codepage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm gtwin gtwvt gtgui gtdos gtos2 debug profiler compiler hbpcre"
     else
         echo -n "$@"
     fi
@@ -74,7 +74,7 @@ mk_hbgetlibsctb()
 {
     if [ -z "$@" ]
     then
-        echo -n "rddads ct nf tip xhb hbgd hbodbc hbole hbpg hbmysql"
+        echo -n "rddads ct nf tip xhb hbgd hbodbc hbpg hbmysql adordd hbwin32"
     else
         echo -n "$@"
     fi
@@ -126,6 +126,8 @@ mk_hbtools()
     fi
     if [ "${HB_COMPILER}" = "mingw32" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lwsock32 -lws2_32"
+    elif [ "${HB_COMPILER}" = "cemgw" ]; then
+        HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS}"
     else
@@ -401,9 +403,16 @@ if [ "\${HB_ARCHITECTURE}" = "darwin" ] || \\
 else
     HARBOUR_LIBS="-Wl,--start-group \${HARBOUR_LIBS} -Wl,--end-group"
 fi
+
+l="mainwin"
+[ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
+[ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
+
 l="fm"
 [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
-if [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ]; then
+if [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && \\
+   ( [ -n "\${HB_FM_REQ}" ] || [ "\${HB_STATIC}" = "yes" ] ) && \\
+   ( [ "\${HB_COMPILER}" != "cemgw" ] || [ "\${HB_FM_REQ}" = "STAT" ] ); then
     if [ "\${HB_STATIC}" = "yes" ] && [ "\${HB_FM_REQ}" = "STAT" ]; then
         HARBOUR_LIBS="-l\${l} \${HARBOUR_LIBS}"
     else
@@ -521,12 +530,12 @@ case "\${HB}" in
         ;;
     *lnk|harbour-link)
         hb_link "\${P[@]}" && \\
-        ( [ "\${HB_STRIP}" != "yes" ] || strip "\${FOUTE}" )
+        ( [ "\${HB_STRIP}" != "yes" ] || ${CCPREFIX}strip "\${FOUTE}" )
         ;;
     *mk)
         hb_cmp "\${P[@]}" && \\
         hb_link "\${FOUTO}" && \\
-        ( [ "\${HB_STRIP}" != "yes" ] || strip "\${FOUTE}" ) && \\
+        ( [ "\${HB_STRIP}" != "yes" ] || ${CCPREFIX}strip "\${FOUTE}" ) && \\
         rm -f "\${FOUTO}"
         ;;
 esac

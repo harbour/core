@@ -310,7 +310,7 @@ static void hb_pp_usage( char * szName )
 #if defined(__MINGW32CE__) || defined(HB_WINCE)
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     HINSTANCE hPrevInstance,  /* handle to previous instance */
-                    LPWSTR lpCmdLine,         /* pointer to command line */
+                    LPTSTR lpCmdLine,         /* pointer to command line */
                     int iCmdShow )            /* show state of window */
 {
    char * szFile = NULL, * szRuleFile = NULL;
@@ -319,7 +319,12 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    int iResult, i;
    /* hack - we do not want to create real binaries */
    int argc = 1;
-   char * argv[] = {"ppgen"};
+   char * argv[] = { "ppgen" };
+
+   HB_SYMBOL_UNUSED( hInstance );
+   HB_SYMBOL_UNUSED( hPrevInstance );
+   HB_SYMBOL_UNUSED( lpCmdLine );
+   HB_SYMBOL_UNUSED( iCmdShow );
 #else
 int main( int argc, char * argv[] )
 {

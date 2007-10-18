@@ -72,12 +72,12 @@ char * hb_getenv( const char * szName )
 #if defined(HB_OS_WIN_32)
 
    {
-      DWORD size = GetEnvironmentVariable( szName, NULL, 0 );
+      DWORD size = GetEnvironmentVariableA( szName, NULL, 0 );
 
       if( size != 0 )
       {
          pszBuffer = ( char * ) hb_xgrab( size );
-         GetEnvironmentVariable( szName, pszBuffer, size );
+         GetEnvironmentVariableA( szName, pszBuffer, size );
       }
    }
 

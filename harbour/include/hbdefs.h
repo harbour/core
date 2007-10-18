@@ -161,6 +161,10 @@
 
 #endif
 
+#if defined( HB_OS_WIN_32 )
+   #include "hbwince.h"
+#endif
+
 #if ! defined( HB_DONT_DEFINE_BASIC_TYPES )
 
    #if ! defined( HB_DONT_DEFINE_BOOL )
@@ -634,8 +638,8 @@ typedef unsigned long HB_COUNTER;
  * IMHO need HB_ARCH_<arch> macro yet - the same OS can be used with
  * different architectures - SPARC + LINUX, ALPHA + LINUX
  */
-#if defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX )
-#  if !defined( HB_STRICT_ALIGNMENT )
+#if !defined( HB_STRICT_ALIGNMENT )
+#  if defined( HB_OS_SUNOS ) || defined( HB_OS_HPUX ) || defined( _M_ARM )
 #     define HB_STRICT_ALIGNMENT
 #  endif
 #endif

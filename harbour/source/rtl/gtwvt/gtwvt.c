@@ -179,7 +179,7 @@ static HFONT hb_gt_wvt_GetFont( char * pszFace, int iHeight, int iWidth, int iWe
 {
    HFONT hFont;
 
-   if ( iHeight > 0 )
+   if( iHeight > 0 )
    {
       LOGFONT logfont;
 
@@ -197,7 +197,7 @@ static HFONT hb_gt_wvt_GetFont( char * pszFace, int iHeight, int iWidth, int iWe
       logfont.lfHeight         = iHeight;
       logfont.lfWidth          = iWidth < 0 ? -iWidth : iWidth ;
 
-      hb_strncpy( logfont.lfFaceName, pszFace, sizeof( logfont.lfFaceName ) - 1 );
+      HB_TCHAR_CPTO( logfont.lfFaceName, pszFace, sizeof( logfont.lfFaceName ) - 1 );
 
       hFont = CreateFontIndirect( &logfont );
    }
@@ -245,7 +245,7 @@ static void hb_gt_wvt_ResetWindowSize( HWND hWnd )
    _s.hFont = hFont ;
    hOldFont = ( HFONT ) SelectObject( hdc, hFont );
    GetTextMetrics( hdc, &tm );
-   SetTextCharacterExtra( hdc,0 ); /* do not add extra char spacing even if bold */
+   SetTextCharacterExtra( hdc, 0 ); /* do not add extra char spacing even if bold */
    SelectObject( hdc, hOldFont );
    ReleaseDC( hWnd, hdc );
 
@@ -298,7 +298,9 @@ static void hb_gt_wvt_ResetWindowSize( HWND hWnd )
 
 static void hb_gt_wvt_SetWindowTitle( char * title )
 {
-   SetWindowText( _s.hWnd, title );
+   LPTSTR text = HB_TCHAR_CONVTO( title );
+   SetWindowText( _s.hWnd, text );
+   HB_TCHAR_FREE( text );
 }
 
 static BOOL hb_gt_wvt_InitWindow( HWND hWnd, int iRow, int iCol )
@@ -442,7 +444,7 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
 
    pszAnsi[ 0 ] = ( BYTE ) c;
    pszAnsi[ 1 ] = 0;
-   CharToOemBuff( ( LPCSTR ) pszAnsi, ( LPTSTR ) pszOem, 1 );
+   CharToOemBuffA( ( LPCSTR ) pszAnsi, ( LPSTR ) pszOem, 1 );
 
    return * pszOem;
 }
@@ -931,7 +933,7 @@ static void hb_gt_wvt_PaintText( HWND hWnd, RECT rcRect )
    int         iRow, iCol, startCol, len;
    BYTE        bColor, bAttr, bOldColor = 0;
    USHORT      usChar;
-   char        text[ WVT_MAX_ROWS ];
+   TCHAR       text[ WVT_MAX_ROWS ];
 
    hdc = BeginPaint( hWnd, &ps );
    SelectObject( hdc, _s.hFont );
@@ -958,7 +960,7 @@ static void hb_gt_wvt_PaintText( HWND hWnd, RECT rcRect )
             startCol = iCol;
             len = 0;
          }
-         text[ len++ ] = ( char ) usChar;
+         text[ len++ ] = ( TCHAR ) usChar;
          iCol++;
       }
       if ( len > 0 )
@@ -1656,9 +1658,10 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
          HICON hIcon = 0;
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL,
-                                         hb_itemGetCPtr( pInfo->pNewVal ),
+            LPTSTR lpImage = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
+            hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpImage,
                                          IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+            HB_TCHAR_FREE( lpImage );
             if ( hIcon )
             {
                SendMessage( _s.hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); /* Set Title Bar Icon */
@@ -1674,8 +1677,9 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
          HICON hIcon = 0;
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            hIcon = LoadIcon( ( HINSTANCE ) s_hInstance,
-                              hb_itemGetCPtr( pInfo->pNewVal ) );
+            LPTSTR lpIcon = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
+            hIcon = LoadIcon( ( HINSTANCE ) s_hInstance, lpIcon );
+            HB_TCHAR_FREE( lpIcon );
          }
          else if ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {

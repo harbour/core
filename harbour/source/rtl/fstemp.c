@@ -75,13 +75,13 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
    char cTempDir[ _POSIX_PATH_MAX + 1 ];
 
-   if ( pszDir != NULL && pszDir[0] != '\0' )
+   if( pszDir != NULL && pszDir[0] != '\0' )
    {
       strncpy( (char *) cTempDir, (const char *) pszDir, _POSIX_PATH_MAX );
    }
    else
    {
-      if ( ! GetTempPath( ( DWORD ) _POSIX_PATH_MAX, cTempDir ) )
+      if( ! GetTempPathA( ( DWORD ) _POSIX_PATH_MAX, cTempDir ) )
       {
          hb_fsSetIOError( FALSE, 0 );
          return FALSE;
@@ -89,7 +89,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
    }
    cTempDir[ _POSIX_PATH_MAX ] = '\0';
 
-   fResult = GetTempFileName( ( LPCSTR ) cTempDir, ( ( pszPrefix == NULL ) ? ( LPCSTR ) "hb" : ( LPCSTR ) pszPrefix ), 0, ( LPSTR ) pszBuffer );
+   fResult = GetTempFileNameA( ( LPCSTR ) cTempDir, ( ( pszPrefix == NULL ) ? ( LPCSTR ) "hb" : ( LPCSTR ) pszPrefix ), 0, ( LPSTR ) pszBuffer );
 
 #else
 

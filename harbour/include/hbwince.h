@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * OEM <-> ANSI string conversion functions (Win32 specific, Xbase++ ext.)
+ * 
  *
- * Copyright 1999-2007 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,52 +50,47 @@
  *
  */
 
-/* NOTE: These are Win32 specific, for other platforms it will return the
-         passed parameter unchanged. */
+#ifndef HB_WINCE_H_
+#define HB_WINCE_H_
 
-#define HB_OS_WIN_32_USED
+#if defined(HB_WINCE)
 
-#include "hbapi.h"
-#include "hbapiitm.h"
+#undef  OS_HAS_DRIVE_LETTER
 
-HB_FUNC( HB_ANSITOOEM )
-{
-   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
+extern wchar_t * hb_mbtowc( const char *srcA );
+extern char * hb_wctomb( const wchar_t *srcW );
+extern void hb_mbtowccpy( wchar_t *dstW, const char *srcA, unsigned long ulLen );
+extern void hb_mbtowcset( wchar_t *dstW, const char *srcA, unsigned long ulLen );
+extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen );
 
-   if( pString )
-#if defined(HB_OS_WIN_32)
-   {
-      DWORD ulLen = hb_itemGetCLen( pString );
-      char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
+#define HB_TCHAR_CPTO(d,s,l)        hb_mbtowccpy(d,s,l)
+#define HB_TCHAR_GETFROM(d,s,l)     hb_wctombget(d,s,l)
+#define HB_TCHAR_SETTO(d,s,l)       hb_mbtowcset(d,s,l)
+#define HB_TCHAR_CONVTO(s)          hb_mbtowc(s)
+#define HB_TCHAR_CONVFROM(s)        hb_wctomb(s)
+#define HB_TCHAR_FREE(s)            hb_xfree(s)
 
-      CharToOemBuffA( ( LPCSTR ) hb_itemGetCPtr( pString ), ( LPSTR ) pszDst, ulLen );
+/* defined(__CEGCC__) || defined(__MINGW32CE__) */
 
-      hb_retclen_buffer( pszDst, ulLen );
-   }
-#else
-      hb_itemReturn( pString );
+#if defined(__MINGW32CE__)
+typedef long clock_t;
+extern clock_t clock( void );
 #endif
-   else
-      hb_retc( NULL );
-}
 
-HB_FUNC( HB_OEMTOANSI )
-{
-   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
+extern int remove( const char *filename );
+extern int access( const char *pathname, int mode );
+extern char *strerror( int errnum );
+extern int system( const char *string );
 
-   if( pString )
-#if defined(HB_OS_WIN_32)
-   {
-      DWORD ulLen = hb_itemGetCLen( pString );
-      char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
-
-      OemToCharBuffA( ( LPCSTR ) hb_itemGetCPtr( pString ), ( LPSTR ) pszDst, ulLen );
-
-      hb_retclen_buffer( pszDst, ulLen );
-   }
 #else
-      hb_itemReturn( pString );
-#endif
-   else
-      hb_retc( NULL );
-}
+
+#define HB_TCHAR_CPTO(d,s,l)        hb_strncpy(d,s,l)
+#define HB_TCHAR_SETTO(d,s,l)       memcpy(d,s,l)
+#define HB_TCHAR_GETFROM(d,s,l)     memcpy(d,s,l)
+#define HB_TCHAR_CONVTO(s)          (s)
+#define HB_TCHAR_CONVFROM(s)        (s)
+#define HB_TCHAR_FREE(s)            HB_SYMBOL_UNUSED(s)
+
+#endif /* HB_WINCE */
+
+#endif /* HB_WINCE_H_ */

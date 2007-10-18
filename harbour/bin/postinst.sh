@@ -36,7 +36,8 @@ fi
 . ${hb_root}/bin/hb-func.sh
 
 if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \
-   [ "$HB_COMPILER" = "mingw32" ] || [ "$HB_COMPILER" = "djgpp" ]
+   [ "$HB_COMPILER" = "mingw32" ] || [ "$HB_COMPILER" = "cemgw" ] || \
+   [ "$HB_COMPILER" = "djgpp" ]
 then
     RANLIB=""
     MAKE=make
@@ -59,7 +60,7 @@ then
     fi
     mk_hbtools "${HB_BIN_INSTALL}" "$@"
     if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \
-       [ "$HB_COMPILER" = "mingw32" ]; then
+       [ "$HB_COMPILER" = "mingw32" ] || [ "$HB_COMPILER" = "cemgw" ]; then
         mk_hblibso "${hb_root}"
     fi
     # build fm lib with memory statistic

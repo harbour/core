@@ -50,6 +50,8 @@
  *
  */
 
+#include "hbapi.h"
+
 #ifdef HB_COMPAT_XPP
 
 HB_FUNC_EXTERN( HB_ANSITOOEM );

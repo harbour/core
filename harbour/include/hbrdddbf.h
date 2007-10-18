@@ -53,7 +53,6 @@
 #ifndef HB_RDDDBF_H_
 #define HB_RDDDBF_H_
 
-#include "hbsetup.h"
 #include "hbapirdd.h"
 #include "hbdbferr.h"
 #include "hbdbf.h"

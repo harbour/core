@@ -67,26 +67,23 @@ extern "C" {
 #endif
 #endif
 
-#define MAX_ARGS 128
+#define MAX_ARGS     128
 
 static int    s_argc = 0;
 static char * s_argv[ MAX_ARGS ];
-static char   s_szAppName[ 256 ];
-
-#if defined(__MINGW32CE__) || defined(HB_WINCE)
-#  define HB_SYSSTR LPWSTR
-#else
-#  define HB_SYSSTR LPSTR
-#endif
+static char   s_szAppName[ MAX_PATH ];
 
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     HINSTANCE hPrevInstance,  /* handle to previous instance */
-                    HB_SYSSTR lpCmdLine,      /* pointer to command line */
+                    LPTSTR    lpCmdLine,      /* pointer to command line */
                     int iCmdShow )            /* show state of window */
 {
-   LPSTR pArgs, pArg, pDst, pSrc;
+   TCHAR szAppName[ MAX_PATH ];
+   LPSTR pArgs, pArg, pDst, pSrc, pFree;
    BOOL fQuoted;
    int iErrorCode;
+
+   HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow));
 
    #ifdef HB_INCLUDE_WINEXCHANDLER
    {
@@ -98,19 +95,14 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    }
    #endif
 
-   HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow));
-
-   GetModuleFileName( hInstance, s_szAppName, sizeof( s_szAppName ) - 1 );
+   GetModuleFileName( hInstance, szAppName, MAX_PATH );
+   HB_TCHAR_GETFROM( s_szAppName, szAppName, MAX_PATH );
    s_argv[ s_argc++ ] = s_szAppName;
 
    pArg = NULL;
-#if defined(__MINGW32CE__) || defined(HB_WINCE)
-   pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( ( LPSTR ) lpCmdLine ) + 1 );
-   pSrc = ( LPSTR ) lpCmdLine;
-#else
-   pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( lpCmdLine ) + 1 );
-   pSrc = lpCmdLine;
-#endif
+
+   pSrc = pFree = HB_TCHAR_CONVFROM( lpCmdLine );
+   pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( pFree ) + 1 );
    fQuoted = FALSE;
 
    while( *pSrc != 0 && s_argc < MAX_ARGS )
@@ -121,7 +113,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
             pArg = pDst;
          fQuoted = !fQuoted;
       }
-      else if( fQuoted || !HB_ISSPACE ( *pSrc ) )
+      else if( fQuoted || !HB_ISSPACE( *pSrc ) )
       {
          if( pArg == NULL )
             pArg = pDst;
@@ -144,6 +136,8 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
       s_argv[ s_argc++ ] = pArg;
    }
 
+   HB_TCHAR_FREE( pFree );
+
    hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
    hb_cmdargInit( s_argc, s_argv );
 
@@ -151,7 +145,6 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    iErrorCode = hb_vmQuit();
 
    LocalFree( pArgs );
-
    return iErrorCode;
 }
 

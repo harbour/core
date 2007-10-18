@@ -313,9 +313,9 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
      if( nConvertedLen )
      {
-        char *cString = (char *) hb_xgrab( nConvertedLen );
+        char *cString = (char *) hb_xgrab( nConvertedLen + 1 );
 
-        if( WideCharToMultiByte( CP_ACP, 0, wString, -1, cString, nConvertedLen, NULL, NULL ) )
+        if( WideCharToMultiByte( CP_ACP, 0, wString, -1, cString, nConvertedLen + 1, NULL, NULL ) )
         {
            return cString;
         }
@@ -1398,6 +1398,9 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
   {
      if( (LONG) s_nOleError == DISP_E_EXCEPTION )
      {
+#if defined( HB_WINCE )
+        MessageBox( NULL, excep.bstrDescription, excep.bstrSource, MB_ICONHAND );
+#else
         LPSTR source, description;
 
         source = hb_oleWideToAnsi( excep.bstrSource );
@@ -1407,6 +1410,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
         hb_xfree( source );
         hb_xfree( description );
+#endif
      }
   }
 
@@ -1532,7 +1536,11 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
   //---------------------------------------------------------------------------//
   HB_FUNC( MESSAGEBOX )
   {
-     hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), hb_parcx( 2 ), hb_parcx( 3 ), hb_parni( 4 ) ) );
+     LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) ),
+            lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+     hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), lpStr1, lpStr2, hb_parni( 4 ) ) );
+     HB_TCHAR_FREE( lpStr1 );
+     HB_TCHAR_FREE( lpStr2 );
   }
 
   //---------------------------------------------------------------------------//

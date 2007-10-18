@@ -213,7 +213,9 @@ HB_FUNC( HB_OUTDEBUG )
 
    if( ISCHAR(1) )
    {
-      OutputDebugString( hb_parcx(1) );
+      LPTSTR lpMsg = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+      OutputDebugString( lpMsg );
+      HB_TCHAR_FREE( lpMsg );
    }
 
    #endif

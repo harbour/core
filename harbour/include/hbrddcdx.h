@@ -53,7 +53,6 @@
 #ifndef HB_RDDCDX_H_
 #define HB_RDDCDX_H_
 
-#include "hbsetup.h"
 #include "hbapirdd.h"
 #include "hbdbferr.h"
 #define HB_EXTERNAL_RDDDBF_USE

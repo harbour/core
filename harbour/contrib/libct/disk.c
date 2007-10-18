@@ -112,49 +112,44 @@ HB_FUNC( DIRNAME )
 HB_FUNC( DRIVETYPE )
 {
 #if defined(HB_OS_WIN_32)
-   unsigned int uiType;
    ULONG ulSize = hb_parclen( 1 ) + 2;  /* allow space for '\0' & ":\" */
-   char *pDrive = ( char * ) hb_xgrab( ulSize + 1 );
+   char *pszDrive = ( char * ) hb_xgrab( ulSize + 1 );
+   LPTSTR lpDrive;
+   int iType;
 
-   hb_strncpy( pDrive, ( char * ) hb_parcx( 1 ), ulSize );
+   hb_strncpy( pszDrive, ( char * ) hb_parcx( 1 ), ulSize );
 
-   if( strstr( pDrive, ":" ) == NULL )
-   {
-      hb_strncat( pDrive, ":", ulSize );
-   }
+   if( strstr( pszDrive, ":" ) == NULL )
+      hb_strncat( pszDrive, ":", ulSize );
 
-   if( strstr( pDrive, "\\" ) == NULL )
-   {
-      hb_strncat( pDrive, "\\", ulSize );
-   }
+   if( strstr( pszDrive, "\\" ) == NULL )
+      hb_strncat( pszDrive, "\\", ulSize );
 
-   uiType = GetDriveType( pDrive );
-
-   if( uiType == DRIVE_RAMDISK )
+   lpDrive = HB_TCHAR_CONVTO( pszDrive );
+   switch( GetDriveType( lpDrive ) )
    {
-      hb_retni( 0 );            /* RAM Drive - Clipper compatible */
+      case DRIVE_RAMDISK:
+         iType = 0;           /* RAM Drive - Clipper compatible */
+         break;
+      case DRIVE_REMOVABLE:
+         iType = 2;           /* Floppy Drive - Clipper compatible */
+         break;
+      case DRIVE_FIXED:
+         iType = 3;           /* Hard Drive  - Clipper compatible */
+         break;
+      case DRIVE_CDROM:
+         iType = 4;           /* CD-Rom Drive - xHarbour extension */
+         break;
+      case DRIVE_REMOTE:
+         iType = 5;           /* Network Drive - xHarbour extension */
+         break;
+      default:
+         iType = 9;           /* Unknow Drive - xHarbour extension */
+         break;
    }
-   else if( uiType == DRIVE_REMOVABLE )
-   {
-      hb_retni( 2 );            /* Floppy Drive - Clipper compatible */
-   }
-   else if( uiType == DRIVE_FIXED )
-   {
-      hb_retni( 3 );            /* Hard Drive  - Clipper compatible */
-   }
-   else if( uiType == DRIVE_CDROM )
-   {
-      hb_retni( 4 );            /* CD-Rom Drive - xHarbour extension */
-   }
-   else if( uiType == DRIVE_REMOTE )
-   {
-      hb_retni( 5 );            /* Network Drive - xHarbour extension */
-   }
-   else
-   {
-      hb_retni( 9 );            /* Unknow Drive - xHarbour extension */
-   }
-   hb_xfree( pDrive );
+   hb_retni( iType );
+   hb_xfree( pszDrive );
+   HB_TCHAR_FREE( lpDrive );
 #else
    hb_retni( 9 );
 #endif
@@ -242,7 +237,16 @@ HB_FUNC( VOLUME )
             hb_xfree( sDiskName );
       }
 #if defined(HB_OS_WIN_32)
-      bReturn = SetVolumeLabel( sRoot, sVolName );
+      {
+         LPTSTR lpRoot, lpVolName;
+         lpRoot = sRoot ? HB_TCHAR_CONVTO( sRoot ) : NULL;
+         lpVolName = sVolName ? HB_TCHAR_CONVTO( sVolName ) : NULL;
+         bReturn = SetVolumeLabel( lpRoot, lpVolName );
+         if( lpRoot )
+            HB_TCHAR_FREE( lpRoot );
+         if( lpVolName )
+            HB_TCHAR_FREE( lpVolName );
+      }
 #endif
    }
    hb_retl( bReturn );
@@ -258,17 +262,21 @@ HB_FUNC( GETVOLINFO )
 {
 #if defined(HB_OS_WIN_32)
    int iretval;
-   char *sDrive = hb_parcx( 1 );
-   char sVolName[255];
+   char *sDrive = hb_parcx( 1 ), *sVolName;
+   TCHAR lpVolName[256];
+   LPTSTR lpDrive;
 
-   if( sDrive[0] == 0 )
-   {
-      sDrive = NULL;
-   }
-   iretval = GetVolumeInformation( sDrive, sVolName, 256, NULL, NULL, NULL, NULL, 0 );
+   lpDrive = sDrive[0] ? HB_TCHAR_CONVTO( sDrive ) : NULL;
+   iretval = GetVolumeInformation( lpDrive, lpVolName, 256, NULL, NULL, NULL, NULL, 0 );
+   if( lpDrive )
+      HB_TCHAR_FREE( lpDrive );
 
    if( iretval != 0 )
+   {
+      sVolName = HB_TCHAR_CONVFROM( lpVolName );
       hb_retc( sVolName );
+      HB_TCHAR_FREE( sVolName );
+   }
    else
       hb_retc( NULL );
 #endif
@@ -292,13 +300,11 @@ HB_FUNC( VOLSERIAL )
 #if defined(HB_OS_WIN_32)
    int retval;
    char *sDrive = hb_parcx( 1 );
+   LPTSTR lpDrive;
    DWORD dSerial;
 
-   if( sDrive[0] == 0 )
-   {
-      sDrive = NULL;
-   }
-   retval = GetVolumeInformation( sDrive,       /* RootPathName */
+   lpDrive = sDrive[0] ? HB_TCHAR_CONVTO( sDrive ) : NULL;
+   retval = GetVolumeInformation( lpDrive,      /* RootPathName */
                                   NULL,         /* VolumeName */
                                   0,            /* VolumeNameSize */
                                   &dSerial,     /* VolumeSerialNumber */
@@ -306,9 +312,11 @@ HB_FUNC( VOLSERIAL )
                                   NULL,         /* FileSystemFlags */
                                   NULL,         /* FileSystemName */
                                   0 );          /* FileSystemSize */
+   if( lpDrive )
+      HB_TCHAR_FREE( lpDrive );
 
    if( retval != 0 )
-      hb_retnd( dSerial );
+      hb_retnint( dSerial );
    else
       hb_retni( -1 );
 #endif
@@ -316,22 +324,26 @@ HB_FUNC( VOLSERIAL )
 
 HB_FUNC( TRUENAME )
 {
-   if( ISCHAR( 1 ) )
+   char *szFile = hb_parc( 1 );
+
+   if( szFile )
    {
-      char *szFile = hb_parc( 1 );
-
 #ifdef HB_OS_WIN_32
-      char *szBuffRet = NULL;
-      char buffer[MAX_PATH + 1] = { 0 };
+      char *szBuffRet;
+      TCHAR buffer[MAX_PATH + 1] = { 0 };
+      LPTSTR lpFile;
 
-      GetFullPathName( ( LPCSTR ) szFile, MAX_PATH, ( LPSTR ) buffer, &szBuffRet );
-      hb_retc( buffer );
+      lpFile = HB_TCHAR_CONVTO( szFile );
+      GetFullPathName( lpFile, MAX_PATH, buffer, NULL );
+      HB_TCHAR_FREE( lpFile );
+
+      szBuffRet = HB_TCHAR_CONVFROM( buffer );
+      hb_retc( szBuffRet );
+      HB_TCHAR_FREE( szBuffRet );
 #else
       hb_retc( szFile );
 #endif
    }
    else
-   {
       hb_retc( NULL );
-   }
 }

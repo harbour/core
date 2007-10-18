@@ -72,9 +72,12 @@ void hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
       if( hglbCopy )
       {
          /* Lock the handle and copy the text to the buffer. */
-         lptstrCopy = ( LPSTR ) GlobalLock( hglbCopy );
-         memcpy( lptstrCopy, szClipData, ulLen );
-         lptstrCopy[ ulLen ] = 0;
+         lptstrCopy = ( LPTSTR ) GlobalLock( hglbCopy );
+         if( lptstrCopy )
+         {
+            HB_TCHAR_SETTO( lptstrCopy, szClipData, ulLen );
+            lptstrCopy[ ulLen ] = '\0';
+         }
          GlobalUnlock( hglbCopy );
          /* Place the handle on the clipboard. */
          SetClipboardData( uFormat, hglbCopy );
@@ -95,7 +98,7 @@ BOOL hb_gt_w32_GetClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
       hglb = GetClipboardData( uFormat );
       if( hglb )
       {
-         lptstr = ( LPSTR ) GlobalLock( hglb );
+         lptstr = ( LPTSTR ) GlobalLock( hglb );
          if( lptstr != NULL )
          {
             *pulLen = GlobalSize( hglb );
@@ -103,7 +106,8 @@ BOOL hb_gt_w32_GetClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
             if( *pulLen )
             {
                *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
-               memcpy( *pszClipData, lptstr, *pulLen + 1 );
+               HB_TCHAR_GETFROM( *pszClipData, lptstr, *pulLen );
+               pszClipData[*pulLen] = '\0';
             }
             GlobalUnlock( hglb );
          }

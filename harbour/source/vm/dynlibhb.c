@@ -104,7 +104,7 @@ HB_FUNC( HB_LIBLOAD )
 
       /* use stack address as first level marker */
       hb_vmBeginSymbolGroup( ( void * ) hb_stackId(), TRUE );
-      hDynLib = ( void * ) LoadLibrary( hb_parc( 1 ) );
+      hDynLib = ( void * ) LoadLibraryA( hb_parc( 1 ) );
       /* set real marker */
       hb_vmInitSymbolGroup( hDynLib, argc, argv );
       if( argv )

@@ -192,6 +192,7 @@
    #include <sys/file.h>
 #endif
 
+#if defined(OS_HAS_DRIVE_LETTER)
 /* 27/08/2004 - <maurilio.longo@libero.it>
                 HB_FS_GETDRIVE() should return a number in the range 0..25 ('A'..'Z')
                 HB_FS_SETDRIVE() should accept a number inside same range.
@@ -229,6 +230,7 @@
    #define HB_FS_SETDRIVE(n)  _chdrive( ( n ) + 1 )
 
 #endif
+#endif /* OS_HAS_DRIVE_LETTER */
 
 #ifndef O_BINARY
    #define O_BINARY     0       /* O_BINARY not defined on Linux */
@@ -654,8 +656,8 @@ HB_EXPORT FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 
       convert_open_flags( FALSE, FC_NORMAL, uiFlags, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
-      hFile = ( HANDLE ) CreateFile( ( char * ) pFilename, dwMode, dwShare,
-                                     NULL, dwCreat, dwAttr, NULL );
+      hFile = ( HANDLE ) CreateFileA( ( char * ) pFilename, dwMode, dwShare,
+                                      NULL, dwCreat, dwAttr, NULL );
 
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
 
@@ -711,8 +713,8 @@ HB_EXPORT FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
 
       convert_open_flags( TRUE, uiAttr, FO_EXCLUSIVE, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
-      hFile = ( HANDLE ) CreateFile( ( char * ) pFilename, dwMode, dwShare,
-                                     NULL, dwCreat, dwAttr, NULL );
+      hFile = ( HANDLE ) CreateFileA( ( char * ) pFilename, dwMode, dwShare,
+                                      NULL, dwCreat, dwAttr, NULL );
 
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
 
@@ -768,8 +770,8 @@ HB_EXPORT FHANDLE hb_fsCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags
 
       convert_open_flags( TRUE, uiAttr, uiFlags, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
-      hFile = ( HANDLE ) CreateFile( ( char * ) pFilename, dwMode, dwShare,
-                                     NULL, dwCreat, dwAttr, NULL );
+      hFile = ( HANDLE ) CreateFileA( ( char * ) pFilename, dwMode, dwShare,
+                                      NULL, dwCreat, dwAttr, NULL );
 
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
 
@@ -851,7 +853,8 @@ HB_EXPORT BOOL    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 
    return iRet != -1;
 }
-#elif defined(_MSC_VER) || defined(__MINGW32__) || defined(__DMC__)
+#elif ( defined(_MSC_VER) || defined(__MINGW32__) || defined(__DMC__) ) && \
+      !defined(HB_WINCE)
 {
    int iRet = 0;
 
@@ -875,7 +878,7 @@ HB_EXPORT BOOL    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 
    return iRet != -1;
 }
-#elif defined( HB_OS_UNIX )
+#elif defined( HB_OS_UNIX ) || defined( HB_WINCE )
 
    HB_SYMBOL_UNUSED( hFileHandle );
 
@@ -1726,7 +1729,7 @@ HB_EXPORT BOOL hb_fsDelete( BYTE * pFilename )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = DeleteFile( ( char * ) pFilename );
+   bResult = DeleteFileA( ( char * ) pFilename );
    hb_fsSetIOError( bResult, 0 );
 
 #elif defined(HAVE_POSIX_IO)
@@ -1764,7 +1767,7 @@ HB_EXPORT BOOL hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = MoveFile( ( char * ) pOldName, ( char * ) pNewName );
+   bResult = MoveFileA( ( char * ) pOldName, ( char * ) pNewName );
    hb_fsSetIOError( bResult, 0 );
 
 #elif defined(HB_FS_FILE_IO)
@@ -1800,7 +1803,7 @@ HB_EXPORT BOOL hb_fsMkDir( BYTE * pDirname )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = CreateDirectory( ( char * ) pDirname, NULL );
+   bResult = CreateDirectoryA( ( char * ) pDirname, NULL );
    hb_fsSetIOError( bResult, 0 );
 
 #elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
@@ -1838,7 +1841,7 @@ HB_EXPORT BOOL hb_fsChDir( BYTE * pDirname )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = SetCurrentDirectory( ( char * ) pDirname );
+   bResult = SetCurrentDirectoryA( ( char * ) pDirname );
    hb_fsSetIOError( bResult, 0 );
 
 #elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
@@ -1870,7 +1873,7 @@ HB_EXPORT BOOL hb_fsRmDir( BYTE * pDirname )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = RemoveDirectory( ( char * ) pDirname );
+   bResult = RemoveDirectoryA( ( char * ) pDirname );
    hb_fsSetIOError( bResult, 0 );
 
 #elif defined(HAVE_POSIX_IO) || defined(__MINGW32__)
@@ -1933,7 +1936,7 @@ HB_EXPORT USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen
 
 #if defined(HB_OS_WIN_32)
 
-   fResult = GetCurrentDirectory( ulLen, ( char * ) pbyBuffer );
+   fResult = GetCurrentDirectoryA( ulLen, ( char * ) pbyBuffer );
    hb_fsSetIOError( fResult, 0 );
 
 #elif defined(HB_OS_OS2)
@@ -2318,7 +2321,8 @@ HB_EXPORT  FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
 
 HB_EXPORT BOOL hb_fsEof( FHANDLE hFileHandle )
 {
-#if defined(__DJGPP__) || defined(__CYGWIN__) || defined(OS_UNIX_COMPATIBLE)
+#if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HB_WINCE) || \
+    defined(OS_UNIX_COMPATIBLE)
    LONG curPos;
    LONG endPos;
    LONG newPos;

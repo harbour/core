@@ -357,6 +357,11 @@
    #endif
 #endif
 
+#if !defined(HB_WINCE) && \
+    ( defined(_WINCE) || defined(__CEGCC__) || defined(__MINGW32CE__) )
+   #define HB_WINCE
+#endif
+
 #ifndef HB_OS_LINUX
    #if defined(linux) || defined(__linux) || defined(__linux__)
       #define HB_OS_LINUX
@@ -434,7 +439,6 @@
       #define snprintf _bprintf
    #endif
 #endif
-
 
 /* ***********************************************************************
  * Extern "C" detection

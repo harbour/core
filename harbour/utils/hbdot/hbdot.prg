@@ -314,7 +314,9 @@ RETURN
 /* ********************************************************************** */
 
 /* request for full screen GT driver */
-#if   defined( __PLATFORM__Windows )
+#if   defined( __PLATFORM__WINCE )
+REQUEST HB_GT_WVT_DEFAULT
+#elif defined( __PLATFORM__Windows )
 REQUEST HB_GT_WIN_DEFAULT
 #elif defined( __PLATFORM__UNIX )
 REQUEST HB_GT_TRM_DEFAULT

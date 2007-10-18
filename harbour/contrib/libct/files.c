@@ -194,7 +194,7 @@ HB_FUNC( SETFATTR )
 
    DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
    DWORD dwLastError = ERROR_SUCCESS;
-   LPCTSTR cFile = hb_parcx( 1 );
+   LPTSTR lpFile = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
    int iAttr = hb_parni( 2 );
 
    if( iAttr & FA_READONLY )
@@ -205,9 +205,9 @@ HB_FUNC( SETFATTR )
       dwFlags |= FILE_ATTRIBUTE_SYSTEM;
    if( iAttr & FA_NORMAL )
       dwFlags |= FILE_ATTRIBUTE_NORMAL;
-   if( !SetFileAttributes( cFile, dwFlags ) )
+   if( !SetFileAttributes( lpFile, dwFlags ) )
       dwLastError = GetLastError();
-
+   HB_TCHAR_FREE( lpFile );
    hb_retni( dwLastError );
 
 #else

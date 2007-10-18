@@ -168,9 +168,9 @@ HB_FUNC( NETNAME )
 
    szValue[ 0 ] = '\0';
    if( fGetUser )
-      GetUserName( szValue, &ulLen );
+      GetUserNameA( szValue, &ulLen );
    else
-      GetComputerName( szValue, &ulLen );
+      GetComputerNameA( szValue, &ulLen );
    hb_retc( szValue );
 
 #else

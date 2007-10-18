@@ -286,7 +286,7 @@ static int chrmap_parse( FILE *fp, const char *pszTerm, int *nTransTbl, const ch
    fpos_t pos;
 
    fgetpos( fp, &pos );
-   rewind( fp );
+   fseek( fp, 0, SEEK_SET );
 
    while( !feof( fp ) && isTerm < 2 )
    {

@@ -8,6 +8,81 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-18 23:54 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-mkslib.sh
+  * harbour/bin/pack_src.sh
+    * updated for recent Viktor's modifications
+
+  * harbour/source/rtl/oemansix.c
+    ! added missing #include "hbpai.h"
+
+  * harbour/include/Makefile
+  + harbour/include/hbwince.h
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbrdddbt.h
+  * harbour/include/hbdefs.h
+  * harbour/include/hbsetup.h
+  * harbour/include/hbrddcdx.h
+  * harbour/include/hbrddfpt.h
+  * harbour/contrib/xhb/hboutdbg.c
+  * harbour/contrib/xhb/hbsyslog.c
+  * harbour/contrib/xhb/xhbfunc.c
+  * harbour/contrib/libct/ctnet.c
+  * harbour/contrib/libct/files.c
+  * harbour/contrib/libct/disk.c
+  * harbour/contrib/libnf/getenvrn.c
+  * harbour/contrib/win32/tprinter.c
+  * harbour/contrib/win32/w32_ole.c
+  * harbour/contrib/win32/w32_prn.c
+  * harbour/contrib/odbc/odbc.c
+  * harbour/source/pp/ppgen.c
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/gtclip.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/gtchrmap.c
+  * harbour/source/rtl/oemansi.c
+  * harbour/source/rtl/disksphb.c
+  * harbour/source/rtl/fssize.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rtl/net.c
+  * harbour/source/rtl/gtgui/gtdef.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/vm/Makefile
+  * harbour/source/vm/mainwin.c
+  * harbour/source/vm/dynlibhb.c
+  + harbour/source/vm/mainwin/Makefile
+  * harbour/source/common/Makefile
+  * harbour/source/common/hbgete.c
+  * harbour/source/common/hbver.c
+  + harbour/source/common/hbwince.c
+  * harbour/utils/hbpp/hbpp.c
+  * harbour/utils/hbdot/hbdot.prg
+  * harbour/utils/hbver/hbverfix.c
+    + added support for WinCE and PocketPC
+
+  + harbour/make_xcemgw.sh
+  + harbour/config/w32/cemgw.cf
+  * harbour/bin/hb-mkslib.sh
+  * harbour/bin/hb-func.sh
+  * harbour/bin/postinst.sh
+    + added support for CeGCC-MinGW32 port - those of you who want to
+      create applications for WinCE on PockePC with ARM processors on
+      Linux or MS-Windows can download from SF cegcc-mingw32ce port.
+      User using RPM based Linux distribution for x86 CPUs can simply
+      download cegcc-mingw32ce-0.50-1.i586.rpm and install it.
+      The hb* scripts created by ./make_xcemgw.sh [tgz|gnu] are
+      automatically updated to work with CeGCC-MinGW32 so later you
+      can simply crate WinCE-ARM binaries using them as for native port.
+
+     I'm waiting for users feedback. Please remember that I'm not Windows
+     user and even this port was created without any Pocket machine.
+     With Marek Paliwoda help I only tested that final applications are
+     working using PocketPC emulator.
+
 2007-10-18 18:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    + contrib/win32/test/testole.prg
    - contrib/win32/test/oleenum.prg

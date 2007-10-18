@@ -8,6 +8,7 @@ C_SOURCES=\
 	hbfhnd.c \
 	hbfsapi.c \
 	hbgete.c \
+	hbwince.c \
 	hbhash.c \
 	hbstr.c \
 	hbdate.c \

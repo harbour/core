@@ -88,6 +88,12 @@
 #  include "hbapicdp.h"
 #endif
 
+#if !defined( HB_NO_WIN_CONSOLE ) && defined( HB_WINCE )
+#  define HB_NO_WIN_CONSOLE
+#endif
+
+#if !defined( HB_NO_WIN_CONSOLE )
+
 #if defined( _MSC_VER ) || defined(__WATCOMC__)
 #  include <conio.h>
 #endif
@@ -1809,3 +1815,5 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
    static HB_$INITSYM hb_vm_auto__hb_startup_gt_Init_ = _hb_startup_gt_Init_;
    #pragma data_seg()
 #endif
+
+#endif /* HB_NO_WIN_CONSOLE */

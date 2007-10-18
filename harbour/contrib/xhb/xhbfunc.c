@@ -53,6 +53,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 #include "hbapiitm.h"
+#include "hbapigt.h"
 
 HB_FUNC_EXTERN( __KEYBOARD );
 

@@ -78,7 +78,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#ifdef HB_OS_WIN_32
+#if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
 
 #include <windows.h>
 #include <winspool.h>

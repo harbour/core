@@ -198,11 +198,11 @@ char * hb_verPlatform( void )
 #elif defined(HB_OS_WIN_32)
 
    {
-      OSVERSIONINFO osVer;
+      OSVERSIONINFOA osVer;
 
       osVer.dwOSVersionInfoSize = sizeof( osVer );
 
-      if( GetVersionEx( &osVer ) )
+      if( GetVersionExA( &osVer ) )
       {
          char * pszName = "Windows";
 
@@ -307,10 +307,10 @@ HB_EXPORT BOOL hb_iswinnt( void )
 
    if( ! s_fInited )
    {
-      OSVERSIONINFO osvi ;
-      osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-      GetVersionEx (&osvi);
-      s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4); */
+      OSVERSIONINFO osvi;
+      osvi.dwOSVersionInfoSize = sizeof( osvi );
+      if( GetVersionEx( &osvi ) )
+         s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4); */
       s_fInited = TRUE;
    }
    return s_fWinNT;

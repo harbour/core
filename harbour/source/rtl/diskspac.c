@@ -98,7 +98,7 @@ HB_FUNC( DISKSPACE )
 #elif defined(HB_OS_WIN_32)
    {
       USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
-      typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
+      typedef BOOL ( WINAPI * P_GDFSE )( LPCSTR, PULARGE_INTEGER,
                                          PULARGE_INTEGER, PULARGE_INTEGER );
       char szPath[ 4 ];
       P_GDFSE pGetDiskFreeSpaceEx;
@@ -117,10 +117,13 @@ HB_FUNC( DISKSPACE )
 
       SetLastError( 0 );
 
-#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
-      pGetDiskFreeSpaceEx = ( P_GDFSE ) GetProcAddress( GetModuleHandle( "kernel32.dll" ),
-                                                        "GetDiskFreeSpaceExA");
+#if defined(HB_WINCE)
+      pGetDiskFreeSpaceEx = NULL;
+#else
+      pGetDiskFreeSpaceEx = ( P_GDFSE ) GetProcAddress( GetModuleHandleA( "kernel32.dll" ),
+                                                        "GetDiskFreeSpaceExA" );
 
+#endif
       if( pGetDiskFreeSpaceEx )
       {
          ULARGE_INTEGER i64FreeBytesToCaller,
@@ -157,7 +160,6 @@ HB_FUNC( DISKSPACE )
          }
       }
       else
-#endif
       {
          DWORD dwSectorsPerCluster;
          DWORD dwBytesPerSector;
@@ -166,11 +168,11 @@ HB_FUNC( DISKSPACE )
 
          SetLastError( 0 );
 
-         if( GetDiskFreeSpace( szPath,
-                               &dwSectorsPerCluster,
-                               &dwBytesPerSector,
-                               &dwNumberOfFreeClusters,
-                               &dwTotalNumberOfClusters ) )
+         if( GetDiskFreeSpaceA( szPath,
+                                &dwSectorsPerCluster,
+                                &dwBytesPerSector,
+                                &dwNumberOfFreeClusters,
+                                &dwTotalNumberOfClusters ) )
             dSpace = ( double ) dwNumberOfFreeClusters *
                      ( double ) dwSectorsPerCluster *
                      ( double ) dwBytesPerSector;

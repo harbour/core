@@ -193,7 +193,7 @@ HB_FUNC( FT_GETE )
 
 
       char *buffer = NULL;
-      LPVOID lpEnviron = GetEnvironmentStrings();
+      LPVOID lpEnviron = GetEnvironmentStringsA();
       char *sCurEnv;
       int x;
       int buffsize = 0;
@@ -207,7 +207,7 @@ HB_FUNC( FT_GETE )
       if( rettype == CHARTYPE )
          /* scan strings first and add up total size */
       {
-         for( sCurEnv = ( LPTSTR ) lpEnviron; *sCurEnv; sCurEnv++ )
+         for( sCurEnv = ( LPSTR ) lpEnviron; *sCurEnv; sCurEnv++ )
          {
 
             {
@@ -228,7 +228,7 @@ HB_FUNC( FT_GETE )
          }
       }
       x = 0;
-      for( sCurEnv = ( LPTSTR ) lpEnviron; *sCurEnv; sCurEnv++ )
+      for( sCurEnv = ( LPSTR ) lpEnviron; *sCurEnv; sCurEnv++ )
       {
 
 
@@ -262,7 +262,7 @@ HB_FUNC( FT_GETE )
       /* return number of strings found */
       hb_retni( x );
 
-      FreeEnvironmentStrings( ( LPCH ) lpEnviron );
+      FreeEnvironmentStrings( ( LPTSTR ) lpEnviron );
    }
 
 #endif

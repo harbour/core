@@ -52,7 +52,8 @@
 
 #include "hbsetup.h"
 
-#if defined(HB_OS_WIN_32) && (!defined(__RSXNT__)) && (!defined(__CYGWIN__))
+#if defined(HB_OS_WIN_32) && \
+    !( defined(__RSXNT__) || defined(__CYGWIN__) || defined(HB_WINCE) )
 
 #include <windows.h>
 
