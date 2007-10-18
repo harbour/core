@@ -9,6 +9,7 @@
 */
 
 2007-10-18 12:16 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   + contrib/Makefile
    + contrib/win32
    + contrib/win32/test
    + contrib/win32/test/testw32p.prg
