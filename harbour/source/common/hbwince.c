@@ -63,11 +63,9 @@
 #include "hbapi.h"
 #include "hbdate.h"
 
-#if defined(HB_OS_WIN_32) && \
-    ( defined(_WINCE) || defined(HB_WINCE) || \
-      defined(__CEGCC__) || defined(__MINGW32CE__) )
+#if defined(HB_WINCE)
 
-
+#if defined(__MINGW32CE__)
 clock_t clock( void )
 {
    SYSTEMTIME st;
@@ -77,6 +75,7 @@ clock_t clock( void )
    return ( ( clock_t ) hb_dateEncode( st.wYear, st.wMonth, st.wDay ) - 2451545 ) * 86400000 +
       ( ( st.wHour * 60 + st.wMinute ) * 60 + st.wSecond ) * 1000 + st.wMilliseconds;
 }
+#endif
 
 int remove( const char *filename )
 {
@@ -145,6 +144,10 @@ char *strerror( int errnum )
    return ( char * ) "";
 }
 
+#endif /* HB_WINCE */
+
+#if defined(HB_OS_WIN_32)
+
 void hb_mbtowccpy( wchar_t * dstW, const char *srcA, ULONG ulLen )
 {
    MultiByteToWideChar( CP_ACP, 0, srcA, -1, dstW, ulLen / sizeof( wchar_t ) );
@@ -184,6 +187,8 @@ void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
    WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, dstA, ulLen, NULL, NULL );
 }
 
+#if defined(UNICODE)
+
 DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
 {
    /* use registry instead of "environment valuable". */
@@ -195,7 +200,7 @@ DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
    LPWSTR wname;
    LPSTR avalue;
 
-   lret = RegOpenKeyEx( HKEY_LOCAL_MACHINE, L"Software\\harbour_mswince", 0, KEY_QUERY_VALUE, &hk );
+   lret = RegOpenKeyEx( HKEY_LOCAL_MACHINE, TEXT( "Software\\harbour_mswince" ), 0, KEY_QUERY_VALUE, &hk );
 
    if( lret != ERROR_SUCCESS )
    {
@@ -624,4 +629,6 @@ BOOL WINAPI LocalUnlock( HLOCAL h )
    return FALSE;
 }
 
-#endif
+#endif /* UNICODE */
+
+#endif /* HB_OS_WIN_32 */

@@ -77,7 +77,7 @@
 HB_FUNC( DISKSPACE )
 {
    double dSpace = 0.0;
-   BOOL bError = FALSE;
+   BOOL bError;
 
 #if defined(HB_OS_DOS)
    {
@@ -88,76 +88,69 @@ HB_FUNC( DISKSPACE )
       regs.h.ah = 0x36;
       HB_DOS_INT86( 0x21, &regs, &regs );
 
-      if( regs.HB_XREGS.ax != 0xFFFF )
+      bError = regs.HB_XREGS.ax == 0xFFFF
+      if( !bError )
          dSpace = ( double ) regs.HB_XREGS.bx *
                   ( double ) regs.HB_XREGS.ax *
                   ( double ) regs.HB_XREGS.cx;
-      else
-         bError = TRUE;
    }
 #elif defined(HB_OS_WIN_32)
    {
-      USHORT uiDrive = ISNUM( 1 ) ? hb_parni( 1 ) : 0;
+#if defined(_MSC_VER) || defined(__LCC__) || \
+    ( defined(__GNUC__) && !defined(__RSXNT__) )
+
+#  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).LowPart + \
+                                    ( double ) (v).HighPart * \
+                                    ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
+
+#else
+   /* NOTE: Borland doesn't seem to deal with the un-named
+            struct that is part of ULARGE_INTEGER
+            [pt] */
+#  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).u.LowPart + \
+                                    ( double ) (v).u.HighPart * \
+                                    ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
+#endif
+
       typedef BOOL ( WINAPI * P_GDFSE )( LPCSTR, PULARGE_INTEGER,
                                          PULARGE_INTEGER, PULARGE_INTEGER );
-      char szPath[ 4 ];
-      P_GDFSE pGetDiskFreeSpaceEx;
-      UINT uiErrMode;
-
-      /* Get the default drive */
-      if( uiDrive == 0 )
-         uiDrive = hb_fsCurDrv() + 1;
-
-      szPath[ 0 ] = uiDrive + 'A' - 1;
-      szPath[ 1 ] = ':';
-      szPath[ 2 ] = '\\';
-      szPath[ 3 ] = '\0';
-
-      uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
-
-      SetLastError( 0 );
+      ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
+      USHORT uiParam = hb_parni( 1 );
+      USHORT uiDrive = uiParam == 0 ? hb_fsCurDrv() + 1 : uiParam;
+      UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
 
 #if defined(HB_WINCE)
-      pGetDiskFreeSpaceEx = NULL;
-#else
-      pGetDiskFreeSpaceEx = ( P_GDFSE ) GetProcAddress( GetModuleHandleA( "kernel32.dll" ),
-                                                        "GetDiskFreeSpaceExA" );
+      TCHAR lpPath[4];
 
-#endif
+      lpPath[0] = uiDrive + 'A' - 1;
+      lpPath[1] = ':';
+      lpPath[2] = '\\';
+      lpPath[3] = '\0';
+
+      bError = !GetDiskFreeSpaceEx( lpPath,
+                                    ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                    ( PULARGE_INTEGER ) &i64TotalBytes,
+                                    ( PULARGE_INTEGER ) &i64FreeBytes );
+      if( !bError )
+         dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
+#else
+      char szPath[4];
+      P_GDFSE pGetDiskFreeSpaceEx = ( P_GDFSE )
+                           GetProcAddress( GetModuleHandleA( "kernel32.dll" ),
+                                           "GetDiskFreeSpaceExA" );
+      szPath[0] = uiDrive + 'A' - 1;
+      szPath[1] = ':';
+      szPath[2] = '\\';
+      szPath[3] = '\0';
+
       if( pGetDiskFreeSpaceEx )
       {
-         ULARGE_INTEGER i64FreeBytesToCaller,
-                        i64TotalBytes,
-                        i64FreeBytes,
-                        i64RetVal;
-
-         if( pGetDiskFreeSpaceEx( szPath,
-                                  ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
-                                  ( PULARGE_INTEGER ) &i64TotalBytes,
-                                  ( PULARGE_INTEGER ) &i64FreeBytes ) )
-         {
-            memcpy( &i64RetVal, &i64FreeBytesToCaller, sizeof( ULARGE_INTEGER ) );
-
-            #if ( defined(__GNUC__) || defined(_MSC_VER) || defined(__LCC__) ) && !defined(__RSXNT__)
-
-               dSpace  = ( double ) i64RetVal.LowPart +
-                         ( double ) i64RetVal.HighPart +
-                         ( double ) i64RetVal.HighPart *
-                         ( double ) 0xFFFFFFFF;
-
-            #else
-
-               /* NOTE: Borland doesn't seem to deal with the un-named
-                        struct that is part of ULARGE_INTEGER
-                        [pt] */
-
-               dSpace  = ( double ) i64RetVal.u.LowPart +
-                         ( double ) i64RetVal.u.HighPart +
-                         ( double ) i64RetVal.u.HighPart *
-                         ( double ) 0xFFFFFFFF;
-
-            #endif
-         }
+         bError = !pGetDiskFreeSpaceEx( szPath,
+                                        ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                        ( PULARGE_INTEGER ) &i64TotalBytes,
+                                        ( PULARGE_INTEGER ) &i64FreeBytes );
+         if( !bError )
+            dSpace = HB_GET_LARGE_UINT( i64FreeBytesToCaller );
       }
       else
       {
@@ -166,22 +159,18 @@ HB_FUNC( DISKSPACE )
          DWORD dwNumberOfFreeClusters;
          DWORD dwTotalNumberOfClusters;
 
-         SetLastError( 0 );
-
-         if( GetDiskFreeSpaceA( szPath,
-                                &dwSectorsPerCluster,
-                                &dwBytesPerSector,
-                                &dwNumberOfFreeClusters,
-                                &dwTotalNumberOfClusters ) )
+         bError = !GetDiskFreeSpaceA( szPath,
+                                      &dwSectorsPerCluster,
+                                      &dwBytesPerSector,
+                                      &dwNumberOfFreeClusters,
+                                      &dwTotalNumberOfClusters );
+         if( !bError )
             dSpace = ( double ) dwNumberOfFreeClusters *
                      ( double ) dwSectorsPerCluster *
                      ( double ) dwBytesPerSector;
       }
-
+#endif
       SetErrorMode( uiErrMode );
-
-      if( GetLastError() != 0 )
-         bError = TRUE;
    }
 #elif defined(HB_OS_OS2)
    {
@@ -189,12 +178,11 @@ HB_FUNC( DISKSPACE )
       struct _FSALLOCATE fsa;
 
       /* Query level 1 info from filesystem */
-      if( DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa ) ) == 0 )
+      bError = DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa ) ) != 0;
+      if( !bError )
          dSpace = ( double ) fsa.cUnitAvail *
                   ( double ) fsa.cSectorUnit *
                   ( double ) fsa.cbSector;
-      else
-         bError = TRUE;
    }
 #elif defined(HB_OS_UNIX)
    {
@@ -209,27 +197,27 @@ HB_FUNC( DISKSPACE )
       {
 #if defined(__WATCOMC__) || defined(__CEGCC__)
          struct stat st;
-         if( stat( szName, &st) == 0 )
+         bError = stat( szName, &st) != 0;
+         if( !bError )
             dSpace = ( double ) st.st_blocks * ( double ) st.st_blksize;
-         else
-            bError = TRUE;
 #else
          struct statvfs st;
-         if( statvfs( szName, &st ) == 0 )
+         bError = statvfs( szName, &st ) != 0;
+         if( !bError )
          {
             if( getuid() == 0 )
                dSpace = ( double ) st.f_bfree * ( double ) st.f_bsize;
             else
                dSpace = ( double ) st.f_bavail * ( double ) st.f_bsize;
          }
-         else
-            bError = TRUE;
 #endif
       }
 
       if( fFree )
          hb_xfree( szName );
    }
+#else
+   bError = FALSE;
 #endif
 
    if( bError )

@@ -8,6 +8,36 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-19 16:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicdp.h
+  * harbour/source/rtl/cdpapi.c
+    + added hb_cdpGetChar()
+
+  + harbour/tests/wcecon.prg
+    + added demonstration console program for WinCE,
+      compile it using:
+         hbmk -n -w -es2 -gtwvt wcecon
+
+  * harbour/include/hbwince.h
+  * harbour/source/common/hbwince.c
+  * harbour/contrib/win32/w32_ole.c
+  * harbour/contrib/odbc/odbc.c
+    * use UNICODE macro instead of HB_WINCE to allow using Unicode
+      WINAPI also in other MS-Windows versions
+
+  * harbour/source/rtl/gtwvt/gtwvt.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    + added support for Unicode IO
+
+  * harbour/source/rtl/diskspac.c
+  * harbour/source/rtl/disksphb.c
+     ! fixed wrongly set error code
+     ! fixed possible access to uninitialized memory
+     * use GetDiskFreeSpaceEx() on WinCE instead of GetDiskFreeSpace()
+       for disk larger then 4GB - I do not know if PocketPC have such
+       large devices now or if WinCE can support it but for sure it will
+       somewhere in the future
+
 2007-10-19 01:09 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/runjava
      - Obsolete contrib removed. (Thanks Petr)

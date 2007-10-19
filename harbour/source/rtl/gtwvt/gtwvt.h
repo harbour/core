@@ -65,6 +65,7 @@
 #include "hbset.h"
 #include "hbgtcore.h"
 #include "hbinit.h"
+#include "hbapicdp.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "inkey.ch"
@@ -130,6 +131,9 @@ typedef struct global_data
    HWND     hWnd;                         /* the window handle */
 
    HDC      hdc;                          /* Handle to Windows Device Context */
+
+   PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
+   PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
 
    int      CodePage;                     /* Code page to use for display characters */
    BOOL     Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */

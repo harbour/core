@@ -1398,7 +1398,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
   {
      if( (LONG) s_nOleError == DISP_E_EXCEPTION )
      {
-#if defined( HB_WINCE )
+#if defined( UNICODE )
         MessageBox( NULL, excep.bstrDescription, excep.bstrSource, MB_ICONHAND );
 #else
         LPSTR source, description;

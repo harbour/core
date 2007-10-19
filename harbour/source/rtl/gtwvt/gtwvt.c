@@ -258,6 +258,9 @@ static void hb_gt_wvt_ResetWindowSize( HWND hWnd )
                      tm.tmAveCharWidth;   /* For fixed FONT should == tm.tmMaxCharWidth */
    _s.PTEXTSIZE.y = tm.tmHeight;          /* but seems to be a problem on Win9X so */
                                           /* assume proportional fonts always for Win9X */
+#if defined(HB_WINCE)
+   _s.FixedFont = FALSE;
+#else
    if ( _s.fontWidth < 0 || _s.Win9X || ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) || ( _s.PTEXTSIZE.x != tm.tmMaxCharWidth ) )
    {
       _s.FixedFont = FALSE;
@@ -266,6 +269,7 @@ static void hb_gt_wvt_ResetWindowSize( HWND hWnd )
    {
       _s.FixedFont = TRUE ;
    }
+#endif
 
    for( n = 0 ; n < _s.COLS ; n++ )       /* _s.FixedSize[] is used by ExtTextOut() to emulate */
    {                                      /* fixed font when a proportional font is used */
@@ -726,7 +730,7 @@ static BOOL hb_gt_wvt_KeyEvent( HWND hWnd, UINT message, WPARAM wParam, LPARAM l
             }
             else if ( bCtrl && ( c >= 1 && c <= 26 ) )  /* K_CTRL_A - Z */
             {
-               hb_gt_wvt_AddCharToInputQueue( K_Ctrl[c-1]  );
+               hb_gt_wvt_AddCharToInputQueue( K_Ctrl[c - 1]  );
             }
             else
             {
@@ -746,10 +750,13 @@ static BOOL hb_gt_wvt_KeyEvent( HWND hWnd, UINT message, WPARAM wParam, LPARAM l
                      hb_gt_wvt_AddCharToInputQueue( K_ESC );
                      break;
                   default:
+#if defined(UNICODE)
+                     if( _s.inCDP )
+                        c = hb_cdpGetChar( _s.inCDP, FALSE, ( USHORT ) c );
+                     else
+#endif
                      if( _s.CodePage == OEM_CHARSET )
-                     {
                         c = hb_gt_wvt_key_ansi_to_oem( c );
-                     }
                      hb_gt_wvt_AddCharToInputQueue( c );
                      break;
                }
@@ -949,6 +956,9 @@ static void hb_gt_wvt_PaintText( HWND hWnd, RECT rcRect )
          {
             break;
          }
+#if defined(UNICODE)
+         usChar = hb_cdpGetU16( _s.hostCDP, TRUE, ( BYTE ) usChar );
+#endif
          if ( len == 0 )
          {
             bOldColor = bColor;
@@ -1283,6 +1293,10 @@ static void hb_gt_wvt_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       hb_errInternal( 10001, "WINAPI CreateWindow() failed", "", "" );
    }
    _s.hdc        = GetDC( _s.hWnd );
+#ifndef HB_CDP_SUPPORT_OFF
+   _s.hostCDP    = hb_cdp_page;
+   _s.inCDP      = hb_cdp_page;
+#endif
 
    /* Set default window title */
    {
@@ -1786,6 +1800,66 @@ static void hb_gt_wvt_Refresh( void )
 
 /* *********************************************************************** */
 
+static BOOL hb_gt_wvt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
+{
+
+   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+
+#ifndef HB_CDP_SUPPORT_OFF
+   /*
+    * We are displaying text in U16 so pszTermCDP is unimportant.
+    * We only have to know what is the internal application codepage
+    * to make proper translation
+    */
+   if( !pszHostCDP || !*pszHostCDP )
+   {
+      if( hb_cdp_page )
+         pszHostCDP = hb_cdp_page->id;
+      else if( pszTermCDP && *pszTermCDP )
+         pszHostCDP = pszTermCDP;
+   }
+   if( pszHostCDP && *pszHostCDP )
+   {
+      PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
+      if( cdpHost )
+         _s.hostCDP = cdpHost;
+   }
+#endif
+
+   return TRUE;
+}
+
+static BOOL hb_gt_wvt_SetKeyCP( char * pszTermCDP, char * pszHostCDP )
+{
+   HB_GTSUPER_SETKEYCP( pszTermCDP, pszHostCDP );
+
+#ifndef HB_CDP_SUPPORT_OFF
+   /*
+    * We are receiving WM_CHAR events in U16 so pszTermCDP is unimportant.
+    * We only have to know what is the internal application codepage
+    * to make proper translation
+    */
+   if( !pszHostCDP || !*pszHostCDP )
+   {
+      if( hb_cdp_page )
+         pszHostCDP = hb_cdp_page->id;
+      else if( pszTermCDP && *pszTermCDP )
+         pszHostCDP = pszTermCDP;
+   }
+   if( pszHostCDP && *pszHostCDP )
+   {
+      PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
+      if( cdpHost )
+         _s.inCDP = cdpHost;
+   }
+#endif
+
+   return TRUE;
+}
+
+
+/* *********************************************************************** */
+
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
@@ -1798,6 +1872,8 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Version                    = hb_gt_wvt_Version;
    pFuncTable->Tone                       = hb_gt_wvt_Tone;
    pFuncTable->Info                       = hb_gt_wvt_Info;
+   pFuncTable->SetDispCP                  = hb_gt_wvt_SetDispCP;
+   pFuncTable->SetKeyCP                   = hb_gt_wvt_SetKeyCP;
 
    pFuncTable->ReadKey                    = hb_gt_wvt_ReadKey;
 

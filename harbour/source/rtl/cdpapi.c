@@ -543,6 +543,24 @@ HB_EXPORT USHORT hb_cdpGetU16( PHB_CODEPAGE cdp, BOOL fCtrl, BYTE ch )
    return u;
 }
 
+HB_EXPORT UCHAR hb_cdpGetChar( PHB_CODEPAGE cdp, BOOL fCtrl, USHORT uc )
+{
+   if( ( fCtrl || uc >= 32 ) && cdp &&
+       cdp->uniTable && cdp->uniTable->uniCodes )
+   {
+      int i;
+      for( i = fCtrl ? 0 : 32; i < cdp->uniTable->nChars; i++ )
+      {
+         if( cdp->uniTable->uniCodes[ i ] == uc )
+         {
+            uc = ( USHORT ) i;
+            break;
+         }
+      }
+   }
+   return uc >= 0x100 ? '?' : ( UCHAR ) uc;
+}
+
 HB_EXPORT BYTE * hb_cdpUTF8StringSubstr( const BYTE * pSrc, ULONG ulLen,
                                          ULONG ulFrom, ULONG ulCount,
                                          ULONG * pulDest )

@@ -54,21 +54,7 @@
 #define HB_WINCE_H_
 
 #if defined(HB_WINCE)
-
-#undef  OS_HAS_DRIVE_LETTER
-
-extern wchar_t * hb_mbtowc( const char *srcA );
-extern char * hb_wctomb( const wchar_t *srcW );
-extern void hb_mbtowccpy( wchar_t *dstW, const char *srcA, unsigned long ulLen );
-extern void hb_mbtowcset( wchar_t *dstW, const char *srcA, unsigned long ulLen );
-extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen );
-
-#define HB_TCHAR_CPTO(d,s,l)        hb_mbtowccpy(d,s,l)
-#define HB_TCHAR_GETFROM(d,s,l)     hb_wctombget(d,s,l)
-#define HB_TCHAR_SETTO(d,s,l)       hb_mbtowcset(d,s,l)
-#define HB_TCHAR_CONVTO(s)          hb_mbtowc(s)
-#define HB_TCHAR_CONVFROM(s)        hb_wctomb(s)
-#define HB_TCHAR_FREE(s)            hb_xfree(s)
+#  undef  OS_HAS_DRIVE_LETTER
 
 /* defined(__CEGCC__) || defined(__MINGW32CE__) */
 
@@ -79,8 +65,27 @@ extern clock_t clock( void );
 
 extern int remove( const char *filename );
 extern int access( const char *pathname, int mode );
-extern char *strerror( int errnum );
 extern int system( const char *string );
+extern char *strerror( int errnum );
+
+#endif /* HB_WINCE */
+
+#if defined(HB_OS_WIN_32)
+
+extern wchar_t * hb_mbtowc( const char *srcA );
+extern char * hb_wctomb( const wchar_t *srcW );
+extern void hb_mbtowccpy( wchar_t *dstW, const char *srcA, unsigned long ulLen );
+extern void hb_mbtowcset( wchar_t *dstW, const char *srcA, unsigned long ulLen );
+extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen );
+
+#if defined(UNICODE)
+
+#define HB_TCHAR_CPTO(d,s,l)        hb_mbtowccpy(d,s,l)
+#define HB_TCHAR_GETFROM(d,s,l)     hb_wctombget(d,s,l)
+#define HB_TCHAR_SETTO(d,s,l)       hb_mbtowcset(d,s,l)
+#define HB_TCHAR_CONVTO(s)          hb_mbtowc(s)
+#define HB_TCHAR_CONVFROM(s)        hb_wctomb(s)
+#define HB_TCHAR_FREE(s)            hb_xfree(s)
 
 #else
 
@@ -91,6 +96,8 @@ extern int system( const char *string );
 #define HB_TCHAR_CONVFROM(s)        (s)
 #define HB_TCHAR_FREE(s)            HB_SYMBOL_UNUSED(s)
 
-#endif /* HB_WINCE */
+#endif /* UNICODE */
+
+#endif /* HB_OS_WIN_32 */
 
 #endif /* HB_WINCE_H_ */

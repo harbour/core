@@ -188,6 +188,7 @@ extern HB_EXPORT int           hb_cdpchrcmp( char, char, PHB_CODEPAGE );
 extern HB_EXPORT void          hb_cdpReleaseAll( void );
        
 extern HB_EXPORT USHORT        hb_cdpGetU16( PHB_CODEPAGE, BOOL, BYTE );
+extern HB_EXPORT UCHAR         hb_cdpGetChar( PHB_CODEPAGE, BOOL, USHORT );
 extern HB_EXPORT BOOL          hb_cdpGetFromUTF8( PHB_CODEPAGE, BOOL, BYTE, int *, USHORT * );
 extern HB_EXPORT ULONG         hb_cdpStrnToUTF8( PHB_CODEPAGE, BOOL, const BYTE *, ULONG, BYTE * );
 extern HB_EXPORT ULONG         hb_cdpStrnToU16( PHB_CODEPAGE, BOOL, const BYTE *, ULONG, BYTE * );
