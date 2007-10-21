@@ -88,13 +88,14 @@ HB_FUNC( FT_FSKIP );
 HB_FUNC( FT_FBOF );
 HB_FUNC( FT_FEOF );
 HB_FUNC( FT_FGOTOP );
-HB_FUNC( FT_FGOBOTTOM );
+HB_FUNC( FT_FGOBOT );
 HB_FUNC( FT_FWRITELN );
 HB_FUNC( FT_FREADLN );
 HB_FUNC( FT_FREADLN_EX );
 HB_FUNC( FT_FDELETED );
 HB_FUNC( FT_FCLOSE );
 HB_FUNC( FT_FCLOSEALL );
+HB_FUNC( FT_FERROR );
 
 HB_FUNC_EXTERN( ASCAN );
 HB_FUNC_EXTERN( HB_RASCAN );
@@ -187,7 +188,7 @@ HB_FUNC( FT_FUSE )
       // Area already used
       if ( pTemp && pTemp->bActive)
       {
-         hb_retl( FALSE );
+         hb_retni( -1 );
          return;
       }
 
@@ -292,7 +293,7 @@ HB_FUNC( FT_FUSE )
 
          hb_itemRelease( pClone );
 
-         pTemp->nCurrent = nCurrent ;
+         pTemp->nCurrent = nCurrent;
          pTemp->bActive = TRUE;
 
          pCurFile = pTemp;
@@ -318,11 +319,11 @@ HB_FUNC( FT_FUSE )
 
          hb_xfree( ft_FileName );
          hb_itemRelease( pArray );
-         hb_retl( TRUE );
+         hb_retni( iSelect );
       }
       else
       {
-         hb_retl( FALSE );
+         hb_retni( -1 );
       }
    }
    else
@@ -337,7 +338,7 @@ HB_FUNC( FT_FUSE )
          HB_FUNCNAME( FT_FCLOSEALL )();
       }
 
-      hb_retl( FALSE );
+      hb_retni( 0 );
    }
 }
 
@@ -867,7 +868,7 @@ HB_FUNC( FT_FGOTOP )
 }
 
 //------------------------------------------------------------------------------
-HB_FUNC( FT_FGOBOTTOM )
+HB_FUNC( FT_FGOBOT )
 {
    if( pCurFile )
    {
@@ -1049,6 +1050,12 @@ HB_FUNC( FT_FCLOSEALL )
    }
 
    pCurFile = NULL;
+}
+
+//------------------------------------------------------------------------------
+HB_FUNC( FT_FERROR )
+{
+   hb_retni( 0 ); // TOFIX: return error after FT_FUSE()
 }
 
 //------------------------------------------------------------------------------

@@ -564,7 +564,7 @@ HB_FUNC( SET )
             hb_set.HB_SET_DEVICE = set_string( pArg2, hb_set.HB_SET_DEVICE );
             if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set.hb_set_printhan == FS_ERROR
             && hb_set.HB_SET_PRINTFILE && strlen( hb_set.HB_SET_PRINTFILE ) > 0 )
-               hb_set.hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, FALSE, ".prn", HB_SET_PRINTFILE );
+               hb_set.hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, FALSE, NULL, HB_SET_PRINTFILE );
          }
          break;
       case HB_SET_EOF        :
@@ -972,10 +972,15 @@ void hb_setInitialize( void )
    hb_set.HB_SET_OPTIMIZE = TRUE;
    hb_set.HB_SET_PATH = hb_strdup( "" );
    hb_set.HB_SET_PRINTER = FALSE;
-#ifdef HB_OS_UNIX
-   hb_set.HB_SET_PRINTFILE = hb_strdup( "|lpr" );  /* Default printer device */
+   /* Default printer device */
+#if defined(HB_OS_UNIX)
+   hb_set.HB_SET_PRINTFILE = hb_strdup( "|lpr" );
+#elif defined(HB_OS_DOS)
+   hb_set.HB_SET_PRINTFILE = hb_strdup( "PRN" );
+#elif defined(HB_OS_WIN_32)
+   hb_set.HB_SET_PRINTFILE = hb_strdup( "LPT1" );
 #else
-   hb_set.HB_SET_PRINTFILE = hb_strdup( "PRN" );   /* Default printer device */
+   hb_set.HB_SET_PRINTFILE = hb_strdup( "PRN" ); /* TOFIX */
 #endif
    hb_set.hb_set_printhan = FS_ERROR;
    hb_set.HB_SET_SCOREBOARD = TRUE;

@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * Copyright(C) 1999 by Jesus Salas
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,10 +26,10 @@
  */
 
 #define INITGUID
-#include "HB_DDraw.h"
+#include "w32_ddrw.h"
 
 
-    BOOL hb_dd_g_handling_events=FALSE;   // painting?
+    BOOL hb_dd_g_handling_events = FALSE;   // painting?
 
     #define HB_DD_TIMER_ID            1
 	#define HB_DD_TIMER_RATE          100
@@ -36,8 +40,8 @@
 	LPDIRECTDRAW4               hb_dd_g_pDD = NULL;        // DirectDraw object
     HWND                        hb_dd_g_DDHwnd;            // Our hWnd
 
-    long hb_dd_g_xWindow=0;
-	long hb_dd_g_yWindow=0;
+    long hb_dd_g_xWindow = 0;
+	long hb_dd_g_yWindow = 0;
 
 //------------------------------------------------------------------------------//
 //                     Management Structs for surfaces...
@@ -94,10 +98,9 @@
 
 	short int hb_dd_g_KeyDown[256];
 
-    HARBOUR HB_DD_ISKEYPRESSED( void )
+    HB_FUNC( HB_DD_ISKEYPRESSED )
 	{
-		long nKey = hb_parnl( 1 );
-		if ( hb_dd_g_KeyDown[ nKey ] )
+		if ( hb_dd_g_KeyDown[ hb_parnl( 1 ) ] )
 			 hb_retl( 1 );
 		else
 			 hb_retl( 0 );
@@ -105,7 +108,7 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_SPGETXY( void )
+	HB_FUNC( HB_DD_SPGETXY )
 	{
 
 		// This function is Broken ( hb_stornl fail );
@@ -118,46 +121,40 @@
 		hb_stornl( hb_dd_Sprites[ n ].y, -1, 1  );
 	}
 
-	HARBOUR HB_DD_SPGETX( void )
+	HB_FUNC( HB_DD_SPGETX )
 	{
-
-		long n =hb_parnl( 1 );
-		hb_retnl( hb_dd_Sprites[ n ].x );
+		hb_retnl( hb_dd_Sprites[ hb_parnl( 1 ) ].x );
 	}
 
-	HARBOUR HB_DD_SPGETY( void )
+	HB_FUNC( HB_DD_SPGETY )
 	{
-
-		long n =hb_parnl( 1 );
-		hb_retnl( hb_dd_Sprites[ n ].y );
+		hb_retnl( hb_dd_Sprites[ hb_parnl( 1 ) ].y );
 	}
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_SPGETVISIBLE( void )
+	HB_FUNC( HB_DD_SPGETVISIBLE )
 	{
   	   hb_retl( hb_dd_Sprites[ hb_parnl( 1 ) ].Visible );
 	}
 
 //------------------------------------------------------------------//
 
-	void HB_DD_SPSETVISIBLE( void )
+	HB_FUNC( HB_DD_SPSETVISIBLE )
 	{
-		long n = hb_parnl( 1 );
-		hb_dd_Sprites[ n ].Visible = hb_parl( 2 );
+		hb_dd_Sprites[ hb_parnl( 1 ) ].Visible = hb_parl( 2 );
 	}
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_SPONRENDER( void )
+	HB_FUNC( HB_DD_SPONRENDER )
 	{
-		long n = hb_parnl( 1 );
-		hb_dd_Sprites[ n ].OnRender = strdup( hb_parc(1) );
+		hb_dd_Sprites[ hb_parnl( 1 ) ].OnRender = strdup( hb_parc(1) );
 	}
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_SPCLEARDIRECTION( void )
+	HB_FUNC( HB_DD_SPCLEARDIRECTION )
 	{
 		long n = hb_parnl( 1 );
 		hb_dd_Sprites[ n ].xIncrement =  0;
@@ -167,23 +164,21 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_SPSETSOLID( void )
+	HB_FUNC( HB_DD_SPSETSOLID )
 	{
-		long n =hb_parnl( 1 );
 		hb_dd_Sprites[hb_parnl( 1 ) ].Solid = hb_parl( 2 );
 	}
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_SPSETMASKED( void  )
+    HB_FUNC( HB_DD_SPSETMASKED )
 	{
-		long n =hb_parnl( 1 );
 		hb_dd_Sprites[hb_parnl( 1 ) ].Masked = hb_parl( 2 );
 	}
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_SPSETDIRECTION( void )
+	HB_FUNC( HB_DD_SPSETDIRECTION )
 	{
 		long n		   =hb_parnl( 1 );
 
@@ -194,7 +189,7 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_SPONFIRSTFRAME( void )
+	HB_FUNC( HB_DD_SPONFIRSTFRAME )
 	{
 		long n =hb_parnl( 1 );
 		hb_dd_Sprites[ n ].OnFirstFrame = strdup( hb_parc(2) );
@@ -202,7 +197,7 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_SPONOUTSCREEN( void )
+	HB_FUNC( HB_DD_SPONOUTSCREEN )
 	{
 		long n =hb_parnl( 1 );
 		hb_dd_Sprites[ n ].OnOutScreen = strdup( hb_parc(2) );
@@ -210,7 +205,7 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_SPONCOLLISION( void )
+	HB_FUNC( HB_DD_SPONCOLLISION )
 	{
 		long n =hb_parnl( 1 );
 		hb_dd_Sprites[ n ].OnCollision = strdup( hb_parc(2) );
@@ -219,8 +214,7 @@
 
 //------------------------------------------------------------------//
 
-
-	HARBOUR HB_DD_CREATESPRITE( void )
+	HB_FUNC( HB_DD_CREATESPRITE )
 	{
 		long n = hb_dd_g_SpritesCount;
 		
@@ -242,7 +236,7 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_SPSETXY( void )
+	HB_FUNC( HB_DD_SPSETXY )
 	{
 		long n =hb_parnl( 1 );
 		long x =hb_parnl( 2 );
@@ -253,7 +247,7 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR DD_SPSETINVERTED( void )
+	HB_FUNC( DD_SPSETINVERTED )
 	{
 		LPDIRECTDRAWSURFACE4 pdds;
 		long n =hb_parnl(1);
@@ -280,11 +274,8 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_MSGBOX( void )
+	HB_FUNC( HB_DD_MSGBOX )
 	{
-		char buff[20]="";
-		long dwVal=0;
-
 		char *m1;
 		char *m2;
         char deftitle [100] = "";
@@ -301,7 +292,6 @@
 			 m2 = deftitle;
 
 	    MessageBox( hb_dd_g_DDHwnd, m1, m2, NULL);
-
 	}
 
 //------------------------------------------------------------------//
@@ -373,21 +363,17 @@
 	HRESULT hRet;
 	long cont,cont2;
 	RECT rcRect;
-	LPDIRECTDRAWSURFACE4        pdds;
-	long o =0 ;
-	PSYMBOL pVMCall; 
-	PDYNSYM pDynSym;
+	LPDIRECTDRAWSURFACE4 pdds;
+	PHB_DYNS pDynSym;
 
-	pDynSym = hb_FindDynSym( "DDONRENDER" );
-
+    pDynSym = hb_dynsymFindName( "DDONRENDER" );
+    
     if( pDynSym )
-	{
-       pVMCall = pDynSym->pSymbol;
-	   PushSymbol( pVMCall );
-	   PushNil();
-	   Do( 0 );
-	}
-
+    {
+       hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
+       hb_vmPushNil();
+       hb_vmDo(0);
+    }
 
 	for( cont=0; cont<hb_dd_g_SpritesCount; cont++)
 	{
@@ -422,17 +408,16 @@
 							{
 								 if (  hb_dd_Sprites[ cont ].OnCollision != NULL )
 								 {
-									   pDynSym = hb_FindDynSym( hb_dd_Sprites[ cont ].OnCollision );
-
-									   if( pDynSym )
-									   {
-								           pVMCall = pDynSym->pSymbol;
-									       PushSymbol( pVMCall );
-									       PushNil();
-									       PushLong( cont );
-									       PushLong( cont2 );
-									       Do( 2 );
-									   }
+                                    pDynSym = hb_dynsymFindName( hb_dd_Sprites[ cont ].OnCollision );
+                                    
+                                    if( pDynSym )
+                                    {
+                                       hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
+                                       hb_vmPushNil();
+									   hb_vmPushLong( cont );
+									   hb_vmPushLong( cont2 );
+                                       hb_vmDo(2);
+                                    }
 								 }
 
 							}
@@ -447,14 +432,14 @@
 
 				 if ( hb_dd_Sprites[ cont ].OnFirstFrame != NULL )
 				 {
-					pDynSym = hb_FindDynSym( hb_dd_Sprites[ cont ].OnFirstFrame );
-				    if( pDynSym )
-					{
-						pVMCall = pDynSym->pSymbol;
-						PushSymbol( pVMCall );
-						PushNil();
-						Do( 0 );
-					}
+                    pDynSym = hb_dynsymFindName( hb_dd_Sprites[ cont ].OnFirstFrame );
+                    
+                    if( pDynSym )
+                    {
+                       hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
+                       hb_vmPushNil();
+                       hb_vmDo(0);
+                    }
 				 }
 				 hb_dd_Sprites[ cont ].Frame = 1;
 			}
@@ -507,16 +492,15 @@
 				{
 					 if (  hb_dd_Sprites[ cont ].OnOutScreen != NULL )
 					 {
-						 pDynSym = hb_FindDynSym( hb_dd_Sprites[ cont ].OnOutScreen );
-
-						 if( pDynSym )
-						 {
-							 pVMCall = pDynSym->pSymbol;
-							 PushSymbol( pVMCall );
-							 PushNil();
-							 PushLong( cont );
-						     Do( 1 );
-						 }
+                         pDynSym = hb_dynsymFindName( hb_dd_Sprites[ cont ].OnOutScreen );
+                         
+                         if( pDynSym )
+                         {
+                            hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
+                            hb_vmPushNil();
+							hb_vmPushLong( cont );
+						    hb_vmDo( 1 );
+                         }
 					 }
 
 
@@ -595,10 +579,10 @@
 //------------------------------------------------------------------//
 
 
-	HARBOUR HB_DD_CREATEWINDOW( void )
+	HB_FUNC( HB_DD_CREATEWINDOW )
 	{
 
-       HWND m_hWnd = NULL;
+       HWND m_hWnd;
 	   HINSTANCE m_hInstance = GetModuleHandle(NULL);
 	   long x,y;
 
@@ -649,7 +633,7 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_LOADBMPINTOSURFACE( void )
+	HB_FUNC( HB_DD_LOADBMPINTOSURFACE )
 	{
 		long   nSurface = hb_parnl( 1 );
 		char * cBitmap	= hb_parc ( 2 );
@@ -683,7 +667,7 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_CREATEOFFSCREENBITMAP( void )
+	HB_FUNC( HB_DD_CREATEOFFSCREENBITMAP )
 	{
 		DDSURFACEDESC2              ddsd;
 	    HRESULT                     hRet;
@@ -758,7 +742,7 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_DDRAWSTARTUP( HWND hWnd )
+	void HB_DD_DDRAWSTARTUP( HWND hWnd )
 	{
 
 
@@ -823,9 +807,8 @@
 
 //------------------------------------------------------------------//
 
-	HARBOUR HB_DD_STARTWINDOW( void )
+	HB_FUNC( HB_DD_STARTWINDOW )
 	{
-		HWND m_hWnd = ( HWND ) hb_parnl(1);
 		MSG msg;
 		BOOL loop = TRUE;
 
@@ -881,9 +864,10 @@ HRESULT	hb_dd_DDCopyBitmap(IDirectDrawSurface4 * pdds, HBITMAP hbm, int x, int y
     return hr;
 }
 
-void hb_dd_checkError( HRESULT hr )
+long hb_dd_checkError( HRESULT hr )
 {
-	long p=0;
+	long p = 0;
+
 	switch( hr )
 	{
 	case  DDERR_EXCEPTION  : p++;break;
@@ -901,6 +885,8 @@ void hb_dd_checkError( HRESULT hr )
 	case  DDERR_INVALIDSURFACETYPE :p++;;break;
 		
 	}
+
+	return p;
 }
 
 

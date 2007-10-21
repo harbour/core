@@ -57,9 +57,6 @@ HB_EXPORT BOOL hb_printerIsReady( char * pszPrinterName )
 {
    BOOL bIsPrinter;
 
-   if( pszPrinterName == NULL )
-      pszPrinterName = "LPT1";
-
 #if defined(HB_OS_DOS)
 
    /* NOTE: DOS specific solution, using BIOS interrupt */
@@ -67,6 +64,9 @@ HB_EXPORT BOOL hb_printerIsReady( char * pszPrinterName )
    {
       USHORT uiPort;
       
+      if( pszPrinterName == NULL )
+         pszPrinterName = "LPT1";
+
       if( hb_strnicmp( pszPrinterName, "PRN", 3 ) == 0 )
       {
          union REGS regs;
@@ -95,7 +95,7 @@ HB_EXPORT BOOL hb_printerIsReady( char * pszPrinterName )
          bIsPrinter = FALSE;
    }
 
-#else
+#elif defined(HB_OS_WIN_32)
 
    /* NOTE: Platform independent method, at least it will compile and run
             on any platform, but the result may not be the expected one,
@@ -105,9 +105,24 @@ HB_EXPORT BOOL hb_printerIsReady( char * pszPrinterName )
             [vszakats] */
 
    {
-      FHANDLE fhnd = hb_fsOpen( ( BYTE * ) pszPrinterName, FO_WRITE | FO_SHARED | FO_PRIVATE );
+      FHANDLE fhnd;
+      
+      if( pszPrinterName == NULL )
+         pszPrinterName = "LPT1";
+
+      fhnd = hb_fsOpen( ( BYTE * ) pszPrinterName, FO_WRITE | FO_SHARED | FO_PRIVATE );
       bIsPrinter = ( fhnd != FS_ERROR );
       hb_fsClose( fhnd );
+   }
+
+#else
+
+   {
+      /* TODO */
+
+      HB_SYMBOL_UNUSED( pszPrinterName );
+
+      bIsPrinter = FALSE;
    }
 
 #endif

@@ -8,6 +8,34 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-21 02:52 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/set.c
+     ! Fixed SET DEVICE TO PRINTER not to add an extension (".prn") 
+       to the filename specified by SET PRINTER TO (the extension 
+       is only added by the SET PRINTER TO command).
+     ! Fixed SET DEVICE TO PRINTER to point to "LPT1" by default 
+       (instead of "PRN") under Win32 (this is now in sync with 
+       ISPRINTER() logic). Added "PRN" for the rest of OSes (TOFIX).
+     ; Pls test.
+
+   * source/rtl/isprint.c
+     ! Cleaned up platform branches in ISPRINTER(). Non DOS/Win32 
+       branch is a dummy TODO now.
+
+   * contrib/libnf/fttext.c
+     ! Some fixes reported by Mike Evans. Pls test.
+       Not all reported bugs were fixed. (ft_FError() returns 
+       a constant zero, ft_FUse() still needs ft_FSelect())
+
+   - contrib/directx/HB_DDraw.cpp
+   + contrib/directx/w32_ddrw.cpp
+   - contrib/directx/HB_DDraw.h
+   + contrib/directx/w32_ddrw.h
+   * contrib/directx/readme.1st
+     ! Harbour API updates to this severly outdated code.
+     ! Fixed warnings.
+     + Added SVN headers.
+
 2007-10-19 16:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapicdp.h
   * harbour/source/rtl/cdpapi.c
