@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-21 11:01 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/directx/w32_ddrw.cpp
+     ! Fixed two -w warnings left.
+
 2007-10-21 02:52 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/set.c
      ! Fixed SET DEVICE TO PRINTER not to add an extension (".prn") 

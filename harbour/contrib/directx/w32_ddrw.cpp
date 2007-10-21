@@ -66,7 +66,7 @@
 		long Width;				   // width of one frame
 		long Height;			   // height of one frame
 		long Images;			   // Number of frames in Surface
-        short int Visible;         // Render it and do Hit detect?
+        BOOL Visible;              // Render it and do Hit detect?
 		long Frame;				   // Actual Frame to Render
 		long zOrder;			   // For painting
 		long x;				       // x in Virtual Screen
@@ -142,7 +142,7 @@
 
 	HB_FUNC( HB_DD_SPSETVISIBLE )
 	{
-		hb_dd_Sprites[ hb_parnl( 1 ) ].Visible = hb_parl( 2 );
+		hb_dd_Sprites[ hb_parnl( 1 ) ].Visible = ( int ) hb_parl( 2 );
 	}
 
 //------------------------------------------------------------------//
