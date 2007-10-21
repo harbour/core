@@ -45,6 +45,8 @@
 #include "ddraw.h"
 
 
+HB_EXTERN_BEGIN
+
 
     // Main Message Loop
 
@@ -73,3 +75,4 @@ extern "C" DWORD hb_dd_DDColorMatch  ( IDirectDrawSurface4 * pdds, COLORREF rgb 
     void DD_MsgBox          ( void );
     void WinError           ( void );
 
+HB_EXTERN_END

@@ -28,6 +28,8 @@
 #define INITGUID
 #include "w32_ddrw.h"
 
+HB_EXTERN_BEGIN
+
 
     BOOL hb_dd_g_handling_events = FALSE;   // painting?
 
@@ -98,7 +100,7 @@
 
 	short int hb_dd_g_KeyDown[256];
 
-    HB_FUNC( HB_DD_ISKEYPRESSED )
+    HB_FUNC( DD_ISKEYPRESSED )
 	{
 		if ( hb_dd_g_KeyDown[ hb_parnl( 1 ) ] )
 			 hb_retl( 1 );
@@ -108,7 +110,7 @@
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_SPGETXY )
+	HB_FUNC( DD_SPGETXY )
 	{
 
 		// This function is Broken ( hb_stornl fail );
@@ -121,40 +123,40 @@
 		hb_stornl( hb_dd_Sprites[ n ].y, -1, 1  );
 	}
 
-	HB_FUNC( HB_DD_SPGETX )
+	HB_FUNC( DD_SPGETX )
 	{
 		hb_retnl( hb_dd_Sprites[ hb_parnl( 1 ) ].x );
 	}
 
-	HB_FUNC( HB_DD_SPGETY )
+	HB_FUNC( DD_SPGETY )
 	{
 		hb_retnl( hb_dd_Sprites[ hb_parnl( 1 ) ].y );
 	}
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_SPGETVISIBLE )
+	HB_FUNC( DD_SPGETVISIBLE )
 	{
   	   hb_retl( hb_dd_Sprites[ hb_parnl( 1 ) ].Visible );
 	}
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_SPSETVISIBLE )
+	HB_FUNC( DD_SPSETVISIBLE )
 	{
 		hb_dd_Sprites[ hb_parnl( 1 ) ].Visible = ( int ) hb_parl( 2 );
 	}
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_SPONRENDER )
+	HB_FUNC( DD_SPONRENDER )
 	{
 		hb_dd_Sprites[ hb_parnl( 1 ) ].OnRender = strdup( hb_parc(1) );
 	}
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_SPCLEARDIRECTION )
+	HB_FUNC( DD_SPCLEARDIRECTION )
 	{
 		long n = hb_parnl( 1 );
 		hb_dd_Sprites[ n ].xIncrement =  0;
@@ -164,21 +166,21 @@
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_SPSETSOLID )
+	HB_FUNC( DD_SPSETSOLID )
 	{
 		hb_dd_Sprites[hb_parnl( 1 ) ].Solid = hb_parl( 2 );
 	}
 
 //------------------------------------------------------------------//
 
-    HB_FUNC( HB_DD_SPSETMASKED )
+    HB_FUNC( DD_SPSETMASKED )
 	{
 		hb_dd_Sprites[hb_parnl( 1 ) ].Masked = hb_parl( 2 );
 	}
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_SPSETDIRECTION )
+	HB_FUNC( DD_SPSETDIRECTION )
 	{
 		long n		   =hb_parnl( 1 );
 
@@ -189,7 +191,7 @@
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_SPONFIRSTFRAME )
+	HB_FUNC( DD_SPONFIRSTFRAME )
 	{
 		long n =hb_parnl( 1 );
 		hb_dd_Sprites[ n ].OnFirstFrame = strdup( hb_parc(2) );
@@ -197,7 +199,7 @@
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_SPONOUTSCREEN )
+	HB_FUNC( DD_SPONOUTSCREEN )
 	{
 		long n =hb_parnl( 1 );
 		hb_dd_Sprites[ n ].OnOutScreen = strdup( hb_parc(2) );
@@ -205,7 +207,7 @@
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_SPONCOLLISION )
+	HB_FUNC( DD_SPONCOLLISION )
 	{
 		long n =hb_parnl( 1 );
 		hb_dd_Sprites[ n ].OnCollision = strdup( hb_parc(2) );
@@ -214,7 +216,7 @@
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_CREATESPRITE )
+	HB_FUNC( DD_CREATESPRITE )
 	{
 		long n = hb_dd_g_SpritesCount;
 		
@@ -236,7 +238,7 @@
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_SPSETXY )
+	HB_FUNC( DD_SPSETXY )
 	{
 		long n =hb_parnl( 1 );
 		long x =hb_parnl( 2 );
@@ -274,7 +276,7 @@
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_MSGBOX )
+	HB_FUNC( DD_MSGBOX )
 	{
 		char *m1;
 		char *m2;
@@ -579,7 +581,7 @@
 //------------------------------------------------------------------//
 
 
-	HB_FUNC( HB_DD_CREATEWINDOW )
+	HB_FUNC( DD_CREATEWINDOW )
 	{
 
        HWND m_hWnd;
@@ -633,7 +635,7 @@
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_LOADBMPINTOSURFACE )
+	HB_FUNC( DD_LOADBMPINTOSURFACE )
 	{
 		long   nSurface = hb_parnl( 1 );
 		char * cBitmap	= hb_parc ( 2 );
@@ -667,7 +669,7 @@
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_CREATEOFFSCREENBITMAP )
+	HB_FUNC( DD_CREATEOFFSCREENBITMAP )
 	{
 		DDSURFACEDESC2              ddsd;
 	    HRESULT                     hRet;
@@ -807,7 +809,7 @@
 
 //------------------------------------------------------------------//
 
-	HB_FUNC( HB_DD_STARTWINDOW )
+	HB_FUNC( DD_STARTWINDOW )
 	{
 		MSG msg;
 		BOOL loop = TRUE;
@@ -894,3 +896,5 @@ long hb_dd_checkError( HRESULT hr )
 void hb_dd_g_Error( char *, long , char *)
 {
 }
+
+HB_EXTERN_END

@@ -8,6 +8,34 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-21 11:21 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   - contrib/directx/media
+   - contrib/directx/samples
+   - contrib/directx/lib
+   - contrib/directx/directx.lib
+   - contrib/directx/readme.1st
+   + contrib/directx/readme.txt
+   + contrib/directx/test
+   + contrib/directx/test/testdx.prg
+   + contrib/directx/test/anima2.bmp
+   + contrib/directx/test/brick1.bmp
+   + contrib/directx/test/black.bmp
+   + contrib/directx/test/brick2.bmp
+   + contrib/directx/test/shot.bmp
+   + contrib/directx/test/brick3.bmp
+   - contrib/directx/buvcdx.bat
+   + contrib/directx/Makefile
+   + contrib/directx/makefile.bc
+   + contrib/directx/makefile.vc
+   + contrib/directx/make_b32.bat
+   + contrib/directx/make_vc.bat
+   * contrib/directx/w32_ddrw.h
+   * contrib/directx/w32_ddrw.cpp
+     + Added build scripts
+     ! Further fixes to make it compile and run.
+     * Rearranged test/readme files.
+     ; Now it runs but the sample .bmps seem to be corrupted.
+
 2007-10-21 11:01 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/directx/w32_ddrw.cpp
      ! Fixed two -w warnings left.
