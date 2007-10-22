@@ -133,7 +133,10 @@ HB_EXPORT USHORT hb_rddInsertAreaNode( const char *szDriver )
 
    if( s_uiCurrArea >= s_uiWaNumMax )
    {
-      int iSize = ( ( s_uiCurrArea + 256 ) >> 8 ) << 8;
+      int iSize = ( ( ( int ) s_uiCurrArea + 256 ) >> 8 ) << 8;
+
+      if( iSize > HARBOUR_MAX_RDD_AREA_NUM )
+         iSize = HARBOUR_MAX_RDD_AREA_NUM;
 
       if( s_uiWaNumMax == 0 )
       {

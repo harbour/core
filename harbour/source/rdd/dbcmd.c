@@ -175,11 +175,11 @@ HB_FUNC( AFIELDS )
 
 HB_FUNC( ALIAS )
 {
-   USHORT uiArea;
+   int iArea;
    AREAP pArea;
 
-   uiArea = hb_parni( 1 );
-   pArea = ( AREAP ) hb_rddGetWorkAreaPointer( uiArea );
+   iArea = hb_parni( 1 );
+   pArea = ( AREAP ) hb_rddGetWorkAreaPointer( iArea );
    if( pArea )
    {
       char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
@@ -2102,13 +2102,13 @@ HB_FUNC( DBSETRELATION )
       }
       else
       {
-         USHORT uiArea = hb_rddGetCurrentWorkAreaNumber();
+         int iArea = hb_rddGetCurrentWorkAreaNumber();
 
          hb_rddSelectWorkAreaAlias( hb_parcx( 1 ) );
          if( hb_vmRequestQuery() )
             return;
          uiChildArea = hb_rddGetCurrentWorkAreaNumber();
-         hb_rddSelectWorkAreaNumber( uiArea );
+         hb_rddSelectWorkAreaNumber( iArea );
       }
 
       pChildArea = uiChildArea ? ( AREAP ) hb_rddGetWorkAreaPointer( uiChildArea ) : NULL;
