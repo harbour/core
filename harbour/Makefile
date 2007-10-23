@@ -4,14 +4,28 @@
 
 ROOT = ./
 
+ifeq ($(HB_HOST_BUILD),yes)
+
+DIRS=\
+	source \
+
+else
+
+ifeq ($(HB_HOST_BUILD),lib)
+HB_UTIL_DIR=
+else
+HB_UTIL_DIR=utils
+endif
+
 DIRS=\
 	doc \
 	include \
 	source \
-	utils \
+	$(HB_UTIL_DIR) \
 	contrib \
 #	samples \
 
+endif
 
 ifeq ($(HB_POSTINST),)
 

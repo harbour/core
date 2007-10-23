@@ -4,30 +4,27 @@
 
 ROOT = ../
 
-ifeq ($(HB_COMPILER),bcc16)
-
-# Don't build the Harbour compiler for 16-bit DOS,
-# because it frequently runs out of memory, so it
-# is necessary to use the DJGPP Harbour compiler.
-
-DIRS=\
-	common \
-	pp \
-	rtl \
-	vm \
-	macro \
-	codepage \
-	lang \
-	rdd \
-	debug \
-
-else
+ifeq ($(HB_HOST_BUILD),yes)
 
 DIRS=\
 	common \
 	pp \
 	compiler \
 	main \
+
+else
+
+ifeq ($(HB_HOST_BUILD),lib)
+HB_COMP_DIR=
+else
+HB_COMP_DIR=main
+endif
+
+DIRS=\
+	common \
+	pp \
+	compiler \
+	$(HB_COMP_DIR) \
 	rtl \
 	vm \
 	macro \

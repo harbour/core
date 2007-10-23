@@ -246,6 +246,9 @@ $hb_collect source/vm/*.prg
 # SOURCE\VM\MAINSTD
 $hb_collect source/vm/mainstd/Makefile
 
+# SOURCE\VM\MAINWIN
+$hb_collect source/vm/mainwin/Makefile
+
 # TESTS
 $hb_collect tests/Makefile
 $hb_collect tests/*.bat

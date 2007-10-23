@@ -8,6 +8,28 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-23 20:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/doc/howtobld.txt
+    + added hb* scripts description
+
+  * harbour/Makefile
+  * harbour/source/Makefile
+  + harbour/harbour-ce-spec
+  * harbour/bin/pack_src.sh
+  + harbour/make_rpmce.sh
+    + added script to build RPMs with cross build of Harbour for PocketPC
+      make_rpmce.sh should create harbour-ce-1.1.1-0.i386.rpm which
+      can be installed with other harbour RPMs
+      It contains Harbour libraries compiled for WinCE/PocketPC and
+      set of hbce* scripts which should be used instead of standard hb*
+      ones to create PocketPC binaries. It means that you can create
+      standard Linux binaries and PocketPC binaries in the same session
+      without setting/changing any additional environment varibales, f.e:
+         hbmk -n -w -es2 test.prg
+      will create linux binaries and:
+         hbcemk -n -w -es2 test.prg
+      will create binaries for WinCE/PocketPC
+
 2007-10-23 16:39 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/libnf/fttext.c
      ! Fixed opening mode in FT_FUSE().
