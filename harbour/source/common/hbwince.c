@@ -187,7 +187,7 @@ void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
    WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, dstA, ulLen, NULL, NULL );
 }
 
-#if defined(UNICODE)
+#if defined(HB_WINCE)
 
 DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
 {
@@ -356,7 +356,7 @@ UINT WINAPI SetErrorMode( UINT mode )
    return 0;
 }
 
-HANDLE CreateFileA( LPCSTR filename, DWORD access,
+HANDLE WINAPI CreateFileA( LPCSTR filename, DWORD access,
                     DWORD sharing, LPSECURITY_ATTRIBUTES sa,
                     DWORD creation, DWORD attributes, HANDLE template )
 {
@@ -370,7 +370,7 @@ HANDLE CreateFileA( LPCSTR filename, DWORD access,
    return h;
 }
 
-BOOL MoveFileA( LPCSTR fn1, LPCSTR fn2 )
+BOOL WINAPI MoveFileA( LPCSTR fn1, LPCSTR fn2 )
 {
    LPWSTR wfn1, wfn2;
    BOOL b;
@@ -384,7 +384,7 @@ BOOL MoveFileA( LPCSTR fn1, LPCSTR fn2 )
    return b;
 }
 
-BOOL DeleteFileA( LPCSTR path )
+BOOL WINAPI DeleteFileA( LPCSTR path )
 {
    LPWSTR wpath;
    BOOL b;
@@ -396,7 +396,7 @@ BOOL DeleteFileA( LPCSTR path )
    return b;
 }
 
-BOOL RemoveDirectoryA( LPCSTR path )
+BOOL WINAPI RemoveDirectoryA( LPCSTR path )
 {
    LPWSTR wpath;
    BOOL b;

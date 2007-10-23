@@ -73,9 +73,14 @@ static int    s_argc = 0;
 static char * s_argv[ MAX_ARGS ];
 static char   s_szAppName[ MAX_PATH ];
 
+#if defined( HB_WINCE )
+#  define HB_LPSTR      LPWSTR
+#else
+#  define HB_LPSTR      LPSTR
+#endif
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     HINSTANCE hPrevInstance,  /* handle to previous instance */
-                    LPTSTR    lpCmdLine,      /* pointer to command line */
+                    HB_LPSTR  lpCmdLine,      /* pointer to command line */
                     int iCmdShow )            /* show state of window */
 {
    TCHAR szAppName[ MAX_PATH ];
@@ -101,7 +106,11 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    pArg = NULL;
 
+#if defined( HB_WINCE )
    pSrc = pFree = HB_TCHAR_CONVFROM( lpCmdLine );
+#else
+   pSrc = pFree = lpCmdLine;
+#endif
    pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( pFree ) + 1 );
    fQuoted = FALSE;
 
@@ -136,7 +145,9 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
       s_argv[ s_argc++ ] = pArg;
    }
 
+#if defined( HB_WINCE )
    HB_TCHAR_FREE( pFree );
+#endif
 
    hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
    hb_cmdargInit( s_argc, s_argv );
