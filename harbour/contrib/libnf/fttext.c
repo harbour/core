@@ -1809,7 +1809,7 @@ _fbolerr:
 /* inserts xxx bytes into the current file, beginning at the current record */
 /* the contents of the inserted bytes are indeterminate, i.e. you'll have to
      write to them before they mean anything */
-static _ins_buff( int iLen )
+static int _ins_buff( int iLen )
 {
 
    char *   ReadBuff    = ( char * ) hb_xgrab( BUFFSIZE );
@@ -1904,7 +1904,7 @@ static _ins_buff( int iLen )
 
 /*컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴*/
 /* deletes xxx bytes from the current file, beginning at the current record */
-static _del_buff( int iLen )
+static int _del_buff( int iLen )
 {
 
    char *   WriteBuff   = ( char * ) hb_xgrab( BUFFSIZE );

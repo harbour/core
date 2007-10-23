@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-23 21:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/libnf/fttext.c
+    ! added missing type declaration in _ins_buff() and _del_buff()
+
 2007-10-23 20:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/doc/howtobld.txt
     + added hb* scripts description
