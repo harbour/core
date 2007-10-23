@@ -160,7 +160,7 @@ NANFOR_LIB_OBJ = \
    $(OBJ_DIR)\qtr.obj \
    $(OBJ_DIR)\rand1.obj \
    $(OBJ_DIR)\restsets.obj \
-   $(OBJ_DIR)\round.obj \
+   $(OBJ_DIR)\ftround.obj \
    $(OBJ_DIR)\savearr.obj \
    $(OBJ_DIR)\savesets.obj \
    $(OBJ_DIR)\scregion.obj \
@@ -383,7 +383,7 @@ $(OBJ_DIR)\year.c     : year.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 $(OBJ_DIR)\easter.c   : easter.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
-$(OBJ_DIR)\round.c    : round.prg
+$(OBJ_DIR)\ftround.c  : ftround.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
 $(OBJ_DIR)\aemaxlen.c : aemaxlen.prg
    $(HARBOUR_EXE) $(HARBOURFLAGS) $** -o$@
@@ -743,7 +743,7 @@ $(OBJ_DIR)\easter.obj   : $(OBJ_DIR)\easter.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
 
-$(OBJ_DIR)\round.obj    : $(OBJ_DIR)\round.c
+$(OBJ_DIR)\ftround.obj  : $(OBJ_DIR)\ftround.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
 

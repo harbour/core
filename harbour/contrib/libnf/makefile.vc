@@ -216,7 +216,7 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\qtr.obj \
    $(OBJ_DIR)\rand1.obj \
    $(OBJ_DIR)\restsets.obj \
-   $(OBJ_DIR)\round.obj \
+   $(OBJ_DIR)\ftround.obj \
    $(OBJ_DIR)\savearr.obj \
    $(OBJ_DIR)\savesets.obj \
    $(OBJ_DIR)\scregion.obj \
@@ -360,7 +360,7 @@ CLEAN:
    -@if exist $(OBJ_DIR)\qtr.* del $(OBJ_DIR)\qtr.*
    -@if exist $(OBJ_DIR)\rand1.* del $(OBJ_DIR)\rand1.*
    -@if exist $(OBJ_DIR)\restsets.* del $(OBJ_DIR)\restsets.*
-   -@if exist $(OBJ_DIR)\round.* del $(OBJ_DIR)\round.*
+   -@if exist $(OBJ_DIR)\ftround.* del $(OBJ_DIR)\ftround.*
    -@if exist $(OBJ_DIR)\savearr.* del $(OBJ_DIR)\savearr.*
    -@if exist $(OBJ_DIR)\savesets.* del $(OBJ_DIR)\savesets.*
    -@if exist $(OBJ_DIR)\scregion.* del $(OBJ_DIR)\scregion.*
@@ -389,4 +389,3 @@ $(TOOLS_LIB) : $(TOOLS_LIB_OBJS)
 # dummy targets used for prg to c creation
 
 $(TOOLS_LIB)2  : $(TOOLS_LIB_OBJS)
-

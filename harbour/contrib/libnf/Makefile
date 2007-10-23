@@ -121,7 +121,7 @@ PRG_SOURCES= \
 	qtr.prg \
 	rand1.prg \
 	restsets.prg \
-	round.prg \
+	ftround.prg \
 	savearr.prg \
 	savesets.prg \
 	scancode.prg \

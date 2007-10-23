@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-23 22:40 UTC+0300 Phil Krylov <phil a t newstar.rinet.ru>
+   * contrib/libnf/Makefile
+   * contrib/libnf/makefile.vc
+   * contrib/libnf/makefile.bc
+   - contrib/libnf/round.prg
+   + contrib/libnf/ftround.prg
+   - contrib/libnf/test.prg
+   + contrib/libnf/test
+   + contrib/libnf/test/test.prg
+     ! Rename one file in NFLIB to don't clash with core Harbour.
+     * Moved test file to a separate test dir.
+
+   * source/debug/dbgtobj.prg
+     ! Fixed an RTE when browsing subarrays in object monitor.
+       (from xhb by Phil Krylov)
+
 2007-10-23 21:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/libnf/fttext.c
     ! added missing type declaration in _ins_buff() and _del_buff()

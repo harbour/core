@@ -147,13 +147,13 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
       "Method",;
       PadR( __dbgValToStr( __objSendMsg( ::TheObj, ::ArrayReference[ ::arrayindex, 1 ] ) ), nWidth  - 12 ) ) } ) )
 
-   oBrwSets:Cargo := 1 // Actual highligthed row
+   oBrwSets:Cargo := 1 // Actual highlighted row
    oCol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
    oCol:width := MaxCol() - 14 - nMaxLen
    oBrwSets:colPos := 2
    ::aWindows[ ::nCurWindow ]:bPainted    := { || oBrwSets:ForceStable() }
    ::aWindows[ ::nCurWindow ]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ),;
-                                               ::aWindows[ ::nCurWindow ], ::objname, Len( ::Arrayreference ), ::pitems ) }
+                                               ::aWindows[ ::nCurWindow ], ::objname, ::Arrayreference ) }
    ::aWindows[ ::nCurwindow ]:cCaption := ::objname + " is of class: " +::TheObj:ClassName()
 
    SetCursor( SC_NONE )
