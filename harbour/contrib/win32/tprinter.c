@@ -331,11 +331,11 @@ LONG hb_PrintFileRaw( UCHAR * cPrinterName, UCHAR * cFileName, UCHAR * cDocName 
    HANDLE hPrinter, hFile;
    DOC_INFO_1 DocInfo;
    DWORD nRead, nWritten, Result;
-   LPTSTR lpPrinterName = HB_TCHAR_CONVTO( cPrinterName );
+   LPTSTR lpPrinterName = HB_TCHAR_CONVTO( ( char * ) cPrinterName );
 
    if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) != 0 )
    {
-      LPTSTR lpDocName = HB_TCHAR_CONVTO( cDocName );
+      LPTSTR lpDocName = HB_TCHAR_CONVTO( ( char * ) cDocName );
       DocInfo.pDocName = lpDocName;
       DocInfo.pOutputFile = NULL;
       DocInfo.pDatatype = TEXT( "RAW" );
