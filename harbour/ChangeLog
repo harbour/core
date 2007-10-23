@@ -12,7 +12,7 @@
   * harbour/harbour-ce-spec
     * set svn:keywords=Id, svn:eol-style=native
 
-2007-10-23 22:40 UTC+0300 Phil Krylov <phil a t newstar.rinet.ru>
+2007-10-23 22:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/libnf/Makefile
    * contrib/libnf/makefile.vc
    * contrib/libnf/makefile.bc
@@ -21,7 +21,7 @@
    - contrib/libnf/test.prg
    + contrib/libnf/test
    + contrib/libnf/test/test.prg
-     ! Rename one file in NFLIB to don't clash with core Harbour.
+     ! Rename one file in NFLIB to not clash with core Harbour.
      * Moved test file to a separate test dir.
 
    * source/debug/dbgtobj.prg
