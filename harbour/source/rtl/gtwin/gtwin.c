@@ -709,7 +709,7 @@ static void hb_gt_win_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
 
    HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
-   s_HOutput = CreateFile( "CONOUT$",                       /* filename    */
+   s_HOutput = CreateFile( TEXT( "CONOUT$" ),               /* filename    */
                      GENERIC_READ    | GENERIC_WRITE,       /* Access flag */
                      FILE_SHARE_READ | FILE_SHARE_WRITE,    /* share mode  */
                      NULL,                                  /* security attributes */
@@ -719,7 +719,7 @@ static void hb_gt_win_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    if( s_HOutput == INVALID_HANDLE_VALUE )
       hb_errInternal( 10001, "Can't allocate console (output)", "", "" );
 
-   s_HInput = CreateFile( "CONIN$",                         /* filename    */
+   s_HInput = CreateFile( TEXT( "CONIN$" ),                 /* filename    */
                      GENERIC_READ    | GENERIC_WRITE,       /* Access flag */
                      FILE_SHARE_READ | FILE_SHARE_WRITE,    /* share mode  */
                      NULL,                                  /* security attributes */
@@ -1586,13 +1586,20 @@ static BOOL hb_gt_win_Info( int iType, PHB_GT_INFO pInfo )
 
       case GTI_WINTITLE:
       {
-         char szBuff[ 256 ];
+         TCHAR buff[ 256 ];
+         char * szTitle;
          DWORD dwLen;
 
-         dwLen = GetConsoleTitle( ( LPSTR ) szBuff, sizeof( szBuff ) );
-         pInfo->pResult = hb_itemPutCL( pInfo->pResult, szBuff, dwLen );
+         dwLen = GetConsoleTitle( buff, sizeof( buff ) / sizeof( TCHAR ) );
+         szTitle = ( char * ) hb_xgrab( dwLen + 1 );
+         HB_TCHAR_GETFROM( szTitle, buff, dwLen );
+         pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, szTitle, dwLen );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-            SetConsoleTitle( ( LPCSTR ) hb_itemGetCPtr( pInfo->pNewVal ) );
+         {
+            LPTSTR lpTitle = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
+            SetConsoleTitle( lpTitle );
+            HB_TCHAR_FREE( lpTitle );
+         }
          break;
       }
       case GTI_VIEWMAXHEIGHT:

@@ -72,7 +72,7 @@
 */
 
 #ifndef HB_OS_WIN_32_USED
-   #define HB_OS_WIN_32_USED
+#  define HB_OS_WIN_32_USED
 #endif
 
 #include "hbapi.h"
@@ -80,457 +80,513 @@
 
 #if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
 
-#include <windows.h>
-#include <winspool.h>
+#  include <windows.h>
+#  include <winspool.h>
 
-#ifndef INVALID_FILE_SIZE
-   #define INVALID_FILE_SIZE (DWORD)0xFFFFFFFF
-#endif
+#  ifndef INVALID_FILE_SIZE
+#     define INVALID_FILE_SIZE (DWORD)0xFFFFFFFF
+#  endif
 
 HB_FUNC( WIN32_CREATEDC )
 {
-  LONG Result = 0 ;
-  if (ISCHAR(1))
-  {
-    Result = (LONG)  CreateDC("",hb_parc(1),NULL, NULL) ;
-  }
-  hb_retnl(Result) ;
+   LONG Result = 0;
+
+   if( ISCHAR( 1 ) )
+   {
+      LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+      Result = ( LONG ) CreateDC( TEXT( "" ), lpText, NULL, NULL );
+      HB_TCHAR_FREE( lpText );
+   }
+   hb_retnl( Result );
 }
 
 HB_FUNC( WIN32_STARTDOC )
 {
-  HDC hDC = (HDC) hb_parnl(1) ;
-  DOCINFO sDoc ;
-  BOOL Result = FALSE;
-  if (hDC )
-  {
-    sDoc.cbSize= sizeof(DOCINFO) ;
-    sDoc.lpszDocName= hb_parc(2) ;
-    sDoc.lpszOutput = NULL ;
-    sDoc.lpszDatatype= NULL ;
-    sDoc.fwType      = 0 ;
-    Result = (BOOL) (StartDoc(hDC, &sDoc)  >0 ) ;
-  }
-  hb_retl(Result);
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+   DOCINFO sDoc;
+   BOOL Result = FALSE;
+
+   if( hDC )
+   {
+      char * szDocName = hb_parc( 2 );
+      LPTSTR lpDocName = szDocName ? HB_TCHAR_CONVTO( szDocName ) : NULL;
+      sDoc.cbSize = sizeof( DOCINFO );
+      sDoc.lpszDocName = lpDocName;
+      sDoc.lpszOutput = NULL;
+      sDoc.lpszDatatype = NULL;
+      sDoc.fwType = 0;
+      Result = ( BOOL ) ( StartDoc( hDC, &sDoc ) > 0 );
+      if( lpDocName )
+         HB_TCHAR_FREE( lpDocName );
+   }
+   hb_retl( Result );
 }
 
 
 HB_FUNC( WIN32_ENDDOC )
 {
-  BOOL Result = FALSE;
-  HDC hDC = (HDC) hb_parnl(1) ;
-  if (hDC)
-  {
-    if (ISLOG(2) && hb_parl(2))
-    {
-      Result = (AbortDoc(hDC) > 0) ;
-    }
-    else
-    {
-      Result = (EndDoc( hDC) > 0) ;
-    }
-  }
-  hb_retl(Result) ;
+   BOOL Result = FALSE;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+
+   if( hDC )
+   {
+      if( ISLOG( 2 ) && hb_parl( 2 ) )
+      {
+         Result = ( AbortDoc( hDC ) > 0 );
+      }
+      else
+      {
+         Result = ( EndDoc( hDC ) > 0 );
+      }
+   }
+   hb_retl( Result );
 }
 
 HB_FUNC( WIN32_DELETEDC )
 {
-  HDC hDC =  (HDC) hb_parnl(1) ;
-  if (hDC)
-  {
-    DeleteDC( hDC ) ;
-  }
-  hb_retnl(0) ;  // Return zero as a new handle even if fails
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+
+   if( hDC )
+   {
+      DeleteDC( hDC );
+   }
+   hb_retni( 0 );               // Return zero as a new handle even if fails
 }
 
 HB_FUNC( WIN32_STARTPAGE )
 {
-  BOOL Result = FALSE ;
-  HDC hDC = (HDC) hb_parnl(1) ;
-  if (hDC)
-  {
-    Result = ( StartPage( hDC ) > 0) ;
-  }
-  hb_retl(Result) ;
+   BOOL Result = FALSE;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+
+   if( hDC )
+   {
+      Result = ( StartPage( hDC ) > 0 );
+   }
+   hb_retl( Result );
 }
 
 HB_FUNC( WIN32_ENDPAGE )
 {
-  BOOL Result = FALSE ;
-  HDC hDC = (HDC) hb_parnl(1) ;
-  if (hDC)
-  {
-    Result = (EndPage( hDC ) > 0) ;
-  }
-  hb_retl(Result) ;
+   BOOL Result = FALSE;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+
+   if( hDC )
+   {
+      Result = ( EndPage( hDC ) > 0 );
+   }
+   hb_retl( Result );
 }
 
 HB_FUNC( WIN32_TEXTOUT )
 {
-  LONG Result = 0 ;
-  HDC hDC = (HDC) hb_parnl(1) ;
-  SIZE sSize ;
-  if (hDC)
-  {
-    int iLen   = (int) hb_parnl(5) ;
-    if ( iLen > 0 )
-    {
-      int iRow   = (int) hb_parnl(2) ;
-      int iCol   = (int) hb_parnl(3) ;
-      char *pszData = hb_parc(4) ;
-      int iWidth = ISNUM(6) ? (int) hb_parnl(6) : 0 ;
-      if (ISNUM(7) && (hb_parnl(7) == 1 || hb_parnl(7) == 2))
+   LONG Result = 0;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+   ULONG ulLen = hb_parclen( 4 );
+   SIZE sSize;
+
+   if( hDC && ulLen )
+   {
+      int iLen = ( int ) hb_parnl( 5 );
+
+
+      if( iLen > ( int ) ulLen )
+         iLen = ( int ) ulLen;
+
+      if( iLen > 0 )
       {
-        if (hb_parnl(7) == 1)
-        {
-          SetTextAlign((HDC) hDC, TA_BOTTOM | TA_RIGHT | TA_NOUPDATECP) ;
-        }
-        else
-        {
-          SetTextAlign((HDC) hDC, TA_BOTTOM | TA_CENTER | TA_NOUPDATECP) ;
-        }
+         int iRow = ( int ) hb_parnl( 2 );
+         int iCol = ( int ) hb_parnl( 3 );
+         int iWidth = ISNUM( 6 ) ? ( int ) hb_parnl( 6 ) : 0;
+         LPTSTR lpData = HB_TCHAR_CONVNTO( hb_parc( 4 ), iLen );
+
+         if( ISNUM( 7 ) && ( hb_parnl( 7 ) == 1 || hb_parnl( 7 ) == 2 ) )
+         {
+            if( hb_parnl( 7 ) == 1 )
+            {
+               SetTextAlign( ( HDC ) hDC, TA_BOTTOM | TA_RIGHT | TA_NOUPDATECP );
+            }
+            else
+            {
+               SetTextAlign( ( HDC ) hDC, TA_BOTTOM | TA_CENTER | TA_NOUPDATECP );
+            }
+         }
+         else
+         {
+            SetTextAlign( ( HDC ) hDC, TA_BOTTOM | TA_LEFT | TA_NOUPDATECP );
+         }
+         if( iWidth < 0 && iLen < 1024 )
+         {
+            int n = iLen, aFixed[1024];
+
+            iWidth = -iWidth;
+            while( n )
+            {
+               aFixed[--n] = iWidth;
+            }
+            if( ExtTextOut( hDC, iRow, iCol, 0, NULL, lpData, iLen, aFixed ) )
+            {
+               Result = ( LONG ) ( iLen * iWidth );
+            }
+         }
+         else if( TextOut( hDC, iRow, iCol, lpData, iLen ) )
+         {
+            GetTextExtentPoint32( hDC, lpData, iLen, &sSize ); // Get the length of the text in device size
+            Result = ( LONG ) sSize.cx; // return the width so we can update the current pen position (::PosY)
+         }
+         HB_TCHAR_FREE( lpData );
       }
-      else
-      {
-        SetTextAlign((HDC) hDC, TA_BOTTOM | TA_LEFT | TA_NOUPDATECP) ;
-      }
-      if (iWidth < 0 && iLen < 1024 )
-      {
-        int n= iLen, aFixed[1024] ;
-        iWidth = -iWidth ;
-        while( n )
-        {
-          aFixed[ --n ] = iWidth;
-        }
-        if (ExtTextOut( hDC, iRow, iCol, 0, NULL, pszData, iLen, aFixed ))
-        {
-          Result = (LONG) (iLen * iWidth) ;
-        }
-      }
-      else if (TextOut(hDC, iRow, iCol, pszData, iLen))
-      {
-        GetTextExtentPoint32(hDC,pszData, iLen , &sSize) ;  // Get the length of the text in device size
-        Result = (LONG) sSize.cx ;   // return the width so we can update the current pen position (::PosY)
-      }
-    }
-  }
-  hb_retnl(Result) ;
+   }
+   hb_retnl( Result );
 }
 
 HB_FUNC( WIN32_GETTEXTSIZE )
 {
-  LONG Result = 0 ;
-  HDC hDC = (HDC) hb_parnl(1) ;
-  SIZE sSize ;
-  if (hDC)
-  {
-    char *pszData = hb_parc(2) ;
-    int iLen   = (int) hb_parnl(3) ;
-    GetTextExtentPoint32(hDC,pszData, iLen , &sSize) ;  // Get the length of the text in device size
-    if (ISLOG(4) && !hb_parl(4))
-    {
-      Result = (LONG) sSize.cy ;   // return the height
-    }
-    else
-    {
-      Result = (LONG) sSize.cx ;   // return the width
-    }
-  }
-  hb_retnl(Result) ;
+   LONG Result = 0;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+   ULONG ulLen = hb_parclen( 2 );
+   SIZE sSize;
+
+   if( hDC && ulLen )
+   {
+      int iLen = ( int ) hb_parnl( 3 );
+      LPTSTR lpData;
+
+      if( ( ULONG ) iLen > ulLen )
+         iLen = ulLen;
+
+      lpData = HB_TCHAR_CONVNTO( hb_parc( 2 ), iLen );
+
+      GetTextExtentPoint32( hDC, lpData, iLen, &sSize );       // Get the length of the text in device size
+      if( ISLOG( 4 ) && !hb_parl( 4 ) )
+      {
+         Result = ( LONG ) sSize.cy;    // return the height
+      }
+      else
+      {
+         Result = ( LONG ) sSize.cx;    // return the width
+      }
+      HB_TCHAR_FREE( lpData );
+   }
+   hb_retnl( Result );
 }
 
 
 HB_FUNC( WIN32_GETCHARSIZE )
 {
-  LONG Result = 0 ;
-  HDC hDC = (HDC) hb_parnl(1) ;
-  if (hDC)
-  {
-    TEXTMETRIC tm;
-    GetTextMetrics( hDC, &tm );
-    if ( ISLOG(2) && hb_parl(2) )
-    {
-      Result = (LONG) tm.tmHeight;
-    }
-    else
-    {
-      Result = (LONG) tm.tmAveCharWidth;
-    }
-  }
-  hb_retnl(Result) ;
+   LONG Result = 0;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+
+   if( hDC )
+   {
+      TEXTMETRIC tm;
+
+      GetTextMetrics( hDC, &tm );
+      if( ISLOG( 2 ) && hb_parl( 2 ) )
+      {
+         Result = ( LONG ) tm.tmHeight;
+      }
+      else
+      {
+         Result = ( LONG ) tm.tmAveCharWidth;
+      }
+   }
+   hb_retnl( Result );
 }
 
 HB_FUNC( WIN32_GETDEVICECAPS )
 {
-  LONG Result = 0 ;
-  HDC hDC = (HDC) hb_parnl(1) ;
-  if (hDC && ISNUM(2))
-  {
-    Result = (LONG) GetDeviceCaps( hDC, hb_parnl(2)) ;
-  }
-  hb_retnl( Result) ;
+   LONG Result = 0;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+
+   if( hDC && ISNUM( 2 ) )
+   {
+      Result = ( LONG ) GetDeviceCaps( hDC, hb_parnl( 2 ) );
+   }
+   hb_retnl( Result );
 }
 
 HB_FUNC( WIN32_SETMAPMODE )
 {
-  LONG Result = 0 ;
-  HDC hDC = (HDC) hb_parnl(1) ;
-  if (hDC && ISNUM(2))
-  {
-    Result = SetMapMode( hDC, hb_parnl(2)) ;
-  }
-  hb_retnl( Result) ;
+   LONG Result = 0;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+
+   if( hDC && ISNUM( 2 ) )
+   {
+      Result = SetMapMode( hDC, hb_parnl( 2 ) );
+   }
+   hb_retnl( Result );
 }
 
 HB_FUNC( WIN32_MULDIV )
 {
-  hb_retnl(MulDiv(hb_parnl(1), hb_parnl(2), hb_parnl(3)));
+   hb_retnl( MulDiv( hb_parnl( 1 ), hb_parnl( 2 ), hb_parnl( 3 ) ) );
 }
 
 HB_FUNC( WIN32_CREATEFONT )
 {
-  BOOL Result = FALSE ;
-  HDC hDC = (HDC) hb_parnl(1) ;
-  HFONT hFont, hOldFont ;
-  char *pszFont = hb_parc(2) ;
-  int iHeight = (int) hb_parnl(3) ;
-  int iMul = (int) hb_parnl(4) ;
-  int iDiv = (int) hb_parnl(5) ;
-  int iWidth ;
-  int iWeight = (int) hb_parnl(6) ;
-  DWORD dwUnderLine = (DWORD) hb_parl(7) ;
-  DWORD dwItalic    = (DWORD) hb_parl(8) ;
-  DWORD dwCharSet   = (DWORD) hb_parnl(9) ;
-  iWeight = iWeight > 0 ? iWeight : FW_NORMAL ;
-  iHeight = -MulDiv(iHeight, GetDeviceCaps(hDC, LOGPIXELSY), 72);
-  if (iDiv )
-  {
-    iWidth = MulDiv(abs(iMul), GetDeviceCaps(hDC,LOGPIXELSX), abs(iDiv)) ;
-  }
-  else
-  {
-    iWidth = 0 ; // Use the default font width
-  }
+   BOOL Result = FALSE;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+   HFONT hFont, hOldFont;
+   char *pszFont = hb_parc( 2 );
+   LPTSTR lpFont = pszFont ? HB_TCHAR_CONVTO( pszFont ) : NULL;
+   int iHeight = ( int ) hb_parnl( 3 );
+   int iMul = ( int ) hb_parnl( 4 );
+   int iDiv = ( int ) hb_parnl( 5 );
+   int iWidth;
+   int iWeight = ( int ) hb_parnl( 6 );
+   DWORD dwUnderLine = ( DWORD ) hb_parl( 7 );
+   DWORD dwItalic = ( DWORD ) hb_parl( 8 );
+   DWORD dwCharSet = ( DWORD ) hb_parnl( 9 );
 
-  hFont = CreateFont(iHeight, iWidth, 0, 0, iWeight, dwItalic, dwUnderLine, 0,
-        dwCharSet, OUT_DEVICE_PRECIS, CLIP_DEFAULT_PRECIS, DRAFT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,  pszFont) ;
-  if (hFont)
-  {
-    Result = TRUE;
-    hOldFont = (HFONT) SelectObject(hDC, hFont) ;
-    if ( hOldFont )
-    {
-      DeleteObject(hOldFont) ;
-    }
-  }
-  hb_retl( Result ) ;
+   iWeight = iWeight > 0 ? iWeight : FW_NORMAL;
+   iHeight = -MulDiv( iHeight, GetDeviceCaps( hDC, LOGPIXELSY ), 72 );
+   if( iDiv )
+   {
+      iWidth = MulDiv( abs( iMul ), GetDeviceCaps( hDC, LOGPIXELSX ), abs( iDiv ) );
+   }
+   else
+   {
+      iWidth = 0;               // Use the default font width
+   }
+
+   hFont = CreateFont( iHeight, iWidth, 0, 0, iWeight, dwItalic, dwUnderLine, 0,
+                       dwCharSet, OUT_DEVICE_PRECIS, CLIP_DEFAULT_PRECIS, DRAFT_QUALITY,
+                       DEFAULT_PITCH | FF_DONTCARE, lpFont );
+   if( lpFont )
+      HB_TCHAR_FREE( lpFont );
+
+   if( hFont )
+   {
+      Result = TRUE;
+      hOldFont = ( HFONT ) SelectObject( hDC, hFont );
+      if( hOldFont )
+      {
+         DeleteObject( hOldFont );
+      }
+   }
+   hb_retl( Result );
 }
 
 HB_FUNC( WIN32_GETPRINTERFONTNAME )
 {
-  HDC hDC = (HDC) hb_parnl(1) ;
-  if (hDC)
-  {
-    unsigned char cFont[128] ;
-    GetTextFace(hDC, 127, (LPTSTR) cFont) ;
-    hb_retc( (char*) cFont ) ;
-  }
-  else
-  {
-    hb_retc("") ;
-  }
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+
+   if( hDC )
+   {
+      unsigned char cFont[128];
+
+      GetTextFace( hDC, 127, ( LPTSTR ) cFont );
+      hb_retc( ( char * ) cFont );
+   }
+   else
+   {
+      hb_retc( NULL );
+   }
 }
 
 HB_FUNC( WIN32_BITMAPSOK )
 {
-  BOOL Result = FALSE ;
-  HDC hDC = (HDC) hb_parnl(1) ;
-  if (hDC)
-  {
-    Result = (GetDeviceCaps(hDC, RASTERCAPS)  & RC_STRETCHDIB) ;
-  }
-  hb_retl(Result) ;
+   BOOL Result = FALSE;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+
+   if( hDC )
+   {
+      Result = ( GetDeviceCaps( hDC, RASTERCAPS ) & RC_STRETCHDIB );
+   }
+   hb_retl( Result );
 }
 
 HB_FUNC( WIN32_SETDOCUMENTPROPERTIES )
 {
-  BOOL Result = FALSE ;
-  HDC hDC = (HDC) hb_parnl(1) ;
-  if (hDC)
-  {
-    HANDLE hPrinter ;
-    LPTSTR pszPrinterName = hb_parc(2) ;
-    PDEVMODE pDevMode = NULL ;
-    LONG lSize ;
-    if (OpenPrinter(pszPrinterName, &hPrinter, NULL))
-    {
-      lSize= DocumentProperties(0,hPrinter,pszPrinterName, pDevMode,pDevMode,0);
-      if (lSize > 0 )
+   BOOL Result = FALSE;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+
+   if( hDC )
+   {
+      HANDLE hPrinter;
+      char * pszPrinterName = hb_parc( 2 );
+      LPTSTR lpPrinterName = pszPrinterName ? HB_TCHAR_CONVTO( pszPrinterName ) : NULL;
+      PDEVMODE pDevMode = NULL;
+      LONG lSize;
+
+      if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
       {
-        pDevMode= (PDEVMODE) hb_xgrab(lSize) ;
-        if (pDevMode )
-        {
-          DocumentProperties(0,hPrinter,pszPrinterName, pDevMode,pDevMode,DM_OUT_BUFFER) ;
-          if ( ISNUM(3) && hb_parnl(3) ) // 22/02/2007 don't change if 0
-          {
-            pDevMode->dmPaperSize     = ( short ) hb_parnl(3) ;
-          }
-          if (ISLOG(4))
-          {
-            pDevMode->dmOrientation   = ( short ) (hb_parl(4) ? 2 : 1) ;
-          }
-          if (ISNUM(5) && hb_parnl(5) > 0)
-          {
-            pDevMode->dmCopies        = ( short ) hb_parnl(5) ;
-          }
-          if ( ISNUM(6) && hb_parnl(6) ) // 22/02/2007 don't change if 0
-          {
-            pDevMode->dmDefaultSource = ( short ) hb_parnl(6) ;
-          }
-          if (ISNUM(7)  && hb_parnl(7) ) // 22/02/2007 don't change if 0
-          {
-            pDevMode->dmDuplex = ( short ) hb_parnl(7) ;
-          }
-          if (ISNUM(8) && hb_parnl(8) ) // 22/02/2007 don't change if 0
-          {
-            pDevMode->dmPrintQuality = ( short ) hb_parnl(8) ;
-          }
-          Result= (BOOL) ResetDC(hDC, pDevMode) ;
-          hb_xfree(pDevMode) ;
-        }
+         lSize = DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, 0 );
+         if( lSize > 0 )
+         {
+            pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
+            if( pDevMode )
+            {
+               DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );
+               if( ISNUM( 3 ) && hb_parnl( 3 ) )        // 22/02/2007 don't change if 0
+               {
+                  pDevMode->dmPaperSize = ( short ) hb_parnl( 3 );
+               }
+               if( ISLOG( 4 ) )
+               {
+                  pDevMode->dmOrientation = ( short ) ( hb_parl( 4 ) ? 2 : 1 );
+               }
+               if( ISNUM( 5 ) && hb_parnl( 5 ) > 0 )
+               {
+                  pDevMode->dmCopies = ( short ) hb_parnl( 5 );
+               }
+               if( ISNUM( 6 ) && hb_parnl( 6 ) )        // 22/02/2007 don't change if 0
+               {
+                  pDevMode->dmDefaultSource = ( short ) hb_parnl( 6 );
+               }
+               if( ISNUM( 7 ) && hb_parnl( 7 ) )        // 22/02/2007 don't change if 0
+               {
+                  pDevMode->dmDuplex = ( short ) hb_parnl( 7 );
+               }
+               if( ISNUM( 8 ) && hb_parnl( 8 ) )        // 22/02/2007 don't change if 0
+               {
+                  pDevMode->dmPrintQuality = ( short ) hb_parnl( 8 );
+               }
+               Result = ( BOOL ) ResetDC( hDC, pDevMode );
+               hb_xfree( pDevMode );
+            }
+         }
+         ClosePrinter( hPrinter );
       }
-      ClosePrinter(hPrinter) ;
-    }
-  }
-  hb_retl(Result) ;
+      if( lpPrinterName )
+         HB_TCHAR_FREE( lpPrinterName );
+   }
+   hb_retl( Result );
 }
 
 // Functions for Loading & Printing bitmaps
 
 HB_FUNC( WIN32_LOADBITMAPFILE )
 {
-  PTSTR pstrFileName = hb_parc(1) ;
-  BOOL               bSuccess= FALSE ;
-  DWORD              dwFileSize, dwHighSize, dwBytesRead ;
-  HANDLE             hFile ;
-  BITMAPFILEHEADER * pbmfh = NULL ;
-  hFile = CreateFile (pstrFileName, GENERIC_READ, FILE_SHARE_READ, NULL,OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL) ;
-  if (hFile != INVALID_HANDLE_VALUE)
-  {
-    dwFileSize = GetFileSize (hFile, &dwHighSize) ;
-    if ((dwFileSize != INVALID_FILE_SIZE) && !dwHighSize) // Do not continue if File size error or TOO big for memory
-    {
-      pbmfh = (BITMAPFILEHEADER *) hb_xgrab(dwFileSize) ;
-      if (pbmfh)
+   char * pstrFileName = hb_parc( 1 );
+   BOOL bSuccess = FALSE;
+   DWORD dwFileSize, dwHighSize, dwBytesRead;
+   HANDLE hFile;
+   BITMAPFILEHEADER *pbmfh = NULL;
+
+   hFile =
+      CreateFileA( pstrFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
+                   FILE_FLAG_SEQUENTIAL_SCAN, NULL );
+   if( hFile != INVALID_HANDLE_VALUE )
+   {
+      dwFileSize = GetFileSize( hFile, &dwHighSize );
+      if( ( dwFileSize != INVALID_FILE_SIZE ) && !dwHighSize )  // Do not continue if File size error or TOO big for memory
       {
-        bSuccess = ReadFile (hFile, pbmfh, dwFileSize, &dwBytesRead, NULL) ;
-        bSuccess = bSuccess && (dwBytesRead == dwFileSize) && (pbmfh->bfType == * (WORD *) "BM") ; //&& (pbmfh->bfSize == dwFileSize) ;
+         pbmfh = ( BITMAPFILEHEADER * ) hb_xgrab( dwFileSize );
+         if( pbmfh )
+         {
+            bSuccess = ReadFile( hFile, pbmfh, dwFileSize, &dwBytesRead, NULL );
+            bSuccess = bSuccess && ( dwBytesRead == dwFileSize ) && ( pbmfh->bfType == *( WORD * ) "BM" );      //&& (pbmfh->bfSize == dwFileSize) ;
+         }
       }
-    }
-    CloseHandle (hFile) ;
-  }
-  if (bSuccess)
-  {
-    hb_retclen( (char *) pbmfh, dwFileSize ); // hb_retclenAdoptRaw
-    if( pbmfh )
-       hb_xfree( pbmfh );
-  }
-  else
-  {
-    hb_retc("") ;
-    if (pbmfh != NULL)
-    {
-      hb_xfree (pbmfh) ;
-    }
-  }
+      CloseHandle( hFile );
+   }
+   if( bSuccess )
+   {
+      hb_retclen( ( char * ) pbmfh, dwFileSize );       // hb_retclenAdoptRaw
+      if( pbmfh )
+         hb_xfree( pbmfh );
+   }
+   else
+   {
+      hb_retc( NULL );
+      if( pbmfh != NULL )
+      {
+         hb_xfree( pbmfh );
+      }
+   }
 }
 
 HB_FUNC( WIN32_DRAWBITMAP )
 {
-  HDC hDC                  = (HDC) hb_parnl(1) ;
-  BITMAPFILEHEADER * pbmfh = (BITMAPFILEHEADER *) hb_parc(2) ;
-  BITMAPINFO       * pbmi ;
-  BYTE             * pBits ;
-  int                cxDib, cyDib ;
-  pbmi  = (BITMAPINFO *) (pbmfh + 1) ;
-  pBits = (BYTE *) pbmfh + pbmfh->bfOffBits ;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
+   BITMAPFILEHEADER *pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 2 );
+   BITMAPINFO *pbmi;
+   BYTE *pBits;
+   int cxDib, cyDib;
 
-  if (pbmi->bmiHeader.biSize == sizeof (BITMAPCOREHEADER))
-  { // Remember there are 2 types of BitMap File
-    cxDib = ((BITMAPCOREHEADER *) pbmi)->bcWidth ;
-    cyDib = ((BITMAPCOREHEADER *) pbmi)->bcHeight ;
-  }
-  else
-  {
-    cxDib =      pbmi->bmiHeader.biWidth ;
-    cyDib = abs (pbmi->bmiHeader.biHeight) ;
-  }
+   pbmi = ( BITMAPINFO * ) ( pbmfh + 1 );
+   pBits = ( BYTE * ) pbmfh + pbmfh->bfOffBits;
 
-  SetStretchBltMode (hDC, COLORONCOLOR) ;
-  hb_retl( StretchDIBits( hDC, hb_parni(3), hb_parni(4), hb_parni(5), hb_parni(6),
-                          0, 0, cxDib, cyDib, pBits, pbmi,
-                          DIB_RGB_COLORS, SRCCOPY ) != ( int ) GDI_ERROR );
+   if( pbmi->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
+   {                            // Remember there are 2 types of BitMap File
+      cxDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcWidth;
+      cyDib = ( ( BITMAPCOREHEADER * ) pbmi )->bcHeight;
+   }
+   else
+   {
+      cxDib = pbmi->bmiHeader.biWidth;
+      cyDib = abs( pbmi->bmiHeader.biHeight );
+   }
+
+   SetStretchBltMode( hDC, COLORONCOLOR );
+   hb_retl( StretchDIBits( hDC, hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ), hb_parni( 6 ),
+                           0, 0, cxDib, cyDib, pBits, pbmi,
+                           DIB_RGB_COLORS, SRCCOPY ) != ( int ) GDI_ERROR );
 }
 
-static int CALLBACK FontEnumCallBack(LOGFONT *lplf, TEXTMETRIC *lpntm, DWORD FontType, LPVOID pArray )
+static int CALLBACK FontEnumCallBack( LOGFONT * lplf, TEXTMETRIC * lpntm, DWORD FontType,
+                                      LPVOID pArray )
 {
-    PHB_ITEM SubItems = hb_itemNew( NULL );
+   PHB_ITEM SubItems = hb_itemNew( NULL );
+   char * pszFaceName = HB_TCHAR_CONVFROM( lplf->lfFaceName );
 
-    hb_arrayNew( SubItems, 4 );
-    hb_itemPutC(  hb_arrayGetItemPtr( SubItems, 1 ), lplf->lfFaceName                      );
-    hb_itemPutL(  hb_arrayGetItemPtr( SubItems, 2 ), lplf->lfPitchAndFamily & FIXED_PITCH );
-    hb_itemPutL(  hb_arrayGetItemPtr( SubItems, 3 ), FontType & TRUETYPE_FONTTYPE         );
-    hb_itemPutNL( hb_arrayGetItemPtr( SubItems, 4 ), lpntm->tmCharSet                      );
-    hb_arrayAddForward( (PHB_ITEM) pArray, SubItems);
+   hb_arrayNew( SubItems, 4 );
+   hb_itemPutC( hb_arrayGetItemPtr( SubItems, 1 ), pszFaceName );
+   hb_itemPutL( hb_arrayGetItemPtr( SubItems, 2 ), lplf->lfPitchAndFamily & FIXED_PITCH );
+   hb_itemPutL( hb_arrayGetItemPtr( SubItems, 3 ), FontType & TRUETYPE_FONTTYPE );
+   hb_itemPutNL( hb_arrayGetItemPtr( SubItems, 4 ), lpntm->tmCharSet );
+   hb_arrayAddForward( ( PHB_ITEM ) pArray, SubItems );
+   hb_itemRelease( SubItems );
+   HB_TCHAR_FREE( pszFaceName );
 
-    hb_itemRelease( SubItems );
-
-    return(TRUE);
+   return ( TRUE );
 }
 
 HB_FUNC( WIN32_ENUMFONTS )
 {
-  BOOL Result = FALSE ;
-  HDC hDC = (HDC) hb_parnl(1) ;
+   BOOL Result = FALSE;
+   HDC hDC = ( HDC ) hb_parnl( 1 );
 
-  if (hDC)
-  {
-    PHB_ITEM Array = hb_itemNew( NULL );
+   if( hDC )
+   {
+      PHB_ITEM Array = hb_itemNew( NULL );
 
-    hb_arrayNew( Array, 0 );
+      hb_arrayNew( Array, 0 );
 
-    EnumFonts(hDC, (LPCTSTR) NULL, (FONTENUMPROC) FontEnumCallBack, (LPARAM) Array);
+      EnumFonts( hDC, ( LPCTSTR ) NULL, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) Array );
 
-    hb_itemReturnForward( Array );
+      hb_itemReturnForward( Array );
 
-    hb_itemRelease( Array );
+      hb_itemRelease( Array );
 
-    Result = TRUE ;
-  }
+      Result = TRUE;
+   }
 
-  if( !Result )
-  {
-    hb_ret() ;
-  }
+   if( !Result )
+   {
+      hb_ret();
+   }
 }
 
 HB_FUNC( WIN32_GETEXEFILENAME )
 {
-  unsigned char pBuf[1024] ;
-  GetModuleFileName(NULL, (LPTSTR) pBuf, 1023) ;
-  hb_retc( (char*) pBuf ) ;
+   unsigned char pBuf[1024];
+
+   GetModuleFileName( NULL, ( LPTSTR ) pBuf, 1023 );
+   hb_retc( ( char * ) pBuf );
 }
 
 HB_FUNC( WIN32_SETCOLOR )
 {
    HDC hDC = ( HDC ) hb_parnl( 1 );
 
-   SetTextColor( hDC, (COLORREF) hb_parnl( 2 ) );
-   if( ISNUM(3) )
+   SetTextColor( hDC, ( COLORREF ) hb_parnl( 2 ) );
+   if( ISNUM( 3 ) )
    {
-      SetBkColor( hDC, (COLORREF) hb_parnl( 3 ) );
+      SetBkColor( hDC, ( COLORREF ) hb_parnl( 3 ) );
    }
-   if( ISNUM(4) )
+   if( ISNUM( 4 ) )
    {
       SetTextAlign( hDC, hb_parni( 4 ) );
    }
@@ -539,17 +595,16 @@ HB_FUNC( WIN32_SETCOLOR )
 HB_FUNC( WIN32_SETPEN )
 {
    HDC hDC = ( HDC ) hb_parnl( 1 );
-   HPEN hPen = CreatePen(
-               hb_parni( 2 ),   // pen style
-               hb_parni( 3 ),   // pen width
-               (COLORREF) hb_parnl( 4 )     // pen color
-               );
-   HPEN hOldPen = (HPEN) SelectObject( hDC, hPen);
+   HPEN hPen = CreatePen( hb_parni( 2 ),        // pen style
+                          hb_parni( 3 ),        // pen width
+                          ( COLORREF ) hb_parnl( 4 )    // pen color
+       );
+   HPEN hOldPen = ( HPEN ) SelectObject( hDC, hPen );
 
    if( hOldPen )
       DeleteObject( hOldPen );
 
-   hb_retnl( (LONG) hPen);
+   hb_retnl( ( LONG ) hPen );
 }
 
 
@@ -560,19 +615,19 @@ HB_FUNC( WIN32_FILLRECT )
    int y1 = hb_parni( 3 );
    int x2 = hb_parni( 4 );
    int y2 = hb_parni( 5 );
-   HBRUSH hBrush = CreateSolidBrush( (COLORREF) hb_parnl( 6 ) );
+   HBRUSH hBrush = CreateSolidBrush( ( COLORREF ) hb_parnl( 6 ) );
    RECT rct;
 
-   rct.top    = y1;
-   rct.left   = x1;
+   rct.top = y1;
+   rct.left = x1;
    rct.bottom = y2;
-   rct.right  = x2;
+   rct.right = x2;
 
    FillRect( hDC, &rct, hBrush );
 
    DeleteObject( hBrush );
 
-   hb_ret( );
+   hb_ret();
 }
 
 HB_FUNC( WIN32_LINETO )
@@ -597,13 +652,14 @@ HB_FUNC( WIN32_RECTANGLE )
    int y2 = hb_parni( 5 );
    int iWidth = hb_parni( 6 );
    int iHeight = hb_parni( 7 );
-   if ( iWidth && iHeight )
+
+   if( iWidth && iHeight )
    {
-     hb_retl( RoundRect( hDC, x1, y1, x2, y2, iWidth, iHeight ) );
+      hb_retl( RoundRect( hDC, x1, y1, x2, y2, iWidth, iHeight ) );
    }
    else
    {
-     hb_retl( Rectangle( hDC, x1, y1, x2, y2) );
+      hb_retl( Rectangle( hDC, x1, y1, x2, y2 ) );
    }
 }
 
@@ -615,7 +671,7 @@ HB_FUNC( WIN32_ARC )
    int x2 = hb_parni( 4 );
    int y2 = hb_parni( 5 );
 
-   hb_retl( Arc( hDC, x1, y1, x2, y2, 0, 0, 0, 0) );
+   hb_retl( Arc( hDC, x1, y1, x2, y2, 0, 0, 0, 0 ) );
 }
 
 HB_FUNC( WIN32_ELLIPSE )
@@ -626,20 +682,21 @@ HB_FUNC( WIN32_ELLIPSE )
    int x2 = hb_parni( 4 );
    int y2 = hb_parni( 5 );
 
-   hb_retl( Ellipse( hDC, x1, y1, x2, y2) );
+   hb_retl( Ellipse( hDC, x1, y1, x2, y2 ) );
 }
 
 HB_FUNC( WIN32_SETBKMODE )
 {
-  hb_retnl( SetBkMode( (HDC) hb_parnl( 1 ), hb_parnl( 2 ) ) ) ;
+   hb_retnl( SetBkMode( ( HDC ) hb_parnl( 1 ), hb_parnl( 2 ) ) );
 }
 
 HB_FUNC( WIN32_OS_ISWIN9X )
 {
-  OSVERSIONINFO osvi;
-  osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-  GetVersionEx( &osvi );
-  hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
+   OSVERSIONINFO osvi;
+
+   osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
+   GetVersionEx( &osvi );
+   hb_retl( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
 }
 
 #endif

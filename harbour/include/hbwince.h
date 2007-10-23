@@ -74,6 +74,8 @@ extern char *strerror( int errnum );
 
 extern wchar_t * hb_mbtowc( const char *srcA );
 extern char * hb_wctomb( const wchar_t *srcW );
+extern wchar_t * hb_mbntowc( const char *srcA, unsigned long ulLen );
+extern char * hb_wcntomb( const wchar_t *srcW, unsigned long ulLen );
 extern void hb_mbtowccpy( wchar_t *dstW, const char *srcA, unsigned long ulLen );
 extern void hb_mbtowcset( wchar_t *dstW, const char *srcA, unsigned long ulLen );
 extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen );
@@ -85,6 +87,8 @@ extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
 #define HB_TCHAR_SETTO(d,s,l)       hb_mbtowcset(d,s,l)
 #define HB_TCHAR_CONVTO(s)          hb_mbtowc(s)
 #define HB_TCHAR_CONVFROM(s)        hb_wctomb(s)
+#define HB_TCHAR_CONVNTO(s,l)       hb_mbntowc(s,l)
+#define HB_TCHAR_CONVNFROM(s,l)     hb_wcntomb(s,l)
 #define HB_TCHAR_FREE(s)            hb_xfree(s)
 
 #else
@@ -94,6 +98,8 @@ extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
 #define HB_TCHAR_GETFROM(d,s,l)     memcpy(d,s,l)
 #define HB_TCHAR_CONVTO(s)          (s)
 #define HB_TCHAR_CONVFROM(s)        (s)
+#define HB_TCHAR_CONVNTO(s,l)       (s)
+#define HB_TCHAR_CONVNFROM(s,l)     (s)
 #define HB_TCHAR_FREE(s)            HB_SYMBOL_UNUSED(s)
 
 #endif /* UNICODE */

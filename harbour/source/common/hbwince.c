@@ -182,6 +182,30 @@ char *hb_wctomb( const wchar_t *srcW )
    return dstA;
 }
 
+wchar_t *hb_mbntowc( const char *srcA, unsigned long ulLen )
+{
+   DWORD length;
+   wchar_t *dstW;
+
+   length = MultiByteToWideChar( CP_ACP, 0, srcA, ulLen, NULL, 0 );
+   dstW = ( wchar_t * ) hb_xgrab( ( length + 1 ) * sizeof( wchar_t ) );
+   MultiByteToWideChar( CP_ACP, 0, srcA, ulLen, dstW, length + 1 );
+
+   return dstW;
+}
+
+char *hb_wcntomb( const wchar_t *srcW, unsigned long ulLen )
+{
+   DWORD length;
+   char *dstA;
+
+   length = WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, NULL, 0, NULL, NULL );
+   dstA = ( char * ) hb_xgrab( length + 1 );
+   WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, dstA, length + 1, NULL, NULL );
+
+   return dstA;
+}
+
 void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
 {
    WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, dstA, ulLen, NULL, NULL );

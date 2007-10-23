@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-23 04:03 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbwince.h
+  * harbour/source/common/hbwince.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/contrib/win32/tprinter.c
+  * harbour/contrib/win32/w32_prn.c
+    * updated for compilation with UNICODE support
+
 2007-10-23 02:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/vm/mainwin.c
