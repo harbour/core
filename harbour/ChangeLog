@@ -157,6 +157,7 @@
      ! FT_F*() functions fully ported from original NFLIB.
        Pls test.
      * Some minor cleanups, formatting.
+     + Added FT_IAMIDLE()
 
    * include/filesys.api
      ! _fsRead(), _fsWrite() now more compatible.
