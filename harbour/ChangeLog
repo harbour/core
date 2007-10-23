@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-23 22:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+    * set svn:keywords=Id, svn:eol-style=native
+
 2007-10-23 22:40 UTC+0300 Phil Krylov <phil a t newstar.rinet.ru>
    * contrib/libnf/Makefile
    * contrib/libnf/makefile.vc
