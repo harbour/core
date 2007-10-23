@@ -198,6 +198,7 @@ static int _ins_buff( int bytes );
 static int _del_buff( int bytes );
 static long _ft_skip( long recs );
 static int _writeLine( char * theData, int iDataLen );
+static BOOL _writeeol( FHANDLE fhnd );
 
 /* arrays used by the text workareas */
 static int  area = 0;
@@ -230,9 +231,9 @@ HB_FUNC( FT_FOFFSET )
 #define __max(a,b)  (((a) > (b)) ? (a) : (b))
 #define __min(a,b)  (((a) < (b)) ? (a) : (b))
 
-#define CRLF   0x0A0D
-
-
+#define FT_CHR_CR  13
+#define FT_CHR_LF  10
+#define FT_CHR_EOF 26
 
 
 
@@ -303,7 +304,7 @@ HB_FUNC( FT_FOFFSET )
 
 HB_FUNC( FT_FUSE )
 {
-   int attr = ISNUM( 2 ) ? _parni(2) : FO_READ|FO_DENYNONE;
+   int attr = ISNUM( 2 ) ? _parni(2) : FO_READWRITE|FO_DENYNONE;
 
    error[area] = 0;
 
@@ -703,13 +704,12 @@ HB_FUNC( FT_FSKIP )
    if ( ISNUM(1) )
    {
        if( _parnl(1) )
-         _retnl( _ft_skip( _parnl(1) ) );
+          _retnl( _ft_skip( _parnl(1) ) );
        else
           _retnl( 0L );
    }
    else
       _retnl( _ft_skip(1L) );
-
 }
 
 
@@ -774,7 +774,7 @@ static long _ft_skip( long iRecs )
                   record */
                iBytesRemaining -= iByteCount;
                fpOffset        += iByteCount;
-               cPtr             += iByteCount;
+               cPtr            += iByteCount;
                offset[area]     = fpOffset;
                recno[area]++;
                iSkipped++;
@@ -858,7 +858,7 @@ static long _ft_skip( long iRecs )
                      record */
                   iBytesRemaining -= iByteCount;
                   offset[area]    -= iByteCount;
-                  cPtr             -= iByteCount;
+                  cPtr            -= iByteCount;
                   fpOffset         = offset[area];
                   recno[area]--;
                   iSkipped++;
@@ -1132,7 +1132,6 @@ HB_FUNC( FT_FDELETE )
 
 HB_FUNC( FT_FINSERT )
 {
-   int   crlf = CRLF;
    int   no_lines = ( ISNUM( 1 ) ? _parni( 1 ) : 1 );
    int   no_bytes = no_lines * 2 ;
    int   err = 1;
@@ -1142,7 +1141,7 @@ HB_FUNC( FT_FINSERT )
    else
    {
       while( no_lines-- )
-         if( _fsWrite( handles[area], (void *) &crlf, 2 ) != 2 )
+         if( !_writeeol( handles[area] ) )
          {
             error[area] = _fsError();
             err = 0;
@@ -1215,10 +1214,9 @@ HB_FUNC( FT_FINSERT )
 
 HB_FUNC( FT_FAPPEND )
 {
-   int    no_lines = ( ISNUM( 1 ) ? _parni( 1 ) : 1 );
+   int   no_lines = ( ISNUM( 1 ) ? _parni( 1 ) : 1 );
    int   iRead;
-   int    iByteCount;
-   int   crlf = CRLF;
+   int   iByteCount;
 
    char  *   buff = ( char * ) hb_xgrab( BUFFSIZE );
 
@@ -1248,20 +1246,20 @@ HB_FUNC( FT_FAPPEND )
 
    while( no_lines-- )
    {
-      if( _fsWrite( handles[area], (void *) &crlf, 2 ) != 2 )
+      if( !_writeeol( handles[area] ) )
       {
          error[area] = _fsError();
          break;
       }
       recno[area]++;
       offset[area] = _fsSeek( handles[area], 0, FS_RELATIVE );
-      no_lines--;
+/*    no_lines--;  !Harbour FIX! */
    }
 
    if( !error[area] )
    {
       /* move DOS eof marker */
-      _fsWrite( handles[area], (void *) &crlf, 0 );
+      _fsWrite( handles[area], (void *) buff, 0 );
       error[area] = _fsError();
    }
 
@@ -1662,8 +1660,10 @@ static int _findeol( BYTEP buf, int buf_len )
 
    for( tmp = 0; tmp < buf_len; tmp++ )
    {
-      if( buf[ tmp ] == 13 && buf[ tmp + 1 ] == 10 )
+      if( buf[ tmp ] == FT_CHR_CR && buf[ tmp + 1 ] == FT_CHR_LF )
          return tmp + 2;
+      else if( buf[ tmp ] == FT_CHR_LF )
+         return tmp + 1;
    }
 
    return 0;
@@ -1722,7 +1722,7 @@ static int _findbol( BYTEP buf, int buf_len )
       BYTEP p = buf - 1;
       BYTE b = *p;
 
-      if( b == 26 )
+      if( b == FT_CHR_EOF )
       {
          p--;
          tmp--;
@@ -1731,7 +1731,7 @@ static int _findbol( BYTEP buf, int buf_len )
             return buf_len;
       }
       
-      if( b == 10 )
+      if( b == FT_CHR_LF )
       {
          p--;
          tmp--;
@@ -1739,7 +1739,7 @@ static int _findbol( BYTEP buf, int buf_len )
          if( tmp == 0 )
             return buf_len;
 
-         if( *p == 13 )
+         if( *p == FT_CHR_CR )
          {
             p--;
             tmp--;
@@ -1751,8 +1751,10 @@ static int _findbol( BYTEP buf, int buf_len )
       
       for( ; tmp > 0; tmp--, p-- )
       {
-         if( *p == 10 && *( p - 1 ) == 13 )
+         if( *p == FT_CHR_LF && *( p - 1 ) == FT_CHR_CR )
             return buf_len - ( tmp + 2 ) + 1;
+         else if( *p == FT_CHR_LF )
+            return buf_len - ( tmp + 1 ) + 1;
       }
    }
 
@@ -1963,7 +1965,6 @@ static _del_buff( int iLen )
 /* writes a line of data to the file, including the terminating CRLF */
 static int _writeLine( char * theData, int iDataLen )
 {
-   int   crlf  = CRLF;
    int   err   = 0;
 
    if( !( _fsWrite( handles[area], theData, iDataLen ) == iDataLen ) )
@@ -1972,13 +1973,29 @@ static int _writeLine( char * theData, int iDataLen )
       error[area] = _fsError();
    }
    else
-      if( !( _fsWrite( handles[area], (void*) &crlf, 2 ) == 2 ) )
+      if( !_writeeol( handles[area] ) )
       {
          err = 1;
          error[area] = _fsError();
       }
    return err;
 }
-// _writeLine
+
+static BOOL _writeeol( FHANDLE fhnd )
+{
+   char * crlf = hb_conNewLine();
+   int    len = strlen( crlf );
+   int    tmp;
+
+   for( tmp = 0; tmp < len; tmp++ )
+   {
+      if( _fsWrite( fhnd, (void *) ( crlf + tmp ), 1 ) != 1 )
+      {
+         return FALSE;
+      }
+   }
+
+   return TRUE;
+}
 
 /*  fttext.c  eof */

@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-23 16:39 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/libnf/fttext.c
+     ! Fixed opening mode in FT_FUSE().
+     ! Fixed FT_FAPPEND() infinite loop when called without 
+       parameter or with an odd number. (bug in original function)
+     + Added support for plain LF line ending.
+     * Changed to use OS dependant line ending instead of hardwired 
+       CRLF when adding new lines.
+     ; Please test.
+
 2007-10-23 13:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    + contrib/libnf/ftisprn.c
    + contrib/libnf/setkeys.c
