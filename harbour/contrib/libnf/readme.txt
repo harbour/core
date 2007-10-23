@@ -8,29 +8,16 @@ This library has been ported to Harbour by Luiz Rafael Culik
 The follow functions must be rewrite in C
 asm\ADAPTER.ASM               ;     FT_ADAPTER()
 asm\DEFAULT.ASM               ;     FT_DEFAULT()
-asm\IAMIDLE.ASM               ;     FT_IAmIdle()
 asm\INP.ASM                   ;     FT_INP()
-asm\ISPRINT.ASM               ;     FT_ISPRINT()
 asm\OUTP.ASM                  ;     FT_OUTP()
-asm\PUTKEY.ASM                ;     FT_PUTKEY()
 asm\REBOOT.ASM                ;     FT_REBOOT()
 asm\RESTATT.ASM               ;     FT_RESTATT()
 asm\SAVEATT.ASM               ;     FT_SAVEATT()
-asm\SETKEYS.ASM               ;     FT_SETKEYS()
-asm\SETLASTK.ASM              ;     FT_LASTKEY()
-asm\SHADOW.ASM                ;     FT_SHADOW()
-
-//TOFIX
 
 The follow functions need to be fixed.
-CINT86.C                    ;     FT_INT86()
-
-  This function is Called from many prg source code
-fttext.c
-   I never could compiler this file under BCC
+CINT86.C                      ;     FT_INT86()
 
 The follow functions Need that FT_INT86() been fixed or writed a "C" Wrapper
-
 
 SETDATE.PRG               FT_SETDATE()
 SETTIME.PRG               FT_SETTIME()

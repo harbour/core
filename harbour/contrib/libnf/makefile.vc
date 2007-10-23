@@ -118,6 +118,9 @@ TOOLS_LIB_OBJS = \
    $(OBJ_DIR)\shift.obj \
    $(OBJ_DIR)\mouse.obj \
    $(OBJ_DIR)\getvid.obj \
+   $(OBJ_DIR)\setkeys.obj \
+   $(OBJ_DIR)\setlastk.obj \
+   $(OBJ_DIR)\ftisprn.obj \
    $(OBJ_DIR)\ftidle.obj \
    $(OBJ_DIR)\iamidle.obj \
    $(OBJ_DIR)\chdir.obj \
@@ -260,6 +263,9 @@ CLEAN:
    -@if exist $(OBJ_DIR)\shift.obj del $(OBJ_DIR)\shift.obj
    -@if exist $(OBJ_DIR)\mouse.obj del $(OBJ_DIR)\mouse.obj
    -@if exist $(OBJ_DIR)\getvid.obj del $(OBJ_DIR)\getvid.obj
+   -@if exist $(OBJ_DIR)\setkeys.obj del $(OBJ_DIR)\setkeys.obj
+   -@if exist $(OBJ_DIR)\setlastk.obj del $(OBJ_DIR)\setlastk.obj
+   -@if exist $(OBJ_DIR)\ftisprn.obj del $(OBJ_DIR)\ftisprn.obj
    -@if exist $(OBJ_DIR)\ftidle.obj del $(OBJ_DIR)\ftidle.obj
    -@if exist $(OBJ_DIR)\iamidle.obj del $(OBJ_DIR)\iamidle.obj
    -@if exist $(OBJ_DIR)\chdir.obj del $(OBJ_DIR)\chdir.obj

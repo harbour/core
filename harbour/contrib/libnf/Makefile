@@ -14,6 +14,7 @@ C_SOURCES = \
 	dispc.c \
 	ftattr.c \
 	ftidle.c \
+	ftisprn.c \
 	fttext.c \
 	ftshadow.c \
 	getenvrn.c \
@@ -30,6 +31,8 @@ C_SOURCES = \
 	prtscr.c \
 	putkey.c \
 	rmdir.c \
+	setkeys.c \
+	setlastk.c \
 	shift.c \
 	stod.c \
 
