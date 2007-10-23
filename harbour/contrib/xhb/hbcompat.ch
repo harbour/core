@@ -53,14 +53,9 @@
 #ifdef __HARBOUR__
 
 #ifdef __XHARBOUR__
+
    #include "gtinfo.ch"
    #include "gfx.ch"
-#else
-   #include "hbgtinfo.ch"
-   #include "hbgfx.ch"
-#endif
-
-#ifdef __XHARBOUR__
 
    #xtranslate hb_gtSys                => gtSys
    #xtranslate hb_gtInfo([<x,...>])    => gtInfo(<x>)
@@ -100,6 +95,15 @@
    #xcommand END OBJECT => END
 
 #else
+
+   #include "hbgtinfo.ch"
+   #include "hbgfx.ch"
+
+   /* these are used _by_ MaxRow()/MaxCol() */
+   #define GTI_WINDOW         0  /* Maximum window size ('window' in CT terms) */
+   #define GTI_SCREEN         1  /* Maximum screen size ('Screen' in CT terms) */
+   #define GTI_CLIENT         2  /* Maximum possible client size of a window */
+   #define GTI_MAX            3  /* Maximum possible window size (in Windows) */
 
    #xtranslate gtSys                   => hb_gtSys
    #xtranslate gtInfo([<x,...>])       => hb_gtInfo(<x>)
@@ -246,3 +250,4 @@
 #endif
 
 #endif /* __HARBOUR__ */
+

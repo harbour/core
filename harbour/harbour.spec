@@ -361,8 +361,6 @@ All these scripts accept command line switches:
 Link options work only with "%{hb_pref}lnk" and "%{hb_pref}mk" and have no effect
 in "%{hb_pref}cc" and "%{hb_pref}cmp".
 Other options are passed to %{dname}/C compiler/linker.
-To save compatibility with older rpm distributions, "gharbour" can be used
-as a synonym of "%{hb_pref}cmp", and "harbour-link" as synonym of "%{hb_pref}lnk"
 
 An example compile/link session looks like:
 ----------------------------------------------------------------------
@@ -473,8 +471,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{hb_pref}cmp
 %{_bindir}/%{hb_pref}lnk
 %{_bindir}/%{hb_pref}mk
-%{_bindir}/gharbour
-%{_bindir}/harbour-link
 #%{_bindir}/hbtest
 %{_bindir}/hbrun
 %{_bindir}/hbdot

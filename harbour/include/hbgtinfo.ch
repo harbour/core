@@ -112,7 +112,6 @@
 #define GTI_VIEWPORTHEIGHT    36  /* Current viewport height:for current mode */
 #define GTI_VIEWPORTWIDTH     37  /* Current viewport width:either win or full scrn */
 
-
 #define GTI_STDOUTCON         38  /* redirect STDOUT to console */
 #define GTI_STDERRCON         39  /* redirect STDERR to console */
 
@@ -125,21 +124,15 @@
 #define GTI_ADDKEYMAP         45  /* add key escape sequences */
 #define GTI_DELKEYMAP         46  /* del key escape sequences */
 
-/* these are used _by_ MaxRow/Col */
-#define GTI_WINDOW         0  /* Maximum window size ('window' in CT terms) */
-#define GTI_SCREEN         1  /* Maximum screen size ('Screen' in CT terms) */
-#define GTI_CLIENT         2  /* Maximum possible client size of a window */
-#define GTI_MAX            3  /* Maximum possible window size (in Windows) */
-
 /* Font weights */
-#define GTI_FONTW_THIN     1
-#define GTI_FONTW_NORMAL   2
-#define GTI_FONTW_BOLD     3
-
-/* Font sizes */
-#define GTI_FONTQ_DRAFT    1
-#define GTI_FONTQ_NORMAL   2
-#define GTI_FONTQ_HIGH     3
+#define GTI_FONTW_THIN        1
+#define GTI_FONTW_NORMAL      2
+#define GTI_FONTW_BOLD        3
+                              
+/* Font sizes */              
+#define GTI_FONTQ_DRAFT       1
+#define GTI_FONTQ_NORMAL      2
+#define GTI_FONTQ_HIGH        3
 
 /* Keyboard shifts states */
 #define GTI_KBD_SHIFT         1

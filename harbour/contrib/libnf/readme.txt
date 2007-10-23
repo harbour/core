@@ -17,7 +17,7 @@ asm\SAVEATT.ASM               ;     FT_SAVEATT()
 The follow functions need to be fixed.
 CINT86.C                      ;     FT_INT86()
 
-The follow functions Need that FT_INT86() been fixed or writed a "C" Wrapper
+The following functions need FT_INT86() or to be rewritten in C:
 
 SETDATE.PRG               FT_SETDATE()
 SETTIME.PRG               FT_SETTIME()
@@ -32,4 +32,3 @@ NWSEM.PRG                 FT_NWSEMLOCK()
 NWSEM.PRG                 FT_NWSEMUNLOCK()
 NWUID.PRG                 FT_NWUID()
 FLOPTST.PRG               FT_FLOPTST()
-

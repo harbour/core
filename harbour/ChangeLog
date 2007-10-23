@@ -8,6 +8,34 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 01:47 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/libnf/fttext.c
+     % Optimized _writeeol()
+
+   * contrib/libnf/readme.txt
+     ! Old typos fixed.
+
+   * include/hbgtinfo.ch
+   * contrib/xhb/hbcompat.ch
+     ! Some xhb specific MaxRow()/MaxCol() parameter 
+       extension macros (also named GTI_*) moved to xhb contrib.
+
+   - bin/bld.cmd
+     - Removed obsolete version of bld.bat (aimed for OS/2).
+       OS/2 users should use bld.bat.
+
+   - bin/bld.sh
+     - Removed obsolete file. Linux/Unix users should use hb*.sh 
+       scripts, which are properly working (as opposed to bld.sh).
+
+   * harbour-ce-spec
+   * harbour.spec
+   * doc/howtobld.txt
+     - Removed gharbour and harbour-link compatibility commands 
+       (to lessen equivalent user choices and to have every harbour 
+       related stuff to start with hb)
+       Pls use hbcmp and hblnk respectively.
+
 2007-10-23 22:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-ce-spec
     * set svn:keywords=Id, svn:eol-style=native

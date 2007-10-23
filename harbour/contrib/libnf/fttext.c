@@ -1985,17 +1985,8 @@ static BOOL _writeeol( FHANDLE fhnd )
 {
    char * crlf = hb_conNewLine();
    int    len = strlen( crlf );
-   int    tmp;
 
-   for( tmp = 0; tmp < len; tmp++ )
-   {
-      if( _fsWrite( fhnd, (void *) ( crlf + tmp ), 1 ) != 1 )
-      {
-         return FALSE;
-      }
-   }
-
-   return TRUE;
+   return ( _fsWrite( fhnd, crlf, len ) == len );
 }
 
 /*  fttext.c  eof */

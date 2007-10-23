@@ -171,7 +171,6 @@ ${CCPREFIX}strip --strip-debug $HB_LIB_INSTALL/*
 
 # remove unused files
 rm -fR ${HB_BIN_INSTALL}/{harbour,hbdoc,hbdot,hbmake,hbpp,hbrun,hbtest,hbverfix,pretest}.exe
-rm -fR ${HB_BIN_INSTALL}/{gharbour,harbour-link}
 rm -fR $HB_INC_INSTALL
 
 mv ${HB_BIN_INSTALL}/hb-mkslib ${HB_BIN_INSTALL}/%{hb_pref}-mkslib

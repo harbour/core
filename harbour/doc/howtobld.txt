@@ -48,8 +48,6 @@ All these scripts accept command line switches:
 Link options work only with "hblnk" and "hbmk" and have no effect
 in "hbcc" and "hbcmp".
 Other options are passed to Harbour/C compiler/linker.
-To save compatibility with older harbour distributions, "gharbour" can
-be used as a synonym of "hbcmp", and "harbour-link" as synonym of "hblnk"
 
 An example compile/link session looks like:
 ----------------------------------------------------------------------
