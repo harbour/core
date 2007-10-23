@@ -88,7 +88,7 @@ HB_FUNC( DISKSPACE )
       regs.h.ah = 0x36;
       HB_DOS_INT86( 0x21, &regs, &regs );
 
-      bError = regs.HB_XREGS.ax == 0xFFFF
+      bError = regs.HB_XREGS.ax == 0xFFFF;
       if( !bError )
          dSpace = ( double ) regs.HB_XREGS.bx *
                   ( double ) regs.HB_XREGS.ax *
