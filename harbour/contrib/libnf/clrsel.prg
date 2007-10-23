@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: ClrSel.PRG
  * Author....: Dave Adams
  * CIS ID....: 72037,2654

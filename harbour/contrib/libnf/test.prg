@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 function main()
 local nver,nmar,ntype,nir,ppp
 

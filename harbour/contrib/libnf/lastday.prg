@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: LASTDAY.PRG
  * Author....: Mike Schinkel
  * CIS ID....: ?

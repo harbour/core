@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: SCREGION.PRG
  * Author....: David A. Richardson
  * CIS ID....: ?

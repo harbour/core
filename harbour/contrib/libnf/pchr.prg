@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: PCHR.PRG
  * Author....: Jim Gale
  * CIS ID....: 73670,2561

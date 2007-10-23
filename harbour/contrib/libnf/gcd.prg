@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: GCD.PRG
  * Author....: David Husnian
  * CIS ID....: ?

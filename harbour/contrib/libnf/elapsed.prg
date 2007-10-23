@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: ELAPSED.PRG
  * Author....: Jo W. French dba Practical Computing
  * CIS ID....: ?

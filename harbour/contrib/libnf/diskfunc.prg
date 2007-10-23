@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: DISKFUNC.PRG
  * Author....: Robert A. DiFalco
  * CIS ID....: ?

@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: ArEdit.prg
  * Author....: James J. Orlowski, M.D.
  * CIS ID....: 72707,601

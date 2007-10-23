@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: FIRSTDAY.PRG
  * Author....: Jeff Bryant
  * CIS ID....: ?

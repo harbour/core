@@ -151,35 +151,34 @@ _NanFor    ENDS
 #include "dos.h"
 #endif
 
-HB_FUNC( FT_SETRATE)
+HB_FUNC( FT_SETRATE )
 {
 #if defined(HB_OS_DOS)
    {
-
       union REGS registers;
-      int tempo = 0,nrepete = 0;
-      switch( hb_pcount() ) {
-         case 0:
-              tempo = 0 ;
-              nrepete = 0;
-              break;
-         case 1:
-              tempo = hb_parni(1) ;
-              nrepete = 0;
-              break;
-         case 2:
-              tempo = hb_parni(1);
-              nrepete = hb_parni(2);
-              break;
+      int tempo = 0, nrepete = 0;
+
+      switch( hb_pcount() )
+      {
+      case 0:
+           tempo = 0;
+           nrepete = 0;
+           break;
+      case 1:
+           tempo = hb_parni( 1 );
+           nrepete = 0;
+           break;
+      case 2:
+           tempo = hb_parni( 1 );
+           nrepete = hb_parni( 2 );
+           break;
       }
+
       registers.h.ah = 0x03;
       registers.h.al = 0x05;
       registers.h.bh = tempo;
       registers.h.bl = nrepete;
-      HB_DOS_INT86(0x16,&registers,&registers);
+      HB_DOS_INT86( 0x16, &registers, &registers );
    }
 #endif
 }
-
-
-

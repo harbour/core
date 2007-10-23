@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: WEEK.PRG
  * Author....: Jo W. French dba Practical Computing
  * CIS ID....: 74731,1751

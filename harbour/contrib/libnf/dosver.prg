@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: DOSVER.PRG
  * Author....: Glenn Scott
  * CIS ID....: ?

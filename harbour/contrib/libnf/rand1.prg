@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: RAND1.PRG
  * Author....: Gary Baren
  * CIS ID....: 75470,1027

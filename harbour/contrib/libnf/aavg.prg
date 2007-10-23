@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: AAvg.Prg
  * Author....: David Husnian
  * CIS ID....: ?

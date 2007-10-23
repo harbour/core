@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: BITSET.PRG
  * Author....: Forest Belt, Computer Diagnostic Services, Inc.
  * CIS ID....: ?

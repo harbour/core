@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: NWLSTAT.PRG
  * Author....: Glenn Scott
  * CIS ID....: ?

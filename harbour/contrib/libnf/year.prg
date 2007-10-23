@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: YEAR.PRG
  * Author....: Jo W. French dba Practical Computing
  * CIS_ID....: 74731,1751

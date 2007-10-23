@@ -60,9 +60,9 @@
  * $END$
  */
 
-#include <hbapi.h>
+#include "hbapi.h"
 
-HB_FUNC(FT_ORIGIN)
+HB_FUNC( FT_ORIGIN )
 {
-   hb_retc( hb_cmdargARGV()[0] );
+   hb_retc( hb_cmdargARGV()[ 0 ] );
 }

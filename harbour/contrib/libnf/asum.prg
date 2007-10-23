@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: ASum.Prg
  * Author....: David Husnian
  * CIS ID....: ?

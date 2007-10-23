@@ -27,12 +27,11 @@
 
 #define INITGUID
 
-#include "hbapi.h"
-#include "hbvm.h"
-#include "hbstack.h"
-
 #include "windows.h"
 #include "winuser.h"
+
+#include "hbapi.h"
+#include "hbvm.h"
 
 #include "errno.h"
 #include "objbase.h"
@@ -44,35 +43,25 @@
 
 #include "ddraw.h"
 
-
 HB_EXTERN_BEGIN
 
+/* Main Message Loop */
 
-    // Main Message Loop
+long _stdcall hb_dd_DDWndProc( HWND , UINT , WPARAM , LPARAM );
 
-    long _stdcall hb_dd_DDWndProc ( HWND , UINT , WPARAM , LPARAM );
-    void hb_dd_g_Error			  ( char *, long , char *);
-	void hb_dd_CreateWindow		  ( void );
-   
-    // DDraw initialize
+/* DDraw initialize */
 
-    void HB_DD_DDRAWSTARTUP		     ( HWND		);
-	void hb_dd_StartWindow		     ( void		);
-	void hb_dd_CreateOffScreenBitmap ( void		);
-	void hb_dd_ReleaseAllObjects     ( void		);
-	void hb_dd_RestoreAll		     ( void		);
-	long hb_dd_checkError		     ( HRESULT  );
-
-	HRESULT	hb_dd_DDCopyBitmap		 ( IDirectDrawSurface4 * pdds, HBITMAP hbm, int x, int y, int dx, int dy);
-	void    hb_dd_RenderSprites		 ( long  );
-
-extern "C" DWORD hb_dd_DDColorMatch  ( IDirectDrawSurface4 * pdds, COLORREF rgb );
-
-//-------------------------------------------------------//
-// API Functions
-//-------------------------------------------------------//
-
-    void DD_MsgBox          ( void );
-    void WinError           ( void );
+void    hb_dd_DDrawStartup( HWND );
+void    hb_dd_StartWindow( void );
+void    hb_dd_CreateWindow( void );
+void    hb_dd_CreateOffScreenBitmap( void );
+void    hb_dd_ReleaseAllObjects( void );
+void    hb_dd_RestoreAll( void );
+long    hb_dd_checkError( HRESULT );
+HRESULT hb_dd_DDCopyBitmap( IDirectDrawSurface4 * pdds, HBITMAP hbm, int x, int y, int dx, int dy);
+void    hb_dd_RenderSprites( long );
+DWORD   hb_dd_DDColorMatch( IDirectDrawSurface4 * pdds, COLORREF rgb );
+void    hb_dd_WinError( void );
+void    hb_dd_g_Error( char *, long , char *);
 
 HB_EXTERN_END

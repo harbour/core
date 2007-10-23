@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: MIN2DHM.PRG
  * Author....: Alexander B. Spencer
  * CIS ID....: 76276,1012

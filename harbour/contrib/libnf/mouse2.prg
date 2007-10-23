@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: MOUSE1.PRG
  * Author....: Leo Letendre
  * CIS ID....: 73607,233

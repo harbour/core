@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: MILTIME.PRG
  * Author....: Alexander B. Spencer
  * CIS ID....: 76276,1012

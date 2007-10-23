@@ -57,7 +57,7 @@
  *  $END$
  */
 
-#include <hbapi.h>
+#include "hbapi.h"
 
 #define pbyte *( ( char * ) 0x00400100 )
 

@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: IDLE.C
  * Author....: Ted Means (with much gratitude to Robert DiFalco)
  * CIS ID....: 73067,3332
@@ -58,11 +62,7 @@
  *  $END$
  */
 
-void _evSendId( unsigned int, unsigned int );
-
 HB_FUNC(FT_Idle)
 {
-   _evSendId( 0x5108, 0xFFFF );
-
-   return;
+   hb_idleState();
 }

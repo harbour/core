@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: METAPH.PRG
  * Author....: Dave Adams
  * CIS ID....: ?

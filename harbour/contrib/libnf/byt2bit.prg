@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: BYT2BIT.PRG
  * Author....: Forest Belt, Computer Diagnostic Services, Inc.
  * CIS ID....: ?

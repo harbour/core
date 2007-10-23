@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: FTINT86.CH - Header file for users of FT_INT86() function
  * Author....: Ted Means
  * CIS ID....: 73067,3332

@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: E2D.PRG
  * Author....: Gary Baren
  * CIS ID....: 75470,1027

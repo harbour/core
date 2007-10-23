@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 This library has been ported to Harbour by Luiz Rafael Culik
 
 //TODO
@@ -5,16 +9,16 @@ The follow functions must be rewrite in C
 asm\ADAPTER.ASM               ;     FT_ADAPTER()
 asm\DEFAULT.ASM               ;     FT_DEFAULT()
 asm\IAMIDLE.ASM               ;     FT_IAmIdle()
-asm\INP.ASM                   ;      FT_INP()
+asm\INP.ASM                   ;     FT_INP()
 asm\ISPRINT.ASM               ;     FT_ISPRINT()
-asm\OUTP.ASM                  ;      FT_OUTP()
+asm\OUTP.ASM                  ;     FT_OUTP()
 asm\PUTKEY.ASM                ;     FT_PUTKEY()
-asm\REBOOT.ASM                ;      FT_REBOOT()
+asm\REBOOT.ASM                ;     FT_REBOOT()
 asm\RESTATT.ASM               ;     FT_RESTATT()
 asm\SAVEATT.ASM               ;     FT_SAVEATT()
 asm\SETKEYS.ASM               ;     FT_SETKEYS()
 asm\SETLASTK.ASM              ;     FT_LASTKEY()
-asm\SHADOW.ASM                ;      FT_SHADOW()
+asm\SHADOW.ASM                ;     FT_SHADOW()
 
 //TOFIX
 

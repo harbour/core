@@ -13,12 +13,13 @@ C_SOURCES = \
 	descend.c \
 	dispc.c \
 	ftattr.c \
+	ftidle.c \
 	fttext.c \
 	ftshadow.c \
 	getenvrn.c \
 	getver.c \
 	getvid.c \
-	idle.c \
+	iamidle.c \
 	kspeed.c \
 	mkdir.c \
 	mouse.c \
@@ -147,4 +148,3 @@ BAD_PRG_SOURCES= \
 LIBNAME=nf
 
 include $(TOP)$(ROOT)config/lib.cf
-

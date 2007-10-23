@@ -7,7 +7,7 @@
  *
  * Getver.c Support functions for Nanfor Library
  *
- * Copyright 2000  Luiz Rafael Culik <Culik@sl.conex.net>
+ * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,7 +59,7 @@
 #include "string.h"
 #include "stdlib.h"
 
-HB_FUNC(_GET_DOSVER)
+HB_FUNC( _GET_DOSVER )
 {
 #if defined(HB_OS_DOS)
    {
@@ -72,119 +72,112 @@ HB_FUNC(_GET_DOSVER)
 
       sprintf( pszPlatform, "%d.%02d", regs.h.al, regs.h.ah );
 
-      hb_retc(pszPlatform );
-      hb_xfree(pszPlatform );
+      hb_retc( pszPlatform );
+      hb_xfree( pszPlatform );
    }
 #endif
 }
 
-HB_FUNC(_FT_ISSHARE)
+HB_FUNC( _FT_ISSHARE )
 {
    int iShare;
 #if defined(HB_OS_DOS)
    {
       union REGS regs;
-      regs.HB_XREGS.ax=0x1000;
-      regs.HB_XREGS.cx=0;
-      HB_DOS_INT86(0x2F,&regs,&regs);
-      iShare=regs.h.al;
+      regs.HB_XREGS.ax = 0x1000;
+      regs.HB_XREGS.cx = 0;
+      HB_DOS_INT86( 0x2F, &regs, &regs );
+      iShare = regs.h.al;
    }
 #else
    {
-      iShare=0;
+      iShare = 0;
    }
 #endif
-   {
-      hb_retni(iShare);
-   }
+   hb_retni( iShare );
 }
 
 
-HB_FUNC(_FT_NWKSTAT)
+HB_FUNC( _FT_NWKSTAT )
 {
    int iConnect;
 #if defined(HB_OS_DOS)
    {
       union REGS regs;
-      regs.HB_XREGS.ax=0xDC;
-      HB_DOS_INT86(0x2F,&regs,&regs);
-      iConnect=regs.h.al;
+      regs.HB_XREGS.ax = 0xDC;
+      HB_DOS_INT86( 0x2F, &regs, &regs );
+      iConnect = regs.h.al;
    }
 #else
    {
-      iConnect=0;
+      iConnect = 0;
    }
 #endif
-   {
-      hb_retni(iConnect);
-   }
+   hb_retni( iConnect );
 }
 
-HB_FUNC(_FT_SETMODE)
+HB_FUNC( _FT_SETMODE )
 {
 #if defined(HB_OS_DOS)
    {
       union REGS regs;
-      regs.h.ah=0;
-      regs.h.al=hb_parni(1);
-      HB_DOS_INT86(0x10,&regs,&regs);
+      regs.h.ah = 0;
+      regs.h.al = hb_parni( 1 );
+      HB_DOS_INT86( 0x10, &regs, &regs );
    }
 #endif
 }
-HB_FUNC(_FT_GETMODE)
+
+HB_FUNC( _FT_GETMODE )
 {
    int iMode;
 #if defined(HB_OS_DOS)
    {
       union REGS regs;
-      regs.h.ah=0x0F;
-      HB_DOS_INT86(0x10,&regs,&regs);
-      iMode=regs.h.al;
+      regs.h.ah = 0x0F;
+      HB_DOS_INT86( 0x10, &regs, &regs );
+      iMode = regs.h.al;
    }
 #else
    {
-      iMode=0;
+      iMode = 0;
    }
 #endif
-   {
-      hb_retni(iMode);
-   }
+   hb_retni( iMode );
 }
 
-HB_FUNC(_FT_TEMPFIL)
+HB_FUNC( _FT_TEMPFIL )
 {
    int nax;
    int iflags;
-   char *cPath;
+   char * cPath;
 
 #if defined(HB_OS_DOS) && !defined(HB_OS_DOS_32)
    {
-
-      int iMode=hb_parni(2);
+      int iMode = hb_parni( 2 );
       union REGS regs;
       struct SREGS sregs;
-      segread(&sregs);
-      cPath=hb_parcx(1);
-      regs.h.ah=0x5A;
-      regs.HB_XREGS.cx=iMode;
-      sregs.ds=FP_SEG(cPath);
-      regs.HB_XREGS.dx=FP_OFF(cPath);
-      HB_DOS_INT86X(0x21,&regs,&regs,&sregs);
-      nax=regs.HB_XREGS.ax;
-      iflags=regs.HB_XREGS.flags;
+      segread( &sregs );
+      cPath = hb_parcx( 1 );
+      regs.h.ah = 0x5A;
+      regs.HB_XREGS.cx = iMode;
+      sregs.ds = FP_SEG( cPath );
+      regs.HB_XREGS.dx = FP_OFF( cPath );
+      HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
+      nax = regs.HB_XREGS.ax;
+      iflags = regs.HB_XREGS.flags;
    }
 #else
    {
-
-      nax=0;
-      iflags=0;
-      cPath=hb_parcx(1);
+      nax = 0;
+      iflags = 0;
+      cPath = hb_parcx( 1 );
    }
 #endif
    {
       PHB_ITEM pArray = hb_itemArrayNew( 3 );
-      PHB_ITEM pAx = hb_itemPutNI( NULL, nax);
-      PHB_ITEM pDs = hb_itemPutC( NULL, cPath);
+      PHB_ITEM pAx = hb_itemPutNI( NULL, nax );
+      PHB_ITEM pDs = hb_itemPutC( NULL, cPath );
       PHB_ITEM pFlags = hb_itemPutNI( NULL, iflags );
 
       hb_itemArrayPut( pArray, 1, pAx );

@@ -7,7 +7,7 @@
  *
  * Getvid.c Support functions for Nanfor Library
  *
- * Copyright 2000  Luiz Rafael Culik <Culik@sl.conex.net>
+ * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,37 +56,36 @@
 #include "dos.h"
 #endif
 
-HB_FUNC(_FT_GETVPG)
+HB_FUNC( _FT_GETVPG )
 {
    int iPage;
+
 #if defined(HB_OS_DOS)
    {
       union REGS registers;
-      registers.h.ah=0x0F;
-      HB_DOS_INT86(0x10,&registers,&registers);
-      iPage=registers.h.bh;
+      registers.h.ah = 0x0F;
+      HB_DOS_INT86( 0x10, &registers, &registers );
+      iPage = registers.h.bh;
    }
 #else
    {
-      iPage=0;
+      iPage = 0;
    }
 #endif
-   {
-      hb_retni(iPage);
-   }
+
+   hb_retni( iPage );
 }
 
-HB_FUNC(_V_SETVPG)
+HB_FUNC( _V_SETVPG )
 {
 #if defined(HB_OS_DOS)
    {
       int iPage;
       union REGS registers;
-      iPage=hb_parni(1);
-      registers.h.ah=0x05;
-      registers.h.al=iPage;
-      HB_DOS_INT86(0x10,&registers,&registers);
+      iPage = hb_parni( 1 );
+      registers.h.ah = 0x05;
+      registers.h.al = iPage;
+      HB_DOS_INT86( 0x10, &registers, &registers );
    }
 #endif
 }
-

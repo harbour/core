@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: BYTEOR.PRG
  * Author....: Forest Belt, Computer Diagnostic Services, Inc.
  * CIS ID....: ?

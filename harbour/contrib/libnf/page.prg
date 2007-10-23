@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: PAGE.PRG
  * Author....: Glenn Scott
  * CIS ID....: 71620,1521

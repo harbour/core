@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: PEEK.C
  * Author....: Ted Means
  * CIS ID....: 73067,3332
@@ -55,8 +59,8 @@
  *  $END$
  */
 
-#include <extend.api>
-#include <cpmi.h>
+#include "extend.api"
+#include "cpmi.h"
 
 #define FP_SEG( fp ) ( *( ( unsigned int * ) &( fp ) + 1 ) )
 #define FP_OFF( fp ) ( *( ( unsigned int * ) &( fp ) ) )

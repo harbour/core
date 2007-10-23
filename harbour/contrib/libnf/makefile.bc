@@ -201,6 +201,8 @@ NANFOR_LIB_OBJ = \
    $(OBJ_DIR)\getver.obj \
    $(OBJ_DIR)\ftattr.obj \
    $(OBJ_DIR)\dispc.obj \
+   $(OBJ_DIR)\iamidle.obj \
+   $(OBJ_DIR)\ftidle.obj \
    $(OBJ_DIR)\fttext.obj \
    $(OBJ_DIR)\ftshadow.obj \
    $(OBJ_DIR)\putkey.obj
@@ -921,6 +923,14 @@ $(OBJ_DIR)\mkdir.obj  : mkdir.c
    tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
 
 $(OBJ_DIR)\getver.obj  : getver.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\ftidle.obj  : ftidle.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+   tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
+
+$(OBJ_DIR)\iamidle.obj  : iamidle.c
    $(CC) $(CLIBFLAGS) -o$@ $**
    tlib $(NANFOR_LIB) $(ARFLAGS) -+$@,,
 

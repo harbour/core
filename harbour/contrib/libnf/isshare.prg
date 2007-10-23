@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: ISSHARE.PRG
  * Author....: Glenn Scott (from Tom Leylan C source)
  * CIS ID....: ?

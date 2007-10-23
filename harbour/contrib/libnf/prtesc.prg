@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: PRTESC.PRG
  * Author....: Steven Tyrakowski
  * CIS ID....: ?

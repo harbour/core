@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Compatibility header file for CA-Clipper Filesys API
+ * FT_IAMIDLE()
  *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 1999-2007 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -48,52 +48,64 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
+*/
 
-/* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
+/* File......: ADAPTER.ASM
+* Author....: Ted Means
+* CIS ID....: 73067,3332
+*
+* This is an original work by Ted Means and is placed in the
+* public domain.
+*
+* Modification history:
+* ---------------------
+*
+*     Rev 1.0   01 Jan 1995 03:01:00   TED
+*  Nanforum Toolkit
+*
+*/
 
-#ifndef _FILESYS_API
-#define _FILESYS_API
+/* $DOC$
+*  $FUNCNAME$
+*     FT_IAmIdle()
+*  $CATEGORY$
+*     DOS/BIOS
+*  $ONELINER$
+*     Inform the operating system that the application is idle.
+*  $SYNTAX$
+*     FT_IAmIdle() -> lSuccess
+*  $ARGUMENTS$
+*     None
+*  $RETURNS$
+*     .T. if supported, .F. otherwise.
+*  $DESCRIPTION$
+*     Some multitasking operating environments (e.g. Windows or OS/2) can
+*     function more efficiently when applications release the CPU during
+*     idle states.  This function allows you "announce" to the operating
+*     system that your application is idle.
+*
+*     Note that if you use this function in conjunction with FT_OnIdle(),
+*     you can cause Clipper to automatically release the CPU whenever
+*     Clipper itself detects an idle state.
+*  $EXAMPLES$
+*     while inkey() != K_ESC
+*        FT_IAmIdle()         // Wait for ESC and announce idleness
+*     end
+*
+*     * Here's another way to do it:
+*
+*     FT_OnIdle( {|| FT_IAmIdle()} )
+* 
+*     Inkey( 0 )              // Automatically reports idleness until key
+*                             // is pressed!
+*  $SEEALSO$
+*     FT_OnIdle()
+*  $END$
+*/
 
-#include "clipdefs.h"
-#include "hbapifs.h"
-#include "error.api"
+#include "hbapi.h"
 
-/* Compatible types */
-
-typedef FHANDLE fhandle;
-typedef FHANDLE * FHANDLEP;
-
-#define FHANDLE_DEFINED
-
-/* DOS predefined standard handles */
-
-#define STDIN                   0
-#define STDOUT                  1
-#define STDERR                  2
-#define STDAUX                  3
-#define STDPRN                  4
-                                
-/* Functions */                 
-                                
-#define _fsChDir                hb_fsChDir
-#define _fsChDrv                hb_fsChDrv
-#define _fsClose                hb_fsClose
-#define _fsCommit               hb_fsCommit
-#define _fsCreate               hb_fsCreate
-#define _fsCurDir               hb_fsCurDir
-#define _fsCurDrv               hb_fsCurDrv
-#define _fsDelete               hb_fsDelete
-#define _fsError                hb_fsError
-#define _fsExtOpen              hb_fsExtOpen
-#define _fsIsDrv                hb_fsIsDrv
-#define _fsLock                 hb_fsLock
-#define _fsMkDir                hb_fsMkDir
-#define _fsOpen                 hb_fsOpen
-#define _fsRead( a, b, c )      hb_fsRead( a, ( BYTE * ) ( b ), c )
-#define _fsRmDir                hb_fsRmDir
-#define _fsRename               hb_fsRename
-#define _fsSeek                 hb_fsSeek
-#define _fsWrite( a, b, c )     hb_fsWrite( a, ( BYTE * ) ( b ), c )
-
-#endif /* _FILESYS_API */
+HB_FUNC( FT_IAMIDLE )
+{
+   hb_releaseCPU();
+}

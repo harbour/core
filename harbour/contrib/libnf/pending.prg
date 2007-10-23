@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: PENDING.PRG
  * Author....: Isa Asudeh
  * CIS ID....: 76477,647

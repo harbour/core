@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: HEX2DEC.PRG
  * Author....: Robert A. DiFalco
  * CIS ID....: ?

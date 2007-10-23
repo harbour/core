@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: SQZN.PRG
  * Author....: Joseph D. Booth, Sr.
  * CIS ID....: 72040,2112

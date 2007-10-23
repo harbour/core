@@ -8,6 +8,156 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-23 13:30 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/directx/w32_ddrw.cpp
+   * contrib/directx/w32_ddrw.h
+     ! Cleanup, formatting.
+     ! Tabs converted to spaces.
+
+   * contrib/libnf/aading.prg
+   * contrib/libnf/aavg.prg
+   * contrib/libnf/acctadj.prg
+   * contrib/libnf/acctmnth.prg
+   * contrib/libnf/acctqtr.prg
+   * contrib/libnf/acctweek.prg
+   * contrib/libnf/acctyear.prg
+   * contrib/libnf/adessort.prg
+   * contrib/libnf/aemaxlen.prg
+   * contrib/libnf/aeminlen.prg
+   * contrib/libnf/amedian.prg
+   * contrib/libnf/anomatch.prg
+   * contrib/libnf/any2any.prg
+   * contrib/libnf/aredit.prg
+   * contrib/libnf/asum.prg
+   * contrib/libnf/at2.prg
+   * contrib/libnf/bitclr.prg
+   * contrib/libnf/bitset.prg
+   * contrib/libnf/blink.prg
+   * contrib/libnf/byt2bit.prg
+   * contrib/libnf/byt2hex.prg
+   * contrib/libnf/byteand.prg
+   * contrib/libnf/byteneg.prg
+   * contrib/libnf/bytenot.prg
+   * contrib/libnf/byteor.prg
+   * contrib/libnf/bytexor.prg
+   * contrib/libnf/calendar.prg
+   * contrib/libnf/clrsel.prg
+   * contrib/libnf/cntryset.prg
+   * contrib/libnf/d2e.prg
+   * contrib/libnf/datecnfg.prg
+   * contrib/libnf/dayofyr.prg
+   * contrib/libnf/daytobow.prg
+   * contrib/libnf/dectobin.prg
+   * contrib/libnf/descend.c
+   * contrib/libnf/dfile.prg
+   * contrib/libnf/dhkey.h
+   * contrib/libnf/diskfunc.prg
+   * contrib/libnf/dispmsg.prg
+   * contrib/libnf/dosver.prg
+   * contrib/libnf/e2d.prg
+   * contrib/libnf/easter.prg
+   * contrib/libnf/elapmil.prg
+   * contrib/libnf/elapsed.prg
+   * contrib/libnf/eltime.prg
+   * contrib/libnf/findith.prg
+   * contrib/libnf/firstday.prg
+   * contrib/libnf/floptst.prg
+   * contrib/libnf/ftattr.c
+   * contrib/libnf/ftint86.ch
+   * contrib/libnf/ftmenuto.ch
+   * contrib/libnf/fttext.c
+   * contrib/libnf/gcd.prg
+   * contrib/libnf/getenvrn.c
+   * contrib/libnf/getver.c
+   * contrib/libnf/getvid.c
+   * contrib/libnf/hex2dec.prg
+   * contrib/libnf/idle.c
+   * contrib/libnf/invclr.prg
+   * contrib/libnf/isbit.prg
+   * contrib/libnf/isbiton.prg
+   * contrib/libnf/isshare.prg
+   * contrib/libnf/kspeed.c
+   * contrib/libnf/lastday.prg
+   * contrib/libnf/linked.prg
+   * contrib/libnf/madd.prg
+   * contrib/libnf/menu1.prg
+   * contrib/libnf/menuto.prg
+   * contrib/libnf/metaph.prg
+   * contrib/libnf/miltime.prg
+   * contrib/libnf/min2dhm.prg
+   * contrib/libnf/month.prg
+   * contrib/libnf/mouse.c
+   * contrib/libnf/mouse1.prg
+   * contrib/libnf/mouse2.prg
+   * contrib/libnf/netpv.prg
+   * contrib/libnf/nooccur.prg
+   * contrib/libnf/ntow.prg
+   * contrib/libnf/nwlstat.prg
+   * contrib/libnf/nwsem.prg
+   * contrib/libnf/nwuid.prg
+   * contrib/libnf/ontick.c
+   * contrib/libnf/origin.c
+   * contrib/libnf/page.prg
+   * contrib/libnf/pchr.prg
+   * contrib/libnf/peek.c
+   * contrib/libnf/pegs.prg
+   * contrib/libnf/pending.prg
+   * contrib/libnf/pickday.prg
+   * contrib/libnf/poke.c
+   * contrib/libnf/popadder.prg
+   * contrib/libnf/prtesc.prg
+   * contrib/libnf/prtscr.c
+   * contrib/libnf/pvid.prg
+   * contrib/libnf/qtr.prg
+   * contrib/libnf/rand1.prg
+   * contrib/libnf/readme.txt
+   * contrib/libnf/restsets.prg
+   * contrib/libnf/round.prg
+   * contrib/libnf/savearr.prg
+   * contrib/libnf/savesets.prg
+   * contrib/libnf/scancode.prg
+   * contrib/libnf/scregion.prg
+   * contrib/libnf/setdate.prg
+   * contrib/libnf/settime.prg
+   * contrib/libnf/sinkey.prg
+   * contrib/libnf/sleep.prg
+   * contrib/libnf/sqzn.prg
+   * contrib/libnf/sysmem.prg
+   * contrib/libnf/tbwhile.prg
+   * contrib/libnf/test.prg
+   * contrib/libnf/vertmenu.prg
+   * contrib/libnf/vidcur.prg
+   * contrib/libnf/vidmode.prg
+   * contrib/libnf/wda.prg
+   * contrib/libnf/week.prg
+   * contrib/libnf/workdays.prg
+   * contrib/libnf/woy.prg
+   * contrib/libnf/xbox.prg
+   * contrib/libnf/year.prg
+   - contrib/libnf/idle.c
+   + contrib/libnf/ftidle.c
+   + contrib/libnf/iamidle.c
+   * contrib/libnf/Makefile
+   * contrib/libnf/makefile.bc
+   * contrib/libnf/makefile.vc
+     + Added svn headers.
+     ! Fixed FT_IDLE()
+     ! Renamed idle.c to not clash with core idle.obj.
+     ! FT_F*() functions fully ported from original NFLIB.
+       Pls test.
+     * Some minor cleanups, formatting.
+
+   * include/filesys.api
+     ! _fsRead(), _fsWrite() now more compatible.
+
+   * include/hbundoc.api
+     + Added _lcopy(), _ncopyuc(), _ncopylc() compatibility 
+       functions.
+
+   * include/hbapi.h
+   * source/common/hbstr.c
+     + Added hb_strncpyLower()
+
 2007-10-23 10:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/diskspac.c
     ! added missing ; in DOS builds

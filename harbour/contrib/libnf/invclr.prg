@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: InvClr.Prg
  * Author....: David Husnian
  * CIS ID....: ?

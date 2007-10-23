@@ -103,6 +103,9 @@
 #define _bset           memset
 #define _bmove          memmove
 #define _bcopy          memcpy
+#define _lcopy          memcpy
+#define _ncopyuc        hb_strncpyUpper
+#define _ncopylc        hb_strncpyLower
 #define _bcmp           memcmp
 #define _bscan(p,cnt,c) memchr( p, c, cnt )
 

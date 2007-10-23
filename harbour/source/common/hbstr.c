@@ -765,6 +765,37 @@ HB_EXPORT char * hb_strncat( char * pDest, const char * pSource, ULONG ulLen )
    return pBuf;
 }
 
+/* This function copies and converts szText to lower case.
+ */
+/*
+ * NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null
+ * pt
+ */
+HB_EXPORT char * hb_strncpyLower( char * pDest, const char * pSource, ULONG ulLen )
+{
+   char *pBuf = pDest;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyLower(%p, %s, %lu)", pDest, pSource, ulLen));
+
+   pDest[ ulLen ] ='\0';
+
+   /* some compilers implement tolower as a macro, and this has side effects! */
+   /* *pDest++ = tolower( *pSource++ ); */
+   while( ulLen && (*pDest++ = tolower( *pSource )) != '\0' )
+   {
+      ulLen--;
+      pSource++;
+   }
+
+   while (ulLen--)
+   {
+      *pDest++ = '\0';
+   }
+
+   return pBuf;
+}
+
 /* This function copies and converts szText to upper case.
  */
 /*
@@ -780,7 +811,7 @@ HB_EXPORT char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLe
 
    pDest[ ulLen ] ='\0';
 
-   /* some compilers impliment toupper as a macro, and this has side effects! */
+   /* some compilers implement toupper as a macro, and this has side effects! */
    /* *pDest++ = toupper( *pSource++ ); */
    while( ulLen && (*pDest++ = toupper( *pSource )) != '\0' )
    {

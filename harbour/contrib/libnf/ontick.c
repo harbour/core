@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: ONTICK.C
  * Author....: Ted Means
  * CIS ID....: 73067,3332
@@ -60,9 +64,11 @@
  *  $END$
  */
 
-#include <extend.api>
-#include <item.api>
-#include <cpmi.h>
+#include "extend.api"
+#include "item.api"
+#include "hbundoc.api"
+
+#include "cpmi.h"
 
 typedef union
 {
@@ -75,7 +81,6 @@ typedef union
 } LONGPTR;
 
 void cdecl _evLow( unsigned int, void *, unsigned int );
-void cdecl _bcopy( void *, void *, unsigned int );
 
 static long far Ticks = 0;
 static long far Interval = 1;

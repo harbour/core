@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: SCANCODE.PRG
  * Author....: Glenn Scott (from John Kaster)
  * CIS ID....: 71620,1521

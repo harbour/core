@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: BLINK.PRG
  * Author....: Terry Hackett
  * CIS ID....: 76662,2035

@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: NWSEM.PRG
  * Author....: Glenn Scott
  * CIS ID....: 71620,1521

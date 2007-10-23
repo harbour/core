@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: XBOX.PRG
  * Author....: Don Opperthauser
  * CIS ID....: ?

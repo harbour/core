@@ -2,7 +2,6 @@
  * $Id$
  */
 
-
 /*
  * File......: SAVEATT.ASM
  * Author....: Ted Means

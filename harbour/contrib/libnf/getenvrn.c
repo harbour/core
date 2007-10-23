@@ -98,8 +98,8 @@
 /* NOTE: we need this to prevent base types redefinition */
 /*
 #define _CLIPDEFS_H
-#include <extend.api>
-#include <fm.api>
+#include "extend.api"
+#include "fm.api"
 */
 #include "hbapi.h"
 

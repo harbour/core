@@ -1,6 +1,9 @@
+/*
+ * $Id$
+ */
 
-static lCrsState:=.F.
-static lMinit:=.F.
+static s_lCrsState:=.F.
+static s_lMinit:=.F.
 
 #ifdef FT_TEST
 
@@ -749,17 +752,17 @@ FUNCTION FT_MINIT()
 
 * If not previously initialized then try
 
-   IF !lMinit
-	lMinit=(FT_MRESET()!=0)
+   IF !s_lMinit
+      s_lMinit := ( FT_MRESET() != 0 )
    ELSE
 * Reset maximum x and y limits
 
-     FT_MYLIMIT(0,8*24)
-     FT_MXLIMIT(0,8*80)
+      FT_MYLIMIT(0,8*24)
+      FT_MXLIMIT(0,8*80)
    ENDIF
 
 
-RETURN lMinit
+RETURN s_lMinit
 
 /*
  * $DOC$
@@ -800,7 +803,7 @@ LOCAL lStatus
    aReg[AX] := 0          // set mouse function call 0
    FT_INT86( 51, aReg )  // execute mouse interrupt
    */
-   lCrsState=.F.         // Cursor is off after reset
+   s_lCrsState=.F.         // Cursor is off after reset
 lStatus:=_m_reset()
 * Reset maximum x and y limits
 
@@ -837,10 +840,10 @@ RETURN lStatus          // return status code
  */
 
 FUNCTION FT_MCURSOR( lState )
-   local lSavState := lCrsState
+   local lSavState := s_lCrsState
 
    if VALTYPE(lState)="L"
-      if ( lCrsState := lState )
+      if ( s_lCrsState := lState )
          FT_MSHOWCRS()
       else
          FT_MHIDECRS()
@@ -890,7 +893,7 @@ FUNCTION FT_MSHOWCRS()
    FT_INT86( 51, aReg ) // execute mouse interrupt
    */
       _mse_showcurs()
-   lCrsState := .t.
+   s_lCrsState := .t.
 
 RETURN NIL              // no output from function
 
@@ -939,7 +942,7 @@ FUNCTION FT_MHIDECRS()   // decrement internal cursor flag and hide cursor
    FT_INT86( 51, aReg )  // execute mouse interrupt
    */
    _mse_mhidecrs()
-   lCrsState := .f.
+   s_lCrsState := .f.
 RETURN NIL		          // no output from function
 
 /*

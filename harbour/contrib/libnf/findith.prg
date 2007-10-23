@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: FindIth.Prg
  * Author....: David Husnian
  * CIS ID....: ?

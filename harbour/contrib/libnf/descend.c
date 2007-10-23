@@ -45,11 +45,10 @@
  *  $END$
  */
 
-#include <hbapi.h>
-#include <hbapiitm.h>
-//#include <fm.api>
+#include "hbapi.h"
+#include "hbapiitm.h"
 
-HB_FUNC( FT_DESCEND)
+HB_FUNC( FT_DESCEND )
 {
 #if defined(HB_OS_DOS) || defined(HB_OS_WIN_32)
    {
@@ -93,8 +92,6 @@ HB_FUNC( FT_DESCEND)
 
       hb_itemRelease( iP );
       hb_itemRelease( iR );
-
-   return;
    }
 #endif
 }

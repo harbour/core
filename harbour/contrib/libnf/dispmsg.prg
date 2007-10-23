@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * File......: DISPMSG.PRG
  * Author....: Paul Ferrara, ColumbuSoft
  * CIS ID....: 76702,556
