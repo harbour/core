@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 03:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/make_rpmce.sh
+    * automatically update version number
+
+  * harbour/doc/howtobld.txt
+    * set svn:keywords=Id
+
+  * harbour/contrib/libnf/Makefile
+    - removed test.prg
+
 2007-10-24 03:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbclass.ch
    * include/hbsetup.ch

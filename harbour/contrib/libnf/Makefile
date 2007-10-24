@@ -134,7 +134,6 @@ PRG_SOURCES= \
 	sysmem.prg \
 	tbwhile.prg \
 	tempfile.prg \
-	test.prg \
 	vertmenu.prg \
 	vidcur.prg \
 	vidmode.prg \
