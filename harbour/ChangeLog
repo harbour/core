@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 21:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/debian/hbdot.1
+  * harbour/debian/harbour.1
+  * harbour/debian/hbrun.1
+    * updated man files
+
 2007-10-24 20:57 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/rtl/hbbit.c
     + fixed HB_BITRESET()

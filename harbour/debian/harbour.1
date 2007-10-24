@@ -36,10 +36,6 @@ output type: Platform dependant object module
 output type: Windows/DOS OBJ32 (.obj)
 .IP "\fB-gh\fP" 10
 output type: Harbour Portable Object (.hrb)
-.IP "\fB-gj\fP" 10
-output type: Java source (.java)
-.IP "\fB-gi\fP" 10
-output type: .NET platform (.il)
 .IP "\fB-i<path>\fP" 10
 #include file search path
 .IP "\fB-k\fP" 10
@@ -58,6 +54,8 @@ no implicit starting procedure (default)
 object file drive and/or path
 .IP "\fB-p[<path>]\fP" 10
 generate pre-processed output (.ppo) file
+.IP "\fB-p+\fP" 10
+generate pre-processor trace (.ppt) file
 .IP "\fB-q\fP" 10
 quiet
 .IP "\fB-q0\fP" 10
@@ -68,6 +66,8 @@ set maximum number of preprocessor iterations
 syntax check only
 .IP "\fB-u[<file>]\fP" 10
 use command def set in <file> (or none)
+.IP "\fB-undef:<id>\fP" 10
+#undef <id>
 .IP "\fB-v\fP" 10
 variables are assumed M->
 .IP "\fB-w[<level>]\fP" 10
