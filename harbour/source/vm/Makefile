@@ -55,6 +55,7 @@ C_SOURCES=\
 	proc.c       \
 	pvalue.c     \
 	runner.c     \
+	vm.c         \
 
 PRG_SOURCES=\
 	harbinit.prg \

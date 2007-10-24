@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 03:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/vm.api
+   * include/hbapi.h
+   * include/clipdefs.h
+   * common.mak
+   * source/vm/Makefile
+   + source/vm/vm.c
+     + Added skeletons for CA-Cl*pper-like C-level VM API.
+       Types slightly modified for portability and to support 
+       larger memory than C5x.
+
 2007-10-24 03:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-ce-spec
   * harbour/make_rpmce.sh

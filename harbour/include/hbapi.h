@@ -460,6 +460,8 @@ typedef USHORT ERRCODE;
 
 extern HB_SYMB  hb_symEval;
 
+typedef ULONG HB_VMHANDLE;
+
 extern HB_EXPORT void   hb_xinit( void );                           /* Initialize fixed memory subsystem */
 extern HB_EXPORT void   hb_xexit( void );                           /* Deinitialize fixed memory subsystem */
 extern HB_EXPORT void * hb_xalloc( ULONG ulSize );                  /* allocates memory, returns NULL on failure */
@@ -468,6 +470,23 @@ extern HB_EXPORT void   hb_xfree( void * pMem );                    /* frees mem
 extern HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize );   /* reallocates memory */
 extern HB_EXPORT ULONG  hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
 extern HB_EXPORT ULONG  hb_xquery( USHORT uiMode );                 /* Query different types of memory information */
+
+extern HB_EXPORT HB_VMHANDLE hb_xvalloc( ULONG nSize, USHORT nFlags );
+extern HB_EXPORT void        hb_xvfree( HB_VMHANDLE h );
+extern HB_EXPORT HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, ULONG nSize, USHORT nFlags );
+extern HB_EXPORT void *      hb_xvlock( HB_VMHANDLE h );
+extern HB_EXPORT void        hb_xvunlock( HB_VMHANDLE h );
+extern HB_EXPORT void *      hb_xvwire( HB_VMHANDLE h );
+extern HB_EXPORT void        hb_xvunwire( HB_VMHANDLE h );
+extern HB_EXPORT ULONG       hb_xvlockcount( HB_VMHANDLE h );
+extern HB_EXPORT ULONG       hb_xvsize( HB_VMHANDLE h );
+extern HB_EXPORT HB_VMHANDLE hb_xvheapnew( ULONG nSize );
+extern HB_EXPORT void        hb_xvheapdestroy( HB_VMHANDLE h );
+extern HB_EXPORT HB_VMHANDLE hb_xvheapresize( HB_VMHANDLE h, ULONG nSize );
+extern HB_EXPORT ULONG       hb_xvheapalloc( HB_VMHANDLE h, ULONG nSize );
+extern HB_EXPORT void        hb_xvheapfree( HB_VMHANDLE h, ULONG nOffset );
+extern HB_EXPORT void *      hb_xvheaplock( HB_VMHANDLE h, ULONG nOffset );
+extern HB_EXPORT void        hb_xvheapunlock( HB_VMHANDLE h, ULONG nOffset );
 
 #ifdef _HB_API_INTERNAL_
 extern void       hb_xRefInc( void * pMem );    /* increment reference counter */

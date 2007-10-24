@@ -369,6 +369,7 @@ VM_COMMON_LIB_OBJS = \
     $(OBJ_DIR)\proc$(OBJEXT)     \
     $(OBJ_DIR)\pvalue$(OBJEXT)   \
     $(OBJ_DIR)\runner$(OBJEXT)   \
+    $(OBJ_DIR)\vm$(OBJEXT)       \
     $(OBJ_DIR)\harbinit$(OBJEXT) \
 
 # Specific VM Objects for building STATIC library

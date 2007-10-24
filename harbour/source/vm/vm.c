@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Compatibility header file for CA-Clipper Virtual Memory API
+ * The Virtual Memory API
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2007 {list of individual authors and e-mail addresses}
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,41 +50,130 @@
  *
  */
 
-/* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
-
 /* -------------------------------------------------------- */
 /* Warning: VM functionality is not supported by Harbour.   */
 /*          All functions will emulate constant failure.    */
 /* -------------------------------------------------------- */
 
-#ifndef _VM_API
-#define _VM_API
-
-#include "clipdefs.h"
 #include "hbapi.h"
 
-/* Standard */
-#define _xvalloc( size, flags )      hb_xvalloc( ( ULONG ) size, flags )
-#define _xvfree( h )                 hb_xvfree( h )
-#define _xvrealloc( h, size, flags ) hb_xvrealloc( h, ( ULONG ) size, flags )
-#define _xvlock( h )                 hb_xvlock( h )
-#define _xvunlock( h )               hb_xvunlock( h )
+HB_EXPORT HB_VMHANDLE hb_xvalloc( ULONG nSize, USHORT nFlags )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( nSize );
+   HB_SYMBOL_UNUSED( nFlags );
+   return 0;
+}
+
+HB_EXPORT void hb_xvfree( HB_VMHANDLE h )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+}
+
+HB_EXPORT HB_VMHANDLE hb_xvrealloc( HB_VMHANDLE h, ULONG nSize, USHORT nFlags )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+   HB_SYMBOL_UNUSED( nSize );
+   HB_SYMBOL_UNUSED( nFlags );
+   return 0;
+}
+
+HB_EXPORT void * hb_xvlock( HB_VMHANDLE h )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+   return NULL;
+}
+
+HB_EXPORT void hb_xvunlock( HB_VMHANDLE h )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+}
 
 /* Wire */
-#define _xvwire( h )                 hb_xvwire( h )
-#define _xvunwire( h )               hb_xvunwire( h )
+
+HB_EXPORT void * hb_xvwire( HB_VMHANDLE h )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+   return NULL;
+}
+
+HB_EXPORT void hb_xvunwire( HB_VMHANDLE h )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+}
+
 
 /* State */
-#define _xvlockcount( h )            hb_xvlockcount( h )
-#define _xvsize( h )                 hb_xvsize( h )
+
+HB_EXPORT ULONG hb_xvlockcount( HB_VMHANDLE h )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+   return 0;
+}
+
+HB_EXPORT ULONG hb_xvsize( HB_VMHANDLE h )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+   return 0;
+}
 
 /* Heap */
-#define _xvheapnew( size )           hb_xvheapnew( ( ULONG ) size )
-#define _xvheapdestroy( h )          hb_xvheapdestroy( h )
-#define _xvheapresize( h, size )     hb_xvheapresize( h, ( ULONG ) size )
-#define _xvheapalloc( h, size )      hb_xvheapalloc( h, ( ULONG ) size )
-#define _xvheapfree( h, offset )     hb_xvheapfree( h, ( ULONG ) offset )
-#define _xvheaplock( h, offset )     hb_xvheaplock( h, ( ULONG ) offset )
-#define _xvheapunlock( h, offset )   hb_xvheapunlock( h, ( ULONG ) offset )
 
-#endif /* _VM_API */
+HB_EXPORT HB_VMHANDLE hb_xvheapnew( ULONG nSize )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( nSize );
+   return 0;
+}
+
+HB_EXPORT void hb_xvheapdestroy( HB_VMHANDLE h )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+}
+
+HB_EXPORT HB_VMHANDLE hb_xvheapresize( HB_VMHANDLE h, ULONG nSize )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+   HB_SYMBOL_UNUSED( nSize );
+   return 0;
+}
+
+HB_EXPORT ULONG hb_xvheapalloc( HB_VMHANDLE h, ULONG nSize )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+   HB_SYMBOL_UNUSED( nSize );
+   return 0;
+}
+
+HB_EXPORT void hb_xvheapfree( HB_VMHANDLE h, ULONG nOffset )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+   HB_SYMBOL_UNUSED( nOffset );
+}
+
+HB_EXPORT void * hb_xvheaplock( HB_VMHANDLE h, ULONG nOffset )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+   HB_SYMBOL_UNUSED( nOffset );
+   return NULL;
+}
+
+HB_EXPORT void hb_xvheapunlock( HB_VMHANDLE h, ULONG nOffset )
+{
+   /* TODO */
+   HB_SYMBOL_UNUSED( h );
+   HB_SYMBOL_UNUSED( nOffset );
+}

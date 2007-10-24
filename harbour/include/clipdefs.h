@@ -107,7 +107,7 @@ typedef NEARP * NEARPP;
    typedef FARP    PVOID;
 #endif
 
-typedef void *  HANDLE;
+typedef HB_VMHANDLE HANDLE;
 typedef ERRCODE IHELP;
 typedef ERRCODE ICODE;
 
