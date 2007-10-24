@@ -22,8 +22,8 @@ rem Copyright 1999-2001 Viktor Szakats (viktor.szakats@syenar.hu)
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
-if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=dos
-if "%HB_COMPILER%" == "" set HB_COMPILER=djgpp
+if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=w32
+if "%HB_COMPILER%" == "" set HB_COMPILER=mingw32
 if "%HB_GT_LIB%" == "" set HB_GT_LIB=
 
 rem set PRG_USR= 

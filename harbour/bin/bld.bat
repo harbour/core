@@ -20,8 +20,8 @@ rem Copyright 1999-2004 Viktor Szakats (viktor.szakats@syenar.hu)
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 
-rem if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=dos
-rem if "%HB_COMPILER%" == "" set HB_COMPILER=djgpp
+rem if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=w32
+rem if "%HB_COMPILER%" == "" set HB_COMPILER=mingw32
 rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
 
 if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=..\bin\

@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 03:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   - make_gnu.cmd
+     - Remove obsolete file. This was the same as make_gnu.bat 
+       but with defaults set for OS/2. OS/2 users should use 
+       make_gnu.bat with proper platform/compiler sets.
+
+   * bin/bld.bat
+   * make_gnu.bat
+     * Changed default compiler/platform to w32/mingw32 
+       (was dos/djgpp)
+
 2007-10-24 01:47 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/libnf/fttext.c
      % Optimized _writeeol()
