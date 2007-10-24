@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 09:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * debian/copyright
+   * doc/license.txt
+   * COPYING
+     ! Synced COPYING with doc/license.txt
+     ! Synced old license list with debian/copyright
+     ! Removed one old license file reference from text:
+       contrib\libmisc\dates2.c (Only the DateTime() function by Jon Berg)
+       Since this copyright clearly refers to doc/license.txt.
+       Moreover, it's clearly stated in the text that licenses 
+       in contrib can be anything as per defined in the given contrib.
+     * Removed 1 char left margin from the text.
+
 2007-10-24 04:22 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - bin/b16
      - Removed obsolete directory.

@@ -5,7 +5,7 @@ It was downloaded from http://www.harbour-project.org
 
 Upstream Authors: The Harbour Project <harbour@matrixlist.com>
 
-Copyright (C) 1999-2003 The Harbour Project <harbour@matrixlist.com>
+Copyright (C) 1999-2007 The Harbour Project <harbour@matrixlist.com>
 
   The GNU General Public License, mentioned below, can be found on
   Debian systems at /usr/share/common-licenses/GPL
@@ -72,7 +72,6 @@ THE OLD HARBOUR PROJECT LIBRARY LICENSE
 
  Note: This license only applies to the following files:
 
-    contrib\libmisc\dates2.c (Only the DateTime() function by Jon Berg)
     samples\pe\license.txt
     source\rtl\philes.c
     source\rtl\binnum.c
@@ -108,10 +107,7 @@ THE HARBOUR PROJECT CONTRIB LICENSE
  There is no one single license that applies to the Harbour Project
  contrib files. Some files use the Harbour Project Compiler license.
  Some files use the Harbour Project Library license. Some files use
- the old Harbour Project Library license (and in one case, just one
- function in a file that otherwise uses the Harbour Project Library
- license uses the old license - this is the DateTime() function in
- the file  contrib\libmisc\dates2.c).  Some files may even use other
+ the old Harbour Project Library license. Some files may even use other
  types of free software or open source  software licenses. Some files
  have been donated to the public domain. If you use any of the contrib
  files, you need to investigate the license that applies to each file.
