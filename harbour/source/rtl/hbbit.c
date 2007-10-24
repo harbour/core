@@ -144,7 +144,7 @@ HB_FUNC( HB_BITRESET )
 {
    HB_LONG lValue, lBit;
    if( hb_numParam( 1, &lValue ) && hb_numParam( 2, &lBit ) )
-      hb_retnint( lValue & ( ( ~ ( HB_LONG ) 1 ) << lBit ) );
+      hb_retnint( lValue & ( ~ ( ( HB_LONG ) 1 << lBit ) ) );
 }
 
 HB_FUNC( HB_BITSHIFT )

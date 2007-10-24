@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 20:57 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/rtl/hbbit.c
+    + fixed HB_BITRESET()
+
 2007-10-24 17:47 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * debian/control
      ! Fixed pkg dependency to allow building Harbour on some 
