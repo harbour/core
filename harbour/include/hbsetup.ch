@@ -72,15 +72,6 @@
 /* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
 /* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
 
-/* NOTE: HB_SHORTNAMES must be defined manually if the symbol name length is
-         set to 10 explicitly and not through the HB_C52_STRICT option
-         [vszakats] */
-
-/* Turn on short names support for the class engine */
-#ifdef HB_C52_STRICT
-   #define HB_SHORTNAMES
-#endif
-
 /* #define HB_FILE_VER_STATIC */  /* Enable inclusion of file version strings */
 
 #endif /* HB_SETUP_CH_ */

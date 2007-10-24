@@ -126,13 +126,6 @@
    #define HB_CLS_NO_DECLARATIONS
 #endif
 
-/* disable method decoration when Harbour compiled with short (10 chars) symbols */
-#ifdef HB_SHORTNAMES
-   #ifndef HB_CLS_NO_DECORATION
-      #define HB_CLS_NO_DECORATION
-   #endif
-#endif
-
 /*
  * I have to enable this definition by default untill we will not fix
  * preprocessor. [druzus]

@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 03:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbclass.ch
+   * include/hbsetup.ch
+     - Removed HB_SHORTNAME last occurences. Harbour doesn't 
+       have a 10 char symbol compatibility since some time, and
+       it didn't make too much sense anyway since long.
+       I wonder if HB_CLS_NO_DECORATION (in hbclass.ch) has 
+       any point anymore?
+
 2007-10-24 03:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - make_gnu.cmd
      - Remove obsolete file. This was the same as make_gnu.bat 
