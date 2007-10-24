@@ -285,6 +285,9 @@ strip $HB_BIN_INSTALL/harbour
 # Keep the size of the libraries to a minimim.
 strip --strip-debug $HB_LIB_INSTALL/*
 
+mkdir -p $RPM_BUILD_ROOT%{_mandir}/man1
+install -m644 doc/man/*.1* $RPM_BUILD_ROOT%{_mandir}/man1/
+
 mkdir -p $RPM_BUILD_ROOT/etc/harbour
 install -m644 source/rtl/gtcrs/hb-charmap.def $RPM_BUILD_ROOT/etc/harbour/hb-charmap.def
 cat > $RPM_BUILD_ROOT/etc/harbour.cfg <<EOF
@@ -476,6 +479,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/hbdot
 %{_bindir}/hbpp
 %{_bindir}/hbmake
+%{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}
 %attr(644,root,root) %{_includedir}/%{name}/*
 

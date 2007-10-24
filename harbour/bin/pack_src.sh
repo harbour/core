@@ -63,6 +63,10 @@ $hb_collect doc/en/[Mm]akefile*
 $hb_collect doc/en/*.txt
 $hb_collect doc/es/[Mm]akefile*
 $hb_collect doc/es/*.txt
+$hb_collect doc/man/*.1*
+
+# DEBIAN
+$hb_collect debian/*
 
 # INCLUDE
 $hb_collect include/Makefile

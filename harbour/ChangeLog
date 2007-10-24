@@ -8,6 +8,30 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 21:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  - harbour/debian/hbdot.1
+  - harbour/debian/harbour.1
+  - harbour/debian/hbmake.1
+  - harbour/debian/hbtest.1
+  - harbour/debian/hbpp.1
+  - harbour/debian/hbrun.1
+  - harbour/debian/hbdoc.1
+  + harbour/doc/man
+  + harbour/doc/man/hbdot.1
+  + harbour/doc/man/harbour.1
+  + harbour/doc/man/hbmake.1
+  + harbour/doc/man/hbpp.1
+  + harbour/doc/man/hbtest.1
+  + harbour/doc/man/hbrun.1
+  + harbour/doc/man/hbdoc.1
+    * moved man files from ./debian directory to ./doc/man
+
+  * harbour/debian/rules
+    * updated for new man files location
+  * harbour/bin/pack_src.sh
+  * harbour/harbour.spec
+    * added man files to RPMs
+
 2007-10-24 21:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/debian/hbdot.1
   * harbour/debian/harbour.1
