@@ -207,7 +207,7 @@ elif [ "\$*" = "mk-links" ]; then
     NAME="\${0##*/}"
     if [ "\${DIR}" != "\${NAME}" ]; then
         (cd "\${DIR}"
-        for n in ${hb_pref}cc ${hb_pref}cmp ${hb_pref}mk ${hb_pref}lnk gharbour harbour-link; do
+        for n in ${hb_pref}cc ${hb_pref}cmp ${hb_pref}mk ${hb_pref}lnk; do
             if [ "\${HB_ARCHITECTURE}" = "dos" ]; then
                 cp -f "\${NAME}" "\${n}"
             else
@@ -524,13 +524,6 @@ HB="\${0##*/}"
 case "\${HB}" in
     *cc)
         hb_cc "\${P[@]}"
-        ;;
-    *cmp|gharbour)
-        hb_cmp "\${P[@]}"
-        ;;
-    *lnk|harbour-link)
-        hb_link "\${P[@]}" && \\
-        ( [ "\${HB_STRIP}" != "yes" ] || ${CCPREFIX}strip "\${FOUTE}" )
         ;;
     *mk)
         hb_cmp "\${P[@]}" && \\

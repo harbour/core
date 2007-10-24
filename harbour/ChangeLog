@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 15:32 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * bin/hb-func.sh
+    * removed not longer needed "gharbour","harbour-link" references
+      in build script.
+
 2007-10-24 21:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   - harbour/debian/hbdot.1
   - harbour/debian/harbour.1
