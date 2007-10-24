@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 17:47 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * debian/control
+     ! Fixed pkg dependency to allow building Harbour on some 
+       non-Linux ports as per Petr Salinger's request.
+       See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=375426
+
 2007-10-24 09:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * debian/copyright
    * doc/license.txt
