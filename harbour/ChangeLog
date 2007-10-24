@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 16:07 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * bin/hb-func.sh
+    ! Fixed stupid typo that was removing cmp/lnk commands
+
 2007-10-24 15:32 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * bin/hb-func.sh
     * removed not longer needed "gharbour","harbour-link" references

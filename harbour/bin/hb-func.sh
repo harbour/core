@@ -525,6 +525,13 @@ case "\${HB}" in
     *cc)
         hb_cc "\${P[@]}"
         ;;
+    *cmp)
+        hb_cmp "\${P[@]}"
+        ;;
+    *lnk)
+        hb_link "\${P[@]}" && \\
+        ( [ "\${HB_STRIP}" != "yes" ] || ${CCPREFIX}strip "\${FOUTE}" )
+        ;;
     *mk)
         hb_cmp "\${P[@]}" && \\
         hb_link "\${FOUTO}" && \\
@@ -544,7 +551,7 @@ mk_hblibso()
 
     name=`get_solibname`
     hb_rootdir="${1-.}"
-    
+
     hb_ver=`get_hbver "${hb_rootdir}"`
     hb_libs=`mk_hbgetlibs "$2"`
     [ -z "${HB_GT_LIB}" ] && HB_GT_LIB="gtstd"
