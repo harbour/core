@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-24 04:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   - bin/bld_b16.bat
+     - Removed file. DOS/BCC16 usage is not that common now, 
+       that it needs a separate batch file. DOS/BCC16 users 
+       should use bld.bat with proper envvars.
+
 2007-10-24 03:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/vm.api
    * include/hbapi.h
