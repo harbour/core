@@ -101,13 +101,13 @@ typedef void *  NEARP;
 typedef NEARP * NEARPP;
 
 #if !(defined(HB_OS_WIN_32) && defined(HB_OS_WIN_32_USED))
-   typedef void *  FARP;
-   typedef FARP *  FARPP;
-   typedef FARP    VOIDP;
-   typedef FARP    PVOID;
+   typedef void *      FARP;
+   typedef FARP *      FARPP;
+   typedef FARP        VOIDP;
+   typedef FARP        PVOID;
+   typedef HB_VMHANDLE HANDLE;
 #endif
 
-typedef HB_VMHANDLE HANDLE;
 typedef ERRCODE IHELP;
 typedef ERRCODE ICODE;
 
