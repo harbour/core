@@ -189,7 +189,8 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
    HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
-#if defined( OS_UNIX_COMPATIBLE )
+/* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
+#if defined( OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
    s_fRestTTY = FALSE;
    if( s_bStdinConsole )
    {

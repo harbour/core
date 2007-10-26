@@ -212,7 +212,7 @@ static int  isBof[   TEXT_WORKAREAS];
 static int  isEof[   TEXT_WORKAREAS];
 static int  error[   TEXT_WORKAREAS];
 
-// for debugging purposes
+/* for debugging purposes */
 static int doInt=0;
 
 HB_FUNC_EXTERN( FT_GOBOT );
@@ -1867,7 +1867,7 @@ static int _ins_buff( int iLen )
             error[area] = _fsError();
             break;
          }
-//         WriteLen = SaveLen;
+         /* WriteLen = SaveLen; */
 
          /* swap buffers */
          SaveBuff  = WriteBuff;
@@ -1898,7 +1898,7 @@ static int _ins_buff( int iLen )
 
    return error[area];
 }
-// _ins_buff
+/* _ins_buff */
 
 
 
@@ -1958,7 +1958,7 @@ static int _del_buff( int iLen )
 
    return error[area];
 }
-// _del_buff
+/* _del_buff */
 
 
 /*컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴*/

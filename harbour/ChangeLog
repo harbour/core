@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-26 03:46 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbstack.h
+  * harbour/include/hboo.ch
+  * harbour/ChangeLog
+  * harbour/utils/hbmake/hbmlang.c
+  * harbour/utils/hbpp/hbppcore.c
+  * harbour/utils/hbpp/hbpp.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/rtl/cdpapi.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtalleg/fixedth.sfc
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/idle.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/hbregex.c
+  * harbour/source/vm/hvm.c
+  * harbour/contrib/xhb/hboutdbg.c
+  * harbour/contrib/xhb/hbxml.c
+  * harbour/contrib/xhb/hbxml.h
+  * harbour/contrib/xhb/cstructc.c
+  * harbour/contrib/xhb/hbsyslog.c
+  * harbour/contrib/libmisc/hb_f.c
+  * harbour/contrib/libnf/fttext.c
+  * harbour/contrib/libnf/mouse.c
+  * harbour/contrib/tip/encmthd.c
+  * harbour/contrib/rdd_ads/ads1.c
+  * harbour/contrib/rdd_ads/ace.h
+  * harbour/contrib/btree/hb_btree.c
+  * harbour/contrib/samples/status.c
+  * harbour/contrib/samples/gauge.c
+  * harbour/contrib/odbc/odbc.c
+  * harbour/contrib/bmdbfcdx/hbrddbmcdx.h
+  * harbour/contrib/bmdbfcdx/bmdbfcdx1.c
+    * cleanup errors in strict ANSI C compilation
+
 2007-10-25 22:43 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/win32/w32_prn.c
      ! Changed hb_retnl() -> hb_retptr() for Windows handles.
@@ -5301,12 +5339,12 @@
     * added support for --with gd, --with pgsql, --with pgsql4 and --without tip
   * contrib/tip/cgi.prg
     * added lDumpHtml to create a dump of the html useful for syntax check
-	 * added support for "var" and "src" in both scripts and styles
+    * added support for "var" and "src" in both scripts and styles
   * contrib/pgsql/tpostgre.prg
-  	 * added ::Read() method to use in forward only loop
-	 * instead of while !::eof() ... ::skip()
+    * added ::Read() method to use in forward only loop
+    * instead of while !::eof() ... ::skip()
     * several optimizations now in a typical loop it is 30% faster
-	 * !!! now char fields are not sized to len !!!
+    * !!! now char fields are not sized to len !!!
 
 2007-06-01 02:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/bin/bld.sh
@@ -5855,9 +5893,9 @@
 2007-05-12 17:43 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/contrib/tip/cgi.prg
     * support of option encoding in StartHtml
-	 * removed language= in htmlscript
-	 * fixed use of pre and post parameters in HtmlOption
-	 * now TipCgi code is validated xhtml 1.0 strict
+    * removed language= in htmlscript
+    * fixed use of pre and post parameters in HtmlOption
+    * now TipCgi code is validated xhtml 1.0 strict
 
 2007-05-12 11:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbffind.c
@@ -6694,7 +6732,7 @@
 2007-04-18 09:23 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/source/compiler/gencobj.c
     * added support of HB_CFG_FILE envvar which define the file name to use
-	 for -go compiler switch borrowed from xHarbour
+      for -go compiler switch borrowed from xHarbour
   * harbour/config/w32/mingw32.cf
     * fixed a typo
 
@@ -7298,8 +7336,8 @@
 2007-04-10 11:20 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/contrib/gd
     * added new directory
-	 * harbour wrapper classes for www.libgd.org graphic library
-	 * see README and hbgd.txt for docs
+    * harbour wrapper classes for www.libgd.org graphic library
+    * see README and hbgd.txt for docs
 
 2007-04-06 15:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/persist.prg
@@ -8447,13 +8485,13 @@
     ! some minor fixes
       TOFIX: we have to also use GTI_ISCTWIN or add window allocation
              to standard GT drivers to be Clipper compatible when CTWIN
-	     is used - In Clipper Tools ALERT() works in differ way then
-	     the standard one. It creates separate window box to display
-	     data, supports SETKEY(), etc. I'll think about adding some
-	     extended support for ALERT() and similar operations (f.e.
-	     separate debugger windows) to GT API so it will be also
-	     possible to overload standard alert() command by GUI message
-	     box in GTGUI and similar GT drivers.
+      is used - In Clipper Tools ALERT() works in differ way then
+      the standard one. It creates separate window box to display
+      data, supports SETKEY(), etc. I'll think about adding some
+      extended support for ALERT() and similar operations (f.e.
+      separate debugger windows) to GT API so it will be also
+      possible to overload standard alert() command by GUI message
+      box in GTGUI and similar GT drivers.
 
   * harbour/source/rtl/binnumx.c
     ! fixed U2BIN() - wrong casting
@@ -27832,7 +27870,7 @@ ed
 2001-12-21 08:46 UTC+0000 Dave Pearson <davep@davep.org>
    * ERRATA
      * Added a note about and a pointer to harbour's bug reporting page.
-	
+
 2001-12-21 00:48 UTC-0800 Brian Hays <bhays@abacuslaw.com>
    * source/rtl/persist.prg
       * added type test to SaveToText() to avoid errors on
@@ -31232,7 +31270,7 @@ e.vc
        decide if a symbol should be ignored. This will let developers
        modify what is and isn't ignored by subclassing HB_Profile and
        implementing their own version of HB_Profile::ignoreSymbol().
-	
+
 2001-08-02 10:00 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.txt
      * Corrected typos.
@@ -37743,7 +37781,7 @@ NOTE! some modules still use a direct access to the eval stack
     * contrib/dot/pp.prg
       ! Fixed few more associations within NextExp()
       + Added logic to auto create vars refernced in command line.
-	/* Now the DOT prompt is much more functional, in both Clipper and Harbour. */
+        /* Now the DOT prompt is much more functional, in both Clipper and Harbour. */
 
 2000-10-17 18:21 GMT+2 Maurilio Longo <maurilio.longo@libero.it>
    * source/rtl/tbrowse.prg
@@ -37762,11 +37800,11 @@ NOTE! some modules still use a direct access to the eval stack
 2000-10-17 00:55 UTC+0800 Ron Pinkas <ron@profit-master.com>
     * contrib/dot
       ! contrib/dot/pp.prg
-	! Fixed bug with processing of #include within #ifdef
-	! Fixed handling of unterminated strings crossing file read buffer boundaries.
-	! Fixed association of := and -> within NextExp()
-	  /* I'm now able to PP my largest prg without any difference from Clipper (other then minor spacing
-             differences). */
+      ! Fixed bug with processing of #include within #ifdef
+      ! Fixed handling of unterminated strings crossing file read buffer boundaries.
+      ! Fixed association of := and -> within NextExp()
+        /* I'm now able to PP my largest prg without any difference from Clipper (other then minor spacing
+           differences). */
 
 2000-10-16 20:22 GMT+1 Victor Szakats <vector@matavnet.hu>
    * source/rtl/run.c
@@ -44224,13 +44262,13 @@ The follow is mission from previus session
     * harbour/include/hbexprb.c
       * Modified all HB_EXPR_PCODE?( hb_compGenPCode1 ,...) to HB_EXPR_GENPCODE?( ... ) to diferntiate between the
         calls top GenPCode?() and the other calls using this macro, since the GenPCode?() now uses additional parameter:
-	BOOL bAffectStack
+        BOOL bAffectStack
       * Modified all the GenPCode?() to pass additional required paramter.
 
     * harbour/include/hbexprc.c
       * Modified all HB_EXPR_PCODE?( hb_compGenPCode1 ,...) to HB_EXPR_GENPCODE?( ... ) to diferntiate between the
         calls top GenPCode?() and the other calls using this macro, since the GenPCode?() now uses additional parameter:
-	BOOL bAffectStack
+        BOOL bAffectStack
       * Modified all the GenPCode?() to pass additional required paramter.
 
     * harbour/include/hbexprop.h
@@ -44240,7 +44278,7 @@ The follow is mission from previus session
         #define HB_EXPR_GENPCODE3( action, p1, p2, p3, p4 ) action( (p1), (p2), (p3), (p4) )
         #define HB_EXPR_GENPCODE4( action, p1, p2, p3, p4, p5 ) action( (p1), (p2), (p3), (p4), (p5) )
 
-	And:
+        And:
 
         #define HB_EXPR_GENPCODE1( action, p1 ) action( (p1), pMacro )
         #define HB_EXPR_GENPCODE2( action, p1, p2, p3 ) action( (p1), (p2), (p3), pMacro )
@@ -44255,14 +44293,14 @@ The follow is mission from previus session
          extern void hb_compGenPCode4( BYTE, BYTE, BYTE, BYTE, BOOL, HB_MACRO_DECL );
          extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL, HB_MACRO_DECL );
 
-	 And:
+       And:
          extern void hb_compGenPCode1( BYTE byte, HB_MACRO_DECL );
          extern void hb_compGenPCode2( BYTE byte1, BYTE byte2, BOOL bStackAffected, HB_MACRO_DECL );
          extern void hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, BOOL bStackAffected, HB_MACRO_DECL );
          extern void hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, BOOL bStackAffected, HB_MACRO_DECL );
          extern void hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, BOOL, HB_MACRO_DECL );
 
-	 *** I think this is redundant but I went by exisitng declarations !!! Ryszard Please Check !!!
+       *** I think this is redundant but I went by exisitng declarations !!! Ryszard Please Check !!!
 
     * harbour/source/compiler/harbour.c
       * Modified GenPCode2-N() to require additional paramter.
@@ -44301,9 +44339,9 @@ The follow is mission from previus session
 
 20000426-16:58 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
-    *source/rtl/gtcrs/gtcrs.c
-	* the terminal is no longer scrolled up if something is
-	  written at MAXROW(),MAXCOL() position
+    * source/rtl/gtcrs/gtcrs.c
+      * the terminal is no longer scrolled up if something is
+        written at MAXROW(),MAXCOL() position
 
 20000426-15:17 GMT+1 Antonio Linares <alinares@fivetech.com>
    + source/compiler/genobj32.c
@@ -44318,15 +44356,15 @@ The follow is mission from previus session
     *source/compiler/hbfix.c
     *source/compiler/hbpcode.c
     *source/vm/hvm.c
-	* fixed support for HB_P_(PUSH/POP)LOCALNEAR - it uses two
-	  bytes again
-	* added function hb_compNOOPadd() to add position of HB_P_NOOP
-	  opcode that will be later removed at the jump optimization
-	  phase
-	* due to CVS conflicts I have cancelled the latest Ron changes
-	  in hb_compCodeblockEnd - anyway I don't see any reason to create
-	  a temporary buffer that is filled with some values and next
-	  copied into pcode buffer - all these values can be copied directly
+      * fixed support for HB_P_(PUSH/POP)LOCALNEAR - it uses two
+        bytes again
+      * added function hb_compNOOPadd() to add position of HB_P_NOOP
+        opcode that will be later removed at the jump optimization
+        phase
+      * due to CVS conflicts I have cancelled the latest Ron changes
+        in hb_compCodeblockEnd - anyway I don't see any reason to create
+        a temporary buffer that is filled with some values and next
+        copied into pcode buffer - all these values can be copied directly
 
 NOTE: All source code HAVE TO be recompiled!
 
@@ -44334,14 +44372,13 @@ NOTE: All source code HAVE TO be recompiled!
     *source/rtl/gtcrs/gtcrs.c
     *source/rtl/gtcrs/kbdcrs.c
     *source/rtl/gtcrs/mousecrs.c
-	* added new file kbdcrs.c with keyboard support - the separation
-	  from terminal code will allow to use different modules for
-	  keyboard handling (for example 'rawkeys' library)
+      * added new file kbdcrs.c with keyboard support - the separation
+        from terminal code will allow to use different modules for
+        keyboard handling (for example 'rawkeys' library)
 
     *tests/Makefile
-	* all test modules that were using non-standard harbour functions
-	  are moved to BAD_PRG section
-
+      * all test modules that were using non-standard harbour functions
+        are moved to BAD_PRG section
 
 20000426-02:12 DST Paul Tucker <ptucker@sympatico.ca>
    * contrib/libmisc/make_vc.bat
@@ -44381,8 +44418,8 @@ NOTE: All source code HAVE TO be recompiled!
 
 20000425-18:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
-    *utils/hbdoc/Makefile
-	* added lang library
+   * utils/hbdoc/Makefile
+     * added lang library
 
 20000425-07:30 GMT-8 Ron Pinkas <Ron@Profit-Master.com>
 
@@ -44406,7 +44443,7 @@ NOTE: All source code HAVE TO be recompiled!
 20000425-15:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/hbpcode.c
-	*fixed length of HB_P_PUSHDOUBLE pcode
+      *fixed length of HB_P_PUSHDOUBLE pcode
 
 20000425-12:40 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
@@ -44416,18 +44453,18 @@ NOTE: All source code HAVE TO be recompiled!
     *source/compiler/harbour.y
     *source/compiler/hbgenerr.c
     *source/pp/ppcore.c
-	* fixed STATIC var[ <value> ] declaration
-	* fixed DO &(<name>) WITH ... syntax
-	* fixed reporting of line numbers in errors/warnings messages
-	NOTE: fix in ppcore.c needs Alexander to review it - anyway
-	empty lines cannot be buffered by a preprocessor (see
-	hb_pp_nEmptyStrings)
+      * fixed STATIC var[ <value> ] declaration
+      * fixed DO &(<name>) WITH ... syntax
+      * fixed reporting of line numbers in errors/warnings messages
+      NOTE: fix in ppcore.c needs Alexander to review it - anyway
+      empty lines cannot be buffered by a preprocessor (see
+      hb_pp_nEmptyStrings)
 
     *source/rtl/gtstd/gtstd.c
-	* removed atexit() call when HB_OS_UNIX is defined
+      * removed atexit() call when HB_OS_UNIX is defined
 
     *source/vm/hvm.c
-	* <windows.h> can be included only if HB_OS_WIN_32 is defined
+      * <windows.h> can be included only if HB_OS_WIN_32 is defined
 
 
 20000425-11:36 GMT+1 Antonio Linares <alinares@fivetech.com>
@@ -44513,7 +44550,7 @@ NOTE: All source code HAVE TO be recompiled!
 20000424-19:40 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
-	* fixed recognition of WHILE abbreviation (WHIL)
+      * fixed recognition of WHILE abbreviation (WHIL)
 
 20000424-19:15 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
@@ -44565,9 +44602,9 @@ NOTE: All source code HAVE TO be recompiled!
         * added hbfix.c
 
     *source/vm/itemapi.c
-	* reverted a change (items unreferencing) because it caused
-	  GPFs when an inlined method of an object was called
-	  (it requires more testing)
+      * reverted a change (items unreferencing) because it caused
+        GPFs when an inlined method of an object was called
+        (it requires more testing)
 
 20000424-03:44 GMT+1 Victor Szakats <info@szelvesz.hu>
 
@@ -44639,31 +44676,31 @@ NOTE: All source code HAVE TO be recompiled!
 20000423-19:10 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	*added support for using references as an array element
-	{ 1, @var }
+      *added support for using references as an array element
+      { 1, @var }
 
     *source/vm/itemapi.c
-	*added support for handling of references in arrays
-	Example:
-	    a := 1
-	    CallProc( { @a } )
-	    ? a		//prints: 2
+      *added support for handling of references in arrays
+      Example:
+          a := 1
+          CallProc( { @a } )
+          ? a           //prints: 2
 
-	    PROC CallProc( x )
-	    LOCAL y:=x[ 1 ]
-		y++
+          PROC CallProc( x )
+          LOCAL y:=x[ 1 ]
+            y++
 
     NOTE: references in arrays cannot be used with usual operators
     For example (using the above code)
-	? y + x[ 1 ]
+      ? y + x[ 1 ]
     will cause 'argument error: +' because hb_vmPlus() (and others)
     doesn't dereference arguments.
 
 20000423-18:18 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	*fixed incorrect error when a public/private variable was
-	initialized with a codeblock using a local parameters
+      *fixed incorrect error when a public/private variable was
+      initialized with a codeblock using a local parameters
 
 20000423-15:57 GMT+1 Victor Szakats <info@szelvesz.hu>
 
@@ -44913,12 +44950,12 @@ NOTE: All source code HAVE TO be recompiled!
 
     *source/rtl/gtcrs/gtcrs.c
     *source/rtl/gtcrs/mousecrs.c
-	*fixed arrow keys under xterm
-	*added support for mouse under xterm
+      *fixed arrow keys under xterm
+      *added support for mouse under xterm
 
     *source/compiler/harbour.c
-	*fixed duplicated variable error when PARAMETER variable was
-	also declared as a MEMVAR variable
+      *fixed duplicated variable error when PARAMETER variable was
+      also declared as a MEMVAR variable
 
 20000422 08:20 gmt -3 Luiz Rafael Culik <culik@sl.conex.net>
 +contrib\libnf\getenvrn.c
@@ -51484,12 +51521,12 @@ NOTE:
 20000130-13:55 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.l
-	* fixed support for macro variables used in FOR statement
+      * fixed support for macro variables used in FOR statement
 
     *source/vm/hvm.c
-	* private variables created during a macro evaluation are not
-	released after a macro evaluation. They have the function/procedure
-	scope.
+      * private variables created during a macro evaluation are not
+        released after a macro evaluation. They have the function/procedure
+        scope.
 
 20000129-19:15 GMT+1 Victor Szel <info@szelvesz.hu>
   * bin/bld_tpl.*
@@ -51518,8 +51555,8 @@ NOTE:
 
     *source/compiler/harbour.l
     *source/compiler/harbour.y
-        * fixed support for STEP and TO keywords
-	* fixed GPF (core dump) if field variable is used in a codeblock
+      * fixed support for STEP and TO keywords
+      * fixed GPF (core dump) if field variable is used in a codeblock
 
 20000129-01:55 EST Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
@@ -51529,24 +51566,24 @@ NOTE:
 
     *source/macro/macro.l
     *source/compiler/harbour.l
-	* any nonstandard characters (ASCII < 32 and ASCII > 127) are
-	passed to grammar analyser instead of printing on stdout
+      * any nonstandard characters (ASCII < 32 and ASCII > 127) are
+      passed to grammar analyser instead of printing on stdout
 
     *include/hbexpr.c
     *source/macro/macro.c
     *source/compiler/expropt.c
-	* memory is released properly when more complex expression
-	is macro compiled eg. &( "1 + 2" ), &( ".T.:classname" )
+      * memory is released properly when more complex expression
+        is macro compiled eg. &( "1 + 2" ), &( ".T.:classname" )
 
     *source/debugger/debugger.prg
-	* added 'LOCAL nKey' to suppress warnings
+      * added 'LOCAL nKey' to suppress warnings
 
 20000128-20:3  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
    *source/rdd/dbcmd.c
    *source/rtl/arrays.c
-        *Enhaced the Docs
+     * Enhaced the Docs
    *doc/whatnew.txt
-        *Description of the program that extract documention from source code forget the OS2 and TROFF output
+     * Description of the program that extract documention from source code forget the OS2 and TROFF output
 20000115-20:3  GMT+3 Luiz Rafael Culik <culik@sl.conex.net>
 
    * ngdoc/ft_helpc.prg
@@ -51632,21 +51669,21 @@ NOTE:
 20000124-14:05 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/rtl/memoline.c
-	* fixed 'max' to 'HB_MAX_'
+      * fixed 'max' to 'HB_MAX_'
 
     *source/rtl/mlpos.c
-	* added RCS ID
+      * added RCS ID
 
     *source/rtl/Makefile
-	* added mlpos.c file
+      * added mlpos.c file
 
 20000124-13:30 GMT+1 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
     *source/macro/macro.c
-	* fixed support for the syntax:
-	    DO &var
-	    DO &( expression_list )
+      * fixed support for the syntax:
+          DO &var
+          DO &( expression_list )
 
 2000-01-23 22:03 GMT+1 Antonio Linares <alinares@fivetech.com>
    * source/debug/debugger.prg
@@ -54613,30 +54650,30 @@ Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-	* doc/tracing.txt: 
-	* include/hbtrace.h: 
-	* source/common/hbtrace.c: 
-	* source/pp/hbpp.c: 
-	* source/pp/hbppint.c: 
-	* source/pp/hbpplib.c: 
-	* source/pp/table.c: 
-	* source/pp/stdalone/hbpp.c: 
-	Changed the environment variables that enable tracing in Harbour,
-	and added a document explaining how to do tracing.
-	
-	* include/hbsetup.h: 
-	* source/rtl/gt/gtcrs.c: 
-	* source/rtl/gt/gtlin.c: 
-	* source/rtl/gtxxx.c: 
-	Changed the name for the curses-based GT implementation file to
-	gtcrs.c, leaving room for other linux-oriented implementations
-	such as s-lang, etc.
-	
-	* source/rtl/arrays.c: 
-	* source/rtl/fm.c: 
-	* source/rtl/gtapi.c: 
-	* source/rtl/inkey.c: 
-	Added/corrected a few calls to HB_TRACE().
+      * doc/tracing.txt: 
+      * include/hbtrace.h: 
+      * source/common/hbtrace.c: 
+      * source/pp/hbpp.c: 
+      * source/pp/hbppint.c: 
+      * source/pp/hbpplib.c: 
+      * source/pp/table.c: 
+      * source/pp/stdalone/hbpp.c: 
+        Changed the environment variables that enable tracing in Harbour,
+        and added a document explaining how to do tracing.
+
+      * include/hbsetup.h: 
+      * source/rtl/gt/gtcrs.c: 
+      * source/rtl/gt/gtlin.c: 
+      * source/rtl/gtxxx.c: 
+        Changed the name for the curses-based GT implementation file to
+        gtcrs.c, leaving room for other linux-oriented implementations
+        such as s-lang, etc.
+
+      * source/rtl/arrays.c: 
+      * source/rtl/fm.c: 
+      * source/rtl/gtapi.c: 
+      * source/rtl/inkey.c: 
+        Added/corrected a few calls to HB_TRACE().
 
 19991025-15:20 GMT+1 Victor Szel <info@szelvesz.hu>
    * tests/memory.prg
@@ -58739,29 +58776,29 @@ NOTE: You have to recompile all PRG sources!
 
     *include/errorapi.h
     *source/rtl/errorapi.c
-        * all hb_errRT*() functions return error code returned by
+      * all hb_errRT*() functions return error code returned by
         hb_errLaunch
-        * separated generic runtime error creation from error launching
+      * separated generic runtime error creation from error launching
 
     *include/extend.h
     *source/rtl/strings.c
-        + added hb_strncpyUpper( char *pDest, char *pSource, ULONG ulLen )
+      + added hb_strncpyUpper( char *pDest, char *pSource, ULONG ulLen )
         function to copy and convert to uppercase in one operation
 
     *source/rdd/dbcmd.c
-        * functions that select workarea can now retry the select operation
+      * functions that select workarea can now retry the select operation
         in case of error (the user code can open a missing database in a
         custom error handler)
 
     *source/vm/hvm.c
-	*added substitution possibility in case of invalid alias value
+      *added substitution possibility in case of invalid alias value
     
     *tests/working/rtl_test.prg
-        * failure description shows now function name and line number where
+      * failure description shows now function name and line number where
         failed code was used
 
     *include/external.ch
-        * added declaration of MEMVARBLOCK, __MVGET, __MVPUT
+      * added declaration of MEMVARBLOCK, __MVGET, __MVPUT
 
 19990912-07:43 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/vm/hvm.c
@@ -58825,15 +58862,15 @@ NOTE: You have to recompile all PRG sources!
 19990911-12:45 GMT+2 Ryszard Glab <rglab@imid.med.pl>
 
     *source/compiler/harbour.y
-	* changed binary search to linear search for abbreviations
-	or redefinitions of reserved functions
-	
+      * changed binary search to linear search for abbreviations
+        or redefinitions of reserved functions
+
     *source/rtl/math.c
-        * added generation of runtime errors in case of math errors
+      * added generation of runtime errors in case of math errors
         (log(0), sgrt(-2), etc) - for Watcom C only at this moment.
         'matherr' function is used to suppress printing of internal
         compiler message for math errors. I think we need rethink
-	the handling of such errors.
+        the handling of such errors.
 
     *source/rdd/dbcmd.c
     *include/rddapi.h

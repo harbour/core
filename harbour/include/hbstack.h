@@ -88,8 +88,8 @@ extern HB_STACK hb_stack;
 
 #endif
 
-extern HB_EXPORT HB_ITEM_PTR hb_stackSelfItem( void );  // returns Self object at C function level
-extern HB_EXPORT HB_ITEM_PTR hb_stackReturnItem( void );// returns RETURN Item from stack
+extern HB_EXPORT HB_ITEM_PTR hb_stackSelfItem( void );   /* returns Self object at C function level */
+extern HB_EXPORT HB_ITEM_PTR hb_stackReturnItem( void ); /* returns RETURN Item from stack */
 
 extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
 extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );

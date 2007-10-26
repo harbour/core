@@ -66,16 +66,20 @@
 #define INCL_NOPMAPI
 #define HB_OS_WIN_32_USED
 
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbset.h"
 #include "hbvm.h"
 #include "error.ch"
-#include <time.h>
 #if defined( HB_OS_UNIX )
-  #include <sys/times.h>
-  #include <unistd.h>
+   #ifndef __USE_POSIX199309
+      #define __USE_POSIX199309
+   #endif
+   #include <sys/times.h>
+   #include <unistd.h>
 #endif
+#include <time.h>
 
 /* list of background tasks 
  * A pointer into an array of pointers to items with a codeblock

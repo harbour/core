@@ -583,7 +583,8 @@ static int getClipKey( int nKey )
 }
 
 
-#if defined( OS_UNIX_COMPATIBLE )
+/* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
+#if defined( OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
 
 static void sig_handler( int iSigNo )
 {
@@ -2812,7 +2813,10 @@ static void hb_gt_trm_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    s_termState.hFilenoStderr = hFilenoStderr;
 
    hb_gt_trm_SetTerm();
-#ifdef OS_UNIX_COMPATIBLE
+
+/* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
+#if defined( OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
+
    if( s_termState.fStdinTTY )
    {
       struct sigaction act, old;

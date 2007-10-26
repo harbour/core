@@ -853,7 +853,7 @@ HB_EXPORT int hb_cdpcmp( const char* szFirst, ULONG ulLenFirst, const char* szSe
       {
          int j, nd1 = 0, nd2 = 0;
          PHB_MULTICHAR pmulti = cdpage->multi;
-         // printf( "\nhb_cdpcmp-1 %c %c",*szFirst,*szSecond );
+         /* printf( "\nhb_cdpcmp-1 %c %c",*szFirst,*szSecond ); */
          ul ++;
          for( j=0; j<cdpage->nMulti; j++,pmulti++ )
          {
@@ -883,14 +883,14 @@ HB_EXPORT int hb_cdpcmp( const char* szFirst, ULONG ulLenFirst, const char* szSe
          {
             n2 = (int)cdpage->s_chars[ ((int)(*szSecond))&255 ];
             iRet = ( nd1 < n2 )? -1 : 1;
-            // printf( "\nhb_cdpcmp-2 %d %d %d",iRet,nd1,n2 );
+            /* printf( "\nhb_cdpcmp-2 %d %d %d",iRet,nd1,n2 ); */
             break;
          }
          else if( !nd1 && nd2 )
          {
             n1 = (int)cdpage->s_chars[ ((int)(*szFirst))&255 ];
             iRet = ( n1 < nd2 )? -1 : 1;
-            // printf( "\nhb_cdpcmp-3 %d %d %d",iRet,n1,nd2 );
+            /* printf( "\nhb_cdpcmp-3 %d %d %d",iRet,n1,nd2 ); */
             break;
          }
          else if( nd1 && nd2 )
@@ -984,7 +984,7 @@ HB_EXPORT int hb_cdpicmp( const char* szFirst, ULONG ulLenFirst, const char* szS
       {
          int j, nd1 = 0, nd2 = 0;
          PHB_MULTICHAR pmulti = cdpage->multi;
-         // printf( "\nhb_cdpcmp-1 %c %c",*szFirst,*szSecond );
+         /* printf( "\nhb_cdpcmp-1 %c %c",*szFirst,*szSecond ); */
          ul ++;
          for( j=0; j<cdpage->nMulti; j++,pmulti++ )
          {
@@ -1010,14 +1010,14 @@ HB_EXPORT int hb_cdpicmp( const char* szFirst, ULONG ulLenFirst, const char* szS
          {
             n2 = (int)cdpage->s_chars[ u2 ];
             iRet = ( nd1 < n2 ) ? -1 : 1;
-            // printf( "\nhb_cdpcmp-2 %d %d %d",iRet,nd1,n2 );
+            /* printf( "\nhb_cdpcmp-2 %d %d %d",iRet,nd1,n2 ); */
             break;
          }
          else if( !nd1 && nd2 )
          {
             n1 = (int)cdpage->s_chars[ u1 ];
             iRet = ( n1 < nd2 ) ? -1 : 1;
-            // printf( "\nhb_cdpcmp-3 %d %d %d",iRet,n1,nd2 );
+            /* printf( "\nhb_cdpcmp-3 %d %d %d",iRet,n1,nd2 ); */
             break;
          }
          else if( nd1 && nd2 )

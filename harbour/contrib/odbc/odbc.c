@@ -415,7 +415,7 @@ HB_FUNC( SQLFETCHSC )
                               ( SHORT ) hb_parnl( 2 ), hb_parnl( 3 ) ) );
 }
 
-HB_FUNC( SQLERROR ) //  hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg
+HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @ cErrorClass, @ nType, @ cErrorMsg */
 {
    SQLINTEGER lError;
    SWORD      wLen;
@@ -464,7 +464,7 @@ HB_FUNC( SQLROWCOUN )
     hb_retni( wResult );
 }
 
-HB_FUNC( SQLGETINFO ) // hDbc, nType, @cResult
+HB_FUNC( SQLGETINFO ) /* hDbc, nType, @cResult */
 {
    BYTE bBuffer[ 512 ];
    SQLSMALLINT wLen;
@@ -474,19 +474,19 @@ HB_FUNC( SQLGETINFO ) // hDbc, nType, @cResult
    hb_retni( wResult );
 }
 
-HB_FUNC( SQLSETCONNECTOPTION ) // hDbc, nOption, uOption
+HB_FUNC( SQLSETCONNECTOPTION ) /* hDbc, nOption, uOption */
 {
    hb_retnl( ( LONG ) SQLSetConnectOption( ( HDBC ) hb_parnl( 1 ), ( UWORD ) hb_parnl( 2 ),
            ( UDWORD ) ISCHAR( 3 ) ? ( LONG ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
 }
 
-HB_FUNC( SQLSETSTMTOPTION ) // hStmt, nOption, uOption )  --> nRetCode
+HB_FUNC( SQLSETSTMTOPTION ) /* hStmt, nOption, uOption )  --> nRetCode */
 {
    hb_retnl( ( LONG ) SQLSetStmtOption( ( SQLHSTMT ) hb_parnl( 1 ), ( UWORD ) hb_parnl( 2 ),
            ( UDWORD ) ISCHAR( 3 ) ? ( LONG ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
 }
 
-HB_FUNC( SQLGETCONNECTOPTION ) // hDbc, nOption, @cOption
+HB_FUNC( SQLGETCONNECTOPTION ) /* hDbc, nOption, @cOption */
 {
    BYTE bBuffer[ 512 ];
    WORD wResult = SQLGetConnectOption( ( HDBC ) hb_parnl( 1 ), hb_parni( 2 ), bBuffer );
@@ -496,7 +496,7 @@ HB_FUNC( SQLGETCONNECTOPTION ) // hDbc, nOption, @cOption
    hb_retni( wResult );
 }
 
-HB_FUNC( SQLGETSTMTOPTION ) // hStmt, nOption, @cOption
+HB_FUNC( SQLGETSTMTOPTION ) /* hStmt, nOption, @cOption */
 {
    BYTE bBuffer[ 512 ];
    WORD wResult = SQLGetStmtOption( ( SQLHSTMT ) hb_parnl( 1 ), hb_parni( 2 ), bBuffer );
@@ -509,12 +509,12 @@ HB_FUNC( SQLGETSTMTOPTION ) // hStmt, nOption, @cOption
    hb_retni( wResult );
 }
 
-HB_FUNC( SQLCOMMIT ) // hEnv, hDbc
+HB_FUNC( SQLCOMMIT ) /* hEnv, hDbc */
 {
    hb_retni( SQLTransact( ( HENV ) hb_parnl( 1 ), ( HDBC ) hb_parnl( 2 ), SQL_COMMIT ) );
 }
 
-HB_FUNC( SQLROLLBACK )  // hEnv, hDbc
+HB_FUNC( SQLROLLBACK )  /* hEnv, hDbc */
 {
    hb_retni( SQLTransact( ( HENV ) hb_parnl( 1 ), ( HDBC ) hb_parnl( 2 ), SQL_ROLLBACK ) );
 }
@@ -598,7 +598,7 @@ HB_FUNC( SQLSTOD )
    }
 }
 
-HB_FUNC( SQLMORERESULTS ) // hEnv, hDbc
+HB_FUNC( SQLMORERESULTS ) /* hEnv, hDbc */
 {
    hb_retni( SQLMoreResults( ( SQLHSTMT ) hb_parnl( 1 ) ) );
 }

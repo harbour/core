@@ -20,8 +20,8 @@ HB_FUNC( HB_SYSLOGOPEN )
 {
    #if defined( HB_OS_WIN_32 )
       #if (WINVER >= 0x0400)
-      //Ok, we compiled under NT, but we must not use this function
-      // when RUNNING on a win98.
+      /* Ok, we compiled under NT, but we must not use this function
+         when RUNNING on a win98. */
       if( hb_iswinnt() )
       {
          s_RegHandle = RegisterEventSource(NULL, (LPCTSTR) hb_parcx(1));
@@ -83,15 +83,15 @@ HB_FUNC( HB_SYSLOGMESSAGE )
             default:
                logval = EVENTLOG_AUDIT_SUCCESS;
          }
-         hb_retl( ReportEvent(s_RegHandle,         // event log handle
-                              logval,              // event type
-                              0,                   // category zero
-                              (DWORD) hb_parnl(3), // event identifier
-                              NULL,                // no user security identifier
-                              1,                   // one substitution string
-                              0,                   // no data
-                              (LPCTSTR *) &lpMsg,  // pointer to string array
-                              NULL                 // pointer to data
+         hb_retl( ReportEvent(s_RegHandle,         /* event log handle */
+                              logval,              /* event type */
+                              0,                   /* category zero */
+                              (DWORD) hb_parnl(3), /* event identifier */
+                              NULL,                /* no user security identifier */
+                              1,                   /* one substitution string */
+                              0,                   /* no data */
+                              (LPCTSTR *) &lpMsg,  /* pointer to string array */
+                              NULL                 /* pointer to data */
                              ) ? TRUE : FALSE );
          HB_TCHAR_FREE( lpMsg );
       }

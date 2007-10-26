@@ -141,6 +141,9 @@ HB_FILE_VER( "$Id$" )
 
 #elif defined(HB_OS_UNIX)
 
+   #ifndef __USE_BSD
+      #define __USE_BSD
+   #endif
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <fcntl.h>

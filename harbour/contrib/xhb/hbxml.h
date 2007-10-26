@@ -133,8 +133,8 @@ typedef enum
    MXML_TYPE_PI,
    MXML_TYPE_DIRECTIVE,
    MXML_TYPE_DATA,
-   MXML_TYPE_CDATA,   // Used for <![CDATA[ nodes
-   MXML_TYPE_DOCUMENT   // used for document level root node
+   MXML_TYPE_CDATA,     /* Used for <![CDATA[ nodes */
+   MXML_TYPE_DOCUMENT   /* used for document level root node */
 } MXML_NODE_TYPE;
 
 /* Refil function */
@@ -153,27 +153,27 @@ typedef void (*MXML_OUTPUT_FUNC)( struct tag_mxml_output *out, char *data, int l
 
 typedef struct tag_mxml_refil
 {
-   // status variables
+   /* status variables */
    MXML_STATUS status;
    MXML_ERROR_CODE error;
 
-   // buffer for reading data
+   /* buffer for reading data */
    unsigned char *buffer;
-   int bufsize;  // size of the whole buffer
-   int buflen;   // valid characters in the current buffer
-   int bufpos;   // current position
+   int bufsize;  /* size of the whole buffer */
+   int buflen;   /* valid characters in the current buffer */
+   int bufpos;   /* current position */
 
-   // lenght of the stream for implementing progress indicators
+   /* lenght of the stream for implementing progress indicators */
    LONG streampos;
    LONG streamlen;
 
-   // callback funcs
+   /* callback funcs */
    MXML_REFIL_FUNC refil_func;
 
-   // ungetc implementation
+   /* ungetc implementation */
    int sparechar;
 
-   // data available for callback functions
+   /* data available for callback functions */
    union
    {
       FHANDLE hFile;
@@ -185,18 +185,18 @@ typedef struct tag_mxml_refil
 
 typedef struct tag_mxml_output
 {
-   // status variables
+   /* status variables */
    MXML_STATUS status;
    MXML_ERROR_CODE error;
 
-   // output operation
+   /* output operation */
    MXML_OUTPUT_FUNC  output_func;
 
-   // data to implement progress indicators
+   /* data to implement progress indicators */
    int node_count;
    int node_done;
 
-   // data available for callback functions
+   /* data available for callback functions */
    union
    {
       FHANDLE hFile;

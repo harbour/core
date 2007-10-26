@@ -56,12 +56,12 @@
 #include "hbapiitm.h"
 #include "hbapigt.h"
 
-#define ST_ROW       1     // Status item display row
-#define ST_COL       2     // Status item display column
-#define ST_COLOR     3     // Status item color
-#define ST_CURRENT   4     // Status item current position in aDisplay
+#define ST_ROW       1     /* Status item display row */
+#define ST_COL       2     /* Status item display column */
+#define ST_COLOR     3     /* Status item color */
+#define ST_CURRENT   4     /* Status item current position in aDisplay */
 
-#define ST_LEN       ST_CURRENT  // Length of status array
+#define ST_LEN       ST_CURRENT  /* Length of status array */
 
 /* StatusNew( [<nRow>], [<nCol>], [<cColor>] ) --> <aStat>
 */

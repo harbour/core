@@ -376,12 +376,15 @@ static int getClipKey( int nKey )
 
 static void set_sig_handler( int iSig )
 {
+   /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
+#if defined( SA_NOCLDSTOP )
    struct sigaction act;
 
    sigaction( iSig, 0, &act );
    act.sa_handler = sig_handler;
    act.sa_flags = SA_RESTART | ( iSig == SIGCHLD ? SA_NOCLDSTOP : 0 );
    sigaction( iSig, &act, 0 );
+#endif
 }
 
 #if 1

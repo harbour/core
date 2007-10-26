@@ -54,7 +54,7 @@
 #include "hbapiitm.h"
 #include "hbapigt.h"
 
-// Box array definitions
+/* Box array definitions */
 #define B_TOP           1
 #define B_LEFT          2
 #define B_BOTTOM        3
@@ -200,7 +200,7 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
 
    if( hb_arrayGetL( pArray, B_DISPLAYNUM ) )
    {
-//    sprintf( szPct, "%3.0f\%", fPercent * 100 );
+      /* sprintf( szPct, "%3.0f\%", fPercent * 100 ); */
       sprintf( szPct, "%3.0f%%", fPercent * 100 );
       hb_gtWriteAt( (USHORT) hb_arrayGetNL( pArray, B_TOP ),
                     (USHORT) iCenter + 2, (BYTE *) szPct, 4 );

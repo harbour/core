@@ -374,7 +374,7 @@ static BOOL hb_regex( int iRequest )
             do
             {
                /* If I want all matches */
-               if( iGetMatch == 0 || // Check boundaries
+               if( iGetMatch == 0 || /* Check boundaries */
                    ( iGetMatch < 0 || iGetMatch > iMatches ) )
                {
                   pAtxArray = hb_itemArrayNew( iMatches );

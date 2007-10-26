@@ -598,8 +598,8 @@ HB_FUNC( WIN32_SETPEN )
    HPEN hPen = CreatePen( hb_parni( 2 ),        // pen style
                           hb_parni( 3 ),        // pen width
                           ( COLORREF ) hb_parnl( 4 )    // pen color
-       );
-   HPEN hOldPen = SelectObject( hDC, hPen );
+                        );
+   HPEN hOldPen = ( HPEN ) SelectObject( hDC, hPen );
 
    if( hOldPen )
       DeleteObject( hOldPen );

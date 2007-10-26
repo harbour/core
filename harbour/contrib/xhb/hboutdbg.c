@@ -189,7 +189,7 @@ HB_FUNC( HB_OUTDEBUG )
          if ( iPid == s_iXtermPid || iPid == -1 )
          {
             s_iXtermPid = 0;
-            //close( s_iDebugFd );
+            /* close( s_iDebugFd ); */
             s_iDebugFd = 0;
             return;
          }
@@ -198,7 +198,7 @@ HB_FUNC( HB_OUTDEBUG )
       if ( s_iDebugFd > 0 && ISCHAR(1) )
       {
          fd_set wrds;
-         struct timeval tv = { 0, 100000 }; // wait each time a tenth of second
+         struct timeval tv = { 0, 100000 }; /* wait each time a tenth of second */
          FD_ZERO(&wrds);
          FD_SET(s_iDebugFd, &wrds);
 

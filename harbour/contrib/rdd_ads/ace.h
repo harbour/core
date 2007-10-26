@@ -1,3 +1,4 @@
+/*
 // Copyright (c) 2002-2003 Extended Systems, Inc.  ALL RIGHTS RESERVED.
 //
 // This source code can be used, modified, or copied by the licensee as long as
@@ -17,7 +18,7 @@
 // cost of servicing or repair. No oral or written information or advice given
 // by an Extended Systems Inc. representative shall create a warranty or in any
 // way increase the scope of this warranty.
-
+*/
 /*******************************************************************************
 * Source File  : ace.h
 * Description  : This is the main header file for the Advantage Client
@@ -51,7 +52,7 @@
    #define WINAPI   /* nothing */
    #define FARPROC  void*
    #define HWND     void*
-#endif  // ADS_LINUX && ACE
+#endif  /* ADS_LINUX && ACE */
 
 
 #ifdef ADS_LINUX
@@ -169,8 +170,8 @@
 #define ADS_TABLE_PERM_DELETE             0x00000080
 #define ADS_REINDEX_ON_COLLATION_MISMATCH 0x00000100
 #define ADS_IGNORE_COLLATION_MISMATCH     0x00000200
-//#define unpublished                     0x00000400
-//#define unpublished                     0x00000800
+/* #define unpublished                    0x00000400 */
+/* #define unpublished                    0x00000800 */
 #define ADS_DICTIONARY_BOUND_TABLE        0x00001000
 
 
@@ -184,11 +185,11 @@
 #define ADS_USER_DEFINED         0x00000010
 
 /* Options specifically for FTS indexes */
-#define ADS_FTS_INDEX            0x00000020      // This is implied for AdsCreateFTSIndex
-#define ADS_FTS_FIXED            0x00000040      // Do not maintain the index with record updates
-#define ADS_FTS_CASE_SENSITIVE   0x00000080      // Make the index case sensitive
-#define ADS_FTS_KEEP_SCORE       0x00000100      // Track word counts in the index for faster SCORE()
-#define ADS_FTS_PROTECT_NUMBERS  0x00000200      // Don't break numbers on commas and periods
+#define ADS_FTS_INDEX            0x00000020      /* This is implied for AdsCreateFTSIndex */
+#define ADS_FTS_FIXED            0x00000040      /* Do not maintain the index with record updates */
+#define ADS_FTS_CASE_SENSITIVE   0x00000080      /* Make the index case sensitive */
+#define ADS_FTS_KEEP_SCORE       0x00000100      /* Track word counts in the index for faster SCORE() */
+#define ADS_FTS_PROTECT_NUMBERS  0x00000200      /* Don't break numbers on commas and periods */
 
 
 /* Options for returning string values */
@@ -1021,84 +1022,84 @@ typedef struct _ADD_FIELD_DESC_
 #ifdef WINAPI
 typedef UNSIGNED32 (WINAPI *STORED_PROCEDURE_PTR)
 (
-   UNSIGNED32  ulConnectionID, // (I) value used to associate a user/connection
-                               //     and can be used to track the state
-   UNSIGNED8   *pucUserName,   // (I) the user name who invoked this procedure
-   UNSIGNED8   *pucPassword,   // (I) the user's password in encrypted form
-   UNSIGNED8   *pucProcName,   // (I) the stored procedure name
-   UNSIGNED32  ulRecNum,       // (I) reserved for triggers
-   UNSIGNED8   *pucTable1,     // (I) table one.  For Stored Proc this table
-                               //     contains all input parameters.  For
-                               //     triggers, it contains the original field
-                               //     values if the trigger is an OnUpdate or
-                               //     OnDelete
-   UNSIGNED8   *pucTable2      // (I) table two.  For Stored Proc this table
-                               //     is empty and the users function will
-                               //     optionally add rows to it as output.
-                               //     For triggers, it contains the new field
-                               //     values if the trigger is an OnUpdate or
-                               //     OnInsert
+   UNSIGNED32  ulConnectionID, /* (I) value used to associate a user/connection
+                                      and can be used to track the state */
+   UNSIGNED8   *pucUserName,   /* (I) the user name who invoked this procedure */
+   UNSIGNED8   *pucPassword,   /* (I) the user's password in encrypted form */
+   UNSIGNED8   *pucProcName,   /* (I) the stored procedure name */
+   UNSIGNED32  ulRecNum,       /* (I) reserved for triggers */
+   UNSIGNED8   *pucTable1,     /* (I) table one.  For Stored Proc this table
+                                      contains all input parameters.  For
+                                      triggers, it contains the original field
+                                      values if the trigger is an OnUpdate or
+                                      OnDelete */
+   UNSIGNED8   *pucTable2      /* (I) table two.  For Stored Proc this table
+                                      is empty and the users function will
+                                      optionally add rows to it as output.
+                                      For triggers, it contains the new field
+                                      values if the trigger is an OnUpdate or
+                                      OnInsert */
 );
 
 
 typedef UNSIGNED32 (WINAPI *STARTUP_PROCEDURE_PTR)
 (
-   UNSIGNED32  ulConnectionID, // (I) value used to associate a user/connection
-                               //     and can be used to track the state
-   UNSIGNED8   *pucUserName,   // (I) the user name who invoked this procedure
-   UNSIGNED8   *pucPassword   // (I) the user's password in encrypted form
+   UNSIGNED32  ulConnectionID, /* (I) value used to associate a user/connection
+                                      and can be used to track the state */
+   UNSIGNED8   *pucUserName,   /* (I) the user name who invoked this procedure */
+   UNSIGNED8   *pucPassword    /* (I) the user's password in encrypted form */
 );
 
 
 typedef UNSIGNED32 (WINAPI *SHUTDOWN_PROCEDURE_PTR)
 (
-   UNSIGNED32  ulConnectionID, // (I) value used to associate a user/connection
-                               //     and can be used to track the state
-   UNSIGNED8   *pucUserName,   // (I) the user name who invoked this procedure
-   UNSIGNED8   *pucPassword    // (I) the user's password in encrypted form
+   UNSIGNED32  ulConnectionID, /* (I) value used to associate a user/connection
+                                      and can be used to track the state */
+   UNSIGNED8   *pucUserName,   /* (I) the user name who invoked this procedure */
+   UNSIGNED8   *pucPassword    /* (I) the user's password in encrypted form */
 );
 
 
 typedef UNSIGNED32 (WINAPI *STORED_PROCEDURE2_PTR)
 (
-   UNSIGNED32  ulConnectionID,        // (I) value used to associate a user/connection
-                                      //     and can be used to track the state
-   ADSHANDLE   hConnection,           // (I) active connection to be used by the procedure
-   UNSIGNED32  *pulNumRowsAffected    // (O) the number of rows affected
+   UNSIGNED32  ulConnectionID,        /* (I) value used to associate a user/connection
+                                             and can be used to track the state */
+   ADSHANDLE   hConnection,           /* (I) active connection to be used by the procedure */
+   UNSIGNED32  *pulNumRowsAffected    /* (O) the number of rows affected */
 );
 
 
 typedef UNSIGNED32 (WINAPI *STARTUP_PROCEDURE2_PTR)
 (
-   UNSIGNED32  ulConnectionID, // (I) value used to associate a user/connection
-                               //     and can be used to track the state
-   ADSHANDLE   hConnection     // (I) active connection to be used by the procedure
+   UNSIGNED32  ulConnectionID, /* (I) value used to associate a user/connection
+                                      and can be used to track the state */
+   ADSHANDLE   hConnection     /* (I) active connection to be used by the procedure */
 );
 
 
 typedef UNSIGNED32 (WINAPI *SHUTDOWN_PROCEDURE2_PTR)
 (
-   UNSIGNED32  ulConnectionID, // (I) value used to associate a user/connection
-                               //     and can be used to track the state
-   ADSHANDLE   hConnection     // (I) active connection to be used by the procedure
+   UNSIGNED32  ulConnectionID, /* (I) value used to associate a user/connection
+                                      and can be used to track the state */
+   ADSHANDLE   hConnection     /* (I) active connection to be used by the procedure */
 );
 
 
 typedef UNSIGNED32 (WINAPI *TRIGGER_FUNCTION_PTR)
 (
-   UNSIGNED32  ulConnectionID,  // (I) Unique ID identifying the user causing this trig
-   ADSHANDLE   hConnection,     // (I) Active ACE connection handle user can perform
-                                //     operations on
-   UNSIGNED8   *pucTriggerName, // (I) Name of trigger in the dictionary
-   UNSIGNED8   *pucTableName,   // (I) Name of the base table that caused the trigger
-   UNSIGNED32  ulEventType,     // (I) Flag with event type (insert, update, etc.)
-   UNSIGNED32  ulTriggerType,   // (I) Flag with trigger type (before, after, etc.)
-   UNSIGNED32  ulRecNo          // (I) Record number of the record being modified
+   UNSIGNED32  ulConnectionID,  /* (I) Unique ID identifying the user causing this trig */
+   ADSHANDLE   hConnection,     /* (I) Active ACE connection handle user can perform
+                                       operations on */
+   UNSIGNED8   *pucTriggerName, /* (I) Name of trigger in the dictionary */
+   UNSIGNED8   *pucTableName,   /* (I) Name of the base table that caused the trigger */
+   UNSIGNED32  ulEventType,     /* (I) Flag with event type (insert, update, etc.) */
+   UNSIGNED32  ulTriggerType,   /* (I) Flag with trigger type (before, after, etc.) */
+   UNSIGNED32  ulRecNo          /* (I) Record number of the record being modified */
 );
 
 typedef UNSIGNED32 (WINAPI *GET_INTERFACE_VERSION_PTR)();
 
-#endif // WINAPI
+#endif /* WINAPI */
 
 /*
  * This macro allows a numeric field value to be passed into functions
@@ -1116,7 +1117,7 @@ typedef UNSIGNED32 (WINAPI *GET_INTERFACE_VERSION_PTR)();
 #endif
 
 #if defined( NLM ) || defined( ADS_LINUX )
-   #if !defined( SNAPDUMP )      // Snapdump is now built as a WIN32 app so WINAPI is defined
+   #if !defined( SNAPDUMP )      /* Snapdump is now built as a WIN32 app so WINAPI is defined */
       #define WINAPI   /* nothing */
    #endif
 #endif

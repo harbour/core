@@ -1844,7 +1844,7 @@ HB_FUNC( HB_BTREECLOSE )  /* hb_BTreeClose( hb_BTree_Handle ) -> NIL */
 HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG lData | ANY xData ) -> lSuccess */
 {
   struct hb_BTree * pBTree = BTree_GetTreeIndex( "hb_btreeinsert" );
-  //PHB_ITEM pKeyCode = hb_param( 1, HB_IT_NUMERIC );
+  /* PHB_ITEM pKeyCode = hb_param( 1, HB_IT_NUMERIC ); */
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( ISNUM( 1 ) && ISCHAR( 2 ) && ( hb_pcount() == 2 || GETFLAG( pBTree, IsInMemory ) || ISNUM( 3 ) ) )

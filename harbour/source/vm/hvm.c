@@ -627,7 +627,8 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
       if( ! --uiPolls )
       {
          hb_inkeyPoll();
-         //uiPolls = 255;
+         /* uiPolls = 255; */
+
          /* IMHO we should have a _SET_ controlled by user
           * sth like:
 

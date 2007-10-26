@@ -184,11 +184,24 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
       {
          hb_strncpy( ( char * ) pszName, ( char * ) pszDir, _POSIX_PATH_MAX );
       }
-      else if( !fsGetTempDirByCase( pszName, getenv( "TMPDIR" ) ) &&
-               !fsGetTempDirByCase( pszName, P_tmpdir ) )
+      else
       {
-         hb_strncpy( ( char * ) pszName, ".", _POSIX_PATH_MAX );
+         char * pszTmpDir = hb_getenv( "TMPDIR" );
+
+         if( !fsGetTempDirByCase( pszName, pszTmpDir ) )
+         {
+#ifdef P_tmpdir
+            if( !fsGetTempDirByCase( pszName, P_tmpdir ) )
+#endif
+            {
+               pszName[0] = '.';
+               pszName[1] = '\0';
+            }
+         }
+         if( pszTmpDir )
+            hb_xfree( pszTmpDir );
       }
+
       if( pszName[0] != '\0' )
       {
          int len;

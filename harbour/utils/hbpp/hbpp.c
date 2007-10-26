@@ -148,7 +148,7 @@ int main( int argc, char * argv[] )
                     {
                        szDefText[ pAssign - szDefText ] = '\0';
 
-                       //hb_pp_AddDefine_( szDefText,  pAssign + 1 );
+                       /* hb_pp_AddDefine_( szDefText,  pAssign + 1 ); */
                        sDefLine = hb_xstrcpy( NULL, szDefText, " ", pAssign + 1, NULL );
                        hb_pp_ParseDefine_( sDefLine );
                        hb_xfree( sDefLine );

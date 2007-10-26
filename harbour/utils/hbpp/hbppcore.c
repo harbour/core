@@ -2812,7 +2812,7 @@ static int getExpReal( char *expreal, char **ptri, BOOL prlist, int maxrez, BOOL
 
                if( State == STATE_ID )
                {
-                  // Prefix ONLY when lens == 0 (2) oterwise MUST be a postfix.
+                  /* Prefix ONLY when lens == 0 (2) oterwise MUST be a postfix. */
                   if( lens == 2 )
                   {
                      while( **ptri == ' ' && lens < maxrez )

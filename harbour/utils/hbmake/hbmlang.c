@@ -135,7 +135,7 @@ HB_FUNC(GETUSERLANG)
 #include "hbapiitm.h"
 #include "hbapigt.h"
 
-// Box array definitions
+/* Box array definitions */
 #define B_TOP           1
 #define B_LEFT          2
 #define B_BOTTOM        3

@@ -195,7 +195,7 @@ HB_FUNC( _MGET_DOUBLESPEED )
    hb_retni( iSpeed );
 }
 
-HB_FUNC( _MSET_SENSITIVE ) //nHoriz,nVert,nDouble)
+HB_FUNC( _MSET_SENSITIVE ) /* nHoriz,nVert,nDouble) */
 {
 #if defined(HB_OS_DOS)
    {
@@ -209,7 +209,7 @@ HB_FUNC( _MSET_SENSITIVE ) //nHoriz,nVert,nDouble)
 #endif
 }
 
-HB_FUNC( _MSE_CONOFF ) //nTop*8,nLeft*8,nBotton*8,nRight*8)
+HB_FUNC( _MSE_CONOFF ) /* nTop*8,nLeft*8,nBotton*8,nRight*8) */
 {
 #if defined(HB_OS_DOS)
    {

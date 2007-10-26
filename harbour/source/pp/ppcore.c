@@ -922,7 +922,9 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                       * word concatenation which is not Clipper compatible and
                       * will break code like:
                       */
+#if 0
                       //   if /**/lVar; endif
+#endif
                      pState->iSpacesMin = 1;
                      ++ul;
                   }

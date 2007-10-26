@@ -6822,7 +6822,7 @@ HB_FUNC( BM_DBSETFILTERARRAY )
             for ( ulPos = 1; ulPos <= hb_arrayLen( pArray ); ulPos++ )
                 BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ulRecCount, (ULONG) hb_arrayGetNL( pArray, ulPos ) );
             pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
-            if ( pTag ) // Con índice activo
+            if ( pTag ) /* Con índice activo */
                 CURKEY_SETLOGCNT( pTag, (hb_arrayLen( pArray )) )
        }
        else
@@ -6851,7 +6851,7 @@ HB_FUNC( BM_DBSETFILTERARRAYADD )
                      ulAdd++;
                  }
              pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
-             if ( pTag ) // Con índice activo
+             if ( pTag ) /* Con índice activo */
                  CURKEY_SETLOGCNT( pTag, (pTag->logKeyCount + ulAdd) )
         }
         else
@@ -6880,7 +6880,7 @@ HB_FUNC( BM_DBSETFILTERARRAYDEL )
                     ulDel++;
                 }
             pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
-            if ( pTag ) // Con índice activo
+            if ( pTag ) /* Con índice activo */
                 CURKEY_SETLOGCNT( pTag, pTag->logKeyCount - ulDel )
        }
        else
@@ -7216,7 +7216,7 @@ static ERRCODE hb_cdxAppend( CDXAREAP pArea, BOOL bUnLockAll )
                 LPCDXTAG pTag;
                 BM_SetBit( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->Size, ulRecCount );
                 pTag = hb_cdxGetActiveTag( (CDXAREAP) pArea );
-                if ( pTag && CURKEY_LOGCNT(pTag) ) // Con índice activo
+                if ( pTag && CURKEY_LOGCNT(pTag) ) /* Con índice activo */
                     CURKEY_SETLOGCNT( pTag, (pTag)->logKeyCount + 1 )
             }
             else
@@ -9052,7 +9052,7 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
 static ERRCODE hb_cdxClearFilter( CDXAREAP pArea )
 {
    hb_cdxClearLogPosInfo( pArea );
-   // Limpiamos filtro tipo array
+   /* Limpiamos filtro tipo array */
    if ( pArea->dbfi.lpvCargo )
    {
         hb_xfree( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap );
@@ -9109,7 +9109,7 @@ static ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo )
         ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap = (ULONG *) hb_xgrab( sizeof(ULONG) * (((ulRecCount+1) >> 5) + 1 ) );
         memset( ( ( LPBM_FILTER ) pArea->dbfi.lpvCargo)->rmap, 0, sizeof(ULONG) * (((ulRecCount+1) >> 5) + 1 ) );
 
-        if ( pTag ) // with active index
+        if ( pTag ) /* with active index */
         {
             if ( FAST_GOCOLD( ( AREAP ) pArea ) == FAILURE )
                return FAILURE;

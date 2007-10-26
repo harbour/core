@@ -380,7 +380,7 @@ HB_FUNC( HB_FREADANDSKIP )
 
    offset[area] = offset[area] + x;
    recno[area] += 1;
-   // See if there's more to read
+   /* See if there's more to read */
    if ( !isEof[area] )
       isEof[area] = (lastbyte[area] <= offset[area] + 1) ;
 
