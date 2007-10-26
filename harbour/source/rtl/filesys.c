@@ -292,7 +292,7 @@ static BOOL s_fUseWaitLocks = TRUE;
       #endif
    #endif
 
-HANDLE DostoWinHandle( FHANDLE fHandle )
+static HANDLE DosToWinHandle( FHANDLE fHandle )
 {
    HANDLE hHandle = (HANDLE) LongToHandle( fHandle );
 
@@ -525,12 +525,12 @@ static int convert_seek_flags( USHORT uiFlags )
  * FILESYS.API FUNCTIONS --
  */
 
-HB_EXPORT FHANDLE  hb_fsGetOsHandle( FHANDLE hFileHandle )
+HB_EXPORT FHANDLE hb_fsGetOsHandle( FHANDLE hFileHandle )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsGetOsHandle(%p)", hFileHandle));
 
 #if defined(HB_WIN32_IO)
-   return ( FHANDLE ) DostoWinHandle( hFileHandle );
+   return ( FHANDLE ) DosToWinHandle( hFileHandle );
 #else
    return hFileHandle;
 #endif
@@ -810,7 +810,7 @@ HB_EXPORT void hb_fsClose( FHANDLE hFileHandle )
 #if defined(HB_FS_FILE_IO)
 
    #if defined(HB_WIN32_IO)
-      hb_fsSetIOError( CloseHandle( DostoWinHandle( hFileHandle ) ), 0 );
+      hb_fsSetIOError( CloseHandle( DosToWinHandle( hFileHandle ) ), 0 );
    #else
       hb_fsSetIOError( close( hFileHandle ) == 0, 0 );
    #endif
@@ -822,7 +822,7 @@ HB_EXPORT void hb_fsClose( FHANDLE hFileHandle )
 #endif
 }
 
-HB_EXPORT BOOL    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
+HB_EXPORT BOOL hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetDevMode(%p, %hu)", hFileHandle, uiDevMode));
 
@@ -899,7 +899,7 @@ HB_EXPORT BOOL    hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 #endif
 }
 
-HB_EXPORT USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
+HB_EXPORT USHORT hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 {
    USHORT uiRead;
 
@@ -912,7 +912,7 @@ HB_EXPORT USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
          DWORD dwRead ;
          BOOL fResult;
 
-         fResult = ReadFile( DostoWinHandle(hFileHandle), pBuff, (DWORD)uiCount, &dwRead, NULL );
+         fResult = ReadFile( DosToWinHandle(hFileHandle), pBuff, (DWORD)uiCount, &dwRead, NULL );
          hb_fsSetIOError( fResult, 0 );
 
          uiRead = fResult ? ( USHORT ) dwRead : 0;
@@ -935,7 +935,7 @@ HB_EXPORT USHORT  hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
    return uiRead;
 }
 
-HB_EXPORT USHORT  hb_fsWrite( FHANDLE hFileHandle, const BYTE * pBuff, USHORT uiCount )
+HB_EXPORT USHORT hb_fsWrite( FHANDLE hFileHandle, const BYTE * pBuff, USHORT uiCount )
 {
    USHORT uiWritten;
 
@@ -950,12 +950,12 @@ HB_EXPORT USHORT  hb_fsWrite( FHANDLE hFileHandle, const BYTE * pBuff, USHORT ui
 
          if ( uiCount )
          {
-             fResult = WriteFile( DostoWinHandle(hFileHandle), pBuff, uiCount, &dwWritten, NULL );
+             fResult = WriteFile( DosToWinHandle(hFileHandle), pBuff, uiCount, &dwWritten, NULL );
          }
          else
          {
              dwWritten = 0;
-             fResult = SetEndOfFile( DostoWinHandle(hFileHandle) );
+             fResult = SetEndOfFile( DosToWinHandle(hFileHandle) );
          }
          hb_fsSetIOError( fResult, 0 );
 
@@ -1004,7 +1004,7 @@ HB_EXPORT ULONG hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount
 
    #if defined(HB_WIN32_IO)
    {
-      hb_fsSetIOError( ReadFile( DostoWinHandle(hFileHandle),
+      hb_fsSetIOError( ReadFile( DosToWinHandle(hFileHandle),
                                  pBuff, ulCount, &ulRead, NULL ), 0 );
    }
    #elif defined(HB_FS_LARGE_OPTIMIZED)
@@ -1079,11 +1079,11 @@ HB_EXPORT ULONG hb_fsWriteLarge( FHANDLE hFileHandle, const BYTE * pBuff, ULONG 
       ulWritten = 0;
       if( ulCount )
       {
-         hb_fsSetIOError( WriteFile( DostoWinHandle( hFileHandle), pBuff, ulCount, &ulWritten, NULL ), 0 );
+         hb_fsSetIOError( WriteFile( DosToWinHandle( hFileHandle), pBuff, ulCount, &ulWritten, NULL ), 0 );
       }
       else
       {
-         hb_fsSetIOError( SetEndOfFile( DostoWinHandle(hFileHandle) ), 0 );
+         hb_fsSetIOError( SetEndOfFile( DosToWinHandle(hFileHandle) ), 0 );
       }
    }
    #else
@@ -1172,7 +1172,7 @@ HB_EXPORT void hb_fsCommit( FHANDLE hFileHandle )
 #if defined(HB_OS_WIN_32)
    {
       #if defined(HB_WIN32_IO)
-         hb_fsSetIOError( FlushFileBuffers( ( HANDLE ) DostoWinHandle( hFileHandle ) ), 0 );
+         hb_fsSetIOError( FlushFileBuffers( ( HANDLE ) DosToWinHandle( hFileHandle ) ), 0 );
       #else
          #if defined(__WATCOMC__)
             hb_fsSetIOError( fsync( hFileHandle ) == 0, 0 );
@@ -1236,8 +1236,8 @@ HB_EXPORT void hb_fsCommit( FHANDLE hFileHandle )
 #endif
 }
 
-HB_EXPORT  BOOL hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
-                      ULONG ulLength, USHORT uiMode )
+HB_EXPORT BOOL hb_fsLock( FHANDLE hFileHandle, ULONG ulStart,
+                          ULONG ulLength, USHORT uiMode )
 {
    BOOL bResult;
 
@@ -1259,11 +1259,11 @@ HB_EXPORT  BOOL hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
             {
                dwFlags |= LOCKFILE_FAIL_IMMEDIATELY ;
             }
-            bResult = LockFileEx( DostoWinHandle( hFileHandle ), dwFlags, 0, ulLength, 0, &sOlap );
+            bResult = LockFileEx( DosToWinHandle( hFileHandle ), dwFlags, 0, ulLength, 0, &sOlap );
          }
          else
          {
-             bResult = LockFile( DostoWinHandle( hFileHandle ), ulStart, 0, ulLength,0 );
+             bResult = LockFile( DosToWinHandle( hFileHandle ), ulStart, 0, ulLength,0 );
          }
          break;
       }
@@ -1274,11 +1274,11 @@ HB_EXPORT  BOOL hb_fsLock   ( FHANDLE hFileHandle, ULONG ulStart,
             OVERLAPPED sOlap ;
             memset( &sOlap, 0, sizeof( OVERLAPPED ) ) ;
             sOlap.Offset = ( ULONG ) ulStart ;
-            bResult = UnlockFileEx( DostoWinHandle( hFileHandle ), 0, ulLength,0, &sOlap );
+            bResult = UnlockFileEx( DosToWinHandle( hFileHandle ), 0, ulLength,0, &sOlap );
          }
          else
          {
-            bResult = UnlockFile( DostoWinHandle( hFileHandle ), ulStart, 0, ulLength,0 );
+            bResult = UnlockFile( DosToWinHandle( hFileHandle ), ulStart, 0, ulLength,0 );
          }
          break;
 
@@ -1458,12 +1458,12 @@ HB_EXPORT BOOL hb_fsLockLarge( FHANDLE hFileHandle, HB_FOFFSET ulStart,
                sOlap.Offset = dwOffsetLo;
                sOlap.OffsetHigh = dwOffsetHi;
 
-               bResult = LockFileEx( DostoWinHandle( hFileHandle ), dwFlags, 0,
+               bResult = LockFileEx( DosToWinHandle( hFileHandle ), dwFlags, 0,
                                      dwLengthLo, dwLengthHi, &sOlap );
             }
             else
             {
-               bResult = LockFile( DostoWinHandle( hFileHandle ),
+               bResult = LockFile( DosToWinHandle( hFileHandle ),
                                    dwOffsetLo, dwOffsetHi,
                                    dwLengthLo, dwLengthHi );
             }
@@ -1478,12 +1478,12 @@ HB_EXPORT BOOL hb_fsLockLarge( FHANDLE hFileHandle, HB_FOFFSET ulStart,
                sOlap.Offset = dwOffsetLo;
                sOlap.OffsetHigh = dwOffsetHi;
 
-               bResult = UnlockFileEx( DostoWinHandle( hFileHandle ), 0,
+               bResult = UnlockFileEx( DosToWinHandle( hFileHandle ), 0,
                                        dwLengthLo, dwLengthHi, &sOlap );
             }
             else
             {
-               bResult = UnlockFile( DostoWinHandle( hFileHandle ),
+               bResult = UnlockFile( DosToWinHandle( hFileHandle ),
                                      dwOffsetLo, dwOffsetHi,
                                      dwLengthLo, dwLengthHi );
             }
@@ -1587,13 +1587,13 @@ HB_EXPORT ULONG hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
       }
       else
       {
-         ulPos = (DWORD) SetFilePointer( DostoWinHandle(hFileHandle), lOffset, NULL, (DWORD)Flags );
+         ulPos = (DWORD) SetFilePointer( DosToWinHandle(hFileHandle), lOffset, NULL, (DWORD)Flags );
          hb_fsSetIOError( (DWORD) ulPos != INVALID_SET_FILE_POINTER, 0 );
       }
 
       if ( (DWORD) ulPos == INVALID_SET_FILE_POINTER )
       {
-         ulPos = (DWORD) SetFilePointer( DostoWinHandle(hFileHandle), 0, NULL, SEEK_CUR );
+         ulPos = (DWORD) SetFilePointer( DosToWinHandle(hFileHandle), 0, NULL, SEEK_CUR );
       }
    #else
       /* This DOS hack creates 2GB file size limit, Druzus */
@@ -1645,7 +1645,7 @@ HB_EXPORT HB_FOFFSET hb_fsSeekLarge( FHANDLE hFileHandle, HB_FOFFSET llOffset, U
       }
       else
       {
-         ulOffsetLow = SetFilePointer( DostoWinHandle( hFileHandle ),
+         ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                        ulOffsetLow, (PLONG) &ulOffsetHigh,
                                        ( DWORD ) Flags );
          llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
@@ -1655,7 +1655,7 @@ HB_EXPORT HB_FOFFSET hb_fsSeekLarge( FHANDLE hFileHandle, HB_FOFFSET llOffset, U
       if ( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
       {
          ulOffsetHigh = 0;
-         ulOffsetLow = SetFilePointer( DostoWinHandle( hFileHandle ),
+         ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                        0, (PLONG) &ulOffsetHigh, SEEK_CUR );
          llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
       }
@@ -1701,7 +1701,7 @@ HB_EXPORT ULONG   hb_fsTell( FHANDLE hFileHandle )
 #if defined(HB_FS_FILE_IO)
 
    #if defined(HB_WIN32_IO)
-      ulPos = (DWORD) SetFilePointer( DostoWinHandle(hFileHandle), 0, NULL, FILE_CURRENT );
+      ulPos = (DWORD) SetFilePointer( DosToWinHandle(hFileHandle), 0, NULL, FILE_CURRENT );
       hb_fsSetIOError( (DWORD) ulPos != INVALID_SET_FILE_POINTER, 0 );
    #else
       ulPos = lseek( hFileHandle, 0L, SEEK_CUR );
@@ -1897,7 +1897,7 @@ HB_EXPORT BOOL hb_fsRmDir( BYTE * pDirname )
 /* NOTE: This is not thread safe function, it's there for compatibility. */
 /* NOTE: 0 = current drive, 1 = A, 2 = B, 3 = C, etc. */
 
-HB_EXPORT BYTE *  hb_fsCurDir( USHORT uiDrive )
+HB_EXPORT BYTE * hb_fsCurDir( USHORT uiDrive )
 {
    static BYTE s_byDirBuffer[ _POSIX_PATH_MAX + 1 ];
 
@@ -1911,7 +1911,7 @@ HB_EXPORT BYTE *  hb_fsCurDir( USHORT uiDrive )
 /* NOTE: Thread safe version of hb_fsCurDir() */
 /* NOTE: 0 = current drive, 1 = A, 2 = B, 3 = C, etc. */
 
-HB_EXPORT USHORT  hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
+HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen )
 {
    USHORT uiCurDrv = uiDrive, usError;
    BOOL fResult;
@@ -2090,7 +2090,7 @@ HB_EXPORT USHORT hb_fsIsDrv( BYTE nDrive )
    return uiResult;
 }
 
-HB_EXPORT  BOOL hb_fsIsDevice( FHANDLE hFileHandle )
+HB_EXPORT BOOL hb_fsIsDevice( FHANDLE hFileHandle )
 {
    BOOL bResult;
 
@@ -2098,7 +2098,7 @@ HB_EXPORT  BOOL hb_fsIsDevice( FHANDLE hFileHandle )
 
 #if defined(HB_OS_WIN_32)
 
-   bResult = GetFileType( DostoWinHandle( hFileHandle ) ) == FILE_TYPE_CHAR;
+   bResult = GetFileType( DosToWinHandle( hFileHandle ) ) == FILE_TYPE_CHAR;
    hb_fsSetIOError( bResult, 0 );
 
 #elif defined(HB_FS_FILE_IO)
@@ -2123,7 +2123,7 @@ HB_EXPORT  BOOL hb_fsIsDevice( FHANDLE hFileHandle )
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */
 
-HB_EXPORT  BYTE hb_fsCurDrv( void )
+HB_EXPORT BYTE hb_fsCurDrv( void )
 {
    UINT uiResult;
 
@@ -2144,9 +2144,9 @@ HB_EXPORT  BYTE hb_fsCurDrv( void )
 }
 
 /* copied from xHarbour */
-HB_EXPORT  FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
-                                 USHORT uiExFlags, BYTE * pPaths,
-                                 PHB_ITEM pError )
+HB_EXPORT FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
+                                USHORT uiExFlags, BYTE * pPaths,
+                                PHB_ITEM pError )
 {
    HB_PATHNAMES *pSearchPath = NULL, *pNextPath;
    PHB_FNAME pFilepath;
