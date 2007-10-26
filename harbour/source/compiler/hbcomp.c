@@ -308,7 +308,7 @@ void hb_compOutErr( HB_COMP_DECL, const char * szMessage )
          HB_COMP_PARAM->outErrFunc( HB_COMP_PARAM->cargo, szMessage );
       else
       {
-#if defined( HOST_OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE )
          fprintf( stderr, "%s", szMessage ); fflush( stderr );
 #else
          fprintf( stdout, "%s", szMessage ); fflush( stdout );

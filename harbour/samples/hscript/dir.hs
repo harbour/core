@@ -4,7 +4,7 @@
 * www - http://www.harbour-project.org
 *
 */
-FUNCTION Main()
+FUNCTION Start()
 
    LOCAL aDir := directory( "c:\*.*" )
    LOCAL i

@@ -207,7 +207,7 @@ GTXWC_LIB    = $(LIB_DIR)\$(LIBPREF)gtxwc$(LIBEXT)
 HARBOUR_EXE  = $(BIN_DIR)\harbour$(EXEEXT)
 # required (intermediate) utility
 #     to generate pptable.c
-HBPPGEN_EXE  = $(BIN_DIR)\ppgen$(EXEEXT)
+HBPPGEN_EXE  = $(BIN_DIR)\hbppgen$(EXEEXT)
 HBPP_EXE     = $(BIN_DIR)\hbpp$(EXEEXT)
 HBPPTEST_EXE = $(BIN_DIR)\hbpptest$(EXEEXT)
 HBRUN_EXE    = $(BIN_DIR)\hbrun$(EXEEXT)
@@ -937,7 +937,7 @@ HBPP_EXE_OBJS = \
 #**********************************************************
 
 HBPPGEN_EXE_OBJS = \
-    $(OBJ_DIR)\ppgen$(OBJEXT)    \
+    $(OBJ_DIR)\hbppgen$(OBJEXT)  \
 
 #**********************************************************
 

@@ -9,7 +9,7 @@
 *
 */
 
-FUNCTION Main()
+FUNCTION Start()
 
    // Add content-type parameter if using active page on a Web Server
    IF !empty( GetEnv( "SERVER_NAME" ) )

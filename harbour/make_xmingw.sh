@@ -60,7 +60,7 @@ else
     exit 1
 fi
 
-(cd `dirname $0`; ln -s `pwd`/source/pp/linux/gcc/ppgen ${HB_BIN_COMPILE}/ppgen.exe)
+(cd `dirname $0`; ln -s `pwd`/source/pp/linux/gcc/hbppgen ${HB_BIN_COMPILE}/hbppgen.exe)
 export HB_PPGEN_PATH=${HB_BIN_COMPILE}
 
 export PATH CCPATH CCPREFIX

@@ -51,66 +51,60 @@
  *
  *  1999/06/13  First implementation.
  *  1999/06/24  Enhanced tag matching routines.
- *  1999/07/26  Corrections to CGI output, qOut() -> OutStd().
+ *  1999/07/26  Corrections to CGI output, QOut() -> OutStd().
  *
  */
 
 #include "hbextern.ch"
 #include "cgi.ch"
-#define IF_BUFFER 65535
 
-REQUEST DIRECTORY
-REQUEST GETENV
-REQUEST ASORT
+#define IF_BUFFER 65535
 
 FUNCTION Main( cScript )
 
    LOCAL aHRSHandle  := {}                         // Handle for script lines
    LOCAL aResult     := {}                         // Handle for transl'd lines
-   LOCAL cLocation   := {}                         // Location of scripts
+   LOCAL cLocation                                 // Location of scripts
    LOCAL cHarbourDir := GetEnv( "HARBOURDIR" )     // Harbour.exe dir with '\'
-   LOCAL cHost       := strtran( alltrim( ;        // Random (not et al)
-      str( seconds() ) ), '.' )                    // file name
+   LOCAL cHost       := StrTran( alltrim( ;        // Random (not et al)
+      Str( Seconds() ) ), '.' )                    // file name
    LOCAL cScriptName, cFile, cLine, cTrans, c
    LOCAL hFile, i, lOpen, nLen
 
-   WHILE .t.
+   WHILE .T.
 
-      IF empty( GetEnv( "SERVER_NAME" ) )
+      IF Empty( GetEnv( "SERVER_NAME" ) )
          cScriptName := cScript
          cLocation   := cHarbourDir
 
       ELSE
          cScriptName := GetEnv( "QUERY_STRING" )
-         IF at( "=", cScriptName ) != 0
+         IF At( "=", cScriptName ) != 0
             cScriptName := ParseString( cScriptName, "=", 2 )
          ENDIF
          cLocation   := GetEnv( "PATH_TRANSLATED" ) + ;
-            strtran( GetEnv( "SCRIPT_NAME" ), "/", "\" )
-         cLocation   := substr( cLocation, 1, rat( "\", cLocation ) )
+            StrTran( GetEnv( "SCRIPT_NAME" ), "/", "\" )
+         cLocation   := SubStr( cLocation, 1, RAt( "\", cLocation ) )
          cHarbourDir := cLocation
 
       ENDIF
 
-      IF empty( cScriptName )
-         IF !empty( GetEnv( "SERVER_NAME" ) )
+      IF Empty( cScriptName )
+         IF !Empty( GetEnv( "SERVER_NAME" ) )
             OutStd( "content-type: text/html" + hb_OSNewLine() )
             OutStd( hb_OSNewLine() )
             OutStd( "<HTML><BODY><H1>Server Error</H1><P>" + hb_OSNewLine() )
             OutStd( "Must specify scriptname using hscript.exe?script=<scriptname>" + hb_OSNewLine() )
             OutStd( "</BODY></HTML>" + hb_OSNewLine() )
-
          ELSE
             OutStd( "Please give .hs name" + hb_OSNewLine() )
-
          ENDIF
-
          EXIT
       ENDIF
 
       // Script not found
-      IF !file( cScriptName )
-         IF !empty( GetEnv( "SERVER_NAME" ) )
+      IF !File( cScriptName )
+         IF !Empty( GetEnv( "SERVER_NAME" ) )
             OutStd( "CONTENT-TYPE: text/html" + hb_OSNewLine() )
          ENDIF
          OutStd( "<H1>Server Error</H1><P>Script not found: " + cScriptName + hb_OSNewLine() )
@@ -118,12 +112,12 @@ FUNCTION Main( cScript )
       ENDIF
 
       lOpen := .f.
-      hb_fUse( cScriptName )
-      WHILE !hb_fEof()
+      ft_FUse( cScriptName )
+      WHILE !ft_FEof()
 
-         cLine  := alltrim( hb_fReadLn() )
+         cLine  := AllTrim( ft_FReadLn() )
          cTrans := ""
-         nLen   := len( cLine )
+         nLen   := Len( cLine )
 
          IF lOpen
             cTrans += "OutStd( '"
@@ -131,12 +125,11 @@ FUNCTION Main( cScript )
 
          FOR i := 1 TO nLen
 
-            c := substr( cLine, i, 1 )
+            c := SubStr( cLine, i, 1 )
 
             IF c = "%" .AND. substr( cLine, i + 1, 1 ) = ">"
                IF lOpen
                   // Error - Already in htm mode
-
                ELSE
                   // Abre script
                   IF i > 1
@@ -154,7 +147,6 @@ FUNCTION Main( cScript )
             ELSEIF c = "<" .AND. substr( cLine, i + 1, 1 ) = "%"
                IF !lOpen
                   // Error - Not in htm mode
-
                ELSE
                   // Fecha script
                   cTrans += "' + chr(10) )"
@@ -169,46 +161,43 @@ FUNCTION Main( cScript )
 
             ELSE
                cTrans += c
-
             ENDIF
-
          NEXT
 
          IF lOpen .AND. substr( cLine, nLen - 1, 2 ) <> "%>"
             cTrans += "' + chr(10) )"
          ENDIF
 
-         aadd( aResult, cTrans )
+         AAdd( aResult, cTrans )
 
-         hb_fSkip()
+         ft_FSkip()
 
       ENDDO
-      hb_fUse()
+      ft_FUse()
 
       cFile := cLocation + cHost + ".prg"                 // Output file name
-      hFile := fCreate( cFile )
-      FOR i := 1 TO len( aResult )
-         fWrite( hFile, aResult[i] + chr(13)+chr(10) )
+      hFile := FCreate( cFile )
+      FOR i := 1 TO Len( aResult )
+         FWrite( hFile, aResult[i] + hb_OSNewLine() )
       NEXT
-      fClose( hFile )
+      FClose( hFile )
 
       // Creates the temporary HRB, erases the PRG
-      __Run( cHarbourDir + "harbour.exe " + cFile + " /q /n /gh /o" + ;
-        left( cHarbourDir, len( cHarbourDir ) - 1 ) + "\" )
-      fErase( cFile )
+      __Run( cHarbourDir + "harbour.exe " + cFile + " /q /n /gh /o" + Left( cHarbourDir, Len( cHarbourDir ) - 1 ) + iif( !Empty( Left( cHarbourDir, Len( cHarbourDir ) - 1 ) ), "\", "" ) )
+      FErase( cFile )
 
       // Runs using Tugboat
-      cFile := strtran( upper( cFile ), ".PRG", ".hrb" )
+      cFile := StrTran( Upper( cFile ), ".PRG", ".hrb" )
       __hrbRun( cFile )
       // Erases the HRB file
-      fErase( cFile )
+      FErase( cFile )
 
       // That's all, folks!
       EXIT
 
    ENDDO
 
-   RETURN( NIL )
+   RETURN NIL
 
 FUNCTION ParseString( cString, cDelim, nRet )
 

@@ -42,8 +42,8 @@ else
 fi
 
 (cd `dirname $0`
-ln -s `pwd`/source/pp/`echo "$UNAME"|tr A-Z a-z`/gcc/ppgen \
-      ${HB_BIN_COMPILE}/ppgen.exe)
+ln -s `pwd`/source/pp/`echo "$UNAME"|tr A-Z a-z`/gcc/hbppgen \
+      ${HB_BIN_COMPILE}/hbppgen.exe)
 export HB_PPGEN_PATH=${HB_BIN_COMPILE}
 
 case "$1" in

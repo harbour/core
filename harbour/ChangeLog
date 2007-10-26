@@ -8,6 +8,50 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-27 01:23 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbsetup.h
+     - Removed HOST_OS_UNIX_COMPATIBLE which was a misleading 
+       alias for OS_UNIX_COMPATIBLE.
+
+   * source/compiler/hbcomp.c
+     % HOST_OS_UNIX_COMPATIBLE -> OS_UNIX_COMPATIBLE
+
+   * common.mak
+   * harbour-ce-spec
+   * make_xmingw.sh
+   * make_xmingwce.sh
+   * makefile.bc
+   * makefile.gc
+   * makefile.vc
+   * source/pp/Makefile
+   - source/pp/ppgen.c
+   + source/pp/hbppgen.c
+     ! executable ppgen renamed to hbppgen.
+
+   * samples/pe/editorlo.c
+   * samples/pe/pe.prg
+   + samples/pe/bld_b32.bat
+     + Added BCC build batch file.
+     ! Fixed to compile under current Harbour.
+     ! Fixed filename casing.
+     ! Fixed several warnings (quite some signedness problem still remain).
+     ; This is a very nice editor written in C (Harbour callable),
+       I think it is the work of Ryszard.
+
+   * samples/hscript/bld_b32.bat
+   * samples/hscript/hscript.prg
+   * samples/hscript/dir.hs
+   * samples/hscript/multiply.hs
+   * samples/hscript/ugly.hs
+   * samples/hscript/hello.hs
+     ! Fixed build batch file.
+     ! Fixed to use NFLib file IO rather than libmisc, because 
+       latter was broken (it is a clone of the NFLib file IO).
+     ! Fixed scripts to use Start instead of Main as an entry 
+       point otherwise __hrbRun() got confused and called the 
+       app Main().
+     ! Fixed some other problems to make it run.
+
 2007-10-26 20:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/win32/w32_prn.c
      + Using hb_retptrGC()/hb_parptrGC().

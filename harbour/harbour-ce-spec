@@ -97,7 +97,7 @@ export HB_ARCHITECTURE=w32
 export HB_COMPILER=cemgw
 
 mkdir -p source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}
-ln -s ../../linux/gcc/ppgen source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}/ppgen.exe
+ln -s ../../linux/gcc/hbppgen source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}/hbppgen.exe
 mkdir -p source/main/${HB_ARCHITECTURE}/${HB_COMPILER}
 ln -s ../../linux/gcc/harbour source/main/${HB_ARCHITECTURE}/${HB_COMPILER}/harbour.exe
 

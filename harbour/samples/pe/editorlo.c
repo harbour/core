@@ -29,7 +29,7 @@
   #define TRUE     !0
 #endif
 
-#define CLIPPER_ACTION(action)  void pascal action( void )
+#define CLIPPER_ACTION(action)  HB_FUNC( action )
 
 
 #define Eof        '\x0'
@@ -253,7 +253,7 @@ static void New(EDITOR *E, int tab, int ll, long int BuforSize)
  ** Creates new editor and returns index into internal editors table
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_NEW )
+CLIPPER_ACTION( ED_NEW )
 #else
 int HB_ED_NEW( int ll, int tab, long int BuforSize )
 #endif
@@ -346,7 +346,7 @@ static void FormatText ( EDITOR *E )
     * operation if a very large file is edited
     */
    wsk =E->begin +E->last_line;
-   while( (wsk = strchr( wsk, '\t' )) )
+   while( (wsk = strchr( wsk, '\t' )) != 0 )
    {
       j = wsk - E->begin;
 
@@ -379,7 +379,8 @@ static void FormatText ( EDITOR *E )
  */
 static void NewText( EDITOR *E )
 {
-   unsigned int i, dl;
+   unsigned int dl;
+   int i;
 
    /* text in buffer have to end with CR/LF
     */
@@ -443,7 +444,7 @@ static void AddText( int nEdit, char *adres )
  ** Appends passed text at the end of existing one
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_ADDTEXT )
+CLIPPER_ACTION( ED_ADDTEXT )
 #else
 CLIPPER HB_ED_ADDTEXT ( int nEdit, char *adres )
 #endif
@@ -497,7 +498,7 @@ static long int GoToLine( EDITOR *E, int linia )
 
    i =0;
    p =E->begin;
-   while( (++i <= linia) && (p=strchr( p, '\n' )) )
+   while( (++i <= linia) && (p=strchr( p, '\n' )) != 0 )
       p +=2;
 
    if( i > linia )
@@ -626,7 +627,7 @@ static long int InsText ( EDITOR *E, char *adres, long int line )
  ** Inserts passed text into text buffer
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_INSTEXT )
+CLIPPER_ACTION( ED_INSTEXT )
 #else
 unsigned int HB_ED_INSTEXT ( int nEdit, char *adres, long int linia )
 #endif
@@ -659,7 +660,7 @@ unsigned int HB_ED_INSTEXT ( int nEdit, char *adres, long int linia )
  **
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_PUSH )
+CLIPPER_ACTION( ED_PUSH )
 {
    int i;
 
@@ -670,7 +671,7 @@ CLIPPER_ACTION( HB_ED_PUSH )
    EStack[ i ] =ED;
 }
 
-CLIPPER_ACTION( HB_ED_POP )
+CLIPPER_ACTION( ED_POP )
 {
    int i;
 
@@ -691,7 +692,7 @@ CLIPPER_ACTION( HB_ED_POP )
  * to this editor.
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_CONFIG )
+CLIPPER_ACTION( ED_CONFIG )
 #else
 CLIPPER HB_ED_CONFIG(int nEdit, int top, int left, int bottom, int right,
                        int nRow, int nCol)
@@ -868,7 +869,7 @@ CLIPPER HB_ED_CONFIG(int nEdit, int top, int left, int bottom, int right,
  ** Returns current text buffer
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_GETTEXT )
+CLIPPER_ACTION( ED_GETTEXT )
 #else
 char *HB_ED_GETTEXT(int nEdit, int Case, int mietka )
 #endif
@@ -945,7 +946,7 @@ char *HB_ED_GETTEXT(int nEdit, int Case, int mietka )
  ** Returns given line of text and positions caret at the beginning of next line
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_GETLINE )
+CLIPPER_ACTION( ED_GETLINE )
 #else
 char *HB_ED_GETLINE(int nEdit, long int linia )
 #endif
@@ -954,7 +955,8 @@ char *HB_ED_GETLINE(int nEdit, long int linia )
    long int        tmp;
    char            *bufor;
    EDITOR          *E;
-   int             rdl, i, dl;
+   int             rdl, dl;
+   long int        i;
 
 #ifdef mc51
    long int linia;
@@ -968,7 +970,7 @@ char *HB_ED_GETLINE(int nEdit, long int linia )
 
    l = 1;
    tmp = E->first_line;
-   for(i = 1; i < (unsigned int) linia; i++)
+   for(i = 1; i < linia; i++)
    {
       j = Next ( E, tmp );
       if ( j >= 0 )
@@ -1005,7 +1007,7 @@ char *HB_ED_GETLINE(int nEdit, long int linia )
  ** Returns current line pointed by caret position and advances it to the beginning of next line
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_GETNEXT )
+CLIPPER_ACTION( ED_GETNEXT )
 #else
 char *HB_ED_GETNEXT(int nEdit)
 #endif
@@ -1067,7 +1069,7 @@ static void KillText ( EDITOR *E )
  ** Stores new text into editor
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_SETTEXT )
+CLIPPER_ACTION( ED_SETTEXT )
 #else
 CLIPPER HB_ED_SETTEXT(int nEdit, char *adres)
 #endif
@@ -1095,12 +1097,12 @@ CLIPPER HB_ED_SETTEXT(int nEdit, char *adres)
  ** Reads a text from the file
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_READTEXT )
+CLIPPER_ACTION( ED_READTEXT )
 {
    unsigned int nEdit, nFile, nSize, lSuccess=FALSE;
    long int nSeek, nRead;
    EDITOR *E;
-   BOOL lConv;
+/* BOOL lConv; */
 
    nEdit =_parni( 1 );
    E =ETab[ nEdit ];
@@ -1111,7 +1113,7 @@ CLIPPER_ACTION( HB_ED_READTEXT )
    nFile =_parni( 2 );
    nSeek =_parnl( 3 );
    nSize =_parni( 4 );
-   lConv =_parl( 5 );
+/* lConv =_parl( 5 ); */
 
    nRead =_fsSeek( nFile, nSeek, FS_SET );
    if( nRead == nSeek )
@@ -1159,7 +1161,7 @@ CLIPPER_ACTION( HB_ED_READTEXT )
  ** Releases memory occupied by the editor
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_KILL )
+CLIPPER_ACTION( ED_KILL )
 #else
 CLIPPER HB_ED_KILL(int nEdit)
 #endif
@@ -1192,7 +1194,7 @@ CLIPPER HB_ED_KILL(int nEdit)
 
 /* Sorry - I don't remember why it is here
  */
-CLIPPER_ACTION( HB_ED_UNLOCK )
+CLIPPER_ACTION( ED_UNLOCK )
 {
 }
 
@@ -1203,7 +1205,7 @@ CLIPPER_ACTION( HB_ED_UNLOCK )
  * Incremental stabilisation was too slow
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_STABILIZE )
+CLIPPER_ACTION( ED_STABILIZE )
 #else
 int HB_ED_STABILI( void )
 #endif
@@ -1296,7 +1298,7 @@ int HB_ED_STABILI( void )
          nTop  =ED->top +nRow;
          if( nLen )
          {
-            if( ED->escape && ( EscPtr = strchr( adres, ED->escape ) ) )
+            if( ED->escape && ( EscPtr = strchr( adres, ED->escape ) ) != 0 )
             {
                i  =(unsigned int)(EscPtr - adres);
                nLeft =ED->left +i;
@@ -1452,7 +1454,7 @@ static void Down( EDITOR *E )
  ** Moves cursor to the next line of text
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_DOWN )
+CLIPPER_ACTION( ED_DOWN )
 #else
 CLIPPER HB_ED_DOWN(void)
 #endif
@@ -1525,7 +1527,7 @@ static void Up( void )
  ** Moves the cursor to the previous line
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_UP )
+CLIPPER_ACTION( ED_UP )
 #else
 CLIPPER HB_ED_UP(void)
 #endif
@@ -1541,7 +1543,7 @@ CLIPPER HB_ED_UP(void)
  ** Moves the cursor to the next page of text
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_PGDOWN )
+CLIPPER_ACTION( ED_PGDOWN )
 #else
 CLIPPER HB_ED_PGDOWN(void)
 #endif
@@ -1614,7 +1616,7 @@ CLIPPER HB_ED_PGDOWN(void)
  ** Moves the cursor to the previous page of text
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_PGUP )
+CLIPPER_ACTION( ED_PGUP )
 #else
 CLIPPER HB_ED_PGUP(void)
 #endif
@@ -1679,7 +1681,7 @@ CLIPPER HB_ED_PGUP(void)
  ** Move the cursor to the beginning of the text
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_TOP )
+CLIPPER_ACTION( ED_TOP )
 #else
 CLIPPER HB_ED_TOP(void)
 #endif
@@ -1714,7 +1716,7 @@ CLIPPER HB_ED_TOP(void)
  ** Move the cursor to the last line of text
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_BOTTOM )
+CLIPPER_ACTION( ED_BOTTOM )
 #else
 CLIPPER HB_ED_BOTTOM(void)
 #endif
@@ -1798,7 +1800,7 @@ static void GoTo(int line)
  ** Move the cursor to the given line using line number
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_GOTO )
+CLIPPER_ACTION( ED_GOTO )
 #else
 CLIPPER HB_ED_GOTO(long int line)
 #endif
@@ -1838,7 +1840,7 @@ static void Left(void)
  ** Move the cursor to the previous character
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_LEFT )
+CLIPPER_ACTION( ED_LEFT )
 #else
 CLIPPER HB_ED_LEFT(void)
 #endif
@@ -1875,7 +1877,7 @@ static void Right( EDITOR *E )
  ** Move the cursor to the next character
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_RIGHT )
+CLIPPER_ACTION( ED_RIGHT )
 #else
 CLIPPER HB_ED_RIGHT(void)
 #endif
@@ -1911,7 +1913,7 @@ static void Home( EDITOR *E )
  ** Move the cursor to the beginning of the line
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_HOME )
+CLIPPER_ACTION( ED_HOME )
 #else
 CLIPPER HB_ED_HOME(void)
 #endif
@@ -1960,7 +1962,7 @@ static void End( EDITOR *E )
  ** Move the cursor the the end of line (after the last non-space character)
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_END )
+CLIPPER_ACTION( ED_END )
 #else
 CLIPPER HB_ED_END(void)
 #endif
@@ -2090,7 +2092,7 @@ static void DelChar ( EDITOR *E )
  ** Delete the character at current cursor position
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_DELCHAR )
+CLIPPER_ACTION( ED_DELCHAR )
 #else
 CLIPPER HB_ED_DELCHAR(void)
 #endif
@@ -2187,7 +2189,7 @@ static void BackSpace( int INS )
 
             /* find the first space in current line (the new line will
              * be wrapped eventually at this position) */
-            if( ( w = strchr ( tmp, ' ') ) )
+            if( ( w = strchr ( tmp, ' ') ) != 0 )
                ww = (int)(w - tmp);
             else
                ww = nLen+rdl;
@@ -2268,7 +2270,7 @@ static void BackSpace( int INS )
  ** Delete a character on the left side of the cursor
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_BSPACE )
+CLIPPER_ACTION( ED_BSPACE )
 #else
 CLIPPER HB_ED_BSPACE(int INS)
 #endif
@@ -2360,7 +2362,7 @@ static void NextWord(void)
  ** Move the cursor to the next word
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_NWORD )
+CLIPPER_ACTION( ED_NWORD )
 #else
 CLIPPER HB_ED_NWORD(void)
 #endif
@@ -2443,7 +2445,7 @@ static void PreviousWord(void)
  ** Move the cursor to the previous word
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_PWORD )
+CLIPPER_ACTION( ED_PWORD )
 #else
 CLIPPER HB_ED_PWORD(void)
 #endif
@@ -2676,7 +2678,7 @@ static void PutChar( int INS, int znak )
  ** Insert or replace the character into the text buffer
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_PUTCHAR )
+CLIPPER_ACTION( ED_PUTCHAR )
 #else
 CLIPPER HB_ED_PUTCHAR(int INS, int znak)
 #endif
@@ -2710,7 +2712,7 @@ static void Tab ( int INS )
 
 /*
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_TAB )
+CLIPPER_ACTION( ED_TAB )
 #else
 CLIPPER HB_ED_TAB(int INS)
 #endif
@@ -2729,7 +2731,7 @@ CLIPPER HB_ED_TAB(int INS)
  ** Delete the current line
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_DELLINE )
+CLIPPER_ACTION( ED_DELLINE )
 #else
 CLIPPER HB_ED_DELLINE(void)
 #endif
@@ -2786,7 +2788,7 @@ CLIPPER HB_ED_DELLINE(void)
  ** Delete the word on the right side of the cursor
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_DELWORD )
+CLIPPER_ACTION( ED_DELWORD )
 #else
 CLIPPER HB_ED_DELWORD(void)
 #endif
@@ -2836,7 +2838,11 @@ CLIPPER HB_ED_DELWORD(void)
       {
          if( ( GetLineLength( ED, ED->current_line, &rdl ) ) == 0 )
          {
+#ifdef mc51
+            HB_FUNC_EXEC( ED_DELLINE )
+#else
             HB_ED_DELLINE( );
+#endif
             Home( ED );
          }
       }
@@ -2941,7 +2947,7 @@ static void Return(int INS)
  ** Insert the CRLF characters
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_RETURN )
+CLIPPER_ACTION( ED_RETURN )
 #else
 CLIPPER HB_ED_RETURN(int INS)
 #endif
@@ -2958,7 +2964,7 @@ CLIPPER HB_ED_RETURN(int INS)
  ** Returns the current cursor row inside the editor's window
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_WINROW )
+CLIPPER_ACTION( ED_WINROW )
 #else
 int HB_ED_WINROW(void)
 #endif
@@ -2974,7 +2980,7 @@ int HB_ED_WINROW(void)
  ** Returns the line number where the cursor is positioned
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_ROW )
+CLIPPER_ACTION( ED_ROW )
 #else
 int HB_ED_ROW(void)
 #endif
@@ -2991,7 +2997,7 @@ int HB_ED_ROW(void)
  ** Return the current cursor column inside the editor's window
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_WINCOL )
+CLIPPER_ACTION( ED_WINCOL )
 #else
 int HB_ED_WINCOL(void)
 #endif
@@ -3007,7 +3013,7 @@ int HB_ED_WINCOL(void)
  ** Returns the current cursor position inside the line
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_COL )
+CLIPPER_ACTION( ED_COL )
 #else
 int HB_ED_COL(void)
 #endif
@@ -3024,7 +3030,7 @@ int HB_ED_COL(void)
  ** Returns the total number of lines
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_MAXLINE )
+CLIPPER_ACTION( ED_MAXLINE )
 #else
 long int HB_ED_MAXLINE(void)
 #endif
@@ -3040,7 +3046,7 @@ long int HB_ED_MAXLINE(void)
  ** Counts the total number of lines in passed editor
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_LCOUNT )
+CLIPPER_ACTION( ED_LCOUNT )
 #else
 long int HB_ED_LCOUNT(int nEdit)
 #endif
@@ -3063,7 +3069,7 @@ long int HB_ED_LCOUNT(int nEdit)
  ** Returns if the editor is correctly displayed
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_STABLE )
+CLIPPER_ACTION( ED_STABLE )
 #else
 int HB_ED_STABLE(void)
 #endif
@@ -3080,7 +3086,7 @@ int HB_ED_STABLE(void)
  ** Returns the number of bytes stored in the text buffer
 */
 #ifdef mc51
-CLIPPER_ACTION( HB_ED_LENGTH )
+CLIPPER_ACTION( ED_LENGTH )
 #else
 long int HB_ED_LENGTH(void)
 #endif

@@ -319,7 +319,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    int iResult, i;
    /* hack - we do not want to create real binaries */
    int argc = 1;
-   char * argv[] = { "ppgen" };
+   char * argv[] = { "hbppgen" };
 
    HB_SYMBOL_UNUSED( hInstance );
    HB_SYMBOL_UNUSED( hPrevInstance );

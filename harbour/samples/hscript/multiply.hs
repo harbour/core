@@ -9,7 +9,7 @@
 *
 */
 
-FUNCTION Main()
+FUNCTION Start()
 
    LOCAL i, j
 

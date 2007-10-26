@@ -280,7 +280,6 @@
       ! ( defined(__DJGPP__) || defined(__EMX__) || defined(__RSXNT__) || \
           defined(_Windows) || defined(_WIN32) || defined(_WINCE) ) ) || \
     ( defined(__WATCOMC__) && defined(__LINUX__) )
-   #define HOST_OS_UNIX_COMPATIBLE
    #define OS_UNIX_COMPATIBLE
    #define OS_PATH_LIST_SEPARATOR    ':'
    #define OS_PATH_DELIMITER         '/'
