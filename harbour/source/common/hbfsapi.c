@@ -50,8 +50,20 @@
  *
  */
 
+#define HB_OS_WIN_32_USED
+
 #include "hbapi.h"
 #include "hbapifs.h"
+
+#if defined( HB_OS_WIN_32 )
+   #if !defined( INVALID_FILE_ATTRIBUTES )
+      #define INVALID_FILE_ATTRIBUTES ( ( DWORD ) -1 )
+   #endif
+#elif defined( HB_OS_UNIX )
+   #include <errno.h>
+   #include <sys/types.h>
+   #include <sys/stat.h>
+#endif
 
 /* NOTE: Not really belongs here, but until we can't find a better place 
          it will do it. [vszakats] */
@@ -60,7 +72,7 @@ extern void hb_fhnd_ForceLink( void );
 /*
  * Function that adds zero or more paths to a list of pathnames to search
  */
-void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
+HB_EXPORT void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
 {
    char * pPath;
    char * pDelim;
@@ -91,7 +103,7 @@ void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
 /*
  * free list of pathnames to search
  */
-void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
+HB_EXPORT void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
 {
    HB_PATHNAMES * pNext;
 
@@ -110,7 +122,7 @@ void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
 }
 
 /* Split given filename into path, name and extension, plus determine drive */
-PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
+HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 {
    PHB_FNAME pFileName;
    char * pszPos;
@@ -197,7 +209,7 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 /* NOTE: szFileName buffer must be at least _POSIX_PATH_MAX long */
 
 /* This function joins path, name and extension into a string with a filename */
-char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
+HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 {
    static char szPathSep[] = {OS_PATH_DELIMITER,0}; /* see NOTE below */
    char * pszName;
@@ -263,4 +275,41 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge: Filename: |%s|\n", pszFileName));
 
    return pszFileName;
+}
+
+HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
+{
+   if( pszFileName == NULL )
+      return FALSE;
+
+   #if defined( HB_OS_DOS )
+   {
+      union REGS regs;
+      struct SREGS sregs;
+
+      regs.HB_XREGS.ax = 0x4300;
+      regs.HB_XREGS.dx = FP_OFF( pszFileName );
+      sregs.ds = FP_SEG( pszFileName );
+
+      HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
+
+      return regs.x.cflag == 0;
+   }
+   #elif defined( HB_OS_WIN_32 )
+   {
+      return GetFileAttributes( pszFileName ) != INVALID_FILE_ATTRIBUTES;
+   }
+   #elif defined( HB_OS_UNIX )
+   {
+      struct stat statbuf;
+
+      return stat( pszFileName, &statbuf ) == 0;
+   }
+   #else
+   {
+      HB_SYMBOL_UNUSED( pszFileName );
+
+      return FALSE;
+   }
+   #endif
 }

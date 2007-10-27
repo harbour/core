@@ -8,6 +8,30 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-27 16:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbapifs.h
+   * source/common/hbfsapi.c
+     ! Added missing HB_EXPORTs.
+     + Added hb_fsFileExists(). This is the preferred way to check 
+       for the existence of a file, because it is fast and will 
+       find a file even of directory traversal is not possible 
+       for the file's directory. Works the same way as file 
+       existence check in most other tools.
+     ; NOTE: DOS branch was not compiled or tested (it is a 
+             rewrite of a tested ASM function though).
+
+   * common.mak
+   * include/hbextern.ch
+   * source/rtl/Makefile
+   + source/rtl/hbfile.c
+     + Added HB_FILEEXISTS() Harbour level function to check 
+       for the existence of a file. This works better than 
+       FILE() in most situations, but it doesn't accept any 
+       wildcards.
+
+   * source/compiler/gencobj.c
+     ! Fixed to not used access(). Using hb_fsFileExists() instead.
+
 2007-10-27 16:04 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/compiler/gencobj.c
      ! HOST_OS_UNIX_COMPATIBLE -> OS_UNIX_COMPATIBLE
