@@ -143,11 +143,11 @@ extern HB_EXPORT void     hb_fsSetError   ( USHORT uiError ); /* set the file sy
 extern HB_EXPORT void     hb_fsSetIOError ( BOOL fResult, USHORT uiOperation ); /* set the file system error number after IO operation */
 extern HB_EXPORT USHORT   hb_fsWrite      ( FHANDLE hFileHandle, const BYTE * pBuff, USHORT ulCount ); /* write to an open file from a buffer (<=64K) */
 extern HB_EXPORT ULONG    hb_fsWriteLarge ( FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount ); /* write to an open file from a buffer (>64K) */
-extern HB_EXPORT FHANDLE  hb_fsPOpen( BYTE * pFilename, BYTE * pMode );
+extern HB_EXPORT FHANDLE  hb_fsPOpen      ( BYTE * pFilename, BYTE * pMode );
 extern HB_EXPORT FHANDLE  hb_fsGetOsHandle( FHANDLE hFileHandle );
-extern HB_EXPORT USHORT   hb_getFError( void ); /* get FERROR() flag */
-extern HB_EXPORT void     hb_setFError( USHORT uiError ); /* set FERROR() flag */
-extern HB_EXPORT BOOL     hb_fsFileExists( const char * pszFileName ); /* check if a file exists (wildcard chars not accepted). */
+extern HB_EXPORT USHORT   hb_fsGetFError  ( void ); /* get FERROR() flag */
+extern HB_EXPORT void     hb_fsSetFError  ( USHORT uiError ); /* set FERROR() flag */
+extern HB_EXPORT BOOL     hb_fsFileExists ( const char * pszFileName ); /* check if a file exists (wildcard chars not accepted). */
 
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )

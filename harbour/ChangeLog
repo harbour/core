@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-27 16:57 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbapifs.h
+   * source/rtl/fserror.c
+   * source/rtl/philes.c
+   * source/rtl/philes53.c
+     ! Two FS API functions moved the hb_fs*() namespace:
+       hb_getFError() -> hb_fsGetFError()
+       hb_setFError() -> hb_fsSetFError()
+
 2007-10-27 16:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbapifs.h
    * source/common/hbfsapi.c

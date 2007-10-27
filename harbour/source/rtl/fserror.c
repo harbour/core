@@ -182,9 +182,9 @@ static int hb_WinToDosError( ULONG ulError )
 #endif
 
 /* return FERROR() code */
-HB_EXPORT USHORT hb_getFError( void )
+HB_EXPORT USHORT hb_fsGetFError( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_getFError()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsGetFError()"));
 
    return s_uiFError;
 }
@@ -206,9 +206,9 @@ HB_EXPORT USHORT hb_fsOsError( void )
 }
 
 /* set FERROR() code */
-HB_EXPORT void hb_setFError( USHORT uiError )
+HB_EXPORT void hb_fsSetFError( USHORT uiError )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_setFError(%hu)", uiError));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetFError(%hu)", uiError));
 
    s_uiFError = uiError;
 }

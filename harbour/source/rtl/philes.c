@@ -62,11 +62,11 @@ HB_FUNC( FOPEN )
    {
       hb_retni( hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
                            ISNUM( 2 ) ? hb_parni( 2 ) : FO_READ | FO_COMPAT ) );
-      hb_setFError( hb_fsError() );
+      hb_fsSetFError( hb_fsError() );
    }
    else
    {
-      hb_setFError( 0 );
+      hb_fsSetFError( 0 );
       /* NOTE: Undocumented but existing Clipper Run-time error */
       hb_errRT_BASE( EG_ARG, 2021, NULL, "FOPEN", HB_ERR_ARGS_BASEPARAMS );
    }
@@ -78,12 +78,12 @@ HB_FUNC( FCREATE )
    {
       hb_retni( hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
                              ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
-      hb_setFError( hb_fsError() );
+      hb_fsSetFError( hb_fsError() );
    }
    else
    {
       hb_retni( FS_ERROR );
-      hb_setFError( 0 );
+      hb_fsSetFError( 0 );
    }
 }
 
@@ -94,12 +94,12 @@ HB_FUNC( HB_FCREATE )
       hb_retni( hb_fsCreateEx( ( BYTE * ) hb_parc( 1 ),
                                ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
                                ISNUM( 3 ) ? hb_parni( 3 ) : FO_COMPAT ) );
-      hb_setFError( hb_fsError() );
+      hb_fsSetFError( hb_fsError() );
    }
    else
    {
       hb_retni( FS_ERROR );
-      hb_setFError( 0 );
+      hb_fsSetFError( 0 );
    }
 }
 
@@ -137,7 +137,7 @@ HB_FUNC( FREAD )
    }
 
    hb_retnint( ulRead );
-   hb_setFError( uiError );
+   hb_fsSetFError( uiError );
 }
 
 HB_FUNC( FWRITE )
@@ -153,12 +153,12 @@ HB_FUNC( FWRITE )
    }
    else
       hb_retnl( 0 );
-   hb_setFError( uiError );
+   hb_fsSetFError( uiError );
 }
 
 HB_FUNC( FERROR )
 {
-   hb_retni( hb_getFError() );
+   hb_retni( hb_fsGetFError() );
 }
 
 HB_FUNC( FCLOSE )
@@ -172,7 +172,7 @@ HB_FUNC( FCLOSE )
    }
    else
       hb_retl( FALSE );
-   hb_setFError( uiError );
+   hb_fsSetFError( uiError );
 }
 
 HB_FUNC( FERASE )
@@ -186,7 +186,7 @@ HB_FUNC( FERASE )
    }
    else
       hb_retni( FS_ERROR );
-   hb_setFError( uiError );
+   hb_fsSetFError( uiError );
 }
 
 HB_FUNC( FRENAME )
@@ -201,7 +201,7 @@ HB_FUNC( FRENAME )
    }
    else
       hb_retni( FS_ERROR );
-   hb_setFError( uiError );
+   hb_fsSetFError( uiError );
 }
 
 HB_FUNC( FSEEK )
@@ -218,7 +218,7 @@ HB_FUNC( FSEEK )
    else
       hb_retni( 0 );
 
-   hb_setFError( uiError );
+   hb_fsSetFError( uiError );
 }
 
 HB_FUNC( FREADSTR )
@@ -247,7 +247,7 @@ HB_FUNC( FREADSTR )
    }
    else
       hb_retc( NULL );
-   hb_setFError( uiError );
+   hb_fsSetFError( uiError );
 }
 
 /* NOTE: This function should not return the leading and trailing */
@@ -276,7 +276,7 @@ HB_FUNC( HB_FEOF )
    }
    else
       hb_retl( TRUE );
-   hb_setFError( uiError );
+   hb_fsSetFError( uiError );
 }
 
 HB_FUNC( HB_FCOMMIT )
@@ -289,7 +289,7 @@ HB_FUNC( HB_FCOMMIT )
       uiError = hb_fsError();
    }
 
-   hb_setFError( uiError );
+   hb_fsSetFError( uiError );
 }
 
 HB_FUNC( HB_OSERROR )
