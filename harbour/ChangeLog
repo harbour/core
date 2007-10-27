@@ -21,7 +21,7 @@
    * source/rtl/fserror.c
    * source/rtl/philes.c
    * source/rtl/philes53.c
-     ! Two FS API functions moved the hb_fs*() namespace:
+     ! Two FS API functions moved to the hb_fs*() namespace:
        hb_getFError() -> hb_fsGetFError()
        hb_setFError() -> hb_fsSetFError()
 
@@ -31,7 +31,7 @@
      ! Added missing HB_EXPORTs.
      + Added hb_fsFileExists(). This is the preferred way to check 
        for the existence of a file, because it is fast and will 
-       find a file even of directory traversal is not possible 
+       find a file even if directory traversal is not possible 
        for the file's directory. Works the same way as file 
        existence check in most other tools.
      ; NOTE: DOS branch was not compiled or tested (it is a 
