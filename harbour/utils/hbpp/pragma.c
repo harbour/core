@@ -342,11 +342,11 @@ BOOL hb_pp_ParsePragma( char * szLine )
          int iOverflow;
          int iMax;
          
-         iMax = hb_strValInt( szLine, &iOverflow );
+         iMax = ( int ) hb_strValInt( szLine, &iOverflow );
          if( iOverflow || iMax < 1 )
             hb_pp_MaxTranslateCycles = 1024;
          else
-            hb_pp_MaxTranslateCycles = (unsigned int)iMax;
+            hb_pp_MaxTranslateCycles = ( unsigned int ) iMax;
          DebugPragma( szLine, hb_pp_MaxTranslateCycles, FALSE );
       }
    }

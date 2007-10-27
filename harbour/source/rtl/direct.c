@@ -157,7 +157,7 @@ HB_FUNC( DIRECTORY )
          char buffer[ 32 ];
 
          hb_arraySet( pSubarray, F_NAME, hb_itemPutC( pFilename, ffind->szName ) );
-         hb_arraySet( pSubarray, F_SIZE, hb_itemPutNL( pSize, ffind->size ) );
+         hb_arraySet( pSubarray, F_SIZE, hb_itemPutNL( pSize, ( LONG ) ffind->size ) ); /* TOFIX: Loss of digits. */
          hb_arraySet( pSubarray, F_DATE, hb_itemPutDL( pDate, ffind->lDate ) );
          hb_arraySet( pSubarray, F_TIME, hb_itemPutC( pTime, ffind->szTime ) );
          hb_arraySet( pSubarray, F_ATTR, hb_itemPutC( pAttr, hb_fsAttrDecode( ffind->attr, buffer ) ) );
@@ -180,4 +180,3 @@ HB_FUNC( DIRECTORY )
 
    hb_itemRelease( hb_itemReturn( pDir ) );
 }
-

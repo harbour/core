@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-27 17:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * utils/hbpp/pragma.c
+   * source/rtl/binnum.c
+   * source/rtl/direct.c
+     ! Some VS2005 -O2 warnings.
+       One TOFIX added at the same time, since DIRECTORY()
+       has a problem returning file sizes greater than 2GB.
+
 2007-10-27 16:57 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbapifs.h
    * source/rtl/fserror.c
