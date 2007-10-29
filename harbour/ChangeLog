@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-29 17:57 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/make_xmingwce.sh
+  * harbour/make_xmingw.sh
+    * removed HOST_OS_UNIX_COMPATIBLE
+
+  * harbour/makefile.gc
+    * changed ppgen.c -> hbppgen.c
+
+  * harbour/source/pp/hbppgen.c
+  * harbour/source/vm/dynsym.c
+    * fixed some typos in comment
+
+  * harbour/source/rtl/hbcrc.c
+    ! fixed casting
+
 2007-10-29 11:21 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * doc/howtosvn.txt
      + Added few propset command. Would need some more cleanup.

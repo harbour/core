@@ -135,12 +135,12 @@ HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
           */
          if( pDynSym->pSymbol->value.pFunPtr == pSymbol->value.pFunPtr )
          {
-            /* The addresses have been updated, f.e. in such case works GCC
+            /* The addresses have been updated, f.e. in such way works GCC
              * in Linux (but not MinGW and DJGPP) if user will allow to create
              * binaries with multiple symbols by
              *    -Wl,--allow-multiple-definition
              * when whole module cannot be cleanly replaced.
-             * OpenWatcom for Linux, DOS and Windows (I haven't testes OS2
+             * OpenWatcom for Linux, DOS and Windows (I haven't tested OS2
              * version), POCC and XCC (with /FORCE:MULTIPLE) also update
              * addresses in such case.
              *

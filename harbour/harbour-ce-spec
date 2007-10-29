@@ -101,7 +101,7 @@ ln -s ../../linux/gcc/hbppgen source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}/hbppge
 mkdir -p source/main/${HB_ARCHITECTURE}/${HB_COMPILER}
 ln -s ../../linux/gcc/harbour source/main/${HB_ARCHITECTURE}/${HB_COMPILER}/harbour.exe
 
-export CC_C_USR="-DHOST_OS_UNIX_COMPATIBLE"
+export CC_C_USR=""
 export C_USR="$CC_C_USR -O2 -DHB_FM_STATISTICS_OFF"
 export CC_PRG_USR="-D__PLATFORM__Windows -D__PLATFORM__WINCE -undef:__PLATFORM__UNIX -undef:__PLATFORM__Linux"
 export PRG_USR="$CC_PRG_USR"
@@ -129,7 +129,7 @@ make -r
 
 # Install harbour itself.
 
-export CC_C_USR="-DHOST_OS_UNIX_COMPATIBLE"
+export CC_C_USR=""
 export C_USR="$CC_C_USR -O2 -DHB_FM_STATISTICS_OFF"
 export CC_PRG_USR="-D__PLATFORM__Windows -D__PLATFORM__WINCE -undef:__PLATFORM__UNIX -undef:__PLATFORM__Linux"
 export PRG_USR="$CC_PRG_USR"

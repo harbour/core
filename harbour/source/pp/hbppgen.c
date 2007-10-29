@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *    preprocessor static rules generator.
  *    It creates .c file with tables for defines/[x]translates/[x]commands
- *    found in given file .ch or .prg file
+ *    found in given .ch or .prg file
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org

@@ -212,7 +212,7 @@ HB_EXPORT HB_ULONG hb_crcct( HB_ULONG crc, const BYTE * buf, ULONG len, HB_ULONG
 
       while( revp >>= 1 )
          ++bits;
-      mask = 1 << ( bits - 1 );
+      mask = ( HB_LONG ) 1 << ( bits - 1 );
       bits -= 8;
       do
       {

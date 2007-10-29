@@ -20,7 +20,7 @@ export HB_COMPILER=cemgw
 
 [ -z "$HB_INSTALL_PREFIX" ] && \
 export HB_INSTALL_PREFIX="/usr/local/arm-wince-cemgw-harbour"
-export CC_C_USR="-DHOST_OS_UNIX_COMPATIBLE"
+export CC_C_USR=""
 export C_USR="$CC_C_USR $C_USR"
 export CC_PRG_USR="-D__PLATFORM__Windows -D__PLATFORM__WINCE -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAME"
 export PRG_USR="$CC_PRG_USR $PRG_USR"
