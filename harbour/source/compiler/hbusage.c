@@ -220,6 +220,6 @@ void hb_compPrintLogo( HB_COMP_DECL )
 
    hb_compOutStd( HB_COMP_PARAM, szVer );
    hb_compOutStd( HB_COMP_PARAM,
-                  "\nCopyright 1999-2007, http://www.harbour-project.org/\n" );
+                  "\nCopyright (c) 1999-2007, http://www.harbour-project.org/\n" );
    hb_xfree( szVer );
 }

@@ -211,7 +211,7 @@ HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 /* This function joins path, name and extension into a string with a filename */
 HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 {
-   static char szPathSep[] = {OS_PATH_DELIMITER,0}; /* see NOTE below */
+   static char s_szPathSep[] = { OS_PATH_DELIMITER, 0 }; /* see NOTE below */
    char * pszName;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%p, %p)", pszFileName, pFileName));
@@ -229,9 +229,9 @@ HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
       hb_strncat( pszFileName, pFileName->szPath, _POSIX_PATH_MAX - 1 );
 
    /*
-      NOTE: be _very_ careful about 'optimising' this next section code!
-      (specifically, initialising szPathSep) as MSVC with /Ni
-      (or anything that infers it like /Ox) will cause you trouble.
+      NOTE: be _very_ careful about "optimizing" this next section code!
+            (specifically, initialising s_szPathSep) as MSVC with /Ni
+            (or anything that infers it like /Ox) will cause you trouble.
     */
 
    /* If we have a path, append a path separator to the path if there
@@ -243,13 +243,13 @@ HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
       if( strchr( OS_PATH_DELIMITER_LIST, pszFileName[ iLen ] ) == NULL )
       {
          /*
-             char szPathSep[2];
+             char s_szPathSep[ 2 ];
 
-             szPathSep[ 0 ] = OS_PATH_DELIMITER;
-             szPathSep[ 1 ] = '\0';
+             s_szPathSep[ 0 ] = OS_PATH_DELIMITER;
+             s_szPathSep[ 1 ] = '\0';
 
           */
-         hb_strncat( pszFileName, szPathSep, _POSIX_PATH_MAX - 1 );
+         hb_strncat( pszFileName, s_szPathSep, _POSIX_PATH_MAX - 1 );
       }
    }
 
@@ -279,6 +279,8 @@ HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 
 HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsFileExists(%p)", pszFileName));
+
    if( pszFileName == NULL )
       return FALSE;
 
@@ -307,8 +309,6 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
    }
    #else
    {
-      HB_SYMBOL_UNUSED( pszFileName );
-
       return FALSE;
    }
    #endif

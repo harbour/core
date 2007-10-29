@@ -185,5 +185,6 @@ by SVN server to full length.
 
 Note that last dollar sign is mandatory.
 
-Run this command and commit:
+Run these commands and commit:
 svn propset svn:keywords Id "filename"
+svn propset svn:eol-style native "filename"
