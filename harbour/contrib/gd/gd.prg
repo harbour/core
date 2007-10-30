@@ -139,10 +139,6 @@ FUNCTION gdImageFromFile( cFile )
   LOCAL hFile := {=>}
   LOCAL oImage
 
-  #if ( defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB ) )
-  HB_HAUTOADD( hFile, .T.)
-  #endif
-
   IF File( cFile )
      HB_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
      //TraceLog( cFile, cPath, cName, cExt, cDrive )

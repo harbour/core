@@ -120,11 +120,7 @@ PROCEDURE Main( cValue, cBaseImage )
    /* Draw Digits */
    FOR n := 1 TO Len( cValue )
        // Retrieve the number from array in memory
-       #if ( defined( __HARBOUR__ ) .and. !defined( __COMP_FLAG_HB_COMPAT_XHB__ ) )
        oTemp := aNumberImages[ Val( SubStr( cValue, n, 1 ) ) + 1 ]:Clone()
-       #else
-       oTemp := aNumberImages[ Val( cValue[ n ] ) + 1 ]:Clone()
-       #endif
        // Save it to show the number for a position
        oTemp:SaveGif( IMAGES_OUT + "Pos_" + StrZero( n, 2 ) + ".gif" )
        // Set the digit as tile that I have to use to fill position in counter

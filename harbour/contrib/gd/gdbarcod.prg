@@ -215,11 +215,7 @@ METHOD Draw13(cText)  CLASS TCode
 			// If we have to write text, we moved the barcode to the right to have space to put digit
          ::positionX = If( ::textfont == 0 , 0, 10 )
 
-         #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
          xParity := ::Parity[ Val( SubStr( ::text, 1, 1 ) ) ]
-         #else
-         xParity := ::Parity[ Val( ::text[1] ) ]
-         #endif
 
    		// First Bar
    		::positionX := 10
@@ -461,43 +457,25 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
 		If cModeCode == "C"
 
-         #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
          npos := AsCAn( ::KeysmodeC, { |x| x == SubStr( ::Text, i, 1 ) + SubStr( ::Text, i+1, 1 ) } )
-         #else
-         npos := AsCAn( ::KeysmodeC, { |x| x ==::Text[i]+::Text[i+1] } )
-         #endif
 
 			If npos == 0
-				 #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
 				 ::DrawError("With Code C, you must provide always pair of two integers. Char "+SubStr( ::text, i, 1 )+SubStr( ::text, i+1, 1 )+" not allowed." )
-				 #else
-				 ::DrawError("With Code C, you must provide always pair of two integers. Char "+::text[i]+::text[i+1]+" not allowed." )
-				 #endif
 				 lerror := .T.
 		  EndIf
 
 		ElseIf cModeCode == "B"
 
-  		 #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
 			 If ::FindCharCode( ::KeysmodeB, SubStr( ::Text, i, 1 ) ) == 0
 		       ::DrawError('Char '+ SubStr( ::text, i, 1 )+" not allowed.")
-  		 #else
-			 If ::FindCharCode( ::KeysmodeB, ::Text[i] ) == 0
-		       ::DrawError('Char '+::text[i]+" not allowed.")
-			 #endif
-			    lerror = .T.
+  			    lerror = .T.
 			 EndIf
 
 		ElseiF cModeCode == "A"
 
-  		 #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
 		   If ::FindCharCode( ::KeysmodeA, SubStr( ::text, i, 1 ) ) == 0
 		      ::DrawError('Char '+ SubStr( ::text, i, 1 ) +" not allowed.")
-  		 #else
-		   If ::FindCharCode( ::KeysmodeA, ::text[i] ) == 0
-		      ::DrawError('Char '+::text[i]+" not allowed.")
-  		 #endif
-		      lerror := .T.
+  		      lerror := .T.
 		   EndIf
 
 		EndIf

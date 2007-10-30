@@ -300,13 +300,8 @@ METHOD CheckCode() CLASS TBarCode
    LOCAL i
 
    For i := 1 To Len( ::text )
-       #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
        If( !IsInt( ::CheckValInArray( SubStr( ::text, i, 1 ) ) ) )
            ::DrawError("Character  "+SubStr( ::text, i, 1 )+" not allowed .")
-       #else
-       If( !IsInt( ::CheckValInArray( ::text[i] ) ) )
-           ::DrawError("Character  "+::text[i]+" not allowed .")
-       #endif
            lRet := .F.
        EndIf
    Next
@@ -318,11 +313,7 @@ METHOD CheckValInArray(cchar) CLASS TBarCode
   LOCAL npos
   LOCAL uret
 
-  #if defined( __HARBOUR__ ) .and. !defined( HB_COMPAT_XHB )
   npos := ASCAN( ::keys, { |x| SubStr( x, 1, 1 ) == cchar } )
-  #else
-  npos := ASCAN( ::keys, { |x| x[1]== cchar } )
-  #endif
 
   If npos > 0
      uret := npos
