@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-30 19:45 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * harbour/contrib/tip/Makefile
+  * harbour/contrib/tip/ftpcln.prg
+  * harbour/contrib/tip/httpcln.prg
+  + harbour/contrib/tip/sendmail.prg
+    * synced with xHarbour's fixes and additions
+
 2007-10-30 19:25 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/contrib/gd/gd.prg
   * harbour/contrib/gd/gdbar.prg

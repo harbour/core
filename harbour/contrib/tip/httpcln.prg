@@ -412,10 +412,10 @@ METHOD setCookie(cLine) CLASS tIPClientHTTP
    IF !empty(cName)
       //cookies are stored in hashes as host.path.name
       //check if we have a host hash yet
-      if !HHASKEY(::hCookies,cHost)
+      if !HB_HHASKEY(::hCookies,cHost)
          ::hCookies[cHost]:={=>}
       endif
-      if !HHASKEY(::hCookies[cHost],cPath)
+      if !HB_HHASKEY(::hCookies[cHost],cPath)
          ::hCookies[cHost][cPath]:={=>}
       endif
       ::hCookies[cHost][cPath][cName]:=cValue
@@ -439,7 +439,7 @@ METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
    ENDIF
 
    //tail matching the domain
-   aKeys:=hgetkeys(::hCookies)
+   aKeys:=hb_hkeyat(::hCookies)
    y:=len(aKeys)
    z:=len(cHost)
    cHost:=upper(cHost)
@@ -455,7 +455,7 @@ METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
    //now that we have the domain matches we have to do path matchine
    nPath:=len(cPath)
    FOR x := 1 TO y
-      aKeys:=hgetkeys(::hCookies[aDomKeys[x]])
+      aKeys:=hb_hkeyat(::hCookies[aDomKeys[x]])
       aPathKeys:={}
       b:=len(aKeys)
       FOR  a:= 1 TO b
@@ -468,7 +468,7 @@ METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
       asort(aPathKeys,,, {|cX,cY| len(cX) > len(cY)} )
       b:=len(aPathKeys)
       FOR a := 1 TO b
-         aKeys:=hgetkeys(::hCookies[aDomKeys[x]][aPathKeys[a]])
+         aKeys:=hb_hkeyat(::hCookies[aDomKeys[x]][aPathKeys[a]])
          d:=len(aKeys)
          FOR c := 1 TO d
             IF !empty(cOut)

@@ -24,6 +24,7 @@ PRG_SOURCES= \
 	mail.prg \
 	cgi.prg \
 	thtml.prg \
+	sendmail.prg
 
 LIBNAME=tip
 
