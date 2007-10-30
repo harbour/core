@@ -186,11 +186,6 @@
 
 #define VALLOC_FLAG   0
 
-#ifndef SIZE_T
-   #define SIZE_T
-   typedef unsigned int size_t;
-#endif
-
 /* routines internal to this module */
 static int _findeol( BYTEP buf, int buf_len );
 static int _findbol( BYTEP buf, int buf_len );
