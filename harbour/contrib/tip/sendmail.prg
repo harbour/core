@@ -54,10 +54,9 @@
  *
  */
 
-
 #include "common.ch"
-#include "hbcompat.ch"
 
+#translate ( <exp1> LIKE <exp2> )   => ( HB_REGEXLIKE( (<exp2>), (<exp1>) ) )
 
 FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, lTrace, lPopAuth)
 
@@ -73,8 +72,8 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    aFiles     -> Optional. Array of attachments to the email to send
    cUser      -> Required. User name for the POP3 server
    cPass      -> Required. Password for cUser
-   cPopServer -> Required. Pop3 server name or address   
-   nPriority  -> Optional. Email priority: 1=High, 3=Normal (Standard), 5=Low 
+   cPopServer -> Required. Pop3 server name or address
+   nPriority  -> Optional. Email priority: 1=High, 3=Normal (Standard), 5=Low
    lRead      -> Optional. If set to .T., a confirmation request is send. Standard setting is .F.
    lTrace     -> Optional. If set to .T., a log file is created (sendmail<nNr>.log). Standard setting is .F.
    */
@@ -101,16 +100,16 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    DEFAULT nPriority   TO 3
    DEFAULT lRead       TO .F.
    DEFAULT lTrace      TO .F.
-   DEFAULT lPopAuth to .T.   
+   DEFAULT lPopAuth to .T.
 
    cUser := StrTran( cUser, "@", "&at;" )
-   
+
    IF !( (".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. File(cBody) )
-   
+
       IF Right(cBody,2) != HB_OSNewLine()
          cBody += HB_OsNewLine()
       ENDIF
-      
+
    ENDIF
 
    // cTo
@@ -131,7 +130,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       cTo := Alltrim( aTo )
    ENDIF
 
-   
+
    // CC (Carbon Copy)
    IF Valtype(aCC) =="A"
       IF Len(aCC) >0
@@ -143,8 +142,8 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ELSEIF Valtype(aCC) =="C"
       cCC := Alltrim( aCC )
    ENDIF
-   
-   
+
+
    // BCC (Blind Carbon Copy)
    IF Valtype(aBCC) =="A"
       IF Len(aBCC)>0
@@ -156,42 +155,42 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ELSEIF Valtype(aBCC) =="C"
       cBCC := Alltrim( aBCC )
    ENDIF
-   
+
    IF cPopServer != NIL .AND. lPopAuth
-      Try
+      BEGIN SEQUENCE
          oUrl1 := tUrl():New( "pop://" + cUser + ":" + cPass + "@" + cPopServer + "/" )
-         oUrl1:cUserid := Strtran( cUser, "&at;", "@" )      
-         opop:= tIPClientPOP():New( oUrl1, lTrace ) 
+         oUrl1:cUserid := Strtran( cUser, "&at;", "@" )
+         opop:= tIPClientPOP():New( oUrl1, lTrace )
          IF oPop:Open()
             oPop:Close()
          ENDIF
-      Catch    
+      RECOVER
          lReturn := .F.
-      END      
+      END
 
    ENDIF
-   
+
    IF !lReturn
       RETURN .F.
-   ENDIF      
-   
-   TRY
+   ENDIF
+
+   BEGIN SEQUENCE
     oUrl := tUrl():New( "smtp://" + cUser + "@" + cServer + '/' + cTo )
-   CATCH
+   RECOVER
     lReturn := .F.
    END
-   
+
    IF !lReturn
       RETURN .F.
-   ENDIF   
-   
+   ENDIF
+
    oUrl:nPort   := nPort
    oUrl:cUserid := cUser
-   
+
    oMail   := tipMail():new()
    oAttach := tipMail():new()
    oAttach:SetEncoder( "7-bit" )
-   
+
    IF (".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. File(cBody)
       cMimeText := "text/html ; charset=ISO-8859-1"
       oAttach:hHeaders[ "Content-Type" ] := cMimeText
@@ -214,18 +213,18 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       oMail:hHeaders[ "Bcc" ] := cBCC
    ENDIF
 
-   TRY
+   BEGIN SEQUENCE
     oInmail := tIPClientSMTP():New( oUrl, lTrace)
-   CATCH
+   RECOVER
     lReturn := .F.
    END
-   
+
    IF !lReturn
       RETURN .F.
-   ENDIF   
+   ENDIF
 
    oInmail:nConnTimeout:=20000
-   
+
    IF oInMail:Opensecure()
 
       WHILE .T.
@@ -238,7 +237,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
             lAuthPlain := .T.
          ENDIF
       ENDDO
-      
+
       IF lAuthLogin
          IF !oInMail:Auth( cUser, cPass )
             lConnect := .F.
@@ -246,7 +245,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
             lConnectPlain  := .T.
          ENDIF
       ENDIF
-      
+
       IF lAuthPlain .AND. !lConnect
          IF !oInMail:AuthPlain( cUser, cPass )
             lConnect := .F.
@@ -261,13 +260,13 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ELSE
 
       lConnect := .F.
-      
+
    ENDIF
 
    IF !lConnect
-   
+
       oInMail:Close()
-      
+
       IF !oInMail:Open()
          lConnect := .F.
          oInmail:Close()
@@ -280,15 +279,15 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
             EXIT
          ENDIF
       ENDDO
-      
+
    ENDIF
-   
+
    oInMail:oUrl:cUserid := cFrom
    oMail:hHeaders[ "To" ]      := cTo
    oMail:hHeaders[ "Subject" ] := cSubject
-   
+
    FOR EACH aThisFile IN AFiles
-   
+
       IF Valtype( aThisFile ) == "C"
          cFile := aThisFile
          cData := Memoread( cFile )
@@ -347,7 +346,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       oAttach:hHeaders[ "Content-Disposition" ] := "attachment; filename=" + cFname + cFext
       oAttach:SetBody( cData )
       oMail:Attach( oAttach )
-      
+
    NEXT
 
    IF lRead
@@ -357,11 +356,11 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    IF nPriority != 3
       oMail:hHeaders[ "X-Priority" ] := Str( nPriority, 1 )
    ENDIF
-   
+
    oInmail:Write( oMail:ToString() )
    oInMail:Commit()
    oInMail:Close()
-   
+
 RETURN lReturn
 
 
@@ -371,7 +370,7 @@ RETURN lReturn
 FUNCTION HB_SetMimeType( cFile, cFname, cFext )
 
 cFile := Lower( cFile )
-   
+
 IF     ( cFile LIKE ".+\.vbd" ); RETURN "application/activexdocument="+cFname + cFext
 ELSEIF ( cFile LIKE ".+\.(asn|asz|asd)" ); RETURN "application/astound="+cFname + cFext
 ELSEIF ( cFile LIKE ".+\.pqi" ); RETURN "application/cprplayer=" + cFname + cFext

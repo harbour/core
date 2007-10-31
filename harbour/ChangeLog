@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-10-30 18:37 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * contrib/tip/sendmail.prg
+    * cleanup to compile with a std harbour build, removed the
+      "include "hbcompat.ch"", and added the #translate for LIKE found in the
+      hbcompat.ch file, to keep it easy and clean when comparing from/to the
+      xHarbour version.
+
 2007-10-30 19:45 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/contrib/tip/Makefile
   * harbour/contrib/tip/ftpcln.prg
