@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-01 20:03 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/tip/sendmail.prg
+  * harbour/contrib/directx/test/anima2.bmp
+  * harbour/contrib/directx/test/brick1.bmp
+  * harbour/contrib/directx/test/black.bmp
+  * harbour/contrib/directx/test/brick2.bmp
+  * harbour/contrib/directx/test/brick3.bmp
+  * harbour/contrib/directx/test/shot.bmp
+  * harbour/contrib/directx/w32_ddrw.h
+  * harbour/contrib/directx/Makefile
+  * harbour/samples/pe/pe.prg
+    * updated svn attributes
+
 2007-11-01 19:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/ole/bldtest.bat
   * harbour/contrib/ole/build32.bat
