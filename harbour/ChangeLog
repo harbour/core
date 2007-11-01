@@ -8,6 +8,58 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-01 19:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/ole/bldtest.bat
+  * harbour/contrib/ole/build32.bat
+  * harbour/contrib/xhb/make_b32.bat
+  * harbour/contrib/xhb/make_vc.bat
+  * harbour/contrib/libmisc/make_b32.bat
+  * harbour/contrib/libmisc/doc/gendoc.bat
+  * harbour/contrib/libmisc/make_vc.bat
+  * harbour/contrib/pgsql/make_b32.bat
+  * harbour/contrib/apollo/test/bld.bat
+  * harbour/contrib/apollo/test/bld_b32.bat
+  * harbour/contrib/apollo/make_b32.bat
+  * harbour/contrib/gd/make_b32.bat
+  * harbour/contrib/gd/tests/bldtest.bat
+  * harbour/contrib/libnf/make_b32.bat
+  * harbour/contrib/libnf/make_vc.bat
+  * harbour/contrib/htmllib/make_b32.bat
+  * harbour/contrib/htmllib/make_vc.bat
+  * harbour/contrib/tip/make_b32.bat
+  * harbour/contrib/tip/make_vc.bat
+  * harbour/contrib/libct/make_b32.bat
+  * harbour/contrib/libct/make_vc.bat
+  * harbour/contrib/adordd/make_b32.bat
+  * harbour/contrib/rdd_ads/doc/gendoc.bat
+  * harbour/contrib/rdd_ads/make_b32.bat
+  * harbour/contrib/rdd_ads/make_vc.bat
+  * harbour/contrib/libgt/make_b32.bat
+  * harbour/contrib/libgt/doc/gendoc.bat
+  * harbour/contrib/libgt/make_vc.bat
+  * harbour/contrib/hbclip/make_clp.bat
+  * harbour/contrib/btree/make_b32.bat
+  * harbour/contrib/btree/mktest.bat
+  * harbour/contrib/directx/make_b32.bat
+  * harbour/contrib/directx/make_vc.bat
+  * harbour/contrib/win32/make_b32.bat
+  * harbour/contrib/win32/make_vc.bat
+  * harbour/contrib/hgf/tests/build_b32.bat
+  * harbour/contrib/hgf/win32/make_b32.bat
+  * harbour/contrib/hgf/win32/makevc.bat
+  * harbour/contrib/samples/make_b32.bat
+  * harbour/contrib/samples/make_vc.bat
+  * harbour/contrib/delphi/hbdll/start.bat
+  * harbour/contrib/delphi/hbdll/bld_sdll.bat
+  * harbour/contrib/mysql/make_b32.bat
+  * harbour/contrib/odbc/bldodbc.bat
+  * harbour/contrib/odbc/bld_b32.bat
+  * harbour/contrib/bmdbfcdx/make_b32.bat
+  * harbour/contrib/hbzlib/dll_b32.bat
+  * harbour/contrib/hbzlib/make_b32.bat
+  * harbour/contrib/hbzlib/make_vc.bat
+    * fixed typo, changed eol-style to svn:eol-style
+
 2007-11-01 18:37 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/ole/bldtest.bat
   * harbour/contrib/ole/build32.bat
