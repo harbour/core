@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-01 11:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/cdpapi.c
+    * changed accented character handling and multibyte character
+      comparison to make some operations like:
+         dbSeek(cVal)
+         while ordKeyVal() = cVal
+            ...
+         enddo
+      safe also with such CDPs
+
 2007-10-30 18:37 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * contrib/tip/sendmail.prg
     * cleanup to compile with a std harbour build, removed the

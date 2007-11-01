@@ -295,7 +295,7 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
          {
             if( !s_cdpList[ iPos ] )
             {
-               int i, iu, il, iumax = 0, ilmax = 0;
+               int i, ia, iu, il, iumax = 0, ilmax = 0;
                char *ptrUpper = cdpage->CharsUpper;
                char *ptrLower = cdpage->CharsLower;
                char *ptr;
@@ -332,7 +332,7 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                      ptrLower = cdpage->CharsLower = hb_strdup(cdpage->CharsLower);
                      cdpage->lChClone = TRUE;
                   }
-                  for( i=1; *ptrUpper; i++,ptrUpper++,ptrLower++ )
+                  for( i=ia=1; *ptrUpper; i++,ia++,ptrUpper++,ptrLower++ )
                   {
                      if( *ptrUpper == '~' )
                      {
@@ -344,22 +344,6 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                         *(ptr-1) = '\0';
                         if( cdpage->lAccEqual )
                            i--;
-                        if( cdpage->lAccInterleave )
-                        {
-                           char *ptrtmp;
-
-                           ptrtmp = ptrUpper-1;
-                           while( cdpage->s_accent[ (((int)*ptrtmp)&255) ] )
-                              ptrtmp --;
-                           iu = (((int)*ptrUpper)&255);
-                           cdpage->s_accent[ iu ] = *ptrtmp;
-
-                           ptrtmp = ptrLower-1;
-                           while( cdpage->s_accent[ (((int)*ptrtmp)&255) ] )
-                              ptrtmp --;
-                           il = (((int)*ptrLower)&255);
-                           cdpage->s_accent[ il ] = *ptrtmp;
-                        }
                      }
                      else if( *ptrUpper == '.' )
                      {
@@ -381,18 +365,21 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                         cdpage->lSort = TRUE;
                         continue;
                      }
-                     iu = (((int)*ptrUpper)&255);
-                     cdpage->s_chars[ iu ] = i;
-                     il = (((int)*ptrLower)&255);
-                     cdpage->s_chars[ il ] = i+nAddLower;
+                     iu = ((int)*ptrUpper)&255;
+                     il = ((int)*ptrLower)&255;
                      if( iu < iumax || il < ilmax )
                         cdpage->lSort = TRUE;
                      iumax = iu; ilmax = il;
 
-                     iu = ((int)(*ptrLower))&255;
-                     cdpage->s_upper[iu] = *ptrUpper;
-                     il = ((int)(*ptrUpper))&255;
-                     cdpage->s_lower[il] = *ptrLower;
+                     cdpage->s_chars[ iu ] = i;
+                     cdpage->s_chars[ il ] = i + nAddLower;
+                     if( cdpage->lAccInterleave )
+                     {
+                        cdpage->s_accent[ iu ] = ia;
+                        cdpage->s_accent[ il ] = ia + nAddLower;
+                     }
+                     cdpage->s_upper[ iu ] = *ptrUpper;
+                     cdpage->s_lower[ il ] = *ptrLower;
                   }
                   if( cdpage->lLatin )
                   {
@@ -408,12 +395,6 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                      }
                   }
                   /*
-                  for( i=0; i<32; i++ )
-                     printf( "\n %3d %3d %3d %3d %3d %3d %3d %3d",cdpage->s_accent[i*8],
-                       cdpage->s_accent[i*8+1],cdpage->s_accent[i*8+2],
-                       cdpage->s_accent[i*8+3],cdpage->s_accent[i*8+4],
-                       cdpage->s_accent[i*8+5],cdpage->s_accent[i*8+6],
-                       cdpage->s_accent[i*8+7] );
                   for( i=0; i<32; i++ )
                      printf( "\n %3d %3d %3d %3d %3d %3d %3d %3d",cdpage->s_chars[i*8],
                        cdpage->s_chars[i*8+1],cdpage->s_chars[i*8+2],
@@ -838,255 +819,275 @@ HB_EXPORT int hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdpage )
 
 }
 
+static int hb_cdpMultiWeight( PHB_CODEPAGE cdpage, char * szChar )
+{
+   PHB_MULTICHAR pmulti = cdpage->multi;
+   int j;
+
+   for( j = 0; j < cdpage->nMulti; ++j, ++pmulti )
+   {
+      if( ( *szChar == pmulti->cFirst[ 0 ] ||
+            *szChar == pmulti->cFirst[ 1 ] ) &&
+          ( *( szChar + 1 ) == pmulti->cLast[ 0 ] ||
+            *( szChar + 1 ) == pmulti->cLast[ 1 ] ) )
+      {
+         return pmulti->nCode +
+                      ( ( *szChar == pmulti->cFirst[ 0 ] ) ? 0 :
+                           ( cdpage->nChars + ( cdpage->lLatin ? 6 : 0 ) ) );
+      }
+   }
+
+   return 0;
+}
+
 HB_EXPORT int hb_cdpcmp( const char* szFirst, ULONG ulLenFirst, const char* szSecond, ULONG ulLenSecond, PHB_CODEPAGE cdpage, BOOL fExact )
 {
+   int iRet = 0, iAcc = 0, n1 = 0, n2 = 0;
    ULONG ul, ulLen;
-   int iRet = 0, n1, n2;
-   int nAcc1 = 0, nAcc2 = 0;
-   /* printf( "\nhb_cdpcmp-0 %s %s",szFirst,szSecond ); */
 
    ulLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
-
-   for( ul=0; ul<ulLen; ul++,szFirst++,szSecond++ )
+   for( ul = 0; ul < ulLen; ++szFirst, ++szSecond, ++ul )
    {
-      if( cdpage->nMulti && ( *szFirst != *szSecond  || *(szFirst+1) != *(szSecond+1) ) )
-      {
-         int j, nd1 = 0, nd2 = 0;
-         PHB_MULTICHAR pmulti = cdpage->multi;
-         /* printf( "\nhb_cdpcmp-1 %c %c",*szFirst,*szSecond ); */
-         ul ++;
-         for( j=0; j<cdpage->nMulti; j++,pmulti++ )
-         {
-            if( ( ul < ulLenFirst ) && 
-                ( *(szFirst+1) == pmulti->cLast[0] ||
-                  *(szFirst+1) == pmulti->cLast[1] ) &&
-                ( *szFirst == pmulti->cFirst[0] ||
-                  *szFirst == pmulti->cFirst[1] ) )
-            {
-                nd1 = pmulti->nCode + 
-                      ( (*szFirst == pmulti->cFirst[0])? 0 :
-                           ( cdpage->nChars + ( (cdpage->lLatin)? 6:0 ) ) );
-            }
-            if( ( ul < ulLenSecond ) && 
-                ( *(szSecond+1) == pmulti->cLast[0] ||
-                  *(szSecond+1) == pmulti->cLast[1] ) &&
-                ( *szSecond == pmulti->cFirst[0] ||
-                  *szSecond == pmulti->cFirst[1] ) )
-            {
-                nd2 = pmulti->nCode +
-                      ( (*szSecond == pmulti->cFirst[0])? 0 :
-                           ( cdpage->nChars + ( (cdpage->lLatin)? 6:0 ) ) );
-            }
-         }
-         ul --;
-         if( nd1 && !nd2 )
-         {
-            n2 = (int)cdpage->s_chars[ ((int)(*szSecond))&255 ];
-            iRet = ( nd1 < n2 )? -1 : 1;
-            /* printf( "\nhb_cdpcmp-2 %d %d %d",iRet,nd1,n2 ); */
-            break;
-         }
-         else if( !nd1 && nd2 )
-         {
-            n1 = (int)cdpage->s_chars[ ((int)(*szFirst))&255 ];
-            iRet = ( n1 < nd2 )? -1 : 1;
-            /* printf( "\nhb_cdpcmp-3 %d %d %d",iRet,n1,nd2 ); */
-            break;
-         }
-         else if( nd1 && nd2 )
-         {
-            iRet = ( nd1 == nd2 )? ( ( *(szFirst+1) < *(szSecond+1) )? -1 : 1 ) :
-                   ( ( nd1 < nd2 )? -1 : 1 );
-            break;
-         }
-      }
       if( *szFirst != *szSecond )
       {
-         if( ( n1 = (int)cdpage->s_chars[ ((int)*szFirst)&255 ] ) == 0 ||
-             ( n2 = (int)cdpage->s_chars[ ((int)*szSecond)&255 ] ) == 0 )
+         if( cdpage->nMulti )
+         {
+            int nd1, nd2;
+
+            if( ul > 0 )
+            {
+               nd1 = hb_cdpMultiWeight( cdpage, szFirst - 1 );
+               nd2 = hb_cdpMultiWeight( cdpage, szSecond - 1 );
+               if( nd1 )
+               {
+                  if( nd2 )
+                  {
+                     if( nd1 == nd2 )
+                     {
+                        nd1 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) *szFirst ];
+                        nd2 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) *szSecond ];
+                        if( nd1 == nd2 || !nd1 || !nd2 )
+                        {
+                           nd1 = ( UCHAR ) *szFirst;
+                           nd2 = ( UCHAR ) *szSecond;
+                        }
+                     }
+                  }
+                  else
+                     nd2 = n2;
+                  iRet = ( nd1 < nd2 ) ? -1 : 1;
+                  break;
+               }
+               else if( nd2 )
+               {
+                  iRet = ( n1 < nd2 ) ? -1 : 1;
+                  break;
+               }
+            }
+            nd1 = ( ul < ulLenFirst - 1 ) ?
+                        hb_cdpMultiWeight( cdpage, szFirst ) : 0;
+            nd2 = ( ul < ulLenSecond - 1 ) ?
+                        hb_cdpMultiWeight( cdpage, szSecond ) : 0;
+            if( nd1 )
+            {
+               if( nd2 )
+               {
+                  if( nd1 == nd2 )
+                  {
+                     nd1 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) *szFirst ];
+                     nd2 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) *szSecond ];
+                     if( nd1 == nd2 || !nd1 || !nd2 )
+                     {
+                        nd1 = ( UCHAR ) *szFirst;
+                        nd2 = ( UCHAR ) *szSecond;
+                     }
+                  }
+               }
+               else
+                  nd2 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) *szSecond ];
+               iRet = ( nd1 < nd2 ) ? -1 : 1;
+               break;
+            }
+            else if( nd2 )
+            {
+               nd1 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) *szFirst ];
+               iRet = ( nd1 < nd2 ) ? -1 : 1;
+               break;
+            }
+         }
+
+         if( ( n1 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) *szFirst ] ) == 0 ||
+             ( n2 = ( UCHAR ) cdpage->s_chars[ ( UCHAR ) *szSecond ] ) == 0 )
          {
             /* One of characters doesn't belong to the national characters */
-            iRet = ( (((int)*szFirst)&255) < (((int)*szSecond)&255) )? -1 : 1;
-            /* printf( "\n|%c|%c|%d %d %d",*szFirst,*szSecond,((int)*szFirst)&255,((int)*szSecond)&255,iRet ); */
+            iRet = ( ( UCHAR ) *szFirst < ( UCHAR ) *szSecond ) ? -1 : 1;
             break;
          }
-         if( ( n1 == n2 ) && !fExact )
+         else if( n1 == n2 )
          {
-            continue;
-         }
-         if( cdpage->lAccInterleave && !nAcc1 && !nAcc2 )
-         {
-            BYTE a1, a2;
-            a1 = cdpage->s_accent[ ((int)*(szFirst))&255 ];
-            a2 = cdpage->s_accent[ ((int)*(szSecond))&255 ];
-            if( ( a1 || a2 ) &&
-                ( a1 == a2 || a1 == *((BYTE*)szSecond) || a2 == *((BYTE*)szFirst) )
-                )
+            if( iAcc == 0 && ( fExact || ( ulLenFirst == ulLenSecond &&
+                                           cdpage->lAccInterleave ) ) )
             {
-               /* printf( "\nhb_cdpcmp-3A %d %d",a1,a2 ); */
-               if( a1 == *((BYTE*)szSecond) || a1 == a2 )
-                  nAcc1 = n1;
-               if( a2 == *((BYTE*)szFirst) || a1 == a2 )
-                  nAcc2 = n2;
-            }
-            else
-            {
-               iRet = ( n1 == n2 )? ( ( *szFirst < *szSecond )? -1 : 1 ) :
-                      ( ( n1 < n2 )? -1 : 1 );
-               break;
+               if( cdpage->lAccInterleave )
+                  iAcc = ( cdpage->s_accent[ ( UCHAR ) *szFirst ] <
+                           cdpage->s_accent[ ( UCHAR ) *szSecond ] ) ? -1 : 1;
+               else
+                  iAcc = ( ( UCHAR ) *szFirst < ( UCHAR ) *szSecond ) ? -1 : 1;
             }
          }
          else
          {
-            iRet = ( n1 == n2 )? ( ( *szFirst < *szSecond )? -1 : 1 ) :
-                   ( ( n1 < n2 )? -1 : 1 );
+            iRet = ( n1 < n2 ) ? -1 : 1;
             break;
          }
       }
    }
-   /* printf( "\r\n : %d %d %d",iRet,nAcc1,nAcc2 ); */
 
    if( !iRet )
    {
-      if( ( fExact || ( ulLenSecond > ulLenFirst ) || ( nAcc1 != nAcc2 && ulLenSecond < ulLenFirst ) )
-         && ( ulLenSecond != ulLenFirst ) )
-      {
-         iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
-      }
-      else if( nAcc1 > nAcc2 )
-      {
-         iRet = 1;
-      }
-      else if( nAcc2 > nAcc1 )
-      {
+      if( iAcc )
+         iRet = iAcc;
+      else if( ulLenSecond > ulLenFirst )
          iRet = -1;
-      }
+      else if( fExact && ulLenSecond < ulLenFirst )
+         iRet = 1;
    }
 
    return iRet;
 }
 
+static int hb_cdpMultiWeightI( PHB_CODEPAGE cdpage, char * szChar )
+{
+   PHB_MULTICHAR pmulti = cdpage->multi;
+   int j;
+
+   for( j = 0; j < cdpage->nMulti; ++j, ++pmulti )
+   {
+      if( ( *szChar == pmulti->cFirst[ 0 ] ||
+            *szChar == pmulti->cFirst[ 1 ] ) &&
+          ( *( szChar + 1 ) == pmulti->cLast[ 0 ] ||
+            *( szChar + 1 ) == pmulti->cLast[ 1 ] ) )
+      {
+         return pmulti->nCode;
+      }
+   }
+
+   return 0;
+}
+
 HB_EXPORT int hb_cdpicmp( const char* szFirst, ULONG ulLenFirst, const char* szSecond, ULONG ulLenSecond, PHB_CODEPAGE cdpage, BOOL fExact )
 {
+   int iRet = 0, iAcc = 0, n1 = 0, n2 = 0, u1, u2;
    ULONG ul, ulLen;
-   int iRet = 0, n1, n2, u1, u2;
-   int nAcc1 = 0, nAcc2 = 0;
-   /* printf( "\nhb_cdpcmp-0 %s %s",szFirst,szSecond ); */
 
    ulLen = ulLenFirst < ulLenSecond ? ulLenFirst : ulLenSecond;
-
-   for( ul=0; ul<ulLen; ul++,szFirst++,szSecond++ )
+   for( ul = 0; ul < ulLen; ++szFirst, ++szSecond, ++ul )
    {
       u1 = ( UCHAR ) cdpage->s_upper[ ( UCHAR ) *szFirst ];
       u2 = ( UCHAR ) cdpage->s_upper[ ( UCHAR ) *szSecond ];
-      if( cdpage->nMulti && ( u1 != u2 || cdpage->s_upper[ ( UCHAR ) szFirst[1] ] !=
-                                          cdpage->s_upper[ ( UCHAR ) szSecond[1] ] ) )
-      {
-         int j, nd1 = 0, nd2 = 0;
-         PHB_MULTICHAR pmulti = cdpage->multi;
-         /* printf( "\nhb_cdpcmp-1 %c %c",*szFirst,*szSecond ); */
-         ul ++;
-         for( j=0; j<cdpage->nMulti; j++,pmulti++ )
-         {
-            if( ( ul < ulLenFirst ) && 
-                ( *(szFirst+1) == pmulti->cLast[0] ||
-                  *(szFirst+1) == pmulti->cLast[1] ) &&
-                ( *szFirst == pmulti->cFirst[0] ||
-                  *szFirst == pmulti->cFirst[1] ) )
-            {
-                nd1 = pmulti->nCode;
-            }
-            if( ( ul < ulLenSecond ) && 
-                ( *(szSecond+1) == pmulti->cLast[0] ||
-                  *(szSecond+1) == pmulti->cLast[1] ) &&
-                ( *szSecond == pmulti->cFirst[0] ||
-                  *szSecond == pmulti->cFirst[1] ) )
-            {
-                nd2 = pmulti->nCode;
-            }
-         }
-         ul --;
-         if( nd1 && !nd2 )
-         {
-            n2 = (int)cdpage->s_chars[ u2 ];
-            iRet = ( nd1 < n2 ) ? -1 : 1;
-            /* printf( "\nhb_cdpcmp-2 %d %d %d",iRet,nd1,n2 ); */
-            break;
-         }
-         else if( !nd1 && nd2 )
-         {
-            n1 = (int)cdpage->s_chars[ u1 ];
-            iRet = ( n1 < nd2 ) ? -1 : 1;
-            /* printf( "\nhb_cdpcmp-3 %d %d %d",iRet,n1,nd2 ); */
-            break;
-         }
-         else if( nd1 && nd2 )
-         {
-            iRet = ( nd1 == nd2 ) ?
-                   ( ( cdpage->s_upper[ ( UCHAR ) szFirst[1] ] <
-                       cdpage->s_upper[ ( UCHAR ) szSecond[1] ] ) ? -1 : 1 ) :
-                   ( ( nd1 < nd2 ) ? -1 : 1 );
-            break;
-         }
-      }
       if( u1 != u2 )
       {
-         if( ( n1 = (int) cdpage->s_chars[ u1 ] ) == 0 ||
-             ( n2 = (int) cdpage->s_chars[ u2 ] ) == 0 )
+         if( cdpage->nMulti )
+         {
+            int nd1, nd2;
+
+            if( ul > 0 )
+            {
+               nd1 = hb_cdpMultiWeightI( cdpage, szFirst - 1 );
+               nd2 = hb_cdpMultiWeightI( cdpage, szSecond - 1 );
+               if( nd1 )
+               {
+                  if( nd2 )
+                  {
+                     if( nd1 == nd2 )
+                     {
+                        nd1 = ( UCHAR ) cdpage->s_chars[ u1 ];
+                        nd2 = ( UCHAR ) cdpage->s_chars[ u2 ];
+                        if( nd1 == nd2 || !nd1 || !nd2 )
+                        {
+                           nd1 = u1;
+                           nd2 = u2;
+                        }
+                     }
+                  }
+                  else
+                     nd2 = n2;
+                  iRet = ( nd1 < nd2 ) ? -1 : 1;
+                  break;
+               }
+               else if( nd2 )
+               {
+                  iRet = ( n1 < nd2 ) ? -1 : 1;
+                  break;
+               }
+            }
+            nd1 = ( ul < ulLenFirst - 1 ) ?
+                        hb_cdpMultiWeightI( cdpage, szFirst ) : 0;
+            nd2 = ( ul < ulLenSecond - 1 ) ?
+                        hb_cdpMultiWeightI( cdpage, szSecond ) : 0;
+            if( nd1 )
+            {
+               if( nd2 )
+               {
+                  if( nd1 == nd2 )
+                  {
+                     nd1 = ( UCHAR ) cdpage->s_chars[ u1 ];
+                     nd2 = ( UCHAR ) cdpage->s_chars[ u2 ];
+                     if( nd1 == nd2 || !nd1 || !nd2 )
+                     {
+                        nd1 = u1;
+                        nd2 = u2;
+                     }
+                  }
+               }
+               else
+                  nd2 = ( UCHAR ) cdpage->s_chars[ u2 ];
+               iRet = ( nd1 < nd2 ) ? -1 : 1;
+               break;
+            }
+            else if( nd2 )
+            {
+               nd1 = ( UCHAR ) cdpage->s_chars[ u1 ];
+               iRet = ( nd1 < nd2 ) ? -1 : 1;
+               break;
+            }
+         }
+
+         if( ( n1 = ( UCHAR ) cdpage->s_chars[ u1 ] ) == 0 ||
+             ( n2 = ( UCHAR ) cdpage->s_chars[ u2 ] ) == 0 )
          {
             /* One of characters doesn't belong to the national characters */
-            iRet = ( u1 < u2 )? -1 : 1;
+            iRet = ( u1 < u2 ) ? -1 : 1;
             break;
          }
-         if( ( n1 == n2 ) && !fExact )
+         else if( n1 == n2 )
          {
-            continue;
-         }
-         if( cdpage->lAccInterleave && !nAcc1 && !nAcc2 )
-         {
-            UCHAR a1, a2;
-            a1 = cdpage->s_accent[ u1 ];
-            a2 = cdpage->s_accent[ u2 ];
-            if( ( a1 || a2 ) && ( a1 == a2 || a1 == u2 || a2 == u1 ) )
+            if( iAcc == 0 && ( fExact || ( ulLenFirst == ulLenSecond &&
+                                           cdpage->lAccInterleave ) ) )
             {
-               /* printf( "\nhb_cdpcmp-3A %d %d",a1,a2 ); */
-               if( a1 == u2 || a1 == a2 )
-                  nAcc1 = n1;
-               if( a2 == u1 || a1 == a2 )
-                  nAcc2 = n2;
-            }
-            else
-            {
-               iRet = ( n1 == n2 ) ? ( ( u1 < u2 ) ? -1 : 1 ) :
-                      ( ( n1 < n2 ) ? -1 : 1 );
-               break;
+               if( cdpage->lAccInterleave )
+                  iAcc = ( cdpage->s_accent[ u1 ] <
+                           cdpage->s_accent[ u2 ] ) ? -1 : 1;
+               else
+                  iAcc = ( u1 < u2 ) ? -1 : 1;
             }
          }
          else
          {
-            iRet = ( n1 == n2 ) ? ( ( u1 < u2 ) ? -1 : 1 ) :
-                   ( ( n1 < n2 ) ? -1 : 1 );
+            iRet = ( n1 < n2 ) ? -1 : 1;
             break;
          }
       }
    }
-   /* printf( "\r\n : %d %d %d",iRet,nAcc1,nAcc2 ); */
 
    if( !iRet )
    {
-      if( ( fExact || ( ulLenSecond > ulLenFirst ) || ( nAcc1 != nAcc2 && ulLenSecond < ulLenFirst ) )
-         && ( ulLenSecond != ulLenFirst ) )
-      {
-         iRet = ( ulLenFirst < ulLenSecond ) ? -1 : 1;
-      }
-      else if( nAcc1 > nAcc2 )
-      {
-         iRet = 1;
-      }
-      else if( nAcc2 > nAcc1 )
-      {
+      if( iAcc )
+         iRet = iAcc;
+      else if( ulLenSecond > ulLenFirst )
          iRet = -1;
-      }
+      else if( fExact && ulLenSecond < ulLenFirst )
+         iRet = 1;
    }
 
    return iRet;
