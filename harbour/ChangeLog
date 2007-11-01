@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-01 18:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/cdpapi.c
+    * added mossing const in declaration
+
+  * harbour/contrib/xhb/make_b32.bat
+  * harbour/contrib/xhb/make_vc.bat
+  * harbour/contrib/win32/make_b32.bat
+  * harbour/contrib/win32/make_vc.bat
+    * changed EOL style to CRLF
+
 2007-11-01 11:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/cdpapi.c
     * changed accented character handling and multibyte character

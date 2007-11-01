@@ -819,7 +819,7 @@ HB_EXPORT int hb_cdpchrcmp( char cFirst, char cSecond, PHB_CODEPAGE cdpage )
 
 }
 
-static int hb_cdpMultiWeight( PHB_CODEPAGE cdpage, char * szChar )
+static int hb_cdpMultiWeight( PHB_CODEPAGE cdpage, const char * szChar )
 {
    PHB_MULTICHAR pmulti = cdpage->multi;
    int j;
@@ -956,7 +956,7 @@ HB_EXPORT int hb_cdpcmp( const char* szFirst, ULONG ulLenFirst, const char* szSe
    return iRet;
 }
 
-static int hb_cdpMultiWeightI( PHB_CODEPAGE cdpage, char * szChar )
+static int hb_cdpMultiWeightI( PHB_CODEPAGE cdpage, const char * szChar )
 {
    PHB_MULTICHAR pmulti = cdpage->multi;
    int j;
