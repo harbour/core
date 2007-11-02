@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-02 13:15 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   - doc/genhtm.cmd
+   - utils/hbtest/make_xpp.cmd
+   - contrib/libmisc/doc/gendoc.cmd
+   - contrib/libgt/doc/gendoc.cmd
+     - Removed .cmd versions of .bat files.
+
+   + contrib/dot/bld_b32.bat
+     + New build batch file added (for testing).
+
 2007-11-02 12:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbfsapi.c
   * harbour/source/common/hbwince.c
