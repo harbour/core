@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-02 16:04 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
+  * contrib/bmdbfcdx/bmdbfcdx1.c
+    ! fixed undoing previous fix
+
 2007-11-02 13:15 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - doc/genhtm.cmd
    - utils/hbtest/make_xpp.cmd
