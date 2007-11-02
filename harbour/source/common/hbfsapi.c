@@ -284,7 +284,7 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
    if( pszFileName == NULL )
       return FALSE;
 
-   #if defined( HB_OS_DOS )
+#if defined( HB_OS_DOS )
    {
       union REGS regs;
       struct SREGS sregs;
@@ -297,19 +297,19 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
 
       return regs.x.cflag == 0;
    }
-   #elif defined( HB_OS_WIN_32 )
+#elif defined( HB_OS_WIN_32 )
    {
-      return GetFileAttributes( pszFileName ) != INVALID_FILE_ATTRIBUTES;
+      return GetFileAttributesA( pszFileName ) != INVALID_FILE_ATTRIBUTES;
    }
-   #elif defined( HB_OS_UNIX )
+#elif defined( HB_OS_UNIX )
    {
       struct stat statbuf;
 
       return stat( pszFileName, &statbuf ) == 0;
    }
-   #else
+#else
    {
       return FALSE;
    }
-   #endif
+#endif
 }

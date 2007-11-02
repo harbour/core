@@ -446,13 +446,15 @@ BOOL WINAPI CreateDirectoryA( LPCSTR path, LPSECURITY_ATTRIBUTES attr )
 
 BOOL WINAPI CharToOemBuffA( LPCSTR src, LPSTR dst, DWORD len )
 {
-   hb_strncpy( dst, src, len );
+   if( len )
+      hb_strncpy( dst, src, len - 1 );
    return TRUE;
 }
 
 BOOL WINAPI OemToCharBuffA( LPCSTR src, LPSTR dst, DWORD len )
 {
-   hb_strncpy( dst, src, len );
+   if( len )
+      hb_strncpy( dst, src, len - 1 );
    return TRUE;
 }
 
@@ -498,6 +500,18 @@ BOOL WINAPI FindNextFileA( HANDLE handle, WIN32_FIND_DATAA * data )
    data->nFileSizeLow = wdata.nFileSizeLow;
 
    return b;
+}
+
+DWORD WINAPI GetFileAttributesA( LPCSTR path )
+{
+   LPWSTR wpath;
+   DWORD dw;
+
+   wpath = hb_mbtowc( path );
+   dw = GetFileAttributesW( wpath );
+   hb_xfree( wpath );
+
+   return dw;
 }
 
 BOOL WINAPI GetVersionExA( OSVERSIONINFOA * v )

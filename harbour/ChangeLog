@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-02 12:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbfsapi.c
+  * harbour/source/common/hbwince.c
+    ! fixed hb_fsFileExists() in W32 Unicode builds and WinCE
+
 2007-11-02 21:32 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
   * contrib/bmdbfcdx/bmdbfcdx1.c
     ! fixed acces to set variables.
