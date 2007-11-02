@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-02 21:32 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
+  * contrib/bmdbfcdx/bmdbfcdx1.c
+    ! fixed acces to set variables.
+
 2007-11-01 21:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/samples/pe/bld_b32.bat
     * updated svn attributes

@@ -6902,7 +6902,7 @@ HB_FUNC( BM_DBSEEKWILD )
        if( !ISNIL( 1 ) )
        {
           pKey = hb_param( 1, HB_IT_ANY );
-          bSoftSeek = ISLOG( 2 ) ? (BOOL) hb_parl( 2 ) : hb_setGetL( HB_SET_SOFTSEEK );
+          bSoftSeek = ISLOG( 2 ) ? (BOOL) hb_parl( 2 ) : hb_set.HB_SET_SOFTSEEK;
           bFindLast = ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
           bNext     = ISLOG( 4 ) ? hb_parl( 4 ) : FALSE;
           bAll      = ISLOG( 5 ) ? hb_parl( 5 ) : FALSE;
@@ -7024,7 +7024,7 @@ static ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, LONG lUpDown )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cdxSkipFilter(%p, %ld)", pArea, lUpDown));
 
-   if( !hb_setGetL( HB_SET_DELETED ) && pArea->dbfi.itmCobExpr == NULL )
+   if( !hb_set.HB_SET_DELETED && pArea->dbfi.itmCobExpr == NULL )
       return SUCCESS;
 
    /* Since lToSkip is passed to SkipRaw, it should never request more than
@@ -7040,7 +7040,7 @@ static ERRCODE hb_cdxSkipFilter( CDXAREAP pArea, LONG lUpDown )
    while( !pArea->fBof && !pArea->fEof )
    {
       /* SET DELETED */
-      if( hb_setGetL( HB_SET_DELETED ) )
+      if( hb_set.HB_SET_DELETED )
       {
          LPCDXTAG pTag = hb_cdxGetActiveTag( pArea );
 
@@ -9094,7 +9094,7 @@ static ERRCODE hb_cdxSetFilter( CDXAREAP pArea, LPDBFILTERINFO pFilterInfo )
     if ( SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo ) != SUCCESS )
         return FAILURE;
 
-    pArea->dbfi.fOptimized = hb_setGetL( HB_SET_OPTIMIZE );
+    pArea->dbfi.fOptimized = hb_set.HB_SET_OPTIMIZE;
 
     if ( pArea->dbfi.fOptimized )
     {
