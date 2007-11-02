@@ -299,13 +299,18 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
    }
 #elif defined( HB_OS_WIN_32 )
    {
-      return GetFileAttributesA( pszFileName ) != INVALID_FILE_ATTRIBUTES;
+      DWORD   dwAttr;
+
+      dwAttr = GetFileAttributesA( pszFileName );
+      return ( dwAttr != INVALID_FILE_ATTRIBUTES ) && 
+             ( dwAttr & ( FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_DEVICE ) ) == 0;
    }
 #elif defined( HB_OS_UNIX )
    {
       struct stat statbuf;
 
-      return stat( pszFileName, &statbuf ) == 0;
+      return stat( pszFileName, &statbuf ) == 0 && 
+             ( statbuf.st_mode & S_IFMT ) == S_IFREG;
    }
 #else
    {

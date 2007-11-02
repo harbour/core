@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-02 18:52 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/common/hbfsapi.c
+    ! fixed hb_fsFileExists() to return TRUE for files only
+
 2007-11-02 16:04 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
   * contrib/bmdbfcdx/bmdbfcdx1.c
     ! fixed undoing previous fix
