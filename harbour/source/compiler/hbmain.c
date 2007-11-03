@@ -209,7 +209,7 @@ static int hb_compProcessRSPFile( HB_COMP_DECL, char * szRspName )
       szRspName = szFile;
    }
 
-   inFile = fopen( szRspName, "r" );
+   inFile = hb_fopen( szRspName, "r" );
    if( !inFile )
    {
       char buffer[ _POSIX_PATH_MAX + 80 ];

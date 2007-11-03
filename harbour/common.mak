@@ -288,6 +288,7 @@ COMMON_LIB_OBJS = \
     $(OBJ_DIR)\hbarch$(OBJEXT)   \
     $(OBJ_DIR)\hbfhnd$(OBJEXT)   \
     $(OBJ_DIR)\hbfsapi$(OBJEXT)  \
+    $(OBJ_DIR)\hbfopen$(OBJEXT)  \
     $(OBJ_DIR)\hbgete$(OBJEXT)   \
     $(OBJ_DIR)\hbwince$(OBJEXT)  \
     $(OBJ_DIR)\hbhash$(OBJEXT)   \

@@ -72,7 +72,7 @@ void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
       pFileName->szExtension = ".obj";
    hb_fsFNameMerge( szFileName, pFileName );
 
-   if( ( hObjFile = fopen( szFileName, "wb" ) ) == NULL )
+   if( ( hObjFile = hb_fopen( szFileName, "wb" ) ) == NULL )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );
       return;

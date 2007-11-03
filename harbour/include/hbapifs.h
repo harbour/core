@@ -229,6 +229,9 @@ extern char *    hb_fsAttrDecode( USHORT uiAttr, char * szAttr );
 extern HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree );
 extern HB_EXPORT BYTE * hb_fileNameConv( char *str );
 
+/* wrapper to fopen() which calls hb_fsNameConv() */
+extern FILE * hb_fopen( const char *path, const char *mode );
+
 HB_EXTERN_END
 
 #endif /* HB_APIFS_H_ */

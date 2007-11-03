@@ -51,6 +51,7 @@
  */
 
 #include "hbcomp.h"
+#include "hbapifs.h"
 #include "hbmemory.ch"
 
 int main( int argc, char * argv[] )
@@ -359,4 +360,12 @@ void hb_conOutErr( const char * pStr, ULONG ulLen )
 char * hb_conNewLine( void )
 {
    return "\n";
+}
+
+HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
+{
+   if( pfFree )
+      * pfFree = FALSE;
+
+   return szFileName;
 }

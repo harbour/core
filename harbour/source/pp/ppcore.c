@@ -1804,7 +1804,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, char * szFileName,
                }
             }
 
-            file_in = fopen( szFileName, "r" );
+            file_in = hb_fopen( szFileName, "r" );
 #if !defined(__MINGW32CE__) && !defined(HB_WINCE)
             fNested = errno == EMFILE;
 #endif
@@ -1825,7 +1825,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, char * szFileName,
                {
                   pFileName->szPath = pPath->szPath;
                   hb_fsFNameMerge( szFileNameBuf, pFileName );
-                  file_in = fopen( szFileNameBuf, "r" );
+                  file_in = hb_fopen( szFileNameBuf, "r" );
                   pPath = pPath->pNext;
                }
             }
@@ -5223,7 +5223,7 @@ BOOL hb_pp_outFile( PHB_PP_STATE pState, const char * szOutFileName,
       if( file_out )
          pState->file_out = file_out;
       else
-         pState->file_out = fopen( szOutFileName, "w" );
+         pState->file_out = hb_fopen( szOutFileName, "w" );
 
       if( pState->file_out )
       {
@@ -5252,7 +5252,7 @@ BOOL hb_pp_traceFile( PHB_PP_STATE pState, const char * szTraceFileName, FILE * 
       if( file_trace )
          pState->file_trace = file_trace;
       else
-         pState->file_trace = fopen( szTraceFileName, "w" );
+         pState->file_trace = hb_fopen( szTraceFileName, "w" );
 
       if( pState->file_trace )
       {

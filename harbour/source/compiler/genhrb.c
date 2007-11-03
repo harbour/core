@@ -141,7 +141,7 @@ void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME pFileName )
       pFileName->szExtension = ".hrb";
    hb_fsFNameMerge( szFileName, pFileName );
 
-   yyc = fopen( szFileName, "wb" );
+   yyc = hb_fopen( szFileName, "wb" );
    if( ! yyc )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_CREATE_OUTPUT, szFileName, NULL );

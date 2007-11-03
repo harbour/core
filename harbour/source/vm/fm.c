@@ -82,6 +82,7 @@
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapifs.h"
 #include "hbstack.h"
 #include "hbapierr.h"
 #include "hbmemory.ch"
@@ -582,7 +583,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       FILE *hLog = NULL;
 
       if( s_lMemoryBlocks )
-          hLog = fopen( "fm.log", "a+" );
+          hLog = hb_fopen( "fm.log", "a+" );
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );

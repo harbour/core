@@ -163,7 +163,7 @@ void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 
    if( pszEnv && *hb_searchpath( pszCfgFileName, pszEnv, pszTemp ) )
    {
-      filecfg = fopen( pszTemp, "rt" );
+      filecfg = hb_fopen( pszTemp, "rt" );
       if( ! filecfg )
       {
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_OPEN_CFG, szFileName, NULL );

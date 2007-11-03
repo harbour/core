@@ -8,6 +8,39 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-03 02:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/bmdbfcdx/bmdbfcdx1.c
+    * replaced all direct access to hb_set structure with functions
+      Now it's possible to link bmdbfcdx with harbour.dll but because
+      it still access hb_cdp_page then only if linker supports auto
+      import conversions
+
+  * harbour/source/common/hbfsapi.c
+  * harbour/source/main/harbour.c
+  * harbour/source/pp/hbppgen.c
+  * harbour/utils/hbpp/hbpp.c
+    * added filename conversion (hb_fsNameConv()) to hb_fsFileExists()
+      function
+
+  * harbour/include/hbapifs.h
+  + harbour/source/common/hbfopen.c
+  * harbour/source/common/Makefile
+  * harbour/common.mak
+    + added hb_fopen() function - it's a wrapper to fopen() function but
+      calls internally hb_fsNameConv()
+
+  * harbour/source/pp/hbppgen.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/common/hbtrace.c
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/genhrb.c
+  * harbour/source/compiler/gencobj.c
+  * harbour/source/compiler/genobj32.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/rtl/gtchrmap.c
+  * harbour/source/vm/fm.c
+    * use hb_fopen() instead of fopen()
+
 2007-11-02 18:52 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/common/hbfsapi.c
     ! fixed hb_fsFileExists() to return TRUE for files only

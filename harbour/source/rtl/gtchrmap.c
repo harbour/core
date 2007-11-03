@@ -55,10 +55,7 @@
 /* NOTE: User programs should never call this layer directly! */
 
 #include "hbgtcore.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "hbapifs.h"
 
 #define MAX_CHAR_VAL    0xff
 #define HB_CHRMAP(a,c)  ( ( (a) << 16 ) | (c) )
@@ -377,7 +374,7 @@ static int hb_gt_chrmapread( const char *pszFile, const char *pszTerm, int *nTra
    char buf[256], *ptr, *pTerm;
    int isTerm = -1;
 
-   fp = fopen( pszFile, "r" );
+   fp = hb_fopen( pszFile, "r" );
 
    if( fp != NULL )
    {

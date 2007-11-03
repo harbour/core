@@ -519,6 +519,14 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
     hb_compGenError( NULL, hb_pp_szErrors, 'P', HB_PP_ERR_MEMFREE, NULL, NULL );
 }
 
+BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
+{
+   if( pfFree )
+      * pfFree = FALSE;
+
+   return szFileName;
+}
+
 static BOOL hb_pp_fopen( char * szFileName )
 {
    PFILE pFile;

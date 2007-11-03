@@ -65,6 +65,7 @@
 void * hb_xgrab( ULONG ulSize ) { return malloc( ulSize ); }
 void * hb_xrealloc( void * pMem, ULONG ulSize ) { return realloc( pMem, ulSize ); }
 void hb_xfree( void * pMem ) { free( pMem ); }
+BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree ) { if( pfFree ) * pfFree = FALSE; return szFileName; }
 
 
 /*
@@ -275,7 +276,7 @@ static int hb_pp_preprocesfile( PHB_PP_STATE pState, char * szRuleFile )
    {
       FILE * foutr;
 
-      foutr = fopen( szRuleFile, "w" );
+      foutr = hb_fopen( szRuleFile, "w" );
       if( !foutr )
       {
 #if !defined(__MINGW32CE__) && !defined(HB_WINCE)
