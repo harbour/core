@@ -594,9 +594,7 @@ static LPKEYINFO hb_ntxEvalKey( LPKEYINFO pKey, LPTAGINFO pTag )
    NTXAREAP pArea = pTag->Owner->Owner;
    PHB_ITEM pItem;
 #ifndef HB_CDP_SUPPORT_OFF
-   /* TODO%: this hack is not thread safe, hb_cdp_page has to be thread specific */
-   PHB_CODEPAGE cdpTmp = hb_cdp_page;
-   hb_cdp_page = pArea->cdPage;
+   PHB_CODEPAGE cdpTmp = hb_cdpSelect( pArea->cdPage );
 #endif
 
    if( pTag->nField )
@@ -623,7 +621,7 @@ static LPKEYINFO hb_ntxEvalKey( LPKEYINFO pKey, LPTAGINFO pTag )
    }
 
 #ifndef HB_CDP_SUPPORT_OFF
-   hb_cdp_page = cdpTmp;
+   hb_cdpSelect( cdpTmp );
 #endif
 
    return pKey;
@@ -4154,11 +4152,13 @@ static BOOL hb_ntxOrdSkipEval( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pEval )
 static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm )
 {
    NTXAREAP pArea = pTag->Owner->Owner;
-   char *szPattern = hb_itemGetCPtr( pWildItm );
+   char *szPattern, *szFree = NULL;
    BOOL fFound = FALSE;
    int iFixed = 0;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_ntxOrdSkipWild(%p, %d, %p)", pTag, fForward, pWildItm));
+
+   szPattern = hb_itemGetCPtr( pWildItm );
 
    if( pTag->KeyType != 'C' || !szPattern || !*szPattern )
    {
@@ -4170,7 +4170,7 @@ static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
 #ifndef HB_CDP_SUPPORT_OFF
    if( pArea->cdPage != hb_cdp_page )
    {
-      szPattern = hb_strdup( szPattern );
+      szPattern = szFree = hb_strdup( szPattern );
       hb_cdpTranslate( szPattern, hb_cdp_page, pArea->cdPage );
    }
 #endif
@@ -4266,12 +4266,8 @@ static BOOL hb_ntxOrdSkipWild( LPTAGINFO pTag, BOOL fForward, PHB_ITEM pWildItm 
    else
       pArea->fEof = FALSE;
 
-#ifndef HB_CDP_SUPPORT_OFF
-   if( pArea->cdPage != hb_cdp_page )
-   {
+   if( szFree )
       hb_xfree( szPattern );
-   }
-#endif
 
    return fFound;
 }
@@ -4283,7 +4279,7 @@ static BOOL hb_ntxRegexMatch( LPTAGINFO pTag, PHB_REGEX pRegEx, char * szKey )
 
    if( pTag->Owner->Owner->cdPage != hb_cdp_page )
    {
-      hb_strncpy( szBuff, pTag->CurKeyInfo->key, pTag->KeyLength );
+      memcpy( szBuff, pTag->CurKeyInfo->key, pTag->KeyLength + 1 );
       hb_cdpnTranslate( szBuff, pTag->Owner->Owner->cdPage, hb_cdp_page, pTag->KeyLength );
       szKey = szBuff;
    }
@@ -5263,9 +5259,7 @@ static ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, BOOL fReindex )
       char szBuffer[ NTX_MAX_KEY ];
       int iRecBuff = 0, iRecBufSize, iRec;
 #ifndef HB_CDP_SUPPORT_OFF
-      /* TODO%: this hack is not thread safe, hb_cdp_page has to be thread specific */
-      PHB_CODEPAGE cdpTmp = hb_cdp_page;
-      hb_cdp_page = pArea->cdPage;
+      PHB_CODEPAGE cdpTmp = hb_cdpSelect( pArea->cdPage );
 #endif
 
       pForItem = pTag->pForItem;
@@ -5465,7 +5459,7 @@ static ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, BOOL fReindex )
 
       pArea->lpCurTag = pSaveTag;
 #ifndef HB_CDP_SUPPORT_OFF
-      hb_cdp_page = cdpTmp;
+      hb_cdpSelect( cdpTmp );
 #endif
    }
 

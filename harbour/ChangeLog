@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-03 11:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/cdpapi.c
+    * some minor speed improvement
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * use hb_cdpSelect() instead of direct accessing hb_cdp_page variable
+
 2007-11-02 22:09 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * contrib/directx/makefile.vc
   * contrib/hbzlib/makefile.vc
