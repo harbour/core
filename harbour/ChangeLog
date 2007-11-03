@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-02 22:09 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * contrib/directx/makefile.vc
+  * contrib/hbzlib/makefile.vc
+  * contrib/hgf/win32/makefile.vc
+  * contrib/htmllib/makefile.vc
+  * contrib/libct/makefile.vc
+  * contrib/libgt/makefile.vc
+  * contrib/libmisc/makefile.vc
+  * contrib/libnf/makefile.vc
+  * contrib/rdd_ads/makefile.vc
+  * contrib/samples/makefile.vc
+  * contrib/tip/makefile.vc
+  * contrib/win32/makefile.vc
+  * contrib/xhb/makefile.vc
+    * removed the "-TP" (force source as c++) msvc compiler flag
+
+
 2007-11-03 02:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/bmdbfcdx/bmdbfcdx1.c
     * replaced all direct access to hb_set structure with functions

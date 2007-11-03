@@ -25,7 +25,7 @@ CLEAN :
     @if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=-Ogt2yb1p -FD -GA -GB -Gs -TP -W3 /nologo /GX /ML /I "..\..\include" /Iinclude\
+CPP_PROJ=-Ogt2yb1p -FD -GA -GB -Gs -W3 /nologo /GX /ML /I "..\..\include" /Iinclude\
          /DWIN32 /D_WIN32 /DNDEBUG /D_MBCS /D_LIB\
          /Fp"$(INTDIR)\hbzip.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\"\
          /FD /c $(CFLAGS)
