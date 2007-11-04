@@ -350,9 +350,8 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 
 #ifdef HB_C52_STRICT
 /* Clipper supports quoting by [] for 1-st token in the line so we
-   are checking for HB_PP_TOKEN_NUL in this macro */
-#define HB_PP_TOKEN_CANQUOTE(t)     ( HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_NUL && \
-                                      HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_KEYWORD && \
+   are not checking for HB_PP_TOKEN_NUL in this macro */
+#define HB_PP_TOKEN_CANQUOTE(t)     ( HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_KEYWORD && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACROVAR && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACROTEXT && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_RIGHT_PB && \
@@ -362,9 +361,8 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 /* Disable string quoting by [] for next token if current one is
    constant value - it's not Clipper compatible but we need it for
    accessing string characters by array index operator or introduce
-   similar extensions in the future */
-#define HB_PP_TOKEN_CANQUOTE(t)     ( HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_NUL && \
-                                      HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_KEYWORD && \
+   similar extensions for other types in the future */
+#define HB_PP_TOKEN_CANQUOTE(t)     ( HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_KEYWORD && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACROVAR && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_MACROTEXT && \
                                       HB_PP_TOKEN_TYPE(t) != HB_PP_TOKEN_RIGHT_PB && \

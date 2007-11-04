@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-04 17:47 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+    ! fixed typo in quoting condition for 1-st line token
+
 2007-11-04 03:40 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * include/hbapifs.h
   * harbour/source/common/hbfsapi.c
