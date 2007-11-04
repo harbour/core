@@ -8,6 +8,29 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-04 19:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbmacro.h
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/garbage.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/classes.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rtl/binnum.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * added explicit casting or changed some declarations to avoid
+      warning about possible data lost in conversions
+  * harbour/source/rtl/direct.c
+    % optimized directory array creation and fixed one TOFIX note
+
+   I left few warnings intentionally to mark places which should be
+   updated in the future (f.e. HB_SYMBOLSCOPE translations).
+   Victor, if you can please make build test with MSVC builds and
+   send the list of warnings which still exist to harbour-devel.
+
 2007-11-04 17:47 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
     ! fixed typo in quoting condition for 1-st line token

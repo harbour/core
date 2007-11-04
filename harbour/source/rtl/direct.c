@@ -145,35 +145,25 @@ HB_FUNC( DIRECTORY )
 
    if( ( ffind = hb_fsFindFirst( pDirSpec ? hb_itemGetCPtr( pDirSpec ) : HB_DIR_ALL_FILES_MASK, uiMask ) ) != NULL )
    {
-      PHB_ITEM pFilename = hb_itemNew( NULL );
-      PHB_ITEM pSize = hb_itemNew( NULL );
-      PHB_ITEM pDate = hb_itemNew( NULL );
-      PHB_ITEM pTime = hb_itemNew( NULL );
-      PHB_ITEM pAttr = hb_itemNew( NULL );
+      PHB_ITEM pSubarray = hb_itemNew( NULL );
 
       do
       {
-         PHB_ITEM pSubarray = hb_itemArrayNew( F_LEN );
          char buffer[ 32 ];
 
-         hb_arraySet( pSubarray, F_NAME, hb_itemPutC( pFilename, ffind->szName ) );
-         hb_arraySet( pSubarray, F_SIZE, hb_itemPutNL( pSize, ( LONG ) ffind->size ) ); /* TOFIX: Loss of digits. */
-         hb_arraySet( pSubarray, F_DATE, hb_itemPutDL( pDate, ffind->lDate ) );
-         hb_arraySet( pSubarray, F_TIME, hb_itemPutC( pTime, ffind->szTime ) );
-         hb_arraySet( pSubarray, F_ATTR, hb_itemPutC( pAttr, hb_fsAttrDecode( ffind->attr, buffer ) ) );
+         hb_arrayNew( pSubarray, F_LEN );
+         hb_arraySetC   ( pSubarray, F_NAME, ffind->szName );
+         hb_arraySetNInt( pSubarray, F_SIZE, ffind->size );
+         hb_arraySetDL  ( pSubarray, F_DATE, ffind->lDate );
+         hb_arraySetC   ( pSubarray, F_TIME, ffind->szTime );
+         hb_arraySetC   ( pSubarray, F_ATTR, hb_fsAttrDecode( ffind->attr, buffer ) );
 
          /* Don't exit when array limit is reached */
          hb_arrayAdd( pDir, pSubarray );
-
-         hb_itemRelease( pSubarray );
       }
       while( hb_fsFindNext( ffind ) );
 
-      hb_itemRelease( pFilename );
-      hb_itemRelease( pSize );
-      hb_itemRelease( pDate );
-      hb_itemRelease( pTime );
-      hb_itemRelease( pAttr );
+      hb_itemRelease( pSubarray );
 
       hb_fsFindClose( ffind );
    }

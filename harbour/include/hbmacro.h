@@ -136,16 +136,16 @@ extern void hb_macroGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL )
 extern void hb_macroGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL );
 extern void hb_macroGenPopVar( char * szVarName, HB_COMP_DECL );
 extern void hb_macroGenPopAliasedVar( char * szVarName,
-                                     BOOL bPushAliasValue,
-                                     char * szAlias,
-                                     long lWorkarea, HB_COMP_DECL );
+                                      BOOL bPushAliasValue,
+                                      char * szAlias,
+                                      HB_LONG lWorkarea, HB_COMP_DECL );
 extern void hb_macroGenPushVar( char * szVarName, BOOL bMacroVar, HB_COMP_DECL );
 extern void hb_macroGenPushVarRef( char * szVarName, HB_COMP_DECL );
 extern void hb_macroGenPushMemvarRef( char * szVarName, HB_COMP_DECL );
 extern void hb_macroGenPushAliasedVar( char * szVarName,
-                                      BOOL bPushAliasValue,
-                                      char * szAlias,
-                                      long lWorkarea, HB_COMP_DECL );
+                                       BOOL bPushAliasValue,
+                                       char * szAlias,
+                                       HB_LONG lWorkarea, HB_COMP_DECL );
 extern void hb_macroGenPushLogical( int iTrueFalse, HB_COMP_DECL );
 extern void hb_macroGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL );
 extern void hb_macroGenPushFunCall( char * szFunName, HB_COMP_DECL );

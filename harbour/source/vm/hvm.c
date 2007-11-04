@@ -4429,7 +4429,7 @@ static void hb_vmArrayNew( HB_ITEM_PTR pArray, USHORT uiDimension )
    if( HB_IS_INTEGER( pDim ) )
       ulElements = ( ULONG ) pDim->item.asInteger.value;
    else if( HB_IS_LONG( pDim ) )
-      ulElements = pDim->item.asLong.value;
+      ulElements = ( ULONG ) pDim->item.asLong.value;
    else if( HB_IS_DOUBLE( pDim ) )
       ulElements = ( ULONG ) pDim->item.asDouble.value;
    else
@@ -4587,7 +4587,7 @@ static void hb_vmMacroDo( USHORT uiArgSets )
 
    lArgs = hb_vmArgsJoin( -1, uiArgSets );
    hb_stackDecrease( uiArgSets );
-   hb_vmDo( lArgs );
+   hb_vmDo( ( USHORT ) lArgs );
 }
 
 static void hb_vmMacroFunc( USHORT uiArgSets )
@@ -4598,7 +4598,7 @@ static void hb_vmMacroFunc( USHORT uiArgSets )
 
    lArgs = hb_vmArgsJoin( -1, uiArgSets );
    hb_stackDecrease( uiArgSets );
-   hb_vmDo( lArgs );
+   hb_vmDo( ( USHORT ) lArgs );
    hb_stackPushReturn();
 }
 
@@ -4610,7 +4610,7 @@ static void hb_vmMacroSend( USHORT uiArgSets )
 
    lArgs = hb_vmArgsJoin( -1, uiArgSets );
    hb_stackDecrease( uiArgSets );
-   hb_vmSend( lArgs );
+   hb_vmSend( ( USHORT ) lArgs );
    hb_stackPushReturn();
 }
 

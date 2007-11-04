@@ -370,7 +370,7 @@ static void hb_dbfSetBlankRecord( DBFAREAP pArea, int iType )
          {
             HB_LONG nValue = hb_dbfGetNextValue( pArea, uiCount );
             if( pField->uiDec )
-               nValue = ( HB_LONG ) hb_numDecConv( nValue, - ( int ) pField->uiDec );
+               nValue = ( HB_LONG ) hb_numDecConv( ( double ) nValue, - ( int ) pField->uiDec );
             if( pField->uiType == HB_FT_INTEGER ||
                 pField->uiType == HB_FT_AUTOINC )
             {

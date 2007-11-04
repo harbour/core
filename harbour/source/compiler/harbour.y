@@ -288,12 +288,12 @@ Source     : Crlf
 
 Line       : LINE NUM_LONG LITERAL Crlf
                   { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, $3.string, $3.dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
-                    HB_COMP_PARAM->currLine = $2.lNumber;
+                    HB_COMP_PARAM->currLine = ( int ) $2.lNumber;
                     HB_COMP_PARAM->pLex->fEol = FALSE;
                     if( $3.dealloc ) { hb_xfree( $3.string ); $3.dealloc = FALSE; } }
            | LINE NUM_LONG LITERAL '@' LITERAL Crlf   /* Xbase++ style */
                   { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, $5.string, $5.dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
-                    HB_COMP_PARAM->currLine = $2.lNumber;
+                    HB_COMP_PARAM->currLine = ( int ) $2.lNumber;
                     HB_COMP_PARAM->pLex->fEol = FALSE;
                     if( $3.dealloc ) { hb_xfree( $3.string ); $3.dealloc = FALSE; }
                     if( $5.dealloc ) { hb_xfree( $5.string ); $5.dealloc = FALSE; } }
@@ -1065,8 +1065,8 @@ CodeBlock   : BlockHead BlockExpList '}'
                hb_compCodeBlockEnd( HB_COMP_PARAM );
                $$ = hb_compExprSetCodeblockBody( $1,
                      HB_COMP_PARAM->functions.pLast->pCode + ( ULONG ) $<lNumber>3,
-                     HB_COMP_PARAM->functions.pLast->lPCodePos - $<lNumber>3 );
-               HB_COMP_PARAM->functions.pLast->lPCodePos = $<lNumber>3;
+                     HB_COMP_PARAM->functions.pLast->lPCodePos - ( ULONG ) $<lNumber>3 );
+               HB_COMP_PARAM->functions.pLast->lPCodePos = ( ULONG ) $<lNumber>3;
                HB_COMP_PARAM->lastLinePos = 0;
             }
             ;
@@ -1505,11 +1505,11 @@ DoWhile    : WhileBegin Expression Crlf
              EmptyStats
                {
                   hb_compLoopHere( HB_COMP_PARAM );
-                  hb_compGenJump( $1 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                  hb_compGenJump( ( ULONG ) $1 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
                }
              EndWhile
                {
-                  hb_compGenJumpHere( $<lNumber>4, HB_COMP_PARAM ); 
+                  hb_compGenJumpHere( ( ULONG ) $<lNumber>4, HB_COMP_PARAM ); 
                   if( HB_COMP_PARAM->wWhileCounter )
                      --HB_COMP_PARAM->wWhileCounter;
                   hb_compLoopEnd( HB_COMP_PARAM );
@@ -1562,7 +1562,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   hb_compLoopHere( HB_COMP_PARAM );
 
                   iLine = HB_COMP_PARAM->currLine;
-                  HB_COMP_PARAM->currLine = $<lNumber>1;
+                  HB_COMP_PARAM->currLine = ( int ) $<lNumber>1;
                   hb_compLinePush( HB_COMP_PARAM );
                   HB_COMP_PARAM->currLine = iLine;
 
@@ -1571,7 +1571,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                      HB_COMP_EXPR_CLEAR( hb_compExprGenPush( hb_compExprSetOperand( hb_compExprNewPlusEq( $2, HB_COMP_PARAM ), $<asExpr>8, HB_COMP_PARAM ), HB_COMP_PARAM ) );
                   else
                      HB_COMP_EXPR_CLEAR( hb_compExprGenPush( hb_compExprNewPreInc( $2, HB_COMP_PARAM ), HB_COMP_PARAM ) );
-                  hb_compGenJumpHere( $<lNumber>9, HB_COMP_PARAM );
+                  hb_compGenJumpHere( ( ULONG ) $<lNumber>9, HB_COMP_PARAM );
                   hb_compExprGenPush( $7, HB_COMP_PARAM );              /* end */
                   if( iSign )
                      hb_compGenPCode1( iSign > 0 ? HB_P_GREATER : HB_P_LESS, HB_COMP_PARAM );
@@ -1581,7 +1581,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                      hb_compGenPCode1( HB_P_FORTEST, HB_COMP_PARAM );
                   }
 
-                  hb_compGenJumpFalse( $<lNumber>11 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                  hb_compGenJumpFalse( ( ULONG ) $<lNumber>11 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
                   hb_compLoopEnd( HB_COMP_PARAM );
                   if( hb_compExprAsSymbol( $<asExpr>2 ) )
                      hb_compForEnd( HB_COMP_PARAM, hb_compExprAsSymbol( $<asExpr>2 ) );
@@ -1657,9 +1657,9 @@ ForEach    : FOREACH ForList IN ForArgs          /* 1  2  3  4 */
              {
                 hb_compLoopHere( HB_COMP_PARAM );
                 hb_compEnumNext( HB_COMP_PARAM, $2, $6 );
-                hb_compGenJump( $<lNumber>7 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                hb_compGenJump( ( ULONG ) $<lNumber>7 - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
 
-                hb_compGenJumpHere( $<lNumber>9, HB_COMP_PARAM );
+                hb_compGenJumpHere( ( ULONG ) $<lNumber>9, HB_COMP_PARAM );
                 hb_compLoopEnd( HB_COMP_PARAM );
                 HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                 hb_compEnumEnd( HB_COMP_PARAM, $2 );
@@ -1754,7 +1754,7 @@ BeginSeq    : BEGINSEQ        /* 1 */
                    */
                   if( $<lNumber>3 )
                      hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
-                  hb_compGenJumpHere( $<lNumber>2, HB_COMP_PARAM );
+                  hb_compGenJumpHere( ( ULONG ) $<lNumber>2, HB_COMP_PARAM );
                   $<lNumber>$ = hb_compSequenceEnd( HB_COMP_PARAM );
                   $<lNumber>4 = hb_compLoopCount( HB_COMP_PARAM );
                }
@@ -1764,7 +1764,7 @@ BeginSeq    : BEGINSEQ        /* 1 */
                    * HB_P_SEQBEGIN opcode if there is RECOVER clause
                    */
                   if( $<lNumber>7 )
-                     hb_compGenJumpThere( $<lNumber>2, $<lNumber>7, HB_COMP_PARAM );
+                     hb_compGenJumpThere( ( ULONG ) $<lNumber>2, ( ULONG ) $<lNumber>7, HB_COMP_PARAM );
                   else if( HB_COMP_PARAM->wSeqCounter )
                      --HB_COMP_PARAM->wSeqCounter;
                }
@@ -1782,19 +1782,19 @@ BeginSeq    : BEGINSEQ        /* 1 */
                      --HB_COMP_PARAM->wAlwaysCounter;
                      /* replace END address with ALWAYS address in
                         HB_P_SEQEND opcode */
-                     hb_compGenJumpThere( $<lNumber>6, $<lNumber>9, HB_COMP_PARAM );
+                     hb_compGenJumpThere( ( ULONG ) $<lNumber>6, ( ULONG ) $<lNumber>9, HB_COMP_PARAM );
                      /* Fix ALWAYS address in HB_P_SEQALWAYS opcode */
-                     hb_compGenJumpThere( $<lNumber>2 - 4, $<lNumber>9, HB_COMP_PARAM );
+                     hb_compGenJumpThere( ( ULONG ) $<lNumber>2 - 4, ( ULONG ) $<lNumber>9, HB_COMP_PARAM );
                      /* Fix ALWAYSEND address in HB_P_ALWAYSBEGIN opcode */
-                     hb_compGenJumpHere( $<lNumber>9 + 1, HB_COMP_PARAM );
+                     hb_compGenJumpHere( ( ULONG ) $<lNumber>9 + 1, HB_COMP_PARAM );
                      hb_compGenPCode1( HB_P_ALWAYSEND, HB_COMP_PARAM );
                   }
                   else
                   {
                      /* Fix END address in HB_P_SEQEND opcode */
-                     hb_compGenJumpHere( $<lNumber>6, HB_COMP_PARAM );
+                     hb_compGenJumpHere( ( ULONG ) $<lNumber>6, HB_COMP_PARAM );
                   }
-                  hb_compSequenceFinish( HB_COMP_PARAM, $<lNumber>2, $<lNumber>6, $<lNumber>9,
+                  hb_compSequenceFinish( HB_COMP_PARAM, ( ULONG ) $<lNumber>2, ( ULONG ) $<lNumber>6, ( ULONG ) $<lNumber>9,
                                          $<lNumber>5 != 0, $<lNumber>7 != 0, $<lNumber>4 == lLoopCount );
                }
                EndSeqID       /* 10 */
@@ -1917,7 +1917,7 @@ WithObject : WITHOBJECT Expression Crlf
                   else
                   {
                      hb_compNOOPfill( HB_COMP_PARAM->functions.pLast,
-                                      $<lNumber>4, 1, FALSE, TRUE );
+                                      ( ULONG ) $<lNumber>4, 1, FALSE, TRUE );
                      hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
                   }
                }

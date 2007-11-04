@@ -1255,9 +1255,9 @@ void hb_macroGenPopVar( char * szVarName, HB_COMP_DECL )
  * an aliased variable
  */
 void hb_macroGenPopAliasedVar( char * szVarName,
-                              BOOL bPushAliasValue,
-                              char * szAlias,
-                              long lWorkarea, HB_COMP_DECL )
+                               BOOL bPushAliasValue,
+                               char * szAlias,
+                               HB_LONG lWorkarea, HB_COMP_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGenPopAliasedVar(%s->%s)",szAlias,szVarName));
 
@@ -1345,9 +1345,9 @@ void hb_macroGenPushMemvarRef( char * szVarName, HB_COMP_DECL )
  * machine stack
  */
 void hb_macroGenPushAliasedVar( char * szVarName,
-                               BOOL bPushAliasValue,
-                               char * szAlias,
-                               long lWorkarea, HB_COMP_DECL )
+                                BOOL bPushAliasValue,
+                                char * szAlias,
+                                HB_LONG lWorkarea, HB_COMP_DECL )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroGenPushAliasedVar(%s->%s)",szAlias,szVarName));
 

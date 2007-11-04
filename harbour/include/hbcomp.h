@@ -210,8 +210,8 @@ extern void hb_compGenPushDate( HB_LONG lNumber, HB_COMP_DECL );       /* Pushes
 extern void hb_compGenPushNil( HB_COMP_DECL );                   /* Pushes nil on the virtual machine stack */
 extern void hb_compGenPushString( char * szText, ULONG ulLen, HB_COMP_DECL );       /* Pushes a string on the virtual machine stack */
 extern void hb_compGenPushSymbol( char * szSymbolName, BOOL bFunction, HB_COMP_DECL ); /* Pushes a symbol on to the Virtual machine stack */
-extern void hb_compGenPushAliasedVar( char *, BOOL, char *, long, HB_COMP_DECL );
-extern void hb_compGenPopAliasedVar( char *, BOOL, char *, long, HB_COMP_DECL );
+extern void hb_compGenPushAliasedVar( char *, BOOL, char *, HB_LONG, HB_COMP_DECL );
+extern void hb_compGenPopAliasedVar( char *, BOOL, char *, HB_LONG, HB_COMP_DECL );
 extern void hb_compGenPushFunRef( char *, HB_COMP_DECL );
 extern void hb_compGenPCode1( BYTE, HB_COMP_DECL ); /* generates 1 byte of pcode */
 extern void hb_compGenPCode2( BYTE, BYTE, HB_COMP_DECL ); /* generates 2 bytes of pcode + flag for optional StrongType(). */
@@ -389,7 +389,7 @@ extern const BYTE    hb_comp_pcode_len[];
 #if defined( HB_MACRO_SUPPORT )
 #  define HB_MACRO_GENFLAGS   HB_COMPFLAG_RT_MACRO
 #elif ! defined( HB_COMMON_SUPPORT )
-#  define HB_MACRO_GENFLAGS   ( HB_COMP_PARAM->supported & \
+#  define HB_MACRO_GENFLAGS   ( ( ( BYTE ) HB_COMP_PARAM->supported ) & \
                                 ( HB_COMPFLAG_HARBOUR | \
                                   HB_COMPFLAG_XBASE | \
                                   HB_COMPFLAG_SHORTCUTS | \

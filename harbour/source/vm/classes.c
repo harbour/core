@@ -842,7 +842,7 @@ static BOOL hb_clsUpdateHiddenMessages( PMETHOD pSrcMethod, PMETHOD pDstMethod,
 
             if( uiData == 0 )
             {
-               uiData = hb_arrayLen( pDstClass->pClassDatas ) + 1;
+               uiData = ( USHORT ) hb_arrayLen( pDstClass->pClassDatas ) + 1;
                hb_arraySize( pDstClass->pClassDatas, uiData );
             }
             if( pDstMethod->uiOffset )

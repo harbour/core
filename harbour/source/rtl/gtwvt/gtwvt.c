@@ -211,12 +211,12 @@ static HFONT hb_gt_wvt_GetFont( char * pszFace, int iHeight, int iWidth, int iWe
 
 static USHORT hb_gt_wvt_CalcPixelHeight( void )
 {
-   return _s.PTEXTSIZE.y * _s.ROWS;
+   return ( USHORT ) ( _s.PTEXTSIZE.y * _s.ROWS );
 }
 
 static USHORT hb_gt_wvt_CalcPixelWidth( void )
 {
-   return _s.PTEXTSIZE.x * _s.COLS;
+   return ( USHORT ) ( _s.PTEXTSIZE.x * _s.COLS );
 }
 
 static void hb_gt_wvt_ResetWindowSize( HWND hWnd )
@@ -1184,8 +1184,8 @@ static BOOL hb_gt_wvt_ValidWindowSize( int rows, int cols, HFONT hFont, int iWid
 
    SystemParametersInfo( SPI_GETWORKAREA,0, &rcWorkArea, 0 );
 
-   maxWidth  = (SHORT) ( rcWorkArea.right - rcWorkArea.left );
-   maxHeight = (SHORT) ( rcWorkArea.bottom - rcWorkArea.top );
+   maxWidth  = (USHORT) ( rcWorkArea.right - rcWorkArea.left );
+   maxHeight = (USHORT) ( rcWorkArea.bottom - rcWorkArea.top );
 
    hdc       = GetDC( _s.hWnd );
    hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
@@ -1193,10 +1193,10 @@ static BOOL hb_gt_wvt_ValidWindowSize( int rows, int cols, HFONT hFont, int iWid
    SelectObject( hdc, hOldFont ); /* Put old font back */
    ReleaseDC( _s.hWnd, hdc );
 
-   width     = iWidth < 0 ? -iWidth : tm.tmAveCharWidth * cols ;  /* Total pixel width this setting would take */
-   height    = tm.tmHeight * rows;        /* Total pixel height this setting would take */
+   width     = (USHORT) ( iWidth < 0 ? -iWidth : tm.tmAveCharWidth * cols );  /* Total pixel width this setting would take */
+   height    = (USHORT) ( tm.tmHeight * rows ); /* Total pixel height this setting would take */
 
-  return ( width <= maxWidth ) && ( height <= maxHeight );
+   return ( width <= maxWidth ) && ( height <= maxHeight );
 }
 
 static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow )

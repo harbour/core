@@ -92,10 +92,9 @@ HB_FUNC( I2BIN )
 
    if( ISNUM( 1 ) )
    {
-      SHORT iValue = hb_parni( 1 );
+      SHORT iValue = ( SHORT ) hb_parni( 1 );
 
-      szString[ 0 ] = ( iValue & 0x00FF );
-      szString[ 1 ] = ( iValue & 0xFF00 ) >> 8;
+      HB_PUT_LE_UINT16( szString, iValue );
    }
    else
    {
@@ -114,10 +113,7 @@ HB_FUNC( L2BIN )
    {
       long lValue = hb_parnl( 1 );
 
-      szString[ 0 ] = ( char ) ( lValue & 0x000000FF );
-      szString[ 1 ] = ( char ) ( ( lValue & 0x0000FF00 ) >> 8 );
-      szString[ 2 ] = ( char ) ( ( lValue & 0x00FF0000 ) >> 16 );
-      szString[ 3 ] = ( char ) ( ( lValue & 0xFF000000 ) >> 24 );
+      HB_PUT_LE_UINT32( szString, lValue );
    }
    else
    {

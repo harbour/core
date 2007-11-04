@@ -128,7 +128,7 @@ static BOOL s_bCollecting = FALSE;
 /* flag for used/unused blocks - the meaning of the HB_GC_USED_FLAG bit
  * is reversed on every collecting attempt
  */
-static USHORT s_uUsedFlag = HB_GC_USED_FLAG;
+static BYTE s_uUsedFlag = HB_GC_USED_FLAG;
 
 static void  hb_gcUnregisterSweep( void * Cargo );
 

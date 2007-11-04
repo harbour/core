@@ -3193,7 +3193,7 @@ void hb_compGenPushMemvarRef( char * szVarName, HB_COMP_DECL ) /* generates the 
 void hb_compGenPopAliasedVar( char * szVarName,
                               BOOL bPushAliasValue,
                               char * szAlias,
-                              long lWorkarea,
+                              HB_LONG lWorkarea,
                               HB_COMP_DECL )
 {
    if( bPushAliasValue )
@@ -3238,7 +3238,7 @@ void hb_compGenPopAliasedVar( char * szVarName,
 void hb_compGenPushAliasedVar( char * szVarName,
                                BOOL bPushAliasValue,
                                char * szAlias,
-                               long lWorkarea,
+                               HB_LONG lWorkarea,
                                HB_COMP_DECL )
 {
    if( bPushAliasValue )
