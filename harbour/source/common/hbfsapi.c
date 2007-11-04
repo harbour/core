@@ -300,7 +300,7 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
 
       HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
 
-      fExist = regs.x.cflag == 0;
+      fExist = regs.x.cflag == 0 && ( regs.HB_XREGS.cx & 10h ) == 0;
    }
 #elif defined( HB_OS_WIN_32 )
    {
@@ -328,6 +328,61 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
 
    if( fFree )
       hb_xfree( ( void * ) pszFileName );
+
+   return fExist;
+}
+
+
+HB_EXPORT BOOL hb_fsDirExists( const char * pszDirName )
+{
+   BOOL fExist;
+   BOOL fFree;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsDirExists(%p)", pszDirName));
+
+   if( pszDirName == NULL )
+      return FALSE;
+
+   pszDirName = ( char * ) hb_fsNameConv( ( BYTE * ) pszDirName, &fFree );
+
+#if defined( HB_OS_DOS )
+   {
+      union REGS regs;
+      struct SREGS sregs;
+
+      regs.HB_XREGS.ax = 0x4300;
+      regs.HB_XREGS.dx = FP_OFF( pszDirName );
+      sregs.ds = FP_SEG( pszDirName );
+
+      HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
+
+      fExist = regs.x.cflag == 0 && ( regs.HB_XREGS.cx & 10h );
+   }
+#elif defined( HB_OS_WIN_32 )
+   {
+      DWORD   dwAttr;
+
+      dwAttr = GetFileAttributesA( pszDirName );
+      fExist = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
+               ( dwAttr & FILE_ATTRIBUTE_DIRECTORY );
+   }
+#elif defined( HB_OS_UNIX )
+   {
+      struct stat statbuf;
+
+      fExist = stat( pszDirName, &statbuf ) == 0 &&
+               S_ISDIR( statbuf.st_mode );
+   }
+#else
+   {
+      int TODO; /* To force warning */
+
+      fExist = FALSE;
+   }
+#endif
+
+   if( fFree )
+      hb_xfree( ( void * ) pszDirName );
 
    return fExist;
 }

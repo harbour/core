@@ -57,3 +57,8 @@ HB_FUNC( HB_FILEEXISTS )
 {
    hb_retl( hb_fsFileExists( hb_parc( 1 ) ) );
 }
+
+HB_FUNC( HB_DIREXISTS )
+{
+   hb_retl( hb_fsDirExists( hb_parc( 1 ) ) );
+}
