@@ -812,6 +812,7 @@ extern const char * hb_szAscii[256];      /* array of 1 character length strings
 extern HB_EXPORT int       hb_stricmp( const char * s1, const char * s2 ); /* compare two strings without regards to case */
 extern HB_EXPORT int       hb_strnicmp( const char * s1, const char * s2, ULONG ulLen ); /* compare two string without regards to case, limited by length */
 extern HB_EXPORT char *    hb_strupr( char * pszText ); /* convert a string in-place to upper-case */
+extern HB_EXPORT char *    hb_strlow( char * pszText ); /* convert a string in-place to lower-case */
 extern HB_EXPORT char *    hb_strdup( const char * pszText ); /* returns a pointer to a newly allocated copy of the source string */
 extern HB_EXPORT char *    hb_strndup( const char * pszText, ULONG ulLen ); /* returns a pointer to a newly allocated copy of the source string not longer then ulLen */
 extern HB_EXPORT ULONG     hb_strnlen( const char * pszText, ULONG ulLen ); /* like strlen() but result is limited to ulLen */

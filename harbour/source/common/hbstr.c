@@ -129,6 +129,18 @@ HB_EXPORT char * hb_strupr( char * pszText )
    return pszText;
 }
 
+HB_EXPORT char * hb_strlow( char * pszText )
+{
+   char * pszPos;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_strlow(%s)", pszText));
+
+   for( pszPos = pszText; *pszPos; pszPos++ )
+      *pszPos = tolower( ( UCHAR ) *pszPos );
+
+   return pszText;
+}
+
 HB_EXPORT char * hb_strdup( const char * pszText )
 {
    char * pszDup;

@@ -2363,7 +2363,7 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 */
 
    if( hb_set.HB_SET_TRIMFILENAME ||
-       hb_set.HB_SET_DIRSEPARATOR != '\\' ||
+       hb_set.HB_SET_DIRSEPARATOR != OS_PATH_DELIMITER ||
        hb_set.HB_SET_FILECASE != HB_SET_CASE_MIXED ||
        hb_set.HB_SET_DIRCASE != HB_SET_CASE_MIXED )
    {
@@ -2378,13 +2378,13 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
          *pfFree = TRUE;
       }
 
-      if( hb_set.HB_SET_DIRSEPARATOR != '\\' )
+      if( hb_set.HB_SET_DIRSEPARATOR != OS_PATH_DELIMITER )
       {
          BYTE *p = szFileName;
          while( *p )
          {
-            if( *p == '\\' )
-               *p = hb_set.HB_SET_DIRSEPARATOR;
+            if( *p == hb_set.HB_SET_DIRSEPARATOR )
+               *p = OS_PATH_DELIMITER;
             p++;
          }
       }

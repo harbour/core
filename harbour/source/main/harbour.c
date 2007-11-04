@@ -53,16 +53,7 @@
 #include "hbcomp.h"
 #include "hbapifs.h"
 #include "hbmemory.ch"
-
-int main( int argc, char * argv[] )
-{
-   int iResult;
-
-   iResult = hb_compMain( argc, argv, NULL, NULL, NULL );
-   hb_xexit();
-
-   return iResult;
-}
+#include "hbset.h"
 
 /* ------------------------------------------------------------------------- */
 /* FM statistic module */
@@ -362,10 +353,217 @@ char * hb_conNewLine( void )
    return "\n";
 }
 
+static int  s_iFileCase = HB_SET_CASE_MIXED;
+static int  s_iDirCase  = HB_SET_CASE_MIXED;
+static BOOL s_fFnTrim   = FALSE;
+static char s_cDirSep   = OS_PATH_DELIMITER;
+
 HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 {
-   if( pfFree )
-      * pfFree = FALSE;
+   if( s_fFnTrim || s_cDirSep != OS_PATH_DELIMITER ||
+       s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
+   {
+      PHB_FNAME pFileName;
+      ULONG ulLen;
+
+      if( pfFree )
+      {
+         BYTE * szNew = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
+         hb_strncpy( ( char * ) szNew, ( char * ) szFileName, _POSIX_PATH_MAX );
+         szFileName = szNew;
+         *pfFree = TRUE;
+      }
+
+      if( s_cDirSep != OS_PATH_DELIMITER )
+      {
+         BYTE *p = szFileName;
+         while( *p )
+         {
+            if( *p == s_cDirSep )
+               *p = OS_PATH_DELIMITER;
+            p++;
+         }
+      }
+
+      pFileName = hb_fsFNameSplit( ( char * ) szFileName );
+
+      /* strip trailing and leading spaces */
+      if( s_fFnTrim )
+      {
+         if( pFileName->szName )
+         {
+            ulLen = strlen( pFileName->szName );
+            while( ulLen && pFileName->szName[ulLen - 1] == ' ' )
+               --ulLen;
+            while( ulLen && pFileName->szName[0] == ' ' )
+            {
+               ++pFileName->szName;
+               --ulLen;
+            }
+            pFileName->szName[ulLen] = '\0';
+         }
+         if( pFileName->szExtension )
+         {
+            ulLen = strlen( pFileName->szExtension );
+            while( ulLen && pFileName->szExtension[ulLen - 1] == ' ' )
+               --ulLen;
+            while( ulLen && pFileName->szExtension[0] == ' ' )
+            {
+               ++pFileName->szExtension;
+               --ulLen;
+            }
+            pFileName->szExtension[ulLen] = '\0';
+         }
+      }
+
+      /* FILECASE */
+      if( s_iFileCase == HB_SET_CASE_LOWER )
+      {
+         if( pFileName->szName )
+            hb_strlow( pFileName->szName );
+         if( pFileName->szExtension )
+            hb_strlow( pFileName->szExtension );
+      }
+      else if( s_iFileCase == HB_SET_CASE_UPPER )
+      {
+         if( pFileName->szName )
+            hb_strupr( pFileName->szName );
+         if( pFileName->szExtension )
+            hb_strupr( pFileName->szExtension );
+      }
+
+      /* DIRCASE */
+      if( pFileName->szPath )
+      {
+         if( s_iDirCase == HB_SET_CASE_LOWER )
+            hb_strlow( pFileName->szPath );
+         else if( s_iDirCase == HB_SET_CASE_UPPER )
+            hb_strupr( pFileName->szPath );
+      }
+
+      hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+      hb_xfree( pFileName );
+   }
+   else if( pfFree )
+      *pfFree = FALSE;
 
    return szFileName;
+}
+
+static void hb_compChkFileSwitches( int argc, char * argv[] )
+{
+   int i, n;
+
+   for( i = 1; i < argc; ++i )
+   {
+      if( HB_ISOPTSEP( argv[i][0] ) && argv[i][1] == 'f' )
+      {
+         n = 0;
+         switch( argv[i][2] )
+         {
+            case 'n':
+               if( !argv[i][3] )
+               {
+                  s_iFileCase = HB_SET_CASE_MIXED;
+                  n = 3;
+               }
+               else if( argv[i][3] == ':' )
+               {
+                  if( argv[i][4] == 'u' )
+                  {
+                     s_iFileCase = HB_SET_CASE_UPPER;
+                     n = 5;
+                  }
+                  else if( argv[i][4] == 'l' )
+                  {
+                     s_iFileCase = HB_SET_CASE_LOWER;
+                     n = 5;
+                  }
+               }
+               else if( argv[i][3] == '-' )
+               {
+                  s_iFileCase = HB_SET_CASE_MIXED;
+                  n = 4;
+               }
+               break;
+
+            case 'd':
+               if( !argv[i][3] )
+               {
+                  s_iDirCase = HB_SET_CASE_MIXED;
+                  n = 3;
+               }
+               else if( argv[i][3] == ':' )
+               {
+                  if( argv[i][4] == 'u' )
+                  {
+                     s_iDirCase = HB_SET_CASE_UPPER;
+                     n = 5;
+                  }
+                  else if( argv[i][4] == 'l' )
+                  {
+                     s_iDirCase = HB_SET_CASE_LOWER;
+                     n = 5;
+                  }
+               }
+               else if( argv[i][3] == '-' )
+               {
+                  s_iDirCase = HB_SET_CASE_MIXED;
+                  n = 4;
+               }
+               break;
+
+            case 'p':
+               if( !argv[i][3] )
+               {
+                  s_cDirSep = OS_PATH_DELIMITER;
+                  n = 3;
+               }
+               else if( argv[i][3] == '-' )
+               {
+                  s_cDirSep = OS_PATH_DELIMITER;
+                  n = 4;
+               }
+               else if( argv[i][3] == ':' && argv[i][4] )
+               {
+                  s_cDirSep = argv[i][4];
+                  n = 5;
+               }
+               break;
+
+            case 's':
+               if( !argv[i][3] )
+               {
+                  s_fFnTrim = TRUE;
+                  n = 3;
+               }
+               else if( argv[i][3] == '-' )
+               {
+                  s_fFnTrim = FALSE;
+                  n = 4;
+               }
+               break;
+         }
+         if( n )
+         {
+            argv[i] += n;
+            if( argv[i][0] )
+               --i;
+            else
+               argv[i] = "-";
+         }
+      }
+   }
+}
+
+int main( int argc, char * argv[] )
+{
+   int iResult;
+
+   hb_compChkFileSwitches( argc, argv );
+
+   iResult = hb_compMain( argc, argv, NULL, NULL, NULL );
+   hb_xexit();
+
+   return iResult;
 }

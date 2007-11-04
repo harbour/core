@@ -8,6 +8,42 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-04 02:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/common/hbstr.c
+    + added hb_strlow()
+
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/filesys.c
+    ! fixed _SET_DIRSEPARATOR behavior - now it's always set to default
+      OS directory separator what means no translations. If you want to
+      enable some translations then it should be set to other value, f.e.
+      in *nixes:
+         set( _SET_DIRSEPARATOR, "\" )
+      enables translations of "\" in paths to "/"
+
+  * harbour/source/main/harbour.c
+    + added support for new compiler switches:
+         - Filename casing:
+               -fn:l       (lower)
+               -fn:u       (upper)
+               -fn-        (disable - default)
+               -fn         (disable - default)
+         - Directory casing
+               -fd:l       (lower)
+               -fd:u       (upper)
+               -fd-        (disable - default)
+               -fd         (disable - default)
+         - Path separator:
+               -fp:<char>
+               -fp         (default: OS defined)
+         - Filename space trimming:
+               -fs         (enable)
+               -fs-        (disable - default)
+      These switches works only in standalone compiler.
+      When compiler is linked with HVM and RTL then corresponding
+      _SET_* switches are used instead.
+
 2007-11-03 11:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/cdpapi.c
     * indenting

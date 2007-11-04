@@ -206,7 +206,7 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
       {
          int len;
          len = strlen( ( char * ) pszName );
-         pszName[ len ] = ( BYTE ) hb_set.HB_SET_DIRSEPARATOR;
+         pszName[ len ] = ( BYTE ) OS_PATH_DELIMITER;
          pszName[ len + 1 ] = '\0';
       }
 
