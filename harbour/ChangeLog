@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-05 18:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/tests/wcecon.prg
+    + added small test for DBF/FPT/CDX file creation and browsing
+      in PocketPC/WinCE
+
 2007-11-05 01:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/utils/hbmake/hbmlang.c
     * pacify some other data lost conversion warnings by explicit casting

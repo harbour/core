@@ -15,15 +15,17 @@
 
 proc main()
 
+   field F1, F2, FX
    local nMaxScrRow, nMaxScrCol
+   local cPath, cName, cExt, cDrive
    local i, j, k
 
    /* set OEM font encoding for non unicode modes */
    hb_gtInfo( GTI_CODEPAGE, 255 )
 
    /* Set EN CP-437 encoding */
-   HB_SETCODEPAGE( "EN" )
-   HB_SETTERMCP( "EN" )
+   hb_setCodePage( "EN" )
+   hb_setTermCP( "EN" )
 
    /* Set font size */
    hb_gtInfo( GTI_FONTSIZE, 12 )
@@ -45,10 +47,35 @@ proc main()
    inkey( 0 )
 
    /* display infomration aboout used OS, harbour version and GT driver */
-   alert( OS() + ";" + VERSION() + ";" + HB_GTVERSION() )
+   alert( OS() + ";" + Version() + ";" + hb_gtVersion() )
+
+   /* database test */
+   hb_FNameSplit( hb_argv( 0 ), @cPath, @cName, @cExt, @cDrive )
+   cPath += "data" + hb_osPathSeparator()
+
+   Alert( "Database path:;;" + cPath )
+
+   rddSetDefault("DBFCDX")
+   if !hb_dirExists( cPath )
+      MakeDir( cPath )
+   endif
+   dbCreate( cPath + "mydata", { { "F1", "C", 10, 0 }, ;
+                                 { "F2", "=",  8, 0 }, ;
+                                 { "FX", "M",  4, 0 } } )
+   use ( cPath+"mydata" )
+   index on F1 tag T1
+   index on F2 tag T2
+   while lastrec() < 10
+      dbappend()
+      F1 := "rec:" + str( recno(), 3 )
+      FX := "[rec:" + str( recno(), 3 ) + "]"
+   enddo
+   dbCommit()
+   dbGoTop()
+   browse()
 
    /* display all characters */
-   ?
+   CLS
    for i := 0 to 15
       for j := 0 to 15
          dispout( " " + chr( i * 16 + j ) )
