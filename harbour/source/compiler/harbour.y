@@ -2419,7 +2419,7 @@ static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach )
          if( strcmp( pEnumVar->szName, szVarName ) == 0 )
          {
             /* Enumerator variable exists already - throw warning */
-            if( bWarn == TRUE )
+            if( bWarn )
             {
                hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_FORVAR_DUPL, szVarName, NULL );
                bWarn = FALSE;

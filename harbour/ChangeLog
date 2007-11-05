@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-05 01:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/utils/hbmake/hbmlang.c
+    * pacify some other data lost conversion warnings by explicit casting
+
+  * harbour/source/compiler/harbour.y
+    * cleaned explicit comparison with TRUE value
+
+  * harbour/source/compiler/harbour.yyc
+    * rebuild with all recent cleanup in harbour.y
+
 2007-11-04 19:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
   * harbour/include/hbmacro.h

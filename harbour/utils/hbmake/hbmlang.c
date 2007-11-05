@@ -264,8 +264,8 @@ HB_FUNC( GAUGEUPDATE )
 
 static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
 {
-   int iCenter = ( ( hb_arrayGetNL( pArray, B_RIGHT ) - hb_arrayGetNL( pArray, B_LEFT ) ) / 2 ) + 1;
-   int iRatio = hb_arrayGetNL( pArray, B_RIGHT ) - hb_arrayGetNL( pArray, B_LEFT ) - 1;
+   int iCenter = ( ( hb_arrayGetNI( pArray, B_RIGHT ) - hb_arrayGetNI( pArray, B_LEFT ) ) / 2 ) + 1;
+   int iRatio = hb_arrayGetNI( pArray, B_RIGHT ) - hb_arrayGetNI( pArray, B_LEFT ) - 1;
    int iRow;
    int iCols;
    int iMax;
@@ -282,19 +282,19 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
    if( hb_arrayGetL( pArray, B_DISPLAYNUM ) )
    {
       snprintf( szPct, sizeof( szPct ), "%3.0f%%", fPercent * 100 );
-      hb_gtWriteAt( (USHORT) hb_arrayGetNL( pArray, B_TOP ),
+      hb_gtWriteAt( (USHORT) hb_arrayGetNI( pArray, B_TOP ),
                     (USHORT) iCenter + 2, (BYTE *) szPct, 4 );
    }
 
-   hb_gtBox( hb_arrayGetNL( pArray, B_TOP ) + 1, hb_arrayGetNL( pArray, B_LEFT ) + 1,
-             hb_arrayGetNL( pArray, B_BOTTOM ) - 1, hb_arrayGetNL( pArray, B_RIGHT ) - 1,
+   hb_gtBox( (SHORT) ( hb_arrayGetNI( pArray, B_TOP ) + 1 ), (SHORT) ( hb_arrayGetNI( pArray, B_LEFT ) + 1 ),
+             (SHORT) ( hb_arrayGetNI( pArray, B_BOTTOM ) - 1 ), (SHORT) ( hb_arrayGetNI( pArray, B_RIGHT ) - 1 ),
              ( BYTE * ) szStr );
 
-   iMax = hb_arrayGetNL( pArray, B_BOTTOM ) - hb_arrayGetNL( pArray, B_TOP ) - 1;
+   iMax = hb_arrayGetNI( pArray, B_BOTTOM ) - hb_arrayGetNI( pArray, B_TOP ) - 1;
    for( iRow = 1; iRow <= iMax; iRow++ )
    {
-      hb_gtRepChar( (USHORT) (iRow + hb_arrayGetNL( pArray, B_TOP )),
-                    (USHORT) (hb_arrayGetNL( pArray, B_LEFT ) + 1),
+      hb_gtRepChar( (USHORT) (iRow + hb_arrayGetNI( pArray, B_TOP )),
+                    (USHORT) (hb_arrayGetNI( pArray, B_LEFT ) + 1),
                     ( BYTE ) * hb_arrayGetCPtr( pArray, B_BARCHAR ), iCols );
    }
 

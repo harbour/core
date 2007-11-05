@@ -4311,7 +4311,7 @@ yyreduce:
   case 16:
 #line 290 "harbour.y"
     { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, (yyvsp[(3) - (4)].valChar).string, (yyvsp[(3) - (4)].valChar).dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
-                    HB_COMP_PARAM->currLine = (yyvsp[(2) - (4)].valLong).lNumber;
+                    HB_COMP_PARAM->currLine = ( int ) (yyvsp[(2) - (4)].valLong).lNumber;
                     HB_COMP_PARAM->pLex->fEol = FALSE;
                     if( (yyvsp[(3) - (4)].valChar).dealloc ) { hb_xfree( (yyvsp[(3) - (4)].valChar).string ); (yyvsp[(3) - (4)].valChar).dealloc = FALSE; } ;}
     break;
@@ -4319,7 +4319,7 @@ yyreduce:
   case 17:
 #line 295 "harbour.y"
     { HB_COMP_PARAM->currModule = hb_compIdentifierNew( HB_COMP_PARAM, (yyvsp[(5) - (6)].valChar).string, (yyvsp[(5) - (6)].valChar).dealloc ? HB_IDENT_FREE : HB_IDENT_STATIC );
-                    HB_COMP_PARAM->currLine = (yyvsp[(2) - (6)].valLong).lNumber;
+                    HB_COMP_PARAM->currLine = ( int ) (yyvsp[(2) - (6)].valLong).lNumber;
                     HB_COMP_PARAM->pLex->fEol = FALSE;
                     if( (yyvsp[(3) - (6)].valChar).dealloc ) { hb_xfree( (yyvsp[(3) - (6)].valChar).string ); (yyvsp[(3) - (6)].valChar).dealloc = FALSE; }
                     if( (yyvsp[(5) - (6)].valChar).dealloc ) { hb_xfree( (yyvsp[(5) - (6)].valChar).string ); (yyvsp[(5) - (6)].valChar).dealloc = FALSE; } ;}
@@ -5860,8 +5860,8 @@ yyreduce:
                hb_compCodeBlockEnd( HB_COMP_PARAM );
                (yyval.asExpr) = hb_compExprSetCodeblockBody( (yyvsp[(1) - (5)].asExpr),
                      HB_COMP_PARAM->functions.pLast->pCode + ( ULONG ) (yyvsp[(3) - (5)].lNumber),
-                     HB_COMP_PARAM->functions.pLast->lPCodePos - (yyvsp[(3) - (5)].lNumber) );
-               HB_COMP_PARAM->functions.pLast->lPCodePos = (yyvsp[(3) - (5)].lNumber);
+                     HB_COMP_PARAM->functions.pLast->lPCodePos - ( ULONG ) (yyvsp[(3) - (5)].lNumber) );
+               HB_COMP_PARAM->functions.pLast->lPCodePos = ( ULONG ) (yyvsp[(3) - (5)].lNumber);
                HB_COMP_PARAM->lastLinePos = 0;
             ;}
     break;
@@ -6510,14 +6510,14 @@ yyreduce:
 #line 1506 "harbour.y"
     {
                   hb_compLoopHere( HB_COMP_PARAM );
-                  hb_compGenJump( (yyvsp[(1) - (5)].lNumber) - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                  hb_compGenJump( ( ULONG ) (yyvsp[(1) - (5)].lNumber) - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
                ;}
     break;
 
   case 544:
 #line 1511 "harbour.y"
     {
-                  hb_compGenJumpHere( (yyvsp[(4) - (7)].lNumber), HB_COMP_PARAM ); 
+                  hb_compGenJumpHere( ( ULONG ) (yyvsp[(4) - (7)].lNumber), HB_COMP_PARAM ); 
                   if( HB_COMP_PARAM->wWhileCounter )
                      --HB_COMP_PARAM->wWhileCounter;
                   hb_compLoopEnd( HB_COMP_PARAM );
@@ -6578,7 +6578,7 @@ yyreduce:
                   hb_compLoopHere( HB_COMP_PARAM );
 
                   iLine = HB_COMP_PARAM->currLine;
-                  HB_COMP_PARAM->currLine = (yyvsp[(1) - (12)].lNumber);
+                  HB_COMP_PARAM->currLine = ( int ) (yyvsp[(1) - (12)].lNumber);
                   hb_compLinePush( HB_COMP_PARAM );
                   HB_COMP_PARAM->currLine = iLine;
 
@@ -6587,7 +6587,7 @@ yyreduce:
                      HB_COMP_EXPR_CLEAR( hb_compExprGenPush( hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[(2) - (12)].asExpr), HB_COMP_PARAM ), (yyvsp[(8) - (12)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ) );
                   else
                      HB_COMP_EXPR_CLEAR( hb_compExprGenPush( hb_compExprNewPreInc( (yyvsp[(2) - (12)].asExpr), HB_COMP_PARAM ), HB_COMP_PARAM ) );
-                  hb_compGenJumpHere( (yyvsp[(9) - (12)].lNumber), HB_COMP_PARAM );
+                  hb_compGenJumpHere( ( ULONG ) (yyvsp[(9) - (12)].lNumber), HB_COMP_PARAM );
                   hb_compExprGenPush( (yyvsp[(7) - (12)].asExpr), HB_COMP_PARAM );              /* end */
                   if( iSign )
                      hb_compGenPCode1( iSign > 0 ? HB_P_GREATER : HB_P_LESS, HB_COMP_PARAM );
@@ -6597,7 +6597,7 @@ yyreduce:
                      hb_compGenPCode1( HB_P_FORTEST, HB_COMP_PARAM );
                   }
 
-                  hb_compGenJumpFalse( (yyvsp[(11) - (12)].lNumber) - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                  hb_compGenJumpFalse( ( ULONG ) (yyvsp[(11) - (12)].lNumber) - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
                   hb_compLoopEnd( HB_COMP_PARAM );
                   if( hb_compExprAsSymbol( (yyvsp[(2) - (12)].asExpr) ) )
                      hb_compForEnd( HB_COMP_PARAM, hb_compExprAsSymbol( (yyvsp[(2) - (12)].asExpr) ) );
@@ -6698,9 +6698,9 @@ yyreduce:
     {
                 hb_compLoopHere( HB_COMP_PARAM );
                 hb_compEnumNext( HB_COMP_PARAM, (yyvsp[(2) - (10)].asExpr), (yyvsp[(6) - (10)].iNumber) );
-                hb_compGenJump( (yyvsp[(7) - (10)].lNumber) - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
+                hb_compGenJump( ( ULONG ) (yyvsp[(7) - (10)].lNumber) - HB_COMP_PARAM->functions.pLast->lPCodePos, HB_COMP_PARAM );
 
-                hb_compGenJumpHere( (yyvsp[(9) - (10)].lNumber), HB_COMP_PARAM );
+                hb_compGenJumpHere( ( ULONG ) (yyvsp[(9) - (10)].lNumber), HB_COMP_PARAM );
                 hb_compLoopEnd( HB_COMP_PARAM );
                 HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                 hb_compEnumEnd( HB_COMP_PARAM, (yyvsp[(2) - (10)].asExpr) );
@@ -6813,7 +6813,7 @@ yyreduce:
                    */
                   if( (yyvsp[(3) - (5)].lNumber) )
                      hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
-                  hb_compGenJumpHere( (yyvsp[(2) - (5)].lNumber), HB_COMP_PARAM );
+                  hb_compGenJumpHere( ( ULONG ) (yyvsp[(2) - (5)].lNumber), HB_COMP_PARAM );
                   (yyval.lNumber) = hb_compSequenceEnd( HB_COMP_PARAM );
                   (yyvsp[(4) - (5)].lNumber) = hb_compLoopCount( HB_COMP_PARAM );
                ;}
@@ -6826,7 +6826,7 @@ yyreduce:
                    * HB_P_SEQBEGIN opcode if there is RECOVER clause
                    */
                   if( (yyvsp[(7) - (7)].lNumber) )
-                     hb_compGenJumpThere( (yyvsp[(2) - (7)].lNumber), (yyvsp[(7) - (7)].lNumber), HB_COMP_PARAM );
+                     hb_compGenJumpThere( ( ULONG ) (yyvsp[(2) - (7)].lNumber), ( ULONG ) (yyvsp[(7) - (7)].lNumber), HB_COMP_PARAM );
                   else if( HB_COMP_PARAM->wSeqCounter )
                      --HB_COMP_PARAM->wSeqCounter;
                ;}
@@ -6847,19 +6847,19 @@ yyreduce:
                      --HB_COMP_PARAM->wAlwaysCounter;
                      /* replace END address with ALWAYS address in
                         HB_P_SEQEND opcode */
-                     hb_compGenJumpThere( (yyvsp[(6) - (9)].lNumber), (yyvsp[(9) - (9)].lNumber), HB_COMP_PARAM );
+                     hb_compGenJumpThere( ( ULONG ) (yyvsp[(6) - (9)].lNumber), ( ULONG ) (yyvsp[(9) - (9)].lNumber), HB_COMP_PARAM );
                      /* Fix ALWAYS address in HB_P_SEQALWAYS opcode */
-                     hb_compGenJumpThere( (yyvsp[(2) - (9)].lNumber) - 4, (yyvsp[(9) - (9)].lNumber), HB_COMP_PARAM );
+                     hb_compGenJumpThere( ( ULONG ) (yyvsp[(2) - (9)].lNumber) - 4, ( ULONG ) (yyvsp[(9) - (9)].lNumber), HB_COMP_PARAM );
                      /* Fix ALWAYSEND address in HB_P_ALWAYSBEGIN opcode */
-                     hb_compGenJumpHere( (yyvsp[(9) - (9)].lNumber) + 1, HB_COMP_PARAM );
+                     hb_compGenJumpHere( ( ULONG ) (yyvsp[(9) - (9)].lNumber) + 1, HB_COMP_PARAM );
                      hb_compGenPCode1( HB_P_ALWAYSEND, HB_COMP_PARAM );
                   }
                   else
                   {
                      /* Fix END address in HB_P_SEQEND opcode */
-                     hb_compGenJumpHere( (yyvsp[(6) - (9)].lNumber), HB_COMP_PARAM );
+                     hb_compGenJumpHere( ( ULONG ) (yyvsp[(6) - (9)].lNumber), HB_COMP_PARAM );
                   }
-                  hb_compSequenceFinish( HB_COMP_PARAM, (yyvsp[(2) - (9)].lNumber), (yyvsp[(6) - (9)].lNumber), (yyvsp[(9) - (9)].lNumber),
+                  hb_compSequenceFinish( HB_COMP_PARAM, ( ULONG ) (yyvsp[(2) - (9)].lNumber), ( ULONG ) (yyvsp[(6) - (9)].lNumber), ( ULONG ) (yyvsp[(9) - (9)].lNumber),
                                          (yyvsp[(5) - (9)].lNumber) != 0, (yyvsp[(7) - (9)].lNumber) != 0, (yyvsp[(4) - (9)].lNumber) == lLoopCount );
                ;}
     break;
@@ -7011,7 +7011,7 @@ yyreduce:
                   else
                   {
                      hb_compNOOPfill( HB_COMP_PARAM->functions.pLast,
-                                      (yyvsp[(4) - (6)].lNumber), 1, FALSE, TRUE );
+                                      ( ULONG ) (yyvsp[(4) - (6)].lNumber), 1, FALSE, TRUE );
                      hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
                   }
                ;}
@@ -7732,7 +7732,7 @@ static void hb_compForStart( HB_COMP_DECL, char *szVarName, BOOL bForEach )
          if( strcmp( pEnumVar->szName, szVarName ) == 0 )
          {
             /* Enumerator variable exists already - throw warning */
-            if( bWarn == TRUE )
+            if( bWarn )
             {
                hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_FORVAR_DUPL, szVarName, NULL );
                bWarn = FALSE;
