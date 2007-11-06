@@ -174,7 +174,7 @@ typedef struct
 
 
 static HB_DEBUGINFO s_Info = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* bCBTrace */ TRUE, 0, 0, 0, 0, 0 };
-static HB_DEBUGINFO *info = &s_Info;
+static HB_DEBUGINFO *s_pInfo = &s_Info;
 
 
 static PHB_ITEM
@@ -397,6 +397,7 @@ hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
    int i;
    ULONG nProcLevel;
    char szProcName[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+   HB_DEBUGINFO *info = s_pInfo;
 
    if ( ( info->bInside || info->bQuit ) && nMode != HB_DBG_VMQUIT )
       return;

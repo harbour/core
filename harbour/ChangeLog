@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-06 23:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/dbgentry.c
+    * changed the name of global static variable from 'info' to
+      's_pInfo' to avoid possible typos
+
 2007-11-06 12:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbwince.h
     * put functions declarations inside HB_EXTERN_BEGIN / HB_EXTERN_END
