@@ -94,9 +94,7 @@
 #  define _LARGEFILE64_SOURCE
 #endif
 
-#ifndef HB_OS_WIN_32_USED
-   #define HB_OS_WIN_32_USED
-#endif
+#define HB_OS_WIN_32_USED
 
 #include <string.h>
 #include <ctype.h>
@@ -279,7 +277,7 @@ static BOOL s_fUseWaitLocks = TRUE;
           #endif
        #endif
 
-      #ifndef _WIN64 /* MSVC64 already provides these funtions */ 
+      #ifndef _WIN64 /* MSVC64 already provides these funtions */
       __inline void * LongToHandle( const long h )
       {
           return((void *) (INT_PTR) h );

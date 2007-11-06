@@ -94,6 +94,10 @@
 
 #if !defined( HB_NO_WIN_CONSOLE )
 
+#if !defined( __LCC__ )
+#  include <wincon.h>
+#endif
+
 #if defined( _MSC_VER ) || defined(__WATCOMC__)
 #  include <conio.h>
 #endif
@@ -1179,7 +1183,7 @@ static int hb_gt_win_ReadKey( int iEventMask )
                {
                   if ( wKey == 0x38 &&
                        s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown &&
-                       (s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState 
+                       (s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState
                          & NUMLOCK_ON )
                          & ( (RIGHT_ALT_PRESSED | LEFT_ALT_PRESSED ) | NUMLOCK_ON )
                          & ~(LEFT_CTRL_PRESSED) )
@@ -1235,8 +1239,8 @@ static int hb_gt_win_ReadKey( int iEventMask )
              */
 
             if ( s_bSpecialKeyHandling &&
-                 ( dwState & CAPSLOCK_ON ) && 
-                 s_osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS ) 
+                 ( dwState & CAPSLOCK_ON ) &&
+                 s_osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
             {
                ch = SpecialHandling( &wChar, wKey, ch, (dwState & SHIFT_PRESSED) );
             }

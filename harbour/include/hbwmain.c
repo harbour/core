@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *
+ *    WinMain() to main() wrapper
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -50,64 +50,85 @@
  *
  */
 
-#ifndef HB_WINCE_H_
-#define HB_WINCE_H_
+#include <windows.h>
 
-HB_EXTERN_BEGIN
+#define HB_MAX_ARGS     128
 
-#if defined(HB_WINCE)
-#  undef  OS_HAS_DRIVE_LETTER
+static int    s_argc = 0;
+static char * s_argv[ HB_MAX_ARGS ];
+static char   s_szAppName[ MAX_PATH ];
+static TCHAR  s_lpAppName[ MAX_PATH ];
 
-/* defined(__CEGCC__) || defined(__MINGW32CE__) */
-
-#if defined(__MINGW32CE__)
-typedef long clock_t;
-extern clock_t clock( void );
+#if defined( HB_WINCE )
+#  define HB_LPSTR      LPWSTR
+#else
+#  define HB_LPSTR      LPSTR
 #endif
 
-extern int remove( const char *filename );
-extern int access( const char *pathname, int mode );
-extern int system( const char *string );
-extern char *strerror( int errnum );
+int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
+                    HINSTANCE hPrevInstance,  /* handle to previous instance */
+                    HB_LPSTR  lpCmdLine,      /* pointer to command line */
+                    int iCmdShow )            /* show state of window */
+{
+   LPSTR pArgs, pArg, pDst, pSrc, pFree;
+   BOOL fQuoted;
+   int iErrorCode;
 
-#endif /* HB_WINCE */
+   HB_SYMBOL_UNUSED( hPrevInstance );
+   HB_SYMBOL_UNUSED( iCmdShow );
 
-#if defined(HB_OS_WIN_32)
+   GetModuleFileName( hInstance, s_lpAppName, MAX_PATH );
+   HB_TCHAR_GETFROM( s_szAppName, s_lpAppName, MAX_PATH );
+   s_argv[ s_argc++ ] = s_szAppName;
 
-extern wchar_t * hb_mbtowc( const char *srcA );
-extern char * hb_wctomb( const wchar_t *srcW );
-extern wchar_t * hb_mbntowc( const char *srcA, unsigned long ulLen );
-extern char * hb_wcntomb( const wchar_t *srcW, unsigned long ulLen );
-extern void hb_mbtowccpy( wchar_t *dstW, const char *srcA, unsigned long ulLen );
-extern void hb_mbtowcset( wchar_t *dstW, const char *srcA, unsigned long ulLen );
-extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen );
+   pArg = NULL;
 
-#if defined(UNICODE)
-
-   #define HB_TCHAR_CPTO(d,s,l)        hb_mbtowccpy(d,s,l)
-   #define HB_TCHAR_GETFROM(d,s,l)     hb_wctombget(d,s,l)
-   #define HB_TCHAR_SETTO(d,s,l)       hb_mbtowcset(d,s,l)
-   #define HB_TCHAR_CONVTO(s)          hb_mbtowc(s)
-   #define HB_TCHAR_CONVFROM(s)        hb_wctomb(s)
-   #define HB_TCHAR_CONVNTO(s,l)       hb_mbntowc(s,l)
-   #define HB_TCHAR_CONVNFROM(s,l)     hb_wcntomb(s,l)
-   #define HB_TCHAR_FREE(s)            hb_xfree(s)
-
+#if defined( HB_WINCE )
+   pSrc = pFree = HB_TCHAR_CONVFROM( lpCmdLine );
 #else
+   pSrc = pFree = lpCmdLine;
+#endif
+   pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( pFree ) + 1 );
+   fQuoted = FALSE;
 
-   #define HB_TCHAR_CPTO(d,s,l)        hb_strncpy(d,s,l)
-   #define HB_TCHAR_SETTO(d,s,l)       memcpy(d,s,l)
-   #define HB_TCHAR_GETFROM(d,s,l)     memcpy(d,s,l)
-   #define HB_TCHAR_CONVTO(s)          (s)
-   #define HB_TCHAR_CONVFROM(s)        (s)
-   #define HB_TCHAR_CONVNTO(s,l)       (s)
-   #define HB_TCHAR_CONVNFROM(s,l)     (s)
-   #define HB_TCHAR_FREE(s)            HB_SYMBOL_UNUSED(s)
+   while( *pSrc != 0 && s_argc < HB_MAX_ARGS )
+   {
+      if( *pSrc == '"' )
+      {
+         if( pArg == NULL )
+            pArg = pDst;
+         fQuoted = !fQuoted;
+      }
+      else if( fQuoted || !HB_ISSPACE( *pSrc ) )
+      {
+         if( pArg == NULL )
+            pArg = pDst;
+         *pDst++ = *pSrc;
+      }
+      else
+      {
+         if( pArg )
+         {
+            *pDst++ = '\0';
+            s_argv[ s_argc++ ] = pArg;
+            pArg = NULL;
+         }
+      }
+      ++pSrc;
+   }
+   if( pArg )
+   {
+      *pDst = '\0';
+      s_argv[ s_argc++ ] = pArg;
+   }
 
-#endif /* UNICODE */
+#if defined( HB_WINCE )
+   HB_TCHAR_FREE( pFree );
+#endif
 
-#endif /* HB_OS_WIN_32 */
+   iErrorCode = main( s_argc, s_argv );
 
-HB_EXTERN_END
+   LocalFree( pArgs );
 
-#endif /* HB_WINCE_H_ */
+   return iErrorCode;
+}

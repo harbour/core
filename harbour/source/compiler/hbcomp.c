@@ -295,7 +295,7 @@ void hb_compOutStd( HB_COMP_DECL, const char * szMessage )
          HB_COMP_PARAM->outStdFunc( HB_COMP_PARAM->cargo, szMessage );
       else
       {
-         fprintf( stderr, "%s", szMessage ); fflush( stdout );
+         fprintf( stdout, "%s", szMessage ); fflush( stdout );
       }
    }
 }

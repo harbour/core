@@ -8,6 +8,36 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-06 12:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbwince.h
+    * put functions declarations inside HB_EXTERN_BEGIN / HB_EXTERN_END
+
+  + harbour/include/hbwmain.c
+    + added WinMain() to main() wrapper
+
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt1.c
+    ! fixed typo reported by Chen
+
+  * harbour/source/pp/hbppgen.c
+  * harbour/source/main/harbour.c
+  * harbour/utils/hbpp/hbpp.c
+    * use hbwmain.c when main() is not supported by C compiler/platform
+
+  * harbour/source/rtl/gtwin/gtwin.c
+    * include wincon.h in all builds except LCC
+
+  * harbour/source/rtl/fserror.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/filesys.c
+    * use HB_OS_WIN_32_USED as in other files (still on TOFIX list)
+
+  * harbour/source/rtl/seconds.c
+    + added HB_OS_WIN_32_USED
+
+  * harbour/source/compiler/hbcomp.c
+    ! fixed typo: stderr was used instead of stdout
+
 2007-11-05 18:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/tests/wcecon.prg
     + added small test for DBF/FPT/CDX file creation and browsing

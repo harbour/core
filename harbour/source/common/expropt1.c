@@ -1233,7 +1233,7 @@ ULONG hb_compExprMacroListLen( HB_EXPR_PTR pExpr )
    while( pExpr )
    {
       if( pExpr->ExprType == HB_ET_MACRO &&
-          ( pExpr->value.asMacro.SubType | HB_ET_MACRO_LIST ) )
+          ( pExpr->value.asMacro.SubType & HB_ET_MACRO_LIST ) )
       {
          if( ulItems )
          {

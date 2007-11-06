@@ -50,9 +50,7 @@
  *
  */
 
-#ifndef HB_OS_WIN_32_USED
-   #define HB_OS_WIN_32_USED
-#endif
+#define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
 #include "hbapifs.h"

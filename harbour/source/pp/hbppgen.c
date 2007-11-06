@@ -308,32 +308,12 @@ static void hb_pp_usage( char * szName )
            "         -q        \tdisable information messages\n" );
 }
 
-#if defined(__MINGW32CE__) || defined(HB_WINCE)
-int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
-                    HINSTANCE hPrevInstance,  /* handle to previous instance */
-                    LPTSTR lpCmdLine,         /* pointer to command line */
-                    int iCmdShow )            /* show state of window */
-{
-   char * szFile = NULL, * szRuleFile = NULL;
-   BOOL fQuiet = FALSE, fWrite = FALSE;
-   PHB_PP_STATE pState;
-   int iResult, i;
-   /* hack - we do not want to create real binaries */
-   int argc = 1;
-   char * argv[] = { "hbppgen" };
-
-   HB_SYMBOL_UNUSED( hInstance );
-   HB_SYMBOL_UNUSED( hPrevInstance );
-   HB_SYMBOL_UNUSED( lpCmdLine );
-   HB_SYMBOL_UNUSED( iCmdShow );
-#else
 int main( int argc, char * argv[] )
 {
    char * szFile = NULL, * szRuleFile = NULL;
    BOOL fQuiet = FALSE, fWrite = FALSE;
    PHB_PP_STATE pState;
    int iResult, i;
-#endif
 
    pState = hb_pp_new();
 
@@ -420,3 +400,7 @@ int main( int argc, char * argv[] )
 
    return iResult;
 }
+
+#if defined( HB_WINCE ) && !defined( __CEGCC__ )
+#  include "hbwmain.c"
+#endif

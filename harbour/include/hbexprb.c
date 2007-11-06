@@ -1140,7 +1140,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
             while( pExpr )
             {
                if( ( pExpr->ExprType == HB_ET_MACRO &&
-                     ( pExpr->value.asMacro.SubType | HB_ET_MACRO_LIST ) ) ||
+                     ( pExpr->value.asMacro.SubType & HB_ET_MACRO_LIST ) ) ||
                    ( pExpr->ExprType == HB_ET_ARGLIST &&
                      pExpr->value.asList.reference ) )
                {

@@ -547,3 +547,7 @@ static BOOL hb_pp_fopen( char * szFileName )
 
    return TRUE;
 }
+
+#if defined( HB_WINCE ) && !defined( __CEGCC__ )
+#  include "hbwmain.c"
+#endif

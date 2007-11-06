@@ -50,6 +50,8 @@
  *
  */
 
+#define HB_OS_WIN_32_USED
+
 #include "hbapi.h"
 #include "hbdate.h"
 
@@ -217,7 +219,7 @@ HB_EXPORT double hb_secondsCPU( int n )
 
    if( ( n < 1 || n > 3 ) && ( n < 11 || n > 13 ) )
       n = 3;
-   
+
 #if defined( OS_UNIX_COMPATIBLE )
    {
       struct tms tm;
