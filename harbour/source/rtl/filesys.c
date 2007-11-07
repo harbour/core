@@ -1690,30 +1690,11 @@ HB_EXPORT HB_FOFFSET hb_fsSeekLarge( FHANDLE hFileHandle, HB_FOFFSET llOffset, U
    return llPos;
 }
 
-HB_EXPORT ULONG   hb_fsTell( FHANDLE hFileHandle )
+HB_EXPORT ULONG hb_fsTell( FHANDLE hFileHandle )
 {
-   ULONG ulPos;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_fsTell(%p)", hFileHandle));
 
-#if defined(HB_FS_FILE_IO)
-
-   #if defined(HB_WIN32_IO)
-      ulPos = (DWORD) SetFilePointer( DosToWinHandle(hFileHandle), 0, NULL, FILE_CURRENT );
-      hb_fsSetIOError( (DWORD) ulPos != INVALID_SET_FILE_POINTER, 0 );
-   #else
-      ulPos = lseek( hFileHandle, 0L, SEEK_CUR );
-      hb_fsSetIOError( ulPos != (ULONG) -1, 0 );
-   #endif
-
-#else
-
-   ulPos = (ULONG) -1;
-   hb_fsSetError( (USHORT) FS_ERROR );
-
-#endif
-
-   return ulPos;
+   return hb_fsSeek( hFileHandle, 0, FS_RELATIVE );
 }
 
 HB_EXPORT BOOL hb_fsDelete( BYTE * pFilename )
@@ -2319,18 +2300,19 @@ HB_EXPORT FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
 
 HB_EXPORT BOOL hb_fsEof( FHANDLE hFileHandle )
 {
-#if defined(__DJGPP__) || defined(__CYGWIN__) || defined(HB_WINCE) || \
+#if defined(__DJGPP__) || defined(__CYGWIN__) || \
+    defined(HB_WIN32_IO) || defined(HB_WINCE) || \
     defined(OS_UNIX_COMPATIBLE)
-   LONG curPos;
-   LONG endPos;
-   LONG newPos;
+   HB_FOFFSET curPos;
+   HB_FOFFSET endPos;
+   HB_FOFFSET newPos;
    BOOL fResult = FALSE;
 
-   curPos = lseek( hFileHandle, 0L, SEEK_CUR );
-   if ( curPos != -1 )
+   curPos = hb_fsSeekLarge( hFileHandle, 0L, SEEK_CUR );
+   if( curPos != -1 )
    {
-      endPos = lseek( hFileHandle, 0L, SEEK_END );
-      newPos = lseek( hFileHandle, curPos, SEEK_SET );
+      endPos = hb_fsSeekLarge( hFileHandle, 0L, SEEK_END );
+      newPos = hb_fsSeekLarge( hFileHandle, curPos, SEEK_SET );
       fResult = ( endPos != -1 && newPos == curPos );
    }
    else

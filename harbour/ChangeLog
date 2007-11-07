@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-07 01:47 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/filesys.c
+    * updated hb_fsTell() and hb_fsEof() to respect platform dependent
+      API calls used in hb_fsSeek[Large]()
+
 2007-11-06 23:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/dbgentry.c
     * changed the name of global static variable from 'info' to
