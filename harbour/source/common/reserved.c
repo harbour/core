@@ -124,7 +124,7 @@ static const char * s_szReservedFun[] = {
    "YEAR"
 };
 
-#define RESERVED_FUNCTIONS  sizeof( s_szReservedFun ) / sizeof( char * )
+#define RESERVED_FUNCTIONS    ( sizeof( s_szReservedFun ) / sizeof( char * ) )
 #endif
 
 char * hb_compReservedName( char * szName )

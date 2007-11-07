@@ -2986,15 +2986,15 @@ static USHORT hb_clsNew( const char * szClassName, USHORT uiDatas,
             /* Copy instance area init data */
             if( pSprCls->uiInitDatas )
             {
-               USHORT ui;
-               for( ui = 0; ui < pSprCls->uiInitDatas; ++ui )
+               USHORT u;
+               for( u = 0; u < pSprCls->uiInitDatas; ++u )
                {
-                  if( pSprCls->pInitData[ ui ].uiType == HB_OO_MSG_DATA )
+                  if( pSprCls->pInitData[ u ].uiType == HB_OO_MSG_DATA )
                   {
-                     USHORT uiCls = pSprCls->pInitData[ ui ].uiSprClass;
+                     USHORT uiCls = pSprCls->pInitData[ u ].uiSprClass;
                      hb_clsAddInitValue( pNewCls,
-                        pSprCls->pInitData[ ui ].pInitValue, HB_OO_MSG_DATA,
-                        pSprCls->pInitData[ ui ].uiData,
+                        pSprCls->pInitData[ u ].pInitValue, HB_OO_MSG_DATA,
+                        pSprCls->pInitData[ u ].uiData,
                         hb_clsParentInstanceOffset( pNewCls,
                                           s_pClasses[ uiCls ].pClassSym ),
                         uiCls );
@@ -3315,7 +3315,7 @@ HB_FUNC( __CLSMODMSG )
             }
             else                                      /* Modify METHOD */
             {
-               PHB_SYMB pFuncSym = hb_objGetFuncSym( hb_param( 3, HB_IT_ANY ) );
+               pFuncSym = hb_objGetFuncSym( hb_param( 3, HB_IT_ANY ) );
 
                if( pFuncSym == NULL )
                   hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSMODMSG", 0 );

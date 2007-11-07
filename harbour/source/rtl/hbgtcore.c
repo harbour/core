@@ -1566,7 +1566,9 @@ static int hb_gt_def_Alert( PHB_ITEM pMessage, PHB_ITEM pOptions,
          char * szMsgDsp;
 
          ulMaxWidth = iCols - 4;
-         ulDefWidth = ( ulMaxWidth >> 2 ) * 3;
+         ulDefWidth = ( ulMaxWidth * 3 ) >> 2;
+         if( ulDefWidth == 0 )
+            ulDefWidth = 1;
          szMsgDsp = ( char * ) hb_xgrab( ulLen + ( ulLen / ulDefWidth ) + 1 );
 
          while( ul < ulLen )
@@ -2351,8 +2353,7 @@ static int hb_gt_def_MouseReadKey( int iEventMask )
       }
       else if( iEventMask & INKEY_MOVE )
       {
-         int iCol, iRow;
-            hb_mouse_GetPos( &iRow, &iCol );
+         hb_mouse_GetPos( &iRow, &iCol );
          if( iRow != s_iMouseLastRow || iCol != s_iMouseLastCol )
          {
             s_iMouseLastRow = iRow;

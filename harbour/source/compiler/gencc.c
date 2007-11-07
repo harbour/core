@@ -35,7 +35,7 @@
 typedef HB_GENC_FUNC( HB_GENC_FUNC_ );
 typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 
-#define HB_GENC_GETLABEL(l)   ( l < pFunc->lPCodePos ? cargo->pulLabels[ l ] : 0 )
+#define HB_GENC_GETLABEL(l)   ( (l) < pFunc->lPCodePos ? cargo->pulLabels[ (l) ] : 0 )
 
 #define HB_GENC_LABEL()       do { \
                                  ULONG ulLab = HB_GENC_GETLABEL( lPCodePos ); \

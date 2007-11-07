@@ -2800,7 +2800,7 @@ static BOOL hb_pp_matchPatternNew( PHB_PP_STATE pState, PHB_PP_TOKEN * pTokenPtr
             }
             else
             {
-               PHB_PP_TOKEN pToken, pOptional = ( * pTokenPtr )->pNext;
+               PHB_PP_TOKEN pToken, pOptTok = ( * pTokenPtr )->pNext;
                pToken = * pStopOptPtr;
                * pStopOptPtr = NULL;
                ( * pTokenPtr )->pNext = pToken->pNext;
@@ -2810,10 +2810,10 @@ static BOOL hb_pp_matchPatternNew( PHB_PP_STATE pState, PHB_PP_TOKEN * pTokenPtr
                if( ( * pTokenPtr )->spaces > 1 )
                   ( * pTokenPtr )->spaces = 1;
                ( * pTokenPtr )->type |= HB_PP_TOKEN_MATCHMARKER;
-               ( * pTokenPtr )->pMTokens = pOptional;
+               ( * pTokenPtr )->pMTokens = pOptTok;
                if( pLastPtr && !hb_pp_matchHasKeywords( * pLastPtr ) )
                {
-                  if( !hb_pp_matchHasKeywords( pOptional ) )
+                  if( !hb_pp_matchHasKeywords( pOptTok ) )
                   {
                      hb_pp_error( pState, 'E', HB_PP_ERR_AMBIGUOUS_MATCH_PATTERN, NULL );
                      return FALSE;
@@ -2821,7 +2821,7 @@ static BOOL hb_pp_matchPatternNew( PHB_PP_STATE pState, PHB_PP_TOKEN * pTokenPtr
                   /* replace the order for these optional tokens to keep
                      the ones with keywords 1-st */
                   ( * pTokenPtr )->pMTokens = * pLastPtr;
-                  * pLastPtr = pOptional;
+                  * pLastPtr = pOptTok;
                }
                pLastPtr = &( * pTokenPtr )->pMTokens;
                /* to skip resetting pLastPtr below */

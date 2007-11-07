@@ -521,7 +521,6 @@ void hb_compPCodeEval( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, vo
    ULONG ulPos = 0;
    ULONG ulSkip;
    BYTE opcode;
-   HB_PCODE_FUNC_PTR pCall;
 
    /* Make sure that table is correct */
    assert( sizeof( hb_comp_pcode_len ) == HB_P_LAST_PCODE );
@@ -532,15 +531,14 @@ void hb_compPCodeEval( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, vo
       opcode = pFunc->pCode[ ulPos ];
       if( opcode < HB_P_LAST_PCODE )
       {
-         pCall = pFunctions[ opcode ];
+         HB_PCODE_FUNC_PTR pCall = pFunctions[ opcode ];
          ulSkip = pCall ? pCall( pFunc, ulPos, cargo ) : 0;
          if( ulSkip == 0 )
          {
             ulSkip = hb_comp_pcode_len[ opcode ];
             if( ulSkip == 0 )
             {
-               HB_PCODE_FUNC_PTR pCall = s_psize_table[ opcode ];
-
+               pCall = s_psize_table[ opcode ];
                if( pCall != NULL )
                   ulSkip = pCall( pFunc, ulPos, NULL );
             }
@@ -581,18 +579,16 @@ void hb_compPCodeEval( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, vo
 void hb_compPCodeTrace( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
    ULONG ulPos = 0;
-   BYTE opcode;
-   HB_PCODE_FUNC_PTR pCall;
 
    /* Make sure that table is correct */
    assert( sizeof( hb_comp_pcode_len ) == HB_P_LAST_PCODE );
 
    while( ulPos < pFunc->lPCodePos )
    {
-      opcode = pFunc->pCode[ ulPos ];
+      BYTE opcode = pFunc->pCode[ ulPos ];
       if( opcode < HB_P_LAST_PCODE )
       {
-         pCall = pFunctions[ opcode ];
+         HB_PCODE_FUNC_PTR pCall = pFunctions[ opcode ];
          if( pCall )
             ulPos = pCall( pFunc, ulPos, cargo );
          else

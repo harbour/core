@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-07 13:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/cdpapi.c
+  * harbour/source/rtl/mlcfunc.c
+  * harbour/source/vm/classes.c
+  * harbour/source/common/reserved.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hbfunchk.c
+    * cleaned possible dangerous code reported by Chen - many thanks
+
 2007-11-07 10:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbfsapi.c
     ! fixed DJGPP builds

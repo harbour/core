@@ -179,7 +179,7 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
          pEOLs = ( PHB_EOL_INFO ) hb_xgrab( sizeof( HB_EOL_INFO ) * iEOLs );
          for( ul = 1; ul <= ulSize; ++ul )
          {
-            ULONG ulLen = hb_arrayGetCLen( pArray, ul );
+            ulLen = hb_arrayGetCLen( pArray, ul );
             if( ulLen > 0 )
             {
                pEOLs[ iEOLs ].szEOL = hb_arrayGetCPtr( pArray, ul );
