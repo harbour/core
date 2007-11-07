@@ -54,13 +54,13 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hb_io.h"
 
 #if defined( HB_OS_WIN_32 )
    #if !defined( INVALID_FILE_ATTRIBUTES )
       #define INVALID_FILE_ATTRIBUTES ( ( DWORD ) -1 )
    #endif
 #elif defined( HB_OS_UNIX )
-   #include <errno.h>
    #include <sys/types.h>
    #include <sys/stat.h>
 #endif
@@ -291,16 +291,14 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
 
 #if defined( HB_OS_DOS )
    {
-      union REGS regs;
-      struct SREGS sregs;
-
-      regs.HB_XREGS.ax = 0x4300;
-      regs.HB_XREGS.dx = FP_OFF( pszFileName );
-      sregs.ds = FP_SEG( pszFileName );
-
-      HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
-
-      fExist = regs.x.cflag == 0 && ( regs.HB_XREGS.cx & 10h ) == 0;
+#if defined( __DJGPP__ ) || defined(__BORLANDC__)
+      int iAttr = _chmod( pszFileName, 0, 0 );
+      fExist = iAttr != -1 && ( iAttr & 0x10 ) == 0;
+#else
+      unsigned int iAttr = 0;
+      fExist = _dos_getfileattr( pszFileName, &iAttr ) == 0 &&
+               ( iAttr & 0x10 ) == 0;
+#endif
    }
 #elif defined( HB_OS_WIN_32 )
    {
@@ -347,16 +345,14 @@ HB_EXPORT BOOL hb_fsDirExists( const char * pszDirName )
 
 #if defined( HB_OS_DOS )
    {
-      union REGS regs;
-      struct SREGS sregs;
-
-      regs.HB_XREGS.ax = 0x4300;
-      regs.HB_XREGS.dx = FP_OFF( pszDirName );
-      sregs.ds = FP_SEG( pszDirName );
-
-      HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
-
-      fExist = regs.x.cflag == 0 && ( regs.HB_XREGS.cx & 10h );
+#if defined( __DJGPP__ ) || defined(__BORLANDC__)
+      int iAttr = _chmod( pszDirName, 0, 0 );
+      fExist = iAttr != -1 && ( iAttr & 0x10 ) != 0;
+#else
+      unsigned int iAttr = 0;
+      fExist = _dos_getfileattr( pszDirName, &iAttr ) == 0 &&
+               ( iAttr & 0x10 ) != 0;
+#endif
    }
 #elif defined( HB_OS_WIN_32 )
    {
