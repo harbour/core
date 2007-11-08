@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-09 00:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/tip/ftpcln.prg
+    * converted TABs to SPACEs
+
 2007-11-08 22:57 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_xmingw.sh
     * minor modification in one message

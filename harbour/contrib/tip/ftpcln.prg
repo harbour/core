@@ -83,16 +83,16 @@
 /* 2007-09-08 21:34 UTC+0100 Patrick Mast <patrick/dot/mast/at/xharbour.com>
    * source\tip\ftpcln.prg
      * Formatting
-	  + METHOD StartCleanLogFile()
-	    Starts a clean log file, overwriting current logfile.
-	  + METHOD fileSize( cFileSpec )
-	    Calculates the filesize of the given files specifications.
-	  + DATA cLogFile
-	    Holds the filename of the current logfile.
-	  ! Fixed logfilename in New(), now its not limited to 9999 log files anymore
-	  ! Fixed MGet() due to changes in HB_aTokens()
-	  ! Fixed listFiles() due to changes in HB_aTokens()
-	  ! listFiles() is still buggy. Needs to be fixed.
+     + METHOD StartCleanLogFile()
+       Starts a clean log file, overwriting current logfile.
+     + METHOD fileSize( cFileSpec )
+       Calculates the filesize of the given files specifications.
+     + DATA cLogFile
+       Holds the filename of the current logfile.
+     ! Fixed logfilename in New(), now its not limited to 9999 log files anymore
+     ! Fixed MGet() due to changes in HB_aTokens()
+     ! Fixed listFiles() due to changes in HB_aTokens()
+     ! listFiles() is still buggy. Needs to be fixed.
 */
 
 #include "directry.ch"
