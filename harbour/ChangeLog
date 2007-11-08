@@ -8,6 +8,30 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-08 22:57 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_xmingw.sh
+    * minor modification in one message
+
+  + harbour/make_rpmw32.sh
+  + harbour/harbour-w32-spec
+    + added script to build RPMs with cross build of Harbour for MS-Windows
+      using MinGW32 cross compiler.
+      make_rpmw32.sh should create harbour-w32-<ver>.i[345]86.rpm which
+      can be installed with platform native harbour RPMs.
+      This RPM contains Harbour libraries compiled for Win32 and
+      set of hbw* scripts which should be used instead of standard hb*
+      ones to create MS-Windows binaries. It means that you can create
+      standard Linux binaries and MS-Windows binaries in the same session
+      without setting/changing any additional environment variables, f.e:
+         hbmk -n -w -es2 test.prg
+      will create Linux binaries and:
+         hbwmk -n -w -es2 test.prg
+      will create binaries for MS-Windows.
+      Please also remember that if you create and install RPMs with Harbour
+      for WinCE/PocketPC (make_rpmce.sh) then hbce* scripts will create
+      WinCE/PocketPC binaries, f.e.:
+         hbcemk -n -w -es2 test.prg
+
 2007-11-07 13:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/ppcore.c
   * harbour/source/rtl/hbgtcore.c

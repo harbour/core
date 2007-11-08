@@ -42,11 +42,13 @@ elif find /usr/local/bin -name "i[3456]86-mingw*-gcc" -maxdepth 1 &>/dev/null; t
     CCPREFIX="$TARGET-"
 else
     echo "Can't determine the location for the MinGW32 cross-compiler."
-    echo "Please add your platform to the $0 script."
+    echo "Please install it or add your platform to the $0 script."
     exit 1
 fi
 CCPATH="$MINGW_PREFIX/bin:$MINGW_PREFIX/$TARGET/bin:"
 PATH="$CCPATH$PATH"
+
+export PATH CCPATH CCPREFIX
 
 export HB_BIN_COMPILE=/tmp/hb-xmingw-$$
 rm -fR "${HB_BIN_COMPILE}"
@@ -62,8 +64,6 @@ fi
 
 (cd `dirname $0`; ln -s `pwd`/source/pp/linux/gcc/hbppgen ${HB_BIN_COMPILE}/hbppgen.exe)
 export HB_PPGEN_PATH=${HB_BIN_COMPILE}
-
-export PATH CCPATH CCPREFIX
 
 case "$1" in
     tgz|gnu)

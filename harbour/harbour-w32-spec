@@ -1,0 +1,350 @@
+#
+# $Id$
+#
+
+# ---------------------------------------------------------------
+# Copyright 2007 Przemyslaw Czerpak (druzus/at/priv.onet.pl),
+# Harbour-MinGW32 cross build RPM spec file
+#
+# See doc/license.txt for licensing terms.
+# ---------------------------------------------------------------
+
+######################################################################
+# Conditional build:
+# --with mysql       - build mysql lib
+# --with pgsql       - build pgsql lib 
+# --with gd          - build gd lib 
+# --with allegro     - build GTALLEG - Allegro based GT driver
+# --without odbc     - do not build odbc lib
+# --without adsrdd   - do not build ADS RDD
+# --without nf       - do not build nanforum lib
+######################################################################
+
+######################################################################
+## Definitions.
+######################################################################
+
+%define name      harbour-w32
+%define version   0.0.0
+%define releasen  0
+%define hb_pref   hbw
+%define hb_ccpath /opt/xmingw/bin
+%define hb_ccpref i386-mingw32-
+%define hb_host   www.harbour-project.org
+%define readme    README.RPM
+
+# Workaround for the problem of /usr/bin/strip not handling PE binaries.
+%define __strip   %{hb_ccpath}/%{hb_ccpref}strip
+%define __objdump %{hb_ccpath}/%{hb_ccpref}objdump
+
+######################################################################
+## Preamble.
+######################################################################
+
+Summary:        Free software Clipper compatible compiler
+Summary(pl):    Darmowy kompilator kompatybilny z jêzykiem Clipper.
+Name:           %{name}
+Version:        %{version}
+Release:        %{releasen}
+License:        GPL (plus exception)
+Group:          Development/Languages
+Vendor:         %{hb_host}
+URL:            http://%{hb_host}/
+Source:         harbour-%{version}.src.tar.gz
+Packager:       Przemys³aw Czerpak (druzus/at/priv.onet.pl)
+BuildPrereq:    gcc binutils bash
+Requires:       gcc binutils bash sh-utils harbour = %{?epoch:%{epoch}:}%{version}-%{release}
+Provides:       %{name}
+BuildRoot:      /tmp/%{name}-%{version}-root
+
+%define         _noautoreq    'libharbour.*'
+
+%description
+Harbour is a CA-Clipper compatible compiler for multiple platforms. This
+package includes a compiler, pre-processor, header files, virtual machine
+and libraries for creating MS-Windows application in Linux box using MinGW
+GCC port.
+
+%description -l pl
+Harbour to kompatybilny z jêzykiem CA-Clipper kompilator rozwijany na
+wielu ró¿nych platformach. Ten pakiet zawiera kompilator, preprocesor,
+zbiory nag³ówkowe, wirtualn± maszynê oraz biblioteki pozwalaj±ce na
+tworzenie aplikacji dla MS-Windows przy u¿yciu MinGW GCC.
+
+
+######################################################################
+## Preperation.
+######################################################################
+
+%prep
+%setup -c harbour
+rm -fR $RPM_BUILD_ROOT
+
+######################################################################
+## Build.
+######################################################################
+
+%build
+
+export HB_HOST_BUILD=yes
+export HB_ARCHITECTURE=linux
+export HB_COMPILER=gcc
+export C_USR="-O2 -DHB_FM_STATISTICS_OFF"
+make -r
+
+export HB_HOST_BUILD=lib
+export HB_ARCHITECTURE=w32
+export HB_COMPILER=mingw32
+
+mkdir -p source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}
+ln -s ../../linux/gcc/hbppgen source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}/hbppgen.exe
+mkdir -p source/main/${HB_ARCHITECTURE}/${HB_COMPILER}
+ln -s ../../linux/gcc/harbour source/main/${HB_ARCHITECTURE}/${HB_COMPILER}/harbour.exe
+
+export CC_C_USR=""
+export C_USR="$CC_C_USR -O2 -DHB_FM_STATISTICS_OFF"
+export CC_PRG_USR="-D__PLATFORM__Windows -undef:__PLATFORM__UNIX -undef:__PLATFORM__Linux"
+export PRG_USR="$CC_PRG_USR"
+export L_USR="${CC_L_USR}"
+
+export CCPATH="%{hb_ccpath}:"
+export CCPREFIX="%{hb_ccpref}"
+export PATH="$CCPATH$PATH"
+
+export HB_MT=no
+export HB_GT_LIB=gtwin
+export HB_BIN_INSTALL=%{_bindir}
+export HB_INC_INSTALL=%{_includedir}/harbour
+export HB_LIB_INSTALL=%{_libdir}/%{name}
+export HB_GTALLEG=%{?_with_allegro:yes}
+export HB_CONTRIBLIBS="%{?_with_gd:gd} %{?_with_pgsql:pgsql} %{?_with_mysql:mysql}"
+
+make -r
+
+######################################################################
+## Install.
+######################################################################
+
+%install
+
+# Install harbour itself.
+
+export CC_C_USR=""
+export C_USR="$CC_C_USR -O2 -DHB_FM_STATISTICS_OFF"
+export CC_PRG_USR="-D__PLATFORM__Windows -undef:__PLATFORM__UNIX -undef:__PLATFORM__Linux"
+export PRG_USR="$CC_PRG_USR"
+export L_USR="${CC_L_USR}"
+
+export CCPATH="%{hb_ccpath}:"
+export CCPREFIX="%{hb_ccpref}"
+export PATH="$CCPATH$PATH"
+
+export HB_HOST_BUILD=lib
+export HB_ARCHITECTURE=w32
+export HB_COMPILER=mingw32
+export HB_MT=no
+export HB_GT_LIB=gtwin
+export HB_BIN_INSTALL=%{_bindir}
+export HB_INC_INSTALL=%{_includedir}/harbour
+export HB_LIB_INSTALL=%{_libdir}/%{name}
+export HB_GTALLEG=%{?_with_allegro:yes}
+export HB_CONTRIBLIBS="%{?_with_gd:gd} %{?_with_pgsql:pgsql} %{?_with_mysql:mysql}"
+
+export _DEFAULT_BIN_DIR=$HB_BIN_INSTALL
+export _DEFAULT_INC_DIR=$HB_INC_INSTALL
+export _DEFAULT_LIB_DIR=$HB_LIB_INSTALL
+export HB_BIN_INSTALL=$RPM_BUILD_ROOT/$HB_BIN_INSTALL
+export HB_INC_INSTALL=$RPM_BUILD_ROOT/$HB_INC_INSTALL
+export HB_LIB_INSTALL=$RPM_BUILD_ROOT/$HB_LIB_INSTALL
+export HB_TOOLS_PREF=%{hb_pref}
+
+mkdir -p $HB_BIN_INSTALL
+mkdir -p $HB_LIB_INSTALL
+
+make -r -i install
+
+[ "%{?_without_odbc:1}" ] && rm -f $HB_LIB_INSTALL/libhbodbc.a
+[ "%{?_with_allegro:1}" ] || rm -f $HB_LIB_INSTALL/libgtalleg.a
+
+# Keep the size of the libraries to a minimim.
+${CCPREFIX}strip --strip-debug $HB_LIB_INSTALL/*
+
+# remove unused files
+rm -fR ${HB_BIN_INSTALL}/{harbour,hbdoc,hbdot,hbmake,hbpp,hbrun,hbtest,hbverfix,pretest}.exe
+rm -fR $HB_INC_INSTALL
+
+mv ${HB_BIN_INSTALL}/hb-mkslib ${HB_BIN_INSTALL}/%{hb_pref}-mkslib
+
+# Create a README file for people using this RPM.
+cat > doc/%{readme} <<EOF
+This RPM distribution of Harbour includes extra commands to make compiling
+and linking with Harbour a little easier. There are compiler and linker
+wrappers called "%{hb_pref}cc", "%{hb_pref}cmp", "%{hb_pref}lnk" and "%{hb_pref}mk".
+
+"%{hb_pref}cc" is a wrapper to the C compiler only. It sets all flags
+and paths necessary to compile .c files which include Harbour header
+files. The result of its work is an object file.
+
+Use "%{hb_pref}cmp" exactly as you would use the harbour compiler itself.
+The main difference with %{hb_pref}cmp is that it results in an object file,
+not a C file that needs compiling down to an object. %{hb_pref}cmp also
+ensures that the harbour include directory is seen by the harbour compiler.
+
+"%{hb_pref}lnk" simply takes a list of object files and links them together
+with the harbour virtual machine and run-time library to produce an
+executable. The executable will be given the basename of the first object
+file if not directly set by the "-o" command line switch.
+
+"%{hb_pref}mk" tries to produce an executable from your .prg file. It's a simple
+equivalent of cl.bat from the CA-Clipper distribution.
+
+All these scripts accept command line switches:
+-o<outputfilename>      # output file name
+-static                 # link with static Harbour libs
+-fullstatic             # link with all static libs
+-shared                 # link with shared libs (default)
+-mt                     # link with multi-thread libs
+-gt<hbgt>               # link with <hbgt> GT driver, can be repeated to
+                        # link with more GTs. The first one will be
+                        #      the default at runtime
+-xbgtk                  # link with xbgtk library (xBase GTK+ interface)
+-hwgui                  # link with HWGUI library (GTK+ interface)
+-l<libname>             # link with <libname> library
+-L<libpath>             # additional path to search for libraries
+-fmstat                 # link with the memory statistics lib
+-nofmstat               # do not link with the memory statistics lib (default)
+-[no]strip              # strip (no strip) binaries
+-main=<main_func>       # set the name of main program function/procedure.
+                        # if not set then 'MAIN' is used or if it doesn't
+                        # exist the name of first public function/procedure
+                        # in first linked object module (link)
+
+Link options work only with "%{hb_pref}lnk" and "%{hb_pref}mk" and have no effect
+in "%{hb_pref}cc" and "%{hb_pref}cmp".
+Other options are passed to Harbour/C compiler/linker.
+
+An example compile/link session looks like:
+----------------------------------------------------------------------
+druzus@uran:~/tmp$ cat foo.prg
+function main()
+? "Hello, World!"
+return nil
+
+druzus@uran:~/tmp$ %{hb_pref}cmp foo
+Harbour Compiler Alpha build 46.2 (Flex)
+Copyright 1999-2006, http://www.harbour-project.org/
+Compiling 'foo.prg'...
+Lines 5, Functions/Procedures 2
+Generating C source output to 'foo.c'... Done.
+
+druzus@uran:~/tmp$ %{hb_pref}lnk foo.o
+
+druzus@uran:~/tmp$ ls -l foo
+-rwxrwxr-x    1 druzus   druzus       3824 maj 17 02:46 foo.exe
+----------------------------------------------------------------------
+
+or using %{hb_pref}mk only:
+----------------------------------------------------------------------
+druzus@uran:~/tmp$ cat foo.prg
+function main()
+? "Hello, World!"
+return nil
+
+druzus@uran:~/tmp$ %{hb_pref}mk foo
+Harbour Compiler Alpha build 46.2 (Flex)
+Copyright 1999-2006, http://www.harbour-project.org/
+Compiling 'foo.prg'...
+Lines 5, Functions/Procedures 2
+Generating C source output to 'foo.c'... Done.
+
+druzus@uran:~/tmp$ ls -l foo
+-rwxrwxr-x    1 druzus   druzus       3824 maj 17 02:46 foo.exe
+----------------------------------------------------------------------
+
+I hope this RPM is useful. Have fun with Harbour.
+
+Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+EOF
+
+######################################################################
+## Post install
+######################################################################
+#%post lib
+#/sbin/ldconfig
+
+######################################################################
+## Post uninstall
+######################################################################
+#%postun lib
+#/sbin/ldconfig
+
+######################################################################
+## Clean.
+######################################################################
+
+%clean
+rm -fR $RPM_BUILD_ROOT
+
+######################################################################
+## File list.
+######################################################################
+
+%files
+%defattr(-,root,root,755)
+%doc doc/%{readme}
+
+%{_bindir}/%{hb_pref}-mkslib
+%{_bindir}/%{hb_pref}-build
+%{_bindir}/%{hb_pref}cc
+%{_bindir}/%{hb_pref}cmp
+%{_bindir}/%{hb_pref}lnk
+%{_bindir}/%{hb_pref}mk
+
+%defattr(644,root,root,755)
+%dir %{_libdir}/%{name}
+%{_libdir}/%{name}/libcodepage.a
+%{_libdir}/%{name}/libcommon.a
+%{_libdir}/%{name}/libcompiler.a
+%{_libdir}/%{name}/libdebug.a
+%{_libdir}/%{name}/libfm.a
+%{_libdir}/%{name}/libdb*.a
+%{_libdir}/%{name}/libgt*.a
+%{_libdir}/%{name}/liblang.a
+%{_libdir}/%{name}/libmacro.a
+%{_libdir}/%{name}/libhbpcre.a
+%{_libdir}/%{name}/libnulsys.a
+%{_libdir}/%{name}/libpp.a
+%{_libdir}/%{name}/librdd.a
+%{_libdir}/%{name}/libhsx.a
+%{_libdir}/%{name}/libhbsix.a
+%{_libdir}/%{name}/librtl.a
+%{_libdir}/%{name}/libsamples.a
+%{_libdir}/%{name}/libvm.a
+%{_libdir}/%{name}/libmainstd.a
+%{_libdir}/%{name}/libusrrdd.a
+
+%{!?_without_odbc: %{_libdir}/%{name}/libhbodbc.a}
+%{!?_without_adsrdd: %{_libdir}/%{name}/librddads.a}
+%{!?_without_nf: %{_libdir}/%{name}/libnf.a}
+%{?_with_mysql: %{_libdir}/%{name}/libhbmysql.a}
+%{?_with_pgsql: %{_libdir}/%{name}/libhbpg.a}
+%{?_with_gd: %{_libdir}/%{name}/libhbgd.a}
+%{_libdir}/%{name}/libhbbtree.a
+%{_libdir}/%{name}/libhtml.a
+%{_libdir}/%{name}/libmisc.a
+%{_libdir}/%{name}/libct.a
+%{_libdir}/%{name}/libtip.a
+%{_libdir}/%{name}/libxhb.a
+%{_libdir}/%{name}/libadordd.a
+%{_libdir}/%{name}/libhbwin32.a
+
+%defattr(755,root,root,755)
+%{_libdir}/%{name}/*.dll
+
+######################################################################
+## Spec file Changelog.
+######################################################################
+
+%changelog
+* Thu Oct 23 2007 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+- initial release
