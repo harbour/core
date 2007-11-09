@@ -24,7 +24,7 @@
 
 #**********************************************************
 
-!include ..\_makelib.mak
+!include ..\maketpl.mak
 
 #**********************************************************
 # C compiler definition and C flags. These should never have to change.
