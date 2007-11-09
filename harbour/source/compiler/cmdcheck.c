@@ -486,7 +486,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
 
             case 'r':
             case 'R':
-               if( *( s + 1 ) == '=' )
+               if( *( s + 1 ) == ':' )
                {
                   int iOverflow;
                   int iCycles = ( int ) hb_strValInt( s + 2, &iOverflow );

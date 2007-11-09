@@ -248,7 +248,7 @@ HB_FUNC( FILESCREEN )
          hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &ulSize );
          pBuffer = ( char * ) hb_xgrab( ulSize );
 
-         lLength = hb_fsRead( hFile, ( BYTE * ) pBuffer, ulSize );
+         lLength = hb_fsReadLarge( hFile, ( BYTE * ) pBuffer, ulSize );
          hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pBuffer );
 
          hb_xfree( pBuffer );

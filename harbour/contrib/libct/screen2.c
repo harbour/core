@@ -137,7 +137,7 @@ HB_FUNC( SAYSPREAD )
          do
          {
             for( ul = 0; ul < ulLen && iCol + ( int ) ul <= iMaxCol; ++ul )
-               hb_gtPutChar( iRow, iCol + ul, bColor, 0, szText[ulPos + ul] );
+               hb_gtPutChar( iRow, iCol + ( int ) ul, bColor, 0, szText[ulPos + ul] );
             ulLen += 2;
             if( lDelay )
             {
@@ -182,7 +182,7 @@ HB_FUNC( SAYMOVEIN )
          BYTE bColor = hb_gt_GetColor();
 
          sRow = iRow;
-         sCol = iCol + ulLen;
+         sCol = iCol + ( int ) ulLen;
          if( fBack )
             iCol += ulLen - 1;
          else
@@ -197,14 +197,14 @@ HB_FUNC( SAYMOVEIN )
                if( iCol <= iMaxCol )
                {
                   for( ul = 0; ul < ulChars; ++ul )
-                     hb_gtPutChar( iRow, iCol + ul, bColor, 0, szText[ul] );
+                     hb_gtPutChar( iRow, iCol + ( int ) ul, bColor, 0, szText[ul] );
                }
                --iCol;
             }
             else
             {
                for( ul = 0; ul < ulChars; ++ul )
-                  hb_gtPutChar( iRow, iCol + ul, bColor, 0, szText[ul] );
+                  hb_gtPutChar( iRow, iCol + ( int ) ul, bColor, 0, szText[ul] );
                --szText;
             }
             if( ( int ) ulChars + iCol <= iMaxCol )

@@ -8,6 +8,59 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-09 15:20 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/compiler/hbcomp.c
+     ! Changed error messaged to go to stderr on non-Unix 
+       platforms too. With this change the Harbour compiler 
+       uses the same output on non-Unix platforms as on Unixes.
+       With Przemek's previous and now this change, the 
+       compiler uses stdout/stderr in the standard way 
+       (messages to stdout, warnings/errors to stderr), 
+       instead of being more or less CA-Cl*pper compatible.
+       (in CA-Cl*pper startup msg plus some info went to 
+       stderr and errors/warnings and some other progress 
+       info went to stdout)
+
+   * source/compiler/hbusage.c
+     + Added -f* switches to help screen.
+
+   * source/compiler/cmdcheck.c
+     ! -r=<max> -> -r:<max>
+
+   * contrib/libct/screen2.c
+   * contrib/libct/cursor.c
+   * contrib/libct/ctstrfil.c
+     ! Fixed MSVC warnings.
+
+   * contrib/libct/make_b32.bat
+   * contrib/libct/make_vc.bat
+
+   * contrib/htmllib/Makefile.bc
+     * Changed to not generate .ppo output on build.
+
+   * contrib/libct/make_b32.bat
+   * contrib/libct/make_vc.bat
+   - contrib/libct/makefile.bc
+   - contrib/libct/makefile.vc
+   + contrib/libct/common.mak
+   + contrib/maketpl.b32
+   + contrib/maketpl.vc
+   + contrib/maketpl.mak
+     + Added BC/VC non-GNU generic make script for contribs.
+     + Using the above generic make scripts to build LIBCT.
+       Notice BC/VC now uses one make file per contrib project 
+       named common.mak. The two helper batch files are essentially 
+       identical for BC and VC, and there is no reduancy or any 
+       complexity in common.mak (they much resemble in content 
+       to Makefile).
+       Notice that with this new system users have to call 
+       make_[b32|vc].bat INSTALL in order to get the libs and 
+       headers installed in the final lib/header destinations.
+       (This step was previously done automatically by the .bat 
+       files in LIBCT - or maybe not in other contribs.)
+       The new scripts also have a generic CLEAN functionality.
+     ; Thanks Marek Paliwoda for the generic make scripts.
+
 2007-11-09 00:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/tip/ftpcln.prg
     * converted TABs to SPACEs

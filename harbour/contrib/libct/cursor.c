@@ -74,11 +74,11 @@ HB_FUNC( RESTCURSOR )
 {
    long lCursor = hb_parnl( 1 );
 
-   hb_gtSetPos( ( lCursor >> 8 ) & 0xff, lCursor & 0xff );
+   hb_gtSetPos( ( SHORT ) ( ( lCursor >> 8 ) & 0xff ), ( SHORT ) ( lCursor & 0xff ) );
 #ifdef HB_C52_STRICT 
-   hb_gtSetCursor( ( lCursor >> 16 ) & 0x01 );
+   hb_gtSetCursor( ( USHORT ) ( ( lCursor >> 16 ) & 0x01 ) );
 #else
-   hb_gtSetCursor( ( lCursor >> 16 ) & 0xff );
+   hb_gtSetCursor( ( USHORT ) ( ( lCursor >> 16 ) & 0xff ) );
 #endif
 
    hb_retc( NULL );
