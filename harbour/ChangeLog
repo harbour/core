@@ -25,6 +25,7 @@
      + Added -f* switches to help screen.
 
    * source/compiler/cmdcheck.c
+   * source/compiler/hbusage.c
      ! -r=<max> -> -r:<max>
 
    * contrib/libct/screen2.c

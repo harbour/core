@@ -88,7 +88,7 @@ void hb_compPrintUsage( HB_COMP_DECL, char * szSelf )
            "\n          %cp+              generate pre-processor trace (.ppt) file",
            "\n          %cq               quiet",
            "\n          %cq0              quiet and don't display program header",
-           "\n          %cr=<max>         set maximum number of preprocessor iterations",
+           "\n          %cr:<max>         set maximum number of preprocessor iterations",
 /* TODO:   "\n          %cr[<lib>]        request linker to search <lib> (or none)", */
            "\n          %cs               syntax check only",
 /* TODO:   "\n          %ct<path>         path for temp file creation", */
