@@ -60,14 +60,11 @@
 #endif
 
 #include <stdio.h>
-/* #include <setjmp.h> */
 
 #include "hbppdef.h"
 #include "hbcomp.h"
 #include "hbapi.h"
 #include "hbapierr.h"
-
-#ifdef HB_EXTENSION
 
 HB_PATHNAMES * hb_comp_pIncludePath = NULL;
 PHB_FNAME      hb_comp_pFileName = NULL;
@@ -91,8 +88,6 @@ BOOL           hb_comp_bForceMemvars = FALSE;             /* holds if memvars ar
 BOOL           hb_comp_bDebugInfo = FALSE;                /* holds if generate debugger required info */
 int            hb_comp_iExitLevel = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
 FILE *         hb_comp_yyppo = NULL;
-
-/* static jmp_buf s_env; */
 
 HB_FUNC( __PP_INIT )
 {
@@ -251,6 +246,3 @@ void hb_compGenWarning( HB_COMP_DECL, char * szWarnings[], char cPrefix, int iWa
    HB_SYMBOL_UNUSED( szWarning1 );
    HB_SYMBOL_UNUSED( szWarning2 );
 }
-
-#endif
-

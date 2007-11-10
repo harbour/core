@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  * Harbour GUI framework for Gtk
- * Class HBMenuItem
+ * Class HGFMenuItem
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
  * www - http://www.harbour-project.org
@@ -61,7 +61,7 @@
 
 /* ********************************************************************* */
 
-CLASS HBMenuItem FROM HBPersistent
+CLASS HGFMenuItem FROM HBPersistent
 
     DATA   Caption   INIT ""  PROPERTY // Specifies the text of the menu item
     DATA   Name               PROPERTY // The name of this component
@@ -86,7 +86,7 @@ ENDCLASS
 
 /* ********************************************************************* */
 
-METHOD New( oOwner ) CLASS HBMenuItem
+METHOD New( oOwner ) CLASS HGFMenuItem
 
     ::nId := ::nIdStart++
     IF oOwner != nil
@@ -99,7 +99,7 @@ RETURN Self
 
 /* ********************************************************************* */
 
-METHOD Add( oMenuItem ) CLASS HBMenuItem
+METHOD Add( oMenuItem ) CLASS HGFMenuItem
     /* required because of a stupid Harbour compiler error */
     LOCAL nHandle := ::nHandle
 
@@ -115,7 +115,7 @@ RETURN nil
 
 /* ********************************************************************* */
 
-METHOD FindItem( nId ) CLASS HBMenuItem
+METHOD FindItem( nId ) CLASS HGFMenuItem
    LOCAL oMenuItem, n
 
    FOR n = 1 TO Len( ::Items )

@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #xcommand WITH <oObject> DO => Self := <oObject>
 #xcommand ENDWITH           => Self := NIL
 

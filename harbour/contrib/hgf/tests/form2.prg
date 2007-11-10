@@ -32,13 +32,13 @@ METHOD New() CLASS HBForm2
 
    oMenu = HBMenu():New( Self )
 
-   oMenuItem = HBMenuItem():New( oMenu )
+   oMenuItem = HGFMenuItem():New( oMenu )
    oMenuitem:Caption = "Test"
    oMenuitem:Name    = "Test"
    oMenuItem:OnClick  = "TestClick"  // The container method to execute
    oMenu:Add( oMenuItem )
 
-   oMenuItem = HBMenuItem():New( oMenu )
+   oMenuItem = HGFMenuItem():New( oMenu )
    oMenuitem:Caption = "Exit"
    oMenuitem:Name    = "Exit"
    oMenuItem:OnClick  = "ExitClick"  // The container method to execute

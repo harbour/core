@@ -107,5 +107,3 @@ METHOD FindItem( nId ) CLASS HBMenu
    next
 
 return oMenuItem
-
-

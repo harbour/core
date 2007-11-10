@@ -8,6 +8,71 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-11 00:44 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/std.ch
+     * Removed HB_EXTENSION guard from around SET commands 
+       implementing Harbour _SET_* extensions. The reason: 
+       _SET_* extensions are not marked as extensions (and 
+       it would be nearly impossibly to do so), so it's more 
+       consistent to behave the same way for their command 
+       counterparts.
+
+   * utils/hbpp/hbpplib.c
+     ! Removed HB_EXTENSION guard from around __PP*() functions 
+       which are Harbour undocumented ones, so they don't need to 
+       be guarded. We're also in sync with hbextern.ch now.
+
+   * utils/hbtest/rt_stra.prg
+     ! Removed HB_EXTENSION guard from around hb_ValToStr() calls, 
+       because this function is no longer marked as HB_EXTENSION.
+
+   * contrib/hgf/os2pm/tmenu.prg
+   * contrib/hgf/os2pm/tmenuitm.prg
+   * contrib/hgf/gtk/shared.ch
+   * contrib/hgf/gtk/dispatch.c
+   * contrib/hgf/gtk/creamenu.c
+   * contrib/hgf/gtk/msginfo.c
+   * contrib/hgf/gtk/creabutt.c
+   * contrib/hgf/gtk/general.c
+   * contrib/hgf/gtk/creawin.c
+   * contrib/hgf/gtk/harbgtk.h
+   * contrib/hgf/gtk/menuitem.prg
+   * contrib/hgf/win32/button.prg
+   * contrib/hgf/win32/edit.prg
+   * contrib/hgf/win32/form.prg
+   * contrib/hgf/win32/menu.prg
+   * contrib/hgf/win32/menuitem.prg
+   * contrib/hgf/win32/winctrl.prg
+   * contrib/hgf/tests/bld_b32.bat
+   * contrib/hgf/tests/form2.prg
+   * contrib/hgf/tests/form3.prg
+   * contrib/hgf/tests/form3.hbf
+   * contrib/hgf/tests/form3res.prg
+   * contrib/hgf/tests/formtext.prg
+   * contrib/hgf/tests/testctrl.prg
+   * contrib/hgf/tests/testform.prg
+     ! Fixed bld_b32.bat to link properly.
+     ! Changed HBMenuItem CLASS to HGFMenuItem() to not collide with 
+       Harbour class HBMenuItem() (C53 compatibility class).
+     ; The above reported by Petr Chornyj.
+     ! Added CRLF at the end of each source file where there was none.
+     ! Fixed version headers.
+     ; TOFIX1: HBPersistent():LoadFromFile() has a bug where it doesn't 
+               load the last line if it doesn't end with newline.
+     ; TOFIX2: HBPersistent() uses At() "dirty" extension.
+
+   * contrib/odbc/test/odbcdemo.prg
+   - contrib/odbc/test/browodbc.prg
+   * contrib/odbc/test/odbccall.prg
+   * contrib/odbc/test/testodbc.prg
+   * contrib/odbc/common.mak
+   + contrib/odbc/browodbc.prg
+     ! Moved back browodbc.prg to /contrib/odbc (since it was not a test, 
+       just missing from the non-GNU make files)
+       Reported by Petr Chornyj.
+     ! Added browodbc.prg to non-GNU makefile.
+     ! Added version headers.
+
 2007-11-10 18:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * Makefile
    - samples
@@ -304,7 +369,7 @@
 
 2007-11-09 15:20 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/compiler/hbcomp.c
-     ! Changed error messaged to go to stderr on non-Unix 
+     ! Changed error messages to go to stderr on non-Unix 
        platforms too. With this change the Harbour compiler 
        uses the same output on non-Unix platforms as on Unixes.
        With Przemek's previous and now this change, the 
@@ -326,9 +391,6 @@
    * contrib/libct/cursor.c
    * contrib/libct/ctstrfil.c
      ! Fixed MSVC warnings.
-
-   * contrib/libct/make_b32.bat
-   * contrib/libct/make_vc.bat
 
    * contrib/htmllib/Makefile.bc
      * Changed to not generate .ppo output on build.

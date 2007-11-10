@@ -473,31 +473,30 @@ FUNCTION Exact_Str()
    TEST_LINE( "DEF" >= "ABCD", .T. )
 
    SET( _SET_EXACT, old_exact )
+
    RETURN NIL
 
 FUNCTION New_STRINGS()
 
 #ifdef __HARBOUR__
-#ifdef HB_EXTENSION
 
-   TEST_LINE( HB_ValToStr( 4 )                     , "         4"    )
-   TEST_LINE( HB_ValToStr( 4.0 / 2 )               , "         2.00" )
-   TEST_LINE( HB_ValToStr( "String" )              , "String"        )
-   TEST_LINE( HB_ValToStr( HB_SToD( "20010101" ) ) , "2001.01.01"    )
-   TEST_LINE( HB_ValToStr( NIL )                   , "NIL"           )
-   TEST_LINE( HB_ValToStr( .F. )                   , ".F."           )
-   TEST_LINE( HB_ValToStr( .T. )                   , ".T."           )
+   TEST_LINE( hb_ValToStr( 4 )                     , "         4"    )
+   TEST_LINE( hb_ValToStr( 4.0 / 2 )               , "         2.00" )
+   TEST_LINE( hb_ValToStr( "String" )              , "String"        )
+   TEST_LINE( hb_ValToStr( hb_SToD( "20010101" ) ) , "2001.01.01"    )
+   TEST_LINE( hb_ValToStr( NIL )                   , "NIL"           )
+   TEST_LINE( hb_ValToStr( .F. )                   , ".F."           )
+   TEST_LINE( hb_ValToStr( .T. )                   , ".T."           )
 
-#endif
 #endif
 
    RETURN NIL
 
 FUNCTION Long_STRINGS()
 
-   TEST_LINE( RIGHT( SPACE( 64 * 1024 - 5 ) + "12345 7890", 10                      ), "12345 7890"                                 )
-   TEST_LINE( LEN( SPACE( 81910 ) + "1234567890"                                    ), 81920                                        )
-   TEST_LINE( ( "1234567890" + SPACE( 810910 ) ) - ( "1234567890" + SPACE( 810910 ) ), "12345678901234567890" + SPACE( 810910 * 2 ) )
+   TEST_LINE( Right( Space( 64 * 1024 - 5 ) + "12345 7890", 10                      ), "12345 7890"                                 )
+   TEST_LINE( Len( Space( 81910 ) + "1234567890"                                    ), 81920                                        )
+   TEST_LINE( ( "1234567890" + Space( 810910 ) ) - ( "1234567890" + Space( 810910 ) ), "12345678901234567890" + Space( 810910 * 2 ) )
 
    RETURN NIL
 

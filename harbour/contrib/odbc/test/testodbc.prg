@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include "sql.ch"
 
 #xcommand GET ROW <nRow> INTO <cVar> => ;
