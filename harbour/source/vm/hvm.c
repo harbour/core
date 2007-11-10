@@ -5216,7 +5216,9 @@ static void hb_vmModuleName( char * szModuleName ) /* PRG and function name info
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmModuleName(%s)", szModuleName));
 
-#ifndef HB_NO_DEBUG
+#ifdef HB_NO_DEBUG
+   HB_SYMBOL_UNUSED( szModuleName );
+#else
    if( s_pFunDbgEntry )
    {
       s_bDebugging = FALSE;
