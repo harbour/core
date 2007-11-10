@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-10 18:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * Makefile
+   - samples
+   + contrib/examples
+   * contrib/Makefile
+   * contrib/examples/Makefile
+   * contrib/examples/guestbk/inifiles.prg
+   * contrib/examples/guestbk/testcgi.prg
+   * contrib/examples/guestbk/bld_b32.bat
+   * contrib/examples/guestbk/Makefile
+   * contrib/examples/pe/pe.prg
+   * contrib/examples/pe/Makefile
+   * contrib/examples/misc/Makefile
+   * contrib/examples/hscript/bld_b32.bat
+   * contrib/examples/hscript/Makefile
+   * contrib/examples/Makefile
+     * Moved /samples to /contrib/examples
+
 2007-11-10 17:35 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/vm/hvm.c
      ! Fixed unused var warning when HB_NO_DEBUG was defined 

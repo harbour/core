@@ -2,14 +2,12 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT = ../../../
 
 PRG_SOURCES=\
-	guestbk.prg \
-	inifiles.prg \
-	testcgi.prg \
+	hscript.prg \
 	
-PRG_MAIN=guestbk.prg
+PRG_MAIN=hscript.prg
 
 LIBS=\
 	debug \

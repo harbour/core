@@ -12,7 +12,7 @@ PROCEDURE Main( cFile )
    IF cFile == NIL
       cFile := "license.txt"
       IF !File( cFile )
-         cFile := "../../license.txt"
+         cFile := "../../../license.txt"
       ENDIF
       lMode := EDIT_VIEW
    ENDIF

@@ -14,6 +14,7 @@ DIRS=\
 	samples \
 	xhb \
 	$(HB_CONTRIBLIBS)
+#	examples \
 
 
 ifneq ($(HB_ARCHITECTURE),dos)

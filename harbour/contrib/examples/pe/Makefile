@@ -2,12 +2,15 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT = ../../../
 
 PRG_SOURCES=\
-	hscript.prg \
+	editorhi.prg \
 	
-PRG_MAIN=hscript.prg
+C_SOURCES=\
+	editorlo.c \
+
+PRG_MAIN=pe.prg
 
 LIBS=\
 	debug \

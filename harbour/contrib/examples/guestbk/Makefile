@@ -2,15 +2,14 @@
 # $Id$
 #
 
-ROOT = ../../
+ROOT = ../../../
 
 PRG_SOURCES=\
-	editorhi.prg \
+	guestbk.prg \
+	inifiles.prg \
+	testcgi.prg \
 	
-C_SOURCES=\
-	editorlo.c \
-
-PRG_MAIN=pe.prg
+PRG_MAIN=guestbk.prg
 
 LIBS=\
 	debug \

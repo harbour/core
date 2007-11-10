@@ -23,7 +23,6 @@ DIRS=\
 	source \
 	$(HB_UTIL_DIR) \
 	contrib \
-#	samples \
 
 endif
 
