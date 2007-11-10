@@ -1,3 +1,7 @@
+#
+# $Id$
+#
+
 # makefile for Microsoft Visual C++ 32 bits
 # Building of hgfwin32.lib - Harbour GUI framework for Win32
 

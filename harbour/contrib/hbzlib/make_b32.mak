@@ -20,7 +20,7 @@ OBJ_DIR = obj\b32
 LIB_DIR = ..\..\lib\b32
 
 IMPLIB  = Implib
-BCC32   = Bcc32 @bccw32.cfg
+BCC32   = Bcc32 -vi -Ve -6 -R- -H- -5 -OS -w- -O2 -X- -a8 -b -k-
 TLINK32 = TLink32
 TLIB    = TLib
 BRC32   = Brc32
@@ -49,7 +49,7 @@ BOptsAt_ziparddll = $(BLocalOptsAtC32_ziparddll)
 Dep_zipar = \
    $(LIB_DIR)\hbzip.lib
 
-ziparchive : BccW32.cfg $(Dep_zipar)
+ziparchive : $(Dep_zipar)
   echo MakeNode
 
 CLEAN:

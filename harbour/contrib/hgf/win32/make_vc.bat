@@ -1,11 +1,15 @@
 @echo off
+rem
+rem $Id$
+rem
+
 SET _LIB=%LIB%
 SET _PATH=%PATH%
 SET _INCLUDE=%INCLUDE%
 SET LIB=C:\COMPILER\VC\LIB;%PATH%
 SET PATH=C:\COMPILER\VC\BIN;%PATH%
 SET INCLUDE=..\..\..\INCLUDE;C:\COMPILER\VC\INCLUDE;%_INCLUDE%
-nmake /f makefile.vc %1 %2 %3
+nmake /f make_vc.mak %1 %2 %3
 SET LIB=%_LIB%
 SET PATH=%_PATH%
 SET INCLUDE=%_INCLUDE%

@@ -8,6 +8,28 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-10 06:10 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   - contrib/hgf/tests/build_b32.bat
+   + contrib/hgf/tests/bld_b32.bat
+   - contrib/hgf/win32/makefile.bc
+   + contrib/hgf/win32/make_b32.mak
+   - contrib/hgf/win32/makevc.bat
+   + contrib/hgf/win32/make_vc.bat
+   - contrib/hgf/win32/makefile.vc
+   + contrib/hgf/win32/make_vc.mak
+   * contrib/hgf/win32/make_b32.bat
+   - contrib/hbzlib/hrbdll.bc
+   + contrib/hbzlib/make_b32_dll.bat
+   - contrib/hbzlib/dll_b32.bat
+   + contrib/hbzlib/make_b32_dll.mak
+   - contrib/hbzlib/makefile.vc
+   + contrib/hbzlib/make_vc.mak
+   - contrib/hbzlib/makefile.bc
+   + contrib/hbzlib/make_b32.mak
+   * contrib/hbzlib/make_b32.bat
+   * contrib/hbzlib/make_vc.bat
+     * Some non-GNU make file cleanup.
+
 2007-11-10 05:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * make_b32.bat
    + make_b32.mak

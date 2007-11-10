@@ -8,7 +8,7 @@ if not exist obj\b32 md obj\b32
 
 :BUILD
 
-   make -fmakefile.bc %1 %2 %3 > make_b32.log
+   make -fmake_b32.mak %1 %2 %3 > make_b32.log
    if "%1" == "clean" goto CLEAN
    if "%1" == "CLEAN" goto CLEAN
    if errorlevel 1 goto BUILD_ERR
