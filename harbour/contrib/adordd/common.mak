@@ -11,7 +11,7 @@ LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 #
 
 LIB_OBJS = \
-   $(OBJ_DIR)\adordd.obj   
+   $(OBJ_DIR)\adordd$(OBJEXT)   
 
 all: \
    $(LIB_PATH) \

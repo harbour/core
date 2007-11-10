@@ -11,14 +11,14 @@ LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 #
 
 LIB_OBJS = \
-   $(OBJ_DIR)\environ.obj \
-   $(OBJ_DIR)\date.obj   \
-   $(OBJ_DIR)\dbf.obj    \
-   $(OBJ_DIR)\gauge.obj  \
-   $(OBJ_DIR)\num.obj    \
-   $(OBJ_DIR)\stack.obj   \
-   $(OBJ_DIR)\status.obj \
-   $(OBJ_DIR)\time.obj
+   $(OBJ_DIR)\environ$(OBJEXT) \
+   $(OBJ_DIR)\date$(OBJEXT)   \
+   $(OBJ_DIR)\dbf$(OBJEXT)    \
+   $(OBJ_DIR)\gauge$(OBJEXT)  \
+   $(OBJ_DIR)\num$(OBJEXT)    \
+   $(OBJ_DIR)\stack$(OBJEXT)   \
+   $(OBJ_DIR)\status$(OBJEXT) \
+   $(OBJ_DIR)\time$(OBJEXT)
 
 all: \
    $(LIB_PATH) \

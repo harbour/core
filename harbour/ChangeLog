@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-10 12:29 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/libmisc/common.mak
+   * contrib/apollo/common.mak
+   * contrib/libnf/common.mak
+   * contrib/gd/common.mak
+   * contrib/htmllib/common.mak
+   * contrib/tip/common.mak
+   * contrib/adordd/common.mak
+   * contrib/rdd_ads/common.mak
+   * contrib/libgt/common.mak
+   * contrib/btree/common.mak
+   * contrib/win32/common.mak
+   * contrib/directx/common.mak
+   * contrib/samples/common.mak
+   * contrib/mysql/common.mak
+   * contrib/bmdbfcdx/common.mak
+   * contrib/pgsql/common.mak
+     ! .obj -> $(OBJEXT)
+
+   * contrib/pgsql/make_b32.bat
+   * contrib/pgsql/make_vc.bat
+     ! Minor fix.
+
+   + contrib/pdflib/make_vc.bat
+   + contrib/pdflib/make_b32.bat
+   + contrib/pdflib/common.mak
+   + contrib/pdflib/pdf1.prg
+   + contrib/pdflib/pdfhbdoc.ch
+   + contrib/pdflib/pdf.ch
+   + contrib/pdflib/pdfhbdocs.prg
+   * contrib/pdflib/pdflib.h
+   * contrib/pdflib/pdfhbdoc.c
+     * Borrowed from xhb.
+     ! Fixed HB_ITEM -> PHB_ITEM.
+     ! Fixed warnings.
+     + Added non-GNU make files.
+     ; NOTE: I didn't test this, it would be great if someone would.
+
 2007-11-10 06:10 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - contrib/hgf/tests/build_b32.bat
    + contrib/hgf/tests/bld_b32.bat
@@ -135,8 +173,8 @@
    + contrib/pgsql/make_vc.bat
      * Changed most libs to use the generic non-GNU makefiles.
      + Added support for MSVC for all above libs.
-     ; directx won't build under MSVC with an error.
      + Added "implib" for rdd_ads. TOFIX: Doesn't work for MSVC.
+     ; TOFIX: directx won't build under MSVC with an error.
      ; TOFIX: I couldn't compile pgsql using latest 8.2.5.
 
    * contrib/samples/gauge.c

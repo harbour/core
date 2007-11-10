@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = hb_btree
+LIBNAME = hbpdflib
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
@@ -11,8 +11,8 @@ LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 #
 
 LIB_OBJS = \
-   $(OBJ_DIR)\hb_btree$(OBJEXT) \
-   $(OBJ_DIR)\tbtree$(OBJEXT) \
+   $(OBJ_DIR)\pdfhbdoc$(OBJEXT) \
+   $(OBJ_DIR)\pdf1$(OBJEXT) \
 
 all: \
    $(LIB_PATH) \

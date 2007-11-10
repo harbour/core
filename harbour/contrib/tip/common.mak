@@ -11,24 +11,24 @@ LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 #
 
 LIB_OBJS = \
-   $(OBJ_DIR)\base64x.obj \
-   $(OBJ_DIR)\encmthd.obj \
-   $(OBJ_DIR)\utils.obj \
+   $(OBJ_DIR)\base64x$(OBJEXT) \
+   $(OBJ_DIR)\encmthd$(OBJEXT) \
+   $(OBJ_DIR)\utils$(OBJEXT) \
    \
-   $(OBJ_DIR)\cgi.obj \
-   $(OBJ_DIR)\client.obj \
-   $(OBJ_DIR)\credent.obj \
-   $(OBJ_DIR)\encb64.obj \
-   $(OBJ_DIR)\encoder.obj \
-   $(OBJ_DIR)\encqp.obj \
-   $(OBJ_DIR)\encurl.obj \
-   $(OBJ_DIR)\ftpcln.obj \
-   $(OBJ_DIR)\httpcln.obj \
-   $(OBJ_DIR)\mail.obj \
-   $(OBJ_DIR)\popcln.obj \
-   $(OBJ_DIR)\smtpcln.obj \
-   $(OBJ_DIR)\thtml.obj \
-   $(OBJ_DIR)\url.obj \
+   $(OBJ_DIR)\cgi$(OBJEXT) \
+   $(OBJ_DIR)\client$(OBJEXT) \
+   $(OBJ_DIR)\credent$(OBJEXT) \
+   $(OBJ_DIR)\encb64$(OBJEXT) \
+   $(OBJ_DIR)\encoder$(OBJEXT) \
+   $(OBJ_DIR)\encqp$(OBJEXT) \
+   $(OBJ_DIR)\encurl$(OBJEXT) \
+   $(OBJ_DIR)\ftpcln$(OBJEXT) \
+   $(OBJ_DIR)\httpcln$(OBJEXT) \
+   $(OBJ_DIR)\mail$(OBJEXT) \
+   $(OBJ_DIR)\popcln$(OBJEXT) \
+   $(OBJ_DIR)\smtpcln$(OBJEXT) \
+   $(OBJ_DIR)\thtml$(OBJEXT) \
+   $(OBJ_DIR)\url$(OBJEXT) \
 
 all: \
    $(LIB_PATH) \

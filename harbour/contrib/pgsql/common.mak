@@ -11,8 +11,8 @@ LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 #
 
 LIB_OBJS = \
-   $(OBJ_DIR)\tpostgre.obj \
-   $(OBJ_DIR)\postgres.obj
+   $(OBJ_DIR)\tpostgre$(OBJEXT) \
+   $(OBJ_DIR)\postgres$(OBJEXT)
 
 all: \
    $(LIB_PATH) \

@@ -11,9 +11,9 @@ LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 #
 
 LIB_OBJS = \
-   $(OBJ_DIR)\tmysql.obj \
-   $(OBJ_DIR)\tsqlbrw.obj \
-   $(OBJ_DIR)\mysql.obj
+   $(OBJ_DIR)\tmysql$(OBJEXT) \
+   $(OBJ_DIR)\tsqlbrw$(OBJEXT) \
+   $(OBJ_DIR)\mysql$(OBJEXT)
 
 all: \
    $(LIB_PATH) \

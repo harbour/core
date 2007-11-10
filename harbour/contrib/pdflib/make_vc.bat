@@ -4,9 +4,9 @@ rem $Id$
 rem
 
 rem ---------------------------------------------------------------
-rem IMPORTANT: You'll need PostreSQL sources and this envvar
+rem IMPORTANT: You'll need PDFLIB lib sources this envvar
 rem            to be set to successfully build this library:
-rem            set C_USR=-IC:\postgresql-8.2.5\src\include
+rem            set C_USR=-IC:\pdflib\src\pdflib
 rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------
@@ -24,8 +24,6 @@ rem ---------------------------------------------------------------
 if "%HB_CC_NAME%" == "" set HB_CC_NAME=vc
 if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
 set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
-
-set C_USR=%C_USR% -DHB_OS_WIN_32_USED -DPG_DIAG_INTERNAL_POSITION
 
 rem ---------------------------------------------------------------
 

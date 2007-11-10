@@ -4,7 +4,7 @@ rem $Id$
 rem
 
 rem ---------------------------------------------------------------
-rem IMPORTANT: You'll need MySQL sources and this envvar
+rem IMPORTANT: You'll need PostreSQL sources and this envvar
 rem            to be set to successfully build this library:
 rem            set C_USR=-IC:\postgresql-8.2.5\src\include
 rem ---------------------------------------------------------------

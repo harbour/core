@@ -11,12 +11,12 @@ LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 #
 
 LIB_OBJS = \
-   $(OBJ_DIR)\gdwrp.obj \
-   $(OBJ_DIR)\gd.obj \
-   $(OBJ_DIR)\gdimage.obj \
-   $(OBJ_DIR)\gdchart.obj \
-   $(OBJ_DIR)\gdbar.obj \
-   $(OBJ_DIR)\gdbarcod.obj \
+   $(OBJ_DIR)\gdwrp$(OBJEXT) \
+   $(OBJ_DIR)\gd$(OBJEXT) \
+   $(OBJ_DIR)\gdimage$(OBJEXT) \
+   $(OBJ_DIR)\gdchart$(OBJEXT) \
+   $(OBJ_DIR)\gdbar$(OBJEXT) \
+   $(OBJ_DIR)\gdbarcod$(OBJEXT) \
 
 all: \
    $(LIB_PATH) \
