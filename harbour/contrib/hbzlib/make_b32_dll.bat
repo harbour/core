@@ -9,7 +9,7 @@ if not exist obj\dll\b32 md obj\dll\b32
 
 :BUILD
 
-   make -fmake_b32_dll.mak %1 %2 %3 > dll_b32.log
+   make -fmake_b32_dll.mak %1 %2 %3 > make_b32_dll.log
    if errorlevel 1 goto BUILD_ERR
    if "%1" == "clean" goto CLEAN
    if "%1" == "CLEAN" goto CLEAN
