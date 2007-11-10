@@ -46,12 +46,12 @@ LIBEXT=.lib
 # Directory macros. These should never have to change.
 #
 
-BIN_DIR = bin\$(CC_DIRNAME)
-OBJ_DIR = obj\$(CC_DIRNAME)
-LIB_DIR = lib\$(CC_DIRNAME)
+BIN_DIR = bin\$(HB_CC_NAME)
+OBJ_DIR = obj\$(HB_CC_NAME)
+LIB_DIR = lib\$(HB_CC_NAME)
 
 DLL_ROOTDIR = obj\dll
-DLL_OBJ_DIR = $(DLL_ROOTDIR)\$(CC_DIRNAME)
+DLL_OBJ_DIR = $(DLL_ROOTDIR)\$(HB_CC_NAME)
 
 # Targets Destination Directories
 HB_DEST_DIRS = \
@@ -217,7 +217,7 @@ HBDOC_EXE    = $(BIN_DIR)\hbdoc$(EXEEXT)
 HBMAKE_EXE   = $(BIN_DIR)\hbmake$(EXEEXT)
 HBVER_EXE    = $(BIN_DIR)\hbverfix$(EXEEXT)
 
-HARBOUR_DLL  = $(BIN_DIR)\harbour-$(CC_DIRNAME)$(DLLEXT)
+HARBOUR_DLL  = $(BIN_DIR)\harbour-$(HB_CC_NAME)$(DLLEXT)
 HBTESTDLL_EXE= $(BIN_DIR)\hbtest-dll$(EXEEXT)
 
 #**********************************************************

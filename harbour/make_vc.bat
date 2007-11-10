@@ -15,22 +15,15 @@ rem    set HB_BUILD_MODE=C
 rem    set HB_BUILD_DLL=yes
 rem    set HB_BUILD_DEBUG=yes
 rem    set HB_BUILD_VERBOSE=yes
+rem    set HB_REBUILD_PARSER=yes
 rem    set HB_MAKE_PROGRAM=
 rem    set HB_MAKE_FLAGS=
 rem ---------------------------------------------------------------
 
-if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
-
-rem Save the user value, force silent file overwrite with COPY
-rem (not all Windows versions support the COPY /Y flag)
-set HB_ORGENV_COPYCMD=%COPYCMD%
-set COPYCMD=/Y
-
-rem ---------------------------------------------------------------
-
-rem IMPORTANT ! It has to be declared here
-if "%CC_DIRNAME%" == "" set CC_DIRNAME=vc
 if "%HB_GT_LIB%"  == "" set HB_GT_LIB=gtwin
+if "%HB_CC_NAME%" == "" set HB_CC_NAME=vc
+if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
+set HB_MAKEFILE=make_%HB_CC_NAME%.mak
 
 rem ---------------------------------------------------------------
 
@@ -40,35 +33,18 @@ if "%1" == "CLEAN" goto CLEAN
 if "%1" == "install" goto INSTALL
 if "%1" == "INSTALL" goto INSTALL
 
-rem ---------------------------------------------------------------
-
 :BUILD
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc %1 %2 %3 > make_%CC_DIRNAME%.log
-   if errorlevel 1 goto BUILD_ERR
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
+   if errorlevel 1 notepad make_%HB_CC_NAME%.log
    goto EXIT
-
-rem ---------------------------------------------------------------
-
-:BUILD_ERR
-
-   notepad make_%CC_DIRNAME%.log
-   goto EXIT
-
-rem ---------------------------------------------------------------
 
 :CLEAN
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc CLEAN > make_%CC_DIRNAME%.log
-
-   rem In this case, the makefile handles most cleanup.
-
-   if exist make_%CC_DIRNAME%.log del make_%CC_DIRNAME%.log > nul
-   if exist inst_%CC_DIRNAME%.log del inst_%CC_DIRNAME%.log > nul
-
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% CLEAN > make_%HB_CC_NAME%.log
+   if exist make_%HB_CC_NAME%.log del make_%HB_CC_NAME%.log > nul
+   if exist inst_%HB_CC_NAME%.log del inst_%HB_CC_NAME%.log > nul
    goto EXIT
-
-rem ---------------------------------------------------------------
 
 :INSTALL
 
@@ -78,14 +54,7 @@ rem ---------------------------------------------------------------
    if "%HB_INC_INSTALL%"    == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
    if "%HB_LIB_INSTALL%"    == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% /f makefile.vc INSTALL > nul
-
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
    goto EXIT
 
-rem ---------------------------------------------------------------
-
 :EXIT
-rem Restore user value
-set COPYCMD=%HB_ORGENV_COPYCMD%
-set HB_ORGENV_COPYCMD=
-set CC_DIRNAME=

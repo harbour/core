@@ -3,42 +3,52 @@ rem
 rem $Id$
 rem
 
+rem ---------------------------------------------------------------
+rem This is a generic template file, if it doesn't fit your own needs
+rem please DON'T MODIFY IT.
+rem
+rem Instead, make a local copy and modify that one, or make a call to
+rem this batch file from your customized one. [vszakats]
+rem
+rem Set any of the below settings to customize your build process:
+rem    set HB_MAKE_PROGRAM=
+rem    set HB_MAKE_FLAGS=
+rem ---------------------------------------------------------------
+
+if "%HB_CC_NAME%" == "" set HB_CC_NAME=b32
+if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=make.exe
+set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
+
+rem ---------------------------------------------------------------
+
 if "%1" == "clean" goto CLEAN
-if "%1" == "Clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
+
+if "%1" == "install" goto INSTALL
+if "%1" == "INSTALL" goto INSTALL
 
 :BUILD
 
-   make -fmakefile.bc %1 %2 %3 > make_b32.log
-   if errorlevel 1 goto BUILD_ERR
-
-:BUILD_OK
-
-   copy ..\..\lib\b32\html.lib ..\..\lib\*.* > nul
-   goto EXIT
-
-:BUILD_ERR
-
-   notepad make_b32.log
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
+   if errorlevel 1 notepad make_%HB_CC_NAME%.log
    goto EXIT
 
 :CLEAN
-   if exist ..\..\lib\b32\html.lib      del ..\..\lib\b32\html.lib
-   if exist ..\..\lib\b32\html.bak      del ..\..\lib\b32\html.bak
-   if exist ..\..\obj\b32\ohtm.obj      del ..\..\obj\b32\ads1.obj
-   if exist ..\..\obj\b32\htmbrows.obj  del ..\..\obj\b32\adsfunc.obj
-   if exist ..\..\obj\b32\oedit.obj     del ..\..\obj\b32\adsmgmnt.obj
-   if exist ..\..\obj\b32\ofile.obj     del ..\..\obj\b32\ofile.obj
-   if exist ..\..\obj\b32\jlist.obj     del ..\..\obj\b32\jlist.obj
-   if exist ..\..\obj\b32\oini.obj      del ..\..\obj\b32\oini.obj
-   if exist ..\..\obj\b32\jwindow.obj   del ..\..\obj\b32\jwindow.obj
-   if exist ..\..\obj\b32\ocgi.obj      del ..\..\obj\b32\ocgi.obj
-   if exist ..\..\obj\b32\oframe.obj    del ..\..\obj\b32\oframe.obj
-   if exist ..\..\obj\b32\counter.obj   del ..\..\obj\b32\counter.obj
-   if exist ..\..\obj\b32\errorsys.obj  del ..\..\obj\b32\errorsys.obj
-   if exist ..\..\obj\b32\htmutil.obj   del ..\..\obj\b32\htmutil.obj
 
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% CLEAN > make_%HB_CC_NAME%.log
+   if exist make_%HB_CC_NAME%.log del make_%HB_CC_NAME%.log > nul
+   if exist inst_%HB_CC_NAME%.log del inst_%HB_CC_NAME%.log > nul
+   goto EXIT
+
+:INSTALL
+
+   if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=..\..
+
+   if "%HB_BIN_INSTALL%"    == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
+   if "%HB_INC_INSTALL%"    == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
+   if "%HB_LIB_INSTALL%"    == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
+
+   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
    goto EXIT
 
 :EXIT
-

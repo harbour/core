@@ -8,6 +8,149 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-10 05:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * make_b32.bat
+   + make_b32.mak
+   - makefile.bc
+   * make_gcc.sh
+   + make_gcc.mak
+   - makefile.gc
+   * make_vc.bat
+   + make_vc.mak
+   - makefile.vc
+   * common.mak
+   - contrib/maketpl.b32
+   + contrib/mtpl_b32.mak
+   - contrib/maketpl.vc
+   + contrib/mtpl_vc.mak
+   - contrib/maketpl.mak
+   + contrib/mtpl.mak
+   * contrib/libct/make_b32.bat
+   * contrib/libct/make_vc.bat
+     % Makefile name cleanup, batch file synchronization, 
+       setting name cleanup. Some minor fixes.
+       Now all non-GNU makefiles have the .mak extension.
+
+   - contrib/xhb/makefile.vc
+   * contrib/xhb/make_b32.bat
+   + contrib/xhb/common.mak
+   - contrib/xhb/makefile.bc
+   * contrib/xhb/make_vc.bat
+   - contrib/libmisc/makefile.vc
+   * contrib/libmisc/make_b32.bat
+   + contrib/libmisc/common.mak
+   - contrib/libmisc/makefile.bc
+   * contrib/libmisc/make_vc.bat
+   + contrib/apollo/common.mak
+   - contrib/apollo/makefile.bc
+   * contrib/apollo/make_b32.bat
+   + contrib/apollo/make_vc.bat
+   - contrib/htmllib/makefile.vc
+   * contrib/htmllib/make_b32.bat
+   + contrib/htmllib/common.mak
+   - contrib/htmllib/Makefile.bc
+   * contrib/htmllib/make_vc.bat
+   * contrib/libct/make_b32.bat
+   * contrib/libct/make_vc.bat
+   - contrib/libgt/makefile.vc
+   * contrib/libgt/make_b32.bat
+   + contrib/libgt/common.mak
+   - contrib/libgt/makefile.bc
+   * contrib/libgt/make_vc.bat
+   * contrib/libnf/make_b32.bat
+   - contrib/libnf/makefile.vc
+   * contrib/libnf/make_vc.bat
+   + contrib/libnf/common.mak
+   - contrib/libnf/makefile.bc
+   * contrib/gd/make_b32.bat
+   + contrib/gd/common.mak
+   - contrib/gd/makefile.bc
+   + contrib/gd/make_vc.bat
+   - contrib/tip/makefile.vc
+   * contrib/tip/make_b32.bat
+   + contrib/tip/common.mak
+   - contrib/tip/makefile.bc
+   * contrib/tip/make_vc.bat
+   + contrib/adordd/common.mak
+   - contrib/adordd/makefile.bc
+   * contrib/adordd/make_b32.bat
+   + contrib/adordd/make_vc.bat
+   - contrib/rdd_ads/makefile.vc
+   * contrib/rdd_ads/make_b32.bat
+   + contrib/rdd_ads/common.mak
+   - contrib/rdd_ads/makefile.bc
+   * contrib/rdd_ads/make_vc.bat
+   + contrib/btree/common.mak
+   - contrib/btree/makefile.bc
+   * contrib/btree/make_b32.bat
+   + contrib/btree/make_vc.bat
+   + contrib/directx/common.mak
+   - contrib/directx/makefile.bc
+   - contrib/directx/makefile.vc
+   * contrib/directx/make_b32.bat
+   * contrib/directx/make_vc.bat
+   + contrib/win32/common.mak
+   - contrib/win32/makefile.bc
+   - contrib/win32/makefile.vc
+   * contrib/win32/make_b32.bat
+   * contrib/win32/make_vc.bat
+   + contrib/bmdbfcdx/common.mak
+   - contrib/bmdbfcdx/makefile.bc
+   * contrib/bmdbfcdx/make_b32.bat
+   + contrib/bmdbfcdx/make_vc.bat
+   - contrib/samples/makefile.vc
+   * contrib/samples/make_b32.bat
+   + contrib/samples/common.mak
+   - contrib/samples/makefile.bc
+   * contrib/samples/make_vc.bat
+   * contrib/mysql/common.mak
+   - contrib/mysql/makefile.bc
+   * contrib/mysql/make_b32.bat
+   + contrib/mysql/make_vc.bat
+   * contrib/pgsql/common.mak
+   - contrib/pgsql/makefile.bc
+   * contrib/pgsql/make_b32.bat
+   + contrib/pgsql/make_vc.bat
+     * Changed most libs to use the generic non-GNU makefiles.
+     + Added support for MSVC for all above libs.
+     ; directx won't build under MSVC with an error.
+     + Added "implib" for rdd_ads. TOFIX: Doesn't work for MSVC.
+     ; TOFIX: I couldn't compile pgsql using latest 8.2.5.
+
+   * contrib/samples/gauge.c
+     ! Fixed MSVC warning.
+
+   + odbc/test
+   + odbc/test/bld_b32.bat
+   + odbc/test/harbour.mdb
+   + odbc/test/odbcdemo.prg
+   + odbc/test/browodbc.prg
+   + odbc/test/odbccall.prg
+   + odbc/test/testodbc.prg
+   - odbc/bld_b32.bat
+   - odbc/harbour.mdb
+   - odbc/odbcdemo.prg
+   - odbc/browodbc.prg
+   - odbc/odbccall.prg
+   - odbc/testodbc.prg
+   - odbc/bldodbc.bat
+   + odbc/make_b32.bat
+   + odbc/make_vc.bat
+   - odbc/hbodbc.b32
+   + odbc/common.mak
+     * Moved test functions to test fir.
+     ! Fixed bld_b32.bat
+     ! Renamed non-GNU BC make files to be in sync with the rest of contribs.
+     ; TOFIX: There are some warnings under MSVC.
+     ; TOFIX: .def -> .lib conversions fails under MSVC.
+
+   - contrib/ole
+   - contrib/delphi
+   - contrib/hb_struc
+   - contrib/dot
+   - contrib/tprepro
+     - Removed obsolete, incomplete or non-working contribs.
+
 2007-11-09 15:20 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/compiler/hbcomp.c
      ! Changed error messaged to go to stderr on non-Unix 

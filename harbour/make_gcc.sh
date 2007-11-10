@@ -17,13 +17,13 @@ if [ -z "$HB_ARCHITECTURE" ]; then
     export HB_ARCHITECTURE="$hb_arch"
 fi
 
-if [ -z "$CC_DIRNAME" ]; then
+if [ -z "$HB_CC_NAME" ]; then
     case "$HB_ARCHITECTURE" in
-        w32) CC_DIRNAME="mingw" ;;
-        dos) CC_DIRNAME="djgpp" ;;
-        *)   CC_DIRNAME="gcc" ;;
+        w32) HB_CC_NAME="mingw" ;;
+        dos) HB_CC_NAME="djgpp" ;;
+        *)   HB_CC_NAME="gcc" ;;
     esac
-    export CC_DIRNAME
+    export HB_CC_NAME
 fi
 
 if [ -z "$HB_GT_LIB" ]; then
@@ -163,7 +163,7 @@ export CC LD EXEEXT
 
 #export HB_BUILD_VERBOSE=yes
 
-mkdir -p obj/$CC_DIRNAME lib/$CC_DIRNAME bin/$CC_DIRNAME
+mkdir -p obj/$HB_CC_NAME lib/$HB_CC_NAME bin/$HB_CC_NAME
 
 # Convert common.mak (for BCC/VC) to common.cf (GCC)
 
@@ -184,6 +184,6 @@ sed -e "s/\.obj/.o/g"         \
     -e 's/$(HB_GT_LIST)/$(foreach gt, $(HB_GT_LIST), $(GT$(gt)_LIB))/g' \
    common.mak > common.cf
 
-#$MAKE -n -p -r -f makefile.gc 1>EOK 2>ERR
-$MAKE -r -f makefile.gc $*
+#$MAKE -n -p -r -f make_gcc.mak 1>EOK 2>ERR
+$MAKE -r -f make_gcc.mak $*
 rm -f common.cf
