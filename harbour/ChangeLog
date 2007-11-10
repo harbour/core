@@ -8,6 +8,74 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-10 17:24 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * make_b32.bat
+   * make_vc.bat
+   * contrib/xhb/make_b32.bat
+   * contrib/xhb/make_vc.bat
+   * contrib/libmisc/make_b32.bat
+   * contrib/libmisc/make_vc.bat
+   * contrib/pgsql/make_b32.bat
+   * contrib/pgsql/make_vc.bat
+   * contrib/apollo/make_b32.bat
+   * contrib/apollo/make_vc.bat
+   * contrib/libnf/make_b32.bat
+   * contrib/libnf/make_vc.bat
+   * contrib/gd/make_b32.bat
+   * contrib/gd/make_vc.bat
+   * contrib/htmllib/make_b32.bat
+   * contrib/htmllib/make_vc.bat
+   * contrib/tip/make_b32.bat
+   * contrib/tip/make_vc.bat
+   * contrib/libct/make_b32.bat
+   * contrib/libct/make_vc.bat
+   * contrib/adordd/make_b32.bat
+   * contrib/adordd/make_vc.bat
+   * contrib/pdflib/make_b32.bat
+   * contrib/pdflib/make_vc.bat
+   * contrib/rdd_ads/make_b32.bat
+   * contrib/rdd_ads/make_vc.bat
+   * contrib/libgt/make_b32.bat
+   * contrib/libgt/make_vc.bat
+   * contrib/btree/make_b32.bat
+   * contrib/btree/make_vc.bat
+   * contrib/win32/make_b32.bat
+   * contrib/win32/make_vc.bat
+   * contrib/directx/make_b32.bat
+   * contrib/directx/make_vc.bat
+   * contrib/samples/make_b32.bat
+   * contrib/samples/make_vc.bat
+   * contrib/mysql/make_b32.bat
+   * contrib/mysql/make_vc.bat
+   * contrib/odbc/make_b32.bat
+   + contrib/odbc/make_vc.bat
+   * contrib/bmdbfcdx/make_b32.bat
+   * contrib/bmdbfcdx/make_vc.bat
+   * contrib/hgf/win32/make_b32.bat
+   * contrib/hgf/win32/make_vc.bat
+     ! Readded COPYCMD "hack" to core Harbour for fully portable
+       "copy /y" functionality across all Micro$oft operating systems.
+     + Same feature added for all contribs.
+
+   * contrib/hbzlib/make_b32_dll.bat
+   * contrib/hbzlib/make_b32_dll.mak
+   * contrib/hbzlib/make_b32.bat
+   - contrib/hbzlib/make_b32.mak
+   * contrib/hbzlib/make_vc.bat
+   - contrib/hbzlib/make_vc.mak
+   + contrib/hbzlib/common.mak
+     + Standardized make files (and some cleanup along the way)
+     ; TODO: BC dll creating is still to be cleaned.
+     ; TOFIX: Lots of warnings if compiled with standard BCC switch set.
+     ; TOFIX: Lots of warnings when compiler for MSVC.
+
+   * contrib/hgf/win32/win32.c
+   * contrib/hgf/win32/form.prg
+     ! Fixed one unused var warning in .prg code.
+     ! Fixed to not use Harbour internals.
+       (Petr, this should have the same effect as your request, 
+       but pls test this change.)
+
 2007-11-10 12:29 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/libmisc/common.mak
    * contrib/apollo/common.mak

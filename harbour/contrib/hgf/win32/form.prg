@@ -132,6 +132,8 @@ return nil
 
 METHOD LButtonDown( nKeyFlags, nXPos, nYPos ) CLASS HBForm
 
+   HB_SYMBOL_UNUSED( nKeyFlags )
+
    if ::OnClick != nil
       return __ObjSendMsg( Self, ::OnClick, Self, nXPos, nYPos )
    endif

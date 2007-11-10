@@ -3,6 +3,13 @@ rem
 rem $Id$
 rem
 
+rem ---------------------------------------------------------------
+
+rem Save the user value, force silent file overwrite with COPY
+rem (not all Windows versions support the COPY /Y flag)
+set HB_ORGENV_COPYCMD=%COPYCMD%
+set COPYCMD=/Y
+
 SET _LIB=%LIB%
 SET _PATH=%PATH%
 SET _INCLUDE=%INCLUDE%
@@ -16,3 +23,8 @@ SET INCLUDE=%_INCLUDE%
 SET _LIB=
 SET _PATH=
 SET _INCLUDE=
+
+rem ---------------------------------------------------------------
+
+rem Restore user value
+set COPYCMD=%HB_ORGENV_COPYCMD%

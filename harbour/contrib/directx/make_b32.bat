@@ -27,6 +27,13 @@ set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
 
 rem ---------------------------------------------------------------
 
+rem Save the user value, force silent file overwrite with COPY
+rem (not all Windows versions support the COPY /Y flag)
+set HB_ORGENV_COPYCMD=%COPYCMD%
+set COPYCMD=/Y
+
+rem ---------------------------------------------------------------
+
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
 
@@ -58,3 +65,8 @@ if "%1" == "INSTALL" goto INSTALL
    goto EXIT
 
 :EXIT
+
+rem ---------------------------------------------------------------
+
+rem Restore user value
+set COPYCMD=%HB_ORGENV_COPYCMD%

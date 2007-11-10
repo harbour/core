@@ -207,23 +207,26 @@ HB_FUNC( SENDMESSAGE )
 
 LRESULT CALLBACK WndProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-   static PHB_DYNS pDynSym = 0;
+   static PHB_DYNS pDynSym = NULL;
 
    if( ! pDynSym )
-      pDynSym = hb_dynsymFind( "HB_GUI" );
+      pDynSym = hb_dynsymFindName( "HB_GUI" );
 
-   hb_vmPushSymbol( pDynSym->pSymbol );
-   hb_vmPushNil();
-   hb_vmPushLong( ( LONG ) hWnd );
-   hb_vmPushLong( message );
-   hb_vmPushLong( wParam );
-   hb_vmPushLong( lParam );
-   hb_vmDo( 4 );
+   if( pDynSym )
+   {
+      hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
+      hb_vmPushNil();
+      hb_vmPushLong( ( LONG ) hWnd );
+      hb_vmPushLong( message );
+      hb_vmPushLong( wParam );
+      hb_vmPushLong( lParam );
+      hb_vmDo( 4 );
 
-   if( hb_arrayGetType( &hb_stack.Return, 1 ) == HB_IT_NIL )
-      return DefWindowProc( ( HWND ) hWnd, message, wParam, lParam );
-   else
-      return hb_parnl( -1, 1 );
+      if( hb_arrayGetType( hb_stackReturnItem(), 1 ) == HB_IT_NIL )
+         return DefWindowProc( ( HWND ) hWnd, message, wParam, lParam );
+   }
+
+   return hb_parnl( -1, 1 );
 }
 
 HB_FUNC( POSTQUITMESSAGE )

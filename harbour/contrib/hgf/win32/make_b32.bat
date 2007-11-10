@@ -3,22 +3,24 @@ rem
 rem $Id$
 rem
 
+rem ---------------------------------------------------------------
+
+rem Save the user value, force silent file overwrite with COPY
+rem (not all Windows versions support the COPY /Y flag)
+set HB_ORGENV_COPYCMD=%COPYCMD%
+set COPYCMD=/Y
+
 if "%1" == "clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
 
 :BUILD
 
    make -fmake_b32.mak %1 %2 %3 > make_b32.log
-   if errorlevel 1 goto BUILD_ERR
+   if errorlevel 1 notepad make_b32.log
 
 :BUILD_OK
 
    copy ..\..\..\lib\b32\hgfwin32.lib ..\..\..\lib\*.* > nul
-   goto EXIT
-
-:BUILD_ERR
-
-   notepad make_b32.log
    goto EXIT
 
 :CLEAN
@@ -36,3 +38,7 @@ if "%1" == "CLEAN" goto CLEAN
 
 :EXIT
 
+rem ---------------------------------------------------------------
+
+rem Restore user value
+set COPYCMD=%HB_ORGENV_COPYCMD%

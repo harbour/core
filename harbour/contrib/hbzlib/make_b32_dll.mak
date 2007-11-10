@@ -39,7 +39,7 @@ INCLUDE_DIR  = include;..\..\include;
 
 
 C_USR          = -tW -DHB_FM_STATISTICS_OFF -D__WIN32__ -D__EXPORT__
-CLIBFLAGS      = $(C_USR) -a8 -OS -O2 -6 -c -I$(INCLUDE_DIR) -d -w- -DSIMPLEX -DZLIB_DLL
+CLIBFLAGS      = $(C_USR) -a8 -OS -O2 -6 -c -I$(INCLUDE_DIR) -d -w- -DZLIB_DLL
 
 # ÚÄÄÄÄÄÄÄÄ¿
 # ³ output ³Û
