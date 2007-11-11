@@ -15,6 +15,7 @@ rem    set HB_MAKE_PROGRAM=
 rem    set HB_MAKE_FLAGS=
 rem ---------------------------------------------------------------
 
+if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%SystemRoot%\system32
 if "%HB_CC_NAME%" == "" set HB_CC_NAME=b32
 if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=make.exe
 set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
