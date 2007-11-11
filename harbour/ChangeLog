@@ -43,7 +43,7 @@
    + contrib/ole/make_vc.bat
    + contrib/ole/Makefile
      + Restored "old" OLE implementation, as it was reported 
-       by Mindaugas Kavaliaskuas that it works better in some 
+       by Mindaugas Kavaliauskas that it works better in some 
        respects than the newer version in /contrib/win32.
        Until we know further about the details there is no 
        reason to not have this contrib.
