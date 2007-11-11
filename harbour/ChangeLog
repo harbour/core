@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-11 18:55 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   + contrib/telepath
+   + contrib/telepath/ChangeLog
+   + contrib/telepath/Makefile
+   + contrib/telepath/make_b32.bat
+   + contrib/telepath/make_vc.bat
+   + contrib/telepath/common.mak
+   + contrib/telepath/telepath.ch
+   + contrib/telepath/tplinux.c
+   + contrib/telepath/tpwin32.c
+   + contrib/telepath/tpos2.c
+   + contrib/telepath/telepath.prg
+   + contrib/telepath/readme.txt
+   + contrib/telepath/test
+   + contrib/telepath/test/testtp.prg
+     + Added Telep*th(y) compatible contrib lib.
+       Borrowed from xhb.
+
+   * source/debug/dbgtobj.prg
+     ! Fixed crash. Borrowed from xhb.
+
 2007-11-11 18:07 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/mtpl.mak
    * contrib/mtpl_b32.mak

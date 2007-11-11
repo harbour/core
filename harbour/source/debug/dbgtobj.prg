@@ -71,7 +71,7 @@ CREATE CLASS HBDbObject
    METHOD New( oObject, cVarName, lEditable )
    METHOD addWindows( aArray, nRow )
    METHOD doGet( oBrowse, pItem, nSet )
-   METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray )
+   METHOD SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cName, aArray )
 
 ENDCLASS
 

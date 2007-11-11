@@ -1,0 +1,125 @@
+/*
+ * $Id: ChangeLog,v 1.15 2005/10/24 14:39:26 mauriliolongo Exp $
+ */
+
+/* Use this format for the entry headers:
+   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
+   For example:
+   2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
+*/
+
+2005-10-24 16:30 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   ! tp_/linux.c
+   ! tp_/telepath.prg
+   ! tp_/ChangeLog
+   ! Latest commit broke EOL
+   * tp_/os2.c
+     + stub tp_ctrlcts()
+
+2005-10-13 13:00 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * NB: With latest commits tp_recv() and tp_recvto() wait up to
+         3 ms ( under linux ) before returning ( with or without any
+         character ).
+         OS/2 and win32 modules, instead, return immediatly if no
+         input is available and waiting in the com port receive buffer.
+         I think the correct way of doing read()s is the one implemented
+         in linux.c and I will change OS/2 and win32 behaviour as
+         soon as I can.
+
+2005-10-13 12:50 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * tp_/Makefile
+     * added linux.c module to library
+
+2005-10-13 10:05 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   + tp_/linux.c
+     + Added linux low level serial module, tested with a
+       a serial printer and a connection to a cash register.
+   * tp_/telepath.prg
+     * changes to a few functions to make them work nicely with linux.c
+
+2004-08-31 16:50 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * tp_/os2.c
+   * tp_/telepath.prg
+     ! corrected an error on tp_crc16()
+     + added a bunch of functions, right now only to OS/2 build
+
+2004-08-31 16:45 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * tp_/TELEPATH.CH
+     - removed UPPERCASE file
+     + added telepath.ch
+
+2004-08-26 09:30 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * tp_/os2.c
+     + added OS/2 low level C code
+
+2004-08-25 23:50 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * tp_/telepath.prg
+     + tp_crc32()
+
+2004-08-25 15:50 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * tp_/telepath.prg
+   * tp_/win32.c
+     + tp_baud(), tp_sendsub()
+     ! tp_send() and tp_receive() seem to work as expected.
+
+2004-08-25 10:35 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * tp_/telepath.prg
+     + tp_crc16() thanks to Pete Disdale.
+     * modified a few functions to start using low level win32.c
+   + tp_/win32.c
+     + Low level C code for win32 serial port access
+   + tp_/Makefile
+     + OS/2 Makefile
+   + tp_/makefile.bc
+     + bcc32 makefile
+   + tp_/make_b32.bat
+     + win32 makefile
+   + tp_/TELEPATH.CH
+     + .prg level defines for telepathy compatibility
+
+   /* At this time, on win32, I can ask to my modem its name :) */
+
+2004-08-16 16:32 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * tp_/telepath.prg
+   * tp_/testtp.prg
+      + Added xharbour Copyright header with full credit to the original
+        author of this library
+
+   /* I think I will change a lot this library since I want to have it
+      multiplatform, so, for example, all C code will go to separated files
+      (one per platform) to have a common (high level) .prg code which
+      calls common (low level) C code functions from different (one per
+      platform) .c files.
+
+      As it is now should compile and work under linux, I can't test it right
+      now and, probably, something will break in the process of making it
+      multiplatform.
+   */
+
+2004-08-16 16:32 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * tp_/telepath.prg
+      + removed the original developed with Flagship and inserted
+        the one ported to xharbour by Luiz Rafael Culik Guimaraes (culikr@brturbo.com)
+
+2004-08-16 16:22 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
+   * tp_/ChangeLog
+   * tp_/Makefile
+   * tp_/README
+   * tp_/telepath.prg
+   * tp_/testtp.prg
+      + Added CVS ID to every file
+
+
+I sent the original version to the flagship website in may 2000.
+I just now (July 2001) made the first change to the code.
+
+7/19/2001
+The bug I found is REALLY esoteric... it's in tp_open.  It comes into play
+when something previously set the parity to Even or Odd and then your telepathy program does a tp_open on that port and sets parity to None.  I previously
+assumed that if you were setting parity to N, the port was already at N and I
+didn't explicitly call stty -parenb and -parodd.
+
+I included telepathy.bak in case you care to look at the prior version.
+
+
+
