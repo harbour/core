@@ -196,7 +196,11 @@ RETURN nil
 *+
 FUNCTION FT_MKDIR( CDIR AS STRING)
 
+#ifdef HB_COMPAT_C53
    MAKEDIR( cdir )
+#else
+   HB_SYMBOL_UNUSED( cDir ) // TOFIX
+#endif
 
 RETURN nil
 

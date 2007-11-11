@@ -1435,10 +1435,10 @@ HB_FUNC( __MVRESTORE )
 {
    /* Clipper checks for the number of arguments here here, but we cannot
       in Harbour since we have two optional parameters as an extension. */
-#ifdef HB_EXTENSION
-   if( ISCHAR( 1 ) && ISLOG( 2 ) )
-#else
+#ifdef HB_C52_STRICT
    if( hb_pcount() == 2 && ISCHAR( 1 ) && ISLOG( 2 ) )
+#else
+   if( ISCHAR( 1 ) && ISLOG( 2 ) )
 #endif
    {
       PHB_FNAME pFileName;
@@ -1482,12 +1482,12 @@ HB_FUNC( __MVRESTORE )
          BYTE buffer[ HB_MEM_REC_LEN ];
          char * pszMask;
 
-#ifdef HB_EXTENSION
-         pszMask = hb_memvarGetMask( 3 );
-         bIncludeMask = !ISLOG( 4 ) || hb_parl( 4 );
-#else
+#ifdef HB_C52_STRICT
          pszMask = "*";
          bIncludeMask = TRUE;
+#else
+         pszMask = hb_memvarGetMask( 3 );
+         bIncludeMask = !ISLOG( 4 ) || hb_parl( 4 );
 #endif
 
          while( hb_fsRead( fhnd, buffer, HB_MEM_REC_LEN ) == HB_MEM_REC_LEN )

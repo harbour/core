@@ -8,6 +8,54 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-11 12:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/std.ch
+     ! SET STRICTREAD command definition fixed.
+
+   * include/hbextern.ch
+     ! Fixed placement of MENUMODAL, to compile when HB_COMPAT_C53
+       is turned off.
+
+   * contrib/libmisc/Makefile
+     ! Fixed test dir name. (broken since yesterday)
+
+   * contrib/pdflib/common.mak
+     + Added another file.
+
+   + contrib/pdflib/Makefile
+     + Added GNU make file for pdflib.
+
+   * utils/hbdoc/ft_funcs.prg
+   * utils/hbmake/ft_funcs.prg
+   * utils/hbmake/hbmake.prg
+     ! Made them compile with HB_COMPAT_C53 turned off.
+       There is a loss of functionality in this case.
+       (MAKEDIR(), DIRCHANGE() and @ CHECKBOX are used here)
+
+   * source/rtl/menuto.prg
+   * source/rtl/tgetlist.prg
+     ! Fixed to compile when HB_COMPAT_C53 is turned off.
+
+   * include/hbextern.ch
+   * source/rtl/defpath.c
+   * source/rtl/adir.prg
+     * __DEFPATH() is now always included, not just when HB_C52_UNDOC 
+       is defined, since we use this function from core, and __*() 
+       functions are okey to be included without this guard.
+       DEFPATH() is still marked as HB_C52_UNDOC.
+     ! ADIR() now uses __DEFPATH() instead of DEFPATH() to compile
+       with HB_C52_UNDOC turned off.
+     ; TOFIX: There are still a few functions we use from core, which 
+       are guarded with HB_C52_UNDOC: NATIONMSG(), ISNEGATIVE()
+
+   * source/vm/memvars.c
+     * Changed HB_EXTENSION to HB_C52_STRICT. Reason: This 
+       is a Harbour internal (undocumented) function, where extension 
+       is possible. CA-Cl*pper internal (undocumented) function __MRESTORE()
+       is mapped to this function, which is still okey. We could 
+       create a fully CA-Cl*pper compatible, non-extended __MRESTORE() 
+       without any trouble, if this is an issue.
+
 2007-11-11 02:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/at.c
    * include/hbextern.ch

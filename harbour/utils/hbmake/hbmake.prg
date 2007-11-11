@@ -1243,10 +1243,12 @@ FUNC crtmakfile( cFile )
     @  1, 23 SAY aLangMessages[ 29 ] 
     @  1, 40 GET cCompiler radio { "BCC", "MSVC", "GCC" } VALID !Empty( cCompiler )        
     @  1, 48 SAY aLangMessages[ 30 ] 
+#ifdef HB_COMPAT_C53
     @  1, 64 GET lFwh checkbox caption "Use FWH"          WHEN Cos == "Win32"              
     @  2, 64 GET lcw checkbox caption "Use C4W"           WHEN Cos == "Win32"              
     @  3, 64 GET lRddads checkbox caption "Use RddAds"    WHEN Cos == "Win32" .OR. Cos == "Linux"
     @  4, 64 Get lMiniGui checkbox caption "Use Minigui"  WHEN Cos == "Win32"
+#endif
 
     READ
 
@@ -1268,15 +1270,19 @@ FUNC crtmakfile( cFile )
     @  5, 40 SAY "Obj Files Dir" GET cObjDir PICT "@s15" 
     ATTENTION( aLangMessages[ 31 ] , 6 )
 
+#ifdef HB_COMPAT_C53
     @  7,  1 GET lautomemvar checkbox caption aLangMessages[ 32 ]
     @  7, 40 GET lvarismemvar checkbox caption aLangMessages[ 33 ] 
     @  8,  1 GET lDebug checkbox caption  aLangMessages[ 34 ]
     @  8, 40 GET lSupressline checkbox caption aLangMessages[ 35 ] 
     @  9,  1 GET lGenppo checkbox caption aLangMessages[ 36 ] 
     @  9, 40 GET lCompMod checkbox caption aLangMessages[ 37 ] 
+#endif
     @ 10,  1 SAY aLangMessages[ 38 ]   GET cUserDef     PICT "@s15"
     @ 10, 40 SAY aLangMessages[ 39 ]  GET cUserInclude PICT "@s15"
+#ifdef HB_COMPAT_C53
     @ 11,  1 GET lExternalLib checkbox caption aLangMessages[ 40 ] 
+#endif
     @ 12,  1 Say "Resource file Name" Get CResName 
     READ
 
@@ -1299,15 +1305,13 @@ FUNC crtmakfile( cFile )
 
     IF !Empty( cobjDir )
 
+#ifdef HB_COMPAT_C53
         IF Dirchange( cobjDir ) != 0
-
             Makedir( cobjDir )
-
         ELSE
-
             Dirchange( '..' )
-
         ENDIF
+#endif
 
     ENDIF
 
@@ -2344,12 +2348,14 @@ FUNC crtlibmakfile( cFile )
 
     ATTENTION( "Harbour Options", 5 )
 
+#ifdef HB_COMPAT_C53
     @  6,  1 GET lautomemvar checkbox caption "Automatic memvar declaration"                                         
     @  6, 40 GET lvarismemvar checkbox caption "Variables are assumed M->"                                           
     @  7,  1 GET lDebug checkbox caption "Debug info"                                                                
     @  7, 40 GET lSupressline checkbox caption "Suppress line number information"                                    
     @  8,  1 GET lGenppo checkbox caption "Generate pre-processed output"                                            
     @  8, 40 GET lCompMod checkbox caption "compile module only"                                                     
+#endif
     @  9,  1 SAY "User Defines "                                                  GET cUserDef     PICT "@s15"       
     @  9, 40 SAY "User include Path"                                              GET cUserInclude PICT "@s15"
 
@@ -2374,15 +2380,13 @@ FUNC crtlibmakfile( cFile )
 
     IF !Empty( cobjDir )
 
+#ifdef HB_COMPAT_C53
         IF Dirchange( cobjDir ) != 0
-
             Makedir( cobjDir )
-
         ELSE
-
             Dirchange( '..' )
-
         ENDIF
+#endif
 
     ENDIF
 

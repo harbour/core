@@ -115,6 +115,7 @@ CREATE CLASS HBGetList
    METHOD Updated()                                  // returns ::lUpdated
    METHOD Get()                                      // returns ::oGet
 
+#ifdef HB_COMPAT_C53
    METHOD GUIReader( oGet, oMenu, aMsg )
    METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg )
    METHOD GUIPreValidate( oGet, oGUI, aMsg )
@@ -123,6 +124,7 @@ CREATE CLASS HBGetList
    METHOD TBReader( oGet, oMenu, aMsg )
    METHOD Accelerator( nKey, aMsg )
    METHOD hitTest( nMRow, nMCol, aMsg )
+#endif
    METHOD ReadStats( nElement, xNewValue )
    METHOD ShowGetMsg( oGet, aMsg )
    METHOD EraseGetMsg( aMsg )
@@ -329,11 +331,14 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
 
    LOCAL cKey
    LOCAL bKeyBlock
+   LOCAL lSetKey
+
+#ifdef HB_COMPAT_C53
    LOCAL nMRow
    LOCAL nMCol
    LOCAL nButton
    LOCAL nHotItem
-   LOCAL lSetKey
+#endif
 
    DEFAULT oGet TO ::oGet
 
@@ -400,6 +405,7 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
       oGet:ExitState := GE_WRITE
 #endif
 
+#ifdef HB_COMPAT_C53
    CASE nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
 
       nMRow := MRow()
@@ -448,6 +454,7 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
       ELSE
          oGet:ExitState := GE_NOEXIT
       ENDIF
+#endif
 
    CASE nKey == K_UNDO
       oGet:Undo()
@@ -556,7 +563,9 @@ METHOD GetPostValidate( oGet, aMsg ) CLASS HBGetList
 
    LOCAL lUpdated
    LOCAL lValid := .T.
+#ifdef HB_COMPAT_C53
    LOCAL nOldCursor
+#endif
 
    DEFAULT oGet TO ::oGet
 
@@ -849,6 +858,8 @@ METHOD ReadUpdated( lUpdated ) CLASS HBGetList
    ENDIF
 
    RETURN lSavUpdated
+
+#ifdef HB_COMPAT_C53
 
 METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
 
@@ -1523,6 +1534,8 @@ METHOD HitTest( nMRow, nMCol, aMsg ) CLASS HBGetList
 
    // RETURN ::nNextGet != 0  // Commented out.
    RETURN 0
+
+#endif
 
 #define SLUPDATED       1
 #define SBFORMAT        2

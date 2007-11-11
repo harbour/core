@@ -78,7 +78,7 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
    hb_FNameSplit( cFileMask, @cDir, @cName, @cExt )
 
    IF Empty( cDir )
-      cFileMask := hb_FNameMerge( DefPath(), cName, cExt )
+      cFileMask := hb_FNameMerge( __DefPath(), cName, cExt )
    ENDIF
 
    // ;

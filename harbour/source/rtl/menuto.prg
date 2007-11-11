@@ -60,7 +60,9 @@ FUNCTION __MenuTo( bBlock, cVariable )
 
    LOCAL lDeclared
    LOCAL bAction
+#ifdef HB_COMPAT_C53
    LOCAL nMouseClik
+#endif
 
    LOCAL nPointer
    LOCAL aColor
@@ -193,6 +195,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
 
          // check for keystrokes
          SWITCH nKey
+#ifdef HB_COMPAT_C53
             CASE K_MOUSEMOVE
                EXIT
             CASE K_LBUTTONDOWN
@@ -205,6 +208,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
                    lExit := .T.
                ENDIF
                EXIT
+#endif
             CASE K_DOWN
             CASE K_RIGHT
                IF ++n > nArrLen
@@ -270,6 +274,8 @@ FUNCTION __MenuTo( bBlock, cVariable )
 
    RETURN n
 
+#ifdef HB_COMPAT_C53
+
 STATIC FUNCTION HitTest( aMenu, nMRow, nMCol )
 
    LOCAL aMenuItem
@@ -284,3 +290,5 @@ STATIC FUNCTION HitTest( aMenu, nMRow, nMCol )
    NEXT
 
    RETURN 0
+
+#endif

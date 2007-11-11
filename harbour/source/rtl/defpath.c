@@ -57,6 +57,13 @@
 
 HB_FUNC( DEFPATH )
 {
+   HB_FUNC_EXEC( __DEFPATH );
+}
+
+#endif
+
+HB_FUNC( __DEFPATH )
+{
    char buffer[ _POSIX_PATH_MAX + 2 ];
    int size = 0;
 
@@ -92,10 +99,3 @@ HB_FUNC( DEFPATH )
 
    hb_retclen( buffer, size );
 }
-
-HB_FUNC( __DEFPATH )
-{
-   HB_FUNC_EXEC( DEFPATH );
-}
-
-#endif
