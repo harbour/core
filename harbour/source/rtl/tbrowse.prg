@@ -475,7 +475,6 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
    if nPos >= 1
    
       if nPos > ::nColumns
-#endif      
 
          ::Moved() /* TOFIX: This logic should go inside ::configure() */
 
@@ -488,8 +487,10 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
          AAdd( ::aColsPos, 0 )
          AAdd( ::aColsInfo, ::InitColumn( oCol, .F. ) )
 
-#ifndef HB_C52_STRICT
+         ::Configure( 2 )
+
       else
+#endif
 
          ::Moved() /* TOFIX: This logic should go inside ::configure() */
 
@@ -509,12 +510,10 @@ METHOD insColumn( nPos, oCol ) CLASS TBrowse
          ::aColsPos[ nPos ] := 0
          ::aColsInfo[ nPos ] := ::InitColumn( oCol, .F. )
 
-      endif
-#endif
-   
-      ::Configure( 2 )
+         ::Configure( 2 )
 
 #ifndef HB_C52_STRICT
+      endif
    endif
 #endif
 

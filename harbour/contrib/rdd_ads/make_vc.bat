@@ -15,6 +15,7 @@ rem    set HB_MAKE_PROGRAM=
 rem    set HB_MAKE_FLAGS=
 rem ---------------------------------------------------------------
 
+if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%SystemRoot%\system32
 if "%HB_CC_NAME%" == "" set HB_CC_NAME=vc
 if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
 set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
@@ -37,13 +38,21 @@ if "%1" == "INSTALL" goto INSTALL
 :BUILD
 
    rem ---------------------------------------------------------------
-   DUMPBIN /EXPORTS ace32.dll > _dump.tmp
-   echo LIBRARY ace32.dll > _temp.def
+   rem This .dll to .lib conversion needs GNU sed.exe in the path
+   rem ---------------------------------------------------------------
+   echo./[ \t]*ordinal hint/,/^^[ \t]*Summary/{> _temp.sed
+   echo. /^^[ \t]\+[0-9]\+/{>> _temp.sed
+   echo.   s/^^[ \t]\+[0-9]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+\(.*\)/\1/p>> _temp.sed
+   echo. }>> _temp.sed
+   echo.}>> _temp.sed
+   DUMPBIN /EXPORTS %HB_DLL_DIR%\ace32.dll > _dump.tmp
+   echo LIBRARY %HB_DLL_DIR%\ace32.dll > _temp.def
    echo EXPORTS >> _temp.def
-   sed -nf exports.sed < _dump.tmp >> _temp.def
+   sed -nf _temp.sed < _dump.tmp >> _temp.def
    LIB /MACHINE:X86 /DEF:_temp.def /OUT:..\..\lib\%HB_CC_NAME%\ace32.lib 
    del _dump.tmp
    del _temp.def
+   del _temp.sed
    rem ---------------------------------------------------------------
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log

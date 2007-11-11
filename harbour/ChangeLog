@@ -8,6 +8,36 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-11 13:45 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tbrowse.prg
+     ! Fixed to compile with HB_C52_STRICT.
+
+   * contrib/rdd_ads/make_vc.bat
+   * contrib/odbc/make_vc.bat
+     ! Fixed .dll to .lib generation to work using GNU sed.
+       (now it doesn't need exports.sed anymore).
+       NOTE: I'm not sure if the batch tricks will work 
+             on every flavour of Windows. It should for 
+             W2K and above though, probably NT too.
+     ! Fixed to pick .dlls from HB_DLL_DIR, which when not 
+       defined points to system32 dir.
+     ; I know "sed" dependency is not optimal, but we can remove 
+       this later if we have better solution, until then 
+       it cannot hurt and it's better than nothing.
+       "sed" is a free tool included in mingw32, cygwin, 
+       and also downloadable as a self-contained .exe from 
+       the gnuwin32 project:
+       http://gnuwin32.sourceforge.net/packages/sed.htm
+       Direct link to bin package:
+       http://gnuwin32.sourceforge.net/downlinks/sed-bin-zip.php
+       (it cannot hurt to have this in ones "utils" dir anyway :)
+       
+   * contrib/odbc/make_b32.bat
+   - contrib/odbc/odbc32.def
+     - Removed .def file from repository. .lib have to 
+       be generated from live .dll instead of this old 
+       .def.
+
 2007-11-11 12:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/std.ch
      ! SET STRICTREAD command definition fixed.
