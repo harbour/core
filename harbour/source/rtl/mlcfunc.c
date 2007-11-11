@@ -147,9 +147,9 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
 {
    PHB_EOL_INFO pEOLs = NULL;
    int iEOLs = 0;
-   char * szEOL;
 
 #ifdef HB_EXTENSION
+   char * szEOL;
    ULONG ulLen, ul;
 
    szEOL = hb_parc( iParam );
@@ -189,6 +189,8 @@ static PHB_EOL_INFO hb_mlGetEOLs( int iParam, int * piEOLs )
          }
       }
    }
+#else
+   HB_SYMBOL_UNUSED( iParam );
 #endif
 
    if( iEOLs == 0 )

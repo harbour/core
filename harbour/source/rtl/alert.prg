@@ -46,10 +46,14 @@ STATIC s_lNoAlert
 #endif
 
 FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
-   LOCAL cMessage, cLine, cColorHigh
+   LOCAL cMessage
+   LOCAL cColorHigh
    LOCAL aOptionsOK
    LOCAL nEval
+#ifdef HB_EXTENSION
    LOCAL lFirst
+   LOCAL cLine
+#endif
 
 #ifdef HB_C52_UNDOC
 

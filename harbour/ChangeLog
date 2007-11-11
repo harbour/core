@@ -8,6 +8,34 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-11 01:52 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tpopup.prg
+     ! Fixed a few problems regarding HB_EXTENSION guards.
+       (one method declaration was mistakenly guarded, and one 
+       IF construct broke when compiled without HB_EXTENSION)
+
+   * source/rtl/mlcfunc.c
+   * source/rtl/alert.prg
+     ! Fixed unused var warnings when HB_EXTENSION is off.
+
+   * contrib/hgf/tests/bld_b32.bat
+     ! Some more fixes. (removed hard coded BCC path, and 
+       a few wrong dirs)
+     ; For me form3.hbf works without a closing EOL, under Windows.
+       So the problem might rather be something else. For sure though,
+       HBPersistent()'s EOL detection and handling is not portable (TOFIX).
+
+   * source/compiler/hbcomp.c
+     ! Reverted previous change for non-Unix platforms, regaring
+       command-line output. Now Harbour will again use stderr/stdout 
+       about the same way CA-Cl*pper does. However odd this is, 
+       most DOS/Windows programs work this way, so the "when in Rome" 
+       rule got in effect here. Otherwise, any DOS/Windows build 
+       output (BC/VC/GCC) goes to stdout, _except_ Harbour 
+       errors/warnings, and this is not a good thing. Still, the 
+       //STDOUT:, //STDERR: compiler switches could come handy to 
+       override the platform defaults.
+
 2007-11-11 00:44 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/std.ch
      * Removed HB_EXTENSION guard from around SET commands 

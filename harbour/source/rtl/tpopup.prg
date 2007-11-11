@@ -96,6 +96,7 @@ CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
    METHOD border( cBorder ) SETGET
    METHOD bottom( nBottom ) SETGET
    METHOD colorSpec( cColorSpec ) SETGET
+   METHOD current() SETGET
    METHOD itemCount() SETGET
    METHOD left( nLeft ) SETGET
    METHOD right( nRight ) SETGET
@@ -108,7 +109,6 @@ CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
    METHOD setCoors( nRow, nCol, lTop )        /* NOTE: This method is a Harbour extension [vszakats] */
    METHOD isShortCut( nKey, nID )             /* NOTE: This method is a Harbour extension [vszakats] */
    METHOD isQuick( nKey, nID )                /* NOTE: This method is a Harbour extension [vszakats] */
-   METHOD current() SETGET                    /* NOTE: This method is a Harbour extension [vszakats] */
 #endif
 
    PROTECTED:
@@ -447,15 +447,16 @@ METHOD hitTest( nMRow, nMCol ) CLASS POPUPMENU
         nMCol < ::nRight
 
       nPos := nMRow - ::nTop
+      DO CASE
 #ifdef HB_EXTENSION
-      IF !::aItems[ nPos ]:enabled
+      CASE !::aItems[ nPos ]:enabled
          RETURN HTNOWHERE
 #endif
-      ELSEIF ::aItems[ nPos ]:caption == MENU_SEPARATOR
+      CASE ::aItems[ nPos ]:caption == MENU_SEPARATOR
          RETURN HTSEPARATOR
-      ELSE
+      OTHERWISE
          RETURN nPos
-      ENDIF
+      ENDCASE
    ENDCASE
 
    RETURN HTNOWHERE
