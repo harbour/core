@@ -180,8 +180,8 @@ METHOD display() CLASS TOPBARMENU
          nLeft := nRight - nCaptionLen
       ENDIF
 
-      aItems[ nItem ]:row := nRow
-      aItems[ nItem ]:col := nLeft
+      aItems[ nItem ]:__row := nRow
+      aItems[ nItem ]:__col := nLeft
 
       IF aItems[ nItem ]:isPopUp()
          oPopUp := aItems[ nItem ]:data
@@ -352,7 +352,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS TOPBARMENU
 
       FOR n := 1 TO ::nItemCount
 
-         nColumn := aItems[ n ]:col
+         nColumn := aItems[ n ]:__col
 
          IF nMCol >= nColumn .AND. nMCol <= nColumn + Len( aItems[ n ]:caption )
 #ifndef HB_C52_STRICT

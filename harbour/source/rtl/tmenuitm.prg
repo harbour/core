@@ -75,8 +75,8 @@ CREATE CLASS MENUITEM FUNCTION HBMenuItem
    METHOD shortcut( nShortcut ) SETGET
    METHOD style( cStyle ) SETGET
 
-   VAR col        INIT -1 AS NUMERIC                    /* NOTE: This is a Harbour extension. */
-   VAR row        INIT -1 AS NUMERIC                    /* NOTE: This is a Harbour extension. */
+   VAR __col      INIT -1 AS NUMERIC                    /* NOTE: This is a Harbour extension. */
+   VAR __row      INIT -1 AS NUMERIC                    /* NOTE: This is a Harbour extension. */
 
    METHOD isPopUp()
 
@@ -203,10 +203,10 @@ FUNCTION __miColumn( o, nColumn )
    IF ISOBJECT( o ) .AND. o:ClassName() == "MENUITEM"
 
       IF ISNUMBER( nColumn )
-         o:col := nColumn
+         o:__col := nColumn
       ENDIF
 
-      RETURN o:col
+      RETURN o:__col
    ENDIF
 
    RETURN -1
@@ -216,10 +216,10 @@ FUNCTION __miRow( o, nRow )
    IF ISOBJECT( o ) .AND. o:ClassName() == "MENUITEM"
 
       IF ISNUMBER( nRow )
-         o:row := nRow
+         o:__row := nRow
       ENDIF
 
-      RETURN o:row
+      RETURN o:__row
    ENDIF
 
    RETURN -1

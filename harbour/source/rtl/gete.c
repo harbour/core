@@ -72,7 +72,11 @@ HB_FUNC( GETENV )
 {
    PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
 
+#ifdef HB_EXTENSION
    if( pName )
+#else
+   if( pName && hb_pcount() == 1 )
+#endif
    {
       char * pszName = hb_itemGetC( pName );
       ULONG ulName = strlen( pszName );

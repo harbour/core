@@ -2086,7 +2086,7 @@ METHOD setKey( nKey, bBlock ) CLASS TBrowse
                    { K_ESC        , {|   |               TBR_EXIT       } },;
                    { K_LBUTTONDOWN, {| o | TBMouse( o, MRow(), MCol() ) } } }
 
-      #ifdef HB_EXTENSION
+      #ifndef HB_C52_STRICT
          AAdd( ::aKeys, { K_MWFORWARD  , {| o | o:Up()      , TBR_CONTINUE   } } )
          AAdd( ::aKeys, { K_MWBACKWARD , {| o | o:Down()    , TBR_CONTINUE   } } )
       #endif

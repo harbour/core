@@ -104,7 +104,7 @@ HB_FUNC( PROCLINE )
 
 HB_FUNC( PROCFILE )
 {
-#ifdef HB_EXTENSION
+#ifndef HB_C52_STRICT
    PHB_SYMB pSym = NULL;
 
    if( ISSYMBOL( 1 ) )

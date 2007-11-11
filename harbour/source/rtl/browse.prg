@@ -150,7 +150,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
             TBMOUSE( oBrw, MRow(), MCol() )
             EXIT
 #endif
-#ifdef HB_EXTENSION
+#ifndef HB_C52_STRICT
          CASE K_MWFORWARD
 #endif
          CASE K_UP
@@ -161,7 +161,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
             ENDIF
             EXIT
 
-#ifdef HB_EXTENSION
+#ifndef HB_C52_STRICT
          CASE K_MWBACKWARD
 #endif
          CASE K_DOWN

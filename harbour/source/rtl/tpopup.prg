@@ -267,8 +267,8 @@ METHOD display() CLASS POPUPMENU
                cCaption += " "
             ENDIF
 
-            aItems[ nPos ]:row := nTop
-            aItems[ nPos ]:col := nLeft
+            aItems[ nPos ]:__row := nTop
+            aItems[ nPos ]:__col := nLeft
 
             IF ( nHotKeyPos := At( "&", cCaption ) ) == 0
                IF ( nCharPos := RAt( SubStr( aItems[ nPos ]:style, 2, 1 ), cCaption ) ) > 0

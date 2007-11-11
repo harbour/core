@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-11 14:13 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tpopup.prg
+   * source/rtl/ttopbar.prg
+   * source/rtl/tmenuitm.prg
+     ! MENUITEM class :row and :col vars changed to 
+       :__row and :__col, instead of adding HB_EXTENSION 
+       guards to them, because they are needed internally.
+
+   * source/rtl/browse.prg
+   * source/rtl/tbrowse.prg
+     * Two mouse-wheel handling extensions now rather 
+       guarded with HB_C52_STRICT.
+
+   * source/rtl/gete.c
+     ! Fixed GETENV()/GETE() to return an empty string when 
+       called with more than one parameter, to be fully 
+       C5.x compatible.
+
+   * source/vm/proc.c
+     ! PROCFILE() HB_EXTENSION guard changed to HB_C52_STRICT.
+       Since PROCFILE() is an undocumented function in C5.x 
+       we can legally extend it in Harbour.
+
+   * include/hbsetup.ch
+     * Turned off HB_EXTENSION for the default build.
+       Now HB_EXTENSION covers all the extensions which 
+       in some ways violates namespace rules or extends 
+       functionality of existing CA-Cl*pper functions 
+       or classes in an "invisible" (or "dirty") way, like 
+       adding new parameters or accepting new types of parameters.
+       In case we want to keep some extended functionality 
+       in the default build, we'll need to create new 
+       function names. For class extensions, I'm not yet 
+       sure what is the proper way to go.
+       In case of ML*() functions, I think they should respect 
+       SET EOL instead of accepting EOL settings as parameters.
+
 2007-11-11 13:45 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tbrowse.prg
      ! Fixed to compile with HB_C52_STRICT.
