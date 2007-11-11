@@ -36,7 +36,7 @@ if "%1" == "INSTALL" goto INSTALL
 
 :BUILD
 
-   implib ..\..\lib\%HB_CC_NAME%\odbc32.lib odbc32.dll
+   implib ..\..\lib\%HB_CC_NAME%\odbc32.lib %HB_DLL_DIR%\odbc32.dll
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
    if errorlevel 1 notepad make_%HB_CC_NAME%.log

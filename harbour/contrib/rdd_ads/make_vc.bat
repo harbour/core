@@ -46,8 +46,8 @@ if "%1" == "INSTALL" goto INSTALL
    echo. }>> _temp.sed
    echo.}>> _temp.sed
    DUMPBIN /EXPORTS %HB_DLL_DIR%\ace32.dll > _dump.tmp
-   echo LIBRARY %HB_DLL_DIR%\ace32.dll > _temp.def
-   echo EXPORTS >> _temp.def
+   echo.LIBRARY %HB_DLL_DIR%\ace32.dll > _temp.def
+   echo.EXPORTS >> _temp.def
    sed -nf _temp.sed < _dump.tmp >> _temp.def
    LIB /MACHINE:X86 /DEF:_temp.def /OUT:..\..\lib\%HB_CC_NAME%\ace32.lib 
    del _dump.tmp

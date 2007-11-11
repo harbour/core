@@ -15,6 +15,7 @@ rem    set HB_MAKE_PROGRAM=
 rem    set HB_MAKE_FLAGS=
 rem ---------------------------------------------------------------
 
+if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%SystemRoot%\system32
 if "%HB_CC_NAME%" == "" set HB_CC_NAME=b32
 if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=make.exe
 set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
@@ -36,7 +37,7 @@ if "%1" == "INSTALL" goto INSTALL
 
 :BUILD
 
-   implib ..\..\lib\%HB_CC_NAME%\ace32.lib ace32.dll
+   implib ..\..\lib\%HB_CC_NAME%\ace32.lib %HB_DLL_DIR%\ace32.dll
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
    if errorlevel 1 notepad make_%HB_CC_NAME%.log
