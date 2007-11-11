@@ -61,7 +61,6 @@
 based on  work of : Victor K.    . http://www.ihaveparts.com
 + many new itens that Victor code dont handle
 */
-MEMVAR lLandScape // GLOBAL EXTERNAL
 
 CLASS TPdf
 
@@ -516,7 +515,7 @@ RETURN nil
 
 METHOD Pdfpageorient( _cPageOrient ) CLASS TPdf
 
-   DEFAULT _cPageOrient TO Iif( lLandScape, "L", "P" )
+   DEFAULT _cPageOrient TO Iif( pdf_GetLandScape(), "L", "P" )
 
    ::aReport[ PAGEORIENT ] := _cPageOrient
    ::pdfPageSize( ::aReport[ PAGESIZE ] )

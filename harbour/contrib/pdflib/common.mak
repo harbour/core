@@ -11,8 +11,8 @@ LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 #
 
 LIB_OBJS = \
-   $(OBJ_DIR)\pdfhbdocs$(OBJEXT) \
    $(OBJ_DIR)\pdfhbdoc$(OBJEXT) \
+#  $(OBJ_DIR)\pdfhbdocs$(OBJEXT) \
    $(OBJ_DIR)\pdf1$(OBJEXT) \
 
 all: \

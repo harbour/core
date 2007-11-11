@@ -32,14 +32,32 @@ LIBEXT = .lib
 .SUFFIXES: $(LIBEXT) $(OBJEXT) .prg .c .cpp .asm
 
 #**********************************************************
+# Install directory defaults.
+#**********************************************************
+
+!ifndef HB_INSTALL_PREFIX
+HB_INSTALL_PREFIX = $(HB_ROOT)
+!endif
+
+!ifndef HB_BIN_INSTALL
+HB_BIN_INSTALL = $(HB_INSTALL_PREFIX)\bin
+!endif
+!ifndef HB_INC_INSTALL
+HB_INC_INSTALL = $(HB_INSTALL_PREFIX)\include
+!endif
+!ifndef HB_LIB_INSTALL
+HB_LIB_INSTALL = $(HB_INSTALL_PREFIX)\lib
+!endif
+
+#**********************************************************
 # Directory macros. These should never have to change.
 #**********************************************************
 
-OBJ_DIR = ..\..\obj\$(HB_CC_NAME)
-LIB_DIR = ..\..\lib\$(HB_CC_NAME)
-BIN_DIR = ..\..\bin\$(HB_CC_NAME)
+OBJ_DIR = $(HB_ROOT)\obj\$(HB_CC_NAME)
+LIB_DIR = $(HB_ROOT)\lib\$(HB_CC_NAME)
+BIN_DIR = $(HB_ROOT)\bin\$(HB_CC_NAME)
 
-INCLUDE_DIR = ..\..\include
+INCLUDE_DIR = $(HB_ROOT)\include
 
 #**********************************************************
 # Macros to access Harbour executable and other goodies

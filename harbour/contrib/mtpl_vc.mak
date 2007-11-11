@@ -25,7 +25,11 @@ HB_VISUALC_VER = 60
 
 #**********************************************************
 
-!include ..\mtpl.mak
+!ifndef HB_ROOT
+HB_ROOT = ..\..
+!endif
+
+!include $(HB_ROOT)\contrib\mtpl.mak
 
 #**********************************************************
 # C compiler definition and C flags. These should never have to change.

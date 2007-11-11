@@ -41,6 +41,24 @@ LIBEXT=.lib
 #!endif
 
 #**********************************************************
+# Install directory defaults.
+#**********************************************************
+
+!ifndef HB_INSTALL_PREFIX
+HB_INSTALL_PREFIX = .
+!endif
+
+!ifndef HB_BIN_INSTALL
+HB_BIN_INSTALL = $(HB_INSTALL_PREFIX)\bin
+!endif
+!ifndef HB_INC_INSTALL
+HB_INC_INSTALL = $(HB_INSTALL_PREFIX)\include
+!endif
+!ifndef HB_LIB_INSTALL
+HB_LIB_INSTALL = $(HB_INSTALL_PREFIX)\lib
+!endif
+
+#**********************************************************
 
 #
 # Directory macros. These should never have to change.

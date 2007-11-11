@@ -8,6 +8,71 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-11 18:07 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/mtpl.mak
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_vc.mak
+     + Added support for HB_ROOT.
+     + Now default HB_*_INSTALL dirs are set inside make files.
+       (to avoid manipulating these envvars on the batch file level)
+
+   * contrib/libmisc/make_b32.bat
+   * contrib/libmisc/make_vc.bat
+     - Removed HB_*_INSTALL manipulation from .bat files.
+
+   * contrib/hgf/win32/make_b32.bat
+   * contrib/hgf/win32/make_vc.bat
+   - contrib/hgf/win32/make_b32.mak
+   - contrib/hgf/win32/make_vc.mak
+   + contrib/hgf/win32/common.mak
+     + Now using contrib template make files.
+
+   * make_b32.bat
+   * make_vc.bat
+   * common.mak
+     ! Moved HB_*_INSTALL defaulting to make file level.
+
+   + contrib/ole
+   + contrib/ole/common.mak
+   + contrib/ole/oleauto.prg
+   + contrib/ole/test/sample.odt
+   + contrib/ole/test/testole.prg
+   + contrib/ole/test/bld_b32.bat
+   + contrib/ole/ole2.c
+   + contrib/ole/make_b32.bat
+   + contrib/ole/make_vc.bat
+   + contrib/ole/Makefile
+     + Restored "old" OLE implementation, as it was reported 
+       by Mindaugas Kavaliaskuas that it works better in some 
+       respects than the newer version in /contrib/win32.
+       Until we know further about the details there is no 
+       reason to not have this contrib.
+     + Added CreateObject() and GetActiveObject() to enhance 
+       compatibility with newer implementation.
+     + Standardized make files.
+     * test moved to test dir.
+     + Added VC make file.
+
+   * contrib/win32/test/testole.prg
+   + contrib/ole/test/testole.prg
+     + The two test apps from the two OLE implementations 
+       were merged and now they are the same. A quick look 
+       shows differences when detecting the presence of 
+       an OLE object. "old" OLE GPFs with "new" OLE method, 
+       "new" OLE RTEs with "old" OLE method.
+
+   * contrib/pdflib/common.mak
+   * contrib/pdflib/pdf1.prg
+   * contrib/pdflib/pdfhbdocs.prg
+   * contrib/pdflib/pdfhbdoc.c
+   * contrib/pdflib/Makefile
+     ! Removed GLOBAL requirement.
+     ! Moved away C code inside .prg.
+     ! Fixed some unused var warnings.
+     ! Removed some unused stuff.
+     ; Now there are clashing symbols. I suspect this is an 
+       unfinished contrib, even in xhb.
+
 2007-11-11 16:07 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/xhb/hbcompat.ch
      + Added hb_At() translation to extended At()

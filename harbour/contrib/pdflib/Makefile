@@ -8,8 +8,8 @@ C_SOURCES= \
 	pdfhbdoc.c \
 
 PRG_SOURCES= \
-	pdfhbdocs.prg \
 	pdf1.prg \
+#	pdfhbdocs.prg \
 
 LIBNAME=hbpdflib
 
