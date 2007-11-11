@@ -397,7 +397,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
       nPos := 1
    ENDIF
 
-   nLinePos := At( e"\r\n", cMail, nPos )
+   nLinePos := hb_At( e"\r\n", cMail, nPos )
    DO WHILE nLinePos > nPos
       // going on with last field?
       IF (SubStr( cMail, nPos, 1 ) == " " .or. SubStr( cMail, nPos, 1 ) == e"\t" );
@@ -410,7 +410,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
          ENDIF
 
       ELSE
-         nSplitPos := At( ":", cMail, nPos )
+         nSplitPos := hb_At( ":", cMail, nPos )
          cLastField := Substr( cMail, nPos, nSplitPos - nPos)
          cValue := Ltrim(Substr( cMail, nSplitPos +1, nLinePos - nSplitPos -1))
          IF Lower(cLastField) == "received"
@@ -421,9 +421,9 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
       ENDIF
 
       nPos := nLinePos + 2
-      nLinePos := At( e"\r\n", cMail, nPos )
+      nLinePos := hb_At( e"\r\n", cMail, nPos )
       //Prevents malformed body to affect us
-      IF cBoundary != NIL .and. At( "--"+cBoundary, cMail, nPos ) == 1
+      IF cBoundary != NIL .and. hb_At( "--"+cBoundary, cMail, nPos ) == 1
          RETURN 0
       ENDIF
    ENDDO
@@ -448,27 +448,27 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
 
    nPos := nLinePos + 2
    nBodyPos := nPos
-   nLinePos := At( e"\r\n", cMail, nPos )
+   nLinePos := hb_At( e"\r\n", cMail, nPos )
 
    DO WHILE nLinePos >= nPos
       // Avoid useless tests for empty lines
       IF nLinePos == nPos
          nPos += 2
-         nLinePos := At( e"\r\n", cMail, nPos )
+         nLinePos := hb_At( e"\r\n", cMail, nPos )
          LOOP
       ENDIF
 
       //have we met the boundary?
-      IF cBoundary != NIL .and. At( "--"+cBoundary, cMail, nPos ) == nPos
+      IF cBoundary != NIL .and. hb_At( "--"+cBoundary, cMail, nPos ) == nPos
          EXIT
       ENDIF
 
       //Have we met a section?
       IF cSubBoundary != NIL .and.;
-            At( "--" + cSubBoundary, cMail, nPos ) == nPos
+            hb_At( "--" + cSubBoundary, cMail, nPos ) == nPos
 
          //is it the last subsection?
-         IF At( "--", cMail, nPos + Len(cSubBoundary)+2, nLinePos) > 0
+         IF hb_At( "--", cMail, nPos + Len(cSubBoundary)+2, nLinePos) > 0
             EXIT
          ENDIF
 
@@ -497,10 +497,10 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
             Instead of testing every single line of mail until we find next boundary, if there is a boundary we
             jump to it immediatly, this saves thousands of EOL test and makes splitting of a string fast
          */
-         nPos := iif( ! Empty(cSubBoundary), At("--" + cSubBoundary, cMail, nPos ), iif( ! Empty(cBoundary), At("--" + cBoundary, cMail, nPos ), nLinePos + 2 ))
+         nPos := iif( ! Empty(cSubBoundary), hb_At("--" + cSubBoundary, cMail, nPos ), iif( ! Empty(cBoundary), hb_At("--" + cBoundary, cMail, nPos ), nLinePos + 2 ))
       ENDIF
 
-      nLinePos := At( e"\r\n", cMail, nPos )
+      nLinePos := hb_At( e"\r\n", cMail, nPos )
    ENDDO
 
    // set our body if needed

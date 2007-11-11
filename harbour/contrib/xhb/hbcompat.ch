@@ -79,6 +79,7 @@
    #xtranslate hb_RAScan([<x,...>])    => RAScan(<x>)
    #xtranslate hb_AIns([<x,...>])      => AIns(<x>)
    #xtranslate hb_ADel([<x,...>])      => ADel(<x>)
+   #xtranslate hb_At([<x,...>])        => At(<x>)
 
    #xtranslate hb_ISPOINTER( <xValue> )=> ISPOINTER( <xValue> )
 

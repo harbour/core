@@ -318,7 +318,7 @@ METHOD Retrieve( nId, nLen ) CLASS tIPClientPOP
                       otherwise if response breaks EOM in two, it will never
                       be found
       */
-      IF ( nPos := At( cEOM, cRet, Max( nRetLen - Len( cEOM ), 1 ) ) ) <> 0
+      IF ( nPos := hb_At( cEOM, cRet, Max( nRetLen - Len( cEOM ), 1 ) ) ) <> 0
          // Remove ".CRLF"
          cRet := Left( cRet, nPos + 1 )
          ::bEof := .T.

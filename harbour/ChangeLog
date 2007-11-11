@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-11 16:07 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/xhb/hbcompat.ch
+     + Added hb_At() translation to extended At()
+
+   * contrib/tip/popcln.prg
+   * contrib/tip/mail.prg
+     ! Changed extended At() to hb_At().
+
 2007-11-11 16:05 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/xhb/hbcompat.ch
      + Added extended At() translation to hb_At()
