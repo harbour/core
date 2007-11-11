@@ -53,15 +53,6 @@
 #include "hbapi.h"
 #include "hbset.h"
 
-#ifdef HB_C52_UNDOC
-
-HB_FUNC( DEFPATH )
-{
-   HB_FUNC_EXEC( __DEFPATH );
-}
-
-#endif
-
 HB_FUNC( __DEFPATH )
 {
    char buffer[ _POSIX_PATH_MAX + 2 ];
@@ -99,3 +90,12 @@ HB_FUNC( __DEFPATH )
 
    hb_retclen( buffer, size );
 }
+
+#ifdef HB_C52_UNDOC
+
+HB_FUNC( DEFPATH )
+{
+   HB_FUNC_EXEC( __DEFPATH );
+}
+
+#endif
