@@ -821,13 +821,13 @@ METHOD listFiles( cFileSpec ) CLASS tIPClientFTP
 
       IF Empty( cEntry ) //PM:09-08-2007 Needed because of the new HB_aTokens()
       
-        HB_ADel(aList, cEntry:__enumIndex(), .T.)
+         hb_ADel(aList, cEntry:__enumIndex(), .T.)
       
       ELSE
    
          aFile         := Array( F_LEN+3 )
          nStart        := 1
-         nEnd          := At( Chr(32), cEntry, nStart )
+         nEnd          := hb_At( Chr(32), cEntry, nStart )
 
          // file permissions (attributes)
          aFile[F_ATTR] := SubStr( cEntry, nStart, nEnd-nStart )
@@ -835,44 +835,44 @@ METHOD listFiles( cFileSpec ) CLASS tIPClientFTP
 
          // # of links
          DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
-         nEnd          := At( Chr(32), cEntry, nStart )
+         nEnd          := hb_At( Chr(32), cEntry, nStart )
          aFile[F_LEN+1]:= Val( SubStr( cEntry, nStart, nEnd-nStart ) )
          nStart        := nEnd
 
          // owner name
          DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
-         nEnd          := At( Chr(32), cEntry, nStart )
+         nEnd          := hb_At( Chr(32), cEntry, nStart )
          aFile[F_LEN+2]:= SubStr( cEntry, nStart, nEnd-nStart )
          nStart        := nEnd
 
          // group name
          DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
-         nEnd          := At( Chr(32), cEntry, nStart )
+         nEnd          := hb_At( Chr(32), cEntry, nStart )
          aFile[F_LEN+3]:= SubStr( cEntry, nStart, nEnd-nStart )
          nStart        := nEnd
 
          // file size
          DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
-         nEnd          := At( Chr(32), cEntry, nStart )
+         nEnd          := hb_At( Chr(32), cEntry, nStart )
          aFile[F_SIZE] := Val( SubStr( cEntry, nStart, nEnd-nStart ) )
          nStart        := nEnd
 
          // Month
          DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
-         nEnd          := At( Chr(32), cEntry, nStart )
+         nEnd          := hb_At( Chr(32), cEntry, nStart )
          cMonth        := SubStr( cEntry, nStart, nEnd-nStart )
          cMonth        := PadL( AScan( aMonth, cMonth ), 2, "0" )
          nStart        := nEnd
 
          // Day
          DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
-         nEnd          := At( Chr(32), cEntry, nStart )
+         nEnd          := hb_At( Chr(32), cEntry, nStart )
          cDay          := SubStr( cEntry, nStart, nEnd-nStart )
          nStart        := nEnd
 
          // year
          DO WHILE SubStr( cEntry, ++nStart, 1 ) == " " ; ENDDO
-         nEnd          := At( Chr(32), cEntry, nStart )
+         nEnd          := hb_At( Chr(32), cEntry, nStart )
          cYear         := SubStr( cEntry, nStart, nEnd-nStart )
          nStart        := nEnd
 

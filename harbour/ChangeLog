@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-11 16:05 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/xhb/hbcompat.ch
+     + Added extended At() translation to hb_At()
+
+   * contrib/tip/ftpcln.prg
+     ! Changed extended At() to hb_At(). (Thanks Petr)
+
 2007-11-11 14:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/rdd_ads/make_b32.bat
    * contrib/rdd_ads/make_vc.bat

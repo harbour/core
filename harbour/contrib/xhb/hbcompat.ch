@@ -135,6 +135,7 @@
    #xtranslate RAScan([<x,...>])              => hb_RAScan(<x>)
    #xtranslate AIns(<a>,<n>,[<x,...>])        => hb_AIns(<a>,<n>,<x>)
    #xtranslate ADel(<a>,<n>,<l>)              => hb_ADel(<a>,<n>,<l>)
+   #xtranslate At(<a>,<b>,[<x,...>])          => hb_At(<a>,<b>,<x>)
 
    #xtranslate ISPOINTER( <xValue> )   => hb_ISPOINTER( <xValue> )
 
