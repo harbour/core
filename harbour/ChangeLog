@@ -8,6 +8,47 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-11 02:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/at.c
+   * include/hbextern.ch
+     + Added hb_At() which is equivalent to At() with 
+       HB_EXTENSION turned on. Users are encouraged to 
+       use hb_At(), and this is also a must inside core.
+
+   * include/hbextern.ch
+     ! Added missing hb_AIns(), hb_ADel(), hb_AScan()
+
+   * source/rtl/persist.prg
+     ! Fixed hard-wired EOL length.
+     ! Fixed to not go into an infinite loop on 
+       non EOL terminated texts. (Thanks Petr)
+     ! Fixed to use hb_At() instead of extended At().
+     ! Fixed to also handle LF delimited texts.
+     ; All this in static function ExtractLine()
+
+   * contrib/rdd_ads/doc/gendoc.bat
+     ! Added version header.
+
+   * contrib/hgf/tests/bld_b32.bat
+     ! Some more minor cleanups.
+
+   * contrib/pgsql/make_vc.bat
+   * contrib/apollo/make_vc.bat
+   * contrib/gd/make_vc.bat
+   * contrib/adordd/make_vc.bat
+   * contrib/pdflib/make_b32.bat
+   * contrib/pdflib/make_vc.bat
+   * contrib/btree/make_vc.bat
+   * contrib/samples/make_vc.bat
+   * contrib/mysql/make_vc.bat
+   * contrib/odbc/make_vc.bat
+   * contrib/bmdbfcdx/make_vc.bat
+     ! Fixed EOL-style.
+
+   + contrib/libmisc/test
+   - contrib/libmisc/tests
+     * Dir rename.
+
 2007-11-11 01:52 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tpopup.prg
      ! Fixed a few problems regarding HB_EXTENSION guards.

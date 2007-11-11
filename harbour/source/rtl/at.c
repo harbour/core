@@ -56,9 +56,7 @@
 
 /* locates a substring in a string */
 
-#if defined( HB_EXTENSION )
-
-HB_FUNC( AT )
+HB_FUNC( HB_AT )
 {
    PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
@@ -85,6 +83,13 @@ HB_FUNC( AT )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", HB_ERR_ARGS_BASEPARAMS );
+}
+
+#if defined( HB_EXTENSION )
+
+HB_FUNC( AT )
+{
+   HB_FUNC_EXEC( HB_AT );
 }
 
 #else

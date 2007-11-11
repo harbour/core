@@ -52,9 +52,9 @@ ilink32 -Gn -Tpe -s @bld_b32.mak
 
 rem delete temporary files
 del %1.c
-del %1.map
 del %1.obj
-del %1.tds
+if exist %1.map del %1.map
+if exist %1.tds del %1.tds
 del bld_b32.mak
 del bld_b32.log
 

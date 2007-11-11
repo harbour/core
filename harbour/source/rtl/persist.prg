@@ -229,14 +229,20 @@ return cText
 
 static function ExtractLine( cText, nFrom )
 
-   local nAt := At( hb_OSNewLine(), cText, nFrom )
+   local nAt := hb_At( Chr( 10 ), cText, nFrom )
   
    if nAt > 0
-      cText := Substr( cText, nFrom, nAt - nFrom )
-      nFrom := nAt + 2
+      cText := SubStr( cText, nFrom, nAt - nFrom )
+      if Right( cText, 1 ) == Chr( 13 )
+         cText := Left( cText, Len( cText ) - 1 )
+      endif
+      nFrom := nAt + 1
    else
-      cText := Substr( cText, nFrom )
-      nFrom := Len( cText ) + 1
+      cText := SubStr( cText, nFrom )
+      if Right( cText, 1 ) == Chr( 13 )
+         cText := Left( cText, Len( cText ) - 1 )
+      endif
+      nFrom += Len( cText ) + 1
    endif
 
 return cText

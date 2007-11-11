@@ -1,3 +1,8 @@
+@echo off
+rem
+rem $Id$
+rem
+
 if "%1" =="/OS2" goto OS2
 if "%1" =="/NGI" goto NG
 if "%1" =="/RTF" goto RTF
@@ -30,4 +35,3 @@ GOTO END
    GOTO END
 :END
 del ass*.bat
-
