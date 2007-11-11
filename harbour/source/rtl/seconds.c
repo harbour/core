@@ -197,8 +197,6 @@ HB_FUNC( HB_CLOCKS2SECS )
    hb_retnd((double) hb_parnl( 1 ) / CLOCKS_PER_SEC );
 }
 
-#ifdef HB_COMPAT_FLAGSHIP
-
 /*
    secondsCPU(n) -> nTime
    FlagShip/CLIP compatible function, which reports how many CPU and/or
@@ -273,10 +271,3 @@ HB_EXPORT double hb_secondsCPU( int n )
 #endif
    return d;
 }
-
-HB_FUNC( SECONDSCPU )
-{
-   hb_retnd( hb_secondsCPU( hb_parni( 1 ) ) );
-}
-
-#endif

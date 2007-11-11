@@ -8,6 +8,32 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-11 22:26 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * common.mak
+   * source/rtl/Makefile
+   + source/rtl/getsys53.prg
+   * source/rtl/getsys.prg
+   + source/rtl/secondfs.c
+   * source/rtl/seconds.c
+   + source/rtl/mouse53.c
+   * source/rtl/mouseapi.c
+     + Some C53 and FlagShip functions moved to separate source file.
+
+   * include/hbextern.ch
+   * common.mak
+   * source/rtl/Makefile
+   + source/rtl/hbstrsh.c
+   * utils/hbtest/rt_stra.prg
+     + Added hb_StrShrink(<cString>[,<nShrinkBy>]) -> cStringShrinked
+       <nShrinkBy> has a default value of 1. Returns empty string 
+       on error, returns full string if <nShrinkBy> is zero or negative.
+       This function call is meant to be use instead of code like this:
+       cString := Left( cString, Len( cString ) - 1 ) ->
+       cString := hb_StrShrink( cString, 1 )
+       TODO: Maybe to support passing it by reference and make it even 
+             faster.
+     + Added regression tests for this function.
+
 2007-11-11 18:55 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    + contrib/telepath
    + contrib/telepath/ChangeLog

@@ -468,6 +468,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbfile$(OBJEXT)   \
     $(OBJ_DIR)\hbgtcore$(OBJEXT) \
     $(OBJ_DIR)\hbinet$(OBJEXT)   \
+    $(OBJ_DIR)\hbstrsh$(OBJEXT)  \
     $(OBJ_DIR)\hbrandom$(OBJEXT) \
     $(OBJ_DIR)\hbregex$(OBJEXT)  \
     $(OBJ_DIR)\hbregexc$(OBJEXT) \
@@ -487,6 +488,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\minmax$(OBJEXT)   \
     $(OBJ_DIR)\mlcfunc$(OBJEXT)  \
     $(OBJ_DIR)\mod$(OBJEXT)      \
+    $(OBJ_DIR)\mouse53$(OBJEXT)  \
     $(OBJ_DIR)\mouseapi$(OBJEXT) \
     $(OBJ_DIR)\mousex$(OBJEXT)   \
     $(OBJ_DIR)\mtran$(OBJEXT)    \
@@ -511,6 +513,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\samples$(OBJEXT)  \
     $(OBJ_DIR)\saverest$(OBJEXT) \
     $(OBJ_DIR)\scroll$(OBJEXT)   \
+    $(OBJ_DIR)\secondfs$(OBJEXT) \
     $(OBJ_DIR)\seconds$(OBJEXT)  \
     $(OBJ_DIR)\set$(OBJEXT)      \
     $(OBJ_DIR)\setcolor$(OBJEXT) \
@@ -571,6 +574,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\fieldbl$(OBJEXT)  \
     $(OBJ_DIR)\getlist$(OBJEXT)  \
     $(OBJ_DIR)\getsys$(OBJEXT)   \
+    $(OBJ_DIR)\getsys53$(OBJEXT) \
     $(OBJ_DIR)\gui$(OBJEXT)      \
     $(OBJ_DIR)\hbini$(OBJEXT)    \
     $(OBJ_DIR)\input$(OBJEXT)    \
@@ -578,7 +582,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\memoedit$(OBJEXT) \
     $(OBJ_DIR)\memvarbl$(OBJEXT) \
     $(OBJ_DIR)\menuto$(OBJEXT)   \
-    $(OBJ_DIR)\menusys$(OBJEXT) \
+    $(OBJ_DIR)\menusys$(OBJEXT)  \
     $(OBJ_DIR)\objfunc$(OBJEXT)  \
     $(OBJ_DIR)\perfuncs$(OBJEXT) \
     $(OBJ_DIR)\persist$(OBJEXT)  \

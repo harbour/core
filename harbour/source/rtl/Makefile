@@ -59,6 +59,7 @@ C_SOURCES=\
 	hbfile.c     \
 	hbgtcore.c   \
 	hbinet.c     \
+	hbstrsh.c    \
 	hbrandom.c   \
 	hbregex.c    \
 	hbregexc.c   \
@@ -78,6 +79,7 @@ C_SOURCES=\
 	minmax.c     \
 	mlcfunc.c    \
 	mod.c        \
+	mouse53.c    \
 	mouseapi.c   \
 	mousex.c     \
 	mtran.c      \
@@ -102,6 +104,7 @@ C_SOURCES=\
 	samples.c    \
 	saverest.c   \
 	scroll.c     \
+	secondfs.c   \
 	seconds.c    \
 	set.c        \
 	setcolor.c   \
@@ -164,6 +167,7 @@ PRG_SOURCES=\
 	fieldbl.prg  \
 	getlist.prg  \
 	getsys.prg   \
+	getsys53.prg \
 	gui.prg      \
 	hbini.prg    \
 	input.prg    \
