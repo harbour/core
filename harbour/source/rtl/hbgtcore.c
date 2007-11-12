@@ -58,14 +58,12 @@
 
 #define HB_GT_NAME      NUL
 
-#include <ctype.h>
 #include "hbgtcore.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbapierr.h"
 #include "hbapicdp.h"
-
-#include <time.h>
+#include "hbdate.h"
 
 static PHB_GT_BASE   s_curGT = NULL;
 static BOOL          s_fVgaCell   = TRUE;
@@ -100,9 +98,9 @@ static int           s_iDoubleClickSpeed = 168; /* In milliseconds */
 static BOOL          s_fMouseVisible = FALSE;
 static int           s_iMouseLastRow;
 static int           s_iMouseLastCol;
-static clock_t       s_iMouseLeftTimer;
-static clock_t       s_iMouseRightTimer;
-static clock_t       s_iMouseMiddleTimer;
+static HB_LONG       s_iMouseLeftTimer;
+static HB_LONG       s_iMouseRightTimer;
+static HB_LONG       s_iMouseMiddleTimer;
 
 static void * hb_gt_def_New( void )
 {
@@ -323,7 +321,7 @@ static const char * hb_gt_def_ColorDecode( const char * szColorString, int * piC
 
    while( ( c = *szColorString++ ) != 0 )
    {
-      switch( toupper( ( UCHAR ) c ) )
+      switch( c )
       {
          case '*':
             nColor |= 0x80;
@@ -340,36 +338,44 @@ static const char * hb_gt_def_ColorDecode( const char * szColorString, int * piC
                bFore = FALSE;
             break;
 
+         case 'b':
          case 'B':
             nColor |= bFore ? 0x01: 0x10;
             break;
 
+         case 'g':
          case 'G':
             nColor |= bFore ? 0x02: 0x20;
             break;
 
+         case 'r':
          case 'R':
             nColor |= bFore ? 0x04: 0x40;
             break;
 
+         case 'w':
          case 'W':
             nColor |= bFore ? 0x07: 0x70;
             break;
 
+         case 'n':
          case 'N':
             nColor &= bFore ? 0xFFF8: 0xFF8F;
             break;
 
+         case 'i':
          case 'I':
             bFore = FALSE;
             nColor &= 0x88;
             nColor |= 0x70;
             break;
 
+         case 'x':
          case 'X':
             nColor &= 0x88;
             break;
 
+         case 'u':
          case 'U':
             if( bFore )
                nColor = ( nColor & 0xF0F8 ) | 0x0801;
@@ -2314,8 +2320,8 @@ static int hb_gt_def_MouseReadKey( int iEventMask )
    {
       if( iEventMask & INKEY_LDOWN && hb_mouse_ButtonPressed( 0, &iRow, &iCol ) )
       {
-         clock_t timer = clock();
-         if( timer - s_iMouseLeftTimer <= ( clock_t ) hb_mouse_GetDoubleClickSpeed() * 1000 / CLOCKS_PER_SEC )
+         HB_ULONG timer = hb_dateMilliSeconds();
+         if( timer - s_iMouseLeftTimer <= ( HB_ULONG ) hb_mouse_GetDoubleClickSpeed() )
             iKey = K_LDBLCLK;
          else
             iKey = K_LBUTTONDOWN;
@@ -2327,8 +2333,8 @@ static int hb_gt_def_MouseReadKey( int iEventMask )
       }
       else if( iEventMask & INKEY_RDOWN && hb_mouse_ButtonPressed( 1, &iRow, &iCol ) )
       {
-         clock_t timer = clock();
-         if( timer - s_iMouseRightTimer <= ( clock_t ) hb_mouse_GetDoubleClickSpeed() * 1000 / CLOCKS_PER_SEC )
+         HB_ULONG timer = hb_dateMilliSeconds();
+         if( timer - s_iMouseRightTimer <= ( HB_ULONG ) hb_mouse_GetDoubleClickSpeed() )
             iKey = K_RDBLCLK;
          else
             iKey = K_RBUTTONDOWN;
@@ -2340,8 +2346,8 @@ static int hb_gt_def_MouseReadKey( int iEventMask )
       }
       else if( iEventMask & INKEY_MMIDDLE && hb_mouse_ButtonPressed( 2, &iRow, &iCol ) )
       {
-         clock_t timer = clock();
-         if( timer - s_iMouseMiddleTimer <= ( clock_t ) hb_mouse_GetDoubleClickSpeed() * 1000 / CLOCKS_PER_SEC )
+         HB_ULONG timer = hb_dateMilliSeconds();
+         if( timer - s_iMouseMiddleTimer <= ( HB_ULONG ) hb_mouse_GetDoubleClickSpeed() )
             iKey = K_MDBLCLK;
          else
             iKey = K_MBUTTONDOWN;

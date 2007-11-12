@@ -58,6 +58,7 @@
 HB_EXTERN_BEGIN
 
 extern HB_EXPORT double hb_dateSeconds( void );
+extern HB_EXPORT HB_ULONG hb_dateMilliSeconds( void );
 extern HB_EXPORT double hb_secondsCPU( int n );
 extern HB_EXPORT void   hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec );
 extern HB_EXPORT char * hb_timeStampStr( char * szTime, LONG lMillisec );

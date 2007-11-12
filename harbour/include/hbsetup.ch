@@ -59,7 +59,7 @@
 /* NOTE: You can select here, which features you want to include of the
          different Clipper implementations. */
 
-/* #define HB_EXTENSION */        /* Enable Harbour extensions */
+#define HB_EXTENSION              /* Enable Harbour extensions */
 #define HB_C52_UNDOC              /* Enable CA-Cl*pper 5.2e undocumented features */
 /* #define HB_C52_STRICT */       /* Enable CA-Cl*pper 5.2e strict compatibility */
 #define HB_COMPAT_C53             /* Enable CA-Cl*pper 5.3x extensions */

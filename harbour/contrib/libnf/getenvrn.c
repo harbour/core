@@ -101,6 +101,8 @@
 #include "extend.api"
 #include "fm.api"
 */
+
+#define HB_OS_WIN_32_USED
 #include "hbapi.h"
 
 #if defined(OS_UNIX_COMPATIBLE)

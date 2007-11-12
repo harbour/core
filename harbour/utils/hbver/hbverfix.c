@@ -64,7 +64,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-#if ! defined(__MINGW32CE__)
+#if !defined(__MINGW32CE__) && !( defined( _MSC_VER ) && defined( HB_WINCE ) )
 #  include <errno.h>
 #endif
 
@@ -233,7 +233,7 @@ int main( int argc, char * argv[] )
       fhChangeLog = fopen( cszChangeLogName, "rt" );
       if( fhChangeLog == NULL )
       {
-#if defined(__MINGW32CE__)
+#if defined(__MINGW32CE__) || ( defined( _MSC_VER ) && defined( HB_WINCE ) )
          perror( szErrBuf );
          return 4;
 #else

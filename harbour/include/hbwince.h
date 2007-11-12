@@ -53,6 +53,8 @@
 #ifndef HB_WINCE_H_
 #define HB_WINCE_H_
 
+#if defined(HB_OS_WIN_32)
+
 HB_EXTERN_BEGIN
 
 #if defined(HB_WINCE)
@@ -60,7 +62,7 @@ HB_EXTERN_BEGIN
 
 /* defined(__CEGCC__) || defined(__MINGW32CE__) */
 
-#if defined(__MINGW32CE__)
+#if defined(__MINGW32CE__) && 0
 typedef long clock_t;
 extern clock_t clock( void );
 #endif
@@ -70,9 +72,81 @@ extern int access( const char *pathname, int mode );
 extern int system( const char *string );
 extern char *strerror( int errnum );
 
-#endif /* HB_WINCE */
+#if defined( HB_OS_WIN_32_USED ) && defined( _MSC_VER )
 
-#if defined(HB_OS_WIN_32)
+   #ifndef MAX_COMPUTERNAME_LENGTH
+      #define MAX_COMPUTERNAME_LENGTH         31
+      #define SEM_FAILCRITICALERRORS          0x0001
+      #define FILE_TYPE_CHAR                  0x0002
+      #define FILE_ATTRIBUTE_DEVICE           0x00000040
+      #define STD_INPUT_HANDLE                (DWORD)-10
+      #define STD_OUTPUT_HANDLE               (DWORD)-11
+      #define STD_ERROR_HANDLE                (DWORD)-12
+      #define LOCKFILE_FAIL_IMMEDIATELY       0x00000001
+      #define LOCKFILE_EXCLUSIVE_LOCK         0x00000002
+      #define OEM_FIXED_FONT                  SYSTEM_FONT
+      #define WM_NCMOUSEMOVE                  0x00A0
+      #define WM_QUERYENDSESSION              0x0011
+      #define WM_ENTERIDLE                    0x0121
+      #define SM_CMOUSEBUTTONS                43
+      #define PROOF_QUALITY                   2
+      #define LR_LOADFROMFILE                 0x0010
+   #endif
+
+   DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size );
+   LPSTR WINAPI GetEnvironmentStringsA( void );
+   BOOL WINAPI GetProcessTimes( HANDLE hprocess,
+                                LPFILETIME lpCreationTime, LPFILETIME lpExitTime,
+                                LPFILETIME lpKernelTime, LPFILETIME lpUserTime );
+   BOOL WINAPI GetUserNameA( LPSTR buffer, LPDWORD len );
+   BOOL WINAPI GetComputerNameA( LPSTR buffer, LPDWORD len );
+   DWORD WINAPI GetCurrentDirectoryA( DWORD len, LPSTR buffer );
+   BOOL WINAPI SetCurrentDirectoryA( LPCSTR dirname );
+   BOOL WINAPI LockFile( HANDLE hFile,
+                         DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
+                         DWORD nNumberOfBytesToLockLow, DWORD nNumberOfBytesToLockHigh );
+   BOOL WINAPI LockFileEx( HANDLE hFile,
+                           DWORD dwFlags, DWORD dwReserved,
+                           DWORD nNumberOfBytesToLockLow,
+                           DWORD nNumberOfBytesToLockHigh, LPOVERLAPPED lpOverlapped );
+   BOOL WINAPI UnlockFile( HANDLE hFile,
+                           DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
+                           DWORD nNumberOfBytesToUnlockLow, DWORD nNumberOfBytesToUnlockHigh );
+   BOOL WINAPI UnlockFileEx( HANDLE hFile, DWORD dwReserved,
+                             DWORD nNumberOfBytesToUnlockLow,
+                             DWORD nNumberOfBytesToUnlockHigh, LPOVERLAPPED lpOverlapped );
+   BOOL WINAPI GetVolumeInformationA( LPCSTR p1, LPSTR p2, DWORD p3, PDWORD p4,
+                                      PDWORD p5, PDWORD p6, LPSTR p7, DWORD p8 );
+   UINT WINAPI SetErrorMode( UINT mode );
+   HANDLE WINAPI CreateFileA( LPCSTR filename, DWORD access,
+                       DWORD sharing, LPSECURITY_ATTRIBUTES sa,
+                       DWORD creation, DWORD attributes, HANDLE template );
+   BOOL WINAPI MoveFileA( LPCSTR fn1, LPCSTR fn2 );
+   BOOL WINAPI DeleteFileA( LPCSTR path );
+   BOOL WINAPI RemoveDirectoryA( LPCSTR path );
+   BOOL WINAPI CreateDirectoryA( LPCSTR path, LPSECURITY_ATTRIBUTES attr );
+   BOOL WINAPI CharToOemBuffA( LPCSTR src, LPSTR dst, DWORD len );
+   BOOL WINAPI OemToCharBuffA( LPCSTR src, LPSTR dst, DWORD len );
+   HANDLE WINAPI FindFirstFileA( LPCSTR path, WIN32_FIND_DATAA * data );
+   BOOL WINAPI FindNextFileA( HANDLE handle, WIN32_FIND_DATAA * data );
+   BOOL WINAPI GetVersionExA( OSVERSIONINFOA * v );
+   HANDLE WINAPI GetStdHandle( DWORD nStdHandle );
+   DWORD WINAPI GetFileType( HANDLE handle );
+   HMODULE WINAPI GetModuleHandleA( LPCSTR modulename );
+   HINSTANCE WINAPI LoadLibraryA( LPCSTR libname );
+   DWORD WINAPI GetTempPathA( DWORD size, LPSTR buffer );
+   UINT WINAPI GetTempFileNameA( LPCSTR tmpdir, LPCSTR prefix, UINT unique, LPSTR filename );
+   BOOL WINAPI GetDiskFreeSpaceA( LPCSTR path, PDWORD pdwSectorsPerCluster,
+                                  PDWORD pdwBytesPerSector,
+                                  PDWORD pdwNumberOfFreeClusters, PDWORD pdwTotalNumberOfClusters );
+   BOOL WINAPI Beep( DWORD dwFreq, DWORD dwDurat );
+   int WINAPI SetTextCharacterExtra( HDC hdc, int i );
+   BOOL WINAPI GetKeyboardState( PBYTE p );
+   BOOL WINAPI SetKeyboardState( PBYTE p );
+
+#endif /* HB_OS_WIN_32_USED && _MSC_VER */
+
+#endif /* HB_WINCE */
 
 extern wchar_t * hb_mbtowc( const char *srcA );
 extern char * hb_wctomb( const wchar_t *srcW );
@@ -106,8 +180,8 @@ extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
 
 #endif /* UNICODE */
 
-#endif /* HB_OS_WIN_32 */
-
 HB_EXTERN_END
+
+#endif /* HB_OS_WIN_32 */
 
 #endif /* HB_WINCE_H_ */

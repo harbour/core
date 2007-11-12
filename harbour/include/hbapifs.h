@@ -229,6 +229,7 @@ extern USHORT    hb_fsAttrEncode( const char * szAttr );
 extern char *    hb_fsAttrDecode( USHORT uiAttr, char * szAttr );
 extern HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree );
 extern HB_EXPORT BYTE * hb_fileNameConv( char *str );
+extern HB_EXPORT BOOL hb_fsMaxFilesError( void );
 
 /* wrapper to fopen() which calls hb_fsNameConv() */
 extern FILE * hb_fopen( const char *path, const char *mode );

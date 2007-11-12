@@ -107,9 +107,9 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    pArg = NULL;
 
 #if defined( HB_WINCE )
-   pSrc = pFree = HB_TCHAR_CONVFROM( lpCmdLine );
+   pSrc = pFree = hb_wctomb( lpCmdLine );
 #else
-   pSrc = pFree = lpCmdLine;
+   pSrc = pFree = HB_TCHAR_CONVFROM( lpCmdLine );
 #endif
    pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( pFree ) + 1 );
    fQuoted = FALSE;

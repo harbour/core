@@ -75,19 +75,13 @@
 #endif
 #endif
 
-#include <time.h>
-#if !defined(__MINGW32CE__)
+#if !defined(__MINGW32CE__) && !( defined( _MSC_VER ) && defined( HB_WINCE ) )
 #  include <errno.h>
 #endif
 
 #include "hbppdef.h"
 #include "hbcomp.h"
-
-#if defined( OS_UNIX_COMPATIBLE )
-#include <sys/timeb.h>
-#else
-#include <sys/timeb.h>
-#endif
+#include "hbdate.h"
 
 int hb_pp_ParseDefine_( char * );        /* Process #define directive */
 
@@ -448,17 +442,20 @@ void hb_pp_Init( void )
    }
 
    {
+      int iYear, iMonth, iDay;
       char szResult[11];
-      time_t t;
-      struct tm *oTime;
 
-      time( &t );
-      oTime = localtime( &t );
-
-      snprintf( szResult, sizeof( szResult ), "\"%04d%02d%02d\"", oTime->tm_year + 1900, oTime->tm_mon + 1, oTime->tm_mday );
+      hb_dateToday( &iYear, &iMonth, &iDay );
+      hb_dateStrPut( szResult + 1, iYear, iMonth, iDay );
+      szResult[ 0 ] = '"';
+      szResult[ 9 ] = '"';
+      szResult[ 10 ] = '\0';
       hb_pp_AddDefine_( "__DATE__", szResult );
 
-      snprintf( szResult, sizeof( szResult ), "\"%02d:%02d:%02d\"", oTime->tm_hour, oTime->tm_min, oTime->tm_sec );
+      hb_dateTimeStr( szResult + 1 );
+      szResult[ 0 ] = '"';
+      szResult[ 9 ] = '"';
+      szResult[ 10 ] = '\0';
       hb_pp_AddDefine_( "__TIME__", szResult );
    }
 
@@ -559,13 +556,11 @@ int hb_pp_ParseDirective_( char *sLine )
 
          if( !OpenInclude( sLine, hb_comp_pIncludePath, hb_comp_pFileName, ( cDelimChar == '>' ), szInclude ) )
          {
-#if !defined(__MINGW32CE__)
-            if( errno == 0 || errno == EMFILE )
+            if( hb_fsMaxFilesError() )
                hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_TOO_MANY_INCLUDES, sLine, NULL );
             else
-#endif
             {
-#if defined(__CYGWIN__) || defined(__MINGW32CE__) || defined(__IBMCPP__) || defined(__LCC__)
+#if defined(__CYGWIN__) || defined(__IBMCPP__) || defined(__LCC__) || defined( HB_WINCE )
                hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, "" );
 #else
                hb_compGenError( NULL, hb_pp_szErrors, 'F', HB_PP_ERR_CANNOT_OPEN, sLine, strerror( errno ) );
@@ -4738,7 +4733,7 @@ static BOOL OpenInclude( char *szFileName, HB_PATHNAMES * pSearch, PHB_FNAME pMa
 
    HB_TRACE( HB_TR_DEBUG, ( "OpenInclude(%s, %p, %p, %d, %s)", szFileName, pSearch, pMainFileName, ( int ) bStandardOnly, szInclude ) );
 
-#if !defined(__MINGW32CE__)
+#if !defined(__MINGW32CE__) && !( defined( _MSC_VER ) && defined( HB_WINCE ) )
    errno = 0;
 #endif
    if( bStandardOnly )
@@ -4759,11 +4754,7 @@ static BOOL OpenInclude( char *szFileName, HB_PATHNAMES * pSearch, PHB_FNAME pMa
       hb_xfree( pFileName );
    }
 
-#if defined(__MINGW32CE__)
-   if( !fptr && pSearch )
-#else
-   if( !fptr && pSearch && errno != EMFILE )
-#endif
+   if( !fptr && pSearch && !hb_fsMaxFilesError() )
    {
       pFileName = hb_fsFNameSplit( szFileName );
       pFileName->szName = szFileName;

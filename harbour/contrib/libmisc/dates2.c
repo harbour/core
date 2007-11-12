@@ -301,6 +301,7 @@ HB_FUNC( BOY )
       hb_retdl( 0 );
 }
 
+/*
 HB_FUNC( DATETIME )
 {
    time_t current_time;
@@ -309,3 +310,4 @@ HB_FUNC( DATETIME )
 
    hb_retc( ctime( &current_time ) );
 }
+*/

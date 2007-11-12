@@ -8,6 +8,60 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-12 16:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapifs.h
+  * harbour/source/common/hbfsapi.c
+    + added hb_fsMaxFilesError()
+
+  * harbour/source/pp/ppcore.c
+  * harbour/utils/hbpp/hbppcore.c
+    * use hb_fsMaxFilesError() to avoid direct accessing of errno
+      value - some compilers/platforms do not support errno
+
+  * harbour/include/hbdate.h
+  * harbour/source/rtl/seconds.c
+    + added hb_dateMilliSeconds()
+
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/idle.c
+  * harbour/source/rtl/inkey.c
+    * use hb_dateMilliSeconds() to avoid using clock_t clock()
+      some compilers/platforms do not support it
+
+  * harbour/include/hbwince.h
+  * harbour/source/common/hbwince.c
+    * disabled clock_t clock() emulation - it's not longer used
+    + added some declarations for ANSI functions emulated by us
+      for WinCE and some defines - code sent by Marek Paliwoda
+
+  * harbour/include/hbwmain.c
+  * harbour/source/vm/mainwin.c
+    * always use unicode translations with WinMain() parameters for compilers
+      which do not set UNICODE macro for WinCE
+
+  * harbour/source/rtl/fserror.c
+    * do not include errno.h for HB_WIN32_IO - it's not necessary
+
+  * harbour/utils/hbver/hbverfix.c
+    * do not include errno.h for _MSC_VER and HB_WINCE builds
+
+  * harbour/contrib/libmisc/dates2.c
+    - commented DATETIME() function - this was not standard DATETIME()
+      value but raw ctime() function output and some compilers/platforms
+      do not support ctime()
+
+  * harbour/contrib/libnf/getenvrn.c
+    + added HB_OS_WIN_32_USED
+
+  * harbour/contrib/mtpl.mak
+  * harbour/contrib/pdflib/pdflib.h
+    * replaced TABs with SPACEs
+
+  * harbour/include/hbsetup.ch
+    ! reenabled HB_EXTENSION in default builds - disabling it makes
+      a lot of RDD code unusable and breaks default builds due to
+      insufficient dependences
+
 2007-11-12 01:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * utils/hbmake/hbmake.prg
      ! Fixed warnings.

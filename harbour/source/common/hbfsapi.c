@@ -64,6 +64,9 @@
    #include <sys/types.h>
    #include <sys/stat.h>
 #endif
+#if !defined( HB_WIN32_IO )
+   #include <errno.h>
+#endif
 
 /* NOTE: Not really belongs here, but until we can't find a better place 
          it will do it. [vszakats] */
@@ -330,7 +333,6 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
    return fExist;
 }
 
-
 HB_EXPORT BOOL hb_fsDirExists( const char * pszDirName )
 {
    BOOL fExist;
@@ -381,4 +383,15 @@ HB_EXPORT BOOL hb_fsDirExists( const char * pszDirName )
       hb_xfree( ( void * ) pszDirName );
 
    return fExist;
+}
+
+HB_EXPORT BOOL hb_fsMaxFilesError( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsMaxFilesError()"));
+
+#if defined( HB_WIN32_IO )
+   return GetLastError() == ERROR_TOO_MANY_OPEN_FILES;
+#else
+   return errno == EMFILE;
+#endif
 }

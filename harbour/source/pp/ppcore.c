@@ -58,9 +58,6 @@
 
 #include "hbpp.h"
 #include "hbdate.h"
-#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
-#  include <errno.h>
-#endif
 
 #define HB_PP_WARN_DEFINE_REDEF                 1     /* C1005 */
 
@@ -1805,9 +1802,7 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, char * szFileName,
             }
 
             file_in = hb_fopen( szFileName, "r" );
-#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
-            fNested = errno == EMFILE;
-#endif
+            fNested = file_in == NULL && hb_fsMaxFilesError();
          }
 
          if( !file_in )

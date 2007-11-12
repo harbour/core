@@ -55,7 +55,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hb_io.h"
-#if !defined(__MINGW32CE__)
+#if !(defined(HB_WIN32_IO) || defined(HB_OS_WIN_32))
 #  include <errno.h>
 #endif
 

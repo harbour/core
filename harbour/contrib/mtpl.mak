@@ -9,7 +9,7 @@
 #**********************************************************
 
 # NOTE: "echo." intentionally used instead of "echo", to avoid conflicts
-#   	with external commands named echo.
+#       with external commands named echo.
 
 !ifndef ECHO
 ECHO = echo.

@@ -59,7 +59,7 @@
 
 #if ( defined( HB_OS_BSD ) || defined( HB_OS_LINUX ) ) && !defined( __WATCOMC__ )
    #include <sys/time.h>
-#else
+#elif !( defined( HB_WINCE ) && defined( _MSC_VER ) )
    #include <sys/timeb.h>
 #endif
 #if defined( OS_UNIX_COMPATIBLE )
@@ -125,6 +125,37 @@ HB_EXPORT void hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec )
    *plJulian = hb_dateEncode( st->tm_year + 1900, st->tm_mon + 1, st->tm_mday );
    *plMilliSec = ( ( st->tm_hour * 60 + st->tm_min ) * 60 + st->tm_sec ) * 1000 +
                  tb.millitm;
+#endif
+}
+
+HB_EXPORT HB_ULONG hb_dateMilliSeconds( void )
+{
+#if defined(HB_OS_WIN_32)
+   SYSTEMTIME st;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateMilliSeconds()"));
+
+   GetLocalTime( &st );
+
+   return ( HB_ULONG ) hb_dateEncode( st.wYear, st.wMonth, st.wDay ) * 86400000L +
+          ( ( st.wHour * 60 + st.wMinute ) * 60 + st.wSecond ) * 1000 +
+          st.wMilliseconds;
+#elif ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) ) && !defined( __WATCOMC__ )
+   struct timeval tv;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateMilliSeconds()"));
+
+   gettimeofday( &tv, NULL );
+
+   return ( HB_ULONG ) tv.tv_sec * 1000 * tv.tv_usec / 1000;
+#else
+   struct timeb tb;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_dateMilliSeconds()"));
+
+   ftime( &tb );
+
+   return ( HB_ULONG ) tb.time * 1000 * tb.millitm;
 #endif
 }
 
@@ -194,7 +225,11 @@ HB_FUNC( SECONDS )
 
 HB_FUNC( HB_CLOCKS2SECS )
 {
-   hb_retnd((double) hb_parnl( 1 ) / CLOCKS_PER_SEC );
+#ifdef CLOCKS_PER_SEC
+   hb_retnd( ( double ) hb_parnint( 1 ) / CLOCKS_PER_SEC );
+#else
+   hb_retnd( ( double ) hb_parnint( 1 ) / 1000 );
+#endif
 }
 
 /*
@@ -211,7 +246,7 @@ HB_FUNC( HB_CLOCKS2SECS )
 HB_EXPORT double hb_secondsCPU( int n )
 {
    double d = 0.0;
-#if defined( HB_OS_WIN_32 )
+#if defined( HB_OS_WIN_32 ) && !defined( OS_UNIX_COMPATIBLE )
    FILETIME Create, Exit, Kernel, User;
 #endif
 

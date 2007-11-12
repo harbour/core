@@ -65,7 +65,7 @@
 
 #if defined(HB_WINCE)
 
-#if defined(__MINGW32CE__)
+#if defined(__MINGW32CE__) && 0
 clock_t clock( void )
 {
    SYSTEMTIME st;
@@ -100,7 +100,7 @@ int access( const char *filename, int mode )
 int system( const char *cmd )
 {
    LPWSTR wcmd;
-   STARTUPINFO si;
+   STARTUPINFOW si;
    PROCESS_INFORMATION pi;
    BOOL b;
 
@@ -111,16 +111,16 @@ int system( const char *cmd )
    wcmd = hb_mbtowc( cmd );
 
    /* Start the child process. */
-   b = CreateProcess( NULL,     /* No module name (use command line) */
-                      wcmd,     /* Command line */
-                      NULL,     /* Process handle not inheritable */
-                      NULL,     /* Thread handle not inheritable */
-                      FALSE,    /* Set handle inheritance to FALSE */
-                      0,        /* No creation flags */
-                      NULL,     /* Use parent's environment block */
-                      NULL,     /* Use parent's starting directory */
-                      &si,      /* Pointer to STARTUPINFO structure */
-                      &pi );    /* Pointer to PROCESS_INFORMATION structure */
+   b = CreateProcessW( NULL,     /* No module name (use command line) */
+                       wcmd,     /* Command line */
+                       NULL,     /* Process handle not inheritable */
+                       NULL,     /* Thread handle not inheritable */
+                       FALSE,    /* Set handle inheritance to FALSE */
+                       0,        /* No creation flags */
+                       NULL,     /* Use parent's environment block */
+                       NULL,     /* Use parent's starting directory */
+                       &si,      /* Pointer to STARTUPINFO structure */
+                       &pi );    /* Pointer to PROCESS_INFORMATION structure */
 
    hb_xfree( wcmd );
 
@@ -137,7 +137,7 @@ int system( const char *cmd )
    return b ? 0 : -1;
 }
 
-char *strerror( int errnum )
+char * strerror( int errnum )
 {
    HB_SYMBOL_UNUSED( errnum );
 
@@ -148,7 +148,7 @@ char *strerror( int errnum )
 
 #if defined(HB_OS_WIN_32)
 
-void hb_mbtowccpy( wchar_t * dstW, const char *srcA, ULONG ulLen )
+void hb_mbtowccpy( wchar_t *dstW, const char *srcA, ULONG ulLen )
 {
    MultiByteToWideChar( CP_ACP, 0, srcA, -1, dstW, ulLen / sizeof( wchar_t ) );
 }
@@ -237,7 +237,7 @@ DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
    cbData = MAX_PATH * sizeof( *buf );
    wname = hb_mbtowc( name );
 
-   lret = RegQueryValueEx( hk, wname, NULL, &dwType, lpData, &cbData );
+   lret = RegQueryValueExW( hk, wname, NULL, &dwType, lpData, &cbData );
    RegCloseKey( hk );
 
    if( lret != ERROR_SUCCESS )
@@ -248,7 +248,7 @@ DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size )
       return 0;
    }
 
-   avalue = hb_wctomb( ( LPCTSTR ) lpData );
+   avalue = hb_wctomb( ( LPCWSTR ) lpData );
    if( value && size )
       hb_strncpy( value, avalue, size - 1 );
    size = strlen( avalue );
@@ -575,7 +575,7 @@ HINSTANCE WINAPI LoadLibraryA( LPCSTR libname )
 
 DWORD WINAPI GetTempPathA( DWORD size, LPSTR buffer )
 {
-   TCHAR wbuffer[MAX_PATH] = { 0 };
+   WCHAR wbuffer[MAX_PATH] = { 0 };
    char *abuffer;
    DWORD dw;
 
@@ -590,7 +590,7 @@ DWORD WINAPI GetTempPathA( DWORD size, LPSTR buffer )
 UINT WINAPI GetTempFileNameA( LPCSTR tmpdir, LPCSTR prefix, UINT unique, LPSTR filename )
 {
    LPWSTR wtmpdir, wprefix;
-   TCHAR wfilename[MAX_PATH] = { 0 };
+   WCHAR wfilename[MAX_PATH] = { 0 };
    UINT u;
 
    wtmpdir = hb_mbtowc( tmpdir );

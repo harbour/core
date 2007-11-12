@@ -71,6 +71,7 @@
 #include "hbapiitm.h"
 #include "hbset.h"
 #include "hbvm.h"
+#include "hbdate.h"
 #include "error.ch"
 #if defined( HB_OS_UNIX )
    #ifndef __USE_POSIX199309
@@ -213,23 +214,15 @@ void hb_idleShutDown( void )
 
 void hb_idleSleep( double dSeconds )
 {
-#if defined( HB_OS_UNIX )
-   /* NOTE: clock() returns a time used by a program - if it is suspended
-    * then this time will be zero
-    */
-   clock_t end_clock;
-   struct tms tm;
-
-   end_clock = times( &tm ) + ( clock_t ) ( dSeconds * sysconf(_SC_CLK_TCK) );
-   while( times( &tm ) < end_clock )
-#else
-   clock_t end_clock = clock() + ( clock_t ) ( dSeconds * CLOCKS_PER_SEC );
-   while( clock() < end_clock )
-#endif
+   if( dSeconds >= 0 )
    {
-      hb_idleState();
+      HB_ULONG end_timer = hb_dateMilliSeconds() + ( HB_ULONG ) dSeconds * 1000;
+
+      while( hb_dateMilliSeconds() < end_timer )
+         hb_idleState();
+
+      hb_idleReset();
    }
-   hb_idleReset();
 }
 
 /* signal that the user code is in idle state */

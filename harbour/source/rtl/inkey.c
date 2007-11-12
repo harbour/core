@@ -83,13 +83,8 @@
 #include "hbapigt.h"
 #include "hbvm.h"
 #include "hbset.h"
+#include "hbdate.h"
 #include "inkey.ch"
-
-#include <time.h>
-#if defined( HB_OS_UNIX )
-  #include <sys/times.h>
-  #include <unistd.h>
-#endif
 
 static int    s_defaultKeyBuffer[ HB_DEFAULT_INKEY_BUFSIZE + 1 ];
 
@@ -302,27 +297,15 @@ HB_EXPORT int hb_inkeyNext( int iEventMask )
 
 HB_EXPORT int hb_inkey( BOOL fWait, double dSeconds, int iEventMask )
 {
-   clock_t end_clock = 0;
+   HB_ULONG end_timer = 0;
    BOOL fPop;
-
-#if defined( HB_OS_UNIX )
-   /* NOTE: clock() returns a time used by a program - if it is suspended
-    * then this time will be zero
-    */
-   struct tms tm;
-   #define _HB_CUR_CLOCK() times( &tm )
-   #define _HB_CLOCK_TICK  sysconf(_SC_CLK_TCK)
-#else
-   #define _HB_CUR_CLOCK() clock()
-   #define _HB_CLOCK_TICK  CLOCKS_PER_SEC
-#endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_inkey(%d, %f, %d)", (int) fWait, dSeconds, iEventMask));
 
    /* Wait forever ?, Use fixed value 100 for strict Clipper compatibility */
    if( fWait && dSeconds * 100 >= 1 )
    {
-      end_clock = _HB_CUR_CLOCK() + ( clock_t ) ( dSeconds * _HB_CLOCK_TICK );
+      end_timer = hb_dateMilliSeconds() + ( HB_ULONG ) ( dSeconds * 1000 );
    }
 
    do
@@ -343,7 +326,7 @@ HB_EXPORT int hb_inkey( BOOL fWait, double dSeconds, int iEventMask )
 
       hb_idleState();
    }
-   while( end_clock == 0 || end_clock >  _HB_CUR_CLOCK() );
+   while( end_timer == 0 || end_timer > hb_dateMilliSeconds() );
 
    hb_idleReset();
 
