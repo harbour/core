@@ -318,6 +318,8 @@ Local cItem:=' '
 Local nPos:=0
 Local nSize:=Len(aLink)
 
+HB_SYMBOL_UNUSED( lAlink )
+
 if nSize >2
 For nPos:=1 to nSize
     if nPos==nSize

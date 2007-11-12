@@ -68,8 +68,6 @@ LOCAL lIsChecked := .f.
 LOCAL aItems     := IN_ARRAY
 LOCAL aTemp
 LOCAL cItem
-LOCAL cItem1
-LOCAL cTemp
 LOCAL cOldColor  := Setcolor()
 
 DEFAULT lAllowAll TO .F.
@@ -100,9 +98,9 @@ DEFAULT lLib to .F.
       FOR EACH cItem IN aDefault
 
          if !lLib
-            x := AScan( IN_ARRAY, { | a, y | SubStr( a, 4, At(' ', alltrim(a) ) - 1 ) == cItem } )
+            x := AScan( IN_ARRAY, { | a | SubStr( a, 4, At(' ', alltrim(a) ) - 1 ) == cItem } )
          else
-            x := AScan( IN_ARRAY, { | a, y | alltrim(cItem) IN a } )
+            x := AScan( IN_ARRAY, { | a | alltrim(cItem) $ a } )
          endif
 
          IF x != 0
@@ -116,9 +114,9 @@ DEFAULT lLib to .F.
             cItem := SubStr( cItem, Rat( '\', cItem ) - 1 )
 
             if !lLib
-               x := AScan( aTemp, { | a, y | SubStr( a, 4, At( ' ', a ) - 1 ) == cItem } )
+               x := AScan( aTemp, { | a | SubStr( a, 4, At( ' ', a ) - 1 ) == cItem } )
             else
-               x := AScan( IN_ARRAY, { | a, y | alltrim(cItem) IN a } )
+               x := AScan( IN_ARRAY, { | a | alltrim(cItem) $ a } )
             endif
 
             IF x != 0
