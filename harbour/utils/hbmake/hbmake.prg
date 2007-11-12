@@ -59,7 +59,7 @@
 #include "radios.ch"
 #include "inkey.ch"
 
-#pragma -w1
+//#pragma -w1
 
 //#include "wvtgui.ch"
 
@@ -155,8 +155,6 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
    LOCAL aDef        := {}
    LOCAL cMakeParams := ""
    LOCAL nLang       := GETUSERLANG()
-   LOCAL nPos
-   LOCAL aPpo
    LOCAL cExt := ""
    LOCAL cExp,cLib
    LOCAL lCreateAndCompile := .F.  // for "-c" param only.
@@ -476,7 +474,6 @@ RETURN NIL
 FUNCTION ParseMakeFile( cFile )
 *------------------------------
 
-   LOCAL nPos
    LOCAL cBuffer     := {}
    LOCAL cMacro      := iif(s_lMSVcc,"#MSVC",iif(s_lPocc,"#POCC",iif(s_lGcc,"#GCC","#BCC")))
    LOCAL cDep        := "#DEPENDS"
@@ -502,7 +499,6 @@ FUNCTION ParseMakeFile( cFile )
    LOCAL aLibx
    LOCAL lDjgpp      := "GNU C" $ HB_COMPILER()
    LOCAL x           := 1
-   LOCAL ct
    LOCAL nFHandle
    LOCAL cTrash :=""
 
@@ -861,7 +857,6 @@ RETURN .T.
 FUNCTION Checkdefine( cTemp )
 *----------------------------
 
-   LOCAL cDef
    LOCAL nPos
    LOCAL cRead
    LOCAL aSet     := {}
@@ -904,7 +899,6 @@ FUNCTION Setcommands( cTemp )
 *----------------------------
 
    LOCAL cRead        := Alltrim( readln( @s_lEof ) )
-   LOCAL nPos
    LOCAL nCount       := 0
    LOCAL aTempMacros  := {}
    LOCAL aLocalMacros := {}
@@ -925,7 +919,6 @@ RETURN NIL
 FUNCTION SetDependencies( cTemp )
 *--------------------------------
 
-   LOCAL nPos
    LOCAL nCount       := 0
    LOCAL aTempMacros  := {}
    LOCAL aLocalMacros := {}
@@ -984,7 +977,6 @@ RETURN cRead
 FUNCTION ReplaceMacros( cMacros )
 *--------------------------------
 
-   LOCAL nPos
    LOCAL nCount       := 0
    LOCAL aTempMacros  := {}
    LOCAL aLocalMacros := {}
@@ -1037,7 +1029,6 @@ FUNCTION SetBuild()
    LOCAL nPos
    LOCAL aMacro
    LOCAL aTemp
-   LOCAL nCount
    LOCAL cCurrentRead := ''
    LOCAL cMacro
    LOCAL xInfo
@@ -1179,7 +1170,6 @@ FUNCTION CompileFiles()
    LOCAL cComm
    LOCAL cOld
    LOCAL nPos
-   LOCAL nCount
    LOCAL nFiles
    LOCAL cErrText := ""
    LOCAL aOrder   := ListAsArray2( s_aBuildOrder[ 2 ], " " )
@@ -1547,8 +1537,6 @@ RETURN NIL
 *---------------------
 FUNCTION PrintMacros()
 *---------------------
-
-   LOCAL nPos
 
    Outstd( HbMake_Id()+ " "+HbMake_Copyright()+ CRLF )
    Outstd( "" + CRLF )
@@ -2426,7 +2414,7 @@ Endif // Create and compile
 
 
    IF "Win32" $ cOS
-      AEval( aInFiles, { |x,y| aInFiles[y] := Upper( aInFiles[y] ) } )
+      AEval( aInFiles, { |x,y| HB_SYMBOL_UNUSED( x ), aInFiles[y] := Upper( aInFiles[y] ) } )
    ENDIF
 
    aOutFiles := AClone( aInFiles )
@@ -2452,7 +2440,7 @@ Endif // Create and compile
       ENDIF
 
 
-      AEval( aOutFiles, { | x, y | aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( ' ', aOutFiles[ y ] ) ) ) } )
+      AEval( aOutFiles, { | x, y | HB_SYMBOL_UNUSED( x ), aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( ' ', aOutFiles[ y ] ) ) ) } )
 
       aOutFiles := ASort( aOutFiles )
 
@@ -2463,7 +2451,7 @@ Endif // Create and compile
       ASort( aSelFiles )
 
    else
-       AEval( aOutFiles, { | x, y | aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( ' ', aOutFiles[ y ] ) ) ) } )
+       AEval( aOutFiles, { | x, y | HB_SYMBOL_UNUSED( x ), aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( ' ', aOutFiles[ y ] ) ) ) } )
        aSelFiles := aOutFiles
    endif
 
@@ -2653,7 +2641,7 @@ Endif // Create and compile
    s_aCFiles := aClone( aOutc )
 
    IF ! s_lExtended
-      AEval( aOutc, { | xItem, x | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cext := Substr( cExt, 2 ), IIF( ! s_lGcc, AAdd( s_aObjs, cObjDir + cTest + "." + Exten( cExt, 2 ) ), AAdd( s_aObjs, cObjDir + cTest + "." + Exten( cExt, 1 ) ) ) } )
+      AEval( aOutc, { | xItem | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cext := Substr( cExt, 2 ), IIF( ! s_lGcc, AAdd( s_aObjs, cObjDir + cTest + "." + Exten( cExt, 2 ) ), AAdd( s_aObjs, cObjDir + cTest + "." + Exten( cExt, 1 ) ) ) } )
       AEval( aOutFiles, { | xItem | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cExt := Substr( cExt, 2 ), AAdd( s_aCFiles, cObjDir + cTest + "." + Exte( cExt, 1 ) ) } )
    ELSE
       s_aObjsC := aClone( aOutc )
@@ -3062,7 +3050,7 @@ Endif // Create and compile
    if Len(s_aExtLibs) < 1
       FWrite( s_nMakeFileHandle, CRLF ) 
    else
-      AEval( s_aExtLibs, { | x, i | nWriteFiles ++, FWrite( s_nMakeFileHandle, " " + Alltrim( x )  ) } )
+      AEval( s_aExtLibs, { | x | nWriteFiles ++, FWrite( s_nMakeFileHandle, " " + Alltrim( x )  ) } )
       FWrite( s_nMakeFileHandle, CRLF ) 
    endif
 
@@ -3431,7 +3419,6 @@ FUNCTION CompileUpdatedFiles()
    LOCAL cComm
    LOCAL cOld
    LOCAL nPos
-   LOCAL nCount
 
    LOCAL aCtocompile := {}
    LOCAL aOrder      := ListAsArray2( s_aBuildOrder[ 2 ], " " )
@@ -3835,7 +3822,6 @@ FUNCTION CreateLibMakeFile( cFile )
    LOCAL lCompMod        := .F.
    LOCAL lInstallLib     := .F.
    LOCAL x
-   LOCAL y
    LOCAL nPos
 //   LOCAL lGenppo         := .F.
    LOCAL GetList         := {}
@@ -4346,7 +4332,7 @@ FUNCTION CreateLibMakeFile( cFile )
    ENDIF
 
 
-   AEval( aOutFiles, { | x, y | aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( ' ', aOutFiles[ y ] ) ) ) } )
+   AEval( aOutFiles, { | x, y | HB_SYMBOL_UNUSED( x ), aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( ' ', aOutFiles[ y ] ) ) ) } )
    AEval( aOutFiles, { | xItem | IIF( At( '.c', xItem ) > 0 .OR. At( '.C', xItem ) > 0 .OR. At( '.cpp', xItem ) > 0 .OR. At( '.CPP', xItem ) > 0, AAdd( aOutc, xitem ), ) } )
    AEval( aOutc, { | x, z | citem := x, z := AScan( aOutFiles, { | t | t = citem } ), IIF( z > 0, aSize( aDel( aOutFiles, z ), Len( aOutFiles ) - 1 ), ) } )
 
@@ -4358,7 +4344,7 @@ FUNCTION CreateLibMakeFile( cFile )
    s_aCFiles := aClone( aOutc )
 
    IF ! s_lExtended
-      AEval( aOutc, { | xItem, x | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cext := Substr( cExt, 2 ), IIF( ! s_lGcc, AAdd( s_aObjs, cObjDir + cTest + "." + Exten( cExt, 2 ) ), AAdd( s_aObjs, cObjDir + cTest + "." + Exten( cExt, 1 ) ) ) } )
+      AEval( aOutc, { | xItem | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cext := Substr( cExt, 2 ), IIF( ! s_lGcc, AAdd( s_aObjs, cObjDir + cTest + "." + Exten( cExt, 2 ) ), AAdd( s_aObjs, cObjDir + cTest + "." + Exten( cExt, 1 ) ) ) } )
       AEval( aOutFiles, { | xItem | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cExt := Substr( cExt, 2 ), AAdd( s_aCFiles, cObjDir + cTest + "." + Exte( cExt, 1 ) ) } )
    ELSE
       s_aObjsC := aClone( aOutc )
@@ -5719,7 +5705,7 @@ FUNCTION GetSelFiles( aInFiles, aOutFiles )
 
    FOR EACH cItem IN aInFiles
 
-      nPos := AScan( aOutFiles, { | x, y | x == Left( cItem, At( ' ', citem ) - 1 ) } )
+      nPos := AScan( aOutFiles, { | x | x == Left( cItem, At( ' ', citem ) - 1 ) } )
 
       IF nPos > 0
          AAdd( aRet, cItem )
