@@ -166,7 +166,7 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
 
    cExt := SubStr( cFile, At(".",cFile) )
 
-   IF ! Empty(cExt) .AND. lower(cExt) $ s_cInvalidExt 
+   IF ! Empty(cExt) .AND. AScan( s_cInvalidExt, {|x| x == lower(cExt) } ) > 0
       Alert("Invalid extension for hbmake script file <"+cFile+">.")
       Return .F.
    ENDIF
@@ -1619,13 +1619,13 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
    LOCAL getlist          := {}
    LOCAL cTopFile         := Space(50)
    LOCAL cAppName         := padr(s_cAppName,50)
-   LOCAL cDefaultLibs     := "lang.lib vm.lib rtl.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib dbffpt.lib common.lib gtwin.lib codepage.lib ct.lib tip.lib hbpcre.lib hsx.lib hbsix.lib"
+   LOCAL cDefaultLibs     := "lang.lib vm.lib rtl.lib rdd.lib macro.lib pp.lib dbfntx.lib dbfcdx.lib dbffpt.lib common.lib gtwin.lib codepage.lib hbpcre.lib hsx.lib hbsix.lib"
    LOCAL cDefGccLibs      := "-lvm -lrtl -lhbpcre -lgtdos -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -ldbffpt -lhsx -lhbsix -lcommon -lcodepage  -lm "
    LOCAL cDefGccLibsUnix  := "-lvm -lcodepage -ltef -lrtl  -lrdd  -lrtl  -lvm  -lmacro  -lpp  -llang  -lcommon  -lnulsys  -lbmdbfcdx  -ldbfntx  -ldbfcdx  -ldbffpt  -lhbsix  -lhsx  -lusrrdd -lhbpcre -lgtnul -lgtsln -lslang -lm -lrt "
    LOCAL cDefGccLibsw     := "-lvm -lrtl -lhbpcre -lgtwin -lgtnul -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -ldbffpt -lhsx -lhbsix -lcommon -lcodepage -lm"
    LOCAL cGccLibsOs2      := "-lvm -lrtl -lhbpcre -lgtos2 -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -ldbffpt -lhsx -lhbsix -lcommon -lcodepage -lm"
    LOCAL cDefLibGccLibs   := "-lvm -lrtl -lhbpcre -lgtcrs -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbfntx -ldbfcdx -ldbffpt -lhsx -lhbsix -lcommon -lcodepage -lgtnul"
-   LOCAL cDefaultLibsMt    := "lang.lib vmmt.lib rtlmt.lib rddmt.lib macromt.lib ppmt.lib dbfntxmt.lib dbfcdxmt.lib  dbffptmt.lib common.lib gtwin.lib codepage.lib ctmt.lib tipmt.lib hbpcre.lib hsxmt.lib hbsixmt.lib"
+   LOCAL cDefaultLibsMt    := "lang.lib vmmt.lib rtlmt.lib rddmt.lib macromt.lib ppmt.lib dbfntxmt.lib dbfcdxmt.lib  dbffptmt.lib common.lib gtwin.lib codepage.lib hbpcre.lib hsxmt.lib hbsixmt.lib"
    LOCAL cDefGccLibsUnixMt := "-lvmmt -lcodepage -ltef -lrtlmt  -lrddmt  -lrtl  -lvmmt  -lmacromt  -lpp  -llang  -lcommon  -lnulsys  -lbmdbfcdx  -ldbfntx  -ldbfcdx  -ldbffpt  -lhbsix  -lhsx  -lusrrdd -lhbpcre -lgtnul -lgtsln -lslang -lm -lrt"
    LOCAL cDefGccLibsMt    := "-lvmmt -lrtlmt -lhbpcre -lgtdos -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
    LOCAL cDefGccLibsMtw    := "-lvmmt -lrtlmt -lhbpcre -lgtwin -lgtnul -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
@@ -1996,7 +1996,7 @@ While .t.
 
    @ 02,53       GET lUseHarbourDll;
                  CHECKBOX;
-                 CAPTION "use Harbour[.dll|.so]" style "[X ]";
+                 CAPTION "use harbour[.dll|.so]" style "[X ]";
                  WHEN cOS == "Win32" .or. cOS == "Linux";
                  MESSAGE s_aLangMessages[ 55 ]
 

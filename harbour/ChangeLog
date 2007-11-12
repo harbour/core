@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-13 01:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/odbc/odbc.c
+     ! MSVC casting warnings silenced.
+
+   * utils/hbmake/hbmake.prg
+     ! Fixed "$" used on array named s_cInvalidExt.
+     ! Fixed to not include ct/tip/ctmt/tipmt in Harbour.
+     ; The reports and fixes were provided by Bill Robertson.
+
 2007-11-12 20:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/filesys.c
     * do not redefine LongToHandle() for __XCC__ and __POCC__ WinCE builds
