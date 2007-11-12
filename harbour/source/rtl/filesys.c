@@ -261,10 +261,11 @@ static BOOL s_fUseWaitLocks = TRUE;
 
 #if defined(HB_WIN32_IO)
 
-   #if defined( __LCC__ ) || ( defined( _MSC_VER ) && defined( HB_WINCE ) )
+   #if defined( __LCC__ ) || ( defined( _MSC_VER ) && defined( HB_WINCE ) && \
+                               !defined( __POCC__ ) && !defined( __XCC__ ) )
       __inline void * LongToHandle( const long h )
       {
-          return((void *) (INT_PTR) h );
+          return( ( void * ) ( INT_PTR ) h );
       }
    #endif
 

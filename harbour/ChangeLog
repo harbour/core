@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-12 20:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/filesys.c
+    * do not redefine LongToHandle() for __XCC__ and __POCC__ WinCE builds
+
+  * harbour/utils/hbver/hbverfix.c
+    ! fixed typos in previous commit
+
 2007-11-12 19:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/include/hbassert.h
   * harbour/include/hb_io.h

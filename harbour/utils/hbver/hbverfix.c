@@ -74,10 +74,10 @@
 #define MAX_BUF_LEN 4096
 
 #if defined(HB_WINCE)
-wchar_t *hb_mbtowc( const char *srcA )
+wchar_t *hb_mbtowc( const char * srcA )
 {
    DWORD length;
-   wchar_t *dstW;
+   wchar_t * dstW;
 
    length = MultiByteToWideChar( CP_ACP, 0, srcA, -1, NULL, 0 );
    dstW = ( wchar_t * ) malloc( ( length + 1 ) * sizeof( wchar_t ) );
@@ -86,9 +86,9 @@ wchar_t *hb_mbtowc( const char *srcA )
    return dstW;
 }
 
-int remove( const char *filename )
+int remove( const char * path )
 {
-   wchar_t *wpath;
+   wchar_t * wpath;
    int result;
 
    wpath = hb_mbtowc( path );
@@ -103,9 +103,9 @@ void perror( const char *szError )
    fprintf( stderr, "error: %s\n", szError );
 }
 
-int rename( const char *oldname, const char *newname )
+int rename( const char * fn1, const char * fn2 )
 {
-   wchar_t wfn1, wfn2;
+   wchar_t * wfn1, * wfn2;
    int result;
 
    wfn1 = hb_mbtowc( fn1 );
