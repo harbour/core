@@ -145,8 +145,8 @@ static void hb_gt_wvt_InitStatics( void )
    /* THEESE are the default font parameters, if not changed by user */
    _s.PTEXTSIZE.x      = 8;
    _s.PTEXTSIZE.y      = 12;
-   _s.fontHeight       = 20;
-   _s.fontWidth        = 10;
+   _s.fontHeight       = WVT_DEFAULT_FONT_HEIGHT;
+   _s.fontWidth        = WVT_DEFAULT_FONT_WIDTH;
    _s.fontWeight       = FW_NORMAL;
    _s.fontQuality      = DEFAULT_QUALITY;
    hb_strncpy( _s.fontFace, "Courier New", sizeof( _s.fontFace ) - 1 );
@@ -168,7 +168,7 @@ static BOOL hb_gt_wvt_SetWindowSize( int iRow, int iCol )
       _s.COLS = ( USHORT ) iCol;
       return TRUE;
    }
-   
+
    return FALSE;
 }
 

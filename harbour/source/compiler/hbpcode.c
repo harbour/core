@@ -37,9 +37,8 @@
  *
  */
 
-#include <assert.h>
-
 #include "hbcomp.h"
+#include "hbassert.h"
 
 #define HB_PSIZE_FUNC( func ) HB_PCODE_FUNC( func, HB_VOID_PTR )
 

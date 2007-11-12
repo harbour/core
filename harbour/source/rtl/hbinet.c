@@ -170,8 +170,8 @@
 
 #if !defined( HB_NO_DEFAULT_INET )
 
-#include <fcntl.h>
-#if !defined(__MINGW32CE__)
+#if !defined( HB_WINCE )
+   #include <fcntl.h>
    #include <errno.h>
 #endif
 

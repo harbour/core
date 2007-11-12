@@ -118,17 +118,17 @@
    #endif
 #endif
 
-#if ( defined(__DMC__) || defined(__BORLANDC__) || defined(__IBMCPP__) || defined(_MSC_VER) || \
-      defined(__MINGW32__) || defined(__WATCOMC__) ) && !defined( HB_OS_UNIX )
+#if ( defined(__DMC__) || defined(__BORLANDC__) || \
+      defined(__IBMCPP__) || defined(_MSC_VER) || \
+      defined(__MINGW32__) || defined(__WATCOMC__) ) && \
+      !defined( HB_OS_UNIX ) && !defined( HB_WINCE )
    #include <sys/stat.h>
    #include <fcntl.h>
    #include <process.h>
    #if !defined( __POCC__ ) && !defined( __XCC__ )
       #include <share.h>
    #endif
-   #if !defined(__MINGW32CE__)
-      #include <direct.h>
-   #endif
+   #include <direct.h>
    #if defined(__BORLANDC__)
       #include <dir.h>
       #include <dos.h>
@@ -261,7 +261,7 @@ static BOOL s_fUseWaitLocks = TRUE;
 
 #if defined(HB_WIN32_IO)
 
-   #if defined( __LCC__ )
+   #if defined( __LCC__ ) || ( defined( _MSC_VER ) && defined( HB_WINCE ) )
       __inline void * LongToHandle( const long h )
       {
           return((void *) (INT_PTR) h );

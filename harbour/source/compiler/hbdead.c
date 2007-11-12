@@ -50,10 +50,8 @@
  *
  */
 
-#include <assert.h>
-
 #include "hbcomp.h"
-
+#include "hbassert.h"
 
 /* helper structure to pass information */
 typedef struct _HB_CODETRACE_INFO

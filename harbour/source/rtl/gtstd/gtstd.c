@@ -75,7 +75,7 @@
    #if defined( HB_WIN32_IO )
       #include <windows.h>
    #endif
-   #if defined( _MSC_VER ) || defined( __MINGW32__ )
+   #if defined( _MSC_VER ) && !defined( HB_WINCE )
       #include <conio.h>
    #endif
 #endif
@@ -285,7 +285,7 @@ static int hb_gt_std_ReadKey( int iEventMask )
 
    HB_SYMBOL_UNUSED( iEventMask );
 
-#if defined( _MSC_VER )
+#if defined( _MSC_VER ) && !defined( HB_WINCE )
    if( s_bStdinConsole )
    {
       if( _kbhit() ) ch = _getch();
@@ -322,9 +322,9 @@ static int hb_gt_std_ReadKey( int iEventMask )
          ch = s_keyTransTbl[ bChar ];
    }
 #else
-
-   /* TODO: */
-
+   {
+      int TODO; /* TODO: */
+   }
 #endif
 
    return ch;

@@ -26,10 +26,9 @@
  *
  */
 
-#include <assert.h>
-
 #include "hbcomp.h"
 #include "hbdate.h"
+#include "hbassert.h"
 
 #define HB_GENC_FUNC( func ) HB_PCODE_FUNC( func, PHB_LABEL_INFO )
 typedef HB_GENC_FUNC( HB_GENC_FUNC_ );

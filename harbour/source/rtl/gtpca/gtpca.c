@@ -61,11 +61,11 @@
 
 #include "hbgtcore.h"
 #include "hbinit.h"
+#include "hbapifs.h"
 #include "hbapicdp.h"
 #include "hbapiitm.h"
 #include "hbdate.h"
 #include "hb_io.h"
-#include "hbset.h"
 #include "inkey.ch"
 
 #include <ctype.h>
@@ -84,8 +84,7 @@
    #if defined( HB_WIN32_IO )
       #include <windows.h>
    #endif
-   #if defined( _MSC_VER ) || defined( __MINGW32__ )
-      #include <io.h>
+   #if defined( _MSC_VER ) && !defined( HB_WINCE )
       #include <conio.h>
    #endif
 #endif
@@ -668,7 +667,7 @@ static int hb_gt_pca_ReadKey( int iEventMask )
       case 396:  /* Alt + F12 */
          ch = 349 - ch;
    }
-#elif defined( _MSC_VER )
+#elif defined( _MSC_VER ) && !defined( HB_WINCE )
    if( s_bStdinConsole )
    {
       if( _kbhit() ) ch = _getch();
@@ -696,9 +695,9 @@ static int hb_gt_pca_ReadKey( int iEventMask )
          ch = s_keyTransTbl[ bChar ];
    }
 #else
-
-   /* TODO: */
-
+   {
+      int TODO; /* TODO: */
+   }
 #endif
 
    return ch;

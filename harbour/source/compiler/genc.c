@@ -26,10 +26,9 @@
  *
  */
 
-#include <assert.h>
-
 #include "hbcomp.h"
 #include "hbdate.h"
+#include "hbassert.h"
 
 static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
 static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );

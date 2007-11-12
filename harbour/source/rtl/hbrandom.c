@@ -50,9 +50,9 @@
  *
  */
 
-#include <hbmath.h>
+#include "hbmath.h"
+#include "hbdate.h"
 #include <stdlib.h>
-#include <time.h>
 
 #ifndef HB_OS_WIN_32
 #include <float.h>
@@ -122,7 +122,7 @@ HB_FUNC( HB_RANDOMINT )
 
 HB_FUNC( HB_RANDOMSEED )
 {
-   srand( ISNUM( 1 ) ? ( unsigned ) hb_parni( 1 ) : ( unsigned ) time( NULL ) );
+   srand( ISNUM( 1 ) ? ( unsigned ) hb_parni( 1 ) : ( unsigned ) hb_dateMilliSeconds() );
    s_fInit = TRUE;
 }
       
@@ -133,7 +133,7 @@ double hb_random_num()
 
    if( !s_fInit )
    {
-      srand( ( unsigned ) time( NULL ) );
+      srand( ( unsigned ) hb_dateMilliSeconds() );
       s_fInit = TRUE;
    }
 

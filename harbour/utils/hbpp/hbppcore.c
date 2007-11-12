@@ -75,13 +75,13 @@
 #endif
 #endif
 
-#if !defined(__MINGW32CE__) && !( defined( _MSC_VER ) && defined( HB_WINCE ) )
-#  include <errno.h>
-#endif
-
 #include "hbppdef.h"
 #include "hbcomp.h"
 #include "hbdate.h"
+
+#if !defined(__MINGW32CE__) && !( defined( _MSC_VER ) && defined( HB_WINCE ) )
+#  include <errno.h>
+#endif
 
 int hb_pp_ParseDefine_( char * );        /* Process #define directive */
 

@@ -49,10 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-#include <assert.h>
 
 #include "hbcomp.h"
-
+#include "hbassert.h"
 
 /* helper structure to pass information */
 typedef struct HB_stru_fix_info

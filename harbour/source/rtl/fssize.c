@@ -58,8 +58,10 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-#include <sys/types.h>
-#include <sys/stat.h>
+#if !defined(HB_WINCE)
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#endif
 
 HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
 {

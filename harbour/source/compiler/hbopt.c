@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-#include <assert.h>
 
 #include "hbcomp.h"
+#include "hbassert.h"
 
 typedef struct HB_stru_opt_info
 {

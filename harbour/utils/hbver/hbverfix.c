@@ -64,23 +64,34 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "hbcomp.h"
+
 #if !defined(__MINGW32CE__) && !( defined( _MSC_VER ) && defined( HB_WINCE ) )
 #  include <errno.h>
 #endif
 
-#include "hbcomp.h"
-
 #define MAX_BUF_LEN 4096
 
-#if defined(__MINGW32CE__)
+#if defined(HB_WINCE)
+wchar_t *hb_mbtowc( const char *srcA )
+{
+   DWORD length;
+   wchar_t *dstW;
+
+   length = MultiByteToWideChar( CP_ACP, 0, srcA, -1, NULL, 0 );
+   dstW = ( wchar_t * ) malloc( ( length + 1 ) * sizeof( wchar_t ) );
+   MultiByteToWideChar( CP_ACP, 0, srcA, -1, dstW, length + 1 );
+
+   return dstW;
+}
+
 int remove( const char *filename )
 {
-   int length, result;
    wchar_t *wpath;
+   int result;
 
-   length = MultiByteToWideChar( CP_ACP, 0, filename, -1, NULL, 0 );
-   wpath = ( wchar_t * ) malloc( ( length + 1 ) * sizeof( wchar_t ) );
-   MultiByteToWideChar( CP_ACP, 0, filename, -1, wpath, length );
+   wpath = hb_mbtowc( path );
    result = DeleteFileW( wpath ) ? 0 : -1;
    free( wpath );
 
@@ -91,6 +102,21 @@ void perror( const char *szError )
 {
    fprintf( stderr, "error: %s\n", szError );
 }
+
+int rename( const char *oldname, const char *newname )
+{
+   wchar_t wfn1, wfn2;
+   int result;
+
+   wfn1 = hb_mbtowc( fn1 );
+   wfn2 = hb_mbtowc( fn2 );
+   result = MoveFileW( wfn1, wfn2 ) ? 0 : -1;
+   free( wfn1 );
+   free( wfn2 );
+
+   return result;
+}
+
 #endif
 
 static char * szIncrementNumber( char * szBuffer, size_t stSkipOver )

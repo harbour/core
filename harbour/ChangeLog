@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-12 19:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/include/hbassert.h
+  * harbour/include/hb_io.h
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/fssize.c
+  * harbour/source/rtl/hbinet.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/compiler/hbfix.c
+  * harbour/source/compiler/hbpcode.c
+  * harbour/source/compiler/hbdead.c
+  * harbour/source/compiler/genc.c
+  * harbour/source/compiler/hbopt.c
+  * harbour/source/compiler/gencc.c
+  * harbour/source/compiler/hblbl.c
+  * harbour/source/compiler/hbstripl.c
+  * harbour/utils/hbver/hbverfix.c
+  * harbour/utils/hbpp/hbppcore.c
+    * removed dependences to unsupported by new MSVC header files
+      most of this modifications can be enabled also for standard Win32
+      builds
+
+  * harbour/source/common/hbwince.c
+    * do not create dummy LocalLock() and LocalUnlock() function in MSVC
+      WinCE builds
+
+  * harbour/source/rtl/gtwin/gtwin.c
+    + added HB_WINCE_USE_POCKET_CONSOLE macro which enable
+      console support in WINCE builds (macro suggested by Marek Paliwoda)
+
+  * harbour/source/rtl/gtwvt/gtwvt.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * changed default window and font size on WinCE to values suggested
+      by Marek Paliwoda
+
+   Marek if you have a while please make test with MSVC WinCE/PocketPC
+   builds and current SVN code.
+
 2007-11-12 16:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapifs.h
   * harbour/source/common/hbfsapi.c
