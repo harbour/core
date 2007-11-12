@@ -1,8 +1,6 @@
-
 /*
  * $Id$
  */
-
 /*
  * Harbour Project source code:
  * radios.Prg radios gets for hbmake
@@ -64,8 +62,7 @@ LOCAL nRow := Row(), nCol := Col()
 LOCAL nGets := Len(aChoices)
 LOCAL nGet
 LOCAL nStartGet := Len(aGetList) + 1
-
-  default bvalid to {||.t.}
+   default bvalid to {||.t.}
 
   // For each element in aChoices
   FOR nGet := 1 To nGets
@@ -78,8 +75,8 @@ LOCAL nStartGet := Len(aGetList) + 1
     oGet := GetNew(nRow++,ncol+4,t(aChoices[nGet]),cvar)
     Aadd(aGetList, oGet)
 
-    oGet:cargo     := Array(RADIO_NUM_IVARS)
-    oGet:PostBlock := bValid
+    oGet:cargo := Array(RADIO_NUM_IVARS)
+   oGet:PostBlock:=bValid
     oGet:radioGsb  := bVar
     oGet:radioGets := Array(nGets)
 

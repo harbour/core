@@ -424,5 +424,3 @@ IF nLen<=230
 ENDIF
 RETURN aLine
 *+ EOF: OS2.PRG
-
-

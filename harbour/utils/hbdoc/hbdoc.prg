@@ -1,13 +1,13 @@
 /*
- * $Id$
+ * $Id$ 
  */
 
 /*
- * Harbour Project source code:
+ * xHarbour Project source code:
  * HBDOC document Extractor
  *
- * Copyright 1999-2001 Luiz Rafael Culik <culik@sl.conex.net>
- * www - http://www.harbour-project.org
+ * Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -128,9 +128,12 @@
 //  The delimiter
 MEMVAR aDirList
 MEMVAR aDocInfo
+MEMVAR aDocwwwInfo
+MEMVAR aClassList 
 MEMVAR aLinkInfo
 MEMVAR aAuthorList
 MEMVAR lAscii
+MEMVAR lTee
 MEMVAR lContinuous
 MEMVAR lAuthor
 MEMVAR lRtf
@@ -138,11 +141,15 @@ MEMVAR lNgi
 MEMVAR lOs2
 MEMVAR lPdf
 MEMVAR lWww
+MEMVAR lWww2 
 MEMVAR lChm
+MEMVAR lChm2 
 MEMVAR lNorton
 MEMVAR aWWW
 MEMVAR lTroff
 MEMVAR aResult
+MEMVAR theHandle
+ 
 STATIC cTitle:=''
 
 /*
@@ -160,23 +167,39 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    // NG/EH input
 
    LOCAL aExtensions := { "*.ch", "*.prg", "*.c", "*.asm", "*.txt" }
-   LOCAL i
-   Local cLast
+   LOCAL i, j
+   LOCAL cLast
    LOCAL nItem
    LOCAL nHpj
    LOCAL cItem:=''
-
+   LOCAL cFName 
+   LOCAL cLName
+   LOCAL aName 
+   LOCAL nLen 
+   LOCAL lDone
+   LOCAL cMI
+   LOCAL oHtmIndex
+   LOCAL cFileName
+ 
    LOCAL cCompiler     // Compiler type
    LOCAL oHtm
    LOCAL oHtm1
+    
    LOCAL nPos
    LOCAL ppp
    LOCAL aMetaContents:={}
    Local aTemp:={}
    LOCAL lAdded:=.f.
+   Local aRtfid
+    
+   LOCAL nCount_1 := 1
+   LOCAL nCount_2 := 1 
+
    PUBLIC theHandle
    PUBLIC aDirList
    PUBLIC aDocInfo    := {}
+   PUBLIC aDocWwwInfo := {}
+   PUBLIC aClassList  := {} 
    PUBLIC aLinkInfo   := {}
    PUBLIC aAuthorList := {}
    PUBLIC lAscii      := .F.               // Create ascii output instead of NG/EH input
@@ -187,10 +210,13 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    PUBLIC lOs2        := .F.
    PUBLIC lPdf        := .F.
    PUBLIC lWww        := .F.
+   PUBLIC lWww2       := .F.
    PUBLIC lChm        := .F.
+   PUBLIC lChm2       := .F.
    PUBLIC lNorton     := .F.
+   PUBLIC lTee        := .F.
    PUBLIC aWWW        := {}
-   PUBLIC aResult:={}
+   PUBLIC aResult     := {}
    PUBLIC lTroff      := .f.
 
    //  The following variables are used to allow one to change the delimiter
@@ -208,11 +234,13 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    //  See if flag is there
 
-   IF .NOT. EMPTY( cFlags )
+   IF .NOT. EMPTY( cFlags )   
       IF LEFT( cFlags, 1 ) == "-" .OR. LEFT( cFlags, 1 ) == "/"
          IF ( cFlags := UPPER( RIGHT( cFlags, 3 ) ) ) == "TXT"
             lAscii      := .T.
             lContinuous := .F.
+         ELSEIF cFlags = "TEE"
+            lTee    := .T.
          ELSEIF cFlags = "HPC"
             lNorton := .T.
          ELSEIF cFlags = "NGI"
@@ -223,11 +251,14 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             lRtf := .T.
          ELSEIF cFlags = "HTM"
             lWww := .T.
+         ELSEIF cFlags = "HT2"
+            lWww2 := .T.
          ELSEIF cFlags = "PDF"
             lPdf := .T.
-
          ELSEIF cFlags = "CHM"
             lChm := .T.
+         ELSEIF cFlags = "CH2"
+            lChm2 := .T.
          ELSEIF cFlags = "TRF"
             lTroff := .t.
          ELSEIF cFlags = "DOC"
@@ -244,28 +275,31 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    //  Get the linkfile name and get the info in it
 
    IF cLinkName = NIL
-      ?? "Harbour Doc Extractor"
-      ? "Copyright 1999-2001, http://www.harbour-project.org"
-      ? ""
-      ? "Syntax:  hbdoc [options] <linkname> [<ifile>]"
-      ? ""
-      ? "Options:  /txt Create an ASCII file instead of a Norton Guide"
-      ? "          /con Create an ASCII file without formfeeds"
-      ? "          /hpc Helpc source file"
-      ? "          /ngi Adds the -NG switch to EHC command for compile for"
-      ? "               DOS/Windows/Linux."
-      ? "          /rtf Winhelp source code for Windows"
-      ? "          /os2 OS/2 help source code For OS/2"
-      ? "          /htm Generate HTML output"
-      ? "          /chm Generate HTML source files for Windows .CHM Help files"
-      ? "          /pdf Generate an Adobe Portable Document (.PDF)"
-      ? "          /trf Gerenate Linux TROFF code"
-      ? "          /doc Create continuous ASCII file w/o author information"
-      ? " "
-      ? "Notes:  - Only one option can be specified at a time."
-      ? "        - <linkname> is the name of the Norton Guide Link file."
-      ? "        - <iFile> is a file containing a list of files to process"
-      ? "          otherwise *.prg, *.c, *.asm, *.ch and *.txt are used."
+      outstd( "Harbour Doc Extractor"+ hb_osnewline() )
+      outstd( "Copyright 1999-2005, http://www.harbour-project.org"+ hb_osnewline() )
+      outstd( ""+ hb_osnewline() )
+      outstd( "Syntax:  hbdoc [options] <linkname> [<ifile>]"+ hb_osnewline() )
+      outstd( ""+ hb_osnewline() )
+      outstd( "Options:  /txt Create an ASCII file instead of a Norton Guide"+ hb_osnewline() )
+      outstd( "          /con Create an ASCII file without formfeeds"+ hb_osnewline() )
+      outstd( "          /hpc Helpc source file"+ hb_osnewline() )
+      outstd( "          /ngi Adds the -NG switch to EHC command for compile for"+ hb_osnewline() )
+      outstd( "               DOS/Windows/Linux."+ hb_osnewline() )
+      outstd( "          /rtf Winhelp source code for Windows"+ hb_osnewline() )
+      outstd( "          /os2 OS/2 help source code For OS/2"+ hb_osnewline() )
+      outstd( "          /htm Generate HTML output"+ hb_osnewline() )
+      outstd( "          /ht2 Generate HTML output (new doc model)"+ hb_osnewline() ) 
+      outstd( "          /chm Generate HTML source files for Windows .chm Help files"+ hb_osnewline() )
+      outstd( "          /ch2 Generate HTML source files for Windows .chm Help files"+ hb_osnewline() )
+      outstd( "               (new doc model)"+ hb_osnewline() ) 
+      outstd( "          /pdf Generate an Adobe Portable Document (.PDF)"+ hb_osnewline() )
+      outstd( "          /trf Gerenate Linux TROFF code"+ hb_osnewline() )
+      outstd( "          /doc Create continuous ASCII file w/o author information"+ hb_osnewline() )
+      outstd( " "+ hb_osnewline() )
+      outstd( "Notes:  - Only one option can be specified at a time."+ hb_osnewline() )
+      outstd( "        - <linkname> is the name of the Norton Guide Link file."+ hb_osnewline() )
+      outstd( "        - <iFile> is a file containing a list of files to process"+ hb_osnewline() )
+      outstd( "          otherwise *.prg, *.c, *.asm, *.ch and *.txt are used."+ hb_osnewline() )
       RETURN NIL
    ENDIF
 
@@ -297,16 +331,22 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       IF EMPTY( DIRECTORY( "htm.*", "D" ) )
          FT_MKDIR( "htm" )
       ENDIF
+   ELSEIF lWww2
+      IF EMPTY( DIRECTORY( "htm.*", "D" ) )
+         FT_MKDIR( "htm" )
+      ENDIF
    ELSEIF lChm
       IF EMPTY( DIRECTORY( "chm.*", "D" ) )
          FT_MKDIR( "chm" )
       ENDIF
-
+   ELSEIF lChm2
+      IF EMPTY( DIRECTORY( "chm.*", "D" ) )
+         FT_MKDIR( "chm" )
+      ENDIF
    ELSEIF   lPdf
       IF EMPTY( DIRECTORY( "pdf.*", "D" ) )
          FT_MKDIR( "pdf" )
       ENDIF
-
    ELSEIF lNgi
       IF EMPTY( DIRECTORY( "ngi.*", "D" ) )
          FT_MKDIR( "ngi" )
@@ -320,10 +360,21 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       IF EMPTY( DIRECTORY( "ipf.*", "D" ) )
          FT_MKDIR( "ipf" )
       ENDIF
+   ELSEIF lAscii
+      IF EMPTY( DIRECTORY( "txt.*", "D" ) )
+         FT_MKDIR( "txt" )
+      ENDIF
+   ELSEIF lTee
+      IF EMPTY( DIRECTORY( "teesrcs.*", "D" ) )
+         FT_MKDIR( "teesrcs" )
+      ENDIF
+      IF EMPTY( DIRECTORY( "teedocs.*", "D" ) )
+         FT_MKDIR( "teedocs" )
+      ENDIF
    ENDIF
    if lNgi .or. lRtf
    cCompiler := fill_Link_info( cLinkName )
-   endif        
+   endif
 
    IF cAtFile = NIL                     // use all files in directory
 
@@ -342,10 +393,13 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
             IF lAscii
                ASCIIFiles()
+            ELSEIF lTee
+               TeeFiles()
             ELSEIF lNorton
                ProcessFiles()
             ELSEIF lRtf
-               ProcessRtf()
+               aRtfid := ProcessRtf()
+//             tracelog(aRtfid,aRtfid[1])
             ELSEIF lPdf
             #ifdef PDF
                ProcessPDF(.t.)
@@ -353,8 +407,12 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          #endif
             ELSEIF lWww
                ProcessWww()
+            ELSEIF lWww2
+               ProcessWww2()
             ELSEIF lChm
                ProcessChm()
+            ELSEIF lChm2
+               ProcessChm2()
             ELSEIF lNgi
                ProcessiNg()
             ELSEIF lTroff
@@ -383,11 +441,16 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             ProcessPDF(.f.)
          #endif
          ELSEIF lRtf
-            ProcessRtf()
+             aRtfid := ProcessRtf()
+//                          tracelog(aRtfid,aRtfid[1])
          ELSEIF lWww
             ProcessWww()
+         ELSEIF lWww2
+            ProcessWww2()
          ELSEIF lChm
             ProcessChm()
+         ELSEIF lChm2
+            ProcessChm2()
          ELSEIF lNgi
             ProcessiNg()
          ELSEIF lTroff
@@ -402,34 +465,36 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    //  Now build text files for norton compiler based upon link file
    //  first sort based upon category and filename. Not Fast but easy.
 
+
    @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
    @ MODULELINE,  0 CLEAR TO MODULELINE, MAXCOL()
    @ LINELINE,  0 CLEAR TO LINELINE, MAXCOL()
-   @ INFILELINE, 30 SAY "Sorting input files"         
+   @ INFILELINE, 30 SAY "Sorting input files"
 
    ASORT( aDocInfo,,, { | a, b | UPPER( a[ 1 ] + " " + a[ 2 ] ) < UPPER( b[ 1 ] + " " + b[ 2 ] ) } )
+
 
    //  Now actually build the info
 
    @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
    IF lnorton
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "HelpC" ) ;         
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "HelpC" ) ;
               + " input files"
    ELSEIF lRTF
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "WINHELP" ) ;         
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "WINHELP" ) ;
               + " input files"
    ELSEIF lPdf
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "Adobe Portable Document Format" ) ;         
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "Adobe Portable Document Format" ) ;
               + " input files"
 
    ELSEIF lWww .or. lChm
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "Html" ) ;         
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "Html" ) ;
               + " input files"
    ELSEIF lNgi
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "NG" ) ;         
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "NG" ) ;
               + " input files"
    ELSEIF lTroff
-      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "TROFF" ) ;         
+      @ INFILELINE, 30 SAY "Assembling " + IIF( lAscii, "documentation", "TROFF" ) ;
               + " input files"
 
    ENDIF
@@ -455,11 +520,11 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             IF i = 1 .OR. .NOT. ( ALLTRIM( aDocInfo[ i - 1, 1 ] ) == ALLTRIM( aDocInfo[ i, 1 ] ) )
                //  Make the first copy
                ? "ECHO Creating", aLinkinfo[ nItem, 2 ]
-               ? "COPY hdf/" + ALLTRIM( aDocInfo[ i, 4 ] ) + " HarDoc.hdf  > NUL"
+               ? "COPY hdf\" + ALLTRIM( aDocInfo[ i, 4 ] ) + " HarDoc.hdf  > NUL"
 
             ELSE
                //  This may be slow but I don't have to worry about line length
-               ? "TYPE hdf/" + ALLTRIM( aDocInfo[ i, 4 ] ) + " >> HarDoc.hdf "
+               ? "TYPE hdf\" + ALLTRIM( aDocInfo[ i, 4 ] ) + " >> HarDoc.hdf "
             ENDIF
             aLinkInfo[ nItem, 3 ] = .T.
          ELSE
@@ -469,7 +534,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             SET CONSOLE ON
             WRITE_ERROR( "Category not found: " + aDocInfo[ i, 1 ],,,, aDocInfo[ i, 4 ] )
             @ ERRORLINE,  0 CLEAR TO ERRORLINE, MAXCOL()
-            @ ERRORLINE, 20 SAY "Category not found: " + aDocInfo[ i, 1 ] + " in " + aDocInfo[ i, 4 ]         
+            @ ERRORLINE, 20 SAY "Category not found: " + aDocInfo[ i, 1 ] + " in " + aDocInfo[ i, 4 ]
             SET ALTERNATE TO "assembl.bat" ADDITIVE
             SET ALTERNATE ON
             SET CONSOLE OFF
@@ -486,20 +551,32 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, 'CONTENTS=IDH_OVERVIEW' + CRLF )
       FWRITE( nHpj, 'TITLE='+cTitle + CRLF )
       FWRITE( nHpj, 'COPYRIGHT=Harbour (C) http://www.harbour-project.org' + CRLF )
-      FWRITE( nHpj, 'HLP=./'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
-      FWRITE( nHpj, 'ROOT=/' + CURDIR() + "/RTF" + CRLF )
-      FWRITE( nHpj, 'CNT=./'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".cnt"+ CRLF )
+      FWRITE( nHpj, 'HLP=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
+      FWRITE( nHpj, 'ROOT=\' + CURDIR() + "\RTF" + CRLF )
+      FWRITE( nHpj, 'CNT=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".cnt"+ CRLF )
       FWRITE( nHpj, '[FILES]' + CRLF )
       FWRITE( nHpj, "harbour.rtf" + CRLF )
       FWRITE( nHpj, '[CONFIG]' + CRLF + 'contents()' + CRLF + 'prev()' + CRLF + 'next()' + CRLF + 'BrowseButtons()' + CRLF )
-      FWRITE( nHpj, '[WINDOWS]' + CRLF + 'Commands="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +'API="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +       'Error="Harbour Run Time Errors",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Tools="Harbour Tools",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Class="Harbour OOP Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Funca="Harbour Run Time Functions A-M",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Funcn="Harbour Run Time Functions N-_",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF + 'Main="HARBOUR",(117,100,894,873),60672,(r14876671),(r12632256),f2' + CRLF )
+      FWRITE( nHpj, '[WINDOWS]' + CRLF + 'Commands="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' +;
+                     CRLF +'API="Harbour Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +;
+                     'Error="Harbour Run Time Errors",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +;
+                     'Tools="Harbour Tools",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +;
+                     'Class="Harbour OOP Commands",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +;
+                     'Funca="Harbour Run Time Functions A-M",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +;
+                     'Funcn="Harbour Run Time Functions N-_",(653,102,360,600),20736,(r14876671),(r12632256),f2' + CRLF +;
+                     'Main="Harbour",(117,100,894,873),60672,(r14876671),(r12632256),f2' + CRLF )
+      FWRITE( nHpj, '[MAP]'+CRLF)
+      for each ppp in aRtfid
+      fwrite(nHpj, "#define "+ppp[1] +" " + str(ppp[2])+CRLF)
+      next
+
       FCLOSE( nHpj )
       nHpj := FCREATE( lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".cnt"  )
       FWRITE( nHpj, ':Base '+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
       FWRITE( nHpj, ':Title '+cTitle+CRLF)
       FWRITE( nHpj, ':Index '+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +'='+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hlp"+ CRLF )
       FWRITE( nHpj, '1 Harbour'+CRLF)
-      asort(aWww,,,{|x,y| x[3]+x[1]<y[3]+y[1]})
+      asort(      aWww,,,{|x,y| x[3]+x[1]<y[3]+y[1]})
       for ppp:=1 to len(aWww)
           if aWww[ppp,3]=='Document'
              fWrite( nHpj, '2 '+aWww[ppp,1]+"="+aWww[ppp,2]+">Main"+CRLF)
@@ -528,7 +605,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       for ppp:=1 to nItem
 
         cLast:=GetNextContent(ppp)
-        if cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector"  .and. cLast <>"OOP Command" .and. cLast <>"Command"  .and. cLast <>"The idle states"
+        if cLast =='Statement' .or. cLast =="Command"
             WriteContentFile(aWww,cLast,nHpj)
         endif
       Next
@@ -551,16 +628,18 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
              fWrite( nHpj, '2 '+aWww[ppp,1]+"="+aWww[ppp,2]+">API"+CRLF)
           endif
       Next
-    fClose(nHpj)
-set console off
-   ELSEIF lWWW
 
+
+    fClose(nHpj)
+    set console off
+   ELSEIF lWWW
+      ASORT( aDocWWWInfo,,, { | a, b | UPPER( a[ 1 ]  ) < UPPER( b[ 1 ]) } )
       asort(adocinfo,,,{|x,y| x[1]+x[2]<y[1]+y[2]})
             do while .t.
           citem:=adocinfo[1,1]
           AADD(aMetaContents,{"GENERATOR","HBDOC Harbour document Extractor"})
           aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
-          ohtm:=THTML():new('htm/hb'+strtran(citem," ","")+'.htm',aMetaContents)
+          ohtm:=THTML():new('htm\hb'+strtran(citem," ","")+'.htm',aMetaContents)
           ohtm:WriteText('<h2>'+adocinfo[1,1]+'</h2><br>')
           ohtm:WriteText("<table>")
   
@@ -576,7 +655,7 @@ set console off
           AADD(aMetaContents,{"GENERATOR","HBDOC Harbour document Extractor"})
           aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
 
-           ohtm:=THTML():new('htm/hb'+strtran(adocinfo[ppp,1]," ","")+'.htm',aMetaContents)
+           ohtm:=THTML():new('htm\hb'+strtran(adocinfo[ppp,1]," ","")+'.htm',aMetaContents)
 
 //                    oHtm:WriteMetaTag('Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem)
            ohtm:WriteText('<h2>'+adocinfo[ppp,1]+'</h2><br>')
@@ -594,11 +673,11 @@ set console off
           AADD(aMetaContents,{"GENERATOR","HBDOC Harbour document Extractor"})
           aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
 
-      oHtm1 := THTML():New( "htm/harbour.htm" ,aMetaContents)
+      oHtm1 := THTML():New( "htm\harbour.htm" ,aMetaContents)
 //          oHtm:WriteMetaTag('Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,Harbour Documentation")
       oHtm1:WriteTitle( "Harbour Reference Guide" )
       oHtm1:WriteText( "<H1>Harbour Reference Guide</H1>" )
-      oHtm1:WriteText( "<H2>HARBOUR</H2>" + hb_osnEwline() + '<UL>' )
+      oHtm1:WriteText( "<H2>Harbour</H2>" + hb_osnEwline() + '<UL>' )
       oHtm1:WriteLink( "overview", UpperLower( "Harbour Read me" ) )
       oHtm1:WriteLink( "license", UpperLower( "Harbour License" ) )
       oHtm1:WriteLink( "http://www.gnu.org/copyleft/gpl.html", "GNU License" )
@@ -606,6 +685,7 @@ set console off
       oHtm1:WriteLink( "harbourextensions.htm", "Harbour Extensions" )
       oHtm1:WriteLink( "thegarbagecollector.htm", "The Garbage Collector" )
       oHtm1:WriteLink( "theidlestates.htm", "The Idle States" )
+      ohtm1:WriteLink( "http://www.harbour-project.org","Harbour.org Web page")
       oHtm1:WriteText( "</UL>" )
       oHtm1:WriteText( "<H2>Alphabetical list of functions by Categorie</H2>" )
       ohtm1:writetext('<ul>')
@@ -615,25 +695,110 @@ set console off
       for ppp:=1 to nItem
 
         cLast:=GetNextContent(ppp)
-        if cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector"  .and. cLast <>"OOP Command" .and. cLast <>"Command"  .and. cLast <>"The idle states"
+        if (cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector" .and. cLast <>"The idle states") .and. (cLast !=  "Command" .and. clast !="OOP Command" .and. cLast !="Statement") .and. (! "CLASS" $ UPPER(cLast) .and. !"METHOD" $ UPPER(cLast))
             ohtm1:WriteLink('hb'+strtran(aResult[ppp]," ","")+'.htm',aResult[ppp])
 
         endif
       Next
-      ohtm1:writetext('</ul>')        
+      ohtm1:writetext('</ul>')
+
+      oHtm1:WriteText( "<H2>Commands and Statements</H2>" )
+      ohtm1:writetext('<ul>')
+
+      for ppp:=1 to nItem
+
+        cLast:=GetNextContent(ppp)
+        if cLast ==  "Command" .or. clast =="OOP Command" .or. cLast =="Statement"
+            ohtm1:WriteLink('hb'+strtran(aResult[ppp]," ","")+'.htm',aResult[ppp])
+
+        endif
+      Next
+      ohtm1:writetext('</ul>')
+
+
+      oHtm1:WriteText( "<H2>Classes and method </H2>" )
+      ohtm1:writetext('<ul>')
+
+      for ppp:=1 to nItem
+
+        cLast:=GetNextContent(ppp)
+        if "CLASS" $ UPPER(cLast) .or. "METHOD" $ UPPER(cLast)
+            ohtm1:WriteLink('hb'+strtran(aResult[ppp]," ","")+'.htm',aResult[ppp])
+
+        endif
+      Next
+      ohtm1:writetext('</ul>')
+
         ohtm1:close()
 
+        ohtm1:close()
+
+
       oHtm:Close()
+
+
+     ohtm:=THTML():new("htm\harbourfuntionwithsyntax.htm",aMetaContents)
+     For each ppp in aDocwwwInfo
+     ohtm:Writelink(ppp[2],ppp[1])
+     next
+     ohtm:close()
+
+   ELSEIF lWww2
+      cFileName := "index.htm"
+      oHtmIndex := THTML():New('htm\' + cFileName)
+   
+      // Add title to HTML
+      oHtmIndex:WriteText("<title>Harbour - Reference Guide</title>")
+   
+      // Add CSS to the HTML
+      oHtmIndex:WriteText("<style>") 
+      oHtmIndex:WriteText("body {font-family:arial;font-size:14px;line-height:18px;}")
+      oHtmIndex:WriteText(".classtitle {font-weight:bold;font-size:20px;padding-bottom:4px;}") 
+      oHtmIndex:WriteText(".functiontitle {font-weight:bold;font-size:20px;padding-bottom:4px;}")
+      oHtmIndex:WriteText("</style></head><body>")
+   
+      oHtmIndex:WriteText("<div style='font-size:20px;font-weight:bold;margin-bottom:16px;'>Harbour Reference Guide</div>")
+   
+      ASORT(aDocInfo,,, {|x, y| UPPER(x[1]) < UPPER(y[1])})
+   
+      oHtmIndex:WriteText("<div class='classtitle'>Alphabetical list of classes</div>")
+      oHtmIndex:WriteText("<div style='margin-left:12px;margin-bottom:12px;'>")
+      FOR i := 1 TO LEN(aDocInfo)
+         IF aDocInfo[i][3] = "C1" 
+            oHtmIndex:WriteText("<strong>&raquo;</strong> <a href='" + aDocInfo[i][2] + "' target=_self>" + aDocInfo[i][1] + "</a><br>")
+         END IF 
+      NEXT
+      oHtmIndex:WriteText("</div>")
+   
+      oHtmIndex:WriteText("<div class='functiontitle'>Alphabetical list of functions</div>")
+      oHtmIndex:WriteText("<div style='margin-left:12px;margin-bottom:12px;'>")
+      FOR i := 1 TO LEN(aDocInfo)
+         IF aDocInfo[i][3] = "F1" 
+            oHtmIndex:WriteText("<strong>&raquo;</strong> <a href='" + aDocInfo[i][2] + "' target=_self>" + aDocInfo[i][1] + "</a><br>")
+         ENDIF
+      NEXT
+      oHtmIndex:WriteText("</div>") 
+
+      oHtmIndex:WriteText("<div class='classtitle'>Alphabetical list of WinAPI functions</div>") 
+      oHtmIndex:WriteText("<div style='margin-left:12px;margin-bottom:12px;'>")
+      FOR i := 1 TO LEN(aDocInfo)
+         IF aDocInfo[i][3] = "F2" 
+            oHtmIndex:WriteText("<strong>&raquo;</strong> <a href='" + aDocInfo[i][2] + "' target=_self>" + aDocInfo[i][1] + "</a><br>")
+         END IF 
+      NEXT
+      oHtmIndex:WriteText("</div>")
+      oHtmIndex:WriteText("</html>")
    ELSEIF lChm
-      nHpj := FCREATE( 'chm/'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhp" )
+ 
+      nHpj := FCREATE( 'chm\'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhp" )
 
       FWRITE( nHpj, '[OPTIONS]' + CRLF )
       FWRITE( nHpj, 'Compatibility=1.1 or later'+CRLF)
       FWRITE( nHpj, 'Auto Index=Yes'+CRLF)
       FWRITE( nHpj,'Full-text search=Yes'+CRLF)
       FWRITE( nHpj, 'Language=0x416 Português (brasileiro)' + CRLF )
-      FWRITE( nHpj, 'Contents file=./'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc"+ CRLF )
-      FWRITE( nHpj, 'Compiled file=./'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".chm"+ CRLF )
+      FWRITE( nHpj, 'Contents file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc"+ CRLF )
+      FWRITE( nHpj, 'Compiled file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".chm"+ CRLF )
       FWRITE( nHpj, 'Display compile progress=No'+CRLF)
       nPos:=aScan(awww,{|x| Upper(x[1])="OVERVIEW"})
       if nPos > 0
@@ -649,7 +814,7 @@ set console off
 
 
 
-          ohtm:=THTML():NewContent('chm/'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc")
+          ohtm:=THTML():NewContent('chm\'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc")
           ohtm:WriteText('<!--Sitemap 1.0-->')
           ohtm:Addobject("text/site properties")
           oHtm:AddParam("FrameName","Ajuda")
@@ -657,7 +822,7 @@ set console off
           ohtm:WriteText("<ul>")
           oHtm:ListItem()
           oHtm:AddObject("text/sitemap")
-          oHTm:AddParam('Name','HARBOUR')
+          oHTm:AddParam('Name','Harbour')
           ohtm:EndObject()
           ohtm:WriteText("<ul>")
           writeChmContentFile(aDocinfo,"Document",oHtm)
@@ -710,7 +875,7 @@ set console off
           oHtm:AddObject("text/sitemap")
           oHTm:AddParam('Name',cLast)
           ohtm:EndObject()
-          ohtm:WriteText("<ul>")          
+          ohtm:WriteText("<ul>")
         endif
         if cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector"  .and. cLast <>"OOP Command" .and. cLast <>"Command"  .and. cLast <>"The idle states"
         //    oHtm:WriteText( "<UL>" )
@@ -753,7 +918,231 @@ set console off
       oHtm:WriteText( "</UL>" )
       ohtm:WriteText("</ul>")
     ohtm:close()
+ 
+   ELSEIF lChm2
+      cFileName := "index.htm"   
+      oHtmIndex := THTML():New('chm\' + cFileName)
+  
+      // Add title to HTML 
+      oHtmIndex:WriteText("<title>Harbour - Reference Guide</title>")  
+   
+      // Add CSS to the HTML 
+      oHtmIndex:WriteText("<style>")
+      oHtmIndex:WriteText("body {font-family:arial;font-size:14px;line-height:18px;}")  
+      oHtmIndex:WriteText(".classtitle {font-weight:bold;font-size:20px;padding-bottom:4px;}") 
+      oHtmIndex:WriteText(".functiontitle {font-weight:bold;font-size:20px;padding-bottom:4px;}") 
+      oHtmIndex:WriteText("</style></head><body>")
+   
+      oHtmIndex:WriteText("<div style='font-size:20px;font-weight:bold;margin-bottom:16px;'>Harbour Reference Guide</div>") 
+   
+      ASORT(aDocInfo,,, {|x, y| x[1] < y[1]})
+   
+      oHtmIndex:WriteText("<div class='classtitle'>Alphabetical list of classes</div>")
+      oHtmIndex:WriteText("<div style='margin-left:12px;margin-bottom:12px;'>") 
+      FOR i := 1 TO LEN(aDocInfo)
+         IF aDocInfo[i][3] = "C1" 
+            oHtmIndex:WriteText("<strong>&raquo;</strong> <a href='" + aDocInfo[i][2] + "' target=_self>" + aDocInfo[i][1] + "</a><br>") 
+         END IF 
+      NEXT
+      oHtmIndex:WriteText("</div>")  
 
+      oHtmIndex:WriteText("<div class='functiontitle'>Alphabetical list of functions</div>")
+      oHtmIndex:WriteText("<div style='margin-left:12px;margin-bottom:12px;'>")  
+      FOR i := 1 TO LEN(aDocInfo)
+         IF aDocInfo[i][3] = "F1" 
+            oHtmIndex:WriteText("<strong>&raquo;</strong> <a href='" + aDocInfo[i][2] + "' target=_self>" + aDocInfo[i][1] + "</a><br>") 
+         END IF 
+      NEXT  
+      oHtmIndex:WriteText("</div>")
+
+      oHtmIndex:WriteText("<div class='functiontitle'>Alphabetical list of WinAPI functions</div>") 
+      oHtmIndex:WriteText("<div style='margin-left:12px;margin-bottom:12px;'>")  
+      FOR i := 1 TO LEN(aDocInfo)
+         IF aDocInfo[i][3] = "F2" 
+            oHtmIndex:WriteText("<strong>&raquo;</strong> <a href='" + aDocInfo[i][2] + "' target=_self>" + aDocInfo[i][1] + "</a><br>") 
+         END IF 
+      NEXT  
+      oHtmIndex:WriteText("</div>") 
+      oHtmIndex:WriteText("</html>")  
+
+      nHpj := FCREATE('chm\' + LOWER(SUBSTR(cLinkName,1,AT(".",cLinkName)-1)) +".hhp" ) 
+      FWRITE( nHpj, '[OPTIONS]' + CRLF )
+      FWRITE( nHpj, 'Compatibility=1.1 or later'+CRLF)
+      FWRITE( nHpj, 'Auto Index=Yes'+CRLF)
+      FWRITE( nHpj, 'Full-text search=Yes'+CRLF)
+      FWRITE( nHpj, 'Language=0x416 Português (brasileiro)' + CRLF )
+      FWRITE( nHpj, 'Contents file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc"+ CRLF )
+      FWRITE( nHpj, 'Compiled file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".chm"+ CRLF )
+      FWRITE( nHpj, 'Display compile progress=No'+CRLF)
+      //nPos := aScan(aDocInfo, {|x| Upper(x[2] + ".HTM") = "OVERVIEW"})
+      //if nPos > 0
+         FWRITE( nHpj,'Default topic=index.htm' + CRLF)
+      //Else
+         //FWRITE( nHpj,'Default topic=' + lower(aDocInfo[1,2]) + CRLF)
+      //Endif
+      FWRITE( nHpj, '[FILES]' + CRLF )
+      For nPos:=1 to len(aDocInfo)
+         FWRITE( nHpj, lower(aDocInfo[npos,2]) + CRLF )
+      Next
+      FCLOSE( nHpj )
+
+ 
+      oHtm:=THTML():NewContent('chm\'+lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc") 
+      oHtm:WriteText('<!--Sitemap 1.0-->')
+      oHtm:Addobject("text/site properties")
+         oHtm:AddParam("FrameName","Ajuda")
+      oHtm:EndObject()
+      oHtm:WriteText("<ul>")
+         oHtm:ListItem() 
+         oHtm:AddObject("text/sitemap")
+         oHtm:AddParam('Name','Harbour Reference Guide')
+         oHtm:EndObject()
+            oHtm:WriteText("<ul>")
+               oHtm:ListItem() 
+               oHtm:AddObject("text/sitemap")
+               oHtm:AddParam('Name', 'Alphabetical list of classes')
+               oHtm:AddParam('Local', 'index.htm')
+               oHtm:EndObject() 
+                  oHtm:WriteText("<ul>") 
+
+                  ASORT(aDocInfo,,, {|x, y| UPPER(x[1]) < UPPER(y[1])})
+                  nCount_1 := 1 
+                  DO WHILE nCount_1 <= LEN(aDocInfo) 
+                     IF aDocInfo[nCount_1][3] = "C1"  
+                        oHtm:ListItem()  
+                        oHtm:AddObject("text/sitemap") 
+                        oHtm:AddParam('Name', aDocInfo[nCount_1][1])
+                        oHtm:AddParam('Local', aDocInfo[nCount_1][2])
+                        oHtm:EndObject()
+                        oHtm:WriteText("<ul>") 
+                      
+
+                        IF LEN(aDocInfo[nCount_1][4]) > 0 
+                           oHtm:ListItem()   
+                           oHtm:AddObject("text/sitemap") 
+                           oHtm:AddParam('Name', "Methods")
+                           oHtm:AddParam('Local', LEFT(aDocInfo[nCount_1][2], LEN(aDocInfo[nCount_1][2]) - 4) + "_content.htm#methodlist")
+                           oHtm:EndObject()
+                           oHtm:WriteText("<ul>")
+                              ASORT(aDocInfo[nCount_1][4],,, {|x, y| UPPER(x[1]) < UPPER(y[1]) .AND. UPPER(x[2]) < UPPER(y[2]) })  
+                              nCount_2 := 1 
+                              DO WHILE nCount_2 <= LEN(aDocInfo[nCount_1][4])
+                                 IF aDocInfo[nCount_1][4][nCount_2, 1] = "Method" 
+                                    oHtm:ListItem()  
+                                    oHtm:AddObject("text/sitemap") 
+                                    oHtm:AddParam('Name', aDocInfo[nCount_1][4][nCount_2, 2])
+                                    oHtm:AddParam('Local', LEFT(aDocInfo[nCount_1][2], LEN(aDocInfo[nCount_1][2]) - 4) + "_content.htm#" + aDocInfo[nCount_1][4][nCount_2, 2])
+                                    oHtm:EndObject()
+                                 ENDIF 
+                            
+                                 nCount_2 ++ 
+                              ENDDO 
+                           oHtm:WriteText("</ul>")
+                        ENDIF 
+
+                        IF LEN(aDocInfo[nCount_1][4]) > 0 
+                           oHtm:ListItem()    
+                           oHtm:AddObject("text/sitemap") 
+                           oHtm:AddParam('Name', "Properties")
+                           oHtm:AddParam('Local', LEFT(aDocInfo[nCount_1][2], LEN(aDocInfo[nCount_1][2]) - 4) + "_content.htm#methodlist")
+                           oHtm:EndObject()
+                           oHtm:WriteText("<ul>")
+                              ASORT(aDocInfo[nCount_1][4],,, {|x, y| UPPER(x[1]) < UPPER(y[1]) .AND. UPPER(x[2]) < UPPER(y[2]) })  
+                              nCount_2 := 1 
+                              DO WHILE nCount_2 <= LEN(aDocInfo[nCount_1][4])
+                                 IF aDocInfo[nCount_1][4][nCount_2, 1] = "Data" 
+                                    oHtm:ListItem()  
+                                    oHtm:AddObject("text/sitemap") 
+                                    oHtm:AddParam('Name', aDocInfo[nCount_1][4][nCount_2, 2])
+                                    oHtm:AddParam('Local', LEFT(aDocInfo[nCount_1][2], LEN(aDocInfo[nCount_1][2]) - 4) + "_content.htm#" + aDocInfo[nCount_1][4][nCount_2, 2])
+                                    oHtm:EndObject()
+                                 ENDIF 
+                            
+                                 nCount_2 ++ 
+                              ENDDO 
+                           oHtm:WriteText("</ul>")
+                        ENDIF 
+                        oHtm:WriteText("</ul>")
+                     ENDIF 
+                     nCount_1 ++ 
+                  ENDDO  
+                  oHtm:WriteText("</ul>")
+
+               // WinAPI functions 
+               oHtm:ListItem()  
+               oHtm:AddObject("text/sitemap")
+               oHtm:AddParam('Name', 'Alphabetical list of WinAPI functions')
+               oHtm:AddParam('Local', 'index.htm')
+               oHtm:EndObject() 
+                  oHtm:WriteText("<ul>") 
+
+                  ASORT(aDocInfo,,, {|x, y| UPPER(x[1]) < UPPER(y[1])})
+                  nCount_1 := 1 
+                  DO WHILE nCount_1 <= LEN(aDocInfo) 
+                     IF aDocInfo[nCount_1][3] = "F2"  
+                        oHtm:ListItem()  
+                        oHtm:AddObject("text/sitemap") 
+                        oHtm:AddParam('Name', aDocInfo[nCount_1][1])
+                        oHtm:AddParam('Local', aDocInfo[nCount_1][2])
+                        oHtm:EndObject()
+                        //oHtm:WriteText("<ul>") 
+
+                        /* 
+                        IF LEN(aDocInfo[nCount_1][4]) > 0 
+                           oHtm:ListItem()   
+                           oHtm:AddObject("text/sitemap") 
+                           oHtm:AddParam('Name', "Methods")
+                           oHtm:AddParam('Local', LEFT(aDocInfo[nCount_1][2], LEN(aDocInfo[nCount_1][2]) - 4) + "_content.htm#methodlist")
+                           oHtm:EndObject()
+                           oHtm:WriteText("<ul>")
+                              ASORT(aDocInfo[nCount_1][4],,, {|x, y| UPPER(x[1]) < UPPER(y[1]) .AND. UPPER(x[2]) < UPPER(y[2]) })  
+                              nCount_2 := 1 
+                              DO WHILE nCount_2 <= LEN(aDocInfo[nCount_1][4])
+                                 IF aDocInfo[nCount_1][4][nCount_2, 1] = "Method" 
+                                    oHtm:ListItem()  
+                                    oHtm:AddObject("text/sitemap") 
+                                    oHtm:AddParam('Name', aDocInfo[nCount_1][4][nCount_2, 2])
+                                    oHtm:AddParam('Local', LEFT(aDocInfo[nCount_1][2], LEN(aDocInfo[nCount_1][2]) - 4) + "_content.htm#" + aDocInfo[nCount_1][4][nCount_2, 2])
+                                    oHtm:EndObject()
+                                 ENDIF 
+                            
+                                 nCount_2 ++ 
+                              ENDDO 
+                           oHtm:WriteText("</ul>")
+                        ENDIF
+
+                        IF LEN(aDocInfo[nCount_1][4]) > 0 
+                           oHtm:ListItem()    
+                           oHtm:AddObject("text/sitemap") 
+                           oHtm:AddParam('Name', "Properties")
+                           oHtm:AddParam('Local', LEFT(aDocInfo[nCount_1][2], LEN(aDocInfo[nCount_1][2]) - 4) + "_content.htm#methodlist")
+                           oHtm:EndObject()
+                           oHtm:WriteText("<ul>")
+                              ASORT(aDocInfo[nCount_1][4],,, {|x, y| UPPER(x[1]) < UPPER(y[1]) .AND. UPPER(x[2]) < UPPER(y[2]) })  
+                              nCount_2 := 1 
+                              DO WHILE nCount_2 <= LEN(aDocInfo[nCount_1][4])
+                                 IF aDocInfo[nCount_1][4][nCount_2, 1] = "Data" 
+                                    oHtm:ListItem()  
+                                    oHtm:AddObject("text/sitemap") 
+                                    oHtm:AddParam('Name', aDocInfo[nCount_1][4][nCount_2, 2])
+                                    oHtm:AddParam('Local', LEFT(aDocInfo[nCount_1][2], LEN(aDocInfo[nCount_1][2]) - 4) + "_content.htm#" + aDocInfo[nCount_1][4][nCount_2, 2])
+                                    oHtm:EndObject()
+                                 ENDIF 
+                            
+                                 nCount_2 ++ 
+                              ENDDO 
+                           oHtm:WriteText("</ul>")
+                        ENDIF
+                        */ 
+                        //oHtm:WriteText("</ul>") 
+                     ENDIF 
+                     nCount_1 ++ 
+                  ENDDO  
+                  oHtm:WriteText("</ul>") 
+
+            oHtm:WriteText("</ul>")         
+      oHtm:WriteText("</ul>")   
+      oHtm:Close() 
 
    ELSEIF lNgi
       SET ALTERNATE TO "assembl.bat" ADDITIVE
@@ -789,11 +1178,11 @@ set console off
          SET ALTERNATE TO "assembl.bat" ADDITIVE
          SET ALTERNATE ON
          SET CONSOLE OFF
-         ? 'Copy ngi/overview.ngi .'
-         ? 'Copy ngi/License.ngi  .'
-         ? 'Copy ngi/Funcam.txt   .'
-         ? 'Copy ngi/funcn_.txt   .'
-         ? 'copy ngi/comm.txt     .'
+         ? 'Copy ngi\overview.ngi .'
+         ? 'Copy ngi\License.ngi  .'
+         ? 'Copy ngi\Funcam.txt   .'
+         ? 'Copy ngi\funcn_.txt   .'
+         ? 'copy ngi\comm.txt     .'
          ? 'Compiling Sources'
          ? 'ngxc overview.ngi'
          ? 'ngxc license.ngi'
@@ -802,12 +1191,12 @@ set console off
          ? 'ngxc comm.txt'
          ? 'Linking the Guide'
          ? 'ngxl '+cLinkName
-         ? 'del ngi/*.*'
+         ? 'del ngi\*.*'
          ? 'del *.ngo'
       ENDIF
 
       @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
-      @ INFILELINE, 30 SAY "Writing summary file"         
+      @ INFILELINE, 30 SAY "Writing summary file"
 
    ENDIF
 
@@ -815,13 +1204,13 @@ set console off
    SET ALTERNATE ON
    SET CONSOLE OFF
    FOR i := 1 TO LEN( aDocInfo )
-      ? PAD( aDocInfo[ i, 1 ], 15 ), PAD( aDocInfo[ i, 2 ], 15 ), PAD( aDocInfo[ i, 4 ], 15 )
+      ? PAD( aDocInfo[ i, 1 ], 15 ), PAD( aDocInfo[ i, 2 ], 15 ), PAD( aDocInfo[ i, 3 ], 15 ) // 4 
    NEXT
 
    //  Send out list of authors
 
-/*   @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
-   @ INFILELINE, 30 SAY "Sorting Author file"         
+   @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
+   @ INFILELINE, 30 SAY "Sorting Author file"
 
    FOR i := 1 TO LEN( aAuthorList )
 
@@ -859,7 +1248,7 @@ set console off
                            UPPER( a[ 3 ] ) < UPPER( b[ 3 ] ) ) } )
 
    @ INFILELINE,  0 CLEAR TO INFILELINE, MAXCOL()
-   @ INFILELINE, 30 SAY "Writing Author file"         
+   @ INFILELINE, 30 SAY "Writing Author file" 
 
    IF LEN( aAuthorList ) > 1
       i     := 2
@@ -898,12 +1287,15 @@ set console off
    SET ALTERNATE OFF
    SET ALTERNATE TO
 
-*/
 
-   @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"         
+
+
+   @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"
+
+   WAIT
 
    //  Return to caller
-
+SET CURSOR ON
 RETURN NIL
 
 //  End of MAIN()
@@ -1415,7 +1807,7 @@ for nCount:=1 to Len(aWww)
         aadd(aTemp,{aTop[nCount,1],aTop[nCount,2],aTop[nCount,3]})
     endif
 Next
-asort(aTemp,,,{|x,y| x[1]<y[1]})
+asort(aTemp,,,{|x,y| x[2]<y[2]})
     fWrite( nFile, '2 '+cCat+CRLF)
 for nCount:=1 to Len(aTemp)
     fWrite( nFile, '3 '+aTemp[nCount,1]+"="+aTemp[nCount,2]+">Funca"+CRLF)
@@ -1425,10 +1817,13 @@ return nil
 
 function GetNextContent(nPos)
 Local cReturn
+//tracelog( nPos)
 if nPos <=Len(aResult)
 cReturn := aResult[nPos]
 endif
+//tracelog(cReturn)
 return cReturn
+
 Function WriteChmContentFile(aTop,cCat,oHtm)
 Local nCount:=0
 
@@ -1439,7 +1834,7 @@ for nCount:=1 to Len(aWww)
         aadd(aTemp,{aTop[nCount,1],aTop[nCount,2],aTop[nCount,4]})
     endif
 Next
-asort(aTemp,,,{|x,y| x[1]<y[1]})
+asort(aTemp,,,{|x,y| x[2]<y[2]})
 
 for nCount:=1 to Len(aTemp)
           oHtm:ListItem()
@@ -1459,4 +1854,3 @@ for nCount:=1 to Len(aTemp)
 next
 return nil
     
-

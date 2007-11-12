@@ -132,7 +132,7 @@ FUNCTION ASCIIFiles()
    LOCAL cSeeAlso
    LOCAL cTemp
    LOCAL cChar
-   LOCAL nDocCnt
+   LOCAL nDocCnt     := 0 
    LOCAL lBlankLine  := .F.                // Blank line encountered and sent out
    LOCAL lAddBlank   := .F.                // Need to add a blank line if next line is not blank
    LOCAL lFunc       := .T.                // currently a function rather than a command
@@ -248,7 +248,7 @@ FUNCTION ASCIIFiles()
                ENDIF
                FWRITE( nWriteHandle, CRLF )
                FWRITE( nWriteHandle, " Source: " + aDirList[ i, F_NAME ] + CRLF + CRLF )
-               IF lAuthor
+               IF lAuthor .and. !empty( cAuthor )
                   FWRITE( nWriteHandle, " Author: " + cAuthor + CRLF )
                ENDIF
                IF .NOT. EMPTY( cSeeAlso )
@@ -308,7 +308,7 @@ FUNCTION ASCIIFiles()
                nEnd      := 1
                nCount    := 0
                DO WHILE nEnd > 0
-                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".hdf" } )
+                  nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".txt" } )
                   IF nEnd > 0
 
                      //  This will break if there are more than 10 files with the same first
@@ -324,12 +324,12 @@ FUNCTION ASCIIFiles()
                ENDDO
                //  Add on the extension
 
-               cFileName := LEFT( cFileName, 8 ) + ".hdf"
+               cFileName := LEFT( cFileName, 8 ) + ".txt"
 
-               nWriteHandle := FCREATE( "hdf\" + cFileName )
+               nWriteHandle := FCREATE( "txt\" + cFileName )
                IF nWriteHandle < 1
-                  ? "Error creating", cFileName, ".hdf"
-                  WRITE_ERROR( "Error creating",,,, cFileName + ".hdf" )
+                  ? "Error creating", cFileName, ".txt"
+                  WRITE_ERROR( "Error creating",,,, cFileName + ".txt" )
                ENDIF
                //  2) Category
             ELSEIF AT( cCat, cBuffer ) > 0

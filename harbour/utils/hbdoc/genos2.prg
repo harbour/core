@@ -732,17 +732,16 @@ RETURN aAlso
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNCTION Formatos2Buff( cBuffer, cStyle, ongi )
+FUNCTION Formatos2Buff( cBuffer, cStyle )
 
    LOCAL cReturn  := ''
    LOCAL cLine    := ''
+   LOCAL cBuffend := ''
    LOCAL coline   := ''
    LOCAL lEndBuff := .f.
 
    LOCAL nPos
    LOCAL lArgBold := .f.
-
-   HB_SYMBOL_UNUSED( ongi )
 
    cReturn := cBuffer + ' '
    IF AT( '</par>', cReturn ) > 0 .OR. EMPTY( cBuffer )
@@ -834,7 +833,7 @@ RETURN cReturn
 *+
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
-FUNC checkos2color( cbuffer, ncolorpos )
+FUNCTION checkos2color( cbuffer, ncolorpos )
 
    LOCAL ncolorend
    LOCAL nreturn
@@ -967,6 +966,7 @@ RETURN max
 FUNCTION Genos2Table( oOs2 )
     Local x
     Local cItem,cItem1
+    //Local cItem2,cItem3 // Variables not used in function, it may be deleted? 
 //   oos2:WritePar( "" )
     if nNumTableItems == 2
         citem  := str(maxos2elem(afitable),2)
@@ -1080,7 +1080,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
             ENDIF
 
          ELSE
-            cBuffer := Formatos2Buff( cBuffer, cStyle, oOs2 )
+            cBuffer := Formatos2Buff( cBuffer, cStyle )
          ENDIF
       ENDIF
    ENDIF

@@ -234,13 +234,13 @@ static function ExtractLine( cText, nFrom )
    if nAt > 0
       cText := SubStr( cText, nFrom, nAt - nFrom )
       if Right( cText, 1 ) == Chr( 13 )
-         cText := Left( cText, Len( cText ) - 1 )
+         cText := hb_StrShrink( cText, 1 )
       endif
       nFrom := nAt + 1
    else
       cText := SubStr( cText, nFrom )
       if Right( cText, 1 ) == Chr( 13 )
-         cText := Left( cText, Len( cText ) - 1 )
+         cText := hb_StrShrink( cText, 1 )
       endif
       nFrom += Len( cText ) + 1
    endif

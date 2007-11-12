@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * RTF Documentation Support Code For HBDOC
  *
- * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
+ * Copyright 2000-2003 Luiz Rafael Culik <culikr@uol.com.br>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -65,6 +65,8 @@ CLASS TRTF
 
    DATA cFile
    DATA nHandle
+   DATA aIdh init {}
+   DATA lastId init 100
    METHOD WriteHeader()
    METHOD New( cFile )
    METHOD WritePar( cPar, cIden )
@@ -218,15 +220,25 @@ METHOD WriteTitle( cTitle, cTopic, cOne ,cCat) CLASS TRTF
       cTemp := HB_OEMTOANSI( ALLTRIM( cTitle ) )
       cTemp := STRTRAN( cTemp, "@", "x" )
    ENDIF
+   nPos := AT( "#", cTitle )
 
+   IF nPos > 0
+      cTemp := ALLTRIM( HB_OEMTOANSI( STRTRAN( cTemp, "#", "\#" ) ) )
+   ENDIF
    cTopic := ALLTRIM( HB_OEMTOANSI( cTopic ) )
+   cTemp := StrTran( cTemp, " ","_")
 
-   cWrite := '{\f6' + CRLF + ;
-             '  #{\footnote \pard\fs20 # ' + "IDH_" + cTemp + ' }' + CRLF + ;
-             '  ${\footnote \pard\fs20 $ ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
-             '  K{\footnote \pard\fs20 K ' + UPPERLOWER(ALLTRIM( cTopic ))+";" + UPPERLOWER(ALLTRIM( cCat ))+ ' }' + CRLF + ;
-             '  A{\footnote \pard\fs20 A ' + UPPERLOWER(ALLTRIM( cTopic )) +' }' + CRLF + ;
-             '}' + CRLF
+   Aadd( ::aIdh, {"IDH_" + cTemp,::lastid++})
+   cWrite := CRLF + ;
+             '  {#{\footnote \pard\fs20 {' + "IDH_" + cTemp + ' }}}' + CRLF + ;
+             '  {${\footnote \pard\fs20 {' + ALLTRIM( cTopic ) + ' }}}' + CRLF + ;
+             '  {K{\footnote \pard\fs20 {' + UPPERLOWER(ALLTRIM( cTopic ))+";" + UPPERLOWER(ALLTRIM( cCat ))+ ' }}}' + CRLF + ;
+             '  {A{\footnote{A} ' + UPPERLOWER(ALLTRIM( cTopic )) +' }}' + CRLF + ;
+              CRLF
+
+
+
+   /*'{\f6' + CRLF + ;*/
              /*" ; " + UPPERLOWER(cCat) +" , " +UPPERLOWER(ALLTRIM( strtran(cTopic,"()","" )))+ */
    aadd(aWww,{cTopic,"IDH_"+cTemp,cCat})
    nPos := ascan(aResult,{|a| UPPER(a) == UPPER(cCat)})
@@ -257,10 +269,10 @@ METHOD WriteJumpTitle( cTitle, cTopic ) CLASS TRTF
 
    cTopic := ALLTRIM( HB_OEMTOANSI( cTopic ) )
 
-   cWrite := '{\f6' + CRLF + ;
-             '  #{\footnote \pard\fs20 # ' + "IDH_" + cTemp + ' }' + CRLF + ;
-             '  ${\footnote \pard\fs20 $ ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
-             '}' + CRLF
+   cWrite :=  CRLF + ;
+             '  #{\footnote \pard\fs20 ' + "IDH_" + cTemp + ' }' + CRLF + ;
+             '  ${\footnote \pard\fs20 ' + ALLTRIM( cTopic ) + ' }' + CRLF + ;
+             CRLF
 
    FWRITE( Self:nHandle, cWrite )
 
@@ -306,19 +318,17 @@ Local cItem:=' '
 Local nPos:=0
 Local nSize:=Len(aLink)
 
-HB_SYMBOL_UNUSED( lAlink )
-
 if nSize >2
 For nPos:=1 to nSize
     if nPos==nSize
-        cItem+= aLink[nPos]
+        cItem+= UPPERLOWER(aLink[nPos])
     else
-        cItem+= aLink[nPos]
+        cItem+= UPPERLOWER(aLink[nPos])
         cItem+=";"
     endif
 next
 cItem:=Alltrim(cItem)
-   FWRITE( Self:nHandle, '\par \pard\cf1\fs20       \{button , ALink('+cItem + ', 2) \}{\f6\uldb Related Topic }'+'{\v\f6 %!ALink(" '+cItem + '", 2) }'+ CRLF )
+   FWRITE( Self:nHandle, '\par \pard\cf1\fs20       \{button , ALink('+UPPER(cItem) + ', 2) \}{\f6\uldb Related Topic }'+'{\v\f6 %!ALink(" '+cItem + '", 2) }'+ CRLF )
 else
 For nPos:=1 to nSize
     FWRITE( Self:nHandle, '\par \pard\cf1\fs20       {\f6\uldb '+aLink[nPos] +' }{\v\f6 !KLink(" '+UPPERLOWER(aLink[nPos]) + '", 2) }'+ CRLF )

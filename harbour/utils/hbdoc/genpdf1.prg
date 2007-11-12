@@ -63,6 +63,9 @@
 #define ERRORLINE    20
 #define LONGLINE     600
 #define LONGONELINE  66
+#define a4_width    595.0
+#define a4_height   842.0
+
 MEMVAR aDirlist
 MEMVAR aDocInfo,awww,aResult
 STATIC aAlso
@@ -186,12 +189,13 @@ local hhh
    //  loop through all of the files
    if lmemory
 //   oPdf := tPdf():new( "pdf\temp.pdf" )
-   HB_PDFNEW("pdf\temp.pdf")
+
+   HB_PDFNEW("pdf\temp.pdf",,a4_height,a4_width)
    hb_pdfnewpage("Harbour Guide",'Harbour Guide')
    hb_pdfendpage()
    else
 //   ? 'im here'
-   HB_PDFNEW("pdf\harbour.pdf")
+   HB_PDFNEW("pdf\harbour.pdf",,a4_height,a4_width)
    hb_pdfnewpage("Harbour Guide",'Harbour Guide')
    hb_pdfinitbook(aResult)
    hb_pdfendpage()
@@ -832,7 +836,7 @@ FUNCTION ProcPdfTable( cBuffer, nNum )
       cBuffer   := STRTRAN( cbuffer, "<color:", "" )
       cBuffer   := STRTRAN( cbuffer, ">", "" )
       cBuffer   := STRTRAN( cBuffer, ccolor, '' )
-      nColorpos := ASCAN( aColorTable, { | x | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
+      nColorpos := ASCAN( aColorTable, { | x, y | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
       cColor    := aColortable[ nColorPos, 2 ]
    ENDIF
    IF !EMPTY( cBuffer )
@@ -1208,7 +1212,7 @@ FUNC CheckPdfColor( cbuffer, ncolorpos )
       cOldColorString := SUBSTR( cbuffer, ncolorpos )
       nColorend       := AT( ">", cOldColorString )
       cOldColorString := SUBSTR( cOldColorString, 1, nColorEnd )
-      nreturn         := ASCAN( acolortable, { | x | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
+      nreturn         := ASCAN( acolortable, { | x, y | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
       IF nreturn > 0
          cReturn := "^a" + acolortable[ nreturn, 2 ]
       ENDIF

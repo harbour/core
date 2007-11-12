@@ -10,18 +10,20 @@ ROOT = ../../
 
 PRG_SOURCES=\
 	hbmake.prg \
+	tmake.prg \
 	hbmutils.prg \
 	fclass1.prg \
 	ffile1.prg \
 	ft_funcs.prg \
 	radios.prg \
-	checks.prg  \
+	checks.prg \
 	pickarry.prg \
 	pickfile.prg \
 	prb_stak.prg \
 
 C_SOURCES=\
-	hbmlang.c        \
+	hbmlang.c \
+	readline.c \
 
 
 PRG_MAIN=hbmake.prg

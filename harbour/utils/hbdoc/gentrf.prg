@@ -57,7 +57,6 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-#include "common.ch"
 
 //  output lines on the screen
 

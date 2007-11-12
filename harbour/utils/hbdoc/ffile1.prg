@@ -72,8 +72,6 @@ CLASS FileBase FROM FileMan
    DATA nPosition   // This holds the position in the file at
    DATA lAtBottom   // This is a value to show if at bottom of file
    DATA lAtTop      // This is a value to show if at top of file
-   DATA cCRLF       // OS dependant End of Line marker 
-   DATA nCRLFLen    // Length of cCRLF   
 
    METHOD new( cname )                  // This is the constructor for the file
    METHOD FOPEN()   // This opens the specified file
@@ -104,7 +102,7 @@ ENDCLASS
 */
 METHOD new( cName ) CLASS FileBase
 
-   ::super:new()
+   super:new()
    // first thing to do is check to see if there is a valid file
 
    ::nSkipLength := 1
@@ -112,9 +110,6 @@ METHOD new( cName ) CLASS FileBase
    ::nCreateMode := 0                   // Mode for which to create the file
 
    ::cName := cName
-   
-   ::cCRLF    := HB_OSNewLine()         // Set our End of Line marker
-   ::nCRLFLen := len(::cCRLF)           // and its length    
 
    RETURN ( self )
 
@@ -365,15 +360,15 @@ METHOD goBottom() CLASS FileBase
       cBuffer := SPACE( pBUFFER_LENGTH )
       FSEEK( Self:nDosHandle, - ( pBUFFER_LENGTH ), 2 )
       FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
-      IF RIGHT( cBuffer, ::nCRLFLen ) == ::cCRLF   // We need to remove this extra one!
-         cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - ::nCRLFLen )
+      IF RIGHT( cBuffer, 2 ) == pCRLF   // We need to remove this extra one!
+         cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - 2 )
          lWithCRLF := pTRUE
       ENDIF
-      cBuffer       := SUBSTR( cBuffer, RAT( ::cCRLF, cBuffer ) + ::nCRLFLen )
-      ::nSkipLength := LEN( cBuffer ) + IF( lWithCRLF, ::nCRLFLen, 0 )
+      cBuffer       := SUBSTR( cBuffer, RAT( pCRLF, cBuffer ) + 2 )
+      ::nSkipLength := LEN( cBuffer ) + IF( lWithCRLF, 2, 0 )
       ::nposition   := FSEEK( Self:nDosHandle, - ( LEN( cBuffer ) ), 2 )
       IF lWithCRLF
-         ::nposition := FSEEK( Self:nDosHandle, -( ::nCRLFLen), 1 )
+         ::nposition := FSEEK( Self:nDosHandle, - 2, 1 )
       ENDIF
    ENDIF
 
@@ -458,11 +453,11 @@ METHOD WRITE( cChar ) CLASS FileBase
       cBuffer := SPACE( ::nposition - nRead )
       FREAD( Self:nDosHandle, @cBuffer, ( ::nposition - nRead ) )
 
-      IF RIGHT( cBuffer, ::nCRLFLen ) == ::cCRLF   // with line already
-         cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - ::nCRLFLen )
+      IF RIGHT( cBuffer, 2 ) == pCRLF   // with line already
+         cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - 2 )
          lWithCRLF := pTRUE
       ENDIF
-      nLocation := LEN( cBuffer ) - ( RAT( ::cCRLF, cBuffer ) )
+      nLocation := LEN( cBuffer ) - ( RAT( pCRLF, cBuffer ) )
 
    ELSE
       cBuffer := SPACE( pBUFFER_LENGTH )
@@ -472,7 +467,7 @@ METHOD WRITE( cChar ) CLASS FileBase
 
       // Now, parse the string. and file
 
-      nLocation := AT( ::cCRLF, cBuffer )
+      nLocation := AT( pCRLF, cBuffer )
 
       // Now, if there is NO CRLF in the buffer and if the value of the
       // number of bytes read is less than the buffer length, then we
@@ -500,8 +495,8 @@ METHOD appendLine( cLine ) CLASS FileBase
 
    IF LEN( cLine ) == 0                 // Valid line
       IF Self:noDosError() .AND. Self:nDosHandle > 0        // No error
-         IF !( ::cCRLF $ cLine )          // No CRLF, so add
-            cLIne += ::cCRLF
+         IF !( pCRLF $ cLine )          // No CRLF, so add
+            cLIne += pCRLF
          ENDIF
          FSEEK( Self:nDosHandle, 0, 2 )
          FWRITE( Self:nDosHandle, cLine )
@@ -577,12 +572,12 @@ METHOD GOTO( nValue ) CLASS FileBase
                lContinue := ( FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH ) == ;
                               pBUFFER_LENGTH )
                cBuffer := cLine + cBuffer
-               WHILE ::cCRLF $ cBuffer
+               WHILE pCRLF $ cBuffer
                   IF ++ nCount == nValue
                      lContinue := pFALSE
                      EXIT
                   ENDIF
-                  cBuffer := SUBSTR( cBuffer, AT( ::cCRLF, cBuffer ) + ::nCRLFLen )
+                  cBuffer := SUBSTR( cBuffer, AT( pCRLF, cBuffer ) + 2 )
                ENDDO
                cLine := cBuffer
             ENDDO
@@ -624,11 +619,11 @@ METHOD BufferGet( lForward ) CLASS FileBase
       cBuffer := SPACE( ::nposition - nRead )
       FREAD( Self:nDosHandle, @cBuffer, ( ::nposition - nRead ) )
 
-      IF RIGHT( cBuffer, ::nCRLFLen ) == ::cCRLF   // with line already
-         cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - ::nCRLFLen )
+      IF RIGHT( cBuffer, 2 ) == pCRLF   // with line already
+         cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - 2 )
          lWithCRLF := pTRUE
       ENDIF
-      nLocation := LEN( cBuffer ) - ( RAT( ::cCRLF, cBuffer ) )
+      nLocation := LEN( cBuffer ) - ( RAT( pCRLF, cBuffer ) )
 
    ELSE
       cBuffer := SPACE( pBUFFER_LENGTH )
@@ -638,7 +633,7 @@ METHOD BufferGet( lForward ) CLASS FileBase
 
       // Now, parse the string. and file
 
-      nLocation := AT( ::cCRLF, cBuffer )
+      nLocation := AT( pCRLF, cBuffer )
 
       // Now, if there is NO CRLF in the buffer and if the value of the
       // number of bytes read is less than the buffer length, then we

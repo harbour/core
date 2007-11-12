@@ -8,6 +8,52 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-12 01:14 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbapi.h
+     + Added xhb compatibility #define for hb_storclenAdopt()
+       (equivalent to Harbour's hb_storclen_buffer())
+
+   * contrib/xhb/hbcompat.ch
+     + Added xhb IsDirectory() <-> hb_DirExists() translation.
+       Harbour version works using access(), while xhb version 
+       does a filefind, so Harbour will return a more accurate 
+       result more quickly, but it won't work with wildcards.
+
+   * source/rtl/persist.prg
+     % Using hb_StrShrink()
+
+   * common.mak
+   * utils/hbdoc/Makefile
+   * utils/hbdoc/ffile1.prg
+   * utils/hbdoc/genasc.prg
+   * utils/hbdoc/genchm.prg
+   * utils/hbdoc/genhtm.prg
+   * utils/hbdoc/genng.prg
+   * utils/hbdoc/genos2.prg
+   * utils/hbdoc/genpdf1.prg
+   * utils/hbdoc/genrtf.prg
+   * utils/hbdoc/gentrf.prg
+   * utils/hbdoc/hbdoc.prg
+   * utils/hbdoc/html.prg
+   * utils/hbdoc/ng.prg
+   * utils/hbdoc/os2.prg
+   * utils/hbdoc/rtf.prg
+   + utils/hbdoc/teeasc.prg
+     + Synced with xhb.
+     ; Someone who uses this tool, pls test.
+
+   * common.mak
+   * utils/hbmake/Makefile
+   * utils/hbmake/ft_funcs.prg
+   * utils/hbmake/hbmake.prg
+   * utils/hbmake/hbmutils.prg
+   * utils/hbmake/pickarry.prg
+   * utils/hbmake/radios.prg
+   + utils/hbmake/readline.c
+   + utils/hbmake/tmake.prg
+     + Synced with xhb.
+     ; Someone who uses this tool, pls test.
+
 2007-11-11 22:26 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * common.mak
    * source/rtl/Makefile

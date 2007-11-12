@@ -69,6 +69,7 @@
    #xtranslate hb_adler32([<x,...>])   => hb_checksum(<x>)
    #xtranslate hb_setLastKey([<x,...>])=> setLastKey(<x>)
    #xtranslate hb_CStr([<x,...>])      => CStr(<x>)
+   #xtranslate hb_DirExists(<x>)       => IsDirectory(<x>)
 
    #xtranslate hb_HexToNum([<c,...>])  => HexToNum(<c>)
    #xtranslate hb_NumToHex([<n,...>])  => NumToHex(<n>)
@@ -126,6 +127,7 @@
    #xtranslate hb_checksum([<x,...>])  => hb_adler32(<x>)
    #xtranslate setLastKey([<x,...>])   => hb_setLastKey(<x>)
    #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
+   #xtranslate IsDirectory(<x>)        => hb_DirExists(<x>)
 
    #xtranslate HexToNum([<c,...>])     => hb_HexToNum(<c>)
    #xtranslate NumToHex([<n,...>])     => hb_NumToHex(<n>)

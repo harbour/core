@@ -4,9 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Norton Guide Support Code For HBDOC
+ * TEEASC support module for hbdoc document Extractor
+ * To separate the doc from the source
  *
- * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
+ * Copyright 2004 Lorenzo Fiorini <lorenzo_fiorini@teamwork.it>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -47,85 +48,70 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
+
  *
  */
 
+#include "directry.ch"
+#include "fileio.ch"
+#include "inkey.ch"
+
 #define CRLF HB_OSNewLine()
 
-#include 'hbclass.ch'
-#include 'common.ch'
+#define DELIM   "$"                 // keyword delimiter
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Class TNortonGuide
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-CLASS TNortonGuide
+MEMVAR aDirList
 
-   DATA cFile
-   DATA nHandle
-   METHOD New( cFile )
-   METHOD WriteParBox( cPar )
-   METHOD WritePar( cPar, lConv )
-   METHOD WriteLink( clink )
-   METHOD CLOSE()
-   METHOD WriteParBold( cPar )
-   METHOD WriteTitle( cTopic, cTitle )
+FUNCTION TeeFiles()
 
-ENDCLASS
+   LOCAL i
+   LOCAL nFiles      := LEN( aDirList )
+   LOCAL cFileName 
+   LOCAL lDoc
+   LOCAL cBuffer
+   LOCAL nReadHandle
+   LOCAL nSourceHandle
+   LOCAL nDocHandle
+   LOCAL cDoc        := DELIM + "DOC" + DELIM                  // DOC keyword
+   LOCAL cEnd        := DELIM + "END" + DELIM                  // END keyword
 
-METHOD new( cFile ) CLASS TNortonGuide
+   FOR i := 1 TO nFiles
 
-   IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
-      Self:cFile   := LOWER( cFile )
-      Self:nHandle := FCREATE( Self:cFile )
-   ENDIF
+      cFileName   := aDirList[ i, F_NAME ]
+      nReadHandle := fopen( cFileName )
+      nSourceHandle := fcreate( "teesrcs\" + cFileName )
+      nDocHandle := fcreate( "teedocs\" + cFileName )
+   
+      lDoc := .F.
+   
+      DO WHILE freadline( nReadHandle, @cBuffer, 256 )
 
-RETURN Self
+         IF AT( cDoc, cBuffer ) > 0
+            lDoc    := .T.
+         ELSEIF AT( cEnd, cBuffer ) > 0
+            lDoc    := .F.
+            cBuffer += CRLF
+            FWRITE( nDocHandle, cBuffer, len( cBuffer ) )
+            freadline( nReadHandle, @cBuffer, 256 )
+            cBuffer += CRLF
+            FWRITE( nDocHandle, cBuffer, len( cBuffer ) )
+            LOOP            
+         ENDIF
 
-METHOD WritePar( cPar, lconv ) CLASS TNortonGuide
+         cBuffer += CRLF
 
-   DEFAULT lConv TO .T.
-   IF lConv
-      FWRITE( Self:nHandle, HB_OEMTOANSI( cPar ) + CRLF )
-   ELSE
-      FWRITE( Self:nHandle, cPar + CRLF )
-   ENDIF
-RETURN Self
-METHOD WriteParBox( cPar ) CLASS TNortonGuide
+         IF lDoc
+            FWRITE( nDocHandle, cBuffer, len( cBuffer ) )
+         ELSE
+            FWRITE( nSourceHandle, cBuffer, len( cBuffer ) )
+         ENDIF
 
-   FWRITE( Self:nHandle, cPar )
-RETURN Self
+      ENDDO
+   
+      fclose( nReadHandle )
+      fclose( nSourceHandle )
+      fclose( nDocHandle )
 
-METHOD WriteParBold( cPar ) CLASS TNortonGuide
+   NEXT
 
-   Self:WritePar( "" )
-   FWRITE( Self:nHandle, '^b' + HB_OEMTOANSI( cPar ) + '^b^' + CRLF )
-   Self:WritePar( "" )
-RETURN Self
-
-METHOD WriteTitle( cTopic, cTitle ) CLASS TNortonGuide
-
-
-   cTopic := HB_OEMTOANSI( cTopic )
-
-   FWRITE( Self:nHandle, "!Short: " + cTopic + CRLF )
-
-   Self:WriteParBold( cTitle )
-
-RETURN Self
-
-METHOD CLOSE() CLASS TNortonGuide
-
-   FCLOSE( Self:nHandle )
-
-RETURN Self
-
-METHOD WriteLink( cLink ) CLASS TNortonGuide
-
-   FWRITE( Self:nHandle, cLink )
-
-RETURN Self
-
-*+ EOF: NG.PRG
+RETURN NIL
