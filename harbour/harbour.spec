@@ -307,7 +307,7 @@ then
     for utl in hbmake hbrun hbdot hbpp hbdoc
     do
         pushd utils/${utl}
-        rm -fR "./${HB_ARCHITECTURE}"
+        rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
         make -r install
         strip ${HB_BIN_INSTALL}/${utl}
         popd

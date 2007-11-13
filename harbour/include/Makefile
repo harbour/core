@@ -17,6 +17,7 @@ C_HEADERS=\
 	hbapiitm.h   \
 	hbapilng.h   \
 	hbapirdd.h   \
+	hbassert.h   \
 	hbchksum.h   \
 	hbcomp.h     \
 	hbcompdf.h   \
@@ -55,6 +56,7 @@ C_HEADERS=\
 	hbvmpub.h    \
 	hbxvm.h      \
 	hbwince.h    \
+	hbwmain.c    \
 	hb_io.h      \
 
 PRG_HEADERS=\
@@ -89,6 +91,7 @@ PRG_HEADERS=\
 	hboo.ch      \
 	hbpers.ch    \
 	hbsetup.ch   \
+	hbsix.ch     \
 	hbstdgen.ch  \
 	hbusrrdd.ch  \
 	inkey.ch     \

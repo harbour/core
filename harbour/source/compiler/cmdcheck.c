@@ -992,7 +992,7 @@ static void hb_compChkDefineSwitch( HB_COMP_DECL, char *pszSwitch )
          char *szDefText = hb_strdup( pszSwitch + 2 ), *pAssign;
          unsigned int i = 0;
 
-         while( i < strlen( szDefText ) && !HB_ISOPTSEP( szDefText[i] ) )
+         while( szDefText[i] /*&& !HB_ISOPTSEP( szDefText[i] )*/ )
             i++;
 
          szDefText[i] = '\0';

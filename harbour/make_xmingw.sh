@@ -14,6 +14,7 @@ cleanup()
 }
 
 UNAME=`uname`
+UNAMEL=`echo "$UNAME"|tr A-Z a-z`
 
 export HB_ARCHITECTURE=w32
 export HB_COMPILER=mingw32
@@ -50,19 +51,30 @@ PATH="$CCPATH$PATH"
 
 export PATH CCPATH CCPREFIX
 
+export HB_TOOLS_PREF="hbw"
+export HB_XBUILD="w32"
+export HB_HOST_BUILD="lib"
+
 export HB_BIN_COMPILE=/tmp/hb-xmingw-$$
 rm -fR "${HB_BIN_COMPILE}"
 trap cleanup EXIT &>/dev/null
 mkdir ${HB_BIN_COMPILE}
 
+DIR=`cd $(dirname $0);pwd`
 if which harbour &> /dev/null; then
-    ln -s `which harbour` ${HB_BIN_COMPILE}/harbour.exe
+    HB_COMP_PATH=`which harbour 2> /dev/null`
+else
+    HB_COMP_PATH="$DIR/source/main/$UNAMEL/gcc/harbour"
+fi
+
+if [ -x "${HB_COMP_PATH}" ]; then
+    ln -s "${HB_COMP_PATH}" ${HB_BIN_COMPILE}/harbour.exe
 else
     echo "You must have a working Harbour executable for your platform on your PATH."
     exit 1
 fi
 
-(cd `dirname $0`; ln -s `pwd`/source/pp/linux/gcc/hbppgen ${HB_BIN_COMPILE}/hbppgen.exe)
+ln -s "$DIR/source/pp/$UNAMEL/gcc/hbppgen" ${HB_BIN_COMPILE}/hbppgen.exe
 export HB_PPGEN_PATH=${HB_BIN_COMPILE}
 
 case "$1" in

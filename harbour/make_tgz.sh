@@ -17,6 +17,7 @@ name="harbour"
 hb_ver=`get_hbver`
 hb_platform=`get_hbplatform`
 [ "${hb_platform}" = "" ] || hb_platform="-${hb_platform}"
+[ "${HB_XBUILD}" = "" ] || hb_platform="-${HB_XBUILD}"
 hb_archfile="${name}-${hb_ver}${hb_platform}.bin.tar.gz"
 hb_instfile="${name}-${hb_ver}${hb_platform}.inst.sh"
 hb_lnkso="yes"
@@ -228,10 +229,12 @@ do
 done
 
 # Keep the size of the binaries to a minimim.
-strip $HB_BIN_INSTALL/harbour${hb_exesuf}
+if [ -f $HB_BIN_INSTALL/harbour${hb_exesuf} ]; then
+    ${CCPREFIX}strip $HB_BIN_INSTALL/harbour${hb_exesuf}
+fi
 if [ "$HB_ARCHITECTURE" != "hpux" ]; then
     # Keep the size of the libraries to a minimim, but don't try to strip symlinks.
-    strip -S `find $HB_LIB_INSTALL -type f`
+    ${CCPREFIX}strip -S `find $HB_LIB_INSTALL -type f`
 fi
 
 if [ "${hb_sysdir}" = "yes" ]; then
@@ -266,9 +269,9 @@ then
     for utl in hbmake hbrun hbdot hbpp hbdoc hbtest
     do
         (cd "utils/${utl}"
-         rm -fR "./${HB_ARCHITECTURE}"
+         rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
          $MAKE -r install
-         strip "${HB_BIN_INSTALL}/${utl}${hb_exesuf}")
+         ${CCPREFIX}strip "${HB_BIN_INSTALL}/${utl}${hb_exesuf}")
     done
 fi
 

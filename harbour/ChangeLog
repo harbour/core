@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-13 14:13 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_xmingwce.sh
+  * harbour/make_xmingw.sh
+    * do not create compiler binaries in cross builds
+    * use hbce and hbw prefixes for generated build scripts
+
+  * harbour/make_tgz.sh
+    * use strip from cross compiler instead of native one
+
+  * harbour/include/Makefile
+    + added missing header files
+
+  * harbour/harbour.spec
+    * minor cleanup
+
+  * harbour/source/compiler/cmdcheck.c
+    * accept internal option delimiters in define value
+      (-d option, f.e.: '-dABC="QWE-ASD"')
+
 2007-11-13 01:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/odbc/odbc.c
      ! MSVC casting warnings silenced.
