@@ -67,11 +67,11 @@ char * hb_strLower( char * szText, ULONG ulLen )
 #ifndef HB_CDP_SUPPORT_OFF
    if( hb_cdp_page->nChars )
       for( i = 0; i < ulLen; i++ )
-         szText[ i ] = (char) hb_cdp_page->s_lower[szText[i]&255];
+         szText[ i ] = ( char ) hb_cdp_page->s_lower[ ( UCHAR ) szText[ i ] ];
    else
 #endif
       for( i = 0; i < ulLen; i++ )
-         szText[ i ] = tolower( (unsigned char) szText[ i ] );
+         szText[ i ] = ( char ) tolower( ( UCHAR ) szText[ i ] );
 
    return szText;
 }
@@ -86,11 +86,11 @@ char * hb_strUpper( char * szText, ULONG ulLen )
 #ifndef HB_CDP_SUPPORT_OFF
    if( hb_cdp_page->nChars )
       for( i = 0; i < ulLen; i++ )
-         szText[ i ] = (char) hb_cdp_page->s_upper[szText[i]&255];
+         szText[ i ] = ( char ) hb_cdp_page->s_upper[ ( UCHAR ) szText[ i ] ];
    else
 #endif
       for( i = 0; i < ulLen; i++ )
-         szText[ i ] = toupper( (unsigned char) szText[ i ] );
+         szText[ i ] = ( char ) toupper( ( UCHAR ) szText[ i ] );
 
    return szText;
 }
