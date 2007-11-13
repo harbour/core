@@ -383,8 +383,8 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                         cdpage->s_accent[iu] = ia;
                         cdpage->s_accent[il] = ia + nAddLower;
                      }
-                     cdpage->s_upper[iu] = *ptrUpper;
-                     cdpage->s_lower[il] = *ptrLower;
+                     cdpage->s_upper[il] = *ptrUpper;
+                     cdpage->s_lower[iu] = *ptrLower;
                   }
                   if( cdpage->lLatin )
                   {
