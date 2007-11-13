@@ -21,7 +21,7 @@ if [ -z "$HB_ARCHITECTURE" ]; then
     else
         hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
         case "$hb_arch" in
-            *windows*|*mingw32*)    hb_arch="w32" ;;
+            *windows*|*mingw32*|msys*)    hb_arch="w32" ;;
             *dos)   hb_arch="dos" ;;
             *bsd)   hb_arch="bsd" ;;
         esac

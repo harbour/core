@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-14 00:51 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_gcc.sh
+  * harbour/make_gnu.sh
+  * harbour/make_tgz.sh
+    * updated for new MSYS versions
+
 2007-11-13 22:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/strcase.c
     * casting
