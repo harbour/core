@@ -88,11 +88,6 @@
 #  include "hbapicdp.h"
 #endif
 
-#if !defined( HB_NO_WIN_CONSOLE ) && defined( HB_WINCE ) && \
-    !defined( HB_WINCE_USE_POCKET_CONSOLE )
-#  define HB_NO_WIN_CONSOLE
-#endif
-
 #if !defined( HB_NO_WIN_CONSOLE )
 
 #if !defined( __LCC__ )

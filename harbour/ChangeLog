@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-13 14:38 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * do not include gtwin in harbour.dll for MinGW-CE builds
+      gtwin can work only if additional (non standard) libraries
+      are installed in WinCE/PocketPC so it should not be part
+      of harbour.dll
+
+  * harbour/source/rtl/gtwin/gtwin.c
+    * removed HB_WINCE_USE_POCKET_CONSOLE macro
+      It's not longer necessary when gtwin is not part of harbour.dll
+
 2007-11-13 14:13 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_xmingwce.sh
   * harbour/make_xmingw.sh

@@ -62,9 +62,16 @@ get_solibname()
 
 mk_hbgetlibs()
 {
+    local libs
+
     if [ -z "$@" ]
     then
-        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix usrrdd ${HB_DB_DRVEXT} macro common lang codepage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm gtwin gtwvt gtgui gtdos gtos2 debug profiler compiler hbpcre"
+        libs=""
+        if [ "$HB_COMPILER" != "cemgw" ]
+        then
+            libs="$libs gtwin"
+        fi
+        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix usrrdd ${HB_DB_DRVEXT} macro common lang codepage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 debug profiler compiler hbpcre"
     else
         echo -n "$@"
     fi
@@ -72,9 +79,16 @@ mk_hbgetlibs()
 
 mk_hbgetlibsctb()
 {
+    local libs
+
     if [ -z "$@" ]
     then
-        echo -n "rddads ct nf tip xhb hbgd hbodbc hbpg hbmysql adordd hbwin32"
+        libs=""
+        if [ "$HB_COMPILER" = "cemgw" ]
+        then
+            libs="$libs gtwin"
+        fi
+        echo -n "$libs rddads ct nf tip xhb hbgd hbodbc hbpg hbmysql adordd hbwin32"
     else
         echo -n "$@"
     fi
@@ -380,7 +394,7 @@ else
     fi
     [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}mt\${ext}" ] && l="\${l}mt"
     [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}\${ext}" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
-    libs="gtalleg hbodbc debug profiler ${hb_libsc}"
+    libs="gtalleg debug profiler ${hb_libsc}"
 fi
 for l in \${libs}
 do
