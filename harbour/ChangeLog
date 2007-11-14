@@ -8,6 +8,52 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-15 00:20 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/xhb/make_b32.bat
+   * contrib/xhb/make_vc.bat
+   * contrib/apollo/make_b32.bat
+   * contrib/apollo/make_vc.bat
+   * contrib/htmllib/make_b32.bat
+   * contrib/htmllib/make_vc.bat
+   * contrib/libct/make_b32.bat
+   * contrib/libct/make_vc.bat
+   * contrib/pdflib/make_b32.bat
+   * contrib/pdflib/make_vc.bat
+   * contrib/libgt/make_b32.bat
+   * contrib/libgt/make_vc.bat
+   * contrib/hbzlib/make_b32.bat
+   * contrib/hbzlib/make_vc.bat
+   * contrib/pgsql/make_b32.bat
+   * contrib/pgsql/make_vc.bat
+   * contrib/libnf/make_b32.bat
+   * contrib/libnf/make_vc.bat
+   * contrib/gd/make_b32.bat
+   * contrib/gd/make_vc.bat
+   * contrib/tip/make_b32.bat
+   * contrib/tip/make_vc.bat
+   * contrib/adordd/make_b32.bat
+   * contrib/adordd/make_vc.bat
+   * contrib/rdd_ads/make_b32.bat
+   * contrib/rdd_ads/make_vc.bat
+   * contrib/btree/make_b32.bat
+   * contrib/btree/make_vc.bat
+   * contrib/directx/make_b32.bat
+   * contrib/directx/make_vc.bat
+   * contrib/win32/make_b32.bat
+   * contrib/win32/make_vc.bat
+   * contrib/samples/make_b32.bat
+   * contrib/samples/make_vc.bat
+   * contrib/mysql/make_b32.bat
+   * contrib/mysql/make_vc.bat
+   * contrib/odbc/make_b32.bat
+   * contrib/odbc/make_vc.bat
+   * contrib/bmdbfcdx/make_b32.bat
+   * contrib/bmdbfcdx/make_vc.bat
+     ! Removed HB_*_INSTALL manipulation from .bat files.
+     ! Different but compatible logic added on batch file 
+       level for odbc and rddads, where the batch file is 
+       copying the .dll .libs to the final install dir.
+
 2007-11-14 23:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * common.mak
    * include/hbextern.ch

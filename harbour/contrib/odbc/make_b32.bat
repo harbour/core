@@ -52,13 +52,12 @@ if "%1" == "INSTALL" goto INSTALL
 
 :INSTALL
 
-   if "%HB_INSTALL_PREFIX%" == "" set HB_INSTALL_PREFIX=..\..
+   set _HB_INSTALL_PREFIX=%HB_INSTALL_PREFIX%
+   if "%_HB_INSTALL_PREFIX%" == "" set _HB_INSTALL_PREFIX=..\..
+   set _HB_LIB_INSTALL=%HB_LIB_INSTALL%
+   if "%_HB_LIB_INSTALL%" == "" set _HB_LIB_INSTALL=%_HB_INSTALL_PREFIX%\lib
 
-   if "%HB_BIN_INSTALL%"    == "" set HB_BIN_INSTALL=%HB_INSTALL_PREFIX%\bin
-   if "%HB_INC_INSTALL%"    == "" set HB_INC_INSTALL=%HB_INSTALL_PREFIX%\include
-   if "%HB_LIB_INSTALL%"    == "" set HB_LIB_INSTALL=%HB_INSTALL_PREFIX%\lib
-
-   copy ..\..\lib\%HB_CC_NAME%\odbc32.lib ..\..\lib\
+   copy ..\..\lib\%HB_CC_NAME%\odbc32.lib %_HB_LIB_INSTALL%
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
    goto EXIT
