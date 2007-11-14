@@ -12,6 +12,8 @@
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
 
+# HB_ARCHITECTURE=""
+
 if [ -n "${HB_ARCHITECTURE}" ]
 then
     hb_arch="${HB_ARCHITECTURE}"
@@ -20,7 +22,7 @@ else
 fi
 
 case "$hb_arch" in
-    *windows*|*mingw32*)    hb_arch="w32" ;;
+    *windows*|*mingw32*|msys*)  hb_arch="w32" ;;
     *dos)   hb_arch="dos" ;;
     *bsd)   hb_arch="bsd" ;;
 esac

@@ -616,11 +616,16 @@ mk_hblibso()
         full_lib_name="lib${name}-${hb_ver}.so"
         full_lib_name_mt="lib${name}mt-${hb_ver}.so"
     fi
+    if [ -n "${HB_TOOLS_PREF}" ]; then
+        hb_mkslib="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkslib"
+    else
+        hb_mkslib="${HB_BIN_INSTALL}/hb-mkslib"
+    fi
     echo "Making ${full_lib_name}..."
-    $HB_BIN_INSTALL/hb-mkslib ${full_lib_name} $LIBS ${linker_options}
+    ${hb_mkslib} ${full_lib_name} $LIBS ${linker_options}
     if [ "$HB_MT" = "MT" ]; then
         echo "Making ${full_lib_name_mt}..."
-        $HB_BIN_INSTALL/hb-mkslib ${full_lib_name_mt} $LIBSMT ${linker_options}
+        ${hb_mkslib} ${full_lib_name_mt} $LIBSMT ${linker_options}
     fi
     for l in ${full_lib_name} ${full_lib_name_mt}
     do

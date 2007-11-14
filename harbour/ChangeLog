@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-14 15:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_xmingwce.sh
+    ! added -D__PLATFORM__Windows for non MS-Windows based hosts I
+      removed by mistake in previous commit
+
+  * harbour/bin/hb-mkslib.sh
+  * harbour/bin/hb-func.sh
+  * harbour/bin/postinst.sh
+    * in cross builds changed hb-mkslib.sh name to respect prefix used
+      by other hb* scripts (f.e. hbce or hbw) and set destination platform
+      to fixed value
+
 2007-11-14 14:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_xmingwce.sh
     * cleaned possible warning message when host computer is controlled

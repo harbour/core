@@ -31,7 +31,7 @@ fi
 
 CC_PRG_USR="-D__PLATFORM__WINCE"
 if [ "$HB_HOST_ARCH" != "w32" ]; then
-    CC_PRG_USR="$CC_PRG_USR -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAME"
+    CC_PRG_USR="$CC_PRG_USR -D__PLATFORM__Windows -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAME"
 fi
 
 [ -z "$HB_INSTALL_PREFIX" ] && \
