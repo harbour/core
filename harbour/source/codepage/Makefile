@@ -18,7 +18,7 @@ C_SOURCES=\
 	cpelwin.c     \
 	cpesdos.c     \
 	cpeswin.c     \
-	cpesmwi.c     \
+	cpesmwin.c    \
 	cpfrdos.c     \
 	cpgedos.c     \
 	cpgewin.c     \

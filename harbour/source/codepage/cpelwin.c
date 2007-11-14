@@ -86,7 +86,7 @@
 
 static HB_CODEPAGE s_codepage = { "ELWIN",
     HB_CPID_1253, HB_UNITB_1253, NUMBER_OF_CHARACTERS,
-    "а~╒бцде╦фг~╧хи~╨йклмно~╪пяссту~╬жвьы~©",
+    "а~╒бцде~╦фг~╧хи~╨йклмно~╪пяссту~╬жвьы~©",
     "А~эБЦДЕ~щФГ~чХИ~ъЙКЛМНО~ЭПЯСРТУ~ЩЖВЬЫ~Ч",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 

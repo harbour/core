@@ -337,7 +337,8 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                   }
                   for( i = ia = 1; *ptrUpper; i++, ia++, ptrUpper++, ptrLower++ )
                   {
-                     if( *ptrUpper == '~' )
+                     if( ( cdpage->lAccEqual || cdpage->lAccInterleave ) &&
+                         *ptrUpper == '~' && *ptrLower == '~' )
                      {
                         for( ptr = ptrUpper + 1; *ptr; ptr++ )
                            *( ptr - 1 ) = *ptr;
@@ -348,7 +349,9 @@ HB_EXPORT BOOL hb_cdpRegister( PHB_CODEPAGE cdpage )
                         if( cdpage->lAccEqual )
                            i--;
                      }
-                     else if( *ptrUpper == '.' )
+                     else if( *ptrUpper == '.' && *ptrLower == '.' &&
+                              ptrUpper[1] && ptrUpper[2] && ptrUpper[3] == '.' &&
+                              ptrLower[1] && ptrLower[2] && ptrLower[3] == '.' )
                      {
                         multi[nMulti].cFirst[0] = *( ptrUpper + 1 );
                         multi[nMulti].cFirst[1] = *( ptrLower + 1 );

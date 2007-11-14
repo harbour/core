@@ -8,6 +8,28 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-14 02:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/codepage/Makefile
+  + harbour/source/codepage/cpesmwin.c
+  - harbour/source/codepage/cpesmwi.c
+    * renamed
+
+  * harbour/source/rtl/cdpapi.c
+    ! do not use '~' as accented character marker if neither ACCENTED_EQUAL
+      nor ACCENTED_INTERLEAVED is set - in some CPs '~' is a letter
+    ! use '~' as accented character marker only if it exists in UPPER and
+      LOWER letter sets - our CP code cannot properly decode letter sets
+      when this condition is not true - it should be fixed (TOFIX)
+    ! use '.' as multibyte character marker only if it exists in UPPER and
+      LOWER letter sets - our CP code cannot properly decode letter sets
+      when this condition is not true - it should be fixed (TOFIX)
+
+  * harbour/source/codepage/cpeldos.c
+  * harbour/source/codepage/cpelwin.c
+    * updated accent marker upper letters to be the same as in lower ones
+      Greek users should fix me.
+
 2007-11-14 00:51 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gcc.sh
   * harbour/make_gnu.sh
