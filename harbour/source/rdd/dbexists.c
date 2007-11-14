@@ -4,9 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Header file for runtime configuration, common for Harbour and C level.
+ * DBEXISTS() Harbour extension.
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999 Bruno Cantero <bruno@issnet.net>
+ * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,26 +51,34 @@
  *
  */
 
-/* NOTE: This file is used by C code and at Harbour build time. 
-         Normally you never need to #include it in any .prg code. */
+#include "hbapi.h"
+#include "hbapirdd.h"
+#include "hbapierr.h"
 
-#ifndef HB_SETUP_CH_
-#define HB_SETUP_CH_
+/* NOTE: This function is a new Harbour function implemented in the 
+         original CA-Cl*pper namespace. This should have been 
+         marked as HB_EXTENSION, but it's not. */
 
-/* NOTE: You can select here, which features you want to include of the
-         different Clipper implementations. */
+HB_FUNC( DBEXISTS )
+{
+   LPRDDNODE  pRDDNode;
+   USHORT     uiRddID;
+   const char * szDriver;
 
-/* #define HB_EXTENSION */        /* Enable Harbour extensions */
-#define HB_C52_UNDOC              /* Enable CA-Cl*pper 5.2e undocumented features */
-/* #define HB_C52_STRICT */       /* Enable CA-Cl*pper 5.2e strict compatibility */
-#define HB_COMPAT_C53             /* Enable CA-Cl*pper 5.3x extensions */
-#define HB_COMPAT_XPP             /* Enable Alaska Xbase++ extensions */
-/* #define HB_COMPAT_VO */        /* Enable CA-VO extensions */
-#define HB_COMPAT_FLAGSHIP        /* Enable Flagship extensions */
-/* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
-/* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
-/* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
+   szDriver = hb_parc( 3 );
+   if( !szDriver ) /* no VIA RDD parameter, use default */
+   {
+      szDriver = hb_rddDefaultDrv( NULL );
+   }
 
-/* #define HB_FILE_VER_STATIC */  /* Enable inclusion of file version strings */
+   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDD */
 
-#endif /* HB_SETUP_CH_ */
+   if( !pRDDNode )
+   {
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "DBEXISTS" );
+      return;
+   }
+
+   hb_retl( SELF_EXISTS( pRDDNode, hb_param( 1, HB_IT_STRING ),
+                                   hb_param( 2, HB_IT_STRING ) ) == SUCCESS );
+}

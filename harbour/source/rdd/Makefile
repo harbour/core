@@ -6,7 +6,11 @@ ROOT = ../../
 
 C_SOURCES=\
 	dbcmd.c \
+	dbcmd53.c \
 	dbcmdx.c \
+	dbdrop.c \
+	dbexists.c \
+	fieldhb.c \
 	workarea.c \
 	wacore.c \
 	wafunc.c \
@@ -15,6 +19,7 @@ C_SOURCES=\
 	dbsql.c \
 	delim1.c \
 	sdf1.c \
+	rddinfo.c \
 	hbdbsort.c \
 
 PRG_SOURCES=\

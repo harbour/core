@@ -72,14 +72,10 @@ static void hb_sdfInitArea( SDFAREAP pArea, char * szFileName )
    /* Allocate only after succesfully open file */
    pArea->szFileName = hb_strdup( szFileName );
 
-#ifdef __XHARBOUR__
    if( hb_itemGetCLen( hb_set.HB_SET_EOL ) == 0 )
       pArea->szEol = hb_strdup( hb_conNewLine() );
    else
       pArea->szEol = hb_strdup( hb_itemGetCPtr( hb_set.HB_SET_EOL ) );
-#else
-   pArea->szEol = hb_strdup( hb_conNewLine() );
-#endif
    pArea->uiEolLen = strlen( pArea->szEol );
 
    /* Alloc buffer */

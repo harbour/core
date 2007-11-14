@@ -74,14 +74,10 @@ static void hb_delimInitArea( DELIMAREAP pArea, char * szFileName )
    pArea->szFileName = hb_strdup( szFileName );
 
    /* set line separator: EOL */
-#ifdef __XHARBOUR__
    if( hb_itemGetCLen( hb_set.HB_SET_EOL ) == 0 )
       pArea->szEol = hb_strdup( hb_conNewLine() );
    else
       pArea->szEol = hb_strdup( hb_itemGetCPtr( hb_set.HB_SET_EOL ) );
-#else
-   pArea->szEol = hb_strdup( hb_conNewLine() );
-#endif
    pArea->uiEolLen = strlen( pArea->szEol );
 
    /* allocate record buffer, one additional byte is for deleted flag */

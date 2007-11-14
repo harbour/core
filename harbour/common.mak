@@ -805,7 +805,11 @@ CODEPAGE_LIB_OBJS = \
 
 RDD_LIB_OBJS = \
     $(OBJ_DIR)\dbcmd$(OBJEXT)    \
+    $(OBJ_DIR)\dbcmd53$(OBJEXT)  \
     $(OBJ_DIR)\dbcmdx$(OBJEXT)   \
+    $(OBJ_DIR)\dbdrop$(OBJEXT)   \
+    $(OBJ_DIR)\dbexists$(OBJEXT) \
+    $(OBJ_DIR)\fieldhb$(OBJEXT)  \
     $(OBJ_DIR)\hbdbsort$(OBJEXT) \
     $(OBJ_DIR)\workarea$(OBJEXT) \
     $(OBJ_DIR)\wacore$(OBJEXT)   \
@@ -815,6 +819,7 @@ RDD_LIB_OBJS = \
     $(OBJ_DIR)\delim1$(OBJEXT)   \
     $(OBJ_DIR)\dbsql$(OBJEXT)    \
     $(OBJ_DIR)\sdf1$(OBJEXT)     \
+    $(OBJ_DIR)\rddinfo$(OBJEXT)  \
     \
     $(OBJ_DIR)\dbdelim$(OBJEXT)  \
     $(OBJ_DIR)\dbsdf$(OBJEXT)    \

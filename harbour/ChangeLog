@@ -8,6 +8,50 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-14 23:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * common.mak
+   * include/hbextern.ch
+   * source/rdd/Makefile
+   + source/rdd/rddinfo.c
+   * source/rdd/dbcmd.c
+   + source/rdd/dbdrop.c
+   + source/rdd/dbcmd53.c
+   + source/rdd/dbexists.c
+   + source/rdd/fieldhb.c
+     ! Moved away C53 functions to a separate file.
+     + Added HB_RDDGETTEMPALIAS() as a documented version 
+       of the long existing __RDDGETTEMPALIAS(). The latter 
+       name still kept for compatibility.
+     ! Moved away non-namespace conformant HB_EXTENSIONs 
+       to separate files to cause less harm form those not 
+       wanting these or already using these names in app 
+       code.
+     + Added HB_RDDINFO() namespace conformant version of 
+       the RDDINFO() Harbour extension. RDDINFO() still works 
+       but it's now defined in a separate file to cause less 
+       potential harm.
+     - Removed HB_EXTENSION guards from around DBDROP(), DBEXISTS(), 
+       RDDINFO(), FIELDLEN(), FIELDDEC(), FIELDTYPE() non namespace 
+       conformant Harbour extensions, so these are now always 
+       available.
+     ; NOTE/TOFIX: In RDD we have some more hidden Harbour 
+                   specific extensions not properly marked or 
+                   at least documented, like cRDD, nConnection, 
+                   cCodePage extra parameters, DBS_FLAG, maybe more.
+     ; Przemek: I'm sorry you didn't bother to answer, so I 
+       just can hope these address the problems you were having.
+
+   * source/rdd/sdf1.c
+   * source/rdd/delim1.c
+     ! Removed two __XHARBOUR__ guards, by making the guarded 
+       code the default. We have SET EOL support in Harbour now, 
+       so this seems okey. If not, tell.
+     ; TOFIX: We still have __XHARBOUR__ #defines in pp/ppcore.c 
+       and debug/debugger.prg.
+
+   * include/hbsetup.ch
+     ! HB_EXTENSION turned off.
+
 2007-11-14 21:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_xmingwce.sh
     * updated for different then GCC host C compiler name
