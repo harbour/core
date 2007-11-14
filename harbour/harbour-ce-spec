@@ -173,8 +173,6 @@ ${CCPREFIX}strip --strip-debug $HB_LIB_INSTALL/*
 rm -fR ${HB_BIN_INSTALL}/{harbour,hbdoc,hbdot,hbmake,hbpp,hbrun,hbtest,hbverfix,pretest}.exe
 rm -fR $HB_INC_INSTALL
 
-mv ${HB_BIN_INSTALL}/hb-mkslib ${HB_BIN_INSTALL}/%{hb_pref}-mkslib
-
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF
 This RPM distribution of Harbour includes extra commands to make compiling

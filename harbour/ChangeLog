@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-14 17:07 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+    * updated for recently modified hb-mkslib.sh name in cross builds
+
 2007-11-14 15:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_xmingwce.sh
     ! added -D__PLATFORM__Windows for non MS-Windows based hosts I
