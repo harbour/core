@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-14 14:45 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_xmingwce.sh
+    * cleaned possible warning message when host computer is controlled
+      by MS-Windows cross build
+    ! fixed harbour.exe and hbppgen.exe detecting in Windows
+
 2007-11-14 02:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/codepage/Makefile

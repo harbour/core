@@ -13,17 +13,32 @@ cleanup()
     rm -fR "${HB_BIN_COMPILE}"
 }
 
-UNAME=`uname`
-UNAMEL=`echo "$UNAME"|tr A-Z a-z`
-
 export HB_ARCHITECTURE=w32
 export HB_COMPILER=cemgw
+
+UNAME=`uname -s | tr -d "[-]" 2>/dev/null`
+
+if [ "$OSTYPE" = "msdosdjgpp" ]; then
+    HB_HOST_ARCH="dos"
+else
+    HB_HOST_ARCH=`echo "$UNAME"|tr '[A-Z]' '[a-z]'`
+    case "$HB_HOST_ARCH" in
+        *windows*|*mingw32*|msys*)  HB_HOST_ARCH="w32" ;;
+        *dos)   HB_HOST_ARCH="dos" ;;
+        *bsd)   HB_HOST_ARCH="bsd" ;;
+    esac
+fi
+
+CC_PRG_USR="-D__PLATFORM__WINCE"
+if [ "$HB_HOST_ARCH" != "w32" ]; then
+    CC_PRG_USR="$CC_PRG_USR -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAME"
+fi
 
 [ -z "$HB_INSTALL_PREFIX" ] && \
 export HB_INSTALL_PREFIX="/usr/local/arm-wince-cemgw-harbour"
 export CC_C_USR=""
 export C_USR="$CC_C_USR $C_USR"
-export CC_PRG_USR="-D__PLATFORM__Windows -D__PLATFORM__WINCE -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAME"
+export CC_PRG_USR
 export PRG_USR="$CC_PRG_USR $PRG_USR"
 
 export CCPATH="/opt/mingw32ce/bin:"
@@ -44,7 +59,7 @@ DIR=`cd $(dirname $0);pwd`
 if which harbour &> /dev/null; then
     HB_COMP_PATH=`which harbour 2> /dev/null`
 else
-    HB_COMP_PATH="$DIR/source/main/$UNAMEL/gcc/harbour"
+    HB_COMP_PATH="$DIR/source/main/$HB_HOST_ARCH/gcc/harbour"
 fi
 if [ -x "${HB_COMP_PATH}" ]; then
     ln -s "${HB_COMP_PATH}" ${HB_BIN_COMPILE}/harbour.exe
@@ -53,7 +68,7 @@ else
     exit 1
 fi
 
-ln -s "$DIR/source/pp/$UNAMEL/gcc/hbppgen" ${HB_BIN_COMPILE}/hbppgen.exe
+ln -s "$DIR/source/pp/$HB_HOST_ARCH/gcc/hbppgen" ${HB_BIN_COMPILE}/hbppgen.exe
 export HB_PPGEN_PATH=${HB_BIN_COMPILE}
 
 case "$1" in
