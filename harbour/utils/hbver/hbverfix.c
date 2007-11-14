@@ -74,6 +74,10 @@
 #define MAX_BUF_LEN 4096
 
 #if defined(HB_WINCE)
+
+#define hb_xgrab(x)     malloc(x)
+#define hb_xfree(x)     free(x)
+
 wchar_t *hb_mbtowc( const char * srcA )
 {
    DWORD length;
@@ -84,6 +88,23 @@ wchar_t *hb_mbtowc( const char * srcA )
    MultiByteToWideChar( CP_ACP, 0, srcA, -1, dstW, length + 1 );
 
    return dstW;
+}
+
+char *hb_wctomb( const wchar_t *srcW )
+{
+   DWORD length;
+   char *dstA;
+
+   length = WideCharToMultiByte( CP_ACP, 0, srcW, -1, NULL, 0, NULL, NULL );
+   dstA = ( char * ) hb_xgrab( length + 1 );
+   WideCharToMultiByte( CP_ACP, 0, srcW, -1, dstA, length + 1, NULL, NULL );
+
+   return dstA;
+}
+
+void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
+{
+   WideCharToMultiByte( CP_ACP, 0, srcW, ulLen, dstA, ulLen, NULL, NULL );
 }
 
 int remove( const char * path )
@@ -410,3 +431,7 @@ int main( int argc, char * argv[] )
    }
    return 0;
 }
+
+#if defined( HB_WINCE ) && !defined( __CEGCC__ )
+#  include "hbwmain.c"
+#endif

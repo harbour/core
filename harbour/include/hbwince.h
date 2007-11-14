@@ -144,6 +144,17 @@ extern char *strerror( int errnum );
    BOOL WINAPI GetKeyboardState( PBYTE p );
    BOOL WINAPI SetKeyboardState( PBYTE p );
 
+   #if defined( __POCC__ ) || defined( __XCC__ )
+      #define GlobalAlloc(flags, cb)      LocalAlloc(flags, cb)
+      #define GlobalLock(lp)              LocalLock(lp)
+      #define GlobalUnlock(lp)            LocalUnlock(lp)
+      #define GlobalSize(lp)              LocalSize(lp)
+      #define GlobalFree(h)               LocalFree(h)
+      #define GlobalReAlloc(h, cb, flags) LocalReAlloc(h, cb, flags)
+      #define GlobalHandle(lp)            LocalHandle(lp)
+      #define GlobalFlags(lp)             LocalFlags(lp)
+   #endif
+
 #endif /* HB_OS_WIN_32_USED && _MSC_VER */
 
 #endif /* HB_WINCE */

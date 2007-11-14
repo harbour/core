@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-14 19:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbwince.h
+  * harbour/source/common/hbwince.c
+  * harbour/utils/hbver/hbverfix.c
+    * modified for clean compilation with POCC/XCC and ARM processors
+
 2007-11-14 17:07 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-ce-spec
   * harbour/harbour-w32-spec

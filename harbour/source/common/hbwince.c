@@ -653,7 +653,7 @@ BOOL WINAPI SetKeyboardState( PBYTE p )
    return FALSE;
 }
 
-#ifndef _MSC_VER
+#if !defined( _MSC_VER ) || defined( __POCC__ ) || defined( __XCC__ )
 PVOID WINAPI LocalLock( HLOCAL h )
 {
    HB_SYMBOL_UNUSED( h );
@@ -667,7 +667,7 @@ BOOL WINAPI LocalUnlock( HLOCAL h )
 
    return FALSE;
 }
-#endif /* _MSC_VER */
+#endif /* !_MSC_VER || __POCC__ || __XCC__ */
 
 #endif /* UNICODE */
 
