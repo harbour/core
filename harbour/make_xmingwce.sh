@@ -20,10 +20,12 @@ UNAME=`uname -s | tr -d "[-]" 2>/dev/null`
 
 if [ "$OSTYPE" = "msdosdjgpp" ]; then
     HB_HOST_ARCH="dos"
+    HB_HOST_CC="djgpp"
 else
     HB_HOST_ARCH=`echo "$UNAME"|tr '[A-Z]' '[a-z]'`
+    HB_HOST_CC="gcc"
     case "$HB_HOST_ARCH" in
-        *windows*|*mingw32*|msys*)  HB_HOST_ARCH="w32" ;;
+        *windows*|*mingw32*|msys*)  HB_HOST_ARCH="w32"; HB_HOST_CC="mingw32" ;;
         *dos)   HB_HOST_ARCH="dos" ;;
         *bsd)   HB_HOST_ARCH="bsd" ;;
     esac
@@ -59,7 +61,7 @@ DIR=`cd $(dirname $0);pwd`
 if which harbour &> /dev/null; then
     HB_COMP_PATH=`which harbour 2> /dev/null`
 else
-    HB_COMP_PATH="$DIR/source/main/$HB_HOST_ARCH/gcc/harbour"
+    HB_COMP_PATH="$DIR/source/main/$HB_HOST_ARCH/$HB_HOST_CC/harbour"
 fi
 if [ -x "${HB_COMP_PATH}" ]; then
     ln -s "${HB_COMP_PATH}" ${HB_BIN_COMPILE}/harbour.exe
@@ -68,7 +70,7 @@ else
     exit 1
 fi
 
-ln -s "$DIR/source/pp/$HB_HOST_ARCH/gcc/hbppgen" ${HB_BIN_COMPILE}/hbppgen.exe
+ln -s "$DIR/source/pp/$HB_HOST_ARCH/$HB_HOST_CC/hbppgen" ${HB_BIN_COMPILE}/hbppgen.exe
 export HB_PPGEN_PATH=${HB_BIN_COMPILE}
 
 case "$1" in

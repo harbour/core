@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-14 21:53 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_xmingwce.sh
+    * updated for different then GCC host C compiler name
+      (DJGPP in DOS and MINGW32 in MS-Windows)
+
 2007-11-14 19:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbwince.h
   * harbour/source/common/hbwince.c
