@@ -1,7 +1,13 @@
 @echo off
 rem
-rem $Id$
+rem $Id: make_b32.bat 7974 2007-11-14 23:24:27Z vszakats $
 rem
+
+rem ---------------------------------------------------------------
+rem IMPORTANT: You'll need Firebird headers and this envvar
+rem            to be set to successfully build this library:
+rem            set FBDIR=C:\Firebird
+rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------
 rem This is a generic template file, if it doesn't fit your own needs
@@ -15,11 +21,12 @@ rem    set HB_MAKE_PROGRAM=
 rem    set HB_MAKE_FLAGS=
 rem ---------------------------------------------------------------
 
-if "%HB_CC_NAME%" == "" set HB_CC_NAME=vc
-if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
+if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%SystemRoot%\system32
+if "%HB_CC_NAME%" == "" set HB_CC_NAME=b32
+if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=make.exe
 set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
 
-set C_USR=%C_USR% -Iinclude -DZLIB_DLL;WIN32;ASSERT
+set C_USR=%C_USR% -I%FBDIR%\include -DHB_OS_WIN_32_USED
 
 rem ---------------------------------------------------------------
 
@@ -38,6 +45,8 @@ if "%1" == "INSTALL" goto INSTALL
 
 :BUILD
 
+   implib ..\..\lib\%HB_CC_NAME%\fbclient.lib %FBDIR%\bin\fbclient.dll
+
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
    if errorlevel 1 notepad make_%HB_CC_NAME%.log
    goto EXIT
@@ -50,6 +59,13 @@ if "%1" == "INSTALL" goto INSTALL
    goto EXIT
 
 :INSTALL
+
+   set _HB_INSTALL_PREFIX=%HB_INSTALL_PREFIX%
+   if "%_HB_INSTALL_PREFIX%" == "" set _HB_INSTALL_PREFIX=..\..
+   set _HB_LIB_INSTALL=%HB_LIB_INSTALL%
+   if "%_HB_LIB_INSTALL%" == "" set _HB_LIB_INSTALL=%_HB_INSTALL_PREFIX%\lib
+
+   copy ..\..\lib\%HB_CC_NAME%\fbclient.lib %_HB_LIB_INSTALL%
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
    goto EXIT

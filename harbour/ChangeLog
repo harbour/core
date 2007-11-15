@@ -8,6 +8,37 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-15 20:44 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   + contrib/firebird
+   + contrib/firebird/Makefile
+   + contrib/firebird/make_b32.bat
+   + contrib/firebird/make_vc.bat
+   + contrib/firebird/common.mak
+   + contrib/firebird/tfirebird.prg
+   + contrib/firebird/firebird.c
+   + contrib/firebird/readme.txt
+   + contrib/firebird/test
+   + contrib/firebird/test/Makefile
+   + contrib/firebird/test/bld_b32.bat
+   + contrib/firebird/test/simple.prg
+   + contrib/firebird/test/test.prg
+   + contrib/firebird/test/stress.prg
+   + contrib/firebird/test/testapi.c
+     + Added firebird library, with some warnings and other 
+       minor things fixed, and Harbour std non-GNU make / build 
+       files added.
+     ; TOFIX: There is still a potentially dangerous 
+              warning to be fixed in FBGETBLOB().
+
+   * contrib/hbzlib/make_b32.bat
+   * contrib/hbzlib/make_vc.bat
+     ! Fixed to not override C_USR set by user.
+
+   + contrib/mysql/test
+   + contrib/mysql/test/test.prg
+   - contrib/mysql/test.prg
+     * Moved test file to test dir.
+
 2007-11-15 00:20 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/xhb/make_b32.bat
    * contrib/xhb/make_vc.bat

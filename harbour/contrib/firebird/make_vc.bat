@@ -1,7 +1,13 @@
 @echo off
 rem
-rem $Id$
+rem $Id: make_vc.bat 7974 2007-11-14 23:24:27Z vszakats $
 rem
+
+rem ---------------------------------------------------------------
+rem IMPORTANT: You'll need Firebird headers and this envvar
+rem            to be set to successfully build this library:
+rem            set FBDIR=C:\Firebird
+rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------
 rem This is a generic template file, if it doesn't fit your own needs
@@ -15,11 +21,12 @@ rem    set HB_MAKE_PROGRAM=
 rem    set HB_MAKE_FLAGS=
 rem ---------------------------------------------------------------
 
+if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%SystemRoot%\system32
 if "%HB_CC_NAME%" == "" set HB_CC_NAME=vc
 if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
 set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
 
-set C_USR=%C_USR% -Iinclude -DZLIB_DLL;WIN32;ASSERT
+set C_USR=%C_USR% -I%FBDIR%\include -DHB_OS_WIN_32_USED
 
 rem ---------------------------------------------------------------
 
@@ -38,6 +45,24 @@ if "%1" == "INSTALL" goto INSTALL
 
 :BUILD
 
+   rem ---------------------------------------------------------------
+   rem This .dll to .lib conversion needs GNU sed.exe in the path
+   rem ---------------------------------------------------------------
+   echo./[ \t]*ordinal hint/,/^^[ \t]*Summary/{> _temp.sed
+   echo. /^^[ \t]\+[0-9]\+/{>> _temp.sed
+   echo.   s/^^[ \t]\+[0-9]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+\(.*\)/\1/p>> _temp.sed
+   echo. }>> _temp.sed
+   echo.}>> _temp.sed
+   DUMPBIN /EXPORTS %FBDIR%\bin\fbclient.dll > _dump.tmp
+   echo.LIBRARY %FBDIR%\bin\fbclient.dll > _temp.def
+   echo.EXPORTS >> _temp.def
+   sed -nf _temp.sed < _dump.tmp >> _temp.def
+   LIB /MACHINE:X86 /DEF:_temp.def /OUT:..\..\lib\%HB_CC_NAME%\fbclient.lib 
+   del _dump.tmp
+   del _temp.def
+   del _temp.sed
+   rem ---------------------------------------------------------------
+
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
    if errorlevel 1 notepad make_%HB_CC_NAME%.log
    goto EXIT
@@ -50,6 +75,13 @@ if "%1" == "INSTALL" goto INSTALL
    goto EXIT
 
 :INSTALL
+
+   set _HB_INSTALL_PREFIX=%HB_INSTALL_PREFIX%
+   if "%_HB_INSTALL_PREFIX%" == "" set _HB_INSTALL_PREFIX=..\..
+   set _HB_LIB_INSTALL=%HB_LIB_INSTALL%
+   if "%_HB_LIB_INSTALL%" == "" set _HB_LIB_INSTALL=%_HB_INSTALL_PREFIX%\lib
+
+   copy ..\..\lib\%HB_CC_NAME%\fbclient.lib %_HB_LIB_INSTALL%
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
    goto EXIT

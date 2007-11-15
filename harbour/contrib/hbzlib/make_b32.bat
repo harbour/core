@@ -19,7 +19,7 @@ if "%HB_CC_NAME%" == "" set HB_CC_NAME=b32
 if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=make.exe
 set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
 
-set C_USR=-Iinclude -DZLIB_DLL;WIN32;ASSERT -vi -Ve -6 -R- -H- -5 -OS -w- -X- -a8 -b -k-
+set C_USR=%C_USR% -Iinclude -DZLIB_DLL;WIN32;ASSERT -vi -Ve -6 -R- -H- -5 -OS -w- -X- -a8 -b -k-
 
 rem ---------------------------------------------------------------
 
