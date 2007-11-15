@@ -29,6 +29,7 @@
        files added.
      ; TOFIX: There is still a potentially dangerous 
               warning to be fixed in FBGETBLOB().
+     ; Borrowed frmo xhb.
 
    * contrib/hbzlib/make_b32.bat
    * contrib/hbzlib/make_vc.bat
