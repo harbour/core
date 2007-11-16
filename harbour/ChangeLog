@@ -8,16 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-16 18:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  + harbour/make_vcce.bat
+  + harbour/make_vcce.mak
+     + Added WinCE/MSVC 8.0 bat/makefile environment
+
 2007-11-16 15:37 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * make_b32.mak
    * make_vc.mak
-     ! Fixed BC/VC make files to generated pptable.c in the obj 
+     ! Fixed BC/VC make files to generated pptable.c in the obj
        dir instead of source/pp.
      ! Synced BC/VC pptable.c dependencies with make_gcc.mak
      ; Suggested by Przemek.
 
    * make_gcc.mak
-     ! Fixed to not delete source/pp/pptable.c on clean 
+     ! Fixed to not delete source/pp/pptable.c on clean
        (since it's never generated there).
 
 2007-11-16 14:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -32,8 +37,8 @@
    * source/rtl/Makefile
    + source/rtl/natmsgu.c
    * source/rtl/natmsg.c
-     + Added Harbour internal version of undocument Clipper 
-       Nat*() (and friends) calls. These are always available 
+     + Added Harbour internal version of undocument Clipper
+       Nat*() (and friends) calls. These are always available
        in core.
        Harbour __natIsAffirm()   = Clipper IsAffirm()
        Harbour __natIsNegative() = Clipper IsNegative()
@@ -47,8 +52,8 @@
    * source/rtl/tgetlist.prg
    * source/rtl/tlabel.prg
    * source/rtl/treport.prg
-     ! Now using Harbour internal __NAT*() functions 
-       instead of C5.x undocumented calls, so Harbour 
+     ! Now using Harbour internal __NAT*() functions
+       instead of C5.x undocumented calls, so Harbour
        will now compile with HB_C52_UNDOC turned off.
 
 2007-11-16 01:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -71,20 +76,20 @@
      + Added FreeImage OSS library Harbour interface.
      ! Some minor fixes and file rearrangements made.
      + Added std make files.
-     ; TOFIX: There is still a potentially dangerous 
+     ; TOFIX: There is still a potentially dangerous
               warning to be fixed in FI_GETBACKGROUNDCOLOR()
      ; Borrowed from xhb.
-     ; NOTE: The lib made some features available through the xhb 
-             specific C struct functionality. Since such functionality 
-             is not implemented in Harbour, the library would need 
-             to be extened with some more wrappers to make C level 
-             vars accessible from Harbour code. But even without 
+     ; NOTE: The lib made some features available through the xhb
+             specific C struct functionality. Since such functionality
+             is not implemented in Harbour, the library would need
+             to be extened with some more wrappers to make C level
+             vars accessible from Harbour code. But even without
              this functionality, the lib seems quite useful.
      ; NOTE: The lib also has some Windows specific functions:
              FI_FITOBITMAP(), FI_BITMAPTOFI(), FI_WINDRAW()
 
    + contrib/xhb/hbfast.h
-     + Added this file to enhance C interface code compatibility 
+     + Added this file to enhance C interface code compatibility
        with xhb.
 
    * contrib/firebird/*
@@ -106,10 +111,10 @@
    + contrib/firebird/test/test.prg
    + contrib/firebird/test/stress.prg
    + contrib/firebird/test/testapi.c
-     + Added firebird library, with some warnings and other 
-       minor things fixed, and Harbour std non-GNU make / build 
+     + Added firebird library, with some warnings and other
+       minor things fixed, and Harbour std non-GNU make / build
        files added.
-     ; TOFIX: There is still a potentially dangerous 
+     ; TOFIX: There is still a potentially dangerous
               warning to be fixed in FBGETBLOB().
      ; Borrowed from xhb.
 
@@ -164,8 +169,8 @@
    * contrib/bmdbfcdx/make_b32.bat
    * contrib/bmdbfcdx/make_vc.bat
      ! Removed HB_*_INSTALL manipulation from .bat files.
-     ! Different but compatible logic added on batch file 
-       level for odbc and rddads, where the batch file is 
+     ! Different but compatible logic added on batch file
+       level for odbc and rddads, where the batch file is
        copying the .dll .libs to the final install dir.
 
 2007-11-14 23:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -179,34 +184,34 @@
    + source/rdd/dbexists.c
    + source/rdd/fieldhb.c
      ! Moved away C53 functions to a separate file.
-     + Added HB_RDDGETTEMPALIAS() as a documented version 
-       of the long existing __RDDGETTEMPALIAS(). The latter 
+     + Added HB_RDDGETTEMPALIAS() as a documented version
+       of the long existing __RDDGETTEMPALIAS(). The latter
        name still kept for compatibility.
-     ! Moved away non-namespace conformant HB_EXTENSIONs 
-       to separate files to cause less harm form those not 
-       wanting these or already using these names in app 
+     ! Moved away non-namespace conformant HB_EXTENSIONs
+       to separate files to cause less harm form those not
+       wanting these or already using these names in app
        code.
-     + Added HB_RDDINFO() namespace conformant version of 
-       the RDDINFO() Harbour extension. RDDINFO() still works 
-       but it's now defined in a separate file to cause less 
+     + Added HB_RDDINFO() namespace conformant version of
+       the RDDINFO() Harbour extension. RDDINFO() still works
+       but it's now defined in a separate file to cause less
        potential harm.
-     - Removed HB_EXTENSION guards from around DBDROP(), DBEXISTS(), 
-       RDDINFO(), FIELDLEN(), FIELDDEC(), FIELDTYPE() non namespace 
-       conformant Harbour extensions, so these are now always 
+     - Removed HB_EXTENSION guards from around DBDROP(), DBEXISTS(),
+       RDDINFO(), FIELDLEN(), FIELDDEC(), FIELDTYPE() non namespace
+       conformant Harbour extensions, so these are now always
        available.
-     ; NOTE/TOFIX: In RDD we have some more hidden Harbour 
-                   specific extensions not properly marked or 
-                   at least documented, like cRDD, nConnection, 
+     ; NOTE/TOFIX: In RDD we have some more hidden Harbour
+                   specific extensions not properly marked or
+                   at least documented, like cRDD, nConnection,
                    cCodePage extra parameters, DBS_FLAG, maybe more.
-     ; Przemek: I'm sorry you didn't bother to answer, so I 
+     ; Przemek: I'm sorry you didn't bother to answer, so I
        just can hope these address the problems you were having.
 
    * source/rdd/sdf1.c
    * source/rdd/delim1.c
-     ! Removed two __XHARBOUR__ guards, by making the guarded 
-       code the default. We have SET EOL support in Harbour now, 
+     ! Removed two __XHARBOUR__ guards, by making the guarded
+       code the default. We have SET EOL support in Harbour now,
        so this seems okey. If not, tell.
-     ; TOFIX: We still have __XHARBOUR__ #defines in pp/ppcore.c 
+     ; TOFIX: We still have __XHARBOUR__ #defines in pp/ppcore.c
        and debug/debugger.prg.
 
    * include/hbsetup.ch
@@ -431,8 +436,8 @@
 
    * contrib/xhb/hbcompat.ch
      + Added xhb IsDirectory() <-> hb_DirExists() translation.
-       Harbour version works using access(), while xhb version 
-       does a filefind, so Harbour will return a more accurate 
+       Harbour version works using access(), while xhb version
+       does a filefind, so Harbour will return a more accurate
        result more quickly, but it won't work with wildcards.
 
    * source/rtl/persist.prg
@@ -487,12 +492,12 @@
    + source/rtl/hbstrsh.c
    * utils/hbtest/rt_stra.prg
      + Added hb_StrShrink(<cString>[,<nShrinkBy>]) -> cStringShrinked
-       <nShrinkBy> has a default value of 1. Returns empty string 
+       <nShrinkBy> has a default value of 1. Returns empty string
        on error, returns full string if <nShrinkBy> is zero or negative.
        This function call is meant to be use instead of code like this:
        cString := Left( cString, Len( cString ) - 1 ) ->
        cString := hb_StrShrink( cString, 1 )
-       TODO: Maybe to support passing it by reference and make it even 
+       TODO: Maybe to support passing it by reference and make it even
              faster.
      + Added regression tests for this function.
 
@@ -551,12 +556,12 @@
    + contrib/ole/make_b32.bat
    + contrib/ole/make_vc.bat
    + contrib/ole/Makefile
-     + Restored "old" OLE implementation, as it was reported 
-       by Mindaugas Kavaliauskas that it works better in some 
+     + Restored "old" OLE implementation, as it was reported
+       by Mindaugas Kavaliauskas that it works better in some
        respects than the newer version in /contrib/win32.
-       Until we know further about the details there is no 
+       Until we know further about the details there is no
        reason to not have this contrib.
-     + Added CreateObject() and GetActiveObject() to enhance 
+     + Added CreateObject() and GetActiveObject() to enhance
        compatibility with newer implementation.
      + Standardized make files.
      * test moved to test dir.
@@ -564,10 +569,10 @@
 
    * contrib/win32/test/testole.prg
    + contrib/ole/test/testole.prg
-     + The two test apps from the two OLE implementations 
-       were merged and now they are the same. A quick look 
-       shows differences when detecting the presence of 
-       an OLE object. "old" OLE GPFs with "new" OLE method, 
+     + The two test apps from the two OLE implementations
+       were merged and now they are the same. A quick look
+       shows differences when detecting the presence of
+       an OLE object. "old" OLE GPFs with "new" OLE method,
        "new" OLE RTEs with "old" OLE method.
 
    * contrib/pdflib/common.mak
@@ -579,7 +584,7 @@
      ! Moved away C code inside .prg.
      ! Fixed some unused var warnings.
      ! Removed some unused stuff.
-     ; Now there are clashing symbols. I suspect this is an 
+     ; Now there are clashing symbols. I suspect this is an
        unfinished contrib, even in xhb.
 
 2007-11-11 16:07 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -609,37 +614,37 @@
    * source/rtl/tpopup.prg
    * source/rtl/ttopbar.prg
    * source/rtl/tmenuitm.prg
-     ! MENUITEM class :row and :col vars changed to 
-       :__row and :__col, instead of adding HB_EXTENSION 
+     ! MENUITEM class :row and :col vars changed to
+       :__row and :__col, instead of adding HB_EXTENSION
        guards to them, because they are needed internally.
 
    * source/rtl/browse.prg
    * source/rtl/tbrowse.prg
-     * Two mouse-wheel handling extensions now rather 
+     * Two mouse-wheel handling extensions now rather
        guarded with HB_C52_STRICT.
 
    * source/rtl/gete.c
-     ! Fixed GETENV()/GETE() to return an empty string when 
-       called with more than one parameter, to be fully 
+     ! Fixed GETENV()/GETE() to return an empty string when
+       called with more than one parameter, to be fully
        C5.x compatible.
 
    * source/vm/proc.c
      ! PROCFILE() HB_EXTENSION guard changed to HB_C52_STRICT.
-       Since PROCFILE() is an undocumented function in C5.x 
+       Since PROCFILE() is an undocumented function in C5.x
        we can legally extend it in Harbour.
 
    * include/hbsetup.ch
      * Turned off HB_EXTENSION for the default build.
-       Now HB_EXTENSION covers all the extensions which 
-       in some ways violates namespace rules or extends 
-       functionality of existing CA-Cl*pper functions 
-       or classes in an "invisible" (or "dirty") way, like 
+       Now HB_EXTENSION covers all the extensions which
+       in some ways violates namespace rules or extends
+       functionality of existing CA-Cl*pper functions
+       or classes in an "invisible" (or "dirty") way, like
        adding new parameters or accepting new types of parameters.
-       In case we want to keep some extended functionality 
-       in the default build, we'll need to create new 
-       function names. For class extensions, I'm not yet 
+       In case we want to keep some extended functionality
+       in the default build, we'll need to create new
+       function names. For class extensions, I'm not yet
        sure what is the proper way to go.
-       In case of ML*() functions, I think they should respect 
+       In case of ML*() functions, I think they should respect
        SET EOL instead of accepting EOL settings as parameters.
 
 2007-11-11 13:45 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -650,26 +655,26 @@
    * contrib/odbc/make_vc.bat
      ! Fixed .dll to .lib generation to work using GNU sed.
        (now it doesn't need exports.sed anymore).
-       NOTE: I'm not sure if the batch tricks will work 
-             on every flavour of Windows. It should for 
+       NOTE: I'm not sure if the batch tricks will work
+             on every flavour of Windows. It should for
              W2K and above though, probably NT too.
-     ! Fixed to pick .dlls from HB_DLL_DIR, which when not 
+     ! Fixed to pick .dlls from HB_DLL_DIR, which when not
        defined points to system32 dir.
-     ; I know "sed" dependency is not optimal, but we can remove 
-       this later if we have better solution, until then 
+     ; I know "sed" dependency is not optimal, but we can remove
+       this later if we have better solution, until then
        it cannot hurt and it's better than nothing.
-       "sed" is a free tool included in mingw32, cygwin, 
-       and also downloadable as a self-contained .exe from 
+       "sed" is a free tool included in mingw32, cygwin,
+       and also downloadable as a self-contained .exe from
        the gnuwin32 project:
        http://gnuwin32.sourceforge.net/packages/sed.htm
        Direct link to bin package:
        http://gnuwin32.sourceforge.net/downlinks/sed-bin-zip.php
        (it cannot hurt to have this in ones "utils" dir anyway :)
-       
+
    * contrib/odbc/make_b32.bat
    - contrib/odbc/odbc32.def
-     - Removed .def file from repository. .lib have to 
-       be generated from live .dll instead of this old 
+     - Removed .def file from repository. .lib have to
+       be generated from live .dll instead of this old
        .def.
 
 2007-11-11 12:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -703,28 +708,28 @@
    * include/hbextern.ch
    * source/rtl/defpath.c
    * source/rtl/adir.prg
-     * __DEFPATH() is now always included, not just when HB_C52_UNDOC 
-       is defined, since we use this function from core, and __*() 
+     * __DEFPATH() is now always included, not just when HB_C52_UNDOC
+       is defined, since we use this function from core, and __*()
        functions are okey to be included without this guard.
        DEFPATH() is still marked as HB_C52_UNDOC.
      ! ADIR() now uses __DEFPATH() instead of DEFPATH() to compile
        with HB_C52_UNDOC turned off.
-     ; TOFIX: There are still a few functions we use from core, which 
+     ; TOFIX: There are still a few functions we use from core, which
        are guarded with HB_C52_UNDOC: NATIONMSG(), ISNEGATIVE()
 
    * source/vm/memvars.c
-     * Changed HB_EXTENSION to HB_C52_STRICT. Reason: This 
-       is a Harbour internal (undocumented) function, where extension 
+     * Changed HB_EXTENSION to HB_C52_STRICT. Reason: This
+       is a Harbour internal (undocumented) function, where extension
        is possible. CA-Cl*pper internal (undocumented) function __MRESTORE()
-       is mapped to this function, which is still okey. We could 
-       create a fully CA-Cl*pper compatible, non-extended __MRESTORE() 
+       is mapped to this function, which is still okey. We could
+       create a fully CA-Cl*pper compatible, non-extended __MRESTORE()
        without any trouble, if this is an issue.
 
 2007-11-11 02:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/at.c
    * include/hbextern.ch
-     + Added hb_At() which is equivalent to At() with 
-       HB_EXTENSION turned on. Users are encouraged to 
+     + Added hb_At() which is equivalent to At() with
+       HB_EXTENSION turned on. Users are encouraged to
        use hb_At(), and this is also a must inside core.
 
    * include/hbextern.ch
@@ -732,7 +737,7 @@
 
    * source/rtl/persist.prg
      ! Fixed hard-wired EOL length.
-     ! Fixed to not go into an infinite loop on 
+     ! Fixed to not go into an infinite loop on
        non EOL terminated texts. (Thanks Petr)
      ! Fixed to use hb_At() instead of extended At().
      ! Fixed to also handle LF delimited texts.
@@ -764,7 +769,7 @@
 2007-11-11 01:52 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tpopup.prg
      ! Fixed a few problems regarding HB_EXTENSION guards.
-       (one method declaration was mistakenly guarded, and one 
+       (one method declaration was mistakenly guarded, and one
        IF construct broke when compiled without HB_EXTENSION)
 
    * source/rtl/mlcfunc.c
@@ -772,7 +777,7 @@
      ! Fixed unused var warnings when HB_EXTENSION is off.
 
    * contrib/hgf/tests/bld_b32.bat
-     ! Some more fixes. (removed hard coded BCC path, and 
+     ! Some more fixes. (removed hard coded BCC path, and
        a few wrong dirs)
      ; For me form3.hbf works without a closing EOL, under Windows.
        So the problem might rather be something else. For sure though,
@@ -780,31 +785,31 @@
 
    * source/compiler/hbcomp.c
      ! Reverted previous change for non-Unix platforms, regaring
-       command-line output. Now Harbour will again use stderr/stdout 
-       about the same way CA-Cl*pper does. However odd this is, 
-       most DOS/Windows programs work this way, so the "when in Rome" 
-       rule got in effect here. Otherwise, any DOS/Windows build 
-       output (BC/VC/GCC) goes to stdout, _except_ Harbour 
-       errors/warnings, and this is not a good thing. Still, the 
-       //STDOUT:, //STDERR: compiler switches could come handy to 
+       command-line output. Now Harbour will again use stderr/stdout
+       about the same way CA-Cl*pper does. However odd this is,
+       most DOS/Windows programs work this way, so the "when in Rome"
+       rule got in effect here. Otherwise, any DOS/Windows build
+       output (BC/VC/GCC) goes to stdout, _except_ Harbour
+       errors/warnings, and this is not a good thing. Still, the
+       //STDOUT:, //STDERR: compiler switches could come handy to
        override the platform defaults.
 
 2007-11-11 00:44 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/std.ch
-     * Removed HB_EXTENSION guard from around SET commands 
-       implementing Harbour _SET_* extensions. The reason: 
-       _SET_* extensions are not marked as extensions (and 
-       it would be nearly impossibly to do so), so it's more 
-       consistent to behave the same way for their command 
+     * Removed HB_EXTENSION guard from around SET commands
+       implementing Harbour _SET_* extensions. The reason:
+       _SET_* extensions are not marked as extensions (and
+       it would be nearly impossibly to do so), so it's more
+       consistent to behave the same way for their command
        counterparts.
 
    * utils/hbpp/hbpplib.c
-     ! Removed HB_EXTENSION guard from around __PP*() functions 
-       which are Harbour undocumented ones, so they don't need to 
+     ! Removed HB_EXTENSION guard from around __PP*() functions
+       which are Harbour undocumented ones, so they don't need to
        be guarded. We're also in sync with hbextern.ch now.
 
    * utils/hbtest/rt_stra.prg
-     ! Removed HB_EXTENSION guard from around hb_ValToStr() calls, 
+     ! Removed HB_EXTENSION guard from around hb_ValToStr() calls,
        because this function is no longer marked as HB_EXTENSION.
 
    * contrib/hgf/os2pm/tmenu.prg
@@ -833,12 +838,12 @@
    * contrib/hgf/tests/testctrl.prg
    * contrib/hgf/tests/testform.prg
      ! Fixed bld_b32.bat to link properly.
-     ! Changed HBMenuItem CLASS to HGFMenuItem() to not collide with 
+     ! Changed HBMenuItem CLASS to HGFMenuItem() to not collide with
        Harbour class HBMenuItem() (C53 compatibility class).
      ; The above reported by Petr Chornyj.
      ! Added CRLF at the end of each source file where there was none.
      ! Fixed version headers.
-     ; TOFIX1: HBPersistent():LoadFromFile() has a bug where it doesn't 
+     ; TOFIX1: HBPersistent():LoadFromFile() has a bug where it doesn't
                load the last line if it doesn't end with newline.
      ; TOFIX2: HBPersistent() uses At() "dirty" extension.
 
@@ -848,7 +853,7 @@
    * contrib/odbc/test/testodbc.prg
    * contrib/odbc/common.mak
    + contrib/odbc/browodbc.prg
-     ! Moved back browodbc.prg to /contrib/odbc (since it was not a test, 
+     ! Moved back browodbc.prg to /contrib/odbc (since it was not a test,
        just missing from the non-GNU make files)
        Reported by Petr Chornyj.
      ! Added browodbc.prg to non-GNU makefile.
@@ -874,7 +879,7 @@
 
 2007-11-10 17:35 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/vm/hvm.c
-     ! Fixed unused var warning when HB_NO_DEBUG was defined 
+     ! Fixed unused var warning when HB_NO_DEBUG was defined
        and TRACE disabled. (Reported by Enrico Maria Giordano)
 
 2007-11-10 17:24 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -942,7 +947,7 @@
    * contrib/hgf/win32/form.prg
      ! Fixed one unused var warning in .prg code.
      ! Fixed to not use Harbour internals.
-       (Petr, this should have the same effect as your request, 
+       (Petr, this should have the same effect as your request,
        but pls test this change.)
 
 2007-11-10 12:29 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -1024,7 +1029,7 @@
    + contrib/mtpl.mak
    * contrib/libct/make_b32.bat
    * contrib/libct/make_vc.bat
-     % Makefile name cleanup, batch file synchronization, 
+     % Makefile name cleanup, batch file synchronization,
        setting name cleanup. Some minor fixes.
        Now all non-GNU makefiles have the .mak extension.
 
@@ -1150,15 +1155,15 @@
 
 2007-11-09 15:20 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/compiler/hbcomp.c
-     ! Changed error messages to go to stderr on non-Unix 
-       platforms too. With this change the Harbour compiler 
+     ! Changed error messages to go to stderr on non-Unix
+       platforms too. With this change the Harbour compiler
        uses the same output on non-Unix platforms as on Unixes.
-       With Przemek's previous and now this change, the 
-       compiler uses stdout/stderr in the standard way 
-       (messages to stdout, warnings/errors to stderr), 
+       With Przemek's previous and now this change, the
+       compiler uses stdout/stderr in the standard way
+       (messages to stdout, warnings/errors to stderr),
        instead of being more or less CA-Cl*pper compatible.
-       (in CA-Cl*pper startup msg plus some info went to 
-       stderr and errors/warnings and some other progress 
+       (in CA-Cl*pper startup msg plus some info went to
+       stderr and errors/warnings and some other progress
        info went to stdout)
 
    * source/compiler/hbusage.c
@@ -1186,15 +1191,15 @@
    + contrib/maketpl.mak
      + Added BC/VC non-GNU generic make script for contribs.
      + Using the above generic make scripts to build LIBCT.
-       Notice BC/VC now uses one make file per contrib project 
-       named common.mak. The two helper batch files are essentially 
-       identical for BC and VC, and there is no reduancy or any 
-       complexity in common.mak (they much resemble in content 
+       Notice BC/VC now uses one make file per contrib project
+       named common.mak. The two helper batch files are essentially
+       identical for BC and VC, and there is no reduancy or any
+       complexity in common.mak (they much resemble in content
        to Makefile).
-       Notice that with this new system users have to call 
-       make_[b32|vc].bat INSTALL in order to get the libs and 
+       Notice that with this new system users have to call
+       make_[b32|vc].bat INSTALL in order to get the libs and
        headers installed in the final lib/header destinations.
-       (This step was previously done automatically by the .bat 
+       (This step was previously done automatically by the .bat
        files in LIBCT - or maybe not in other contribs.)
        The new scripts also have a generic CLEAN functionality.
      ; Thanks Marek Paliwoda for the generic make scripts.
@@ -1330,7 +1335,7 @@
 2007-11-04 03:40 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * include/hbapifs.h
   * harbour/source/common/hbfsapi.c
-    ! fixed hb_fsFileExists() for DOS 
+    ! fixed hb_fsFileExists() for DOS
     + Added hb_fsDirExists()
 
   * include/hbextern.ch
@@ -1683,21 +1688,21 @@
    * include/hbapifs.h
    * source/common/hbfsapi.c
      ! Added missing HB_EXPORTs.
-     + Added hb_fsFileExists(). This is the preferred way to check 
-       for the existence of a file, because it is fast and will 
-       find a file even if directory traversal is not possible 
-       for the file's directory. Works the same way as file 
+     + Added hb_fsFileExists(). This is the preferred way to check
+       for the existence of a file, because it is fast and will
+       find a file even if directory traversal is not possible
+       for the file's directory. Works the same way as file
        existence check in most other tools.
-     ; NOTE: DOS branch was not compiled or tested (it is a 
+     ; NOTE: DOS branch was not compiled or tested (it is a
              rewrite of a tested ASM function though).
 
    * common.mak
    * include/hbextern.ch
    * source/rtl/Makefile
    + source/rtl/hbfile.c
-     + Added HB_FILEEXISTS() Harbour level function to check 
-       for the existence of a file. This works better than 
-       FILE() in most situations, but it doesn't accept any 
+     + Added HB_FILEEXISTS() Harbour level function to check
+       for the existence of a file. This works better than
+       FILE() in most situations, but it doesn't accept any
        wildcards.
 
    * source/compiler/gencobj.c
@@ -1709,7 +1714,7 @@
 
 2007-10-27 01:23 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbsetup.h
-     - Removed HOST_OS_UNIX_COMPATIBLE which was a misleading 
+     - Removed HOST_OS_UNIX_COMPATIBLE which was a misleading
        alias for OS_UNIX_COMPATIBLE.
 
    * source/compiler/hbcomp.c
@@ -1744,10 +1749,10 @@
    * samples/hscript/ugly.hs
    * samples/hscript/hello.hs
      ! Fixed build batch file.
-     ! Fixed to use NFLib file IO rather than libmisc, because 
+     ! Fixed to use NFLib file IO rather than libmisc, because
        latter was broken (it is a clone of the NFLib file IO).
-     ! Fixed scripts to use Start instead of Main as an entry 
-       point otherwise __hrbRun() got confused and called the 
+     ! Fixed scripts to use Start instead of Main as an entry
+       point otherwise __hrbRun() got confused and called the
        app Main().
      ! Fixed some other problems to make it run.
 
@@ -1811,10 +1816,10 @@
 
    * include/clipdefs.h
      ! Fixed HANDLE clash with Windows headers after recent modification.
-       Notice that I've left HB_VMHANDLE as ULONG for now. It's enough 
+       Notice that I've left HB_VMHANDLE as ULONG for now. It's enough
        to revisit this when implementing those VM API calls.
-       Another notice that because of this name clash legacy Clipper 
-       VM API calls in Harbour won't work with Windows headers, 
+       Another notice that because of this name clash legacy Clipper
+       VM API calls in Harbour won't work with Windows headers,
        native Harbour VM API calls will do work however.
 
    - make_xcemgw.sh
@@ -1842,7 +1847,7 @@
    - ChangeLog.018
    - ChangeLog.019
    * ChangeLog
-     + Re-merged changelog into one file. Now searching is easy, 
+     + Re-merged changelog into one file. Now searching is easy,
        clutter is less, performance should stay the same.
 
 2007-10-24 15:32 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
@@ -1886,7 +1891,7 @@
 
 2007-10-24 17:47 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * debian/control
-     ! Fixed pkg dependency to allow building Harbour on some 
+     ! Fixed pkg dependency to allow building Harbour on some
        non-Linux ports as per Petr Salinger's request.
        See: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=375426
 
@@ -1899,7 +1904,7 @@
      ! Removed one old license file reference from text:
        contrib\libmisc\dates2.c (Only the DateTime() function by Jon Berg)
        Since this copyright clearly refers to doc/license.txt.
-       Moreover, it's clearly stated in the text that licenses 
+       Moreover, it's clearly stated in the text that licenses
        in contrib can be anything as per defined in the given contrib.
      * Removed 1 char left margin from the text.
 
@@ -1914,8 +1919,8 @@
 
 2007-10-24 04:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - bin/bld_b16.bat
-     - Removed file. DOS/BCC16 usage is not that common now, 
-       that it needs a separate batch file. DOS/BCC16 users 
+     - Removed file. DOS/BCC16 usage is not that common now,
+       that it needs a separate batch file. DOS/BCC16 users
        should use bld.bat with proper envvars.
 
 2007-10-24 03:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -1926,7 +1931,7 @@
    * source/vm/Makefile
    + source/vm/vm.c
      + Added skeletons for CA-Cl*pper-like C-level VM API.
-       Types slightly modified for portability and to support 
+       Types slightly modified for portability and to support
        larger memory than C5x.
 
 2007-10-24 03:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -1943,21 +1948,21 @@
 2007-10-24 03:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbclass.ch
    * include/hbsetup.ch
-     - Removed HB_SHORTNAME last occurences. Harbour doesn't 
+     - Removed HB_SHORTNAME last occurences. Harbour doesn't
        have a 10 char symbol compatibility since some time, and
        it didn't make too much sense anyway since long.
-       I wonder if HB_CLS_NO_DECORATION (in hbclass.ch) has 
+       I wonder if HB_CLS_NO_DECORATION (in hbclass.ch) has
        any point anymore?
 
 2007-10-24 03:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - make_gnu.cmd
-     - Remove obsolete file. This was the same as make_gnu.bat 
-       but with defaults set for OS/2. OS/2 users should use 
+     - Remove obsolete file. This was the same as make_gnu.bat
+       but with defaults set for OS/2. OS/2 users should use
        make_gnu.bat with proper platform/compiler sets.
 
    * bin/bld.bat
    * make_gnu.bat
-     * Changed default compiler/platform to w32/mingw32 
+     * Changed default compiler/platform to w32/mingw32
        (was dos/djgpp)
 
 2007-10-24 01:47 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -1969,7 +1974,7 @@
 
    * include/hbgtinfo.ch
    * contrib/xhb/hbcompat.ch
-     ! Some xhb specific MaxRow()/MaxCol() parameter 
+     ! Some xhb specific MaxRow()/MaxCol() parameter
        extension macros (also named GTI_*) moved to xhb contrib.
 
    - bin/bld.cmd
@@ -1977,14 +1982,14 @@
        OS/2 users should use bld.bat.
 
    - bin/bld.sh
-     - Removed obsolete file. Linux/Unix users should use hb*.sh 
+     - Removed obsolete file. Linux/Unix users should use hb*.sh
        scripts, which are properly working (as opposed to bld.sh).
 
    * harbour-ce-spec
    * harbour.spec
    * doc/howtobld.txt
-     - Removed gharbour and harbour-link compatibility commands 
-       (to lessen equivalent user choices and to have every harbour 
+     - Removed gharbour and harbour-link compatibility commands
+       (to lessen equivalent user choices and to have every harbour
        related stuff to start with hb)
        Pls use hbcmp and hblnk respectively.
 
@@ -2037,10 +2042,10 @@
 2007-10-23 16:39 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/libnf/fttext.c
      ! Fixed opening mode in FT_FUSE().
-     ! Fixed FT_FAPPEND() infinite loop when called without 
+     ! Fixed FT_FAPPEND() infinite loop when called without
        parameter or with an odd number. (bug in original function)
      + Added support for plain LF line ending.
-     * Changed to use OS dependant line ending instead of hardwired 
+     * Changed to use OS dependant line ending instead of hardwired
        CRLF when adding new lines.
      ; Please test.
 
@@ -2052,7 +2057,7 @@
    * contrib/libnf/makefile.bc
    * contrib/libnf/makefile.vc
    * contrib/libnf/readme.txt
-     + Added FT_SETKEYS(), FT_ISPRINTER() (not 100% compatible 
+     + Added FT_SETKEYS(), FT_ISPRINTER() (not 100% compatible
        in all situations), FT_LASTKEY().
 
 2007-10-23 13:30 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -2199,7 +2204,7 @@
      ! _fsRead(), _fsWrite() now more compatible.
 
    * include/hbundoc.api
-     + Added _lcopy(), _ncopyuc(), _ncopylc() compatibility 
+     + Added _lcopy(), _ncopyuc(), _ncopylc() compatibility
        functions.
 
    * include/hbapi.h
@@ -2267,21 +2272,21 @@
 
 2007-10-21 02:52 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/set.c
-     ! Fixed SET DEVICE TO PRINTER not to add an extension (".prn") 
-       to the filename specified by SET PRINTER TO (the extension 
+     ! Fixed SET DEVICE TO PRINTER not to add an extension (".prn")
+       to the filename specified by SET PRINTER TO (the extension
        is only added by the SET PRINTER TO command).
-     ! Fixed SET DEVICE TO PRINTER to point to "LPT1" by default 
-       (instead of "PRN") under Win32 (this is now in sync with 
+     ! Fixed SET DEVICE TO PRINTER to point to "LPT1" by default
+       (instead of "PRN") under Win32 (this is now in sync with
        ISPRINTER() logic). Added "PRN" for the rest of OSes (TOFIX).
      ; Pls test.
 
    * source/rtl/isprint.c
-     ! Cleaned up platform branches in ISPRINTER(). Non DOS/Win32 
+     ! Cleaned up platform branches in ISPRINTER(). Non DOS/Win32
        branch is a dummy TODO now.
 
    * contrib/libnf/fttext.c
      ! Some fixes reported by Mike Evans. Pls test.
-       Not all reported bugs were fixed. (ft_FError() returns 
+       Not all reported bugs were fixed. (ft_FError() returns
        a constant zero, ft_FUse() still needs ft_FSelect())
 
    - contrib/directx/HB_DDraw.cpp
@@ -2432,7 +2437,7 @@
    + contrib/win32/tprinter.c
    + contrib/win32/w32_ole.c
    + contrib/win32/w32_prn.c
-     + Added a Win32 contrib lib by merging win32prn and ole2 
+     + Added a Win32 contrib lib by merging win32prn and ole2
        libs. The name of the new library is "hbwin32".
      ; directx was not added for now.
 
@@ -2473,7 +2478,7 @@
 2007-10-16 23:58 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/isprint.c
      - Removed Win32 bitmap printer specific (non-multiplatform)
-       functionality. For this feature (and more) pls use 
+       functionality. For this feature (and more) pls use
        hbwin32prn.lib from contrib:
        PRINTEREXISTS(), GETDEFAULTPRINTER(), etc.
      % Minor optimization.
@@ -2499,7 +2504,7 @@
    * source/rtl/isprint.c
      ! Fixed ISPRINTER() on Win32 after last changes.
        Thanks Guillermo, pls test now.
-   
+
    * source/rdd/dbcmd.c
      ! Marked as HB_EXTENSION: FIELDLEN(), FIELDDEC(), FIELDTYPE()
 
@@ -2522,17 +2527,17 @@
    * source/rtl/trace.c
    * source/rtl/valtostr.c
    * source/vm/dynsym.c
-     + Removed HB_EXTENSION from all the .prg level functions 
+     + Removed HB_EXTENSION from all the .prg level functions
        prefixed with HB_.
-       (there was a mixed situation here, but there's no need 
-       to mark any HB_ functions as extensions, as it's obvious 
-       by their name. So as a rule, no HB_ prefixed function 
+       (there was a mixed situation here, but there's no need
+       to mark any HB_ functions as extensions, as it's obvious
+       by their name. So as a rule, no HB_ prefixed function
        should ever be marked as HB_EXTENSION anymore.)
-     ! Fixed some inconsistencies in HB_EXTENSION between 
+     ! Fixed some inconsistencies in HB_EXTENSION between
        hbextern.ch and actual sources.
 
    * source/rtl/tgetlist.prg
-     * One HB_EXTENSION changed to !HB_C52_STRICT because it 
+     * One HB_EXTENSION changed to !HB_C52_STRICT because it
        was guarding a bugfix rather than a real extension.
 
    * source/rtl/gui.prg
@@ -2542,28 +2547,28 @@
    * source/rtl/inkey.c
    * contrib/xhb/xhb.ch
    * contrib/xhb/xhbfunc.c
-     ! __KEYBOARD() xhb hidden parameter extension moved to 
-       xhb lib. For similar functionality inside Harbour 
-       pls use HB_KEYPUT(). __KEYBOARD is now 100% C5.x 
+     ! __KEYBOARD() xhb hidden parameter extension moved to
+       xhb lib. For similar functionality inside Harbour
+       pls use HB_KEYPUT(). __KEYBOARD is now 100% C5.x
        compatible.
 
    * source/rtl/setfunc.prg
-     * __SetFunction() extension now uses HB_KEYPUT() instead 
+     * __SetFunction() extension now uses HB_KEYPUT() instead
        of __KEYBOARD() extended parameters.
 
    * source/compiler/hbfunchk.c
    * source/rtl/at.c
-     ! AT() extra parameters handled when HB_EXTENSION is on 
-       (was !HB_C52_STRICT). (The first extra parameter is 
-       XPP and Flagship compatible. The three parameter version 
+     ! AT() extra parameters handled when HB_EXTENSION is on
+       (was !HB_C52_STRICT). (The first extra parameter is
+       XPP and Flagship compatible. The three parameter version
        of this function is called AT3() in CAVO.)
-     ! TRIM()/RTRIM() extra parameters handled on compiler level 
+     ! TRIM()/RTRIM() extra parameters handled on compiler level
        when HB_EXTENSION is on (default).
      ! FILE() parameter check turned off in compiler.
        (to be C5.x compatible)
 
    * source/rtl/alert.prg
-     ! ALERT() Harbour extended parameter (1st parameter type) 
+     ! ALERT() Harbour extended parameter (1st parameter type)
        is now guarded with HB_EXTENSION instead of HB_C52_STRICT.
 
    * source/rtl/gete.c
@@ -2574,24 +2579,24 @@
 
    * source/rtl/mlcfunc.c
      ! Harbour extended parameters for MEMOLINE()/MLCOUNT()/
-       MLPOS()/MLCTOPOS()/MPOSTOLC() are now guarded with HB_EXTENSION 
-       (instead of HB_C52_STRICT). It seems to be possible to 
-       specify custom EOLs for all these functions. (Maybe simple 
+       MLPOS()/MLCTOPOS()/MPOSTOLC() are now guarded with HB_EXTENSION
+       (instead of HB_C52_STRICT). It seems to be possible to
+       specify custom EOLs for all these functions. (Maybe simple
        automatic Unix/Win EOL style handling would be better here)
 
    * source/vm/memvars.c
      ! Guarded Harbour extension in __MVRESTORE() with HB_EXTENSION.
 
    ; After this cleanup:
-     - HB_EXTENSION is marking extra features living inside existing C5.x 
-                    functions or classes, or Harbour extension functions 
-                    not complying with the HB_ prefix rule (we have six 
-                    such functions in RDD). If there are more extended 
-                    parameters in Harbour pls mark them with HB_EXTENSION 
+     - HB_EXTENSION is marking extra features living inside existing C5.x
+                    functions or classes, or Harbour extension functions
+                    not complying with the HB_ prefix rule (we have six
+                    such functions in RDD). If there are more extended
+                    parameters in Harbour pls mark them with HB_EXTENSION
                     too.
      - HB_C52_STRICT is guarding bugfixes compared to C5.x.
      - No HB_ functions are guarded with HB_EXTENSION anymore.
-     - We'd pbly need to review each HB_EXTENSIONs to check whether they 
+     - We'd pbly need to review each HB_EXTENSIONs to check whether they
        are safe or not.
      - A list of HB_EXTENSIONs:
        - MLCOUNT()
@@ -2605,7 +2610,7 @@
        - SETKEY()        - 3rd codeblock parameter ("isactive" block)
        - SAVESCREEN()    - 5th parameter: lNoCheck (?)
          RESTSCREEN()    - 6th parameter: lNoCheck (?)
-       - AT()            - 3rd and 4th parameters to set search range. 3rd parameter is 
+       - AT()            - 3rd and 4th parameters to set search range. 3rd parameter is
                            also supported by XPP and FS. Results in compiler error in C5.x.
                            (CAVO uses AT2() and AT3() for extended versions.)
        - TRIM()
@@ -2616,7 +2621,7 @@
          GETENV()        - 2nd parameter specifies a default value. Can be found in HB_GETENV().
        - PROCFILE()      - 1st parameter is a Harbour extension. Undocumented function in C5.x.
                            The extension looks similar to the one found in Flagship.
-       - __MVRESTORE()   - 3rd/4th parameters are Harbour extensions to set variable name 
+       - __MVRESTORE()   - 3rd/4th parameters are Harbour extensions to set variable name
                            mask. Redirected from the internal 5.x function named __MRESTORE().
        - DB*()           - cRDD, nConnection, cCodePage extra parameters in many DB*() functions.
                            TOFIX: None of them is marked as HB_EXTENSION.
@@ -2626,18 +2631,18 @@
 2007-10-16 09:29 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbextern.ch
    * source/rtl/gete.c
-     + Added HB_GETENV(). There you have a 2nd parameter 
-       which will be returned in case the requested 
-       envvar doesn't exist. This extensions is still present 
+     + Added HB_GETENV(). There you have a 2nd parameter
+       which will be returned in case the requested
+       envvar doesn't exist. This extensions is still present
        in GETE[NV](), but we'd better remove it.
 
    * include/hbextern.ch
    * source/rtl/isprint.c
-     + Added HB_ISPRINTER() with support for extra parameter 
-       printer port name. This parameter also currently has 
-       support for Win32 printers. Win32 printer name support 
+     + Added HB_ISPRINTER() with support for extra parameter
+       printer port name. This parameter also currently has
+       support for Win32 printers. Win32 printer name support
        was removed from ISPRINTER() to keep compatibility.
-       ISPRINTER() extra parameter is enabled with HB_COMPAT_XPP 
+       ISPRINTER() extra parameter is enabled with HB_COMPAT_XPP
        (which is the default).
 
 2007-10-15 18:36 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -2648,7 +2653,7 @@
      + Added handling of arrays of numbers in HB_KEYPUT().
        (this was copied from __KEYBOARD()'s extended section)
      + Added handling of string parameter in HB_KEYPUT().
-       (this way we don't really need the hidden extensions 
+       (this way we don't really need the hidden extensions
        in __KEYBOARD() anymore.)
 
    * common.mak
@@ -2662,7 +2667,7 @@
    * source/compiler/hbusage.c
    - source/compiler/genjava.c
    - source/compiler/gencli.c
-     - Removed two non-working (experimental) output types: 
+     - Removed two non-working (experimental) output types:
        Java, CLI
      ! Prefixed LANG_* enums with HB_
 
@@ -2731,7 +2736,7 @@
   * harbour/tests/multifnc/t0.prg
   * harbour/tests/multifnc/t1.prg
   * harbour/tests/multifnc/t2.prg
-    + one more test for function overload with C function 
+    + one more test for function overload with C function
 
 2007-10-10 00:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcompdf.h
@@ -2774,7 +2779,7 @@
    * contrib/xhb/xhb.ch
      + Moved lines which do not need xhb lib itself from xhb.ch to hbcompat.ch.
        xhb.ch now includes hbcompat.ch and not vice versa.
-       So now hbcompat.ch can be used as a "lighter" compatibility 
+       So now hbcompat.ch can be used as a "lighter" compatibility
        layer which doesn't need the lib binary. Pls test.
 
    * contrib/mysql/tmysql.prg
@@ -3018,11 +3023,11 @@
    * contrib/tip/thtml.prg
    * contrib/tip/url.prg
      + Code converted to not require xhb lib.
-     % Now compiled with -kM switch to avoid macro expansion 
-       of strings. This is important here, as "&" char is used 
-       quite often in the code, so expect a somewhat better 
+     % Now compiled with -kM switch to avoid macro expansion
+       of strings. This is important here, as "&" char is used
+       quite often in the code, so expect a somewhat better
        performance.
-     - Removed hex number conversion functions, as compatible 
+     - Removed hex number conversion functions, as compatible
        versions are now available in Harbour with am hb_ prefix.
      + C code update to use Harbour API calls only.
      + Added VC build script.
@@ -3035,7 +3040,7 @@
    * source/rtl/hbinet.c
    * contrib/xhb/xhb.ch
    * contrib/xhb/xhbfunc.c
-     * Renamed hb_IsInetSocket() to hb_inetIsSocket() to 
+     * Renamed hb_IsInetSocket() to hb_inetIsSocket() to
        keep all inet related functions in one namespace.
 
 2007-10-01 19:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -3175,7 +3180,7 @@
    * contrib/xhb/xhb.ch
    * contrib/xhb/Makefile
      * Moved content or hbcompat.ch into xhb.ch.
-       Those who need compatibility, have to replace 
+       Those who need compatibility, have to replace
      * Moved hbcompat.ch (for compatibility) to contrib/xhb
 
 2007-09-28 16:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -3206,7 +3211,7 @@
       object item references
     + added support for passing indexes to string item characters
       ( @cValue[n] ) by reference using extended references - extension
-      enabled by -ks compiler switch and //flags:s RT switch. 
+      enabled by -ks compiler switch and //flags:s RT switch.
     + added hb_vmPushItemRef()
 
   * harbour/source/rdd/dbf1.c
@@ -3400,11 +3405,11 @@
 
 2007-09-25 19:15 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/xhb/xhbcomp.prg
-     + Added "string as array" implementation. I didn't test 
+     + Added "string as array" implementation. I didn't test
        it for 100% compatibility, but the base is there.
-       One problem though that Harbour won't allow an zero 
-       or negative index even with the -ks switch. (I find 
-       the error useful though, so we should keep it, but allow 
+       One problem though that Harbour won't allow an zero
+       or negative index even with the -ks switch. (I find
+       the error useful though, so we should keep it, but allow
        it with a switch -ks?)
 
 2007-09-25 18:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -3412,9 +3417,9 @@
    * source/vm/arrayshb.c
    * contrib/xhb/xhb.ch
    * contrib/xhb/xhbfunc.c
-     + Added HB_ASCAN() to Harbour, which does the same as 
-       the plain AScan() in xhb. I decided to do this 
-       because we already had hb_RAscan() implemented, and 
+     + Added HB_ASCAN() to Harbour, which does the same as
+       the plain AScan() in xhb. I decided to do this
+       because we already had hb_RAscan() implemented, and
        having hb_Ascan() is good to keep symetry.
      * Modified xhb lib to use the Harbour one.
      * Translations moved to hbcompat.ch.
@@ -3445,20 +3450,20 @@
    * contrib/xhb/xhbfunc.c
    + contrib/xhb/xhb.ch
    + contrib/xhb/xhbcomp.prg
-     + Added xhb_AScan(), xhb_AIns(), xhb_ADel() plus defines 
-       to redirect extended AScan(), AIns(), ADel() calls to these 
+     + Added xhb_AScan(), xhb_AIns(), xhb_ADel() plus defines
+       to redirect extended AScan(), AIns(), ADel() calls to these
        functions. They need to be tested as I'm no xhb user.
-     + Added compatibility header, which adds a the above translations 
+     + Added compatibility header, which adds a the above translations
        and include hbcompat.ch.
-     + Added INIT PROC xhb_Init() as a future place for xhb specific 
+     + Added INIT PROC xhb_Init() as a future place for xhb specific
        startup settings.
      ; TODO:
        - Add $ and [] operator overloading.
        - Add operator overloading for hash type.
-       - Add a way hash API call to control the default flag 
-         hb_hashNew() uses, then add this default setting to 
+       - Add a way hash API call to control the default flag
+         hb_hashNew() uses, then add this default setting to
          the xhb libs INIT PROC.
-     ; For better xhb compatibility, developers should add 
+     ; For better xhb compatibility, developers should add
        #ifndef __XHARBOUR__
           #include "xhb.ch"
        #endif
@@ -3605,7 +3610,7 @@
          Sx_FCompress(), Sx_FDecompress(),
          Sx_AutoOpen(), Sx_AutoShare(),
          Sx_MemoExt(), Sx_MemoBlk(), Sx_SetMemoBlock(), Sx_MemoPack(),
-         Sx_SetTrigger(), Sx_SetTrig(), Sx_DefTrigger(), 
+         Sx_SetTrigger(), Sx_SetTrig(), Sx_DefTrigger(),
          Sx_INIheader(), _sx_INIinit(), _sxOpenInit(),
          Sx_SetPass(),
          Sx_Encrypt(), Sx_Decrypt(), Sx_DBFdecrypt(), Sx_DBFencrypt(),
@@ -3874,7 +3879,7 @@
    * source/rtl/tbrowsys.prg
    * source/rtl/getsys.prg
    * source/rtl/tbrowse.prg
-     ! Some rearrangements to avoid including the C5.3 
+     ! Some rearrangements to avoid including the C5.3
        compatible (and yet to be implemented) bloat in tbrowsys.prg
 
 2007-09-17 13:26 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -3900,7 +3905,7 @@
    * source/rtl/getsys.prg
    * source/rtl/tbrowse.prg
      + Added new file for C5.3 TB*() functions.
-       Most of them is dummy, a few of them were moved 
+       Most of them is dummy, a few of them were moved
        here from existing files.
 
    * include/hbextern.ch
@@ -3934,21 +3939,21 @@
      + Consolidated scalar classes to one file.
      + Minor optimizations and cleanup done on files.
      + Class function names now consistently HB*()
-       (was non-Class(y) compatible and a mixed list 
-       of plain unprefixed class names and class names 
-       prefixed with an underscore). Notice however that 
-       Class(y) has only CsyArray() defined in its own 
-       library, the rest was seemingly made only 
+       (was non-Class(y) compatible and a mixed list
+       of plain unprefixed class names and class names
+       prefixed with an underscore). Notice however that
+       Class(y) has only CsyArray() defined in its own
+       library, the rest was seemingly made only
        available as additional source code.
      ! Fixed NIL class to be named NIL (was _NIL).
      % Some unneeded MESSAGE redirections removed.
-     % LOCAL var[0] -> LOCAL var := {}. This results 
+     % LOCAL var[0] -> LOCAL var := {}. This results
        in better pcode.
      + Added all these symbols to hbextern.ch
 
    * source/rtl/symbol.prg
      * Some cleanup.
-     ; I believe this should be named HBSymbol() and 
+     ; I believe this should be named HBSymbol() and
        added to hbextern.ch
 
 2007-09-16 22:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -3959,7 +3964,7 @@
 
 2007-09-16 20:14 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tbrowse.prg
-     ! C5.x compatible fix for non-numeric values inside the 
+     ! C5.x compatible fix for non-numeric values inside the
        defColor array or the one returned by colorBlock.
 
 2007-09-16 18:44 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -3977,7 +3982,7 @@
      ! Some final fixes for full color compatibility.
 
    * source/common/hbver.c
-     + Added NOTE about what CA-Cl*ppers are returning 
+     + Added NOTE about what CA-Cl*ppers are returning
        for Version().
 
 2007-09-15 22:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -3997,10 +4002,10 @@
 2007-09-15 13:53 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tbrowse.prg
      ! Color handling made fully C5.x compatible. Pls test.
-     + One C5.3 bug replicated where no special header/footer 
-       colors are being used if there is not header/footer separator 
+     + One C5.3 bug replicated where no special header/footer
+       colors are being used if there is not header/footer separator
        specified.
-     ! Fixed compile error (because of unused var warning) when 
+     ! Fixed compile error (because of unused var warning) when
        HB_COMPAT_C53 is not defined.
      ! Fixed recently introduced vertical header aligning.
 
@@ -4027,8 +4032,8 @@
    * source/debug/tbrwtext.prg
    * source/debug/dbgtmenu.prg
      + Enabled "PROTECTED:" keyword in profiler.prg
-     * Finished CLASS declarations to use a more or less consistent syntax 
-       inside Harbour (Class(y) compatible except SETGET and the METHOD 
+     * Finished CLASS declarations to use a more or less consistent syntax
+       inside Harbour (Class(y) compatible except SETGET and the METHOD
        parameter lists, maybe some more).
      * Finished WHILE, iif(), END, string quotation to be consistent along Harbour.
      ! Fixed some indentations.
@@ -4036,9 +4041,9 @@
 
 2007-09-14 18:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/tbrowse.prg
-     ! Fixed cell color. This was needed because the oCol:colorBlock() 
-       now always contains a block (it cannot be NIL) to be CA-Cl*pper 
-       compatible, so the logic had to be adjusted in :DispCell() 
+     ! Fixed cell color. This was needed because the oCol:colorBlock()
+       now always contains a block (it cannot be NIL) to be CA-Cl*pper
+       compatible, so the logic had to be adjusted in :DispCell()
        accordingly.
 
 2007-09-14 07:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -4162,7 +4167,7 @@
    * makefile.bc
    * config/rules.cf
      + Using Harbour -kM switch when building Harbour itself.
-       (this switch will turn off macro substitution in string 
+       (this switch will turn off macro substitution in string
        literals.)
 
 2007-09-13 13:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -4173,14 +4178,14 @@
    * source/rtl/getsys.prg
    * source/rtl/tgetlist.prg
    * source/debug/debugger.prg
-     ! Fixed scope violation in debugger by creating 
+     ! Fixed scope violation in debugger by creating
        a new :Get() method for HBGetList().
      ! Fixed some minor issues.
-     % Minor optimization. Like dropping HBGetList():ReadExit() 
+     % Minor optimization. Like dropping HBGetList():ReadExit()
        which was just a wrapper to SET( _SET_EXIT ).
-     ! Replaced a few remaining external HBGetList() var accesses 
+     ! Replaced a few remaining external HBGetList() var accesses
        with :ReadStats() calls.
-     ! TGetList():GetApplyKey() parameter list rearranged after 
+     ! TGetList():GetApplyKey() parameter list rearranged after
        yesterday to keep it compatible with previous versions.
        This also avoids a crash in the debugger.
 
@@ -4192,22 +4197,22 @@
        old message name kept for compatibility.
      + HBEditor():hitTest() added.
      + HBEditor():changed() added. (returns internal ::lDirty)
-       
+
    * source/rtl/getlist.prg
    * source/rtl/getsys.prg
    * source/rtl/tgetlist.prg
-     ! Fixes for UI problems reported by Lorenzo 
+     ! Fixes for UI problems reported by Lorenzo
        and more. Mostly from xhb.
      + ReadModal() core functionality moved inside HBGetList()
      + ReadStats() functionality moved inside HBGetList()
      + All HBGetList() vars made protected.
      + Cleaned up the .prg and class interfaces.
-     ! Fixed crashes of several GETSYS compatibility 
+     ! Fixed crashes of several GETSYS compatibility
        functions, when no getlist was active.
        We're still not fully C5.x compatible though.
 
    * source/rtl/tmenusys.prg
-     + Uses ReadStats() instead of direct 
+     + Uses ReadStats() instead of direct
        HBGetList() var access.
 
    * source/rtl/tbrowse.prg
@@ -4237,7 +4242,7 @@
      ! :HitTest() made more compatible.
      + Added proper wrappers for undocumented C5.3 vars.
      + Added support for Caption.
-     + Added support for C5.3 color handling (it's quite ugly, 
+     + Added support for C5.3 color handling (it's quite ugly,
        but it's on by default).
      ; Some snippets from xhb but heavily fixed.
 
@@ -4260,7 +4265,7 @@
    * source/rtl/teditor.prg
    * source/rtl/tbrowse.prg
      ! Fixed to assign SetColor() in New() rather than in INIT.
-       (INIT value gets evaluated and stored on first class usage, 
+       (INIT value gets evaluated and stored on first class usage,
        not on every instantiation.)
 
    * source/rtl/tget.prg
@@ -4334,9 +4339,9 @@
 2007-09-11 23:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/hbgtcore.c
      ! Fixed handling of some strangely formatted colorstrings
-       mainly inside TGet(). The low-level functionality 
-       modified is the colorstring to number conversion. The 
-       only change is to continue (and not exit) on a non-std 
+       mainly inside TGet(). The low-level functionality
+       modified is the colorstring to number conversion. The
+       only change is to continue (and not exit) on a non-std
        char.
 
    * utils/hbtest/rt_misc.prg
@@ -4351,7 +4356,7 @@
 2007-09-11 15:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * tests/rto_get.prg
    * source/rtl/tget.prg
-     ! Fixed display issue when using display->varput->display 
+     ! Fixed display issue when using display->varput->display
        sequence. (Thanks Lorenzo)
      + Above case added to test suite.
 
@@ -4369,8 +4374,8 @@
    * include/hbextern.ch
    * source/rtl/hbini.prg
      + .ini functions added to hbextern.ch.
-     * .ini functions renamed so that all of them reside 
-       in the hb_ini*() namespace. xhb compatibility translates 
+     * .ini functions renamed so that all of them reside
+       in the hb_ini*() namespace. xhb compatibility translates
        added.
 
    * source/debug/debugger.prg
@@ -4380,7 +4385,7 @@
      % Minor optimization.
 
    * source/rtl/memoedit.prg
-     ! Fixed to not ask for confirmation when pressing 
+     ! Fixed to not ask for confirmation when pressing
        <Esc> on an unedited buffer.
 
 2007-09-10 22:51 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -4388,7 +4393,7 @@
    * contrib/libct/dattime2.c
    * contrib/samples/date.c
    * contrib/bmdbfcdx/bmdbfcdx1.c
-     * Changed hb_set.* access to hb_setGet*() in all 
+     * Changed hb_set.* access to hb_setGet*() in all
        contrib code.
 
    * source/rtl/hbini.prg
@@ -4497,7 +4502,7 @@
    * source/debug/debugger.prg
    * source/debug/dbgtarr.prg
      * Further formatting, cleanup, minor optimizations.
-     + Added Ctrl+PgUp/PgDn + Ctrl+Home/End everywhere as 
+     + Added Ctrl+PgUp/PgDn + Ctrl+Home/End everywhere as
        synonyms to Home/End.
 
 2007-09-09 19:38 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -4516,13 +4521,13 @@
    * source/rtl/teditor.prg
    * source/debug/debugger.prg
      + Added :RowPow(), :ColPos(), :IsWordWrap(), :WordWrapCol()
-     ! Changed debugger to use the above methods instead of direct 
+     ! Changed debugger to use the above methods instead of direct
        instance var access.
 
    * source/rtl/tbcolumn.prg
    * source/rtl/tget.prg
    * source/rtl/tbrowse.prg
-     ! Public class initializator names hidden when in strict 
+     ! Public class initializator names hidden when in strict
        (and non-XPP) mode.
 
    * source/rtl/tbrowse.prg
@@ -4533,7 +4538,7 @@
 
    * source/rtl/getsys.prg
    * source/rtl/tgetlist.prg
-     + (Better) C5.3 message line support, several 5.3 fixes, 
+     + (Better) C5.3 message line support, several 5.3 fixes,
        some of them borrowed from xhb.
 
    * include/hbcompat.ch
@@ -4552,18 +4557,18 @@
      ! Class names named to be in the Harbour namespace.
        xhb compatibility translations added to hbcompat.ch
      ! Unneeded BEGINDUMP and .h inclusions removed.
-     ! Added :End() to HBBrwText to avoid using some 
+     ! Added :End() to HBBrwText to avoid using some
        internals vars of the class.
-     ! Fixed problem with HBDebugger:SaveAppScreen() 
-       where it crashed due to wrong initialization order 
-       of TBrowse() screen coordinates. Bug appeared 
+     ! Fixed problem with HBDebugger:SaveAppScreen()
+       where it crashed due to wrong initialization order
+       of TBrowse() screen coordinates. Bug appeared
        due to the now more compatible TBrowse() behaviour.
      ! Locally used function (named ShowTopic()) made STATIC.
      % Optimizations and cleanups.
      % Unused vars/functions removed.
-     * Formatting (except large parts of debugger.prg and 
+     * Formatting (except large parts of debugger.prg and
        those files which were okey).
-     ; Majority of formatting, optimization and code cleanup 
+     ; Majority of formatting, optimization and code cleanup
        work is still left to do.
 
 2007-09-08 15:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -4623,29 +4628,29 @@
    * source/rtl/tpopup.prg
    * source/rtl/treport.prg
    * source/rtl/ttopbar.prg
-     ; These changes mainly targeted the .prg 
+     ; These changes mainly targeted the .prg
        level UI classes of Harbour.
      + Code standardization, cleanup, formatting.
        (formatting is not fully complete yet)
      ! Lots of compatibility fixes.
-     ! Lots of bugfixes (crashes, wrongly passed 
+     ! Lots of bugfixes (crashes, wrongly passed
        parameters, etc).
      ! Minor fix in one of the methods of HBReportForm()
-     - Non-Clipper classes removed (the MENUSYS/msgline 
+     - Non-Clipper classes removed (the MENUSYS/msgline
        related ones).
      ! Some fixes adapted from xHarbour's TBrowse()
      + Class VARs properly scoped.
      + TBColumn() is now fully compatible.
-     * The mess in the TTopBar and related classes was 
-       cleaned up, some small non-Clipper compatible 
-       classes were removed and a new TMenuSys class 
+     * The mess in the TTopBar and related classes was
+       cleaned up, some small non-Clipper compatible
+       classes were removed and a new TMenuSys class
        was created of the related parts.
      % Optimizations.
-     + TBrowse/TBColumn regression test suite 
+     + TBrowse/TBColumn regression test suite
        added (far from complete at this point).
      ; NOTE: No C5.3 GUI support is implemented in Harbour.
-     ; NOTE: Harbour uses Disp*() functions in UI functions 
-             to update screen. C5.x uses a mixture of Dev*(), 
+     ; NOTE: Harbour uses Disp*() functions in UI functions
+             to update screen. C5.x uses a mixture of Dev*(),
              Q?Out() and Disp*().
      ; NOTE: TBrowse() fixing is still a work in progress.
      ; Please test.
@@ -4954,7 +4959,7 @@
   * harbour/source/rtl/pushbtn.prg
   * harbour/source/rtl/radiobtn.prg
     * code checking and formatting
-    ! added fixes borrowed from xHarbour 
+    ! added fixes borrowed from xHarbour
     ! some other fixes
     % some speed improvements
 
@@ -6886,7 +6891,7 @@
 
    * harbour/utils/hbtest/rt_hvma.prg
    * harbour/utils/hbtest/rt_str.prg
-     + Added two more tests for "" $ "" / At( "", "" ) 
+     + Added two more tests for "" $ "" / At( "", "" )
        combinations.
 
 2007-06-05 10:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -6980,9 +6985,9 @@
   * harbour/include/hbexprop.h
   * harbour/include/hbexprb.c
   * harbour/source/common/expropt2.c
-     * added UPPER("") optimisation. The side effect of this modification 
-       is that Harbour becomes Clipper bug compatible in calculation of 
-       AT(UPPER(""), "test"). Though this optimisation does not introduce 
+     * added UPPER("") optimisation. The side effect of this modification
+       is that Harbour becomes Clipper bug compatible in calculation of
+       AT(UPPER(""), "test"). Though this optimisation does not introduce
        any buggy behaviour itself.
 
 2007-06-02 12:30 UTC+0200 Enrico Maria Giordano (e.m.giordano@emagsoftware.it)
@@ -7063,7 +7068,7 @@
             ...
          [ ALWAYS ]
             ...
-         END 
+         END
       It works like normal BEGIN SEQUENCE but sets <errorBlockExp> as
       ErrorBlock() before executing <statements;...> and restore
       previous ErrorBlock() at the end or when exception will appear.
@@ -7254,7 +7259,7 @@
   * harbour/contrib/Makefile
     * disable BMDBFCDX for DOS builds due to long names which do not
       pass 8.3 convention
-    * use OLE2 instead of OLE 
+    * use OLE2 instead of OLE
   * harbour/contrib/ole2/w32ole.c
     * warning fixes
   * harbour/include/hbregex.h
@@ -7553,10 +7558,10 @@
    * contrib/adordd/adordd.prg
      * ADO_GETFIELDTYPE() Improved
      * ADO_GETFIELDSIZE() Now support MEMO Field
-     
+
 2007-05-17 00:36 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/utils/hbtest/rt_misc.prg
-     ! SET EOLs guarded with __HARBOUR__ to make it compile on 
+     ! SET EOLs guarded with __HARBOUR__ to make it compile on
        other platforms.
 
 2007-05-17 00:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -7627,15 +7632,15 @@
      * Improved ADO_PUTVALUE()
 
 2007-05-11 18:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
-   * harbour/source/compiler/hbmain.c 
+   * harbour/source/compiler/hbmain.c
    * harbour/source/compiler/harbour.yyc
-     ! Fixed error message text when unclosed multiline codeblock 
+     ! Fixed error message text when unclosed multiline codeblock
        was detected (said: <||...> instead of {||...}).
        (two more places)
 
 2007-05-11 18:24 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/compiler/harbour.y
-     ! Fixed error message text when unclosed multiline codeblock 
+     ! Fixed error message text when unclosed multiline codeblock
        was detected (said: <||...> instead of {||...}).
      ; TOFIX: In this same case two memory blocks are not released:
        source\main\harbour.c:329: HB_TR_ERROR Block 1 0098C39C (size 100)
@@ -7654,7 +7659,7 @@
 
 2007-05-12 10:48 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
-     * OrdCreate() fixed 
+     * OrdCreate() fixed
      * OrdDestroy() implemented
 
 2007-05-12 10:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -7737,21 +7742,21 @@
 
 2007-05-11 10:17 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/rtl/filehb.c
-     * Changed one old TOFIX to a NOTE regarding a minor 
-       incompatibility in FILE() where the filename is RTrim()-ed 
-       in Clipper but not in Harbour. It became a NOTE because 
+     * Changed one old TOFIX to a NOTE regarding a minor
+       incompatibility in FILE() where the filename is RTrim()-ed
+       in Clipper but not in Harbour. It became a NOTE because
        making it compatible would mean losing some portability.
 
    * harbour/source/rtl/hbffind.c
-     ! Removed code in UNIX branch which would change an empty 
-       file mask to "*" (thus causing FILE("") to return .T. 
+     ! Removed code in UNIX branch which would change an empty
+       file mask to "*" (thus causing FILE("") to return .T.
        and DIRECTORY("") to return the whole dir content.)
-     ! Made sure in UNIX branch that an empty file mask won't 
-       return any files regardless of the filename matching 
+     ! Made sure in UNIX branch that an empty file mask won't
+       return any files regardless of the filename matching
        method used.
 
    * harbour/source/rtl/strmatch.c
-     + Added NOTE about hb_WildMatch() / sx_WildMatch() 
+     + Added NOTE about hb_WildMatch() / sx_WildMatch()
        incompatibility.
      ! Guarded WILDMATCH() with HB_COMPAT_XHB.
      * WILDMATCH() now calls HB_WILDMATCH() internally.
@@ -7767,15 +7772,15 @@
 2007-05-09 15:28 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * Improved ADO_CLEARREL()
-     
+
 2007-05-09 15:03 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
    * contrib/adordd/adordd.prg
      + Improved Deleted()
-     
+
 2007-05-09 10:55 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      + Added function HB_AdoRddGetRecordSet( [<nWorkArea>] ) --> oAdoRecordset
-     
+
 2007-05-09 10:41 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      + New functions HB_AdoRddGetConnection( [<nWorkArea>] ) --> oAdoConnection
@@ -7806,7 +7811,7 @@
 2007-05-07 19:42 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * Added some connection strings, borrowed from xharbour
-     
+
 2007-05-07 15:46 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
    * contrib/adordd/adordd.prg
     * ADO_GOTOID() borrowed from xHarbour with modifications
@@ -7814,7 +7819,7 @@
 2007-05-07 14:06 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
    * contrib/adordd/adordd.prg
     * DbRSelect() and DbRelation() implemented
-    
+
 2007-05-07 11:28 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * INDEX ON ... implementation
@@ -7839,7 +7844,7 @@
 2007-05-06 11:42 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.ch
      * New define added
-     
+
    * contrib/adordd/adordd.prg
      * SET RELATION implementation
 
@@ -7919,7 +7924,7 @@
 2007-05-04 11:06 UTC+0100 Miguel Angel Marchuet (miguelangel/at/marchuet.net)
   * source/rdd/wafunc.c
     * change of the behavior of DbUseArea opening, so that one behaves like made Clipper, when it fails the
-      opening of a table, does not recover the previous area. 
+      opening of a table, does not recover the previous area.
 
 2007-05-04 10:15 UTC+0100 Miguel Angel Marchuet (miguelangel/at/marchuet.net)
   + contrib/bmdbfcdx/Makefile
@@ -8061,9 +8066,9 @@
    * contrib/adordd/adordd.ch
    * contrib/adordd/adordd.prg
      * LOCATE and CONTINUE support
-     
+
    + contrib/adordd/mysql3.prg
-     * MySQL LOCATE and CONTINUE sample  
+     * MySQL LOCATE and CONTINUE sample
 
 2007-04-30 21:58 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
@@ -8076,11 +8081,11 @@
 2007-04-30 10:15 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
    * contrib/adordd/adordd.prg
      * ADO connection objects and ADO catalog objects are automatically created, stored and used by the ADORDD
-          
+
 2007-04-29 17:34 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/adordd/adordd.prg
      * Oracle support, thanks to Srdjan Dragojlovic
-     
+
    * contrib/adordd/adordd.ch
      * formatting
 
@@ -8089,7 +8094,7 @@
      * SET FILTER TO ... support
 
    i.e.: SET FILTER TO First = "Homer"
-     
+
    To use special SQL expressions, place quotation marks around them, i.e.:
    SET FILTER TO "City LIKE 'Chi*'"
 
@@ -8101,7 +8106,7 @@
 07-04-27 14:35 UTC+0100 Fernando Mancera (fmancera@viaopen.com)
    * contrib/adordd/adordd.prg
      * Minor change to header file name
-     
+
 2007-04-27 13:05 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * harbour/source/rtl/set.c
   * harbour/include/set.ch
@@ -8168,8 +8173,8 @@
      ! ::IsEditable() fixes.
      ! ::Picture fixes for invalid types, assignment behaviour.
      ! ::Picture hacks removed.
-     ! Non-assignable vars made READONLY. (will generate 
-       different RTEs than in CA-Cl*pper due to the more 
+     ! Non-assignable vars made READONLY. (will generate
+       different RTEs than in CA-Cl*pper due to the more
        refined oo engine in Harbour.)
      ! ::BadDate changed to be a METHOD.
      ! ::DecPos fixed.
@@ -8182,7 +8187,7 @@
    * harbour/source/rtl/gtapi.c
    * harbour/source/rtl/setcolor.c
      + hb_gtColorsToString() public API added.
-     + hb_NToColor() function added to convert a single color 
+     + hb_NToColor() function added to convert a single color
        value (returned by hb_ColorToN()) back to a string.
        Used in TGet():ColorSpec implementation.
 
@@ -8193,7 +8198,7 @@
      + Added many test cases.
 
    * harbour/source/vm/cmdarg.c
-     + Added support to use "--" instead of "//" for internal 
+     + Added support to use "--" instead of "//" for internal
        command line options.
 
    * harbour/source/rtl/tbcolumn.prg
@@ -8277,7 +8282,7 @@
      % Avoiding INLINE for speed.
      % Using INIT for quicker object initialization.
      + Added TGet() NOTEs, TOFIX.
-     ! Fixed some problems in TGetList. (Two GetApplyKey() 
+     ! Fixed some problems in TGetList. (Two GetApplyKey()
        potential RTEs.)
      ! Fixed a few missing "CLASS TBrowse"-es.
      ; Some formatting, code cleaning.
@@ -8286,13 +8291,13 @@
    * harbour/source/rtl/tget.prg
    * harbour/tests/Makefile
    + harbour/tests/rto_get.prg
-     ; Fixed lots of minor bugs and differences between 
-       CA-Cl*pper and Harbour Get system. The following 
+     ; Fixed lots of minor bugs and differences between
+       CA-Cl*pper and Harbour Get system. The following
        methods got most of the fixes:
      + ::Reform() undocumented C52 method added.
      ! ::Display() fixed when not having focus. (old TOFIX)
      ! ::UpdateBuffer() fixed when not having focus.
-     ! ::SetFocus() fixed to do nothing when already having focus.      
+     ! ::SetFocus() fixed to do nothing when already having focus.
      ! ::KillFocus() made almost fully compatible.
        (the ::Assign() call is still raising questions)
      ! ::Reset() made compatible.
@@ -8303,10 +8308,10 @@
      ! ::OverStrike() fixed RTE when not having focus.
      ! ::Insert() fixed RTE when not having focus.
      ! ::ToDecPos() fixed to set ::Changed.
-     ! ::PutMask() fixed to not pad the string to ::nMaxLen to 
+     ! ::PutMask() fixed to not pad the string to ::nMaxLen to
        be fully compatible with C5x.
      ! ::DecPos, ::Pos initialization made compatible.
-       (here the CA-Cl*pper NG is wrong in stating that these 
+       (here the CA-Cl*pper NG is wrong in stating that these
        vars ever hold NIL, they don't and they hold 0s instead)
      ! ::Minus more compatible but still far from perfect.
      % ::ParsePict() integrated into ::Picture()
@@ -8316,13 +8321,13 @@
      % Several minor optimizations, meaningless code elimination.
      ; Formatting, removed many old commented code snippets.
      + Added regression style tests for basic Get methods.
-       All the above fixes was the result of comparing 
-       Get object var dumps after calling different methods 
+       All the above fixes was the result of comparing
+       Get object var dumps after calling different methods
        in different order.
-     ; Notice that there could be new/rare cases when any of 
-       the above methods would need more fixes, in that case 
-       the regression test is there to check if the existing 
-       behaviour stayed the same after the fix and it's also 
+     ; Notice that there could be new/rare cases when any of
+       the above methods would need more fixes, in that case
+       the regression test is there to check if the existing
+       behaviour stayed the same after the fix and it's also
        very useful to add the new cases to the test.
 
 2007-04-19 00:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -8368,10 +8373,10 @@
 
 2007-04-18 10:43 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * harbour/source/codepage/cp_tpl.c
-     + Added NOTE about the fact that hb_Translate() 
-       (and hb_cdpTranslate()) would only work properly 
-       if all codepages for the same language are using the 
-       exact same number of lowercase/uppercase cp chars 
+     + Added NOTE about the fact that hb_Translate()
+       (and hb_cdpTranslate()) would only work properly
+       if all codepages for the same language are using the
+       exact same number of lowercase/uppercase cp chars
        in the exact same order.
 
    * harbour/source/codepage/Makefile
@@ -8382,24 +8387,24 @@
    + harbour/source/codepage/cphuisos.c
    * harbour/source/codepage/cphuwin.c
    + harbour/source/codepage/cphuwins.c
-     ! Synced HU WIN and HU ISO codepage lower/uppercase 
-       strings with HU 852, so that hb_Translate() works 
-       properly. (this means there are now several duplicate 
-       chars included in the WIN/ISO versions, along with 
-       a non-HU char, all just needed to stay compatible with 
-       original CA-Cl*pper HU/852 index ordering and keep 
+     ! Synced HU WIN and HU ISO codepage lower/uppercase
+       strings with HU 852, so that hb_Translate() works
+       properly. (this means there are now several duplicate
+       chars included in the WIN/ISO versions, along with
+       a non-HU char, all just needed to stay compatible with
+       original CA-Cl*pper HU/852 index ordering and keep
        hb_Translate() working at the same time.)
-       IMO, we'd need to introduce a separate "collation" 
-       string in each cp file to detach index ordering 
-       from upper/lowercase and codepage translation without 
-       any hacks, since as this example shows these two 
-       are not always in sync. (or, as an alternative we might 
-       want to make codepage translation more sophisticated, 
-       like converting first to unicode and convert back to 
-       the other codepage from unicode, but that leads a bit 
-       further.). (If I'm missing something, pls don't hesitate 
+       IMO, we'd need to introduce a separate "collation"
+       string in each cp file to detach index ordering
+       from upper/lowercase and codepage translation without
+       any hacks, since as this example shows these two
+       are not always in sync. (or, as an alternative we might
+       want to make codepage translation more sophisticated,
+       like converting first to unicode and convert back to
+       the other codepage from unicode, but that leads a bit
+       further.). (If I'm missing something, pls don't hesitate
        to clarify)
-     + Added SixDriver compatible HU ISO/WIN codepage files 
+     + Added SixDriver compatible HU ISO/WIN codepage files
        for the reasons described above.
 
    * harbour/include/hbapicdp.h
@@ -8468,7 +8473,7 @@
    * harbour/source/codepage/uckoi8.c
    * harbour/source/codepage/uckoi8u.c
    * harbour/source/codepage/ucmaz.c
-     ! #define namespace issue in public API header file 
+     ! #define namespace issue in public API header file
        corrected:
        CPID_* -> HB_CPID_*
        UNITB_* -> HB_UNITB_*
@@ -8572,9 +8577,9 @@
    + contrib/ole2/make_b32.bat
    + contrib/ole2/makefile.bc
      * Borland makefile for HBOleAut.lib
-     
+
    * contrib/ole2/win32ole.prg
-     * minor fix  
+     * minor fix
 
 2007-04-17 01:32 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * contrib/ole2/win32ole.prg
@@ -8593,8 +8598,8 @@
 
    * harbour/source/rtl/idle.c
      ! Fixed releasing idle CPU cycles. (thanks Przemek)
-       The committed method was tested against usleep( 1 ) 
-       and usleep( 100 ) and found to work perfect as 
+       The committed method was tested against usleep( 1 )
+       and usleep( 100 ) and found to work perfect as
        opposed to the usleep() calls.
 
    * harbour/source/rtl/tget.prg
@@ -10972,7 +10977,7 @@
     ! fixed GPF during compilation of @:var, @:&var, @o:&var
     + added support for @o:&var and @:var, @:&var inside WITH OBJECT
       statement
-    * changed PCODE generated of ++,--,+=,-=,... 
+    * changed PCODE generated of ++,--,+=,-=,...
       Now left side expression is evaluated _ONLY_ once and when object
       messages are used it's guarantied that exactly the same object
       variable will be used. It also fixes some problems which exists
@@ -11026,13 +11031,13 @@
 2006-12-18 18:20 UTC+0100 Ryszard Glab <rglab//imid.med.pl>
    * include/hbcomp.h
       + added extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL )
-      
+
    * include/hbcompdf.h
       + added 'int iLastLineErr' to HB_COMP structure
-      
+
    * include/hbpp.h
       + added extern BOOL hb_pp_eof( PHB_PP_STATE )
-      
+
    * source/compiler/harbour.c
    * source/compiler/harbour.y
    * source/compiler/harbour.yyc
@@ -17440,11 +17445,11 @@
         However there are still leaks when the compiler aborts
         compilation due to errors.
       + added optimalization of '+=' '-=' '*=' '/=' operators
-      + added hb_itemGetNDDec(), 
+      + added hb_itemGetNDDec(),
         hb_itemPutHBLong(),
         hb_itemPutNumType()
         borrowed from xHarbour
-      
+
       NOTE: new pcodes:
       HB_[PLUS|MINUS|MULT|DIV]EQ
       HB_[PLUS|MINUS|MULT|DIV]EQPOP
@@ -17490,7 +17495,7 @@
     + added GNU Makefile
 
 2006-02-12 11:15 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
-  * harbour/include/hbdefs.h 
+  * harbour/include/hbdefs.h
     * minor fix to avoid conflict with Darwin and Cocoa BOOL use
 
 2006-02-11 16:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -17514,7 +17519,7 @@
       It's not exactly the same as in Clipper because Clipper creates
       one final file when [x]Harbour series of files.
       To make it like in Clipper we will have to add support from more
-      then one symbol table in the final file. It will be also useful 
+      then one symbol table in the final file. It will be also useful
       for proper implementation of:
          DO <file>
       Now in [x]Harbour it works like #include <file>.prg when in Clipper
@@ -17550,7 +17555,7 @@
 
    * tests/mousetst.prg
       * minor fix after latest Przemek changes
-            
+
    * source/pp/ppcore.c
       * fixed bug in processing the list of optional repeatable code
       reported by Lorenzo
@@ -17922,7 +17927,7 @@
   * harbour/source/rtl/filesys.c
     + added hb_fsGetOsHandle()
     * updated for API modifications
-    
+
   * harbour/source/rtl/gt.c
   * harbour/source/rtl/gtapi.c
   * harbour/source/rtl/gtapiu.c
@@ -18053,7 +18058,7 @@
 
   * harbour/source/vm/arrays.c
     * updated for API modifications
-    + added hb_arrayId(), 
+    + added hb_arrayId(),
     * changed hb_arrayClone() declaration to:
          HB_EXPORT PHB_ITEM hb_arrayClone( PHB_ITEM pSrcArray )
     * changed hb_arrayFromParams() declaration to:
@@ -18301,22 +18306,22 @@
    * source/macro/macrob.c
       * fixed to release the memory if macro compiled code contains
         a variable or a function reference
-        
+
    * source/rtl/filesys.c
       * added missing '(' to copile correctly on UNIX'es
-      
+
 
 2005-12-28 13:05 UTC+0100 Antonio Linares (alinares@fivetechsoft.com)
    * vm/maindll.c
      + Added new functions HBDLLENTRY1() and HBDLLENTRY2()
-     
+
      These function allow to call a Harbour (self contained) DLL and provide it
-     one or two Harbour items as parameters. A HBDLLENTRYN() that allows optionally 
+     one or two Harbour items as parameters. A HBDLLENTRYN() that allows optionally
      N parameters would be valuable too.
 
 2005-12-02 17:12 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * include/hbmath.h
-     ! Fixed a few declarations to be in sync with the 
+     ! Fixed a few declarations to be in sync with the
        implementation. (Thanks Chen)
 
 2005-11-27 11:20 UTC+0200 Chen Kedem <niki@actcom.co.il>
@@ -18328,7 +18333,7 @@
 
 2005-11-24 23:24 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
   * include/hbpcode.h
-    + Comment added about adding new pcodes at the end of 
+    + Comment added about adding new pcodes at the end of
       the list for compatibility.
 
   * source/rtl/filesys.c
@@ -18336,15 +18341,15 @@
 
   * tests/mathtest.prg
   * source/rtl/math.c
-    ! Fixed prev commit to comply with 10char function name 
+    ! Fixed prev commit to comply with 10char function name
       rule:
-      HB_MATHERRMODE()    -> HB_MATHERMODE()   
+      HB_MATHERRMODE()    -> HB_MATHERMODE()
       HB_MATHERRORBLOCK() -> HB_MATHERBLOCK()
 
   * source/rtl/seconds.c
-    ! hb_secondsCPU() move inside FlagShip guard instead 
+    ! hb_secondsCPU() move inside FlagShip guard instead
       of HB_EXTENSION.
-    * hb_secondsCPU() made static (Harbour level function 
+    * hb_secondsCPU() made static (Harbour level function
       helper only with non-std name).
 
   * source/vm/dynlibhb.c
@@ -18356,23 +18361,23 @@
   * source/rtl/symbol.prg
   * source/vm/dynsym.c
   * include/hbextern.ch
-    * Internal function names renamed to comply and to 
-      not collide with existing ones (mistake in prev 
+    * Internal function names renamed to comply and to
+      not collide with existing ones (mistake in prev
       commit).
 
-  + tests/symbolt.prg 
+  + tests/symbolt.prg
     ; Missed from prev commit.
 
 2005-11-22 10:31 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
   * source/rtl/symbol.prg
   * source/vm/dynsym.c
   * include/hbextern.ch
-    ! Moved and renamed two functions from BEGINDUMP to their 
+    ! Moved and renamed two functions from BEGINDUMP to their
       proper place.
       GETSYMBOLPOINTER() -> __DYNSGETPOINTER()
       GETSYMBOLNAME() -> __DYNSGETNAME()
     + Added the two functions to hbextern.ch
-    + TOFIX added to symbol.prg to remove the remaining one C 
+    + TOFIX added to symbol.prg to remove the remaining one C
       function inside BEGINDUMP. (Antonio, can you take a look?)
 
 2005-11-22 10:08 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
@@ -18380,8 +18385,8 @@
     ! Fixed doc for hb_fsSetDevMode()
 
   * source/rtl/filesys.c
-    + Partially undone prev commit, so that now it gives 
-      unreferenced var warnings for the not-implemented 
+    + Partially undone prev commit, so that now it gives
+      unreferenced var warnings for the not-implemented
       platform branch.
 
   * tests/bldtest/bldtest.c
@@ -18398,7 +18403,7 @@
   * utils/hbextern/Makefile
   * utils/hbmake/Makefile
   * utils/hbrun/Makefile
-  * utils/hbtest/Makefile 
+  * utils/hbtest/Makefile
     + Added missing dbf*, hbsix libs.
       Could not test GCC because MingW build is broken.
 
@@ -18469,10 +18474,10 @@
    * tests/mathtest.prg
    * doc/en/math.txt
      ! HB_ prefix added for non-Clipper functions.
-       MATHERRMODE()    -> HB_MATHERRMODE()   
+       MATHERRMODE()    -> HB_MATHERRMODE()
        MATHERRORBLOCK() -> HB_MATHERRORBLOCK()
      + Above two functions added to hbextern.ch
-     * HB_MATHERRMODE() input validation logic moved to the lower 
+     * HB_MATHERRMODE() input validation logic moved to the lower
        level function. This is a step to make this a simple Set()
 
    * include/math.ch
@@ -18495,14 +18500,14 @@
 2005-11-19 00:30 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * include/hbapifs.c
    * src/rtl/filesys.c
-     ! hb_fsSetDevMode() fixed back to return a BOOL value 
-       to be compatible with the CA-Cl*pper undocumented 
-       _tdevraw() function. (hb_fsSetDevMove() is mapped 
-       to _tdevraw() in hbundoc.api, it's the documented 
+     ! hb_fsSetDevMode() fixed back to return a BOOL value
+       to be compatible with the CA-Cl*pper undocumented
+       _tdevraw() function. (hb_fsSetDevMove() is mapped
+       to _tdevraw() in hbundoc.api, it's the documented
        version of the same functionality)
-       Also fixed warning and error for one of the dummy 
+       Also fixed warning and error for one of the dummy
        platform branches.
-       Since this came from xHarbour it pbly needs to be 
+       Since this came from xHarbour it pbly needs to be
        fixed there too.
 
    * tests/Makefile
@@ -18606,14 +18611,14 @@
 2005-11-14 20:50 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
    * hrbdll.vc
    * makefile.nt
-   * makefile.vc 
+   * makefile.vc
    * makefile64.nt
-     * Change -o linker option to /OUT: to avoid warning with 
+     * Change -o linker option to /OUT: to avoid warning with
        MS Visual Studio 2005 compiler tools.
-     + Added -D_CRT_SECURE_NO_DEPRECATE to suppress the many 
+     + Added -D_CRT_SECURE_NO_DEPRECATE to suppress the many
        new MS warnings about unsafe function usage.
      ; NOTE: MSVC 14.0 fails to compile macroy.c
-     ; NOTE: Still tons of warnings, but other than these it 
+     ; NOTE: Still tons of warnings, but other than these it
              compiles fine.
 
    * source/codepage/cdpsl437.c
@@ -18626,10 +18631,10 @@
    * include/hbextern.ch
      + Updated (somewhat).
 
-   * source/rtl/strmatch.c 
+   * source/rtl/strmatch.c
    * source/rdd/rddord.prg
      ! WILDMATCH() renamed to HB_WILDMATCH()
-   
+
    * source/rdd/rddord.prg
      ! ORDWILDSEEK() guarded with HB_COMPAT_XPP
 
@@ -18641,7 +18646,7 @@
      - removed references to delim0.prg/c
 
 2005-11-14 14:40 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
-   * harbour/bin/bld.bat 
+   * harbour/bin/bld.bat
      + added references to hbsix.lib
      - removed references to dbfdbt.lib
 
@@ -18707,9 +18712,9 @@
          END
 
    Notice:
-      - Integer and string expressions can be mixed in a single 
+      - Integer and string expressions can be mixed in a single
         SWITCH command with no runtime errors;
-      - CASE expression have to be resolved at compile time and 
+      - CASE expression have to be resolved at compile time and
         the result has to be either an integer or string constant
       - if there is no EXIT statement then next CASE is executed
         (or OTHERWISE for the last CASE)
@@ -18721,7 +18726,7 @@
 
    Notice:
       The above changes apply only to FLEX version!
-            
+
 
 2005-11-13 21:21 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
   * harbour/contrib/ole/bldtest.bat
@@ -18817,7 +18822,7 @@
       + added support for FOR EACH loop
          FOR EACH var1 [,var255] IN expr1 [,expr255] [DESCEND]
          NEXT
-         
+
          Note:
             -expr can be a string or an array
                if it is a string then assigments to the control
@@ -18829,7 +18834,7 @@
              :__enumbase  - the value that is being traversed
              :__enumvalue - the value of variable
             -see tests/foreach.prg for examples
-            
+
       + added warnings in cases of duplicated loop variables
        eg. FOR i:=1 TO 5
             FOR i:=i TO i+5
@@ -18839,22 +18844,22 @@
 
 NOTE:
    The new pcodes were added - rebuild everything
-         
-      
+
+
 2005-11-04 22:19 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
      * harbour/source/vm/estack.c
        * hb_UnhandledExceptionFilter() modified to return EXCEPTION_CONTINUE_SEARCH
-       
+
      NOTICE: When returning EXCEPTION_CONTINUE_SEARCH then both Microsoft and Borland
              behave the same way, and the Windows GPF dialogbox is finally shown, which
-             it is quite usefull to locate the GPF address (on a MAP file).  
+             it is quite usefull to locate the GPF address (on a MAP file).
 
 2005-11-04 12:41 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
      * harbour/source/vm/mainwin.c
        * SetUnhandledExceptionFilter() is called if HB_INCLUDE_WINEXCHANDLER define is used
-     
+
      * harbour/source/vm/estack.c
-       * UnhandledExceptionFilter renamed as hb_UnhandledExceptionFilter, and 
+       * UnhandledExceptionFilter renamed as hb_UnhandledExceptionFilter, and
          WINBASEAPI removed.
 
 2005-11-03 10:42 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
@@ -18899,7 +18904,7 @@ NOTE:
    * makefile.nt
    * makefile64.nt
      + added references to new files.
- 
+
 2005-11-02 01:56 UTC+0100 Jacek Kubica (kubica/at/wssk.wroc.pl)
   * harbour/makefile.bc
    + added references to harbour/source/common/hbarch.c
@@ -19086,7 +19091,7 @@ NOTE:
    * source/lang/msghucwi.c
    + source/lang/msghuiso.c
    * source/lang/msghuwin.c
-     * HU lang stuff updated. ISO cp added (same as Win cp). Minor fixes 
+     * HU lang stuff updated. ISO cp added (same as Win cp). Minor fixes
        (not related to functionality) added.
 
 2005-10-24 02:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -19185,23 +19190,23 @@ NOTE:
     * synced with recent xHarbour modification in RDD init code
 
 2005-10-23 09:05 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
-   * harbour/source/rdd/dbfntx/dbfntx1.c  
-   * harbour/source/rdd/dbfcdx/dbfcdx1.c  
-   * harbour/source/rdd/dbffpt/dbffpt1.c  
+   * harbour/source/rdd/dbfntx/dbfntx1.c
+   * harbour/source/rdd/dbfcdx/dbfcdx1.c
+   * harbour/source/rdd/dbffpt/dbffpt1.c
    * harbour/source/rdd/hbsix/sxcompr.c
    * harbour/source/rdd/hbsix/sxcrypt.c
    * harbour/source/rdd/hsx/hsx.c
      + Minor fix to support define HB_NO_DEFAULT_API_MACROS (if used)
        required by Microsoft compiler
-       
-   IMPORTANT: Now Harbour properly builds using Microsoft compiler and 
+
+   IMPORTANT: Now Harbour properly builds using Microsoft compiler and
               define HB_NO_DEFAULT_API_MACROS, but applications fail to start, showing
-              this error: 
+              this error:
               Unrecoverable error 9004: RDD invalid or failed to load
               Called from DBFFPTINIT(62)
-              
+
               Using Borland and the same define, all compiles and works ok.
-              
+
               We need to discover why such error raises using Microsoft compiler and that
               define.
 
@@ -19270,7 +19275,7 @@ NOTE:
    * makefile.vc
    * makefile64.nt
       - removed references to DBFDBT library
-   
+
    * source/debug/dbgtmenu.prg
    * source/debug/dbgtmitm.prg
    * source/debug/dbgtwin.prg
@@ -19278,7 +19283,7 @@ NOTE:
    * source/rtl/alert.prg
       * fixed displaying of boxes under the xterm
         (use @ ... TO ... instead of @ ... BOX)
-      
+
    * source/rtl/gtcrs/gtcrs.c
       * fixed restoring of alternate characters flag
 
@@ -19326,9 +19331,9 @@ NOTE:
    * include/hbextern.ch
       * removed reference to SDFC and DELIMC
    * source/rdd/dbcmd.c
-      * removed definition of DBSKIPPER function (it is defined 
+      * removed definition of DBSKIPPER function (it is defined
       already in rtl/browdbx.prg)
-      
+
 
 2005-09-23 13:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * makefile.bc
@@ -19336,7 +19341,7 @@ NOTE:
    * makefile.vc
    * makefile64.nt
       * updated build files for non-GNU make engines
-      
+
 
 2005-09-23 15:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * config/global.cf
@@ -19398,7 +19403,7 @@ NOTE:
    + source/rdd/hsx/hsx.c
       * changes to synhronize RDD code with xHarbour (state of 23.09.2005)
         Many, many thanks to Przemek Czerpak for his work.
-      
+
 
 2005-09-20 10:16 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
@@ -19414,13 +19419,13 @@ NOTE:
 2005-08-23 18:45 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
 
    * source\rtl\scrollbr.prg
-     * Fixed length in Style string (more than 4 characters) 
+     * Fixed length in Style string (more than 4 characters)
      - Eliminated unused LOCAL vars in Hitest()
      - Deleted unused method GetColor()
      + Added METHOD SetStyle( cStyle )  to change SB characters at runtime
      + Added METHOD SetColor( cColor )  to change SB colors at runtime
      * fixed bugs, minor optimizations
-  
+
 2005-08-23 18:45 UTC-0400 Alejandro de Garate <alex_degarate@hotmail.com>
 
    + tests\sbartest.prg
@@ -19429,7 +19434,7 @@ NOTE:
 2005-06-14 21:11 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
    * source/rtl/disksphb.c
-     * hb_DiskSpace() changed to not give a runtime error in case 
+     * hb_DiskSpace() changed to not give a runtime error in case
        of any error, but set the FError() value instead.
 
    * config/bsd/global.cf
@@ -19448,22 +19453,22 @@ NOTE:
 
 2005-06-11 13:01 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
-   * source/rtl/idle.c 
+   * source/rtl/idle.c
      ! Fix to prev. commit.
 
 2005-06-09 18:09 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
    * source/rtl/tget.prg
-     ! :display fixed (again) to always call VarGet block 
+     ! :display fixed (again) to always call VarGet block
        to be CA-Cl*pper compatible.
 
    * config/w32/global.cf
-     ! Fixed to properly create the obj directories when compiling 
+     ! Fixed to properly create the obj directories when compiling
        using GCC under XP. This broke in the near past.
 
    * source/pp/ppcore.c
      ! Fixed two compiler warnings.
-     ; Please review one of them if you made the change, since 
+     ; Please review one of them if you made the change, since
        I'm not sure what the intention was, here's the code snippet:
 
        ...
@@ -19481,8 +19486,8 @@ NOTE:
 
    * source/compiler/hbusage.c
      + Copyright year updated.
-   
-   * source/rtl/idle.c 
+
+   * source/rtl/idle.c
      * Cleaned up a platform dependent code part.
 
 2005-05-25 09:55 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
@@ -19506,8 +19511,8 @@ NOTE:
    * makefile64.nt
      + bufferoverflowu.lib added to LDFLAGS as per new Microsoft C 64
        compiler (PSDK April 2005) requirement.
-       
-   * hbdate.h    
+
+   * hbdate.h
    * hbapifs.h
      + HB_EXPORT added to those functions that already were using it,
        as per new Microsoft C 64 compiler (PSDK April 2005) requirement.
@@ -19517,18 +19522,18 @@ NOTE:
      * -D__64__ removed. No longer needed.
 
 2005-04-29 15:54 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
-   * include/hbinit.h  
+   * include/hbinit.h
      * __64__ changed into Microsoft C 64 built-in _WIN64
 
 2005-04-29 15:46 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
-   * include/hbdefs.h  
+   * include/hbdefs.h
      * fixed for Windows 64, using Microsoft C provided _WIN64 define
        Changes provided by Przemek. Thanks! :-)
 
 2005-04-29 07:02 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
    * makefile64.nt
      * __64__ define declared
-   * include/hbinit.h  
+   * include/hbinit.h
      * __64__ define use to detect building for 64 bits when using Microsoft C compiler
 
    Please notice that Microsoft C 64 compiler is a cross compiler that works as a 32 bits
@@ -19563,7 +19568,7 @@ NOTE:
 
    * config/dos/global.cf
       *restored creation of subdirectiories under plain DOS
-   
+
    * include/hbapi.h
    * include/hbcomp.h
    * include/hbdefs.h
@@ -19574,7 +19579,7 @@ NOTE:
    * source/vm/dynsym.c
    * source/vm/hvm.c
    * source/vm/macro.c
-      *modified creation of symbols table 
+      *modified creation of symbols table
          *symbol of function name never share a symbol of variable
          *symbol for INIT/EXIT procedure has now '$' suffix - this means
          that such procedures cannot be called from user code
@@ -19592,22 +19597,22 @@ NOTE:
        It will print:
        In INIT procedure aaa$
        In STATIC procedure aaa
-       
+
       *fixed access to static functions in a macro compiler (symbols for
       static functions never goes into dynamic symbols table)
 
    * source/pp/ppcore.c
       *increased numer of nested optional clauses (max 5 currently - work
       in progress)
-      
+
 2005-02-16 13:52 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
   * source/vm/classes.c
     hb_objGetpMethod() compiled as extern "C" for MSVC compatibility with xHarbour
 
 2005-02-01 21:05 UTC+0100 Tomaz Zupan <tomaz/at/orpo.si>
   * harbour.spec
-    Returned optimization to O3. Problems with Mandrake/gcc 
-    are fixed in Mdk 10.1 with gcc 3.4. 
+    Returned optimization to O3. Problems with Mandrake/gcc
+    are fixed in Mdk 10.1 with gcc 3.4.
     (see ChangeLog 2004-07-18 19:50 UTC+0200 Tomaz Zupan)
 
 2005-02-01 20:40 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -19711,7 +19716,7 @@ NOTE:
   * harbour/include/hbapifs.h
   * harbour/source/rtl/filesys.c
     * added hb_fsLockLarge() and hb_fsSeekLarge() which uses 64bit ofsets
-    
+
   * harbour/source/rdd/workarea.c
     * set current work area to the used one in EVALBLOCK RDD method
       before code block evaluation
@@ -19838,7 +19843,7 @@ NOTE:
    * source/pp/ppcore.c
       * defined pseudo-functions' parameters are case sensitive now
       (this fixes bug #define F( n )  FF( n, N ) )
-      
+
 
 2005-01-03 14:15 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbexprb.c
@@ -19865,18 +19870,18 @@ NOTE:
         Notice, that Clipper reports error even in this case:
         MEMVAR mvar
         {|| &mvar,mvar}
-         
+
    * source/vm/memvars.c
       * restored initial and expand sizes for memvars table
 
    * source/pp/ppcore.c
       * some empty lines added
-        
+
 2004-12-27 10:37 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/vm/memvars.c
       * changed algorithm for recycling of unused memvar values
         - thanks to Przemek
-        
+
 
 2004-12-31 06:16 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * harbour/source/codepage/cdpesmwi.c
@@ -20125,16 +20130,16 @@ NOTE:
    * source/vm/memvars.c
       * changed algorithm for recycling of unused memvar values
         - thanks to Przemek
-        
+
 2004-12-24 07:47 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * include/hbapi.h
    * source/vm/codebloc.c
    * source/vm/itemapi.c
    * source/vm/memvars.c
       * fixed memvars and detached locals handling related to reallocation
-      of memvar's buffer and detaching of locals in a loop 
+      of memvar's buffer and detaching of locals in a loop
       - thanks to Przemek
-      
+
    * source/vm/debug.c
       *removed diagnostic hb_dbgstop()
 
@@ -20145,9 +20150,9 @@ NOTE:
    * source/vm/itemapi.c
    * source/vm/memvars.c
       * fixed memvars and detached locals handling related to reallocation
-      of memvar's buffer and detaching of locals in a loop 
+      of memvar's buffer and detaching of locals in a loop
       - thanks to Przemek
-      
+
    * source/vm/debug.c
       *removed diagnostic hb_dbgstop()
 
@@ -20292,7 +20297,7 @@ NOTE:
     * small fix to error message
 
   * harbour/source/rtl/idle.c
-    + added HB_IDLESLEEP() and 
+    + added HB_IDLESLEEP() and
       void hb_idleSleep( double dSeconds )
 
   * harbour/source/rtl/isprint.c
@@ -20441,7 +20446,7 @@ NOTE:
 
   * harbour/include/hbdefs.h
     + added HB_DBL_LIM_INT24(d) and HB_LIM_INT24(l) macros
-    + try to autodect byte order using information form system C header 
+    + try to autodect byte order using information form system C header
       files - it whoud work for Linux, BSD/Darwin, SunOS - maybe also
       for some other *nixes
     * removed some dangerous casting. [x]Harbour code still depnds on
@@ -20784,8 +20789,8 @@ NOTE:
   * harbour/contrib/mysql/tmysql.prg
   * harbour/contrib/mysql/tsqlbrw.prg
     * Changes to approach Clipper behaviour
-      NOTE: My changes are marked in source code with label "DAVID:", to 
-            help in quick review of changes, and these changes are 
+      NOTE: My changes are marked in source code with label "DAVID:", to
+            help in quick review of changes, and these changes are
             described widely in files difer.txt, diffeng.txt
             These labels will be removed in a reasonable time
 
@@ -20806,22 +20811,22 @@ NOTE:
       * fixed support for static functions used in macro compiled
       expressions (the runtime error is generated during evaluation
       instead of macro compilation - like in Clipper)
-      
+
    * source/pp/ppcore.c
       * fixed support for '&macro.' in complex expressions
-      
+
 
 2004-09-07 10:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/pp/ppcore.c
       * fixed support for Clipper undocumented <x:&> match marker,
-      Harbour is now 100% compatible here. 
+      Harbour is now 100% compatible here.
       Notice that this fixes support for
-      SET FILTER TO &macro 
+      SET FILTER TO &macro
       SET FILTER TO &macro. .AND. expr
 
 2004-08-06 18:21 UTC-0500 David Arturo Macias Corona <dmacias@mail.udg.mx>
   * harbour/source/rtl/dates.c
-    ! fixed problem with dates. Now is Clipper compatible 
+    ! fixed problem with dates. Now is Clipper compatible
       For empty date it returns empty string, for valid
       when number of years greater equal to 0 it returns formated date
       and in other case it fills buffers with 0 characters.
@@ -20837,7 +20842,7 @@ NOTE:
 
 2004-08-03 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/rtl/tget.prg
-      * GetNew() no longer evaluates passed set/get codeblock    
+      * GetNew() no longer evaluates passed set/get codeblock
 
 2004-08-01 14:38 UTC+0100 Viktor Szakats (viktor.szakats syenar.hu)
 
@@ -21857,7 +21862,7 @@ NOTE:
 
    * source/common/hbffind.c
       *fixed to compile correctly with HB_OS_UNIX
-            
+
    * include/hbcomp.h
    * include/hbexpra.c
    * include/hbexprb.c
@@ -21891,7 +21896,7 @@ NOTE:
 
    NOTICE:
       Some compilers may require that the debug library has to
-      be specified as an object file in order to get the 
+      be specified as an object file in order to get the
       debugger linked in.
 
 2004-03-08 19:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
@@ -21941,7 +21946,7 @@ NOTE:
 2004-02-27 12:37 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/teditor.prg
-     ! Fixed a Bound error in GetParagraph which came up when 
+     ! Fixed a Bound error in GetParagraph which came up when
        using <Del> in wrap mode, in the last line I guess.
        Note that this just fixed the bound error, not the possible
        real problem.
@@ -21950,34 +21955,34 @@ NOTE:
 
    * source/common/hbffind.c
    * source/rtl/direct.c
-     + Completely rearranged, so that the platform specific stuff 
+     + Completely rearranged, so that the platform specific stuff
        is kept in one function. Redundant code removed.
-     * Attrib filters needed to make DIRECTORY() CA-Cl*pper 
-       compatible have been moved to the low-level file-find 
+     * Attrib filters needed to make DIRECTORY() CA-Cl*pper
+       compatible have been moved to the low-level file-find
        functions.
      + Added label support for Win32.
-     ! Fix for Win32. It has been made compatible with the 
-       C RTL _dos_findfirst pattern matching, which is what 
+     ! Fix for Win32. It has been made compatible with the
+       C RTL _dos_findfirst pattern matching, which is what
        CA-Clipper is compatible with.
-     * Adding space to the stringified attribute list on 
-       HB_FA_NORMAL removed, since it's not compatible, and it 
+     * Adding space to the stringified attribute list on
+       HB_FA_NORMAL removed, since it's not compatible, and it
        doesn't get executed anyway, since HB_FA_NORMAL == 0.
      * UNIX part formatted.
-     ; All this means that file find API is fixed now and compatible 
-       with CA-Cl*pper on the lower level. Heavily tested under 
-       Win32, and probably easy to fix for any other platforms 
-       now in case of incompatibility. Changes has be merged from 
-       an older version of the file, so please double chk your 
+     ; All this means that file find API is fixed now and compatible
+       with CA-Cl*pper on the lower level. Heavily tested under
+       Win32, and probably easy to fix for any other platforms
+       now in case of incompatibility. Changes has be merged from
+       an older version of the file, so please double chk your
        changes/platforms.
-     ; Note that other file-find API based functions will also 
+     ; Note that other file-find API based functions will also
        automatically benefit from the above changes, like FILE()/
        hb_fsFile().
 
 2004-02-21 7:39 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/memoread.c
-     * Previous change reverted. hb_retc( NULL ) was intentional 
-       and is an optimized version of hb_retc( "" ). Both will return 
+     * Previous change reverted. hb_retc( NULL ) was intentional
+       and is an optimized version of hb_retc( "" ). Both will return
        an empty string.
      % hb_fsClose() calls reduced.
 
@@ -21986,18 +21991,18 @@ NOTE:
      ! :SetColumn() retval made compatible.
      ! :ColWidth() retval made compatible.
      % Using array functions to speed up a few things.
-     % Got rid of the predefined 4096 long array in every 
+     % Got rid of the predefined 4096 long array in every
        columns plus the browse object.
-     ; More and more incompatibilities are popping up, some 
-       of them quite strange, and only coming up in a large 
+     ; More and more incompatibilities are popping up, some
+       of them quite strange, and only coming up in a large
        app's sophisticated browse stressing environment.
        - Removing rightmost column while active will do RTE,
-       - If headsep is initialized after the columns and cargo, 
-         browse will sometimes behave strangely (headsep value 
+       - If headsep is initialized after the columns and cargo,
+         browse will sometimes behave strangely (headsep value
          disappears??)
-       - Moving columns off the visible area will screw up 
+       - Moving columns off the visible area will screw up
          internals.
-       - Modifying columns is slow because of the unconditional 
+       - Modifying columns is slow because of the unconditional
          :configure() calls.
 
 2004-02-20 8:55 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
@@ -22016,7 +22021,7 @@ NOTE:
      ! adsSeek() now raises a runtime error 1201 if no index is active
      ! adsOrderListAdd() sets order to 0 if an invalid or non-existent tag is provided
        The above two were added to keep Clipper compatibility
-     + Added 5th param to commonError() in order to provide uiFlags, like other RDD's 
+     + Added 5th param to commonError() in order to provide uiFlags, like other RDD's
    * source/rdd/dbfcdx/dbfcdx1.c
    * source/rdd/dbfntx/dbfntx1.c
      ! Fixed error code returned by hb_cdxSeek() and ntxSeek() to 1201 (was 1020)
@@ -22050,13 +22055,13 @@ NOTE:
         adsDDSetDatabaseProperty()
         adsGetTableCharType()
         adsMGGetLockOwner()
-      
+
 2004-02-16 15:52 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * src/rtl/set.c
-     ! Fixed an incompatibility in Set(_SET_EXIT) which caused 
-       ReadExit() to set the SET value even if called without 
-       a parameter. Similar incompatibility can exist with other 
+     ! Fixed an incompatibility in Set(_SET_EXIT) which caused
+       ReadExit() to set the SET value even if called without
+       a parameter. Similar incompatibility can exist with other
        sets, but I didn't chk them.
        Now ReadExit() works as expected.
 
@@ -22066,9 +22071,9 @@ NOTE:
 2004-02-16 10:52 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * src/rtl/tbrowse.prg
-     + :ColorRect() partial support added. The missing part is 
-       that in C52 :ColorRect() will update the screen probably 
-       using some internal buffers for the data, because 
+     + :ColorRect() partial support added. The missing part is
+       that in C52 :ColorRect() will update the screen probably
+       using some internal buffers for the data, because
        the skipblock for example is not evaluated.
 
    * src/rtl/filesys.c
@@ -22082,35 +22087,35 @@ NOTE:
 2004-02-15 16:35 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * src/rtl/tbrowse.prg
-     ! Fixed to not display headsep/footsep when there's no 
+     ! Fixed to not display headsep/footsep when there's no
        header/footer.
-     ! Fixed to display headsep/footsep with the width of 
+     ! Fixed to display headsep/footsep with the width of
        colsep.
 
    * makefile.bc
-     ! Added DEBUG_LIB for Harbour exes to make them compile 
+     ! Added DEBUG_LIB for Harbour exes to make them compile
        in debug mode.
 
    * souce/rtl/gtapi.c
-     ! hb_gtSetColorStr() previous change reverted. The mistake 
+     ! hb_gtSetColorStr() previous change reverted. The mistake
        was on my side most probably.
 
 2004-02-15 05:25 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tbrowse.prg
-     ! :Moved() fixed to always DeHilite() (independently from 
+     ! :Moved() fixed to always DeHilite() (independently from
        the autolite value). This is in sync with C52 docs
-       (see autolite .ng), and testing has shown it to be 
-       compatible. Only :stabilize should be affected by the 
+       (see autolite .ng), and testing has shown it to be
+       compatible. Only :stabilize should be affected by the
        autolite setting.
      + TODO: added about missing ColorRect functionality.
 
 2004-02-15 05:12 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tbrowse.prg
-     ! Fixed color handling to take into account ::defcolor 
-       of TBColumn. Now TBrowse coloring is C52 compatible. 
-       For speed wierd cases are not handled like if the value 
+     ! Fixed color handling to take into account ::defcolor
+       of TBColumn. Now TBrowse coloring is C52 compatible.
+       For speed wierd cases are not handled like if the value
        of ::defcolor is improper.
 
    * source/rtl/tgetlist.prg
@@ -22122,7 +22127,7 @@ NOTE:
 2004-02-15 04:20 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/tget.prg
-     ! :display() fixed to always evaluate the get block before 
+     ! :display() fixed to always evaluate the get block before
        displaying like in C52.
 
    * include/hbapifs.h
@@ -22131,7 +22136,7 @@ NOTE:
 2004-02-15 03:42 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rdd/dbcmd.c
-     ! FIELDPUT() Fixed to accept and ignore field NIL values 
+     ! FIELDPUT() Fixed to accept and ignore field NIL values
        without runtime error. C52 compatible.
 
 2004-02-14 19:14 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
@@ -22142,15 +22147,15 @@ NOTE:
 2004-02-14 05:33 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbapigt.h
-   * source/rtl/gt_tpl/gt_tpl.c 
-   * source/rtl/gtwin/gtwin.c 
-   * source/rtl/gtcgi/gtcgi.c 
-   * source/rtl/gtcrs/gtcrs.c 
-   * source/rtl/gtdos/gtdos.c 
-   * source/rtl/gtos2/gtos2.c 
-   * source/rtl/gtpca/gtpca.c 
-   * source/rtl/gtsln/gtsln.c 
-   * source/rtl/gtstd/gtstd.c 
+   * source/rtl/gt_tpl/gt_tpl.c
+   * source/rtl/gtwin/gtwin.c
+   * source/rtl/gtcgi/gtcgi.c
+   * source/rtl/gtcrs/gtcrs.c
+   * source/rtl/gtdos/gtdos.c
+   * source/rtl/gtos2/gtos2.c
+   * source/rtl/gtpca/gtpca.c
+   * source/rtl/gtsln/gtsln.c
+   * source/rtl/gtstd/gtstd.c
      + Following low-level GT API functions added (for completeness):
        hb_gt_GetCharAttr( SHORT uiRow, SHORT uiCol, BYTE * pbyChar, BYTE * pbyAttr );
        "static hb_gt_xGetXY()" functionality copied where available.
@@ -22162,9 +22167,9 @@ NOTE:
 2004-02-14 04:28 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * include/hbapigt.h
-   * source/rtl/gt_tpl/gt_tpl.c 
-     + Following low-level GT API functions added to support 
-       3rd party GT high-level layers/replacements and 3rd 
+   * source/rtl/gt_tpl/gt_tpl.c
+     + Following low-level GT API functions added to support
+       3rd party GT high-level layers/replacements and 3rd
        party screen handling libraries:
        hb_gt_PutCharAttr( USHORT uiRow, USHORT uiCol, BYTE byChar, BYTE byAttr );
        hb_gt_PutChar( USHORT uiRow, USHORT uiCol, BYTE byChar );
@@ -22172,16 +22177,16 @@ NOTE:
        hb_gt_GetChar( USHORT uiRow, USHORT uiCol, BYTE * pbyChar );
        hb_gt_GetAttr( USHORT uiRow, USHORT uiCol, BYTE * pbyAttr );
 
-   * source/rtl/gtwin/gtwin.c 
+   * source/rtl/gtwin/gtwin.c
      * Above functions completed for the Win Terminal driver.
 
-   * source/rtl/gtcgi/gtcgi.c 
-   * source/rtl/gtcrs/gtcrs.c 
-   * source/rtl/gtdos/gtdos.c 
-   * source/rtl/gtos2/gtos2.c 
-   * source/rtl/gtpca/gtpca.c 
-   * source/rtl/gtsln/gtsln.c 
-   * source/rtl/gtstd/gtstd.c 
+   * source/rtl/gtcgi/gtcgi.c
+   * source/rtl/gtcrs/gtcrs.c
+   * source/rtl/gtdos/gtdos.c
+   * source/rtl/gtos2/gtos2.c
+   * source/rtl/gtpca/gtpca.c
+   * source/rtl/gtsln/gtsln.c
+   * source/rtl/gtstd/gtstd.c
      * Skeletons added for the above new functions.
 
 2004-02-14 03:00 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
@@ -22189,11 +22194,11 @@ NOTE:
    * makefile.bc
      ! Fixed compilation of dbgbrwsr
 
-   * source/pp/ppcore.c 
+   * source/pp/ppcore.c
    * source/rtl/round.c
    * source/rdd/dbfcdx/dbfcdx1.c
      ! Fixed errors when compiled with HB_TRACE
-   
+
    * source/common/hbffind.c
      * Formatting.
 
@@ -22213,8 +22218,8 @@ NOTE:
    * makefile.bc
    * makefile.nt
    * makefile.vc
-     + hb_errInternal() put in a separate source file, to ease 
-       replacing/override it in link-time, this may be useful 
+     + hb_errInternal() put in a separate source file, to ease
+       replacing/override it in link-time, this may be useful
        for GUI apps, logging or something like this.
 
 2004-02-13 23:36 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
@@ -22230,12 +22235,12 @@ NOTE:
 
    * source/rtl/filesys.c
    * include/hbapifs.h
-     + Added return value to hb_fsSetDevMode(), this way it's 
+     + Added return value to hb_fsSetDevMode(), this way it's
        fully compatible with the CA-Clipper _tdevraw() call.
 
    * source/rtl/philes53.c
-     ! FSETDEVMOD() now returns a numeric instead of NIL. The 
-       returned value is always 0 now. Note added about this 
+     ! FSETDEVMOD() now returns a numeric instead of NIL. The
+       returned value is always 0 now. Note added about this
        incompatibility with C53.
 
    * source/common/hbver.c
@@ -22247,8 +22252,8 @@ NOTE:
 2004-02-13 21:56 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * souce/rtl/gtapi.c
-     ! hb_gtSetColorStr() removed one suspicious assigment which 
-       showed incompatible with CA-Cl*pper, where CLR_UNSELECTED 
+     ! hb_gtSetColorStr() removed one suspicious assigment which
+       showed incompatible with CA-Cl*pper, where CLR_UNSELECTED
        was made equal to CLR_ENHANCED if missing from the color string.
      * Using HB_CLR_ constants instead of literals.
 
@@ -22267,7 +22272,7 @@ NOTE:
    + source/debug/dbgbrwsr.prg
       + The new file with TDbgBrowser class which inherits
       from TBrowse
-      
+
    * hrbdll.bc
    * hrbdll.vc
    * makefile.bc
@@ -22275,26 +22280,26 @@ NOTE:
    * makefile.vc
    * source/debug/Makefile
       + added the reference to dbgbrwsr.prg
-      
+
    * source/debug/dbgmenu.prg
       + added "Run at Startup' option
-      
+
    * source/debug/dbgtwin.prg
    * source/debug/debugger.prg
    * source/debug/tbrwtext.prg
       + added "Run at Startup' option - if it is enabled then
       the debugged application runs until ALTD() is called or
       Alt+D keys pressed (Clipper compatibility - the default
-      option). If it is disabled the the debugger shows up at 
+      option). If it is disabled the the debugger shows up at
       the first code line with the debug info.
         This setting is stored in the initialization file
       (init.cld) as 'Options NoRunAtStartup'.
       * fixed more display/refreshing issues
       * fixed quiting the debugger
-      
+
    * source/rtl/alert.prg
       * fixed bug with messages longer then 60 bytes
-      
+
    * source/vm/hvm.c
       * hb_vmDebugEndProc() is called before the eval stack
       is cleaned - this allows to handle INIT/EXIT procedures
@@ -22309,13 +22314,13 @@ NOTE:
 
 2004-01-30 15:30 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/pp/ppcore.c
-      * fixed compilation of &(exp) in normal stringify 
+      * fixed compilation of &(exp) in normal stringify
       markers (this fixes INDEX ON bug reported by Jorge)
 
 2004-01-30 10:40 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/rtl/teditor.prg
       * the current line is still visible after the window resizing
-      
+
    * source/debug/debugger.prg
       * fixed refreshing of variables' monitor window
       * fixed some save/restore screen issues
@@ -22346,32 +22351,32 @@ NOTE:
 
 2004-01-28 11:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.c
-      * removed duplicated line causing memory leak 
+      * removed duplicated line causing memory leak
       reported by Andi
 
 2004-01-27 19:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.c
-      * fixed generation of pcode in codeblocks with no 
+      * fixed generation of pcode in codeblocks with no
       local variables or parameters
-      
+
    * source/debug/debugger.prg
       * fixed refreshing of variables in monitor window
 
 2004-01-27 16:10 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.c
-      * the compiler generates module name inside 
+      * the compiler generates module name inside
       '(_INITSTATICS)' function if -B option is used
-      
+
    * source/vm/hvm.c
-      * fixed hb_vmStaticName, hb_dbg_vmVarSGet, 
+      * fixed hb_vmStaticName, hb_dbg_vmVarSGet,
       hb_dbg_varSSet to use the static variables frame
-      
+
    * source/debug/dbgtmenu.prg
    * source/debug/dbgtmitm.prg
    * source/debug/debugger.prg
       * fixed parsing of <var>:<name> in watchpoint
       expressions
-      * fixed monitoring of static variables - the 
+      * fixed monitoring of static variables - the
       debugger displays now static variables defined
       in the current debugged prg file
 
@@ -22391,7 +22396,7 @@ NOTE:
 2004-01-26 11:45 UTC+0100 Ryszard Glab <rglab@imid.med.pl>
    * source/compiler/harbour.c
       *fixed generation of codeblock's pcode with debugging info
-      
+
    * source/debug/dbgmenu.prg
    * source/debug/dbgtmenu.prg
    * source/debug/dbgtmitm.prg
@@ -22404,13 +22409,13 @@ NOTE:
       *local variables are displayed correctly when the
       callstack window is browsed
       *other minor fixes
-      
+
    * source/vm/debug.c
       *renamed '__vm*' functions to 'hb_dbg_*'
       *fixed support for local variables inside of codeblock
-      
+
    * source/vm/hvm.c
-      *added 'hb_dbg_ProcLevel' function which return the 
+      *added 'hb_dbg_ProcLevel' function which return the
       size of procedure stack calls (the debugger support)
 
 2004-01-25 10:11 UTC+0100 Antonio Linares <alinares@fivetechsoft.com>
@@ -42571,10 +42576,10 @@ NOTE:
 
     *include/hbapi.h
         * added declaration of hb_gcLockItem()/hb_gcUnlockItem()
-        
+
     *source/vm/garbage.c
         * added definition of hb_gcLockItem()/hb_gcUnlockItem()
-        
+
     *source/vm/classes.c
         * all arrays created internally for CLASS structure are now locked
         to prevent premature deallocation by the garbage collector
@@ -49718,9 +49723,9 @@ NOTE:
      * Doesn't use hbclip.ch anymore.
    * source/vm/pvalue.c
      doc/subcodes.txt
-     - HB_PVALUE() removed the runtime error. From now on NIL will be returned 
-       if the requested parameter doesn't exist. This better fits in the 
-       average pattern of usage, and if needed the error case can checked by 
+     - HB_PVALUE() removed the runtime error. From now on NIL will be returned
+       if the requested parameter doesn't exist. This better fits in the
+       average pattern of usage, and if needed the error case can checked by
        the caller.
    * config/w32/global.cf
    * config/dos/global.cf
@@ -49828,7 +49833,7 @@ NOTE:
 
    * utils/hbtest/make_c5x.bat
      utils/hbtest/hbtest.prg
-     + If the HBCLIP.LIB is built, the regression test will automatically use 
+     + If the HBCLIP.LIB is built, the regression test will automatically use
        it, so the STOD() tests will pass in HBTEXT5X.EXE.
 
    * utils/hbrun/exttools.prg
@@ -53199,12 +53204,12 @@ NOTE:
      % Synchronized with updates that were made to the build31 branch
 
 20000131-15:09 GMT+1 Victor Szakats <info@szelvesz.hu>
-  * ft_helpc.b32 
+  * ft_helpc.b32
     ! Fixed CVS ID header.
   * source/debug/debugger.prg
     ! Some constants changed to manifest constants (SC_NONE,SC_NORMAL)
     + NOTE readded.
-  * make_b40.bat 
+  * make_b40.bat
     + ft_helpc.b32 added.
   * source/rdd/dbcmd.c
     ! Doc formatting errors fixed.
@@ -56355,7 +56360,7 @@ Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
    * source/rtl/filesys.c
      + CURDRIVE() XBase++ compatible function added, between HB_COMPAT_XPP
        guards, it also has a TODO:
-     ! hb_fsCurDrv() fixed to convert the return value of the OS calls to 
+     ! hb_fsCurDrv() fixed to convert the return value of the OS calls to
        the Clipper standard.
      ! hb_fsChDrv()    / DISKCHANGE(), CURDRIVE()
        hb_fsIsDrv()    / ISDISK()
@@ -56376,7 +56381,7 @@ Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      + HB_OEMTOANSI() new Win32 related function added (Harbour extension)
      + CONVTOOEMCP() XBase++ compatible function added (between HB_COMPAT_XPP)
      + CONVTOANSICP() XBase++ compatible function added (between HB_COMPAT_XPP)
-     ; IMPORTANT NOTE: This may cause problems in other platform, since USER32 
+     ; IMPORTANT NOTE: This may cause problems in other platform, since USER32
        should be linked in. (WIN32/MINGW32 platform arranged)
    * source/rdd/dbf1.c
      - Some HB_SYMBOL_UNUSED() macros removed, since the variables are used.
@@ -56401,29 +56406,29 @@ Tue Oct 26 12:15:01 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
-      * doc/tracing.txt: 
-      * include/hbtrace.h: 
-      * source/common/hbtrace.c: 
-      * source/pp/hbpp.c: 
-      * source/pp/hbppint.c: 
-      * source/pp/hbpplib.c: 
-      * source/pp/table.c: 
-      * source/pp/stdalone/hbpp.c: 
+      * doc/tracing.txt:
+      * include/hbtrace.h:
+      * source/common/hbtrace.c:
+      * source/pp/hbpp.c:
+      * source/pp/hbppint.c:
+      * source/pp/hbpplib.c:
+      * source/pp/table.c:
+      * source/pp/stdalone/hbpp.c:
         Changed the environment variables that enable tracing in Harbour,
         and added a document explaining how to do tracing.
 
-      * include/hbsetup.h: 
-      * source/rtl/gt/gtcrs.c: 
-      * source/rtl/gt/gtlin.c: 
-      * source/rtl/gtxxx.c: 
+      * include/hbsetup.h:
+      * source/rtl/gt/gtcrs.c:
+      * source/rtl/gt/gtlin.c:
+      * source/rtl/gtxxx.c:
         Changed the name for the curses-based GT implementation file to
         gtcrs.c, leaving room for other linux-oriented implementations
         such as s-lang, etc.
 
-      * source/rtl/arrays.c: 
-      * source/rtl/fm.c: 
-      * source/rtl/gtapi.c: 
-      * source/rtl/inkey.c: 
+      * source/rtl/arrays.c:
+      * source/rtl/fm.c:
+      * source/rtl/gtapi.c:
+      * source/rtl/inkey.c:
         Added/corrected a few calls to HB_TRACE().
 
 19991025-15:20 GMT+1 Victor Szel <info@szelvesz.hu>
@@ -56519,7 +56524,7 @@ Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      + __DBCOPYSTRUCT(), __DBCOPYXSTRUCT(), __DBCREATE() functions added.
        WARNING ! Please update non-GNU make files.
    * source/rtl/dir.c
-     ! DIRECTORY() *very* small compatibility fix for the order of returned 
+     ! DIRECTORY() *very* small compatibility fix for the order of returned
        attribute chars.
    * source/vm/hvm.c
      ! hb_vmForTest() error handler value substitution support added.
@@ -56548,7 +56553,7 @@ Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      * ALLTRIM() is now launching a Clipper 5.3 compatible error by default
        instead of returning an empty string.
      ! hb_strAt() now returns 0 when an empty string is searched, this matches
-       the Clipper behaviour, but the regression test was fooled by the 
+       the Clipper behaviour, but the regression test was fooled by the
        (buggy) compiler optimalization.
    * tests/rtl_test.prg
      tests/strings3.prg
@@ -56566,14 +56571,14 @@ Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      ! hb_arrayCopy()/ACOPY() is now 100% Clipper compatible, the STRICT option
        removed, it's always strict now.
    * source/rtl/binnum.c
-     + BIN2U(), U2BIN(), W2BIN() XBase++ compatible functions added. All 
+     + BIN2U(), U2BIN(), W2BIN() XBase++ compatible functions added. All
        guarded with HB_COMPAT_XPP (defined by default) (not tested)
    * source/rtl/dates.c
      include/hbextern.ch
      source/runner/stdalone/external.prg
      + STOD() put between HB_COMPAT_XPP guards, since it belongs to XBase++
        and is not part of base Clipper.
-     + HB_STOD() Harbour extension function added, same as STOD() but with 
+     + HB_STOD() Harbour extension function added, same as STOD() but with
        consistent naming.
    * source/rtl/dircmd.prg
      * STOD() -> HB_STOD()
@@ -56585,7 +56590,7 @@ Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
      + One function added to the proper Copyright holder.
    * include/hbsetup.h
      source/rtl/mousexxx.c
-     * HARBOUR_USE_MSAPI setup #define removed, from now on the USE_GTAPI 
+     * HARBOUR_USE_MSAPI setup #define removed, from now on the USE_GTAPI
        setting will choose the mouse driver, too, since the mouse handling
        is highly related to the output (GT) driver.
      + HARBOUR_USE_STD_GTAPI #define added as a start for the std stream IO
@@ -56608,7 +56613,7 @@ Mon Oct 25 13:14:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
        WARNING ! Please update non-GNU make files.
    * include/fileio.ch
      include/filesys.h
-     ! FO_INHERITED and FO_PRIVATE flags moved to the .H file for better 
+     ! FO_INHERITED and FO_PRIVATE flags moved to the .H file for better
        Clipper compatibility.
    * source/rtl/tone.c
      * __DJGPP -> __DJGPP__ (cosmetic only __DJGPP was also valid)
@@ -60362,7 +60367,7 @@ NOTE: You have to recompile all PRG sources!
 19990913-22:50 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/gtapi.c
-    ! hb_gtRectSize() fixed to always return a valid value, even when 
+    ! hb_gtRectSize() fixed to always return a valid value, even when
       the coordinates are out of range, just like in Clipper.
       This caused a GPF when running a program with the standard output
       redirected. The screen size stored in the caching static variables
@@ -60504,7 +60509,7 @@ NOTE: You have to recompile all PRG sources!
 19990912-20:30 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/rtl/memvars.c
-    + __MVSAVE()/__MVRESTORE() .MEM file saving and restoring support added, 
+    + __MVSAVE()/__MVRESTORE() .MEM file saving and restoring support added,
       Clipper compatible, with extensions to __MVRESTORE() to only restore
       varnames with a specified mask.
 
@@ -60543,7 +60548,7 @@ NOTE: You have to recompile all PRG sources!
 
     *source/vm/hvm.c
       *added substitution possibility in case of invalid alias value
-    
+
     *tests/working/rtl_test.prg
       * failure description shows now function name and line number where
         failed code was used
@@ -60556,7 +60561,7 @@ NOTE: You have to recompile all PRG sources!
     ! hb_vmSwapAlias() removed the RT error 9993, now it works like Clipper.
     + Added an empty TYPE() function prototype with a TODO:
   * source/vm/initsymb.c
-    - QSELF removed from the list, since it's a native opcode in Harbour, 
+    - QSELF removed from the list, since it's a native opcode in Harbour,
       there's not need to initialize it, the function address was NULL anyway.
     + Changed NULL pointer to HB_TYPE for the "TYPE" symbol.
       initsymb.c is complete now.
@@ -60586,7 +60591,7 @@ NOTE: You have to recompile all PRG sources!
     ! Added '|| defined(__CYGWIN__)' to the #if block for HARBOUR_GCC_OS2
       and _Windows for calculating the value for temp for each pass of the
       tone duration timing loop.
-  
+
 19990911-07:42 EDT Paul Tucker <ptucker@sympatico.ca>
   * makefile.vc
     added new files for compiler to exe generation section
@@ -68188,22 +68193,22 @@ Tue Jul 13 13:44:04 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
 * tests/working/Makefile
  + added longstr2.prg
- 
+
 19990710-14:00 Ryszard Glab <rglab@imid.med.pl>
 
 * tests/working/Makefile
  * removed asctest.prg
  * renamed errorsys.prg to syserror.prg
- 
+
 * tests/working/errorsys.prg
  - renamed to syserror.prg to avoid duplicated symbol ERRORSYS__initSymbols
- 
+
 * source/compiler/harbour.y
  * EXTERN definition is now in 'Statement' section to compile code:
    if .T.
      EXTERNAL xx
    ENDIF
- 
+
 19990709-19:00 Eddie Runia <eddie@runia.com>
   + tests/working/clsdata.prg
     Test program supplied by Bruno Cantero
