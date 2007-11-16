@@ -8,6 +8,37 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-16 14:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbsetup.ch
+     ! Minor fix in comments.
+
+   * contrib/xhb/hbcompat.ch
+     + Added hb_rddInfo() translation for xhb apps.
+
+   * common.mak
+   * include/hbextern.ch
+   * source/rtl/Makefile
+   + source/rtl/natmsgu.c
+   * source/rtl/natmsg.c
+     + Added Harbour internal version of undocument Clipper 
+       Nat*() (and friends) calls. These are always available 
+       in core.
+       Harbour __natIsAffirm()   = Clipper IsAffirm()
+       Harbour __natIsNegative() = Clipper IsNegative()
+       Harbour __natMsg()        = Clipper NationMsg()
+       Harbour __natSortVer()    = Clipper _NatSortVer()
+       Harbour __natMsgVer()     = Clipper _NatMsgVer()
+
+   * utils/hbtest/rt_misc.prg
+   * source/rtl/dircmd.prg
+   * source/rtl/getsys.prg
+   * source/rtl/tgetlist.prg
+   * source/rtl/tlabel.prg
+   * source/rtl/treport.prg
+     ! Now using Harbour internal __NAT*() functions 
+       instead of C5.x undocumented calls, so Harbour 
+       will now compile with HB_C52_UNDOC turned off.
+
 2007-11-16 01:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    + contrib/freeimage
    + contrib/freeimage/Makefile

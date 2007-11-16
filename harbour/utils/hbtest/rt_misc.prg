@@ -378,6 +378,17 @@ FUNCTION Main_MISC()
 
    /* NATION functions (do not exist in 5.2e US) */
 
+#ifdef __HARBOUR__
+   #ifndef HB_C52_UNDOC
+      /* NOTE: Use the identical internal versions if Harbour 
+               was compiled without C5.x undocumented features.
+               [vszakats] */
+      #xtranslate NationMsg([<x,...>])  => __NatMsg(<x>)
+      #xtranslate IsAffirm([<x,...>])   => __NatIsAffirm(<x>)
+      #xtranslate IsNegative([<x,...>]) => __NatIsNegative(<x>)
+   #endif
+#endif
+
 #ifndef __XPP__
    TEST_LINE( NationMsg()                     , "Invalid argument" )
 #endif

@@ -334,8 +334,8 @@ METHOD New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nReco
 
          // Print the first line
          ::PrintIt( SPACE( ::aReportData[RPT_LMARGIN] ) + ;
-               iif( nGroup == 1, NationMsg( _RFRM_SUBTOTAL ),;
-                                 NationMsg( _RFRM_SUBSUBTOTAL ) ) )
+               iif( nGroup == 1, __NatMsg( _RFRM_SUBTOTAL ),;
+                                 __NatMsg( _RFRM_SUBSUBTOTAL ) ) )
 
          // Print the second line
          QQOUT( SPACE(::aReportData[RPT_LMARGIN]) )
@@ -379,7 +379,7 @@ METHOD New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nReco
          ENDIF
 
          // Print the first line
-         ::PrintIt( SPACE(::aReportData[RPT_LMARGIN]) + NationMsg(_RFRM_TOTAL ) )
+         ::PrintIt( SPACE(::aReportData[RPT_LMARGIN]) + __NatMsg(_RFRM_TOTAL ) )
 
          // Print the second line
          QQOUT( SPACE(::aReportData[RPT_LMARGIN]) )
@@ -471,7 +471,7 @@ METHOD ReportHeader() CLASS HBReportForm
 
    IF !::aReportData[RPT_PLAIN]
       IF ::aReportData[RPT_HEADING] == ""
-         AADD( aPageHeader,NationMsg(_RFRM_PAGENO) + STR(::nPageNumber,6))
+         AADD( aPageHeader,__NatMsg(_RFRM_PAGENO) + STR(::nPageNumber,6))
 
       ELSE
          aTempPgHeader:=ParseHeader( ::aReportData[RPT_HEADING],;
@@ -489,7 +489,7 @@ METHOD ReportHeader() CLASS HBReportForm
             NEXT nHeadLine
          NEXT nLine
          aPageHeader[ 1 ] := STUFF(aPageHeader[ 1 ], 1, 14, ;
-                                   NationMsg(_RFRM_PAGENO)+STR(::nPageNumber,6))
+                                   __NatMsg(_RFRM_PAGENO)+STR(::nPageNumber,6))
 
       ENDIF
       AADD( aPageHeader, DTOC(DATE()) )
@@ -619,8 +619,8 @@ METHOD ExecuteReport() CLASS HBReportForm
          IF lGroupChanged .OR. MakeAStr(EVAL(::aReportData[RPT_GROUPS,nGroup,RGT_EXP]),;
              ::aReportData[RPT_GROUPS,nGroup,RGT_TYPE]) != ::aGroupTotals[nGroup]
 
-            AADD( aRecordHeader, iif( nGroup == 1, NationMsg(_RFRM_SUBTOTAL),;
-                                                   NationMsg(_RFRM_SUBSUBTOTAL) ) )
+            AADD( aRecordHeader, iif( nGroup == 1, __NatMsg(_RFRM_SUBTOTAL),;
+                                                   __NatMsg(_RFRM_SUBSUBTOTAL) ) )
             AADD( aRecordHeader, "" )
 
 

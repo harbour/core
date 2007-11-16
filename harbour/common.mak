@@ -493,6 +493,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\mousex$(OBJEXT)   \
     $(OBJ_DIR)\mtran$(OBJEXT)    \
     $(OBJ_DIR)\natmsg$(OBJEXT)   \
+    $(OBJ_DIR)\natmsgu$(OBJEXT)  \
     $(OBJ_DIR)\net$(OBJEXT)      \
     $(OBJ_DIR)\oemansi$(OBJEXT)  \
     $(OBJ_DIR)\oemansix$(OBJEXT) \

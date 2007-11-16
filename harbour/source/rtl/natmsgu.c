@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Header file for runtime configuration, common for Harbour and C level.
+ * NATION undocumented functions
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,26 +50,61 @@
  *
  */
 
-/* NOTE: This file is used by C code and at Harbour build time. 
-         Normally you never need to #include it in any .prg code. */
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ *    _NATSORTVER()
+ *    _NATMSGVER()
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
 
-#ifndef HB_SETUP_CH_
-#define HB_SETUP_CH_
+#include "hbapi.h"
 
-/* NOTE: You can select here, which features you want to include of the
-         different Clipper implementations. */
+#ifdef HB_C52_UNDOC
 
-/* #define HB_EXTENSION */        /* Enable Harbour extensions */
-#define HB_C52_UNDOC              /* Enable CA-Cl*pper 5.2e/5.3x undocumented features */
-/* #define HB_C52_STRICT */       /* Enable CA-Cl*pper 5.2e/5.3x strict compatibility */
-#define HB_COMPAT_C53             /* Enable CA-Cl*pper 5.3x extensions */
-#define HB_COMPAT_XPP             /* Enable Alaska Xbase++ extensions */
-/* #define HB_COMPAT_VO */        /* Enable CA-VO extensions */
-#define HB_COMPAT_FLAGSHIP        /* Enable Flagship extensions */
-/* #define HB_COMPAT_FOXPRO */    /* Enable FoxPro extensions */
-/* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
-/* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
+HB_FUNC_EXTERN( __NATISAFFIRM );
 
-/* #define HB_FILE_VER_STATIC */  /* Enable inclusion of file version strings */
+HB_FUNC( ISAFFIRM )
+{
+   HB_FUNC_EXEC( __NATISAFFIRM )
+}
 
-#endif /* HB_SETUP_CH_ */
+HB_FUNC_EXTERN( __NATISNEGATIVE );
+
+HB_FUNC( ISNEGATIVE )
+{
+   HB_FUNC_EXEC( __NATISNEGATIVE )
+}
+
+HB_FUNC_EXTERN( __NATISAFFIRM );
+
+HB_FUNC( NATIONMSG )
+{
+   HB_FUNC_EXEC( __NATMSG )
+}
+
+/* NOTE: Intentionally using one leading underscore, like in Clipper.
+         [vszakats] */
+
+HB_FUNC_EXTERN( __NATSORTVER );
+
+HB_FUNC( _NATSORTVER )
+{
+   HB_FUNC_EXEC( __NATSORTVER )
+}
+
+/* NOTE: Intentionally using one leading underscore, like in Clipper.
+         [vszakats] */
+
+HB_FUNC_EXTERN( __NATMSGVER );
+
+HB_FUNC( _NATMSGVER )
+{
+   HB_FUNC_EXEC( __NATMSGVER )
+}
+
+#endif

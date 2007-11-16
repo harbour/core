@@ -807,7 +807,7 @@ METHOD ShowScoreboard() CLASS HBGetList
 
       nOldCursor := SetCursor( SC_NONE )
 
-      DispOutAt( SCORE_ROW, SCORE_COL, iif( Set( _SET_INSERT ), NationMsg( _GET_INSERT_ON ), NationMsg( _GET_INSERT_OFF ) ) )
+      DispOutAt( SCORE_ROW, SCORE_COL, iif( Set( _SET_INSERT ), __NatMsg( _GET_INSERT_ON ), __NatMsg( _GET_INSERT_OFF ) ) )
       SetPos( nRow, nCol )
 
       SetCursor( nOldCursor )
@@ -826,13 +826,13 @@ METHOD DateMsg() CLASS HBGetList
       nRow := Row()
       nCol := Col()
 
-      DispOutAt( SCORE_ROW, SCORE_COL, NationMsg( _GET_INVD_DATE ) )
+      DispOutAt( SCORE_ROW, SCORE_COL, __NatMsg( _GET_INVD_DATE ) )
       SetPos( nRow, nCol )
 
       DO WHILE NextKey() == 0
       ENDDO
 
-      DispOutAt( SCORE_ROW, SCORE_COL, Space( Len( NationMsg( _GET_INVD_DATE ) ) ) )
+      DispOutAt( SCORE_ROW, SCORE_COL, Space( Len( __NatMsg( _GET_INVD_DATE ) ) ) )
       SetPos( nRow, nCol )
 
    ENDIF

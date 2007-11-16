@@ -70,7 +70,7 @@ PROCEDURE __Dir( cFileMask )
 #ifdef HB_C52_STRICT
       QOut( "Database Files    # Records    Last Update     Size" )
 #else
-      QOut( NationMsg( _DIR_HEADER ) )
+      QOut( __NatMsg( _DIR_HEADER ) )
 #endif
 
       AEval( Directory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ),;

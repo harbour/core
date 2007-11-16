@@ -328,7 +328,7 @@ METHOD SampleLabels() CLASS HBLabelForm
       ENDIF
 
       // Prompt for more
-      @ ROW(), 0 SAY NationMsg(_LF_SAMPLES)+" ("+Nationmsg(_LF_YN)+")"
+      @ ROW(), 0 SAY __NatMsg(_LF_SAMPLES)+" ("+__NatMsg(_LF_YN)+")"
       nGetKey := INKEY(0)
       @ ROW(), COL() SAY CHR(nGetKey)
       IF ROW() == MAXROW()
@@ -337,7 +337,7 @@ METHOD SampleLabels() CLASS HBLabelForm
       ELSE
          @ ROW()+1, 0 SAY ""
       ENDIF
-      IF IsNegative(CHR(nGetKey))   // Don't give sample labels
+      IF __NatIsNegative(CHR(nGetKey))   // Don't give sample labels
          lMoreSamples := .F.
       ENDIF
    ENDDO

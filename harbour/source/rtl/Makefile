@@ -84,6 +84,7 @@ C_SOURCES=\
 	mousex.c     \
 	mtran.c      \
 	natmsg.c     \
+	natmsgu.c    \
 	net.c        \
 	oemansi.c    \
 	oemansix.c   \

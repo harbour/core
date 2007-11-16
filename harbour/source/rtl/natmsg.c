@@ -55,8 +55,8 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
- *    _NATSORTVER()
- *    _NATMSGVER()
+ *    __NATSORTVER()
+ *    __NATMSGVER()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -93,23 +93,21 @@ static char * hb_nationGetMsg( USHORT uiMsg )
    return ( uiMsg >= 1 && uiMsg <= 13 ) ? ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + uiMsg - 1 ) : ( char * ) "";
 }
 
-#ifdef HB_C52_UNDOC
-
-HB_FUNC( ISAFFIRM )
+HB_FUNC( __NATISAFFIRM )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == ( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 ) )[ 0 ] );
 }
 
-HB_FUNC( ISNEGATIVE )
+HB_FUNC( __NATISNEGATIVE )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    hb_retl( pItem && hb_itemGetCLen( pItem ) >= 1 && toupper( hb_itemGetCPtr( pItem )[ 0 ] ) == ( ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + _LF_YN - 1 ) )[ 2 ] );
 }
 
-HB_FUNC( NATIONMSG )
+HB_FUNC( __NATMSG )
 {
    if( hb_pcount() == 0 )
       /* TODO: Replace this with Language API call. */
@@ -120,10 +118,7 @@ HB_FUNC( NATIONMSG )
       hb_retc( NULL );
 }
 
-/* NOTE: Intentionally using one leading underscore, like in Clipper.
-         [vszakats] */
-
-HB_FUNC( _NATSORTVER )
+HB_FUNC( __NATSORTVER )
 {
    /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATSORT v1.2i x14 19/Mar/93" */
    /* NOTE: CA-Cl*pper 5.3  Intl. will return: "NATSORT v1.3i x19 06/Mar/95" */
@@ -131,15 +126,10 @@ HB_FUNC( _NATSORTVER )
    hb_retc( "NATSORT (Harbour)" );
 }
 
-/* NOTE: Intentionally using one leading underscore, like in Clipper.
-         [vszakats] */
-
-HB_FUNC( _NATMSGVER )
+HB_FUNC( __NATMSGVER )
 {
    /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATMSGS v1.2i x14 19/Mar/93" */
    /* NOTE: CA-Cl*pper 5.3  Intl. will return: "NATMSGS v1.3i x19 06/Mar/95" */
 
    hb_retc( "NATMSGS (Harbour)" );
 }
-
-#endif

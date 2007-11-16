@@ -70,6 +70,7 @@
    #xtranslate hb_setLastKey([<x,...>])=> setLastKey(<x>)
    #xtranslate hb_CStr([<x,...>])      => CStr(<x>)
    #xtranslate hb_DirExists(<x>)       => IsDirectory(<x>)
+   #xtranslate hb_rddInfo([<x,...>])   => rddInfo(<x>)
 
    #xtranslate hb_HexToNum([<c,...>])  => HexToNum(<c>)
    #xtranslate hb_NumToHex([<n,...>])  => NumToHex(<n>)
