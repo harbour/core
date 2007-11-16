@@ -37,7 +37,8 @@
              to be extened with some more wrappers to make C level 
              vars accessible from Harbour code. But even without 
              this functionality, the lib seems quite useful.
-     ; NOTE: The lib also has some Windows specific 
+     ; NOTE: The lib also has some Windows specific functions:
+             FI_FITOBITMAP(), FI_BITMAPTOFI(), FI_WINDRAW()
 
    + contrib/xhb/hbfast.h
      + Added this file to enhance C interface code compatibility 
