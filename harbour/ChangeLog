@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-16 20:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/natmsgu.c
+     ! Typo fixed.
+
 2007-11-16 18:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   + harbour/make_vcce.bat
   + harbour/make_vcce.mak
