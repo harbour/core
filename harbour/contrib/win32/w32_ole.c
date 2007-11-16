@@ -92,7 +92,7 @@
 static void RetValue( void );
 
 static HRESULT  s_nOleError;
-static HB_ITEM  OleAuto;
+static HB_ITEM  s_OleAuto; // TOFIX
 
 static PHB_DYNS s_pSym_TOleAuto = NULL;
 static PHB_DYNS s_pSym_hObj = NULL;
@@ -106,7 +106,8 @@ static PHB_DYNS s_pSym_Value = NULL;
 
 static DISPPARAMS s_EmptyDispParams;
 
-static VARIANTARG RetVal, OleVal;
+static VARIANTARG s_RetVal;
+static VARIANTARG s_OleVal;
 
 static BOOL s_bInit = FALSE;
 
@@ -121,7 +122,7 @@ static void hb_itemPushForward( PHB_ITEM pItem )
 
 static void hb_vmRequestReset( void )
 {
-   hb_stackSetActionRequest( 0 );
+   hb_stackSetActionRequest( 0 ); // TOFIX
 }
 
 PHB_ITEM HB_EXPORT hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, ULONG ulLen )
@@ -136,18 +137,18 @@ PHB_ITEM HB_EXPORT hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, UL
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = HB_IT_STRING;
-   pItem->item.asString.allocated = 0;
+   pItem->type = HB_IT_STRING; // TOFIX
+   pItem->item.asString.allocated = 0; // TOFIX
 
    if( szText == NULL )
    {
-      pItem->item.asString.value  = "";
-      pItem->item.asString.length = 0;
+      pItem->item.asString.value  = ""; // TOFIX
+      pItem->item.asString.length = 0; // TOFIX
    }
    else
    {
-      pItem->item.asString.value  = ( char * ) szText;
-      pItem->item.asString.length = ulLen;
+      pItem->item.asString.value  = ( char * ) szText; // TOFIX
+      pItem->item.asString.length = ulLen; // TOFIX
    }
 
    return pItem;
@@ -280,8 +281,8 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
             s_bInit = TRUE;
          }
 
-         VariantInit( &RetVal );
-         VariantInit( &OleVal );
+         VariantInit( &s_RetVal );
+         VariantInit( &s_OleVal );
      }
   }
 
@@ -374,7 +375,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
      VariantClear( pVariant );
 
-     switch( pItem->type )
+     switch( hb_itemType( pItem ) )
      {
         case HB_IT_NIL:
           //pVariant->n1.n2.vt = VT_EMPTY;
@@ -388,7 +389,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
           sString = hb_itemGetCPtr( pItem );
 
           // Check for hidden signature of SafeArrayToArray().
-          if( (int) (pItem->item.asString.allocated - ulLen) >= 5 &&
+          if( (int) (pItem->item.asString.allocated - ulLen) >= 5 && // TOFIX
               sString[ ulLen ] == 0x7A && sString[ ulLen + 1 ] == 0x7B && sString[ ulLen + 2 ] == 0x7C && sString[ ulLen + 3 ] == 0x7D )
           {
              vt = (VARTYPE) sString[ ulLen + 4 ];
@@ -400,7 +401,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
              hb_itemPutCRawStatic( pItem, (char *) hb_oleAnsiToSysString( sString ), ulLen * 2 + 1 );
 
              pVariant->n1.n2.vt   = VT_BYREF | VT_BSTR;
-             pVariant->n1.n2.n3.pbstrVal = (BSTR *) &( pItem->item.asString.value );
+             pVariant->n1.n2.n3.pbstrVal = (BSTR *) &( pItem->item.asString.value ); // TOFIX
              //wprintf( L"*** BYREF >%s<\n", *pVariant->n1.n2.n3.bstrVal );
           }
           else
@@ -416,7 +417,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
           if( bByRef )
           {
              pVariant->n1.n2.vt = VT_BYREF | VT_BOOL;
-             pVariant->n1.n2.n3.pboolVal = (short *) &( pItem->item.asLogical.value ) ;
+             pVariant->n1.n2.n3.pboolVal = (short *) &( pItem->item.asLogical.value ) ; // TOFIX
              *pVariant->n1.n2.n3.pboolVal = hb_itemGetL( pItem ) ? VARIANT_TRUE : VARIANT_FALSE;
              //pItem->type = HB_IT_LONG;
           }
@@ -432,7 +433,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
            if( bByRef )
            {
               pVariant->n1.n2.vt = VT_BYREF | VT_I2;
-              pVariant->n1.n2.n3.piVal = &( pItem->item.asInteger.value ) ;
+              pVariant->n1.n2.n3.piVal = &( pItem->item.asInteger.value ) ; // TOFIX
            }
            else
            {
@@ -444,7 +445,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
            if( bByRef )
            {
               pVariant->n1.n2.vt = VT_BYREF | VT_I4;
-              pVariant->n1.n2.n3.plVal = (long *) &( pItem->item.asInteger.value ) ;
+              pVariant->n1.n2.n3.plVal = (long *) &( pItem->item.asInteger.value ) ; // TOFIX
            }
            else
            {
@@ -458,7 +459,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
            if( bByRef )
            {
               pVariant->n1.n2.vt = VT_BYREF | VT_I4;
-              pVariant->n1.n2.n3.plVal = (long *) &( pItem->item.asLong.value ) ;
+              pVariant->n1.n2.n3.plVal = (long *) &( pItem->item.asLong.value ) ; // TOFIX
            }
            else
            {
@@ -469,7 +470,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
            if( bByRef )
            {
               pVariant->n1.n2.vt = VT_BYREF | VT_I8;
-              pVariant->n1.n2.n3.pllVal = &( pItem->item.asLong.value ) ;
+              pVariant->n1.n2.n3.pllVal = &( pItem->item.asLong.value ) ; // TOFIX
            }
            else
            {
@@ -483,7 +484,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
            if( bByRef )
            {
               pVariant->n1.n2.vt = VT_BYREF | VT_R8;
-              pVariant->n1.n2.n3.pdblVal = &( pItem->item.asDouble.value ) ;
+              pVariant->n1.n2.n3.pdblVal = &( pItem->item.asDouble.value ) ; // TOFIX
               pItem->type = HB_IT_DOUBLE;
            }
            else
@@ -494,22 +495,22 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
            break;
 
         case HB_IT_DATE:
-          if( pItem->item.asDate.value == 0 )
+          if( pItem->item.asDate.value == 0 ) // TOFIX
           {
              pVariant->n1.n2.vt = VT_NULL;
           }
           else if( bByRef )
           {
-             pItem->item.asDouble.value = (double) ( pItem->item.asDate.value - 2415019 );
-             pItem->type = HB_IT_DOUBLE;
+             pItem->item.asDouble.value = (double) ( pItem->item.asDate.value - 2415019 ); // TOFIX
+             pItem->type = HB_IT_DOUBLE; // TOFIX
 
              pVariant->n1.n2.vt = VT_BYREF | VT_DATE;
-             pVariant->n1.n2.n3.pdblVal = &( pItem->item.asDouble.value ) ;
+             pVariant->n1.n2.n3.pdblVal = &( pItem->item.asDouble.value ) ; // TOFIX
           }
           else
           {
              pVariant->n1.n2.vt = VT_DATE;
-             pVariant->n1.n2.n3.dblVal = (double) ( pItem->item.asDate.value - 2415019 );
+             pVariant->n1.n2.n3.dblVal = (double) ( pItem->item.asDate.value - 2415019 ); // TOFIX
           }
           break;
 
@@ -522,11 +523,11 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
         {
            if( HB_IS_OBJECT( pItem ) )
            {
-              if( hb_clsIsParent( pItem->item.asArray.value->uiClass , "TOLEAUTO" ) )
+              if( hb_clsIsParent( pItem->item.asArray.value->uiClass , "TOLEAUTO" ) ) // TOFIX
               {
                  IDispatch *pDisp;// = NULL;
 
-                 hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+                 hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
                  hb_vmPush( pItem );
                  hb_vmSend( 0 );
 
@@ -549,17 +550,17 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
                  }
               }
               // MUST be before "VTWRAPPER"
-              else if( hb_clsIsParent( pItem->item.asArray.value->uiClass , "VTARRAYWRAPPER" ) )
+              else if( hb_clsIsParent( pItem->item.asArray.value->uiClass , "VTARRAYWRAPPER" ) ) // TOFIX
               {
                  // vt := oVTArray:vt
-                 hb_vmPushSymbol( s_pSym_vt->pSymbol );
+                 hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_vt ) );
                  hb_vmPush( pItem );
                  hb_vmSend( 0 );
 
                  vt = (VARTYPE) hb_parnl(-1);
 
                  // aArray := oVTArray:Value
-                 hb_vmPushSymbol( s_pSym_Value->pSymbol );
+                 hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_Value ) );
                  hb_vmPush( pItem );
                  hb_vmSend( 0 );
 
@@ -605,17 +606,17 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
                  goto ItemToVariant_ProcessArray;
               }
-              else if( hb_clsIsParent( pItem->item.asArray.value->uiClass , "VTWRAPPER" ) )
+              else if( hb_clsIsParent( pItem->item.asArray.value->uiClass , "VTWRAPPER" ) ) // TOFIX
               {
                  // vt := oVT:vt
-                 hb_vmPushSymbol( s_pSym_vt->pSymbol );
+                 hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_vt ) );
                  hb_vmPush( pItem );
                  hb_vmSend( 0 );
 
                  pVariant->n1.n2.vt = (VARTYPE) hb_parnl(-1);
 
                  //value := oVT:value
-                 hb_vmPushSymbol( s_pSym_Value->pSymbol );
+                 hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_Value ) );
                  hb_vmPush( pItem );
                  hb_vmSend( 0 );
 
@@ -685,7 +686,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
         default:
         {
-           TraceLog( NULL, "Unexpected type %p in: %s(%i)!\n", pItem->type, __FILE__, __LINE__ );
+           TraceLog( NULL, "Unexpected type %p in: %s(%i)!\n", hb_itemType( pItem ), __FILE__, __LINE__ );
         }
      }
   }
@@ -715,7 +716,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
            aPrgParams[ n ] = hb_stackItemFromBase( nArg + nOffset );
 
-           //TraceLog( NULL, "N: %i Arg: %i Type: %i %i ByRef: %i\n", n, nArg, pParam->type, aPrgParams[ n ]->type, bByRef );
+           //TraceLog( NULL, "N: %i Arg: %i Type: %i %i ByRef: %i\n", n, nArg, hb_itemType( pParam ), hb_itemType( aPrgParams[ n ] ), bByRef );
 
            hb_oleItemToVariant( &( pArgs[ n ] ), aPrgParams[ n ] );
         }
@@ -810,25 +811,25 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
                       }
                    }
 
-                   OleAuto.type = HB_IT_NIL;
+                   s_OleAuto.type = HB_IT_NIL; // TOFIX
 
                    if( s_pSym_TOleAuto )
                    {
-                      hb_vmPushSymbol( s_pSym_TOleAuto->pSymbol );
+                      hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_TOleAuto ) );
                       hb_vmPushNil();
                       hb_vmDo( 0 );
 
-                      hb_itemForwardValue( &OleAuto, hb_stackReturnItem() );
+                      hb_itemForwardValue( &s_OleAuto, hb_stackReturnItem() );
                    }
 
-                   if( s_pSym_New && OleAuto.type )
+                   if( s_pSym_New && s_OleAuto.type ) // TOFIX
                    {
                       // Implemented in :New()
                       //pDisp->lpVtbl->AddRef( pDisp );
 
                       //TOleAuto():New( nDispatch )
-                      hb_vmPushSymbol( s_pSym_New->pSymbol );
-                      hb_itemPushForward( &OleAuto );
+                      hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_New ) );
+                      hb_itemPushForward( &s_OleAuto );
                       hb_vmPushLong( ( LONG ) pDisp );
                       hb_vmSend( 1 );
 
@@ -985,7 +986,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
               // Ugly hack, but needed to allocate our signature as hidden bytes!
               hb_itemPutCL( pArray, NULL, 0 );
               HB_STRING_ALLOC( pArray, (ULONG)(iLen + 5) );
-              pArray->item.asString.length = iLen;
+              pArray->item.asString.length = iLen; // TOFIX
 
               sArray = hb_itemGetCPtr( pArray );
 
@@ -1033,14 +1034,14 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
         }
      }
 
-     //TraceLog( NULL, "Return len: %i\n", pArray->item.asArray.value->ulLen );
+     //TraceLog( NULL, "Return len: %i\n", pArray->item.asArray.value->ulLen ); // TOFIX
 
      // Wrap our array with VTArrayWrapper() class ( aArray := VTArrayWrapper( vt, aArray) )
      if( HB_IS_ARRAY( pArray ) && vt != VT_VARIANT )
      {
         PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), (LONG) vt );
 
-        hb_vmPushSymbol( s_pSym_VTArrayWrapper->pSymbol );
+        hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_VTArrayWrapper ) );
         hb_vmPushNil();
         hb_itemPushForward( pVT );
         hb_itemPushForward( pArray );
@@ -1143,7 +1144,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
                  PHB_ITEM pVT = hb_itemPutNL( hb_itemNew( NULL ), (LONG) pVariant->n1.n2.vt );
                  PHB_ITEM pUnknown = hb_itemPutPtr( hb_itemNew( NULL ), (void *) pUnk );
 
-                 hb_vmPushSymbol( s_pSym_VTWrapper->pSymbol );
+                 hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_VTWrapper ) );
                  hb_vmPushNil();
                  hb_itemPushForward( pVT );
                  hb_itemPushForward( pUnknown );
@@ -1163,7 +1164,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
            pOleAuto = hb_itemNew( NULL );
 
-           hb_vmPushSymbol( s_pSym_TOleAuto->pSymbol );
+           hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_TOleAuto ) );
            hb_vmPushNil();
            hb_vmDo( 0 );
 
@@ -1175,7 +1176,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
            if( pOleAuto->type )
            {
               //TOleAuto():New( nDispatch )
-              hb_vmPushSymbol( s_pSym_New->pSymbol );
+              hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_New ) );
               hb_itemPushForward( pOleAuto );
               hb_vmPushLong( ( LONG ) pDisp );
               hb_vmSend( 1 );
@@ -1196,7 +1197,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
                  hb_itemForwardValue( pItem, hb_stackReturnItem() );
               }
 
-              //printf( "Dispatch: %ld %ld\n", ( LONG ) pDisp, (LONG) hb_stackReturnItem()->item.asArray.value );
+              //printf( "Dispatch: %ld %ld\n", ( LONG ) pDisp, (LONG) hb_stackReturnItem()->item.asArray.value ); // TOFIX
            }
            break;
 
@@ -1365,9 +1366,9 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
   //---------------------------------------------------------------------------//
   static void RetValue( void )
   {
-     hb_oleVariantToItem( hb_stackReturnItem(), &RetVal );
+     hb_oleVariantToItem( hb_stackReturnItem(), &s_RetVal );
 
-     VariantClear( &RetVal );
+     VariantClear( &s_RetVal );
 
      return;
   }
@@ -1377,10 +1378,10 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
       IEnumVARIANT *pEnumVariant = ( IEnumVARIANT * ) hb_parptr( 1 );
       ULONG *pcElementFetched = NULL;
 
-      if( pEnumVariant->lpVtbl->Next( pEnumVariant, 1, &RetVal, pcElementFetched ) == S_OK )
+      if( pEnumVariant->lpVtbl->Next( pEnumVariant, 1, &s_RetVal, pcElementFetched ) == S_OK )
       {
-         hb_oleVariantToItem( hb_stackReturnItem(), &RetVal );
-         VariantClear( &RetVal );
+         hb_oleVariantToItem( hb_stackReturnItem(), &s_RetVal );
+         VariantClear( &s_RetVal );
          hb_storl( TRUE, 2 );
       }
       else
@@ -1738,7 +1739,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
                                           LOCALE_SYSTEM_DEFAULT,
                                           DISPATCH_METHOD,
                                           pDispParams,
-                                          &RetVal,
+                                          &s_RetVal,
                                           &excep,
                                           &uArgErr );
 
@@ -1756,7 +1757,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
                                           LOCALE_SYSTEM_DEFAULT,
                                           DISPATCH_PROPERTYGET,
                                           pDispParams,
-                                          &RetVal,
+                                          &s_RetVal,
                                           &excep,
                                           &uArgErr );
 
@@ -1768,13 +1769,13 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
   //---------------------------------------------------------------------------//
   static HRESULT OleGetValue( IDispatch *pDisp )
   {
-     VariantClear( &RetVal );
+     VariantClear( &s_RetVal );
 
      // Try to apply the requested message to the DEFAULT Property of the object if any.
-     if( SUCCEEDED( OleGetProperty( pDisp, DISPID_VALUE, &s_EmptyDispParams ) ) &&  ( RetVal.n1.n2.vt == VT_DISPATCH || RetVal.n1.n2.vt == ( VT_DISPATCH | VT_BYREF ) ) )
+     if( SUCCEEDED( OleGetProperty( pDisp, DISPID_VALUE, &s_EmptyDispParams ) ) &&  ( s_RetVal.n1.n2.vt == VT_DISPATCH || s_RetVal.n1.n2.vt == ( VT_DISPATCH | VT_BYREF ) ) )
      {
-        VariantCopy( &OleVal, &RetVal );
-        VariantClear( &RetVal );
+        VariantCopy( &s_OleVal, &s_RetVal );
+        VariantClear( &s_RetVal );
 
         return s_nOleError;
      }
@@ -1788,7 +1789,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
      PHB_ITEM pReturn;
      char *sDescription;
 
-     hb_vmPushSymbol( s_pSym_cClassName->pSymbol );
+     hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_cClassName ) );
      hb_vmPush( hb_stackSelfItem() );
      hb_vmSend( 0 );
 
@@ -1827,13 +1828,13 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
      {
         IDispatch *pDisp;
 
-        hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+        hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
         hb_vmPush( hb_stackSelfItem() );
         hb_vmSend( 0 );
 
         pDisp = ( IDispatch * ) hb_parnl( -1 );
 
-        VariantClear( &RetVal );
+        VariantClear( &s_RetVal );
 
         OleGetProperty( pDisp, DISPID_VALUE, &s_EmptyDispParams );
         //TraceLog( NULL, "GetDefault: %p\n", s_nOleError );
@@ -1858,13 +1859,13 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
         DISPPARAMS DispParams;
         PHB_ITEM *aPrgParams;
 
-        hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+        hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
         hb_vmPush( hb_stackSelfItem() );
         hb_vmSend( 0 );
 
         pDisp = ( IDispatch * ) hb_parnl( -1 );
 
-        VariantClear( &RetVal );
+        VariantClear( &s_RetVal );
 
         aPrgParams = GetParams( &DispParams, 0 );
 
@@ -1890,41 +1891,41 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
   {
      IDispatch *pDisp;
 
-     hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+     hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
      hb_vmPush( hb_stackSelfItem() );
      hb_vmSend( 0 );
 
      pDisp = ( IDispatch * ) hb_parnl( -1 );
 
-     VariantClear( &RetVal );
+     VariantClear( &s_RetVal );
 
      if( SUCCEEDED( OleGetProperty( pDisp, DISPID_NEWENUM, &s_EmptyDispParams ) ) ||
          SUCCEEDED( OleInvoke( pDisp, DISPID_NEWENUM, &s_EmptyDispParams ) ) )
      {
         LPVOID pEnumVariant = NULL; /* IEnumVARIANT */
 
-        if( RetVal.n1.n2.vt == ( VT_UNKNOWN | VT_BYREF ) )
+        if( s_RetVal.n1.n2.vt == ( VT_UNKNOWN | VT_BYREF ) )
         {
-           s_nOleError = (*RetVal.n1.n2.n3.ppunkVal)->lpVtbl->QueryInterface( *RetVal.n1.n2.n3.ppunkVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
+           s_nOleError = (*s_RetVal.n1.n2.n3.ppunkVal)->lpVtbl->QueryInterface( *s_RetVal.n1.n2.n3.ppunkVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
         }
-        else if( RetVal.n1.n2.vt == VT_UNKNOWN )
+        else if( s_RetVal.n1.n2.vt == VT_UNKNOWN )
         {
-           s_nOleError = RetVal.n1.n2.n3.punkVal->lpVtbl->QueryInterface( RetVal.n1.n2.n3.punkVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
+           s_nOleError = s_RetVal.n1.n2.n3.punkVal->lpVtbl->QueryInterface( s_RetVal.n1.n2.n3.punkVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
         }
-        else if( RetVal.n1.n2.vt == ( VT_DISPATCH | VT_BYREF ) )
+        else if( s_RetVal.n1.n2.vt == ( VT_DISPATCH | VT_BYREF ) )
         {
-           s_nOleError = (*RetVal.n1.n2.n3.ppdispVal)->lpVtbl->QueryInterface( *RetVal.n1.n2.n3.ppdispVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
+           s_nOleError = (*s_RetVal.n1.n2.n3.ppdispVal)->lpVtbl->QueryInterface( *s_RetVal.n1.n2.n3.ppdispVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
         }
-        else if( RetVal.n1.n2.vt == VT_DISPATCH )
+        else if( s_RetVal.n1.n2.vt == VT_DISPATCH )
         {
-           s_nOleError = RetVal.n1.n2.n3.pdispVal->lpVtbl->QueryInterface( RetVal.n1.n2.n3.pdispVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
+           s_nOleError = s_RetVal.n1.n2.n3.pdispVal->lpVtbl->QueryInterface( s_RetVal.n1.n2.n3.pdispVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
         }
         else
         {
            s_nOleError = E_FAIL;
         }
 
-        VariantClear( &RetVal );
+        VariantClear( &s_RetVal );
 
         if( SUCCEEDED( s_nOleError ) )
         {
@@ -1997,7 +1998,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
      DISPID DispID;
      DISPPARAMS DispParams;
 
-     hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+     hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
      hb_vmPush( hb_stackSelfItem() );
      hb_vmSend( 0 );
 
@@ -2024,7 +2025,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
      DISPID DispID;
      DISPPARAMS DispParams;
 
-     hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+     hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
      hb_vmPush( hb_stackSelfItem() );
      hb_vmSend( 0 );
      pDisp = ( IDispatch * ) hb_parnl( -1 );
@@ -2050,7 +2051,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
      DISPID DispID;
      DISPPARAMS DispParams;
 
-     hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+     hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
      hb_vmPush( hb_stackSelfItem() );
      hb_vmSend( 0 );
      pDisp = ( IDispatch * ) hb_parnl( -1 );
@@ -2079,7 +2080,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
      //TraceLog( NULL, "Class: '%s' Message: '%s', Params: %i Arg1: %i\n", hb_objGetClsName( hb_stackSelfItem() ), hb_itemGetSymbol( hb_stackBaseItem() )->szName, hb_pcount(), hb_parinfo(1) );
 
-     hb_vmPushSymbol( s_pSym_hObj->pSymbol );
+     hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_hObj ) );
      hb_vmPush( hb_stackSelfItem() );
      hb_vmSend( 0 );
      pDisp = ( IDispatch * ) hb_parnl( -1 );
@@ -2088,7 +2089,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
      if( SUCCEEDED( OleGetID( pDisp, hb_itemGetSymbol( hb_stackBaseItem() )->szName, &DispID, &bSetFirst ) ) )
      {
-        VariantClear( &RetVal );
+        VariantClear( &s_RetVal );
 
         if( bSetFirst )
         {
@@ -2138,7 +2139,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
      if( SUCCEEDED( s_nOleError ) )
      {
         //TraceLog( NULL, "Invoke Succeeded!\n" );
-        if( HB_IS_OBJECT( hb_stackReturnItem() ) && hb_clsIsParent( hb_stackReturnItem()->item.asArray.value->uiClass , "TOLEAUTO" ) )
+        if( HB_IS_OBJECT( hb_stackReturnItem() ) && hb_clsIsParent( hb_stackReturnItem()->item.asArray.value->uiClass , "TOLEAUTO" ) ) // TOFIX
         {
            PHB_ITEM pReturn = hb_itemNew( NULL );
            PHB_ITEM pOleClassName = hb_itemNew( NULL );
@@ -2147,7 +2148,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
            hb_itemForwardValue( pReturn, hb_stackReturnItem() );
 
-           hb_vmPushSymbol( s_pSym_cClassName->pSymbol );
+           hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_cClassName ) );
            hb_vmPush( hb_stackSelfItem() );
            hb_vmSend( 0 );
 
@@ -2164,7 +2165,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
 
            hb_itemPutCPtr( pOleClassName, sOleClassName, iClassNameLen + 1 + iMsgNameLen );
 
-           hb_vmPushSymbol( s_pSym_cClassName->pSymbol );
+           hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_cClassName ) );
            hb_vmPush( pReturn );
            hb_itemPushForward( pOleClassName );
            hb_vmSend( 1 );
@@ -2185,7 +2186,7 @@ static void TraceLog( const char * sFile, const char * sTraceMsg, ... )
               bTryDefault = FALSE;
 
               //TraceLog( NULL, "Try using DISPID_VALUE\n" );
-              pDisp = OleVal.n1.n2.n3.pdispVal;
+              pDisp = s_OleVal.n1.n2.n3.pdispVal;
               goto OleGetID;
            }
         }
