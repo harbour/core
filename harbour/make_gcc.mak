@@ -497,7 +497,6 @@ doClean:
 	-$(DEL) $(DLL_OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(DLL_OBJ_DIR)/*.c
 	-$(DEL) $(DLL_OBJ_DIR)/*.h
-	-$(DEL) $(PP_DIR)/pptable.c
 	-$(DEL) inst_$(HB_CC_NAME).log
 	-$(DEL) common.cf
 

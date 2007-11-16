@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-16 15:37 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * make_b32.mak
+   * make_vc.mak
+     ! Fixed BC/VC make files to generated pptable.c in the obj 
+       dir instead of source/pp.
+     ! Synced BC/VC pptable.c dependencies with make_gcc.mak
+     ; Suggested by Przemek.
+
+   * make_gcc.mak
+     ! Fixed to not delete source/pp/pptable.c on clean 
+       (since it's never generated there).
+
 2007-11-16 14:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbsetup.ch
      ! Minor fix in comments.
@@ -99,7 +111,7 @@
        files added.
      ; TOFIX: There is still a potentially dangerous 
               warning to be fixed in FBGETBLOB().
-     ; Borrowed frmo xhb.
+     ; Borrowed from xhb.
 
    * contrib/hbzlib/make_b32.bat
    * contrib/hbzlib/make_vc.bat
