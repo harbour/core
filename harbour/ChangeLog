@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-16 01:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   + contrib/freeimage
+   + contrib/freeimage/Makefile
+   + contrib/freeimage/make_b32.bat
+   + contrib/freeimage/make_vc.bat
+   + contrib/freeimage/common.mak
+   + contrib/freeimage/freeimage.ch
+   + contrib/freeimage/fi_winfu.c
+   + contrib/freeimage/fi_wrp.c
+   + contrib/freeimage/readme.txt
+   + contrib/freeimage/test
+   + contrib/freeimage/test/bld_b32.bat
+   + contrib/freeimage/test/fitest.prg
+   + contrib/freeimage/test/sample1.jpg
+   + contrib/freeimage/test/italia.gif
+   + contrib/freeimage/test/fsg.jpg
+   + contrib/freeimage/test/images_out
+     + Added FreeImage OSS library Harbour interface.
+     ! Some minor fixes and file rearrangements made.
+     + Added std make files.
+     ; TOFIX: There is still a potentially dangerous 
+              warning to be fixed in FI_GETBACKGROUNDCOLOR()
+     ; Borrowed from xhb.
+     ; NOTE: The lib made some features available through the xhb 
+             specific C struct functionality. Since such functionality 
+             is not implemented in Harbour, the library would need 
+             to be extened with some more wrappers to make C level 
+             vars accessible from Harbour code. But even without 
+             this functionality, the lib seems quite useful.
+     ; NOTE: The lib also has some Windows specific 
+
+   + contrib/xhb/hbfast.h
+     + Added this file to enhance C interface code compatibility 
+       with xhb.
+
+   * contrib/firebird/*
+     ! Fixed SVN properties.
+
 2007-11-15 20:44 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    + contrib/firebird
    + contrib/firebird/Makefile

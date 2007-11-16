@@ -4,9 +4,10 @@ rem $Id$
 rem
 
 rem ---------------------------------------------------------------
-rem IMPORTANT: You'll need Firebird headers and this envvar
-rem            to be set to successfully build this library:
-rem            set FBDIR=C:\Firebird
+rem IMPORTANT: You'll need Freeimage headers and binary from here:
+rem            http://freeimage.sourceforge.net/download.html
+rem            and this envvar to be set to successfully build this library:
+rem            set FREEIMAGE_DIR=C:\FreeImage
 rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------
@@ -26,7 +27,7 @@ if "%HB_CC_NAME%" == "" set HB_CC_NAME=vc
 if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
 set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
 
-set C_USR=%C_USR% -I%FBDIR%\include -DHB_OS_WIN_32_USED
+set C_USR=%C_USR% -I%FREEIMAGE_DIR%\source -DHB_OS_WIN_32_USED
 
 rem ---------------------------------------------------------------
 
@@ -53,11 +54,11 @@ if "%1" == "INSTALL" goto INSTALL
    echo.   s/^^[ \t]\+[0-9]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+\(.*\)/\1/p>> _temp.sed
    echo. }>> _temp.sed
    echo.}>> _temp.sed
-   DUMPBIN /EXPORTS %FBDIR%\bin\fbclient.dll > _dump.tmp
-   echo.LIBRARY %FBDIR%\bin\fbclient.dll > _temp.def
+   DUMPBIN /EXPORTS %FREEIMAGE_DIR%\Dist\FreeImage.dll > _dump.tmp
+   echo.LIBRARY %FREEIMAGE_DIR%\Dist\FreeImage.dll > _temp.def
    echo.EXPORTS >> _temp.def
    sed -nf _temp.sed < _dump.tmp >> _temp.def
-   LIB /MACHINE:X86 /DEF:_temp.def /OUT:..\..\lib\%HB_CC_NAME%\fbclient.lib 
+   LIB /MACHINE:X86 /DEF:_temp.def /OUT:..\..\lib\%HB_CC_NAME%\FreeImage.lib 
    del _dump.tmp
    del _temp.def
    del _temp.sed
@@ -81,7 +82,7 @@ if "%1" == "INSTALL" goto INSTALL
    set _HB_LIB_INSTALL=%HB_LIB_INSTALL%
    if "%_HB_LIB_INSTALL%" == "" set _HB_LIB_INSTALL=%_HB_INSTALL_PREFIX%\lib
 
-   copy ..\..\lib\%HB_CC_NAME%\fbclient.lib %_HB_LIB_INSTALL%
+   copy ..\..\lib\%HB_CC_NAME%\FreeImage.lib %_HB_LIB_INSTALL%
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
    goto EXIT

@@ -36,8 +36,8 @@ echo %hdir%\lib\common.lib + >> bld_b32.mak
 echo %hdir%\lib\pp.lib + >> bld_b32.mak
 echo %hdir%\lib\hbsix.lib + >> bld_b32.mak 
 echo %hdir%\lib\dbffpt.lib + >> bld_b32.mak
-echo %hdir%\lib\fbclient.lib + >> bld_b32.mak
-echo %hdir%\lib\firebird.lib + >> bld_b32.mak
+echo %hdir%\lib\fi_lib.lib + >> bld_b32.mak
+echo %hdir%\lib\freeimage.lib + >> bld_b32.mak
 
 rem Uncomment these two lines to use Advantage RDD
 rem echo %hdir%\lib\rddads.lib + >> bld_b32.mak  

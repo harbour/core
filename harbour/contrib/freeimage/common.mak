@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = firebird
+LIBNAME = fi_lib
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
@@ -11,8 +11,8 @@ LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 #
 
 LIB_OBJS = \
-   $(OBJ_DIR)\firebird$(OBJEXT) \
-   $(OBJ_DIR)\tfirebird$(OBJEXT) \
+   $(OBJ_DIR)\fi_winfu$(OBJEXT) \
+   $(OBJ_DIR)\fi_wrp$(OBJEXT) \
 
 all: \
    $(LIB_PATH) \

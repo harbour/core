@@ -1,5 +1,5 @@
 /*
- * $Id: atrepl.c 7583 2007-07-06 21:17:36Z druzus $
+ * $Id$
  */
 
 /* VERY IMPORTANT: Don't use this querys as sample, they are used for stress tests !!! */

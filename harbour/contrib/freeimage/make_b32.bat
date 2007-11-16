@@ -4,9 +4,10 @@ rem $Id$
 rem
 
 rem ---------------------------------------------------------------
-rem IMPORTANT: You'll need Firebird headers and this envvar
-rem            to be set to successfully build this library:
-rem            set FBDIR=C:\Firebird
+rem IMPORTANT: You'll need Freeimage headers and binary from here:
+rem            http://freeimage.sourceforge.net/download.html
+rem            and this envvar to be set to successfully build this library:
+rem            set FREEIMAGE_DIR=C:\FreeImage
 rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------
@@ -22,11 +23,11 @@ rem    set HB_MAKE_FLAGS=
 rem ---------------------------------------------------------------
 
 if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%SystemRoot%\system32
-if "%HB_CC_NAME%" == "" set HB_CC_NAME=vc
-if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
+if "%HB_CC_NAME%" == "" set HB_CC_NAME=b32
+if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=make.exe
 set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
 
-set C_USR=%C_USR% -I%FBDIR%\include -DHB_OS_WIN_32_USED
+set C_USR=%C_USR% -I%FREEIMAGE_DIR%\source -DHB_OS_WIN_32_USED
 
 rem ---------------------------------------------------------------
 
@@ -45,23 +46,7 @@ if "%1" == "INSTALL" goto INSTALL
 
 :BUILD
 
-   rem ---------------------------------------------------------------
-   rem This .dll to .lib conversion needs GNU sed.exe in the path
-   rem ---------------------------------------------------------------
-   echo./[ \t]*ordinal hint/,/^^[ \t]*Summary/{> _temp.sed
-   echo. /^^[ \t]\+[0-9]\+/{>> _temp.sed
-   echo.   s/^^[ \t]\+[0-9]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+\(.*\)/\1/p>> _temp.sed
-   echo. }>> _temp.sed
-   echo.}>> _temp.sed
-   DUMPBIN /EXPORTS %FBDIR%\bin\fbclient.dll > _dump.tmp
-   echo.LIBRARY %FBDIR%\bin\fbclient.dll > _temp.def
-   echo.EXPORTS >> _temp.def
-   sed -nf _temp.sed < _dump.tmp >> _temp.def
-   LIB /MACHINE:X86 /DEF:_temp.def /OUT:..\..\lib\%HB_CC_NAME%\fbclient.lib 
-   del _dump.tmp
-   del _temp.def
-   del _temp.sed
-   rem ---------------------------------------------------------------
+   implib ..\..\lib\%HB_CC_NAME%\FreeImage.lib %FREEIMAGE_DIR%\Dist\FreeImage.dll
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
    if errorlevel 1 notepad make_%HB_CC_NAME%.log
@@ -81,7 +66,7 @@ if "%1" == "INSTALL" goto INSTALL
    set _HB_LIB_INSTALL=%HB_LIB_INSTALL%
    if "%_HB_LIB_INSTALL%" == "" set _HB_LIB_INSTALL=%_HB_INSTALL_PREFIX%\lib
 
-   copy ..\..\lib\%HB_CC_NAME%\fbclient.lib %_HB_LIB_INSTALL%
+   copy ..\..\lib\%HB_CC_NAME%\FreeImage.lib %_HB_LIB_INSTALL%
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
    goto EXIT
