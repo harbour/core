@@ -436,22 +436,25 @@ static void hb_vmRequestReset( void )
            break;
 
         case HB_IT_DATE:
-          if( pItem->item.asDate.value == 0 ) // TOFIX
           {
-             pVariant->n1.n2.vt = VT_NULL;
-          }
-          else if( bByRef )
-          {
-             pItem->item.asDouble.value = (double) ( pItem->item.asDate.value - 2415019 ); // TOFIX
-             pItem->type = HB_IT_DOUBLE; // TOFIX
-
-             pVariant->n1.n2.vt = VT_BYREF | VT_DATE;
-             pVariant->n1.n2.n3.pdblVal = &( pItem->item.asDouble.value ) ; // TOFIX
-          }
-          else
-          {
-             pVariant->n1.n2.vt = VT_DATE;
-             pVariant->n1.n2.n3.dblVal = (double) ( pItem->item.asDate.value - 2415019 ); // TOFIX
+             long lDate = hb_itemGetDL( pItem );
+             
+             if( lDate == 0 )
+             {
+                pVariant->n1.n2.vt = VT_NULL;
+             }
+             else if( bByRef )
+             {
+                hb_itemPutND( pItem, (double) ( lDate - 2415019 ) );
+             
+                pVariant->n1.n2.vt = VT_BYREF | VT_DATE;
+                pVariant->n1.n2.n3.pdblVal = &( pItem->item.asDouble.value );
+             }
+             else
+             {
+                pVariant->n1.n2.vt = VT_DATE;
+                pVariant->n1.n2.n3.dblVal = (double) ( lDate - 2415019 );
+             }
           }
           break;
 
@@ -464,7 +467,7 @@ static void hb_vmRequestReset( void )
         {
            if( HB_IS_OBJECT( pItem ) )
            {
-              if( hb_clsIsParent( pItem->item.asArray.value->uiClass , "TOLEAUTO" ) ) // TOFIX
+              if( hb_clsIsParent( hb_objGetClass( pItem ), "TOLEAUTO" ) )
               {
                  IDispatch *pDisp;// = NULL;
 
@@ -491,7 +494,7 @@ static void hb_vmRequestReset( void )
                  }
               }
               // MUST be before "VTWRAPPER"
-              else if( hb_clsIsParent( pItem->item.asArray.value->uiClass , "VTARRAYWRAPPER" ) ) // TOFIX
+              else if( hb_clsIsParent( hb_objGetClass( pItem ), "VTARRAYWRAPPER" ) )
               {
                  // vt := oVTArray:vt
                  hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_vt ) );
@@ -547,7 +550,7 @@ static void hb_vmRequestReset( void )
 
                  goto ItemToVariant_ProcessArray;
               }
-              else if( hb_clsIsParent( pItem->item.asArray.value->uiClass , "VTWRAPPER" ) ) // TOFIX
+              else if( hb_clsIsParent( hb_objGetClass( pItem ), "VTWRAPPER" ) )
               {
                  // vt := oVT:vt
                  hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_vt ) );
@@ -978,7 +981,7 @@ static void hb_vmRequestReset( void )
         }
      }
 
-     //HB_TRACE(HB_TR_INFO, ("Return len: %i\n", pArray->item.asArray.value->ulLen));
+     //HB_TRACE(HB_TR_INFO, ("Return len: %i\n", hb_arrayLen( pArray )));
 
      // Wrap our array with VTArrayWrapper() class ( aArray := VTArrayWrapper( vt, aArray) )
      if( HB_IS_ARRAY( pArray ) && vt != VT_VARIANT )
@@ -1140,8 +1143,6 @@ static void hb_vmRequestReset( void )
               {
                  hb_itemForwardValue( pItem, hb_stackReturnItem() );
               }
-
-              //printf( "Dispatch: %ld %ld\n", ( LONG ) pDisp, (LONG) hb_stackReturnItem()->item.asArray.value ); // TOFIX
            }
            break;
 

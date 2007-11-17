@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-17 03:20 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/win32/w32_ole.c
+     ! Fixed more direct item accesses.
+       Now only complicated cases remain.
+
 2007-11-17 03:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * make_vcce.bat
    * make_vcce.mak
