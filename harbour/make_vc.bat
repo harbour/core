@@ -17,12 +17,14 @@ rem    set HB_BUILD_DEBUG=yes
 rem    set HB_BUILD_VERBOSE=yes
 rem    set HB_REBUILD_PARSER=yes
 rem    set HB_MAKE_PROGRAM=
+rem    set HB_SHOW_ERRORS=
 rem    set HB_MAKE_FLAGS=
 rem ---------------------------------------------------------------
 
-if "%HB_GT_LIB%"  == "" set HB_GT_LIB=gtwin
-if "%HB_CC_NAME%" == "" set HB_CC_NAME=vc
+if "%HB_GT_LIB%"       == "" set HB_GT_LIB=gtwin
+if "%HB_CC_NAME%"      == "" set HB_CC_NAME=vc
 if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
+if "%HB_SHOW_ERRORS%"  == "" set HB_SHOW_ERRORS=yes
 set HB_MAKEFILE=make_%HB_CC_NAME%.mak
 
 rem ---------------------------------------------------------------
@@ -43,12 +45,13 @@ if "%1" == "INSTALL" goto INSTALL
 :BUILD
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
-   if errorlevel 1 notepad make_%HB_CC_NAME%.log
+   if errorlevel 1 if "%HB_SHOW_ERRORS%" == "yes" notepad make_%HB_CC_NAME%.log
    goto EXIT
 
 :CLEAN
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% CLEAN > make_%HB_CC_NAME%.log
+   if errorlevel 1 goto EXIT
    if exist make_%HB_CC_NAME%.log del make_%HB_CC_NAME%.log > nul
    if exist inst_%HB_CC_NAME%.log del inst_%HB_CC_NAME%.log > nul
    goto EXIT

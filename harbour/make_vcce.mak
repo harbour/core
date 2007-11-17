@@ -1067,8 +1067,8 @@ doClean:
 	-if exist $(BIN_DIR)\*.lib $(DEL) $(BIN_DIR)\*.lib > nul
 	-if exist $(BIN_DIR)\*.exp $(DEL) $(BIN_DIR)\*.exp > nul
 	-if exist $(DLL_OBJ_DIR)\*.obj   $(DEL) $(DLL_OBJ_DIR)\*.obj   > nul
-	-if exist $(DLL_OBJ_DIR)\*.c	 $(DEL) $(DLL_OBJ_DIR)\*.c  	 > nul
-	-if exist $(DLL_OBJ_DIR)\*.h	 $(DEL) $(DLL_OBJ_DIR)\*.h  	 > nul
+	-if exist $(DLL_OBJ_DIR)\*.c	 $(DEL) $(DLL_OBJ_DIR)\*.c     > nul
+	-if exist $(DLL_OBJ_DIR)\*.h	 $(DEL) $(DLL_OBJ_DIR)\*.h     > nul
 	-if exist inst_$(HB_CC_NAME).log $(DEL) inst_$(HB_CC_NAME).log > nul
 	-if exist bin\*.exe 	   $(DEL) bin\*.exe > nul
 	-if exist lib\*.lib 	   $(DEL) lib\*.lib > nul
