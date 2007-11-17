@@ -8,6 +8,64 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-17 10:20 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * harbour/contrib/adordd/make_b32.bat
+   * harbour/contrib/adordd/make_vc.bat
+   * harbour/contrib/apollo/make_b32.bat
+   * harbour/contrib/apollo/make_vc.bat
+   * harbour/contrib/bmdbfcdx/make_b32.bat
+   * harbour/contrib/bmdbfcdx/make_vc.bat
+   * harbour/contrib/btree/make_b32.bat
+   * harbour/contrib/btree/make_vc.bat
+   * harbour/contrib/directx/make_b32.bat
+   * harbour/contrib/directx/make_vc.bat
+   * harbour/contrib/firebird/make_b32.bat
+   * harbour/contrib/firebird/make_vc.bat
+   * harbour/contrib/freeimage/make_b32.bat
+   * harbour/contrib/freeimage/make_vc.bat
+   * harbour/contrib/gd/make_b32.bat
+   * harbour/contrib/gd/make_vc.bat
+   * harbour/contrib/hbzlib/make_b32.bat
+   * harbour/contrib/hbzlib/make_vc.bat
+   * harbour/contrib/htmllib/make_b32.bat
+   * harbour/contrib/htmllib/make_vc.bat
+   * harbour/contrib/libct/make_b32.bat
+   * harbour/contrib/libct/make_vc.bat
+   * harbour/contrib/libgt/make_b32.bat
+   * harbour/contrib/libgt/make_vc.bat
+   * harbour/contrib/libmisc/make_b32.bat
+   * harbour/contrib/libmisc/make_vc.bat
+   * harbour/contrib/libnf/make_b32.bat
+   * harbour/contrib/libnf/make_vc.bat
+   * harbour/contrib/mysql/make_b32.bat
+   * harbour/contrib/mysql/make_vc.bat
+   * harbour/contrib/odbc/make_b32.bat
+   * harbour/contrib/odbc/make_vc.bat
+   * harbour/contrib/ole/make_b32.bat
+   * harbour/contrib/ole/make_vc.bat
+   * harbour/contrib/pdflib/make_b32.bat
+   * harbour/contrib/pdflib/make_vc.bat
+   * harbour/contrib/pgsql/make_b32.bat
+   * harbour/contrib/pgsql/make_vc.bat
+   * harbour/contrib/rdd_ads/make_b32.bat
+   * harbour/contrib/rdd_ads/make_vc.bat
+   * harbour/contrib/samples/make_b32.bat
+   * harbour/contrib/samples/make_vc.bat
+   * harbour/contrib/telepath/make_b32.bat
+   * harbour/contrib/telepath/make_vc.bat
+   * harbour/contrib/tip/make_b32.bat
+   * harbour/contrib/tip/make_vc.bat
+   * harbour/contrib/win32/make_b32.bat
+   * harbour/contrib/win32/make_vc.bat
+   * harbour/contrib/xhb/make_b32.bat
+   * harbour/contrib/xhb/make_vc.bat
+     ! Synced with recent changes to main bat files from harbour dir
+
+   + harbour/contrib/make_b32.bat
+   + harbour/contrib/make_vc.bat
+   + harbour/contrib/mkall_b32.bat
+     + Added bat files for compiling (almost) all contribs
+
 2007-11-17 07:20 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/make_b32.bat
   * harbour/make_vc.bat
