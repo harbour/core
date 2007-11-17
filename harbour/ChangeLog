@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-17 12:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/make_b32.bat
+   * contrib/make_vc.bat
+   * contrib/mkall_b32.bat
+     ! Added SVN headers.
+     ! Fixed SVN properties (keywords, eol-style=CRLF).
+
 2007-11-17 12:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/xhb/cstructc.c
    * contrib/make_b32.bat

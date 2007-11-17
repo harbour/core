@@ -1,4 +1,7 @@
 @echo off
+rem
+rem $Id$
+rem
 
 set HB_SHOW_ERRORS=no
 

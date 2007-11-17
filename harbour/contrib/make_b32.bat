@@ -1,4 +1,7 @@
 @echo off
+rem
+rem $Id$
+rem
 
 if "%1" == "" goto ERROR
 
