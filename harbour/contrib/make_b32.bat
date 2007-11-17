@@ -12,7 +12,7 @@ goto EXIT
 
 :ERROR
 echo ----------------------------------------
-echo RUN : make_vc.bat DIRNAME  !!!
+echo RUN : make_b32.bat DIRNAME  !!!
 echo ----------------------------------------
 
 :EXIT

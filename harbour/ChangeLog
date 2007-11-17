@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-17 12:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/xhb/cstructc.c
+   * contrib/make_b32.bat
+     ! Some fixes for recent changes.
+
 2007-11-17 10:20 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
    * harbour/contrib/adordd/make_b32.bat
    * harbour/contrib/adordd/make_vc.bat

@@ -87,6 +87,9 @@ static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, ULONG ulLen
    return pItem;
 }
 
+#ifdef hb_itemPutCRawStatic
+   #undef hb_itemPutCRawStatic
+#endif
 static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, ULONG ulLen )
 {
    HB_TRACE_STEALTH(HB_TR_DEBUG, ("hb_itemPutCRawStatic(%p, %s, %lu)", pItem, szText, ulLen));
@@ -107,13 +110,17 @@ static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, ULONG
    return pItem;
 }
 
-#undef hb_retclenAdoptRaw
+#ifdef hb_retclenAdoptRaw
+   #undef hb_retclenAdoptRaw
+#endif
 HB_EXPORT void hb_retclenAdoptRaw( const char * szText, ULONG ulLen )
 {
    hb_itemPutCRaw( hb_stackReturnItem(), szText, ulLen );
 }
 
-#undef hb_retclenStatic
+#ifdef hb_retclenStatic
+   #undef hb_retclenStatic
+#endif
 HB_EXPORT void hb_retclenStatic( const char * szText, ULONG ulLen )
 {
    hb_itemPutCRawStatic( hb_stackReturnItem(), szText, ulLen );
