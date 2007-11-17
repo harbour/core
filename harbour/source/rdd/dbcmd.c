@@ -911,7 +911,7 @@ HB_FUNC( FIELDNAME )
          szName = ( char * ) hb_xgrab( pArea->uiMaxFieldNameLength + 1 );
          szName[ 0 ] = '\0';
          SELF_FIELDNAME( pArea, uiIndex, szName );
-         hb_retcAdopt( szName );
+         hb_retc_buffer( szName );
          return;
       }
       /* This is not Clipper compatible! - David G. Holm <dholm@jsd-llc.com>

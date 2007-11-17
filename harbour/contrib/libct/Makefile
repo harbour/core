@@ -4,7 +4,7 @@
 
 ROOT = ../../
 
-C_SOURCES = \
+C_SOURCES =\
 	addascii.c \
 	asciisum.c \
 	ascpos.c \
@@ -82,7 +82,7 @@ C_SOURCES = \
 	wordrepl.c \
 	wordtoch.c \
 
-PRG_SOURCES= \
+PRG_SOURCES=\
 	blank.prg \
 	ct.prg \
 	ctmisc.prg \
@@ -98,6 +98,13 @@ PRG_SOURCES= \
 	screen3.prg \
 	scrmark.prg \
 	showtime.prg \
+
+PRG_HEADERS=\
+	ct.ch \
+	ctdisk.ch \
+	cterror.ch \
+	ctextern.ch \
+	ctvideo.ch \
 
 LIBNAME=ct
 

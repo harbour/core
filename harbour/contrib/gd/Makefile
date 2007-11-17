@@ -9,9 +9,10 @@ C_SOURCES=\
 
 PRG_HEADERS=\
 	gd.ch \
+	gdexternal.ch \
 
 PRG_SOURCES=\
-	gd.prg  \
+	gd.prg \
 	gdbar.prg \
 	gdchart.prg \
 	gdimage.prg \

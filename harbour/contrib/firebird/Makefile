@@ -10,7 +10,7 @@ C_SOURCES=\
         firebird.c \
 
 PRG_SOURCES=\
-        tfirebird.prg  \
+        tfirebird.prg \
 
 LIBNAME=firebird
 

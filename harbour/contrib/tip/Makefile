@@ -7,7 +7,7 @@ ROOT = ../../
 C_SOURCES = \
 	base64x.c \
 	encmthd.c \
-	utils.c   \
+	utils.c \
 
 PRG_SOURCES= \
 	popcln.prg \
@@ -25,6 +25,10 @@ PRG_SOURCES= \
 	cgi.prg \
 	thtml.prg \
 	sendmail.prg
+
+PRG_HEADERS= \
+	thtml.ch \
+	tip.ch \
 
 LIBNAME=tip
 

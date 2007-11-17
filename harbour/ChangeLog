@@ -8,6 +8,83 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-17 03:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * make_vcce.bat
+   * make_vcce.mak
+     ! Minor corrections (syncing with existing files).
+
+   * doc/genhtm.bat
+     ! Minor fix to make it work out of the box.
+     - Some obsolete stuff removed from it.
+
+   * include/hbapiitm.h
+   * include/hbapi.h
+   * source/vm/itemapi.c
+     + Added hb_itemPutCLConst() which is the same as 
+       hb_itemPutCConst() but the buffer length can be passed.
+       Same as xhb hb_itemPutCRawStatic().
+
+   + contrib/xhb/hbcompat.h
+     + Added C level compatibility header file.
+
+   * contrib/win32/w32_ole.c
+     ! hb_itemPutCRawStatic() -> hb_itemPutCLConst()
+     ! Some more xhb API calls changed to Harbour ones.
+     ! TraceLog() -> HB_TRACE()
+     ! HB_ITEM s_OleAuto -> PHB_ITEM s_pOleAuto
+       TOFIX (new): s_pOleAuto is not freed on app exit.
+     ! Fixed a few more internal accesses by using API 
+       calls.
+     ; NOTE: There are four more complicated problems here 
+             to be solved:
+             1) hb_stackSetActionRequest() call
+             2) Passing direct references to HB_ITEM .value 
+                members to external functions.
+             3) Storing "hidden" information in string ITEMs 
+                prepended after the strings' actual content.
+             4) Not freeing s_pOleAuto (this var BTW is used in 
+                one static function only)
+
+   * source/rtl/hbinet.c
+   * source/rdd/dbcmd.c
+     ! Changed some xhb C level API calls to Harbour ones.
+
+   * contrib/xhb/Makefile
+   * contrib/freeimage/Makefile
+   * contrib/apollo/Makefile
+   * contrib/firebird/Makefile
+   * contrib/libct/Makefile
+   * contrib/telepath/Makefile
+   * contrib/pgsql/Makefile
+   * contrib/gd/Makefile
+   * contrib/libnf/Makefile
+   * contrib/tip/Makefile
+   * contrib/adordd/Makefile
+   * contrib/rdd_ads/Makefile
+   * contrib/btree/Makefile
+   * contrib/samples/Makefile
+   * contrib/mysql/Makefile
+   * contrib/odbc/Makefile
+   * contrib/pdflib/Makefile
+     ! Added C and Harbour public headers to GNU makefiles.
+     ! Added one missing SVN header.
+
+   * contrib/pdflib/pdfhbdoc.ch
+   * contrib/pdflib/pdf.ch
+     ! Added missing SVN headers.
+
+   - contrib/pdflib/pdflib.h
+     - Removed this file which belongs to the pdflib 
+       package. This package is needed anyway to use 
+       this contrib. (but the contrib is badly broken)
+
+   * contrib/pdflib/make_b32.bat
+   * contrib/pdflib/make_vc.bat
+     ! Minor typo.
+
+   * source/rtl/persist.prg
+     ! Prefixed static var name with "s_"
+
 2007-11-16 21:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/win32/w32_ole.c
      ! Some trivial cases fixed where low-level stuff was 

@@ -113,13 +113,13 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
    local oNew := &( ::ClassName() + "()" ):CreateNew()
    local aProperties, n, uValue, uNewValue, cObject, cType
 
-   static nIndent := -3
+   static s_nIndent := -3
 
    DEFAULT cObjectName TO "o" + ::ClassName()
 
-   nIndent += 3
-   cObject := iif( nIndent > 0, hb_OSNewLine(), "" ) + Space( nIndent ) + ;
-              "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
+   s_nIndent += 3
+   cObject := iif( s_nIndent > 0, hb_OSNewLine(), "" ) + Space( s_nIndent ) + ;
+              "OBJECT " + iif( s_nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
               ::ClassName() + hb_OSNewLine()
 
    aProperties := __ClsGetProperties( ::ClassH )
@@ -133,9 +133,9 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
 
          do case
             case cType == "A"
-                 nIndent += 3
-                 cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
-                 nIndent -= 3
+                 s_nIndent += 3
+                 cObject += ArrayToText( uValue, aProperties[ n ], s_nIndent )
+                 s_nIndent -= 3
                  if n < Len( aProperties )
                     cObject += hb_OSNewLine()
                  endif
@@ -152,7 +152,7 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
                  if n == 1
                     cObject += hb_OSNewLine()
                  endif
-                 cObject += Space( nIndent ) + "   ::" + ;
+                 cObject += Space( s_nIndent ) + "   ::" + ;
                             aProperties[ n ] + " = " + ValToText( uValue ) + ;
                             hb_OSNewLine()
          endcase
@@ -161,8 +161,8 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
 
    next
 
-   cObject += hb_OSNewLine() + Space( nIndent ) + "ENDOBJECT" + hb_OSNewLine()
-   nIndent -= 3
+   cObject += hb_OSNewLine() + Space( s_nIndent ) + "ENDOBJECT" + hb_OSNewLine()
+   s_nIndent -= 3
 
 return cObject
 

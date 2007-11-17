@@ -4,7 +4,7 @@ rem $Id$
 rem
 
 rem ---------------------------------------------------------------
-rem IMPORTANT: You'll need PDFLIB lib sources this envvar
+rem IMPORTANT: You'll need PDFLIB lib sources and this envvar
 rem            to be set to successfully build this library:
 rem            set C_USR=-IC:\pdflib\src\pdflib
 rem ---------------------------------------------------------------

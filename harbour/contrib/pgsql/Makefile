@@ -1,3 +1,6 @@
+#
+# $Id$
+#
 
 ROOT = ../../
 
@@ -5,7 +8,10 @@ C_SOURCES=\
 	postgres.c \
 
 PRG_SOURCES=\
-	tpostgre.prg  \
+	tpostgre.prg \
+
+PRG_HEADERS=\
+	postgres.ch \
 
 LIBNAME=hbpg
 

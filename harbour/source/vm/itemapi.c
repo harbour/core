@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2007 Viktor Szakats <viktor.szakats@syenar.hu>
  *    hb_itemPCount()
  *    hb_itemParamPtr()
  *    hb_itemReturnPtr()
@@ -66,6 +66,7 @@
  *    hb_itemGetCLen()
  *    hb_itemGetNLen()
  *    hb_itemPutCConst()
+ *    hb_itemPutCLConst()
  *    hb_itemPutNLen()
  *    hb_itemPutNDLen()
  *    hb_itemPutNILen()
@@ -226,35 +227,6 @@ HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
    return pItem;
 }
 
-HB_EXPORT PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCConst(%p, %s)", pItem, szText));
-
-   if( pItem )
-   {
-      if( HB_IS_COMPLEX( pItem ) )
-         hb_itemClear( pItem );
-   }
-   else
-      pItem = hb_itemNew( NULL );
-
-   pItem->type = HB_IT_STRING;
-   pItem->item.asString.allocated = 0;
-
-   if( szText == NULL )
-   {
-      pItem->item.asString.value  = "";
-      pItem->item.asString.length = 0;
-   }
-   else
-   {
-      pItem->item.asString.value  = ( char * ) szText;
-      pItem->item.asString.length = strlen( szText );
-   }
-
-   return pItem;
-}
-
 HB_EXPORT PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCL(%p, %s, %lu)", pItem, szText, ulLen));
@@ -293,6 +265,64 @@ HB_EXPORT PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLe
    }
 
    pItem->type = HB_IT_STRING;
+
+   return pItem;
+}
+
+HB_EXPORT PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCConst(%p, %s)", pItem, szText));
+
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = HB_IT_STRING;
+   pItem->item.asString.allocated = 0;
+
+   if( szText == NULL )
+   {
+      pItem->item.asString.value  = "";
+      pItem->item.asString.length = 0;
+   }
+   else
+   {
+      pItem->item.asString.value  = ( char * ) szText;
+      pItem->item.asString.length = strlen( szText );
+   }
+
+   return pItem;
+}
+
+HB_EXPORT PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCConst(%p, %s, %lu)", pItem, szText, ulLen));
+
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( NULL );
+
+   pItem->type = HB_IT_STRING;
+   pItem->item.asString.allocated = 0;
+
+   if( szText == NULL )
+   {
+      pItem->item.asString.value  = "";
+      pItem->item.asString.length = 0;
+   }
+   else
+   {
+      pItem->item.asString.value  = ( char * ) szText;
+      pItem->item.asString.length = ulLen;
+   }
 
    return pItem;
 }

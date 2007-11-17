@@ -5,28 +5,31 @@
 ROOT = ../../
 
 C_SOURCES=\
-	hbxml.c    \
+	hbxml.c \
 	hbsyslog.c \
 	hboutdbg.c \
 	cstructc.c \
-	xhbenum.c  \
-	xhbfunc.c  \
-	xhbmsgs.c  \
-	xhbwith.c  \
+	xhbenum.c \
+	xhbfunc.c \
+	xhbmsgs.c \
+	xhbwith.c \
+
+C_HEADERS=\
+	hbcompat.h \
 
 PRG_SOURCES=\
-	txml.prg     \
-	hblog.prg    \
+	txml.prg \
+	hblog.prg \
 	hblognet.prg \
-	cstruct.prg  \
-	xhbcomp.prg  \
+	cstruct.prg \
+	xhbcomp.prg \
 
 PRG_HEADERS=\
-	xhb.ch      \
+	xhb.ch \
 	hbcompat.ch \
-	hblog.ch    \
+	hblog.ch \
 	hblogdef.ch \
-	cstruct.ch  \
+	cstruct.ch \
 	hbctypes.ch \
 	wintypes.ch \
 	xhbextrn.ch \

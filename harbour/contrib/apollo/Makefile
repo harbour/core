@@ -4,8 +4,8 @@
 
 ROOT = ../../
 
-C_SOURCES=    \
-   apollo.c
+C_SOURCES=\
+   apollo.c \
 
 PRG_SOURCES=\
 	apollo1.prg \

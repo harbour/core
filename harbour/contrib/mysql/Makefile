@@ -8,8 +8,11 @@ C_SOURCES=\
 	mysql.c \
 
 PRG_SOURCES=\
-	tmysql.prg  \
+	tmysql.prg \
 	tsqlbrw.prg \
+
+PRG_HEADERS=\
+	mysql.ch \
 
 LIBNAME=hbmysql
 

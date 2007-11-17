@@ -8,17 +8,20 @@ ifneq ($(HB_ARCHITECTURE),dos)
 
 ifeq ($(HB_ARCHITECTURE),linux)
 C_SOURCES=\
-	tplinux.c
+	tplinux.c \
 else ($(HB_ARCHITECTURE),win32)
 C_SOURCES=\
-	tpwin32.c
+	tpwin32.c \
 else
 C_SOURCES=\
-	tpos2.c
+	tpos2.c \
 endif
 
 PRG_SOURCES=\
-	telepath.prg
+	telepath.prg \
+
+PRG_HEADERS=\
+	telepath.ch \
 
 LIBNAME=telepath
 

@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 /* Defines */
 #define FONTBOLD "Courier-Bold"
 #define FONTNORMAL "Courier"

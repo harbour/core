@@ -16,6 +16,9 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 
+PRG_HEADERS=\
+	time87.ch \
+
 LIBNAME=samples
 
 include $(TOP)$(ROOT)config/lib.cf

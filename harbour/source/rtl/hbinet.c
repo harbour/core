@@ -1008,7 +1008,7 @@ static void s_inetRecvPattern( char *szPattern )
             hb_itemPutNI( pResult, iPos );
          }
 
-         hb_retclenAdopt( Buffer, iPos );
+         hb_retclen_buffer( Buffer, iPos );
       }
       else
       {
@@ -1211,7 +1211,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
             hb_itemPutNI( pResult, iPos  - (iprotosize[ifindproto]-1) );
          }
 
-         hb_retclenAdopt( Buffer, iPos  - (iprotosize[ifindproto]-1) );
+         hb_retclen_buffer( Buffer, iPos  - (iprotosize[ifindproto]-1) );
       }
       else
       {
