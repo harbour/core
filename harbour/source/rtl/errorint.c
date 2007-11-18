@@ -63,6 +63,15 @@ void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, 
    char buffer[ 1024 ];
    BOOL fLang;
 
+   if( szText == NULL )
+      szText = "";
+
+   if( szPar1 == NULL )
+      szPar1 = "";
+
+   if( szPar2 == NULL )
+      szPar2 = "";
+
    HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
 
    fLang = ( hb_langID() != NULL );

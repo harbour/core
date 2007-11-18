@@ -453,15 +453,15 @@ HB_FUNC( WIN32_SETDOCUMENTPROPERTIES )
       HANDLE hPrinter;
       char * pszPrinterName = hb_parc( 2 );
       LPTSTR lpPrinterName = pszPrinterName ? HB_TCHAR_CONVTO( pszPrinterName ) : NULL;
-      PDEVMODE pDevMode = NULL;
-      LONG lSize;
 
       if( OpenPrinter( lpPrinterName, &hPrinter, NULL ) )
       {
-         lSize = DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, 0 );
+         PDEVMODE pDevMode = NULL;
+         LONG lSize = DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, 0 );
          if( lSize > 0 )
          {
             pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
+
             if( pDevMode )
             {
                DocumentProperties( 0, hPrinter, lpPrinterName, pDevMode, pDevMode, DM_OUT_BUFFER );

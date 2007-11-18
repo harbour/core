@@ -58,7 +58,7 @@
 #define MAX_STR_LEN 255
 
 #include "hbapi.h"
-#include "sde60.h"
+#include "sde61.h"
 
 
 /* -----------------29/12/2001 19:21-----------------

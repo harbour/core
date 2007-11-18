@@ -217,52 +217,52 @@ CLASS WIN32PRN
 
   METHOD GetDeviceCaps( nCaps ) INLINE win32_GetDeviceCaps( ::hPrinterDC, nCaps)
 
-  VAR PrinterName    INIT ""
-  VAR Printing       INIT .F.
-  VAR HavePrinted    INIT .F.
-  VAR hPrinterDc     INIT 0
+  VAR PrinterName      INIT ""
+  VAR Printing         INIT .F.
+  VAR HavePrinted      INIT .F.
+  VAR hPrinterDc       INIT 0
 
 // These next 4 variables must be set before calling ::Create() if
 // you wish to alter the defaults
-  VAR FormType       INIT 0
-  VAR BinNumber      INIT 0
-  VAR Landscape      INIT .F.
-  VAR Copies         INIT 1
+  VAR FormType         INIT 0
+  VAR BinNumber        INIT 0
+  VAR Landscape        INIT .F.
+  VAR Copies           INIT 1
 
-  VAR SetFontOk      INIT .F.
-  VAR FontName       INIT ""                        // Current Point size for font
-  VAR FontPointSize  INIT 12                        // Point size for font
-  VAR FontWidth      INIT {0,0}                     // {Mul, Div} Calc width: nWidth:= MulDiv(nMul, GetDeviceCaps(shDC,LOGPIXELSX), nDiv)
-                                                    // If font width is specified it is in "characters per inch" to emulate DotMatrix
-  VAR fBold           INIT 0      HIDDEN            // font darkness weight ( Bold). See wingdi.h or WIN SDK CreateFont() for valid values
-  VAR fUnderLine      INIT .F.    HIDDEN            // UnderLine is on or off
-  VAR fItalic         INIT .F.    HIDDEN            // Italic is on or off
-  VAR fCharSet        INIT 1      HIDDEN            // Default character set == DEFAULT_CHARSET ( see wingdi.h )
+  VAR SetFontOk        INIT .F.
+  VAR FontName         INIT ""                       // Current Point size for font
+  VAR FontPointSize    INIT 12                       // Point size for font
+  VAR FontWidth        INIT {0,0}                    // {Mul, Div} Calc width: nWidth:= MulDiv(nMul, GetDeviceCaps(shDC,LOGPIXELSX), nDiv)
+                                                     // If font width is specified it is in "characters per inch" to emulate DotMatrix
+  VAR fBold            INIT 0      HIDDEN            // font darkness weight ( Bold). See wingdi.h or WIN SDK CreateFont() for valid values
+  VAR fUnderLine       INIT .F.    HIDDEN            // UnderLine is on or off
+  VAR fItalic          INIT .F.    HIDDEN            // Italic is on or off
+  VAR fCharSet         INIT 1      HIDDEN            // Default character set == DEFAULT_CHARSET ( see wingdi.h )
 
   VAR PixelsPerInchY
   VAR PixelsPerInchX
-  VAR PageHeight     INIT 0
-  VAR PageWidth      INIT 0
-  VAR TopMargin      INIT 0
-  VAR BottomMargin   INIT 0
-  VAR LeftMargin     INIT 0
-  VAR RightMargin    INIT 0
-  VAR LineHeight     INIT 0
-  VAR CharHeight     INIT 0
-  VAR CharWidth      INIT 0
-  VAR fCharWidth     INIT 0      HIDDEN
-  VAR BitmapsOk      INIT .F.
-  VAR NumColors      INIT 1
-  VAR fDuplexType    INIT 0      HIDDEN              //DMDUP_SIMPLEX, 22/02/2007 change to 0 to use default printer settings
-  VAR fPrintQuality  INIT 0     HIDDEN              //DMRES_HIGH, 22/02/2007 change to 0 to use default printer settings
-  VAR fNewDuplexType INIT 0      HIDDEN
-  VAR fNewPrintQuality INIT 0   HIDDEN
-  VAR fOldLandScape  INIT .F.    HIDDEN
-  VAR fOldBinNumber  INIT 0      HIDDEN
-  VAR fOldFormType   INIT 0      HIDDEN
+  VAR PageHeight       INIT 0
+  VAR PageWidth        INIT 0
+  VAR TopMargin        INIT 0
+  VAR BottomMargin     INIT 0
+  VAR LeftMargin       INIT 0
+  VAR RightMargin      INIT 0
+  VAR LineHeight       INIT 0
+  VAR CharHeight       INIT 0
+  VAR CharWidth        INIT 0
+  VAR fCharWidth       INIT 0      HIDDEN
+  VAR BitmapsOk        INIT .F.
+  VAR NumColors        INIT 1
+  VAR fDuplexType      INIT 0      HIDDEN            // DMDUP_SIMPLEX, 22/02/2007 change to 0 to use default printer settings
+  VAR fPrintQuality    INIT 0      HIDDEN            // DMRES_HIGH, 22/02/2007 change to 0 to use default printer settings
+  VAR fNewDuplexType   INIT 0      HIDDEN
+  VAR fNewPrintQuality INIT 0      HIDDEN
+  VAR fOldLandScape    INIT .F.    HIDDEN
+  VAR fOldBinNumber    INIT 0      HIDDEN
+  VAR fOldFormType     INIT 0      HIDDEN
 
-  VAR PosX           INIT 0
-  VAR PosY           INIT 0
+  VAR PosX             INIT 0
+  VAR PosY             INIT 0
 
   VAR TextColor
   VAR BkColor
@@ -315,6 +315,8 @@ METHOD Create() CLASS WIN32PRN
     ::fOldFormType:= ::FormType  // Last formtype used
     ::fOldLandScape:= ::LandScape
     ::fOldBinNumber:= ::BinNumber
+    ::fNewDuplexType := ::fDuplexType
+    ::fNewPrintQuality := ::fPrintQuality
     Result:= .T.
   ENDIF
   RETURN(Result)

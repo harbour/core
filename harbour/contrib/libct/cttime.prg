@@ -88,7 +88,7 @@ else
 endif
 n := int( n % 86400 )
 for i := 1 to 3
-   h := strzero( n % 60, 2 ) + h
+   h := strzero( n % 60, 2 ) + iif( len( h ) == 0, "", ":") + h
    n := int( n / 60 )
 next
 return h

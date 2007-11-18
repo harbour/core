@@ -21,7 +21,6 @@ rem    set HB_MAKE_PROGRAM=
 rem    set HB_MAKE_FLAGS=
 rem ---------------------------------------------------------------
 
-if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%SystemRoot%\system32
 if "%HB_CC_NAME%" == "" set HB_CC_NAME=vc
 if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
 if "%HB_SHOW_ERRORS%"  == "" set HB_SHOW_ERRORS=yes

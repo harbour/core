@@ -8,6 +8,46 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-18 13:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/xhb/hbcompat.ch
+     + Added xhb SecondsSleep() translation.
+
+   * contrib/freeimage/make_b32.bat
+   * contrib/freeimage/make_vc.bat
+   * contrib/firebird/make_b32.bat
+   * contrib/firebird/make_vc.bat
+     ! Some fixes.
+
+   * contrib/libct/cttime.prg
+     ! SECTOTIME() fix. Borrowed from xhb.
+
+   * contrib/apollo/apollo.c
+   * contrib/apollo/make_b32.bat
+   * contrib/apollo/make_vc.bat
+     ! Fixed and tested with latest downloadable package.
+
+   * contrib/win32/w32_tprn.prg
+   * contrib/win32/w32_prn.c
+     + Minor fix (from xhb)
+
+   * source/rtl/errorint.c
+     ! Defaulting all string parameters to "" when they are NULL 
+       to avoid any potential problems later in the function.
+
+   * source/rtl/hbgtcore.c
+     % Passing NULL instead of "" in hb_errInternal() calls.
+
+   * source/vm/itemapi.c
+     ! Internal error is lauched in case the parameters passed 
+       to hb_itemPutCLConst() are violating string item rules.
+       Thanks for Mindaugas for the suggestion.
+       TOFIX: Since this violation will most probably happen in 
+              contrib/win32 OLE code, we'll need to fix that 
+              code too.
+
+   * utils/hbmake/hbmake.prg
+     ! Fixed to not request wvtgui.lib.
+
 2007-11-17 12:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/make_b32.bat
    * contrib/make_vc.bat

@@ -3235,7 +3235,7 @@ HB_EXPORT BOOL hb_gtLoad( const char * szGtName, PHB_GT_FUNCS pFuncTable )
          memcpy( s_gtInit[ iPos ]->pSuperTable, pFuncTable, sizeof( HB_GT_FUNCS ) );
          if( !s_gtInit[ iPos ]->init( pFuncTable ) )
          {
-            hb_errInternal( 9999, "Internal error: screen driver initialization failure", "", "" );
+            hb_errInternal( 9999, "Internal error: screen driver initialization failure", NULL, NULL );
          }
          s_gtLinkOrder[ s_iGtLinkCount++ ] = iPos;
          return TRUE;
@@ -3289,7 +3289,7 @@ HB_EXPORT void hb_gtStartupInit( void )
          return;
    }
 
-   hb_errInternal( 9998, "Internal error: screen driver initialization failure", "", "" );
+   hb_errInternal( 9998, "Internal error: screen driver initialization failure", NULL, NULL );
 
    /* force linking HB_GTSYS() */
    HB_FUNC_EXEC( HB_GTSYS );

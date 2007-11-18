@@ -71,6 +71,7 @@
    #xtranslate hb_CStr([<x,...>])      => CStr(<x>)
    #xtranslate hb_DirExists(<x>)       => IsDirectory(<x>)
    #xtranslate hb_rddInfo([<x,...>])   => rddInfo(<x>)
+   #xtranslate hb_idleSleep([<x,...>]) => SecondsSleep(<x>)
 
    #xtranslate hb_HexToNum([<c,...>])  => HexToNum(<c>)
    #xtranslate hb_NumToHex([<n,...>])  => NumToHex(<n>)
@@ -129,6 +130,7 @@
    #xtranslate setLastKey([<x,...>])   => hb_setLastKey(<x>)
    #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
    #xtranslate IsDirectory(<x>)        => hb_DirExists(<x>)
+   #xtranslate SecondsSleep([<x,...>]) => hb_idleSleep(<x>)
 
    #xtranslate HexToNum([<c,...>])     => hb_HexToNum(<c>)
    #xtranslate NumToHex([<n,...>])     => hb_NumToHex(<n>)
