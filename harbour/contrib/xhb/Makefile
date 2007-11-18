@@ -13,9 +13,12 @@ C_SOURCES=\
 	xhbfunc.c \
 	xhbmsgs.c \
 	xhbwith.c \
+	hbcomprs.c \
+	hbchksum.c \
 
 C_HEADERS=\
 	hbcompat.h \
+	hbcomprs.h \
 
 PRG_SOURCES=\
 	txml.prg \

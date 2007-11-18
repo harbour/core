@@ -21,6 +21,8 @@ LIB_OBJS = \
    $(OBJ_DIR)\hblognet$(OBJEXT) \
    $(OBJ_DIR)\cstruct$(OBJEXT)  \
    $(OBJ_DIR)\xhbcomp$(OBJEXT)  \
+   $(OBJ_DIR)\hbcomprs$(OBJEXT)  \
+   $(OBJ_DIR)\hbchksum$(OBJEXT)  \
 
 all: \
    $(LIB_PATH) \
