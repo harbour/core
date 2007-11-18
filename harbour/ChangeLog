@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-18 12:09 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+   + contrib/xhb/hbcomprs.c
+     % Direct access to item values changed to api calls.
+
+   + contrib/xhb/hbchksum.c
+     % Direct access to item values changed to api calls.
+
+   + contrib/xhb/hbcomprs.h
+
+     Hb_Compress(), Hb_Uncompress(), Hb_CheckSum() functions made available.
+     Borrowed from xHarbour.
+
 2007-11-18 13:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/xhb/hbcompat.ch
      + Added xhb SecondsSleep() translation.
