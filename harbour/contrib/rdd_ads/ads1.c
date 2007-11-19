@@ -4545,7 +4545,13 @@ static ERRCODE adsExit( LPRDDNODE pRDD )
             hb_setListenerRemove( s_iSetListenerHandle ) ;
             s_iSetListenerHandle = 0;
          }
+#ifdef __BORLANDC__
+   #pragma option push -w-pro
+#endif
          AdsApplicationExit();
+#ifdef __BORLANDC__
+   #pragma option pop
+#endif
       }
    }
 

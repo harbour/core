@@ -184,7 +184,13 @@ HB_FUNC( ADSSETEPOCH )
 
 HB_FUNC( ADSAPPLICATIONEXIT )
 {
+#ifdef __BORLANDC__
+   #pragma option push -w-pro
+#endif
    AdsApplicationExit();
+#ifdef __BORLANDC__
+   #pragma option pop
+#endif
 }
 
 

@@ -9,6 +9,7 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 	tpostgre.prg \
+	pgrdd.prg \
 
 PRG_HEADERS=\
 	postgres.ch \

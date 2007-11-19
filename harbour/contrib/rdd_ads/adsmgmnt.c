@@ -331,17 +331,23 @@ HB_FUNC( ADSMGGETCONFIGINFO )
          hb_stornl( stConfigValues.usNumSendECBs          , -1, 13);  /* number send ECBs (NLM only)   */
          hb_stornd( stConfigValues.usNumBurstPackets      , -1, 14);  /* number packets per burst      */
          hb_stornl( stConfigValues.usNumWorkerThreads     , -1, 15);  /* number worker threads         */
+#if defined(ADS_VER) && ADS_VER >= 810
+         hb_stornl( stConfigValues.ulSortBuffSize         , -1, 16);  /* index sort buffer size        */
+         hb_storni( 0                                     , -1, 17);  /* reserved                      */
+         hb_storni( 0                                     , -1, 18);  /* reserved                      */
+#else
          hb_stornl( stConfigValues.usSortBuffSize         , -1, 16);  /* index sort buffer size        */
          hb_storni( stConfigValues.ucReserved1            , -1, 17);  /* reserved                      */
          hb_storni( stConfigValues.ucReserved2            , -1, 18);  /* reserved                      */
-         hb_storc ( (char *) stConfigValues.aucErrorLog   , -1, 19);  /* error log path         */
-         hb_storc ( (char *) stConfigValues.aucSemaphore  , -1, 20);  /* semaphore file path    */
-         hb_storc ( (char *) stConfigValues.aucTransaction, -1, 21);  /* TPS log file path      */
+#endif
+         hb_storc ( (char *) stConfigValues.aucErrorLog   , -1, 19);  /* error log path                */
+         hb_storc ( (char *) stConfigValues.aucSemaphore  , -1, 20);  /* semaphore file path           */
+         hb_storc ( (char *) stConfigValues.aucTransaction, -1, 21);  /* TPS log file path             */
          hb_storni( stConfigValues.ucReserved3            , -1, 22);  /* reserved                      */
          hb_storni( stConfigValues.ucReserved4            , -1, 23);  /* reserved                      */
          hb_stornl( stConfigValues.usSendIPPort           , -1, 24);  /* NT Service IP send port #     */
          hb_stornl( stConfigValues.usReceiveIPPort        , -1, 25);  /* NT Service IP rcv port #      */
-      /* hb_stornl( stConfigValues.usReserved5            , -1, 26);   reserved                     */
+      /* hb_stornl( stConfigValues.usReserved5            , -1, 26);     reserved                      */
 
       }
       else if ( iOption == 1 )

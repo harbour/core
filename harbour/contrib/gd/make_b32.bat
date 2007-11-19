@@ -3,66 +3,52 @@ rem
 rem $Id$
 rem
 
-rem ---------------------------------------------------------------
-rem IMPORTANT: You'll need GD lib sources from www.libgd.org and this envvar
-rem            to be set to successfully build this library:
-rem            set C_USR=-IC:\gd-2.0.35
-rem ---------------------------------------------------------------
+if "%GD_DIR%" == "" goto HELP
 
-rem ---------------------------------------------------------------
-rem This is a generic template file, if it doesn't fit your own needs
-rem please DON'T MODIFY IT.
-rem
-rem Instead, make a local copy and modify that one, or make a call to
-rem this batch file from your customized one. [vszakats]
-rem
-rem Set any of the below settings to customize your build process:
-rem    set HB_MAKE_PROGRAM=
-rem    set HB_MAKE_FLAGS=
-rem ---------------------------------------------------------------
-
-if "%HB_CC_NAME%" == "" set HB_CC_NAME=b32
-if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=make.exe
-if "%HB_SHOW_ERRORS%"  == "" set HB_SHOW_ERRORS=yes
-set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
+set C_USR=%C_USR% -I%GD_DIR%\include
+set HB_DLL_NAME=bgd
+if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%GD_DIR%\bin
 
 rem ---------------------------------------------------------------
 
-rem Save the user value, force silent file overwrite with COPY
-rem (not all Windows versions support the COPY /Y flag)
-set HB_ORGENV_COPYCMD=%COPYCMD%
-set COPYCMD=/Y
+call ..\mtpl_b32.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem ---------------------------------------------------------------
 
-if "%1" == "clean" goto CLEAN
-if "%1" == "CLEAN" goto CLEAN
+set _HB_INSTALL_PREFIX=%HB_INSTALL_PREFIX%
+if "%_HB_INSTALL_PREFIX%" == "" set _HB_INSTALL_PREFIX=..\..
+set _HB_LIB_INSTALL=%HB_LIB_INSTALL%
+if "%_HB_LIB_INSTALL%" == "" set _HB_LIB_INSTALL=%_HB_INSTALL_PREFIX%\lib
 
-if "%1" == "install" goto INSTALL
-if "%1" == "INSTALL" goto INSTALL
+if "%1" == "clean" goto POST_CLEAN
+if "%1" == "CLEAN" goto POST_CLEAN
+if "%1" == "install" goto POST_INSTALL
+if "%1" == "INSTALL" goto POST_INSTALL
 
-:BUILD
+:POST_BUILD
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
-   if errorlevel 1 if "%HB_SHOW_ERRORS%" == "yes" notepad make_%HB_CC_NAME%.log
-   goto EXIT
+   implib ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.lib %HB_DLL_DIR%\%HB_DLL_NAME%.dll
+   goto POST_EXIT
 
-:CLEAN
+:POST_CLEAN
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% CLEAN > make_%HB_CC_NAME%.log
-   if errorlevel 1 goto EXIT
-   if exist make_%HB_CC_NAME%.log del make_%HB_CC_NAME%.log > nul
-   if exist inst_%HB_CC_NAME%.log del inst_%HB_CC_NAME%.log > nul
-   goto EXIT
+   if exist ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.lib del ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
+   if exist ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.exp del ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.exp > nul
+   if exist %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib      del %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib      > nul
+   goto POST_EXIT
 
-:INSTALL
+:POST_INSTALL
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
-   goto EXIT
+   if exist %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib del %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib
+   if exist ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.lib copy ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.lib %_HB_LIB_INSTALL%
+   goto POST_EXIT
 
-:EXIT
+:HELP
 
-rem ---------------------------------------------------------------
+echo ---------------------------------------------------------------
+echo IMPORTANT: You'll need GD lib package from www.libgd.org and this envvar
+echo            to be set to successfully build this library:
+echo            set GD_DIR=-IC:\gd
+echo ---------------------------------------------------------------
 
-rem Restore user value
-set COPYCMD=%HB_ORGENV_COPYCMD%
+:POST_EXIT

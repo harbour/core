@@ -58,6 +58,11 @@
 #if defined( HB_OS_WIN_32 ) && !defined( WIN32 )
    #define WIN32
 #endif
+#if defined( unix ) || defined(__LINUX__)
+   #ifndef ADS_LINUX
+      #define ADS_LINUX
+   #endif
+#endif
 #include "ace.h"
 
 #undef ADS_MAX_KEY_LENGTH
@@ -65,6 +70,16 @@
    #define ADS_MAX_KEY_LENGTH   4082   /* maximum key value length.  This is the max key length */
 #else                                  /* of ADI indexes.  Max CDX key length is 240.  Max */
    #define ADS_MAX_KEY_LENGTH    256   /* NTX key length is 256 */
+#endif
+
+#ifndef ADS_CISTRING
+   #define ADS_CISTRING             20    /* CaSe INSensiTIVE character data (>= 7.10) */
+#endif
+#ifndef ADS_ROWVERSION
+   #define ADS_ROWVERSION           21    /* 8 byte integer, incremented for every update, unique to entire table (>= 800) */
+#endif
+#ifndef ADS_MODTIME
+   #define ADS_MODTIME              22    /* 8 byte timestamp, updated when record is updated (>= 800) */
 #endif
 
 HB_EXTERN_BEGIN
