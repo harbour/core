@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-19 15:25 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   + contrib/examples/dbu
+   + contrib/examples/dbu/readme.txt
+   + contrib/examples/dbu/bld_b32.bat
+   + contrib/examples/dbu/Makefile
+     + Added make files for original CA-Cl*pper DBU.
+       One will need to original sources to compile.
+
 2007-11-18 23:11 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    + contrib/mtpl_b32.bat
    + contrib/mtpl_vc.bat
