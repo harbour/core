@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-19 20:35 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/examples/dbu/bld_b32.bat
+     * Now the non-GNU build batch file will look for 
+       DBU source in the original CA-Cl*pper installation, 
+       if specified (using 'set CLIPPER_DIR=C:\CLIPPER5\').
+
 2007-11-19 20:21 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    + contrib/rdd_ads/test
    + contrib/rdd_ads/test/testmg.prg
