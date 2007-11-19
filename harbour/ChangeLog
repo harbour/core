@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-19 20:21 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   + contrib/rdd_ads/test
+   + contrib/rdd_ads/test/testmg.prg
+   - contrib/rdd_ads/testmg.prg
+     * Moved.
+
+   * contrib/rdd_ads/make_b32.bat
+   * contrib/rdd_ads/make_vc.bat
+   * contrib/rdd_ads/adsmgmnt.c
+   - contrib/rdd_ads/ace.h
+     + Non-GNU make files standardized. You'll need to set these envvars 
+       to tell the package (Advantage Client Engine) location (and version):
+       set ACE_DIR=C:\ads\acesdk
+       set ACE_VER=810
+     * ACE_VER is optional, if not speficied, zero will be 
+       returned as "index sort buffer size" by AdsMgGetConfigInfo().
+     ; The exact .dll location inside the package dir will be 
+       detected (tested 6.11-8.10)
+     - Now ADS header is not included anymore in Harbour.
+       Notice that this header file is a copyrighted file where such 
+       distribution is not permitted. Anyhow, distributing other 
+       packages headers is not good practice anyway.
+
+   * contrib/rdd_ads/rddads.h
+     * WatcomC / LCC hack implemented outside ace.h. Please test 
+       this as I don't have any of these compilers.
+
 2007-11-19 19:03 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/compiler/hbopt.c
     ! fixed HB_P_MACROFUNC optimization

@@ -63,6 +63,11 @@
       #define ADS_LINUX
    #endif
 #endif
+
+#if defined( __WATCOMC__ ) || defined( __LCC__ )
+   #define _declspec( dllexport ) __declspec( dllexport )
+#endif
+
 #include "ace.h"
 
 #undef ADS_MAX_KEY_LENGTH

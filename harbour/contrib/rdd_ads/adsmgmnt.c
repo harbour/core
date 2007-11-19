@@ -335,10 +335,14 @@ HB_FUNC( ADSMGGETCONFIGINFO )
          hb_stornl( stConfigValues.ulSortBuffSize         , -1, 16);  /* index sort buffer size        */
          hb_storni( 0                                     , -1, 17);  /* reserved                      */
          hb_storni( 0                                     , -1, 18);  /* reserved                      */
-#else
+#elif defined(ADS_VER) && ADS_VER < 810
          hb_stornl( stConfigValues.usSortBuffSize         , -1, 16);  /* index sort buffer size        */
          hb_storni( stConfigValues.ucReserved1            , -1, 17);  /* reserved                      */
          hb_storni( stConfigValues.ucReserved2            , -1, 18);  /* reserved                      */
+#else
+         hb_stornl( 0                                     , -1, 16);  /* index sort buffer size        */
+         hb_storni( 0                                     , -1, 17);  /* reserved                      */
+         hb_storni( 0                                     , -1, 18);  /* reserved                      */
 #endif
          hb_storc ( (char *) stConfigValues.aucErrorLog   , -1, 19);  /* error log path                */
          hb_storc ( (char *) stConfigValues.aucSemaphore  , -1, 20);  /* semaphore file path           */

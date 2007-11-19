@@ -3,12 +3,18 @@ rem
 rem $Id$
 rem
 
-rem ---------------------------------------------------------------
-rem IMPORTANT: You'll need Advantage Client Engine installed.
-rem ---------------------------------------------------------------
+if "%ADS_DIR%" == "" goto HELP
 
+set C_USR=%C_USR% -I%ADS_DIR%
 set HB_DLL_NAME=ace32
-if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%SystemRoot%\system32
+if not "%HB_DLL_DIR%" == "" goto DIR_OK
+if exist "%ADS_DIR%\32bit\ace32.dll"        set HB_DLL_DIR=%ADS_DIR%\32bit
+if exist "%ADS_DIR%\Redistribute\ace32.dll" set HB_DLL_DIR=%ADS_DIR%\Redistribute
+if exist "%ADS_DIR%\ace32.dll"              set HB_DLL_DIR=%ADS_DIR%
+
+:DIR_OK
+
+echo Using this .dll: %HB_DLL_DIR%\%HB_DLL_NAME%.dll
 
 rem ---------------------------------------------------------------
 
@@ -43,5 +49,14 @@ if "%1" == "INSTALL" goto POST_INSTALL
    if exist %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib del %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib
    if exist ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.lib copy ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.lib %_HB_LIB_INSTALL%
    goto POST_EXIT
+
+:HELP
+
+echo ---------------------------------------------------------------
+echo IMPORTANT: You'll need Advantage Client Engine installed and
+echo            these envvars set to successfully build this library:
+echo            set ACE_DIR=C:\ads\acesdk
+echo            set ACE_VER=810
+echo ---------------------------------------------------------------
 
 :POST_EXIT
