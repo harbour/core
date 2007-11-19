@@ -680,13 +680,13 @@ static HB_OPT_FUNC( hb_p_functionshort )
 
 static HB_OPT_FUNC( hb_p_macrofunc )
 {
-   if( pFunc->pCode[ lPCodePos + 1 ] == HB_P_RETVALUE &&
-       ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 1 ) )
+   if( pFunc->pCode[ lPCodePos + 3 ] == HB_P_RETVALUE &&
+       ! hb_compIsJump( cargo->HB_COMP_PARAM, pFunc, lPCodePos + 3 ) )
    {
       pFunc->pCode[ lPCodePos ] = HB_P_MACRODO;
-      hb_compNOOPfill( pFunc, lPCodePos + 1, 1, FALSE, FALSE );
+      hb_compNOOPfill( pFunc, lPCodePos + 3, 1, FALSE, FALSE );
    }
-   return 1;
+   return 3;
 }
 
 static HB_OPT_FUNC( hb_p_endblock )
