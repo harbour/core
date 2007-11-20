@@ -8,6 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-20 19:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    ! fixed using -o<name> in hbcc
+
+  * harbour/contrib/rdd_ads/rddads.h
+    ! small hack for Linux compilation and compilers which do not set
+      unix macro
+
+  * harbour/contrib/rdd_ads/Makefile
+    * added /usr/local/ads/acesdk to include directory list
+      Viktor the side effect of removing ace.h from our repository is
+      blocking ADS* RDDs compilation by people who do not have ACE
+      installed - I expect it will be serious problem in creating BETA4
+      binaries because not all people who create them have ACE installed
+      or even want to install it and without these RDDs for many users
+      new Harbour version will be unusable.
+
+  * harbour/source/rtl/seconds.c
+    ! fixed stupid typo in milliseconds calculation
+
+  * harbour/contrib/xhb/hbchksum.c
+  * harbour/contrib/xhb/hbcomprs.c
+  * harbour/contrib/xhb/hbcomprs.h
+    ! use hb_retclenAdopt() instead of hb_retclenAdoptRaw()
+    + svn:keywords Id
+      svn:eol-style native
+    TOFIX - these files have to be removed or changed to avoid name conflicts
+    with ZLIB - personally I vote to add real ZLIB wrapper and only xHarbour
+    compatible .prg functions when they are necessary. Probably only:
+        HB_COMPRESS(), HB_UNCOMPRESS(), HB_COMPRESSBUFLEN()
+    and maybe:
+        HB_COMPRESSERROR(), HB_COMPRESSERRORDESC()
+    In xHarbour:
+        HB_CHECKSUM( <cValue> [, <nStart>] ) -> <nChkSum>
+    is exactly the same function as in Harbour:
+        HB_ADLER32( <cValue> [, <nStart>] ) -> <nChkSum>
+    with the exception to bug with negative values fixed in Harbour only.
+
 2007-11-20 17:02 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
     * contrib/xhb/common.mak
       + Added some missing lines (suggested by Juan Gálvez)

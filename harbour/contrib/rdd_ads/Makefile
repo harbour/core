@@ -15,7 +15,11 @@ PRG_HEADERS=\
 LIBNAME=rddads
 
 ifeq ($(HB_ARCHITECTURE),w32)
-  C_USR += -DWIN32
+   C_USR += -DWIN32
+endif
+
+ifneq ($(wildcard /usr/local/ads/acesdk/ace.h),)
+   C_USR += -I/usr/local/ads/acesdk
 endif
 
 include $(TOP)$(ROOT)config/header.cf

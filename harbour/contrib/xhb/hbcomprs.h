@@ -1,5 +1,5 @@
 /*
- * $Id: hbcomprs.h,v 1.3 2005/04/05 22:26:06 druzus Exp $
+ * $Id$
  */
 
 /*

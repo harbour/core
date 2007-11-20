@@ -58,10 +58,8 @@
 #if defined( HB_OS_WIN_32 ) && !defined( WIN32 )
    #define WIN32
 #endif
-#if defined( unix ) || defined(__LINUX__)
-   #ifndef ADS_LINUX
-      #define ADS_LINUX
-   #endif
+#if !defined( unix ) && ( defined( __LINUX__ ) || defined( HB_OS_LINUX ) )
+   #define unix
 #endif
 
 #if defined( __WATCOMC__ ) || defined( __LCC__ )

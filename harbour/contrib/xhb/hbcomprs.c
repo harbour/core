@@ -1,5 +1,5 @@
 /*
- * $Id: hbcomprs.c,v 1.12 2005/09/30 23:44:05 druzus Exp $
+ * $Id$
  */
 
 /*
@@ -4110,7 +4110,7 @@ HB_FUNC( HB_COMPRESS )
       }
       else
       {
-         hb_retclenAdoptRaw( cDest, ulDstlen );
+         hb_retclenAdopt( cDest, ulDstlen );
       }
    }
    s_hb_compress_error = cerr;
@@ -4196,7 +4196,7 @@ HB_FUNC( HB_UNCOMPRESS )
       }
       else
       {
-         hb_retclenAdoptRaw( cDest, ulDstlen );
+         hb_retclenAdopt( cDest, ulDstlen );
       }
    }
    s_hb_compress_error = cerr;

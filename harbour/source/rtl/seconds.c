@@ -147,7 +147,7 @@ HB_EXPORT HB_ULONG hb_dateMilliSeconds( void )
 
    gettimeofday( &tv, NULL );
 
-   return ( HB_ULONG ) tv.tv_sec * 1000 * tv.tv_usec / 1000;
+   return ( HB_ULONG ) tv.tv_sec * 1000 + tv.tv_usec / 1000;
 #else
    struct timeb tb;
 
@@ -155,7 +155,7 @@ HB_EXPORT HB_ULONG hb_dateMilliSeconds( void )
 
    ftime( &tb );
 
-   return ( HB_ULONG ) tb.time * 1000 * tb.millitm;
+   return ( HB_ULONG ) tb.time * 1000 + tb.millitm;
 #endif
 }
 

@@ -233,6 +233,15 @@ elif [ "\$*" = "mk-links" ]; then
     exit
 fi
 
+## check basename
+case "\${0##*/}" in
+    *cc)    HB=cc  ;;
+    *cmp)   HB=cmp ;;
+    *lnk)   HB=lnk ;;
+    *mk)    HB=mk  ;;
+    *)      exit 1 ;;
+esac
+
 ## default parameters
 HB_STATIC="${hb_static}"
 HB_MT=""
@@ -262,11 +271,13 @@ while [ \$n -lt \${#P[@]} ]; do
         -o*)
             d="\${v#-o}"; p="\${v}"
             if [ -d "\${d}" ]; then
-                DIROUT="\${d%/}"
+                DIROUT="\${d%}"
             elif [ -d "\${d%/*}" ]; then
-                DIROUT="\${d%/*}"; FILEOUT="\${d##*/}"; p="-o\${d%.*}"
+                DIROUT="\${d%/*}"; FILEOUT="\${d##*/}"; p="-o\${d}"
+                [ \${HB} != "cc" ] || p="-o\${d%.*}"
             elif [ -n "\${d}" ]; then
-                FILEOUT="\${d}"; p="-o\${d%.*}"
+                FILEOUT="\${d}"; p="-o\${d}"
+                [ \${HB} != "cc" ] || p="-o\${d%.*}"
             fi ;;
         -static)     HB_STATIC="yes" ;;
         -fullstatic) HB_STATIC="full" ;;
@@ -531,9 +542,6 @@ hb_cleanup()
 }
 
 trap hb_cleanup EXIT &>/dev/null
-
-## get basename
-HB="\${0##*/}"
 
 case "\${HB}" in
     *cc)
