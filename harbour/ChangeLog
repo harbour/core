@@ -8,8 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-20 17:02 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
+    * contrib/xhb/common.mak
+      + Added some missing lines (suggested by Juan Gálvez)
 
-2007-11-20 113:45 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
+2007-11-20 13:45 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
   * contrib/bmdbfcdx/bmdbfcdx1.c
     * synced with dbfcdx as nedded
 
