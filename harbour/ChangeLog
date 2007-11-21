@@ -8,10 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-21 21:10 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  - harbour/contrib/make_all.mak
+  - harbour/contrib/mtpl_ruls.mak
+    - Removed due to explict request from Viktor to revert new make system
+
+  * harbour/contrib/make_b32_all.bat
+  * harbour/contrib/make_vc_all.bat
+    * Restored to my original version
+    * After restoration modified to allow proper compilation under Win98
+    * Blocked compilation for contribs required additional setting
+      (Sorry Viktor I do not share your opinion in regard to this issue)
+
+  + harbour/contrib/make_b32.bat
+  + harbour/contrib/make_vc.bat
+    + Restored to my original version
+    * Modified to show which dir is compiled
+
+  * harbour/contrib/mtpl_b32.mak
+  * harbour/contrib/mtpl_vc.mak
+    * Removed makefile integration between Bcc and Msvc.
+      You now HAVE TO do duplicative work to modify CLEAN and INSTALL rule.
+      IMO this is wrong behavior, but requested by Viktor.
+
 2007-11-21 19:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbgtcore.c
     + added emulation for clipboard in core GT code.
-      Now: 
+      Now:
          hb_gtInfo( GTI_CLIPBOARDDATA ) -> <cClipData>
       and:
          hb_gtInfo( GTI_CLIPBOARDDATA, <cNewClipData> )

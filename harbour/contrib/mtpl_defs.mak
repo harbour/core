@@ -2,12 +2,6 @@
 # $Id$
 #
 
-# -------------------------------------------------------------------
-# Copyright 2007 Marek Paliwoda (mpaliwoda "at" interia "dot" pl)
-# Copyright 2007 Viktor Szakats (viktor.szakats "at" syenar "dot" hu)
-# See doc/license.txt for licensing terms.
-# -------------------------------------------------------------------
-
 # --------------------------------------------------------
 # Makefile common section for Harbour Project Contrib libs
 # for Microsoft Visual C/Borland C/C++ - definitions
