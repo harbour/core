@@ -8,6 +8,26 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-21 05:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+  * harbour/harbour.spec
+  * harbour/make_rpmce.sh
+  * harbour/make_rpmw32.sh
+  * harbour/make_rpm.sh
+    * changed --without adsrdd to --with adsrdd
+      now ADS* RDDs are not created by default
+
+  * harbour/make_rpm.sh
+    * set '--with adsrdd' when ${HOME}/ads/acesdk/ace.h or
+      /usr/local/ads/acesdk/ace.h exists
+
+  * harbour/contrib/rdd_ads/Makefile
+    + added ${HOME}/ads/acesdk/ace.h as alternative ace.h location
+
+  * harbour/source/rdd/hbsix/sxini.prg
+    ! fixed typo
+
 2007-11-20 19:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     ! fixed using -o<name> in hbcc

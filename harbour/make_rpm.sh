@@ -18,7 +18,7 @@
 # --with gd          - build gd lib
 # --with odbc        - build odbc lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
-# --without adsrdd   - do not build ADS RDD
+# --with adsrdd      - build ADS RDD
 # --without gpl      - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
 # --without x11      - do not build GTXWC
@@ -118,6 +118,11 @@ fi
 if ! test_reqrpm "XFree86-devel"
 then
     INST_PARAM="${INST_PARAM} --without X11"
+fi
+if [ -f /usr/local/ads/acesdk/ace.h ] ||
+   [ -f ${HOME}/ads/acesdk/ace.h ]
+then
+    INST_PARAM="${INST_PARAM} --with adsrdd"
 fi
 
 TOINST_LST=""

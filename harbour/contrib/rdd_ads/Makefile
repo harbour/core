@@ -20,6 +20,10 @@ endif
 
 ifneq ($(wildcard /usr/local/ads/acesdk/ace.h),)
    C_USR += -I/usr/local/ads/acesdk
+else
+ifneq ($(wildcard $(HOME)/ads/acesdk/ace.h),)
+   C_USR += -I/usr/local/ads/acesdk
+endif
 endif
 
 include $(TOP)$(ROOT)config/header.cf

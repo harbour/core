@@ -71,7 +71,7 @@ static function _sx_INIlogical( cVal )
       case "FALSE"
       case "NO"
       case "OFF"
-         return .T.
+         return .F.
    end
 return NIL
 

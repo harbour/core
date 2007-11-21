@@ -16,8 +16,8 @@
 # --with pgsql       - build pgsql lib
 # --with gd          - build gd lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
+# --with adsrdd      - build ADS RDD
 # --without odbc     - do not build odbc lib
-# --without adsrdd   - do not build ADS RDD
 # --without nf       - do not build nanforum lib
 ######################################################################
 

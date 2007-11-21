@@ -19,7 +19,7 @@
 # --with gd          - build gd lib 
 # --with odbc        - build odbc lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
-# --without adsrdd   - do not build ADS RDD
+# --with adsrdd      - build ADS RDD
 # --without gpl      - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
 # --without x11      - do not build GTXWC
@@ -509,9 +509,9 @@ rm -rf $RPM_BUILD_ROOT
 %files contrib
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
-%{?_with_odbc: %{_libdir}/%{name}/libhbodbc.a}
 %{!?_without_nf: %{_libdir}/%{name}/libnf.a}
-%{!?_without_adsrdd: %{_libdir}/%{name}/librddads.a}
+%{?_with_adsrdd: %{_libdir}/%{name}/librddads.a}
+%{?_with_odbc: %{_libdir}/%{name}/libhbodbc.a}
 %{?_with_mysql: %{_libdir}/%{name}/libhbmysql.a}
 %{?_with_pgsql: %{_libdir}/%{name}/libhbpg.a}
 %{?_with_pgsql4: %{_libdir}/%{name}/libhbpg.a}
