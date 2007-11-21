@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-21 21:45 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/contrib/mtpl_defs.mak
+  * harbour/contrib/mtpl_b32.mak
+  * harbour/contrib/mtpl_vc.mak
+    * Resored Viktor's Copyright removed by mistake in my last commit
+
 2007-11-21 21:10 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   - harbour/contrib/make_all.mak
   - harbour/contrib/mtpl_ruls.mak
