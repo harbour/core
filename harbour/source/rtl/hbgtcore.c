@@ -78,6 +78,9 @@ static USHORT        s_uiClearChar = ' ';
 static BYTE          s_bClearColor = 0x07;
 static FHANDLE       s_hStdIn = 0, s_hStdOut = 1, s_hStdErr = 2;
 
+static char *        s_szClipboardData = NULL;
+static ULONG         s_ulClipboardLen = 0;
+
 static BOOL          s_fDispTrans = FALSE;
 static PHB_CODEPAGE  s_cdpTerm = NULL;
 static PHB_CODEPAGE  s_cdpHost = NULL;
@@ -178,6 +181,11 @@ static void hb_gt_def_Exit( void )
    {
       hb_xfree( s_pColor );
       s_iColorCount = 0;
+   }
+   if( s_ulClipboardLen )
+   {
+      hb_xfree( s_szClipboardData );
+      s_ulClipboardLen = 0;
    }
 }
 
@@ -1523,6 +1531,25 @@ static BOOL hb_gt_def_Info( int iType, PHB_GT_INFO pInfo )
             hb_gt_DispEnd();
             hb_gt_Flush();
          }
+         break;
+
+      case GTI_CLIPBOARDDATA:
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         {  /* set new Clipboard value */
+            if( s_ulClipboardLen )
+               hb_xfree( s_szClipboardData );
+            s_ulClipboardLen = hb_itemGetCLen( pInfo->pNewVal );
+            if( s_ulClipboardLen )
+            {
+               s_szClipboardData = ( char * ) hb_xgrab( s_ulClipboardLen + 1 );
+               memcpy( s_szClipboardData, hb_itemGetCPtr( pInfo->pNewVal ),
+                       s_ulClipboardLen );
+               s_szClipboardData[ s_ulClipboardLen ] = '\0';
+            }
+         }
+         else /* get Clipboard value */
+            pInfo->pResult = hb_itemPutCL( pInfo->pResult, s_szClipboardData,
+                                           s_ulClipboardLen );
          break;
 
       default:

@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-21 19:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbgtcore.c
+    + added emulation for clipboard in core GT code.
+      Now: 
+         hb_gtInfo( GTI_CLIPBOARDDATA ) -> <cClipData>
+      and:
+         hb_gtInfo( GTI_CLIPBOARDDATA, <cNewClipData> )
+      is working in all GTs even if such functionality is not supported
+      by OS.
+
 2007-11-21 18:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_vcce.bat
   * harbour/make_vcce.mak
