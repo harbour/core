@@ -1,6 +1,11 @@
 #
-# $Id: mtpl_ruls.mak 7958 2007-11-12 15:10:28Z druzus $
+# $Id$
 #
+
+# ---------------------------------------------------------------
+# Copyright 2007 Marek Paliwoda (mpaliwoda "at" interia "dot" pl)
+# See doc/license.txt for licensing terms.
+# ---------------------------------------------------------------
 
 # --------------------------------------------------------
 # Makefile common section for Harbour Project Contrib libs

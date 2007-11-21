@@ -1,10 +1,15 @@
 #
-# $Id: makefile.vc 7563 2007-06-27 17:00:34Z druzus $
+# $Id$
 #
 
 #**********************************************************
 # Makefile for Harbour Project for MSVC-8.0/WinCE compilers
 #**********************************************************
+
+# ---------------------------------------------------------------
+# Copyright 2007 Marek Paliwoda (mpaliwoda "at" interia "dot" pl)
+# See doc/license.txt for licensing terms.
+# ---------------------------------------------------------------
 
 # ---------------------------------------------------------------
 # If you need to set additional compiler/linker options use the

@@ -1,6 +1,11 @@
 #
-# $Id: make_all.mak 7958 2007-11-12 15:10:28Z druzus $
+# $Id$
 #
+
+# ---------------------------------------------------------------
+# Copyright 2007 Marek Paliwoda (mpaliwoda "at" interia "dot" pl)
+# See doc/license.txt for licensing terms.
+# ---------------------------------------------------------------
 
 # Makefile for buildning all buildable contribs.
 # It is common for Bcc and Msvc

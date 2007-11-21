@@ -3,6 +3,11 @@
 # $Id$
 #
 
+# ---------------------------------------------------------------
+# Copyright 2007 Przemyslaw Czerpak (druzus/at/priv.onet.pl),
+# See doc/license.txt for licensing terms.
+# ---------------------------------------------------------------
+
 if [ -z "$HB_ARCHITECTURE" ]; then
     if [ "$OSTYPE" = "msdosdjgpp" ]; then
         hb_arch="dos"

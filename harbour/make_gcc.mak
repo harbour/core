@@ -7,6 +7,11 @@
 #**********************************************************
 
 # ---------------------------------------------------------------
+# Copyright 2007 Marek Paliwoda (mpaliwoda "at" interia "dot" pl)
+# See doc/license.txt for licensing terms.
+# ---------------------------------------------------------------
+
+# ---------------------------------------------------------------
 # If you need to set additional compiler/linker options use the
 # environment variables below, but please DON'T MODIFY THIS FILE
 # for this purpose.

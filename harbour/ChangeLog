@@ -8,6 +8,31 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-21 18:30 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_vcce.bat
+  * harbour/make_vcce.mak
+  * harbour/make_b32.mak
+  * harbour/common.mak
+  * harbour/contrib/make_all.mak
+  * harbour/contrib/mtpl_ruls.mak
+  * harbour/make_gcc.mak
+    + added missing Marek's Copyright
+    * set svn attributes:
+         svn ps svn:eol-style [native|CRLF]
+         svn ps svn:keywords Id
+
+  * harbour/contrib/mtpl_defs.mak
+  * harbour/contrib/mtpl_b32.mak
+  * harbour/contrib/mtpl_vc.mak
+    + added missing Marek's and Viktor's Copyrights
+    * set svn attributes:
+         svn ps svn:eol-style [native|CRLF]
+         svn ps svn:keywords Id
+    Viktor, Marek if I missed sth then please fix me.
+
+  * harbour/make_gcc.sh
+    * added mine Copyright note
+
 2007-11-21 17:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/contrib/make_all.mak
   * harbour/contrib/make_b32_all.bat
