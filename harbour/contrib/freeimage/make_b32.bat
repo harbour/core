@@ -3,8 +3,17 @@ rem
 rem $Id$
 rem
 
-if "%FREEIMAGE_DIR%" == "" goto HELP
+if NOT "%FREEIMAGE_DIR%" == "" goto EXEC
+echo FREEIMAGE_DIR environment variable has to be defined !
+echo ---------------------------------------------------------------
+echo IMPORTANT: You'll need Freeimage headers and binary from here:
+echo            http://freeimage.sourceforge.net/download.html
+echo            and this envvar to be set to successfully build this library:
+echo            set FREEIMAGE_DIR=C:\FreeImage
+echo ---------------------------------------------------------------
+exit 1
 
+:EXEC
 set C_USR=%C_USR% -I%FREEIMAGE_DIR%\source -DHB_OS_WIN_32_USED
 set HB_DLL_NAME=FreeImage
 if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%FREEIMAGE_DIR%\Dist
@@ -42,14 +51,5 @@ if "%1" == "INSTALL" goto POST_INSTALL
    if exist %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib del %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib
    if exist ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.lib copy ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.lib %_HB_LIB_INSTALL%
    goto POST_EXIT
-
-:HELP
-
-echo ---------------------------------------------------------------
-echo IMPORTANT: You'll need Freeimage headers and binary from here:
-echo            http://freeimage.sourceforge.net/download.html
-echo            and this envvar to be set to successfully build this library:
-echo            set FREEIMAGE_DIR=C:\FreeImage
-echo ---------------------------------------------------------------
 
 :POST_EXIT

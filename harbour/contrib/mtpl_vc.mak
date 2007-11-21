@@ -2,6 +2,7 @@
 # $Id$
 #
 
+# --------------------------------------------------------
 # Makefile common section for Harbour Project Contrib libs
 # for Microsoft Visual C
 # --------------------------------------------------------
@@ -29,7 +30,7 @@ HB_VISUALC_VER = 60
 HB_ROOT = ..\..
 !endif
 
-!include $(HB_ROOT)\contrib\mtpl.mak
+!include $(HB_ROOT)\contrib\mtpl_defs.mak
 
 #**********************************************************
 # C compiler definition and C flags. These should never have to change.
@@ -83,42 +84,4 @@ $**
 <<$(KEEPSTATE)
 #**********************************************************
 
-#**********************************************************
-# CLEAN rule(s)
-#**********************************************************
-
-clean: doClean
-CLEAN: doClean
-
-doClean:
-   $(ECHO) echo off 					  > delone.bat
-   $(ECHO) if "%1" == "" goto skip  	 >> delone.bat
-   $(ECHO) if exist %1.c   $(DEL) %1.c   >> delone.bat
-   $(ECHO) if exist %1.obj $(DEL) %1.obj >> delone.bat
-   $(ECHO) :skip						 >> delone.bat
-   type <<alldel.bat
-call delone.bat $(LIB_OBJS:.obj=^
-call delone.bat )
-<<KEEP
-   $(ECHO) @echo off > delall.bat
-   type alldel.bat  >> delall.bat
-   delall.bat
-   if exist $(LIB_PATH) $(DEL) $(LIB_PATH) > nul
-   if exist $(LIB_PATH) $(DEL) $(LIB_PATH:.lib=.exp) > nul
-   $(DEL) alldel.bat > nul
-   $(DEL) delone.bat > nul
-   $(DEL) delall.bat > nul
-
-#**********************************************************
-
-#**********************************************************
-# INSTALL rule(s)
-#**********************************************************
-
-install: doInstall
-INSTALL: doInstall
-
-doInstall:
-   if exist $(LIB_DIR)\$(LIBNAME)$(LIBEXT) copy $(LIB_DIR)\$(LIBNAME)$(LIBEXT) $(HB_LIB_INSTALL) > nul
-   if exist *.api copy *.api $(HB_INC_INSTALL) > nul
-   if exist *.ch  copy *.ch  $(HB_INC_INSTALL) > nul
+!include $(HB_ROOT)\contrib\mtpl_ruls.mak

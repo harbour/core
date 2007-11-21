@@ -8,103 +8,103 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2007-11-21 05:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-  * harbour/harbour-ce-spec
-  * harbour/harbour-w32-spec
-  * harbour/harbour.spec
-  * harbour/make_rpmce.sh
-  * harbour/make_rpmw32.sh
-  * harbour/make_rpm.sh
-    * changed --without adsrdd to --with adsrdd
-      now ADS* RDDs are not created by default
+2007-11-21 17:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/contrib/make_all.mak
+  * harbour/contrib/make_b32_all.bat
+  * harbour/contrib/make_vc_all.bat
+  * harbour/contrib/mtpl_b32.bat
+  * harbour/contrib/mtpl_b32.mak
+  * harbour/contrib/mtpl_vc.bat
+  * harbour/contrib/mtpl_vc.mak
+    * Adopted to new make system
+      - Handling of PRG_HEADERS and C_HEADERS is implemented.
+        All common.mak files from contrib dirs should be modified to
+        add those defines if required. Only those headers  defined in
+        PRG_HEADERS and C_HEADERS are installed into HB_INC_INSTALL
+        dir. If this dir is equal HB_ROOT those header are automaticaly
+        CLEANed.
+      - Changed "echo." to "echo" for Borland makefiles to enable
+        proper work on Win2003
 
-  * harbour/make_rpm.sh
-    * set '--with adsrdd' when ${HOME}/ads/acesdk/ace.h or
-      /usr/local/ads/acesdk/ace.h exists
+  + harbour/contrib/mtpl_defs.mak
+    + Rules for Bcc and Msvc are unified now and placed into a
+      new  makefile, "included" by mtpl_b32.mak and mtpl_vc.mak.
 
-  * harbour/contrib/rdd_ads/Makefile
-    + added ${HOME}/ads/acesdk/ace.h as alternative ace.h location
+  + harbour/contrib/mtpl_ruls.mak
+  - harbour/contrib/mtpl.mak
+    + Renamed to more verbose name
 
-  * harbour/source/rdd/hbsix/sxini.prg
-    ! fixed typo
+  - harbour/contrib/make_b32.bat
+  - harbour/contrib/make_vc.bat
+    - Removed - no longer neccesary
 
-2007-11-20 19:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-  * harbour/bin/hb-func.sh
-    ! fixed using -o<name> in hbcc
+  * harbour/contrib/libmisc/make_b32.bat
+  * harbour/contrib/libmisc/make_vc.bat
+  * harbour/contrib/libnf/delone.bat
+  * harbour/contrib/libnf/make_b32.bat
+  * harbour/contrib/libnf/make_vc.bat
+  * harbour/contrib/mysql/delone.bat
+  * harbour/contrib/mysql/make_b32.bat
+  * harbour/contrib/mysql/make_vc.bat
+  * harbour/contrib/odbc/a_mk_vc.bat
+  * harbour/contrib/odbc/delone.bat
+  * harbour/contrib/odbc/make_b32.bat
+  * harbour/contrib/odbc/make_vc.bat
+  * harbour/contrib/odbc/mhlp_b32.bat
+  * harbour/contrib/odbc/mhlp_vc.bat
+  * harbour/contrib/ole/delone.bat
+  * harbour/contrib/ole/make_b32.bat
+  * harbour/contrib/ole/make_vc.bat
+  * harbour/contrib/pdflib/delone.bat
+  * harbour/contrib/pdflib/make_b32.bat
+  * harbour/contrib/pdflib/make_vc.bat
+  * harbour/contrib/pgsql/delone.bat
+  * harbour/contrib/pgsql/make_b32.bat
+  * harbour/contrib/pgsql/make_vc.bat
+  * harbour/contrib/rdd_ads/delone.bat
+  * harbour/contrib/rdd_ads/make_b32.bat
+  * harbour/contrib/rdd_ads/make_vc.bat
+  * harbour/contrib/samples/delone.bat
+  * harbour/contrib/samples/make_b32.bat
+  * harbour/contrib/samples/make_vc.bat
+  * harbour/contrib/telepath/delone.bat
+  * harbour/contrib/telepath/make_b32.bat
+  * harbour/contrib/telepath/make_vc.bat
+  * harbour/contrib/tip/delone.bat
+  * harbour/contrib/tip/make_b32.bat
+  * harbour/contrib/tip/make_vc.bat
+  * harbour/contrib/win32/a_mk_bc.bat
+  * harbour/contrib/win32/delall.bat
+  * harbour/contrib/win32/delone.bat
+  * harbour/contrib/win32/make_b32.bat
+  * harbour/contrib/win32/make_vc.bat
+  * harbour/contrib/xhb/delone.bat
+  * harbour/contrib/xhb/make_b32.bat
+  * harbour/contrib/xhb/make_vc.bat
+    * Adopted to new make system
 
-  * harbour/contrib/rdd_ads/rddads.h
-    ! small hack for Linux compilation and compilers which do not set
-      unix macro
+  * harbour/common.mak
+  * harbour/make_b32.mak
+  * harbour/make_gcc.mak
+  * harbour/make_vc.mak
+  * harbour/make_vcce.mak
+    * Minor cleanup
 
-  * harbour/contrib/rdd_ads/Makefile
-    * added /usr/local/ads/acesdk to include directory list
-      Viktor the side effect of removing ace.h from our repository is
-      blocking ADS* RDDs compilation by people who do not have ACE
-      installed - I expect it will be serious problem in creating BETA4
-      binaries because not all people who create them have ACE installed
-      or even want to install it and without these RDDs for many users
-      new Harbour version will be unusable.
-
-  * harbour/source/rtl/seconds.c
-    ! fixed stupid typo in milliseconds calculation
-
-  * harbour/contrib/xhb/hbchksum.c
-  * harbour/contrib/xhb/hbcomprs.c
-  * harbour/contrib/xhb/hbcomprs.h
-    ! use hb_retclenAdopt() instead of hb_retclenAdoptRaw()
-    + svn:keywords Id
-      svn:eol-style native
-    TOFIX - these files have to be removed or changed to avoid name conflicts
-    with ZLIB - personally I vote to add real ZLIB wrapper and only xHarbour
-    compatible .prg functions when they are necessary. Probably only:
-        HB_COMPRESS(), HB_UNCOMPRESS(), HB_COMPRESSBUFLEN()
-    and maybe:
-        HB_COMPRESSERROR(), HB_COMPRESSERRORDESC()
-    In xHarbour:
-        HB_CHECKSUM( <cValue> [, <nStart>] ) -> <nChkSum>
-    is exactly the same function as in Harbour:
-        HB_ADLER32( <cValue> [, <nStart>] ) -> <nChkSum>
-    with the exception to bug with negative values fixed in Harbour only.
-
-2007-11-20 17:02 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
-    * contrib/xhb/common.mak
-      + Added some missing lines (suggested by Juan Gálvez)
-
-2007-11-20 13:45 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
-  * contrib/bmdbfcdx/bmdbfcdx1.c
-    * synced with dbfcdx as nedded
-
-2007-11-19 20:35 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
-   * contrib/examples/dbu/bld_b32.bat
-     * Now the non-GNU build batch file will look for 
-       DBU source in the original CA-Cl*pper installation, 
-       if specified (using 'set CLIPPER_DIR=C:\CLIPPER5\').
-
-2007-11-19 20:21 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
-   + contrib/rdd_ads/test
-   + contrib/rdd_ads/test/testmg.prg
-   - contrib/rdd_ads/testmg.prg
-     * Moved.
-
-   * contrib/rdd_ads/make_b32.bat
-   * contrib/rdd_ads/make_vc.bat
-   * contrib/rdd_ads/adsmgmnt.c
-   - contrib/rdd_ads/ace.h
-     + Non-GNU make files standardized. You'll need to set these envvars 
+     + Non-GNU make files standardized. You'll need to set these envvars
        to tell the package (Advantage Client Engine) location (and version):
        set ADS_DIR=C:\ads\acesdk
        set ADS_VER=810
-     * ADS_VER is optional, if not speficied, zero will be 
+     * ADS_VER is optional, if not speficied, zero will be
        returned as "index sort buffer size" by AdsMgGetConfigInfo().
-     ; The exact .dll location inside the package dir will be 
+     ; The exact .dll location inside the package dir will be
        detected (tested 6.11-8.10)
      - Now ADS header is not included anymore in Harbour.
-       Notice that this header file is a copyrighted file where such 
-       distribution is not permitted. Anyhow, distributing other 
+       Notice that this header file is a copyrighted file where such
+       distribution is not permitted. Anyhow, distributing other
        packages headers is not good practice anyway.
 
    * contrib/rdd_ads/rddads.h
-     * WatcomC / LCC hack implemented outside ace.h. Please test 
+     * WatcomC / LCC hack implemented outside ace.h. Please test
        this as I don't have any of these compilers.
 
 2007-11-19 19:03 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
@@ -126,7 +126,7 @@
      ; Thanks to Marek.
 
    * utils/hbmake/hbmutils.prg
-     ! Some untested fixes to hbmake. If someone 
+     ! Some untested fixes to hbmake. If someone
        uses this tool, pls send reports.
 
    - contrib/mkall_b32.bat
@@ -156,9 +156,9 @@
        'Call to function 'AdsApplicationExit' with no prototype in function ...'
 
    + contrib/rdd_ads/unixutils.h
-     + Added dummy header to fix compilation under 
+     + Added dummy header to fix compilation under
        Linux, using the original ads.h headers.
-       Not tested. Supposed to replace the workaround 
+       Not tested. Supposed to replace the workaround
        currently in local ads.h where '#include "unixutils.h"'
        is commented out.
 
@@ -239,7 +239,7 @@
    * contrib/bmdbfcdx/make_b32.bat
    * contrib/bmdbfcdx/make_vc.bat
      % Using the batch file templates.
-     + Some other additions and fixes related to make it easy 
+     + Some other additions and fixes related to make it easy
        to specifiy 3rd party package locations.
        These envvars can be used for our libs:
        set APOLLO_DIR=C:\Apollo
@@ -285,18 +285,18 @@
      + Minor fix (from xhb)
 
    * source/rtl/errorint.c
-     ! Defaulting all string parameters to "" when they are NULL 
+     ! Defaulting all string parameters to "" when they are NULL
        to avoid any potential problems later in the function.
 
    * source/rtl/hbgtcore.c
      % Passing NULL instead of "" in hb_errInternal() calls.
 
    * source/vm/itemapi.c
-     ! Internal error is lauched in case the parameters passed 
+     ! Internal error is lauched in case the parameters passed
        to hb_itemPutCLConst() are violating string item rules.
        Thanks for Mindaugas for the suggestion.
-       TOFIX: Since this violation will most probably happen in 
-              contrib/win32 OLE code, we'll need to fix that 
+       TOFIX: Since this violation will most probably happen in
+              contrib/win32 OLE code, we'll need to fix that
               code too.
 
    * utils/hbmake/hbmake.prg

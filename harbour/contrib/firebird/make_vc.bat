@@ -3,8 +3,16 @@ rem
 rem $Id$
 rem
 
-if "%FIREBIRD_DIR%" == "" goto HELP
+if NOT "%FIREBIRD_DIR%" == "" goto EXEC
+echo FIREBIRD_DIR environment variable has to be defined !
+echo ---------------------------------------------------------------
+echo IMPORTANT: You'll need Firebird package and this envvar
+echo            to be set to successfully build this library:
+echo            set FIREBIRD_DIR=C:\Firebird
+echo ---------------------------------------------------------------
+exit 1
 
+:EXEC
 set C_USR=%C_USR% -I%FIREBIRD_DIR%\include -DHB_OS_WIN_32_USED
 set HB_DLL_NAME=fbclient
 if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%FIREBIRD_DIR%\bin
@@ -58,13 +66,5 @@ if "%1" == "INSTALL" goto POST_INSTALL
    if exist %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib del %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib
    if exist ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.lib copy ..\..\lib\%HB_CC_NAME%\%HB_DLL_NAME%.lib %_HB_LIB_INSTALL%
    goto POST_EXIT
-
-:HELP
-
-echo ---------------------------------------------------------------
-echo IMPORTANT: You'll need Firebird package and this envvar
-echo            to be set to successfully build this library:
-echo            set FIREBIRD_DIR=C:\Firebird
-echo ---------------------------------------------------------------
 
 :POST_EXIT

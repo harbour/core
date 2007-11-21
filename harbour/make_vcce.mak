@@ -2,9 +2,9 @@
 # $Id: makefile.vc 7563 2007-06-27 17:00:34Z druzus $
 #
 
-#
+#**********************************************************
 # Makefile for Harbour Project for MSVC-8.0/WinCE compilers
-#
+#**********************************************************
 
 # ---------------------------------------------------------------
 # If you need to set additional compiler/linker options use the
