@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-21 06:08 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  + contrib/gtwvt
+    + gtwvt.c
+    + gtwvt.h
+    + wvtcore.c
+    + wvtutils.c
+    + wvtpaint.prg
+    + wvtclass.prg
+    + wvtwin.ch
+      * Initial port of xHarbour's GTWVT + WVTGUI in a combined manner.
+      ? Please create the make files as I am poor in this field.
+      ? Przem, please add switches to hnmk/hbcemk files for -gtwvg as is done for -gtwvt.
+
 2007-11-22 01:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/fssize.c
   * harbour/source/rtl/hbffind.c
