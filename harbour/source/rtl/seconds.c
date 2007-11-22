@@ -110,7 +110,7 @@ HB_EXPORT void hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec )
    st = localtime( &seconds );
    *plJulian = hb_dateEncode( st->tm_year + 1900, st->tm_mon + 1, st->tm_mday );
    *plMilliSec = ( ( st->tm_hour * 60 + st->tm_min ) * 60 + st->tm_sec ) * 1000 +
-                 tv->tv_usec / 1000.0;
+                 tv.tv_usec / 1000.0;
 #else
    struct timeb tb;
    struct tm * st;

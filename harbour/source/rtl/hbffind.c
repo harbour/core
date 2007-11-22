@@ -52,7 +52,7 @@
  *
  */
 
-#if defined(HB_OS_LINUX)
+#if !defined( _LARGEFILE64_SOURCE )
 #  define _LARGEFILE64_SOURCE
 #endif
 
@@ -162,6 +162,19 @@ HB_FILE_VER( "$Id$" )
 
    typedef void HB_FFIND_INFO, * PHB_FFIND_INFO;
 
+#endif
+
+#if !defined( HB_USE_LARGEFILE64 ) && defined( OS_UNIX_COMPATIBLE )
+   #if defined( __USE_LARGEFILE64 )
+      /*
+       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+       * define and efectively enables lseek64/flock64/ftruncate64 functions
+       * on 32bit machines.
+       */
+      #define HB_USE_LARGEFILE64
+   #elif defined( HB_OS_HPUX ) && defined( O_LARGEFILE )
+      #define HB_USE_LARGEFILE64
+   #endif
 #endif
 
 /* ------------------------------------------------------------- */
@@ -677,12 +690,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          {
             time_t ftime;
             struct tm * ft;
-#if defined(HB_OS_LINUX) && defined(__USE_LARGEFILE64)
-            /*
-             * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-             * define and efectively enables lseek64/flock64/ftruncate64 functions
-             * on 32bit machines.
-             */
+#if defined( HB_USE_LARGEFILE64 )
             struct stat64 sStat;
             if( stat64( dirname, &sStat ) == 0 )
 #else

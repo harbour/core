@@ -90,7 +90,7 @@
    This has been corrected by ptucker
  */
 
-#if defined(HB_OS_LINUX)
+#if !defined( _LARGEFILE64_SOURCE )
 #  define _LARGEFILE64_SOURCE
 #endif
 
@@ -166,9 +166,7 @@
    #include <fcntl.h>
 #endif
 
-#if defined(HB_OS_HPUX)
-   extern int fdatasync(int fildes);
-#elif defined(HB_OS_DOS)
+#if defined(HB_OS_DOS)
    #include <dos.h>
 #elif defined(HB_OS_OS2)
    #include <sys/signal.h>
@@ -188,6 +186,19 @@
 #endif
 #if defined( HB_USE_SHARELOCKS ) && defined( HB_USE_BSDLOCKS )
    #include <sys/file.h>
+#endif
+
+#if !defined( HB_USE_LARGEFILE64 ) && defined( OS_UNIX_COMPATIBLE )
+   #if defined( __USE_LARGEFILE64 )
+      /*
+       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+       * define and efectively enables lseek64/flock64/ftruncate64 functions
+       * on 32bit machines.
+       */
+      #define HB_USE_LARGEFILE64
+   #elif defined( HB_OS_HPUX ) && defined( O_LARGEFILE )
+      #define HB_USE_LARGEFILE64
+   #endif
 #endif
 
 #if defined(OS_HAS_DRIVE_LETTER)
@@ -970,12 +981,7 @@ HB_EXPORT USHORT hb_fsWrite( FHANDLE hFileHandle, const BYTE * pBuff, USHORT uiC
       }
       else
       {
-#if defined(HB_OS_LINUX) && defined(__USE_LARGEFILE64)
-         /*
-          * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-          * define and efectively enables lseek64/flock64/ftruncate64 functions
-          * on 32bit machines.
-          */
+#if defined(HB_USE_LARGEFILE64)
          hb_fsSetIOError( ftruncate64( hFileHandle, lseek64( hFileHandle, 0L, SEEK_CUR ) ) != -1, 0 );
 #else
          hb_fsSetIOError( ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) ) != -1, 0 );
@@ -1140,12 +1146,7 @@ HB_EXPORT ULONG hb_fsWriteLarge( FHANDLE hFileHandle, const BYTE * pBuff, ULONG 
       #endif
       else
       {
-#if defined(HB_OS_LINUX) && defined(__USE_LARGEFILE64)
-         /*
-          * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-          * define and efectively enables lseek64/flock64/ftruncate64 functions
-          * on 32bit machines.
-          */
+#if defined(HB_USE_LARGEFILE64)
          hb_fsSetIOError( ftruncate64( hFileHandle, lseek64( hFileHandle, 0L, SEEK_CUR ) ) != -1, 0 );
 #else
          hb_fsSetIOError( ftruncate( hFileHandle, lseek( hFileHandle, 0L, SEEK_CUR ) ) != -1, 0 );
@@ -1493,12 +1494,7 @@ HB_EXPORT BOOL hb_fsLockLarge( FHANDLE hFileHandle, HB_FOFFSET ulStart,
       }
       hb_fsSetIOError( bResult, 0 );
    }
-#elif defined(HB_OS_LINUX) && defined(__USE_LARGEFILE64)
-   /*
-    * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-    * define and efectively enables lseek64/flock64/ftruncate64 functions
-    * on 32bit machines.
-    */
+#elif defined(HB_USE_LARGEFILE64)
    {
       struct flock64 lock_info;
 
@@ -1659,12 +1655,7 @@ HB_EXPORT HB_FOFFSET hb_fsSeekLarge( FHANDLE hFileHandle, HB_FOFFSET llOffset, U
          llPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
       }
    }
-#elif defined(HB_OS_LINUX) && defined(__USE_LARGEFILE64)
-   /*
-    * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-    * define and efectively enables lseek64/flock64/ftruncate64 functions
-    * on 32bit machines.
-    */
+#elif defined(HB_USE_LARGEFILE64)
    {
       USHORT Flags = convert_seek_flags( uiFlags );
 

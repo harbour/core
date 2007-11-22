@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-22 01:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/fssize.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/filesys.c
+    * set _LARGEFILE64_SOURCE in all builds and use HB_USE_LARGEFILE64
+      macro (set automatically when __USE_LARGEFILE64 is defined too or
+      HB_OS_HPUX && O_LARGEFILE) to enable large file support in 32 bit
+      POSIX systems. It should help to enable large file support in other
+      then Linux different 32 bit *nixes.
+      I hope it will resolve Sandro problems with HPUX.
+
+  * harbour/source/vm/itemapi.c
+    * do not return DATE item value in hb_itemGetNDDec()
+      It was old and unused xHarbour only code - now hb_itemGetNDDec()
+      is compatible with hb_itemGetND()
+
+  * harbour/source/rtl/seconds.c
+    ! fixed typo in BSD builds
+      BTW can someone test current SVN code with Solaris?
+      I will not be able to make such test myself in the nearest few weeks.
+
 2007-11-21 21:45 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/contrib/mtpl_defs.mak
   * harbour/contrib/mtpl_b32.mak

@@ -964,7 +964,7 @@ HB_EXPORT PHB_ITEM hb_itemPutNDDec( PHB_ITEM pItem, double dNumber, int iDec )
 
 HB_EXPORT double hb_itemGetNDDec( PHB_ITEM pItem, int * piDec )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetNDDec(%p,p%)", pItem, piDec));
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemGetNDDec(%p,%p)", pItem, piDec));
 
    if( HB_IS_INTEGER( pItem ) )
    {
@@ -980,11 +980,6 @@ HB_EXPORT double hb_itemGetNDDec( PHB_ITEM pItem, int * piDec )
    {
       *piDec = pItem->item.asDouble.decimal;
       return pItem->item.asDouble.value;
-   }
-   else if( HB_IS_DATE( pItem ) )
-   {
-      *piDec = 0;
-      return ( double ) pItem->item.asDate.value;
    }
 
    *piDec = 0;

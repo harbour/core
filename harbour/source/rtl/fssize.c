@@ -51,7 +51,7 @@
  *
  */
 
-#if defined(HB_OS_LINUX)
+#if !defined( _LARGEFILE64_SOURCE )
 #  define _LARGEFILE64_SOURCE
 #endif
 
@@ -62,6 +62,20 @@
 #  include <sys/types.h>
 #  include <sys/stat.h>
 #endif
+
+#if !defined( HB_USE_LARGEFILE64 ) && defined( OS_UNIX_COMPATIBLE )
+   #if defined( __USE_LARGEFILE64 )
+      /*
+       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+       * define and efectively enables lseek64/flock64/ftruncate64 functions
+       * on 32bit machines.
+       */
+      #define HB_USE_LARGEFILE64
+   #elif defined( HB_OS_HPUX ) && defined( O_LARGEFILE )
+      #define HB_USE_LARGEFILE64
+   #endif
+#endif
+
 
 HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
 {
@@ -81,12 +95,7 @@ HB_FOFFSET hb_fsFSize( BYTE * pszFileName, BOOL bUseDirEntry )
          hb_fsFindClose( ffind );
          return size;
       }
-#elif defined(HB_OS_LINUX) && defined(__USE_LARGEFILE64)
-      /*
-       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * define and efectively enables lseek64/flock64/ftruncate64 functions
-       * on 32bit machines.
-       */
+#elif defined( HB_USE_LARGEFILE64 )
       BOOL fResult, fFree;
       struct stat64 statbuf;
       pszFileName = hb_fsNameConv( pszFileName, &fFree );
