@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-22 18:33 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * declared two functions
+         hb_gt_wvt_AddCharToInputQueue() and
+         hb_gt_wvt_AddCharToInputQueue()
+      as static - they were public by mistake
+
+  * harbour/contrib/gtwvg/wvtcore.c
+  * harbour/contrib/gtwvg/gtwvt.c
+    * moved hb_wvt_gtDlgProcMLess() and hb_wvt_gtDlgProcModal()
+      from gtwvt.c to wvtcore.c
+      These both functions are wrong and have to be fixed.
+    * farther cleanup:
+      - declared some internal functions as static
+      - synced some other with GTWVT
+      - removed some repeated declarations
+
 2007-11-22 14:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbwince.h
     + added HB_TCHAR_CONVNREV() macro

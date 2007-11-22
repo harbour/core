@@ -15,6 +15,9 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     Copyright 2002 Przemys³aw Czerpak <druzus@polbox.com>
  *
+ *
+ *
+ *
  * The following parts are Copyright of the individual authors.
  * www - http://www.harbour-project.org
  *
@@ -86,30 +89,14 @@
 static HB_GT_FUNCS SuperTable;
 #define HB_GTSUPER (&SuperTable)
 
-#if defined(__WATCOMC__)
-  #include <conio.h>
-#endif
+static const TCHAR s_szAppName[] = TEXT( "Harbour WVT" );
+/*
+static HANDLE  s_hInstance;
+static HANDLE  s_hPrevInstance;
+static int     s_iCmdShow;
 
-#ifndef WM_MOUSEWHEEL
-   #define WM_MOUSEWHEEL 0x020A
-#endif
-
-#ifndef INVALID_FILE_SIZE
-   #define INVALID_FILE_SIZE (DWORD)0xFFFFFFFF
-#endif
-
-#ifndef CC_ANYCOLOR
-   #define CC_ANYCOLOR 0x00000100
-#endif
-
-#ifndef IDC_HAND
-   #define IDC_HAND MAKEINTRESOURCE(32649)
-#endif
-
-//----------------------------------------------------------------------//
-
-static TCHAR szAppName[] = TEXT( "Harbour WVT" );
-
+static OSVERSIONINFO s_osv;
+*/
 static GLOBAL_DATA _s;
 
 static COLORREF _COLORS[] = {
@@ -131,31 +118,24 @@ static COLORREF _COLORS[] = {
    BRIGHT_WHITE
 };
 
-#ifdef WVT_DEBUG
-static int nCountPuts=0,nCountScroll=0, nCountPaint=0, nSetFocus=0, nKillFocus=0;
-#endif
-
-static int K_Ctrl[] = {
-  K_CTRL_A, K_CTRL_B, K_CTRL_C, K_CTRL_D, K_CTRL_E, K_CTRL_F, K_CTRL_G, K_CTRL_H,
-  K_CTRL_I, K_CTRL_J, K_CTRL_K, K_CTRL_L, K_CTRL_M, K_CTRL_N, K_CTRL_O, K_CTRL_P,
-  K_CTRL_Q, K_CTRL_R, K_CTRL_S, K_CTRL_T, K_CTRL_U, K_CTRL_V, K_CTRL_W, K_CTRL_X,
-  K_CTRL_Y, K_CTRL_Z
-  };
-
-//static buffer[100];
+static int K_Ctrl[] =
+{
+   K_CTRL_A, K_CTRL_B, K_CTRL_C, K_CTRL_D, K_CTRL_E, K_CTRL_F, K_CTRL_G,
+   K_CTRL_H, K_CTRL_I, K_CTRL_J, K_CTRL_K, K_CTRL_L, K_CTRL_M, K_CTRL_N,
+   K_CTRL_O, K_CTRL_P, K_CTRL_Q, K_CTRL_R, K_CTRL_S, K_CTRL_T, K_CTRL_U,
+   K_CTRL_V, K_CTRL_W, K_CTRL_X, K_CTRL_Y, K_CTRL_Z
+};
 
 //-------------------------------------------------------------------//
 //
 //                  private functions declaration
 //
 //HB_EXTERN_BEGIN
-static void    gt_hbInitStatics( void );
 static HWND    hb_wvt_gtCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow );
 static BOOL    hb_wvt_gtInitWindow( HWND hWnd, USHORT col, USHORT row );
 static void    hb_wvt_gtResetWindowSize( HWND hWnd );
 static LRESULT CALLBACK hb_wvt_gtWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 static BOOL    hb_wvt_gtAllocSpBuffer( USHORT col, USHORT row );
-static DWORD   hb_wvt_gtProcessMessages( void );
 static BOOL    hb_wvt_gtValidWindowSize( int rows, int cols, HFONT hFont, int width );
 static void    hb_wvt_gtSetCaretOn( BOOL bOn );
 static BOOL    hb_wvt_gtSetCaretPos( void );
@@ -164,7 +144,6 @@ static void    hb_wvt_gtUpdateCaret( void );
 
 static void    hb_wvt_gtSetMouseX( USHORT ix );
 static void    hb_wvt_gtSetMouseY( USHORT iy );
-static BOOL    hb_wvt_gtGetCharFromInputQueue( int * c );
 
 static void    hb_wvt_gtTranslateKey( int key, int shiftkey, int altkey, int controlkey );
 
@@ -224,11 +203,8 @@ static void    HB_GT_FUNC( gt_GetText( int top, int left, int bottom, int right,
 static void    HB_GT_FUNC( gt_SetAttribute( int rowStart, int colStart, int rowStop, int colStop, BYTE attr ) );
 static BOOL    HB_GT_FUNC( gt_SetMode( int row, int col ) );
 static void    HB_GT_FUNC( gt_Scroll( int usTop, int usLeft, int usBottom, int usRight, BYTE byAttr, BYTE byChar, int iRows, int iCols ) );
-static BOOL    HB_GT_FUNC( gt_Info( int iType, PHB_GT_INFO pInfo ) );
 static int     HB_GT_FUNC( gt_MaxCol( void ) );
 static int     HB_GT_FUNC( gt_MaxRow( void ) );
-static BOOL    HB_GT_FUNC( gt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox ) );
-static BOOL    HB_GT_FUNC( gt_SetKeyCP( char * pszTermCDP, char * pszHostCDP ) );
 
 static void    HB_GT_FUNC( gt_Replicate( USHORT usRow, USHORT usCol, BYTE byAttr, BYTE byChar, ULONG ulLen ) );
 static void    HB_GT_FUNC( gt_Puts( USHORT usRow, USHORT usCol, BYTE byAttr, BYTE *pbyStr, ULONG ulLen ) );
@@ -267,276 +243,6 @@ static BOOL    b_MouseEnable = TRUE;
 //
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//                 Modeless Dialogs Implementation
-//
-//-------------------------------------------------------------------//
-
-HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
-{
-   int      iIndex, iType;
-   long int bReturn = FALSE ;
-   PHB_ITEM pFunc = NULL;
-   PHB_DYNS pDynSym;
-
-   iType = (int) NULL;
-
-   for ( iIndex = 0; iIndex < WVT_DLGML_MAX; iIndex++ )
-   {
-      if ( ( _s.hDlgModeless[ iIndex ] != NULL ) && ( _s.hDlgModeless[ iIndex ] == hDlg ) )
-      {
-         if ( _s.pFunc[ iIndex ] != NULL )
-         {
-            pFunc = _s.pFunc[ iIndex ];
-            iType = _s.iType[ iIndex ];
-         }
-         break;
-      }
-   }
-
-   if ( pFunc )
-   {
-      switch ( iType )
-      {
-         case 1:  // Function Name
-         {
-            pDynSym = ( PHB_DYNS ) pFunc;
-            hb_vmPushState();
-            hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
-            hb_vmPushNil();
-            hb_vmPushLong( ( ULONG ) hDlg    );
-            hb_vmPushLong( ( UINT  ) message );
-            hb_vmPushLong( ( ULONG ) wParam  );
-            hb_vmPushLong( ( ULONG ) lParam  );
-            hb_vmDo( 4 );
-            //bReturn = hb_itemGetNL( hb_stackReturnItem() );
-            bReturn = hb_parnl( -1 );
-
-            hb_vmPopState();
-            break;
-         }
-
-         case 2:  // Block
-         {
-            /* eval the codeblock */
-            //if ( _s.pFunc[ iIndex ]->type == HB_IT_BLOCK )
-            if ( hb_itemType( _s.pFunc[ iIndex ] ) == HB_IT_BLOCK )
-            {
-              PHB_ITEM hihDlg, himessage, hiwParam, hilParam;
-              PHB_ITEM pReturn;
-
-              //hihDlg.type = HB_IT_NIL;
-              hb_itemPutNL( &hihDlg, (ULONG) hDlg );
-
-              //himessage.type = HB_IT_NIL;
-              hb_itemPutNL( &himessage, (ULONG) message );
-
-              //hiwParam.type = HB_IT_NIL;
-              hb_itemPutNL( &hiwParam, (ULONG) wParam );
-
-              //hilParam.type = HB_IT_NIL;
-              hb_itemPutNL( &hilParam, (ULONG) lParam );
-
-              pReturn = hb_itemDo( (PHB_ITEM) _s.pFunc[ iIndex ], 4, &hihDlg, &himessage, &hiwParam, &hilParam );
-              bReturn = hb_itemGetNL( pReturn );
-              hb_itemRelease( pReturn );
-            }
-            else
-            {
-              //internal error: missing codeblock
-            }
-
-
-            break;
-         }
-      }
-   }
-
-   switch( message )
-   {
-      case WM_COMMAND:
-      {
-         switch( LOWORD( wParam ) )
-         {
-            case IDOK:
-            {
-               DestroyWindow( hDlg );
-               bReturn = TRUE;
-            }
-            break;
-
-            case IDCANCEL:
-            {
-               DestroyWindow( hDlg );
-               bReturn = FALSE;
-            }
-            break;
-         }
-      }
-      break;
-
-      case WM_CLOSE:
-      {
-         DestroyWindow( hDlg );
-         bReturn = FALSE;
-      }
-      break;
-
-      case WM_NCDESTROY:
-      {
-         if ( _s.pFunc[ iIndex ] != NULL && _s.iType[ iIndex ] == 2 )
-         {
-            hb_itemRelease( ( PHB_ITEM ) _s.pFunc[ iIndex ] );
-         }
-         _s.hDlgModeless[ iIndex ] = NULL;
-         _s.pFunc[ iIndex ] = NULL;
-         _s.iType[ iIndex ] = (int) NULL;
-         bReturn = FALSE;
-      }
-      break;
-   }
-
-   return bReturn;
-}
-
-//-------------------------------------------------------------------//
-
-HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
-{
-   int      iIndex, iType;
-   long int bReturn = FALSE ;
-   PHB_ITEM pFunc   = NULL;
-   PHB_DYNS pDynSym;
-   int      iFirst  = ( int ) lParam;
-
-   if ( iFirst > 0 && iFirst <= WVT_DLGMD_MAX )
-   {
-      _s.hDlgModal[ iFirst-1 ] = hDlg ;
-      SendMessage( hDlg, WM_INITDIALOG, 0, 0 );
-      return ( bReturn );
-   }
-
-   iType = ( int ) NULL;
-
-   for ( iIndex = 0; iIndex < WVT_DLGMD_MAX; iIndex++ )
-   {
-      if ( ( _s.hDlgModal[ iIndex ] != NULL ) && ( _s.hDlgModal[ iIndex ] == hDlg ) )
-      {
-         if ( _s.pFuncModal[ iIndex ] != NULL )
-         {
-            pFunc = _s.pFuncModal[ iIndex ];
-            iType = _s.iTypeModal[ iIndex ];
-         }
-         break;
-      }
-   }
-
-   if ( pFunc )
-   {
-      switch ( iType )
-      {
-         case 1:  // Function Name
-         {
-            pDynSym = ( PHB_DYNS ) pFunc;
-            hb_vmPushState();
-            hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
-
-            hb_vmPushNil();
-            hb_vmPushLong( ( ULONG ) hDlg    );
-            hb_vmPushLong( ( UINT  ) message );
-            hb_vmPushLong( ( ULONG ) wParam  );
-            hb_vmPushLong( ( ULONG ) lParam  );
-            hb_vmDo( 4 );
-            //bReturn = hb_itemGetNL( hb_stackReturnItem() );
-            bReturn = hb_parnl( -1 );
-
-            hb_vmPopState();
-            break;
-         }
-
-         case 2:  // Block
-         {
-            /* eval the codeblock */
-            if ( hb_itemType( _s.pFuncModal[ iIndex ] ) == HB_IT_BLOCK )
-            {
-              PHB_ITEM hihDlg, himessage, hiwParam, hilParam;
-              PHB_ITEM pReturn;
-
-              //hihDlg.type = HB_IT_NIL;
-              hb_itemPutNL( &hihDlg, (ULONG) hDlg );
-
-              //himessage.type = HB_IT_NIL;
-              hb_itemPutNL( &himessage, (ULONG) message );
-
-              //hiwParam.type = HB_IT_NIL;
-              hb_itemPutNL( &hiwParam, (ULONG) wParam );
-
-              //hilParam.type = HB_IT_NIL;
-              hb_itemPutNL( &hilParam, (ULONG) lParam );
-
-              pReturn = hb_itemDo( (PHB_ITEM) _s.pFuncModal[ iIndex ], 4, &hihDlg, &himessage, &hiwParam, &hilParam );
-              bReturn = hb_itemGetNL( pReturn );
-              hb_itemRelease( pReturn );
-            }
-            else
-            {
-              //internal error: missing codeblock
-            }
-
-            break;
-         }
-      }
-   }
-
-   switch( message )
-   {
-      case WM_COMMAND:
-      {
-         switch( LOWORD( wParam ) )
-         {
-            case IDOK:
-            {
-               EndDialog( hDlg, IDOK );
-               bReturn = TRUE;
-            }
-            break;
-
-            case IDCANCEL:
-            {
-               EndDialog( hDlg, IDCANCEL );
-               bReturn = FALSE;
-            }
-            break;
-         }
-      }
-      break;
-
-      case WM_CLOSE:
-      {
-         EndDialog( hDlg, IDCANCEL );
-         bReturn = FALSE;
-      }
-      break;
-
-      case WM_NCDESTROY:
-      {
-         if ( _s.pFuncModal[ iIndex ] != NULL && _s.iTypeModal[ iIndex ] == 2 )
-         {
-            hb_itemRelease( ( PHB_ITEM ) _s.pFuncModal[ iIndex ] );
-         }
-
-         _s.hDlgModal[ iIndex ]   = NULL;
-         _s.pFuncModal[ iIndex ]  = NULL;
-         _s.iTypeModal[ iIndex ]  = ( int ) NULL;
-         bReturn = FALSE;
-      }
-      break;
-   }
-
-   return bReturn;
-}
-
 //-------------------------------------------------------------------//
 
 static void hb_wvt_gtCreateObjects( void )
@@ -963,16 +669,16 @@ static HWND hb_wvt_gtCreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
   wndclass.hbrBackground = NULL;
   wndclass.lpszMenuName  = NULL;
-  wndclass.lpszClassName = szAppName;
+  wndclass.lpszClassName = s_szAppName;
 
   if ( ! RegisterClass( &wndclass ) )
   {
     MessageBox( NULL, TEXT( "Failed to register class." ),
-                szAppName, MB_ICONERROR );
+                s_szAppName, MB_ICONERROR );
     return( 0 );
   }
 
-  hWnd = CreateWindow( szAppName,                         //classname
+  hWnd = CreateWindow( s_szAppName,                       //classname
      TEXT( "XHARBOUR_WVT" ),                              //window name
      WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,  //style
      0,                                                   //x
@@ -1066,7 +772,7 @@ static void hb_wvt_gtCreateToolTipWindow( void )       /* NO */
 
 //-------------------------------------------------------------------//
 
-static DWORD hb_wvt_gtProcessMessages( void )
+static DWORD hb_gt_wvt_ProcessMessages( void )
 {
    MSG  msg;
    int  iIndex;
@@ -1587,7 +1293,7 @@ static void hb_wvt_gtDoInvalidateRect( void )
       // InvalidateRect( _s.hWnd, &_s.RectInvalid, TRUE );
       InvalidateRect( _s.hWnd, &_s.RectInvalid, FALSE );
       _s.RectInvalid.left = -1 ;
-      hb_wvt_gtProcessMessages();
+      hb_gt_wvt_ProcessMessages();
    }
 }
 
@@ -1786,7 +1492,7 @@ void HB_EXPORT hb_wvt_gtAddCharToInputQueue ( int data )
 
 //-------------------------------------------------------------------//
 
-static BOOL hb_wvt_gtGetCharFromInputQueue ( int *c )
+static BOOL hb_gt_wvt_GetCharFromInputQueue( int * c )
 {
   int iNextPos;
   BOOL bRet = FALSE;
@@ -1802,22 +1508,6 @@ static BOOL hb_wvt_gtGetCharFromInputQueue ( int *c )
 
   return( bRet );
 }
-
-//-------------------------------------------------------------------//
-/*
-static USHORT hb_wvt_gtGetMouseX ( void )
-{
-  return( (SHORT) _s.mousePos.x );
-}
-
-//-------------------------------------------------------------------//
-
-static USHORT hb_wvt_gtGetMouseY ( void )
-{
-  return( (SHORT) _s.mousePos.y );
-}
-*/
-//-------------------------------------------------------------------//
 
 static void hb_wvt_gtSetMouseX ( USHORT ix )
 {
@@ -2606,7 +2296,7 @@ BOOL HB_EXPORT hb_wvt_gtSetAltF4Close( BOOL bCanClose )
 
 void HB_EXPORT hb_wvt_gtDoProcessMessages( void )
 {
-   hb_wvt_gtProcessMessages();
+   hb_gt_wvt_ProcessMessages();
 }
 
 //-------------------------------------------------------------------//
@@ -2841,6 +2531,66 @@ HB_EXPORT BOOL hb_wvt_gtSetColorData( int iIndex, COLORREF ulCr )
 
 //-------------------------------------------------------------------//
 
+void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
+{
+   USHORT irow, icol, index, j;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_GetText( %hu, %hu, %hu, %hu, %p )", top, left, bottom, right, sBuffer ) );
+
+   j = 0;
+   for ( irow = top; irow <= bottom; irow++ )
+   {
+      index = hb_wvt_gtGetIndexForTextBuffer( left, irow );
+      for ( icol = left; icol <= right; icol++ )
+      {
+         if ( index >= _s.BUFFERSIZE )
+         {
+            break;
+         }
+         else
+         {
+            sBuffer[ j ] = _s.pBuffer[ index ];
+            sAttrib[ j ] = _s.pAttributes[ index ];
+            index++;
+            j++;
+         }
+      }
+   }
+}
+
+//----------------------------------------------------------------------//
+
+void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
+{
+   USHORT irow, icol, index, j;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_GetText( %hu, %hu, %hu, %hu, %p )", top, left, bottom, right, sBuffer ) );
+
+   j = 0;
+   for ( irow = top; irow <= bottom; irow++ )
+   {
+      index = hb_wvt_gtGetIndexForTextBuffer( left, irow );
+      for ( icol = left; icol <= right; icol++ )
+      {
+         if ( index >= _s.BUFFERSIZE )
+         {
+            break;
+         }
+         else
+         {
+            _s.pBuffer[ index ] = sBuffer[ j ];
+            _s.pAttributes[ index ] = sAttrib[ j ];
+            j++;
+            index++;
+         }
+      }
+   }
+   hb_wvt_gtSetInvalidRect( left, top, right, bottom );
+}
+
+
+//-------------------------------------------------------------------//
+
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
@@ -2976,7 +2726,7 @@ static void HB_GT_FUNC( gt_Exit( void ) )
 
      DestroyWindow( _s.hWnd );
    }
-   UnregisterClass( szAppName,( HINSTANCE ) hb_hInstance );
+   UnregisterClass( s_szAppName, ( HINSTANCE ) hb_hInstance );
 
    if( b_MouseEnable )
    {
@@ -3034,7 +2784,7 @@ static BOOL HB_GT_FUNC( gt_IsColor( void ) )
 
 //-------------------------------------------------------------------//
 
-int HB_GT_FUNC( gt_GetCursorStyle( void ) )
+static int HB_GT_FUNC( gt_GetCursorStyle( void ) )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_GetCursorStyle()" ) );
    return( s_usCursorStyle );
@@ -3042,7 +2792,7 @@ int HB_GT_FUNC( gt_GetCursorStyle( void ) )
 
 //-------------------------------------------------------------------//
 
-void HB_GT_FUNC( gt_SetCursorStyle( int usStyle ) )
+static void HB_GT_FUNC( gt_SetCursorStyle( int usStyle ) )
 {
    BOOL bCursorOn= TRUE;
 
@@ -3159,65 +2909,6 @@ static void HB_GT_FUNC( gt_Replicate( USHORT usRow, USHORT usCol, BYTE byAttr, B
 
 //-------------------------------------------------------------------//
 
-void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
-{
-   USHORT irow, icol, index, j;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_GetText( %hu, %hu, %hu, %hu, %p )", top, left, bottom, right, sBuffer ) );
-
-   j = 0;
-   for ( irow = top; irow <= bottom; irow++ )
-   {
-      index = hb_wvt_gtGetIndexForTextBuffer( left, irow );
-      for ( icol = left; icol <= right; icol++ )
-      {
-         if ( index >= _s.BUFFERSIZE )
-         {
-            break;
-         }
-         else
-         {
-            sBuffer[ j ] = _s.pBuffer[ index ];
-            sAttrib[ j ] = _s.pAttributes[ index ];
-            index++;
-            j++;
-         }
-      }
-   }
-}
-
-//----------------------------------------------------------------------//
-
-void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
-{
-   USHORT irow, icol, index, j;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_GetText( %hu, %hu, %hu, %hu, %p )", top, left, bottom, right, sBuffer ) );
-
-   j = 0;
-   for ( irow = top; irow <= bottom; irow++ )
-   {
-      index = hb_wvt_gtGetIndexForTextBuffer( left, irow );
-      for ( icol = left; icol <= right; icol++ )
-      {
-         if ( index >= _s.BUFFERSIZE )
-         {
-            break;
-         }
-         else
-         {
-            _s.pBuffer[ index ] = sBuffer[ j ];
-            _s.pAttributes[ index ] = sAttrib[ j ];
-            j++;
-            index++;
-         }
-      }
-   }
-   hb_wvt_gtSetInvalidRect( left, top, right, bottom );
-}
-
-//-------------------------------------------------------------------//
-
 static void HB_GT_FUNC( gt_GetText( int top, int left, int bottom, int right, BYTE * sBuffer ) )
 {
    USHORT irow, icol, index, j;
@@ -3313,7 +3004,7 @@ static void HB_GT_FUNC( gt_PutText( int top, int left, BYTE bColor, BYTE * pText
 
 //-------------------------------------------------------------------//
 
-void HB_GT_FUNC( gt_SetAttribute( int rowStart, int colStart, int rowStop, int colStop, BYTE attr ) )
+static void HB_GT_FUNC( gt_SetAttribute( int rowStart, int colStart, int rowStop, int colStop, BYTE attr ) )
 {
    USHORT irow, icol, index;
 
@@ -3338,43 +3029,10 @@ void HB_GT_FUNC( gt_SetAttribute( int rowStart, int colStart, int rowStop, int c
 }
 
 //-------------------------------------------------------------------//
-/*
-static void HB_GT_FUNC( gt_SetAttributeCT( USHORT rowStart, USHORT colStart, USHORT rowStop, USHORT colStop, BYTE attr ) )
-{
-   USHORT irow, icol, index;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_SetAttributeCT( %hu, %hu, %hu, %hu, %d", rowStart, colStart, rowStop, colStop, ( int ) attr ) );
-
-   for ( irow = rowStart; irow <=rowStop; irow++ )
-   {
-      index = hb_wvt_gtGetIndexForTextBuffer( colStart, irow );
-      for ( icol = colStart; icol <= colStop; icol++ )
-      {
-         if ( index >= _s.BUFFERSIZE )
-         {
-            break;
-         }
-         else
-         {
-            if ( _s.pAttributes[ index ] != attr &&  _s.pAttributes[ index ] )
-            {
-               _s.pAttributes[ index++ ] = attr;
-            }
-            else
-            {
-               _s.pAttributes[ index++ ] = 0;
-            }
-         }
-      }
-   }
-   hb_wvt_gtSetInvalidRect( colStart, rowStart, colStop, rowStop );
-}
-*/
-//-------------------------------------------------------------------//
 //
 //    copied from gtwin...
 //
-void HB_GT_FUNC( gt_Scroll( int usTop, int usLeft, int usBottom, int usRight, BYTE byAttr, BYTE byChar, int iRows, int iCols ) )
+static void HB_GT_FUNC( gt_Scroll( int usTop, int usLeft, int usBottom, int usRight, BYTE byAttr, BYTE byChar, int iRows, int iCols ) )
 {
    SHORT  usSaveRow, usSaveCol;
    BYTE   ucBlank[ WVT_CHAR_BUFFER ], ucBuff[ WVT_CHAR_BUFFER * 2 ] ;
@@ -3483,7 +3141,7 @@ void HB_GT_FUNC( gt_Scroll( int usTop, int usLeft, int usBottom, int usRight, BY
 //
 //    resize the ( existing ) window
 //
-BOOL HB_GT_FUNC( gt_SetMode( int row, int col ) )
+static BOOL HB_GT_FUNC( gt_SetMode( int row, int col ) )
 {
    BOOL bResult= FALSE;
    HFONT hFont;
@@ -3704,14 +3362,14 @@ static void HB_GT_FUNC( gt_Box( int Top, int Left, int Bottom, int Right, BYTE *
 
 //-------------------------------------------------------------------//
 
-void HB_GT_FUNC( gt_BoxD( int Top, int Left, int Bottom, int Right, BYTE * pbyFrame, BYTE byAttr ) )
+static void HB_GT_FUNC( gt_BoxD( int Top, int Left, int Bottom, int Right, BYTE * pbyFrame, BYTE byAttr ) )
 {
    HB_GT_FUNC( gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr ) );
 }
 
 //-------------------------------------------------------------------//
 
-void HB_GT_FUNC( gt_BoxS( int Top, int Left, int Bottom, int Right, BYTE * pbyFrame, BYTE byAttr ) )
+static void HB_GT_FUNC( gt_BoxS( int Top, int Left, int Bottom, int Right, BYTE * pbyFrame, BYTE byAttr ) )
 {
    HB_GT_FUNC( gt_Box( Top, Left, Bottom, Right, pbyFrame, byAttr ) );
 }
@@ -3753,7 +3411,7 @@ void HB_GT_FUNC( gt_HorizLine( int Row, int Left, int Right, BYTE byChar, BYTE b
 
 //-------------------------------------------------------------------//
 //
-void HB_GT_FUNC( gt_VertLine( int Col, int Top, int Bottom, BYTE byChar, BYTE byAttr ) )
+static void HB_GT_FUNC( gt_VertLine( int Col, int Top, int Bottom, BYTE byChar, BYTE byAttr ) )
 {
    USHORT sWidth  = _GetScreenWidth();
    USHORT sHeight = _GetScreenHeight();
@@ -3800,71 +3458,300 @@ void HB_GT_FUNC( gt_VertLine( int Col, int Top, int Bottom, BYTE byChar, BYTE by
 
 //-------------------------------------------------------------------//
 
-BOOL HB_GT_FUNC( gt_Suspend() )
+static BOOL HB_GT_FUNC( gt_Suspend() )
 {
    return( TRUE );
 }
 
 //-------------------------------------------------------------------//
 
-BOOL HB_GT_FUNC( gt_Resume() )
+static BOOL HB_GT_FUNC( gt_Resume() )
 {
    return( TRUE );
 }
 
 //-------------------------------------------------------------------//
 
-BOOL HB_GT_FUNC( gt_PreExt() )
+static BOOL HB_GT_FUNC( gt_PreExt() )
 {
    return( TRUE );
 }
 
 //-------------------------------------------------------------------//
 
-BOOL HB_GT_FUNC( gt_PostExt() )
+static BOOL HB_GT_FUNC( gt_PostExt() )
 {
    return( TRUE );
 }
 
 //-------------------------------------------------------------------//
 
-void HB_GT_FUNC( gt_OutStd( BYTE * pbyStr, ULONG ulLen ) )
+static void HB_GT_FUNC( gt_OutStd( BYTE * pbyStr, ULONG ulLen ) )
 {
    hb_fsWriteLarge( s_iStdOut, ( BYTE * ) pbyStr, ulLen );
 }
 
 //-------------------------------------------------------------------//
 
-void HB_GT_FUNC( gt_OutErr( BYTE * pbyStr, ULONG ulLen ) )
+static void HB_GT_FUNC( gt_OutErr( BYTE * pbyStr, ULONG ulLen ) )
 {
    hb_fsWriteLarge( s_iStdErr, ( BYTE * ) pbyStr, ulLen );
 }
 
 //-------------------------------------------------------------------//
 
-int HB_GT_FUNC( gt_ExtendedKeySupport() )
-{
-   return( FALSE );  // Only use standard Clipper hey handling
-}
-
-//-------------------------------------------------------------------//
-
-int HB_GT_FUNC( gt_ReadKey() )
+static int hb_gt_wvt_ReadKey( int iEventMask )
 {
    int  c = 0;
-   BOOL bKey;
+   BOOL fKey;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_ReadKey()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey( %d )", iEventMask ) );
 
-   hb_wvt_gtProcessMessages() ;
-   bKey = hb_wvt_gtGetCharFromInputQueue( &c );
+   HB_SYMBOL_UNUSED( iEventMask ); /* we ignore the eventmask! */
 
-   return( bKey ? c : 0 );
+   hb_gt_wvt_ProcessMessages();
+   fKey = hb_gt_wvt_GetCharFromInputQueue( &c );
+
+   return fKey ? c : 0;
 }
+
 
 //----------------------------------------------------------------------//
 
-static BOOL HB_GT_FUNC( gt_Info( int iType, PHB_GT_INFO pInfo ) )
+/* ********** Graphics API ********** */
+/*
+ * NOTE:
+ *      gfxPrimitive() parameters may have different meanings
+ *      ie: - Desired color is 'iBottom' for PUTPIXEL and 'iRight' for CIRCLE
+ *          - Red is iTop, Green iLeft and Blue is iBottom for MAKECOLOR
+ *
+ */
+
+#define SetGFXContext() do { \
+                           hPen = CreatePen( PS_SOLID, 1, color ); \
+                           hOldPen = ( HPEN ) SelectObject( hdc, hPen ); \
+                           hBrush = ( HBRUSH ) CreateSolidBrush( color ); \
+                           hOldBrush = ( HBRUSH ) SelectObject( hdc, hBrush ); \
+                           bOut=TRUE; \
+                        } while( 0 )
+
+static int hb_gt_wvt_gfx_Primitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
+{
+   COLORREF      color;
+   HPEN          hPen, hOldPen;
+   HBRUSH        hBrush, hOldBrush;
+   HDC           hdc;
+   BOOL          bOut = FALSE;
+   int           iRet = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_gfx_Primitive(%d, %d, %d, %d, %d, %d)", iType, iTop, iLeft, iBottom, iRight, iColor ) );
+
+   hdc = GetDC( _s.hWnd );
+
+   switch ( iType )
+   {
+      case GFX_ACQUIRESCREEN:
+      case GFX_RELEASESCREEN:
+         return 1;
+      case GFX_MAKECOLOR:
+         return ( (int) ( (iTop << 16) | (iLeft << 8) | ( iBottom ) ) );
+      case GFX_PUTPIXEL:
+         color = RGB( iBottom >> 16, ( iBottom & 0xFF00 ) >> 8, iBottom & 0xFF );
+         SetGFXContext();
+
+         MoveToEx( hdc, iLeft, iTop, NULL );
+         LineTo( hdc, iLeft, iTop );
+
+         iRet = 1;
+         break;
+      case GFX_LINE:
+         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
+         SetGFXContext();
+
+         MoveToEx( hdc, iLeft, iTop, NULL );
+         LineTo( hdc, iRight, iBottom );
+
+         iRet = 1;
+         break;
+      case GFX_RECT:
+      {
+         RECT r;
+         r.left = iLeft;
+         r.top = iTop;
+         r.right = iRight;
+         r.bottom = iBottom;
+
+         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
+         SetGFXContext();
+
+         FrameRect( hdc, &r, hBrush );
+
+         iRet = 1;
+      }
+      break;
+      case GFX_FILLEDRECT:
+         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
+         SetGFXContext();
+
+         Rectangle( hdc, iLeft, iTop, iRight, iBottom );
+
+         iRet = 1;
+         break;
+      case GFX_CIRCLE:
+         color = RGB( iRight >> 16, ( iRight & 0xFF00 ) >> 8, iRight & 0xFF );
+         SetGFXContext();
+
+         Arc( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
+
+         iRet = 1;
+         break;
+      case GFX_FILLEDCIRCLE:
+         color = RGB( iRight >> 16, ( iRight & 0xFF00 ) >> 8, iRight & 0xFF );
+         SetGFXContext();
+
+         Ellipse( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2 );
+
+         iRet = 1;
+         break;
+      case GFX_ELLIPSE:
+         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
+         SetGFXContext();
+
+         Arc( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
+
+         iRet = 1;
+         break;
+      case GFX_FILLEDELLIPSE:
+         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
+         SetGFXContext();
+
+         Ellipse( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2 );
+
+         iRet = 1;
+         break;
+      case GFX_FLOODFILL:
+         color = RGB( iBottom >> 16, ( iBottom & 0xFF00 ) >> 8, iBottom & 0xFF );
+         SetGFXContext();
+
+         FloodFill( hdc, iLeft, iTop, iColor );
+
+         iRet = 1;
+         break;
+  }
+
+  if ( bOut )
+  {
+     SelectObject( hdc, hOldPen );
+     SelectObject( hdc, hOldBrush );
+     DeleteObject( hBrush );
+     DeleteObject( hPen );
+  }
+
+  return iRet;
+}
+
+/*
+static void HB_GT_FUNC( gt_gfxText( int iTop, int iLeft, char *cBuf, int iColor, int iSize, int iWidth ) )
+{
+  HB_SYMBOL_UNUSED( iTop );
+  HB_SYMBOL_UNUSED( iLeft );
+  HB_SYMBOL_UNUSED( cBuf );
+  HB_SYMBOL_UNUSED( iColor );
+  HB_SYMBOL_UNUSED( iSize );
+  HB_SYMBOL_UNUSED( iWidth );
+}
+*/
+
+//----------------------------------------------------------------------//
+
+static void HB_GT_FUNC( gt_Redraw( int iRow, int iCol, int iSize ) )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gtRedraw(%d, %d, %d)", iRow, iCol, iSize ) );
+
+   if ( _s.hWnd )
+   {
+      RECT rect;
+
+      rect.top = rect.bottom = ( SHORT ) iRow;
+      rect.left = ( SHORT ) iCol;
+      rect.right = ( SHORT ) ( iCol + iSize - 1 );
+
+      rect = hb_wvt_gtGetXYFromColRowRect( rect );
+
+      InvalidateRect( _s.hWnd, &rect, FALSE );
+   }
+}
+
+//----------------------------------------------------------------------//
+/*
+static void HB_GT_FUNC( gt_Refresh( void ) )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gtRefresh()") );
+
+   HB_GTSUPER_REFRESH();
+
+   if ( _s.hWnd )
+   {
+      SendMessage( _s.hWnd, WM_MY_UPDATE_CARET, 0, 0 );
+      hb_gt_wvt_ProcessMessages();
+   }
+}
+*/
+//----------------------------------------------------------------------//
+
+
+/* *********************************************************************** */
+/* dDuration is in 'Ticks' (18.2 per second) */
+static void hb_gt_wvt_Tone( double dFrequency, double dDuration )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Tone(%lf, %lf)", dFrequency, dDuration));
+
+   hb_gt_w32_Tone( dFrequency, dDuration );
+}
+
+/* *********************************************************************** */
+
+static BOOL hb_gt_wvt_mouse_IsPresent( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_mouse_IsPresent()"));
+
+   return TRUE;
+}
+
+static void hb_gt_wvt_mouse_GetPos( int * piRow, int * piCol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_mouse_GetPos(%p,%p)", piRow, piCol));
+
+   *piRow = _s.mousePos.y;
+   *piCol = _s.mousePos.x;
+}
+
+static BOOL hb_gt_wvt_mouse_ButtonState( int iButton )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_mouse_ButtonState(%i)", iButton ) );
+
+   switch( iButton )
+   {
+      case 0:
+         return ( GetKeyState( VK_LBUTTON ) & 0x8000 ) != 0;
+      case 1:
+         return ( GetKeyState( VK_RBUTTON ) & 0x8000 ) != 0;
+      case 2:
+         return ( GetKeyState( VK_MBUTTON ) & 0x8000 ) != 0;
+   }
+   return FALSE;
+}
+
+static int hb_gt_wvt_mouse_CountButton( void )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_mouse_CountButton()") );
+
+   return( GetSystemMetrics( SM_CMOUSEBUTTONS ) ) ;
+}
+
+/* *********************************************************************** */
+
+static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
 {
    int iVal;
 
@@ -4016,7 +3903,7 @@ static BOOL HB_GT_FUNC( gt_Info( int iType, PHB_GT_INFO pInfo ) )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GT_FUNC( gt_SetMode( (int) ( iVal / _s.PTEXTSIZE.y ), _s.COLS ) );
+            hb_gtSetMode( (USHORT) ( iVal / _s.PTEXTSIZE.y ), _s.COLS );
          }
          break;
 
@@ -4025,7 +3912,7 @@ static BOOL HB_GT_FUNC( gt_Info( int iType, PHB_GT_INFO pInfo ) )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            HB_GT_FUNC( gt_SetMode( _s.ROWS, (int) ( iVal / _s.PTEXTSIZE.x ) ) );
+            hb_gtSetMode( _s.ROWS, (USHORT) ( iVal / _s.PTEXTSIZE.x ) );
          }
          break;
 
@@ -4181,180 +4068,9 @@ static BOOL HB_GT_FUNC( gt_Info( int iType, PHB_GT_INFO pInfo ) )
    return TRUE;
 }
 
-//----------------------------------------------------------------------//
+/* *********************************************************************** */
 
-/* ********** Graphics API ********** */
-/*
- * NOTE:
- *      gfxPrimitive() parameters may have different meanings
- *      ie: - Desired color is 'iBottom' for PUTPIXEL and 'iRight' for CIRCLE
- *          - Red is iTop, Green iLeft and Blue is iBottom for MAKECOLOR
- *
- */
-
-#define SetGFXContext() hPen=CreatePen(PS_SOLID,1,color); hOldPen=(HPEN) SelectObject(hdc,hPen); hBrush=(HBRUSH) CreateSolidBrush(color); hOldBrush=(HBRUSH) SelectObject(hdc,hBrush); bOut=TRUE
-
-int HB_GT_FUNC( gt_gfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor ) )
-{
-   COLORREF      color;
-   HPEN          hPen, hOldPen;
-   HBRUSH        hBrush, hOldBrush;
-   HDC           hdc;
-   BOOL          bOut = FALSE;
-   int           iRet = 0;
-
-   hdc = GetDC( _s.hWnd );
-
-   switch ( iType )
-   {
-      case GFX_ACQUIRESCREEN:
-      case GFX_RELEASESCREEN:
-         return 1;
-      case GFX_MAKECOLOR:
-         return ( (int) ( (iTop << 16) | (iLeft << 8) | ( iBottom ) ) );
-      case GFX_PUTPIXEL:
-         color = RGB( iBottom >> 16, ( iBottom & 0xFF00 ) >> 8, iBottom & 0xFF );
-         SetGFXContext();
-
-         MoveToEx( hdc, iLeft, iTop, NULL );
-         LineTo( hdc, iLeft, iTop );
-
-         iRet = 1;
-         break;
-      case GFX_LINE:
-         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
-         SetGFXContext();
-
-         MoveToEx( hdc, iLeft, iTop, NULL );
-         LineTo( hdc, iRight, iBottom );
-
-         iRet = 1;
-         break;
-      case GFX_RECT:
-      {
-         RECT r;
-         r.left = iLeft;
-         r.top = iTop;
-         r.right = iRight;
-         r.bottom = iBottom;
-
-         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
-         SetGFXContext();
-
-         FrameRect( hdc, &r, hBrush );
-
-         iRet = 1;
-      }
-      break;
-      case GFX_FILLEDRECT:
-         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
-         SetGFXContext();
-
-         Rectangle( hdc, iLeft, iTop, iRight, iBottom );
-
-         iRet = 1;
-         break;
-      case GFX_CIRCLE:
-         color = RGB( iRight >> 16, ( iRight & 0xFF00 ) >> 8, iRight & 0xFF );
-         SetGFXContext();
-
-         Arc( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
-
-         iRet = 1;
-         break;
-      case GFX_FILLEDCIRCLE:
-         color = RGB( iRight >> 16, ( iRight & 0xFF00 ) >> 8, iRight & 0xFF );
-         SetGFXContext();
-
-         Ellipse( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2 );
-
-         iRet = 1;
-         break;
-      case GFX_ELLIPSE:
-         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
-         SetGFXContext();
-
-         Arc( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
-
-         iRet = 1;
-         break;
-      case GFX_FILLEDELLIPSE:
-         color = RGB( iColor >> 16, ( iColor & 0xFF00 ) >> 8, iColor & 0xFF );
-         SetGFXContext();
-
-         Ellipse( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2 );
-
-         iRet = 1;
-         break;
-      case GFX_FLOODFILL:
-         color = RGB( iBottom >> 16, ( iBottom & 0xFF00 ) >> 8, iBottom & 0xFF );
-         SetGFXContext();
-
-         FloodFill( hdc, iLeft, iTop, iColor );
-
-         iRet = 1;
-         break;
-  }
-
-  if ( bOut )
-  {
-     SelectObject( hdc, hOldPen );
-     SelectObject( hdc, hOldBrush );
-     DeleteObject( hBrush );
-     DeleteObject( hPen );
-  }
-
-  return iRet;
-}
-
-void HB_GT_FUNC( gt_gfxText( int iTop, int iLeft, char *cBuf, int iColor, int iSize, int iWidth ) )
-{
-  HB_SYMBOL_UNUSED( iTop );
-  HB_SYMBOL_UNUSED( iLeft );
-  HB_SYMBOL_UNUSED( cBuf );
-  HB_SYMBOL_UNUSED( iColor );
-  HB_SYMBOL_UNUSED( iSize );
-  HB_SYMBOL_UNUSED( iWidth );
-}
-
-//----------------------------------------------------------------------//
-
-static void HB_GT_FUNC( gt_Redraw( int iRow, int iCol, int iSize ) )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gtRedraw(%d, %d, %d)", iRow, iCol, iSize ) );
-
-   if ( _s.hWnd )
-   {
-      RECT rect;
-
-      rect.top = rect.bottom = ( SHORT ) iRow;
-      rect.left = ( SHORT ) iCol;
-      rect.right = ( SHORT ) ( iCol + iSize - 1 );
-
-      rect = hb_wvt_gtGetXYFromColRowRect( rect );
-
-      InvalidateRect( _s.hWnd, &rect, FALSE );
-   }
-}
-
-//----------------------------------------------------------------------//
-/*
-static void HB_GT_FUNC( gt_Refresh( void ) )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gtRefresh()") );
-
-   HB_GTSUPER_REFRESH();
-
-   if ( _s.hWnd )
-   {
-      SendMessage( _s.hWnd, WM_MY_UPDATE_CARET, 0, 0 );
-      hb_wvt_gtProcessMessages();
-   }
-}
-*/
-//----------------------------------------------------------------------//
-
-static BOOL HB_GT_FUNC( gt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox ) )
+static BOOL hb_gt_wvt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
 
    HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
@@ -4383,9 +4099,7 @@ static BOOL HB_GT_FUNC( gt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL
    return TRUE;
 }
 
-//----------------------------------------------------------------------//
-
-static BOOL HB_GT_FUNC( gt_SetKeyCP( char * pszTermCDP, char * pszHostCDP ) )
+static BOOL hb_gt_wvt_SetKeyCP( char * pszTermCDP, char * pszHostCDP )
 {
    HB_GTSUPER_SETKEYCP( pszTermCDP, pszHostCDP );
 
@@ -4413,131 +4127,76 @@ static BOOL HB_GT_FUNC( gt_SetKeyCP( char * pszTermCDP, char * pszHostCDP ) )
    return TRUE;
 }
 
-//-------------------------------------------------------------------//
 
-void HB_GT_FUNC( gt_Tone( double dFrequency, double dDuration ) )
+/* *********************************************************************** */
+
+static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
-   hb_gt_w32_Tone( dFrequency, dDuration );
-}
-
-//----------------------------------------------------------------------//
-
-static BOOL HB_GT_FUNC( gt_mouse_IsPresent( void ) )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtmouse_IsPresent()"));
-
-   return TRUE;
-}
-
-//----------------------------------------------------------------------//
-
-static void HB_GT_FUNC( gt_mouse_GetPos( int * piRow, int * piCol ) )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtmouse_GetPos(%p,%p)", piRow, piCol));
-
-   *piRow = _s.mousePos.y;
-   *piCol = _s.mousePos.x;
-}
-
-//----------------------------------------------------------------------//
-
-static BOOL HB_GT_FUNC( gt_mouse_ButtonState( int iButton ) )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gtmouse_ButtonState(%i)", iButton ) );
-
-   switch( iButton )
-   {
-      case 0:
-         return ( GetKeyState( VK_LBUTTON ) & 0x8000 ) != 0;
-      case 1:
-         return ( GetKeyState( VK_RBUTTON ) & 0x8000 ) != 0;
-      case 2:
-         return ( GetKeyState( VK_MBUTTON ) & 0x8000 ) != 0;
-   }
-   return FALSE;
-}
-
-//----------------------------------------------------------------------//
-
-static int HB_GT_FUNC( gt_mouse_CountButton( void ) )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gtmouse_CountButton()") );
-
-   return( GetSystemMetrics( SM_CMOUSEBUTTONS ) ) ;
-}
-
-//----------------------------------------------------------------------//
-
-static BOOL hb_gt_FuncInit( PHB_GT_FUNCS gt_funcs )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gtFnInit( %p )", gt_funcs ) );
-
-   gt_funcs->Init                  = HB_GT_FUNC( gt_Init               );
-   gt_funcs->Box                   = HB_GT_FUNC( gt_Box                );
-   gt_funcs->BoxD                  = HB_GT_FUNC( gt_BoxD               );
-   gt_funcs->BoxS                  = HB_GT_FUNC( gt_BoxS               );
-   gt_funcs->DispBegin             = HB_GT_FUNC( gt_DispBegin          );
-   gt_funcs->DispEnd               = HB_GT_FUNC( gt_DispEnd            );
-   gt_funcs->DispCount             = HB_GT_FUNC( gt_DispCount          );
-   gt_funcs->Exit                  = HB_GT_FUNC( gt_Exit               );
-   gt_funcs->GetBlink              = HB_GT_FUNC( gt_GetBlink           );
-   gt_funcs->GetCursorStyle        = HB_GT_FUNC( gt_GetCursorStyle     );
+   pFuncTable->Init                 = HB_GT_FUNC( gt_Init               );
+   pFuncTable->Box                  = HB_GT_FUNC( gt_Box                );
+   pFuncTable->BoxD                 = HB_GT_FUNC( gt_BoxD               );
+   pFuncTable->BoxS                 = HB_GT_FUNC( gt_BoxS               );
+   pFuncTable->DispBegin            = HB_GT_FUNC( gt_DispBegin          );
+   pFuncTable->DispEnd              = HB_GT_FUNC( gt_DispEnd            );
+   pFuncTable->DispCount            = HB_GT_FUNC( gt_DispCount          );
+   pFuncTable->Exit                 = HB_GT_FUNC( gt_Exit               );
+   pFuncTable->GetBlink             = HB_GT_FUNC( gt_GetBlink           );
+   pFuncTable->GetCursorStyle       = HB_GT_FUNC( gt_GetCursorStyle     );
    //                     PART OF GT BUT UNDEFINED                     //
-   gt_funcs->GetPos                = HB_GT_FUNC( gt_GetPos             );
-   //gt_funcs->GetScreenWidth        = HB_GT_FUNC( gt_GetScreenWidth     );
-   //gt_funcs->GetScreenHeight       = HB_GT_FUNC( gt_GetScreenHeight    );
-   gt_funcs->MaxCol                = HB_GT_FUNC( gt_MaxCol             );
-   gt_funcs->MaxRow                = HB_GT_FUNC( gt_MaxRow             );
-   //gt_funcs->GetText               = HB_GT_FUNC( gt_GetText            );
-   gt_funcs->HorizLine             = HB_GT_FUNC( gt_HorizLine          );
-   gt_funcs->Info                  = HB_GT_FUNC( gt_Info               );
-   gt_funcs->IsColor               = HB_GT_FUNC( gt_IsColor            );
-   gt_funcs->OutStd                = HB_GT_FUNC( gt_OutStd             );
-   gt_funcs->OutErr                = HB_GT_FUNC( gt_OutErr             );
-   gt_funcs->PostExt               = HB_GT_FUNC( gt_PostExt            );
-   gt_funcs->PreExt                = HB_GT_FUNC( gt_PreExt             );
-   //gt_funcs->ProcessMessages       = HB_GT_FUNC( gt_ProcessMessages    );
-   //gt_funcs->Puts                  = HB_GT_FUNC( gt_Puts               );
-   //gt_funcs->PutChar                 = HB_GT_FUNC( gt_Puts               );
-   gt_funcs->PutText               = HB_GT_FUNC( gt_PutText            );
-   gt_funcs->Redraw                = HB_GT_FUNC( gt_Redraw             );   // +
-   //gt_funcs->Refresh               = HB_GT_FUNC( gt_Refresh            );   // +
-   gt_funcs->ReadKey               = HB_GT_FUNC( gt_ReadKey            );
-   gt_funcs->Rest                  = HB_GT_FUNC( gt_xPutText           );
-   gt_funcs->Resume                = HB_GT_FUNC( gt_Resume             );
-   //gt_funcs->Replicate             = HB_GT_FUNC( gt_Replicate          );
-   //gt_funcs->RectSize              = HB_GT_FUNC( gt_RectSize           );
-   //gt_funcs->Row                   = HB_GT_FUNC( gt_Row                );
-   gt_funcs->Save                  = HB_GT_FUNC( gt_GetText            );
-   gt_funcs->SetAttribute          = HB_GT_FUNC( gt_SetAttribute       );
-   gt_funcs->SetBlink              = HB_GT_FUNC( gt_SetBlink           );
-   //gt_funcs->SetClipboard          = HB_GT_FUNC( gt_SetClipboard       );
-   gt_funcs->SetCursorStyle        = HB_GT_FUNC( gt_SetCursorStyle     );
-   gt_funcs->SetMode               = HB_GT_FUNC( gt_SetMode            );
-   gt_funcs->SetPos                = HB_GT_FUNC( gt_SetPos             );
-   gt_funcs->Scroll                = HB_GT_FUNC( gt_Scroll             );
-   gt_funcs->Suspend               = HB_GT_FUNC( gt_Suspend            );
-   gt_funcs->Tone                  = HB_GT_FUNC( gt_Tone               );
-   gt_funcs->Version               = HB_GT_FUNC( gt_Version            );
-   gt_funcs->VertLine              = HB_GT_FUNC( gt_VertLine           );
+   pFuncTable->GetPos               = HB_GT_FUNC( gt_GetPos             );
+   //pFuncTable->GetScreenWidth       = HB_GT_FUNC( gt_GetScreenWidth     );
+   //pFuncTable->GetScreenHeight      = HB_GT_FUNC( gt_GetScreenHeight    );
+   pFuncTable->MaxCol               = HB_GT_FUNC( gt_MaxCol             );
+   pFuncTable->MaxRow               = HB_GT_FUNC( gt_MaxRow             );
+   //pFuncTable->GetText              = HB_GT_FUNC( gt_GetText            );
+   pFuncTable->HorizLine            = HB_GT_FUNC( gt_HorizLine          );
+   pFuncTable->IsColor              = HB_GT_FUNC( gt_IsColor            );
+   pFuncTable->OutStd               = HB_GT_FUNC( gt_OutStd             );
+   pFuncTable->OutErr               = HB_GT_FUNC( gt_OutErr             );
+   pFuncTable->PostExt              = HB_GT_FUNC( gt_PostExt            );
+   pFuncTable->PreExt               = HB_GT_FUNC( gt_PreExt             );
+   //pFuncTable->ProcessMessages      = HB_GT_FUNC( gt_ProcessMessages    );
+   //pFuncTable->Puts                 = HB_GT_FUNC( gt_Puts               );
+   //pFuncTable->PutChar                = HB_GT_FUNC( gt_Puts               );
+   pFuncTable->PutText              = HB_GT_FUNC( gt_PutText            );
+   pFuncTable->Redraw               = HB_GT_FUNC( gt_Redraw             );   // +
+   //pFuncTable->Refresh              = HB_GT_FUNC( gt_Refresh            );   // +
+   pFuncTable->Rest                 = HB_GT_FUNC( gt_xPutText           );
+   pFuncTable->Resume               = HB_GT_FUNC( gt_Resume             );
+   //pFuncTable->Replicate            = HB_GT_FUNC( gt_Replicate          );
+   //pFuncTable->RectSize             = HB_GT_FUNC( gt_RectSize           );
+   //pFuncTable->Row                  = HB_GT_FUNC( gt_Row                );
+   pFuncTable->Save                 = HB_GT_FUNC( gt_GetText            );
+   pFuncTable->SetAttribute         = HB_GT_FUNC( gt_SetAttribute       );
+   pFuncTable->SetBlink             = HB_GT_FUNC( gt_SetBlink           );
+   pFuncTable->SetCursorStyle       = HB_GT_FUNC( gt_SetCursorStyle     );
+   pFuncTable->SetMode              = HB_GT_FUNC( gt_SetMode            );
+   pFuncTable->SetPos               = HB_GT_FUNC( gt_SetPos             );
+   pFuncTable->Scroll               = HB_GT_FUNC( gt_Scroll             );
+   pFuncTable->Suspend              = HB_GT_FUNC( gt_Suspend            );
+   pFuncTable->Version              = HB_GT_FUNC( gt_Version            );
+   pFuncTable->VertLine             = HB_GT_FUNC( gt_VertLine           );
 
-   gt_funcs->SetDispCP             = HB_GT_FUNC( gt_SetDispCP          );
-   gt_funcs->SetKeyCP              = HB_GT_FUNC( gt_SetKeyCP           );
+   pFuncTable->Tone                 = hb_gt_wvt_Tone;
+   pFuncTable->Info                 = hb_gt_wvt_Info;
+   pFuncTable->SetDispCP            = hb_gt_wvt_SetDispCP;
+   pFuncTable->SetKeyCP             = hb_gt_wvt_SetKeyCP;
 
-   /* Graphics API */
-   //gt_funcs->gfxPrimitive          = HB_GT_FUNC( gt_gfxPrimitive );
+   pFuncTable->ReadKey              = hb_gt_wvt_ReadKey;
 
-   gt_funcs->MouseIsPresent        = HB_GT_FUNC( gt_mouse_IsPresent    );
-   gt_funcs->MouseGetPos           = HB_GT_FUNC( gt_mouse_GetPos       );
-   gt_funcs->MouseButtonState      = HB_GT_FUNC( gt_mouse_ButtonState  );
-   gt_funcs->MouseCountButton      = HB_GT_FUNC( gt_mouse_CountButton  );
+   pFuncTable->MouseIsPresent       = hb_gt_wvt_mouse_IsPresent;
+   pFuncTable->MouseGetPos          = hb_gt_wvt_mouse_GetPos;
+   pFuncTable->MouseButtonState     = hb_gt_wvt_mouse_ButtonState;
+   pFuncTable->MouseCountButton     = hb_gt_wvt_mouse_CountButton;
+
+   pFuncTable->GfxPrimitive         = hb_gt_wvt_gfx_Primitive;
 
    return TRUE;
 }
 
-//-------------------------------------------------------------------//
+/* ********************************************************************** */
 
 static HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
                              hb_gt_FuncInit,

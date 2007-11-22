@@ -89,7 +89,7 @@
 static HB_GT_FUNCS SuperTable;
 #define HB_GTSUPER (&SuperTable)
 
-static TCHAR szAppName[] = TEXT( "Harbour WVT" );
+static const TCHAR s_szAppName[] = TEXT( "Harbour WVT" );
 
 static HANDLE  s_hInstance;
 static HANDLE  s_hPrevInstance;
@@ -342,7 +342,7 @@ static RECT hb_gt_wvt_GetColRowFromXYRect( RECT xy )
    return colrow;
 }
 
-POINT HB_EXPORT hb_gt_wvt_GetXYFromColRow( USHORT col, USHORT row )
+static POINT hb_gt_wvt_GetXYFromColRow( USHORT col, USHORT row )
 {
    POINT xy;
 
@@ -367,7 +367,7 @@ static RECT hb_gt_wvt_GetXYFromColRowRect( RECT colrow )
 /*
  *  functions for handling the input queues for the mouse and keyboard
  */
-void HB_EXPORT hb_gt_wvt_AddCharToInputQueue( int iKey )
+static void hb_gt_wvt_AddCharToInputQueue( int iKey )
 {
    int iPos = _s.keyPointerIn;
 
@@ -1218,16 +1218,16 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
    wndclass.hbrBackground = NULL;
    wndclass.lpszMenuName  = NULL;
-   wndclass.lpszClassName = szAppName;
+   wndclass.lpszClassName = s_szAppName;
 
    if ( ! RegisterClass( &wndclass ) )
    {
       MessageBox( NULL, TEXT( "Failed to register class." ),
-                  szAppName, MB_ICONERROR );
+                  s_szAppName, MB_ICONERROR );
       return 0;
    }
 
-   hWnd = CreateWindow( szAppName,                         /* classname */
+   hWnd = CreateWindow( s_szAppName,                       /* classname */
       TEXT( "HARBOUR_WVT" ),                               /* window name */
       WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,  /* style */
       0,                                                   /* x */
@@ -1329,7 +1329,7 @@ static void hb_gt_wvt_Exit( void )
       DestroyWindow( _s.hWnd );
       _s.hWnd = NULL;
    }
-   UnregisterClass( szAppName, ( HINSTANCE ) s_hInstance );
+   UnregisterClass( s_szAppName, ( HINSTANCE ) s_hInstance );
 }
 
 static BOOL hb_gt_wvt_SetMode( int iRow, int iCol )
@@ -1402,7 +1402,6 @@ static void hb_gt_wvt_Tone( double dFrequency, double dDuration )
 
    hb_gt_w32_Tone( dFrequency, dDuration );
 }
-
 
 /* *********************************************************************** */
 
@@ -1864,25 +1863,25 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
 
-   pFuncTable->Init                       = hb_gt_wvt_Init;
-   pFuncTable->Exit                       = hb_gt_wvt_Exit;
-   pFuncTable->SetMode                    = hb_gt_wvt_SetMode;
-   pFuncTable->Redraw                     = hb_gt_wvt_Redraw;
-   pFuncTable->Refresh                    = hb_gt_wvt_Refresh;
-   pFuncTable->Version                    = hb_gt_wvt_Version;
-   pFuncTable->Tone                       = hb_gt_wvt_Tone;
-   pFuncTable->Info                       = hb_gt_wvt_Info;
-   pFuncTable->SetDispCP                  = hb_gt_wvt_SetDispCP;
-   pFuncTable->SetKeyCP                   = hb_gt_wvt_SetKeyCP;
+   pFuncTable->Init                 = hb_gt_wvt_Init;
+   pFuncTable->Exit                 = hb_gt_wvt_Exit;
+   pFuncTable->SetMode              = hb_gt_wvt_SetMode;
+   pFuncTable->Redraw               = hb_gt_wvt_Redraw;
+   pFuncTable->Refresh              = hb_gt_wvt_Refresh;
+   pFuncTable->Version              = hb_gt_wvt_Version;
+   pFuncTable->Tone                 = hb_gt_wvt_Tone;
+   pFuncTable->Info                 = hb_gt_wvt_Info;
+   pFuncTable->SetDispCP            = hb_gt_wvt_SetDispCP;
+   pFuncTable->SetKeyCP             = hb_gt_wvt_SetKeyCP;
 
-   pFuncTable->ReadKey                    = hb_gt_wvt_ReadKey;
+   pFuncTable->ReadKey              = hb_gt_wvt_ReadKey;
 
-   pFuncTable->MouseIsPresent             = hb_gt_wvt_mouse_IsPresent;
-   pFuncTable->MouseGetPos                = hb_gt_wvt_mouse_GetPos;
-   pFuncTable->MouseButtonState           = hb_gt_wvt_mouse_ButtonState;
-   pFuncTable->MouseCountButton           = hb_gt_wvt_mouse_CountButton;
+   pFuncTable->MouseIsPresent       = hb_gt_wvt_mouse_IsPresent;
+   pFuncTable->MouseGetPos          = hb_gt_wvt_mouse_GetPos;
+   pFuncTable->MouseButtonState     = hb_gt_wvt_mouse_ButtonState;
+   pFuncTable->MouseCountButton     = hb_gt_wvt_mouse_CountButton;
 
-//   pFuncTable->GfxPrimitive               = hb_gt_wvt_gfx_Primitive;
+//   pFuncTable->GfxPrimitive         = hb_gt_wvt_gfx_Primitive;
 
    return TRUE;
 }
