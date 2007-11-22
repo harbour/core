@@ -176,6 +176,7 @@ extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
    #define HB_TCHAR_CONVFROM(s)        hb_wctomb(s)
    #define HB_TCHAR_CONVNTO(s,l)       hb_mbntowc(s,l)
    #define HB_TCHAR_CONVNFROM(s,l)     hb_wcntomb(s,l)
+   #define HB_TCHAR_CONVNREV(d,s,l)    do { hb_wctombget(d,s,l); hb_xfree(s); } while( 0 )
    #define HB_TCHAR_FREE(s)            hb_xfree(s)
 
 #else
@@ -187,6 +188,7 @@ extern void hb_wctombget( char *dstA, const wchar_t *srcW, unsigned long ulLen )
    #define HB_TCHAR_CONVFROM(s)        (s)
    #define HB_TCHAR_CONVNTO(s,l)       (s)
    #define HB_TCHAR_CONVNFROM(s,l)     (s)
+   #define HB_TCHAR_CONVNREV(d,s,l)    do { ; } while( 0 )
    #define HB_TCHAR_FREE(s)            HB_SYMBOL_UNUSED(s)
 
 #endif /* UNICODE */

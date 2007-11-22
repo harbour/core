@@ -1234,9 +1234,9 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
    PHB_ITEM pFirst = hb_param( 3,HB_IT_ANY );
    PHB_ITEM pFunc  = NULL ;
    PHB_DYNS pExecSym;
-   HWND     hDlg ;
+   HWND     hDlg   = 0;
+   int      iType  = 0;
    int      iIndex;
-   int      iType;
    int      iResource = hb_parni( 4 );
 
    /* check if we still have room for a new dialog */
@@ -1678,26 +1678,27 @@ HB_FUNC( WVT_DLGSETICON )
 
 HB_FUNC( WIN_SENDMESSAGE )
 {
-   char *cText ;
+   char *cText = NULL;
+   ULONG ulLen = 0;
 
    if( ISBYREF( 4 ) )
    {
-      cText = ( char* ) hb_xgrab( hb_parcsiz( 4 ) );
-      hb_xmemcpy( cText, hb_parc( 4 ), hb_parcsiz( 4 ) );
+      ulLen = hb_parclen( 4 );
+      cText = ( char* ) hb_xgrab( ulLen + 1 );
+      hb_xmemcpy( cText, hb_parcx( 4 ), ulLen + 1 );
    }
 
    hb_retnl( ( ULONG ) SendMessage( ( HWND ) hb_parnl( 1 ),
                                     ( UINT ) hb_parni( 2 ),
                                     ( ISNIL( 3 ) ? 0 : ( WPARAM ) hb_parnl( 3 ) ),
-                                    ( ISNIL( 4 ) ? 0 : ( ISBYREF( 4 ) ? ( LPARAM ) ( LPSTR ) cText :
+                                    ( ISNIL( 4 ) ? 0 : ( cText ? ( LPARAM ) ( LPSTR ) cText :
                                        ( ISCHAR( 4 ) ? ( LPARAM )( LPSTR ) hb_parc( 4 ) :
                                            ( LPARAM ) hb_parnl( 4 ) ) ) ) )
            );
 
-   if ( ISBYREF( 4 ) )
+   if ( cText )
    {
-      hb_storclen( cText, hb_parcsiz( 4 ), 4 );
-      hb_xfree( cText );
+      hb_storclen_buffer( cText, ulLen, 4 );
    }
 }
 
@@ -1930,28 +1931,22 @@ HB_FUNC( WIN_LOADICON )
 //
 HB_FUNC( WIN_LOADIMAGE )
 {
-   HBITMAP hImage;
+   HBITMAP hImage = 0;
    int     iSource = hb_parni( 2 );
 
    switch ( iSource )
    {
       case 0:
-      {
          hImage = LoadBitmap( ( HINSTANCE ) hb_hInstance, MAKEINTRESOURCE( hb_parni( 1 ) ) );
-      }
-      break;
+         break;
 
       case 1:
-      {
          hImage = LoadBitmap( ( HINSTANCE ) hb_hInstance, hb_parc( 1 ) );
-      }
-      break;
+         break;
 
       case 2:
-      {
          hImage = ( HBITMAP ) LoadImage( ( HINSTANCE ) NULL, hb_parc( 1 ), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE );
-      }
-      break;
+         break;
    }
 
    hb_retnl( ( ULONG ) hImage ) ;
@@ -2089,13 +2084,11 @@ HB_FUNC( WIN_ISWINDOW )
 
 HB_FUNC( WVT_GETFONTHANDLE )
 {
-   HFONT hFont;
-   int   iSlot = hb_parni( 1 )-1;
+   HFONT hFont = 0;
+   int   iSlot = hb_parni( 1 ) - 1;
 
    if ( iSlot >= 0 && iSlot < WVT_PICTURES_MAX )
-   {
       hFont = _s->hUserFonts[ iSlot ];
-   }
 
    hb_retnl( ( ULONG ) hFont );
 }

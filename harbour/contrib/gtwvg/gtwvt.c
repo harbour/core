@@ -1468,8 +1468,7 @@ static void hb_wvt_gtPaintText( HWND hWnd, RECT updateRect )
             {
                hb_wvt_gtSetColors( hdc, oldAttrib );
 
-               //text = HB_TCHAR_CONVNTO( ( const char* ) _s.pBuffer + startIndex, len );
-               text = HB_TCHAR_CONVNTO( ( BYTE * ) _s.pBuffer + startIndex, len );
+               text = HB_TCHAR_CONVNTO( ( char * ) _s.pBuffer + startIndex, len );
                //hb_wvt_gtTextOut( hdc, startCol, irow, ( char const * ) _s.pBuffer + startIndex, len );
                hb_wvt_gtTextOut( hdc, startCol, irow, text, len );
 
@@ -1490,8 +1489,7 @@ static void hb_wvt_gtPaintText( HWND hWnd, RECT updateRect )
             index++;
          }
          hb_wvt_gtSetColors( hdc, oldAttrib );
-         //text = HB_TCHAR_CONVNTO( ( const char* ) _s.pBuffer + startIndex, len );
-         text = HB_TCHAR_CONVNTO( ( BYTE * ) _s.pBuffer + startIndex, len );
+         text = HB_TCHAR_CONVNTO( ( char * ) _s.pBuffer + startIndex, len );
          hb_wvt_gtTextOut( hdc, startCol, irow, text, len );
          if ( _s.bGui )
          {
@@ -1670,8 +1668,6 @@ static void gt_hbInitStatics( void )
    OSVERSIONINFO osvi ;
    HINSTANCE     h;
    int           iIndex;
-   LPTSTR        msimg32 = HB_TCHAR_CONVTO( "msimg32.dll" );
-   LPTSTR        GradientFill = HB_TCHAR_CONVTO( "GradientFill" );
 
    _s.ROWS             = WVT_DEFAULT_ROWS;
    _s.COLS             = WVT_DEFAULT_COLS;
@@ -1726,12 +1722,15 @@ static void gt_hbInitStatics( void )
    _s.colStop          = 0;
    _s.bToolTipActive   = FALSE;
 
-   h = LoadLibraryEx( msimg32, NULL, 0 );
-   HB_TCHAR_FREE( msimg32 );
+   h = LoadLibraryEx( TEXT( "msimg32.dll" ), NULL, 0 );
    if ( h )
    {
-     _s.pfnGF = ( wvtGradientFill ) GetProcAddress( h, GradientFill );
-     HB_TCHAR_FREE( GradientFill );
+      /* workaround for wrong declarations in some old C compilers */
+#if defined( UNICODE ) && defined( GetProcAddress )
+     _s.pfnGF = ( wvtGradientFill ) GetProcAddressW( h, TEXT( "GradientFill" ) );
+#else
+     _s.pfnGF = ( wvtGradientFill ) GetProcAddress( h, "GradientFill" );
+#endif
      if ( _s.pfnGF )
      {
        _s.hMSImg32 = h;
@@ -2513,8 +2512,13 @@ DWORD HB_EXPORT hb_wvt_gtSetWindowIconFromFile( char *icon )
 
 int HB_EXPORT hb_wvt_gtGetWindowTitle( char * cTitle, int length )
 {
-  //LPTSTR title = HB_TCHAR_CONVTO( cTitle );
-  return( GetWindowText( _s.hWnd, HB_TCHAR_CONVTO( cTitle ), length ) );
+   int iResult;
+   LPTSTR lpBuffer = HB_TCHAR_CONVNTO( cTitle, length );
+
+   iResult = GetWindowText( _s.hWnd, lpBuffer, length );
+   HB_TCHAR_CONVNREV( cTitle, lpBuffer, length );
+
+   return iResult;
 }
 
 //-------------------------------------------------------------------//
@@ -2631,10 +2635,10 @@ HB_EXPORT IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR 
 {
    HRSRC  res;
    LPVOID iPicture = NULL;
-   //LPTSTR resource = cResource; //HB_TCHAR_CPTO( cResource );
-   //LPTSTR section  = cSection; //HB_TCHAR_CPTO( cSection );
+   LPTSTR resource = HB_TCHAR_CONVTO( ( LPSTR ) cResource );
+   LPTSTR section  = HB_TCHAR_CONVTO( ( LPSTR ) cSection );
 
-   res = FindResource( ( HINSTANCE ) hb_hInstance, cResource, cSection );
+   res = FindResource( ( HINSTANCE ) hb_hInstance, resource, section );
    if ( res )
    {
       IStream *iStream  = NULL;
@@ -2655,8 +2659,8 @@ HB_EXPORT IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR 
       FreeResource( mem );
    }
 
-   //HB_TCHAR_FREE( resource );
-   //HB_TCHAR_FREE( section );
+   HB_TCHAR_FREE( resource );
+   HB_TCHAR_FREE( section );
 
    return (IPicture *) iPicture;
 }
@@ -3014,7 +3018,7 @@ static void HB_GT_FUNC( gt_SetPos( int sRow, int sCol ) )
 
 static void HB_GT_FUNC( gt_GetPos( int * sRow, int * sCol ) )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_SetPos( %hd, %hd, %hd )", sRow, sCol, sMethod ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_GetPos( %p, %p )", sRow, sCol ) );
 
    *sCol = _s.caretPos.x;
    *sRow = _s.caretPos.y;
@@ -3284,7 +3288,7 @@ static void HB_GT_FUNC( gt_PutText( int top, int left, BYTE bColor, BYTE * pText
 {
    USHORT irow, icol, index, j, right;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_PutText( %hu, %hu, %hu, %hu, %p )", top, left, bottom, right, sBuffer ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_PutText( %d, %d, %d, %s, %lu )", top, left, bColor, pText, ulLen ) );
 
    j = 0;
    irow = top;
@@ -3850,7 +3854,7 @@ int HB_GT_FUNC( gt_ReadKey() )
    int  c = 0;
    BOOL bKey;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_ReadKey( %d )", ( int ) eventmask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_ReadKey()" ) );
 
    hb_wvt_gtProcessMessages() ;
    bKey = hb_wvt_gtGetCharFromInputQueue( &c );

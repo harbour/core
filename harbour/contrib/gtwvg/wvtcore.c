@@ -117,8 +117,6 @@ HB_FUNC( WVT_CORE )
 
 HB_EXPORT BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image )
 {
-  IStream  *iStream;
-  IPicture *iPicture;
   HGLOBAL  hGlobal;
   HANDLE   hFile;
   DWORD    nFileSize;
@@ -149,8 +147,12 @@ HB_EXPORT BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char *
       {
         if ( ReadFile( hFile, hGlobal, nFileSize, &nReadByte, NULL ) )
         {
+          IStream  *iStream;
+          IPicture *iPicture;
+          IPicture ** iPictureRef = &iPicture;
+
           CreateStreamOnHGlobal( hGlobal, TRUE, &iStream );
-          OleLoadPicture( iStream, nFileSize, TRUE, (REFIID) &IID_IPicture, ( LPVOID* )&iPicture );
+          OleLoadPicture( iStream, nFileSize, TRUE, (REFIID) &IID_IPicture, ( LPVOID * ) iPictureRef );
 
           if ( iPicture )
           {
@@ -705,6 +707,8 @@ HB_FUNC( WVT_DRAWOUTLINE )
    iBottom = xy.y;
    iRight  = xy.x;
 
+   hOldPenGUI = hOldPen = 0;
+
    if ( ISNUM( 5 ) )
    {
       hPen = CreatePen( hb_parni( 5 ), 0, ( ISNIL( 7 ) ? 0 : ( COLORREF ) hb_parnl( 7 ) ) );
@@ -736,7 +740,7 @@ HB_FUNC( WVT_DRAWOUTLINE )
    if ( hPen )
    {
       SelectObject( _s->hdc, hOldPen );
-      if ( _s->bGui )
+      if ( hOldPenGUI )
       {
          SelectObject( _s->hGuiDC, hOldPenGUI );
       }
@@ -774,7 +778,6 @@ HB_FUNC( WVT_DRAWLINE )
    switch ( iAlign )
    {
       case 0:                  // Center
-      {
          if ( iOrient == 0 )   // Horizontal
          {
             iOffset = ( ( iBottom - iTop ) / 2 ) ;
@@ -785,14 +788,12 @@ HB_FUNC( WVT_DRAWLINE )
             iOffset = ( ( iRight - iLeft ) / 2 ) ;
             x       = iLeft + iOffset ;
          }
-      }
-      break;
+         break;
 
       case 1:                  // Top
-      break;
+         break;
 
       case 2:                  // bottom
-      {
          if ( iFormat == 0 || iFormat == 1 )  // Raised/Recessd
          {
             y = iBottom - 1;
@@ -801,14 +802,12 @@ HB_FUNC( WVT_DRAWLINE )
          {
             y = iBottom;
          }
-      }
-      break;
+         break;
 
       case 3:                  // Left
-      break;
+         break;
 
       case 4:                  // Right
-      {
          if ( iFormat == 0 || iFormat == 1 )  // Raised/Recessd
          {
             x = iRight - 1;
@@ -817,16 +816,12 @@ HB_FUNC( WVT_DRAWLINE )
          {
             x = iRight;
          }
-      }
-      break;
+         break;
    }
 
    hPen = CreatePen( iStyle, iThick, cr );
    hOldPen = (HPEN) SelectObject( _s->hdc, hPen );
-   if ( _s->bGui )
-   {
-      hOldPenGUI = (HPEN) SelectObject( _s->hGuiDC, hPen );
-   }
+   hOldPenGUI = _s->bGui ? (HPEN) SelectObject( _s->hGuiDC, hPen ) : 0;
 
    switch ( iFormat )
    {
@@ -944,7 +939,7 @@ HB_FUNC( WVT_DRAWLINE )
    }
 
    SelectObject( _s->hdc, hOldPen );
-   if ( _s->bGui )
+   if ( hOldPenGUI )
    {
       SelectObject( _s->hGuiDC, hOldPenGUI );
    }
@@ -1955,8 +1950,8 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    iBottom      = xy.y - 1;
    iRight       = xy.x - 1;
 
-   iAlignHorz   = ( ISNIL( 6 ) ? 0 : hb_parni( 6 ) );
-   iAlignVert   = ( ISNIL( 7 ) ? 0 : hb_parni( 7 ) );
+   iAlignHorz   = hb_parni( 6 ); /* default is 0 */
+   iAlignVert   = hb_parni( 7 ); /* default is 0 */
 
    SetTextColor( _s->hdc, ISNIL( 8 ) ? _s->foreground : ( COLORREF ) hb_parnl( 8 ) );
    SetBkColor( _s->hdc, ISNIL( 9 ) ? _s->background : ( COLORREF ) hb_parnl( 9 ) );
@@ -1970,22 +1965,21 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    switch ( iAlignHorz )
    {
       case 0:
-      {
          iAlignH = TA_LEFT;
-      }
-      break;
+         break;
+
       case 1:
-      {
          iAlignH = TA_RIGHT;
          x = iRight;
-      }
-      break;
+         break;
+
       case 2:
-      {
          iAlignH = TA_CENTER;
          x = iLeft + ( ( iRight - iLeft + 1 ) / 2 );
-      }
-      break;
+         break;
+
+      default:
+         iAlignH = 0;
    }
 
    iAlignV = TA_TOP;
@@ -1993,15 +1987,12 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    switch ( iAlignVert )
    {
       case 1:
-      {
          y = iBottom - sz.cy;
-      }
-      break;
+         break;
+
       case 2:
-      {
          y = iTop + ( ( iBottom - iTop + 1 - sz.cy ) / 2 );
-      }
-      break;
+         break;
    }
 
    SetTextAlign( _s->hdc, iAlignH | iAlignV );
@@ -2342,28 +2333,24 @@ HB_FUNC( WVT_DRAWTEXTBOX )
    int iBottom = ( _s->PTEXTSIZE.y * ( hb_parni( 3 ) + 1 ) ) - 1 + hb_parni( 5,3 );
    int iRight  = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parni( 5,4 );
 
-   int iAlignHorz   = ( ISNIL( 7 ) ? 0 : hb_parni( 7 ) );
-   int iAlignH ;
+   int iAlignHorz = hb_parni( 7 ); /* default to 0 */
+   int iAlignH = 0;
 
    RECT     rc = { 0,0,0,0 };
 
    switch ( iAlignHorz )
    {
       case 0:
-      {
          iAlignH = DT_LEFT;
-      }
-      break;
+         break;
+
       case 1:
-      {
          iAlignH = DT_RIGHT;
-      }
-      break;
+         break;
+
       case 2:
-      {
          iAlignH = DT_CENTER;
-      }
-      break;
+         break;
    }
 
    rc.top       = iTop;

@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-22 14:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbwince.h
+    + added HB_TCHAR_CONVNREV() macro
+
+  * harbour/contrib/gtwvg/wvtutils.c
+  * harbour/contrib/gtwvg/wvtcore.c
+  * harbour/contrib/gtwvg/gtwvt.c
+    * cleaned MinGW warnings
+    ! fixed compilation with HB_TR_LEVEL_DEBUG
+    * some minor cleanup in UNICODE conversions
+
 2007-11-22 12:21 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwvt/gtwvt.c
     * formatting
