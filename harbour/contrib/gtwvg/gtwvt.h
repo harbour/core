@@ -68,6 +68,10 @@
 
 //-------------------------------------------------------------------//
 
+#ifndef _WIN32_IE
+   #define _WIN32_IE 0x0400
+#endif
+
 #ifndef CINTERFACE
    #define CINTERFACE 1
 #endif

@@ -1486,8 +1486,8 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
                _s.fontHeight = iVal;
                if ( _s.hWnd )
                {
-                 hb_gt_wvt_ResetWindowSize( _s.hWnd );
-                 hb_gt_wvt_UpdateCaret();
+                  hb_gt_wvt_ResetWindowSize( _s.hWnd );
+                  hb_gt_wvt_UpdateCaret();
                }
                DeleteObject( hFont );
             }

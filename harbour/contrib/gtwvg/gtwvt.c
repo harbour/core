@@ -67,25 +67,19 @@
  *
  */
 
-//-------------------------------------------------------------------//
 /*
-* Individual authors:
-* (C) 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
-*         Standard xplatform GT Info system,
-*         Graphical object system and event system.
-*         GTINFO() And GTO_* implementation.
-*
-* (C) 2004 Mauricio Abre <maurifull@datafull.com>
-*         Cross-GT, multiplatform Graphics API
-*
-*/
-//-------------------------------------------------------------------//
+ * Individual authors:
+ * (C) 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
+ *         Standard xplatform GT Info system,
+ *         Graphical object system and event system.
+ *         GTINFO() And GTO_* implementation.
+ *
+ * (C) 2004 Mauricio Abre <maurifull@datafull.com>
+ *         Cross-GT, multiplatform Graphics API
+ *
+ */
 
 #define HB_OS_WIN_32_USED
-
-#ifndef _WIN32_IE
-   #define _WIN32_IE 0x0400
-#endif
 
 #include "gtwvt.h"
 
@@ -168,8 +162,6 @@ static BOOL    hb_wvt_gtSetCaretPos( void );
 static void    hb_wvt_gtValidateCaret( void );
 static void    hb_wvt_gtUpdateCaret( void );
 
-//static USHORT  hb_wvt_gtGetMouseX( void );
-//static USHORT  hb_wvt_gtGetMouseY( void );
 static void    hb_wvt_gtSetMouseX( USHORT ix );
 static void    hb_wvt_gtSetMouseY( USHORT iy );
 static BOOL    hb_wvt_gtGetCharFromInputQueue( int * c );
@@ -209,17 +201,10 @@ static BOOL    hb_wvt_gtKeyEvent( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
 static void    HB_GT_FUNC( gt_Init( FHANDLE iFilenoStdin, FHANDLE iFilenoStdout, FHANDLE iFilenoStderr ) );
 static void    HB_GT_FUNC( gt_Exit( void ) );
-//static void    HB_GT_FUNC( gt_ProcessMessages( void ) );
-static void    HB_GT_FUNC( gt_GetClipboard( char *szData, ULONG *pulMaxSize ) );
-static void    HB_GT_FUNC( gt_SetClipboard( char *szData, ULONG ulSize ) );
-//static ULONG   HB_GT_FUNC( gt_GetClipboardSize( void ) );
-//static USHORT  HB_GT_FUNC( gt_GetScreenWidth( void ) );
-//static USHORT  HB_GT_FUNC( gt_GetScreenHeight( void ) );
 static SHORT   HB_GT_FUNC( gt_Col( void ) );
 static SHORT   HB_GT_FUNC( gt_Row( void ) );
 static void    HB_GT_FUNC( gt_SetPos( int sRow, int sCol ) );
 static void    HB_GT_FUNC( gt_GetPos( int * sRow, int * sCol ) );
-//static BOOL    HB_GT_FUNC( gt_AdjustPos( BYTE * pStr, ULONG ulLen ) );
 static BOOL    HB_GT_FUNC( gt_IsColor( void ) );
 
 static void    HB_GT_FUNC( gt_DispEnd( void ) );
@@ -246,11 +231,9 @@ static BOOL    HB_GT_FUNC( gt_SetDispCP( char * pszTermCDP, char * pszHostCDP, B
 static BOOL    HB_GT_FUNC( gt_SetKeyCP( char * pszTermCDP, char * pszHostCDP ) );
 
 static void    HB_GT_FUNC( gt_Replicate( USHORT usRow, USHORT usCol, BYTE byAttr, BYTE byChar, ULONG ulLen ) );
-//static int     HB_GT_FUNC( gt_RectSize( USHORT rows, USHORT cols ) );
 static void    HB_GT_FUNC( gt_Puts( USHORT usRow, USHORT usCol, BYTE byAttr, BYTE *pbyStr, ULONG ulLen ) );
 static void    HB_GT_FUNC( gt_xPutch( USHORT iRow, USHORT iCol, BYTE bAttr, BYTE bChar ) );
 static char *  HB_GT_FUNC( gt_Version( int iType ) );
-//static void    HB_GT_FUNC( gt_SetAttributeCT( USHORT rowStart, USHORT colStart, USHORT rowStop, USHORT colStop, BYTE attr ) );
 static void    HB_GT_FUNC( gt_SetBlink( BOOL bBlink ) );
 static BOOL    HB_GT_FUNC( gt_GetBlink( void ) );
 
@@ -2854,24 +2837,6 @@ HB_EXPORT BOOL hb_wvt_gtSetColorData( int iIndex, COLORREF ulCr )
 
 //-------------------------------------------------------------------//
 
-static int kbdShiftsState( void )
-{
-   BYTE kbBuffer[ 256 ];
-   int  kbdShifts;
-   kbdShifts = 0;
-   GetKeyboardState( kbBuffer );
-   if ( kbBuffer[ VK_SHIFT ] & 0x080 ) kbdShifts += GTI_KBD_SHIFT;
-   if ( kbBuffer[ VK_CONTROL ] & 0x080 ) kbdShifts += GTI_KBD_CTRL;
-   if ( kbBuffer[ VK_MENU ] & 0x080 ) kbdShifts += GTI_KBD_ALT;
-   if ( kbBuffer[ VK_LWIN ] & 0x080 ) kbdShifts += GTI_KBD_LWIN;
-   if ( kbBuffer[ VK_RWIN ] & 0x080 ) kbdShifts += GTI_KBD_RWIN;
-   if ( kbBuffer[ VK_APPS ] & 0x080 ) kbdShifts += GTI_KBD_MENU;
-   if ( kbBuffer[ VK_SCROLL ] & 0x01 ) kbdShifts += GTI_KBD_SCROLOCK;
-   if ( kbBuffer[ VK_NUMLOCK ] & 0x01 ) kbdShifts += GTI_KBD_NUMLOCK;
-   if ( kbBuffer[ VK_CAPITAL ] & 0x01 ) kbdShifts += GTI_KBD_CAPSLOCK;
-   return kbdShifts;
-}
-
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
@@ -3016,167 +2981,6 @@ static void HB_GT_FUNC( gt_Exit( void ) )
 }
 
 //-------------------------------------------------------------------//
-/*
-static void HB_GT_FUNC( gt_ProcessMessages( void ) )
-{
-   hb_wvt_gtProcessMessages();
-}
-*/
-//-------------------------------------------------------------------//
-
-static void HB_GT_FUNC( gt_GetClipboard( char *szData, ULONG *pulMaxSize ) )
-{
-   HGLOBAL hglb;
-   LPTSTR  lptstr;
-   UINT    uFormat = ( _s.CodePage == OEM_CHARSET ) ? CF_OEMTEXT : CF_TEXT;
-
-   if ( ! IsClipboardFormatAvailable( uFormat ) )
-   {
-     *pulMaxSize = 0;
-     return;
-   }
-
-   if ( !OpenClipboard( NULL ) )
-   {
-     *pulMaxSize = 0;
-     return;
-   }
-
-   hglb = GetClipboardData( uFormat );
-   if ( hglb != NULL )
-   {
-      lptstr = ( LPTSTR ) GlobalLock( hglb );
-      if ( lptstr != NULL )
-      {
-         ULONG iLen = strlen( lptstr );
-
-         if ( *pulMaxSize == 0 || *pulMaxSize > iLen )
-         {
-            *pulMaxSize = iLen;
-         }
-
-         //  still nothing ?
-         //
-         if ( *pulMaxSize == 0 )
-         {
-            return;
-         }
-
-         memcpy( szData, lptstr, *pulMaxSize );
-         szData[ *pulMaxSize ] = '\0';
-
-         GlobalUnlock( hglb );
-      }
-   }
-   CloseClipboard();
-}
-
-//-------------------------------------------------------------------//
-
-void HB_GT_FUNC( gt_SetClipboard( char *szData, ULONG ulSize ) )
-{
-   LPTSTR  lptstrCopy;
-   HGLOBAL hglbCopy;
-   UINT    uFormat = ( _s.CodePage == OEM_CHARSET ) ? CF_OEMTEXT : CF_TEXT;
-
-/*  This poses problems when some other application copies a bitmap on the
-    clipboard. The only way to set text to clipboard is made possible
-    only if another application copies some text on the clipboard.
-
-   if ( !IsClipboardFormatAvailable( CF_TEXT ) )
-   {
-     return;
-   }
-*/
-
-   if ( ! OpenClipboard( NULL ) )
-   {
-     return;
-   }
-   EmptyClipboard();
-
-   // Allocate a global memory object for the text.
-   //
-   hglbCopy = GlobalAlloc( GMEM_MOVEABLE, ( ulSize+1 ) * sizeof( TCHAR ) );
-   if ( ! hglbCopy )
-   {
-      CloseClipboard();
-      return;
-   }
-
-   // Lock the handle and copy the text to the buffer.
-   //
-   lptstrCopy = ( LPTSTR ) GlobalLock( hglbCopy );  // LPSTR
-
-   memcpy( lptstrCopy, szData, ( ulSize+1 ) * sizeof( TCHAR ) );
-
-   lptstrCopy[ ulSize+1 ] = ( TCHAR ) 0;    // null character
-
-   GlobalUnlock( hglbCopy );
-
-   // Place the handle on the clipboard.
-   //
-   SetClipboardData( uFormat, hglbCopy );
-
-   CloseClipboard();
-}
-
-//-------------------------------------------------------------------//
-/*
-static ULONG HB_GT_FUNC( gt_GetClipboardSize( void ) )
-{
-   HGLOBAL hglb;
-   LPTSTR  lptstr;
-   UINT    uFormat = ( _s.CodePage == OEM_CHARSET ) ? CF_OEMTEXT : CF_TEXT;
-   int     ret;
-
-   if ( !IsClipboardFormatAvailable( uFormat ) )
-   {
-     return 0;
-   }
-
-   if ( ! OpenClipboard( NULL ) )
-   {
-     return 0;
-   }
-
-   hglb = GetClipboardData( uFormat );
-   ret  = 0;
-   if ( hglb != NULL )
-   {
-      lptstr = ( LPTSTR ) GlobalLock( hglb );                // LPSTR
-      if ( lptstr != NULL )
-      {
-         ret = strlen( lptstr );
-         GlobalUnlock( hglb );
-      }
-   }
-   CloseClipboard();
-   return ret;
-}
-*/
-//-------------------------------------------------------------------//
-//
-//   returns the number of displayable columns
-//
-/*
-static USHORT HB_GT_FUNC( gt_GetScreenWidth( void ) )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_GetScreenWidth()" ) );
-   return _GetScreenWidth();
-}
-
-//-------------------------------------------------------------------//
-//
-//   returns the number of displayable rows
-//
-static USHORT HB_GT_FUNC( gt_GetScreenHeight( void ) )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_GetScreenHeight()"));
-   return _GetScreenHeight();
-}
-*/
-//-------------------------------------------------------------------//
 
 static SHORT HB_GT_FUNC( gt_Col( void ) )
 {
@@ -3216,18 +3020,6 @@ static void HB_GT_FUNC( gt_GetPos( int * sRow, int * sCol ) )
    *sRow = _s.caretPos.y;
 }
 
-//-------------------------------------------------------------------//
-/*
-static BOOL HB_GT_FUNC( gt_AdjustPos( BYTE * pStr, ULONG ulLen ) )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_AdjustPos( %s, %lu )", pStr, ulLen ) );
-
-   HB_SYMBOL_UNUSED( pStr );
-   HB_SYMBOL_UNUSED( ulLen );
-
-   return( FALSE );
-}
-*/
 //-------------------------------------------------------------------//
 
 static BOOL HB_GT_FUNC( gt_IsColor( void ) )
@@ -3361,14 +3153,6 @@ static void HB_GT_FUNC( gt_Replicate( USHORT usRow, USHORT usCol, BYTE byAttr, B
    }
 }
 
-//-------------------------------------------------------------------//
-/*
-static int HB_GT_FUNC( gt_RectSize( USHORT rows, USHORT cols ) )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_RectSize()" ) );
-   return( rows * cols * 2 );
-}
-*/
 //-------------------------------------------------------------------//
 
 void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
@@ -4348,28 +4132,30 @@ static BOOL HB_GT_FUNC( gt_Info( int iType, PHB_GT_INFO pInfo ) )
          break;
 
       case GTI_KBDSHIFTS:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, kbdShiftsState() );
-         /* TODO
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_w32_getKbdState() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-            kbdShiftsState( hb_itemGetNI( pInfo->pNewVal ) );
+            hb_gt_w32_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
-         */
 
       case GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            HB_GT_FUNC( gt_SetClipboard( hb_itemGetCPtr( pInfo->pNewVal ),
-                                         hb_itemGetCLen( pInfo->pNewVal ) ) );
+            hb_gt_w32_SetClipboard( _s.CodePage == OEM_CHARSET ?
+                                    CF_OEMTEXT : CF_TEXT,
+                                    hb_itemGetCPtr( pInfo->pNewVal ),
+                                    hb_itemGetCLen( pInfo->pNewVal ) );
          }
          else
          {
-            char  *szClipboardData;
+            char * szClipboardData;
             ULONG ulLen;
-
-            HB_GT_FUNC( gt_GetClipboard( szClipboardData, &ulLen ) );
-            if( szClipboardData )
+            if( hb_gt_w32_GetClipboard( _s.CodePage == OEM_CHARSET ?
+                                        CF_OEMTEXT : CF_TEXT,
+                                        &szClipboardData, &ulLen ) )
             {
-               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, szClipboardData, ulLen );
+               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult,
+                                                szClipboardData,
+                                                ulLen );
             }
             else
             {
@@ -4625,207 +4411,13 @@ static BOOL HB_GT_FUNC( gt_SetKeyCP( char * pszTermCDP, char * pszHostCDP ) )
 
 //-------------------------------------------------------------------//
 
-#if defined(__BORLANDC__) || defined(_MSC_VER) || defined(__WATCOMC__) || defined(__MINGW32__)
-static int hb_Inp9x( USHORT usPort )
-{
-   USHORT usVal;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_Inp9x( %hu )", usPort ) );
-
-   #if defined( __BORLANDC__ ) || defined(__DMC__)
-
-      _DX = usPort;
-      __emit__( 0xEC );        /* ASM  IN AL, DX */
-      __emit__( 0x32,0xE4 );   /* ASM XOR AH, AH */
-      usVal = _AX;
-
-   #elif defined( __XCC__ )
-      __asm {
-               mov   dx, usPort
-               xor   ax, ax
-               in    al, dx
-               mov   usVal, ax
-            }
-
-   #elif defined( __MINGW32__ )
-      HB_SYMBOL_UNUSED( usPort );
-      //__asm__ __volatile__ ("inb %w1,%b0":"=a" (usVal):"Nd" (usPort));
-
-   #elif defined( __WATCOMC__ )
-      usVal = inp( usPort );
-
-   #else
-      usVal = _inp( usPort );
-
-   #endif
-
-   return( usVal );
-}
-
-//----------------------------------------------------------------------//
-
-static int hb_Outp9x( USHORT usPort, USHORT usVal )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hb_Outp9x( %hu, %hu )", usPort, usVal ) );
-
-   #if defined( __BORLANDC__ ) || defined(__DMC__)
-
-      _DX = usPort;
-      _AL = usVal;
-      __emit__( 0xEE );        /* ASM OUT DX, AL */
-
-   #elif defined( __XCC__ )
-      __asm {
-               mov   dx, usPort
-               mov   ax, usVal
-               out   dx, al
-            }
-
-   #elif defined( __MINGW32__ )
-      HB_SYMBOL_UNUSED( usPort );
-      //__asm__ __volatile__ ("outb %b0,%w1": :"a" (usVal), "Nd" (usPort));
-
-   #elif defined( __WATCOMC__ )
-       outp( usPort, usVal );
-
-   #else
-      _outp( usPort, usVal );
-
-   #endif
-
-   return( usVal );
-}
-
-//----------------------------------------------------------------------//
-
-static void HB_GT_FUNC(gt_w9xTone( double dFreq, double dDurat ))
-{
-    INT   uLSB,uMSB;
-    ULONG lAdjFreq;
-
-    HB_TRACE( HB_TR_DEBUG, ("hb_gt_w9xtone(%lf, %lf)", dFreq, dDurat ) );
-
-    /* sync with internal clock with very small time period */
-    hb_idleSleep( 0.01 );
-
-    /* Clipper ignores Tone() requests (but delays anyway) if Frequency is
-       less than < 20 hz (and so should we) to maintain compatibility .. */
-
-    if ( dFreq >= 20.0 )
-    {
-      /* Setup Sound Control Port Registers and timer channel 2 */
-      hb_Outp9x( 67, 182 ) ;
-
-      lAdjFreq = ( ULONG ) ( 1193180 / dFreq ) ;
-
-      if( ( LONG ) lAdjFreq < 0 )
-         uLSB = lAdjFreq + 65536;
-      else
-         uLSB = lAdjFreq % 256;
-
-      if( ( LONG ) lAdjFreq < 0 )
-         uMSB = lAdjFreq + 65536;
-      else
-         uMSB = lAdjFreq / 256;
-
-
-      /* set the frequency (LSB,MSB) */
-
-      hb_Outp9x( 66, uLSB );
-      hb_Outp9x( 66, uMSB );
-
-      /* Get current Port setting */
-      /* enable Speaker Data & Timer gate bits */
-      /* (00000011B is bitmask to enable sound) */
-      /* Turn on Speaker - sound Tone for duration.. */
-
-      hb_Outp9x( 97, hb_Inp9x( 97 ) | 3 );
-
-      hb_idleSleep( dDurat );
-
-      /* Read back current Port value for Reset */
-      /* disable Speaker Data & Timer gate bits */
-      /* (11111100B is bitmask to disable sound) */
-      /* Turn off the Speaker ! */
-
-      hb_Outp9x( 97, hb_Inp9x( 97 ) & 0xFC );
-
-    }
-    else
-    {
-       hb_idleSleep( dDurat );
-    }
-}
-#endif
-
-//-------------------------------------------------------------------//
-//
-/* dDurat is in seconds */
-//
-static void HB_GT_FUNC( gt_wNtTone( double dFreq, double dDurat ) )
-{
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wNtTone(%lf, %lf)", dFreq, dDurat ) );
-
-    /* Clipper ignores Tone() requests (but delays anyway) if Frequency is
-       less than < 20 hz.  Windows NT minimum is 37... */
-
-    /* sync with internal clock with very small time period */
-    hb_idleSleep( 0.01 );
-
-    if ( dFreq >= 37.0 )
-    {
-       Beep( (ULONG) dFreq, (ULONG) ( dDurat * 1000 ) ); /* Beep wants Milliseconds */
-    }
-    else
-    {
-       hb_idleSleep( dDurat );
-    }
-}
-
-//-------------------------------------------------------------------//
-//
-/* dDuration is in 'Ticks' (18.2 per second) */
-//
 void HB_GT_FUNC( gt_Tone( double dFrequency, double dDuration ) )
 {
-    OSVERSIONINFO osv;
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
 
-    HB_TRACE(HB_TR_DEBUG, ("hb_gt_Tone(%lf, %lf)", dFrequency, dDuration));
-
-    /*
-      According to the Clipper NG, the duration in 'ticks' is truncated to the
-      interger portion  ... Depending on the platform, xHarbour allows a finer
-      resolution, but the minimum is 1 tick (for compatibility)
-     */
-    /* Convert from ticks to seconds */
-    dDuration  = ( HB_MIN( HB_MAX( 1.0, dDuration ), ULONG_MAX ) ) / 18.2;
-
-    /* keep the frequency in an acceptable range */
-    dFrequency =   HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
-
-    /* What version of Windows are you running? */
-    osv.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-    GetVersionEx( &osv );
-
-    /* If Windows 95 or 98, use w9xTone for BCC32, MSVC */
-    if ( osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
-    {
-       #if defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined( __WATCOMC__ )  || defined(__MINGW32__)
-          HB_GT_FUNC( gt_w9xTone( dFrequency, dDuration ) );
-       #else
-          HB_GT_FUNC( gt_wNtTone( dFrequency, dDuration ) );
-       #endif
-    }
-
-    /* If Windows NT or NT2k, use wNtTone, which provides TONE()
-       reset sequence support (new) */
-    else if ( osv.dwPlatformId == VER_PLATFORM_WIN32_NT )
-    {
-      HB_GT_FUNC( gt_wNtTone( dFrequency, dDuration ) );
-    }
+   hb_gt_w32_Tone( dFrequency, dDuration );
 }
 
-//----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
 static BOOL HB_GT_FUNC( gt_mouse_IsPresent( void ) )
@@ -4868,113 +4460,9 @@ static BOOL HB_GT_FUNC( gt_mouse_ButtonState( int iButton ) )
 static int HB_GT_FUNC( gt_mouse_CountButton( void ) )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gtmouse_CountButton()") );
+
    return( GetSystemMetrics( SM_CMOUSEBUTTONS ) ) ;
 }
-
-//----------------------------------------------------------------------//
-/*
-void HB_GT_FUNC( mouse_Init( void ) )
-{
-  hb_wvt_gtSetMouseX( 0 );
-  hb_wvt_gtSetMouseY( 0 );
-}
-
-//-------------------------------------------------------------------//
-
-void HB_GT_FUNC( mouse_Exit( void ) )
-{
-}
-
-//-------------------------------------------------------------------//
-
-BOOL HB_GT_FUNC( mouse_IsPresent( void ) )
-{
-   return( TRUE );
-}
-
-//-------------------------------------------------------------------//
-
-void HB_GT_FUNC( mouse_Show( void ) )
-{
-}
-
-//-------------------------------------------------------------------//
-
-void HB_GT_FUNC( mouse_Hide( void ) )
-{
-}
-
-//-------------------------------------------------------------------//
-
-int HB_GT_FUNC( mouse_Col( void ) )
-{
-  return( hb_wvt_gtGetMouseX() );
-}
-
-//-------------------------------------------------------------------//
-
-int HB_GT_FUNC( mouse_Row( void ) )
-{
-  return( hb_wvt_gtGetMouseY() );
-}
-
-//-------------------------------------------------------------------//
-
-void HB_GT_FUNC( mouse_SetPos( int iRow, int iCol ) )
-{
-  hb_wvt_gtSetMouseY( iRow );
-  hb_wvt_gtSetMouseX( iCol );
-}
-
-//-------------------------------------------------------------------//
-
-BOOL HB_GT_FUNC( mouse_IsButtonPressed( int iButton ) )
-{
-  BOOL bReturn = FALSE;
-
-  if ( iButton == 0 )
-  {
-    bReturn = GetKeyState( VK_LBUTTON ) & 0x8000;
-  }
-  else if ( iButton== 1 )
-  {
-    bReturn = GetKeyState( VK_RBUTTON ) & 0x8000;
-  }
-  else if ( iButton == 2 )
-  {
-    bReturn = GetKeyState( VK_MBUTTON ) & 0x8000;
-  }
-
-  return( bReturn );
-}
-
-//-------------------------------------------------------------------//
-
-int HB_GT_FUNC( mouse_CountButton( void ) )
-{
-  return( GetSystemMetrics( SM_CMOUSEBUTTONS ) ) ;
-}
-
-//-------------------------------------------------------------------//
-
-void HB_GT_FUNC( mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight ) )
-{
-   HB_SYMBOL_UNUSED( iTop    );
-   HB_SYMBOL_UNUSED( iLeft   );
-   HB_SYMBOL_UNUSED( iBottom );
-   HB_SYMBOL_UNUSED( iRight  );
-}
-
-//-------------------------------------------------------------------//
-
-void HB_GT_FUNC( mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight ) )
-{
-   HB_SYMBOL_UNUSED( piTop    );
-   HB_SYMBOL_UNUSED( piLeft   );
-   HB_SYMBOL_UNUSED( piBottom );
-   HB_SYMBOL_UNUSED( piRight  );
-}
-*/
 
 //----------------------------------------------------------------------//
 
@@ -4983,8 +4471,6 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS gt_funcs )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gtFnInit( %p )", gt_funcs ) );
 
    gt_funcs->Init                  = HB_GT_FUNC( gt_Init               );
-   //gt_funcs->AdjustPos             = HB_GT_FUNC( gt_AdjustPos          );
-   //gt_funcs->Col                   = HB_GT_FUNC( gt_Col                );
    gt_funcs->Box                   = HB_GT_FUNC( gt_Box                );
    gt_funcs->BoxD                  = HB_GT_FUNC( gt_BoxD               );
    gt_funcs->BoxS                  = HB_GT_FUNC( gt_BoxS               );
@@ -4992,10 +4478,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS gt_funcs )
    gt_funcs->DispEnd               = HB_GT_FUNC( gt_DispEnd            );
    gt_funcs->DispCount             = HB_GT_FUNC( gt_DispCount          );
    gt_funcs->Exit                  = HB_GT_FUNC( gt_Exit               );
-   //gt_funcs->ExtendedKeySupport    = HB_GT_FUNC( gt_ExtendedKeySupport );
    gt_funcs->GetBlink              = HB_GT_FUNC( gt_GetBlink           );
-   //gt_funcs->GetClipboard          = HB_GT_FUNC( gt_GetClipboard       );
-   //gt_funcs->GetClipboardSize      = HB_GT_FUNC( gt_GetClipboardSize   );
    gt_funcs->GetCursorStyle        = HB_GT_FUNC( gt_GetCursorStyle     );
    //                     PART OF GT BUT UNDEFINED                     //
    gt_funcs->GetPos                = HB_GT_FUNC( gt_GetPos             );
@@ -5051,26 +4534,6 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS gt_funcs )
 }
 
 //-------------------------------------------------------------------//
-/*
-static void HB_GT_FUNC( mouseFnInit( PHB_GT_FUNCS gt_funcs ) )
-{
-    HB_TRACE( HB_TR_DEBUG, ( "hb_mouseFnInit( %p )", gt_funcs ) );
-
-    gt_funcs->mouse_Init            = HB_GT_FUNC( mouse_Init            );
-    gt_funcs->mouse_Exit            = HB_GT_FUNC( mouse_Exit            );
-    gt_funcs->mouse_IsPresent       = HB_GT_FUNC( mouse_IsPresent       );
-    gt_funcs->mouse_Show            = HB_GT_FUNC( mouse_Show            );
-    gt_funcs->mouse_Hide            = HB_GT_FUNC( mouse_Hide            );
-    gt_funcs->mouse_Col             = HB_GT_FUNC( mouse_Col             );
-    gt_funcs->mouse_Row             = HB_GT_FUNC( mouse_Row             );
-    gt_funcs->mouse_SetPos          = HB_GT_FUNC( mouse_SetPos          );
-    gt_funcs->mouse_IsButtonPressed = HB_GT_FUNC( mouse_IsButtonPressed );
-    gt_funcs->mouse_CountButton     = HB_GT_FUNC( mouse_CountButton     );
-    gt_funcs->mouse_SetBounds       = HB_GT_FUNC( mouse_SetBounds       );
-    gt_funcs->mouse_GetBounds       = HB_GT_FUNC( mouse_GetBounds       );
-}
-*/
-//-------------------------------------------------------------------//
 
 static HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
                              hb_gt_FuncInit,
@@ -5094,6 +4557,3 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
    static HB_$INITSYM hb_vm_auto__hb_startup_gt_Init_ = _hb_startup_gt_Init_;
    #pragma data_seg()
 #endif
-
-//-------------------------------------------------------------------//
-

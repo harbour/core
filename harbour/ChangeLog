@@ -8,6 +8,26 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-22 12:21 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * formatting
+
+  * harbour/contrib/gtwvg/gtwvt.h
+  * harbour/contrib/gtwvg/gtwvt.c
+    * removed some unused code and redirect some methods to common
+      for all MS-Win GTs functions.
+      Pritpal this code needs cleanup. Now it's xHarbour GT hacked
+      to compile and link with Harbour API. It means that this code
+      also inherited some small incompatibilities to Clipper which
+      exists in xHarbour GTs. If you agree I'll try to systematically
+      clean it and as I can see IMO the final version will look like
+      GTWVT in core code plus some additional code so it can be quite
+      easy separated. Probably with some small modifications in GTWVT it
+      will be possible to remove these two files from GTWVG at all
+      changing GTWVG to inherit from core GTWVT. Such separation will
+      also show what is core GT code and what is GUI Windows extension
+      what should help in defining common multi platform API.
+
 2007-11-21 22:57 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvt.c
     ! Suppressed warnings.
