@@ -168,8 +168,8 @@ static BOOL    hb_wvt_gtSetCaretPos( void );
 static void    hb_wvt_gtValidateCaret( void );
 static void    hb_wvt_gtUpdateCaret( void );
 
-static USHORT  hb_wvt_gtGetMouseX( void );
-static USHORT  hb_wvt_gtGetMouseY( void );
+//static USHORT  hb_wvt_gtGetMouseX( void );
+//static USHORT  hb_wvt_gtGetMouseY( void );
 static void    hb_wvt_gtSetMouseX( USHORT ix );
 static void    hb_wvt_gtSetMouseY( USHORT iy );
 static BOOL    hb_wvt_gtGetCharFromInputQueue( int * c );
@@ -1822,7 +1822,7 @@ static BOOL hb_wvt_gtGetCharFromInputQueue ( int *c )
 }
 
 //-------------------------------------------------------------------//
-
+/*
 static USHORT hb_wvt_gtGetMouseX ( void )
 {
   return( (SHORT) _s.mousePos.x );
@@ -1834,7 +1834,7 @@ static USHORT hb_wvt_gtGetMouseY ( void )
 {
   return( (SHORT) _s.mousePos.y );
 }
-
+*/
 //-------------------------------------------------------------------//
 
 static void hb_wvt_gtSetMouseX ( USHORT ix )
@@ -3016,12 +3016,12 @@ static void HB_GT_FUNC( gt_Exit( void ) )
 }
 
 //-------------------------------------------------------------------//
-
+/*
 static void HB_GT_FUNC( gt_ProcessMessages( void ) )
 {
    hb_wvt_gtProcessMessages();
 }
-
+*/
 //-------------------------------------------------------------------//
 
 static void HB_GT_FUNC( gt_GetClipboard( char *szData, ULONG *pulMaxSize ) )
@@ -3122,7 +3122,7 @@ void HB_GT_FUNC( gt_SetClipboard( char *szData, ULONG ulSize ) )
 }
 
 //-------------------------------------------------------------------//
-
+/*
 static ULONG HB_GT_FUNC( gt_GetClipboardSize( void ) )
 {
    HGLOBAL hglb;
@@ -3154,11 +3154,12 @@ static ULONG HB_GT_FUNC( gt_GetClipboardSize( void ) )
    CloseClipboard();
    return ret;
 }
-
+*/
 //-------------------------------------------------------------------//
 //
 //   returns the number of displayable columns
 //
+/*
 static USHORT HB_GT_FUNC( gt_GetScreenWidth( void ) )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_GetScreenWidth()" ) );
@@ -3174,7 +3175,7 @@ static USHORT HB_GT_FUNC( gt_GetScreenHeight( void ) )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_GetScreenHeight()"));
    return _GetScreenHeight();
 }
-
+*/
 //-------------------------------------------------------------------//
 
 static SHORT HB_GT_FUNC( gt_Col( void ) )
@@ -3549,7 +3550,7 @@ void HB_GT_FUNC( gt_SetAttribute( int rowStart, int colStart, int rowStop, int c
 }
 
 //-------------------------------------------------------------------//
-
+/*
 static void HB_GT_FUNC( gt_SetAttributeCT( USHORT rowStart, USHORT colStart, USHORT rowStop, USHORT colStop, BYTE attr ) )
 {
    USHORT irow, icol, index;
@@ -3580,7 +3581,7 @@ static void HB_GT_FUNC( gt_SetAttributeCT( USHORT rowStart, USHORT colStart, USH
    }
    hb_wvt_gtSetInvalidRect( colStart, rowStart, colStop, rowStop );
 }
-
+*/
 //-------------------------------------------------------------------//
 //
 //    copied from gtwin...
@@ -4547,7 +4548,7 @@ static void HB_GT_FUNC( gt_Redraw( int iRow, int iCol, int iSize ) )
 }
 
 //----------------------------------------------------------------------//
-
+/*
 static void HB_GT_FUNC( gt_Refresh( void ) )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gtRefresh()") );
@@ -4560,7 +4561,7 @@ static void HB_GT_FUNC( gt_Refresh( void ) )
       hb_wvt_gtProcessMessages();
    }
 }
-
+*/
 //----------------------------------------------------------------------//
 
 static BOOL HB_GT_FUNC( gt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox ) )
@@ -4647,7 +4648,8 @@ static int hb_Inp9x( USHORT usPort )
             }
 
    #elif defined( __MINGW32__ )
-//      __asm__ __volatile__ ("inb %w1,%b0":"=a" (usVal):"Nd" (usPort));
+      HB_SYMBOL_UNUSED( usPort );
+      //__asm__ __volatile__ ("inb %w1,%b0":"=a" (usVal):"Nd" (usPort));
 
    #elif defined( __WATCOMC__ )
       usVal = inp( usPort );
@@ -4680,7 +4682,8 @@ static int hb_Outp9x( USHORT usPort, USHORT usVal )
             }
 
    #elif defined( __MINGW32__ )
-//      __asm__ __volatile__ ("outb %b0,%w1": :"a" (usVal), "Nd" (usPort));
+      HB_SYMBOL_UNUSED( usPort );
+      //__asm__ __volatile__ ("outb %b0,%w1": :"a" (usVal), "Nd" (usPort));
 
    #elif defined( __WATCOMC__ )
        outp( usPort, usVal );
