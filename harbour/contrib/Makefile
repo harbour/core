@@ -28,6 +28,7 @@ ifeq ($(HB_ARCHITECTURE),w32)
 
 DIRS +=\
 	rdd_ads \
+	gtwvg \
 
 ifneq ($(HB_COMPILER),rsxnt)
 

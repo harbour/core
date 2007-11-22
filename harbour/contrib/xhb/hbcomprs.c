@@ -3043,6 +3043,7 @@ uIntf *v)               /* working area: values in order of bit length */
   int y;                        /* number of dummy codes added */
   uInt z;                       /* number of entries in current table */
 
+  memset( &r, '\0', sizeof( r ) );
 
   /* Generate counts for each bit length */
   p = c;

@@ -1,23 +1,23 @@
 #
-# 
+# $Id$
 #
 
 ROOT = ../../
 
 C_SOURCES=\
 	gtwvt.c      \
-        wvtcore.c    \
-        wvtutils.c   \
+	wvtcore.c    \
+	wvtutils.c   \
 
 C_HEADERS=\
-        gtwvt.h      \        
+	gtwvt.h      \
 
 PRG_SOURCES=\
-        wvtclass.prg \
-        wvtpaint.prg \ 
+	wvtclass.prg \
+	wvtpaint.prg \
 
 PRG_HEADERS=\
-        wvtwin.ch    \
+	wvtwin.ch    \
 
 LIBNAME=gtwvg
 

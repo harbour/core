@@ -88,7 +88,7 @@ mk_hbgetlibsctb()
         then
             libs="$libs gtwin"
         fi
-        echo -n "$libs rddads ct nf tip xhb hbgd hbodbc hbpg hbmysql adordd hbwin32"
+        echo -n "$libs rddads ct nf tip xhb hbgd hbodbc hbpg hbmysql adordd hbwin32 gtwvg"
     else
         echo -n "$@"
     fi

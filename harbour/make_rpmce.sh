@@ -67,6 +67,12 @@ do
     shift
 done
 
+if [ -f /usr/local/ads/acesdk/ace.h ] ||
+   [ -f ${HOME}/ads/acesdk/ace.h ]
+then
+    INST_PARAM="${INST_PARAM} --with adsrdd"
+fi
+
 TOINST_LST=""
 for i in ${NEED_RPM}
 do

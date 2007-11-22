@@ -8,6 +8,45 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-22 04:33 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+  * harbour/make_rpmce.sh
+  * harbour/make_rpmw32.sh
+    * updated for removed ace.h
+
+  * harbour/bin/pack_src.sh
+    * updated for some recent modifications in contrib/pgsql
+      TOFIX: it should be updated for all recent modifications in
+      contrib and MS-Windows build scripts.
+
+  * harbour/bin/hb-func.sh
+    + added gtwvg to -gt* parameters in hb* scripts
+
+  * harbour/contrib/Makefile
+    + added gtwvg in W32 builds
+
+  * harbour/contrib/xhb/hbcomprs.c
+  * harbour/contrib/xhb/hbcomprs.h
+    * cleaned some warnings
+
+  * harbour/contrib/gtwvg/gtwvt.h
+  * harbour/contrib/gtwvg/wvtutils.c
+  * harbour/contrib/gtwvg/wvtpaint.prg
+  * harbour/contrib/gtwvg/wvtwin.ch
+  * harbour/contrib/gtwvg/wvtcore.c
+  * harbour/contrib/gtwvg/gtwvt.c
+  * harbour/contrib/gtwvg/Makefile
+  * harbour/contrib/gtwvg/wvtclass.prg
+    * set svn attributes:
+         svn ps svn:eol-style native
+         svn ps svn:keywords Id
+      Pritpal please remember about it before you commit new files.
+      For .bat files use
+         svn ps svn:eol-style CRLF
+      or better set default attribute in your SVN config file so you will
+      not have to set it manually each time you are adding new file.
+
 2007-11-21 06:08 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   + contrib/gtwvt
     + gtwvt.c

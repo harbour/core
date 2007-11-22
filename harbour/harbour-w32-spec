@@ -165,6 +165,7 @@ make -r -i install
 
 [ "%{?_without_odbc:1}" ] && rm -f $HB_LIB_INSTALL/libhbodbc.a
 [ "%{?_with_allegro:1}" ] || rm -f $HB_LIB_INSTALL/libgtalleg.a
+[ "%{?_with_adsrdd:1}" ]  || rm -f $HB_LIB_INSTALL/librddads.a
 
 # Keep the size of the libraries to a minimim.
 ${CCPREFIX}strip --strip-debug $HB_LIB_INSTALL/*

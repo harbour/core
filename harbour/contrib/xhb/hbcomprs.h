@@ -126,7 +126,8 @@
 #endif
 
 /* Old Borland C incorrectly complains about missing returns: */
-#if defined(__BORLANDC__) && (__BORLANDC__ < 0x500)
+#if ( defined(__BORLANDC__) && (__BORLANDC__ < 0x500) ) || \
+    defined( __POCC__ ) || defined( __XCC__ )
 #  if !defined(NEED_DUMMY_RETURN)
 #    define NEED_DUMMY_RETURN
 #  endif

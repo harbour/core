@@ -392,12 +392,16 @@ $hb_collect contrib/win32/test/*.prg
 # CONTRIB\PGSQL
 $hb_collect contrib/pgsql/[mM]akefile*
 $hb_collect contrib/pgsql/Change[Ll]og*
-$hb_collect contrib/pgsql/README
+$hb_collect contrib/pgsql/README*
+$hb_collect contrib/pgsql/readme*
 $hb_collect contrib/pgsql/*.[ch]
 $hb_collect contrib/pgsql/*.ch
 $hb_collect contrib/pgsql/*.prg
 $hb_collect contrib/pgsql/*.txt
 $hb_collect contrib/pgsql/*.bat
+$hb_collect contrib/pgsql/test/[mM]akefile*
+$hb_collect contrib/pgsql/test/*.prg
+$hb_collect contrib/win32/*.bat
 
 # CONTRIB\MYSQL
 $hb_collect contrib/mysql/[mM]akefile*
