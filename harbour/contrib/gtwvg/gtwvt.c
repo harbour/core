@@ -2526,8 +2526,10 @@ HB_EXPORT BOOL hb_wvt_gtSetColorData( int iIndex, COLORREF ulCr )
 }
 
 //-------------------------------------------------------------------//
-/*
-void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
+//       Required: Please do not comment out. It has wide usage.
+//-------------------------------------------------------------------//
+
+HB_EXPORT void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
 {
    USHORT irow, icol, index, j;
 
@@ -2554,9 +2556,9 @@ void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT righ
    }
 }
 
-//----------------------------------------------------------------------//
+//-------------------------------------------------------------------//
 
-void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
+HB_EXPORT void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
 {
    USHORT irow, icol, index, j;
 
@@ -2583,10 +2585,6 @@ void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT righ
    }
    hb_wvt_gtSetInvalidRect( left, top, right, bottom );
 }
-*/
-
-//-------------------------------------------------------------------//
-
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
