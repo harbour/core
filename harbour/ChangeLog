@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-22 22:49 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvtcore.c
+    ! Fixes for UNICODE Support.
+    ? Przem, please review. I suspect about like these fixes:
+      
+      
+      DrawText( _s->hGuiDC, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+      =>
+      LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 6 ) );
+      DrawText( _s->hGuiDC, text, strlen( hb_parc( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+                                  ^--------------------^  OK | How to compute length of "text" 
+
+
 2007-11-22 21:45 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvtutils.c
     ! Fixes for UNICODE Support.
