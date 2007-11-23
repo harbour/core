@@ -193,7 +193,6 @@ static void    hb_vmPushIntegerConst( int iNumber );  /* Pushes a int constant (
 #else
 static void    hb_vmPushLongConst( long lNumber );    /* Pushes a long constant (pcode) */
 #endif
-static void    hb_vmPushNumInt( HB_LONG lNumber );     /* pushes a number on to the stack and decides if it is integer or HB_LONG */
 static void    hb_vmPushNumType( double dNumber, int iDec, int iType1, int iType2 ); /* pushes a number on to the stack and decides if it is integer, long or double */
 static void    hb_vmPushStatic( USHORT uiStatic );     /* pushes the containts of a static onto the stack */
 static void    hb_vmPushStaticByRef( USHORT uiStatic ); /* pushes a static by refrence onto the stack */
@@ -5412,14 +5411,6 @@ static int hb_vmCalcIntWidth( HB_LONG lNumber )
    return iWidth;
 }
 
-static void hb_vmPushNumInt( HB_LONG lNumber )
-{
-   if( HB_LIM_INT( lNumber ) )
-      hb_vmPushInteger( ( int ) lNumber );
-   else
-      hb_vmPushHBLong( lNumber );
-}
-
 HB_EXPORT void hb_vmPushInteger( int iNumber )
 {
    PHB_ITEM pItem = hb_stackAllocItem();
@@ -5496,6 +5487,14 @@ static void hb_vmPushLongLongConst( LONGLONG llNumber )
    pItem->item.asLong.length = hb_vmCalcIntWidth( llNumber );
 }
 #endif
+
+HB_EXPORT void hb_vmPushNumInt( HB_LONG lNumber )
+{
+   if( HB_LIM_INT( lNumber ) )
+      hb_vmPushInteger( ( int ) lNumber );
+   else
+      hb_vmPushHBLong( lNumber );
+}
 
 HB_EXPORT void hb_vmPushDouble( double dNumber, int iDec )
 {

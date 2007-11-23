@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 01:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+    * make hb_vmPushNumInt() public function
+
+  * harbour/contrib/gtwvg/wvtcore.c
+    ! fixed hb_wvt_gtDlgProcMLess() and hb_wvt_gtDlgProcModal()
+      - fixed GPF when codeblock are used
+      - use hb_vmPushNumInt() instead of hb_vmPushLong() to push
+        handles and numbers with potentially unknown size.
+        I still suggest to use pointers ITEMs instead of converting
+        handles to numbers but I'm leaving such modifications to library
+        authors - using hb_vmPushNumInt() is a workaround for striping
+        highest 32 bit from handles by hb_vmPushLong() in XP64 
+      - use hb_vmRequestReenter() / hb_vmRequestRestore() to avoid crash
+        when function/codeblock is executed during HVM has been serving
+        an exception (f.e. BREAK/QUIT/RETURN)
+
 2007-11-22 18:33 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwvt/gtwvt.c
     * declared two functions
