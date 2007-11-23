@@ -39,9 +39,9 @@ else
 endif
 lBoxChar := !empty( lBoxChar )
 
-HB_GTINFO( GTI_FONTSIZE, 20 )
-HB_GTINFO( GTI_FONTWIDTH, 9 )
 HB_GTINFO( GTI_FONTNAME, "fixed" )
+HB_GTINFO( GTI_FONTWIDTH, 9 )
+HB_GTINFO( GTI_FONTSIZE, 20 )
 
 HB_SETTERMCP( cTermCP, cHostCP, lBoxChar )
 

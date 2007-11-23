@@ -28,8 +28,8 @@ proc main()
    hb_setTermCP( "EN" )
 
    /* Set font size */
-   hb_gtInfo( GTI_FONTSIZE, 12 )
    hb_gtInfo( GTI_FONTWIDTH, 6 )
+   hb_gtInfo( GTI_FONTSIZE, 12 )
 
    /* resize console window using new font size */
    SetMode( MaxRow() + 1, MaxCol() + 1 )

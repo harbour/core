@@ -78,7 +78,7 @@
    #xtranslate hb_HexToStr([<c,...>])  => HexToStr(<c>)
    #xtranslate hb_StrToHex([<c,...>])  => StrToHex(<c>)
 
-   #xtranslate hb_AScan([<x,...>)      => AScan(<x>)
+   #xtranslate hb_AScan([<x,...>])     => AScan(<x>)
    #xtranslate hb_RAScan([<x,...>])    => RAScan(<x>)
    #xtranslate hb_AIns([<x,...>])      => AIns(<x>)
    #xtranslate hb_ADel([<x,...>])      => ADel(<x>)

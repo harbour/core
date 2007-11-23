@@ -8,6 +8,26 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 05:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * removed foreground and background from GLOBAL_DATA
+      - they are not necessary
+    + added support for gfxPrimitive() - fixed xHarbour code
+
+  * harbour/contrib/gtwvg/gtwvt.c
+    + added support for gfxPrimitive() - fixed xHarbour code
+    * removed some methods which can be safely replaced by
+      default ones
+
+  * harbour/tests/gfx.prg
+  * harbour/tests/wcecon.prg
+  * harbour/tests/gtchars.prg
+    * updated the order of changed font parameters
+
+  * harbour/contrib/xhb/hbcompat.ch
+    ! added missing closing square bracket
+
 2007-11-23 04:59 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * make_b32.bat
    * make_vc.bat

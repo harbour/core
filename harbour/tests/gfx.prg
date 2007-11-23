@@ -21,8 +21,8 @@ Local nTop, nLeft, nHeight, nWidth, nColor, nSec := Seconds()
   End
 
   If hb_gtInfo(GTI_DESKTOPWIDTH) > 1000
-    hb_gtInfo(GTI_FONTSIZE, 24)
     hb_gtInfo(GTI_FONTWIDTH, 12)
+    hb_gtInfo(GTI_FONTSIZE, 24)
   End
 
   ? hb_gtVersion(1)

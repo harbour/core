@@ -130,8 +130,6 @@ static void hb_gt_wvt_InitStatics( void )
 {
    _s.ROWS             = WVT_DEFAULT_ROWS;
    _s.COLS             = WVT_DEFAULT_COLS;
-   _s.foreground       = WHITE;
-   _s.background       = BLACK;
    _s.CaretExist       = FALSE;
    _s.CaretSize        = 4;
    _s.mousePos.x       = 0;
@@ -910,11 +908,11 @@ static BOOL hb_gt_wvt_TextOut( HDC hdc, USHORT col, USHORT row, BYTE attr, LPCTS
    POINT xy;
    RECT  rClip;
 
-   _s.foreground = _COLORS[ attr & 0x0F ];
-   _s.background = _COLORS[ ( attr >> 4 ) & 0x0F ];
+   /* set foreground color */
+   SetTextColor( hdc, _COLORS[ attr & 0x0F ] );
+   /* set background color */
+   SetBkColor( hdc, _COLORS[ ( attr >> 4 ) & 0x0F ] );
 
-   SetTextColor( hdc, _s.foreground );
-   SetBkColor( hdc, _s.background );
    SetTextAlign( hdc, TA_LEFT );
 
    xy = hb_gt_wvt_GetXYFromColRow( col, row );
@@ -1165,8 +1163,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
 static DWORD hb_gt_wvt_ProcessMessages( void )
 {
-   MSG  msg;
-   while ( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
+   MSG msg;
+
+   while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
    {
       TranslateMessage( &msg );
       DispatchMessage( &msg );
@@ -1332,6 +1331,8 @@ static void hb_gt_wvt_Exit( void )
    UnregisterClass( s_szAppName, ( HINSTANCE ) s_hInstance );
 }
 
+/* ********************************************************************** */
+
 static BOOL hb_gt_wvt_SetMode( int iRow, int iCol )
 {
    BOOL fResult= FALSE;
@@ -1366,6 +1367,8 @@ static BOOL hb_gt_wvt_SetMode( int iRow, int iCol )
 
    return fResult;
 }
+
+/* ********************************************************************** */
 
 static char * hb_gt_wvt_Version( int iType )
 {
@@ -1764,6 +1767,166 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
 
 /* *********************************************************************** */
 
+/* ********** Graphics API ********** */
+/*
+ * NOTE:
+ *      gfxPrimitive() parameters may have different meanings
+ *      ie: - Desired color is 'iBottom' for PUTPIXEL and 'iRight' for CIRCLE
+ *          - Red is iTop, Green iLeft and Blue is iBottom for MAKECOLOR
+ *
+ */
+
+#define SetGFXContext(c) \
+         do { \
+            COLORREF color = RGB( (c) >> 16, ( (c) & 0xFF00 ) >> 8, (c) & 0xFF ); \
+            hdc = GetDC( _s.hWnd ); \
+            hPen = CreatePen( PS_SOLID, 1, color ); \
+            hOldPen = ( HPEN ) SelectObject( hdc, hPen ); \
+            hBrush = ( HBRUSH ) CreateSolidBrush( color ); \
+            hOldBrush = ( HBRUSH ) SelectObject( hdc, hBrush ); \
+         } while( 0 )
+
+#define ClearGFXContext() \
+         do { \
+            SelectObject( hdc, hOldPen ); \
+            SelectObject( hdc, hOldBrush ); \
+            DeleteObject( hBrush ); \
+            DeleteObject( hPen ); \
+            ReleaseDC( _s.hWnd, hdc ); \
+         } while( 0 )
+
+static int hb_gt_wvt_gfx_Primitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
+{
+   HDC      hdc;
+   HPEN     hPen, hOldPen;
+   HBRUSH   hBrush, hOldBrush;
+   int      iRet = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_gfx_Primitive(%d, %d, %d, %d, %d, %d)", iType, iTop, iLeft, iBottom, iRight, iColor ) );
+
+   if( _s.hWnd )
+   {
+      switch ( iType )
+      {
+         case GFX_ACQUIRESCREEN:
+         case GFX_RELEASESCREEN:
+            iRet = 1;
+            break;
+
+         case GFX_MAKECOLOR:
+            iRet = (iTop << 16) | (iLeft << 8) | ( iBottom );
+            break;
+
+         case GFX_PUTPIXEL:
+            SetGFXContext( iBottom );
+
+            MoveToEx( hdc, iLeft, iTop, NULL );
+            LineTo( hdc, iLeft, iTop );
+
+            ClearGFXContext();
+            iRet = 1;
+            break;
+
+         case GFX_LINE:
+            SetGFXContext( iColor );
+
+            MoveToEx( hdc, iLeft, iTop, NULL );
+            LineTo( hdc, iRight, iBottom );
+
+            ClearGFXContext();
+            iRet = 1;
+            break;
+
+         case GFX_RECT:
+         {
+            RECT r;
+
+            r.left = iLeft;
+            r.top = iTop;
+            r.right = iRight;
+            r.bottom = iBottom;
+
+            SetGFXContext( iColor );
+
+            FrameRect( hdc, &r, hBrush );
+
+            ClearGFXContext();
+            iRet = 1;
+            break;
+         }
+         case GFX_FILLEDRECT:
+            SetGFXContext( iColor );
+
+            Rectangle( hdc, iLeft, iTop, iRight, iBottom );
+
+            ClearGFXContext();
+            iRet = 1;
+            break;
+
+         case GFX_CIRCLE:
+            SetGFXContext( iRight );
+
+            Arc( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
+
+            ClearGFXContext();
+            iRet = 1;
+            break;
+
+         case GFX_FILLEDCIRCLE:
+            SetGFXContext( iRight );
+
+            Ellipse( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2 );
+
+            ClearGFXContext();
+            iRet = 1;
+            break;
+
+         case GFX_ELLIPSE:
+            SetGFXContext( iColor );
+
+            Arc( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
+
+            ClearGFXContext();
+            iRet = 1;
+            break;
+
+         case GFX_FILLEDELLIPSE:
+            SetGFXContext( iColor );
+
+            Ellipse( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2 );
+
+            ClearGFXContext();
+            iRet = 1;
+            break;
+
+         case GFX_FLOODFILL:
+            SetGFXContext( iBottom );
+
+            FloodFill( hdc, iLeft, iTop, iColor );
+
+            ClearGFXContext();
+            iRet = 1;
+            break;
+      }
+   }
+
+   return iRet;
+}
+
+/*
+static void HB_GT_FUNC( gt_gfxText( int iTop, int iLeft, char *cBuf, int iColor, int iSize, int iWidth ) )
+{
+  HB_SYMBOL_UNUSED( iTop );
+  HB_SYMBOL_UNUSED( iLeft );
+  HB_SYMBOL_UNUSED( cBuf );
+  HB_SYMBOL_UNUSED( iColor );
+  HB_SYMBOL_UNUSED( iSize );
+  HB_SYMBOL_UNUSED( iWidth );
+}
+*/
+
+/* *********************************************************************** */
+
 static void hb_gt_wvt_Redraw( int iRow, int iCol, int iSize )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
@@ -1881,7 +2044,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->MouseButtonState     = hb_gt_wvt_mouse_ButtonState;
    pFuncTable->MouseCountButton     = hb_gt_wvt_mouse_CountButton;
 
-//   pFuncTable->GfxPrimitive         = hb_gt_wvt_gfx_Primitive;
+   pFuncTable->GfxPrimitive         = hb_gt_wvt_gfx_Primitive;
 
    return TRUE;
 }

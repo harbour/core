@@ -112,8 +112,6 @@ typedef struct global_data
 {
    USHORT   ROWS;                         /* number of displayable rows in window */
    USHORT   COLS;                         /* number of displayable columns in window */
-   COLORREF foreground;                   /* forground colour */
-   COLORREF background;                   /* background colour */
 
    BOOL     CaretExist;                   /* TRUE if a caret has been created */
    BOOL     CaretHidden;                  /* TRUE if a caret has been hiden */
@@ -154,22 +152,24 @@ typedef struct global_data
 } GLOBAL_DATA;
 typedef GLOBAL_DATA * LPGLOBAL_DATA;
 
-/* Harbour compatible definitions */
-#define K_SH_LEFT            K_LEFT   /* Shift-Left  == Left  */
-#define K_SH_UP              K_UP     /* Shift-Up    == Up    */
-#define K_SH_RIGHT           K_RIGHT  /* Shift-Right == Right */
-#define K_SH_DOWN            K_DOWN   /* Shift-Down  == Down  */
-#define K_SH_INS             K_INS    /* Shift-Ins   == Ins   */
-#define K_SH_DEL             K_DEL    /* Shift-Del   == Del   */
-#define K_SH_HOME            K_HOME   /* Shift-Home  == Home  */
-#define K_SH_END             K_END    /* Shift-End   == End   */
-#define K_SH_PGUP            K_PGUP   /* Shift-PgUp  == PgUp  */
-#define K_SH_PGDN            K_PGDN   /* Shift-PgDn  == PgDn  */
-#define K_SH_RETURN          K_RETURN /* Shift-Enter == Enter */
-#define K_SH_ENTER           K_ENTER  /* Shift-Enter == Enter */
+/* xHarbour compatible definitions */
+#if !defined( K_SH_LEFT )
+#  define K_SH_LEFT           K_LEFT   /* Shift-Left  == Left  */
+#  define K_SH_UP             K_UP     /* Shift-Up    == Up    */
+#  define K_SH_RIGHT          K_RIGHT  /* Shift-Right == Right */
+#  define K_SH_DOWN           K_DOWN   /* Shift-Down  == Down  */
+#  define K_SH_INS            K_INS    /* Shift-Ins   == Ins   */
+#  define K_SH_DEL            K_DEL    /* Shift-Del   == Del   */
+#  define K_SH_HOME           K_HOME   /* Shift-Home  == Home  */
+#  define K_SH_END            K_END    /* Shift-End   == End   */
+#  define K_SH_PGUP           K_PGUP   /* Shift-PgUp  == PgUp  */
+#  define K_SH_PGDN           K_PGDN   /* Shift-PgDn  == PgDn  */
+#  define K_SH_RETURN         K_RETURN /* Shift-Enter == Enter */
+#  define K_SH_ENTER          K_ENTER  /* Shift-Enter == Enter */
+#endif
 
 #ifndef WM_MOUSEWHEEL
-   #define WM_MOUSEWHEEL 0x020A
+#  define WM_MOUSEWHEEL 0x020A
 #endif
 
 #endif /* HB_WVT_H_ */
