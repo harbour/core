@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-22 21:45 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvtutils.c
+    ! Fixes for UNICODE Support.
+    ? Przem, please review. It is not complete, still there are warnings.
+
 2007-11-23 05:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/gtwvg/wvtcore.c
     ! casting
