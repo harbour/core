@@ -215,27 +215,27 @@ ARFLAGS = rc $(A_USR)
 #**********************************************************
 # General *.prg --> *.o COMPILE rule for STATIC Libraries
 $(OBJ_DIR)/%$(OBJEXT) : %.prg
-    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)/ $<
-    $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)/$(<F:.prg=.c)
+	$(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)/ $<
+	$(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
 # General *.c --> *.o COMPILE rule for STATIC Libraries
 $(OBJ_DIR)/%$(OBJEXT) : %.c
-    $(CC) $(CLIBFLAGS) -o$@ $<
+	$(CC) $(CLIBFLAGS) -o$@ $<
 #*******************************************************
 # General *.prg --> *.o COMPILE rule for SHARED Libraries
 $(DLL_OBJ_DIR)/%$(OBJEXT) : %.prg
-    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)/ $**
-    $(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)/$&.c
+	$(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)/ $**
+	$(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)/$&.c
 #----------------------------------------------------------
 # General *.c --> *.o COMPILE rule for SHARED Libraries
 $(DLL_OBJ_DIR)/%$(OBJEXT) : %.c
-    $(CC) $(CLIBFLAGSDLL) -o$@ $<
+	$(CC) $(CLIBFLAGSDLL) -o$@ $<
 #**********************************************************
 # General *.o -> *.a LIBRARY CREATION rule
 #%$(LIBEXT) : %$(OBJEXT)
 #$(LIB_DIR)/%$(LIBEXT) : $(OBJ_DIR)/%$(OBJEXT)
 $(LIB_DIR)/%$(LIBEXT) : %$(OBJEXT)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 
 
@@ -258,7 +258,7 @@ StdLibs   : BasicExes $(STANDARD_STATIC_HBLIBS)
 #**********************************************************
 # Implicit directory creation rule
 $(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
-    mkdir -p $@
+	mkdir -p $@
 #**********************************************************
 
 
@@ -266,93 +266,93 @@ $(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
 # LIBRARY Targets BUILD rules
 #**********************************************************
 $(COMMON_LIB)   : $(COMMON_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(PP_LIB)       : $(PP_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(VM_LIB)       : $(VM_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 ifeq ($(HB_ARCHITECTURE),w32)
 $(MAIN_LIB)     : $(MAIN_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 endif
 #**********************************************************
 $(RTL_LIB)      : $(RTL_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(MACRO_LIB)    : $(MACRO_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(DEBUG_LIB)    : $(DEBUG_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(LANG_LIB)     : $(LANG_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(CODEPAGE_LIB) : $(CODEPAGE_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(PCRE_LIB)     : $(PCRE_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(RDD_LIB)      : $(RDD_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(NULSYS_LIB)   : $(NULSYS_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(DBFNTX_LIB)   : $(DBFNTX_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(DBFCDX_LIB)   : $(DBFCDX_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(DBFFPT_LIB)   : $(DBFFPT_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(HBSIX_LIB)    : $(HBSIX_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(HSX_LIB)      : $(HSX_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(USRRDD_LIB)   : $(USRRDD_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(GTCGI_LIB)    : $(GTCGI_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(GTSTD_LIB)    : $(GTSTD_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(GTPCA_LIB)    : $(GTPCA_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(GTWIN_LIB)    : $(GTWIN_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(GTWVT_LIB)    : $(GTWVT_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(GTGUI_LIB)    : $(GTGUI_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(GTTRM_LIB)    : $(GTTRM_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(GTCRS_LIB)    : $(GTCRS_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(GTSLN_LIB)    : $(GTSLN_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(GTXWC_LIB)    : $(GTXWC_LIB_OBJS)
-    $(MKLIB) $(ARFLAGS) $@ $^
+	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 
 
@@ -360,41 +360,41 @@ $(GTXWC_LIB)    : $(GTXWC_LIB_OBJS)
 # EXECUTABLE Targets BUILD rules
 #**********************************************************
 $(HBPPGEN_EXE)  : $(HBPPGEN_EXE_OBJS) $(COMMON_LIB)
-    $(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
 #**********************************************************
 $(HARBOUR_EXE)  : $(HARBOUR_EXE_OBJS) $(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
-    $(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
 #**********************************************************
 $(HBPP_EXE)     : $(HBPP_EXE_OBJS) $(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
-    $(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
 #**********************************************************
 $(HBRUN_EXE)    :: $(StdLibs)
 $(HBRUN_EXE)    :: $(HBRUN_EXE_OBJS)
-    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBDOT_EXE)    :: $(StdLibs)
 $(HBDOT_EXE)    :: $(HBDOT_EXE_OBJS)
-    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBTEST_EXE)   :: $(StdLibs)
 $(HBTEST_EXE)   :: $(HBTEST_EXE_OBJS)
-    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBPPTEST_EXE) :: $(StdLibs)
 $(HBPPTEST_EXE) :: $(HBPPTEST_EXE_OBJS)
-    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBDOC_EXE)    :: $(StdLibs)
 $(HBDOC_EXE)    :: $(HBDOC_EXE_OBJS)
-    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBMAKE_EXE)   :: $(StdLibs)
 $(HBMAKE_EXE)   :: $(HBMAKE_EXE_OBJS)
-    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBVER_EXE)    :: $(StdLibs)
 $(HBVER_EXE)    :: $(HBVER_EXE_OBJS)
-    $(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
 #**********************************************************
 
 
@@ -406,37 +406,37 @@ $(HBVER_EXE)    :: $(HBVER_EXE_OBJS)
 # built at the initial phase of build process
 $(OBJ_DIR)/pptable$(OBJEXT) : $(OBJ_DIR)/pptable.c
 $(OBJ_DIR)/pptable.c        : $(HBPPGEN) include/hbstdgen.ch include/std.ch $(PP_DIR)/ppcore.c $(PP_DIR)/hbppgen.c
-    $< include/hbstdgen.ch -o$@ -q
+	$< include/hbstdgen.ch -o$@ -q
 
 #**********************************************************
 
 ifeq ("$(HB_REBUILD_PARSER)","yes")
 
 $(OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.y
-    bison --no-line -d $** -o$@
+	bison --no-line -d $** -o$@
 
 $(OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.y
-    bison --no-line -d $** -o$@
+	bison --no-line -d $** -o$@
 
 else
 
 $(OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.yyc
-    $(COPY) $< $@
-    $(COPY) $(<:.yyc=.yyh) $(@:.c=.h)
+	$(COPY) $< $@
+	$(COPY) $(<:.yyc=.yyh) $(@:.c=.h)
 
 $(OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.yyc
-    $(COPY) $< $@
-    $(COPY) $(<:.yyc=.yyh) $(@:.c=.h)
+	$(COPY) $< $@
+	$(COPY) $(<:.yyc=.yyh) $(@:.c=.h)
 
 endif
 
 #**********************************************************
 
 #$(OBJ_DIR)/macrol.c : $(MACRO_DIR)/macro.l
-#   flex -Phb_macro -i -8 -o$@ $**
+#	flex -Phb_macro -i -8 -o$@ $**
 
 #$(OBJ_DIR)/harbourl.c : $(COMPILER_DIR)/harbour.l
-#   flex -Phb_comp -i -8 -o$@ $**
+#	flex -Phb_comp -i -8 -o$@ $**
 
 #$(OBJ_DIR)/harbourl$(OBJEXT) : $(OBJ_DIR)/harbourl.c
 #$(OBJ_DIR)/macrol$(OBJEXT)   : $(OBJ_DIR)/macrol.c
@@ -451,30 +451,30 @@ $(OBJ_DIR)/macroy$(OBJEXT)   : $(OBJ_DIR)/macroy.c
 ifeq ("$(HB_REBUILD_PARSER)","yes")
 
 $(DLL_OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.y
-    bison --no-line -d $** -o$@
+	bison --no-line -d $** -o$@
 
 $(DLL_OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.y
-    bison --no-line -d $** -o$@
+	bison --no-line -d $** -o$@
 
 else
 
 $(DLL_OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.yyc
-    $(COPY) $** $@
-    $(COPY) $(**:.yyc=.yyh) $(@:.c=.h)
+	$(COPY) $** $@
+	$(COPY) $(**:.yyc=.yyh) $(@:.c=.h)
 
 $(DLL_OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.yyc
-    $(COPY) $** $@
-    $(COPY) $(**:.yyc=.yyh) $(@:.c=.h)
+	$(COPY) $** $@
+	$(COPY) $(**:.yyc=.yyh) $(@:.c=.h)
 
 endif
 
 #**********************************************************
 
 #$(DLL_OBJ_DIR)/macrol.c : $(MACRO_DIR)/macro.l
-#   flex -Phb_macro -i -8 -o$@ $**
+#	flex -Phb_macro -i -8 -o$@ $**
 
 #$(DLL_OBJ_DIR)/harbourl.c : $(COMPILER_DIR)/harbour.l
-#   flex -Phb_comp -i -8 -o$@ $**
+#	flex -Phb_comp -i -8 -o$@ $**
 
 #$(DLL_OBJ_DIR)/harbourl$(OBJEXT) : $(DLL_OBJ_DIR)/harbourl.c
 #$(DLL_OBJ_DIR)/macrol$(OBJEXT)   : $(DLL_OBJ_DIR)/macrol.c
@@ -493,15 +493,15 @@ Clean: doClean
 CLEAN: doClean
 
 doClean:
-    -$(DEL) $(HB_BUILD_TARGETS)
-    -$(DEL) $(OBJ_DIR)/*$(OBJEXT)
-    -$(DEL) $(OBJ_DIR)/*.c
-    -$(DEL) $(OBJ_DIR)/*.h
-    -$(DEL) $(DLL_OBJ_DIR)/*$(OBJEXT)
-    -$(DEL) $(DLL_OBJ_DIR)/*.c
-    -$(DEL) $(DLL_OBJ_DIR)/*.h
-    -$(DEL) inst_$(HB_CC_NAME).log
-    -$(DEL) common.cf
+	-$(DEL) $(HB_BUILD_TARGETS)
+	-$(DEL) $(OBJ_DIR)/*$(OBJEXT)
+	-$(DEL) $(OBJ_DIR)/*.c
+	-$(DEL) $(OBJ_DIR)/*.h
+	-$(DEL) $(DLL_OBJ_DIR)/*$(OBJEXT)
+	-$(DEL) $(DLL_OBJ_DIR)/*.c
+	-$(DEL) $(DLL_OBJ_DIR)/*.h
+	-$(DEL) inst_$(HB_CC_NAME).log
+	-$(DEL) common.cf
 
 #**********************************************************
 # INSTALL rules
@@ -512,19 +512,19 @@ Install : doInstall
 INSTALL : doInstall
 
 doInstall: $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL)
-    -for n in $(HB_BUILD_TARGETS); \
-     do \
-       [ -f "$$n" ] && \
-       case $$n in \
-         *$(DLLEXT) ) $(COPY) $$n $(HB_BIN_INSTALL);; \
-         *$(LIBEXT) ) $(COPY) $$n $(HB_LIB_INSTALL);; \
-         *$(EXEEXT) ) $(COPY) $$n $(HB_BIN_INSTALL);; \
-       esac \
-     done
+	-for n in $(HB_BUILD_TARGETS); \
+	 do \
+	   [ -f "$$n" ] && \
+	   case $$n in \
+	     *$(DLLEXT) ) $(COPY) $$n $(HB_BIN_INSTALL);; \
+	     *$(LIBEXT) ) $(COPY) $$n $(HB_LIB_INSTALL);; \
+	     *$(EXEEXT) ) $(COPY) $$n $(HB_BIN_INSTALL);; \
+	   esac \
+	 done
 ifneq  ("$(HB_INSTALL_PREFIX)",".")
-    -[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.api $(HB_INC_INSTALL)
-    -[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.ch  $(HB_INC_INSTALL)
-    -[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.h   $(HB_INC_INSTALL)
+	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.api $(HB_INC_INSTALL)
+	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.ch  $(HB_INC_INSTALL)
+	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.h   $(HB_INC_INSTALL)
 endif
 
 #**********************************************************

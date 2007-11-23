@@ -669,6 +669,37 @@ BOOL WINAPI LocalUnlock( HLOCAL h )
 }
 #endif /* !_MSC_VER || __POCC__ || __XCC__ */
 
-#endif /* UNICODE */
+BOOL WINAPI Arc( HDC h, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8 )
+{
+   HB_SYMBOL_UNUSED( h );
+   HB_SYMBOL_UNUSED( p1 );
+   HB_SYMBOL_UNUSED( p2 );
+   HB_SYMBOL_UNUSED( p3 );
+   HB_SYMBOL_UNUSED( p4 );
+   HB_SYMBOL_UNUSED( p5 );
+   HB_SYMBOL_UNUSED( p6 );
+   HB_SYMBOL_UNUSED( p7 );
+   HB_SYMBOL_UNUSED( p8 );
+   return FALSE;
+}
+
+int WINAPI FrameRect( HDC h, LPCRECT r, HBRUSH hb )
+{
+   HB_SYMBOL_UNUSED( h );
+   HB_SYMBOL_UNUSED( r );
+   HB_SYMBOL_UNUSED( hb );
+   return 0;
+}
+
+BOOL WINAPI FloodFill( HDC h, int x, int y, COLORREF c )
+{
+   HB_SYMBOL_UNUSED( h );
+   HB_SYMBOL_UNUSED( x );
+   HB_SYMBOL_UNUSED( y );
+   HB_SYMBOL_UNUSED( c );
+   return FALSE;
+}
+
+#endif /* HB_WINCE */
 
 #endif /* HB_OS_WIN_32 */

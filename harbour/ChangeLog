@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 09:47 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbwince.c
+    + added dummy Arc(), FrameRect(), FloodFill() for WinCE builds
+
+  * harbour/make_gcc.mak
+    ! restored TABs in rules definitions. Viktor TABs for GNU make
+      have special meaning - your last modifications broke this file
+
+  * harbour/contrib/libmisc/Makefile
+    ! comment DIR rule as temporary workaround for problem with
+      library name
+
 2007-11-22 22:49 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvtcore.c
     ! Fixes for UNICODE Support.
