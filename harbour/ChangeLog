@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 18:55 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/include/hbexprb.c
+    * changed HB_i18nGettext() to hb_i18n_gettext(), to respect 
+      original gettext lowercase function name convention
+
 2007-11-23 06:57 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvt.c
     * HB_EXPORT void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
@@ -316,15 +321,15 @@
   * harbour/source/compiler/cmdcheck.c
   * harbour/source/compiler/hbmain.c
     + added i18n support
-      Implemented -j[filename] switch to indicate output filename. Default 
-      filename is <sourcefilename>.pot. If switch -o is used, this file
-      is created in speficied output path.
-      Output file format is compatible with 'gettext' utils, but not all
+      Implemented -j[filename] switch to indicate output filename. 
+      Default filename is <sourcefilename>.pot. If switch -o is used, 
+      this file is created in specified output path. Output file 
+      format is compatible with 'gettext' utils, but not all
       available features are implemented.
-      Harbour level function HB_i18nGettext( cText [, cContext ] ) sould be
-      used to indicate translatable strings.
-      All this commit is commented using #ifdef HB_I18N_SUPPORT and is in 
-      development stage. Please, do not use it yet.
+      Harbour level function HB_i18nGettext( cText [, cContext ] ) 
+      should be used to indicate translatable strings.
+      All this commit is commented using #ifdef HB_I18N_SUPPORT and 
+      is in development stage. Please, do not use it yet.
 
 2007-11-23 01:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    + gtwvg/common.mak

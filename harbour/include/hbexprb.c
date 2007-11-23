@@ -1645,7 +1645,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                }
 #ifdef HB_I18N_SUPPORT
 #ifndef HB_MACRO_SUPPORT
-               else if( strcmp( "HB_I18NGETTEXT", pName->value.asSymbol ) == 0 && usCount )
+               else if( strcmp( "HB_I18N_GETTEXT", pName->value.asSymbol ) == 0 && usCount )
                {
                   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
 
