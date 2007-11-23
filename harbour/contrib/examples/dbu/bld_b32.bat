@@ -4,11 +4,9 @@ rem $Id$
 rem
 
 set DBU_DIR=%CLIPPER_DIR%\SOURCE\DBU
-if exist "%DBU_DIR%\DBU.PRG" goto BUILD
+if exist "%DBU_DIR%\DBU.PRG" goto DIR_OK
 set DBU_DIR=.
-if exist "%DBU_DIR%\DBU.PRG" goto BUILD
-
-:HELP
+if exist "%DBU_DIR%\DBU.PRG" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll either need to copy the original CA-Cl*pper 
@@ -17,10 +15,9 @@ echo            your original CA-Cl*pper installation (with DBU sources
 echo            in SOURCE\DBU):
 echo            set CLIPPER_DIR=C:\CLIPPER5
 echo ---------------------------------------------------------------
-
 goto EXIT
 
-:BUILD
+:DIR_OK
 
 ..\..\..\bin\harbour /n %DBU_DIR%\DBU.PRG     /i..\..\..\include\
 ..\..\..\bin\harbour /n %DBU_DIR%\DBUCOPY.PRG /i..\..\..\include\

@@ -3,12 +3,27 @@ rem
 rem $Id$
 rem
 
-rem ---------------------------------------------------------------
-rem IMPORTANT: You'll need Advantage Client Engine installed.
-rem ---------------------------------------------------------------
+if not "%ADS_DIR%" == "" goto DIR_OK
 
+echo ---------------------------------------------------------------
+echo IMPORTANT: You'll need Advantage Client Engine installed and
+echo            these envvars set to successfully build this library:
+echo            set ACE_VER=810
+echo            set ACE_DIR=C:\ads\acesdk
+echo ---------------------------------------------------------------
+goto POST_EXIT
+
+:DIR_OK
+
+set CFLAGS=%C_USR% -I%ADS_DIR%
 set HB_DLL_NAME=ace32
-if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%SystemRoot%\system32
+if exist "%ADS_DIR%\32bit\%HB_DLL_NAME%.dll"        set HB_DLL_DIR=%ADS_DIR%\32bit
+if exist "%ADS_DIR%\Redistribute\%HB_DLL_NAME%.dll" set HB_DLL_DIR=%ADS_DIR%\Redistribute
+if exist "%ADS_DIR%\%HB_DLL_NAME%.dll"              set HB_DLL_DIR=%ADS_DIR%
+if exist "%ADS_DIR%\%HB_DLL_NAME%.dll"              set HB_DLL_DIR=%ADS_DIR%
+if exist "%SystemRoot%\system32\%HB_DLL_NAME%.dll"  set HB_DLL_DIR=%SystemRoot%\system32
+
+echo Using this .dll: %HB_DLL_DIR%\%HB_DLL_NAME%.dll
 
 rem ---------------------------------------------------------------
 
@@ -22,8 +37,10 @@ set _HB_LIB_INSTALL=%HB_LIB_INSTALL%
 if "%_HB_LIB_INSTALL%" == "" set _HB_LIB_INSTALL=%_HB_INSTALL_PREFIX%\lib
 
 if "%1" == "clean" goto POST_CLEAN
+if "%1" == "Clean" goto POST_CLEAN
 if "%1" == "CLEAN" goto POST_CLEAN
 if "%1" == "install" goto POST_INSTALL
+if "%1" == "Install" goto POST_INSTALL
 if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD

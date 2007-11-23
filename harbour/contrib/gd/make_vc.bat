@@ -3,19 +3,20 @@ rem
 rem $Id$
 rem
 
-if NOT "%GD_DIR%" == "" goto EXEC
-echo GD_DIR environment variable has to be defined !
+if not "%GD_DIR%" == "" goto DIR_OK
+
 echo ---------------------------------------------------------------
-echo IMPORTANT: You'll need GD lib package from www.libgd.org and this
-echo            envvar to be set to successfully build this library:
+echo IMPORTANT: You'll need GD lib package from www.libgd.org and this envvar
+echo            to be set to successfully build this library:
 echo            set GD_DIR=-IC:\gd
 echo ---------------------------------------------------------------
-exit 1
+goto POST_EXIT
 
-:EXEC
-set C_USR=%C_USR% -I%GD_DIR%\include
+:DIR_OK
+
+set CFLAGS=%C_USR% -I%GD_DIR%\include
 set HB_DLL_NAME=bgd
-if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%GD_DIR%\bin
+set HB_DLL_DIR=%GD_DIR%\bin
 
 rem ---------------------------------------------------------------
 
@@ -29,8 +30,10 @@ set _HB_LIB_INSTALL=%HB_LIB_INSTALL%
 if "%_HB_LIB_INSTALL%" == "" set _HB_LIB_INSTALL=%_HB_INSTALL_PREFIX%\lib
 
 if "%1" == "clean" goto POST_CLEAN
+if "%1" == "Clean" goto POST_CLEAN
 if "%1" == "CLEAN" goto POST_CLEAN
 if "%1" == "install" goto POST_INSTALL
+if "%1" == "Install" goto POST_INSTALL
 if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD

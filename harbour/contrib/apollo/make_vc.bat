@@ -3,19 +3,20 @@ rem
 rem $Id$
 rem
 
-if NOT "%APOLLO_DIR%" == "" goto EXEC
-echo APOLLO_DIR environment variable has to be defined !
+if not "%APOLLO_DIR%" == "" goto DIR_OK
+
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need Apollo headers and lib and this envvar
 echo            to be set to successfully build this library:
 echo            set APOLLO_DIR=C:\Apollo
 echo ---------------------------------------------------------------
-exit 1
+goto POST_EXIT
 
-:EXEC
-set C_USR=%C_USR% -I%APOLLO_DIR%\include
+:DIR_OK
+
+set CFLAGS=%C_USR% -I%APOLLO_DIR%\include
 set HB_DLL_NAME=sde61
-if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%APOLLO_DIR%
+set HB_DLL_DIR=%APOLLO_DIR%
 
 rem ---------------------------------------------------------------
 
@@ -29,8 +30,10 @@ set _HB_LIB_INSTALL=%HB_LIB_INSTALL%
 if "%_HB_LIB_INSTALL%" == "" set _HB_LIB_INSTALL=%_HB_INSTALL_PREFIX%\lib
 
 if "%1" == "clean" goto POST_CLEAN
+if "%1" == "Clean" goto POST_CLEAN
 if "%1" == "CLEAN" goto POST_CLEAN
 if "%1" == "install" goto POST_INSTALL
+if "%1" == "Install" goto POST_INSTALL
 if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD

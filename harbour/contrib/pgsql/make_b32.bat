@@ -3,20 +3,21 @@ rem
 rem $Id$
 rem
 
-if NOT "%PGSQL_DIR%" == "" goto EXEC
-echo PGSQL_DIR environment variable has to be defined !
+if not "%PGSQL_DIR%" == "" goto DIR_OK
+
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need PostreSQL package and this envvar
 echo            to be set to successfully build this library:
 echo            set PGSQL_DIR=C:\pgsql
 echo ---------------------------------------------------------------
-exit 1
+goto POST_EXIT
 
-:EXEC
-set C_USR=%C_USR% -I%PGSQL_DIR%\include -DHB_OS_WIN_32_USED
+:DIR_OK
+
+set CFLAGS=%C_USR% -I%PGSQL_DIR%\include -DHB_OS_WIN_32_USED
 rem .exe
 set HB_DLL_NAME=postgres
-if "%HB_DLL_DIR%" == "" set HB_DLL_DIR=%PGSQL_DIR%\bin
+set HB_DLL_DIR=%PGSQL_DIR%\bin
 
 rem ---------------------------------------------------------------
 
@@ -30,8 +31,10 @@ set _HB_LIB_INSTALL=%HB_LIB_INSTALL%
 if "%_HB_LIB_INSTALL%" == "" set _HB_LIB_INSTALL=%_HB_INSTALL_PREFIX%\lib
 
 if "%1" == "clean" goto POST_CLEAN
+if "%1" == "Clean" goto POST_CLEAN
 if "%1" == "CLEAN" goto POST_CLEAN
 if "%1" == "install" goto POST_INSTALL
+if "%1" == "Install" goto POST_INSTALL
 if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD
