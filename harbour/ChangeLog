@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 21:18 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/mtpl_vc.mak
+     ! Some minor fixes for VC.
+       - %1 -> %%1 to be on the safe side.
+       - Fixed double execution of inline files.
+       Thanks to Marek.
+
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+     ! Batch file calling method reset to Marek's version 
+       ('%COMSPEC% /c' as opposed to 'call') to avoid 
+       any unwanted "crosstalk" between contrib build 
+       procedures through the CFLAGS envvar.
+
 2007-11-23 21:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/doc/man/harbour.1
   * harbour/source/compiler/hbusage.c

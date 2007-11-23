@@ -11,10 +11,10 @@ set HB_SHOW_ERRORS=no
 set DO_NOT_COMPILE=examples hbclip hgf msql
 
 set DIRS=adordd bmdbfcdx btree libct libgt libmisc libnf ole
-for %%n in ( %DIRS% ) do call make_vc.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
+for %%n in ( %DIRS% ) do %COMSPEC% /c make_vc.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set DIRS=hbzlib htmllib odbc telepath tip win32 xhb
-for %%n in ( %DIRS% ) do call make_vc.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
+for %%n in ( %DIRS% ) do %COMSPEC% /c make_vc.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set DIRS=samples directx
 if not "%APOLLO_DIR%"    == "" set DIRS=%DIRS% apollo
@@ -25,4 +25,4 @@ if not "%MYSQL_DIR%"     == "" set DIRS=%DIRS% mysql
 if not "%PDFLIB_DIR%"    == "" set DIRS=%DIRS% pdflib
 if not "%PGSQL_DIR%"     == "" set DIRS=%DIRS% pgsql
 if not "%ADS_DIR%"       == "" set DIRS=%DIRS% rdd_ads
-for %%n in ( %DIRS% ) do call make_vc.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
+for %%n in ( %DIRS% ) do %COMSPEC% /c make_vc.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
