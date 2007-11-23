@@ -20,7 +20,7 @@ PRG_SOURCES=\
 	stringp.prg \
 	twirler.prg \
 
-LIBNAME=misc
+LIBNAME=hbmisc
 
 DIRS=test
 

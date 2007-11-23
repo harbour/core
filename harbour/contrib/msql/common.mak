@@ -2,16 +2,17 @@
 # $Id$
 #
 
-LIBNAME = hbfreeimage
+LIBNAME = msql
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
 PRG_HEADERS = \
-    freeimage.ch \
+    ads.ch \
 
 LIB_OBJS = \
-    $(OBJ_DIR)\fi_winfu$(OBJEXT) \
-    $(OBJ_DIR)\fi_wrp$(OBJEXT) \
+    $(OBJ_DIR)\msql$(OBJEXT) \
+    \
+    $(OBJ_DIR)\tmsql$(OBJEXT) \
 
 all: \
     $(LIB_PATH) \

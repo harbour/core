@@ -79,10 +79,10 @@
    #define ADS_CISTRING             20    /* CaSe INSensiTIVE character data (>= 7.10) */
 #endif
 #ifndef ADS_ROWVERSION
-   #define ADS_ROWVERSION           21    /* 8 byte integer, incremented for every update, unique to entire table (>= 800) */
+   #define ADS_ROWVERSION           21    /* 8 byte integer, incremented for every update, unique to entire table (>= 8.00) */
 #endif
 #ifndef ADS_MODTIME
-   #define ADS_MODTIME              22    /* 8 byte timestamp, updated when record is updated (>= 800) */
+   #define ADS_MODTIME              22    /* 8 byte timestamp, updated when record is updated (>= 8.00) */
 #endif
 
 HB_EXTERN_BEGIN

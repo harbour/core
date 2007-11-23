@@ -1,3 +1,7 @@
+#
+# $Id$
+#
+
 CompOptions = -m -n -I../include
 
 

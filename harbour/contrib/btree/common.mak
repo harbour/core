@@ -2,17 +2,20 @@
 # $Id$
 #
 
-LIBNAME = hb_btree
+LIBNAME = hbbtree
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
-#
-# LIB rules
-#
+C_HEADERS = \
+    hb_btree.api \
+
+PRG_HEADERS = \
+    hb_btree.ch \
 
 LIB_OBJS = \
-   $(OBJ_DIR)\hb_btree$(OBJEXT) \
-   $(OBJ_DIR)\tbtree$(OBJEXT) \
+    $(OBJ_DIR)\hb_btree$(OBJEXT) \
+    \
+    $(OBJ_DIR)\tbtree$(OBJEXT) \
 
 all: \
-   $(LIB_PATH) \
+    $(LIB_PATH) \

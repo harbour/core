@@ -6,12 +6,11 @@ LIBNAME = adordd
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
-#
-# LIB rules
-#
+PRG_HEADERS = \
+    adordd.ch \
 
 LIB_OBJS = \
-   $(OBJ_DIR)\adordd$(OBJEXT)   
+    $(OBJ_DIR)\adordd$(OBJEXT)   
 
 all: \
-   $(LIB_PATH) \
+    $(LIB_PATH) \

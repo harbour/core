@@ -7,10 +7,10 @@ ROOT = ../../
 CFLAGS += -I/opt/firebird/include
 
 C_SOURCES=\
-        firebird.c \
+	firebird.c \
 
 PRG_SOURCES=\
-        tfirebird.prg \
+	tfirebird.prg \
 
 LIBNAME=firebird
 

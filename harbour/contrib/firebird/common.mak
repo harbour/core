@@ -6,13 +6,9 @@ LIBNAME = firebird
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
-#
-# LIB rules
-#
-
 LIB_OBJS = \
-   $(OBJ_DIR)\firebird$(OBJEXT) \
-   $(OBJ_DIR)\tfirebird$(OBJEXT) \
+    $(OBJ_DIR)\firebird$(OBJEXT) \
+    $(OBJ_DIR)\tfirebird$(OBJEXT) \
 
 all: \
-   $(LIB_PATH) \
+    $(LIB_PATH) \

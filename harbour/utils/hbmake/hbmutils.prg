@@ -555,18 +555,15 @@ FUNCTION GetInstaledLibs( clibs, lGcc )
    aadd(aDefLib,'gttrm'+ cSuffix)
    aadd(aDefLib,'gtwin'+ cSuffix)
    aadd(aDefLib,'gtwvt'+ cSuffix)
-   aadd(aDefLib,'libct'+cSuffix)
    aadd(aDefLib,'hbodbc'+ cSuffix)
    aadd(aDefLib,'hbpg'+ cSuffix)
-   aadd(aDefLib,'hbtip'+cSuffix)
-   aadd(aDefLib,'hbzip'+ cSuffix)
+   aadd(aDefLib,'tip'+cSuffix)
    aadd(aDefLib,'html'+ cSuffix)
    aadd(aDefLib,'lang'+ cSuffix)
    aadd(aDefLib,'libmisc'+ cSuffix)
    aadd(aDefLib,'libnf'+ cSuffix)
    aadd(aDefLib,'libgt'+ cSuffix)
    aadd(aDefLib,'hbmysql'+ cSuffix)
-   aadd(aDefLib,'mysql'+ cSuffix)
    aadd(aDefLib,'macro'+ cSuffix)
    aadd(aDefLib,'nulsys'+ cSuffix)
    aadd(aDefLib,'pdflib'+ cSuffix)
@@ -578,7 +575,7 @@ FUNCTION GetInstaledLibs( clibs, lGcc )
    aadd(aDefLib,'tip'+cSuffix)
    aadd(aDefLib,'hbwin32'+cSuffix)
    aadd(aDefLib,'vm'+ cSuffix)
-   aadd(aDefLib,'ziparchive'+ cSuffix)
+   aadd(aDefLib,'hbziparch'+ cSuffix)
 
 
    IF lGcc
@@ -608,13 +605,13 @@ FUNCTION GetLibs( lGcc, cDir )
    LOCAL cExt := iif(lGcc,".a",".lib")
 
 
-   LOCAL aLibsDesc     := { { "Harbour Misc       lib - "+iif( lGcc, "misc.a", "libmisc.lib" ) , iif( lGcc, 'misc.a', 'libmisc.lib' ) },;
-                            { "Harbour Html       lib - html" + cExt                           , 'html' +cExt },;
-                            { "Harbour NanFor     lib - "+iif( lGcc, "nf.a", "libnf.lib" )     , iif( lGcc, 'nf.a', 'libnf.lib' ) },;
+   LOCAL aLibsDesc     := { { "Harbour hbmisc     lib - hbmisc" + cExt                         , 'hbmisc' + cExt },;
+                            { "Harbour Html       lib - html" + cExt                           , 'html' + cExt },;
+                            { "Harbour NanFor     lib - nf" + cExt                             , 'nf' + cExt },;
                             { "Harbour GT         lib - gt"+cExt                               , 'gt' + cExt },;
-                            { "Harbour Zip        lib - "+iif( IsWin(),"hbzip","ziparchive")+cExt  , IIF( ISWIN(),'hbzip','ziparchive') + cExt + iif( lLinux, ' stdc++.a z.a', ' ' ) },;
+                            { "Harbour Zip        lib - hbziparch"+cExt                        , 'hbziparch' + cExt + iif( lLinux, ' stdc++.a z.a', ' ' ) },;
                             { "Harbour Ole        lib - hbole"+ cExt                           , 'hbole' + cExt + ' ole2' + cExt },;
-                            { "Harbour MySql      lib - "+iif( IsWin(), "mysql", "hbmysql") + cExt, iif( IsWin(), 'mysql', "hbmysql") + cExt },;
+                            { "Harbour MySql      lib - hbmysql" + cExt                        , 'hbmysql' + cExt },;
                             { "Harbour PostGreSql lib - libhbpg"+cExt                          , 'libhbpg' + cExt },;
                             { "Harbour Samples    lib - samples"+cExt                          , 'samples' + cExt }  }
 

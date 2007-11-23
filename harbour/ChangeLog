@@ -8,6 +8,157 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 03:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * make_b32.mak
+   * make_gcc.mak
+   * make_vc.mak
+   * make_vcce.mak
+   * common.mak
+     ! Fixed copyrights.
+     ! Tabs converted to spaces.
+     - CFLAGS not advertised anymore as an official public var to set 
+       compiler flags.
+       C_USR should be used, which is also GNU make system compatible.
+
+   * make_vc.mak
+   * make_vcce.mak
+     ! Removed /Y from copy command
+       (we're using the COPYCMD trick in core make files).
+
+   - contrib/adordd/access1.prg
+   - contrib/adordd/access2.prg
+   - contrib/adordd/mysql1.prg
+   - contrib/adordd/mysql3.prg
+   + contrib/adordd/tests
+   + contrib/adordd/tests/access1.prg
+   + contrib/adordd/tests/access2.prg
+   + contrib/adordd/tests/mysql1.prg
+   + contrib/adordd/tests/mysql3.prg
+   - contrib/btree/mktest.bat
+   + contrib/btree/test/mktest.bat
+   - contrib/samples/testdate.prg
+   - contrib/samples/testenv.prg
+   - contrib/samples/testgaug.prg
+   - contrib/samples/testnum.prg
+   - contrib/samples/teststat.prg
+   - contrib/samples/testtime.prg
+   - contrib/samples/tststack.prg
+   + contrib/samples/tests
+   + contrib/samples/tests/testdate.prg
+   + contrib/samples/tests/testenv.prg
+   + contrib/samples/tests/testgaug.prg
+   + contrib/samples/tests/testnum.prg
+   + contrib/samples/tests/teststat.prg
+   + contrib/samples/tests/testtime.prg
+   + contrib/samples/tests/tststack.prg
+     * Test related files moved to test dir.
+     ! Added EOLs to the last line in adordd files.
+
+   - contrib/gd/README
+   + contrib/gd/readme.txt
+     * Renamed to use proper extension.
+
+   * contrib/adordd/common.mak
+   * contrib/apollo/common.mak
+   * contrib/bmdbfcdx/common.mak
+   * contrib/btree/common.mak
+   * contrib/directx/common.mak
+   * contrib/firebird/common.mak
+   * contrib/freeimage/common.mak
+   * contrib/gd/common.mak
+   * contrib/hbzlib/common.mak
+   * contrib/hgf/win32/common.mak
+   * contrib/htmllib/common.mak
+   * contrib/ole/common.mak
+   * contrib/pdflib/common.mak
+   * contrib/pgsql/common.mak
+   * contrib/libct/common.mak
+   * contrib/libgt/common.mak
+   * contrib/libnf/common.mak
+   * contrib/libmisc/common.mak
+   * contrib/mysql/common.mak
+   * contrib/odbc/common.mak
+   * contrib/rdd_ads/common.mak
+   * contrib/samples/common.mak
+   * contrib/telepath/common.mak
+   * contrib/tip/common.mak
+   * contrib/win32/common.mak
+   * contrib/xhb/common.mak
+     * Formatting made consistent.
+
+   * contrib/adordd/common.mak
+   * contrib/bmdbfcdx/common.mak
+   * contrib/btree/common.mak
+   * contrib/freeimage/common.mak
+   * contrib/gd/common.mak
+   * contrib/hgf/win32/common.mak
+   * contrib/libct/common.mak
+   * contrib/libnf/common.mak
+   * contrib/mysql/common.mak
+   * contrib/odbc/common.mak
+   * contrib/pdflib/common.mak
+   * contrib/pgsql/common.mak
+   * contrib/rdd_ads/common.mak
+   * contrib/samples/common.mak
+   * contrib/tip/common.mak
+   * contrib/xhb/common.mak
+     + Added headers.
+
+   * contrib/btree/common.mak
+   * contrib/freeimage/common.mak
+   * contrib/freeimage/Makefile
+   * contrib/hbzlib/common.mak
+   * contrib/hbzlib/Makefile
+   * contrib/libct/common.mak
+   * contrib/libmisc/common.mak
+   * contrib/libmisc/Makefile
+   * contrib/mysql/common.mak
+     ! Library names synced between GNU and non-GNU 
+       make systems.
+     ! Some libraries renamed to not have a too common 
+       or non-descriptive name, like "misc".
+       non-GNU hb_btree   -> hbbtree (synced with GNU)
+       non-GNU fi_lib     -> hbfreeimage
+       GNU     fi_lib     -> hbfreeimage
+       non-GNU hbzip      -> hbziparch
+       GNU     ziparchive -> hbziparch
+       non-GNU libct      -> ct (synced with GNU)
+       non-GNU libmisc    -> hbmisc
+       GNU     misc       -> hbmisc
+       non-GNU mysql      -> hbmysql (synced with GNU)
+
+   * contrib/apollo/Makefile
+   * contrib/firebird/Makefile
+     ! Fixed space to tabs.
+
+   + contrib/msql/make_b32.bat
+   + contrib/msql/make_vc.bat
+   + contrib/msql/common.mak
+     + Added non-GNU make files.
+     ; TOFIX: I cannot compile these still.
+
+   * contrib/msql/Makefile
+     ! Added SVN header.
+     ; TOFIX: This is a non-standard Makefile.
+              Did anyone manage to compile this lib?
+
+   * contrib/adordd/adordd.ch
+   * contrib/adordd/adordd.prg
+     ! Added EOLs to the last line.
+
+   * utils/hbmake/hbmutils.prg
+     * Lib names fixed and changed to reflect the recent 
+       changes in contrib.
+
+   * contrib/rdd_ads/rddads.h
+     ! Minor cosmetic fix.
+
+   * include/hbextern.ch
+   * source/rtl/memofile.c
+     ! MEMOWRIT() 3rd parameter marked as extension.
+     + HB_MEMOWRIT() function added, which never write the 
+       obsolete EOF char at the end of the file.
+
 2007-11-23 03:55 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/include/hbcompdf.h
   * harbour/source/include/hbexprop.h

@@ -6,13 +6,10 @@ LIBNAME = telepath
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
-#
-# LIB rules
-#
-
 LIB_OBJS = \
-   $(OBJ_DIR)\telepath$(OBJEXT) \
-   $(OBJ_DIR)\tpwin32$(OBJEXT)
+    $(OBJ_DIR)\tpwin32$(OBJEXT) \
+    \
+    $(OBJ_DIR)\telepath$(OBJEXT) \
 
 all: \
-   $(LIB_PATH) \
+    $(LIB_PATH) \

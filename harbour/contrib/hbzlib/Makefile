@@ -6,11 +6,9 @@ ROOT = ../../
 
 PRG_HEADERS = \
 
-
 C_SOURCES = \
 	zip.c \
 	hbcomprs.c \
-
 
 CPP_SOURCES = \
 	stdafx.cpp \
@@ -43,7 +41,7 @@ endif
 
 PRG_SOURCES= \
 
-LIBNAME=ziparchive
+LIBNAME=hbziparch
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

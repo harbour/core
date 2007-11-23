@@ -107,15 +107,11 @@ HB_FUNC( MEMOREAD )
       hb_retc( NULL );
 }
 
-HB_FUNC( MEMOWRIT )
+static BOOL hb_memowrit( BOOL bWriteEOF )
 {
    PHB_ITEM pFileName = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pString   = hb_param( 2, HB_IT_STRING );
-   BOOL bWriteEof     = TRUE;      /* write Eof !, by default is .T. */
    BOOL bRetVal       = FALSE;
-
-   if( hb_parinfo(0) == 3 && ISLOG( 3 ) )
-       bWriteEof = hb_parl( 3 );
 
    if( pFileName && pString )
    {
@@ -131,7 +127,7 @@ HB_FUNC( MEMOWRIT )
          /* NOTE: CA-Clipper will not return .F. when the EOF could not be written. [vszakats] */
          #if ! defined(OS_UNIX_COMPATIBLE)
          {
-            if( bWriteEof )  /* if true, then write EOF */
+            if( bWriteEOF )  /* if true, then write EOF */
             {
                BYTE byEOF = HB_CHAR_EOF;
 
@@ -144,5 +140,19 @@ HB_FUNC( MEMOWRIT )
       }
    }
 
-   hb_retl( bRetVal );
+   return bRetVal;
+}
+
+HB_FUNC( HB_MEMOWRIT )
+{
+   hb_retl( hb_memowrit( FALSE ) );
+}
+
+HB_FUNC( MEMOWRIT )
+{
+#ifdef HB_EXTENSION
+   hb_retl( hb_memowrit( hb_parinfo(0) == 3 && ISLOG( 3 ) ? hb_parl( 3 ) : TRUE ) );
+#else
+   hb_retl( hb_memowrit( TRUE ) );
+#endif
 }

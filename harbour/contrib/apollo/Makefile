@@ -5,7 +5,7 @@
 ROOT = ../../
 
 C_SOURCES=\
-   apollo.c \
+	apollo.c \
 
 PRG_SOURCES=\
 	apollo1.prg \

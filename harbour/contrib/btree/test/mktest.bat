@@ -1,6 +1,9 @@
 @echo off
+rem
+rem $Id$
+rem
 
-cd test\dos\djgpp\
+cd dos\djgpp\
 del test.exe
 del *.c
 
@@ -13,9 +16,9 @@ gcc -I. -I../../../../../include -Wall  -c ttest.c -ottest.o
 gcc -I. -I../../../../../include -I../../.. -Wall -c ../../ctest.c -octest.o
 
 gcc @__link__.tmp
-cd ..\..\..
+cd ..\..
 
 pause
-test\dos\djgpp\test
+dos\djgpp\test
 
 :done

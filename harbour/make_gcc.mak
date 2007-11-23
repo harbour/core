@@ -19,46 +19,44 @@
 
 #
 # NOTE: You can use these envvars to configure the make process:
-#   	(note that these are all optional)
+#       (note that these are all optional)
 #
-#   	CFLAGS  		  - Extra C compiler options for libraries and for
-#   						executables
-#   	C_USR   		  - Extra C compiler options for libraries and for
-#   						executables (GNU make compatible envvar)
-#   	CLIBFLAGS   	  - Extra C compiler options for the static libraries
-#   	CLIBFLAGSDLL	  - Extra C compiler options for the shared libraries
+#       C_USR             - Extra C compiler options for libraries and for
+#                           executables (GNU make compatible envvar)
+#       CLIBFLAGS         - Extra C compiler options for the static libraries
+#       CLIBFLAGSDLL      - Extra C compiler options for the shared libraries
 #
-#   	LDFLAGS 		  - Extra linker options for the static libraries
-#   	LDFLAGSDLL  	  - Extra linker options for the shared libraries
+#       LDFLAGS           - Extra linker options for the static libraries
+#       LDFLAGSDLL        - Extra linker options for the shared libraries
 #
-#   	HARBOURFLAGS	  - Extra Harbour compiler options for static libs/exes
-#   	HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
-#   	PRG_USR 		  - Extra Harbour compiler options
-#   						(GNU make compatible envvar)
-#   	HB_GT_DEFAULT     - The default GT driver, Choose between :
-#   						gtstd (default),gtcgi,gtpca,gttrm,gtcrs,gtsln,gtxwc
-#   	HB_GT_LIB   	  - Set if you want to override the default GT driver
-#   						(search for HB_GT_LIBS for a list of values)
+#       HARBOURFLAGS      - Extra Harbour compiler options for static libs/exes
+#       HARBOURFLAGSDLL   - Extra Harbour compiler options for shared libraries
+#       PRG_USR           - Extra Harbour compiler options
+#                           (GNU make compatible envvar)
+#       HB_GT_DEFAULT     - The default GT driver, Choose between :
+#                           gtstd (default),gtcgi,gtpca,gttrm,gtcrs,gtsln,gtxwc
+#       HB_GT_LIB         - Set if you want to override the default GT driver
+#                           (search for HB_GT_LIBS for a list of values)
 #
-#   	HB_GPM_MOUSE	  - If set to yes enables using GPM mouse driver on console
-#   	HB_WITHOUT_GTSLN  - If set to yes causes to not build gtsln
-#   						(if you don't have slang installed)
+#       HB_GPM_MOUSE      - If set to yes enables using GPM mouse driver on console
+#       HB_WITHOUT_GTSLN  - If set to yes causes to not build gtsln
+#                           (if you don't have slang installed)
 #
-#   	HB_COMMERCE 	  - If set to yes disables pure GNU modules (slang,GPM,...)
-#   	HB_BUILD_DLL	  - If set to yes enables building harbour VM+RTL
-#   						dll in addition to normal static build (currently not working)
-#   	HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
-#   	HB_BUILD_VERBOSE  - enables echoing commands being executed
-#   	HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
-#   						bison (you must use bison 2.3 or later)
+#       HB_COMMERCE       - If set to yes disables pure GNU modules (slang,GPM,...)
+#       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
+#                           dll in addition to normal static build (currently not working)
+#       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
+#       HB_BUILD_VERBOSE  - enables echoing commands being executed
+#       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
+#                           bison (you must use bison 2.3 or later)
 #
-#   	HB_INSTALL_PREFIX - Path to instalation directory into which
-#   						Harbour will be installed when the command
-#   						"make_gcc.bat install" is lauched. Defaults
-#   						to current directory
+#       HB_INSTALL_PREFIX - Path to instalation directory into which
+#                           Harbour will be installed when the command
+#                           "make_gcc.bat install" is lauched. Defaults
+#                           to current directory
 #
-#   	HB_DOC_PDF  	  - Turns on the .PDF file support in the HBDOC utility.
-#   						Note that this will require the pdflib contrib.
+#       HB_DOC_PDF        - Turns on the .PDF file support in the HBDOC utility.
+#                           Note that this will require the pdflib contrib.
 
 # ---------------------------------------------------------------
 
@@ -110,12 +108,12 @@ include common.cf
 # GUI programs without console. Please note IT IS A
 # DIRTY HACK and any better solution is HIGHLY WELCOME
 ifeq ($(HB_ARCHITECTURE),w32)
-MAIN_LIB	  = $(LIB_DIR)/$(LIBPREF)mainstd$(LIBEXT)
+MAIN_LIB      = $(LIB_DIR)/$(LIBPREF)mainstd$(LIBEXT)
 MAIN_LIB_OBJS = $(OBJ_DIR)/mainstd$(OBJEXT)
 
 VM_STATIC_LIB_OBJS     := $(VM_STATIC_LIB_OBJS:$(OBJ_DIR)/mainstd$(OBJEXT)=)
 STANDARD_STATIC_HBLIBS := $(STANDARD_STATIC_HBLIBS) $(MAIN_LIB)
-HB_BUILD_TARGETS	   := $(MAIN_LIB) $(HB_BUILD_TARGETS)
+HB_BUILD_TARGETS       := $(MAIN_LIB) $(HB_BUILD_TARGETS)
 endif
 
 #**********************************************************
@@ -158,22 +156,22 @@ endif
 # Main "Include" directory
 INCLUDE_DIR    := include
 
-CFLAGS  	   := -W -Wall -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -Iobj/$(HB_CC_NAME)
+CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -Iobj/$(HB_CC_NAME)
 #-----------
 ifndef GCC_NOOPTIM
-CFLAGS  	   := -O3 $(CFLAGS)
+CFLAGS         := -O3 $(CFLAGS)
 endif
 #-----------
 ifeq ($(HB_BUILD_DEBUG),yes)
-CFLAGS  	   := -g $(CFLAGS)
+CFLAGS         := -g $(CFLAGS)
 endif
 #-----------
 ifneq ($(HB_GT_DEFAULT),)
-CFLAGS  	   += -DHB_GT_DEFAULT=$(HB_GT_DEFAULT:gt%=%)
+CFLAGS         += -DHB_GT_DEFAULT=$(HB_GT_DEFAULT:gt%=%)
 endif
 #-----------
 ifneq ($(HB_GT_LIB),)
-CFLAGS  	   += -DHB_GT_LIB=$(HB_GT_LIB:gt%=%)
+CFLAGS         += -DHB_GT_LIB=$(HB_GT_LIB:gt%=%)
 endif
 #-----------
 CLIBFLAGS      := -c $(CFLAGS) $(CLIBFLAGS)
@@ -217,27 +215,27 @@ ARFLAGS = rc $(A_USR)
 #**********************************************************
 # General *.prg --> *.o COMPILE rule for STATIC Libraries
 $(OBJ_DIR)/%$(OBJEXT) : %.prg
-	$(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)/ $<
-	$(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)/$(<F:.prg=.c)
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)/ $<
+    $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
 # General *.c --> *.o COMPILE rule for STATIC Libraries
 $(OBJ_DIR)/%$(OBJEXT) : %.c
-	$(CC) $(CLIBFLAGS) -o$@ $<
+    $(CC) $(CLIBFLAGS) -o$@ $<
 #*******************************************************
 # General *.prg --> *.o COMPILE rule for SHARED Libraries
 $(DLL_OBJ_DIR)/%$(OBJEXT) : %.prg
-	$(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)/ $**
-	$(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)/$&.c
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)/ $**
+    $(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)/$&.c
 #----------------------------------------------------------
 # General *.c --> *.o COMPILE rule for SHARED Libraries
 $(DLL_OBJ_DIR)/%$(OBJEXT) : %.c
-	$(CC) $(CLIBFLAGSDLL) -o$@ $<
+    $(CC) $(CLIBFLAGSDLL) -o$@ $<
 #**********************************************************
 # General *.o -> *.a LIBRARY CREATION rule
 #%$(LIBEXT) : %$(OBJEXT)
 #$(LIB_DIR)/%$(LIBEXT) : $(OBJ_DIR)/%$(OBJEXT)
 $(LIB_DIR)/%$(LIBEXT) : %$(OBJEXT)
-	$(MKLIB) $(ARFLAGS) $@ $^
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 
 
@@ -260,7 +258,7 @@ StdLibs   : BasicExes $(STANDARD_STATIC_HBLIBS)
 #**********************************************************
 # Implicit directory creation rule
 $(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
-	mkdir -p $@
+    mkdir -p $@
 #**********************************************************
 
 
@@ -268,93 +266,93 @@ $(HB_DEST_DIRS) $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL):
 # LIBRARY Targets BUILD rules
 #**********************************************************
 $(COMMON_LIB)   : $(COMMON_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(PP_LIB)   	: $(PP_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(PP_LIB)       : $(PP_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(VM_LIB)   	: $(VM_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(VM_LIB)       : $(VM_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 ifeq ($(HB_ARCHITECTURE),w32)
-$(MAIN_LIB) 	: $(MAIN_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(MAIN_LIB)     : $(MAIN_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 endif
 #**********************************************************
-$(RTL_LIB)  	: $(RTL_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(RTL_LIB)      : $(RTL_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(MACRO_LIB)	: $(MACRO_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(MACRO_LIB)    : $(MACRO_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(DEBUG_LIB)	: $(DEBUG_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(DEBUG_LIB)    : $(DEBUG_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(LANG_LIB) 	: $(LANG_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(LANG_LIB)     : $(LANG_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(CODEPAGE_LIB) : $(CODEPAGE_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(PCRE_LIB) 	: $(PCRE_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(PCRE_LIB)     : $(PCRE_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(RDD_LIB)  	: $(RDD_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(RDD_LIB)      : $(RDD_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(NULSYS_LIB)   : $(NULSYS_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(DBFNTX_LIB)   : $(DBFNTX_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(DBFCDX_LIB)   : $(DBFCDX_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(DBFFPT_LIB)   : $(DBFFPT_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(HBSIX_LIB)	: $(HBSIX_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(HBSIX_LIB)    : $(HBSIX_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(HSX_LIB)  	: $(HSX_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(HSX_LIB)      : $(HSX_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 $(USRRDD_LIB)   : $(USRRDD_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(GTCGI_LIB)	: $(GTCGI_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(GTCGI_LIB)    : $(GTCGI_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(GTSTD_LIB)	: $(GTSTD_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(GTSTD_LIB)    : $(GTSTD_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(GTPCA_LIB)	: $(GTPCA_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(GTPCA_LIB)    : $(GTPCA_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(GTWIN_LIB)	: $(GTWIN_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(GTWIN_LIB)    : $(GTWIN_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(GTWVT_LIB)	: $(GTWVT_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(GTWVT_LIB)    : $(GTWVT_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(GTGUI_LIB)	: $(GTGUI_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(GTGUI_LIB)    : $(GTGUI_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(GTTRM_LIB)	: $(GTTRM_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(GTTRM_LIB)    : $(GTTRM_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(GTCRS_LIB)	: $(GTCRS_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(GTCRS_LIB)    : $(GTCRS_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(GTSLN_LIB)	: $(GTSLN_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(GTSLN_LIB)    : $(GTSLN_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-$(GTXWC_LIB)	: $(GTXWC_LIB_OBJS)
-	$(MKLIB) $(ARFLAGS) $@ $^
+$(GTXWC_LIB)    : $(GTXWC_LIB_OBJS)
+    $(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 
 
@@ -362,41 +360,41 @@ $(GTXWC_LIB)	: $(GTXWC_LIB_OBJS)
 # EXECUTABLE Targets BUILD rules
 #**********************************************************
 $(HBPPGEN_EXE)  : $(HBPPGEN_EXE_OBJS) $(COMMON_LIB)
-	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+    $(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
 #**********************************************************
 $(HARBOUR_EXE)  : $(HARBOUR_EXE_OBJS) $(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
-	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+    $(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
 #**********************************************************
-$(HBPP_EXE) 	: $(HBPP_EXE_OBJS) $(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
-	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+$(HBPP_EXE)     : $(HBPP_EXE_OBJS) $(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
+    $(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
 #**********************************************************
-$(HBRUN_EXE)	:: $(StdLibs)
-$(HBRUN_EXE)	:: $(HBRUN_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+$(HBRUN_EXE)    :: $(StdLibs)
+$(HBRUN_EXE)    :: $(HBRUN_EXE_OBJS)
+    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBDOT_EXE)	:: $(StdLibs)
-$(HBDOT_EXE)	:: $(HBDOT_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+$(HBDOT_EXE)    :: $(StdLibs)
+$(HBDOT_EXE)    :: $(HBDOT_EXE_OBJS)
+    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBTEST_EXE)   :: $(StdLibs)
 $(HBTEST_EXE)   :: $(HBTEST_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBPPTEST_EXE) :: $(StdLibs)
 $(HBPPTEST_EXE) :: $(HBPPTEST_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBDOC_EXE)	:: $(StdLibs)
-$(HBDOC_EXE)	:: $(HBDOC_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+$(HBDOC_EXE)    :: $(StdLibs)
+$(HBDOC_EXE)    :: $(HBDOC_EXE_OBJS)
+    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBMAKE_EXE)   :: $(StdLibs)
 $(HBMAKE_EXE)   :: $(HBMAKE_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+    $(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBVER_EXE)	:: $(StdLibs)
-$(HBVER_EXE)	:: $(HBVER_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+$(HBVER_EXE)    :: $(StdLibs)
+$(HBVER_EXE)    :: $(HBVER_EXE_OBJS)
+    $(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
 #**********************************************************
 
 
@@ -407,28 +405,28 @@ $(HBVER_EXE)	:: $(HBVER_EXE_OBJS)
 # Generated by an intermediate utility hbppgen.exe
 # built at the initial phase of build process
 $(OBJ_DIR)/pptable$(OBJEXT) : $(OBJ_DIR)/pptable.c
-$(OBJ_DIR)/pptable.c		: $(HBPPGEN) include/hbstdgen.ch include/std.ch $(PP_DIR)/ppcore.c $(PP_DIR)/hbppgen.c
-	$< include/hbstdgen.ch -o$@ -q
+$(OBJ_DIR)/pptable.c        : $(HBPPGEN) include/hbstdgen.ch include/std.ch $(PP_DIR)/ppcore.c $(PP_DIR)/hbppgen.c
+    $< include/hbstdgen.ch -o$@ -q
 
 #**********************************************************
 
 ifeq ("$(HB_REBUILD_PARSER)","yes")
 
 $(OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.y
-	bison --no-line -d $** -o$@
+    bison --no-line -d $** -o$@
 
 $(OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.y
-	bison --no-line -d $** -o$@
+    bison --no-line -d $** -o$@
 
 else
 
 $(OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.yyc
-	$(COPY) $< $@
-	$(COPY) $(<:.yyc=.yyh) $(@:.c=.h)
+    $(COPY) $< $@
+    $(COPY) $(<:.yyc=.yyh) $(@:.c=.h)
 
 $(OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.yyc
-	$(COPY) $< $@
-	$(COPY) $(<:.yyc=.yyh) $(@:.c=.h)
+    $(COPY) $< $@
+    $(COPY) $(<:.yyc=.yyh) $(@:.c=.h)
 
 endif
 
@@ -453,20 +451,20 @@ $(OBJ_DIR)/macroy$(OBJEXT)   : $(OBJ_DIR)/macroy.c
 ifeq ("$(HB_REBUILD_PARSER)","yes")
 
 $(DLL_OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.y
-	bison --no-line -d $** -o$@
+    bison --no-line -d $** -o$@
 
 $(DLL_OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.y
-	bison --no-line -d $** -o$@
+    bison --no-line -d $** -o$@
 
 else
 
 $(DLL_OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.yyc
-	$(COPY) $** $@
-	$(COPY) $(**:.yyc=.yyh) $(@:.c=.h)
+    $(COPY) $** $@
+    $(COPY) $(**:.yyc=.yyh) $(@:.c=.h)
 
 $(DLL_OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.yyc
-	$(COPY) $** $@
-	$(COPY) $(**:.yyc=.yyh) $(@:.c=.h)
+    $(COPY) $** $@
+    $(COPY) $(**:.yyc=.yyh) $(@:.c=.h)
 
 endif
 
@@ -495,15 +493,15 @@ Clean: doClean
 CLEAN: doClean
 
 doClean:
-	-$(DEL) $(HB_BUILD_TARGETS)
-	-$(DEL) $(OBJ_DIR)/*$(OBJEXT)
-	-$(DEL) $(OBJ_DIR)/*.c
-	-$(DEL) $(OBJ_DIR)/*.h
-	-$(DEL) $(DLL_OBJ_DIR)/*$(OBJEXT)
-	-$(DEL) $(DLL_OBJ_DIR)/*.c
-	-$(DEL) $(DLL_OBJ_DIR)/*.h
-	-$(DEL) inst_$(HB_CC_NAME).log
-	-$(DEL) common.cf
+    -$(DEL) $(HB_BUILD_TARGETS)
+    -$(DEL) $(OBJ_DIR)/*$(OBJEXT)
+    -$(DEL) $(OBJ_DIR)/*.c
+    -$(DEL) $(OBJ_DIR)/*.h
+    -$(DEL) $(DLL_OBJ_DIR)/*$(OBJEXT)
+    -$(DEL) $(DLL_OBJ_DIR)/*.c
+    -$(DEL) $(DLL_OBJ_DIR)/*.h
+    -$(DEL) inst_$(HB_CC_NAME).log
+    -$(DEL) common.cf
 
 #**********************************************************
 # INSTALL rules
@@ -514,19 +512,19 @@ Install : doInstall
 INSTALL : doInstall
 
 doInstall: $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL)
-	-for n in $(HB_BUILD_TARGETS); \
-	 do \
-	   [ -f "$$n" ] && \
-	   case $$n in \
-		 *$(DLLEXT) ) $(COPY) $$n $(HB_BIN_INSTALL);; \
-		 *$(LIBEXT) ) $(COPY) $$n $(HB_LIB_INSTALL);; \
-		 *$(EXEEXT) ) $(COPY) $$n $(HB_BIN_INSTALL);; \
-	   esac \
-	 done
+    -for n in $(HB_BUILD_TARGETS); \
+     do \
+       [ -f "$$n" ] && \
+       case $$n in \
+         *$(DLLEXT) ) $(COPY) $$n $(HB_BIN_INSTALL);; \
+         *$(LIBEXT) ) $(COPY) $$n $(HB_LIB_INSTALL);; \
+         *$(EXEEXT) ) $(COPY) $$n $(HB_BIN_INSTALL);; \
+       esac \
+     done
 ifneq  ("$(HB_INSTALL_PREFIX)",".")
-	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.api $(HB_INC_INSTALL)
-	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.ch  $(HB_INC_INSTALL)
-	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.h   $(HB_INC_INSTALL)
+    -[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.api $(HB_INC_INSTALL)
+    -[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.ch  $(HB_INC_INSTALL)
+    -[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.h   $(HB_INC_INSTALL)
 endif
 
 #**********************************************************
