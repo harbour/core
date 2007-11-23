@@ -5500,7 +5500,7 @@ LOCAL aLang := Array( 67 )
       aLang[24] := "                  /l[LANGID] Specify the language to be used on hbmake"
       aLang[25] := "                  LANGID= (EN/PT/ES). On Windows, the default will be the S.O."
       aLang[26] := "                  language. On OS/2, FreeBSD and LINUX will be English." 
-      aLang[27] :=  "Enviroment options" 
+      aLang[27] := "Environment options" 
       aLang[28] := "Select the OS" 
       aLang[29] := "Select the C Compiler"
       aLang[30] := "Graph Lib"

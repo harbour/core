@@ -5,7 +5,7 @@ rem
 
 if "%1" == "" goto ERROR
 
-echo Entering %1 ...
+echo Entering: %1
 
 cd %1
 call make_b32.bat %2 %3 %4 %5 %6 %7 %8 %9
@@ -15,7 +15,7 @@ goto EXIT
 
 :ERROR
 echo ----------------------------------------
-echo RUN : make_b32.bat DIRNAME  !!!
+echo Usage: make_b32.bat <dirname>
 echo ----------------------------------------
 
 :EXIT

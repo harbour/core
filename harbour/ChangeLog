@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 04:59 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * make_b32.bat
+   * make_vc.bat
+   * make_vcce.bat
+     + Accepts "Install" and "Clean" consistently.
+     ! Not directly modifying C_USR, instead use CFLAGS internally.
+
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+   * contrib/make_b32.bat
+   * contrib/make_vc.bat
+   * contrib/mtpl_b32.bat
+   * contrib/mtpl_vc.bat
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_vc.mak
+   - contrib/mtpl_defs.mak
+     % Removed COPYCMD requirement.
+     ! Not modifying any user level envvars anymore.
+       (so no need for COMPSPEC trick to call another copy of command com)
+     ! Some other smaller fixes.
+     ! Fixed rdd_ads in make_*_all.bats.
+     * Removed the simple common part for BC/VC to consistently 
+       separate the BC/VC make file system. The only common 
+       part now is common.mak in each contrib. (Marek I hope you don't 
+       mind, I promise to update them in case of changes. We have quite 
+       some reduancy between BC/VC anyway, so this won't hurt much overall, 
+       but they are now nicely separated and maybe bit easier to oversee 
+       for someone new to the project.
+     ! Avoiding 'exit' command, as it stops all batch file 
+       execution, and as a bad side-effect can force to exit 
+       shells too.
+     - CFLAGS, CLIBFLAGS, HARBOURFLAGS not advertised anymore as 
+       official public vars to set compiler flags.
+       C_USR, PRG_USR should be used, which are also GNU make system compatible.
+     ! Fixed copyrights.
+     ! Tabs converted to spaces.
+
 2007-11-23 03:20 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/apollo/make_b32.bat
    * contrib/apollo/make_vc.bat

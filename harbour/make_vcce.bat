@@ -28,7 +28,7 @@ if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
 if "%HB_SHOW_ERRORS%"  == "" set HB_SHOW_ERRORS=yes
 set HB_MAKEFILE=make_%HB_CC_NAME%.mak
 
-set C_USR=%C_USR% -DHB_NO_WIN_CONSOLE
+set CFLAGS=%C_USR% -DHB_NO_WIN_CONSOLE
 
 rem ---------------------------------------------------------------
 
@@ -40,9 +40,10 @@ set COPYCMD=/Y
 rem ---------------------------------------------------------------
 
 if "%1" == "clean" goto CLEAN
+if "%1" == "Clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
-
 if "%1" == "install" goto INSTALL
+if "%1" == "Install" goto INSTALL
 if "%1" == "INSTALL" goto INSTALL
 
 :BUILD

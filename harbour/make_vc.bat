@@ -37,9 +37,10 @@ set COPYCMD=/Y
 rem ---------------------------------------------------------------
 
 if "%1" == "clean" goto CLEAN
+if "%1" == "Clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
-
 if "%1" == "install" goto INSTALL
+if "%1" == "Install" goto INSTALL
 if "%1" == "INSTALL" goto INSTALL
 
 :BUILD

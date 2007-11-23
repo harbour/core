@@ -15,54 +15,46 @@ rem    set HB_MAKE_PROGRAM=
 rem    set HB_MAKE_FLAGS=
 rem ---------------------------------------------------------------
 
-if "%HB_CC_NAME%"      == "" set HB_CC_NAME=vc
-if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
-if "%HB_SHOW_ERRORS%"  == "" set HB_SHOW_ERRORS=yes
-set HB_MAKEFILE=..\mtpl_%HB_CC_NAME%.mak
+set _HB_CC_NAME=%HB_CC_NAME%
+set _HB_MAKE_PROGRAM=%HB_MAKE_PROGRAM%
+set _HB_SHOW_ERRORS=%HB_SHOW_ERRORS%
 
-rem ---------------------------------------------------------------
-
-rem Save the user value, force silent file overwrite with COPY
-rem (not all Windows versions support the COPY /Y flag)
-set HB_ORGENV_COPYCMD=%COPYCMD%
-set COPYCMD=/Y
+if "%_HB_CC_NAME%"      == "" set _HB_CC_NAME=vc
+if "%_HB_MAKE_PROGRAM%" == "" set _HB_MAKE_PROGRAM=nmake.exe
+if "%_HB_SHOW_ERRORS%"  == "" set _HB_SHOW_ERRORS=yes
+set HB_MAKEFILE=..\mtpl_%_HB_CC_NAME%.mak
+set HB_EXIT_LEVEL=
 
 rem ---------------------------------------------------------------
 
 if "%1" == "clean" goto CLEAN
+if "%1" == "Clean" goto CLEAN
 if "%1" == "CLEAN" goto CLEAN
 if "%1" == "install" goto INSTALL
+if "%1" == "Install" goto INSTALL
 if "%1" == "INSTALL" goto INSTALL
 
 :BUILD
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
-   if errorlevel 1 if "%HB_SHOW_ERRORS%" == "yes" notepad make_%HB_CC_NAME%.log
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%_HB_CC_NAME%.log
    if errorlevel 1 set HB_EXIT_LEVEL=1
+   if errorlevel 1 if "%_HB_SHOW_ERRORS%" == "yes" notepad make_%_HB_CC_NAME%.log
    goto EXIT
 
 :CLEAN
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% CLEAN > make_%HB_CC_NAME%.log
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% CLEAN > make_%_HB_CC_NAME%.log
    if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 goto EXIT
 
-   if exist make_%HB_CC_NAME%.log del make_%HB_CC_NAME%.log > nul
-   if exist inst_%HB_CC_NAME%.log del inst_%HB_CC_NAME%.log > nul
+   if exist make_%_HB_CC_NAME%.log del make_%_HB_CC_NAME%.log > nul
+   if exist inst_%_HB_CC_NAME%.log del inst_%_HB_CC_NAME%.log > nul
    goto EXIT
 
 :INSTALL
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
    if errorlevel 1 set HB_EXIT_LEVEL=1
-   if errorlevel 1 goto EXIT
    goto EXIT
 
 :EXIT
-
-rem ---------------------------------------------------------------
-
-rem Restore user value
-set COPYCMD=%HB_ORGENV_COPYCMD%
-
-if "%HB_EXIT_LEVEL%" == "1" exit 1
