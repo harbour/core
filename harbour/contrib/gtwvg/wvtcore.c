@@ -352,9 +352,12 @@ HB_EXPORT BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char *
   HRGN     hrgn1;
   POINT    lpp = { 0,0 };
   BOOL     bResult = FALSE;
+  LPTSTR   lpImage = HB_TCHAR_CONVTO( image );
 
-  hFile = CreateFile( image, GENERIC_READ, 0, NULL, OPEN_EXISTING,
+  hFile = CreateFile( lpImage, GENERIC_READ, 0, NULL, OPEN_EXISTING,
                                       FILE_ATTRIBUTE_NORMAL, NULL );
+  HB_TCHAR_FREE( lpImage );
+
   if ( hFile != INVALID_HANDLE_VALUE )
   {
     nFileSize = GetFileSize( hFile, NULL );
@@ -874,20 +877,23 @@ HB_FUNC( WVT_DRAWLABEL )
    logfont.lfHeight         = ( ISNIL(  9 ) ? _s->fontHeight : hb_parni(  9 ) );
    logfont.lfWidth          = ( ISNIL( 10 ) ? (_s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 10 ) );
 
-   strcpy( logfont.lfFaceName, ( ISNIL( 8 ) ? _s->fontFace : hb_parcx( 8 ) ) );
+   //strcpy( logfont.lfFaceName, ( ISNIL( 8 ) ? _s->fontFace : hb_parcx( 8 ) ) );
+   HB_TCHAR_CPTO( logfont.lfFaceName, ( ISNIL( 8 ) ? _s->fontFace : hb_parcx( 8 ) ), sizeof( logfont.lfFaceName )-1 );
 
    hFont = CreateFontIndirect( &logfont );
    if ( hFont )
    {
+      LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
 
-      xy           = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+      xy          = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
 
       SetBkColor( _s->hdc, ISNIL( 7 ) ? _s->background : ( COLORREF ) hb_parnl( 7 ) );
       SetTextColor( _s->hdc, ISNIL( 6 ) ? _s->foreground : ( COLORREF ) hb_parnl( 6 ) );
       SetTextAlign( _s->hdc, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
       hOldFont = ( HFONT ) SelectObject( _s->hdc, hFont );
 
-      ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
+      //ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
+      ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, strlen( hb_parcx( 3 ) ), NULL );
 
       SelectObject( _s->hdc, hOldFont );
 
@@ -898,11 +904,11 @@ HB_FUNC( WVT_DRAWLABEL )
          SetTextAlign( _s->hGuiDC, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
          hOldFontGui = ( HFONT ) SelectObject( _s->hGuiDC, hFont );
 
-         ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
-
+         //ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
+         ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, strlen( hb_parcx( 3 ) ), NULL );
          SelectObject( _s->hGuiDC, hOldFontGui );
       }
-
+      HB_TCHAR_FREE( text );
       DeleteObject( hFont );
       hb_retl( TRUE );
    }
@@ -1462,9 +1468,13 @@ HB_FUNC( WVT_DRAWBUTTON )
 
    if ( bText )
    {
+      LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 5 ) );
+
       ( HFONT ) SelectObject( _s->hdc, GetStockObject( DEFAULT_GUI_FONT ) );
 
-      GetTextExtentPoint32( _s->hdc, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), &sz );
+      //GetTextExtentPoint32( _s->hdc, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), &sz );
+      GetTextExtentPoint32( _s->hdc, text, strlen( hb_parcx( 5 ) ), &sz );
+
       // iTextWidth   = sz.cx;
       iTextHeight  = sz.cy;
 
@@ -1491,7 +1501,8 @@ HB_FUNC( WVT_DRAWBUTTON )
       SetBkMode( _s->hdc, TRANSPARENT );
       SetTextColor( _s->hdc, textColor );
 
-      ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
+      //ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
+      ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, strlen( hb_parcx( 5 ) ), NULL );
       if ( _s->bGui )
       {
          SelectObject( _s->hGuiDC, GetStockObject( DEFAULT_GUI_FONT ) );
@@ -1499,8 +1510,10 @@ HB_FUNC( WVT_DRAWBUTTON )
          SetBkMode( _s->hGuiDC, TRANSPARENT );
          SetTextColor( _s->hGuiDC, textColor );
 
-         ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
+         //ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
+         ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, strlen( hb_parcx( 5 ) ), NULL );
       }
+      HB_TCHAR_FREE( text );
    }
    else
    {
@@ -1634,14 +1647,16 @@ HB_FUNC( WVT_DRAWLABELEX )
 
    if ( _s->hUserFonts[ iSlot ] )
    {
-      xy           = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+      LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+      xy          = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
 
       SetBkColor( _s->hdc, ISNIL( 6 ) ? _s->background : ( COLORREF ) hb_parnl( 6 ) );
       SetTextColor( _s->hdc, ISNIL( 5 ) ? _s->foreground : ( COLORREF ) hb_parnl( 5 ) );
       SetTextAlign( _s->hdc, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
       ( HFONT ) SelectObject( _s->hdc, _s->hUserFonts[ iSlot ] );
 
-      ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
+      //ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
+      ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, strlen( hb_parcx( 3 ) ), NULL );
       if ( _s->bGui )
       {
          SetBkColor( _s->hGuiDC, ISNIL( 6 ) ? _s->background : ( COLORREF ) hb_parnl( 6 ) );
@@ -1649,9 +1664,10 @@ HB_FUNC( WVT_DRAWLABELEX )
          SetTextAlign( _s->hGuiDC, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
          ( HFONT ) SelectObject( _s->hGuiDC, _s->hUserFonts[ iSlot ] );
 
-         ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
+         //ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
+         ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, text, strlen( hb_parcx( 3 ) ), NULL );
       }
-
+      HB_TCHAR_FREE( text );
       hb_retl( TRUE );
    }
 
@@ -1958,7 +1974,8 @@ HB_FUNC( WVT_LOADFONT )
    logfont.lfHeight         = ( ISNIL(  3 ) ? _s->fontHeight : hb_parni( 3 ) );
    logfont.lfWidth          = ( ISNIL(  4 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 4 ) );
 
-   strcpy( logfont.lfFaceName, ( ISNIL( 2 ) ? _s->fontFace : hb_parcx( 2 ) ) );
+   //strcpy( logfont.lfFaceName, ( ISNIL( 2 ) ? _s->fontFace : hb_parcx( 2 ) ) );
+   HB_TCHAR_CPTO( logfont.lfFaceName, ( ISNIL( 2 ) ? _s->fontFace : hb_parcx( 2 ) ), sizeof( logfont.lfFaceName )-1 );
 
    hFont = CreateFontIndirect( &logfont );
    if ( hFont )
@@ -2137,7 +2154,8 @@ HB_FUNC( WVT_CREATEFONT )
    logfont.lfHeight         = ( ISNIL(  2 ) ? _s->fontHeight : hb_parni( 2 ) );
    logfont.lfWidth          = ( ISNIL(  3 ) ? ( _s->fontWidth < 0 ? -_s->fontWidth : _s->fontWidth ) : hb_parni( 3 ) );
 
-   strcpy( logfont.lfFaceName, ( ISNIL( 1 ) ? _s->fontFace : hb_parcx( 1 ) ) );
+   //strcpy( logfont.lfFaceName, ( ISNIL( 1 ) ? _s->fontFace : hb_parcx( 1 ) ) );
+   HB_TCHAR_CPTO( logfont.lfFaceName, ( ISNIL( 1 ) ? _s->fontFace : hb_parcx( 1 ) ), sizeof( logfont.lfFaceName )-1 );
 
    hFont = CreateFontIndirect( &logfont );
    if ( hFont )
@@ -2162,6 +2180,7 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    int      iAlignHorz, iAlignVert, iAlignH, iAlignV;
    UINT     uiOptions;
    SIZE     sz = { 0,0 };
+   LPTSTR   text = HB_TCHAR_CONVTO( hb_parc( 5 ) );
 
    xy           = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
    iTop         = xy.y;
@@ -2177,7 +2196,8 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    SetBkColor( _s->hdc, ISNIL( 9 ) ? _s->background : ( COLORREF ) hb_parnl( 9 ) );
    ( HFONT ) SelectObject( _s->hdc, ( HFONT ) hb_parnl( 10 ) );
 
-   GetTextExtentPoint32( _s->hdc, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), &sz );
+   //GetTextExtentPoint32( _s->hdc, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), &sz );
+   GetTextExtentPoint32( _s->hdc, text, strlen( hb_parcx( 5 ) ), &sz );
 
    x = iLeft;
    y = iTop;
@@ -2226,7 +2246,8 @@ HB_FUNC( WVT_DRAWLABELOBJ )
 
    //  Ground is Ready, Draw Text
    //
-   ExtTextOut( _s->hdc, x, y, uiOptions, &rect, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
+   //ExtTextOut( _s->hdc, x, y, uiOptions, &rect, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
+   ExtTextOut( _s->hdc, x, y, uiOptions, &rect, text, strlen( hb_parcx( 5 ) ), NULL );
    if ( _s->bGui )
    {
       SetTextColor( _s->hGuiDC, ISNIL( 8 ) ? _s->foreground : ( COLORREF ) hb_parnl( 8 ) );
@@ -2234,9 +2255,10 @@ HB_FUNC( WVT_DRAWLABELOBJ )
       ( HFONT ) SelectObject( _s->hGuiDC, ( HFONT ) hb_parnl( 10 ) );
       SetTextAlign( _s->hGuiDC, iAlignH | iAlignV );
 
-      ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rect, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
+      //ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rect, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), NULL );
+      ExtTextOut( _s->hGuiDC, x, y, uiOptions, &rect, text, strlen( hb_parcx( 5 ) ), NULL );
    }
-
+   HB_TCHAR_FREE( text );
    hb_retl( TRUE );
 }
 
@@ -2557,6 +2579,7 @@ HB_FUNC( WVT_DRAWTEXTBOX )
    int iAlignH = 0;
 
    RECT     rc = { 0,0,0,0 };
+   LPTSTR   text = HB_TCHAR_CONVTO( hb_parc( 6 ) );
 
    switch ( iAlignHorz )
    {
@@ -2584,7 +2607,8 @@ HB_FUNC( WVT_DRAWTEXTBOX )
    SetBkMode( _s->hdc, ISNIL( 11 ) ? OPAQUE : hb_parni( 11 ) );
    ( HFONT ) SelectObject( _s->hdc, ( HFONT ) hb_parnl( 12 ) );
 
-   DrawText( _s->hdc, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+   //DrawText( _s->hdc, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+   DrawText( _s->hdc, text, strlen( hb_parcx( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
    if ( _s->bGui )
    {
       SetTextAlign( _s->hGuiDC, TA_TOP | TA_LEFT | TA_NOUPDATECP );
@@ -2593,8 +2617,10 @@ HB_FUNC( WVT_DRAWTEXTBOX )
       SetBkMode( _s->hGuiDC, ISNIL( 11 ) ? OPAQUE : hb_parni( 11 ) );
       ( HFONT ) SelectObject( _s->hGuiDC, ( HFONT ) hb_parnl( 12 ) );
 
-      DrawText( _s->hGuiDC, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+      //DrawText( _s->hGuiDC, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
+      DrawText( _s->hGuiDC, text, strlen( hb_parc( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
    }
+   HB_TCHAR_FREE( text );
 }
 
 //-------------------------------------------------------------------//
