@@ -2057,7 +2057,7 @@ HB_FUNC( WIN_DRAWTEXT )
    rc.right  = hb_parni( 3,3 );
    rc.bottom = hb_parni( 3,4 );
 
-   hb_retl( DrawText( ( HDC ) hb_parnl( 1 ), lpBuffer, strlen( hb_parc( 2 ) ), &rc, hb_parni( 4 ) ) );
+   hb_retl( DrawText( ( HDC ) hb_parnl( 1 ), lpBuffer, lstrlen( lpBuffer ), &rc, hb_parni( 4 ) ) );
    HB_TCHAR_FREE( lpBuffer );
 }
 

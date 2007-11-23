@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 10:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/gtwvg/wvtutils.c
+  * harbour/contrib/gtwvg/wvtcore.c
+    * use lstrlen( text ) instead of strlen( hb_parc( 2 ) )
+    * removed dummy casting
+
 2007-11-23 09:47 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbwince.c
     + added dummy Arc(), FrameRect(), FloodFill() for WinCE builds
