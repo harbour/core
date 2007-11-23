@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 21:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/doc/man/harbour.1
+  * harbour/source/compiler/hbusage.c
+    + added description for -j switch
+
+  * harbour/include/hbexprb.c
+    * replaced // comments by /* */
+    * accept <cContext> (domain) parameters of HB_i18nGettext() when
+      number of parameters is two or more
+      Should we generate compile time warning when wrong number of
+      parameters is passed to this function or they are not literal
+      strings? Maybe only after -j+ or sth like that?
+
+  * harbour/include/hbclass.ch
+  * harbour/include/tbrowse.ch
+  * harbour/include/hbpers.ch
+  * harbour/include/getexit.ch
+    * replaced // comments by /* */
+
 2007-11-23 18:55 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/include/hbexprb.c
     * changed HB_i18nGettext() to hb_i18n_gettext(), to respect 

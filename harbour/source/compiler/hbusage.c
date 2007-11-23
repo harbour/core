@@ -77,6 +77,9 @@ void hb_compPrintUsage( HB_COMP_DECL, char * szSelf )
            "\n          %cgw              output type: Windows/DOS OBJ32 (.obj)",
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
            "\n          %ci<path>         #include file search path",
+#ifdef HB_I18N_SUPPORT
+           "\n          %cj[<file>]       generate i18n gettex file (.pot)",
+#endif
            "\n          %ck               compilation mode (type -k? for more data)",
            "\n          %cl               suppress line number information",
            "\n          %cm               compile module only",

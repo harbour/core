@@ -1649,16 +1649,19 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                {
                   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
 
-                  // TODO: do we need to add empty string also?
-                  // TODO: add context, line number
-                  if( HB_COMP_PARAM->fI18n && pArg->ExprType == HB_ET_STRING && pArg->ulLength > 0 )
+                  /* TODO: do we need to add empty string also? */
+                  /* TODO: add context, line number */
+                  if( HB_COMP_PARAM->fI18n && pArg->ExprType == HB_ET_STRING &&
+                      pArg->ulLength > 0 )
                   {
-                     if( usCount == 2 && pArg->pNext->ExprType == HB_ET_STRING && pArg->pNext->ulLength > 0 )
-                        hb_compI18nAdd( HB_COMP_PARAM, pArg->value.asString.string, 
-                                        pArg->pNext->value.asString.string, HB_COMP_PARAM->currLine );
-                     else
-                        hb_compI18nAdd( HB_COMP_PARAM, pArg->value.asString.string, NULL, 
+                     if( usCount >= 2 && pArg->pNext->ExprType == HB_ET_STRING &&
+                         pArg->pNext->ulLength > 0 )
+                        hb_compI18nAdd( HB_COMP_PARAM, pArg->value.asString.string,
+                                        pArg->pNext->value.asString.string,
                                         HB_COMP_PARAM->currLine );
+                     else
+                        hb_compI18nAdd( HB_COMP_PARAM, pArg->value.asString.string,
+                                        NULL, HB_COMP_PARAM->currLine );
                   }
                }
 #endif

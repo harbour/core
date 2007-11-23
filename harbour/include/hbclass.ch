@@ -442,7 +442,7 @@ DECLARE HBClass ;
    #xcommand PROTECTED:  =>    nScope := HB_OO_CLSTP_PROTECTED
 
 
-   // Classy compatibility... Added By JF Lefebvre (mafact) 2006/11/07
+   /* Classy compatibility... Added By JF Lefebvre (mafact) 2006/11/07 */
    #xcommand METHOD <MethodName> [ AS <type> ] INLINE [Local <v>,] <Code,...> [<other>] => ;
              MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [,<v>] | __HB_CLS_SYMBOL_UNUSED(Self), <Code>} [ <other>]
 
