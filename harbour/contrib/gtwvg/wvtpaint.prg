@@ -318,9 +318,7 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    aAdd( aDlg[ 1 ] , If( ValType( cTitle ) == "C", cTitle, "" ) )
 
    //IF ( nStyle & DS_SETFONT ) == DS_SETFONT
-   if HB_INLINE( nStyle, DS_SETFONT ){
-      hb_retnl( hb_parnl(1) & hb_parnl(2) ) ;
-      }
+   if hb_bitAnd( nStyle, DS_SETFONT ) == DS_SETFONT
       aAdd( aDlg[ 1 ], If( ValType( nPointSize ) == "N", nPointSize, 8               ) )
       aAdd( aDlg[ 1 ], If( ValType( nWeight    ) == "N", nWeight   , 400             ) )
       aAdd( aDlg[ 1 ], If( ValType( lItalic    ) == "L", lItalic   , .F.             ) )

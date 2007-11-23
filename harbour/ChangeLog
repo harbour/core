@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 01:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   + gtwvg/common.mak
+   + gtwvg/make_b32.bat
+   + gtwvg/make_vc.bat
+     + Added non-GNU make files.
+     ; TOFIX: gtwvt.obj will clash with the core file with this 
+              name, so this won't properly work yet.
+
+   * gtwvg/wvtpaint.prg
+     ! HB_INLINE() -> hb_bitAnd()
+
+   * gtwvg/Makefile
+     * Minor formatting.
+
 2007-11-23 01:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbvm.h
   * harbour/source/vm/hvm.c
