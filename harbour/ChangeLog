@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 12:37 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbmain.c
+    ! fixed bad typo in hb_compI18nAdd() and memmove() range which can
+      cause GPF
+    * changed pFileName to FileName in hb_compI18nSave() to respect used
+      by us naming convention
+    * eliminated strcpy() - do not use strcpy()/strcat() - these functions
+      are reported as dangerous by security restrict compilers.
+      I suggest to use hb_strncpy()/hb_strncat() instead (remember about
+      different size meaning in these functions) or some others depending
+      on context (f.e. hb_strdup() in this case)
+
 2007-11-23 10:22 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/gtwvg/wvtutils.c
   * harbour/contrib/gtwvg/wvtcore.c
