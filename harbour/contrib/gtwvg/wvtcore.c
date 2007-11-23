@@ -885,7 +885,7 @@ HB_FUNC( WVT_DRAWLABEL )
       SetBkColor( _s->hdc, ISNIL( 7 ) ? _s->background : ( COLORREF ) hb_parnl( 7 ) );
       SetTextColor( _s->hdc, ISNIL( 6 ) ? _s->foreground : ( COLORREF ) hb_parnl( 6 ) );
       SetTextAlign( _s->hdc, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
-      hOldFont = SelectObject( _s->hdc, hFont );
+      hOldFont = ( HFONT ) SelectObject( _s->hdc, hFont );
 
       ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
 
@@ -896,7 +896,7 @@ HB_FUNC( WVT_DRAWLABEL )
          SetBkColor( _s->hGuiDC, ISNIL( 7 ) ? _s->background : ( COLORREF ) hb_parnl( 7 ) );
          SetTextColor( _s->hGuiDC, ISNIL( 6 ) ? _s->foreground : ( COLORREF ) hb_parnl( 6 ) );
          SetTextAlign( _s->hGuiDC, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
-         hOldFontGui = SelectObject( _s->hGuiDC, hFont );
+         hOldFontGui = ( HFONT ) SelectObject( _s->hGuiDC, hFont );
 
          ExtTextOut( _s->hGuiDC, xy.x, xy.y, 0, NULL, hb_parcx( 3 ), strlen( hb_parcx( 3 ) ), NULL );
 

@@ -125,16 +125,15 @@ static BOOL hb_memowrit( BOOL bWriteEOF )
 
          /* NOTE: CA-Clipper will add the EOF even if the write failed. [vszakats] */
          /* NOTE: CA-Clipper will not return .F. when the EOF could not be written. [vszakats] */
-         #if ! defined(OS_UNIX_COMPATIBLE)
+#if ! defined(OS_UNIX_COMPATIBLE)
+         if( bWriteEOF )  /* if true, then write EOF */
          {
-            if( bWriteEOF )  /* if true, then write EOF */
-            {
-               BYTE byEOF = HB_CHAR_EOF;
-
-               hb_fsWrite( fhnd, &byEOF, sizeof( BYTE ) );
-            }
+            BYTE byEOF = HB_CHAR_EOF;
+            hb_fsWrite( fhnd, &byEOF, sizeof( BYTE ) );
          }
-         #endif
+#else
+         HB_SYMBOL_UNUSED( bWriteEOF );
+#endif
 
          hb_fsClose( fhnd );
       }
