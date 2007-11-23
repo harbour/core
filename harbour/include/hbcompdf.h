@@ -551,6 +551,24 @@ typedef struct HB_MACRO_    /* a macro compiled pcode container */
 #define HB_COMP_PARAM         pComp
 #define HB_COMP_DECL          HB_COMP_PTR HB_COMP_PARAM
 
+#ifdef HB_I18N_SUPPORT
+typedef struct _HB_I18NSTRING
+{
+   char*      szText;
+   char*      szContext;
+   UINT       uiLine;
+   UINT*      pLine;
+   UINT       uiLineCount;
+} HB_I18NSTRING, * PHB_I18NSTRING;
+
+typedef struct _HB_I18NTABLE
+{
+   PHB_I18NSTRING    pString;
+   ULONG             uiCount;
+   ULONG             uiAllocated;
+} HB_I18NTABLE, * PHB_I18NTABLE;
+#endif
+
 typedef struct _HB_COMP_LEX
 {
    PHB_PP_STATE   pPP;
@@ -604,6 +622,11 @@ typedef struct _HB_COMP
    PHB_FNAME         pFileName;
    PHB_FNAME         pOutPath;
    PHB_FNAME         pPpoPath;
+#ifdef HB_I18N_SUPPORT
+   PHB_FNAME         pI18nFileName;
+   PHB_I18NTABLE     pI18n;
+   BOOL              fI18n;
+#endif
 
    void              ( * outStdFunc ) ( void *, const char* );
    void              ( * outErrFunc ) ( void *, const char* );

@@ -198,6 +198,10 @@ extern BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DE
 extern BOOL hb_compExprReduceCTOD( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceUPPER( HB_EXPR_PTR, HB_COMP_DECL );
 
+#ifdef HB_I18N_SUPPORT
+extern void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext, UINT uiLine );
+#endif
+
 HB_EXTERN_END
 
 #endif  /* HB_EXPROP_H_ */

@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-23 03:55 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/include/hbcompdf.h
+  * harbour/source/include/hbexprop.h
+  * harbour/source/include/hbexprb.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/hbmain.c
+    + added i18n support
+      Implemented -j[filename] switch to indicate output filename. Default 
+      filename is <sourcefilename>.pot. If switch -o is used, this file
+      is created in speficied output path.
+      Output file format is compatible with 'gettext' utils, but not all
+      available features are implemented.
+      Harbour level function HB_i18nGettext( cText [, cContext ] ) sould be
+      used to indicate translatable strings.
+      All this commit is commented using #ifdef HB_I18N_SUPPORT and is in 
+      development stage. Please, do not use it yet.
+
 2007-11-23 01:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    + gtwvg/common.mak
    + gtwvg/make_b32.bat
