@@ -8,6 +8,30 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-24 01:58 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/msql/Makefile
+   * contrib/msql/make_b32.bat
+   * contrib/msql/make_vc.bat
+   * contrib/msql/msql.h
+   * contrib/msql/tmsql.prg
+     ! Fixed to compile with non-GNU BC/VC makefiles.
+       (short-term fixes, there may be better / more generic 
+       ways to fix it)
+     ! C warnings fixed.
+     ! Harbour warnings fixed.
+     ! Makefile changed to Harbour standard GNU format.
+
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+     + msql enabled.
+
+   - contrib/msql/dbf2msql.prg
+   - contrib/msql/test.prg
+   + contrib/msql/tests
+   + contrib/msql/tests/dbf2msql.prg
+   + contrib/msql/tests/test.prg
+     * Tests moved to tests dir.
+
 2007-11-23 21:18 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/mtpl_vc.mak
      ! Some minor fixes for VC.

@@ -24,7 +24,11 @@
 #define MSQL_H
 
 #include <sys/types.h>
+#if defined(__BORLANDC__) || defined(_MSC_VER)
+#include <sys/types.h>	/* needed for time_t prototypes */
+#else
 #include <sys/time.h>	/* needed for time_t prototypes */
+#endif
 
 
 #ifndef APIENTRY
@@ -50,7 +54,7 @@
 #endif
 
 
-#if defined(__STDC__) || defined(__cplusplus)
+#if (defined(__STDC__) || defined(__cplusplus) || defined(__BORLANDC__) || defined(_MSC_VER))
 #  define __ANSI_PROTO(x)	x
 #else
 #  define __ANSI_PROTO(x)	()
@@ -124,10 +128,11 @@ typedef struct result_s {
 #define IS_UNIQUE(n)	(n & UNIQUE_FLAG)
 #define IS_NOT_NULL(n)	(n & NOT_NULL_FLAG)
 
+/*
 static char msqlTypeNames[][12] =
 	{"???", "int", "char","real","ident","null","text","date","uint",
 	"money","time","???"};
-
+*/
 
 /*
 ** Pre-declarations for the API library functions

@@ -8,12 +8,12 @@ rem IT or you will break Win9x command.com line length limit !!!
 
 set HB_SHOW_ERRORS=no
 
-set DO_NOT_COMPILE=examples hbclip hgf msql
+set DO_NOT_COMPILE=examples hbclip hgf
 
-set DIRS=adordd bmdbfcdx btree libct libgt libmisc libnf ole
+set DIRS=adordd bmdbfcdx btree libct libgt libmisc libnf msql
 for %%n in ( %DIRS% ) do %COMSPEC% /c make_b32.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set DIRS=hbzlib htmllib odbc telepath tip win32 xhb
+set DIRS=ole hbzlib htmllib odbc telepath tip win32 xhb
 for %%n in ( %DIRS% ) do %COMSPEC% /c make_b32.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set DIRS=samples directx

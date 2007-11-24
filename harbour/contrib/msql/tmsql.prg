@@ -111,11 +111,9 @@ METHOD FieldGet(nNum) CLASS TmSQLRow
 
    if nNum > 0 .AND. nNum <= Len(::aRow)
       return ::aRow[nNum]
-   else
-      return nil
    endif
 
-return
+return nil
 
 
 METHOD FieldPut(nNum, Value) CLASS TmSQLRow
@@ -162,11 +160,9 @@ METHOD FieldName(nPosition) CLASS TmSQLRow
 
    if nPosition >=1 .AND. nPosition <= Len(::aFieldStruct)
       return ::aFieldStruct[nPosition][MSQL_FS_NAME]
-   else
-      return ""
    endif
 
-return
+return ""
 
 /* ----------------------------------------------------------------------------------------*/
 
@@ -270,7 +266,7 @@ static function NMonth(cMonthValue)
 
    static cMonths := {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dec" }
 
-   nMonth := AScan(cMonths, cMonthValue)
+   local nMonth := AScan(cMonths, cMonthValue)
 
 return PadL(nMonth, 2, "0")
 
@@ -585,9 +581,7 @@ METHOD GetBlankRow() CLASS TmSQLTable
       endcase
    next
 
-   return TmSQLRow():New(aRow, ::aFieldStruct, ::cTable, .F.)
-
-return nil
+return TmSQLRow():New(aRow, ::aFieldStruct, ::cTable, .F.)
 
 
 /* ----------------------------------------------------------------------------------------*/
