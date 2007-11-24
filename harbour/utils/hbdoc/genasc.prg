@@ -157,6 +157,7 @@ FUNCTION ASCIIFiles()
    LOCAL cFiles      := DELIM + 'FILES' + DELIM
    LOCAL cSubCode    := DELIM + 'SUBCODE' + DELIM
    LOCAL cFunction   := DELIM + 'FUNCTION' + DELIM
+   LOCAL cFileNameOri
 
 #define D_NORMAL     1
 #define D_ARG        2
@@ -304,27 +305,26 @@ FUNCTION ASCIIFiles()
 
                //  See if file name is present already. If so then modify
 
+#ifndef LFN
                cFileName := LEFT( cFileName, 8 )
+#endif
+               cFileNameOri := cFileName
                nEnd      := 1
                nCount    := 0
                DO WHILE nEnd > 0
                   nEnd := ASCAN( aDocInfo, { | a | a[ 4 ] == cFileName + ".txt" } )
                   IF nEnd > 0
-
-                     //  This will break if there are more than 10 files with the same first
-                     //  seven characters. We take our chances.
-
-                     IF LEN( cFileName ) = 8
-                        cFileName := STUFF( cFileName, 8, 1, STR( nCount, 1, 0 ) )
-                     ELSE
-                        cFileName += STR( nCount, 1, 0 )
-                     ENDIF
+#ifdef LFN
+                     cFileName := cFileNameOri + StrZero( nCount, 5, 0 )
+#else
+                     cFileName := Left( cFileNameOri, 5 ) + StrZero( nCount, 3, 0 )
+#endif
                      nCount ++
                   ENDIF
                ENDDO
                //  Add on the extension
 
-               cFileName := LEFT( cFileName, 8 ) + ".txt"
+               cFileName += ".txt"
 
                nWriteHandle := FCREATE( "txt\" + cFileName )
                IF nWriteHandle < 1

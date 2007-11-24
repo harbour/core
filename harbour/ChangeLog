@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-24 11:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/gtwin/gtwin.c
+   * source/rtl/gtcrs/gtcrs.h
+   * source/rtl/gtsln/gtsln.h
+   * source/rtl/gttrm/gttrm.c
+   * source/rtl/gtwvt/gtwvt.h
+     + #defining xhb compatible K_SH_* keyboard codes only if 
+       they were not already defined.
+
+   * utils/hbdoc/genasc.prg
+     ! Fixed problem generating filenames for .txt output.
+       Also added LFN branch to get rid of the 8.3 limitation.
+
 2007-11-24 01:58 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/msql/Makefile
    * contrib/msql/make_b32.bat

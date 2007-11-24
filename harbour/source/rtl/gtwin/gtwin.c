@@ -338,18 +338,20 @@ static const ClipKeyCode stdKeyTab[CLIP_STDKEY_COUNT] = {
 #define EXKEY_KPDIVIDE        (33)
 
 /* xHarbour compatible definitions */
-#define K_SH_LEFT            K_LEFT   /* Shift-Left  == Left  */
-#define K_SH_UP              K_UP     /* Shift-Up    == Up    */
-#define K_SH_RIGHT           K_RIGHT  /* Shift-Right == Right */
-#define K_SH_DOWN            K_DOWN   /* Shift-Down  == Down  */
-#define K_SH_INS             K_INS    /* Shift-Ins   == Ins   */
-#define K_SH_DEL             K_DEL    /* Shift-Del   == Del   */
-#define K_SH_HOME            K_HOME   /* Shift-Home  == Home  */
-#define K_SH_END             K_END    /* Shift-End   == End   */
-#define K_SH_PGUP            K_PGUP   /* Shift-PgUp  == PgUp  */
-#define K_SH_PGDN            K_PGDN   /* Shift-PgDn  == PgDn  */
-#define K_SH_RETURN          K_RETURN /* Shift-Enter == Enter */
-#define K_SH_ENTER           K_ENTER  /* Shift-Enter == Enter */
+#if !defined( K_SH_LEFT )
+#define K_SH_LEFT           K_LEFT   /* Shift-Left  == Left  */
+#define K_SH_UP             K_UP     /* Shift-Up    == Up    */
+#define K_SH_RIGHT          K_RIGHT  /* Shift-Right == Right */
+#define K_SH_DOWN           K_DOWN   /* Shift-Down  == Down  */
+#define K_SH_INS            K_INS    /* Shift-Ins   == Ins   */
+#define K_SH_DEL            K_DEL    /* Shift-Del   == Del   */
+#define K_SH_HOME           K_HOME   /* Shift-Home  == Home  */
+#define K_SH_END            K_END    /* Shift-End   == End   */
+#define K_SH_PGUP           K_PGUP   /* Shift-PgUp  == PgUp  */
+#define K_SH_PGDN           K_PGDN   /* Shift-PgDn  == PgDn  */
+#define K_SH_RETURN         K_RETURN /* Shift-Enter == Enter */
+#define K_SH_ENTER          K_ENTER  /* Shift-Enter == Enter */
+#endif
 
 static const ClipKeyCode extKeyTab[CLIP_EXTKEY_COUNT] = {
    {K_F1,          K_ALT_F1,     K_CTRL_F1,   K_SH_F1,    K_ALT_F1}, /*  00 */
