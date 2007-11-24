@@ -243,8 +243,9 @@ static BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
 
 HB_SYMB  hb_symEval      = { "EVAL",      {HB_FS_PUBLIC},  {hb_vmDoBlock}, NULL }; /* symbol to evaluate codeblocks */
 
-static HB_ITEM  s_aStatics;         /* Harbour array to hold all application statics variables */
+static HB_ITEM  s_aStatics;            /* Harbour array to hold all application statics variables */
 
+static BOOL     s_fHVMActive = FALSE;  /* is HVM ready for PCODE executing */
 static BOOL     s_fDoExitProc = TRUE;  /* execute EXIT procedures */
 static int      s_nErrorLevel = 0;     /* application exit errorlevel */
 static PHB_SYMB s_pSymStart = NULL;    /* start symbol of the application. MAIN() is not required */
@@ -428,6 +429,9 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
          s_pFunDbgEntry = hb_vmDebugEntry;
    }
 
+   /* emable executing PCODE (HVM reenter request) */
+   s_fHVMActive = TRUE;
+
    /* Call functions that initializes static variables
     * Static variables have to be initialized before any INIT functions
     * because INIT function can use static variables
@@ -558,6 +562,9 @@ HB_EXPORT int hb_vmQuit( void )
     */
    hb_stackSetActionRequest( 0 );
    hb_rddShutDown();
+
+   /* stop executing PCODE (HVM reenter request) */
+   s_fHVMActive = FALSE;
 
    hb_errExit();
    hb_clsReleaseAll();
@@ -7150,6 +7157,9 @@ USHORT hb_vmRequestQuery( void )
 BOOL hb_vmRequestReenter( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmRequestReenter()"));
+
+   if( !s_fHVMActive )
+      return FALSE;
 
    hb_stackPushReturn();
 

@@ -221,35 +221,31 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, ULONG ulPCount, ... )
 
       if( pSymbol )
       {
-         ULONG ulParam;
-
-         hb_vmPushState();
-
-         hb_vmPushSymbol( pSymbol );
-         if( pItem )
-            hb_vmPush( pItem );
-         else
-            hb_vmPushNil();
-
-         if( ulPCount )
+         if( hb_vmRequestReenter() )
          {
-            va_list va;
+            hb_vmPushSymbol( pSymbol );
+            if( pItem )
+               hb_vmPush( pItem );
+            else
+               hb_vmPushNil();
 
-            va_start( va, ulPCount );
-            for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
+            if( ulPCount )
             {
-               hb_vmPush( va_arg( va, PHB_ITEM ) );
+               ULONG ulParam;
+               va_list va;
+               va_start( va, ulPCount );
+               for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
+                  hb_vmPush( va_arg( va, PHB_ITEM ) );
+               va_end( va );
             }
-            va_end( va );
+            if( pItem )
+               hb_vmSend( ( USHORT ) ulPCount );
+            else
+               hb_vmDo( ( USHORT ) ulPCount );
+
+            pResult = hb_itemNew( hb_stackReturnItem() );
+            hb_vmRequestRestore();
          }
-
-         if( pItem )
-            hb_vmSend( ( USHORT ) ulPCount );
-         else
-            hb_vmDo( ( USHORT ) ulPCount );
-
-         pResult = hb_itemNew( hb_stackReturnItem() );
-         hb_vmPopState();
       }
    }
 
@@ -275,22 +271,23 @@ PHB_ITEM hb_itemDoC( char * szFunc, ULONG ulPCount, ... )
 
       if( pDynSym )
       {
-         ULONG ulParam;
-
-         hb_vmPushState();
-         hb_vmPushSymbol( pDynSym->pSymbol );
-         hb_vmPushNil();
-         if( ulPCount )
+         if( hb_vmRequestReenter() )
          {
-            va_list va;
-            va_start( va, ulPCount );
-            for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
-               hb_vmPush( va_arg( va, PHB_ITEM ) );
-            va_end( va );
+            hb_vmPushSymbol( pDynSym->pSymbol );
+            hb_vmPushNil();
+            if( ulPCount )
+            {
+               ULONG ulParam;
+               va_list va;
+               va_start( va, ulPCount );
+               for( ulParam = 1; ulParam <= ulPCount; ulParam++ )
+                  hb_vmPush( va_arg( va, PHB_ITEM ) );
+               va_end( va );
+            }
+            hb_vmDo( ( unsigned short ) ulPCount );
+            pResult = hb_itemNew( hb_stackReturnItem() );
+            hb_vmRequestRestore();
          }
-         hb_vmDo( ( unsigned short ) ulPCount );
-         pResult = hb_itemNew( hb_stackReturnItem() );
-         hb_vmPopState();
       }
    }
 

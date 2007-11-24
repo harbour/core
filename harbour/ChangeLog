@@ -8,6 +8,32 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-24 20:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * removed unused global hdc
+    * formatting and minor code cleanup
+
+  * harbour/source/vm/hvm.c
+    + added to hb_vmRequestReenter() support for checking if HVM is
+      properly initialized and working for code which may want to execute
+      PCODE before HVM initialization or after HVM close - in such case
+      hb_vmRequestReenter() will return FALSE.
+      Please also remember that in the future hb_vmRequestReenter()
+      may return FALSE also in some other cases.
+
+  * harbour/source/vm/eval.c
+    * use hb_vmRequestReenter()/hb_vmRequestRestore() in hb_itemDo[C]()
+      instead of hb_vmPushState()/hb_vmPopState()
+
+  * harbour/contrib/gtwvg/gtwvt.c
+    ! always use hb_vmRequestReenter()/hb_vmRequestRestore() before
+      executing .prg functions/codeblocks. It will resolve the problem
+      with executing .prg functions during HVM closing. Anyhow I suggest
+      to register C cleanup functions using hb_vmAtExit() for code which
+      needs some additional destructor/closing procedure.
+    * code formatting and indenting
+
 2007-11-24 11:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/gtwin/gtwin.c
    * source/rtl/gtcrs/gtcrs.h

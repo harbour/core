@@ -129,15 +129,13 @@ typedef struct global_data
    BOOL     FixedFont;                    /* TRUE if current font is a fixed font */
    int      FixedSize[ WVT_MAX_COLS ];    /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
    int      fontHeight;                   /* requested font height */
-   int      fontWidth ;                   /* requested font width */
+   int      fontWidth;                    /* requested font width */
    int      fontWeight;                   /* Bold level */
    int      fontQuality;                  /* requested font quality */
    char     fontFace[ LF_FACESIZE ];      /* requested font face name LF_FACESIZE #defined in wingdi.h */
    HFONT    hFont;                        /* current font handle */
 
    HWND     hWnd;                         /* the window handle */
-
-   HDC      hdc;                          /* Handle to Windows Device Context */
 
    PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
    PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
@@ -149,8 +147,7 @@ typedef struct global_data
 
    BOOL     fIgnoreWM_SYSCHAR;
 
-} GLOBAL_DATA;
-typedef GLOBAL_DATA * LPGLOBAL_DATA;
+} GLOBAL_DATA, * LPGLOBAL_DATA;
 
 /* xHarbour compatible definitions */
 #if !defined( K_SH_LEFT )
