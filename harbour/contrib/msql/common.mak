@@ -7,7 +7,7 @@ LIBNAME = msql
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
 PRG_HEADERS = \
-    ads.ch \
+    msql.ch \
 
 LIB_OBJS = \
     $(OBJ_DIR)\msql$(OBJEXT) \
