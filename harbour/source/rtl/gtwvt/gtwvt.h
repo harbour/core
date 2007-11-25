@@ -75,6 +75,7 @@
 
 
 #define WVT_CHAR_QUEUE_SIZE  128
+#define WVT_MAX_TITLE_SIZE   128
 #define WVT_MAX_ROWS         256
 #define WVT_MAX_COLS         256
 #if defined( HB_WINCE )
@@ -88,6 +89,7 @@
 #  define WVT_DEFAULT_FONT_HEIGHT   20
 #  define WVT_DEFAULT_FONT_WIDTH    10
 #endif
+#define WVT_DEFAULT_FONT_NAME    "Courier New"
 
 #define BLACK          RGB( 0x0 ,0x0 ,0x0  )
 #define BLUE           RGB( 0x0 ,0x0 ,0x85 )
@@ -145,7 +147,7 @@ typedef struct global_data
    BOOL     AltF4Close;                   /* Can use Alt+F4 to close application */
    BOOL     CentreWindow;                 /* True if window is to be Reset into centre of window */
 
-   BOOL     fIgnoreWM_SYSCHAR;
+   BOOL     IgnoreWM_SYSCHAR;
 
 } GLOBAL_DATA, * LPGLOBAL_DATA;
 

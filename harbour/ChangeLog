@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-25 23:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    + extended GTI_WINTITLE to return window title:
+         hb_gtInfo( GTI_WINTITLE [, <cNewTitle>] ) -> <prevTile>
+    * formatting and code cleanup
+
 2007-11-25 23:06 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    + contrib/what32/Makefile
    + contrib/what32/make_b32.bat
