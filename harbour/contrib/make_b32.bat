@@ -15,7 +15,7 @@ goto EXIT
 
 :ERROR
 echo ----------------------------------------
-echo Usage: make_b32.bat <dirname>
+echo Usage: "make_b32.bat <dirname>"
 echo ----------------------------------------
 
 :EXIT

@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-25 20:20 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/common.mak
+  * harbour/make_b32.mak
+  * harbour/make_gcc.mak
+  * harbour/make_vc.mak
+  * harbour/make_vcce.mak
+    * Moved HB and HBPPGEN definitions to common.mak
+      to reduce unnecesary redundancy
+
+  * harbour/contrib/make_b32.bat
+  * harbour/contrib/make_vc.bat
+    * Enclosed "help usage message" in double quotes
+      due to special meaning of "<>" symbols in command
+      processor.
+
 2007-11-25 11:00 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   + harbour/contrib/what32
     + _winbmp.c
@@ -159,7 +174,7 @@
    * source/rtl/gtsln/gtsln.h
    * source/rtl/gttrm/gttrm.c
    * source/rtl/gtwvt/gtwvt.h
-     + #defining xhb compatible K_SH_* keyboard codes only if 
+     + #defining xhb compatible K_SH_* keyboard codes only if
        they were not already defined.
 
    * utils/hbdoc/genasc.prg
@@ -173,7 +188,7 @@
    * contrib/msql/msql.h
    * contrib/msql/tmsql.prg
      ! Fixed to compile with non-GNU BC/VC makefiles.
-       (short-term fixes, there may be better / more generic 
+       (short-term fixes, there may be better / more generic
        ways to fix it)
      ! C warnings fixed.
      ! Harbour warnings fixed.
@@ -199,9 +214,9 @@
 
    * contrib/make_b32_all.bat
    * contrib/make_vc_all.bat
-     ! Batch file calling method reset to Marek's version 
-       ('%COMSPEC% /c' as opposed to 'call') to avoid 
-       any unwanted "crosstalk" between contrib build 
+     ! Batch file calling method reset to Marek's version
+       ('%COMSPEC% /c' as opposed to 'call') to avoid
+       any unwanted "crosstalk" between contrib build
        procedures through the CFLAGS envvar.
 
 2007-11-23 21:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -225,7 +240,7 @@
 
 2007-11-23 18:55 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/include/hbexprb.c
-    * changed HB_i18nGettext() to hb_i18n_gettext(), to respect 
+    * changed HB_i18nGettext() to hb_i18n_gettext(), to respect
       original gettext lowercase function name convention
 
 2007-11-23 06:57 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
@@ -268,13 +283,13 @@
   * harbour/contrib/gtwvg/wvtcore.c
     ! Fixes for UNICODE Support.
     ? Przem, please review. I suspect about like these fixes:
-      
-      
+
+
       DrawText( _s->hGuiDC, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
       =>
       LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 6 ) );
       DrawText( _s->hGuiDC, text, strlen( hb_parc( 6 ) ), &rc, iAlignH | DT_WORDBREAK | DT_TOP );
-                                  ^--------------------^  OK | How to compute length of "text" 
+                                  ^--------------------^  OK | How to compute length of "text"
 
 
 2007-11-22 21:45 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
@@ -330,17 +345,17 @@
        (so no need for COMPSPEC trick to call another copy of command com)
      ! Some other smaller fixes.
      ! Fixed rdd_ads in make_*_all.bats.
-     * Removed the simple common part for BC/VC to consistently 
-       separate the BC/VC make file system. The only common 
-       part now is common.mak in each contrib. (Marek I hope you don't 
-       mind, I promise to update them in case of changes. We have quite 
-       some reduancy between BC/VC anyway, so this won't hurt much overall, 
-       but they are now nicely separated and maybe bit easier to oversee 
+     * Removed the simple common part for BC/VC to consistently
+       separate the BC/VC make file system. The only common
+       part now is common.mak in each contrib. (Marek I hope you don't
+       mind, I promise to update them in case of changes. We have quite
+       some reduancy between BC/VC anyway, so this won't hurt much overall,
+       but they are now nicely separated and maybe bit easier to oversee
        for someone new to the project.
-     ! Avoiding 'exit' command, as it stops all batch file 
-       execution, and as a bad side-effect can force to exit 
+     ! Avoiding 'exit' command, as it stops all batch file
+       execution, and as a bad side-effect can force to exit
        shells too.
-     - CFLAGS, CLIBFLAGS, HARBOURFLAGS not advertised anymore as 
+     - CFLAGS, CLIBFLAGS, HARBOURFLAGS not advertised anymore as
        official public vars to set compiler flags.
        C_USR, PRG_USR should be used, which are also GNU make system compatible.
      ! Fixed copyrights.
@@ -373,9 +388,9 @@
      ! Restored some lost changes.
      ! Not directly modifying C_USR, instead use CFLAGS internally.
      + Now rddads will find ace32.dll in system32 dir too.
-     ; It's not possible to set HB_DLL_DIR directly now, 
-       just through the <LIBNAME>_DIR envvar. Some contribs 
-       may try to "autodetect" the exact location of the .dll 
+     ; It's not possible to set HB_DLL_DIR directly now,
+       just through the <LIBNAME>_DIR envvar. Some contribs
+       may try to "autodetect" the exact location of the .dll
        (currently rddads).
 
 2007-11-23 03:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -386,7 +401,7 @@
    * common.mak
      ! Fixed copyrights.
      ! Tabs converted to spaces.
-     - CFLAGS not advertised anymore as an official public var to set 
+     - CFLAGS not advertised anymore as an official public var to set
        compiler flags.
        C_USR should be used, which is also GNU make system compatible.
 
@@ -483,9 +498,9 @@
    * contrib/libmisc/common.mak
    * contrib/libmisc/Makefile
    * contrib/mysql/common.mak
-     ! Library names synced between GNU and non-GNU 
+     ! Library names synced between GNU and non-GNU
        make systems.
-     ! Some libraries renamed to not have a too common 
+     ! Some libraries renamed to not have a too common
        or non-descriptive name, like "misc".
        non-GNU hb_btree   -> hbbtree (synced with GNU)
        non-GNU fi_lib     -> hbfreeimage
@@ -517,7 +532,7 @@
      ! Added EOLs to the last line.
 
    * utils/hbmake/hbmutils.prg
-     * Lib names fixed and changed to reflect the recent 
+     * Lib names fixed and changed to reflect the recent
        changes in contrib.
 
    * contrib/rdd_ads/rddads.h
@@ -526,7 +541,7 @@
    * include/hbextern.ch
    * source/rtl/memofile.c
      ! MEMOWRIT() 3rd parameter marked as extension.
-     + HB_MEMOWRIT() function added, which never writes the 
+     + HB_MEMOWRIT() function added, which never writes the
        obsolete EOF char at the end of the file.
 
 2007-11-23 03:55 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
@@ -536,14 +551,14 @@
   * harbour/source/compiler/cmdcheck.c
   * harbour/source/compiler/hbmain.c
     + added i18n support
-      Implemented -j[filename] switch to indicate output filename. 
-      Default filename is <sourcefilename>.pot. If switch -o is used, 
-      this file is created in specified output path. Output file 
+      Implemented -j[filename] switch to indicate output filename.
+      Default filename is <sourcefilename>.pot. If switch -o is used,
+      this file is created in specified output path. Output file
       format is compatible with 'gettext' utils, but not all
       available features are implemented.
-      Harbour level function HB_i18nGettext( cText [, cContext ] ) 
+      Harbour level function HB_i18nGettext( cText [, cContext ] )
       should be used to indicate translatable strings.
-      All this commit is commented using #ifdef HB_I18N_SUPPORT and 
+      All this commit is commented using #ifdef HB_I18N_SUPPORT and
       is in development stage. Please, do not use it yet.
 
 2007-11-23 01:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -551,7 +566,7 @@
    + gtwvg/make_b32.bat
    + gtwvg/make_vc.bat
      + Added non-GNU make files.
-     ; TOFIX: gtwvt.obj will clash with the core file with this 
+     ; TOFIX: gtwvt.obj will clash with the core file with this
               name, so this won't properly work yet.
 
    * gtwvg/wvtpaint.prg
@@ -573,7 +588,7 @@
         I still suggest to use pointers ITEMs instead of converting
         handles to numbers but I'm leaving such modifications to library
         authors - using hb_vmPushNumInt() is a workaround for striping
-        highest 32 bit from handles by hb_vmPushLong() in XP64 
+        highest 32 bit from handles by hb_vmPushLong() in XP64
       - use hb_vmRequestReenter() / hb_vmRequestRestore() to avoid crash
         when function/codeblock is executed during HVM has been serving
         an exception (f.e. BREAK/QUIT/RETURN)

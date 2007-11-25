@@ -15,7 +15,7 @@ goto EXIT
 
 :ERROR
 echo ----------------------------------------
-echo Usage: make_vc.bat <dirname>
+echo Usage: "make_vc.bat <dirname>"
 echo ----------------------------------------
 
 :EXIT
