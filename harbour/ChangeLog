@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-25 23:06 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   + contrib/what32/Makefile
+   + contrib/what32/make_b32.bat
+   + contrib/what32/make_vc.bat
+   + contrib/what32/common.mak
+     + Added GNU and non-GNU make files for what32.
+     ; Not fully tested, because I stumbled across a few problems 
+       when compiling:
+       - for BCC32 this lib needs TASM32 (non-free AFAIS)
+       - it need xhb lib and headers
+       - several .prg warnings, so it needs PRG_USR=-w1 before building.
+       - error in .prg:
+         .\wintabs.prg(98) Warning W0001  Redefinition or duplicate definition of #define TCN_SELCHANGE
+     ; An MSVC warning:
+       - ..\..\obj\vc\wincore.c(711) : warning C4129: 'w' : unrecognized character escape sequence
+         This is inline C code in wincore.prg
 
 2007-11-25 13:15 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/what32
