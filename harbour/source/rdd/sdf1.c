@@ -72,10 +72,11 @@ static void hb_sdfInitArea( SDFAREAP pArea, char * szFileName )
    /* Allocate only after succesfully open file */
    pArea->szFileName = hb_strdup( szFileName );
 
-   if( hb_itemGetCLen( hb_set.HB_SET_EOL ) == 0 )
-      pArea->szEol = hb_strdup( hb_conNewLine() );
+   /* set line separator: EOL */
+   if( hb_set.HB_SET_EOL && hb_set.HB_SET_EOL[ 0 ] )
+      pArea->szEol = hb_strdup( hb_set.HB_SET_EOL );
    else
-      pArea->szEol = hb_strdup( hb_itemGetCPtr( hb_set.HB_SET_EOL ) );
+      pArea->szEol = hb_strdup( hb_conNewLine() );
    pArea->uiEolLen = strlen( pArea->szEol );
 
    /* Alloc buffer */

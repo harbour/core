@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-25 12:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbwmain.c
+  * harbour/source/vm/mainwin.c
+    ! fixed unnecessary conversion of WinMain() parameters on W32/W64
+      when UNICODE macro is set - thanks to Chen
+
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/delim1.c
+    ! fixed code wrongly synced with xHarbour - in Harbour HB_SET_EOL
+      is char* not PHB_ITEM - thanks to Andi
+
+  * harbour/source/compiler/genc.c
+    ! fixed file name in generated for C inline code by escaping
+      special characters - thanks to Andi
+
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * minor code cleanup
+
+  * harbour/contrib/gtwvg/wvtcore.c
+    ! fixed setting default foreground and background color when user
+      does not pass it's own one. Previous versions was using _s->background
+      and _s->foreground - it was wrong because this variables in all
+      GTWVT base GTs (also in xHarbour) contains not default color but
+      the color recently used to redraw some part of screen - f.e. after
+      exposing some region - it means that they can have any value.
+      Such bugs are hard to locate because the same program can be executed
+      many times without any problem and suddenly he will use wrong colors
+      drawing sth - if you observed such effect then it can be the results
+      of the above problem. Now default color is taken from core GT code.
+      Two functions make it: hb_wvt_FgColorParam() and hb_wvt_BgColorParam()
+      Both accept also colors passed as standard Clipper strings.
+      The same should be also fixed in xHarbour just like the problem with
+      executing registered user functions when HVM is closing fixed in
+      previous commit - even if now it does not cause GPF (due to race
+      condition it may be exploited only sometimes) then it does not mean
+      it works correctly.
+
 2007-11-24 20:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwvt/gtwvt.h
   * harbour/source/rtl/gtwvt/gtwvt.c

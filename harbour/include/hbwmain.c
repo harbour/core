@@ -86,7 +86,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 #if defined( HB_WINCE )
    pSrc = pFree = hb_wctomb( lpCmdLine );
 #else
-   pSrc = pFree = HB_TCHAR_CONVFROM( lpCmdLine );
+   pSrc = pFree = lpCmdLine;
 #endif
    pDst = pArgs = ( LPSTR ) LocalAlloc( LMEM_FIXED, strlen( pFree ) + 1 );
    fQuoted = FALSE;

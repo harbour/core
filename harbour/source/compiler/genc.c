@@ -302,7 +302,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
          pFunc = pFunc->pNext;
       }
 
-      /* Generate codeblocks data
+      /* Generate C inline functions
        */
       if( bIsInlineFunction )
       {
@@ -320,12 +320,14 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       {
          if( pInline->pCode )
          {
-            fprintf( yyc, "#line %i \"%s\"\n", pInline->iLine, pInline->szFileName );
+            fprintf( yyc, "#line %i ", pInline->iLine );
+            hb_compGenCString( yyc, ( BYTE * ) pInline->szFileName,
+                               strlen( pInline->szFileName ) );
+            fprintf( yyc, "\n" );
 
             if( pInline->szName )
-            {
                fprintf( yyc, "HB_FUNC_STATIC( %s )\n", pInline->szName );
-            }
+
             fprintf( yyc, "%s", pInline->pCode );
          }
          pInline = pInline->pNext;
@@ -348,9 +350,14 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
                   fprintf( yyc, "#include \"hbxvm.h\"\n" );
                bIsInlineFunction = TRUE;
             }
-            fprintf( yyc, "#line %i \"%s\"\n", pInline->iLine, pInline->szFileName );
+            fprintf( yyc, "#line %i ", pInline->iLine );
+            hb_compGenCString( yyc, ( BYTE * ) pInline->szFileName,
+                               strlen( pInline->szFileName ) );
+            fprintf( yyc, "\n" );
+
             if( pInline->szName )
                fprintf( yyc, "HB_FUNC_STATIC( %s )\n", pInline->szName );
+
             fprintf( yyc, "%s", pInline->pCode );
          }
          pInline = pInline->pNext;

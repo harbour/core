@@ -95,8 +95,6 @@ static HANDLE  s_hInstance;
 static HANDLE  s_hPrevInstance;
 static int     s_iCmdShow;
 
-static OSVERSIONINFO s_osv;
-
 static GLOBAL_DATA _s;
 
 static COLORREF _COLORS[] = {
@@ -128,6 +126,11 @@ static int K_Ctrl[] =
 
 static void hb_gt_wvt_InitStatics( void )
 {
+   OSVERSIONINFO osvi;
+
+   osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
+   GetVersionEx( &osvi );
+
    _s.ROWS             = WVT_DEFAULT_ROWS;
    _s.COLS             = WVT_DEFAULT_COLS;
    _s.CaretExist       = FALSE;
@@ -152,7 +155,7 @@ static void hb_gt_wvt_InitStatics( void )
    _s.CentreWindow     = TRUE;            /* Default is to always display window in centre of screen */
    _s.CodePage         = OEM_CHARSET;     /* GetACP(); - set code page to default system */
 
-   _s.Win9X            = ( s_osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
+   _s.Win9X            = ( osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS );
    _s.AltF4Close       = FALSE;
 
    _s.fIgnoreWM_SYSCHAR = FALSE;
@@ -201,8 +204,8 @@ static HFONT hb_gt_wvt_GetFont( char * pszFace, int iHeight, int iWidth, int iWe
    }
    else
    {
-      /* hFont = GetStockObject( SYSTEM_FIXED_FONT ); */
-      hFont = ( HFONT ) GetStockObject( OEM_FIXED_FONT );
+      /* hFont = ( HFONT ) GetStockObject( SYSTEM_FIXED_FONT ); */
+      hFont = GetStockObject( OEM_FIXED_FONT );
    }
    return hFont;
 }
@@ -1198,9 +1201,6 @@ static void hb_gt_wvt_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       hb_errInternal( 10001, "It's not a window GUI program.", "", "" );
    }
 
-   s_osv.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-   GetVersionEx( &s_osv );
-
    hb_gt_wvt_InitStatics();
    _s.hWnd = hb_gt_wvt_CreateWindow( ( HINSTANCE ) s_hInstance,
                                      ( HINSTANCE ) s_hPrevInstance,
@@ -1294,7 +1294,7 @@ static char * hb_gt_wvt_Version( int iType )
    return "Harbour Terminal: Win32 buffered WVT";
 }
 
-/* *********************************************************************** */
+/* ********************************************************************** */
 
 static int hb_gt_wvt_ReadKey( int iEventMask )
 {
@@ -1311,7 +1311,7 @@ static int hb_gt_wvt_ReadKey( int iEventMask )
    return fKey ? c : 0;
 }
 
-/* *********************************************************************** */
+/* ********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
 static void hb_gt_wvt_Tone( double dFrequency, double dDuration )
 {
@@ -1320,7 +1320,7 @@ static void hb_gt_wvt_Tone( double dFrequency, double dDuration )
    hb_gt_w32_Tone( dFrequency, dDuration );
 }
 
-/* *********************************************************************** */
+/* ********************************************************************** */
 
 static BOOL hb_gt_wvt_mouse_IsPresent( void )
 {
@@ -1360,7 +1360,7 @@ static int hb_gt_wvt_mouse_CountButton( void )
    return( GetSystemMetrics( SM_CMOUSEBUTTONS ) );
 }
 
-/* *********************************************************************** */
+/* ********************************************************************** */
 
 static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
 {
@@ -1679,7 +1679,7 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
    return TRUE;
 }
 
-/* *********************************************************************** */
+/* ********************************************************************** */
 
 /* ********** Graphics API ********** */
 /*
@@ -1839,7 +1839,7 @@ static void HB_GT_FUNC( gt_gfxText( int iTop, int iLeft, char *cBuf, int iColor,
 }
 */
 
-/* *********************************************************************** */
+/* ********************************************************************** */
 
 static void hb_gt_wvt_Redraw( int iRow, int iCol, int iSize )
 {
@@ -1859,7 +1859,7 @@ static void hb_gt_wvt_Redraw( int iRow, int iCol, int iSize )
    }
 }
 
-/* *********************************************************************** */
+/* ********************************************************************** */
 
 static void hb_gt_wvt_Refresh( void )
 {
@@ -1874,7 +1874,7 @@ static void hb_gt_wvt_Refresh( void )
    }
 }
 
-/* *********************************************************************** */
+/* ********************************************************************** */
 
 static BOOL hb_gt_wvt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
@@ -1934,7 +1934,7 @@ static BOOL hb_gt_wvt_SetKeyCP( char * pszTermCDP, char * pszHostCDP )
 }
 
 
-/* *********************************************************************** */
+/* ********************************************************************** */
 
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {

@@ -655,6 +655,38 @@ static void hb_wvt_DrawToolButtonDown( HDC hdc, int iTop, int iLeft, int iBottom
    LineTo( hdc, iRight, iTop );
 }
 
+static COLORREF hb_wvt_BgColorParam( int iParam )
+{
+   COLORREF color;
+
+   if( ISNUM( iParam ) )
+      color = ( COLORREF ) hb_parnl( iParam );
+   else
+   {
+      int iColor = ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) :
+                                      hb_gt_GetColor();
+      color = hb_wvt_gtGetColorData( ( iColor >> 4 ) & 0x0f );
+   }
+
+   return color;
+}
+
+static COLORREF hb_wvt_FgColorParam( int iParam )
+{
+   COLORREF color;
+
+   if( ISNUM( iParam ) )
+      color = ( COLORREF ) hb_parnl( iParam );
+   else
+   {
+      int iColor = ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) :
+                                      hb_gt_GetColor();
+      color = hb_wvt_gtGetColorData( iColor & 0x0f );
+   }
+
+   return color;
+}
+
 //-------------------------------------------------------------------//
 //
 //   Wvt_SetPen( nPenStyle, nWidth, nColor )
@@ -884,11 +916,13 @@ HB_FUNC( WVT_DRAWLABEL )
    if ( hFont )
    {
       LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+      COLORREF fgClr = hb_wvt_FgColorParam( 6 ),
+               bgClr = hb_wvt_BgColorParam( 7 );
 
-      xy          = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+      xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
 
-      SetBkColor( _s->hdc, ISNIL( 7 ) ? _s->background : ( COLORREF ) hb_parnl( 7 ) );
-      SetTextColor( _s->hdc, ISNIL( 6 ) ? _s->foreground : ( COLORREF ) hb_parnl( 6 ) );
+      SetBkColor( _s->hdc, bgClr );
+      SetTextColor( _s->hdc, fgClr );
       SetTextAlign( _s->hdc, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
       hOldFont = ( HFONT ) SelectObject( _s->hdc, hFont );
 
@@ -899,8 +933,8 @@ HB_FUNC( WVT_DRAWLABEL )
 
       if ( _s->bGui )
       {
-         SetBkColor( _s->hGuiDC, ISNIL( 7 ) ? _s->background : ( COLORREF ) hb_parnl( 7 ) );
-         SetTextColor( _s->hGuiDC, ISNIL( 6 ) ? _s->foreground : ( COLORREF ) hb_parnl( 6 ) );
+         SetBkColor( _s->hGuiDC, bgClr );
+         SetTextColor( _s->hGuiDC, fgClr );
          SetTextAlign( _s->hGuiDC, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
          hOldFontGui = ( HFONT ) SelectObject( _s->hGuiDC, hFont );
 
@@ -1648,10 +1682,13 @@ HB_FUNC( WVT_DRAWLABELEX )
    if ( _s->hUserFonts[ iSlot ] )
    {
       LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
-      xy          = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+      COLORREF fgClr = hb_wvt_FgColorParam( 5 ),
+               bgClr = hb_wvt_BgColorParam( 6 );
 
-      SetBkColor( _s->hdc, ISNIL( 6 ) ? _s->background : ( COLORREF ) hb_parnl( 6 ) );
-      SetTextColor( _s->hdc, ISNIL( 5 ) ? _s->foreground : ( COLORREF ) hb_parnl( 5 ) );
+      xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
+
+      SetBkColor( _s->hdc, bgClr );
+      SetTextColor( _s->hdc, fgClr );
       SetTextAlign( _s->hdc, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
       SelectObject( _s->hdc, _s->hUserFonts[ iSlot ] );
 
@@ -1659,8 +1696,8 @@ HB_FUNC( WVT_DRAWLABELEX )
       ExtTextOut( _s->hdc, xy.x, xy.y, 0, NULL, text, lstrlen( text ), NULL );
       if ( _s->bGui )
       {
-         SetBkColor( _s->hGuiDC, ISNIL( 6 ) ? _s->background : ( COLORREF ) hb_parnl( 6 ) );
-         SetTextColor( _s->hGuiDC, ISNIL( 5 ) ? _s->foreground : ( COLORREF ) hb_parnl( 5 ) );
+         SetBkColor( _s->hGuiDC, bgClr );
+         SetTextColor( _s->hGuiDC, fgClr );
          SetTextAlign( _s->hGuiDC, ( ISNIL( 4 ) ? TA_LEFT : hb_parni( 4 ) ) );
          SelectObject( _s->hGuiDC, _s->hUserFonts[ iSlot ] );
 
@@ -2181,6 +2218,8 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    UINT     uiOptions;
    SIZE     sz = { 0,0 };
    LPTSTR   text = HB_TCHAR_CONVTO( hb_parc( 5 ) );
+   COLORREF fgClr = hb_wvt_FgColorParam( 8 ),
+            bgClr = hb_wvt_BgColorParam( 9 );
 
    xy           = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
    iTop         = xy.y;
@@ -2192,8 +2231,8 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    iAlignHorz   = hb_parni( 6 ); /* default is 0 */
    iAlignVert   = hb_parni( 7 ); /* default is 0 */
 
-   SetTextColor( _s->hdc, ISNIL( 8 ) ? _s->foreground : ( COLORREF ) hb_parnl( 8 ) );
-   SetBkColor( _s->hdc, ISNIL( 9 ) ? _s->background : ( COLORREF ) hb_parnl( 9 ) );
+   SetTextColor( _s->hdc, fgClr );
+   SetBkColor( _s->hdc, bgClr );
    SelectObject( _s->hdc, ( HFONT ) hb_parnl( 10 ) );
 
    //GetTextExtentPoint32( _s->hdc, hb_parcx( 5 ), strlen( hb_parcx( 5 ) ), &sz );
@@ -2250,8 +2289,8 @@ HB_FUNC( WVT_DRAWLABELOBJ )
    ExtTextOut( _s->hdc, x, y, uiOptions, &rect, text, lstrlen( text ), NULL );
    if ( _s->bGui )
    {
-      SetTextColor( _s->hGuiDC, ISNIL( 8 ) ? _s->foreground : ( COLORREF ) hb_parnl( 8 ) );
-      SetBkColor( _s->hGuiDC, ISNIL( 9 ) ? _s->background : ( COLORREF ) hb_parnl( 9 ) );
+      SetTextColor( _s->hGuiDC, fgClr );
+      SetBkColor( _s->hGuiDC, bgClr );
       SelectObject( _s->hGuiDC, ( HFONT ) hb_parnl( 10 ) );
       SetTextAlign( _s->hGuiDC, iAlignH | iAlignV );
 
@@ -2580,6 +2619,8 @@ HB_FUNC( WVT_DRAWTEXTBOX )
 
    RECT     rc = { 0,0,0,0 };
    LPTSTR   text = HB_TCHAR_CONVTO( hb_parc( 6 ) );
+   COLORREF fgClr = hb_wvt_FgColorParam( 9 ),
+            bgClr = hb_wvt_BgColorParam( 10 );
 
    switch ( iAlignHorz )
    {
@@ -2602,8 +2643,8 @@ HB_FUNC( WVT_DRAWTEXTBOX )
    rc.right     = iRight;
 
    SetTextAlign( _s->hdc, TA_TOP | TA_LEFT | TA_NOUPDATECP );
-   SetTextColor( _s->hdc, ISNIL( 9 ) ? _s->foreground : ( COLORREF ) hb_parnl( 9 ) );
-   SetBkColor( _s->hdc, ISNIL( 10 ) ? _s->background : ( COLORREF ) hb_parnl( 10 ) );
+   SetTextColor( _s->hdc, fgClr );
+   SetBkColor( _s->hdc, bgClr );
    SetBkMode( _s->hdc, ISNIL( 11 ) ? OPAQUE : hb_parni( 11 ) );
    SelectObject( _s->hdc, ( HFONT ) hb_parnl( 12 ) );
 
@@ -2612,8 +2653,8 @@ HB_FUNC( WVT_DRAWTEXTBOX )
    if ( _s->bGui )
    {
       SetTextAlign( _s->hGuiDC, TA_TOP | TA_LEFT | TA_NOUPDATECP );
-      SetTextColor( _s->hGuiDC, ISNIL( 9 ) ? _s->foreground : ( COLORREF ) hb_parnl( 9 ) );
-      SetBkColor( _s->hGuiDC, ISNIL( 10 ) ? _s->background : ( COLORREF ) hb_parnl( 10 ) );
+      SetTextColor( _s->hGuiDC, fgClr );
+      SetBkColor( _s->hGuiDC, bgClr );
       SetBkMode( _s->hGuiDC, ISNIL( 11 ) ? OPAQUE : hb_parni( 11 ) );
       SelectObject( _s->hGuiDC, ( HFONT ) hb_parnl( 12 ) );
 
