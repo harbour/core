@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-25 13:07 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/what32
+    - wininet.CH
+    - errorsys.prg
+    - debug.prg
+    - wintabs.Prg
+    - wintbar.Prg
+      Removed to have all lower case and avoid name conflicts.
+
 2007-11-25 20:20 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/common.mak
   * harbour/make_b32.mak
