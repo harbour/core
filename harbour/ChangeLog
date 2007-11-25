@@ -8,6 +8,81 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-25 11:00 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  + harbour/contrib/what32
+    + _winbmp.c
+    + _winbrsh.c
+    + _wincall.c
+    + _wincdlg.c
+    + _winclpb.c
+    + _wincomm.c
+    + _wincret.c
+    + _windate.c
+    + _windc.c
+    + _windir.c
+    + _windlg.c
+    + _windll.c
+    + _windraw.c
+    + _winfont.c
+    + _wingdi.c
+    + _winhead.c
+    + _winicon.c
+    + _winlist.c
+    + _wininet.c
+    + _winini.c
+    + _winkbrd.c
+    + _winlv.c
+    + _winmain.c
+    + _winmapi.c
+    + _winmem.c
+    + _winmenu.c
+    + _winmeta.c
+    + _winmisc.c
+    + _winmmcap.c
+    + _winmous.c
+    + _winmsg.c
+    + _winpen.c
+    + _winprn.c
+    + _winrect.c
+    + _winreq.c
+    + _winrgn.c
+    + _winscrlb.c
+    + _winserial.c
+    + _winshell.c
+    + _winsock.c
+    + _winsys.c
+    + _wintab.c
+    + _wintbar.c
+    + _wintext.c
+    + _wintree.c
+    + _winview.c
+    + _winwnd.c
+    + commctrl.ch
+    + commdlg.ch
+    + debug.ch
+    + import.ch
+    + sqltypes.ch
+    + what32.ch
+    + wingdi.ch
+    + wininet.ch
+    + winstruc.ch
+    + wintypes.ch
+    + winuser.ch
+    + debug.prg
+    + errorsys.prg
+    + whatutil.prg
+    + wincdlg.prg
+    + wincomm.prg
+    + wincore.prg
+    + winini.prg
+    + winrbar.prg
+    + wintabs.prg
+    + wintbar.prg
+
+      Initial upload of xharbour/contrib/what32.
+      Direct item access replaced with api calls.
+      Still untested.
+
 2007-11-25 12:24 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/gtwvg/wvtutils.c
     ! changed 'template' used as variable name to 'lpTemplate'
