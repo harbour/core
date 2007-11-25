@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-25 12:24 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/gtwvg/wvtutils.c
+    ! changed 'template' used as variable name to 'lpTemplate'
+      Some C++ compilers may not accept 'template' as variable name
+      because 'template' has special meaning in C++ so please do not
+      use such name - thanks to Andi
+
 2007-11-25 12:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbwmain.c
   * harbour/source/vm/mainwin.c

@@ -1300,12 +1300,12 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
          {
             case 0:
             {
-               LPTSTR template = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+               LPTSTR lpTemplate = HB_TCHAR_CONVTO( hb_parc( 1 ) );
                hDlg = CreateDialog( ( HINSTANCE     ) hb_hInstance,
-                                                      template,
+                                                      lpTemplate,
                                                       hb_parl( 2 ) ? _s->hWnd : NULL,
                                                       (DLGPROC) hb_wvt_gtDlgProcMLess );
-               HB_TCHAR_FREE( template );
+               HB_TCHAR_FREE( lpTemplate );
             }
             break;
 
@@ -1424,13 +1424,13 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
    {
       case 0:
       {
-         LPTSTR template = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+         LPTSTR lpTemplate = HB_TCHAR_CONVTO( hb_parc( 1 ) );
          iResult = DialogBoxParam( ( HINSTANCE     ) hb_hInstance,
-                                                     template,
+                                                     lpTemplate,
                                                      hParent,
                                                      (DLGPROC) hb_wvt_gtDlgProcModal,
                                 ( LPARAM ) ( DWORD ) iIndex+1 );
-         HB_TCHAR_FREE( template );
+         HB_TCHAR_FREE( lpTemplate );
       }
       break;
 
