@@ -350,7 +350,7 @@ BOOL HB_EXPORT hb_wvt_gtDestroyPicture( IPicture * iPicture )
 
 //-------------------------------------------------------------------//
 
-POINT  HB_EXPORT hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
+POINT  HB_EXPORT hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row )
 {
    POINT xy;
 
