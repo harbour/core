@@ -329,7 +329,7 @@ static HFONT hb_gt_wvt_GetFont( char * pszFace, int iHeight, int iWidth, int iWe
    else
    {
       /* hFont = ( HFONT ) GetStockObject( SYSTEM_FIXED_FONT ); */
-      hFont = GetStockObject( OEM_FIXED_FONT );
+      hFont = ( HFONT ) GetStockObject( OEM_FIXED_FONT );
    }
    return hFont;
 }

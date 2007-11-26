@@ -56,7 +56,6 @@
 
 #define HB_GT_NAME  WVT
 
-/* #define WVT_DEBUG */
 
 #include <windows.h>
 /*#include <winuser.h>*/

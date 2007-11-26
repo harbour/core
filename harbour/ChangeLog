@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-26 08:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/gtwvg/gtwvt.h
+  * harbour/contrib/gtwvg/gtwvt.c
+  * harbour/source/rtl/gtwvt/gtwvt.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * casting and minor formatting
+
 2007-11-26 06:15 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/common.mak
     ! HB and HBPPGEN definitions moved to end of file, because
