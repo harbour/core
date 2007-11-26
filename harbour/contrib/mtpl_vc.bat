@@ -17,11 +17,9 @@ rem ---------------------------------------------------------------
 
 set _HB_CC_NAME=%HB_CC_NAME%
 set _HB_MAKE_PROGRAM=%HB_MAKE_PROGRAM%
-set _HB_SHOW_ERRORS=%HB_SHOW_ERRORS%
 
 if "%_HB_CC_NAME%"      == "" set _HB_CC_NAME=vc
 if "%_HB_MAKE_PROGRAM%" == "" set _HB_MAKE_PROGRAM=nmake.exe
-if "%_HB_SHOW_ERRORS%"  == "" set _HB_SHOW_ERRORS=yes
 set HB_MAKEFILE=..\mtpl_%_HB_CC_NAME%.mak
 set HB_EXIT_LEVEL=
 
@@ -38,7 +36,7 @@ if "%1" == "INSTALL" goto INSTALL
 
    %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%_HB_CC_NAME%.log
    if errorlevel 1 set HB_EXIT_LEVEL=1
-   if errorlevel 1 if "%_HB_SHOW_ERRORS%" == "yes" notepad make_%_HB_CC_NAME%.log
+   if errorlevel 1 if not "%HB_SHOW_ERRORS%" == "no" notepad make_%_HB_CC_NAME%.log
    goto EXIT
 
 :CLEAN

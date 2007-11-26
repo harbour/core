@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-26 22:09 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/mtpl_b32.bat
+   * contrib/mtpl_vc.bat
+     % Eliminated _HB_SHOW_ERRORS.
+
 2007-11-26 21:18 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/mtpl_b32.mak
    * contrib/mtpl_vc.mak
