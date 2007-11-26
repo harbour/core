@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-26 21:18 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_vc.mak
+     ! Fixed: HB_CC_NAME -> _HB_CC_NAME
+       (files were directly created in '/lib//' since last change)
+       If someone wants to override the default dir names where 
+       bin/lib/obj files are created - by using an undocumented 
+       internal envvar - pls use 'set _HB_CC_NAME=...'
+
 2007-11-26 20:50 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/contrib/make_b32.bat
   * harbour/contrib/make_vc.bat

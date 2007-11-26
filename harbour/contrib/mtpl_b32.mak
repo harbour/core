@@ -73,9 +73,9 @@ HB_LIB_INSTALL = $(HB_INSTALL_PREFIX)\lib
 # Directory macros. These should never have to change.
 #**********************************************************
 
-OBJ_DIR = $(HB_ROOT)\obj\$(HB_CC_NAME)
-LIB_DIR = $(HB_ROOT)\lib\$(HB_CC_NAME)
-BIN_DIR = $(HB_ROOT)\bin\$(HB_CC_NAME)
+OBJ_DIR = $(HB_ROOT)\obj\$(_HB_CC_NAME)
+LIB_DIR = $(HB_ROOT)\lib\$(_HB_CC_NAME)
+BIN_DIR = $(HB_ROOT)\bin\$(_HB_CC_NAME)
 
 INCLUDE_DIR = $(HB_ROOT)\include
 
