@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-26 09:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    ! fixed typo
+
+  * harbour/contrib/gtwvg/gtwvt.c
+    * use hb_strncpy() instead of strcpy()
+
 2007-11-26 08:02 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/gtwvg/gtwvt.h
   * harbour/contrib/gtwvg/gtwvt.c

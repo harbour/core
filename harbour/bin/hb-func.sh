@@ -274,10 +274,10 @@ while [ \$n -lt \${#P[@]} ]; do
                 DIROUT="\${d%}"
             elif [ -d "\${d%/*}" ]; then
                 DIROUT="\${d%/*}"; FILEOUT="\${d##*/}"; p="-o\${d}"
-                [ \${HB} != "cc" ] || p="-o\${d%.*}"
+                [ \${HB} = "cc" ] || p="-o\${d%.*}"
             elif [ -n "\${d}" ]; then
                 FILEOUT="\${d}"; p="-o\${d}"
-                [ \${HB} != "cc" ] || p="-o\${d%.*}"
+                [ \${HB} = "cc" ] || p="-o\${d%.*}"
             fi ;;
         -static)     HB_STATIC="yes" ;;
         -fullstatic) HB_STATIC="full" ;;

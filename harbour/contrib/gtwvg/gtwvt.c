@@ -1913,9 +1913,9 @@ BOOL HB_EXPORT hb_wvt_gtSetFont( char *fontFace, int height, int width, int Bold
          _s.fontQuality = Quality;
 
          size = strlen( fontFace );
-         if( ( size > 0 ) && ( size < LF_FACESIZE-1 ) )
+         if( size > 0 && size < LF_FACESIZE - 1 )
          {
-            strcpy( _s.fontFace, fontFace );
+            hb_strncpy( _s.fontFace, fontFace, sizeof( _s.fontFace ) - 1 );
          }
          if( _s.hWnd )
          {
