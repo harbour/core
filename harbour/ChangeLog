@@ -8,6 +8,28 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-26 02:34 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/gtwvg/gtwvt.h
+  * harbour/contrib/gtwvg/gtwvt.c
+  * harbour/contrib/gtwvg/wvtcore.c
+    * moved hb_wvt_GetStringAttrib(), hb_wvt_PutStringAttrib(),
+      hb_wvt_gtLoadPictureFromResource(), hb_wvt_gtLoadPicture(),
+      hb_wvt_gtRenderPicture(), hb_wvt_gtDestroyPicture() from
+      gtwvt.c to wvtcore.c
+    * changed hb_wvt_GetStringAttrib() and hb_wvt_PutStringAttrib()
+      to work with any GTs
+    ! removed GTWVG internal screen buffer and fixed to work well woth
+      core code screen buffer
+    ! some fixes borrowed from Harbour GTWVT
+    * synced most of contrib/gtwvg/gtwvt.c code with rtl/gtwvt/gtwvt.c
+    - removed unused GLOBAL_DATA members:
+      foreground, background, BUFFERSIZE, byAttributes, byBuffer,
+      pAttributes, pBuffer, caretPos, displayCaret, RectInvalid
+
+    Pritpal please check if it works for you with GUI extensions.
+    I've tested it as normal GT driver and it works correct in my
+    tests.
+
 2007-11-25 23:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwvt/gtwvt.h
   * harbour/source/rtl/gtwvt/gtwvt.c

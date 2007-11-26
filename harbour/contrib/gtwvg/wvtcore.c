@@ -114,6 +114,255 @@ HB_FUNC( WVT_CORE )
 }
 
 //-------------------------------------------------------------------//
+
+HB_EXPORT void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
+{
+   USHORT irow, icol, j;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_wvt_GetStringAttrib( %hu, %hu, %hu, %hu, %p, %p )", top, left, bottom, right, sBuffer, sAttrib ) );
+
+   for( j = 0, irow = top; irow <= bottom; irow++ )
+   {
+      for( icol = left; icol <= right; icol++ )
+      {
+         BYTE bColor, bAttr;
+         USHORT usChar;
+
+         if( !hb_gt_GetScrChar( irow, icol, &bColor, &bAttr, &usChar ) )
+            break;
+
+         sBuffer[ j ] = ( BYTE ) usChar;
+         sAttrib[ j ] = bColor;
+         j++;
+      }
+   }
+}
+
+//-------------------------------------------------------------------//
+
+HB_EXPORT void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, USHORT right, BYTE * sBuffer, BYTE * sAttrib )
+{
+   USHORT irow, icol, j;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_wvt_PutStringAttrib( %hu, %hu, %hu, %hu, %p, %p )", top, left, bottom, right, sBuffer, sAttrib ) );
+
+   hb_gtBeginWrite();
+   for( j = 0, irow = top; irow <= bottom; irow++ )
+   {
+      for( icol = left; icol <= right; icol++ )
+      {
+         if( !hb_gt_PutScrChar( irow, icol, sAttrib[ j ], 0, sBuffer[ j ] ) )
+            break;
+         j++;
+      }
+   }
+   hb_gtEndWrite();
+}
+
+//-------------------------------------------------------------------//
+//
+//               Courtesy - Augusto Infante - Thanks
+//
+HB_EXPORT IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection )
+{
+   HRSRC  res      = 0;
+   LPVOID iPicture = NULL;
+   LPTSTR resource = HB_TCHAR_CONVTO( ( LPSTR ) cResource );
+   LPTSTR section  = HB_TCHAR_CONVTO( ( LPSTR ) cSection );
+   HANDLE hInstance;
+
+   if( hb_winmainArgGet( &hInstance, NULL, NULL ) )
+      res = FindResource( ( HINSTANCE ) hInstance, resource, section );
+
+   if( res )
+   {
+      IStream *iStream  = NULL;
+      HGLOBAL mem       = LoadResource( GetModuleHandle( NULL ), res );
+      void    *data     = LockResource( mem );
+      size_t  nFileSize = SizeofResource( GetModuleHandle( NULL ), res );
+      HGLOBAL hGlobal   = GlobalAlloc( GMEM_MOVEABLE, nFileSize );
+      LPVOID  pvData    = GlobalLock( hGlobal );
+
+      memcpy( pvData, data, nFileSize );
+
+      GlobalUnlock( hGlobal );
+
+      CreateStreamOnHGlobal( hGlobal, TRUE, &iStream );
+
+      OleLoadPicture( iStream, nFileSize, TRUE, ( REFIID ) &IID_IPicture, &iPicture );
+
+      FreeResource( mem );
+   }
+
+   HB_TCHAR_FREE( resource );
+   HB_TCHAR_FREE( section );
+
+   return ( IPicture * ) iPicture;
+}
+
+//--------------------------------------------------------------------//
+
+HB_EXPORT IPicture * hb_wvt_gtLoadPicture( char * cImage )
+{
+   IStream  *iStream;
+   LPVOID   iPicture = NULL;
+   HGLOBAL  hGlobal;
+   HANDLE   hFile;
+   DWORD    nFileSize;
+   DWORD    nReadByte;
+   LPTSTR   image = HB_TCHAR_CONVTO( cImage );
+
+   hFile = CreateFile( image, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
+   if( hFile != INVALID_HANDLE_VALUE )
+   {
+      nFileSize = GetFileSize( hFile, NULL );
+
+      if( nFileSize != INVALID_FILE_SIZE )
+      {
+         hGlobal = GlobalAlloc( GPTR, nFileSize );
+
+         if( hGlobal )
+         {
+            if( ReadFile( hFile, hGlobal, nFileSize, &nReadByte, NULL ) )
+            {
+               CreateStreamOnHGlobal( hGlobal, TRUE, &iStream );
+               OleLoadPicture( iStream, nFileSize, TRUE, ( REFIID ) &IID_IPicture, &iPicture );
+            }
+            GlobalFree( hGlobal );
+         }
+      }
+      CloseHandle( hFile );
+   }
+
+   HB_TCHAR_FREE( image );
+
+   return ( IPicture * ) iPicture;
+}
+
+//-------------------------------------------------------------------//
+
+BOOL HB_EXPORT hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture )
+{
+   LONG     lWidth, lHeight;
+   int      x, y, xe, ye;
+   int      c   = x1;
+   int      r   = y1;
+   int      dc  = wd;
+   int      dr  = ht;
+   int      tor =  0;
+   int      toc =  0;
+   HRGN     hrgn1;
+   POINT    lpp;
+   BOOL     bResult = FALSE;
+
+   if( iPicture )
+   {
+      iPicture->lpVtbl->get_Width( iPicture,&lWidth );
+      iPicture->lpVtbl->get_Height( iPicture,&lHeight );
+
+      if( dc  == 0 )
+      {
+         dc = ( int ) ( ( float ) dr * lWidth  / lHeight );
+      }
+      if( dr  == 0 )
+      {
+         dr = ( int ) ( ( float ) dc * lHeight / lWidth  );
+      }
+      if( tor == 0 )
+      {
+         tor = dr;
+      }
+      if( toc == 0 )
+      {
+         toc = dc;
+      }
+      x  = c;
+      y  = r;
+      xe = c + toc - 1;
+      ye = r + tor - 1;
+
+      GetViewportOrgEx( _s->hdc, &lpp );
+
+      hrgn1 = CreateRectRgn( c+lpp.x, r+lpp.y, xe+lpp.x, ye+lpp.y );
+      SelectClipRgn( _s->hdc, hrgn1 );
+
+      while( x < xe )
+      {
+         while( y < ye )
+         {
+            iPicture->lpVtbl->Render( iPicture, _s->hdc, x, y, dc, dr, 0, lHeight, lWidth, -lHeight, NULL );
+            y += dr;
+         }
+         y =  r;
+         x += dc;
+      }
+
+      SelectClipRgn( _s->hdc, NULL );
+      DeleteObject( hrgn1 );
+
+      if( _s->bGui )
+      {
+         x  = c;
+         y  = r;
+         xe = c + toc - 1;
+         ye = r + tor - 1;
+
+         GetViewportOrgEx( _s->hGuiDC, &lpp );
+
+         hrgn1 = CreateRectRgn( c+lpp.x, r+lpp.y, xe+lpp.x, ye+lpp.y );
+         SelectClipRgn( _s->hGuiDC, hrgn1 );
+
+         while( x < xe )
+         {
+            while( y < ye )
+            {
+               iPicture->lpVtbl->Render( iPicture, _s->hGuiDC, x, y, dc, dr, 0, lHeight, lWidth, -lHeight, NULL );
+               y += dr;
+            }
+            y =  r;
+            x += dc;
+         }
+
+         SelectClipRgn( _s->hGuiDC, NULL );
+         DeleteObject( hrgn1 );
+      }
+
+      bResult = TRUE;
+   }
+
+   return bResult;
+}
+
+//-------------------------------------------------------------------//
+
+BOOL HB_EXPORT hb_wvt_gtDestroyPicture( IPicture * iPicture )
+{
+   BOOL bResult = FALSE;
+
+   if( iPicture )
+   {
+      iPicture->lpVtbl->Release( iPicture );
+      bResult = TRUE;
+   }
+
+   return bResult;
+}
+
+//-------------------------------------------------------------------//
+
+POINT  HB_EXPORT hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
+{
+   POINT xy;
+
+   xy.x = col * _s->PTEXTSIZE.x;
+   xy.y = row * _s->PTEXTSIZE.y;
+
+   return xy;
+}
+
+//-------------------------------------------------------------------//
+
+//-------------------------------------------------------------------//
 //
 //                 Modeless Dialogs Implementation
 //

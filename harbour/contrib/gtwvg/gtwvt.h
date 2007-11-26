@@ -50,19 +50,9 @@
  *
  */
 
-//-------------------------------------------------------------------//
 #ifndef HB_WVT_H_
-//-------------------------------------------------------------------//
 
 #define HB_WVT_H_
-
-//-------------------------------------------------------------------//
-
-/* NOTE: User programs should never call this layer directly! */
-
-/* This definition has to be placed before #include "hbapigt.h" */
-
-//-------------------------------------------------------------------//
 
 #define HB_GT_NAME  WVG
 
@@ -80,6 +70,21 @@
 
 //-------------------------------------------------------------------//
 
+#include <windows.h>
+#include <winuser.h>
+#include <commctrl.h>
+#include <ole2.h>
+#include <oleauto.h>
+#include <olectl.h>
+#include <commdlg.h>
+#if defined(__MINGW__)
+#   include <comctl32.h>
+#endif
+#include <shlobj.h>
+
+#include <time.h>
+#include <ctype.h>
+
 #include "hbset.h"
 #include "hbgtcore.h"
 #include "hbinit.h"
@@ -91,37 +96,11 @@
 #include "hbvm.h"
 #include "hbgfxdef.ch"
 
-#include <windows.h>
-#include <ole2.h>
-#include <oleauto.h>
-#include <olectl.h>
-
-#include <winuser.h>
-#include <commctrl.h>
-#include <commdlg.h>
-#if defined(__MINGW__)
-#   include <comctl32.h>
-#endif
-#include <shlobj.h>
-
-#include <time.h>
-#include <ctype.h>
-
-//-------------------------------------------------------------------//
 
 #define WVT_CHAR_QUEUE_SIZE        128
-#define WVT_CHAR_BUFFER           1024
+#define WVT_MAX_TITLE_SIZE         128
 #define WVT_MAX_ROWS               256
 #define WVT_MAX_COLS               256
-
-#define WVT_PICTURES_MAX            50
-#define WVT_FONTS_MAX               50
-#define WVT_PENS_MAX                50
-#define WVT_DLGML_MAX               50
-#define WVT_DLGMD_MAX               50
-
-//-------------------------------------------------------------------//
-
 #if defined( HB_WINCE )
 #  define WVT_DEFAULT_ROWS          15
 #  define WVT_DEFAULT_COLS          50
@@ -130,11 +109,10 @@
 #else
 #  define WVT_DEFAULT_ROWS          25
 #  define WVT_DEFAULT_COLS          80
-#  define WVT_DEFAULT_FONT_HEIGHT   20
-#  define WVT_DEFAULT_FONT_WIDTH    10
+#  define WVT_DEFAULT_FONT_HEIGHT   16
+#  define WVT_DEFAULT_FONT_WIDTH     8
 #endif
-
-//-------------------------------------------------------------------//
+#define WVT_DEFAULT_FONT_NAME    "Terminal"
 
 #define BLACK          RGB( 0x0 ,0x0 ,0x0  )
 #define BLUE           RGB( 0x0 ,0x0 ,0x85 )
@@ -153,10 +131,14 @@
 #define YELLOW         RGB( 0xFF,0xFF,0x00 )
 #define BRIGHT_WHITE   RGB( 0xFF,0xFF,0xFF )
 
-//-------------------------------------------------------------------//
-
 #define WM_MY_UPDATE_CARET ( WM_USER + 0x0101 )
 
+//-------------------------------------------------------------------//
+#define WVT_PICTURES_MAX            50
+#define WVT_FONTS_MAX               50
+#define WVT_PENS_MAX                50
+#define WVT_DLGML_MAX               50
+#define WVT_DLGMD_MAX               50
 //-------------------------------------------------------------------//
 
 #if defined(__DMC__)
@@ -203,110 +185,109 @@ typedef BOOL ( WINAPI *wvtGradientFill )     (
 
 typedef struct global_data
 {
-  POINT     PTEXTSIZE;                 // size of the fixed width font
-  BOOL      FixedFont;                 // TRUE if current font is a fixed font
-  int       FixedSize[ WVT_MAX_COLS ]; // buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected
-  USHORT    ROWS;                      // number of displayable rows in window
-  USHORT    COLS;                      // number of displayable columns in window
-  COLORREF  foreground;                // forground colour
-  COLORREF  background;                // background colour
+   USHORT   ROWS;                         /* number of displayable rows in window */
+   USHORT   COLS;                         /* number of displayable columns in window */
 
-  USHORT    BUFFERSIZE;                // size of the screen text buffer
-  BYTE      byAttributes[ WVT_MAX_ROWS * WVT_MAX_COLS ]; // buffer with the attributes
-  BYTE      byBuffer[ WVT_MAX_ROWS * WVT_MAX_COLS ];     // buffer with the text to be displayed on the screen
-  BYTE      *pAttributes;              // pointer to buffer
-  BYTE      *pBuffer;                  //   "     "    "
-  POINT     caretPos;                  // the current caret position
-  BOOL      CaretExist;                // TRUE if a caret has been created
-  int       CaretSize;
-  BOOL      CaretHidden;
-  POINT     mousePos;                  // the last mousedown position
-  BOOL      MouseMove;                 // Flag to say whether to return mouse movement events
-  HWND      hWnd;                      // the window handle
-  int       Keys[ WVT_CHAR_QUEUE_SIZE ]; // Array to hold the characters & events
-  int       keyPointerIn;              // Offset into key array for character to be placed
-  int       keyPointerOut;             // Offset into key array of next character to read
-  BOOL      displayCaret;              // flag to indicate if caret is on
-  RECT      RectInvalid;               // Invalid rectangle if DISPBEGIN() active
-  HFONT     hFont;
-  int       fontHeight;                // requested font height
-  int       fontWidth ;                // requested font width
-  int       fontWeight;                // Bold level
-  int       fontQuality;
-  char      fontFace[ LF_FACESIZE ];   // requested font face name LF_FACESIZE #defined in wingdi.h
-//  int       closeEvent;                // command to return ( in ReadKey ) on close
-//  int       shutdownEvent;             // command to return ( in ReadKey ) on shutdown
-  int       LastMenuEvent;             // Last menu item selected
-  int       MenuKeyEvent;              // User definable event number for windows menu command
-  BOOL      CentreWindow;              // True if window is to be Reset into centre of window
-  int       CodePage;                  // Code page to use for display characters
-  BOOL      Win9X;                     // Flag to say if running on Win9X not NT/2000/XP
-  BOOL      AltF4Close;                // Can use Alt+F4 to close application
-  BOOL      InvalidateWindow;          // Flag for controlling whether to use ScrollWindowEx()
-  BOOL      EnableShortCuts;           // Determines whether ALT key enables menu or system menu
-  HPEN      penWhite;                  // White pen to draw GDI elements
-  HPEN      penBlack;                  // Black pen to draw GDI elements
-  HPEN      penWhiteDim;               // White dim pen to draw GDI elements
-  HPEN      penDarkGray;               // Dark gray pen to draw GDI elements
-  HPEN      penGray;                   // Gray pen equivilant to Clipper White
-  HPEN      penNull;                   // Null pen
-  HPEN      currentPen;                // Handle to current pen settable at runtime
-  HBRUSH    currentBrush;              // Handle to current brush settable by runtime
-  HBRUSH    diagonalBrush;             // Handle to diaoganl brush to draw scrollbars
-  HBRUSH    solidBrush;                // Handle to solid brush
-  HBRUSH    wvtWhiteBrush;             // Wvt specific White colored brush
-  HDC       hdc;                       // Handle to Windows Device Context
-  PHB_DYNS  pSymWVT_PAINT;             // Stores pointer to WVT_PAINT function
-  PHB_DYNS  pSymWVT_SETFOCUS;          // Stores pointer to WVT_SETFOCUS function
-  PHB_DYNS  pSymWVT_KILLFOCUS;         // Stores pointer to WVT_KILLFOCUS function
-  PHB_DYNS  pSymWVT_MOUSE;             // Stores pointer to WVT_MOUSE function
-  PHB_DYNS  pSymWVT_TIMER;             // Stores pointer to WVT_TIMER function
-  PHB_DYNS  pSymWVT_KEY;
-  int       rowStart;                  // Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect()
-  int       rowStop;                   // Holds nBottom of last WM_PAINT rectangle
-  int       colStart;                  // Holds nLeft   of last WM_PAINT rectangle
-  int       colStop;                   // Holds nRight  of last WM_PAINT rectangle
-  HMENU     hPopup;                    // Handle of context menu invokable with right click
-  IPicture  *iPicture[ WVT_PICTURES_MAX ]; // Array to hold the Picture Streams to avoid recurring loading and unloading
-  HDC       hCompDC;                   // Compatible DC to _s.hdc
-  HFONT     hUserFonts[ WVT_FONTS_MAX ] ;  // User defined font handles
-  HPEN      hUserPens[ WVT_PENS_MAX ]; // User defined pens
-  HWND      hWndTT;                    // Handle to hold tooltip information
-  BOOL      bToolTipActive;            // Flag to set whether tooltip is active or not
-  HINSTANCE hMSImg32;                  // Handle to the loaded library msimg32.dll
-  wvtGradientFill pfnGF;               // Pointer to Address of the GradientFill function in MSImg32.dll
-  HWND      hDlgModeless[ WVT_DLGML_MAX ]; // Handle to a modeless dialog
-  PHB_ITEM  pFunc[ WVT_DLGML_MAX ];    // Function pointer for WndProc
-  /* TODO: pcbFunc is redundant and should be removed */
-  PHB_ITEM  pcbFunc[ WVT_DLGML_MAX ];   //codeblock for WndProc
-  int       iType[ WVT_DLGML_MAX ];    // Type of Function Pointers - Function 1, Block 2, Method 3
-  HWND      hDlgModal[ WVT_DLGMD_MAX ];// Handle to a modeless dialog
-  PHB_ITEM  pFuncModal[ WVT_DLGMD_MAX ];  // Function pointer for WndProc
-  /* TODO: pcbFuncModal is redundant and should be removed */
-  PHB_ITEM  pcbFuncModal[ WVT_DLGMD_MAX ]; // codeblock for WndProc
-  int       iTypeModal[ WVT_DLGMD_MAX ];  // Type of Function Pointers - Function 1, Block 2, Method 3
-  BOOL      bGui;
-  HDC       hGuiDC;
-  HBITMAP   hGuiBmp;
-  int       iGuiWidth;
-  int       iGuiHeight;
+   BOOL     CaretExist;                   /* TRUE if a caret has been created */
+   BOOL     CaretHidden;                  /* TRUE if a caret has been hiden */
+   int      CaretSize;                    /* Size of solid caret */
 
-  BOOL      bIgnoreWM_SYSCHAR;
-  BOOL      bPaint     ;
-  BOOL      bGetFocus  ;
-  BOOL      bSetFocus  ;
-  BOOL      bKillFocus ;
+   POINT    mousePos;                     /* the last mouse position */
+   BOOL     MouseMove;                    /* Flag to say whether to return mouse movement events */
 
-  PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
-  PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
+   int      Keys[ WVT_CHAR_QUEUE_SIZE ];  /* Array to hold the characters & events */
+   int      keyPointerIn;                 /* Offset into key array for character to be placed */
+   int      keyPointerOut;                /* Offset into key array of next character to read */
+   int      keyLast;                      /* last inkey code value in buffer */
 
-} GLOBAL_DATA;
+   POINT    PTEXTSIZE;                    /* size of the fixed width font */
+   BOOL     FixedFont;                    /* TRUE if current font is a fixed font */
+   int      FixedSize[ WVT_MAX_COLS ];    /* buffer for ExtTextOut() to emulate fixed pitch when Proportional font selected */
+   int      fontHeight;                   /* requested font height */
+   int      fontWidth;                    /* requested font width */
+   int      fontWeight;                   /* Bold level */
+   int      fontQuality;                  /* requested font quality */
+   char     fontFace[ LF_FACESIZE ];      /* requested font face name LF_FACESIZE #defined in wingdi.h */
+   HFONT    hFont;                        /* current font handle */
 
-typedef GLOBAL_DATA * LPGLOBAL_DATA;
+   HWND     hWnd;                         /* the window handle */
+
+   PHB_CODEPAGE hostCDP;                  /* Host/HVM CodePage for unicode output translations */
+   PHB_CODEPAGE inCDP;                    /* Host/HVM CodePage for unicode input translations */
+
+   int      CodePage;                     /* Code page to use for display characters */
+   BOOL     Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */
+   BOOL     AltF4Close;                   /* Can use Alt+F4 to close application */
+   BOOL     CentreWindow;                 /* True if window is to be Reset into centre of window */
+
+   BOOL     IgnoreWM_SYSCHAR;
+
+
+
+   /* *** GUI part *** */
+
+//   int       closeEvent;                // command to return ( in ReadKey ) on close
+//   int       shutdownEvent;             // command to return ( in ReadKey ) on shutdown
+   int       LastMenuEvent;             // Last menu item selected
+   int       MenuKeyEvent;              // User definable event number for windows menu command
+   BOOL      InvalidateWindow;          // Flag for controlling whether to use ScrollWindowEx()
+   BOOL      EnableShortCuts;           // Determines whether ALT key enables menu or system menu
+   HPEN      penWhite;                  // White pen to draw GDI elements
+   HPEN      penBlack;                  // Black pen to draw GDI elements
+   HPEN      penWhiteDim;               // White dim pen to draw GDI elements
+   HPEN      penDarkGray;               // Dark gray pen to draw GDI elements
+   HPEN      penGray;                   // Gray pen equivilant to Clipper White
+   HPEN      penNull;                   // Null pen
+   HPEN      currentPen;                // Handle to current pen settable at runtime
+   HBRUSH    currentBrush;              // Handle to current brush settable by runtime
+   HBRUSH    diagonalBrush;             // Handle to diaoganl brush to draw scrollbars
+   HBRUSH    solidBrush;                // Handle to solid brush
+   HBRUSH    wvtWhiteBrush;             // Wvt specific White colored brush
+   HDC       hdc;                       // Handle to Windows Device Context
+   PHB_DYNS  pSymWVT_PAINT;             // Stores pointer to WVT_PAINT function
+   PHB_DYNS  pSymWVT_SETFOCUS;          // Stores pointer to WVT_SETFOCUS function
+   PHB_DYNS  pSymWVT_KILLFOCUS;         // Stores pointer to WVT_KILLFOCUS function
+   PHB_DYNS  pSymWVT_MOUSE;             // Stores pointer to WVT_MOUSE function
+   PHB_DYNS  pSymWVT_TIMER;             // Stores pointer to WVT_TIMER function
+   PHB_DYNS  pSymWVT_KEY;
+   int       rowStart;                  // Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect()
+   int       rowStop;                   // Holds nBottom of last WM_PAINT rectangle
+   int       colStart;                  // Holds nLeft   of last WM_PAINT rectangle
+   int       colStop;                   // Holds nRight  of last WM_PAINT rectangle
+   HMENU     hPopup;                    // Handle of context menu invokable with right click
+   IPicture  *iPicture[ WVT_PICTURES_MAX ]; // Array to hold the Picture Streams to avoid recurring loading and unloading
+   HDC       hCompDC;                   // Compatible DC to _s.hdc
+   HFONT     hUserFonts[ WVT_FONTS_MAX ] ;  // User defined font handles
+   HPEN      hUserPens[ WVT_PENS_MAX ]; // User defined pens
+   HWND      hWndTT;                    // Handle to hold tooltip information
+   BOOL      bToolTipActive;            // Flag to set whether tooltip is active or not
+   HINSTANCE hMSImg32;                  // Handle to the loaded library msimg32.dll
+   wvtGradientFill pfnGF;               // Pointer to Address of the GradientFill function in MSImg32.dll
+   HWND      hDlgModeless[ WVT_DLGML_MAX ]; // Handle to a modeless dialog
+   PHB_ITEM  pFunc[ WVT_DLGML_MAX ];    // Function pointer for WndProc
+   /* TODO: pcbFunc is redundant and should be removed */
+   PHB_ITEM  pcbFunc[ WVT_DLGML_MAX ];   //codeblock for WndProc
+   int       iType[ WVT_DLGML_MAX ];    // Type of Function Pointers - Function 1, Block 2, Method 3
+   HWND      hDlgModal[ WVT_DLGMD_MAX ];// Handle to a modeless dialog
+   PHB_ITEM  pFuncModal[ WVT_DLGMD_MAX ];  // Function pointer for WndProc
+   /* TODO: pcbFuncModal is redundant and should be removed */
+   PHB_ITEM  pcbFuncModal[ WVT_DLGMD_MAX ]; // codeblock for WndProc
+   int       iTypeModal[ WVT_DLGMD_MAX ];  // Type of Function Pointers - Function 1, Block 2, Method 3
+   BOOL      bGui;
+   HDC       hGuiDC;
+   HBITMAP   hGuiBmp;
+   int       iGuiWidth;
+   int       iGuiHeight;
+
+   BOOL      bPaint;
+   BOOL      bGetFocus;
+   BOOL      bSetFocus;
+   BOOL      bKillFocus;
+
+} GLOBAL_DATA, * LPGLOBAL_DATA;
 
 //-------------------------------------------------------------------//
 
-//POINT  HB_EXPORT hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
 POINT  HB_EXPORT hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
 BOOL   HB_EXPORT hb_wvt_gtSetMenuKeyEvent( int iMenuKeyEvent );
 BOOL   HB_EXPORT hb_wvt_gtSetCentreWindow( BOOL bCentre, BOOL bPaint );
@@ -348,10 +329,6 @@ void   HB_EXPORT hb_wvt_wvtCore( void );
 void   HB_EXPORT hb_wvt_wvtUtils( void );
 
 //-------------------------------------------------------------------//
-
-#ifndef WM_MOUSEWHEEL
-   #define WM_MOUSEWHEEL 0x020A
-#endif
 
 #ifndef INVALID_FILE_SIZE
    #define INVALID_FILE_SIZE (DWORD)0xFFFFFFFF
@@ -413,20 +390,24 @@ typedef struct _tag_HB_GT_COLDEF
 
 //----------------------------------------------------------------------//
 
-#define K_SH_LEFT            K_LEFT   /* Shift-Left  == Left  */
-#define K_SH_UP              K_UP     /* Shift-Up    == Up    */
-#define K_SH_RIGHT           K_RIGHT  /* Shift-Right == Right */
-#define K_SH_DOWN            K_DOWN   /* Shift-Down  == Down  */
-#define K_SH_INS             K_INS    /* Shift-Ins   == Ins   */
-#define K_SH_DEL             K_DEL    /* Shift-Del   == Del   */
-#define K_SH_HOME            K_HOME   /* Shift-Home  == Home  */
-#define K_SH_END             K_END    /* Shift-End   == End   */
-#define K_SH_PGUP            K_PGUP   /* Shift-PgUp  == PgUp  */
-#define K_SH_PGDN            K_PGDN   /* Shift-PgDn  == PgDn  */
-#define K_SH_RETURN          K_RETURN /* Shift-Enter == Enter */
-#define K_SH_ENTER           K_ENTER  /* Shift-Enter == Enter */
-
-//-------------------------------------------------------------------//
+/* xHarbour compatible definitions */
+#if !defined( K_SH_LEFT )
+#define K_SH_LEFT           K_LEFT   /* Shift-Left  == Left  */
+#define K_SH_UP             K_UP     /* Shift-Up    == Up    */
+#define K_SH_RIGHT          K_RIGHT  /* Shift-Right == Right */
+#define K_SH_DOWN           K_DOWN   /* Shift-Down  == Down  */
+#define K_SH_INS            K_INS    /* Shift-Ins   == Ins   */
+#define K_SH_DEL            K_DEL    /* Shift-Del   == Del   */
+#define K_SH_HOME           K_HOME   /* Shift-Home  == Home  */
+#define K_SH_END            K_END    /* Shift-End   == End   */
+#define K_SH_PGUP           K_PGUP   /* Shift-PgUp  == PgUp  */
+#define K_SH_PGDN           K_PGDN   /* Shift-PgDn  == PgDn  */
+#define K_SH_RETURN         K_RETURN /* Shift-Enter == Enter */
+#define K_SH_ENTER          K_ENTER  /* Shift-Enter == Enter */
 #endif
-//-------------------------------------------------------------------//
 
+#ifndef WM_MOUSEWHEEL
+#  define WM_MOUSEWHEEL 0x020A
+#endif
+
+#endif /* HB_WVT_H_ */
