@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-26 14:36 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/what32/wintabs.prg
+   * contrib/what32/wintbar.prg
+     ! Fixes to make them compile with Harbour.
+       Pritpal, could you please check this, because it's 
+       not exactly clear what is the intent in the source code, 
+       so these might be the wrong fixes.
+
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_vc.mak
+     ! Using a neutral character instead of double quote
+       in hacked DOS "if %1 ==" commands to avoid the 
+       situation where the quote is filtered, replaced 
+       under certain (not defined) Windows/BCC
+       environments. Same change done for VC to stay in 
+       sync.
+
 2007-11-26 06:15 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/make_b32.mak
   * harbour/make_gcc.mak

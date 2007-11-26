@@ -95,6 +95,8 @@ static FUNCTION _TempPageProc(nMsg)
    RETURN(0)
 
 *-----------------------------------------------------------------------------*
+
+#undef TCN_SELCHANGE
 #define TCN_SELCHANGE 0
 
 METHOD TabProc(hDlg, nMsg, nwParam, nlParam)
@@ -111,7 +113,7 @@ METHOD TabProc(hDlg, nMsg, nwParam, nlParam)
       tnhdr IS NMHDR
       tnhdr:Buffer( peek(nlParam,tnhdr:sizeof() ) )
 
-      IF tnhdr:code==TCN_SELCHANGE
+      IF tnhdr:code==0//TCN_SELCHANGE
 
         nSel:=TabCtrl_GetCurSel( ::hTab )+1
         IF ::nCursel <> nSel

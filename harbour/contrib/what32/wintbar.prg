@@ -251,6 +251,12 @@ RETURN(::hWnd)
 
 *-----------------------------------------------------------------------------*
 
+#undef TBN_DROPDOWN     
+#undef TTN_NEEDTEXT     
+#undef TBN_QUERYINSERT  
+#undef TBN_QUERYDELETE  
+#undef TBN_GETBUTTONINFO
+
 #DEFINE TBN_DROPDOWN      0
 #DEFINE TTN_NEEDTEXT      1
 #DEFINE TBN_QUERYINSERT   2
