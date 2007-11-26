@@ -8,6 +8,30 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-26 08:00 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  + harbour/contrib/gtwvg/test
+    + demowvg.prg
+    + test.dbf
+    + dia_excel.ico
+    + v_browse.ico
+    + v_clcltr.ico
+    + v_calend.ico
+    + v_clclt.bmp
+    + v_filter.ico
+    + v_help.ico
+    + v_index.bmp
+    + v_lock.bmp
+    + v_new.bmp
+    + v_notes.bmp
+    + v_notes1.bmp
+    + v_selct1.bmp
+    + v_tools.bmp
+    + vr_1.ico
+      Initial placement of files to demonstrate the usage of gtwvg and its GUI elements.
+      Please note that this appln may terminate without notice at places where
+      browser is opened because appln needs tbrowse:aColumnsSep instance variable
+      which I will do shortly. Rest all components are working ok.
+
 2007-11-26 17:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/postinst.sh
     * workaround for missing 'install' command in some HP-UX versions
