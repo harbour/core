@@ -3335,7 +3335,7 @@ METHOD AddItem(cCaption, bAction) CLASS wvtMenu
          aItem:= {MF_POPUP,bAction:hMenu,cCaption,bAction} // bAction is a wvtMenu object reference
       ELSEIF HB_ISBLOCK(bAction)
          aItem:= {MF_STRING,::MenuItemId++,cCaption,bAction} // bAction is a code block to execute
-      ELSEIF cCaption[1]=="-"
+      ELSEIF left( cCaption, 1 )=="-"
          aItem:= {MF_SEPARATOR,0,0,NIL}
       ELSE
          //Throw( ErrorNew( "wvtMenu", 3101, "wvtMenu:AddItem()", "Argument Error", { cCaption, bAction },"WVT.PRG" ) )
