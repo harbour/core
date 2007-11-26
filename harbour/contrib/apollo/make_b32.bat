@@ -14,7 +14,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=%C_USR% -I%APOLLO_DIR%\include
+set CFLAGS=-I%APOLLO_DIR%\include
 set HB_DLL_NAME=sde61
 set HB_DLL_DIR=%APOLLO_DIR%
 

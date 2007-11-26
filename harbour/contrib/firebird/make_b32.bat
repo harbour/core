@@ -14,7 +14,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=%C_USR% -I%FIREBIRD_DIR%\include -DHB_OS_WIN_32_USED
+set CFLAGS=-I%FIREBIRD_DIR%\include -DHB_OS_WIN_32_USED
 set HB_DLL_NAME=fbclient
 set HB_DLL_DIR=%FIREBIRD_DIR%\bin
 

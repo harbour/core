@@ -14,7 +14,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=%C_USR% -I%MYSQL_DIR%\include -DHB_OS_WIN_32_USED
+set CFLAGS=-I%MYSQL_DIR%\include -DHB_OS_WIN_32_USED
 set HB_DLL_NAME=libmySQL
 set HB_DLL_DIR=%MYSQL_DIR%\bin
 

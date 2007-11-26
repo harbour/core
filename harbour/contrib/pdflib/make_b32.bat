@@ -14,6 +14,6 @@ exit 1
 
 :DIR_OK
 
-set CFLAGS=%C_USR% -I%PDFLIB_DIR%\src\pdflib -DHB_OS_WIN_32_USED
+set CFLAGS=-I%PDFLIB_DIR%\src\pdflib -DHB_OS_WIN_32_USED
 
 call ..\mtpl_b32.bat %1 %2 %3 %4 %5 %6 %7 %8 %9

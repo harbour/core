@@ -14,7 +14,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=%C_USR% -I%PGSQL_DIR%\include -DHB_OS_WIN_32_USED
+set CFLAGS=-I%PGSQL_DIR%\include -DHB_OS_WIN_32_USED
 rem .exe
 set HB_DLL_NAME=postgres
 set HB_DLL_DIR=%PGSQL_DIR%\bin

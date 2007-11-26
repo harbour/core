@@ -15,7 +15,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=%C_USR% -I%ADS_DIR%
+set CFLAGS=-I%ADS_DIR%
 set HB_DLL_NAME=ace32
 if exist "%ADS_DIR%\32bit\%HB_DLL_NAME%.dll"        set HB_DLL_DIR=%ADS_DIR%\32bit
 if exist "%ADS_DIR%\Redistribute\%HB_DLL_NAME%.dll" set HB_DLL_DIR=%ADS_DIR%\Redistribute
