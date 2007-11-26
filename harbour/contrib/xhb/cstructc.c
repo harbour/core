@@ -1415,11 +1415,11 @@ HB_FUNC( HB_POINTER2STRING )
    }
    else if( HB_IS_INTEGER( pPointer ) && pLen )
    {
-      hb_retclen( (char *) hb_itemGetNI( pPointer ), (ULONG) hb_itemGetNL( pLen ) );
+      hb_retclen( (char *) (HB_PTRDIFF) hb_itemGetNI( pPointer ), (ULONG) hb_itemGetNL( pLen ) );
    }
    else if( HB_IS_LONG( pPointer ) && pLen )
    {
-      hb_retclen( (char *) hb_itemGetNL( pPointer ), (ULONG) hb_itemGetNL( pLen ) );
+      hb_retclen( (char *) (HB_PTRDIFF) hb_itemGetNL( pPointer ), (ULONG) hb_itemGetNL( pLen ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "HB_Pointer2String", 2, hb_paramError( 1 ), hb_paramError( 2 ) );

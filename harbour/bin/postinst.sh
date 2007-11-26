@@ -58,7 +58,9 @@ then
             -e "s/^# CCPREFIX=\"\"\$/[ -n \"\${CCPREFIX}\" ] || CCPREFIX=\"${CCPREFIX}\"/g" \
             "${hb_root}/bin/hb-mkslib.sh" > "${hb_mkslib}" && \
         chmod 755 "${hb_mkslib}"
-    elif [ "${HB_ARCHITECTURE}" = "sunos" ]; then
+    elif [ "${HB_ARCHITECTURE}" = "sunos" ] || \
+         [ "${HB_ARCHITECTURE}" = "hpux" ] || \
+         ! which install &>/dev/null; then
         rm -f "${HB_BIN_INSTALL}/hb-mkslib"
         cp "${hb_root}/bin/hb-mkslib.sh" "${HB_BIN_INSTALL}/hb-mkslib" && \
         chmod 755 "${HB_BIN_INSTALL}/hb-mkslib"
