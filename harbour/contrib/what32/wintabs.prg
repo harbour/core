@@ -1,5 +1,5 @@
 /*
- * $Id: wintabs.Prg 8045 2007-11-25 18:36:59Z vouchcac $
+ * $Id$
  */
 
 #Define WIN_WANT_VER4

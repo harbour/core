@@ -1,5 +1,5 @@
 /*
- * $Id: debug.prg 8045 2007-11-25 18:36:59Z vouchcac $
+ * $Id$
  */
 
 #INCLUDE "SET.CH"
