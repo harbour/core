@@ -71,7 +71,7 @@
 #include <ctype.h>
 #include <string.h>
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    #include <unistd.h>  /* read() function requires it */
    #include <termios.h>
    #include <sys/ioctl.h>
@@ -118,7 +118,7 @@ static int     s_iOutBufSize = 0;
 static int     s_iOutBufIndex = 0;
 static BYTE *  s_sOutBuf;
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
 
 static volatile BOOL s_fRestTTY = FALSE;
 static struct termios s_saved_TIO, s_curr_TIO;
@@ -214,7 +214,7 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
       hb_gt_pca_termOut( ( BYTE * ) "\x1B[6n", 4 );
       hb_gt_pca_termFlush();
 
-#ifdef OS_UNIX_COMPATIBLE
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
       {
          char rdbuf[ 64 ];
          int i, n, y, x;
@@ -443,7 +443,8 @@ static void hb_gt_pca_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
-#if defined( OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
+#if ( defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ ) ) && \
+    defined( SA_NOCLDSTOP )
    s_fRestTTY = FALSE;
    if( s_bStdinConsole )
    {
@@ -519,7 +520,7 @@ static void hb_gt_pca_Exit( void )
 
    HB_GTSUPER_EXIT();
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    if( s_fRestTTY )
       tcsetattr( s_hFilenoStdin, TCSANOW, &s_saved_TIO );
 #endif
@@ -680,7 +681,7 @@ static int hb_gt_pca_ReadKey( int iEventMask )
       if( _read( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
-#elif defined( OS_UNIX_COMPATIBLE )
+#elif defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    {
       BYTE bChar;
       if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
@@ -750,7 +751,7 @@ static char * hb_gt_pca_Version( int iType )
 static BOOL hb_gt_pca_Suspend( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Suspend()" ) );
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    if( s_fRestTTY )
    {
       tcsetattr( s_hFilenoStdin, TCSANOW, &s_saved_TIO );
@@ -765,7 +766,7 @@ static BOOL hb_gt_pca_Resume( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Resume()" ) );
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    if( s_fRestTTY )
    {
       tcsetattr( s_hFilenoStdin, TCSANOW, &s_curr_TIO );

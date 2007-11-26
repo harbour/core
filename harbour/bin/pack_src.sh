@@ -414,7 +414,8 @@ $hb_collect contrib/mysql/*.bat
 # CONTRIB\GD
 $hb_collect contrib/gd/[mM]akefile*
 $hb_collect contrib/gd/Change[Ll]og*
-$hb_collect contrib/gd/README
+$hb_collect contrib/gd/README*
+$hb_collect contrib/gd/readme*
 $hb_collect contrib/gd/*.[ch]
 $hb_collect contrib/gd/include/*.[ch]
 $hb_collect contrib/gd/*.ch

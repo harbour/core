@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-27 00:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/pack_src.sh
+    * updated for recent file name modifications
+
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/gtclip.c
+    * changed hb_gt_w32_SetClipboard() type from void to BOOL
+
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtpca/gtpca.c
+    * added basic input support for DJGPP
+
+  * harbour/contrib/gtwvg/gtwvt.c
+    ! fixed memory leak and GPF trap
+
+  * harbour/contrib/gtwvg/wvtutils.c
+    ! rewritten and fixed CLIPBOARD functions - Pritpal this functions
+      should be removed, they are redundant and works only in MS-Windows
+    * make WVT__GETOPENFILENAME() and WVT__GETSAVEFILENAME() Unicode
+      ready and fixed possible GPF trap
+
 2007-11-26 22:09 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/mtpl_b32.bat
    * contrib/mtpl_vc.bat

@@ -58,10 +58,11 @@
 
 #if defined( HB_OS_WIN_32 )
 
-void hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
+BOOL hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
 {
    LPTSTR  lptstrCopy;
    HGLOBAL hglbCopy;
+   BOOL fResult = FALSE;
 
    if( OpenClipboard( NULL ) )
    {
@@ -77,6 +78,7 @@ void hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
          {
             HB_TCHAR_SETTO( lptstrCopy, szClipData, ulLen );
             lptstrCopy[ ulLen ] = '\0';
+            fResult = TRUE;
          }
          GlobalUnlock( hglbCopy );
          /* Place the handle on the clipboard. */
@@ -84,6 +86,7 @@ void hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
       }
       CloseClipboard();
    }
+   return fResult;
 }
 
 BOOL hb_gt_w32_GetClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )

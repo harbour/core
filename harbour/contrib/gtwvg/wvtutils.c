@@ -167,9 +167,9 @@ HB_FUNC( WVT_CHOOSEFONT )
    cf.rgbColors        = RGB( 0,0,0 );
    cf.lCustData        = 0L;
    cf.lpfnHook         = ( LPCFHOOKPROC ) NULL;
-   cf.lpTemplateName   = ( LPSTR ) NULL;
+   cf.lpTemplateName   = ( LPTSTR ) NULL;
    cf.hInstance        = ( HINSTANCE ) NULL;
-   cf.lpszStyle        = ( LPSTR ) NULL;
+   cf.lpszStyle        = ( LPTSTR ) NULL;
    cf.nFontType        = SCREEN_FONTTYPE;
    cf.nSizeMin         = 0;
    cf.nSizeMax         = 0;
@@ -292,6 +292,8 @@ HB_FUNC( WVT_SETTOOLTIP )
 
    if ( SendMessage( _s->hWndTT, TTM_GETTOOLINFO, 0, ( LPARAM ) &ti ) )
    {
+      LPTSTR text = HB_TCHAR_CONVTO( hb_parcx( 5 ) );
+
       xy      = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
       iTop    = xy.y;
       iLeft   = xy.x;
@@ -300,13 +302,16 @@ HB_FUNC( WVT_SETTOOLTIP )
       iBottom = xy.y - 1;
       iRight  = xy.x - 1;
 
-      HB_TCHAR_CPTO( ti.lpszText, hb_parc( 5 ), sizeof( ti.lpszText )-1 );
+      ti.lpszText = text;
+      
       ti.rect.left   = iLeft;
       ti.rect.top    = iTop;
       ti.rect.right  = iRight;
       ti.rect.bottom = iBottom;
 
       SendMessage( _s->hWndTT, TTM_SETTOOLINFO, 0, ( LPARAM ) &ti );
+
+      HB_TCHAR_FREE( text );
    }
 }
 
@@ -322,9 +327,10 @@ HB_FUNC( WVT_SETTOOLTIPTEXT )
 
    if ( SendMessage( _s->hWndTT, TTM_GETTOOLINFO, 0, ( LPARAM ) &ti ) )
    {
-      HB_TCHAR_CPTO( ti.lpszText, hb_parc( 1 ), sizeof( ti.lpszText )-1 );
-      //ti.lpszText = hb_parc( 1 );
+      LPTSTR text = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+      ti.lpszText = text;
       SendMessage( _s->hWndTT, TTM_UPDATETIPTEXT, 0, ( LPARAM ) &ti );
+      HB_TCHAR_FREE( text );
    }
 }
 
@@ -999,124 +1005,43 @@ HB_FUNC( WVT_GETRGBCOLOR )
 
 HB_FUNC( WVT_GETCLIPBOARD )
 {
-    HGLOBAL   hglb;
-    LPTSTR    lptstr;
+   char * szClipboardData;
+   ULONG ulLen;
 
-    if ( !IsClipboardFormatAvailable( CF_TEXT ) )
-    {
-      hb_ret();
-    }
-
-    if ( !OpenClipboard( NULL ) )
-    {
-      hb_ret();
-    }
-
-    hglb = GetClipboardData( CF_TEXT );
-    if ( hglb != NULL )
-    {
-       lptstr = ( LPSTR ) GlobalLock( hglb );
-       if ( lptstr != NULL )
-       {
-          hb_retc( lptstr );
-          GlobalUnlock( hglb );
-       }
-    }
-    CloseClipboard();
+   if( hb_gt_w32_GetClipboard( _s->CodePage == OEM_CHARSET ?
+                               CF_OEMTEXT : CF_TEXT,
+                               &szClipboardData, &ulLen ) )
+   {
+      hb_retclen_buffer( szClipboardData, ulLen );
+   }
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_SETCLIPBOARD )
 {
-   LPTSTR  lptstrCopy;
-   HGLOBAL hglbCopy;
-   char *  cText;
-   int     nLen;
-
-   if ( !IsClipboardFormatAvailable( CF_TEXT ) )
-   {
-     hb_retl( FALSE );
-     return;
-   }
-
-   // Check params
-   //
-   if ( ! ISCHAR( 1 ) )
-   {
-     hb_retl( FALSE );
-     return;
-   }
-
-   if ( ! OpenClipboard( NULL ) )
-   {
-     hb_retl( FALSE );
-     return;
-   }
-   EmptyClipboard();
-
-   // Get text from PRG
-   //
-   cText = hb_parc( 1 );
-   nLen  = hb_parclen( 1 );
-
-   // Allocate a global memory object for the text.
-   //
-   hglbCopy = GlobalAlloc( GMEM_MOVEABLE, ( nLen+1 ) * sizeof( TCHAR ) );
-   if ( hglbCopy == NULL )
-   {
-       CloseClipboard();
-       hb_retl( FALSE );
-       return;
-   }
-
-   // Lock the handle and copy the text to the buffer.
-   //
-   lptstrCopy = ( LPSTR ) GlobalLock( hglbCopy );
-   memcpy( lptstrCopy, cText, ( nLen+1 ) * sizeof( TCHAR ) );
-   lptstrCopy[ nLen+1 ] = ( TCHAR ) 0;    // null character
-   GlobalUnlock( hglbCopy );
-
-   // Place the handle on the clipboard.
-   //
-   SetClipboardData( CF_TEXT, hglbCopy );
-
-   CloseClipboard();
-   hb_retl( TRUE );
+   if( ISCHAR( 1 ) )
+      hb_retl( hb_gt_w32_SetClipboard( _s->CodePage == OEM_CHARSET ?
+                                       CF_OEMTEXT : CF_TEXT,
+                                       hb_parc( 1 ), hb_parclen( 1 ) ) );
+   else
+      hb_retl( FALSE );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_PASTEFROMCLIPBOARD )
 {
-   HGLOBAL   hglb;
-   LPTSTR    lptstr;
-   ULONG     ul;
+   char * szClipboardData;
+   ULONG ulLen, ul;
 
-   if ( !IsClipboardFormatAvailable( CF_TEXT ) )
+   if( hb_gt_w32_GetClipboard( _s->CodePage == OEM_CHARSET ?
+                               CF_OEMTEXT : CF_TEXT,
+                               &szClipboardData, &ulLen ) )
    {
-     hb_ret();
+      for( ul = 0; ul < ulLen; ul++ )
+         hb_wvt_gtAddCharToInputQueue( ( UCHAR ) szClipboardData[ ul ] );
    }
-
-   if ( !OpenClipboard( NULL ) )
-   {
-     hb_ret();
-   }
-
-   hglb = GetClipboardData( CF_TEXT );
-   if ( hglb != NULL )
-   {
-      lptstr = ( LPSTR ) GlobalLock( hglb );
-      if ( lptstr != NULL )
-      {
-         for ( ul=0; ul < GlobalSize( hglb ); ul++ )
-         {
-            hb_wvt_gtAddCharToInputQueue( ( int ) lptstr[ ul ] );
-         }
-         GlobalUnlock( hglb ) ;
-      }
-   }
-   CloseClipboard();
 }
 
 //-------------------------------------------------------------------//
@@ -2298,77 +2223,101 @@ void wvt_Size2ArrayEx( SIZE *siz, PHB_ITEM aSize )
 
 //----------------------------------------------------------------------//
 
+#define HB_PARTSTR( n )  ( ISCHAR( n ) ? HB_TCHAR_CONVTO( hb_parc(n) ) : NULL )
+#define HB_PARTFREE( p ) do { if( p ) HB_TCHAR_FREE( p ); } while( 0 )
+
 HB_FUNC( WVT__GETOPENFILENAME )
 {
-    int size = ( ISNIL( 2 ) ? 1024 : hb_parcsiz( 2 ) );
-    OPENFILENAME ofn ;
+   OPENFILENAME ofn;
+   LPTSTR lpFileName, lpstrTitle, lpstrFilter, lpstrInitialDir, lpstrDefExt;
+   int size = hb_parclen( 2 );
 
-    char * szFileName = ( char* ) hb_xgrab( size );
+   size += size ? 1 : 1024;
+   lpFileName = ( LPTSTR ) hb_xgrab( size * sizeof( TCHAR ) );
+   HB_TCHAR_CPTO( lpFileName, hb_parcx( 2 ), size - 1 );
+   lpstrTitle      = HB_PARTSTR( 3 );
+   lpstrFilter     = HB_PARTSTR( 4 );
+   lpstrInitialDir = HB_PARTSTR( 6 );
+   lpstrDefExt     = HB_PARTSTR( 7 );
 
-    strcpy( szFileName, ( ISNIL( 2 ) ? "" : hb_parc( 2 ) ) );
+   ZeroMemory( &ofn, sizeof( ofn ) );
 
-    ZeroMemory( &ofn, sizeof( ofn ) );
+   ofn.hInstance        = GetModuleHandle( NULL )  ;
+   ofn.lStructSize      = sizeof( ofn );
+   ofn.hwndOwner        = ISNIL(1) ? GetActiveWindow() : (HWND) hb_parnl( 1 ) ;
+   ofn.lpstrTitle       = lpstrTitle;
+   ofn.lpstrFilter      = lpstrFilter;
+   ofn.Flags            = ISNIL(5) ? OFN_SHOWHELP|OFN_NOCHANGEDIR : hb_parnl( 5 ) ;
+   ofn.lpstrInitialDir  = lpstrInitialDir;
+   ofn.lpstrDefExt      = lpstrDefExt;
+   ofn.nFilterIndex     = ISNIL(8) ? 0 : (int) hb_parni( 8 );
+   ofn.lpstrFile        = lpFileName;
+   ofn.nMaxFile         = size;
 
-    ofn.hInstance       = GetModuleHandle( NULL )  ;
-    ofn.lStructSize     = sizeof( ofn );
-    ofn.hwndOwner       = ISNIL(1) ? GetActiveWindow() : (HWND) hb_parnl( 1 ) ;
-    ofn.lpstrTitle      = ISNIL(3) ? NULL : hb_parc( 3 );
-    ofn.lpstrFilter     = ISNIL(4) ? NULL : hb_parc( 4 );
-    ofn.Flags           = ISNIL(5) ? OFN_SHOWHELP|OFN_NOCHANGEDIR : hb_parnl( 5 ) ;
-    ofn.lpstrInitialDir = ISNIL(6) ? NULL : hb_parc( 6 );
-    ofn.lpstrDefExt     = ISNIL(7) ? NULL : hb_parc( 7 );
-    ofn.nFilterIndex    = ISNIL(8) ? 0 : (int) hb_parni( 8 );
-    ofn.lpstrFile       = szFileName;
-    ofn.nMaxFile        = size;
+   if( GetOpenFileName( &ofn ) )
+   {
+      char * szFileName = HB_TCHAR_CONVFROM( lpFileName );
 
-    if( GetOpenFileName( &ofn ) )
-    {
       hb_stornl( ofn.nFilterIndex, 8 );
       hb_storclen( szFileName, size, 2 ) ;
-      hb_retclen( ( char * ) ofn.lpstrFile, size );
-    }
-    else
-    {
-      hb_retc( "" );
-    }
-    hb_xfree( szFileName );
+      hb_retc( szFileName );
+      
+   }
+   else
+   {
+      hb_retc( NULL );
+   }
+   hb_xfree( lpFileName );
+   HB_PARTFREE( lpstrTitle );
+   HB_PARTFREE( lpstrFilter );
+   HB_PARTFREE( lpstrInitialDir );
+   HB_PARTFREE( lpstrDefExt );
 }
 
 //----------------------------------------------------------------------//
 
 HB_FUNC( WVT__GETSAVEFILENAME )
 {
-   HINSTANCE hInstance;
    OPENFILENAME ofn;
-   char szFileName[ MAX_PATH+1 ] ;
+   LPTSTR lpstrTitle, lpstrFilter, lpstrInitialDir, lpstrDefExt;
+   TCHAR lpFileName[MAX_PATH + 1];
 
-   hInstance = GetModuleHandle( NULL );
-
-   strcpy( szFileName, hb_parc( 2 ) );
+   HB_TCHAR_CPTO( lpFileName, hb_parcx( 2 ), MAX_PATH );
+   lpstrTitle      = HB_PARTSTR( 3 );
+   lpstrFilter     = HB_PARTSTR( 4 );
+   lpstrInitialDir = HB_PARTSTR( 6 );
+   lpstrDefExt     = HB_PARTSTR( 7 );
 
    ZeroMemory( &ofn, sizeof( ofn ) );
 
-   ofn.hInstance       = hInstance  ;
+   ofn.hInstance       = GetModuleHandle( NULL );
    ofn.lStructSize     = sizeof( ofn );
    ofn.hwndOwner       = ISNIL   (1) ? GetActiveWindow() : (HWND) hb_parnl( 1 );
-   ofn.lpstrTitle      = hb_parc (3);
-   ofn.lpstrFilter     = hb_parc (4);
+   ofn.lpstrTitle      = lpstrTitle;
+   ofn.lpstrFilter     = lpstrFilter;
    ofn.Flags           = (ISNIL  (5) ? OFN_FILEMUSTEXIST|OFN_EXPLORER|OFN_NOCHANGEDIR : hb_parnl( 4 ) );
-   ofn.lpstrInitialDir = hb_parc (6);
-   ofn.lpstrDefExt     = hb_parc (7);
+   ofn.lpstrInitialDir = lpstrInitialDir;
+   ofn.lpstrDefExt     = lpstrDefExt;
    ofn.nFilterIndex    = hb_parni(8);
-   ofn.lpstrFile       = szFileName;
+   ofn.lpstrFile       = lpFileName;
    ofn.nMaxFile        = MAX_PATH;
 
    if( GetSaveFileName( &ofn ) )
    {
+      char * szFileName = HB_TCHAR_CONVFROM( lpFileName );
       hb_stornl( ofn.nFilterIndex, 8 );
-      hb_retc( ofn.lpstrFile );
+      hb_retc( szFileName );
+      HB_TCHAR_FREE( szFileName );
    }
    else
    {
-      hb_retc( "" );
+      hb_retc( NULL );
    }
+
+   HB_PARTFREE( lpstrTitle );
+   HB_PARTFREE( lpstrFilter );
+   HB_PARTFREE( lpstrInitialDir );
+   HB_PARTFREE( lpstrDefExt );
 }
 //----------------------------------------------------------------------//
 

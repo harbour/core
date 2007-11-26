@@ -684,7 +684,7 @@ static void hb_gt_wvt_MouseEvent( HWND hWnd, UINT message, WPARAM wParam, LPARAM
 
    if( keyCode != 0 )
    {
-      if( _s.pSymWVT_MOUSE && keyCode != 0 )
+      if( _s.pSymWVT_MOUSE )
       {
          if( hb_vmRequestReenter() )
          {
@@ -1619,7 +1619,7 @@ static void hb_wvt_gtCreateToolTipWindow( void )
    ti.hwnd      = _s.hWnd;
    ti.uId       = 100000;
    ti.hinst     = ( HINSTANCE ) s_hInstance;
-   ti.lpszText  = HB_TCHAR_CONVTO( "" );
+   ti.lpszText  = TEXT( "" );
    ti.rect.left = ti.rect.top = ti.rect.bottom = ti.rect.right = 0;
 
    /* Add the tool to the control, displaying an error if needed. */
@@ -1805,7 +1805,7 @@ int HB_EXPORT hb_wvt_gtGetWindowTitle( char * cTitle, int length )
 
 //-------------------------------------------------------------------//
 
-void HB_EXPORT hb_wvt_gtAddCharToInputQueue ( int iKey )
+void HB_EXPORT hb_wvt_gtAddCharToInputQueue( int iKey )
 {
    hb_gt_wvt_AddCharToInputQueue( iKey );
 }

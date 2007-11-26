@@ -62,7 +62,7 @@
 #include "hbdate.h"
 #include "hb_io.h"
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    #include <unistd.h>
    #include <termios.h>
    #include <sys/ioctl.h>
@@ -298,7 +298,7 @@ static int hb_gt_std_ReadKey( int iEventMask )
       if( _read( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
-#elif defined( OS_UNIX_COMPATIBLE )
+#elif defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    {
       struct timeval tv;
       fd_set rfds;
