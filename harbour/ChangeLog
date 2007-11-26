@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-26 06:15 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/common.mak
+    ! HB and HBPPGEN definitions moved to end of file, because
+      they have to be defined after HARBOUR_EXE and HBPPGEN_EXE
+
 2007-11-26 02:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/gtwvg/wvtcore.c
     ! fixed typo
@@ -47,7 +52,7 @@
    + contrib/what32/make_vc.bat
    + contrib/what32/common.mak
      + Added GNU and non-GNU make files for what32.
-     ; Not fully tested, because I stumbled across a few problems 
+     ; Not fully tested, because I stumbled across a few problems
        when compiling:
        - for BCC32 this lib needs TASM32 (non-free AFAIS)
        - it need xhb lib and headers
