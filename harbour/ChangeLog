@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-26 06:15 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/make_b32.mak
+  * harbour/make_gcc.mak
+  * harbour/make_vc.mak
+  * harbour/make_vcce.mak
+    ! Fixed generation of pptable.c for dll build
+      (I am amazed how it used to work before)
+    * Changed -Iobj\$(HB_CC_NAME) to -I$(OBJ_DIR)
+
 2007-11-26 09:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     ! fixed typo
