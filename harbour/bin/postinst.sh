@@ -55,6 +55,7 @@ then
         hb_mkslib="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkslib"
         rm -f "${hb_mkslib}"
         sed -e "s/^# HB_ARCHITECTURE=\"\"\$/HB_ARCHITECTURE=\"${HB_ARCHITECTURE}\"/g" \
+            -e "s/^# CCPREFIX=\"\"\$/[ -n \"\${CCPREFIX}\" ] || CCPREFIX=\"${CCPREFIX}\"/g" \
             "${hb_root}/bin/hb-mkslib.sh" > "${hb_mkslib}" && \
         chmod 755 "${hb_mkslib}"
     elif [ "${HB_ARCHITECTURE}" = "sunos" ]; then

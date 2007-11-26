@@ -13,6 +13,7 @@
 # ---------------------------------------------------------------
 
 # HB_ARCHITECTURE=""
+# CCPREFIX=""
 
 if [ -n "${HB_ARCHITECTURE}" ]
 then

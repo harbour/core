@@ -2417,8 +2417,8 @@ static ERRCODE hb_fptCopyToFile( FHANDLE hSrc, FHANDLE hDst, HB_FOFFSET size )
 
       do
       {
-         ulRead = hb_fsReadLarge( hSrc, pBuffer,
-                                  ( ULONG ) HB_MIN( ulBufSize, size - written ) );
+         ulRead = hb_fsReadLarge( hSrc, pBuffer, ( ULONG )
+                        HB_MIN( ( HB_FOFFSET ) ulBufSize, size - written ) );
          if( ulRead <= 0 )
             errCode = EDBF_READ;
          else if( hb_fsWriteLarge( hDst, pBuffer, ulRead ) != ulRead )

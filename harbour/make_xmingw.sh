@@ -37,6 +37,7 @@ elif [ "$UNAME" = "FreeBSD" ]; then
     MINGW_PREFIX=/usr/local/mingw32
     TARGET="."
     CCPREFIX=""
+    UNAMEL=bsd
 elif find /usr/local/bin -name "i[3456]86-mingw*-gcc" -maxdepth 1 &>/dev/null; then
     MINGW_PREFIX=/usr/local
     TARGET=`find /usr/local/bin -name "i[3456]86-mingw*-gcc" -maxdepth 1|sed -e '1 !d' -e 's/.*\(i[3456]86-mingw[^-]*\).*/\1/g'`

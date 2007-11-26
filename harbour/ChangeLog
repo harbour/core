@@ -8,6 +8,26 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-26 14:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-mkslib.sh
+  * harbour/bin/postinst.sh
+    * set predefined CCPREFIX in cross build hb*-mkslib
+
+  * harbour/make_xmingw.sh
+    ! fixed BSD build cross build - problem noticed by Phil Krylov
+      in xHarbour
+
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+    * casting
+
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/config/bsd/gcc.cf
+    * added support for HB_CRS_LIB envvar which allow to overload platform
+      default [n]curses library name
+
 2007-11-26 14:36 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/what32/wintabs.prg
    * contrib/what32/wintbar.prg

@@ -47,8 +47,11 @@ LINKPATHS += $(foreach gt, $(HB_GT_LIBS), -L$(TOP)$(ROOT)source/rtl/$(gt)/$(HB_A
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lrtl
 
 # screen driver libraries
+ifeq ($(HB_CRS_LIB),)
+HB_CRS_LIB=ncurses
+endif
 ifneq ($(findstring gtcrs, $(HB_GT_LIBS)),)
-LINKLIBS += -lncurses
+LINKLIBS += -l$(HB_CRS_LIB)
 endif
 ifneq ($(findstring gtsln, $(HB_GT_LIBS)),)
 LINKLIBS += -lslang
