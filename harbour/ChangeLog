@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-26 08:00 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvtcore.c
+    ! Fixed side effects of copy/paste in hb_wvt_gtDlgProcModal().
+  * harbour/contrib/gtwvg/wvtclass.prg
+    * Changed cCaption[1] to left( cCaption,1 ) to work without xhb.lib.
+
 2007-11-26 07:50 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/what32
     * wininet.ch
