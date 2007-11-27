@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-27 18:24 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbfsapi.c
+    * define INVALID_FILE_ATTRIBUTES when not defined in C header
+      files - temporary workaround for missing INVALID_FILE_ATTRIBUTES
+      definition in new MSVC versions
+
+  * harbour/include/hbwince.h
+    * removed INVALID_FILE_ATTRIBUTES definition
+
 2007-11-27 17:43 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbwince.c
     * disabled dummy GetDiskFreeSpaceA() overloading - it's not longer

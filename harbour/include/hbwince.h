@@ -78,7 +78,6 @@ extern char *strerror( int errnum );
       #define MAX_COMPUTERNAME_LENGTH         31
       #define SEM_FAILCRITICALERRORS          0x0001
       #define FILE_TYPE_CHAR                  0x0002
-      #define FILE_ATTRIBUTE_DEVICE           0x00000040
       #define STD_INPUT_HANDLE                (DWORD)-10
       #define STD_OUTPUT_HANDLE               (DWORD)-11
       #define STD_ERROR_HANDLE                (DWORD)-12
