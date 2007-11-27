@@ -84,6 +84,14 @@
    #define TTM_SETTITLE TTM_SETTITLEA
 #endif
 
+#if defined(__MINGW32CE__)
+/* ChooseColorW() problem is fixed in current devel MINGW32CE version but
+ * people who use recent official release (0.50) needs it
+ */
+#undef ChooseColor
+BOOL WINAPI ChooseColor( LPCHOOSECOLORW );
+#endif /* __MINGW32CE__ */
+
 //-------------------------------------------------------------------//
 
 static GLOBAL_DATA *_s = NULL;

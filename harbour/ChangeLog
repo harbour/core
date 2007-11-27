@@ -8,6 +8,37 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-27 14:47 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * inherit some parameters like -mlp{64,32}, -m{64,32} set in C_USR
+      during build as default C compiler/linker switches in hb* scripts
+
+  * harbour/config/w32/pocc.cf
+    + added comdlg32.lib to linked library list
+
+  * harbour/source/common/hbwince.c
+    + added dummy FreeResource() function. This is a note from MSDN:
+         FreeResource() is an obsolete function. It is provided for backward
+         compatibility with 16-bit Windows applications. FreeResource() is
+         not necessary for 32-bit Windows applications to free the resources
+         loaded using LoadResource() function.
+
+  * harbour/contrib/gtwvg/wvtutils.c
+    + added workaround for wrong ChooseColorW() definition in header
+      files include in last oficial relase (0.50) of MinGW32-CE
+
+      Pritpal above finished modifications I was able to make using
+      only pure MinGW32-CE 0.50. The following functions used by GTWVG
+      are still missing:
+         GetMenu(), SetMenu(),
+         CreateBrushIndirect(),
+         GetViewportOrgEx(),
+         IsDlgButtonChecked(),
+         OleLoadPicture(),
+         TrackPopupMenu(),
+      If you are sure that they exist in WinCE then simply create
+      static import library for them or dynamic wrappers.
+
 2007-11-27 11:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbwince.c
     * added MulDiv() implementation for MinGW32-CE builds

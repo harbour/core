@@ -160,6 +160,19 @@ mk_hbtools()
         fi
         HB_SLN_LIB="slang"
     fi
+    if [ "${C_USR//-mlp64/}" != "${C_USR}" ]; then
+        CC_L_USR="${CC_L_USR} -mlp64"
+        CC_C_USR="${CC_C_USR} -mlp64"
+    elif [ "${C_USR//-mlp32/}" != "${C_USR}" ]; then
+        CC_L_USR="${CC_L_USR} -mlp32"
+        CC_C_USR="${CC_C_USR} -mlp32"
+    elif [ "${C_USR//-m64/}" != "${C_USR}" ]; then
+        CC_L_USR="${CC_L_USR} -m64"
+        CC_C_USR="${CC_C_USR} -m64"
+    elif [ "${C_USR//-m32/}" != "${C_USR}" ]; then
+        CC_L_USR="${CC_L_USR} -m32"
+        CC_C_USR="${CC_C_USR} -m32"
+    fi
 
     echo "Generating ${hb_tool}... "
     cat > ${hb_tool} <<EOF
