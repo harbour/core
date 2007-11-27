@@ -71,14 +71,14 @@
 
 /*
 #if _MSC_VER > 1000
-	#pragma warning (disable : 4131)
-	#pragma warning (disable : 4115)
-	#pragma warning (disable : 4127)
-	#pragma warning (disable : 4100)
-	#pragma warning (disable : 4244)
-	#pragma warning (disable : 4702)
-	#pragma warning (disable : 4206)
-	#pragma warning (disable : 4518)
+   #pragma warning (disable : 4131)
+   #pragma warning (disable : 4115)
+   #pragma warning (disable : 4127)
+   #pragma warning (disable : 4100)
+   #pragma warning (disable : 4244)
+   #pragma warning (disable : 4702)
+   #pragma warning (disable : 4206)
+   #pragma warning (disable : 4518)
 #endif // _MSC_VER > 1000
 */
 
@@ -343,9 +343,9 @@ extern int   HB_EXPORT deflateEnd OF((z_streamp strm));
 extern int   HB_EXPORT deflateInit_ OF(( z_streamp strm, int level, const char *version, int stream_size));
 extern int   HB_EXPORT deflateInit2_ OF((z_streamp strm, int level, int method,
                                      int windowBits, int memLevel, int strategy,
-		                     const char * version, int stream_size));
+                                     const char * version, int stream_size));
 extern int   HB_EXPORT deflateParams OF((z_streamp strm,
-				         int level, int strategy));
+                                     int level, int strategy));
 extern int   HB_EXPORT deflateReset OF((z_streamp strm));
 extern int   HB_EXPORT deflateSetDictionary OF((z_streamp strm,
                                     const Bytef *dictionary, uInt dictLength));
@@ -714,7 +714,7 @@ typedef struct internal_state {
 void _tr_init         OF((deflate_state *s));
 int  _tr_tally        OF((deflate_state *s, unsigned dist, unsigned lc));
 void _tr_flush_block  OF((deflate_state *s, charf *buf, ulg stored_len,
-			  int eof));
+                          int eof));
 void _tr_align        OF((deflate_state *s));
 void _tr_stored_block OF((deflate_state *s, charf *buf, ulg stored_len,
                           int eof));

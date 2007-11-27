@@ -12,16 +12,16 @@
 #ifndef ISC_INT64_FORMAT
 
 #if (defined(_MSC_VER) && defined(WIN32)) || (defined(__BORLANDC__) && defined(__WIN32__))
-#define	ISC_INT64_FORMAT	"I64"
+#define  ISC_INT64_FORMAT  "I64"
 #else
-#define	ISC_INT64_FORMAT	"ll"
+#define  ISC_INT64_FORMAT  "ll"
 #endif
 #endif
 
 #define USER     "sysdba"
 #define PASSWORD "masterkey"
 #define DATABASE "192.168.1.33:d:\\fontes\\lixo\\test.gdb"
-#define ERREXIT(status, rc)	{isc_print_status(status); return rc;}
+#define ERREXIT(status, rc)   {isc_print_status(status); return rc;}
 #define MAX_BUFFER          1024
 
 int execute( char *exec_str );
@@ -207,197 +207,197 @@ int qclose( void )
 
 char *getdata(int pos)
 {
-	short dtype;
-	char data[MAX_BUFFER], *p;
-	char blob_s[20], date_s[25];
-	short len;
-	long status[20];
+   short dtype;
+   char data[MAX_BUFFER], *p;
+   char blob_s[20], date_s[25];
+   short len;
+   long status[20];
     
-	struct tm times;
-	ISC_QUAD bid;
-	XSQLVAR *var;
+   struct tm times;
+   ISC_QUAD bid;
+   XSQLVAR *var;
 
-	if ( ( pos + 1 ) > sqlda->sqln )              
-	    return "error";
+   if ( ( pos + 1 ) > sqlda->sqln )              
+       return "error";
 
-	var = sqlda->sqlvar;
+   var = sqlda->sqlvar;
 
-	var += pos;
+   var += pos;
 
-	dtype = var->sqltype & ~1;
-	p = data;
+   dtype = var->sqltype & ~1;
+   p = data;
 
-	if ( ( var->sqltype & 1 ) && ( *var->sqlind < 0 ) ) {
-		switch ( dtype ) {
-		case SQL_TEXT:
-		case SQL_VARYING:
-			len = var->sqllen;
-			break;
-		case SQL_SHORT:
-			len = 6;
-			if ( var->sqlscale > 0 )
-				len += var->sqlscale;
-			break;
-		case SQL_LONG:
-			len = 11;
-			if ( var->sqlscale > 0 )
-				len += var->sqlscale;
-			break;
-		case SQL_INT64:
-			len = 21;
-			if ( var->sqlscale > 0 )
-				len += var->sqlscale;
-			break;
-		case SQL_FLOAT:
-			len = 15;
-			break;
-		case SQL_DOUBLE:
-			len = 24;
-			break;
-		case SQL_TIMESTAMP:
-			len = 24;
-			break;
-		case SQL_TYPE_DATE:
-			len = 10;
-			break;
-		case SQL_TYPE_TIME:
-			len = 13;
-			break;
-		case SQL_BLOB:
-		case SQL_ARRAY:
-		default:
-			len = 17;
-			break;
-		}
-		if ( ( dtype == SQL_TEXT ) || ( dtype == SQL_VARYING ) )
-			sprintf ( p, "%-*s ", len, "NULL" );
-		else
-			sprintf ( p, "%*s ", len, "NULL" );
-	} else {
-		switch ( dtype ) {
-		case SQL_TEXT:
-			sprintf ( p, "%.*s ", var->sqllen, var->sqldata );
-			break;
+   if ( ( var->sqltype & 1 ) && ( *var->sqlind < 0 ) ) {
+      switch ( dtype ) {
+      case SQL_TEXT:
+      case SQL_VARYING:
+         len = var->sqllen;
+         break;
+      case SQL_SHORT:
+         len = 6;
+         if ( var->sqlscale > 0 )
+            len += var->sqlscale;
+         break;
+      case SQL_LONG:
+         len = 11;
+         if ( var->sqlscale > 0 )
+            len += var->sqlscale;
+         break;
+      case SQL_INT64:
+         len = 21;
+         if ( var->sqlscale > 0 )
+            len += var->sqlscale;
+         break;
+      case SQL_FLOAT:
+         len = 15;
+         break;
+      case SQL_DOUBLE:
+         len = 24;
+         break;
+      case SQL_TIMESTAMP:
+         len = 24;
+         break;
+      case SQL_TYPE_DATE:
+         len = 10;
+         break;
+      case SQL_TYPE_TIME:
+         len = 13;
+         break;
+      case SQL_BLOB:
+      case SQL_ARRAY:
+      default:
+         len = 17;
+         break;
+      }
+      if ( ( dtype == SQL_TEXT ) || ( dtype == SQL_VARYING ) )
+         sprintf ( p, "%-*s ", len, "NULL" );
+      else
+         sprintf ( p, "%*s ", len, "NULL" );
+   } else {
+      switch ( dtype ) {
+      case SQL_TEXT:
+         sprintf ( p, "%.*s ", var->sqllen, var->sqldata );
+         break;
 
-		case SQL_VARYING:
-			sprintf ( p, "%.*s ", var->sqllen, var->sqldata );
-			break;
+      case SQL_VARYING:
+         sprintf ( p, "%.*s ", var->sqllen, var->sqldata );
+         break;
 
-		case SQL_SHORT:
-		case SQL_LONG:
-		case SQL_INT64:
-		{
-			ISC_INT64 value = 0;
-			short field_width = 0;
-			short dscale;
+      case SQL_SHORT:
+      case SQL_LONG:
+      case SQL_INT64:
+      {
+         ISC_INT64 value = 0;
+         short field_width = 0;
+         short dscale;
 
-			switch ( dtype ) {
-			case SQL_SHORT:
-				value = ( ISC_INT64 ) * ( short ISC_FAR * ) var->sqldata;
-				field_width = 6;
-				break;
-			case SQL_LONG:
-				value = ( ISC_INT64 ) * ( long ISC_FAR * ) var->sqldata;
-				field_width = 11;
-				break;
-			case SQL_INT64:
-				value = ( ISC_INT64 ) * ( ISC_INT64 ISC_FAR * ) var->sqldata;
-				field_width = 21;
-				break;
-			}
-			dscale = var->sqlscale;
-			if ( dscale < 0 ) {
-				ISC_INT64 tens;
-				short i;
+         switch ( dtype ) {
+         case SQL_SHORT:
+            value = ( ISC_INT64 ) * ( short ISC_FAR * ) var->sqldata;
+            field_width = 6;
+            break;
+         case SQL_LONG:
+            value = ( ISC_INT64 ) * ( long ISC_FAR * ) var->sqldata;
+            field_width = 11;
+            break;
+         case SQL_INT64:
+            value = ( ISC_INT64 ) * ( ISC_INT64 ISC_FAR * ) var->sqldata;
+            field_width = 21;
+            break;
+         }
+         dscale = var->sqlscale;
+         if ( dscale < 0 ) {
+            ISC_INT64 tens;
+            short i;
 
-				tens = 1;
-				for ( i = 0; i > dscale; i-- ) {
-					tens *= 10;
+            tens = 1;
+            for ( i = 0; i > dscale; i-- ) {
+               tens *= 10;
 
-					if ( value >= 0 ) {
+               if ( value >= 0 ) {
 
-						sprintf ( p,
-							  "%*" ISC_INT64_FORMAT "d.%0*"
-							  ISC_INT64_FORMAT "d",
-							  field_width - 1 + dscale,
-							  ( ISC_INT64 ) ( value / tens ), -dscale,
-							  ( ISC_INT64 ) ( value % tens ) );
-					} else if ( ( value / tens ) != 0 ) {
+                  sprintf ( p,
+                       "%*" ISC_INT64_FORMAT "d.%0*"
+                       ISC_INT64_FORMAT "d",
+                       field_width - 1 + dscale,
+                       ( ISC_INT64 ) ( value / tens ), -dscale,
+                       ( ISC_INT64 ) ( value % tens ) );
+               } else if ( ( value / tens ) != 0 ) {
 
-						sprintf ( p,
-							  "%*" ISC_INT64_FORMAT "d.%0*"
-							  ISC_INT64_FORMAT "d",
-							  field_width - 1 + dscale,
-							  ( ISC_INT64 ) ( value / tens ), -dscale,
-							  ( ISC_INT64 ) - ( value % tens ) );
-					} else {
+                  sprintf ( p,
+                       "%*" ISC_INT64_FORMAT "d.%0*"
+                       ISC_INT64_FORMAT "d",
+                       field_width - 1 + dscale,
+                       ( ISC_INT64 ) ( value / tens ), -dscale,
+                       ( ISC_INT64 ) - ( value % tens ) );
+               } else {
 
-						sprintf ( p, "%*s.%0*" ISC_INT64_FORMAT "d",
-							  field_width - 1 + dscale,
-							  "-0", -dscale,
-							  ( ISC_INT64 ) - ( value % tens ) );
-					}
-				}
-			} else if ( dscale ) {
-				sprintf ( p, "%*" ISC_INT64_FORMAT "d%0*d",
-					  field_width, ( ISC_INT64 ) value, dscale, 0 );
-			} else {
-				sprintf ( p, "%*" ISC_INT64_FORMAT "d",
-					  field_width, ( ISC_INT64 ) value );
-			}
-		};
-			break;
+                  sprintf ( p, "%*s.%0*" ISC_INT64_FORMAT "d",
+                       field_width - 1 + dscale,
+                       "-0", -dscale,
+                       ( ISC_INT64 ) - ( value % tens ) );
+               }
+            }
+         } else if ( dscale ) {
+            sprintf ( p, "%*" ISC_INT64_FORMAT "d%0*d",
+                 field_width, ( ISC_INT64 ) value, dscale, 0 );
+         } else {
+            sprintf ( p, "%*" ISC_INT64_FORMAT "d",
+                 field_width, ( ISC_INT64 ) value );
+         }
+      };
+         break;
 
-		case SQL_FLOAT:
-			sprintf ( p, "%15g ", *( float ISC_FAR * ) ( var->sqldata ) );
-			break;
+      case SQL_FLOAT:
+         sprintf ( p, "%15g ", *( float ISC_FAR * ) ( var->sqldata ) );
+         break;
 
-		case SQL_DOUBLE:
-			sprintf ( p, "%24f ", *( double ISC_FAR * ) ( var->sqldata ) );
-			break;
+      case SQL_DOUBLE:
+         sprintf ( p, "%24f ", *( double ISC_FAR * ) ( var->sqldata ) );
+         break;
 
-		case SQL_TIMESTAMP:
-			isc_decode_timestamp ( ( ISC_TIMESTAMP ISC_FAR * ) var->sqldata, &times );
-			sprintf ( date_s, "%04d-%02d-%02d %02d:%02d:%02d.%04lui",
-				  times.tm_year + 1900,
-				  times.tm_mon + 1,
-				  times.tm_mday,
-				  times.tm_hour,
-				  times.tm_min,
-				  times.tm_sec,
-				  ( ( ISC_TIMESTAMP * ) var->sqldata )->timestamp_time % 10000 );
-			sprintf ( p, "%*s ", 24, date_s );
-			break;
+      case SQL_TIMESTAMP:
+         isc_decode_timestamp ( ( ISC_TIMESTAMP ISC_FAR * ) var->sqldata, &times );
+         sprintf ( date_s, "%04d-%02d-%02d %02d:%02d:%02d.%04lui",
+              times.tm_year + 1900,
+              times.tm_mon + 1,
+              times.tm_mday,
+              times.tm_hour,
+              times.tm_min,
+              times.tm_sec,
+              ( ( ISC_TIMESTAMP * ) var->sqldata )->timestamp_time % 10000 );
+         sprintf ( p, "%*s ", 24, date_s );
+         break;
 
-		case SQL_TYPE_DATE:
-			isc_decode_sql_date ( ( ISC_DATE ISC_FAR * ) var->sqldata, &times );
-			sprintf ( date_s, "%04d-%02d-%02d",
-				  times.tm_year + 1900, times.tm_mon + 1, times.tm_mday );
-			sprintf ( p, "%*s ", 10, date_s );
-			break;
+      case SQL_TYPE_DATE:
+         isc_decode_sql_date ( ( ISC_DATE ISC_FAR * ) var->sqldata, &times );
+         sprintf ( date_s, "%04d-%02d-%02d",
+              times.tm_year + 1900, times.tm_mon + 1, times.tm_mday );
+         sprintf ( p, "%*s ", 10, date_s );
+         break;
 
-		case SQL_TYPE_TIME:
-			isc_decode_sql_time ( ( ISC_TIME ISC_FAR * ) var->sqldata, &times );
-			sprintf ( date_s, "%02d:%02d:%02d.%04lui",
-				  times.tm_hour,
-				  times.tm_min,
-				  times.tm_sec, ( *( ( ISC_TIME * ) var->sqldata ) ) % 10000 );
-			sprintf ( p, "%*s ", 13, date_s );
-			break;
+      case SQL_TYPE_TIME:
+         isc_decode_sql_time ( ( ISC_TIME ISC_FAR * ) var->sqldata, &times );
+         sprintf ( date_s, "%02d:%02d:%02d.%04lui",
+              times.tm_hour,
+              times.tm_min,
+              times.tm_sec, ( *( ( ISC_TIME * ) var->sqldata ) ) % 10000 );
+         sprintf ( p, "%*s ", 13, date_s );
+         break;
 
-		case SQL_BLOB:
-		case SQL_ARRAY:
-			/* Print the blob id on blobs or arrays */
-			bid = *( ISC_QUAD ISC_FAR * ) var->sqldata;
-			sprintf ( blob_s, "%08x:%08x", ( unsigned int ) bid.gds_quad_high,
-				  ( unsigned int ) bid.gds_quad_low );
-			sprintf ( p, "%17s ", blob_s );
-			break;
+      case SQL_BLOB:
+      case SQL_ARRAY:
+         /* Print the blob id on blobs or arrays */
+         bid = *( ISC_QUAD ISC_FAR * ) var->sqldata;
+         sprintf ( blob_s, "%08x:%08x", ( unsigned int ) bid.gds_quad_high,
+              ( unsigned int ) bid.gds_quad_low );
+         sprintf ( p, "%17s ", blob_s );
+         break;
 
-		default:
-			break;
-		}
-	}
+      default:
+         break;
+      }
+   }
 
-	return ( p );
+   return ( p );
 }

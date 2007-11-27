@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-27 18:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/xhb/hbcomprs.c
+  * harbour/contrib/xhb/hbcomprs.h
+  * harbour/contrib/freeimage/fi_winfu.c
+  * harbour/contrib/firebird/test/testapi.c
+  * harbour/contrib/firebird/firebird.c
+  * harbour/contrib/what32/sqltypes.ch
+  * harbour/contrib/what32/_wincret.c
+  * harbour/contrib/what32/_winpen.c
+  * harbour/contrib/what32/what32.ch
+  * harbour/contrib/what32/_winmem.c
+    * converted TABs to spaces
+
 2007-11-27 18:24 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbfsapi.c
     * define INVALID_FILE_ATTRIBUTES when not defined in C header

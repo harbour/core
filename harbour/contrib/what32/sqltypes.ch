@@ -13,7 +13,7 @@ pragma pack(8)
 
 /* if ODBCVER is not defined, assume version 3.51 */
 #ifndef ODBCVER
-#define ODBCVER	0x0351
+#define ODBCVER 0x0351
 #endif  /* ODBCVER */
 
 
@@ -108,8 +108,8 @@ pragma pack(8)
 #define SQLHWND    HWND
 
 
-#ifndef	__SQLDATE
-#define	__SQLDATE
+#ifndef __SQLDATE
+#define __SQLDATE
 
 /* transfer types for DATE, TIME, TIMESTAMP */
 
@@ -157,57 +157,57 @@ typedef struct tagTIMESTAMP_STRUCT;
 
 //#if (ODBCVER >= 0x0300)
 
-#define 	SQL_IS_YEAR		  	= 1
-#define 	SQL_IS_MONTH			= 2
-#define 	SQL_IS_DAY			= 3
-#define 	SQL_IS_HOUR			= 4
-#define 	SQL_IS_MINUTE			= 5
-#define 	SQL_IS_SECOND			= 6
-#define 	SQL_IS_YEAR_TO_MONTH		= 7
-#define 	SQL_IS_DAY_TO_HOUR		= 8
-#define 	SQL_IS_DAY_TO_MINUTE		= 9
-#define 	SQL_IS_DAY_TO_SECOND		= 10
-#define 	SQL_IS_HOUR_TO_MINUTE		= 11
-#define 	SQL_IS_HOUR_TO_SECOND		= 12
-#define 	SQL_IS_MINUTE_TO_SECOND		= 13
+#define         SQL_IS_YEAR                     = 1
+#define         SQL_IS_MONTH                    = 2
+#define         SQL_IS_DAY                      = 3
+#define         SQL_IS_HOUR                     = 4
+#define         SQL_IS_MINUTE                   = 5
+#define         SQL_IS_SECOND                   = 6
+#define         SQL_IS_YEAR_TO_MONTH            = 7
+#define         SQL_IS_DAY_TO_HOUR              = 8
+#define         SQL_IS_DAY_TO_MINUTE            = 9
+#define         SQL_IS_DAY_TO_SECOND            = 10
+#define         SQL_IS_HOUR_TO_MINUTE           = 11
+#define         SQL_IS_HOUR_TO_SECOND           = 12
+#define         SQL_IS_MINUTE_TO_SECOND         = 13
 
 //#endif  /* ODBCVER >= 0x0300 */
 
 //#if (ODBCVER >= 0x0300)
 typedef struct tagSQL_YEAR_MONTH ;
 {;
-		SQLUINTEGER		year;
-		SQLUINTEGER		month;
+                SQLUINTEGER             year;
+                SQLUINTEGER             month;
 } SQL_YEAR_MONTH_STRUCT
 
 typedef struct tagSQL_DAY_SECOND;
 {;
-		SQLUINTEGER		day;
-		SQLUINTEGER		hour;
-		SQLUINTEGER		minute;
-		SQLUINTEGER		second;
-		SQLUINTEGER		fraction;
+                SQLUINTEGER             day;
+                SQLUINTEGER             hour;
+                SQLUINTEGER             minute;
+                SQLUINTEGER             second;
+                SQLUINTEGER             fraction;
 } SQL_DAY_SECOND_STRUCT
 
 typedef struct tagSQL_INTERVAL_STRUCT ;
 {;
-	SQLINTERVAL		interval_type;
-	SQLSMALLINT		interval_sign;
-	SQL_YEAR_MONTH_STRUCT	intval       ;
+        SQLINTERVAL             interval_type;
+        SQLSMALLINT             interval_sign;
+        SQL_YEAR_MONTH_STRUCT   intval       ;
 } SQL_INTERVAL_STRUCT
 
 //#endif  /* ODBCVER >= 0x0300 */
 
-//#endif	/* __SQLDATE	*/
+//#endif        /* __SQLDATE    */
 
 /* the ODBC C types for SQL_C_SBIGINT and SQL_C_UBIGINT */
 //#if (ODBCVER >= 0x0300)
 //#if (_MSC_VER >= 900)
-#define ODBCINT64	__int64
+#define ODBCINT64       __int64
 //#endif
 
 /* If using other compilers, define ODBCINT64 to the 
-	approriate 64 bit integer type */
+        approriate 64 bit integer type */
 //#ifdef ODBCINT64
 #define SQLBIGINT  ODBCINT64 
 #define SQLUBIGINT unsigned ODBCINT64 
@@ -216,13 +216,13 @@ typedef struct tagSQL_INTERVAL_STRUCT ;
 
 /* internal representation of numeric data type */
 //#if (ODBCVER >= 0x0300)
-#define SQL_MAX_NUMERIC_LEN		16
+#define SQL_MAX_NUMERIC_LEN             16
 typedef struct tagSQL_NUMERIC_STRUCT;
 {;
-	SQLCHAR		precision;
-	SQLSCHAR	scale;
-	SQLCHAR		sign;	/* 1 if positive, 0 if negative */
-	SQLCHAR		val[SQL_MAX_NUMERIC_LEN];
+        SQLCHAR         precision;
+        SQLSCHAR        scale;
+        SQLCHAR         sign;   /* 1 if positive, 0 if negative */
+        SQLCHAR         val[SQL_MAX_NUMERIC_LEN];
 } SQL_NUMERIC_STRUCT
 //#endif  /* ODBCVER >= 0x0300 */
 

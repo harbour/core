@@ -24,9 +24,9 @@
 HB_FUNC( CREATEPEN )
 {
    hb_retnl( (LONG) CreatePen(
-               hb_parni( 1 ),	// pen style 
-               hb_parni( 2 ),	// pen width  
-               (COLORREF) hb_parnl( 3 ) 	// pen color 
+               hb_parni( 1 ),   // pen style 
+               hb_parni( 2 ),   // pen width  
+               (COLORREF) hb_parnl( 3 ) // pen color 
              ) );
 }
 

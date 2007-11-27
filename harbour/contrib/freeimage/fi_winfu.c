@@ -100,8 +100,8 @@ HB_FUNC( FI_FITOBITMAP )
       /* run function */
       hDC = GetDC( NULL );
       bitmap = CreateDIBitmap(hDC, FreeImage_GetInfoHeader(dib),
-	                                 CBM_INIT, FreeImage_GetBits(dib),
-	                                 FreeImage_GetInfo(dib), DIB_RGB_COLORS);
+                              CBM_INIT, FreeImage_GetBits(dib),
+                              FreeImage_GetInfo(dib), DIB_RGB_COLORS);
       ReleaseDC( NULL, hDC );
 
       /* return value */
@@ -217,9 +217,9 @@ HB_FUNC( FI_WINDRAW )
                                      rcDest.top,
                                      rcDest.right-rcDest.left,
                                      rcDest.bottom-rcDest.top,
-	                                   0, 0, FreeImage_GetWidth(dib), FreeImage_GetHeight(dib),
-	                                   FreeImage_GetBits(dib), FreeImage_GetInfo(dib),
-	                                   DIB_RGB_COLORS, SRCCOPY);
+                                     0, 0, FreeImage_GetWidth(dib), FreeImage_GetHeight(dib),
+                                     FreeImage_GetBits(dib), FreeImage_GetInfo(dib),
+                                     DIB_RGB_COLORS, SRCCOPY);
 
       /* return value */
       hb_retni( scanlines );

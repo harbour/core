@@ -77,9 +77,9 @@
 #ifndef ISC_INT64_FORMAT
 
 #if (defined(_MSC_VER) && defined(WIN32)) || (defined(__BORLANDC__) && defined(__WIN32__))
-#define	ISC_INT64_FORMAT	"I64"
+#define ISC_INT64_FORMAT        "I64"
 #else
-#define	ISC_INT64_FORMAT	"ll"
+#define ISC_INT64_FORMAT        "ll"
 #endif
 #endif
 
@@ -590,65 +590,65 @@ HB_FUNC(FBGETDATA)
 
                 case SQL_SHORT:
                 case SQL_LONG:
-        	    case SQL_INT64:
-        		{
-            		ISC_INT64	value;
-            		short		field_width;
-            		short		dscale;
-            		switch (dtype)
-		            {
-		                case SQL_SHORT:
-			                value = (ISC_INT64) *(short ISC_FAR *) var->sqldata;
-        			        field_width = 6;
-		        	        break;
+                    case SQL_INT64:
+                        {
+                        ISC_INT64       value;
+                        short           field_width;
+                        short           dscale;
+                        switch (dtype)
+                            {
+                                case SQL_SHORT:
+                                        value = (ISC_INT64) *(short ISC_FAR *) var->sqldata;
+                                        field_width = 6;
+                                        break;
 
-		                case SQL_LONG:
-			                value = (ISC_INT64) *(long ISC_FAR *) var->sqldata;
-			                field_width = 11;
-			                break;
+                                case SQL_LONG:
+                                        value = (ISC_INT64) *(long ISC_FAR *) var->sqldata;
+                                        field_width = 11;
+                                        break;
 
-		                case SQL_INT64:
-			                value = (ISC_INT64) *(ISC_INT64 ISC_FAR *) var->sqldata;
-			                field_width = 21;
-			                break;
+                                case SQL_INT64:
+                                        value = (ISC_INT64) *(ISC_INT64 ISC_FAR *) var->sqldata;
+                                        field_width = 21;
+                                        break;
                     }
 
-		            dscale = var->sqlscale;
+                            dscale = var->sqlscale;
 
-		            if (dscale < 0)
-		            {
-		                ISC_INT64   tens;
-		                short       i;
+                            if (dscale < 0)
+                            {
+                                ISC_INT64   tens;
+                                short       i;
 
-    		            tens = 1;
-	    	            for (i = 0; i > dscale; i--)
-		    	            tens *= 10;
+                            tens = 1;
+                            for (i = 0; i > dscale; i--)
+                                    tens *= 10;
 
-		                if (value >= 0)
-			                sprintf (p, "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
-				                field_width - 1 + dscale,
-				                (ISC_INT64) value / tens,
-				                -dscale,
-				                (ISC_INT64) value % tens);
+                                if (value >= 0)
+                                        sprintf (p, "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
+                                                field_width - 1 + dscale,
+                                                (ISC_INT64) value / tens,
+                                                -dscale,
+                                                (ISC_INT64) value % tens);
 
-		                else if ((value / tens) != 0)
-        			        sprintf (p, "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
-		        		        field_width - 1 + dscale,
-				                (ISC_INT64) (value / tens),
-				                -dscale,
-        				        (ISC_INT64) -(value % tens));
+                                else if ((value / tens) != 0)
+                                        sprintf (p, "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
+                                                field_width - 1 + dscale,
+                                                (ISC_INT64) (value / tens),
+                                                -dscale,
+                                                (ISC_INT64) -(value % tens));
 
-		                else
-        			        sprintf (p, "%*s.%0*" ISC_INT64_FORMAT "d",
-		        		        field_width - 1 + dscale,
-				                "-0",
-				                -dscale,
-        				        (ISC_INT64) -(value % tens));
-		            }
-		            else if (dscale)
-    		            sprintf (p, "%*" ISC_INT64_FORMAT "d%0*d", field_width, (ISC_INT64) value, dscale, 0);
-		            else
-		                sprintf (p, "%*" ISC_INT64_FORMAT "d", field_width, (ISC_INT64) value);
+                                else
+                                        sprintf (p, "%*s.%0*" ISC_INT64_FORMAT "d",
+                                                field_width - 1 + dscale,
+                                                "-0",
+                                                -dscale,
+                                                (ISC_INT64) -(value % tens));
+                            }
+                            else if (dscale)
+                            sprintf (p, "%*" ISC_INT64_FORMAT "d%0*d", field_width, (ISC_INT64) value, dscale, 0);
+                            else
+                                sprintf (p, "%*" ISC_INT64_FORMAT "d", field_width, (ISC_INT64) value);
                 };
                     _retc(p);
                     break;
@@ -659,7 +659,7 @@ HB_FUNC(FBGETDATA)
                     break;
 
                 case SQL_DOUBLE:
-		            sprintf(p, "%24f ", *(double ISC_FAR *) (var->sqldata));
+                            sprintf(p, "%24f ", *(double ISC_FAR *) (var->sqldata));
                     _retc(p);
                     break;
 

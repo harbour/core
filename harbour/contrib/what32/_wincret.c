@@ -4,7 +4,7 @@
 
 /*
    Caret functions
-	Last change:  WN   27 May 2002    8:41 pm
+   Last change:  WN   27 May 2002    8:41 pm
 */
 
 #define HB_OS_WIN_32_USED

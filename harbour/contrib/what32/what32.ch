@@ -20,9 +20,9 @@
 #Define CR                 CHR(13)   //   Carriage return
 #define TAB                CHR(9)   //   Tab
 
-#xtranslate	MAKELONG(<nLow>, <nHigh>)	=> ((<nLow>) + (<nHigh>) * 65536)
-#xtranslate	MAKELPARAM(<nLow>, <nHigh>)	=> ((<nLow>) + (<nHigh>) * 65536)
-#xtranslate	MAKEWORD(<nLow>, <nHigh>)	=> ((<nLow>) + (<nHigh>) * 256)
+#xtranslate MAKELONG(<nLow>, <nHigh>)   => ((<nLow>) + (<nHigh>) * 65536)
+#xtranslate MAKELPARAM(<nLow>, <nHigh>) => ((<nLow>) + (<nHigh>) * 65536)
+#xtranslate MAKEWORD(<nLow>, <nHigh>)   => ((<nLow>) + (<nHigh>) * 256)
 
 #xcommand DEFAULT <v> TO <x> [, <vN> TO <xN>]            ;
        => IF <v> == nil ; <v> := <x> ; END            ;

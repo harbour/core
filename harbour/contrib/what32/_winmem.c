@@ -160,7 +160,7 @@ HB_FUNC( GLOBALMEMORYSTATUS )
    GlobalMemoryStatus( lpBuffer ) ;
 }
 
-	Last change:  WN   29 May 2002   11:26 pm
+   Last change:  WN   29 May 2002   11:26 pm
 */
 
 //-----------------------------------------------------------------------------

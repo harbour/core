@@ -255,7 +255,7 @@ static void * hb_xgrabz( ULONG ulSize )
 
 /* ========================================================================= */
 int HB_EXPORT deflateInit2_( z_streamp strm, int level, int method, int windowBits, int memLevel, int strategy,
-		  const char * version, int stream_size)
+                  const char * version, int stream_size)
 {
     deflate_state *s;
     int noheader = 0;
@@ -268,7 +268,7 @@ int HB_EXPORT deflateInit2_( z_streamp strm, int level, int method, int windowBi
 
     if (version == NULL || version[0] != my_version[0] ||
         stream_size != sizeof(z_stream)) {
-	return Z_VERSION_ERROR;
+        return Z_VERSION_ERROR;
     }
     if (strm == NULL) return Z_STREAM_ERROR;
 
@@ -284,7 +284,7 @@ int HB_EXPORT deflateInit2_( z_streamp strm, int level, int method, int windowBi
     }
     if (memLevel < 1 || memLevel > MAX_MEM_LEVEL || method != Z_DEFLATED ||
         windowBits < 9 || windowBits > 15 || level < 0 || level > 9 ||
-	strategy < 0 || strategy > Z_HUFFMAN_ONLY) {
+        strategy < 0 || strategy > Z_HUFFMAN_ONLY) {
         return Z_STREAM_ERROR;
     }
     s = (deflate_state *) hb_xgrab( sizeof(deflate_state) );
@@ -332,7 +332,7 @@ int HB_EXPORT deflateInit2_( z_streamp strm, int level, int method, int windowBi
 int HB_EXPORT deflateInit_( z_streamp strm, int level, const char *version, int stream_size)
 {
     return deflateInit2_(strm, level, Z_DEFLATED, MAX_WBITS, DEF_MEM_LEVEL,
-			 Z_DEFAULT_STRATEGY, version, stream_size);
+                         Z_DEFAULT_STRATEGY, version, stream_size);
     /* To do: ignore strm->next_in if we use it as window */
 }
 
@@ -522,9 +522,9 @@ int HB_EXPORT deflateSetDictionary ( z_streamp strm,  const Bytef * dictionary, 
 
     if (length < MIN_MATCH) return Z_OK;
     if (length > MAX_DIST(s)) {
-	length = MAX_DIST(s);
+        length = MAX_DIST(s);
 #ifndef USE_DICT_HEAD
-	dictionary += dictLength - length; /* use the tail of the dictionary */
+        dictionary += dictLength - length; /* use the tail of the dictionary */
 #endif
     }
     memcpy(s->window, dictionary, length);
@@ -660,14 +660,14 @@ int HB_EXPORT deflate ( z_streamp strm, int flush)
     deflate_state *s;
 
     if (strm == NULL || strm->state == NULL ||
-	flush > Z_FINISH || flush < 0) {
+        flush > Z_FINISH || flush < 0) {
         return Z_STREAM_ERROR;
     }
     s = strm->state;
 
     if (strm->next_out == NULL ||
         (strm->next_in == NULL && strm->avail_in != 0) ||
-	(s->status == FINISH_STATE && flush != Z_FINISH)) {
+        (s->status == FINISH_STATE && flush != Z_FINISH)) {
         ERR_RETURN(strm, Z_STREAM_ERROR);
     }
     if (strm->avail_out == 0) ERR_RETURN(strm, Z_BUF_ERROR);
@@ -684,40 +684,40 @@ int HB_EXPORT deflate ( z_streamp strm, int flush)
 
         if (level_flags > 3) level_flags = 3;
         header |= (level_flags << 6);
-	if (s->strstart != 0) header |= PRESET_DICT;
+        if (s->strstart != 0) header |= PRESET_DICT;
         header += 31 - (header % 31);
 
         s->status = BUSY_STATE;
         putShortMSB(s, header);
 
-	/* Save the adler32 of the preset dictionary: */
-	if (s->strstart != 0) {
-	    putShortMSB(s, (uInt)(strm->adler >> 16));
-	    putShortMSB(s, (uInt)(strm->adler & 0xffff));
-	}
-	strm->adler = 1L;
+        /* Save the adler32 of the preset dictionary: */
+        if (s->strstart != 0) {
+            putShortMSB(s, (uInt)(strm->adler >> 16));
+            putShortMSB(s, (uInt)(strm->adler & 0xffff));
+        }
+        strm->adler = 1L;
     }
 
     /* Flush as much pending output as possible */
     if (s->pending != 0) {
         flush_pending(strm);
         if (strm->avail_out == 0) {
-	    /* Since avail_out is 0, deflate will be called again with
-	     * more output space, but possibly with both pending and
-	     * avail_in equal to zero. There won't be anything to do,
-	     * but this is not an error situation so make sure we
-	     * return OK instead of BUF_ERROR at next call of deflate:
+            /* Since avail_out is 0, deflate will be called again with
+             * more output space, but possibly with both pending and
+             * avail_in equal to zero. There won't be anything to do,
+             * but this is not an error situation so make sure we
+             * return OK instead of BUF_ERROR at next call of deflate:
              */
-	    s->last_flush = -1;
-	    return Z_OK;
-	}
+            s->last_flush = -1;
+            return Z_OK;
+        }
 
     /* Make sure there is something to do and avoid duplicate consecutive
      * flushes. For repeated and useless calls with Z_FINISH, we keep
      * returning Z_STREAM_END instead of Z_BUFF_ERROR.
      */
     } else if (strm->avail_in == 0 && flush <= old_flush &&
-	       flush != Z_FINISH) {
+               flush != Z_FINISH) {
         ERR_RETURN(strm, Z_BUF_ERROR);
     }
 
@@ -732,24 +732,24 @@ int HB_EXPORT deflate ( z_streamp strm, int flush)
         (flush != Z_NO_FLUSH && s->status != FINISH_STATE)) {
         block_state bstate;
 
-	bstate = (*(configuration_table[s->level].func))(s, flush);
+        bstate = (*(configuration_table[s->level].func))(s, flush);
 
         if (bstate == finish_started || bstate == finish_done) {
             s->status = FINISH_STATE;
         }
         if (bstate == need_more || bstate == finish_started) {
-	    if (strm->avail_out == 0) {
-	        s->last_flush = -1; /* avoid BUF_ERROR next call, see above */
-	    }
-	    return Z_OK;
-	    /* If flush != Z_NO_FLUSH && avail_out == 0, the next call
-	     * of deflate should use the same flush parameter to make sure
-	     * that the flush is complete. So we don't have to output an
-	     * empty block here, this will be done at next call. This also
-	     * ensures that for a very small output buffer, we emit at most
-	     * one empty block.
-	     */
-	}
+            if (strm->avail_out == 0) {
+                s->last_flush = -1; /* avoid BUF_ERROR next call, see above */
+            }
+            return Z_OK;
+            /* If flush != Z_NO_FLUSH && avail_out == 0, the next call
+             * of deflate should use the same flush parameter to make sure
+             * that the flush is complete. So we don't have to output an
+             * empty block here, this will be done at next call. This also
+             * ensures that for a very small output buffer, we emit at most
+             * one empty block.
+             */
+        }
         if (bstate == block_done) {
             if (flush == Z_PARTIAL_FLUSH) {
                 _tr_align(s);
@@ -763,10 +763,10 @@ int HB_EXPORT deflate ( z_streamp strm, int flush)
                 }
             }
             flush_pending(strm);
-	    if (strm->avail_out == 0) {
-	      s->last_flush = -1; /* avoid BUF_ERROR at next call, see above */
-	      return Z_OK;
-	    }
+            if (strm->avail_out == 0) {
+              s->last_flush = -1; /* avoid BUF_ERROR at next call, see above */
+              return Z_OK;
+            }
         }
     }
 
@@ -1100,10 +1100,10 @@ local uInt longest_match( deflate_state *s, IPos cur_match )
      */
     do {
     } while (*++scan == *++match && *++scan == *++match &&
-	     *++scan == *++match && *++scan == *++match &&
-	     *++scan == *++match && *++scan == *++match &&
-	     *++scan == *++match && *++scan == *++match &&
-	     scan < strend);
+             *++scan == *++match && *++scan == *++match &&
+             *++scan == *++match && *++scan == *++match &&
+             *++scan == *++match && *++scan == *++match &&
+             scan < strend);
 
     len = MAX_MATCH - (int)(strend - scan);
 
@@ -1161,23 +1161,23 @@ local void fill_window( deflate_state *s )
                later. (Using level 0 permanently is not an optimal usage of
                zlib, so we don't care about this pathological case.)
              */
-	    n = s->hash_size;
-	    p = &s->head[n];
-	    do {
-		m = *--p;
-		*p = (Pos)(m >= wsize ? m-wsize : NIL);
-	    } while (--n);
+            n = s->hash_size;
+            p = &s->head[n];
+            do {
+                m = *--p;
+                *p = (Pos)(m >= wsize ? m-wsize : NIL);
+            } while (--n);
 
-	    n = wsize;
+            n = wsize;
 #ifndef FASTEST
-	    p = &s->prev[n];
-	    do {
-		m = *--p;
-		*p = (Pos)(m >= wsize ? m-wsize : NIL);
-		/* If n is not on any hash chain, prev[n] is garbage but
-		 * its value will never be used.
-		 */
-	    } while (--n);
+            p = &s->prev[n];
+            do {
+                m = *--p;
+                *p = (Pos)(m >= wsize ? m-wsize : NIL);
+                /* If n is not on any hash chain, prev[n] is garbage but
+                 * its value will never be used.
+                 */
+            } while (--n);
 #endif
             more += wsize;
         }
@@ -1221,8 +1221,8 @@ local void fill_window( deflate_state *s )
    _tr_flush_block(s, (s->block_start >= 0L ? \
                    (charf *)&s->window[(unsigned)s->block_start] : \
                    (charf *)NULL), \
-		(ulg)((LONG)s->strstart - s->block_start), \
-		(eof)); \
+                (ulg)((LONG)s->strstart - s->block_start), \
+                (eof)); \
    s->block_start = s->strstart; \
    flush_pending(s->strm); \
 }
@@ -1265,23 +1265,23 @@ local block_state deflate_stored( deflate_state *s, int flush )
             if (s->lookahead == 0) break; /* flush the current block */
         }
 
-	s->strstart += s->lookahead;
-	s->lookahead = 0;
+        s->strstart += s->lookahead;
+        s->lookahead = 0;
 
-	/* Emit a stored block if pending_buf will be full: */
- 	max_start = s->block_start + max_block_size;
+        /* Emit a stored block if pending_buf will be full: */
+        max_start = s->block_start + max_block_size;
         if (s->strstart == 0 || (ulg)s->strstart >= max_start) {
-	    /* strstart == 0 is possible when wraparound on 16-bit machine */
-	    s->lookahead = (uInt)(s->strstart - max_start);
-	    s->strstart = (uInt)max_start;
+            /* strstart == 0 is possible when wraparound on 16-bit machine */
+            s->lookahead = (uInt)(s->strstart - max_start);
+            s->strstart = (uInt)max_start;
             FLUSH_BLOCK(s, 0);
-	}
-	/* Flush if we may have to slide, otherwise block_start may become
+        }
+        /* Flush if we may have to slide, otherwise block_start may become
          * negative and the data will be gone:
          */
         if (s->strstart - (uInt)s->block_start >= MAX_DIST(s)) {
             FLUSH_BLOCK(s, 0);
-	}
+        }
     }
     FLUSH_BLOCK(s, flush == Z_FINISH);
     return flush == Z_FINISH ? finish_done : block_done;
@@ -1308,8 +1308,8 @@ local block_state deflate_fast( deflate_state *s, int flush )
         if (s->lookahead < MIN_LOOKAHEAD) {
             fill_window(s);
             if (s->lookahead < MIN_LOOKAHEAD && flush == Z_NO_FLUSH) {
-	        return need_more;
-	    }
+                return need_more;
+            }
             if (s->lookahead == 0) break; /* flush the current block */
         }
 
@@ -1357,7 +1357,7 @@ local block_state deflate_fast( deflate_state *s, int flush )
                 s->strstart++;
             } else
 #endif
-	    {
+            {
                 s->strstart += s->match_length;
                 s->match_length = 0;
                 s->ins_h = s->window[s->strstart];
@@ -1401,8 +1401,8 @@ local block_state deflate_slow( deflate_state *s, int flush )
         if (s->lookahead < MIN_LOOKAHEAD) {
             fill_window(s);
             if (s->lookahead < MIN_LOOKAHEAD && flush == Z_NO_FLUSH) {
-	        return need_more;
-	    }
+                return need_more;
+            }
             if (s->lookahead == 0) break; /* flush the current block */
         }
 
@@ -1447,7 +1447,7 @@ local block_state deflate_slow( deflate_state *s, int flush )
             /* Do not insert strings in hash table beyond this. */
 
             _tr_tally_dist(s, s->strstart -1 - s->prev_match,
-			   s->prev_length - MIN_MATCH, bflush);
+                           s->prev_length - MIN_MATCH, bflush);
 
             /* Insert in hash table all strings up to the end of the match.
              * strstart-1 and strstart are already inserted. If there is not
@@ -1472,8 +1472,8 @@ local block_state deflate_slow( deflate_state *s, int flush )
              * single literal. If there was a match but the current match
              * is longer, truncate the previous match to a single literal.
              */
-	    _tr_tally_lit(s, s->window[s->strstart-1], bflush);
-	    if (bflush) {
+            _tr_tally_lit(s, s->window[s->strstart-1], bflush);
+            if (bflush) {
                 FLUSH_BLOCK_ONLY(s, 0);
             }
             s->strstart++;
@@ -2113,30 +2113,30 @@ void _tr_flush_block(
     /* Build the Huffman trees unless a stored block is forced */
     if (s->level > 0) {
 
-	 /* Check if the file is ascii or binary */
-	if (s->data_type == Z_UNKNOWN) set_data_type(s);
+         /* Check if the file is ascii or binary */
+        if (s->data_type == Z_UNKNOWN) set_data_type(s);
 
-	/* Construct the literal and distance trees */
-	build_tree(s, (tree_desc *)(&(s->l_desc)));
+        /* Construct the literal and distance trees */
+        build_tree(s, (tree_desc *)(&(s->l_desc)));
 
-	build_tree(s, (tree_desc *)(&(s->d_desc)));
-	/* At this point, opt_len and static_len are the total bit lengths of
-	 * the compressed block data, excluding the tree representations.
-	 */
+        build_tree(s, (tree_desc *)(&(s->d_desc)));
+        /* At this point, opt_len and static_len are the total bit lengths of
+         * the compressed block data, excluding the tree representations.
+         */
 
-	/* Build the bit length tree for the above two trees, and get the index
-	 * in bl_order of the last bit length code to send.
-	 */
-	max_blindex = build_bl_tree(s);
+        /* Build the bit length tree for the above two trees, and get the index
+         * in bl_order of the last bit length code to send.
+         */
+        max_blindex = build_bl_tree(s);
 
-	/* Determine the best encoding. Compute first the block length in bytes*/
-	opt_lenb = (s->opt_len+3+7)>>3;
-	static_lenb = (s->static_len+3+7)>>3;
+        /* Determine the best encoding. Compute first the block length in bytes*/
+        opt_lenb = (s->opt_len+3+7)>>3;
+        static_lenb = (s->static_len+3+7)>>3;
 
-	if (static_lenb <= opt_lenb) opt_lenb = static_lenb;
+        if (static_lenb <= opt_lenb) opt_lenb = static_lenb;
 
     } else {
-	opt_lenb = static_lenb = stored_len + 5; /* force a stored block */
+        opt_lenb = static_lenb = stored_len + 5; /* force a stored block */
     }
 
 #ifdef FORCE_STORED
