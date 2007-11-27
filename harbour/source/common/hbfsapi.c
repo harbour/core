@@ -60,7 +60,7 @@
    #if !defined( INVALID_FILE_ATTRIBUTES )
       #define INVALID_FILE_ATTRIBUTES     ( ( DWORD ) -1 )
    #endif
-   #if !define( FILE_ATTRIBUTE_DEVICE )
+   #if !defined( FILE_ATTRIBUTE_DEVICE )
       #define FILE_ATTRIBUTE_DEVICE       0x00000040
    #endif
 #elif defined( HB_OS_UNIX )
