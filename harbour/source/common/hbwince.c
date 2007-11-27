@@ -672,6 +672,19 @@ HLOCAL WINAPI LocalHandle( LPCVOID p )
 }
 #endif /* !_MSC_VER || __POCC__ || __XCC__ */
 
+#if defined(__MINGW32CE__)
+int WINAPI MulDiv( int nNumber, int nNumerator, int nDenominator )
+{
+   if( nDenominator )
+   {
+      HB_LONG llResult = ( HB_LONG ) nNumber * nNumerator / nDenominator;
+      if( HB_LIM_INT32( llResult ) )
+         return ( int ) llResult;
+   }
+   return -1;
+}
+#endif /* __MINGW32CE__ */
+
 BOOL WINAPI Arc( HDC h, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8 )
 {
    HB_SYMBOL_UNUSED( h );

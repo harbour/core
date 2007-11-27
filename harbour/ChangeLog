@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-27 11:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbwince.c
+    * added MulDiv() implementation for MinGW32-CE builds
+
 2007-11-27 11:31 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/hbmain.c
     * make all hb_compI18n*() functions which do not need external access
