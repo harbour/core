@@ -15,7 +15,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I%FREEIMAGE_DIR%\source -DHB_OS_WIN_32_USED
+set CFLAGS=-I%FREEIMAGE_DIR%\source
 set HB_DLL_NAME=FreeImage
 set HB_DLL_DIR=%FREEIMAGE_DIR%\Dist
 

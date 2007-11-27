@@ -50,14 +50,13 @@
  *
  */
 
+#define _CLIPDEFS_H
+
+#define HB_OS_WIN_32_USED
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "libpq-fe.h"
-
-#define _CLIPDEFS_H
-#if defined(HB_OS_WIN_32_USED)
-   #include <windows.h>
-#endif
 
 #define VARHDRSZ              4
 #define BOOLOID               16

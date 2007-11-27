@@ -53,6 +53,8 @@
 /* NOTE: we need this to prevent base types redefinition */
 #define _CLIPDEFS_H
 
+#define HB_OS_WIN_32_USED
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbstack.h"

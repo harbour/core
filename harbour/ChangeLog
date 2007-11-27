@@ -8,6 +8,43 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-27 01:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * make_b32.mak
+     ! Removed -l flag from .dll creation to be in sync with the 
+       rest of Harbour.
+
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_vc.mak
+     ! Synced with core flags (VC mainly).
+
+   * contrib/freeimage/fi_winfu.c
+   * contrib/freeimage/fi_wrp.c
+   * contrib/freeimage/make_b32.bat
+   * contrib/freeimage/make_vc.bat
+   * contrib/firebird/firebird.c
+   * contrib/firebird/make_b32.bat
+   * contrib/firebird/make_vc.bat
+   * contrib/pdflib/make_b32.bat
+   * contrib/pdflib/make_vc.bat
+   * contrib/pdflib/pdfhbdoc.c
+   * contrib/pgsql/postgres.c
+   * contrib/pgsql/make_b32.bat
+   * contrib/pgsql/make_vc.bat
+   * contrib/mysql/mysql.c
+   * contrib/mysql/make_b32.bat
+   * contrib/mysql/make_vc.bat
+     ! Some extra lib-level custom C flags fixed to be 
+       in sync with rest of Harbour. (mainly HB_OS_WIN_32_USED)
+
+   * contrib/hbzlib/make_b32.bat
+   * contrib/hbzlib/make_vc.bat
+     ! hbziparch extra switches removed (all of them). 
+       This made surface a whole lot of warnings.
+       If someone wants to create a .dll from this, 
+       -DZLIB_DLL will need to be added to C_USR.
+       -a8 switch was also removed from the BCC build.
+       If someone know that it's necessary, pls shout.
+
 2007-11-27 00:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/pack_src.sh
     * updated for recent file name modifications

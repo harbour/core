@@ -61,6 +61,9 @@
  *
  */
 
+#ifdef __WIN32__
+   #define HB_OS_WIN_32_USED
+#endif
 
 /* NOTE: we need this to prevent base types redefinition */
 #define _CLIPDEFS_H

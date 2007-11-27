@@ -92,7 +92,14 @@ MKLIB  = lib.exe
 
 #**********************************************************
 
-CFLAGS         = -I$(INCLUDE_DIR) -W3 -nologo $(C_USR) $(CFLAGS)
+# C Compiler Flags
+!if $(HB_VISUALC_VER) >= 80
+CFLAGS_VER     = -Ot2b1 -EHs-c- -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
+!else
+CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX -FD -Gs
+!endif
+
+CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -W3 -nologo -D__WINDOWS__ -DWIN32 -D__WIN32__ $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w2 -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)

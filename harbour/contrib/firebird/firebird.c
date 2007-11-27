@@ -53,15 +53,15 @@
  */
 
 #define _CLIPDEFS_H
-#if defined(HB_OS_WIN_32_USED)
-   #include <windows.h>
-#endif
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
 
+#define HB_OS_WIN_32_USED
+
+#include "hbapi.h"
 #include "extend.api"
 #include "item.api"
 #include "hbapiitm.h"
