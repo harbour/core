@@ -308,9 +308,14 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
       DWORD   dwAttr;
 
       dwAttr = GetFileAttributesA( pszFileName );
+#if defined(HB_WINCE)   
       fExist = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
                ( dwAttr & ( FILE_ATTRIBUTE_DIRECTORY |
                             FILE_ATTRIBUTE_DEVICE ) ) == 0;
+#else
+      fExist = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
+               ( dwAttr & ( FILE_ATTRIBUTE_DIRECTORY ) ) == 0;
+#endif                            
    }
 #elif defined( HB_OS_UNIX )
    {

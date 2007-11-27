@@ -1,12 +1,16 @@
 /*
  * $Id$
  */
-
+  
 /* Use this format for the entry headers:
    YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2007-11-27 10:36 UTC+0100 J. Lefebvre Mafact (jfl/at/mafact.com)
+    * source/common/hbfsapi.c
+      added a check for HB_WINCE for using "FILE_ATTRIBUTE_DEVICE"
 
 2007-11-27 09:33 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/mtpl_b32.mak
