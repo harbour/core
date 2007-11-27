@@ -15,11 +15,15 @@ CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 CFLAGS = -DHB_OS_HPUX -Wall -W
+LDFLAGS =
 
 # uncomment this if you want to farce relocateable code for .so libs
 # it's necessary on some platforms but can reduce performance
 #CFLAGS += -fPIC
 
+# uncomment this if you want to force creating 64bit binaries on IA64
+#CFLAGS += -mlp64
+#LDFLAGS = -mlp64
 
 LD = $(HB_CCACHE) gcc
 LD_OUT = -o
@@ -78,7 +82,7 @@ endif
 
 LINKLIBS += -lm -lrt
 
-LDFLAGS = $(LINKPATHS)
+LDFLAGS += $(LINKPATHS)
 
 AR = ar
 ARFLAGS = $(A_USR)

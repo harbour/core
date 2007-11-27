@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-27 11:31 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbmain.c
+    * make all hb_compI18n*() functions which do not need external access
+      static - now only hb_compI18nAdd() is public function. If it will
+      be necessary to make other functions public then we will make it
+      but please always try to declare new functions as static if it's
+      not necessary to access them externally - it helps in future
+      modifications because we do not have to worry about external
+      code which may access some functions.
+
+  * harbour/config/hpux/gcc.cf
+    * added commented -mlp64 GCC switch to CFLAGS and LDFLAGS - this
+      switch forces 64-bit mode in HP-UX on IA64
+
+  * harbour/source/common/hbwince.c
+    + added wrapper for LocalHandle() and direct translation for LocalLock()
+
+  * harbour/config/w32/cemgw.cf
+    + added commdlg, commctrl, luuid and ole32 to linked library list
+      for some contrib code
+
 2007-11-27 10:36 UTC+0100 J. Lefebvre Mafact (jfl/at/mafact.com)
     * source/common/hbfsapi.c
       added a check for HB_WINCE for using "FILE_ATTRIBUTE_DEVICE"

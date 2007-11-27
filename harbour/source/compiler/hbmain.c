@@ -4012,7 +4012,7 @@ void hb_compCodeBlockRewind( HB_COMP_DECL )
 
 #ifdef HB_I18N_SUPPORT
 /* ============================ I18N ============================ */
-PHB_I18NTABLE hb_compI18nCreate( void )
+static PHB_I18NTABLE hb_compI18nCreate( void )
 {
    PHB_I18NTABLE  pI18n;
 
@@ -4023,8 +4023,7 @@ PHB_I18NTABLE hb_compI18nCreate( void )
    return pI18n;
 }
 
-
-void hb_compI18nFree( PHB_I18NTABLE pI18n )
+static void hb_compI18nFree( PHB_I18NTABLE pI18n )
 {
    UINT    ui;
 
@@ -4071,7 +4070,6 @@ static int hb_compI18nCompare( PHB_I18NSTRING pString, const char* pText, const 
    }
    return i;
 }
-
 
 void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext, UINT uiLine )
 {
@@ -4150,7 +4148,7 @@ void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext, UI
 }
 
 
-BOOL hb_compI18nSave( HB_COMP_DECL )
+static BOOL hb_compI18nSave( HB_COMP_DECL )
 {
    PHB_I18NTABLE    pI18n;
    PHB_I18NSTRING   pString;

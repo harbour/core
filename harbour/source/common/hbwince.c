@@ -656,9 +656,7 @@ BOOL WINAPI SetKeyboardState( PBYTE p )
 #if !defined( _MSC_VER ) || defined( __POCC__ ) || defined( __XCC__ )
 PVOID WINAPI LocalLock( HLOCAL h )
 {
-   HB_SYMBOL_UNUSED( h );
-
-   return NULL;
+   return ( PVOID ) h;
 }
 
 BOOL WINAPI LocalUnlock( HLOCAL h )
@@ -666,6 +664,11 @@ BOOL WINAPI LocalUnlock( HLOCAL h )
    HB_SYMBOL_UNUSED( h );
 
    return FALSE;
+}
+
+HLOCAL WINAPI LocalHandle( LPCVOID p )
+{
+   return ( HLOCAL ) p;
 }
 #endif /* !_MSC_VER || __POCC__ || __XCC__ */
 
