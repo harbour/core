@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-27 09:33 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_vc.mak
+     + Added optional HB_CC_DIRNAME to control (and override) 
+       where the final target files will be created inside 
+       obj/lib/bin dirs.
+       Marek pls report if this solved anything for you.
+
 2007-11-27 01:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * make_b32.mak
      ! Removed -l flag from .dll creation to be in sync with the 
