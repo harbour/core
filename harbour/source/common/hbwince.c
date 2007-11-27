@@ -65,18 +65,6 @@
 
 #if defined(HB_WINCE)
 
-#if defined(__MINGW32CE__) && 0
-clock_t clock( void )
-{
-   SYSTEMTIME st;
-
-   GetLocalTime( &st );
-
-   return ( ( clock_t ) hb_dateEncode( st.wYear, st.wMonth, st.wDay ) - 2451545 ) * 86400000 +
-      ( ( st.wHour * 60 + st.wMinute ) * 60 + st.wSecond ) * 1000 + st.wMilliseconds;
-}
-#endif
-
 int remove( const char *filename )
 {
    return DeleteFileA( filename ) ? 0 : -1;
@@ -610,19 +598,6 @@ UINT WINAPI GetTempFileNameA( LPCSTR tmpdir, LPCSTR prefix, UINT unique, LPSTR f
    return u;
 }
 
-BOOL WINAPI GetDiskFreeSpaceA( LPCSTR path, PDWORD pdwSectorsPerCluster,
-                               PDWORD pdwBytesPerSector,
-                               PDWORD pdwNumberOfFreeClusters, PDWORD pdwTotalNumberOfClusters )
-{
-   HB_SYMBOL_UNUSED( path );
-   HB_SYMBOL_UNUSED( pdwSectorsPerCluster );
-   HB_SYMBOL_UNUSED( pdwBytesPerSector );
-   HB_SYMBOL_UNUSED( pdwNumberOfFreeClusters );
-   HB_SYMBOL_UNUSED( pdwTotalNumberOfClusters );
-
-   return FALSE;
-}
-
 BOOL WINAPI Beep( DWORD dwFreq, DWORD dwDurat )
 {
    HB_SYMBOL_UNUSED( dwFreq );
@@ -721,6 +696,36 @@ BOOL WINAPI FloodFill( HDC h, int x, int y, COLORREF c )
    HB_SYMBOL_UNUSED( c );
    return FALSE;
 }
+
+/*
+ * functions which were overloaded but are not longer necessary
+ */
+#if 0
+#if defined(__MINGW32CE__)
+clock_t clock( void )
+{
+   SYSTEMTIME st;
+
+   GetLocalTime( &st );
+
+   return ( ( clock_t ) hb_dateEncode( st.wYear, st.wMonth, st.wDay ) - 2451545 ) * 86400000 +
+      ( ( st.wHour * 60 + st.wMinute ) * 60 + st.wSecond ) * 1000 + st.wMilliseconds;
+}
+#endif
+
+BOOL WINAPI GetDiskFreeSpaceA( LPCSTR path, PDWORD pdwSectorsPerCluster,
+                               PDWORD pdwBytesPerSector,
+                               PDWORD pdwNumberOfFreeClusters, PDWORD pdwTotalNumberOfClusters )
+{
+   HB_SYMBOL_UNUSED( path );
+   HB_SYMBOL_UNUSED( pdwSectorsPerCluster );
+   HB_SYMBOL_UNUSED( pdwBytesPerSector );
+   HB_SYMBOL_UNUSED( pdwNumberOfFreeClusters );
+   HB_SYMBOL_UNUSED( pdwTotalNumberOfClusters );
+
+   return FALSE;
+}
+#endif /* 0 */
 
 #endif /* HB_WINCE */
 
