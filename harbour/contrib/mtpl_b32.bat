@@ -17,10 +17,11 @@ rem ---------------------------------------------------------------
 
 set _HB_CC_NAME=%HB_CC_NAME%
 set _HB_MAKE_PROGRAM=%HB_MAKE_PROGRAM%
+set _HB_MAKEFILE=%HB_MAKEFILE%
 
 if "%_HB_CC_NAME%"      == "" set _HB_CC_NAME=b32
 if "%_HB_MAKE_PROGRAM%" == "" set _HB_MAKE_PROGRAM=make.exe
-set HB_MAKEFILE=..\mtpl_%_HB_CC_NAME%.mak
+if "%_HB_MAKEFILE%"     == "" set _HB_MAKEFILE=..\mtpl_%_HB_CC_NAME%.mak
 set HB_EXIT_LEVEL=
 
 rem ---------------------------------------------------------------
@@ -34,14 +35,14 @@ if "%1" == "INSTALL" goto INSTALL
 
 :BUILD
 
-   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%_HB_CC_NAME%.log
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %_HB_MAKEFILE% %1 %2 %3 > make_%_HB_CC_NAME%.log
    if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 if not "%HB_SHOW_ERRORS%" == "no" notepad make_%_HB_CC_NAME%.log
    goto EXIT
 
 :CLEAN
 
-   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% CLEAN > make_%_HB_CC_NAME%.log
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %_HB_MAKEFILE% CLEAN > make_%_HB_CC_NAME%.log
    if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 goto EXIT
 
@@ -51,7 +52,7 @@ if "%1" == "INSTALL" goto INSTALL
 
 :INSTALL
 
-   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %_HB_MAKEFILE% INSTALL > nul
    if errorlevel 1 set HB_EXIT_LEVEL=1
    goto EXIT
 

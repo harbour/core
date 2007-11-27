@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-27 21:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/make_b32.bat
+   * contrib/make_vc.bat
+     ! Refixed to work again with /contrib/hgf/win32 
+       (or any other nested libs)
+
 2007-11-27 20:43 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbfsapi.c
     ! fixed typo
