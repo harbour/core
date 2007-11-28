@@ -177,17 +177,17 @@ static void hb_wvt_gtCreateObjects( void )
    lb.lbStyle      = BS_HATCHED;
    lb.lbColor      = RGB( 210,210,210 );
    lb.lbHatch      = HS_DIAGCROSS; // HS_BDIAGONAL;
-   _s.diagonalBrush = CreateBrushIndirect( &lb );
+   _s.diagonalBrush = CreateHatchBrush( HS_DIAGCROSS, RGB( 210,210,210 ) ); //CreateBrushIndirect( &lb );
 
    lb.lbStyle      = BS_SOLID;
    lb.lbColor      = 0; // NULL;  // RGB( 0,0,0 );
    lb.lbHatch      = 0;
-   _s.solidBrush = CreateBrushIndirect( &lb );
+   _s.solidBrush   = CreateSolidBrush( RGB( 0,0,0 ) ); //CreateBrushIndirect( &lb );
 
    lb.lbStyle      = BS_SOLID;
    lb.lbColor      = _COLORS[ 7 ];
    lb.lbHatch      = 0;
-   _s.wvtWhiteBrush= CreateBrushIndirect( &lb );
+   _s.wvtWhiteBrush= CreateSolidBrush( _COLORS[ 7 ] ); //CreateBrushIndirect( &lb );
 
 
    /* GUI members of global structure */

@@ -1463,7 +1463,7 @@ STATIC FUNCTION MyDialogOne()
    oGet:cDesc     := 'Normal Get Box'
    oGet:bOnCreate := bBlock
    oDlg:AddObject( oGet )
-/*
+
    oBnr := WvtBanner():New( oDlg, 101, 0, 127, 1,oDlg:MaxCol()-2 )
    oBnr:nTimeDelay        := 0.25
    oBnr:cText             := 'the compiler that EXTENDS with you'
@@ -1477,7 +1477,7 @@ STATIC FUNCTION MyDialogOne()
    oBnr:nBackColorHoverOn := RGB( 255,100, 12 )
    oBnr:Tooltip           := 'WvtBanner():New()'
    oDlg:AddObject( oBnr )
-*/
+
    oBRsd := WvtStatic():New( oDlg, , 41,127,52,oDlg:MaxCol()-2 )
    oBRsd:nStatic := WVT_STATIC_BOXGROUPRAISED
    oDlg:AddObject( oBRsd )
@@ -1954,7 +1954,7 @@ Function DynDialog_2()
 
    aDlg := Wvt_MakeDlgTemplate( 1, 4, 21, 60, {0,0,0,0},  ;
                'Dialog First [ ' + ltrim( str( nInfo,10,0 ) ) + ' ] '+;
-                        if( nInfo%2==0, 'Modal','Modeless'),' Dialog !', nStyle )
+                        if( nInfo%2==0, 'Modeless', 'Modal' ),' Dialog !', nStyle )
 
    // Multi line edit control
    //

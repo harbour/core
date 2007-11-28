@@ -520,7 +520,8 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, aFilter, nFlags, cIniDir, cDe
       END
       Return( aFiles )
    else
-     cRet := left( cRet, at( chr( 0 ), cRet ) -1 )
+      //cRet := left( cRet, at( chr( 0 ), cRet ) -1 )
+
    end
 
    Return ( cRet )

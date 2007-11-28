@@ -188,7 +188,6 @@ HB_FUNC( WVT_CHOOSEFONT )
 
       hb_reta( 8 );
 
-      //hb_storc(  lf.lfFaceName     , -1, 1 );
       hb_storc(  HB_TCHAR_CONVFROM( lf.lfFaceName ), -1, 1 );
       hb_stornl( ( LONG ) PointSize, -1, 2 );
       hb_storni( lf.lfWidth        , -1, 3 );
@@ -311,7 +310,7 @@ HB_FUNC( WVT_SETTOOLTIP )
       iRight  = xy.x - 1;
 
       ti.lpszText = text;
-      
+
       ti.rect.left   = iLeft;
       ti.rect.top    = iTop;
       ti.rect.right  = iRight;
@@ -346,24 +345,23 @@ HB_FUNC( WVT_SETTOOLTIPTEXT )
 
 HB_FUNC( WVT_SETTOOLTIPMARGIN )
 {
-   /*
+#if !defined( __WINCE__ )
    RECT rc = { 0,0,0,0 };
-   int  iTtm = TTM_SETMARGIN;
 
    rc.left   = hb_parni( 2 );
    rc.top    = hb_parni( 1 );
    rc.right  = hb_parni( 4 );
    rc.bottom = hb_parni( 3 );
 
-   SendMessage( _s->hWndTT, iTtm, 0, ( LPARAM ) &rc );
-   */
+   SendMessage( _s->hWndTT, TTM_SETMARGIN, 0, ( LPARAM ) &rc );
+#endif
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_SETTOOLTIPWIDTH )
 {
-   /*
+#if !defined( __WINCE__ )
    int iTipWidth = SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 );
 
    if ( ISNUM( 1 ) )
@@ -372,14 +370,14 @@ HB_FUNC( WVT_SETTOOLTIPWIDTH )
    }
 
    hb_retni( iTipWidth );
-   */
+#endif
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
 {
-   /*
+#if !defined( __WINCE__ )
    COLORREF cr = SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 );
 
    if ( ISNUM( 1 ) )
@@ -387,14 +385,14 @@ HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
       SendMessage( _s->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 1 ), 0 );
    }
    hb_retnl( ( COLORREF ) cr );
-   */
+#endif
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
 {
-   /*
+#if !defined( __WINCE__ )
    COLORREF cr = SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 );
 
    if ( ISNUM( 1 ) )
@@ -403,14 +401,15 @@ HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
    }
 
    hb_retnl( ( COLORREF ) cr );
-   */
+#endif
 }
 
 //-------------------------------------------------------------------//
+#if _WIN32_IE > 0x400
 
 HB_FUNC( WVT_SETTOOLTIPTITLE )
 {
-   /*
+#if !defined( __WINCE__ )
    int iIcon;
 
    if ( ! ISNIL( 2 ) )
@@ -422,28 +421,35 @@ HB_FUNC( WVT_SETTOOLTIPTITLE )
       }
       SendMessage( _s->hWndTT, TTM_SETTITLE, ( WPARAM ) iIcon, ( LPARAM ) hb_parc( 2 ) );
    }
-   */
+#endif
 }
 
+#endif
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_GETTOOLTIPWIDTH )
 {
-   //hb_retni( SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 ) );
+#if !defined( __WINCE__ )
+   hb_retni( SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 ) );
+#endif
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_GETTOOLTIPBKCOLOR )
 {
-   //hb_retnl( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
+#if !defined( __WINCE__ )
+   hb_retnl( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
+#endif
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_GETTOOLTIPTEXTCOLOR )
 {
-   //hb_retnl( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
+#if !defined( __WINCE__ )
+   hb_retnl( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
+#endif
 }
 
 //-------------------------------------------------------------------//
@@ -1545,7 +1551,9 @@ HB_EXPORT int nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn )
 
 HB_FUNC( WVT_LBADDSTRING )
 {
-   SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM )( LPSTR ) hb_parc( 3 ) );
+   LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+   SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM )( LPSTR ) text );
+   HB_TCHAR_FREE( text );
 }
 
 //-------------------------------------------------------------------//
@@ -1573,7 +1581,9 @@ HB_FUNC( WVT_LBSETCURSEL )
 
 HB_FUNC( WVT_CBADDSTRING )
 {
-   SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM )( LPSTR ) hb_parc( 3 ) );
+   LPTSTR text = HB_TCHAR_CONVTO( hb_parc( 3 ) );
+   SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM )( LPSTR ) text );
+   HB_TCHAR_FREE( text );
 }
 
 //-------------------------------------------------------------------//
@@ -1802,6 +1812,7 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
                  );
 
    hb_retc( cText );
+   //hb_retc( HB_TCHAR_CONVFROM( cText ) );
    hb_xfree( cText );
 }
 
@@ -2265,11 +2276,10 @@ HB_FUNC( WVT__GETOPENFILENAME )
    if( GetOpenFileName( &ofn ) )
    {
       char * szFileName = HB_TCHAR_CONVFROM( lpFileName );
-
       hb_stornl( ofn.nFilterIndex, 8 );
       hb_storclen( szFileName, size, 2 ) ;
       hb_retc( szFileName );
-      
+
    }
    else
    {
@@ -2303,7 +2313,7 @@ HB_FUNC( WVT__GETSAVEFILENAME )
    ofn.hwndOwner       = ISNIL   (1) ? GetActiveWindow() : (HWND) hb_parnl( 1 );
    ofn.lpstrTitle      = lpstrTitle;
    ofn.lpstrFilter     = lpstrFilter;
-   ofn.Flags           = (ISNIL  (5) ? OFN_FILEMUSTEXIST|OFN_EXPLORER|OFN_NOCHANGEDIR : hb_parnl( 4 ) );
+   ofn.Flags           = (ISNIL  (5) ? OFN_FILEMUSTEXIST|OFN_EXPLORER|OFN_NOCHANGEDIR : hb_parnl( 5 ) );
    ofn.lpstrInitialDir = lpstrInitialDir;
    ofn.lpstrDefExt     = lpstrDefExt;
    ofn.nFilterIndex    = hb_parni(8);
