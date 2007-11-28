@@ -330,7 +330,7 @@ rm -fR $RPM_BUILD_ROOT
 %{?_with_gd: %{_libdir}/%{name}/libhbgd.a}
 %{_libdir}/%{name}/libhbbtree.a
 %{_libdir}/%{name}/libhtml.a
-%{_libdir}/%{name}/libmisc.a
+%{_libdir}/%{name}/libhbmisc.a
 %{_libdir}/%{name}/libct.a
 %{_libdir}/%{name}/libtip.a
 %{_libdir}/%{name}/libxhb.a

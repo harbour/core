@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-28 15:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+    * updated for library name modification
+
 2007-11-28 15:01 UTC+0100 Tomaz Zupan (tomaz.zupan@orpo.si)
    * harbour.spec
      ! fixed name libhbmisc. Change needed after namechange 
