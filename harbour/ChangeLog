@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-28 15:01 UTC+0100 Tomaz Zupan (tomaz.zupan@orpo.si)
+   * harbour.spec
+     ! fixed name libhbmisc. Change needed after namechange 
+       see: (2007-11-23 03:03 UTC+0100 Viktor Szakats)
+
 2007-11-27 21:38 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvt.c
     * Minor fixes.
@@ -1329,7 +1334,7 @@
 
 2007-11-20 17:02 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
     * contrib/xhb/common.mak
-      + Added some missing lines (suggested by Juan Gálvez)
+      + Added some missing lines (suggested by Juan Gï¿½lvez)
 
 2007-11-20 13:45 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
   * contrib/bmdbfcdx/bmdbfcdx1.c
@@ -7762,7 +7767,7 @@
   * harbour/contrib/libct/Makefile
   * harbour/contrib/libct/makefile.bc
   * harbour/contrib/libct/makefile.vc
-    * added new files and Juan Gálvez fixes
+    * added new files and Juan Gï¿½lvez fixes
   * harbour/contrib/libct/like.c
   * harbour/contrib/libct/keyset.c
     ! fixed typo
@@ -8562,7 +8567,7 @@
   * harbour/harbour.spec
     * restored original national characters which were unintentionally
       damaged on 2006-06-29 08:25 UTC+0200 Tomaz Zupan
-      Toma¾ please do not use editors which will change national characters
+      Tomaï¿½ please do not use editors which will change national characters
       in the whole file when you will change harbour.spec in the future
 
 2007-06-07 11:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -9710,7 +9715,7 @@
 
     Examples
 
-     ¦  The following example enables optimization for the Inventor
+     ï¿½  The following example enables optimization for the Inventor
         database file using the SET OPTIMIZE command:
 
         USE Inventor NEW VIA "BMDBFCDX"
@@ -23739,7 +23744,7 @@ NOTE:
      ! Changed return values for empty or failed calles to MemoRead() to return an
        empty string instead of a NULL
      ! Close file when MemoRead() was successful, but file was empty (was being left open)
-   Above solutions reported and provided by David Arturo Macías Corona.  Thanks!
+   Above solutions reported and provided by David Arturo Macï¿½as Corona.  Thanks!
 
 2004-02-19 12:48 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
    * contrib/rdd_ads/adsfunc.c
@@ -24303,7 +24308,7 @@ NOTE:
 2003-12-03 17:28 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * source/rdd/dbcmd.c
     ! Fixed OrdKeyNo() bug that set RecNo() to LastRec() + 1
-      reported by Roberto López - borrowed from xharbour
+      reported by Roberto Lï¿½pez - borrowed from xharbour
 
 2003-12-03 14:24 UTC-0800 Luis Krause Mantilla <lkrausem /*at*/ shaw /*dot*/ ca>
   * include/hbapirdd.h
@@ -26173,7 +26178,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2003-04-16 14:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
-    * A bug in hb_ntxTagKeyCount() fixed - reported by Jos© Luis Capel
+    * A bug in hb_ntxTagKeyCount() fixed - reported by Josï¿½ Luis Capel
 
 2003-04-15 13:10 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   + contrib/ole
@@ -26182,7 +26187,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
   + contrib/ole/hbtest.prg
   + contrib/ole/ole2.c
   + contrib/ole/oleauto.prg
-    + With a kind permission of the author, José F. Giménez <jfgimenez@wanadoo.es>,
+    + With a kind permission of the author, Josï¿½ F. Gimï¿½nez <jfgimenez@wanadoo.es>,
       ole library for harbour added.
       Some unused stuff is removed from the original files, few bug fixes are made.
 
@@ -26608,7 +26613,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
           DBOI_ISCOND, DBOI_ISDESC, DBOI_UNIQUE, DBOI_POSITION, DBOI_RECNO,
           DBOI_KEYNORAW, DBOI_KEYCOUNT, DBOI_KEYCOUNTRAW.
           This makes ordKeyNo() = recno() and ordKeyCount() = lastrec()
-          in such case. Reported by Hernán Diego Ceccarelli
+          in such case. Reported by Hernï¿½n Diego Ceccarelli
           <hceccarelli@cesotech.com.ar>
         + added helper function hb_cdxOrdListClear
         ! structural index isn't closed anymore
@@ -26739,7 +26744,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2002-11-27 13:30 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
-    ! Bug fixed, reported by Carlos Andr©s
+    ! Bug fixed, reported by Carlos Andrï¿½s
   * source/rtl/cdpapi.c
     ! Bug fixed in HB_TRANSLATE()
 
@@ -27085,7 +27090,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2002-10-22 18:53 UTC+0100 Antonio Linares <alinares@fivetech.com>
   * source/rtl/filesys.c
-    ! minor fix reported by José Fco. Pérez
+    ! minor fix reported by Josï¿½ Fco. Pï¿½rez
 
 2002-10-22 12:00 UTC-0500 Paul Tucker <ptucker@sympatico.ca>
   * source/rdd/dbcmd.c
@@ -29422,7 +29427,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
      ! fixed bug seek and set deleted on, reported by Lorenzo Fiorini
        also fix bug with set filter
      ! fixed bug with ordkeyno() and ordkeycount(),
-       reported by Manuel Mercado Gómez
+       reported by Manuel Mercado Gï¿½mez
 
 2002-03-04 22:33 UTC+0100 Antonio Linares <alinares@fivetech.com>
    * source/rtl/set.c
@@ -29831,7 +29836,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2002-02-04 20:15 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbf1.c
-    * Fix for hb_dbfGoTo(), posted by Horacio Rold¡n
+    * Fix for hb_dbfGoTo(), posted by Horacio Roldï¿½n
 
 2002-02-04 16:45 UTC+0100 Ignacio Ortiz <ignacio@fivetech.com>
   * source/rtl/Tget.prg
@@ -29882,7 +29887,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
          ...
          __hrbUnload( hrbLib )
 
-2002-02-01 10:30 UTC-0300 Horacio Roldán <harbour_ar@yahoo.com.ar>
+2002-02-01 10:30 UTC-0300 Horacio Roldï¿½n <harbour_ar@yahoo.com.ar>
    * utils/hbmake/hbmake.prg
      utils/hbmake/hbmutils.prg
      * Better support for big project(Read and Generations)
@@ -30191,7 +30196,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
 2002-01-28 14:21 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbf1.c
-    * Bug fixed in dbfGetMemo(), reported by Jos© Luis Capel
+    * Bug fixed in dbfGetMemo(), reported by Josï¿½ Luis Capel
 
 2002-01-28 13:50 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
@@ -30680,7 +30685,7 @@ ed
 2002-01-11 08:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   * source/rdd/dbf1.c
     ! Fixed problem with numeric field.
-      From Horacio Roldán <harbour_ar@yahoo.com.ar>
+      From Horacio Roldï¿½n <harbour_ar@yahoo.com.ar>
 
 2002-01-10 22:10 GMT-3 Luiz Rafael Culik <culik@sl.conex.net>
   * source/common/hbffind.c
@@ -30694,7 +30699,7 @@ ed
 2002-01-10 14:30 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/spfiles.c
     ! Fix to remove spurious ISCHAR(1) tests from C routines.
-      From Horacio Roldán <harbour_ar@yahoo.com.ar>
+      From Horacio Roldï¿½n <harbour_ar@yahoo.com.ar>
 
 2002-01-10 17:20 UTC+0300 Alexander Kresin <alex@belacy.belgorod.su>
   * source/pp/pptable.c
@@ -32081,7 +32086,7 @@ e.vc
 
 2001-12-06 22:20 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
-    * Bug fixed, reported by Horacio Rold¡n
+    * Bug fixed, reported by Horacio Roldï¿½n
 
 2001-12-06 21:15 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
   * source/rdd/dbfntx/dbfntx1.c
@@ -34854,7 +34859,7 @@ e.vc
 
 2001-07-24 20:45  GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +doc/es/math.txt
-      *Math docs translated to spanish. Thanks for Ricardo Ramírez R.
+      *Math docs translated to spanish. Thanks for Ricardo Ramï¿½rez R.
 
 2001-07-24  08:45 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>/Jose Lalin <dezac@corevia.com>
    * source/compiler/gencobj.c
@@ -35534,7 +35539,7 @@ e.vc
      * Changed PP_Main() to STATIC Main() to have a Main procedure for build that require a MAIN yet avoid conflict if linked with a prg including a MAIN.
    * contrib/dot/pp_harb.ch
      * Wrapped a Windows specific code within #ifdef WIN.
-   /* Thanks to input from Tomaž Zupan. */
+   /* Thanks to input from Tomaï¿½ Zupan. */
 
    * source/pp/ppcore.c
      ! Added a BOOL 2nd parameter to isExpres() to flag a LIST MP. This fixes problem with matching a list exp with an empty component.
@@ -36221,7 +36226,7 @@ e.vc
       new Harbour License and Exception with permission from
       Andi Jahja <andijahja@cbn.net.id>,
       April White <awhite@mail.rosecom.ca>,
-      Ignacio_Ortiz_de_Zúñiga <ignacio@ozs.com>,
+      Ignacio_Ortiz_de_Zï¿½ï¿½iga <ignacio@ozs.com>,
       Kwon,OJun (Charles Kwon) <charles@fivetech.net>, and
       Phil Barnett <midnight@the-oasis.net>
 
@@ -38668,7 +38673,7 @@ NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
 
 2001-03-14 04:55 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * source/vm/classes.c
-     ! Fixed hb_param() to hb_stackItemFromBase() (posted by José F. Giménez)
+     ! Fixed hb_param() to hb_stackItemFromBase() (posted by Josï¿½ F. Gimï¿½nez)
 
 2001-03-13 03:45 UTC-0800 Ron Pinkas <ron@profit-master.com>
    * contrib/dot/pp.txt
@@ -38693,7 +38698,7 @@ NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
   * source/lang/msgeo.c
     ! Updated
     + Added harbour license
-    ( provided by Jos© Lal­n <dezac@corevia.com> )
+    ( provided by Josï¿½ Lalï¿½n <dezac@corevia.com> )
 
 2001-03-11 21:43 UTC+0500 April <awhite@user.rose.com>
    * doc/en/hb_macro.txt
@@ -57589,7 +57594,7 @@ Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
       rewritten and continued in C++, which is also Open Source, and you can
       find it at http://www.nexus.hu/cccpp/
 
-      This great contribution was made by Levente Csisz r <lcsiszar@index.hu>
+      This great contribution was made by Levente Csiszï¿½r <lcsiszar@index.hu>
 
 19991109-01:09 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/filesys.c
@@ -59907,7 +59912,7 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
    * source/rtl/memoline.c
      source/rtl/mlcount.c
      ! TAB handling fixes for MEMOLINE() and MLCOUNT() by
-       Ignacio Ortiz de Zúniga <ignacio@fivetech.com>
+       Ignacio Ortiz de Zï¿½niga <ignacio@fivetech.com>
      * All USHORTs changed to ULONG.
 
 19991006-13:05 GMT+1 Victor Szel <info@szelvesz.hu>
@@ -60109,7 +60114,7 @@ Tue Oct 05 14:44:16 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     source/rtl/Makefile
     doc/funclist.txt
     + MEMOLINE() added
-      (thanks to Ignacio Ortiz de Zúniga <ignacio@fivetech.com>)
+      (thanks to Ignacio Ortiz de Zï¿½niga <ignacio@fivetech.com>)
       !! WARNING !! Please modify non-GNU make files.
 
 19991005-18:20 GMT+1 Victor Szel <info@szelvesz.hu>
@@ -60324,7 +60329,7 @@ Mon Oct 04 12:52:42 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
     source/rtl/Makefile
     doc/funclist.txt
     + MLCOUNT() added
-      (thanks to Ignacio Ortiz de Zúniga <ignacio@fivetech.com>)
+      (thanks to Ignacio Ortiz de Zï¿½niga <ignacio@fivetech.com>)
   - source/runner/stdalone/runner.prg
     - Removed (now for sure)
 
