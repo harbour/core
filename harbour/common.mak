@@ -20,6 +20,27 @@
 
 #**********************************************************
 
+# ---------------------------------------------------------------
+# "echo." intentionally used instead of "echo", to avoid conflicts
+# with external commands named echo.
+# using macros for ECHO and DEL to allow overiding such as:
+#
+#    set ECHO=cmd /c echo
+#    set DEL=cmd /c del
+#
+# The above might be needed on Windows 2000 and XP.
+# The macros are referenced in makefile.bc
+# ---------------------------------------------------------------
+
+!ifndef ECHO
+ECHO = echo.
+!endif
+!ifndef DEL
+DEL = del
+!endif
+
+#**********************************************************
+
 #
 # binary file suffixes and prefixes
 #

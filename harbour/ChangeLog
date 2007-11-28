@@ -1,12 +1,23 @@
 /*
  * $Id$
  */
-  
+
 /* Use this format for the entry headers:
    YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2007-11-28 18:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/source/common/hbfhnd.c
+    * Added conditional define to disable Bcc extension
+      (HB_NO_BCC_MAX_OPENFILES_HACK). Required for dll
+      build with dynamic runtime (-tWR).
+
+  * harbour/make_b32.mak
+  * harbour/make_vc.mak
+  * harbour/make_vcce.mak
+    * $ECHO) and $(DEL) definitions moved to common.mak to avoid redundancy
 
 2007-11-28 15:16 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-ce-spec
@@ -15,7 +26,7 @@
 
 2007-11-28 15:01 UTC+0100 Tomaz Zupan (tomaz.zupan@orpo.si)
    * harbour.spec
-     ! fixed name libhbmisc. Change needed after namechange 
+     ! fixed name libhbmisc. Change needed after namechange
        see: (2007-11-23 03:03 UTC+0100 Viktor Szakats)
 
 2007-11-27 21:38 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
@@ -27,12 +38,12 @@
   * harbour/contrib/gtwvg/wvtpaint.prg
     ! Wvt_GetOpenFileName() - Fixed to respect recent UNICODE compliance.
   * harbour/contrib/gtwvg/test/demowvg.prg
-    ! Adjusted to respect changes in core lib.	
+    ! Adjusted to respect changes in core lib.
 
 2007-11-27 21:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/make_b32.bat
    * contrib/make_vc.bat
-     ! Refixed to work again with /contrib/hgf/win32 
+     ! Refixed to work again with /contrib/hgf/win32
        (or any other nested libs)
 
 2007-11-27 20:43 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -129,14 +140,14 @@
 2007-11-27 09:33 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/mtpl_b32.mak
    * contrib/mtpl_vc.mak
-     + Added optional HB_CC_DIRNAME to control (and override) 
-       where the final target files will be created inside 
+     + Added optional HB_CC_DIRNAME to control (and override)
+       where the final target files will be created inside
        obj/lib/bin dirs.
        Marek pls report if this solved anything for you.
 
 2007-11-27 01:12 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * make_b32.mak
-     ! Removed -l flag from .dll creation to be in sync with the 
+     ! Removed -l flag from .dll creation to be in sync with the
        rest of Harbour.
 
    * contrib/mtpl_b32.mak
@@ -159,14 +170,14 @@
    * contrib/mysql/mysql.c
    * contrib/mysql/make_b32.bat
    * contrib/mysql/make_vc.bat
-     ! Some extra lib-level custom C flags fixed to be 
+     ! Some extra lib-level custom C flags fixed to be
        in sync with rest of Harbour. (mainly HB_OS_WIN_32_USED)
 
    * contrib/hbzlib/make_b32.bat
    * contrib/hbzlib/make_vc.bat
-     ! hbziparch extra switches removed (all of them). 
+     ! hbziparch extra switches removed (all of them).
        This made surface a whole lot of warnings.
-       If someone wants to create a .dll from this, 
+       If someone wants to create a .dll from this,
        -DZLIB_DLL will need to be added to C_USR.
        -a8 switch was also removed from the BCC build.
        If someone know that it's necessary, pls shout.
@@ -202,8 +213,8 @@
    * contrib/mtpl_vc.mak
      ! Fixed: HB_CC_NAME -> _HB_CC_NAME
        (files were directly created in '/lib//' since last change)
-       If someone wants to override the default dir names where 
-       bin/lib/obj files are created - by using an undocumented 
+       If someone wants to override the default dir names where
+       bin/lib/obj files are created - by using an undocumented
        internal envvar - pls use 'set _HB_CC_NAME=...'
 
 2007-11-26 20:50 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)

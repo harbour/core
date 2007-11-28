@@ -50,17 +50,7 @@
 #       HB_DOC_PDF        - Turns on the .PDF file support in the HBDOC utility.
 #                           Note that this will require the pdflib contrib.
 
-# ---------------------------------------------------------------
-# "echo." intentionally used instead of "echo", to avoid conflicts
-# with external commands named echo.
-# using macros for ECHO and DEL to allow overiding such as:
-#
-#    set ECHO=cmd /c echo
-#    set DEL=cmd /c del
-#
-# The above might be needed on Windows 2000 and XP.
-# The macros are referenced in makefile.bc
-# ---------------------------------------------------------------
+#**********************************************************
 
 .SUFFIXES:
 
@@ -69,15 +59,6 @@
 # Visual C++ version
 !ifndef HB_VISUALC_VER
 HB_VISUALC_VER = 80
-!endif
-
-#**********************************************************
-
-!ifndef ECHO
-ECHO = echo.
-!endif
-!ifndef DEL
-DEL = del
 !endif
 
 #**********************************************************

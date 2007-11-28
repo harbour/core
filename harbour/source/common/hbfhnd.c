@@ -50,7 +50,7 @@
  *
  */
 
-#if defined(__WIN32__) && defined(__BORLANDC__)
+#if defined(__WIN32__) && defined(__BORLANDC__) && !defined( HB_NO_BCC_MAX_OPENFILES_HACK )
 
    #define ___NFILE_H
 
@@ -92,7 +92,7 @@ void hb_fhnd_ForceLink( void )
    /* Intentionally do nothing */
 }
 
-#if defined(__WIN32__) && defined(__BORLANDC__)
+#if defined(__WIN32__) && defined(__BORLANDC__) && !defined( HB_NO_BCC_MAX_OPENFILES_HACK )
 
 #define _F_STDIN        (_F_READ | _F_TERM | _F_LBUF)
 #define _F_STDOUT       (_F_WRIT | _F_TERM | _F_LBUF)

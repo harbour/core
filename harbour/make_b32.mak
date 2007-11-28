@@ -52,31 +52,11 @@
 #
 #       HB_DOC_PDF        - Turns on the .PDF file support in the HBDOC utility.
 #                           Note that this will require the pdflib contrib.
-
-# ---------------------------------------------------------------
-# "echo." intentionally used instead of "echo", to avoid conflicts
-# with external commands named echo.
-# using macros for ECHO and DEL to allow overiding such as:
-#
-#    set ECHO=cmd /c echo
-#    set DEL=cmd /c del
-#
-# The above might be needed on Windows 2000 and XP.
-# The macros are referenced in makefile.bc
-# ---------------------------------------------------------------
+#**********************************************************
 
 #.KEEP
 .AUTODEPEND
 .SUFFIXES:
-
-#**********************************************************
-
-!ifndef ECHO
-    ECHO = echo.
-!endif
-!ifndef DEL
-    DEL = del
-!endif
 
 #**********************************************************
 
@@ -121,6 +101,7 @@ CFLAGS         = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
 !endif
 #-----------
 !if "$(BCCDLL_WITH_DYNRT)" == "-tWR"
+    BCCDLL_WITH_DYNRT=$(BCCDLL_WITH_DYNRT) -DHB_NO_BCC_MAX_OPENFILES_HACK
     RTLIBSUFFIX = i
 !endif
 #-----------
