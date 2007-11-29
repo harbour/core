@@ -35,6 +35,8 @@ if "%HB_SHOW_ERRORS%"  == "" set HB_SHOW_ERRORS=yes
 
 set HB_MAKEFILE=make_%HB_CC_NAME%.mak
 
+set HB_EXIT_LEVEL=
+
 rem ---------------------------------------------------------------
 
 rem Save the user value, force silent file overwrite with COPY
@@ -54,12 +56,14 @@ if "%1" == "INSTALL" goto INSTALL
 :BUILD
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
+   if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 if "%HB_SHOW_ERRORS%" == "yes" notepad make_%HB_CC_NAME%.log
    goto EXIT
 
 :CLEAN
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% CLEAN > make_%HB_CC_NAME%.log
+   if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 goto EXIT
    if exist make_%HB_CC_NAME%.log del make_%HB_CC_NAME%.log > nul
    if exist inst_%HB_CC_NAME%.log del inst_%HB_CC_NAME%.log > nul
@@ -68,11 +72,12 @@ if "%1" == "INSTALL" goto INSTALL
 :INSTALL
 
    %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
+   if errorlevel 1 set HB_EXIT_LEVEL=1
    goto EXIT
 
-:EXIT
-
 rem ---------------------------------------------------------------
+
+:EXIT
 
 rem Restore user value
 set COPYCMD=%HB_ORGENV_COPYCMD%
@@ -88,3 +93,5 @@ set HB_GT_LIB_SAV=
 set HB_CC_NAME_SAV=
 set HB_MAKE_PROGRAM_SAV=
 set HB_SHOW_ERRORS_SAV=
+
+if "%HB_EXIT_LEVEL%" == "1" exit 1
