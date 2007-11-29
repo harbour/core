@@ -20,7 +20,7 @@
        exiting.
      ! Not tampering with user level envvars by changing 
        their content to default values.
-     % HB_GT_* envvar defaulting move to .mak file level, 
+     % HB_GT_* envvar defaulting moved to .mak file level, 
        since these envvars were not used on batch file 
        level anyway.
 

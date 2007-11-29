@@ -28,6 +28,7 @@ if "%_HB_CC_NAME%"      == "" set _HB_CC_NAME=b32
 if "%_HB_MAKE_PROGRAM%" == "" set _HB_MAKE_PROGRAM=make.exe
 
 set _HB_MAKEFILE=make_%_HB_CC_NAME%.mak
+set HB_EXIT_LEVEL=
 
 rem ---------------------------------------------------------------
 
