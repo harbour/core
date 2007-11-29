@@ -57,7 +57,3 @@ if "%1" == "INSTALL" goto INSTALL
    goto EXIT
 
 :EXIT
-
-set _HB_CC_NAME=
-set _HB_MAKE_PROGRAM=
-set _HB_MAKEFILE=

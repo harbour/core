@@ -21,26 +21,13 @@ rem    set HB_MAKE_FLAGS=
 rem    set HB_CC_NAME=
 rem ---------------------------------------------------------------
 
-rem Save original environment variables
-if NOT "%HB_GT_LIB%"       == "" set HB_GT_LIB_SAV=%HB_GT_LIB%
-if NOT "%HB_CC_NAME%"      == "" set HB_CC_NAME_SAV=%HB_CC_NAME%
-if NOT "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM_SAV=%HB_MAKE_PROGRAM%
-if NOT "%HB_SHOW_ERRORS%"  == "" set HB_SHOW_ERRORS_SAV=%HB_SHOW_ERRORS%
-if NOT "%HB_GT_DEFAULT%"   == "" set HB_GT_DEFAULT_SAV=%HB_GT_DEFAULT%
-if NOT "%C_USR%"           == "" set C_USR_SAV=%C_USR%
+set _HB_CC_NAME=%HB_CC_NAME%
+set _HB_MAKE_PROGRAM=%HB_MAKE_PROGRAM%
 
-rem Set environment variables to default values
-if "%HB_GT_LIB%"       == "" set HB_GT_LIB=gtwvt
-if "%HB_CC_NAME%"      == "" set HB_CC_NAME=vcce
-if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
-if "%HB_SHOW_ERRORS%"  == "" set HB_SHOW_ERRORS=yes
-if "%HB_GT_DEFAULT%"   == "" set HB_GT_DEFAULT=wvt
+if "%_HB_CC_NAME%"      == "" set _HB_CC_NAME=vcce
+if "%_HB_MAKE_PROGRAM%" == "" set _HB_MAKE_PROGRAM=nmake.exe
 
-set HB_MAKEFILE=make_%HB_CC_NAME%.mak
-
-set CFLAGS=%C_USR% -DHB_NO_WIN_CONSOLE
-
-set HB_EXIT_LEVEL=
+set _HB_MAKEFILE=make_%_HB_CC_NAME%.mak
 
 rem ---------------------------------------------------------------
 
@@ -60,47 +47,33 @@ if "%1" == "INSTALL" goto INSTALL
 
 :BUILD
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% %1 %2 %3 > make_%HB_CC_NAME%.log
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %_HB_MAKEFILE% %1 %2 %3 > make_%_HB_CC_NAME%.log
    if errorlevel 1 set HB_EXIT_LEVEL=1
-   if errorlevel 1 if "%HB_SHOW_ERRORS%" == "yes" notepad make_%HB_CC_NAME%.log
+   if errorlevel 1 if not "%HB_SHOW_ERRORS%" == "no" notepad make_%_HB_CC_NAME%.log
    goto EXIT
 
 :CLEAN
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% CLEAN > make_%HB_CC_NAME%.log
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %_HB_MAKEFILE% CLEAN > make_%_HB_CC_NAME%.log
    if errorlevel 1 set HB_EXIT_LEVEL=1
    if errorlevel 1 goto EXIT
-   if exist make_%HB_CC_NAME%.log del make_%HB_CC_NAME%.log > nul
-   if exist inst_%HB_CC_NAME%.log del inst_%HB_CC_NAME%.log > nul
+   if exist make_%_HB_CC_NAME%.log del make_%_HB_CC_NAME%.log > nul
+   if exist inst_%_HB_CC_NAME%.log del inst_%_HB_CC_NAME%.log > nul
    goto EXIT
 
 :INSTALL
 
-   %HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %HB_MAKEFILE% INSTALL > nul
+   %_HB_MAKE_PROGRAM% %HB_MAKE_FLAGS% -f %_HB_MAKEFILE% INSTALL > nul
    if errorlevel 1 set HB_EXIT_LEVEL=1
    goto EXIT
 
-rem ---------------------------------------------------------------
-
 :EXIT
+
+rem ---------------------------------------------------------------
 
 rem Restore user value
 set COPYCMD=%HB_ORGENV_COPYCMD%
 
-set HB_MAKEFILE=
-
-set HB_GT_LIB=%HB_GT_LIB_SAV%
-set HB_CC_NAME=%HB_CC_NAME_SAV%
-set HB_MAKE_PROGRAM=%HB_MAKE_PROGRAM_SAV%
-set HB_SHOW_ERRORS=%HB_SHOW_ERRORS_SAV%
-set HB_GT_DEFAULT=%HB_GT_DEFAULT_SAV%
-set C_USR=%C_USR_SAV%
-
-set HB_GT_LIB_SAV=
-set HB_CC_NAME_SAV=
-set HB_MAKE_PROGRAM_SAV=
-set HB_SHOW_ERRORS_SAV=
-set HB_GT_DEFAULT_SAV=
-set C_USR_SAV=
-
-if "%HB_EXIT_LEVEL%" == "1" exit 1
+set _HB_CC_NAME=
+set _HB_MAKE_PROGRAM=
+set _HB_MAKEFILE=

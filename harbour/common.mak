@@ -86,6 +86,10 @@ HB_LIB_INSTALL = $(HB_INSTALL_PREFIX)\lib
 # Directory macros. These should never have to change.
 #**********************************************************
 
+!ifdef _HB_CC_NAME
+HB_CC_NAME = $(_HB_CC_NAME)
+!endif
+
 BIN_DIR = bin\$(HB_CC_NAME)
 OBJ_DIR = obj\$(HB_CC_NAME)
 LIB_DIR = lib\$(HB_CC_NAME)

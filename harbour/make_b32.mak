@@ -58,6 +58,10 @@
 .AUTODEPEND
 .SUFFIXES:
 
+!if "$(HB_GT_LIB)" == ""
+HB_GT_LIB = gtwin
+!endif
+
 #**********************************************************
 
 CC     = bcc32.exe

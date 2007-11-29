@@ -56,6 +56,10 @@
 
 .SUFFIXES:
 
+!if "$(HB_GT_LIB)" == ""
+HB_GT_LIB = gtwin
+!endif
+
 #**********************************************************
 
 # Visual C++ version

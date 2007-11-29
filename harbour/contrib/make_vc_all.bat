@@ -10,10 +10,10 @@ set HB_SHOW_ERRORS=no
 
 set DO_NOT_COMPILE=examples hbclip hgf
 
-set DIRS=adordd bmdbfcdx btree libct libgt libmisc libnf msql
+set DIRS=adordd bmdbfcdx btree gtwvg libct libgt libmisc libnf msql
 for %%n in ( %DIRS% ) do %COMSPEC% /c make_vc.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set DIRS=ole hbzlib htmllib odbc telepath tip win32 xhb
+set DIRS=ole hbzlib htmllib odbc telepath tip what32 win32 xhb
 for %%n in ( %DIRS% ) do %COMSPEC% /c make_vc.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set DIRS=samples directx
