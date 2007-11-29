@@ -8,10 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-29 21:40 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/make_b32.bat
+  * harbour/make_vc.bat
+  * harbour/make_vcce.bat
+    * Take care of environment variables possibly modified
+      inside batch files. Should leave user environment space
+      in a consistent state.
+
 2007-11-29 01:26 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/mtpl_b32.bat
    * contrib/mtpl_vc.bat
-     + Clear the internal envvars used by these .bat files, to 
+     + Clear the internal envvars used by these .bat files, to
        not leave any junk after themselves.
 
 2007-11-28 18:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)

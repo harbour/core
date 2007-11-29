@@ -21,11 +21,21 @@ rem    set HB_MAKE_FLAGS=
 rem    set HB_CC_NAME=
 rem ---------------------------------------------------------------
 
+rem Save original environment variables
+if NOT "%HB_GT_LIB%"       == "" set HB_GT_LIB_SAV=%HB_GT_LIB%
+if NOT "%HB_CC_NAME%"      == "" set HB_CC_NAME_SAV=%HB_CC_NAME%
+if NOT "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM_SAV=%HB_MAKE_PROGRAM%
+if NOT "%HB_SHOW_ERRORS%"  == "" set HB_SHOW_ERRORS_SAV=%HB_SHOW_ERRORS%
+if NOT "%HB_GT_DEFAULT%"   == "" set HB_GT_DEFAULT_SAV=%HB_GT_DEFAULT%
+if NOT "%C_USR%"           == "" set C_USR_SAV=%C_USR%
+
+rem Set environment variables to default values
 if "%HB_GT_LIB%"       == "" set HB_GT_LIB=gtwvt
 if "%HB_CC_NAME%"      == "" set HB_CC_NAME=vcce
-if "%HB_GT_DEFAULT%"   == "" set HB_GT_DEFAULT=wvt
 if "%HB_MAKE_PROGRAM%" == "" set HB_MAKE_PROGRAM=nmake.exe
 if "%HB_SHOW_ERRORS%"  == "" set HB_SHOW_ERRORS=yes
+if "%HB_GT_DEFAULT%"   == "" set HB_GT_DEFAULT=wvt
+
 set HB_MAKEFILE=make_%HB_CC_NAME%.mak
 
 set CFLAGS=%C_USR% -DHB_NO_WIN_CONSOLE
@@ -71,3 +81,19 @@ rem ---------------------------------------------------------------
 
 rem Restore user value
 set COPYCMD=%HB_ORGENV_COPYCMD%
+
+set HB_MAKEFILE=
+
+set HB_GT_LIB=%HB_GT_LIB_SAV%
+set HB_CC_NAME=%HB_CC_NAME_SAV%
+set HB_MAKE_PROGRAM=%HB_MAKE_PROGRAM_SAV%
+set HB_SHOW_ERRORS=%HB_SHOW_ERRORS_SAV%
+set HB_GT_DEFAULT=%HB_GT_DEFAULT_SAV%
+set C_USR=%C_USR_SAV%
+
+set HB_GT_LIB_SAV=
+set HB_CC_NAME_SAV=
+set HB_MAKE_PROGRAM_SAV=
+set HB_SHOW_ERRORS_SAV=
+set HB_GT_DEFAULT_SAV=
+set C_USR_SAV=
