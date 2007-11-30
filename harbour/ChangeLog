@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-40 07:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/common.mak
+  * harbour/make_b32.mak
+  * harbour/make_vc.mak
+    ! Reverted moving HB_GT_LIB to common.mak, because
+      in common.mak it is set to gtstd by default.
+
 2007-11-40 08:45 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/make_vcce.mak
     ! Conditionaly add HB_NO_WIN_CONSOLE to CFLAGS
