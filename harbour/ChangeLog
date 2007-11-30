@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-30 06:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/make_b32.bat
+  * harbour/make_vc.bat
+  * harbour/make_vcce.bat
+    * Restored handling of exit level
+
 2007-11-29 22:23 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * make_vcce.bat
    * make_vcce.mak
@@ -16,24 +22,24 @@
    * make_vc.bat
    * make_vc.mak
    * common.mak
-     + Now every internally used envvars are reset before 
+     + Now every internally used envvars are reset before
        exiting.
-     ! Not tampering with user level envvars by changing 
+     ! Not tampering with user level envvars by changing
        their content to default values.
-     % HB_GT_* envvar defaulting moved to .mak file level, 
-       since these envvars were not used on batch file 
+     % HB_GT_* envvar defaulting moved to .mak file level,
+       since these envvars were not used on batch file
        level anyway.
 
    * make_vcce.bat
    * make_vcce.mak
      * CFLAGS -DHB_NO_WIN_CONSOLE moved to the make file.
-       If there was any reason to have this only CE C flag 
-       in batch file separated from the rest of the extra 
+       If there was any reason to have this only CE C flag
+       in batch file separated from the rest of the extra
        CE C flags in the make file, please speak up.
-       This change may cause trouble for those using 
-       the make file directly and at the same time don't 
-       want to use the HB_NO_WIN_CONSOLE compiler flag. 
-       In this case we should add a documented way to 
+       This change may cause trouble for those using
+       the make file directly and at the same time don't
+       want to use the HB_NO_WIN_CONSOLE compiler flag.
+       In this case we should add a documented way to
        disable it inside the make file IMO.
 
    * contrib/freeimage/make_b32.bat
@@ -60,12 +66,12 @@
    * contrib/what32/make_vc.bat
    * contrib/msql/make_b32.bat
    * contrib/msql/make_vc.bat
-     + Now every internally used envvars are reset before 
-       exiting the batch file, so they won't interact 
-       with other batch files even if being called after 
-       each other using "call". So "%COMPSPEC% /c" is not 
+     + Now every internally used envvars are reset before
+       exiting the batch file, so they won't interact
+       with other batch files even if being called after
+       each other using "call". So "%COMPSPEC% /c" is not
        necessary anymore when calling these batches.
-     ! Fixed to use _HB_CC_NAME when dealing with .dll to .lib 
+     ! Fixed to use _HB_CC_NAME when dealing with .dll to .lib
        conversions.
 
    * contrib/make_b32_all.bat
