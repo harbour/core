@@ -10,7 +10,7 @@
 
 2007-11-40 08:45 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/make_vcce.mak
-    * Conditionaly add HB_NO_WIN_CONSOLE to CFLAGS
+    ! Conditionaly add HB_NO_WIN_CONSOLE to CFLAGS
       based on HB_WINCE_COMPILE_WITH_GTWIN envvar
 
 2007-11-40 07:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
