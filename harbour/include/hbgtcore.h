@@ -254,6 +254,7 @@ typedef struct _HB_GT_INIT
    char           * id;
    BOOL           (* init) ( PHB_GT_FUNCS );
    PHB_GT_FUNCS   pSuperTable;
+   int *          pGtId;
 } HB_GT_INIT, * PHB_GT_INIT;
 
 
@@ -303,9 +304,11 @@ typedef struct
    BOOL *         pLines;           /* Touched Window lines */
    BOOL           fRefresh;         /* Should Window be refreshed */
 
+   void **        pGTData;          /*  */
 } HB_GT_BASE;
-typedef HB_GT_BASE * PHB_GT_BASE;
+typedef HB_GT_BASE * PHB_GT_BASE, * PHB_GT;
 
+extern PHB_GT hb_gt_Base( void );
 extern void * hb_gt_New( void );
 extern void   hb_gt_Free( void * pGtPtr );
 extern void   hb_gt_Init( FHANDLE hStdIn, FHANDLE hStdOut, FHANDLE hStdErr );

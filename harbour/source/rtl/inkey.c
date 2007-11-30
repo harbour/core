@@ -58,7 +58,7 @@
  *    HB_KEYPUT()
  *
  * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
- *    hb_setInkeyLast()
+ *    hb_inkeySetLast()
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *    HB_SETLASTKEY()
@@ -104,11 +104,11 @@ static PHB_ITEM s_inKeyBlockBefore = NULL;
 static PHB_ITEM s_inKeyBlockAfter  = NULL;
 
 
-HB_EXPORT int hb_inkeyTranslate( int iKey, int iEventMask )
+static int hb_inkeyFilter( int iKey, int iEventMask )
 {
    int iMask;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyTranslate(%d,%d)", iKey, iEventMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyFilter(%d,%d)", iKey, iEventMask));
 
    switch( iKey )
    {
@@ -153,7 +153,23 @@ HB_EXPORT int hb_inkeyTranslate( int iKey, int iEventMask )
    return iKey;
 }
 
-
+/* drop the next key in keyboard buffer */
+static void hb_inkeyPop( void )
+{
+   if( s_StrBuffer )
+   {
+      if( ++s_StrBufferPos >= s_StrBufferSize )
+      {
+         hb_xfree( s_StrBuffer );
+         s_StrBuffer = NULL;
+      }
+   }
+   else if( s_inkeyHead != s_inkeyTail )
+   {
+      if( ++s_inkeyTail >= s_inkeyBufferSize )
+         s_inkeyTail = 0;
+   }
+}
 
 /* Put the key into keyboard buffer */
 HB_EXPORT void hb_inkeyPut( int iKey )
@@ -189,24 +205,6 @@ HB_EXPORT void hb_inkeyPut( int iKey )
    }
 }
 
-/* drop the next key in keyboard buffer */
-static void hb_inkeyPop( void )
-{
-   if( s_StrBuffer )
-   {
-      if( ++s_StrBufferPos >= s_StrBufferSize )
-      {
-         hb_xfree( s_StrBuffer );
-         s_StrBuffer = NULL;
-      }
-   }
-   else if( s_inkeyHead != s_inkeyTail )
-   {
-      if( ++s_inkeyTail >= s_inkeyBufferSize )
-         s_inkeyTail = 0;
-   }
-}
-
 static BOOL hb_inkeyNextCheck( int iEventMask, int * iKey )
 {
    HB_TRACE( HB_TR_DEBUG, ("hb_inkeyNextCheck(%p)", iKey) );
@@ -217,7 +215,7 @@ static BOOL hb_inkeyNextCheck( int iEventMask, int * iKey )
    }
    else if( s_inkeyHead != s_inkeyTail )
    {
-      *iKey = hb_inkeyTranslate( s_inkeyBuffer[ s_inkeyTail ], iEventMask );
+      *iKey = hb_inkeyFilter( s_inkeyBuffer[ s_inkeyTail ], iEventMask );
    }
    else
    {
@@ -295,6 +293,7 @@ HB_EXPORT int hb_inkeyNext( int iEventMask )
    return iKey;
 }
 
+/* Wait for keyboard input */
 HB_EXPORT int hb_inkey( BOOL fWait, double dSeconds, int iEventMask )
 {
    HB_ULONG end_timer = 0;
@@ -346,19 +345,39 @@ HB_EXPORT int hb_inkeyLast( int iEventMask )
 
    hb_inkeyPoll();
 
-   return hb_inkeyTranslate( s_inkeyLast, iEventMask );
+   return hb_inkeyFilter( s_inkeyLast, iEventMask );
 }
 
 /* Force a value to s_inkeyLast and return previous value */
-HB_EXPORT int hb_setInkeyLast( int iKey )
+HB_EXPORT int hb_inkeySetLast( int iKey )
 {
    int iLast = s_inkeyLast;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_setInkeyLast(%d)", iKey));
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeySetLast(%d)", iKey));
 
    s_inkeyLast = iKey;
 
    return iLast;
+}
+
+/* Set text into inkey buffer */
+HB_EXPORT void hb_inkeySetText( const char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeySetText(%s,%lu)", szText, ulLen));
+
+   if( s_StrBuffer )
+   {
+      hb_xfree( s_StrBuffer );
+      s_StrBuffer = NULL;
+   }
+
+   if( szText && ulLen )
+   {
+      s_StrBuffer = ( BYTE * ) hb_xgrab( ulLen );
+      memcpy( s_StrBuffer, szText, ulLen );
+      s_StrBufferSize = ulLen;
+      s_StrBufferPos = 0;
+   }
 }
 
 /* Reset the keyboard buffer */
@@ -394,6 +413,7 @@ HB_EXPORT void hb_inkeyReset( void )
    }
 }
 
+/* reset inkey pool to default state and free any allocated resources */
 HB_EXPORT void hb_inkeyExit( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyExit()"));
@@ -441,9 +461,7 @@ HB_FUNC( INKEY )
    int iKey;
 
    if( s_inKeyBlockBefore )
-   {
       hb_vmEvalBlock( s_inKeyBlockBefore );
-   }
 
    do
    {
@@ -456,14 +474,12 @@ HB_FUNC( INKEY )
 
       pKey = hb_itemPutNI( pKey, iKey );
       iKey = hb_itemGetNI( hb_vmEvalBlockV( s_inKeyBlockAfter, 1, pKey ) );
-      hb_setInkeyLast( iKey );
+      hb_inkeySetLast( iKey );
    }
    while( iKey == 0 );
 
    if( pKey )
-   {
       hb_itemRelease( pKey );
-   }
 
    hb_retni( iKey );
 }
@@ -472,65 +488,37 @@ HB_FUNC( INKEY )
 #if 0
 HB_FUNC( HB_SETINKEYBEFOREBLOCK )
 {
-   USHORT uiPCount = hb_pcount();
-
    if( s_inKeyBlockBefore )
-   {
       hb_itemReturn( s_inKeyBlockBefore );
-   }
-   else
-   {
-      hb_ret();
-   }
 
-   if( uiPCount > 0 )
+   if( hb_pcount() > 0 )
    {
       PHB_ITEM pBlock = hb_param( 1, HB_IT_BLOCK );
 
-      if( s_inKeyBlockBefore )
-      {
-         hb_itemRelease( s_inKeyBlockBefore );
-      }
       if( pBlock )
-      {
-         s_inKeyBlockBefore = hb_itemNew( pBlock );
-      }
-      else
-      {
-         s_inKeyBlockBefore = NULL;
-      }
+         pBlock = hb_itemNew( pBlock );
+
+      if( s_inKeyBlockBefore )
+         hb_itemRelease( s_inKeyBlockBefore );
+      s_inKeyBlockBefore = pBlock;
    }
 }
 
 HB_FUNC( HB_SETINKEYAFTERBLOCK )
 {
-   USHORT uiPCount = hb_pcount();
-
    if( s_inKeyBlockAfter )
-   {
       hb_itemReturn( s_inKeyBlockAfter );
-   }
-   else
-   {
-      hb_ret();
-   }
 
-   if( uiPCount > 0 )
+   if( hb_pcount() > 0 )
    {
       PHB_ITEM pBlock = hb_param( 1, HB_IT_BLOCK );
 
-      if( s_inKeyBlockAfter )
-      {
-         hb_itemRelease( s_inKeyBlockAfter );
-      }
       if( pBlock )
-      {
-         s_inKeyBlockAfter = hb_itemNew( pBlock );
-      }
-      else
-      {
-         s_inKeyBlockAfter = NULL;
-      }
+         pBlock = hb_itemNew( pBlock );
+
+      if( s_inKeyBlockAfter )
+         hb_itemRelease( s_inKeyBlockAfter );
+      s_inKeyBlockAfter = pBlock;
    }
 }
 #endif
@@ -541,18 +529,7 @@ HB_FUNC( __KEYBOARD )
    hb_inkeyReset();
 
    if( ISCHAR( 1 ) )
-   {
-      ULONG ulSize = hb_parclen( 1 );
-
-      /* It might be just a request to clear the buffer */
-      if( ulSize != 0 )
-      {
-         s_StrBuffer = ( BYTE * ) hb_xgrab( ulSize );
-         memcpy( s_StrBuffer, hb_parc( 1 ), ulSize );
-         s_StrBufferSize = ulSize;
-         s_StrBufferPos = 0;
-      }
-   }
+      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
 }
 
 HB_FUNC( HB_KEYPUT )
@@ -594,5 +571,5 @@ HB_FUNC( LASTKEY )
 HB_FUNC( HB_SETLASTKEY )
 {
    if( ISNUM(1) )
-      hb_retni( hb_setInkeyLast( hb_parni( 1 ) ) );
+      hb_retni( hb_inkeySetLast( hb_parni( 1 ) ) );
 }

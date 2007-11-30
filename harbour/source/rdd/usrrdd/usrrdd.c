@@ -94,8 +94,7 @@ static BOOL hb_usrIsMethod( PHB_ITEM pMethods, USHORT uiMethod )
 {
    PHB_ITEM pItem = hb_arrayGetItemPtr( pMethods, uiMethod );
 
-   return pItem && ( HB_IS_POINTER( pItem ) || HB_IS_SYMBOL( pItem ) ||
-                     HB_IS_BLOCK( pItem ) );
+   return pItem && ( HB_IS_SYMBOL( pItem ) || HB_IS_BLOCK( pItem ) );
 }
 
 static BOOL hb_usrPushMethod( PHB_ITEM pMethods, USHORT uiMethod )
@@ -104,13 +103,7 @@ static BOOL hb_usrPushMethod( PHB_ITEM pMethods, USHORT uiMethod )
 
    if( pItem )
    {
-      if( HB_IS_POINTER( pItem ) )
-      {
-         hb_vmPushSymbol( ( PHB_SYMB ) hb_itemGetPtr( pItem ) );
-         hb_vmPushNil();
-         return TRUE;
-      }
-      else if( HB_IS_SYMBOL( pItem ) )
+      if( HB_IS_SYMBOL( pItem ) )
       {
          hb_vmPushSymbol( hb_itemGetSymbol( pItem ) );
          hb_vmPushNil();
@@ -118,7 +111,7 @@ static BOOL hb_usrPushMethod( PHB_ITEM pMethods, USHORT uiMethod )
       }
       else if( HB_IS_BLOCK( pItem ) )
       {
-         hb_vmPushSymbol( &hb_symEval );
+         hb_vmPushEvalSym();
          hb_vmPush( pItem );
          return TRUE;
       }

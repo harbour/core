@@ -319,6 +319,7 @@ static void hb_gt_def_SetClearChar( int iChar )
    s_uiClearChar = iChar;
 }
 
+/* helper internal function */
 static const char * hb_gt_def_ColorDecode( const char * szColorString, int * piColor )
 {
    char c;
@@ -634,11 +635,6 @@ static BOOL hb_gt_def_Resume( void )
    return hb_gt_PostExt();
 }
 
-static void hb_gt_def_OutFile( FHANDLE hFile, BYTE * pbyStr, ULONG ulLen )
-{
-   hb_fsWriteLarge( hFile, pbyStr, ulLen );
-}
-
 static void hb_gt_def_OutStd( BYTE * pbyStr, ULONG ulLen )
 {
    if( ulLen )
@@ -655,16 +651,16 @@ static void hb_gt_def_OutStd( BYTE * pbyStr, ULONG ulLen )
                BYTE * pbyStrBuff = ( BYTE * ) hb_xgrab( ulLen );
                memcpy( pbyStrBuff, pbyStr, ulLen );
                hb_cdpnTranslate( ( char * ) pbyStrBuff, s_cdpHost, s_cdpTerm, ulLen );
-               hb_gt_def_OutFile( s_hStdOut, pbyStrBuff, ulLen );
+               hb_fsWriteLarge( s_hStdOut, pbyStrBuff, ulLen );
                hb_xfree( pbyStrBuff );
             }
             else
-               hb_gt_def_OutFile( s_hStdOut, pbyStr, ulLen );
+               hb_fsWriteLarge( s_hStdOut, pbyStr, ulLen );
             hb_gt_PostExt();
          }
       }
       else
-         hb_gt_def_OutFile( s_hStdOut, pbyStr, ulLen );
+         hb_fsWriteLarge( s_hStdOut, pbyStr, ulLen );
    }
 }
 
@@ -684,16 +680,16 @@ static void hb_gt_def_OutErr( BYTE * pbyStr, ULONG ulLen )
                BYTE * pbyStrBuff = ( BYTE * ) hb_xgrab( ulLen );
                memcpy( pbyStrBuff, pbyStr, ulLen );
                hb_cdpnTranslate( ( char * ) pbyStrBuff, s_cdpHost, s_cdpTerm, ulLen );
-               hb_gt_def_OutFile( s_hStdErr, pbyStrBuff, ulLen );
+               hb_fsWriteLarge( s_hStdErr, pbyStrBuff, ulLen );
                hb_xfree( pbyStrBuff );
             }
             else
-               hb_gt_def_OutFile( s_hStdErr, pbyStr, ulLen );
+               hb_fsWriteLarge( s_hStdErr, pbyStr, ulLen );
             hb_gt_PostExt();
          }
       }
       else
-         hb_gt_def_OutFile( s_hStdErr, pbyStr, ulLen );
+         hb_fsWriteLarge( s_hStdErr, pbyStr, ulLen );
    }
 }
 
@@ -1998,7 +1994,7 @@ static void hb_gt_def_GetSize( int * piRows, int  * piCols )
    }
 }
 
-void hb_gt_def_SemiCold( void )
+static void hb_gt_def_SemiCold( void )
 {
    if( s_curGT )
    {
@@ -3172,19 +3168,19 @@ void   hb_gt_WhoCares( void * pCargo )
 static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 
 #if defined(HB_GT_DEFAULT)
-   char * s_defaultGT = HB_GT_DRVNAME( HB_GT_DEFAULT );
+   const char * s_defaultGT = HB_GT_DRVNAME( HB_GT_DEFAULT );
 #elif defined(HB_GT_LIB)
-   char * s_defaultGT = HB_GT_DRVNAME( HB_GT_LIB );
+   const char * s_defaultGT = HB_GT_DRVNAME( HB_GT_LIB );
 #elif defined(HB_OS_LINUX)
-   char * s_defaultGT = "crs";
+   const char * s_defaultGT = "crs";
 #elif defined(HB_OS_WIN_32)
-   char * s_defaultGT = "win";
+   const char * s_defaultGT = "win";
 #elif defined(HB_OS_DOS)
-   char * s_defaultGT = "dos";
+   const char * s_defaultGT = "dos";
 #elif defined(HB_OS_OS2)
-   char * s_defaultGT = "os2";
+   const char * s_defaultGT = "os2";
 #else
-   char * s_defaultGT = "std";
+   const char * s_defaultGT = "std";
 #endif
 
 static PHB_GT_INIT s_gtInit[ HB_GT_MAX_ ];
@@ -3264,6 +3260,8 @@ HB_EXPORT BOOL hb_gtLoad( const char * szGtName, PHB_GT_FUNCS pFuncTable )
          {
             hb_errInternal( 9999, "Internal error: screen driver initialization failure", NULL, NULL );
          }
+         if( s_gtInit[ iPos ]->pGtId )
+            *s_gtInit[ iPos ]->pGtId = s_iGtLinkCount;
          s_gtLinkOrder[ s_iGtLinkCount++ ] = iPos;
          return TRUE;
       }

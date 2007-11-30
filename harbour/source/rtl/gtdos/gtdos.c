@@ -149,8 +149,10 @@
    #define HB_POKE_BYTE(s,o,b)   *( ( UCHAR FAR * ) MK_FP( (s), (o) ) ) = (b)
 #endif
 
-static HB_GT_FUNCS SuperTable;
-#define HB_GTSUPER (&SuperTable)
+static int           s_GtId;
+static HB_GT_FUNCS   SuperTable;
+#define HB_GTSUPER   (&SuperTable)
+#define HB_GTID_PTR  (&s_GtId)
 
 static int  s_iRows;
 static int  s_iCols;
@@ -1584,7 +1586,8 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
 static HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
                              hb_gt_FuncInit,
-                             HB_GTSUPER };
+                             HB_GTSUPER,
+                             HB_GTID_PTR };
 
 HB_GT_ANNOUNCE( HB_GT_NAME )
 

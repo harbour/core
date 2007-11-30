@@ -228,7 +228,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const BYTE * pBuffer,
    return pCBlock;
 }
 
-HB_CODEBLOCK_PTR hb_codeblockMacroNew( BYTE * pBuffer, ULONG ulLen )
+HB_CODEBLOCK_PTR hb_codeblockMacroNew( const BYTE * pBuffer, ULONG ulLen )
 {
    HB_CODEBLOCK_PTR pCBlock;
    BYTE * pCode;

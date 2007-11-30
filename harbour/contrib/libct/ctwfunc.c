@@ -52,7 +52,6 @@
 
 #include "hbapi.h"
 #include "hbapigt.h"
-#include "hbgtcore.h"
 #include "ctwin.h"
 
 HB_FUNC( CTWINIT )
@@ -62,15 +61,15 @@ HB_FUNC( CTWINIT )
 
 HB_FUNC( GETCLEARA )
 {
-   hb_retni( hb_gt_GetClearColor() );
+   hb_retni( hb_gtGetClearColor() );
 }
 
 HB_FUNC( SETCLEARA )
 {
    if( ISNUM( 1 ) )
-      hb_gt_SetClearColor( hb_parni( 1 ) & 0xff );
+      hb_gtSetClearColor( hb_parni( 1 ) & 0xff );
    else if( hb_parclen( 1 ) > 0 )
-      hb_gt_SetClearColor( hb_gtColorToN( hb_parc( 1 ) ) );
+      hb_gtSetClearColor( hb_gtColorToN( hb_parc( 1 ) ) );
 
    hb_retc( NULL );
 }
@@ -86,14 +85,14 @@ HB_FUNC( SETCLEARB )
    else
       iNew = 255;
 
-   hb_gt_SetClearChar( iNew & 0xff );
+   hb_gtSetClearChar( iNew & 0xff );
 
    hb_retc( NULL );
 }
 
 HB_FUNC( GETCLEARB )
 {
-   hb_retni( hb_gt_GetClearChar() );
+   hb_retni( hb_gtGetClearChar() );
 }
 
 HB_FUNC( WSETSHADOW )
@@ -129,7 +128,7 @@ HB_FUNC( WBOARD )
    iResult = hb_ctw_SetWindowBoard( hb_parni( 1 ), hb_parni( 2 ),
                                     ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
                                     ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol() );
-   hb_gt_Flush();
+   hb_gtFlush();
    hb_retni( iResult );
 }
 
@@ -141,7 +140,7 @@ HB_FUNC( WOPEN )
    iResult = hb_ctw_CreateWindow( hb_parni( 1 ), hb_parni( 2 ),
                                   hb_parni( 3 ), hb_parni( 4 ),
                                   hb_parl( 5 ), iColor );
-   hb_gt_Flush();
+   hb_gtFlush();
    hb_retni( iResult );
 }
 
@@ -150,7 +149,7 @@ HB_FUNC( WCLOSE )
    int iResult;
 
    iResult = hb_ctw_CloseWindow( hb_ctw_CurrentWindow() );
-   hb_gt_Flush();
+   hb_gtFlush();
    hb_retni( iResult );
 }
 
@@ -159,7 +158,7 @@ HB_FUNC( WACLOSE )
    int iResult;
 
    iResult = hb_ctw_CloseAllWindows();
-   hb_gt_Flush();
+   hb_gtFlush();
    hb_retni( iResult );
 }
 
@@ -171,7 +170,7 @@ HB_FUNC( WSELECT )
       iResult = hb_ctw_SelectWindow( hb_parni( 1 ) );
    else
       iResult =  hb_ctw_CurrentWindow();
-   hb_gt_Flush();
+   hb_gtFlush();
    hb_retni( iResult );
 }
 
@@ -219,7 +218,7 @@ HB_FUNC( WBOX )
       memcpy( szBoxBuf, pWBoxFrames[ iFrame ], 9 );
       if( ( iFrame & 4 ) == 0 )
       {
-         szBoxBuf[ 8 ] = hb_gt_GetClearChar();
+         szBoxBuf[ 8 ] = hb_gtGetClearChar();
       }
       szBoxBuf[ 9 ] = '0';
       szBox = szBoxBuf;
@@ -227,7 +226,7 @@ HB_FUNC( WBOX )
 
    iColor = ISCHAR( 2 ) ? hb_gtColorToN( hb_parc( 2 ) ) : hb_parni( 2 );
    iResult = hb_ctw_AddWindowBox( hb_ctw_CurrentWindow(), szBox, iColor );
-   hb_gt_Flush();
+   hb_gtFlush();
    hb_retni( iResult );
 }
 

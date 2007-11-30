@@ -89,8 +89,10 @@
    #endif
 #endif
 
-static HB_GT_FUNCS SuperTable;
-#define HB_GTSUPER (&SuperTable)
+static int           s_GtId;
+static HB_GT_FUNCS   SuperTable;
+#define HB_GTSUPER   (&SuperTable)
+#define HB_GTID_PTR  (&s_GtId)
 
 static const BYTE s_szBell[] = { HB_CHAR_BEL, 0 };
 static const int  s_AnsiColors[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
@@ -962,7 +964,8 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
 static HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
                              hb_gt_FuncInit,
-                             HB_GTSUPER };
+                             HB_GTSUPER,
+                             HB_GTID_PTR };
 
 HB_GT_ANNOUNCE( HB_GT_NAME )
 

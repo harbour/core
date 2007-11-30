@@ -188,6 +188,17 @@ extern HB_EXPORT ERRCODE hb_gtSetKeyCP( char * pszTermCDP, char * pszHostCDP );
 extern HB_EXPORT ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo );
 extern HB_EXPORT int     hb_gtAlert( PHB_ITEM pMessage, PHB_ITEM pOptions, int iClrNorm, int iClrHigh, double dDelay );
 extern HB_EXPORT int     hb_gtSetFlag( int iType, int iNewValue );
+extern HB_EXPORT int     hb_gtGetCurrColor( void );
+extern HB_EXPORT int     hb_gtGetClearColor( void );
+extern HB_EXPORT ERRCODE hb_gtSetClearColor( int );
+extern HB_EXPORT int     hb_gtGetClearChar( void );
+extern HB_EXPORT ERRCODE hb_gtSetClearChar( int );
+extern HB_EXPORT ERRCODE hb_gtGetScrChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar );
+extern HB_EXPORT ERRCODE hb_gtPutScrChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar );
+extern HB_EXPORT ERRCODE hb_gtFlush( void );
+extern HB_EXPORT ERRCODE hb_gtGetPosEx( int * piRow, int * piCol );
+extern HB_EXPORT ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor, BYTE bChar, int iRows, int iCols );
+extern HB_EXPORT ERRCODE hb_gtBoxEx( int iTop, int iLeft, int iBottom, int iRight, BYTE * pbyFrame, BYTE bColor );
 extern HB_EXPORT int     hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor );
 extern HB_EXPORT ERRCODE hb_gtGfxText( int iTop, int iLeft, char * szText, int iColor, int iSize, int iWidth );
        
@@ -251,10 +262,10 @@ extern HB_EXPORT int     hb_inkeyLast( int iEvenMask );  /* Return the value of 
 extern HB_EXPORT int     hb_inkeyNext( int iEvenMask );  /* Return the next key without extracting it */
 extern HB_EXPORT void    hb_inkeyPoll( void );           /* Poll the console keyboard to stuff the Harbour buffer */
 extern HB_EXPORT void    hb_inkeyReset( void );          /* Reset the Harbour keyboard buffer */
-extern HB_EXPORT int     hb_inkeyTranslate( int key, int iEvenMask ); /* Translation extended codes to normal codes, if needed */
 extern HB_EXPORT void    hb_inkeySetCancelKeys( int CancelKey, int CancelKeyEx ); /* Set keycodes for Cancel key (usually K_ALT_C) */
-extern HB_EXPORT int     hb_setInkeyLast( int iKey );
-extern HB_EXPORT void    hb_inkeyExit( void );
+extern HB_EXPORT void    hb_inkeySetText( const char * szText, ULONG ulLen ); /* Set text into inkey buffer */
+extern HB_EXPORT int     hb_inkeySetLast( int iKey );    /* Set new LASTKEY() value, return previous one */
+extern HB_EXPORT void    hb_inkeyExit( void );           /* reset inkey pool to default state and free any allocated resources */
 
 /* SetKey related declarations */
 

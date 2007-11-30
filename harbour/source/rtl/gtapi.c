@@ -416,7 +416,7 @@ HB_EXPORT ERRCODE hb_gtBeginWrite( void )
 
 HB_EXPORT ERRCODE hb_gtEndWrite( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gtBeginWrite()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtEndWrite()"));
 
    hb_gt_Flush();
 
@@ -584,6 +584,8 @@ HB_EXPORT ERRCODE hb_gtOutErr( BYTE * pbyStr, ULONG ulLen )
 
 ERRCODE hb_gtSetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetDispCP(%s, %s, %d)", pszTermCDP, pszHostCDP, fBox));
+
    if( hb_gt_SetDispCP( pszTermCDP, pszHostCDP, fBox ) )
       return SUCCESS;
    else
@@ -592,34 +594,141 @@ ERRCODE hb_gtSetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 
 ERRCODE hb_gtSetKeyCP( char * pszTermCDP, char * pszHostCDP )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetKeyCP(%s, %s)", pszTermCDP, pszHostCDP));
+
    if( hb_gt_SetKeyCP( pszTermCDP, pszHostCDP ) )
       return SUCCESS;
    else
       return FAILURE;
 }
 
-ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo )
+HB_EXPORT ERRCODE hb_gtInfo( int iType, PHB_GT_INFO pInfo )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtInfo(%d, %p)", iType, pInfo));
+
    if( hb_gt_Info( iType, pInfo ) )
       return SUCCESS;
    else
       return FAILURE;
 }
 
-int hb_gtAlert( PHB_ITEM pMessage, PHB_ITEM pOptions,
-                int iClrNorm, int iClrHigh, double dDelay )
+HB_EXPORT int hb_gtAlert( PHB_ITEM pMessage, PHB_ITEM pOptions,
+                          int iClrNorm, int iClrHigh, double dDelay )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtAlert(%p, %p, %d, %d, %f)", pMessage, pOptions, iClrNorm, iClrHigh, dDelay));
+
    return hb_gt_Alert( pMessage, pOptions, iClrNorm, iClrHigh, dDelay );
 }
 
-int hb_gtSetFlag( int iType, int iNewValue )
+HB_EXPORT int hb_gtSetFlag( int iType, int iNewValue )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetFlag(%d, %d)", iType, iNewValue));
+
    return hb_gt_SetFlag( iType, iNewValue );
 }
 
-int hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
+HB_EXPORT int hb_gtGetCurrColor( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetCurrColor()"));
+
+   return hb_gt_GetColor();
+}
+
+HB_EXPORT int hb_gtGetClearColor( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetClearColor()"));
+
+   return hb_gt_GetClearColor();
+}
+
+HB_EXPORT ERRCODE hb_gtSetClearColor( int iColor )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetClearColor(%d)", iColor));
+
+   hb_gt_SetClearColor( iColor );
+
+   return SUCCESS;
+}
+
+HB_EXPORT int hb_gtGetClearChar( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetClearChar()"));
+
+   return hb_gt_GetClearChar();
+}
+
+HB_EXPORT ERRCODE hb_gtSetClearChar( int iChar )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtSetClearChar(%d)", iChar));
+
+   hb_gt_SetClearChar( iChar );
+
+   return SUCCESS;
+}
+
+HB_EXPORT ERRCODE hb_gtGetScrChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtScrGetChar(%d, %d, %p, %p, %p)", iRow, iCol, pbColor, pbAttr, pusChar));
+
+   return hb_gt_GetScrChar( iRow, iCol, pbColor, pbAttr, pusChar ) ?
+          SUCCESS : FAILURE;
+}
+
+HB_EXPORT ERRCODE hb_gtPutScrChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtPutScrChar(%d, %d, %d, %d, %hu)", iRow, iCol, bColor, bAttr, usChar));
+
+   return hb_gt_PutScrChar( iRow, iCol, bColor, bAttr, usChar ) ?
+          SUCCESS : FAILURE;
+}
+
+HB_EXPORT ERRCODE hb_gtFlush( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtFlush()"));
+
+   hb_gt_Flush();
+
+   return SUCCESS;
+}
+
+HB_EXPORT ERRCODE hb_gtGetPosEx( int * piRow, int * piCol )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtGetPosEx(%p, %p)", piRow, piCol));
+
+   hb_gt_GetPos( piRow, piCol );
+
+   return SUCCESS;
+}
+
+HB_EXPORT ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor, BYTE bChar, int iRows, int iCols )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtScrollEx(%d, %d, %d, %d, %d, %hd, %d, %d)", iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols));
+
+   if( iTop > iBottom || iLeft > iRight )
+      return FAILURE;
+
+   hb_gt_Scroll( iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols );
+   hb_gt_Flush();
+
+   return SUCCESS;
+}
+
+HB_EXPORT ERRCODE hb_gtBoxEx( int iTop, int iLeft, int iBottom, int iRight, BYTE * pbyFrame, BYTE bColor )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtBoxEx(%d, %d, %d, %d, %p, %d)", iTop, iLeft, iBottom, iRight, pbyFrame, bColor));
+
+   hb_gt_Box( iTop, iLeft, iBottom, iRight, pbyFrame, bColor );
+   hb_gt_SetPos( iTop + 1, iLeft + 1 );
+   hb_gt_Flush();
+
+   return SUCCESS;
+}
+
+HB_EXPORT int hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
    int iResult;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtGfxText(%d, %d, %d, %d, %d, %d)", iType, iTop, iLeft, iBottom, iRight, iColor));
 
    iResult = hb_gt_GfxPrimitive( iType, iTop, iLeft, iBottom, iRight, iColor );
    hb_gt_Flush();
@@ -627,8 +736,10 @@ int hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, 
    return iResult;
 }
 
-ERRCODE hb_gtGfxText( int iTop, int iLeft, char * cBuf, int iColor, int iSize, int iWidth )
+HB_EXPORT ERRCODE hb_gtGfxText( int iTop, int iLeft, char * cBuf, int iColor, int iSize, int iWidth )
 {
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtGfxText(%d, %d, %s, %d, %d, %d)", iTop, iLeft, cBuf, iColor, iSize, iWidth));
+
    hb_gt_GfxText( iTop, iLeft, cBuf, iColor, iSize, iWidth );
    hb_gt_Flush();
 

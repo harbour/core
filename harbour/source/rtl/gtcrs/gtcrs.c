@@ -55,8 +55,10 @@
 
 #include "gtcrs.h"
 
-static HB_GT_FUNCS SuperTable;
-#define HB_GTSUPER (&SuperTable)
+static int           s_GtId;
+static HB_GT_FUNCS   SuperTable;
+#define HB_GTSUPER   (&SuperTable)
+#define HB_GTID_PTR  (&s_GtId)
 
 /* this variable should be global and checked in main VM loop */
 static volatile BOOL s_BreakFlag = FALSE;
@@ -2972,7 +2974,8 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
 static HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
                              hb_gt_FuncInit,
-                             HB_GTSUPER };
+                             HB_GTSUPER,
+                             HB_GTID_PTR };
 
 HB_GT_ANNOUNCE( HB_GT_NAME )
 

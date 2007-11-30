@@ -61,7 +61,6 @@
 #include "hbdefs.h"
 #include "hbapi.h"
 #include "hbapigt.h"
-#include "hbgtcore.h"
 
 /*  $DOC$
  *  $FUNCNAME$
@@ -271,7 +270,7 @@ static BOOL hb_ctGetWinCord( int * piTop, int * piLeft,
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
 
-   hb_gt_GetPos( piTop, piLeft );
+   hb_gtGetPosEx( piTop, piLeft );
 
    if( ISNUM( 1 ) )
       *piTop = hb_parni( 1 );
@@ -307,7 +306,7 @@ static int hb_ctGetClearChar( int iParam )
    else if( ISCHAR( iParam ) )
       iChar = ( UCHAR ) hb_parc( iParam )[0];
    else
-      iChar = hb_gt_GetClearChar();
+      iChar = hb_gtGetClearChar();
 
    return iChar;
 }
@@ -321,7 +320,7 @@ static int hb_ctGetClearColor( int iParam )
    else if( ISCHAR( iParam ) )
       iColor = hb_gtColorToN( hb_parc( iParam ) );
    else
-      iColor = hb_gt_GetClearColor();
+      iColor = hb_gtGetClearColor();
 
    return iColor;
 }
@@ -337,8 +336,7 @@ HB_FUNC( CLEARWIN )
       bColor = ( BYTE ) hb_ctGetClearColor( 5 );
       bChar  = ( BYTE ) hb_ctGetClearChar( 6 );
 
-      hb_gt_Scroll( iTop, iLeft, iBottom, iRight, bColor, bChar, 0, 0 );
-      hb_gt_Flush();
+      hb_gtScrollEx( iTop, iLeft, iBottom, iRight, bColor, bChar, 0, 0 );
    }
 
    hb_retc( NULL );

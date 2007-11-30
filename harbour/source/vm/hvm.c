@@ -180,7 +180,7 @@ static void    hb_vmPushAliasedField( PHB_SYMB ); /* pushes an aliased field on 
 static void    hb_vmPushAliasedVar( PHB_SYMB );   /* pushes an aliased variable on the eval stack */
 static void    hb_vmPushBlock( const BYTE * pCode, PHB_SYMB pSymbols, ULONG ulLen ); /* creates a codeblock */
 static void    hb_vmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols, ULONG ulLen ); /* creates a codeblock */
-static void    hb_vmPushMacroBlock( BYTE * pCode, ULONG ulSize, USHORT usParams ); /* creates a macro-compiled codeblock */
+static void    hb_vmPushMacroBlock( const BYTE * pCode, ULONG ulSize, USHORT usParams ); /* creates a macro-compiled codeblock */
 static void    hb_vmPushDoubleConst( double dNumber, int iWidth, int iDec ); /* Pushes a double constant (pcode) */
 static void    hb_vmPushLocal( int iLocal );       /* pushes the containts of a local onto the stack */
 static void    hb_vmPushLocalByRef( int iLocal );  /* pushes a local by refrence onto the stack */
@@ -5687,7 +5687,7 @@ static void hb_vmPushBlockShort( const BYTE * pCode, PHB_SYMB pSymbols, ULONG ul
  *
  * NOTE: pCode points to dynamically allocated memory
  */
-static void hb_vmPushMacroBlock( BYTE * pCode, ULONG ulSize, USHORT usParams )
+static void hb_vmPushMacroBlock( const BYTE * pCode, ULONG ulSize, USHORT usParams )
 {
    PHB_ITEM pItem = hb_stackAllocItem();
 

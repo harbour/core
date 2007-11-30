@@ -54,7 +54,6 @@
  */
 
 #include "hbapigt.h"
-#include "hbgtcore.h"
 #include "hbdate.h"
 
 HB_FUNC( SAYDOWN )
@@ -78,7 +77,7 @@ HB_FUNC( SAYDOWN )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
-         BYTE bColor = hb_gt_GetColor();
+         BYTE bColor = hb_gtGetCurrColor();
 
          if( ulLen > ( ULONG ) ( iMaxRow - iRow + 1 ) )
             ulLen = ( ULONG ) ( iMaxRow - iRow + 1 );
@@ -123,7 +122,7 @@ HB_FUNC( SAYSPREAD )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
-         BYTE bColor = hb_gt_GetColor();
+         BYTE bColor = hb_gtGetCurrColor();
 
          ulPos = ulLen >> 1;
          ulLen = ulLen & 1;
@@ -179,7 +178,7 @@ HB_FUNC( SAYMOVEIN )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
-         BYTE bColor = hb_gt_GetColor();
+         BYTE bColor = hb_gtGetCurrColor();
 
          sRow = iRow;
          sCol = iCol + ( int ) ulLen;
@@ -246,11 +245,11 @@ HB_FUNC( CLEARSLOW )
    else if( ISCHAR( 6 ) )
       ucChar = ( UCHAR ) hb_parc( 6 )[0];
    else
-      ucChar = ( UCHAR ) hb_gt_GetClearChar();
+      ucChar = ( UCHAR ) hb_gtGetClearChar();
 
    if( iTop >= 0 && iLeft >= 0 && iTop <= iBottom && iLeft <= iRight )
    {
-      BYTE pbFrame[2], bColor = ( BYTE ) hb_gt_GetColor();
+      BYTE pbFrame[2], bColor = ( BYTE ) hb_gtGetCurrColor();
       double dX, dY, dXX, dYY;
 
       pbFrame[0] = ucChar;
@@ -273,7 +272,7 @@ HB_FUNC( CLEARSLOW )
       hb_gtBeginWrite();
       while( TRUE )
       {
-         hb_gt_Box( iTop, iLeft, iBottom, iRight, pbFrame, bColor );
+         hb_gtBoxEx( iTop, iLeft, iBottom, iRight, pbFrame, bColor );
          if( lDelay )
          {
             hb_gtEndWrite();
@@ -414,7 +413,7 @@ HB_FUNC( _HB_CTDSPTIME )
    else if( ISCHAR( 4 ) )
       iColor = hb_gtColorToN( hb_parc( 4 ) );
    else
-      iColor = hb_gt_GetClearColor();
+      iColor = hb_gtGetClearColor();
 
    hb_dateTimeStr( szTime );
    iLen = 8;
@@ -439,7 +438,8 @@ HB_FUNC( _HB_CTDSPTIME )
    if( szTime[0] == '0' )
       szTime[0] = ' ';
 
+   hb_gtDispBegin();
    for( i = 0; i < iLen; ++sCol, ++i )
-      hb_gt_PutScrChar( sRow, sCol, iColor, 0, szTime[i] );
-   hb_gt_Flush();
+      hb_gtPutScrChar( sRow, sCol, iColor, 0, szTime[i] );
+   hb_gtDispEnd();
 }

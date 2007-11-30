@@ -8,6 +8,56 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-30 19:57 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtalleg/gtalleg.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtos2/gtos2.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtgui/gtgui.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/contrib/libct/ctwin.c
+  * harbour/contrib/gtwvg/gtwvt.c
+    + added GT ID (int s_GtId)
+
+  * harbour/include/hbapigt.h
+  * harbour/source/rtl/gtapi.c
+    + added some missing wrappers for hb_gt_* functions to avoid
+      including hbgtcore.h by non GT code - such functions separation
+      will be important in MT mode where each thread can operate on
+      different GT context (window)
+
+  * harbour/contrib/libct/screen2.c
+  * harbour/contrib/libct/screen1.c
+  * harbour/contrib/libct/ctwfunc.c
+    * use hb_gt* functions instead of hb_gt_*() ones
+
+  * harbour/include/hbapigt.h
+  * harbour/source/rtl/inkey.c
+    * changed hb_setInkeyLast() to hb_inkeySetLast() to keep hb_inkey*()
+      prefix in all inkey() related functions
+    + added hb_inkeySetText()
+    - removed hb_inkeyTranslate()
+
+  * harbour/contrib/libct/setlast.c
+    * use hb_inkeySetLast() instead of hb_setInkeyLast()
+
+  * harbour/source/rdd/usrrdd/usrrdd.c
+    * removed dummy xHarbour code not usable in Harbour
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/codebloc.c
+  * harbour/source/vm/hvm.c
+    * added const to BYTE * pCode parameter of hb_codeblockMacroNew()
+
 2007-11-40 07:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/common.mak
   * harbour/make_b32.mak
