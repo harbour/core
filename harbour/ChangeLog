@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-40 06:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/contrib/make_b32_all.bat
+  * harbour/contrib/make_vc_all.bat
+    + Cleanup of used environment variables
+
 2007-11-30 06:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/make_b32.bat
   * harbour/make_vc.bat

@@ -8,7 +8,7 @@ rem IT or you will break Win9x command.com line length limit !!!
 
 set HB_SHOW_ERRORS=no
 
-set DO_NOT_COMPILE=examples hbclip hgf what32
+rem set DO_NOT_COMPILE=examples hbclip hgf what32
 
 set DIRS=adordd bmdbfcdx btree gtwvg libct libgt libmisc libnf msql
 for %%n in ( %DIRS% ) do %COMSPEC% /c make_b32.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
@@ -26,3 +26,6 @@ if not "%PDFLIB_DIR%"    == "" set DIRS=%DIRS% pdflib
 if not "%PGSQL_DIR%"     == "" set DIRS=%DIRS% pgsql
 if not "%ADS_DIR%"       == "" set DIRS=%DIRS% rdd_ads
 for %%n in ( %DIRS% ) do %COMSPEC% /c make_b32.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
+
+set HB_SHOW_ERRORS=
+set DIRS=
