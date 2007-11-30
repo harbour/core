@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-40 07:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/common.mak
+  * harbour/make_b32.mak
+  * harbour/make_vc.mak
+    % HB_GT_LIB definition moved to common.mak to avoid redundancy
+
 2007-11-40 06:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/contrib/make_b32_all.bat
   * harbour/contrib/make_vc_all.bat
