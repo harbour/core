@@ -88,9 +88,6 @@ extern HB_STACK hb_stack;
 
 #endif
 
-extern HB_EXPORT HB_ITEM_PTR hb_stackSelfItem( void );   /* returns Self object at C function level */
-extern HB_EXPORT HB_ITEM_PTR hb_stackReturnItem( void ); /* returns RETURN Item from stack */
-
 extern HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
 extern HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
 extern LONG        hb_stackTopOffset( void );
@@ -98,11 +95,13 @@ extern LONG        hb_stackBaseOffset( void );
 extern LONG        hb_stackTotalItems( void );
 extern HB_ITEM_PTR hb_stackBaseItem( void );
 extern HB_ITEM_PTR hb_stackItem( LONG iItemPos );
+extern HB_ITEM_PTR hb_stackSelfItem( void );   /* returns Self object at C function level */
+extern HB_ITEM_PTR hb_stackReturnItem( void ); /* returns RETURN Item from stack */
 extern char *      hb_stackDateBuffer( void );
 extern void *      hb_stackId( void );
 
 extern void        hb_stackDec( void );        /* pops an item from the stack without clearing it's contents */
-extern void        hb_stackPop( void );        /* pops an item from the stack */
+extern HB_EXPORT void hb_stackPop( void );        /* pops an item from the stack */
 extern void        hb_stackPush( void );       /* pushes an item on to the stack */
 extern HB_ITEM_PTR hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
 extern void        hb_stackPushReturn( void );

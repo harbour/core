@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-11-30 20:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/include/hbstack.h
+    ! Added HB_EXPORT to hb_stackPop(). Required
+      by dll build  with -gc3 switch
+    * Removed HB_EXPORT from hb_stackReturnItem()
+      and hb_stackSelfItem()
+
 2007-11-30 19:57 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbgtcore.h
   * harbour/source/rtl/hbgtcore.c
@@ -58,25 +65,25 @@
   * harbour/source/vm/hvm.c
     * added const to BYTE * pCode parameter of hb_codeblockMacroNew()
 
-2007-11-40 07:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+2007-11-30 07:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/common.mak
   * harbour/make_b32.mak
   * harbour/make_vc.mak
     ! Reverted moving HB_GT_LIB to common.mak, because
       in common.mak it is set to gtstd by default.
 
-2007-11-40 08:45 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+2007-11-30 08:45 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/make_vcce.mak
     ! Conditionaly add HB_NO_WIN_CONSOLE to CFLAGS
       based on HB_WINCE_COMPILE_WITH_GTWIN envvar
 
-2007-11-40 07:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+2007-11-30 07:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/common.mak
   * harbour/make_b32.mak
   * harbour/make_vc.mak
     % HB_GT_LIB definition moved to common.mak to avoid redundancy
 
-2007-11-40 06:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+2007-11-30 06:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/contrib/make_b32_all.bat
   * harbour/contrib/make_vc_all.bat
     + Cleanup of used environment variables
