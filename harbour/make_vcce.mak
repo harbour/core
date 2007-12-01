@@ -118,7 +118,7 @@ HB_BUILD_MODE  = C
 
 # C Compiler Flags
 !if $(HB_VISUALC_VER) >= 80
-CFLAGS_VER     = -Od -Os -GS- -EHsc- -fp:fast -Gm -Zi -GR- -FD -D_CRT_SECURE_NO_DEPRECATE
+CFLAGS_VER     = -Od -Os -Gy -GS- -EHsc- -fp:fast -Gm -Zi -GR- -FD -D_CRT_SECURE_NO_DEPRECATE
 !else
 CFLAGS_VER     = -Oxsb1 -EHsc /YX /GF
 !endif
