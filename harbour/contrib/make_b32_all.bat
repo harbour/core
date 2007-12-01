@@ -13,7 +13,7 @@ rem set DO_NOT_COMPILE=examples hbclip hgf what32
 set _HB_DIRS=adordd bmdbfcdx hbbtree gtwvg libct libgt libmisc libnf msql
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c make_b32.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=ole hbziparch htmllib odbc telepath tip win32 xhb
+set _HB_DIRS=ole hbziparch odbc telepath tip win32 xhb
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c make_b32.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=samples hbw32ddr

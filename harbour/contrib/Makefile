@@ -6,7 +6,6 @@ ROOT = ../
 
 DIRS=\
 	hbbtree \
-	htmllib \
 	libct \
 	libgt \
 	libmisc \
