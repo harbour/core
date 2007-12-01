@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 02:22 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   - contrib/pdflib
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+     - Removed pdflib (not working, abandoned)
+
 2007-12-01 02:20 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - contrib/htmllib
    * contrib/Makefile

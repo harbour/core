@@ -22,7 +22,6 @@ if not "%FIREBIRD_DIR%"  == "" set _HB_DIRS=%_HB_DIRS% hbfbird
 if not "%FREEIMAGE_DIR%" == "" set _HB_DIRS=%_HB_DIRS% hbfimage
 if not "%GD_DIR%"        == "" set _HB_DIRS=%_HB_DIRS% hbgd
 if not "%MYSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% mysql
-if not "%PDFLIB_DIR%"    == "" set _HB_DIRS=%_HB_DIRS% pdflib
 if not "%PGSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% pgsql
 if not "%ADS_DIR%"       == "" set _HB_DIRS=%_HB_DIRS% rdd_ads
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c make_b32.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
