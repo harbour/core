@@ -8,14 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 15:27 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/source/rtl/hbinet.c
+    ! Fixed compilation under Cygwin environment
+
+  * harbour/make_gcc.sh
+    + Added Cygwin as a detected platform
+
 2007-12-01 03:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * debian/copyright
    * doc/license.txt
    * COPYING
      - Removed one explicily listed license exception:
-       'samples\pe\license.txt', since it is now in the contrib 
+       'samples\pe\license.txt', since it is now in the contrib
        which is covered in the "contrib license" section anyway.
-       This license is probably included only as an example 
+       This license is probably included only as an example
        file for the editor.     Ryszard?
 
 2007-12-01 03:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -47,34 +54,34 @@
        Old         Old           New
        DIR         LIBNAME       DIR & LIBNAME
        ----------- ------------- -------------
-       adordd      adordd        hbrddado 
-       apollo      apollo        hbapollo 
-       bmdbfcdx    bmdbfcdx      hbbmcdx  
-       btree       hbbtree       hbbtree  
-       directx     hbwin32ddrw   hbw32ddr 
-       firebird    firebird      hbfbird  
-       freeimage   hbfreeimage   hbfimage 
-       gd          hbgd          hbgd     
-       gtwvg       gtwvg         hbgtwvg  
+       adordd      adordd        hbrddado
+       apollo      apollo        hbapollo
+       bmdbfcdx    bmdbfcdx      hbbmcdx
+       btree       hbbtree       hbbtree
+       directx     hbwin32ddrw   hbw32ddr
+       firebird    firebird      hbfbird
+       freeimage   hbfreeimage   hbfimage
+       gd          hbgd          hbgd
+       gtwvg       gtwvg         hbgtwvg
        hbzlib      hbziparch     hbziparch
        htmllib     html          (DELETED)
-       libct       ct            hbct     
-       libgt       gt            hbgt     
-       libmisc     hbmisc        hbmisc   
-       libnf       nf            hbnf     
-       msql        msql          hbmsql   
-       mysql       hbmysql       hbmysql  
-       odbc        hbodbc        hbodbc   
-       ole         hbole         hbole    
+       libct       ct            hbct
+       libgt       gt            hbgt
+       libmisc     hbmisc        hbmisc
+       libnf       nf            hbnf
+       msql        msql          hbmsql
+       mysql       hbmysql       hbmysql
+       odbc        hbodbc        hbodbc
+       ole         hbole         hbole
        pdflib      hbpdflib      (DELETED)
-       pgsql       hbpg          hbpgsql  
-       rdd_ads     rddads        hbrddads 
-       samples     samples       hbclipsm 
-       telepath    telepath      hbtpathy 
-       tip         tip           hbtip    
-       what32      what32        hbwhat32 
-       win32       hbwin32       hbw32    
-       xhb         xhb           xhb      
+       pgsql       hbpg          hbpgsql
+       rdd_ads     rddads        hbrddads
+       samples     samples       hbclipsm
+       telepath    telepath      hbtpathy
+       tip         tip           hbtip
+       what32      what32        hbwhat32
+       win32       hbwin32       hbw32
+       xhb         xhb           xhb
        hgf         hgf*          hbgf*
 
 2007-12-01 02:55 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)

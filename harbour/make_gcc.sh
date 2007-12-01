@@ -15,8 +15,9 @@ if [ -z "$HB_ARCHITECTURE" ]; then
         hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
         case "$hb_arch" in
             *windows*|*mingw32*|msys*)    hb_arch="w32" ;;
-            *dos)   hb_arch="dos" ;;
-            *bsd)   hb_arch="bsd" ;;
+            *cygwin*)   hb_arch="cyg" ;;
+            *dos)       hb_arch="dos" ;;
+            *bsd)       hb_arch="bsd" ;;
         esac
     fi
     export HB_ARCHITECTURE="$hb_arch"
@@ -81,6 +82,11 @@ case "$HB_ARCHITECTURE" in
     w32)    HB_OS="WIN_32"
             GT_LIST="WIN WVT GUI"
             OS_LIBS="-luser32 -lwinspool -lwsock32"
+            EXEEXT=".exe"
+            ;;
+    cyg)    HB_OS="CYGWIN"
+            GT_LIST="${GT_LIST} WIN WVT GUI"
+            OS_LIBS="-luser32 -lwinspool"
             EXEEXT=".exe"
             ;;
     dos)    HB_OS="DOS"

@@ -56,10 +56,14 @@
  *
  */
 
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+
+/* Compile in Unix mode under Cygwin */
+#ifdef OS_UNIX_COMPATIBLE
+  #undef HB_OS_WIN_32
+#endif
 
 /* HB_INET_H_ */
 #if defined( HB_OS_DOS )
