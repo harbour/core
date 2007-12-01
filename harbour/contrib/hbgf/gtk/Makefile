@@ -21,7 +21,7 @@ PRG_SOURCES=\
 	winctrl.prg \
 
 
-LIBNAME=hbgtk
+LIBNAME=hbgfgtk
 
 include $(TOP)$(ROOT)config/lib.cf
 

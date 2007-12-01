@@ -19,6 +19,6 @@ PRG_SOURCES=\
 PRG_HEADERS=\
 	wvtwin.ch \
 
-LIBNAME=gtwvg
+LIBNAME=hbgtwvg
 
 include $(TOP)$(ROOT)config/lib.cf

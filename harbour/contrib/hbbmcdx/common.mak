@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = bmdbfcdx
+LIBNAME = hbbmcdx
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 

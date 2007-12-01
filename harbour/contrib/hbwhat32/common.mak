@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = what32
+LIBNAME = hbwhat32
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 

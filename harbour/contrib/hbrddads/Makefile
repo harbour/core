@@ -12,7 +12,7 @@ C_SOURCES=\
 PRG_HEADERS=\
 	ads.ch \
 
-LIBNAME=rddads
+LIBNAME=hbrddads
 
 ifeq ($(HB_ARCHITECTURE),w32)
    C_USR += -DWIN32

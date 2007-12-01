@@ -32,7 +32,7 @@ if %HB_COMPILER%.==.     set HB_COMPILER=bcc32
 SET HB_BIN_INSTALL=%HB_INSTALL%\bin
 set HB_INC_INSTALL=..;%HB_INSTALL%\include
 set HB_LIB_INSTALL=%HB_INSTALL%\lib
-set HB_USER_LIBS=%HB_LIB_INSTALL%\hbgd.lib %HB_LIB_INSTALL%\libbgd.lib %HB_LIB_INSTALL%\libct.lib
+set HB_USER_LIBS=%HB_LIB_INSTALL%\hbgd.lib %HB_LIB_INSTALL%\libbgd.lib %HB_LIB_INSTALL%\hbct.lib
 
 echo.
 echo.BldTest.bat - /? or /h to display options

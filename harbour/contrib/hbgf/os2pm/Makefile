@@ -16,7 +16,7 @@ PRG_SOURCES=\
 	edit.prg     \
 	
 
-LIBNAME=os2pm
+LIBNAME=hbgfos2pm
 
 include $(TOP)$(ROOT)config/lib.cf
 

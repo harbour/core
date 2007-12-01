@@ -10,6 +10,6 @@ PRG_SOURCES= \
 PRG_HEADERS=\
 	adordd.ch \
 
-LIBNAME=adordd
+LIBNAME=hbrddado
 
 include $(TOP)$(ROOT)config/lib.cf

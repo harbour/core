@@ -37,10 +37,10 @@ echo %hdir%\lib\pp.lib + >> bld_b32.mak
 echo %hdir%\lib\hbsix.lib + >> bld_b32.mak 
 echo %hdir%\lib\dbffpt.lib + >> bld_b32.mak
 echo %hdir%\lib\postgres.lib + >> bld_b32.mak
-echo %hdir%\lib\hbpg.lib + >> bld_b32.mak
+echo %hdir%\lib\hbpgsql.lib + >> bld_b32.mak
 
 rem Uncomment these two lines to use Advantage RDD
-rem echo %hdir%\lib\rddads.lib + >> bld_b32.mak  
+rem echo %hdir%\lib\hbrddads.lib + >> bld_b32.mak  
 rem echo %hdir%\lib\ace32.lib + >> bld_b32.mak
 
 echo cw32.lib + >> bld_b32.mak

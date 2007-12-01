@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = adordd
+LIBNAME = hbrddado
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 

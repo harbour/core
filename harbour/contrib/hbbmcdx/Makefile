@@ -8,6 +8,6 @@ C_SOURCES=\
 	bmdbfcdx1.c \
 	bmsixcdx1.c
 
-LIBNAME=bmdbfcdx
+LIBNAME=hbbmcdx
 
 include $(TOP)$(ROOT)config/lib.cf

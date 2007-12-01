@@ -78,6 +78,6 @@ PRG_HEADERS= \
 	wintypes.ch \
 	winuser.ch \
 
-LIBNAME=what32
+LIBNAME=hbwhat32
 
 include $(TOP)$(ROOT)config/lib.cf

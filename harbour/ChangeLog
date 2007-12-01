@@ -8,6 +8,65 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 03:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   - contrib/hgf
+   + contrib/hbgf
+   * contrib/hbwhat32/Makefile
+   * contrib/hbwhat32/common.mak
+   * contrib/hbfbird/test/bld_b32.bat
+   * contrib/hbapollo/test/bld.bat
+   * contrib/hbpgsql/tests/bld_b32.bat
+   * contrib/hbfimage/test/bld_b32.bat
+   * contrib/hbgd/tests/bldtest.bat
+   * contrib/hbgf/os2pm/Makefile
+   * contrib/hbgf/tests/bld_b32.bat
+   * contrib/hbgf/win32/common.mak
+   * contrib/hbgf/gtk/Makefile
+   * contrib/hbrddado/common.mak
+   * contrib/hbrddado/Makefile
+   * contrib/hbbmcdx/common.mak
+   * contrib/hbbmcdx/Makefile
+   * contrib/hbgtwvg/common.mak
+   * contrib/hbgtwvg/Makefile
+   * contrib/hbrddads/common.mak
+   * contrib/hbrddads/Makefile
+     ! Some fixes to previous changes.
+
+     ; Here is the final summary of contrib lib renames:
+       ----------- ------------- -------------
+       Old         Old           New
+       DIR         LIBNAME       DIR & LIBNAME
+       ----------- ------------- -------------
+       adordd      adordd        hbrddado 
+       apollo      apollo        hbapollo 
+       bmdbfcdx    bmdbfcdx      hbbmcdx  
+       btree       hbbtree       hbbtree  
+       directx     hbwin32ddrw   hbw32ddr 
+       firebird    firebird      hbfbird  
+       freeimage   hbfreeimage   hbfimage 
+       gd          hbgd          hbgd     
+       gtwvg       gtwvg         hbgtwvg  
+       hbzlib      hbziparch     hbziparch
+       htmllib     html          (DELETED)
+       libct       ct            hbct     
+       libgt       gt            hbgt     
+       libmisc     hbmisc        hbmisc   
+       libnf       nf            hbnf     
+       msql        msql          hbmsql   
+       mysql       hbmysql       hbmysql  
+       odbc        hbodbc        hbodbc   
+       ole         hbole         hbole    
+       pdflib      hbpdflib      (DELETED)
+       pgsql       hbpg          hbpgsql  
+       rdd_ads     rddads        hbrddads 
+       samples     samples       hbclipsm 
+       telepath    telepath      hbtpathy 
+       tip         tip           hbtip    
+       what32      what32        hbwhat32 
+       win32       hbwin32       hbw32    
+       xhb         xhb           xhb      
+       hgf         hgf*          hbgf*
+
 2007-12-01 02:55 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/make_b32_all.bat
    * contrib/make_vc_all.bat

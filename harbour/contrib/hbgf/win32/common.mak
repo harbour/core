@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = hgfwin32
+LIBNAME = hbgfw32
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
