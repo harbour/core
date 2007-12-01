@@ -38,7 +38,7 @@ if not "%HBPPGEN%" == "" if exist %HBPPGEN% goto COMPILE
    echo **********************************************
    echo You must set HBPPGEN environment variable to a
    echo working copy of hbppgen.exe helper executable
-   echo. Example : set HB=C:\Harbour\hbppgen.exe
+   echo. Example : set HBPPGEN=C:\Harbour\hbppgen.exe
    echo **********************************************
    echo.
    goto EXIT
