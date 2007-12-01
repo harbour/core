@@ -10,17 +10,17 @@ set HB_SHOW_ERRORS=no
 
 rem set DO_NOT_COMPILE=examples hbclip hgf what32
 
-set _HB_DIRS=adordd bmdbfcdx btree gtwvg libct libgt libmisc libnf msql
+set _HB_DIRS=adordd bmdbfcdx hbbtree gtwvg libct libgt libmisc libnf msql
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c make_b32.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=ole hbzlib htmllib odbc telepath tip win32 xhb
+set _HB_DIRS=ole hbziparch htmllib odbc telepath tip win32 xhb
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c make_b32.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=samples directx
+set _HB_DIRS=samples hbw32ddr
 if not "%APOLLO_DIR%"    == "" set _HB_DIRS=%_HB_DIRS% hbapollo
-if not "%FIREBIRD_DIR%"  == "" set _HB_DIRS=%_HB_DIRS% firebird
-if not "%FREEIMAGE_DIR%" == "" set _HB_DIRS=%_HB_DIRS% freeimage
-if not "%GD_DIR%"        == "" set _HB_DIRS=%_HB_DIRS% gd
+if not "%FIREBIRD_DIR%"  == "" set _HB_DIRS=%_HB_DIRS% hbfbird
+if not "%FREEIMAGE_DIR%" == "" set _HB_DIRS=%_HB_DIRS% hbfimage
+if not "%GD_DIR%"        == "" set _HB_DIRS=%_HB_DIRS% hbgd
 if not "%MYSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% mysql
 if not "%PDFLIB_DIR%"    == "" set _HB_DIRS=%_HB_DIRS% pdflib
 if not "%PGSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% pgsql

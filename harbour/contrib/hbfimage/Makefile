@@ -13,6 +13,6 @@ PRG_SOURCES= \
 PRG_HEADERS=\
 	freeimage.ch \
 
-LIBNAME=hbfreeimage
+LIBNAME=hbfimage
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = hbfreeimage
+LIBNAME = hbfimage
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 

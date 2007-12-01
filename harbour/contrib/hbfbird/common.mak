@@ -2,12 +2,13 @@
 # $Id$
 #
 
-LIBNAME = hbwin32ddrw
+LIBNAME = hbfbird
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
 LIB_OBJS = \
-    $(OBJ_DIR)\w32_ddrw$(OBJEXT) \
+    $(OBJ_DIR)\firebird$(OBJEXT) \
+    $(OBJ_DIR)\tfirebird$(OBJEXT) \
 
 all: \
     $(LIB_PATH) \

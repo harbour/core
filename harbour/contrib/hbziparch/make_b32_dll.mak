@@ -47,7 +47,7 @@ CLIBFLAGS      = $(C_USR) -a8 -OS -O2 -6 -c -I$(INCLUDE_DIR) -d -w- -DZLIB_DLL
 #  ßßßßßßßßßß
 # Please adjust according to your environment
 
-HARBOUR_DLL = ..\..\lib\b32\hbzipdll.dll
+HARBOUR_DLL = ..\..\lib\b32\hbziparchdll.dll
 
 # ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
 # ³ HARBOUR_DLL rules ³Û
@@ -84,8 +84,8 @@ all: \
 
 CLEAN:
    -@if exist $(HARBOUR_DLL) del $(HARBOUR_DLL) >nul
-   -@if exist ..\..\lib\b32\hbzipdll.tds del ..\..\lib\b32\hbzipdll.tds >nul
-   -@if exist ..\..\lib\b32\hbzipdll.map del ..\..\lib\b32\hbzipdll.map >nul
+   -@if exist ..\..\lib\b32\hbziparchdll.tds del ..\..\lib\b32\hbziparchdll.tds >nul
+   -@if exist ..\..\lib\b32\hbziparchdll.map del ..\..\lib\b32\hbziparchdll.map >nul
    -@if exist $(OBJ_DIR)\*.obj del $(OBJ_DIR)\*.obj >nul
    -@if exist $(OBJ_DIR)\*.c del $(OBJ_DIR)\*.c >nul
    -@if exist $(OBJ_DIR)\*.h del $(OBJ_DIR)\*.h >nul

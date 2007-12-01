@@ -9,6 +9,6 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 
-LIBNAME=hbwin32ddrw
+LIBNAME=hbw32ddr
 
 include $(TOP)$(ROOT)config/lib.cf

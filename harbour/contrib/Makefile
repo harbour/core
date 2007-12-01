@@ -5,7 +5,7 @@
 ROOT = ../
 
 DIRS=\
-	btree \
+	hbbtree \
 	htmllib \
 	libct \
 	libgt \

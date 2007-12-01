@@ -25,9 +25,9 @@ if not exist obj\dll\b32 md obj\dll\b32
 :BUILD_OK
 
    if exist hdll.tmp del hdll.tmp
-   if exist ..\..\lib\b32\hbzipdll.dll implib ..\..\lib\b32\hbzipdll.lib ..\..\lib\b32\hbzipdll.dll > nul
-   if exist ..\..\lib\b32\hbzipdll.dll copy ..\..\lib\b32\hbzipdll.dll ..\..\lib > nul
-   if exist ..\..\lib\b32\hbzipdll.lib copy ..\..\lib\b32\hbzipdll.lib ..\..\lib > nul
+   if exist ..\..\lib\b32\hbziparchdll.dll implib ..\..\lib\b32\hbziparchdll.lib ..\..\lib\b32\hbziparchdll.dll > nul
+   if exist ..\..\lib\b32\hbziparchdll.dll copy ..\..\lib\b32\hbziparchdll.dll ..\..\lib > nul
+   if exist ..\..\lib\b32\hbziparchdll.lib copy ..\..\lib\b32\hbziparchdll.lib ..\..\lib > nul
 
    goto EXIT
 

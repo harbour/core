@@ -8,18 +8,44 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 01:15 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   - contrib/btree
+   + contrib/hbbtree
+   - contrib/directx
+   + contrib/hbw32ddr
+   * contrib/hbw32ddr/Makefile
+   * contrib/hbw32ddr/common.mak
+   - contrib/firebird
+   + contrib/hbfbird
+   * contrib/hbfbird/Makefile
+   * contrib/hbfbird/common.mak
+   - contrib/freeimage
+   + contrib/hbfimage
+   * contrib/hbfimage/Makefile
+   * contrib/hbfimage/common.mak
+   - contrib/gd
+   + contrib/hbgd
+   - contrib/hbzlib
+   + contrib/hbziparch
+   * contrib/hbziparch/make_b32_dll.bat
+   * contrib/hbziparch/make_b32_dll.mak
+   * contrib/Makefile
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+     * Contrib lib rename continued.
+
 2007-12-01 00:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - contrib/apollo
    + contrib/hbapollo
    * contrib/hbapollo/common.mak
    * contrib/hbapollo/Makefile
-   * harbour/contrib/make_b32_all.bat
-   * harbour/contrib/make_vc_all.bat
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
      * First contrib lib rename (live rehearsal).
        (goals: hb prefix, dirname = libname, 8 chars limit)
 
-   * harbour/contrib/make_b32_all.bat
-   * harbour/contrib/make_vc_all.bat
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
      * DIRS internal envvar renamed to _HB_DIRS.
 
 2007-11-30 20:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)

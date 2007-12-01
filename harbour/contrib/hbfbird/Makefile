@@ -12,6 +12,6 @@ C_SOURCES=\
 PRG_SOURCES=\
 	tfirebird.prg \
 
-LIBNAME=firebird
+LIBNAME=hbfbird
 
 include $(TOP)$(ROOT)config/lib.cf
