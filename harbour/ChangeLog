@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 03:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * debian/copyright
+   * doc/license.txt
+   * COPYING
+     - Removed one explicily listed license exception:
+       'samples\pe\license.txt', since it is now in the contrib 
+       which is covered in the "contrib license" section anyway.
+       This license is probably included only as an example 
+       file for the editor.     Ryszard?
+
 2007-12-01 03:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - contrib/hgf
    + contrib/hbgf

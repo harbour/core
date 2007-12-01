@@ -72,7 +72,6 @@ THE OLD HARBOUR PROJECT LIBRARY LICENSE
 
  Note: This license only applies to the following files:
 
-    samples\pe\license.txt
     source\rtl\philes.c
     source\rtl\binnum.c
     source\lang\msgeu.c
