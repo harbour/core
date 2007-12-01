@@ -1,5 +1,5 @@
 /*
- * $Id: msgltwin.c,v 1.5 2005/06/10 22:51:37 ronpinkas Exp $
+ * $Id$
  */
 
 /*
