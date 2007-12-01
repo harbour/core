@@ -14,7 +14,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I%GD_DIR%\include
+set CFLAGS=-I%GD_DIR%\include -DHB_OS_WIN_32_USED
 set HB_DLL_NAME=bgd
 set HB_DLL_DIR=%GD_DIR%\bin
 

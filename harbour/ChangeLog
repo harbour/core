@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 22:21 UTC+0100 Francesco Saverio Giudice (info at fsgiudice dot com)
+  * harbour/contrib/hbgd/make_b32.bat
+    ! Fixed compilation under BCC
+      added -DHB_OS_WIN_32_USED to CFLAGS env var to compile
+      gdwrp.c creating undecorate C function names
+
 2007-12-01 21:07 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/make_vcce.mak
     ! Fixed compilation against bug in Texas Instruments
