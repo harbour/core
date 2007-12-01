@@ -19,6 +19,6 @@ PRG_SOURCES=\
 PRG_HEADERS=\
 	time87.ch \
 
-LIBNAME=samples
+LIBNAME=hbclipsm
 
 include $(TOP)$(ROOT)config/lib.cf

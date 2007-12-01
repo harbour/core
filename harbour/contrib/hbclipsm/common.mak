@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = samples
+LIBNAME = hbclipsm
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 

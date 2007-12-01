@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = msql
+LIBNAME = hbmsql
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 

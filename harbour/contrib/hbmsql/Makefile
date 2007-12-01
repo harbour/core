@@ -13,6 +13,6 @@ PRG_SOURCES=\
 PRG_HEADERS=\
 	msql.ch \
 
-LIBNAME=msql
+LIBNAME=hbmsql
 
 include $(TOP)$(ROOT)config/lib.cf

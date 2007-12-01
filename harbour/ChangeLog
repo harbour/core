@@ -8,6 +8,31 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 02:34 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+   * contrib/Makefile
+   - contrib/msql
+   + contrib/hbmsql
+   * contrib/hbmsql/common.mak
+   * contrib/hbmsql/Makefile
+   - contrib/libmisc
+   + contrib/hbmisc
+   - contrib/mysql
+   + contrib/hbmysql
+   - contrib/odbc
+   + contrib/hbodbc
+   - contrib/ole
+   + contrib/hbole
+   - contrib/pgsql
+   + contrib/hbpgsql
+   * contrib/hbpgsql/common.mak
+   * contrib/hbpgsql/Makefile
+   - contrib/samples
+   + contrib/hbclipsm
+   * contrib/hbclipsm/common.mak
+   * contrib/hbclipsm/Makefile
+
 2007-12-01 02:22 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - contrib/pdflib
    * contrib/make_b32_all.bat

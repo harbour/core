@@ -14,7 +14,7 @@ PRG_SOURCES=\
 PRG_HEADERS=\
 	postgres.ch \
 
-LIBNAME=hbpg
+LIBNAME=hbpgsql
 
 include $(TOP)$(ROOT)config/lib.cf
 

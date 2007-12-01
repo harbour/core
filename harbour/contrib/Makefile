@@ -10,7 +10,7 @@ DIRS=\
 	libgt \
 	libmisc \
 	libnf \
-	samples \
+	hbclipsm \
 	xhb \
 	$(HB_CONTRIBLIBS)
 #	examples \
@@ -33,7 +33,7 @@ ifneq ($(HB_COMPILER),rsxnt)
 
 DIRS +=\
 	win32 \
-	odbc \
+	hbodbc \
 	adordd \
 
 endif

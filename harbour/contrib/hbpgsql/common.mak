@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = hbpg
+LIBNAME = hbpgsql
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
