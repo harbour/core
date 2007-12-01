@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 22:33 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/hbgd/make_b32.bat
+   * contrib/hbgd/gdwrp.c
+     ! Fixed the way HB_OS_WIN_32_USED is used and windows.h 
+       is included to work like in rest of Harbour. This way 
+       it works for all compilers/build systems.
+
 2007-12-01 22:21 UTC+0100 Francesco Saverio Giudice (info at fsgiudice dot com)
   * harbour/contrib/hbgd/make_b32.bat
     ! Fixed compilation under BCC
