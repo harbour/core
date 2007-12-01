@@ -10,6 +10,6 @@ C_SOURCES=\
 PRG_SOURCES=\
 	apollo1.prg \
 
-LIBNAME=apollo
+LIBNAME=hbapollo
 
 include $(TOP)$(ROOT)config/lib.cf

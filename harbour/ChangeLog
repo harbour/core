@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 00:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   - contrib/apollo
+   + contrib/hbapollo
+   * contrib/hbapollo/common.mak
+   * contrib/hbapollo/Makefile
+   * harbour/contrib/make_b32_all.bat
+   * harbour/contrib/make_vc_all.bat
+     * First contrib lib rename (live rehearsal).
+       (goals: hb prefix, dirname = libname, 8 chars limit)
+
+   * harbour/contrib/make_b32_all.bat
+   * harbour/contrib/make_vc_all.bat
+     * DIRS internal envvar renamed to _HB_DIRS.
+
 2007-11-30 20:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/include/hbstack.h
     ! Added HB_EXPORT to hb_stackPop(). Required

@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = apollo
+LIBNAME = hbapollo
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
