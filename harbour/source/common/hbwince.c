@@ -370,13 +370,13 @@ UINT WINAPI SetErrorMode( UINT mode )
 
 HANDLE WINAPI CreateFileA( LPCSTR filename, DWORD access,
                     DWORD sharing, LPSECURITY_ATTRIBUTES sa,
-                    DWORD creation, DWORD attributes, HANDLE template )
+                    DWORD creation, DWORD attributes, HANDLE tmplt )
 {
    LPWSTR wfilename;
    HANDLE h;
 
    wfilename = hb_mbtowc( filename );
-   h = CreateFileW( wfilename, access, sharing, sa, creation, attributes, template );
+   h = CreateFileW( wfilename, access, sharing, sa, creation, attributes, tmplt );
    hb_xfree( wfilename );
 
    return h;

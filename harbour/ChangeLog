@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 21:52 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/include/hbwince.h
+    ! Fixed compilation in C++ mode by renaming local variable
+      named "template" to "tmplt". "template" is a reserved
+      word in MSVC C++.
+    + Added few missing WINAPI function declarations under
+      MSVC WinCE.
+
+  * harbour/source/common/hbwince.c
+    ! Fixed compilation in C++ mode by renaming local variable
+      named "template" to "tmplt". "template" is a reserved
+      word in MSVC C++.
+
 2007-12-01 20:12 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/make_vcce.bat
     + Added existence verification of HB and HBPPGEN environment

@@ -119,7 +119,7 @@ extern char *strerror( int errnum );
    UINT WINAPI SetErrorMode( UINT mode );
    HANDLE WINAPI CreateFileA( LPCSTR filename, DWORD access,
                        DWORD sharing, LPSECURITY_ATTRIBUTES sa,
-                       DWORD creation, DWORD attributes, HANDLE template );
+                       DWORD creation, DWORD attributes, HANDLE tmplt );
    BOOL WINAPI MoveFileA( LPCSTR fn1, LPCSTR fn2 );
    BOOL WINAPI DeleteFileA( LPCSTR path );
    BOOL WINAPI RemoveDirectoryA( LPCSTR path );
@@ -142,6 +142,10 @@ extern char *strerror( int errnum );
    int WINAPI SetTextCharacterExtra( HDC hdc, int i );
    BOOL WINAPI GetKeyboardState( PBYTE p );
    BOOL WINAPI SetKeyboardState( PBYTE p );
+
+   int WINAPI FrameRect( HDC hDC, CONST RECT *lprc, HBRUSH hbr );
+   BOOL WINAPI FloodFill( HDC hdc, int x, int y, COLORREF color);
+   BOOL  WINAPI Arc( HDC hdc, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4);
 
    #if defined( __POCC__ ) || defined( __XCC__ )
       #define GlobalAlloc(flags, cb)      LocalAlloc(flags, cb)
