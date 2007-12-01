@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 20:12 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/make_vcce.bat
+    + Added existence verification of HB and HBPPGEN environment
+      variables and existence of files which are pointed by them
+
 2007-12-01 20:30 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   + harbour/source/lang/msgltwin.c
   * harbour/source/lang/Makefile

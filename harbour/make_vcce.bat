@@ -21,6 +21,32 @@ rem    set HB_MAKE_FLAGS=
 rem    set HB_CC_NAME=
 rem ---------------------------------------------------------------
 
+if not "%HB%" == "" if exist %HB% goto CHECK_HBPPGEN
+   echo.
+   echo *******************************************
+   echo You must set HB environment variable to a
+   echo working copy of Harbour compiler executable
+   echo harbour.exe.
+   echo. Example : set HB=C:\Harbour\harbour.exe
+   echo *******************************************
+   echo.
+   goto EXIT
+
+:CHECK_HBPPGEN
+if not "%HBPPGEN%" == "" if exist %HBPPGEN% goto COMPILE
+   echo.
+   echo **********************************************
+   echo You must set HBPPGEN environment variable to a
+   echo working copy of hbppgen.exe helper executable
+   echo. Example : set HB=C:\Harbour\hbppgen.exe
+   echo **********************************************
+   echo.
+   goto EXIT
+
+rem ---------------------------------------------------------------
+
+:COMPILE
+
 set _HB_CC_NAME=%HB_CC_NAME%
 set _HB_MAKE_PROGRAM=%HB_MAKE_PROGRAM%
 
