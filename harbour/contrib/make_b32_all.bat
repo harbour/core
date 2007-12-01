@@ -16,7 +16,7 @@ for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c make_b32.bat %%n %1 %2 %3 %4 %5 %6 %7 
 set _HB_DIRS=hbole hbziparch hbodbc hbtpathy hbtip hbw32 xhb
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c make_b32.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=samples hbw32ddr
+set _HB_DIRS=hbclipsm hbw32ddr
 if not "%APOLLO_DIR%"    == "" set _HB_DIRS=%_HB_DIRS% hbapollo
 if not "%FIREBIRD_DIR%"  == "" set _HB_DIRS=%_HB_DIRS% hbfbird
 if not "%FREEIMAGE_DIR%" == "" set _HB_DIRS=%_HB_DIRS% hbfimage
