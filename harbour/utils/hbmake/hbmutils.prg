@@ -540,7 +540,7 @@ FUNCTION GetInstaledLibs( clibs, lGcc )
    aadd(aDefLib,'ace32'+ cSuffix)
    aadd(aDefLib,'codepage'+ cSuffix)
    aadd(aDefLib,'common'+ cSuffix)
-   aadd(aDefLib,'ct'+cSuffix)
+   aadd(aDefLib,'hbct'+cSuffix)
    aadd(aDefLib,'dbfdbt'+ cSuffix)
    aadd(aDefLib,'dbfcdx'+ cSuffix)
    aadd(aDefLib,'dbffpt'+ cSuffix)
@@ -556,22 +556,20 @@ FUNCTION GetInstaledLibs( clibs, lGcc )
    aadd(aDefLib,'gtwin'+ cSuffix)
    aadd(aDefLib,'gtwvt'+ cSuffix)
    aadd(aDefLib,'hbodbc'+ cSuffix)
-   aadd(aDefLib,'hbpg'+ cSuffix)
+   aadd(aDefLib,'hbpgsql'+ cSuffix)
    aadd(aDefLib,'tip'+cSuffix)
-   aadd(aDefLib,'html'+ cSuffix)
    aadd(aDefLib,'lang'+ cSuffix)
-   aadd(aDefLib,'libmisc'+ cSuffix)
-   aadd(aDefLib,'libnf'+ cSuffix)
-   aadd(aDefLib,'libgt'+ cSuffix)
+   aadd(aDefLib,'hbmisc'+ cSuffix)
+   aadd(aDefLib,'hbnf'+ cSuffix)
+   aadd(aDefLib,'hbgt'+ cSuffix)
    aadd(aDefLib,'hbmysql'+ cSuffix)
    aadd(aDefLib,'macro'+ cSuffix)
    aadd(aDefLib,'nulsys'+ cSuffix)
-   aadd(aDefLib,'pdflib'+ cSuffix)
    aadd(aDefLib,'pp'+ cSuffix)
    aadd(aDefLib,'rdd'+ cSuffix)
    aadd(aDefLib,'rddads'+ cSuffix)
    aadd(aDefLib,'rtl'+ cSuffix)
-   aadd(aDefLib,'samples'+ cSuffix)
+   aadd(aDefLib,'hbclipsm'+ cSuffix)
    aadd(aDefLib,'tip'+cSuffix)
    aadd(aDefLib,'hbwin32'+cSuffix)
    aadd(aDefLib,'vm'+ cSuffix)
@@ -606,14 +604,13 @@ FUNCTION GetLibs( lGcc, cDir )
 
 
    LOCAL aLibsDesc     := { { "Harbour hbmisc     lib - hbmisc" + cExt                         , 'hbmisc' + cExt },;
-                            { "Harbour Html       lib - html" + cExt                           , 'html' + cExt },;
-                            { "Harbour NanFor     lib - nf" + cExt                             , 'nf' + cExt },;
-                            { "Harbour GT         lib - gt"+cExt                               , 'gt' + cExt },;
+                            { "Harbour NanFor     lib - hbnf" + cExt                           , 'hbnf' + cExt },;
+                            { "Harbour GT         lib - hbgt"+cExt                             , 'hbgt' + cExt },;
                             { "Harbour Zip        lib - hbziparch"+cExt                        , 'hbziparch' + cExt + iif( lLinux, ' stdc++.a z.a', ' ' ) },;
                             { "Harbour Ole        lib - hbole"+ cExt                           , 'hbole' + cExt + ' ole2' + cExt },;
                             { "Harbour MySql      lib - hbmysql" + cExt                        , 'hbmysql' + cExt },;
-                            { "Harbour PostGreSql lib - libhbpg"+cExt                          , 'libhbpg' + cExt },;
-                            { "Harbour Samples    lib - samples"+cExt                          , 'samples' + cExt }  }
+                            { "Harbour PostGreSql lib - hbpgsql"+cExt                          , 'hbpgsql' + cExt },;
+                            { "Harbour Samples    lib - hbclipsm"+cExt                         , 'hbclipsm' + cExt }  }
 
 
    AEVAL( aInstaledLibs, { | x | AAdd( aLibsDesc, { padr("Harbour contrib",20)+"lib - " + padr(x,15), x } ) } )

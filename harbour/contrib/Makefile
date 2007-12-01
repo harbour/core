@@ -6,10 +6,10 @@ ROOT = ../
 
 DIRS=\
 	hbbtree \
-	libct \
-	libgt \
-	libmisc \
-	libnf \
+	hbct \
+	hbgt \
+	hbmisc \
+	hbnf \
 	hbclipsm \
 	xhb \
 	$(HB_CONTRIBLIBS)
