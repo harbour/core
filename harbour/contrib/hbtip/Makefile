@@ -30,6 +30,6 @@ PRG_HEADERS= \
 	thtml.ch \
 	tip.ch \
 
-LIBNAME=tip
+LIBNAME=hbtip
 
 include $(TOP)$(ROOT)config/lib.cf

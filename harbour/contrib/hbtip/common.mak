@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = tip
+LIBNAME = hbtip
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 

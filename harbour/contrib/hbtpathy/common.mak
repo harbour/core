@@ -2,7 +2,7 @@
 # $Id: common.mak 7935 2007-11-10 11:31:17Z vszakats $
 #
 
-LIBNAME = telepath
+LIBNAME = hbtpathy
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 

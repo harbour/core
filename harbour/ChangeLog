@@ -8,6 +8,41 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 02:55 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+   * contrib/Makefile
+   - contrib/telepath
+   + contrib/hbtpathy
+   * contrib/hbtpathy/common.mak
+   * contrib/hbtpathy/Makefile
+   - contrib/what32
+   + contrib/hbwhat32
+   - contrib/win32
+   + contrib/hbw32
+   * contrib/hbw32/common.mak
+   * contrib/hbw32/Makefile
+   - contrib/adordd
+   + contrib/hbrddado
+   - contrib/gtwvg
+   + contrib/hbgtwvg
+   - contrib/rdd_ads
+   + contrib/hbrddads
+   - contrib/tip
+   + contrib/hbtip
+   * contrib/hbtip/common.mak
+   * contrib/hbtip/Makefile
+   - contrib/bmdbfcdx
+   + contrib/hbbmcdx
+   * contrib/hbct/Makefile
+   * contrib/hbct/common.mak
+   * contrib/hbgt/common.mak
+   * contrib/hbgt/Makefile
+   * contrib/hbnf/common.mak
+   * contrib/hbnf/Makefile
+     * Contrib lib rename finished.
+     ; Please report build (or other) problems.
+
 2007-12-01 02:42 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - contrib/libct
    + contrib/hbct

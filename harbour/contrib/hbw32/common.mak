@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = hbwin32
+LIBNAME = hbw32
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 

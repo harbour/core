@@ -19,22 +19,22 @@ DIRS=\
 ifneq ($(HB_ARCHITECTURE),dos)
 
 DIRS +=\
-	bmdbfcdx \
+	hbbmcdx \
 
 endif
 
 ifeq ($(HB_ARCHITECTURE),w32)
 
 DIRS +=\
-	rdd_ads \
-	gtwvg \
+	hbrddads \
+	hbgtwvg \
 
 ifneq ($(HB_COMPILER),rsxnt)
 
 DIRS +=\
-	win32 \
+	hbw32 \
 	hbodbc \
-	adordd \
+	hbrddado \
 
 endif
 
@@ -54,8 +54,8 @@ else
 ifeq ($(HB_ARCHITECTURE),linux)
 
 DIRS +=\
-	rdd_ads \
-	odbc \
+	hbrddads \
+	hbodbc \
 
 endif
 endif
@@ -63,7 +63,7 @@ endif
 endif
 
 ifneq ($(HB_ARCHITECTURE),dos)
-DIRS += tip
+DIRS += hbtip
 endif
 
 include $(ROOT)config/dir.cf

@@ -13,6 +13,6 @@ PRG_SOURCES=\
 	w32_tole.prg \
 	w32_tprn.prg \
 
-LIBNAME=hbwin32
+LIBNAME=hbw32
 
 include $(TOP)$(ROOT)config/lib.cf

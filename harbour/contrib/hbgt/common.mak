@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = gt
+LIBNAME = hbgt
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 

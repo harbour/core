@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = nf
+LIBNAME = hbnf
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 

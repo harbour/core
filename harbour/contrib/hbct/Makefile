@@ -106,6 +106,6 @@ PRG_HEADERS=\
 	ctextern.ch \
 	ctvideo.ch \
 
-LIBNAME=ct
+LIBNAME=hbct
 
 include $(TOP)$(ROOT)config/lib.cf

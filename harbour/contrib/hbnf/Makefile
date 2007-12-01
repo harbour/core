@@ -150,6 +150,6 @@ BAD_PRG_SOURCES=\
 PRG_HEADERS=\
 	ftmenuto.ch \
 
-LIBNAME=nf
+LIBNAME=hbnf
 
 include $(TOP)$(ROOT)config/lib.cf

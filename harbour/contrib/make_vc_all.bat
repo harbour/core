@@ -10,10 +10,10 @@ set HB_SHOW_ERRORS=no
 
 rem set DO_NOT_COMPILE=examples hbclip hgf
 
-set _HB_DIRS=adordd bmdbfcdx hbbtree gtwvg hbct hbgt hbmisc hbnf hbmsql
+set _HB_DIRS=hbrddado hbbmcdx hbbtree hbgtwvg hbct hbgt hbmisc hbnf hbmsql
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c make_vc.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=hbole hbziparch hbodbc telepath tip win32 xhb
+set _HB_DIRS=hbole hbziparch hbodbc hbtpathy hbtip hbw32 xhb
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c make_vc.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=samples hbw32ddr
@@ -23,7 +23,7 @@ if not "%FREEIMAGE_DIR%" == "" set _HB_DIRS=%_HB_DIRS% hbfimage
 if not "%GD_DIR%"        == "" set _HB_DIRS=%_HB_DIRS% hbgd
 if not "%MYSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% hbmysql
 if not "%PGSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
-if not "%ADS_DIR%"       == "" set _HB_DIRS=%_HB_DIRS% rdd_ads
+if not "%ADS_DIR%"       == "" set _HB_DIRS=%_HB_DIRS% hbrddads
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c make_vc.bat %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set HB_SHOW_ERRORS=

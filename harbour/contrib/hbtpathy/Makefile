@@ -23,7 +23,7 @@ PRG_SOURCES=\
 PRG_HEADERS=\
 	telepath.ch \
 
-LIBNAME=telepath
+LIBNAME=hbtpathy
 
 include $(TOP)$(ROOT)config/lib.cf
 
