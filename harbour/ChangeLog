@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-01 20:30 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  + harbour/source/lang/msgltwin.c
+  * harbour/source/lang/Makefile
+  * harbour/common.mak
+    + message file for Lithuanian language
+
 2007-12-01 15:27 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/source/rtl/hbinet.c
     ! Fixed compilation under Cygwin environment
