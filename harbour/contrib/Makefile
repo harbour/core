@@ -42,13 +42,13 @@ else
 ifeq ($(HB_COMPILER),icc)
 
 DIRS +=\
-	hgf/os2pm \
+	hbgf/os2pm \
 
 else
 ifeq ($(HB_ARCHITECTURE),os2)
 
 DIRS +=\
-	hgf/os2pm \
+	hbgf/os2pm \
 
 else
 ifeq ($(HB_ARCHITECTURE),linux)
