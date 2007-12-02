@@ -317,26 +317,28 @@ rm -fR $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhsx.a
 %{_libdir}/%{name}/libhbsix.a
 %{_libdir}/%{name}/librtl.a
-%{_libdir}/%{name}/libsamples.a
 %{_libdir}/%{name}/libvm.a
 %{_libdir}/%{name}/libmainstd.a
 %{_libdir}/%{name}/libmainwin.a
 %{_libdir}/%{name}/libusrrdd.a
 
-%{?_with_adsrdd: %{_libdir}/%{name}/librddads.a}
+%{?_with_adsrdd: %{_libdir}/%{name}/libhbrddads.a}
 %{!?_without_odbc: %{_libdir}/%{name}/libhbodbc.a}
-%{!?_without_nf: %{_libdir}/%{name}/libnf.a}
+%{!?_without_nf: %{_libdir}/%{name}/libhbnf.a}
 %{?_with_mysql: %{_libdir}/%{name}/libhbmysql.a}
 %{?_with_pgsql: %{_libdir}/%{name}/libhbpg.a}
 %{?_with_gd: %{_libdir}/%{name}/libhbgd.a}
 %{_libdir}/%{name}/libhbbtree.a
-%{_libdir}/%{name}/libhtml.a
 %{_libdir}/%{name}/libhbmisc.a
-%{_libdir}/%{name}/libct.a
-%{_libdir}/%{name}/libtip.a
+%{_libdir}/%{name}/libhbct.a
+%{_libdir}/%{name}/libhbtip.a
 %{_libdir}/%{name}/libxhb.a
-%{_libdir}/%{name}/libadordd.a
-%{_libdir}/%{name}/libhbwin32.a
+%{_libdir}/%{name}/libhbrddado.a
+%{_libdir}/%{name}/libhbw32.a
+%{_libdir}/%{name}/libhbgtwvg.a
+%{_libdir}/%{name}/libhbgt.a
+%{_libdir}/%{name}/libhbbmcdx.a
+%{_libdir}/%{name}/libhbclipsm.a
 
 %defattr(755,root,root,755)
 %{_libdir}/%{name}/*.dll

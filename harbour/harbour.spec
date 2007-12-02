@@ -80,7 +80,7 @@
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_opt   export HB_GTALLEG=%{?_with_allegro:yes}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpl:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="%{?_with_gd:gd} %{?_with_pgsql:pgsql} %{?_with_mysql:mysql}"
+%define hb_ctrb  export HB_CONTRIBLIBS="%{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
 %define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_defgt} ; %{hb_gpm} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_opt} ; %{hb_ctrb} ; %{hb_cmrc}
 
 %define hb_host  www.harbour-project.org
@@ -502,26 +502,27 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhsx.a
 %{_libdir}/%{name}/libhbsix.a
 %{_libdir}/%{name}/librtl.a
-%{_libdir}/%{name}/libsamples.a
 %{_libdir}/%{name}/libvm.a
 %{_libdir}/%{name}/libusrrdd.a
 
 %files contrib
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
-%{!?_without_nf: %{_libdir}/%{name}/libnf.a}
-%{?_with_adsrdd: %{_libdir}/%{name}/librddads.a}
+%{!?_without_nf: %{_libdir}/%{name}/libhbnf.a}
+%{?_with_adsrdd: %{_libdir}/%{name}/libhbrddads.a}
 %{?_with_odbc: %{_libdir}/%{name}/libhbodbc.a}
 %{?_with_mysql: %{_libdir}/%{name}/libhbmysql.a}
-%{?_with_pgsql: %{_libdir}/%{name}/libhbpg.a}
-%{?_with_pgsql4: %{_libdir}/%{name}/libhbpg.a}
+%{?_with_pgsql: %{_libdir}/%{name}/libhbpgsql.a}
+%{?_with_pgsql4: %{_libdir}/%{name}/libhbpgsql.a}
 %{?_with_gd: %{_libdir}/%{name}/libhbgd.a}
 %{_libdir}/%{name}/libhbbtree.a
-%{_libdir}/%{name}/libhtml.a
 %{_libdir}/%{name}/libhbmisc.a
-%{_libdir}/%{name}/libct.a
-%{_libdir}/%{name}/libtip.a
+%{_libdir}/%{name}/libhbct.a
+%{_libdir}/%{name}/libhbtip.a
 %{_libdir}/%{name}/libxhb.a
+%{_libdir}/%{name}/libhbgt.a
+%{_libdir}/%{name}/libhbbmcdx.a
+%{_libdir}/%{name}/libhbclipsm.a
 
 %files lib
 %defattr(755,root,root,755)

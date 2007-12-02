@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-02 04:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/mouse53.c
+    * do not include unnecessary header files
+
+  * harbour/bin/pack_src.sh
+    * changed packing procedure - now it does not scan chosen directories
+      and files but all contents of all .svn/entries to extract files
+      stores in SVN repository and then pack them - it's very good method
+      to pack whole Harbour repository without .svn/* data and risk of
+      packing local files.
+
+  * harbour/harbour.spec
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+    * updated for recent changes in directory and library names
+
 2007-12-01 23:55 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/lang/msgltwin.c
     * svn properties

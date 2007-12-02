@@ -51,8 +51,7 @@
  */
 
 #include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbgtcore.h"
+#include "hbapigt.h"
 
 /* HARBOUR callable interface */
 
