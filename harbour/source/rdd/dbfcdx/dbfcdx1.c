@@ -2346,7 +2346,7 @@ static void hb_cdxPageStore( LPCDXPAGE pPage )
    else if ( pPage->iKeys > pPage->TagParent->MaxKeys )
       hb_cdxErrInternal( "hb_cdxPageStore: number of keys exceed!." );
 #endif
-   HB_PUT_LE_UINT16( pPage->node.intNode.attr, pPage->PageType );
+   HB_PUT_LE_UINT16( pPage->node.intNode.attr, ( UINT16 ) pPage->PageType );
    HB_PUT_LE_UINT16( pPage->node.intNode.nKeys, pPage->iKeys );
    HB_PUT_LE_UINT32( pPage->node.intNode.leftPtr, pPage->Left );
    HB_PUT_LE_UINT32( pPage->node.intNode.rightPtr, pPage->Right );

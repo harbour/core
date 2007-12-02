@@ -737,7 +737,7 @@ typedef unsigned long HB_COUNTER;
                double dbl; \
                BYTE buffer[ 8 ]; \
             } u; \
-            u.dbl = ( d ); \
+            u.dbl = ( double ) ( d ); \
             (( BYTE * )( p ))[ 7 ] = u.buffer[ 0 ]; \
             (( BYTE * )( p ))[ 6 ] = u.buffer[ 1 ]; \
             (( BYTE * )( p ))[ 5 ] = u.buffer[ 2 ]; \
@@ -753,7 +753,7 @@ typedef unsigned long HB_COUNTER;
                double dbl; \
                BYTE buffer[ 8 ]; \
             } u; \
-            u.dbl = ( d ); \
+            u.dbl = ( double ) ( d ); \
             (( BYTE * )( p ))[ 0 ] = u.buffer[ 0 ]; \
             (( BYTE * )( p ))[ 1 ] = u.buffer[ 1 ]; \
             (( BYTE * )( p ))[ 2 ] = u.buffer[ 2 ]; \

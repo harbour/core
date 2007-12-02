@@ -18,6 +18,10 @@
  *
  */
 
+2007-12-02 04:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/hbpcre/pcrecomp.c
+    * minor modification to pacify MSVC warnings
+
 2007-05-31 17:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/hbpcre/pcredfa.c
   * harbour/source/hbpcre/pcreexec.c

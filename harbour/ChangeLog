@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-02 04:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+  * harbour/source/rdd/hsx/hsx.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/hbpcre/ChangeLog
+  * harbour/source/hbpcre/pcrecomp.c
+    * minor modifications to pacify some MSVC warnings
+
 2007-12-02 04:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/mouse53.c
     * do not include unnecessary header files
