@@ -262,7 +262,7 @@ function ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
  *    FT_NWSEMOPEN( "Semaphore Test", nInitVal, @nHandle, @nOpenCnt )
  *
  *    nRc := FT_NWSEMWAIT( nHandle )
- *    	IF nRc == 254
+ *    IF nRc == 254
  *       QOUT( "All slots for this resource are currently in use" )
  *       QUIT
  *    ENDIF

@@ -51,10 +51,10 @@
  *     FT_ESCCODE( <cASCII> )  -> <cPrinterFormat>
  *  $ARGUMENTS$
  *     <cASCII> is the ASCII representation of the printer control
- *		codes in Lotus 123 format (e.g. "\027E" for Chr(27)+"E")
+ *     codes in Lotus 123 format (e.g. "\027E" for Chr(27)+"E")
  *
- *		"\nnn" will be converted to Chr(nnn)
- *		"\\" will be converted to "\"
+ *     "\nnn" will be converted to Chr(nnn)
+ *     "\\" will be converted to "\"
  *  $RETURNS$
  *     The binary version of an ASCII coded printer setup string.
  *  $DESCRIPTION$
@@ -74,31 +74,31 @@
 FUNCTION FT_ESCCODE( cInput )
 
 LOCAL cOutput  := ""             ,;
-	  cCurrent					 ,;
-	  nPointer := 1 			 ,;
-	  nLen	   := Len( cInput )
+      cCurrent                   ,;
+      nPointer := 1              ,;
+      nLen     := Len( cInput )
 
   DO WHILE nPointer <= nLen
 
-	cCurrent := Substr( cInput, nPointer, 1 )
+    cCurrent := Substr( cInput, nPointer, 1 )
 
     DO CASE
 
        CASE cCurrent == "\" .AND. ;
-		IsDigit(Substr(cInput, nPointer+1, 1) ) .AND. ;
-		IsDigit(Substr(cInput, nPointer+2, 1) ) .AND. ;
-		IsDigit(Substr(cInput, nPointer+3, 1) )
-	   cOutput  += Chr(Val(Substr(cInput, nPointer+1,3)))
-	   nPointer += 4
+            IsDigit(Substr(cInput, nPointer+1, 1) ) .AND. ;
+            IsDigit(Substr(cInput, nPointer+2, 1) ) .AND. ;
+            IsDigit(Substr(cInput, nPointer+3, 1) )
+         cOutput  += Chr(Val(Substr(cInput, nPointer+1,3)))
+         nPointer += 4
 
        CASE cCurrent == "\" .AND. ;
-		 Substr(cInput, nPointer+1, 1) == "\"
-	   cOutput += "\"
-	   nPointer += 2
+            Substr(cInput, nPointer+1, 1) == "\"
+         cOutput += "\"
+         nPointer += 2
 
        OTHERWISE
-	   cOutput += cCurrent
-	   nPointer++
+         cOutput += cCurrent
+         nPointer++
 
     ENDCASE
   ENDDO

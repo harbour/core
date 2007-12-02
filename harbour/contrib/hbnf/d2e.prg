@@ -31,37 +31,37 @@
  *  $CATEGORY$
  *      Conversion
  *  $ONELINER$
- *		Convert decimal to scientific notation
+ *          Convert decimal to scientific notation
  *  $SYNTAX$
- *		FT_D2E( <nDec>, <nPrecision> )  -> <cNumE>
+ *          FT_D2E( <nDec>, <nPrecision> )  -> <cNumE>
  *  $ARGUMENTS$
- *		<nDec>         Decimal number to convert
+ *          <nDec>         Decimal number to convert
  *
- *		<nPrecision>   Number of decimal places in result.
+ *          <nPrecision>   Number of decimal places in result.
  *                     Defaults to 6 decimal places.
  *  $RETURNS$
- *		<cNumE>        A string representing a number in
+ *          <cNumE>        A string representing a number in
  *                     scientific notation
  *  $DESCRIPTION$
- *		Given a decimal number and the desired precision,
- *		a string representing the equivalent in scientific
- *		notation is returned.
+ *          Given a decimal number and the desired precision,
+ *          a string representing the equivalent in scientific
+ *          notation is returned.
  *  $EXAMPLES$
- *		? FT_D2E( 12.345, 2 )
- *		  -> 1.23E1
+ *          ? FT_D2E( 12.345, 2 )
+ *            -> 1.23E1
  *
- *		? FT_D2E( -12.345, 3 )
- *		  -> -1.235E1
+ *          ? FT_D2E( -12.345, 3 )
+ *            -> -1.235E1
  *
- *		? FT_D2E( 0.00000543, 2 )
- *		  -> 5.43E-6
+ *          ? FT_D2E( 0.00000543, 2 )
+ *            -> 5.43E-6
  *  $SEEALSO$
  *     FT_E2D()
  *  $END$
  */
 
-#define log10( num )	log( num ) / log( 10 )
-#define DEFAULT_PRECISION	6
+#define log10( num )    log( num ) / log( 10 )
+#define DEFAULT_PRECISION     6
 #command DEFAULT <p> TO <val> => <p> := iif( <p> == NIL, <val>, <p> )
 
 #ifdef FT_TEST
@@ -80,7 +80,7 @@ function ft_d2e( nDec, nPrecision )
      nExp := int( log10( nDec ) ) - 1
   else
      nExp := int( log10( abs(nDec)+0.00001 ) )   && 0.00001 == kludge
-  endif								                    && for imprecise logs
+  endif           && for imprecise logs
 
   nDec /= 10 ^ nExp
 

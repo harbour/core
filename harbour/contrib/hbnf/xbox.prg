@@ -111,21 +111,21 @@
 
 #ifdef FT_TEST
    FUNCTION MAIN()
-	   local i
-	   setcolor('W/B')
-	   * clear screen
-	   for i = 1 to 24
-		   @ i, 0 say replicate('@', 80)
-	   next
+      local i
+      setcolor('W/B')
+      * clear screen
+      for i = 1 to 24
+         @ i, 0 say replicate('@', 80)
+      next
 
-       FT_XBOX(,,,,,,,'This is a test','of the XBOX() function')
-       FT_XBOX('L','W','D','GR+/R','W/B',1,10,'It is so nice',;
-                         'to not have to do the messy chore',;
-						 'of calculating the box size!')
+      FT_XBOX(,,,,,,,'This is a test','of the XBOX() function')
+      FT_XBOX('L','W','D','GR+/R','W/B',1,10,'It is so nice',;
+                     'to not have to do the messy chore',;
+                     'of calculating the box size!')
        FT_XBOX(,'W','D','GR+/R','W/B',16,10,'It is so nice',;
-                         'to not have to do the messy chore',;
-						 'of calculating the box size!',;
-						 'Even though this line is way too long, and is in fact more than 80 characters long, if you care to check!')
+                     'to not have to do the messy chore',;
+                     'of calculating the box size!',;
+                     'Even though this line is way too long, and is in fact more than 80 characters long, if you care to check!')
 
    return ( nil )
 #endif

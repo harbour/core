@@ -51,22 +51,22 @@
  *      Also, numeric 0 is returned as a null string.  You will need to
  *      make a decision how to output it (zero dollars, no dollars, etc).
  *  $EXAMPLES$
- *		? FT_NTOW( 999 )		-> Nine Hundred Ninety Nine
+ *          ? FT_NTOW( 999 )        -> Nine Hundred Ninety Nine
  *
- *		? FT_NTOW( 1000 )		-> One Thousand
+ *          ? FT_NTOW( 1000 )       -> One Thousand
  *
- *		? FT_NTOW( 23 ) + " Dollars and " + FT_NTOW( 99 ) + " Cents"
- *			-> Twenty Three Dollars and Ninety Nine Cents
+ *          ? FT_NTOW( 23 ) + " Dollars and " + FT_NTOW( 99 ) + " Cents"
+ *                -> Twenty Three Dollars and Ninety Nine Cents
  *
- *		? FT_NTOW( 23 ) + " Dollars and " + "99/100"
- *			-> Twenty Three Dollars and 99/100
+ *          ? FT_NTOW( 23 ) + " Dollars and " + "99/100"
+ *                -> Twenty Three Dollars and 99/100
  *
- *    x      := -23.99
- *    cents  := str( (x - int( x )) * 100, 2, 0 ) + "/100"
- *		x      := int( x )
- *    string := iif( x < 0, "Credit of ", "Debit of " )
- *		? string + FT_NTOW( abs(x) ) + " Dollars and " + "99/100"
- *		     -> Credit of Twenty Three Dollars and 99/100
+ *          x      := -23.99
+ *          cents  := str( (x - int( x )) * 100, 2, 0 ) + "/100"
+ *          x      := int( x )
+ *          string := iif( x < 0, "Credit of ", "Debit of " )
+ *          ? string + FT_NTOW( abs(x) ) + " Dollars and " + "99/100"
+ *                -> Credit of Twenty Three Dollars and 99/100
  *  $END$
  */
 
@@ -107,7 +107,7 @@ function ft_ntow(nAmount)
   if nTemp > (nDiv /= 1000) .and. (nDiv > 1)
      sResult += ft_ntow( nTemp, nDiv )
   else
-	   sResult += grp_to_words(nTemp, "")
+     sResult += grp_to_words(nTemp, "")
   endif
   return( ltrim(sResult) )
 
@@ -120,13 +120,13 @@ static function grp_to_words(nGrp, sQual)
   sResult += ones[ nGrp + 1 ] + iif( nGrp > 0, " Hundred", "")
 
   do case
-	   case nTemp > 19
-		   sResult += tens[ int( nTemp / 10 ) + 1 ]
-  		sResult += ones[ int( nTemp % 10 ) + 1 ]
+     case nTemp > 19
+         sResult += tens[ int( nTemp / 10 ) + 1 ]
+         sResult += ones[ int( nTemp % 10 ) + 1 ]
      case nTemp < 20 .and. nTemp > 9
-		   sResult += teens[ int( nTemp % 10 ) + 1 ]
+         sResult += teens[ int( nTemp % 10 ) + 1 ]
      case nTemp < 10 .and. nTemp > 0
-		   sResult += ones[ int( nTemp) + 1 ]
+         sResult += ones[ int( nTemp) + 1 ]
   endcase
   return(sResult + sQual)
 

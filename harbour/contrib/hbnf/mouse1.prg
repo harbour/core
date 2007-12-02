@@ -20,17 +20,17 @@ static s_lMinit:=.F.
      local nHoriz, nVert, nDouble
      local nTime
 
-	IF nRow=NIL
-		nRow=MAXROW()+1
-	ELSE
-		nRow=VAL(nRow)
-	ENDIF
+     IF nRow=NIL
+        nRow=MAXROW()+1
+     ELSE
+        nRow=VAL(nRow)
+     ENDIF
 
-	IF nCol=NIL
-		nCol=MAXCOL()+1
-	ELSE
-		nCol=VAL(nCol)
-	ENDIF
+     IF nCol=NIL
+        nCol=MAXCOL()+1
+     ELSE
+        nCol=VAL(nCol)
+     ENDIF
 
      if  !FT_MINIT() 
         @ maxrow(), 0 say "Mouse driver is not installed!"
@@ -55,13 +55,13 @@ static s_lMinit:=.F.
 
      * ..... Start the demo
 
-	@MAXROW(),0 SAY "Driver version: "+;
-		ALLTRIM(STR(FT_MVERSION(@nMinor,@nType,@nIRQ),2,0))+"."+;
-		ALLTRIM(STR(nMinor,2,0))
+     @MAXROW(),0 SAY "Driver version: "+;
+               ALLTRIM(STR(FT_MVERSION(@nMinor,@nType,@nIRQ),2,0))+"."+;
+               ALLTRIM(STR(nMinor,2,0))
      @ ROW(),COL() SAY " "+aType[nType]+" mouse using IRQ "+STR(nIRQ,1,0)
 
      FT_MGETSENS(@nHoriz,@nVert,@nDouble)  // Get the current sensitivities
-	FT_MSETSENS(70,70,60)    // Bump up the sensitivity of the mouse
+     FT_MSETSENS(70,70,60)    // Bump up the sensitivity of the mouse
 
      FT_MSHOWCRS()
      FT_MSETCOORD(10,20)  // just an arbitrary place for demo
@@ -533,15 +533,15 @@ FT_MGETSENS(@nCurHoriz, @nCurVert, @nCurDouble)
 // Set defaults if necessary
 
 IF VALTYPE(nHoriz)!="N"
-	nHoriz=nCurHoriz
+    nHoriz=nCurHoriz
 ENDIF
 
 IF VALTYPE(nVert)!="N"
-	nVert=nCurVert
+    nVert=nCurVert
 ENDIF
 
 IF VALTYPE(nDouble)!="N"
-	nDouble=nCurDouble
+    nDouble=nCurDouble
 ENDIF
 
 * Fill the registers
@@ -938,12 +938,12 @@ RETURN NIL              // no output from function
 
 FUNCTION FT_MHIDECRS()   // decrement internal cursor flag and hide cursor
 /*
-   aReg[AX] := 2          // set mouse function call 2
+   aReg[AX] := 2         // set mouse function call 2
    FT_INT86( 51, aReg )  // execute mouse interrupt
    */
    _mse_mhidecrs()
    s_lCrsState := .f.
-RETURN NIL		          // no output from function
+RETURN NIL               // no output from function
 
 /*
  * $DOC$
@@ -1274,8 +1274,8 @@ RETURN NIL                           // no function output
 FUNCTION FT_MBUTPRS( nButton, nButPrs, nX, nY ) // get button press information
 local aReg:={}
 /*
-   aReg[AX] := 5	           // set mouse function call 5
-   aReg[BX] := nButton          // pass parameter for left or right button
+   aReg[AX] := 5               // set mouse function call 5
+   aReg[BX] := nButton         // pass parameter for left or right button
    FT_INT86( 51, aReg )        // execute mouse interrupt
    */
    nButPrs := aReg[1] // store updated press count
@@ -1401,11 +1401,11 @@ RETURN iButton
 
 FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type and masks
 /*
-   aReg[AX] = 10   	   // set mouse function call 10
+   aReg[AX] = 10         // set mouse function call 10
    aReg[BX] = nCurType   // load cursor type parameter
    aReg[CX] = nScrMask   // load screen mask value
    aReg[DX] = nCurMask   // load cursor mask value
-   FT_INT86( 51, aReg ) // execute mouse interrupt
+   FT_INT86( 51, aReg )  // execute mouse interrupt
    */
 _m_mdefcrs(nCurType, nScrMask, nCurMask ) 
 RETURN NIL              // no function output

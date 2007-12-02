@@ -87,23 +87,23 @@ static lMinit:=.F.
      local nHoriz, nVert, nDouble
      local nTime
 
-	IF nRow=NIL
-		nRow=MAXROW()+1
-	ELSE
-		nRow=VAL(nRow)
-	ENDIF
+     IF nRow=NIL
+         nRow=MAXROW()+1
+     ELSE
+         nRow=VAL(nRow)
+     ENDIF
 
-	IF nCol=NIL
-		nCol=MAXCOL()+1
-	ELSE
-		nCol=VAL(nCol)
-	ENDIF
+     IF nCol=NIL
+         nCol=MAXCOL()+1
+     ELSE
+         nCol=VAL(nCol)
+     ENDIF
 
-	IF .NOT.SETMODE(nRow,nCol)
-		@maxrow(),0 SAY "Mode Change unsuccessful:"+STR(nRow,2,0)+" by";
-			+STR(nCol,3,0)
-		RETURN NIL
-	ENDIF
+     IF .NOT.SETMODE(nRow,nCol)
+        @maxrow(),0 SAY "Mode Change unsuccessful:"+STR(nRow,2,0)+" by";
+                        +STR(nCol,3,0)
+        RETURN NIL
+     ENDIF
 
      if empty( FT_MINIT() )
         @ maxrow(), 0 say "Mouse driver is not installed!"
@@ -128,13 +128,13 @@ static lMinit:=.F.
 
      * ..... Start the demo
 
-	@MAXROW(),0 SAY "Driver version: "+;
-		ALLTRIM(STR(FT_MVERSION(@nMinor,@nType,@nIRQ),2,0))+"."+;
-		ALLTRIM(STR(nMinor,2,0))
+     @MAXROW(),0 SAY "Driver version: "+;
+               ALLTRIM(STR(FT_MVERSION(@nMinor,@nType,@nIRQ),2,0))+"."+;
+               ALLTRIM(STR(nMinor,2,0))
      @ ROW(),COL() SAY " "+aType[nType]+" mouse using IRQ "+STR(nIRQ,1,0)
 
      FT_MGETSENS(@nHoriz,@nVert,@nDouble)  // Get the current sensitivities
-	FT_MSETSENS(70,70,60)    // Bump up the sensitivity of the mouse
+     FT_MSETSENS(70,70,60)    // Bump up the sensitivity of the mouse
 
      FT_MSHOWCRS()
      FT_MSETCOORD(10,20)  // just an arbitrary place for demo
@@ -306,7 +306,7 @@ FUNCTION FT_MINIT()
 * If not previously initialized then try
 
    IF !lMinit
-	lMinit=(FT_MRESET()!=0)
+     lMinit=(FT_MRESET()!=0)
    ELSE
 * Reset maximum x and y limits
 
@@ -352,16 +352,16 @@ RETURN lMinit
 
 FUNCTION FT_MRESET()
 
-   aReg[AX] := 0          // set mouse function call 0
-   FT_INT86( 51, aReg )  // execute mouse interrupt
-   lCrsState=.F.         // Cursor is off after reset
+   aReg[AX] := 0        // set mouse function call 0
+   FT_INT86( 51, aReg ) // execute mouse interrupt
+   lCrsState=.F.        // Cursor is off after reset
 
 * Reset maximum x and y limits
 
    FT_MYLIMIT(0,8*MAXROW())
    FT_MXLIMIT(0,8*MAXCOL())
 
-RETURN aReg[AX] 	       // return status code
+RETURN aReg[AX]         // return status code
 
 
 /* $DOC$
@@ -485,12 +485,12 @@ RETURN NIL              // no output from function
 
 
 
-FUNCTION FT_MHIDECRS()   // decrement internal cursor flag and hide cursor
+FUNCTION FT_MHIDECRS()  // decrement internal cursor flag and hide cursor
 
-   aReg[AX] := 2          // set mouse function call 2
-   FT_INT86( 51, aReg )  // execute mouse interrupt
+   aReg[AX] := 2        // set mouse function call 2
+   FT_INT86( 51, aReg ) // execute mouse interrupt
    lCrsState := .f.
-RETURN NIL		          // no output from function
+RETURN NIL              // no output from function
 
 
 /*
@@ -869,14 +869,14 @@ RETURN NIL                           // no function output
 
 FUNCTION FT_MBUTPRS( nButton, nButPrs, nX, nY ) // get button press information
 
-   aReg[AX] := 5	           // set mouse function call 5
-   aReg[BX] := nButton          // pass parameter for left or right button
-   FT_INT86( 51, aReg )        // execute mouse interrupt
+   aReg[AX] := 5              // set mouse function call 5
+   aReg[BX] := nButton        // pass parameter for left or right button
+   FT_INT86( 51, aReg )       // execute mouse interrupt
    nButPrs := aReg[BX] // store updated press count
    nX := aReg[DX]      // x-coordinate at last press
    nY := aReg[CX]      // y-coordinate at last press
 
-RETURN aReg[AX]                 // return button status
+RETURN aReg[AX]               // return button status
 
 
 
@@ -996,10 +996,10 @@ RETURN aReg[AX]                 // return button status
   /*
 FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type and masks
 
-   aReg[AX] = 10   	   // set mouse function call 10
-   aReg[BX] = nCurType   // load cursor type parameter
-   aReg[CX] = nScrMask   // load screen mask value
-   aReg[DX] = nCurMask   // load cursor mask value
+   aReg[AX] = 10        // set mouse function call 10
+   aReg[BX] = nCurType  // load cursor type parameter
+   aReg[CX] = nScrMask  // load screen mask value
+   aReg[DX] = nCurMask  // load cursor mask value
    FT_INT86( 51, aReg ) // execute mouse interrupt
 
 RETURN NIL              // no function output

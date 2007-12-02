@@ -88,13 +88,13 @@
 FUNCTION FT_SLEEP( nSeconds, nInitial )
 
   IF nInitial == NIL .OR. VALTYPE( nInitial ) != "N"
-	   nInitial := SECONDS()
+     nInitial := SECONDS()
   ENDIF
 
   // correct for running at midnight
 
   IF nInitial + nSeconds > 86399
-	   nInitial -= 86399
+     nInitial -= 86399
      *  Wait until midnight
      DO WHILE SECONDS() > 100  // no problem with a _very_ slow machine
      ENDDO

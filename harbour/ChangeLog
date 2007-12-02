@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-02 12:38 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbnf/nwsem.prg
+  * harbour/contrib/hbnf/prtesc.prg
+  * harbour/contrib/hbnf/mouse1.prg
+  * harbour/contrib/hbnf/workdays.prg
+  * harbour/contrib/hbnf/sleep.prg
+  * harbour/contrib/hbnf/xbox.prg
+  * harbour/contrib/hbnf/d2e.prg
+  * harbour/contrib/hbnf/mouse2.prg
+  * harbour/contrib/hbnf/ntow.prg
+  * harbour/contrib/hbnf/floptst.prg
+  * harbour/contrib/hbnf/e2d.prg
+    * converted TABs to SPACEs
+
 2007-12-02 05:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * updated for new contrib libraries names

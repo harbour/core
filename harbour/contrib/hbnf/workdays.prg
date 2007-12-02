@@ -47,7 +47,7 @@
  *  $DESCRIPTION$
  *     FT_WORKDAYS() returns a number indicating the number of work days
  *     between two dates.  Work days are considered Monday through Friday.
- *		 (The five day work week none of us Clipper programmers have.)
+ *     (The five day work week none of us Clipper programmers have.)
  *
  *  $EXAMPLES$
  *    ? FT_WorkDays( CTOD("5/16/91"), CTOD("5/20/91") ) // 3  (Th - Mo)
@@ -64,35 +64,35 @@
 
 
 FUNCTION FT_WorkDays( dStart, dStop )
-  LOCAL nWorkDays := 0, nDays, nAdjust
+   LOCAL nWorkDays := 0, nDays, nAdjust
 
-  IF dStart # NIL .AND. dStop # NIL
-	   IF dStart # dStop
-        IF dStart > dStop   // Swap the values
+   IF dStart # NIL .AND. dStop # NIL
+      IF dStart # dStop
+         IF dStart > dStop   // Swap the values
             nAdjust    := dStop
             dStop    := dStart
             dStart    := nAdjust
-        ENDIF
+         ENDIF
 
-        IF ( nDays := Dow( dStart ) ) == 1 // Sunday (change to next Monday)
-           dStart++
-        ELSEIF nDays == 7 // Saturday (change to next Monday)
-           dStart += 2
-        ENDIF
+         IF ( nDays := Dow( dStart ) ) == 1 // Sunday (change to next Monday)
+            dStart++
+         ELSEIF nDays == 7 // Saturday (change to next Monday)
+            dStart += 2
+         ENDIF
 
-        IF ( nDays := Dow( dStop ) ) == 1 // Sunday (change to prev Friday)
-           dStop -= 2
-        ELSEIF nDays == 7 // Saturday (change to prev Friday)
-           dStop--
-        ENDIF
+         IF ( nDays := Dow( dStop ) ) == 1 // Sunday (change to prev Friday)
+            dStop -= 2
+         ELSEIF nDays == 7 // Saturday (change to prev Friday)
+            dStop--
+         ENDIF
 
-        nAdjust := ( nDays := dStop - dStart + 1 ) % 7
+         nAdjust := ( nDays := dStop - dStart + 1 ) % 7
 
-        IF Dow( dStop ) + 1 < Dow( dStart ) // Weekend adjustment
-           nAdjust -= 2
-        ENDIF
+         IF Dow( dStop ) + 1 < Dow( dStart ) // Weekend adjustment
+            nAdjust -= 2
+         ENDIF
 
-        nWorkDays := Int( nDays / 7 ) * 5 + nAdjust
+         nWorkDays := Int( nDays / 7 ) * 5 + nAdjust
 
       ELSEIF ( Dow( dStart ) # 1 .AND. Dow( dStart ) # 7 )
 
