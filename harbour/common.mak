@@ -501,6 +501,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbtoken$(OBJEXT)  \
     $(OBJ_DIR)\idle$(OBJEXT)     \
     $(OBJ_DIR)\inkey$(OBJEXT)    \
+    $(OBJ_DIR)\inkeyapi$(OBJEXT) \
     $(OBJ_DIR)\is$(OBJEXT)       \
     $(OBJ_DIR)\isprint$(OBJEXT)  \
     $(OBJ_DIR)\itemseri$(OBJEXT) \

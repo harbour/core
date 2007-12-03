@@ -64,10 +64,21 @@
 #include "hbapierr.h"
 #include "hbapicdp.h"
 #include "hbdate.h"
+#include "hbset.h"
+#include "hbvm.h"
 
+/* these variables are used for stdout/stderr output when GT subsystem
+ * is not initialized
+ */
+static FHANDLE s_hStdIn = 0, s_hStdOut = 1, s_hStdErr = 2;
+
+/* base GT strucure */
 static PHB_GT_BASE   s_curGT = NULL;
 
-static FHANDLE       s_hStdOut = 1, s_hStdErr = 2;
+PHB_GT hb_gt_Base( void )
+{
+   return s_curGT;
+}
 
 /* helper internal function */
 static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
@@ -82,11 +93,14 @@ static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
    pGT->uiExtCount   = 0;
    pGT->uiClearChar  = ' ';
    pGT->bClearColor  = 0x07;
-   pGT->hStdIn       = 0;
-   pGT->hStdOut      = 1;
-   pGT->hStdErr      = 2;
+   pGT->hStdIn       = s_hStdIn;
+   pGT->hStdOut      = s_hStdOut;
+   pGT->hStdErr      = s_hStdErr;
 
    pGT->iDoubleClickSpeed = 168; /* In milliseconds */
+
+   pGT->inkeyBuffer     = pGT->defaultKeyBuffer;
+   pGT->inkeyBufferSize = HB_DEFAULT_INKEY_BUFSIZE;
 }
 
 static void * hb_gt_def_New( void )
@@ -143,6 +157,9 @@ static void hb_gt_def_Free( void * pGtPtr )
       hb_xfree( pGT->szClipboardData );
    if( pGT->iColorCount > 0 )
       hb_xfree( pGT->pColor );
+   if( pGT->pGTData )
+      hb_xfree( pGT->pGTData );
+
    hb_xfree( pGT );
 }
 
@@ -162,6 +179,7 @@ static void hb_gt_def_Init( FHANDLE hStdIn, FHANDLE hStdOut, FHANDLE hStdErr )
 static void hb_gt_def_Exit( void )
 {
    hb_mouse_Exit();
+   hb_inkey_Exit();
 
    if( s_curGT )
    {
@@ -2173,6 +2191,352 @@ static int hb_gt_def_ReadKey( int iEventMask )
    return hb_mouse_ReadKey( iEventMask );
 }
 
+/* helper internal function */
+static int hb_gt_def_InkeyFilter( int iKey, int iEventMask )
+{
+   int iMask;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeyFilter(%d,%d)", iKey, iEventMask));
+
+   switch( iKey )
+   {
+      case K_MOUSEMOVE:
+      case K_MMLEFTDOWN:
+      case K_MMRIGHTDOWN:
+      case K_MMMIDDLEDOWN:
+      case K_NCMOUSEMOVE:
+         iMask = INKEY_MOVE;
+         break;
+      case K_LBUTTONDOWN:
+      case K_LDBLCLK:
+         iMask = INKEY_LDOWN;
+         break;
+      case K_LBUTTONUP:
+         iMask = INKEY_LUP;
+         break;
+      case K_RBUTTONDOWN:
+      case K_RDBLCLK:
+         iMask = INKEY_RDOWN;
+         break;
+      case K_RBUTTONUP:
+         iMask = INKEY_RUP;
+         break;
+      case K_MBUTTONDOWN:
+      case K_MBUTTONUP:
+      case K_MDBLCLK:
+         iMask = INKEY_MMIDDLE;
+         break;
+      case K_MWFORWARD:
+      case K_MWBACKWARD:
+         iMask = INKEY_MWHEEL;
+         break;
+      default:
+         iMask = INKEY_KEYBOARD;
+         break;
+   }
+
+   if( ( iMask & iEventMask ) == 0 )
+      return 0;
+
+   return iKey;
+}
+
+/* helper internal function: drop the next key in keyboard buffer */
+static void hb_gt_def_InkeyPop( void )
+{
+   if( s_curGT )
+   {
+      if( s_curGT->StrBuffer )
+      {
+         if( ++s_curGT->StrBufferPos >= s_curGT->StrBufferSize )
+         {
+            hb_xfree( s_curGT->StrBuffer );
+            s_curGT->StrBuffer = NULL;
+         }
+      }
+      else if( s_curGT->inkeyHead != s_curGT->inkeyTail )
+      {
+         if( ++s_curGT->inkeyTail >= s_curGT->inkeyBufferSize )
+            s_curGT->inkeyTail = 0;
+      }
+   }
+}
+
+/* Put the key into keyboard buffer */
+static void hb_gt_def_InkeyPut( int iKey )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeyPut(%d)", iKey));
+
+   if( s_curGT )
+   {
+      int iHead = s_curGT->inkeyHead;
+
+      if( iKey == K_MOUSEMOVE )
+         {
+         /*
+          * Clipper does not store in buffer repeated mouse movement
+          * IMHO it's good idea to reduce unnecessary inkey buffer
+          * overloading so I also implemented it, [druzus]
+          */
+         if( s_curGT->iLastPut == iKey && s_curGT->inkeyHead != s_curGT->inkeyTail )
+            return;
+      }
+
+      /*
+       * When the buffer is full new event overwrite the last one
+       * in the buffer - it's Clipper behavior, [druzus]
+       */
+      s_curGT->inkeyBuffer[ iHead++ ] = s_curGT->iLastPut = iKey;
+      if( iHead >= s_curGT->inkeyBufferSize )
+         iHead = 0;
+
+      if( iHead != s_curGT->inkeyTail )
+         s_curGT->inkeyHead = iHead;
+   }
+}
+
+/* helper internal function */
+static BOOL hb_gt_def_InkeyNextCheck( int iEventMask, int * iKey )
+{
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_def_InkeyNextCheck(%p)", iKey) );
+
+   if( s_curGT )
+   {
+      if( s_curGT->StrBuffer )
+      {
+         *iKey = s_curGT->StrBuffer[ s_curGT->StrBufferPos ];
+      }
+      else if( s_curGT->inkeyHead != s_curGT->inkeyTail )
+      {
+         *iKey = hb_gt_def_InkeyFilter( s_curGT->inkeyBuffer[ s_curGT->inkeyTail ], iEventMask );
+      }
+      else
+      {
+         return FALSE;
+      }
+
+      if( *iKey == 0 )
+      {
+         hb_gt_def_InkeyPop();
+         return FALSE;
+      }
+   }
+
+   return TRUE;
+}
+
+/* helper internal function */
+static void hb_gt_def_InkeyPollDo( void )
+{
+   int iKey;
+
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_def_InkeyPollDo()") );
+
+   iKey = hb_gt_ReadKey( INKEY_ALL );
+
+   if( iKey )
+   {
+      switch( iKey )
+      {
+         case HB_BREAK_FLAG:           /* Check for Ctrl+Break */
+         case K_ALT_C:                 /* Check for normal Alt+C */
+            if( hb_set.HB_SET_CANCEL )
+            {
+               hb_vmRequestCancel();   /* Request cancellation */
+               return;
+            }
+            break;
+         case K_ALT_D:                 /* Check for Alt+D */
+            if( hb_set.HB_SET_DEBUG )
+            {
+               hb_vmRequestDebug();    /* Request the debugger */
+               return;
+            }
+      }
+      hb_inkey_Put( iKey );
+   }
+}
+
+/* Poll the console keyboard to stuff the Harbour buffer */
+static void hb_gt_def_InkeyPoll( void )
+{
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_def_InkeyPoll()") );
+
+   /*
+    * Clipper 5.3 always poll events without respecting
+    * hb_set.HB_SET_TYPEAHEAD when CL5.2 only when it's non zero.
+    * IMHO keeping CL5.2 behavior will be more accurate for xharbour
+    * because it allow to control it by user what some times could be
+    * necessary due to different low level GT behavior on some platforms
+    */
+   if( hb_set.HB_SET_TYPEAHEAD )
+   {
+      hb_gt_def_InkeyPollDo();
+   }
+}
+
+/* Return the next key without extracting it */
+static int hb_gt_def_InkeyNext( int iEventMask )
+{
+   int iKey = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeyNext(%d)", iEventMask));
+
+   hb_inkey_Poll();
+   hb_gt_def_InkeyNextCheck( iEventMask, &iKey );
+
+   return iKey;
+}
+
+/* Wait for keyboard input */
+static int hb_gt_def_InkeyGet( BOOL fWait, double dSeconds, int iEventMask )
+{
+   HB_ULONG end_timer;
+   BOOL fPop;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeyGet(%d, %f, %d)", (int) fWait, dSeconds, iEventMask));
+
+   if( s_curGT )
+   {
+      /* Wait forever ?, Use fixed value 100 for strict Clipper compatibility */
+      if( fWait && dSeconds * 100 >= 1 )
+         end_timer = hb_dateMilliSeconds() + ( HB_ULONG ) ( dSeconds * 1000 );
+      else
+         end_timer = 0;
+
+      do
+      {
+         hb_gt_def_InkeyPollDo();
+         fPop = hb_gt_def_InkeyNextCheck( iEventMask, &s_curGT->inkeyLast );
+
+         if( fPop )
+            break;
+
+         /* immediately break if a VM request is pending. */
+         if( !fWait || hb_vmRequestQuery() != 0 )
+            return 0;
+
+         hb_idleState();
+      }
+      while( end_timer == 0 || end_timer > hb_dateMilliSeconds() );
+
+      hb_idleReset();
+
+      if( fPop )
+      {
+         hb_gt_def_InkeyPop();
+         return s_curGT->inkeyLast;
+      }
+   }
+
+   return 0;
+}
+
+/* Return the value of the last key that was extracted */
+static int hb_gt_def_InkeyLast( int iEventMask )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeyLast(%d)", iEventMask));
+
+   hb_inkey_Poll();
+
+   return s_curGT ? hb_gt_def_InkeyFilter( s_curGT->inkeyLast, iEventMask ) : 0;
+}
+
+/* Set LastKey() value and return previous value */
+static int hb_gt_def_InkeySetLast( int iKey )
+{
+   int iLast = 0;
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeySetLast(%d)", iKey));
+
+   if( s_curGT )
+   {
+      iLast = s_curGT->inkeyLast;
+      s_curGT->inkeyLast = iKey;
+   }
+
+   return iLast;
+}
+
+/* Set text into inkey buffer */
+static void hb_gt_def_InkeySetText( const char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeySetText(%s,%lu)", szText, ulLen));
+
+   if( s_curGT )
+   {
+      if( s_curGT->StrBuffer )
+      {
+         hb_xfree( s_curGT->StrBuffer );
+         s_curGT->StrBuffer = NULL;
+      }
+
+      if( szText && ulLen )
+      {
+         s_curGT->StrBuffer = ( BYTE * ) hb_xgrab( ulLen );
+         memcpy( s_curGT->StrBuffer, szText, ulLen );
+         s_curGT->StrBufferSize = ulLen;
+         s_curGT->StrBufferPos = 0;
+      }
+   }
+}
+
+/* Reset the keyboard buffer */
+static void hb_gt_def_InkeyReset( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeyReset()"));
+
+   if( s_curGT )
+   {
+      if( s_curGT->StrBuffer )
+      {
+         hb_xfree( s_curGT->StrBuffer );
+         s_curGT->StrBuffer = NULL;
+      }
+
+      s_curGT->inkeyHead = 0;
+      s_curGT->inkeyTail = 0;
+
+      if( hb_set.HB_SET_TYPEAHEAD != s_curGT->inkeyBufferSize )
+      {
+         if( s_curGT->inkeyBufferSize > HB_DEFAULT_INKEY_BUFSIZE )
+            hb_xfree( s_curGT->inkeyBuffer );
+
+         if( hb_set.HB_SET_TYPEAHEAD > HB_DEFAULT_INKEY_BUFSIZE )
+         {
+            s_curGT->inkeyBufferSize = hb_set.HB_SET_TYPEAHEAD;
+            s_curGT->inkeyBuffer = ( int * ) hb_xgrab( s_curGT->inkeyBufferSize * sizeof( int ) );
+         }
+         else
+         {
+            s_curGT->inkeyBufferSize = HB_DEFAULT_INKEY_BUFSIZE;
+            s_curGT->inkeyBuffer = s_curGT->defaultKeyBuffer;
+         }
+      }
+   }
+}
+
+/* reset inkey pool to default state and free any allocated resources */
+static void hb_gt_def_InkeyExit( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeyExit()"));
+
+   if( s_curGT )
+   {
+      if( s_curGT->StrBuffer )
+      {
+         hb_xfree( s_curGT->StrBuffer );
+         s_curGT->StrBuffer = NULL;
+      }
+      if( s_curGT->inkeyBufferSize > HB_DEFAULT_INKEY_BUFSIZE )
+      {
+         hb_xfree( s_curGT->inkeyBuffer );
+         s_curGT->inkeyBufferSize = HB_DEFAULT_INKEY_BUFSIZE;
+         s_curGT->inkeyBuffer = s_curGT->defaultKeyBuffer;
+      }
+
+   }
+}
+
 static void hb_gt_def_MouseInit( void )
 {
    ;
@@ -2525,6 +2889,15 @@ static HB_GT_FUNCS gtCoreFunc =
    SetDispCP                  : hb_gt_def_SetDispCP                     ,
    SetKeyCP                   : hb_gt_def_SetKeyCP                      ,
    ReadKey                    : hb_gt_def_ReadKey                       ,
+   InkeyGet                   : hb_gt_def_InkeyGet                     ,
+   InkeyPut                   : hb_gt_def_InkeyPut                     ,
+   InkeyLast                  : hb_gt_def_InkeyLast                    ,
+   InkeyNext                  : hb_gt_def_InkeyNext                    ,
+   InkeyPoll                  : hb_gt_def_InkeyPoll                    ,
+   InkeySetText               : hb_gt_def_InkeySetText                 ,
+   InkeySetLast               : hb_gt_def_InkeySetLast                 ,
+   InkeyReset                 : hb_gt_def_InkeyReset                   ,
+   InkeyExit                  : hb_gt_def_InkeyExit                    ,
    MouseInit                  : hb_gt_def_MouseInit                     ,
    MouseExit                  : hb_gt_def_MouseExit                     ,
    MouseIsPresent             : hb_gt_def_MouseIsPresent                ,
@@ -2633,6 +3006,15 @@ static HB_GT_FUNCS gtCoreFunc =
    hb_gt_def_SetDispCP                    ,
    hb_gt_def_SetKeyCP                     ,
    hb_gt_def_ReadKey                      ,
+   hb_gt_def_InkeyGet                     ,
+   hb_gt_def_InkeyPut                     ,
+   hb_gt_def_InkeyLast                    ,
+   hb_gt_def_InkeyNext                    ,
+   hb_gt_def_InkeyPoll                    ,
+   hb_gt_def_InkeySetText                 ,
+   hb_gt_def_InkeySetLast                 ,
+   hb_gt_def_InkeyReset                   ,
+   hb_gt_def_InkeyExit                    ,
    hb_gt_def_MouseInit                    ,
    hb_gt_def_MouseExit                    ,
    hb_gt_def_MouseIsPresent               ,
@@ -3052,6 +3434,51 @@ int    hb_gt_SetFlag( int iType, int iNewValue )
 int    hb_gt_ReadKey( int iEventMask )
 {
    return gtCoreFunc.ReadKey( iEventMask );
+}
+
+int    hb_inkey_Get( BOOL fWait, double dSeconds, int iEventMask )
+{
+   return gtCoreFunc.InkeyGet( fWait, dSeconds, iEventMask );
+}
+
+void   hb_inkey_Put( int iKey )
+{
+   gtCoreFunc.InkeyPut( iKey );
+}
+
+int    hb_inkey_Last( int iEventMask )
+{
+   return gtCoreFunc.InkeyLast( iEventMask );
+}
+
+int    hb_inkey_Next( int iEventMask )
+{
+   return gtCoreFunc.InkeyNext( iEventMask );
+}
+
+void   hb_inkey_Poll( void )
+{
+   gtCoreFunc.InkeyPoll();
+}
+
+void   hb_inkey_SetText( const char * szText, ULONG ulLen )
+{
+   gtCoreFunc.InkeySetText( szText, ulLen );
+}
+
+int    hb_inkey_SetLast( int iKey )
+{
+   return gtCoreFunc.InkeySetLast( iKey );
+}
+
+void   hb_inkey_Reset( void )
+{
+   gtCoreFunc.InkeyReset();
+}
+
+void   hb_inkey_Exit( void )
+{
+   gtCoreFunc.InkeyExit();
 }
 
 void   hb_mouse_Init( void )

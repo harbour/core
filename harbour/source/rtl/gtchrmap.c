@@ -473,4 +473,4 @@ int main(int argc, char **argv)
 }
 */
 
-#endif // HB_OS_UNIX
+#endif /* HB_OS_UNIX */

@@ -193,6 +193,16 @@ typedef struct
    /* keyboard */
    int      (* ReadKey) ( int );
 
+   int      (* InkeyGet) ( BOOL fWait, double dSeconds, int iEventMask );
+   void     (* InkeyPut) ( int iKey );
+   int      (* InkeyLast) ( int iEventMask );
+   int      (* InkeyNext) ( int iEventMask );
+   void     (* InkeyPoll) ( void );
+   void     (* InkeySetText) ( const char * szText, ULONG ulLen );
+   int      (* InkeySetLast) ( int iKey );
+   void     (* InkeyReset) ( void );
+   void     (* InkeyExit) ( void );
+
    /* mouse */
    void     (* MouseInit) ( void );
    void     (* MouseExit) ( void );
@@ -336,6 +346,18 @@ typedef struct
    HB_LONG        iMouseRightTimer;
    HB_LONG        iMouseMiddleTimer;
 
+   int            defaultKeyBuffer[ HB_DEFAULT_INKEY_BUFSIZE + 1 ];
+
+   int *          inkeyBuffer;
+   int            inkeyBufferSize;
+   int            inkeyHead;
+   int            inkeyTail;
+   int            iLastPut;
+   int            inkeyLast;
+   BYTE *         StrBuffer;
+   ULONG          StrBufferSize;
+   ULONG          StrBufferPos;
+
    void **        pGTData;          /*  */
 } HB_GT_BASE;
 typedef HB_GT_BASE * PHB_GT_BASE, * PHB_GT;
@@ -420,6 +442,15 @@ extern BOOL   hb_gt_Info( int iType, PHB_GT_INFO pInfo );
 extern int    hb_gt_Alert( PHB_ITEM pMessage, PHB_ITEM pOptions, int iClrNorm, int iClrHigh, double dDelay );
 extern int    hb_gt_SetFlag( int iType, int iNewValue );
 extern int    hb_gt_ReadKey( int iEventMask );
+extern int    hb_inkey_Get( BOOL bWait, double dSeconds, int iEventMask );
+extern void   hb_inkey_Put( int iKey );
+extern int    hb_inkey_Last( int iEventMask );
+extern int    hb_inkey_Next( int iEventMask );
+extern void   hb_inkey_Poll( void );
+extern void   hb_inkey_SetText( const char * szText, ULONG ulLen );
+extern int    hb_inkey_SetLast( int iKey );
+extern void   hb_inkey_Reset( void );
+extern void   hb_inkey_Exit( void );
 extern void   hb_mouse_Init( void );
 extern void   hb_mouse_Exit( void );
 extern BOOL   hb_mouse_IsPresent( void );

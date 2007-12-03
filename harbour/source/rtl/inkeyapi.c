@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Mouse API
+ * Inkey GT API
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,119 +50,72 @@
  *
  */
 
-#include "hbapigt.h"
+#include "hbgtcore.h"
 
-/* HARBOUR callable interface */
-
-#ifdef HB_COMPAT_C53
-
-#define M_BUTTON_LEFT   0
-#define M_BUTTON_RIGHT  1
-
-HB_FUNC( MPRESENT )
+HB_EXPORT int  hb_inkey( BOOL fWait, double dSeconds, int iEventMask )
 {
-   hb_retl( hb_mouseIsPresent() );
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkey(%d, %f, %d)", (int) fWait, dSeconds, iEventMask));
+
+   return hb_inkey_Get( fWait, dSeconds, iEventMask );
 }
 
-HB_FUNC( MHIDE )
+HB_EXPORT void hb_inkeyPut( int iKey )
 {
-   hb_mouseSetCursor( FALSE );
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyPut(%d)", iKey));
+
+   hb_inkey_Put( iKey );
 }
 
-HB_FUNC( MSHOW )
+HB_EXPORT int  hb_inkeyLast( int iEventMask )
 {
-   hb_mouseSetCursor( TRUE );
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyLast(%d)", iEventMask));
+
+   return hb_inkey_Last( iEventMask );
 }
 
-HB_FUNC( MSETCURSOR )
+HB_EXPORT int  hb_inkeyNext( int iEventMask )
 {
-   hb_retl( hb_mouseGetCursor() );
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyNext(%d)", iEventMask));
 
-   if( ISLOG( 1 ) )
-      hb_mouseSetCursor( hb_parl( 1 ) );
+   return hb_inkey_Next( iEventMask );
 }
 
-HB_FUNC( MROW )
+HB_EXPORT void hb_inkeyPoll( void )
 {
-   if( ISLOG( 1 ) && hb_parl( 1 ) )
-   {
-      int iRow, iCol;
+   HB_TRACE( HB_TR_DEBUG, ("hb_inkeyPoll()") );
 
-      hb_mouseGetPos( &iRow, &iCol );
-      hb_retni( iRow );
-   }
-   else
-      hb_retni( hb_mouseRow() );
+   hb_inkey_Poll();
 }
 
-HB_FUNC( MCOL )
+HB_EXPORT int  hb_inkeySetLast( int iKey )
 {
-   if( ISLOG( 1 ) && hb_parl( 1 ) )
-   {
-      int iRow, iCol;
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeySetLast(%d)", iKey));
 
-      hb_mouseGetPos( &iRow, &iCol );
-      hb_retni( iCol );
-   }
-   else
-      hb_retni( hb_mouseCol() );
+   return hb_inkey_SetLast( iKey );
 }
 
-HB_FUNC( MSETPOS )
+HB_EXPORT void hb_inkeySetText( const char * szText, ULONG ulLen )
 {
-   if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_mouseSetPos( hb_parni( 1 ), hb_parni( 2 ) );
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeySetText(%s,%lu)", szText, ulLen));
+
+   hb_inkey_SetText( szText, ulLen );
 }
 
-HB_FUNC( MLEFTDOWN )
+HB_EXPORT void hb_inkeyReset( void )
 {
-   hb_retl( hb_mouseButtonState( M_BUTTON_LEFT ) );
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyReset()"));
+
+   hb_inkey_Reset();
 }
 
-HB_FUNC( MRIGHTDOWN )
+HB_EXPORT void hb_inkeySetCancelKeys( int iCancelKey, int iCancelKeyEx )
 {
-   hb_retl( hb_mouseButtonState( M_BUTTON_RIGHT ) );
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeySetCancelKeys(%d,%d)", iCancelKey, iCancelKeyEx));
+
+/*
+   s_InkeyAltC = iCancelKey;
+   s_InkeyAltCEx = iCancelKeyEx;
+*/
+   HB_SYMBOL_UNUSED( iCancelKey );
+   HB_SYMBOL_UNUSED( iCancelKeyEx );
 }
-
-HB_FUNC( MDBLCLK )
-{
-   hb_retni( hb_mouseGetDoubleClickSpeed() );
-
-   if( ISNUM( 1 ) )
-   {
-      hb_mouseSetDoubleClickSpeed( hb_parni( 1 ) );
-   }
-}
-
-HB_FUNC( MSAVESTATE )
-{
-   int iLen = hb_mouseStorageSize();
-
-   if( iLen > 0 )
-   {
-      BYTE * pBuffer = ( BYTE * ) hb_xgrab( iLen + 1 );
-
-      hb_mouseSaveState( pBuffer );
-      hb_retclen_buffer( ( char * ) pBuffer, iLen );
-   }
-   else
-      hb_retc( NULL );
-}
-
-HB_FUNC( MRESTSTATE )
-{
-   if( ISCHAR( 1 ) && hb_parclen( 1 ) == ( ULONG ) hb_mouseStorageSize() )
-   {
-      hb_mouseRestoreState( ( BYTE * ) hb_parc( 1 ) );
-   }
-}
-
-HB_FUNC( MSETBOUNDS )
-{
-   hb_mouseSetBounds( hb_parni( 1 ), /* Defaults to zero on bad type */
-                      hb_parni( 2 ), /* Defaults to zero on bad type */
-                      ISNUM( 3 ) ? hb_parni( 3 ) : hb_gtMaxRow(),
-                      ISNUM( 4 ) ? hb_parni( 4 ) : hb_gtMaxCol() );
-}
-
-#endif

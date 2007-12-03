@@ -61,15 +61,13 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapiitm.h"
 #include "hbgtcore.h"
 
 /* NOTE: Mouse initialization is called directly from low level GT driver
  * because it possible that mouse subsystem can depend on the terminal
  * (for example, mouse subsystem cannot be initialized before ncurses
  * driver is initialized).
-*/
+ */
 /* C callable interface */
 
 HB_EXPORT BOOL hb_mouseIsPresent( void )

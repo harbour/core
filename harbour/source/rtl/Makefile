@@ -66,6 +66,7 @@ C_SOURCES=\
 	hbtoken.c    \
 	idle.c       \
 	inkey.c      \
+	inkeyapi.c   \
 	is.c         \
 	isprint.c    \
 	itemseri.c   \
