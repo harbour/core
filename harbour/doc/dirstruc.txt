@@ -7,20 +7,15 @@ Harbour directory structure
 
 Follow are the various directories that exist under the Harbour tree.
 Under each directory exist in this list there is also a special directory
-named CVS, which should normally ignored since it is used by the CVS to keep
-track of all files (read the FAQ if you don't know what CVS is). Note that
-the tree might contain other empty directories, they might be obsolete but
-there is no simple way to remove them completely (you can use: cvs update -d
-in order to remove empty directories)
+named .svn, which should normally ignored since it is used by the SVN to keep
+track of all files (read the FAQ if you don't know what SVN is).
 
 
 <harbour>               - Main Harbour directory. Contain all the various
 |                         make file and Changelog (=changes history) files.
 |
 +---bin                 - Executable and build scripts.
-|   |                     Should contain HARBOUR.EXE and other executable. (*)
-|   |
-|   +---b16             -
+|   |                     Should contain harbour.exe and other executable. (*)
 |   |
 |   +---b32             -
 |   |
@@ -47,57 +42,69 @@ in order to remove empty directories)
 +---contrib             - Miscellaneous contribution files. Those are not
 |   |                     part of the official Harbour project.
 |   |
-|   +---apollo          - Wrapper functions for VistaSoftware's Apollo
+|   +---examples        - Sample files and small applications.
+|   |   |
+|   |   +---dbu         - Make files (without source) for CA-Clipper DBU.
+|   |   |
+|   |   +---guestbk     - Harbour Guests Book.
+|   |   |
+|   |   +---hscript     - Harbour Script.
+|   |   |
+|   |   +---misc        - A few humble demonstration.
+|   |   |
+|   |   +---pe          - Editor.
+|   |
+|   +---hbapollo        - Wrapper functions for VistaSoftware's Apollo
 |   |   |                 database driver.
 |   |   |
 |   |   +---test        - Test programs.
 |   |
-|   +---btree           - BTree library.
+|   +---hbbmcdx         - DBFCDX RDD with bitmap filters compatible with
+|   |                     CA-Clipper 5.3
+|   |
+|   +---hbbtree         - BTree library.
 |   |   |
 |   |   +---doc         - HB_BTree C and Harbour API documentation.
 |   |   |
 |   |   +---test        - HB_BTree api test programs.
 |   |
-|   +---delphi          - Integration with Borland Delphi.
-|   |   |
-|   |   +---hbdll       - Accessing Harbour DLL from Delphi.
-|   |
-|   +---directx         - DirectDraw implementation for Windows.
-|   |   |
-|   |   +---lib         -
-|   |   |   |
-|   |   |   +---vc      -
-|   |   |
-|   |   +---media       -
-|   |   |
-|   |   +---samples     -
-|   |
-|   +---dot             - Pre-Processor/Dot prompt environment.
-|   |
-|   +---gd              - HBGD wrapper for gdLibrary.
-|   |   |
-|   |   +---tests       - Test programs and samples.
-|   |       |
-|   |       +-images_in -
-|   |       |
-|   |       +-images_out-
-|   |
 |   +---hbclip          - Harbour Compatibility Library (HCL) for
 |   |                     CA-Clipper 5.x
 |   |
-|   +---hbzlib          - Interface for 'zlib' general purpose compression
-|   |   |                 library to work with ZIP files.
+|   +---hbclipsm        - Miscellaneous contribution files.
 |   |   |
-|   |   +---doc         - Documents for the ZIP functions.
-|   |   |
-|   |   +---include     - Include files used by the library.
-|   |   |
-|   |   +---Linux       - Some source files for the Linux platform.
+|   |   +---tests       - Test programs.
 |   |
-|   +---hb_struc        - Base Class for internal handling of class creation
-|   |                     as structures.
+|   +---hbct            - CA-T**ls Compatible Library for Harbour.
+|   |   |
+|   |   +---tests       - Test programs.
 |   |
-|   +---hgf             - Harbour GUI framework.
+|   +---hbfbird         - Harbour Low Level api for Firebird and Interbase
+|   |   |                 RDBMS.
+|   |   |
+|   |   +---test        - Test programs.
+|   |
+|   +---hbfimage        - Wrapper for FreeImage.
+|   |   |
+|   |   +---test        - Test program and sample images.
+|   |       |
+|   |       +-images_out- Output directory used by the test program.
+|   |
+|   +---hbgd            - HBGD wrapper for gdLibrary.
+|   |   |
+|   |   +---doc         - Help and license files.
+|   |   |
+|   |   +---include     - gdLibrary c include files.
+|   |   |
+|   |   +---tests       - Test programs and samples.
+|   |       |
+|   |       +-digits    - Digits images for counter test program.
+|   |       |
+|   |       +-images_in - Sample images.
+|   |       |
+|   |       +-images_out- Output directory.
+|   |
+|   +---hbgf            - Harbour GUI framework.
 |   |   |
 |   |   +---gtk         - Implementation for GTK+ environment.
 |   |   |
@@ -108,71 +115,103 @@ in order to remove empty directories)
 |   |   |
 |   |   +---win32       - Implementation for Win32 environment.
 |   |
-|   +---htmllib         - HTMLLIB (HTML classes) port for Harbour
-|   |
-|   +---libct           - CA-T**ls Compatible Library for Harbour.
-|   |   |
-|   |   +---alt         - Alternate version of CT function.
-|   |   |
-|   |   +---tests       - Test programs.
-|   |
-|   +---libgt           - GT library port to Harbour.
+|   +---hbgt            - GT library port to Harbour.
 |   |   |
 |   |   +---doc         - Documents for the GT library.
 |   |       |
 |   |       +---en      - English documentation.
 |   |
-|   +---libmisc         - Miscellaneous contribution.
+|   +---hbgtwvg         - GT subsystem for Win32 GUI using GDI functions.
+|   |   |
+|   |   +---test        - Demo program and sample images.
+|   |
+|   +---hbmisc          - Miscellaneous contribution.
 |   |   |
 |   |   +---doc         - Documents for above contribution.
 |   |   |   |
 |   |   |   +---en      - English documentation.
 |   |   |
-|   |   +---tests       - Test programs.
+|   |   +---test        - Test programs.
 |   |
-|   +---libnf           - Nanforum library port for Harbour.
-|   |
-|   +---msql            - Harbour mSQL access classes.
-|   |
-|   +---mysql           - Harbour MySQL access classes.
-|   |
-|   +---odbc            - ODBS Access Class Demonstration.
-|   |
-|   +---ole             - Win32 OLE Automation library.
-|   |
-|   +---pdflib          - PDF low level Api for HBDOC to inteface with PDFlib.
-|   |
-|   +---pgsql           - Harbour Low Level API for Postgres RDBMS.
+|   +---hbmsql          - Harbour mSQL access classes.
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
-|   +---rdd_ads         - RDD for Advantage Database Server.
+|   +---hbmysql         - Harbour MySQL access classes.
+|   |   |
+|   |   +---test        - Test program.
+|   |
+|   +---hbnf            - Nanforum library port for Harbour.
+|   |   |
+|   |   +---test        - Test program.
+|   |
+|   +---hbodbc          - ODBS Access Class Demonstration.
+|   |   |
+|   |   +---test        - Test programs.
+|   |
+|   +---hbole           - Win32 OLE Automation library.
+|   |   |
+|   |   +---test        - Demonstration program.
+|   |
+|   +---hbpgsql         - Harbour Low Level API for Postgres RDBMS.
+|   |   |
+|   |   +---tests       - Test programs.
+|   |
+|   +---hbrddado        - ADORDD - RDD to automatically manage Microsoft ADO.
+|   |   |
+|   |   +---tests       - Test programs.
+|   |
+|   +---hbrddads        - RDD for Advantage Database Server.
 |   |   |
 |   |   +---doc         - Documents for Advantage Database Server RDD.
-|   |       |
-|   |       +---en      - English documentation.
+|   |   |   |
+|   |   |   +---en      - English documentation.
+|   |   |
+|   |   +---test        - Test programs.
 |   |
-|   +---runjava         - JAVA runner for Harbour Portable Object (.HRB)
-|   |                     files.
+|   +---hbtip           - TIP Class oriented Internet Protocol library.
 |   |
-|   +---samples         - Miscellaneous contribution files.
+|   +---hbtpathy        - Telepathy serial communication port for Harbour.
+|   |   |
+|   |   +---test        - Test program.
 |   |
-|   +---tip             - TIP Class oriented Internet Protocol library.
+|   +---hbw32           - Collection of Win32 specific utility functions.
+|   |   |
+|   |   +---test        - Test programs.
 |   |
-|   +---tprepro         - PreProcessor class based on Harbour Preprocessor
-|                         runtime library.
+|   +---hbw32ddr        - DirectDraw implementation for Windows.
+|   |   |
+|   |   +---test        - A BreakOut like sample game.
+|   |
+|   +---hbwhat32        - What32 is a library for ccessing all of Win32 API
+|   |                     from PRG level.
+|   |
+|   +---hbziparch       - Interface for ZipArchive general purpose compression
+|   |   |                 library to work with ZIP files.
+|   |   |
+|   |   +---doc         - Documents for the ZIP functions.
+|   |   |
+|   |   +---include     - Include files used by the library.
+|   |   |
+|   |   +---Linux       - Some source files for the Linux platform.
+|   |
+|   +---xhb             - xHarbour compatibility libarary. To allow programs
+|                         which where written using some xHarcour extensions,
+|                         to be complied by Harbour.
+|
++---debian              - Packaging information for Debian GNU/Linux.
 |
 +---doc                 - Documentation and white-paper.
 |   |
 |   +---en              - English documentation.
 |   |
 |   +---es              - Spanish documentation.
+|   |
+|   +---man             - Man pages.
 |
 +---include             - Include files for both Harbour and C.
 |
 +---lib                 - Run-Time libraries binaries for each platform. (*)
-|   |
-|   +---b16             -
 |   |
 |   +---b32             -
 |   |
@@ -180,21 +219,9 @@ in order to remove empty directories)
 |
 +---obj                 - Object files. (*)
 |   |
-|   +---b16             -
-|   |
 |   +---b32             -
 |   |
 |   +---vc              -
-|
-+---samples             - Sample files and small applications.
-|   |
-|   +---guestbk         - Harbour Guests Book.
-|   |
-|   +---hscript         - Harbour Script.
-|   |
-|   +---misc            - A few humble demonstration.
-|   |
-|   +---pe              - Editor.
 |
 +---source              - All source files reside underneath.
 |   |
@@ -205,6 +232,9 @@ in order to remove empty directories)
 |   +---compiler        - Harbour compiler module.
 |   |
 |   +---debug           - Debugger.
+|   |
+|   +---hbpcre          - Harbour implementation of the Perl Compatible
+|   |                     Regular Expressions (PCRE) library.
 |   |
 |   +---lang            - National language message support files.
 |   |
@@ -258,6 +288,10 @@ in order to remove empty directories)
 |   |   |
 |   |   +---gtstd       - GT subsystem for plain ANSI C stream IO.
 |   |   |
+|   |   +---gttrm       - GT subsystem for terminal. It does not use
+|   |   |                 termcap/terminfo for terminal escape sequences,
+|   |   |                 but rather hard coded ones for basic capabilities.
+|   |   |
 |   |   +---gtwin       - GT subsystem for Win32 compilers (Console).
 |   |   |
 |   |   +---gtwvt       - GT subsystem for Win32 using GUI windows instead of
@@ -271,16 +305,22 @@ in order to remove empty directories)
 |       |                 library functions.
 |       |
 |       +---mainstd     - mainstd library for MinGW32 build.
+|       |
+|       +---mainwin     - mainwin library for MinGW32 build.
 |
 |
 +---tests               - Test programs.
 |   |
 |   +---bldtest         - Simple C program to check if Harbour can be compiled
-|                         on the current machine, system and C compiler.
+|   |                     on the current machine, system and C compiler.
+|   |
+|   +---multifnc        - Overloading C functions test.
 |
 +---utils               - Utilities and tools that are part of Harbour.
     |
     +---hbdoc           - Documentation generation tool.
+    |
+    +---hbdot           - "DOt Prompt" console for the Harbour language.
     |
     +---hbextern        - HBEXTERN.CH generator.
     |
@@ -300,8 +340,8 @@ in order to remove empty directories)
 Legend:
 =======
 (*)      Should exist in a final build or if you build them yourself, in
-         normal CVS distribution this directory is empty or does not contain
+         normal SVN distribution this directory is empty or does not contain
          all files.
 
 
-Chen Kedem <niki@actcom.co.il>
+Chen Kedem <niki@synel.co.il>

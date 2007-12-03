@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-03 16:30 UTC+0200 Chen Kedem <niki@synel.co.il>
+  * ChangeLog
+    * Update my email address
+  * doc/dirstruc.txt
+    + Add short description to the newly added directories.
+
 2007-12-03 11:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapigt.h
     * removed declaration for not existing function: hb_inkeyGet()
@@ -9129,7 +9135,7 @@
   - harbour/contrib/hbzlib/Makefile.mingw
     - removed not necessary file
 
-2007-06-05 09:56 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2007-06-05 09:56 UTC+0300 Chen Kedem <niki@synel.co.il>
   * source/rtl/achoice.prg
     ! Fix bug#1729881 by <sokaxa@telenet.be>
       ACHOICE() was not handling AC_GOTO when user function was used.
@@ -10031,7 +10037,7 @@
   * harbour/contrib/gd/gdwrp.c
     * fixed warnings
 
-2007-05-08 16:06 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2007-05-08 16:06 UTC+0300 Chen Kedem <niki@synel.co.il>
   * source/rtl/mlctopos.c
     ! Make the function MLCTOPOS() more compatible.
       TOFIX note added about existing problems.
@@ -10056,7 +10062,7 @@
      * INDEX ON ... implementation
      * OrdListClear() and OrdListAdd() implementation
 
-2007-05-07 11:04 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2007-05-07 11:04 UTC+0300 Chen Kedem <niki@synel.co.il>
   * source/rtl/mlctopos.c
     ! Fix bug#1635288 - Make the function MLCTOPOS() more Clipper
       compatible. Also, the WordWrap value was taken from the wrong
@@ -11215,7 +11221,7 @@
     * use HB_COMPILEBUF() instead of HB_COMPILE() to eliminate temporary
       files
 
-2007-04-12 11:14 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2007-04-12 11:14 UTC+0300 Chen Kedem <niki@synel.co.il>
   * source/rtl/tget.prg
     ! Fix bug#1672233 - Picture masks for Logical GET variables.
 
@@ -12753,7 +12759,7 @@
   * harbour/tests/hbinline.prg
     * updated comments
 
-2007-01-09 10:56 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2007-01-09 10:56 UTC+0200 Chen Kedem <niki@synel.co.il>
   * doc/whatsnew.txt
     + Add changes for the new beta build.
 
@@ -13280,7 +13286,7 @@
    * source/pp/ppcore.c
       + added hb_pp_eof() function
 
-2006-12-18 14:19 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2006-12-18 14:19 UTC+0200 Chen Kedem <niki@synel.co.il>
   * doc/dirstruc.txt
     + Add a oneliner description for: source/rdd/usrrdd, source/rtl/gtgui
 
@@ -13659,7 +13665,7 @@
     * updated generated grammar parser files for above modification
       in parser definition files (.y)
 
-2006-11-29 16:11 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2006-11-29 16:11 UTC+0200 Chen Kedem <niki@synel.co.il>
   * makefile.bc
   * make_b32.bat
     ! Fixed the COPY command to work on Windows-NT (/Y flag isn't supported)
@@ -14327,7 +14333,7 @@
   * harbour/doc/pp.txt
     * updated documentation for the above modification
 
-2006-11-13 11:22 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2006-11-13 11:22 UTC+0200 Chen Kedem <niki@synel.co.il>
   * TODO
     - Remove one TOFIX item with was fixed (PP of a long line).
     + Add 3 TOFIX items (these are all that I know of).
@@ -15704,7 +15710,7 @@
   * harbour/source/vm/hvm.c
     ! fixed item type used for iterator
 
-2006-09-06 12:02 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2006-09-06 12:02 UTC+0300 Chen Kedem <niki@synel.co.il>
   * utils/hbrun/hbrun.prg
     * Change Main() into _APPMAIN() to avoid collision with user function
       in HRB file with that name.
@@ -15933,7 +15939,7 @@
       returns TRUE
     * some other fixes, reduced memory consumption and speed optimizations
 
-2006-09-03 16:37 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2006-09-03 16:37 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/en/lang.txt
     + Update supported codepage list for HB_SETCODEPAGE()
 
@@ -16050,7 +16056,7 @@
   * harbour/source/vm/classes.c
     ! fixed bug in super casting introduced in my last commit
 
-2006-08-24 10:02 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2006-08-24 10:02 UTC+0300 Chen Kedem <niki@synel.co.il>
   * TODO
     + Add three known issues to the To-Fix list
 
@@ -17078,7 +17084,7 @@
   * harbour/source/vm/itemapi.c
     * formatting
 
-2006-07-12 12:24 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2006-07-12 12:24 UTC+0300 Chen Kedem <niki@synel.co.il>
    * doc/en/rddmisc.txt
    * doc/en/rdddb.txt
      ! Fix the sample for AFIELDS()
@@ -17433,7 +17439,7 @@
   * harbour/source/rtl/empty.c
     * added HB_IT_SYMBOL
 
-2006-06-26 14:27 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2006-06-26 14:27 UTC+0300 Chen Kedem <niki@synel.co.il>
    * doc/en/var.txt
      + Add the types Pointer and Symbol to TYPE() and VARTYPE()
 
@@ -17455,7 +17461,7 @@
       * fixed to call hb_gcUnregisterSweep before the memory
       block clean-up
 
-2006-06-25 08:32 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2006-06-25 08:32 UTC+0300 Chen Kedem <niki@synel.co.il>
    * TODO
      * Change one assignment from Przemek to Ryszard
 
@@ -17529,7 +17535,7 @@
   * harbour/source/rdd/dbfntx/dbfntx1.c
     * code clean-up
 
-2006-06-22 11:58 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2006-06-22 11:58 UTC+0300 Chen Kedem <niki@synel.co.il>
    * TODO
      * Modify to include latests TODO and TOFIX entries,
        removed completed tasks.
@@ -18374,7 +18380,7 @@
   * harbour/source/rdd/workarea.c
     * added some dummy DBI_* actions in base RDD level
 
-2006-05-30 12:09 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2006-05-30 12:09 UTC+0300 Chen Kedem <niki@synel.co.il>
    + doc/howtorel.txt
      + How-to-Release document by Przemyslaw Czerpak (druzus/at/priv.onet.pl)
    * doc/whatsnew.txt
@@ -18398,7 +18404,7 @@
       using -a command line switch)
 
 
-2006-05-23 14:21 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2006-05-23 14:21 UTC+0300 Chen Kedem <niki@synel.co.il>
    * doc/whatsnew.txt
      + Add information about the upcoming alpha build 46.
 
@@ -18482,7 +18488,7 @@
     * return "S" for HB_IT_SYMBOL by hb_itemType()
     * formatting
 
-2006-05-14 09:36 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2006-05-14 09:36 UTC+0300 Chen Kedem <niki@synel.co.il>
    * doc/dirstruc.txt
      + Add oneliner description for: source\rtl\gtalleg, source\rtl\gtwvt,
        source\rtl\gtxwc, source\vm\mainstd
@@ -19894,7 +19900,7 @@
    * source/rtl/gtstd/gtstd.c
      ! Fixed recent compiler warnings.
 
-2006-02-05 09:47 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2006-02-05 09:47 UTC+0200 Chen Kedem <niki@synel.co.il>
    * source/rtl/gtos2/gtos2.c
      * Restore my copyright notice for functions used to be in mouseos2.c
 
@@ -20555,7 +20561,7 @@
      ! Fixed a few declarations to be in sync with the
        implementation. (Thanks Chen)
 
-2005-11-27 11:20 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2005-11-27 11:20 UTC+0200 Chen Kedem <niki@synel.co.il>
    * doc/en/math.txt
      * Rename HB_MATHERRMODE()    --> HB_MATHERMODE(),
               HB_MATHERRORBLOCK() --> HB_MATHERBLOCK(),
@@ -20714,7 +20720,7 @@
    * include/math.ch
      + HB_ prefix added.
 
-2005-11-21 18:29 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2005-11-21 18:29 UTC+0200 Chen Kedem <niki@synel.co.il>
    * source/rtl/math.c
      * Standardized public function names (to make HbExtern happy):
        HB_FUNC (MATHERRMODE)    --> HB_FUNC( MATHERRMODE )
@@ -21230,7 +21236,7 @@ NOTE:
         harbour/source/rdd/dbfcdx/sixcdx0.prg
         harbour/source/rdd/dbfdbt/dbfdbt0.prg
 
-2005-10-30 14:50 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2005-10-30 14:50 UTC+0200 Chen Kedem <niki@synel.co.il>
    * doc/dirstruc.txt
      + Add oneliner description for: source/rdd/hbsix, source/rdd/hsx
 
@@ -21727,11 +21733,11 @@ NOTE:
   * harbour.spec
     * Release info has been changed for release 45.
 
-2005-05-15 11:04 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2005-05-15 11:04 UTC+0300 Chen Kedem <niki@synel.co.il>
    * doc/dirstruc.txt
      + Add oneliner description for: config/hpux
 
-2005-05-15 10:42 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2005-05-15 10:42 UTC+0300 Chen Kedem <niki@synel.co.il>
    * doc/whatsnew.txt
      + Add information about the upcoming alpha build 45 written by
        Alejandro de Garate <alex_degarate@hotmail.com>
@@ -22633,7 +22639,7 @@ NOTE:
     ! Fixed a small bug in ordListAdd() function - there was a memory leak if
       the index name is wrong.
 
-2004-10-20 09:41 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2004-10-20 09:41 UTC+0200 Chen Kedem <niki@synel.co.il>
    * makefile.bc
      + Add the missing Greek language and codepage files
    * doc/dirstruc.txt
@@ -23198,7 +23204,7 @@ NOTE:
   * contrib/mysql/mysql.c
     * Some fixes and formatting.
 
-2004-07-18 13:05 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2004-07-18 13:05 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/whatsnew.txt
     + Add information about the upcoming alpha build 44
 
@@ -23358,7 +23364,7 @@ NOTE:
     + Documented code style
 
 
-2004-05-23 16:55 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2004-05-23 16:55 UTC+0300 Chen Kedem <niki@synel.co.il>
 
    * doc/en/lang.txt
      + Documentation for HB_LANGERRMSG(), HB_LANGMESSAGE(), HB_TRANSLATE()
@@ -23429,9 +23435,9 @@ NOTE:
 2004-05-18 15:45 UTC-0400 David G. Holm <dholm@jsd-llc.com>
   * source/rtl/cdpapi.c
     ! Corrected the function names reported by to HB_TRACE statements,
-      as pointed out by Chen Kedem <niki@actcom.co.il>.
+      as pointed out by Chen Kedem <niki@synel.co.il>.
 
-2004-05-18 16:12 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2004-05-18 16:12 UTC+0300 Chen Kedem <niki@synel.co.il>
 
    * doc/en/lang.txt
      + Documentation for HB_SETCODEPAGE()
@@ -23615,7 +23621,7 @@ NOTE:
        (changes are applyable to other cdp*.c files, too, but will wait
         until cdpesdos.c is completely reworked)
 
-2004-05-02 09:25 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2004-05-02 09:25 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/howtocvs.txt
     * Change references to CVSROOT (according to SourceForge documents)
       from cvs.Harbour-project.sourceforge.net
@@ -23691,13 +23697,13 @@ NOTE:
   * source/vm/memvars.c
     ! Eliminated most warnings issued by MinGW GCC compiler.
 
-2004-04-22 10:57 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2004-04-22 10:57 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/dirstruc.txt
     + Add oneliner description for: contrib/hbzlib/include,
                                     contrib/hbzlib/Linux,
                                     tests/bldtest
 
-2004-04-21 16:35 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2004-04-21 16:35 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/en/rddord.txt
     - Remove docs for: ORDKEY() $DESCRIPTION$ section, ORDLISTADD(),
                        ORDLISTCLEAR(), ORDLISTREBUILD(), ORDNAME(),
@@ -23708,7 +23714,7 @@ NOTE:
   * contrib/Makefile
     + Added an ifeq section for bsd builds.
 
-2004-04-19 11:43 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2004-04-19 11:43 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/en/rdd.txt
     - Remove docs for: RDDLIST(), RDDNAME(), RDDSETDEFAULT(), __RDDSETDEFAULT()
       because of copyright violation! (the file is now EMPTY)
@@ -24860,7 +24866,7 @@ NOTE:
     ! Use the standard ENOENT instead of the DOS-centric ENOFILE.
     ! Resolved three print format warnings.
 
-2003-11-12 13:35 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2003-11-12 13:35 UTC+0200 Chen Kedem <niki@synel.co.il>
   * doc/dirstruc.txt
     + Add a lines for source/rdd/dbfdbt, source/rdd/dbffpt, utils/hbver
 
@@ -25309,7 +25315,7 @@ NOTE:
       It makes it more easy to set/get values of object variables,
       execute object methods from the C level.
 
-2003-10-07 12:06 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2003-10-07 12:06 UTC+0200 Chen Kedem <niki@synel.co.il>
   * doc/whatsnew.txt
     * Update build 43 release date
 
@@ -25342,7 +25348,7 @@ NOTE:
    * include/hbver.h
      * Release info has been corrected again :).
 
-2003-09-29 11:47 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2003-09-29 11:47 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/whatsnew.txt
     + Added information about builds 10..25, 43 based on information
       found on the Harbour site and the mail list.
@@ -25626,7 +25632,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
   * include/set.ch
     ! Indicate that there are six (6) Harbour SET extensions.
 
-2003-07-30 08:28 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2003-07-30 08:28 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/en/set.txt
     + Added _SET_EOF text from the changelog entry written by
       David G. Holm <dholm@jsd-llc.com> and mark it Harbour extension.
@@ -25842,7 +25848,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
   * contrib/rdd_ads/ads1.c
     ! Fixed: deleted() return TRUE when is at eof(), borrow from xHarbour.
 
-2003-07-08 11:27 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2003-07-08 11:27 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/en/lang.txt
     + Added the following to HB_LANGSELECT() list of supported ID's:
       Slovenian 437
@@ -26121,7 +26127,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
   Warning: This is not even an early prototype :-) More coming soon...
 
-2003-06-23 10:05 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2003-06-23 10:05 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/en/lang.txt
     + Added the following to HB_LANGSELECT() list of supported ID's:
       Serbian Windows-1251
@@ -26221,7 +26227,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
   * source/debug/dbgwa.prg
     ! some fixes implemented by Ian Anderson
 
-2003-06-17 09:08 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2003-06-17 09:08 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/en/lang.txt
     + Added the following to HB_LANGSELECT() list of supported ID's:
       German ANSI, Spanish ANSI, Polish Windows-1250, Slovenian 852,
@@ -26624,7 +26630,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
 
   This fixes the debugger bug reported by Guy Roussin.
 
-2003-04-27 15:09 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2003-04-27 15:09 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/dirstruc.txt
     + Add a line about contrib/ole
 
@@ -26698,7 +26704,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
   * contrib/odbc/todbc.prg
     ! Better way to move to first record after fetching
 
-2003-04-13 10:02 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2003-04-13 10:02 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/whatsnew.txt
     + Add information about builds 38..42 according to information
       found on the Harbour site and the developers mailing list
@@ -27128,7 +27134,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
   + added doc/windll.txt as an introduction to Windows
       32-bit dll creation with Harbour.
 
-2002-12-22 13:06 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2002-12-22 13:06 UTC+0200 Chen Kedem <niki@synel.co.il>
   * doc/dirstruc.txt
     + Add a line about source/codepade
 
@@ -27495,7 +27501,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
   * source/rdd/dbf1.c
     * added missing typecasting for msvc.
 
-2002-10-27 10:28 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2002-10-27 10:28 UTC+0200 Chen Kedem <niki@synel.co.il>
   * doc/en/lang.txt
     + Added Russian KOI-8 to HB_LANGSELECT() list of supported ID's
 
@@ -27870,13 +27876,13 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
                of the options.
                Added support for dbinfo(DBI_ISFLOCK)
 
-2002-10-01 08:25 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2002-10-01 08:25 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/es/browse.txt
   * doc/es/cmdline.txt
   * doc/es/dbstrux.txt
     ! columns in <table></table> need to be at least 3 spaces apart
 
-2002-09-30 16:46 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2002-09-30 16:46 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/en/input.txt
   * doc/en/lang.txt
   * doc/en/menu.txt
@@ -28026,7 +28032,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
       no character fields or because all of the character fields
       are blank).
 
-2002-09-09 16:48 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2002-09-09 16:48 UTC+0300 Chen Kedem <niki@synel.co.il>
   * source/common/hbffind.c
     - Remove redundant line which used FILE_ATTRIBUTE_NOT_CONTENT_INDEXED
       from hb_fsAttToRaw(). The next line already use the explicit
@@ -28836,7 +28842,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
   * source/rtl/gtwin/gtwin.c
     ! Fix, now Shift-ESC return the correct value.
 
-2002-06-06 09:23 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2002-06-06 09:23 UTC+0300 Chen Kedem <niki@synel.co.il>
   * doc/dirstruc.txt
     + Add notes for the btree directory
 
@@ -29645,7 +29651,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
      ! Fix bug in picture "999,999.99" and "999.999,99".
      ! Fix bug in picture with initial spaces.
 
-2002-03-25 08:45 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2002-03-25 08:45 UTC+0200 Chen Kedem <niki@synel.co.il>
 
    * doc/en/lang.txt
      ! Change ZH_GB --> ZHGB, ZH_BIG5 --> ZHB5
@@ -30047,7 +30053,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
      * Fixed bug when browsing vars
        reported by Jorge A. Giraldo
 
-2002-02-24 09:34 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2002-02-24 09:34 UTC+0200 Chen Kedem <niki@synel.co.il>
 
    * doc/dirstruc.txt
      + Add two lines about the Delphi directory
@@ -30169,7 +30175,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
    * source/rtl/tbcolumn.prg
      ! fixed columns footing handling
 
-2002-02-18 10:42 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2002-02-18 10:42 UTC+0200 Chen Kedem <niki@synel.co.il>
 
    * doc/en/string.txt
      + AT() : Add note about Harbour extension in the $COMPLIANCE$ section
@@ -30496,7 +30502,7 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
      * source change re-implemented, that was lost cause using
        Viktor classes.c
 
-2002-01-30 12:30 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2002-01-30 12:30 UTC+0200 Chen Kedem <niki@synel.co.il>
 
    * source/vm/arrayshb.c
      * HB_AEXPRESSIONS() - The reported error code was 1123
@@ -31382,7 +31388,7 @@ ed
      * hb_fscommit() now used true Win32 Api calls
      * No more file limit on Win32
 
-2002-01-02 09:40 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2002-01-02 09:40 UTC+0200 Chen Kedem <niki@synel.co.il>
 
    * doc/dirstruc.txt
      + Add description for newly added directories
@@ -32132,7 +32138,7 @@ ed
    * source/vm/estack.c
      + Added language markers HB_I_()
 
-2001-12-16 14:20 UTC+0200 Chen Kedem <niki@actcom.co.il>
+2001-12-16 14:20 UTC+0200 Chen Kedem <niki@synel.co.il>
 
    * doc/en/lang.txt
      * HB_LANGSELECT() - Sort table according to language
@@ -34189,7 +34195,7 @@ e.vc
    * harbour/contrib/hgf/tests/form3res.prg
      Loading persistence files at runtime sample
 
-2001-09-06 14:39 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2001-09-06 14:39 UTC+0300 Chen Kedem <niki@synel.co.il>
    + doc/dirstruc.txt
      * add a document which list Harbour directory structure
 
@@ -35088,7 +35094,7 @@ e.vc
    * source/compiler/genc.c
      ! Improved sync logic of HB_SETMACRO() level, to only activate once per module with same level used by compiler.
 
-2001-08-06 10:33 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2001-08-06 10:33 UTC+0300 Chen Kedem <niki@synel.co.il>
    * doc/funclist.txt
      ! Fix excessive use of global replace forcing 'n' or 'N' into 'S'
 
@@ -35282,7 +35288,7 @@ e.vc
    * source/rtl/profiler.prg
       * Restored the OO based profile reporter.
 
-2001-07-30 16:40 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2001-07-30 16:40 UTC+0300 Chen Kedem <niki@synel.co.il>
 
    * doc/en/memvar2.txt
    * doc/en/sayget.txt
@@ -37444,7 +37450,7 @@ contrib/hbzlib/doc/zipnew.txt
 
    First round of copyright/e-mail address update. To be continued.
 
-2001-05-15 13:20 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2001-05-15 13:20 UTC+0300 Chen Kedem <niki@synel.co.il>
    * doc/en/objfunc.txt
      * update the doc for __objGetMsgList() to reflect
        changelog 2001-05-13 22:10 UTC+1 JFL (mafact) <jfl@mafact.com>
@@ -37696,7 +37702,7 @@ contrib/hbzlib/doc/zipnew.txt
   + contrib/libct/tests/tokensep.prg
     ! small test programs for new functions
 
-2001-05-10 09:46 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2001-05-10 09:46 UTC+0300 Chen Kedem <niki@synel.co.il>
    * doc/en/objfunc.txt
      * update the doc for __objGetMsgList() to reflect
        changelog 2001-05-09 00:02 UTC+1 JFL (mafact) <jfl@mafact.com>
@@ -38696,7 +38702,7 @@ contrib/hbzlib/doc/zipnew.txt
       from Matthew "Mabster" Hamilton <mhamilton@bunge.com.au>
       and Antonio Linares <alinares@fivetech.com>
 
-2001-04-12 10:42 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2001-04-12 10:42 UTC+0300 Chen Kedem <niki@synel.co.il>
    * source/rtl/tone.c
    * source/rtl/gtos2/mouseos2.c
    * source/rtl/lang/msghe862.c
@@ -43358,7 +43364,7 @@ NOTE:
      + Added check for the file path when checking self reference of #include.
      + Added logic to ignore case when checing self reference of #include.
 
-2000-08-02 15:54 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2000-08-02 15:54 UTC+0300 Chen Kedem <niki@synel.co.il>
 
    * doc/simplex.txt
      + add missing id tag
@@ -44836,7 +44842,7 @@ NOTE:
    * source/pp/ppcore.c
         *fixed some problems, reported by Ron Pinkas
 
-2000-06-26 08:55 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2000-06-26 08:55 UTC+0300 Chen Kedem <niki@synel.co.il>
 
    * source/rdd/dblist.prg
      ! fixed to handle cToFileName that contain "." in the path
@@ -46187,7 +46193,7 @@ for .chm support
        hb_retd( lYear, lMonth, lDay );
      * This will speed up things a bit.
 
-2000-05-30 10:30 UTC+0300 Chen Kedem <niki@actcom.co.il>
+2000-05-30 10:30 UTC+0300 Chen Kedem <niki@synel.co.il>
 
    * doc/en/objfunc.txt
      + Documentation for __objDerivedFrom()
@@ -47545,7 +47551,7 @@ The follow is mission from previus session
    * contrib/hbclip/hbclip.ch
      + Added additional strong typing compatibility translations
 
-20000504-12:07 GMT+3 Chen Kedem <niki@actcom.co.il>
+20000504-12:07 GMT+3 Chen Kedem <niki@synel.co.il>
    * doc/en/array.txt
      ! Change ASORT() $COMPLIANCE$ as suggested by Victor Szakats
 
@@ -49552,7 +49558,7 @@ NOTE:
     *source/rtl/diskspac.c
         *added support for U*ix like systems
 
-20000417-15:27 GMT+3 Chen Kedem <niki@actcom.co.il>
+20000417-15:27 GMT+3 Chen Kedem <niki@synel.co.il>
    * source/lang/msghe862.c
    * source/lang/msghewin.c
      * update Hebrew language support to the new API
@@ -50046,7 +50052,7 @@ NOTE:
      utils/hbdoc/html.prg
         *Small changes
 
-20000413-16:40 GMT+2 Chen Kedem <niki@actcom.co.il>
+20000413-16:40 GMT+2 Chen Kedem <niki@synel.co.il>
    * doc/en/dbstrux.txt
      * in __FLTEDIT() HARBOUR_STRICT_CLIPPER_COMPATIBILITY was changed into
        HB_C52_UNDOC as used by the source
@@ -50800,7 +50806,7 @@ NOTE:
    * tests/tstprag.prg
      + New tests changed.
 
-20000404-08:55 GMT+2 Chen Kedem <niki@actcom.co.il>
+20000404-08:55 GMT+2 Chen Kedem <niki@synel.co.il>
    * doc/en/dbstrux.txt
      + documentation for __dbCreate()
      + documentation for CREATE
@@ -51231,7 +51237,7 @@ NOTE:
     *doc/whatsnew.txt
         *some changes
 
-20000402-08:44 GMT+2 Chen Kedem <niki@actcom.co.il>
+20000402-08:44 GMT+2 Chen Kedem <niki@synel.co.il>
    + doc/en/dbstrux.txt
      + documentation for __dbCopyStruct()
      + documentation for COPY STRUCTURE
@@ -54086,7 +54092,7 @@ NOTE:
    * source/rtl/arrays.c
      * Minor change in comment.
 
-20000301-10:15 GMT+2 Chen Kedem <niki@actcom.co.il>
+20000301-10:15 GMT+2 Chen Kedem <niki@synel.co.il>
    * doc/en/ARRAY.TXT
    * doc/en/BINNUM.TXT
    * doc/en/BROWSE.TXT
@@ -54198,7 +54204,7 @@ NOTE:
      * pInfo.ItmOrder initialized with NULL, where it is necessary
        ( Victor Szel proposal )
 
-20000227-08:59 GMT+2 Chen Kedem <niki@actcom.co.il>
+20000227-08:59 GMT+2 Chen Kedem <niki@synel.co.il>
    * source/rtl/binnum.c
      + doc for all function
 
@@ -54284,7 +54290,7 @@ NOTE:
    * source/pp/hbppint.c
      * added cast
 
-20000221-08:50 GMT+2 Chen Kedem <niki@actcom.co.il>
+20000221-08:50 GMT+2 Chen Kedem <niki@synel.co.il>
    * source/rtl/objfunc.prg
      * Update docs to reflect changes made by Victor (20000220-14:30 GMT+1)
 
@@ -54328,7 +54334,7 @@ NOTE:
      ! Removed -5 option since this breaks Harbour on 386/486. Add
        this to your local BCC_OPT setting if needed.
 
-20000220-12:22 GMT+2 Chen Kedem <niki@actcom.co.il>
+20000220-12:22 GMT+2 Chen Kedem <niki@synel.co.il>
    * doc/cvs_ssh.txt
      + Add CVS ID
    * doc/gnulice.txt
@@ -54737,13 +54743,13 @@ NOTE:
    * doc/*
      ! Fixed and standardized CVS ID for the rest of files.
 
-20000213-11:32 GMT+2 Chen Kedem <niki@actcom.co.il>
+20000213-11:32 GMT+2 Chen Kedem <niki@synel.co.il>
    * doc/readme.txt
    * doc/statics.txt
    * doc/whatsnew.txt
      ! CVS ID fixed (sorry)
 
-20000213-11:23 GMT+2 Chen Kedem <niki@actcom.co.il>
+20000213-11:23 GMT+2 Chen Kedem <niki@synel.co.il>
    * doc/compiler.txt
    * doc/readme.txt
    * doc/statics.txt
@@ -55618,7 +55624,7 @@ NOTE:
    * source/rtl/tgetlist.prg
      * Added support for non-modal GetLists management.
 
-20000125-10:05 GMT+2 Chen Kedem <niki@actcom.co.il>
+20000125-10:05 GMT+2 Chen Kedem <niki@synel.co.il>
   * source/rtl/arrays.c
     - remove documentation stolen from CA-Clipper 5.2 NG from the following
       functions: ARRAY(), AADD(), ASIZE(), ATAIL(), AINS(), ADEL(), AFILL(),
@@ -56282,7 +56288,7 @@ Fixed the documentation to make the ng linker happy and added docs for the array
 19991230-19:28 GMT+1 Patrick Mast <Harbour@PatrickMast.com>
   + doc/harbour.ng (Luiz Rafael Culik)
 
-19991230-08:22 GMT+2 Chen Kedem <niki@actcom.co.il>
+19991230-08:22 GMT+2 Chen Kedem <niki@synel.co.il>
   * source/rtl/text.prg
     + doc for __TextSave()
     + doc for __TextRestore()
@@ -56315,7 +56321,7 @@ Fixed the documentation to make the ng linker happy and added docs for the array
      ! Added // NOTEST as first line in this test program that
        won't compile.
 
-19991227-08:30 GMT+2 Chen Kedem <niki@actcom.co.il>
+19991227-08:30 GMT+2 Chen Kedem <niki@synel.co.il>
   * source/rtl/readvar.prg
     + doc for READVAR()
   * source/rtl/setfunc.prg
@@ -56344,7 +56350,7 @@ Fixed the documentation to make the ng linker happy and added docs for the array
         a statement context (the previously selected workarea is popped
         from the eval stack instead of swapping)
 
-19991220-18:42 GMT+1 Chen Kedem <niki@actcom.co.il>
+19991220-18:42 GMT+1 Chen Kedem <niki@synel.co.il>
   * source/rtl/menuto.prg
     + doc for __AtPrompt()
     + doc for __MenuTo()
@@ -63388,11 +63394,11 @@ NOTE: You have to recompile all PRG sources!
   * source/rtl/gt/gtdos.c
     * active hb_gt_scroll source.
     needs test.
-  * most of this reported by Chen Kedem <niki@actcom.co.il>
+  * most of this reported by Chen Kedem <niki@synel.co.il>
 
 19990908-03:05 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gt/gtos2.c
-    + hb_gt_scroll by Chen Kedem <niki@actcom.co.il>
+    + hb_gt_scroll by Chen Kedem <niki@synel.co.il>
 
 19990908-08:24 GMT+1 Antonio Linares <alinares@fivetech.com>
   * makefile.b32
@@ -64371,7 +64377,7 @@ NOTE: You have to recompile all PRG sources!
     + static variables prefixed with "s_"
     * Some type changed to BOOL.
 
-19990830-16:59 +0300 Chen Kedem <niki@actcom.co.il>
+19990830-16:59 +0300 Chen Kedem <niki@synel.co.il>
    * source/rtl/mouse/mouseos2.c
      * hb_mouse_Hide() now work in any text screen mode.
      * hb_mouse_IsButtonPressed() now return TRUE if any button was
@@ -64646,7 +64652,7 @@ NOTE: You have to recompile all PRG sources!
       Jose Lalin <dezac@corevia.com>.
       Luiz Rafael Culik <Culik@sl.conex.net>.
     + The OS/2 implementation is thanks to
-      Chen Kedem <niki@actcom.co.il>
+      Chen Kedem <niki@synel.co.il>
 
       Please note that these files have not been tested yet, Borland
       users should comment out the #define BORLANDC line in mousedos.c.
@@ -64764,7 +64770,7 @@ NOTE: You have to recompile all PRG sources!
       code by Jose Lalin dezac@corevia.com
       and Luiz Rafael Culik (culik@sl.conex.net)
   + source/rtl/mouseos2.c
-      code by Chen Kedem <niki@actcom.co.il>
+      code by Chen Kedem <niki@synel.co.il>
   + source/rtl/mousetpl.c
 
 19990826-20:05 GMT+1 Bruno Cantero <bruno@issnet.net>
@@ -64953,7 +64959,7 @@ NOTE: You have to recompile all PRG sources!
      + Added 'DosSleep( 25 );' to hb_releaseCPU() for OS/2.
    * source/rtl/tone.c
      + Added 'Beep()' support for Win32, thanks to Chen Kedem
-       <niki@actcom.co.il>. Notes: Only tested with Cygwin() on
+       <niki@synel.co.il>. Notes: Only tested with Cygwin() on
        Windows NT and 95; On other Windows it only produces the
        default sound or standard beep.
      ! Removed call to hb_releaseCPU() at end of outer loop for long
@@ -66521,7 +66527,7 @@ NOTE: You have to recompile all PRG code!
     ! changed hb_gt_SetMode to return BOOL
   * include/gtapi.h source/rtl/gtdos.c
     ! changed hb_gt_SetMode to return BOOL
-  * source/rtl/gtos2.c (Chen Kedem <niki@actcom.co.il>)
+  * source/rtl/gtos2.c (Chen Kedem <niki@synel.co.il>)
     ! changed hb_gt_SetMode to return BOOL
     + hb_gt_IsColor()
     + hb_gt_SetAttribute()
@@ -66569,7 +66575,7 @@ NOTE: You have to recompile all PRG code!
 19990809-13:10 EDT Paul Tucker <ptucker@sympatico.ca>
   * source/rtl/gt_tpl.c
     + added a number of TODO comments
-  * from  Chen Kedem <niki@actcom.co.il>
+  * from  Chen Kedem <niki@synel.co.il>
   * source/rtl/gt/gtos2.c
     + support for:
       hb_gt_Get/SetBlink
