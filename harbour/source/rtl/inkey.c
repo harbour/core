@@ -71,14 +71,7 @@
  *
  */
 
-/* NOTE: For OS/2. Must be ahead of any and all #include statements */
-#if defined( HB_OS_OS2 )
-#  define INCL_DOSPROCESS
-#  define INCL_NOPMAPI
-#endif
-
 #include "hbapi.h"
-#include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbapigt.h"
 #include "hbvm.h"
@@ -195,14 +188,10 @@ HB_EXPORT void hb_inkeyPut( int iKey )
     */
    s_inkeyBuffer[ iHead++ ] = s_iLastPut = iKey;
    if( iHead >= s_inkeyBufferSize )
-   {
       iHead = 0;
-   }
 
    if( iHead != s_inkeyTail )
-   {
       s_inkeyHead = iHead;
-   }
 }
 
 static BOOL hb_inkeyNextCheck( int iEventMask, int * iKey )
@@ -303,9 +292,7 @@ HB_EXPORT int hb_inkey( BOOL fWait, double dSeconds, int iEventMask )
 
    /* Wait forever ?, Use fixed value 100 for strict Clipper compatibility */
    if( fWait && dSeconds * 100 >= 1 )
-   {
       end_timer = hb_dateMilliSeconds() + ( HB_ULONG ) ( dSeconds * 1000 );
-   }
 
    do
    {
@@ -313,15 +300,11 @@ HB_EXPORT int hb_inkey( BOOL fWait, double dSeconds, int iEventMask )
       fPop = hb_inkeyNextCheck( iEventMask, &s_inkeyLast );
 
       if( fPop )
-      {
          break;
-      }
 
       /* immediately break if a VM request is pending. */
       if( !fWait || hb_vmRequestQuery() != 0 )
-      {
          return 0;
-      }
 
       hb_idleState();
    }
@@ -397,9 +380,8 @@ HB_EXPORT void hb_inkeyReset( void )
    if( hb_set.HB_SET_TYPEAHEAD != s_inkeyBufferSize )
    {
       if( s_inkeyBufferSize > HB_DEFAULT_INKEY_BUFSIZE )
-      {
          hb_xfree( s_inkeyBuffer );
-      }
+
       if( hb_set.HB_SET_TYPEAHEAD > HB_DEFAULT_INKEY_BUFSIZE )
       {
          s_inkeyBufferSize = hb_set.HB_SET_TYPEAHEAD;

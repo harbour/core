@@ -12,7 +12,6 @@ DIRS=\
 	hbnf \
 	hbclipsm \
 	xhb \
-	$(HB_CONTRIBLIBS)
 #	examples \
 
 
@@ -64,6 +63,10 @@ endif
 
 ifneq ($(HB_ARCHITECTURE),dos)
 DIRS += hbtip
+endif
+
+ifneq ($(HB_CONTRIBLIBS),)
+DIRS += $(HB_CONTRIBLIBS)
 endif
 
 include $(ROOT)config/dir.cf

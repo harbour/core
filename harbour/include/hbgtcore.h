@@ -59,6 +59,7 @@
 #define HB_GTCORE_H_
 
 #include "hbapigt.h"
+#include "hbapicdp.h"
 
 /* extended attributes used by core screen buffer */
 #define HB_GT_ATTR_BOX        0x01
@@ -290,8 +291,6 @@ typedef HB_GT_CORD * PHB_GT_CORD;
 
 typedef struct
 {
-   int            iHandle;          /* Window handle */
-
    int            iRow;             /* cursor row position */
    int            iCol;             /* cursor column position */
 
@@ -304,11 +303,45 @@ typedef struct
    BOOL *         pLines;           /* Touched Window lines */
    BOOL           fRefresh;         /* Should Window be refreshed */
 
+   BOOL           fVgaCell;
+   BOOL           fIsColor;
+   BOOL           fBlinking;
+   BOOL           fStdOutCon;
+   BOOL           fStdErrCon;
+   int            iCursorShape;
+   USHORT         uiDispCount;
+   USHORT         uiExtCount;
+   USHORT         uiClearChar;
+   BYTE           bClearColor;
+   FHANDLE        hStdIn;
+   FHANDLE        hStdOut;
+   FHANDLE        hStdErr;
+
+   char *         szClipboardData;
+   ULONG          ulClipboardLen;
+
+   BOOL           fDispTrans;
+   PHB_CODEPAGE   cdpTerm;
+   PHB_CODEPAGE   cdpHost;
+
+   int            iColorIndex;
+   int            iColorCount;
+   int *          pColor;
+
+   int            iDoubleClickSpeed; /* In milliseconds */
+   BOOL           fMouseVisible;
+   int            iMouseLastRow;
+   int            iMouseLastCol;
+   HB_LONG        iMouseLeftTimer;
+   HB_LONG        iMouseRightTimer;
+   HB_LONG        iMouseMiddleTimer;
+
    void **        pGTData;          /*  */
 } HB_GT_BASE;
 typedef HB_GT_BASE * PHB_GT_BASE, * PHB_GT;
 
 extern PHB_GT hb_gt_Base( void );
+
 extern void * hb_gt_New( void );
 extern void   hb_gt_Free( void * pGtPtr );
 extern void   hb_gt_Init( FHANDLE hStdIn, FHANDLE hStdOut, FHANDLE hStdErr );

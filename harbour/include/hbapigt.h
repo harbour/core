@@ -256,7 +256,6 @@ extern HB_EXPORT ERRCODE hb_gtSetBorder( HB_GT_RGB * color );
 
 /* Harbour keyboard support functions */
 extern HB_EXPORT int     hb_inkey( BOOL bWait, double dSeconds, int iEvenMask ); /* Wait for keyboard input */
-extern HB_EXPORT int     hb_inkeyGet( int iEvenMask );   /* Extract the next key from the Harbour keyboard buffer */
 extern HB_EXPORT void    hb_inkeyPut( int ch );          /* Inserts an inkey code into the keyboard buffer */
 extern HB_EXPORT int     hb_inkeyLast( int iEvenMask );  /* Return the value of the last key that was extracted */
 extern HB_EXPORT int     hb_inkeyNext( int iEvenMask );  /* Return the next key without extracting it */

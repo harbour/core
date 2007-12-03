@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-03 11:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapigt.h
+    * removed declaration for not existing function: hb_inkeyGet()
+
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+    * moved all static variables used by core GT code to HB_GT_BASE
+      structure
+
+  * harbour/source/rtl/inkey.c
+    * cleanup
+
+  * harbour/contrib/Makefile
+    * moved HB_CONTRIBLIBS to the end build library list because they may
+      need some other contrib libraries in dependences list
+
 2007-12-02 12:38 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbnf/nwsem.prg
   * harbour/contrib/hbnf/prtesc.prg
