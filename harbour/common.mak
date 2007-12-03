@@ -60,9 +60,9 @@ DLLEXT=.dll
 LIBEXT=.lib
 !endif
 
-#!ifndef LIBPREF
-#LIBPREF=
-#!endif
+!ifndef LIBPREF
+LIBPREF=
+!endif
 
 #**********************************************************
 # Install directory defaults.
@@ -261,7 +261,7 @@ HBDOC_EXE    = $(BIN_DIR)\hbdoc$(EXEEXT)
 HBMAKE_EXE   = $(BIN_DIR)\hbmake$(EXEEXT)
 HBVER_EXE    = $(BIN_DIR)\hbverfix$(EXEEXT)
 
-HARBOUR_DLL  = $(BIN_DIR)\harbour-$(HB_CC_NAME)$(DLLEXT)
+HARBOUR_DLL  = $(BIN_DIR)\$(LIBPREF)harbour-$(HB_CC_NAME)$(DLLEXT)
 HBTESTDLL_EXE= $(BIN_DIR)\hbtest-dll$(EXEEXT)
 
 #**********************************************************
@@ -282,6 +282,9 @@ HB_WINOS_GT = \
     $(GTGUI_LIB)
 
 !ifdef HB_GT_LIST
+# Hack - (HB_GT_LIST) is replaced by make_gcc.sh
+# when it creates common.cf - a modified verion
+# of common.mak
 HB_GT_LIBS = $(HB_STD_GT) $(HB_GT_LIST)
 !else
 HB_GT_LIBS = $(HB_STD_GT) $(HB_WINOS_GT)
@@ -704,7 +707,6 @@ LANG_LIB_OBJS = \
     $(OBJ_DIR)\msgis850$(OBJEXT) \
     $(OBJ_DIR)\msgit$(OBJEXT)    \
     $(OBJ_DIR)\msgko$(OBJEXT)    \
-    $(OBJ_DIR)\msgltwin$(OBJEXT) \
     $(OBJ_DIR)\msgnl$(OBJEXT)    \
     $(OBJ_DIR)\msgpl852$(OBJEXT) \
     $(OBJ_DIR)\msgpliso$(OBJEXT) \
@@ -1094,6 +1096,23 @@ HBVER_EXE_OBJS = \
 # with all objects required for building DLL.
 # They have wrong OBJ directory. We fix it
 # in each respective makefile.
+
+#-------------------------
+
+!ifdef HB_GT_LIST
+# Hack - (HB_GT_OBJS) is replaced by make_gcc.sh
+# when it creates common.cf - a modified verion
+# of common.mak
+DLL_GT_OBJS = $(HB_GT_OBJS)
+!else
+DLL_GT_OBJS = \
+    $(GTWIN_LIB_OBJS)       \
+    $(GTWVT_LIB_OBJS)       \
+    $(GTGUI_DLL_OBJS)
+!endif
+
+#-------------------------
+
 TMP_DLL_OBJS = \
     $(COMMON_LIB_OBJS)      \
     $(PP_LIB_OBJS)          \
@@ -1114,9 +1133,9 @@ TMP_DLL_OBJS = \
     $(GTCGI_LIB_OBJS)       \
     $(GTPCA_LIB_OBJS)       \
     $(GTSTD_LIB_OBJS)       \
-    $(GTWIN_LIB_OBJS)       \
-    $(GTWVT_LIB_OBJS)       \
-    $(GTGUI_DLL_OBJS)       \
+    $(DLL_GT_OBJS)          \
+
+#-------------------------
 
 DISABLED_SHARED_MODULES=    \
     $(NULSYS_LIB_OBJS)      \

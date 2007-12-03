@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-03 18:25 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/common.mak
+  * harbour/make_gcc.mak
+  * harbour/make_gcc.sh
+    + Added the possibility to build dll/so of Harbour VM+RTL
+      (tested om MingW, Cygwin, FC8/64)
+
+  * harbour/make_b32.mak
+  * harbour/make_vc.mak
+  * harbour/make_vcce.mak
+    + Added HB_ARCHITECTURE definition (to be used in a future)
+
+  * harbour/source/rtl/gtchrmap.c
+    ! Fixed compilation under Linux using make_gcc.sh
+
 2007-12-03 16:30 UTC+0200 Chen Kedem <niki@synel.co.il>
   * ChangeLog
     * Update my email address
@@ -79,8 +94,8 @@
 2007-12-01 22:33 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/hbgd/make_b32.bat
    * contrib/hbgd/gdwrp.c
-     ! Fixed the way HB_OS_WIN_32_USED is used and windows.h 
-       is included to work like in rest of Harbour. This way 
+     ! Fixed the way HB_OS_WIN_32_USED is used and windows.h
+       is included to work like in rest of Harbour. This way
        it works for all compilers/build systems.
 
 2007-12-01 22:21 UTC+0100 Francesco Saverio Giudice (info at fsgiudice dot com)

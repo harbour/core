@@ -57,6 +57,8 @@
 #include "hbgtcore.h"
 #include "hbapifs.h"
 
+#ifdef HB_OS_UNIX
+
 #define MAX_CHAR_VAL    0xff
 #define HB_CHRMAP(a,c)  ( ( (a) << 16 ) | (c) )
 
@@ -470,3 +472,5 @@ int main(int argc, char **argv)
    return 0;
 }
 */
+
+#endif // HB_OS_UNIX

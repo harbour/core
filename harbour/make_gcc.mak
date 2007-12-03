@@ -64,6 +64,13 @@
 
 #**********************************************************
 
+#ifeq ($(HB_ARCHITECTURE),cyg)
+## Cygwin is "Linux on Windows"
+#HB_ARCHITECTURE = w32
+#endif
+
+#**********************************************************
+
 ifndef ECHO
 ECHO = echo
 endif
@@ -89,6 +96,17 @@ endif
 ifeq ($(MKLIB),)
 MKLIB = ar
 endif
+
+#**********************************************************
+
+# These defs have to be defined
+# *before* common.cf is included
+
+OBJEXT=.o
+EXEEXT=$(if $(findstring $(HB_ARCHITECTURE),w32 cyg dos os2),.exe)
+DLLEXT=$(if $(findstring $(HB_ARCHITECTURE),w32 cyg dos os2),.dll,.so)
+LIBEXT=.a
+LIBPREF=lib
 
 #**********************************************************
 
@@ -123,13 +141,25 @@ endif
 #**********************************************************
 
 # Default sources directory search paths
-VPATH := $(ALL_SRC_DIRS) $(LIB_DIR) $(BIN_DIR) $(OBJ_DIR)
+VPATH := $(ALL_SRC_DIRS) $(LIB_DIR) $(BIN_DIR) $(OBJ_DIR) $(DLL_OBJ_DIR)
 
 #**********************************************************
 
 # Some definitions cannot be kept in Common.mak
 # due to serious limitations of Microsoft Nmake
-DLL_OBJS = $(TMP_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
+
+# Unix systems do not require an
+# extra compilation pass for dlls
+DLL_OBJS := $(TMP_DLL_OBJS)
+
+# DLLs on Windows require IMPORT lib
+# and additional compiler pass
+ifeq ($(HB_ARCHITECTURE),w32)
+DLL_OBJS := $(patsubst $(OBJ_DIR)%,$(DLL_OBJ_DIR)%,$(TMP_DLL_OBJS))
+
+HB_DLL_IMPLIB := $(HARBOUR_DLL:$(DLLEXT)=$(LIBEXT))
+HB_IMPLIB_PART := -Wl,--out-implib,$(HB_DLL_IMPLIB)
+endif
 
 #**********************************************************
 # C compiler flags and Harbour compiler flags.
@@ -158,7 +188,7 @@ endif
 #-----------
 CLIBFLAGS      := -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDLL   := -D__EXPORT__ $(CLIBFLAGS) $(CLIBFLAGSDLL)
-CEXEFLAGSDLL   := $(CLIBFLAGS) $(CEXEFLAGSDLL)
+CEXEFLAGSDLL   := $(CFLAGS) $(CEXEFLAGSDLL)
 
 # Harbour Compiler Flags
 HBFLAGSCMN     := -i$(INCLUDE_DIR) -q0 -w2 -es2 -gc0 -kM $(PRG_USR)
@@ -172,7 +202,7 @@ HARBOURFLAGSDLL:= -D__EXPORT__ -n1 -l $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 # Linker Flags
 #**********************************************************
 
-LDFLAGS    := $(L_USR) -Wl,--start-group $(STANDARD_STATIC_HBLIBS)
+LDFLAGS := $(L_USR) -Wl,--start-group $(STANDARD_STATIC_HBLIBS)
 
 # HB_GPM_MOUSE: use gpm mouse driver
 ifeq ($(HB_GPM_MOUSE),yes)
@@ -184,7 +214,7 @@ LDFLAGS += -lpcre
 endif
 
 LDFLAGS    += -Wl,--end-group $(HB_OS_LIBS)
-LDFLAGSDLL := -L$(LIB_DIR) $(LDFLAGSDLL)
+LDFLAGSDLL := -shared $(L_USR) -L$(LIB_DIR) $(LDFLAGSDLL)
 
 #**********************************************************
 
@@ -206,8 +236,8 @@ $(OBJ_DIR)/%$(OBJEXT) : %.c
 #*******************************************************
 # General *.prg --> *.o COMPILE rule for SHARED Libraries
 $(DLL_OBJ_DIR)/%$(OBJEXT) : %.prg
-	$(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)/ $**
-	$(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)/$&.c
+	$(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)/ $<
+	$(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)/$(<F:.prg=.c)
 #----------------------------------------------------------
 # General *.c --> *.o COMPILE rule for SHARED Libraries
 $(DLL_OBJ_DIR)/%$(OBJEXT) : %.c
@@ -379,6 +409,26 @@ $(HBVER_EXE)    :: $(HBVER_EXE_OBJS)
 	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
 #**********************************************************
 
+#**********************************************************
+# DLL Targets
+#**********************************************************
+$(HARBOUR_DLL) :: $(StdLibs)
+$(HARBOUR_DLL) :: $(DLL_OBJS)
+	$(CC) $(LDFLAGSDLL) -o$@ $^ $(HB_OS_LIBS) $(HB_IMPLIB_PART)
+#**********************************************************
+# DLL EXECUTABLE Targets
+#**********************************************************
+$(HBTESTDLL_EXE) :: $(StdLibs)
+$(HBTESTDLL_EXE) :: $(DLL_OBJ_DIR)/mainstd$(OBJEXT) $(HBTEST_EXE_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
+	$(CC) $(CEXEFLAGSDLL) -o$@ $^ $(HARBOUR_DLL) $(HB_OS_LIBS)
+#----------------------------------------------------------
+#$(DLL_OBJ_DIR)\hbtest.obj : $(HBTEST_DIR)\hbtest.prg
+#	$(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\  $**
+#	$(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)\$&.c
+#----------------------------------------------------------
+$(DLL_OBJ_DIR)/mainstd$(OBJEXT) : $(VM_DIR)/mainstd.c
+	$(CC) $(CLIBFLAGS) -o$@ $<
+#**********************************************************
 
 #**********************************************************
 # EXTRA Object's DEPENDENCIES
@@ -446,12 +496,12 @@ $(DLL_OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.y
 else
 
 $(DLL_OBJ_DIR)/macroy.c : $(MACRO_DIR)/macro.yyc
-	$(COPY) $** $@
-	$(COPY) $(**:.yyc=.yyh) $(@:.c=.h)
+	$(COPY) $< $@
+	$(COPY) $(<:.yyc=.yyh) $(@:.c=.h)
 
 $(DLL_OBJ_DIR)/harboury.c : $(COMPILER_DIR)/harbour.yyc
-	$(COPY) $** $@
-	$(COPY) $(**:.yyc=.yyh) $(@:.c=.h)
+	$(COPY) $< $@
+	$(COPY) $(<:.yyc=.yyh) $(@:.c=.h)
 
 endif
 
@@ -481,6 +531,7 @@ CLEAN: doClean
 
 doClean:
 	-$(DEL) $(HB_BUILD_TARGETS)
+	-$(DEL) $(HB_DLL_IMPLIB)
 	-$(DEL) $(OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(OBJ_DIR)/*.c
 	-$(DEL) $(OBJ_DIR)/*.h
