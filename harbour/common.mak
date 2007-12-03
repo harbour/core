@@ -282,9 +282,6 @@ HB_WINOS_GT = \
     $(GTGUI_LIB)
 
 !ifdef HB_GT_LIST
-# Hack - (HB_GT_LIST) is replaced by make_gcc.sh
-# when it creates common.cf - a modified verion
-# of common.mak
 HB_GT_LIBS = $(HB_STD_GT) $(HB_GT_LIST)
 !else
 HB_GT_LIBS = $(HB_STD_GT) $(HB_WINOS_GT)
@@ -1099,10 +1096,7 @@ HBVER_EXE_OBJS = \
 
 #-------------------------
 
-!ifdef HB_GT_LIST
-# Hack - (HB_GT_OBJS) is replaced by make_gcc.sh
-# when it creates common.cf - a modified verion
-# of common.mak
+!ifdef HB_GT_OBJS
 DLL_GT_OBJS = $(HB_GT_OBJS)
 !else
 DLL_GT_OBJS = \

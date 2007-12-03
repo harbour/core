@@ -163,9 +163,17 @@ if [ "$GTXWC" = "yes" ]; then
    OS_LIBS="$OS_LIBS -lX11 -L/usr/X11R6/$HB_LIBDIRNAME"
 fi
 
+for n in $GT_LIST
+do
+   GT_TEMP="$GT_TEMP \$(GT${n}_LIB)"
+   GT_OBJS="$GT_OBJS \$(GT${n}_LIB_OBJS)"
+done
+GT_LIST=$GT_TEMP
+
 export C_USR="$C_USR -DHB_OS_$HB_OS"
 export HB_OS_LIBS="$HB_OS_LIBS $OS_LIBS"
 export HB_GT_LIST="$HB_GT_LIST $GT_LIST"
+export HB_GT_OBJS="$HB_GT_OBJS $GT_OBJS"
 export CC LD
 
 mkdir -p obj/$HB_CC_NAME lib/$HB_CC_NAME bin/$HB_CC_NAME
@@ -188,8 +196,6 @@ sed -e 's/;/ /g'             \
     -e 's/^!else/else/g'                                                \
     -e 's/^!endif/endif/g'                                              \
     -e 's/^!include/include/g'                                          \
-    -e 's/$(HB_GT_LIST)/$(foreach gt, $(HB_GT_LIST), $(GT$(gt)_LIB))/g' \
-    -e 's/$(HB_GT_OBJS)/$(foreach gt, $(HB_GT_LIST), $(GT$(gt)_LIB_OBJS))/g' \
     -e 's/^HB_BUILD_TARGETS \=/HB_BUILD_TARGETS \:\=/g'                 \
     common.mak > common.cf
 

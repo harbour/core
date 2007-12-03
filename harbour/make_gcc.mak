@@ -125,7 +125,7 @@ include common.cf
 # building CONSOLE programs. Otherwise we're building
 # GUI programs without console. Please note IT IS A
 # DIRTY HACK and any better solution is HIGHLY WELCOME
-ifeq ($(HB_ARCHITECTURE),w32)
+ifeq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),w32)
 MAIN_LIB      = $(LIB_DIR)/$(LIBPREF)mainstd$(LIBEXT)
 MAIN_LIB_OBJS = $(OBJ_DIR)/mainstd$(OBJEXT)
 
@@ -154,7 +154,7 @@ DLL_OBJS := $(TMP_DLL_OBJS)
 
 # DLLs on Windows require IMPORT lib
 # and additional compiler pass
-ifeq ($(HB_ARCHITECTURE),w32)
+ifeq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),w32)
 DLL_OBJS := $(patsubst $(OBJ_DIR)%,$(DLL_OBJ_DIR)%,$(TMP_DLL_OBJS))
 
 HB_DLL_IMPLIB := $(HARBOUR_DLL:$(DLLEXT)=$(LIBEXT))
@@ -289,7 +289,7 @@ $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
 $(VM_LIB)       : $(VM_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-ifeq ($(HB_ARCHITECTURE),w32)
+ifeq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),w32)
 $(MAIN_LIB)     : $(MAIN_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 endif
