@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-04 16:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/make_vcce.bat
+    * Checking if HB and HBPPGEN envvars are set is moved
+      to BUILD rule to not affect CLEAN and INSTALL rules
+
 2007-12-04 12:51 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbgtcore.h
     + added some missing HB_GTSUPER_* functions
