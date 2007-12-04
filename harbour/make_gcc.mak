@@ -87,6 +87,8 @@ endif
 
 #**********************************************************
 
+# CC and LD are set in make_gcc.sh
+
 #ifeq ($(CC),)
 #CC = gcc
 #endif
@@ -153,7 +155,7 @@ VPATH := $(ALL_SRC_DIRS) $(LIB_DIR) $(BIN_DIR) $(OBJ_DIR) $(DLL_OBJ_DIR)
 DLL_OBJS := $(TMP_DLL_OBJS)
 
 # DLLs on Windows require IMPORT lib
-# and additional compiler pass
+# and an additional compiler pass
 ifeq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),w32)
 DLL_OBJS := $(patsubst $(OBJ_DIR)%,$(DLL_OBJ_DIR)%,$(TMP_DLL_OBJS))
 
@@ -188,12 +190,12 @@ endif
 #-----------
 CLIBFLAGS      := -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDLL   := -D__EXPORT__ $(CLIBFLAGS) $(CLIBFLAGSDLL)
-CEXEFLAGSDLL   := $(CFLAGS) $(CEXEFLAGSDLL)
+CEXEFLAGSDLL   :=  $(CFLAGS) $(CEXEFLAGSDLL)
 
 # Harbour Compiler Flags
 HBFLAGSCMN     := -i$(INCLUDE_DIR) -q0 -w2 -es2 -gc0 -kM $(PRG_USR)
 ifdef HB_DOC_PDF
-HBFLAGSCMN     := $(HBFLAGSCMN) -dPDF
+HBFLAGSCMN     :=  $(HBFLAGSCMN) -dPDF
 endif
 HARBOURFLAGS   := -n $(HBFLAGSCMN) $(HARBOURFLAGS)
 HARBOURFLAGSDLL:= -D__EXPORT__ -n1 -l $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
@@ -217,9 +219,9 @@ LDFLAGS    += -Wl,--end-group $(HB_OS_LIBS)
 LDFLAGSDLL := -shared $(L_USR) -L$(LIB_DIR) $(LDFLAGSDLL)
 
 #**********************************************************
+# Libbrarian Flags
+#**********************************************************
 
-# This is needed, otherwise the libs may overflow
-# when debug info is requested with -v -y
 ARFLAGS = rc $(A_USR)
 
 #**********************************************************
@@ -244,10 +246,8 @@ $(DLL_OBJ_DIR)/%$(OBJEXT) : %.c
 	$(CC) $(CLIBFLAGSDLL) -o$@ $<
 #**********************************************************
 # General *.o -> *.a LIBRARY CREATION rule
-#%$(LIBEXT) : %$(OBJEXT)
-#$(LIB_DIR)/%$(LIBEXT) : $(OBJ_DIR)/%$(OBJEXT)
-$(LIB_DIR)/%$(LIBEXT) : %$(OBJEXT)
-	$(MKLIB) $(ARFLAGS) $@ $^
+#$(LIB_DIR)/%$(LIBEXT) : %$(OBJEXT)
+#	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
 
 
@@ -419,12 +419,9 @@ $(HARBOUR_DLL) :: $(DLL_OBJS)
 # DLL EXECUTABLE Targets
 #**********************************************************
 $(HBTESTDLL_EXE) :: $(StdLibs)
-$(HBTESTDLL_EXE) :: $(DLL_OBJ_DIR)/mainstd$(OBJEXT) $(HBTEST_EXE_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
+$(HBTESTDLL_EXE) :: $(DLL_OBJ_DIR)/mainstd$(OBJEXT) \
+                    $(HBTEST_EXE_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
 	$(CC) $(CEXEFLAGSDLL) -o$@ $^ $(HARBOUR_DLL) $(HB_OS_LIBS)
-#----------------------------------------------------------
-#$(DLL_OBJ_DIR)\hbtest.obj : $(HBTEST_DIR)\hbtest.prg
-#	$(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\  $**
-#	$(CC) $(CLIBFLAGSDLL) -o$@ $(DLL_OBJ_DIR)\$&.c
 #----------------------------------------------------------
 $(DLL_OBJ_DIR)/mainstd$(OBJEXT) : $(VM_DIR)/mainstd.c
 	$(CC) $(CLIBFLAGS) -o$@ $<

@@ -157,12 +157,12 @@ CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
 
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDLL   = -D__EXPORT__ $(CLIBFLAGS) $(CLIBFLAGSDLL)
-CEXEFLAGSDLL   = $(CLIBFLAGS) $(CEXEFLAGSDLL)
+CEXEFLAGSDLL   =  $(CLIBFLAGS) $(CEXEFLAGSDLL)
 
 # Harbour Compiler Flags
 HBFLAGSCMN     = -DHB_WINCE -D__PLATFORM__WINCE -i$(INCLUDE_DIR) -q0 -w2 -es2 -gc1 $(PRG_USR)
 !ifdef HB_DOC_PDF
-HBFLAGSCMN     = $(HBFLAGSCMN) -dPDF
+HBFLAGSCMN     =  $(HBFLAGSCMN) -dPDF
 !endif
 HARBOURFLAGS   = -n $(HBFLAGSCMN) $(HARBOURFLAGS)
 HARBOURFLAGSDLL= -D__EXPORT__ -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
@@ -688,19 +688,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 #**********************************************************
 
 #**********************************************************
-# General BUILD rules (not used !)
-#**********************************************************
-# General Library BUILD rule
-#{$(OBJ_DIR)}$(OBJEXT){$(COMMON_DIR)}.lib:
-#    IF EXIST "$@" $(DEL) "$@" > nul
-#    $(MKLIB) /out:$@ <<
-#$**
-#<<
-#**********************************************************
-#**********************************************************
-#**********************************************************
-
-#**********************************************************
 # TARGET dependencies
 #**********************************************************
 
@@ -958,10 +945,6 @@ $(HBTESTDLL_OBJS: = ^
 )
 $(HARBOUR_DLL:.dll=.lib)
 <<
-#----------------------------------------------------------
-#$(DLL_OBJ_DIR)\hbtest.obj : $(HBTEST_DIR)\hbtest.prg
-#    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\  $**
-#    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #----------------------------------------------------------
 $(DLL_OBJ_DIR)\mainstd.obj : $(VM_DIR)\mainstd.c
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $**
