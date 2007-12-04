@@ -19,13 +19,6 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     Copyright 2002 Przemys³aw Czerpak <druzus@polbox.com>
  *
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_Tone()
- *
  * See doc/license.txt for licensing terms.
  *
  * www - http://www.harbour-project.org
@@ -128,7 +121,7 @@ HB_EXPORT void hb_wvt_GetStringAttrib( USHORT top, USHORT left, USHORT bottom, U
          BYTE bColor, bAttr;
          USHORT usChar;
 
-         if( !hb_gt_GetScrChar( irow, icol, &bColor, &bAttr, &usChar ) )
+         if( !hb_gtGetScrChar( irow, icol, &bColor, &bAttr, &usChar ) )
             break;
 
          sBuffer[ j ] = ( BYTE ) usChar;
@@ -151,7 +144,7 @@ HB_EXPORT void hb_wvt_PutStringAttrib( USHORT top, USHORT left, USHORT bottom, U
    {
       for( icol = left; icol <= right; icol++ )
       {
-         if( !hb_gt_PutScrChar( irow, icol, sAttrib[ j ], 0, sBuffer[ j ] ) )
+         if( !hb_gtPutScrChar( irow, icol, sAttrib[ j ], 0, sBuffer[ j ] ) )
             break;
          j++;
       }
@@ -913,7 +906,7 @@ static COLORREF hb_wvt_BgColorParam( int iParam )
    else
    {
       int iColor = ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) :
-                                      hb_gt_GetColor();
+                                      hb_gtGetCurrColor();
       color = hb_wvt_gtGetColorData( ( iColor >> 4 ) & 0x0f );
    }
 
@@ -929,7 +922,7 @@ static COLORREF hb_wvt_FgColorParam( int iParam )
    else
    {
       int iColor = ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) :
-                                      hb_gt_GetColor();
+                                      hb_gtGetCurrColor();
       color = hb_wvt_gtGetColorData( iColor & 0x0f );
    }
 

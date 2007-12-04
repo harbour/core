@@ -231,12 +231,12 @@ static void hb_gt_wNtTone( double dFreq, double dDurat )
 
 /* *********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
-void hb_gt_w32_Tone( double dFrequency, double dDuration )
+void hb_gt_w32_tone( double dFrequency, double dDuration )
 {
    static OSVERSIONINFO s_osv;
    static BOOL s_fInit = TRUE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_w32_Tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_w32_tone(%lf, %lf)", dFrequency, dDuration));
 
    if( s_fInit )
    {

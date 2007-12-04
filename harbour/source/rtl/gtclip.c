@@ -56,9 +56,40 @@
 #define HB_OS_WIN_32_USED
 #include "hbgtcore.h"
 
+/* TODO: add protection for MT mode */
+static char *     s_szClipboardData;
+static ULONG      s_ulClipboardLen;
+
+BOOL hb_gt_setClipboard( char * szClipData, ULONG ulLen )
+{
+   if( s_ulClipboardLen )
+      hb_xfree( s_szClipboardData );
+   s_ulClipboardLen = ulLen;
+   if( s_ulClipboardLen )
+   {
+      s_szClipboardData = ( char * ) hb_xgrab( s_ulClipboardLen + 1 );
+      memcpy( s_szClipboardData, szClipData, s_ulClipboardLen );
+      s_szClipboardData[ s_ulClipboardLen ] = '\0';
+   }
+   return TRUE;
+}
+
+BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen )
+{
+   *pszClipData = NULL;
+   *pulLen = s_ulClipboardLen;
+   if( s_ulClipboardLen )
+   {
+      *pszClipData = ( char * ) hb_xgrab( s_ulClipboardLen + 1 );
+      memcpy( *pszClipData, s_szClipboardData, s_ulClipboardLen );
+      *pszClipData[ s_ulClipboardLen ] = '\0';
+   }
+   return *pulLen != 0;
+}
+
 #if defined( HB_OS_WIN_32 )
 
-BOOL hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
+BOOL hb_gt_w32_setClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
 {
    LPTSTR  lptstrCopy;
    HGLOBAL hglbCopy;
@@ -89,7 +120,7 @@ BOOL hb_gt_w32_SetClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
    return fResult;
 }
 
-BOOL hb_gt_w32_GetClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
+BOOL hb_gt_w32_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
 {
    HGLOBAL hglb;
    LPTSTR  lptstr;

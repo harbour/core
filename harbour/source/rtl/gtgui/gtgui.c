@@ -87,7 +87,7 @@ static void hb_gt_gui_Tone( double dFrequency, double dDuration )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_gui_Tone(%lf, %lf)", dFrequency, dDuration));
 
 #if defined( HB_OS_WIN_32 )
-   hb_gt_w32_Tone( dFrequency, dDuration );
+   hb_gt_w32_tone( dFrequency, dDuration );
 #else
    HB_GTSUPER_TONE( dFrequency, dDuration );
 #endif
@@ -105,7 +105,7 @@ static BOOL hb_gt_gui_Info( int iType, PHB_GT_INFO pInfo )
       case GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            hb_gt_w32_SetClipboard( CF_TEXT, hb_itemGetCPtr( pInfo->pNewVal ),
+            hb_gt_w32_setClipboard( CF_TEXT, hb_itemGetCPtr( pInfo->pNewVal ),
                                     hb_itemGetCLen( pInfo->pNewVal ) );
          }
          else
@@ -113,7 +113,7 @@ static BOOL hb_gt_gui_Info( int iType, PHB_GT_INFO pInfo )
             char * szClipboardData;
             ULONG ulLen;
 
-            if( hb_gt_w32_GetClipboard( CF_TEXT, &szClipboardData, &ulLen ) )
+            if( hb_gt_w32_getClipboard( CF_TEXT, &szClipboardData, &ulLen ) )
             {
                pInfo->pResult = hb_itemPutCPtr( pInfo->pResult,
                                                 szClipboardData, ulLen );

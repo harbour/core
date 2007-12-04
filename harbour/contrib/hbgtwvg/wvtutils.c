@@ -19,13 +19,6 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     Copyright 2002 Przemys³aw Czerpak <druzus@polbox.com>
  *
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_Tone()
- *
  * See doc/license.txt for licensing terms.
  *
  * www - http://www.harbour-project.org
@@ -1022,7 +1015,7 @@ HB_FUNC( WVT_GETCLIPBOARD )
    char * szClipboardData;
    ULONG ulLen;
 
-   if( hb_gt_w32_GetClipboard( _s->CodePage == OEM_CHARSET ?
+   if( hb_gt_w32_getClipboard( _s->CodePage == OEM_CHARSET ?
                                CF_OEMTEXT : CF_TEXT,
                                &szClipboardData, &ulLen ) )
    {
@@ -1035,7 +1028,7 @@ HB_FUNC( WVT_GETCLIPBOARD )
 HB_FUNC( WVT_SETCLIPBOARD )
 {
    if( ISCHAR( 1 ) )
-      hb_retl( hb_gt_w32_SetClipboard( _s->CodePage == OEM_CHARSET ?
+      hb_retl( hb_gt_w32_setClipboard( _s->CodePage == OEM_CHARSET ?
                                        CF_OEMTEXT : CF_TEXT,
                                        hb_parc( 1 ), hb_parclen( 1 ) ) );
    else
@@ -1049,7 +1042,7 @@ HB_FUNC( WVT_PASTEFROMCLIPBOARD )
    char * szClipboardData;
    ULONG ulLen, ul;
 
-   if( hb_gt_w32_GetClipboard( _s->CodePage == OEM_CHARSET ?
+   if( hb_gt_w32_getClipboard( _s->CodePage == OEM_CHARSET ?
                                CF_OEMTEXT : CF_TEXT,
                                &szClipboardData, &ulLen ) )
    {

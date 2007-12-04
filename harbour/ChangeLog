@@ -8,6 +8,27 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-04 12:51 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtcore.h
+    + added some missing HB_GTSUPER_* functions
+
+  * harbour/contrib/hbgtwvg/wvtcore.c
+    * use hb_gt*() functions instead of hb_gt_*() ones
+
+  * harbour/contrib/hbgtwvg/wvtutils.c
+  * harbour/contrib/hbgtwvg/gtwvt.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtgui/gtgui.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gttone.c
+  * harbour/source/rtl/gtclip.c
+    * minor cleanup in hb_gt_w32_*() function names
+
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtclip.c
+    * use common for all GT internal Clipboard buffer - thanks to Pritpal
+      for a note
+
 2007-12-04 10:17 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/contrib/make_b32_all.bat
   * harbour/contrib/make_vc_all.bat

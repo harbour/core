@@ -153,8 +153,6 @@ static void hb_gt_def_Free( void * pGtPtr )
       hb_xfree( pGT->prevBuffer );
    if( pGT->pLines )
       hb_xfree( pGT->pLines );
-   if( pGT->ulClipboardLen )
-      hb_xfree( pGT->szClipboardData );
    if( pGT->iColorCount > 0 )
       hb_xfree( pGT->pColor );
    if( pGT->pGTData )
@@ -186,6 +184,8 @@ static void hb_gt_def_Exit( void )
       hb_gt_Free( s_curGT );
       s_curGT = NULL;
    }
+   /* clear internal clipboard data */
+   hb_gt_setClipboard( NULL, 0 );
 }
 
 static BOOL hb_gt_def_CheckPos( int iRow, int iCol, long *plIndex )
@@ -1565,21 +1565,22 @@ static BOOL hb_gt_def_Info( int iType, PHB_GT_INFO pInfo )
 
       case GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {  /* set new Clipboard value */
-            if( s_curGT->ulClipboardLen )
-               hb_xfree( s_curGT->szClipboardData );
-            s_curGT->ulClipboardLen = hb_itemGetCLen( pInfo->pNewVal );
-            if( s_curGT->ulClipboardLen )
-            {
-               s_curGT->szClipboardData = ( char * ) hb_xgrab( s_curGT->ulClipboardLen + 1 );
-               memcpy( s_curGT->szClipboardData, hb_itemGetCPtr( pInfo->pNewVal ),
-                       s_curGT->ulClipboardLen );
-               s_curGT->szClipboardData[ s_curGT->ulClipboardLen ] = '\0';
-            }
+         {
+            /* set new Clipboard value */
+            hb_gt_setClipboard( hb_itemGetCPtr( pInfo->pNewVal ),
+                                hb_itemGetCLen( pInfo->pNewVal ) );
          }
-         else /* get Clipboard value */
-            pInfo->pResult = hb_itemPutCL( pInfo->pResult, s_curGT->szClipboardData,
-                                           s_curGT->ulClipboardLen );
+         else
+         {
+            /* get Clipboard value */
+            char * pszClipData;
+            ULONG ulLen;
+
+            if( hb_gt_getClipboard( &pszClipData, &ulLen ) )
+               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, pszClipData, ulLen );
+            else
+               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
+         }
          break;
 
       default:

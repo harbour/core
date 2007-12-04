@@ -1322,7 +1322,7 @@ static void hb_gt_wvt_Tone( double dFrequency, double dDuration )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Tone(%lf, %lf)", dFrequency, dDuration));
 
-   hb_gt_w32_Tone( dFrequency, dDuration );
+   hb_gt_w32_tone( dFrequency, dDuration );
 }
 
 /* ********************************************************************** */
@@ -1650,7 +1650,7 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
       case GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            hb_gt_w32_SetClipboard( _s.CodePage == OEM_CHARSET ?
+            hb_gt_w32_setClipboard( _s.CodePage == OEM_CHARSET ?
                                     CF_OEMTEXT : CF_TEXT,
                                     hb_itemGetCPtr( pInfo->pNewVal ),
                                     hb_itemGetCLen( pInfo->pNewVal ) );
@@ -1659,7 +1659,7 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
          {
             char * szClipboardData;
             ULONG ulLen;
-            if( hb_gt_w32_GetClipboard( _s.CodePage == OEM_CHARSET ?
+            if( hb_gt_w32_getClipboard( _s.CodePage == OEM_CHARSET ?
                                         CF_OEMTEXT : CF_TEXT,
                                         &szClipboardData, &ulLen ) )
             {
