@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-04 10:17 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/contrib/make_b32_all.bat
+  * harbour/contrib/make_vc_all.bat
+    - Removed the dependancy on a worker bat file
+      named make_<b32|vc>.bat. Now a worker bat file
+      is created on a fly.
+
+  - harbour/contrib/make_b32.bat
+  - harbour/contrib/make_vc.bat
+    - Removed. No longer neccesary.
+
 2007-12-03 22:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/rtl/Makefile
