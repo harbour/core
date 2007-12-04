@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-04 20:39 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/contrib/make_b32_all.bat
+  * harbour/contrib/make_vc_all.bat
+    ! Fixed argument handling in created "worker bat file"
+
 2007-12-04 17:04 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/make_b32.mak
   * harbour/make_vc.mak

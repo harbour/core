@@ -17,11 +17,13 @@ rem *******************************************************
 set __BATWORKER__=_hbwrk_.bat
 
 echo @echo off                                          >%__BATWORKER__%
+echo if %%1x == x goto EXIT                            >>%__BATWORKER__%
 echo if not exist %%1\make_b32.bat goto EXIT           >>%__BATWORKER__%
 echo echo Entering: %%1                                >>%__BATWORKER__%
 echo cd %%1                                            >>%__BATWORKER__%
 echo call make_b32.bat %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9 >>%__BATWORKER__%
 echo cd ..                                             >>%__BATWORKER__%
+echo :EXIT                                             >>%__BATWORKER__%
 
 rem *******************************************************
 rem Compiling contrib dirs ...
