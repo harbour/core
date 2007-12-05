@@ -57,7 +57,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   +---hbapollo        - Wrapper functions for VistaSoftware's Apollo
 |   |   |                 database driver.
 |   |   |
-|   |   +---test        - Test programs.
+|   |   +---tests       - Test programs.
 |   |
 |   +---hbbmcdx         - DBFCDX RDD with bitmap filters compatible with
 |   |                     CA-Clipper 5.3
@@ -66,7 +66,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---doc         - HB_BTree C and Harbour API documentation.
 |   |   |
-|   |   +---test        - HB_BTree api test programs.
+|   |   +---tests       - HB_BTree api test programs.
 |   |
 |   +---hbclip          - Harbour Compatibility Library (HCL) for
 |   |                     CA-Clipper 5.x
@@ -82,11 +82,11 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   +---hbfbird         - Harbour Low Level api for Firebird and Interbase
 |   |   |                 RDBMS.
 |   |   |
-|   |   +---test        - Test programs.
+|   |   +---tests       - Test programs.
 |   |
 |   +---hbfimage        - Wrapper for FreeImage.
 |   |   |
-|   |   +---test        - Test program and sample images.
+|   |   +---tests       - Test program and sample images.
 |   |       |
 |   |       +-images_out- Output directory used by the test program.
 |   |
@@ -123,7 +123,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   +---hbgtwvg         - GT subsystem for Win32 GUI using GDI functions.
 |   |   |
-|   |   +---test        - Demo program and sample images.
+|   |   +---tests       - Demo program and sample images.
 |   |
 |   +---hbmisc          - Miscellaneous contribution.
 |   |   |
@@ -131,7 +131,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |   |
 |   |   |   +---en      - English documentation.
 |   |   |
-|   |   +---test        - Test programs.
+|   |   +---tests       - Test programs.
 |   |
 |   +---hbmsql          - Harbour mSQL access classes.
 |   |   |
@@ -139,19 +139,19 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   +---hbmysql         - Harbour MySQL access classes.
 |   |   |
-|   |   +---test        - Test program.
+|   |   +---tests       - Test program.
 |   |
 |   +---hbnf            - Nanforum library port for Harbour.
 |   |   |
-|   |   +---test        - Test program.
+|   |   +---tests       - Test program.
 |   |
 |   +---hbodbc          - ODBS Access Class Demonstration.
 |   |   |
-|   |   +---test        - Test programs.
+|   |   +---tests       - Test programs.
 |   |
 |   +---hbole           - Win32 OLE Automation library.
 |   |   |
-|   |   +---test        - Demonstration program.
+|   |   +---tests       - Demonstration program.
 |   |
 |   +---hbpgsql         - Harbour Low Level API for Postgres RDBMS.
 |   |   |
@@ -167,21 +167,21 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |   |
 |   |   |   +---en      - English documentation.
 |   |   |
-|   |   +---test        - Test programs.
+|   |   +---tests       - Test programs.
 |   |
 |   +---hbtip           - TIP Class oriented Internet Protocol library.
 |   |
 |   +---hbtpathy        - Telepathy serial communication port for Harbour.
 |   |   |
-|   |   +---test        - Test program.
+|   |   +---tests       - Test program.
 |   |
 |   +---hbw32           - Collection of Win32 specific utility functions.
 |   |   |
-|   |   +---test        - Test programs.
+|   |   +---tests       - Test programs.
 |   |
 |   +---hbw32ddr        - DirectDraw implementation for Windows.
 |   |   |
-|   |   +---test        - A BreakOut like sample game.
+|   |   +---tests       - A BreakOut like sample game.
 |   |
 |   +---hbwhat32        - What32 is a library for ccessing all of Win32 API
 |   |                     from PRG level.

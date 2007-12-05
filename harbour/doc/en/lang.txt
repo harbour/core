@@ -178,7 +178,7 @@
  *      Croatian              ISO-8859-2     HRISO
  *      Czech                 852            CS852
  *      Czech                 ISO-8859-2     CSISO
- *      Czech                 KAM            CSKAM
+ *      Czech                 Kamenickych    CSKAM
  *      Czech                 Windows-1250   CSWIN
  *      Dutch                 437            NL
  *      English               437            EN
@@ -194,14 +194,15 @@
  *      Hungarian             852            HU852
  *      Hungarian             CWI-2          HUCWI
  *      Hungarian             ISO-8859-2     HUISO
- *      Hungarian             Windows-1      HUWIN
+ *      Hungarian             Windows-1250   HUWIN
  *      Icelandic             850            IS850
  *      Indonesian            437            ID
  *      Italian               437            IT
  *      Korean                949            KO
+ *      Lithuanian            Windows-1257   LT
  *      Polish                852            PL852
  *      Polish                ISO-8859-2     PLISO
- *      Polish                Mozowia        PLMAZ
+ *      Polish                Mazowia        PLMAZ
  *      Polish                Windows-1250   PLWIN
  *      Portuguese            850            PT
  *      Romanian              852            RO
@@ -281,6 +282,7 @@
  *
  *      Bulgarian             866            BG866
  *      Bulgarian             ISO-8859-5     BGISO
+ *      Bulgarian             MIK            BGMIK
  *      Bulgarian             Windows-1251   BGWIN
  *      Croatian              437            HR437
  *      Croatian              852            HR852
@@ -289,7 +291,7 @@
  *      Czech                 ISO-8859-2     CSISO
  *      Czech                 KAM            CSKAM
  *      Czech                 Windoes-1250   CSWIN
- *      Engzish               437            EN
+ *      English               437            EN
  *      French                850            FR
  *      German                850            DE
  *      German                ISO-8859-1     DEWIN
@@ -297,8 +299,10 @@
  *      Greek                 Windows-1253   ELWIN
  *      Hungarian (ntxhu852)  852            HU852
  *      Hungarian (sixhu852)  852            HU852S
- *      Hungarian             ISO-8859-2     HUISO
- *      Hungarian             Windows-1250   HUWIN
+ *      Hungarian (ntxhu852)  ISO-8859-2     HUISO
+ *      Hungarian (sixhu852)  ISO-8859-2     HUISOS
+ *      Hungarian (ntxhu852)  Windows-1250   HUWIN
+ *      Hungarian (sixhu852)  Windows-1250   HUWINS
  *      Italian               437            IT437
  *      Italian               850            IT850
  *      Italian               ISO-8859-1b    ITISB
@@ -306,7 +310,7 @@
  *      Lithuanian            Windows-1257   LT
  *      Polish                852            PL852
  *      Polish                ISO-8859-2     PLISO
- *      Polish                Mozowia        PLMAZ
+ *      Polish                Mazowia        PLMAZ
  *      Polish                Windows-1250   PLWIN
  *      Portuguese            850            PT850
  *      Portuguese            ISO-8859-1     PTISO
@@ -314,6 +318,10 @@
  *      Russian               KOI-8          RUKOI8
  *      Russian               Windows-1251   RU1251
  *      Serbian               Windows-1251   SRWIN
+ *      Slovak                852            SK852
+ *      Slovak                ISO-8859-2     SKISO
+ *      Slovak                Kamenicky      SKKAM
+ *      Slovak                Windows-1250   SKWIN
  *      Slovenian             437            SL437
  *      Slovenian             852            SL852
  *      Slovenian             ISO-8859-2     SLISO
@@ -321,6 +329,9 @@
  *      Spanish               850            ES
  *      Spanish               ISO-8859-1     ESWIN
  *      Spanish Modern        ISO-8859-1     ESMWIN
+ *      Swedish               850            SV850
+ *      Swedish (Clipper)     437            SVCLIP
+ *      Swedish               ISO-8859-1     SVWIN
  *      Turkish               857            TR857
  *      Turkish               Windows-1254   TRWIN
  *      Ukrainian             866            UA866

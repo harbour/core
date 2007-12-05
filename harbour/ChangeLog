@@ -1,4 +1,4 @@
-﻿/*
+/*
  * $Id$
  */
 
@@ -7,6 +7,13 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2007-12-05 14:20 UTC+0200 Chen Kedem <niki@synel.co.il>
+  * doc/dirstruc.txt
+    * Change "test" to "tests".
+  * doc/en/lang.txt
+    * Update language table for HB_LANGSELECT  to reflect source/lang
+    * Update codepage table for HB_SETCODEPAGE to reflect source/codepage
 
 2007-12-05 09:15 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/hbct/files.c
@@ -28,8 +35,8 @@
    + contrib/hbfbird/tests
    - contrib/hbapollo/test
    + contrib/hbapollo/tests
-   - contrib/hbnf/tests
-   + contrib/hbnf/test
+   - contrib/hbnf/test
+   + contrib/hbnf/tests
    - contrib/hbfimage/test
    + contrib/hbfimage/tests
    - contrib/hbmisc/test
