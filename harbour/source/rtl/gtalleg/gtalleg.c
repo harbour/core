@@ -75,6 +75,8 @@ static BOOL s_fInit;
 static BOOL s_fMakeInit;
 static BOOL s_fGtError; 
 
+static ssfFont s_ssfDefaultFont;
+
 static int s_iMsButtons, s_iMSBoundTop, s_iMSBoundLeft, s_iMSBoundBottom, s_iMSBoundRight;
 static int s_iMSX, s_iMSY;
 static BYTE s_byMSButtons;
@@ -173,8 +175,14 @@ static const gtAllegKey sCtrlTable[GT_CTRL_TABLE_SIZE] = {
    {AL_KEY_PGDN,   K_CTRL_PGDN}
 };
 
-#define GT_UPD_GFXRECT(t,l,b,r)  do {if (t<s_iGFXUpdTop) s_iGFXUpdTop=t; if (l<s_iGFXUpdLeft) s_iGFXUpdLeft=l; if (b>s_iGFXUpdBottom) s_iGFXUpdBottom=b; if (r>s_iGFXUpdRight) s_iGFXUpdRight=r;} while(0)
-#define GT_SCREENINIT()          do {if (!s_fInit) hb_gt_alleg_InitializeScreen(s_iScrHeight, s_iScrWidth, TRUE);} while(0)
+#define GT_UPD_GFXRECT(t,l,b,r)  do { if( t < s_iGFXUpdTop ) s_iGFXUpdTop = t; \
+                                      if( l < s_iGFXUpdLeft ) s_iGFXUpdLeft = l; \
+                                      if( b > s_iGFXUpdBottom ) s_iGFXUpdBottom=b; \
+                                      if( r > s_iGFXUpdRight ) s_iGFXUpdRight=r; \
+                                    } while(0)
+#define GT_SCREENINIT()          do { if( !s_fInit ) \
+                                         hb_gt_alleg_InitializeScreen( s_iScrHeight, s_iScrWidth, TRUE ); \
+                                    } while( 0 )
 #define MK_GT8BCOLOR(n)          ((n & 0xFF) / 16 | (n & 0xFF00) / 256)
 
 
@@ -298,13 +306,13 @@ static BOOL hb_gt_alleg_InitializeScreen( int iRows, int iCols, BOOL lClearInit 
       return FALSE;
    }
 
-   if ( lPrev )
+   if( lPrev )
    {
       al_destroy_bitmap(bmp);
       bmp = NULL;
    }
 
-   if ( s_iGFXWidth != 0 && s_iGFXHeight != 0 )
+   if( s_iGFXWidth != 0 && s_iGFXHeight != 0 )
    {
       iWidth = (int) s_iGFXWidth;
       iHeight = (int) s_iGFXHeight;
@@ -315,31 +323,31 @@ static BOOL hb_gt_alleg_InitializeScreen( int iRows, int iCols, BOOL lClearInit 
       iHeight = s_byFontSize * iRows;
    }
 
-   if ( iRows > 11 && iCols > 23 && iRows < 129 && iCols < 257 )
+   if( iRows > 11 && iCols > 23 && iRows < 129 && iCols < 257 )
    {
 #if defined(AL_GFX_XWINDOWS)
       HB_TRACE(HB_TR_DEBUG, ("trying X DGA2 mode"));
       iRet = al_set_gfx_mode( AL_GFX_XDGA2, iWidth, iHeight, 0, 0 );
-      if ( iRet != 0 )
+      if( iRet != 0 )
       {
          HB_TRACE(HB_TR_DEBUG, ("trying X DGA mode"));
          iRet = al_set_gfx_mode( AL_GFX_XDGA, iWidth, iHeight, 0, 0 );
       }
-      if ( iRet != 0 )
+      if( iRet != 0 )
       {
          HB_TRACE(HB_TR_DEBUG, ("trying X Windows mode"));
          iRet = al_set_gfx_mode( AL_GFX_XWINDOWS, iWidth, iHeight, 0, 0 );
       }
 #endif
 #if defined (ALLEGRO_UNIX) || defined(ALLEGRO_LINUX) || defined(ALLEGRO_DOS)
-      if ( iRet != 0 )
+      if( iRet != 0 )
       {
          HB_TRACE(HB_TR_DEBUG, ("trying VBE/AF mode"));
          iRet = al_set_gfx_mode( AL_GFX_VBEAF, iWidth, iHeight, 0, 0 );
       }
 #endif
 #if (defined(ALLEGRO_UNIX) || defined(ALLEGRO_LINUX)) && defined(AL_GFX_FBCON)
-      if ( iRet != 0 )
+      if( iRet != 0 )
       {
          HB_TRACE(HB_TR_DEBUG, ("trying fb console mode"));
          iRet = al_set_gfx_mode( AL_GFX_FBCON, iWidth, iHeight, 0, 0 );
@@ -347,39 +355,39 @@ static BOOL hb_gt_alleg_InitializeScreen( int iRows, int iCols, BOOL lClearInit 
 #endif
       /* Trying safe (slower) modes */
       /* Try a windowed mode first */
-      if ( iRet != 0 )
+      if( iRet != 0 )
       {
          HB_TRACE(HB_TR_DEBUG, ("trying autodetect windowed mode"));
          iRet = al_set_gfx_mode( AL_GFX_AUTODETECT_WINDOWED, iWidth, iHeight, 0, 0 );
       }
 #ifdef ALLEGRO_WINDOWS
       /* GDI is slower, but it is more likely to bring a windowed mode than DirectX */
-      if ( iRet != 0 )
+      if( iRet != 0 )
       {
          HB_TRACE(HB_TR_DEBUG, ("trying GDI windowed mode"));
          iRet = al_set_gfx_mode( AL_GFX_GDI, iWidth, iHeight, 0, 0 );
       }
-      if ( iRet != 0 )
+      if( iRet != 0 )
       {
          HB_TRACE(HB_TR_DEBUG, ("trying DirectX windowed mode"));
          iRet = al_set_gfx_mode( AL_GFX_DIRECTX_WIN, iWidth, iHeight, 0, 0 );
       }
 #endif
-      if ( iRet != 0 )
+      if( iRet != 0 )
       {
          HB_TRACE(HB_TR_DEBUG, ("trying autodetect console mode"));
          iRet = al_set_gfx_mode( AL_GFX_AUTODETECT, iWidth, iHeight, 0, 0 );
       }
-      if ( iRet != 0 )
+      if( iRet != 0 )
       {
       /* If that fails (ie, plain DOS or Linux VESA Framebuffer)
          ensure to get any available gfx mode */
          HB_TRACE(HB_TR_DEBUG, ("trying safe mode"));
          iRet = al_set_gfx_mode(AL_GFX_SAFE, iWidth, iHeight, 0, 0 );
       }
-      if ( iRet != 0 )  /* Doh! */
+      if( iRet != 0 )  /* Doh! */
       {
-         if ( lPrev )
+         if( lPrev )
          {
             iCols = s_iScrWidth;
             iRows = s_iScrHeight;
@@ -398,7 +406,7 @@ static BOOL hb_gt_alleg_InitializeScreen( int iRows, int iCols, BOOL lClearInit 
       al_set_window_title(pFileName->szName);
       hb_xfree( pFileName );
 
-      if ( !lPrev )
+      if( !lPrev )
       {
          al_install_timer();
          al_install_keyboard();
@@ -420,27 +428,27 @@ static BOOL hb_gt_alleg_InitializeScreen( int iRows, int iCols, BOOL lClearInit 
        * eg: Linux vesafb (doesn't support mode switching)
        *     or for DOS, we'll mostly request unavailable resolutions
        */
-      if ( AL_SCREEN_W != s_byFontWidth * s_iScrWidth )
+      if( AL_SCREEN_W != s_byFontWidth * s_iScrWidth )
       {
          ixFP = (BYTE) (AL_SCREEN_W / s_iScrWidth) * 2;
       }
 
-      if ( AL_SCREEN_H != s_byFontSize * s_iScrHeight )
+      if( AL_SCREEN_H != s_byFontSize * s_iScrHeight )
       {
          iyFP = (BYTE) (AL_SCREEN_H / s_iScrHeight);
-         if ( iyFP % 2 == 1 )
+         if( iyFP & 1 )
          {
             iyFP--;
          }
       }
 
-      if ( ixFP || iyFP )
+      if( ixFP || iyFP )
       {
-         if ( !ixFP )
+         if( !ixFP )
          {
             ixFP = iyFP;
          }
-         if ( !iyFP )
+         if( !iyFP )
          {
             iyFP = ixFP;
          }
@@ -461,7 +469,7 @@ static BOOL hb_gt_alleg_InitializeScreen( int iRows, int iCols, BOOL lClearInit 
       s_iCurCol = 0;
       s_iCurRow = 0;
       s_iCursorStyle = SC_NONE;
-      ssfSetFontSize(ssfDefaultFont, s_byFontSize);
+      ssfSetFontSize(&s_ssfDefaultFont, s_byFontSize);
       s_pClr[ 0] = al_make_color(0x00, 0x00, 0x00);  /* black */
       s_pClr[ 1] = al_make_color(0x00, 0x00, 0xAA);  /* blue */
       s_pClr[ 2] = al_make_color(0x00, 0xAA, 0x00);  /* green */
@@ -480,16 +488,16 @@ static BOOL hb_gt_alleg_InitializeScreen( int iRows, int iCols, BOOL lClearInit 
       s_pClr[15] = al_make_color(0xFF, 0xFF, 0xFF);  /* bright white */
 
       bmp = al_create_system_bitmap(AL_SCREEN_W, AL_SCREEN_H);
-      if ( bmp == NULL )
+      if( bmp == NULL )
       {
          bmp = al_create_bitmap(AL_SCREEN_W, AL_SCREEN_H);
-         if ( bmp == NULL )
+         if( bmp == NULL )
          {
             hb_gt_alleg_Error( "Could not allocate double buffer bitmap" );
          }
       }
 
-      if ( !lClearInit )
+      if( !lClearInit )
       {
          BYTE bColor = s_pClr[ ( hb_gt_GetClearColor() >> 4 ) & 0x0f ];
          al_clear_to_color( bmp, bColor );
@@ -513,6 +521,8 @@ static void hb_gt_alleg_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHAND
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_alleg_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr));
 
+   ssfCreateThinFont( &s_ssfDefaultFont );
+
    s_iCursorStyle = SC_NONE;
    s_fMakeInit = s_fGtError = FALSE;
 
@@ -523,7 +533,7 @@ static void hb_gt_alleg_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHAND
 
    iRet = al_desktop_color_depth();
 
-   if ( iRet > 0 )
+   if( iRet > 0 )
    {
       al_set_color_depth( iRet );
    }
@@ -538,7 +548,7 @@ static void hb_gt_alleg_Exit( void )
 
    HB_GTSUPER_EXIT();
 
-   if ( bmp )
+   if( bmp )
    {
       al_destroy_bitmap( bmp );
       bmp = NULL;
@@ -547,7 +557,7 @@ static void hb_gt_alleg_Exit( void )
 
 static char * hb_gt_alleg_Version( int iType )
 {
-   if ( iType == 0 )
+   if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
    return "Harbour Terminal: Multiplatform Allegro graphics console";
@@ -569,68 +579,68 @@ static int hb_gt_alleg_ReadKey( int iEventMask )
 
    GT_SCREENINIT();
 
-   if ( al_mouse_needs_poll() )
+   if( al_mouse_needs_poll() )
    {
       al_poll_mouse();
    }
 
    iMSX = al_mouse_x / s_byFontWidth;
    iMSY = al_mouse_y / s_byFontSize;
-   if ( iMSX != s_iMSX || iMSY != s_iMSY )
+   if( iMSX != s_iMSX || iMSY != s_iMSY )
    {
       s_iMSX = iMSX;
       s_iMSY = iMSY;
-      if ( iEventMask & INKEY_MOVE )
+      if( iEventMask & INKEY_MOVE )
       {
          nKey = K_MOUSEMOVE;
       }
    }
 
-   if ( ( nKey == 0 ) && ( (BYTE) al_mouse_b != s_byMSButtons ) )
+   if( nKey == 0 && ( BYTE ) al_mouse_b != s_byMSButtons )
    {
-      if ( ( al_mouse_b & 1 ) != ( s_byMSButtons & 1 ) )
+      if( ( al_mouse_b & 1 ) != ( s_byMSButtons & 1 ) )
       {
-         if ( al_mouse_b & 1 )
+         if( al_mouse_b & 1 )
          {
-            if ( iEventMask & INKEY_LDOWN )
+            if( iEventMask & INKEY_LDOWN )
             {
                nKey = K_LBUTTONDOWN;
             }
          }
          else
          {
-            if ( iEventMask & INKEY_LUP )
+            if( iEventMask & INKEY_LUP )
             {
                nKey = K_LBUTTONUP;
             }
          }
-      } else if ( ( al_mouse_b & 2 ) != ( s_byMSButtons & 2 ) )
+      } else if( ( al_mouse_b & 2 ) != ( s_byMSButtons & 2 ) )
       {
-         if ( al_mouse_b & 2 )
+         if( al_mouse_b & 2 )
          {
-            if ( iEventMask & INKEY_RDOWN )
+            if( iEventMask & INKEY_RDOWN )
             {
                nKey = K_RBUTTONDOWN;
             }
          }
          else
          {
-            if ( iEventMask & INKEY_RUP )
+            if( iEventMask & INKEY_RUP )
             {
                nKey = K_RBUTTONUP;
             }
          }
-      } /* else if ( ( al_mouse_b & 4 ) != ( s_byMSButtons & 4 ) )
+      } /* else if( ( al_mouse_b & 4 ) != ( s_byMSButtons & 4 ) )
       {
-         if ( al_mouse_b & 4 )
+         if( al_mouse_b & 4 )
          {
-            if ( iEventMask & INKEY_MDOWN )
+            if( iEventMask & INKEY_MDOWN )
             {
                   nKey = K_MBUTTONDOWN;
             }
          } else
          {
-            if ( iEventMask & INKEY_MUP )
+            if( iEventMask & INKEY_MUP )
             {
                   nKey = K_MBUTTONUP;
             }
@@ -640,38 +650,38 @@ static int hb_gt_alleg_ReadKey( int iEventMask )
       s_byMSButtons = (BYTE) al_mouse_b;
    }
 
-   if ( ( nKey == 0 ) && ( iEventMask & INKEY_KEYBOARD ) )
+   if( nKey == 0 && ( iEventMask & INKEY_KEYBOARD ) )
    {
-      if ( al_keyboard_needs_poll() )
+      if( al_keyboard_needs_poll() )
       {
          al_poll_keyboard();
       }
 
-      if ( al_key_pressed() )
+      if( al_key_pressed() )
       {
          nKey = al_read_key();
       }
 
 #ifdef DEBUG
-      if (nKey != 0)
+      if( nKey != 0 )
       {
          /* Good standard debuging... */
          printf("gtAlleg: Scancode: %d (0x%0x) ascii: %d (0x%0x) raw: %d (0x%0x)\n", nKey>>8, nKey>>8, nKey&0xff, nKey&0xff, nKey, nKey);
       }
 #endif
 
-      if ( ( ( nKey & 255 ) == 2 || ( nKey & 255 ) == 3 )  && ( nKey >> 8 ) > 31 )  /* K_CTRL_ + navigation key */
+      if( ( ( nKey & 255 ) == 2 || ( nKey & 255 ) == 3 )  && ( nKey >> 8 ) > 31 )  /* K_CTRL_ + navigation key */
       {
-         for ( i = 0; i < GT_CTRL_TABLE_SIZE; i++ )
+         for( i = 0; i < GT_CTRL_TABLE_SIZE; i++ )
          {
-            if ( ( nKey >> 8 ) == sCtrlTable[i].al_key )
+            if( ( nKey >> 8 ) == sCtrlTable[i].al_key )
             {
                nKey = sCtrlTable[i].xhb_key;
                break;
             }
          }
       }
-      else if ( ( nKey != 0 ) && ( ( nKey & 255 ) < 32 ) && ( ( nKey & 255 ) == ( nKey >> 8 ) ) )  /* K_CTRL_A .. Z */
+      else if( ( nKey != 0 ) && ( ( nKey & 255 ) < 32 ) && ( ( nKey & 255 ) == ( nKey >> 8 ) ) )  /* K_CTRL_A .. Z */
       {
 #ifdef HB_NEW_KCTRL
         nKey = 512 + ( nKey & 255 );
@@ -679,9 +689,9 @@ static int hb_gt_alleg_ReadKey( int iEventMask )
         nKey = nKey & 255;
 #endif
       }
-      else if ( ( ( ( nKey & 255 ) == 1 ) || ( ( nKey & 255 ) == 4 ) ) && ( ( ( nKey >> 8 ) >= AL_KEY_F1 ) && ( ( nKey >> 8 ) <= AL_KEY_F12 ) ) )  /* K_SH_F1 .. F12, K_ALT_F1..F12 */
+      else if( ( ( ( nKey & 255 ) == 1 ) || ( ( nKey & 255 ) == 4 ) ) && ( ( ( nKey >> 8 ) >= AL_KEY_F1 ) && ( ( nKey >> 8 ) <= AL_KEY_F12 ) ) )  /* K_SH_F1 .. F12, K_ALT_F1..F12 */
       {
-         if ( ( nKey & 255 ) == 1 )
+         if( ( nKey & 255 ) == 1 )
          {
             int iFKeys[12] = {K_SH_F1, K_SH_F2, K_SH_F2, K_SH_F4, K_SH_F5, K_SH_F6,
                               K_SH_F7, K_SH_F8, K_SH_F9, K_SH_F10, K_SH_F11, K_SH_F12};
@@ -694,15 +704,15 @@ static int hb_gt_alleg_ReadKey( int iEventMask )
             nKey   = iFKeys[( nKey >> 8 ) - AL_KEY_F1];
          }
       }
-      else if ( nKey & 255 )
+      else if( nKey & 255 )
       {
          nKey = nKey & 255;
       }
-      else if ( nKey != 0 )
+      else if( nKey != 0 )
       {
-         for ( i = 0; i < GT_KEY_TABLE_SIZE; i++ )
+         for( i = 0; i < GT_KEY_TABLE_SIZE; i++ )
          {
-            if ( ( nKey >> 8 ) == sKeyTable[i].al_key )
+            if( ( nKey >> 8 ) == sKeyTable[i].al_key )
             {
                nKey = sKeyTable[i].xhb_key;
                break;
@@ -723,7 +733,7 @@ static void hb_gt_alleg_mouse_GetPos( int * piRow, int * piCol )
 {
    GT_SCREENINIT();
 
-   if ( al_mouse_needs_poll() )
+   if( al_mouse_needs_poll() )
    {
       al_poll_mouse();
    }
@@ -743,7 +753,7 @@ static BOOL hb_gt_alleg_mouse_ButtonState( int iButton )
 {
    GT_SCREENINIT();
 
-   if ( al_mouse_needs_poll() )
+   if( al_mouse_needs_poll() )
    {
       al_poll_mouse();
    }
@@ -762,22 +772,22 @@ static void hb_gt_alleg_mouse_SetBounds( int iTop, int iLeft, int iBottom, int i
 {
    GT_SCREENINIT();
 
-   if ( iTop > -1 && iTop * s_byFontSize < AL_SCREEN_H )
+   if( iTop > -1 && iTop * s_byFontSize < AL_SCREEN_H )
    {
       s_iMSBoundTop = iTop * s_byFontSize;
    }
 
-   if ( iLeft > -1 && iLeft * s_byFontWidth < AL_SCREEN_W )
+   if( iLeft > -1 && iLeft * s_byFontWidth < AL_SCREEN_W )
    {
       s_iMSBoundLeft = iLeft * s_byFontWidth;
    }
 
-   if ( iBottom >= iTop && iBottom * s_byFontSize < AL_SCREEN_H )
+   if( iBottom >= iTop && iBottom * s_byFontSize < AL_SCREEN_H )
    {
       s_iMSBoundBottom = iBottom * s_byFontSize;
    }
 
-   if ( iRight >= iLeft && iRight * s_byFontWidth < AL_SCREEN_W )
+   if( iRight >= iLeft && iRight * s_byFontWidth < AL_SCREEN_W )
    {
       s_iMSBoundRight = iRight * s_byFontWidth;
    }
@@ -850,7 +860,7 @@ static BOOL hb_gt_alleg_Info( int iType, PHB_GT_INFO pInfo )
       case GTI_FONTSIZE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_byFontSize );
          iValue = hb_itemGetNI( pInfo->pNewVal );
-         if ( iValue > 0 && iValue < 256 )
+         if( iValue > 0 && iValue < 256 )
          {
             s_byFontSize = ( BYTE ) iValue;
             s_byFontWidth = s_byFontSize / 2;
@@ -877,7 +887,7 @@ static BOOL hb_gt_alleg_Info( int iType, PHB_GT_INFO pInfo )
          break;
 
       case GTI_KBDSHIFTS:
-         if ( al_keyboard_needs_poll() )
+         if( al_keyboard_needs_poll() )
          {
             al_poll_keyboard();
          }
@@ -921,7 +931,7 @@ static int hb_gt_alleg_gfx_Primitive( int iType, int iTop, int iLeft, int iBotto
    GT_SCREENINIT();
    hb_gt_Refresh();
 
-   switch (iType)
+   switch( iType )
    {
       case GFX_ACQUIRESCREEN:
          al_acquire_bitmap(bmp);
@@ -976,9 +986,9 @@ static int hb_gt_alleg_gfx_Primitive( int iType, int iTop, int iLeft, int iBotto
 
       case GFX_LINE:
          al_acquire_bitmap(bmp);
-         if ( iLeft == iRight )
+         if( iLeft == iRight )
             al_draw_vline(bmp, iLeft, iTop, iBottom, iColor);
-         else if ( iTop == iBottom )
+         else if( iTop == iBottom )
             al_draw_hline(bmp, iLeft, iTop, iRight, iColor);
          else
             al_draw_line(bmp, iLeft, iTop, iRight, iBottom, iColor);
@@ -1039,7 +1049,7 @@ static int hb_gt_alleg_gfx_Primitive( int iType, int iTop, int iLeft, int iBotto
          return HB_GTSUPER_GFXPRIMITIVE( iType, iTop, iLeft, iBottom, iRight, iColor );
    }
 
-   if ( hb_gt_DispCount() == 0 )
+   if( hb_gt_DispCount() == 0 )
    {
       hb_gt_alleg_ScreenUpdate();
    }
@@ -1058,25 +1068,25 @@ static void hb_gt_alleg_gfx_Text( int iTop, int iLeft, char * cBuf, int iColor, 
    GT_SCREENINIT();
    hb_gt_Refresh();
 
-   if ( iSize )
+   if( iSize )
    {
-      ssfSetFontSize( ssfDefaultFont, (unsigned short) iSize );
+      ssfSetFontSize( &s_ssfDefaultFont, (unsigned short) iSize );
    }
 
-   iRight = iLeft + strlen(cBuf) * ( ssfDefaultFont->fsize / 2 ) - 1;
-   iBottom = iTop + ssfDefaultFont->fsize - 1;
+   iRight = iLeft + strlen(cBuf) * ( s_ssfDefaultFont.fsize / 2 ) - 1;
+   iBottom = iTop + s_ssfDefaultFont.fsize - 1;
 
    al_acquire_bitmap(bmp);
-   ssfDrawText( bmp, ssfDefaultFont, cBuf, iLeft, iTop, iColor );
+   ssfDrawText( bmp, &s_ssfDefaultFont, cBuf, iLeft, iTop, iColor );
    al_release_bitmap(bmp);
    GT_UPD_GFXRECT( iTop, iLeft, iBottom, iRight );
 
-   if ( iSize )
+   if( iSize )
    {
-      ssfSetFontSize( ssfDefaultFont, s_byFontSize );
+      ssfSetFontSize( &s_ssfDefaultFont, s_byFontSize );
    }
 
-   if ( hb_gt_DispCount() == 0 )
+   if( hb_gt_DispCount() == 0 )
    {
       hb_gt_alleg_ScreenUpdate();
    }
@@ -1107,7 +1117,7 @@ static void hb_gt_alleg_Redraw( int iRow, int iCol, int iSize )
          if( !hb_gt_GetScrChar( iRow, iCol++, &bColor, &bAttr, &usChar ) )
             break;
          al_draw_rect_fill( bmp,  iPosX, iPosY, iPosX + s_byFontWidth - 1, iPosY + s_byFontSize - 1, s_pClr[bColor >> 4] );
-         ssfDrawChar( bmp, ssfDefaultFont, ( BYTE ) usChar, iPosX, iPosY, s_pClr[bColor & 0x0F] );
+         ssfDrawChar( bmp, &s_ssfDefaultFont, ( BYTE ) usChar, iPosX, iPosY, s_pClr[bColor & 0x0F] );
          iPosX += s_byFontWidth;
       }
    }
@@ -1140,7 +1150,7 @@ static void hb_gt_alleg_Refresh( void )
          al_acquire_bitmap(bmp);
          HB_GTSUPER_REFRESH();
          al_release_bitmap(bmp);
-         if ( hb_gt_DispCount() == 0 )
+         if( hb_gt_DispCount() == 0 )
          {
             hb_gt_alleg_ScreenUpdate();
          }

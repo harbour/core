@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-05 08:25 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtcore.h
+    * added HB_GTSELF_*() macros for future use
+
+  * harbour/source/rtl/gtalleg/gtalleg.c
+  * harbour/source/rtl/gtalleg/ssf.h
+  * harbour/source/rtl/gtalleg/fixedth.sfc
+  * harbour/source/rtl/gtalleg/ssf.c
+    * replaced one global variable by static one
+    * formatting
+
+  * harbour/contrib/hbct/files.c
+    ! fixed default attribute mask in FILEATTR(<cFileName>)
+
 2007-12-05 02:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * utils/hbmake/hbmutils.prg
      ! Some fixes related to contrib dir renames.

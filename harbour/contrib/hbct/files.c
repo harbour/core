@@ -97,12 +97,11 @@ static void _hb_fileClose( void * cargo )
    }
 }
 
-static PHB_FFIND _hb_fileStart( BOOL fNext )
+static PHB_FFIND _hb_fileStart( BOOL fNext, USHORT uiAttr )
 {
    if( hb_pcount() > 0 )
    {
       char * szFile = hb_parc( 1 );
-      USHORT uiAttr = HB_FA_ALL;
       BOOL fFree;
 
       if( s_ffind )
@@ -134,35 +133,39 @@ static PHB_FFIND _hb_fileStart( BOOL fNext )
 
 HB_FUNC( FILESEEK )
 {
-   PHB_FFIND ffind = _hb_fileStart( TRUE );
+   PHB_FFIND ffind = _hb_fileStart( TRUE, HB_FA_ALL );
 
    hb_retc( ffind ? ffind->szName : NULL );
 }
 
 HB_FUNC( FILEATTR )
 {
-   PHB_FFIND ffind = _hb_fileStart( FALSE );
+   /* CT3 uses 64 as attribute mask but the idea was setting ALL
+    * attributes and because we are supporting more attributes
+    * then I decided to use 0xffff value. [druzus]
+    */
+   PHB_FFIND ffind = _hb_fileStart( FALSE, 0xffff );
 
    hb_retni( ffind ? ffind->attr : 0 );
 }
 
 HB_FUNC( FILESIZE )
 {
-   PHB_FFIND ffind = _hb_fileStart( FALSE );
+   PHB_FFIND ffind = _hb_fileStart( FALSE, HB_FA_ALL );
 
    hb_retnint( ffind ? ffind->size : 0 );
 }
 
 HB_FUNC( FILEDATE )
 {
-   PHB_FFIND ffind = _hb_fileStart( FALSE );
+   PHB_FFIND ffind = _hb_fileStart( FALSE, HB_FA_ALL );
 
    hb_retdl( ffind ? ffind->lDate : 0 );
 }
 
 HB_FUNC( FILETIME )
 {
-   PHB_FFIND ffind = _hb_fileStart( FALSE );
+   PHB_FFIND ffind = _hb_fileStart( FALSE, HB_FA_ALL );
 
    hb_retc( ffind ? ffind->szTime : NULL );
 }

@@ -63,8 +63,6 @@
 #include "ssf.h"
 #include "fixedth.sfc"
 
-ssfFont *ssfDefaultFont = &ssfFixedThinFont;
-
 #define fSize sfont->fsize
 #define fLeft points[0]
 #define fTop points[1]
@@ -74,6 +72,12 @@ ssfFont *ssfDefaultFont = &ssfFixedThinFont;
 #define fTop2 points[5]
 #define fRight2 points[6]
 #define fBottom2 points[7]
+
+void ssfCreateThinFont(ssfFont *sfont)
+{
+   sfont->fsize = 16;                     /* default pitch */
+   sfont->chars = s_ssfFixedThinChars;    /* chars */
+}
 
 void ssfSetFontSize(ssfFont *sfont, USHORT fsize)
 {
@@ -93,10 +97,10 @@ USHORT ssfDrawChar(AL_BITMAP *dst, ssfFont *sfont, char c, int x, int y, int col
    charGlyph = *sfont->chars[p];
    fScale = (float) ((float) sfont->fsize / (float) 65535);
 
-   for (i = 0; i < charGlyph.num; i++)
+   for( i = 0; i < charGlyph.num; i++ )
    {
       charFrame = charGlyph.frames[i];
-      if (charFrame.ftype == SSF_SPLINE2)
+      if( charFrame.ftype == SSF_SPLINE2 )
       {
          fLeft2 = x + (int) (fScale * charFrame.left);
          fTop2 = y + (int) (fScale * charFrame.top);
@@ -111,18 +115,18 @@ USHORT ssfDrawChar(AL_BITMAP *dst, ssfFont *sfont, char c, int x, int y, int col
          fBottom = y + (int) (fScale * charFrame.bottom);
       }
 
-      switch (charFrame.ftype)
+      switch( charFrame.ftype )
       {
       case SSF_SPLINE2:
          thick = (int) (fScale * charFrame.thick);
 
-         if (thick == 0)
+         if( thick == 0 )
             thick++;
 
-         for (j = 0; j < thick; j++)
+         for( j = 0; j < thick; j++ )
          {
             al_draw_spline(dst, points, color);
-            switch (charFrame.thickdir)
+            switch( charFrame.thickdir )
             {
                case THICK_LEFT:
                   fLeft--;
@@ -155,13 +159,14 @@ USHORT ssfDrawChar(AL_BITMAP *dst, ssfFont *sfont, char c, int x, int y, int col
       case SSF_LINE:
          thick = (int) (fScale * charFrame.thick);
 
-         if (thick == 0)
+         if( thick == 0 )
             thick++;
 
-         for (j = 0; j < thick; j++)
+         for( j = 0; j < thick; j++ )
          {
             al_draw_line(dst, fLeft, fTop, fRight, fBottom, color);
-            switch (charFrame.thickdir) {
+            switch( charFrame.thickdir )
+            {
                case THICK_LEFT:
                   fLeft--;
                   fRight--;
@@ -200,7 +205,7 @@ int ssfDrawText(AL_BITMAP *dst, ssfFont *sfont, char *s, int x, int y, int color
 {
    int i = 0;
 
-   while ( s[i] )
+   while( s[i] )
    {
       x += ssfDrawChar(dst, sfont, s[i], x, y, color);
       i++;

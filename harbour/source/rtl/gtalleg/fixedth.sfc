@@ -1106,7 +1106,7 @@ static ssfGlyph g223 = {
     {{SSF_BOX, 0, 0, 32767, 32767, 0, 0}}
 };
 
-static ssfGlyph *ssfFixedThinChars[] = {
+static ssfGlyph *s_ssfFixedThinChars[] = {
     &g000,
     &g000,  /* 1 */
     &g000,  /* 2 */
@@ -1363,9 +1363,4 @@ static ssfGlyph *ssfFixedThinChars[] = {
     &g000,  /* 253 */
     &g000,  /* 254 */
     &g000,  /* 255 */
-};
- 
-static ssfFont ssfFixedThinFont = {
-    16,                 /* default pitch */
-    ssfFixedThinChars   /* chars */
 };
