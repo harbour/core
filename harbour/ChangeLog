@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-05 02:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * utils/hbmake/hbmutils.prg
+     ! Some fixes related to contrib dir renames.
+       NOTE: Blind fix. I don't use this tool. If you do, pls 
+             report problems.
+
 2007-12-04 20:39 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/contrib/make_b32_all.bat
   * harbour/contrib/make_vc_all.bat
