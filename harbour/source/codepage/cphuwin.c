@@ -52,7 +52,7 @@
 
 /* Language name: Hungarian */
 /* ISO language code (2 chars): HU */
-/* Codepage: Windows-1250 (ntxhu852 compatible) */
+/* Codepage: Windows-1250 (ntxhu852 flavour) */
 
 #include <ctype.h>
 #include "hbapi.h"

@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-05 20:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/codepage/cphuwins.c
+   * source/codepage/cphuiso.c
+   * source/codepage/cphuwin.c
+   * source/codepage/cphuisos.c
+     ! Fixed sloppy wording in comment. (Thanks Chen)
+
+   * common.mak
+   * source/codepage/Makefile
+   + source/codepage/cpgeiso.c
+   - source/codepage/cpgewin.c
+     * Renamed to ISO to be in sync with the actual codepage used.
+       (Thanks Chen)
+     ; Might be a good idea to readd the "real" WIN version to stay 
+       compatible. Anyone?
+
 2007-12-05 19:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/lang/msgnl.c
    * source/lang/msgelwin.c

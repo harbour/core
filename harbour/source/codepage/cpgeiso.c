@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( German WIN )
+ * National Collation Support Module ( German ISO )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
@@ -84,16 +84,16 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "DEWIN",
+static HB_CODEPAGE s_codepage = { "DEISO",
     HB_CPID_8859_1, HB_UNITB_8859_1, NUMBER_OF_CHARACTERS,
     "AÄBCDEFGHIJKLMNOÖPQRSßTUÜVWXYZ",
     "aäbcdefghijklmnoöpqrsßtuüvwxyz",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( DEWIN )
+HB_CODEPAGE_INIT( DEISO )
 
 #if defined(HB_PRAGMA_STARTUP)
-   #pragma startup hb_codepage_Init_DEWIN
+   #pragma startup hb_codepage_Init_DEISO
 #elif defined(HB_MSC_STARTUP)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
@@ -101,6 +101,6 @@ HB_CODEPAGE_INIT( DEWIN )
    #else
       #pragma data_seg( "XIY" )
    #endif
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_DEWIN = hb_codepage_Init_DEWIN;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_DEISO = hb_codepage_Init_DEISO;
    #pragma data_seg()
 #endif

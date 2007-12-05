@@ -768,7 +768,7 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpeswin$(OBJEXT)  \
     $(OBJ_DIR)\cpfrdos$(OBJEXT)  \
     $(OBJ_DIR)\cpgedos$(OBJEXT)  \
-    $(OBJ_DIR)\cpgewin$(OBJEXT)  \
+    $(OBJ_DIR)\cpgeiso$(OBJEXT)  \
     $(OBJ_DIR)\cphr1250$(OBJEXT) \
     $(OBJ_DIR)\cphr437$(OBJEXT)  \
     $(OBJ_DIR)\cphr852$(OBJEXT)  \

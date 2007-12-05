@@ -52,7 +52,7 @@
 
 /* Language name: Hungarian */
 /* ISO language code (2 chars): HU */
-/* Codepage: ISO-8859-2 (sixhu852 compatible) */
+/* Codepage: ISO-8859-2 (sixhu852 flavour) */
 
 #include <ctype.h>
 #include "hbapi.h"

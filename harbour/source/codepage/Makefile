@@ -21,7 +21,7 @@ C_SOURCES=\
 	cpesmwin.c    \
 	cpfrdos.c     \
 	cpgedos.c     \
-	cpgewin.c     \
+	cpgeiso.c     \
 	cphr1250.c    \
 	cphr437.c     \
 	cphr852.c     \
