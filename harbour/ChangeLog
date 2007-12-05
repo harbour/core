@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-05 19:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/lang/msgnl.c
+   * source/lang/msgelwin.c
+   * source/lang/msgltwin.c
+   * source/lang/msgel.c
+   * source/codepage/cpitisb.c
+   * source/codepage/cpit850.c
+   * source/codepage/cpcswin.c
+   * source/codepage/cpskwin.c
+   * source/codepage/cpitiso.c
+     ! Some SVN header, SVN keywords and some errors in 
+       comments fixed. (Thanks Chen)
+
 2007-12-05 14:20 UTC+0200 Chen Kedem <niki@synel.co.il>
   * doc/dirstruc.txt
     * Change "test" to "tests".

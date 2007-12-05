@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: msgltwin.c 8122 2007-12-01 22:00:27Z snaiperis $
  */
 
 /*
@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Lietuviø",                  /* Name (in native language) */
       "LT",                        /* RFC ID */
       "Windows-1257",              /* Codepage */
-      "$Revision: 1.5 $ $Date: 2005/06/10 22:51:37 $",         /* Version */
+      "$Revision: 1.5 $ $Date$",         /* Version */
 
       /* Month names */
 

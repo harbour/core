@@ -52,7 +52,7 @@
 
 /* Language name: Slovak */
 /* ISO language code (2 chars): SK */
-/* Codepage: Windows-1520 */
+/* Codepage: Windows-1250 */
 
 #include <ctype.h>
 #include "hbapi.h"
