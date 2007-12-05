@@ -520,7 +520,7 @@ HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM w
                if( hb_vmRequestReenter() )
                {
                   hb_vmPushEvalSym();
-                  hb_vmPush( _s->pFuncModal[ iIndex ] );
+                  hb_vmPush( pFunc );
                   hb_vmPushNumInt( ( HB_LONG ) ( HB_PTRDIFF ) hDlg );
                   hb_vmPushNumInt( message );
                   hb_vmPushNumInt( wParam );
@@ -545,7 +545,7 @@ HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM w
          {
             case IDOK:
                EndDialog( hDlg, IDOK );
-               lReturn = 1;
+               lReturn = 0;
                break;
 
             case IDCANCEL:

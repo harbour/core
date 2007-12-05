@@ -1221,10 +1221,12 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
    {
       if ( ISNUM( 3 ) )
       {
+         LPTSTR lpTemplate = HB_TCHAR_CONVTO( hb_parc( 1 ) );
          hDlg = CreateDialogIndirect( ( HINSTANCE     ) hb_hInstance,
-                                      ( LPDLGTEMPLATE ) hb_parc( 1 ),
+                                      ( LPDLGTEMPLATE ) lpTemplate,
                                                         hb_parl( 2 ) ? _s->hWnd : NULL,
                                       ( DLGPROC       ) hb_parnl( 3 ) );
+         HB_TCHAR_FREE( lpTemplate );
       }
       else
       {
@@ -1233,29 +1235,30 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
             case 0:
             {
                LPTSTR lpTemplate = HB_TCHAR_CONVTO( hb_parc( 1 ) );
-               hDlg = CreateDialog( ( HINSTANCE     ) hb_hInstance,
-                                                      lpTemplate,
-                                                      hb_parl( 2 ) ? _s->hWnd : NULL,
-                                                      (DLGPROC) hb_wvt_gtDlgProcMLess );
+               hDlg = CreateDialog( ( HINSTANCE ) hb_hInstance,
+                                                  lpTemplate,
+                                                  hb_parl( 2 ) ? _s->hWnd : NULL,
+                                      ( DLGPROC ) hb_wvt_gtDlgProcMLess );
                HB_TCHAR_FREE( lpTemplate );
             }
             break;
 
             case 1:
             {
-               hDlg = CreateDialog( ( HINSTANCE     ) hb_hInstance,
+               hDlg = CreateDialog( ( HINSTANCE ) hb_hInstance,
                                     MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
-                                                      hb_parl( 2 ) ? _s->hWnd : NULL,
-                                                      (DLGPROC) hb_wvt_gtDlgProcMLess );
+                                    hb_parl( 2 ) ? _s->hWnd : NULL,
+                                    ( DLGPROC ) hb_wvt_gtDlgProcMLess );
             }
             break;
 
             case 2:
             {
+               /* hb_parc( 1 ) is already unicode compliant, so no conversion */
                hDlg = CreateDialogIndirect( ( HINSTANCE     ) hb_hInstance,
                                             ( LPDLGTEMPLATE ) hb_parc( 1 ),
-                                                              hb_parl( 2 ) ? _s->hWnd : NULL,
-                                                              (DLGPROC) hb_wvt_gtDlgProcMLess );
+                                            hb_parl( 2 ) ? _s->hWnd : NULL,
+                                            ( DLGPROC ) hb_wvt_gtDlgProcMLess );
             }
             break;
          }
@@ -1285,7 +1288,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
       }
       else
       {
-         //if codeblock item created earlier, release it
+         /* if codeblock item created earlier, release it */
          if (iType==2 && pFunc)
          {
             hb_itemRelease( pFunc );
@@ -1360,7 +1363,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
          iResult = DialogBoxParam( ( HINSTANCE     ) hb_hInstance,
                                                      lpTemplate,
                                                      hParent,
-                                                     (DLGPROC) hb_wvt_gtDlgProcModal,
+                                         ( DLGPROC ) hb_wvt_gtDlgProcModal,
                                 ( LPARAM ) ( DWORD ) iIndex+1 );
          HB_TCHAR_FREE( lpTemplate );
       }
@@ -1371,17 +1374,18 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
          iResult = DialogBoxParam( ( HINSTANCE     ) hb_hInstance,
                            MAKEINTRESOURCE( ( WORD ) hb_parni( 1 ) ),
                                                      hParent,
-                                                     (DLGPROC) hb_wvt_gtDlgProcModal,
+                                         ( DLGPROC ) hb_wvt_gtDlgProcModal,
                                 ( LPARAM ) ( DWORD ) iIndex+1 );
       }
       break;
 
       case 2:
       {
+         /* hb_parc( 1 ) is already unicode compliant, so no conversion */
          iResult = DialogBoxIndirectParam( ( HINSTANCE     ) hb_hInstance,
                                            ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                                              hParent,
-                                                             (DLGPROC) hb_wvt_gtDlgProcModal,
+                                                 ( DLGPROC ) hb_wvt_gtDlgProcModal,
                                         ( LPARAM ) ( DWORD ) iIndex+1 );
       }
       break;
@@ -1629,14 +1633,11 @@ HB_FUNC( WVT_DLGSETICON )
 
 HB_FUNC( WIN_SENDMESSAGE )
 {
-   char *cText = NULL;
-   ULONG ulLen = 0;
+   LPTSTR cText = NULL;
 
    if( ISBYREF( 4 ) )
    {
-      ulLen = hb_parclen( 4 );
-      cText = ( char* ) hb_xgrab( ulLen + 1 );
-      hb_xmemcpy( cText, hb_parcx( 4 ), ulLen + 1 );
+      cText = HB_TCHAR_CONVTO( hb_parc( 4 ) );
    }
 
    hb_retnl( ( ULONG ) SendMessage( ( HWND ) hb_parnl( 1 ),
@@ -1649,7 +1650,8 @@ HB_FUNC( WIN_SENDMESSAGE )
 
    if ( cText )
    {
-      hb_storclen_buffer( cText, ulLen, 4 );
+      hb_storc( HB_TCHAR_CONVFROM( cText ), 4 );
+      HB_TCHAR_FREE( cText );
    }
 }
 
@@ -1796,7 +1798,7 @@ HB_FUNC( WIN_SETDLGITEMTEXT )
 HB_FUNC( WIN_GETDLGITEMTEXT )
 {
    USHORT iLen = SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1 ;
-   char *cText = ( char* ) hb_xgrab( iLen );
+   char *cText = ( char* ) hb_xgrab( iLen * sizeof( TCHAR ) );
 
    GetDlgItemText( ( HWND ) hb_parnl( 1 ),   // handle of dialog box
                    hb_parni( 2 ),            // identifier of control
@@ -1804,9 +1806,8 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
                    iLen                      // maximum size of string
                  );
 
-   hb_retc( cText );
-   //hb_retc( HB_TCHAR_CONVFROM( cText ) );
-   hb_xfree( cText );
+   hb_retc( HB_TCHAR_CONVFROM( cText ) );
+   HB_TCHAR_FREE( cText );
 }
 
 //-------------------------------------------------------------------//
