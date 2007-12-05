@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( LT )
+ * National Collation Support Module ( LTWIN )
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org
@@ -85,16 +85,16 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "LT",
+static HB_CODEPAGE s_codepage = { "LTWIN",
     HB_CPID_1257,HB_UNITB_1257,NUMBER_OF_CHARACTERS,
     "AÀBCÈDEÆËFGHIÁYJKLMNOPQRSÐTUØÛVWXZÞ",
     "aàbcèdeæëfghiáyjklmnopqrsðtuøûvwxzþ",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( LT )
+HB_CODEPAGE_INIT( LTWIN )
 
 #if defined(HB_PRAGMA_STARTUP)
-   #pragma startup hb_codepage_Init_LT
+   #pragma startup hb_codepage_Init_LTWIN
 #elif defined(HB_MSC_STARTUP)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
@@ -102,7 +102,7 @@ HB_CODEPAGE_INIT( LT )
    #else
       #pragma data_seg( "XIY" )
    #endif
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_LT = hb_codepage_Init_LT;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_LTWIN = hb_codepage_Init_LTWIN;
    #pragma data_seg()
 #endif
 

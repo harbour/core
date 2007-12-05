@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-05 21:15 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/codepage/cpltwin.c
+  * harbour/source/lang/msgltwin.c
+    * changed language ID to: LTWIN
+    * svn properties
+
 2007-12-05 20:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/codepage/cphuwins.c
    * source/codepage/cphuiso.c
