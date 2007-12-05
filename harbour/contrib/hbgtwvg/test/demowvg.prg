@@ -19,6 +19,19 @@
 //           Thanks Peter Rees! You have laid the foundation!
 //
 //-------------------------------------------------------------------//
+#pragma BEGINDUMP
+
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include <windows.h>
+
+HB_FUNC( UIDEBUG )
+{
+   OutputDebugString( hb_parc( 1 ) );
+}
+
+#pragma ENDDUMP
+//-------------------------------------------------------------------//
 
 #include    'inkey.ch'
 #include   'common.ch'
@@ -145,7 +158,7 @@ PROCEDURE Main( cDSN )
 
    Wvt_SetGui( .t. )
    WvtSetKeys( .t. )
-//   Popups( 1 )
+   Popups( 1 )
 
    Wvt_SetFont( 'Courier New', 18, 0, 0 )
    Wvt_SetMouseMove( .t. )
@@ -278,7 +291,7 @@ PROCEDURE Main( cDSN )
    WvtSetKeys( .f. )
    Wvt_SetPopupMenu( hPopup )
 
-RETURN
+   RETURN
 
 //-------------------------------------------------------------------//
 
@@ -345,7 +358,7 @@ PROCEDURE WvtNextGets()
 
    CLS
 
-   @ MaxRow(), 0 SAY PadC( 'xHarbour + WVT Console GUI Screen',80 ) COLOR 'R+/W'
+   @ MaxRow(), 0 SAY PadC( '(x)Harbour + WVT Console GUI Screen',80 ) COLOR 'R+/W'
 
    @  6, nColGet SAY '< Date >'
    @  9, nColGet SAY '<' + PadC( 'Name', 33 ) + '>'
@@ -370,7 +383,7 @@ PROCEDURE WvtNextGets()
    RestScreen( 0,0,maxrow(),maxcol(), scr )
    Wvt_RestScreen( wvtScr )
    SetPos( nRow, nCol )
-RETURN
+   RETURN
 
 //-------------------------------------------------------------------//
 FUNCTION WvtSetKeys( lSet )
@@ -397,7 +410,7 @@ FUNCTION WvtSetKeys( lSet )
       SetKey( K_F10, keys_[ 10] )
    endif
 
-RETURN Nil
+   RETURN Nil
 //-------------------------------------------------------------------//
 //      Wvt_Paint() must be a FUNCTION in your application
 //      as it is called when Window gets WM_PAINT message.
@@ -409,8 +422,7 @@ FUNCTION Wvt_Paint()
 
    WvtPaintObjects()
 
-RETURN 0
-
+   RETURN 0
 //-------------------------------------------------------------------//
 //      Wvt_SetFocus() must be a FUNCTION in your application
 //      needs to process messages sent through WM_SETFOCUS message
@@ -425,8 +437,7 @@ FUNCTION Wvt_SetFocus( hWnd )
 
    DevPos( nRow, nCol )
 
-RETURN nil
-
+   RETURN nil
 //-------------------------------------------------------------------//
 //      Wvt_KillFocus() must be a FUNCTION in your application
 //      needs to process messages sent through WM_KILLFOCUS message
@@ -441,7 +452,7 @@ FUNCTION Wvt_KillFocus( hWnd )
 
    DevPos( nRow, nCol )
 
-RETURN nil
+   RETURN nil
 //-------------------------------------------------------------------//
 //
 //      Wvt_Mouse() must be present if you want to catch and fire
@@ -524,9 +535,7 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
 
    ENDCASE
 
-RETURN nil
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+   RETURN nil
 //-------------------------------------------------------------------//
 //  WvtSetBlocks() is a get/set FUNCTION to be used by Wvt_Paint()
 //-------------------------------------------------------------------//
@@ -541,7 +550,7 @@ FUNCTION WvtSetBlocks( a_ )
       s := aClone( a_ )
    ENDIF
 
-RETURN o
+   RETURN o
 //-------------------------------------------------------------------//
 //  WvtSetObjects() is a get/set FUNCTION to be used by Wvt_Mouse()
 //-------------------------------------------------------------------//
@@ -568,7 +577,7 @@ FUNCTION WvtSetObjects( aObject )
       endif
    endif
 
-RETURN oObjects
+   RETURN oObjects
 //-------------------------------------------------------------------//
 FUNCTION SetMouseCheck( lYes )
    LOCAL lOYes
@@ -579,8 +588,7 @@ FUNCTION SetMouseCheck( lYes )
       lSYes := lYes
    endif
 
-RETURN lOYes
-
+   RETURN lOYes
 //-------------------------------------------------------------------//
 
 FUNCTION WvtWindowExpand( nUnits )
@@ -591,13 +599,11 @@ FUNCTION WvtWindowExpand( nUnits )
 
    Wvt_setFont( 'Courier New', sUnits )
 
-RETURN .t.
-
+   RETURN .t.
 //-------------------------------------------------------------------//
 STATIC FUNCTION rgb( r,g,b )
 
-RETURN ( r + ( g * 256 ) + ( b * 256 * 256 ) )
-
+   RETURN ( r + ( g * 256 ) + ( b * 256 * 256 ) )
 //-------------------------------------------------------------------//
 FUNCTION VouChoice( aChoices )
 
@@ -613,8 +619,7 @@ FUNCTION VouChoice( aChoices )
    setColor( clr )
    RestScreen( 7, 48, 13, 55, scr )
 
-RETURN nChoice
-
+   RETURN nChoice
 //-------------------------------------------------------------------//
 FUNCTION WvtMyBrowse()
 
@@ -713,7 +718,7 @@ FUNCTION WvtMyBrowse()
    aAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight ) } )
    aAdd( aBlocks, {|| Wvt_DrawBoxRecessed( nTop+3, nLeft+2, nBottom-1, nRight-2 ) } )
    aAdd( aBlocks, {|| Wvt_DrawGridHorz( oBrowse:nTop+3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
-   aAdd( aBlocks, {|| Wvt_DrawGridVert( oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, len( oBrowse:aColumnsSep ) ) } )
+   //aAdd( aBlocks, {|| Wvt_DrawGridVert( oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, len( oBrowse:aColumnsSep ) ) } )
 
    aLastPaint := WvtSetBlocks( aBlocks )
 
@@ -750,7 +755,7 @@ FUNCTION WvtMyBrowse()
    RestScreen( 0,0, maxrow(),maxcol(), cScr )
    Wvt_setPopupMenu( hPopup )
 
-RETURN nil
+   RETURN nil
 //-------------------------------------------------------------------//
 STATIC FUNCTION DbSkipBlock( n, oTbr )
 
@@ -769,8 +774,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
       enddo
    endif
 
-RETURN  nSkipped
-
+   RETURN  nSkipped
 //-------------------------------------------------------------------//
 STATIC FUNCTION TBNext( oTbr )
 
@@ -787,7 +791,7 @@ STATIC FUNCTION TBNext( oTbr )
       endif
    endif
 
-RETURN lMoved
+   RETURN lMoved
 //-------------------------------------------------------------------//
 STATIC FUNCTION TBPrev( oTbr )
    LOCAL nSaveRecNum := Recno()
@@ -800,11 +804,11 @@ STATIC FUNCTION TBPrev( oTbr )
       lMoved := .F.
    endif
 
-RETURN lMoved
+   RETURN lMoved
 //-------------------------------------------------------------------//
 STATIC FUNCTION VouBlockField( i )
 
-RETURN  {|| fieldget( i ) }
+   RETURN  {|| fieldget( i ) }
 //-------------------------------------------------------------------//
 STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
    LOCAL lRet := .t.
@@ -1025,7 +1029,7 @@ STATIC FUNCTION CfgMyBrowse( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSp
 
    oWvtBrw:bHandleEvent := {|oWvtBrw,cPaintID,oBrowse,nKey| BrwOnEvent( oWvtBrw,cPaintID,oBrowse,nKey ) }
 
-RETURN oWvtBrw
+   RETURN oWvtBrw
 
 //-------------------------------------------------------------------//
 
@@ -1068,7 +1072,8 @@ FUNCTION WvtPartialScreen()
    WvtSetBlocks( aLastPaint )
    Wvt_SetPopupMenu( hPopup )
 
-RETURN NIL
+   RETURN NIL
+
 //-------------------------------------------------------------------//
 
 function WvtLines()
@@ -1128,7 +1133,7 @@ function WvtLines()
 
    RestScreen( 0,0,maxrow(),maxcol(), scr )
 
-RETURN nil
+   RETURN nil
 
 //-------------------------------------------------------------------//
 
@@ -1136,7 +1141,7 @@ FUNCTION DispStatusMsg( cMsg )
 
    Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, rgb(198,198,198), 'Arial', 18, , 900 )
 
-RETURN .t.
+   RETURN .t.
 
 //-------------------------------------------------------------------//
 
@@ -1148,7 +1153,7 @@ FUNCTION ClearStatusMsg()
 
    SetPos( nRow, nCol )
 
-RETURN .t.
+   RETURN .t.
 
 //-------------------------------------------------------------------//
 
@@ -1218,7 +1223,7 @@ FUNCTION Popups( nID, lDestroy )
 
    hPop_[ nID ] := hPop
 
-RETURN Wvt_SetPopupMenu( hPop_[ nID ] )
+   RETURN Wvt_SetPopupMenu( hPop_[ nID ] )
 
 //-------------------------------------------------------------------//
 
@@ -1232,7 +1237,7 @@ FUNCTION WvtPictures( nSlot,cFilePic )
       endif
    endif
 
-RETURN nil
+   RETURN nil
 
 //-------------------------------------------------------------------//
 
@@ -1242,7 +1247,7 @@ FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
       Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aOffSet )
    endif
 
-RETURN nil
+   RETURN nil
 
 //-------------------------------------------------------------------//
 
@@ -1292,8 +1297,7 @@ FUNCTION CreateMainMenu()
 
    g_oMenuBar:addItem( "",oMenu)
 
-
-RETURN g_oMenuBar
+   RETURN g_oMenuBar
 
 //-------------------------------------------------------------------//
 
@@ -1312,7 +1316,7 @@ STATIC FUNCTION ActivateMenu( oMenu )
       ENDIF
    ENDIF
 
-RETURN ( NIL )
+   RETURN ( NIL )
 
 //-------------------------------------------------------------------//
 
@@ -1590,7 +1594,7 @@ STATIC FUNCTION MyDialogOne()
    Wvt_SetPopupMenu( hPopup )
    SetMouseCheck( lChkMouse )
 
-RETURN Nil
+   RETURN Nil
 
 //-------------------------------------------------------------------//
 
@@ -1650,7 +1654,7 @@ STATIC FUNCTION MyDialogTwo()
    oDlg:Destroy()
 
    WvtSetBlocks( aObjects )
-RETURN Nil
+   RETURN Nil
 
 //-------------------------------------------------------------------//
 
@@ -1677,8 +1681,7 @@ STATIC FUNCTION ExeProgBar( oPBar,oPBar1,oPBar2,oPBar3,oPBar4 )
    oPBar3:DeActivate()
    oPBar4:DeActivate()
 
-RETURN nil
-
+   RETURN nil
 //-------------------------------------------------------------------//
 
 STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
@@ -1693,164 +1696,164 @@ STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
    next
    oPBar:DeActivate()
    oPBar3:DeActivate()
-RETURN NIL
 
+   RETURN NIL
 //-------------------------------------------------------------------//
 #ifdef __XCC__
 //-------------------------------------------------------------------//
 
 function WvtPaintObjects()
-LOCAL i, lExe, nLeft, nRight, b, tlbr_, aBlocks, nBlocks
+   LOCAL i, lExe, nLeft, nRight, b, tlbr_, aBlocks, nBlocks
 
-aBlocks := WvtSetPaint()
+   aBlocks := WvtSetPaint()
 
-if ( nBlocks := len( aBlocks ) ) > 0
-   tlbr_:= Wvt_GetPaintRect()
+   if ( nBlocks := len( aBlocks ) ) > 0
+      tlbr_:= Wvt_GetPaintRect()
 
-   for i := 1 to nBlocks
-      lExe := .t.
+      for i := 1 to nBlocks
+         lExe := .t.
 
-      if aBlocks[ i,3 ] <> nil .and. !empty( aBlocks[ i,3 ] )
-         //  Check parameters against tlbr_ depending upon the
-         //  type of object and attributes contained in aAttr
-         //
-         do case
-         case aBlocks[ i,3,1 ] == WVT_BLOCK_GRID_V
-            b := aBlocks[ i,3,6 ]
-            if len( b:aColumnsSep ) == 0
-               lExe := .f.
-            else
-               nLeft  := b:aColumnsSep[ 1 ]
-               nRight := b:aColumnsSep[ len( b:aColumnsSep ) ]
+         if aBlocks[ i,3 ] <> nil .and. !empty( aBlocks[ i,3 ] )
+            //  Check parameters against tlbr_ depending upon the
+            //  type of object and attributes contained in aAttr
+            //
+            do case
+            case aBlocks[ i,3,1 ] == WVT_BLOCK_GRID_V
+               b := aBlocks[ i,3,6 ]
+               if len( b:aColumnsSep ) == 0
+                  lExe := .f.
+               else
+                  nLeft  := b:aColumnsSep[ 1 ]
+                  nRight := b:aColumnsSep[ len( b:aColumnsSep ) ]
+                  if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   < bottom
+                        tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm > top
+                        tlbr_[ 2 ] <= nRight           .and. ; // left  < right
+                        tlbr_[ 4 ] >= nLeft                  ) // right > left
+                     lExe := .f.
+                  endif
+               endif
+
+            otherwise
+               // If refreshing rectangle's top is less than objects' bottom
+               // and left is less than objects' right
+               //
                if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   < bottom
                      tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm > top
-                     tlbr_[ 2 ] <= nRight           .and. ; // left  < right
-                     tlbr_[ 4 ] >= nLeft                  ) // right > left
+                     tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; // left  < right
+                     tlbr_[ 4 ] >= aBlocks[ i,3,3 ] )       // right > left
                   lExe := .f.
                endif
-            endif
 
-         otherwise
-            // If refreshing rectangle's top is less than objects' bottom
-            // and left is less than objects' right
-            //
-            if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   < bottom
-                  tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm > top
-                  tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; // left  < right
-                  tlbr_[ 4 ] >= aBlocks[ i,3,3 ] )       // right > left
-               lExe := .f.
-            endif
+            endcase
+         endif
 
-         endcase
-      endif
+         if lExe
+            eval( aBlocks[ i,2 ] )
+         endif
+      next
+   endif
 
-      if lExe
-         eval( aBlocks[ i,2 ] )
-      endif
-   next
-endif
-
-return ( 0 )
+   return ( 0 )
 
 //-------------------------------------------------------------------//
 
 function WvtSetPaint( a_ )
-local o
-static s := {}
+   local o
+   static s := {}
 
-o := s
+   o := s
 
-if a_ <> nil
-   s := a_
-endif
+   if a_ <> nil
+      s := a_
+   endif
 
-return o
+   return o
 
 //-------------------------------------------------------------------//
 
 function SetPaint( cID, nAction, xData, aAttr )
-local n, n1, oldData
+   local n, n1, oldData
 
-if xData <> nil
-   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-      if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
-         oldData := paint_[ n,2,n1,2 ]
-         paint_[ n,2,n1,2 ] := xData
-         paint_[ n,2,n1,3 ] := aAttr
+   if xData <> nil
+      if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+         if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
+            oldData := paint_[ n,2,n1,2 ]
+            paint_[ n,2,n1,2 ] := xData
+            paint_[ n,2,n1,3 ] := aAttr
+         else
+            aadd( paint_[ n,2 ], { nAction,xData,aAttr } )
+         endif
       else
-         aadd( paint_[ n,2 ], { nAction,xData,aAttr } )
+         aadd( paint_, { cID, {} } )
+         n := len( paint_ )
+         aadd( paint_[ n,2 ], { nAction, xData, aAttr } )
       endif
-   else
-      aadd( paint_, { cID, {} } )
-      n := len( paint_ )
-      aadd( paint_[ n,2 ], { nAction, xData, aAttr } )
    endif
-endif
 
-return oldData
+   return oldData
 
 //-------------------------------------------------------------------//
 
 function GetPaint( cID )
-local n
+   local n
 
-if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-   return paint_[ n,2 ]
-endif
+   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      return paint_[ n,2 ]
+   endif
 
-return {}
+   return {}
 
 //-------------------------------------------------------------------//
 
 function DelPaint( cID, nAction )
-local xData, n1, n
+   local xData, n1, n
 
-if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-   if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
-      xData := paint_[ n,2,n1,2 ]
-      paint_[ n,2,n1,2 ] := {|| .t. }
+   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
+         xData := paint_[ n,2,n1,2 ]
+         paint_[ n,2,n1,2 ] := {|| .t. }
+      endif
    endif
-endif
 
-return xData
+   return xData
 
 //-------------------------------------------------------------------//
 
 function PurgePaint( cID,lDummy )
-local n, aPaint
+   local n, aPaint
 
-DEFAULT lDummy TO .f.
+   DEFAULT lDummy TO .f.
 
-if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-   aPaint := paint_[ n ]
-   ADel( paint_, n )
-   aSize( paint_, len( paint_ ) - 1 )
-endif
+   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      aPaint := paint_[ n ]
+      ADel( paint_, n )
+      aSize( paint_, len( paint_ ) - 1 )
+   endif
 
-if lDummy
-   WvtSetPaint( {} )
-endif
+   if lDummy
+      WvtSetPaint( {} )
+   endif
 
-return ( aPaint )
+   return ( aPaint )
 
 //-------------------------------------------------------------------//
 
 function InsertPaint( cID, aPaint, lSet )
-local n
+   local n
 
-DEFAULT lSet TO .f.
+   DEFAULT lSet TO .f.
 
-if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-   paint_[ n ] := aPaint
-else
-   aadd( paint_, aPaint )
-endif
+   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      paint_[ n ] := aPaint
+   else
+      aadd( paint_, aPaint )
+   endif
 
-if lSet
-   WvtSetPaint( aPaint )
-endif
+   if lSet
+      WvtSetPaint( aPaint )
+   endif
 
-return nil
+   return nil
 
 //-------------------------------------------------------------------//
 #endif
@@ -1880,7 +1883,7 @@ Function DynDialog_1()
 
    hDlg := Wvt_CreateDialog( aDlg, .f., 'DynDlgProc_1' )
 
-Return hDlg
+   Return hDlg
 
 //-------------------------------------------------------------------//
 
@@ -2028,7 +2031,7 @@ Function DynDialog_2()
    else
       // Modeless Dialog
       //
-      hDlg := Wvt_CreateDialog( aDlg, lOnTop, bDlgProc, cDlgIcon, nTimerTicks, hMenu )
+      hDlg := Wvt_CreateDialog( aDlg, lOnTop, bDlgProc, cDlgIcon, /*nTimerTicks*/, hMenu )
 
       // Using Function name.
       //hDlg  := Wvt_CreateDialog( aDlg, lOnTop, cDlgProc, cDlgIcon, nTimerTicks, hMenu, lModal )
@@ -2081,7 +2084,7 @@ Static Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
          if Win_HiWord( wParam ) == CBN_SELCHANGE
             nIndex  := Win_SendMessage( Win_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETCURSEL, 0, 0 )
             cPrompt := space( 20 )
-            Win_SendMessage( Win_GetDlgItem( hDlg, ID_CMB_COMBO ),CB_GETLBTEXT, nIndex, @cPrompt )
+            Win_SendMessage( Win_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETLBTEXT, nIndex, @cPrompt )
             Win_MessageBox( hDlg, cPrompt, 'Combo Box' )
          endif
 
@@ -2109,6 +2112,8 @@ Static Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
       exit
 
    case WM_INITDIALOG
+      Win_SetTimer( hDlg, 5001, 1000 ) // 1 sec
+
       if empty( ahFonts )
          if ( hFont := Wvt_CreateFont( "Times New Roman", 18 ) ) <> 0
             aadd( ahFonts, hFont )
