@@ -8,6 +8,41 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-05 09:15 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/hbct/files.c
+     ! FILESIZE() fixed to return -1 when the file doesn't exist.
+
+   - contrib/hbmysql/test
+   + contrib/hbmysql/tests
+   - contrib/hbw32ddr/test
+   + contrib/hbw32ddr/tests
+   - contrib/hbodbc/test
+   + contrib/hbodbc/tests
+   - contrib/hbtpathy/test
+   + contrib/hbtpathy/tests
+   - contrib/hbw32/test
+   + contrib/hbw32/tests
+   - contrib/hbole/test
+   + contrib/hbole/tests
+   - contrib/hbfbird/test
+   + contrib/hbfbird/tests
+   - contrib/hbapollo/test
+   + contrib/hbapollo/tests
+   - contrib/hbnf/tests
+   + contrib/hbnf/test
+   - contrib/hbfimage/test
+   + contrib/hbfimage/tests
+   - contrib/hbmisc/test
+   + contrib/hbmisc/tests
+   - contrib/hbgtwvg/test
+   + contrib/hbgtwvg/tests
+   - contrib/hbrddads/test
+   + contrib/hbrddads/tests
+   - contrib/hbbtree/test
+   + contrib/hbbtree/tests
+     ! Renamed test to tests to use 'tests' everywhere 
+       inside the repository.
+
 2007-12-04 23:56 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvtcore.c
     ! Small typo and formatting.

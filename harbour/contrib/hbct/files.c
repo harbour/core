@@ -153,7 +153,7 @@ HB_FUNC( FILESIZE )
 {
    PHB_FFIND ffind = _hb_fileStart( FALSE, HB_FA_ALL );
 
-   hb_retnint( ffind ? ffind->size : 0 );
+   hb_retnint( ffind ? ffind->size : -1 );
 }
 
 HB_FUNC( FILEDATE )
