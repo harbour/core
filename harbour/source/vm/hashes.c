@@ -160,6 +160,16 @@ static int hb_hashItemCmp( PHB_ITEM pKey1, PHB_ITEM pKey2, BOOL fIgnoreCase )
       else
          return 1;
    }
+   else if( HB_IS_POINTER( pKey1 ) )
+   {
+      if( HB_IS_POINTER( pKey2 ) )
+         return pKey1->item.asPointer.value < pKey2->item.asPointer.value ? -1 :
+              ( pKey1->item.asPointer.value > pKey2->item.asPointer.value ? 1 : 0 );
+      else if( HB_IS_STRING( pKey2 ) || HB_IS_DATE( pKey2 ) )
+         return -1;
+      else
+         return 1;
+   }
    else if( HB_IS_NUMINT( pKey1 ) && HB_IS_NUMINT( pKey2 ) )
    {
       HB_LONG l1 = HB_ITEM_GET_NUMINTRAW( pKey1 ),

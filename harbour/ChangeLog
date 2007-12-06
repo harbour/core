@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-06 11:35 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/lang/msgltwin.c
+    * more changes from LT to LTWIN
+  * harbour/common.mak
+    * restored missing msgltwin.c 
+  * harbour/include/hbapi.h
+  * harbour/source/vm/hashes.c
+    + added hash key support for pointer type
+
 2007-12-06 00:20 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvt.c
     ! Small addition in PaintText() wrongly omitted while cleaning.

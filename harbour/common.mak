@@ -705,6 +705,7 @@ LANG_LIB_OBJS = \
     $(OBJ_DIR)\msgis850$(OBJEXT) \
     $(OBJ_DIR)\msgit$(OBJEXT)    \
     $(OBJ_DIR)\msgko$(OBJEXT)    \
+    $(OBJ_DIR)\msgltwin$(OBJEXT) \
     $(OBJ_DIR)\msgnl$(OBJEXT)    \
     $(OBJ_DIR)\msgpl852$(OBJEXT) \
     $(OBJ_DIR)\msgpliso$(OBJEXT) \
