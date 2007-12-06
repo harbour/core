@@ -761,14 +761,14 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpcsiso$(OBJEXT)  \
     $(OBJ_DIR)\cpcskam$(OBJEXT)  \
     $(OBJ_DIR)\cpcswin$(OBJEXT)  \
+    $(OBJ_DIR)\cpdedos$(OBJEXT)  \
+    $(OBJ_DIR)\cpdeiso$(OBJEXT)  \
     $(OBJ_DIR)\cpeldos$(OBJEXT)  \
     $(OBJ_DIR)\cpelwin$(OBJEXT)  \
     $(OBJ_DIR)\cpesdos$(OBJEXT)  \
     $(OBJ_DIR)\cpesmwin$(OBJEXT) \
     $(OBJ_DIR)\cpeswin$(OBJEXT)  \
     $(OBJ_DIR)\cpfrdos$(OBJEXT)  \
-    $(OBJ_DIR)\cpgedos$(OBJEXT)  \
-    $(OBJ_DIR)\cpgeiso$(OBJEXT)  \
     $(OBJ_DIR)\cphr1250$(OBJEXT) \
     $(OBJ_DIR)\cphr437$(OBJEXT)  \
     $(OBJ_DIR)\cphr852$(OBJEXT)  \

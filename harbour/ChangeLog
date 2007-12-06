@@ -8,6 +8,26 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-06 01:26 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * doc/howtosvn.txt
+     ! Fixed the SVN propset command to include all needed keywords, 
+       not just "Id".
+
+   * common.mak
+   * source/codepage/Makefile
+   - source/codepage/cpgedos.c
+   - source/codepage/cpgeiso.c
+   + source/codepage/cpdedos.c
+   + source/codepage/cpdeiso.c
+     ! Renamed to be in sync with rules and content.
+
+   * source/lang/msgnl.c
+     ! svn propset svn:keywords "Author Date Id Revision".
+       (to correct my prev commit)
+
+   * include/hbextern.ch
+     ! Adjusted CP/MSG module names.
+
 2007-12-05 21:15 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/codepage/cpltwin.c
   * harbour/source/lang/msgltwin.c

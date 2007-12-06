@@ -1,5 +1,5 @@
 /*
- * $Id: msgnl.c 7111 2007-04-06 09:37:21Z druzus $
+ * $Id$
  */
 
 /*
@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Nederlands",     /* Name (in native language) */
       "NL",             /* RFC ID */
       "437",            /* Codepage */
-      "$Revision: 7111 $Date$", /* Version */
+      "$Revision$Date: 2007-12-05 19:52:13 +0100 (Sze, 05 dec. 2007) $", /* Version */
 
       /* Month names */
 

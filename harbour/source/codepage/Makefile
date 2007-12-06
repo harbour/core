@@ -14,14 +14,14 @@ C_SOURCES=\
 	cpcsiso.c     \
 	cpcskam.c     \
 	cpcswin.c     \
+	cpdedos.c     \
+	cpdeiso.c     \
 	cpeldos.c     \
 	cpelwin.c     \
 	cpesdos.c     \
 	cpeswin.c     \
 	cpesmwin.c    \
 	cpfrdos.c     \
-	cpgedos.c     \
-	cpgeiso.c     \
 	cphr1250.c    \
 	cphr437.c     \
 	cphr852.c     \
