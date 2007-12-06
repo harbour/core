@@ -979,7 +979,7 @@ STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
       oWvtBrw:oHBar:SetPos( oBrowse:ColCount, oBrowse:ColPos )
    endif
 
-   RETURN Nil
+   RETURN lRet
 
 //-------------------------------------------------------------------//
 
@@ -1468,7 +1468,7 @@ STATIC FUNCTION MyDialogOne()
    oGet:bOnCreate := bBlock
    oDlg:AddObject( oGet )
 
-   oBnr := WvtBanner():New( oDlg, 101, 0, 127, 1,oDlg:MaxCol()-2 )
+   oBnr := WvtBanner():New( oDlg, 101, 0, 127, 1, oDlg:MaxCol()-2 )
    oBnr:nTimeDelay        := 0.25
    oBnr:cText             := 'the compiler that EXTENDS with you'
    oBnr:nFontHeight       := 24
@@ -1529,7 +1529,7 @@ STATIC FUNCTION MyDialogOne()
    aGets_:= { pad('Pritpal',20 ), pad( 'Bedi',20 ), pad( '60, New Professor Colony',30 ), ;
               pad( 'Ludhiana, INDIA',30 ),;
               'PB', pad( '141004',10 ), ctod( '22/06/04' ), .t., 48, 17000, ;
-              pad( 'Wvtgui is a classical example of xHarbour capabilities...',65 ) }
+              pad( 'Wvtgui is a classical example of (x)Harbour capabilities...',65 ) }
 
    oGet1 := WvtGets():New( oDlg, , 4, 2, 37, 62 )
    oGet1:AddGets( nGetRow+00, nGetCol, aGets_[ 1 ], '@ '       , 'N/W*,N/GR*' )
@@ -1698,165 +1698,7 @@ STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
    oPBar3:DeActivate()
 
    RETURN NIL
-//-------------------------------------------------------------------//
-#ifdef __XCC__
-//-------------------------------------------------------------------//
 
-function WvtPaintObjects()
-   LOCAL i, lExe, nLeft, nRight, b, tlbr_, aBlocks, nBlocks
-
-   aBlocks := WvtSetPaint()
-
-   if ( nBlocks := len( aBlocks ) ) > 0
-      tlbr_:= Wvt_GetPaintRect()
-
-      for i := 1 to nBlocks
-         lExe := .t.
-
-         if aBlocks[ i,3 ] <> nil .and. !empty( aBlocks[ i,3 ] )
-            //  Check parameters against tlbr_ depending upon the
-            //  type of object and attributes contained in aAttr
-            //
-            do case
-            case aBlocks[ i,3,1 ] == WVT_BLOCK_GRID_V
-               b := aBlocks[ i,3,6 ]
-               if len( b:aColumnsSep ) == 0
-                  lExe := .f.
-               else
-                  nLeft  := b:aColumnsSep[ 1 ]
-                  nRight := b:aColumnsSep[ len( b:aColumnsSep ) ]
-                  if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   < bottom
-                        tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm > top
-                        tlbr_[ 2 ] <= nRight           .and. ; // left  < right
-                        tlbr_[ 4 ] >= nLeft                  ) // right > left
-                     lExe := .f.
-                  endif
-               endif
-
-            otherwise
-               // If refreshing rectangle's top is less than objects' bottom
-               // and left is less than objects' right
-               //
-               if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   < bottom
-                     tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm > top
-                     tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; // left  < right
-                     tlbr_[ 4 ] >= aBlocks[ i,3,3 ] )       // right > left
-                  lExe := .f.
-               endif
-
-            endcase
-         endif
-
-         if lExe
-            eval( aBlocks[ i,2 ] )
-         endif
-      next
-   endif
-
-   return ( 0 )
-
-//-------------------------------------------------------------------//
-
-function WvtSetPaint( a_ )
-   local o
-   static s := {}
-
-   o := s
-
-   if a_ <> nil
-      s := a_
-   endif
-
-   return o
-
-//-------------------------------------------------------------------//
-
-function SetPaint( cID, nAction, xData, aAttr )
-   local n, n1, oldData
-
-   if xData <> nil
-      if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-         if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
-            oldData := paint_[ n,2,n1,2 ]
-            paint_[ n,2,n1,2 ] := xData
-            paint_[ n,2,n1,3 ] := aAttr
-         else
-            aadd( paint_[ n,2 ], { nAction,xData,aAttr } )
-         endif
-      else
-         aadd( paint_, { cID, {} } )
-         n := len( paint_ )
-         aadd( paint_[ n,2 ], { nAction, xData, aAttr } )
-      endif
-   endif
-
-   return oldData
-
-//-------------------------------------------------------------------//
-
-function GetPaint( cID )
-   local n
-
-   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-      return paint_[ n,2 ]
-   endif
-
-   return {}
-
-//-------------------------------------------------------------------//
-
-function DelPaint( cID, nAction )
-   local xData, n1, n
-
-   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-      if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
-         xData := paint_[ n,2,n1,2 ]
-         paint_[ n,2,n1,2 ] := {|| .t. }
-      endif
-   endif
-
-   return xData
-
-//-------------------------------------------------------------------//
-
-function PurgePaint( cID,lDummy )
-   local n, aPaint
-
-   DEFAULT lDummy TO .f.
-
-   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-      aPaint := paint_[ n ]
-      ADel( paint_, n )
-      aSize( paint_, len( paint_ ) - 1 )
-   endif
-
-   if lDummy
-      WvtSetPaint( {} )
-   endif
-
-   return ( aPaint )
-
-//-------------------------------------------------------------------//
-
-function InsertPaint( cID, aPaint, lSet )
-   local n
-
-   DEFAULT lSet TO .f.
-
-   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-      paint_[ n ] := aPaint
-   else
-      aadd( paint_, aPaint )
-   endif
-
-   if lSet
-      WvtSetPaint( aPaint )
-   endif
-
-   return nil
-
-//-------------------------------------------------------------------//
-#endif
 //-------------------------------------------------------------------//
 
 Function DynDialog_1()

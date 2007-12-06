@@ -1088,6 +1088,11 @@ static void hb_gt_wvt_PaintText( HWND hWnd, RECT updateRect )
    }
 
    rcRect = hb_gt_wvt_GetColRowFromXYRect( updateRect );
+   /* Required, GUI Paint mechanism is based on it */
+   _s.rowStart = rcRect.top    ;
+   _s.rowStop  = rcRect.bottom ;
+   _s.colStart = rcRect.left   ;
+   _s.colStop  = rcRect.right  ;
 
    for( iRow = rcRect.top; iRow <= rcRect.bottom; ++iRow )
    {

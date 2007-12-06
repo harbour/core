@@ -277,7 +277,7 @@ HB_FUNC( WVT_SETTOOLTIPACTIVE )
 //
 HB_FUNC( WVT_SETTOOLTIP )
 {
-   TOOLINFO ti;// = { 0,0,0,0,0,0,0,0 };
+   TOOLINFO ti = { 0,0,0,0,0,0,0,0 };
    POINT    xy = { 0,0 };
    int      iTop, iLeft, iBottom, iRight;
 
