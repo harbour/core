@@ -52,7 +52,7 @@ C_SOURCES=\
 	msgslwin.c   \
 	msgsr852.c   \
 	msgsriso.c   \
-	msgtrdos.c   \
+	msgtr857.c   \
 	msgtrwin.c   \
 	msgsrwin.c   \
 	msgzhb5.c    \

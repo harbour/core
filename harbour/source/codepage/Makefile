@@ -14,14 +14,14 @@ C_SOURCES=\
 	cpcsiso.c     \
 	cpcskam.c     \
 	cpcswin.c     \
-	cpdedos.c     \
+	cpde850.c     \
 	cpdeiso.c     \
-	cpeldos.c     \
+	cpel737.c     \
 	cpelwin.c     \
-	cpesdos.c     \
+	cpes850.c     \
 	cpeswin.c     \
 	cpesmwin.c    \
-	cpfrdos.c     \
+	cpfr850.c     \
 	cphr1250.c    \
 	cphr437.c     \
 	cphr852.c     \
@@ -57,7 +57,7 @@ C_SOURCES=\
 	cpsv850.c     \
 	cpsvclip.c    \
 	cpsvwin.c     \
-	cptrdos.c     \
+	cptr857.c     \
 	cptrwin.c     \
 	cpua866.c     \
 	cpuakoi.c     \

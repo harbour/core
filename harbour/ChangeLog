@@ -8,6 +8,31 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-06 02:21 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbextern.ch
+   * common.mak
+   * source/codepage/Makefile
+   - source/codepage/cpdedos.c
+   + source/codepage/cpde850.c
+   - source/codepage/cpeldos.c
+   + source/codepage/cpel737.c
+   - source/codepage/cpesdos.c
+   + source/codepage/cpes850.c
+   - source/codepage/cpfrdos.c
+   + source/codepage/cpfr850.c
+   - source/codepage/cptrdos.c
+   + source/codepage/cptr857.c
+     ! Renamed some codepage modules to include the 
+       actual DOS codepage number instead of nothing 
+       or generic "dos" name.
+
+   * common.mak
+   * source/lang/Makefile
+   + source/lang/msgtr857.c
+   - source/lang/msgtrdos.c
+     ! Rename one language module to be in sync with 
+       proper internal ID.
+
 2007-12-06 01:26 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * doc/howtosvn.txt
      ! Fixed the SVN propset command to include all needed keywords, 

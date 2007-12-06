@@ -1,15 +1,13 @@
 /*
  * $Id$
- */
+*/
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( French MS-DOS cp-850 )
+ * National Collation Support Module ( Greek MS-DOS 737 )
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
  * www - http://www.harbour-project.org
- * French collating sequence (FR) done by
- * Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,31 +50,31 @@
  *
  */
 
-/* Language name: French */
-/* ISO language code (2 chars): FR */
-/* Codepage: 850 */
+/* Language name: <Greek dos> */
+/* ISO language code (2 chars): EL */
+/* Codepage: 737 */
 
 #include <ctype.h>
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#define NUMBER_OF_CHARACTERS  46    /* The number of single characters in the
+#define NUMBER_OF_CHARACTERS  32    /* The number of single characters in the
                                        alphabet, two-as-one aren't considered
                                        here, accented - are considered. */
-#define IS_LATIN               1    /* Should be 1, if the national alphabet
+#define IS_LATIN               0    /* Should be 1, if the national alphabet
                                        is based on Latin */
-#define ACCENTED_EQUAL         0    /* Should be 1, if accented character
+#define ACCENTED_EQUAL         1    /* Should be 1, if accented character 
                                        has the same weight as appropriate
                                        unaccented. */
 #define ACCENTED_INTERLEAVED   0    /* Should be 1, if accented characters
                                        sort after their unaccented counterparts
-                                       only if the unaccented versions of all
-                                       characters being compared are the same
+                                       only if the unaccented versions of all 
+                                       characters being compared are the same 
                                        ( interleaving ) */
 
 /* If ACCENTED_EQUAL or ACCENTED_INTERLEAVED is 1, you need to mark the
    accented characters with the symbol '~' before each of them, for example:
-      a~€
+      a~_
    If there is two-character sequence, which is considered as one, it should
    be marked with '.' before and after it, for example:
       ... h.ch.i ...
@@ -85,16 +83,16 @@
    same excepting the characters case, of course.
  */
 
-static HB_CODEPAGE s_codepage = { "FR",
-    HB_CPID_850, HB_UNITB_850, NUMBER_OF_CHARACTERS,
-    "AAAAABCDEEEEEFGHIIIIIJKLMNOOOOOPQRSTUUUUUVWXYZ",
-    "a …ƒ„bcde‚Šˆ‰fghi¡Œ‹jklmno¢•“”pqrstu£—–vwxyz",
+static HB_CODEPAGE s_codepage = { "EL737",
+    HB_CPID_737, HB_UNITB_737, NUMBER_OF_CHARACTERS,
+    "€~ê‚ƒ„~ë…†~ì‡ˆ~í‰Š‹ŒŽ~î‘‘’“~ï”•–—~ð",
+    "˜~á™š›œ~âž~ãŸ ~å¡¢£¤¥¦~æ§¨©ª«¬~ç­®¯à~é",
     IS_LATIN, ACCENTED_EQUAL, ACCENTED_INTERLEAVED, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
-HB_CODEPAGE_INIT( FR )
+HB_CODEPAGE_INIT( EL737 )
 
 #if defined(HB_PRAGMA_STARTUP)
-   #pragma startup hb_codepage_Init_FR
+   #pragma startup hb_codepage_Init_EL737
 #elif defined(HB_MSC_STARTUP)
    #if _MSC_VER >= 1010
       #pragma data_seg( ".CRT$XIY" )
@@ -102,6 +100,6 @@ HB_CODEPAGE_INIT( FR )
    #else
       #pragma data_seg( "XIY" )
    #endif
-   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_FR = hb_codepage_Init_FR;
+   static HB_$INITSYM hb_vm_auto_hb_codepage_Init_EL737 = hb_codepage_Init_EL737;
    #pragma data_seg()
 #endif

@@ -722,7 +722,7 @@ LANG_LIB_OBJS = \
     $(OBJ_DIR)\msgsr852$(OBJEXT) \
     $(OBJ_DIR)\msgsriso$(OBJEXT) \
     $(OBJ_DIR)\msgsrwin$(OBJEXT) \
-    $(OBJ_DIR)\msgtrdos$(OBJEXT) \
+    $(OBJ_DIR)\msgtr857$(OBJEXT) \
     $(OBJ_DIR)\msgtrwin$(OBJEXT) \
     $(OBJ_DIR)\msgzhb5$(OBJEXT)  \
     $(OBJ_DIR)\msgzhgb$(OBJEXT)  \
@@ -761,14 +761,14 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpcsiso$(OBJEXT)  \
     $(OBJ_DIR)\cpcskam$(OBJEXT)  \
     $(OBJ_DIR)\cpcswin$(OBJEXT)  \
-    $(OBJ_DIR)\cpdedos$(OBJEXT)  \
+    $(OBJ_DIR)\cpde850$(OBJEXT)  \
     $(OBJ_DIR)\cpdeiso$(OBJEXT)  \
-    $(OBJ_DIR)\cpeldos$(OBJEXT)  \
+    $(OBJ_DIR)\cpel737$(OBJEXT)  \
     $(OBJ_DIR)\cpelwin$(OBJEXT)  \
-    $(OBJ_DIR)\cpesdos$(OBJEXT)  \
+    $(OBJ_DIR)\cpes850$(OBJEXT)  \
     $(OBJ_DIR)\cpesmwin$(OBJEXT) \
     $(OBJ_DIR)\cpeswin$(OBJEXT)  \
-    $(OBJ_DIR)\cpfrdos$(OBJEXT)  \
+    $(OBJ_DIR)\cpfr850$(OBJEXT)  \
     $(OBJ_DIR)\cphr1250$(OBJEXT) \
     $(OBJ_DIR)\cphr437$(OBJEXT)  \
     $(OBJ_DIR)\cphr852$(OBJEXT)  \
@@ -804,7 +804,7 @@ CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpsv850$(OBJEXT)  \
     $(OBJ_DIR)\cpsvclip$(OBJEXT) \
     $(OBJ_DIR)\cpsvwin$(OBJEXT)  \
-    $(OBJ_DIR)\cptrdos$(OBJEXT)  \
+    $(OBJ_DIR)\cptr857$(OBJEXT)  \
     $(OBJ_DIR)\cptrwin$(OBJEXT)  \
     $(OBJ_DIR)\cpua866$(OBJEXT)  \
     $(OBJ_DIR)\cpuakoi$(OBJEXT)  \
