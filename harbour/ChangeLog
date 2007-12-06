@@ -1,4 +1,4 @@
-/*
+﻿/*
  * $Id$
  */
 
@@ -7,6 +7,16 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2007-12-06 00:20 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvt.c
+    ! Small addition in PaintText() wrongly omitted while cleaning.
+  * harbour/contrib/gtwvg/wvtutils.c
+    * Tooltip - Initialization of variable.
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    ! Fixed to run with Harbour perfectly. Please note that 
+      TBrowse in Harbour needs some fixes. Replace it with xHarbour
+      TBrowse and the look of composite dialog changes.
 
 2007-12-06 02:21 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbextern.ch
