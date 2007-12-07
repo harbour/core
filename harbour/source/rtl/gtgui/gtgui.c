@@ -70,9 +70,11 @@ static HB_GT_FUNCS   SuperTable;
 
 /* *********************************************************************** */
 
-static char * hb_gt_gui_Version( int iType )
+static char * hb_gt_gui_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Version(%d)", iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Version(%p,%d)", pGT, iType ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if ( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
@@ -82,22 +84,23 @@ static char * hb_gt_gui_Version( int iType )
 
 /* *********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
-static void hb_gt_gui_Tone( double dFrequency, double dDuration )
+static void hb_gt_gui_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_gui_Tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_gui_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
 
 #if defined( HB_OS_WIN_32 )
+   HB_SYMBOL_UNUSED( pGT );
    hb_gt_w32_tone( dFrequency, dDuration );
 #else
-   HB_GTSUPER_TONE( dFrequency, dDuration );
+   HB_GTSUPER_TONE( pGT, dFrequency, dDuration );
 #endif
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_gui_Info( int iType, PHB_GT_INFO pInfo )
+static BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Info(%d,%p)", iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
    switch( iType )
    {
@@ -132,7 +135,7 @@ static BOOL hb_gt_gui_Info( int iType, PHB_GT_INFO pInfo )
          break;
 #endif
       default:
-         return HB_GTSUPER_INFO( iType, pInfo );
+         return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
    return TRUE;

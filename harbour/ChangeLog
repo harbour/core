@@ -8,6 +8,50 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-07 10:43 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtapi.c
+  * harbour/source/rtl/inkeyapi.c
+  * harbour/source/rtl/mouseapi.c
+    - removed hb_gt_*(), hb_inkey_*(), hb_mouse_*() functions
+    + implemented HB_GTSELF_*() functions and changed HB_GTSUPER_*()
+      ones to operate on GT context passed ad 1-st parameter.
+      Now GT API allows to create many GTs working simultaneously
+    + added hb_gt_Base() core function which returns GT context
+      it will be extended soon to allow using many GT contexts,
+      setting thread default one or switch between them using some
+      .prg function.
+
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtcrs/gtcrs.h
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtsln/gtsln.h
+  * harbour/source/rtl/gtsln/kbsln.c
+  * harbour/source/rtl/gtsln/mousesln.c
+  * harbour/source/rtl/gtalleg/gtalleg.c
+  * harbour/source/rtl/gtgui/gtgui.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtwvt/gtwvt.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/contrib/hbct/ctwin.c
+  * harbour/contrib/hbct/ctwin.h
+  * harbour/contrib/hbct/ctwfunc.c
+  * harbour/contrib/hbgtwvg/gtwvt.h
+  * harbour/contrib/hbgtwvg/gtwvt.c
+    * updated GT code for new GT API. I still haven't added GT cloning
+      to them and only GTTRM is ready to use in multi window MT programs
+      but now they can be systematically modified and it can be done
+      locally without core code modifications.
+
+  * harbour/contrib/hbgtwvg/wvtutils.c
+    ! fixed some memory leaks in Unicode conversions
+
 2007-12-06 11:35 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/lang/msgltwin.c
     * more changes from LT to LTWIN

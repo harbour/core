@@ -186,6 +186,8 @@ typedef BOOL ( WINAPI *wvtGradientFill )     (
 
 typedef struct global_data
 {
+   PHB_GT   pGT;                          /* core GT pointer */
+
    USHORT   ROWS;                         /* number of displayable rows in window */
    USHORT   COLS;                         /* number of displayable columns in window */
 
@@ -193,7 +195,7 @@ typedef struct global_data
    BOOL     CaretHidden;                  /* TRUE if a caret has been hiden */
    int      CaretSize;                    /* Size of solid caret */
 
-   POINT    mousePos;                     /* the last mouse position */
+   POINT    MousePos;                     /* the last mouse position */
    BOOL     MouseMove;                    /* Flag to say whether to return mouse movement events */
 
    int      Keys[ WVT_CHAR_QUEUE_SIZE ];  /* Array to hold the characters & events */

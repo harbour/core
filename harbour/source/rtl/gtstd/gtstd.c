@@ -168,9 +168,9 @@ static void hb_gt_std_newLine( void )
 }
 
 
-static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_std_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_std_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_std_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr));
 
    s_hFilenoStdin  = hFilenoStdin;
    s_hFilenoStdout = hFilenoStdout;
@@ -189,7 +189,7 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    s_ulCrLf = strlen( ( char * ) s_szCrLf );
 
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
-   HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
 #if defined( OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
@@ -233,7 +233,7 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
 
       if( ioctl( hFilenoStdout, TIOCGWINSZ, ( char * ) &win ) != -1 )
       {
-         HB_GTSUPER_RESIZE( win.ws_row, win.ws_col );
+         HB_GTSUPER_RESIZE( pGT, win.ws_row, win.ws_col );
       }
    }
 #elif defined( HB_WIN32_IO ) && ! defined( HB_WINCE )
@@ -242,17 +242,17 @@ static void hb_gt_std_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       SetConsoleMode( ( HANDLE ) hb_fsGetOsHandle( s_hFilenoStdin ), 0x0000 );
    }
 #endif
-   hb_gt_SetFlag( GTI_STDOUTCON, s_bStdoutConsole );
-   hb_gt_SetFlag( GTI_STDERRCON, s_bStderrConsole );
+   HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, s_bStdoutConsole );
+   HB_GTSELF_SETFLAG( pGT, GTI_STDERRCON, s_bStderrConsole );
 }
 
-static void hb_gt_std_Exit( void )
+static void hb_gt_std_Exit( PHB_GT pGT )
 {
    int iRow, iCol;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_std_Exit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_std_Exit(%p)", pGT));
 
-   hb_gt_Refresh();
+   HB_GTSELF_REFRESH( pGT );
 
    /* update cursor position on exit */
    if( s_bStdoutConsole && s_iLastCol > 0 )
@@ -261,11 +261,11 @@ static void hb_gt_std_Exit( void )
       ++s_iRow;
    }
 
-   hb_gt_GetPos( &iRow, &iCol );
+   HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
    while( ++s_iRow <= iRow )
       hb_gt_std_newLine();
 
-   HB_GTSUPER_EXIT();
+   HB_GTSUPER_EXIT( pGT );
 
 #if defined( OS_UNIX_COMPATIBLE )
    if( s_fRestTTY )
@@ -279,12 +279,13 @@ static void hb_gt_std_Exit( void )
    s_bStdinConsole = s_bStdoutConsole = s_bStderrConsole = FALSE;
 }
 
-static int hb_gt_std_ReadKey( int iEventMask )
+static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int ch = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_std_ReadKey(%d)", iEventMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_std_ReadKey(%p,%d)", pGT, iEventMask));
 
+   HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iEventMask );
 
 #if defined( _MSC_VER ) && !defined( HB_WINCE )
@@ -332,19 +333,23 @@ static int hb_gt_std_ReadKey( int iEventMask )
    return ch;
 }
 
-static BOOL hb_gt_std_IsColor( void )
+static BOOL hb_gt_std_IsColor( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_std_IsColor()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_std_IsColor(%p)", pGT));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    return FALSE;
 }
 
-static void hb_gt_std_Tone( double dFrequency, double dDuration )
+static void hb_gt_std_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    static double dLastSeconds = 0;
    double dCurrentSeconds;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_std_Tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_std_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    /* Output an ASCII BEL character to cause a sound */
    /* but throttle to max once per second, in case of sound */
@@ -364,16 +369,20 @@ static void hb_gt_std_Tone( double dFrequency, double dDuration )
    hb_idleSleep( dDuration / 18.2 );
 }
 
-static void hb_gt_std_Bell( void )
+static void hb_gt_std_Bell( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ( "hb_gt_std_Bell()" ) );
+   HB_TRACE(HB_TR_DEBUG, ( "hb_gt_std_Bell(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    hb_gt_std_termOut( s_szBell, 1 );
 }
 
-static char * hb_gt_std_Version( int iType )
+static char * hb_gt_std_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Version(%d)", iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Version(%p,%d)", pGT, iType ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
@@ -381,9 +390,12 @@ static char * hb_gt_std_Version( int iType )
    return "Harbour Terminal: Standard stream console";
 }
 
-static BOOL hb_gt_std_Suspend( void )
+static BOOL hb_gt_std_Suspend( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Suspend()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Suspend(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
+
 #if defined( OS_UNIX_COMPATIBLE )
    if( s_fRestTTY )
    {
@@ -393,9 +405,11 @@ static BOOL hb_gt_std_Suspend( void )
    return TRUE;
 }
 
-static BOOL hb_gt_std_Resume( void )
+static BOOL hb_gt_std_Resume( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Resume()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Resume(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
 #if defined( OS_UNIX_COMPATIBLE )
    if( s_fRestTTY )
@@ -406,35 +420,35 @@ static BOOL hb_gt_std_Resume( void )
    return TRUE;
 }
 
-static void hb_gt_std_Scroll( int iTop, int iLeft, int iBottom, int iRight,
+static void hb_gt_std_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
                               BYTE bColor, BYTE bChar, int iRows, int iCols )
 {
    int iHeight, iWidth;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Scroll(%d,%d,%d,%d,%d,%d,%d,%d)", iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols ) );
 
    /* Provide some basic scroll support for full screen */
-   hb_gt_GetSize( &iHeight, &iWidth );
+   HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
    if( iCols == 0 && iRows > 0 &&
        iTop == 0 && iLeft == 0 &&
        iBottom >= iHeight - 1 && iRight >= iWidth - 1 )
    {
       /* scroll up the internal screen buffer */
-      HB_GTSUPER_SCROLLUP( iRows, bColor, bChar );
+      HB_GTSUPER_SCROLLUP( pGT, iRows, bColor, bChar );
       /* update our internal row position */
       s_iRow -= iRows;
       if( s_iRow < 0 )
          s_iRow = 0;
    }
    else
-      HB_GTSUPER_SCROLL( iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols );
+      HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols );
 }
 
-static BOOL hb_gt_std_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
+static BOOL hb_gt_std_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_SetDispCP(%s,%s,%d)", pszTermCDP, pszHostCDP, (int) fBox ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
-   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
@@ -454,9 +468,11 @@ static BOOL hb_gt_std_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
    return FALSE;
 }
 
-static BOOL hb_gt_std_SetKeyCP( char *pszTermCDP, char *pszHostCDP )
+static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_SetKeyCP(%s,%s)", pszTermCDP, pszHostCDP ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
@@ -497,7 +513,7 @@ static BOOL hb_gt_std_SetKeyCP( char *pszTermCDP, char *pszHostCDP )
    return FALSE;
 }
 
-static void hb_gt_std_DispLine( int iRow )
+static void hb_gt_std_DispLine( PHB_GT pGT, int iRow )
 {
    BYTE bColor, bAttr;
    USHORT usChar;
@@ -505,7 +521,7 @@ static void hb_gt_std_DispLine( int iRow )
 
    for( iCol = 0; iCol < s_iLineBufSize; ++iCol )
    {
-      if( !hb_gt_GetScrChar( iRow, iCol, &bColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
          break;
       if( usChar < 32 || usChar == 127 )
          usChar = '.';
@@ -520,13 +536,13 @@ static void hb_gt_std_DispLine( int iRow )
    s_iRow = iRow;
 }
 
-static void hb_gt_std_Redraw( int iRow, int iCol, int iSize )
+static void hb_gt_std_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    BYTE bColor, bAttr;
    USHORT usChar;
    int iLineFeed, iBackSpace, iLen, iMin;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    iLineFeed = iBackSpace = 0;
 
@@ -560,7 +576,7 @@ static void hb_gt_std_Redraw( int iRow, int iCol, int iSize )
    iMin = iLineFeed > 0 || s_iLastCol <= iCol ? 0 : s_iLastCol - iCol;
 
    while( iSize > iMin &&
-          hb_gt_GetScrChar( iRow, iCol + iSize - 1, &bColor, &bAttr, &usChar ) )
+          HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iSize - 1, &bColor, &bAttr, &usChar ) )
    {
       if( usChar != ' ' )
          break;
@@ -585,7 +601,7 @@ static void hb_gt_std_Redraw( int iRow, int iCol, int iSize )
                s_bFullRedraw = TRUE;
             }
             for( i = s_iRow + 1; i < iRow; ++i )
-               hb_gt_std_DispLine( i );
+               hb_gt_std_DispLine( pGT, i );
             iLineFeed = 1;
          }
 
@@ -602,7 +618,7 @@ static void hb_gt_std_Redraw( int iRow, int iCol, int iSize )
 
       for( iLen = 0; iLen < iSize; ++iLen )
       {
-         if( !hb_gt_GetScrChar( iRow, iCol, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
          if( usChar < 32 || usChar == 127 )
             usChar = '.';
@@ -625,13 +641,13 @@ static void hb_gt_std_Redraw( int iRow, int iCol, int iSize )
    }
 }
 
-static void hb_gt_std_Refresh( void )
+static void hb_gt_std_Refresh( PHB_GT pGT )
 {
    int iHeight, iWidth;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Refresh()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Refresh(%p)", pGT ) );
 
-   hb_gt_GetSize( &iHeight, &iWidth );
+   HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
    if( s_iLineBufSize == 0 )
    {
       s_sLineBuf = ( BYTE * ) hb_xgrab( iWidth );
@@ -643,7 +659,7 @@ static void hb_gt_std_Refresh( void )
       s_iLineBufSize = iWidth;
    }
    s_bFullRedraw = FALSE;
-   HB_GTSUPER_REFRESH();
+   HB_GTSUPER_REFRESH( pGT );
    if( s_bFullRedraw )
    {
       int i;
@@ -651,14 +667,14 @@ static void hb_gt_std_Refresh( void )
       if( s_iRow < iHeight - 1 )
       {
          for( i = s_iRow + 1; i < iHeight; ++i )
-            hb_gt_std_DispLine( i );
+            hb_gt_std_DispLine( pGT, i );
       }
    }
 }
 
-static BOOL hb_gt_std_Info( int iType, PHB_GT_INFO pInfo )
+static BOOL hb_gt_std_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Info(%d,%p)", iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
    switch ( iType )
    {
@@ -668,7 +684,7 @@ static BOOL hb_gt_std_Info( int iType, PHB_GT_INFO pInfo )
          break;
 
       default:
-         return HB_GTSUPER_INFO( iType, pInfo );
+         return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
    return TRUE;

@@ -133,8 +133,8 @@
 
 
 #define ESC_DELAY       25
-/* #define DBLCLK_DELAY 250 */
-#define DBLCLK_DELAY    hb_mouse_GetDoubleClickSpeed();
+/* #define DBLCLK_DELAY 168 */
+#define DBLCLK_DELAY    hb_mouseGetDoubleClickSpeed()
 
 #define MAX_IOBASE      32
 #define STDIN_BUFLEN    128

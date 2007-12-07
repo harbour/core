@@ -2446,11 +2446,11 @@ void HB_GT_FUNC( gt_CatchSignal( int iSig ) )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_crs_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
    InOutBase *ioBase;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
    if( !s_ioBase )
    {
@@ -2470,10 +2470,10 @@ static void hb_gt_crs_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       if( ioBase )
       {
          add_new_ioBase( ioBase );
-         HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
-         HB_GTSUPER_RESIZE( s_ioBase->maxrow, s_ioBase->maxcol );
-         hb_gt_SetFlag( GTI_COMPATBUFFER, FALSE );
-         hb_gt_SetBlink( TRUE );
+         HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+         HB_GTSUPER_RESIZE( pGT, s_ioBase->maxrow, s_ioBase->maxcol );
+         HB_GTSELF_SETFLAG( pGT, GTI_COMPATBUFFER, FALSE );
+         HB_GTSELF_SETBLINK( pGT, TRUE );
       }
    }
 
@@ -2483,33 +2483,35 @@ static void hb_gt_crs_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_Exit( void )
+static void hb_gt_crs_Exit( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Exit()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Exit(%p)", pGT ) );
 
-   HB_GTSUPER_EXIT();
+   HB_GTSUPER_EXIT( pGT );
 
    del_all_ioBase();
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_IsColor( void )
+static BOOL hb_gt_crs_IsColor( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_IsColor()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_IsColor(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    return s_ioBase->is_color;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_SetMode( int iRows, int iCols )
+static BOOL hb_gt_crs_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetMode(%d, %d)", iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
 
    if( gt_setsize( s_ioBase, iRows, iCols ) == 0 )
    {
-      HB_GTSUPER_RESIZE( iRows, iCols );
+      HB_GTSUPER_RESIZE( pGT, iRows, iCols );
       return TRUE;
    }
    return FALSE;
@@ -2517,23 +2519,25 @@ static BOOL hb_gt_crs_SetMode( int iRows, int iCols )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_SetBlink( BOOL fBlink )
+static void hb_gt_crs_SetBlink( PHB_GT pGT, BOOL fBlink )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetBlink(%d)", ( int ) fBlink ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetBlink(%p, %d)", pGT, ( int ) fBlink ) );
 
    if( fBlink )
       s_ioBase->attr_mask |= A_BLINK;
    else
       s_ioBase->attr_mask &= ~A_BLINK;
 
-   HB_GTSUPER_SETBLINK( fBlink );
+   HB_GTSUPER_SETBLINK( pGT, fBlink );
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_Tone( double dFrequency, double dDuration )
+static void hb_gt_crs_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Tone(%lf, %lf)", dFrequency, dDuration ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    gt_tone( s_ioBase, dFrequency, dDuration );
 
@@ -2546,9 +2550,11 @@ static void hb_gt_crs_Tone( double dFrequency, double dDuration )
 
 /* *********************************************************************** */
 
-static char * hb_gt_crs_Version( int iType )
+static char * hb_gt_crs_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Version(%d)", iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Version(%p,%d)", pGT, iType ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
@@ -2558,42 +2564,44 @@ static char * hb_gt_crs_Version( int iType )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_OutStd( BYTE * pbyStr, ULONG ulLen )
+static void hb_gt_crs_OutStd( PHB_GT pGT, BYTE * pbyStr, ULONG ulLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutStd(%s, %hu)", pbyStr, ulLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutStd(%p,%s,%lu)", pGT, pbyStr, ulLen ) );
 
    if( s_ioBase )
    {
       if( s_ioBase->stdoutfd == -1 )
-         hb_gt_WriteCon( pbyStr, ulLen );
+         HB_GTSELF_WRITECON( pGT, pbyStr, ulLen );
       else
          gt_outstd( s_ioBase, pbyStr, ulLen );
    }
    else
-      HB_GTSUPER_OUTSTD( pbyStr, ulLen );
+      HB_GTSUPER_OUTSTD( pGT, pbyStr, ulLen );
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_OutErr( BYTE * pbyStr, ULONG ulLen )
+static void hb_gt_crs_OutErr( PHB_GT pGT, BYTE * pbyStr, ULONG ulLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutErr(%s, %hu)", pbyStr, ulLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutErr(%p,%s,%lu)", pGT, pbyStr, ulLen ) );
    if( s_ioBase )
    {
       if( s_ioBase->stderrfd == -1 )
-         hb_gt_WriteCon( pbyStr, ulLen );
+         HB_GTSELF_WRITECON( pGT, pbyStr, ulLen );
       else
          gt_outerr( s_ioBase, ( char * ) pbyStr, ulLen );
    }
    else
-      HB_GTSUPER_OUTERR( pbyStr, ulLen );
+      HB_GTSUPER_OUTERR( pGT, pbyStr, ulLen );
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_Suspend( void )
+static BOOL hb_gt_crs_Suspend( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Suspend()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Suspend(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( s_ioBase )
    {
@@ -2606,9 +2614,11 @@ static BOOL hb_gt_crs_Suspend( void )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_Resume( void )
+static BOOL hb_gt_crs_Resume( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Resume()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Resume(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( s_ioBase )
    {
@@ -2623,9 +2633,11 @@ static BOOL hb_gt_crs_Resume( void )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_PreExt( void )
+static BOOL hb_gt_crs_PreExt( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_PreExt()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_PreExt(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( s_ioBase )
    {
@@ -2636,27 +2648,33 @@ static BOOL hb_gt_crs_PreExt( void )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_PostExt( void )
+static BOOL hb_gt_crs_PostExt( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_PostExt()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_PostExt(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    return TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_mouse_IsPresent( void )
+static BOOL hb_gt_crs_mouse_IsPresent( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_IsPresent()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_IsPresent(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    return s_ioBase->mouse_type != MOUSE_NONE;
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_mouse_Show( void )
+static void hb_gt_crs_mouse_Show( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Show()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Show(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
 #ifdef HAVE_GPM_H
    if( s_ioBase->mouse_type == MOUSE_GPM )
@@ -2667,9 +2685,11 @@ static void hb_gt_crs_mouse_Show( void )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_mouse_Hide( void )
+static void hb_gt_crs_mouse_Hide( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Hide()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Hide(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
 #ifdef HAVE_GPM_H
    if( s_ioBase->mouse_type == MOUSE_GPM )
@@ -2681,9 +2701,11 @@ static void hb_gt_crs_mouse_Hide( void )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_mouse_GetPos( int * piRow, int * piCol )
+static void hb_gt_crs_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Col(%p,%p)", piRow, piCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Col(%p,%p,%p)", pGT, piRow, piCol ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    *piRow = s_ioBase->mLastEvt.row;
    *piCol = s_ioBase->mLastEvt.col;
@@ -2691,9 +2713,11 @@ static void hb_gt_crs_mouse_GetPos( int * piRow, int * piCol )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_mouse_SetPos( int iRow, int iCol )
+static void hb_gt_crs_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_SetPos(%i, %i)", iRow, iCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_SetPos(%p,%i,%i)", pGT, iRow, iCol ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    /* it does really nothing */
    s_ioBase->mLastEvt.col = iCol;
@@ -2703,11 +2727,13 @@ static void hb_gt_crs_mouse_SetPos( int iRow, int iCol )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_mouse_ButtonState( int iButton )
+static BOOL hb_gt_crs_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
    BOOL ret = FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_ButtonState(%i)", iButton ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_ButtonState(%p,%i)", pGT, iButton ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( s_ioBase->mouse_type != 0 )
    {
@@ -2730,26 +2756,30 @@ static BOOL hb_gt_crs_mouse_ButtonState( int iButton )
 
 /* *********************************************************************** */
 
-static int hb_gt_crs_mouse_CountButton( void )
+static int hb_gt_crs_mouse_CountButton( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_CountButton()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_CountButton(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    return ( s_ioBase->mButtons );
 }
 
-static void hb_gt_crs_mouse_SetDoubleClickSpeed( int iSpeed )
+static void hb_gt_crs_mouse_SetDoubleClickSpeed( PHB_GT pGT, int iSpeed )
 {
-   HB_GTSUPER_MOUSESETDOUBLECLICKSPEED( iSpeed );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_SetDoubleClickSpeed(%p,%d)", pGT, iSpeed ) );
+
+   HB_GTSUPER_MOUSESETDOUBLECLICKSPEED( pGT, iSpeed );
    s_ioBase->mLastEvt.click_delay = iSpeed;
 }
 
 /* *********************************************************************** */
 
-static int hb_gt_crs_ReadKey( int iEventMask )
+static int hb_gt_crs_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int iKey;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_ReadKey(%d)", iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_ReadKey(%p,%d)", pGT, iEventMask ) );
 
    HB_SYMBOL_UNUSED( iEventMask );
 
@@ -2758,7 +2788,7 @@ static int hb_gt_crs_ReadKey( int iEventMask )
    if( iKey == K_RESIZE )
    {
       gt_resize( s_ioBase );
-      HB_GTSUPER_RESIZE( s_ioBase->maxrow, s_ioBase->maxcol );
+      HB_GTSUPER_RESIZE( pGT, s_ioBase->maxrow, s_ioBase->maxcol );
       iKey = 0;
    }
 
@@ -2767,11 +2797,11 @@ static int hb_gt_crs_ReadKey( int iEventMask )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
+static BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%s,%s,%d)", pszTermCDP, pszHostCDP, (int) fBox ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
-   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP || !*pszHostCDP )
@@ -2816,9 +2846,11 @@ static BOOL hb_gt_crs_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_SetKeyCP( char *pszTermCDP, char *pszHostCDP )
+static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetKeyCP(%s,%s)", pszTermCDP, pszHostCDP ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP || !*pszHostCDP )
@@ -2859,9 +2891,9 @@ static BOOL hb_gt_crs_SetKeyCP( char *pszTermCDP, char *pszHostCDP )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_crs_Info( int iType, PHB_GT_INFO pInfo )
+static BOOL hb_gt_crs_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Info(%d,%p)", iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
    if( s_ioBase )
    {
@@ -2879,7 +2911,7 @@ static BOOL hb_gt_crs_Info( int iType, PHB_GT_INFO pInfo )
             break;
 
          default:
-            return HB_GTSUPER_INFO( iType, pInfo );
+            return HB_GTSUPER_INFO( pGT, iType, pInfo );
       }
    }
 
@@ -2889,9 +2921,9 @@ static BOOL hb_gt_crs_Info( int iType, PHB_GT_INFO pInfo )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_Redraw( int iRow, int iCol, int iSize )
+static void hb_gt_crs_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    if( s_ioBase )
    {
@@ -2902,7 +2934,7 @@ static void hb_gt_crs_Redraw( int iRow, int iCol, int iSize )
       wmove( s_ioBase->stdscr, iRow, iCol );
       while( iSize-- > 0 )
       {
-         if( !hb_gt_GetScrChar( iRow, iCol++, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &bColor, &bAttr, &usChar ) )
             break;
          ch = ( s_ioBase->attr_map[ bColor ] & s_ioBase->attr_mask ) |
               ( bAttr & HB_GT_ATTR_BOX ? s_ioBase->box_chmap[ usChar & 0xff ] :
@@ -2914,16 +2946,16 @@ static void hb_gt_crs_Redraw( int iRow, int iCol, int iSize )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_Refresh( void )
+static void hb_gt_crs_Refresh( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Refresh()") );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Refresh(%p)", pGT ) );
 
-   HB_GTSUPER_REFRESH();
+   HB_GTSUPER_REFRESH( pGT );
    if( s_ioBase )
    {
       int iRow, iCol, iShape;
 
-      hb_gt_GetScrCursor( &iRow, &iCol, &iShape );
+      HB_GTSELF_GETSCRCURSOR( pGT, &iRow, &iCol, &iShape );
       s_ioBase->row = iRow;
       s_ioBase->col = iCol;
       set_cursor( s_ioBase, iShape );

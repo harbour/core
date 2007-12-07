@@ -109,8 +109,10 @@
 
 #define WM_MY_UPDATE_CARET ( WM_USER + 0x0101 )
 
-typedef struct global_data
+typedef struct
 {
+   PHB_GT   pGT;                          /* core GT pointer */
+
    USHORT   ROWS;                         /* number of displayable rows in window */
    USHORT   COLS;                         /* number of displayable columns in window */
 
@@ -118,7 +120,7 @@ typedef struct global_data
    BOOL     CaretHidden;                  /* TRUE if a caret has been hiden */
    int      CaretSize;                    /* Size of solid caret */
 
-   POINT    mousePos;                     /* the last mouse position */
+   POINT    MousePos;                     /* the last mouse position */
    BOOL     MouseMove;                    /* Flag to say whether to return mouse movement events */
 
    int      Keys[ WVT_CHAR_QUEUE_SIZE ];  /* Array to hold the characters & events */
@@ -148,7 +150,7 @@ typedef struct global_data
 
    BOOL     IgnoreWM_SYSCHAR;
 
-} GLOBAL_DATA, * LPGLOBAL_DATA;
+} HB_GTWVT, * PHB_GTWVT;
 
 /* xHarbour compatible definitions */
 #if !defined( K_SH_LEFT )

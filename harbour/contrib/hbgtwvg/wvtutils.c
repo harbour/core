@@ -177,11 +177,12 @@ HB_FUNC( WVT_CHOOSEFONT )
 
    if ( ChooseFont( &cf ) )
    {
+      char * szFaceName = HB_TCHAR_CONVFROM( lf.lfFaceName );
+
       PointSize = -MulDiv( lf.lfHeight, 72, GetDeviceCaps( _s->hdc, LOGPIXELSY ) ) ;
 
       hb_reta( 8 );
-
-      hb_storc(  HB_TCHAR_CONVFROM( lf.lfFaceName ), -1, 1 );
+      hb_storc(  szFaceName        , -1, 1 );
       hb_stornl( ( LONG ) PointSize, -1, 2 );
       hb_storni( lf.lfWidth        , -1, 3 );
       hb_storni( lf.lfWeight       , -1, 4 );
@@ -189,6 +190,8 @@ HB_FUNC( WVT_CHOOSEFONT )
       hb_storl(  lf.lfItalic       , -1, 6 );
       hb_storl(  lf.lfUnderline    , -1, 7 );
       hb_storl(  lf.lfStrikeOut    , -1, 8 );
+
+      HB_TCHAR_FREE( szFaceName );
    }
    else
    {
@@ -277,7 +280,7 @@ HB_FUNC( WVT_SETTOOLTIPACTIVE )
 //
 HB_FUNC( WVT_SETTOOLTIP )
 {
-   TOOLINFO ti = { 0,0,0,0,0,0,0,0 };
+   TOOLINFO ti;
    POINT    xy = { 0,0 };
    int      iTop, iLeft, iBottom, iRight;
 
@@ -286,6 +289,7 @@ HB_FUNC( WVT_SETTOOLTIP )
       return;
    }
 
+   memset( &ti, 0, sizeof( ti ) );
    ti.cbSize    = sizeof( TOOLINFO );
    ti.hwnd      = _s->hWnd;
    ti.uId       = 100000;
@@ -1648,9 +1652,11 @@ HB_FUNC( WIN_SENDMESSAGE )
                                            ( LPARAM ) hb_parnl( 4 ) ) ) ) )
            );
 
-   if ( cText )
+   if( cText )
    {
-      hb_storc( HB_TCHAR_CONVFROM( cText ), 4 );
+      char * szText = HB_TCHAR_CONVFROM( cText );
+      hb_storc( szText, 4 );
+      HB_TCHAR_FREE( szText );
       HB_TCHAR_FREE( cText );
    }
 }
@@ -1798,15 +1804,19 @@ HB_FUNC( WIN_SETDLGITEMTEXT )
 HB_FUNC( WIN_GETDLGITEMTEXT )
 {
    USHORT iLen = SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1 ;
-   char *cText = ( char* ) hb_xgrab( iLen * sizeof( TCHAR ) );
+   LPTSTR cText = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
+   char * szText;
 
    GetDlgItemText( ( HWND ) hb_parnl( 1 ),   // handle of dialog box
                    hb_parni( 2 ),            // identifier of control
-                   ( LPTSTR ) cText,         // address of buffer for text
+                   cText,                    // address of buffer for text
                    iLen                      // maximum size of string
                  );
 
-   hb_retc( HB_TCHAR_CONVFROM( cText ) );
+
+   szText = HB_TCHAR_CONVFROM( cText );
+   hb_retc( szText );
+   HB_TCHAR_FREE( szText );
    HB_TCHAR_FREE( cText );
 }
 
@@ -2273,7 +2283,7 @@ HB_FUNC( WVT__GETOPENFILENAME )
       hb_stornl( ofn.nFilterIndex, 8 );
       hb_storclen( szFileName, size, 2 ) ;
       hb_retc( szFileName );
-
+      HB_TCHAR_FREE( szFileName );
    }
    else
    {

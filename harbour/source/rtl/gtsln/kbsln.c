@@ -307,14 +307,14 @@ int hb_sln_Init_Terminal( int phase )
 
 /* *********************************************************************** */
 
-int hb_gt_sln_ReadKey( int iEventMask )
+int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
 {
    static int InDeadState = FALSE;
    unsigned int ch, tmp, kbdflags;
    BOOL fInput;
    int iKey;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_ReadKey(%d)", (int) iEventMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_ReadKey(%p,%d)", pGT, (int) iEventMask));
 
    /* user AbortKey break */
    if( SLKeyBoard_Quit == 1 )
@@ -331,7 +331,7 @@ int hb_gt_sln_ReadKey( int iEventMask )
 
       /* TODO: we need here some kind of screen redrawing */
       /*SLsmg_refresh();*/
-      hb_gt_Resize( SLtt_Screen_Rows, SLtt_Screen_Cols );
+      HB_GTSELF_RESIZE( pGT, SLtt_Screen_Rows, SLtt_Screen_Cols );
    }
 
    fInput = SLang_input_pending( 0 ) != 0;

@@ -54,58 +54,86 @@
 
 HB_EXPORT int  hb_inkey( BOOL fWait, double dSeconds, int iEventMask )
 {
+   PHB_GT pGT;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_inkey(%d, %f, %d)", (int) fWait, dSeconds, iEventMask));
 
-   return hb_inkey_Get( fWait, dSeconds, iEventMask );
+   pGT = hb_gt_Base();
+   return pGT ? HB_GTSELF_INKEYGET( pGT, fWait, dSeconds, iEventMask ) : 0;
 }
 
 HB_EXPORT void hb_inkeyPut( int iKey )
 {
+   PHB_GT pGT;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyPut(%d)", iKey));
 
-   hb_inkey_Put( iKey );
+   pGT = hb_gt_Base();
+   if( pGT )
+      HB_GTSELF_INKEYPUT( pGT, iKey );
 }
 
 HB_EXPORT int  hb_inkeyLast( int iEventMask )
 {
+   PHB_GT pGT;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyLast(%d)", iEventMask));
 
-   return hb_inkey_Last( iEventMask );
+   pGT = hb_gt_Base();
+   return pGT ? HB_GTSELF_INKEYLAST( pGT, iEventMask ) : 0;
 }
 
 HB_EXPORT int  hb_inkeyNext( int iEventMask )
 {
+   PHB_GT pGT;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyNext(%d)", iEventMask));
 
-   return hb_inkey_Next( iEventMask );
+   pGT = hb_gt_Base();
+   return pGT ? HB_GTSELF_INKEYNEXT( pGT, iEventMask ) : 0;
 }
 
 HB_EXPORT void hb_inkeyPoll( void )
 {
+   PHB_GT pGT;
+
    HB_TRACE( HB_TR_DEBUG, ("hb_inkeyPoll()") );
 
-   hb_inkey_Poll();
+   pGT = hb_gt_Base();
+   if( pGT )
+      HB_GTSELF_INKEYPOLL( pGT );
 }
 
 HB_EXPORT int  hb_inkeySetLast( int iKey )
 {
+   PHB_GT pGT;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeySetLast(%d)", iKey));
 
-   return hb_inkey_SetLast( iKey );
+   pGT = hb_gt_Base();
+   return pGT ? HB_GTSELF_INKEYSETLAST( pGT, iKey ) : 0;
 }
 
 HB_EXPORT void hb_inkeySetText( const char * szText, ULONG ulLen )
 {
+   PHB_GT pGT;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeySetText(%s,%lu)", szText, ulLen));
 
-   hb_inkey_SetText( szText, ulLen );
+   pGT = hb_gt_Base();
+   if( pGT )
+      HB_GTSELF_INKEYSETTEXT( pGT, szText, ulLen );
 }
 
 HB_EXPORT void hb_inkeyReset( void )
 {
+   PHB_GT pGT;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_inkeyReset()"));
 
-   hb_inkey_Reset();
+   pGT = hb_gt_Base();
+   if( pGT )
+      HB_GTSELF_INKEYRESET( pGT );
 }
 
 HB_EXPORT void hb_inkeySetCancelKeys( int iCancelKey, int iCancelKeyEx )

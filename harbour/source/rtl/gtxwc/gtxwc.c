@@ -62,10 +62,12 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTSUPER   (&SuperTable)
 #define HB_GTID_PTR  (&s_GtId)
 
+#define HB_GTXWC_GET(p) ( ( PXWND_DEF ) HB_GTLOCAL( p ) )
+
 /* mouse button mapping into Clipper keycodes */
-static int mousePressKeys[ XWC_MAX_BUTTONS ]    = { K_LBUTTONDOWN, K_MBUTTONDOWN, K_RBUTTONDOWN, K_MWFORWARD, K_MWBACKWARD };
-static int mouseReleaseKeys[ XWC_MAX_BUTTONS ]  = { K_LBUTTONUP,   K_MBUTTONUP,   K_RBUTTONUP   };
-static int mouseDblPressKeys[ XWC_MAX_BUTTONS ] = { K_LDBLCLK,     K_MDBLCLK,     K_RDBLCLK    , K_MWFORWARD, K_MWBACKWARD };
+static const int mousePressKeys[ XWC_MAX_BUTTONS ]    = { K_LBUTTONDOWN, K_MBUTTONDOWN, K_RBUTTONDOWN, K_MWFORWARD, K_MWBACKWARD };
+static const int mouseReleaseKeys[ XWC_MAX_BUTTONS ]  = { K_LBUTTONUP,   K_MBUTTONUP,   K_RBUTTONUP   };
+static const int mouseDblPressKeys[ XWC_MAX_BUTTONS ] = { K_LDBLCLK,     K_MDBLCLK,     K_RDBLCLK    , K_MWFORWARD, K_MWBACKWARD };
 
 typedef struct tag_ClipKeyCode {
     int key;
@@ -322,6 +324,8 @@ typedef struct tag_modifiers
 
 typedef struct tag_x_wnddef
 {
+   PHB_GT pGT;
+
    Display *dpy;
    Window window;
    GC gc;
@@ -336,6 +340,9 @@ typedef struct tag_x_wnddef
    BOOL fInit;
    /* is anything written to screen */
    BOOL fData;
+
+   /* block recursive refresh calls */
+   BOOL fRefresh;
 
    /* window size in character cells */
    USHORT cols;
@@ -386,6 +393,10 @@ typedef struct tag_x_wnddef
    int lastCursorCol;
    int lastCursorRow;
    int lastCursorType;
+
+   BOOL cursorState;
+   ULONG cursorBlinkRate;
+   ULONG cursorStateTime;
 
    /* Mouse informations */
    int mouseCol;
@@ -441,10 +452,6 @@ static void hb_gt_xwc_InvalidatePts( PXWND_DEF wnd, int left, int top, int right
 static PXWND_DEF s_wnd = NULL;
 static BOOL s_fNoXServer = FALSE;
 
-static BOOL s_cursorState = TRUE;
-static ULONG s_cursorBlinkRate = 350;
-static ULONG s_cursorStateTime = 0;
-
 #if 1
 static int s_updateMode = XWC_SYNC_UPDATE;
 #else
@@ -471,13 +478,15 @@ static int s_errorHandler( Display *dpy, XErrorEvent *e )
 
 static void hb_gt_xwc_SigHandler( int iSig )
 {
+   PXWND_DEF wnd = s_wnd;
+
    HB_SYMBOL_UNUSED( iSig );
 
-   if( s_updateMode == XWC_ASYNC_UPDATE && s_wnd && s_wnd->fInit )
+   if( s_updateMode == XWC_ASYNC_UPDATE && wnd && wnd->fInit )
    {
       if( s_iUpdateCounter )
          --s_iUpdateCounter;
-      hb_gt_xwc_ProcessMessages( s_wnd );
+      hb_gt_xwc_ProcessMessages( wnd );
    }
 }
 
@@ -2038,7 +2047,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
             {
                Time evtTime = ((XButtonEvent *) evt)->time;
                if( evtTime - wnd->mouseButtonsTime[ button ] <
-                   ( Time ) hb_mouse_GetDoubleClickSpeed() )
+                   ( Time ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( wnd->pGT ) )
                {
                   key = mouseDblPressKeys[ button ];
                }
@@ -2478,7 +2487,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
        */
       while( icol <= colStop )
       {
-         hb_gt_GetScrChar( irow, icol, &color, &attr, &usCh16 );
+         HB_GTSELF_GETSCRCHAR( wnd->pGT, irow, icol, &color, &attr, &usCh16 );
          ulCurr = hb_gt_xwc_HashCurrChar( attr, color, usCh16 );
          if( wnd->charTrans[ usCh16 ].inverse )
          {
@@ -2689,7 +2698,7 @@ static void hb_gt_xwc_InvalidatePts( PXWND_DEF wnd,
 
 static void hb_gt_xwc_UpdateCursor( PXWND_DEF wnd )
 {
-   int cursorType = s_cursorState ? wnd->cursorType : SC_NONE;
+   int cursorType = wnd->cursorState ? wnd->cursorType : SC_NONE;
 
    /* must the mouse cursor be positioned? */
    if( wnd->mouseGotoRow >= 0 && wnd->mouseGotoCol >= 0 )
@@ -2743,7 +2752,7 @@ static void hb_gt_xwc_UpdateCursor( PXWND_DEF wnd )
             BYTE color, attr;
             USHORT usChar;
 
-            hb_gt_GetScrChar( wnd->row, wnd->col, &color, &attr, &usChar );
+            HB_GTSELF_GETSCRCHAR( wnd->pGT, wnd->row, wnd->col, &color, &attr, &usChar );
             XSetForeground( wnd->dpy, wnd->gc, wnd->pixels[color & 0x0f] );
             XFillRectangle( wnd->dpy, wnd->window, wnd->gc,
                             basex, basey, wnd->fontWidth, size );
@@ -2816,8 +2825,8 @@ static void hb_gt_xwc_UpdateSize( PXWND_DEF wnd )
    if( wnd->fWinResize )
    {
       wnd->fWinResize = FALSE;
-      hb_gtSetMode( wnd->newHeight / wnd->fontHeight,
-                    wnd->newWidth / wnd->fontWidth );
+      HB_GTSELF_SETMODE( wnd->pGT, wnd->newHeight / wnd->fontHeight,
+                                   wnd->newWidth / wnd->fontWidth );
    }
 }
 
@@ -2838,18 +2847,18 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd )
 
    if( wnd->cursorType != SC_NONE )
    {
-      if( s_cursorBlinkRate == 0 )
+      if( wnd->cursorBlinkRate == 0 )
       {
-         s_cursorState = TRUE;
+         wnd->cursorState = TRUE;
       }
       else
       {
          ULONG ulCurrentTime = hb_gt_xwc_CurrentTime();
 
-         if( ulCurrentTime - s_cursorStateTime > s_cursorBlinkRate )
+         if( ulCurrentTime - wnd->cursorStateTime > wnd->cursorBlinkRate )
          {
-            s_cursorState = !s_cursorState;
-            s_cursorStateTime = ulCurrentTime;
+            wnd->cursorState = !wnd->cursorState;
+            wnd->cursorStateTime = ulCurrentTime;
          }
       }
    }
@@ -2894,7 +2903,7 @@ static void hb_gt_xwc_SetScrBuff( PXWND_DEF wnd, USHORT cols, USHORT rows )
 
       memset( wnd->pCurrScr, 0xFFFFFFFFL, iSize * sizeof( ULONG ) );
       hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
-      HB_GTSUPER_RESIZE( wnd->rows, wnd->cols );
+      HB_GTSUPER_RESIZE( wnd->pGT, wnd->rows, wnd->cols );
    }
 }
 
@@ -2965,7 +2974,7 @@ static BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, char *fontFace, char *weight, int 
 
 /* *********************************************************************** */
 
-static PXWND_DEF hb_gt_xwc_CreateWndDef( void )
+static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
 {
    PHB_FNAME pFileName;
    PXWND_DEF wnd = ( PXWND_DEF ) hb_xgrab( sizeof( XWND_DEF ) );
@@ -2973,6 +2982,7 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( void )
    /* clear whole structure */
    memset( wnd, 0, sizeof( XWND_DEF ) );
 
+   wnd->pGT = pGT;
    wnd->dpy = NULL;
    wnd->fInit = wnd->fData = FALSE;
    hb_gt_xwc_SetScrBuff( wnd, XWC_DEFAULT_COLS, XWC_DEFAULT_ROWS );
@@ -3228,7 +3238,7 @@ static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, char *szData, ULONG ulSize )
       else
       {
          char * cMsg = "Cannot set primary selection\r\n";
-         hb_gt_OutErr( ( BYTE * ) cMsg, strlen( cMsg ) );
+         HB_GTSELF_OUTERR( wnd->pGT, ( BYTE * ) cMsg, strlen( cMsg ) );
       }
    }
 }
@@ -3297,93 +3307,106 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_RealRefresh( void )
+static void hb_gt_xwc_RealRefresh( PXWND_DEF wnd )
 {
-   static BOOL s_fRefresh = FALSE;
+   hb_gt_xwc_Initialize( wnd );
 
-   hb_gt_xwc_Initialize( s_wnd );
-
-   if( s_updateMode == XWC_SYNC_UPDATE && !s_fRefresh )
+   if( s_updateMode == XWC_SYNC_UPDATE && !wnd->fRefresh )
    {
-      s_fRefresh = TRUE;
-      hb_gt_xwc_ProcessMessages( s_wnd );
-      s_fRefresh = FALSE;
+      wnd->fRefresh = TRUE;
+      hb_gt_xwc_ProcessMessages( wnd );
+      wnd->fRefresh = FALSE;
    }
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_LateRefresh( void )
+static void hb_gt_xwc_LateRefresh( PXWND_DEF wnd )
 {
-   if( s_wnd->fInit )
-      hb_gt_xwc_RealRefresh();
+   if( wnd->fInit )
+      hb_gt_xwc_RealRefresh( wnd );
 }
 
 /* *********************************************************************** */
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_xwc_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr));
+   PXWND_DEF wnd;
 
-   s_wnd = hb_gt_xwc_CreateWndDef();
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr));
 
-   HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSUPER_RESIZE( s_wnd->rows, s_wnd->cols );
-   hb_gt_SemiCold();
+   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+
+   wnd = hb_gt_xwc_CreateWndDef( pGT );
+   HB_GTLOCAL( pGT ) = wnd;
+
+   /* for signal handler */
+   s_wnd = wnd;
+
+   wnd->cursorState = TRUE;
+   wnd->cursorBlinkRate = 350;
+   wnd->cursorStateTime = 0;
+
+   HB_GTSUPER_RESIZE( pGT, wnd->rows, wnd->cols );
+   HB_GTSELF_SEMICOLD( pGT );
 
    /* For immediate connection to XSarver and screen Window show */
-   /* hb_gt_xwc_Initialize( s_wnd ); */
+   /* hb_gt_xwc_Initialize( wnd ); */
 
    /* For connection to XSarver only */
-   /* hb_gt_xwc_ConnectX( s_wnd, TRUE ); */
+   /* hb_gt_xwc_ConnectX( wnd, TRUE ); */
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_Exit( void )
+static void hb_gt_xwc_Exit( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_Exit()"));
+   PXWND_DEF wnd;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_Exit(%p)", pGT));
+
+   wnd = HB_GTXWC_GET( pGT );
 
    hb_gt_xwc_Disable();
+   HB_GTSUPER_EXIT( pGT );
 
-   HB_GTSUPER_EXIT();
-
-   if( s_wnd )
+   if( wnd )
    {
-      hb_gt_xwc_DestroyWndDef( s_wnd );
-      s_wnd = NULL;
+      hb_gt_xwc_DestroyWndDef( wnd );
    }
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_xwc_SetMode( int iRow, int iCol )
+static BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
 {
    BOOL fResult = FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_SetMode(%d, %d)", iRow, iCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_SetMode(%p,%d,%d)", pGT, iRow, iCol));
 
    if( iCol >= XWC_MIN_COLS && iRow >= XWC_MIN_ROWS &&
        iCol <= XWC_MAX_COLS && iRow <= XWC_MAX_ROWS )
    {
-      if( iCol == s_wnd->cols && iRow == s_wnd->rows )
+      PXWND_DEF wnd = HB_GTXWC_GET( pGT );
+
+      if( iCol == wnd->cols && iRow == wnd->rows )
       {
          fResult = TRUE;
-         HB_GTSUPER_RESIZE( s_wnd->rows, s_wnd->cols );
+         HB_GTSUPER_RESIZE( pGT, wnd->rows, wnd->cols );
       }
-      else if( !s_wnd->fInit )
+      else if( !wnd->fInit )
       {
-         hb_gt_xwc_SetScrBuff( s_wnd, iCol, iRow );
+         hb_gt_xwc_SetScrBuff( wnd, iCol, iRow );
          fResult = TRUE;
       }
       else
       {
          hb_gt_xwc_Disable();
-         fResult = hb_gt_xwc_Resize( s_wnd, iCol, iRow );
+         fResult = hb_gt_xwc_Resize( wnd, iCol, iRow );
          if( fResult )
-            HB_GTSUPER_RESIZE( s_wnd->rows, s_wnd->cols );
+            HB_GTSUPER_RESIZE( pGT, wnd->rows, wnd->cols );
          hb_gt_xwc_Enable();
       }
    }
@@ -3393,17 +3416,21 @@ static BOOL hb_gt_xwc_SetMode( int iRow, int iCol )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_xwc_GetBlink()
+static BOOL hb_gt_xwc_GetBlink( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_GetBlink()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_GetBlink(%p)", pGT));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    return FALSE;
 }
 
 /* *********************************************************************** */
 
-static char * hb_gt_xwc_Version( int iType )
+static char * hb_gt_xwc_Version( PHB_GT pGT, int iType )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
@@ -3412,18 +3439,20 @@ static char * hb_gt_xwc_Version( int iType )
 
 /* *********************************************************************** */
 
-static int hb_gt_xwc_ReadKey( int iEventMask )
+static int hb_gt_xwc_ReadKey( PHB_GT pGT, int iEventMask )
 {
+   PXWND_DEF wnd;
    int c = 0;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_wxc_gt_ReadKey(%p,%d)", pGT, iEventMask));
 
    HB_SYMBOL_UNUSED( iEventMask );
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_wxc_gt_ReadKey(%d)", iEventMask));
+   wnd = HB_GTXWC_GET( pGT );
+   hb_gt_xwc_LateRefresh( wnd );
+   /* hb_gt_xwc_RealRefresh( wnd ); */
 
-   hb_gt_xwc_LateRefresh();
-   /* hb_gt_xwc_RealRefresh(); */
-
-   if( hb_gt_xwc_GetCharFromInputQueue( s_wnd, &c ) )
+   if( hb_gt_xwc_GetCharFromInputQueue( wnd, &c ) )
       return c;
    else
       return 0;
@@ -3432,86 +3461,104 @@ static int hb_gt_xwc_ReadKey( int iEventMask )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_Tone( double dFrequency, double dDuration )
+static void hb_gt_xwc_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_Tone(%lf, %lf)", dFrequency, dDuration));
+   PXWND_DEF wnd;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
 
    /* The conversion from Clipper (DOS) timer tick units to
       milliseconds is * 1000.0 / 18.2. */
    dDuration /= 18.2;
 
-   if( s_wnd->dpy != NULL )
+   wnd = HB_GTXWC_GET( pGT );
+   if( wnd->dpy != NULL )
    {
       XKeyboardControl XkbCtrl;
 
       XkbCtrl.bell_pitch = (int) dFrequency;
       XkbCtrl.bell_duration = (int) (dDuration * 1000);
-      XChangeKeyboardControl( s_wnd->dpy, KBBellPitch | KBBellDuration, &XkbCtrl );
-      XBell( s_wnd->dpy, 0 );
+      XChangeKeyboardControl( wnd->dpy, KBBellPitch | KBBellDuration, &XkbCtrl );
+      XBell( wnd->dpy, 0 );
    }
    hb_idleSleep( dDuration );
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_xwc_mouse_IsPresent( void )
+static BOOL hb_gt_xwc_mouse_IsPresent( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_IsPresent()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_IsPresent(%p)", pGT));
 
-   return s_wnd->mouseNumButtons > 0;
+   return HB_GTXWC_GET( pGT )->mouseNumButtons > 0;
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_mouse_GetPos( int * piRow, int * piCol )
+static void hb_gt_xwc_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_GetPos(%p,%p)", piRow, piCol));
+   PXWND_DEF wnd;
 
-   hb_gt_xwc_LateRefresh();
-   *piRow = s_wnd->mouseRow;
-   *piCol = s_wnd->mouseCol;
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_GetPos(%p,%p,%p)", pGT, piRow, piCol));
+
+   wnd = HB_GTXWC_GET( pGT );
+   if( wnd )
+   {
+      hb_gt_xwc_LateRefresh( wnd );
+      *piRow = wnd->mouseRow;
+      *piCol = wnd->mouseCol;
+   }
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_mouse_SetPos( int iRow, int iCol )
+static void hb_gt_xwc_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_SetPos(%d,%d)", iRow, iCol));
+   PXWND_DEF wnd;
 
-   s_wnd->mouseGotoRow = iRow;
-   s_wnd->mouseGotoCol = iCol;
-   hb_gt_xwc_LateRefresh();
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_SetPos(%p,%d,%d)", pGT, iRow, iCol));
+
+   wnd = HB_GTXWC_GET( pGT );
+   wnd->mouseGotoRow = iRow;
+   wnd->mouseGotoCol = iCol;
+   hb_gt_xwc_LateRefresh( wnd );
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_xwc_mouse_ButtonState( int iButton )
+static BOOL hb_gt_xwc_mouse_ButtonState( PHB_GT pGT,int iButton )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_ButtonState(%i)", iButton));
+   PXWND_DEF wnd;
 
-   if( iButton >= 0 && iButton < s_wnd->mouseNumButtons )
-      return ( s_wnd->mouseButtonsState & 1 << iButton ) != 0;
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_ButtonState(%p,%i)", pGT, iButton));
+
+   wnd = HB_GTXWC_GET( pGT );
+   if( iButton >= 0 && iButton < wnd->mouseNumButtons )
+      return ( wnd->mouseButtonsState & 1 << iButton ) != 0;
    else
       return FALSE;
 }
 
 /* *********************************************************************** */
 
-static int hb_gt_xwc_mouse_CountButton( void )
+static int hb_gt_xwc_mouse_CountButton( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_CountButton()"));
+   PXWND_DEF wnd;
 
-   hb_gt_xwc_RealRefresh();
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_CountButton(%p)", pGT));
 
-   return s_wnd->mouseNumButtons;
+   wnd = HB_GTXWC_GET( pGT );
+   hb_gt_xwc_RealRefresh( wnd );
+
+   return wnd->mouseNumButtons;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_xwc_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
+static BOOL hb_gt_xwc_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
 
-   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
    /*
@@ -3529,11 +3576,13 @@ static BOOL hb_gt_xwc_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox
    if( pszHostCDP && *pszHostCDP )
    {
       PHB_CODEPAGE cdpHost = hb_cdpFind( pszHostCDP );
-      if( cdpHost && cdpHost != s_wnd->hostCDP )
+      PXWND_DEF wnd = HB_GTXWC_GET( pGT );
+
+      if( cdpHost && cdpHost != wnd->hostCDP )
       {
-         s_wnd->hostCDP = cdpHost;
-         if( s_wnd->fInit )
-            hb_gt_xwc_BuildCharTrans( s_wnd );
+         wnd->hostCDP = cdpHost;
+         if( wnd->fInit )
+            hb_gt_xwc_BuildCharTrans( wnd );
       }
    }
 #endif
@@ -3543,7 +3592,7 @@ static BOOL hb_gt_xwc_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_xwc_SetKeyCP( char * pszTermCDP, char * pszHostCDP )
+static BOOL hb_gt_xwc_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP )
 {
 #ifndef HB_CDP_SUPPORT_OFF
    /*
@@ -3566,10 +3615,11 @@ static BOOL hb_gt_xwc_SetKeyCP( char * pszTermCDP, char * pszHostCDP )
       PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP );
       if( cdpTerm )
       {
-         s_wnd->inCDP = cdpTerm;
+         HB_GTXWC_GET( pGT )->inCDP = cdpTerm;
       }
    }
 #else
+   HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( pszTermCDP );
    HB_SYMBOL_UNUSED( pszHostCDP );
 #endif
@@ -3590,20 +3640,22 @@ static int hb_gt_xwc_getKbdState( PXWND_DEF wnd )
    return iKbdState;
 }
 
-static BOOL hb_gt_xwc_Info( int iType, PHB_GT_INFO pInfo )
+static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
+   PXWND_DEF wnd;
    int iVal;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Info(%d,%p)", iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
-   if( !s_wnd->dpy )
+   wnd = HB_GTXWC_GET( pGT );
+   if( !wnd->dpy )
    {
       switch( iType )
       {
          case GTI_FULLSCREEN:
          case GTI_KBDSUPPORT:
          case GTI_ISGRAPHIC:
-            hb_gt_xwc_ConnectX( s_wnd, FALSE );
+            hb_gt_xwc_ConnectX( wnd, FALSE );
             break;
 
          case GTI_INPUTFD:
@@ -3614,7 +3666,7 @@ static BOOL hb_gt_xwc_Info( int iType, PHB_GT_INFO pInfo )
          case GTI_DESKTOPCOLS:
          case GTI_DESKTOPROWS:
          case GTI_CLIPBOARDDATA:
-            hb_gt_xwc_ConnectX( s_wnd, TRUE );
+            hb_gt_xwc_ConnectX( wnd, TRUE );
             break;
       }
    }
@@ -3624,48 +3676,48 @@ static BOOL hb_gt_xwc_Info( int iType, PHB_GT_INFO pInfo )
       case GTI_FULLSCREEN:
       case GTI_KBDSUPPORT:
       case GTI_ISGRAPHIC:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_wnd->dpy != NULL );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->dpy != NULL );
          break;
 
       case GTI_INPUTFD:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, ConnectionNumber( s_wnd->dpy ) );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, ConnectionNumber( wnd->dpy ) );
          break;
 
       case GTI_SCREENWIDTH:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_wnd->width );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->width );
          break;
 
       case GTI_SCREENHEIGHT:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_wnd->height );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->height );
          break;
 
       case GTI_SCREENDEPTH:
       case GTI_DESKTOPDEPTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult,
-                     DefaultDepth( s_wnd->dpy, DefaultScreen( s_wnd->dpy ) ) );
+                     DefaultDepth( wnd->dpy, DefaultScreen( wnd->dpy ) ) );
          break;
 
       case GTI_FONTSIZE:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_wnd->fontHeight );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->fontHeight );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 ) /* TODO */
-            s_wnd->fontHeight = iVal;
+            wnd->fontHeight = iVal;
          break;
 
       case GTI_FONTWIDTH:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_wnd->fontWidth );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->fontWidth );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 ) /* TODO */
-            s_wnd->fontWidth = iVal;
+            wnd->fontWidth = iVal;
          break;
 
       case GTI_FONTNAME:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, s_wnd->szFontName );
+         pInfo->pResult = hb_itemPutC( pInfo->pResult, wnd->szFontName );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) /* TODO */
          {
-            if( s_wnd->szFontName )
-               hb_xfree( s_wnd->szFontName );
-            s_wnd->szFontName = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
+            if( wnd->szFontName )
+               hb_xfree( wnd->szFontName );
+            wnd->szFontName = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
          }
          break;
 
@@ -3675,7 +3727,7 @@ static BOOL hb_gt_xwc_Info( int iType, PHB_GT_INFO pInfo )
       case GTI_DESKTOPROWS:
       {
          XWindowAttributes wndAttr;
-         XGetWindowAttributes( s_wnd->dpy, DefaultRootWindow( s_wnd->dpy ), &wndAttr );
+         XGetWindowAttributes( wnd->dpy, DefaultRootWindow( wnd->dpy ), &wndAttr );
          switch( iType )
          {
             case GTI_DESKTOPWIDTH:
@@ -3685,10 +3737,10 @@ static BOOL hb_gt_xwc_Info( int iType, PHB_GT_INFO pInfo )
                iVal = wndAttr.height;
                break;
             case GTI_DESKTOPCOLS:
-               iVal = wndAttr.width / s_wnd->fontWidth;
+               iVal = wndAttr.width / wnd->fontWidth;
                break;
             case GTI_DESKTOPROWS:
-               iVal = wndAttr.height / s_wnd->fontHeight;
+               iVal = wndAttr.height / wnd->fontHeight;
                break;
             default:
                iVal = 0;
@@ -3698,74 +3750,76 @@ static BOOL hb_gt_xwc_Info( int iType, PHB_GT_INFO pInfo )
       }
 
       case GTI_WINTITLE:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, s_wnd->szTitle );
+         pInfo->pResult = hb_itemPutC( pInfo->pResult, wnd->szTitle );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            if( s_wnd->szTitle )
-               hb_xfree( s_wnd->szTitle );
+            if( wnd->szTitle )
+               hb_xfree( wnd->szTitle );
 
             if( hb_itemGetCLen( pInfo->pNewVal ) > 0 )
-               s_wnd->szTitle = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
+               wnd->szTitle = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
             else
-               s_wnd->szTitle = NULL;
+               wnd->szTitle = NULL;
 
-            s_wnd->fDspTitle = TRUE;
+            wnd->fDspTitle = TRUE;
          }
          break;
 
       case GTI_VIEWMAXWIDTH:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_wnd->cols );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->cols );
          break;
 
       case GTI_VIEWMAXHEIGHT:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_wnd->rows );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->rows );
          break;
 
       case GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            hb_gt_xwc_RealRefresh();
-            hb_gt_xwc_SetSelection( s_wnd, hb_itemGetCPtr( pInfo->pNewVal ),
+            hb_gt_xwc_RealRefresh( wnd );
+            hb_gt_xwc_SetSelection( wnd, hb_itemGetCPtr( pInfo->pNewVal ),
                                            hb_itemGetCLen( pInfo->pNewVal ) );
-            hb_gt_xwc_RealRefresh();
+            hb_gt_xwc_RealRefresh( wnd );
          }
          else
          {
-            hb_gt_xwc_RealRefresh();
-            hb_gt_xwc_RequestSelection( s_wnd );
+            hb_gt_xwc_RealRefresh( wnd );
+            hb_gt_xwc_RequestSelection( wnd );
             pInfo->pResult = hb_itemPutCL( pInfo->pResult,
-                                           ( char * ) s_wnd->ClipboardData,
-                                           s_wnd->ClipboardSize );
+                                           ( char * ) wnd->ClipboardData,
+                                           wnd->ClipboardSize );
          }
          break;
 
       case GTI_CURSORBLINKRATE:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_cursorBlinkRate );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->cursorBlinkRate );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
-            s_cursorBlinkRate = hb_itemGetNI( pInfo->pNewVal );
+            wnd->cursorBlinkRate = hb_itemGetNI( pInfo->pNewVal );
          break;
 
       case GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult,
-                                        hb_gt_xwc_getKbdState( s_wnd ) );
+                                        hb_gt_xwc_getKbdState( wnd ) );
          break;
 
       default:
-         return HB_GTSUPER_INFO( iType, pInfo );
+         return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
    return TRUE;
 }
 
-static int hb_gt_xwc_gfx_Primitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
+static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
+   PXWND_DEF wnd;
    int iRet = 1;
    XColor color;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_gfx_Primitive(%d, %d, %d, %d, %d, %d)", iType, iTop, iLeft, iBottom, iRight, iColor ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_gfx_Primitive(%p,%d,%d,%d,%d,%d,%d)", pGT, iType, iTop, iLeft, iBottom, iRight, iColor ) );
 
-   hb_gt_xwc_Initialize( s_wnd );
-   hb_gt_Refresh();
+   wnd = HB_GTXWC_GET( pGT );
+   hb_gt_xwc_Initialize( wnd );
+   HB_GTSELF_REFRESH( pGT );
 
    switch( iType )
    {
@@ -3783,32 +3837,32 @@ static int hb_gt_xwc_gfx_Primitive( int iType, int iTop, int iLeft, int iBottom,
          color.green = iLeft * 256;
          color.blue = iBottom * 256;
          color.flags = DoRed | DoGreen | DoBlue;
-         hb_gt_xwc_AllocColor( s_wnd, &color );
+         hb_gt_xwc_AllocColor( wnd, &color );
          iRet = color.pixel;
          break;
 
       case GFX_CLIPTOP:
-         iRet = s_wnd->ClipRect.y;
+         iRet = wnd->ClipRect.y;
          break;
 
       case GFX_CLIPLEFT:
-         iRet = s_wnd->ClipRect.x;
+         iRet = wnd->ClipRect.x;
          break;
 
       case GFX_CLIPBOTTOM:
-         iRet = s_wnd->ClipRect.y + s_wnd->ClipRect.height - 1;
+         iRet = wnd->ClipRect.y + wnd->ClipRect.height - 1;
          break;
 
       case GFX_CLIPRIGHT:
-         iRet = s_wnd->ClipRect.x + s_wnd->ClipRect.width - 1;
+         iRet = wnd->ClipRect.x + wnd->ClipRect.width - 1;
          break;
 
       case GFX_SETCLIP:
-         s_wnd->ClipRect.y = iTop;
-         s_wnd->ClipRect.x = iLeft;
-         s_wnd->ClipRect.width = iBottom;
-         s_wnd->ClipRect.height = iRight;
-         XSetClipRectangles( s_wnd->dpy, s_wnd->gc, 0, 0, &s_wnd->ClipRect, 1, YXBanded );
+         wnd->ClipRect.y = iTop;
+         wnd->ClipRect.x = iLeft;
+         wnd->ClipRect.width = iBottom;
+         wnd->ClipRect.height = iRight;
+         XSetClipRectangles( wnd->dpy, wnd->gc, 0, 0, &wnd->ClipRect, 1, YXBanded );
          break;
 
       case GFX_DRAWINGMODE:
@@ -3821,76 +3875,76 @@ static int hb_gt_xwc_gfx_Primitive( int iType, int iTop, int iLeft, int iBottom,
          break;
 
       case GFX_PUTPIXEL:
-         XSetForeground( s_wnd->dpy, s_wnd->gc, iBottom );
-         XDrawPoint( s_wnd->dpy, s_wnd->drw, s_wnd->gc, iLeft, iTop );
-         hb_gt_xwc_InvalidatePts( s_wnd, iLeft, iTop, iLeft, iTop );
+         XSetForeground( wnd->dpy, wnd->gc, iBottom );
+         XDrawPoint( wnd->dpy, wnd->drw, wnd->gc, iLeft, iTop );
+         hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iLeft, iTop );
          break;
 
       case GFX_LINE:
-         XSetForeground( s_wnd->dpy, s_wnd->gc, iColor );
-         XDrawLine( s_wnd->dpy, s_wnd->drw, s_wnd->gc,
+         XSetForeground( wnd->dpy, wnd->gc, iColor );
+         XDrawLine( wnd->dpy, wnd->drw, wnd->gc,
                     iLeft, iTop, iRight, iBottom );
-         hb_gt_xwc_InvalidatePts( s_wnd, iLeft, iTop, iRight, iBottom );
+         hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iRight, iBottom );
          break;
 
       case GFX_RECT:
-         XSetForeground( s_wnd->dpy, s_wnd->gc, iColor );
-         XDrawRectangle( s_wnd->dpy, s_wnd->drw, s_wnd->gc,
+         XSetForeground( wnd->dpy, wnd->gc, iColor );
+         XDrawRectangle( wnd->dpy, wnd->drw, wnd->gc,
                          iLeft, iTop, iRight - iLeft, iBottom - iTop );
-         hb_gt_xwc_InvalidatePts( s_wnd, iLeft, iTop, iRight, iBottom );
+         hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iRight, iBottom );
          break;
 
       case GFX_FILLEDRECT:
-         XSetForeground( s_wnd->dpy, s_wnd->gc, iColor );
-         XFillRectangle( s_wnd->dpy, s_wnd->drw, s_wnd->gc,
+         XSetForeground( wnd->dpy, wnd->gc, iColor );
+         XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                          iLeft, iTop, iRight - iLeft, iBottom - iTop );
-         hb_gt_xwc_InvalidatePts( s_wnd, iLeft, iTop, iRight, iBottom );
+         hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iRight, iBottom );
          break;
 
       case GFX_CIRCLE:
-         XSetForeground( s_wnd->dpy, s_wnd->gc, iRight );
-         XDrawArc( s_wnd->dpy, s_wnd->drw, s_wnd->gc,
+         XSetForeground( wnd->dpy, wnd->gc, iRight );
+         XDrawArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iBottom, iBottom, 0, 360*64 );
-         hb_gt_xwc_InvalidatePts( s_wnd, iLeft - iBottom, iTop - iBottom,
-                                         iLeft + iBottom, iTop + iBottom );
+         hb_gt_xwc_InvalidatePts( wnd, iLeft - iBottom, iTop - iBottom,
+                                       iLeft + iBottom, iTop + iBottom );
          break;
 
       case GFX_FILLEDCIRCLE:
-         XSetForeground( s_wnd->dpy, s_wnd->gc, iRight );
-         XFillArc( s_wnd->dpy, s_wnd->drw, s_wnd->gc,
+         XSetForeground( wnd->dpy, wnd->gc, iRight );
+         XFillArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iBottom, iBottom, 0, 360*64 );
-         hb_gt_xwc_InvalidatePts( s_wnd, iLeft - iBottom, iTop - iBottom,
-                                         iLeft + iBottom, iTop + iBottom );
+         hb_gt_xwc_InvalidatePts( wnd, iLeft - iBottom, iTop - iBottom,
+                                       iLeft + iBottom, iTop + iBottom );
          break;
 
       case GFX_ELLIPSE:
-         XSetForeground( s_wnd->dpy, s_wnd->gc, iColor );
-         XDrawArc( s_wnd->dpy, s_wnd->drw, s_wnd->gc,
+         XSetForeground( wnd->dpy, wnd->gc, iColor );
+         XDrawArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iRight, iBottom, 0, 360*64 );
-         hb_gt_xwc_InvalidatePts( s_wnd, iLeft - iRight, iTop - iBottom,
-                                         iLeft + iRight, iTop + iBottom );
+         hb_gt_xwc_InvalidatePts( wnd, iLeft - iRight, iTop - iBottom,
+                                       iLeft + iRight, iTop + iBottom );
          break;
 
       case GFX_FILLEDELLIPSE:
-         XSetForeground( s_wnd->dpy, s_wnd->gc, iColor );
-         XFillArc( s_wnd->dpy, s_wnd->drw, s_wnd->gc,
+         XSetForeground( wnd->dpy, wnd->gc, iColor );
+         XFillArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iRight, iBottom, 0, 360*64 );
-         hb_gt_xwc_InvalidatePts( s_wnd, iLeft - iRight, iTop - iBottom,
-                                         iLeft + iRight, iTop + iBottom );
+         hb_gt_xwc_InvalidatePts( wnd, iLeft - iRight, iTop - iBottom,
+                                       iLeft + iRight, iTop + iBottom );
          break;
 
       case GFX_FLOODFILL:
          /* TODO: */
-         hb_gt_xwc_InvalidatePts( s_wnd, 0, 0, s_wnd->width, s_wnd->height );
+         hb_gt_xwc_InvalidatePts( wnd, 0, 0, wnd->width, wnd->height );
          break;
 
       default:
-         return HB_GTSUPER_GFXPRIMITIVE( iType, iTop, iLeft, iBottom, iRight, iColor );
+         return HB_GTSUPER_GFXPRIMITIVE( pGT, iType, iTop, iLeft, iBottom, iRight, iColor );
    }
 
-   if ( hb_gt_DispCount() == 0 )
+   if ( HB_GTSELF_DISPCOUNT( pGT ) == 0 )
    {
-      hb_gt_xwc_RealRefresh();
+      hb_gt_xwc_RealRefresh( wnd );
    }
 
    return iRet;
@@ -3898,64 +3952,70 @@ static int hb_gt_xwc_gfx_Primitive( int iType, int iTop, int iLeft, int iBottom,
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_Redraw( int iRow, int iCol, int iSize )
+static void hb_gt_xwc_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
+   PXWND_DEF wnd;
 
-   if( s_wnd && !s_fNoXServer )
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
+
+   wnd = HB_GTXWC_GET( pGT );
+   if( wnd && !s_fNoXServer )
    {
-      if( s_wnd->fInit )
+      if( wnd->fInit )
       {
 #if 1
-         hb_gt_xwc_InvalidateChar( s_wnd, iCol, iRow, iCol + iSize - 1, iRow );
+         hb_gt_xwc_InvalidateChar( wnd, iCol, iRow, iCol + iSize - 1, iRow );
 #else
-         hb_gt_xwc_RepaintChar( s_wnd, iCol, iRow, iCol + iSize - 1, iRow );
-         iCol *= s_wnd->fontWidth;
-         iRow *= s_wnd->fontHeight;
-         hb_gt_xwc_InvalidatePts( s_wnd, iCol, iRow,
-                                  iCol + iSize * s_wnd->fontWidth - 1,
-                                  iRow + s_wnd->fontHeight - 1 );
+         hb_gt_xwc_RepaintChar( wnd, iCol, iRow, iCol + iSize - 1, iRow );
+         iCol *= wnd->fontWidth;
+         iRow *= wnd->fontHeight;
+         hb_gt_xwc_InvalidatePts( wnd, iCol, iRow,
+                                  iCol + iSize * wnd->fontWidth - 1,
+                                  iRow + wnd->fontHeight - 1 );
 #endif
       }
 #if 0
-      else if( !s_wnd->fData )
+      else if( !wnd->fData )
       {
-         BYTE bDefColor = hb_gt_GetColor();
+         BYTE bDefColor = HB_GTSELF_GETCOLOR( pGT );
          BYTE bColor, bAttr;
          USHORT usChar;
 
          while( iSize-- )
          {
-            if( !hb_gt_GetScrChar( iRow, iCol++, &bColor, &bAttr, &usChar ) )
+            if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &bColor, &bAttr, &usChar ) )
                break;
             if( bColor != bDefColor || usChar != ' ' )
             {
-               s_wnd->fData = TRUE;
+               wnd->fData = TRUE;
                break;
             }
          }
       }
 #else
       else
-         s_wnd->fData = TRUE;
+         wnd->fData = TRUE;
 #endif
    }
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_Refresh( void )
+static void hb_gt_xwc_Refresh( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Refresh()") );
+   PXWND_DEF wnd;
 
-   HB_GTSUPER_REFRESH();
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Refresh(%p)", pGT) );
 
-   if( s_wnd && !s_fNoXServer )
+   wnd = HB_GTXWC_GET( pGT );
+   HB_GTSUPER_REFRESH( pGT );
+
+   if( wnd && !s_fNoXServer )
    {
-      hb_gt_GetScrCursor( &s_wnd->row, &s_wnd->col, &s_wnd->cursorType );
+      HB_GTSELF_GETSCRCURSOR( pGT, &wnd->row, &wnd->col, &wnd->cursorType );
 
-      if( s_wnd->fInit || s_wnd->fData )
-         hb_gt_xwc_RealRefresh();
+      if( wnd->fInit || wnd->fData )
+         hb_gt_xwc_RealRefresh( wnd );
    }
 }
 

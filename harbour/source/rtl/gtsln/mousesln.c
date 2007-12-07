@@ -138,19 +138,19 @@ static void hb_sln_CheckDoubleClick()
       {
          if ( TIMEVAL_LESS( evtTime, mLeftDblckTime ) )
             s_usMouseState |= M_BUTTON_LDBLCK;
-         TIMEVAL_ADD( mLeftDblckTime, evtTime, hb_mouse_GetDoubleClickSpeed() );
+         TIMEVAL_ADD( mLeftDblckTime, evtTime, hb_mouseGetDoubleClickSpeed() );
       }
       if( usNewButtons & M_BUTTON_MIDDLE )
       {
          if ( TIMEVAL_LESS( evtTime, mMiddleDblckTime ) )
             s_usMouseState |= M_BUTTON_MDBLCK;
-         TIMEVAL_ADD( mMiddleDblckTime, evtTime, hb_mouse_GetDoubleClickSpeed() );
+         TIMEVAL_ADD( mMiddleDblckTime, evtTime, hb_mouseGetDoubleClickSpeed() );
       }
       if( usNewButtons & M_BUTTON_RIGHT )
       {
          if ( TIMEVAL_LESS( evtTime, mRightDblckTime ) )
             s_usMouseState |= M_BUTTON_RDBLCK;
-         TIMEVAL_ADD( mRightDblckTime, evtTime, hb_mouse_GetDoubleClickSpeed() );
+         TIMEVAL_ADD( mRightDblckTime, evtTime, hb_mouseGetDoubleClickSpeed() );
       }
    }
 }
@@ -429,15 +429,19 @@ void hb_gt_sln_mouse_Exit( void )
 
 /* *********************************************************************** */
 
-BOOL hb_gt_sln_mouse_IsPresent( void )
+BOOL hb_gt_sln_mouse_IsPresent( PHB_GT pGT )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    return s_bMousePresent;
 }
 
 /* *********************************************************************** */
 
-void hb_gt_sln_mouse_Show( void )
+void hb_gt_sln_mouse_Show( PHB_GT pGT )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
 #ifdef HAVE_GPM_H
    gpm_visiblepointer = 1;
    if( hb_sln_UnderLinuxConsole && s_bMousePresent )
@@ -448,8 +452,10 @@ void hb_gt_sln_mouse_Show( void )
 
 /* *********************************************************************** */
 
-void hb_gt_sln_mouse_Hide( void )
+void hb_gt_sln_mouse_Hide( PHB_GT pGT )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
 #ifdef HAVE_GPM_H
    gpm_visiblepointer = 0;
 #endif
@@ -458,16 +464,20 @@ void hb_gt_sln_mouse_Hide( void )
 
 /* *********************************************************************** */
 
-void hb_gt_sln_mouse_GetPos( int * piRow, int * piCol )
+void hb_gt_sln_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    *piRow = s_iMouseRow;
    *piCol = s_iMouseCol;
 }
 
 /* *********************************************************************** */
 
-void hb_gt_sln_mouse_SetPos( int iRow, int iCol )
+void hb_gt_sln_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    /* it does really nothing */
    s_iMouseRow = iRow;
    s_iMouseCol = iCol;
@@ -480,8 +490,10 @@ void hb_gt_sln_mouse_SetPos( int iRow, int iCol )
 
 /* *********************************************************************** */
 
-BOOL hb_gt_sln_mouse_ButtonState( int iButton )
+BOOL hb_gt_sln_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    switch( iButton )
    {
       case 0:
@@ -497,9 +509,11 @@ BOOL hb_gt_sln_mouse_ButtonState( int iButton )
 
 /* *********************************************************************** */
 
-int hb_gt_sln_mouse_CountButton( void )
+int hb_gt_sln_mouse_CountButton( PHB_GT pGT )
 {
-   return( s_iMouseButtons );
+   HB_SYMBOL_UNUSED( pGT );
+
+   return s_iMouseButtons;
 }
 
 /* *********************************************************************** */

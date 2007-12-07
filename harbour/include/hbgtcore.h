@@ -111,148 +111,150 @@
 /* forward declaration */
 struct _HB_GT_BASE;
 
+#define HB_GT_PTR       struct _HB_GT_BASE *
+
 typedef struct
 {
-   void     (* Init) ( FHANDLE, FHANDLE, FHANDLE );
-   void     (* Exit) ( void );
-   void *   (* New) ( void );
-   void     (* Free) ( void * );
-   BOOL     (* Resize ) ( int, int );
-   BOOL     (* SetMode) ( int, int );
-   void     (* GetSize) ( int *, int * );
-   void     (* SemiCold) ( void );
-   void     (* ColdArea) ( int, int, int, int );
-   void     (* ExposeArea) ( int, int, int, int );
-   void     (* ScrollArea) ( int, int, int, int, BYTE, BYTE, int, int );
-   void     (* TouchCell) ( int, int );
-   void     (* Redraw) ( int, int, int );
-   void     (* Refresh) ( void );
-   void     (* Flush) ( void );
-   int      (* MaxCol) ( void );
-   int      (* MaxRow) ( void );
-   BOOL     (* CheckPos) ( int, int, long * );
-   void     (* SetPos) ( int, int );
-   void     (* GetPos) ( int *, int * );
-   BOOL     (* IsColor) ( void );
-   void     (* GetColorStr) ( char * );
-   void     (* SetColorStr) ( const char * );
-   void     (* ColorSelect) ( int );
-   int      (* GetColor) ( void );
-   int      (* ColorNum) ( const char * );
-   void     (* ColorsToString) ( int *, int, char *, int );
-   void     (* StringToColors) ( const char *, int **, int * );
-   void     (* GetColorData) ( int **, int *, int * );
-   int      (* GetClearColor) ( void );
-   void     (* SetClearColor) ( int );
-   int      (* GetClearChar) ( void );
-   void     (* SetClearChar) ( int );
-   int      (* GetCursorStyle) ( void );
-   void     (* SetCursorStyle) ( int );
-   void     (* GetScrCursor) ( int *, int *, int * );
-   BOOL     (* GetScrChar) ( int, int, BYTE *, BYTE *, USHORT * );
-   BOOL     (* PutScrChar) ( int, int, BYTE, BYTE, USHORT );
-   void     (* DispBegin) ( void );
-   void     (* DispEnd) ( void );
-   int      (* DispCount) ( void );
-   BOOL     (* GetChar) ( int, int, BYTE *, BYTE *, USHORT * );
-   BOOL     (* PutChar) ( int, int, BYTE, BYTE, USHORT );
-   long     (* RectSize) ( int, int, int, int );
-   void     (* Save) ( int, int, int, int, BYTE * );
-   void     (* Rest) ( int, int, int, int, BYTE * );
-   void     (* PutText) ( int, int, BYTE, BYTE *, ULONG );
-   void     (* Replicate) ( int, int, BYTE, BYTE, USHORT, ULONG );
-   void     (* WriteAt) ( int, int, BYTE *, ULONG );
-   void     (* Write) ( BYTE *, ULONG );
-   void     (* WriteCon) ( BYTE *, ULONG );
-   void     (* SetAttribute) ( int, int, int, int, BYTE );
-   void     (* DrawShadow) ( int, int, int, int, BYTE );
-   void     (* Scroll) ( int, int, int, int, BYTE, BYTE, int, int );
-   void     (* ScrollUp) ( int, BYTE, BYTE );
-   void     (* Box) ( int, int, int, int, BYTE *, BYTE );
-   void     (* BoxD) ( int, int, int, int, BYTE *, BYTE );
-   void     (* BoxS) ( int, int, int, int, BYTE *, BYTE );
-   void     (* HorizLine) ( int, int, int, BYTE, BYTE );
-   void     (* VertLine) ( int, int, int, BYTE, BYTE );
-   BOOL     (* GetBlink) ( void );
-   void     (* SetBlink) ( BOOL );
-   void     (* SetSnowFlag) ( BOOL );
-   char *   (* Version) ( int );
-   BOOL     (* Suspend) ( void );
-   BOOL     (* Resume) ( void );
-   BOOL     (* PreExt) ( void );
-   BOOL     (* PostExt) ( void );
-   void     (* OutStd) ( BYTE *, ULONG );
-   void     (* OutErr) ( BYTE *, ULONG );
-   void     (* Tone) ( double, double );
-   void     (* Bell) ( void );
-   BOOL     (* Info) ( int, PHB_GT_INFO );
-   int      (* Alert) ( PHB_ITEM, PHB_ITEM, int, int, double );
-   int      (* SetFlag) ( int, int );
+   void     (* Init) ( HB_GT_PTR, FHANDLE, FHANDLE, FHANDLE );
+   void     (* Exit) ( HB_GT_PTR );
+   void *   (* New) ( HB_GT_PTR );
+   void     (* Free) ( HB_GT_PTR );
+   BOOL     (* Resize ) ( HB_GT_PTR, int, int );
+   BOOL     (* SetMode) ( HB_GT_PTR, int, int );
+   void     (* GetSize) ( HB_GT_PTR, int *, int * );
+   void     (* SemiCold) ( HB_GT_PTR );
+   void     (* ColdArea) ( HB_GT_PTR, int, int, int, int );
+   void     (* ExposeArea) ( HB_GT_PTR, int, int, int, int );
+   void     (* ScrollArea) ( HB_GT_PTR, int, int, int, int, BYTE, BYTE, int, int );
+   void     (* TouchCell) ( HB_GT_PTR, int, int );
+   void     (* Redraw) ( HB_GT_PTR, int, int, int );
+   void     (* Refresh) ( HB_GT_PTR );
+   void     (* Flush) ( HB_GT_PTR );
+   int      (* MaxCol) ( HB_GT_PTR );
+   int      (* MaxRow) ( HB_GT_PTR );
+   BOOL     (* CheckPos) ( HB_GT_PTR, int, int, long * );
+   void     (* SetPos) ( HB_GT_PTR, int, int );
+   void     (* GetPos) ( HB_GT_PTR, int *, int * );
+   BOOL     (* IsColor) ( HB_GT_PTR );
+   void     (* GetColorStr) ( HB_GT_PTR, char * );
+   void     (* SetColorStr) ( HB_GT_PTR, const char * );
+   void     (* ColorSelect) ( HB_GT_PTR, int );
+   int      (* GetColor) ( HB_GT_PTR );
+   int      (* ColorNum) ( HB_GT_PTR, const char * );
+   void     (* ColorsToString) ( HB_GT_PTR, int *, int, char *, int );
+   void     (* StringToColors) ( HB_GT_PTR, const char *, int **, int * );
+   void     (* GetColorData) ( HB_GT_PTR, int **, int *, int * );
+   int      (* GetClearColor) ( HB_GT_PTR );
+   void     (* SetClearColor) ( HB_GT_PTR, int );
+   int      (* GetClearChar) ( HB_GT_PTR );
+   void     (* SetClearChar) ( HB_GT_PTR, int );
+   int      (* GetCursorStyle) ( HB_GT_PTR );
+   void     (* SetCursorStyle) ( HB_GT_PTR, int );
+   void     (* GetScrCursor) ( HB_GT_PTR, int *, int *, int * );
+   BOOL     (* GetScrChar) ( HB_GT_PTR, int, int, BYTE *, BYTE *, USHORT * );
+   BOOL     (* PutScrChar) ( HB_GT_PTR, int, int, BYTE, BYTE, USHORT );
+   void     (* DispBegin) ( HB_GT_PTR );
+   void     (* DispEnd) ( HB_GT_PTR );
+   int      (* DispCount) ( HB_GT_PTR );
+   BOOL     (* GetChar) ( HB_GT_PTR, int, int, BYTE *, BYTE *, USHORT * );
+   BOOL     (* PutChar) ( HB_GT_PTR, int, int, BYTE, BYTE, USHORT );
+   long     (* RectSize) ( HB_GT_PTR, int, int, int, int );
+   void     (* Save) ( HB_GT_PTR, int, int, int, int, BYTE * );
+   void     (* Rest) ( HB_GT_PTR, int, int, int, int, BYTE * );
+   void     (* PutText) ( HB_GT_PTR, int, int, BYTE, BYTE *, ULONG );
+   void     (* Replicate) ( HB_GT_PTR, int, int, BYTE, BYTE, USHORT, ULONG );
+   void     (* WriteAt) ( HB_GT_PTR, int, int, BYTE *, ULONG );
+   void     (* Write) ( HB_GT_PTR, BYTE *, ULONG );
+   void     (* WriteCon) ( HB_GT_PTR, BYTE *, ULONG );
+   void     (* SetAttribute) ( HB_GT_PTR, int, int, int, int, BYTE );
+   void     (* DrawShadow) ( HB_GT_PTR, int, int, int, int, BYTE );
+   void     (* Scroll) ( HB_GT_PTR, int, int, int, int, BYTE, BYTE, int, int );
+   void     (* ScrollUp) ( HB_GT_PTR, int, BYTE, BYTE );
+   void     (* Box) ( HB_GT_PTR, int, int, int, int, BYTE *, BYTE );
+   void     (* BoxD) ( HB_GT_PTR, int, int, int, int, BYTE *, BYTE );
+   void     (* BoxS) ( HB_GT_PTR, int, int, int, int, BYTE *, BYTE );
+   void     (* HorizLine) ( HB_GT_PTR, int, int, int, BYTE, BYTE );
+   void     (* VertLine) ( HB_GT_PTR, int, int, int, BYTE, BYTE );
+   BOOL     (* GetBlink) ( HB_GT_PTR );
+   void     (* SetBlink) ( HB_GT_PTR, BOOL );
+   void     (* SetSnowFlag) ( HB_GT_PTR, BOOL );
+   char *   (* Version) ( HB_GT_PTR, int );
+   BOOL     (* Suspend) ( HB_GT_PTR );
+   BOOL     (* Resume) ( HB_GT_PTR );
+   BOOL     (* PreExt) ( HB_GT_PTR );
+   BOOL     (* PostExt) ( HB_GT_PTR );
+   void     (* OutStd) ( HB_GT_PTR, BYTE *, ULONG );
+   void     (* OutErr) ( HB_GT_PTR, BYTE *, ULONG );
+   void     (* Tone) ( HB_GT_PTR, double, double );
+   void     (* Bell) ( HB_GT_PTR );
+   BOOL     (* Info) ( HB_GT_PTR, int, PHB_GT_INFO );
+   int      (* Alert) ( HB_GT_PTR, PHB_ITEM, PHB_ITEM, int, int, double );
+   int      (* SetFlag) ( HB_GT_PTR, int, int );
 
    /* internationalization */
-   BOOL     (* SetDispCP) ( char *, char *, BOOL );
-   BOOL     (* SetKeyCP) ( char *, char * );
+   BOOL     (* SetDispCP) ( HB_GT_PTR, char *, char *, BOOL );
+   BOOL     (* SetKeyCP) ( HB_GT_PTR, char *, char * );
 
    /* keyboard */
-   int      (* ReadKey) ( int );
+   int      (* ReadKey) ( HB_GT_PTR, int );
 
-   int      (* InkeyGet) ( BOOL fWait, double dSeconds, int iEventMask );
-   void     (* InkeyPut) ( int iKey );
-   int      (* InkeyLast) ( int iEventMask );
-   int      (* InkeyNext) ( int iEventMask );
-   void     (* InkeyPoll) ( void );
-   void     (* InkeySetText) ( const char * szText, ULONG ulLen );
-   int      (* InkeySetLast) ( int iKey );
-   void     (* InkeyReset) ( void );
-   void     (* InkeyExit) ( void );
+   int      (* InkeyGet) ( HB_GT_PTR, BOOL fWait, double dSeconds, int iEventMask );
+   void     (* InkeyPut) ( HB_GT_PTR, int iKey );
+   int      (* InkeyLast) ( HB_GT_PTR, int iEventMask );
+   int      (* InkeyNext) ( HB_GT_PTR, int iEventMask );
+   void     (* InkeyPoll) ( HB_GT_PTR );
+   void     (* InkeySetText) ( HB_GT_PTR, const char * szText, ULONG ulLen );
+   int      (* InkeySetLast) ( HB_GT_PTR, int iKey );
+   void     (* InkeyReset) ( HB_GT_PTR );
+   void     (* InkeyExit) ( HB_GT_PTR );
 
    /* mouse */
-   void     (* MouseInit) ( void );
-   void     (* MouseExit) ( void );
-   BOOL     (* MouseIsPresent) ( void );
-   void     (* MouseShow) ( void );
-   void     (* MouseHide) ( void );
-   BOOL     (* MouseGetCursor) ( void );
-   void     (* MouseSetCursor) ( BOOL );
-   int      (* MouseCol) ( void );
-   int      (* MouseRow) ( void );
-   void     (* MouseGetPos) ( int *, int * );
-   void     (* MouseSetPos) ( int, int );
-   void     (* MouseSetBounds) ( int, int, int, int );
-   void     (* MouseGetBounds) ( int *, int *, int *, int * );
-   int      (* MouseStorageSize) ( void );
-   void     (* MouseSaveState) ( BYTE * );
-   void     (* MouseRestoreState) ( BYTE * );
-   int      (* MouseGetDoubleClickSpeed) ( void );
-   void     (* MouseSetDoubleClickSpeed) ( int );
-   int      (* MouseCountButton) ( void );
-   BOOL     (* MouseButtonState) ( int );
-   BOOL     (* MouseButtonPressed) ( int, int *, int * );
-   BOOL     (* MouseButtonReleased) ( int, int *, int * );
-   int      (* MouseReadKey) ( int );
+   void     (* MouseInit) ( HB_GT_PTR );
+   void     (* MouseExit) ( HB_GT_PTR );
+   BOOL     (* MouseIsPresent) ( HB_GT_PTR );
+   void     (* MouseShow) ( HB_GT_PTR );
+   void     (* MouseHide) ( HB_GT_PTR );
+   BOOL     (* MouseGetCursor) ( HB_GT_PTR );
+   void     (* MouseSetCursor) ( HB_GT_PTR, BOOL );
+   int      (* MouseCol) ( HB_GT_PTR );
+   int      (* MouseRow) ( HB_GT_PTR );
+   void     (* MouseGetPos) ( HB_GT_PTR, int *, int * );
+   void     (* MouseSetPos) ( HB_GT_PTR, int, int );
+   void     (* MouseSetBounds) ( HB_GT_PTR, int, int, int, int );
+   void     (* MouseGetBounds) ( HB_GT_PTR, int *, int *, int *, int * );
+   int      (* MouseStorageSize) ( HB_GT_PTR );
+   void     (* MouseSaveState) ( HB_GT_PTR, BYTE * );
+   void     (* MouseRestoreState) ( HB_GT_PTR, BYTE * );
+   int      (* MouseGetDoubleClickSpeed) ( HB_GT_PTR );
+   void     (* MouseSetDoubleClickSpeed) ( HB_GT_PTR, int );
+   int      (* MouseCountButton) ( HB_GT_PTR );
+   BOOL     (* MouseButtonState) ( HB_GT_PTR, int );
+   BOOL     (* MouseButtonPressed) ( HB_GT_PTR, int, int *, int * );
+   BOOL     (* MouseButtonReleased) ( HB_GT_PTR, int, int *, int * );
+   int      (* MouseReadKey) ( HB_GT_PTR, int );
 
    /* Graphics API */
-   int      (* GfxPrimitive) ( int, int, int, int, int, int );
-   void     (* GfxText) ( int, int, char *, int, int, int );
+   int      (* GfxPrimitive) ( HB_GT_PTR, int, int, int, int, int, int );
+   void     (* GfxText) ( HB_GT_PTR, int, int, char *, int, int, int );
 
 #if 0
     /* keyboard */
-    int     (* ExtendedKeySupport) ( void );
+    int     (* ExtendedKeySupport) ( HB_GT_PTR );
 
     /* GT CLIPBOARD functions */
-    void    (* GetClipboard) ( char *, ULONG * );
-    void    (* SetClipboard) ( char *, ULONG );
-    ULONG   (* GetClipboardSize) ( void );
+    void    (* GetClipboard) ( HB_GT_PTR, char *, ULONG * );
+    void    (* SetClipboard) ( HB_GT_PTR, char *, ULONG );
+    ULONG   (* GetClipboardSize) ( HB_GT_PTR );
 
-    void    (* ProcessMessages) ( void );
+    void    (* ProcessMessages) ( HB_GT_PTR );
 
     /* GT to DRIVER communication functions */
-    void    (* update ) ( int );
-    int     (* info ) ( int, BOOL , int , void * );
+    void    (* update ) ( HB_GT_PTR, int );
+    int     (* info ) ( HB_GT_PTR, int, BOOL , int , void * );
 
 #endif
 
-   void    (* WhoCares) ( void * );
+   void    (* WhoCares) ( HB_GT_PTR, void * );
 
 } HB_GT_FUNCS, * PHB_GT_FUNCS;
 
@@ -360,125 +362,13 @@ typedef struct _HB_GT_BASE
    ULONG          StrBufferSize;
    ULONG          StrBufferPos;
 
-   void **        pGTData;          /*  */
+   void *         pGTData[HB_GT_MAX_];    /* local GT data */
 
 } HB_GT_BASE, * PHB_GT_BASE, * PHB_GT;
 
 extern PHB_GT hb_gt_Base( void );
 
-extern void   hb_gt_Init( FHANDLE hStdIn, FHANDLE hStdOut, FHANDLE hStdErr );
-extern void   hb_gt_Exit( void );
-extern void * hb_gt_New( void );
-extern void   hb_gt_Free( void * pGtPtr );
-extern BOOL   hb_gt_Resize( int iRows, int iCols );
-extern BOOL   hb_gt_SetMode( int iRows, int iCols );
-extern void   hb_gt_GetSize( int * piRows, int * piCols );
-extern void   hb_gt_SemiCold( void );
-extern void   hb_gt_ColdArea( int iTop, int iLeft, int iBottom, int iRight );
-extern void   hb_gt_ExposeArea( int iTop, int iLeft, int iBottom, int iRight );
-extern void   hb_gt_ScrollArea( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor, BYTE bChar, int iRows, int iCols );
-extern void   hb_gt_TouchCell( int iRow, int iCol );
-extern void   hb_gt_Redraw( int iRow, int iCol, int iSize );
-extern void   hb_gt_Refresh( void );
-extern void   hb_gt_Flush( void );
-extern int    hb_gt_MaxCol( void );
-extern int    hb_gt_MaxRow( void );
-extern BOOL   hb_gt_CheckPos( int iRow, int iCol, long *plIndex );
-extern void   hb_gt_SetPos( int iRow, int iCol );
-extern void   hb_gt_GetPos( int * piRow, int * piCol );
-extern BOOL   hb_gt_IsColor( void );
-extern void   hb_gt_GetColorStr( char * );
-extern void   hb_gt_SetColorStr( const char * );
-extern void   hb_gt_ColorSelect( int iColorIndex );
-extern int    hb_gt_GetColor( void );
-extern int    hb_gt_ColorNum( const char * );
-extern void   hb_gt_ColorsToString( int *, int, char *, int );
-extern void   hb_gt_StringToColors( const char *, int **, int * );
-extern void   hb_gt_GetColorData( int **, int *, int * );
-extern int    hb_gt_GetClearColor( void );
-extern void   hb_gt_SetClearColor( int );
-extern int    hb_gt_GetClearChar( void );
-extern void   hb_gt_SetClearChar( int );
-extern int    hb_gt_GetCursorStyle( void );
-extern void   hb_gt_SetCursorStyle( int iStyle );
-extern void   hb_gt_GetScrCursor( int * piRow, int * piCol, int * piStyle );
-extern BOOL   hb_gt_GetScrChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar );
-extern BOOL   hb_gt_PutScrChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar );
-extern void   hb_gt_DispBegin( void );
-extern void   hb_gt_DispEnd( void );
-extern int    hb_gt_DispCount( void );
-extern BOOL   hb_gt_GetChar( int iRow, int iCol, BYTE * pbColor, BYTE * pbAttr, USHORT * pusChar );
-extern BOOL   hb_gt_PutChar( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar );
-extern long   hb_gt_RectSize( int iTop, int iLeft, int iBottom, int iRight );
-extern void   hb_gt_Save( int iTop, int iLeft, int iBottom, int iRight, BYTE * pBuffer );
-extern void   hb_gt_Rest( int iTop, int iLeft, int iBottom, int iRight, BYTE * pBuffer );
-extern void   hb_gt_PutText( int iRow, int iCol, BYTE bColor, BYTE * pText, ULONG ulLen );
-extern void   hb_gt_Replicate( int iRow, int iCol, BYTE bColor, BYTE bAttr, USHORT usChar, ULONG ulLen );
-extern void   hb_gt_WriteAt( int iRow, int iCol, BYTE * pText, ULONG ulLength );
-extern void   hb_gt_Write( BYTE * pText, ULONG ulLength );
-extern void   hb_gt_WriteCon( BYTE * pText, ULONG ulLength );
-extern void   hb_gt_SetAttribute( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor );
-extern void   hb_gt_DrawShadow( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor );
-extern void   hb_gt_Scroll( int iTop, int iLeft, int iBottom, int iRight, BYTE bColor, BYTE bChar, int iRows, int iCols );
-extern void   hb_gt_ScrollUp( int iRows, BYTE bColor, BYTE bChar );
-extern void   hb_gt_Box( int iTop, int iLeft, int iBottom, int iRight, BYTE * pbyFrame, BYTE bColor );
-extern void   hb_gt_BoxD( int iTop, int iLeft, int iBottom, int iRight, BYTE * pbyFrame, BYTE bColor );
-extern void   hb_gt_BoxS( int iTop, int iLeft, int iBottom, int iRight, BYTE * pbyFrame, BYTE bColor );
-extern void   hb_gt_HorizLine( int iRow, int iLeft, int iRight, BYTE bChar, BYTE bColor );
-extern void   hb_gt_VertLine( int iCol, int iTop, int iBottom, BYTE bChar, BYTE bColor );
-extern BOOL   hb_gt_GetBlink( void );
-extern void   hb_gt_SetBlink( BOOL fBlink );
-extern void   hb_gt_SetSnowFlag( BOOL fNoSnow );
-extern char * hb_gt_Version( int iType );
-extern BOOL   hb_gt_Suspend( void );
-extern BOOL   hb_gt_Resume( void );
-extern BOOL   hb_gt_PreExt( void );
-extern BOOL   hb_gt_PostExt( void );
-extern void   hb_gt_OutStd( BYTE * pbyStr, ULONG ulLen );
-extern void   hb_gt_OutErr( BYTE * pbyStr, ULONG ulLen );
-extern void   hb_gt_Tone( double dFrequency, double dDuration );
-extern void   hb_gt_Bell( void );
-extern BOOL   hb_gt_Info( int iType, PHB_GT_INFO pInfo );
-extern int    hb_gt_Alert( PHB_ITEM pMessage, PHB_ITEM pOptions, int iClrNorm, int iClrHigh, double dDelay );
-extern int    hb_gt_SetFlag( int iType, int iNewValue );
-extern BOOL   hb_gt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox );
-extern BOOL   hb_gt_SetKeyCP( char * pszTermCDP, char * pszHostCDP );
-extern int    hb_gt_ReadKey( int iEventMask );
-extern int    hb_inkey_Get( BOOL fWait, double dSeconds, int iEventMask );
-extern void   hb_inkey_Put( int iKey );
-extern int    hb_inkey_Last( int iEventMask );
-extern int    hb_inkey_Next( int iEventMask );
-extern void   hb_inkey_Poll( void );
-extern void   hb_inkey_SetText( const char * szText, ULONG ulLen );
-extern int    hb_inkey_SetLast( int iKey );
-extern void   hb_inkey_Reset( void );
-extern void   hb_inkey_Exit( void );
-extern void   hb_mouse_Init( void );
-extern void   hb_mouse_Exit( void );
-extern BOOL   hb_mouse_IsPresent( void );
-extern void   hb_mouse_Show( void );
-extern void   hb_mouse_Hide( void );
-extern BOOL   hb_mouse_GetCursor( void );
-extern void   hb_mouse_SetCursor( BOOL fVisible );
-extern int    hb_mouse_Col( void );
-extern int    hb_mouse_Row( void );
-extern void   hb_mouse_SetPos( int iRow, int iCol );
-extern void   hb_mouse_GetPos( int * piRow, int * piCol );
-extern void   hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight );
-extern void   hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight );
-extern int    hb_mouse_StorageSize( void );
-extern void   hb_mouse_SaveState( BYTE * pBuffer );
-extern void   hb_mouse_RestoreState( BYTE * pBuffer );
-extern int    hb_mouse_GetDoubleClickSpeed( void );
-extern void   hb_mouse_SetDoubleClickSpeed( int iSpeed );
-extern int    hb_mouse_CountButton( void );
-extern BOOL   hb_mouse_ButtonState( int iButton );
-extern BOOL   hb_mouse_ButtonPressed( int iButton, int * piRow, int * piCol );
-extern BOOL   hb_mouse_ButtonReleased( int iButton, int * piRow, int * piCol );
-extern int    hb_mouse_ReadKey( int iEventMask );
-extern int    hb_gt_GfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor );
-extern void   hb_gt_GfxText( int iTop, int iLeft, char * szText, int iColor, int iSize, int iWidth );
-extern void   hb_gt_WhoCares( void * pCargo );
+#define HB_GTLOCAL(g)   (g)->pGTData[*HB_GTID_PTR]
 
 #define HB_GTSELF_INIT(g,i,o,e)                 (g)->pFuncTable->Init(g,i,o,e)
 #define HB_GTSELF_EXIT(g)                       (g)->pFuncTable->Exit(g)
@@ -572,8 +462,8 @@ extern void   hb_gt_WhoCares( void * pCargo );
 #define HB_GTSELF_MOUSEISPRESENT(g)             (g)->pFuncTable->MouseIsPresent(g)
 #define HB_GTSELF_MOUSESHOW(g)                  (g)->pFuncTable->MouseShow(g)
 #define HB_GTSELF_MOUSEHIDE(g)                  (g)->pFuncTable->MouseHide(g)
-#define HB_GTSELF_MOUSESGETCURSOR(g)            (g)->pFuncTable->MouseGetCursor(g)
-#define HB_GTSELF_MOUSESSETCURSOR(g,v)          (g)->pFuncTable->MouseSetCursor(g,v)
+#define HB_GTSELF_MOUSEGETCURSOR(g)             (g)->pFuncTable->MouseGetCursor(g)
+#define HB_GTSELF_MOUSESETCURSOR(g,v)           (g)->pFuncTable->MouseSetCursor(g,v)
 #define HB_GTSELF_MOUSECOL(g)                   (g)->pFuncTable->MouseCol(g)
 #define HB_GTSELF_MOUSEROW(g)                   (g)->pFuncTable->MouseRow(g)
 #define HB_GTSELF_MOUSEGETPOS(g,pr,pc)          (g)->pFuncTable->MouseGetPos(g,pr,pc)
@@ -594,119 +484,119 @@ extern void   hb_gt_WhoCares( void * pCargo );
 #define HB_GTSELF_GFXTEXT(g,t,l,s,c,h,w)        (g)->pFuncTable->GfxText(g,t,l,s,c,h,w)
 #define HB_GTSELF_WHOCARES(g,p)                 (g)->pFuncTable->WhoCares(g,p)
 
-#define HB_GTSUPER_INIT(i,o,e)               (HB_GTSUPER)->Init(i,o,e)
-#define HB_GTSUPER_EXIT()                    (HB_GTSUPER)->Exit()
-#define HB_GTSUPER_NEW()                     (HB_GTSUPER)->New()
-#define HB_GTSUPER_FREE(p)                   (HB_GTSUPER)->Free(p)
-#define HB_GTSUPER_RESIZE(r,c)               (HB_GTSUPER)->Resize(r,c)
-#define HB_GTSUPER_SETMODE(r,c)              (HB_GTSUPER)->SetMode(r,c)
-#define HB_GTSUPER_GETSIZE(pr,pc)            (HB_GTSUPER)->GetSize(pr,pc)
-#define HB_GTSUPER_SEMICOLD()                (HB_GTSUPER)->SemiCold()
-#define HB_GTSUPER_COLDAREA(t,l,b,r)         (HB_GTSUPER)->ColdArea(t,l,b,r)
-#define HB_GTSUPER_EXPOSEAREA(t,l,b,r)       (HB_GTSUPER)->ExposeArea(t,l,b,r)
-#define HB_GTSUPER_SCROLLAREA(t,l,b,r,m,u,v,h) (HB_GTSUPER)->ScrollArea(t,l,b,r,m,u,v,h)
-#define HB_GTSUPER_TOUCHCELL(r,c)            (HB_GTSUPER)->TouchCell(r,c)
-#define HB_GTSUPER_REDRAW(r,c,l)             (HB_GTSUPER)->Redraw(r,c,l)
-#define HB_GTSUPER_REFRESH()                 (HB_GTSUPER)->Refresh()
-#define HB_GTSUPER_FLUSH()                   (HB_GTSUPER)->Flush()
-#define HB_GTSUPER_MAXCOL()                  (HB_GTSUPER)->MaxCol()
-#define HB_GTSUPER_MAXROW()                  (HB_GTSUPER)->MaxRow()
-#define HB_GTSUPER_CHECKPOS(r,c,l)           (HB_GTSUPER)->CheckPos(r,c,l)
-#define HB_GTSUPER_SETPOS(r,c)               (HB_GTSUPER)->SetPos(r,c)
-#define HB_GTSUPER_GETPOS(pr,pc)             (HB_GTSUPER)->GetPos(pr,pc)
-#define HB_GTSUPER_ISCOLOR()                 (HB_GTSUPER)->IsColor()
-#define HB_GTSUPER_GETCOLORSTR(s)            (HB_GTSUPER)->GetColorStr(s)
-#define HB_GTSUPER_SETCOLORSTR(s)            (HB_GTSUPER)->SetColorStr(s)
-#define HB_GTSUPER_COLORSELECT(c)            (HB_GTSUPER)->ColorSelect(c)
-#define HB_GTSUPER_GETCOLOR()                (HB_GTSUPER)->GetColor()
-#define HB_GTSUPER_COLORNUM(s)               (HB_GTSUPER)->ColorNum(s)
-#define HB_GTSUPER_COLORSTOSTRING(pc,i,ps,n) (HB_GTSUPER)->ColorsToString(pc,i,ps,n)
-#define HB_GTSUPER_STRINGTOCOLORS(ps,pc,pi)  (HB_GTSUPER)->StringToColors(ps,pc,pi)
-#define HB_GTSUPER_GETCOLORDATA(pc,pn,pi)    (HB_GTSUPER)->GetColorData(pc,pn,pi)
-#define HB_GTSUPER_GETCLEARCOLOR()           (HB_GTSUPER)->GetClearColor()
-#define HB_GTSUPER_SETCLEARCOLOR(c)          (HB_GTSUPER)->SetClearColor(c)
-#define HB_GTSUPER_GETCLEARCHAR()            (HB_GTSUPER)->GetClearChar()
-#define HB_GTSUPER_SETCLEARCHAR(c)           (HB_GTSUPER)->SetClearChar(c)
-#define HB_GTSUPER_GETCURSORSTYLE()          (HB_GTSUPER)->GetCursorStyle()
-#define HB_GTSUPER_SETCURSORSTYLE(s)         (HB_GTSUPER)->SetCursorStyle(s)
-#define HB_GTSUPER_GETSCRCURSOR(pr,pc,ps)    (HB_GTSUPER)->GetScrCursor(pr,pc,ps)
-#define HB_GTSUPER_GETSCRCHAR(r,c,pm,pa,pc)  (HB_GTSUPER)->GetScrChar(r,c,pm,pa,pc)
-#define HB_GTSUPER_PUTSCRCHAR(r,c,m,a,u)     (HB_GTSUPER)->PutScrChar(r,c,m,a,u)
-#define HB_GTSUPER_DISPBEGIN()               (HB_GTSUPER)->DispBegin()
-#define HB_GTSUPER_DISPEND()                 (HB_GTSUPER)->DispEnd()
-#define HB_GTSUPER_DISPCOUNT()               (HB_GTSUPER)->DispCount()
-#define HB_GTSUPER_GETCHAR(r,c,pm,pa,pc)     (HB_GTSUPER)->GetChar(r,c,pm,pa,pc)
-#define HB_GTSUPER_PUTCHAR(r,c,m,a,u)        (HB_GTSUPER)->PutChar(r,c,m,a,u)
-#define HB_GTSUPER_RECTSIZE(t,l,b,r)         (HB_GTSUPER)->RectSize(t,l,b,r)
-#define HB_GTSUPER_SAVE(t,l,b,r,p)           (HB_GTSUPER)->Save(t,l,b,r,p)
-#define HB_GTSUPER_REST(t,l,b,r,p)           (HB_GTSUPER)->Rest(t,l,b,r,p)
-#define HB_GTSUPER_PUTTEXT(r,c,m,s,l)        (HB_GTSUPER)->PutText(r,c,m,s,l)
-#define HB_GTSUPER_REPLICATE(r,c,m,a,u,l)    (HB_GTSUPER)->Replicate(r,c,m,a,u,l)
-#define HB_GTSUPER_WRITEAT(r,c,s,l)          (HB_GTSUPER)->WriteAt(r,c,s,l)
-#define HB_GTSUPER_WRITE(s,l)                (HB_GTSUPER)->Write(s,l)
-#define HB_GTSUPER_WRITECON(s,l)             (HB_GTSUPER)->WriteCon(s,l)
-#define HB_GTSUPER_SETATTRIBUTE(t,l,b,r,m)   (HB_GTSUPER)->SetAttribute(t,l,b,r,m)
-#define HB_GTSUPER_DRAWSHADOW(t,l,b,r,m)     (HB_GTSUPER)->DrawShadow(t,l,b,r,m)
-#define HB_GTSUPER_SCROLL(t,l,b,r,m,u,v,h)   (HB_GTSUPER)->Scroll(t,l,b,r,m,u,v,h)
-#define HB_GTSUPER_SCROLLUP(r,m,u)           (HB_GTSUPER)->ScrollUp(r,m,u)
-#define HB_GTSUPER_BOX(t,l,b,r,f,m)          (HB_GTSUPER)->Box(t,l,b,r,f,m)
-#define HB_GTSUPER_BOXD(t,l,b,r,f,m)         (HB_GTSUPER)->BoxD(t,l,b,r,f,m)
-#define HB_GTSUPER_BOXS(t,l,b,r,f,m)         (HB_GTSUPER)->BoxS(t,l,b,r,f,m)
-#define HB_GTSUPER_HORIZLINE(h,l,r,u,m)      (HB_GTSUPER)->HorizLine(h,l,r,u,m)
-#define HB_GTSUPER_VERTLINE(c,t,b,u,m)       (HB_GTSUPER)->VertLine(c,t,b,u,m)
-#define HB_GTSUPER_GETBLINK()                (HB_GTSUPER)->GetBlink()
-#define HB_GTSUPER_SETBLINK(b)               (HB_GTSUPER)->SetBlink(b)
-#define HB_GTSUPER_SETSNOWFLAG(b)            (HB_GTSUPER)->SetSnowFlag(b)
-#define HB_GTSUPER_VERSION(i)                (HB_GTSUPER)->Version(i)
-#define HB_GTSUPER_SUSPEND()                 (HB_GTSUPER)->Suspend()
-#define HB_GTSUPER_RESUME()                  (HB_GTSUPER)->Resume()
-#define HB_GTSUPER_PREEXT()                  (HB_GTSUPER)->PreExt()
-#define HB_GTSUPER_POSTEXT()                 (HB_GTSUPER)->PostExt()
-#define HB_GTSUPER_OUTSTD(s,l)               (HB_GTSUPER)->OutStd(s,l)
-#define HB_GTSUPER_OUTERR(s,l)               (HB_GTSUPER)->OutErr(s,l)
-#define HB_GTSUPER_TONE(f,d)                 (HB_GTSUPER)->Tone(f,d)
-#define HB_GTSUPER_BELL()                    (HB_GTSUPER)->Bell()
-#define HB_GTSUPER_INFO(i,p)                 (HB_GTSUPER)->Info(i,p)
-#define HB_GTSUPER_ALERT(m,o,n,h,d)          (HB_GTSUPER)->Alert(m,o,n,h,d)
-#define HB_GTSUPER_SETFLAG(i,f)              (HB_GTSUPER)->SetFlag(i,f)
-#define HB_GTSUPER_SETDISPCP(t,h,b)          (HB_GTSUPER)->SetDispCP(t,h,b)
-#define HB_GTSUPER_SETKEYCP(t,h)             (HB_GTSUPER)->SetKeyCP(t,h)
-#define HB_GTSUPER_READKEY(m)                (HB_GTSUPER)->ReadKey(m)
-#define HB_GTSUPER_INKEYGET(w,d,m)           (HB_GTSUPER)->InkeyGet(w,d,m)
-#define HB_GTSUPER_INKEYPUT(k)               (HB_GTSUPER)->InkeyPut(k)
-#define HB_GTSUPER_INKEYLAST(m)              (HB_GTSUPER)->InkeyLast(m)
-#define HB_GTSUPER_INKEYNEXT(m)              (HB_GTSUPER)->InkeyNext(m)
-#define HB_GTSUPER_INKEYPOLL()               (HB_GTSUPER)->InkeyPoll()
-#define HB_GTSUPER_INKEYSETTEXT(s,l)         (HB_GTSUPER)->InkeySetText(s,l)
-#define HB_GTSUPER_INKEYSETLAST(k)           (HB_GTSUPER)->InkeySetLast(k)
-#define HB_GTSUPER_INKEYRESET()              (HB_GTSUPER)->InkeyReset()
-#define HB_GTSUPER_INKEYEXIT()               (HB_GTSUPER)->InkeyExit()
-#define HB_GTSUPER_MOUSEINIT()               (HB_GTSUPER)->MouseInit()
-#define HB_GTSUPER_MOUSEEXIT()               (HB_GTSUPER)->MouseExit()
-#define HB_GTSUPER_MOUSEISPRESENT()          (HB_GTSUPER)->MouseIsPresent()
-#define HB_GTSUPER_MOUSESHOW()               (HB_GTSUPER)->MouseShow()
-#define HB_GTSUPER_MOUSEHIDE()               (HB_GTSUPER)->MouseHide()
-#define HB_GTSUPER_MOUSESGETCURSOR()         (HB_GTSUPER)->MouseGetCursor()
-#define HB_GTSUPER_MOUSESSETCURSOR(v)        (HB_GTSUPER)->MouseSetCursor(v)
-#define HB_GTSUPER_MOUSECOL()                (HB_GTSUPER)->MouseCol()
-#define HB_GTSUPER_MOUSEROW()                (HB_GTSUPER)->MouseRow()
-#define HB_GTSUPER_MOUSEGETPOS(pr,pc)        (HB_GTSUPER)->MouseGetPos(pr,pc)
-#define HB_GTSUPER_MOUSESETPOS(r,c)          (HB_GTSUPER)->MouseSetPos(r,c)
-#define HB_GTSUPER_MOUSESETBOUNDS(t,l,b,r)   (HB_GTSUPER)->MouseSetBounds(t,l,b,r)
-#define HB_GTSUPER_MOUSEGETBOUNDS(t,l,b,r)   (HB_GTSUPER)->MouseGetBounds(t,l,b,r)
-#define HB_GTSUPER_MOUSESTORAGESIZE()        (HB_GTSUPER)->MouseStorageSize()
-#define HB_GTSUPER_MOUSESAVESTATE(p)         (HB_GTSUPER)->MouseSaveState(p)
-#define HB_GTSUPER_MOUSERESTORESTATE(p)      (HB_GTSUPER)->MouseRestoreState(p)
-#define HB_GTSUPER_MOUSEGETDOUBLECLICKSPEED() (HB_GTSUPER)->MouseGetDoubleClickSpeed()
-#define HB_GTSUPER_MOUSESETDOUBLECLICKSPEED(i) (HB_GTSUPER)->MouseSetDoubleClickSpeed(i)
-#define HB_GTSUPER_MOUSECOUNTBUTTON()        (HB_GTSUPER)->MouseCountButton()
-#define HB_GTSUPER_MOUSEBUTTONSTATE(b)       (HB_GTSUPER)->MouseButtonState(b)
-#define HB_GTSUPER_MOUSEBUTTONPRESSED(b,r,c) (HB_GTSUPER)->MouseButtonPressed(b,r,c)
-#define HB_GTSUPER_MOUSEBUTTONRELEASED(b,r,c) (HB_GTSUPER)->MouseButtonReleased(b,r,c)
-#define HB_GTSUPER_MOUSEREADKEY(m)           (HB_GTSUPER)->MouseReadKey(m)
-#define HB_GTSUPER_GFXPRIMITIVE(i,t,l,b,r,c) (HB_GTSUPER)->GfxPrimitive(i,t,l,b,r,c)
-#define HB_GTSUPER_GFXTEXT(t,l,s,c,h,w)      (HB_GTSUPER)->GfxText(t,l,s,c,h,w)
-#define HB_GTSUPER_WHOCARES(p)               (HB_GTSUPER)->WhoCares(p)
+#define HB_GTSUPER_INIT(g,i,o,e)                 (HB_GTSUPER)->Init(g,i,o,e)
+#define HB_GTSUPER_EXIT(g)                       (HB_GTSUPER)->Exit(g)
+#define HB_GTSUPER_NEW(g)                        (HB_GTSUPER)->New(g)
+#define HB_GTSUPER_FREE(g)                       (HB_GTSUPER)->Free(g)
+#define HB_GTSUPER_RESIZE(g,r,c)                 (HB_GTSUPER)->Resize(g,r,c)
+#define HB_GTSUPER_SETMODE(g,r,c)                (HB_GTSUPER)->SetMode(g,r,c)
+#define HB_GTSUPER_GETSIZE(g,pr,pc)              (HB_GTSUPER)->GetSize(g,pr,pc)
+#define HB_GTSUPER_SEMICOLD(g)                   (HB_GTSUPER)->SemiCold(g)
+#define HB_GTSUPER_COLDAREA(g,t,l,b,r)           (HB_GTSUPER)->ColdArea(g,t,l,b,r)
+#define HB_GTSUPER_EXPOSEAREA(g,t,l,b,r)         (HB_GTSUPER)->ExposeArea(g,t,l,b,r)
+#define HB_GTSUPER_SCROLLAREA(g,t,l,b,r,m,u,v,h) (HB_GTSUPER)->ScrollArea(g,t,l,b,r,m,u,v,h)
+#define HB_GTSUPER_TOUCHCELL(g,r,c)              (HB_GTSUPER)->TouchCell(g,r,c)
+#define HB_GTSUPER_REDRAW(g,r,c,l)               (HB_GTSUPER)->Redraw(g,r,c,l)
+#define HB_GTSUPER_REFRESH(g)                    (HB_GTSUPER)->Refresh(g)
+#define HB_GTSUPER_FLUSH(g)                      (HB_GTSUPER)->Flush(g)
+#define HB_GTSUPER_MAXCOL(g)                     (HB_GTSUPER)->MaxCol(g)
+#define HB_GTSUPER_MAXROW(g)                     (HB_GTSUPER)->MaxRow(g)
+#define HB_GTSUPER_CHECKPOS(g,r,c,l)             (HB_GTSUPER)->CheckPos(g,r,c,l)
+#define HB_GTSUPER_SETPOS(g,r,c)                 (HB_GTSUPER)->SetPos(g,r,c)
+#define HB_GTSUPER_GETPOS(g,pr,pc)               (HB_GTSUPER)->GetPos(g,pr,pc)
+#define HB_GTSUPER_ISCOLOR(g)                    (HB_GTSUPER)->IsColor(g)
+#define HB_GTSUPER_GETCOLORSTR(g,s)              (HB_GTSUPER)->GetColorStr(g,s)
+#define HB_GTSUPER_SETCOLORSTR(g,s)              (HB_GTSUPER)->SetColorStr(g,s)
+#define HB_GTSUPER_COLORSELECT(g,c)              (HB_GTSUPER)->ColorSelect(g,c)
+#define HB_GTSUPER_GETCOLOR(g)                   (HB_GTSUPER)->GetColor(g)
+#define HB_GTSUPER_COLORNUM(g,s)                 (HB_GTSUPER)->ColorNum(g,s)
+#define HB_GTSUPER_COLORSTOSTRING(g,pc,i,ps,n)   (HB_GTSUPER)->ColorsToString(g,pc,i,ps,n)
+#define HB_GTSUPER_STRINGTOCOLORS(g,ps,pc,pi)    (HB_GTSUPER)->StringToColors(g,ps,pc,pi)
+#define HB_GTSUPER_GETCOLORDATA(g,pc,pn,pi)      (HB_GTSUPER)->GetColorData(g,pc,pn,pi)
+#define HB_GTSUPER_GETCLEARCOLOR(g)              (HB_GTSUPER)->GetClearColor(g)
+#define HB_GTSUPER_SETCLEARCOLOR(g,c)            (HB_GTSUPER)->SetClearColor(g,c)
+#define HB_GTSUPER_GETCLEARCHAR(g)               (HB_GTSUPER)->GetClearChar(g)
+#define HB_GTSUPER_SETCLEARCHAR(g,c)             (HB_GTSUPER)->SetClearChar(g,c)
+#define HB_GTSUPER_GETCURSORSTYLE(g)             (HB_GTSUPER)->GetCursorStyle(g)
+#define HB_GTSUPER_SETCURSORSTYLE(g,s)           (HB_GTSUPER)->SetCursorStyle(g,s)
+#define HB_GTSUPER_GETSCRCURSOR(g,pr,pc,ps)      (HB_GTSUPER)->GetScrCursor(g,pr,pc,ps)
+#define HB_GTSUPER_GETSCRCHAR(g,r,c,pm,pa,pc)    (HB_GTSUPER)->GetScrChar(g,r,c,pm,pa,pc)
+#define HB_GTSUPER_PUTSCRCHAR(g,r,c,m,a,u)       (HB_GTSUPER)->PutScrChar(g,r,c,m,a,u)
+#define HB_GTSUPER_DISPBEGIN(g)                  (HB_GTSUPER)->DispBegin(g)
+#define HB_GTSUPER_DISPEND(g)                    (HB_GTSUPER)->DispEnd(g)
+#define HB_GTSUPER_DISPCOUNT(g)                  (HB_GTSUPER)->DispCount(g)
+#define HB_GTSUPER_GETCHAR(g,r,c,pm,pa,pc)       (HB_GTSUPER)->GetChar(g,r,c,pm,pa,pc)
+#define HB_GTSUPER_PUTCHAR(g,r,c,m,a,u)          (HB_GTSUPER)->PutChar(g,r,c,m,a,u)
+#define HB_GTSUPER_RECTSIZE(g,t,l,b,r)           (HB_GTSUPER)->RectSize(g,t,l,b,r)
+#define HB_GTSUPER_SAVE(g,t,l,b,r,p)             (HB_GTSUPER)->Save(g,t,l,b,r,p)
+#define HB_GTSUPER_REST(g,t,l,b,r,p)             (HB_GTSUPER)->Rest(g,t,l,b,r,p)
+#define HB_GTSUPER_PUTTEXT(g,r,c,m,s,l)          (HB_GTSUPER)->PutText(g,r,c,m,s,l)
+#define HB_GTSUPER_REPLICATE(g,r,c,m,a,u,l)      (HB_GTSUPER)->Replicate(g,r,c,m,a,u,l)
+#define HB_GTSUPER_WRITEAT(g,r,c,s,l)            (HB_GTSUPER)->WriteAt(g,r,c,s,l)
+#define HB_GTSUPER_WRITE(g,s,l)                  (HB_GTSUPER)->Write(g,s,l)
+#define HB_GTSUPER_WRITECON(g,s,l)               (HB_GTSUPER)->WriteCon(g,s,l)
+#define HB_GTSUPER_SETATTRIBUTE(g,t,l,b,r,m)     (HB_GTSUPER)->SetAttribute(g,t,l,b,r,m)
+#define HB_GTSUPER_DRAWSHADOW(g,t,l,b,r,m)       (HB_GTSUPER)->DrawShadow(g,t,l,b,r,m)
+#define HB_GTSUPER_SCROLL(g,t,l,b,r,m,u,v,h)     (HB_GTSUPER)->Scroll(g,t,l,b,r,m,u,v,h)
+#define HB_GTSUPER_SCROLLUP(g,r,m,u)             (HB_GTSUPER)->ScrollUp(g,r,m,u)
+#define HB_GTSUPER_BOX(g,t,l,b,r,f,m)            (HB_GTSUPER)->Box(g,t,l,b,r,f,m)
+#define HB_GTSUPER_BOXD(g,t,l,b,r,f,m)           (HB_GTSUPER)->BoxD(g,t,l,b,r,f,m)
+#define HB_GTSUPER_BOXS(g,t,l,b,r,f,m)           (HB_GTSUPER)->BoxS(g,t,l,b,r,f,m)
+#define HB_GTSUPER_HORIZLINE(g,h,l,r,u,m)        (HB_GTSUPER)->HorizLine(g,h,l,r,u,m)
+#define HB_GTSUPER_VERTLINE(g,c,t,b,u,m)         (HB_GTSUPER)->VertLine(g,c,t,b,u,m)
+#define HB_GTSUPER_GETBLINK(g)                   (HB_GTSUPER)->GetBlink(g)
+#define HB_GTSUPER_SETBLINK(g,b)                 (HB_GTSUPER)->SetBlink(g,b)
+#define HB_GTSUPER_SETSNOWFLAG(g,b)              (HB_GTSUPER)->SetSnowFlag(g,b)
+#define HB_GTSUPER_VERSION(g,i)                  (HB_GTSUPER)->Version(g,i)
+#define HB_GTSUPER_SUSPEND(g)                    (HB_GTSUPER)->Suspend(g)
+#define HB_GTSUPER_RESUME(g)                     (HB_GTSUPER)->Resume(g)
+#define HB_GTSUPER_PREEXT(g)                     (HB_GTSUPER)->PreExt(g)
+#define HB_GTSUPER_POSTEXT(g)                    (HB_GTSUPER)->PostExt(g)
+#define HB_GTSUPER_OUTSTD(g,s,l)                 (HB_GTSUPER)->OutStd(g,s,l)
+#define HB_GTSUPER_OUTERR(g,s,l)                 (HB_GTSUPER)->OutErr(g,s,l)
+#define HB_GTSUPER_TONE(g,f,d)                   (HB_GTSUPER)->Tone(g,f,d)
+#define HB_GTSUPER_BELL(g)                       (HB_GTSUPER)->Bell(g)
+#define HB_GTSUPER_INFO(g,i,p)                   (HB_GTSUPER)->Info(g,i,p)
+#define HB_GTSUPER_ALERT(g,m,o,n,h,d)            (HB_GTSUPER)->Alert(g,m,o,n,h,d)
+#define HB_GTSUPER_SETFLAG(g,i,f)                (HB_GTSUPER)->SetFlag(g,i,f)
+#define HB_GTSUPER_SETDISPCP(g,t,h,b)            (HB_GTSUPER)->SetDispCP(g,t,h,b)
+#define HB_GTSUPER_SETKEYCP(g,t,h)               (HB_GTSUPER)->SetKeyCP(g,t,h)
+#define HB_GTSUPER_READKEY(g,m)                  (HB_GTSUPER)->ReadKey(g,m)
+#define HB_GTSUPER_INKEYGET(g,w,d,m)             (HB_GTSUPER)->InkeyGet(g,w,d,m)
+#define HB_GTSUPER_INKEYPUT(g,k)                 (HB_GTSUPER)->InkeyPut(g,k)
+#define HB_GTSUPER_INKEYLAST(g,m)                (HB_GTSUPER)->InkeyLast(g,m)
+#define HB_GTSUPER_INKEYNEXT(g,m)                (HB_GTSUPER)->InkeyNext(g,m)
+#define HB_GTSUPER_INKEYPOLL(g)                  (HB_GTSUPER)->InkeyPoll(g)
+#define HB_GTSUPER_INKEYSETTEXT(g,s,l)           (HB_GTSUPER)->InkeySetText(g,s,l)
+#define HB_GTSUPER_INKEYSETLAST(g,k)             (HB_GTSUPER)->InkeySetLast(g,k)
+#define HB_GTSUPER_INKEYRESET(g)                 (HB_GTSUPER)->InkeyReset(g)
+#define HB_GTSUPER_INKEYEXIT(g)                  (HB_GTSUPER)->InkeyExit(g)
+#define HB_GTSUPER_MOUSEINIT(g)                  (HB_GTSUPER)->MouseInit(g)
+#define HB_GTSUPER_MOUSEEXIT(g)                  (HB_GTSUPER)->MouseExit(g)
+#define HB_GTSUPER_MOUSEISPRESENT(g)             (HB_GTSUPER)->MouseIsPresent(g)
+#define HB_GTSUPER_MOUSESHOW(g)                  (HB_GTSUPER)->MouseShow(g)
+#define HB_GTSUPER_MOUSEHIDE(g)                  (HB_GTSUPER)->MouseHide(g)
+#define HB_GTSUPER_MOUSEGETCURSOR(g)             (HB_GTSUPER)->MouseGetCursor(g)
+#define HB_GTSUPER_MOUSESETCURSOR(g,v)           (HB_GTSUPER)->MouseSetCursor(g,v)
+#define HB_GTSUPER_MOUSECOL(g)                   (HB_GTSUPER)->MouseCol(g)
+#define HB_GTSUPER_MOUSEROW(g)                   (HB_GTSUPER)->MouseRow(g)
+#define HB_GTSUPER_MOUSEGETPOS(g,pr,pc)          (HB_GTSUPER)->MouseGetPos(g,pr,pc)
+#define HB_GTSUPER_MOUSESETPOS(g,r,c)            (HB_GTSUPER)->MouseSetPos(g,r,c)
+#define HB_GTSUPER_MOUSESETBOUNDS(g,t,l,b,r)     (HB_GTSUPER)->MouseSetBounds(g,t,l,b,r)
+#define HB_GTSUPER_MOUSEGETBOUNDS(g,t,l,b,r)     (HB_GTSUPER)->MouseGetBounds(g,t,l,b,r)
+#define HB_GTSUPER_MOUSESTORAGESIZE(g)           (HB_GTSUPER)->MouseStorageSize(g)
+#define HB_GTSUPER_MOUSESAVESTATE(g,p)           (HB_GTSUPER)->MouseSaveState(g,p)
+#define HB_GTSUPER_MOUSERESTORESTATE(g,p)        (HB_GTSUPER)->MouseRestoreState(g,p)
+#define HB_GTSUPER_MOUSEGETDOUBLECLICKSPEED(g)   (HB_GTSUPER)->MouseGetDoubleClickSpeed(g)
+#define HB_GTSUPER_MOUSESETDOUBLECLICKSPEED(g,i) (HB_GTSUPER)->MouseSetDoubleClickSpeed(g,i)
+#define HB_GTSUPER_MOUSECOUNTBUTTON(g)           (HB_GTSUPER)->MouseCountButton(g)
+#define HB_GTSUPER_MOUSEBUTTONSTATE(g,b)         (HB_GTSUPER)->MouseButtonState(g,b)
+#define HB_GTSUPER_MOUSEBUTTONPRESSED(g,b,r,c)   (HB_GTSUPER)->MouseButtonPressed(g,b,r,c)
+#define HB_GTSUPER_MOUSEBUTTONRELEASED(g,b,r,c)  (HB_GTSUPER)->MouseButtonReleased(g,b,r,c)
+#define HB_GTSUPER_MOUSEREADKEY(g,m)             (HB_GTSUPER)->MouseReadKey(g,m)
+#define HB_GTSUPER_GFXPRIMITIVE(g,i,t,l,b,r,c)   (HB_GTSUPER)->GfxPrimitive(g,i,t,l,b,r,c)
+#define HB_GTSUPER_GFXTEXT(g,t,l,s,c,h,w)        (HB_GTSUPER)->GfxText(g,t,l,s,c,h,w)
+#define HB_GTSUPER_WHOCARES(g,p)                 (HB_GTSUPER)->WhoCares(g,p)
 
 extern HB_EXPORT void hb_gtSetDefault( const char * szGtName );
 extern HB_EXPORT BOOL hb_gtRegister( PHB_GT_INIT gtInit );

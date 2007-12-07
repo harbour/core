@@ -106,9 +106,9 @@ static void hb_gt_cgi_newLine( void )
    hb_gt_cgi_termOut( s_szCrLf, s_ulCrLf );
 }
 
-static void hb_gt_cgi_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_cgi_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
    s_hFilenoStdin  = hFilenoStdin;
    s_hFilenoStdout = hFilenoStdout;
@@ -123,21 +123,21 @@ static void hb_gt_cgi_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
 
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
 
-   HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   hb_gt_SetFlag( GTI_STDOUTCON, TRUE );
+   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, TRUE );
 }
 
-static void hb_gt_cgi_Exit( void )
+static void hb_gt_cgi_Exit( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_Exit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_Exit(%p)", pGT));
 
-   hb_gt_Refresh();
+   HB_GTSELF_REFRESH( pGT );
 
    /* update cursor position on exit */
    if( s_iLastCol > 0 )
       hb_gt_cgi_newLine();
 
-   HB_GTSUPER_EXIT();
+   HB_GTSUPER_EXIT( pGT );
 
    if( s_iLineBufSize > 0 )
    {
@@ -146,32 +146,39 @@ static void hb_gt_cgi_Exit( void )
    }
 }
 
-static int hb_gt_cgi_ReadKey( int iEventMask )
+static int hb_gt_cgi_ReadKey( PHB_GT pGT, int iEventMask )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_ReadKey(%d)", iEventMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_ReadKey(%p,%d)", pGT, iEventMask));
 
+   HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iEventMask );
 
    return 13;
 }
 
-static BOOL hb_gt_cgi_IsColor( void )
+static BOOL hb_gt_cgi_IsColor( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_IsColor()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_IsColor(%p)", pGT));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    return FALSE;
 }
 
-static void hb_gt_cgi_Bell( void )
+static void hb_gt_cgi_Bell( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ( "hb_gt_cgi_Bell()" ) );
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_Bell(%p)", pGT));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    hb_gt_cgi_termOut( s_szBell, 1 );
 }
 
-static char * hb_gt_cgi_Version( int iType )
+static char * hb_gt_cgi_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Version(%d)", iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Version(%p,%d)", pGT, iType ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
@@ -179,21 +186,21 @@ static char * hb_gt_cgi_Version( int iType )
    return "Harbour Terminal: Raw stream console";
 }
 
-static void hb_gt_cgi_Scroll( int iTop, int iLeft, int iBottom, int iRight,
+static void hb_gt_cgi_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
                               BYTE bColor, BYTE bChar, int iRows, int iCols )
 {
    int iHeight, iWidth;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Scroll(%d,%d,%d,%d,%d,%d,%d,%d)", iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols ) );
 
    /* Provide some basic scroll support for full screen */
-   hb_gt_GetSize( &iHeight, &iWidth );
+   HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
    if( iCols == 0 && iRows > 0 &&
        iTop == 0 && iLeft == 0 &&
        iBottom >= iHeight - 1 && iRight >= iWidth - 1 )
    {
       /* scroll up the internal screen buffer */
-      HB_GTSUPER_SCROLLUP( iRows, bColor, bChar );
+      HB_GTSUPER_SCROLLUP( pGT, iRows, bColor, bChar );
       /* update our internal row position */
       s_iRow -= iRows;
       if( s_iRow < 0 )
@@ -201,14 +208,14 @@ static void hb_gt_cgi_Scroll( int iTop, int iLeft, int iBottom, int iRight,
       s_iLastCol = s_iCol = 0;
    }
    else
-      HB_GTSUPER_SCROLL( iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols );
+      HB_GTSUPER_SCROLL( pGT, iTop, iLeft, iBottom, iRight, bColor, bChar, iRows, iCols );
 }
 
-static BOOL hb_gt_cgi_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
+static BOOL hb_gt_cgi_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_SetDispCP(%s,%s,%d)", pszTermCDP, pszHostCDP, (int) fBox ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
-   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
@@ -230,7 +237,7 @@ static BOOL hb_gt_cgi_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 
 #ifdef HB_GT_CGI_RAWOUTPUT
 
-static void hb_gt_cgi_WriteCon( BYTE * pText, ULONG ulLength )
+static void hb_gt_cgi_WriteCon( PHB_GT pGT, BYTE * pText, ULONG ulLength )
 {
    BYTE * buffer = NULL;
 
@@ -269,13 +276,13 @@ static void hb_gt_cgi_WriteCon( BYTE * pText, ULONG ulLength )
             ++s_iCol;
       }
    }
-   HB_GTSUPER_SETPOS( s_iRow, s_iCol );
+   HB_GTSUPER_SETPOS( pGT, s_iRow, s_iCol );
 
    if( buffer )
       hb_xfree( buffer );
 }
 
-static void hb_gt_cgi_WriteAt( int iRow, int iCol, BYTE * pText, ULONG ulLength )
+static void hb_gt_cgi_WriteAt( PHB_GT pGT, int iRow, int iCol, BYTE * pText, ULONG ulLength )
 {
    int iLineFeed = 0, iSpace = 0;
 
@@ -305,20 +312,20 @@ static void hb_gt_cgi_WriteAt( int iRow, int iCol, BYTE * pText, ULONG ulLength 
    s_iRow = iRow;
    s_iCol = iCol;
 
-   hb_gt_cgi_WriteCon( pText, ulLength );
+   hb_gt_cgi_WriteCon( pGT, pText, ulLength );
 }
 
 #else /* HB_GT_CGI_RAWOUTPUT */
 
-static void hb_gt_cgi_Redraw( int iRow, int iCol, int iSize )
+static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    BYTE bColor, bAttr;
    USHORT usChar;
    int iLineFeed, iHeight, iWidth, iLen;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
-   hb_gt_GetSize( &iHeight, &iWidth );
+   HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
    iLineFeed = iLen = 0;
 
    if( s_iRow != iRow )
@@ -340,7 +347,7 @@ static void hb_gt_cgi_Redraw( int iRow, int iCol, int iSize )
    }
 
    while( iSize > 0 && iCol + iSize > s_iLastCol &&
-          hb_gt_GetScrChar( iRow, iCol + iSize - 1, &bColor, &bAttr, &usChar ) )
+          HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iSize - 1, &bColor, &bAttr, &usChar ) )
    {
       if( usChar != ' ' )
          break;
@@ -355,7 +362,7 @@ static void hb_gt_cgi_Redraw( int iRow, int iCol, int iSize )
 
       while( iLen < iSize )
       {
-         if( !hb_gt_GetScrChar( iRow, iCol, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
          s_sLineBuf[ iLen++ ] = ( BYTE ) usChar;
          ++iCol;
@@ -374,13 +381,13 @@ static void hb_gt_cgi_Redraw( int iRow, int iCol, int iSize )
    }
 }
 
-static void hb_gt_cgi_Refresh( void )
+static void hb_gt_cgi_Refresh( PHB_GT pGT )
 {
    int iHeight, iWidth;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Refresh()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Refresh(%p)", pGT ) );
 
-   hb_gt_GetSize( &iHeight, &iWidth );
+   HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
    if( s_iLineBufSize == 0 )
    {
       s_sLineBuf = ( BYTE * ) hb_xgrab( iWidth );
@@ -391,7 +398,7 @@ static void hb_gt_cgi_Refresh( void )
       s_sLineBuf = ( BYTE * ) hb_xrealloc( s_sLineBuf, iWidth );
       s_iLineBufSize = iWidth;
    }
-   HB_GTSUPER_REFRESH();
+   HB_GTSUPER_REFRESH( pGT );
 }
 
 #endif /* HB_GT_CGI_RAWOUTPUT */

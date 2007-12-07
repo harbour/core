@@ -118,7 +118,7 @@ static COLORREF _COLORS[] = {
    BRIGHT_WHITE
 };
 
-static int K_Ctrl[] =
+static const int K_Ctrl[] =
 {
    K_CTRL_A, K_CTRL_B, K_CTRL_C, K_CTRL_D, K_CTRL_E, K_CTRL_F, K_CTRL_G,
    K_CTRL_H, K_CTRL_I, K_CTRL_J, K_CTRL_K, K_CTRL_L, K_CTRL_M, K_CTRL_N,
@@ -247,20 +247,21 @@ static void hb_wvt_gtCreateObjects( void )
 
 //-------------------------------------------------------------------//
 
-static void hb_gt_wvt_InitStatics( void )
+static void hb_gt_wvt_InitStatics( PHB_GT pGT )
 {
    OSVERSIONINFO osvi;
 
    osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
    GetVersionEx( &osvi );
 
+   _s.pGT              = pGT;
    _s.ROWS             = WVT_DEFAULT_ROWS;
    _s.COLS             = WVT_DEFAULT_COLS;
    _s.CaretExist       = FALSE;
    _s.CaretHidden      = FALSE;
    _s.CaretSize        = 4;
-   _s.mousePos.x       = 0;
-   _s.mousePos.y       = 0;
+   _s.MousePos.x       = 0;
+   _s.MousePos.y       = 0;
    _s.MouseMove        = TRUE;
    _s.hWnd             = NULL;
    _s.keyPointerIn     = 0;
@@ -289,7 +290,7 @@ static void hb_gt_wvt_InitStatics( void )
 
 static BOOL hb_gt_wvt_SetWindowSize( int iRow, int iCol )
 {
-   if( HB_GTSUPER_RESIZE( iRow, iCol ) )
+   if( HB_GTSUPER_RESIZE( _s.pGT, iRow, iCol ) )
    {
       _s.ROWS = ( USHORT ) iRow;
       _s.COLS = ( USHORT ) iCol;
@@ -587,8 +588,8 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
 
 static void hb_gt_wvt_SetMousePos( int iRow, int iCol )
 {
-   _s.mousePos.y = ( SHORT ) iRow;
-   _s.mousePos.x = ( SHORT ) iCol;
+   _s.MousePos.y = ( SHORT ) iRow;
+   _s.MousePos.x = ( SHORT ) iCol;
 }
 
 static void hb_gt_wvt_MouseEvent( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
@@ -1101,7 +1102,7 @@ static void hb_gt_wvt_PaintText( HWND hWnd, RECT updateRect )
 
       while( iCol <= rcRect.right )
       {
-         if( !hb_gt_GetScrChar( iRow, iCol, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( _s.pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
 
 #if defined(UNICODE)
@@ -1160,7 +1161,7 @@ static void hb_gt_wvt_UpdateCaret( void )
 {
    int iRow, iCol, iStyle, iCaretSize;
 
-   hb_gt_GetScrCursor( &iRow, &iCol, &iStyle );
+   HB_GTSELF_GETSCRCURSOR( _s.pGT, &iRow, &iCol, &iStyle );
 
    if( iRow < 0 || iCol < 0 || iRow >= _s.ROWS || iCol >= _s.COLS )
    {
@@ -1946,16 +1947,17 @@ BOOL HB_EXPORT hb_wvt_gtSetFont( char *fontFace, int height, int width, int Bold
  */
 /* ********************************************************************** */
 
-static void hb_gt_wvt_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
    if( ! hb_winmainArgGet( &s_hInstance, &s_hPrevInstance, &s_iCmdShow ) )
    {
       hb_errInternal( 10001, "It's not a window GUI program.", "", "" );
    }
 
-   hb_gt_wvt_InitStatics();
+   hb_gt_wvt_InitStatics( pGT );
+   HB_GTLOCAL( pGT ) = ( void * ) &_s;
    _s.hWnd = hb_gt_wvt_CreateWindow( ( HINSTANCE ) s_hInstance,
                                      ( HINSTANCE ) s_hPrevInstance,
                                      "", s_iCmdShow );
@@ -1987,18 +1989,18 @@ static void hb_gt_wvt_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    }
 
    /* SUPER GT initialization */
-   HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSUPER_RESIZE( _s.ROWS, _s.COLS );
-   HB_GTSUPER_EXPOSEAREA( 0, 0, _s.ROWS, _s.COLS );
+   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   HB_GTSUPER_RESIZE( pGT, _s.ROWS, _s.COLS );
+   HB_GTSUPER_EXPOSEAREA( pGT, 0, 0, _s.ROWS, _s.COLS );
 }
 
 /* ********************************************************************** */
 
-static void hb_gt_wvt_Exit( void )
+static void hb_gt_wvt_Exit( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Exit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Exit(%p)", pGT));
 
-   HB_GTSUPER_EXIT();
+   HB_GTSUPER_EXIT( pGT );
 
    if( _s.hWnd )
    {
@@ -2011,11 +2013,13 @@ static void hb_gt_wvt_Exit( void )
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_SetMode( int iRow, int iCol )
+static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 {
    BOOL fResult = FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_SetMode( %hu, %hu )", iRow, iCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_SetMode(%p,%d,%d)", pGT, iRow, iCol ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( iRow <= WVT_MAX_ROWS && iCol <= WVT_MAX_COLS )
    {
@@ -2048,9 +2052,11 @@ static BOOL hb_gt_wvt_SetMode( int iRow, int iCol )
 
 /* ********************************************************************** */
 
-static char * hb_gt_wvt_Version( int iType )
+static char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Version()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Version(%p,%d)", pGT, iType ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
@@ -2060,13 +2066,14 @@ static char * hb_gt_wvt_Version( int iType )
 
 /* ********************************************************************** */
 
-static int hb_gt_wvt_ReadKey( int iEventMask )
+static int hb_gt_wvt_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int  c = 0;
    BOOL fKey;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey( %d )", iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_ReadKey(%p,%d)", pGT, iEventMask ) );
 
+   HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iEventMask ); /* we ignore the eventmask! */
 
    hb_gt_wvt_ProcessMessages();
@@ -2077,33 +2084,41 @@ static int hb_gt_wvt_ReadKey( int iEventMask )
 
 /* ********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
-static void hb_gt_wvt_Tone( double dFrequency, double dDuration )
+static void hb_gt_wvt_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    hb_gt_w32_tone( dFrequency, dDuration );
 }
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_mouse_IsPresent( void )
+static BOOL hb_gt_wvt_mouse_IsPresent( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_mouse_IsPresent()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_mouse_IsPresent(%p)", pGT));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    return TRUE;
 }
 
-static void hb_gt_wvt_mouse_GetPos( int * piRow, int * piCol )
+static void hb_gt_wvt_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_mouse_GetPos(%p,%p)", piRow, piCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_mouse_GetPos(%p,%p,%p)", pGT, piRow, piCol));
 
-   *piRow = _s.mousePos.y;
-   *piCol = _s.mousePos.x;
+   HB_SYMBOL_UNUSED( pGT );
+
+   *piRow = _s.MousePos.y;
+   *piCol = _s.MousePos.x;
 }
 
-static BOOL hb_gt_wvt_mouse_ButtonState( int iButton )
+static BOOL hb_gt_wvt_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_mouse_ButtonState(%i)", iButton ) );
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_mouse_ButtonState(%p,%i)", pGT, iButton) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    switch( iButton )
    {
@@ -2117,20 +2132,22 @@ static BOOL hb_gt_wvt_mouse_ButtonState( int iButton )
    return FALSE;
 }
 
-static int hb_gt_wvt_mouse_CountButton( void )
+static int hb_gt_wvt_mouse_CountButton( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_mouse_CountButton()") );
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_mouse_CountButton(%p)", pGT) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    return GetSystemMetrics( SM_CMOUSEBUTTONS );
 }
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
+static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    int iVal;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Info(%d,%p)", iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
    switch( iType )
    {
@@ -2278,7 +2295,7 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            hb_gtSetMode( (USHORT) ( iVal / _s.PTEXTSIZE.y ), _s.COLS );
+            HB_GTSELF_SETMODE( pGT, (USHORT) ( iVal / _s.PTEXTSIZE.y ), _s.COLS );
          }
          break;
 
@@ -2287,7 +2304,7 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
          {
-            hb_gtSetMode( _s.ROWS, (USHORT) ( iVal / _s.PTEXTSIZE.x ) );
+            HB_GTSELF_SETMODE( pGT, _s.ROWS, (USHORT) ( iVal / _s.PTEXTSIZE.x ) );
          }
          break;
 
@@ -2440,7 +2457,7 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
          break;
 
       default:
-         return HB_GTSUPER_INFO( iType, pInfo );
+         return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
    return TRUE;
@@ -2476,14 +2493,16 @@ static BOOL hb_gt_wvt_Info( int iType, PHB_GT_INFO pInfo )
             ReleaseDC( _s.hWnd, hdc ); \
          } while( 0 )
 
-static int hb_gt_wvt_gfx_Primitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
+static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
    HDC      hdc;
    HPEN     hPen, hOldPen;
    HBRUSH   hBrush, hOldBrush;
    int      iRet = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_gfx_Primitive(%d, %d, %d, %d, %d, %d)", iType, iTop, iLeft, iBottom, iRight, iColor ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_gfx_Primitive(%p,%d,%d,%d,%d,%d,%d)", pGT, iType, iTop, iLeft, iBottom, iRight, iColor ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( _s.hWnd )
    {
@@ -2595,8 +2614,9 @@ static int hb_gt_wvt_gfx_Primitive( int iType, int iTop, int iLeft, int iBottom,
 }
 
 /*
-static void hb_gt_wvt_gfx_Text( int iTop, int iLeft, char *cBuf, int iColor, int iSize, int iWidth )
+static void hb_gt_wvt_gfx_Text( PHB_GT pGT, int iTop, int iLeft, char *cBuf, int iColor, int iSize, int iWidth )
 {
+   HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iTop );
    HB_SYMBOL_UNUSED( iLeft );
    HB_SYMBOL_UNUSED( cBuf );
@@ -2608,9 +2628,11 @@ static void hb_gt_wvt_gfx_Text( int iTop, int iLeft, char *cBuf, int iColor, int
 
 /* ********************************************************************** */
 
-static void hb_gt_wvt_Redraw( int iRow, int iCol, int iSize )
+static void hb_gt_wvt_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( _s.hWnd )
    {
@@ -2628,11 +2650,11 @@ static void hb_gt_wvt_Redraw( int iRow, int iCol, int iSize )
 
 /* ********************************************************************** */
 
-static void hb_gt_wvt_Refresh( void )
+static void hb_gt_wvt_Refresh( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Refresh()") );
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_Refresh(%p)", pGT) );
 
-   HB_GTSUPER_REFRESH();
+   HB_GTSUPER_REFRESH( pGT );
 
    if( _s.hWnd )
    {
@@ -2643,10 +2665,9 @@ static void hb_gt_wvt_Refresh( void )
 
 /* ********************************************************************** */
 
-static BOOL hb_gt_wvt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
+static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
-
-   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
    /*
@@ -2672,9 +2693,9 @@ static BOOL hb_gt_wvt_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox
    return TRUE;
 }
 
-static BOOL hb_gt_wvt_SetKeyCP( char * pszTermCDP, char * pszHostCDP )
+static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP )
 {
-   HB_GTSUPER_SETKEYCP( pszTermCDP, pszHostCDP );
+   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
 #ifndef HB_CDP_SUPPORT_OFF
    /*

@@ -419,11 +419,11 @@ static void hb_gt_pca_setKeyTrans( char * pSrcChars, char * pDstChars )
    }
 }
 
-static void hb_gt_pca_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_pca_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
    int iRows = 25, iCols = 80;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr));
 
    s_hFilenoStdin  = hFilenoStdin;
    s_hFilenoStdout = hFilenoStdout;
@@ -442,7 +442,7 @@ static void hb_gt_pca_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
 
    hb_fsSetDevMode( s_hFilenoStdout, FD_BINARY );
 
-   HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
 #if ( defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ ) ) && \
@@ -501,26 +501,26 @@ static void hb_gt_pca_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
       s_sOutBuf = ( BYTE * ) hb_xgrab( s_iOutBufSize );
    }
 
-   HB_GTSUPER_RESIZE( iRows, iCols );
-   hb_gt_SetFlag( GTI_STDOUTCON, s_bStdoutConsole );
-   hb_gt_SetFlag( GTI_STDERRCON, s_bStderrConsole );
+   HB_GTSUPER_RESIZE( pGT, iRows, iCols );
+   HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, s_bStdoutConsole );
+   HB_GTSELF_SETFLAG( pGT, GTI_STDERRCON, s_bStderrConsole );
 
    hb_gt_pca_AnsiInit();
    hb_gt_pca_AnsiGetCurPos( &s_iRow, &s_iCol );
 }
 
-static void hb_gt_pca_Exit( void )
+static void hb_gt_pca_Exit( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_Exit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_Exit(%p)", pGT));
 
-   hb_gt_Refresh();
+   HB_GTSELF_REFRESH( pGT );
    /* set default color */
    hb_gt_pca_AnsiSetAttributes( 0x07 );
    hb_gt_pca_AnsiSetCursorStyle( SC_NORMAL );
    hb_gt_pca_AnsiSetAutoMargin( 1 );
    hb_gt_pca_termFlush();
 
-   HB_GTSUPER_EXIT();
+   HB_GTSUPER_EXIT( pGT );
 
 #if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    if( s_fRestTTY )
@@ -539,12 +539,13 @@ static void hb_gt_pca_Exit( void )
    s_bStdinConsole = s_bStdoutConsole = s_bStderrConsole = FALSE;
 }
 
-static int hb_gt_pca_ReadKey( int iEventMask )
+static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int ch = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_ReadKey(%d)", iEventMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_ReadKey(%p,%d)", pGT, iEventMask));
 
+   HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iEventMask );
 
 #if defined( HARBOUR_GCC_OS2 )
@@ -706,12 +707,14 @@ static int hb_gt_pca_ReadKey( int iEventMask )
    return ch;
 }
 
-static void hb_gt_pca_Tone( double dFrequency, double dDuration )
+static void hb_gt_pca_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    static double dLastSeconds = 0;
    double dCurrentSeconds;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_Tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_pca_Tone(%p, %lf, %lf)", pGT, dFrequency, dDuration));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    /* Output an ASCII BEL character to cause a sound */
    /* but throttle to max once per second, in case of sound */
@@ -732,17 +735,21 @@ static void hb_gt_pca_Tone( double dFrequency, double dDuration )
    hb_idleSleep( dDuration / 18.2 );
 }
 
-static void hb_gt_pca_Bell( void )
+static void hb_gt_pca_Bell( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ( "hb_gt_pca_Bell()" ) );
+   HB_TRACE(HB_TR_DEBUG, ( "hb_gt_pca_Bell(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    hb_gt_pca_termOut( s_szBell, 1 );
    hb_gt_pca_termFlush();
 }
 
-static char * hb_gt_pca_Version( int iType )
+static char * hb_gt_pca_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Version(%d)", iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Version(%p,%d)", pGT, iType ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
@@ -750,9 +757,11 @@ static char * hb_gt_pca_Version( int iType )
    return "Harbour Terminal: PC ANSI";
 }
 
-static BOOL hb_gt_pca_Suspend( void )
+static BOOL hb_gt_pca_Suspend( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Suspend()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Suspend(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 #if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    if( s_fRestTTY )
    {
@@ -764,10 +773,11 @@ static BOOL hb_gt_pca_Suspend( void )
    return TRUE;
 }
 
-static BOOL hb_gt_pca_Resume( void )
+static BOOL hb_gt_pca_Resume( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Resume()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Resume(%p)", pGT ) );
 
+   HB_SYMBOL_UNUSED( pGT );
 #if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    if( s_fRestTTY )
    {
@@ -779,11 +789,11 @@ static BOOL hb_gt_pca_Resume( void )
    return TRUE;
 }
 
-static BOOL hb_gt_pca_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
+static BOOL hb_gt_pca_SetDispCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP, BOOL fBox )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetDispCP(%s,%s,%d)", pszTermCDP, pszHostCDP, (int) fBox ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
 
-   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
@@ -803,10 +813,11 @@ static BOOL hb_gt_pca_SetDispCP( char *pszTermCDP, char *pszHostCDP, BOOL fBox )
    return FALSE;
 }
 
-static BOOL hb_gt_pca_SetKeyCP( char *pszTermCDP, char *pszHostCDP )
+static BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetKeyCP(%s,%s)", pszTermCDP, pszHostCDP ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
+   HB_SYMBOL_UNUSED( pGT );
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdp_page->id;
@@ -846,17 +857,17 @@ static BOOL hb_gt_pca_SetKeyCP( char *pszTermCDP, char *pszHostCDP )
    return FALSE;
 }
 
-static void hb_gt_pca_Redraw( int iRow, int iCol, int iSize )
+static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    BYTE bColor, bAttr;
    USHORT usChar;
    int iLen = 0, iColor = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    while( iSize-- )
    {
-      if( !hb_gt_GetScrChar( iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
          break;
 
       if( iLen == 0 )
@@ -886,13 +897,13 @@ static void hb_gt_pca_Redraw( int iRow, int iCol, int iSize )
    }
 }
 
-static void hb_gt_pca_Refresh( void )
+static void hb_gt_pca_Refresh( PHB_GT pGT )
 {
    int iWidth, iHeight, iRow, iCol, iStyle;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Refresh()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Refresh(%p)", pGT ) );
 
-   hb_gt_GetSize( &iHeight, &iWidth );
+   HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
 
    if( s_iLineBufSize == 0 )
    {
@@ -905,9 +916,9 @@ static void hb_gt_pca_Refresh( void )
       s_iLineBufSize = iWidth;
    }
 
-   HB_GTSUPER_REFRESH();
+   HB_GTSUPER_REFRESH( pGT );
 
-   hb_gt_GetScrCursor( &iRow, &iCol, &iStyle );
+   HB_GTSELF_GETSCRCURSOR( pGT, &iRow, &iCol, &iStyle );
    if( iStyle != SC_NONE )
    {
       if( iRow >= 0 && iCol >= 0 && iRow < iHeight && iCol < iWidth )
@@ -919,9 +930,9 @@ static void hb_gt_pca_Refresh( void )
    hb_gt_pca_termFlush();
 }
 
-static BOOL hb_gt_pca_Info( int iType, PHB_GT_INFO pInfo )
+static BOOL hb_gt_pca_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Info(%d,%p)", iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
    switch ( iType )
    {
@@ -931,7 +942,7 @@ static BOOL hb_gt_pca_Info( int iType, PHB_GT_INFO pInfo )
          break;
 
       default:
-         return HB_GTSUPER_INFO( iType, pInfo );
+         return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
    return TRUE;

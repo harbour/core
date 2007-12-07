@@ -566,11 +566,11 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
 /* *********************************************************************** */
 
 /* I think this function should not be void. It should be BOOL */
-static void hb_gt_sln_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_sln_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
    BOOL gt_Inited = FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr));
 
    /* stdin && stdout && stderr */
    s_hStdIn  = hFilenoStdin;
@@ -694,21 +694,21 @@ static void hb_gt_sln_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
 
    s_fActive = TRUE;
    hb_gt_sln_mouse_Init();
-   HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSUPER_RESIZE( SLtt_Screen_Rows, SLtt_Screen_Cols );
-   hb_gt_SetFlag( GTI_COMPATBUFFER, FALSE );
-   hb_gt_SetFlag( GTI_STDOUTCON, s_fStdOutTTY );
-   hb_gt_SetFlag( GTI_STDERRCON, s_fStdErrTTY );
+   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   HB_GTSUPER_RESIZE( pGT, SLtt_Screen_Rows, SLtt_Screen_Cols );
+   HB_GTSELF_SETFLAG( pGT, GTI_COMPATBUFFER, FALSE );
+   HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, s_fStdOutTTY );
+   HB_GTSELF_SETFLAG( pGT, GTI_STDERRCON, s_fStdErrTTY );
 
-   hb_gt_SetBlink( TRUE );
-   hb_gt_SetPos( SLsmg_get_row(), SLsmg_get_column() );
+   HB_GTSELF_SETBLINK( pGT, TRUE );
+   HB_GTSELF_SETPOS( pGT, SLsmg_get_row(), SLsmg_get_column() );
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_sln_Exit( void )
+static void hb_gt_sln_Exit( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_Exit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_Exit(%p)", pGT));
 
    /* restore a standard bell frequency and duration */
    if( hb_sln_UnderLinuxConsole )
@@ -718,7 +718,7 @@ static void hb_gt_sln_Exit( void )
       SLtt_flush_output();
    }
 
-   hb_gt_Refresh();
+   HB_GTSELF_REFRESH( pGT );
    hb_gt_sln_mouse_Exit();
    /* NOTE: This is incompatible with Clipper - on exit leave a cursor visible */
    hb_sln_SetCursorStyle( SC_NORMAL );
@@ -729,15 +729,16 @@ static void hb_gt_sln_Exit( void )
 
    s_fStdInTTY = s_fStdOutTTY = s_fStdErrTTY = s_fActive = FALSE;
 
-   HB_GTSUPER_EXIT();
+   HB_GTSUPER_EXIT( pGT );
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_SetMode( int iRows, int iCols )
+static BOOL hb_gt_sln_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_SetMode(%d, %d)", iRows, iCols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_SetMode(%p,%d,%d)", pGT, iRows, iCols));
 
+   HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iRows );
    HB_SYMBOL_UNUSED( iCols );
 
@@ -747,18 +748,20 @@ static BOOL hb_gt_sln_SetMode( int iRows, int iCols )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_IsColor( void )
+static BOOL hb_gt_sln_IsColor( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_IsColor()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_IsColor(%p)", pGT));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    return SLtt_Use_Ansi_Colors;
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_sln_SetBlink( BOOL fBlink )
+static void hb_gt_sln_SetBlink( PHB_GT pGT, BOOL fBlink )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_SetBlink(%d)", (int) fBlink));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_SetBlink(%p,%d)", pGT, (int) fBlink));
 
    /*
     * We cannot switch remote terminal between blinking and highlight mode
@@ -774,16 +777,18 @@ static void hb_gt_sln_SetBlink( BOOL fBlink )
     */
 
    SLtt_Blink_Mode = fBlink ? 1 : 0;
-   HB_GTSUPER_SETBLINK( fBlink );
+   HB_GTSUPER_SETBLINK( pGT, fBlink );
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_sln_Tone( double dFrequency, double dDuration )
+static void hb_gt_sln_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_Tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
 
    /* TODO: Implement this for other consoles than linux ? */
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( hb_sln_UnderLinuxConsole )
    {
@@ -812,9 +817,11 @@ static void hb_gt_sln_Tone( double dFrequency, double dDuration )
 
 /* *********************************************************************** */
 
-static char * hb_gt_sln_Version( int iType )
+static char * hb_gt_sln_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Version()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Version(%p)", pGT ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if ( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
@@ -829,8 +836,10 @@ static char * hb_gt_sln_Version( int iType )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_Suspend( void )
+static BOOL hb_gt_sln_Suspend( PHB_GT pGT )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    if( ! s_bSuspended )
    {
       if( SLsmg_suspend_smg() != -1 )
@@ -845,8 +854,10 @@ static BOOL hb_gt_sln_Suspend( void )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_Resume( void )
+static BOOL hb_gt_sln_Resume( PHB_GT pGT )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    if( s_bSuspended && SLsmg_resume_smg() != -1 &&
        hb_sln_Init_Terminal( 1 ) != -1 )
    {
@@ -862,27 +873,31 @@ static BOOL hb_gt_sln_Resume( void )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_PreExt( void )
+static BOOL hb_gt_sln_PreExt( PHB_GT pGT )
 {
-    SLsmg_refresh();
+   HB_SYMBOL_UNUSED( pGT );
+
+   SLsmg_refresh();
 #ifdef HAVE_GPM_H
-    hb_gt_sln_mouse_FixTrash();
+   hb_gt_sln_mouse_FixTrash();
 #endif
-    return TRUE;
+   return TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_PostExt( void )
+static BOOL hb_gt_sln_PostExt( PHB_GT pGT )
 {
-    return TRUE;
+   HB_SYMBOL_UNUSED( pGT );
+
+   return TRUE;
 }
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_Info( int iType, PHB_GT_INFO pInfo )
+static BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Info(%d,%p)", iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
    switch ( iType )
    {
@@ -898,7 +913,7 @@ static BOOL hb_gt_sln_Info( int iType, PHB_GT_INFO pInfo )
          break;
 
       default:
-         return HB_GTSUPER_INFO( iType, pInfo );
+         return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
    return TRUE;
@@ -907,9 +922,9 @@ static BOOL hb_gt_sln_Info( int iType, PHB_GT_INFO pInfo )
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
+static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
-   HB_GTSUPER_SETDISPCP( pszTermCDP, pszHostCDP, fBox );
+   HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
    {
@@ -932,7 +947,7 @@ static BOOL hb_gt_sln_SetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox
 
 /* *********************************************************************** */
 
-static BOOL hb_gt_sln_SetKeyCP( char * pszTermCDP, char * pszHostCDP )
+static BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP )
 {
 #ifndef HB_CDP_SUPPORT_OFF
    PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
@@ -951,14 +966,16 @@ static BOOL hb_gt_sln_SetKeyCP( char * pszTermCDP, char * pszHostCDP )
    HB_SYMBOL_UNUSED( pszTermCDP );
    HB_SYMBOL_UNUSED( pszHostCDP );
 #endif
+   HB_SYMBOL_UNUSED( pGT );
+
    return TRUE;
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_sln_Redraw( int iRow, int iCol, int iSize )
+static void hb_gt_sln_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    if( s_fActive )
    {
@@ -968,7 +985,7 @@ static void hb_gt_sln_Redraw( int iRow, int iCol, int iSize )
 
       while( iSize-- > 0 )
       {
-         if( !hb_gt_GetScrChar( iRow, iCol, &bColor, &bAttr, &usChar ) )
+         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
             break;
          SLsmg_gotorc( iRow, iCol );
          HB_SLN_BUILD_CHAR( SLchar, usChar & 0xff, bColor, bAttr );
@@ -980,16 +997,16 @@ static void hb_gt_sln_Redraw( int iRow, int iCol, int iSize )
 
 /* *********************************************************************** */
 
-static void hb_gt_sln_Refresh( void )
+static void hb_gt_sln_Refresh( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Refresh()") );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Refresh(%p)", pGT ) );
 
-   HB_GTSUPER_REFRESH();
+   HB_GTSUPER_REFRESH( pGT );
    if( s_fActive )
    {
       int iRow, iCol, iStyle;
 
-      hb_gt_GetScrCursor( &iRow, &iCol, &iStyle );
+      HB_GTSELF_GETSCRCURSOR( pGT, &iRow, &iCol, &iStyle );
       if( iStyle != SC_NONE && ( iRow < 0 || iCol < 0 ||
                       iRow >= SLtt_Screen_Rows || iCol >= SLtt_Screen_Cols ) )
          iStyle = SC_NONE;
