@@ -98,10 +98,10 @@
 #include "hbgfxdef.ch"
 
 
-#define WVT_CHAR_QUEUE_SIZE        128
-#define WVT_MAX_TITLE_SIZE         128
-#define WVT_MAX_ROWS               256
-#define WVT_MAX_COLS               256
+#define WVT_CHAR_QUEUE_SIZE   128
+#define WVT_MAX_TITLE_SIZE    128
+#define WVT_MAX_ROWS          256
+#define WVT_MAX_COLS          256
 #if defined( HB_WINCE )
 #  define WVT_DEFAULT_ROWS          15
 #  define WVT_DEFAULT_COLS          50
@@ -190,6 +190,8 @@ typedef struct global_data
 
    USHORT   ROWS;                         /* number of displayable rows in window */
    USHORT   COLS;                         /* number of displayable columns in window */
+
+   COLORREF COLORS[16];                   /* colors */
 
    BOOL     CaretExist;                   /* TRUE if a caret has been created */
    BOOL     CaretHidden;                  /* TRUE if a caret has been hiden */

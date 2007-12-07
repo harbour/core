@@ -99,25 +99,6 @@ static int     s_iCmdShow;
 
 static HB_GTWVT _s;
 
-static const COLORREF _COLORS[16] = {
-   BLACK,
-   BLUE,
-   GREEN,
-   CYAN,
-   RED,
-   MAGENTA,
-   BROWN,
-   WHITE,
-   LIGHT_GRAY,
-   BRIGHT_BLUE,
-   BRIGHT_GREEN,
-   BRIGHT_CYAN,
-   BRIGHT_RED,
-   BRIGHT_MAGENTA,
-   YELLOW,
-   BRIGHT_WHITE
-};
-
 static const int K_Ctrl[] =
 {
    K_CTRL_A, K_CTRL_B, K_CTRL_C, K_CTRL_D, K_CTRL_E, K_CTRL_F, K_CTRL_G,
@@ -134,8 +115,27 @@ static void hb_gt_wvt_InitStatics( PHB_GT pGT )
    GetVersionEx( &osvi );
 
    _s.pGT              = pGT;
+
    _s.ROWS             = WVT_DEFAULT_ROWS;
    _s.COLS             = WVT_DEFAULT_COLS;
+
+   _s.COLORS[ 0]       = BLACK;
+   _s.COLORS[ 1]       = BLUE;
+   _s.COLORS[ 2]       = GREEN;
+   _s.COLORS[ 3]       = CYAN;
+   _s.COLORS[ 4]       = RED;
+   _s.COLORS[ 5]       = MAGENTA;
+   _s.COLORS[ 6]       = BROWN;
+   _s.COLORS[ 7]       = WHITE;
+   _s.COLORS[ 8]       = LIGHT_GRAY;
+   _s.COLORS[ 9]       = BRIGHT_BLUE;
+   _s.COLORS[10]       = BRIGHT_GREEN;
+   _s.COLORS[11]       = BRIGHT_CYAN;
+   _s.COLORS[12]       = BRIGHT_RED;
+   _s.COLORS[13]       = BRIGHT_MAGENTA;
+   _s.COLORS[14]       = YELLOW;
+   _s.COLORS[15]       = BRIGHT_WHITE;
+
    _s.CaretExist       = FALSE;
    _s.CaretHidden      = FALSE;
    _s.CaretSize        = 4;
@@ -874,9 +874,9 @@ static BOOL hb_gt_wvt_TextOut( HDC hdc, USHORT col, USHORT row, BYTE attr, LPCTS
    RECT  rClip;
 
    /* set foreground color */
-   SetTextColor( hdc, _COLORS[ attr & 0x0F ] );
+   SetTextColor( hdc, _s.COLORS[ attr & 0x0F ] );
    /* set background color */
-   SetBkColor( hdc, _COLORS[ ( attr >> 4 ) & 0x0F ] );
+   SetBkColor( hdc, _s.COLORS[ ( attr >> 4 ) & 0x0F ] );
 
    SetTextAlign( hdc, TA_LEFT );
 
