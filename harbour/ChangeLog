@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-07 15:29 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/hbgtwvg/Makefile
+   * contrib/hbgtwvg/common.mak
+   - contrib/hbgtwvg/gtwvt.h
+   + contrib/hbgtwvg/gtwvg.h
+   - contrib/hbgtwvg/gtwvt.c
+   + contrib/hbgtwvg/gtwvg.c
+   * contrib/hbgtwvg/wvtutils.c
+   * contrib/hbgtwvg/wvtcore.c
+     ! Renamed gtwvt to gtwvg to avoid clash with 
+       gtwvt in core when using non-GNU make files.
+
+   * source/vm/extend.c
+     ! Fixed trace messages in hb_parcx()
+
+   * utils/hbmake/hbmutils.prg
+     ! Fixed cosmetic problem.
+       (Thanks to Bill Robertson)
+
 2007-12-07 11:39 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwvt/gtwvt.h
   * harbour/source/rtl/gtwvt/gtwvt.c

@@ -78,7 +78,7 @@
 
 //-------------------------------------------------------------------//
 
-#include "gtwvt.h"
+#include "gtwvg.h"
 
 static GLOBAL_DATA *_s = NULL;
 

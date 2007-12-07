@@ -70,7 +70,7 @@
 
 //-------------------------------------------------------------------//
 
-#include "gtwvt.h"
+#include "gtwvg.h"
 
 /* workaround for missing declaration in MinGW32 */
 #if !defined(TTM_SETTITLE) && defined(TTM_SETTITLEA)

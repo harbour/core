@@ -84,7 +84,7 @@
 
 #define HB_OS_WIN_32_USED
 
-#include "gtwvt.h"
+#include "gtwvg.h"
 
 static int           s_GtId;
 static HB_GT_FUNCS   SuperTable;

@@ -189,7 +189,7 @@ HB_EXPORT char * hb_parc( int iParam, ... )
 
 HB_EXPORT char * hb_parcx( int iParam, ... )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_parc(%d, ...)", iParam));
+   HB_TRACE(HB_TR_DEBUG, ("hb_parcx(%d, ...)", iParam));
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {

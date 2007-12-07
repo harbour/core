@@ -5,12 +5,12 @@
 ROOT = ../../
 
 C_SOURCES=\
-	gtwvt.c \
+	gtwvg.c \
 	wvtcore.c \
 	wvtutils.c \
 
 C_HEADERS=\
-	gtwvt.h \
+	gtwvg.h \
 
 PRG_SOURCES=\
 	wvtclass.prg \

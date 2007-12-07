@@ -601,18 +601,18 @@ FUNCTION GetLibs( lGcc, cDir )
    LOCAL aInstaledLibs := GetInstaledLibs( IIF( ! lLinux, IIF( ! lGcc, cDir + "\*.lib", cDir + "\*.a" ),  '/usr/lib/harbour/*.a' ), lGcc )
    LOCAL cExt := iif(lGcc,".a",".lib")
 
+                            /* 1234567890123456789 */
+   LOCAL aLibsDesc     := { { "Harbour hbmisc      lib - hbmisc" + cExt                         , 'hbmisc' + cExt },;
+                            { "Harbour NanFor Lib  lib - hbnf" + cExt                           , 'hbnf' + cExt },;
+                            { "Harbour GT Lib      lib - hbgt"+cExt                             , 'hbgt' + cExt },;
+                            { "Harbour ZipArch     lib - hbziparch"+cExt                        , 'hbziparch' + cExt + iif( lLinux, ' stdc++.a z.a', ' ' ) },;
+                            { "Harbour ole (old)   lib - hbole"+ cExt                           , 'hbole' + cExt + ' ole2' + cExt },;
+                            { "Harbour MySQL       lib - hbmysql" + cExt                        , 'hbmysql' + cExt },;
+                            { "Harbour PostgreSQL  lib - hbpgsql"+cExt                          , 'hbpgsql' + cExt },;
+                            { "Harbour samples     lib - hbclipsm"+cExt                         , 'hbclipsm' + cExt }  }
 
-   LOCAL aLibsDesc     := { { "Harbour hbmisc     lib - hbmisc" + cExt                         , 'hbmisc' + cExt },;
-                            { "Harbour NanFor     lib - hbnf" + cExt                           , 'hbnf' + cExt },;
-                            { "Harbour GT         lib - hbgt"+cExt                             , 'hbgt' + cExt },;
-                            { "Harbour Zip        lib - hbziparch"+cExt                        , 'hbziparch' + cExt + iif( lLinux, ' stdc++.a z.a', ' ' ) },;
-                            { "Harbour Ole        lib - hbole"+ cExt                           , 'hbole' + cExt + ' ole2' + cExt },;
-                            { "Harbour MySql      lib - hbmysql" + cExt                        , 'hbmysql' + cExt },;
-                            { "Harbour PostGreSql lib - hbpgsql"+cExt                          , 'hbpgsql' + cExt },;
-                            { "Harbour Samples    lib - hbclipsm"+cExt                         , 'hbclipsm' + cExt }  }
 
-
-   AEVAL( aInstaledLibs, { | x | AAdd( aLibsDesc, { padr("Harbour contrib",20)+"lib - " + padr(x,15), x } ) } )
+   AEVAL( aInstaledLibs, { | x | AAdd( aLibsDesc, { padr("Harbour contrib",19)+" lib - " + padr(x,15), x } ) } )
 
 RETURN aLibsDesc
 
