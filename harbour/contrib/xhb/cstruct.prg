@@ -53,6 +53,7 @@
 #include "cstruct.ch"
 #include "hboo.ch"
 #include "error.ch"
+#include "xhb.ch"
 
 #define CLASS_PROPERTIES 6
 
@@ -256,7 +257,7 @@ Procedure HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
 
    IF ! Empty( cSynonList )
       FOR EACH cSynon IN HB_aTokens( cSynonList )
-         IF cSynon[1] == '*'
+         IF left( cSynon,1 ) == '*'
             aAdd( s_aSynonyms, { Upper( SubStr( cSynon, 2 ) ), nID + CTYPE_STRUCTURE_PTR } )
          ELSE
             aAdd( s_aSynonyms, { Upper( cSynon ), nID + CTYPE_STRUCTURE } )
