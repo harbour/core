@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-08 12:13 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/xhb/cstruct.prg
+    + #include 'xhb.ch'
+    ! Line#259 : cSynon[1] == '*' => left( cSynon,1 ) == '*'
+      Now C Structure support in Harbour is exactly like xHarbour. Tested.
+
 2007-12-07 15:29 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/hbgtwvg/Makefile
    * contrib/hbgtwvg/common.mak
