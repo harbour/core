@@ -144,7 +144,7 @@ PROCEDURE Main( cDSN )
    LOCAL nRgt    := 75
    LOCAL nMaxRows:= MaxRow()
    LOCAL nBtnRow := nMaxRows - 1
-   LOCAL cLabel  := 'xHarbour simulated GUI.'
+   LOCAL cLabel  := '(x)Harbour simulated GUI.'
    LOCAL aObjects:= WvtSetObjects( {} )
    LOCAL aObj    := {}
    LOCAL hPopup
@@ -250,14 +250,11 @@ PROCEDURE Main( cDSN )
 
    aAdd( aBlocks, {|| Wvt_Mouse( -1000001 ) } )
 
-
    aLastPaint := WvtSetBlocks( aBlocks )
 
    scr := SaveScreen( 0,0,maxrow(),maxcol() )
    clr := SetColor( 'N/W' )
-
    CLS
-
    SetColor( 'N/W,N/GR*,,,N/W*' )
 
    Wvt_SetMenu( oMenu:hMenu )
@@ -318,7 +315,7 @@ PROCEDURE WvtNextGets()
    LOCAL nBtm       := 20
    LOCAL nRgt       := 75
    LOCAL kf2        := SetKey( K_F2, {|| WvtGets() } )
-   LOCAL kf3        := SetKey( K_F3, {|| WvtWindowExpand( 1 ) } )
+   LOCAL kf3        := SetKey( K_F3, {|| WvtWindowExpand(  1 ) } )
    LOCAL kf4        := SetKey( K_F4, {|| WvtWindowExpand( -1 ) } )
    LOCAL cLabel     := 'VOUCH, that GROWS with you'
    LOCAL aPalette   := Wvt_GetPalette()
@@ -354,8 +351,8 @@ PROCEDURE WvtNextGets()
    aAdd( aBlocks, {|| Wvt_DrawButton( 22,36,22,41,'Data',, 0, rgb( 100,22,241 ), rgb( 198,198,198 ) ) } )
 
    aLastPaint := WvtSetBlocks( aBlocks )
-   clr        := SetColor( 'N/W,N/GR*,,,N/W*' )
 
+   clr := SetColor( 'N/W,N/GR*,,,N/W*' )
    CLS
 
    @ MaxRow(), 0 SAY PadC( '(x)Harbour + WVT Console GUI Screen',80 ) COLOR 'R+/W'
@@ -380,7 +377,8 @@ PROCEDURE WvtNextGets()
    WvtSetObjects( aObjects )
    WvtSetBlocks( aLastPaint )
    SetColor( clr )
-   RestScreen( 0,0,maxrow(),maxcol(), scr )
+
+   RestScreen( 0, 0,maxrow(), maxcol(), scr )
    Wvt_RestScreen( wvtScr )
    SetPos( nRow, nCol )
    RETURN
@@ -544,10 +542,10 @@ FUNCTION WvtSetBlocks( a_ )
    LOCAL o
    STATIC s := {}
 
-   o := aClone( s )
+   o := aclone( s )
 
    IF a_ <> nil
-      s := aClone( a_ )
+      s := aclone( a_ )
    ENDIF
 
    RETURN o
@@ -642,34 +640,9 @@ FUNCTION WvtMyBrowse()
 
    STATIC nStyle := 0
 
-   #ifdef __SQL__
-      cDbfFile := 'TEST.DBF'
-      cSqlFile := 'TEST_DBF'
-
-      if !( SR_ExistTable( cSqlFile ) )
-         USE ( cDbfFile ) NEW VIA 'DBFCDX'
-         if NetError()
-            ?  'Error in using local file'
-            inkey( 0 )
-            return nil
-         endif
-         Stru_:= DbStruct()
-         DbCloseArea()
-
-         DbCreate( cSqlFile, Stru_, 'SQLRDD' )
-         USE ( cSqlFile ) NEW VIA 'SQLRDD'
-
-         APPEND FROM ( cDbfFile ) VIA 'DBFCDX'
-         DbCloseArea()
-      endif
-      cRDD       := 'SQLRDD'
-      cFileDbf   := 'TEST_DBF'
-      cFileIndex := 'TEST_Z01'
-   #else
-      cRDD       := 'DBFCDX'
-      cFileDbf   := 'TEST.DBF'
-      cFileIndex := 'TEST.Z01'
-   #endif
+   cRDD       := 'DBFCDX'
+   cFileDbf   := 'TEST.DBF'
+   cFileIndex := 'TEST.Z01'
 
    USE ( cFileDbf ) NEW SHARED VIA ( cRDD )
    if NetErr()
@@ -752,7 +725,7 @@ FUNCTION WvtMyBrowse()
    SetCursor( nCursor )
 
    DBCloseArea()
-   RestScreen( 0,0, maxrow(),maxcol(), cScr )
+   RestScreen( 0, 0, maxrow(), maxcol(), cScr )
    Wvt_setPopupMenu( hPopup )
 
    RETURN nil
@@ -1378,7 +1351,7 @@ STATIC FUNCTION MyDialogOne()
    oDlg:AddObject( oBox )
 
    oText := WvtLabel():New( oDlg, 101, 4, oDlg:MaxCol()-40, 7,oDlg:MaxCol()-2 )
-   oText:Text              := 'xHarbour'
+   oText:Text              := '(x)Harbour'
    oText:nFontHeight       := 36
    oText:nAlignHorz        := 2
    oText:nAlignVert        := 2
@@ -1401,7 +1374,7 @@ STATIC FUNCTION MyDialogOne()
    oTBar:lFloating := .f.
    oTBar:Tooltip   := 'Toolbar'
    oTBar:AddButton( aImg_[ 1 ], {|| oImg:SetImage( aImg_[ 1 ] ) } , 'Lock' )
-   oTBar:AddButton( aImg_[ 2 ], {|| oImg:SetImage( aImg_[ 2 ] ), oText:SetText( 'xHarbour' ) } , 'New' )
+   oTBar:AddButton( aImg_[ 2 ], {|| oImg:SetImage( aImg_[ 2 ] ), oText:SetText( '(x)Harbour' ) } , 'New' )
    oTBar:AddButton( aImg_[ 3 ], {|| oImg:SetImage( aImg_[ 3 ] ) } , 'Calculator' )
    oTBar:AddButton()
    oTBar:AddButton( aImg_[ 5 ], {|| oImg:SetImage( aImg_[ 5 ] ) } , 'Restore' )
@@ -1839,7 +1812,7 @@ Function DynDialog_2()
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_GROUPBOX
    aDlg   := Wvt_AddDlgItem( aDlg, 7, 41,  4, 17, {0,0,4,0},ID_GRP_COMP, 'BUTTON' , nStyle, 'Compiler' )
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_AUTORADIOBUTTON
-   aDlg   := Wvt_AddDlgItem( aDlg, 8, 43,  1, 14, {}, ID_RDO_XH    , 'BUTTON' , nStyle, 'xHarbour' )
+   aDlg   := Wvt_AddDlgItem( aDlg, 8, 43,  1, 14, {}, ID_RDO_XH    , 'BUTTON' , nStyle, '(x)Harbour' )
    aDlg   := Wvt_AddDlgItem( aDlg, 9, 43,  1, 14, {}, ID_RDO_CLIP  , 'BUTTON' , nStyle, 'Clipper'  )
    aDlg   := Wvt_AddDlgItem( aDlg,10, 43,  1, 14, {}, ID_RDO_XBASE , 'BUTTON' , nStyle, 'Xbase++'  )
 
@@ -1900,7 +1873,7 @@ Static Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
          Win_MessageBox( hDlg, if( lClicked, 'Satisfied', 'UnSatisfied' ), 'CheckBoxStatus' )
 
       case wParam == ID_RDO_XH
-         Win_MessageBox( hDlg, 'xHarbour', 'Compiler' )
+         Win_MessageBox( hDlg, '(x)Harbour', 'Compiler' )
 
       case wParam == ID_RDO_CLIP
          Win_MessageBox( hDlg, 'Clipper', 'Compiler' )
@@ -1986,7 +1959,7 @@ Static Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
 
       Win_CheckRadioButton( hDlg, ID_RDO_XH, ID_RDO_XBASE, ID_RDO_XH )
 
-      Wvt_LBAddString( hDlg, ID_LST_LIST, 'xHarbour'  )
+      Wvt_LBAddString( hDlg, ID_LST_LIST, '(x)Harbour'  )
       Wvt_LBAddString( hDlg, ID_LST_LIST, 'Gtwvt'     )
       Wvt_LBAddString( hDlg, ID_LST_LIST, 'Wvtgui'    )
       Wvt_LBAddString( hDlg, ID_LST_LIST, 'Modeless'  )
@@ -2023,13 +1996,13 @@ Static Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
 static function GetEditText()
    Local cText := ''
 
-   cText += 'Welcome in the Wonderful World of xHarbour!'
+   cText += 'Welcome in the Wonderful World of (x)Harbour!'
    cText += CRLF + CRLF
    cText += 'When Peter Rees first published GTWVT, a Windows '
    cText += 'Terminal Driver, on 22 Dec 2003, everybody took it '
    cText += 'lightly, except for me, as I was aware that what '
-   cText += 'wonderful contribution to xHarbour he has made, '
-   cText += 'what immense possibilities he has opened for xHarbour '
+   cText += 'wonderful contribution to (x)Harbour he has made, '
+   cText += 'what immense possibilities he has opened for (x)Harbour '
    cText += 'developers, what limitations he has cleared for Clipper '
    cText += 'savvy user base.'
    cText += CRLF + CRLF

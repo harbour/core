@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-09 19:17 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbgtwvg/tests/demowvg.prg
+    ! Formatting. 
+    ! "xHarbour" => "(x)Harbour"
+
 2007-12-08 12:13 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/xhb/cstruct.prg
     + #include 'xhb.ch'
