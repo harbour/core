@@ -2003,7 +2003,7 @@ static void hb_gt_def_ColdArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, in
          if( HB_GTSELF_CHECKPOS( pGT, iTop, i, &lIndex ) )
          {
             pGT->prevBuffer[ lIndex ].uiValue =
-               ( pGT->screenBuffer[ lIndex ].uiValue &=  ~HB_GT_ATTR_REFRESH );
+               ( pGT->screenBuffer[ lIndex ].uiValue &= ~HB_GT_ATTR_REFRESH );
          }
       }
       if( iLeft == 0 && iRight == pGT->iWidth - 1 )

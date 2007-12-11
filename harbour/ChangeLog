@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-11 16:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbgtcore.c
+    * formatting
+
+  * harbour/source/vm/hvm.c
+    ! fixed typo in HB_TRACE message
+
+  * harbour/source/rtl/gtwvt/gtwvt.h
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * updated for multi window usage
+
+  * harbour/source/vm/maindllp.c
+    * use MessageBox() instead of hb_errInternal() - thanks to Jon Jagger
+      for information about the problem
+
 2007-12-09 19:17 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbgtwvg/tests/demowvg.prg
     ! Formatting. 

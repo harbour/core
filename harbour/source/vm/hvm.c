@@ -3645,7 +3645,7 @@ static void hb_vmEnumReference( PHB_ITEM pBase )
 
    PHB_ENUMREF pEnumExtRef;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmEnumReference(%p)", pEnumRef));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmEnumReference(%p)", pBase));
 
    pEnumExtRef = ( PHB_ENUMREF ) hb_xgrab( sizeof( HB_ENUMREF ) );
    pEnumExtRef->basevalue.type = HB_IT_NIL;

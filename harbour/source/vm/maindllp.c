@@ -70,7 +70,7 @@
 #if defined(HB_OS_WIN_32)
 HB_EXTERN_BEGIN
 
-static FARPROC hb_getProcAddress( LPSTR szProcName )
+static FARPROC hb_getProcAddress( LPCSTR szProcName )
 {
    static HMODULE s_hModule = NULL;
    FARPROC pProcAddr = NULL;
@@ -93,7 +93,12 @@ static FARPROC hb_getProcAddress( LPSTR szProcName )
    }
 
    if( pProcAddr == NULL )
-      hb_errInternal( HB_EI_ERRUNRECOV, "Cannot find address of '%s' function", szProcName, NULL );
+   {
+      LPTSTR lpFuncName = HB_TCHAR_CONVTO( szProcName );
+      MessageBox( NULL, TEXT( "Cannot find function address" ),
+                  lpFuncName, MB_ICONSTOP );
+      HB_TCHAR_FREE( lpFuncName );
+   }
 
    return pProcAddr;
 }

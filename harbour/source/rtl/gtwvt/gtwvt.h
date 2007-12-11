@@ -77,6 +77,7 @@
 #define WVT_MAX_TITLE_SIZE    128
 #define WVT_MAX_ROWS          256
 #define WVT_MAX_COLS          256
+#define WVT_MAX_WINDOWS       256
 #if defined( HB_WINCE )
 #  define WVT_DEFAULT_ROWS          15
 #  define WVT_DEFAULT_COLS          50
@@ -112,6 +113,7 @@
 typedef struct
 {
    PHB_GT   pGT;                          /* core GT pointer */
+   int      iHandle;                      /* window number */
 
    USHORT   ROWS;                         /* number of displayable rows in window */
    USHORT   COLS;                         /* number of displayable columns in window */
