@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-11 23:37 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/compiler/hbusage.c
+     * Year bumped to 2008.
+
 2007-12-11 16:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbgtcore.c
     * formatting
