@@ -1,4 +1,4 @@
-/*
+﻿/*
  * $Id$
  */
 
@@ -7,6 +7,14 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2007-12-13 10:42 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbgtwvg/wvtpaint.prg
+    ! Formatting. 
+  * harbour/contrib/hbgtwvg/hbgtwvg.c
+    + static BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
+                            BYTE bColor, BYTE bAttr, USHORT usChar )
+      GUI elements need that every screen region requsted to be redrawn must be redrawn.
 
 2007-12-12 11:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog

@@ -82,164 +82,164 @@ static paint_:= { { '', {} } }
 //-------------------------------------------------------------------//
 
 function WvtPaintObjects()
-LOCAL i, lExe, nLeft, nRight, b, tlbr_, aBlocks, nBlocks
+   LOCAL i, lExe, nLeft, nRight, b, tlbr_, aBlocks, nBlocks
 
-aBlocks := WvtSetPaint()
+   aBlocks := WvtSetPaint()
 
-if ( nBlocks := len( aBlocks ) ) > 0
-   tlbr_:= Wvt_GetPaintRect()
+   if ( nBlocks := len( aBlocks ) ) > 0
+      tlbr_:= Wvt_GetPaintRect()
 
-   for i := 1 to nBlocks
-      lExe := .t.
+      for i := 1 to nBlocks
+         lExe := .t.
 
-      if aBlocks[ i,3 ] <> nil .and. !empty( aBlocks[ i,3 ] )
-         //  Check parameters against tlbr_ depending upon the
-         //  type of object and attributes contained in aAttr
-         //
-         do case
-         case aBlocks[ i,3,1 ] == WVT_BLOCK_GRID_V
-            b := aBlocks[ i,3,6 ]
-            if len( b:aColumnsSep ) == 0
-               lExe := .f.
-            else
-               nLeft  := b:aColumnsSep[ 1 ]
-               nRight := b:aColumnsSep[ len( b:aColumnsSep ) ]
-               if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   < bottom
+         if aBlocks[ i,3 ] <> nil .and. !empty( aBlocks[ i,3 ] )
+            //  Check parameters against tlbr_ depending upon the
+            //  type of object and attributes contained in aAttr
+            //
+            do case
+            case aBlocks[ i,3,1 ] == WVT_BLOCK_GRID_V
+               b := aBlocks[ i,3,6 ]
+               if len( b:aColumnsSep ) == 0
+                  lExe := .f.
+               else
+                  nLeft  := b:aColumnsSep[ 1 ]
+                  nRight := b:aColumnsSep[ len( b:aColumnsSep ) ]
+                  if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   < bottom
+                        tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm > top
+                        tlbr_[ 2 ] <= nRight + 1       .and. ; // left  < right
+                        tlbr_[ 4 ] >= nLeft  - 2             ) // right > left
+                     lExe := .f.
+                  endif
+               endif
+
+            case aBlocks[ i,3,1 ] == WVT_BLOCK_GETS
+               if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   < bott
                      tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm > top
-                     tlbr_[ 2 ] <= nRight + 1       .and. ; // left  < right
-                     tlbr_[ 4 ] >= nLeft  - 2             ) // right > left
+                     tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; // left  < righ
+                     tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) // right > left
                   lExe := .f.
                endif
-            endif
 
-         case aBlocks[ i,3,1 ] == WVT_BLOCK_GETS
-            if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   < bott
-                  tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm > top
-                  tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; // left  < righ
-                  tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) // right > left
-               lExe := .f.
-            endif
+            otherwise
+               // If refreshing rectangle's top is less than objects' bottom
+               // and left is less than objects' right
+               //
+               if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   <= bottom
+                     tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm >= top
+                     tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; // left  < right
+                     tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) // right > left
+                  lExe := .f.
+               endif
+            endcase
+         endif
 
-         otherwise
-            // If refreshing rectangle's top is less than objects' bottom
-            // and left is less than objects' right
-            //
-            if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; // top   <= bottom
-                  tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; // bootm >= top
-                  tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; // left  < right
-                  tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) // right > left
-               lExe := .f.
-            endif
-         endcase
-      endif
+         if lExe
+            eval( aBlocks[ i,2 ] )
+         endif
+      next
+   endif
 
-      if lExe
-         eval( aBlocks[ i,2 ] )
-      endif
-   next
-endif
-
-return ( 0 )
+   return ( 0 )
 
 //-------------------------------------------------------------------//
 
 function WvtSetPaint( a_ )
-local o
-static s := {}
+   local o
+   static s := {}
 
-o := s
+   o := s
 
-if a_ <> nil
-   s := a_
-endif
+   if a_ <> nil
+      s := a_
+   endif
 
-return o
+   return o
 
 //-------------------------------------------------------------------//
 
 function SetPaint( cID, nAction, xData, aAttr )
-local n, n1, oldData
+   local n, n1, oldData
 
-if xData <> nil
-   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-      if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
-         oldData := paint_[ n,2,n1,2 ]
-         paint_[ n,2,n1,2 ] := xData
-         paint_[ n,2,n1,3 ] := aAttr
+   if xData <> nil
+      if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+         if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
+            oldData := paint_[ n,2,n1,2 ]
+            paint_[ n,2,n1,2 ] := xData
+            paint_[ n,2,n1,3 ] := aAttr
+         else
+            aadd( paint_[ n,2 ], { nAction,xData,aAttr } )
+         endif
       else
-         aadd( paint_[ n,2 ], { nAction,xData,aAttr } )
+         aadd( paint_, { cID, {} } )
+         n := len( paint_ )
+         aadd( paint_[ n,2 ], { nAction, xData, aAttr } )
       endif
-   else
-      aadd( paint_, { cID, {} } )
-      n := len( paint_ )
-      aadd( paint_[ n,2 ], { nAction, xData, aAttr } )
    endif
-endif
 
-return oldData
+   return oldData
 
 //-------------------------------------------------------------------//
 
 function GetPaint( cID )
-local n
+   local n
 
-if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-   return paint_[ n,2 ]
-endif
+   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      return paint_[ n,2 ]
+   endif
 
-return {}
+   return {}
 
 //-------------------------------------------------------------------//
 
 function DelPaint( cID, nAction )
-local xData, n1, n
+   local xData, n1, n
 
-if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-   if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
-      xData := paint_[ n,2,n1,2 ]
-      paint_[ n,2,n1,2 ] := {|| .t. }
+   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      if ( n1 := ascan( paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
+         xData := paint_[ n,2,n1,2 ]
+         paint_[ n,2,n1,2 ] := {|| .t. }
+      endif
    endif
-endif
 
-return xData
+   return xData
 
 //-------------------------------------------------------------------//
 
 function PurgePaint( cID,lDummy )
-local n, aPaint
+   local n, aPaint
 
-DEFAULT lDummy TO .f.
+   DEFAULT lDummy TO .f.
 
-if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-   aPaint := paint_[ n ]
-   ADel( paint_, n )
-   aSize( paint_, len( paint_ ) - 1 )
-endif
+   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      aPaint := paint_[ n ]
+      ADel( paint_, n )
+      aSize( paint_, len( paint_ ) - 1 )
+   endif
 
-if lDummy
-   WvtSetPaint( {} )
-endif
+   if lDummy
+      WvtSetPaint( {} )
+   endif
 
-return ( aPaint )
+   return ( aPaint )
 
 //-------------------------------------------------------------------//
 
 function InsertPaint( cID, aPaint, lSet )
-local n
+   local n
 
-DEFAULT lSet TO .f.
+   DEFAULT lSet TO .f.
 
-if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-   paint_[ n ] := aPaint
-else
-   aadd( paint_, aPaint )
-endif
+   if ( n := ascan( paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+      paint_[ n ] := aPaint
+   else
+      aadd( paint_, aPaint )
+   endif
 
-if lSet
-   WvtSetPaint( aPaint )
-endif
+   if lSet
+      WvtSetPaint( aPaint )
+   endif
 
-return nil
+   return nil
 
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//

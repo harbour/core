@@ -2052,6 +2052,19 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 
 /* ********************************************************************** */
 
+static BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
+                               BYTE bColor, BYTE bAttr, USHORT usChar )
+{
+   if( HB_GTSUPER_PUTCHAR( pGT, iRow, iCol, bColor, bAttr, usChar ) )
+   {
+      HB_GTSELF_TOUCHCELL( pGT, iRow, iCol );
+      return TRUE;
+   }
+   return FALSE;
+}
+
+/* ********************************************************************** */
+
 static char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Version(%p,%d)", pGT, iType ) );
@@ -2739,6 +2752,8 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->SetDispCP            = hb_gt_wvt_SetDispCP;
    pFuncTable->SetKeyCP             = hb_gt_wvt_SetKeyCP;
 
+   pFuncTable->PutChar              = hb_gt_wvt_PutChar;
+
    pFuncTable->ReadKey              = hb_gt_wvt_ReadKey;
 
    pFuncTable->MouseIsPresent       = hb_gt_wvt_mouse_IsPresent;
@@ -2776,3 +2791,5 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
    static HB_$INITSYM hb_vm_auto__hb_startup_gt_Init_ = _hb_startup_gt_Init_;
    #pragma data_seg()
 #endif
+
+
