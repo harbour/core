@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-12 22:01 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gt_tpl/gt_tpl.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtos2/gtos2.c
+    * updated for new API
+
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtalleg/gtalleg.c
+    * cleanup
+
 2007-12-13 10:42 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbgtwvg/wvtpaint.prg
     ! Formatting. 

@@ -233,7 +233,7 @@ static void hb_gt_std_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
 
       if( ioctl( hFilenoStdout, TIOCGWINSZ, ( char * ) &win ) != -1 )
       {
-         HB_GTSUPER_RESIZE( pGT, win.ws_row, win.ws_col );
+         HB_GTSELF_RESIZE( pGT, win.ws_row, win.ws_col );
       }
    }
 #elif defined( HB_WIN32_IO ) && ! defined( HB_WINCE )
@@ -434,7 +434,7 @@ static void hb_gt_std_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
        iBottom >= iHeight - 1 && iRight >= iWidth - 1 )
    {
       /* scroll up the internal screen buffer */
-      HB_GTSUPER_SCROLLUP( pGT, iRows, bColor, bChar );
+      HB_GTSELF_SCROLLUP( pGT, iRows, bColor, bChar );
       /* update our internal row position */
       s_iRow -= iRows;
       if( s_iRow < 0 )
@@ -472,7 +472,7 @@ static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
-   HB_SYMBOL_UNUSED( pGT );
+   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
@@ -505,9 +505,6 @@ static BOOL hb_gt_std_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 
       return TRUE;
    }
-#else
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
 #endif
 
    return FALSE;

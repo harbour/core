@@ -2903,7 +2903,7 @@ static void hb_gt_xwc_SetScrBuff( PXWND_DEF wnd, USHORT cols, USHORT rows )
 
       memset( wnd->pCurrScr, 0xFFFFFFFFL, iSize * sizeof( ULONG ) );
       hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
-      HB_GTSUPER_RESIZE( wnd->pGT, wnd->rows, wnd->cols );
+      HB_GTSELF_RESIZE( wnd->pGT, wnd->rows, wnd->cols );
    }
 }
 
@@ -3349,7 +3349,7 @@ static void hb_gt_xwc_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    wnd->cursorBlinkRate = 350;
    wnd->cursorStateTime = 0;
 
-   HB_GTSUPER_RESIZE( pGT, wnd->rows, wnd->cols );
+   HB_GTSELF_RESIZE( pGT, wnd->rows, wnd->cols );
    HB_GTSELF_SEMICOLD( pGT );
 
    /* For immediate connection to XSarver and screen Window show */
@@ -3394,7 +3394,7 @@ static BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
       if( iCol == wnd->cols && iRow == wnd->rows )
       {
          fResult = TRUE;
-         HB_GTSUPER_RESIZE( pGT, wnd->rows, wnd->cols );
+         HB_GTSELF_RESIZE( pGT, wnd->rows, wnd->cols );
       }
       else if( !wnd->fInit )
       {
@@ -3406,7 +3406,7 @@ static BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
          hb_gt_xwc_Disable();
          fResult = hb_gt_xwc_Resize( wnd, iCol, iRow );
          if( fResult )
-            HB_GTSUPER_RESIZE( pGT, wnd->rows, wnd->cols );
+            HB_GTSELF_RESIZE( pGT, wnd->rows, wnd->cols );
          hb_gt_xwc_Enable();
       }
    }
@@ -3594,6 +3594,9 @@ static BOOL hb_gt_xwc_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
 
 static BOOL hb_gt_xwc_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP )
 {
+
+   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
+
 #ifndef HB_CDP_SUPPORT_OFF
    /*
     * Basic Xlib api has no function to return character key val in
@@ -3618,10 +3621,6 @@ static BOOL hb_gt_xwc_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP
          HB_GTXWC_GET( pGT )->inCDP = cdpTerm;
       }
    }
-#else
-   HB_SYMBOL_UNUSED( pGT );
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
 #endif
 
    return TRUE;

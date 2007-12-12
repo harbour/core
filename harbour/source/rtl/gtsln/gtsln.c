@@ -695,7 +695,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    s_fActive = TRUE;
    hb_gt_sln_mouse_Init();
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSUPER_RESIZE( pGT, SLtt_Screen_Rows, SLtt_Screen_Cols );
+   HB_GTSELF_RESIZE( pGT, SLtt_Screen_Rows, SLtt_Screen_Cols );
    HB_GTSELF_SETFLAG( pGT, GTI_COMPATBUFFER, FALSE );
    HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, s_fStdOutTTY );
    HB_GTSELF_SETFLAG( pGT, GTI_STDERRCON, s_fStdErrTTY );
@@ -924,24 +924,23 @@ static BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 static BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
+#ifndef HB_CDP_SUPPORT_OFF
+   PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
+
+   cdpHost = hb_cdpFind( pszHostCDP );
+   if ( pszHostCDP && *pszHostCDP )
+      cdpHost = hb_cdpFind( pszHostCDP );
+   if ( ! cdpHost )
+      cdpHost = hb_cdp_page;
+
+   if ( pszTermCDP && *pszTermCDP )
+      cdpTerm = hb_cdpFind( pszTermCDP );
+
+   hb_sln_setCharTrans( cdpHost, cdpTerm, fBox );
+#endif
+
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
-#ifndef HB_CDP_SUPPORT_OFF
-   {
-      PHB_CODEPAGE cdpTerm = NULL, cdpHost = NULL;
-
-      cdpHost = hb_cdpFind( pszHostCDP );
-      if ( pszHostCDP && *pszHostCDP )
-         cdpHost = hb_cdpFind( pszHostCDP );
-      if ( ! cdpHost )
-         cdpHost = hb_cdp_page;
-
-      if ( pszTermCDP && *pszTermCDP )
-         cdpTerm = hb_cdpFind( pszTermCDP );
-
-      hb_sln_setCharTrans( cdpHost, cdpTerm, fBox );
-   }
-#endif
    return TRUE;
 }
 
@@ -962,11 +961,9 @@ static BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP
       cdpTerm = hb_cdpFind( pszTermCDP );
 
    hb_sln_setKeyTrans( cdpHost, cdpTerm );
-#else
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
 #endif
-   HB_SYMBOL_UNUSED( pGT );
+
+   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
    return TRUE;
 }

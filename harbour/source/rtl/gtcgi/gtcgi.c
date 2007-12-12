@@ -200,7 +200,7 @@ static void hb_gt_cgi_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
        iBottom >= iHeight - 1 && iRight >= iWidth - 1 )
    {
       /* scroll up the internal screen buffer */
-      HB_GTSUPER_SCROLLUP( pGT, iRows, bColor, bChar );
+      HB_GTSELF_SCROLLUP( pGT, iRows, bColor, bChar );
       /* update our internal row position */
       s_iRow -= iRows;
       if( s_iRow < 0 )

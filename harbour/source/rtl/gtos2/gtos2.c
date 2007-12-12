@@ -155,11 +155,13 @@ static PHKBD s_hk;
 /* mouse logical handle */
 static HMOU s_uMouHandle;
 
-static void hb_gt_os2_mouse_Init( void )
+static void hb_gt_os2_mouse_Init( PHB_GT pGT )
 {
    USHORT fsEvents = MOUSE_MOTION_WITH_BN1_DOWN | MOUSE_BN1_DOWN |
                      MOUSE_MOTION_WITH_BN2_DOWN | MOUSE_BN2_DOWN |
                      MOUSE_MOTION_WITH_BN3_DOWN | MOUSE_BN3_DOWN ;
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( MouOpen ( 0L, &s_uMouHandle ) )          /* try to open mouse */
       s_uMouHandle = 0;                         /* no mouse found */
@@ -167,8 +169,10 @@ static void hb_gt_os2_mouse_Init( void )
       MouSetEventMask ( &fsEvents, s_uMouHandle );    /* mask some events */
 }
 
-static void hb_gt_os2_mouse_Exit( void )
+static void hb_gt_os2_mouse_Exit( PHB_GT pGT )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    if( s_uMouHandle )
    {
       MouClose( s_uMouHandle );           /* relese mouse handle */
@@ -176,26 +180,33 @@ static void hb_gt_os2_mouse_Exit( void )
    }
 }
 
-static BOOL hb_gt_os2_mouse_IsPresent( void )
+static BOOL hb_gt_os2_mouse_IsPresent( PHB_GT pGT )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    return s_uMouHandle != 0;
 }
 
-static void hb_gt_os2_mouse_Show( void )
+static void hb_gt_os2_mouse_Show( PHB_GT pGT )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    if( s_uMouHandle )
       MouDrawPtr( s_uMouHandle );
 }
 
-static void hb_gt_os2_mouse_Hide( void )
+static void hb_gt_os2_mouse_Hide( PHB_GT pGT )
 {
    /*
       NOTE: mouse cursor always visible if not in full screen
     */
-   NOPTRRECT rect;
-   VIOMODEINFO vi;                             /* needed to get max Row/Col */
+   HB_SYMBOL_UNUSED( pGT );
+
    if( s_uMouHandle )
    {
+      NOPTRRECT rect;
+      VIOMODEINFO vi;                           /* needed to get max Row/Col */
+
       /*
          QUESTION: should I call the GT MaxRow/Col function ?
          pro: encapsulating of the GetScreen function
@@ -212,8 +223,10 @@ static void hb_gt_os2_mouse_Hide( void )
    }
 }
 
-static void hb_gt_os2_mouse_GetPos( int * row, int * col )
+static void hb_gt_os2_mouse_GetPos( PHB_GT pGT, int * row, int * col )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    if( s_uMouHandle )
    {
       PTRLOC pos;
@@ -223,8 +236,10 @@ static void hb_gt_os2_mouse_GetPos( int * row, int * col )
    }
 }
 
-static void hb_gt_os2_mouse_SetPos( int row, int col )
+static void hb_gt_os2_mouse_SetPos( PHB_GT pGT, int row, int col )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    if( s_uMouHandle )
    {
       PTRLOC pos;
@@ -292,8 +307,10 @@ static void hb_gt_os2_mouse_ReadMouseState( void )
    }
 }
 
-static BOOL hb_gt_os2_mouse_ButtonState( int iButton )
+static BOOL hb_gt_os2_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    hb_gt_os2_mouse_ReadMouseState();
 
    if( s_uMouHandle && iButton >= 0 && iButton < 3 )
@@ -302,8 +319,10 @@ static BOOL hb_gt_os2_mouse_ButtonState( int iButton )
       return FALSE;
 }
 
-static BOOL hb_gt_os2_mouse_ButtonPressed( int iButton, int * piRow, int * piCol )
+static BOOL hb_gt_os2_mouse_ButtonPressed( PHB_GT pGT, int iButton, int * piRow, int * piCol )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    hb_gt_os2_mouse_ReadMouseState();
 
    if( s_uMouHandle && iButton >= 0 && iButton < 3 )
@@ -320,8 +339,10 @@ static BOOL hb_gt_os2_mouse_ButtonPressed( int iButton, int * piRow, int * piCol
    return FALSE;
 }
 
-static BOOL hb_gt_os2_mouse_ButtonReleased( int iButton, int * piRow, int * piCol )
+static BOOL hb_gt_os2_mouse_ButtonReleased( PHB_GT pGT, int iButton, int * piRow, int * piCol )
 {
+   HB_SYMBOL_UNUSED( pGT );
+
    hb_gt_os2_mouse_ReadMouseState();
 
    if( s_uMouHandle && iButton >= 0 && iButton < 3 )
@@ -338,11 +359,15 @@ static BOOL hb_gt_os2_mouse_ButtonReleased( int iButton, int * piRow, int * piCo
    return FALSE;
 }
 
-static int hb_gt_os2_mouse_CountButton( void )
+static int hb_gt_os2_mouse_CountButton( PHB_GT pGT )
 {
    USHORT usButtons = 0;
+
+   HB_SYMBOL_UNUSED( pGT );
+
    if( s_uMouHandle )
       MouGetNumButtons ( &usButtons, s_uMouHandle );
+
    return ( int ) usButtons;
 }
 
@@ -465,13 +490,13 @@ static void hb_gt_os2_SetCursorStyle( int iStyle )
    }
 }
 
-static void hb_gt_os2_GetScreenContents( void )
+static void hb_gt_os2_GetScreenContents( PHB_GT pGT )
 {
    BYTE Cell[2];
    int iRow, iCol;
    USHORT usSize;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetScreenContents()")`);
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetScreenContents(%p)", pGT));
 
    for( iRow = 0; iRow < s_vi.row; ++iRow )
    {
@@ -479,10 +504,10 @@ static void hb_gt_os2_GetScreenContents( void )
       {
          usSize = 2;
          VioReadCellStr( ( PBYTE ) Cell, &usSize, iRow, iCol, 0 );
-         hb_gt_PutScrChar( iRow, iCol, Cell[ 1 ], 0, Cell[ 0 ] );
+         HB_GTSELF_PUTSCRCHAR( pGT, iRow, iCol, Cell[ 1 ], 0, Cell[ 0 ] );
       }
    }
-   hb_gt_ColdArea( 0, 0, s_vi.row, s_vi.col );
+   HB_GTSELF_COLDAREA( pGT, 0, 0, s_vi.row, s_vi.col );
 }
 
 static PVOID hb_gt_os2_allocMem( int iSize )
@@ -497,9 +522,9 @@ static PVOID hb_gt_os2_allocMem( int iSize )
    return pMem;
 }
 
-static void hb_gt_os2_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_os2_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
    s_vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &s_vi, 0 );        /* fill structure with current video mode settings */
@@ -552,30 +577,30 @@ static void hb_gt_os2_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    s_iCursorStyle = hb_gt_os2_GetCursorStyle();
 
-   HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSUPER_RESIZE( s_vi.row, s_vi.col );
-   HB_GTSUPER_SETPOS( s_iCurRow, s_iCurCol );
+   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   HB_GTSELF_RESIZE( pGT, s_vi.row, s_vi.col );
+   HB_GTSELF_SETPOS( pGT, s_iCurRow, s_iCurCol );
    if( s_iCursorStyle > 0 )
-      HB_GTSUPER_SETCURSORSTYLE( s_iCursorStyle );
-   hb_gt_os2_GetScreenContents();
+      HB_GTSELF_SETCURSORSTYLE( pGT, s_iCursorStyle );
+   hb_gt_os2_GetScreenContents( pGT );
 }
 
-static void hb_gt_os2_Exit( void )
+static void hb_gt_os2_Exit( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Exit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Exit(%p)", pGT));
 
-   HB_GTSUPER_EXIT();
+   HB_GTSUPER_EXIT( pGT );
 
    DosFreeMem( s_key );
    DosFreeMem( s_hk );
    VioSetCp( 0, s_usOldCodePage, 0 );
 }
 
-static int hb_gt_os2_ReadKey( int iEventMask )
+static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int ch;              /* next char if any */
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_ReadKey(%d)", iEventMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_ReadKey(%p,%d)", pGT, iEventMask));
 
    /* zero out keyboard event record */
    memset( s_key, 0, sizeof( KBDKEYINFO ) );
@@ -716,36 +741,43 @@ static int hb_gt_os2_ReadKey( int iEventMask )
    }
    if( ch == 0 )
    {
-      ch = hb_mouse_ReadKey( iEventMask );
+      ch = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );
    }
 
    return ch;
 }
 
-static BOOL hb_gt_os2_IsColor( void )
+static BOOL hb_gt_os2_IsColor( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_IsColor()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_IsColor(%p)", pGT));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    return s_vi.fbType != 0;        /* 0 = monochrom-compatible mode */
 }
 
-static BOOL hb_gt_os2_GetBlink()
+static BOOL hb_gt_os2_GetBlink( PHB_GT pGT )
 {
    VIOINTENSITY vi;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetBlink()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetBlink(%p)", pGT));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    vi.cb   = sizeof( VIOINTENSITY );    /* 6                          */
    vi.type = 2;                         /* get intensity/blink toggle */
    VioGetState( &vi, 0 );
+
    return vi.fs == 0;                   /* 0 = blink, 1 = intens      */
 }
 
-static void hb_gt_os2_SetBlink( BOOL fBlink )
+static void hb_gt_os2_SetBlink( PHB_GT pGT, BOOL fBlink )
 {
    VIOINTENSITY vi;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetBlink(%d)", (int) fBlink));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetBlink(%p,%d)", pGT, (int) fBlink));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    vi.cb   = sizeof( VIOINTENSITY );    /* 6                          */
    vi.type = 2;                         /* set intensity/blink toggle */
@@ -753,9 +785,11 @@ static void hb_gt_os2_SetBlink( BOOL fBlink )
    VioSetState( &vi, 0 );
 }
 
-static void hb_gt_os2_Tone( double dFrequency, double dDuration )
+static void hb_gt_os2_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
+
+   HB_SYMBOL_UNUSED( pGT );
 
    /* The conversion from Clipper timer tick units to
       milliseconds is * 1000.0 / 18.2. */
@@ -781,9 +815,11 @@ static void hb_gt_os2_Tone( double dFrequency, double dDuration )
    }
 }
 
-static char * hb_gt_os2_Version( int iType )
+static char * hb_gt_os2_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Version(%d)", iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Version(%p,%d)", pGT, iType ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
@@ -791,11 +827,11 @@ static char * hb_gt_os2_Version( int iType )
    return "Harbour Terminal: OS/2 console";
 }
 
-static BOOL hb_gt_os2_SetMode( int iRows, int iCols )
+static BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
    BOOL fResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetMode(%d, %d)", iRows, iCols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetMode(%p,%d,%d)", pGT, iRows, iCols));
 
    s_vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
@@ -811,68 +847,54 @@ static BOOL hb_gt_os2_SetMode( int iRows, int iCols )
 
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    s_iCursorStyle = hb_gt_os2_GetCursorStyle();
-   HB_GTSUPER_RESIZE( s_vi.row, s_vi.col );
-   HB_GTSUPER_SETPOS( s_iCurRow, s_iCurCol );
+   HB_GTSELF_RESIZE( pGT, s_vi.row, s_vi.col );
+   HB_GTSELF_SETPOS( pGT, s_iCurRow, s_iCurCol );
    if( s_iCursorStyle > 0 )
-      HB_GTSUPER_SETCURSORSTYLE( s_iCursorStyle );
-   hb_gt_os2_GetScreenContents();
+      HB_GTSELF_SETCURSORSTYLE( pGT, s_iCursorStyle );
+   hb_gt_os2_GetScreenContents( pGT );
 
    return fResult;
 }
 
-static BOOL hb_gt_os2_PreExt( void )
+static BOOL hb_gt_os2_PostExt( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_PreExt()"));
-
-   return TRUE;
-}
-
-static BOOL hb_gt_os2_PostExt( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_PostExt()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_PostExt(%p)", pGT));
 
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
-   HB_GTSUPER_SETPOS( s_iCurRow, s_iCurCol );
-   hb_gt_os2_GetScreenContents();
+   HB_GTSELF_SETPOS( pGT, s_iCurRow, s_iCurCol );
+   hb_gt_os2_GetScreenContents( pGT );
 
-   return TRUE;
+   return HB_GTSUPER_POSTEXT( pGT );
 }
 
-static BOOL hb_gt_os2_Suspend( void )
+static BOOL hb_gt_os2_Resume( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Suspend()"));
-
-   return TRUE;
-}
-
-static BOOL hb_gt_os2_Resume( void )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Resume()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Resume(%p)", pGT));
 
    s_vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    s_iCursorStyle = hb_gt_os2_GetCursorStyle();
-   HB_GTSUPER_RESIZE( s_vi.row, s_vi.col );
-   HB_GTSUPER_SETPOS( s_iCurRow, s_iCurCol );
+   HB_GTSELF_RESIZE( pGT, s_vi.row, s_vi.col );
+   HB_GTSELF_SETPOS( pGT, s_iCurRow, s_iCurCol );
    if( s_iCursorStyle > 0 )
-      HB_GTSUPER_SETCURSORSTYLE( s_iCursorStyle );
-   hb_gt_os2_GetScreenContents();
+      HB_GTSELF_SETCURSORSTYLE( pGT, s_iCursorStyle );
+   hb_gt_os2_GetScreenContents( pGT );
 
-   return TRUE;
+   return HB_GTSUPER_RESUME( pGT );
 }
 
-static void hb_gt_os2_Redraw( int iRow, int iCol, int iSize )
+static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    BYTE bColor, bAttr;
    USHORT usChar, usCell;
    int iLen = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    while( iLen < iSize )
    {
-      if( !hb_gt_GetScrChar( iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
          break;
 
       /*
@@ -888,15 +910,15 @@ static void hb_gt_os2_Redraw( int iRow, int iCol, int iSize )
    }
 }
 
-static void hb_gt_os2_Refresh( void )
+static void hb_gt_os2_Refresh( PHB_GT pGT )
 {
    int iRow, iCol, iStyle;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Refresh()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Refresh(%p)", pGT ) );
 
-   HB_GTSUPER_REFRESH();
+   HB_GTSUPER_REFRESH( pGT );
 
-   hb_gt_GetScrCursor( &iRow, &iCol, &iStyle );
+   HB_GTSELF_GETSCRCURSOR( pGT, &iRow, &iCol, &iStyle );
    if( iStyle != SC_NONE )
    {
       if( iRow >= 0 && iCol >= 0 && iRow < s_vi.row && iCol < s_vi.col )
@@ -907,9 +929,9 @@ static void hb_gt_os2_Refresh( void )
    hb_gt_os2_SetCursorStyle( iStyle );
 }
 
-static BOOL hb_gt_os2_Info( int iType, PHB_GT_INFO pInfo )
+static BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Info(%d,%p)", iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
    switch ( iType )
    {
@@ -919,7 +941,7 @@ static BOOL hb_gt_os2_Info( int iType, PHB_GT_INFO pInfo )
          break;
 
       default:
-         return HB_GTSUPER_INFO( iType, pInfo );
+         return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
    return TRUE;
@@ -941,9 +963,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->SetBlink                   = hb_gt_os2_SetBlink;
    pFuncTable->GetBlink                   = hb_gt_os2_GetBlink;
    pFuncTable->Version                    = hb_gt_os2_Version;
-   pFuncTable->Suspend                    = hb_gt_os2_Suspend;
    pFuncTable->Resume                     = hb_gt_os2_Resume;
-   pFuncTable->PreExt                     = hb_gt_os2_PreExt;
    pFuncTable->PostExt                    = hb_gt_os2_PostExt;
    pFuncTable->Tone                       = hb_gt_os2_Tone;
    pFuncTable->Info                       = hb_gt_os2_Info;

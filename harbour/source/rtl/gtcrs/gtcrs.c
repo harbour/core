@@ -2471,7 +2471,7 @@ static void hb_gt_crs_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       {
          add_new_ioBase( ioBase );
          HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-         HB_GTSUPER_RESIZE( pGT, s_ioBase->maxrow, s_ioBase->maxcol );
+         HB_GTSELF_RESIZE( pGT, s_ioBase->maxrow, s_ioBase->maxcol );
          HB_GTSELF_SETFLAG( pGT, GTI_COMPATBUFFER, FALSE );
          HB_GTSELF_SETBLINK( pGT, TRUE );
       }
@@ -2511,7 +2511,7 @@ static BOOL hb_gt_crs_SetMode( PHB_GT pGT, int iRows, int iCols )
 
    if( gt_setsize( s_ioBase, iRows, iCols ) == 0 )
    {
-      HB_GTSUPER_RESIZE( pGT, iRows, iCols );
+      HB_GTSELF_RESIZE( pGT, iRows, iCols );
       return TRUE;
    }
    return FALSE;
@@ -2788,7 +2788,7 @@ static int hb_gt_crs_ReadKey( PHB_GT pGT, int iEventMask )
    if( iKey == K_RESIZE )
    {
       gt_resize( s_ioBase );
-      HB_GTSUPER_RESIZE( pGT, s_ioBase->maxrow, s_ioBase->maxcol );
+      HB_GTSELF_RESIZE( pGT, s_ioBase->maxrow, s_ioBase->maxcol );
       iKey = 0;
    }
 
@@ -2850,7 +2850,7 @@ static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
-   HB_SYMBOL_UNUSED( pGT );
+   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP || !*pszHostCDP )
@@ -2881,9 +2881,6 @@ static BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
          return TRUE;
       }
    }
-#else
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
 #endif
 
    return FALSE;

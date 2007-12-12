@@ -504,7 +504,7 @@ static BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, BOOL
          al_clear_to_color( al_screen, bColor );
       }
 
-      HB_GTSUPER_RESIZE( pGT, s_iScrHeight, s_iScrWidth );
+      HB_GTSELF_RESIZE( pGT, s_iScrHeight, s_iScrWidth );
       HB_GTSELF_EXPOSEAREA( pGT, 0, 0, s_iScrHeight, s_iScrWidth );
       HB_GTSELF_REFRESH( pGT );
    }
@@ -539,7 +539,7 @@ static void hb_gt_alleg_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoS
    }
 
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSUPER_RESIZE( pGT, s_iScrHeight, s_iScrWidth );
+   HB_GTSELF_RESIZE( pGT, s_iScrHeight, s_iScrWidth );
 }
 
 static void hb_gt_alleg_Exit( PHB_GT pGT )

@@ -125,34 +125,51 @@ static BYTE *  s_sOutBuf;
 static volatile BOOL s_fRestTTY = FALSE;
 static struct termios s_saved_TIO, s_curr_TIO;
 
+#if defined( SIGTTOU )
 static void sig_handler( int iSigNo )
 {
-   int e = errno, stat;
-   pid_t pid;
-
    switch( iSigNo )
    {
+#ifdef SIGCHLD
       case SIGCHLD:
-         while ( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
+      {
+         int e = errno, stat;
+         pid_t pid;
+         do
+            pid = waitpid( -1, &stat, WNOHANG );
+         while( pid > 0 );
+         errno = e;
          break;
+      }
+#endif
+#ifdef SIGWINCH
       case SIGWINCH:
          /* s_WinSizeChangeFlag = TRUE; */
          break;
+#endif
+#ifdef SIGINT
       case SIGINT:
          /* s_InetrruptFlag = TRUE; */
          break;
+#endif
+#ifdef SIGQUIT
       case SIGQUIT:
          /* s_BreakFlag = TRUE; */
          break;
+#endif
+#ifdef SIGTSTP
       case SIGTSTP:
          /* s_DebugFlag = TRUE; */
          break;
+#endif
+#ifdef SIGTTOU
       case SIGTTOU:
          s_fRestTTY = FALSE;
          break;
+#endif
    }
-   errno = e;
 }
+#endif
 
 #endif
 
@@ -450,9 +467,8 @@ static void hb_gt_pca_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    s_fRestTTY = FALSE;
    if( s_bStdinConsole )
    {
+#if defined( SIGTTOU )
       struct sigaction act, old;
-
-      s_fRestTTY = TRUE;
 
       /* if( s_saved_TIO.c_lflag & TOSTOP ) != 0 */
       sigaction( SIGTTOU, NULL, &old );
@@ -467,6 +483,9 @@ static void hb_gt_pca_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       act.sa_flags = 0;
 #endif
       sigaction( SIGTTOU, &act, 0 );
+#endif
+
+      s_fRestTTY = TRUE;
 
       tcgetattr( hFilenoStdin, &s_saved_TIO );
       memcpy( &s_curr_TIO, &s_saved_TIO, sizeof( struct termios ) );
@@ -476,9 +495,11 @@ static void hb_gt_pca_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       s_curr_TIO.c_cc[ VMIN ] = 0;
       s_curr_TIO.c_cc[ VTIME ] = 0;
       tcsetattr( hFilenoStdin, TCSAFLUSH, &s_curr_TIO );
-      act.sa_handler = SIG_DFL;
 
+#if defined( SIGTTOU )
+      act.sa_handler = SIG_DFL;
       sigaction( SIGTTOU, &old, NULL );
+#endif
    }
 
    iRows = 24;
@@ -501,7 +522,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       s_sOutBuf = ( BYTE * ) hb_xgrab( s_iOutBufSize );
    }
 
-   HB_GTSUPER_RESIZE( pGT, iRows, iCols );
+   HB_GTSELF_RESIZE( pGT, iRows, iCols );
    HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, s_bStdoutConsole );
    HB_GTSELF_SETFLAG( pGT, GTI_STDERRCON, s_bStderrConsole );
 
@@ -817,7 +838,8 @@ static BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
-   HB_SYMBOL_UNUSED( pGT );
+   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
+
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdp_page->id;
@@ -849,12 +871,9 @@ static BOOL hb_gt_pca_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 
       return TRUE;
    }
-#else
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
 #endif
 
-   return FALSE;
+   return TRUE;
 }
 
 static void hb_gt_pca_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )

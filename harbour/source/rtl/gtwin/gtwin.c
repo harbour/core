@@ -579,7 +579,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
       ULONG ulSize = ( ULONG ) _GetScreenWidth() * _GetScreenHeight() *
                      sizeof( CHAR_INFO );
 
-      HB_GTSUPER_RESIZE( pGT, _GetScreenHeight(), _GetScreenWidth() );
+      HB_GTSELF_RESIZE( pGT, _GetScreenHeight(), _GetScreenWidth() );
 
       if( s_pCharInfoScreen == NULL || ulSize != s_ulScreenBuffSize )
       {

@@ -224,7 +224,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
 
 static BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRow, int iCol )
 {
-   if( HB_GTSUPER_RESIZE( pWVT->pGT, iRow, iCol ) )
+   if( HB_GTSELF_RESIZE( pWVT->pGT, iRow, iCol ) )
    {
       pWVT->ROWS = ( USHORT ) iRow;
       pWVT->COLS = ( USHORT ) iCol;
@@ -1298,8 +1298,8 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
 
    /* SUPER GT initialization */
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSUPER_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
-   HB_GTSUPER_EXPOSEAREA( pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+   HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
+   HB_GTSELF_EXPOSEAREA( pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
 }
 
 /* ********************************************************************** */
@@ -1978,6 +1978,8 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
    PHB_GTWVT pWVT;
 
    HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_Refresh(%p)", pGT) );
+
+   HB_GTSUPER_REFRESH( pGT );
 
    pWVT = HB_GTWVT_GET( pGT );
    if( pWVT && pWVT->hWnd )

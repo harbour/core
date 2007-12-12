@@ -56,33 +56,35 @@
 
 #include "hbgtcore.h"
 #include "hbinit.h"
+static int           s_GtId;
+static HB_GT_FUNCS   SuperTable;
+#define HB_GTSUPER   (&SuperTable)
+#define HB_GTID_PTR  (&s_GtId)
 
-static HB_GT_FUNCS SuperTable;
-#define HB_GTSUPER (&SuperTable)
-
-static void hb_gt_tpl_Init( FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
+static void hb_gt_tpl_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStdout, FHANDLE hFilenoStderr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Init(%p,%p,%p)", hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
    /* TODO: */
 
-   HB_GTSUPER_INIT( hFilenoStdin, hFilenoStdout, hFilenoStderr );
+   HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
 }
 
-static void hb_gt_tpl_Exit( void )
+static void hb_gt_tpl_Exit( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_tpl_Exit()"));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_tpl_Exit(%p)", pGT));
 
-   HB_GTSUPER_EXIT();
+   HB_GTSUPER_EXIT( pGT );
 
    /* TODO: */
 }
 
 
-static int hb_gt_tpl_ReadKey( int iEventMask )
+static int hb_gt_tpl_ReadKey( PHB_GT pGT, int iEventMask )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_tpl_ReadKey(%d)", iEventMask));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_tpl_ReadKey(%p,%d)", pGT, iEventMask));
 
+   HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iEventMask );
 
    /* TODO: check the input queue (incoming mouse and keyboard events)
@@ -91,9 +93,11 @@ static int hb_gt_tpl_ReadKey( int iEventMask )
    return 0;
 }
 
-static char * hb_gt_tpl_Version( int iType )
+static char * hb_gt_tpl_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Version(%d)", iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Version(%p,%d)", pGT, iType ) );
+
+   HB_SYMBOL_UNUSED( pGT );
 
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
@@ -101,10 +105,11 @@ static char * hb_gt_tpl_Version( int iType )
    return "Harbour Terminal: (template)";
 }
 
-static BOOL hb_gt_tpl_SetMode( int iRows, int iCols )
+static BOOL hb_gt_tpl_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_tpl_SetMode(%d, %d)", iRows, iCols));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_tpl_SetMode(%p,%d,%d)", pGT, iRows, iCols));
 
+   HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iRows );
    HB_SYMBOL_UNUSED( iCols );
 
@@ -113,30 +118,30 @@ static BOOL hb_gt_tpl_SetMode( int iRows, int iCols )
    return FALSE;
 }
 
-static void hb_gt_tpl_Redraw( int iRow, int iCol, int iSize )
+static void hb_gt_tpl_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    BYTE bColor, bAttr;
    USHORT usChar;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Redraw(%d, %d, %d)", iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    while( iSize-- )
    {
-      if( !hb_gt_GetScrChar( iRow, iCol, &bColor, &bAttr, &usChar ) )
+      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bColor, &bAttr, &usChar ) )
          break;
       /* TODO: display usChar at iRow, iCol position with color bColor */
       ++iCol;
    }
 }
 
-static void hb_gt_tpl_Refresh( void )
+static void hb_gt_tpl_Refresh( PHB_GT pGT )
 {
    int iRow, iCol, iStyle;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Refresh()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_tpl_Refresh(%p)", pGT ) );
 
-   HB_GTSUPER_REFRESH();
-   hb_gt_GetScrCursor( &iRow, &iCol, &iStyle );
+   HB_GTSUPER_REFRESH( pGT );
+   HB_GTSELF_GETSCRCURSOR( pGT, &iRow, &iCol, &iStyle );
 
    /* TODO: set cursor position and shape */
 }
@@ -163,9 +168,10 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
 static HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
                              hb_gt_FuncInit,
-                             HB_GTSUPER };
+                             HB_GTSUPER,
+                             HB_GTID_PTR };
 
-HB_GT_ANNOUNCE( HB_GT_NAME );
+HB_GT_ANNOUNCE( HB_GT_NAME )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_startup_gt_Init_ )
    hb_gtRegister( &gtInit );

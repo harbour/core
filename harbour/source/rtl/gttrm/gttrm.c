@@ -2888,7 +2888,7 @@ static void hb_gt_trm_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
 #endif
 
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSUPER_RESIZE( pGT, iRows, iCols );
+   HB_GTSELF_RESIZE( pGT, iRows, iCols );
    HB_GTSELF_SETFLAG( pGT, GTI_COMPATBUFFER, FALSE );
    HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, pTerm->fStdoutTTY );
    HB_GTSELF_SETFLAG( pGT, GTI_STDERRCON, pTerm->fStderrTTY );
@@ -3051,7 +3051,7 @@ static int hb_gt_trm_ReadKey( PHB_GT pGT, int iEventMask )
       int iRows, iCols;
 
       if( hb_gt_trm_getSize( HB_GTTRM_GET( pGT ), &iRows, &iCols ) )
-         HB_GTSUPER_RESIZE( pGT, iRows, iCols );
+         HB_GTSELF_RESIZE( pGT, iRows, iCols );
       iKey = 0;
    }
 
@@ -3147,7 +3147,7 @@ static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
           pTerm->iRow == iHeight - 1 )
       {
          /* scroll up the internal screen buffer */
-         HB_GTSUPER_SCROLLUP( pGT, iRows, bColor, bChar );
+         HB_GTSELF_SCROLLUP( pGT, iRows, bColor, bChar );
          /* update our internal row position */
          do
             hb_gt_trm_termOut( pTerm, ( BYTE * ) "\n\r", 2 );
@@ -3169,7 +3169,7 @@ static BOOL hb_gt_trm_SetMode( PHB_GT pGT, int iRows, int iCols )
    pTerm = HB_GTTRM_GET( pGT );
    if( pTerm->SetMode( pTerm, &iRows, &iCols ) )
    {
-      HB_GTSUPER_RESIZE( pGT, iRows, iCols );
+      HB_GTSELF_RESIZE( pGT, iRows, iCols );
       return TRUE;
    }
    return FALSE;
@@ -3238,6 +3238,8 @@ static BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
+   HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
+
 #ifndef HB_CDP_SUPPORT_OFF
    if( !pszHostCDP )
       pszHostCDP = hb_cdp_page->id;
@@ -3274,9 +3276,6 @@ static BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, char *pszTermCDP, char *pszHostCDP )
 
       return TRUE;
    }
-#else
-   HB_SYMBOL_UNUSED( pszTermCDP );
-   HB_SYMBOL_UNUSED( pszHostCDP );
 #endif
 
    return FALSE;
