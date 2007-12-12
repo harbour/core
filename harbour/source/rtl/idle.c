@@ -216,7 +216,7 @@ void hb_idleSleep( double dSeconds )
 {
    if( dSeconds >= 0 )
    {
-      HB_ULONG end_timer = hb_dateMilliSeconds() + ( HB_ULONG ) dSeconds * 1000;
+      HB_ULONG end_timer = hb_dateMilliSeconds() + ( HB_ULONG ) ( dSeconds * 1000 );
 
       while( hb_dateMilliSeconds() < end_timer )
          hb_idleState();
