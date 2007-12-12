@@ -1,4 +1,4 @@
-﻿/*
+/*
  * $Id$
  */
 
@@ -7,6 +7,13 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2007-12-12 11:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/ChangeLog
+    * removed UTF-8 signature: 0xEF 0xBB 0xBF
+
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * converted TABs to SPACEs
 
 2007-12-12 10:46 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/idle.c

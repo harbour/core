@@ -93,8 +93,8 @@ static HB_GT_FUNCS   SuperTable;
 
 #define HB_GTWVT_GET(p) ( ( PHB_GTWVT ) HB_GTLOCAL( p ) )
 
-static PHB_GTWVT 	s_wvtWindows[WVT_MAX_WINDOWS];
-static int 		s_wvtCount = 0;
+static PHB_GTWVT  s_wvtWindows[WVT_MAX_WINDOWS];
+static int        s_wvtCount = 0;
 
 static HANDLE  s_hInstance;
 static HANDLE  s_hPrevInstance;
@@ -1321,7 +1321,7 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
          pWVT->hWnd = NULL;
       }
       UnregisterClass( s_szAppName, ( HINSTANCE ) s_hInstance );
-	hb_gt_wvt_Free( pWVT );
+      hb_gt_wvt_Free( pWVT );
    }
 }
 
