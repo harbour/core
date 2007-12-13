@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-13 16:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapigt.h
+  * harbour/source/rtl/gtapi.c
+    ! fixed DISPCOUNT() return value
+    * cleaned some GT functions declarations
+
 2007-12-13 10:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwvt/gtwvt.c
     ! fixed allocating terminal context - thanks to Enrico

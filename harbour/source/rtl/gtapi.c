@@ -238,12 +238,7 @@ HB_EXPORT USHORT hb_gtDispCount( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_gtDispCount()"));
 
    pGT = hb_gt_Base();
-   if( pGT )
-   {
-      HB_GTSELF_DISPCOUNT( pGT );
-      return SUCCESS;
-   }
-   return FAILURE;
+   return pGT ? HB_GTSELF_DISPCOUNT( pGT ) : 0;
 }
 
 HB_EXPORT ERRCODE hb_gtDispEnd( void )
@@ -322,7 +317,7 @@ HB_EXPORT USHORT hb_gtColorToN( char * szColorString )
    return pGT ? HB_GTSELF_COLORNUM( pGT, szColorString ) : 0;
 }
 
-HB_EXPORT USHORT hb_gtColorsToString( int * pColors, int iColorCount, char * pszColorString, int iBufSize )
+HB_EXPORT ERRCODE hb_gtColorsToString( int * pColors, int iColorCount, char * pszColorString, int iBufSize )
 {
    PHB_GT pGT;
 
@@ -364,7 +359,6 @@ HB_EXPORT ERRCODE hb_gtGetCursor( USHORT * uipCursorStyle )
       *uipCursorStyle = HB_GTSELF_GETCURSORSTYLE( pGT );
       return SUCCESS;
    }
-
    *uipCursorStyle = SC_NONE;
    return FAILURE;
 }
@@ -383,7 +377,6 @@ HB_EXPORT ERRCODE hb_gtSetCursor( USHORT uiCursorStyle )
          return SUCCESS;
       }
    }
-
    return FAILURE;
 }
 
@@ -401,7 +394,6 @@ HB_EXPORT ERRCODE hb_gtGetPos( SHORT * piRow, SHORT * piCol )
       HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
       *piRow = ( SHORT ) iRow;
       *piCol = ( SHORT ) iCol;
-
       return SUCCESS;
    }
    return FAILURE;
@@ -853,7 +845,7 @@ HB_EXPORT ERRCODE hb_gtOutErr( BYTE * pbyStr, ULONG ulLen )
    return SUCCESS;
 }
 
-ERRCODE hb_gtSetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
+HB_EXPORT ERRCODE hb_gtSetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
    PHB_GT pGT;
 
@@ -868,7 +860,7 @@ ERRCODE hb_gtSetDispCP( char * pszTermCDP, char * pszHostCDP, BOOL fBox )
    return FAILURE;
 }
 
-ERRCODE hb_gtSetKeyCP( char * pszTermCDP, char * pszHostCDP )
+HB_EXPORT ERRCODE hb_gtSetKeyCP( char * pszTermCDP, char * pszHostCDP )
 {
    PHB_GT pGT;
 
@@ -1088,7 +1080,6 @@ HB_EXPORT int hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, in
       iResult = HB_GTSELF_GFXPRIMITIVE( pGT, iType, iTop, iLeft, iBottom, iRight, iColor );
       HB_GTSELF_FLUSH( pGT );
    }
-
    return iResult;
 }
 
