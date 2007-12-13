@@ -444,6 +444,7 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
 
 HB_FUNC( ADSMGGETLOCKOWNER )
 {
+   /*
    // UNSIGNED32  AdsMgGetLockOwner  (ADSHANDLE hMgmtConnect,
    //                                     UNSIGNED8 *pucTableName,
    //                                     UNSIGNED32 ulRecordNumber,
@@ -461,6 +462,7 @@ HB_FUNC( ADSMGGETLOCKOWNER )
    //
    // returns the advantage error code if it fails
    //
+   */
    UNSIGNED32  ulRetVal;
    UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
    UNSIGNED16  pusLockType;
@@ -475,19 +477,18 @@ HB_FUNC( ADSMGGETLOCKOWNER )
                                  &pusLockType);
    if ( ulRetVal== AE_SUCCESS )
    {
-       hb_reta(5);
-       hb_storc ( (char *)  pstUserInfo->aucUserName , -1, 1); /* Machine name under NT */
-       hb_stornl( (UNSIGNED16) pstUserInfo->usConnNumber, -1, 2); /* NetWare conn # (NLM only) */
-       hb_storc ( (char *) pstUserInfo->aucAuthUserName, -1, 3); /* logon name with Data Dictionary */
-       hb_storc ( (char *) pstUserInfo->aucAddress, -1, 4); /* IP adddress */
-       hb_stornl( pusLockType, -1, 5);                /* type of lock */
+      hb_reta(5);
+      hb_storc ( (char *)  pstUserInfo->aucUserName , -1, 1); /* Machine name under NT */
+      hb_stornl( (UNSIGNED16) pstUserInfo->usConnNumber, -1, 2); /* NetWare conn # (NLM only) */
+      hb_storc ( (char *) pstUserInfo->aucAuthUserName, -1, 3); /* logon name with Data Dictionary */
+      hb_storc ( (char *) pstUserInfo->aucAddress, -1, 4); /* IP adddress */
+      hb_stornl( pusLockType, -1, 5);                /* type of lock */
    }
    else
    {
-       hb_retnl( ulRetVal );
+      hb_retnl( ulRetVal );
    }
-   if ( pstUserInfo )
-      hb_xfree( pstUserInfo );
+   hb_xfree( pstUserInfo );
 }
 
 HB_FUNC( ADSMGGETSERVERTYPE )   /* Determine OS ADS is running on; see ADS_MGMT_* constants */

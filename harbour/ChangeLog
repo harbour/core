@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-13 10:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    ! fixed allocating terminal context - thanks to Enrico
+
+  * harbour/contrib/hbct/token2.c
+    + added automatic cleanup code for static data allocated by
+      TokenInit() using hb_vmAtExit() functions
+    * Change RestToken() to validate size of passed string
+
+  * harbour/contrib/hbct/ct.prg
+    - removed TokenExit() from CT EXIT procedure - it's not
+      longer necessary
+
+  * harbour/contrib/hbrddads/adsmgmnt.c
+    * minor cleanup - hb_xgrab() cannot return NULL pointer
+
 2007-12-13 18:05 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbrddads/adsmgmnt.c
     ! Fixed memory leak in HB_FUNC( ADSMGGETLOCKOWNER )

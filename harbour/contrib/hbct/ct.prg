@@ -142,8 +142,6 @@ return sbInitialized
 function CTEXIT()
 
    if sbInitialized
-      /* call tokenexit to release static token environment */
-      tokenexit()
       ctcexit()
       sbInitialized := .F.
    endif
@@ -153,8 +151,6 @@ return nil
 exit function _CTEXIT()
 
   if sbInitialized
-    /* call tokenexit to release static token environment */
-    tokenexit()
     ctcexit()
     sbInitialized := .F.
   endif

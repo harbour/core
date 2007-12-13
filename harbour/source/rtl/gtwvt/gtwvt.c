@@ -132,16 +132,18 @@ static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
    if( s_wvtCount < WVT_MAX_WINDOWS )
    {
       int iPos = 0;
-      while( iPos < WVT_MAX_WINDOWS )
+      do
       {
          if( s_wvtWindows[iPos] == NULL )
          {
+            ++s_wvtCount;
             s_wvtWindows[iPos] = pWVT;
             pWVT->iHandle = iPos;
             return TRUE;
          }
+         ++iPos;
       }
-      ++iPos;
+      while( iPos < WVT_MAX_WINDOWS );
    }
    return FALSE;
 }
