@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-13 18:05 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/hbrddads/adsmgmnt.c
+    ! Fixed memory leak in HB_FUNC( ADSMGGETLOCKOWNER )
+      if ( pstUserInfo )
+         hb_xfree( pstUserInfo );
+
 2007-12-12 22:01 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gt_tpl/gt_tpl.c
   * harbour/source/rtl/gtdos/gtdos.c

@@ -486,6 +486,8 @@ HB_FUNC( ADSMGGETLOCKOWNER )
    {
        hb_retnl( ulRetVal );
    }
+   if ( pstUserInfo )
+      hb_xfree( pstUserInfo );
 }
 
 HB_FUNC( ADSMGGETSERVERTYPE )   /* Determine OS ADS is running on; see ADS_MGMT_* constants */
