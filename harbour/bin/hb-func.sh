@@ -385,7 +385,7 @@ fi
 
 HB_LNK_REQ=""
 for gt in \${HB_GT_REQ}; do
-    if [ "\${HB_STATIC}" = "yes" ] || [ "\${gt}" = "ALLEG" ]; then
+#    if [ "\${HB_STATIC}" = "yes" ] || [ "\${gt}" = "ALLEG" ]; then
         HB_LNK_REQ="\${HB_LNK_REQ} HB_GT_\${gt}"
         if [ "\${gt}" = "ALLEG" ]; then
             if [ "\${HB_STATIC}" = "yes" ]; then
@@ -394,7 +394,7 @@ for gt in \${HB_GT_REQ}; do
                 SYSTEM_LIBS="\`allegro-config --libs 2>/dev/null\` \${SYSTEM_LIBS}"
             fi
         fi
-    fi
+#    fi
 done
 [ -n "\${HB_FM_REQ}" ] && HB_LNK_REQ="\${HB_LNK_REQ} HB_FM_\${HB_FM_REQ}"
 
