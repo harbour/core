@@ -111,23 +111,25 @@ METHOD BecomeErr() CLASS ScalarObject
 
 CREATE CLASS Array INHERIT HBScalar FUNCTION __HBArray
 
-   METHOD Init()
+   METHOD Init
 
-   METHOD AsString()
+   METHOD AsString
    METHOD At
-   METHOD AtPut()
+   METHOD AtPut
    METHOD Add
-   METHOD AddAll()
-   METHOD Collect()
-   METHOD Copy()
-   METHOD Do()
-   METHOD DeleteAt()
-   METHOD InsertAt()
-   METHOD IndexOf()
-   METHOD IsScalar()
-   METHOD Remove()
-   METHOD Scan()
-   METHOD _Size()                        // assignment method
+   METHOD AddAll
+   METHOD Collect
+   METHOD Copy
+   METHOD Do
+   METHOD DeleteAt
+   METHOD InsertAt
+   METHOD IndexOf
+   METHOD IsScalar
+   METHOD Remove
+   METHOD Scan
+   METHOD _Size                          // assignment method
+
+   MESSAGE Append  METHOD Add
 
 ENDCLASS
 
