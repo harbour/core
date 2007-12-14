@@ -968,11 +968,18 @@ HB_FUNC( WVT_PROCESSMESSAGES )
 
 HB_FUNC( WVT_GETTITLE )
 {
-  BYTE ucText[ 1024 ];
+   TCHAR buffer[WVT_MAX_TITLE_SIZE];
+   int iResult;
 
-  hb_wvt_gtGetWindowTitle( ( char* ) ucText, 1023 );
-
-  hb_retc( ( char* ) ucText ) ;
+   iResult = GetWindowText( _s->hWnd, buffer, WVT_MAX_TITLE_SIZE );
+   if( iResult > 0 )
+   {
+      hb_retc( HB_TCHAR_CONVFROM( buffer ) );
+   }
+   else
+   {
+      hb_retc( "" );
+   }
 }
 
 //-------------------------------------------------------------------//
