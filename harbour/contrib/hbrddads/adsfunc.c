@@ -2551,6 +2551,22 @@ HB_FUNC( ADSSTMTSETTABLEPASSWORD )
 
 }
 
+HB_FUNC( ADSGETSERVERNAME )
+{
+   ADSHANDLE   hConnect = HB_ADS_PARCONNECTION( 1 );
+   UNSIGNED16  usLen = 256;
+   char        buf[ 256 ];
+
+   if( AdsGetServerName( hConnect, buf, &usLen ) == AE_SUCCESS )
+   {
+      hb_retclen( buf, usLen );
+   }
+   else
+   {
+      hb_ret();
+   }
+}
+
 #endif   /* ADS_REQUIRE_VERSION >= 6  */
 
 #if ADS_REQUIRE_VERSION >= 7

@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-15 18:35 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/contrib/hbrddads/adsfunc.c
+    + ADSGetServerName()
+  * harbour/contrib/hbrddads/make_b32.bat
+  * harbour/contrib/hbrddads/make_vc.bat
+    ! Fixed variable names in help screen
+    * Added setting to ADS_REQUIRE_VERSION by value of ADS_VER 
+
 2007-12-14 08:55 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbgtwvg/wvtutils.c
     ! Fixed memory leak in HB_FUNC( WVT_GETTITLE )
