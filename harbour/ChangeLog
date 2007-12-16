@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-16 15:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbct/files.c
+    ! fixed pure C compilation I broke in previous commit
+
 2007-12-16 13:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbfsapi.c
     + added OS2 version of hb_fsFileExists() and hb_fsDirExists()

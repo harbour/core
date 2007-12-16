@@ -282,70 +282,72 @@ HB_FUNC( SETFDATI )
          sscanf( hb_itemGetCPtr( pTime ), "%2d:%2d:%2d", &hour, &minute, &second );
 
 #if defined( HB_OS_WIN_32 ) && !defined( __CYGWIN__ )
-      FILETIME ft, local_ft;
-      SYSTEMTIME st;
-      HANDLE f = ( HANDLE ) _lopen( szFile, OF_READWRITE | OF_SHARE_COMPAT );
-
-      if( f != ( HANDLE ) HFILE_ERROR )
       {
+         FILETIME ft, local_ft;
+         SYSTEMTIME st;
+         HANDLE f = ( HANDLE ) _lopen( szFile, OF_READWRITE | OF_SHARE_COMPAT );
+
+         if( f != ( HANDLE ) HFILE_ERROR )
+         {
+            if( !pDate || !pTime )
+               GetLocalTime( &st );
+            if( pDate )
+            {
+               st.wYear = year;
+               st.wMonth = month;
+               st.wDay = day;
+            }
+            if( pTime )
+            {
+               st.wHour = hour;
+               st.wMinute = minute;
+               st.wSecond = second;
+            }
+            SystemTimeToFileTime( &st, &local_ft );
+            LocalFileTimeToFileTime( &local_ft, &ft );
+            hb_retl( SetFileTime( f, NULL, &ft, &ft ) );
+            _lclose( ( HFILE ) f );
+            return;
+         }
+      }
+#elif defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+      {
+         struct utimbuf buf;
+         struct tm new_value;
+
+         if( !pDate && !pTime )
+         {
+            hb_retl( utime( szFile, NULL ) == 0 );
+            return;
+         }
+
          if( !pDate || !pTime )
          {
-            GetLocalTime( &st );
+            time_t current_time;
+
+            current_time = time( NULL );
+#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
+            new_value = *localtime( &current_time );
+#   else
+            localtime_r( &current_time, &new_value );
+#   endif
          }
          if( pDate )
          {
-            st.wYear = year;
-            st.wMonth = month;
-            st.wDay = day;
+            new_value.tm_year = year - 1900;
+            new_value.tm_mon = month - 1;
+            new_value.tm_mday = day;
          }
          if( pTime )
          {
-            st.wHour = hour;
-            st.wMinute = minute;
-            st.wSecond = second;
+            new_value.tm_hour = hour;
+            new_value.tm_min = minute;
+            new_value.tm_sec = second;
          }
-         SystemTimeToFileTime( &st, &local_ft );
-         LocalFileTimeToFileTime( &local_ft, &ft );
-         hb_retl( SetFileTime( f, NULL, &ft, &ft ) );
-         _lclose( ( HFILE ) f );
+         buf.actime = buf.modtime = mktime( &new_value );
+         hb_retl( utime( szFile, &buf ) == 0 );
          return;
       }
-#elif defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
-      struct utimbuf buf;
-      struct tm new_value;
-
-      if( !pDate && !pTime )
-      {
-         hb_retl( utime( szFile, NULL ) == 0 );
-         return;
-      }
-
-      if( !pDate || !pTime )
-      {
-         time_t current_time;
-
-         current_time = time( NULL );
-#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
-         new_value = *localtime( &current_time );
-#   else
-         localtime_r( &current_time, &new_value );
-#   endif
-      }
-      if( pDate )
-      {
-         new_value.tm_year = year - 1900;
-         new_value.tm_mon = month - 1;
-         new_value.tm_mday = day;
-      }
-      if( pTime )
-      {
-         new_value.tm_hour = hour;
-         new_value.tm_min = minute;
-         new_value.tm_sec = second;
-      }
-      buf.actime = buf.modtime = mktime( &new_value );
-      hb_retl( utime( szFile, &buf ) == 0 );
-      return;
 #else
 
    int TODO; /* To force warning */
