@@ -61,7 +61,13 @@
  *
  */
 
+/* OS2 */
+#define INCL_DOSFILEMGR   /* File Manager values */
+#define INCL_DOSERRORS    /* DOS error values    */
+
+/* W32 */
 #define HB_OS_WIN_32_USED
+
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
@@ -71,16 +77,19 @@
 #include "ctdisk.ch"
 
 #if defined( __DJGPP__ )
-#   include <dpmi.h>
-#   include <go32.h>
-#   include <sys/farptr.h>
-#   include <sys/param.h>
+#  include <dpmi.h>
+#  include <go32.h>
+#  include <sys/farptr.h>
+#  include <sys/param.h>
 #endif
 #if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
-#   include <sys/types.h>
-#   include <utime.h>
-#   include <unistd.h>
-#   include <time.h>
+#  include <sys/types.h>
+#  include <utime.h>
+#  include <unistd.h>
+#  include <time.h>
+#elif defined( HB_OS_OS2 )
+#  include <os2.h>
+#  include <stdio.h>
 #endif
 
 static PHB_FFIND s_ffind = NULL;
@@ -175,9 +184,8 @@ HB_FUNC( SETFATTR )
 {
 #if defined( HB_OS_DOS )
 
-#if defined( __DJGPP__ ) || defined( __BORLANDC__ )
-   int iFlags;
    int iReturn = -1;
+   int iFlags;
    const char *szFile = hb_parcx( 1 );
 
    if( ISNUM( 2 ) )
@@ -186,12 +194,14 @@ HB_FUNC( SETFATTR )
       iFlags = 32;
 
    if( !( iFlags & ~( FA_ARCHIVE | FA_HIDDEN | FA_READONLY | FA_SYSTEM ) ) )
+   {
+#if defined( __DJGPP__ ) || defined( __BORLANDC__ )
       iReturn = _chmod( szFile, 1, iFlags );
-
-   hb_retni( iReturn );
 #else
-   hb_retnl( -1 );
+      iReturn = _dos_setfileattr( pszDirName, iFlags );
 #endif
+   }
+   hb_retni( iReturn );
 
 #elif defined( HB_OS_WIN_32 )
 
@@ -213,7 +223,38 @@ HB_FUNC( SETFATTR )
    HB_TCHAR_FREE( lpFile );
    hb_retni( dwLastError );
 
+#elif defined( HB_OS_OS2 )
+
+   FILESTATUS3 fs3;
+   ULONG ulAttr = FILE_NORMAL;
+   APIRET ulrc;
+
+   if( iAttr & FA_READONLY )
+      ulAttr |= FILE_READONLY;
+   if( iAttr & FA_HIDDEN )
+      ulAttr |= FILE_HIDDEN;
+   if( iAttr & FA_SYSTEM )
+      ulAttr |= FILE_SYSTEM;
+   if( iAttr & FA_ARCHIVE )
+      ulAttr |= FILE_ARCHIVED;
+
+   ulrc = DosQueryPathInfo( pszPathName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+   if( ulrc == NO_ERROR )
+   {
+      fs3.attrFile = ulAttr;
+      ulrc = DosSetPathInfo( pszPathName, FIL_STANDARD,
+                             &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
+   }
+   hb_retni( ulrc );
+
+#elif defined( OS_UNIX_COMPATIBLE )
+
+   /* *nixes do not use DOS like file attributes */
+   hb_retnl( -1 );
+
 #else
+
+   /* int TODO; */ /* To force warning */
 
    hb_retnl( -1 );
 
@@ -241,74 +282,74 @@ HB_FUNC( SETFDATI )
          sscanf( hb_itemGetCPtr( pTime ), "%2d:%2d:%2d", &hour, &minute, &second );
 
 #if defined( HB_OS_WIN_32 ) && !defined( __CYGWIN__ )
+      FILETIME ft, local_ft;
+      SYSTEMTIME st;
+      HANDLE f = ( HANDLE ) _lopen( szFile, OF_READWRITE | OF_SHARE_COMPAT );
+
+      if( f != ( HANDLE ) HFILE_ERROR )
       {
-         FILETIME ft, local_ft;
-         SYSTEMTIME st;
-         HANDLE f = ( HANDLE ) _lopen( szFile, OF_READWRITE | OF_SHARE_COMPAT );
-
-         if( f != ( HANDLE ) HFILE_ERROR )
-         {
-            if( !pDate || !pTime )
-            {
-               GetLocalTime( &st );
-            }
-            if( pDate )
-            {
-               st.wYear = year;
-               st.wMonth = month;
-               st.wDay = day;
-            }
-            if( pTime )
-            {
-               st.wHour = hour;
-               st.wMinute = minute;
-               st.wSecond = second;
-            }
-            SystemTimeToFileTime( &st, &local_ft );
-            LocalFileTimeToFileTime( &local_ft, &ft );
-            hb_retl( SetFileTime( f, NULL, &ft, &ft ) );
-            _lclose( ( HFILE ) f );
-            return;
-         }
-      }
-#elif defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
-      {
-         struct utimbuf buf;
-         struct tm new_value;
-
-         if( !pDate && !pTime )
-         {
-            hb_retl( utime( szFile, NULL ) == 0 );
-            return;
-         }
-
          if( !pDate || !pTime )
          {
-            time_t current_time;
-
-            current_time = time( NULL );
-#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
-            new_value = *localtime( &current_time );
-#   else
-            localtime_r( &current_time, &new_value );
-#   endif
+            GetLocalTime( &st );
          }
          if( pDate )
          {
-            new_value.tm_year = year - 1900;
-            new_value.tm_mon = month - 1;
-            new_value.tm_mday = day;
+            st.wYear = year;
+            st.wMonth = month;
+            st.wDay = day;
          }
          if( pTime )
          {
-            new_value.tm_hour = hour;
-            new_value.tm_min = minute;
-            new_value.tm_sec = second;
+            st.wHour = hour;
+            st.wMinute = minute;
+            st.wSecond = second;
          }
-         buf.actime = buf.modtime = mktime( &new_value );
-         hb_retl( utime( szFile, &buf ) == 0 );
+         SystemTimeToFileTime( &st, &local_ft );
+         LocalFileTimeToFileTime( &local_ft, &ft );
+         hb_retl( SetFileTime( f, NULL, &ft, &ft ) );
+         _lclose( ( HFILE ) f );
          return;
       }
+#elif defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+      struct utimbuf buf;
+      struct tm new_value;
+
+      if( !pDate && !pTime )
+      {
+         hb_retl( utime( szFile, NULL ) == 0 );
+         return;
+      }
+
+      if( !pDate || !pTime )
+      {
+         time_t current_time;
+
+         current_time = time( NULL );
+#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
+         new_value = *localtime( &current_time );
+#   else
+         localtime_r( &current_time, &new_value );
+#   endif
+      }
+      if( pDate )
+      {
+         new_value.tm_year = year - 1900;
+         new_value.tm_mon = month - 1;
+         new_value.tm_mday = day;
+      }
+      if( pTime )
+      {
+         new_value.tm_hour = hour;
+         new_value.tm_min = minute;
+         new_value.tm_sec = second;
+      }
+      buf.actime = buf.modtime = mktime( &new_value );
+      hb_retl( utime( szFile, &buf ) == 0 );
+      return;
+#else
+
+   int TODO; /* To force warning */
+
 #endif
    }
 
@@ -394,5 +435,7 @@ HB_FUNC( FILESMAX )
    hb_retni( handles );
 #elif defined( _SC_OPEN_MAX )
    hb_retnl( sysconf( _SC_OPEN_MAX ) );
+#else
+   hb_retni( -1 );
 #endif
 }

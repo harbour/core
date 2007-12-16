@@ -21,6 +21,11 @@ do
     test_reqpkg "$i" || TOINST_LST="${TOINST_LST} $i"
 done
 
+if test_reqpkg libpq-dev
+then
+     HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbpgsql"
+fi
+
 if [ -z "${TOINST_LST}" ] || [ "$1" = "--force" ]
 then
     . ./bin/pack_src.sh

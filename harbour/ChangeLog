@@ -8,6 +8,29 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-16 13:32 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbfsapi.c
+    + added OS2 version of hb_fsFileExists() and hb_fsDirExists()
+      Please test - I do not have OS2
+
+  * harbour/source/rdd/dbf1.c
+    ! removed unnecessary printf() message I left by mistake
+
+  * harbour/contrib/hbct/files.c
+    + added OS2 version of SETFATTR()
+      Please test - I do not have OS2
+
+  * harbour/config/os2/global.cf
+    + added temporary workaround for possible problems with some
+      GNU make versions
+
+  * harbour/make_deb.sh
+    + build hbpgsql when libpq-dev is installed
+
+  * harbour/include/clipdefs.h
+    * do not define PBYTE, PSHORT, PUSHORT, PLONG, PULONG, PBOOL, PVOID
+      when HB_OS_OS2 && HB_DONT_DEFINE_BASIC_TYPES is defined
+
 2007-12-15 18:35 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/contrib/hbrddads/adsfunc.c
     + ADSGetServerName()

@@ -69,14 +69,20 @@ typedef BOOL    Boolean;
 /* New types */
 
 typedef BYTE *  BYTEP;
-typedef BYTEP   PBYTE;
 typedef BYTEP   BYTEPP;
+#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
+typedef BYTEP   PBYTE;
+#endif
 
 typedef SHORT * SHORTP;
+#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef SHORTP  PSHORT;
+#endif
 
 typedef USHORT * USHORTP;
+#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef USHORTP PUSHORT;
+#endif
 
 #if !(defined(HB_OS_WIN_32) && defined(HB_OS_WIN_32_USED))
    typedef unsigned int WORD;
@@ -85,17 +91,23 @@ typedef USHORTP PUSHORT;
 #endif
 
 typedef LONG *  LONGP;
+#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef LONGP   PLONG;
+#endif
 
 typedef ULONG * ULONGP;
+#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef ULONGP  PULONG;
+#endif
 
 typedef unsigned long DWORD;
 typedef DWORD * DWORDP;
 typedef DWORDP  PDWORD;
 
 typedef BOOL *  BOOLP;
+#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
 typedef BOOLP   PBOOL;
+#endif
 
 typedef void *  NEARP;
 typedef NEARP * NEARPP;
@@ -104,7 +116,9 @@ typedef NEARP * NEARPP;
    typedef void *      FARP;
    typedef FARP *      FARPP;
    typedef FARP        VOIDP;
+#if !( defined( HB_OS_OS2 ) && defined( HB_DONT_DEFINE_BASIC_TYPES ) )
    typedef FARP        PVOID;
+#endif
    typedef HB_VMHANDLE HANDLE;
 #endif
 

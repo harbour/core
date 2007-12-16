@@ -50,6 +50,11 @@
  *
  */
 
+/* OS2 */
+#define INCL_DOSFILEMGR   /* File Manager values */
+#define INCL_DOSERRORS    /* DOS error values    */
+
+/* W32 */
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
@@ -63,6 +68,9 @@
    #if !defined( FILE_ATTRIBUTE_DEVICE )
       #define FILE_ATTRIBUTE_DEVICE       0x00000040
    #endif
+#elif defined( HB_OS_OS2 )
+   #include <os2.h>
+   #include <stdio.h>
 #elif defined( HB_OS_UNIX )
    #include <sys/types.h>
    #include <sys/stat.h>
@@ -315,6 +323,13 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
                ( dwAttr & ( FILE_ATTRIBUTE_DIRECTORY |
                             FILE_ATTRIBUTE_DEVICE ) ) == 0;
    }
+#elif defined( HB_OS_OS2 )
+   {
+      FILESTATUS3 fs3;
+      if( DosQueryPathInfo( pszFileName, FIL_STANDARD,
+                            &fs3, sizeof( fs3 ) ) == NO_ERROR )
+         fExist = ( fs3.attrFile & FILE_DIRECTORY ) == 0;
+   }
 #elif defined( HB_OS_UNIX )
    {
       struct stat statbuf;
@@ -366,6 +381,13 @@ HB_EXPORT BOOL hb_fsDirExists( const char * pszDirName )
       dwAttr = GetFileAttributesA( pszDirName );
       fExist = ( dwAttr != INVALID_FILE_ATTRIBUTES ) &&
                ( dwAttr & FILE_ATTRIBUTE_DIRECTORY );
+   }
+#elif defined( HB_OS_OS2 )
+   {
+      FILESTATUS3 fs3;
+      if( DosQueryPathInfo( pszDirName, FIL_STANDARD,
+                            &fs3, sizeof( fs3 ) ) == NO_ERROR )
+         fExist = ( fs3.attrFile & FILE_DIRECTORY ) != 0;
    }
 #elif defined( HB_OS_UNIX )
    {

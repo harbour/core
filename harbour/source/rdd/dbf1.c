@@ -635,8 +635,6 @@ static void hb_dbfTableCrypt( DBFAREAP pArea, PHB_ITEM pPasswd, BOOL fEncrypt )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfTableCrypt(%p,%p,%d)", pArea, pPasswd, fEncrypt));
 
-   printf("\r\nhb_dbfTableCrypt(%d)\r\n", fEncrypt);fflush(stdout);
-
    if( !pArea->fReadonly && !pArea->fShared &&
        fEncrypt ? !pArea->fTableEncrypted && !pArea->fHasMemo :
                    pArea->fTableEncrypted )
