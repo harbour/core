@@ -172,6 +172,16 @@
    #endif
 #endif
 
+#if defined(__BORLANDC__)
+#if __BORLANDC__ == 0x0550
+#ifdef __cplusplus
+extern "C" { STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*); }
+#else
+STDAPI OleLoadPicture(LPSTREAM,LONG,BOOL,REFIID,PVOID*);
+#endif
+#endif
+#endif /* __BORLANDC__ */
+
 //-------------------------------------------------------------------//
 
 typedef BOOL ( WINAPI *wvtGradientFill )     (

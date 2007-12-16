@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-16 15:42 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbgtwvg/gtwvg.h
+    * added OleLoadPicture() declaration when BCC5.5 is used.
+      It's missing in BCC55 header files.
+
 2007-12-16 15:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/files.c
     ! fixed pure C compilation I broke in previous commit
