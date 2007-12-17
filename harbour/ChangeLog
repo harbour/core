@@ -1,4 +1,4 @@
-﻿/*
+/*
  * $Id$
  */
 
@@ -7,6 +7,23 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2007-12-17 21:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * bin/bld.bat
+     ! %HB_USER_LIBS% (for bcc32) moved to the beginning of the lib list.
+
+   * contrib/mtpl_b32.mak
+     ! Fixed preprocessor error in line 190 when HB_INSTALL_PREFIX != HB_ROOT
+
+   * source/rtl/getsys53.prg
+   * source/rtl/getsys.prg
+     ! Moved ReadStats() to getsys52.prg
+
+   * ChangeLog
+     ! Removed UTF-8 signature from the beginning of the file.
+       Unfortunately accented chars got converted to UTF8, which 
+       would need to fixed.
+       Pritpal, please turn off this feature on your editor for Harbour.
 
 2007-12-17 21:21 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapigt.h
@@ -36566,7 +36583,7 @@ e.vc
      * Changed PP_Main() to STATIC Main() to have a Main procedure for build that require a MAIN yet avoid conflict if linked with a prg including a MAIN.
    * contrib/dot/pp_harb.ch
      * Wrapped a Windows specific code within #ifdef WIN.
-   /* Thanks to input from Toma� Zupan. */
+   /* Thanks to input from Tomas Zupan. */
 
    * source/pp/ppcore.c
      ! Added a BOOL 2nd parameter to isExpres() to flag a LIST MP. This fixes problem with matching a list exp with an empty component.

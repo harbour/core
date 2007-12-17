@@ -180,8 +180,10 @@ doClean:
 
 !if "$(HB_INSTALL_PREFIX)" == "$(HB_ROOT)"
     @if exist $(HB_LIB_INSTALL)\$(LIBNAME)$(LIBEXT) $(DEL) $(HB_LIB_INSTALL)\$(LIBNAME)$(LIBEXT) > nul
+!endif
     @$(ECHO) @echo off                                                  > _hbdelho.bat
     @$(ECHO) if %1x == x goto SKIP                                     >> _hbdelho.bat
+    @$(ECHO) if $(HB_INSTALL_PREFIX)x == $(HB_ROOT)x goto SKIP         >> _hbdelho.bat
     @$(ECHO) if exist $(HB_INC_INSTALL)\%1 $(DEL) $(HB_INC_INSTALL)\%1 >> _hbdelho.bat
     @$(ECHO) :SKIP                                                     >> _hbdelho.bat
     @type &&!
@@ -191,7 +193,6 @@ doClean:
     @_hbdelha.bat
     @if exist _hbdelha.bat $(DEL) _hbdelha.bat > nul
     @if exist _hbdelho.bat $(DEL) _hbdelho.bat > nul
-!endif
 
 #**********************************************************
 # INSTALL rule(s)

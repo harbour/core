@@ -275,19 +275,6 @@ PROCEDURE __SetFormat( bFormat )
 
    RETURN
 
-FUNCTION ReadStats( nElement, xNewValue )
-   LOCAL oGetList := __GetListActive()
-
-   IF oGetList != NIL
-      IF PCount() > 1
-         RETURN oGetList:ReadStats( nElement, xNewValue )
-      ELSE
-         RETURN oGetList:ReadStats( nElement )
-      ENDIF
-   ENDIF
-
-   RETURN NIL
-
 #define SCORE_ROW       0
 #define SCORE_COL       60
 

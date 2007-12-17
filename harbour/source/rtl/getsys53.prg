@@ -159,4 +159,17 @@ FUNCTION EraseGetMsg( oGet, aMsg )
 
    RETURN NIL
 
+FUNCTION ReadStats( nElement, xNewValue )
+   LOCAL oGetList := __GetListActive()
+
+   IF oGetList != NIL
+      IF PCount() > 1
+         RETURN oGetList:ReadStats( nElement, xNewValue )
+      ELSE
+         RETURN oGetList:ReadStats( nElement )
+      ENDIF
+   ENDIF
+
+   RETURN NIL
+
 #endif
