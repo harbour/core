@@ -897,6 +897,15 @@ HBSIX_LIB_OBJS = \
     $(OBJ_DIR)\sxcompr$(OBJEXT)  \
     $(OBJ_DIR)\sxcrypt$(OBJEXT)  \
     $(OBJ_DIR)\sxdate$(OBJEXT)   \
+    $(OBJ_DIR)\sxsem$(OBJEXT)    \
+    $(OBJ_DIR)\sxfname$(OBJEXT)  \
+    $(OBJ_DIR)\sxtable$(OBJEXT)  \
+    $(OBJ_DIR)\sxord$(OBJEXT)    \
+    $(OBJ_DIR)\sxutil$(OBJEXT)   \
+    $(OBJ_DIR)\sxredir$(OBJEXT)  \
+    $(OBJ_DIR)\sxcompat$(OBJEXT) \
+    $(OBJ_DIR)\sxini$(OBJEXT)    \
+    $(OBJ_DIR)\sxtrig$(OBJEXT)   \
 
 #**********************************************************
 
