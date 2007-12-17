@@ -304,6 +304,7 @@ HB_EXPORT ERRCODE hb_gtGetColorStr( char * pszColorString )
       HB_GTSELF_GETCOLORSTR( pGT, pszColorString );
       return SUCCESS;
    }
+   pszColorString[0] = '\0';
    return FAILURE;
 }
 
@@ -329,6 +330,7 @@ HB_EXPORT ERRCODE hb_gtColorsToString( int * pColors, int iColorCount, char * ps
       HB_GTSELF_COLORSTOSTRING( pGT, pColors, iColorCount, pszColorString, iBufSize );
       return SUCCESS;
    }
+   pszColorString[0] = '\0';
    return FAILURE;
 }
 
@@ -396,6 +398,7 @@ HB_EXPORT ERRCODE hb_gtGetPos( SHORT * piRow, SHORT * piCol )
       *piCol = ( SHORT ) iCol;
       return SUCCESS;
    }
+   *piRow = *piCol = 0;
    return FAILURE;
 }
 
@@ -454,6 +457,7 @@ HB_EXPORT ERRCODE hb_gtScrDim( USHORT * uipHeight, USHORT * uipWidth )
       *uipWidth  = ( USHORT ) iWidth;
       return SUCCESS;
    }
+   *uipHeight = *uipWidth = 0;
    return FAILURE;
 }
 
@@ -484,6 +488,7 @@ HB_EXPORT ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, U
       *pulBuffSize = HB_GTSELF_RECTSIZE( pGT, iTop, iLeft, iBottom, iRight );
       return SUCCESS;
    }
+   *pulBuffSize = 0;
    return FAILURE;
 }
 
@@ -611,6 +616,7 @@ HB_EXPORT ERRCODE hb_gtGetBlink( BOOL * bpBlink )
       *bpBlink = HB_GTSELF_GETBLINK( pGT );
       return SUCCESS;
    }
+   *bpBlink = 0;
    return FAILURE;
 }
 
@@ -1029,6 +1035,7 @@ HB_EXPORT ERRCODE hb_gtGetPosEx( int * piRow, int * piCol )
       HB_GTSELF_GETPOS( pGT, piRow, piCol );
       return SUCCESS;
    }
+   *piRow = *piCol = 0;
    return FAILURE;
 }
 

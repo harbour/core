@@ -1858,12 +1858,12 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
 /* ********************************************************************** */
 
-static HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
-                             hb_gt_FuncInit,
-                             HB_GTSUPER,
-                             HB_GTID_PTR };
+static const HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
+                                   hb_gt_FuncInit,
+                                   HB_GTSUPER,
+                                   HB_GTID_PTR };
 
-HB_GT_ANNOUNCE( HB_GT_NAME );
+HB_GT_ANNOUNCE( HB_GT_NAME )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_startup_gt_Init_ )
    hb_gtRegister( &gtInit );

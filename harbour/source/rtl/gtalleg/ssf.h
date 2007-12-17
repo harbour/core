@@ -230,7 +230,7 @@ typedef struct _ssfGlyph {
 
 typedef struct _ssfFont {
     unsigned short fsize;
-    ssfGlyph **chars;
+    const ssfGlyph **chars;
 } ssfFont;
 
 extern void ssfCreateThinFont(ssfFont *sfont);

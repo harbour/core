@@ -8,6 +8,42 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-17 21:21 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapigt.h
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/gtapi.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gt_tpl/gt_tpl.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtwin/gtwin.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gtos2/gtos2.c
+  * harbour/source/rtl/gtcrs/gtcrs.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtpca/gtpca.c
+  * harbour/source/rtl/gtgui/gtgui.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/contrib/hbct/ctwin.c
+  * harbour/contrib/hbgtwvg/gtwvg.c
+  * harbour/source/rtl/gtalleg/gtalleg.c
+  * harbour/source/rtl/gtalleg/ssf.h
+  * harbour/source/rtl/gtalleg/fixedth.sfc
+    * added missing const to few declarations
+    * formatting and minor code cleanup
+
+  * harbour/source/rtl/hbgtcore.c
+    ! fixed GTNUL registration
+
+  * harbour/source/rtl/gtcgi/gtcgi.c
+  * harbour/source/rtl/gtstd/gtstd.c
+    * moved static variables to dynamic GT area
+
+  * harbour/contrib/hbct/files.c
+    ! fixed DOS version
+
 2007-12-17 13:41 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
     * common.mak
       + Added some missing files (suggested by Juan Gálvez)

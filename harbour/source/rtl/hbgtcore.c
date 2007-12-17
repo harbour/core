@@ -2989,7 +2989,7 @@ static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
    const char * s_defaultGT = "std";
 #endif
 
-static PHB_GT_INIT s_gtInit[ HB_GT_MAX_ ];
+static const HB_GT_INIT * s_gtInit[ HB_GT_MAX_ ];
 static int s_gtLinkOrder[ HB_GT_MAX_ ];
 static int s_iGtLinkCount = 0;
 static int s_iGtCount = 0;
@@ -3036,7 +3036,7 @@ HB_EXPORT void hb_gtSetDefault( const char * szGtName )
    s_defaultGT = s_gtNameBuf;
 }
 
-HB_EXPORT BOOL hb_gtRegister( PHB_GT_INIT gtInit )
+HB_EXPORT BOOL hb_gtRegister( const HB_GT_INIT * gtInit )
 {
    if( hb_gt_FindEntry( gtInit->id ) == -1 )
    {
@@ -3053,7 +3053,17 @@ HB_EXPORT BOOL hb_gtLoad( const char * szGtName, PHB_GT_FUNCS pFuncTable )
    if( szGtName )
    {
       if( hb_stricmp( szGtName, "nul" ) == 0 || hb_stricmp( szGtName, "null" ) == 0 )
+      {
+         if( pFuncTable == NULL )
+            pFuncTable = &s_gtCoreFunc;
+         if( !s_curGT )
+         {
+            s_curGT = ( PHB_GT_BASE ) hb_xgrab( sizeof( HB_GT_BASE ) );
+            memset( s_curGT, 0, sizeof( HB_GT_BASE ) );
+         }
+         s_curGT->pFuncTable = pFuncTable;
          return TRUE;
+      }
 
       iPos = hb_gt_FindEntry( szGtName );
 

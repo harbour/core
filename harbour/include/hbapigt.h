@@ -222,10 +222,24 @@ extern HB_EXPORT BOOL    hb_mouseButtonPressed( int iButton, int * piRow, int * 
 extern HB_EXPORT BOOL    hb_mouseButtonReleased( int iButton, int * piRow, int * piCol );
 extern HB_EXPORT int     hb_mouseReadKey( int iEventMask );
 
+typedef struct
+{
+   int   iTop;
+   int   iLeft;
+   int   iBottom;
+   int   iRight;
+} HB_GT_RECT;
+typedef HB_GT_RECT * PHB_GT_RECT;
+
+typedef struct
+{
+   int   iRow;
+   int   iCol;
+} HB_GT_CORD;
+typedef HB_GT_CORD * PHB_GT_CORD;
 
 /* Undocumented CA-Clipper 5.x GT API calls */
 
-#define HB_GT_RECT void
 #define HB_GT_WND void
 #define HB_GT_RGB void
 #define HB_GT_SLR void

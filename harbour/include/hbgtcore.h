@@ -286,23 +286,6 @@ typedef union
 } HB_SCREENCELL;
 typedef HB_SCREENCELL * PHB_SCREENCELL;
 
-/*
-typedef struct
-{
-   int   iTop;
-   int   iLeft;
-   int   iBottom;
-   int   iRight;
-} HB_GT_RECT;
-typedef HB_GT_RECT * PHB_GT_RECT;
-
-typedef struct
-{
-   int   iRow;
-   int   iCol;
-} HB_GT_CORD;
-typedef HB_GT_CORD * PHB_GT_CORD;
-*/
 
 typedef struct _HB_GT_BASE
 {
@@ -599,7 +582,7 @@ extern PHB_GT hb_gt_Base( void );
 #define HB_GTSUPER_WHOCARES(g,p)                 (HB_GTSUPER)->WhoCares(g,p)
 
 extern HB_EXPORT void hb_gtSetDefault( const char * szGtName );
-extern HB_EXPORT BOOL hb_gtRegister( PHB_GT_INIT gtInit );
+extern HB_EXPORT BOOL hb_gtRegister( const HB_GT_INIT * gtInit );
 extern HB_EXPORT BOOL hb_gtLoad( const char * szGtName, PHB_GT_FUNCS pFuncTable );
 extern HB_EXPORT BOOL hb_gtUnLoad( void );
 extern HB_EXPORT void hb_gtStartupInit( void );

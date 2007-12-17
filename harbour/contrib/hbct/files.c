@@ -198,7 +198,7 @@ HB_FUNC( SETFATTR )
 #if defined( __DJGPP__ ) || defined( __BORLANDC__ )
       iReturn = _chmod( szFile, 1, iFlags );
 #else
-      iReturn = _dos_setfileattr( pszDirName, iFlags );
+      iReturn = _dos_setfileattr( szFile, iFlags );
 #endif
    }
    hb_retni( iReturn );
