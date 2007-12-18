@@ -22,7 +22,7 @@
 
    * source/rtl/getsys53.prg
    * source/rtl/getsys.prg
-     ! Moved ReadStats() to getsys52.prg
+     ! Moved ReadStats() to getsys53.prg
 
    * ChangeLog
      ! Removed UTF-8 signature from the beginning of the file.
