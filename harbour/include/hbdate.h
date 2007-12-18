@@ -63,6 +63,7 @@ extern HB_EXPORT double hb_secondsCPU( int n );
 extern HB_EXPORT void   hb_dateTimeStamp( LONG * plJulian, LONG * plMilliSec );
 extern HB_EXPORT char * hb_timeStampStr( char * szTime, LONG lMillisec );
 extern HB_EXPORT void   hb_timeStampDecode( LONG lMillisec, int * piHour, int * piMinutes, int * piSeconds, int * piMSec );
+extern HB_EXPORT void   hb_timeStrGet( const char * szTime, int * piHour, int * piMinutes, int * piSeconds, int * piMSec );
 extern HB_EXPORT char * hb_dateTimeStampStr( char * szDateTime, LONG lJulian, LONG lMillisec );
 extern HB_EXPORT void   hb_dateTimeStampStrGet( const char * szDateTime, LONG * plJulian, LONG * plMillisec );
 extern HB_EXPORT void   hb_dateToday( int * piYear, int * piMonth, int * piDay );

@@ -64,6 +64,7 @@
 /* OS2 */
 #define INCL_DOSFILEMGR   /* File Manager values */
 #define INCL_DOSERRORS    /* DOS error values    */
+#define INCL_DOSDATETIME  /* DATETIME functions  */
 
 /* W32 */
 #define HB_OS_WIN_32_USED
@@ -263,6 +264,7 @@ HB_FUNC( SETFATTR )
 #endif
 }
 
+
 HB_FUNC( SETFDATI )
 {
    if( hb_pcount() >= 1 )
@@ -281,7 +283,7 @@ HB_FUNC( SETFDATI )
       if( !pTime )
          pTime = hb_param( 3, HB_IT_STRING );
       if( pTime )
-         sscanf( hb_itemGetCPtr( pTime ), "%2d:%2d:%2d", &hour, &minute, &second );
+         hb_timeStrGet( hb_itemGetCPtr( pTime ), &hour, &minute, &second, NULL );
 
 #if defined( HB_OS_WIN_32 ) && !defined( __CYGWIN__ )
       {
@@ -312,16 +314,61 @@ HB_FUNC( SETFDATI )
             return;
          }
       }
+#elif defined( HB_OS_OS2 )
+      {
+         FILESTATUS3 fs3;
+         APIRET ulrc;
+
+         ulrc = DosQueryPathInfo( szFile, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+         if( ulrc == NO_ERROR )
+         {
+            FDATE fdate;
+            FTIME ftime;
+
+            if( !pDate || !pTime )
+            {
+               DATETIME dt;
+
+               DosGetDateTime( &dt );
+
+               fdate.year = dt.year;
+               fdate.month = dt.month;
+               fdate.day = dt.day;
+               ftime.hours = dt.hours;
+               ftime.minutes = dt.minutes;
+               ftime.twosecs = dt.seconds;
+            }
+
+            if( pDate )
+            {
+               fdate.year = year;
+               fdate.month = month;
+               fdate.day = day;
+            }
+            if( pTime )
+            {
+               ftime.hours = hour;
+               ftime.minutes = minute;
+               ftime.twosecs = second;
+            }
+            fs3.fdateCreation = fs3.fdateLastAccess = fs3.fdateLastWrite = fdate;
+            fs3.ftimeCreation = fs3.ftimeLastAccess = fs3.ftimeLastWrite = ftime;
+            ulrc = DosSetPathInfo( szFile, FIL_STANDARD,
+                                   &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
+         }
+         hb_retl( ulrc == NO_ERROR );
+      }
 #elif defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+
+      if( !pDate && !pTime )
+      {
+         hb_retl( utime( szFile, NULL ) == 0 );
+         return;
+      }
+      else
       {
          struct utimbuf buf;
          struct tm new_value;
-
-         if( !pDate && !pTime )
-         {
-            hb_retl( utime( szFile, NULL ) == 0 );
-            return;
-         }
 
          if( !pDate || !pTime )
          {
@@ -334,6 +381,9 @@ HB_FUNC( SETFDATI )
             localtime_r( &current_time, &new_value );
 #   endif
          }
+         else
+            memset( &new_value, 0, sizeof( new_value ) );
+
          if( pDate )
          {
             new_value.tm_year = year - 1900;
@@ -352,7 +402,7 @@ HB_FUNC( SETFDATI )
       }
 #else
 
-   int TODO; /* To force warning */
+      int TODO; /* To force warning */
 
 #endif
    }

@@ -386,6 +386,57 @@ HB_EXPORT char * hb_dateTimeStampStr( char * szDateTime, LONG lJulian, LONG lMil
    return szDateTime;
 }
 
+HB_EXPORT void hb_timeStrGet( const char * szTime, int * piHour, int * piMinutes,
+                              int * piSeconds, int * piMSec )
+{
+   int iHour, iMinutes, iSeconds, iMSec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStrGet(%s, %p, %p, %p, %p)", szTime, piHour, piMinutes, piSeconds, piMSec));
+
+   iHour = iMinutes = iSeconds = iMSec = 0;
+
+   if( szTime )
+   {
+      int iLen = hb_strnlen( szTime, 12 );
+
+      if( iLen >= 5 )
+      {
+
+         iHour    = ( szTime[ 0 ] - '0' ) * 10 +
+                    ( szTime[ 1 ] - '0' );
+         iMinutes = ( szTime[ 3 ] - '0' ) * 10 +
+                    ( szTime[ 4 ] - '0' );
+         if( iHour >= 0 && iHour < 24 && iMinutes >= 0 && iMinutes < 60 )
+         {
+            if( iLen >= 8 )
+            {
+               iSeconds = ( szTime[ 6 ] - '0' ) * 10 +
+                          ( szTime[ 7 ] - '0' );
+               if( iSeconds < 0 || iSeconds >= 60 )
+                  iSeconds = 0;
+               else if( iLen >= 12 )
+               {
+                  iMSec = ( ( szTime[  9 ] - '0' )   * 10 +
+                            ( szTime[ 10 ] - '0' ) ) * 10 +
+                            ( szTime[ 11 ] - '0' );
+                  if( iMSec < 0 || iMSec >= 1000 )
+                     iMSec = 0;
+               }
+            }
+         }
+      }
+   }
+
+   if( piHour )
+      *piHour = iHour;
+   if( piMinutes )
+      *piMinutes = iMinutes;
+   if( piSeconds )
+      *piSeconds = iSeconds;
+   if( piMSec )
+      *piMSec = iMSec;
+}
+
 HB_EXPORT void hb_dateTimeStampStrGet( const char * szDateTime, LONG * plJulian, LONG * plMillisec )
 {
    int iLen;
