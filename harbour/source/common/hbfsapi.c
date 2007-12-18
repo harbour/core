@@ -326,9 +326,9 @@ HB_EXPORT BOOL hb_fsFileExists( const char * pszFileName )
 #elif defined( HB_OS_OS2 )
    {
       FILESTATUS3 fs3;
-      if( DosQueryPathInfo( pszFileName, FIL_STANDARD,
-                            &fs3, sizeof( fs3 ) ) == NO_ERROR )
-         fExist = ( fs3.attrFile & FILE_DIRECTORY ) == 0;
+      fExist = DosQueryPathInfo( pszFileName, FIL_STANDARD,
+                                 &fs3, sizeof( fs3 ) ) == NO_ERROR &&
+               ( fs3.attrFile & FILE_DIRECTORY ) == 0;
    }
 #elif defined( HB_OS_UNIX )
    {
@@ -385,9 +385,9 @@ HB_EXPORT BOOL hb_fsDirExists( const char * pszDirName )
 #elif defined( HB_OS_OS2 )
    {
       FILESTATUS3 fs3;
-      if( DosQueryPathInfo( pszDirName, FIL_STANDARD,
-                            &fs3, sizeof( fs3 ) ) == NO_ERROR )
-         fExist = ( fs3.attrFile & FILE_DIRECTORY ) != 0;
+      fExist = DosQueryPathInfo( pszDirName, FIL_STANDARD,
+                                 &fs3, sizeof( fs3 ) ) == NO_ERROR &&
+               ( fs3.attrFile & FILE_DIRECTORY ) != 0;
    }
 #elif defined( HB_OS_UNIX )
    {

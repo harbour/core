@@ -226,8 +226,10 @@ HB_FUNC( SETFATTR )
 #elif defined( HB_OS_OS2 )
 
    FILESTATUS3 fs3;
-   ULONG ulAttr = FILE_NORMAL;
    APIRET ulrc;
+   ULONG ulAttr = FILE_NORMAL;
+   int iAttr = hb_parni( 2 );
+   const char *szFile = hb_parcx( 1 );
 
    if( iAttr & FA_READONLY )
       ulAttr |= FILE_READONLY;
@@ -238,11 +240,11 @@ HB_FUNC( SETFATTR )
    if( iAttr & FA_ARCHIVE )
       ulAttr |= FILE_ARCHIVED;
 
-   ulrc = DosQueryPathInfo( pszPathName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+   ulrc = DosQueryPathInfo( szFile, FIL_STANDARD, &fs3, sizeof( fs3 ) );
    if( ulrc == NO_ERROR )
    {
       fs3.attrFile = ulAttr;
-      ulrc = DosSetPathInfo( pszPathName, FIL_STANDARD,
+      ulrc = DosSetPathInfo( szFile, FIL_STANDARD,
                              &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
    }
    hb_retni( ulrc );

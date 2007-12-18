@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-18 06:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbct/files.c
+  * harbour/source/common/hbfsapi.c
+    ! fixes in OS2 build - thanks to David
+
 2007-12-17 21:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * bin/bld.bat
      ! %HB_USER_LIBS% (for bcc32) moved to the beginning of the lib list.
