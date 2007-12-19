@@ -12,6 +12,7 @@ C_SOURCES=\
 	xhbenum.c \
 	xhbfunc.c \
 	xhbmsgs.c \
+	xhbqself.c \
 	xhbwith.c \
 	hbcomprs.c \
 	hbchksum.c \

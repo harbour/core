@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-19 18:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/xhb/Makefile
+  * harbour/contrib/xhb/common.mak
+  + harbour/contrib/xhb/xhbqself.c
+    + added xHarbour compatible HB_QSELF() function
+
+  * harbour/contrib/xhb/xhbfunc.c
+    * removed HB_QSELF() redirecting to Class(y) compatible __SENDER()
+      function
+
+  * harbour/contrib/xhb/xhbcomp.prg
+    ! fixed scalar classes overloading, do not enable extended messages
+      for basic types if user haven't requested it (ENABLE TYPE CLASS ...),
+      use scalar classes defined in RTL
+
 2007-12-19 13:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbmath.h
   * harbour/source/rtl/math.c

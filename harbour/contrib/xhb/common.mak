@@ -28,6 +28,7 @@ LIB_OBJS = \
     $(OBJ_DIR)\xhbenum$(OBJEXT) \
     $(OBJ_DIR)\xhbfunc$(OBJEXT) \
     $(OBJ_DIR)\xhbmsgs$(OBJEXT) \
+    $(OBJ_DIR)\xhbqself$(OBJEXT) \
     $(OBJ_DIR)\xhbwith$(OBJEXT) \
     $(OBJ_DIR)\hbcomprs$(OBJEXT) \
     $(OBJ_DIR)\hbchksum$(OBJEXT) \

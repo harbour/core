@@ -251,11 +251,3 @@ HB_FUNC( ISINETSOCKET )             { HB_FUNC_EXEC( HB_INETISSOCKET ); }
 HB_FUNC( INETDESTROY )              { }
 
 #endif /* !HB_NO_DEFAULT_INET */
-
-
-HB_FUNC_EXTERN( __SENDER );
-
-HB_FUNC( HB_QSELF )
-{
-   HB_FUNC_EXEC( __SENDER )
-}
