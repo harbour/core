@@ -331,17 +331,17 @@ HB_FUNC( SETFDATI )
 
                DosGetDateTime( &dt );
 
-               fdate.year = dt.year;
+               fdate.year = dt.year - 1980;
                fdate.month = dt.month;
                fdate.day = dt.day;
                ftime.hours = dt.hours;
                ftime.minutes = dt.minutes;
-               ftime.twosecs = dt.seconds;
+               ftime.twosecs = dt.seconds / 2;
             }
 
             if( pDate )
             {
-               fdate.year = year;
+               fdate.year = year - 1980;
                fdate.month = month;
                fdate.day = day;
             }
@@ -349,7 +349,7 @@ HB_FUNC( SETFDATI )
             {
                ftime.hours = hour;
                ftime.minutes = minute;
-               ftime.twosecs = second;
+               ftime.twosecs = second / 2;
             }
             fs3.fdateCreation = fs3.fdateLastAccess = fs3.fdateLastWrite = fdate;
             fs3.ftimeCreation = fs3.ftimeLastAccess = fs3.ftimeLastWrite = ftime;

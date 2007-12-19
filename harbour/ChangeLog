@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-19 13:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbmath.h
+  * harbour/source/rtl/math.c
+    * cleaned matherr API, now it works in the same way on all
+      platforms - this modification fixes also some strange
+      results when math functions were called with wrong arguments
+      on some platforms
+
+  * harbour/contrib/hbct/trig.c
+  * harbour/contrib/hbct/finan.c
+  * harbour/contrib/hbct/ctmath2.c
+    * updated for new matherr API and cleaned some minor problems
+
+  * harbour/contrib/hbct/files.c
+    ! use DATE and TIME parameters formated like for DOS in OS2
+      version of SETFDATI() - David,  if possible please repeat
+      the test from my previous commit, thank you.
+
 2007-12-18 13:08 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * contrib/xhb/xhbcomp.prg
     + Added xHarbour specific methods to Type classes.

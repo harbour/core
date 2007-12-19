@@ -102,31 +102,30 @@ HB_EXTERN_BEGIN
 
 typedef struct _HB_MATH_EXCEPTION
 {
-  int    type;
-  char * funcname;
-  char * error;
-  double arg1;
-  double arg2;
-  double retval;
-  int    retvalwidth;
-  int    retvaldec;
-  int    handled;
+   int            type;
+   const char *   funcname;
+   const char *   error;
+   double         arg1;
+   double         arg2;
+   double         retval;
+   int            retvalwidth;
+   int            retvaldec;
+   int            handled;
 } HB_MATH_EXCEPTION;
 
-typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err);
+typedef int ( * HB_MATH_HANDLERPROC )( HB_MATH_EXCEPTION * err );
 
-extern void hb_mathResetError (void);
-extern int hb_mathGetLastError (HB_MATH_EXCEPTION * phb_exc);
-extern int hb_mathIsMathErr (void);
+extern HB_EXPORT void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc );
+extern HB_EXPORT BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc, double arg1, double arg2, double dResult );
 
-extern int hb_mathSetErrMode (int imode);
-extern int hb_mathGetErrMode (void);
-extern int hb_matherr (HB_MATH_EXCEPTION * pexc);
+extern HB_EXPORT int hb_mathSetErrMode( int imode );
+extern HB_EXPORT int hb_mathGetErrMode( void );
+extern HB_EXPORT int hb_matherr( HB_MATH_EXCEPTION * pexc );
 
-extern HB_MATH_HANDLERPROC hb_mathSetHandler (HB_MATH_HANDLERPROC handlerproc);
-extern HB_MATH_HANDLERPROC hb_mathGetHandler (void);
+extern HB_EXPORT HB_MATH_HANDLERPROC hb_mathSetHandler( HB_MATH_HANDLERPROC handlerproc );
+extern HB_EXPORT HB_MATH_HANDLERPROC hb_mathGetHandler( void );
 
-extern double hb_random_num( void );
+extern HB_EXPORT double hb_random_num( void );
 
 /* include defines from hbmath.ch */
 #include <hbmath.ch>

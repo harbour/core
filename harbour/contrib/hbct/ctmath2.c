@@ -105,13 +105,20 @@ HB_FUNC( FLOOR )
 {
    if( ISNUM( 1 ) )
    {
-      double dInput = hb_parnd( 1 );
-      double dResult;
+      HB_MATH_EXCEPTION hb_exc;
+      double dResult, dArg = hb_parnd( 1 );
 
-      hb_mathResetError();
-      dResult = floor( dInput );
-
-      hb_retnlen( dResult, 0, 0 );
+      hb_mathResetError( &hb_exc );
+      dResult = floor( dArg );
+      if( hb_mathGetError( &hb_exc, "FLOOR", dArg, 0.0, dResult ) )
+      {
+         if( hb_exc.handled )
+            hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
+         else
+            hb_retnlen( 0, 0, 0 );
+      }
+      else
+         hb_retnlen( dResult, 0, 0 );
    }
    else
    {
@@ -171,13 +178,20 @@ HB_FUNC( CEILING )
 {
    if( ISNUM( 1 ) )
    {
-      double dInput = hb_parnd( 1 );
-      double dResult;
+      HB_MATH_EXCEPTION hb_exc;
+      double dResult, dArg = hb_parnd( 1 );
 
-      hb_mathResetError();
-      dResult = ceil( dInput );
-
-      hb_retnlen( dResult, 0, 0 );
+      hb_mathResetError( &hb_exc );
+      dResult = ceil( dArg );
+      if( hb_mathGetError( &hb_exc, "CEIL", dArg, 0.0, dResult ) )
+      {
+         if( hb_exc.handled )
+            hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
+         else
+            hb_retnlen( 0, 0, 0 );
+      }
+      else
+         hb_retnlen( dResult, 0, 0 );
    }
    else
    {
@@ -311,42 +325,33 @@ HB_FUNC( LOG10 )
 {
    if( ISNUM( 1 ) )
    {
-      double dInput = hb_parnd( 1 );
-      double dResult;
+      HB_MATH_EXCEPTION hb_exc;
+      double dResult, dArg = hb_parnd( 1 );
 
-      hb_mathResetError();
-      dResult = log10( dInput );
-
-      if( hb_mathIsMathErr() )
+      hb_mathResetError( &hb_exc );
+      dResult = log10( dArg );
+      if( hb_mathGetError( &hb_exc, "LOG10", dArg, 0.0, dResult ) )
       {
-         /* the C-RTL provides a kind of matherr() mechanism */
-         HB_MATH_EXCEPTION hb_exc;
-         int iLastError = hb_mathGetLastError( &hb_exc );
-
-         if( iLastError != HB_MATH_ERR_NONE )
+         if( hb_exc.handled )
+            hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
+         else
          {
-            if( hb_exc.handled )
+            /* math exception is up to the Harbour function, so do this as Clipper compatible as possible */
+            switch( hb_exc.type )
             {
-               hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
-            }
-            else
-            {
-               /* math exception is up to the Harbour function, so do this as CTIII compatible as possible */
-               switch ( iLastError )
-               {
-                  case HB_MATH_ERR_SING:       /* argument to log10 was 0.0 */
-                  case HB_MATH_ERR_DOMAIN:     /* argument to log10 was < 0.0 */
-                     hb_retndlen( -HUGE_VAL, -1, -1 );  /* return -infinity */
-                     break;
+               case HB_MATH_ERR_SING:       /* argument to log was 0.0 */
+               case HB_MATH_ERR_DOMAIN:     /* argument to log was < 0.0 */
+                  hb_retndlen( -HUGE_VAL, -1, -1 );  /* return -infinity */
+                  break;
 
-                  default:
-                     hb_retnd( 0.0 );
-               }
+               default:
+                  hb_retnd( 0.0 );
+                  break;
             }
-            return;
          }
       }
-      hb_retnd( dResult );
+      else
+         hb_retnd( dResult );
    }
    else
    {
