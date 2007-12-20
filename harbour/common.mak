@@ -481,6 +481,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\gtclip$(OBJEXT)   \
     $(OBJ_DIR)\gtfunc$(OBJEXT)   \
     $(OBJ_DIR)\gtkbstat$(OBJEXT) \
+    $(OBJ_DIR)\gtkeycod$(OBJEXT) \
     $(OBJ_DIR)\gtsys$(OBJEXT)    \
     $(OBJ_DIR)\gttone$(OBJEXT)   \
     $(OBJ_DIR)\gx$(OBJEXT)       \

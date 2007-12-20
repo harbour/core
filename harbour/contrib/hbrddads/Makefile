@@ -18,12 +18,9 @@ ifeq ($(HB_ARCHITECTURE),w32)
    C_USR += -DWIN32
 endif
 
-ifneq ($(wildcard /usr/local/ads/acesdk/ace.h),)
-   C_USR += -I/usr/local/ads/acesdk
-else
-ifneq ($(wildcard $(HOME)/ads/acesdk/ace.h),)
-   C_USR += -I/usr/local/ads/acesdk
-endif
+ifeq ($(ACE_DIRS),)
+export ACE_DIRS = /usr/local $(HOME)
+C_USR += $(foreach d, $(ACE_DIRS), $(if $(wildcard $(d)/ads/acesdk/ace.h),-I$(d)/ads/acesdk,))
 endif
 
 include $(TOP)$(ROOT)config/header.cf

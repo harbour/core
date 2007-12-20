@@ -46,6 +46,7 @@ C_SOURCES=\
 	gtclip.c     \
 	gtfunc.c     \
 	gtkbstat.c   \
+	gtkeycod.c   \
 	gtsys.c      \
 	gttone.c     \
 	gx.c         \

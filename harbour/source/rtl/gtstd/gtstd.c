@@ -319,9 +319,19 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
 #if defined( _MSC_VER ) && !defined( HB_WINCE )
    if( pGTSTD->fStdinConsole )
    {
-      if( _kbhit() ) ch = _getch();
-      if( ch >= 0 && ch <= 255 )
-         ch = pGTSTD->keyTransTbl[ ch ];
+      if( _kbhit() )
+      {
+         ch = _getch();
+         if( ( ch == 0 || ch == 224 ) && _kbhit() )
+         {
+            /* It was a function key lead-in code, so read the actual
+               function key and then offset it by 256 */
+            ch = _getch() + 256;
+         }
+         ch = hb_gt_dos_keyCodeTanslate( ch );
+         if( ch > 0 && ch <= 255 )
+            ch = pGTSTD->keyTransTbl[ ch ];
+      }
    }
    else if( !_eof( pGTSTD->hStdin ) )
    {

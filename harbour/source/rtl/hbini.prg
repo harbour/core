@@ -110,13 +110,8 @@ STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMai
    LOCAL cFile, nLen
    LOCAL aKeyVal, hCurrentSection
    LOCAL hFile, nLineEnd
-   LOCAL cData, cBuffer, cLine
+   LOCAL cData, cLine
    LOCAL reComment, reInclude, reSection, reSplitters
-
-   reComment := hb_RegexComp( s_cHalfLineComment + "|^[ \t]*" + s_cLineComment )
-   reInclude := hb_RegexComp( "include (.*)" )
-   reSection := hb_RegexComp( "[[](.*)[]]" )
-   reSplitters := hb_RegexComp( cSplitters )
 
    aFiles := hb_aTokens( cFileSpec, hb_OSPathListSeparator() )
    IF Empty( aFiles )
@@ -136,11 +131,16 @@ STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMai
       RETURN NIL
    ENDIF
 
+   reComment := hb_RegexComp( s_cHalfLineComment + "|^[ \t]*" + s_cLineComment )
+   reInclude := hb_RegexComp( "include (.*)" )
+   reSection := hb_RegexComp( "[[](.*)[]]" )
+   reSplitters := hb_RegexComp( cSplitters )
+
    /* we'll read the whole file, then we'll break it in lines. */
-   cBuffer := Space( FSeek( hFile, 0, FS_END ) )
+   cData := Space( FSeek( hFile, 0, FS_END ) )
    FSeek( hFile, 0, FS_SET )
-   nLen := FRead( hFile, @cBuffer, Len( cBuffer ) )
-   cBuffer := Left( cBuffer, nLen )
+   nLen := FRead( hFile, @cData, Len( cData ) )
+   cData := Left( cData, nLen )
    FClose( hFile )
 
    /* Always begin with the MAIN section */

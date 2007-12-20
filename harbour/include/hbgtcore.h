@@ -599,6 +599,8 @@ extern int  hb_gt_w32_getKbdState( void );
 extern void hb_gt_w32_setKbdState( int kbdShifts );
 extern void hb_gt_w32_tone( double dFrequency, double dDuration );
 #endif /* HB_OS_WIN_32 */
-
+#if defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
+int hb_gt_dos_keyCodeTanslate( int iKey );
+#endif /* HB_OS_DOS || HB_OS_OS2 */
 
 #endif /* HB_GTCORE_H_ */

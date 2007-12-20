@@ -889,123 +889,12 @@ static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
 #endif
    }
 
-   /* Perform key translations */
-   switch( ch )
-   {
-      case -1:  /* No key available */
-         return 0;
-      case 328:  /* Up arrow */
-         ch = K_UP;
-         break;
-      case 336:  /* Down arrow */
-         ch = K_DOWN;
-         break;
-      case 331:  /* Left arrow */
-         ch = K_LEFT;
-         break;
-      case 333:  /* Right arrow */
-         ch = K_RIGHT;
-         break;
-      case 327:  /* Home */
-         ch = K_HOME;
-         break;
-      case 335:  /* End */
-         ch = K_END;
-         break;
-      case 329:  /* Page Up */
-         ch = K_PGUP;
-         break;
-      case 337:  /* Page Down */
-         ch = K_PGDN;
-         break;
-      case 371:  /*  Ctrl + Left arrow */
-         ch = K_CTRL_LEFT;
-         break;
-      case 372:  /* Ctrl + Right arrow */
-         ch = K_CTRL_RIGHT;
-         break;
-      case 375:  /* Ctrl + Home */
-         ch = K_CTRL_HOME;
-         break;
-      case 373:  /* Ctrl + End */
-         ch = K_CTRL_END;
-         break;
-      case 388:  /* Ctrl + Page Up */
-         ch = K_CTRL_PGUP;
-         break;
-      case 374:  /* Ctrl + Page Down */
-         ch = K_CTRL_PGDN;
-         break;
-      case 338:  /* Insert */
-         ch = K_INS;
-         break;
-      case 339:  /* Delete */
-         ch = K_DEL;
-         break;
-      case 315:  /* F1 */
-         ch = K_F1;
-         break;
-      case 316:  /* F2 */
-      case 317:  /* F3 */
-      case 318:  /* F4 */
-      case 319:  /* F5 */
-      case 320:  /* F6 */
-      case 321:  /* F7 */
-      case 322:  /* F8 */
-      case 323:  /* F9 */
-      case 324:  /* F10 */
-         ch = 315 - ch;
-         break;
-      case 340:  /* Shift + F1 */
-      case 341:  /* Shift + F2 */
-      case 342:  /* Shift + F3 */
-      case 343:  /* Shift + F4 */
-      case 344:  /* Shift + F5 */
-      case 345:  /* Shift + F6 */
-      case 346:  /* Shift + F7 */
-      case 347:  /* Shift + F8 */
-      case 348:  /* Shift + F9 */
-      case 349:  /* Shift + F10 */
-      case 350:  /* Ctrl + F1 */
-      case 351:  /* Ctrl + F2 */
-      case 352:  /* Ctrl + F3 */
-      case 353:  /* Ctrl + F4 */
-      case 354:  /* Ctrl + F5 */
-      case 355:  /* Ctrl + F6 */
-      case 356:  /* Ctrl + F7 */
-      case 357:  /* Ctrl + F8 */
-      case 358:  /* Ctrl + F9 */
-      case 359:  /* Ctrl + F10 */
-      case 360:  /* Alt + F1 */
-      case 361:  /* Alt + F2 */
-      case 362:  /* Alt + F3 */
-      case 363:  /* Alt + F4 */
-      case 364:  /* Alt + F5 */
-      case 365:  /* Alt + F6 */
-      case 366:  /* Alt + F7 */
-      case 367:  /* Alt + F8 */
-      case 368:  /* Alt + F9 */
-      case 369:  /* Alt + F10 */
-         ch = 330 - ch;
-         break;
-      case 389:  /* F11 */
-      case 390:  /* F12 */
-      case 391:  /* Shift + F11 */
-      case 392:  /* Shift + F12 */
-      case 393:  /* Ctrl + F11 */
-      case 394:  /* Ctrl + F12 */
-      case 395:  /* Alt + F11 */
-      case 396:  /* Alt + F12 */
-         ch = 349 - ch;
-   }
+   ch = hb_gt_dos_keyCodeTanslate( ch );
+
    if( ch == 0 )
-   {
       ch = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );
-   }
    else if( ch > 0 && ch <= 255 )
-   {
       ch = s_keyTrans[ ch ];
-   }
 
    return ch;
 }

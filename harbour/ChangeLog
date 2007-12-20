@@ -8,6 +8,30 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-20 11:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  * harbour/include/hbgtcore.h
+  + harbour/source/rtl/gtkeycod.c
+    + added hb_gt_dos_keyCodeTanslate() - based on hb_gt_ReadKey()
+      from GTDOS by David G. Holm <dholm@jsd-llc.com>
+
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtos2/gtos2.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtpca/gtpca.c
+    * use hb_gt_dos_keyCodeTanslate() to eliminate repeated code
+
+  * harbour/contrib/hbrddads/Makefile
+  * harbour/contrib/hbpgsql/Makefile
+    * updated code to locate directories with header files
+
+  * harbour/source/rtl/hbini.prg
+    ! fixed typo in HB_IniRead()
+
+  * harbour/source/rtl/persist.prg
+    ! eliminated internal static variable
+
 2007-12-20 08:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/files.c
     ! added missing 'return;' - in OS2 builds - it should fix value

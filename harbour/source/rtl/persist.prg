@@ -53,14 +53,12 @@
 #include "hbclass.ch"
 #include "common.ch"
 
-extern HB_STOD
-
 CREATE CLASS HBPersistent
 
    METHOD CreateNew() INLINE Self
    METHOD LoadFromFile( cFileName ) INLINE ::LoadFromText( MemoRead( cFileName ) )
    METHOD LoadFromText( cObjectText )
-   METHOD SaveToText( cObjectName )
+   METHOD SaveToText( cObjectName, nIndent )
    METHOD SaveToFile( cFileName ) INLINE MemoWrit( cFileName, ::SaveToText() )
 
 ENDCLASS
@@ -108,18 +106,21 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
 return .T.
 
-METHOD SaveToText( cObjectName ) CLASS HBPersistent
+METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 
    local oNew := &( ::ClassName() + "()" ):CreateNew()
    local aProperties, n, uValue, uNewValue, cObject, cType
 
-   static s_nIndent := -3
-
    DEFAULT cObjectName TO "o" + ::ClassName()
 
-   s_nIndent += 3
-   cObject := iif( s_nIndent > 0, hb_OSNewLine(), "" ) + Space( s_nIndent ) + ;
-              "OBJECT " + iif( s_nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
+   if nIndent == NIL
+      nIndent := 0
+   else
+      nIndent += 3
+   endif
+
+   cObject := iif( nIndent > 0, hb_OSNewLine(), "" ) + Space( nIndent ) + ;
+              "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
               ::ClassName() + hb_OSNewLine()
 
    aProperties := __ClsGetProperties( ::ClassH )
@@ -133,16 +134,16 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
 
          do case
             case cType == "A"
-                 s_nIndent += 3
-                 cObject += ArrayToText( uValue, aProperties[ n ], s_nIndent )
-                 s_nIndent -= 3
+                 nIndent += 3
+                 cObject += ArrayToText( uValue, aProperties[ n ], nIndent )
+                 nIndent -= 3
                  if n < Len( aProperties )
                     cObject += hb_OSNewLine()
                  endif
 
             case cType == "O"
                  if __objDerivedFrom( uValue, "HBPERSISTENT" )
-                    cObject += uValue:SaveToText( aProperties[ n ] )
+                    cObject += uValue:SaveToText( aProperties[ n ], nIndent )
                  endif
                  if n < Len( aProperties )
                     cObject += hb_OSNewLine()
@@ -152,7 +153,7 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
                  if n == 1
                     cObject += hb_OSNewLine()
                  endif
-                 cObject += Space( s_nIndent ) + "   ::" + ;
+                 cObject += Space( nIndent ) + "   ::" + ;
                             aProperties[ n ] + " = " + ValToText( uValue ) + ;
                             hb_OSNewLine()
          endcase
@@ -161,8 +162,7 @@ METHOD SaveToText( cObjectName ) CLASS HBPersistent
 
    next
 
-   cObject += hb_OSNewLine() + Space( s_nIndent ) + "ENDOBJECT" + hb_OSNewLine()
-   s_nIndent -= 3
+   cObject += hb_OSNewLine() + Space( nIndent ) + "ENDOBJECT" + hb_OSNewLine()
 
 return cObject
 
@@ -186,7 +186,7 @@ static function ArrayToText( aArray, cName, nIndent )
          case cType == "O"
               if __objDerivedFrom( uValue, "HBPERSISTENT" )
                  cArray += uValue:SaveToText( cName + "[ " + AllTrim( Str( n ) ) + ;
-                           " ]" )
+                                              " ]", nIndent )
               endif
 
          otherwise
