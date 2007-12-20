@@ -116,7 +116,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    IF Valtype( aTo ) == "A"
       IF Len( aTo ) > 1
          FOR EACH cTo IN aTo
-            IF HB_EnumIndex( cTo ) != 1
+            IF cTo:__enumIndex() != 1
                cTmp += cTo + ","
             ENDIF
          NEXT

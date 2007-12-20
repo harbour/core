@@ -38,9 +38,9 @@ elif [ "$UNAME" = "FreeBSD" ]; then
     TARGET="."
     CCPREFIX=""
     UNAMEL=bsd
-elif find /usr/local/bin -name "i[3456]86-mingw*-gcc" -maxdepth 1 &>/dev/null; then
+elif find /usr/local/bin -maxdepth 1 -name "i[3456]86-mingw*-gcc" &>/dev/null; then
     MINGW_PREFIX=/usr/local
-    TARGET=`find /usr/local/bin -name "i[3456]86-mingw*-gcc" -maxdepth 1|sed -e '1 !d' -e 's/.*\(i[3456]86-mingw[^-]*\).*/\1/g'`
+    TARGET=`find /usr/local/bin -maxdepth 1 -name "i[3456]86-mingw*-gcc" |sed -e '1 !d' -e 's/.*\(i[3456]86-mingw[^-]*\).*/\1/g'`
     CCPREFIX="$TARGET-"
 else
     echo "Can't determine the location for the MinGW32 cross-compiler."

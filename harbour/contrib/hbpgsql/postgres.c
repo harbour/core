@@ -441,6 +441,32 @@ HB_FUNC( PQMETADATA )
    }
 }
 
+HB_FUNC( PQRESULT2ARRAY )
+{
+   PGresult *res;
+   if( hb_parinfo( 1 ) )
+   {
+      res = ( PGresult * ) hb_parptr( 1 );
+      if( PQresultStatus( res ) == PGRES_TUPLES_OK )
+      {
+         int nRows = PQntuples(res), nRow;
+         int nCols = PQnfields( res ), nCol;
+         PHB_ITEM pResult = hb_itemArrayNew( nRows ), pRow;
+
+         for( nRow = 0; nRow < nRows ; nRow++ )
+         {  
+            pRow = hb_arrayGetItemPtr( pResult, nRow + 1 );
+            hb_arrayNew ( pRow, nCols );
+            for( nCol = 0; nCol < nCols ; nCol++ )
+            {
+               hb_arraySetC( pRow, nCol + 1, PQgetvalue(res, nRow, nCol) );
+            }
+         }
+         hb_itemRelease( hb_itemReturnForward( pResult ) );
+      }
+   }
+}
+
 HB_FUNC(PQTRANSACTIONSTATUS)
 {
     if (hb_parinfo(1))

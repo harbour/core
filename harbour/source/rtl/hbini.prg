@@ -87,6 +87,14 @@ PROCEDURE hb_IniSetComment( cLc, cHlc )
    s_cHalfLineComment := cHlc
 RETURN
 
+FUNCTION HB_IniNew( bAutoMain )
+   LOCAL hIni := hb_Hash()
+
+   IF bAutoMain
+      hIni[ "MAIN" ] := hb_Hash()
+   ENDIF
+
+RETURN hIni
 
 FUNCTION hb_IniRead( cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
    LOCAL hIni := hb_Hash()
@@ -97,7 +105,6 @@ FUNCTION hb_IniRead( cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
    DEFAULT bAutoMain TO .T.
 
    hb_HCaseMatch( hIni, bKeyCaseSens )
-   hb_HAutoAdd( hIni, HB_HAUTOADD_ASSIGN )
 
    IF bAutoMain
       hIni[ "MAIN" ] := hb_Hash()

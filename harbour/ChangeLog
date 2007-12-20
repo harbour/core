@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-20 15:00 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * harbour/make_xmingw.sh
+    * moved -maxdepth before -name
+  * harbour/source/rtl/hbini.prg
+    * added hb_ininew()
+  * harbour/contrib/hbtip/sendmail.prg
+    * removed hbcompat.ch dependences
+  + harbour/contrib/hbtip/utils.c
+    * fixed a type in jpeg mime string
+	 * added TIP_HTMLSPECIALCHARS
+  + harbour/contrib/hbpgsql/postgres.c
+    * added PQRESULT2ARRAY
+	 
 2007-12-20 11:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/rtl/Makefile

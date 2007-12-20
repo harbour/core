@@ -333,7 +333,7 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
    /* 65*/ { 0, "GIF", "image/gif", 0, 0, 0 },
 
    /* JPEG image */
-   /* 66*/ { 0, "\xff\xd8", "image/x-compressed-gif", 0, 0, 0 }
+   /* 66*/ { 0, "\xff\xd8", "image/jpg", 0, 0, 0 }
 };
 
 /* Find mime by extension */
@@ -828,3 +828,84 @@ HB_FUNC( HB_EXEC )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
+
+HB_FUNC( TIP_HTMLSPECIALCHARS )
+{
+   char *cData = hb_parc(1);
+   int nLen = hb_parclen(1);
+   char *cRet;
+   int nPos = 0, nPosRet = 0;
+   BYTE cElem;
+   
+   if ( ! cData )
+   {
+      hb_errRT_BASE( EG_ARG, 3012, NULL,
+         "TIP_HTMLSPECIALCHARS", 1, hb_paramError(1) );
+      return;
+   }
+
+   if ( ! nLen )
+   {
+      hb_retc( "" );
+      return;
+   }
+
+   // Giving maximum final length possible
+   cRet = (char *) hb_xgrab( nLen * 6 +1);
+
+   while ( nPos < nLen )
+   {
+      cElem = ( BYTE )cData[ nPos ];
+
+      if ( cElem == '&' )
+      {
+         cRet[ nPosRet++ ] = '&';
+         cRet[ nPosRet++ ] = 'a';
+         cRet[ nPosRet++ ] = 'm';
+         cRet[ nPosRet++ ] = 'p';
+         cRet[ nPosRet++ ] = ';';
+      }
+      else if ( cElem == '<' )      
+      {
+         cRet[ nPosRet++ ] = '&';         
+         cRet[ nPosRet++ ] = 'l';
+         cRet[ nPosRet++ ] = 't';
+         cRet[ nPosRet++ ] = ';';
+      }
+      else if ( cElem == '>' )      
+      {
+         cRet[ nPosRet++ ] = '&';
+         cRet[ nPosRet++ ] = 'g';
+         cRet[ nPosRet++ ] = 't';
+         cRet[ nPosRet++ ] = ';';
+      }
+      else if ( cElem == '"' )      
+      {
+         cRet[ nPosRet++ ] = '&';
+         cRet[ nPosRet++ ] = 'q';
+         cRet[ nPosRet++ ] = 'u';
+         cRet[ nPosRet++ ] = 'o';
+         cRet[ nPosRet++ ] = 't';
+         cRet[ nPosRet++ ] = ';';
+      }
+      else if ( cElem == '\'' )      
+      {
+         cRet[ nPosRet++ ] = '&';
+         cRet[ nPosRet++ ] = '#';
+         cRet[ nPosRet++ ] = '0';
+         cRet[ nPosRet++ ] = '3';
+         cRet[ nPosRet++ ] = '9';
+         cRet[ nPosRet++ ] = ';';
+      }
+      else if ( cElem >= ' ' )     
+      {
+         cRet[ nPosRet ] = cElem;
+         nPosRet++;
+      }
+
+      nPos++;
+   }
+
+   hb_retclen_buffer( cRet, nPosRet );
+}
+
