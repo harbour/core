@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-20 08:06 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbct/files.c
+    ! added missing 'return;' - in OS2 builds - it should fix value
+      returned by SETFDATI(), many thanks to David for his tests,
+      now SETFDATI() should be fully functional in OS2 builds.
+
 2007-12-19 18:48 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/xhb/Makefile
   * harbour/contrib/xhb/common.mak

@@ -357,6 +357,7 @@ HB_FUNC( SETFDATI )
                                    &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
          }
          hb_retl( ulrc == NO_ERROR );
+         return;
       }
 #elif defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
 
