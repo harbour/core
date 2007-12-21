@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-21 10:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * respect -fPIC used to create Harbour binaries in default
+      GCC switches used by hb* scripts
+
 2007-12-20 15:56 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_rpmw32.sh
     * moved -maxdepth option before actions and expressions in find
