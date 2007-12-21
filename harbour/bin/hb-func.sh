@@ -141,7 +141,7 @@ mk_hbtools()
     if [ "${HB_COMPILER}" = "mingw32" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lwsock32 -lws2_32"
     elif [ "${HB_COMPILER}" = "cemgw" ]; then
-        HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2"
+        HB_SYS_LIBS="${HB_SYS_LIBS} -lwininet -lws2 -lcommdlg -lcommctrl -luuid -lole32"
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS}"
     else
@@ -287,7 +287,7 @@ while [ \$n -lt \${#P[@]} ]; do
         -o*)
             d="\${v#-o}"; p="\${v}"
             if [ -d "\${d}" ]; then
-                DIROUT="\${d%}"
+                DIROUT="\${d%/}"
             elif [ -d "\${d%/*}" ]; then
                 DIROUT="\${d%/*}"; FILEOUT="\${d##*/}"; p="-o\${d}"
                 [ \${HB} = "cc" ] || p="-o\${d%.*}"
@@ -380,7 +380,7 @@ fi
 
 if [ "\${HB_STATIC}" = "full" ]; then
     if [ "\${HB_ARCHITECTURE}" = "linux" ]; then
-        SYSTEM_LIBS="\${SYSTEM_LIBS} -ldl -lpthread"
+        SYSTEM_LIBS="\${SYSTEM_LIBS} -lpthread"
     fi
     LN_OPT="\${LN_OPT} -static"
     HB_STATIC="yes"

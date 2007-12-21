@@ -272,7 +272,7 @@ static const UnixBoxChar boxTranslate[] ={
 #endif
 
 /* these are standard PC console colors in RGB */
-static char *rgb_colors[] = {
+static const char *rgb_colors[] = {
    "rgb:00/00/00",   /* black         */
    "rgb:00/00/AA",   /* blue          */
    "rgb:00/AA/00",   /* green         */

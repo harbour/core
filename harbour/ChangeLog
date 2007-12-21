@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-21 10:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * added system libraries necessary for linking some of harbour
+      contrib libs in WinCE
+    * minor cleanup
+
+  * harbour/source/rtl/gtxwc/gtxwc.c
+    * added missing 'const' in declaration
+
 2007-12-21 10:05 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * respect -fPIC used to create Harbour binaries in default
