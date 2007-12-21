@@ -247,6 +247,7 @@ static HFONT hb_gt_wvt_GetFont( char * pszFace, int iHeight, int iWidth, int iWe
    {
       LOGFONT logfont;
 
+      memset( &logfont, 0, sizeof( LOGFONT ) );
       logfont.lfEscapement     = 0;
       logfont.lfOrientation    = 0;
       logfont.lfWeight         = iWeight;
@@ -342,6 +343,7 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
       wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
    }
    SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
+   HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
 }
 
 static void hb_gt_wvt_SetWindowTitle( HWND hWnd, char * title )
@@ -1232,6 +1234,7 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
    {
       MessageBox( NULL, TEXT( "Failed to create window." ),
                   TEXT( "HARBOUR_WVT" ), MB_ICONERROR );
+      return NULL;
    }
 
    /*
@@ -1285,6 +1288,8 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       /* hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_wvt_Init()", 0, 0 ); */
       hb_errInternal( 10001, "WINAPI CreateWindow() failed", "", "" );
    }
+
+   hb_gt_wvt_InitWindow( pWVT, WVT_DEFAULT_ROWS, WVT_DEFAULT_COLS );
 
 #ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_cdp_page;
@@ -1356,6 +1361,7 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
                fResult = hb_gt_wvt_InitWindow( pWVT, iRow, iCol );
             }
             DeleteObject( hFont );
+            HB_GTSELF_REFRESH( pGT );
          }
       }
       else
@@ -1508,6 +1514,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                {
                   hb_gt_wvt_ResetWindowSize( pWVT );
                   hb_gt_wvt_UpdateCaret( pWVT );
+                  HB_GTSELF_REFRESH( pGT );
                }
                DeleteObject( hFont );
             }

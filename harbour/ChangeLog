@@ -8,6 +8,24 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-21 18:21 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/pack_src.sh
+    * try to detect GNU tar
+
+  * harbour/make_xmingw.sh
+    * added new default location for MinGW cross-compiler in Gentoo
+      distribution
+    * added auto detection of MinGW cross-compiler installation which
+      should work in most cases when default location test fails
+
+  * harbour/make_tgz.sh
+    * try to detect GNU make and GNU tar
+
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * call hb_gt_wvt_InitWindow explicitly to eliminate problems
+      with ignored WM_CREATE message when new window handler is not
+      yet registered
+
 2007-12-21 18:00 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/lang/msgltwin.c
     * month name typo

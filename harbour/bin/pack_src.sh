@@ -4,8 +4,19 @@
 #
 # This script requires "TAR" utilities for compression.
 
-hb_archbin="tar"
-hb_archopt="-cz --ignore-failed-read -f"
+if tar --version >/dev/null 2>&1; then
+   hb_archbin="tar"
+   hb_gnutar="yes"
+elif gtar --version >/dev/null 2>&1; then
+   hb_archbin="gtar"
+   hb_gnutar="yes"
+else
+   hb_archbin="tar"
+   hb_gnutar="no"
+   echo "Warning!!! Cannot find GNU TAR"
+fi
+
+hb_archopt="-czf"
 hb_ext=".tar.gz"
 if [ -f bin/hb-func.sh ]; then
   hb_rootdir="."

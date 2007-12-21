@@ -123,18 +123,19 @@ case "$HB_ARCHITECTURE" in
 esac
 
 # Select the platform-specific command names
-INSTALL=install
 MAKE=make
 TAR=tar
-case "$HB_ARCHITECTURE" in
-    darwin)
-        gtar --version >/dev/null 2>&1 && TAR=gtar
-        INSTALL="install -c"
-        ;;
-    bsd|hpux)
-        MAKE=gmake
-        ;;
-esac
+
+if gtar --version >/dev/null 2>&1; then
+   TAR=gtar
+if ! tar --version >/dev/null 2>&1; then
+   echo "Warning!!! Cannot find GNU TAR"
+fi
+if gmake --version >/dev/null 2>&1; then
+   MAKE=gmake
+if ! make --version >/dev/null 2>&1; then
+   echo "Warning!!! Cannot find GNU MAKE"
+fi
 
 # Set other platform-specific build options
 if [ -z "$HB_GPM_MOUSE" ]; then
@@ -240,7 +241,8 @@ fi
 if [ "${hb_sysdir}" = "yes" ]; then
 
 mkdir -p $HB_INST_PREF$ETC/harbour
-$INSTALL -m644 source/rtl/gtcrs/hb-charmap.def $HB_INST_PREF$ETC/harbour/hb-charmap.def
+cp -f source/rtl/gtcrs/hb-charmap.def $HB_INST_PREF$ETC/harbour/hb-charmap.def
+chmod 644 $HB_INST_PREF$ETC/harbour/hb-charmap.def
 
 cat > $HB_INST_PREF$ETC/harbour.cfg <<EOF
 CC=${CCPREFIX}gcc
