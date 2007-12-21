@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-21 18:00 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/lang/msgltwin.c
+    * month name typo
+
 2007-12-21 10:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * added system libraries necessary for linking some of harbour

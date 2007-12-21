@@ -74,7 +74,7 @@ static HB_LANG s_lang =
       "Vasaris",
       "Kovas",
       "Balandis",
-      "Kovas",
+      "Geguþë",
       "Birþelis",
       "Liepa",
       "Rugpjûtis",
