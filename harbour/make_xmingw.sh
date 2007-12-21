@@ -64,7 +64,7 @@ if [ -z "${MINGW_PREFIX}" ] || \
                 TARGET=`echo "$MINGWGCC"|sed -e '1 !d' -e 's/.*\(i[3456]86-mingw[^-]*\).*/\1/g'`
                 CCPREFIX="$TARGET-"
             else
-                MINGWGCC=`echo $d/i[3456]86-mingw*/gcc`
+                MINGWGCC=`echo $d/i[3456]86-mingw*/bin/gcc`
                 if [ -x $MINGWGCC ]; then
                    MINGW_PREFIX=$d
                    TARGET=`echo "$MINGWGCC"|sed -e '1 !d' -e 's!.*\(i[3456]86-mingw[^/]*\).*!\1!g'`
