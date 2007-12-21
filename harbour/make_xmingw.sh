@@ -27,12 +27,12 @@ export PRG_USR="$CC_PRG_USR $PRG_USR"
 
 # try to detect MinGW cross-compiler location
 # using some default platform settings
-if [ -f /etc/debian-version ]; then
+if [ -f /etc/debian_version ]; then
     MINGW_PREFIX=/usr
     TARGET=i586-mingw32msvc
     CCPREFIX="$TARGET-"
 elif [ -f /etc/gentoo-release ]; then
-    if [ -x /opt/xmingw/bin/i686-mingw32-gcc ]; then
+    if [ -x /opt/xmingw/bin/i386-mingw32-gcc ]; then
         MINGW_PREFIX=/opt/xmingw
         TARGET=i386-mingw32msvc
     else
