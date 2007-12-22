@@ -16,7 +16,7 @@ cd `dirname $0`
 name="harbour"
 hb_ver=`get_hbver`
 hb_platform=`get_hbplatform`
-[ "${hb_platform}" = "" ] || hb_platform="-${hb_platform}"
+[ "${hb_platform}" = "" ] || hb_platform="-${hb_platform}${HB_BUILDSUF}"
 [ "${HB_XBUILD}" = "" ] || hb_platform="-${HB_XBUILD}"
 hb_archfile="${name}-${hb_ver}${hb_platform}.bin.tar.gz"
 hb_instfile="${name}-${hb_ver}${hb_platform}.inst.sh"
@@ -233,6 +233,9 @@ do
      $MAKE -r -i install)
 done
 
+# remove some unnecessary binaries
+rm -f $HB_BIN_INSTALL/hbverfix${hb_exesuf} $HB_BIN_INSTALL/pretest${hb_exesuf}
+
 # Keep the size of the binaries to a minimim.
 if [ -f $HB_BIN_INSTALL/harbour${hb_exesuf} ]; then
     ${CCPREFIX}strip $HB_BIN_INSTALL/harbour${hb_exesuf}
@@ -284,15 +287,13 @@ fi
 chmod 644 $HB_INC_INSTALL/*
 
 CURDIR=$(pwd)
-(cd "${HB_INST_PREF}"
 if [ $hb_gnutar = yes ]; then
-    $TAR czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .
+    (cd "${HB_INST_PREF}"; $TAR czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .)
     UNTAR_OPT=xvpf
 else
-    $TAR cvf - . | gzip > "${CURDIR}/${hb_archfile}"
+    (cd "${HB_INST_PREF}"; $TAR cvf - . | gzip > "${CURDIR}/${hb_archfile}")
     UNTAR_OPT=xvf
 fi
-)
 rm -fR "${HB_INST_PREF}"
 
 if [ -n "${hb_instfile}" ]; then
