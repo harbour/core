@@ -291,7 +291,7 @@ if [ $hb_gnutar = yes ]; then
     (cd "${HB_INST_PREF}"; $TAR czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .)
     UNTAR_OPT=xvpf
 else
-    (cd "${HB_INST_PREF}"; $TAR cvf - . | gzip > "${CURDIR}/${hb_archfile}")
+    (cd "${HB_INST_PREF}"; $TAR covf - . | gzip > "${CURDIR}/${hb_archfile}")
     UNTAR_OPT=xvf
 fi
 rm -fR "${HB_INST_PREF}"

@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-22 13:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_tgz.sh
+    + added HB_BUILDSUF
+    - removed hbverfix and pretest from final binaries
+    ! fixed setting UNTAR_OPT
+
 2007-12-22 12:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_tgz.sh
     + added HB_BUILDSUF
