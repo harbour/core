@@ -125,15 +125,16 @@ esac
 # Select the platform-specific command names
 MAKE=make
 TAR=tar
-
+hb_gnutar=yes
 if gtar --version >/dev/null 2>&1; then
    TAR=gtar
-if ! tar --version >/dev/null 2>&1; then
+elif ! tar --version >/dev/null 2>&1; then
    echo "Warning!!! Cannot find GNU TAR"
 fi
 if gmake --version >/dev/null 2>&1; then
    MAKE=gmake
-if ! make --version >/dev/null 2>&1; then
+elif ! make --version >/dev/null 2>&1; then
+   hb_gnutar=no
    echo "Warning!!! Cannot find GNU MAKE"
 fi
 
@@ -280,7 +281,15 @@ fi
 chmod 644 $HB_INC_INSTALL/*
 
 CURDIR=$(pwd)
-(cd "${HB_INST_PREF}"; $TAR -czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .)
+(cd "${HB_INST_PREF}"
+if [ $hb_gnutar = yes ]; then
+    $TAR czvf "${CURDIR}/${hb_archfile}" --owner=${HB_INSTALL_OWNER} --group=${HB_INSTALL_GROUP} .
+    UNTAR_OPT=xvpf
+else
+    $TAR cvf - . | gzip > "${CURDIR}/${hb_archfile}"
+    UNTAR_OPT=xvf
+fi
+)
 rm -fR "${HB_INST_PREF}"
 
 if [ -n "${hb_instfile}" ]; then
@@ -307,7 +316,7 @@ read ASK
 if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then
     exit 1
 fi
-(sed -e '1,/^HB_INST_EOF\$/ d' "\$0" | gzip -cd | tar xvpf - -C /) ${DO_LDCONFIG}
+(sed -e '1,/^HB_INST_EOF\$/ d' "\$0" | gzip -cd | tar ${UNTAR_OPT} - -C /) ${DO_LDCONFIG}
 exit \$?
 HB_INST_EOF
 EOF

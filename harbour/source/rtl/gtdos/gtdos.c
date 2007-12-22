@@ -889,7 +889,7 @@ static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
 #endif
    }
 
-   ch = hb_gt_dos_keyCodeTanslate( ch );
+   ch = hb_gt_dos_keyCodeTranslate( ch );
 
    if( ch == 0 )
       ch = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );

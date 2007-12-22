@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    hb_gt_dos_keyCodeTanslate()
+ *    hb_gt_dos_keyCodeTranslate()
  *          function used by DOS, WIN and OS2 ports of few GTs which use
  *          getkey()/getch()/_read_kbd()/KbdCharIn() or similar function
  *          for keyboard input
@@ -59,7 +59,7 @@
 
 #if defined( HB_OS_DOS ) || defined( HB_OS_WIN_32 ) || defined( HB_OS_OS2 )
 
-int hb_gt_dos_keyCodeTanslate( int iKey )
+int hb_gt_dos_keyCodeTranslate( int iKey )
 {
    /* Perform key translations */
    switch( iKey )

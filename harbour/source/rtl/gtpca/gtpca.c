@@ -582,7 +582,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
    /* _read_kbd() returns -1 for no key, the switch statement will handle
       this. */
 
-   ch = hb_gt_dos_keyCodeTanslate( ch );
+   ch = hb_gt_dos_keyCodeTranslate( ch );
    if( ch > 0 && ch <= 255 )
       ch = s_keyTransTbl[ ch ];
 #elif defined( _MSC_VER ) && !defined( HB_WINCE )
@@ -597,7 +597,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
                function key and then offset it by 256 */
             ch = _getch() + 256;
          }
-         ch = hb_gt_dos_keyCodeTanslate( ch );
+         ch = hb_gt_dos_keyCodeTranslate( ch );
          if( ch > 0 && ch <= 255 )
             ch = s_keyTransTbl[ ch ];
       }

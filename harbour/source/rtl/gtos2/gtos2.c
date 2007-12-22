@@ -624,7 +624,7 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
    else
       ch = 0;
 
-   ch = hb_gt_dos_keyCodeTanslate( ch );
+   ch = hb_gt_dos_keyCodeTranslate( ch );
 
    if( ch == 0 )
       ch = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );

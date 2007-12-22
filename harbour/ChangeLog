@@ -8,6 +8,32 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-22 11:28 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-mkslib.sh
+    + added -fPIC to GCC parameters - it's necessary on some platforms
+    + use .sl suffix for shared library in HP-UX
+
+  * harbour/bin/hb-func.sh
+    + use .sl suffix for shared library in HP-UX
+
+  * harbour/bin/postinst.bat
+    * removed < > from email address
+
+  * harbour/include/hbgtcore.h
+  * harbour/source/rtl/gtkeycod.c
+  * harbour/source/rtl/gtdos/gtdos.c
+  * harbour/source/rtl/gtos2/gtos2.c
+  * harbour/source/rtl/gtstd/gtstd.c
+  * harbour/source/rtl/gtpca/gtpca.c
+    * fixed typo in function name - it should be hb_gt_dos_keyCodeTranslate()
+      not hb_gt_dos_keyCodeTanslate()
+
+  * harbour/make_tgz.sh
+    * updated for non GNU tar versions
+
+  * harbour/ChangeLog
+    * replaced TABs with SPACEs
+
 2007-12-21 20:09 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_xmingw.sh
     * fixed yet another typo located by Phil Krylov - thanks
@@ -66,10 +92,10 @@
     * removed hbcompat.ch dependences
   + harbour/contrib/hbtip/utils.c
     * fixed a type in jpeg mime string
-	 * added TIP_HTMLSPECIALCHARS
+    * added TIP_HTMLSPECIALCHARS
   + harbour/contrib/hbpgsql/postgres.c
     * added PQRESULT2ARRAY
-	 
+
 2007-12-20 11:44 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/rtl/Makefile

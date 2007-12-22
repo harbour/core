@@ -1,13 +1,13 @@
 @echo off
-rem 
+rem
 rem $Id$
-rem 
+rem
 
 rem ---------------------------------------------------------------
-rem Copyright 2003 Przemyslaw Czerpak <druzus@priv.onet.pl>
+rem Copyright 2003 Przemyslaw Czerpak (druzus / at / priv.onet.pl)
 rem simple script run after Harbour make install to finish install
 rem process
-rem 
+rem
 rem See doc/license.txt for licensing terms.
 rem ---------------------------------------------------------------
 

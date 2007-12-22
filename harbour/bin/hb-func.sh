@@ -415,6 +415,9 @@ else
         pref=""
         ext=".dll"
         HB_LNK_ATTR="__attribute__ ((dllimport))"
+    elif [ "\${HB_ARCHITECTURE}" = "hpux" ]; then
+        pref="lib"
+        ext=".sl"
     else
         pref="lib"
         ext=".so"
@@ -630,15 +633,22 @@ mk_hblibso()
         esac
     done
     if [ "${HB_ARCHITECTURE}" = "darwin" ]; then
-        full_lib_name="lib${name}.${hb_ver}.dylib"
-        full_lib_name_mt="lib${name}mt.${hb_ver}.dylib"
+        lib_ext=".dylib"
+        full_lib_name="lib${name}.${hb_ver}${lib_ext}"
+        full_lib_name_mt="lib${name}mt.${hb_ver}${lib_ext}"
         linker_options="-L/sw/lib -L/opt/local/lib $linker_options"
     elif [ "${HB_ARCHITECTURE}" = "w32" ]; then
-        full_lib_name="${name}.dll"
-        full_lib_name_mt="${name}mt.dll"
+        lib_ext=".dll"
+        full_lib_name="${name}${lib_ext}"
+        full_lib_name_mt="${name}mt${lib_ext}"
+    elif [ "${HB_ARCHITECTURE}" = "hpux" ]; then
+        lib_ext=".sl"
+        full_lib_name="lib${name}-${hb_ver}${lib_ext}"
+        full_lib_name_mt="lib${name}mt-${hb_ver}${lib_ext}"
     else
-        full_lib_name="lib${name}-${hb_ver}.so"
-        full_lib_name_mt="lib${name}mt-${hb_ver}.so"
+        lib_ext=".so"
+        full_lib_name="lib${name}-${hb_ver}${lib_ext}"
+        full_lib_name_mt="lib${name}mt-${hb_ver}${lib_ext}"
     fi
     if [ -n "${HB_TOOLS_PREF}" ]; then
         hb_mkslib="${HB_BIN_INSTALL}/${HB_TOOLS_PREF}-mkslib"
@@ -656,11 +666,11 @@ mk_hblibso()
         if [ -f $l ]
         then
             if [ "${HB_ARCHITECTURE}" = "darwin" ]; then
-                ll=${l%.${hb_ver}.dylib}.dylib
+                ll=${l%.${hb_ver}${lib_ext}}${lib_ext}
             elif [ "${HB_ARCHITECTURE}" = "w32" ]; then
                 ll=""
             else
-                ll=${l%-${hb_ver}.so}.so
+                ll=${l%-${hb_ver}${lib_ext}}${lib_ext}
                 ln -sf $l $ll
             fi
             if [ -n "$ll" ]; then

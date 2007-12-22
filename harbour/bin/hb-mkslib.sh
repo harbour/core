@@ -31,6 +31,7 @@ esac
 case "$hb_arch" in
     darwin) SLIB_EXT=".dylib" ;;
     w32)    SLIB_EXT=".dll" ;;
+    hpux)   SLIB_EXT=".sl" ;;
     *)      SLIB_EXT=".so" ;;
 esac
 
@@ -136,7 +137,7 @@ else
     #FULLNAME="${BASE}-${VERSION}${SLIB_EXT}"
     #FULLNAME="${BASE}{SLIB_EXT}.${VERSION}"
     FULLNAME="${LIB_NAME}${SLIB_EXT}"
-    ${CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${L_USR} && \
+    ${CCPREFIX}gcc -shared -fPIC -o "${FULLNAME}" $OBJLST ${linker_options} ${L_USR} && \
         cd "${dir}" && \
         mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"
 fi

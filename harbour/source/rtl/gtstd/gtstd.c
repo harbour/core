@@ -328,7 +328,7 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
                function key and then offset it by 256 */
             ch = _getch() + 256;
          }
-         ch = hb_gt_dos_keyCodeTanslate( ch );
+         ch = hb_gt_dos_keyCodeTranslate( ch );
          if( ch > 0 && ch <= 255 )
             ch = pGTSTD->keyTransTbl[ ch ];
       }
