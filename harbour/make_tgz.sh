@@ -25,7 +25,7 @@ hb_pref="hb"
 hb_contrib=""
 hb_sysdir="yes"
 hb_exesuf=""
-export C_USR="-DHB_FM_STATISTICS_OFF -O3"
+export C_USR="$C_USR -DHB_FM_STATISTICS_OFF -O3"
 
 [ -z "$HB_INSTALL_PREFIX" ] && [ -n "$PREFIX" ] && export HB_INSTALL_PREFIX="$PREFIX"
 
@@ -84,6 +84,9 @@ then
         *)
             ;;
     esac
+elif [ "$HB_ARCHITECTURE" = "hpux" ]
+then
+    export C_USR="$C_USR -fPIC"
 fi
 
 # Select the platform-specific installation prefix and ownership
@@ -129,12 +132,12 @@ hb_gnutar=yes
 if gtar --version >/dev/null 2>&1; then
    TAR=gtar
 elif ! tar --version >/dev/null 2>&1; then
+   hb_gnutar=no
    echo "Warning!!! Cannot find GNU TAR"
 fi
 if gmake --version >/dev/null 2>&1; then
    MAKE=gmake
 elif ! make --version >/dev/null 2>&1; then
-   hb_gnutar=no
    echo "Warning!!! Cannot find GNU MAKE"
 fi
 
@@ -266,7 +269,7 @@ then
     [ "${HB_WITHOUT_GTSLN}" != yes ] && ADD_LIBS="$ADD_LIBS -lslang"
     [ "${HB_WITHOUT_X11}" != yes ] && ADD_LIBS="$ADD_LIBS -L/usr/X11R6/$HB_LIBDIRNAME -lX11"
 
-    export L_USR="-L${HB_LIB_INSTALL} -l${name} ${ADD_LIBS}"
+    export L_USR="-L${HB_LIB_INSTALL} -l${name} ${ADD_LIBS} ${L_USR}"
     export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${PRG_USR}"
 
     for utl in hbmake hbrun hbdot hbpp hbdoc hbtest

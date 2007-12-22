@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-12-22 11:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_tgz.sh
+    * use -fPIC on HP-UX
+    * respect user defined C_USR and L_USR
+    ! fixed typo in GNU tar detection 
+
 2007-12-22 11:28 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-mkslib.sh
     + added -fPIC to GCC parameters - it's necessary on some platforms
