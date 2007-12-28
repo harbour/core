@@ -1589,7 +1589,7 @@ METHOD DispCell( nRow, nCol, nMode ) CLASS TBrowse
       ftmp := PadC( iif( ftmp, "T", "F" ), nWidth )
       nSkip := nWidth - Len( LTrim( ftmp ) ) - 1
       DispOut( Space( Len( ftmp ) - Len( LTrim( ftmp ) ) ), ::aColorSpec[ 1 ] )
-      DispOut( ftmp, cColor )
+      DispOut( alltrim( ftmp ), cColor )
       DispOut( Space( Len( ftmp ) - Len( RTrim( ftmp ) ) ), ::aColorSpec[ 1 ] )
       EXIT
 
