@@ -321,7 +321,7 @@ METHOD getAccel( xKey ) CLASS POPUPMENU
          nPos != Len( cCaption ) .AND. ;
          xKey == Lower( SubStr( cCaption, nPos + 1, 1 ) )
 
-         RETURN nPos
+         RETURN tmp
       ENDIF
    NEXT
 

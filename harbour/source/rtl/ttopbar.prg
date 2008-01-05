@@ -308,11 +308,11 @@ METHOD getAccel( nKey ) CLASS TOPBARMENU
          IF ( nAt := At( "&", ::aItems[ n ]:caption ) ) > 0 .AND. ;
             Upper( SubStr( ::aItems[ n ]:caption, nAt + 1, 1 ) ) == cKey
       
-#ifndef HB_C52_STRICT
+#ifdef HB_EXTENSION
             IF ::aItems[ n ]:enabled
 #endif
                RETURN n
-#ifndef HB_C52_STRICT
+#ifdef HB_EXTENSION
             ENDIF
 #endif
          ENDIF
@@ -355,11 +355,11 @@ METHOD hitTest( nMRow, nMCol ) CLASS TOPBARMENU
          nColumn := aItems[ n ]:__col
 
          IF nMCol >= nColumn .AND. nMCol <= nColumn + Len( aItems[ n ]:caption )
-#ifndef HB_C52_STRICT
+#ifdef HB_EXTENSION
             IF aItems[ n ]:enabled
 #endif
                RETURN n
-#ifndef HB_C52_STRICT
+#ifdef HB_EXTENSION
             ENDIF
 #endif
          ENDIF

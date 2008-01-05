@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-05 01:07 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/tpopup.prg
+     ! Fixed typo in POPUPMENU():getAccel(), causing wrong 
+       position being returned. Reported by Jose Miguel.
+
+   * source/rtl/ttopbar.prg
+     ! Changed HB_C52_STRICT guards to HB_EXTENSION.
+
 2007-12-28 15:51 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * source/rtl/tbrowse.prg
     Method DispCell()
