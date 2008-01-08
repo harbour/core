@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-08 19:31 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbclass.ch
+     ! Enabling HB_CLS_NO_DECORATION if compiled with HB_C52_STRICT, 
+       since in strict mode some PP extensions required by the 
+       decoration feature are not available.
+       (Thanks Przemek for the tip)
+
 2008-01-05 01:07 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tpopup.prg
      ! Fixed typo in POPUPMENU():getAccel(), causing wrong 

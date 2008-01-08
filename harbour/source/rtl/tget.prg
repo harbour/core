@@ -225,7 +225,7 @@ ENDCLASS
 METHOD assign() CLASS Get
 
    if ::hasFocus
-      ::VarPut( ::UnTransform(), .F. )
+      ::varPut( ::UnTransform(), .F. )
    endif
 
    return Self
@@ -233,10 +233,10 @@ METHOD assign() CLASS Get
 METHOD updateBuffer() CLASS Get
 
    if ::hasFocus
-      ::cBuffer := ::PutMask( ::VarGet() )
-      ::Display()
+      ::cBuffer := ::PutMask( ::varGet() )
+      ::display()
    else
-      ::VarGet()
+      ::varGet()
    endif
 
    return Self
@@ -260,7 +260,7 @@ METHOD display( lForced ) CLASS Get
    if ::hasFocus
       cBuffer := ::cBuffer
    else
-      cBuffer := ::PutMask( ::VarGet() )
+      cBuffer := ::PutMask( ::varGet() )
    endif
 
    if ::nMaxLen == NIL
@@ -270,16 +270,16 @@ METHOD display( lForced ) CLASS Get
       ::nDispLen := ::nMaxLen
    endif
 
-   if ::cType == "N" .and. ::hasFocus .and. ! ::lMinusPrinted .and. ;
-      ::decPos != 0 .and. ::lMinus2 .and. ;
-      ::nPos > ::decPos .and. Val( Left( cBuffer, ::decPos - 1 ) ) == 0
+   if ::cType == "N" .AND. ::hasFocus .AND. ! ::lMinusPrinted .AND. ;
+      ::decPos != 0 .AND. ::lMinus2 .AND. ;
+      ::nPos > ::decPos .AND. Val( Left( cBuffer, ::decPos - 1 ) ) == 0
 
       // display "-." only in case when value on the left side of
       // the decimal point is equal 0
       cBuffer := SubStr( cBuffer, 1, ::decPos - 2 ) + "-." + SubStr( cBuffer, ::decPos + 1 )
    endif
 
-   if ::nDispLen != ::nMaxLen .and. ::nPos != 0 // ; has scroll?
+   if ::nDispLen != ::nMaxLen .AND. ::nPos != 0 // ; has scroll?
       if ::nDispLen > 8
          nDispPos := Max( 1, Min( ::nPos - ::nDispLen + 4       , ::nMaxLen - ::nDispLen + 1 ) )
       else
@@ -310,7 +310,7 @@ METHOD display( lForced ) CLASS Get
 
    /* Display the GET */
 
-   if cBuffer != NIL .and. ( lForced .or. nDispPos != ::nOldPos )
+   if cBuffer != NIL .AND. ( lForced .OR. nDispPos != ::nOldPos )
       DispOutAt( ::nRow, ::nCol,;
                  iif( ::lHideInput, PadR( Replicate( SubStr( ::cStyle, 1, 1 ), Len( RTrim( cBuffer ) ) ), ::nDispLen ), SubStr( cBuffer, nDispPos, ::nDispLen ) ),;
                  hb_ColorIndex( ::cColorSpec, iif( ::hasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
@@ -334,8 +334,8 @@ METHOD display( lForced ) CLASS Get
 
 METHOD colorDisp( cColorSpec ) CLASS Get
 
-   ::ColorSpec( cColorSpec )
-   ::Display()
+   ::colorSpec( cColorSpec )
+   ::display()
 
    return Self
 
@@ -360,7 +360,7 @@ METHOD end() CLASS Get
       next
       ::lClear := .F.
       ::typeOut := ( ::nPos == 0 )
-      ::Display( .F. )
+      ::display( .F. )
    endif
 
    return Self
@@ -371,7 +371,7 @@ METHOD home() CLASS Get
       ::Pos := ::FirstEditable()
       ::lClear := .F.
       ::typeOut := ( ::nPos == 0 )
-      ::Display( .F. )
+      ::display( .F. )
    endif
 
    return Self
@@ -379,14 +379,14 @@ METHOD home() CLASS Get
 METHOD reset() CLASS Get
 
    if ::hasFocus
-      ::cBuffer   := ::PutMask( ::VarGet(), .F. )
+      ::cBuffer   := ::PutMask( ::varGet(), .F. )
       ::Pos       := ::FirstEditable() /* ; Simple 0 in CA-Cl*pper [vszakats] */
-      ::lClear    := ( "K" $ ::cPicFunc .or. ::cType == "N" )
+      ::lClear    := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
       ::lEdit     := .F.
       ::lMinus    := .F.
       ::rejected  := .F.
-      ::typeOut   := !( ::Type $ "CNDL" ) .or. ( ::nPos == 0 ) /* ; Simple .F. in CA-Cl*pper [vszakats] */
-      ::Display()
+      ::typeOut   := !( ::Type $ "CNDL" ) .OR. ( ::nPos == 0 ) /* ; Simple .F. in CA-Cl*pper [vszakats] */
+      ::display()
    endif
 
    return Self
@@ -394,8 +394,9 @@ METHOD reset() CLASS Get
 METHOD undo() CLASS Get
 
    if ::hasFocus
-      ::VarPut( ::original )
-      ::Reset()
+      /* ! TOFIX: when PICTURE "@S" is used on a longer buffer. */
+      ::varPut( ::original )
+      ::reset()
       ::lChanged := .F.
    endif
 
@@ -409,25 +410,25 @@ METHOD setFocus() CLASS Get
       return Self
    endif
 
-   xVarGet := ::VarGet()
+   xVarGet := ::varGet()
 
    ::hasFocus   := .T.
    ::rejected   := .F.
 
    ::original   := xVarGet
    ::cType      := ValType( xVarGet )
-   ::Picture    := ::cPicture
+   ::picture    := ::cPicture
    ::cBuffer    := ::PutMask( xVarGet, .F. )
    ::ResetPar()
    ::lChanged   := .F.
-   ::lClear     := ( "K" $ ::cPicFunc .or. ::cType == "N" )
+   ::lClear     := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
    ::lEdit      := .F.
    ::Pos        := 1
    
    ::lMinusPrinted := .F.
    ::lMinus    := .F.
    
-   ::Display()
+   ::display()
 
    return Self
 
@@ -436,7 +437,7 @@ METHOD killFocus() CLASS Get
    local lHadFocus
 
    if ::lEdit
-      ::Assign()
+      ::assign()
    endif
 
    lHadFocus := ::hasFocus
@@ -450,7 +451,7 @@ METHOD killFocus() CLASS Get
    ::typeOut  := .F.
 
    if lHadFocus
-      ::Display()
+      ::display()
    endif
 
    ::xVarGet  := NIL
@@ -468,7 +469,7 @@ METHOD varPut( xValue, lReFormat ) CLASS Get
 
    if ISBLOCK( ::bBlock )
       aSubs := ::subScript
-      if ISARRAY( aSubs ) .and. ! Empty( aSubs ) 
+      if ISARRAY( aSubs ) .AND. ! Empty( aSubs ) 
          nLen := Len( aSubs )
          aValue := Eval( ::bBlock )
          for i := 1 to nLen - 1
@@ -491,7 +492,7 @@ METHOD varPut( xValue, lReFormat ) CLASS Get
          ::cType    := ValType( xValue )
          ::xVarGet  := xValue
          ::lEdit    := .F.
-         ::Picture  := ::cPicture
+         ::picture  := ::cPicture
          ::nDispLen := NIL
       endif
    else
@@ -509,7 +510,7 @@ METHOD varGet() CLASS Get
 
    if ISBLOCK( ::bBlock )
       aSubs := ::subScript
-      if ISARRAY( aSubs ) .and. ! Empty( aSubs ) 
+      if ISARRAY( aSubs ) .AND. ! Empty( aSubs ) 
          nLen := Len( aSubs )
          xValue := Eval( ::bBlock )
          for i := 1 to nLen
@@ -575,10 +576,10 @@ METHOD unTransform() CLASS Get
       endif
       if !lMinus
          for nFor := 1 to ::nMaxLen
-            if ::IsEditable( nFor ) .and. IsDigit( SubStr( cBuffer, nFor, 1 ) )
+            if ::IsEditable( nFor ) .AND. IsDigit( SubStr( cBuffer, nFor, 1 ) )
                exit
             endif
-            if SubStr( cBuffer, nFor, 1 ) $ "-(" .and. !( SubStr( cBuffer, nFor, 1 ) == SubStr( ::cPicMask, nFor, 1 ) )
+            if SubStr( cBuffer, nFor, 1 ) $ "-(" .AND. !( SubStr( cBuffer, nFor, 1 ) == SubStr( ::cPicMask, nFor, 1 ) )
                lMinus := .T.
                exit
             endif
@@ -593,7 +594,7 @@ METHOD unTransform() CLASS Get
             endif
          next
       else
-         if "E" $ ::cPicFunc .or. ::lDecRev
+         if "E" $ ::cPicFunc .OR. ::lDecRev
             cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) +; 
                        StrTran( StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ".", " " ), ",", "." ) +;
                        SubStr( cBuffer, ::LastEditable() + 1 )
@@ -604,7 +605,7 @@ METHOD unTransform() CLASS Get
          endif
 
          for nFor := ::FirstEditable() to ::LastEditable()
-            if !::IsEditable( nFor ) .and. !( SubStr( cBuffer, nFor, 1 ) == "." )
+            if !::IsEditable( nFor ) .AND. !( SubStr( cBuffer, nFor, 1 ) == "." )
                cBuffer := Left( cBuffer, nFor - 1 ) + Chr( 1 ) + SubStr( cBuffer, nFor + 1 )
             endif
          next
@@ -622,7 +623,7 @@ METHOD unTransform() CLASS Get
 
       if lMinus
          for nFor := 1 to Len( cBuffer )
-            if IsDigit( SubStr( cBuffer, nFor, 1 ) ) .or. SubStr( cBuffer, nFor, 1 ) == "."
+            if IsDigit( SubStr( cBuffer, nFor, 1 ) ) .OR. SubStr( cBuffer, nFor, 1 ) == "."
                exit
             endif
          next
@@ -639,7 +640,7 @@ METHOD unTransform() CLASS Get
    case ::cType == "L"
 
       cBuffer := Upper( cBuffer )
-      xValue := "T" $ cBuffer .or. "Y" $ cBuffer .or. hb_LangMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) $ cBuffer
+      xValue := "T" $ cBuffer .OR. "Y" $ cBuffer .OR. hb_LangMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) $ cBuffer
 
    case ::cType == "D"
 
@@ -658,7 +659,7 @@ METHOD overStrike( cChar ) CLASS Get
       return Self
    endif
 
-   if ::cType == "N" .and. ! ::lEdit .and. ::lClear
+   if ::cType == "N" .AND. ! ::lEdit .AND. ::lClear
       ::Pos := ::FirstEditable()
    endif
    
@@ -676,7 +677,7 @@ METHOD overStrike( cChar ) CLASS Get
       ::rejected := .F.
    endif
    
-   if ::lClear .and. ::nPos == ::FirstEditable()
+   if ::lClear .AND. ::nPos == ::FirstEditable()
       ::DeleteAll()
       ::lClear := .F.
    endif
@@ -687,7 +688,7 @@ METHOD overStrike( cChar ) CLASS Get
       ::Pos := 1
    endif
    
-   do while ! ::IsEditable( ::nPos ) .and. ::nPos <= ::nMaxEdit
+   do while ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
       ::Pos++
    enddo
    
@@ -698,9 +699,9 @@ METHOD overStrike( cChar ) CLASS Get
    
    ::lChanged := .T.
    
-   ::Right( .F. )
+   ::right( .F. )
    
-   ::Display()
+   ::display()
 
    return Self
 
@@ -715,7 +716,7 @@ METHOD insert( cChar ) CLASS Get
 
    nMaxEdit := ::nMaxEdit
    
-   if ::cType == "N" .and. ! ::lEdit .and. ::lClear
+   if ::cType == "N" .AND. ! ::lEdit .AND. ::lClear
       ::Pos := ::FirstEditable()
    endif
    
@@ -733,7 +734,7 @@ METHOD insert( cChar ) CLASS Get
       ::rejected := .F.
    endif
 
-   if ::lClear .and. ::nPos == ::FirstEditable()
+   if ::lClear .AND. ::nPos == ::FirstEditable()
       ::DeleteAll()
       ::lClear := .F.
    endif
@@ -744,7 +745,7 @@ METHOD insert( cChar ) CLASS Get
       ::Pos := 1
    endif
    
-   do while ! ::IsEditable( ::nPos ) .and. ::nPos <= ::nMaxEdit
+   do while ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
       ::Pos++
    enddo
    
@@ -769,9 +770,9 @@ METHOD insert( cChar ) CLASS Get
    
    ::lChanged := .T.
    
-   ::Right( .F. )
+   ::right( .F. )
    
-   ::Display()
+   ::display()
 
    return Self
 
@@ -795,7 +796,7 @@ METHOD right( lDisplay ) CLASS Get
    
    nPos := ::nPos + 1
    
-   do while ! ::IsEditable( nPos ) .and. nPos <= ::nMaxEdit
+   do while ! ::IsEditable( nPos ) .AND. nPos <= ::nMaxEdit
       nPos++
    enddo
    
@@ -806,7 +807,7 @@ METHOD right( lDisplay ) CLASS Get
    endif
    
    if lDisplay
-      ::Display( .F. )
+      ::display( .F. )
    endif
    
    return Self
@@ -831,7 +832,7 @@ METHOD left( lDisplay ) CLASS Get
 
    nPos := ::nPos - 1
 
-   do while ! ::IsEditable( nPos ) .and. nPos > 0
+   do while ! ::IsEditable( nPos ) .AND. nPos > 0
       nPos--
    enddo
 
@@ -842,7 +843,7 @@ METHOD left( lDisplay ) CLASS Get
    endif
 
    if lDisplay
-      ::Display( .F. )
+      ::display( .F. )
    endif
 
    return Self
@@ -867,10 +868,10 @@ METHOD wordLeft() CLASS Get
 
    do while nPos > 0
       if SubStr( ::cBuffer, nPos, 1 ) == " "
-         do while nPos > 0 .and. SubStr( ::cBuffer, nPos, 1 ) == " "
+         do while nPos > 0 .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
             nPos--
          enddo
-         do while nPos > 0 .and. !( SubStr( ::cBuffer, nPos, 1 ) == " " )
+         do while nPos > 0 .AND. !( SubStr( ::cBuffer, nPos, 1 ) == " " )
             nPos--
          enddo
          if nPos > 0
@@ -889,7 +890,7 @@ METHOD wordLeft() CLASS Get
       ::Pos := nPos
    endif
 
-   ::Display( .F. )
+   ::display( .F. )
 
    return Self
 
@@ -913,7 +914,7 @@ METHOD wordRight() CLASS Get
 
    do while nPos <= ::nMaxEdit
       if SubStr( ::cBuffer, nPos, 1 ) == " "
-         do while nPos <= ::nMaxEdit .and. SubStr( ::cBuffer, nPos, 1 ) == " "
+         do while nPos <= ::nMaxEdit .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
             nPos++
          enddo
          exit
@@ -929,7 +930,7 @@ METHOD wordRight() CLASS Get
       ::Pos := nPos
    endif
 
-   ::Display( .F. )
+   ::display( .F. )
 
    return Self
 
@@ -938,19 +939,19 @@ METHOD toDecPos() CLASS Get
    if ::hasFocus
 
       if ::lClear
-         ::DelEnd()
+         ::delEnd()
       endif
 
       ::cBuffer := ::PutMask( ::UnTransform(), .F. )
       ::Pos := ::decPos
       ::lChanged := .T.
 
-      if ::UnTransform() == 0 .and. ::lMinus
-         ::Backspace()
-         ::Overstrike("-")
+      if ::UnTransform() == 0 .AND. ::lMinus
+         ::backSpace()
+         ::overStrike("-")
       endif
 
-      ::Display()
+      ::display()
 
    endif
 
@@ -969,13 +970,13 @@ METHOD backSpace( lDisplay ) CLASS Get
 
    DEFAULT lDisplay TO .T.
 
-   if nPos > 1 .and. nPos == ::FirstEditable() .and. ::lMinus2
+   if nPos > 1 .AND. nPos == ::FirstEditable() .AND. ::lMinus2
 
       /* To delete the parenthesis (negative indicator) in a non editable position */
 
       nMinus := At( "(", SubStr( ::cBuffer, 1, nPos-1 ) )
 
-      if nMinus > 0 .and. !( SubStr( ::cPicMask, nMinus, 1 ) == "(" )
+      if nMinus > 0 .AND. !( SubStr( ::cPicMask, nMinus, 1 ) == "(" )
 
          ::lEdit := .T.
 
@@ -985,7 +986,7 @@ METHOD backSpace( lDisplay ) CLASS Get
          ::lChanged := .T.
 
          if lDisplay
-            ::Display()
+            ::display()
          endif
 
          return Self
@@ -994,10 +995,10 @@ METHOD backSpace( lDisplay ) CLASS Get
 
    endif
 
-   ::Left()
+   ::left()
 
    if ::nPos < nPos
-      ::Delete( lDisplay )
+      ::delete( lDisplay )
    endif
 
    return Self
@@ -1028,7 +1029,7 @@ METHOD delete( lDisplay ) CLASS Get
       nMaxLen := n - 1
    endif
 
-   if ::cType == "N" .and. SubStr( ::cBuffer, ::nPos, 1 ) $ "(-"
+   if ::cType == "N" .AND. SubStr( ::cBuffer, ::nPos, 1 ) $ "(-"
       ::lMinus2 := .F.
    endif
 
@@ -1039,7 +1040,7 @@ METHOD delete( lDisplay ) CLASS Get
    ::lChanged := .T.
 
    if lDisplay
-      ::Display()
+      ::display()
    endif
 
    return Self
@@ -1055,33 +1056,33 @@ METHOD delEnd() CLASS Get
    nPos := ::nPos
    ::Pos := ::nMaxEdit
 
-   ::Delete( .F. )
+   ::delete( .F. )
    do while ::nPos > nPos
-      ::BackSpace( .F. )
+      ::backSpace( .F. )
    enddo
 
-   ::Display()
+   ::display()
 
    return Self
 
 METHOD delLeft() CLASS Get
 
-   ::Left( .F. )
-   ::Delete( .F. )
-   ::Right()
+   ::left( .F. )
+   ::delete( .F. )
+   ::right()
 
    return Self
 
 METHOD delRight() CLASS Get
 
-   ::Right( .F. )
-   ::Delete( .F. )
-   ::Left()
+   ::right( .F. )
+   ::delete( .F. )
+   ::left()
 
    return Self
 
-/* NOTE ::WordLeft()
-        ::DelWordRight() */
+/* NOTE ::wordLeft()
+        ::delWordRight() */
 
 METHOD delWordLeft() CLASS Get
 
@@ -1091,22 +1092,22 @@ METHOD delWordLeft() CLASS Get
 
    if !( SubStr( ::cBuffer, ::nPos, 1 ) == " " )
       if SubStr( ::cBuffer, ::nPos - 1, 1 ) == " "
-         ::BackSpace( .F. )
+         ::backSpace( .F. )
       else
-         ::WordRight()
-         ::Left()
+         ::wordRight()
+         ::left()
       endif
    endif
 
    if SubStr( ::cBuffer, ::nPos, 1 ) == " "
-      ::Delete( .F. )
+      ::delete( .F. )
    endif
 
-   do while ::nPos > 1 .and. !( SubStr( ::cBuffer, ::nPos - 1, 1 ) == " " )
-      ::BackSpace( .F. )
+   do while ::nPos > 1 .AND. !( SubStr( ::cBuffer, ::nPos - 1, 1 ) == " " )
+      ::backSpace( .F. )
    enddo
 
-   ::Display()
+   ::display()
 
    return Self
 
@@ -1124,15 +1125,15 @@ METHOD delWordRight() CLASS Get
       return Self
    endif
 
-   do while ::nPos <= ::nMaxEdit .and. !( SubStr( ::cBuffer, ::nPos, 1 ) == " " )
-      ::Delete( .F. )
+   do while ::nPos <= ::nMaxEdit .AND. !( SubStr( ::cBuffer, ::nPos, 1 ) == " " )
+      ::delete( .F. )
    enddo
 
    if ::nPos <= ::nMaxEdit
-      ::Delete( .F. )
+      ::delete( .F. )
    endif
 
-   ::Display()
+   ::display()
 
    return Self
 
@@ -1157,12 +1158,12 @@ METHOD colorSpec( cColorSpec ) CLASS Get
 
 #ifdef HB_COMPAT_C53
       ::cColorSpec := hb_NToColor( nClrUns := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ) ) +;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != 0 .or. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) ) +;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_CAPTION  ) ) ) != 0 .or. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) ) +;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ACCEL    ) ) ) != 0 .or. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) )
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != 0 .OR. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) ) +;
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_CAPTION  ) ) ) != 0 .OR. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) ) +;
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ACCEL    ) ) ) != 0 .OR. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) )
 #else
       ::cColorSpec := hb_NToColor( nClrUns := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ) ) +;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != 0 .or. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) )
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != 0 .OR. Upper( StrTran( cClrOth, " ", "" ) ) == "N/N", nClrOth, nClrUns ) )
 #endif
 
       return cColorSpec
@@ -1327,7 +1328,7 @@ METHOD picture( cPicture ) CLASS Get
       
    // Generate default picture mask if not specified
    
-   if Empty( ::cPicMask ) .or. ::cPicture == NIL
+   if Empty( ::cPicMask ) .OR. ::cPicture == NIL
    
       do case
       case ::cType == "D"
@@ -1350,7 +1351,7 @@ METHOD picture( cPicture ) CLASS Get
             ::cPicMask := Replicate( "9", Len( cNum ) )
          endif
    
-      case ::cType == "C" .and. ::cPicFunc == "@9"
+      case ::cType == "C" .AND. ::cPicFunc == "@9"
 
          ::cPicMask := Replicate( "9", Len( ::xVarGet ) )
          ::cPicFunc := ""
@@ -1375,7 +1376,7 @@ METHOD picture( cPicture ) CLASS Get
 
 METHOD type() CLASS Get
 
-   return ::cType := ValType( iif( ::hasFocus, ::xVarGet, ::VarGet() ) )
+   return ::cType := ValType( iif( ::hasFocus, ::xVarGet, ::varGet() ) )
 
 /* The METHOD Block and VAR bBlock allow to replace the
  * property Block for a function to control the content and
@@ -1388,7 +1389,7 @@ METHOD type() CLASS Get
 
 METHOD block( bBlock ) CLASS Get
 
-   if PCount() == 0 .or. bBlock == NIL
+   if PCount() == 0 .OR. bBlock == NIL
       return ::bBlock
    endif
 
@@ -1443,7 +1444,7 @@ METHOD resetPar() CLASS Get
    endif
    
    if ::cType == "N"
-      ::decPos := At( iif( ::lDecRev .or. "E" $ ::cPicFunc, ",", "." ), ::cBuffer )
+      ::decPos := At( iif( ::lDecRev .OR. "E" $ ::cPicFunc, ",", "." ), ::cBuffer )
       if ::decPos == 0
          ::decPos := Len( ::cBuffer ) + 1
       endif
@@ -1458,9 +1459,9 @@ METHOD badDate() CLASS Get
 
    local xValue
 
-   return ::hasFocus .and. ;
-      ::Type == "D" .and. ;
-      ( xValue := ::UnTransform() ) == hb_SToD( "" ) .and. ;
+   return ::hasFocus .AND. ;
+      ::Type == "D" .AND. ;
+      ( xValue := ::UnTransform() ) == hb_SToD( "" ) .AND. ;
       !( ::cBuffer == Transform( xValue, ::cPicture ) )
 
 #ifdef HB_C52_UNDOC
@@ -1483,12 +1484,12 @@ METHOD hitTest( nMRow, nMCol ) CLASS Get
       return ::oControl:hitTest( nMRow, nMCol )
    else
       do case
-      case nMRow == ::nRow .and. ;
-           nMCol >= ::nCol .and. ;
+      case nMRow == ::nRow .AND. ;
+           nMCol >= ::nCol .AND. ;
            nMCol < ::nCol + iif( ::nDispLen == NIL, 0, ::nDispLen )
          return HTCLIENT
-      case nMRow == ::nCapRow .and. ;
-           nMCol >= ::nCapCol .and. ;
+      case nMRow == ::nCapRow .AND. ;
+           nMCol >= ::nCapCol .AND. ;
            nMCol < ::nCapCol + Len( ::cCaption ) /* NOTE: C5.3 doesn't care about the shortcut key. */
          return HTCAPTION
       endcase
@@ -1498,7 +1499,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS Get
 
 METHOD control( oControl ) CLASS Get
 
-   if PCount() == 1 .and. ( oControl == NIL .or. ISOBJECT( oControl ) )
+   if PCount() == 1 .AND. ( oControl == NIL .OR. ISOBJECT( oControl ) )
       ::oControl := oControl
    endif
 
@@ -1545,8 +1546,8 @@ METHOD message( cMessage ) CLASS Get
 
 METHOD posInBuffer( nRow, nCol ) CLASS Get
 
-   if nRow == ::nRow .and. ;
-      nCol >= ::nCol + ::nPos - 1 .and. ;
+   if nRow == ::nRow .AND. ;
+      nCol >= ::nCol + ::nPos - 1 .AND. ;
       nCol <= ::nCol + ::nDispLen
 
       return nCol - ::nCol + 1
@@ -1597,7 +1598,7 @@ METHOD IsEditable( nPos ) CLASS Get
         xVar := 98 ; o := _GET_( xVar, "xVar" ) ; o:SetFocus() ; o:picture := "99999" ; o:UnTransform() -> result 
         We're still not 100% compatible in slighly different situations because the CA-Cl*pper 
         behaviour is pretty much undefined here. [vszakats] */
-   if nPos > Len( ::cPicMask ) .and. nPos <= ::nMaxLen
+   if nPos > Len( ::cPicMask ) .AND. nPos <= ::nMaxLen
       return .T.
    endif
 
@@ -1668,20 +1669,20 @@ METHOD Input( cChar ) CLASS Get
          endif
 
       case cPic == "N"
-         if ! IsAlpha( cChar ) .and. ! IsDigit( cChar )
+         if ! IsAlpha( cChar ) .AND. ! IsDigit( cChar )
             cChar := ""
          endif
 
       case cPic == "9"
-         if ! IsDigit( cChar ) .and. ! cChar $ "-+"
+         if ! IsDigit( cChar ) .AND. ! cChar $ "-+"
             cChar := ""
          endif
-         if !( ::cType == "N" ) .and. cChar $ "-+"
+         if !( ::cType == "N" ) .AND. cChar $ "-+"
             cChar := ""
          endif
 
       /* Clipper 5.2 undocumented: # allow T,F,Y,N for Logical [ckedem] */
-      case cPic == "L" .or. ( cPic == "#" .and. ::cType == "L" )
+      case cPic == "L" .OR. ( cPic == "#" .AND. ::cType == "L" )
          if !( Upper( cChar ) $ "YNTF" + ;
                                 hb_langmessage( HB_LANG_ITEM_BASE_TEXT + 1 ) + ;
                                 hb_langmessage( HB_LANG_ITEM_BASE_TEXT + 2 ) )
@@ -1689,7 +1690,7 @@ METHOD Input( cChar ) CLASS Get
          endif
 
       case cPic == "#"
-         if ! IsDigit( cChar ) .and. !( cChar == " " ) .and. !( cChar $ ".+-" )
+         if ! IsDigit( cChar ) .AND. !( cChar == " " ) .AND. !( cChar $ ".+-" )
             cChar := ""
          endif
 
@@ -1698,8 +1699,8 @@ METHOD Input( cChar ) CLASS Get
             cChar := ""
          endif
 
-      case ( cPic == "$" .or. cPic == "*" ) .and. ::cType == "N"
-         if ! IsDigit( cChar ) .and. !( cChar == "-" )
+      case ( cPic == "$" .OR. cPic == "*" ) .AND. ::cType == "N"
+         if ! IsDigit( cChar ) .AND. !( cChar == "-" )
             cChar := ""
          endif
       otherwise
@@ -1718,7 +1719,7 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
    local nFor
    local nNoEditable := 0
 
-   DEFAULT xValue TO ::VarGet()
+   DEFAULT xValue TO ::varGet()
    DEFAULT lEdit  TO ::hasFocus
 
    if !( ValType( xValue ) $ "CNDL" )
@@ -1731,26 +1732,26 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
          cPicFunc := ""
       endif
    endif
-   if lEdit .and. ::lEdit
-      if ( "*" $ cPicMask ) .or. ( "$" $ cPicMask )
+   if lEdit .AND. ::lEdit
+      if ( "*" $ cPicMask ) .OR. ( "$" $ cPicMask )
          cPicMask := StrTran( StrTran( cPicMask, "*", "9" ), "$", "9" )
       endif
    endif
 
    cBuffer := Transform( xValue, ;
                iif( Empty( cPicFunc ), ;
-                  iif( ::lCleanZero .and. !::hasFocus, "@Z ", "" ), ;
-                  cPicFunc + iif( ::lCleanZero .and. !::hasFocus, "Z", "" ) + " " ) ;
+                  iif( ::lCleanZero .AND. !::hasFocus, "@Z ", "" ), ;
+                  cPicFunc + iif( ::lCleanZero .AND. !::hasFocus, "Z", "" ) + " " ) ;
                + cPicMask )
 
    if ::cType == "N"
-      if ( "(" $ cPicFunc .or. ")" $ cPicFunc ) .and. xValue >= 0
+      if ( "(" $ cPicFunc .OR. ")" $ cPicFunc ) .AND. xValue >= 0
          cBuffer += " "
       endif
 
-      if ( ( "C" $ cPicFunc .and. xValue <  0 ) .or.;
-           ( "X" $ cPicFunc .and. xValue >= 0 ) ) .and.;
-           !( "X" $ cPicFunc .and. "C" $ cPicFunc )
+      if ( ( "C" $ cPicFunc .AND. xValue <  0 ) .OR.;
+           ( "X" $ cPicFunc .AND. xValue >= 0 ) ) .AND.;
+           !( "X" $ cPicFunc .AND. "C" $ cPicFunc )
          cBuffer += "   "
       endif
 
@@ -1768,7 +1769,7 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
       ::nDispLen := ::nMaxLen
    endif
 
-   if lEdit .and. ::cType == "N" .and. ! Empty( cPicMask )
+   if lEdit .AND. ::cType == "N" .AND. ! Empty( cPicMask )
       if "E" $ cPicFunc
          cPicMask := Left( cPicMask, ::FirstEditable() - 1 ) + StrTran( SubStr( cPicMask, ::FirstEditable(), ::LastEditable() - ::FirstEditable( ) + 1 ), ",", Chr( 1 ) ) + SubStr( cPicMask, ::LastEditable() + 1 )
          cPicMask := Left( cPicMask, ::FirstEditable() - 1 ) + StrTran( SubStr( cPicMask, ::FirstEditable(), ::LastEditable() - ::FirstEditable( ) + 1 ), ".", ","      ) + SubStr( cPicMask, ::LastEditable() + 1 )
@@ -1776,11 +1777,11 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
       endif
       for nFor := 1 to ::nMaxLen
          cChar := SubStr( cPicMask, nFor, 1 )
-         if cChar $ ",." .and. SubStr( cBuffer, nFor, 1 ) $ ",."
+         if cChar $ ",." .AND. SubStr( cBuffer, nFor, 1 ) $ ",."
             cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + cChar + SubStr( cBuffer, nFor + 1 )
          endif
       next
-      if ::lEdit .and. Empty( xValue )
+      if ::lEdit .AND. Empty( xValue )
          cBuffer := StrTran( cBuffer, "0", " " )
       endif
       if ::lDecRev
@@ -1791,15 +1792,15 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
    endif
 
    if ::cType == "N"
-      if "(" $ ::cPicFunc .or. ")" $ ::cPicFunc
+      if "(" $ ::cPicFunc .OR. ")" $ ::cPicFunc
          ::nMaxEdit--
       endif
-      if "C" $ ::cPicFunc .or. "X" $ ::cPicFunc
+      if "C" $ ::cPicFunc .OR. "X" $ ::cPicFunc
          ::nMaxEdit -= 3
       endif
    endif
 
-   if ::cType == "D" .and. ::BadDate
+   if ::cType == "D" .AND. ::BadDate
       cBuffer := ::cBuffer
    endif
 
@@ -1877,7 +1878,7 @@ METHOD col( nCol ) CLASS Get
 
 METHOD name( cName ) CLASS Get
 
-   if PCount() > 0 .and. cName != NIL
+   if PCount() > 0 .AND. cName != NIL
       ::cName := cName
    endif
 
@@ -1925,7 +1926,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
    ::nCol      := nCol
    ::bBlock    := bVarBlock
    ::cName     := cVarName
-   ::Picture   := cPicture
-   ::ColorSpec := cColorSpec
+   ::picture   := cPicture
+   ::colorSpec := cColorSpec
 
    return Self
