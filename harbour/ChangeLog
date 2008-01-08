@@ -15,6 +15,9 @@
        decoration feature are not available.
        (Thanks Przemek for the tip)
 
+   * source/rtl/tget.prg
+     * Some formatting.
+
 2008-01-05 01:07 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tpopup.prg
      ! Fixed typo in POPUPMENU():getAccel(), causing wrong 
