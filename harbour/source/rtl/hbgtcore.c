@@ -1474,23 +1474,22 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             pInfo->pResult = hb_itemNew( NULL );
          hb_arrayNew( pInfo->pResult, 8 );
          HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
-         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 1 ), iRow );
-         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 2 ), iCol );
-         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 3 ), HB_GTSELF_GETCURSORSTYLE( pGT ) );
-         hb_itemPutC( hb_arrayGetItemPtr( pInfo->pResult, 4 ), hb_conSetColor( NULL ) );
+         hb_arraySetNI( pInfo->pResult, 1, iRow );
+         hb_arraySetNI( pInfo->pResult, 2, iCol );
+         hb_arraySetNI( pInfo->pResult, 3, HB_GTSELF_GETCURSORSTYLE( pGT ) );
+         hb_arraySetC ( pInfo->pResult, 4, hb_conSetColor( NULL ) );
 
          iRow = HB_GTSELF_MAXROW( pGT );
          iCol = HB_GTSELF_MAXCOL( pGT );
-         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 5 ), iRow );
-         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult, 6 ), iCol );
+         hb_arraySetNI( pInfo->pResult, 5, iRow );
+         hb_arraySetNI( pInfo->pResult, 6, iCol );
 
          ulSize = HB_GTSELF_RECTSIZE( pGT, 0, 0, iRow, iCol );
          if( ulSize )
          {
             BYTE * pBuffer = ( BYTE * ) hb_xgrab( ulSize + 1 );
             HB_GTSELF_SAVE( pGT, 0, 0, iRow, iCol, pBuffer );
-            hb_itemPutCPtr( hb_arrayGetItemPtr( pInfo->pResult, 7 ),
-                            ( char * ) pBuffer, ulSize );
+            hb_arraySetCPtr( pInfo->pResult, 7, ( char * ) pBuffer, ulSize );
          }
          break;
       }
@@ -3101,7 +3100,6 @@ HB_EXPORT BOOL hb_gtUnLoad( void )
          memcpy( &s_gtCoreFunc,
                  s_gtInit[ s_gtLinkOrder[ s_iGtLinkCount ] ]->pSuperTable,
                  sizeof( HB_GT_FUNCS ) );
-   
    }
 
    return TRUE;

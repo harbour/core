@@ -310,10 +310,10 @@ HB_FUNC( ADSGETSERVERTIME )
       hb_storc( (char * )pucDateBuf, -1, 1 );
       hb_storc( (char *) pucTimeBuf, -1, 2 );
       hb_stornl( plTime, -1, 3 );
-   } else
+   }
+   else
    {
       AdsShowError( (UNSIGNED8 *) "AdsGetServerTime error:" );
-      hb_ret();
    }
 }
 
@@ -2491,7 +2491,7 @@ HB_FUNC( ADSDIRECTORY )
 
       AdsFindClose( hConnect, sHandle );
    }
-   hb_itemRelease( hb_itemReturn( pitmDir ) );
+   hb_itemReturnRelease( pitmDir );
 }
 
 
@@ -2560,10 +2560,6 @@ HB_FUNC( ADSGETSERVERNAME )
    if( AdsGetServerName( hConnect, buf, &usLen ) == AE_SUCCESS )
    {
       hb_retclen( buf, usLen );
-   }
-   else
-   {
-      hb_ret();
    }
 }
 

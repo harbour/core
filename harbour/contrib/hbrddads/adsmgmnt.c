@@ -110,10 +110,6 @@ HB_FUNC( ADSMGGETINSTALLINFO )
       hb_storc ( (char *) stInstallInfo.aucEvalExpireDate , -1, 7 );  /* Eval expiration date */
       hb_storc ( (char *) stInstallInfo.aucSerialNumber   , -1, 8 );  /* Serial number string */
    }
-   else
-   {
-      hb_ret( );
-   }
 }
 
 HB_FUNC( ADSMGGETACTIVITYINFO )
@@ -130,8 +126,6 @@ HB_FUNC( ADSMGGETACTIVITYINFO )
       //      printf( "\nActivity Information structure on server is larger." );
       //      printf( "\nMore possible info available." );
       */
-   hb_ret();                            /* default to NIL */
-
    if ( iOption && ulRetVal == AE_SUCCESS )
    {
       switch ( iOption )
@@ -267,11 +261,6 @@ HB_FUNC( ADSMGGETCOMMSTATS )
       hb_stornl( stCommStats.ulRecvFromErrors  , -1, 10);  /* RecvFrom failed (NT only)        */
       hb_stornl( stCommStats.ulSendToErrors    , -1, 11);  /* SendTo failed (NT only)          */
    }
-   else
-   {
-      hb_ret();
-   }
-
 }
 
 HB_FUNC( ADSMGRESETCOMMSTATS )
@@ -373,10 +362,6 @@ HB_FUNC( ADSMGGETCONFIGINFO )
 
       }
    }
-   else
-   {
-      hb_ret();
-   }
 }
 
 HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
@@ -431,7 +416,7 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
          hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 3 ),
                       ( char * ) pastUserInfo[ulCount].aucAddress );
       }
-      hb_itemRelease( hb_itemReturn( pArray ) );
+      hb_itemReturnRelease( pArray );
    }
    else
    {

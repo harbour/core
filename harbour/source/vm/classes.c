@@ -1748,12 +1748,12 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
 
       if( pMsg == s___msgKeys.pDynSym )
       {
-         hb_itemRelease( hb_itemReturnForward( hb_hashGetKeys( pObject ) ) );
+         hb_itemReturnRelease( hb_hashGetKeys( pObject ) );
          return &s___msgKeys;
       }
       else if( pMsg == s___msgValues.pDynSym )
       {
-         hb_itemRelease( hb_itemReturnForward( hb_hashGetValues( pObject ) ) );
+         hb_itemReturnRelease( hb_hashGetValues( pObject ) );
          return &s___msgValues;
       }
 #if defined( HB_HASH_MSG_ITEMS )
@@ -3260,7 +3260,7 @@ HB_FUNC( __CLSINST )
    PHB_ITEM pSelf = hb_clsInst( ( USHORT ) hb_parni( 1 ) );
 
    if( pSelf )
-      hb_itemRelease( hb_itemReturnForward( pSelf ) );
+      hb_itemReturnRelease( pSelf );
 }
 
 /*
@@ -3404,7 +3404,7 @@ HB_FUNC( __OBJCLONE )
    if( pSrcObject )
    {
       pDstObject = hb_arrayClone( pSrcObject );
-      hb_itemRelease( hb_itemReturnForward( pDstObject ) );
+      hb_itemReturnRelease( pDstObject );
    }
    else
    {
@@ -3687,13 +3687,7 @@ HB_FUNC( __CLASSSEL )
       do
       {
          if( pMethod->pMessage )    /* Hash Entry used ? */
-         {
-            PHB_ITEM pItem = hb_arrayGetItemPtr( pReturn, ++ulPos );
-            if( pItem )
-               hb_itemPutC( pItem, pMethod->pMessage->pSymbol->szName );
-            else
-               break;  /* Generate internal error? */
-         }
+            hb_arraySetC( pReturn, ++ulPos, pMethod->pMessage->pSymbol->szName );
          ++pMethod;
       }
       while( --ulLimit );
@@ -3702,7 +3696,7 @@ HB_FUNC( __CLASSSEL )
          hb_arraySize( pReturn, ulPos );
    }
 
-   hb_itemRelease( hb_itemReturnForward( pReturn ) );
+   hb_itemReturnRelease( pReturn );
 }
 
 /* to be used from Classes ERROR HANDLER method */
@@ -3823,8 +3817,8 @@ static HARBOUR hb___msgClassSel( void )
                 )
               )
             {
-               hb_itemPutC( hb_arrayGetItemPtr( pReturn, ++ulPos ),
-                            pMethod->pMessage->pSymbol->szName );
+               hb_arraySetC( pReturn, ++ulPos,
+                             pMethod->pMessage->pSymbol->szName );
             }
          }
          ++pMethod;
@@ -3833,7 +3827,7 @@ static HARBOUR hb___msgClassSel( void )
 
       if( ulPos < ( ULONG ) pClass->uiMethods )
          hb_arraySize( pReturn, ulPos );
-      hb_itemRelease( hb_itemReturnForward( pReturn ) );
+      hb_itemReturnRelease( pReturn );
    }
 }
 
@@ -4350,7 +4344,7 @@ HB_FUNC( __CLSGETPROPERTIES )
          hb_itemRelease( pItem );
    }
 
-   hb_itemRelease( hb_itemReturnForward( pReturn ) );
+   hb_itemReturnRelease( pReturn );
 }
 
 /* Real dirty function, though very usefull under certain circunstances:
@@ -4407,7 +4401,7 @@ void hb_clsAssociate( USHORT usClassH )
    PHB_ITEM pSelf = hb_clsInst( usClassH );
 
    if( pSelf )
-      hb_itemRelease( hb_itemReturnForward( pSelf ) );
+      hb_itemReturnRelease( pSelf );
 }
 
 
@@ -4427,17 +4421,15 @@ HB_FUNC( __CLS_PARAM )
    {
       array = hb_itemArrayNew( uiParam );
       for( n = 1; n <= uiParam; n++ )
-      {
          hb_arraySet( array, n, hb_param( n, HB_IT_ANY ) );
-      }
    }
    else
    {
       array = hb_itemArrayNew( 1 );
-      hb_itemPutC( hb_arrayGetItemPtr( array, 1 ), "HBObject" );
+      hb_arraySetC( array, 1, "HBObject" );
    }
 
-   hb_itemRelease( hb_itemReturnForward( array ) );
+   hb_itemReturnRelease( array );
 }
 
 HB_FUNC( __CLS_PAR00 )
@@ -4448,11 +4440,9 @@ HB_FUNC( __CLS_PAR00 )
 
    array = hb_itemArrayNew( uiParam );
    for( n = 1; n <= uiParam; n++ )
-   {
       hb_arraySet( array, n, hb_param( n, HB_IT_ANY ) );
-   }
 
-   hb_itemRelease( hb_itemReturnForward( array ) );
+   hb_itemReturnRelease( array );
 }
 
 /*

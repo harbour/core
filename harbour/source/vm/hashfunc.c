@@ -75,7 +75,7 @@ HB_FUNC( HB_HASH )
             hb_hashAdd( pHash, pKey, pValue );
          else
          {
-            hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), pValue ? 3 : 2, pHash, hb_paramError( iParam ), pValue );
+            hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 3, pHash, hb_param( iParam, HB_IT_ANY ), pValue );
             break;
          }
       }

@@ -73,7 +73,7 @@
 
 HB_STACK hb_stack;
 
-HB_SYMB  s_initSymbol = { "hb_stackInit", {HB_FS_STATIC}, {NULL}, NULL };
+static HB_SYMB s_initSymbol = { "hb_stackInit", {HB_FS_STATIC}, {NULL}, NULL };
 
 /* ------------------------------- */
 

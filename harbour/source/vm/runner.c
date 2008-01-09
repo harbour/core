@@ -562,7 +562,7 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
 
    if( pRetVal )
    {
-      hb_itemRelease( hb_itemReturnForward( pRetVal ) );
+      hb_itemReturnRelease( pRetVal );
    }
 }
 

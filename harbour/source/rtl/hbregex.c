@@ -280,14 +280,14 @@ static BOOL hb_regex( int iRequest )
             for( i = 0; i < iMatches; i++ )
             {
                if( HB_REGMATCH_EO( aMatches, i ) > -1 )
-                  hb_itemPutCL( hb_arrayGetItemPtr( pRetArray, i + 1 ),
-                                pszString + HB_REGMATCH_SO( aMatches, i ),
-                                HB_REGMATCH_EO( aMatches, i ) -
-                                HB_REGMATCH_SO( aMatches, i ) );
+                  hb_arraySetCL( pRetArray, i + 1,
+                                 pszString + HB_REGMATCH_SO( aMatches, i ),
+                                 HB_REGMATCH_EO( aMatches, i ) -
+                                 HB_REGMATCH_SO( aMatches, i ) );
                else
-                  hb_itemPutCL( hb_arrayGetItemPtr( pRetArray, i + 1 ), "", 0 );
+                  hb_arraySetCL( pRetArray, i + 1, "", 0 );
             }
-            hb_itemRelease( hb_itemReturnForward( pRetArray ) );
+            hb_itemReturnRelease( pRetArray );
             fResult = TRUE;
             break;
 
@@ -326,7 +326,7 @@ static BOOL hb_regex( int iRequest )
             }
             hb_itemRelease( pMatch );
 
-            hb_itemRelease( hb_itemReturnForward( pRetArray ) );
+            hb_itemReturnRelease( pRetArray );
             fResult = TRUE;
             break;
 
@@ -342,20 +342,20 @@ static BOOL hb_regex( int iRequest )
                if( iEO != -1 )
                {
                   /* matched string */
-                  hb_itemPutCL( hb_arrayGetItemPtr( pMatch, 1 ), pszString + iSO, iEO - iSO );
+                  hb_arraySetCL( pMatch, 1, pszString + iSO, iEO - iSO );
                   /* begin of match */
-                  hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 2 ), iSO + 1 );
+                  hb_arraySetNI( pMatch, 2, iSO + 1 );
                   /* End of match */
-                  hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 3 ), iEO );
+                  hb_arraySetNI( pMatch, 3, iEO );
                }
                else
                {
-                  hb_itemPutCL( hb_arrayGetItemPtr( pMatch, 1 ), "", 0 );
-                  hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 2 ), 0 );
-                  hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 3 ), 0 );
+                  hb_arraySetCL( pMatch, 1, "", 0 );
+                  hb_arraySetNI( pMatch, 2, 0 );
+                  hb_arraySetNI( pMatch, 3, 0 );
                }
             }
-            hb_itemRelease( hb_itemReturnForward( pRetArray ) );
+            hb_itemReturnRelease( pRetArray );
             fResult = TRUE;
             break;
 
@@ -389,17 +389,17 @@ static BOOL hb_regex( int iRequest )
                         if ( iEO != -1 )
                         {
                            /* matched string */
-                           hb_itemPutCL( hb_arrayGetItemPtr( pMatch, 1 ), pszString + iSO, iEO - iSO );
+                           hb_arraySetCL( pMatch, 1, pszString + iSO, iEO - iSO );
                            /* begin of match */
-                           hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 2 ), ulOffSet + iSO + 1 );
+                           hb_arraySetNI( pMatch, 2, ulOffSet + iSO + 1 );
                            /* End of match */
-                           hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 3 ), ulOffSet + iEO );
+                           hb_arraySetNI( pMatch, 3, ulOffSet + iEO );
                         }
                         else
                         {
-                           hb_itemPutCL( hb_arrayGetItemPtr( pMatch, 1 ), "", 0 );
-                           hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 2 ), 0 );
-                           hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 3 ), 0 );
+                           hb_arraySetCL( pMatch, 1, "", 0 );
+                           hb_arraySetNI( pMatch, 2, 0 );
+                           hb_arraySetNI( pMatch, 3, 0 );
                         }
                      }
                      else
@@ -426,17 +426,17 @@ static BOOL hb_regex( int iRequest )
                      if( iEO != -1 )
                      {
                         /* matched string */
-                        hb_itemPutCL( hb_arrayGetItemPtr( pMatch, 1 ), pszString + iSO, iEO - iSO );
+                        hb_arraySetCL( pMatch, 1, pszString + iSO, iEO - iSO );
                         /* begin of match */
-                        hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 2 ), ulOffSet + iSO + 1 );
+                        hb_arraySetNI( pMatch, 2, ulOffSet + iSO + 1 );
                         /* End of match */
-                        hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 3 ), ulOffSet + iEO );
+                        hb_arraySetNI( pMatch, 3, ulOffSet + iEO );
                      }
                      else
                      {
-                        hb_itemPutCL( hb_arrayGetItemPtr( pMatch, 1 ), "", 0 );
-                        hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 2 ), 0 );
-                        hb_itemPutNI( hb_arrayGetItemPtr( pMatch, 3 ), 0 );
+                        hb_arraySetCL( pMatch, 1, "", 0 );
+                        hb_arraySetNI( pMatch, 2, 0 );
+                        hb_arraySetNI( pMatch, 3, 0 );
                      }
                   }
                   else
@@ -461,7 +461,7 @@ static BOOL hb_regex( int iRequest )
             }
             while( iEO && ulLen && ( iMax == 0 || iCount < iMax ) &&
                    ( iMatches = hb_regexec( pRegEx, pszString, ulLen, iMaxMatch, aMatches ) ) > 0 );
-            hb_itemRelease( hb_itemReturnForward( pRetArray ) );
+            hb_itemReturnRelease( pRetArray );
             fResult = TRUE;
             break;
          }
@@ -471,7 +471,7 @@ static BOOL hb_regex( int iRequest )
    {
       pRetArray = hb_itemArrayNew( 1 );
       hb_arraySet( pRetArray, 1, pString );
-      hb_itemRelease( hb_itemReturnForward( pRetArray ) );
+      hb_itemReturnRelease( pRetArray );
       fResult = TRUE;
    }
 

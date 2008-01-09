@@ -13,7 +13,7 @@ CC = cl.exe
 CC_IN = -c
 CC_OUT = -Fo
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-CFLAGS = -W0 -Zi  # -W4 for max warnings
+CFLAGS = -nologo -W0 -Zi  # -W4 for max warnings
 
 LD = cl.exe
 LD_OUT = -Fe

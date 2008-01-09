@@ -330,7 +330,7 @@ static BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, unsigned int uiAli
                                                       && ( pBaseVar->pItems + ulIndex  )->type != HB_IT_LONG )
             {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError(3) );
-               return NULL;;
+               return NULL;
             }
 
             uiMemberSize = sizeof( char * );
@@ -348,7 +348,7 @@ static BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, unsigned int uiAli
                                                       && ( pBaseVar->pItems + ulIndex  )->type != HB_IT_LONG )
             {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError(3) );
-               return NULL;;
+               return NULL;
             }
 
             uiMemberSize = sizeof( short * );
@@ -366,7 +366,7 @@ static BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, unsigned int uiAli
                                                       && ( pBaseVar->pItems + ulIndex  )->type != HB_IT_LONG )
             {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError(3) );
-               return NULL;;
+               return NULL;
             }
 
             uiMemberSize = sizeof( int * );
@@ -384,7 +384,7 @@ static BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, unsigned int uiAli
                                                       && ( pBaseVar->pItems + ulIndex  )->type != HB_IT_LONG )
             {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError(3) );
-               return NULL;;
+               return NULL;
             }
 
             uiMemberSize = sizeof( long * );
@@ -1153,13 +1153,13 @@ static PHB_ITEM StructureToArray( BYTE* Buffer, unsigned long ulBufferLen, PHB_I
                {
                   hb_itemRelease( pStructure );
                   hb_errRT_BASE( EG_ARG, 2023, NULL, "StructureToArray", 1, hb_paramError( 1 ) );
-                  return pRet;;
+                  return pRet;
                }
             }
             else
             {
                hb_errRT_BASE( EG_ARG, 2023, NULL, "StructureToArray", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError(3) );
-               return pRet;;
+               return pRet;
             }
          }
       }

@@ -132,8 +132,6 @@ ARFLAGS = $(A_USR)
 
 RANLIB = $(CCPREFIX)ranlib
 
-AR = $(CCPREFIX)ar
-ARFLAGS = $(A_USR)
 
 ifeq ($(SHLVL),) # COMMAND.COM - length of command line is limited
 ifneq ($(OS),Windows_NT)

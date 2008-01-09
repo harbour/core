@@ -2755,7 +2755,7 @@ HB_FUNC( WVT_DRAWSCROLLTHUMBHORZ )
    int iLeft       = ( _s->PTEXTSIZE.x * hb_parni( 2 ) ) + hb_parni( 5,2 );
    int iBottom     = ( _s->PTEXTSIZE.y * ( hb_parni( 3 ) + 1 ) ) - 1 + hb_parni( 5,3 );
    int iRight      = ( _s->PTEXTSIZE.x * ( hb_parni( 4 ) + 1 ) ) - 1 + hb_parni( 5,4 );
-   int iThumbLeft, iThumbRight;;
+   int iThumbLeft, iThumbRight;
 
    iThumbLeft  = _s->PTEXTSIZE.x * hb_parni( 6 );
    iThumbRight = iThumbLeft + ( _s->PTEXTSIZE.x * 2 ) - 1;

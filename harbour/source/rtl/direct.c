@@ -168,5 +168,5 @@ HB_FUNC( DIRECTORY )
       hb_fsFindClose( ffind );
    }
 
-   hb_itemRelease( hb_itemReturn( pDir ) );
+   hb_itemReturnRelease( pDir );
 }

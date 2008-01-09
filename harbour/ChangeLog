@@ -8,6 +8,134 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-09 15:03 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/estack.c
+    * added missing static to s_initSymbol declaration
+
+  * harbour/include/hbgtinfo.ch
+  * harbour/source/rtl/scroll.c
+    * formatting
+
+  * harbour/common.mak
+    * added empty line necessary for some make systems (f.e. wmake)
+
+  * harbour/bin/hb-func.sh
+    * changed system libs order to avoid problems on some platforms
+
+  * harbour/bin/pack_src.sh
+    * collect information about repository files using 'svn status -v'
+      command instead of scanning .svn/entries files to avoid problems
+      with different formats used by SVN
+
+  * harbour/include/hbchksum.h
+  * harbour/include/hbset.h
+    ! added missing extern in few function prototypes
+
+  * harbour/include/hbclass.ch
+    * use HB_CLS_PARAM_LIST macro instead of ... for strict C52 mode
+
+  * harbour/source/common/hbfsapi.c
+    + added missing const to one declaration
+
+  * harbour/source/common/hbstr.c
+    * minor cleanup in hb_stricmp()
+
+  * harbour/source/rtl/inkey.c
+    ! casting to avoid negative values during char to int translation
+
+  * harbour/source/rtl/mouse53.c
+    * added one internal definition
+
+  * harbour/source/rtl/philes.c
+    * removed unnecessary #include(s)
+    * added missing const to one declaration
+
+  * harbour/source/rtl/valtype.c
+  * harbour/source/vm/hashfunc.c
+    * cleanup RT error call to eliminate hb_paramError() function
+
+  * harbour/source/pp/pplib.c
+  * harbour/source/vm/runner.c
+  * harbour/source/vm/debug.c
+  * harbour/source/vm/arrayshb.c
+  * harbour/source/vm/classes.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtfunc.c
+  * harbour/source/rtl/hbinet.c
+  * harbour/source/rtl/hbregex.c
+  * harbour/source/rtl/idle.c
+  * harbour/source/rtl/errorapi.c
+  * harbour/source/rtl/hbtoken.c
+  * harbour/source/rtl/direct.c
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/dbcmd53.c
+  * harbour/source/rdd/fieldhb.c
+  * harbour/source/rdd/hbsix/sxcompr.c
+  * harbour/source/rdd/hbsix/sxcrypt.c
+  * harbour/source/compiler/hbcmplib.c
+  * harbour/contrib/hbrddads/adsfunc.c
+  * harbour/contrib/hbrddads/adsmgmnt.c
+    - removed unnecessary calls to hb_ret()
+    % replaced hb_itemRelease( hb_itemReturn( pItem ) ) with
+      hb_itemReturnRelease( pItem )
+    % replaced hb_itemPut*( hb_arrayGetItemPtr( pArray, ... ), ... ) with
+      hb_arraySetNI( pArray, ... )
+
+  * harbour/source/macro/macro.y
+  * harbour/source/macro/macro.yyc
+  * harbour/contrib/xhb/cstructc.c
+  * harbour/contrib/hbw32/w32_ole.c
+  * harbour/contrib/hbgtwvg/wvtcore.c
+    * cleaned typos with double ;;
+
+  * harbour/source/vm/extend.c
+  * harbour/source/rtl/math.c
+    * cleaned HB_EXPORT usage
+
+  * harbour/source/pp/ppcore.c
+    ! fixed Harbour extension which allows to use match marker
+      at the beginning of rule definition
+
+  * harbour/source/main/harbour.c
+    ! fixed hex conversion in FM log module - fix done by Phil Krylov
+      in xHarbour
+
+  * harbour/source/rdd/nulsys/nulsys.c
+    + added dummy version of DBEVAL() and DBFILTER() - these functions
+      are used in RTL
+
+  * harbour/contrib/hbct/bitnum.c
+    + added INTNEG(), INTPOS()
+
+  + harbour/contrib/hbct/ctrand.prg
+    + added RANDOM(), RAND() - borrowd from xHarbour by Pavel Tsarenko
+
+  + harbour/contrib/hbct/setrc.c
+    + added SETRC()
+
+  * harbour/contrib/hbct/getinput.prg
+    % minor optimization
+
+  * harbour/contrib/hbct/Makefile
+  * harbour/contrib/hbct/common.mak
+    * updated for new files
+
+  * harbour/contrib/hbnf/tempfile.prg
+    * use HB_FTempCreate() - modification borrowed from xHarbour
+      TOFIX this function uses hb_isbyref() which does not exist
+      in Harbour
+
+  * harbour/config/w32/msvc.cf
+    + added -nologo flag for cl.exe (Phil Krylov's modification borrowed
+      from xHarbour
+
+  * harbour/config/w32/mingw32.cf
+    - removed repeated definitions
+
+  * harbour/config/w32/install.cf
+    ! added alternative install rule for command.com with max line size limit
+
 2008-01-08 19:31 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbclass.ch
      ! Enabling HB_CLS_NO_DECORATION if compiled with HB_C52_STRICT, 

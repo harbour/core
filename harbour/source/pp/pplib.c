@@ -164,7 +164,7 @@ HB_FUNC( __PP_INIT )
       hb_pp_initDynDefines( pState );
       hb_pp_setStdBase( pState );
 
-      hb_itemRelease( hb_itemReturnForward( ppItem ) );
+      hb_itemReturnRelease( ppItem );
    }
    else
       hb_ret();

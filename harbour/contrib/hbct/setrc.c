@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * SCROLL() function
+ *   CT3 function: SETRC()
  *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,61 +50,20 @@
  *
  */
 
-#include "hbapi.h"
 #include "hbapigt.h"
 
-/* Scrolls a screen region */
-
-HB_FUNC( SCROLL )
+HB_FUNC( SETRC )
 {
-   int iMaxRow = hb_gtMaxRow();
-   int iMaxCol = hb_gtMaxCol();
+   BOOL fRow = ISNUM( 1 ), fCol = ISNUM( 2 );
 
-   int iTop;
-   int iLeft;
-   int iBottom;
-   int iRight;
-
-   /* Enforce limits of (0,0) to (MAXROW(),MAXCOL()) */
-
-   iTop = hb_parni( 1 ); /* Defaults to zero on bad type */
-   if( iTop < 0 )
-      iTop = 0;
-   else if( iTop > iMaxRow )
-      iTop = iMaxRow;
-
-   iLeft = hb_parni( 2 ); /* Defaults to zero on bad type */
-   if( iLeft < 0 )
-      iLeft = 0;
-   else if( iLeft > iMaxCol )
-      iLeft = iMaxCol;
-
-   if( ISNUM( 3 ) )
-   {
-      iBottom = hb_parni( 3 );
-      if( iBottom < 0 )
-         iBottom = 0;
-      else if( iBottom > iMaxRow )
-         iBottom = iMaxRow;
-   }
+   if( fRow && fCol )
+      hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
    else
-      iBottom = iMaxRow;
-
-   if( ISNUM( 4 ) )
    {
-      iRight = hb_parni( 4 );
-      if( iRight < 0 )
-         iRight = 0;
-      else if( iRight > iMaxCol )
-         iRight = iMaxCol;
+      SHORT sRow, sCol;
+      hb_gtGetPos( &sRow, &sCol );
+      hb_gtSetPos( fRow ? hb_parni( 1 ) : sRow, fCol ? hb_parni( 2 ) : sCol );
    }
-   else
-      iRight = iMaxCol;
 
-   hb_gtScroll( ( USHORT ) iTop,
-                ( USHORT ) iLeft,
-                ( USHORT ) iBottom,
-                ( USHORT ) iRight,
-                hb_parni( 5 ), /* Defaults to zero on bad type */
-                hb_parni( 6 ) ); /* Defaults to zero on bad type */
+   hb_retc( NULL );
 }

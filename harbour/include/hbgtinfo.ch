@@ -51,12 +51,12 @@
  *
  */
 
-/* 
+/*
    Minimal informations:
-   
+
    READ doc/gtinfo.txt
 */
-    
+
 #ifndef HB_GTINFO_CH_
 #define HB_GTINFO_CH_
 
@@ -128,8 +128,8 @@
 #define GTI_FONTW_THIN        1
 #define GTI_FONTW_NORMAL      2
 #define GTI_FONTW_BOLD        3
-                              
-/* Font sizes */              
+
+/* Font sizes */
 #define GTI_FONTQ_DRAFT       1
 #define GTI_FONTQ_NORMAL      2
 #define GTI_FONTQ_HIGH        3

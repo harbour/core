@@ -81,6 +81,7 @@ LIB_OBJS = \
     $(OBJ_DIR)\screen1$(OBJEXT) \
     $(OBJ_DIR)\screen2$(OBJEXT) \
     $(OBJ_DIR)\setlast$(OBJEXT) \
+    $(OBJ_DIR)\setrc$(OBJEXT) \
     $(OBJ_DIR)\strdiff$(OBJEXT) \
     $(OBJ_DIR)\strswap$(OBJEXT) \
     $(OBJ_DIR)\tab$(OBJEXT) \
@@ -94,6 +95,7 @@ LIB_OBJS = \
     $(OBJ_DIR)\blank$(OBJEXT) \
     $(OBJ_DIR)\ct$(OBJEXT) \
     $(OBJ_DIR)\ctmisc$(OBJEXT) \
+    $(OBJ_DIR)\ctrand$(OBJEXT) \
     $(OBJ_DIR)\cttime$(OBJEXT) \
     $(OBJ_DIR)\fcopy$(OBJEXT) \
     $(OBJ_DIR)\getinfo$(OBJEXT) \

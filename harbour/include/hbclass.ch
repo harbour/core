@@ -124,16 +124,20 @@
 #ifndef __HARBOUR__
    #define HB_CLS_NO_DECORATION
    #define HB_CLS_NO_DECLARATIONS
+   #define HB_CLS_PARAM_LIST
 #endif
 
 /* Disable method decoration when Harbour compiled strict compatibility mode.
    In strict mode, PP doesn't support identifier concatenation, which 
    would be needed for method decoration. */
 #ifdef HB_C52_STRICT
-   #ifndef HB_CLS_NO_DECORATION	 
-      #define HB_CLS_NO_DECORATION	 
-   #endif	 
-#endif	 
+   #ifndef HB_CLS_NO_DECORATION
+      #define HB_CLS_NO_DECORATION
+   #endif
+   #ifndef HB_CLS_PARAM_LIST
+      #define HB_CLS_PARAM_LIST
+   #endif
+#endif
 
 /*
  * I have to enable this definition by default untill we will not fix
@@ -146,6 +150,11 @@
    #xtranslate __HB_CLS_MTHNAME <ClassName> <MethodName> => <MethodName>
 #else
    #xtranslate __HB_CLS_MTHNAME <ClassName> <MethodName> => <ClassName>_<MethodName>
+#endif
+
+/* parameters list passed throw - it's Harbour extnesion */
+#ifndef HB_CLS_PARAM_LIST
+   #define HB_CLS_PARAM_LIST ...
 #endif
 
 /* should we use _HB_CLASS/_HB_MEMBER declarations? */
@@ -245,7 +254,7 @@ DECLARE HBClass ;
              [ <modulfriend: MODULE FRIENDLY> ] ;
              [ <static: STATIC> ] [ FUNCTION <FuncName> ] => ;
    _HB_CLASS <ClassName> ;;
-   <static> function __HB_CLS_OPT([<FuncName>,] <ClassName>) ( ... ) ;;
+   <static> function __HB_CLS_OPT([<FuncName>,] <ClassName>) ( HB_CLS_PARAM_LIST ) ;;
       static s_oClass ;;
       local nScope, oInstance ;;
       if s_oClass == NIL ;;
@@ -263,7 +272,7 @@ DECLARE HBClass ;
          s_oClass:Create() ; [<-lck-> __clsLock( s_oClass:hClass ) ] ;;
          oInstance := s_oClass:Instance() ;;
          if __ObjHasMsg( oInstance, "InitClass" ) ;;
-            oInstance:InitClass( ... ) ;;
+            oInstance:InitClass( HB_CLS_PARAM_LIST ) ;;
          end ;;
          return oInstance ;;
       end ;;

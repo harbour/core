@@ -6,7 +6,8 @@
  * Harbour Project source code:
  *    CT3 Number and bit manipulation functions:
  *       NUMAND(), NUMOR(), NUMXOR(), NUMNOT(), NUMHIGH(), NUMLOW()
- *       NUMROL(), NUMMIRR(), CLEARBIT(), SETBIT(), ISBIT()
+ *       NUMROL(), NUMMIRR(), CLEARBIT(), SETBIT(), ISBIT(),
+ *       INTNEG(), INTPOS()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -282,4 +283,42 @@ HB_FUNC( ISBIT )
       lValue = 0;
 
    hb_retl( lValue != 0 );
+}
+
+HB_FUNC( INTNEG )
+{
+   HB_LONG lValue;
+
+   if( __numParam( 1, &lValue ) )
+   {
+      BOOL f32Bit = ISLOG( 2 ) && hb_parl( 2 );
+
+      if( f32Bit )
+         hb_retnint( ( INT16 ) lValue );
+      else
+         hb_retnint( ( INT32 ) lValue );
+   }
+   else
+      hb_retni( 0 );
+}
+
+HB_FUNC( INTPOS )
+{
+   HB_LONG lValue;
+
+   if( __numParam( 1, &lValue ) )
+   {
+      BOOL f32Bit = ISLOG( 2 ) && hb_parl( 2 );
+
+      if( f32Bit )
+         hb_retnint( ( UINT16 ) lValue );
+      else
+#ifndef HB_LONG_LONG_OFF
+         hb_retnint( ( UINT32 ) lValue );
+#else
+         hb_retnlen( ( UINT32 ) lValue, 0, 0 );
+#endif
+   }
+   else
+      hb_retni( 0 );
 }

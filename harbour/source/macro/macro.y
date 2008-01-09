@@ -842,7 +842,7 @@ static void hb_macroLstFree( HB_MACRO_PTR pMacro )
 
    while( pMacro->pIdentLst )
    {
-      HB_MIDENT_PTR pMIdent = ( HB_MIDENT_PTR ) HB_MACRO_DATA->pIdentLst;;
+      HB_MIDENT_PTR pMIdent = ( HB_MIDENT_PTR ) HB_MACRO_DATA->pIdentLst;
       HB_MACRO_DATA->pIdentLst = ( void * ) pMIdent->pPrev;
       hb_xfree( pMIdent->Identifier );
       hb_xfree( pMIdent );

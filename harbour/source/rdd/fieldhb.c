@@ -72,8 +72,7 @@ HB_FUNC( FIELDLEN )
 
          if( SELF_FIELDINFO( pArea, uiIndex, DBS_LEN, pItem ) == SUCCESS )
          {
-            hb_itemReturnForward( pItem );
-            hb_itemRelease( pItem );
+            hb_itemReturnRelease( pItem );
             return;
          }
          hb_itemRelease( pItem );
@@ -97,8 +96,7 @@ HB_FUNC( FIELDDEC )
 
          if( SELF_FIELDINFO( pArea, uiIndex, DBS_DEC, pItem ) == SUCCESS )
          {
-            hb_itemReturnForward( pItem );
-            hb_itemRelease( pItem );
+            hb_itemReturnRelease( pItem );
             return;
          }
          hb_itemRelease( pItem );
@@ -122,8 +120,7 @@ HB_FUNC( FIELDTYPE )
 
          if( SELF_FIELDINFO( pArea, uiIndex, DBS_TYPE, pItem ) == SUCCESS )
          {
-            hb_itemReturnForward( pItem );
-            hb_itemRelease( pItem );
+            hb_itemReturnRelease( pItem );
             return;
          }
          hb_itemRelease( pItem );

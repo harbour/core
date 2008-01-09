@@ -61,10 +61,10 @@ FUNCTION GETINPUT( xVar, nRow, nCol, lSay, xPrompt )
    LOCAL GetList := {}
 
    IF !ISNUMBER( nRow )
-      nRow := ROW()
+      nRow := nCursorRow
    ENDIF
    IF !ISNUMBER( nCol )
-      nCol := COL()
+      nCol := nCursorCol
    ENDIF
    IF !ISLOGICAL( lSay )
       lSay := .F.

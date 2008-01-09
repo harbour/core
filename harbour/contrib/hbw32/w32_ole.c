@@ -882,7 +882,7 @@ static void hb_vmRequestReset( void )
   static PHB_ITEM SafeArrayToArray( SAFEARRAY *parray, UINT iDim, long* rgIndices, VARTYPE vt )
   {
      long iFrom, iTo, iLen, i;
-     PHB_ITEM pArray = hb_itemNew( NULL );;
+     PHB_ITEM pArray = hb_itemNew( NULL );
 
      if( parray == NULL )
      {

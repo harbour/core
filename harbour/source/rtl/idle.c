@@ -315,9 +315,6 @@ HB_FUNC( HB_IDLEDEL )
          ++iTask;
       }
    }
-
-   if( !bFound )
-      hb_ret();    /* return NIL */
 }
 
 /* Release a CPU time slice */

@@ -534,7 +534,7 @@ HB_FUNC( HB_INETCREATE )
 
    if( ISNUM( 1 ) )
       Socket->timeout = hb_parni(1);
-   hb_itemRelease( hb_itemReturnForward( pSocket ) );
+   hb_itemReturnRelease( pSocket );
 }
 
 HB_FUNC( HB_INETCLOSE )
@@ -998,7 +998,6 @@ static void s_inetRecvPattern( char *szPattern )
       }
 
       hb_xfree( (void *) Buffer );
-      hb_ret();
    }
    else
    {
@@ -1388,11 +1387,11 @@ HB_FUNC( HB_INETGETHOSTS )
       cHosts = Host->h_addr_list;
       while( *cHosts )
       {
-         hb_itemPutC( hb_arrayGetItemPtr( pHosts, ++iCount ),
-                      inet_ntoa( *( ( struct in_addr * ) * cHosts ) ) );
+         hb_arraySetC( pHosts, ++iCount,
+                       inet_ntoa( *( ( struct in_addr * ) * cHosts ) ) );
          cHosts++;
       }
-      hb_itemRelease( hb_itemReturnForward( pHosts ) );
+      hb_itemReturnRelease( pHosts );
    }
 }
 
@@ -1430,11 +1429,11 @@ HB_FUNC( HB_INETGETALIAS )
       cHosts = Host->h_aliases;
       while( *cHosts )
       {
-         hb_itemPutC( hb_arrayGetItemPtr( pHosts, ++iCount ),
-                      inet_ntoa( *( ( struct in_addr * ) * cHosts ) ) );
+         hb_arraySetC( pHosts, ++iCount,
+                       inet_ntoa( *( ( struct in_addr * ) * cHosts ) ) );
          cHosts++;
       }
-      hb_itemRelease( hb_itemReturnForward( pHosts ) );
+      hb_itemReturnRelease( pHosts );
    }
 }
 
@@ -1480,7 +1479,7 @@ HB_FUNC( HB_INETSERVER )
       HB_SOCKET_SET_ERROR( Socket );
       Socket->com = 0;
       if( pSocket )
-         hb_itemRelease( hb_itemReturn( pSocket ) );
+         hb_itemReturnRelease( pSocket );
       else
          hb_itemReturn( hb_param( 2, HB_IT_ANY ) );
    }
@@ -1513,7 +1512,7 @@ HB_FUNC( HB_INETSERVER )
    }
 
    if( pSocket )
-      hb_itemRelease( hb_itemReturnForward( pSocket ) );
+      hb_itemReturnRelease( pSocket );
    else
       hb_itemReturn( hb_param( 2, HB_IT_ANY ) );
 }
@@ -1581,12 +1580,10 @@ HB_FUNC( HB_INETACCEPT )
    if( iError == -1 )
    {
       HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
-      hb_ret();
    }
    else if( iError > 0 )
    {
       HB_SOCKET_SET_ERROR1( Socket, iError );
-      hb_ret();
    }
    else
    {
@@ -1596,7 +1593,7 @@ HB_FUNC( HB_INETACCEPT )
       memcpy( &NewSocket->remote, &si_remote, Len );
       NewSocket->com = incoming;
       /* hb_socketSetNonBlocking( NewSocket ); */
-      hb_itemRelease( hb_itemReturnForward( pSocket ) );
+      hb_itemReturnRelease( pSocket );
    }
 }
 
@@ -1658,7 +1655,7 @@ HB_FUNC( HB_INETCONNECT )
    }
 
    if( pSocket )
-      hb_itemRelease( hb_itemReturnForward( pSocket ) );
+      hb_itemReturnRelease( pSocket );
    else
       hb_itemReturn( hb_param( 3, HB_IT_ANY ) );
 }
@@ -1709,7 +1706,7 @@ HB_FUNC( HB_INETCONNECTIP )
    }
 
    if( pSocket )
-      hb_itemRelease( hb_itemReturnForward( pSocket ) );
+      hb_itemReturnRelease( pSocket );
    else
       hb_itemReturn( hb_param( 3, HB_IT_ANY ) );
 }
@@ -1746,7 +1743,7 @@ HB_FUNC( HB_INETDGRAMBIND )
    {
       HB_SOCKET_SET_ERROR( Socket );
       Socket->com = 0;
-      hb_itemRelease( hb_itemReturnForward( pSocket ) );
+      hb_itemReturnRelease( pSocket );
       return;
    }
 
@@ -1807,12 +1804,12 @@ HB_FUNC( HB_INETDGRAMBIND )
       {
          HB_SOCKET_SET_ERROR( Socket );
          Socket->com = 0;
-         hb_itemRelease( hb_itemReturnForward( pSocket ) );
+         hb_itemReturnRelease( pSocket );
          return;
       }
    }
 
-   hb_itemRelease( hb_itemReturnForward( pSocket ) );
+   hb_itemReturnRelease( pSocket );
 }
 
 HB_FUNC( HB_INETDGRAM )
@@ -1834,7 +1831,7 @@ HB_FUNC( HB_INETDGRAM )
    {
       HB_SOCKET_SET_ERROR( Socket );
       Socket->com = 0;
-      hb_itemRelease( hb_itemReturnForward( pSocket ) );
+      hb_itemReturnRelease( pSocket );
       return;
    }
 
@@ -1847,7 +1844,7 @@ HB_FUNC( HB_INETDGRAM )
    /* we'll be using non blocking sockets in all functions */
    /* hb_socketSetNonBlocking( Socket ); */
 
-   hb_itemRelease( hb_itemReturnForward( pSocket ) );
+   hb_itemReturnRelease( pSocket );
 }
 
 HB_FUNC( HB_INETDGRAMSEND )

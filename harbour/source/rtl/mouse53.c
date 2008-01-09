@@ -58,6 +58,7 @@
 
 #define M_BUTTON_LEFT   0
 #define M_BUTTON_RIGHT  1
+#define M_BUTTON_MIDDLE 2
 
 HB_FUNC( MPRESENT )
 {

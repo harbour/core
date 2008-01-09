@@ -107,7 +107,7 @@ HB_FUNC( HB_DBG_VMSTKGLIST )
    {
       AddToArray( hb_stackItem( ulPos ), pReturn, ulPos + 1 );
    }
-   hb_itemRelease( hb_itemReturn( pReturn ) );
+   hb_itemReturnRelease( pReturn );
 }
 
 /* $Doc$
@@ -169,7 +169,7 @@ HB_FUNC( HB_DBG_VMSTKLLIST )
    for( ul = 0; ul < ulLen; ++ul )
       AddToArray( hb_stackItem( lPrevOffset + ul ), pReturn, ul + 1 );
 
-   hb_itemRelease( hb_itemReturn( pReturn ) );
+   hb_itemReturnRelease( pReturn );
 }
 
 /* $Doc$
@@ -181,7 +181,7 @@ HB_FUNC( HB_DBG_VMSTKLLIST )
                /* and locals                        */
 HB_FUNC( HB_DBG_VMPARLLIST )
 {
-   hb_itemRelease( hb_itemReturn( hb_arrayFromParams( hb_parni( 1 ) + 1 ) ) );
+   hb_itemReturnRelease( hb_arrayFromParams( hb_parni( 1 ) + 1 ) );
 }
 
 HB_EXPORT PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal )

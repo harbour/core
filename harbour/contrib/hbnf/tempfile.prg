@@ -144,67 +144,23 @@
   #include "fileio.ch"
 
   FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
-  LOCAL nError := 0, cFile
+
+  LOCAL cFile
 
   Default cPath to ".\"
   Default lHide to .f.
 
   cPath = alltrim( cPath )
-  if right( cPath ) # "\"
-    cPath += "\"
-  endif
 
-
-  do while .t.
-     cFile = ntoc( int( ft_rand1( 65535 ) ), 16 ) + ntoc( int( ft_rand1( 65535 ) ), 16 )
-
-     nHandle := fopen( cPath + cFile )  // Use this method because
-                                        // the FILE() function can't see
-                                        // the hidden and system files
-
-     if ferror() = 2   // File not found
-
-        nHandle = fcreate( cPath + cFile, if( lHide, FC_HIDDEN, FC_NORMAL ) )
-
-        if ferror() = 5
-           fclose( nHandle )
-           loop
-        endif
-
-        if ferror() # 0
-           nError ++
-           if nError > 10
-              cFile = ""
-              exit
-           endif
-        endif
-        fclose( nHandle )
-
-        nHandle = fopen( cPath + cFile, FO_EXCLUSIVE + FO_READWRITE )
-        if ferror() = 0
-           exit
-        else
-           nError ++
-           if nError > 10
-              cFile = ""
-              exit
-           endif
-        endif
-
-     else
-        fclose( nHandle )
-
-     endif
-
-  enddo
+  nHandle := HB_FTempCreate( cPath, nil, if( lHide, FC_HIDDEN, FC_NORMAL ), @cFile )
 
   if !hb_isbyref( @nHandle )
      fclose( nHandle )
   endif
 
-  return cFile
+  RETURN cFile
 
-#endif
+#endif /* FT_TEMPFILE_ORIGINAL */
 
 #ifdef FT_TEST
   FUNCTION MAIN( cPath, cHide )

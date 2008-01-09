@@ -157,7 +157,7 @@ static PHB_ITEM hb_tokenArray( char * szLine, ULONG ulLen,
          else if( szLine[ ul ] == szDelim[ 0 ] &&
                   ( ulDelim == 1 || !memcmp( szLine + ul, szDelim, ulDelim ) ) )
          {
-            hb_itemPutCL( hb_arrayGetItemPtr( pArray, ++ulToken ), szLine + ulStart, ul - ulStart );
+            hb_arraySetCL( pArray, ++ulToken, szLine + ulStart, ul - ulStart );
             if( ulDelim == 1 && *szDelim == ' ' )
             {
                while( ul + 1 < ulLen && szLine[ ul + 1 ] == ' ' )
@@ -166,7 +166,7 @@ static PHB_ITEM hb_tokenArray( char * szLine, ULONG ulLen,
             ulStart = ul + ulDelim;
          }
       }
-      hb_itemPutCL( hb_arrayGetItemPtr( pArray, ++ulToken ), szLine + ulStart, ul - ulStart );
+      hb_arraySetCL( pArray, ++ulToken, szLine + ulStart, ul - ulStart );
    }
 
    return pArray;
@@ -287,9 +287,8 @@ HB_FUNC( HB_ATOKENS )
    hb_tokenParam( 2, 0, &szLine, &ulLen, &szDelim, &ulDelim );
 
    if( szLine )
-      hb_itemRelease( hb_itemReturnForward(
-                         hb_tokenArray( szLine, ulLen, szDelim, ulDelim,
-                                        hb_parl( 3 ), hb_parl( 4 ) ) ) );
+      hb_itemReturnRelease( hb_tokenArray( szLine, ulLen, szDelim, ulDelim,
+                                           hb_parl( 3 ), hb_parl( 4 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }

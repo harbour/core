@@ -901,7 +901,7 @@ HB_EXPORT void hb_retptr( void * pointer )
 }
 
 #undef hb_retptrGC
-void HB_EXPORT hb_retptrGC( void * pointer )
+HB_EXPORT void hb_retptrGC( void * pointer )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retptrGC(%p)", pointer));
 

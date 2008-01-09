@@ -53,8 +53,6 @@
 #include "hbapifs.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
-#include "hbset.h"
-#include "hbstack.h"
 
 HB_FUNC( FOPEN )
 {
@@ -317,7 +315,7 @@ HB_FUNC( HB_OSPATHDELIMITERS )
 HB_FUNC( HB_OSDRIVESEPARATOR )
 {
 #ifdef OS_HAS_DRIVE_LETTER
-   char ret[ 2 ] = { OS_DRIVE_DELIMITER, 0 };
+   const char ret[ 2 ] = { OS_DRIVE_DELIMITER, 0 };
    hb_retc( ret );
 #else
    hb_retc( NULL );

@@ -357,20 +357,20 @@ if [ -f "\${HB_LIB_INSTALL}/libgtsln.a" ]; then
     elif [ "\${HB_ARCHITECTURE}" = "bsd" ]; then
         SYSTEM_LIBS="\${SYSTEM_LIBS} -L/usr/local/lib"
     fi
-    SYSTEM_LIBS="\${SYSTEM_LIBS} -l${HB_SLN_LIB:-slang}"
+    SYSTEM_LIBS="-l${HB_SLN_LIB:-slang} \${SYSTEM_LIBS}"
     [ "\${HB_GPM_MOUSE}" = "yes" ] && HB_GPM_LIB="gpm"
 fi
 if [ -f "\${HB_LIB_INSTALL}/libgtcrs.a" ]; then
-    SYSTEM_LIBS="\${SYSTEM_LIBS} -l${HB_CRS_LIB:-ncurses}"
+    SYSTEM_LIBS="-l${HB_CRS_LIB:-ncurses} \${SYSTEM_LIBS}"
     [ "\${HB_GPM_MOUSE}" = "yes" ] && HB_GPM_LIB="gpm"
 fi
 if [ "\${HB_WITHOUT_X11}" != "yes" ]; then
     if [ -f "\${HB_LIB_INSTALL}/libgtxvt.a" ] || [ -f "\${HB_LIB_INSTALL}/libgtxwc.a" ]; then
         [ -d "/usr/X11R6/lib64" ] && SYSTEM_LIBS="\${SYSTEM_LIBS} -L/usr/X11R6/lib64"
-        SYSTEM_LIBS="\${SYSTEM_LIBS} -L/usr/X11R6/lib -lX11"
+        SYSTEM_LIBS="-L/usr/X11R6/lib -lX11 \${SYSTEM_LIBS}"
     fi
 fi
-[ -n "\${HB_GPM_LIB}" ] && SYSTEM_LIBS="\${SYSTEM_LIBS} -l\${HB_GPM_LIB}"
+[ -n "\${HB_GPM_LIB}" ] && SYSTEM_LIBS="-l\${HB_GPM_LIB} \${SYSTEM_LIBS}"
 
 if [ "\${HB_XBGTK}" = "yes" ]; then
     SYSTEM_LIBS="\${SYSTEM_LIBS} \`pkg-config --libs gtk+-2.0\`"
@@ -380,7 +380,7 @@ fi
 
 if [ "\${HB_STATIC}" = "full" ]; then
     if [ "\${HB_ARCHITECTURE}" = "linux" ]; then
-        SYSTEM_LIBS="\${SYSTEM_LIBS} -lpthread"
+        SYSTEM_LIBS="\${SYSTEM_LIBS} -lpthread -ldl"
     fi
     LN_OPT="\${LN_OPT} -static"
     HB_STATIC="yes"

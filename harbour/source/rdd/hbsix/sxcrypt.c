@@ -183,8 +183,6 @@ HB_FUNC( SX_ENCRYPT )
          hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
       }
    }
-   else
-      hb_ret();
 }
 
 HB_FUNC( SX_DECRYPT )
@@ -206,6 +204,4 @@ HB_FUNC( SX_DECRYPT )
          hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
       }
    }
-   else
-      hb_ret();
 }

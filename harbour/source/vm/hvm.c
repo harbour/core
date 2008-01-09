@@ -955,21 +955,21 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             hb_vmEnumNext();
             w++;
             break;
-            
+
          case HB_P_ENUMPREV:
             hb_vmEnumPrev();
             w++;
             break;
-            
+
          case HB_P_ENUMEND:
             hb_vmEnumEnd();
             w++;
             break;
-            
+
          case HB_P_SWITCH:
             w = hb_vmSwitch( pCode, w+3, HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             break;
-            
+
          /* Operators (logical) */
 
          case HB_P_NOT:
@@ -1005,7 +1005,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_ARRAYDIM:
-            hb_vmArrayDim( HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ) );
+            hb_vmArrayDim( HB_PCODE_MKUSHORT( &pCode[ w + 1 ] ) );
             w += 3;
             break;
 
@@ -1368,7 +1368,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             break;
 
          case HB_P_JUMP:
-            w += HB_PCODE_MKSHORT( &( pCode[ w + 1 ] ) );;
+            w += HB_PCODE_MKSHORT( &( pCode[ w + 1 ] ) );
             break;
 
          case HB_P_JUMPFAR:
@@ -1899,13 +1899,13 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
                hb_macroPushSymbol( pMacro );
                /* NOTE: pMacro string is replaced with a symbol.
                 * Symbol is created if it doesn't exist.
-               */
+                */
                if( hb_stackGetActionRequest() == 0 )
                {
                   pSym = pMacro->item.asSymbol.value;
-                  /* NOTE: pMacro item of symbol type is replaced with 
-                   *  the reference 
-                  */
+                  /* NOTE: pMacro item of symbol type is replaced with
+                   *  the reference
+                   */
                   hb_memvarGetRefer( pMacro, pSym );
                }
                w++;
@@ -2095,23 +2095,23 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             int iLocal = pCode[ w + 1 ];
             HB_TRACE( HB_TR_DEBUG, ("HB_P_LOCALNEARADDINT") );
 
-            hb_vmAddInt( hb_stackLocalVariable( &iLocal ), 
+            hb_vmAddInt( hb_stackLocalVariable( &iLocal ),
                          HB_PCODE_MKSHORT( &pCode[ w + 2 ] ) );
             w += 4;
             break;
          }
-         
+
          case HB_P_LOCALADDINT:
          {
             int iLocal = HB_PCODE_MKUSHORT( &pCode[ w + 1 ] );
             HB_TRACE( HB_TR_DEBUG, ("HB_P_LOCALADDINT") );
 
-            hb_vmAddInt( hb_stackLocalVariable( &iLocal ), 
+            hb_vmAddInt( hb_stackLocalVariable( &iLocal ),
                          HB_PCODE_MKSHORT( &pCode[ w + 3 ] ) );
             w += 5;
             break;
          }
-         
+
          case HB_P_LOCALINC:
          {
             int iLocal = HB_PCODE_MKUSHORT( &pCode[ w + 1 ] );
@@ -3510,7 +3510,7 @@ static HB_GARBAGE_FUNC( hb_SeqBlockDestructor )
    hb_itemMove( hb_errorBlock(), * pBlockPtr );
    hb_itemRelease( * pBlockPtr );
 }
-      
+
 static void hb_vmSeqBlock( void )
 {
    PHB_ITEM pItem;
@@ -3850,7 +3850,7 @@ static void hb_vmEnumPrev( void )
 {
    HB_ITEM_PTR pEnumRef, pEnum, pBase;
    int i;
-   
+
    for( i = hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
    {
       pEnumRef = hb_stackItemFromTop( -( i << 1 ) );
@@ -3925,7 +3925,7 @@ static void hb_vmEnumPrev( void )
 static void hb_vmEnumEnd( void )
 {
    int iVars;
-   
+
    /* remove number of iterators */
    iVars = hb_stackItemFromTop( -1 )->item.asInteger.value;
    hb_stackDec();
@@ -3964,7 +3964,7 @@ static LONG hb_vmSwitch( const BYTE * pCode, LONG offset, USHORT casesCnt )
             }
             offset += 5;
             break;
-      
+
          case HB_P_PUSHSTRSHORT:
             if( HB_IS_STRING( pSwitch ) )
             {
@@ -3976,7 +3976,7 @@ static LONG hb_vmSwitch( const BYTE * pCode, LONG offset, USHORT casesCnt )
             }
             offset += 2 + pCode[ offset + 1 ];
             break;
-      
+
          case HB_P_PUSHNIL:
             /* default clause */
             fFound = TRUE;
@@ -4676,28 +4676,28 @@ static ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias, PHB_SYMB pField )
             hb_rddSelectWorkAreaNumber( pAlias->item.asInteger.value );
             pAlias->type = HB_IT_NIL;
             break;
-   
+
          case HB_IT_LONG:
             /* Alias was evaluated from an expression, (nWorkArea)->field
              */
             hb_rddSelectWorkAreaNumber( ( int ) pAlias->item.asLong.value );
             pAlias->type = HB_IT_NIL;
             break;
-   
+
          case HB_IT_DOUBLE:
             /* Alias was evaluated from an expression, (nWorkArea)->field
              */
             hb_rddSelectWorkAreaNumber( ( int ) pAlias->item.asDouble.value );
             pAlias->type = HB_IT_NIL;
             break;
-   
+
          case HB_IT_SYMBOL:
             /* Alias was specified using alias identifier, for example: al->field
              */
             errCode = hb_rddSelectWorkAreaSymbol( pAlias->item.asSymbol.value );
             pAlias->type = HB_IT_NIL;
             break;
-   
+
          case HB_IT_STRING:
          {
             /* Alias was evaluated from an expression, for example: (cVar)->field
@@ -4705,7 +4705,7 @@ static ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias, PHB_SYMB pField )
             /* expand '&' operator if exists */
             char * szAlias;
             BOOL bNewString;
-   
+
             szAlias = hb_macroExpandString( pAlias->item.asString.value, pAlias->item.asString.length, &bNewString );
             if( pField )
             {
@@ -6908,7 +6908,7 @@ BOOL hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg )
    PHB_MSGREF pMsgRef;
    PHB_ITEM pRefer;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmMsgReference(%p,%p,%p)", pObject, pMessage,pAccMsg));
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmMsgReference(%p,%p,%p)", pObject, pMessage, pAccMsg));
 
    pMsgRef = ( PHB_MSGREF ) hb_xgrab( sizeof( HB_MSGREF ) );
    pMsgRef->access = pAccMsg;
@@ -9551,7 +9551,7 @@ HB_FUNC( HB_DBG_VMVARSLIST )
 {
    PHB_ITEM pStatics = hb_itemClone( &s_aStatics );
 
-   hb_itemRelease( hb_itemReturnForward( pStatics ) );
+   hb_itemReturnRelease( pStatics );
 }
 
 /* $Doc$
@@ -9625,7 +9625,7 @@ HB_FUNC( HB_DBG_VMVARGLIST )
    PHB_ITEM pGlobals = hb_itemArrayNew( 0 );
 #endif
 
-   hb_itemRelease( hb_itemReturnForward( pGlobals ) );
+   hb_itemReturnRelease( pGlobals );
 }
 
 HB_FUNC( HB_DBG_VMVARGGET )

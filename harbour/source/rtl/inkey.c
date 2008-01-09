@@ -201,7 +201,7 @@ HB_FUNC( HB_KEYPUT )
       ULONG ulLen = hb_itemGetCLen( pText ), ulIndex;
 
       for( ulIndex = 0; ulIndex < ulLen; ulIndex++ )
-         hb_inkeyPut( szText[ ulIndex ] );
+         hb_inkeyPut( ( UCHAR ) szText[ ulIndex ] );
    }
    else if( ISARRAY( 1 ) )
    {
@@ -228,6 +228,6 @@ HB_FUNC( LASTKEY )
 
 HB_FUNC( HB_SETLASTKEY )
 {
-   if( ISNUM(1) )
+   if( ISNUM( 1 ) )
       hb_retni( hb_inkeySetLast( hb_parni( 1 ) ) );
 }

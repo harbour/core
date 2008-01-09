@@ -72,6 +72,7 @@ C_SOURCES =\
 	screen1.c \
 	screen2.c \
 	setlast.c \
+	setrc.c \
 	strdiff.c \
 	strswap.c \
 	tab.c \
@@ -86,6 +87,7 @@ PRG_SOURCES=\
 	blank.prg \
 	ct.prg \
 	ctmisc.prg \
+	ctrand.prg \
 	cttime.prg \
 	fcopy.prg \
 	getinfo.prg \

@@ -199,14 +199,14 @@ HB_EXPORT int hb_stricmp( const char * s1, const char * s2 )
       c1 = toupper( (unsigned char) *s1 );
       c2 = toupper( (unsigned char) *s2 );
 
-      s1++;
-      s2++;
-
       if( c1 != c2 )
       {
          rc = ( c1 < c2 ? -1 : 1 );
          break;
       }
+
+      s1++;
+      s2++;
    }
    while ( c1 );
 

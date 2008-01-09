@@ -234,10 +234,10 @@ extern int hb_setListenerRemove( int );
    extern HB_EXPORT HB_SET_STRUCT hb_set;
 #endif
 
-HB_EXPORT BOOL    hb_setGetL( HB_set_enum set_specifier );
-HB_EXPORT char *  hb_setGetCPtr( HB_set_enum set_specifier );
-HB_EXPORT int     hb_setGetNI( HB_set_enum set_specifier );
-HB_EXPORT long    hb_setGetNL( HB_set_enum set_specifier );
+extern HB_EXPORT BOOL    hb_setGetL( HB_set_enum set_specifier );
+extern HB_EXPORT char *  hb_setGetCPtr( HB_set_enum set_specifier );
+extern HB_EXPORT int     hb_setGetNI( HB_set_enum set_specifier );
+extern HB_EXPORT long    hb_setGetNL( HB_set_enum set_specifier );
 
 extern HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void );
 

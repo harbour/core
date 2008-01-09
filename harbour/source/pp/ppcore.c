@@ -1658,7 +1658,7 @@ static void hb_pp_ruleListFree( PHB_PP_RULE * pRulePtr )
    }
 }
 
-static void hb_pp_ruleNonStdFree( PHB_PP_RULE * pRulePtr )
+static void hb_pp_ruleListNonStdFree( PHB_PP_RULE * pRulePtr )
 {
    PHB_PP_RULE pRule;
 
@@ -1677,7 +1677,7 @@ static void hb_pp_ruleNonStdFree( PHB_PP_RULE * pRulePtr )
    }
 }
 
-static void hb_pp_ruleSetStd( PHB_PP_RULE pRule )
+static void hb_pp_ruleListSetStd( PHB_PP_RULE pRule )
 {
    while( pRule )
    {
@@ -1686,11 +1686,25 @@ static void hb_pp_ruleSetStd( PHB_PP_RULE pRule )
    }
 }
 
-static void hb_pp_ruleSetId( PHB_PP_STATE pState, PHB_PP_RULE pRule, BYTE id )
+static void hb_pp_ruleSetId( PHB_PP_STATE pState, PHB_PP_TOKEN pMatch, BYTE id )
+{
+   if( HB_PP_TOKEN_ISMATCH( pMatch ) )
+   {
+      int i;
+      for( i = 0; i < HB_PP_HASHID_MAX; ++i )
+         pState->pMap[ i ] |= id;
+   }
+   else
+      pState->pMap[ HB_PP_HASHID( pMatch ) ] |= id;
+}
+
+static void hb_pp_ruleListSetId( PHB_PP_STATE pState, PHB_PP_RULE pRule, BYTE id )
 {
    while( pRule )
    {
-      pState->pMap[ HB_PP_HASHID( pRule->pMatch ) ] |= id;
+      hb_pp_ruleSetId( pState, pRule->pMatch, id );
+      if( HB_PP_TOKEN_ISMATCH( pRule->pMatch ) )
+         break;
       pRule = pRule->pPrev;
    }
 }
@@ -1736,7 +1750,7 @@ static void hb_pp_defineAdd( PHB_PP_STATE pState, USHORT mode,
       pState->pDefinitions = pRule;
       pState->iDefinitions++;
    }
-   pState->pMap[ HB_PP_HASHID( pMatch ) ] |= HB_PP_DEFINE;
+   hb_pp_ruleSetId( pState, pMatch, HB_PP_DEFINE );
 }
 
 static void hb_pp_defineDel( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
@@ -3214,14 +3228,14 @@ static void hb_pp_directiveNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken,
                pRule->pPrev = pState->pCommands;
                pState->pCommands = pRule;
                pState->iCommands++;
-               pState->pMap[ HB_PP_HASHID( pMatch ) ] |= HB_PP_COMMAND;
+               hb_pp_ruleSetId( pState, pMatch, HB_PP_COMMAND );
             }
             else
             {
                pRule->pPrev = pState->pTranslations;
                pState->pTranslations = pRule;
                pState->iTranslations++;
-               pState->pMap[ HB_PP_HASHID( pMatch ) ] |= HB_PP_TRANSLATE;
+               hb_pp_ruleSetId( pState, pMatch, HB_PP_TRANSLATE );
             }
             pMatch = pResult = NULL;
          }
@@ -4992,9 +5006,9 @@ void hb_pp_reset( PHB_PP_STATE pState )
    hb_pp_OutFileFree( pState );
    hb_pp_TraceFileFree( pState );
 
-   hb_pp_ruleNonStdFree( &pState->pDefinitions );
-   hb_pp_ruleNonStdFree( &pState->pTranslations );
-   hb_pp_ruleNonStdFree( &pState->pCommands );
+   hb_pp_ruleListNonStdFree( &pState->pDefinitions );
+   hb_pp_ruleListNonStdFree( &pState->pTranslations );
+   hb_pp_ruleListNonStdFree( &pState->pCommands );
 }
 
 /*
@@ -5020,13 +5034,13 @@ void hb_pp_addSearchPath( PHB_PP_STATE pState, const char * szPath, BOOL fReplac
 void hb_pp_setStdBase( PHB_PP_STATE pState )
 {
    pState->fError = FALSE;
-   hb_pp_ruleSetStd( pState->pDefinitions );
-   hb_pp_ruleSetStd( pState->pTranslations );
-   hb_pp_ruleSetStd( pState->pCommands );
+   hb_pp_ruleListSetStd( pState->pDefinitions );
+   hb_pp_ruleListSetStd( pState->pTranslations );
+   hb_pp_ruleListSetStd( pState->pCommands );
    memset( pState->pMap, 0, sizeof( pState->pMap ) );
-   hb_pp_ruleSetId( pState, pState->pDefinitions, HB_PP_DEFINE );
-   hb_pp_ruleSetId( pState, pState->pTranslations, HB_PP_TRANSLATE );
-   hb_pp_ruleSetId( pState, pState->pCommands, HB_PP_COMMAND );
+   hb_pp_ruleListSetId( pState, pState->pDefinitions, HB_PP_DEFINE );
+   hb_pp_ruleListSetId( pState, pState->pTranslations, HB_PP_TRANSLATE );
+   hb_pp_ruleListSetId( pState, pState->pCommands, HB_PP_COMMAND );
 
    /* clear total number of preprocessed lines so we will report only
     * lines in compiled .prg files

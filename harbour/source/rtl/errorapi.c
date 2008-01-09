@@ -1226,7 +1226,7 @@ void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
    }
 
    /* Ok, launch... */
-   hb_itemRelease( hb_itemReturn( hb_errLaunchSubst( pError ) ) );
+   hb_itemReturnRelease( hb_errLaunchSubst( pError ) );
    hb_errRelease( pError );
 }
 

@@ -414,13 +414,10 @@ HB_FUNC( ACLONE )
    PHB_ITEM pSrcArray = hb_param( 1, HB_IT_ARRAY );
 
    if( pSrcArray && ! hb_arrayIsObject( pSrcArray ) )
-      hb_itemRelease( hb_itemReturn( hb_arrayClone( pSrcArray ) ) ); /* AClone() returns the new array */
+      hb_itemReturnRelease( hb_arrayClone( pSrcArray ) ); /* AClone() returns the new array */
 }
 
 HB_FUNC( HB_APARAMS )
 {
-   if( hb_pcount() == 0 )
-      hb_itemRelease( hb_itemReturn( hb_arrayFromParams( 1 ) ) );
-   else
-      hb_itemRelease( hb_itemReturn( hb_arrayFromParams( hb_parni( 1 ) + 1 ) ) );
+   hb_itemReturnRelease( hb_arrayFromParams( hb_parni( 1 ) + 1 ) );
 }

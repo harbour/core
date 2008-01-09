@@ -174,6 +174,10 @@ HB_FUNC( DBRELATION ) { hb_retc( NULL ); }
 
 HB_FUNC( DBRSELECT ) { hb_retni( 0 ); }
 
+HB_FUNC( DBFILTER ) { hb_retc( NULL ); }
+
+HB_FUNC( DBEVAL ) {}
+
 HB_FUNC( SELECT ) { hb_retni( 0 ); }
 
 HB_FUNC( ALIAS ) { hb_retc( NULL ); }

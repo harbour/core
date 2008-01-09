@@ -111,7 +111,7 @@ void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc )
 /* route C math lib errors to Harbour error handling */
 #if defined(HB_MATH_HANDLER)
 
-int HB_EXPORT matherr( struct exception *err )
+HB_EXPORT int matherr( struct exception *err )
 {
    int retval;
    HB_MATH_HANDLERPROC mathHandler;

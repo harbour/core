@@ -173,5 +173,5 @@ HB_FUNC( HB_ISNULL )
          return;
       }
    }
-   hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, "HB_ISNULL", 1, hb_paramError( 1 ) );
+   hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, "HB_ISNULL", HB_ERR_ARGS_BASEPARAMS );
 }
