@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-01-10 17:50 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * source/rtl/memoedit.prg
+  * source/rtl/teditor.prg
+    + Implemented Clipper compatible missing parameters:
+         nTextBuffRow
+         nTextBuffColumn
+         nWindowRow
+         nWindowColumn
+      Tested slightly but need deeper testing in case <nWndRow> scrolls past ::naTextLen.
+
 2008-01-09 15:03 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/estack.c
     * added missing static to s_initSymbol declaration

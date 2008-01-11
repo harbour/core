@@ -283,7 +283,7 @@ FUNCTION MemoEdit( cString,;
    DEFAULT cString         TO ""
 
    // Original MemoEdit() converts Tabs into spaces;
-   oEd := HBMemoEditor():New( StrTran( cString, Chr( K_TAB ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize )
+   oEd := HBMemoEditor():New( StrTran( cString, Chr( K_TAB ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextBuffRow, nTextBuffColumn, nWindowRow, nWindowColumn )
    oEd:MemoInit( xUserFunction )
    oEd:display()
 

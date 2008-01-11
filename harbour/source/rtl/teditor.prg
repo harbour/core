@@ -956,7 +956,7 @@ METHOD BrowseText( nPassedKey )
 
 /* -------------------------------------------- */
 
-METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize ) CLASS HBEditor
+METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol ) CLASS HBEditor
 
    DEFAULT cString     TO ""
    DEFAULT nTop        TO 0
@@ -966,6 +966,11 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    DEFAULT lEditMode   TO .T.
    DEFAULT nLineLength TO NIL
    DEFAULT nTabSize    TO NIL
+   DEFAULT nTextRow    to 1
+   DEFAULT nTextCol    to 0 
+   DEFAULT nWndRow     to 0 
+   DEFAULT nWndCol     to 0 
+
 
    ::aText := Text2Array( cString, nLineLength )
    ::naTextLen := Len( ::aText )
@@ -1007,11 +1012,34 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
       ::nTabWidth := nTabSize
    endif
 
+   // textrow/col, wndrow/col management
+   nTextRow    := max( 1, nTextRow )
+   nTextCol    := max( 0, nTextCol )
+   nWndRow     := max( 0, nWndRow  )
+   nWndCol     := max( 0, nWndCol  )
+
+   ::nFirstRow := max( 1, nTextRow - nWndRow )
+   ::nFirstCol := max( 1, nTextCol - nWndCol )
+
+   ::nRow := max( 1, min( nTextRow, ::naTextLen ) )
+   ::nCol := max( 1, min( Len( ::aText[ ::nRow ]:cText ), nTextCol + 1 ) )
+
+   // extra sanitization over max bounds
+   IF ::nFirstRow >  ::naTextLen
+      ::nFirstRow := ::naTextLen
+   ENDIF
+
+   IF ::nFirstCol >  ::LineLen( ::nRow ) + 1
+      ::nFirstCol := ::LineLen( ::nRow ) + 1
+   ENDIF
+   
+
    // Empty area of screen which will hold editor window
    Scroll( nTop, nLeft, nBottom, nRight )
 
    // Set cursor upper left corner
-   ::SetPos( ::nTop, ::nLeft )
+   //::SetPos( ::nTop, ::nLeft )
+   ::SetPos( ::nTop + nWndRow, ::nLeft + nWndCol )
 
    return Self
 
