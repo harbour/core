@@ -1702,8 +1702,6 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   }
                   else if( strcmp( "GETTEXT_NOOP", &pName->value.asSymbol[ 8 ] ) == 0 )
                   {
-                     HB_EXPR_PTR   pExpr;
-                
                      if( usCount == 1 )
                      {
                         if( pArg->ExprType == HB_ET_STRING && pArg->ulLength > 0 )
