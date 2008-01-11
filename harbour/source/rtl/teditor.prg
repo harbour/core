@@ -1033,6 +1033,10 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
       ::nFirstCol := ::LineLen( ::nRow ) + 1
    ENDIF
    
+   if ( ::nFirstRow + nWndRow ) > ::naTextLen
+      do while ( ::nFirstRow + ( --nWndRow ) ) > ::naTextLen
+      enddo
+   endif
 
    // Empty area of screen which will hold editor window
    Scroll( nTop, nLeft, nBottom, nRight )

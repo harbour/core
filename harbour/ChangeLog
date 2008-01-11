@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2007-01-10 18:05 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * source/rtl/teditor.prg
+    ! Fixed [ <nWndRow> scrolls past ::naTextLen ]
+
 2007-01-10 17:50 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * source/rtl/memoedit.prg
   * source/rtl/teditor.prg
