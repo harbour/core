@@ -479,7 +479,7 @@ HB_EXPORT void hb_itemUnLockCPtr( char * pszString )
    HB_TRACE(HB_TR_DEBUG, ("hb_itemUnLockCPtr(%p,%p)", pszString));
 
    if( pszString )
-      hb_xRefDec( pszString );
+      hb_xRefFree( pszString );
 }
 
 HB_EXPORT ULONG hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, ULONG ulLen )

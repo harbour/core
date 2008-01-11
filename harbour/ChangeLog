@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-11 22:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/itemapi.c
+    ! use hb_xRefFree() instead of hb_xRefDec() in hb_itemUnLockCPtr()
+      It's necessary when source item is cleared before.
+
 2008-01-11 18:13 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
     * removed unused variable
