@@ -130,6 +130,32 @@ HB_EXPORT PHB_ITEM hb_itemParamPtr( USHORT uiParam, long lMask )
    return hb_param( ( int ) uiParam, lMask );
 }
 
+HB_EXPORT BOOL hb_itemParamStore( USHORT uiParam, PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemParamStore(%hu, %p)", uiParam, pItem));
+
+   if( hb_param( uiParam, HB_IT_BYREF ) )
+   {
+      hb_itemCopyToRef( hb_stackItemFromBase( uiParam ), pItem );
+      return TRUE;
+   }
+
+   return FALSE;
+}
+
+HB_EXPORT BOOL hb_itemParamStoreForward( USHORT uiParam, PHB_ITEM pItem )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemParamStoreForward(%hu, %p)", uiParam, pItem));
+
+   if( hb_param( uiParam, HB_IT_BYREF ) )
+   {
+      hb_itemMoveToRef( hb_stackItemFromBase( uiParam ), pItem );
+      return TRUE;
+   }
+
+   return FALSE;
+}
+
 HB_EXPORT USHORT hb_itemPCount( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPCount()"));
@@ -411,6 +437,49 @@ HB_EXPORT ULONG hb_itemGetCLen( PHB_ITEM pItem )
       return pItem->item.asString.length;
    else
       return 0;
+}
+
+HB_EXPORT char * hb_itemLockReadCPtr( PHB_ITEM pItem, ULONG * pulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemLockReadCPtr(%p,%p)", pItem, pulLen));
+
+   if( pItem && HB_IS_STRING( pItem ) )
+   {
+      if( pulLen )
+         *pulLen = pItem->item.asString.length;
+      hb_xRefInc( pItem->item.asString.value );
+      return pItem->item.asString.value;
+   }
+   else if( pulLen )
+      *pulLen = 0;
+
+   return NULL;
+}
+
+HB_EXPORT char * hb_itemLockWriteCPtr( PHB_ITEM pItem, ULONG * pulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemLockWriteCPtr(%p,%p)", pItem, pulLen));
+
+   if( pItem && HB_IS_STRING( pItem ) )
+   {
+      hb_itemUnShareString( pItem );
+      if( pulLen )
+         *pulLen = pItem->item.asString.length;
+      hb_xRefInc( pItem->item.asString.value );
+      return pItem->item.asString.value;
+   }
+   else if( pulLen )
+      *pulLen = 0;
+
+   return NULL;
+}
+
+HB_EXPORT void hb_itemUnLockCPtr( char * pszString )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemUnLockCPtr(%p,%p)", pszString));
+
+   if( pszString )
+      hb_xRefDec( pszString );
 }
 
 HB_EXPORT ULONG hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, ULONG ulLen )

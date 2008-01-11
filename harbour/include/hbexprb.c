@@ -1643,7 +1643,6 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                {
                   hb_compExprReduceUPPER( pSelf, HB_COMP_PARAM );
                }
-#ifdef HB_I18N_SUPPORT
 #ifndef HB_MACRO_SUPPORT
                else if( strncmp( "HB_I18N_", pName->value.asSymbol, 8 ) == 0 )
                {
@@ -1756,7 +1755,6 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                      }
                   }
                }
-#endif
 #endif
             }
          }

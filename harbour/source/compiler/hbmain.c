@@ -4010,7 +4010,6 @@ void hb_compCodeBlockRewind( HB_COMP_DECL )
    }
 }
 
-#ifdef HB_I18N_SUPPORT
 /* ============================ I18N ============================ */
 static PHB_I18NTABLE hb_compI18nCreate( void )
 {
@@ -4264,7 +4263,6 @@ static BOOL hb_compI18nSave( HB_COMP_DECL )
    fclose( file );
    return TRUE;
 }
-#endif
 
 /* ************************************************************************* */
 
@@ -4388,7 +4386,6 @@ void hb_compCompileEnd( HB_COMP_DECL )
    hb_compSwitchKill( HB_COMP_PARAM );
    hb_compElseIfKill( HB_COMP_PARAM );
 
-#ifdef HB_I18N_SUPPORT
    if( HB_COMP_PARAM->pI18n )
    {
       hb_compI18nFree( HB_COMP_PARAM->pI18n );
@@ -4400,7 +4397,6 @@ void hb_compCompileEnd( HB_COMP_DECL )
       hb_xfree( HB_COMP_PARAM->pI18nFileName );
       HB_COMP_PARAM->pI18nFileName = NULL;
    }
-#endif
 
    if( HB_COMP_PARAM->pMainFileName )
    {
@@ -4587,12 +4583,10 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
                hb_compOutStd( HB_COMP_PARAM, buffer );
             }
 
-#ifdef HB_I18N_SUPPORT
             if( HB_COMP_PARAM->fI18n )
             {
                HB_COMP_PARAM->pI18n = hb_compI18nCreate();
             }
-#endif
 
             /* Generate the starting procedure frame */
             if( HB_COMP_PARAM->fStartProc )
@@ -4776,12 +4770,10 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
             }
 
             hb_compGenOutput( HB_COMP_PARAM, HB_COMP_PARAM->iLanguage );
-#ifdef HB_I18N_SUPPORT
             if( HB_COMP_PARAM->pI18n )
             {
                hb_compI18nSave( HB_COMP_PARAM );
             }
-#endif
          }
       }
    }

@@ -342,14 +342,12 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                hb_pp_addSearchPath( HB_COMP_PARAM->pLex->pPP, s + 1, FALSE );
                break;
 
-#ifdef HB_I18N_SUPPORT
             case 'j':
             case 'J':
                HB_COMP_PARAM->fI18n = TRUE;
                if( s[ 1 ] )
                   HB_COMP_PARAM->pI18nFileName = hb_fsFNameSplit( s + 1 );
                break;
-#endif
 
             case 'k':
             case 'K':
@@ -763,14 +761,12 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, char *Args[] )
                         j = strlen( Args[i] );
                         continue;
 
-#ifdef HB_I18N_SUPPORT
                      case 'j':
                      case 'J':
                         Args[i] += ( j - 1 );
                         hb_compChkEnvironVar( HB_COMP_PARAM, Args[i] );
                         j = strlen( Args[i] );
                         continue;
-#endif
 
                      case 'k':
                      case 'K':

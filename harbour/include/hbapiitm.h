@@ -84,6 +84,9 @@ extern HB_EXPORT PHB_ITEM   hb_itemArrayNew  ( ULONG ulLen );
 extern HB_EXPORT PHB_ITEM   hb_itemArrayPut  ( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem );
 extern HB_EXPORT ULONG      hb_itemCopyC     ( PHB_ITEM pItem, char * szBuffer, ULONG ulLen );
 extern HB_EXPORT BOOL       hb_itemFreeC     ( char * szText );
+extern HB_EXPORT char *     hb_itemLockReadCPtr( PHB_ITEM pItem, ULONG * pulLen );
+extern HB_EXPORT char *     hb_itemLockWriteCPtr( PHB_ITEM pItem, ULONG * pulLen );
+extern HB_EXPORT void       hb_itemUnLockCPtr( char * pszString );
 extern HB_EXPORT char *     hb_itemGetC      ( PHB_ITEM pItem );
 extern HB_EXPORT char *     hb_itemGetCPtr   ( PHB_ITEM pItem );
 extern HB_EXPORT ULONG      hb_itemGetCLen   ( PHB_ITEM pItem );
@@ -143,6 +146,8 @@ extern HB_EXPORT PHB_ITEM   hb_itemPutNLLLen ( PHB_ITEM pItem, LONGLONG lNumber,
 /* Non Clipper compliant internal API */
 
 extern HB_EXPORT PHB_ITEM   hb_itemParamPtr  ( USHORT uiParam, long lMask );
+extern HB_EXPORT BOOL       hb_itemParamStore( USHORT uiParam, PHB_ITEM pItem );
+extern HB_EXPORT BOOL       hb_itemParamStoreForward( USHORT uiParam, PHB_ITEM pItem );
 extern HB_EXPORT int        hb_itemStrCmp    ( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /* our string compare */
 extern HB_EXPORT int        hb_itemStrICmp   ( PHB_ITEM pFirst, PHB_ITEM pSecond, BOOL bForceExact ); /* our string compare */
 extern HB_EXPORT void       hb_itemCopy      ( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */

@@ -8,6 +8,95 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-11 18:01 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapiitm.h
+  * harbour/source/vm/itemapi.c
+    + added new functions:
+         BOOL hb_itemParamStore( USHORT uiParam, PHB_ITEM pItem )
+         BOOL hb_itemParamStoreForward( USHORT uiParam, PHB_ITEM pItem )
+      They copy/move pItem body to parameter passed by reference and
+      return TRUE when operation was done successfully (uiParam was passed
+      by reference)
+    + added new functions for string manipulation:
+         char * hb_itemLockReadCPtr( PHB_ITEM pItem, ULONG * pulLen );
+         char * hb_itemLockWriteCPtr( PHB_ITEM pItem, ULONG * pulLen );
+         void   hb_itemUnLockCPtr( char * pszString );
+      It's recommended to use them instead of hb_itemGetCPtr().
+      Pointer to string buffer returned by hb_itemLockReadCPtr() will
+      be always valid even if source item will be cleared, destroyed or
+      overwritten until hb_itemUnLockCPtr() is called. Each locked string
+      has to be unlocked to avoid memory leaks. After unlocking the string
+      pointer cannot be longer used.
+      hb_itemLockWriteCPtr() works like hb_itemLockReadCPtr() but string
+      pointer returned by this function is writable so user can change
+      the body of string item. It's the _ONLY_ one way when it's possible.
+      Modifying string items using pointers returned by hb_parc() or
+      hb_itemGetCPtr() or extracted directly from HB_ITEM body is _FORBIDDEN_
+      and can cause unpredictable results (GPF when constant/readonly memory
+      pages are changed, changing many different items which share the same
+      memory buffer, etc.).
+      This is code illustrates how to use hb_itemLockReadCPtr()/
+      hb_itemUnLockCPtr() and it's also good example why hb_itemGetCPtr()
+      is very danger function and cannot be used in such case - if you
+      replace hb_itemLockReadCPtr() with hb_itemGetCPtr() and remove
+      hb_itemUnLockCPtr() then you will have buggy code.
+
+         HB_FUNC( MYFUNC )
+         {
+            PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT )
+            if( pObject )
+            {
+               char * pszName1, * pszName2;
+               PHB_ITEM pResult;
+
+               pResult = hb_objSendMsg( pObject, "POP", 0 );
+               pszName1 = hb_itemLockReadCPtr( pResult, NULL );
+               pResult = hb_objSendMsg( pObject, "POP", 0 );
+               pszName2 = hb_itemLockReadCPtr( pResult, NULL );
+               if( pszName1 && pszName2 )
+                  hb_retc_buffer( hb_xstrcpy( NULL,
+                              "[", pszName1, "]-[", pszName2, "]", NULL ) );
+               hb_itemUnLockCPtr( pszName1 );
+               hb_itemUnLockCPtr( pszName2 );
+            }
+         }
+
+      This code shows how to use hb_itemLockWriteCPtr():
+         proc main()
+            local cVal, cVal2
+            cVal := cVal2 := "ABC"
+            STRPUT( @cVal2, 2, 42 )
+            ? cVal, cVal2
+         return
+         #pragma begindump
+         #include "hbapiitm.h"
+         HB_FUNC( STRPUT )
+         {
+            PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
+            ULONG ulAt = hb_parnl( 2 );
+            if( pString && ulAt && ISNUM( 3 ) )
+            {
+               ULONG ulLen;
+               char * pszValue;
+               pszValue = hb_itemLockWriteCPtr( pString, &ulLen );
+               if( pszValue )
+               {
+                  if( ulAt <= ulLen )
+                     pszValue[ ulAt - 1 ] = ( char ) hb_parni( 3 );
+                  hb_itemUnLockCPtr( pszValue );
+               }
+            }
+         }
+         #pragma enddump
+
+  * harbour/include/hbcompdf.h
+  * harbour/include/hbexprop.h
+  * harbour/include/hbexprb.c
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/hbusage.c
+    * removed HB_I18N_SUPPORT macro and enabled I18N code in default build
+
 2008-01-11 17:32 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/include/hbexprb.c
   * harbour/source/compiler/hbmain.c
