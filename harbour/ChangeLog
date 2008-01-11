@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-11 17:32 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/include/hbexprb.c
+  * harbour/source/compiler/hbmain.c
+    ! added string escaping before to i18n .pot files
+    + added hb_i18n_gettext_strict() support for compiler. This function 
+      generates warning if argument is not literal string. See discussion 
+      on mailing list from 2007-11-23 to 2007-11-29, for details.
+
 2007-01-10 18:05 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * source/rtl/teditor.prg
     ! Fixed [ <nWndRow> scrolls past ::naTextLen ]

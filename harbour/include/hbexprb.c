@@ -1645,23 +1645,115 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                }
 #ifdef HB_I18N_SUPPORT
 #ifndef HB_MACRO_SUPPORT
-               else if( strcmp( "HB_I18N_GETTEXT", pName->value.asSymbol ) == 0 && usCount )
+               else if( strncmp( "HB_I18N_", pName->value.asSymbol, 8 ) == 0 )
                {
-                  HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+                  HB_EXPR_PTR   pArg = pParms->value.asList.pExprList;
+                  char          buf[ 16 ];
+                  BOOL          fStrict;
+               
+                  /* TODO: warning message does not fit very well, because it requires
+                           type of used parameter. Let's print "unknown", to avoid deeper 
+                           analysis of parameter. 
+                  */
 
-                  /* TODO: do we need to add empty string also? */
-                  /* TODO: add context, line number */
-                  if( HB_COMP_PARAM->fI18n && pArg->ExprType == HB_ET_STRING &&
-                      pArg->ulLength > 0 )
+                  if( strcmp( "GETTEXT", &pName->value.asSymbol[ 8 ] ) == 0 || 
+                      strcmp( "GETTEXT_STRICT", &pName->value.asSymbol[ 8 ] ) == 0 )
                   {
-                     if( usCount >= 2 && pArg->pNext->ExprType == HB_ET_STRING &&
-                         pArg->pNext->ulLength > 0 )
-                        hb_compI18nAdd( HB_COMP_PARAM, pArg->value.asString.string,
-                                        pArg->pNext->value.asString.string,
-                                        HB_COMP_PARAM->currLine );
-                     else
-                        hb_compI18nAdd( HB_COMP_PARAM, pArg->value.asString.string,
-                                        NULL, HB_COMP_PARAM->currLine );
+                     fStrict = pName->value.asSymbol[ 15 ] != '\0';
+
+                     if( usCount == 1 && HB_COMP_PARAM->funcs )
+                     {
+                        if( pArg->ExprType == HB_ET_STRING && pArg->ulLength > 0 )
+                        {
+                           if( HB_COMP_PARAM->fI18n )
+                              hb_compI18nAdd( HB_COMP_PARAM, pArg->value.asString.string,
+                                              NULL, HB_COMP_PARAM->currLine );
+                        }
+                        else if( fStrict )
+                        {
+                           hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, "unknown", "character" );
+                        }
+                     }
+                     else if( usCount == 2 )
+                     {
+                        if( pArg->pNext->ExprType == HB_ET_STRING && pArg->pNext->ulLength > 0 )
+                        {
+                           if( pArg->ExprType == HB_ET_STRING && pArg->ulLength > 0 )
+                           {
+                              if( HB_COMP_PARAM->fI18n )
+                                 hb_compI18nAdd( HB_COMP_PARAM, pArg->value.asString.string,
+                                                 pArg->pNext->value.asString.string,
+                                                 HB_COMP_PARAM->currLine );
+                           }
+                           else if( fStrict )
+                           {
+                              hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, "unknown", "character" );
+                           }
+                        }
+                        else
+                        {
+                           hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, "unknown", "character" );
+                        }
+                     }
+                     else 
+                     {
+                        snprintf( buf, sizeof( buf ), "%d", (int) usCount );
+                        hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_COUNT, buf, "1 or 2" );
+                     }
+                  }
+                  else if( strcmp( "GETTEXT_NOOP", &pName->value.asSymbol[ 8 ] ) == 0 )
+                  {
+                     HB_EXPR_PTR   pExpr;
+                
+                     if( usCount == 1 )
+                     {
+                        if( pArg->ExprType == HB_ET_STRING && pArg->ulLength > 0 )
+                        {
+                           if( HB_COMP_PARAM->fI18n )
+                              hb_compI18nAdd( HB_COMP_PARAM, pArg->value.asString.string,
+                                              NULL, HB_COMP_PARAM->currLine );
+                        }
+                        else
+                        {
+                           hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, "unknown", "character" );
+                        }
+                     }
+                     else if( usCount == 2 )
+                     {
+                        if( pArg->pNext->ExprType == HB_ET_STRING && pArg->pNext->ulLength > 0 
+                            && pArg->ExprType == HB_ET_STRING && pArg->ulLength > 0 )
+                        {
+                           if( HB_COMP_PARAM->fI18n )
+                              hb_compI18nAdd( HB_COMP_PARAM, pArg->value.asString.string,
+                                              pArg->pNext->value.asString.string,
+                                              HB_COMP_PARAM->currLine );
+                        }
+                        else
+                        {
+                           hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_TYPE, "unknown", "character" );
+                        }
+                     }
+                     else 
+                     {
+                        snprintf( buf, sizeof( buf ), "%d", (int) usCount );
+                        hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PARAM_COUNT, buf, "1 or 2" );
+                     }
+               
+                     /* hb_i18n_gettext_noop() is not a real function. It is used to 
+                        force writing of string to .pot file. So, we should try to 
+                        replaced function call by first argument regardless fI18n flag 
+                        and warnings. 
+                     */
+                     if( usCount )
+                     {
+                        pParms->value.asList.pExprList = pArg->pNext; /* skip first parameter */
+                        pArg->pNext = NULL;
+                        HB_COMP_EXPR_FREE( pParms );
+                        HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
+                        memcpy( pSelf, pArg, sizeof( HB_EXPR ) );
+                        /* TODO: Why do we need to free this? It is used instead of pSelf. */
+                        HB_COMP_EXPR_FREE( pArg );
+                     }
                   }
                }
 #endif
