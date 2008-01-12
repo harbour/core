@@ -439,51 +439,6 @@ HB_EXPORT ULONG hb_itemGetCLen( PHB_ITEM pItem )
       return 0;
 }
 
-HB_EXPORT char * hb_itemLockReadCPtr( PHB_ITEM pItem, ULONG * pulLen )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemLockReadCPtr(%p,%p)", pItem, pulLen));
-
-   if( pItem && HB_IS_STRING( pItem ) )
-   {
-      if( pItem->item.asString.allocated == 0 )
-         hb_itemUnShareString( pItem );
-      if( pulLen )
-         *pulLen = pItem->item.asString.length;
-      hb_xRefInc( pItem->item.asString.value );
-      return pItem->item.asString.value;
-   }
-   else if( pulLen )
-      *pulLen = 0;
-
-   return NULL;
-}
-
-HB_EXPORT char * hb_itemLockWriteCPtr( PHB_ITEM pItem, ULONG * pulLen )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemLockWriteCPtr(%p,%p)", pItem, pulLen));
-
-   if( pItem && HB_IS_STRING( pItem ) )
-   {
-      hb_itemUnShareString( pItem );
-      if( pulLen )
-         *pulLen = pItem->item.asString.length;
-      hb_xRefInc( pItem->item.asString.value );
-      return pItem->item.asString.value;
-   }
-   else if( pulLen )
-      *pulLen = 0;
-
-   return NULL;
-}
-
-HB_EXPORT void hb_itemUnLockCPtr( char * pszString )
-{
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemUnLockCPtr(%p,%p)", pszString));
-
-   if( pszString )
-      hb_xRefFree( pszString );
-}
-
 HB_EXPORT ULONG hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemCopyC(%p, %s, %lu)", pItem, szBuffer, ulLen));
