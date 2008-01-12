@@ -445,6 +445,8 @@ HB_EXPORT char * hb_itemLockReadCPtr( PHB_ITEM pItem, ULONG * pulLen )
 
    if( pItem && HB_IS_STRING( pItem ) )
    {
+      if( pItem->item.asString.allocated == 0 )
+         hb_itemUnShareString( pItem );
       if( pulLen )
          *pulLen = pItem->item.asString.length;
       hb_xRefInc( pItem->item.asString.value );

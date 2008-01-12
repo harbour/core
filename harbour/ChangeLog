@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-12 13:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/itemapi.c
+    ! fixed hb_itemLockReadCPtr() used for static strings
+
 2008-01-11 22:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/itemapi.c
     ! use hb_xRefFree() instead of hb_xRefDec() in hb_itemUnLockCPtr()
