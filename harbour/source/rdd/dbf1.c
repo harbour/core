@@ -647,8 +647,17 @@ static void hb_dbfTableCrypt( DBFAREAP pArea, PHB_ITEM pPasswd, BOOL fEncrypt )
          BYTE * pOldCryptKey, * pNewCryptKey;
 
          pOldCryptKey = pArea->pCryptKey;
+         pArea->pCryptKey = NULL;
          hb_dbfPasswordSet( pArea, pPasswd, FALSE );
          pNewCryptKey = pArea->pCryptKey;
+         if( !fEncrypt && pNewCryptKey )
+         {
+            if( pOldCryptKey )
+               hb_xfree( pNewCryptKey );
+            else
+               pOldCryptKey = pNewCryptKey;
+            pNewCryptKey = NULL;
+         }
          for( ulRecNo = 1; ulRecNo <= ulRecords; ++ulRecNo )
          {
             pArea->pCryptKey = pOldCryptKey;

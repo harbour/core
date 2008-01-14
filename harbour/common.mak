@@ -1065,7 +1065,7 @@ HBDOC_EXE_OBJS = \
 
 # PDF support for HBDOC
 HBDOC_EXE_OBJS = \
-    $(HBDOC_EXE_OBJS)       	 \
+    $(HBDOC_EXE_OBJS)            \
     $(OBJ_DIR)\pdfhbdoc$(OBJEXT) \
     $(OBJ_DIR)\genpdf1$(OBJEXT)  \
 

@@ -35,7 +35,6 @@
  *          Sx_LockRetry()
  *          Sx_IsLocked()
  *          Sx_SetTrigger()
- *          Sx_SetPass()
  *          Sx_VFGet()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
@@ -555,13 +554,3 @@ function Sx_SetTrigger( nAction, cTriggerName, cRDD /* Harbour extensions */ )
    endif
 
 return cPrevTrigger
-
-function Sx_SetPass( cPass, nMode, cRdd /* Harbour extensions */ )
-
-   HB_SYMBOL_UNUSED( nMode )
-
-   if valtype( cPass ) == "C"
-      rddInfo( RDDI_PENDINGPASSWORD, cPass, cRdd )
-   endif
-
-return nil

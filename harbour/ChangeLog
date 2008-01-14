@@ -8,6 +8,28 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-14 19:35 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+    * replaced TAB with SPACEs
+
+  * harbour/source/rdd/dbcmd.c
+    * changed hb_retnl() in LASTREC() to hb_retnint() to increase maximum
+      record number to 2^32 - unsigned 32bit integer instead of signed one.
+
+  * harbour/source/rdd/dbf1.c
+    ! fixed possible memory leak/GPF when sx_DBFencrypt() is called when
+      table already has password set
+    * added support for password passing in sx_DBFdecrypt() - it's accepted
+      only when table has no password
+
+  * harbour/source/rdd/hbsix/sxcompat.prg
+    - removed SX_SETPASS()
+  * harbour/source/rdd/hbsix/sxtable.c
+    + added new SX_SETPASS() implementation which supports
+      some undocumented SIX3 actions
+    ! fixed problem with setting password for currently open table
+      with SX_SETPASS( <cPass> )
+
 2008-01-12 13:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
   * harbour/include/hbapiitm.h

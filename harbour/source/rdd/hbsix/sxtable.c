@@ -15,6 +15,7 @@
  *          Sx_Rollback()
  *          Sx_RLock()
  *          Sx_UnLock()
+ *          Sx_SetPass()
  *          Sx_DBFencrypt()
  *          Sx_DBFdecrypt()
  *          Sx_MemoPack()
@@ -280,6 +281,84 @@ HB_FUNC( SX_UNLOCK )
    }
 }
 
+HB_FUNC( SX_SETPASS )
+{
+   int iPCount = hb_pcount();
+   BOOL fResult = FALSE;
+   PHB_ITEM pItem;
+
+   if( iPCount >=1 )
+   {
+      if( ISCHAR( 1 ) )
+      {
+         AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+         if( pArea )
+         {
+            pItem = hb_itemParam( 1 );
+            if( SELF_INFO( pArea, DBI_PASSWORD, pItem ) == SUCCESS )
+               fResult = TRUE;
+            hb_itemRelease( pItem );
+         }
+      }
+   }
+   else if( iPCount >= 2 || iPCount <= 4 )
+   {
+      if( ISCHAR( 1 ) && ISNUM( 2 ) && ( iPCount < 3 || ISCHAR( 3 ) ) &&
+          ( iPCount < 4 || ISNUM( 4 ) ) )
+      {
+         /* Set pending password for table which will be open
+          * 3-rd and 4-th parameters are optional Harbour extensions
+          * with RDD name and connection number.
+          */
+         LPRDDNODE  pRDDNode;
+         USHORT     uiRddID;
+         const char * szDriver;
+
+         if( iPCount == 2 ) /* no RDD parameter, use default */
+            szDriver = hb_rddDefaultDrv( NULL );
+         else
+            szDriver = hb_parc( 3 );
+         pRDDNode = hb_rddFindNode( szDriver, &uiRddID );   /* find the RDDNODE */
+         if( pRDDNode )
+         {
+            pItem = hb_itemParam( 1 );
+            if( SELF_RDDINFO( pRDDNode, RDDI_PENDINGPASSWORD, hb_parnl( 4 ), pItem ) == SUCCESS )
+               fResult = TRUE;
+            hb_itemRelease( pItem );
+         }
+      }
+      else if( iPCount == 2 && ISNUM( 1 ) && ISCHAR( 2 ) )
+      {
+         AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+         if( pArea )
+         {
+            /* Undocumented SIX3 extension */
+            switch( hb_parni( 1 ) )
+            {
+               case 1:  /* return current password key in raw form */
+                  pItem = hb_itemNew( NULL );
+                  if( SELF_INFO( pArea, DBI_PASSWORD, pItem ) == SUCCESS )
+                     hb_itemReturn( pItem );
+                  hb_itemRelease( pItem );
+                  break;
+               case 2:  /* set raw password key */
+                  /* not implemented */
+                  break;
+               case 3:  /* mark table as encrypted */
+                  /* intentionally not implemented */
+                  break;
+               case 4:  /* mark table as decrypted */
+                  /* intentionally not implemented */
+                  break;
+            }
+            return;
+         }
+      }
+   }
+
+   hb_retl( fResult );
+}
+
 HB_FUNC( SX_DBFENCRYPT )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -287,7 +366,12 @@ HB_FUNC( SX_DBFENCRYPT )
 
    if( pArea )
    {
+      /* Optional parameter with password is Harbour extension */
+#ifdef HB_SIX3_STRICT
+      PHB_ITEM pItem = hb_itemNew( NULL );
+#else
       PHB_ITEM pItem = hb_itemParam( 1 );
+#endif
       if( SELF_INFO( pArea, DBI_ENCRYPT, pItem ) == SUCCESS )
          fResult = hb_itemGetL( pItem );
       hb_itemRelease( pItem );

@@ -1018,7 +1018,7 @@ HB_FUNC( LASTREC )
    if( pArea )
       SELF_RECCOUNT( pArea, &ulRecCount );
 
-   hb_retnl( ulRecCount );
+   hb_retnint( ulRecCount );
 }
 
 HB_FUNC( LOCK )
