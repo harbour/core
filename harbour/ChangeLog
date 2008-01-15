@@ -8,6 +8,72 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-16 01:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  + harbout/contrib/hbzlib
+    + added support for zlib library and zip files (based on 
+      minizip)
+  + harbour/contrib/hbzlib/zconf.h
+  + harbour/contrib/hbzlib/zlib.h
+    + zlib include files
+  + harbour/contrib/hbzlib/zip.h
+  + harbour/contrib/hbzlib/unzip.h
+    + minizip include files
+  + harbour/contrib/hbzlib/ioapi.c
+  + harbour/contrib/hbzlib/zip.c
+  + harbour/contrib/hbzlib/unzip.c
+    + minizip source files. Some fixes are applied to avoid compile 
+      time warning and errors, see readme.txt for list
+    ; I've compiled with BCC only, please, check other compilers
+  + harbour/contrib/hbzlib/hbzlib.c
+    + zlib wrapper functions. Przemyslaw Czerpak is author of this code. 
+      The file was posted to developers mailing list on 2007-05-17. 
+      I think licence statments in the begining of file gives permission 
+      to include it into SVN.
+    * HB_UNCOMPRESSLEN() function added. Source copied from Przemyslaw's
+      email on 2008-01-10.
+  + harbour/contrib/hbzlib/hbmzip.c
+    + wrapper functions for minizip library
+      Function names uses convention:
+      - HB_ZIP*() - manages compression of .zip file:
+           HB_ZIPOPEN(), HB_ZIPCLOSE()
+      - HB_ZIPFILE*() - manages compression of files inside .zip:
+           HB_ZIPFILECREATE(), HB_ZIPFILEWRITE(), HB_ZIPFILECLOSE()
+      - HB_UNZIP*() - manages decompression of .zip fileL
+           HB_UNZIPOPEN(), HB_UNZIPCLOSE()
+      - HB_UNZIPFILE*() - manages decompression of files inside .zip
+           HB_UNZIPFILEOPEN(), HB_UNZIPFILEREAD(), HB_UNZIPFILECLOSE(),
+           HB_UNZIPFILEFIRST(), HB_UNZIPFILENEXT(), HB_UNZIPFILEPOS(), 
+           HB_UNZIPFILEGOTO(), HB_UNZIPFILEINFO()
+      Parameters of functions are documented inside source files.
+    + implemented some higher level functions. These function are not 
+      wrapper of minizip:
+      HB_ZIPSTOREFILE(), HB_UNZIPEXTRACTCURRENTFILE()
+    ; minizip gives low level access on zip files. This could be a 
+      problem if you not going to put your fingers on internals, but 
+      just want to compress/decompress files. Because managing of 
+      file attributes is a little complicated. These higher level 
+      functions do the job.
+    ; please test code under linux. Source is written using docs only, 
+      without test or deeper knowledge.
+  + harbour/contrib/hbzlib/hbzlib.ch
+    + defines for zlib and minizip libraries
+    ; I've used HB_ZLIB_* and HB_ZIP_* prefixes, because some original 
+      names of minizip library are too general, ex., APPEND_STATUS_CREATE
+      If you want to use original define names we change this.
+  + harbour/contrib/hbzlib/readme.txt
+    * some comments on the source of libraries and ChangeLog for minizip 
+      files
+  + harbour/contrib/hbzlib/tests/myzip.prg
+  + harbour/contrib/hbzlib/tests/myunzip.prg
+    + tiny compression/decompression utilities written in Harbour
+  + harbour/contrib/hbzlib/Makefile
+  + harbour/contrib/hbzlib/make_b32.bat
+  + harbour/contrib/hbzlib/make_vc.bat
+    + makefiles written using another contrib's makefiles as template
+    ; I'm not makefiles guru, please test it. I've also used command line 
+      parameters: -DNOCRYPT -DNOUNCRYPT, to compile minizip. I don't know 
+      howto include these to our makefiles
+
 2008-01-15 19:30 UTC+0100 Tomaz Zupan (tomaz.zupan/at/orpo.si)
   * harbour.spec
     * Recognize more Mandriva releases
