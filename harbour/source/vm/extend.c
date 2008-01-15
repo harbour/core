@@ -434,8 +434,6 @@ HB_EXPORT double  hb_parnd( int iParam, ... )
          return ( double ) pItem->item.asInteger.value;
       else if( HB_IS_LONG( pItem ) )
          return ( double ) pItem->item.asLong.value;
-      else if( HB_IS_LOGICAL( pItem ) )
-         return ( double ) pItem->item.asLogical.value;
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -469,8 +467,6 @@ HB_EXPORT int  hb_parni( int iParam, ... )
          return ( int ) pItem->item.asLong.value;
       else if( HB_IS_DOUBLE( pItem ) )
          return ( int ) pItem->item.asDouble.value;
-      else if( HB_IS_LOGICAL( pItem ) )
-         return ( int ) pItem->item.asLogical.value;
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -510,8 +506,6 @@ HB_EXPORT long  hb_parnl( int iParam, ... )
 #endif
       else if( HB_IS_DATE( pItem ) )
          return ( long ) pItem->item.asDate.value;
-      else if( HB_IS_LOGICAL( pItem ) )
-         return ( long ) pItem->item.asLogical.value;
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -552,8 +546,6 @@ HB_EXPORT LONGLONG  hb_parnll( int iParam, ... )
 #endif
       else if( HB_IS_DATE( pItem ) )
          return ( LONGLONG ) pItem->item.asDate.value;
-      else if( HB_IS_LOGICAL( pItem ) )
-         return ( LONGLONG ) pItem->item.asLogical.value;
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -594,8 +586,6 @@ HB_EXPORT HB_LONG  hb_parnint( int iParam, ... )
 #endif
       else if( HB_IS_DATE( pItem ) )
          return ( HB_LONG ) pItem->item.asDate.value;
-      else if( HB_IS_LOGICAL( pItem ) )
-         return ( HB_LONG ) pItem->item.asLogical.value;
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
