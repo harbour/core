@@ -2576,7 +2576,7 @@ static ERRCODE hb_usrRddInfo( LPRDDNODE pRDD, USHORT uiInfoType, ULONG ulConnect
 }
 
 
-static RDDFUNCS usrFuncTable =
+static const RDDFUNCS usrFuncTable =
 {
    /* Movement and positioning methods */
    /* ( DBENTRYP_BP )   */ hb_usrBof,         /* Bof        */
@@ -2702,7 +2702,7 @@ static RDDFUNCS usrFuncTable =
    /* ( DBENTRYP_SVP )  */ NULL               /* WhoCares */
 };
 
-static RDDFUNCS rddFuncTable =
+static const RDDFUNCS rddFuncTable =
 {
    /* Movement and positioning methods */
    /* ( DBENTRYP_BP )   */ NULL,              /* Bof        */
@@ -2847,7 +2847,8 @@ HB_FUNC( USRRDD_GETFUNCTABLE )
    if( puiCount && pSelfTable && pSuperTable && pMethods )
    {
       RDDFUNCS funcTable;
-      DBENTRYP_V * pFunction, * pUsrFunction, * pRddFunction;
+      DBENTRYP_V * pFunction;
+      const DBENTRYP_V * pUsrFunction, * pRddFunction;
 
       * puiCount = RDDFUNCSCOUNT;
       uiSize = ( USHORT ) hb_arrayLen( pMethods );
