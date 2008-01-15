@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-15 14:27 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/macro.c
+    ! make macro substitution before macro compilation - Clipper
+      compatible behavior - fix borrowed from xHarbour
+    ! do not overwrite 1-st error object by others which can appear
+      during macro TYPE() checking
+
 2008-01-14 13:44 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
   * source/vm/extend.c
     * Undo Added conversion from logical params in hb_par* functions.

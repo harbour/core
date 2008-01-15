@@ -152,9 +152,9 @@ static HB_ERROR_HANDLE( hb_macroErrorType )
    HB_MACRO_PTR pMacro = ( HB_MACRO_PTR ) ErrorInfo->Cargo;
 
    /* copy error object for later diagnostic usage */
-   if( pMacro->pError )
-      hb_itemRelease( pMacro->pError );
-   pMacro->pError = hb_itemNew( ErrorInfo->Error );
+   if( !pMacro->pError )
+      pMacro->pError = hb_itemNew( ErrorInfo->Error );
+
    pMacro->status &= ~HB_MACRO_CONT;
 
    /* ignore rest of compiled code */
@@ -389,6 +389,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
    {
       HB_MACRO struMacro;
       int iStatus;
+      BOOL fFree;
 #ifdef HB_MACRO_STATEMENTS
       char * pText;
       char * pOut;
@@ -398,8 +399,21 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
       struMacro.Flags      = HB_MACRO_GEN_PUSH;
       struMacro.uiNameLen  = HB_SYMBOL_NAME_LEN;
       struMacro.status     = HB_MACRO_CONT;
-      struMacro.string     = pItem->item.asString.value;
       struMacro.length     = pItem->item.asString.length;
+      /*
+       * Clipper appears to expand nested macros staticly vs. by
+       * Macro Parser, f.e.:
+       *       PROCEDURE Main()
+       *          LOCAL cText
+       *          cText := "( v := 'A' ) + &v"
+       *          M->v := "'B'"
+       *          ? "Macro:", cText
+       *          ? "Result:", &cText
+       *          ? "Type:", type(cText)
+       *       RETURN
+       */
+      struMacro.string = hb_macroTextSubst( pItem->item.asString.value, &struMacro.length );
+      fFree = struMacro.string != pItem->item.asString.value;
 
       if( iContext != 0 )
       {
@@ -458,7 +472,6 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
          hb_xfree( pOut );
       }
 #endif
-
       hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
       {
@@ -469,6 +482,9 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
       }
       else
          hb_macroSyntaxError( &struMacro );
+
+      if( fFree )
+         hb_xfree( struMacro.string );
 
       hb_macroDelete( &struMacro );
    }
