@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-15 10:31 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+    ! do not define [U]LONGLONG when HB_DONT_DEFINE_BASIC_TYPES macro
+      is set
+
 2008-01-15 10:21 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/usrrdd/usrrdd.c
     * added missing 'const' to few variable declarations

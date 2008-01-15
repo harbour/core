@@ -218,7 +218,7 @@
 
 #ifndef HB_LONG_LONG_OFF
 
-   #if ! defined(_WINNT_H)
+   #if ! defined(HB_DONT_DEFINE_BASIC_TYPES) && ! defined(_WINNT_H)
       #if !defined(LONGLONG)
          #if defined(__GNUC__)
             typedef long long LONGLONG;
