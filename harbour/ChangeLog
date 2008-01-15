@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-14 12:28 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
+  * source/vm/extend.c
+    * Added conversion from logical params in hb_par* functions.
+      ( thks to Juan Gálvez )
+
 2008-01-15 10:31 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbdefs.h
     ! do not define [U]LONGLONG when HB_DONT_DEFINE_BASIC_TYPES macro
