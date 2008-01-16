@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-16 12:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+   + contrib/hbzlib/common.mak
+     + Added missing non-GNU make file.
+     + Added hbzlib to "all" non-GNU make batches.
+
 2008-01-16 03:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   + harbour/contrib/hbzlib/crypt.h
     + added modified for minizp crypt.h - it comes from minizip

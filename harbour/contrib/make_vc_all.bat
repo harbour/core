@@ -32,7 +32,7 @@ rem *******************************************************
 set _HB_DIRS=hbrddado hbbmcdx hbbtree hbgtwvg hbct hbgt hbmisc hbnf hbmsql
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %__BATWORKER__% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=hbole hbziparch hbodbc hbtpathy hbtip hbw32 xhb
+set _HB_DIRS=hbole hbziparch hbodbc hbtpathy hbtip hbw32 hbzlib xhb
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %__BATWORKER__% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=hbclipsm hbw32ddr
