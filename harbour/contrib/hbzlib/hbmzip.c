@@ -65,6 +65,9 @@
 #elif defined( HB_OS_UNIX )
    #include <sys/types.h>
    #include <sys/stat.h>
+   #include <unistd.h>
+   #include <time.h>
+   #include <utime.h>
 #endif
 
 
@@ -502,6 +505,8 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName )
       struct stat statbuf;
       struct tm   st;
 
+      ulExtAttr = 0;
+
       if( stat( szFileName, &statbuf ) == 0 )
       {
          if( S_ISDIR( statbuf.st_mode ) )
@@ -644,7 +649,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName )
 
    if( szFileName )
    {
-      hb_strncpy( szName, szFileName, sizeof( szName ) );
+      hb_strncpy( szName, szFileName, sizeof( szName ) - 1 );
    }
 
    ulLen = strlen( szName );
@@ -658,7 +663,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName )
       cSep = szName[ ulPos ];
 
       /* allow both path separators, ignore terminating path separator */
-      if( cSep == '\\' || cSep == '/' && ulPos < ulLen - 1 )
+      if( ( cSep == '\\' || cSep == '/' ) && ulPos < ulLen - 1 )
       {
          szName[ ulPos ] = '\0'; 
          hb_fsMkDir( szName );
@@ -723,9 +728,8 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName )
    }
 #elif defined( HB_OS_UNIX )
    {
-      struct utimebuf  utim;
+      struct utimbuf   utim;
       struct tm        st;
-      time_t           tim;
 
       chmod( szName, ( ufi.external_fa & 0x00070000 ) >> 16 | 
                      ( ufi.external_fa & 0x00380000 ) >> 15 | 
@@ -735,13 +739,13 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName )
       st.tm_min = ufi.tmu_date.tm_min;
       st.tm_hour = ufi.tmu_date.tm_hour;
       st.tm_mday = ufi.tmu_date.tm_mday;
-      st.tm_mon = ufi.tmz_date.tm_mon + 1; 
+      st.tm_mon = ufi.tmu_date.tm_mon + 1; 
       st.tm_year = ufi.tmu_date.tm_year;
 
       utim.actime = mktime( &st );
       utim.modtime = utim.actime;
 
-      utime( szFile, &utm );
+      utime( szName, &utim );
    }
 #else
    {

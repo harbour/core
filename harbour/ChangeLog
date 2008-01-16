@@ -8,6 +8,25 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-16 03:59 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + harbour/contrib/hbzlib/crypt.h
+    + added modified for minizp crypt.h - it comes from minizip
+      source code and it's modified infozip file
+
+  * harbour/contrib/hbzlib/zip.c
+    * disabled unused functions to eliminate warning
+
+  * harbour/contrib/hbzlib/unzip.c
+    * added suggested by compiler statement markers {} to pacify warnings
+
+  * harbour/contrib/hbzlib/hbmzip.c
+    ! added missing parenthesis in one logical expression
+    * updated for Linux compilation - not tested yet but it
+      can be cleanly compiled
+
+  * harbour/contrib/hbzlib/hbzlib.c
+    * synced with some minor modifications in my local copy
+
 2008-01-16 03:18 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/macro.c
     ! strip trailing and leading SPACEs and TABs from macro compiled
