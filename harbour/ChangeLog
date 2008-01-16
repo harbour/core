@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-16 03:18 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/macro.c
+    ! strip trailing and leading SPACEs and TABs from macro compiled
+      symbols
+
 2008-01-16 01:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   + harbout/contrib/hbzlib
     + added support for zlib library and zip files (based on 

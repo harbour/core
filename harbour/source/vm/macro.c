@@ -659,7 +659,15 @@ char * hb_macroTextSymbol( char *szString, ULONG ulLength, BOOL *pfNewString )
 
       szResult = hb_macroTextSubst( szString, &ulLength );
 
-      while( ulLength && szResult[ ulLength - 1 ] == ' ' )
+      while( ulLength && ( szResult[ 0 ] == ' ' || szResult[ 0 ] == '\t' ) )
+      {
+         ++szResult;
+         ++szString;
+         --ulLength;
+      }
+
+      while( ulLength && ( szResult[ ulLength - 1 ] == ' ' ||
+                           szResult[ ulLength - 1 ] == '\t' ) )
          --ulLength;
 
       /* NOTE: This uses _a-zA-Z0-9 pattern to check for a valid name
