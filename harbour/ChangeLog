@@ -8,6 +8,31 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-17 16:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbzlib/ioapi.c
+  * harbour/contrib/hbzlib/zip.c
+  * harbour/contrib/hbzlib/unzip.c
+  * harbour/contrib/hbzlib/crypt.h
+  * harbour/contrib/hbzlib/hbzlib.c
+  * harbour/contrib/hbzlib/hbmzip.c
+    * casting for C++ compilation
+    * changed function declaration for C++ compilation
+    * removed #include "errno.h" - some platforms do not have it
+    * updated WIN32 API for WinCE and UNICODE builds
+    * use localtime_r() only for Linux builds - TODO: create our own
+      API for it and remove all #if... from core code so we will have
+      it only in one place easy to update for different platforms
+
+  * harbour/contrib/hbzlib/common.mak
+    * replaced TABs with SPACEs
+
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+  * harbour/harbour.spec
+  * harbour/bin/hb-func.sh
+  * harbour/contrib/Makefile
+    + added hbzlib to contrib libraries compiled by default
+
 2008-01-16 12:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/make_b32_all.bat
    * contrib/make_vc_all.bat

@@ -11,6 +11,7 @@ DIRS=\
 	hbmisc \
 	hbnf \
 	hbclipsm \
+	hbzlib \
 	xhb \
 #	examples \
 

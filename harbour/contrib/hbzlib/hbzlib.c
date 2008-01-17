@@ -155,9 +155,9 @@ HB_FUNC( HB_COMPRESS )
          if( pDest )
          {
             if( ISNUM( 4 ) )
-               iResult = compress2( ( Bytef * ) pDest, &ulDstLen, szData, ulLen, hb_parni( 4 ) );
+               iResult = compress2( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ulLen, hb_parni( 4 ) );
             else
-               iResult = compress( ( Bytef * ) pDest, &ulDstLen, szData, ulLen );
+               iResult = compress( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ulLen );
 
             if( !pBuffer )
             {
@@ -218,7 +218,7 @@ HB_FUNC( HB_UNCOMPRESS )
 
          if( pDest )
          {
-            iResult = uncompress( ( Bytef * ) pDest, &ulDstLen, szData, ulLen );
+            iResult = uncompress( ( Bytef * ) pDest, &ulDstLen, ( Bytef * ) szData, ulLen );
 
             if( !pBuffer )
             {
@@ -259,7 +259,7 @@ static HB_GARBAGE_FUNC( hb_gz_Destructor )
 
 static gzFile hb_gzParam( int iParam )
 {
-   gzFile * gzHolder = hb_parptrGC( hb_gz_Destructor, iParam );
+   gzFile * gzHolder = ( gzFile * ) hb_parptrGC( hb_gz_Destructor, iParam );
 
    if( gzHolder && * gzHolder )
       return * gzHolder;
@@ -315,7 +315,7 @@ HB_FUNC( HB_GZDOPEN )
  */
 HB_FUNC( HB_GZCLOSE )
 {
-   gzFile * gzHolder = hb_parptrGC( hb_gz_Destructor, 1 );
+   gzFile * gzHolder = ( gzFile * ) hb_parptrGC( hb_gz_Destructor, 1 );
 
    if( gzHolder )
    {

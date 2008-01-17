@@ -516,6 +516,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbbtree.a
 %{_libdir}/%{name}/libhbmisc.a
 %{_libdir}/%{name}/libhbct.a
+%{_libdir}/%{name}/libhbzlib.a
 %{_libdir}/%{name}/libhbtip.a
 %{_libdir}/%{name}/libxhb.a
 %{_libdir}/%{name}/libhbgt.a

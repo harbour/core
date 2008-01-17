@@ -88,7 +88,7 @@ mk_hbgetlibsctb()
         then
             libs="$libs gtwin"
         fi
-        echo -n "$libs hbrddads hbct hbnf hbtip xhb hbgd hbodbc hbpg hbmysql hbrddado hbw32 hbgtwvg"
+        echo -n "$libs hbrddads hbct hbnf hbzlib hbtip xhb hbgd hbodbc hbpg hbmysql hbrddado hbw32 hbgtwvg"
     else
         echo -n "$@"
     fi
@@ -603,7 +603,7 @@ mk_hblibso()
     for l in ${hb_libs}
     do
         case $l in
-            debug|profiler|fm|hbodbc|gtalleg|rddads) ;;
+            debug|profiler|fm|hbodbc|gtalleg|hbrddads) ;;
             *)
                 ls="lib${l}.a"
                 if [ -f lib${l}mt.a ]
