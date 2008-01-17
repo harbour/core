@@ -57,6 +57,7 @@
 %endif
 %endif
 
+
 %define name     harbour
 %define dname    Harbour
 %define version  1.1.1
