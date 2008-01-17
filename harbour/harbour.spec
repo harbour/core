@@ -56,7 +56,6 @@
 %endif
 %endif
 %endif
-%endif
 
 %define name     harbour
 %define dname    Harbour
