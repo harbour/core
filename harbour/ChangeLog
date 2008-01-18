@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-18 01:39 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbzlib/hbmzip.c
+    * cast result of hb_fsGetOsHandle() to expected OS handle type
+      - thanks to Jorge
+
 2008-01-18 01:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbzlib/zip.c
   * harbour/contrib/hbzlib/unzip.c
