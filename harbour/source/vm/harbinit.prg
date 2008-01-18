@@ -82,7 +82,9 @@ PROCEDURE ClipInit
 
    /* TOFIX: In Clipper this function is not called from here CLIPINIT(). */
    /* NOTE: In Clipper __SETHELPK() is called *after* ERRORSYS(). */
-   __SetHelpK()
+   IF Type( "HELP()" ) == "UI"
+      __SetHelpK()
+   ENDIF
 
    RETURN
 

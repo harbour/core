@@ -107,7 +107,7 @@ HB_FUNC( HB_COMPRESSBOUND )
    if( ISCHAR( 1 ) )
       hb_retnint( compressBound( hb_parclen( 1 ) ) );
    else if( ISNUM( 1 ) )
-      hb_retnint( compressBound( hb_parnint( 1 ) ) );
+      hb_retnint( compressBound( ( uLong ) hb_parnint( 1 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -148,7 +148,8 @@ HB_FUNC( HB_COMPRESS )
          }
          else
          {
-            ulDstLen = ISNUM( 2 ) ? hb_parnint( 2 ) : compressBound( ulLen );
+            ulDstLen = ISNUM( 2 ) ? ( uLong ) hb_parnint( 2 ) :
+                                    compressBound( ulLen );
             pDest = ( char * ) hb_xalloc( ulDstLen + 1 );
          }
 
@@ -211,7 +212,7 @@ HB_FUNC( HB_UNCOMPRESS )
          }
          else
          {
-            ulDstLen = ISNUM( 2 ) ? hb_parnint( 2 ) :
+            ulDstLen = ISNUM( 2 ) ? ( uLong ) hb_parnint( 2 ) :
                                     hb_zlibUncompressedSize( szData, ulLen );
             pDest = ( char * ) hb_xalloc( ulDstLen + 1 );
          }
@@ -466,7 +467,7 @@ HB_FUNC( HB_GZSEEK )
    {
       gzFile gz = hb_gzParam( 1 );
       if( gz )
-         hb_retnint( gzseek( gz, hb_parnint( 2 ), ISNUM( 3 ) ?
+         hb_retnint( gzseek( gz, ( z_off_t ) hb_parnint( 2 ), ISNUM( 3 ) ?
                              hb_parni( 3 ) : SEEK_SET ) );
    }
    else

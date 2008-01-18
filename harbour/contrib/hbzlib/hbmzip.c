@@ -577,7 +577,7 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName )
             FILETIME    ftutc, ft;
             SYSTEMTIME  st;
 
-            if( GetFileTime( LongToHandle( hFile ), NULL, NULL, &ftutc ) &&
+            if( GetFileTime( hb_fsGetOsHandle( hFile ), NULL, NULL, &ftutc ) &&
                 FileTimeToLocalFileTime( &ftutc, &ft ) & 
                 FileTimeToSystemTime( &ft, &st ) )
             {
@@ -711,7 +711,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName )
             if( SystemTimeToFileTime( &st, &ft ) &&
                 LocalFileTimeToFileTime( &ft, &ftutc ) )
             {
-               SetFileTime( LongToHandle( hFile ), &ftutc, &ftutc, &ftutc );
+               SetFileTime( hb_fsGetOsHandle( hFile ), &ftutc, &ftutc, &ftutc );
             }
          }
 #endif

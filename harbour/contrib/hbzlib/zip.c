@@ -383,7 +383,7 @@ local int ziplocal_getShort (
     uLong *pX)
 {
     uLong x ;
-    int i;
+    int i = 0;
     int err;
 
     err = ziplocal_getByte(pzlib_filefunc_def,filestream,&i);
@@ -411,7 +411,7 @@ local int ziplocal_getLong (
     uLong *pX)
 {
     uLong x ;
-    int i;
+    int i = 0;
     int err;
 
     err = ziplocal_getByte(pzlib_filefunc_def,filestream,&i);
