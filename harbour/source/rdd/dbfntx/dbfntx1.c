@@ -5983,7 +5983,7 @@ static ERRCODE ntxClose( NTXAREAP pArea )
 static ERRCODE ntxStructSize( NTXAREAP pArea, USHORT * uiSize )
 
 {
-   HB_TRACE(HB_TR_DEBUG, ("ntxStrucSize(%p, %p)", pArea, uiSize));
+   HB_TRACE(HB_TR_DEBUG, ("ntxStructSize(%p, %p)", pArea, uiSize));
    HB_SYMBOL_UNUSED( pArea );
 
    * uiSize = sizeof( NTXAREA );
@@ -6293,7 +6293,8 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
             if( fOld )
                fOld = ( hb_fsSeekLarge( hFile, 0, FS_END ) != 0 );
          }
-      } while( bRetry );
+      }
+      while( bRetry );
 
       if( hFile == FS_ERROR )
       {
@@ -6354,6 +6355,8 @@ static ERRCODE ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    if( ! iTag && pIndex->iTags == CTX_MAX_TAGS )
    {
+      if( fLocked )
+         hb_ntxIndexUnLockWrite( pIndex );
       hb_vmDestroyBlockOrMacro( pKeyExp );
       if( pForExp != NULL )
          hb_vmDestroyBlockOrMacro( pForExp );
@@ -7465,7 +7468,7 @@ static ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_
 
    HB_TRACE(HB_TR_DEBUG, ("ntxRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
-   pData = ( LPDBFDATA ) pRDD->lpvCargo;
+   pData = NTXNODE_DATA( pRDD );
 
    switch( uiIndex )
    {
@@ -7494,9 +7497,9 @@ static ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_
 #if defined( HB_NTX_NOMULTITAG )
          hb_itemPutL( pItem, FALSE );
 #else
-         BOOL fMultiTag = NTXNODE_DATA( pRDD )->fMultiTag;
+         BOOL fMultiTag = pData->fMultiTag;
          if( hb_itemType( pItem ) == HB_IT_LOGICAL )
-            NTXNODE_DATA( pRDD )->fMultiTag = hb_itemGetL( pItem );
+            pData->fMultiTag = hb_itemGetL( pItem );
          hb_itemPutL( pItem, fMultiTag );
 #endif
          break;
@@ -7504,36 +7507,36 @@ static ERRCODE ntxRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_
 
       case RDDI_SORTRECNO:
       {
-         BOOL fSortRecNo = NTXNODE_DATA( pRDD )->fSortRecNo;
+         BOOL fSortRecNo = pData->fSortRecNo;
          if( hb_itemType( pItem ) == HB_IT_LOGICAL )
-            NTXNODE_DATA( pRDD )->fSortRecNo = hb_itemGetL( pItem );
+            pData->fSortRecNo = hb_itemGetL( pItem );
          hb_itemPutL( pItem, fSortRecNo );
          break;
       }
 
       case RDDI_STRUCTORD:
       {
-         BOOL fStruct = NTXNODE_DATA( pRDD )->fStruct;
+         BOOL fStruct = pData->fStruct;
          if( hb_itemType( pItem ) == HB_IT_LOGICAL )
-            NTXNODE_DATA( pRDD )->fStruct = hb_itemGetL( pItem );
+            pData->fStruct = hb_itemGetL( pItem );
          hb_itemPutL( pItem, fStruct );
          break;
       }
 
       case RDDI_STRICTSTRUCT:
       {
-         BOOL fStrictStruct = NTXNODE_DATA( pRDD )->fStrictStruct;
+         BOOL fStrictStruct = pData->fStrictStruct;
          if( hb_itemType( pItem ) == HB_IT_LOGICAL )
-            NTXNODE_DATA( pRDD )->fStrictStruct = hb_itemGetL( pItem );
+            pData->fStrictStruct = hb_itemGetL( pItem );
          hb_itemPutL( pItem, fStrictStruct );
          break;
       }
 
       case RDDI_MULTIKEY:
       {
-         BOOL fMultiKey = NTXNODE_DATA( pRDD )->fMultiKey;
+         BOOL fMultiKey = pData->fMultiKey;
          if( hb_itemType( pItem ) == HB_IT_LOGICAL )
-            NTXNODE_DATA( pRDD )->fMultiKey = hb_itemGetL( pItem );
+            pData->fMultiKey = hb_itemGetL( pItem );
          hb_itemPutL( pItem, fMultiKey );
          break;
       }

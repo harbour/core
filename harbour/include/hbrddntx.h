@@ -212,12 +212,12 @@ typedef struct _TAGINFO
    HB_NTXSCOPE top;
    HB_NTXSCOPE bottom;
 
-   BOOL        fTagName;      /* remove */
+   USHORT      Signature;
+
+   BOOL        fTagName;
    BOOL        fUsrDescend;
    BOOL        AscendKey;
    BOOL        UniqueKey;
-
-   BOOL        Signature;
 
    BOOL        Custom;
    BOOL        ChgOnly;

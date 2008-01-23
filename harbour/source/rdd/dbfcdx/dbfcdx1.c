@@ -705,7 +705,7 @@ static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEY pKey, PHB_ITEM pItem, LPCDXTAG pTag, 
          case 'L':
             pItem = hb_itemPutL( pItem, pKey->val[0] == 'T' );
             break;
-        default:
+         default:
             if ( pItem )
                hb_itemClear( pItem );
             else
@@ -772,7 +772,8 @@ static BOOL hb_cdxEvalCond( CDXAREAP pArea, PHB_ITEM pCondItem, BOOL fSetWA )
    int iCurrArea = 0;
    BOOL fRet;
 
-   if ( fSetWA ) {
+   if ( fSetWA )
+   {
       iCurrArea = hb_rddGetCurrentWorkAreaNumber();
       if ( iCurrArea != pArea->uiArea )
          hb_rddSelectWorkAreaNumber( pArea->uiArea );
@@ -7398,7 +7399,9 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          uiLen = 1;
          break;
       case 'C':
-         uiLen = HB_CDXMAXKEY( hb_itemGetCLen( pResult ) );
+         uiLen = hb_itemGetCLen( pResult );
+         if( uiLen > CDX_MAXKEY )
+            uiLen = CDX_MAXKEY;
          break;
       default:
          bType = 'U';
@@ -7406,6 +7409,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    }
    hb_itemRelease( pResult );
 
+   /* Make sure KEY has proper type and iLen is not 0 */
    if ( bType == 'U' || uiLen == 0 )
    {
       hb_vmDestroyBlockOrMacro( pKeyExp );
@@ -7426,10 +7430,10 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       if ( pArea->lpdbOrdCondInfo->itmCobFor )
          /* If we have a codeblock for the conditional expression, use it */
          pForExp = hb_itemNew( pArea->lpdbOrdCondInfo->itmCobFor );
-      else if ( pArea->lpdbOrdCondInfo->abFor )
+      else if ( szFor )
       {
          /* Otherwise, try compiling the conditional expression string */
-         if ( SELF_COMPILE( (AREAP) pArea, pArea->lpdbOrdCondInfo->abFor ) == FAILURE )
+         if ( SELF_COMPILE( (AREAP) pArea, ( BYTE * ) szFor ) == FAILURE )
          {
             hb_vmDestroyBlockOrMacro( pKeyExp );
             SELF_GOTO( ( AREAP ) pArea, ulRecNo );
@@ -7471,7 +7475,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
     * The following scheme implemented:
     * 1. abBagName == NULL   -> add the Tag to the structural index
     * 2. atomBagName == NULL -> overwrite any index file of abBagName
-    * 3. ads the Tag to index file
+    * 3. add the Tag to index file
     */
 
    hb_cdxCreateFName( pArea, ( char * ) pOrderInfo->abBagName,
@@ -7541,8 +7545,8 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
             if ( !fNewFile )
                fNewFile = ( hb_fsSeekLarge( hFile, 0, FS_END ) == 0 );
          }
-
-      } while ( bRetry );
+      }
+      while ( bRetry );
 
       if ( hFile != FS_ERROR )
       {

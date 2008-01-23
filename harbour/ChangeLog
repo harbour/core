@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-23 02:24 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbrddntx.h
+    ! fixed type of Signature field in tag structure
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! fixed possible leaving locked index when number of tags
+      exceed 63. 63 is maximum number of tags in multi tag NTX
+      file
+    ! fixed typo in HB_TRACE message
+    % simplify NTXNODE data access in RDDINFO method
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * formatting, some minor cleanup and fixed typo in comment
+
 2008-01-18 02:11 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/hbrddads/make_b32.bat
    * contrib/hbrddads/make_vc.bat
