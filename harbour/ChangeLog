@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-25 17:55 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/radiogrp.prg
+     ! Minor formatting.
+
 2008-01-25 16:32 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    - contrib/hbzlib/zlib.h
    - contrib/hbzlib/zconf.h

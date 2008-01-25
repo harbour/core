@@ -147,7 +147,7 @@ METHOD addItem( oRadioButton ) CLASS RADIOGROUP
 METHOD delItem( nPos ) CLASS RADIOGROUP
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
-      Adel( ::aItems[ nPos ] )
+      ADel( ::aItems[ nPos ] )
       ASize( ::aItems, --::nItemCount )
    ENDIF
 
