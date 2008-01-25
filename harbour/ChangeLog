@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-25 15:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/source/compiler/hbmain.c
+    ! fixed a few /w3 memory leaks 
+
 2008-01-25 10:47 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
    * contrib/make_b32_all.bat
    * contrib/make_vc_all.bat
@@ -130,7 +134,7 @@
       symbols
 
 2008-01-16 01:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
-  + harbout/contrib/hbzlib
+  + harbour/contrib/hbzlib
     + added support for zlib library and zip files (based on
       minizip)
   + harbour/contrib/hbzlib/zconf.h
@@ -143,12 +147,12 @@
   + harbour/contrib/hbzlib/zip.c
   + harbour/contrib/hbzlib/unzip.c
     + minizip source files. Some fixes are applied to avoid compile
-      time warning and errors, see readme.txt for list
+      time warnings and errors, see readme.txt for list
     ; I've compiled with BCC only, please, check other compilers
   + harbour/contrib/hbzlib/hbzlib.c
     + zlib wrapper functions. Przemyslaw Czerpak is author of this code.
       The file was posted to developers mailing list on 2007-05-17.
-      I think licence statments in the begining of file gives permission
+      I think licence statements in the begining of file gives permission
       to include it into SVN.
     * HB_UNCOMPRESSLEN() function added. Source copied from Przemyslaw's
       email on 2008-01-10.

@@ -4462,6 +4462,10 @@ void hb_compCompileEnd( HB_COMP_DECL )
    {
       PCOMDECLARED pDeclared = HB_COMP_PARAM->pReleaseDeclared;
       HB_COMP_PARAM->pReleaseDeclared = pDeclared->pNext;
+      if( pDeclared->cParamTypes )
+         hb_xfree( ( void * ) pDeclared->cParamTypes );
+      if( pDeclared->pParamClasses )
+         hb_xfree( ( void * ) pDeclared->pParamClasses );
       hb_xfree( ( void * ) pDeclared );
    }
    HB_COMP_PARAM->pFirstDeclared = HB_COMP_PARAM->pLastDeclared = NULL;
@@ -4474,6 +4478,10 @@ void hb_compCompileEnd( HB_COMP_DECL )
       {
          PCOMDECLARED pDeclared = pClass->pMethod;
          pClass->pMethod = pDeclared->pNext;
+         if( pDeclared->cParamTypes )
+            hb_xfree( ( void * ) pDeclared->cParamTypes );
+         if( pDeclared->pParamClasses )
+            hb_xfree( ( void * ) pDeclared->pParamClasses );
          hb_xfree( ( void * ) pDeclared );
       }
       hb_xfree( ( void * ) pClass );
