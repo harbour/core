@@ -7,6 +7,6 @@ ROOT = ../../../
 C_SOURCES=\
 	usrrdd.c \
 
-LIBNAME=usrrdd
+LIBNAME=hbusrrdd
 
 include $(TOP)$(ROOT)config/lib.cf

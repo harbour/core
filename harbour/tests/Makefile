@@ -9,16 +9,16 @@ endif
 ROOT = ../
 
 LIBS=\
-	debug \
-	vm \
-	rtl \
-	lang \
-	rdd \
-	rtl \
-	vm \
-	macro \
-	pp \
-	common \
+	hbdebug \
+	hbvm \
+	hbrtl \
+	hblang \
+	hbrdd \
+	hbrtl \
+	hbvm \
+	hbmacro \
+	hbpp \
+	hbcommon \
 
 ifeq ($(PM),)
   PM := $(pm)
@@ -214,4 +214,3 @@ endif
 include $(TOP)$(ROOT)config/bin.cf
 
 endif
-

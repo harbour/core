@@ -60,7 +60,7 @@ C_SOURCES=\
 PRG_SOURCES=\
 	harbinit.prg \
 
-LIBNAME=vm
+LIBNAME=hbvm
 
 include $(TOP)$(ROOT)config/lib.cf
 ifneq ($(DIRS),)

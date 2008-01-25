@@ -9,19 +9,19 @@ endif
 ROOT = ../../../
 
 CONTRIBS=\
-	libmisc \
+	hbmisc \
 
 LIBS=\
-	debug \
-	vm \
-	rtl \
-	lang \
-	rdd \
-	rtl \
-	vm \
-	macro \
-	pp \
-	common \
+	hbdebug \
+	hbvm \
+	hbrtl \
+	hblang \
+	hbrdd \
+	hbrtl \
+	hbvm \
+	hbmacro \
+	hbpp \
+	hbcommon \
 
 ifeq ($(PM),)
   PM := $(pm)

@@ -13,19 +13,19 @@ C_SOURCES=\
 PRG_MAIN=pe.prg
 
 LIBS=\
-	debug \
-	vm \
-	rtl \
-	lang \
-	rdd \
-	rtl \
-	vm \
-	macro \
-	pp \
-	dbfntx \
-	dbfcdx \
-	dbffpt \
+	hbdebug \
+	hbvm \
+	hbrtl \
+	hblang \
+	hbrdd \
+	hbrtl \
+	hbvm \
+	hbmacro \
+	hbpp \
+	rddntx \
+	rddcdx \
+	rddfpt \
 	hbsix \
-	common \
+	hbcommon \
 
 include $(TOP)$(ROOT)config/bin.cf

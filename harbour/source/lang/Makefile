@@ -58,6 +58,6 @@ C_SOURCES=\
 	msgzhb5.c    \
 	msgzhgb.c    \
 	
-LIBNAME=lang
+LIBNAME=hblang
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -9,7 +9,7 @@ endif
 ROOT = ../../../
 
 CONTRIBS=\
-	postgres \
+	hbpgsql \
 
 PRG_SOURCES=\
 	test.prg \
@@ -18,15 +18,15 @@ PRG_MAIN=\
 	test.prg
 
 LIBS=\
-	debug \
-	vm \
-	rtl \
-	lang \
-	rdd \
-	rtl \
-	vm \
-	macro \
-	common \
-	pq \
+	hbdebug \
+	hbvm \
+	hbrtl \
+	hblang \
+	hbrdd \
+	hbrtl \
+	hbvm \
+	hbmacro \
+	hbcommon \
+	hbpgsql \
 
 include $(TOP)$(ROOT)config/bin.cf

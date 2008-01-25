@@ -9,8 +9,8 @@ C_SOURCES=\
 C_MAIN=harbour.c
 
 LIBS=\
-	compiler \
-	pp       \
-	common   \
+	hbcplr   \
+	hbpp     \
+	hbcommon \
 
 include $(TOP)$(ROOT)config/bin.cf

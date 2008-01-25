@@ -21,6 +21,6 @@ PRG_SOURCES=\
 	dbgwa.prg    \
 	dbgbrwsr.prg \
 
-LIBNAME=debug
+LIBNAME=hbdebug
 
 include $(TOP)$(ROOT)config/lib.cf

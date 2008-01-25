@@ -23,6 +23,6 @@ C_SOURCES=\
 
 PRG_SOURCES=\
 
-LIBNAME=common
+LIBNAME=hbcommon
 
 include $(TOP)$(ROOT)config/lib.cf

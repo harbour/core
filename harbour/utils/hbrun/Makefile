@@ -15,18 +15,18 @@ PRG_SOURCES=\
 PRG_MAIN=hbrun.prg
 
 LIBS=\
-	debug \
-	vm \
-	rtl \
-	lang \
-	codepage \
-	rdd \
-	rtl \
-	vm \
-	macro \
-	pp \
-	compiler \
-	common \
+	hbdebug \
+	hbvm \
+	hbrtl \
+	hblang \
+	hbcpage \
+	hbrdd \
+	hbrtl \
+	hbvm \
+	hbmacro \
+	hbpp \
+	hbcplr \
+	hbcommon \
 
 ifeq ($(findstring -DHB_PCRE_REGEX, $(C_USR)),)
 ifeq ($(findstring -DHB_POSIX_REGEX, $(C_USR)),)

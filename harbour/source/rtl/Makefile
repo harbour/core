@@ -215,7 +215,7 @@ PRG_SOURCES=\
 	valtoexp.prg \
 	wait.prg     \
 
-LIBNAME=rtl
+LIBNAME=hbrtl
 
 # The list of all valid GT drivers is defined in config/<arch>/global.cf.
 DIRS=$(HB_GT_LIBS)

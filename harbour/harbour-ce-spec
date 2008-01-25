@@ -301,26 +301,26 @@ rm -fR $RPM_BUILD_ROOT
 
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
-%{_libdir}/%{name}/libcodepage.a
-%{_libdir}/%{name}/libcommon.a
-%{_libdir}/%{name}/libcompiler.a
-%{_libdir}/%{name}/libdebug.a
+%{_libdir}/%{name}/libhbcpage.a
+%{_libdir}/%{name}/libhbcommon.a
+%{_libdir}/%{name}/libhbcplr.a
+%{_libdir}/%{name}/libhbdebug.a
 %{_libdir}/%{name}/libfm.a
-%{_libdir}/%{name}/libdb*.a
+%{_libdir}/%{name}/librdd*.a
 %{_libdir}/%{name}/libgt*.a
-%{_libdir}/%{name}/liblang.a
-%{_libdir}/%{name}/libmacro.a
+%{_libdir}/%{name}/libhblang.a
+%{_libdir}/%{name}/libhbmacro.a
 %{_libdir}/%{name}/libhbpcre.a
-%{_libdir}/%{name}/libnulsys.a
-%{_libdir}/%{name}/libpp.a
-%{_libdir}/%{name}/librdd.a
-%{_libdir}/%{name}/libhsx.a
+%{_libdir}/%{name}/libhbnulrdd.a
+%{_libdir}/%{name}/libhbpp.a
+%{_libdir}/%{name}/libhbrdd.a
+%{_libdir}/%{name}/libhbhsx.a
 %{_libdir}/%{name}/libhbsix.a
-%{_libdir}/%{name}/librtl.a
-%{_libdir}/%{name}/libvm.a
-%{_libdir}/%{name}/libmainstd.a
-%{_libdir}/%{name}/libmainwin.a
-%{_libdir}/%{name}/libusrrdd.a
+%{_libdir}/%{name}/libhbrtl.a
+%{_libdir}/%{name}/libhbvm.a
+%{_libdir}/%{name}/libhbmainstd.a
+%{_libdir}/%{name}/libhbmainwin.a
+%{_libdir}/%{name}/libhbusrrdd.a
 
 %{?_with_adsrdd: %{_libdir}/%{name}/libhbrddads.a}
 %{!?_without_odbc: %{_libdir}/%{name}/libhbodbc.a}

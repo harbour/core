@@ -9,6 +9,6 @@ ROOT = ../../../
 C_SOURCES=\
 	mainstd.c \
 
-LIBNAME=mainstd
+LIBNAME=hbmainstd
 
 include $(TOP)$(ROOT)config/lib.cf

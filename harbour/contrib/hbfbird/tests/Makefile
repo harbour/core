@@ -18,15 +18,16 @@ PRG_MAIN=\
 	simple.prg
 
 LIBS=\
-	debug \
-	vm \
-	rtl \
-	lang \
-	rdd \
-	rtl \
-	vm \
-	macro \
-	common \
+	hbdebug \
+	hbvm \
+	hbrtl \
+	hblang \
+	hbrdd \
+	hbrtl \
+	hbvm \
+	hbmacro \
+	hbcommon \
+	hbfbird \
 	fbclient \
 
 include $(TOP)$(ROOT)config/bin.cf

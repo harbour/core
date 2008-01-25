@@ -23,19 +23,19 @@ echo c0w32.obj + > bld_b32.mak
 echo %1.obj, + >> bld_b32.mak
 echo %1.exe, + >> bld_b32.mak
 echo %1.map, + >> bld_b32.mak
-echo %hdir%\lib\rtl.lib + >> bld_b32.mak
-echo %hdir%\lib\vm.lib + >> bld_b32.mak
+echo %hdir%\lib\hbrtl.lib + >> bld_b32.mak
+echo %hdir%\lib\hbvm.lib + >> bld_b32.mak
 echo %hdir%\lib\gtwin.lib + >> bld_b32.mak
-echo %hdir%\lib\lang.lib + >> bld_b32.mak
-echo %hdir%\lib\macro.lib + >> bld_b32.mak
-echo %hdir%\lib\rdd.lib + >> bld_b32.mak
-echo %hdir%\lib\dbfntx.lib + >> bld_b32.mak
-echo %hdir%\lib\dbfcdx.lib + >> bld_b32.mak
-echo %hdir%\lib\debug.lib + >> bld_b32.mak
-echo %hdir%\lib\common.lib + >> bld_b32.mak
-echo %hdir%\lib\pp.lib + >> bld_b32.mak
+echo %hdir%\lib\hblang.lib + >> bld_b32.mak
+echo %hdir%\lib\hbmacro.lib + >> bld_b32.mak
+echo %hdir%\lib\hbrdd.lib + >> bld_b32.mak
+echo %hdir%\lib\hbdebug.lib + >> bld_b32.mak
+echo %hdir%\lib\hbcommon.lib + >> bld_b32.mak
+echo %hdir%\lib\hbpp.lib + >> bld_b32.mak
 echo %hdir%\lib\hbsix.lib + >> bld_b32.mak 
-echo %hdir%\lib\dbffpt.lib + >> bld_b32.mak
+echo %hdir%\lib\rddntx.lib + >> bld_b32.mak
+echo %hdir%\lib\rddcdx.lib + >> bld_b32.mak
+echo %hdir%\lib\rddfpt.lib + >> bld_b32.mak
 echo %hdir%\lib\hbgfw32.lib + >> bld_b32.mak
 
 rem Uncomment these two lines to use Advantage RDD

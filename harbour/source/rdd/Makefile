@@ -42,12 +42,7 @@ PRG_SOURCES=\
 	rddord.prg \
 	rddsys.prg \
 
-ifeq ($(HB_MT),MT)
-   MT_LIBNAME=rddmt
-endif
-
-LIBNAME=rdd
-
+LIBNAME=hbrdd
 
 # The list of all valid DB drivers is defined in config/global.cf.
 DIRS=nulsys $(HB_DB_DRIVERS)

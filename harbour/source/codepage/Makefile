@@ -4,7 +4,6 @@
 
 ROOT = ../../
 
-
 C_SOURCES=\
 	cpbg866.c     \
 	cpbgiso.c     \
@@ -82,6 +81,6 @@ C_SOURCES=\
 	ucmaz.c       \
 	ucmik.c       \
 
-LIBNAME=codepage
+LIBNAME=hbcpage
 
 include $(TOP)$(ROOT)config/lib.cf

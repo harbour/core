@@ -46,7 +46,8 @@ C_SOURCES=\
 	expropta.c \
 	exproptb.c \
 	complex.c  \
-	hbmain.c \
+	hbmain.c   \
 
-LIBNAME=compiler
+LIBNAME=hbcplr
+
 include $(TOP)$(ROOT)config/lib.cf

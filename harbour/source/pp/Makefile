@@ -11,7 +11,7 @@ C_SOURCES=\
 	pplib2.c  \
 	pplib3.c  \
 
-LIBNAME=pp
+LIBNAME=hbpp
 
 LIBS=\
 	common \

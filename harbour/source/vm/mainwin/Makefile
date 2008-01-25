@@ -9,6 +9,6 @@ ROOT = ../../../
 C_SOURCES=\
 	mainwin.c \
 
-LIBNAME=mainwin
+LIBNAME=hbmainwin
 
 include $(TOP)$(ROOT)config/lib.cf

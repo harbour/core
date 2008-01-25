@@ -29,16 +29,16 @@ C_SOURCES=\
 PRG_MAIN=hbmake.prg
 
 LIBS=\
-	debug \
-	vm \
-	rtl \
-	rdd \
-	rtl \
-	vm \
-	macro \
-	pp \
-	lang \
-	common \
+	hbdebug \
+	hbvm \
+	hbrtl \
+	hbrdd \
+	hbrtl \
+	hbvm \
+	hbmacro \
+	hbpp \
+	hblang \
+	hbcommon \
 
 include $(TOP)$(ROOT)config/bin.cf
 

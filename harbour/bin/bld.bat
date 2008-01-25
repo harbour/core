@@ -125,20 +125,20 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
       echo -O2 -d -mh %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% > build.tmp
       echo -e%1.exe >> build.tmp
       echo %1.c >> build.tmp
-      echo codepage.lib >> build.tmp
-      echo debug.lib >> build.tmp
-      echo vm.lib >> build.tmp
-      echo rtl.lib >> build.tmp
+      echo hbcpage.lib >> build.tmp
+      echo hbdebug.lib >> build.tmp
+      echo hbvm.lib >> build.tmp
+      echo hbrtl.lib >> build.tmp
       echo %_HB_GT_LIB%.lib >> build.tmp
-      echo lang.lib >> build.tmp
-      echo rdd.lib >> build.tmp
-      echo macro.lib >> build.tmp
-      echo pp.lib >> build.tmp
-      echo dbffpt.lib >> build.tmp
-      echo dbfntx.lib >> build.tmp
-      echo dbfcdx.lib >> build.tmp
+      echo hblang.lib >> build.tmp
+      echo hbrdd.lib >> build.tmp
+      echo hbmacro.lib >> build.tmp
+      echo hbpp.lib >> build.tmp
+      echo rddfpt.lib >> build.tmp
+      echo rddntx.lib >> build.tmp
+      echo rddcdx.lib >> build.tmp
       echo hbsix.lib >> build.tmp
-      echo common.lib >> build.tmp
+      echo hbcommon.lib >> build.tmp
       bcc @build.tmp
       del build.tmp
       goto END
@@ -149,22 +149,22 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
 
       echo %1.c > build.tmp
       echo -o%1.exe %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% >> build.tmp
-      echo -lcodepage >> build.tmp
-      echo -ldebug >> build.tmp
-      echo -lvm >> build.tmp
-      echo -lrtl >> build.tmp
+      echo -lhbcpage >> build.tmp
+      echo -lhbdebug >> build.tmp
+      echo -lhbvm >> build.tmp
+      echo -lhbrtl >> build.tmp
       echo -l%_HB_GT_LIB% >> build.tmp
-      echo -llang >> build.tmp
-      echo -lrdd >> build.tmp
-      echo -lrtl >> build.tmp
-      echo -lvm >> build.tmp
-      echo -lmacro >> build.tmp
-      echo -lpp >> build.tmp
-      echo -ldbffpt >> build.tmp
-      echo -ldbfntx >> build.tmp
-      echo -ldbfcdx >> build.tmp
+      echo -lhblang >> build.tmp
+      echo -lhbrdd >> build.tmp
+      echo -lhbrtl >> build.tmp
+      echo -lhbvm >> build.tmp
+      echo -lhbmacro >> build.tmp
+      echo -lhbpp >> build.tmp
+      echo -lrddfpt >> build.tmp
+      echo -lrddntx >> build.tmp
+      echo -lrddcdx >> build.tmp
       echo -lhbsix >> build.tmp
-      echo -lcommon >> build.tmp
+      echo -lhbcommon >> build.tmp
       echo -lm >> build.tmp
       gcc @build.tmp
       del build.tmp
@@ -174,7 +174,7 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
 
    if not "%HB_COMPILER%" == "rsx32" GOTO A_DOS_RSX32_NOT
 
-      gcc %1.c -Zrsx32 %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lcodepage -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
+      gcc %1.c -Zrsx32 %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon
       goto END
 
 :A_DOS_RSX32_NOT
@@ -184,20 +184,20 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
       wpp386 -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -bt=DOS %1.c -fo=%1.obj
       echo debug all OP osn=DOS OP stack=65536 OP CASEEXACT OP stub=cwstub.exe NAME %1.exe > build.tmp
       echo FILE %1.obj >> build.tmp
-      echo LIB codepage.lib >> build.tmp
-      echo LIB debug.lib >> build.tmp
-      echo LIB vm.lib >> build.tmp
-      echo LIB rtl.lib >> build.tmp
+      echo LIB hbcpage.lib >> build.tmp
+      echo LIB hbdebug.lib >> build.tmp
+      echo LIB hbvm.lib >> build.tmp
+      echo LIB hbrtl.lib >> build.tmp
       echo LIB %_HB_GT_LIB%.lib >> build.tmp
-      echo LIB lang.lib >> build.tmp
-      echo LIB rdd.lib >> build.tmp
-      echo LIB macro.lib >> build.tmp
-      echo LIB pp.lib >> build.tmp
-      echo LIB dbfntx.lib >> build.tmp
-      echo LIB dbfcdx.lib >> build.tmp
-      echo LIB dbffpt.lib >> build.tmp
+      echo LIB hblang.lib >> build.tmp
+      echo LIB hbrdd.lib >> build.tmp
+      echo LIB hbmacro.lib >> build.tmp
+      echo LIB hbpp.lib >> build.tmp
+      echo LIB rddntx.lib >> build.tmp
+      echo LIB rddcdx.lib >> build.tmp
+      echo LIB rddfpt.lib >> build.tmp
       echo LIB hbsix.lib  >> build.tmp
-      echo LIB common.lib >> build.tmp
+      echo LIB hbcommon.lib >> build.tmp
       wlink @build.tmp
       del build.tmp
       goto END
@@ -208,13 +208,13 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
 
    if "%HB_GT_LIB%" == "" set _HB_GT_LIB=gtwin
 
-   if "%HB_COMPILER%" == "bcc32"   bcc32 -O2 -d %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %1.c %HB_USER_LIBS% codepage.lib debug.lib vm.lib rtl.lib %_HB_GT_LIB%.lib lang.lib rdd.lib macro.lib pp.lib dbffpt.lib dbfntx.lib dbfcdx.lib hbsix.lib common.lib
+   if "%HB_COMPILER%" == "bcc32"   bcc32 -O2 -d %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% %1.c %HB_USER_LIBS% hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib %_HB_GT_LIB%.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddfpt.lib rddntx.lib rddcdx.lib hbsix.lib hbcommon.lib
 
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c -o%1.exe %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lcodepage -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
-   if "%HB_COMPILER%" == "mingw32" gcc %1.c -o%1.exe %CFLAGS% -mno-cygwin -I%HB_INC_INSTALL% %HB_INC_TEMP% -L%HB_LIB_INSTALL% -lcodepage -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
-   if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -Zwin32 %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lcodepage -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
+   if "%HB_COMPILER%" == "gcc"     gcc %1.c -o%1.exe %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon
+   if "%HB_COMPILER%" == "mingw32" gcc %1.c -o%1.exe %CFLAGS% -mno-cygwin -I%HB_INC_INSTALL% %HB_INC_TEMP% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon
+   if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -Zwin32 %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon
 
-   if "%HB_COMPILER%" == "msvc"    cl -TP -W3 %CFLAGS% -I%HB_INC_INSTALL% %1.c /link /subsystem:CONSOLE %HB_LIB_INSTALL%\codepage.lib %HB_LIB_INSTALL%\debug.lib %HB_LIB_INSTALL%\vm.lib %HB_LIB_INSTALL%\rtl.lib %HB_LIB_INSTALL%\%_HB_GT_LIB%.lib %HB_LIB_INSTALL%\lang.lib %HB_LIB_INSTALL%\rdd.lib %HB_LIB_INSTALL%\macro.lib %HB_LIB_INSTALL%\pp.lib %HB_LIB_INSTALL%\dbfntx.lib %HB_LIB_INSTALL%\dbfcdx.lib %HB_LIB_INSTALL%\dbffpt.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\common.lib user32.lib winspool.lib
+   if "%HB_COMPILER%" == "msvc"    cl -TP -W3 %CFLAGS% -I%HB_INC_INSTALL% %1.c /link /subsystem:CONSOLE %HB_LIB_INSTALL%\hbcpage.lib %HB_LIB_INSTALL%\hbdebug.lib %HB_LIB_INSTALL%\hbvm.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\%_HB_GT_LIB%.lib %HB_LIB_INSTALL%\hblang.lib %HB_LIB_INSTALL%\hbrdd.lib %HB_LIB_INSTALL%\hbmacro.lib %HB_LIB_INSTALL%\hbpp.lib %HB_LIB_INSTALL%\rddntx.lib %HB_LIB_INSTALL%\rddcdx.lib %HB_LIB_INSTALL%\rddfpt.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\hbcommon.lib user32.lib winspool.lib
    if "%HB_COMPILER%" == "msvc"    echo Ignore LNK4033 warning
 
 :C_WATCOM
@@ -224,20 +224,20 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
    wpp386 -j -w3 -d2 -5s -5r -fp5 -oxehtz -zq -zt0 -mf -bt=NT %1.c -fo=%1.obj
    echo debug all OP osn=NT OP stack=65536 OP CASEEXACT NAME %1.exe > build.tmp
    echo FILE %1.obj >> build.tmp
-   echo LIB codepage.lib >> build.tmp
-   echo LIB debug.lib >> build.tmp
-   echo LIB vm.lib >> build.tmp
-   echo LIB rtl.lib >> build.tmp
+   echo LIB hbcpage.lib >> build.tmp
+   echo LIB hbdebug.lib >> build.tmp
+   echo LIB hbvm.lib >> build.tmp
+   echo LIB hbrtl.lib >> build.tmp
    echo LIB %_HB_GT_LIB%.lib >> build.tmp
-   echo LIB lang.lib >> build.tmp
-   echo LIB macro.lib >> build.tmp
-   echo LIB pp.lib >> build.tmp
-   echo LIB dbfntx.lib >> build.tmp
-   echo LIB dbfcdx.lib >> build.tmp
-   echo LIB dbffpt.lib >> build.tmp
+   echo LIB hblang.lib >> build.tmp
+   echo LIB hbmacro.lib >> build.tmp
+   echo LIB hbpp.lib >> build.tmp
+   echo LIB rddntx.lib >> build.tmp
+   echo LIB rddcdx.lib >> build.tmp
+   echo LIB rddfpt.lib >> build.tmp
    echo LIB hbsix.lib >> build.tmp
-   echo LIB rdd.lib >> build.tmp
-   echo LIB common.lib >> build.tmp
+   echo LIB hbrdd.lib >> build.tmp
+   echo LIB hbcommon.lib >> build.tmp
    echo LIB kernel32.lib >> build.tmp
    echo LIB user32.lib >> build.tmp
    echo LIB winspool.lib >> build.tmp
@@ -253,8 +253,8 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
 
    if "%HB_GT_LIB%" == "" set _HB_GT_LIB=gtos2
 
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lcodepage -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp  -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
-   if "%HB_COMPILER%" == "icc"     icc /Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp %CFLAGS% -I%HB_INC_INSTALL% %1.c %HB_LIB_INSTALL%\codepage.lib %HB_LIB_INSTALL%\debug.lib %HB_LIB_INSTALL%\vm.lib %HB_LIB_INSTALL%\rtl.lib %HB_LIB_INSTALL%\%_HB_GT_LIB%.lib %HB_LIB_INSTALL%\lang.lib %HB_LIB_INSTALL%\rdd.lib %HB_LIB_INSTALL%\rtl.lib %HB_LIB_INSTALL%\vm.lib %HB_LIB_INSTALL%\macro.lib %HB_LIB_INSTALL%\pp.lib %HB_LIB_INSTALL%\dbffpt.lib %HB_LIB_INSTALL%\dbfntx.lib %HB_LIB_INSTALL%\dbfcdx.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\common.lib
+   if "%HB_COMPILER%" == "gcc"     gcc %1.c %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon
+   if "%HB_COMPILER%" == "icc"     icc /Gs+ /W2 /Se /Sd+ /Ti+ /C- /Tp %CFLAGS% -I%HB_INC_INSTALL% %1.c %HB_LIB_INSTALL%\hbcpage.lib %HB_LIB_INSTALL%\hbdebug.lib %HB_LIB_INSTALL%\hbvm.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\%_HB_GT_LIB%.lib %HB_LIB_INSTALL%\hblang.lib %HB_LIB_INSTALL%\hbrdd.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\hbvm.lib %HB_LIB_INSTALL%\hbmacro.lib %HB_LIB_INSTALL%\hbpp.lib %HB_LIB_INSTALL%\rddfpt.lib %HB_LIB_INSTALL%\rddntx.lib %HB_LIB_INSTALL%\rddcdx.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\hbcommon.lib
    goto END
 
 :A_LINUX
@@ -263,7 +263,7 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
 
    if "%HB_GT_LIB%" == "" set _HB_GT_LIB=gtstd
 
-   if "%HB_COMPILER%" == "gcc"     gcc %1.c %CFLAGS% -I%HB_INC_INSTALL% -L../lib -lcodepage -ldebug -lvm -lrtl -l%_HB_GT_LIB% -llang -lrdd -lrtl -lvm -lmacro -lpp -ldbffpt -ldbfntx -ldbfcdx -lhbsix -lcommon
+   if "%HB_COMPILER%" == "gcc"     gcc %1.c %CFLAGS% -I%HB_INC_INSTALL% -L../lib -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon
    goto END
 
 :CLEANUP

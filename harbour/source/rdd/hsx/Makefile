@@ -8,6 +8,6 @@ C_SOURCES=\
 	hsx.c \
 	cftsfunc.c \
 
-LIBNAME=hsx
+LIBNAME=hbhsx
 
 include $(TOP)$(ROOT)config/lib.cf

@@ -1,9 +1,9 @@
 @echo off
+rem 
+rem $Id$
+rem 
+
 rem ***********************************************************
-rem * bldtest.bat
-rem *
-rem * $Id$
-rem *
 rem * Batch file to build test programs in ST or MT environment
 rem *
 rem * (C) 2003 Francesco Saverio Giudice <info@fsgiudice.com>

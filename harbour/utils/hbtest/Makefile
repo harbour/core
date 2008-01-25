@@ -25,15 +25,15 @@ PRG_SOURCES=\
 PRG_MAIN=hbtest.prg
 
 LIBS=\
-	debug \
-	vm \
-	rtl \
-	lang \
-	rdd \
-	rtl \
-	vm \
-	macro \
-	pp \
-	common \
+	hbdebug \
+	hbvm \
+	hbrtl \
+	hblang \
+	hbrdd \
+	hbrtl \
+	hbvm \
+	hbmacro \
+	hbpp \
+	hbcommon \
 
 include $(TOP)$(ROOT)config/bin.cf

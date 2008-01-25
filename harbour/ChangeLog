@@ -8,6 +8,103 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-25 21:27 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * bin/bld.bat
+   * harbour.spec
+   * common.mak
+   * source/pp/Makefile
+   * source/lang/Makefile
+   * source/macro/Makefile
+   * source/rtl/Makefile
+   * source/vm/mainstd/Makefile
+   * source/vm/Makefile
+   * source/vm/mainwin/Makefile
+   * source/main/Makefile
+   * source/debug/Makefile
+   * source/codepage/Makefile
+   * source/common/Makefile
+   * source/rdd/nulsys/Makefile
+   * source/rdd/Makefile
+   * source/rdd/hsx/Makefile
+   * source/rdd/usrrdd/Makefile
+   * source/compiler/Makefile
+   * contrib/hbct/tests/Makefile
+   * contrib/hbodbc/tests/bld_b32.bat
+   * contrib/hbole/tests/bld_b32.bat
+   * contrib/hbapollo/tests/bld.bat
+   * contrib/hbfbird/tests/bld_b32.bat
+   * contrib/hbfbird/tests/Makefile
+   * contrib/hbpgsql/tests/Makefile
+   * contrib/hbfimage/tests/bld_b32.bat
+   * contrib/hbgd/tests/bldtest.bat
+   * contrib/hbmisc/tests/Makefile
+   * contrib/hbgf/tests/bld_b32.bat
+   * contrib/hbbtree/tests/Makefile
+   * contrib/examples/guestbk/Makefile
+   * contrib/examples/pe/Makefile
+   * contrib/examples/dbu/Makefile
+   * contrib/examples/misc/Makefile
+   * contrib/examples/hscript/Makefile
+   * utils/hbdoc/Makefile
+   * utils/hbextern/Makefile
+   * utils/hbdot/Makefile
+   * utils/hbmake/Makefile
+   * utils/hbmake/hbmutils.prg
+   * utils/hbmake/hbmake.prg
+   * utils/hbpp/Makefile
+   * utils/hbpptest/Makefile
+   * utils/hbtest/Makefile
+   * utils/hbrun/Makefile
+   * tests/Makefile
+     * Core libs renamed to be prefixed with hb, while 
+       having the first significant 5 chars unique.
+
+       Old name    New name
+       --------    --------
+       codepage -> hbcpage 
+       common   -> hbcommon
+       compiler -> hbcplr  
+       debug    -> hbdebug 
+       hbsix    -> hbsix   
+       hsx      -> hbhsx   
+       lang     -> hblang  
+       macro    -> hbmacro 
+       pp       -> hbpp    
+       rtl      -> hbrtl   
+       vm       -> hbvm    
+       rdd      -> hbrdd
+       dbfcdx   -> rddcdx
+       dbffpt   -> rddfpt
+       dbfntx   -> rddntx
+       nulsys   -> hbnulrdd
+       usrrdd   -> hbusrrdd
+       mainwin  -> hbmainwin
+       mainstd  -> hbmainstd
+
+       NOTE/TODO: We're currently not in sync with contribs, 
+                  regarding hb prefixing, since in contrib 
+                  rdds and gts (rightly) also have hb prefixes.
+                  The only reason not to add them in core this
+                  time, is to keep compatibility with DJGPP.
+                  Maybe we should remove those prefixes from 
+                  contrib.
+
+       NOTE/TODO: Do tests in as many platforms and as many contrib 
+                  tests as possible. Feedback from hbmake users is 
+                  also welcome.
+
+       !!! Please update your local make files !!!
+
+   * include/hbgtinfo.ch
+     + Added HB_ prefixed versions for all GTI_ macros.
+       Unprefixed GTI_ macros are to be considered xhb 
+       compatible (or legacy) ones, and they can be 
+       excluded by #defining HB_GT_NO_XHB if they seem to 
+       collide with user code.
+       TODO: Switch to use HB_GTI_* inside Harbour code.
+
 2008-01-25 17:55 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/radiogrp.prg
      ! Minor formatting.

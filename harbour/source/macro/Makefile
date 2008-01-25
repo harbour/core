@@ -35,6 +35,6 @@ C_SOURCES=\
 	macrolex.c \
 
 
-LIBNAME=macro
+LIBNAME=hbmacro
 
 include $(TOP)$(ROOT)config/lib.cf
