@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-25 10:05 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/hbzlib/make_b32.bat
+   * contrib/hbzlib/make_vc.bat
+     + Added creation of .lib from .dll for non-GNU make systems.
+
 2008-01-23 02:24 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbrddntx.h
     ! fixed type of Signature field in tag structure
