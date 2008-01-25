@@ -19,8 +19,6 @@ the net, ex., you can find it for several compiler on http://libharu.sourceforge
 
 Some small changes (to fix compile time warning and errors) are applied to original 
 source of minizip 1.01e:
-  * harbour/contrib/hbzlib/zconf.h
-    * changed #if 1 to #if 0 to not include unistd.h
 
   * harbour/contrib/hbzlib/zip.c
     * added forward definitions of allocate_new_datablock(), 

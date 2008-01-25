@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-25 16:32 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   - contrib/hbzlib/zlib.h
+   - contrib/hbzlib/zconf.h
+   * contrib/hbzlib/hbmzip.c
+   * contrib/hbzlib/readme.txt
+     ! Removed zlib headers included in Harbour SVN.
+       For this contrib to compiler, users will need to have 
+       the zlib package installed.
+     ! stricmp() -> hb_stricmp() to avoid MSVC warning and 
+       to be more portable.
+
 2008-01-25 15:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/compiler/hbmain.c
     ! fixed a few /w3 memory leaks 

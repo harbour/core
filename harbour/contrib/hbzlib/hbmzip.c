@@ -490,8 +490,8 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName )
          if( ulLen > 4 )
          {
             pString = &szZipName[ ulLen - 4 ];
-            if( stricmp( pString, ".exe" ) == 0 || stricmp( pString, ".com" ) == 0 ||
-                stricmp( pString, ".bat" ) == 0 )
+            if( hb_stricmp( pString, ".exe" ) == 0 || hb_stricmp( pString, ".com" ) == 0 ||
+                hb_stricmp( pString, ".bat" ) == 0 )
             {
                ulExtAttr |= 0x00490000; /* --x--x--x */
             }
