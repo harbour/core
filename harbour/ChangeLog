@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-25 10:47 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+    ! moved hbzlib compilation into "conditional section" of above batfiles
+
 2008-01-25 10:08 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/hbrddads/make_b32.bat
    * contrib/hbrddads/make_vc.bat
@@ -126,7 +131,7 @@
 
 2008-01-16 01:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   + harbout/contrib/hbzlib
-    + added support for zlib library and zip files (based on 
+    + added support for zlib library and zip files (based on
       minizip)
   + harbour/contrib/hbzlib/zconf.h
   + harbour/contrib/hbzlib/zlib.h
@@ -137,13 +142,13 @@
   + harbour/contrib/hbzlib/ioapi.c
   + harbour/contrib/hbzlib/zip.c
   + harbour/contrib/hbzlib/unzip.c
-    + minizip source files. Some fixes are applied to avoid compile 
+    + minizip source files. Some fixes are applied to avoid compile
       time warning and errors, see readme.txt for list
     ; I've compiled with BCC only, please, check other compilers
   + harbour/contrib/hbzlib/hbzlib.c
-    + zlib wrapper functions. Przemyslaw Czerpak is author of this code. 
-      The file was posted to developers mailing list on 2007-05-17. 
-      I think licence statments in the begining of file gives permission 
+    + zlib wrapper functions. Przemyslaw Czerpak is author of this code.
+      The file was posted to developers mailing list on 2007-05-17.
+      I think licence statments in the begining of file gives permission
       to include it into SVN.
     * HB_UNCOMPRESSLEN() function added. Source copied from Przemyslaw's
       email on 2008-01-10.
@@ -158,26 +163,26 @@
            HB_UNZIPOPEN(), HB_UNZIPCLOSE()
       - HB_UNZIPFILE*() - manages decompression of files inside .zip
            HB_UNZIPFILEOPEN(), HB_UNZIPFILEREAD(), HB_UNZIPFILECLOSE(),
-           HB_UNZIPFILEFIRST(), HB_UNZIPFILENEXT(), HB_UNZIPFILEPOS(), 
+           HB_UNZIPFILEFIRST(), HB_UNZIPFILENEXT(), HB_UNZIPFILEPOS(),
            HB_UNZIPFILEGOTO(), HB_UNZIPFILEINFO()
       Parameters of functions are documented inside source files.
-    + implemented some higher level functions. These function are not 
+    + implemented some higher level functions. These function are not
       wrapper of minizip:
       HB_ZIPSTOREFILE(), HB_UNZIPEXTRACTCURRENTFILE()
-    ; minizip gives low level access on zip files. This could be a 
-      problem if you not going to put your fingers on internals, but 
-      just want to compress/decompress files. Because managing of 
-      file attributes is a little complicated. These higher level 
+    ; minizip gives low level access on zip files. This could be a
+      problem if you not going to put your fingers on internals, but
+      just want to compress/decompress files. Because managing of
+      file attributes is a little complicated. These higher level
       functions do the job.
-    ; please test code under linux. Source is written using docs only, 
+    ; please test code under linux. Source is written using docs only,
       without test or deeper knowledge.
   + harbour/contrib/hbzlib/hbzlib.ch
     + defines for zlib and minizip libraries
-    ; I've used HB_ZLIB_* and HB_ZIP_* prefixes, because some original 
+    ; I've used HB_ZLIB_* and HB_ZIP_* prefixes, because some original
       names of minizip library are too general, ex., APPEND_STATUS_CREATE
       If you want to use original define names we change this.
   + harbour/contrib/hbzlib/readme.txt
-    * some comments on the source of libraries and ChangeLog for minizip 
+    * some comments on the source of libraries and ChangeLog for minizip
       files
   + harbour/contrib/hbzlib/tests/myzip.prg
   + harbour/contrib/hbzlib/tests/myunzip.prg
@@ -186,8 +191,8 @@
   + harbour/contrib/hbzlib/make_b32.bat
   + harbour/contrib/hbzlib/make_vc.bat
     + makefiles written using another contrib's makefiles as template
-    ; I'm not makefiles guru, please test it. I've also used command line 
-      parameters: -DNOCRYPT -DNOUNCRYPT, to compile minizip. I don't know 
+    ; I'm not makefiles guru, please test it. I've also used command line
+      parameters: -DNOCRYPT -DNOUNCRYPT, to compile minizip. I don't know
       howto include these to our makefiles
 
 2008-01-15 19:30 UTC+0100 Tomaz Zupan (tomaz.zupan/at/orpo.si)
@@ -278,8 +283,8 @@
   * harbour/include/hbexprb.c
   * harbour/source/compiler/hbmain.c
     ! added string escaping before to i18n .pot files
-    + added hb_i18n_gettext_strict() support for compiler. This function 
-      generates warning if argument is not literal string. See discussion 
+    + added hb_i18n_gettext_strict() support for compiler. This function
+      generates warning if argument is not literal string. See discussion
       on mailing list from 2007-11-23 to 2007-11-29, for details.
 
 2007-01-10 18:05 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
@@ -426,8 +431,8 @@
 
 2008-01-08 19:31 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbclass.ch
-     ! Enabling HB_CLS_NO_DECORATION if compiled with HB_C52_STRICT, 
-       since in strict mode some PP extensions required by the 
+     ! Enabling HB_CLS_NO_DECORATION if compiled with HB_C52_STRICT,
+       since in strict mode some PP extensions required by the
        decoration feature are not available.
        (Thanks Przemek for the tip)
 
@@ -436,7 +441,7 @@
 
 2008-01-05 01:07 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/tpopup.prg
-     ! Fixed typo in POPUPMENU():getAccel(), causing wrong 
+     ! Fixed typo in POPUPMENU():getAccel(), causing wrong
        position being returned. Reported by Jose Miguel.
 
    * source/rtl/ttopbar.prg
@@ -464,7 +469,7 @@
   * harbour/make_tgz.sh
     * use -fPIC on HP-UX
     * respect user defined C_USR and L_USR
-    ! fixed typo in GNU tar detection 
+    ! fixed typo in GNU tar detection
 
 2007-12-22 11:28 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-mkslib.sh
@@ -663,7 +668,7 @@
 
    * ChangeLog
      ! Removed UTF-8 signature from the beginning of the file.
-       Unfortunately accented chars got converted to UTF8, which 
+       Unfortunately accented chars got converted to UTF8, which
        would need to fixed.
        Pritpal, please turn off this feature on your editor for Harbour.
 
@@ -745,7 +750,7 @@
   * harbour/contrib/hbrddads/make_b32.bat
   * harbour/contrib/hbrddads/make_vc.bat
     ! Fixed variable names in help screen
-    * Added setting to ADS_REQUIRE_VERSION by value of ADS_VER 
+    * Added setting to ADS_REQUIRE_VERSION by value of ADS_VER
 
 2007-12-14 08:55 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbgtwvg/wvtutils.c
@@ -808,7 +813,7 @@
 
 2007-12-13 10:42 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbgtwvg/wvtpaint.prg
-    ! Formatting. 
+    ! Formatting.
   * harbour/contrib/hbgtwvg/hbgtwvg.c
     + static BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
                             BYTE bColor, BYTE bAttr, USHORT usChar )
@@ -847,7 +852,7 @@
 
 2007-12-09 19:17 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/hbgtwvg/tests/demowvg.prg
-    ! Formatting. 
+    ! Formatting.
     ! "xHarbour" => "(x)Harbour"
 
 2007-12-08 12:13 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
@@ -865,7 +870,7 @@
    + contrib/hbgtwvg/gtwvg.c
    * contrib/hbgtwvg/wvtutils.c
    * contrib/hbgtwvg/wvtcore.c
-     ! Renamed gtwvt to gtwvg to avoid clash with 
+     ! Renamed gtwvt to gtwvg to avoid clash with
        gtwvt in core when using non-GNU make files.
 
    * source/vm/extend.c
@@ -931,7 +936,7 @@
   * harbour/source/lang/msgltwin.c
     * more changes from LT to LTWIN
   * harbour/common.mak
-    * restored missing msgltwin.c 
+    * restored missing msgltwin.c
   * harbour/include/hbapi.h
   * harbour/source/vm/hashes.c
     + added hash key support for pointer type
@@ -942,7 +947,7 @@
   * harbour/contrib/gtwvg/wvtutils.c
     * Tooltip - Initialization of variable.
   * harbour/contrib/gtwvg/tests/demowvg.prg
-    ! Fixed to run with Harbour perfectly. Please note that 
+    ! Fixed to run with Harbour perfectly. Please note that
       TBrowse in Harbour needs some fixes. Replace it with xHarbour
       TBrowse and the look of composite dialog changes.
 
@@ -960,20 +965,20 @@
    + source/codepage/cpfr850.c
    - source/codepage/cptrdos.c
    + source/codepage/cptr857.c
-     ! Renamed some codepage modules to include the 
-       actual DOS codepage number instead of nothing 
+     ! Renamed some codepage modules to include the
+       actual DOS codepage number instead of nothing
        or generic "dos" name.
 
    * common.mak
    * source/lang/Makefile
    + source/lang/msgtr857.c
    - source/lang/msgtrdos.c
-     ! Rename one language module to be in sync with 
+     ! Rename one language module to be in sync with
        proper internal ID.
 
 2007-12-06 01:26 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * doc/howtosvn.txt
-     ! Fixed the SVN propset command to include all needed keywords, 
+     ! Fixed the SVN propset command to include all needed keywords,
        not just "Id".
 
    * common.mak
@@ -1010,7 +1015,7 @@
    - source/codepage/cpgewin.c
      * Renamed to ISO to be in sync with the actual codepage used.
        (Thanks Chen)
-     ; Might be a good idea to readd the "real" WIN version to stay 
+     ; Might be a good idea to readd the "real" WIN version to stay
        compatible. Anyone?
 
 2007-12-05 19:50 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -1023,7 +1028,7 @@
    * source/codepage/cpcswin.c
    * source/codepage/cpskwin.c
    * source/codepage/cpitiso.c
-     ! Some SVN header, SVN keywords and some errors in 
+     ! Some SVN header, SVN keywords and some errors in
        comments fixed. (Thanks Chen)
 
 2007-12-05 14:20 UTC+0200 Chen Kedem <niki@synel.co.il>
@@ -1065,7 +1070,7 @@
    + contrib/hbrddads/tests
    - contrib/hbbtree/test
    + contrib/hbbtree/tests
-     ! Renamed test to tests to use 'tests' everywhere 
+     ! Renamed test to tests to use 'tests' everywhere
        inside the repository.
 
 2007-12-04 23:56 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
@@ -1093,7 +1098,7 @@
 2007-12-05 02:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * utils/hbmake/hbmutils.prg
      ! Some fixes related to contrib dir renames.
-       NOTE: Blind fix. I don't use this tool. If you do, pls 
+       NOTE: Blind fix. I don't use this tool. If you do, pls
              report problems.
 
 2007-12-04 20:39 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
