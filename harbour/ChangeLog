@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-26 17:00 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * source/rtl/gtxwc/gtxwc.h
+    added missed K_SH_keys
+
 2008-01-26 11:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/pp/Makefile
      ! Missed modification made after lib name change.
