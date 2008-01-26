@@ -141,7 +141,7 @@
    * contrib/hbzlib/hbmzip.c
    * contrib/hbzlib/readme.txt
      ! Removed zlib headers included in Harbour SVN.
-       For this contrib to compiler, users will need to have 
+       For this contrib to compile, users will need to have 
        the zlib package installed.
      ! stricmp() -> hb_stricmp() to avoid MSVC warning and 
        to be more portable.
