@@ -347,7 +347,7 @@ HB_EXPORT PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, ULONG
    else
    {
       if( szText[ ulLen ] != '\0' )
-         hb_errInternal( 9999, "Internal error: hb_itemPutCLConst() missing termination character", NULL, NULL );
+         hb_errInternal( 6003, "Internal error: hb_itemPutCLConst() missing termination character", NULL, NULL );
 
       pItem->item.asString.value  = ( char * ) szText;
       pItem->item.asString.length = ulLen;

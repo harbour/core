@@ -248,7 +248,7 @@ HB_FUNC( AFILL )
                thrown by AEVAL().  [vszakats] */
       hb_errRT_BASE( EG_ARG, 2017, NULL, "AEVAL", HB_ERR_ARGS_BASEPARAMS );
 #else
-      hb_errRT_BASE( EG_ARG, 9999, NULL, "AFILL", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6004, NULL, "AFILL", HB_ERR_ARGS_BASEPARAMS );
 #endif
 }
 

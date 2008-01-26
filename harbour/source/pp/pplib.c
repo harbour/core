@@ -73,7 +73,7 @@ static void hb_pp_ErrorMessage( void * cargo, const char * szMsgTable[],
       PHB_ITEM pError;
       snprintf( szMsgBuf, sizeof( szMsgBuf ), szMsgTable[ iCode - 1 ],
                 szParam1, szParam2 );
-      pError = hb_errRT_New( ES_ERROR, "PP", 9999, ( ULONG ) iCode, szMsgBuf,
+      pError = hb_errRT_New( ES_ERROR, "PP", 1001, ( ULONG ) iCode, szMsgBuf,
                              NULL, 0, EF_NONE | EF_CANDEFAULT );
       hb_errLaunch( pError );
       hb_errRelease( pError );

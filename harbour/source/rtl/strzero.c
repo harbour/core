@@ -121,7 +121,7 @@ HB_FUNC( STRZERO )
                   by STR().  [vszakats] */
          hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STR", HB_ERR_ARGS_BASEPARAMS );
 #else
-         hb_errRT_BASE_SubstR( EG_ARG, 9999, NULL, "STRZERO", HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_BASE_SubstR( EG_ARG, 6003, NULL, "STRZERO", HB_ERR_ARGS_BASEPARAMS );
 #endif
    }
 }

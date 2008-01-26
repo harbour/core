@@ -3073,7 +3073,7 @@ HB_EXPORT BOOL hb_gtLoad( const char * szGtName, PHB_GT_FUNCS pFuncTable )
          memcpy( s_gtInit[ iPos ]->pSuperTable, pFuncTable, sizeof( HB_GT_FUNCS ) );
          if( !s_gtInit[ iPos ]->init( pFuncTable ) )
          {
-            hb_errInternal( 9999, "Internal error: screen driver initialization failure", NULL, NULL );
+            hb_errInternal( 6001, "Internal error: screen driver initialization failure", NULL, NULL );
          }
          if( s_gtInit[ iPos ]->pGtId )
             *s_gtInit[ iPos ]->pGtId = s_iGtLinkCount;

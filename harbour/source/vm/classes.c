@@ -410,7 +410,7 @@ static BOOL hb_clsDictRealloc( PCLASS pClass )
       ulNewHashKey <<= 1;
       if( ulNewHashKey > HASH_KEYMAX )
       {
-         hb_errInternal( 9999, "Not able to realloc classmessage! __clsDictRealloc", NULL, NULL );
+         hb_errInternal( 6002, "Unable to realloc class message in __clsDictRealloc", NULL, NULL );
          return FALSE;
       }
 

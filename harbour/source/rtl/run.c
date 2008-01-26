@@ -66,7 +66,7 @@ HB_FUNC( __RUN )
       if( hb_gtResume() != 0 )
       {
          /* an error should be generated here !! Something like */
-         /* hb_errRT_BASE_Ext1( EG_GTRESUME, 9999, NULL, "__RUN", 0, EF_CANDEFAULT ); */
+         /* hb_errRT_BASE_Ext1( EG_GTRESUME, 6002, NULL, "__RUN", 0, EF_CANDEFAULT ); */
       }
    }
 }

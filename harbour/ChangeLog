@@ -8,6 +8,31 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-26 07:53 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/pp/pplib.c
+   * source/rtl/run.c
+   * source/rtl/hbgtcore.c
+   * source/rtl/philesx.c
+   * source/rtl/strzero.c
+   * source/vm/runner.c
+   * source/vm/debug.c
+   * source/vm/itemapi.c
+   * source/vm/arrayshb.c
+   * source/vm/classes.c
+   * source/rdd/dbfntx/dbfntx1.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! Replaced 9999 internal and RT error codes with 
+       unique ones, in new Harbour ranges:
+       RT/PP: 1001-1999
+       RT/BASE: 6001-6999
+          runner: 6101-6199
+       Internal/misc: 6001-6999
+       Internal/RDD: 7001-7999
+          CDX: 7001-7099
+          NTX: 7101-7199
+       NOTE: If you find some more 9999s in the core code, 
+             pls tell.
+
 2008-01-26 06:27 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * tests/gfx.prg
    * tests/wcecon.prg

@@ -71,8 +71,6 @@
 #include "hbset.h"
 #include "hb_io.h"
 
-/* TODO: Fill the error codes with valid ones (instead of 9999) */
-
 typedef struct
 {
    char *         szName;                       /* Name of the function     */
@@ -451,7 +449,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
                hb_strncpy( szName, pSymRead[ ul ].szName, HB_SYMBOL_NAME_LEN );
                hb_hrbFreeSymbols( pSymRead, pHrbBody->ulSymbols );
                hb_hrbUnLoad( pHrbBody );
-               hb_errRT_BASE( EG_ARG, 9999, "Unknown or unregistered symbol", szName, 0 );
+               hb_errRT_BASE( EG_ARG, 6101, "Unknown or unregistered symbol", szName, 0 );
                return NULL;
             }
          }
@@ -508,7 +506,7 @@ static PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
       hFile = hb_fsOpen( ( BYTE * ) szFileName, FO_READ );
    }
    while( hFile == FS_ERROR &&
-          hb_errRT_BASE_Ext1( EG_OPEN, 9999, NULL, szFileName, hb_fsError(),
+          hb_errRT_BASE_Ext1( EG_OPEN, 6102, NULL, szFileName, hb_fsError(),
                               EF_CANDEFAULT | EF_CANRETRY,
                               HB_ERR_ARGS_BASEPARAMS ) == E_RETRY );
 
@@ -614,7 +612,7 @@ HB_FUNC( __HRBRUN )
          hb_retl( FALSE );
    }
    else
-      hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBRUN", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6103, NULL, "__HRBRUN", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __HRBLOAD )
@@ -680,7 +678,7 @@ HB_FUNC( __HRBDO )
          hb_xfree( argv );
    }
    else
-      hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBDO", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6104, NULL, "__HRBDO", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __HRBUNLOAD )
@@ -690,7 +688,7 @@ HB_FUNC( __HRBUNLOAD )
    if( pHrbBody )
       hb_hrbUnLoad( pHrbBody );
    else
-      hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBUNLOAD", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6105, NULL, "__HRBUNLOAD", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __HRBGETFU )
@@ -714,7 +712,7 @@ HB_FUNC( __HRBGETFU )
          hb_itemPutSymbol( hb_stackReturnItem(), pHrbBody->pSymRead + ulPos );
    }
    else
-      hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBGETFU", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6106, NULL, "__HRBGETFU", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __HRBDOFU )
@@ -735,5 +733,5 @@ HB_FUNC( __HRBDOFU )
       hb_vmDo( argc - 1 );          /* Run function        */
    }
    else
-      hb_errRT_BASE( EG_ARG, 9999, NULL, "__HRBDOFU", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6107, NULL, "__HRBDOFU", HB_ERR_ARGS_BASEPARAMS );
 }
