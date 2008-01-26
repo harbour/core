@@ -127,7 +127,7 @@ include common.cf
 # building CONSOLE programs. Otherwise we're building
 # GUI programs without console. Please note IT IS A
 # DIRTY HACK and any better solution is HIGHLY WELCOME
-ifeq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),w32)
+ifneq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),)
 MAIN_LIB      = $(LIB_DIR)/$(LIBPREF)mainstd$(LIBEXT)
 MAIN_LIB_OBJS = $(OBJ_DIR)/mainstd$(OBJEXT)
 
@@ -147,24 +147,26 @@ VPATH := $(ALL_SRC_DIRS) $(LIB_DIR) $(BIN_DIR) $(OBJ_DIR) $(DLL_OBJ_DIR)
 
 #**********************************************************
 
-# Some definitions cannot be kept in Common.mak
+# Some definitions cannot be kept in common.mak
 # due to serious limitations of Microsoft Nmake
 
-# Unix systems do not require an
-# extra compilation pass for dlls
+# Do not perform an extra compilation phase for shared libraries
+# if gcc -fPIC compilation flag is already passed to a makefile
+ifeq ($(findstring -fPIC,$(C_USR) $(CFLAGS) $(CLIBFLAGS)),-fPIC)
 DLL_OBJS := $(TMP_DLL_OBJS)
+else
+DLL_OBJS := $(patsubst $(OBJ_DIR)%,$(DLL_OBJ_DIR)%,$(TMP_DLL_OBJS))
+endif
 
 # DLLs on Windows require IMPORT lib
-# and an additional compiler pass
-ifeq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),w32)
-DLL_OBJS := $(patsubst $(OBJ_DIR)%,$(DLL_OBJ_DIR)%,$(TMP_DLL_OBJS))
-
+# and an additional compiler phase
+ifneq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),)
 HB_DLL_IMPLIB := $(HARBOUR_DLL:$(DLLEXT)=$(LIBEXT))
 HB_IMPLIB_PART := -Wl,--out-implib,$(HB_DLL_IMPLIB)
 endif
 
 #**********************************************************
-# C compiler flags and Harbour compiler flags.
+# C compiler flags
 #**********************************************************
 
 # Main "Include" directory
@@ -192,7 +194,18 @@ CLIBFLAGS      := -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDLL   := -D__EXPORT__ $(CLIBFLAGS) $(CLIBFLAGSDLL)
 CEXEFLAGSDLL   :=  $(CFLAGS) $(CEXEFLAGSDLL)
 
+# Under architectures other than "DOS based" add -fPIC
+# to gcc compiler flags for compiling shared libraries
+ifeq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),)
+ifeq ($(findstring -fPIC,$(CLIBFLAGSDLL)),)
+CLIBFLAGSDLL   := -fPIC $(CLIBFLAGSDLL)
+endif
+endif
+
+#**********************************************************
 # Harbour Compiler Flags
+#**********************************************************
+
 HBFLAGSCMN     := -i$(INCLUDE_DIR) -q0 -w2 -es2 -gc0 -kM $(PRG_USR)
 ifdef HB_DOC_PDF
 HBFLAGSCMN     :=  $(HBFLAGSCMN) -dPDF
@@ -219,7 +232,7 @@ LDFLAGS    += -Wl,--end-group $(HB_OS_LIBS)
 LDFLAGSDLL := -shared $(L_USR) -L$(LIB_DIR) $(LDFLAGSDLL)
 
 #**********************************************************
-# Libbrarian Flags
+# Library manager Flags
 #**********************************************************
 
 ARFLAGS = rc $(A_USR)
@@ -289,7 +302,7 @@ $(COMPILER_LIB) : $(COMPILER_LIB_OBJS)
 $(VM_LIB)       : $(VM_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
-ifeq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),w32)
+ifneq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),)
 $(MAIN_LIB)     : $(MAIN_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 endif

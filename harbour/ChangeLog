@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-26 22:42 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * make_gcc.mak
+    + Added an extra compilation phase for building
+      shared VM+RTL library (if needed)
+    ! Some minor fixes and cleanup
+
 2008-01-26 17:00 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * source/rtl/gtxwc/gtxwc.h
     added missed K_SH_keys
@@ -37,13 +43,13 @@
     added .ico support to TIP_MIMETYPE
   * contrib/hbtip/cgi.prg
   + contrib/hbtip/sessid.prg
-    moved statis funcs GenerateSID, CheckSID, DateToGmt from cgi.prg 
+    moved statis funcs GenerateSID, CheckSID, DateToGmt from cgi.prg
 	 to new sessid.prg and renamed to TIP_*
-  * contrib/hbtip/httpcln.prg	 
+  * contrib/hbtip/httpcln.prg
     fixed few typos that generated RT errors
-  * source/rtl/gtxwc/gtxwc.c	 
+  * source/rtl/gtxwc/gtxwc.c
     added missed K_SH_keys
-	  
+
 2008-01-26 09:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/make_b32_all.bat
    * contrib/make_vc_all.bat
@@ -61,8 +67,8 @@
    - contrib/hbgtwvg
    - contrib/hbrddads
    * utils/hbmake/hbmutils.prg
-     ! Done some final renames in contrib to be consistent 
-       with the core names where some new rules had to be 
+     ! Done some final renames in contrib to be consistent
+       with the core names where some new rules had to be
        made for DJGPP compatibility.
 
        Old name    New name
@@ -84,7 +90,7 @@
    * source/vm/classes.c
    * source/rdd/dbfntx/dbfntx1.c
    * source/rdd/dbfcdx/dbfcdx1.c
-     ! Replaced 9999 internal and RT error codes with 
+     ! Replaced 9999 internal and RT error codes with
        unique ones, in new Harbour ranges:
        RT/PP: 1001-1999
        RT/BASE: 6001-6999
@@ -93,7 +99,7 @@
        Internal/RDD: 7001-7999
           CDX: 7001-7099
           NTX: 7101-7199
-       NOTE: If you find some more 9999s in the core code, 
+       NOTE: If you find some more 9999s in the core code,
              pls tell.
 
 2008-01-26 06:27 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -118,7 +124,7 @@
    * source/rtl/gtcgi/gtcgi.c
    * source/rtl/gtwvt/gtwvt.c
    * contrib/hbgtwvg/gtwvg.c
-     ! Some minor formatting to the .ch file. Removed 
+     ! Some minor formatting to the .ch file. Removed
        reference to non-existing doc/gtinfo.txt.
      * Using HB_GTI_* instead of GTI_* in Harbour files.
 
@@ -172,22 +178,22 @@
    * utils/hbtest/Makefile
    * utils/hbrun/Makefile
    * tests/Makefile
-     * Core libs renamed to be prefixed with hb, while 
+     * Core libs renamed to be prefixed with hb, while
        having the first significant 5 chars unique.
 
        Old name    New name
        --------    --------
-       codepage -> hbcpage 
+       codepage -> hbcpage
        common   -> hbcommon
-       compiler -> hbcplr  
-       debug    -> hbdebug 
-       hbsix    -> hbsix   
-       hsx      -> hbhsx   
-       lang     -> hblang  
-       macro    -> hbmacro 
-       pp       -> hbpp    
-       rtl      -> hbrtl   
-       vm       -> hbvm    
+       compiler -> hbcplr
+       debug    -> hbdebug
+       hbsix    -> hbsix
+       hsx      -> hbhsx
+       lang     -> hblang
+       macro    -> hbmacro
+       pp       -> hbpp
+       rtl      -> hbrtl
+       vm       -> hbvm
        rdd      -> hbrdd
        dbfcdx   -> rddcdx
        dbffpt   -> rddfpt
@@ -197,25 +203,25 @@
        mainwin  -> hbmainwin
        mainstd  -> hbmainstd
 
-       NOTE/TODO: We're currently not in sync with contribs, 
-                  regarding hb prefixing, since in contrib 
+       NOTE/TODO: We're currently not in sync with contribs,
+                  regarding hb prefixing, since in contrib
                   rdds and gts (rightly) also have hb prefixes.
                   The only reason not to add them in core this
                   time, is to keep compatibility with DJGPP.
-                  Maybe we should remove those prefixes from 
+                  Maybe we should remove those prefixes from
                   contrib.
 
-       NOTE/TODO: Do tests in as many platforms and as many contrib 
-                  tests as possible. Feedback from hbmake users is 
+       NOTE/TODO: Do tests in as many platforms and as many contrib
+                  tests as possible. Feedback from hbmake users is
                   also welcome.
 
        !!! Please update your local make files !!!
 
    * include/hbgtinfo.ch
      + Added HB_ prefixed versions for all GTI_ macros.
-       Unprefixed GTI_ macros are to be considered xhb 
-       compatible (or legacy) ones, and they can be 
-       excluded by #defining HB_GT_NO_XHB if they seem to 
+       Unprefixed GTI_ macros are to be considered xhb
+       compatible (or legacy) ones, and they can be
+       excluded by #defining HB_GT_NO_XHB if they seem to
        collide with user code.
        TODO: Switch to use HB_GTI_* inside Harbour code.
 
@@ -229,14 +235,14 @@
    * contrib/hbzlib/hbmzip.c
    * contrib/hbzlib/readme.txt
      ! Removed zlib headers included in Harbour SVN.
-       For this contrib to compile, users will need to have 
+       For this contrib to compile, users will need to have
        the zlib package installed.
-     ! stricmp() -> hb_stricmp() to avoid MSVC warning and 
+     ! stricmp() -> hb_stricmp() to avoid MSVC warning and
        to be more portable.
 
 2008-01-25 15:20 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/compiler/hbmain.c
-    ! fixed a few /w3 memory leaks 
+    ! fixed a few /w3 memory leaks
 
 2008-01-25 10:47 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
    * contrib/make_b32_all.bat
