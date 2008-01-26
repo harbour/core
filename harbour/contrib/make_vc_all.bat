@@ -29,7 +29,7 @@ rem *******************************************************
 rem Compiling contrib dirs ...
 rem *******************************************************
 
-set _HB_DIRS=hbrddado hbbmcdx hbbtree hbgtwvg hbct hbgt hbmisc hbnf hbmsql
+set _HB_DIRS=rddado hbbmcdx hbbtree gtwvg hbct hbgt hbmisc hbnf hbmsql
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %__BATWORKER__% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=hbole hbziparch hbodbc hbtpathy hbtip hbw32 xhb
@@ -42,7 +42,7 @@ if not "%FREEIMAGE_DIR%" == "" set _HB_DIRS=%_HB_DIRS% hbfimage
 if not "%GD_DIR%"        == "" set _HB_DIRS=%_HB_DIRS% hbgd
 if not "%MYSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% hbmysql
 if not "%PGSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
-if not "%ADS_DIR%"       == "" set _HB_DIRS=%_HB_DIRS% hbrddads
+if not "%ADS_DIR%"       == "" set _HB_DIRS=%_HB_DIRS% rddads
 if not "%ZLIB_DIR%"      == "" set _HB_DIRS=%_HB_DIRS% hbzlib
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %__BATWORKER__% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 

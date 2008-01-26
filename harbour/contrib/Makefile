@@ -26,15 +26,15 @@ endif
 ifeq ($(HB_ARCHITECTURE),w32)
 
 DIRS +=\
-	hbrddads \
-	hbgtwvg \
+	rddads \
+	gtwvg \
 
 ifneq ($(HB_COMPILER),rsxnt)
 
 DIRS +=\
 	hbw32 \
 	hbodbc \
-	hbrddado \
+	rddado \
 
 endif
 
@@ -54,7 +54,7 @@ else
 ifeq ($(HB_ARCHITECTURE),linux)
 
 DIRS +=\
-	hbrddads \
+	rddads \
 	hbodbc \
 
 endif

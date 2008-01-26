@@ -8,6 +8,33 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-26 09:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+   * contrib/Makefile
+   + contrib/rddado
+   * contrib/rddado/common.mak
+   * contrib/rddado/Makefile
+   + contrib/gtwvg
+   * contrib/gtwvg/common.mak
+   * contrib/gtwvg/Makefile
+   + contrib/rddads
+   * contrib/rddads/common.mak
+   * contrib/rddads/Makefile
+   - contrib/hbrddado
+   - contrib/hbgtwvg
+   - contrib/hbrddads
+   * utils/hbmake/hbmutils.prg
+     ! Done some final renames in contrib to be consistent 
+       with the core names where some new rules had to be 
+       made for DJGPP compatibility.
+
+       Old name    New name
+       --------    --------
+       hbgtwvg  -> gtwvg
+       hbrddado -> rddado
+       hbrddads -> rddads
+
 2008-01-26 07:53 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/pp/pplib.c
    * source/rtl/run.c

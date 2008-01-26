@@ -2,7 +2,7 @@
 # $Id$
 #
 
-LIBNAME = hbgtwvg
+LIBNAME = gtwvg
 
 LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
 
