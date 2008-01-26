@@ -192,17 +192,17 @@ static const ClipKeyCode extKeyTab[CLIP_EXTKEY_COUNT] = {
     {K_F10,        K_ALT_F10,    K_CTRL_F10,  K_SH_F10}, /*  09 */
     {K_F11,        K_ALT_F11,    K_CTRL_F11,  K_SH_F11}, /*  10 */
     {K_F12,        K_ALT_F12,    K_CTRL_F12,  K_SH_F12}, /*  11 */
-    {K_UP,          K_ALT_UP,     K_CTRL_UP,         0}, /*  12 */
-    {K_DOWN,      K_ALT_DOWN,   K_CTRL_DOWN,         0}, /*  13 */
-    {K_LEFT,      K_ALT_LEFT,   K_CTRL_LEFT,         0}, /*  14 */
-    {K_RIGHT,    K_ALT_RIGHT,  K_CTRL_RIGHT,         0}, /*  15 */
-    {K_INS,        K_ALT_INS,    K_CTRL_INS,         0}, /*  16 */
-    {K_DEL,        K_ALT_DEL,    K_CTRL_DEL,         0}, /*  17 */
-    {K_HOME,      K_ALT_HOME,   K_CTRL_HOME,         0}, /*  18 */
-    {K_END,        K_ALT_END,    K_CTRL_END,         0}, /*  19 */
-    {K_PGUP,      K_ALT_PGUP,   K_CTRL_PGUP,         0}, /*  20 */
-    {K_PGDN,      K_ALT_PGDN,   K_CTRL_PGDN,         0}, /*  21 */
-    {K_BS,          K_ALT_BS,           127,         0}, /*  22 */
+    {K_UP,          K_ALT_UP,     K_CTRL_UP,   K_SH_UP}, /*  12 */
+    {K_DOWN,      K_ALT_DOWN,   K_CTRL_DOWN, K_SH_DOWN}, /*  13 */
+    {K_LEFT,      K_ALT_LEFT,   K_CTRL_LEFT, K_SH_LEFT}, /*  14 */
+    {K_RIGHT,    K_ALT_RIGHT,  K_CTRL_RIGHT, K_SH_RIGHT}, /*  15 */
+    {K_INS,        K_ALT_INS,    K_CTRL_INS,  K_SH_INS}, /*  16 */
+    {K_DEL,        K_ALT_DEL,    K_CTRL_DEL,  K_SH_DEL}, /*  17 */
+    {K_HOME,      K_ALT_HOME,   K_CTRL_HOME, K_SH_HOME}, /*  18 */
+    {K_END,        K_ALT_END,    K_CTRL_END,  K_SH_END}, /*  19 */
+    {K_PGUP,      K_ALT_PGUP,   K_CTRL_PGUP, K_SH_PGUP}, /*  20 */
+    {K_PGDN,      K_ALT_PGDN,   K_CTRL_PGDN, K_SH_PGDN}, /*  21 */
+    {K_BS,          K_ALT_BS,           127,   K_SH_BS}, /*  22 */
     {K_TAB,        K_ALT_TAB,    K_CTRL_TAB,  K_SH_TAB}, /*  23 */
     {K_ESC,        K_ALT_ESC,         K_ESC,         0}, /*  24 */
     {K_ENTER,    K_ALT_ENTER,  K_CTRL_ENTER,         0}, /*  25 */

@@ -71,10 +71,6 @@
 #define _CRLF chr(13)+chr(10)
 #define _BR '<br />'
 
-#define SID_LENGTH      25
-#define BASE_KEY_STRING "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-#define CRC_KEY_STRING  "Ak3yStR1Ng"  // Max Length must be 10 chars
-
 CLASS TIpCgi
 
    DATA HTTP_RAW_POST_DATA
@@ -106,8 +102,8 @@ CLASS TIpCgi
 
    METHOD StartSession()
    METHOD DestroySession()
-   METHOD CreateSID( cCRCKey ) INLINE ::cSID := GenerateSID( cCrcKey )
-   METHOD CheckCrcSID( cSID, cCRCKey ) INLINE CheckSID( cSID, cCRCKey )
+   METHOD CreateSID( cCRCKey ) INLINE ::cSID := TIP_GenerateSID( cCrcKey )
+   METHOD CheckCrcSID( cSID, cCRCKey ) INLINE TIP_CheckSID( cSID, cCRCKey )
    METHOD SessionEncode()
    METHOD SessionDecode( cData )
 
@@ -275,7 +271,7 @@ METHOD DestroySession( cID ) CLASS TIpCgi
       if !( lRet := ( FErase( cFile ) == 0 ) )
          ::Print( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
       else
-        ::hCookies[ 'SESSIONID' ] := cSID + "; expires= " + DateToGMT( DATE() - 1 )
+        ::hCookies[ 'SESSIONID' ] := cSID + "; expires= " + TIP_DateToGMT( DATE() - 1 )
         ::CreateSID()
         cSID := ::cSID
         ::hCookies[ 'SESSIONID' ] := cSID
@@ -393,12 +389,12 @@ METHOD StartSession( cSID ) CLASS TIpCgi
 
    if empty( cSID )
 
-   if ( nH := hb_HPos( ::hGets, 'SESSIONID' ) ) != 0
-      cSID := hb_HValueAt( ::hGets, nH )
-   elseif ( nH := hb_HPos( ::hPosts, 'SESSIONID' ) ) != 0
-      cSID := hb_HValueAt( ::hPosts, nH )
-   elseif ( nH := hb_HPos( ::hCookies, 'SESSIONID' ) ) != 0
-      cSID := hb_HValueAt( ::hCookies, nH )
+      if ( nH := hb_HPos( ::hGets, 'SESSIONID' ) ) != 0
+         cSID := hb_HValueAt( ::hGets, nH )
+      elseif ( nH := hb_HPos( ::hPosts, 'SESSIONID' ) ) != 0
+         cSID := hb_HValueAt( ::hPosts, nH )
+      elseif ( nH := hb_HPos( ::hCookies, 'SESSIONID' ) ) != 0
+         cSID := hb_HValueAt( ::hCookies, nH )
       endif
 
    endif
@@ -632,84 +628,4 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
 
    return cVal
 
-STATIC FUNCTION GenerateSID( cCRCKey )
 
-   local cSID, nSIDCRC, cSIDCRC, n, cTemp
-   local nLenSID     := SID_LENGTH
-   local cBaseKeys   := BASE_KEY_STRING
-   local nLenKeys    := Len( cBaseKeys )
-   local cRet
-   local nRand, nKey := 0
-
-   DEFAULT cCRCKey  TO CRC_KEY_STRING
-
-   cCRCKey := Left( cCRCKey, 10 )      // Max Lenght must to be of 10 chars
-
-   /* Let's generate the sequence */
-   cSID := Space( nLenSID )
-   for n := 1 TO nLenSID
-      nRand     := HB_RandomInt( 1, nLenKeys )
-      cSID      := Stuff( cSID, n, 1, SubStr( cBaseKeys, nRand, 1 ) )
-      nKey      += nRand
-   next
-
-   nSIDCRC := nKey * 51 // Max Value is 99603 a 5 chars number
-   cTemp   := StrZero( nSIDCRC, 5 )
-   cSIDCRC := ""
-   for n := 1 to Len( cTemp )
-      cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
-   next
-
-   cRet := cSID + cSIDCRC
-
-   RETURN cRet
-
-STATIC FUNCTION CheckSID( cSID, cCRCKey )
-
-   local nSIDCRC, cSIDCRC, n, cTemp
-   local nLenSID     := SID_LENGTH
-   local cBaseKeys   := BASE_KEY_STRING
-   local nLenKeys    := Len( cBaseKeys )
-   local nRand, nKey := 0
-
-   DEFAULT cCRCKey  TO CRC_KEY_STRING
-
-   cCRCKey := Left( cCRCKey, 10 )      // Max Lenght must to be of 10 chars
-
-   /* Calculate the key */
-   for n := 1 to nLenSID
-      nRand := At( SubStr( cSID, n, 1), cBaseKeys )
-      nKey  += nRand
-   next
-
-   // Recalculate the CRC
-   nSIDCRC := nKey * 51 // Max Value is 99603. a 5 chars number
-   cTemp   := StrZero( nSIDCRC, 5 )
-   cSIDCRC := ""
-   for n := 1 to Len( cTemp )
-      cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
-   next
-
-   RETURN ( Right( cSID, 5 ) == cSIDCRC )
-
-STATIC FUNCTION DateToGMT( dDate, cTime )
-   LOCAL cStr := ""
-   LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "dd-mm-yy" )
-   LOCAL nDay, nMonth, nYear, nDoW
-   LOCAL aDays   := { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }
-   LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-  
-   DEFAULT dDate TO DATE()
-   DEFAULT cTime TO TIME()
-  
-   nDay   := Day( dDate )
-   nMonth := Month( dDate )
-   nYear  := Year( dDate)
-   nDoW   := Dow( dDate )
-  
-   cStr := aDays[ nDow ] + ", " + StrZero( nDay, 2 ) + "-" + aMonths[ nMonth ] + "-" + ;
-           Right( StrZero( nYear, 4 ), 2 ) + " " + cTime + " GMT"
-  
-   Set( _SET_DATEFORMAT, cOldDateFormat )
-
-   RETURN cStr

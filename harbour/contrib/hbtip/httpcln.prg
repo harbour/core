@@ -439,7 +439,7 @@ METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
    ENDIF
 
    //tail matching the domain
-   aKeys:=hb_hkeyat(::hCookies)
+   aKeys:=hb_hkeys(::hCookies)
    y:=len(aKeys)
    z:=len(cHost)
    cHost:=upper(cHost)
@@ -455,7 +455,7 @@ METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
    //now that we have the domain matches we have to do path matchine
    nPath:=len(cPath)
    FOR x := 1 TO y
-      aKeys:=hb_hkeyat(::hCookies[aDomKeys[x]])
+      aKeys:=hb_hkeys(::hCookies[aDomKeys[x]])
       aPathKeys:={}
       b:=len(aKeys)
       FOR  a:= 1 TO b

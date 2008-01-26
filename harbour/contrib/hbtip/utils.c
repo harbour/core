@@ -226,7 +226,7 @@ typedef struct tag_mime
 #define MIME_FLAG_TRIMTABS      0x0002
 #define MIME_FLAG_CASEINSENS    0x0004
 #define MIME_FLAG_CONTINUE      0x0008
-#define MIME_TABLE_SIZE         67
+#define MIME_TABLE_SIZE         68
 
 static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 {
@@ -333,7 +333,11 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
    /* 65*/ { 0, "GIF", "image/gif", 0, 0, 0 },
 
    /* JPEG image */
-   /* 66*/ { 0, "\xff\xd8", "image/jpg", 0, 0, 0 }
+   /* 66*/ { 0, "\xff\xd8", "image/jpeg", 0, 0, 0 },
+
+   /* ICO image */
+   /* 67*/ { 2, "\x01\x00", "image/x-icon", 0, 0, 0 }
+
 };
 
 /* Find mime by extension */

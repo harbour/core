@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-26 10:10 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * contrib/hbtip/utils.c
+    added .ico support to TIP_MIMETYPE
+  * contrib/hbtip/cgi.prg
+  + contrib/hbtip/sessid.prg
+    moved statis funcs GenerateSID, CheckSID, DateToGmt from cgi.prg 
+	 to new sessid.prg and renamed to TIP_*
+  * contrib/hbtip/httpcln.prg	 
+    fixed few typos that generated RT errors
+  * source/rtl/gtxwc/gtxwc.c	 
+    added missed K_SH_keys
+	  
 2008-01-26 09:54 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/make_b32_all.bat
    * contrib/make_vc_all.bat
