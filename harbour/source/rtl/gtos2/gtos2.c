@@ -820,8 +820,8 @@ static BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch ( iType )
    {
-      case GTI_FULLSCREEN:
-      case GTI_KBDSUPPORT:
+      case HB_GTI_FULLSCREEN:
+      case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 

@@ -51,12 +51,6 @@
  *
  */
 
-/*
-   Minimal informations:
-
-   READ doc/gtinfo.txt
-*/
-
 #ifndef HB_GTINFO_CH_
 #define HB_GTINFO_CH_
 
@@ -77,12 +71,10 @@
                                        Enable if the caps-lock key affects the top
                                        row keys.  (Alternate language keys are not
                                        handled properly by this temporary fix.
-                                       Default is disabled.
-                                     */
+                                       Default is disabled. */
 #define HB_GTI_KBDALT           12  /* This will get/set the status of the alt-numpad
                                        key handling.
-                                       Default is Enabled.
-                                    */
+                                       Default is Enabled. */
 #define HB_GTI_FULLSCREEN       13  /* Is it full screen GT driver? */
 #define HB_GTI_KBDSUPPORT       14  /* Is it keyboard input supported? */
 #define HB_GTI_CLIPBOARDDATA    15  /* Get/Set clipboard */

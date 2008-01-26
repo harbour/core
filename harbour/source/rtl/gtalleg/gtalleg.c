@@ -820,17 +820,17 @@ static BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
-      case GTI_FULLSCREEN:
-      case GTI_KBDSUPPORT:
-      case GTI_ISGRAPHIC:
+      case HB_GTI_FULLSCREEN:
+      case HB_GTI_KBDSUPPORT:
+      case HB_GTI_ISGRAPHIC:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
-      case GTI_INPUTFD:
+      case HB_GTI_INPUTFD:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, -1 );
          break;
 
-      case GTI_SCREENWIDTH:
+      case HB_GTI_SCREENWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_fInit ?
                                  AL_SCREEN_W : s_byFontWidth * s_iScrWidth );
          iWidth = hb_itemGetNI( pInfo->pNewVal );
@@ -841,7 +841,7 @@ static BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_SCREENHEIGHT:
+      case HB_GTI_SCREENHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_fInit ?
                                  AL_SCREEN_H : s_byFontSize * s_iScrHeight );
          iHeight = hb_itemGetNI( pInfo->pNewVal );
@@ -852,7 +852,7 @@ static BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_SCREENDEPTH:
+      case HB_GTI_SCREENDEPTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_fInit ?
                al_bitmap_color_depth( al_screen ) : al_desktop_color_depth() );
          iValue = hb_itemGetNI( pInfo->pNewVal );
@@ -864,7 +864,7 @@ static BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_FONTSIZE:
+      case HB_GTI_FONTSIZE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_byFontSize );
          iValue = hb_itemGetNI( pInfo->pNewVal );
          if( iValue > 0 && iValue < 256 )
@@ -875,25 +875,25 @@ static BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_FONTWIDTH:
+      case HB_GTI_FONTWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_byFontWidth );
          break;
 
-      case GTI_DESKTOPWIDTH:
+      case HB_GTI_DESKTOPWIDTH:
          al_get_desktop_resolution( &iWidth, &iHeight );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, iWidth );
          break;
 
-      case GTI_DESKTOPHEIGHT:
+      case HB_GTI_DESKTOPHEIGHT:
          al_get_desktop_resolution( &iWidth, &iHeight );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, iHeight );
          break;
 
-      case GTI_DESKTOPDEPTH:
+      case HB_GTI_DESKTOPDEPTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, al_desktop_color_depth() );
          break;
 
-      case GTI_KBDSHIFTS:
+      case HB_GTI_KBDSHIFTS:
          if( al_keyboard_needs_poll() )
          {
             al_poll_keyboard();
@@ -905,18 +905,18 @@ static BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_WINTITLE:
+      case HB_GTI_WINTITLE:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             al_set_window_title( hb_itemGetCPtr( pInfo->pNewVal ) );
          }
          break;
 
-      case GTI_VIEWMAXWIDTH:
+      case HB_GTI_VIEWMAXWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_iScrWidth );
          break;
 
-      case GTI_VIEWMAXHEIGHT:
+      case HB_GTI_VIEWMAXHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_iScrHeight );
          break;
 

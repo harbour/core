@@ -2472,7 +2472,7 @@ static void hb_gt_crs_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
          add_new_ioBase( ioBase );
          HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
          HB_GTSELF_RESIZE( pGT, s_ioBase->maxrow, s_ioBase->maxcol );
-         HB_GTSELF_SETFLAG( pGT, GTI_COMPATBUFFER, FALSE );
+         HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, FALSE );
          HB_GTSELF_SETBLINK( pGT, TRUE );
       }
    }
@@ -2896,12 +2896,12 @@ static BOOL hb_gt_crs_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    {
       switch ( iType )
       {
-         case GTI_FULLSCREEN:
-         case GTI_KBDSUPPORT:
+         case HB_GTI_FULLSCREEN:
+         case HB_GTI_KBDSUPPORT:
             pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
             break;
 
-         case GTI_ESCDELAY:
+         case HB_GTI_ESCDELAY:
             pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_ioBase->esc_delay );
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
                s_ioBase->esc_delay = hb_itemGetNI( pInfo->pNewVal );

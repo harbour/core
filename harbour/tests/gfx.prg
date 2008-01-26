@@ -12,7 +12,7 @@ Function Main
 Local nScreenWidth, nFontHeight, nFontWidth
 Local nTop, nLeft, nHeight, nWidth, nColor, nSec := Seconds()
 
-  If !hb_gtInfo(GTI_ISGRAPHIC)
+  If !hb_gtInfo(HB_GTI_ISGRAPHIC)
      ?
      ? "You are using a non graphics capable gt:"
      ? hb_gtVersion()
@@ -20,23 +20,23 @@ Local nTop, nLeft, nHeight, nWidth, nColor, nSec := Seconds()
      Quit
   End
 
-  If hb_gtInfo(GTI_DESKTOPWIDTH) > 1000
-    hb_gtInfo(GTI_FONTWIDTH, 12)
-    hb_gtInfo(GTI_FONTSIZE, 24)
+  If hb_gtInfo(HB_GTI_DESKTOPWIDTH) > 1000
+    hb_gtInfo(HB_GTI_FONTWIDTH, 12)
+    hb_gtInfo(HB_GTI_FONTSIZE, 24)
   End
 
   ? hb_gtVersion(1)
 
-  nScreenWidth := hb_gtInfo(GTI_SCREENWIDTH)
-  nFontHeight := hb_gtInfo(GTI_FONTSIZE)
-  nFontWidth := hb_gtInfo(GTI_FONTWIDTH)
+  nScreenWidth := hb_gtInfo(HB_GTI_SCREENWIDTH)
+  nFontHeight := hb_gtInfo(HB_GTI_FONTSIZE)
+  nFontWidth := hb_gtInfo(HB_GTI_FONTWIDTH)
 
   SetColor("n/w")
   @ 0, 0 Say Space(MaxCol() + 1)
   @ 1, 0 Say PadC(WELCOME, MaxCol() + 1)
   @ 2, 0 Say Space(MaxCol() + 1)
 
-  hb_gtInfo(GTI_WINTITLE, "Cross-GT, multiplatform graphics demo")
+  hb_gtInfo(HB_GTI_WINTITLE, "Cross-GT, multiplatform graphics demo")
 
   PutFrame(nFontHeight / 2,;
            MaxCol() / 2 * nFontWidth - Len(WELCOME) / 2 * nFontWidth - nFontWidth,;
@@ -45,8 +45,8 @@ Local nTop, nLeft, nHeight, nWidth, nColor, nSec := Seconds()
            hb_gfxMakeColor(0, 0, 0), hb_gfxMakeColor(255, 255, 255))
   
   While Inkey() == 0
-    nTop := Int(hb_Random(3.1 * nFontHeight, hb_gtInfo(GTI_SCREENHEIGHT)))
-    nLeft := Int(hb_Random(hb_gtInfo(GTI_SCREENWIDTH)))
+    nTop := Int(hb_Random(3.1 * nFontHeight, hb_gtInfo(HB_GTI_SCREENHEIGHT)))
+    nLeft := Int(hb_Random(hb_gtInfo(HB_GTI_SCREENWIDTH)))
     nHeight := Int(hb_Random(251))
     nWidth := Int(hb_Random(251))
     nColor := hb_gfxMakeColor(Int(hb_Random(32, 256)), Int(hb_Random(32, 256)), Int(hb_Random(32, 256)))

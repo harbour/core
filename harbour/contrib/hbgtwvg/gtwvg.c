@@ -2164,28 +2164,28 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
-      case GTI_FULLSCREEN:
-      case GTI_KBDSUPPORT:
-      case GTI_ISGRAPHIC:
+      case HB_GTI_FULLSCREEN:
+      case HB_GTI_KBDSUPPORT:
+      case HB_GTI_ISGRAPHIC:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
-      case GTI_INPUTFD:
+      case HB_GTI_INPUTFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
                               ( UINT_PTR ) GetStdHandle( STD_INPUT_HANDLE ) );
          break;
 
-      case GTI_OUTPUTFD:
+      case HB_GTI_OUTPUTFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
                               ( UINT_PTR ) GetStdHandle( STD_OUTPUT_HANDLE ) );
          break;
 
-      case GTI_ERRORFD:
+      case HB_GTI_ERRORFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
                               ( UINT_PTR ) GetStdHandle( STD_ERROR_HANDLE ) );
          break;
 
-      case GTI_FONTSIZE:
+      case HB_GTI_FONTSIZE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, _s.PTEXTSIZE.y );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
@@ -2204,7 +2204,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_FONTWIDTH:
+      case HB_GTI_FONTWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, _s.fontWidth );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
@@ -2214,7 +2214,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_FONTNAME:
+      case HB_GTI_FONTNAME:
          pInfo->pResult = hb_itemPutC( pInfo->pResult, _s.fontFace );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) /* TODO */
          {
@@ -2222,26 +2222,26 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_FONTWEIGHT:
+      case HB_GTI_FONTWEIGHT:
          switch( _s.fontWeight )
          {
             case FW_THIN:
             case FW_EXTRALIGHT:
             case FW_LIGHT:
-               iVal = GTI_FONTW_THIN;
+               iVal = HB_GTI_FONTW_THIN;
             break;
 
             case FW_DONTCARE:
             case FW_NORMAL:
             case FW_MEDIUM:
-               iVal = GTI_FONTW_NORMAL;
+               iVal = HB_GTI_FONTW_NORMAL;
             break;
 
             case FW_SEMIBOLD:
             case FW_BOLD:
             case FW_EXTRABOLD:
             case FW_HEAVY:
-               iVal = GTI_FONTW_BOLD;
+               iVal = HB_GTI_FONTW_BOLD;
             break;
 
             default:
@@ -2254,32 +2254,32 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             /* store font status for next operation on fontsize */
             switch( hb_itemGetNI( pInfo->pNewVal ) )
             {
-               case GTI_FONTW_THIN:
+               case HB_GTI_FONTW_THIN:
                   _s.fontWeight = FW_LIGHT;
                   break;
-               case GTI_FONTW_NORMAL:
+               case HB_GTI_FONTW_NORMAL:
                   _s.fontWeight = FW_NORMAL;
                   break;
-               case GTI_FONTW_BOLD:
+               case HB_GTI_FONTW_BOLD:
                   _s.fontWeight = FW_BOLD;
                   break;
             }
          }
          break;
 
-      case GTI_FONTQUALITY:
+      case HB_GTI_FONTQUALITY:
          switch( _s.fontQuality )
          {
             case ANTIALIASED_QUALITY:
-               iVal = GTI_FONTQ_HIGH;
+               iVal = HB_GTI_FONTQ_HIGH;
                break;
             case DEFAULT_QUALITY:
             case DRAFT_QUALITY:
-               iVal = GTI_FONTQ_NORMAL;
+               iVal = HB_GTI_FONTQ_NORMAL;
                break;
             case NONANTIALIASED_QUALITY:
             case PROOF_QUALITY:
-               iVal = GTI_FONTQ_DRAFT;
+               iVal = HB_GTI_FONTQ_DRAFT;
                break;
             default:
                iVal = 0;
@@ -2290,20 +2290,20 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             switch( hb_itemGetNI( pInfo->pNewVal ) )
             {
-               case GTI_FONTQ_HIGH:
+               case HB_GTI_FONTQ_HIGH:
                   _s.fontQuality = ANTIALIASED_QUALITY;
                   break;
-               case GTI_FONTQ_NORMAL:
+               case HB_GTI_FONTQ_NORMAL:
                   _s.fontQuality = DEFAULT_QUALITY;
                   break;
-               case GTI_FONTQ_DRAFT:
+               case HB_GTI_FONTQ_DRAFT:
                   _s.fontQuality = DRAFT_QUALITY;
                   break;
             }
          }
          break;
 
-      case GTI_SCREENHEIGHT:
+      case HB_GTI_SCREENHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, _s.PTEXTSIZE.y * _s.ROWS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
@@ -2312,7 +2312,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_SCREENWIDTH:
+      case HB_GTI_SCREENWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, _s.PTEXTSIZE.x * _s.COLS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
@@ -2321,7 +2321,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_DESKTOPWIDTH:
+      case HB_GTI_DESKTOPWIDTH:
       {
          RECT rDesk;
          HWND hDesk;
@@ -2331,7 +2331,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, rDesk.right - rDesk.left );
          break;
       }
-      case GTI_DESKTOPHEIGHT:
+      case HB_GTI_DESKTOPHEIGHT:
       {
          RECT rDesk;
          HWND hDesk = GetDesktopWindow();
@@ -2339,7 +2339,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, rDesk.bottom - rDesk.top );
          break;
       }
-      case GTI_DESKTOPCOLS:
+      case HB_GTI_DESKTOPCOLS:
       {
          RECT rDesk;
          HWND hDesk;
@@ -2349,7 +2349,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                               ( rDesk.right - rDesk.left ) / _s.PTEXTSIZE.x );
          break;
       }
-      case GTI_DESKTOPROWS:
+      case HB_GTI_DESKTOPROWS:
       {
          RECT rDesk;
          HWND hDesk;
@@ -2359,7 +2359,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                               ( rDesk.bottom - rDesk.top ) / _s.PTEXTSIZE.y );
          break;
       }
-      case GTI_WINTITLE:
+      case HB_GTI_WINTITLE:
       {
          char * szTitle = NULL;
          if( hb_gt_wvt_GetWindowTitle( &szTitle ) )
@@ -2370,7 +2370,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             hb_gt_wvt_SetWindowTitle( hb_itemGetCPtr( pInfo->pNewVal ) );
          break;
       }
-      case GTI_CODEPAGE:
+      case HB_GTI_CODEPAGE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, _s.CodePage );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 && iVal != _s.CodePage )
@@ -2380,7 +2380,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_ICONFILE:
+      case HB_GTI_ICONFILE:
       {
          HICON hIcon = 0;
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
@@ -2399,7 +2399,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       }
 
-      case GTI_ICONRES:
+      case HB_GTI_ICONRES:
       {
          HICON hIcon = 0;
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
@@ -2422,21 +2422,21 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( UINT_PTR ) hIcon );
          break;
       }
-      case GTI_VIEWMAXWIDTH:
+      case HB_GTI_VIEWMAXWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, _s.COLS );
          break;
 
-      case GTI_VIEWMAXHEIGHT:
+      case HB_GTI_VIEWMAXHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, _s.ROWS );
          break;
 
-      case GTI_KBDSHIFTS:
+      case HB_GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_w32_getKbdState() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hb_gt_w32_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
-      case GTI_CLIPBOARDDATA:
+      case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             hb_gt_w32_setClipboard( _s.CodePage == OEM_CHARSET ?
@@ -2463,7 +2463,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_CURSORBLINKRATE:
+      case HB_GTI_CURSORBLINKRATE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, GetCaretBlinkTime() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             SetCaretBlinkTime( hb_itemGetNI( pInfo->pNewVal ) );

@@ -1389,13 +1389,13 @@ static int hb_gt_dos_getKbdState( void )
 
    ucStat = HB_PEEK_BYTE( 0x0040, 0x0017 );
 
-   if( ucStat & HB_BIOS_SHIFT    ) iKbdState |= GTI_KBD_SHIFT;
-   if( ucStat & HB_BIOS_CTRL     ) iKbdState |= GTI_KBD_CTRL;
-   if( ucStat & HB_BIOS_ALT      ) iKbdState |= GTI_KBD_ALT;
-   if( ucStat & HB_BIOS_SCROLL   ) iKbdState |= GTI_KBD_SCROLOCK;
-   if( ucStat & HB_BIOS_NUMLOCK  ) iKbdState |= GTI_KBD_NUMLOCK;
-   if( ucStat & HB_BIOS_CAPSLOCK ) iKbdState |= GTI_KBD_CAPSLOCK;
-   if( ucStat & HB_BIOS_INSERT   ) iKbdState |= GTI_KBD_INSERT;
+   if( ucStat & HB_BIOS_SHIFT    ) iKbdState |= HB_GTI_KBD_SHIFT;
+   if( ucStat & HB_BIOS_CTRL     ) iKbdState |= HB_GTI_KBD_CTRL;
+   if( ucStat & HB_BIOS_ALT      ) iKbdState |= HB_GTI_KBD_ALT;
+   if( ucStat & HB_BIOS_SCROLL   ) iKbdState |= HB_GTI_KBD_SCROLOCK;
+   if( ucStat & HB_BIOS_NUMLOCK  ) iKbdState |= HB_GTI_KBD_NUMLOCK;
+   if( ucStat & HB_BIOS_CAPSLOCK ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
+   if( ucStat & HB_BIOS_INSERT   ) iKbdState |= HB_GTI_KBD_INSERT;
 
    return iKbdState;
 }
@@ -1404,13 +1404,13 @@ static void hb_gt_dos_setKbdState( int iKbdState )
 {
    UCHAR ucStat = 0;
 
-   ucStat |= ( iKbdState & GTI_KBD_SHIFT    ) ? HB_BIOS_SHIFT    : 0;
-   ucStat |= ( iKbdState & GTI_KBD_CTRL     ) ? HB_BIOS_CTRL     : 0;
-   ucStat |= ( iKbdState & GTI_KBD_ALT      ) ? HB_BIOS_ALT      : 0;
-   ucStat |= ( iKbdState & GTI_KBD_SCROLOCK ) ? HB_BIOS_SCROLL   : 0;
-   ucStat |= ( iKbdState & GTI_KBD_NUMLOCK  ) ? HB_BIOS_NUMLOCK  : 0;
-   ucStat |= ( iKbdState & GTI_KBD_CAPSLOCK ) ? HB_BIOS_CAPSLOCK : 0;
-   ucStat |= ( iKbdState & GTI_KBD_INSERT   ) ? HB_BIOS_INSERT   : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_SHIFT    ) ? HB_BIOS_SHIFT    : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_CTRL     ) ? HB_BIOS_CTRL     : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_ALT      ) ? HB_BIOS_ALT      : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_SCROLOCK ) ? HB_BIOS_SCROLL   : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_NUMLOCK  ) ? HB_BIOS_NUMLOCK  : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_CAPSLOCK ) ? HB_BIOS_CAPSLOCK : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_INSERT   ) ? HB_BIOS_INSERT   : 0;
 
    HB_POKE_BYTE( 0x0040, 0x0017, ucStat );
 }
@@ -1421,12 +1421,12 @@ static BOOL hb_gt_dos_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch ( iType )
    {
-      case GTI_FULLSCREEN:
-      case GTI_KBDSUPPORT:
+      case HB_GTI_FULLSCREEN:
+      case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
-      case GTI_KBDSHIFTS:
+      case HB_GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_dos_getKbdState() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hb_gt_dos_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );

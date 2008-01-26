@@ -523,8 +523,8 @@ static void hb_gt_pca_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    }
 
    HB_GTSELF_RESIZE( pGT, iRows, iCols );
-   HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, s_bStdoutConsole );
-   HB_GTSELF_SETFLAG( pGT, GTI_STDERRCON, s_bStderrConsole );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, s_bStdoutConsole );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, s_bStderrConsole );
 
    hb_gt_pca_AnsiInit();
    hb_gt_pca_AnsiGetCurPos( &s_iRow, &s_iCol );
@@ -858,8 +858,8 @@ static BOOL hb_gt_pca_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch ( iType )
    {
-      case GTI_FULLSCREEN:
-      case GTI_KBDSUPPORT:
+      case HB_GTI_FULLSCREEN:
+      case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 

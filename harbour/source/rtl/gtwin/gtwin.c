@@ -1581,12 +1581,12 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
-      case GTI_FULLSCREEN:
-      case GTI_KBDSUPPORT:
+      case HB_GTI_FULLSCREEN:
+      case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
-      case GTI_WINTITLE:
+      case HB_GTI_WINTITLE:
       {
          TCHAR buff[ 256 ];
          char * szTitle;
@@ -1604,47 +1604,47 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       }
-      case GTI_VIEWMAXHEIGHT:
+      case HB_GTI_VIEWMAXHEIGHT:
       {
          COORD coBuf = GetLargestConsoleWindowSize( s_HOutput );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, coBuf.Y - 1 );
          break;
       }
-      case GTI_VIEWMAXWIDTH:
+      case HB_GTI_VIEWMAXWIDTH:
       {
          COORD coBuf = GetLargestConsoleWindowSize( s_HOutput );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, coBuf.X - 1 );
          break;
       }
-      case GTI_VIEWPORTHEIGHT:
+      case HB_GTI_VIEWPORTHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_csbi.srWindow.Bottom -
                                                         s_csbi.srWindow.Top );
          break;
 
-      case GTI_VIEWPORTWIDTH:
+      case HB_GTI_VIEWPORTWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_csbi.srWindow.Right -
                                                         s_csbi.srWindow.Left );
          break;
 
-      case GTI_KBDSHIFTS:
+      case HB_GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_w32_getKbdState() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hb_gt_w32_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
-      case GTI_KBDSPECIAL:
+      case HB_GTI_KBDSPECIAL:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bSpecialKeyHandling );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
             s_bSpecialKeyHandling = hb_itemGetL( pInfo->pNewVal );
          break;
 
-      case GTI_KBDALT:
+      case HB_GTI_KBDALT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bAltKeyHandling );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
             s_bAltKeyHandling = hb_itemGetL( pInfo->pNewVal );
          break;
 
-      case GTI_CLIPBOARDDATA:
+      case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             hb_gt_w32_setClipboard( CF_OEMTEXT, hb_itemGetCPtr( pInfo->pNewVal ),

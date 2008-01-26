@@ -126,7 +126,7 @@ static void hb_gt_cgi_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    hb_fsSetDevMode( pGTCGI->hStdout, FD_BINARY );
 
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
-   HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, TRUE );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, TRUE );
 }
 
 static void hb_gt_cgi_Exit( PHB_GT pGT )

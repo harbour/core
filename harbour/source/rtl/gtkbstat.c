@@ -65,16 +65,16 @@ int hb_gt_w32_getKbdState( void )
 
    GetKeyboardState( kbState );
 
-   if( kbState[VK_SHIFT   ] & 0x80 ) iKbdState |= GTI_KBD_SHIFT;
-   if( kbState[VK_CONTROL ] & 0x80 ) iKbdState |= GTI_KBD_CTRL;
-   if( kbState[VK_MENU    ] & 0x80 ) iKbdState |= GTI_KBD_ALT;
-   if( kbState[VK_LWIN    ] & 0x80 ) iKbdState |= GTI_KBD_LWIN;
-   if( kbState[VK_RWIN    ] & 0x80 ) iKbdState |= GTI_KBD_RWIN;
-   if( kbState[VK_APPS    ] & 0x80 ) iKbdState |= GTI_KBD_MENU;
-   if( kbState[VK_SCROLL  ] & 0x01 ) iKbdState |= GTI_KBD_SCROLOCK;
-   if( kbState[VK_NUMLOCK ] & 0x01 ) iKbdState |= GTI_KBD_NUMLOCK;
-   if( kbState[VK_CAPITAL ] & 0x01 ) iKbdState |= GTI_KBD_CAPSLOCK;
-   if( kbState[VK_INSERT  ] & 0x01 ) iKbdState |= GTI_KBD_INSERT;
+   if( kbState[VK_SHIFT   ] & 0x80 ) iKbdState |= HB_GTI_KBD_SHIFT;
+   if( kbState[VK_CONTROL ] & 0x80 ) iKbdState |= HB_GTI_KBD_CTRL;
+   if( kbState[VK_MENU    ] & 0x80 ) iKbdState |= HB_GTI_KBD_ALT;
+   if( kbState[VK_LWIN    ] & 0x80 ) iKbdState |= HB_GTI_KBD_LWIN;
+   if( kbState[VK_RWIN    ] & 0x80 ) iKbdState |= HB_GTI_KBD_RWIN;
+   if( kbState[VK_APPS    ] & 0x80 ) iKbdState |= HB_GTI_KBD_MENU;
+   if( kbState[VK_SCROLL  ] & 0x01 ) iKbdState |= HB_GTI_KBD_SCROLOCK;
+   if( kbState[VK_NUMLOCK ] & 0x01 ) iKbdState |= HB_GTI_KBD_NUMLOCK;
+   if( kbState[VK_CAPITAL ] & 0x01 ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
+   if( kbState[VK_INSERT  ] & 0x01 ) iKbdState |= HB_GTI_KBD_INSERT;
 
    return iKbdState;
 }
@@ -85,16 +85,16 @@ void hb_gt_w32_setKbdState( int iKbdState )
 
    GetKeyboardState( kbState );
 
-   kbState[VK_SHIFT  ] = ( iKbdState & GTI_KBD_SHIFT    ) ? 0x80 : 0;
-   kbState[VK_CONTROL] = ( iKbdState & GTI_KBD_CTRL     ) ? 0x80 : 0;
-   kbState[VK_MENU   ] = ( iKbdState & GTI_KBD_ALT      ) ? 0x80 : 0;
-   kbState[VK_LWIN   ] = ( iKbdState & GTI_KBD_LWIN     ) ? 0x80 : 0;
-   kbState[VK_RWIN   ] = ( iKbdState & GTI_KBD_RWIN     ) ? 0x80 : 0;
-   kbState[VK_APPS   ] = ( iKbdState & GTI_KBD_MENU     ) ? 0x80 : 0;
-   kbState[VK_SCROLL ] = ( iKbdState & GTI_KBD_SCROLOCK ) ? 0x01 : 0;
-   kbState[VK_NUMLOCK] = ( iKbdState & GTI_KBD_NUMLOCK  ) ? 0x01 : 0;
-   kbState[VK_CAPITAL] = ( iKbdState & GTI_KBD_CAPSLOCK ) ? 0x01 : 0;
-   kbState[VK_INSERT ] = ( iKbdState & GTI_KBD_INSERT   ) ? 0x01 : 0;
+   kbState[VK_SHIFT  ] = ( iKbdState & HB_GTI_KBD_SHIFT    ) ? 0x80 : 0;
+   kbState[VK_CONTROL] = ( iKbdState & HB_GTI_KBD_CTRL     ) ? 0x80 : 0;
+   kbState[VK_MENU   ] = ( iKbdState & HB_GTI_KBD_ALT      ) ? 0x80 : 0;
+   kbState[VK_LWIN   ] = ( iKbdState & HB_GTI_KBD_LWIN     ) ? 0x80 : 0;
+   kbState[VK_RWIN   ] = ( iKbdState & HB_GTI_KBD_RWIN     ) ? 0x80 : 0;
+   kbState[VK_APPS   ] = ( iKbdState & HB_GTI_KBD_MENU     ) ? 0x80 : 0;
+   kbState[VK_SCROLL ] = ( iKbdState & HB_GTI_KBD_SCROLOCK ) ? 0x01 : 0;
+   kbState[VK_NUMLOCK] = ( iKbdState & HB_GTI_KBD_NUMLOCK  ) ? 0x01 : 0;
+   kbState[VK_CAPITAL] = ( iKbdState & HB_GTI_KBD_CAPSLOCK ) ? 0x01 : 0;
+   kbState[VK_INSERT ] = ( iKbdState & HB_GTI_KBD_INSERT   ) ? 0x01 : 0;
 
    SetKeyboardState( kbState );
 }

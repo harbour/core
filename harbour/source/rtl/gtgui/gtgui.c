@@ -105,7 +105,7 @@ static BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    switch( iType )
    {
 #if defined( HB_OS_WIN_32 )
-      case GTI_CLIPBOARDDATA:
+      case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             hb_gt_w32_setClipboard( CF_TEXT, hb_itemGetCPtr( pInfo->pNewVal ),
@@ -128,7 +128,7 @@ static BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_KBDSHIFTS:
+      case HB_GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_w32_getKbdState() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hb_gt_w32_setKbdState( hb_itemGetNI( pInfo->pNewVal ) );

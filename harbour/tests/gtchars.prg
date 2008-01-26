@@ -39,9 +39,9 @@ else
 endif
 lBoxChar := !empty( lBoxChar )
 
-HB_GTINFO( GTI_FONTNAME, "fixed" )
-HB_GTINFO( GTI_FONTWIDTH, 9 )
-HB_GTINFO( GTI_FONTSIZE, 20 )
+HB_GTINFO( HB_GTI_FONTNAME, "fixed" )
+HB_GTINFO( HB_GTI_FONTWIDTH, 9 )
+HB_GTINFO( HB_GTI_FONTSIZE, 20 )
 
 HB_SETTERMCP( cTermCP, cHostCP, lBoxChar )
 
@@ -50,7 +50,7 @@ HB_SETTERMCP( cTermCP, cHostCP, lBoxChar )
 ? "Host codpage: " + cHostCP + ", terminal codepage: " + cTermCP
 ?
 
-//HB_GTINFO(GTI_COMPATBUFFER,.f.)
+//HB_GTINFO(HB_GTI_COMPATBUFFER,.f.)
 ?
 for i := 0 to 15
     for j := 0 to 15
@@ -71,7 +71,7 @@ inkey(0)
 ? "   CP-1250: say[ " + POL_WIN + " ]"; dspboxch( ", box[ " + POL_WIN + " ]" )
 ? "    CP-852: say[ " + POL_852 + " ]"; dspboxch( ", box[ " + POL_852 + " ]" )
 ? chr(4)+chr(16)+chr(17)+chr(24)+chr(25)+chr(26)+chr(27)+chr(30)+chr(31)
-HB_GTINFO(GTI_ESCDELAY,5)
+HB_GTINFO(HB_GTI_ESCDELAY,5)
 inkey(0)
 alert("ALERT BOX")
 return nil

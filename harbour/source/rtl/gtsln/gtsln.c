@@ -696,9 +696,9 @@ static void hb_gt_sln_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    hb_gt_sln_mouse_Init();
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSELF_RESIZE( pGT, SLtt_Screen_Rows, SLtt_Screen_Cols );
-   HB_GTSELF_SETFLAG( pGT, GTI_COMPATBUFFER, FALSE );
-   HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, s_fStdOutTTY );
-   HB_GTSELF_SETFLAG( pGT, GTI_STDERRCON, s_fStdErrTTY );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, FALSE );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, s_fStdOutTTY );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, s_fStdErrTTY );
 
    HB_GTSELF_SETBLINK( pGT, TRUE );
    HB_GTSELF_SETPOS( pGT, SLsmg_get_row(), SLsmg_get_column() );
@@ -901,12 +901,12 @@ static BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch ( iType )
    {
-      case GTI_FULLSCREEN:
-      case GTI_KBDSUPPORT:
+      case HB_GTI_FULLSCREEN:
+      case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
-      case GTI_ESCDELAY:
+      case HB_GTI_ESCDELAY:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_sln_escDelay );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             hb_sln_escDelay = hb_itemGetNI( pInfo->pNewVal );

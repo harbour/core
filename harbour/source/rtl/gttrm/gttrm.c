@@ -2889,9 +2889,9 @@ static void hb_gt_trm_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
 
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
    HB_GTSELF_RESIZE( pGT, iRows, iCols );
-   HB_GTSELF_SETFLAG( pGT, GTI_COMPATBUFFER, FALSE );
-   HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, pTerm->fStdoutTTY );
-   HB_GTSELF_SETFLAG( pGT, GTI_STDERRCON, pTerm->fStderrTTY );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, FALSE );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, pTerm->fStdoutTTY );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, pTerm->fStderrTTY );
    HB_GTSELF_SETBLINK( pGT, TRUE );
 
    pTerm->Init( pTerm );
@@ -3375,24 +3375,24 @@ static BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    pTerm = HB_GTTRM_GET( pGT );
    switch( iType )
    {
-      case GTI_FULLSCREEN:
-      case GTI_KBDSUPPORT:
+      case HB_GTI_FULLSCREEN:
+      case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
-      case GTI_ESCDELAY:
+      case HB_GTI_ESCDELAY:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pTerm->esc_delay );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             pTerm->esc_delay = hb_itemGetNI( pInfo->pNewVal );
          break;
 
-      case GTI_DELKEYMAP:
+      case HB_GTI_DELKEYMAP:
          szVal = hb_itemGetCPtr( pInfo->pNewVal );
          if( szVal && *szVal )
             removeKeyMap( pTerm, hb_itemGetCPtr( pInfo->pNewVal ) );
          break;
 
-      case GTI_ADDKEYMAP:
+      case HB_GTI_ADDKEYMAP:
          iVal = hb_arrayGetNI( pInfo->pNewVal, 1 );
          szVal = hb_arrayGetCPtr( pInfo->pNewVal, 2 );
          if( iVal && szVal && *szVal )

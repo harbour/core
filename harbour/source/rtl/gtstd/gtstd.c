@@ -263,8 +263,8 @@ static void hb_gt_std_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       SetConsoleMode( ( HANDLE ) hb_fsGetOsHandle( pGTSTD->hStdin ), 0x0000 );
    }
 #endif
-   HB_GTSELF_SETFLAG( pGT, GTI_STDOUTCON, pGTSTD->fStdoutConsole );
-   HB_GTSELF_SETFLAG( pGT, GTI_STDERRCON, pGTSTD->fStderrConsole );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, pGTSTD->fStdoutConsole );
+   HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, pGTSTD->fStderrConsole );
 }
 
 static void hb_gt_std_Exit( PHB_GT pGT )
@@ -721,8 +721,8 @@ static BOOL hb_gt_std_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch ( iType )
    {
-      case GTI_FULLSCREEN:
-      case GTI_KBDSUPPORT:
+      case HB_GTI_FULLSCREEN:
+      case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 

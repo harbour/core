@@ -217,7 +217,7 @@ setcancel(.f.)
 
 #ifdef __HARBOUR__
   set(_SET_EVENTMASK,INKEY_ALL)
-  hb_gtInfo(GTI_ESCDELAY,50)
+  hb_gtInfo(HB_GTI_ESCDELAY,50)
   hb_setCodePage( "PLMAZ" )
   hb_setTermCP( "PLISO" )
   ? hb_gtVersion(1), hb_gtVersion()

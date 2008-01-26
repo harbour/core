@@ -3632,9 +3632,9 @@ static int hb_gt_xwc_getKbdState( PXWND_DEF wnd )
 {
    int iKbdState = 0;
 
-   if( wnd->keyModifiers.bShift ) iKbdState |= GTI_KBD_SHIFT;
-   if( wnd->keyModifiers.bCtrl  ) iKbdState |= GTI_KBD_CTRL;
-   if( wnd->keyModifiers.bAlt   ) iKbdState |= GTI_KBD_ALT;
+   if( wnd->keyModifiers.bShift ) iKbdState |= HB_GTI_KBD_SHIFT;
+   if( wnd->keyModifiers.bCtrl  ) iKbdState |= HB_GTI_KBD_CTRL;
+   if( wnd->keyModifiers.bAlt   ) iKbdState |= HB_GTI_KBD_ALT;
 
    return iKbdState;
 }
@@ -3651,20 +3651,20 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    {
       switch( iType )
       {
-         case GTI_FULLSCREEN:
-         case GTI_KBDSUPPORT:
-         case GTI_ISGRAPHIC:
+         case HB_GTI_FULLSCREEN:
+         case HB_GTI_KBDSUPPORT:
+         case HB_GTI_ISGRAPHIC:
             hb_gt_xwc_ConnectX( wnd, FALSE );
             break;
 
-         case GTI_INPUTFD:
-         case GTI_SCREENDEPTH:
-         case GTI_DESKTOPDEPTH:
-         case GTI_DESKTOPWIDTH:
-         case GTI_DESKTOPHEIGHT:
-         case GTI_DESKTOPCOLS:
-         case GTI_DESKTOPROWS:
-         case GTI_CLIPBOARDDATA:
+         case HB_GTI_INPUTFD:
+         case HB_GTI_SCREENDEPTH:
+         case HB_GTI_DESKTOPDEPTH:
+         case HB_GTI_DESKTOPWIDTH:
+         case HB_GTI_DESKTOPHEIGHT:
+         case HB_GTI_DESKTOPCOLS:
+         case HB_GTI_DESKTOPROWS:
+         case HB_GTI_CLIPBOARDDATA:
             hb_gt_xwc_ConnectX( wnd, TRUE );
             break;
       }
@@ -3672,45 +3672,45 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
    switch( iType )
    {
-      case GTI_FULLSCREEN:
-      case GTI_KBDSUPPORT:
-      case GTI_ISGRAPHIC:
+      case HB_GTI_FULLSCREEN:
+      case HB_GTI_KBDSUPPORT:
+      case HB_GTI_ISGRAPHIC:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->dpy != NULL );
          break;
 
-      case GTI_INPUTFD:
+      case HB_GTI_INPUTFD:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, ConnectionNumber( wnd->dpy ) );
          break;
 
-      case GTI_SCREENWIDTH:
+      case HB_GTI_SCREENWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->width );
          break;
 
-      case GTI_SCREENHEIGHT:
+      case HB_GTI_SCREENHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->height );
          break;
 
-      case GTI_SCREENDEPTH:
-      case GTI_DESKTOPDEPTH:
+      case HB_GTI_SCREENDEPTH:
+      case HB_GTI_DESKTOPDEPTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult,
                      DefaultDepth( wnd->dpy, DefaultScreen( wnd->dpy ) ) );
          break;
 
-      case GTI_FONTSIZE:
+      case HB_GTI_FONTSIZE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->fontHeight );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 ) /* TODO */
             wnd->fontHeight = iVal;
          break;
 
-      case GTI_FONTWIDTH:
+      case HB_GTI_FONTWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->fontWidth );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 ) /* TODO */
             wnd->fontWidth = iVal;
          break;
 
-      case GTI_FONTNAME:
+      case HB_GTI_FONTNAME:
          pInfo->pResult = hb_itemPutC( pInfo->pResult, wnd->szFontName );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) /* TODO */
          {
@@ -3720,25 +3720,25 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_DESKTOPWIDTH:
-      case GTI_DESKTOPHEIGHT:
-      case GTI_DESKTOPCOLS:
-      case GTI_DESKTOPROWS:
+      case HB_GTI_DESKTOPWIDTH:
+      case HB_GTI_DESKTOPHEIGHT:
+      case HB_GTI_DESKTOPCOLS:
+      case HB_GTI_DESKTOPROWS:
       {
          XWindowAttributes wndAttr;
          XGetWindowAttributes( wnd->dpy, DefaultRootWindow( wnd->dpy ), &wndAttr );
          switch( iType )
          {
-            case GTI_DESKTOPWIDTH:
+            case HB_GTI_DESKTOPWIDTH:
                iVal = wndAttr.width;
                break;
-            case GTI_DESKTOPHEIGHT:
+            case HB_GTI_DESKTOPHEIGHT:
                iVal = wndAttr.height;
                break;
-            case GTI_DESKTOPCOLS:
+            case HB_GTI_DESKTOPCOLS:
                iVal = wndAttr.width / wnd->fontWidth;
                break;
-            case GTI_DESKTOPROWS:
+            case HB_GTI_DESKTOPROWS:
                iVal = wndAttr.height / wnd->fontHeight;
                break;
             default:
@@ -3748,7 +3748,7 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       }
 
-      case GTI_WINTITLE:
+      case HB_GTI_WINTITLE:
          pInfo->pResult = hb_itemPutC( pInfo->pResult, wnd->szTitle );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
@@ -3764,15 +3764,15 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_VIEWMAXWIDTH:
+      case HB_GTI_VIEWMAXWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->cols );
          break;
 
-      case GTI_VIEWMAXHEIGHT:
+      case HB_GTI_VIEWMAXHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->rows );
          break;
 
-      case GTI_CLIPBOARDDATA:
+      case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             hb_gt_xwc_RealRefresh( wnd );
@@ -3790,13 +3790,13 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_CURSORBLINKRATE:
+      case HB_GTI_CURSORBLINKRATE:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, wnd->cursorBlinkRate );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
             wnd->cursorBlinkRate = hb_itemGetNI( pInfo->pNewVal );
          break;
 
-      case GTI_KBDSHIFTS:
+      case HB_GTI_KBDSHIFTS:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult,
                                         hb_gt_xwc_getKbdState( wnd ) );
          break;

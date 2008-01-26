@@ -21,22 +21,22 @@ proc main()
    local i, j, k
 
    /* set OEM font encoding for non unicode modes */
-   hb_gtInfo( GTI_CODEPAGE, 255 )
+   hb_gtInfo( HB_GTI_CODEPAGE, 255 )
 
    /* Set EN CP-437 encoding */
    hb_setCodePage( "EN" )
    hb_setTermCP( "EN" )
 
    /* Set font size */
-   hb_gtInfo( GTI_FONTWIDTH, 6 )
-   hb_gtInfo( GTI_FONTSIZE, 12 )
+   hb_gtInfo( HB_GTI_FONTWIDTH, 6 )
+   hb_gtInfo( HB_GTI_FONTSIZE, 12 )
 
    /* resize console window using new font size */
    SetMode( MaxRow() + 1, MaxCol() + 1 )
 
    /* get screen dimensions */
-   nMaxScrRow = hb_gtInfo( GTI_DESKTOPROWS )
-   nMaxScrCol = hb_gtInfo( GTI_DESKTOPCOLS )
+   nMaxScrRow = hb_gtInfo( HB_GTI_DESKTOPROWS )
+   nMaxScrCol = hb_gtInfo( HB_GTI_DESKTOPCOLS )
 
    /* resize console window to the screen size */
    SetMode( nMaxScrRow, nMaxScrCol )

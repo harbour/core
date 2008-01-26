@@ -1419,41 +1419,41 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    switch ( iType )
    {
-      case GTI_ISGRAPHIC:
-      case GTI_FULLSCREEN:
-      case GTI_KBDSUPPORT:
-      case GTI_ISCTWIN:
-      case GTI_ISMULTIWIN:
+      case HB_GTI_ISGRAPHIC:
+      case HB_GTI_FULLSCREEN:
+      case HB_GTI_KBDSUPPORT:
+      case HB_GTI_ISCTWIN:
+      case HB_GTI_ISMULTIWIN:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, FALSE );
          break;
 
-      case GTI_INPUTFD:
+      case HB_GTI_INPUTFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, pGT->hStdIn );
          break;
 
-      case GTI_OUTPUTFD:
+      case HB_GTI_OUTPUTFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, pGT->hStdOut );
          break;
 
-      case GTI_ERRORFD:
+      case HB_GTI_ERRORFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, pGT->hStdErr );
          break;
 
-      case GTI_COMPATBUFFER:
+      case HB_GTI_COMPATBUFFER:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pGT->fVgaCell );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
             pGT->fVgaCell = hb_itemGetL( pInfo->pNewVal );
          break;
 
-      case GTI_VIEWMAXWIDTH:
+      case HB_GTI_VIEWMAXWIDTH:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, HB_GTSELF_MAXCOL( pGT ) );
          break;
 
-      case GTI_VIEWMAXHEIGHT:
+      case HB_GTI_VIEWMAXHEIGHT:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, HB_GTSELF_MAXROW( pGT ) );
          break;
 
-      case GTI_NEWWIN:  /* clear screen area, set default cursor shape and position */
+      case HB_GTI_NEWWIN:  /* clear screen area, set default cursor shape and position */
       {
          /* Clear screen */
          HB_GTSELF_DISPBEGIN( pGT );
@@ -1465,7 +1465,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          HB_GTSELF_FLUSH( pGT );
          /* no break; */
       }
-      case GTI_GETWIN:  /* save screen buffer, cursor shape and possition */
+      case HB_GTI_GETWIN:  /* save screen buffer, cursor shape and possition */
       {
          int iRow, iCol;
          ULONG ulSize;
@@ -1493,7 +1493,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       }
-      case GTI_SETWIN:  /* restore screen buffer, cursor shape and possition */
+      case HB_GTI_SETWIN:  /* restore screen buffer, cursor shape and possition */
          if( hb_arrayLen( pInfo->pNewVal ) == 8 )
          {
             HB_GTSELF_DISPBEGIN( pGT );
@@ -1512,7 +1512,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_CLIPBOARDDATA:
+      case HB_GTI_CLIPBOARDDATA:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             /* set new Clipboard value */
@@ -1557,12 +1557,12 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
       gtInfo.pNewVal = gtInfo.pResult = NULL;
 
-      HB_GTSELF_INFO( pGT, GTI_FULLSCREEN, &gtInfo );
+      HB_GTSELF_INFO( pGT, HB_GTI_FULLSCREEN, &gtInfo );
       if( gtInfo.pResult )
       {
          fScreen = hb_itemGetL( gtInfo.pResult );
       }
-      HB_GTSELF_INFO( pGT, GTI_KBDSUPPORT, &gtInfo );
+      HB_GTSELF_INFO( pGT, HB_GTI_KBDSUPPORT, &gtInfo );
       if( gtInfo.pResult )
       {
          fKeyBoard = hb_itemGetL( gtInfo.pResult );
@@ -1878,17 +1878,17 @@ static int hb_gt_def_SetFlag( PHB_GT pGT, int iType, int iNewValue )
 
    switch ( iType )
    {
-      case GTI_COMPATBUFFER:
+      case HB_GTI_COMPATBUFFER:
          iPrevValue = pGT->fVgaCell;
          pGT->fVgaCell = iNewValue != 0;
          break;
 
-      case GTI_STDOUTCON:
+      case HB_GTI_STDOUTCON:
          iPrevValue = pGT->fStdOutCon;
          pGT->fStdOutCon = iNewValue != 0;
          break;
 
-      case GTI_STDERRCON:
+      case HB_GTI_STDERRCON:
          iPrevValue = pGT->fStdErrCon;
          pGT->fStdErrCon = iNewValue != 0;
          break;
