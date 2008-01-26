@@ -8,6 +8,22 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-26 10:26 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/rddads/adsfunc.c
+     ! Warning fixed in ADSGetServerName().
+
+   * contrib/hbtip/sessid.prg
+     ! SVN header added.
+
+   * contrib/hbtip/common.mak
+     + New file added.
+
+   * contrib/hbtip/Makefile
+     * Formatting.
+
+   * source/rtl/gtxwc/gtxwc.c
+     ! Formatting.
+
 2008-01-26 10:10 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * contrib/hbtip/utils.c
     added .ico support to TIP_MIMETYPE

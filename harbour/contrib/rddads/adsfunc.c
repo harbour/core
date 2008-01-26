@@ -2555,11 +2555,11 @@ HB_FUNC( ADSGETSERVERNAME )
 {
    ADSHANDLE   hConnect = HB_ADS_PARCONNECTION( 1 );
    UNSIGNED16  usLen = 256;
-   char        buf[ 256 ];
+   UNSIGNED8   buf[ 256 ];
 
    if( AdsGetServerName( hConnect, buf, &usLen ) == AE_SUCCESS )
    {
-      hb_retclen( buf, usLen );
+      hb_retclen( ( char * ) buf, usLen );
    }
 }
 

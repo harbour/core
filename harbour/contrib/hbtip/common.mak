@@ -26,6 +26,7 @@ LIB_OBJS = \
     $(OBJ_DIR)\httpcln$(OBJEXT) \
     $(OBJ_DIR)\mail$(OBJEXT) \
     $(OBJ_DIR)\popcln$(OBJEXT) \
+    $(OBJ_DIR)\sessid$(OBJEXT) \
     $(OBJ_DIR)\smtpcln$(OBJEXT) \
     $(OBJ_DIR)\thtml$(OBJEXT) \
     $(OBJ_DIR)\url$(OBJEXT) \

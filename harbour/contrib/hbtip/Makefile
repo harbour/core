@@ -25,7 +25,7 @@ PRG_SOURCES= \
 	cgi.prg \
 	thtml.prg \
 	sendmail.prg \
-	sessid.prg
+	sessid.prg \
 
 PRG_HEADERS= \
 	thtml.ch \

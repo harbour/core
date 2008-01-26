@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * xHarbour Project source code:
  * Functions to create session id and some utils
  *
@@ -57,8 +61,8 @@
  *
  */
 
-#include 'tip.ch'
-#include 'common.ch'
+#include "tip.ch"
+#include "common.ch"
 
 #define SID_LENGTH      25
 #define BASE_KEY_STRING "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -145,4 +149,3 @@ FUNCTION TIP_DATETOGMT( dDate, cTime )
    Set( _SET_DATEFORMAT, cOldDateFormat )
 
    RETURN cStr
-
