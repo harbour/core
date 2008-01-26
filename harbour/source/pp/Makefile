@@ -14,7 +14,7 @@ C_SOURCES=\
 LIBNAME=hbpp
 
 LIBS=\
-	common \
+	hbcommon \
 
 ifeq ($(HB_PPGEN_PATH),)
    HB_PPGEN_PATH=.
