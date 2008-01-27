@@ -856,15 +856,15 @@ static void hb_ntxTagCheckBuffers( LPTAGINFO pTag )
    ULONG i;
 
    if( ( pTag->HdrChanged || pTag->Owner->Changed ) && !pTag->Owner->lockWrite )
-      hb_errInternal( 7101, "hb_ntxTagCheckBuffers: tag modified in unlocked index", "", "" );
+      hb_errInternal( 9301, "hb_ntxTagCheckBuffers: tag modified in unlocked index", "", "" );
 
    for( i = 0; i < pTag->Owner->ulPages; i++ )
    {
       pPage = pTag->Owner->pages[ i ];
       if( pPage->Changed && !pTag->Owner->lockWrite )
-         hb_errInternal( 7102, "hb_ntxTagCheckBuffers: page modified in unlocked index", "", "" );
+         hb_errInternal( 9302, "hb_ntxTagCheckBuffers: page modified in unlocked index", "", "" );
       if( pPage->iUsed )
-         hb_errInternal( 7103, "hb_ntxTagCheckBuffers: page still allocated", "", "" );
+         hb_errInternal( 9303, "hb_ntxTagCheckBuffers: page still allocated", "", "" );
    }
 }
 
@@ -886,7 +886,7 @@ static void hb_ntxPageCheckKeys( LPPAGEINFO pPage, LPTAGINFO pTag, int iPos, int
                 u - 1, pTag->KeyLength, hb_ntxGetKeyVal( pPage, u - 1 ),
                 u, pTag->KeyLength, hb_ntxGetKeyVal( pPage, u ) );
          fflush(stdout);
-         hb_errInternal( 7104, "hb_ntxPageCheckKeys: keys sorted wrong.", "", "" );
+         hb_errInternal( 9304, "hb_ntxPageCheckKeys: keys sorted wrong.", "", "" );
       }
    }
 }
@@ -1093,9 +1093,9 @@ static LPPAGEINFO hb_ntxPageGetBuffer( LPTAGINFO pTag, ULONG ulPage )
       LPPAGEINFO pPage = pIndex->pFirst;
 
       if( pPage->iUsed )
-         hb_errInternal( 7105, "hb_ntxPageGetBuffer: page used.", "", "" );
+         hb_errInternal( 9305, "hb_ntxPageGetBuffer: page used.", "", "" );
       if( pPage->Changed )
-         hb_errInternal( 7106, "hb_ntxPageGetBuffer: page changed.", "", "" );
+         hb_errInternal( 9306, "hb_ntxPageGetBuffer: page changed.", "", "" );
 
       pIndex->pFirst = pPage->pNext;
       if( pIndex->pFirst )
@@ -1207,7 +1207,7 @@ static void hb_ntxPageRelease( LPTAGINFO pTag, LPPAGEINFO pPage )
       }
    }
    else if( pPage->iUsed < 0 )
-      hb_errInternal( 7107, "hb_ntxPageRelease: unused page freed.", "", "" );
+      hb_errInternal( 9307, "hb_ntxPageRelease: unused page freed.", "", "" );
 }
 
 /*
@@ -1950,7 +1950,7 @@ static void hb_ntxIndexFlush( LPNTXINDEX pIndex )
          hb_ntxPageRelease( pIndex->lpTags[0], pPage );
       }
       else
-         hb_errInternal( 7108, "hb_ntxIndexFlush: unchaged page in the list.", "", "" );
+         hb_errInternal( 9308, "hb_ntxIndexFlush: unchaged page in the list.", "", "" );
    }
 
    if( pIndex->Compound )
@@ -5082,7 +5082,7 @@ static void hb_ntxSortOut( LPNTXSORTINFO pSort )
       {
          if( hb_vmRequestQuery() != 0 )
             return;
-         hb_errInternal( 7109, "hb_ntxSortOut: memory structure corrupted.", "", "" );
+         hb_errInternal( 9309, "hb_ntxSortOut: memory structure corrupted.", "", "" );
       }
       if( fUnique )
       {
@@ -5111,7 +5111,7 @@ static void hb_ntxSortOut( LPNTXSORTINFO pSort )
                    ulKey, pKeyVal, ulRec, pSort->pLastKey, pSort->ulLastRec); fflush(stdout);
             if( hb_vmRequestQuery() != 0 )
                return;
-            hb_errInternal( 7110, "hb_ntxSortOut: sorting fails.", "", "" );
+            hb_errInternal( 9310, "hb_ntxSortOut: sorting fails.", "", "" );
          }
       }
       memcpy( pSort->pLastKey, pKeyVal, iLen );
@@ -5125,7 +5125,7 @@ static void hb_ntxSortOut( LPNTXSORTINFO pSort )
    {
       if( hb_vmRequestQuery() != 0 )
          return;
-      hb_errInternal( 7111, "hb_ntxSortOut: memory structure corrupted(2).", "", "" );
+      hb_errInternal( 9311, "hb_ntxSortOut: memory structure corrupted(2).", "", "" );
    }
 #endif
 
@@ -5780,7 +5780,7 @@ static ERRCODE ntxGoCold( NTXAREAP pArea )
          if( fAppend && pArea->fShared )
          {
             if( pArea->fNtxAppend )
-               hb_errInternal( 7112, "ntxGoCold: multiple appending without GOCOLD.", "", "" );
+               hb_errInternal( 9312, "ntxGoCold: multiple appending without GOCOLD.", "", "" );
             pArea->fNtxAppend = TRUE;
          }
          else

@@ -9443,7 +9443,7 @@ static void hb_cdxSortWritePage( LPCDXSORTINFO pSort )
       pSort->hTempFile = hb_fsCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if ( pSort->hTempFile == FS_ERROR )
       {
-         hb_errInternal( 9999, "hb_cdxSortWritePage: Can't create temporary file.", "", "" );
+         hb_errInternal( 9301, "hb_cdxSortWritePage: Can't create temporary file.", "", "" );
       }
       pSort->szTempFileName = hb_strdup( ( char * ) szName );
    }
@@ -9451,7 +9451,7 @@ static void hb_cdxSortWritePage( LPCDXSORTINFO pSort )
    pSort->pSwapPage[ pSort->ulCurPage ].nOffset = hb_fsSeekLarge( pSort->hTempFile, 0, FS_END );
    if ( hb_fsWriteLarge( pSort->hTempFile, pSort->pKeyPool, ulSize ) != ulSize )
    {
-      hb_errInternal( 9999, "hb_cdxSortWritePage: Write error in temporary file.", "", "" );
+      hb_errInternal( 9302, "hb_cdxSortWritePage: Write error in temporary file.", "", "" );
    }
    pSort->ulKeys = 0;
    pSort->ulCurPage++;
@@ -9470,7 +9470,7 @@ static void hb_cdxSortGetPageKey( LPCDXSORTINFO pSort, ULONG ulPage,
       if ( hb_fsSeekLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].nOffset, SEEK_SET ) != pSort->pSwapPage[ ulPage ].nOffset ||
            hb_fsReadLarge( pSort->hTempFile, pSort->pSwapPage[ ulPage ].pKeyPool, ulSize ) != ulSize )
       {
-         hb_errInternal( 9999, "hb_cdxSortGetPageKey: Read error from temporary file.", "", "" );
+         hb_errInternal( 9303, "hb_cdxSortGetPageKey: Read error from temporary file.", "", "" );
       }
       pSort->pSwapPage[ ulPage ].nOffset += ulSize;
       pSort->pSwapPage[ ulPage ].ulKeyBuf = ulKeys;
@@ -9803,7 +9803,7 @@ static void hb_cdxSortOut( LPCDXSORTINFO pSort )
    {
       if ( ! hb_cdxSortKeyGet( pSort, &pKeyVal, &ulRec ) )
       {
-         hb_errInternal( 9999, "hb_cdxSortOut: memory structure corrupted.", "", "" );
+         hb_errInternal( 9304, "hb_cdxSortOut: memory structure corrupted.", "", "" );
       }
       if ( fUnique )
       {
@@ -9824,7 +9824,7 @@ static void hb_cdxSortOut( LPCDXSORTINFO pSort )
          {
             printf("\r\nulKey=%ld, pKeyVal=[%s][%ld], pKeyLast=[%s][%ld]\r\n",
                    ulKey, pKeyVal, ulRec, pSort->pLastKey, pSort->ulLastRec); fflush(stdout);
-            hb_errInternal( 9999, "hb_cdxSortOut: sorting fails.", "", "" );
+            hb_errInternal( 9305, "hb_cdxSortOut: sorting fails.", "", "" );
          }
       }
 #endif
@@ -9836,7 +9836,7 @@ static void hb_cdxSortOut( LPCDXSORTINFO pSort )
 #ifdef HB_CDX_DBGCODE
    if ( hb_cdxSortKeyGet( pSort, &pKeyVal, &ulRec ) )
    {
-      hb_errInternal( 9999, "hb_cdxSortOut: memory structure corrupted(2).", "", "" );
+      hb_errInternal( 9306, "hb_cdxSortOut: memory structure corrupted(2).", "", "" );
    }
 #endif
 

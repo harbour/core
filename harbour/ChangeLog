@@ -8,6 +8,40 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-27 17:24 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/hbmysql/make_b32.bat
+   * contrib/hbmysql/make_vc.bat
+   * contrib/hbodbc/make_b32.bat
+   * contrib/hbodbc/make_vc.bat
+   * contrib/hbfbird/make_b32.bat
+   * contrib/hbfbird/make_vc.bat
+   * contrib/hbapollo/make_b32.bat
+   * contrib/hbapollo/make_vc.bat
+   * contrib/hbzlib/make_b32.bat
+   * contrib/hbzlib/make_vc.bat
+   * contrib/hbpgsql/make_b32.bat
+   * contrib/hbpgsql/make_vc.bat
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+   * contrib/hbfimage/make_b32.bat
+   * contrib/hbfimage/make_vc.bat
+   * contrib/hbgd/make_b32.bat
+   * contrib/hbgd/make_vc.bat
+     ! Minor formatting.
+
+   * contrib/hbzlib/make_b32.bat
+     ! -a added to implib until a better fix is found 
+       for the problem.
+
+   * source/rdd/dbfntx/dbfntx1.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+     ! Changed previously used internal error code 
+       ranges to better fit in already used ones.
+       (70??/71?? -> 93??)
+
+   * contrib/hbbmcdx/bmdbfcdx1.c
+     ! 9999 internal error codes synced with CDX RDD.
+
 2008-01-27 15:26 UTC+0200 Chen Kedem <niki@synel.co.il>
    * source/rtl/objfunc.prg
      ! Change hb_ISPOINTER() -> hb_ISSYMBOL()
