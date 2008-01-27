@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-27 12:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/objfunc.prg
+     ! Fixed ISNUMBER() -> hb_ISPOINTER() for pointers.
+       Thanks to Chen Kedem.
+
+   * utils/hbtest/rt_stra.prg
+   * utils/hbtest/rt_array.prg
+     ! Fixed expected results to use the recently introduced new error codes.
+       Thanks to Chen Kedem.
+
 2008-01-26 22:42 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
    * make_gcc.mak
     + Added an extra compilation phase for building

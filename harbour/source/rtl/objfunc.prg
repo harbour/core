@@ -185,7 +185,7 @@ FUNCTION __ObjSetValueList( oObject, aData )
 
 FUNCTION __objAddMethod( oObject, cSymbol, nFuncPtr )
 
-   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol ) .OR. !ISNUMBER( nFuncPtr )
+   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol ) .OR. !hb_ISPOINTER( nFuncPtr )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF !__objHasMsg( oObject, cSymbol )
       __clsAddMsg( oObject:ClassH, cSymbol, nFuncPtr, HB_OO_MSG_METHOD, NIL, 1 )
@@ -219,7 +219,7 @@ FUNCTION __objAddData( oObject, cSymbol )
 
 FUNCTION __objModMethod( oObject, cSymbol, nFuncPtr )
 
-   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol ) .OR. !ISNUMBER( nFuncPtr )
+   IF !ISOBJECT( oObject ) .OR. !ISCHARACTER( cSymbol ) .OR. !hb_ISPOINTER( nFuncPtr )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ELSEIF __objHasMethod( oObject, cSymbol )
       __clsModMsg( oObject:ClassH, cSymbol, nFuncPtr )

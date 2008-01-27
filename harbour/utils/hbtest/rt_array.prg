@@ -102,9 +102,9 @@ FUNCTION Main_ARRAY()
    TEST_LINE( AFill( NIL )                    , "E BASE 2017 Argument error AEVAL A:4:U:NIL;B:{||...};U:NIL;U:NIL " )
 #else
 #ifndef __XPP__
-   TEST_LINE( AFill()                         , "E BASE 9999 Argument error AFILL "        )
+   TEST_LINE( AFill()                         , "E BASE 6004 Argument error AFILL "        )
 #endif
-   TEST_LINE( AFill( NIL )                    , "E BASE 9999 Argument error AFILL "        )
+   TEST_LINE( AFill( NIL )                    , "E BASE 6004 Argument error AFILL "        )
 #endif
    TEST_LINE( AFill( {} )                     , "{.[0].}"                                  )
    TEST_LINE( AFill( {}, 1 )                  , "{.[0].}"                                  )
