@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-27 15:26 UTC+0200 Chen Kedem <niki@synel.co.il>
+   * source/rtl/objfunc.prg
+     ! Change hb_ISPOINTER() -> hb_ISSYMBOL()
+
 2008-01-27 12:46 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * source/rtl/objfunc.prg
      ! Fixed ISNUMBER() -> hb_ISPOINTER() for pointers.
