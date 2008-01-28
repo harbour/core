@@ -102,9 +102,9 @@ BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
    if( dwErrorCode != ERROR_EXTENDED_ERROR )
    {
       pError = hb_errRT_New( ES_ERROR,
-                             HB_ERR_SS_TOOLS,
-                             9999,
-                             9999,
+                             "CT",
+                             9001,
+                             0,
                              "Windows Network operation failed",
                              lpszFunction, ( USHORT ) dwErrorCode, EF_NONE );
       hb_errLaunch( pError );
@@ -121,7 +121,7 @@ BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
 
       if( dwWNetResult != NO_ERROR )
       {
-         pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_TOOLS, 9999, 9999,
+         pError = hb_errRT_New( ES_ERROR, "CT", 9002, 0,
                                 "WNetGetLastError failed", "see OS error",
                                 ( USHORT ) dwWNetResult, EF_NONE );
          hb_errLaunch( pError );
@@ -131,7 +131,7 @@ BOOL WINAPI WNetErrorHandler( DWORD dwErrorCode, LPSTR lpszFunction )
 
       szDescription = HB_TCHAR_CONVFROM( lpDescription );
       szProvider = HB_TCHAR_CONVFROM( lpProvider );
-      pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_TOOLS, 9999, 9999,
+      pError = hb_errRT_New( ES_ERROR, "CT", 9003, 0,
                              szDescription, szProvider,
                              ( USHORT ) dwLastError, EF_NONE );
       HB_TCHAR_FREE( szDescription );

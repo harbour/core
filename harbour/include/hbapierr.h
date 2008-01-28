@@ -80,7 +80,6 @@ HB_EXTERN_BEGIN
 #define HB_ERR_SS_BASE                  "BASE"
 #define HB_ERR_SS_TERMINAL              "TERM"
 #define HB_ERR_SS_DBCMD                 "DBCMD"
-#define HB_ERR_SS_TOOLS                 "TOOLS"
 
 /* oError:GenCode */
 
@@ -164,7 +163,6 @@ extern HB_EXPORT void      hb_errRT_BASE_SubstR ( ULONG ulGenCode, ULONG ulSubCo
 extern HB_EXPORT USHORT    hb_errRT_TERM        ( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation, USHORT uiOSCode, USHORT uiFlags );
 extern HB_EXPORT USHORT    hb_errRT_DBCMD       ( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation );
 extern HB_EXPORT USHORT    hb_errRT_DBCMD_Ext   ( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation, USHORT uiFlags );
-extern HB_EXPORT USHORT    hb_errRT_TOOLS       ( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation );
        
 extern HB_EXPORT void      hb_errInternal       ( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 );
 

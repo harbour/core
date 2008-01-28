@@ -1269,16 +1269,3 @@ USHORT hb_errRT_DBCMD_Ext( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
 
    return uiAction;
 }
-
-USHORT hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, const char * szDescription, const char * szOperation )
-{
-   USHORT uiAction;
-   PHB_ITEM pError =
-      hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, ulGenCode, ulSubCode, szDescription, szOperation, 0, EF_NONE );
-
-   uiAction = hb_errLaunch( pError );
-
-   hb_errRelease( pError );
-
-   return uiAction;
-}
