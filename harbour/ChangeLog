@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-28 09:28 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rdd/dbfntx/Makefile
+   * source/rdd/dbfdbt/Makefile
+   * source/rdd/dbfcdx/Makefile
+   * source/rdd/dbffpt/Makefile
+     ! Missing LIBNAME change now done.
+
+   * ChangeLog
+     ! Missing dbfdbt -> rdddbt name changed added to prev entry.
+
 2008-01-27 17:24 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/hbmysql/make_b32.bat
    * contrib/hbmysql/make_vc.bat
@@ -246,6 +256,7 @@
        dbfcdx   -> rddcdx
        dbffpt   -> rddfpt
        dbfntx   -> rddntx
+       dbfdbt   -> rdddbt
        nulsys   -> hbnulrdd
        usrrdd   -> hbusrrdd
        mainwin  -> hbmainwin

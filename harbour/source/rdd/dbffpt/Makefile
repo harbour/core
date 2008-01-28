@@ -11,6 +11,6 @@ ROOT = ../../../
 C_SOURCES=\
 	dbffpt1.c \
 
-LIBNAME=dbffpt
+LIBNAME=rddfpt
 
 include $(TOP)$(ROOT)config/lib.cf

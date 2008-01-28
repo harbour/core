@@ -7,6 +7,6 @@ ROOT = ../../../
 C_SOURCES=\
 	dbfntx1.c \
 
-LIBNAME=dbfntx
+LIBNAME=rddntx
 
 include $(TOP)$(ROOT)config/lib.cf
