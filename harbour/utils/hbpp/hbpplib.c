@@ -226,7 +226,7 @@ void hb_compGenError( HB_COMP_DECL, char * szErrors[], char cPrefix, int iError,
              deallocated here */
 
    snprintf( buffer, sizeof( buffer ), szErrors[ iError - 1 ], szError1, szError2 );
-   pError = hb_errRT_New( ES_ERROR, "PP", 1001, ( ULONG ) iError, buffer, NULL, 0, EF_NONE | EF_CANDEFAULT );
+   pError = hb_errRT_New( ES_ERROR, "PP", 1002, ( ULONG ) iError, buffer, NULL, 0, EF_NONE | EF_CANDEFAULT );
    hb_errLaunch( pError );
    hb_errRelease( pError );
 

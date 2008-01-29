@@ -8,12 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-29 01:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * ChangeLog
+     ! Typos.
+
+   * utils/hbpp/hbpplib.c
+     ! Replaced RTE code 1001 with 1002.
+       (almost the same error condition, but better have 
+       it different to avoid any support confusions).
+
 2008-01-28 12:10 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbapierr.h
    * source/rtl/errorapi.c
      ! Removed HB_ERR_SS_TOOLS non-core #define (formerly used by 
-       /contrib/hbct from core header.
-     ! Removed non-core related error API call hb_errRT_TOOLS()
+       /contrib/hbct) from core header.
+     ! Removed non-core related Error API call hb_errRT_TOOLS()
        (functionality was similar to hb_errRT_BASE())
 
    * contrib/hbct/ctnet.c
@@ -31,7 +40,7 @@
      ! Missing LIBNAME change now done.
 
    * ChangeLog
-     ! Missing dbfdbt -> rdddbt name changed added to prev entry.
+     ! Missing dbfdbt -> rdddbt name change added to prev entry.
 
 2008-01-27 17:24 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/hbmysql/make_b32.bat
@@ -169,9 +178,7 @@
        RT/BASE: 6001-6999
           runner: 6101-6199
        Internal/misc: 6001-6999
-       Internal/RDD: 7001-7999
-          CDX: 7001-7099
-          NTX: 7101-7199
+       Internal/RDD: 9301-9399
        NOTE: If you find some more 9999s in the core code,
              pls tell.
 
