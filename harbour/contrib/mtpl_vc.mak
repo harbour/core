@@ -127,13 +127,6 @@ LDFLAGS        = $(LDFLAGS)
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #**********************************************************
-# General Library BUILD rule - does not work
-#{$(OBJ_DIR)}$(OBJEXT){$(LIB_PATH)}.lib:
-#   if exist "$@" $(DEL) "$@" > nul
-#   $(MKLIB) /out:$@ @<<
-#$**
-#<<$(KEEPSTATE)
-#**********************************************************
 
 !include common.mak
 

@@ -182,10 +182,10 @@ mkdir -p obj/$HB_CC_NAME lib/$HB_CC_NAME bin/$HB_CC_NAME
 
 # Revert Cygwin architecture to w32.
 # After all it's under Windows OS.
-if [ "$HB_ARCHITECTURE" == "cyg" ]
-then
-   export HB_ARCHITECTURE=w32
-fi
+#if [ "$HB_ARCHITECTURE" == "cyg" ]
+#then
+#   export HB_ARCHITECTURE=w32
+#fi
 
 sed -e 's/;/ /g'             \
     -e 's!\\\(.\)!/\1!g'     \

@@ -8,19 +8,77 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-30 21:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * contrib/gtwvg/common.mak
+   * contrib/hbapollo/common.mak
+   * contrib/hbbmcdx/common.mak
+   * contrib/hbbtree/common.mak
+   * contrib/hbclipsm/common.mak
+   * contrib/hbct/common.mak
+   * contrib/hbfbird/common.mak
+   * contrib/hbfimage/common.mak
+   * contrib/hbgd/common.mak
+   * contrib/hbgt/common.mak
+   * contrib/hbmisc/common.mak
+   * contrib/hbmsql/common.mak
+   * contrib/hbmysql/common.mak
+   * contrib/hbnf/common.mak
+   * contrib/hbodbc/common.mak
+   * contrib/hbole/common.mak
+   * contrib/hbpgsql/common.mak
+   * contrib/hbtip/common.mak
+   * contrib/hbtpathy/common.mak
+   * contrib/hbw32/common.mak
+   * contrib/hbw32ddr/common.mak
+   * contrib/hbwhat32/common.mak
+   * contrib/hbziparch/common.mak
+   * contrib/hbzlib/common.mak
+   * contrib/rddado/common.mak
+   * contrib/rddads/common.mak
+   * contrib/xhb/common.mak
+     ! Changed to be compatible with GNU make for alternative
+       building system centered around common.mak.
+
+   + contrib/make_gcc_all.sh
+   + contrib/mtpl_gcc.mak
+   + contrib/mtpl_gcc.sh
+     + New files for building contrib libs with GNU make using
+       alternative building system centered around common.mak.
+
+   + contrib/hbbmcdx/make_gcc.sh
+   + contrib/hbbtree/make_gcc.sh
+   + contrib/rddado/make_gcc.sh
+     + New files for building contrib libs with GNU make using
+       alternative building system centered around common.mak.
+       Work in progress.
+
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+     + Added Copyright notes.
+
+   * contrib/mtpl_b32.bat
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_vc.bat
+   * contrib/mtpl_vc.mak
+     ! Minor cleanup and formatting.
+
+   * make_gcc.mak
+   * make_gcc.sh
+     ! Minor fix related to Cygwin platform
+
 2008-01-29 01:00 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * ChangeLog
      ! Typos.
 
    * utils/hbpp/hbpplib.c
      ! Replaced RTE code 1001 with 1002.
-       (almost the same error condition, but better have 
+       (almost the same error condition, but better have
        it different to avoid any support confusions).
 
 2008-01-28 12:10 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbapierr.h
    * source/rtl/errorapi.c
-     ! Removed HB_ERR_SS_TOOLS non-core #define (formerly used by 
+     ! Removed HB_ERR_SS_TOOLS non-core #define (formerly used by
        /contrib/hbct) from core header.
      ! Removed non-core related Error API call hb_errRT_TOOLS()
        (functionality was similar to hb_errRT_BASE())
@@ -64,12 +122,12 @@
      ! Minor formatting.
 
    * contrib/hbzlib/make_b32.bat
-     ! -a added to implib until a better fix is found 
+     ! -a added to implib until a better fix is found
        for the problem.
 
    * source/rdd/dbfntx/dbfntx1.c
    * source/rdd/dbfcdx/dbfcdx1.c
-     ! Changed previously used internal error code 
+     ! Changed previously used internal error code
        ranges to better fit in already used ones.
        (70??/71?? -> 93??)
 

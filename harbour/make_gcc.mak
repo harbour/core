@@ -64,10 +64,11 @@
 
 #**********************************************************
 
-#ifeq ($(HB_ARCHITECTURE),cyg)
-## Cygwin is "Linux on Windows"
-#HB_ARCHITECTURE = w32
-#endif
+ifeq ($(HB_ARCHITECTURE),cyg)
+# Revert Cygwin architecture to w32.
+# After all it's under Windows OS.
+HB_ARCHITECTURE = w32
+endif
 
 #**********************************************************
 

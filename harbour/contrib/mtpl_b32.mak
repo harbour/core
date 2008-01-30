@@ -131,17 +131,9 @@ $(OBJ_DIR);\
     $(CC) $(CLIBFLAGS) -o$@ $<
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
-{$(ALL_LIB_SRC_DIRS)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+{$(ALL_LIB_SRC_DIRS)}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
     $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)\$&.c
-#**********************************************************
-# General Library BUILD rule - does not work
-#{$(OBJ_DIR)}.obj{$(LIB_DIR)}.lib:
-#   if exist "$@" $(DEL) "$@" > NUL
-#   $(MKLIB) "$@" $(ARFLAGS) @&&!
-#+$(**: = &^
-#+)
-#!
 #**********************************************************
 
 !include common.mak

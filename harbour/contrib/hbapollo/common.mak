@@ -2,13 +2,13 @@
 # $Id$
 #
 
-LIBNAME = hbapollo
+LIBNAME = $(LIBPREF)hbapollo
 
-LIB_PATH = $(LIB_DIR)\$(LIBNAME)$(LIBEXT)
+LIB_PATH = $(LIB_DIR)/$(LIBNAME)$(LIBEXT)
 
 LIB_OBJS = \
-    $(OBJ_DIR)\apollo$(OBJEXT) \
-    $(OBJ_DIR)\apollo1$(OBJEXT) \
+    $(OBJ_DIR)/apollo$(OBJEXT) \
+    $(OBJ_DIR)/apollo1$(OBJEXT) \
 
 all: \
     $(LIB_PATH) \

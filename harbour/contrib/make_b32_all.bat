@@ -4,6 +4,16 @@ rem $Id$
 rem
 
 rem *******************************************************
+rem Bat file for creating (almost all) Contrib libs
+rem for Harbour Project for Borland C/C++
+rem *******************************************************
+
+rem *******************************************************
+rem Copyright 2007 Marek Paliwoda (mpaliwoda "at" interia "dot" pl)
+rem See doc/license.txt for licensing terms.
+rem *******************************************************
+
+rem *******************************************************
 rem The compilation is done in three steps. PLEASE DO NOT MODIFY IT
 rem or you will break a Windows9x command.com line length limit !!!
 rem *******************************************************
