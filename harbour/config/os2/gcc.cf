@@ -34,7 +34,6 @@ endif
 
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKPATHS += $(foreach lib, $(CONTRIBS), -L$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH))
 LINKPATHS += -L$(LIB_DIR)
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
@@ -53,7 +52,7 @@ endif
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 ifeq ($(C_MAIN),)
-ifeq ($(HB_GT_LIB),os2pm)
+ifeq ($(findstring os2pm,$(HB_GT_LIB)),os2pm)
 # Special handling for PM mode
 LINKLIBS += -l$(HB_GT_LIB)
 LINKLIBS += -lgtos2

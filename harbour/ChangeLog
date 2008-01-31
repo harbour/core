@@ -8,6 +8,35 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 18:47 UTC+0100 Ryszard Glab <harbour//rglab.pl>
+   * config/hpux/gcc.cf
+   * config/darwin/gcc.cf
+   * config/dos/owatcom.cf
+   * config/dos/watcom.cf
+   * config/dos/bcc16.cf
+   * config/dos/rsx32.cf
+   * config/dos/djgpp.cf
+   * config/linux/owatcom.cf
+   * config/linux/gcc.cf
+   * config/os2/gcc.cf
+   * config/os2/icc.cf
+   * config/sunos/gcc.cf
+   * config/bsd/gcc.cf
+   * config/w32/msvc.cf
+   * config/w32/owatcom.cf
+   * config/w32/watcom.cf
+   * config/w32/bcc32.cf
+   * config/w32/gcc.cf
+   * config/w32/xcc.cf
+   * config/w32/rsxnt.cf
+   * config/w32/cemgw.cf
+   * config/w32/pocc.cf
+   * config/w32/mingw32.cf
+      * fixed to link contrib libraries (all contrib libraries are
+        placed in lib/<arch>/<compiler> directory)
+        NOTE:
+        OS/2 users: the names of libraries have 'hbgf' prefix 
+
 2008-01-31 18:41 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
    + contrib/mtpl_gcc.mak
      + Readded to SVN yet another time

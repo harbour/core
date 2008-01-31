@@ -30,7 +30,7 @@ endif
 endif
 endif
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS = $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib))$(LIB_EXT))
+LINKLIBS = $(foreach lib, $(CONTRIBS), $(LIB_DIR)/$(lib)$(LIB_EXT))
 LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib)$(LIB_EXT))
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
@@ -47,9 +47,9 @@ endif
 # Add the specified GT driver library
 ifeq ($(C_MAIN),)
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-ifeq ($(HB_GT_LIB),os2pm)
+ifeq ($(HB_GT_LIB),hbgfos2pm)
 # Special handling for PM mode
-LINKLIBS += $(TOP)$(ROOT)contrib/hgf/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)$(LIB_EXT)
+LINKLIBS += $(LIB_DIR)/hbgfos2pm.lib
 LINKLIBS += $(LIB_DIR)/gtos2.lib
 else
 ifeq ($(HB_LIB_COMPILE),)

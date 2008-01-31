@@ -63,7 +63,7 @@ LD = wlink
 LDFLAGS = debug all OP osn=NT OP stack=65536 OP CASEEXACT
 
 ifeq ($(HB_LIB_COMPILE),)
-   LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib))))
+   LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(LIB_DIR)/$(lib)))
    LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(LIB_DIR)/$(lib)))
 else
    LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))

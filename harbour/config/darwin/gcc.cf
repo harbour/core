@@ -30,17 +30,15 @@ CFLAGS += -DHB_OS_DARWIN
 LD = cc
 LD_OUT = -o
 
-# Add all libraries specified in HB_USER_LIBS.
-LINKPATHS += $(foreach lib, $(HB_USER_LIBS), -L$(TOP)$(ROOT)source/$(lib)/$(HB_ARCH))
-LINKLIBS += $(foreach lib, $(HB_USER_LIBS), -l$(lib))
-
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKPATHS += $(foreach lib, $(CONTRIBS), -L$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH))
 LINKPATHS += -L$(LIB_DIR)
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
+
+# Add all libraries specified in HB_USER_LIBS.
+LINKLIBS += $(foreach lib, $(HB_USER_LIBS), -l$(lib))
 
 LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))

@@ -32,7 +32,6 @@ LD_OUT = -OUT:
 
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKPATHS += $(foreach lib, $(CONTRIBS), -LIBPATH:$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH))
 LINKPATHS += -LIBPATH:$(LIB_DIR)
 else
 LINKPATHS += -LIBPATH:$(HB_LIB_COMPILE)

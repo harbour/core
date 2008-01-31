@@ -38,7 +38,7 @@ LD = wlink
 LDFLAGS = debug all sys Linux OP CASEEXACT
 
 ifeq ($(HB_LIB_COMPILE),)
-   LINKLIBS := $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib)))
+   LINKLIBS := $(foreach lib, $(CONTRIBS), $(LIB_DIR)/$(lib))
    LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
 else
    LINKLIBS := $(foreach lib, $(CONTRIBS), $(HB_LIB_COMPILE)/$(lib))
