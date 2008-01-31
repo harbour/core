@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 13:00 UTC+0100 Ryszard Glab <harbour//rglab.pl>
+   * source/rdd/Makefile
+   * config/global.cf
+      * added HB_LIB_DIRS with a list of valid RDD subdirectories
+        (HB_LIB_DRIVERS stores the list of valid RDD libraries)
+
 2008-01-31 12:40 UTC+0100 Ryszard Glab <harbour//rglab.pl>
    * doc/howtosvn.txt
       * svn update does not report locally modified files - it is 

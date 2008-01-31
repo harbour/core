@@ -45,7 +45,7 @@ PRG_SOURCES=\
 LIBNAME=hbrdd
 
 # The list of all valid DB drivers is defined in config/global.cf.
-DIRS=nulsys $(HB_DB_DRIVERS)
+DIRS=nulsys $(HB_DB_DIRS)
 
 include $(TOP)$(ROOT)config/lib.cf
 include $(TOP)$(ROOT)config/dir.cf

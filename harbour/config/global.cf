@@ -5,6 +5,7 @@
 GRANDP = ../../
 HB_ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
+#names of valid RDD libraries
 HB_DB_DRIVERS=\
 	rddntx \
 	rddcdx \
@@ -12,6 +13,15 @@ HB_DB_DRIVERS=\
 	hbsix \
 	hbhsx \
 	hbusrrdd \
+
+#names of valid RDD subdirectories
+HB_DB_DIRS=\
+	dbfntx \
+	dbfcdx \
+	dbffpt \
+	hbsix \
+	hsx \
+	usrrdd \
 
 
 ifneq ($(HB_DB_DRVEXT),)
