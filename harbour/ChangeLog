@@ -6971,15 +6971,6 @@
    * contrib/tip/mail.prg
      ! Some hash function calls corrected after last modification.
        Thanks Juan.
-/*
- * $Id$
- */
-
-/* Use this format for the entry headers:
-   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
-   For example:
-   2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
-*/
 
 2007-10-01 22:53 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * contrib/tip/httpcln.prg
@@ -10788,16 +10779,6 @@
    + harbour/ChangeLog.018
      * ChangeLog archived.
 
-/*
- * $Id$
- */
-
-/* Use this format for the entry headers:
-   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
-   For example:
-   2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
-*/
-
 2007-06-11 11:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/genc.c
     * allow to use #pragma begindump / enddump in .prg files without
@@ -14479,16 +14460,6 @@
     * updated version number to 0.47.0
   * tagged CVS as build47
 
-/*
- * $Id$
- */
-
-/* Use this format for the entry headers:
-   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
-   For example:
-   2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
-*/
-
 2007-01-09 15:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/hbusage.c
     * update the year in hb_compPrintLogo() from 2006 to 2007
@@ -17600,16 +17571,6 @@
   * harbour/ChangeLog
   + harbour/ChangeLog.016
     * new ChangeLog file created
-
-/*
- * $Id$
- */
-
-/* Use this format for the entry headers:
-   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
-   For example:
-   2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
-*/
 
 2006-09-03 16:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hboo.ch
@@ -21304,16 +21265,6 @@
   * harbour/bin/hb-func.sh
     * some modification in xhb* scripts building - adding passing
       predefined compiler and linker switches
-
-/*
- * $Id$
- */
-
-/* Use this format for the entry headers:
-   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
-   For example:
-   2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
-*/
 
 2006-02-15 11:15 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/harbour.c
@@ -25913,16 +25864,6 @@ NOTE:
   * makefile.vc
     * make files has been updated due to adding source/rtl/hbrandom.c.
 
-/*
- * $Id$
- */
-
-/* Use this format for the entry headers:
-   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
-   For example:
-   2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
-*/
-
 2004-02-27 12:37 UTC+0100 Viktor Szakats <viktor.szakats@syenar.hu>
 
    * source/rtl/teditor.prg
@@ -29848,16 +29789,6 @@ All this changes (except Ron's PP) are my work borrowed from xHarbour.
     ! Code fix to handle the field delimiters, provided by the
       APPEND FROM code author, Marco Braida <marcobra@elart.it>.
 
-/*
- * $Id$
- */
-
-/* Use this format for the entry headers:
-   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
-   For example:
-   2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
-*/
-
 2002-09-02 16:58 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
    * harbour/source/rtl/tbrowse.prg
      ! fixed columns' width calulation on ::SetColumnWidth( oCol ) method
@@ -33592,16 +33523,6 @@ ed
      * An small clean up
    * ChangeLog
      * Renamed to ChangeLog.012 and started an new one
-
-/*
- * $Id$
- */
-
-/* Use this format for the entry headers:
-   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
-   For example:
-   2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
-*/
 
 2001-12-21 08:46 UTC+0000 Dave Pearson <davep@davep.org>
    * ERRATA
