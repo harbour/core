@@ -174,9 +174,7 @@ char * hb_username( void )
       struct passwd * pwd;
       pwd = getpwuid( getuid() );
       if( pwd )
-      {
          return hb_strdup( pwd->pw_name );
-      }
       else
          return hb_getenv( "USER" );
 #  endif
