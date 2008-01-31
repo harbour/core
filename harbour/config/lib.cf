@@ -11,6 +11,11 @@ include $(TOP)$(ROOT)config/prg.cf
 
 LIB_NAME := $(LIB_PREF)$(LIBNAME)$(LIB_EXT)
 
+#no slash at the end
+LIB_PATH := $(TOP)$(ROOT)lib/$(HB_ARCHITECTURE)
+#no slash at the end
+LIB_DIR := $(LIB_PATH)/$(HB_COMPILER)
+
 LIB_ARCH := $(notdir $(ARCH_DIR))
 ifeq ($(LIB_ARCH),)
 # ARCH_DIR ends with a slash

@@ -49,9 +49,9 @@ LD = bcc
 LDFLAGS = -i48 -O2 -mh $(L_USR)
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS += $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib))$(LIB_EXT))
-LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib)$(LIB_EXT))
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-LINKLIBS += $(foreach lib, $(HB_DB_DRIVERS), $(TOP)$(ROOT)source/rdd/$(lib)/$(HB_ARCH)/$(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(HB_DB_DRIVERS), $(LIB_DIR)$(lib)$(LIB_EXT))
 endif
 else
 LINKLIBS += $(foreach lib, $(CONTRIBS), $(subst lib,,$(lib))$(LIB_EXT))
@@ -65,7 +65,7 @@ LD_RULE = $(link_exe_file)
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(TOP)$(ROOT)source/rtl/$(gt)/$(HB_ARCH)/$(gt)$(LIB_EXT))
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt)$(LIB_EXT))
 else
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
@@ -78,7 +78,7 @@ echo. -+$(file) &>> __lib__.tmp
 endef
 
 define create_library
-echo. $@ &> __lib__.tmp
+echo. $(LIB_DIR)/$@ &> __lib__.tmp
 $(foreach file, $(^F), $(lib_object))
 echo. ,, >> __lib__.tmp
 $(AR) $(ARFLAGS) @__lib__.tmp

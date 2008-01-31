@@ -31,10 +31,10 @@ endif
 endif
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS = $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib))$(LIB_EXT))
-LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib)$(LIB_EXT))
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-LINKLIBS += $(foreach lib, $(HB_DB_DRIVERS), $(TOP)$(ROOT)source/rdd/$(lib)/$(HB_ARCH)/$(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(HB_DB_DRIVERS), $(LIB_DIR)/$(lib)$(LIB_EXT))
 endif
 else
 LINKLIBS = $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
@@ -50,10 +50,10 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
 ifeq ($(HB_GT_LIB),os2pm)
 # Special handling for PM mode
 LINKLIBS += $(TOP)$(ROOT)contrib/hgf/$(HB_GT_LIB)/$(HB_ARCH)/$(HB_GT_LIB)$(LIB_EXT)
-LINKLIBS += $(TOP)$(ROOT)source/rtl/gtos2/$(HB_ARCH)/gtos2.lib
+LINKLIBS += $(LIB_DIR)/gtos2.lib
 else
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(TOP)$(ROOT)source/rtl/$(gt)/$(HB_ARCH)/$(gt)$(LIB_EXT))
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt)$(LIB_EXT))
 else
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
@@ -72,6 +72,6 @@ endif
 AR = ilib
 ARFLAGS = /NOE /NOIgnoreCase $(A_USR)
 AROBJS = $(foreach file, $(^F), -+$(file))
-AR_RULE = $(AR) $(ARFLAGS) $@ $(AROBJS),,
+AR_RULE = $(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(AROBJS),,
 
 include $(TOP)$(ROOT)config/rules.cf

@@ -48,6 +48,8 @@ RANLIB = ranlib
 
 dirbase::
 	@[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)
+	@[ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
 
 clean::
 	-$(RD) $(ARCH_DIR)
+	-$(RD) $(LIB_DIR)

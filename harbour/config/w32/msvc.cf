@@ -21,7 +21,7 @@ LD_OUT = -Fe
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += -link $(foreach lib, $(CONTRIBS), -LIBPATH:$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH))
-LINKPATHS += -link $(foreach lib, $(LIBS), -LIBPATH:$(TOP)$(ROOT)source/$(lib)/$(HB_ARCH))
+LINKPATHS += -link -LIBPATH:$(LIB_DIR)
 else
 LINKPATHS += -link -LIBPATH:$(HB_LIB_COMPILE)
 endif
@@ -30,13 +30,11 @@ LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -LIBPATH:$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH))
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))
 endif
 
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-LINKPATHS += $(foreach gt, $(HB_GT_LIBS), -LIBPATH:$(TOP)$(ROOT)source/rtl/$(gt)/$(HB_ARCH))
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 
@@ -44,6 +42,6 @@ LDFLAGS = $(LINKPATHS)
 
 AR = lib.exe
 ARFLAGS = $(A_USR)
-AR_RULE = $(AR) $(ARFLAGS) /out:$@ $(^F) || $(RM) $@
+AR_RULE = $(AR) $(ARFLAGS) /out:$(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
 
 include $(TOP)$(ROOT)config/rules.cf

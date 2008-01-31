@@ -23,6 +23,8 @@ ifeq ($(SHLVL),) # An OS/2 command shell
 
 ARCH_DIR = $(HB_ARCH)
 OS2_ARCH_DIR = $(subst /,\,$(HB_ARCH))
+OS2_LIB_DIR = $(subst /,\,$(LIB_DIR))
+OS2_LIB_PATH = $(subst /,\,$(LIB_PATH))
 DIRSEP = $(subst /,\,\)
 
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
@@ -42,11 +44,16 @@ MD = md
 dirbase::
 	-CMD.EXE /c IF NOT EXIST $(HB_ARCHITECTURE) $(MD) $(HB_ARCHITECTURE)
 	-CMD.EXE /c IF NOT EXIST $(OS2_ARCH_DIR)    $(MD) $(OS2_ARCH_DIR)
+	-CMD.EXE /c IF NOT EXIST $(OS2_LIB_PATH)   $(MD) $(OS2_LIB_PATH)
+	-CMD.EXE /c IF NOT EXIST $(OS2_LIB_DIR)    $(MD) $(OS2_LIB_DIR)
 
 clean::
 	-CMD.EXE /c IF EXIST $(OS2_ARCH_DIR)\\*.* $(RM) $(OS2_ARCH_DIR)\\*.*
 	-CMD.EXE /c IF EXIST $(OS2_ARCH_DIR)     $(RD) $(OS2_ARCH_DIR)
 	-CMD.EXE /c IF EXIST $(HB_ARCHITECTURE)  $(RD) $(HB_ARCHITECTURE)
+	-CMD.EXE /c IF EXIST $(OS2_LIB_DIR)\\*.* $(RM) $(OS2_LIB_DIR)\\*.*
+	-CMD.EXE /c IF EXIST $(OS2_LIB_DIR)      $(RD) $(OS2_LIB_DIR)
+	-CMD.EXE /c IF EXIST $(OS2_LIB_PATH)     $(RD) $(OS2_LIB_PATH)
 
 else  # bash
 
@@ -62,8 +69,11 @@ MD = mkdir
 dirbase::
 	@[ -d $(HB_ARCHITECTURE) ] || $(MD) $(HB_ARCHITECTURE); \
 	[ -d $(HB_ARCH) ] || $(MD) $(HB_ARCH)
+	@[ -d $(LIB_PATH) ] || $(MD) $(LIB_PATH); \
+	[ -d $(LIB_DIR) ] || $(MD) $(LIB_DIR)
 
 clean::
 	-$(RD) $(ARCH_DIR)
+	-$(RD) $(LIB_DIR)
 
 endif

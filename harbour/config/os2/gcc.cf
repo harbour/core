@@ -35,7 +35,7 @@ endif
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
 LINKPATHS += $(foreach lib, $(CONTRIBS), -L$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH))
-LINKPATHS += $(foreach lib, $(LIBS), -L$(TOP)$(ROOT)source/$(lib)/$(HB_ARCH))
+LINKPATHS += -L$(LIB_DIR)
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
 endif
@@ -45,7 +45,6 @@ LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-LINKPATHS += $(foreach drv, $(HB_DB_DRIVERS), -L$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH))
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 # add a last round of rtl/vm to solve positional interdependencies (at the moment hbrun requires this)
 LINKLIBS += -lrtl -lvm -lrtl
@@ -56,13 +55,10 @@ ifeq ($(findstring rtl,$(LIBS)),rtl)
 ifeq ($(C_MAIN),)
 ifeq ($(HB_GT_LIB),os2pm)
 # Special handling for PM mode
-LINKPATHS += -L$(TOP)$(ROOT)contrib/hgf/$(HB_GT_LIB)/$(HB_ARCH)
 LINKLIBS += -l$(HB_GT_LIB)
-LINKPATHS += -L$(TOP)$(ROOT)source/rtl/gtos2/$(HB_ARCH)
 LINKLIBS += -lgtos2
 else
 
-LINKPATHS += $(foreach gt, $(HB_GT_LIBS), -L$(TOP)$(ROOT)source/rtl/$(gt)/$(HB_ARCH))
 LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lrtl
 
 endif
@@ -93,8 +89,8 @@ endef
 # We have to use a script to overcome the AR limit of max 850 characters
 # in commmand line
 define create_library
-IF EXIST $@ $(RM) $@
-echo CREATE $@ > __lib__.tmp
+IF EXIST $(LIB_DIR)/$@ $(RM) $(LIB_DIR)/$@
+echo CREATE $(LIB_DIR)/$@ > __lib__.tmp
 $(foreach file, $(^F), $(lib_object))
 echo SAVE >> __lib__.tmp
 echo END >> __lib__.tmp

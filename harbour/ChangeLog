@@ -8,6 +8,50 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 12:40 UTC+0100 Ryszard Glab <harbour//rglab.pl>
+   * doc/howtosvn.txt
+      * svn update does not report locally modified files - it is 
+        required to run 'svn status' to list all changed files
+        
+   * config/lib.cf
+   * config/bin.cf
+   * config/darwin/gcc.cf
+   * config/darwin/global.cf
+   * config/hpux/gcc.cf
+   * config/hpux/global.cf
+   * config/dos/owatcom.cf
+   * config/dos/watcom.cf
+   * config/dos/bcc16.cf
+   * config/dos/global.cf
+   * config/dos/rsx32.cf
+   * config/dos/djgpp.cf
+   * config/global.cf
+   * config/linux/owatcom.cf
+   * config/linux/gcc.cf
+   * config/linux/global.cf
+   * config/os2/gcc.cf
+   * config/os2/icc.cf
+   * config/os2/global.cf
+   * config/sunos/gcc.cf
+   * config/sunos/global.cf
+   * config/bsd/gcc.cf
+   * config/bsd/global.cf
+   * config/w32/msvc.cf
+   * config/w32/owatcom.cf
+   * config/w32/watcom.cf
+   * config/w32/bcc32.cf
+   * config/w32/gcc.cf
+   * config/w32/xcc.cf
+   * config/w32/rsxnt.cf
+   * config/w32/global.cf
+   * config/w32/cemgw.cf
+   * config/w32/pocc.cf
+   * config/w32/mingw32.cf
+      * updated to create libraries in harbour/lib/<arch>/<compiler>
+        subdirectories
+      NOTE: only 'linux/gcc' modifications were tested -please
+      report any problems (mostly slash or backslash issues probably)
+
 2008-01-30 21:30 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
    * contrib/gtwvg/common.mak
    * contrib/hbapollo/common.mak

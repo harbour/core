@@ -63,14 +63,16 @@ by Ryszard Glab
     (for example: "SVN update -d >.log"
  3) Resolve all conflicts, run SVN update again (see point 2), recompile
     all sources, fix all errors
- 4) Copy all names of modifed, added or deleted files (files marked with
+ 4) Run SVN STATUS redirecting the output into a file
+    (for example: "svn status >.log"
+ 5) Copy all names of modifed, added or deleted files (files marked with
     'M', 'A' or 'D' flag) from update log into a ChangeLog
- 5) Write necessary comments in the ChangeLog
- 6) Save all your changes from ChangeLog into a file
- 7) Run SVN UPDATE again
- 8) Commit changes running:
+ 6) Write necessary comments in the ChangeLog
+ 7) Save all your changes from ChangeLog into a file
+ 8) Run SVN UPDATE again
+ 9) Commit changes running:
     SVN commit -F file_with_saved_ChangeLog_changes --username sfuser
- 9) Mail file_with_saved_ChangeLog_changes as an email body (do not
+ 10) Mail file_with_saved_ChangeLog_changes as an email body (do not
     send it as an attachment) to the harbour list
 
 Important notes:

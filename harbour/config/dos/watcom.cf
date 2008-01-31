@@ -45,7 +45,7 @@ LD = wlink
 LDFLAGS = debug all OP osn=DOS4G OP stack=65536 OP CASEEXACT
 ifeq ($(HB_LIB_COMPILE),)
 LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib))))
-LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib)))
+LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(LIB_DIR)/$(lib)))
 else
 LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
 LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
@@ -53,10 +53,10 @@ endif
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH)/$(drv)))
+RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(LIB_DIR)/$(drv)))
 endif
 
-GTLIBS := $(foreach gt, $(HB_GT_LIBS), $(subst /,\,$(TOP)$(ROOT)source/rtl/$(gt)/$(HB_ARCH)/$(gt)))
+GTLIBS := $(foreach gt, $(HB_GT_LIBS), $(subst /,\,$(LIB_DIR)/$(gt)))
 
 LD_RULE = $(link_exe_file)
 
@@ -66,8 +66,10 @@ $(COMSPEC) /E:2048 /Cecho -+$(file) >> __lib__.tmp
 
 endef
 
+LIB_DDIR := $(subst /,\,$(LIB_DIR))
+
 define create_library
-$(COMSPEC) /E:2048 /Cecho $@ > __lib__.tmp
+$(COMSPEC) /E:2048 /Cecho $(LIB_DDIR)\$@ > __lib__.tmp
 $(foreach file, $(^F), $(lib_object))
 $(AR) $(ARFLAGS) @__lib__.tmp
 endef

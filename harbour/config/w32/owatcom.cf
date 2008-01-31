@@ -63,7 +63,7 @@ LDFLAGS = debug all OP osn=NT OP stack=65536 OP CASEEXACT
 
 ifeq ($(HB_LIB_COMPILE),)
    LINKLIBS := $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)contrib/$(lib)/$(HB_ARCH)/$(subst lib,,$(lib)))
-   LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)source/$(lib)/$(HB_ARCH)/$(lib))
+   LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
 else
    LINKLIBS := $(foreach lib, $(CONTRIBS), $(HB_LIB_COMPILE)/$(lib))
    LINKLIBS += $(foreach lib, $(LIBS), $(HB_LIB_COMPILE)/$(lib))
@@ -72,7 +72,7 @@ endif
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
    ifeq ($(HB_LIB_COMPILE),)
-      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(TOP)$(ROOT)source/rdd/$(drv)/$(HB_ARCH)/$(drv))
+      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(LIB_DIR)/$(drv))
    else
       RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(HB_LIB_COMPILE)/$(drv))
    endif
@@ -80,7 +80,7 @@ endif
 
 ifeq ($(findstring rtl,$(LIBS)),rtl)
    ifeq ($(HB_LIB_COMPILE),)
-      GTLIBS := $(foreach gt, $(HB_GT_LIBS), $(TOP)$(ROOT)source/rtl/$(gt)/$(HB_ARCH)/$(gt))
+      GTLIBS := $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt))
    else
       GTLIBS := $(foreach gt, $(HB_GT_LIBS), $(HB_LIB_COMPILE)/$(gt))
    endif
@@ -95,7 +95,7 @@ echo. -+$(file) >> __lib__.tmp
 endef
 
 define create_library
-echo. $@ > __lib__.tmp
+echo. $(LIB_DIR)/$@ > __lib__.tmp
 $(foreach file, $(^F), $(lib_object))
 $(AR) $(ARFLAGS) @__lib__.tmp
 endef

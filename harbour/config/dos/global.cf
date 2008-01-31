@@ -34,6 +34,8 @@ ifeq ($(SHLVL),) # COMMAND.COM
 # and some DOS commands require '\' (ARCH_DOS)
 ARCH_DIR = $(subst \,/,$(HB_ARCH))
 ARCH_DOS = $(subst /,\,$(HB_ARCH))
+LIB_DIR_DOS = $(subst /,\,$(LIB_DIR))
+LIB_PATH_DOS = $(subst /,\,$(LIB_PATH))
 DIRSEP = $(subst /,\,\)
 
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
@@ -75,10 +77,13 @@ RANLIB = ranlib
 
 dirbase::
 	-@$(COMSPEC) /Cfor %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\nul $(MD) %d
+	-@$(COMSPEC) /Cfor %d in ($(LIB_PATH_DOS) $(LIB_DIR_DOS)) do if not exist %d\nul $(MD) %d
 
 clean::
 	-@$(COMSPEC) /Cfor %f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
 	-@$(COMSPEC) /Cfor %d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %d\nul $(RD) %d
+	-@$(COMSPEC) /Cfor %f in ($(LIB_DIR_DOS)\*.*) do $(RM) %f
+	-@$(COMSPEC) /Cfor %d in ($(LIB_DIR_DOS) $(LIB_PATH_DOS)) do if exist %d\nul $(RD) %d
 
 else  # bash
 
@@ -98,9 +103,12 @@ RANLIB = ranlib
 dirbase::
 	@[ -d $(HB_ARCHITECTURE) ] || $(MD) $(HB_ARCHITECTURE); \
 	 [ -d $(ARCH_DIR) ] || $(MD) $(ARCH_DIR)
+	@[ -d $(LIB_PATH) ] || $(MD) $(LIB_PATH); \
+	 [ -d $(LIB_DIR) ] || $(MD) $(LIB_DIR)
 
 clean::
 	-$(RD) $(HB_ARCH)
+	-$(RD) $(LIB_DIR)
 
 endif
 endif

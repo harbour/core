@@ -33,6 +33,8 @@ ifeq ($(SHLVL),) # COMMAND.COM
 # and some DOS commands require '\' (ARCH_DOS)
 ARCH_DIR = $(subst \,/,$(HB_ARCH))
 ARCH_DOS = $(subst /,\,$(HB_ARCH))
+LIB_DIR_DOS = $(subst /,\,$(LIB_DIR))
+LIB_PATH_DOS = $(subst /,\,$(LIB_PATH))
 DIRSEP = $(subst /,\,\)
 
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
@@ -65,19 +67,26 @@ RD = rmdir /q /s
 dirbase::
 	-@$(COMSPEC) /c \
 	'for %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\. $(MD) %d'
+	-@$(COMSPEC) /c \
+	'for %d in ($(LIB_PATH_DOS) $(LIB_DIR_DOS)) do if not exist %d\. $(MD) %d'
 
 clean::
 	-@$(COMSPEC) /c \
 	'if exist $(ARCH_DOS) $(RD) $(ARCH_DOS)'
+	-@$(COMSPEC) /c \
+	'if exist $(LIB_DIR_DOS) $(RD) $(LIB_DIR_DOS)'
 
 else # command.com
 
 dirbase::
 	-@for %%d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %%d\nul $(MD) %%d
+	-@for %%d in ($(LIB_PATH_DOS) $(LIB_DIR_DOS)) do if not exist %%d\nul $(MD) %%d
 
 clean::
 	-@for %%f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %%f
 	-@for %%d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %%d\nul $(RD) %%d
+	-@for %%f in ($(LIB_DIR_DOS)\*.*) do $(RM) %%f
+	-@for %%d in ($(LIB_DIR_DOS) $(LIB_PATH_DOS)) do if exist %%d\nul $(RD) %%d
 
 endif
 
@@ -95,8 +104,11 @@ MD = mkdir
 dirbase::
 	@[ -d $(HB_ARCHITECTURE) ] || $(MD) $(HB_ARCHITECTURE); \
 	 [ -d $(HB_ARCH) ] || $(MD) $(HB_ARCH)
+	@[ -d $(LIB_PATH) ] || $(MD) $(LIB_PATH); \
+	 [ -d $(LIB_DIR) ] || $(MD) $(LIB_DIR)
 
 clean::
 	-$(RD) $(ARCH_DIR)
+	-$(RD) $(LIB_DIR)/
 
 endif

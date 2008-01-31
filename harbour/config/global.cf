@@ -6,12 +6,12 @@ GRANDP = ../../
 HB_ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
 
 HB_DB_DRIVERS=\
-	dbfntx \
-	dbfcdx \
-	dbffpt \
+	rddntx \
+	rddcdx \
+	rddfpt \
 	hbsix \
-	hsx \
-	usrrdd \
+	hbhsx \
+	hbusrrdd \
 
 
 ifneq ($(HB_DB_DRVEXT),)
