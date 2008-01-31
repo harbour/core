@@ -63,9 +63,9 @@ PROCEDURE __Dir( cFileMask )
    IF Empty( cFileMask )
 
       /* NOTE: Although Cl*pper has this string in the national language
-               modul, it will not use it from here.
+               modul, it will not use it from there.
                This is hard wired to English. So this is a small
-               incompatibility */
+               incompatibility. */
 
 #ifdef HB_C52_STRICT
       QOut( "Database Files    # Records    Last Update     Size" )
@@ -102,7 +102,7 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
       IF FRead( fhnd, @buffer, 8 ) == 8 .AND. ;
          AScan( { 0x03, 0x06, 0x30, 0x31, 0x83, 0x86, 0xE5, 0xE6, 0xF5, 0xF6 }, ;
-                ASC( buffer ) ) != 0
+                Asc( buffer ) ) != 0
 
          nRecCount := Bin2L( SubStr( buffer, 5, 4 ) )
          dLastUpdate := hb_SToD( StrZero( ASC( SubStr( buffer, 2, 1 ) ) + 1900, 4 ) +;

@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 23:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/gtwvg/tests/demowvg.prg
+     ! SVN header added.
+
+   * source/rtl/dircmd.prg
+     ! Minor typos in comments.
+
+   * source/rtl/net.c
+     % Minor opt.
+
 2008-01-31 22:10 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/examples/guestbk/bld_b32.bat
    * contrib/examples/pe/bld_b32.bat

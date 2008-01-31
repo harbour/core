@@ -173,10 +173,7 @@ char * hb_username( void )
 #  else
       struct passwd * pwd;
       pwd = getpwuid( getuid() );
-      if( pwd )
-         return hb_strdup( pwd->pw_name );
-      else
-         return hb_getenv( "USER" );
+      return pwd ? hb_strdup( pwd->pw_name ) : hb_getenv( "USER" );
 #  endif
 
 #elif defined(HB_OS_WIN_32)
