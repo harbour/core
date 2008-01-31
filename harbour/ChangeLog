@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 17:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * bin/hb-func.sh
+     + Updated for lib name change.
+       Please test & review.
+
+   * source/rtl/net.c
+   * include/hbapi.h
+     + Added hb_netname() and hb_username() low level versions 
+       of NETNAME() and hb_USERNAME().
+
 2008-01-31 17:40 UTC+0100 Ryszard Glab <harbour//rglab.pl>
    * config/w32/mingw32.cf
       * fixed library name mainstd -> hbmainstd

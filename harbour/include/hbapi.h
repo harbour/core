@@ -998,6 +998,8 @@ extern HB_EXPORT BOOL   hb_printerIsReady( char * pszPrinterName );
 /* environment variables access */
 /* WARNING: This returned pointer must be freed if not NULL using hb_xfree( ( void * ) ptr ); */
 extern char * hb_getenv( const char * name );
+extern char * hb_netname( void );
+extern char * hb_username( void );
 
 /* Version tracking related things */
 #ifdef HB_FILE_VER_STATIC

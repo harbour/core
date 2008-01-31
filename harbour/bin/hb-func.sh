@@ -71,7 +71,7 @@ mk_hbgetlibs()
         then
             libs="$libs gtwin"
         fi
-        echo -n "vm pp rtl rdd dbffpt dbfcdx dbfntx hsx hbsix usrrdd ${HB_DB_DRVEXT} macro common lang codepage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 debug profiler compiler hbpcre"
+        echo -n "hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddntx hbhsx hbsix hbusrrdd ${HB_DB_DRVEXT} hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre"
     else
         echo -n "$@"
     fi
@@ -88,7 +88,7 @@ mk_hbgetlibsctb()
         then
             libs="$libs gtwin"
         fi
-        echo -n "$libs hbrddads hbct hbnf hbzlib hbtip xhb hbgd hbodbc hbpg hbmysql hbrddado hbw32 hbgtwvg"
+        echo -n "$libs rddads hbct hbnf hbzlib hbtip xhb hbgd hbodbc hbpg hbmysql rddado hbw32 gtwvg"
     else
         echo -n "$@"
     fi
@@ -424,7 +424,7 @@ else
     fi
     [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}mt\${ext}" ] && l="\${l}mt"
     [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}\${ext}" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
-    libs="gtalleg debug profiler ${hb_libsc}"
+    libs="gtalleg hbdebug profiler ${hb_libsc}"
 fi
 for l in \${libs}
 do
@@ -603,7 +603,7 @@ mk_hblibso()
     for l in ${hb_libs}
     do
         case $l in
-            debug|profiler|fm|hbodbc|gtalleg|hbrddads) ;;
+            hbdebug|profiler|fm|hbodbc|gtalleg|rddads) ;;
             *)
                 ls="lib${l}.a"
                 if [ -f lib${l}mt.a ]

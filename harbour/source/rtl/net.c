@@ -101,50 +101,49 @@
 #endif
 
 /* NOTE: Clipper will only return a maximum of 15 bytes from this function.
-         And it will be padded with spaces. Harbour does the same in the
+         And it will be padded with spaces. Harbour does the same on the
          DOS platform.
          [vszakats] */
 
-HB_FUNC( NETNAME )
+/* NOTE: The caller must free the returned buffer. [vszakats] */
+
+char * hb_netname( void )
 {
 #if defined(HB_OS_UNIX) || ( defined(HB_OS_OS2) && defined(__GNUC__) )
 
 #  if defined(__WATCOMC__)
-      char * pszValue = hb_getenv( "HOSTNAME" );
-      hb_retc_buffer( pszValue );
+      return hb_getenv( "HOSTNAME" );
 #  else
-      char szValue[ MAXGETHOSTNAME + 1 ];
-      szValue[ 0 ] = '\0';
-      gethostname( szValue, MAXGETHOSTNAME );
-      hb_retc( szValue );
+      char * pszValue = hb_xgrab( MAXGETHOSTNAME + 1 );
+      pszValue[ 0 ] = '\0';
+      gethostname( pszValue, MAXGETHOSTNAME );
+      return szValue;
 #  endif
 
 #elif defined(HB_OS_DOS)
 
 #  if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
-      char szValue[ MAXGETHOSTNAME + 1 ];
-      szValue[ 0 ] = '\0';
-
-      gethostname( szValue, MAXGETHOSTNAME );
-
-      hb_retc( szValue );
+      char * pszValue = hb_xgrab( MAXGETHOSTNAME + 1 );
+      pszValue[ 0 ] = '\0';
+      gethostname( pszValue, MAXGETHOSTNAME );
+      return szValue;
 #  else
       union REGS regs;
-      char szValue[ 16 ];
-      szValue[ 0 ] = '\0';
+      char * pszValue = hb_xgrab( 16 );
+      pszValue[ 0 ] = '\0';
 
       regs.HB_XREGS.ax = 0x5E00;
 
       {
          struct SREGS sregs;
 
-         regs.HB_XREGS.dx = FP_OFF( szValue );
-         sregs.ds = FP_SEG( szValue );
+         regs.HB_XREGS.dx = FP_OFF( pszValue );
+         sregs.ds = FP_SEG( pszValue );
 
          HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
       }
 
-      hb_retc( regs.h.ch == 0 ? "" : szValue );
+      return regs.h.ch == 0 ? "" : pszValue;
 #  endif
 
 #elif defined(HB_OS_WIN_32)
@@ -154,29 +153,32 @@ HB_FUNC( NETNAME )
 
    pszValue[ 0 ] = '\0';
    GetComputerNameA( pszValue, &ulLen );
-   hb_retc_buffer( pszValue );
+   return pszValue;
 
 #else
 
-   hb_retc( NULL );
+   return NULL;
 
 #endif
 }
 
-HB_FUNC( HB_USERNAME )
+/* NOTE: The caller must free the returned buffer. [vszakats] */
+
+char * hb_username( void )
 {
 #if defined(HB_OS_UNIX) || ( defined(HB_OS_OS2) && defined(__GNUC__) )
 
 #  if defined(__WATCOMC__)
-      char * pszValue = hb_getenv( "USER" );
-      hb_retc_buffer( pszValue );
+      return hb_getenv( "USER" );
 #  else
       struct passwd * pwd;
       pwd = getpwuid( getuid() );
       if( pwd )
-         hb_retc( pwd->pw_name );
+      {
+         return hb_strdup( pwd->pw_name );
+      }
       else
-         hb_retc_buffer( hb_getenv( "USER" ) );
+         return hb_getenv( "USER" );
 #  endif
 
 #elif defined(HB_OS_WIN_32)
@@ -186,11 +188,21 @@ HB_FUNC( HB_USERNAME )
 
    pszValue[ 0 ] = '\0';
    GetUserNameA( pszValue, &ulLen );
-   hb_retc_buffer( pszValue );
+   return pszValue;
 
 #else
 
-   hb_retc( NULL );
+   return NULL;
 
 #endif
+}
+
+HB_FUNC( NETNAME )
+{
+   hb_retc_buffer( hb_netname() );
+}
+
+HB_FUNC( HB_USERNAME )
+{
+   hb_retc_buffer( hb_username() );
 }
