@@ -72,6 +72,7 @@
    #xtranslate hb_DirExists(<x>)       => IsDirectory(<x>)
    #xtranslate hb_rddInfo([<x,...>])   => rddInfo(<x>)
    #xtranslate hb_idleSleep([<x,...>]) => SecondsSleep(<x>)
+   #xtranslate hb_UserName()           => NetName(1)
 
    #xtranslate hb_HexToNum([<c,...>])  => HexToNum(<c>)
    #xtranslate hb_NumToHex([<n,...>])  => NumToHex(<n>)
@@ -131,6 +132,7 @@
    #xtranslate CStr([<x,...>])         => hb_CStr(<x>)
    #xtranslate IsDirectory(<x>)        => hb_DirExists(<x>)
    #xtranslate SecondsSleep([<x,...>]) => hb_idleSleep(<x>)
+   #xtranslate NetName(<n>)            => iif( ValType( <n> ) == "N" .AND. <n> == 1, hb_UserName(), NetName() )
 
    #xtranslate HexToNum([<c,...>])     => hb_HexToNum(<c>)
    #xtranslate NumToHex([<n,...>])     => hb_NumToHex(<n>)

@@ -109,27 +109,14 @@ HB_FUNC( NETNAME )
 {
 #if defined(HB_OS_UNIX) || ( defined(HB_OS_OS2) && defined(__GNUC__) )
 
-   BOOL fGetUser = hb_parni( 1 ) == 1;
 #  if defined(__WATCOMC__)
-   char * pszValue = hb_getenv( fGetUser ? "USER" : "HOSTNAME" );
-   hb_retc_buffer( pszValue );
+      char * pszValue = hb_getenv( "HOSTNAME" );
+      hb_retc_buffer( pszValue );
 #  else
-   if( fGetUser )
-   {
-      struct passwd * pwd;
-      pwd = getpwuid( getuid() );
-      if( pwd )
-         hb_retc( pwd->pw_name );
-      else
-         hb_retc_buffer( hb_getenv( "USER" ) );
-   }
-   else
-   {
       char szValue[ MAXGETHOSTNAME + 1 ];
       szValue[ 0 ] = '\0';
       gethostname( szValue, MAXGETHOSTNAME );
       hb_retc( szValue );
-   }
 #  endif
 
 #elif defined(HB_OS_DOS)
@@ -162,16 +149,44 @@ HB_FUNC( NETNAME )
 
 #elif defined(HB_OS_WIN_32)
 
-   BOOL fGetUser = hb_parni( 1 ) == 1;
    DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
-   char szValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
+   char * pszValue = ( char * ) hb_xgrab( ulLen );
 
-   szValue[ 0 ] = '\0';
-   if( fGetUser )
-      GetUserNameA( szValue, &ulLen );
-   else
-      GetComputerNameA( szValue, &ulLen );
-   hb_retc( szValue );
+   pszValue[ 0 ] = '\0';
+   GetComputerNameA( pszValue, &ulLen );
+   hb_retc_buffer( pszValue );
+
+#else
+
+   hb_retc( NULL );
+
+#endif
+}
+
+HB_FUNC( HB_USERNAME )
+{
+#if defined(HB_OS_UNIX) || ( defined(HB_OS_OS2) && defined(__GNUC__) )
+
+#  if defined(__WATCOMC__)
+      char * pszValue = hb_getenv( "USER" );
+      hb_retc_buffer( pszValue );
+#  else
+      struct passwd * pwd;
+      pwd = getpwuid( getuid() );
+      if( pwd )
+         hb_retc( pwd->pw_name );
+      else
+         hb_retc_buffer( hb_getenv( "USER" ) );
+#  endif
+
+#elif defined(HB_OS_WIN_32)
+
+   DWORD ulLen = 256;
+   char * pszValue = ( char * ) hb_xgrab( ulLen );
+
+   pszValue[ 0 ] = '\0';
+   GetUserNameA( pszValue, &ulLen );
+   hb_retc_buffer( pszValue );
 
 #else
 

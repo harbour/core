@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 16:32 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbextern.ch
+   * source/rtl/net.c
+   * contrib/xhb/hbcompat.ch
+     ! Removed non-compatible xhb extension from NetName().
+     + hb_UserName() function added with the above functionality.
+     ! Slight correction to the Win32 branch of hb_UserName().
+     + Added compatibility translations to NetName(1) for 
+       xhb lib users (enough to #include "hbcompat.ch").
+
 2008-01-31 14:13 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/hbbtree/hb_btree.c
      ! Removed HB_ERR_SS_TOOLS reference.
