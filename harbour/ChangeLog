@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 18:07 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * common.mak
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * harbour.spec
+   * make_tgz.sh
+   * utils/hbpptest/Makefile
+   + utils/hbpptest/hbpptest.prg
+   - utils/hbpptest/pretest.prg
+     ! Fixed hbpptest to have this name (instead of 'pretest') even 
+       when built with the GNU make system.
+
 2008-01-31 17:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * bin/hb-func.sh
      + Updated for lib name change.

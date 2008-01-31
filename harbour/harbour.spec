@@ -313,7 +313,7 @@ then
 fi
 
 # remove unused files
-rm -f ${HB_BIN_INSTALL}/{hbdoc,hbtest,hbverfix,pretest}
+rm -f ${HB_BIN_INSTALL}/{hbdoc,hbtest,hbverfix,hbpptest}
 
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF

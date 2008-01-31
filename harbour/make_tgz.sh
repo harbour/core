@@ -234,7 +234,7 @@ do
 done
 
 # remove some unnecessary binaries
-rm -f $HB_BIN_INSTALL/hbverfix${hb_exesuf} $HB_BIN_INSTALL/pretest${hb_exesuf}
+rm -f $HB_BIN_INSTALL/hbverfix${hb_exesuf} $HB_BIN_INSTALL/hbpptest${hb_exesuf}
 
 # Keep the size of the binaries to a minimim.
 if [ -f $HB_BIN_INSTALL/harbour${hb_exesuf} ]; then

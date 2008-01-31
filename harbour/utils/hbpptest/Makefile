@@ -9,9 +9,9 @@ endif
 ROOT = ../../
 
 PRG_SOURCES=\
-	pretest.prg \
+	hbpptest.prg \
 
-PRG_MAIN=pretest.prg
+PRG_MAIN=hbpptest.prg
 
 LIBS=\
 	hbdebug \
