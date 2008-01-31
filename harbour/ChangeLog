@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 19:36 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * source/rtl/net.c
+     ! Typo fixed.
+
 2008-01-31 19:04 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/make_gcc_all.sh
      ! Added SVN header.

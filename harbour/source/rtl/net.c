@@ -117,7 +117,7 @@ char * hb_netname( void )
       char * pszValue = hb_xgrab( MAXGETHOSTNAME + 1 );
       pszValue[ 0 ] = '\0';
       gethostname( pszValue, MAXGETHOSTNAME );
-      return szValue;
+      return pszValue;
 #  endif
 
 #elif defined(HB_OS_DOS)
@@ -126,7 +126,7 @@ char * hb_netname( void )
       char * pszValue = hb_xgrab( MAXGETHOSTNAME + 1 );
       pszValue[ 0 ] = '\0';
       gethostname( pszValue, MAXGETHOSTNAME );
-      return szValue;
+      return pszValue;
 #  else
       union REGS regs;
       char * pszValue = hb_xgrab( 16 );
