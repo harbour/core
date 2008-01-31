@@ -8,6 +8,47 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 18:29 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * contrib/gtwvg/common.mak
+   * contrib/hbapollo/common.mak
+   * contrib/hbbmcdx/common.mak
+   * contrib/hbbtree/common.mak
+   * contrib/hbclipsm/common.mak
+   * contrib/hbct/common.mak
+   * contrib/hbfbird/common.mak
+   * contrib/hbfimage/common.mak
+   * contrib/hbgd/common.mak
+   * contrib/hbgt/common.mak
+   * contrib/hbmisc/common.mak
+   * contrib/hbmsql/common.mak
+   * contrib/hbmysql/common.mak
+   * contrib/hbnf/common.mak
+   * contrib/hbodbc/common.mak
+   * contrib/hbole/common.mak
+   * contrib/hbpgsql/common.mak
+   * contrib/hbtip/common.mak
+   * contrib/hbtpathy/common.mak
+   * contrib/hbw32/common.mak
+   * contrib/hbw32ddr/common.mak
+   * contrib/hbwhat32/common.mak
+   * contrib/hbziparch/common.mak
+   * contrib/hbzlib/common.mak
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_vc.mak
+   * contrib/rddado/common.mak
+   * contrib/rddads/common.mak
+   * contrib/xhb/common.mak
+   * contrib/mtpl_gcc.mak
+     ! Fixed possible error in Bcc build, related to recent changes
+
+   + contrib/hbbmcdx/make_gcc.sh
+   + contrib/hbbtree/make_gcc.sh
+   + contrib/rddado/make_gcc.sh
+   + contrib/make_gcc_all.sh
+   + contrib/mtpl_gcc.sh
+     + Readded, due to my wrong last commit, when these files
+       were not added at all
+
 2008-01-31 18:07 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * common.mak
    * harbour-ce-spec
@@ -17,7 +58,7 @@
    * utils/hbpptest/Makefile
    + utils/hbpptest/hbpptest.prg
    - utils/hbpptest/pretest.prg
-     ! Fixed hbpptest to have this name (instead of 'pretest') even 
+     ! Fixed hbpptest to have this name (instead of 'pretest') even
        when built with the GNU make system.
 
 2008-01-31 17:40 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -27,7 +68,7 @@
 
    * source/rtl/net.c
    * include/hbapi.h
-     + Added hb_netname() and hb_username() low level versions 
+     + Added hb_netname() and hb_username() low level versions
        of NETNAME() and hb_USERNAME().
 
 2008-01-31 17:40 UTC+0100 Ryszard Glab <harbour//rglab.pl>
@@ -41,7 +82,7 @@
      ! Removed non-compatible xhb extension from NetName().
      + hb_UserName() function added with the above functionality.
      ! Slight correction to the Win32 branch of hb_UserName().
-     + Added compatibility translations to NetName(1) for 
+     + Added compatibility translations to NetName(1) for
        xhb lib users (enough to #include "hbcompat.ch").
 
 2008-01-31 14:13 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
@@ -56,9 +97,9 @@
 
 2008-01-31 12:40 UTC+0100 Ryszard Glab <harbour//rglab.pl>
    * doc/howtosvn.txt
-      * svn update does not report locally modified files - it is 
+      * svn update does not report locally modified files - it is
         required to run 'svn status' to list all changed files
-        
+
    * config/lib.cf
    * config/bin.cf
    * config/darwin/gcc.cf

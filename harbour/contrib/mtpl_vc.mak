@@ -74,9 +74,9 @@ HB_LIB_INSTALL = $(HB_INSTALL_PREFIX)\lib
 HB_CC_DIRNAME = $(_HB_CC_NAME)
 !endif
 
-OBJ_DIR = $(HB_ROOT)\obj\$(HB_CC_DIRNAME)
-LIB_DIR = $(HB_ROOT)\lib\$(HB_CC_DIRNAME)
-BIN_DIR = $(HB_ROOT)\bin\$(HB_CC_DIRNAME)
+OBJ_DIR = $(HB_ROOT)\obj\$(HB_CC_DIRNAME)\\
+LIB_DIR = $(HB_ROOT)\lib\$(HB_CC_DIRNAME)\\
+BIN_DIR = $(HB_ROOT)\bin\$(HB_CC_DIRNAME)\\
 
 INCLUDE_DIR = $(HB_ROOT)\include
 
@@ -84,7 +84,7 @@ INCLUDE_DIR = $(HB_ROOT)\include
 # Macros to access Harbour executable and other goodies
 #**********************************************************
 
-HARBOUR_EXE = $(BIN_DIR)\harbour.exe
+HARBOUR_EXE = $(BIN_DIR)harbour.exe
 
 #**********************************************************
 # C compiler definition and C flags. These should never have to change.
