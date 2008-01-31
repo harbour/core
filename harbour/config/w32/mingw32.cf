@@ -40,8 +40,7 @@ endif
 ifeq ($(HB_MAIN),std)
 ifeq ($(findstring vm,$(LIBS)),vm)
 ifneq ($(HB_GT_LIB),gtwvt)
-LINKPATHS += -L$(TOP)$(ROOT)source/vm/mainstd/$(HB_ARCH)
-LDLIBS += -lmainstd
+LDLIBS += -lhbmainstd
 endif
 endif
 endif
