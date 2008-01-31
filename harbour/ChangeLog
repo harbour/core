@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 14:13 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/hbbtree/hb_btree.c
+     ! Removed HB_ERR_SS_TOOLS reference.
+
 2008-01-31 13:00 UTC+0100 Ryszard Glab <harbour//rglab.pl>
    * source/rdd/Makefile
    * config/global.cf

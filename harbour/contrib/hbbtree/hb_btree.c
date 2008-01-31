@@ -355,7 +355,7 @@ static void hb_RaiseError( enum hb_BTree_Error_Codes ulSubCode, const char * szD
 {
     PHB_ITEM pErr = hb_errRT_New(
     ES_ERROR        /* USHORT uiSeverity */,
-    HB_ERR_SS_TOOLS /* char * szSubSystem */,
+    "HBBTREE"       /* char * szSubSystem */,
     EG_ARG          /* ULONG  ulGenCode */,
     ulSubCode       /* ULONG  ulSubCode */,
     ( char * )szDescription   /* char * szDescription */,
