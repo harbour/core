@@ -1,5 +1,9 @@
 #!/bin/sh
 
+#
+# $Id$
+#
+
 # ---------------------------------------------------------------
 # Partly based on harbour/make_gcc.sh by :
 # Copyright 2007 Przemyslaw Czerpak (druzus/at/priv.onet.pl),

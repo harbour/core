@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 19:04 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/make_gcc_all.sh
+     ! Added SVN header.
+
+   * contrib/hbgf/win32/common.mak
+     ! Same change done as on the other 'common.mak's in contrib.
+
 2008-01-31 18:47 UTC+0100 Ryszard Glab <harbour//rglab.pl>
    * config/hpux/gcc.cf
    * config/darwin/gcc.cf
