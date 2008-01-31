@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-01-31 18:41 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   + contrib/mtpl_gcc.mak
+     + Readded to SVN yet another time
+
 2008-01-31 18:29 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
    * contrib/gtwvg/common.mak
    * contrib/hbapollo/common.mak
