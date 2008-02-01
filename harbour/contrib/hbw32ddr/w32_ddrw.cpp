@@ -39,14 +39,14 @@ BOOL hb_dd_g_handling_events = FALSE;   // painting?
 // DDRAW MANAGEMENT
 // Global Data
 
-LPDIRECTDRAW4           hb_dd_g_pDD = NULL;    // DirectDraw object
-HWND                    hb_dd_g_DDHwnd;        // Our hWnd
+LPDIRECTDRAW4 hb_dd_g_pDD = NULL;    // DirectDraw object
+HWND          hb_dd_g_DDHwnd;        // Our hWnd
 
 long hb_dd_g_xWindow = 0;
 long hb_dd_g_yWindow = 0;
 
 //------------------------------------------------------------------------------//
-//             Management Structs for surfaces...
+// Management Structs for surfaces...
 
 #define MAX_DDSURFACES 255
 
@@ -55,7 +55,7 @@ LPDIRECTDRAWSURFACE4 hb_dd_g_DDSFaces[ MAX_DDSURFACES + 1 ];
 long hb_dd_g_DDSFaceCount=0;
 
 //------------------------------------------------------------------------------//
-//              Sprites Management
+// Sprites Management
 
 #define MAX_SPRITES 256
 
@@ -91,9 +91,9 @@ struct st_Sprites
    char * OnFirstFrame;       // First Frame handler
    char * OnOutScreen;        // Out of Bounds...
 
-} hb_dd_Sprites[MAX_SPRITES];
+} hb_dd_Sprites[ MAX_SPRITES ];
 
-long hb_dd_g_SpritesCount=0;
+long hb_dd_g_SpritesCount = 0;
 
 //------------------------------------------------------------------//
 // Multi-Key control array.
@@ -321,7 +321,7 @@ DWORD hb_dd_DDColorMatch(IDirectDrawSurface4 * pdds, COLORREF rgb)
    HRESULT         hres;
 
    //
-   //  Use GDI SetPixel to color match for us
+   // Use GDI SetPixel to color match for us
    //
    if( rgb != CLR_INVALID && pdds->GetDC( &hdc ) == DD_OK )
    {
@@ -344,7 +344,7 @@ DWORD hb_dd_DDColorMatch(IDirectDrawSurface4 * pdds, COLORREF rgb)
       pdds->Unlock(NULL);
    }
    //
-   //  Now put the color that was there back.
+   // Now put the color that was there back.
    //
    if( rgb != CLR_INVALID && pdds->GetDC( &hdc ) == DD_OK )
    {
@@ -519,26 +519,26 @@ long _stdcall hb_dd_DDWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
    {
       case WM_DESTROY:
       {
-          hb_dd_ReleaseAllObjects();
-          break;
+         hb_dd_ReleaseAllObjects();
+         break;
       }
       case WM_KEYUP:
       {
-          nVirtKey= (int) wParam;    // virtual-key code
-          hb_dd_g_KeyDown[ nVirtKey ] = 0;
-          break;
+         nVirtKey = (int) wParam;    // virtual-key code
+         hb_dd_g_KeyDown[ nVirtKey ] = 0;
+         break;
       }
       case WM_KEYDOWN:
       {
-          nVirtKey = (int) wParam;    // virtual-key code
-          hb_dd_g_KeyDown[ nVirtKey ] = 1;
+         nVirtKey = (int) wParam;    // virtual-key code
+         hb_dd_g_KeyDown[ nVirtKey ] = 1;
 
-          if( ( int ) wParam == 27 )
-          {
-             PostMessage( hWnd, WM_CLOSE,0,0);
-             PostMessage( hWnd, WM_DESTROY,0,0);
-          }
-          break;
+         if( ( int ) wParam == 27 )
+         {
+            PostMessage( hWnd, WM_CLOSE,0,0);
+            PostMessage( hWnd, WM_DESTROY,0,0);
+         }
+         break;
       }
       case WM_TIMER:
       {
@@ -646,12 +646,12 @@ HB_FUNC( DD_LOADBMPINTOSURFACE )
       hb_dd_g_Error( "Can't load Bitmap.",100,cBitmap );
 
    if( hb_dd_g_DDSFaces[ nSurface ] == NULL )
-       hb_dd_g_Error( "Invalid Surface",nSurface,"LoadBmpIntoSurface");
+      hb_dd_g_Error( "Invalid Surface",nSurface,"LoadBmpIntoSurface");
 
    if( DD_OK != hb_dd_DDCopyBitmap( hb_dd_g_DDSFaces[ nSurface ], hbm, x,y, dx, dy ) )
-       hb_dd_g_Error( "DDCopyBitmap",nSurface,"LoadBmpIntoSurface");
+      hb_dd_g_Error( "DDCopyBitmap",nSurface,"LoadBmpIntoSurface");
 
-   DeleteObject(hbm);
+   DeleteObject( hbm );
 }
 
 //------------------------------------------------------------------//
@@ -696,7 +696,7 @@ void hb_RestoreAll(void)
       for( t = 2; t < MAX_DDSURFACES; t++ )
       {
          if( hb_dd_g_DDSFaces[ t ] != NULL )
-             hb_dd_g_DDSFaces[ t ]->Restore();
+            hb_dd_g_DDSFaces[ t ]->Restore();
       }
    }
 }
@@ -732,10 +732,10 @@ void hb_dd_ReleaseAllObjects(void)
 
 void hb_dd_DDrawStartup( HWND hWnd )
 {
-   DDSURFACEDESC2      ddsd;
-   DDSCAPS2            ddscaps;
-   HRESULT             hRet;
-   LPDIRECTDRAW        pDD;
+   DDSURFACEDESC2 ddsd;
+   DDSCAPS2       ddscaps;
+   HRESULT        hRet;
+   LPDIRECTDRAW   pDD;
    long t;
 
    hb_dd_g_DDHwnd = hWnd;
@@ -798,13 +798,13 @@ HB_FUNC( DD_STARTWINDOW )
 
    while(  loop  )
    {
-        if( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
-        {
-           TranslateMessage( &msg );
-           DispatchMessage( &msg );
-        }
-        if( WM_CLOSE == msg.message  )
-           loop = FALSE;
+      if( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
+      {
+         TranslateMessage( &msg );
+         DispatchMessage( &msg );
+      }
+      if( WM_CLOSE == msg.message  )
+         loop = FALSE;
    }
 }
 
@@ -853,19 +853,19 @@ long hb_dd_checkError( HRESULT hr )
 
    switch( hr )
    {
-   case DDERR_EXCEPTION          : p++;break;
-   case DDERR_GENERIC            : p++;break;
-   case DDERR_INVALIDOBJECT      : p++;break;
-   case DDERR_INVALIDPARAMS      : p++;break;
-   case DDERR_INVALIDRECT        : p++;break;
-   case DDERR_NOBLTHW            : p++;break;
-   case DDERR_SURFACEBUSY        : p++;break;
-   case DDERR_SURFACELOST        : p++;break;
-   case DDERR_UNSUPPORTED        : p++;break;
-   case DDERR_WASSTILLDRAWING    : p++;break;
-   case DDERR_NOOVERLAYHW        : p++;break;
-   case DDERR_NOTAOVERLAYSURFACE : p++;break;
-   case DDERR_INVALIDSURFACETYPE : p++;break;
+      case DDERR_EXCEPTION          : p++;break;
+      case DDERR_GENERIC            : p++;break;
+      case DDERR_INVALIDOBJECT      : p++;break;
+      case DDERR_INVALIDPARAMS      : p++;break;
+      case DDERR_INVALIDRECT        : p++;break;
+      case DDERR_NOBLTHW            : p++;break;
+      case DDERR_SURFACEBUSY        : p++;break;
+      case DDERR_SURFACELOST        : p++;break;
+      case DDERR_UNSUPPORTED        : p++;break;
+      case DDERR_WASSTILLDRAWING    : p++;break;
+      case DDERR_NOOVERLAYHW        : p++;break;
+      case DDERR_NOTAOVERLAYSURFACE : p++;break;
+      case DDERR_INVALIDSURFACETYPE : p++;break;
    }
 
    return p;
