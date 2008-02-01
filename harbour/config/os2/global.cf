@@ -48,12 +48,12 @@ dirbase::
 	-CMD.EXE /c IF NOT EXIST $(OS2_LIB_DIR)    $(MD) $(OS2_LIB_DIR)
 
 clean::
-	-CMD.EXE /c IF EXIST $(OS2_ARCH_DIR)\\*.* $(RM) $(OS2_ARCH_DIR)\\*.*
+	-CMD.EXE /c IF EXIST $(OS2_ARCH_DIR)     $(RM) $(OS2_ARCH_DIR)\*.*
 	-CMD.EXE /c IF EXIST $(OS2_ARCH_DIR)     $(RD) $(OS2_ARCH_DIR)
 	-CMD.EXE /c IF EXIST $(HB_ARCHITECTURE)  $(RD) $(HB_ARCHITECTURE)
-	-CMD.EXE /c IF EXIST $(OS2_LIB_DIR)\\*.* $(RM) $(OS2_LIB_DIR)\\*.*
-	-CMD.EXE /c IF EXIST $(OS2_LIB_DIR)      $(RD) $(OS2_LIB_DIR)
-	-CMD.EXE /c IF EXIST $(OS2_LIB_PATH)     $(RD) $(OS2_LIB_PATH)
+   ifneq ($(LIBNAME),)
+	-CMD.EXE /c IF EXIST $(OS2_LIB_DIR)\$(LIB_NAME) $(RM) $(OS2_LIB_DIR)\$(LIB_NAME)
+   endif
 
 else  # bash
 
