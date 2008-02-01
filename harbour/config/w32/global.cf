@@ -73,8 +73,10 @@ dirbase::
 clean::
 	-@$(COMSPEC) /c \
 	'if exist $(ARCH_DOS) $(RD) $(ARCH_DOS)'
+   ifneq ($(LIBNAME),)
 	-@$(COMSPEC) /c \
-	'if exist $(LIB_DIR_DOS) $(RD) $(LIB_DIR_DOS)'
+	'if exist $(LIB_DIR_DOS)\$(LIB_NAME) $(RM) $(LIB_DIR_DOS)\$(LIB_NAME)'
+   endif
 
 else # command.com
 
@@ -85,8 +87,9 @@ dirbase::
 clean::
 	-@for %%f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %%f
 	-@for %%d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %%d\nul $(RD) %%d
-	-@for %%f in ($(LIB_DIR_DOS)\*.*) do $(RM) %%f
-	-@for %%d in ($(LIB_DIR_DOS) $(LIB_PATH_DOS)) do if exist %%d\nul $(RD) %%d
+   ifneq ($(LIBNAME),)
+	if exist $(LIB_DIR_DOS)\$(LIB_NAME) $(RM) $(LIB_DIR_DOS)\$(LIB_NAME)
+   endif
 
 endif
 
@@ -109,6 +112,8 @@ dirbase::
 
 clean::
 	-$(RD) $(ARCH_DIR)
-	-$(RD) $(LIB_DIR)/
+   ifneq ($(LIBNAME),) 
+	   -$(RM) $(LIB_DIR)/$(LIB_NAME) 
+   endif
 
 endif

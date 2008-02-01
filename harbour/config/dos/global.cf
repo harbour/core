@@ -108,7 +108,9 @@ dirbase::
 
 clean::
 	-$(RD) $(HB_ARCH)
-	-$(RD) $(LIB_DIR)
+   ifneq ($(LIBNAME),) 
+	   -$(RM) $(LIB_DIR)/$(LIB_NAME) 
+   endif
 
 endif
 endif

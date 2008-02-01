@@ -32,6 +32,7 @@ first:: dirbase descend
 descend :
 	@$(MK) -C $(ARCH_DIR) -f $(GRANDP)Makefile 'TOP=$(GRANDP)' $(LIB_NAME)
 
+vpath $(LIB_NAME) $(LIB_DIR)
 $(LIB_NAME) : $(ALL_OBJS)
 	$(AR_RULE)
 

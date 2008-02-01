@@ -74,6 +74,8 @@ dirbase::
 
 clean::
 	-$(RD) $(ARCH_DIR)
-	-$(RD) $(LIB_DIR)
+   ifneq ($(LIBNAME),) 
+	   -$(RM) $(LIB_DIR)/$(LIB_NAME) 
+   endif
 
 endif
