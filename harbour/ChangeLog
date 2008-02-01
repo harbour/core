@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-01 08:17 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/hbw32ddr/w32_ddrw.cpp
+     ! Fixed compile error under MSVC.
+     ! Fixed MSVC warning (strdup() -> hb_strdup())
+       Now compiles without warnings under MSVC.
+     ! Reindented, some formatting.
+
 2008-02-01 02:35 UTC+0100 Ryszard Glab <harbour//rglab.pl>
    * config/lib.cf
       * added vpath to search target libraries in lib/<arch>/<compiler>
