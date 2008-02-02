@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-02 15:27 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   + contrib/examples/dbfdbt
+   + contrib/examples/dbfdbt/dbfdbt1.c
+   + contrib/examples/dbfdbt/Makefile
+   - source/rdd/dbfdbt
+     * Moved no longer used (superceded) core RDD code to 
+       /contrib/examples/
+
 2008-02-02 02:13 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * include/hbapicdp.h
    * common.mak
