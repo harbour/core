@@ -15,6 +15,7 @@ C_SOURCES=\
 	cpcswin.c     \
 	cpde850.c     \
 	cpdeiso.c     \
+	cpdewin.c     \
 	cpel737.c     \
 	cpelwin.c     \
 	cpes850.c     \
@@ -42,6 +43,7 @@ C_SOURCES=\
 	cppt850.c     \
 	cpptiso.c     \
 	cpru866.c     \
+	cpruiso.c     \
 	cprukoi.c     \
 	cpruwin.c     \
 	cpsk852.c     \
@@ -63,6 +65,7 @@ C_SOURCES=\
 	cpuawin.c     \
 	uc1250.c      \
 	uc1251.c      \
+	uc1252.c      \
 	uc1253.c      \
 	uc1254.c      \
 	uc1257.c      \

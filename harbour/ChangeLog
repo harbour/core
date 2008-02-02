@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-02 02:13 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * include/hbapicdp.h
+   * common.mak
+   * source/codepage/Makefile
+   + source/codepage/uc1252.c
+   + source/codepage/cpdewin.c
+   + source/codepage/cpruiso.c
+     + Added RUISO (Russian ISO-8859-5) and DEWIN (German CP1252, actually
+       identical to DEISO) codepages and a CP1252<->Unicode table.
+       Borrowed from Phil Krylov (xhb).
+
 2008-02-01 17:35 UTC+0100 Ryszard Glab (harbour/at/rglab.pl)
   * config/lib.cf
       * fixed to correctly list the source of installed library

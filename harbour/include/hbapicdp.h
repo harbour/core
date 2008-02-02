@@ -121,6 +121,7 @@ typedef struct _HB_CODEPAGE
 #define HB_CPID_866        "cp866"
 #define HB_CPID_1250       "cp1250"
 #define HB_CPID_1251       "cp1251"
+#define HB_CPID_1252       "cp1252"
 #define HB_CPID_1253       "cp1253"
 #define HB_CPID_1254       "cp1254"
 #define HB_CPID_1257       "cp1257"
@@ -141,6 +142,7 @@ typedef struct _HB_CODEPAGE
 #define HB_UNITB_866       &hb_uniTbl_866
 #define HB_UNITB_1250      &hb_uniTbl_1250
 #define HB_UNITB_1251      &hb_uniTbl_1251
+#define HB_UNITB_1252      &hb_uniTbl_1252
 #define HB_UNITB_1253      &hb_uniTbl_1253
 #define HB_UNITB_1254      &hb_uniTbl_1254
 #define HB_UNITB_1257      &hb_uniTbl_1257
@@ -163,6 +165,7 @@ extern HB_UNITABLE hb_uniTbl_857;
 extern HB_UNITABLE hb_uniTbl_866;
 extern HB_UNITABLE hb_uniTbl_1250;
 extern HB_UNITABLE hb_uniTbl_1251;
+extern HB_UNITABLE hb_uniTbl_1252;
 extern HB_UNITABLE hb_uniTbl_1253;
 extern HB_UNITABLE hb_uniTbl_1254;
 extern HB_UNITABLE hb_uniTbl_1257;
