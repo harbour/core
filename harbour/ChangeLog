@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-04 15:55 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/os2/global.cf
+    * added workaround for non working 'if' function in OS2 GNU make port
+
 2008-02-04 16:40 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/vm/fm.c
     ! fixed hex dump of fm.log. The previous "hex" dump contained 
