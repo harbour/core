@@ -181,6 +181,7 @@ $(USRRDD_DIR);\
 $(GTCGI_DIR);\
 $(GTSTD_DIR);\
 $(GTPCA_DIR);\
+$(GTDOS_DIR);\
 $(GTWIN_DIR);\
 $(GTWVT_DIR);\
 $(GTGUI_DIR);\

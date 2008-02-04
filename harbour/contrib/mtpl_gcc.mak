@@ -128,15 +128,15 @@ LDFLAGS        := $(LDFLAGS)
 
 #**********************************************************
 # General *.c --> *.obj COMPILE rule for STATIC Libraries
-$(OBJ_DIR)/%$(OBJEXT) : %.c
+$(OBJ_DIR)%$(OBJEXT) : %.c
 	$(CC) $(CLIBFLAGS) -o$@ $<
 #**********************************************************
 # General *.cpp --> *.obj COMPILE rule for STATIC Libraries
-$(OBJ_DIR)/%$(OBJEXT) : %.cpp
+$(OBJ_DIR)%$(OBJEXT) : %.cpp
 	$(CXX) $(CLIBFLAGS) -o$@ $<
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
-$(OBJ_DIR)/%$(OBJEXT) : %.prg
+$(OBJ_DIR)%$(OBJEXT) : %.prg
 	$(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)/ $<
 	$(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)/$(<F:.prg=.c)
 #**********************************************************

@@ -359,6 +359,9 @@ $(GTSTD_LIB)    : $(GTSTD_LIB_OBJS)
 $(GTPCA_LIB)    : $(GTPCA_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
+$(GTDOS_LIB)    : $(GTDOS_LIB_OBJS)
+	$(MKLIB) $(ARFLAGS) $@ $^
+#**********************************************************
 $(GTWIN_LIB)    : $(GTWIN_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
