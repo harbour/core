@@ -51,7 +51,7 @@ endif
 # Add the specified GT driver library and other RTLs
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lrtl
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lhbrtl
 
 # screen driver libraries
 ifeq ($(HB_CRS_LIB),)
@@ -102,7 +102,7 @@ LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $@ $(^F) $(LDFLAGS) $(L_USR) $(LINKLIBS) $(L
 #AR_RULE = $(AR) $(ARFLAGS) r $@ $(^F) || $(RM) $@
 LIBTOOL = libtool
 LIBTOOLFLAGS = $(LIBTOOL_USR)
-AR_RULE = $(LIBTOOL) -static $(LIBTOOLFLAGS) -o $(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
+AR_RULE = $(LIBTOOL) -static $(LIBTOOLFLAGS) -o $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 RANLIB = ranlib
 
 include $(TOP)$(ROOT)config/rules.cf

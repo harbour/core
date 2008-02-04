@@ -11,7 +11,7 @@ LIB_EXT = .a
 
 CC = $(HB_CCACHE) gcc
 CC_IN = -c
-CC_OUT = -o 
+CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 CFLAGS = -DHB_OS_SUNOS -Wall -W
@@ -38,10 +38,10 @@ ifeq ($(findstring rdd,$(LIBS)),rdd)
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
 endif
 
-# Add the specified GT driver library and other RTLs
+# Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
 
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lrtl
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lhbrtl
 
 # screen driver libraries
 ifeq ($(HB_CRS_LIB),)
@@ -79,6 +79,6 @@ LDFLAGS = $(LINKPATHS)
 
 AR = ar
 ARFLAGS = $(A_USR)
-AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
+AR_RULE = $(AR) $(ARFLAGS) cr $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 include $(TOP)$(ROOT)config/rules.cf

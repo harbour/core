@@ -33,7 +33,7 @@ else  # bash
 INSTALL_RULE =\
 	@if [ ! -d $(INSTALL_DIR) ]; \
 	then \
-	  echo "! Can't install, path not found:" $(INSTALL_DIR); \
+	  echo "! Can't install, path not found: $(INSTALL_DIR)" 1>&2; \
 	else \
 	  for i in $(INSTALL_OBJS); \
 	  do \
@@ -42,7 +42,7 @@ INSTALL_RULE =\
 	      echo "! Installing $$i on $(INSTALL_DIR)"; \
 	      $(CP) $$i $(INSTALL_DIR); \
 	    else \
-	      echo "! Can't install $$i, not found"; \
+	      echo "! Can't install $$i, not found" 1>&2; \
 	    fi \
 	  done \
 	fi

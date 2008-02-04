@@ -8,6 +8,75 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-04 09:31 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour.spec
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+    * updated for new library names
+
+  * harbour/ChangeLog
+  * harbour/include/hbexprb.c
+    * formatting
+
+  * harbour/source/rtl/net.c
+    ! fixed casting
+
+  * harbour/harbour.spec
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+  * harbour/contrib/Makefile
+    * removed hbzlib - it cannot be longer part of default build
+      because Viktor removed zlib header files. Viktor sorry but
+      IMHO you should revert it and also restore ace.h - it creates
+      serious problems without any valuable addition. Now we will
+      have to rebuild Harbour on many different platforms and often
+      it will not be possible to install some libraries. We cannot
+      force installing additional libs by people who will create
+      binaries for incoming releases so it's important to revert
+      it. Please do it.
+
+  * harbour/config/bsd/install.cf
+  * harbour/config/darwin/install.cf
+  * harbour/config/hpux/install.cf
+  * harbour/config/linux/install.cf
+  * harbour/config/sunos/install.cf
+  * harbour/config/dos/install.cf
+  * harbour/config/os2/install.cf
+  * harbour/config/w32/install.cf
+    * redirected echo error messages to stderr when *sh shell is used
+
+  * harbour/config/lib.cf
+  * harbour/config/bin.cf
+  * harbour/config/global.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/hpux/global.cf
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/darwin/global.cf
+  * harbour/config/dos/owatcom.cf
+  * harbour/config/dos/global.cf
+  * harbour/config/dos/rsx32.cf
+  * harbour/config/global.cf
+  * harbour/config/linux/owatcom.cf
+  * harbour/config/linux/global.cf
+  * harbour/config/os2/gcc.cf
+  * harbour/config/os2/global.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/config/sunos/global.cf
+  * harbour/config/bsd/global.cf
+  * harbour/config/w32/owatcom.cf
+  * harbour/config/w32/bcc32.cf
+  * harbour/config/w32/gcc.cf
+  * harbour/config/w32/rsxnt.cf
+  * harbour/config/w32/global.cf
+    ! fixed build process. DOS and WINDOWS users should make tests for
+      different compilers. I tested only DOS-OpenWatcom, DOS-DJGPP,
+      W32-BCC32, W32-OpenWatcom, W32-POCC, W32-XCC and corss builds
+      W32-MinGW, W32-MinGW-CE. OS2 version not testes at all - I hope
+      it will work. LINUX-GCC, LINUX-G++, LINUX-OpenWatcom, BSD-GCC,
+      HPUX-GCC tested and they are working. I hope that SunOS version
+      also works though I do not have any solaris installation where
+      I can make real tests.
+
 2008-02-02 23:40 UTC+0100 Ryszard Glab (harbour//rglab.pl)
   * config/os2/global.cf
       * restored double backslash in deletion command
@@ -434,7 +503,7 @@
   * contrib/hbtip/cgi.prg
   + contrib/hbtip/sessid.prg
     moved statis funcs GenerateSID, CheckSID, DateToGmt from cgi.prg
-	 to new sessid.prg and renamed to TIP_*
+    to new sessid.prg and renamed to TIP_*
   * contrib/hbtip/httpcln.prg
     fixed few typos that generated RT errors
   * source/rtl/gtxwc/gtxwc.c

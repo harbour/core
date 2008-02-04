@@ -26,6 +26,7 @@ HB_DB_DIRS=\
 
 ifneq ($(HB_DB_DRVEXT),)
 HB_DB_DRIVERS += $(HB_DB_DRVEXT)
+HB_DB_DIRS += $(HB_DB_DRVEXT)
 endif
 
 ifeq ($(HB_BIN_COMPILE),)

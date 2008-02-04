@@ -23,15 +23,8 @@ EXE_NAME = $(PRG_MAIN:.prg=$(EXE_EXT))
 endif
 endif
 
-_EXE_ARCH = $(notdir $(ARCH_DIR))
-ifeq ($(_EXE_ARCH),)
-# ARCH_DIR ends with a slash
-EXE_ARCH = $(ARCH_DIR)$(EXE_NAME)
-LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_DIR)
-else
 EXE_ARCH = $(ARCH_DIR)/$(EXE_NAME)
-LIB_DIR := $(TOP)$(ROOT)lib/$(ARCH_DIR)/
-endif
+LIB_DIR = $(TOP)$(ROOT)lib/$(ARCH_DIR)
 
 ALL_OBJS = $(ALL_C_OBJS) $(ALL_PRG_OBJS)
 

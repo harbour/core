@@ -117,7 +117,7 @@ export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/harbour
 export HB_LIB_INSTALL=%{_libdir}/%{name}
 export HB_GTALLEG=%{?_with_allegro:yes}
-export HB_CONTRIBLIBS="%{?_with_gd:gd} %{?_with_pgsql:pgsql} %{?_with_mysql:mysql}"
+export HB_CONTRIBLIBS="%{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
 
 make -r
 
@@ -148,7 +148,7 @@ export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/harbour
 export HB_LIB_INSTALL=%{_libdir}/%{name}
 export HB_GTALLEG=%{?_with_allegro:yes}
-export HB_CONTRIBLIBS="%{?_with_gd:gd} %{?_with_pgsql:pgsql} %{?_with_mysql:mysql}"
+export HB_CONTRIBLIBS="%{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
 
 export _DEFAULT_BIN_DIR=$HB_BIN_INSTALL
 export _DEFAULT_INC_DIR=$HB_INC_INSTALL
@@ -322,21 +322,21 @@ rm -fR $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbmainwin.a
 %{_libdir}/%{name}/libhbusrrdd.a
 
-%{?_with_adsrdd: %{_libdir}/%{name}/libhbrddads.a}
+%{?_with_adsrdd: %{_libdir}/%{name}/librddads.a}
 %{!?_without_odbc: %{_libdir}/%{name}/libhbodbc.a}
 %{!?_without_nf: %{_libdir}/%{name}/libhbnf.a}
 %{?_with_mysql: %{_libdir}/%{name}/libhbmysql.a}
-%{?_with_pgsql: %{_libdir}/%{name}/libhbpg.a}
+%{?_with_pgsql: %{_libdir}/%{name}/libhbpgsql.a}
 %{?_with_gd: %{_libdir}/%{name}/libhbgd.a}
 %{_libdir}/%{name}/libhbbtree.a
 %{_libdir}/%{name}/libhbmisc.a
 %{_libdir}/%{name}/libhbct.a
-%{_libdir}/%{name}/libhbzlib.a
+#%{_libdir}/%{name}/libhbzlib.a
 %{_libdir}/%{name}/libhbtip.a
 %{_libdir}/%{name}/libxhb.a
-%{_libdir}/%{name}/libhbrddado.a
+%{_libdir}/%{name}/librddado.a
 %{_libdir}/%{name}/libhbw32.a
-%{_libdir}/%{name}/libhbgtwvg.a
+%{_libdir}/%{name}/libgtwvg.a
 %{_libdir}/%{name}/libhbgt.a
 %{_libdir}/%{name}/libhbbmcdx.a
 %{_libdir}/%{name}/libhbclipsm.a

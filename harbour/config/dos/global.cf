@@ -36,6 +36,7 @@ ARCH_DIR = $(subst \,/,$(HB_ARCH))
 ARCH_DOS = $(subst /,\,$(HB_ARCH))
 LIB_DIR_DOS = $(subst /,\,$(LIB_DIR))
 LIB_PATH_DOS = $(subst /,\,$(LIB_PATH))
+LIB_ARCH_DOS = $(subst /,\,$(LIB_ARCH))
 DIRSEP = $(subst /,\,\)
 
 MK := $(subst \,/,$(subst \~,~,$(MAKE)))
@@ -77,13 +78,12 @@ RANLIB = ranlib
 
 dirbase::
 	-@$(COMSPEC) /Cfor %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\nul $(MD) %d
-	-@$(COMSPEC) /Cfor %d in ($(LIB_PATH_DOS) $(LIB_DIR_DOS)) do if not exist %d\nul $(MD) %d
+	$(if $(LIB_PATH_DOS),-@$(COMSPEC) /Cfor %d in ($(LIB_PATH_DOS) $(LIB_DIR_DOS)) do if not exist %d\nul $(MD) %d,)
 
 clean::
 	-@$(COMSPEC) /Cfor %f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
 	-@$(COMSPEC) /Cfor %d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %d\nul $(RD) %d
-	-@$(COMSPEC) /Cfor %f in ($(LIB_DIR_DOS)\*.*) do $(RM) %f
-	-@$(COMSPEC) /Cfor %d in ($(LIB_DIR_DOS) $(LIB_PATH_DOS)) do if exist %d\nul $(RD) %d
+	$(if $(LIB_ARCH_DOS),-@$(COMSPEC) /Cif exist $(LIB_ARCH_DOS) $(RM) $(LIB_ARCH_DOS),)
 
 else  # bash
 
@@ -95,22 +95,17 @@ RD = rm -f -r
 CP = cp -f
 MV = mv -f
 MD = mkdir
+MDP = mkdir -p
 
 #this will be used only under MINGW
 RANLIB = ranlib
 
-
 dirbase::
-	@[ -d $(HB_ARCHITECTURE) ] || $(MD) $(HB_ARCHITECTURE); \
-	 [ -d $(ARCH_DIR) ] || $(MD) $(ARCH_DIR)
-	@[ -d $(LIB_PATH) ] || $(MD) $(LIB_PATH); \
-	 [ -d $(LIB_DIR) ] || $(MD) $(LIB_DIR)
+	@[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)
+	@[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
 
 clean::
-	-$(RD) $(HB_ARCH)
-   ifneq ($(LIBNAME),) 
-	   -$(RM) $(LIB_DIR)/$(LIB_NAME) 
-   endif
+	-$(RD) $(ARCH_DIR) $(LIB_ARCH)
 
 endif
 endif

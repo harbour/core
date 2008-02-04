@@ -11,10 +11,9 @@ DIRS=\
 	hbmisc \
 	hbnf \
 	hbclipsm \
-	hbzlib \
 	xhb \
 #	examples \
-
+#	hbzlib \
 
 ifneq ($(HB_ARCHITECTURE),dos)
 

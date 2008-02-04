@@ -42,7 +42,7 @@ endif
 
 # Add the specified GT driver library
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lrtl
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lhbrtl
 endif
 
 # HB_SCREEN_LIB: empty, or one of ncurses, slang

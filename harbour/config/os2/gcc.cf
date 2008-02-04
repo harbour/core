@@ -45,8 +45,6 @@ LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
-# add a last round of rtl/vm to solve positional interdependencies (at the moment hbrun requires this)
-LINKLIBS += -lrtl -lvm -lrtl
 endif
 
 # Add the specified GT driver library
@@ -58,7 +56,7 @@ LINKLIBS += -l$(HB_GT_LIB)
 LINKLIBS += -lgtos2
 else
 
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lrtl
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lhbrtl
 
 endif
 endif

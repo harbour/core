@@ -42,7 +42,7 @@ endif
 
 # Add the specified GT driver library and other RTLs
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lrtl
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lhbrtl
 endif
 
 # The -) option could be appropriate to link against libraries with
@@ -54,6 +54,6 @@ LDFLAGS += $(LINKPATHS)
 
 AR = ar
 ARFLAGS = $(A_USR)
-AR_RULE = $(AR) $(ARFLAGS) r $(LIB_DIR)/$@ $(^F) || $(RM) $(LIB_DIR)/$@
+AR_RULE = $(AR) $(ARFLAGS) r $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
 
 include $(TOP)$(ROOT)config/rules.cf

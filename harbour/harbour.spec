@@ -507,7 +507,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
 %{!?_without_nf: %{_libdir}/%{name}/libhbnf.a}
-%{?_with_adsrdd: %{_libdir}/%{name}/libhbrddads.a}
+%{?_with_adsrdd: %{_libdir}/%{name}/librddads.a}
 %{?_with_odbc: %{_libdir}/%{name}/libhbodbc.a}
 %{?_with_mysql: %{_libdir}/%{name}/libhbmysql.a}
 %{?_with_pgsql: %{_libdir}/%{name}/libhbpgsql.a}
@@ -516,7 +516,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbbtree.a
 %{_libdir}/%{name}/libhbmisc.a
 %{_libdir}/%{name}/libhbct.a
-%{_libdir}/%{name}/libhbzlib.a
+#%{_libdir}/%{name}/libhbzlib.a
 %{_libdir}/%{name}/libhbtip.a
 %{_libdir}/%{name}/libxhb.a
 %{_libdir}/%{name}/libhbgt.a

@@ -1628,7 +1628,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   if( HB_SUPPORT_HARBOUR )
                      hb_compExprReduceASC( pSelf, HB_COMP_PARAM );
                }
-               else if( ( strcmp( "STOD", pName->value.asSymbol ) == 0 || 
+               else if( ( strcmp( "STOD", pName->value.asSymbol ) == 0 ||
                           strcmp( "HB_STOD", pName->value.asSymbol ) == 0 ) && usCount < 2 )
                {
                   if( HB_SUPPORT_HARBOUR )

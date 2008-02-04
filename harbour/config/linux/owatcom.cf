@@ -38,27 +38,27 @@ LD = wlink
 LDFLAGS = debug all sys Linux OP CASEEXACT
 
 ifeq ($(HB_LIB_COMPILE),)
-   LINKLIBS := $(foreach lib, $(CONTRIBS), $(LIB_DIR)/$(lib))
+   LINKLIBS = $(foreach lib, $(CONTRIBS), $(LIB_DIR)/$(lib))
    LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)/$(lib))
 else
-   LINKLIBS := $(foreach lib, $(CONTRIBS), $(HB_LIB_COMPILE)/$(lib))
+   LINKLIBS = $(foreach lib, $(CONTRIBS), $(HB_LIB_COMPILE)/$(lib))
    LINKLIBS += $(foreach lib, $(LIBS), $(HB_LIB_COMPILE)/$(lib))
 endif
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
    ifeq ($(HB_LIB_COMPILE),)
-      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(LIB_DIR)/$(drv))
+      RDDLIBS = $(foreach drv, $(HB_DB_DRIVERS), $(LIB_DIR)/$(drv))
    else
-      RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(HB_LIB_COMPILE)/$(drv))
+      RDDLIBS = $(foreach drv, $(HB_DB_DRIVERS), $(HB_LIB_COMPILE)/$(drv))
    endif
 endif
 
 ifeq ($(findstring rtl,$(LIBS)),rtl)
    ifeq ($(HB_LIB_COMPILE),)
-      GTLIBS := $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt))
+      GTLIBS = $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt))
    else
-      GTLIBS := $(foreach gt, $(HB_GT_LIBS), $(HB_LIB_COMPILE)/$(gt))
+      GTLIBS = $(foreach gt, $(HB_GT_LIBS), $(HB_LIB_COMPILE)/$(gt))
    endif
 endif
 

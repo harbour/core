@@ -48,10 +48,7 @@ RANLIB = ranlib
 
 dirbase::
 	@[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)
-	@[ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
+	@[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
 
 clean::
-	-$(RD) $(ARCH_DIR)
-   ifneq ($(LIBNAME),) 
-	   -$(RM) $(LIB_DIR)/$(LIB_NAME) 
-   endif
+	-$(RD) $(ARCH_DIR) $(LIB_ARCH)

@@ -114,7 +114,7 @@ char * hb_netname( void )
 #  if defined(__WATCOMC__)
       return hb_getenv( "HOSTNAME" );
 #  else
-      char * pszValue = hb_xgrab( MAXGETHOSTNAME + 1 );
+      char * pszValue = ( char * ) hb_xgrab( MAXGETHOSTNAME + 1 );
       pszValue[ 0 ] = '\0';
       gethostname( pszValue, MAXGETHOSTNAME );
       return pszValue;
@@ -129,7 +129,7 @@ char * hb_netname( void )
       return pszValue;
 #  else
       union REGS regs;
-      char * pszValue = hb_xgrab( 16 );
+      char * pszValue = ( char * ) hb_xgrab( 16 );
       pszValue[ 0 ] = '\0';
 
       regs.HB_XREGS.ax = 0x5E00;
