@@ -532,7 +532,7 @@ HB_EXPORT void hb_xinit( void ) /* Initialize fixed memory subsystem */
 #ifdef HB_FM_STATISTICS
 static char * hb_mem2str( char * membuffer, void * pMem, UINT uiSize )
 {
-   char *cMem = ( char * ) pMem;
+   BYTE *cMem = ( BYTE * ) pMem;
    UINT uiIndex, uiPrintable;
 
    uiPrintable = 0;
