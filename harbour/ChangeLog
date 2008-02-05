@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-05 10:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/os2/global.cf
+    ! fixed typo in FOR command
+
 2008-02-04 22:57 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/common.mak
   * harbour/make_gcc.mak
