@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-06 11:08 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/common.mak
+  * harbour/make_gcc.mak
+  * harbour/make_gcc.sh
+    ! Some fixes for OS/2+eComStation. Still not all is working ok (dlls)
+
 2008-02-05 10:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/os2/global.cf
     ! fixed typo in FOR command

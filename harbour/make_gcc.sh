@@ -16,6 +16,7 @@ if [ -z "$HB_ARCHITECTURE" ]; then
       case "$hb_arch" in
          *windows*|*mingw32*|msys*)   hb_arch="w32" ;;
          *cygwin*)                    hb_arch="cyg" ;;
+         *os/2*)                      hb_arch="os2" ;;
          *dos)                        hb_arch="dos" ;;
          *bsd)                        hb_arch="bsd" ;;
       esac
@@ -89,6 +90,9 @@ case "$HB_ARCHITECTURE" in
    dos)  HB_OS="DOS"
          GT_LIST="DOS"
          ;;
+   os2)  HB_OS="OS2"
+         GT_LIST="${GT_LIST} OS2"
+         ;;
    linux) HB_OS="LINUX"
          [ -d "/usr/lib/lib64" ] && [ "${HB_ARCH64}" = yes ] && HB_LIBDIRNAME="lib64"
          OS_LIBS="$OS_LIBS -ldl"
@@ -110,37 +114,43 @@ case "$HB_ARCHITECTURE" in
          ;;
 esac
 
-GTSLN=""
-GTCRS=""
-GTXWC=""
+#GTSLN=""
+#GTCRS=""
+#GTXWC=""
 for dir in /usr /usr/local /sw /opt/local
 do
    if [ "$GTSLN" != yes ]; then
-      if [ -f $dir/include/slang.h ]; then
-         [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
-         GTSLN=yes
-      elif [ -f $dir/include/slang/slang.h ]; then
-         C_USR="$C_USR -I$dir/include/slang"
-         GTSLN=yes
-      fi
+       if [ "$GTSLN" != no ]; then
+          if [ -f $dir/include/slang.h ]; then
+             [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
+             GTSLN=yes
+          elif [ -f $dir/include/slang/slang.h ]; then
+             C_USR="$C_USR -I$dir/include/slang"
+             GTSLN=yes
+          fi
+       fi
    fi
    if [ "$GTCRS" != yes ]; then
-      if [ -f ${dir}/include/curses.h ]; then
-         [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
-         GTCRS=yes
-      elif [ -f ${dir}/include/${CRSLIB}/curses.h ]; then
-         C_USR="$C_USR -I$dir/include/${CRSLIB}"
-         GTCRS=yes
+      if [ "$GTCRS" != no ]; then
+          if [ -f ${dir}/include/curses.h ]; then
+             [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
+             GTCRS=yes
+          elif [ -f ${dir}/include/${CRSLIB}/curses.h ]; then
+             C_USR="$C_USR -I$dir/include/${CRSLIB}"
+             GTCRS=yes
+          fi
       fi
    fi
    if [ "$GTXWC" != yes ]; then
-      if [ -f ${dir}/include/X11/Xlib.h ] && \
-         [ -f ${dir}/include/X11/Xcms.h ] && \
-         [ -f ${dir}/include/X11/Xutil.h ] && \
-         [ -f ${dir}/include/X11/keysym.h ]; then
-         [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
-         GTXWC=yes
-      fi
+       if [ "$GTXWC" != no ]; then
+          if [ -f ${dir}/include/X11/Xlib.h ] && \
+             [ -f ${dir}/include/X11/Xcms.h ] && \
+             [ -f ${dir}/include/X11/Xutil.h ] && \
+             [ -f ${dir}/include/X11/keysym.h ]; then
+             [ $dir = /usr ] || C_USR="$C_USR -I$dir/include"
+             GTXWC=yes
+          fi
+       fi
    fi
 done
 

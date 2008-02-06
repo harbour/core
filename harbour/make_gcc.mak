@@ -161,7 +161,7 @@ endif
 
 # DLLs on Windows require IMPORT lib
 # and an additional compiler phase
-ifneq ($(findstring $(HB_ARCHITECTURE),w32 cyg os2),)
+ifneq ($(findstring $(HB_ARCHITECTURE),w32 cyg),)
 HB_DLL_IMPLIB := $(HARBOUR_DLL:$(DLLEXT)=$(LIBEXT))
 HB_IMPLIB_PART := -Wl,--out-implib,$(HB_DLL_IMPLIB)
 endif
@@ -218,18 +218,32 @@ HARBOURFLAGSDLL:= -D__EXPORT__ -n1 -l $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 # Linker Flags
 #**********************************************************
 
-LDFLAGS := $(L_USR) -Wl,--start-group $(STANDARD_STATIC_HBLIBS)
+# OS/2 hacks for missing gcc features
+ifneq ($(HB_ARCHITECTURE),os2)
+__GROUP_LIBS_BEG__=-Wl,--start-group
+__GROUP_LIBS_END__=-Wl,--end-group
+endif
+
+LDFLAGS := $(L_USR) $(__GROUP_LIBS_BEG__) $(STANDARD_STATIC_HBLIBS)
 
 # HB_GPM_MOUSE: use gpm mouse driver
 ifeq ($(HB_GPM_MOUSE),yes)
 LDFLAGS += -lgpm
 CFLAGS  += -DHAVE_GPM_H
 endif
+
+# PCRE Regex library
 ifneq ($(findstring -DHB_PCRE_REGEX, $(CFLAGS)),)
 LDFLAGS += -lpcre
 endif
 
-LDFLAGS    += -Wl,--end-group $(HB_OS_LIBS)
+LDFLAGS += $(__GROUP_LIBS_END__) $(HB_OS_LIBS)
+
+ifeq ($(HB_ARCHITECTURE),os2)
+LDFLAGS += $(STANDARD_STATIC_HBLIBS) $(HB_OS_LIBS)
+#LDFLAGS += $(RTL_LIB) $(VM_LIB)
+endif
+
 LDFLAGSDLL := -shared $(L_USR) -L$(LIB_DIR) $(LDFLAGSDLL)
 
 #**********************************************************
@@ -371,6 +385,9 @@ $(GTWVT_LIB)    : $(GTWVT_LIB_OBJS)
 $(GTGUI_LIB)    : $(GTGUI_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
+$(GTOS2_LIB)    : $(GTOS2_LIB_OBJS)
+	$(MKLIB) $(ARFLAGS) $@ $^
+#**********************************************************
 $(GTTRM_LIB)    : $(GTTRM_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
@@ -389,41 +406,41 @@ $(GTXWC_LIB)    : $(GTXWC_LIB_OBJS)
 # EXECUTABLE Targets BUILD rules
 #**********************************************************
 $(HBPPGEN_EXE)  : $(HBPPGEN_EXE_OBJS) $(COMMON_LIB)
-	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+	$(CC) $(CFLAGS) -o $@ $^ $(HB_OS_LIBS)
 #**********************************************************
 $(HARBOUR_EXE)  : $(HARBOUR_EXE_OBJS) $(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
-	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+	$(CC) $(CFLAGS) -o $@ $^ $(HB_OS_LIBS)
 #**********************************************************
 $(HBPP_EXE)     : $(HBPP_EXE_OBJS) $(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
-	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+	$(CC) $(CFLAGS) -o $@ $^ $(HB_OS_LIBS)
 #**********************************************************
 $(HBRUN_EXE)    :: $(StdLibs)
 $(HBRUN_EXE)    :: $(HBRUN_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBDOT_EXE)    :: $(StdLibs)
 $(HBDOT_EXE)    :: $(HBDOT_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBTEST_EXE)   :: $(StdLibs)
 $(HBTEST_EXE)   :: $(HBTEST_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBPPTEST_EXE) :: $(StdLibs)
 $(HBPPTEST_EXE) :: $(HBPPTEST_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBDOC_EXE)    :: $(StdLibs)
 $(HBDOC_EXE)    :: $(HBDOC_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBMAKE_EXE)   :: $(StdLibs)
 $(HBMAKE_EXE)   :: $(HBMAKE_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
 $(HBVER_EXE)    :: $(StdLibs)
 $(HBVER_EXE)    :: $(HBVER_EXE_OBJS)
-	$(CC) $(CFLAGS) -o$@ $^ $(HB_OS_LIBS)
+	$(CC) $(CFLAGS) -o $@ $^ $(HB_OS_LIBS)
 #**********************************************************
 
 #**********************************************************
@@ -431,7 +448,7 @@ $(HBVER_EXE)    :: $(HBVER_EXE_OBJS)
 #**********************************************************
 $(HARBOUR_DLL) :: $(StdLibs)
 $(HARBOUR_DLL) :: $(DLL_OBJS)
-	$(CC) $(LDFLAGSDLL) -o$@ $^ $(HB_OS_LIBS) $(HB_IMPLIB_PART)
+	$(CC) $(LDFLAGSDLL) -o $@ $^ $(HB_OS_LIBS) $(HB_IMPLIB_PART)
 #**********************************************************
 # DLL EXECUTABLE Targets
 #**********************************************************

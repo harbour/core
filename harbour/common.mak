@@ -129,13 +129,11 @@ USRRDD_DIR   = source\rdd\usrrdd
 GTCGI_DIR    = source\rtl\gtcgi
 GTSTD_DIR    = source\rtl\gtstd
 GTPCA_DIR    = source\rtl\gtpca
-#---
 GTDOS_DIR    = source\rtl\gtdos
-#---
 GTWIN_DIR    = source\rtl\gtwin
 GTWVT_DIR    = source\rtl\gtwvt
 GTGUI_DIR    = source\rtl\gtgui
-#---
+GTOS2_DIR    = source\rtl\gtos2
 GTTRM_DIR    = source\rtl\gttrm
 GTCRS_DIR    = source\rtl\gtcrs
 GTSLN_DIR    = source\rtl\gtsln
@@ -185,6 +183,7 @@ $(GTDOS_DIR);\
 $(GTWIN_DIR);\
 $(GTWVT_DIR);\
 $(GTGUI_DIR);\
+$(GTOS2_DIR);\
 $(GTTRM_DIR);\
 $(GTCRS_DIR);\
 $(GTSLN_DIR);\
@@ -238,13 +237,12 @@ DBFFPT_LIB   = $(LIB_DIR)\$(LIBPREF)rddfpt$(LIBEXT)
 
 GTCGI_LIB    = $(LIB_DIR)\$(LIBPREF)gtcgi$(LIBEXT)
 GTSTD_LIB    = $(LIB_DIR)\$(LIBPREF)gtstd$(LIBEXT)
-#---
 GTDOS_LIB    = $(LIB_DIR)\$(LIBPREF)gtdos$(LIBEXT)
 GTPCA_LIB    = $(LIB_DIR)\$(LIBPREF)gtpca$(LIBEXT)
 GTWIN_LIB    = $(LIB_DIR)\$(LIBPREF)gtwin$(LIBEXT)
 GTWVT_LIB    = $(LIB_DIR)\$(LIBPREF)gtwvt$(LIBEXT)
 GTGUI_LIB    = $(LIB_DIR)\$(LIBPREF)gtgui$(LIBEXT)
-#---
+GTOS2_LIB    = $(LIB_DIR)\$(LIBPREF)gtos2$(LIBEXT)
 GTTRM_LIB    = $(LIB_DIR)\$(LIBPREF)gttrm$(LIBEXT)
 GTCRS_LIB    = $(LIB_DIR)\$(LIBPREF)gtcrs$(LIBEXT)
 GTSLN_LIB    = $(LIB_DIR)\$(LIBPREF)gtsln$(LIBEXT)
@@ -966,6 +964,11 @@ GTGUI_LIB_SHARED_OBJS = \
 
 GTGUI_LIB_OBJS = $(GTGUI_LIB_COMMON_OBJS) $(GTGUI_LIB_STATIC_OBJS)
 GTGUI_DLL_OBJS = $(GTGUI_LIB_COMMON_OBJS) $(GTGUI_LIB_SHARED_OBJS)
+
+#**********************************************************
+
+GTOS2_LIB_OBJS = \
+    $(OBJ_DIR)\gtos2$(OBJEXT)    \
 
 #**********************************************************
 
