@@ -42,23 +42,25 @@ CP = copy
 MV = move
 MD = md
 
-ifeq ($(OS2_LIB_PATH),)
-dirbase::
-	-FOR %d IN ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR)) DO IF NOT EXIST %d $(MD) %d
-else
-dirbase::
-	-FOR %d IN ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR) $(OS2_LIB_PATH) $(OS2_LIB_DIR)) DO IF NOT EXIST %d $(MD) %d
-endif
+ifeq ($(LIB_PATH),)
 
-ifeq ($(OS2_LIB_ARCH),)
+dirbase::
+	-CMD.EXE /C FOR %d IN ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR)) DO IF NOT EXIST %d $(MD) %d
+
 clean::
-	-IF EXIST $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\*.*
-	-FOR %d IN ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) DO IF EXIST %d $(RD) %d
+	-CMD.EXE /C IF EXIST $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\*.*
+	-CMD.EXE /C FOR %d IN ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) DO IF EXIST %d $(RD) %d
+
 else
+
+dirbase::
+	-CMD.EXE /C FOR %d IN ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR) $(OS2_LIB_PATH) $(OS2_LIB_DIR)) DO IF NOT EXIST %d $(MD) %d
+
 clean::
-	-IF EXIST $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\*.*
-	-FOR %d IN ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) DO IF EXIST %d $(RD) %d
-	-IF EXIST $(OS2_LIB_ARCH) $(RM) $(OS2_LIB_ARCH)
+	-CMD.EXE /C IF EXIST $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\*.*
+	-CMD.EXE /C FOR %d IN ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) DO IF EXIST %d $(RD) %d
+	-CMD.EXE /C IF EXIST $(OS2_LIB_ARCH) $(RM) $(OS2_LIB_ARCH)
+
 endif
 
 else  # bash

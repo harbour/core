@@ -5,16 +5,16 @@
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
+#no slash at the end
+LIB_PATH := $(TOP)$(ROOT)lib/$(HB_ARCHITECTURE)
+#no slash at the end
+LIB_DIR := $(LIB_PATH)/$(HB_COMPILER)
+
 include $(TOP)$(ROOT)config/global.cf
 include $(TOP)$(ROOT)config/c.cf
 include $(TOP)$(ROOT)config/prg.cf
 
 LIB_NAME := $(LIB_PREF)$(LIBNAME)$(LIB_EXT)
-
-#no slash at the end
-LIB_PATH := $(TOP)$(ROOT)lib/$(HB_ARCHITECTURE)
-#no slash at the end
-LIB_DIR := $(LIB_PATH)/$(HB_COMPILER)
 
 LIB_ARCH := $(LIB_DIR)/$(LIB_NAME)
 

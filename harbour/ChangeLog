@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-07 20:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/lib.cf
+    * moved some definitions for easier detecting library build mode
+  * harbour/config/os2/dir.cf
+  * harbour/config/os2/global.cf
+    * some modifications which should help for old GNU make OS2 ports
+      and maybe also current ones
+
 2008-02-07 11:24 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/os2/gcc.cf
     * use OS2_LIB_ARCH as library name to avoid problems with DEL
