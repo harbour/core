@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-07 11:24 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/os2/gcc.cf
+    * use OS2_LIB_ARCH as library name to avoid problems with DEL
+  * harbour/config/os2/global.cf
+    * use double backslash characters - hack to test if it's sufficient
+      workaround for problems mkdir on OS2
+
 2008-02-06 11:08 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/common.mak
   * harbour/make_gcc.mak

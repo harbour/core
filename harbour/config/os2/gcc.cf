@@ -86,7 +86,7 @@ endef
 # We have to use a script to overcome the AR limit of max 850 characters
 # in commmand line
 define create_library
-IF EXIST $(LIB_DIR)/$@ $(RM) $(LIB_DIR)/$@
+IF EXIST $(OS2_LIB_ARCH) $(RM) $(OS2_LIB_ARCH)
 echo CREATE $(LIB_DIR)/$@ > __lib__.tmp
 $(foreach file, $(^F), $(lib_object))
 echo SAVE >> __lib__.tmp

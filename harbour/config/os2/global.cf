@@ -22,10 +22,10 @@ endif
 ifeq ($(SHLVL),) # An OS/2 command shell
 
 ARCH_DIR = $(HB_ARCH)
-OS2_ARCH_DIR = $(subst /,\,$(HB_ARCH))
-OS2_LIB_DIR = $(subst /,\,$(LIB_DIR))
-OS2_LIB_PATH = $(subst /,\,$(LIB_PATH))
-OS2_LIB_ARCH = $(subst /,\,$(LIB_ARCH))
+OS2_ARCH_DIR = $(subst /,\\,$(HB_ARCH))
+OS2_LIB_DIR  = $(subst /,\\,$(LIB_DIR))
+OS2_LIB_PATH = $(subst /,\\,$(LIB_PATH))
+OS2_LIB_ARCH = $(subst /,\\,$(LIB_ARCH))
 DIRSEP = $(subst /,\,\)
 
 MK = $(subst /,\,$(subst \~,~,$(MAKE)))
@@ -72,6 +72,8 @@ CP = cp -f
 MV = mv -f
 MD = mkdir
 MDP = mkdir -p
+
+OS2_LIB_ARCH = $(LIB_ARCH)
 
 dirbase::
 	@[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)
