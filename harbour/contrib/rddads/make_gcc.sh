@@ -9,7 +9,7 @@ then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You will need Advantage package installed and this"
     echo "           envvar to be set to successfully build this library:"
-    echo "           export ADS_INC=C:/Ads/include"
+    echo "           export ADS_INC=C:/Ads/acesdk"
     echo "           or"
     echo "           export ADS_INC=/usr/include/ads"
     echo "---------------------------------------------------------------"

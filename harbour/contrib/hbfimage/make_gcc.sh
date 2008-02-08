@@ -9,7 +9,7 @@ then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You will need FreeImage package installed and this"
     echo "           envvar to be set to successfully build this library:"
-    echo "           export FREEIMAGE_INC=C:/Apollo/include"
+    echo "           export FREEIMAGE_INC=C:/FreeImage/source"
     echo "           or"
     echo "           export FREEIMAGE_INC=/usr/include/freeimage"
     echo "---------------------------------------------------------------"

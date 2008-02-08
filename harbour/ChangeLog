@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-08 19:41 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/hbfimage/make_gcc.sh
+   * contrib/rddads/make_gcc.sh
+     ! Two minor corrections to *_INC path setting examples for Windows.
+
 2008-02-08 16:51 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   + harbour/contrib/gtwvg/make_gcc.sh
   + harbour/contrib/hbapollo/make_gcc.sh
