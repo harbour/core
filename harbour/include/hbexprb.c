@@ -2134,7 +2134,7 @@ static HB_EXPR_FUNC( hb_compExprUseRTVariable )
          break;
       case HB_EA_POP_PCODE:
          if( pSelf->value.asRTVar.szName )
-            HB_GEN_FUNC1( PopVar, pSelf->value.asRTVar.szName );
+            HB_GEN_FUNC1( PopMemvar, pSelf->value.asRTVar.szName );
          else
             HB_EXPR_USE( pSelf->value.asRTVar.pMacro, HB_EA_POP_PCODE );
          break;

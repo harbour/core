@@ -426,14 +426,14 @@ Statement  : ExecFlow CrlfStmnt
                      }
            | PUBLIC  { hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PUBLIC; }
                      ExtVarList
-                     {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPUBLIC" ); 
-                        HB_COMP_PARAM->cVarType = ' ';  HB_COMP_PARAM->iVarScope = VS_NONE; 
+                     {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPUBLIC" );
+                        HB_COMP_PARAM->cVarType = ' ';  HB_COMP_PARAM->iVarScope = VS_NONE;
                         HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                      } Crlf
            | PRIVATE {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PRIVATE; }
-                        ExtVarList
-                     {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPRIVATE" ); 
-                        HB_COMP_PARAM->cVarType = ' '; HB_COMP_PARAM->iVarScope = VS_NONE; 
+                     ExtVarList
+                     {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPRIVATE" );
+                        HB_COMP_PARAM->cVarType = ' '; HB_COMP_PARAM->iVarScope = VS_NONE;
                         HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_WITH_RETURN;
                      } Crlf
            | VarDefs
@@ -472,9 +472,15 @@ CompTimeStr : LITERAL {
                   hb_strncat( hb_strncpy( szFileName, $1.string, _POSIX_PATH_MAX ), $3.string, _POSIX_PATH_MAX );
                   hb_compAutoOpenAdd( HB_COMP_PARAM, hb_compIdentifierNew( HB_COMP_PARAM, szFileName, HB_IDENT_COPY ) );
                   if( $1.dealloc )
+                  {
                      hb_xfree( $1.string );
+                     $1.dealloc = FALSE;
+                  }
                   if( $3.dealloc )
+                  {
                      hb_xfree( $3.string );
+                     $3.dealloc = FALSE;
+                  }
                }
             }
            ;

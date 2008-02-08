@@ -3010,6 +3010,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pThisField->bType = pArea->bTableType == DB_DBF_VFP ? 'T' : '@';
             pField->uiLen = 8;
             pThisField->bLen = ( BYTE ) pField->uiLen;
+            pThisField->bFieldFlags = HB_FF_BINARY;
             pArea->uiRecordLen += pField->uiLen;
             break;
 

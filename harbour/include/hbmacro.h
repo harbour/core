@@ -135,6 +135,7 @@ extern void hb_macroGenPushDate( HB_LONG lNumber, HB_COMP_DECL );
 extern void hb_macroGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL );
 extern void hb_macroGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL );
 extern void hb_macroGenPopVar( char * szVarName, HB_COMP_DECL );
+extern void hb_macroGenPopMemvar( char * szVarName, HB_COMP_DECL );
 extern void hb_macroGenPopAliasedVar( char * szVarName,
                                       BOOL bPushAliasValue,
                                       char * szAlias,

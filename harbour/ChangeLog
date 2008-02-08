@@ -8,6 +8,51 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-08 15:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbmacro.h
+  * harbour/include/hbexprb.c
+  * harbour/source/vm/macro.c
+  * harbour/source/compiler/hbmain.c
+    ! fixed name conflict in privates/publics declaration.
+      Harbour allows to declare memvars with the same name as file
+      wide statics or fields but this extensions was not working well
+      in some cases and can cause unexpected results in variable
+      declaration, f.e. try this code:
+               static v:="static"
+               proc main()
+                  public v:="public"
+                  ? v, M->v
+               return
+      compiled with -n -w switches and also with -n -w -a before
+      this fix.
+    ! fixed some compile time warnings in memvars declaration to be
+      more Clipper compatible
+    ! fixed compiling external modules (DO <procname> [WITH <params,...>])
+      when function <procname> is already declared but with different
+      letter case. Harbour does not convert <procname> in DO statement
+      to upper case to play well with case sensitive file systems and
+      it could cause confusing warning message:
+         Cannot open <procname>.prg, assumed external
+
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    ! added protection against bug in bison destructors which might cause
+      multiple free the same memory block on syntax error due to 
+
+  * harbour/source/rdd/dbf1.c
+    ! added missing binary flag for daytime fields
+
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! fixed possible memory leak during accessing corrupted NTX files
+    ! fixed possible GPF during accessing corrupted NTX files
+
+  * harbour/source/compiler/genc.c
+    * minor cleanup
+
+  * harbour/config/os2/global.cf
+    ! use FOR command to delete group of files
+
 2008-02-07 20:17 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/lib.cf
     * moved some definitions for easier detecting library build mode

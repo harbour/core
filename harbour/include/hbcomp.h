@@ -195,7 +195,8 @@ extern void hb_compStatmentStart( HB_COMP_DECL );        /* Check if we can star
 
 extern void hb_compGenMessage( char * szMsgName, BOOL bIsObject, HB_COMP_DECL );       /* sends a message to an object */
 extern void hb_compGenMessageData( char * szMsg, BOOL bIsObject, HB_COMP_DECL );     /* generates an underscore-symbol name for a data assignment */
-extern void hb_compGenPopVar( char * szVarName, HB_COMP_DECL );         /* generates the pcode to pop a value from the virtual machine stack onto a variable */
+extern void hb_compGenPopVar( char * szVarName, HB_COMP_DECL );        /* generates the pcode to pop a value from the virtual machine stack onto a variable */
+extern void hb_compGenPopMemvar( char * szVarName, HB_COMP_DECL );     /* generates the pcode to pop a value from the virtual machine stack onto a memvar variable */
 extern void hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_COMP_DECL ); /* Pushes a number on the virtual machine stack */
 extern void hb_compGenPushFunCall( char *, HB_COMP_DECL );             /* generates the pcode to push function's call */
 extern void hb_compGenPushFunSym( char *, HB_COMP_DECL );              /* generates the pcode to push function's symbol */

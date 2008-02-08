@@ -1226,6 +1226,7 @@ static LPPAGEINFO hb_ntxPageLoad( LPTAGINFO pTag, ULONG ulPage )
          hb_ntxErrorRT( pTag->Owner->Owner, EG_CORRUPTION, EDBF_CORRUPT,
                         pTag->Owner->IndexName, 0, 0 );
       }
+      return NULL;
    }
    pPage = hb_ntxPageFind( pTag, ulPage );
    if( pPage )
@@ -1249,10 +1250,13 @@ static LPPAGEINFO hb_ntxPageLoad( LPTAGINFO pTag, ULONG ulPage )
    else
    {
       pPage = hb_ntxPageGetBuffer( pTag, ulPage );
+      pPage->Changed = FALSE;
       if( !hb_ntxBlockRead( pTag->Owner, ulPage,
                             (BYTE *) hb_ntxPageBuffer( pPage ), NTXBLOCKSIZE ) )
+      {
+         hb_ntxPageRelease( pTag, pPage );
          return NULL;
-      pPage->Changed = FALSE;
+      }
       pPage->uiKeys = hb_ntxGetKeyCount( pPage );
    }
    return pPage;
@@ -3362,7 +3366,8 @@ static double hb_ntxTagCountRelKeyPos( LPTAGINFO pTag )
          ++iKeys;
       else if( iLevel == pTag->stackLevel - 1 )
          dPos = 0.5;
-      dPos = ( dPos + pTag->stack[ iLevel ].ikey ) / iKeys;
+      if( iKeys )
+         dPos = ( dPos + pTag->stack[ iLevel ].ikey ) / iKeys;
       hb_ntxPageRelease( pTag, pPage );
    }
    if( pTag->fUsrDescend == pTag->AscendKey )

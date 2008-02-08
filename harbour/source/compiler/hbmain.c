@@ -2636,6 +2636,20 @@ PINLINE hb_compInlineFind( HB_COMP_DECL, char * szFunctionName )
    return pInline;
 }
 
+/* check if function exists, ignore case of letters in function name */
+static BOOL hb_compIsFunction( HB_COMP_DECL, char * szFunctionName )
+{
+   PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
+
+   while( pFunc )
+   {
+      if( ! hb_stricmp( pFunc->szName, szFunctionName ) )
+         break;
+      pFunc = pFunc->pNext;
+   }
+   return pFunc != NULL;
+}
+
 static void hb_compNOOPadd( PFUNCTION pFunc, ULONG ulPos )
 {
    pFunc->pCode[ ulPos ] = HB_P_NOOP;
@@ -3058,6 +3072,14 @@ void hb_compGenPopVar( char * szVarName, HB_COMP_DECL ) /* generates the pcode t
    {  /* undeclared variable */
       hb_compGenVariablePCode( HB_COMP_PARAM, HB_P_POPVARIABLE, szVarName );
    }
+}
+
+/* generates the pcode to pop a value from the virtual machine stack onto a memvar variable */
+void hb_compGenPopMemvar( char * szVarName, HB_COMP_DECL )
+{
+   if( ( hb_compVariableScope( HB_COMP_PARAM, szVarName ) & HB_VS_LOCAL_MEMVAR ) == 0 )
+      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_MEMVAR_ASSUMED, szVarName, NULL );
+   hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName, HB_COMP_PARAM );
 }
 
 /* generates the pcode to push a nonaliased variable value to the virtual
@@ -4629,7 +4651,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
          {
             PAUTOOPEN pAutoOpen = HB_COMP_PARAM->autoopen;
 
-            if( ! hb_compFunctionFind( HB_COMP_PARAM, pAutoOpen->szName ) )
+            if( ! hb_compIsFunction( HB_COMP_PARAM, pAutoOpen->szName ) )
                hb_compAutoOpen( HB_COMP_PARAM, pAutoOpen->szName, &bSkipGen, iFileType );
 
             HB_COMP_PARAM->autoopen = HB_COMP_PARAM->autoopen->pNext;
@@ -4804,7 +4826,7 @@ static BOOL hb_compAutoOpenFind( HB_COMP_DECL, const char * szName )
    if( pLast == NULL )
       return FALSE;
 
-   if( strcmp( pLast->szName, szName ) == 0 )
+   if( hb_stricmp( pLast->szName, szName ) == 0 )
       return TRUE;
    else
    {

@@ -1275,6 +1275,12 @@ void hb_macroGenPopVar( char * szVarName, HB_COMP_DECL )
    }
 }
 
+/* generates the pcode to pop a value from the virtual machine stack onto a variable */
+void hb_macroGenPopMemvar( char * szVarName, HB_COMP_DECL )
+{
+   hb_macroMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_COMP_PARAM );
+}
+
 /* generates the pcode to pop a value from the virtual machine stack onto
  * an aliased variable
  */

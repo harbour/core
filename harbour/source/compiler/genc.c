@@ -1384,7 +1384,6 @@ static HB_GENC_FUNC( hb_p_pushblock )
    /* create the table of referenced local variables */
    while( wVar-- )
    {
-      w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos ] );
       fprintf( cargo->yyc, "\t%i, %i,",
                pFunc->pCode[ lPCodePos ],
                pFunc->pCode[ lPCodePos + 1 ] );
@@ -1395,9 +1394,12 @@ static HB_GENC_FUNC( hb_p_pushblock )
          * in which function was defined this local variable
          */
       if( cargo->bVerbose && ( pFunc->cScope & HB_FS_INITEXIT ) != HB_FS_INITEXIT )
+      {
+         w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos ] );
          hb_compGenCLocalName( pFunc, w, lPCodePos, cargo );
+      }
       fprintf( cargo->yyc, "\n" );
-      lPCodePos +=2;
+      lPCodePos += 2;
    }
 
    if( cargo->ulEndBlockPos < ulStart )
@@ -1438,7 +1440,6 @@ static HB_GENC_FUNC( hb_p_pushblocklarge )
    /* create the table of referenced local variables */
    while( wVar-- )
    {
-      w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos ] );
       fprintf( cargo->yyc, "\t%i, %i,",
                pFunc->pCode[ lPCodePos ],
                pFunc->pCode[ lPCodePos + 1 ] );
@@ -1449,9 +1450,12 @@ static HB_GENC_FUNC( hb_p_pushblocklarge )
          * in which function was defined this local variable
          */
       if( cargo->bVerbose && ( pFunc->cScope & HB_FS_INITEXIT ) != HB_FS_INITEXIT )
+      {
+         w = HB_PCODE_MKUSHORT( &pFunc->pCode[ lPCodePos ] );
          hb_compGenCLocalName( pFunc, w, lPCodePos, cargo );
+      }
       fprintf( cargo->yyc, "\n" );
-      lPCodePos +=2;
+      lPCodePos += 2;
    }
 
    if( cargo->ulEndBlockPos < ulStart )
