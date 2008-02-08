@@ -22,7 +22,7 @@ if [ -z "$HB_ARCHITECTURE" ]; then
          *bsd)                        hb_arch="bsd" ;;
       esac
    fi
-   export HB_ARCHITECTURE="$hb_arch" HB_ARCH_SAVED=1
+   export HB_ARCHITECTURE="$hb_arch" _HB_ARCH_SAVED=1
 fi
 
 #**************************************************************
@@ -33,19 +33,35 @@ if [ -z "$HB_CC_NAME" ]; then
       dos) HB_CC_NAME="djgpp" ;;
       *)   HB_CC_NAME="gcc" ;;
    esac
-   export HB_CC_NAME HB_CC_NAME_SAVED=1
+   export HB_CC_NAME _HB_CC_NAME_SAVED=1
 fi
 
 #**************************************************************
 
-export _HB_DIRS_1="hbbmcdx rddado"
-export _HB_DIRS_2="hbbtree"
+_HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbnf hbtip hbtpathy hbzlib xhb"
 
-#echo ${_HB_DIRS_1} ${_HB_DIRS_2}
+case "$HB_ARCHITECTURE" in
+   w32|cyg|os2)
+        _HB_DIRS_ADD="gtwvg hbole hbodbc hbw32 hbw32ddr hbwhat32 hbziparch rddado"
+        ;;
+   *)
+        _HB_DIRS_ADD=;;
+esac
+
+if [ "${APOLLO_INC}"    != "" ]; then _HB_DIRS="${_HB_DIRS} hbapollo"; fi;
+if [ "${FIREBIRD_INC}"  != "" ]; then _HB_DIRS="${_HB_DIRS} hbfbird "; fi;
+if [ "${FREEIMAGE_INC}" != "" ]; then _HB_DIRS="${_HB_DIRS} hbfimage"; fi;
+if [ "${GD_INC}"        != "" ]; then _HB_DIRS="${_HB_DIRS} hbgd    "; fi;
+if [ "${MYSQL_INC}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbmysql "; fi;
+if [ "${PGSQL_INC}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbpgsql "; fi;
+if [ "${ZLIB_INC}"      != "" ]; then _HB_DIRS="${_HB_DIRS} hbzlib  "; fi;
+if [ "${ADS_INC}"       != "" ]; then _HB_DIRS="${_HB_DIRS} rddads  "; fi;
+
+_HB_DIRS="${_HB_DIRS} ${_HB_DIRS_ADD}"
 
 #**************************************************************
 
-for n in ${_HB_DIRS_1} ${_HB_DIRS_2}; do
+for n in ${_HB_DIRS}; do
   if [ -d $n ]; then
     echo Entering $n ... \( $1 $2 $3 $4 $5\)
     cd $n
@@ -56,7 +72,5 @@ done
 
 #**************************************************************
 
-unset _HB_DIRS_1 _HB_DIRS_2
-
-if [ -n "$HB_CC_NAME_SAVED" ]; then unset HB_CC_NAME HB_CC_NAME_SAVED;   fi
-if [ -n "$HB_ARCH_SAVED" ];    then unset HB_ARCHITECTURE HB_ARCH_SAVED; fi
+if [ -n "$_HB_CC_NAME_SAVED" ]; then unset HB_CC_NAME _HB_CC_NAME_SAVED;   fi
+if [ -n "$_HB_ARCH_SAVED" ];    then unset HB_ARCHITECTURE _HB_ARCH_SAVED; fi

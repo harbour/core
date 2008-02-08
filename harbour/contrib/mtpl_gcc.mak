@@ -98,7 +98,7 @@ INCLUDE_DIR = $(HB_ROOT)/include
 # Macros to access Harbour executable and other goodies
 #**********************************************************
 
-HARBOUR_EXE = $(BIN_DIR)harbour.exe
+HARBOUR_EXE = $(BIN_DIR)harbour
 
 #**********************************************************
 # C compiler definition and C flags. These should never have to change.

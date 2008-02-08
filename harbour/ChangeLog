@@ -8,6 +8,65 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-06 11:08 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  + harbour/contrib/gtwvg/make_gcc.sh
+  + harbour/contrib/hbapollo/make_gcc.sh
+  + harbour/contrib/hbclipsm/make_gcc.sh
+  + harbour/contrib/hbct/make_gcc.sh
+  + harbour/contrib/hbfbird/make_gcc.sh
+  + harbour/contrib/hbfimage/make_gcc.sh
+  + harbour/contrib/hbgd/make_gcc.sh
+  + harbour/contrib/hbgt/make_gcc.sh
+  + harbour/contrib/hbmisc/make_gcc.sh
+  + harbour/contrib/hbmsql/make_gcc.sh
+  + harbour/contrib/hbmysql/make_gcc.sh
+  + harbour/contrib/hbnf/make_gcc.sh
+  + harbour/contrib/hbodbc/make_gcc.sh
+  + harbour/contrib/hbole/make_gcc.sh
+  + harbour/contrib/hbpgsql/make_gcc.sh
+  + harbour/contrib/hbtip/make_gcc.sh
+  + harbour/contrib/hbtpathy/make_gcc.sh
+  + harbour/contrib/hbw32/make_gcc.sh
+  + harbour/contrib/hbw32ddr/make_gcc.sh
+  + harbour/contrib/hbwhat32/make_gcc.sh
+  + harbour/contrib/hbziparch/make_gcc.sh
+  + harbour/contrib/hbzlib/make_gcc.sh
+  + harbour/contrib/rddads/make_gcc.sh
+  + harbour/contrib/xhb/make_gcc.sh
+    + Added missing files to allow compilation using non standard
+      build system. Please note that some contribs require external
+      packages, so to succesfuully compile them you will have to
+      set a proper environment variable, pointing to a list of
+      directories, containig required package header files. Those
+      envvars are listed below :
+         APOLLO_INC
+         FIREBIRD_INC
+         FREEIMAGE_INC
+         GD_INC
+         MYSQL_INC
+         PGSQL_INC
+         ZLIB_INC
+         ADS_INC
+      Note that those envvars may contain list of directories,
+      for example :
+         export ADS_INC="/usr/include include ."
+      Also note that on Windows systems, using MingW or Cygwin, you will
+      have to generate a proper import files from dlls, available in those
+      packages - using MingW or Cygwin dlltool - to build end user programs,
+      utilizing those packages.
+
+  * harbour/contrib/mtpl_gcc.mak
+  * harbour/contrib/mtpl_gcc.sh
+  * harbour/contrib/make_gcc_all.sh
+    + Added the rest of contrib libs to compile
+
+  * harbour/contrib/hbtpathy/tplinux.c
+  * harbour/contrib/hbtpathy/tpos2.c
+  * harbour/contrib/hbtpathy/tpwin32.c
+    + Added an operating system guard around the content of
+      thses files to allow including all three files in a
+      library.
+
 2008-02-08 15:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
   * harbour/include/hbmacro.h
@@ -38,7 +97,7 @@
   * harbour/source/compiler/harbour.y
   * harbour/source/compiler/harbour.yyc
     ! added protection against bug in bison destructors which might cause
-      multiple free the same memory block on syntax error due to 
+      multiple free the same memory block on syntax error due to
 
   * harbour/source/rdd/dbf1.c
     ! added missing binary flag for daytime fields

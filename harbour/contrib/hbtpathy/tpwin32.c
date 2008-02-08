@@ -51,6 +51,8 @@
  *
  */
 
+#ifdef HB_OS_WIN_32
+
 #define _CLIPDEFS_H
 
 #include <windows.h>
@@ -133,3 +135,4 @@ HB_FUNC( P_WRITEPORT ) {
       hb_retnl( -1 );
    }
 }
+#endif // HB_OS_WIN_32

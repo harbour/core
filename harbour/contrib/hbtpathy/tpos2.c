@@ -51,6 +51,8 @@
  *
  */
 
+#ifdef HB_OS_OS2
+
 #define _CLIPDEFS_H
 
 #define INCL_BASE
@@ -276,3 +278,4 @@ HB_FUNC( P_CTRLCTS ) {
    hb_retni( 0 );
 
 }
+#endif // HB_OS_OS2

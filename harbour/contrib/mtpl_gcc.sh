@@ -36,8 +36,8 @@ if [ -z "$_HB_CC_NAME" ]; then
       *)                           _HB_CC_NAME="gcc" ;;
    esac
    export _HB_CC_NAME
-   unset hb_arch
 fi
+
 if [ -z "${_HB_MAKE_PROGRAM}" ]; then export _HB_MAKE_PROGRAM=make; fi
 if [ -z "${_HB_MAKEFILE}" ];     then export _HB_MAKEFILE=../mtpl_gcc.mak; fi
 

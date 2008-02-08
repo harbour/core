@@ -54,6 +54,8 @@
  *
  */
 
+#ifdef HB_OS_UNIX
+
 #define _CLIPDEFS_H
 
 #include <stdio.h>   /* Standard input/output definitions */
@@ -410,3 +412,4 @@ HB_FUNC( P_CTRLCTS ) {
    hb_retni( curvalue ? 1 : 0 );
 
 }
+#endif // HB_OS_UNIX
