@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-09 12:50 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/w32/global.cf
+    * removed ' quoting from commands - *sh shells removed them but without
+      such shell they are passed to windows command interpreter and not
+      all version removed them
+
 2008-02-09 10:06 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/contrib/hbtpathy/tplinux.c
   * harbour/contrib/hbtpathy/tpos2.c

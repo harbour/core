@@ -67,14 +67,14 @@ RD = rmdir /q /s
 
 dirbase::
 	-@$(COMSPEC) /c \
-	'for %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\. $(MD) %d'
+	for %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\. $(MD) %d
 	$(if $(LIB_PATH_DOS),-@$(COMSPEC) /c \
-	'for %d in ($(LIB_PATH_DOS) $(LIB_DIR_DOS)) do if not exist %d\. $(MD) %d',)
+	for %d in ($(LIB_PATH_DOS) $(LIB_DIR_DOS)) do if not exist %d\. $(MD) %d,)
 
 clean::
 	-@$(COMSPEC) /c \
-	'if exist $(ARCH_DOS) $(RD) $(ARCH_DOS)'
-	$(if $(LIB_ARCH_DOS),-@$(COMSPEC) /c 'if exist $(LIB_ARCH_DOS) $(RM) $(LIB_ARCH_DOS),)'
+	if exist $(ARCH_DOS) $(RD) $(ARCH_DOS)
+	$(if $(LIB_ARCH_DOS),-@$(COMSPEC) /c if exist $(LIB_ARCH_DOS) $(RM) $(LIB_ARCH_DOS),)
 
 else # command.com
 
