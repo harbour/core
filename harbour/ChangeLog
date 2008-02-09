@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-09 10:06 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+  * harbour/contrib/hbtpathy/tplinux.c
+  * harbour/contrib/hbtpathy/tpos2.c
+  * harbour/contrib/hbtpathy/tpwin32.c
+    * Fixed guarding file content with proper OS constant
+      (HB_OS_UNIX, HB_OS_WIN_32, HB_OS_OS2)
+
 2008-02-08 19:41 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/hbfimage/make_gcc.sh
    * contrib/rddads/make_gcc.sh

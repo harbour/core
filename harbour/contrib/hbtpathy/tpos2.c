@@ -51,9 +51,11 @@
  *
  */
 
-#ifdef HB_OS_OS2
-
 #define _CLIPDEFS_H
+
+#include "hbapifs.h"
+
+#ifdef HB_OS_OS2
 
 #define INCL_BASE
 #define INCL_DOS
@@ -63,11 +65,8 @@
 
 #include <stdio.h>
 
-#include "hbapifs.h"
 #include "extend.api"
 #include "item.api"
-
-
 
 HB_FUNC( P_INITPORTSPEED ) {
 

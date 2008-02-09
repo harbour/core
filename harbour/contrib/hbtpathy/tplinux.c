@@ -54,9 +54,11 @@
  *
  */
 
-#ifdef HB_OS_UNIX
-
 #define _CLIPDEFS_H
+
+#include "hbapifs.h"
+
+#ifdef HB_OS_UNIX
 
 #include <stdio.h>   /* Standard input/output definitions */
 #include <string.h>  /* String function definitions */
@@ -66,11 +68,8 @@
 #include <termios.h> /* POSIX terminal control definitions */
 #include <sys/ioctl.h>
 
-#include "hbapifs.h"
 #include "extend.api"
 #include "item.api"
-
-
 
 HB_FUNC( P_OPEN ) {
 

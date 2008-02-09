@@ -51,18 +51,17 @@
  *
  */
 
-#ifdef HB_OS_WIN_32
-
 #define _CLIPDEFS_H
+
+#include "hbapifs.h"
+
+#ifdef HB_OS_WIN_32
 
 #include <windows.h>
 #include <stdio.h>
 
-#include "hbapifs.h"
 #include "extend.api"
 #include "item.api"
-
-
 
 HB_FUNC( P_INITPORTSPEED ) {
 
