@@ -16,7 +16,7 @@
 # --with pgsql       - build pgsql lib
 # --with gd          - build gd lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
-# --with adsrdd      - build ADS RDD
+# --with ads         - build ADS RDD
 # --without odbc     - do not build odbc lib
 # --without nf       - do not build nanforum lib
 ######################################################################
@@ -67,10 +67,14 @@ do
     shift
 done
 
-if [ -f /usr/local/ads/acesdk/ace.h ] ||
+if [ -f /usr/local/ads/acesdk/ace.h ] || \
    [ -f ${HOME}/ads/acesdk/ace.h ]
 then
-    INST_PARAM="${INST_PARAM} --with adsrdd"
+    INST_PARAM="${INST_PARAM} --with ads"
+fi
+if [ -f /opt/mingw32ce/include/zlib.h ]
+then
+    INST_PARAM="${INST_PARAM} --with zlib"
 fi
 
 TOINST_LST=""
