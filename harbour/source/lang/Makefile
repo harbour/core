@@ -5,8 +5,11 @@
 ROOT = ../../
 
 C_SOURCES=\
+	msgbe866.c   \
+	msgbewin.c   \
 	msgbg866.c   \
 	msgbgiso.c   \
+	msgbgmik.c   \
 	msgbgwin.c   \
 	msgca.c      \
 	msgcs852.c   \
@@ -25,8 +28,10 @@ C_SOURCES=\
 	msggl.c      \
 	msghe862.c   \
 	msghewin.c   \
+	msghr437.c   \
 	msghr852.c   \
 	msghriso.c   \
+	msghrwin.c   \
 	msghu852.c   \
 	msghucwi.c   \
 	msghuiso.c   \
@@ -55,6 +60,9 @@ C_SOURCES=\
 	msgtr857.c   \
 	msgtrwin.c   \
 	msgsrwin.c   \
+	msgua866.c   \
+	msguakoi.c   \
+	msguawin.c   \
 	msgzhb5.c    \
 	msgzhgb.c    \
 	

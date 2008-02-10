@@ -8,6 +8,21 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-10 04:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * common.mak
+   * source/lang/Makefile
+   + source/lang/msgbgmik.c
+   + source/lang/msgbe866.c
+   + source/lang/msgbewin.c
+   + source/lang/msghr437.c
+   + source/lang/msghrwin.c
+   + source/lang/msgua866.c
+   + source/lang/msguakoi.c
+   + source/lang/msguawin.c
+     + Added some msg files from xhb. Some problems corrected.
+       (Belarussian ISO code, long filename and internal ID 
+       for HR1250)
+
 2008-02-09 22:42 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour.spec
   * harbour/harbour-ce-spec

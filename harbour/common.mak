@@ -676,8 +676,11 @@ DEBUG_LIB_OBJS = \
 #**********************************************************
 
 LANG_LIB_OBJS = \
+    $(OBJ_DIR)\msgbe866$(OBJEXT) \
+    $(OBJ_DIR)\msgbewin$(OBJEXT) \
     $(OBJ_DIR)\msgbg866$(OBJEXT) \
     $(OBJ_DIR)\msgbgiso$(OBJEXT) \
+    $(OBJ_DIR)\msgbgmik$(OBJEXT) \
     $(OBJ_DIR)\msgbgwin$(OBJEXT) \
     $(OBJ_DIR)\msgca$(OBJEXT)    \
     $(OBJ_DIR)\msgcs852$(OBJEXT) \
@@ -696,8 +699,10 @@ LANG_LIB_OBJS = \
     $(OBJ_DIR)\msggl$(OBJEXT)    \
     $(OBJ_DIR)\msghe862$(OBJEXT) \
     $(OBJ_DIR)\msghewin$(OBJEXT) \
+    $(OBJ_DIR)\msghr437$(OBJEXT) \
     $(OBJ_DIR)\msghr852$(OBJEXT) \
     $(OBJ_DIR)\msghriso$(OBJEXT) \
+    $(OBJ_DIR)\msghrwin$(OBJEXT) \
     $(OBJ_DIR)\msghu852$(OBJEXT) \
     $(OBJ_DIR)\msghucwi$(OBJEXT) \
     $(OBJ_DIR)\msghuiso$(OBJEXT) \
@@ -726,6 +731,9 @@ LANG_LIB_OBJS = \
     $(OBJ_DIR)\msgsrwin$(OBJEXT) \
     $(OBJ_DIR)\msgtr857$(OBJEXT) \
     $(OBJ_DIR)\msgtrwin$(OBJEXT) \
+    $(OBJ_DIR)\msgua866$(OBJEXT) \
+    $(OBJ_DIR)\msguakoi$(OBJEXT) \
+    $(OBJ_DIR)\msguawin$(OBJEXT) \
     $(OBJ_DIR)\msgzhb5$(OBJEXT)  \
     $(OBJ_DIR)\msgzhgb$(OBJEXT)  \
 
