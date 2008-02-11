@@ -108,6 +108,6 @@
    #define HDC                  CTYPE_UNSIGNED_LONG
    #define HIMAGELIST           CTYPE_UNSIGNED_LONG
 
-   #ytranslate CTYPE_INT(<x>)   Int(<x>) /* Fixes conflict with INT() function */
+   #ytranslate CTYPE_INT(<x>) => Int(<x>) /* Fixes conflict with INT() function */
 
 #endif /* __WINTYPES_CH */

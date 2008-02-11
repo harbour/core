@@ -103,7 +103,7 @@ init PROCEDURE HB_OleInit()
     * STATIC variable. When HVM will clear STATICs on HVM exit
     * then it will execute destructor bound with this variable which
     * calls OleUninitialize() - such method causes that OleUninitialize()
-    * will be called very lately after or user EXIT functions, ALWAYS
+    * will be called very lately after all user EXIT functions, ALWAYS
     * blocks and .prg object destructors which may also use OLE.
     */
    static s_ole

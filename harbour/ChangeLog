@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-11 16:23 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/xhb/wintypes.ch
+    ! added missing => in #ytranslate command - thanks to Alex
+  * harbour/contrib/hbw32/w32_tole.prg
+    * fixed typo in one comment
+  * harbour/contrib/hbw32/w32_ole.c
+    ! added cleanup code for s_pOleAuto - memory leak fix
+
 2008-02-10 04:03 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * common.mak
    * source/lang/Makefile

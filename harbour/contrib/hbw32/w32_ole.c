@@ -191,6 +191,11 @@ static void hb_vmRequestReset( void )
       {
          OleUninitialize();
          s_bInit = FALSE;
+         if( s_pOleAuto )
+         {
+            hb_itemRelease( s_pOleAuto );
+            s_pOleAuto = NULL;
+         }
       }
    }
 
@@ -756,7 +761,7 @@ static void hb_vmRequestReset( void )
                    }
 
                    if( s_pOleAuto == NULL )
-                      s_pOleAuto = hb_itemNew( NULL ); // TOFIX: Never released
+                      s_pOleAuto = hb_itemNew( NULL );
                    else
                       hb_itemClear( s_pOleAuto );
 
