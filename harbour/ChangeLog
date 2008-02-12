@@ -8,6 +8,18 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-12 08:04 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/contrib/hbwhat32/make_gcc.sh
+    ! Fixed compilation under MingW and Cygwin
+
+  * harbour/contrib/make_b32_all.bat
+  * harbour/contrib/make_vc_all.bat
+    + Added hbwhat32 to a list of compiled contribs
+
+  * harbour/contrib/make_gcc_all.sh
+    - Removed hbzlib from a list of mandatory compiled contribs.
+      It still can be compiled conditionaly.
+
 2008-02-11 16:23 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/xhb/wintypes.ch
     ! added missing => in #ytranslate command - thanks to Alex
@@ -28,7 +40,7 @@
    + source/lang/msguakoi.c
    + source/lang/msguawin.c
      + Added some msg files from xhb. Some problems corrected.
-       (Belarussian ISO code, long filename and internal ID 
+       (Belarussian ISO code, long filename and internal ID
        for HR1250)
 
 2008-02-09 22:42 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
