@@ -96,6 +96,13 @@ MKLIB  = lib.exe
 
 #**********************************************************
 
+# In which mode compile Harbour C or CPP
+!if "$(HB_BUILD_MODE)" == "cpp"
+HB_BUILD_MODE  = P
+!else
+HB_BUILD_MODE  = C
+!endif
+
 # C Compiler Flags
 !if $(HB_VISUALC_VER) >= 80
 CFLAGS_VER     = -Ot2b1 -EHs-c- -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
@@ -103,7 +110,8 @@ CFLAGS_VER     = -Ot2b1 -EHs-c- -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
 CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX -FD -Gs
 !endif
 
-CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -W3 -nologo -D__WINDOWS__ -DWIN32 -D__WIN32__ $(C_USR) $(CFLAGS)
+CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -W3 -nologo -T$(HB_BUILD_MODE) \
+                 -D__WINDOWS__ -DWIN32 -D__WIN32__ $(C_USR) $(CFLAGS)
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w2 -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
