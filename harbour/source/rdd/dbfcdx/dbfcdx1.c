@@ -7399,7 +7399,7 @@ static ERRCODE hb_cdxOrderCreate( CDXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
          uiLen = 1;
          break;
       case 'C':
-         uiLen = hb_itemGetCLen( pResult );
+         uiLen = ( USHORT ) hb_itemGetCLen( pResult );
          if( uiLen > CDX_MAXKEY )
             uiLen = CDX_MAXKEY;
          break;

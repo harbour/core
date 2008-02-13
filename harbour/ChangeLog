@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-13 14:36 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    * pacify compiler warning
+
 2008-02-13 14:20 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/hbwhat32/whatutil.prg
    * contrib/hbwhat32/winrbar.prg
