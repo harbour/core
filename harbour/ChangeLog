@@ -8,6 +8,15 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-13 14:03 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/direct.c
+    * fixed Clipper compatibility when last character of given path
+      is directory delimiter or drive delimiter
+
+  * harbour/source/rdd/dbf1.c
+    * added RT error when corrupted memo block address is detected
+      in DBF file.
+
 2008-02-12 08:04 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/contrib/hbwhat32/make_gcc.sh
     ! Fixed compilation under MingW and Cygwin

@@ -1103,7 +1103,20 @@ HB_EXPORT ERRCODE hb_dbfGetMemoData( DBFAREAP pArea, USHORT uiIndex,
             if( bByte >= '0' && bByte <= '9' )
                ulValue = ulValue * 10 + ( bByte - '0' );
             else if( bByte != ' ' || ulValue )
-               return FAILURE;
+            {
+               PHB_ITEM pError = hb_errNew();
+               ERRCODE uiError;
+
+               hb_errPutGenCode( pError, EG_CORRUPTION );
+               hb_errPutSubCode( pError, EDBF_CORRUPT );
+               hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_CORRUPTION ) );
+               hb_errPutFileName( pError, pArea->szDataFileName );
+               hb_errPutFlags( pError, EF_CANDEFAULT );
+               uiError = SELF_ERROR( ( AREAP ) pArea, pError );
+               hb_itemRelease( pError );
+
+               return uiError == E_DEFAULT ? SUCCESS : FAILURE;
+            }
          }
          *pulBlock = ulValue;
       }

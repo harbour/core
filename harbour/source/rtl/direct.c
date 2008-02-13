@@ -98,12 +98,6 @@
 
 #include "directry.ch"
 
-#if defined( HB_OS_UNIX )
-   #define HB_DIR_ALL_FILES_MASK        "*"
-#else
-   #define HB_DIR_ALL_FILES_MASK        "*.*"
-#endif
-
 /* NOTE: 8.3 three support should be added in a separate way, like 
          as a function which converts full names to 8.3 names, since 
          this issue is very much platform specific, and this is 
@@ -111,8 +105,9 @@
 
 HB_FUNC( DIRECTORY )
 {
-   PHB_ITEM  pDirSpec = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM  pAttributes = hb_param( 2, HB_IT_STRING );
+   char *    szDirSpec = hb_parc( 1 );
+   char *    szAttributes = hb_parc( 2 );
+   BOOL      fFree = FALSE;
    USHORT    uiMask;
 
    PHB_ITEM  pDir = hb_itemArrayNew( 0 );
@@ -132,18 +127,60 @@ HB_FUNC( DIRECTORY )
           | HB_FA_ENCRYPTED
           | HB_FA_VOLCOMP;
 
-   if( pAttributes && hb_itemGetCLen( pAttributes ) > 0 )
+   if( szAttributes && *szAttributes )
    {
-      if ( ( uiMask |= hb_fsAttrEncode( hb_itemGetCPtr( pAttributes ) ) ) & HB_FA_LABEL )
+      if( ( uiMask |= hb_fsAttrEncode( szAttributes ) ) & HB_FA_LABEL )
       {
          /* NOTE: This is Clipper Doc compatible. (not operationally) */
          uiMask = HB_FA_LABEL;
       }
    }
 
+   if( szDirSpec && *szDirSpec )
+   {
+      szDirSpec = ( char * ) hb_fsNameConv( ( BYTE * ) szDirSpec, &fFree );
+      if( *szDirSpec )
+      {
+         /* CA-Cl*pper compatible behavior - add all file mask when
+          * last character is directory or drive separator
+          */
+         int iLen = strlen( szDirSpec ) - 1;
+#ifdef OS_HAS_DRIVE_LETTER
+         if( szDirSpec[iLen] == OS_PATH_DELIMITER ||
+             szDirSpec[iLen] == OS_DRIVE_DELIMITER )
+#else
+         if( szDirSpec[iLen] == OS_PATH_DELIMITER )
+#endif
+         {
+            if( fFree )
+            {
+               char * szTemp = hb_xstrcpy( NULL, szDirSpec, OS_FILE_MASK, NULL );
+               hb_xfree( szDirSpec );
+               szDirSpec = szTemp;
+            }
+            else
+            {
+               szDirSpec = hb_xstrcpy( NULL, szDirSpec, OS_FILE_MASK, NULL );
+               fFree = TRUE;
+            }
+         }
+      }
+      else
+      {
+         if( fFree )
+         {
+            hb_xfree( szDirSpec );
+            fFree = FALSE;
+         }
+         szDirSpec = ( char * ) OS_FILE_MASK;
+      }
+   }
+   else
+      szDirSpec = ( char * ) OS_FILE_MASK;
+
    /* Get the file list */
 
-   if( ( ffind = hb_fsFindFirst( pDirSpec ? hb_itemGetCPtr( pDirSpec ) : HB_DIR_ALL_FILES_MASK, uiMask ) ) != NULL )
+   if( ( ffind = hb_fsFindFirst( szDirSpec, uiMask ) ) != NULL )
    {
       PHB_ITEM pSubarray = hb_itemNew( NULL );
 
@@ -167,6 +204,9 @@ HB_FUNC( DIRECTORY )
 
       hb_fsFindClose( ffind );
    }
+
+   if( fFree )
+      hb_xfree( szDirSpec );
 
    hb_itemReturnRelease( pDir );
 }
