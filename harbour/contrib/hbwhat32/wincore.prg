@@ -21,6 +21,8 @@
 #Define WT_MDIFRAME   2      // use DefFrameProc()
 #Define WT_MDICHILD   4      // use DefMDIChildProc()
 
+#include "common.ch"
+
 #Include "winuser.ch"
 #Include "hboo.ch"
 
@@ -223,17 +225,13 @@ Function CreateMDIWindow( cClass, cTitle, nStyle, nX, nY, nWidth, nHeight, ;
 
 Function _ProcessMsg( hWnd, nMsg, nwParam, nlParam, nIndex )
 
-   Local n, m
+   Local n
    Local i := 0
    Local anWM
    Local bProc
    Local nType := WT_WINDOW
    Local nRet := 0
    Local nProc //:=aProc[nIndex]
-   Local hMenu
-   Local cId
-   Local bMenuBlock
-   Local nOldProc
    Local oObj
    Local xCargo
 
@@ -268,7 +266,7 @@ Function _ProcessMsg( hWnd, nMsg, nwParam, nlParam, nIndex )
    nProc := aProc[ nIndex ]
    If n > 0
       nType := aWindow[ n, 2 ]
-      Do While ( i := aScan( aWindow[ n, 3 ] , { | x, y | nProc == x[ 3 ] } ) ) > 0 // does custom procedure exist ?
+      Do While ( i := aScan( aWindow[ n, 3 ] , { | x | nProc == x[ 3 ] } ) ) > 0 // does custom procedure exist ?
          anWM  := aWindow[ n, 3, i, 1 ]
          bProc := aWindow[ n, 3, i, 2 ]
          oObj  := aWindow[ n, 3, i, 5 ]
@@ -487,7 +485,6 @@ Function CreateDialog( hInst, acnDlg , hWnd, bAction, oObj, xCargo )
    Local nIndex
    Local hDlg
    Local cTemplate
-   Local aDlg
    Local n
 
       If !(ValType( bAction ) $ "BN")
@@ -540,6 +537,8 @@ Function CreateDialog( hInst, acnDlg , hWnd, bAction, oObj, xCargo )
 
 Function AddDlgItem( aDlg, cnId, cnDlgClass, nStyle, nX, nY, ;
                        nWidth, nHeight, cText, nHelpId, nExStyle, cData )
+
+   HB_SYMBOL_UNUSED( cData )
 
    aDlg[ 1, 4 ] ++ // item count
 
@@ -599,7 +598,7 @@ Function SetProcedure( hWnd, bAction, anWM, oObj, xCargo )
       nOldProc := GetWindowLong( hWnd, GWL_WNDPROC )
       For i := 1 To 10
          If aProc[ i ] <> nOldProc
-            If aScan( aWindow[ n, 3 ] , { | x, y | x[ 3 ] == aProc[ i ] .OR. x[ 4 ] == aProc[ i ] } ) == 0
+            If aScan( aWindow[ n, 3 ] , { | x | x[ 3 ] == aProc[ i ] .OR. x[ 4 ] == aProc[ i ] } ) == 0
                nProc := aProc[ i ]
                Exit
             EndIf
@@ -629,7 +628,7 @@ Function SetProcedure( hWnd, bAction, anWM, oObj, xCargo )
 
 Function ResetProcedure( hWnd, nProc )
 
-   Local n, i, x
+   Local n, i
    Local lRet := .F.
 
    If ( n := aScan( aWindow, { | x | hWnd == x[ 1 ] } ) ) > 0 //find the window
@@ -651,7 +650,7 @@ Function ResetProcedure( hWnd, nProc )
 
       Else
 
-         If ( i := aScan( aWindow[ n, 3 ] , { | x, y | x[ 4 ] == nProc } ) ) > 0
+         If ( i := aScan( aWindow[ n, 3 ] , { | x | x[ 4 ] == nProc } ) ) > 0
             Do While Len( aWindow[ n, 3 ] ) >= i
                aDel( aWindow[ n, 3 ] , i )
                aSize( aWindow[ n, 3 ] , Len( aWindow[ n, 3 ] ) - 1 )
@@ -677,7 +676,7 @@ Function WinProcCount( hWnd, nProc )
       If ValType( nProc ) <> "N" .OR. nProc == 0
          nRet := Max( 0, Len( aWindow[ n, 3 ] ) - 1 )
       Else
-         If ( i := aScan( aWindow[ n, 3 ] , { | x, y | x[ 3 ] == nProc } ) ) > 0
+         If ( i := aScan( aWindow[ n, 3 ] , { | x | x[ 3 ] == nProc } ) ) > 0
             nRet := Max( 0, i - 1 )
          EndIf
       EndIf

@@ -39,7 +39,6 @@ FUNCTION _DVIEW
    PARAM p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18
 
    LOCAL no_of_param, x, dbg_array, description, half
-   LOCAL t_call_status
 
    no_of_param := PCOUNT( )
    half := no_of_param / 2

@@ -4,6 +4,8 @@
 
 //Clipper-like Alert function
 
+#include "common.ch"
+
 #Include "winuser.ch"
 #Include "What32.ch"
 #Include 'debug.ch'
@@ -78,9 +80,9 @@ function fromUnicode( cString )
 *-----------------------------------------------------------------------------*
 Function Alert( cMsg, aChoices )
 
-   Local aDlg, i, j, n, aWid, aChoose, amSG
+   Local aDlg, i, n, aChoose, amSG
    Local hWnd, hDC
-   Local lErr := .F., e, w , h, t := 0, cTitle, msgh, butwidth
+   Local lErr := .F., w , h, t := 0, cTitle, msgh, butwidth
    Local crpos := 0, txth := 0, atm := { }
    LOCAL hFont:=CreateFont( { 8, 0, 0, 0, 700, 0, 0, 0, 0, 1, 2, 1, 34, "MS Sans Serif" } )
    LOCAL hOldFont
@@ -116,7 +118,7 @@ Function Alert( cMsg, aChoices )
 
    amSG := str2a( cMsg, CR )
 
-   AEVAL( amSG, { | X, Y | w := Max( w, GetTextExtentPoint32( hDC, AllTrim( X ) ) [ 1 ] ) } )
+   AEVAL( amSG, { | X | w := Max( w, GetTextExtentPoint32( hDC, AllTrim( X ) ) [ 1 ] ) } )
    w += 20
 
 * --------- total width of choices, also add "&" to the choices (if needed)
@@ -178,7 +180,7 @@ Function Alert( cMsg, aChoices )
 
    MessageBeep( MB_OK )
 
-   i := DialogBox( ,aDlg, hWnd, { | hDlg, nMsg, nwParam, nlParam | AlertProc( hDlg, nMsg, nwParam, nlParam ) } )
+   i := DialogBox( ,aDlg, hWnd, { | hDlg, nMsg, nwParam, nlParam | HB_SYMBOL_UNUSED( nlParam ), AlertProc( hDlg, nMsg, nwParam, nlParam ) } )
 
    SetFocus( hWnd )
 
@@ -187,6 +189,8 @@ Function Alert( cMsg, aChoices )
 *----------------------------------------------------------------------------*
 
 Function AlertProc( hDlg, nMsg, nwParam, nlParam )
+
+   HB_SYMBOL_UNUSED( nlParam )
 
    Do Case
    Case nMsg == WM_INITDIALOG
@@ -478,7 +482,6 @@ Function Array2Bin( aValues, aTypes )
    Local nLen := Len( aValues )
    Local nDone := 0
    Local cType
-   Local cTypeType
    Local xValue
    Local xType
    Local nQty := 0
@@ -782,7 +785,7 @@ return hFont
 
 FUNCTION GetMessageFont( nWeight ) // retrieves the current font used in MessageBox
 
-   LOCAL cBuff, n
+   LOCAL cBuff
    LOCAL ncm IS NONCLIENTMETRICS
 
    ncm:cbSize := ncm:sizeof()

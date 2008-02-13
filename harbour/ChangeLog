@@ -8,6 +8,16 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-13 14:20 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/hbwhat32/whatutil.prg
+   * contrib/hbwhat32/winrbar.prg
+   * contrib/hbwhat32/winerror.prg
+   * contrib/hbwhat32/wintabs.prg
+   * contrib/hbwhat32/windebug.prg
+   * contrib/hbwhat32/wintbar.prg
+   * contrib/hbwhat32/wincore.prg
+     ! Fixed warnings.
+
 2008-02-13 14:03 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/direct.c
     * fixed Clipper compatibility when last character of given path

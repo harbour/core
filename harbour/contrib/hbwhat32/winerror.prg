@@ -7,6 +7,7 @@
 //  A.J. Wos 08/06/2002
 //  Scaled down and adapted for Harbour + What32.Lib
 
+#include "common.ch"
 
 #include "what32.ch"
 #include "winuser.ch"
@@ -29,7 +30,7 @@ PROCEDURE ErrorSys( )
 STATIC FUNCTION DefError( e )
 
    LOCAL cMessage, aOptions, nChoice
-   LOCAL cErr, SourceLine
+   LOCAL cErr
    LOCAL cProcStack := ''
    LOCAL i
 
@@ -157,8 +158,6 @@ STATIC FUNCTION ErrorMessage( e )
 
 STATIC FUNCTION LogError( e, cProcStack )
 
-   LOCAL r, c
-   LOCAL h
    LOCAL Args := convertargs( e:args )
    LOCAL i    := 3
    LOCAL cErr := ''
@@ -237,11 +236,11 @@ STATIC FUNCTION IfEmpty( Msg )
 
 *------------------------------------------------------------------------------*
 
-STATIC FUNCTION PrintError
+STATIC PROCEDURE PrintError
 
    BREAK
 
-   RETURN ( .F. )
+// RETURN
 
 
 *------------------------------------------------------------------------------*
@@ -492,9 +491,9 @@ STATIC FUNCTION GenCodeText( n )
 
 STATIC FUNCTION eAlert( cMsg, aChoices, cDetail )
 
-   LOCAL aDlg, i, j, n, aWid, aChoose, aMsg
+   LOCAL aDlg, i, n, aChoose, aMsg
    LOCAL hWnd, hDC
-   LOCAL lErr     := .F., e, w , h, t := 0, cTitle, Msgh, ButWidth
+   LOCAL lErr     := .F., w , h, t := 0, cTitle, Msgh, ButWidth
    LOCAL crPos    := 0, txth := 0, atm := { }
    LOCAL isDetail := .F.
 
@@ -523,7 +522,7 @@ STATIC FUNCTION eAlert( cMsg, aChoices, cDetail )
 
    w := GetTextExtentPoint32( hDC, AllTrim( cTitle ) ) [ 1 ]
    aMsg := str2a( cMsg, CR )
-   AEVAL( aMsg, { | x, Y | w := Max( w, GetTextExtentPoint32( hDC, AllTrim( x ) ) [ 1 ] ) } )
+   AEVAL( aMsg, { | x | w := Max( w, GetTextExtentPoint32( hDC, AllTrim( x ) ) [ 1 ] ) } )
    w += 20
 
    //--------- total width of choices, also add "&" to the choices (if needed)
@@ -589,6 +588,8 @@ STATIC FUNCTION eAlertProc( hDlg, nMsg, nwParam, nlParam, isDetail, hWnd, n )
 
    LOCAL aRect
 
+   HB_SYMBOL_UNUSED( nlParam )
+
    DO CASE
    CASE nMsg == WM_INITDIALOG
       CenterWindow( hDlg, , , hWnd )
@@ -615,6 +616,4 @@ STATIC FUNCTION eAlertProc( hDlg, nMsg, nwParam, nlParam, isDetail, hWnd, n )
 
    ENDCASE
 
-   RETURN( 0 )
-
-
+   RETURN 0

@@ -5,7 +5,7 @@
 // What32.Lib
 // Rebar class
 
-
+#include "common.ch"
 
 #Include "winuser.ch"
 #include "hbclass.ch"
@@ -151,7 +151,7 @@ METHOD create(hParent,nStyle)
                            0)
 
 
-  ::nProc:=SetProcedure(::hParent,{|hWnd, nMsg,nwParam,nlParam| ::rbProc(nMsg,nwParam,nlParam)},{WM_SIZE})
+  ::nProc:=SetProcedure(::hParent,{|hWnd, nMsg,nwParam,nlParam| HB_SYMBOL_UNUSED( hWnd ), ::rbProc(nMsg,nwParam,nlParam)},{WM_SIZE})
 
 
 
@@ -188,6 +188,8 @@ METHOD addband(nMask,nStyle,hChild,cxMin,cyMin,cx,cText,hBmp,nPos)
    LOCAL rbBand IS REBARBANDINFO
    LOCAL aRect:=GetWindowRect(hChild)
 
+   HB_SYMBOL_UNUSED( nPos )
+
    rbBand:Reset()
 
    // Initialize structure members that most bands will share.
@@ -210,7 +212,3 @@ METHOD addband(nMask,nStyle,hChild,cxMin,cyMin,cx,cText,hBmp,nPos)
 
    // Add the band
    RETURN (SendMessage(::hWnd, RB_INSERTBAND, -1, rbBand:value ) <> 0 )
-
-   RETURN(self)
-
-
