@@ -10,7 +10,7 @@ C_SOURCES =\
 	chdir.c \
 	color2n.c \
 	ctrl.c \
-	descend.c \
+	descendn.c \
 	dispc.c \
 	ftattr.c \
 	ftidle.c \
@@ -98,7 +98,7 @@ PRG_SOURCES=\
 	linked.prg \
 	madd.prg \
 	menu1.prg \
-	menuto.prg \
+	menutonf.prg \
 	metaph.prg \
 	miltime.prg \
 	min2dhm.prg \

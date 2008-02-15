@@ -12,7 +12,7 @@ PRG_HEADERS = \
 LIB_OBJS = \
     $(OBJ_DIR)caplock$(OBJEXT) \
     $(OBJ_DIR)color2n$(OBJEXT) \
-    $(OBJ_DIR)descend$(OBJEXT) \
+    $(OBJ_DIR)descendn$(OBJEXT) \
     $(OBJ_DIR)numlock$(OBJEXT) \
     $(OBJ_DIR)proper$(OBJEXT) \
     $(OBJ_DIR)shift$(OBJEXT) \
@@ -95,7 +95,7 @@ LIB_OBJS = \
     $(OBJ_DIR)linked$(OBJEXT) \
     $(OBJ_DIR)madd$(OBJEXT) \
     $(OBJ_DIR)menu1$(OBJEXT) \
-    $(OBJ_DIR)menuto$(OBJEXT) \
+    $(OBJ_DIR)menutonf$(OBJEXT) \
     $(OBJ_DIR)metaph$(OBJEXT) \
     $(OBJ_DIR)miltime$(OBJEXT) \
     $(OBJ_DIR)min2dhm$(OBJEXT) \

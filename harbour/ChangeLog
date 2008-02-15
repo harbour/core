@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-15 10:52 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
+   * contrib/hbnf/Makefile
+   * contrib/hbnf/common.mak
+   - contrib/hbnf/descend.c
+   + contrib/hbnf/descendn.c
+   - contrib/hbnf/menuto.prg
+   + contrib/hbnf/menutonf.prg
+     ! Renamed some files in libnf to not collide 
+       with core source names.
+       (Thanks Marek)
+
 2008-02-15 09:47 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/contrib/hbfimage/make_gcc.sh
     ! Fixed CFLAGS settings from a proper FREEIMAGE_INC envvar
