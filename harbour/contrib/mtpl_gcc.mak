@@ -104,10 +104,17 @@ HARBOUR_EXE = $(BIN_DIR)harbour
 # C compiler definition and C flags. These should never have to change.
 #**********************************************************
 
-CC     = gcc
-CXX    = g++
-LINKER = gcc
-MKLIB  = ar
+# CC and LD are set in make_gcc.sh
+
+#ifeq ($(CC),)
+#CC = gcc
+#endif
+#ifeq ($(LD),)
+#LD = gcc
+#endif
+ifeq ($(MKLIB),)
+MKLIB = ar
+endif
 
 #**********************************************************
 

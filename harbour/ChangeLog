@@ -8,6 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-15 09:47 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/contrib/hbfimage/make_gcc.sh
+    ! Fixed CFLAGS settings from a proper FREEIMAGE_INC envvar
+
+  * harbour/contrib/hbziparch/make_vc.bat
+    ! Disabled warnings about functions considered "depreciated" by MS
+
+  * harbour/contrib/mtpl_gcc.mak
+  * harbour/contrib/mtpl_gcc.sh
+    ! Fixed HB_ARCHITECTIRE, CC and LD envvar settings
+
+  * harbour/contrib/mtpl_vc.mak
+    ! Forced CPP mode compilation for a ".cpp.obj" rule
+
 2008-02-13 20:13 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/contrib/mtpl_vc.mak
     ! Enable compilation in C++ mode using HB_BUILD_MODE envvar

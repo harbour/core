@@ -20,6 +20,10 @@
 
 #**********************************************************
 
+HB_ARCHITECTURE = w32
+
+#**********************************************************
+
 !ifndef HB_ROOT
 HB_ROOT = ..\..
 !endif
@@ -105,17 +109,27 @@ HB_BUILD_MODE  = C
 
 # C Compiler Flags
 !if $(HB_VISUALC_VER) >= 80
-CFLAGS_VER     = -Ot2b1 -EHs-c- -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
+CFLAGS_VER     = -Ot2b1 -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
 !else
 CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX -FD -Gs
 !endif
+#-----------
 
 CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -W3 -nologo -T$(HB_BUILD_MODE) \
                  -D__WINDOWS__ -DWIN32 -D__WIN32__ $(C_USR) $(CFLAGS)
+
+#-----------
+!if "$(HB_BUILD_DEBUG)" == "yes"
+CFLAGS         = -Zi $(CFLAGS)
+DBGMARKER      =  d
+!endif
+#-----------
+CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
+
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w2 -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
-LDFLAGS        = $(LDFLAGS)
+LDFLAGS        =  $(LDFLAGS)
 
 #**********************************************************
 # COMPILE Rules
@@ -128,7 +142,7 @@ LDFLAGS        = $(LDFLAGS)
 #**********************************************************
 # General *.cpp --> *.obj COMPILE rule for STATIC Libraries
 {.}.cpp{$(OBJ_DIR)}$(OBJEXT)::
-    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS: -TC= -TP) -Fo$(OBJ_DIR)\ $<
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
 {.}.prg{$(OBJ_DIR)}$(OBJEXT):

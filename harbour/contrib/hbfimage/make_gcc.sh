@@ -17,7 +17,7 @@ then
 fi
 
 export CFLAGS=""
-for I in ${APOLLO_INC}; do
+for I in ${FREEIMAGE_INC}; do
     CFLAGS="${CFLAGS} -I${I}"
 done
 ../mtpl_gcc.sh $1 $2 $3 $4 $5 $6 $7 $8 $9
