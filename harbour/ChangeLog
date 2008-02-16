@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-16 11:28 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdate.h
+    ! fixed limitation which forced to use hbdate.h after hbapi.h
+      or hbdefs.h
+
 2008-02-15 10:52 UTC+0100 Viktor Szakats (harbour.01 syenar.hu)
    * contrib/hbnf/Makefile
    * contrib/hbnf/common.mak
