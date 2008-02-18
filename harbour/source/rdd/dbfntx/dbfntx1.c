@@ -1225,8 +1225,8 @@ static LPPAGEINFO hb_ntxPageLoad( LPTAGINFO pTag, ULONG ulPage )
       {
          hb_ntxErrorRT( pTag->Owner->Owner, EG_CORRUPTION, EDBF_CORRUPT,
                         pTag->Owner->IndexName, 0, 0 );
+         return NULL;
       }
-      return NULL;
    }
    pPage = hb_ntxPageFind( pTag, ulPage );
    if( pPage )
