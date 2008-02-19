@@ -54,6 +54,21 @@
 #include "hbapigt.h"
 #include "ctwin.h"
 
+static int hb_ctColorParam( int iParam, int iDefault )
+{
+   int iColor;
+
+   if( ISNUM( iParam ) )
+      iColor = hb_parni( iParam );
+   else if( hb_parclen( iParam ) > 0 )
+      iColor = hb_gtColorToN( hb_parc( iParam ) );
+   else
+      iColor = iDefault;
+
+   return iColor;
+}
+
+
 HB_FUNC( CTWINIT )
 {
    hb_retl( hb_ctwInit() );
@@ -66,10 +81,10 @@ HB_FUNC( GETCLEARA )
 
 HB_FUNC( SETCLEARA )
 {
-   if( ISNUM( 1 ) )
-      hb_gtSetClearColor( hb_parni( 1 ) & 0xff );
-   else if( hb_parclen( 1 ) > 0 )
-      hb_gtSetClearColor( hb_gtColorToN( hb_parc( 1 ) ) );
+   int iColor = hb_ctColorParam( 1, -1 );
+
+   if( iColor >= 0 )
+      hb_gtSetClearColor( iColor & 0xff );
 
    hb_retc( NULL );
 }
@@ -97,7 +112,7 @@ HB_FUNC( GETCLEARB )
 
 HB_FUNC( WSETSHADOW )
 {
-   hb_retni( hb_ctwSetShadowAttr( ISNUM( 1 ) ? hb_parni( 1 ) : -2 ) );
+   hb_retni( hb_ctwSetShadowAttr( hb_ctColorParam( 1, -2 ) ) );
 }
 
 HB_FUNC( WSETMOVE )
@@ -132,7 +147,7 @@ HB_FUNC( WOPEN )
 {
    int iColor;
 
-   iColor = ISCHAR( 6 ) ? hb_gtColorToN( hb_parc( 6 ) ) : hb_parni( 6 );
+   iColor = hb_ctColorParam( 6, 0 );   /* Harbour extension */
    hb_retni( hb_ctwCreateWindow( hb_parni( 1 ), hb_parni( 2 ),
                                  hb_parni( 3 ), hb_parni( 4 ),
                                  hb_parl( 5 ), iColor ) );
@@ -204,15 +219,31 @@ HB_FUNC( WBOX )
       szBox = szBoxBuf;
    }
 
-   iColor = ISCHAR( 2 ) ? hb_gtColorToN( hb_parc( 2 ) ) : hb_parni( 2 );
+   iColor = hb_ctColorParam( 2, 0 );   /* Harbour extension */
    hb_retni( hb_ctwAddWindowBox( hb_ctwCurrentWindow(), szBox, iColor ) );
 }
 
 HB_FUNC( WFORMAT )
 {
-   hb_retni( hb_ctwChangeMargins( hb_ctwCurrentWindow(),
-                                  hb_parni( 1 ), hb_parni( 2 ),
-                                  hb_parni( 3 ), hb_parni( 4 ) ) );
+   int iWindow = hb_ctwCurrentWindow();
+   int iTop, iLeft, iBottom, iRight;
+
+   if( hb_pcount() == 0 )
+   {
+      hb_ctwGetFormatCords( iWindow, TRUE, &iTop, &iLeft, &iBottom, &iRight );
+      iTop    = -iTop;
+      iLeft   = -iLeft;
+      iBottom = -iBottom;
+      iRight  = -iRight;
+   }
+   else
+   {
+      iTop    = hb_parni( 1 );
+      iLeft   = hb_parni( 2 );
+      iBottom = hb_parni( 3 );
+      iRight  = hb_parni( 4 );
+   }
+   hb_retni( hb_ctwChangeMargins( iWindow, iTop, iLeft, iBottom, iRight ) );
 }
 
 HB_FUNC( WROW )

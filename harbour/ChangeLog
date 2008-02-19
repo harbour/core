@@ -8,6 +8,17 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-19 23:37 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/main/harbour.c
+  * harbour/source/common/hbfsapi.c
+    ! fixed hb_fsFNameSplit()/hb_fsFNameMerge() to respect path delimiter
+     set by user
+
+  * harbour/contrib/hbct/ctwfunc.c
+    ! fixed WFORMAT() called without parameters - it should reset
+      all existing margins
+    ! fixed WSETSHADOW() to accept color also as character parameter
+
 2008-02-18 12:12 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbfntx/dbfntx1.c
     ! fixed very bad typo in my last commit - thanks to Jorge and Enrico

@@ -450,6 +450,11 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
    return szFileName;
 }
 
+HB_EXPORT int hb_setGetDirSeparator( void )
+{
+   return s_cDirSep;
+}
+
 static void hb_compChkFileSwitches( int argc, char * argv[] )
 {
    int i, n;

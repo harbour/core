@@ -60,6 +60,7 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hb_io.h"
+#include "hbset.h"
 
 #if defined( HB_OS_WIN_32 )
    #if !defined( INVALID_FILE_ATTRIBUTES )
@@ -139,7 +140,7 @@ HB_EXPORT void hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList )
 HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 {
    PHB_FNAME pFileName;
-   char * pszPos;
+   char * pszPos, cDirSep;
    int iSize, iPos;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameSplit(%s)", pszFileName));
@@ -147,6 +148,7 @@ HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
    HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit: Filename: |%s|\n", pszFileName));
 
    iPos = iSize = hb_strnlen( pszFileName, _POSIX_PATH_MAX );
+   cDirSep = ( char ) hb_setGetDirSeparator();
 
    /* Grab memory, set defaults */
    pFileName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
@@ -161,7 +163,8 @@ HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 
    while( --iPos >= 0 )
    {
-      if( strchr( OS_PATH_DELIMITER_LIST, pszFileName[ iPos ] ) )
+      if( pszFileName[ iPos ] == cDirSep ||
+          strchr( OS_PATH_DELIMITER_LIST, pszFileName[ iPos ] ) )
       {
          pFileName->szPath = pszPos;
          hb_strncpy( pszPos, pszFileName, iPos + 1 );
@@ -225,28 +228,25 @@ HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 /* This function joins path, name and extension into a string with a filename */
 HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 {
-   static const char s_szPathSep[] = { OS_PATH_DELIMITER, 0 }; /* see NOTE below */
-   char * pszName;
+   char * pszName, cDirSep;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%p, %p)", pszFileName, pFileName));
+
+   /* dir separator set by user */ 
+   cDirSep = ( char ) hb_setGetDirSeparator();
 
    /* Set the result to an empty string */
    pszFileName[ 0 ] = '\0';
 
    /* Strip preceding path separators from the filename */
    pszName = pFileName->szName;
-   if( pszName && pszName[ 0 ] != '\0' && strchr( OS_PATH_DELIMITER_LIST, pszName[ 0 ] ) != NULL )
+   if( pszName && pszName[ 0 ] != '\0' && ( pszName[ 0 ] == cDirSep ||
+       strchr( OS_PATH_DELIMITER_LIST, pszName[ 0 ] ) != NULL ) )
       pszName++;
 
    /* Add path if specified */
    if( pFileName->szPath )
       hb_strncat( pszFileName, pFileName->szPath, _POSIX_PATH_MAX - 1 );
-
-   /*
-      NOTE: be _very_ careful about "optimizing" this next section code!
-            (specifically, initialising s_szPathSep) as MSVC with /Ni
-            (or anything that infers it like /Ox) will cause you trouble.
-    */
 
    /* If we have a path, append a path separator to the path if there
       was none. */
@@ -254,16 +254,11 @@ HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
    {
       int iLen = strlen( pszFileName ) - 1;
 
-      if( strchr( OS_PATH_DELIMITER_LIST, pszFileName[ iLen ] ) == NULL )
+      if( iLen < _POSIX_PATH_MAX - 1 && pszFileName[ iLen ] != cDirSep &&
+          strchr( OS_PATH_DELIMITER_LIST, pszFileName[ iLen ] ) == NULL )
       {
-         /*
-             char s_szPathSep[ 2 ];
-
-             s_szPathSep[ 0 ] = OS_PATH_DELIMITER;
-             s_szPathSep[ 1 ] = '\0';
-
-          */
-         hb_strncat( pszFileName, s_szPathSep, _POSIX_PATH_MAX - 1 );
+         pszFileName[ iLen ] = OS_PATH_DELIMITER;
+         pszFileName[ iLen + 1 ] = '\0';
       }
    }
 
