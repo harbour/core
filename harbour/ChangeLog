@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-20 00:11 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/hbppgen.c
+    ! added hb_setGetDirSeparator()
+
+  * harbour/source/common/hbfsapi.c
+    ! fixed wrong index in path updating
+
 2008-02-19 23:37 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/main/harbour.c
   * harbour/source/common/hbfsapi.c

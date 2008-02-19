@@ -254,11 +254,11 @@ HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
    {
       int iLen = strlen( pszFileName ) - 1;
 
-      if( iLen < _POSIX_PATH_MAX - 1 && pszFileName[ iLen ] != cDirSep &&
+      if( iLen < _POSIX_PATH_MAX - 2 && pszFileName[ iLen ] != cDirSep &&
           strchr( OS_PATH_DELIMITER_LIST, pszFileName[ iLen ] ) == NULL )
       {
-         pszFileName[ iLen ] = OS_PATH_DELIMITER;
-         pszFileName[ iLen + 1 ] = '\0';
+         pszFileName[ iLen + 1 ] = OS_PATH_DELIMITER;
+         pszFileName[ iLen + 2 ] = '\0';
       }
    }
 

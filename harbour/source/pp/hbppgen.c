@@ -66,6 +66,7 @@ void * hb_xgrab( ULONG ulSize ) { return malloc( ulSize ); }
 void * hb_xrealloc( void * pMem, ULONG ulSize ) { return realloc( pMem, ulSize ); }
 void hb_xfree( void * pMem ) { free( pMem ); }
 BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree ) { if( pfFree ) * pfFree = FALSE; return szFileName; }
+int hb_setGetDirSeparator( void ) { return OS_PATH_DELIMITER; }
 
 
 /*
