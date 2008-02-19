@@ -527,6 +527,11 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
    return szFileName;
 }
 
+int hb_setGetDirSeparator( void )
+{
+   return OS_PATH_DELIMITER;
+}
+
 static BOOL hb_pp_fopen( char * szFileName )
 {
    PFILE pFile;
