@@ -8,6 +8,13 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-21 22:17 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/make_vc.mak
+    + Added a possiblity to compile harbour in ST or MT mode by using
+      an environment variable called HB_BUILD_ST. Setting HB_BUILD_ST
+      to yes, causes Harbour+RTL+VM to be built in ST mode. Otherwise
+      MT mode is used.
+
 2008-02-20 00:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/utils/hbpp/hbpp.c
     ! added hb_setGetDirSeparator()
@@ -47,7 +54,7 @@
    + contrib/hbnf/descendn.c
    - contrib/hbnf/menuto.prg
    + contrib/hbnf/menutonf.prg
-     ! Renamed some files in libnf to not collide 
+     ! Renamed some files in libnf to not collide
        with core source names.
        (Thanks Marek)
 
