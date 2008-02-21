@@ -320,3 +320,8 @@ HB_FUNC( WMOVE )
    hb_retni( hb_ctwMoveWindow( hb_ctwCurrentWindow(),
                                hb_parni( 1 ), hb_parni( 2 ) ) );
 }
+
+HB_FUNC( CTWLASTKEY )
+{
+   hb_retni( hb_ctwLastKey() );
+}

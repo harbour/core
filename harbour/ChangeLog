@@ -8,6 +8,23 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-22 00:20 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/cdpapi.c
+    ! fixed unicode values for control codes in default CP437 unicode table
+  * harbour/source/rtl/gtchrmap.c
+    ! added missing default translation of chr(155) - it's control code
+      on most of terminals and should not be shown in non UFT-8 mode
+  * harbour/source/rtl/gttrm/gttrm.c
+    ! do not use alternate character set for box drawing in UTF-8 mode
+      New Linux consoles disable UTF-8 mode when alternate character set
+      is enabled
+  * harbour/contrib/hbct/ctwin.c
+  * harbour/contrib/hbct/ctwin.h
+  * harbour/contrib/hbct/ctwfunc.c
+    * overload ReadKey() method for future window moving when scroll lock
+      is  set and for KEYREAD() implementation. 
+    * store real last key value in CTWIN GT.
+
 2008-02-21 22:17 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/make_vc.mak
     + Added a possiblity to compile harbour in ST or MT mode by using

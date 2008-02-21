@@ -70,6 +70,8 @@ static void chrmap_init( int *piTransTbl )
 
    for( i = 0; i < 256; ++i )
       piTransTbl[i] = HB_CHRMAP( i < 128 ? 1 : 0, i );
+
+   piTransTbl[155] = HB_CHRMAP( 1, '.' );
 }
 
 static void chrmap_dotctrl( int *piTransTbl )

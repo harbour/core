@@ -2097,7 +2097,7 @@ static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, char * src, char * dst, int
    for( i = 0; i < 256; i++ )
    {
       ch = pTerm->charmap[i] & 0xffff;
-      mode = !pTerm->fUTF8 ? ( pTerm->charmap[i] >> 16 ) & 0xff : 0;
+      mode = !pTerm->fUTF8 ? ( pTerm->charmap[i] >> 16 ) & 0xff : 1;
 
       switch( mode )
       {

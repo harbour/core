@@ -134,6 +134,8 @@ static int * s_pShadowMap     = NULL;
 static int s_iMapWidth        = 0;
 static int s_iMapHeight       = 0;
 
+static int s_iLastKey         = 0;
+
 
 static int hb_ctw_CalcShadowWidth( int iRows, int iCols )
 {
@@ -1642,6 +1644,20 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
    return HB_GTSUPER_ALERT( pGT, pMessage, pOptions, iClrNorm, iClrHigh, dDelay );
 }
 
+static int hb_ctw_gt_ReadKey( PHB_GT pGT, int iEventMask )
+{
+   int iKey;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_ReadKey(%p,%d)", pGT, iEventMask));
+
+   iKey = HB_GTSUPER_READKEY( pGT, iEventMask );
+
+   if( iKey != 0 )
+      s_iLastKey = iKey;
+
+   return iKey;
+}
+
 /* PUBLIC FUNCTIONS */
 
 BOOL hb_ctwInit( void )
@@ -1824,6 +1840,21 @@ int  hb_ctwAddWindowBox( int iWindow, BYTE * szBox, int iColor )
    return iResult;
 }
 
+int  hb_ctwLastKey( void )
+{
+   /* keyread() in CT3 uses 64512 bytes length buffer
+    * when it reach this limit and new key is added the
+    * buffer size is decreased by 1024 to 63488 bytes
+    * before adding key. TODO: check id buffer is shifted
+    */
+   if( !s_fInit )
+   {
+      PHB_GT pGT = hb_gt_Base();
+      if( pGT )
+         hb_ctw_Init( pGT );
+   }
+   return s_iLastKey;
+}
 
 static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
@@ -1852,6 +1883,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Resize                     = hb_ctw_gt_Resize;
    pFuncTable->Info                       = hb_ctw_gt_Info;
    pFuncTable->Alert                      = hb_ctw_gt_Alert;
+   pFuncTable->ReadKey                    = hb_ctw_gt_ReadKey;
 
    return TRUE;
 }
