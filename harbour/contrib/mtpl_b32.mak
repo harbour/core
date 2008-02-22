@@ -23,6 +23,10 @@
 
 #**********************************************************
 
+HB_ARCHITECTURE = w32
+
+#**********************************************************
+
 !ifndef HB_ROOT
 HB_ROOT = ..\..
 !endif
@@ -99,15 +103,45 @@ MKLIB  = tlib.exe
 
 #**********************************************************
 
-!if !$d(BCC_NOOPTIM)
-CFLAGS = -O2 $(CFLAGS)
+# BORLAND has ST mode as default
+!if "$(HB_BUILD_ST)" == ""
+    HB_BUILD_ST = yes
 !endif
 
-CFLAGS         = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS)
+#**********************************************************
+
+# In which mode compile Harbour C or CPP
+!if "$(HB_BUILD_MODE)" == "cpp"
+HB_BUILD_MODE  = -P
+!else
+HB_BUILD_MODE  =
+!endif
+
+#**********************************************************
+
+CFLAGS = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS) $(HB_BUILD_MODE)
+
+#-----------
+!if "$(HB_BUILD_DEBUG)" == "yes"
+    CFLAGS  = -y -v $(CFLAGS)
+!endif
+#-----------
+!if !$d(BCC_NOOPTIM)
+    CFLAGS = -O2 $(CFLAGS)
+!endif
+#-----------
+!if "$(HB_BUILD_ST)" != "yes"
+    CFLAGS  = -tWM $(CFLAGS)
+!endif
+#-----------
+
+#**********************************************************
+
 CLIBFLAGS      = -c -q $(CFLAGS) $(CLIBFLAGS)
-CLIBFLAGSDEBUG = -v $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w2 -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
-LDFLAGS        = $(LDFLAGS)
+LDFLAGS        =  $(LDFLAGS)
+
+#**********************************************************
 
 # This is needed, otherwise the libs may overflow when
 # debug info is requested with -v -y
@@ -128,12 +162,12 @@ $(OBJ_DIR);\
 #**********************************************************
 # General *.cpp --> *.obj COMPILE rule for STATIC Libraries
 {$(ALL_LIB_SRC_DIRS)}.cpp{$(OBJ_DIR)}$(OBJEXT):
-    $(CC) $(CLIBFLAGS) -o$@ $<
+    $(CC) $(CLIBFLAGS: -P= ) -P -o$@ $<
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
 {$(ALL_LIB_SRC_DIRS)}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-    $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)\$&.c
+    $(CC) $(CLIBFLAGS) -P -o$@ $(OBJ_DIR)\$&.c
 #**********************************************************
 
 !include common.mak

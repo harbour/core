@@ -37,8 +37,10 @@
 #                           gtstd (default),gtcgi,gtwin,gtwvt
 #       HB_GT_LIB         - To override the default GT driver
 #                           (search for HB_GT_LIBS for a list of values)
+#       HB_BUILD_ST       - If set to yes builds harbour in SingleThread mode
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
+#       HB_BUILD_MODE     - If set to cpp causes to compile in C++ mode
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE  - enables echoing commands being executed
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
@@ -66,6 +68,11 @@ HB_ARCHITECTURE = w32
 
 !if "$(HB_GT_LIB)" == ""
 HB_GT_LIB = gtwin
+!endif
+
+# BORLAND has ST mode as default
+!if "$(HB_BUILD_ST)" == ""
+    HB_BUILD_ST = yes
 !endif
 
 #**********************************************************
@@ -99,8 +106,11 @@ DLL_OBJS = $(TMP_DLL_OBJS:$(OBJ_DIR)=$(DLL_OBJ_DIR))
 # Main "Include" directory
 INCLUDE_DIR    = include
 
+#**********************************************************
+
 # C Compiler Flags
-CFLAGS         = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
+CFLAGS      = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
+
 #-----------
 !ifndef BCC_NOOPTIM
     CFLAGS  = -O2 $(CFLAGS)
@@ -115,6 +125,10 @@ CFLAGS         = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
     RTLIBSUFFIX = i
 !endif
 #-----------
+!if "$(HB_BUILD_ST)" != "yes"
+    CFLAGS  = -tWM $(CFLAGS)
+!endif
+#-----------
 !if "$(HB_GT_DEFAULT)" != ""
     CFLAGS  = -DHB_GT_DEFAULT=$(HB_GT_DEFAULT:gt=) $(CFLAGS)
 !endif
@@ -123,9 +137,15 @@ CFLAGS         = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
     CFLAGS  = -DHB_GT_LIB=$(HB_GT_LIB:gt=) $(CFLAGS)
 !endif
 #-----------
+
+#**********************************************************
+
 CLIBFLAGS      = -c -q $(CFLAGS) $(CLIBFLAGS)
-CLIBFLAGSDLL   = -D__EXPORT__ -tWM $(BCCDLL_WITH_DYNRT) $(CLIBFLAGS) $(CLIBFLAGSDLL)
-CEXEFLAGSDLL   = -tWM $(BCCDLL_WITH_DYNRT) $(CLIBFLAGS) $(CEXEFLAGSDLL)
+CLIBFLAGSxxx   =  $(BCCDLL_WITH_DYNRT) $(CLIBFLAGS: -tWM= )
+CLIBFLAGSDLL   = -D__EXPORT__ -tWM $(CLIBFLAGSxxx) $(CLIBFLAGSDLL)
+CEXEFLAGSDLL   = -tWM $(CLIBFLAGSxxx) $(CEXEFLAGSDLL)
+
+#**********************************************************
 
 # Harbour Compiler Flags
 HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w2 -es2 -gc0 -kM $(PRG_USR)
@@ -134,6 +154,8 @@ HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w2 -es2 -gc0 -kM $(PRG_USR)
 !endif
 HARBOURFLAGS   = -n $(HBFLAGSCMN) $(HARBOURFLAGS)
 HARBOURFLAGSDLL= -D__EXPORT__ -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
+
+#**********************************************************
 
 # Linker Flags
 LDFLAGS        = -ap -Tpe -Gn -C -L$(LIB_DIR) -L$(BIN_DIR) $(LDFLAGS)

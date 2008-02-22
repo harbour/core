@@ -8,6 +8,32 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-22 22:28 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+  * harbour/make_b32.mak
+    * Synchronized with make_vc.mak regarding HB_BUILD_ST and HB_BUILD_MODE
+      environment usage. There is still a difference between make_b32.mak
+      and make_vc.mak, because under BCC - ST mode is default, while under
+      MSVC - MT mode is default. To use MT mode under BCC one needs to
+      set HB_BUILD_ST to something different than a word "yes". For example:
+      set HB_BUILD_ST=no. The difference comes from the fact that so far
+      BCC build has always been done in ST mode. It will be changed after
+      a 1.0 release. Please note that harbour.dll is *always* built in MT
+      mode under BCC and MSVC.
+
+  * harbour/make_vc.mak
+    ! Forced MT mode for harbour.dll
+    * Minor formating
+
+  * harbour/contrib/mtpl_vc.mak
+    ! Fixed compilation using ST mode
+
+  * harbour/contrib/mtpl_b32.mak
+    ! Fixed compilation of CPP files
+    + Added ST/MT handling logic
+
+  * harbour/contrib/hbziparch/make_b32.bat
+    ! Fixed compilation on some BCC instalations
+
 2008-02-22 03:42 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * added -xhgtk switch for linking with xHGtk library
@@ -30,7 +56,7 @@
   * harbour/contrib/hbct/ctwin.h
   * harbour/contrib/hbct/ctwfunc.c
     * overload ReadKey() method for future window moving when scroll lock
-      is  set and for KEYREAD() implementation. 
+      is  set and for KEYREAD() implementation.
     * store real last key value in CTWIN GT.
 
 2008-02-21 22:17 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)

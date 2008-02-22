@@ -107,6 +107,8 @@ HB_BUILD_MODE  = P
 HB_BUILD_MODE  = C
 !endif
 
+#**********************************************************
+
 # C Compiler Flags
 !if $(HB_VISUALC_VER) >= 80
 CFLAGS_VER     = -Ot2b1 -FD -Gs -D_CRT_SECURE_NO_DEPRECATE
@@ -124,10 +126,14 @@ CFLAGS         = -Zi $(CFLAGS)
 DBGMARKER      =  d
 !endif
 #-----------
+!if "$(HB_BUILD_ST)" != "yes"
 CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
+!endif
+#-----------
+
+#**********************************************************
 
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
-CLIBFLAGSDEBUG = -Zi $(CLIBFLAGS)
 HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w2 -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        =  $(LDFLAGS)
 

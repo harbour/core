@@ -108,12 +108,16 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
 # Main "Include" directory
 INCLUDE_DIR    = include
 
+#**********************************************************
+
 # In which mode compile Harbour C or CPP
 !if "$(HB_BUILD_MODE)" == "cpp"
 HB_BUILD_MODE  = P
 !else
 HB_BUILD_MODE  = C
 !endif
+
+#**********************************************************
 
 # C Compiler Flags
 !if $(HB_VISUALC_VER) >= 80
@@ -131,6 +135,10 @@ CFLAGS         = -Zi $(CFLAGS)
 DBGMARKER      =  d
 !endif
 #-----------
+if "$(HB_BUILD_ST)" != "yes"
+CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
+!endif
+#-----------
 !if "$(HB_GT_DEFAULT)" != ""
 CFLAGS         = -D"HB_GT_DEFAULT=$(HB_GT_DEFAULT:gt=)" $(CFLAGS)
 !endif
@@ -139,14 +147,16 @@ CFLAGS         = -D"HB_GT_DEFAULT=$(HB_GT_DEFAULT:gt=)" $(CFLAGS)
 CFLAGS         = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)
 !endif
 #-----------
-if "$(HB_BUILD_ST)" != "yes"
-CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
-!endif
-#-----------
+
+#**********************************************************
 
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
-CLIBFLAGSDLL   = -D__EXPORT__ $(CLIBFLAGS) $(CLIBFLAGSDLL)
-CEXEFLAGSDLL   =  $(CLIBFLAGS) $(CEXEFLAGSDLL)
+CLIBFLAGSxxx   =  $(CLIBFLAGS: -MT= )
+CLIBFLAGSxxx   =  $(CLIBFLAGSxxx: -MTd= )
+CLIBFLAGSDLL   = -D__EXPORT__ -MT$(DBGMARKER) $(CLIBFLAGS) $(CLIBFLAGSDLL)
+CEXEFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) $(CEXEFLAGSDLL)
+
+#**********************************************************
 
 # Harbour Compiler Flags
 HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w2 -es2 -gc0 -kM $(PRG_USR)
@@ -155,6 +165,8 @@ HBFLAGSCMN  = $(HBFLAGSCMN) -dPDF
 !endif
 HARBOURFLAGS   = -n $(HBFLAGSCMN) $(HARBOURFLAGS)
 HARBOURFLAGSDLL= -D__EXPORT__ -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
+
+#**********************************************************
 
 # Linker Flags
 LDFLAGS        = /NOLOGO /SUBSYSTEM:console /OPT:WIN98 /LIBPATH:$(LIB_DIR) $(LDFLAGS)
