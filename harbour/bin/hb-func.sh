@@ -220,6 +220,7 @@ if [ \$# = 0 ]; then
                         # link with more GTs. The first one will be
                         #      the default at runtime
     -xbgtk              # link with xbgtk library (xBase GTK+ interface)
+    -xhgtk              # link with xHGtk library (GTK+ interface)
     -hwgui              # link with HWGUI library (GTK+ interface)
     -l<libname>         # link with <libname> library
     -L<libpath>         # additional path to search for libraries
@@ -270,6 +271,7 @@ HB_FM_REQ=""
 HB_STRIP="yes"
 HB_MAIN_FUNC=""
 HB_XBGTK=""
+HB_XHGTK=""
 HB_HWGUI=""
 HB_USRLIBS=""
 HB_USRLPATH=""
@@ -299,6 +301,7 @@ while [ \$n -lt \${#P[@]} ]; do
         -fullstatic) HB_STATIC="full" ;;
         -shared)     HB_STATIC="no" ;;
         -xbgtk)      HB_XBGTK="yes" ;;
+        -xhgtk)      HB_XHGTK="yes" ;;
         -hwgui)      HB_HWGUI="yes" ;;
         -mt)         HB_MT="MT" ;;
         -gt*)        HB_GT_REQ="\${HB_GT_REQ} \${v#-gt}" ;;
@@ -374,6 +377,8 @@ fi
 
 if [ "\${HB_XBGTK}" = "yes" ]; then
     SYSTEM_LIBS="\${SYSTEM_LIBS} \`pkg-config --libs gtk+-2.0\`"
+elif [ "\${HB_XHGTK}" = "yes" ]; then
+    SYSTEM_LIBS="\${SYSTEM_LIBS} \`pkg-config --libs gtk+-2.0 libglade-2.0\`"
 elif [ "\${HB_HWGUI}" = "yes" ]; then
     SYSTEM_LIBS="\${SYSTEM_LIBS} \`pkg-config --libs gtk+-2.0 --libs libgnomeprint-2.2\`"
 fi
@@ -436,6 +441,9 @@ done
 if [ "\${HB_XBGTK}" = "yes" ]; then
     HARBOUR_LIBS="\${HARBOUR_LIBS} -lxbgtk"
     HB_PATHS="\${HB_PATHS} -I\`PKG_CONFIG_PATH=/usr/local/lib/pkgconfig pkg-config --variable=xbgtkincludedir xbgtk\`"
+fi
+if [ "\${HB_XHGTK}" = "yes" ]; then
+    HARBOUR_LIBS="\${HARBOUR_LIBS} -lxhgtk"
 fi
 if [ "\${HB_HWGUI}" = "yes" ]; then
     HARBOUR_LIBS="\${HARBOUR_LIBS} -lhwgui -lprocmisc -lhbxml"

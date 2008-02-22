@@ -53,6 +53,7 @@
  */
 
 #include "ppcore.c"
+#include "hbset.h"
 
 #if defined(__MINGW32CE__) || defined(HB_WINCE)
 #include <windows.h>

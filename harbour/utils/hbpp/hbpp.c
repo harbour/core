@@ -69,6 +69,7 @@
 
 #include "hbppdef.h"
 #include "hbcomp.h"
+#include "hbset.h"
 
 extern int hb_pp_ParseDefine_( char * );
 
