@@ -135,7 +135,7 @@ CFLAGS         = -Zi $(CFLAGS)
 DBGMARKER      =  d
 !endif
 #-----------
-if "$(HB_BUILD_ST)" != "yes"
+!if "$(HB_BUILD_ST)" != "yes"
 CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
 !endif
 #-----------

@@ -8,6 +8,9 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-02-25 00:08 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * make_vc.mak
+    ! Fixed small typo
 2008-02-22 22:28 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
   * harbour/make_b32.mak
     * Synchronized with make_vc.mak regarding HB_BUILD_ST and HB_BUILD_MODE
