@@ -419,7 +419,7 @@ FUNCTION Main_TRANS()
     * smaller then 5 bytes behaves randomly.
     * In fact precise tests can show that it's not random behavior
     * but CA-Cl*pper uses static buffer for result and when current one
-    * is smaller then 5 bytes then at 1-st two bytes are replaced with
+    * is smaller then 5 bytes then first two bytes are replaced with
     * 4-5 bytes from previous result which was length enough, f.e.:
     *          ? transform( "0123456789", "" )
     *          ? transform( "AB", "@E" )

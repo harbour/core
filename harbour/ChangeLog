@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-03-05 19:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/utils/hbtest/rt_trans.prg
+    * minor comment cleanup
+
 2008-03-05 19:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/screen2.c
     ! fixed possible vary bad bug (memory buffer overflow) in SCREENSTR()
