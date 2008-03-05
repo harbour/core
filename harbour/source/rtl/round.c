@@ -98,10 +98,18 @@ HB_FUNC( ROUND )
    {
       int iDec = hb_parni( 2 );
 
+#ifdef HB_C52_STRICT
+      /* In CA-Cl*pper ROUND() always returns double item, what in some
+       * applications may be important due to different formatting rules
+       * when SET FIXED is ON [druzus]
+       */
+      hb_retndlen( hb_numRound( hb_itemGetND( pNumber ), iDec ), 0, HB_MAX( iDec, 0 ) );
+#else
       if( iDec == 0 && HB_IS_NUMINT( pNumber ) )
          hb_itemReturn( pNumber );
       else
          hb_retnlen( hb_numRound( hb_itemGetND( pNumber ), iDec ), 0, HB_MAX( iDec, 0 ) );
+#endif
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1094, NULL, "ROUND", HB_ERR_ARGS_BASEPARAMS );

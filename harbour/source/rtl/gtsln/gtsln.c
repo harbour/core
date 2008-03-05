@@ -906,6 +906,10 @@ static BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
+      case HB_GTI_ISUNICODE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, hb_sln_Is_Unicode );
+         break;
+
       case HB_GTI_ESCDELAY:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_sln_escDelay );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )

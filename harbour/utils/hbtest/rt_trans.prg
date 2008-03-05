@@ -197,7 +197,7 @@ FUNCTION Main_TRANS()
    TEST_LINE( Transform( HB_SToD("19101112") , "9#-9#/##"   ) , "1910.11.12"                  )
    TEST_LINE( Transform( HB_SToD("19920101") , ""           ) , "1992.01.01"                  )
    TEST_LINE( Transform( HB_SToD("19920101") , "DO THIS "   ) , "1992.01.01"                  )
-   TEST_LINE( Transform( HB_SToD("19920102") , "@E"         ) , "02/01/1992"                  ) /* Bug in CA-Cl*pper, it returns: "2.91901.02" */
+   TEST_LINE( Transform( HB_SToD("19920102") , "@E"         ) , "02.01.1992"                  ) /* Bug in CA-Cl*pper, it returns: "2.91901.02" */
    TEST_LINE( Transform( 1234                , "@D 9999"    ) , "1234.00.0 "                  )
    TEST_LINE( Transform( 1234                , "@BD 9999"   ) , "1234.00.0 "                  )
 
@@ -216,7 +216,7 @@ FUNCTION Main_TRANS()
    TEST_LINE( Transform( HB_SToD("19101112") , "9#-9#/##"   ) , "10.11.12"                    )
    TEST_LINE( Transform( HB_SToD("19920101") , ""           ) , "92.01.01"                    )
    TEST_LINE( Transform( HB_SToD("19920101") , "DO THIS "   ) , "92.01.01"                    )
-   TEST_LINE( Transform( HB_SToD("19920102") , "@E"         ) , "02/01/92"                    ) /* Bug in CA-Cl*pper, it returns: "01.92.02" */
+   TEST_LINE( Transform( HB_SToD("19920102") , "@E"         ) , "02.01.92"                    ) /* Bug in CA-Cl*pper, it returns: "01.92.02" */
    TEST_LINE( Transform( 1234                , "@D 9999"    ) , "**.**.* "                    )
    TEST_LINE( Transform( 1234                , "@BD 9999"   ) , "**.**.* "                    )
 
@@ -411,6 +411,21 @@ FUNCTION Main_TRANS()
    TEST_LINE( Transform("ABCDEFG", "@DB" )                 , "AB.DE.G"                     )
    TEST_LINE( Transform("  CDEFG", "@DB" )                 , ".DE.G  "                     )
    TEST_LINE( Transform("ABCDEFG", "@DBZ" )                , "       "                     )
+#ifdef __CLIPPER__
+   /* CA-Cl*pper do not check result size and always exchanges
+    * bytes 1-2 with bytes 4-5 for @E conversion. It's buffer overflow
+    * bug and I do not want to replicate it inside our transform
+    * implementation. It also causes that the results for for strings
+    * smaller then 5 bytes behaves randomly.
+    * In fact precise tests can show that it's not random behavior
+    * but CA-Cl*pper uses static buffer for result and when current one
+    * is smaller then 5 bytes then at 1-st two bytes are replaced with
+    * 4-5 bytes from previous result which was length enough, f.e.:
+    *          ? transform( "0123456789", "" )
+    *          ? transform( "AB", "@E" )
+    *          ? transform( "ab", "@E" )
+    * [druzus]
+    */
    TEST_LINE( Transform(".", "@E" )                        , " "                           )
    TEST_LINE( Transform(",", "@E" )                        , "."                           )
    TEST_LINE( Transform("..", "@E" )                       , ","+Chr(0)+""                 )
@@ -423,6 +438,7 @@ FUNCTION Main_TRANS()
    TEST_LINE( Transform("JKL", "@ER ," )                   , "L .JK.  "                    )
    TEST_LINE( Transform("OPI", "@ER" )                     , "I .OP.  "                    )
    TEST_LINE( Transform("JKL", "@ER" )                     , "L .JK.  "                    )
+#endif
    TEST_LINE( Transform(CTOD(""), "@DB")                   , ".  .    "                    )
    TEST_LINE( Transform(CTOD(""), "@DBR uiuijk")           , ".. . .    "                  )
    TEST_LINE( Transform(100, "@B $99999")                  , "$  100"                      )

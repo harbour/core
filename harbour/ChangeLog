@@ -8,6 +8,88 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-03-05 19:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbct/screen2.c
+    ! fixed possible vary bad bug (memory buffer overflow) in SCREENSTR()
+
+  * harbour/source/rtl/hbffind.c
+    ! fixed possible GPF in some *nixes
+
+  * harbour/source/vm/classes.c
+    ! do not execute the same destructor inherited from different parent
+      classes more then once
+
+  * harbour/source/rtl/transfrm.c
+    ! fixed bug with '9' used as stop condition of function pattern
+      this character cannot be stripped, f.e.:
+        ? transform( "abc", "@_99*" )
+    ! fixed bug with '*' or '$' used with @), f.e.:
+        ? transform( -12345, "@) $999999" )
+    ! fixed replacing '.' with ',' when @E is used without picture part, f.e.:
+        ? transform( 123.45, "@E" )
+    ! fixed ',' conversions
+        ? transform( 12.34,"@E ab,cd.ef9,9.99,.--" )
+    ! fixed bug with picture starting with ".", f.e.:
+	? transform( 0.3456, ".999" )
+    ! fixed "@(" and "@)" conversions, f.e.:
+        ? transform( -12345, "@) 1999*999" )
+    ! fixed late oveflow detection in "@(" and "@)", f.e.:
+        ? transtest( -12345, "@( 6798^999" )
+    ! fixed "@E" conversion for dates to keep user delimiters set in
+      _SET_DATEFORMAT, f.e.:
+        set( _SET_DATEFORMAT, "mm:dd:yyyy" ); ? transform( date(), "@E" )
+        set( _SET_DATEFORMAT, "yyyy<mm>dd" ); ? transform( date(), "@E" )
+      Please note that Harbour is not strictly Clipper compatible here
+      because it respects _SET_DATEFORMAT set by user.
+    ! fixed 64bit integer conversion by eliminating conversion to
+      'double' f.e.:
+        ? transform(  1234567890123456789, "99999999999999999999" )
+        ? transform( -1234567890123456789, "99999999999999999999" )
+    ! some other fixes, see regression test transtst.prg
+    % speed improvement in numeric conversions
+
+  + harbour/tests/transtst.prg
+    + added regression test for transform function
+
+  * harbour/utils/hbtest/rt_trans.prg
+    * disabled transform() tests for "@E" and result smaller then 5 bytes
+      CA-Cl*pper do not check result size and always exchanges
+      bytes 1-2 with bytes 4-5 for @E conversion. It's buffer overflow
+      bug and I do not want to replicate it inside our transform
+      implementation. It also causes that the results for for strings
+      smaller then 5 bytes behaves randomly.
+      In fact precise tests can show that it's not random behavior
+      but CA-Cl*pper uses static buffer for result and when current one
+      is smaller then 5 bytes then first two bytes are replaced with
+      4-5 bytes from previous result which was length enough, f.e.:
+               ? transform( "0123456789", "" )
+               ? transform( "AB", "@E" )
+               ? transform( "ab", "@E" )
+      Replicating exact CA-Cl*pper behavior it's trivial (it will be enough
+      to use static buffer two and not check the size of current result) but
+      IMHO it's bug.
+
+  * harbour/source/rtl/round.c
+    * added strictly Clipper compatible code covered by HB_C52_STRICT
+      and comment about possible difference in Harbour.
+
+  * harbour/include/hbgtinfo.ch
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/gtxwc/gtxwc.c
+  * harbour/source/rtl/gtsln/gtsln.c
+  * harbour/source/rtl/gttrm/gttrm.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    + added HB_GTI_ISUNICODE - it returns logical value with information
+      about Unicode mode in active GT driver - it's necessary for proper
+      CP initialization in some GTDs which can work in both mode depending
+      on client side settings
+
+  * harbour/source/rtl/gttrm/gttrm.c
+    * improved UTF-8 detection
+    * added automatic PuTTY detection
+    * improved PuTTY and some xterm key handling
+    * added some missing RXVT keys
+
 2008-02-25 00:08 UTC-0600 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * make_vc.mak
     ! Fixed small typo

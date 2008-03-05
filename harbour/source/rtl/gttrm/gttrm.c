@@ -119,6 +119,7 @@ static HB_GT_FUNCS   SuperTable;
 #define TERM_ANSI       1
 #define TERM_LINUX      2
 #define TERM_XTERM      3
+#define TERM_PUTTY      4
 
 #define NO_STDKEYS      96
 #define NO_EXTDKEYS     30
@@ -336,6 +337,7 @@ typedef struct _HB_GTTRM
    BYTE *   pOutBuf;
 
    int      terminal_type;
+   int      terminal_ext;
 
 #if defined( OS_UNIX_COMPATIBLE )
    struct termios saved_TIO, curr_TIO;
@@ -374,7 +376,7 @@ typedef struct _HB_GTTRM
    void     (* Init) ( HB_GTTRM_PTR );
    void     (* Exit) ( HB_GTTRM_PTR );
    void     (* SetTermMode) ( HB_GTTRM_PTR, int );
-   BOOL     (* GetCursorPos) ( HB_GTTRM_PTR, int *, int * );
+   BOOL     (* GetCursorPos) ( HB_GTTRM_PTR, int *, int *, const char * );
    void     (* SetCursorPos) ( HB_GTTRM_PTR, int , int );
    void     (* SetCursorStyle) ( HB_GTTRM_PTR, int );
    void     (* SetAttributes) ( HB_GTTRM_PTR, int );
@@ -1717,9 +1719,10 @@ static void hb_gt_trm_AnsiSetTermMode( PHB_GTTRM pTerm, int iAM )
    }
 }
 
-static BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol )
+static BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol,
+                                        const char * szPost )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiGetCursorPos(%p,%p,%p)", pTerm, iRow, iCol));
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiGetCursorPos(%p,%p,%p,%p)", pTerm, iRow, iCol, szPost));
 
    if( pTerm->fPosAnswer )
    {
@@ -1727,6 +1730,8 @@ static BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol 
       int i, n, y, x;
 
       hb_gt_trm_termOut( pTerm, ( BYTE * ) "\x1B[6n", 4 );
+      if( szPost )
+         hb_gt_trm_termOut( pTerm, ( BYTE * ) szPost, strlen( szPost ) );
       hb_gt_trm_termFlush( pTerm );
 
       *iRow = *iCol = -1;
@@ -1751,7 +1756,15 @@ static BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol 
             if( n == 0 )
             {
                while( i > 0 && rdbuf[0] != '\033' )
-                  memmove( rdbuf, rdbuf + 1, i-- );
+               {
+                  if( szPost && i >= 5 && hb_strnicmp( rdbuf, "PuTTY", 5 ) == 0 )
+                  {
+                     pTerm->terminal_ext |= TERM_PUTTY;
+                     memmove( rdbuf, rdbuf + 5, i -= 5 );
+                  }
+                  else
+                     memmove( rdbuf, rdbuf + 1, i-- );
+               }
             }
             n += i;
             if( n >= 6 )
@@ -2042,11 +2055,8 @@ static BOOL hb_trm_isUTF8( PHB_GTTRM pTerm )
       int iRow = 0, iCol = 0;
       BOOL fSize;
 
-      hb_gt_trm_termOut( pTerm, ( BYTE * ) "\r\303\255", 3 );
-      hb_gt_trm_termFlush( pTerm );
-      fSize = pTerm->GetCursorPos( pTerm, &iRow, &iCol );
-      hb_gt_trm_termOut( pTerm, ( BYTE * ) "\r  \r", 4 );
-      hb_gt_trm_termFlush( pTerm );
+      hb_gt_trm_termOut( pTerm, ( BYTE * ) "\005\r\303\255", 4 );
+      fSize = pTerm->GetCursorPos( pTerm, &iRow, &iCol, "\r   \r" );
       pTerm->iCol = 0;
       if( fSize )
          return iCol == 1;
@@ -2324,6 +2334,13 @@ static void init_keys( PHB_GTTRM pTerm )
 
       { 0, NULL } };
 
+   static const keySeq rxvtKeySeq[] = {
+
+      { EXKEY_HOME,     "\033[H" },
+      { EXKEY_END,      "\033Ow" },
+
+      { 0, NULL } };
+
    static const keySeq xtermModKeySeq[] = {
 
       { EXKEY_F1 |KEY_CTRLMASK, "\033O5P" },
@@ -2401,6 +2418,8 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_PGUP  |KEY_CTRLMASK|KEY_ALTMASK, "\033[5;2~" },
       { EXKEY_PGDN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6;2~" },
 
+      { EXKEY_BS |KEY_ALTMASK,     "\033\010" },
+
       { 0, NULL } };
 
    static const keySeq xtermFnKeySeq[] = {
@@ -2458,6 +2477,8 @@ static void init_keys( PHB_GTTRM pTerm )
 
       /* Konsole */
       { EXKEY_ENTER |KEY_CTRLMASK|KEY_ALTMASK, "\033OM" },
+
+      { EXKEY_END,    "\033Ow" },  /* rxvt */
 
       /* gnome-terminal */
       { EXKEY_END,    "\033OF"  }, /* kend  */
@@ -2623,6 +2644,8 @@ static void init_keys( PHB_GTTRM pTerm )
       addKeyTab( pTerm, xtermFnKeySeq );
       addKeyTab( pTerm, xtermModKeySeq );
       addKeyTab( pTerm, puttyKeySeq );
+      /* if( pTerm->terminal_ext & TERM_PUTTY ) for PuTTY */
+      addKeyTab( pTerm, rxvtKeySeq );
    }
    else if( pTerm->terminal_type == TERM_ANSI )
    {
@@ -2716,7 +2739,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
 {
    static const char * szAcsc = "``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~";
    static const char * szExtAcsc = "+\020,\021-\030.\0310\333`\004a\261f\370g\361h\260i\316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376";
-   char * szTerm;
+   const char * szTerm;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetTerm(%p)", pTerm));
 
@@ -2756,7 +2779,8 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->szAcsc         = szExtAcsc;
       pTerm->terminal_type  = TERM_LINUX;
    }
-   else if( strstr( szTerm, "xterm" ) != NULL ||
+   else if( ( pTerm->terminal_ext & TERM_PUTTY ) ||
+            strstr( szTerm, "xterm" ) != NULL ||
             strncmp( szTerm, "rxvt", 4 ) == 0 ||
             strcmp( szTerm, "putty" ) == 0 ||
             strncmp( szTerm, "screen", 6 ) == 0 )
@@ -2892,15 +2916,15 @@ static void hb_gt_trm_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    HB_GTSELF_SETFLAG( pGT, HB_GTI_COMPATBUFFER, FALSE );
    HB_GTSELF_SETFLAG( pGT, HB_GTI_STDOUTCON, pTerm->fStdoutTTY );
    HB_GTSELF_SETFLAG( pGT, HB_GTI_STDERRCON, pTerm->fStderrTTY );
-   HB_GTSELF_SETBLINK( pGT, TRUE );
 
    pTerm->Init( pTerm );
    pTerm->SetTermMode( pTerm, 0 );
-   if( pTerm->GetCursorPos( pTerm, &pTerm->iRow, &pTerm->iCol ) )
+   if( pTerm->GetCursorPos( pTerm, &pTerm->iRow, &pTerm->iCol, NULL ) )
       HB_GTSELF_SETPOS( pGT, pTerm->iRow, pTerm->iCol );
    pTerm->fUTF8 = hb_trm_isUTF8( pTerm );
    hb_gt_trm_SetKeyTrans( pTerm, NULL, NULL );
    hb_gt_trm_SetDispTrans( pTerm, NULL, NULL, 0 );
+   HB_GTSELF_SETBLINK( pGT, TRUE );
    if( pTerm->fOutTTY )
       HB_GTSELF_SEMICOLD( pGT );
 }
@@ -3085,9 +3109,9 @@ static char * hb_gt_trm_Version( PHB_GT pGT, int iType )
    HB_SYMBOL_UNUSED( pGT );
 
    if( iType == 0 )
-      return HB_GT_DRVNAME( HB_GT_NAME );
+      return ( char * ) HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour terminal driver";
+   return ( char * ) "Harbour terminal driver";
 }
 
 static BOOL hb_gt_trm_Suspend( PHB_GT pGT )
@@ -3182,10 +3206,28 @@ static void hb_gt_trm_SetBlink( PHB_GT pGT, BOOL fBlink )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetBlink(%p,%d)", pGT, ( int ) fBlink ) );
 
    pTerm = HB_GTTRM_GET( pGT );
-   if( fBlink )
+
+#if 0
+   /* This is not portable extension - temporary disabled */
+   if( pTerm->terminal_ext & TERM_PUTTY )
+   {
+      static const char * szBlinkOff = "\033[=0E"; /* disable blinking, highlight bkg */
+      static const char * szBlinkOn  = "\033[=1E"; /* enable blinking */
+
+      const char * szBlink = fBlink ? szBlinkOn : szBlinkOff;
+
       pTerm->iAttrMask |= 0x0080;
+      hb_gt_trm_termOut( pTerm, ( BYTE * ) szBlink, strlen( szBlink ) );
+      hb_gt_trm_termFlush( pTerm );
+   }
    else
-      pTerm->iAttrMask &= ~0x0080;
+#endif
+   {
+      if( fBlink )
+         pTerm->iAttrMask |= 0x0080;
+      else
+         pTerm->iAttrMask &= ~0x0080;
+   }
 
    HB_GTSUPER_SETBLINK( pGT, fBlink );
 }
@@ -3380,6 +3422,10 @@ static BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
          break;
 
+      case HB_GTI_ISUNICODE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pTerm->fUTF8 );
+         break;
+
       case HB_GTI_ESCDELAY:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pTerm->esc_delay );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
@@ -3441,7 +3487,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 
 /* ********************************************************************** */
 
-static const HB_GT_INIT gtInit = { HB_GT_DRVNAME( HB_GT_NAME ),
+static const HB_GT_INIT gtInit = { ( char * ) HB_GT_DRVNAME( HB_GT_NAME ),
                                    hb_gt_FuncInit,
                                    HB_GTSUPER,
                                    HB_GTID_PTR };

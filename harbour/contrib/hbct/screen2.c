@@ -344,9 +344,9 @@ HB_FUNC( SCREENSTR )
             *szText++ = ( char ) usChar;
             *szText++ = ( char ) bColor;
          }
-         while( ++sC <= sMaxCol && --ulCount );
+         while( --ulCount && ++sC <= sMaxCol );
       }
-      while( ++sRow <= sMaxRow && ulCount );
+      while( ulCount && ++sRow <= sMaxRow );
 
       hb_retclen_buffer( pBuffer, ulSize );
    }

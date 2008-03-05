@@ -3678,6 +3678,10 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, wnd->dpy != NULL );
          break;
 
+      case HB_GTI_ISUNICODE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, TRUE );
+         break;
+
       case HB_GTI_INPUTFD:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, ConnectionNumber( wnd->dpy ) );
          break;

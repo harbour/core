@@ -116,6 +116,8 @@
 #define HB_GTI_ADDKEYMAP        45  /* add key escape sequences */
 #define HB_GTI_DELKEYMAP        46  /* del key escape sequences */
 
+#define HB_GTI_ISUNICODE        47  /* is Unicode input/output enabled? */
+
 /* Font weights */              
 #define HB_GTI_FONTW_THIN       1
 #define HB_GTI_FONTW_NORMAL     2
@@ -192,6 +194,7 @@
 #define GTI_NEWWIN              HB_GTI_NEWWIN         
 #define GTI_ADDKEYMAP           HB_GTI_ADDKEYMAP      
 #define GTI_DELKEYMAP           HB_GTI_DELKEYMAP      
+#define GTI_ISUNICODE           HB_GTI_ISUNICODE
 
 /* Font weights */
 #define GTI_FONTW_THIN          HB_GTI_FONTW_THIN  

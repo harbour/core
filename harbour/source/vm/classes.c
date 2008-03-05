@@ -2041,11 +2041,20 @@ static void hb_objSupperDestructorCall( PHB_ITEM pObject, PCLASS pClass )
    {
       if( pbClasses[ uiClass ] == 1 )
       {
-         hb_vmPushSymbol( &s___msgDestructor );
-         hb_clsMakeSuperObject( hb_stackAllocItem(), pObject, uiClass );
-         hb_vmSend( 0 );
-         if( hb_vmRequestQuery() != 0 )
-            break;
+         PMETHOD pDestructor = hb_clsFindMsg( &s_pClasses[ uiClass ],
+                                              s___msgDestructor.pDynSym );
+         if( pDestructor )
+         {
+            if( pbClasses[ pDestructor->uiSprClass ] == 1 )
+            {
+               hb_vmPushSymbol( &s___msgDestructor );
+               hb_clsMakeSuperObject( hb_stackAllocItem(), pObject, uiClass );
+               hb_vmSend( 0 );
+               if( hb_vmRequestQuery() != 0 )
+                  break;
+               pbClasses[ pDestructor->uiSprClass ] |= 2;
+            }
+         }
       }
    }
 

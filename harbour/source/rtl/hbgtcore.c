@@ -1424,6 +1424,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_KBDSUPPORT:
       case HB_GTI_ISCTWIN:
       case HB_GTI_ISMULTIWIN:
+      case HB_GTI_ISUNICODE:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, FALSE );
          break;
 

@@ -724,6 +724,8 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 #else
 
    {
+      int TODO; /* TODO: for given platform */
+
       /* HB_SYMBOL_UNUSED( ffind ); */
 
       HB_SYMBOL_UNUSED( nYear );
@@ -763,14 +765,16 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
 HB_EXPORT PHB_FFIND hb_fsFindFirst( const char * pszFileMask, USHORT attrmask )
 {
-   PHB_FFIND ffind = ( PHB_FFIND ) hb_xgrab( sizeof( HB_FFIND ) );
+   PHB_FFIND ffind;
+
+   ffind = ( PHB_FFIND ) hb_xgrab( sizeof( HB_FFIND ) );
+   memset( ffind, 0, sizeof( HB_FFIND ) );
 
    /* Allocate platform dependent file find info storage */
-
    ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
+   memset( ffind->info, 0, sizeof( HB_FFIND_INFO ) );
 
    /* Store search parameters */
-
    ffind->pszFileMask = pszFileMask;
    ffind->attrmask = attrmask;
    ffind->bFirst = TRUE;
@@ -849,6 +853,7 @@ HB_EXPORT void hb_fsFindClose( PHB_FFIND ffind )
 
 #elif defined(HB_OS_UNIX)
 
+         if( info->dir != NULL )
          {
             closedir( info->dir );
          }
@@ -857,6 +862,7 @@ HB_EXPORT void hb_fsFindClose( PHB_FFIND ffind )
 
          {
             /* Intentionally do nothing */
+            int TODO; /* TODO: for given platform */
 
             HB_SYMBOL_UNUSED( info );
          }
