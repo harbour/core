@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-03-07 19:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbct/ctrand.prg
+    ! fixed random() parameter interpretation - the action was reverted
+
 2008-03-05 19:19 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/utils/hbtest/rt_trans.prg
     * minor comment cleanup

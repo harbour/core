@@ -53,7 +53,7 @@
 
 FUNCTION Random( lMode )
 RETURN IIF( VALTYPE( lMode ) == "L" .AND. lMode, ;
-            HB_RandomInt( 0, 65535 ), HB_RandomInt( -32768, 32767 ) )
+            HB_RandomInt( -32768, 32767 ), HB_RandomInt( 0, 65535 ) )
 
 FUNCTION Rand( nStart )
    IF nStart != NIL
