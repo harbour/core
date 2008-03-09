@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-03-09 16:47 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtclip.c
+    ! fixed two very bad bugs in get clipboard action used for W32 and
+      GTs which do not support system clipboard data
+
 2008-03-07 19:49 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/ctrand.prg
     ! fixed random() parameter interpretation - the action was reverted

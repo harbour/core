@@ -82,9 +82,9 @@ BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen )
    {
       *pszClipData = ( char * ) hb_xgrab( s_ulClipboardLen + 1 );
       memcpy( *pszClipData, s_szClipboardData, s_ulClipboardLen );
-      *pszClipData[ s_ulClipboardLen ] = '\0';
+      ( *pszClipData )[ s_ulClipboardLen ] = '\0';
    }
-   return *pulLen != 0;
+   return s_ulClipboardLen != 0;
 }
 
 #if defined( HB_OS_WIN_32 )
@@ -141,7 +141,7 @@ BOOL hb_gt_w32_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
             {
                *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
                HB_TCHAR_GETFROM( *pszClipData, lptstr, *pulLen );
-               pszClipData[*pulLen] = '\0';
+               ( *pszClipData )[ *pulLen ] = '\0';
             }
             GlobalUnlock( hglb );
          }
