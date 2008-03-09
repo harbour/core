@@ -16,7 +16,7 @@ INSTALL_RULE =\
 	    else \
 	      echo "! Can't install $$i, not found" 1>&2; \
 	    fi \
-	  done \
+	  done; \
 	  if [ $(INSTALL_DIR) = $(HB_LIB_INSTALL) ]; \
 	  then \
 	    $(RANLIB) $(foreach file,$(notdir $(INSTALL_OBJS)),$(INSTALL_DIR)/$(file)); \

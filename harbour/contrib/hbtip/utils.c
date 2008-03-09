@@ -901,6 +901,24 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
          cRet[ nPosRet++ ] = '9';
          cRet[ nPosRet++ ] = ';';
       }
+      else if ( cElem == '\r' )      
+      {
+         cRet[ nPosRet++ ] = '&';
+         cRet[ nPosRet++ ] = '#';
+         cRet[ nPosRet++ ] = '0';
+         cRet[ nPosRet++ ] = '1';
+         cRet[ nPosRet++ ] = '3';
+         cRet[ nPosRet++ ] = ';';
+      }        
+      else if ( cElem == '\n' )      
+      {
+         cRet[ nPosRet++ ] = '&';
+         cRet[ nPosRet++ ] = '#';
+         cRet[ nPosRet++ ] = '0';
+         cRet[ nPosRet++ ] = '1';
+         cRet[ nPosRet++ ] = '0';
+         cRet[ nPosRet++ ] = ';';
+      }
       else if ( cElem >= ' ' )     
       {
          cRet[ nPosRet ] = cElem;
