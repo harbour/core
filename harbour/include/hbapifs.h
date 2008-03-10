@@ -159,8 +159,15 @@ extern HB_EXPORT BOOL     hb_fsDirExists  ( const char * pszDirName ); /* check 
 #  define HB_SHARELOCK_SIZE         0x1UL
 #  if defined( HB_USE_BSDLOCKS_OFF )
 #     undef HB_USE_BSDLOCKS
-#  elif ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) ) && \
+#  elif defined( HB_OS_LINUX ) && \
         !defined( __WATCOMC__ ) && !defined( HB_USE_BSDLOCKS )
+      /* default usage of BSD locks in *BSD systems for emulating
+       * DOS/Windows DENY_* flags has been disabled because tests
+       * on FreeBSD 6.2 and MacOSX shows that this implementation
+       * can create self deadlock when used simultaneously with
+       * POSIX locks - thanks to Phil and Lorenzo for locating the
+       * problem and tests [druzus]
+       */
 #     define HB_USE_BSDLOCKS
 #  endif
 #endif

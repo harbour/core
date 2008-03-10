@@ -8,11 +8,20 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-03-10 13:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapifs.h
+    ! default usage of BSD locks in *BSD systems for emulating
+      DOS/Windows DENY_* flags has been disabled because tests
+      on FreeBSD 6.2 and MacOSX shows that this implementation
+      can create self deadlock when used simultaneously with
+      POSIX locks - thanks to Phil and Lorenzo for locating the
+      problem and tests.
+
 2008-03-09 18:30 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * config/darwin/install.cf
-    added missed semicolon
+    * added missed semicolon
   * contrib/hbtip/utils.c
-    added translation for CR and LF
+    * added translation for CR and LF
 
 2008-03-09 16:47 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtclip.c
