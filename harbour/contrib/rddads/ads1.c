@@ -1839,7 +1839,6 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    LPFIELD    pField;
    BYTE *     pBuffer = pArea->pRecord;
    UNSIGNED32 u32Length;
-   DOUBLE     dVal = 0;
    UNSIGNED32 ulRetVal;
 
    HB_TRACE(HB_TR_DEBUG, ("adsGetValue(%p, %hu, %p)", pArea, uiIndex, pItem));
@@ -1882,71 +1881,106 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          hb_itemPutCL( pItem, ( char * ) pBuffer, pField->uiLen );
          break;
 
-      /* TODO: clean the code below, Druzus */
-      case HB_FT_LONG:
-      case HB_FT_INTEGER:
-      case HB_FT_DOUBLE:
-      case HB_FT_TIME:
       case HB_FT_DAYTIME:
       case HB_FT_MODTIME:
-      case HB_FT_ROWVER:
-      case HB_FT_AUTOINC:
-      case HB_FT_CURDOUBLE:
+      case HB_FT_TIME:
          u32Length = pArea->maxFieldLen + 1;
-         if ( pField->uiTypeExtended == ADS_TIMESTAMP ||
-              pField->uiTypeExtended == ADS_MODTIME ||
-              pField->uiTypeExtended == ADS_TIME )
-         {
-            ulRetVal = AdsGetField( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length, ADS_NONE );
-/*
-            ulRetVal = AdsGetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length );
-            dVal = (double) *pBuffer;
-            TraceLog( NULL, "u32Length %d  float %f  pBuffer: %d \n", u32Length , (double) *pBuffer, (double) *pBuffer );
-            TraceLog( NULL, "u32Length %d  pBuffer: %s \n", u32Length , pBuffer );
-*/
-         }
-         else
-         {
-            ulRetVal = AdsGetDouble( pArea->hTable, ADSFIELD( uiIndex ), &dVal );
-         }
-
+         ulRetVal = AdsGetField( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length, ADS_NONE );
          if( ulRetVal == AE_NO_CURRENT_RECORD )
          {
             memset( pBuffer, ' ', pArea->maxFieldLen + 1 );
             pArea->fEof = TRUE;
-            dVal = 0.0;
          }
+         hb_itemPutCL( pItem, ( char * ) pBuffer, u32Length );
+         break;
 
-         if( pField->uiDec )
+      case HB_FT_INTEGER:
+      {
+         SIGNED32 lVal = 0;
+         ulRetVal = AdsGetLong( pArea->hTable, ADSFIELD( uiIndex ), &lVal );
+         if( ulRetVal == AE_NO_CURRENT_RECORD )
+         {
+            lVal = 0;
+            pArea->fEof = TRUE;
+         }
+         if( pField->uiTypeExtended == ADS_SHORTINT )
+            hb_itemPutNILen( pItem, ( int ) lVal, 6 );
+         else
+            hb_itemPutNLLen( pItem, ( LONG ) lVal, 11 );
+         break;
+      }
+#ifndef HB_LONG_LONG_OFF
+      case HB_FT_AUTOINC:
+      {
+         SIGNED64 qVal = 0;
+         ulRetVal = AdsGetLongLong( pArea->hTable, ADSFIELD( uiIndex ), &qVal );
+         if( ulRetVal == AE_NO_CURRENT_RECORD )
+         {
+            qVal = 0;
+            pArea->fEof = TRUE;
+         }
+         hb_itemPutNIntLen( pItem, ( HB_LONG ) qVal, 10 );
+         break;
+      }
+      case HB_FT_ROWVER:
+      {
+         SIGNED64 qVal = 0;
+         ulRetVal = AdsGetLongLong( pArea->hTable, ADSFIELD( uiIndex ), &qVal );
+         if( ulRetVal == AE_NO_CURRENT_RECORD )
+         {
+            qVal = 0;
+            pArea->fEof = TRUE;
+         }
+         hb_itemPutNIntLen( pItem, ( HB_LONG ) qVal, 20 );
+         break;
+      }
+#else
+      case HB_FT_AUTOINC:
+      case HB_FT_ROWVER:
+      {
+         DOUBLE   dVal = 0;
+
+         ulRetVal = AdsGetDouble( pArea->hTable, ADSFIELD( uiIndex ), &dVal );
+         if( ulRetVal == AE_NO_CURRENT_RECORD )
+         {
+            dVal = 0.0;
+            pArea->fEof = TRUE;
+         }
+         hb_itemPutNLen( pItem, dVal,
+                         pField->uiTypeExtended == HB_FT_AUTOINC ? 10 : 20, 0 );
+      }
+#endif
+      case HB_FT_LONG:
+      case HB_FT_DOUBLE:
+      case HB_FT_CURDOUBLE:
+      {
+         DOUBLE   dVal = 0;
+
+         ulRetVal = AdsGetDouble( pArea->hTable, ADSFIELD( uiIndex ), &dVal );
+         if( ulRetVal == AE_NO_CURRENT_RECORD )
+         {
+            dVal = 0.0;
+            pArea->fEof = TRUE;
+         }
+         if( pField->uiTypeExtended == ADS_CURDOUBLE ||
+             pField->uiTypeExtended == ADS_DOUBLE )
          {
             hb_itemPutNDLen( pItem, dVal,
-                           ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
-                           ( int ) pField->uiDec );
+                             20 - ( pField->uiDec > 0 ? ( pField->uiDec + 1 ) : 0 ),
+                             ( int ) pField->uiDec );
+         }
+         else if( pField->uiDec )
+         {
+            hb_itemPutNDLen( pItem, dVal,
+                             ( int ) pField->uiLen - ( pField->uiDec + 1 ),
+                             ( int ) pField->uiDec );
          }
          else
          {
-            switch ( pField->uiTypeExtended )
-            {
-               case ADS_CURDOUBLE :
-               case ADS_DOUBLE :
-                  hb_itemPutNDLen( pItem, dVal,
-                              ( int ) pField->uiLen,
-                              ( int ) pField->uiDec );
-                  break;
-               /*case ADS_AUTOINC:
-                  hb_itemPutNLen( pItem, dVal, ( int ) 10 , (int) 0 );
-                  break; */
-               case ADS_TIMESTAMP:
-               case ADS_MODTIME:
-               case ADS_TIME:
-                  hb_itemPutCL( pItem, ( char * ) pBuffer, u32Length );
-                  break;
-               default:
-                  hb_itemPutNLen( pItem, dVal, ( int ) pField->uiLen, 0 );
-            }
+            hb_itemPutNLen( pItem, dVal, ( int ) pField->uiLen, 0 );
          }
          break;
-
+      }
       case HB_FT_DATE:
       {
          SIGNED32 lDate;
