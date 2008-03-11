@@ -1,4 +1,4 @@
-/*
+﻿/*
  * $Id$
  */
 
@@ -7,6 +7,12 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2008-03-10 09:53 UTC+0100 Belgrano Massimo (mbelgrano/at/deltain.it)
+  * harbour/utils/hbtest/rt_trans.prg
+    ! added news regression test 
+      Corretted error
+      Formatted source
+      
 
 2008-03-10 13:10 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapifs.h
