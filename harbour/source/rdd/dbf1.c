@@ -3800,17 +3800,6 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
          {
             uiSkip++;
          }
-         /* Peter added it for FVP DBFs but in wrong place,
-            anyhow I cannot see why it's necessary, FVP private data
-            in header should be after 0x0d - I disabled this code, [druzus] */
-         /*
-         if( pArea->bTableType == DB_DBF_VFP &&
-             pBuffer[ uiCount * sizeof( DBFFIELD ) ] == 0x00 )
-         {
-            uiFields = uiCount;
-            break;
-         }
-         */
       }
       uiFields -= uiSkip;
    }
@@ -3847,7 +3836,16 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
       dbFieldInfo.uiLen = pField->bLen;
       dbFieldInfo.uiDec = 0;
       dbFieldInfo.uiTypeExtended = 0;
-      dbFieldInfo.uiFlags = 0;
+      /* We cannot accept bFieldFlags as is because Clipper
+       * creates tables where this field is random so we have to
+       * try to guess the flags ourself. But if we know that table
+       * was created by VFP which uses field flags then we can
+       * retrive information from bFieldFlags.
+       */
+      if( pArea->bTableType == DB_DBF_VFP )
+         dbFieldInfo.uiFlags = pField->bFieldFlags;
+      else
+         dbFieldInfo.uiFlags = 0;
       switch( pField->bType )
       {
          case 'C':
@@ -3996,7 +3994,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
             pArea->fHasMemo = TRUE;
             break;
 
-         default:
+         case '0':
             if( pArea->bTableType == DB_DBF_VFP && pField->bFieldFlags & 0x01 )
             {
                if( memcmp( dbFieldInfo.atomName, "_NullFlags", 10 ) == 0 )
@@ -4006,6 +4004,8 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
                pArea->uiRecordLen += dbFieldInfo.uiLen;
                continue;
             }
+
+         default:
             errCode = FAILURE;
             break;
       }
@@ -4194,7 +4194,8 @@ static ERRCODE hb_dbfPack( DBFAREAP pArea )
          if( ++ulEvery >= ulUserEvery )
          {
             ulEvery = 0;
-            hb_vmEvalBlock( pBlock );
+            if( SELF_EVALBLOCK( ( AREAP ) pArea, pBlock ) != SUCCESS )
+               return FAILURE;
          }
       }
 
@@ -4218,7 +4219,8 @@ static ERRCODE hb_dbfPack( DBFAREAP pArea )
    /* Execute the Code Block for pending record */
    if( pBlock && ulEvery > 0 )
    {
-      hb_vmEvalBlock( pBlock );
+      if( SELF_EVALBLOCK( ( AREAP ) pArea, pBlock ) != SUCCESS )
+         return FAILURE;
    }
 
    if( pArea->ulRecCount != ulRecOut )
@@ -4275,7 +4277,7 @@ static ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
    ulRecNo = 1;
    if( pSortInfo->dbtri.dbsci.itmRecID )
    {
-      uiError = SELF_GOTO( ( AREAP ) pArea, hb_itemGetNL( pSortInfo->dbtri.dbsci.itmRecID ) );
+      uiError = SELF_GOTOID( ( AREAP ) pArea, pSortInfo->dbtri.dbsci.itmRecID );
       bMoreRecords = bLimited = TRUE;
    }
    else if( pSortInfo->dbtri.dbsci.lNext )
@@ -4297,10 +4299,24 @@ static ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
    while( uiError == SUCCESS && !pArea->fEof && bMoreRecords )
    {
       if( pSortInfo->dbtri.dbsci.itmCobWhile )
-         bMoreRecords = hb_itemGetL( hb_vmEvalBlock( pSortInfo->dbtri.dbsci.itmCobWhile ) );
+      {
+         if( SELF_EVALBLOCK( ( AREAP ) pArea, pSortInfo->dbtri.dbsci.itmCobWhile ) != SUCCESS )
+         {
+            hb_dbQSortExit( &dbQuickSort );
+            return FAILURE;
+         }
+         bMoreRecords = hb_itemGetL( pArea->valResult );
+      }
 
       if( bMoreRecords && pSortInfo->dbtri.dbsci.itmCobFor )
-         bValidRecord = hb_itemGetL( hb_vmEvalBlock( pSortInfo->dbtri.dbsci.itmCobFor ) );
+      {
+         if( SELF_EVALBLOCK( ( AREAP ) pArea, pSortInfo->dbtri.dbsci.itmCobFor ) != SUCCESS )
+         {
+            hb_dbQSortExit( &dbQuickSort );
+            return FAILURE;
+         }
+         bValidRecord = hb_itemGetL( pArea->valResult );
+      }
       else
          bValidRecord = bMoreRecords;
 

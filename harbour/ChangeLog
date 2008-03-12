@@ -8,6 +8,50 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-03-12 17:43 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapi.h
+  * harbour/source/common/hbver.c
+  * harbour/source/rtl/gttone.c
+    * added hb_iswince() and fixed TONE() for WinCE
+
+  * harbour/source/rtl/math.c
+    ! added workaround for SIGFPE platforms which generate it instead of
+      setting errno during execution of math functions
+
+  * harbour/source/rtl/gtcrs/hb-charmap.def
+    ! remap 0x9b (155) to '.' in Linux terminals - it's control code
+
+  * harbour/source/rdd/dbsql.c
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbf1.c
+    ! always restore current workarea in WA EVAL() method
+    ! always use EVAL() method for user codeblocks and macros
+
+  * harbour/source/rdd/dbcmd.c
+    ! fixed DBRELATION() called without numeric parameters or with 0 to
+      return first relation expression (Clipper compatible)
+
+  * harbour/contrib/hbtip/thtml.prg
+    ! fixed wrongly ported to Harbour xHarbour specific code
+
+  * harbour/source/common/hbstr.c
+    + added missing const in one declaration
+    * formatting
+
+  * harbour/source/rtl/transfrm.c
+    ! fixed casting for C++ compilers
+
+  * harbour/source/rtl/errorapi.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+    ! cleanup warnings
+
+  * harbour/source/common/hbtrace.c
+  * harbour/source/rdd/dbcmdx.c
+  * harbour/source/rdd/wafunc.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/hbsix/sxcrypt.c
+    * formatting
+
 2008-03-11 14:04 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/utils/hbtest/rt_trans.prg
     * cleaned TRANSFORM() tests
@@ -71,7 +115,7 @@
     ! fixed ',' conversions
         ? transform( 12.34,"@E ab,cd.ef9,9.99,.--" )
     ! fixed bug with picture starting with ".", f.e.:
-	? transform( 0.3456, ".999" )
+        ? transform( 0.3456, ".999" )
     ! fixed "@(" and "@)" conversions, f.e.:
         ? transform( -12345, "@) 1999*999" )
     ! fixed late oveflow detection in "@(" and "@)", f.e.:

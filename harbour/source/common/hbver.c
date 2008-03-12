@@ -315,7 +315,16 @@ HB_EXPORT BOOL hb_iswinnt( void )
    }
    return s_fWinNT;
 #else
-   return FALSE ;
+   return FALSE;
+#endif
+}
+
+HB_EXPORT BOOL hb_iswince( void )
+{
+#if defined(HB_WINCE)
+   return TRUE;
+#else
+   return FALSE;
 #endif
 }
 

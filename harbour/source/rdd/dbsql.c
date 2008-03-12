@@ -229,29 +229,40 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
    PHB_FILEBUF pFileBuf;
    ULONG ulRecords = 0;
    USHORT uiFields = 0, ui;
-   PHB_ITEM pTmp = hb_itemNew( NULL );
+   PHB_ITEM pTmp;
    BOOL fWriteSep = FALSE;
    char * szNewLine = hb_conNewLine();
    char * szInsert = NULL;
    BOOL fEof = TRUE;
    BOOL fNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
 
+   if( SELF_FIELDCOUNT( pArea, &uiFields ) != SUCCESS )
+      return 0;
+
    if( fInsert && szTable )
       szInsert = hb_xstrcpy( NULL, "INSERT INTO ", szTable, " VALUES ( ", NULL );
 
    pFileBuf = hb_createFBuffer( hFile, HB_FILE_BUF_SIZE );
+   pTmp = hb_itemNew( NULL );
 
-   if( SELF_FIELDCOUNT( pArea, &uiFields ) == FAILURE )
-      return 0;
-
-   while( llNext-- > 0 &&
-          ( !pWhile || hb_itemGetL( hb_vmEvalBlock( pWhile ) ) ) )
+   while( llNext-- > 0 )
    {
-      if( SELF_EOF( pArea, &fEof ) == FAILURE || fEof )
+      if( pWhile )
+      {
+         if( SELF_EVALBLOCK( pArea, pWhile ) != SUCCESS ||
+             ! hb_itemGetL( pArea->valResult ) )
+            break;
+      }
+
+      if( SELF_EOF( pArea, &fEof ) != SUCCESS || fEof )
          break;
 
-      /* if For is NULL, hb__Eval returns TRUE */
-      if( !pFor || hb_itemGetL( hb_vmEvalBlock( pFor ) ) )
+      if( pFor )
+      {
+         if( SELF_EVALBLOCK( pArea, pWhile ) != SUCCESS )
+            break;
+      }
+      if( !pFor || hb_itemGetL( pArea->valResult ) )
       {
          ++ulRecords;
 
@@ -279,11 +290,14 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
          {
             for( ui = 1; ui <= uiFields; ui ++ )
             {
-               SELF_GETVALUE( pArea, ui, pTmp );
+               if( SELF_GETVALUE( pArea, ui, pTmp ) != SUCCESS )
+                  break;
                if( fWriteSep )
                   hb_addStrToFBuffer( pFileBuf, szSep );
                fWriteSep = hb_exportBufSqlVar( pFileBuf, pTmp, szDelim, szEsc );
             }
+            if( ui <= uiFields )
+               break;
          }
          else
          {
@@ -296,19 +310,20 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
          fWriteSep = FALSE;
       }
 
-      SELF_SKIP( pArea, 1 );
+      if( SELF_SKIP( pArea, 1 ) != SUCCESS )
+         break;
 
       if( ( llNext % 10000 ) == 0 )
          hb_inkeyPoll();
    }
 
-   /* Writing EOF */
-   /* hb_fsWriteLarge( hFile, (BYTE*) "\x1A", 1 ); */
-
    if( szInsert )
       hb_xfree( szInsert );
    hb_destroyFBuffer( pFileBuf );
    hb_itemRelease( pTmp );
+
+   /* Writing EOF */
+   /* hb_fsWrite( hFile, ( BYTE * ) "\x1A", 1 ); */
 
    return ulRecords;
 }
@@ -335,6 +350,7 @@ HB_FUNC( __DBSQL )
       char * szEsc      = hb_parcx( 15 );
       HB_LONG llNext    = HB_LONG_MAX;
       FHANDLE hFile;
+      ERRCODE errCode;
 
       if( ! szFileName )
          hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, &hb_errFuncName );
@@ -389,16 +405,26 @@ HB_FUNC( __DBSQL )
             if( fAppend )
                hb_fsSeekLarge( hFile, 0, FS_END );
 
+            errCode = SUCCESS;
             if( pRecord )
-               SELF_GOTOID( pArea, pRecord );
+            {
+               errCode = SELF_GOTOID( pArea, pRecord );
+            }
             else if( pNext )
+            {
                llNext = hb_itemGetNInt( pNext );
+            }
             else if( !fRest )
-               SELF_GOTOP( pArea );
+            {
+               errCode = SELF_GOTOP( pArea );
+            }
 
-            hb_retnint( hb_db2Sql( pArea, pFields, llNext, pWhile, pFor,
-                                   szDelim, szSep, szEsc,
-                                   szTable, hFile, fInsert, fRecno ) );
+            if( errCode == SUCCESS )
+            {
+               hb_retnint( hb_db2Sql( pArea, pFields, llNext, pWhile, pFor,
+                                      szDelim, szSep, szEsc,
+                                      szTable, hFile, fInsert, fRecno ) );
+            }
             hb_fsClose( hFile );
          }
       }

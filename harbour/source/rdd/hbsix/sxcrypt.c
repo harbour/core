@@ -65,7 +65,7 @@ static UINT32 hb_sxInitSeed( BYTE * pKeyVal, UINT16 * puiKey )
    UINT32 ulSeed = 0;
    int i;
 
-   for( i = 0; i < 7 ; i++ )
+   for( i = 0; i < 7; i++ )
    {
       ulSeed = ( ( ( ulSeed >> 16 ) + ( ulSeed << 16 ) ) * 17 ) +
                HB_GET_LE_UINT16( &pKeyVal[i] );
@@ -101,7 +101,7 @@ void hb_sxEnCrypt( BYTE * pSrc, BYTE * pDst, BYTE * pKeyVal, ULONG ulLen )
    int i;
 
    ulSeed = hb_sxInitSeed( pKeyVal, &uiKey );
-   for( ul = 0, i = 0 ; ul < ulLen ; ul++ )
+   for( ul = 0, i = 0; ul < ulLen; ul++ )
    {
       uChar = pSrc[ul];
       uShft = uiKey & 0x07;
@@ -122,7 +122,7 @@ void hb_sxDeCrypt( BYTE * pSrc, BYTE * pDst, BYTE * pKeyVal, ULONG ulLen )
    int i;
 
    ulSeed = hb_sxInitSeed( pKeyVal, &uiKey );
-   for( ul = 0, i = 0 ; ul < ulLen ; ul++ )
+   for( ul = 0, i = 0; ul < ulLen; ul++ )
    {
       uChar = pSrc[ul] - ( uiKey & 0xFF );
       uShft = uiKey & 0x07;

@@ -4891,6 +4891,10 @@ static BOOL hb_ntxSortKeyGet( LPNTXSORTINFO pSort, BYTE ** pKeyVal, ULONG *pulRe
       pSort->pSwapPage[ ulPage ].ulKeyBuf--;
       return TRUE;
    }
+
+   *pKeyVal = NULL;
+   *pulRec = 0;
+
    return FALSE;
 }
 

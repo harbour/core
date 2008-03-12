@@ -61,13 +61,15 @@
     30:         '-'     5	# ACS_UARROW
     31:         '.'     5	# ACS_DARROW
 
- 128-255:       *       2
+128-255:        *       2
+    155:        '.'     1
 # @acsc          # include acsc section
 # @maz2iso       # include maz2iso section
 
 :tterm = Teraterm modified terminal
     0-31:       '.'     1
     127:        '.'     1
+    155:        '.'     1
     04:         '#'     1
     16:         '>'     1
     17:         '<'     1

@@ -854,7 +854,7 @@ HB_FUNC( TRANSFORM )
             int iWidth, iDec;
             hb_itemGetNLen( pValue, &iWidth, &iDec );
             iWidth += 2 + ( hb_set.HB_SET_DECIMALS << 1 );
-            szStr = hb_xgrab( iWidth + 1 );
+            szStr = ( char * ) hb_xgrab( iWidth + 1 );
             hb_itemStrBuf( szStr, pValue, iWidth, iDec );
             hb_retclen_buffer( szStr, iWidth );
          }

@@ -993,6 +993,7 @@ extern char * hb_verBuildDate( void ); /* retrieves a newly allocated buffer con
 extern void   hb_verBuildInfo( void ); /* display harbour, compiler, and platform versions to standard console */
 
 extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == WinNt, 2000, XP */
+extern HB_EXPORT BOOL   hb_iswince( void ); /* return .T. if OS is Windows CE or Windows Mobile */
 extern HB_EXPORT BOOL   hb_printerIsReady( char * pszPrinterName );
 
 /* environment variables access */

@@ -233,17 +233,7 @@ static void hb_gt_wNtTone( double dFreq, double dDurat )
 /* dDuration is in 'Ticks' (18.2 per second) */
 void hb_gt_w32_tone( double dFrequency, double dDuration )
 {
-   static OSVERSIONINFO s_osv;
-   static BOOL s_fInit = TRUE;
-
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_w32_tone(%lf, %lf)", dFrequency, dDuration));
-
-   if( s_fInit )
-   {
-      s_osv.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-      GetVersionEx( &s_osv );
-      s_fInit = FALSE;
-   }
 
    /*
     * According to the Clipper NG, the duration in 'ticks' is truncated to the
@@ -256,8 +246,13 @@ void hb_gt_w32_tone( double dFrequency, double dDuration )
    /* keep the frequency in an acceptable range */
    dFrequency =   HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
 
-   /* If Windows 95 or 98, use w9xTone for BCC32, MSVC */
-   if( s_osv.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS )
+   /* If Windows NT or NT2k, use wNtTone, which provides TONE()
+      reset sequence support (new) */
+   if( hb_iswinnt() || hb_iswince() )
+   {
+      hb_gt_wNtTone( dFrequency, dDuration );
+   }
+   else  /* If Windows 95 or 98, use w9xTone for chosen C compilers */
    {
       #if defined( HB_ARCH_32BIT ) && !defined( _M_ARM ) && \
            ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
@@ -266,12 +261,6 @@ void hb_gt_w32_tone( double dFrequency, double dDuration )
       #else
          hb_gt_wNtTone( dFrequency, dDuration );
       #endif
-   }
-   /* If Windows NT or NT2k, use wNtTone, which provides TONE()
-      reset sequence support (new) */
-   else /* if( s_osv.dwPlatformId == VER_PLATFORM_WIN32_NT ) */
-   {
-      hb_gt_wNtTone( dFrequency, dDuration );
    }
 }
 

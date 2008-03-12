@@ -150,7 +150,6 @@ static ERRCODE hb_waSkip( AREAP pArea, LONG lToSkip )
 static ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
 {
    BOOL fBottom, fDeleted;
-   PHB_ITEM pResult;
    ERRCODE uiError;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waSkipFilter(%p, %ld)", pArea, lUpDown));
@@ -186,8 +185,11 @@ static ERRCODE hb_waSkipFilter( AREAP pArea, LONG lUpDown )
       /* SET FILTER TO */
       if( pArea->dbfi.itmCobExpr )
       {
-         pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
-         if( HB_IS_LOGICAL( pResult ) && !hb_itemGetL( pResult ) )
+         if( SELF_EVALBLOCK( pArea, pArea->dbfi.itmCobExpr ) != SUCCESS )
+            return FAILURE;
+
+         if( HB_IS_LOGICAL( pArea->valResult ) &&
+             !hb_itemGetL( pArea->valResult ) )
          {
             if( SELF_SKIPRAW( pArea, lUpDown ) != SUCCESS )
                return FAILURE;
@@ -1005,7 +1007,7 @@ static ERRCODE hb_waSysName( AREAP pArea, BYTE * pBuffer )
 static ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 {
    LONG lNext = 1;
-   BOOL fEof;
+   BOOL fEof, fFor;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waEval(%p, %p)", pArea, pEvalInfo));
 
@@ -1037,13 +1039,28 @@ static ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
          if( fEof )
             break;
 
-         if( pEvalInfo->dbsci.itmCobWhile &&
-             ! hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobWhile ) ) )
-            break;
+         if( pEvalInfo->dbsci.itmCobWhile )
+         {
+            if( SELF_EVALBLOCK( pArea, pEvalInfo->dbsci.itmCobWhile ) != SUCCESS )
+               return FAILURE;
+            if( ! hb_itemGetL( pArea->valResult ) )
+               break;
+         }
 
-         if( ! pEvalInfo->dbsci.itmCobFor ||
-             hb_itemGetL( hb_vmEvalBlock( pEvalInfo->dbsci.itmCobFor ) ) )
-            hb_vmEvalBlock( pEvalInfo->itmBlock );
+         if( pEvalInfo->dbsci.itmCobFor )
+         {
+            if( SELF_EVALBLOCK( pArea, pEvalInfo->dbsci.itmCobFor ) != SUCCESS )
+               return FAILURE;
+            fFor = hb_itemGetL( pArea->valResult );
+         }
+         else
+            fFor = TRUE;
+
+         if( fFor )
+         {
+            if( SELF_EVALBLOCK( pArea, pEvalInfo->itmBlock ) != SUCCESS )
+               return FAILURE;
+         }
 
          if( pEvalInfo->dbsci.itmRecID || ( pEvalInfo->dbsci.lNext && --lNext < 1 ) )
             break;
@@ -1104,15 +1121,29 @@ static ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
          if( fEof )
             break;
 
-         if( !fContinue && pArea->dbsi.itmCobWhile &&
-             ! hb_itemGetL( hb_vmEvalBlock( pArea->dbsi.itmCobWhile ) ) )
-            break;
+         if( !fContinue && pArea->dbsi.itmCobWhile )
+         {
+            if( SELF_EVALBLOCK( pArea, pArea->dbsi.itmCobWhile ) != SUCCESS )
+               return FAILURE;
+            if( ! hb_itemGetL( pArea->valResult ) )
+               break;
+         }
 
-         if( ! pArea->dbsi.itmCobFor ||
-             hb_itemGetL( hb_vmEvalBlock( pArea->dbsi.itmCobFor ) ) )
+         if( ! pArea->dbsi.itmCobFor )
          {
             pArea->fFound = TRUE;
             break;
+         }
+         else
+         {
+            if( SELF_EVALBLOCK( pArea, pArea->dbsi.itmCobFor ) != SUCCESS )
+               return FAILURE;
+
+            if( hb_itemGetL( pArea->valResult ) )
+            {
+               pArea->fFound = TRUE;
+               break;
+            }
          }
 
          if( !fContinue &&
@@ -1133,7 +1164,7 @@ static ERRCODE hb_waLocate( AREAP pArea, BOOL fContinue )
 static ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
 {
    LONG lNext = 1;
-   BOOL fEof;
+   BOOL fEof, fFor;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waTrans(%p, %p)", pArea, pTransInfo));
 
@@ -1165,12 +1196,24 @@ static ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
          if( fEof )
             break;
 
-         if( pTransInfo->dbsci.itmCobWhile &&
-             ! hb_itemGetL( hb_vmEvalBlock( pTransInfo->dbsci.itmCobWhile ) ) )
-            break;
+         if( pTransInfo->dbsci.itmCobWhile )
+         {
+            if( SELF_EVALBLOCK( pArea, pTransInfo->dbsci.itmCobWhile ) != SUCCESS )
+               return FAILURE;
+            if( ! hb_itemGetL( pArea->valResult ) )
+               break;
+         }
 
-         if( ! pTransInfo->dbsci.itmCobFor ||
-             hb_itemGetL( hb_vmEvalBlock( pTransInfo->dbsci.itmCobFor ) ) )
+         if( pTransInfo->dbsci.itmCobFor )
+         {
+            if( SELF_EVALBLOCK( pArea, pTransInfo->dbsci.itmCobFor ) != SUCCESS )
+               return FAILURE;
+            fFor = hb_itemGetL( pArea->valResult );
+         }
+         else
+            fFor = TRUE;
+
+         if( fFor )
          {
             if( SELF_TRANSREC( pArea, pTransInfo ) != SUCCESS )
                return FAILURE;
@@ -1359,7 +1402,7 @@ static ERRCODE hb_waRelArea( AREAP pArea, USHORT uiRelNo, void * pRelArea )
 {
    LPDBRELINFO lpdbRelations;
    USHORT uiIndex = 1;
-   USHORT* pWA = (USHORT *) pRelArea ;
+   USHORT * pWA = (USHORT *) pRelArea;
    /*TODO: Why pRelArea declared as void*? This creates casting hassles.*/
 
    HB_TRACE(HB_TR_DEBUG, ("hb_waRelArea(%p, %hu, %p)", pArea, uiRelNo, pRelArea));
@@ -1375,7 +1418,7 @@ static ERRCODE hb_waRelArea( AREAP pArea, USHORT uiRelNo, void * pRelArea )
       }
       lpdbRelations = lpdbRelations->lpdbriNext;
    }
-   return *pWA ? SUCCESS : FAILURE ;
+   return *pWA ? SUCCESS : FAILURE;
 }
 
 /*
@@ -1702,16 +1745,13 @@ static ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock )
    iCurrArea = hb_rddGetCurrentWorkAreaNumber();
    if( iCurrArea != pArea->uiArea )
       hb_rddSelectWorkAreaNumber( pArea->uiArea );
-   else
-      iCurrArea = 0;
 
    pItem = hb_vmEvalBlockOrMacro( pBlock );
    if( ! pArea->valResult )
       pArea->valResult = hb_itemNew( NULL );
    hb_itemCopy( pArea->valResult, pItem );
 
-   if( iCurrArea )
-      hb_rddSelectWorkAreaNumber( iCurrArea );
+   hb_rddSelectWorkAreaNumber( iCurrArea );
 
    return hb_vmRequestQuery() ? FAILURE : SUCCESS;
 }

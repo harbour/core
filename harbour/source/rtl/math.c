@@ -640,30 +640,35 @@ HB_FUNC( LOG )
       HB_MATH_EXCEPTION hb_exc;
       double dResult, dArg = hb_parnd( 1 );
 
-      hb_mathResetError( &hb_exc );
-      dResult = log( dArg );
-      if( hb_mathGetError( &hb_exc, "LOG", dArg, 0.0, dResult ) )
+      if( dArg <= 0 )
+         hb_retndlen( -HUGE_VAL, -1, -1 );  /* return -infinity */
+      else
       {
-         if( hb_exc.handled )
-            hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
-         else
+         hb_mathResetError( &hb_exc );
+         dResult = log( dArg );
+         if( hb_mathGetError( &hb_exc, "LOG", dArg, 0.0, dResult ) )
          {
-            /* math exception is up to the Harbour function, so do this as Clipper compatible as possible */
-            switch( hb_exc.type )
+            if( hb_exc.handled )
+               hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
+            else
             {
-               case HB_MATH_ERR_SING:       /* argument to log was 0.0 */
-               case HB_MATH_ERR_DOMAIN:     /* argument to log was < 0.0 */
-                  hb_retndlen( -HUGE_VAL, -1, -1 );  /* return -infinity */
-                  break;
+               /* math exception is up to the Harbour function, so do this as Clipper compatible as possible */
+               switch( hb_exc.type )
+               {
+                  case HB_MATH_ERR_SING:       /* argument to log was 0.0 */
+                  case HB_MATH_ERR_DOMAIN:     /* argument to log was < 0.0 */
+                     hb_retndlen( -HUGE_VAL, -1, -1 );  /* return -infinity */
+                     break;
 
-               default:
-                  hb_retnd( 0.0 );
-                  break;
+                  default:
+                     hb_retnd( 0.0 );
+                     break;
+               }
             }
          }
+         else
+            hb_retnd( dResult );
       }
-      else
-         hb_retnd( dResult );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1095, NULL, "LOG", HB_ERR_ARGS_BASEPARAMS );
@@ -676,18 +681,23 @@ HB_FUNC( SQRT )
       HB_MATH_EXCEPTION hb_exc;
       double dResult, dArg = hb_parnd( 1 );
 
-      hb_mathResetError( &hb_exc );
-      dResult = sqrt( dArg );
-      if( hb_mathGetError( &hb_exc, "SQRT", dArg, 0.0, dResult ) )
-      {
-         if( hb_exc.handled )
-            hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
-         else
-            /* math exception is up to the Harbour function, so do this as Clipper compatible as possible */
-            hb_retnd( 0.0 ); /* return 0.0 on all errors (all (?) of type DOMAIN) */
-      }
+      if( dArg <= 0 )
+         hb_retnd( 0.0 );
       else
-         hb_retnd( dResult );
+      {
+         hb_mathResetError( &hb_exc );
+         dResult = sqrt( dArg );
+         if( hb_mathGetError( &hb_exc, "SQRT", dArg, 0.0, dResult ) )
+         {
+            if( hb_exc.handled )
+               hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
+            else
+               /* math exception is up to the Harbour function, so do this as Clipper compatible as possible */
+               hb_retnd( 0.0 ); /* return 0.0 on all errors (all (?) of type DOMAIN) */
+         }
+         else
+            hb_retnd( dResult );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1097, NULL, "SQRT", HB_ERR_ARGS_BASEPARAMS );

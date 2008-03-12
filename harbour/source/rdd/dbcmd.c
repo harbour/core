@@ -1675,7 +1675,8 @@ HB_FUNC( DBRELATION )  /* (<nRelation>) --> cLinkExp */
    if( pArea )
    {
       PHB_ITEM pRelExpr = hb_itemPutC( NULL, "" );
-      SELF_RELTEXT( pArea, hb_parni( 1 ), pRelExpr ) ;
+      USHORT uiRelNo = ( USHORT ) hb_parni( 1 );
+      SELF_RELTEXT( pArea, uiRelNo ? uiRelNo : 1, pRelExpr );
       hb_itemReturnRelease( pRelExpr );
    }
    else

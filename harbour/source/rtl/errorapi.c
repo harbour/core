@@ -131,7 +131,10 @@ static BOOL hb_errGetNumCode( int * piValue, const char * szOperation )
       pItem = hb_errRT_BASE_Subst( EG_ARG, 0, NULL, szOperation,
                                    HB_ERR_ARGS_BASEPARAMS );
       if( !pItem )
+      {
+         *piValue = 0;
          return FALSE;
+      }
 
       if( !HB_IS_NUMERIC( pItem ) )
          hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );

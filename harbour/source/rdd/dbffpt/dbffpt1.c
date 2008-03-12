@@ -577,9 +577,9 @@ static ERRCODE hb_fptWriteGCitems( FPTAREAP pArea, LPMEMOGCTABLE pGCtable, USHOR
 {
    FPTBLOCK fptBlock;
    ERRCODE errCode = SUCCESS;
-   int i /* ,iStart, iStop */ ;
+   int i /* ,iStart, iStop */;
 
-   HB_SYMBOL_UNUSED( usItem ) ;
+   HB_SYMBOL_UNUSED( usItem );
 
 /*
    if( usItem == 0 )
@@ -932,7 +932,7 @@ static ERRCODE hb_fptWriteGCdata( FPTAREAP pArea, LPMEMOGCTABLE pGCtable )
          HB_PUT_LE_UINT16( pGCtable->fptHeader.nGCitems, usItems );
          memset( pGCtable->fptHeader.reserved2, 0, sizeof( pGCtable->fptHeader.reserved2 ) );
          j = pGCtable->usItems - usItems;
-         for( i = j ; i < pGCtable->usItems; i++ )
+         for( i = j; i < pGCtable->usItems; i++ )
          {
             HB_PUT_LE_UINT16( &pGCtable->fptHeader.reserved2[ ( i - j ) * 6 ],
                               (( USHORT ) pGCtable->pGCitems[i].ulSize ) );
@@ -990,7 +990,7 @@ static ERRCODE hb_fptWriteGCdata( FPTAREAP pArea, LPMEMOGCTABLE pGCtable )
             memset( bPageBuf, 0xAD, pGCtable->ulSize );
             HB_PUT_LE_UINT16( bPageBuf, ( (USHORT) usItems << 2 ) + 3 );
             j = pGCtable->usItems - usItems;
-            for( i = j ; i < pGCtable->usItems; i++ )
+            for( i = j; i < pGCtable->usItems; i++ )
             {
                HB_PUT_LE_UINT32( &bPageBuf[ ( i - j ) * 8 + 2 ],
                                 pGCtable->pGCitems[i].ulOffset * pArea->uiMemoBlockSize );
@@ -1228,7 +1228,7 @@ static ULONG hb_fptCountSMTItemLength( FPTAREAP pArea, PHB_ITEM pItem,
          ulLen = hb_arrayLen( pItem );
          if( ulLen > 0xFFFF )
             ulLen = 0xFFFF;
-         for( i = 1 ; i <= ulLen ; i++ )
+         for( i = 1; i <= ulLen; i++ )
          {
             ulSize += hb_fptCountSMTItemLength( pArea, hb_arrayGetItemPtr( pItem, i ), pulArrayCount );
          }
@@ -1348,7 +1348,7 @@ static ULONG hb_fptStoreSMTItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
             ulLen = 0xFFFF;
          HB_PUT_LE_UINT16( *bBufPtr, ulLen );
          *bBufPtr += 2;
-         for( i = 1 ; i <= ulLen ; i++ )
+         for( i = 1; i <= ulLen; i++ )
          {
             ulSize += hb_fptStoreSMTItem( pArea, hb_arrayGetItemPtr( pItem, i ),
                                           bBufPtr );
@@ -1435,7 +1435,7 @@ static ERRCODE hb_fptReadRawSMTItem( FPTAREAP pArea, PHB_ITEM pItem )
 
          ulLen = HB_GET_LE_UINT16( buffer );
          hb_arrayNew( pItem, ulLen );
-         for( i = 1 ; i <= ulLen ; i++ )
+         for( i = 1; i <= ulLen; i++ )
          {
             ERRCODE errCode = hb_fptReadRawSMTItem( pArea, hb_arrayGetItemPtr( pItem, i ) );
             if( errCode != SUCCESS )
@@ -1526,7 +1526,7 @@ static ERRCODE hb_fptReadSMTItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBuf
                break;
             }
             hb_arrayNew( pItem, ulLen );
-            for( i = 1 ; i <= ulLen ; i++ )
+            for( i = 1; i <= ulLen; i++ )
             {
                errCode = hb_fptReadSMTItem( pArea, pbMemoBuf, bBufEnd,
                                             hb_arrayGetItemPtr( pItem, i ) );
@@ -1637,7 +1637,7 @@ static ULONG hb_fptCountSixItemLength( FPTAREAP pArea, PHB_ITEM pItem,
             /* only 2 bytes (SHORT) for SIX compatibility */
             ulLen = HB_MIN( ulLen, 0xFFFF );
          }
-         for( i = 1 ; i <= ulLen ; i++ )
+         for( i = 1; i <= ulLen; i++ )
          {
             ulSize += hb_fptCountSixItemLength( pArea, hb_arrayGetItemPtr( pItem, i ), pulArrayCount );
          }
@@ -1690,7 +1690,7 @@ static ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
          }
          HB_PUT_LE_UINT32( &(*bBufPtr)[2], ulLen );
          *bBufPtr += SIX_ITEM_BUFSIZE;
-         for( i = 1 ; i <= ulLen ; i++ )
+         for( i = 1; i <= ulLen; i++ )
          {
             pTmpItem = hb_arrayGetItemPtr( pItem, i );
             ulSize += hb_fptStoreSixItem( pArea, pTmpItem, bBufPtr );
@@ -1835,7 +1835,7 @@ static ERRCODE hb_fptReadSixItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBuf
             }
             (*pbMemoBuf) += SIX_ITEM_BUFSIZE;
             hb_arrayNew( pItem, ulLen );
-            for( i = 1 ; i <= ulLen ; i++ )
+            for( i = 1; i <= ulLen; i++ )
             {
                errCode = hb_fptReadSixItem( pArea, pbMemoBuf, bBufEnd,
                                             hb_arrayGetItemPtr( pItem, i ) );
@@ -1881,7 +1881,7 @@ static ULONG hb_fptCountFlexItemLength( FPTAREAP pArea, PHB_ITEM pItem,
          (*pulArrayCount)++;
          ulSize += 2;
          ulLen = hb_arrayLen( pItem ) & 0xFFFF;
-         for( i = 1 ; i <= ulLen ; i++ )
+         for( i = 1; i <= ulLen; i++ )
          {
             ulSize += hb_fptCountFlexItemLength( pArea, hb_arrayGetItemPtr( pItem, i ), pulArrayCount );
          }
@@ -1929,7 +1929,7 @@ static void hb_fptStoreFlexItem( FPTAREAP pArea, PHB_ITEM pItem, BYTE ** bBufPtr
          *(*bBufPtr)++ = FPTIT_FLEXAR_ARAY;
          HB_PUT_LE_UINT16( *bBufPtr, ( USHORT ) ulLen );
          *bBufPtr += 2;
-         for( i = 1 ; i <= ulLen ; i++ )
+         for( i = 1; i <= ulLen; i++ )
          {
             hb_fptStoreFlexItem( pArea, hb_arrayGetItemPtr( pItem, i ), bBufPtr );
          }
@@ -2374,7 +2374,7 @@ static ERRCODE hb_fptReadFlexItem( FPTAREAP pArea, BYTE ** pbMemoBuf, BYTE * bBu
             if( bBufEnd - (*pbMemoBuf) >= ( LONG ) ulLen )
             {
                hb_arrayNew( pItem, ulLen );
-               for( i = 1 ; i <= ulLen ; i++ )
+               for( i = 1; i <= ulLen; i++ )
                {
                   errCode = hb_fptReadFlexItem( pArea, pbMemoBuf, bBufEnd,
                                     hb_arrayGetItemPtr( pItem, i ), FALSE );
