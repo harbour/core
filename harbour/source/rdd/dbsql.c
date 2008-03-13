@@ -259,7 +259,7 @@ static ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_LONG llNext,
 
       if( pFor )
       {
-         if( SELF_EVALBLOCK( pArea, pWhile ) != SUCCESS )
+         if( SELF_EVALBLOCK( pArea, pFor ) != SUCCESS )
             break;
       }
       if( !pFor || hb_itemGetL( pArea->valResult ) )
