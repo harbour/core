@@ -8,6 +8,10 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-03-15 15:15 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * harbour/contrib/hbzlib/zip.c
+    ! fixed compression bug
+
 2008-03-13 11:14 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/dbsql.c
     ! fixed typo in last commit which causes GPF when FOR condition was used
