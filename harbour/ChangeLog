@@ -8,6 +8,14 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-03-15 16:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbzlib/zip.c
+    ! fixed to not ignore errors in zipFlushWriteBuffer()
+
+  * harbour/contrib/hbzlib/tests/myzip.prg
+  * harbour/contrib/hbzlib/tests/myunzip.prg
+    ! removed procedure return values
+
 2008-03-15 15:15 UTC+0200 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/contrib/hbzlib/zip.c
     ! fixed compression bug

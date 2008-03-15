@@ -93,4 +93,4 @@ PROC MyUnzip( ... )
       ENDDO
       HB_UNZIPCLOSE( hUnzip )
    ENDIF
-RETURN 0
+RETURN

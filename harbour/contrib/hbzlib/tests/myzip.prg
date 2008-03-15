@@ -84,4 +84,4 @@ PROC MyZip( ... )
       NEXT
       HB_ZIPCLOSE( hZip )
    ENDIF
-RETURN 0
+RETURN

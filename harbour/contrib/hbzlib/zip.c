@@ -1051,9 +1051,11 @@ extern int ZEXPORT zipCloseFileInZipRaw (
         uLong uTotalOutBefore;
         if (zi->ci.stream.avail_out == 0)
         {
-            if (zipFlushWriteBuffer(zi) == ZIP_ERRNO) ;
-                /* err = ZIP_ERRNO;  TOFIX: this line is meaningless and 
-                   commented to pacify warning but error is possible */
+            if (zipFlushWriteBuffer(zi) == ZIP_ERRNO)
+            {
+               err = ZIP_ERRNO;
+               break;
+            }
             zi->ci.stream.avail_out = (uInt)Z_BUFSIZE;
             zi->ci.stream.next_out = zi->ci.buffered_data;
         }
