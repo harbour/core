@@ -61,6 +61,8 @@
 #include "hbapigt.h"
 #include "hbapicdp.h"
 
+HB_EXTERN_BEGIN
+
 /* extended attributes used by core screen buffer */
 #define HB_GT_ATTR_BOX        0x01
 #define HB_GT_ATTR_SHADOW     0x02
@@ -602,5 +604,7 @@ extern void hb_gt_w32_tone( double dFrequency, double dDuration );
 #if defined( HB_OS_DOS ) || defined( HB_OS_WIN_32 ) || defined( HB_OS_OS2 )
 int hb_gt_dos_keyCodeTranslate( int iKey );
 #endif /* HB_OS_DOS || HB_OS_WIN_32 || HB_OS_OS2 */
+
+HB_EXTERN_END
 
 #endif /* HB_GTCORE_H_ */

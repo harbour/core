@@ -134,6 +134,10 @@ static int  s_iCurRow;
 static int  s_iCurCol;
 static int  s_iCursorStyle;
 
+/* buffer for single screen line */
+static int     s_iLineBufSize = 0;
+static USHORT * s_sLineBuf;
+
 /* pointer to offscreen video buffer */
 static ULONG s_ulLVBptr;
 /* length of video buffer */
@@ -517,7 +521,7 @@ static PVOID hb_gt_os2_allocMem( int iSize )
 
    rc = DosAllocMem( &pMem, iSize, PAG_COMMIT | OBJ_TILE | PAG_WRITE );
    if( rc != NO_ERROR )
-      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_os2_ReadKey() memory allocation failure.", NULL, NULL );
+      hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_os2_allocMem() memory allocation failure.", NULL, NULL );
 
    return pMem;
 }
@@ -590,6 +594,12 @@ static void hb_gt_os2_Exit( PHB_GT pGT )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Exit(%p)", pGT));
 
    HB_GTSUPER_EXIT( pGT );
+
+   if( s_iLineBufSize > 0 )
+   {
+      DosFreeMem( ( PVOID ) s_sLineBuf );
+      s_iLineBufSize = 0;
+   }
 
    DosFreeMem( s_key );
    DosFreeMem( s_hk );
@@ -712,6 +722,27 @@ static char * hb_gt_os2_Version( PHB_GT pGT, int iType )
    return "Harbour Terminal: OS/2 console";
 }
 
+static BOOL hb_gt_os2_Resize( PHB_GT pGT, int iRows, int iCols )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Resize(%p,%d,%d)", pGT, iRows, iCols));
+
+   if( HB_GTSUPER_RESIZE( pGT, iRows, iCols ) )
+   {
+      HB_GTSELF_GETSIZE( pGT, &iRows, &iCols );
+      iRows <<= 1;
+      if( s_iLineBufSize != iRows )
+      {
+         if( s_iLineBufSize != 0 )
+            DosFreeMem( ( PVOID ) s_sLineBuf );
+         if( iRows )
+            s_sLineBuf = ( USHORT * ) hb_gt_os2_allocMem( iRows );
+         s_iLineBufSize = iRows;
+      }
+      return TRUE;
+   }
+   return FALSE;
+}
+
 static BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
    BOOL fResult;
@@ -772,7 +803,7 @@ static BOOL hb_gt_os2_Resume( PHB_GT pGT )
 static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
    BYTE bColor, bAttr;
-   USHORT usChar, usCell;
+   USHORT usChar;
    int iLen = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
@@ -782,17 +813,10 @@ static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iLen, &bColor, &bAttr, &usChar ) )
          break;
 
-      /*
-       * TODO: it can be very slow (I haven't tested it) because it
-       * update screen with single characters so if necessary optimize
-       * it by grouping cells for the whole line or characters with
-       * the same color. [druzus]
-       */
-      usCell = ( bColor << 8 ) + ( usChar & 0xff );
-      VioWrtNCell( ( PBYTE ) &usCell, 1, iRow, iCol + iLen, 0 );
-
-      iLen++;
+      s_sLineBuf[ iLen++ ] = ( bColor << 8 ) + ( usChar & 0xff );
    }
+
+   VioWrtCellStr( ( PCH ) s_sLineBuf, iSize << 1, iRow, iCol, 0 );
 }
 
 static void hb_gt_os2_Refresh( PHB_GT pGT )
@@ -842,6 +866,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Init                       = hb_gt_os2_Init;
    pFuncTable->Exit                       = hb_gt_os2_Exit;
    pFuncTable->IsColor                    = hb_gt_os2_IsColor;
+   pFuncTable->Resize                     = hb_gt_os2_Resize;
    pFuncTable->SetMode                    = hb_gt_os2_SetMode;
    pFuncTable->Redraw                     = hb_gt_os2_Redraw;
    pFuncTable->Refresh                    = hb_gt_os2_Refresh;

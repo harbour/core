@@ -722,6 +722,10 @@ LANG_LIB_OBJS = \
     $(OBJ_DIR)\msgru866$(OBJEXT) \
     $(OBJ_DIR)\msgrukoi$(OBJEXT) \
     $(OBJ_DIR)\msgruwin$(OBJEXT) \
+    $(OBJ_DIR)\msgskiso$(OBJEXT) \
+    $(OBJ_DIR)\msgskwin$(OBJEXT) \
+    $(OBJ_DIR)\msgskkam$(OBJEXT) \
+    $(OBJ_DIR)\msgsk852$(OBJEXT) \
     $(OBJ_DIR)\msgsl437$(OBJEXT) \
     $(OBJ_DIR)\msgsl852$(OBJEXT) \
     $(OBJ_DIR)\msgsliso$(OBJEXT) \

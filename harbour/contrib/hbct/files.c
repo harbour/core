@@ -94,6 +94,7 @@
 #endif
 
 static PHB_FFIND s_ffind = NULL;
+static USHORT s_uiAttr = 0;
 static BOOL s_fInit = FALSE;
 
 static void _hb_fileClose( void * cargo )
@@ -129,14 +130,34 @@ static PHB_FFIND _hb_fileStart( BOOL fNext, USHORT uiAttr )
          }
          szFile = ( char * ) hb_fsNameConv( ( BYTE * ) szFile, &fFree );
          if( ISNUM( 2 ) )
-            uiAttr = hb_parni( 2 );
+            uiAttr = ( USHORT ) hb_parni( 2 );
+         s_uiAttr = ISLOG( 3 ) && hb_parl( 3 ) ? uiAttr : 0;
          s_ffind = hb_fsFindFirst( szFile, uiAttr );
          if( fFree )
             hb_xfree( szFile );
+         while( s_ffind && s_uiAttr && s_ffind->attr != s_uiAttr )
+         {
+            if( !hb_fsFindNext( s_ffind ) )
+            {
+               hb_fsFindClose( s_ffind );
+               s_ffind = NULL;
+            }
+         }
       }
    }
    else if( fNext && s_ffind )
-      hb_fsFindNext( s_ffind );
+   {
+      do
+      {
+         if( !hb_fsFindNext( s_ffind ) )
+         {
+            hb_fsFindClose( s_ffind );
+            s_ffind = NULL;
+            break;
+         }
+      }
+      while( s_uiAttr && s_ffind->attr != s_uiAttr );
+   }
 
    return s_ffind;
 }

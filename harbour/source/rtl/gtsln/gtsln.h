@@ -72,7 +72,6 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <unistd.h>
 #include <signal.h>
 
 #ifndef HB_OS_DARWIN

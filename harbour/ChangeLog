@@ -8,6 +8,48 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-03-25 12:26 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/lang/Makefile
+  + harbour/source/lang/msgskiso.c
+  + harbour/source/lang/msgskwin.c
+  + harbour/source/lang/msgskkam.c
+  + harbour/source/lang/msgsk852.c
+    + added Slovak national messages by Gyula Bartal - many thanks
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/arrays.c
+    ! Guarded hb_arraySetNLL() declaration with #ifndef HB_LONG_LONG_OFF.
+    ! Fixed trace in hb_arraySetNInt().
+      By Phil Krylov borrowed from xHarbour
+
+  * harbour/include/hbgtcore.h
+    ! added missing HB_EXTERN_BEGIN / HB_EXTERN_END
+      By Ron Pinkas borrowed from xHarbour
+
+  * harbour/source/rtl/gtos2/gtos2.c
+    % updated for much faster screen updating in OS2 console - many
+      thanks for Maurilio Longo for tests and code.
+
+  * harbour/source/rtl/cdpapi.c
+    ! fixed CP string translation for CPs with accented equal characters
+    + added HB_UTF8CHR( <nUniVal> ) -> <cUtf8Char>
+      It's compatible with the function HB_UTF8CHR() by Phil Krylov in
+      xHarbour
+
+  * harbour/source/rtl/gtsln/gtsln.h
+    * removed repeated #include <unistd.h>
+
+  * harbour/contrib/hbct/files.c
+    ! fixed FILESEEK() called with 3-rd parameter set to .T. (exact
+      attribute match)
+
+  * harbour/config/os2/global.cf
+    ! added fixes by David Arturo Macias Corona
+
+  + harbour/make_os2_gcc.cmd
+    + added build file for GCC OS2 users with minimal environment settings
+
 2008-03-15 16:58 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbzlib/zip.c
     ! fixed to not ignore errors in zipFlushWriteBuffer()

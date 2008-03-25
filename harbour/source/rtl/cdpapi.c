@@ -58,6 +58,15 @@
 #   include "hbapicdp.h"
 #   include "hbapierr.h"
 
+    /* Now we are using only 16bit Unicode values so the maximum size
+     * of single character encoded in UTF8 is 3 though ISO 10646 Universal
+     * Character Set (UCS) occupies even a 31-bit code space and to encode
+     * all UCS values we will need 6 bytes. Now in practice no one uses
+     * Unicode character over 0xFFFF but it may change in the future so
+     * it's safer to use macro for maximum UTF8 character size. [druzus]
+     */
+#   define HB_MAX_UTF8        3
+
 #   define NUMBER_OF_CHARS    256
 
 static USHORT s_uniCodes[NUMBER_OF_CHARS] = {
@@ -98,8 +107,7 @@ static USHORT s_uniCodes[NUMBER_OF_CHARS] = {
 HB_UNITABLE hb_uniTbl_437 = { HB_CPID_437, NUMBER_OF_CHARS, FALSE, s_uniCodes };
 
 static HB_CODEPAGE s_en_codepage =
-   { "EN", HB_CPID_437, HB_UNITB_437, 0, NULL, NULL, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 0,
-NULL };
+   { "EN", HB_CPID_437, HB_UNITB_437, 0, NULL, NULL, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, 0, NULL };
 
 #   define HB_CDP_MAX_ 64
 
@@ -476,19 +484,39 @@ HB_EXPORT void hb_cdpTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpO
 {
    if( cdpIn != cdpOut && cdpIn->nChars == cdpOut->nChars )
    {
-      int nAddLower = ( cdpIn->lLatin ) ? 6 : 0;
-
-      for( ; *psz; psz++ )
+      if( cdpIn->lAccEqual )
       {
-         int n = ( int ) cdpIn->s_chars[( UCHAR ) * psz];
-
-         if( n != 0 &&
-             ( n <= cdpOut->nChars || ( n > ( cdpOut->nChars + nAddLower ) &&
-                                        n <= ( cdpOut->nChars * 2 + nAddLower ) ) ) )
+         for( ; *psz; psz++ )
          {
-            n--;
-            *psz = ( n >= ( cdpOut->nChars + nAddLower ) ) ?
-               cdpOut->CharsLower[n - cdpOut->nChars - nAddLower] : cdpOut->CharsUpper[n];
+            char * ptr;
+
+            ptr = strchr( cdpIn->CharsUpper, *psz );
+            if( ptr )
+               *psz = cdpOut->CharsUpper[ ptr - cdpIn->CharsUpper ];
+            else
+            {
+               ptr = strchr( cdpIn->CharsLower, *psz );
+               if( ptr )
+                  *psz = cdpOut->CharsLower[ ptr - cdpIn->CharsLower ];
+            }
+         }
+      }
+      else
+      {
+         int nAddLower = ( cdpIn->lLatin ) ? 6 : 0;
+
+         for( ; *psz; psz++ )
+         {
+            int n = ( int ) cdpIn->s_chars[( UCHAR ) * psz];
+
+            if( n != 0 &&
+                ( n <= cdpOut->nChars || ( n > ( cdpOut->nChars + nAddLower ) &&
+                                           n <= ( cdpOut->nChars * 2 + nAddLower ) ) ) )
+            {
+               n--;
+               *psz = ( n >= ( cdpOut->nChars + nAddLower ) ) ?
+                  cdpOut->CharsLower[n - cdpOut->nChars - nAddLower] : cdpOut->CharsUpper[n];
+            }
          }
       }
    }
@@ -498,19 +526,39 @@ HB_EXPORT void hb_cdpnTranslate( char *psz, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdp
 {
    if( cdpIn != cdpOut && cdpIn->nChars == cdpOut->nChars )
    {
-      int nAddLower = ( cdpIn->lLatin ) ? 6 : 0;
-
-      for( ; nChars--; psz++ )
+      if( cdpIn->lAccEqual )
       {
-         int n = ( int ) cdpIn->s_chars[( UCHAR ) * psz];
-
-         if( n != 0 &&
-             ( n <= cdpOut->nChars || ( n > ( cdpOut->nChars + nAddLower ) &&
-                                        n <= ( cdpOut->nChars * 2 + nAddLower ) ) ) )
+         for( ; nChars--; psz++ )
          {
-            n--;
-            *psz = ( n >= ( cdpOut->nChars + nAddLower ) ) ?
-               cdpOut->CharsLower[n - cdpOut->nChars - nAddLower] : cdpOut->CharsUpper[n];
+            char * ptr;
+
+            ptr = strchr( cdpIn->CharsUpper, *psz );
+            if( ptr )
+               *psz = cdpOut->CharsUpper[ ptr - cdpIn->CharsUpper ];
+            else
+            {
+               ptr = strchr( cdpIn->CharsLower, *psz );
+               if( ptr )
+                  *psz = cdpOut->CharsLower[ ptr - cdpIn->CharsLower ];
+            }
+         }
+      }
+      else
+      {
+         int nAddLower = ( cdpIn->lLatin ) ? 6 : 0;
+
+         for( ; nChars--; psz++ )
+         {
+            int n = ( int ) cdpIn->s_chars[( UCHAR ) * psz];
+
+            if( n != 0 &&
+                ( n <= cdpOut->nChars || ( n > ( cdpOut->nChars + nAddLower ) &&
+                                           n <= ( cdpOut->nChars * 2 + nAddLower ) ) ) )
+            {
+               n--;
+               *psz = ( n >= ( cdpOut->nChars + nAddLower ) ) ?
+                  cdpOut->CharsLower[n - cdpOut->nChars - nAddLower] : cdpOut->CharsUpper[n];
+            }
          }
       }
    }
@@ -1196,37 +1244,61 @@ HB_FUNC( HB_STRTOUTF8 )
       hb_retc( NULL );
 }
 
+HB_FUNC( HB_UTF8CHR )
+{
+   if( ISNUM( 1 ) )
+   {
+      char utf8Char[ HB_MAX_UTF8 ];
+      int iLen;
+
+      iLen = u16toutf8( ( BYTE * ) utf8Char, ( USHORT ) hb_parni( 1 ) );
+      hb_retclen( utf8Char, iLen );
+   }
+   else
+   {
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+   }
+}
+
 HB_FUNC( HB_UTF8TOSTR )
 {
-   ULONG ulLen = hb_parclen( 1 ), ulDest = 0;
-   char *szString, *szDest = NULL;
+   char *szString = hb_parc( 1 );
 
-   if( ulLen )
+   if( szString )
    {
-      PHB_CODEPAGE cdp = ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_cdp_page;
+      ULONG ulLen = hb_parclen( 1 ), ulDest = 0;
+      char *szDest = NULL;
 
-      if( cdp )
+      if( ulLen )
       {
-         szString = hb_parc( 1 );
-         ulDest = hb_cdpUTF8StringLength( ( BYTE * ) szString, ulLen );
-         szDest = ( char * ) hb_xgrab( ulDest + 1 );
-         hb_cdpUTF8ToStrn( cdp, FALSE, ( BYTE * ) szString, ulLen, ( BYTE * ) szDest, ulDest );
-      }
-   }
+         PHB_CODEPAGE cdp = ISCHAR( 2 ) ? hb_cdpFind( hb_parc( 2 ) ) : hb_cdp_page;
 
-   if( szDest )
-      hb_retclen_buffer( szDest, ulDest );
+         if( cdp )
+         {
+            szString = hb_parc( 1 );
+            ulDest = hb_cdpUTF8StringLength( ( BYTE * ) szString, ulLen );
+            szDest = ( char * ) hb_xgrab( ulDest + 1 );
+            hb_cdpUTF8ToStrn( cdp, FALSE, ( BYTE * ) szString, ulLen, ( BYTE * ) szDest, ulDest );
+         }
+      }
+
+      if( szDest )
+         hb_retclen_buffer( szDest, ulDest );
+      else
+         hb_retc( NULL );
+   }
    else
-      hb_retc( NULL );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_UTF8SUBSTR )
 {
+   char *szString = hb_parc( 1 );
    int iPCount = hb_pcount();
 
-   if( ISCHAR( 1 ) && ( iPCount < 2 || ( ISNUM( 2 ) && ( iPCount < 3 || ISNUM( 3 ) ) ) ) )
+   if( szString && ( iPCount < 2 || ( ISNUM( 2 ) && ( iPCount < 3 || ISNUM( 3 ) ) ) ) )
    {
-      char *szString = hb_parc( 1 ), *szDest = NULL;
+      char *szDest = NULL;
       ULONG ulLen = hb_parclen( 1 ), ulDest = 0;
       LONG lFrom = hb_parnl( 2 );
       LONG lCount = iPCount < 3 ? ( LONG ) ulLen : hb_parnl( 3 );
@@ -1436,6 +1508,7 @@ HB_FUNC_EXTERN( STRTRAN );
 
 HB_FUNC( HB_UTF8STRTRAN )
 {
-HB_FUNC_EXEC( STRTRAN )}
+   HB_FUNC_EXEC( STRTRAN )
+}
 
 #endif /* HB_CDP_SUPPORT_OFF */
