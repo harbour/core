@@ -8,6 +8,19 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-03-26 16:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtos2/gtos2.c
+    * small changes, removed some un-needed code
+      - by Maurilio Longo in xHarbour
+    ! use screen buffer in BYTEs instead of USHORTs to avoid possible
+      problems on big endian machines. I do not know if such OS2 ports
+      exist but this code should be also endian independent like rest
+      of Harbour code
+
+  * harbour/source/rtl/hbgtcore.c
+    ! Fixed screen buffer corruption on little-endian platforms in
+      hb_gt_def_ColdArea() - fixed by Phil Krylov in xHarbour - many thanks
+
 2008-03-25 12:26 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/lang/Makefile
