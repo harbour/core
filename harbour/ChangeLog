@@ -9,7 +9,7 @@
 */
 2008-04-09 UTC+0100 Belgrano Massimo (mbelgrano/at/deltain.it)
    *harbour/contrib/rddado/adordd.prg 
-   *harbour/contrib/rddado/tests/test.prg
+   *harbour/contrib/rddado/tests/access2.prg
    Support For Found() working after a LOCATE command 
    by Antonio Linares
 
