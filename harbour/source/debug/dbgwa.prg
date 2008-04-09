@@ -101,14 +101,14 @@ function __dbgShowWorkAreas()
 
    /* Alias browse */
 
-   aBrw[ 1 ] := TBrowseNew( oDlg:nTop + 1, oDlg:nLeft + 1, oDlg:nBottom - 1, oDlg:nLeft + 11 )
+   aBrw[ 1 ] := HBDbBrowser():new( oDlg:nTop + 1, oDlg:nLeft + 1, oDlg:nBottom - 1, oDlg:nLeft + 11 )
 
    aBrw[ 1 ]:Cargo         := ( n1 := cur_id )
    aBrw[ 1 ]:ColorSpec     := oDlg:cColor
-   aBrw[ 1 ]:GoTopBlock    := { || n1 := 1 }
-   aBrw[ 1 ]:GoBottomBlock := { || n1 := Len( aAlias ) }
+   aBrw[ 1 ]:GoTopBlock    := { || aBrw[ 1 ]:Cargo := n1 := 1 }
+   aBrw[ 1 ]:GoBottomBlock := { || aBrw[ 1 ]:Cargo := n1 := Len( aAlias ) }
    aBrw[ 1 ]:SkipBlock     := { | nSkip, nPos | nPos := n1,;
-                                  n1 := iif( nSkip > 0, Min( Len( aAlias ), n1 + nSkip ),;
+                                  aBrw[ 1 ]:Cargo := n1 := iif( nSkip > 0, Min( Len( aAlias ), n1 + nSkip ),;
                                           Max( 1, n1 + nSkip ) ),;
                                   n1 - nPos }
 
@@ -120,15 +120,16 @@ function __dbgShowWorkAreas()
 
    aInfo := ( aAlias[ n1 ][ 1 ] )->( DbfInfo() )
 
-   aBrw[ 2 ] := TBrowseNew( oDlg:nTop + 7, oDlg:nLeft + 13, oDlg:nBottom - 1, oDlg:nLeft + 50 )
+   aBrw[ 2 ] := HBDbBrowser():new( oDlg:nTop + 7, oDlg:nLeft + 13, oDlg:nBottom - 1, oDlg:nLeft + 50 )
 
    aBrw[ 2 ]:Cargo         := ( n2 := 1 )
    aBrw[ 2 ]:ColorSpec     := oDlg:cColor
    aBrw[ 2 ]:GoTopBlock    := { || aBrw[ 2 ]:Cargo := n2 := 1 }
-   aBrw[ 2 ]:GoBottomBlock := { || n2 := Len( aInfo ) }
-   aBrw[ 2 ]:SkipBlock     := { | nSkip, nPos | nPos := n2,;
-                                  n2 := iif( nSkip > 0, Min( Len( aInfo ), n2 + nSkip ),;
-                                          Max( 1, n2 + nSkip ) ), n2 - nPos }
+   aBrw[ 2 ]:GoBottomBlock := { || aBrw[ 2 ]:Cargo := n2 := Len( aInfo ) }
+   aBrw[ 2 ]:SkipBlock     := { | nSkip, nPos | nPos := n2, ;
+                                aBrw[ 2 ]:Cargo := n2 := iif( nSkip > 0, Min( Len( aInfo ), n2 + nSkip ), ;
+                                                                         Max( 1, n2 + nSkip ) ), ;
+                                n2 - nPos }
 
    aBrw[ 2 ]:AddColumn( oCol := TBColumnNew( "", { || PadR( aInfo[ n2 ], 38 ) } ) )
 
@@ -138,14 +139,14 @@ function __dbgShowWorkAreas()
 
    aStruc := ( aAlias[ n1 ][ 1 ] )->( DbStruct() )
 
-   aBrw[ 3 ] := TBrowseNew( oDlg:nTop + 1, oDlg:nLeft + 52, oDlg:nBottom - 1, oDlg:nLeft + 70 )
+   aBrw[ 3 ] := HBDbBrowser():new( oDlg:nTop + 1, oDlg:nLeft + 52, oDlg:nBottom - 1, oDlg:nLeft + 70 )
 
-   aBrw[ 3 ]:Cargo         := 1
+   aBrw[ 3 ]:Cargo         := n3 := 1
    aBrw[ 3 ]:ColorSpec     := oDlg:cColor
    aBrw[ 3 ]:GoTopBlock    := { || aBrw[ 3 ]:Cargo := n3 := 1 }
-   aBrw[ 3 ]:GoBottomBlock := { || n3 := Len( aStruc ) }
+   aBrw[ 3 ]:GoBottomBlock := { || aBrw[ 3 ]:Cargo := n3 := Len( aStruc ) }
    aBrw[ 3 ]:SkipBlock     := { | nSkip, nPos | nPos := n3,;
-                                  n3 := iif( nSkip > 0, Min( Len( aStruc ), n3 + nSkip ),;
+                                  aBrw[ 3 ]:Cargo := n3 := iif( nSkip > 0, Min( Len( aStruc ), n3 + nSkip ),;
                                           Max( 1, n3 + nSkip ) ), n3 - nPos }
 
    aBrw[ 3 ]:AddColumn( TBColumnNew( "", { || PadR( aStruc[ n3, 1 ], 11 ) + ;
@@ -234,7 +235,7 @@ static function DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
    do case
    case s_nFocus == 1
       nAlias := aBrw[ 1 ]:Cargo
-      WorkAreasKeyPressed( nKey, aBrw[ 1 ], oDlg, Len( aAlias ) )
+      WorkAreasKeyPressed( nKey, aBrw[ 1 ], Len( aAlias ) )
       if nAlias != aBrw[ 1 ]:Cargo
          aBrw[ 2 ]:GoTop()
          aBrw[ 2 ]:Invalidate()
@@ -257,16 +258,14 @@ static function DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
          UpdateInfo( oDlg, aAlias[ aBrw[ 1 ]:Cargo ][ 2 ] )
       endif
    case s_nFocus == 2
-      WorkAreasKeyPressed( nKey, aBrw[ 2 ], oDlg, Len( aInfo ) )
+      WorkAreasKeyPressed( nKey, aBrw[ 2 ], Len( aInfo ) )
    case s_nFocus == 3
-      WorkAreasKeyPressed( nKey, aBrw[ 3 ], oDlg, Len( aStruc ) )
+      WorkAreasKeyPressed( nKey, aBrw[ 3 ], Len( aStruc ) )
    endcase
 
 return nil
 
-static procedure WorkAreasKeyPressed( nKey, oBrw, oDlg, nTotal )
-
-   HB_SYMBOL_UNUSED( oDlg )
+static procedure WorkAreasKeyPressed( nKey, oBrw, nTotal )
 
    do case
    case nKey == K_UP

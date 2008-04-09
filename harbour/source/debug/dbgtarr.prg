@@ -107,7 +107,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
    AAdd( ::aWindows, oWndSets )
 
    nWidth := oWndSets:nRight - oWndSets:nLeft - 1
-   oBrwSets := TBrowseNew( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
+   oBrwSets := HBDbBrowser():New( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
    oBrwSets:autolite := .F.
    oBrwSets:ColorSpec := __Dbg():ClrModal()
    oBrwSets:Cargo := { 1, {} } // Actual highligthed row

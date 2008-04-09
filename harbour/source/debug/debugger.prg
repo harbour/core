@@ -129,12 +129,12 @@ PROCEDURE __dbgAltDEntry()
 PROCEDURE __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4, uParam5 )
 
    LOCAL lStartup
-  
+
    DO CASE
    CASE nMode == HB_DBG_GETENTRY
 
       hb_DBG_SetEntry()
-  
+
    CASE nMode == HB_DBG_ACTIVATE
 
       IF ( lStartup := ( s_oDebugger == NIL ) )
@@ -212,7 +212,7 @@ CREATE CLASS HBDebugger
    VAR lCaseSensitive    INIT .F.
    VAR lMonoDisplay      INIT .F.
    VAR lSortVars         INIT .F.
-                         
+
    VAR cSearchString     INIT ""
    VAR cPathForFiles
    VAR cSettingsFileName INIT "init.cld"
@@ -220,7 +220,7 @@ CREATE CLASS HBDebugger
 
    VAR nTabWidth         INIT 4
    VAR nSpeed            INIT 0
-                         
+
    VAR lShowPublics      INIT .F.
    VAR lShowPrivates     INIT .F.
    VAR lShowStatics      INIT .F.
@@ -232,8 +232,8 @@ CREATE CLASS HBDebugger
    VAR lGo                          // stores if GO was requested
    VAR lActive           INIT .F.
    VAR lCBTrace          INIT .T.   // stores if codeblock tracing is allowed
-   VAR oBrwPnt           
-   VAR oWndPnt           
+   VAR oBrwPnt
+   VAR oWndPnt
    VAR lPPO              INIT .F.
    VAR lRunAtStartup     INIT .T.   // Clipper compatible
    VAR lLineNumbers      INIT .T.
@@ -407,6 +407,7 @@ METHOD New() CLASS HBDebugger
 
    IF File( ::cSettingsFileName )
       ::LoadSettings()
+      ::lGo := ::lRunAtStartup // Once again after settings file is loaded
    ENDIF
 
    RETURN Self
@@ -508,7 +509,7 @@ METHOD BarDisplay() CLASS HBDebugger
 METHOD BuildBrowseStack() CLASS HBDebugger
 
    IF ::oBrwStack == NIL
-      ::oBrwStack := TBrowseNew( 2, ::nMaxCol - 14, ::nMaxRow - 7, ::nMaxCol - 1 )
+      ::oBrwStack := HBDbBrowser():New( 2, ::nMaxCol - 14, ::nMaxRow - 7, ::nMaxCol - 1 )
       ::oBrwStack:ColorSpec := ::aColors[ 3 ] + "," + ::aColors[ 4 ] + "," + ::aColors[ 5 ]
       ::oBrwStack:goTopBlock := { || ::oBrwStack:Cargo := 1 }
       ::oBrwStack:goBottomBlock := { || ::oBrwStack:Cargo := Len( ::aProcStack ) }
@@ -665,7 +666,7 @@ METHOD CodeWindowProcessKey( nKey ) CLASS HBDebugger
 
       DO CASE
       CASE nKey == K_HOME .OR. nKey == K_CTRL_PGUP .OR. nKey == K_CTRL_HOME
-     
+
          ::oBrwText:GoTop()
          IF ::oWndCode:lFocused
             SetCursor( SC_SPECIAL1 )
@@ -674,29 +675,31 @@ METHOD CodeWindowProcessKey( nKey ) CLASS HBDebugger
       CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
 
          ::oBrwText:GoBottom()
-         ::oBrwText:End()
+         ::oBrwText:nCol = ::oWndCode:nLeft + 1
+         ::oBrwText:nFirstCol = ::oWndCode:nLeft + 1
+         SetPos( Row(), ::oWndCode:nLeft + 1 )
          IF ::oWndCode:lFocused
             SetCursor( SC_SPECIAL1 )
          ENDIF
-     
+
       CASE nKey == K_LEFT
          ::oBrwText:Left()
-     
+
       CASE nKey == K_RIGHT
          ::oBrwText:Right()
-     
+
       CASE nKey == K_UP
          ::oBrwText:Up()
-     
+
       CASE nKey == K_DOWN
          ::oBrwText:Down()
-     
+
       CASE nKey == K_PGUP
          ::oBrwText:PageUp()
-     
+
       CASE nKey == K_PGDN
          ::oBrwText:PageDown()
-     
+
       ENDCASE
    ENDIF
 
@@ -711,8 +714,8 @@ METHOD Colors() CLASS HBDebugger
                       "Text High Sel.", "Text PPO Sel.", "Menu", "Menu High",;
                       "Menu Selected", "Menu High Sel." }
 
-   LOCAL oBrwColors := TBrowseNew( oWndColors:nTop + 1, oWndColors:nLeft + 1,;
-                                 oWndColors:nBottom - 1, oWndColors:nRight - 1 )
+   LOCAL oBrwColors := HBDbBrowser():New( oWndColors:nTop + 1, oWndColors:nLeft + 1,;
+                                          oWndColors:nBottom - 1, oWndColors:nRight - 1 )
    LOCAL nWidth := oWndColors:nRight - oWndColors:nLeft - 1
    LOCAL oCol
 
@@ -1223,7 +1226,7 @@ METHOD GetExprValue( xExpr, lValid ) CLASS HBDebugger
    LOCAL xResult
    LOCAL oErr
    LOCAL bOldErrorBlock := ErrorBlock( { | oErr | Break( oErr ) } )
-  
+
    lValid := .F.
 
    BEGIN SEQUENCE
@@ -1707,7 +1710,7 @@ METHOD LoadCallStack() CLASS HBDebugger
    LOCAL nCurrLevel
    LOCAL nlevel
    LOCAL nPos
-  
+
    ::aProcStack := Array( ::nProcLevel )
 
    nCurrLevel := hb_dbg_ProcLevel() - 1
@@ -1851,9 +1854,9 @@ METHOD Local() CLASS HBDebugger
 METHOD Locate( nMode, cValue ) CLASS HBDebugger
 
    LOCAL lFound
-  
+
    DEFAULT nMode TO 0
-  
+
    IF Empty( cValue )
       ::cSearchString := PadR( ::cSearchString, 256 )
       cValue := ::InputBox( "Search string", ::cSearchString )
@@ -1861,11 +1864,11 @@ METHOD Locate( nMode, cValue ) CLASS HBDebugger
          RETURN NIL
       ENDIF
    ENDIF
-  
+
    ::cSearchString := cValue
-  
+
    lFound := ::oBrwText:Search( ::cSearchString, ::lCaseSensitive, nMode )
-  
+
    // Save cursor position to be restored by ::oWndCode:bGotFocus
    ::oWndCode:cargo[ 1 ] := Row()
    ::oWndCode:cargo[ 2 ] := Col()
@@ -2129,7 +2132,7 @@ METHOD Public() CLASS HBDebugger
 METHOD RedisplayBreakPoints() CLASS HBDebugger
 
    LOCAL n
-  
+
    FOR n := 1 TO Len( ::aBreakpoints )
       IF FILENAME_EQUAL( ::aBreakpoints[ n ][ 2 ], strip_path( ::cPrgName ) )
          ::oBrwText:ToggleBreakPoint( ::aBreakpoints[ n ][ 1 ], .T.)
@@ -2162,14 +2165,14 @@ METHOD RefreshVars() CLASS HBDebugger
 
 
 METHOD RemoveWindow( oWnd ) CLASS HBDebugger
-  
+
    LOCAL n := AScan( ::aWindows, { | o | o == oWnd } )
-  
+
    IF n != 0
       ::aWindows := ADel( ::aWindows, n )
       ::aWindows := ASize( ::aWindows, Len( ::aWindows ) - 1 )
    ENDIF
-  
+
    ::nCurrentWindow := 1
 
    RETURN NIL
@@ -2180,13 +2183,13 @@ METHOD ResizeWindows( oWindow ) CLASS HBDebugger
    LOCAL oWindow2
    LOCAL nTop
    LOCAL lVisible2 := .F.
-  
+
    IF oWindow == ::oWndVars
       oWindow2 := ::oWndPnt
    ELSEIF oWindow == ::oWndPnt
       oWindow2 := ::oWndVars
    ENDIF
-  
+
    DispBegin()
    IF oWindow2 == NIL
       nTop := oWindow:nBottom + 1
@@ -2803,23 +2806,23 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
    // look for a breakpoint which matches both line number and program name
 
    LOCAL nAt
-  
+
    IF !::lActive
       RETURN NIL
    ENDIF
-  
+
    IF nLine == NIL
       cFileName := strip_path( ::cPrgName )
       nLine := ::oBrwText:RowPos()
    ENDIF
-  
+
    IF !::IsValidStopLine( cFileName, nLine )
       RETURN NIL
    ENDIF
-  
+
    nAt := AScan( ::aBreakPoints, { | aBreak | aBreak[ 1 ] == nLine ;
                                      .AND. FILENAME_EQUAL( aBreak[ 2 ], cFileName ) } )
-  
+
    IF nAt == 0
       AAdd( ::aBreakPoints, { nLine, cFileName } )     // it was nLine
       hb_DBG_AddBreak( ::pInfo, cFileName, nLine )
@@ -2834,7 +2837,7 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
          ::oBrwText:ToggleBreakPoint( nLine, .F. )
       ENDIF
    ENDIF
-  
+
    ::oBrwText:RefreshCurrent()
 
    RETURN NIL
@@ -2893,7 +2896,7 @@ METHOD VarGetInfo( aVar ) CLASS HBDebugger
 METHOD VarGetValue( aVar ) CLASS HBDebugger
 
    LOCAL cType := Left( aVar[ VAR_TYPE ], 1 )
-  
+
    DO CASE
    CASE cType == "G" ; RETURN hb_dbg_vmVarGGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
    CASE cType == "L" ; RETURN hb_dbg_vmVarLGet( hb_dbg_procLevel() - aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
@@ -2910,22 +2913,22 @@ METHOD VarSetValue( aVar, uValue ) CLASS HBDebugger
 
    LOCAL nProcLevel
    LOCAL cType := Left( aVar[ VAR_TYPE ], 1 )
-  
+
    IF cType == "G"
      hb_dbg_vmVarGSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
-  
+
    ELSEIF cType == "L"
      nProcLevel := hb_dbg_procLevel() - aVar[ VAR_LEVEL ]   //skip debugger stack
      hb_dbg_vmVarLSet( nProcLevel, aVar[ VAR_POS ], uValue )
-  
+
    ELSEIF cType == "S"
      hb_dbg_vmVarSSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
-  
+
    ELSE
      // Public or Private
      aVar[ VAR_POS ] := uValue
      &( aVar[ VAR_NAME ] ) := uValue
-  
+
    ENDIF
 
    RETURN Self
@@ -2945,8 +2948,8 @@ METHOD ViewSets() CLASS HBDebugger
                     "EventMask", "VideoMode", "MBlockSize", "MFileExt",;
                     "StrictRead", "Optimize", "Autopen", "Autorder", "AutoShare" }
 
-   LOCAL oBrwSets := TBrowseNew( oWndSets:nTop + 1, oWndSets:nLeft + 1,;
-                                 oWndSets:nBottom - 1, oWndSets:nRight - 1 )
+   LOCAL oBrwSets := HBDbBrowser():new( oWndSets:nTop + 1, oWndSets:nLeft + 1,;
+                                        oWndSets:nBottom - 1, oWndSets:nRight - 1 )
    LOCAL nWidth := oWndSets:nRight - oWndSets:nLeft - 1
    LOCAL oCol
 
@@ -3146,7 +3149,7 @@ METHOD WatchpointsShow() CLASS HBDebugger
 
       ::oWndPnt:Browser := ::oBrwPnt
 
-      ::oBrwPnt:Cargo := { 1, {} } // Actual highligthed row
+      ::oBrwPnt:Cargo := { 1, {} } // Actual highlighted row
       ::oBrwPnt:ColorSpec := ::aColors[ 2 ] + "," + ::aColors[ 5 ] + "," + ::aColors[ 3 ]
       ::oBrwPnt:goTopBlock := { || ::oBrwPnt:cargo[ 1 ] := Min( 1, Len(::aWatch ) ) }
       ::oBrwPnt:goBottomBlock := { || ::oBrwPnt:cargo[ 1 ] := Len( ::aWatch ) }
@@ -3285,7 +3288,7 @@ STATIC PROCEDURE StripUntil( pcLine, i, cChar )
    LOCAL j
    LOCAL n
    LOCAL nLen := Len( pcLine )
-  
+
    n := Len( cChar )
    j := i + n
    DO WHILE j <= nLen .AND. SubStr( pcLine, j, n ) != cChar
@@ -3349,7 +3352,7 @@ STATIC FUNCTION PathToArray( cList )
       AAdd( aList, cList )              // Add final element
 
       /* Strip ending delimiters */
-      //AEval( aList, { | x, i | iif( Right( x, 1 ) $ cDirSep,  aList[ i ] := Left( x, Len( x ) - 1 ), ) } )
+      AEval( aList, { | x, i | iif( Right( x, 1 ) $ cDirSep,  aList[ i ] := Left( x, Len( x ) - 1 ), ) } )
    ENDIF
 
    RETURN aList
@@ -3376,14 +3379,14 @@ STATIC FUNCTION strip_path( cFileName )
 #ifdef HB_NO_READDBG
 
 STATIC FUNCTION getdbginput( nTop, nLeft, uValue, bValid, cColor )
-  
+
    LOCAL nOldCursor := SetCursor( SC_NORMAL )
    LOCAL uTemp := uValue
-  
+
    IF cColor != NIL
       SetColor( cColor )
    ENDIF
-  
+
    DO WHILE .T.
       @ nTop, nLeft SAY Space( Len( uTemp ) )
       @ nTop, nLeft SAY ""
@@ -3396,7 +3399,7 @@ STATIC FUNCTION getdbginput( nTop, nLeft, uValue, bValid, cColor )
          EXIT
       ENDIF
    ENDDO
-  
+
    SetCursor( nOldCursor )
 
    RETURN uTemp

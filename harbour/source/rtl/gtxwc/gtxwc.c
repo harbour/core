@@ -3781,7 +3781,7 @@ static BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             hb_gt_xwc_RealRefresh( wnd );
             hb_gt_xwc_SetSelection( wnd, hb_itemGetCPtr( pInfo->pNewVal ),
-                                           hb_itemGetCLen( pInfo->pNewVal ) );
+                                         hb_itemGetCLen( pInfo->pNewVal ) );
             hb_gt_xwc_RealRefresh( wnd );
          }
          else

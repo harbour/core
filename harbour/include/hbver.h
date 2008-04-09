@@ -60,17 +60,6 @@
 #define HB_VER_REVISION 1       /* Revision number */
 #define HB_VER_STATUS   "devel" /* Build status */
 
-/* NOTE: The next two fields are automatically updated by the hbverfix program */
-
-#define HB_VER_LENTRY   "2007-06-14 00:20 UTC+0200 Przemyslaw Czerpak"
-#define HB_VER_CHLCVS   "ChangeLog,v 1.5396 2007/06/13 22:20:13"
-
-/* TOFIX: The next three fields need to get updated automatically */
-
-#define HB_VER_C_USR    ""
-#define HB_VER_L_USR    ""
-#define HB_VER_PRG_USR  ""
-
-/* #include "hb_ver_.h" */
+/* #include "hb_verbld.h" */
 
 #endif /* HB_VER_H_ */

@@ -66,7 +66,6 @@
 #include "hbapi.h"
 #include "hberrors.h"
 #include "hbpp.h"
-#include "hbver.h"
 #include "hbmacro.h"
 #include "hbexprop.h"
 #include "hbpcode.h"

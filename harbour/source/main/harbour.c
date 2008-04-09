@@ -53,6 +53,7 @@
 #include "hbcomp.h"
 #include "hbapifs.h"
 #include "hbmemory.ch"
+#include "hbverbld.h"
 #include "hbset.h"
 
 /* ------------------------------------------------------------------------- */
@@ -559,6 +560,54 @@ static void hb_compChkFileSwitches( int argc, char * argv[] )
          }
       }
    }
+}
+
+/* ChangeLog SVN revision number */
+int hb_verSvnID( void )
+{
+   return HB_VER_SVNID;
+}
+
+/* ChangeLog ID string */
+const char * hb_verSvnChangeLogID( void )
+{
+   return HB_VER_CHLID;
+}
+
+/* ChangeLog last entry string */
+const char * hb_verSvnLastEntry( void )
+{
+   return HB_VER_LENTRY;
+}
+
+/* build time C compiler flags in C_USR envvar */
+const char * hb_verFlagsC( void )
+{
+#ifdef HB_VER_C_USR
+   return HB_VER_C_USR;
+#else
+   return "";
+#endif
+}
+
+/* build time linker flags in L_USR envvar */
+const char * hb_verFlagsL( void )
+{
+#ifdef HB_VER_L_USR
+   return HB_VER_L_USR;
+#else
+   return "";
+#endif
+}
+
+/* build time Harbour compiler flags in PRG_USR envvar */
+const char * hb_verFlagsPRG( void )
+{
+#ifdef HB_VER_PRG_USR
+   return HB_VER_PRG_USR;
+#else
+   return "";
+#endif
 }
 
 int main( int argc, char * argv[] )

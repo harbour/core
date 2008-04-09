@@ -8,6 +8,8 @@
  *
  * Copyright 2004 Ryszard Glab <rglab@imid.med.pl>
  * www - http://www.harbour-project.org
+ * Copyright 2007 Phil Krylov <phil a t newstar.rinet.ru>
+ * www - http://xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,22 +54,151 @@
 
 #include "hbclass.ch"
 
-CREATE CLASS HBDbBrowser INHERIT TBrowse  // Debugger browser
+/* HBDbBrowser
+ *
+ * A minimalistic TBrowse implementation just enough for use in
+ * the debugger instead of the HBBrowse monster
+ */
+CREATE CLASS HBDbBrowser
 
-   VAR    Window
+   VAR Window
+   VAR cargo
+   
+   VAR nTop
+   VAR nLeft
+   VAR nBottom
+   VAR nRight
+   VAR colorSpec
+   VAR autoLite INIT .T.
+
+   VAR goTopBlock
+   VAR goBottomBlock
+   VAR skipBlock
+
+   VAR stable INIT .F.
+   VAR rowCount INIT 0
+   VAR rowPos INIT 1
+   VAR colCount INIT 0
+   VAR colPos INIT 1
+   VAR hitBottom INIT .F.
+   VAR freeze INIT 0
+
+   VAR aColumns INIT {}
+   VAR aRowState INIT {}
+   VAR aColorSpec INIT {}
+   VAR nFirstVisible INIT 1
+   VAR lConfigured INIT .F.
 
    METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow )
+   METHOD AddColumn( oCol )    INLINE AAdd( ::aColumns, oCol ), ::colCount++, Self
+   METHOD Configure()
+   METHOD DeHiLite()           INLINE Self
+   METHOD Down()               INLINE ::MoveCursor( 1 )
+   METHOD ForceStable()
+   METHOD GetColumn( nColumn ) INLINE ::aColumns[ nColumn ]
+   METHOD GoTo( nRow )
+   METHOD GoTop()              INLINE ::GoTo( 1 ), ::rowPos := 1, ::nFirstVisible := 1, ::RefreshAll()
+   METHOD GoBottom()
+   METHOD HiLite()             INLINE Self
+   METHOD Invalidate()         INLINE ::RefreshAll()
+   METHOD MoveCursor( nSkip )
+   METHOD PageDown()           INLINE ::MoveCursor( ::rowCount )
+   METHOD PageUp()             INLINE ::MoveCursor( -::rowCount )
+   METHOD RefreshAll()         INLINE AFill( ::aRowState, .F. ), Self
+   METHOD RefreshCurrent()     INLINE IIf( ::rowCount > 0, ::aRowState[ ::rowPos ] := .F., ), Self
    METHOD Resize( nTop, nLeft, nBottom, nRight )
-   METHOD ForceStable() INLINE iif( ::RowCount > 0, ::Super:ForceStable(), )
-   METHOD RefreshAll() INLINE iif( ::RowCount > 0, ::Super:RefreshAll(), )
+   METHOD Stabilize()          INLINE ::ForceStable()
+   METHOD Up()                 INLINE ::MoveCursor( -1 )
 
 ENDCLASS
 
 METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow ) CLASS HBDbBrowser
 
    ::Window := oParentWindow
-   ::super:New( nTop, nLeft, nBottom, nRight )
+   ::nTop := nTop
+   ::nLeft := nLeft
+   ::nBottom := nBottom
+   ::nRight := nRight
    
+   RETURN Self
+
+METHOD Configure()
+   ::rowCount := ::nBottom - ::nTop + 1
+   ASize( ::aRowState, ::rowCount )
+   ::aColorSpec := hb_aTokens( ::colorSpec, "," )
+   ::lConfigured := .T.
+   RETURN Self
+
+METHOD MoveCursor( nSkip )
+   LOCAL nSkipped
+
+   nSkipped := ::GoTo( ::rowPos + ::nFirstVisible - 1 + nSkip )
+   IF !::hitBottom .OR. Abs( nSkipped ) > 0
+      IF IIf( nSkipped > 0, ::rowPos + nSkipped <= ::rowCount, ::rowPos + nSkipped >= 1 )
+         ::RefreshCurrent()
+         ::rowPos += nSkipped
+         ::RefreshCurrent()
+      ELSE
+         ::nFirstVisible := Max( 1, nSkipped + ::nFirstVisible )
+         ::RefreshAll()
+      ENDIF
+   ENDIF
+   RETURN Self
+
+METHOD ForceStable()
+   LOCAL nRow, nCol, xData, oCol, nColX, nWid, xOldColor := SetColor()
+
+   IF !::lConfigured
+       ::Configure()
+   ENDIF
+   FOR nRow := 1 TO ::rowCount
+      IF Empty( ::aRowState[ nRow ] )
+         ::GoTo( ::nFirstVisible + nRow - 1 )
+         IF ::hitBottom
+            SetColor( ::aColorSpec[ 1 ] )
+            @ ::nTop + nRow - 1, ::nLeft SAY Space( ::nRight - ::nLeft + 1 )
+         ELSE
+            nColX := ::nLeft
+            FOR nCol := 1 TO Len( ::aColumns )
+               IF nColX <= ::nRight
+                  oCol := ::aColumns[ nCol ]
+                  SetColor( ::aColorSpec[ oCol:defColor[ IIf( nRow == ::rowPos, 2, 1 ) ] ] )
+                  xData := Eval( oCol:block )
+                  IF oCol:width == NIL
+                     nWid := Len( xData )
+                  ELSE
+                     nWid := oCol:width
+                  ENDIF
+                  @ ::nTop + nRow - 1, nColX SAY PadR( xData, nWid ) + IIf( nCol < Len( ::aColumns ), " ", "" )
+                  nColX += nWid + 1
+               ENDIF
+	    NEXT
+         ENDIF
+         ::aRowState[ nRow ] := .T.
+      ENDIF
+   NEXT
+   ::GoTo( ::nFirstVisible + ::rowPos - 1 )
+   SetColor( xOldColor )
+   SetPos( ::nTop + ::rowPos - 1, ::nLeft )
+   RETURN Self
+
+METHOD GoTo( nRow )
+   LOCAL nOldRow := ::nFirstVisible + ::rowPos - 1
+   LOCAL nSkipped := 0
+
+   Eval( ::goTopBlock )
+   IF nRow == 1
+      ::hitBottom := .F.
+   ELSE
+      nSkipped := Eval( ::skipBlock, nRow - 1 )
+      ::hitBottom := ( nSkipped != nRow - 1 )
+   ENDIF
+   RETURN nSkipped - nOldRow + 1
+
+METHOD GoBottom()
+   DO WHILE !::hitBottom
+      ::PageDown()
+   ENDDO
    RETURN Self
 
 METHOD Resize( nTop, nLeft, nBottom, nRight )
@@ -91,11 +222,7 @@ METHOD Resize( nTop, nLeft, nBottom, nRight )
    ENDIF
 
    IF lResize
-      /* The following check prevents a "High limit exceeded" error. Maybe it
-       * would be wiser to make TBrowse handle height of 0 rows -- Ph.K. */
-      IF ::nBottom >= ::nTop
-         ::configure()
-      ENDIF
+      ::Configure():ForceStable()
    ENDIF
       
    RETURN self

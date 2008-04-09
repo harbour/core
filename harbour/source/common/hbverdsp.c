@@ -106,33 +106,48 @@ void hb_verBuildInfo( void )
    hb_conOutErr( __TIME__, 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "Last ChangeLog entry: ", 0 );
-   hb_conOutErr( HB_VER_LENTRY, 0 );
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "ChangeLog CVS version: ", 0 );
-   hb_conOutErr( HB_VER_CHLCVS, 0 );
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   if( strlen( HB_VER_C_USR ) )
    {
-      hb_conOutErr( "Harbour compiler switches: ", 0 );
-      hb_conOutErr( HB_VER_C_USR, 0 );
+      const char * pszLastEntry = hb_verSvnLastEntry();
+      hb_conOutErr( "Last ChangeLog entry: ", 0 );
+      hb_conOutErr( pszLastEntry, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
    }
 
-   if( strlen( HB_VER_L_USR ) )
    {
-      hb_conOutErr( "C compiler switches: ", 0 );
-      hb_conOutErr( HB_VER_L_USR, 0 );
+      const char * pszLogID = hb_verSvnChangeLogID();
+      hb_conOutErr( "ChangeLog SVN version: ", 0 );
+      hb_conOutErr( pszLogID, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
    }
 
-   if( strlen( HB_VER_PRG_USR ) )
    {
-      hb_conOutErr( "Linker switches: ", 0 );
-      hb_conOutErr( HB_VER_PRG_USR, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
+      const char * pszFlags = hb_verFlagsPRG();
+      if( pszFlags && *pszFlags )
+      {
+         hb_conOutErr( "Harbour compiler switches: ", 0 );
+         hb_conOutErr( pszFlags, 0 );
+         hb_conOutErr( hb_conNewLine(), 0 );
+      }
+   }
+
+   {
+      const char * pszFlags = hb_verFlagsC();
+      if( pszFlags && *pszFlags )
+      {
+         hb_conOutErr( "C compiler switches: ", 0 );
+         hb_conOutErr( pszFlags, 0 );
+         hb_conOutErr( hb_conNewLine(), 0 );
+      }
+   }
+
+   {
+      const char * pszFlags = hb_verFlagsL();
+      if( pszFlags && *pszFlags )
+      {
+         hb_conOutErr( "Linker switches: ", 0 );
+         hb_conOutErr( pszFlags, 0 );
+         hb_conOutErr( hb_conNewLine(), 0 );
+      }
    }
 
    hb_conOutErr( hb_conNewLine(), 0 );

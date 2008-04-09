@@ -122,9 +122,15 @@
 
 
 #ifndef __HARBOUR__
-   #define HB_CLS_NO_DECORATION
-   #define HB_CLS_NO_DECLARATIONS
-   #define HB_CLS_PARAM_LIST
+   #ifndef HB_CLS_NO_DECORATION
+      #define HB_CLS_NO_DECORATION
+   #endif
+   #ifndef HB_CLS_NO_DECLARATIONS
+      #define HB_CLS_NO_DECLARATIONS
+   #endif
+   #ifndef HB_CLS_PARAM_LIST
+      #define HB_CLS_PARAM_LIST
+   #endif
 #endif
 
 /* Disable method decoration when Harbour compiled strict compatibility mode.
@@ -143,7 +149,11 @@
  * I have to enable this definition by default untill we will not fix
  * preprocessor. [druzus]
  */
-#define HB_CLS_NO_PARAMS_ERR
+#ifndef HB_CLS_PARAMS_ERR
+   #ifndef HB_CLS_NO_PARAMS_ERR
+      #define HB_CLS_NO_PARAMS_ERR
+   #endif
+#endif
 
 /* should we use <<ClassName>_ prefix for real method names? */
 #ifdef HB_CLS_NO_DECORATION
@@ -405,6 +415,12 @@ DECLARE HBClass ;
 
 #xcommand ASSIGN <MessageName> [ AS <type> ] [LOCAL <Locals,...>] INLINE <Code,...> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
    MESSAGE _<MessageName> [ AS <type> ] [LOCAL <Locals>] INLINE <Code> <export> <protect> <hidde> <persistent>
+
+#xcommand ACCESS <MessageName> [ AS <type> ] <mth: METHOD, IS> <MethodName> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
+   MESSAGE <MessageName> [ AS <type> ] <mth> <MethodName> <export> <protect> <hidde> <persistent>
+
+#xcommand ASSIGN <MessageName> [ AS <type> ] <mth: METHOD, IS> <MethodName> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
+   MESSAGE _<MessageName> [ AS <type> ] <mth> <MethodName> <export> <protect> <hidde> <persistent>
 
 /*
  * These definitions are for backward compatibility only.

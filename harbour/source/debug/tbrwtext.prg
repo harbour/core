@@ -72,7 +72,7 @@ CREATE CLASS HBBrwText INHERIT HBEditor
    ACCESS colorSpec         INLINE ::cColorSpec
    ASSIGN colorSpec( cClr ) INLINE ::cColorSpec := cClr
 
-   METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor )
+   METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers, nTabWidth )
 
    METHOD GoTop()                                  // Methods available on a standard TBrowse, needed to handle a HBEditor like a TBrowse
    METHOD GoBottom()
@@ -85,6 +85,8 @@ CREATE CLASS HBBrwText INHERIT HBEditor
    METHOD PageDown()
    METHOD RefreshAll()
    METHOD RefreshCurrent()
+   METHOD Resize( nTop, nLeft, nBottom, nRight )
+   METHOD ScrollTo( nCol )                         // Scroll the window to specified column
    METHOD ForceStable() INLINE NIL
    METHOD GotoLine( n )                            // Moves active line cursor
    METHOD SetActiveLine( n )                       // Sets the line to be executed
@@ -92,11 +94,11 @@ CREATE CLASS HBBrwText INHERIT HBEditor
    METHOD LineColor( nRow )                        // Redefine HBEditor method to handle line coloring
    METHOD ToggleBreakPoint( nRow, lSet )           // if lSet is .T. there is a BreakPoint active at nRow, if lSet is .F. BreakPoint at nRow has to be removed
    METHOD Search( cString, lCaseSensitive, nMode ) // 0 from Begining to end, 1 Forward, 2 Backwards
-   METHOD LoadFile( cFileName )
+   METHOD RowPos()
 
 ENDCLASS
 
-METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers ) CLASS HBBrwText
+METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers, nTabWidth ) CLASS HBBrwText
 
    DEFAULT cColor TO SetColor()
    DEFAULT lLineNumbers TO .T.
@@ -104,14 +106,8 @@ METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers ) CLAS
    ::cFileName := cFileName
    ::lLineNumbers := lLineNumbers
 
-   ::Super:New( "", nTop, nLeft, nBottom, nRight, .T. )
+   ::Super:New( "", nTop, nLeft, nBottom, nRight, .F., -1, nTabWidth )
    ::Super:SetColor( cColor )
-   ::Super:LoadFile( cFileName )
-
-   RETURN Self
-
-METHOD LoadFile( cFileName ) CLASS HBBrwText
-
    ::Super:LoadFile( cFileName )
 
    RETURN Self
@@ -169,6 +165,10 @@ METHOD PageDown() CLASS HBBrwText
    ::MoveCursor( K_PGDN )
 
    RETURN Self
+
+METHOD RowPos()
+
+   RETURN ::nRow
 
 METHOD RefreshAll() CLASS HBBrwText
 
@@ -228,6 +228,26 @@ METHOD ToggleBreakPoint( nRow, lSet ) CLASS HBBrwText
    ENDIF
 
    RETURN Self
+
+/* This method is to restore correct cursor position after ::Super:Resize() */
+METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBBrwText
+   LOCAL nRow
+
+   nRow := ::nRow
+   ::Super:Resize( nTop, nLeft, nBottom, nRight )
+   ::GotoLine( nRow )
+RETURN Self
+
+
+METHOD ScrollTo( nCol ) CLASS HBBrwText
+   IF nCol >= 1
+      ::nCol := nCol
+      ::nFirstCol := nCol
+      ::display()
+      ::SetPos( ::Row(), ::nLeft )
+   ENDIF
+RETURN Self
+
 
 METHOD Search( cString, lCaseSensitive, nMode ) CLASS HBBrwText
 

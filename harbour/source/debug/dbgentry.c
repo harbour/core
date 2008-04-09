@@ -236,21 +236,10 @@ hb_dbgActivate( HB_DEBUGINFO *info )
          PHB_ITEM aEntry = hb_itemArrayNew( 6 );
          PHB_ITEM pItem;
 
-         pItem = hb_itemPutC( NULL, pEntry->szModule );
-         hb_arraySet( aEntry, 1, pItem );
-         hb_itemRelease( pItem );
-
-         pItem = hb_itemPutC( NULL, pEntry->szFunction );
-         hb_arraySet( aEntry, 2, pItem );
-         hb_itemRelease( pItem );
-
-         pItem = hb_itemPutNL( NULL, pEntry->nLine );
-         hb_arraySet( aEntry, 3, pItem );
-         hb_itemRelease( pItem );
-
-         pItem = hb_itemPutNL( NULL, pEntry->nProcLevel );
-         hb_arraySet( aEntry, 4, pItem );
-         hb_itemRelease( pItem );
+         hb_arraySetC( aEntry, 1, pEntry->szModule );
+         hb_arraySetC( aEntry, 2, pEntry->szFunction );
+         hb_arraySetNL( aEntry, 3, pEntry->nLine );
+         hb_arraySetNL( aEntry, 4, pEntry->nProcLevel );
 
          pItem = hb_dbgActivateVarArray( pEntry->nLocals, pEntry->aLocals );
          hb_arraySet( aEntry, 5, pItem );
@@ -294,23 +283,15 @@ hb_dbgActivateBreakArray( HB_DEBUGINFO *info )
    for ( i = 0; i < info->nBreakPoints; i++ )
    {
       PHB_ITEM pBreak = hb_itemArrayNew( 3 );
-      PHB_ITEM item;
 
       if ( !info->aBreak[ i ].szFunction )
       {
-         item = hb_itemPutNI( NULL, info->aBreak[ i ].nLine );
-         hb_arraySet( pBreak, 1, item );
-         hb_itemRelease( item );
-
-         item = hb_itemPutC( NULL, info->aBreak[ i ].szModule );
-         hb_arraySet( pBreak, 2, item );
-         hb_itemRelease( item );
+         hb_arraySetNI( pBreak, 1, info->aBreak[ i ].nLine );
+         hb_arraySetC( pBreak, 2, info->aBreak[ i ].szModule );
       }
       else
       {
-         item = hb_itemPutC( NULL, info->aBreak[ i ].szFunction );
-         hb_arraySet( pBreak, 3, item );
-         hb_itemRelease( item );
+         hb_arraySetC( pBreak, 3, info->aBreak[ i ].szFunction );
       }
 
       hb_arraySet( pArray, i + 1, pBreak );
@@ -331,9 +312,7 @@ hb_dbgActivateModuleArray( HB_DEBUGINFO *info )
       PHB_ITEM pModule = hb_itemArrayNew( 4 );
       PHB_ITEM item;
 
-      item = hb_itemPutC( NULL, info->aModules[ i ].szModule );
-      hb_arraySet( pModule, 1, item );
-      hb_itemRelease( item );
+      hb_arraySetC( pModule, 1, info->aModules[ i ].szModule );
 
       item = hb_dbgActivateVarArray( info->aModules[ i ].nStatics,
                                      info->aModules[ i ].aStatics );
@@ -366,23 +345,11 @@ hb_dbgActivateVarArray( int nVars, HB_VARINFO *aVars )
    for ( i = 0; i < nVars; i++ )
    {
       PHB_ITEM aVar = hb_itemArrayNew( 4 );
-      PHB_ITEM item;
 
-      item = hb_itemPutC( NULL, aVars[ i ].szName );
-      hb_arraySet( aVar, 1, item );
-      hb_itemRelease( item );
-
-      item = hb_itemPutNL( NULL, aVars[ i ].nIndex );
-      hb_arraySet( aVar, 2, item );
-      hb_itemRelease( item );
-
-      item = hb_itemPutCL( NULL, &aVars[ i ].cType, 1 );
-      hb_arraySet( aVar, 3, item );
-      hb_itemRelease( item );
-
-      item = hb_itemPutNL( NULL, aVars[ i ].nFrame );
-      hb_arraySet( aVar, 4, item );
-      hb_itemRelease( item );
+      hb_arraySetC( aVar, 1, aVars[ i ].szName );
+      hb_arraySetNL( aVar, 2, aVars[ i ].nIndex );
+      hb_arraySetCL( aVar, 3, &aVars[ i ].cType, 1 );
+      hb_arraySetNL( aVar, 4, aVars[ i ].nFrame );
 
       hb_arraySet( pArray, i + 1, aVar );
       hb_itemRelease( aVar );
@@ -771,8 +738,8 @@ hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
                {
                   pBuffer[ nOrigMin / 8 + k - nMin / 8 ] |= pOrigBuffer[ k ];
                }
-               hb_itemPutNL( hb_arrayGetItemPtr( pLines, 2 ), nMin );
-               hb_itemPutCPtr( hb_arrayGetItemPtr( pLines, 3 ), pBuffer, nLen - 1 );
+               hb_arraySetNL( pLines, 2, nMin );
+               hb_arraySetCPtr( pLines, 3, pBuffer, nLen - 1 );
                bFound = TRUE;
                break;
             }
@@ -794,9 +761,7 @@ hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
            || ( p = strrchr( szModule, '\\' ) ) != NULL )
       {
          char *szName = hb_strdup( p + 1 );
-         
-         hb_itemPutC( hb_arrayGetItemPtr( pEntry, 1 ), szName );
-         hb_xfree( szName );
+         hb_arraySetCPtr( pEntry, 1, szName, strlen( szName ) );
       }
    }
 }

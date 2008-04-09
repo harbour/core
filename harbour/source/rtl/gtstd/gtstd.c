@@ -113,7 +113,7 @@ typedef struct _HB_GTSTD
    PHB_CODEPAGE   cdpHost;
    BYTE           keyTransTbl[ 256 ];
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    struct termios saved_TIO;
    struct termios curr_TIO;
    BOOL           fRestTTY;
@@ -124,38 +124,53 @@ typedef struct _HB_GTSTD
 } HB_GTSTD, * PHB_GTSTD;
 
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
 
 static volatile BOOL s_fRestTTY = FALSE;
 
+#if defined( SIGTTOU )
 static void sig_handler( int iSigNo )
 {
-   int e = errno, stat;
-   pid_t pid;
-
    switch( iSigNo )
    {
+#ifdef SIGCHLD
       case SIGCHLD:
+      {
+         int e = errno, stat;
+         pid_t pid;
          while ( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
+         errno = e;
          break;
+      }
+#endif
+#ifdef SIGWINCH
       case SIGWINCH:
          /* s_WinSizeChangeFlag = TRUE; */
          break;
+#endif
+#ifdef SIGINT
       case SIGINT:
          /* s_InetrruptFlag = TRUE; */
          break;
+#endif
+#ifdef SIGQUIT
       case SIGQUIT:
          /* s_BreakFlag = TRUE; */
          break;
+#endif
+#ifdef SIGTSTP
       case SIGTSTP:
          /* s_DebugFlag = TRUE; */
          break;
+#endif
+#ifdef SIGTSTP
       case SIGTTOU:
          s_fRestTTY = FALSE;
          break;
+#endif
    }
-   errno = e;
 }
+#endif
 
 #endif
 
@@ -212,13 +227,13 @@ static void hb_gt_std_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
-#if defined( OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
+#if ( defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ ) ) && \
+    defined( SA_NOCLDSTOP )
 
    if( pGTSTD->fStdinConsole )
    {
+#if defined( SIGTTOU )
       struct sigaction act, old;
-
-      s_fRestTTY = TRUE;
 
       /* if( pGTSTD->saved_TIO.c_lflag & TOSTOP ) != 0 */
       sigaction( SIGTTOU, NULL, &old );
@@ -233,6 +248,9 @@ static void hb_gt_std_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       act.sa_flags = 0;
 #endif
       sigaction( SIGTTOU, &act, 0 );
+#endif
+
+      s_fRestTTY = TRUE;
 
       tcgetattr( pGTSTD->hStdin, &pGTSTD->saved_TIO );
       memcpy( &pGTSTD->curr_TIO, &pGTSTD->saved_TIO, sizeof( struct termios ) );
@@ -242,12 +260,15 @@ static void hb_gt_std_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       pGTSTD->curr_TIO.c_cc[ VMIN ] = 0;
       pGTSTD->curr_TIO.c_cc[ VTIME ] = 0;
       tcsetattr( pGTSTD->hStdin, TCSAFLUSH, &pGTSTD->curr_TIO );
-      act.sa_handler = SIG_DFL;
 
+#if defined( SIGTTOU )
+      act.sa_handler = SIG_DFL;
       sigaction( SIGTTOU, &old, NULL );
+#endif
       pGTSTD->fRestTTY = s_fRestTTY;
    }
 
+#ifdef TIOCGWINSZ
    if( pGTSTD->fStdoutConsole )
    {
       struct winsize win;
@@ -257,6 +278,7 @@ static void hb_gt_std_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
          HB_GTSELF_RESIZE( pGT, win.ws_row, win.ws_col );
       }
    }
+#endif
 #elif defined( HB_WIN32_IO ) && ! defined( HB_WINCE )
    if( pGTSTD->fStdinConsole )
    {
@@ -293,7 +315,7 @@ static void hb_gt_std_Exit( PHB_GT pGT )
       while( ++pGTSTD->iRow <= iRow )
          hb_gt_std_newLine( pGTSTD );
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
       if( pGTSTD->fRestTTY )
          tcsetattr( pGTSTD->hStdin, TCSANOW, &pGTSTD->saved_TIO );
 #endif
@@ -431,7 +453,7 @@ static BOOL hb_gt_std_Suspend( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Suspend(%p)", pGT ) );
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    {
       PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
       if( pGTSTD->fRestTTY )
@@ -447,7 +469,7 @@ static BOOL hb_gt_std_Resume( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Resume(%p)", pGT ) );
 
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    {
       PHB_GTSTD pGTSTD = HB_GTSTD_GET( pGT );
       if( pGTSTD->fRestTTY )

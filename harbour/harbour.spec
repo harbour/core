@@ -89,9 +89,9 @@
 ######################################################################
 
 Summary:        Free software Clipper compatible compiler
-Summary(pl):    Darmowy kompilator kompatybilny z jО©╫zykiem Clipper.
+Summary(pl):    Darmowy kompilator kompatybilny z jЙzykiem Clipper.
 Summary(pt_BR): Um compilador Clipper compativel Gratis
-Summary(ru):    О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫, О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ Clipper.
+Summary(ru):    Свободный компилятор, совместимый с языком Clipper.
 Name:           %{name}
 Version:        %{version}
 Release:        %{releasen}%{platform}
@@ -100,7 +100,7 @@ Group:          Development/Languages
 Vendor:         %{hb_host}
 URL:            http://%{hb_host}/
 Source:         %{name}-%{version}.src.tar.gz
-Packager:       PrzemysО©╫aw Czerpak <druzus@polbox.com> Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
+Packager:       PrzemysЁaw Czerpak <druzus@polbox.com> Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
 BuildPrereq:    gcc binutils bash ncurses ncurses-devel %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils bash sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:       %{name} harbour
@@ -117,19 +117,19 @@ See README.RPM in the documentation directory for information specific to
 this RPM distribution.
 
 %description -l pl
-%{dname} to kompatybilny z jО©╫zykiem CA-Clipper kompilator rozwijany na
-wielu rО©╫О©╫nych platformach. Ten pakiet zawiera kompilator, preprocesor,
-zbiory nagО©╫О©╫wkowe, wirtualnО©╫ maszynО©╫ oraz dokumentacjО©╫.
+%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator rozwijany na
+wielu rС©nych platformach. Ten pakiet zawiera kompilator, preprocesor,
+zbiory nagЁСwkowe, wirtualn╠ maszynЙ oraz dokumentacjЙ.
 
 %description -l pt_BR
-%{dname} О©╫ um compilador Clipper compativel para multiplas plataformas.
-Esse pacote contem um compilador, um prО©╫-processador, arquivos de cabeО©╫alho
-uma maquina virtual e documentaО©╫О©╫o.
+%{dname} И um compilador Clipper compativel para multiplas plataformas.
+Esse pacote contem um compilador, um prИ-processador, arquivos de cabeГalho
+uma maquina virtual e documentaГЦo.
 
 %description -l ru
-%{dname} - О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫, О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ CA-Clipper.
-О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫, О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫, О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫, О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫
-О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫.
+%{dname} - многоплатформенный компилятор, совместимый с языком CA-Clipper.
+Этот пакет содержит компилятор, препроцессор, файлы заголовков, виртуальную
+машину и документацию.
 
 
 ######################################################################
@@ -139,7 +139,7 @@ uma maquina virtual e documentaО©╫О©╫o.
 %package lib
 Summary:        Shared runtime libaries for %{dname} compiler
 Summary(pl):    Dzielone bilioteki dla kompilatora %{dname}
-Summary(ru):    О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ %{dname}
+Summary(ru):    Совместно используемые библиотеки для компилятора %{dname}
 Group:          Development/Languages
 Provides:       lib%{name}.so lib%{name}mt.so
 
@@ -149,19 +149,19 @@ This package provides %{dname} runtime shared libraries for programs
 linked dynamically.
 
 %description -l pl lib
-%{dname} to kompatybilny z jО©╫zykiem CA-Clipper kompilator.
-Ten pakiet udostО©╫pnia dzielone bilioteki kompilatora %{dname}
-dla programО©╫w konsolidowanych dynamicznie.
+%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.
+Ten pakiet udostЙpnia dzielone bilioteki kompilatora %{dname}
+dla programСw konsolidowanych dynamicznie.
 
 %description -l pt_BR lib
-%{dname} О©╫ um compilador compativel com o Clipper.
+%{dname} И um compilador compativel com o Clipper.
 Esse pacote %{dname} provem as bibliotecas compartilhadas para programas
 linkados dinamicamente.
 
 %description -l ru lib
-%{dname} - О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫, О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ CA-Clipper.
-О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ %{dname},
-О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫.
+%{dname} - компилятор, совместимый с языком CA-Clipper.
+Этот пакет содержит совместно используемые библиотеки %{dname},
+необходимые для работы динамически скомпонованных программ.
 
 
 ######################################################################
@@ -171,7 +171,7 @@ linkados dinamicamente.
 %package static
 Summary:        Static runtime libaries for %{dname} compiler
 Summary(pl):    Statyczne bilioteki dla kompilatora %{dname}
-Summary(ru):    О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ %{dname}
+Summary(ru):    Статические библиотеки для компилятора %{dname}
 Group:          Development/Languages
 Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
@@ -181,26 +181,26 @@ This package provides %{dname} static runtime libraries for static
 program linking.
 
 %description -l pl static
-%{dname} to kompatybilny z jО©╫zykiem CA-Clipper kompilator.
-Ten pakiet udostО©╫pnia statyczne bilioteki dla kompilatora %{dname}
-niezbО©╫dne do statycznej konsolidacji programО©╫w.
+%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.
+Ten pakiet udostЙpnia statyczne bilioteki dla kompilatora %{dname}
+niezbЙdne do statycznej konsolidacji programСw.
 
 %description -l pt_BR static
-%{dname} О©╫ um compilador compativel com o clippe.
+%{dname} И um compilador compativel com o clippe.
 Esse pacote %{dname} provem as bibliotecas  de run time staticas para linkagem
 dos os programas
 
 %description -l ru static
-%{dname} - О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫, О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ CA-Clipper.
-О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ %{dname},
-О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫.
+%{dname} - компилятор, совместимый с языком CA-Clipper.
+Этот пакет содержит статические библиотеки компилятора %{dname},
+необходимые для статической компоновки программ.
 
 
 %package contrib
 Summary:        Contrib runtime libaries for %{dname} compiler
 Summary(pl):    Bilioteki z drzewa contrib dla kompilatora %{dname}
 Summary(pt_BR): Libs contrib para %{dname}
-Summary(ru):    О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ contrib О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ %{dname}
+Summary(ru):    Библиотеки из дерева contrib для компилятора %{dname}
 Group:          Development/Languages
 Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
@@ -209,18 +209,18 @@ Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 This package provides %{dname} contrib libraries for program linking.
 
 %description -l pl contrib
-%{dname} to kompatybilny z jО©╫zykiem CA-Clipper kompilator.
-Ten pakiet udostО©╫pnia statyczne bilioteki z drzewa contrib dla
+%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.
+Ten pakiet udostЙpnia statyczne bilioteki z drzewa contrib dla
 kompilatora %{dname}.
 
 %description -l pt_BR contrib
-%{dname} О©╫ um compilador compativel com o clippe.
+%{dname} И um compilador compativel com o clippe.
 Esse pacote %{dname} provem as bibliotecas contrib para linkagem
 dos programas.
 
 %description -l ru contrib
-%{dname} - О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫, О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ CA-Clipper.
-О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫ %{dname} О©╫О©╫ О©╫О©╫О©╫О©╫О©╫О©╫ contrib.
+%{dname} - компилятор, совместимый с языком CA-Clipper.
+Этот пакет содержит статические библиотеки %{dname} из дерева contrib.
 
 
 ######################################################################

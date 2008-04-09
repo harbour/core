@@ -27,5 +27,5 @@ pptable.c : $(HB_PP_RULES)
 	$(CP) $(subst /,$(DIRSEP),$<) $@
 else
 pptable.c : hbppgen$(EXE_EXT)
-	$(HB_PPGEN_PATH)/hbppgen$(EXE_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q
+	$(HB_PPGEN_PATH)/hbppgen$(EXE_EXT) $(TOP)$(ROOT)include/hbstdgen.ch -opptable.c -q -c -v$(TOP)$(ROOT)include/hbverbld.h
 endif

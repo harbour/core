@@ -987,12 +987,18 @@ extern void   hb_idleSleep( double dSeconds ); /* sleep for a given time serving
 extern void   hb_idleShutDown( void ); /* closes all background tasks */
 
 /* misc */
-extern char * hb_verPlatform( void ); /* retrieves a newly allocated buffer containing platform version */
-extern char * hb_verCompiler( void ); /* retrieves a newly allocated buffer containing compiler version */
-extern char * hb_verHarbour( void ); /* retrieves a newly allocated buffer containing harbour version */
-extern char * hb_verPCode( void ); /* retrieves a newly allocated buffer containing PCode version */
+extern char * hb_verPlatform( void );  /* retrieves a newly allocated buffer containing platform version */
+extern char * hb_verCompiler( void );  /* retrieves a newly allocated buffer containing compiler version */
+extern char * hb_verHarbour( void );   /* retrieves a newly allocated buffer containing harbour version */
+extern char * hb_verPCode( void );     /* retrieves a newly allocated buffer containing PCode version */
 extern char * hb_verBuildDate( void ); /* retrieves a newly allocated buffer containing build date and time */
 extern void   hb_verBuildInfo( void ); /* display harbour, compiler, and platform versions to standard console */
+extern int          hb_verSvnID( void );           /* retrieves ChangeLog SVN revision number */
+extern const char * hb_verSvnChangeLogID( void );  /* retrieves a static buffer containing ChangeLog ID string */
+extern const char * hb_verSvnLastEntry( void );    /* retrieves a static buffer containing ChangeLog last entry string */
+extern const char * hb_verFlagsC( void );          /* retrieves a static buffer containing build time C compiler flags in C_USR envvar */
+extern const char * hb_verFlagsL( void );          /* retrieves a static buffer containing build time linker flags in L_USR envvar */
+extern const char * hb_verFlagsPRG( void );        /* retrieves a static buffer containing build time Harbour compiler flags in PRG_USR envvar */
 
 extern HB_EXPORT BOOL   hb_iswinnt( void ); /* return .T. if OS == WinNt, 2000, XP */
 extern HB_EXPORT BOOL   hb_iswince( void ); /* return .T. if OS is Windows CE or Windows Mobile */

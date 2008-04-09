@@ -68,7 +68,7 @@ void * hb_xrealloc( void * pMem, ULONG ulSize ) { return realloc( pMem, ulSize )
 void hb_xfree( void * pMem ) { free( pMem ); }
 BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree ) { if( pfFree ) * pfFree = FALSE; return szFileName; }
 int hb_setGetDirSeparator( void ) { return OS_PATH_DELIMITER; }
-
+int hb_verSvnID( void ) { return 0; }
 
 /*
  * functions to create .c files with rules defined in given PP context
@@ -214,7 +214,7 @@ static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState )
          " * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
          " * www - http://www.harbour-project.org\n"
          " *\n"
-         " * This file is generate automatically by Harbour preprocessor\n"
+         " * This file is generated automatically by Harbour preprocessor\n"
          " * and is covered by the same license as Harbour PP\n"
          " */\n\n#define _HB_PP_INTERNAL\n#include \"hbpp.h\"\n\n" );
 
@@ -297,6 +297,198 @@ static int hb_pp_preprocesfile( PHB_PP_STATE pState, char * szRuleFile )
    return iResult;
 }
 
+static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeLogID, char * szLastEntry )
+{
+   int iResult = 0;
+   char * pszEnv;
+   FILE * fout;
+
+   fout = hb_fopen( szVerFile, "w" );
+   if( !fout )
+   {
+#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
+      perror( szVerFile );
+#endif
+      iResult = 1;
+   }
+   else
+   {
+      fprintf( fout, "/*\n * $Id$\n */\n\n/*\n"
+         " * Harbour Project source code:\n"
+         " *    Version information and build time switches.\n"
+         " *\n"
+         " * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
+         " * www - http://www.harbour-project.org\n"
+         " *\n"
+         " * This file is generated automatically by Harbour preprocessor\n"
+         " * and is covered by the same license as Harbour PP\n"
+         " */\n\n" );
+
+      if( iSVNID )
+         fprintf( fout, "\n#define HB_VER_SVNID    %d\n", iSVNID );
+
+      if( szChangeLogID )
+         fprintf( fout, "\n#define HB_VER_CHLID    \"%s\"\n", szChangeLogID );
+
+      if( szLastEntry )
+         fprintf( fout, "\n#define HB_VER_LENTRY   \"%s\"\n", szLastEntry );
+
+      pszEnv = hb_getenv( "C_USR" );
+      if( pszEnv )
+      {
+         fprintf( fout, "\n#define HB_VER_C_USR    \"%s\"\n", pszEnv );
+         hb_xfree( pszEnv );
+      }
+
+      pszEnv = hb_getenv( "L_USR" );
+      if( pszEnv )
+      {
+         fprintf( fout, "\n#define HB_VER_L_USR    \"%s\"\n", pszEnv );
+         hb_xfree( pszEnv );
+      }
+
+      pszEnv = hb_getenv( "PRG_USR" );
+      if( pszEnv )
+      {
+         fprintf( fout, "\n#define HB_VER_PRG_USR  \"%s\"\n", pszEnv );
+         hb_xfree( pszEnv );
+      }
+
+      fclose( fout );
+   }
+
+   return iResult;
+}
+
+static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
+                                 BOOL fQuiet, int * piSVNID,
+                                 char ** pszChangeLogID, char ** pszLastEntry )
+{
+   int iResult = 0;
+   const char * pszFile;
+   FILE * file_in;
+
+   pszFile = pszFileName ? pszFileName : "../../../../ChangeLog";
+
+   do
+   {
+      if( hb_fsFileExists( pszFile ) )
+         break;
+      pszFile += 3;
+   }
+   while( !pszFileName && ( *pszFile == '.' || *pszFile == 'C' ) );
+
+   file_in = hb_fopen( pszFile, "r" );
+   if( !file_in )
+   {
+         if( !fQuiet )
+         {
+#if !defined(__MINGW32CE__) && !defined(HB_WINCE)
+            perror( pszFile );
+#else
+            fprintf( stderr, "Cannot open the %s file.\n", pszFile );
+#endif
+         }
+         iResult = 1;
+   }
+   else
+   {
+      char szLine[ 256 ];
+      char szId[ 128 ];
+      char szLog[ 128 ];
+      char * szFrom, *szTo;
+      int iLen;
+
+      *szId = *szLog = '\0';
+
+      do
+      {
+         if( !fgets( szLine, sizeof( szLine ), file_in ) )
+            break;
+
+         if( !*szId )
+         {
+            szFrom = strstr( szLine, "$Id: " );
+            if( szFrom )
+            {
+               szFrom += 5;
+               szTo = strstr( szFrom, " $" );
+               if( szTo )
+               {
+                  *szTo = 0;
+                  hb_strncpy( szId, szFrom, sizeof( szId ) - 1 );
+               }
+            }
+         }
+         else if( !*szLog )
+         {
+            if( szLine[ 4 ] == '-' && szLine[ 7 ] == '-' && 
+                szLine[ 10 ] == ' ' && szLine[ 13 ] == ':' )
+            {
+               int iLen;
+               hb_strncpy( szLog, szLine, sizeof( szLog ) - 1 );
+               iLen = strlen( szLog );
+               while( iLen-- && HB_ISSPACE( szLog[ iLen ] ) )
+                  szLog[ iLen ] = '\0';
+            }
+         }
+      }
+      while( !*szLog );
+
+      fclose( file_in );
+
+      if( !*szLog )
+      {
+         if( !fQuiet )
+            fprintf( stderr, "Cannot find valid $Id end log entry in the %s file.\n", pszFile );
+         iResult = 1;
+      }
+      else
+      {
+         *szLine = '"';
+         hb_strncpy( szLine + 1, szLog, sizeof( szLine ) - 3 );
+         iLen = strlen( szLine );
+         szLine[ iLen ] = '"';
+         szLine[ ++iLen ] = '\0';
+         hb_pp_addDefine( pState, "HB_VER_LENTRY", szLine );
+         *pszLastEntry = hb_strdup( szLog );
+
+         hb_strncpy( szLine + 1, szId, sizeof( szLine ) - 3 );
+         iLen = strlen( szLine );
+         szLine[ iLen ] = '"';
+         szLine[ ++iLen ] = '\0';
+         hb_pp_addDefine( pState, "HB_VER_CHLID", szLine );
+         *pszChangeLogID = hb_strdup( szId );
+
+         szFrom = strchr( szLine, ' ' );
+         if( szFrom )
+         {
+            while( *szFrom == ' ' )
+               ++szFrom;
+            iLen = 0;
+            while( HB_PP_ISDIGIT( szFrom[ iLen ] ) )
+               ++iLen;
+            if( iLen && szFrom[ iLen ] == ' ' )
+               szFrom[ iLen ] ='\0';
+            else
+               szFrom = NULL;
+         }
+         if( szFrom )
+         {
+            hb_pp_addDefine( pState, "HB_VER_SVNID", szFrom );
+            *piSVNID = hb_strValInt( szFrom, &iLen );
+         }
+         else
+         {
+            if( !fQuiet )
+               fprintf( stderr, "Unrecognized Id entry in the %s file.\n", pszFile );
+            iResult = 1;
+         }
+      }
+   }
+
+   return iResult;
+}
 
 /*
  * ppgen only functions
@@ -305,17 +497,21 @@ static void hb_pp_usage( char * szName )
 {
    printf( "Syntax:  %s <file>[.prg] [options]\n\n", szName );
    printf( "Options: -i<path>  \tadd #include file search path\n"
-           "         -o[<file>]\tcreates .c file with PP rules\n"
+           "         -c[<file>]\tlook for ChangeLog file\n"
+           "         -o<file>  \tcreates .c file with PP rules\n"
+           "         -v<file>  \tcreates .h file with version information\n"
            "         -w        \twrite preprocessed (.ppo) input file\n"
            "         -q        \tdisable information messages\n" );
 }
 
 int main( int argc, char * argv[] )
 {
-   char * szFile = NULL, * szRuleFile = NULL;
-   BOOL fQuiet = FALSE, fWrite = FALSE;
+   char * szFile = NULL, * szRuleFile = NULL, * szVerFile = NULL;
+   char * szLogFile = NULL;
+   BOOL fQuiet = FALSE, fWrite = FALSE, fChgLog = FALSE;
+   char * szChangeLogID = NULL, * szLastEntry = NULL;
+   int iSVNID = 0, iResult = 0, i;
    PHB_PP_STATE pState;
-   int iResult, i;
 
    pState = hb_pp_new();
 
@@ -346,6 +542,13 @@ int main( int argc, char * argv[] )
                      fWrite = TRUE;
                   break;
 
+               case 'c':
+               case 'C':
+                  fChgLog = TRUE;
+                  if( argv[i][2] )
+                     szLogFile = argv[i] + 2;
+                  break;
+
                case 'i':
                case 'I':
                   if( argv[i][2] )
@@ -358,6 +561,14 @@ int main( int argc, char * argv[] )
                case 'O':
                   if( argv[i][2] )
                      szRuleFile = argv[i] + 2;
+                  else
+                     szFile = NULL;
+                  break;
+
+               case 'v':
+               case 'V':
+                  if( argv[i][2] )
+                     szVerFile = argv[i] + 2;
                   else
                      szFile = NULL;
                   break;
@@ -387,7 +598,17 @@ int main( int argc, char * argv[] )
 
             hb_pp_outFile( pState, szFileName, NULL );
          }
-         iResult = hb_pp_preprocesfile( pState, szRuleFile );
+
+         if( fChgLog )
+            iResult = hb_pp_parseChangelog( pState, szLogFile, fQuiet,
+                                            &iSVNID, &szChangeLogID, &szLastEntry );
+
+         if( iResult == 0 )
+            iResult = hb_pp_preprocesfile( pState, szRuleFile );
+
+         if( iResult == 0 && szVerFile )
+            iResult = hb_pp_generateVerInfo( szVerFile, iSVNID,
+                                             szChangeLogID, szLastEntry );
       }
       else
          iResult = 1;
@@ -397,6 +618,11 @@ int main( int argc, char * argv[] )
       hb_pp_usage( argv[0] );
       iResult = 1;
    }
+
+   if( szChangeLogID )
+      hb_xfree( szChangeLogID );
+   if( szLastEntry )
+      hb_xfree( szLastEntry );
 
    hb_pp_free( pState );
 

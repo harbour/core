@@ -502,7 +502,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
 #endif
    }
 
-   iRows = 24;
+#ifdef TIOCGWINSZ
    if( s_bStdoutConsole )
    {
       struct winsize win;
@@ -513,6 +513,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
          iCols = win.ws_col;
       }
    }
+#endif
 #endif
 
    if( s_iOutBufSize == 0 )

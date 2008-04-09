@@ -533,6 +533,11 @@ int hb_setGetDirSeparator( void )
    return OS_PATH_DELIMITER;
 }
 
+int hb_verSvnID( void )
+{
+   return 0;
+}
+
 static BOOL hb_pp_fopen( char * szFileName )
 {
    PFILE pFile;

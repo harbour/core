@@ -959,13 +959,13 @@ $(DLL_OBJ_DIR)\mainstd.obj : $(VM_DIR)\mainstd.c
 $(OBJ_DIR)\pptable.obj     : $(OBJ_DIR)\pptable.c
 $(DLL_OBJ_DIR)\pptable.obj : $(DLL_OBJ_DIR)\pptable.c
 
-$(OBJ_DIR)\pptable.c     : include\hbstdgen.ch include\std.ch $(PP_DIR)\ppcore.c $(PP_DIR)\hbppgen.c
+$(OBJ_DIR)\pptable.c     : include\hbstdgen.ch include\std.ch ChangeLog $(PP_DIR)\ppcore.c $(PP_DIR)\hbppgen.c
     IF EXIST "$(OBJ_DIR)\pptable.c" $(DEL) "$(OBJ_DIR)\pptable.c" > nul
-    $(HBPPGEN) include/hbstdgen.ch -o$(OBJ_DIR)/pptable.c -q
+    $(HBPPGEN) include/hbstdgen.ch -o$(OBJ_DIR)/pptable.c -q -cChangeLog -vinclude/hbverbld.h
 
-$(DLL_OBJ_DIR)\pptable.c : include\hbstdgen.ch include\std.ch $(PP_DIR)\ppcore.c $(PP_DIR)\hbppgen.c
+$(DLL_OBJ_DIR)\pptable.c : include\hbstdgen.ch include\std.ch ChangeLog $(PP_DIR)\ppcore.c $(PP_DIR)\hbppgen.c
     IF EXIST "$(DLL_OBJ_DIR)\pptable.c" $(DEL) "$(DLL_OBJ_DIR)\pptable.c" > nul
-    $(HBPPGEN) include/hbstdgen.ch -o$(DLL_OBJ_DIR)/pptable.c -q
+    $(HBPPGEN) include/hbstdgen.ch -o$(DLL_OBJ_DIR)/pptable.c -q -cChangeLog -vinclude/hbverbld.h
 
 #**********************************************************
 

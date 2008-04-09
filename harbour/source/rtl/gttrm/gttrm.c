@@ -3402,8 +3402,8 @@ static void hb_gt_trm_Refresh( PHB_GT pGT )
          iStyle = SC_NONE;
    }
    pTerm->SetCursorStyle( pTerm, iStyle );
-   disp_mousecursor( pTerm );
    hb_gt_trm_termFlush( pTerm );
+   disp_mousecursor( pTerm );
 }
 
 static BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )

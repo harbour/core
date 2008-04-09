@@ -57,6 +57,7 @@
 #define _HB_PP_INTERNAL
 
 #include "hbpp.h"
+#include "hbver.h"
 #include "hbdate.h"
 
 #define HB_PP_WARN_DEFINE_REDEF                 1     /* C1005 */
