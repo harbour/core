@@ -7,6 +7,11 @@
    For example:
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+2008-04-09 UTC+0100 Belgrano Massimo (mbelgrano/at/deltain.it)
+   *harbour/contrib/rddado/adordd.prg 
+   *harbour/contrib/rddado/tests/test.prg
+   Support For Found() working after a LOCATE command 
+   by Antonio Linares
 
 2008-03-26 16:54 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtos2/gtos2.c

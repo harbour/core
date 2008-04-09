@@ -21,10 +21,14 @@ function Main()
    test2->First   = "Lara"
    test2->Last    = "Croft"
    test2->Age     = 32
+   
 
    GO TOP
    Browse()
-
+   
+   GO TOP
+   locate for TEST2->First="Lara"
+   ? FOUND()
    USE
 
 return nil
