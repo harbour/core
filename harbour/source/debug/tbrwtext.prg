@@ -106,7 +106,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers, nTabW
    ::cFileName := cFileName
    ::lLineNumbers := lLineNumbers
 
-   ::Super:New( "", nTop, nLeft, nBottom, nRight, .F., -1, nTabWidth )
+   ::Super:New( "", nTop, nLeft, nBottom, nRight, .F., NIL, nTabWidth )
    ::Super:SetColor( cColor )
    ::Super:LoadFile( cFileName )
 

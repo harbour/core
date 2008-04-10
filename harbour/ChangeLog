@@ -8,6 +8,11 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-10 13:50 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * source/debug/tbrwtext.prg
+    ! fixed small typo that was allowing wordwrapping long source code lines
+      and was messing with the correct display of the current line
+
 2008-04-10 15:39 UTC+0100 Belgrano Massimo (mbelgrano/at/deltain.it)
   * harbour/contrib/rddado/adordd.prg 
     Instead of overloading FOUND method in ADO RDD it will be
