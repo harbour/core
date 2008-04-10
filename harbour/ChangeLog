@@ -8,6 +8,12 @@
    2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-09 UTC+0100 Belgrano Massimo (mbelgrano/at/deltain.it)
+  * harbour/contrib/rddado/adordd.prg 
+    Instead of overloading FOUND method in ADO RDD it will be
+    more efficient to use standard implementation written in C
+    by Przemyslaw  suggestion
+
 2008-04-09 20:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
   * harbour/harbour.spec

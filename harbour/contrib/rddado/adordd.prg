@@ -84,9 +84,8 @@
 #define WA_SCOPEINFO 13
 #define WA_SQLSTRUCT 14
 
-#define WA_FOUND     15
 
-#define WA_SIZE      15
+#define WA_SIZE      14
 
 
 ANNOUNCE ADORDD
@@ -592,10 +591,11 @@ static function ADO_LOCATE( nWA, lContinue )
    local oRecordSet := aWAData[ WA_RECORDSET ]
 
    oRecordSet:Find( aWAData[ WA_SCOPEINFO ][ UR_SI_CFOR ], If( lContinue, 1, 0 ) )
-   aWAData[ WA_FOUND ] = ! oRecordSet:EOF
+   USRRDD_SETFOUND( nWA, ! oRecordSet:EOF )
    aWAData[ WA_EOF ] = oRecordSet:EOF
 
 return SUCCESS
+
 
 
 static function ADO_CLEARREL( nWA )
@@ -774,7 +774,7 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aADOFunc[ UR_ORDLSTADD ]    := ( @ADO_ORDLSTADD() )
    aADOFunc[ UR_ORDLSTCLEAR ]  := ( @ADO_ORDLSTCLEAR() )
    aAdoFunc[ UR_FOUND ]        := ( @ADO_FOUND() )
-   
+
 return USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, cSuperRDD,;
                             aADOFunc )
 
@@ -996,11 +996,5 @@ function HB_AdoRddGetRecordSet( nWA )
    aWAData = USRRDD_AREADATA( nWA )
 
 return If( aWAData != nil, aWAData[ WA_RECORDSET ], nil )
-static function ADO_FOUND( nWA, lFound )
 
-   local aWAData := USRRDD_AREADATA( nWA )
-
-   lFound = aWAData[ WA_FOUND ]
-
-return SUCCESS
 
