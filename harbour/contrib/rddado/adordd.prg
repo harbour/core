@@ -773,7 +773,7 @@ function ADORDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aADOFunc[ UR_ORDDESTROY ]   := ( @ADO_ORDDESTROY() )
    aADOFunc[ UR_ORDLSTADD ]    := ( @ADO_ORDLSTADD() )
    aADOFunc[ UR_ORDLSTCLEAR ]  := ( @ADO_ORDLSTCLEAR() )
-   aAdoFunc[ UR_FOUND ]        := ( @ADO_FOUND() )
+
 
 return USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, cSuperRDD,;
                             aADOFunc )
