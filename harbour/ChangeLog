@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-13 21:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/mod.c
+     ! Fixed error object to be C5x compatible when wrong or too 
+       few parameters were passed to MOD(). Now the previously 
+       corrected MOD() regression tests pass. (I misinterpreted 
+       the problem in the previous ChangeLog entry.)
+
+   * utils/hbtest/rt_math.prg
+     + Added two new tests for MOD()
+
 2008-04-13 19:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    + utils/hbtest/rt_main.h
@@ -37,10 +47,6 @@
 
    * utils/hbtest/rt_math.prg
      ! Corrected expected C5.2/5.3 result for 'MOD()'.
-       TOFIX: The Harbour result is different, and in contrary to 
-              C5.x it won't allow to substitue values from the 
-              error handler, when wrong types were passed initially, 
-              which is IMO a bug.
 
    * utils/hbtest/rt_misc.prg
      ! Some results synced with C5.x (where the result could be 

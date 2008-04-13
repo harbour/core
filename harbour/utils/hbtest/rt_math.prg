@@ -361,6 +361,8 @@ FUNCTION Main_MATH()
    /* MOD() */
 
    TEST_LINE( MOD()                           , "E BASE 1085 Argument error % A:2:U:NIL;U:NIL F:S" )
+   TEST_LINE( MOD( NIL )                      , "E BASE 1085 Argument error % A:2:U:NIL;U:NIL F:S" )
+   TEST_LINE( MOD( 100 )                      , "E BASE 1085 Argument error % A:2:N:100;U:NIL F:S" )
    TEST_LINE( MOD( "A", "B" )                 , "E BASE 1085 Argument error % A:2:C:A;C:B F:S"     )
    TEST_LINE( MOD( "A", 100 )                 , "E BASE 1085 Argument error % A:2:C:A;N:100 F:S"   )
    TEST_LINE( MOD( 100, "B" )                 , "E BASE 1085 Argument error % A:2:N:100;C:B F:S"   )

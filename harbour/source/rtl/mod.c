@@ -99,7 +99,13 @@ HB_FUNC( MOD )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1085, NULL, "%", HB_ERR_ARGS_BASEPARAMS );
+   {
+      PHB_ITEM pItemNIL = hb_itemNew( NULL );
+
+      hb_errRT_BASE_SubstR( EG_ARG, 1085, NULL, "%", 2, hb_pcount() > 0 ? hb_param( 1, HB_IT_ANY ) : pItemNIL, hb_pcount() > 1 ? hb_param( 2, HB_IT_ANY ) : pItemNIL );
+
+      hb_itemRelease( pItemNIL );
+   }
 }
 
 /*
