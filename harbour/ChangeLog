@@ -8,13 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-14 01:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tbcolumn.prg
+     + TBColumn() instance variable ordering in class definition 
+       made CA-Cl*pper compatible, so that it's now possible to 
+       access object vars as array elements the same way.
+       Read-only access is strongly recommended when using this 
+       unofficial access method, and the practice is overall 
+       discouraged.
+
 2008-04-13 22:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbtest/make_c5x.bat
    * utils/hbtest/hbtest.prg
    * utils/hbtest/rt_miscc.c
    * utils/hbtest/rt_misc.prg
      - Removed dependency on hbclip.
-     + Added proper C version of hb_SToD() for C5.x compiles.
+     + Added proper C version of hb_SToD() for C5.x builds.
        (Needs MSC)
      ! Refixed hb_SToD() results messed up in my previous 
        commit. Sorry for the confusion, Harbour was perfectly 
@@ -23,7 +32,7 @@
      + Disabling hb_SToD() tests with invalid input values 
        for CA-Cl*pper in case there was no C compiler available 
        when building HBTEST. This is to avoid any invalid 
-       results (due to the .prg version of hb_SToD() and to 
+       results (due to the .prg version of hb_SToD()) and to 
        avoid confusions such as above.
 
 2008-04-13 21:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
