@@ -22,6 +22,9 @@ PRG_SOURCES=\
 	rt_trans.prg \
 	rt_class.prg \
 
+C_SOURCES=\
+	rt_miscc.c \
+
 PRG_MAIN=hbtest.prg
 
 LIBS=\

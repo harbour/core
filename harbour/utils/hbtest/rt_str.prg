@@ -62,6 +62,24 @@ FUNCTION Main_STR()
    TEST_LINE( Val( NIL )                      , "E BASE 1098 Argument error VAL A:1:U:NIL F:S" )
    TEST_LINE( Val( 10 )                       , "E BASE 1098 Argument error VAL A:1:N:10 F:S"  )
 
+#ifndef RT_NO_C
+   TEST_LINE( Str(R_PASSENL(  1860637360 ))   , "          1860637360"                 )
+   TEST_LINE( Str(R_PASSENL(         100 ))   , "       100"                           )
+   TEST_LINE( Str(R_PASSENL(   999999999 ))   , " 999999999"                           )
+   TEST_LINE( Str(R_PASSENL(  1000000000 ))   , "          1000000000"                 )
+   TEST_LINE( Str(R_PASSENL(  2147483647 ))   , "          2147483647"                 )
+   TEST_LINE( Str(R_PASSENL(  2147483648 ))   , "         -2147483648"                 )
+   TEST_LINE( Str(R_PASSENL(          -1 ))   , "        -1"                           )
+   TEST_LINE( Str(R_PASSENL(  -999999999 ))   , "-999999999"                           )
+   TEST_LINE( Str(R_PASSENL( -1000000000 ))   , "         -1000000000"                 )
+   TEST_LINE( Str(R_PASSENL(   -99999999 ))   , " -99999999"                           )
+   TEST_LINE( Str(R_PASSENL(  -100000000 ))   , "-100000000"                           )
+
+   TEST_LINE( Str(R_PASSENLC())               , "          1000000000"                 )
+#endif
+
+   TEST_LINE( Str(Val(""))                    , "         0"                           )
+
    TEST_LINE( Str(Val(""))                    , "         0"                           )
    TEST_LINE( Str(Val(" "))                   , "0"                                    )
    TEST_LINE( Str(Val("-"))                   , "0"                                    )
@@ -70,8 +88,8 @@ FUNCTION Main_STR()
    TEST_LINE( Str(Val("+-"))                  , " 0"                                   )
    TEST_LINE( Str(Val("."))                   , "0"                                    )
    TEST_LINE( Str(Val(".."))                  , "0.0"                                  )
-   TEST_LINE( Str(Val("-."))                  , " 0"                                   )
-   TEST_LINE( Str(Val("-.."))                 , "0.0"                                  )
+   TEST_LINE( Str(Val("-."))                  , " 0"                                   ) /* Bug in CA-Cl*pper 5.3x, it will return: "  0" */
+   TEST_LINE( Str(Val("-.."))                 , "0.0"                                  ) /* Bug in CA-Cl*pper 5.3x, it will return: " 0.0" */
    TEST_LINE( Str(Val("1."))                  , " 1"                                   )
    TEST_LINE( Str(Val("1.."))                 , "1.0"                                  )
    TEST_LINE( Str(Val("1..."))                , "1.00"                                 )
@@ -82,7 +100,7 @@ FUNCTION Main_STR()
    TEST_LINE( Str(Val("-1..."))               , "-1.00"                                )
    TEST_LINE( Str(Val(".1"))                  , "0.1"                                  )
    TEST_LINE( Str(Val("-.1"))                 , "-0.1"                                 )
-   TEST_LINE( Str(Val("-.0"))                 , "0.0"                                  )
+   TEST_LINE( Str(Val("-.0"))                 , "0.0"                                  ) /* Bug in CA-Cl*pper 5.3x, it will return: " 0.0" */
    TEST_LINE( Str(Val(" -.1"))                , "-0.1"                                 )
    TEST_LINE( Str(Val(" --.1"))               , "  0.0"                                )
    TEST_LINE( Str(Val("+.1"))                 , "0.1"                                  )

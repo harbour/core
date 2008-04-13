@@ -159,21 +159,34 @@ FUNCTION Main_ARRAY()
    TEST_LINE( ATail( { 1, 2 } )               , 2                                          )
    TEST_LINE( ATail( ErrorNew() )             , NIL                                        )
 #ifndef __XPP__
+#ifdef HB_COMPAT_C53
    TEST_LINE( ASize()                         , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( ASize( NIL )                    , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( ASize( {} )                     , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( ASize( ErrorNew() )             , "E BASE 2023 Argument error ASIZE "        )
+#else
+   TEST_LINE( ASize()                         , NIL                                        )
+   TEST_LINE( ASize( NIL )                    , NIL                                        )
+   TEST_LINE( ASize( {} )                     , NIL                                        )
+   TEST_LINE( ASize( ErrorNew() )             , NIL                                        )
 #endif
+#endif
+#ifdef HB_COMPAT_C53
    TEST_LINE( ASize( NIL, 0 )                 , "E BASE 2023 Argument error ASIZE "        )
+   TEST_LINE( ASize( NIL, 1 )                 , "E BASE 2023 Argument error ASIZE "        )
+   TEST_LINE( ASize( NIL, -1 )                , "E BASE 2023 Argument error ASIZE "        )
+#else
+   TEST_LINE( ASize( NIL, 0 )                 , NIL                                        )
+   TEST_LINE( ASize( NIL, 1 )                 , NIL                                        )
+   TEST_LINE( ASize( NIL, -1 )                , NIL                                        )
+#endif
    TEST_LINE( ASize( {}, 0 )                  , "{.[0].}"                                  )
    TEST_LINE( ASize( ErrorNew(), 0 )          , "ERROR Object"                             )
-   TEST_LINE( ASize( NIL, 1 )                 , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( ASize( {}, 1 )                  , "{.[1].}"                                  )
    TEST_LINE( ASize( { 1, 2 }, 1 )            , "{.[1].}"                                  )
    TEST_LINE( ASize( { 1, "AAAA" }, 1 )       , "{.[1].}"                                  )
    TEST_LINE( ASize( { "BBB", "AAAA" }, 0 )   , "{.[0].}"                                  )
    TEST_LINE( ASize( ErrorNew(), 1 )          , "ERROR Object"                             )
-   TEST_LINE( ASize( NIL, -1 )                , "E BASE 2023 Argument error ASIZE "        )
    TEST_LINE( ASize( {}, -1 )                 , "{.[0].}"                                  )
    TEST_LINE( ASize( { 1 }, -1 )              , "{.[0].}"                                  )
 #ifdef __HARBOUR__

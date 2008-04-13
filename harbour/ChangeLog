@@ -5,8 +5,60 @@
 /* Use this format for the entry headers:
    YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
    For example:
-   2002-12-01 13:30 UTC+0100 Foo Bar <foo.bar@foobar.org>
+   2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
+
+2008-04-13 19:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   + utils/hbtest/rt_main.h
+   + utils/hbtest/rt_miscc.c
+   * utils/hbtest/rt_str.prg
+   * utils/hbtest/Makefile
+   * hbtest/make_c5x.bat
+   * hbtest/make_xpp.bat
+     + Added light framework to implement C level regression tests.
+     + Added regression tests for some incompatible Str() conversions.
+       TOFIX: The problem seems to be in hb_retnl() (and friends, 
+              presumably) where in C5x the internal width gets 
+              modified to 20 when certain value is reached (+/-1000000000), 
+              while in Harbour the length stays 10.
+              I tried to do the same test using Item API, but I got 
+              so strange results in C, that I finally dropped it.
+     + Added optional C compilation using MSC for CA-Cl*pper 
+       build batch file.
+     + Added better support to compile the test suite under C5.3.
+       Caller will need to use "set HB_COMPAT_C53=1" for this mode.
+
+   * utils/hbtest/rt_array.prg
+     ! Corrected some (ASize()) expected results when not in 5.3 mode.
+
+   * utils/hbtest/rt_str.prg
+     + Added comments for some erroneous C5.3 'Str(Val())' results.
+
+   * utils/hbtest/rt_math.prg
+     ! Corrected expected C5.2/5.3 result for 'MOD()'.
+       TOFIX: The Harbour result is different, and in contrary to 
+              C5.x it won't allow to substitue values from the 
+              error handler, when wrong types were passed initially, 
+              which is IMO a bug.
+
+   * utils/hbtest/rt_misc.prg
+     ! Some results synced with C5.x (where the result could be 
+       "explained"), two marked as buggy/questionable.
+     ! Two strange Harbour-synced results swapped for the somewhat 
+       more meaningful C5.x ones.
+     + Added some more strange date conversion tests.
+     ; All these could be fixed in Harbour to give the exact same 
+       C5.x values even for these strange inputs, but it's by no 
+       means a priority.
+
+   * source/rtl/transfrm.c
+     ! FoxPro/XPP feature guarded with HB_COMPAT_FOXPRO || HB_COMPAT_XPP,
+       meaning that it stays enabled by default because of HB_COMPAT_XPP.
+
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+     ! Fixed the dir precedence when looking for ace32.dll.
 
 2008-04-11 11.45 UTC+0100 Belgrano Massimo (mbelgrano/at/deltain.it)
   * harbour/contrib/rddado/adordd.prg 

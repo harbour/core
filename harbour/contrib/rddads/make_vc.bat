@@ -21,10 +21,10 @@ set CFLAGS=%CFLAGS% -DADS_REQUIRE_VERSION=%ADS_VER%
 :DEFAULT_VER
 
 set HB_DLL_NAME=ace32
-if exist "%ADS_DIR%\32bit\%HB_DLL_NAME%.dll"        set HB_DLL_DIR=%ADS_DIR%\32bit
+if exist "%SystemRoot%\system32\%HB_DLL_NAME%.dll"  set HB_DLL_DIR=%SystemRoot%\system32
 if exist "%ADS_DIR%\Redistribute\%HB_DLL_NAME%.dll" set HB_DLL_DIR=%ADS_DIR%\Redistribute
 if exist "%ADS_DIR%\%HB_DLL_NAME%.dll"              set HB_DLL_DIR=%ADS_DIR%
-if exist "%SystemRoot%\system32\%HB_DLL_NAME%.dll"  set HB_DLL_DIR=%SystemRoot%\system32
+if exist "%ADS_DIR%\32bit\%HB_DLL_NAME%.dll"        set HB_DLL_DIR=%ADS_DIR%\32bit
 
 echo Using this .dll: %HB_DLL_DIR%\%HB_DLL_NAME%.dll
 

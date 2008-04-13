@@ -1057,6 +1057,7 @@ HBTEST_EXE_OBJS = \
     $(OBJ_DIR)\rt_array$(OBJEXT) \
     $(OBJ_DIR)\rt_file$(OBJEXT)  \
     $(OBJ_DIR)\rt_misc$(OBJEXT)  \
+    $(OBJ_DIR)\rt_miscc$(OBJEXT)  \
     $(OBJ_DIR)\rt_class$(OBJEXT) \
 
 #**********************************************************

@@ -144,11 +144,13 @@ HB_FUNC( TRANSFORM )
                case ')':
                   uiPicFlags |= PF_PARNEGWOS;
                   break;
+#if defined(HB_COMPAT_XPP) || defined(HB_COMPAT_FOXPRO)
                case 'L':
                case '0':
                   uiPicFlags |= PF_PADL;  /* FoxPro/XPP extension */
                   byParamL = '0';
                   break;
+#endif
                case 'B':
                   uiPicFlags |= PF_LEFT;
                   break;
