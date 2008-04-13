@@ -54,33 +54,21 @@
 #include "extend.api"
 #include "item.api"
 
-/* NOTE: Do not use C level function names longer than 
-         10 chars. This is to keep things simple. [vszakats] */
+/* NOTE: Do not use names longer than 10 chars for .prg callable function.
+         This is to keep things simple. [vszakats] */
 
 #if defined(__HARBOUR__)
 
    #include "hbundoc.api"
 
-   #define RT_FUNDEF( funcname )              HB_FUNC( funcname )
+   #define RT_FUNDEF( funcname )            HB_FUNC( funcname )
 
 #elif defined(__XPP__)
 
-   #define RT_FUNDEF( funcname )              XPPRET XPPENTRY funcname ( XppParamList paramList )
+   #define RT_FUNDEF( funcname )            XPPRET XPPENTRY funcname ( XppParamList paramList )
 
 #else /* __CLIPPER__ */
 
-   #define RT_FUNDEF( funcname )              CLIPPER funcname ( void )
-
-   /* NOTE: It's safe to call _xfree() instead of _itemFreeC() as 
-            in C52 they do exactly the same, actually the only thing 
-            _itemFreeC() does is passing the call to _xfree().
-            [vszakats] */
-
-   /* NOTE: WARNING! Do not use function calls as parameters for the 
-            following functions: */
-
-   #define hb_retc_buffer( b )                { _retc( ( char * ) b ); free( ( void * ) b ); }
-   #define hb_retclen_buffer( b, l )          { _retclen( ( char * ) b, l ); free( ( void * ) b ); }
-   #define hb_retc_const( c )                 _retc( ( char * ) ( c ) )
+   #define RT_FUNDEF( funcname )            CLIPPER funcname ( void )
 
 #endif
