@@ -578,7 +578,7 @@ FUNCTION HB_SToD( cDate )
    RETURN SToD( cDate )
 #endif
 
-#ifndef HAVE_HBCLIP
+#ifdef RT_NO_C
 #ifndef __HARBOUR__
 #ifndef __XPP__
 

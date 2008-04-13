@@ -3,14 +3,6 @@ rem
 rem $Id$
 rem
 
-if not exist ..\..\contrib\hbclip\hbclip.lib goto NO_HBCLIP
-
-set HB_CLIPOPT=%HB_CLIPOPT% /DHAVE_HBCLIP
-set HB_LINKOPT=li hbclip
-set LIB=..\..\contrib\hbclip\;%LIB%
-
-:NO_HBCLIP
-
 rem ; TODO: Use /FPi when HB_COMPAT_C53=1
 %HB_MSC_DIR%\cl.exe /c /AL /Zl /Oalt /Gs /FPa /W3 /G2 rt_miscc.c
 

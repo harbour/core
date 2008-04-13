@@ -61,3 +61,15 @@ RT_FUNDEF( R_PASSENLC )
 {
    _retnl( 1000000000L );
 }
+
+#ifndef __HARBOUR__
+#ifndef __XPP__
+
+CLIPPER HB_STOD( void )
+{
+   // The length check is a fix to avoid buggy behaviour of _retds()
+   _retds( ( ISCHAR( 1 ) && _parclen( 1 ) == 8 ) ? _parc( 1 ) : "        " );
+}
+
+#endif
+#endif
