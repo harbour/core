@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-14 23:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/errorapi.c
+    * allow to pass NULL instead of PHB_ITEM pointer in argument list
+      of RT error functions:
+         hb_errRT_BASE()
+         hb_errRT_BASE_Ext1()
+         hb_errRT_BASE_Subst()
+         hb_errRT_BASE_SubstR()
+      to not force allocating dummy item in upper level code.
+
+  * harbour/source/rtl/mod.c
+    ! small fix in substitued return value in code like:
+         proc main()
+            set fixed on
+            ? transform(mod( 12345, 0 ),"")
+         return
+
+  * harbour/utils/hbmake/hbmlang.c
+  * harbour/utils/hbmake/hbmutils.prg
+  * harbour/utils/hbmake/hbmake.prg
+    ! removed gtnul library - it does not longer exists
+    * minor formatting
+
 2008-04-14 01:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbtest/rt_main.h
      * Cleanup.

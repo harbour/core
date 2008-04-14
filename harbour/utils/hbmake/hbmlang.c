@@ -51,7 +51,9 @@
 
 
 #define HB_OS_WIN_32_USED
-#include <hbapi.h>
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapigt.h"
 #include <stdio.h>
 
 HB_FUNC(GETUSERLANG)
@@ -61,7 +63,7 @@ HB_FUNC(GETUSERLANG)
 #if defined(HB_OS_WIN_32) && (!defined(__RSXNT__)) && (!defined(__CYGWIN__))
 
    {
-   
+
       LANGID pLang=GetSystemDefaultLangID();
 
       switch(pLang) {
@@ -74,16 +76,16 @@ HB_FUNC(GETUSERLANG)
 
          break;
 
-         case 0x0409 : 
-         case 0x0809 : 
-         case 0x0c09 : 
-         case 0x1009 : 
-         case 0x1409 : 
-         case 0x1809 : 
-         case 0x1c09 : 
-         case 0x2009 : 
-         case 0x2409 : 
-         case 0x2809 : 
+         case 0x0409 :
+         case 0x0809 :
+         case 0x0c09 :
+         case 0x1009 :
+         case 0x1409 :
+         case 0x1809 :
+         case 0x1c09 :
+         case 0x2009 :
+         case 0x2409 :
+         case 0x2809 :
          case 0x2c09 :
          {
             lRet=2;
@@ -92,48 +94,45 @@ HB_FUNC(GETUSERLANG)
          break;
 
          case 0x040a :
-         case 0x080a :   
-         case 0x0c0a :   
-         case 0x100a :   
-         case 0x140a :   
-         case 0x180a :   
-         case 0x1c0a :   
-         case 0x200a :   
-         case 0x240a :   
-         case 0x280a :   
-         case 0x2c0a :   
-         case 0x300a :   
-         case 0x340a :   
-         case 0x380a :   
-         case 0x3c0a :   
-         case 0x400a :   
-         case 0x440a :   
-         case 0x480a :   
-         case 0x4c0a :   
+         case 0x080a :
+         case 0x0c0a :
+         case 0x100a :
+         case 0x140a :
+         case 0x180a :
+         case 0x1c0a :
+         case 0x200a :
+         case 0x240a :
+         case 0x280a :
+         case 0x2c0a :
+         case 0x300a :
+         case 0x340a :
+         case 0x380a :
+         case 0x3c0a :
+         case 0x400a :
+         case 0x440a :
+         case 0x480a :
+         case 0x4c0a :
          case 0x500a :
          {
             lRet=3;
-         }        
+         }
          break;
 
       default:
 
       lRet=2;
 
-      break; 
+      break;
 
-      }                  
+      }
 
    }
 #else
    lRet = 2 ;
 #endif
-     hb_retnl( lRet ); 
+     hb_retnl( lRet );
 }
 
-
-#include "hbapiitm.h"
-#include "hbapigt.h"
 
 /* Box array definitions */
 #define B_TOP           1
@@ -242,7 +241,7 @@ HB_FUNC( GAUGEDISPLAY )
 
       hb_gtSetColorStr( szOldColor );
 
-      hb_gaugeUpdate( pArray, (float) hb_arrayGetNL( pArray, B_PERCENT ) );
+      hb_gaugeUpdate( pArray, ( float ) hb_arrayGetND( pArray, B_PERCENT ) );
 
       hb_itemReturn( pArray );
    }
@@ -271,7 +270,7 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
    int iMax;
    char szOldColor[ CLR_STRLEN ];
    char * szStr = "        ";
-   char szPct[ 4 ];
+   char szPct[ 5 ];
 
    hb_gtGetColorStr( szOldColor );
    hb_gtSetColorStr( hb_arrayGetCPtr( pArray, B_BARCOLOR ) );

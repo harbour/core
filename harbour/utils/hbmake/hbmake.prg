@@ -1621,14 +1621,14 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
    LOCAL cAppName         := padr(s_cAppName,50)
    LOCAL cDefaultLibs     := "hblang.lib hbvm.lib hbrtl.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbcommon.lib gtwin.lib hbcpage.lib hbpcre.lib hbhsx.lib hbsix.lib"
    LOCAL cDefGccLibs      := "-lhbvm -lhbrtl -lhbpcre -lgtdos -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage -lm"
-   LOCAL cDefGccLibsUnix  := "-lhbvm -lhbcpage -ltef -lhbrtl -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lhblang -lhbcommon -lhbnulrdd -lbmrddcdx -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbhsx -lhbusrrdd -lhbpcre -lgtnul -lgtsln -lshblang -lm -lrt"
-   LOCAL cDefGccLibsw     := "-lhbvm -lhbrtl -lhbpcre -lgtwin -lgtnul -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage -lm"
+   LOCAL cDefGccLibsUnix  := "-lhbvm -lhbcpage -ltef -lhbrtl -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lhblang -lhbcommon -lhbnulrdd -lbmrddcdx -lrddntx -lrddcdx -lrddfpt -lhbsix -lhbhsx -lhbusrrdd -lhbpcre -lgtsln -lshblang -lm -lrt"
+   LOCAL cDefGccLibsw     := "-lhbvm -lhbrtl -lhbpcre -lgtwin -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage -lm"
    LOCAL cGccLibsOs2      := "-lhbvm -lhbrtl -lhbpcre -lgtos2 -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage -lm"
-   LOCAL cDefLibGccLibs   := "-lhbvm -lhbrtl -lhbpcre -lgtcrs -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage -lgtnul"
+   LOCAL cDefLibGccLibs   := "-lhbvm -lhbrtl -lhbpcre -lgtcrs -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddntx -lrddcdx -lrddfpt -lhbhsx -lhbsix -lhbcommon -lhbcpage"
    LOCAL cDefaultLibsMt    := "lang.lib vmmt.lib rtlmt.lib rddmt.lib macromt.lib ppmt.lib dbfntxmt.lib dbfcdxmt.lib  dbffptmt.lib common.lib gtwin.lib codepage.lib hbpcre.lib hsxmt.lib hbsixmt.lib"
-   LOCAL cDefGccLibsUnixMt := "-lvmmt -lcodepage -ltef -lrtlmt  -lrddmt  -lrtl  -lvmmt  -lmacromt  -lpp  -llang  -lcommon  -lnulsys  -lbmdbfcdx  -ldbfntx  -ldbfcdx  -ldbffpt  -lhbsix  -lhsx  -lusrrdd -lhbpcre -lgtnul -lgtsln -lslang -lm -lrt"
+   LOCAL cDefGccLibsUnixMt := "-lvmmt -lcodepage -ltef -lrtlmt  -lrddmt  -lrtl  -lvmmt  -lmacromt  -lpp  -llang  -lcommon  -lnulsys  -lbmdbfcdx  -ldbfntx  -ldbfcdx  -ldbffpt  -lhbsix  -lhsx  -lusrrdd -lhbpcre -lgtsln -lslang -lm -lrt"
    LOCAL cDefGccLibsMt    := "-lvmmt -lrtlmt -lhbpcre -lgtdos -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
-   LOCAL cDefGccLibsMtw    := "-lvmmt -lrtlmt -lhbpcre -lgtwin -lgtnul -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
+   LOCAL cDefGccLibsMtw    := "-lvmmt -lrtlmt -lhbpcre -lgtwin -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
    LOCAL cGccLibsOs2Mt    := "-lvmmt -lrtlmt -lhbpcre -lgtos2 -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage -lm"
 //   LOCAL cDefLibGccLibsMt := "-lvmmt -lrtlmt -lhbpcre -lgtcrs -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage"
    LOCAL cDefLibGccLibsMt := "-lvmmt -lrtlmt -lhbpcre -lgtsln -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage"
@@ -2989,8 +2989,8 @@ Endif // Create and compile
 
    IF s_lBcc .OR. s_lMSVcc .OR. s_lPocc
       if lFwh .or. lMiniGui .or. lC4W .or. lWhoo .or. lHwGui .or. lWhat32
-            cDefaultLibs   := strtran(cDefaultLibs,"gtwin.lib","gtgui.lib gtnul.lib")
-            cDefaultLibsMt := strtran(cDefaultLibsMt,"gtwin.lib","gtgui.lib gtnul.lib")
+            cDefaultLibs   := strtran(cDefaultLibs,"gtwin.lib","gtgui.lib")
+            cDefaultLibsMt := strtran(cDefaultLibsMt,"gtwin.lib","gtgui.lib")
       endif
 
       IF lFwh

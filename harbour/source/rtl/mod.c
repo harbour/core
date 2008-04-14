@@ -68,11 +68,12 @@
 HB_FUNC( MOD )
 {
    PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
+   PHB_ITEM pBase = hb_param( 2, HB_IT_NUMERIC );
 
-   if( pNumber && ISNUM( 2 ) )
+   if( pNumber && pBase )
    {
       double dNumber = hb_itemGetND( pNumber );
-      double dBase = hb_parnd( 2 ); /* dBase! Cool! */
+      double dBase = hb_itemGetND( pBase ); /* dBase! Cool! */
 
       if( dBase )
       {
@@ -86,26 +87,26 @@ HB_FUNC( MOD )
       {
          PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%", HB_ERR_ARGS_BASEPARAMS );
 
+         /* In CA-Clipper MOD() function ignores substitution result
+          * and return original numeric item keeping its internal
+          * representation: integer or double, size and number of
+          * decimal places, it can be seen in code like:
+          *    proc main()
+          *       set fixed on
+          *       ? transform(mod( 12345, 0 ),"")
+          *    return
+          *
+          * [druzus]
+          */
          if( pResult )
          {
-            int iDec;
-
+            hb_itemReturn( pNumber );
             hb_itemRelease( pResult );
-
-            hb_itemGetNLen( pNumber, NULL, &iDec );
-
-            hb_retndlen( dNumber, 0, iDec );
          }
       }
    }
    else
-   {
-      PHB_ITEM pItemNIL = hb_itemNew( NULL );
-
-      hb_errRT_BASE_SubstR( EG_ARG, 1085, NULL, "%", 2, hb_pcount() > 0 ? hb_param( 1, HB_IT_ANY ) : pItemNIL, hb_pcount() > 1 ? hb_param( 2, HB_IT_ANY ) : pItemNIL );
-
-      hb_itemRelease( pItemNIL );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 1085, NULL, "%", 2, hb_param( 1, HB_IT_ANY ), hb_param( 2, HB_IT_ANY ) );
 }
 
 /*

@@ -1050,7 +1050,9 @@ USHORT hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, const char * szDescripti
       va_start( va, ulArgCount );
       for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
       {
-         hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
+         PHB_ITEM pArg = va_arg( va, PHB_ITEM );
+         if( pArg )
+            hb_itemArrayPut( pArray, ulArgPos, pArg );
       }
       va_end( va );
    }
@@ -1106,7 +1108,9 @@ USHORT hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
       va_start( va, ulArgCount );
       for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
       {
-         hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
+         PHB_ITEM pArg = va_arg( va, PHB_ITEM );
+         if( pArg )
+            hb_itemArrayPut( pArray, ulArgPos, pArg );
       }
       va_end( va );
    }
@@ -1161,7 +1165,9 @@ PHB_ITEM hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, const char * szD
       va_start( va, ulArgCount );
       for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
       {
-         hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
+         PHB_ITEM pArg = va_arg( va, PHB_ITEM );
+         if( pArg )
+            hb_itemArrayPut( pArray, ulArgPos, pArg );
       }
       va_end( va );
    }
@@ -1215,7 +1221,9 @@ void hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, const char * szDesc
       va_start( va, ulArgCount );
       for( ulArgPos = 1; ulArgPos <= ulArgCount; ulArgPos++ )
       {
-         hb_itemArrayPut( pArray, ulArgPos, va_arg( va, PHB_ITEM ) );
+         PHB_ITEM pArg = va_arg( va, PHB_ITEM );
+         if( pArg )
+            hb_itemArrayPut( pArray, ulArgPos, pArg );
       }
       va_end( va );
    }
