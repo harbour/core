@@ -567,7 +567,7 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
             {
                *dVal = *dVal * 10.0 + ( c - '0' );
             }
-            else if( *lVal < lLimV || ( *lVal <= lLimV && ( c - '0' ) <= iLimC ) )
+            else if( *lVal < lLimV || ( *lVal <= lLimV && ( ( int ) ( c - '0' ) ) <= iLimC ) )
             {
                *lVal = *lVal * 10 + ( c - '0' );
             }

@@ -66,43 +66,43 @@ CREATE CLASS TBColumn STATIC
 CREATE CLASS TBColumn
 #endif
 
-   EXPORT:
+   EXPORTED:
 
    /* === Start of CA-Cl*pper compatible TBColumn instance area === */
-   VAR cargo                                    // 01. User-definable variable
-   VAR nWidth       PROTECTED                   // 02.
-   VAR bBlock       PROTECTED                   // 03.
-   VAR aDefColor    PROTECTED INIT { 1, 2 }     // 04. /* NOTE: Default value for both CA-Cl*pper 5.2 and 5.3. */
-   VAR bColorBlock  PROTECTED INIT {|| NIL }    // 05.
-   VAR cHeading     PROTECTED INIT ""           // 06.
-   VAR cHeadSep     PROTECTED                   // 07.
-   VAR cColSep      PROTECTED                   // 08.
-   VAR cFootSep     PROTECTED                   // 09.
-   VAR cFooting     PROTECTED INIT ""           // 10.
-   VAR picture                                  // 11. Column picture string
+   VAR cargo                                         /* 01. User-definable variable */
+   VAR nWidth       PROTECTED                        /* 02. */
+   VAR bBlock       PROTECTED                        /* 03. */
+   VAR aDefColor    PROTECTED INIT { 1, 2 }          /* 04. NOTE: Default value for both CA-Cl*pper 5.2 and 5.3. */
+   VAR bColorBlock  PROTECTED INIT {|| NIL }         /* 05. */
+   VAR cHeading     PROTECTED INIT ""                /* 06. */
+   VAR cHeadSep     PROTECTED                        /* 07. */
+   VAR cColSep      PROTECTED                        /* 08. */
+   VAR cFootSep     PROTECTED                        /* 09. */
+   VAR cFooting     PROTECTED INIT ""                /* 10. */
+   VAR picture                                       /* 11. Column picture string */
 #ifdef HB_COMPAT_C53
-   VAR bPreBlock    PROTECTED                   // 12.
-   VAR bPostBlock   PROTECTED                   // 13.
-   VAR aSetStyle    PROTECTED INIT { .F., .F., .F. } // 14. /* TBC_READWRITE, TBC_MOVE, TBC_SIZE */
+   VAR bPreBlock    PROTECTED                        /* 12. */
+   VAR bPostBlock   PROTECTED                        /* 13. */
+   VAR aSetStyle    PROTECTED INIT { .F., .F., .F. } /* 14. TBC_READWRITE, TBC_MOVE, TBC_SIZE */
 #endif
    /* === End of CA-Cl*pper compatible TBColumn instance area === */
-                                                
-   METHOD block( bBlock ) SETGET                // Code block to retrieve data for the column
-   METHOD colorBlock( bColorBlock ) SETGET      // Code block that determines color of data items
-   METHOD defColor( aDefColor ) SETGET          // Array of numeric indexes into the color table
-   METHOD colSep( cColSep ) SETGET              // Column separator character
-   METHOD heading( cHeading ) SETGET            // Column heading
-   METHOD footing( cFooting ) SETGET            // Column footing
-   METHOD headSep( cHeadSep ) SETGET            // Heading separator character
-   METHOD footSep( cFootSep ) SETGET            // Footing separator character
-   METHOD width( nWidth ) SETGET                // Column display width
-#ifdef HB_COMPAT_C53                            
-   METHOD preBlock( bPreBlock ) SETGET          // Code block determining editing
-   METHOD postBlock( bPostBlock ) SETGET        // Code block validating values
-   METHOD setStyle( nStyle, lSetting )          
-#endif                                          
-                                                
-   METHOD New( cHeading, bBlock )               /* NOTE: This method is a Harbour extension [vszakats] */
+
+   METHOD block( bBlock ) SETGET                     /* Code block to retrieve data for the column */
+   METHOD colorBlock( bColorBlock ) SETGET           /* Code block that determines color of data items */
+   METHOD defColor( aDefColor ) SETGET               /* Array of numeric indexes into the color table */
+   METHOD colSep( cColSep ) SETGET                   /* Column separator character */
+   METHOD heading( cHeading ) SETGET                 /* Column heading */
+   METHOD footing( cFooting ) SETGET                 /* Column footing */
+   METHOD headSep( cHeadSep ) SETGET                 /* Heading separator character */
+   METHOD footSep( cFootSep ) SETGET                 /* Footing separator character */
+   METHOD width( nWidth ) SETGET                     /* Column display width */
+#ifdef HB_COMPAT_C53                                 
+   METHOD preBlock( bPreBlock ) SETGET               /* Code block determining editing */
+   METHOD postBlock( bPostBlock ) SETGET             /* Code block validating values */
+   METHOD setStyle( nStyle, lSetting )               
+#endif                                               
+                                                     
+   METHOD New( cHeading, bBlock )                    /* NOTE: This method is a Harbour extension [vszakats] */
 
 ENDCLASS
 

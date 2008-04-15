@@ -476,7 +476,7 @@ void hb_compGenWarning( HB_COMP_DECL, const char* _szWarnings[], char cPrefix, i
     {
       const char *szText = _szWarnings[ iWarning - 1 ];
 
-      if( (szText[ 0 ] - '0') <= s_iWarnings )
+      if( ( ( int ) ( szText[ 0 ] - '0' ) ) <= s_iWarnings )
         {
           printf( "\r(%i) ", hb_comp_iLine );
           printf( "Warning %c%04i  ", cPrefix, iWarning );

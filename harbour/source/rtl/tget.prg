@@ -89,18 +89,36 @@ CREATE CLASS Get STATIC
 CREATE CLASS Get
 #endif
 
-   EXPORT:
+   EXPORTED:
 
-   VAR cargo
+   /* === Start of CA-Cl*pper compatible TGet instance area === */
+   VAR bBlock         PROTECTED         /* 01. */
+   VAR subScript                        /* 02. */
+   VAR cPicture       PROTECTED         /* 03. */
+   VAR postBlock                        /* 04. */
+   VAR preBlock                         /* 05. */
+   VAR cargo                            /* 06. */
+   VAR cName          PROTECTED         /* 07. */
+   VAR cInternal1     HIDDEN            /* 08. U2Bin( ::nRow ) + U2Bin( ::nCol ) + trash. Not implemented in Harbour. */
+   VAR exitState                        /* 09. */
+   VAR reader                           /* 10. */
+#ifdef HB_COMPAT_C53
+   VAR oControl       PROTECTED         /* 11. CA-Clipper 5.3 only. */
+   VAR cCaption       PROTECTED INIT "" /* 12. CA-Clipper 5.3 only. */
+   VAR nCapRow        PROTECTED INIT 0  /* 13. CA-Clipper 5.3 only. */
+   VAR nCapCol        PROTECTED INIT 0  /* 14. CA-Clipper 5.3 only. */
+   VAR cMessage       PROTECTED INIT "" /* 15. CA-Clipper 5.3 only. */
+   VAR nDispLen       PROTECTED         /* 16. CA-Clipper 5.3 places it here. */
+#endif
+   VAR cType          PROTECTED         /* +1. Only accessible when ::hasFocus(). In CA-Cl*pper the field may contain random chars after the first one, which is the type. */
+   VAR cBuffer        PROTECTED         /* +2. Only accessible when ::hasFocus(). */
+   VAR xVarGet        PROTECTED         /* +3. Only accessible when ::hasFocus(). */
+   /* === End of CA-Cl*pper compatible TGet instance area === */
+
    VAR decPos         INIT 0   READONLY /* ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
-   VAR exitState
    VAR hasFocus       INIT .F. READONLY
    VAR original                READONLY
-   VAR postBlock
-   VAR preBlock
-   VAR reader
    VAR rejected       INIT .F. READONLY
-   VAR subScript
    VAR typeOut        INIT .F. READONLY
 
    METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) /* NOTE: This method is a Harbour extension [vszakats] */
@@ -176,25 +194,18 @@ CREATE CLASS Get
 
    PROTECTED:
 
+#ifndef HB_COMPAT_C53
+   VAR nDispLen                /* NOTE: This one is placed inside the instance area for CA-Cl*pper 5.3 [vszakats] */
+#endif
    VAR cColorSpec
-   VAR cPicture
-   VAR bBlock
-   VAR cType
    VAR nPos           INIT 0
    VAR lChanged       INIT .F.
    VAR lClear         INIT .F.
    VAR nRow
    VAR nCol
-   VAR cName
    VAR lRejected      INIT .F.
-   VAR cBuffer
    VAR lHideInput     INIT .F.
    VAR cStyle         INIT "*" /* NOTE: First char is to be used as mask character when :hideInput is .T. [vszakats] */
-   VAR oControl
-   VAR cMessage       INIT ""
-   VAR cCaption       INIT ""
-   VAR nCapRow        INIT 0
-   VAR nCapCol        INIT 0
 
    VAR cPicMask       INIT ""
    VAR cPicFunc       INIT ""
@@ -202,7 +213,6 @@ CREATE CLASS Get
    VAR lEdit          INIT .F.
    VAR lDecRev        INIT .F.
    VAR lPicComplex    INIT .F.
-   VAR nDispLen
    VAR nDispPos       INIT 1
    VAR nOldPos        INIT 0
    VAR lCleanZero     INIT .F.
@@ -210,7 +220,6 @@ CREATE CLASS Get
    VAR lMinus         INIT .F.
    VAR lMinus2        INIT .F.
    VAR lMinusPrinted  INIT .F.
-   VAR xVarGet
 
    METHOD DeleteAll()
    METHOD IsEditable( nPos )
@@ -246,9 +255,11 @@ METHOD display( lForced ) CLASS Get
    local nOldCursor := SetCursor( SC_NONE )
    local cBuffer
    local nDispPos
-
-   local cCaption
    local nPos
+
+#ifdef HB_COMPAT_C53
+   local cCaption
+#endif
 
    DEFAULT lForced TO .T.
 
@@ -274,12 +285,12 @@ METHOD display( lForced ) CLASS Get
       ::decPos != 0 .AND. ::lMinus2 .AND. ;
       ::nPos > ::decPos .AND. Val( Left( cBuffer, ::decPos - 1 ) ) == 0
 
-      // display "-." only in case when value on the left side of
-      // the decimal point is equal 0
+      /* Display "-." only in case when value on the left side of
+         the decimal point is equal 0 */
       cBuffer := SubStr( cBuffer, 1, ::decPos - 2 ) + "-." + SubStr( cBuffer, ::decPos + 1 )
    endif
 
-   if ::nDispLen != ::nMaxLen .AND. ::nPos != 0 // ; has scroll?
+   if ::nDispLen != ::nMaxLen .AND. ::nPos != 0 /* ; has scroll? */
       if ::nDispLen > 8
          nDispPos := Max( 1, Min( ::nPos - ::nDispLen + 4       , ::nMaxLen - ::nDispLen + 1 ) )
       else
@@ -288,6 +299,8 @@ METHOD display( lForced ) CLASS Get
    else
       nDispPos := 1
    endif
+
+#ifdef HB_COMPAT_C53
 
    /* Handle C5.3 caption. */
 
@@ -307,6 +320,8 @@ METHOD display( lForced ) CLASS Get
          DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_ACCEL ) )
       endif
    endif
+
+#endif
 
    /* Display the GET */
 
@@ -754,7 +769,7 @@ METHOD insert( cChar ) CLASS Get
    endif
    
    if ::lPicComplex
-      // Calculating different nMaxEdit for ::lPicComplex
+      /* Calculating different nMaxEdit for ::lPicComplex */
       for n := ::nPos to nMaxEdit
          if !::IsEditable( n )
             exit
@@ -1020,7 +1035,7 @@ METHOD delete( lDisplay ) CLASS Get
    ::lEdit := .T.
 
    if ::lPicComplex
-      // Calculating different nMaxLen for ::lPicComplex
+      /* Calculating different nMaxLen for ::lPicComplex */
       for n := ::nPos to nMaxLen
          if !::IsEditable( n )
             exit
@@ -1326,7 +1341,7 @@ METHOD picture( cPicture ) CLASS Get
       endif
    endif
       
-   // Generate default picture mask if not specified
+   /* Generate default picture mask if not specified. */
    
    if Empty( ::cPicMask ) .OR. ::cPicture == NIL
    
@@ -1360,7 +1375,7 @@ METHOD picture( cPicture ) CLASS Get
    
    endif
    
-   // Comprobar si tiene caracteres embebidos no modificables en la plantilla
+   /* Comprobar si tiene caracteres embebidos no modificables en la plantilla. */
    
    if ! Empty( ::cPicMask )
       for nFor := 1 to Len( ::cPicMask )
@@ -1652,7 +1667,7 @@ METHOD Input( cChar ) CLASS Get
    endcase
 
    if ! Empty( ::cPicFunc )
-      cChar := Left( Transform( cChar, ::cPicFunc ), 1 ) // Left needed for @D
+      cChar := Left( Transform( cChar, ::cPicFunc ), 1 ) /* Left needed for @D */
    endif
 
    if ! Empty( ::cPicMask )

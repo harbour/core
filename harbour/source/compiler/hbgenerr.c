@@ -185,7 +185,7 @@ void hb_compGenWarning( HB_COMP_DECL, const char * szWarnings[], char cPrefix, i
 {
    const char * szText = szWarnings[ iWarning - 1 ];
 
-   if( !HB_COMP_PARAM->fExit && ( szText[ 0 ] - '0' <= HB_COMP_PARAM->iWarnings ) )
+   if( !HB_COMP_PARAM->fExit && ( ( int ) ( szText[ 0 ] - '0' ) <= HB_COMP_PARAM->iWarnings ) )
    {
       hb_compDispMessage( HB_COMP_PARAM, cPrefix, iWarning,
                           szText + 1, szWarning1, szWarning2 );

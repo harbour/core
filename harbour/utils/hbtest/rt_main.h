@@ -54,7 +54,7 @@
 #include "extend.api"
 #include "item.api"
 
-/* NOTE: Do not use names longer than 10 chars for .prg callable function.
+/* NOTE: Do not use names longer than 10 chars for .prg callable functions.
          This is to keep things simple. [vszakats] */
 
 #if defined(__HARBOUR__)

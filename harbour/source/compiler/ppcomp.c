@@ -122,7 +122,7 @@ static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
    BOOL fError = FALSE;
    int i = strlen( szSwitch );
 
-   if( i > 1 && szSwitch[ i - 1 ] - '0' == iValue )
+   if( i > 1 && ( ( int ) ( szSwitch[ i - 1 ] - '0' ) ) == iValue )
       --i;
 
    if( i == 1 )
