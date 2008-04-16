@@ -1320,6 +1320,32 @@ static BOOL hb_ctw_gt_PutChar( PHB_GT pGT, int iRow, int iCol,
       {
          long lIndex = ( long ) iRow * s_iMapWidth + iCol;
          iWindow = s_pWindowMap[ lIndex ];
+#if 0
+         /* When window with shadow is closed CT3 restores attributes
+          * which existed before shadow was displayed. In some application
+          * which switches to window 0 for pass-throw output it causes that
+          * wrong attributes appears after this operation. In Harbour it's
+          * fixed so such problem do not exist. Anyhow some code may switch
+          * to window 0, make savescreen()/restscreen() and in such case
+          * all shadow attributes are copied to window 0 buffer. The code
+          * below is workaround for it. [druzus]
+          */
+         if( s_pShadowMap[ lIndex ] != 0 )
+         {
+            int iShadow = s_pShadowMap[ lIndex ];
+            if( s_windows[ iShadow ]->iShadowAttr >= 0 &&
+                ( BYTE ) s_windows[ iShadow ]->iShadowAttr == bColor )
+            {
+               BYTE bClr, bAtr;
+               USHORT usCh;
+               if( HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &bClr, &bAtr, &usCh ) )
+               {
+                  if( usCh == usChar && bClr == bColor )
+                     return TRUE;
+               }
+            }
+         }
+#endif
          s_pShadowMap[ lIndex ] = 0;
       }
    }

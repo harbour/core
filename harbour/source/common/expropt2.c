@@ -259,9 +259,9 @@ HB_EXPR_PTR hb_compExprReduceMult( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          {
             HB_MAXDBL dVal = ( HB_MAXDBL ) pLeft->value.asNum.val.l * ( HB_MAXDBL ) pRight->value.asNum.val.l;
 
-            if ( HB_DBL_LIM_LONG( dVal ) )
+            if( HB_DBL_LIM_LONG( dVal ) )
             {
-               pSelf->value.asNum.val.l = ( HB_LONG ) dVal;
+               pSelf->value.asNum.val.l = pLeft->value.asNum.val.l * pRight->value.asNum.val.l;
                pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_LONG;
             }
@@ -333,9 +333,9 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          {
             HB_MAXDBL dVal = ( HB_MAXDBL ) pLeft->value.asNum.val.l - ( HB_MAXDBL ) pRight->value.asNum.val.l;
 
-            if ( HB_DBL_LIM_LONG( dVal ) )
+            if( HB_DBL_LIM_LONG( dVal ) )
             {
-               pSelf->value.asNum.val.l = ( HB_LONG ) dVal;
+               pSelf->value.asNum.val.l = pLeft->value.asNum.val.l - pRight->value.asNum.val.l;
                pSelf->value.asNum.bDec = 0;
                pSelf->value.asNum.NumType = HB_ET_LONG;
             }
@@ -487,9 +487,9 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             {
                HB_MAXDBL dVal = ( HB_MAXDBL ) pLeft->value.asNum.val.l + ( HB_MAXDBL ) pRight->value.asNum.val.l;
 
-               if ( HB_DBL_LIM_LONG( dVal ) )
+               if( HB_DBL_LIM_LONG( dVal ) )
                {
-                  pSelf->value.asNum.val.l = ( HB_LONG ) dVal;
+                  pSelf->value.asNum.val.l = pLeft->value.asNum.val.l + pRight->value.asNum.val.l;
                   pSelf->value.asNum.bDec = 0;
                   pSelf->value.asNum.NumType = HB_ET_LONG;
                }
@@ -647,6 +647,44 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       /* TODO: Check for incompatible types e.g. "txt" + 3
       */
    }
+   return pSelf;
+}
+
+HB_EXPR_PTR hb_compExprReduceNegate( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pExpr;
+
+   pExpr = pSelf->value.asOperator.pLeft;
+
+   if( pExpr->ExprType == HB_ET_NUMERIC )
+   {
+      if( pExpr->value.asNum.NumType == HB_ET_DOUBLE )
+      {
+         pExpr->value.asNum.val.d = - pExpr->value.asNum.val.d;
+         pExpr->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+      }
+      else
+      {
+#if -HB_LONG_MAX > HB_LONG_MIN
+         if( pExpr->value.asNum.val.l < -HB_LONG_MAX )
+         {
+            pExpr->value.asNum.NumType = HB_ET_DOUBLE;
+            pExpr->value.asNum.val.d = - ( double ) pExpr->value.asNum.val.l;
+            pExpr->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+            pExpr->value.asNum.bDec = 0;
+         }
+         else
+#endif
+         {
+            pExpr->value.asNum.val.l = - pExpr->value.asNum.val.l;
+            pExpr->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+         }
+      }
+      pSelf->ExprType = HB_ET_NONE; /* suppress deletion of operator components */
+      HB_COMP_EXPR_FREE( pSelf );
+      pSelf = pExpr;
+   }
+
    return pSelf;
 }
 

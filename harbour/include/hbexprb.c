@@ -3806,24 +3806,10 @@ static HB_EXPR_FUNC( hb_compExprUseNegate )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-      {
-         HB_EXPR_PTR pExpr;
-
          pSelf->value.asOperator.pLeft = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_REDUCE ), HB_COMP_PARAM );
-         pExpr = pSelf->value.asOperator.pLeft;
-
-         if( pExpr->ExprType == HB_ET_NUMERIC )
-         {
-            if( pExpr->value.asNum.NumType == HB_ET_DOUBLE )
-               pExpr->value.asNum.val.d = - pExpr->value.asNum.val.d;
-            else
-               pExpr->value.asNum.val.l = - pExpr->value.asNum.val.l;
-            pSelf->ExprType = HB_ET_NONE;  /* do not delete operator parameter - we are still using it */
-            HB_COMP_EXPR_DELETE( pSelf );
-            pSelf = pExpr;
-         }
+         pSelf = hb_compExprReduceNegate( pSelf, HB_COMP_PARAM );
          break;
-      }
+
       case HB_EA_ARRAY_AT:
          HB_COMP_ERROR_TYPE( pSelf );
          break;

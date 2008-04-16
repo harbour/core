@@ -8,6 +8,79 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-16 14:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+    ! removed:
+         MESSAGE <msgName> IS <mthName>
+      used as synonym of:
+         MESSAGE <msgName> METHOD <mthName>
+      If someone was using the removed version then please update the
+      code to MESSAGE ... METHOD ...
+      The removed command has special meaning in Class(y) and it allow
+      to define alternate names for existing messages. I'll add support
+      for them in the future.
+
+  * harbour/contrib/hbct/ctwin.c
+    * added disabled code which is a workaround for some possible
+      bad side effect caused by online shadow showing by CTWIN.
+
+  * harbour/source/rtl/errorint.c
+    ! fixed displaying internal error message
+
+  * harbour/source/common/hbver.c
+    * added "Rev." prefix to shown revision number
+
+  * harbour/include/hbexprop.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+    + added hb_compExprReduceNegate()
+    ! fixed wrong negate optimizations for platforms where HB_LONG_MAX
+      is smaller then -HB_LONG_MIN, f.e. all x86 based CPUs.
+    ! fixed setting the size in optimized negative numbers
+    ! fixed some math optimizations to not use casting to double value
+      when it's not necessary - when double precision is smaller then HB_LONG
+      (f.e. on x86 it's 53 bits and HB_LONG has 64bit) such casting can damage
+      up to 11 less significant bits in big 64 bit numbers.
+
+  * harbour/source/rtl/hbinet.c
+    * replaced MAKEWORD() macro with HB_MKWORD() to pacify BCC58 warnings
+
+  * harbour/include/hbdefs.h
+    + added #include <limits.h>
+      It should hide some warnings related to redefined integer size constants
+      Viktor if it will not help for BCC58 warnings then you will have to add
+         #include <stdint.h>
+      few lines below but please remember that older BCC version does not
+      have it so check for the exact compiler version.
+    ! changed macros which setting default numeric item size for more strict
+      Clipper compatible mode. I'm not a fun of some Clipper behavior in
+      calculating number size and I left some notes about it in hbdefs.h
+      Anyhow this and some other modifications below should cover the
+      differences you've found recently. Some things are not addressed by
+      me intentionally, f.e. _itemPutNL() in Clipper always set size to 10
+      without checking the maximum size so it's too small for values less
+      then -999999999. Harbour compiler makes more compile time optimizations
+      then Clipper. The formatting rules used by compiler are a little bit
+      different then by VM so this can be source of some other differences
+      to Clipper. I can easy create some examples. Harbour supports 64bit
+      signed integers and Clipper doesn't. This is yet another situation
+      when we may have different results then Clipper. Most of them can
+      be hidden if we add new PCODE(s) for integer number with explicit
+      size but I do not think it's such important to increase PCODE list.
+      In few cases it will be necessary to disable some optimizations at
+      all and I do not like it. In the future when I will be adding some
+      new optimizations I also add compiler switch to disable/enable
+      optimizations which can have such side effects for people who need
+      strict formatting.
+
+  * harbour/include/hbvmpub.h
+  * harbour/source/common/hbstr.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/itemapi.c
+  * harbour/source/rtl/round.c
+    * updated for more Clipper compatible number formating using new macros
+
 2008-04-15 13:32 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tget.prg
      + TGet instance variable ordering in class definition 
@@ -179,9 +252,9 @@
 
 2008-04-10 15:39 UTC+0100 Belgrano Massimo (mbelgrano/at/deltain.it)
   * harbour/contrib/rddado/adordd.prg 
-    Instead of overloading FOUND method in ADO RDD it will be
-    more efficient to use standard implementation written in C
-    by Przemyslaw  suggestion
+    * Instead of overloading FOUND method in ADO RDD it will be
+      more efficient to use standard implementation written in C
+      by Przemyslaw  suggestion
 
 2008-04-09 20:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog

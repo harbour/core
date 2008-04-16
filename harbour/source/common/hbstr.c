@@ -635,20 +635,20 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
          *piWidth = iWidth;
       else
       {
-         int iSize = fDbl ? HB_DBL_LENGTH( *dVal ) : HB_LONG_LENGTH( *lVal );
-
          if( fPCode )
          {
             if( iWidth < 10 || fNeg )
-               *piWidth = iSize;
+               *piWidth = fDbl ? HB_DBL_LENGTH( *dVal ) : HB_LONG_LENGTH( *lVal );
             else
                *piWidth = iWidth + ( iDec == 0 ? 1 : 0 );
          }
+         else if( iWidth > 10 )
+         {
+            *piWidth = fDbl ? HB_DBL_LENGTH( *dVal ) : HB_LONG_LENGTH( *lVal );
+         }
          else
          {
-            if( iSize > 10 || iWidth > 10 )
-               *piWidth = iSize;
-            else if( iDec + iDecR == 0 )
+            if( iDec + iDecR == 0 )
                *piWidth = ( int ) ulLen;
             else if( iWidth == 0 )
                *piWidth = 1;

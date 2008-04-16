@@ -81,14 +81,14 @@ struct _HB_SYMB;
                   if( HB_LIM_INT( v ) ) \
                   { \
                      (p)->type = HB_IT_INTEGER; \
-                     (p)->item.asInteger.length = HB_INT_LENGTH( v ); \
+                     (p)->item.asInteger.length = HB_INT_EXPLENGTH( v ); \
                      (p)->item.asInteger.value = ( int ) (v); \
                   } \
                   else \
                   { \
                      (p)->type = HB_IT_LONG; \
                      (p)->item.asLong.value = (v); \
-                     (p)->item.asLong.length = HB_LONG_LENGTH( v ); \
+                     (p)->item.asLong.length = HB_LONG_EXPLENGTH( v ); \
                   } \
                } while( 0 )
 

@@ -57,6 +57,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 #include "hbsetup.h"
 #include "hbtrace.h"
@@ -451,27 +452,56 @@
 #  define HB_LL( num )           num##LL
 #endif
 
-#if HB_INT_MIN <= -1000000000
-#  define HB_INT_LENGTH( i )  ( ( (i) <= -1000000000 ) ? 20 : 10 )
-#else
-#  define HB_INT_LENGTH( i )  10
-#endif
 
-#if !defined( HB_LONG_LONG_OFF )
-#  if HB_LONG_MAX > HB_LL( 10000000000 )
-#     define HB_LONG_LENGTH( l ) ( ( (l) <= -1000000000 || (l) >= HB_LL( 10000000000 ) ) ? 20 : 10 )
+/* HB_*_EXPLENGTH() macros are used by HVM to set the size of
+ * math operations, HB_*_LENGTH() macros are used when new
+ * item is created. [druzus]
+ */
+/* NOTE: the positive number limit 999999999 in HB_INT_LENGTH()
+ *       (HB_LONG_LENGTH() on 16-bit platforms) below is not
+ *       compatible with other limits. Clipper have such limit
+ *       but IMHO it's result of some typo or wrong compiler
+ *       warnings cleanup when someone removed one digit from
+ *       upper limit instead of removing the whole limit.
+ *       It's also possible that it comes from DBASE and was
+ *       intentionally replicated. I think we should keep it
+ *       only in strict compatibility mode. [druzus]
+ */
+#if HB_INT_MIN < -999999999
+#  define HB_INT_LENGTH( i )        ( ( (i) < -999999999 || (i) > 999999999 ) ? 20 : 10 )
+#else
+#  define HB_INT_LENGTH( i )        10
+#  define HB_INT_EXPLENGTH( i )     10
+#  if HB_LONG_MIN < -999999999
+#     define HB_LONG_LENGTH( i )    ( ( (i) < -999999999 || (i) > 999999999 ) ? 20 : 10 )
 #  endif
 #endif
 
-#if !defined HB_LONG_LENGTH
-#  define HB_LONG_LENGTH( l ) ( ( (l) <= -1000000000 ) ? 20 : 10 )
+#if !defined( HB_LONG_LONG_OFF )
+#  if HB_LONG_MAX > HB_LL( 9999999999 )
+#     define HB_LONG_LENGTH( l )    ( ( (l) < -999999999 || (l) > HB_LL( 9999999999 ) ) ? 20 : 10 )
+#  endif
+#  if HB_INT_MAX > HB_LL( 9999999999 )
+#     define HB_INT_EXPLENGTH( i )  HB_LONG_LENGTH( i )
+#  endif
 #endif
 
-/* NOTE: Yes, -999999999.0 is right instead of -1000000000.0 [vszakats] */
-/* This comment is from hb_vmNeg() - if it's true only in this case then
-   the limit should be changed and this function fixed */
+#if !defined( HB_LONG_LENGTH )
+#  define HB_LONG_LENGTH( l )       ( ( (l) < -999999999 ) ? 20 : 10 )
+#endif
+#if !defined( HB_INT_EXPLENGTH )
+#  define HB_INT_EXPLENGTH( i )     ( ( (i) < -999999999 ) ? 20 : 10 )
+#endif
+#if !defined( HB_LONG_EXPLENGTH )
+#  define HB_LONG_EXPLENGTH( l ) HB_LONG_LENGTH( l )
+#endif
 
-#define HB_DBL_LENGTH( d ) ( ( (d) >= 10000000000.0 || (d) <= -999999999.0 ) ? 20 : 10 )
+/* HB_DBL_LENGTH() is used by VAL() for strings longer then 10 characters
+ * (counted to '.') and to set the size of math operations and new
+ * double item - it's CA-Cl*pper compatible range. For doubles we do
+ * not have separated limit for result of math operations. [druzus]
+ */
+#define HB_DBL_LENGTH( d ) ( ( (d) > 9999999999.0 || (d) < -999999999.0 ) ? 20 : 10 )
 
 /* uncomment this if you need strict Clipper compatibility */
 /* #define PCODE_LONG_LIM(l)     HB_LIM_INT32( l ) */

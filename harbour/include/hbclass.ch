@@ -7,10 +7,11 @@
  * Header file for Class commands
  *
  * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
- * www - http://www.harbour-project.org
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    most of rules rewritten
+ *
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -379,7 +380,7 @@ DECLARE HBClass ;
 #xcommand MESSAGE <MessageName> [ AS <type> ] DEFERRED => ;
    MESSAGE <MessageName> [ AS <type> ] VIRTUAL
 
-#xcommand MESSAGE <MessageName> [ AS <type> ] <mth: METHOD, IS> <MethodName> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
+#xcommand MESSAGE <MessageName> [ AS <type> ] METHOD <MethodName> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
    _HB_MEMBER __HB_CLS_ASFUNC(<MessageName>) [<-ctor-> AS CLASS _CLASS_NAME_] [ AS <type> ];;
    __HB_CLS_DECLARE_METHOD __HB_CLS_PARAMS(<MethodName>) _CLASS_NAME_ ;;
    s_oClass:AddMethod( __HB_CLS_ASSTRING(<MessageName>), @__HB_CLS_ASID( __HB_CLS_MTHNAME _CLASS_NAME_ <MethodName> )(), __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ctor.>, HB_OO_CLSTP_CTOR, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) )
@@ -398,8 +399,15 @@ DECLARE HBClass ;
 #xcommand MESSAGE <MessageName> [ AS <type> ] <arg: ARG, ARGS> <Args,...> [LOCAL <Locals,...>] INLINE <Code,...> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
    MESSAGE __HB_CLS_ASID(<MessageName>)(<Args>) [ AS <type> ] [LOCAL <Locals>] INLINE <Code> <ctor> <export> <protect> <hidde> <persistent>
 
+/* MESSAGE ... IS ... command working like in Class(y) temporary disabled for
+ * easier detecting code which was using previous wrong syntax.
+ */
+/*
+#xcommand MESSAGE <MessageName> [ AS <type> ] IS <AltMsgName> [<ctor: CONSTRUCTOR>] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
+   MESSAGE <MessageName> [ AS <type> ] INLINE Self:<AltMsgName> <ctor> <export> <protect> <hidde> <persistent>
+*/
+
 #xcommand MESSAGE <MessageName> [ AS <type> ] TO <oObject> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] =>;
-   MESSAGE <MessageName> [ AS <type> ] INLINE Self:<oObject>:<MessageName> <export> <protect> <hidde> <persistent>
 
 #xcommand MESSAGE <MessageName> [ AS <type> ] IN <SuperClass> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] => ;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<SuperClass>:<MessageName> <export> <protect> <hidde> <persistent>
@@ -467,8 +475,6 @@ DECLARE HBClass ;
    #xtranslate _HB_MEMBER {AS Char     => _HB_MEMBER {AS Character
    #xtranslate _HB_MEMBER {AS Block    => _HB_MEMBER {AS CodeBlock
 
-   /* The #xtranslate is wrongly used instead of #xcommand as
-      workaround for some preprocessor problems */
    #xcommand EXPORTED:   =>    nScope := HB_OO_CLSTP_EXPORTED
    #xcommand EXPORT:     =>    nScope := HB_OO_CLSTP_EXPORTED
    #xcommand VISIBLE:    =>    nScope := HB_OO_CLSTP_EXPORTED
@@ -484,7 +490,7 @@ DECLARE HBClass ;
              MESSAGE <MethodName> [ AS <type> ] BLOCK {|Self [, <params>] [, <v>] | __HB_CLS_SYMBOL_UNUSED(Self), <Code> } [ <other>]
 
 
-   /* This definitions are not Class(y) compatible - I'm leaving them as is now */
+   /* These definitions are not Class(y) compatible - I'm leaving them as is now */
 
    #xcommand VAR <DataNames,...> [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
       __HB_CLS_CHECKVAR(<DataNames>);;

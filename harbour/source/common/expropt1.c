@@ -1053,8 +1053,20 @@ HB_EXPR_PTR hb_compExprNewNegate( HB_EXPR_PTR pNegExpr, HB_COMP_DECL )
       }
       else
       {
-         pNegExpr->value.asNum.val.l = - pNegExpr->value.asNum.val.l;
-         pNegExpr->value.asNum.bWidth = HB_LONG_LENGTH( pNegExpr->value.asNum.val.l );
+#if -HB_LONG_MAX > HB_LONG_MIN
+         if( pNegExpr->value.asNum.val.l < -HB_LONG_MAX )
+         {
+            pNegExpr->value.asNum.NumType = HB_ET_DOUBLE;
+            pNegExpr->value.asNum.val.d = - ( double ) pNegExpr->value.asNum.val.l;
+            pNegExpr->value.asNum.bWidth = HB_DBL_LENGTH( pNegExpr->value.asNum.val.d );
+            pNegExpr->value.asNum.bDec = 0;
+         }
+         else
+#endif
+         {
+            pNegExpr->value.asNum.val.l = - pNegExpr->value.asNum.val.l;
+            pNegExpr->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+         }
       }
       pExpr = pNegExpr;
    }

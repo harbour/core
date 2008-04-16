@@ -867,18 +867,29 @@ HB_EXPORT PHB_ITEM hb_itemPutNInt( PHB_ITEM pItem, HB_LONG lNumber )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutNInt(%p, %" PFHL "d)", pItem, lNumber));
 
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( NULL );
+
    if( HB_LIM_INT( lNumber ) )
    {
-      return hb_itemPutNI( pItem, ( int ) lNumber );
+      pItem->type = HB_IT_INTEGER;
+      pItem->item.asInteger.value = ( int ) lNumber;
+      /* EXP limit used intentionally */
+      pItem->item.asInteger.length = HB_INT_EXPLENGTH( lNumber );
    }
    else
    {
-#ifdef HB_LONG_LONG_OFF
-      return hb_itemPutNL( pItem, ( long ) lNumber );
-#else
-      return hb_itemPutNLL( pItem, ( LONGLONG ) lNumber );
-#endif
+      pItem->type = HB_IT_LONG;
+      pItem->item.asLong.value = lNumber;
+      pItem->item.asLong.length = HB_LONG_LENGTH( lNumber );
    }
+
+   return pItem;
 }
 
 HB_EXPORT PHB_ITEM hb_itemPutNIntLen( PHB_ITEM pItem, HB_LONG lNumber, int iWidth )

@@ -503,8 +503,9 @@ HB_FUNC( HB_INETINIT )
    else
    {
       #if defined(HB_OS_WIN_32)
+         #define HB_MKWORD( l, h )  ((WORD)(((BYTE)(l)) | (((WORD)((BYTE)(h))) << 8)))
          WSADATA wsadata;
-         WSAStartup( MAKEWORD(1,1), &wsadata );
+         WSAStartup( HB_MKWORD(1,1), &wsadata );
       #elif defined( HB_OS_LINUX )
          signal( HB_INET_LINUX_INTERRUPT, hb_inetLinuxSigusrHandle );
       #endif

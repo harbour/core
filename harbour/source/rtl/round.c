@@ -106,7 +106,7 @@ HB_FUNC( ROUND )
       hb_retndlen( hb_numRound( hb_itemGetND( pNumber ), iDec ), 0, HB_MAX( iDec, 0 ) );
 #else
       if( iDec == 0 && HB_IS_NUMINT( pNumber ) )
-         hb_itemReturn( pNumber );
+         hb_retnint( hb_itemGetNInt( pNumber ) );
       else
          hb_retnlen( hb_numRound( hb_itemGetND( pNumber ), iDec ), 0, HB_MAX( iDec, 0 ) );
 #endif
