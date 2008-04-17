@@ -22,6 +22,7 @@ C_SOURCES=\
 	dateshb.c    \
 	datesx.c     \
 	defpath.c    \
+	defpathu.c   \
 	descend.c    \
 	dirdrive.c   \
 	direct.c     \
@@ -30,6 +31,7 @@ C_SOURCES=\
 	do.c         \
 	empty.c      \
 	errorapi.c   \
+	errorapu.c   \
 	errorint.c   \
 	file.c       \
 	filehb.c     \
@@ -116,6 +118,7 @@ C_SOURCES=\
 	setpos.c     \
 	setposbs.c   \
 	shadow.c     \
+	shadowu.c    \
 	soundex.c    \
 	space.c      \
 	spfiles.c    \

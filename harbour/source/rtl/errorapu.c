@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * HB_SHADOW(), HB_CLRAREA() functions
+ * The Error API undocumented functions
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,24 +51,19 @@
  */
 
 #include "hbapi.h"
-#include "hbapigt.h"
 
-HB_FUNC( HB_SHADOW )
+#ifdef HB_C52_UNDOC
+
+HB_FUNC_EXTERN( __ERRINHANDLER );
+   
+HB_FUNC( ERRORINHAN )
 {
-   if( hb_pcount() >= 4 )
-      hb_gtDrawShadow( hb_parni( 1 ),
-                       hb_parni( 2 ),
-                       hb_parni( 3 ),
-                       hb_parni( 4 ),
-                       ISNUM( 5 ) ? hb_parni( 5 ) : 7 );
+   HB_FUNC_EXEC( __ERRINHANDLER )
+}
+   
+HB_FUNC( ERRORINHANDLER )
+{
+   HB_FUNC_EXEC( __ERRINHANDLER )
 }
 
-HB_FUNC( HB_CLRAREA )
-{
-   if( hb_pcount() > 4 )
-      hb_gtSetAttribute( hb_parni( 1 ),
-                         hb_parni( 2 ),
-                         hb_parni( 3 ),
-                         hb_parni( 4 ),
-                         hb_parni( 5 ) );
-}
+#endif

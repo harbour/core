@@ -56,7 +56,7 @@
  *
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  *    DOSERROR()
- *    __ERRINHANDLER(), ERRORINHAN(), ERRORINHANDLER()
+ *    __ERRINHANDLER()
  *    __ERRRT_BASE()
  *    __ERRRT_SBASE()
  *    hb_errLaunch()
@@ -441,20 +441,6 @@ HB_FUNC( __ERRINHANDLER )
 {
    hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
 }
-
-#ifdef HB_C52_UNDOC
-   
-HB_FUNC( ERRORINHAN )
-{
-   HB_FUNC_EXEC( __ERRINHANDLER )
-}
-   
-HB_FUNC( ERRORINHANDLER )
-{
-   HB_FUNC_EXEC( __ERRINHANDLER )
-}
-
-#endif
 
 HB_FUNC( ERRORBLOCK )
 {

@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-17 13:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * source/rtl/Makefile
+   * source/rtl/defpath.c
+   + source/rtl/defpathu.c
+   * source/rtl/errorapi.c
+   + source/rtl/errorapu.c
+   * source/rtl/shadow.c
+   + source/rtl/shadowu.c
+     * Undocumented compatibility functions moved to separate files.
+
 2008-04-17 03:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbextern.ch
    * source/rtl/errorapi.c

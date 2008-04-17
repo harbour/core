@@ -456,6 +456,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\dateshb$(OBJEXT)  \
     $(OBJ_DIR)\datesx$(OBJEXT)   \
     $(OBJ_DIR)\defpath$(OBJEXT)  \
+    $(OBJ_DIR)\defpathu$(OBJEXT)  \
     $(OBJ_DIR)\descend$(OBJEXT)  \
     $(OBJ_DIR)\dirdrive$(OBJEXT) \
     $(OBJ_DIR)\direct$(OBJEXT)   \
@@ -464,6 +465,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\do$(OBJEXT)       \
     $(OBJ_DIR)\empty$(OBJEXT)    \
     $(OBJ_DIR)\errorapi$(OBJEXT) \
+    $(OBJ_DIR)\errorapu$(OBJEXT) \
     $(OBJ_DIR)\errorint$(OBJEXT) \
     $(OBJ_DIR)\file$(OBJEXT)     \
     $(OBJ_DIR)\filehb$(OBJEXT)   \
@@ -551,6 +553,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\setpos$(OBJEXT)   \
     $(OBJ_DIR)\setposbs$(OBJEXT) \
     $(OBJ_DIR)\shadow$(OBJEXT)   \
+    $(OBJ_DIR)\shadowu$(OBJEXT)   \
     $(OBJ_DIR)\soundex$(OBJEXT)  \
     $(OBJ_DIR)\space$(OBJEXT)    \
     $(OBJ_DIR)\spfiles$(OBJEXT)  \

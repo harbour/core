@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DEFPATH(), __DEFPATH() functions
+ * __DEFPATH() function
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  * www - http://www.harbour-project.org
@@ -90,12 +90,3 @@ HB_FUNC( __DEFPATH )
 
    hb_retclen( buffer, size );
 }
-
-#ifdef HB_C52_UNDOC
-
-HB_FUNC( DEFPATH )
-{
-   HB_FUNC_EXEC( __DEFPATH );
-}
-
-#endif
