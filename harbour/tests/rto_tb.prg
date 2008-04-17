@@ -50,6 +50,17 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *    eInstVar() (from RTL)
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 /* NOTE: This source can be compiled with both Harbour and CA-Cl*pper. */
 
 #include "common.ch"
@@ -69,7 +80,7 @@ STATIC s_fhnd
 STATIC s_lCallBackStack
 STATIC s_lRTEDetails
 STATIC s_lIgnoreErrOp
-STATIC s_lC5xDump
+STATIC s_lObjectDump
 STATIC s_lCatchErr
 STATIC s_lCheckResult
 
@@ -93,7 +104,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    s_lCallBackStack := "CALLBACKSTACK" $ Upper( cCommandLine )
    s_lRTEDetails := "RTEDETAILS" $ Upper( cCommandLine )
    s_lIgnoreErrOp := "IGNERROP" $ Upper( cCommandLine )
-   s_lC5xDump := "C5XDUMP" $ Upper( cCommandLine )
+   s_lObjectDump := "ODUMP" $ Upper( cCommandLine )
    s_lCatchErr := .T.
    s_lCheckResult := .F.
 
@@ -288,6 +299,10 @@ PROCEDURE TBRAssign( xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:RowPos        := xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:SkipBlock     := xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:Stable        := xVar )
+#ifdef HB_COMPAT_C53
+   o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:border        := xVar )
+   o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:message       := xVar )
+#endif
    
    RETURN
    
@@ -309,6 +324,10 @@ PROCEDURE TBCAssign( xVar )
    o := TBColumnNew( "test01h", {|| "test01d" } ) ; TEST_L_TBC( o:HeadSep    := xVar )
    o := TBColumnNew( "test01h", {|| "test01d" } ) ; TEST_L_TBC( o:Picture    := xVar )
    o := TBColumnNew( "test01h", {|| "test01d" } ) ; TEST_L_TBC( o:Width      := xVar )
+#ifdef HB_COMPAT_C53
+   o := TBColumnNew( "test01h", {|| "test01d" } ) ; TEST_L_TBC( o:preBlock   := xVar )
+   o := TBColumnNew( "test01h", {|| "test01d" } ) ; TEST_L_TBC( o:postBlock  := xVar )
+#endif
 
    RETURN
 
@@ -444,11 +463,26 @@ PROCEDURE LogTBRVars( o, desc, xResult )
    FWrite( s_fhnd, "   RowPos        " + XToStr( o:RowPos        ) + hb_OSNewLine() )
    FWrite( s_fhnd, "   SkipBlock     " + XToStr( o:SkipBlock     ) + hb_OSNewLine() )
    FWrite( s_fhnd, "   Stable        " + XToStr( o:Stable        ) + hb_OSNewLine() )
-#ifndef __HARBOUR__
-   IF s_lC5xDump
-      FWrite( s_fhnd, "   _dump_        " + ObjToList( o ) + hb_OSNewLine() )
-   ENDIF
+#ifdef HB_COMPAT_C53
+   FWrite( s_fhnd, "   border       " + XToStr( o:border        ) + hb_OSNewLine() )
+   FWrite( s_fhnd, "   message      " + XToStr( o:message       ) + hb_OSNewLine() )
 #endif
+   IF s_lObjectDump
+#ifdef __HARBOUR__
+#ifdef HB_COMPAT_C53
+      FOR tmp := 1 TO 18
+#else
+      FOR tmp := 1 TO 13
+#endif
+#else
+      FOR tmp := 1 TO Len( o )
+#endif
+         /* [8] is binary data, not replicated in Harbour. */
+         IF tmp != 8
+            FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_OSNewLine() )
+         ENDIF
+      NEXT
+   ENDIF
    FOR tmp := 1 TO o:colCount
       FWrite( s_fhnd, "   Column: " + StrZero( tmp, 3 ) + hb_OSNewLine() )
       col := o:GetColumn( tmp )
@@ -464,6 +498,10 @@ PROCEDURE LogTBRVars( o, desc, xResult )
          FWrite( s_fhnd, "      HeadSep       " + XToStr( col:HeadSep     ) + hb_OSNewLine() )
          FWrite( s_fhnd, "      Picture       " + XToStr( col:Picture     ) + hb_OSNewLine() )
          FWrite( s_fhnd, "      Width         " + XToStr( col:Width       ) + hb_OSNewLine() )
+#ifdef HB_COMPAT_C53
+         FWrite( s_fhnd, "      preBlock      " + XToStr( col:preBlock    ) + hb_OSNewLine() )
+         FWrite( s_fhnd, "      postBlock     " + XToStr( col:postBlock   ) + hb_OSNewLine() )
+#endif
       ELSE
          FWrite( s_fhnd, "      Col:          " + XToStr( col             ) + hb_OSNewLine() )
       ENDIF
@@ -475,6 +513,8 @@ PROCEDURE LogTBRVars( o, desc, xResult )
 PROCEDURE LogTBCVars( o, desc, xResult )
    LOCAL nLevel
    LOCAL cStack
+
+   LOCAL tmp
 
    cStack := ""
    FOR nLevel := 2 TO 2
@@ -505,11 +545,23 @@ PROCEDURE LogTBCVars( o, desc, xResult )
       FWrite( s_fhnd, "   HeadSep       " + XToStr( o:HeadSep     ) + hb_OSNewLine() )
       FWrite( s_fhnd, "   Picture       " + XToStr( o:Picture     ) + hb_OSNewLine() )
       FWrite( s_fhnd, "   Width         " + XToStr( o:Width       ) + hb_OSNewLine() )
-#ifndef __HARBOUR__
-      IF s_lC5xDump
-         FWrite( s_fhnd, "   _dump_        " + ObjToList( o ) + hb_OSNewLine() )
-      ENDIF
+#ifdef HB_COMPAT_C53
+      FWrite( s_fhnd, "   preBlock      " + XToStr( o:preBlock    ) + hb_OSNewLine() )
+      FWrite( s_fhnd, "   postBlock     " + XToStr( o:postBlock   ) + hb_OSNewLine() )
 #endif
+      IF s_lObjectDump
+#ifdef __HARBOUR__
+#ifdef HB_COMPAT_C53
+         FOR tmp := 1 TO 14
+#else
+         FOR tmp := 1 TO 11
+#endif
+#else
+         FOR tmp := 1 TO Len( o )
+#endif
+            FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_OSNewLine() )
+         NEXT
+      ENDIF
    ELSE
       FWrite( s_fhnd, "   o             " + XToStr( o ) + hb_OSNewLine() )
    ENDIF
@@ -595,6 +647,47 @@ FUNCTION XToStrE( xValue )
 
    RETURN ""
 
+FUNCTION XToStrX( xValue )
+   LOCAL cType := ValType( xValue )
+
+   LOCAL tmp
+   LOCAL cRetVal
+
+   DO CASE
+   CASE cType == "C"
+
+      xValue := StrTran( xValue, Chr(0), '"+Chr(0)+"' )
+      xValue := StrTran( xValue, Chr(9), '"+Chr(9)+"' )
+      xValue := StrTran( xValue, Chr(10), '"+Chr(10)+"' )
+      xValue := StrTran( xValue, Chr(13), '"+Chr(13)+"' )
+      xValue := StrTran( xValue, Chr(26), '"+Chr(26)+"' )
+
+      RETURN xValue
+
+   CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
+   CASE cType == "D" ; RETURN DToS( xValue )
+   CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
+   CASE cType == "O" ; RETURN xValue:className() + " Object"
+   CASE cType == "U" ; RETURN "NIL"
+   CASE cType == "B" ; RETURN '{||...} -> ' + XToStrX( Eval( xValue ) )
+   CASE cType == "A"
+
+      cRetVal := '{ '
+
+      FOR tmp := 1 TO Len( xValue )
+         cRetVal += XToStrX( xValue[ tmp ] )
+         IF tmp < Len( xValue )
+            cRetVal += ", "
+         ENDIF
+      NEXT
+   
+      RETURN cRetVal + ' }'
+
+   CASE cType == "M" ; RETURN 'M:' + xValue
+   ENDCASE
+
+   RETURN ""
+
 FUNCTION ArrayToEList( a )
    LOCAL tmp
    LOCAL cString := ""
@@ -634,7 +727,8 @@ STATIC FUNCTION ErrorMessage( oError )
          cMessage += oError:description + " "
       ENDIF
       IF !Empty( oError:operation ) .AND. !s_lIgnoreErrOp
-         cMessage += oError:operation + " "
+         /* NOTE: Clipping this to hide the difference in maximum symbol name length in error messages. [vszakats] */
+         cMessage += Left( oError:operation, 9 ) + " "
       ENDIF
       IF !Empty( oError:filename )
          cMessage += oError:filename + " "
@@ -708,3 +802,32 @@ PROCEDURE OBJ_CREATE()
    // ; Dummy
 
    RETURN
+
+#ifdef __HARBOUR__
+
+/* We use this to wash out a small incompatibility in Harbour's built-in _eInstVar(). */
+
+FUNCTION _eInstVar( oVar, cMethod, xValue, cType, nSubCode, bValid )
+
+   LOCAL oError
+
+   IF VALTYPE( xValue ) != cType .OR. ;
+      ( bValid != NIL .AND. !EVAL( bValid, oVar, xValue ) )
+      oError := ErrorNew()
+      oError:description := HB_LANGERRMSG( 1 )
+      oError:gencode := 1
+      oError:severity := 2
+      oError:cansubstitute := .T.
+      oError:subsystem := oVar:classname
+      HB_SYMBOL_UNUSED( cMethod )
+      oError:subcode := nSubCode
+      oError:args := { xValue }
+      xValue := EVAL( ERRORBLOCK(), oError )
+      IF VALTYPE( xValue ) != cType
+         __errInHandler()
+      ENDIF
+   ENDIF
+
+   RETURN xValue
+
+#endif

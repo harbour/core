@@ -942,7 +942,11 @@ PROCEDURE LogGETVars( o, desc, xResult )
 #else
       FOR tmp := 1 TO Len( o )
 #endif
-         FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_OSNewLine() )
+         /* Both indexes contain binary trash
+            (except the first char of [11] which is type. [vszakats] */
+         IF tmp != 8 .AND. tmp != 11
+            FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_OSNewLine() )
+         ENDIF
       NEXT
    ENDIF
    FWrite( s_fhnd, "---------------------" + hb_OSNewLine() )

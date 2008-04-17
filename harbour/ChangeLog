@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-18 00:01 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * tests/rto_tb.prg
+     + Added some C5.3 var tests.
+     + Added object as array info.
+     * Suppressed _eInstVar() difference by including 
+       a strictly compatible copy of it for Harbour.
+     * Exclude incompatible binary array elements of the object.
+
+   * tests/rto_get.prg
+     * Exclude incompatible binary array elements of the object.
+
+   + bin/bld_os2.cmd
+     + Added OS/2 build command file.
+     ; Someone pls test and update the content if needed.
+
 2008-04-17 13:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tget.prg
      * Formatting.
