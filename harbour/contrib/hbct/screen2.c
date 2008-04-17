@@ -411,7 +411,11 @@ HB_FUNC( _HB_CTDSPTIME )
    if( ISNUM( 4 ) )
       iColor = hb_parni( 4 );
    else if( ISCHAR( 4 ) )
+   {
       iColor = hb_gtColorToN( hb_parc( 4 ) );
+      if( iColor == -1 )
+         iColor = 0;
+   }
    else
       iColor = hb_gtGetClearColor();
 

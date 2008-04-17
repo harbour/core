@@ -100,7 +100,7 @@ FUNCTION HBObject()
 
       s_oClass:SetOnError( @HBObject_DftonError() )
 
-      s_oClass:AddInline( "MSGNOTFOUND" , {| Self, cMsg | ::Error( "Message not found", __OBJGETCLSNAME( Self ), cMsg, iif(substr(cMsg,1,1)=="_",1005,1004) ) }, HB_OO_CLSTP_EXPORTED )
+      s_oClass:AddInline( "MSGNOTFOUND" , {| Self, cMsg | ::Error( "Message not found", __OBJGETCLSNAME( Self ), cMsg, IIF( cMsg="_", 1005, 1004 ) ) }, HB_OO_CLSTP_EXPORTED )
 
       /*s_oClass:AddMultiData(,,HB_OO_CLSTP_EXPORTED,{"CLASS"}, .F. )*/
 

@@ -907,6 +907,8 @@ static COLORREF hb_wvt_BgColorParam( int iParam )
    {
       int iColor = ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) :
                                       hb_gtGetCurrColor();
+      if( iColor == -1 )
+         iColor = 0
       color = hb_wvt_gtGetColorData( ( iColor >> 4 ) & 0x0f );
    }
 
@@ -923,6 +925,8 @@ static COLORREF hb_wvt_FgColorParam( int iParam )
    {
       int iColor = ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) :
                                       hb_gtGetCurrColor();
+      if( iColor == -1 )
+         iColor = 0
       color = hb_wvt_gtGetColorData( iColor & 0x0f );
    }
 

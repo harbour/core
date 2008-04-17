@@ -61,7 +61,11 @@ static int hb_ctColorParam( int iParam, int iDefault )
    if( ISNUM( iParam ) )
       iColor = hb_parni( iParam );
    else if( hb_parclen( iParam ) > 0 )
+   {
       iColor = hb_gtColorToN( hb_parc( iParam ) );
+      if( iColor == -1 )
+         iColor = iDefault;
+   }
    else
       iColor = iDefault;
 

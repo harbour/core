@@ -172,7 +172,7 @@ METHOD ForceStable()
                   @ ::nTop + nRow - 1, nColX SAY PadR( xData, nWid ) + IIf( nCol < Len( ::aColumns ), " ", "" )
                   nColX += nWid + 1
                ENDIF
-	    NEXT
+            NEXT
          ENDIF
          ::aRowState[ nRow ] := .T.
       ENDIF

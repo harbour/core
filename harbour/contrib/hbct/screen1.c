@@ -318,7 +318,11 @@ static int hb_ctGetClearColor( int iParam )
    if( ISNUM( iParam ) )
       iColor = hb_parni( iParam );
    else if( ISCHAR( iParam ) )
+   {
       iColor = hb_gtColorToN( hb_parc( iParam ) );
+      if( iColor == -1 )
+         iColor = 0;
+   }
    else
       iColor = hb_gtGetClearColor();
 

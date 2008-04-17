@@ -308,7 +308,7 @@ static void hb_gt_def_SetClearChar( PHB_GT pGT, int iChar )
 static const char * hb_gt_def_ColorDecode( const char * szColorString, int * piColor )
 {
    char c;
-   int nColor = 0;
+   int nColor = 0, iCount = 0;
    BOOL bFore = TRUE;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_ColorDecode(%s,%p)", szColorString, piColor));
@@ -378,7 +378,7 @@ static const char * hb_gt_def_ColorDecode( const char * szColorString, int * piC
             break;
 
          case ',':
-            * piColor = nColor;
+            * piColor = iCount == 0 ? -1 : nColor;
             return szColorString;
 
          default:
@@ -393,10 +393,13 @@ static const char * hb_gt_def_ColorDecode( const char * szColorString, int * piC
                else
                   nColor = ( nColor & 0x0F8F ) | ( iColor << 4 );
             }
+            else
+               --iCount;
       }
+      ++iCount;
    }
 
-   * piColor = nColor;
+   * piColor = iCount == 0 ? -1 : nColor;
    return NULL;
 }
 
@@ -445,9 +448,11 @@ static void hb_gt_def_StringToColors( PHB_GT pGT, const char * szColorString, in
       {
          ++*piColorCount;
          pColors = *pColorsPtr = ( int * ) hb_xrealloc( pColors, *piColorCount * sizeof( int ) );
+         pColors[ nPos ] = 0;
       }
-      pColors[ nPos++ ] = nColor;
-
+      if( nColor != -1 )
+         pColors[ nPos ] = nColor;
+      ++nPos;
    }
    while( szColorString );
 

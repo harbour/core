@@ -308,7 +308,7 @@ HB_EXPORT ERRCODE hb_gtGetColorStr( char * pszColorString )
    return FAILURE;
 }
 
-HB_EXPORT USHORT hb_gtColorToN( char * szColorString )
+HB_EXPORT int hb_gtColorToN( char * szColorString )
 {
    PHB_GT pGT;
 

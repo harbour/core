@@ -8,6 +8,35 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-18 01:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapigt.h
+  * harbour/source/rtl/gtapi.c
+    ! changed USHORT hb_gtColorToN( char * szColorString ) to
+      int hb_gtColorToN( char * szColorString ) - it should be the same
+      type as indexes in hb_gtColorsToString() functions
+
+  * harbour/source/rtl/hbgtcore.c
+    * return -1 from COLORNUM() method when passed color is not
+      valid color string
+
+  * harbour/contrib/hbct/screen2.c
+  * harbour/contrib/hbct/color.c
+  * harbour/contrib/hbct/screen1.c
+  * harbour/contrib/hbct/ctwfunc.c
+  * harbour/contrib/hbnf/color2n.c
+  * harbour/contrib/gtwvg/wvtcore.c
+    * updated to respect -1 returned for wrong color strings
+
+  * harbour/source/rtl/tget.prg
+    * updated to respect -1 returned for wrong color strings
+      Viktor please check me, now it's simpler and hbtest does not
+      reports any errors so I guess that this version will work like
+      in Clipper also for :colorSpec := "R,X,Y,0" or similar
+
+  * harbour/source/rtl/tobject.prg
+  * harbour/source/debug/dbgbrwsr.prg
+    * formatting
+
 2008-04-18 01:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * tests/rto_tb.prg
      + Added some assigment tests using numerics with decimals.

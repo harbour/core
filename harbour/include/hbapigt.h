@@ -140,7 +140,7 @@ extern HB_EXPORT ERRCODE hb_gtBox( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SH
 extern HB_EXPORT ERRCODE hb_gtBoxD( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight );
 extern HB_EXPORT ERRCODE hb_gtBoxS( SHORT uiTop, SHORT uiLeft, SHORT uiBottom, SHORT uiRight );
 extern HB_EXPORT ERRCODE hb_gtColorSelect( USHORT uiColorIndex );
-extern HB_EXPORT USHORT  hb_gtColorToN( char * szColorString );
+extern HB_EXPORT int     hb_gtColorToN( char * szColorString );
 extern HB_EXPORT ERRCODE hb_gtColorsToString( int * pColors, int iColorCount, char * pszColorString, int iBufSize );
 extern HB_EXPORT ERRCODE hb_gtDispBegin( void );
 extern HB_EXPORT USHORT  hb_gtDispCount( void );
