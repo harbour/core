@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-17 13:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tget.prg
+     * Formatting.
+
+   * source/rtl/net.c
+     ! Casting in DOS branch.
+
 2008-04-17 13:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * source/rtl/Makefile

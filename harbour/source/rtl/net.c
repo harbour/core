@@ -123,7 +123,7 @@ char * hb_netname( void )
 #elif defined(HB_OS_DOS)
 
 #  if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
-      char * pszValue = hb_xgrab( MAXGETHOSTNAME + 1 );
+      char * pszValue = ( char * ) hb_xgrab( MAXGETHOSTNAME + 1 );
       pszValue[ 0 ] = '\0';
       gethostname( pszValue, MAXGETHOSTNAME );
       return pszValue;
