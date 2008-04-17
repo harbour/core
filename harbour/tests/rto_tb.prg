@@ -184,7 +184,11 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    TBRAssign( 0 )
    TBRAssign( 1 )
    TBRAssign( 3 )
+   TBRAssign( 3.3 )
+   TBRAssign( 3.7 )
    TBRAssign( 25 )
+   TBRAssign( 25.3 )
+   TBRAssign( 25.7 )
    TBRAssign( "" )
    TBRAssign( "az" )
    TBRAssign( hb_SToD( "20070425" ) )
@@ -201,7 +205,11 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    TBCAssign( 0 )
    TBCAssign( 1 )
    TBCAssign( 3 )
+   TBCAssign( 3.3 )
+   TBCAssign( 3.7 )
    TBCAssign( 25 )
+   TBCAssign( 25.3 )
+   TBCAssign( 25.7 )
    TBCAssign( "" )
    TBCAssign( "az" )
    TBCAssign( hb_SToD( "20070425" ) )
@@ -477,8 +485,8 @@ PROCEDURE LogTBRVars( o, desc, xResult )
 #else
       FOR tmp := 1 TO Len( o )
 #endif
-         /* [8] is binary data, not replicated in Harbour. */
-         IF tmp != 8
+         /* [14] is binary data, not replicated in Harbour. */
+         IF tmp != 14
             FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_OSNewLine() )
          ENDIF
       NEXT
