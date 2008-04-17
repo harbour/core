@@ -5901,7 +5901,7 @@ RETURN ( "HbMake v"+s_cHbMakeVersion+" - Harbour Make Utility")
 *--------------------------
 FUNCTION HbMake_Copyright()
 *--------------------------
-RETURN ( "Copyright (C) 2000-2007 Harbour project - http://www.harbour-project.org")
+RETURN ( "Copyright (C) 2000-2008 Harbour project - http://www.harbour-project.org")
 
 *---------------------
 FUNCTION ShowCredits()

@@ -183,7 +183,7 @@ RETURN
 STATIC PROCEDURE HB_DotUsage()
 
    OutStd( 'Harbour "DOt Prompt" Console' + HB_OSNewLine() +;
-           'Copyright 1999-2007, Przemyslaw Czerpak' + HB_OSNewLine() + ;
+           'Copyright 1999-2008, Przemyslaw Czerpak' + HB_OSNewLine() + ;
            'http://www.harbour-project.org' + HB_OSNewLine() +;
            HB_OSNewLine() +;
            'Syntax:  hbdot [<hrbfile[.prg]> [<parameters,...>]]' + HB_OSNewLine() + ;

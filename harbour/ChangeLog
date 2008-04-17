@@ -8,6 +8,32 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-17 03:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbextern.ch
+   * source/rtl/errorapi.c
+     + Added ERRORINHAN() (and alias ERRORINHANDLER()) CA-Cl*pper 
+       compatible, undocumented function, guarded with HB_C52_UNDOC.
+       Same as Harbour __ERRINHANDLER().
+
+   * source/rtl/trim.c
+   * source/rtl/strtran.c
+     + Added strict branches for incompatible error messages.
+     % Minor optimization in STRTRAN() parameter checking.
+
+   * utils/hbtest/rt_str.prg
+     + Reenabled two C53-only test calls.
+
+   * include/hbdefs.h
+     ! Minor indentation fix.
+
+   * utils/hbdoc/hbdoc.prg
+   * utils/hbdot/hbdot.prg
+   * utils/hbmake/hbmake.prg
+   * utils/hbpp/hbpp.c
+   * utils/hbtest/hbtest.prg
+   * utils/hbrun/hbrun.prg
+     ! Year updated in copyright banners.
+
 2008-04-16 14:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbclass.ch
     ! removed:
@@ -208,7 +234,7 @@
               modified to 20 when certain value is reached (+/-1000000000), 
               while in Harbour the length stays 10.
               I tried to do the same test using Item API, but I got 
-              so strange results in C, that I finally dropped it.
+              so strange results in Clipper, that I finally dropped it.
      + Added optional C compilation using MSC for CA-Cl*pper 
        build batch file.
      + Added better support to compile the test suite under C5.3.

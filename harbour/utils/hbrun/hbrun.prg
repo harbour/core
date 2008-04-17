@@ -76,7 +76,7 @@ FUNCTION _APPMAIN( cHRBFile, ... )
 
    IF Empty( cHRBFile )
       OutStd( "Harbour Runner" + HB_OSNewLine() +;
-              "Copyright 1999-2006, http://www.harbour-project.org" + HB_OSNewLine() +;
+              "Copyright 1999-2008, http://www.harbour-project.org" + HB_OSNewLine() +;
               HB_OSNewLine() +;
               "Syntax:  hbrun <hrbfile[.hrb|.prg]> [parameters]" + HB_OSNewLine() + ;
               HB_OSNewLine() +;

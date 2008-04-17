@@ -276,7 +276,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    IF cLinkName = NIL
       outstd( "Harbour Doc Extractor"+ hb_osnewline() )
-      outstd( "Copyright 1999-2005, http://www.harbour-project.org"+ hb_osnewline() )
+      outstd( "Copyright 1999-2008, http://www.harbour-project.org"+ hb_osnewline() )
       outstd( ""+ hb_osnewline() )
       outstd( "Syntax:  hbdoc [options] <linkname> [<ifile>]"+ hb_osnewline() )
       outstd( ""+ hb_osnewline() )

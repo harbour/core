@@ -102,7 +102,7 @@ STATIC s_nEndTime
 FUNCTION Main( cPar1, cPar2 )
 
    OutStd( "Harbour Regression Test Suite" + HB_OSNewLine() +;
-           "Copyright 1999-2000, http://www.harbour-project.org" + HB_OSNewLine() )
+           "Copyright 1999-2008, http://www.harbour-project.org" + HB_OSNewLine() )
 
    IF cPar1 == NIL
       cPar1 := ""
