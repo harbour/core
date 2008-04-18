@@ -912,7 +912,7 @@ STATIC FUNCTION _DECODECOLORS( cColorSpec )
        * as CA-Cl*pper but some new GTs may accept extended color
        * definitions and use a little bit different rules. [druzus]
        */
-      IF nPos <= 2 .AND. hb_colorToN( cColor ) != -1
+      IF nPos <= 2 .AND. hb_colorToN( cColor ) == -1
          cColor := IIF( nPos == 1, "W/N", "N/W" )
       ENDIF
       AAdd( aColors, cColor )

@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-18 03:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/tbrowse.prg
+    ! fixed typo in last minute modification
+
 2008-04-18 02:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/tbrowse.prg
     * new TBrowse code - many thanks to Viktor Szakats for his help and
