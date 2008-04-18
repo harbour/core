@@ -8,6 +8,33 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-18 02:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/tbrowse.prg
+    * new TBrowse code - many thanks to Viktor Szakats for his help and
+      code and to all others who tested this implementation.
+      It should be very close to Clipper except some minor differences.
+      Most of them are bugs not replicated intentionally. In few cases
+      some of them like wrong positioning of logical columns with extended
+      size by oCol:picture expression the original Clipper behavior is
+      covered by HB_C53_STRICT macro (with cell overwriting during
+      navigation but without internal buffer overflows) but it should
+      be used rather for tests only not for normal applications.
+      I left three TODO notes in the code for some less important things
+      which maybe addressed in the future though they should not effect
+      99.99% of Clipper programs.
+      It's a new code so it's possible that it contains bugs so
+      if you will find any problems then please inform me.
+      Warning: This TBrowse implementation is strongly Clipper oriented.
+               It's neither compatible with previous Harbour nor xHarbour
+               one in intentional or unexpected differences to Clipper.
+               It also does not have any extensions which existed in the
+               old code. In the old code there was TODO note about some
+               xBase++ extensions - I do not have xBase++ so I cannot say
+               anything about it. If any of you things that they are
+               important then I can add them if group agree but I will
+               need detail description of additional methods and probably
+               results of some tests.
+
 2008-04-18 01:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapigt.h
   * harbour/source/rtl/gtapi.c
