@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-18 13:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/gtwvg/wvtcore.c
+    ! fixed missing ; in last modification
+    * when wrong color string is passed from user code then use
+      hb_gtGetCurrColor()
+
 2008-04-18 03:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/tbrowse.prg
     ! fixed typo in last minute modification
