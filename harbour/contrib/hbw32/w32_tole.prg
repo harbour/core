@@ -216,7 +216,7 @@ METHOD New( uObj, cClass ) CLASS TOleAuto
       RETURN HB_ExecFromArray( Self, "_New", HB_aParams() )
    ENDIF
    
-   IF ValType( uObj ) = 'C'
+   IF ValType( uObj ) == 'C'
       ::hObj := CreateOleObject( uObj )
 
       IF OleError() != 0
@@ -252,7 +252,7 @@ METHOD New( uObj, cClass ) CLASS TOleAuto
       ENDIF
 
       ::cClassName := uObj
-   ELSEIF ValType( uObj ) = 'N'
+   ELSEIF ValType( uObj ) == 'N'
       OleAddRef( uObj )
       ::hObj := uObj
 
@@ -298,7 +298,7 @@ METHOD GetActiveObject( cClass ) CLASS TOleAuto
 
    LOCAL oErr
 
-   IF ValType( cClass ) = 'C'
+   IF ValType( cClass ) == 'C'
       ::hObj := GetOleObject( cClass )
 
       IF OleError() != 0

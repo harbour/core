@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-20 13:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/tobject.prg
+    ! fixed the problem with SET EXACT ON I introduced recently by mistake
+
+  * harbour/contrib/xhb/txml.prg
+  * harbour/contrib/hbw32/w32_tole.prg
+  * harbour/contrib/hbw32/w32_tprn.prg
+    * replaced some = use for assign or comparison with := or == when
+      it will have the same meaning.
+      Looks like some parts of TIP library will not work with SET EXACT ON
+      and should be updated.
+
 2008-04-18 13:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/gtwvg/wvtcore.c
     ! fixed missing ; in last modification

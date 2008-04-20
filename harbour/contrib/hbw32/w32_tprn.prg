@@ -152,7 +152,7 @@ CLASS WIN32PRN
   METHOD StartDoc(cDocame)       // Calls StartPage()
   METHOD EndDoc(lAbortDoc)       // Calls EndPage() if lAbortDoc not .T.
   METHOD StartPage()
-  METHOD EndPage(lStartNewPage)      // If lStartNewPage = .T. then StartPage() is called for the next page of output
+  METHOD EndPage(lStartNewPage)      // If lStartNewPage == .T. then StartPage() is called for the next page of output
   METHOD NewLine()
   METHOD NewPage()
   METHOD SetFont(cFontName, nPointSize, nWidth, nBold, lUnderline, lItalic, nCharSet)
@@ -178,7 +178,7 @@ CLASS WIN32PRN
          ::TextColor:=nClrText, ::BkColor:=nClrPane, ::TextAlign:=nAlign,;
          win32_SetColor( ::hPrinterDC, nClrText, nClrPane, nAlign) )
 
-  METHOD TextOut(cString, lNewLine, lUpdatePosX, nAlign)     // nAlign : 0 = left, 1 = right, 2 = centered
+  METHOD TextOut(cString, lNewLine, lUpdatePosX, nAlign)     // nAlign : 0 == left, 1 == right, 2 == centered
   METHOD TextOutAt(nPosX,nPosY, cString, lNewLine, lUpdatePosX, nAlign) // **WARNING** : (Col,Row) _NOT_ (Row,Col)
 
 
@@ -212,7 +212,7 @@ CLASS WIN32PRN
                      nWidth, nBold, lUnderLine, lItalic, lNewLine,; // in specified font and color.
                      lUpdatePosX, nColor, nAlign )                  // Restore original font and colour
                                                                     // after printing.
-  METHOD SetBkMode( nMode )  INLINE win32_SetBkMode( ::hPrinterDc, nMode ) // OPAQUE= 2 or TRANSPARENT= 1
+  METHOD SetBkMode( nMode )  INLINE win32_SetBkMode( ::hPrinterDc, nMode ) // OPAQUE == 2 or TRANSPARENT == 1
                                                                      // Set Background mode
 
   METHOD GetDeviceCaps( nCaps ) INLINE win32_GetDeviceCaps( ::hPrinterDC, nCaps)
