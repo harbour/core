@@ -1942,7 +1942,7 @@ METHOD freeze( nColumns ) CLASS TBROWSE
 METHOD colorSpec( cColorSpec ) CLASS TBROWSE
 
    IF cColorSpec != NIL
-      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001 )
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001 )
       ::configure( _TBR_CONF_COLORS )
    ENDIF
 
@@ -2195,8 +2195,8 @@ METHOD setColumn( nColumn, oCol ) CLASS TBROWSE
 
    IF nColumn != NIL .AND. oCol != NIL
 
-      nColumn := _eInstVar( Self, "COLUMN", nColumn, "N", 1001 )
-      oCol := _eInstVar( Self, "COLUMN", oCol, "O", 1001 )
+      nColumn := __eInstVar53( Self, "COLUMN", nColumn, "N", 1001 )
+      oCol := __eInstVar53( Self, "COLUMN", oCol, "O", 1001 )
 
       /* NOTE: CA-Cl*pper doesn't check nColumn range (and type in C5.3 - I didn't implement this behaviour), 
                but crashes instead. */
@@ -2236,7 +2236,7 @@ METHOD getColumn( nColumn ) CLASS TBROWSE
 METHOD footSep( cFootSep ) CLASS TBROWSE
 
    IF cFootSep != NIL
-      ::cFootSep := _eInstVar( Self, "FOOTSEP", cFootSep, "C", 1001 )
+      ::cFootSep := __eInstVar53( Self, "FOOTSEP", cFootSep, "C", 1001 )
    ENDIF
 
    RETURN ::cFootSep
@@ -2245,7 +2245,7 @@ METHOD footSep( cFootSep ) CLASS TBROWSE
 METHOD colSep( cColSep ) CLASS TBROWSE
 
    IF cColSep != NIL
-      ::cColSep := _eInstVar( Self, "COLSEP", cColSep, "C", 1001 )
+      ::cColSep := __eInstVar53( Self, "COLSEP", cColSep, "C", 1001 )
    ENDIF
 
    RETURN ::cColSep
@@ -2254,7 +2254,7 @@ METHOD colSep( cColSep ) CLASS TBROWSE
 METHOD headSep( cHeadSep ) CLASS TBROWSE
 
    IF cHeadSep != NIL
-      ::cHeadSep := _eInstVar( Self, "HEADSEP", cHeadSep, "C", 1001 )
+      ::cHeadSep := __eInstVar53( Self, "HEADSEP", cHeadSep, "C", 1001 )
    ENDIF
 
    RETURN ::cHeadSep
@@ -2263,7 +2263,7 @@ METHOD headSep( cHeadSep ) CLASS TBROWSE
 METHOD skipBlock( bSkipBlock ) CLASS TBROWSE
 
    IF bSkipBlock != NIL
-      ::bSkipBlock := _eInstVar( Self, "SKIPBLOCK", bSkipBlock, "B", 1001 )
+      ::bSkipBlock := __eInstVar53( Self, "SKIPBLOCK", bSkipBlock, "B", 1001 )
    ENDIF
 
    RETURN ::bSkipBlock
@@ -2272,7 +2272,7 @@ METHOD skipBlock( bSkipBlock ) CLASS TBROWSE
 METHOD goTopBlock( bBlock ) CLASS TBROWSE
 
    IF bBlock != NIL
-      ::bGoTopBlock := _eInstVar( Self, "GOTOPBLOCK", bBlock, "B", 1001 )
+      ::bGoTopBlock := __eInstVar53( Self, "GOTOPBLOCK", bBlock, "B", 1001 )
    ENDIF
 
    RETURN ::bGoTopBlock
@@ -2282,7 +2282,7 @@ METHOD goBottomBlock( bBlock ) CLASS TBROWSE
 
    IF bBlock != NIL
       /* NOTE: In CA-Cl*pper the string is: "GOBOTTOMBL" */
-      ::bGoBottomBlock := _eInstVar( Self, "GOBOTTOMBLOCK", bBlock, "B", 1001 )
+      ::bGoBottomBlock := __eInstVar53( Self, "GOBOTTOMBLOCK", bBlock, "B", 1001 )
    ENDIF
 
    RETURN ::bGoBottomBlock
@@ -2292,12 +2292,12 @@ METHOD nTop( nTop ) CLASS TBROWSE
 
    IF nTop != NIL
       #ifdef HB_COMPAT_C53
-         ::n_Top := _eInstVar( Self, "NTOP", nTop, "N", 1001 )
+         ::n_Top := __eInstVar53( Self, "NTOP", nTop, "N", 1001 )
          IF !Empty( ::cBorder )
             ::n_Top++
          ENDIF
       #else
-         ::n_Top := _eInstVar( Self, "NTOP", nTop, "N", 1001, {| o, x | HB_SYMBOL_UNUSED( o ), x >= 0 } )
+         ::n_Top := __eInstVar53( Self, "NTOP", nTop, "N", 1001, {| o, x | HB_SYMBOL_UNUSED( o ), x >= 0 } )
       #endif
       ::configure( _TBR_CONF_COLUMNS )
    ENDIF
@@ -2315,12 +2315,12 @@ METHOD nLeft( nLeft ) CLASS TBROWSE
 
    IF nLeft != NIL
       #ifdef HB_COMPAT_C53
-         ::n_Left := _eInstVar( Self, "NLEFT", nLeft, "N", 1001 )
+         ::n_Left := __eInstVar53( Self, "NLEFT", nLeft, "N", 1001 )
          IF !Empty( ::cBorder )
             ::n_Left++
          ENDIF
       #else
-         ::n_Left := _eInstVar( Self, "NLEFT", nLeft, "N", 1001, {| o, x | HB_SYMBOL_UNUSED( o ), x >= 0 } )
+         ::n_Left := __eInstVar53( Self, "NLEFT", nLeft, "N", 1001, {| o, x | HB_SYMBOL_UNUSED( o ), x >= 0 } )
       #endif
       ::configure( _TBR_CONF_COLUMNS )
    ENDIF
@@ -2337,7 +2337,7 @@ METHOD nLeft( nLeft ) CLASS TBROWSE
 METHOD nBottom( nBottom ) CLASS TBROWSE
 
    IF nBottom != NIL
-      ::n_Bottom := _eInstVar( Self, "NBOTTOM", nBottom, "N", 1001, {| o, x | x >= o:nTop } )
+      ::n_Bottom := __eInstVar53( Self, "NBOTTOM", nBottom, "N", 1001, {| o, x | x >= o:nTop } )
       #ifdef HB_COMPAT_C53
          IF !Empty( ::cBorder )
             ::n_Bottom--
@@ -2358,7 +2358,7 @@ METHOD nBottom( nBottom ) CLASS TBROWSE
 METHOD nRight( nRight ) CLASS TBROWSE
 
    IF nRight != NIL
-      ::n_Right := _eInstVar( Self, "NRIGHT", nRight, "N", 1001, {| o, x | x >= o:nLeft } )
+      ::n_Right := __eInstVar53( Self, "NRIGHT", nRight, "N", 1001, {| o, x | x >= o:nLeft } )
       #ifdef HB_COMPAT_C53
          IF !Empty( ::cBorder )
             ::n_Right--
@@ -2608,7 +2608,7 @@ METHOD border( cBorder ) CLASS TBROWSE
 
    IF cBorder != NIL
 
-      cBorder := _eInstVar( Self, "BORDER", cBorder, "C", 1001 )
+      cBorder := __eInstVar53( Self, "BORDER", cBorder, "C", 1001 )
 
       IF Len( cBorder ) == 0 .OR. Len( cBorder ) == 8
       
@@ -2636,7 +2636,7 @@ METHOD border( cBorder ) CLASS TBROWSE
 METHOD message( cMessage ) CLASS TBROWSE
 
    IF cMessage != NIL
-      ::cMessage := _eInstVar( Self, "MESSAGE", cMessage, "C", 1001 )
+      ::cMessage := __eInstVar53( Self, "MESSAGE", cMessage, "C", 1001 )
    ENDIF
 
    RETURN ::cMessage

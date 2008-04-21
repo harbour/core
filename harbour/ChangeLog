@@ -8,6 +8,36 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-21 15:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * include/hbextern.ch
+   * source/rtl/Makefile
+   * source/rtl/checkbox.prg
+   * source/rtl/einstvar.prg
+   + source/rtl/einstv52.prg
+   * source/rtl/listbox.prg
+   * source/rtl/pushbtn.prg
+   * source/rtl/radiobtn.prg
+   * source/rtl/radiogrp.prg
+   * source/rtl/tbcolumn.prg
+   * source/rtl/tbrowse.prg
+   * source/rtl/tget.prg
+   * source/rtl/tmenuitm.prg
+   * source/rtl/tpopup.prg
+   * source/rtl/ttopbar.prg
+     ! _eInstVar() made compatible with C5.2 in C5.2 mode.
+     * Renamed _eInstVar52() -> __eInstVar52()
+       (Harbour internal function namespace)
+     * Renamed _eInstVar53() -> __eInstVar53()
+       (Harbour internal function namespace)
+     * __eInstVar52() moved to a separate file.
+     * Harbour now uses __eInstVar53() internally.
+
+   - make_os2_gcc.cmd
+   + make_gnu_os2.cmd
+     * Renamed to align the filename with the rest of the 
+       GNU make command files. Content unchanged.
+
 2008-04-21 14:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * tests/rto_get.prg
    * tests/rto_tb.prg

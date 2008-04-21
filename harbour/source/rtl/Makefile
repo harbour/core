@@ -168,6 +168,7 @@ PRG_SOURCES=\
 	dbedit.prg   \
 	devoutp.prg  \
 	dircmd.prg   \
+	einstv52.prg \
 	einstvar.prg \
 	errorsys.prg \
 	fieldbl.prg  \

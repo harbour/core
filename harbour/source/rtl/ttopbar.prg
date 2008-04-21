@@ -415,7 +415,7 @@ METHOD setItem( nPos, oItem ) CLASS TOPBARMENU
 METHOD colorSpec( cColorSpec ) CLASS TOPBARMENU
 
    IF cColorSpec != NIL
-      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
          {|| !Empty( hb_ColorIndex( cColorSpec, 5 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 6 ) ) } )
    ENDIF
 
@@ -430,7 +430,7 @@ METHOD itemCount() CLASS TOPBARMENU
 METHOD left( nLeft ) CLASS TOPBARMENU
 
    IF nLeft != NIL
-      ::nLeft := _eInstVar( Self, "LEFT", nLeft, "N", 1001 )
+      ::nLeft := __eInstVar53( Self, "LEFT", nLeft, "N", 1001 )
    ENDIF
 
    RETURN ::nLeft
@@ -438,7 +438,7 @@ METHOD left( nLeft ) CLASS TOPBARMENU
 METHOD right( nRight ) CLASS TOPBARMENU
 
    IF nRight != NIL
-      ::nRight := _eInstVar( Self, "RIGHT", nRight, "N", 1001 )
+      ::nRight := __eInstVar53( Self, "RIGHT", nRight, "N", 1001 )
    ENDIF
 
    RETURN ::nRight
@@ -447,7 +447,7 @@ METHOD row( nRow ) CLASS TOPBARMENU
 
    IF nRow != NIL
       /* NOTE: CA-Clipper 5.3 has a bug, where it would show "TOP" in case of an error. */
-      ::nRow := _eInstVar( Self, "ROW", nRow, "N", 1001 )
+      ::nRow := __eInstVar53( Self, "ROW", nRow, "N", 1001 )
    ENDIF
 
    RETURN ::nRow

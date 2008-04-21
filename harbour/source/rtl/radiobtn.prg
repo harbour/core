@@ -240,7 +240,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS RADIOBUTTN
 METHOD bitmaps( aBitmaps ) CLASS RADIOBUTTN
 
    IF aBitmaps != NIL
-      ::aBitmaps := _eInstVar( Self, "BITMAPS", aBitmaps, "A", 1001, {|| Len( aBitmaps ) == 2 } )
+      ::aBitmaps := __eInstVar53( Self, "BITMAPS", aBitmaps, "A", 1001, {|| Len( aBitmaps ) == 2 } )
    ENDIF
 
    RETURN ::aBitmaps
@@ -251,7 +251,7 @@ METHOD buffer() CLASS RADIOBUTTN
 METHOD data( cData ) CLASS RADIOBUTTN
    
    IF PCount() > 0
-      ::cData := iif( cData == NIL, NIL, _eInstVar( Self, "DATA", cData, "C", 1001 ) )
+      ::cData := iif( cData == NIL, NIL, __eInstVar53( Self, "DATA", cData, "C", 1001 ) )
    ENDIF
 
    RETURN iif( ::cData == NIL, __Caption( ::Caption ), ::cData )
@@ -259,7 +259,7 @@ METHOD data( cData ) CLASS RADIOBUTTN
 METHOD capCol( nCapCol ) CLASS RADIOBUTTN
 
    IF nCapCol != NIL
-      ::nCapCol := _eInstVar( Self, "CAPCOL", nCapCol, "N", 1001 )
+      ::nCapCol := __eInstVar53( Self, "CAPCOL", nCapCol, "N", 1001 )
    ENDIF
 
    RETURN ::nCapCol
@@ -267,7 +267,7 @@ METHOD capCol( nCapCol ) CLASS RADIOBUTTN
 METHOD capRow( nCapRow ) CLASS RADIOBUTTN
 
    IF nCapRow != NIL
-      ::nCapRow := _eInstVar( Self, "CAPROW", nCapRow, "N", 1001 )
+      ::nCapRow := __eInstVar53( Self, "CAPROW", nCapRow, "N", 1001 )
    ENDIF
 
    RETURN ::nCapRow
@@ -275,7 +275,7 @@ METHOD capRow( nCapRow ) CLASS RADIOBUTTN
 METHOD caption( cCaption ) CLASS RADIOBUTTN
 
    IF cCaption != NIL
-      ::cCaption := _eInstVar( Self, "CAPTION", cCaption, "C", 1001 )
+      ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
    ENDIF
 
    RETURN ::cCaption
@@ -283,7 +283,7 @@ METHOD caption( cCaption ) CLASS RADIOBUTTN
 METHOD col( nCol ) CLASS RADIOBUTTN
 
    IF nCol != NIL
-      ::nCol := _eInstVar( Self, "COL", nCol, "N", 1001 )
+      ::nCol := __eInstVar53( Self, "COL", nCol, "N", 1001 )
    ENDIF
 
    RETURN ::nCol
@@ -291,7 +291,7 @@ METHOD col( nCol ) CLASS RADIOBUTTN
 METHOD colorSpec( cColorSpec ) CLASS RADIOBUTTN
 
    IF cColorSpec != NIL
-      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
          {|| !Empty( hb_ColorIndex( cColorSpec, 6 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 7 ) ) } )
    ENDIF
 
@@ -300,7 +300,7 @@ METHOD colorSpec( cColorSpec ) CLASS RADIOBUTTN
 METHOD fBlock( bFBlock ) CLASS RADIOBUTTN
    
    IF PCount() > 0
-      ::bFBlock := iif( bFBlock == NIL, NIL, _eInstVar( Self, "FBLOCK", bFBlock, "B", 1001 ) )
+      ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
    ENDIF
 
    RETURN ::bFBlock
@@ -311,7 +311,7 @@ METHOD hasFocus() CLASS RADIOBUTTN
 METHOD row( nRow ) CLASS RADIOBUTTN
 
    IF nRow != NIL
-      ::nRow := _eInstVar( Self, "ROW", nRow, "N", 1001 )
+      ::nRow := __eInstVar53( Self, "ROW", nRow, "N", 1001 )
    ENDIF
 
    RETURN ::nRow
@@ -319,7 +319,7 @@ METHOD row( nRow ) CLASS RADIOBUTTN
 METHOD sBlock( bSBlock ) CLASS RADIOBUTTN
    
    IF PCount() > 0
-      ::bSBlock := iif( bSBlock == NIL, NIL, _eInstVar( Self, "SBLOCK", bSBlock, "B", 1001 ) )
+      ::bSBlock := iif( bSBlock == NIL, NIL, __eInstVar53( Self, "SBLOCK", bSBlock, "B", 1001 ) )
    ENDIF
 
    RETURN ::bSBlock
@@ -327,7 +327,7 @@ METHOD sBlock( bSBlock ) CLASS RADIOBUTTN
 METHOD style( cStyle ) CLASS RADIOBUTTN
 
    IF cStyle != NIL
-      ::cStyle := _eInstVar( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 4 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 4 } )
    ENDIF
 
    RETURN ::cStyle

@@ -239,7 +239,7 @@ METHOD display() CLASS CHECKBOX
 METHOD bitmaps( aBitmaps ) CLASS CHECKBOX
 
    IF aBitmaps != NIL
-      ::aBitmaps := _eInstVar( Self, "BITMAPS", aBitmaps, "A", 1001 )
+      ::aBitmaps := __eInstVar53( Self, "BITMAPS", aBitmaps, "A", 1001 )
    ENDIF
 
    RETURN ::aBitmaps
@@ -250,7 +250,7 @@ METHOD buffer() CLASS CHECKBOX
 METHOD capCol( nCapCol ) CLASS CHECKBOX
 
    IF nCapCol != NIL
-      ::nCapCol := _eInstVar( Self, "CAPCOL", nCapCol, "N", 1001 )
+      ::nCapCol := __eInstVar53( Self, "CAPCOL", nCapCol, "N", 1001 )
    ENDIF
 
    RETURN ::nCapCol
@@ -258,7 +258,7 @@ METHOD capCol( nCapCol ) CLASS CHECKBOX
 METHOD capRow( nCapRow ) CLASS CHECKBOX
 
    IF nCapRow != NIL
-      ::nCapRow := _eInstVar( Self, "CAPROW", nCapRow, "N", 1001 )
+      ::nCapRow := __eInstVar53( Self, "CAPROW", nCapRow, "N", 1001 )
    ENDIF
 
    RETURN ::nCapRow
@@ -266,7 +266,7 @@ METHOD capRow( nCapRow ) CLASS CHECKBOX
 METHOD caption( cCaption ) CLASS CHECKBOX
 
    IF cCaption != NIL
-      ::cCaption := _eInstVar( Self, "CAPTION", cCaption, "C", 1001 )
+      ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
    ENDIF
 
    RETURN ::cCaption
@@ -274,7 +274,7 @@ METHOD caption( cCaption ) CLASS CHECKBOX
 METHOD col( nCol ) CLASS CHECKBOX
 
    IF nCol != NIL
-      ::nCol := _eInstVar( Self, "COL", nCol, "N", 1001 )
+      ::nCol := __eInstVar53( Self, "COL", nCol, "N", 1001 )
    ENDIF
 
    RETURN ::nCol
@@ -282,7 +282,7 @@ METHOD col( nCol ) CLASS CHECKBOX
 METHOD colorSpec( cColorSpec ) CLASS CHECKBOX
 
    IF cColorSpec != NIL
-      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
          {|| !Empty( hb_ColorIndex( cColorSpec, 3 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 4 ) ) } )
    ENDIF
 
@@ -291,7 +291,7 @@ METHOD colorSpec( cColorSpec ) CLASS CHECKBOX
 METHOD fBlock( bFBlock ) CLASS CHECKBOX
    
    IF PCount() > 0
-      ::bFBlock := iif( bFBlock == NIL, NIL, _eInstVar( Self, "FBLOCK", bFBlock, "B", 1001 ) )
+      ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
    ENDIF
 
    RETURN ::bFBlock
@@ -302,7 +302,7 @@ METHOD hasFocus() CLASS CHECKBOX
 METHOD message( cMessage ) CLASS CHECKBOX
 
    IF cMessage != NIL
-      ::cMessage := _eInstVar( Self, "MESSAGE", cMessage, "C", 1001 )
+      ::cMessage := __eInstVar53( Self, "MESSAGE", cMessage, "C", 1001 )
    ENDIF
 
    RETURN ::cMessage
@@ -310,7 +310,7 @@ METHOD message( cMessage ) CLASS CHECKBOX
 METHOD row( nRow ) CLASS CHECKBOX
 
    IF nRow != NIL
-      ::nRow := _eInstVar( Self, "ROW", nRow, "N", 1001 )
+      ::nRow := __eInstVar53( Self, "ROW", nRow, "N", 1001 )
    ENDIF
 
    RETURN ::nRow
@@ -318,7 +318,7 @@ METHOD row( nRow ) CLASS CHECKBOX
 METHOD sBlock( bSBlock ) CLASS CHECKBOX
    
    IF PCount() > 0
-      ::bSBlock := iif( bSBlock == NIL, NIL, _eInstVar( Self, "SBLOCK", bSBlock, "B", 1001 ) )
+      ::bSBlock := iif( bSBlock == NIL, NIL, __eInstVar53( Self, "SBLOCK", bSBlock, "B", 1001 ) )
    ENDIF
 
    RETURN ::bSBlock
@@ -326,7 +326,7 @@ METHOD sBlock( bSBlock ) CLASS CHECKBOX
 METHOD style( cStyle ) CLASS CHECKBOX
 
    IF cStyle != NIL
-      ::cStyle := _eInstVar( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 4 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 4 } )
    ENDIF
 
    RETURN ::cStyle

@@ -507,7 +507,7 @@ METHOD changeButton( nUnselect, nSelect ) CLASS RADIOGROUP
 METHOD bottom( nBottom ) CLASS RADIOGROUP
 
    IF nBottom != NIL
-      ::nBottom := _eInstVar( Self, "BOTTOM", nBottom, "N", 1001 )
+      ::nBottom := __eInstVar53( Self, "BOTTOM", nBottom, "N", 1001 )
    ENDIF
 
    RETURN ::nBottom
@@ -518,7 +518,7 @@ METHOD buffer() CLASS RADIOGROUP
 METHOD capCol( nCapCol ) CLASS RADIOGROUP
 
    IF nCapCol != NIL
-      ::nCapCol := _eInstVar( Self, "CAPCOL", nCapCol, "N", 1001 )
+      ::nCapCol := __eInstVar53( Self, "CAPCOL", nCapCol, "N", 1001 )
    ENDIF
 
    RETURN ::nCapCol
@@ -526,7 +526,7 @@ METHOD capCol( nCapCol ) CLASS RADIOGROUP
 METHOD capRow( nCapRow ) CLASS RADIOGROUP
 
    IF nCapRow != NIL
-      ::nCapRow := _eInstVar( Self, "CAPROW", nCapRow, "N", 1001 )
+      ::nCapRow := __eInstVar53( Self, "CAPROW", nCapRow, "N", 1001 )
    ENDIF
 
    RETURN ::nCapRow
@@ -534,7 +534,7 @@ METHOD capRow( nCapRow ) CLASS RADIOGROUP
 METHOD caption( cCaption ) CLASS RADIOGROUP
 
    IF cCaption != NIL
-      ::cCaption := _eInstVar( Self, "CAPTION", cCaption, "C", 1001 )
+      ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
    ENDIF
 
    RETURN ::cCaption
@@ -542,7 +542,7 @@ METHOD caption( cCaption ) CLASS RADIOGROUP
 METHOD coldBox( cColdBox ) CLASS RADIOGROUP
 
    IF cColdBox != NIL
-      ::cColdBox := _eInstVar( Self, "COLDBOX", cColdBox, "C", 1001, {|| Len( cColdBox ) == 0 .OR. Len( cColdBox ) == 8 } )
+      ::cColdBox := __eInstVar53( Self, "COLDBOX", cColdBox, "C", 1001, {|| Len( cColdBox ) == 0 .OR. Len( cColdBox ) == 8 } )
    ENDIF
 
    RETURN ::cColdBox
@@ -550,7 +550,7 @@ METHOD coldBox( cColdBox ) CLASS RADIOGROUP
 METHOD colorSpec( cColorSpec ) CLASS RADIOGROUP
 
    IF cColorSpec != NIL
-      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
          {|| !Empty( hb_ColorIndex( cColorSpec, 2 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 3 ) ) } )
    ENDIF
 
@@ -559,7 +559,7 @@ METHOD colorSpec( cColorSpec ) CLASS RADIOGROUP
 METHOD fBlock( bFBlock ) CLASS RADIOGROUP
    
    IF PCount() > 0
-      ::bFBlock := iif( bFBlock == NIL, NIL, _eInstVar( Self, "FBLOCK", bFBlock, "B", 1001 ) )
+      ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
    ENDIF
 
    RETURN ::bFBlock
@@ -570,7 +570,7 @@ METHOD hasFocus() CLASS RADIOGROUP
 METHOD hotBox( cHotBox ) CLASS RADIOGROUP
 
    IF cHotBox != NIL
-      ::cHotBox := _eInstVar( Self, "HOTBOX", cHotBox, "C", 1001, {|| Len( cHotBox ) == 0 .OR. Len( cHotBox ) == 8 } )
+      ::cHotBox := __eInstVar53( Self, "HOTBOX", cHotBox, "C", 1001, {|| Len( cHotBox ) == 0 .OR. Len( cHotBox ) == 8 } )
    ENDIF
 
    RETURN ::cHotBox
@@ -581,7 +581,7 @@ METHOD itemCount() CLASS RADIOGROUP
 METHOD left( nLeft ) CLASS RADIOGROUP
 
    IF nLeft != NIL
-      ::nLeft := _eInstVar( Self, "LEFT", nLeft, "N", 1001 )
+      ::nLeft := __eInstVar53( Self, "LEFT", nLeft, "N", 1001 )
    ENDIF
 
    RETURN ::nLeft
@@ -589,7 +589,7 @@ METHOD left( nLeft ) CLASS RADIOGROUP
 METHOD message( cMessage ) CLASS RADIOGROUP
 
    IF cMessage != NIL
-      ::cMessage := _eInstVar( Self, "MESSAGE", cMessage, "C", 1001 )
+      ::cMessage := __eInstVar53( Self, "MESSAGE", cMessage, "C", 1001 )
    ENDIF
 
    RETURN ::cMessage
@@ -597,7 +597,7 @@ METHOD message( cMessage ) CLASS RADIOGROUP
 METHOD right( nRight ) CLASS RADIOGROUP
 
    IF nRight != NIL
-      ::nRight := _eInstVar( Self, "RIGHT", nRight, "N", 1001 )
+      ::nRight := __eInstVar53( Self, "RIGHT", nRight, "N", 1001 )
    ENDIF
 
    RETURN ::nRight
@@ -608,7 +608,7 @@ METHOD textValue() CLASS RADIOGROUP
 METHOD top( nTop ) CLASS RADIOGROUP
 
    IF nTop != NIL
-      ::nTop := _eInstVar( Self, "TOP", nTop, "N", 1001 )
+      ::nTop := __eInstVar53( Self, "TOP", nTop, "N", 1001 )
    ENDIF
 
    RETURN ::nTop

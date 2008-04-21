@@ -601,6 +601,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\dbedit$(OBJEXT)   \
     $(OBJ_DIR)\devoutp$(OBJEXT)  \
     $(OBJ_DIR)\dircmd$(OBJEXT)   \
+    $(OBJ_DIR)\einstv52$(OBJEXT) \
     $(OBJ_DIR)\einstvar$(OBJEXT) \
     $(OBJ_DIR)\errorsys$(OBJEXT) \
     $(OBJ_DIR)\fieldbl$(OBJEXT)  \

@@ -856,7 +856,7 @@ METHOD scrollbarPos() CLASS LISTBOX
 METHOD bitmap( cBitmap ) CLASS LISTBOX
 
    IF cBitmap != NIL .AND. ::lDropDown
-      ::cBitmap := _eInstVar( Self, "BITMAP", cBitmap, "C", 1001 )
+      ::cBitmap := __eInstVar53( Self, "BITMAP", cBitmap, "C", 1001 )
    ENDIF
 
    RETURN ::cBitmap
@@ -864,7 +864,7 @@ METHOD bitmap( cBitmap ) CLASS LISTBOX
 METHOD bottom( nBottom ) CLASS LISTBOX
 
    IF nBottom != NIL
-      ::nBottom := _eInstVar( Self, "BOTTOM", nBottom, "N", 1001 )
+      ::nBottom := __eInstVar53( Self, "BOTTOM", nBottom, "N", 1001 )
       IF ::oVScroll != NIL
          ::oVScroll:end := ::nBottom - 1
       ENDIF
@@ -878,7 +878,7 @@ METHOD buffer() CLASS LISTBOX
 METHOD capCol( nCapCol ) CLASS LISTBOX
 
    IF nCapCol != NIL
-      ::nCapCol := _eInstVar( Self, "CAPCOL", nCapCol, "N", 1001 )
+      ::nCapCol := __eInstVar53( Self, "CAPCOL", nCapCol, "N", 1001 )
    ENDIF
 
    RETURN ::nCapCol
@@ -886,7 +886,7 @@ METHOD capCol( nCapCol ) CLASS LISTBOX
 METHOD capRow( nCapRow ) CLASS LISTBOX
 
    IF nCapRow != NIL
-      ::nCapRow := _eInstVar( Self, "CAPROW", nCapRow, "N", 1001 )
+      ::nCapRow := __eInstVar53( Self, "CAPROW", nCapRow, "N", 1001 )
    ENDIF
 
    RETURN ::nCapRow
@@ -894,7 +894,7 @@ METHOD capRow( nCapRow ) CLASS LISTBOX
 METHOD caption( cCaption ) CLASS LISTBOX
 
    IF cCaption != NIL
-      ::cCaption := _eInstVar( Self, "CAPTION", cCaption, "C", 1001 )
+      ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
       IF ::nCapCol == NIL
          ::nCapRow := ::nTop
          ::nCapCol := ::nLeft - Len( ::cCaption )
@@ -906,7 +906,7 @@ METHOD caption( cCaption ) CLASS LISTBOX
 METHOD coldBox( cColdBox ) CLASS LISTBOX
 
    IF cColdBox != NIL
-      ::cColdBox := _eInstVar( Self, "COLDBOX", cColdBox, "C", 1001, {|| Len( cColdBox ) == 0 .OR. Len( cColdBox ) == 8 } )
+      ::cColdBox := __eInstVar53( Self, "COLDBOX", cColdBox, "C", 1001, {|| Len( cColdBox ) == 0 .OR. Len( cColdBox ) == 8 } )
    ENDIF
 
    RETURN ::cColdBox
@@ -914,7 +914,7 @@ METHOD coldBox( cColdBox ) CLASS LISTBOX
 METHOD colorSpec( cColorSpec ) CLASS LISTBOX
 
    IF cColorSpec != NIL
-      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
          iif( ::lDropDown,;
             {|| !Empty( hb_ColorIndex( cColorSpec, 7 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 8 ) ) },;
             {|| !Empty( hb_ColorIndex( cColorSpec, 6 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 7 ) ) } ) )
@@ -926,7 +926,7 @@ METHOD dropDown( lDropDown ) CLASS LISTBOX
 
    IF lDropDown != NIL
 
-      ::lDropDown := _eInstVar( Self, "DROPDOWN", lDropDown, "L", 1001 )
+      ::lDropDown := __eInstVar53( Self, "DROPDOWN", lDropDown, "L", 1001 )
 
       IF !::lDropDown .AND. !::lIsOpen
          ::lIsOpen := .T.
@@ -940,7 +940,7 @@ METHOD dropDown( lDropDown ) CLASS LISTBOX
 METHOD fBlock( bFBlock ) CLASS LISTBOX
    
    IF PCount() > 0
-      ::bFBlock := iif( bFBlock == NIL, NIL, _eInstVar( Self, "FBLOCK", bFBlock, "B", 1001 ) )
+      ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
    ENDIF
 
    RETURN ::bFBlock
@@ -951,7 +951,7 @@ METHOD hasFocus() CLASS LISTBOX
 METHOD hotBox( cHotBox ) CLASS LISTBOX
 
    IF cHotBox != NIL
-      ::cHotBox := _eInstVar( Self, "HOTBOX", cHotBox, "C", 1001, {|| Len( cHotBox ) == 0 .OR. Len( cHotBox ) == 8 } )
+      ::cHotBox := __eInstVar53( Self, "HOTBOX", cHotBox, "C", 1001, {|| Len( cHotBox ) == 0 .OR. Len( cHotBox ) == 8 } )
    ENDIF
 
    RETURN ::cHotBox
@@ -965,7 +965,7 @@ METHOD itemCount() CLASS LISTBOX
 METHOD left( nLeft ) CLASS LISTBOX
 
    IF nLeft != NIL
-      ::nLeft := _eInstVar( Self, "LEFT", nLeft, "N", 1001 )
+      ::nLeft := __eInstVar53( Self, "LEFT", nLeft, "N", 1001 )
    ENDIF
 
    RETURN ::nLeft
@@ -973,7 +973,7 @@ METHOD left( nLeft ) CLASS LISTBOX
 METHOD message( cMessage ) CLASS LISTBOX
 
    IF cMessage != NIL
-      ::cMessage := _eInstVar( Self, "MESSAGE", cMessage, "C", 1001 )
+      ::cMessage := __eInstVar53( Self, "MESSAGE", cMessage, "C", 1001 )
    ENDIF
 
    RETURN ::cMessage
@@ -981,7 +981,7 @@ METHOD message( cMessage ) CLASS LISTBOX
 METHOD right( nRight ) CLASS LISTBOX
 
    IF nRight != NIL
-      ::nRight := _eInstVar( Self, "RIGHT", nRight, "N", 1001 )
+      ::nRight := __eInstVar53( Self, "RIGHT", nRight, "N", 1001 )
       IF ::oVScroll != NIL
          ::oVScroll:offset := ::nRight
       ENDIF
@@ -992,7 +992,7 @@ METHOD right( nRight ) CLASS LISTBOX
 METHOD sBlock( bSBlock ) CLASS LISTBOX
    
    IF PCount() > 0
-      ::bSBlock := iif( bSBlock == NIL, NIL, _eInstVar( Self, "SBLOCK", bSBlock, "B", 1001 ) )
+      ::bSBlock := iif( bSBlock == NIL, NIL, __eInstVar53( Self, "SBLOCK", bSBlock, "B", 1001 ) )
    ENDIF
 
    RETURN ::bSBlock
@@ -1000,7 +1000,7 @@ METHOD sBlock( bSBlock ) CLASS LISTBOX
 METHOD style( cStyle ) CLASS LISTBOX
 
    IF cStyle != NIL
-      ::cStyle := _eInstVar( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 1 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 1 } )
    ENDIF
 
    RETURN ::cStyle
@@ -1011,7 +1011,7 @@ METHOD textValue() CLASS LISTBOX
 METHOD top( nTop ) CLASS LISTBOX
 
    IF nTop != NIL
-      ::nTop := _eInstVar( Self, "TOP", nTop, "N", 1001 )
+      ::nTop := __eInstVar53( Self, "TOP", nTop, "N", 1001 )
       IF ::oVScroll != NIL
          ::oVScroll:start := ::nTop + 1
       ENDIF
@@ -1023,7 +1023,7 @@ METHOD topItem( nTopItem ) CLASS LISTBOX
 
    IF nTopItem != NIL
 
-      _eInstVar( Self, "TOPITEM", nTopItem, "N", 1001, {|| nTopItem > 0 .AND. nTopItem <= ::nItemCount } )
+      __eInstVar53( Self, "TOPITEM", nTopItem, "N", 1001, {|| nTopItem > 0 .AND. nTopItem <= ::nItemCount } )
 
       nTopItem := Min( nTopItem, ::nItemCount - ( ::nBottom - ::nTop - iif( Empty( ::cHotBox + ::cColdBox ), 0, 2 ) ) )
 
@@ -1052,7 +1052,7 @@ METHOD vScroll( oVScroll ) CLASS LISTBOX
       IF oVScroll == NIL
          ::oVScroll := NIL
       ELSE
-         ::oVScroll := _eInstVar( Self, "VSCROLL", oVScroll, "O", 1001, {|| oVScroll:ClassName() == "SCROLLBAR" .AND. oVScroll:orient == SCROLL_VERTICAL } )
+         ::oVScroll := __eInstVar53( Self, "VSCROLL", oVScroll, "O", 1001, {|| oVScroll:ClassName() == "SCROLLBAR" .AND. oVScroll:orient == SCROLL_VERTICAL } )
          ::oVScroll:total := ::nItemCount
       ENDIF
    ENDIF

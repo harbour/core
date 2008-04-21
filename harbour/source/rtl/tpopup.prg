@@ -696,7 +696,7 @@ METHOD setMetrics() CLASS POPUPMENU
 METHOD border( cBorder ) CLASS POPUPMENU
 
    IF cBorder != NIL
-      ::cBorder := _eInstVar( Self, "BORDER", cBorder, "C", 1001, {|| Len( cBorder ) == 0 .OR. Len( cBorder ) == 11 } )
+      ::cBorder := __eInstVar53( Self, "BORDER", cBorder, "C", 1001, {|| Len( cBorder ) == 0 .OR. Len( cBorder ) == 11 } )
    ENDIF
 
    RETURN ::cBorder
@@ -705,11 +705,11 @@ METHOD bottom( nBottom ) CLASS POPUPMENU
 
 #ifdef HB_C52_STRICT
    IF nBottom != NIL
-      ::nBottom := _eInstVar( Self, "BOTTOM", nBottom, "N", 1001 )
+      ::nBottom := __eInstVar53( Self, "BOTTOM", nBottom, "N", 1001 )
    ENDIF
 #else
    IF PCount() > 0
-      ::nBottom := iif( nBottom == NIL, NIL, _eInstVar( Self, "BOTTOM", nBottom, "N", 1001 ) )
+      ::nBottom := iif( nBottom == NIL, NIL, __eInstVar53( Self, "BOTTOM", nBottom, "N", 1001 ) )
    ENDIF
 #endif
 
@@ -718,7 +718,7 @@ METHOD bottom( nBottom ) CLASS POPUPMENU
 METHOD colorSpec( cColorSpec ) CLASS POPUPMENU
 
    IF cColorSpec != NIL
-      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
          {|| !Empty( hb_ColorIndex( cColorSpec, 5 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 6 ) ) } )
    ENDIF
 
@@ -734,11 +734,11 @@ METHOD left( nLeft ) CLASS POPUPMENU
 
 #ifdef HB_C52_STRICT
    IF nLeft != NIL
-      ::nLeft := _eInstVar( Self, "LEFT", nLeft, "N", 1001 )
+      ::nLeft := __eInstVar53( Self, "LEFT", nLeft, "N", 1001 )
    ENDIF
 #else
    IF PCount() > 0
-      ::nLeft := iif( nLeft == NIL, NIL, _eInstVar( Self, "LEFT", nLeft, "N", 1001 ) )
+      ::nLeft := iif( nLeft == NIL, NIL, __eInstVar53( Self, "LEFT", nLeft, "N", 1001 ) )
    ENDIF
 #endif
 
@@ -748,11 +748,11 @@ METHOD right( nRight ) CLASS POPUPMENU
 
 #ifdef HB_C52_STRICT
    IF nRight != NIL
-      ::nRight := _eInstVar( Self, "RIGHT", nRight, "N", 1001 )
+      ::nRight := __eInstVar53( Self, "RIGHT", nRight, "N", 1001 )
    ENDIF
 #else
    IF PCount() > 0
-      ::nRight := iif( nRight == NIL, NIL, _eInstVar( Self, "RIGHT", nRight, "N", 1001 ) )
+      ::nRight := iif( nRight == NIL, NIL, __eInstVar53( Self, "RIGHT", nRight, "N", 1001 ) )
    ENDIF
 #endif
 
@@ -762,11 +762,11 @@ METHOD top( nTop ) CLASS POPUPMENU
 
 #ifdef HB_C52_STRICT
    IF nTop != NIL
-      ::nTop := _eInstVar( Self, "TOP", nTop, "N", 1001 )
+      ::nTop := __eInstVar53( Self, "TOP", nTop, "N", 1001 )
    ENDIF
 #else
    IF PCount() > 0
-      ::nTop := iif( nTop == NIL, NIL, _eInstVar( Self, "TOP", nTop, "N", 1001 ) )
+      ::nTop := iif( nTop == NIL, NIL, __eInstVar53( Self, "TOP", nTop, "N", 1001 ) )
    ENDIF
 #endif
 

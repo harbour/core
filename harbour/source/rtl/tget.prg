@@ -1931,7 +1931,7 @@ METHOD name( cName ) CLASS Get
 METHOD hideInput( lHideInput ) CLASS Get
 
    IF lHideInput != NIL
-      ::lHideInput := _eInstVar( Self, "HIDEINPUT", lHideInput, "L", 1001 )
+      ::lHideInput := __eInstVar53( Self, "HIDEINPUT", lHideInput, "L", 1001 )
    ENDIF
 
    RETURN ::lHideInput
@@ -1939,7 +1939,7 @@ METHOD hideInput( lHideInput ) CLASS Get
 METHOD style( cStyle ) CLASS Get
 
    IF cStyle != NIL
-      ::cStyle := _eInstVar( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 1 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 1 } )
    ENDIF
 
    RETURN ::cStyle

@@ -109,7 +109,7 @@ ENDCLASS
 METHOD block( bBlock ) CLASS TBColumn
 
    IF bBlock != NIL
-      ::bBlock := _eInstVar( Self, "BLOCK", bBlock, "B", 1001 )
+      ::bBlock := __eInstVar53( Self, "BLOCK", bBlock, "B", 1001 )
    ENDIF
 
    RETURN ::bBlock
@@ -117,7 +117,7 @@ METHOD block( bBlock ) CLASS TBColumn
 METHOD colorBlock( bColorBlock ) CLASS TBColumn
 
    IF bColorBlock != NIL
-      ::bColorBlock := _eInstVar( Self, "COLORBLOCK", bColorBlock, "B", 1001 )
+      ::bColorBlock := __eInstVar53( Self, "COLORBLOCK", bColorBlock, "B", 1001 )
    ENDIF
 
    RETURN ::bColorBlock
@@ -125,7 +125,7 @@ METHOD colorBlock( bColorBlock ) CLASS TBColumn
 METHOD defColor( aDefColor ) CLASS TBColumn
 
    IF aDefColor != NIL
-      ::aDefColor := _eInstVar( Self, "DEFCOLOR", aDefColor, "A", 1001 )
+      ::aDefColor := __eInstVar53( Self, "DEFCOLOR", aDefColor, "A", 1001 )
    ENDIF
 
    RETURN ::aDefColor
@@ -133,7 +133,7 @@ METHOD defColor( aDefColor ) CLASS TBColumn
 METHOD colSep( cColSep ) CLASS TBColumn
 
    IF cColSep != NIL
-      ::cColSep := _eInstVar( Self, "COLSEP", cColSep, "C", 1001 )
+      ::cColSep := __eInstVar53( Self, "COLSEP", cColSep, "C", 1001 )
    ENDIF
 
    RETURN ::cColSep
@@ -141,7 +141,7 @@ METHOD colSep( cColSep ) CLASS TBColumn
 METHOD heading( cHeading ) CLASS TBColumn
 
    IF cHeading != NIL
-      ::cHeading := _eInstVar( Self, "HEADING", cHeading, "C", 1001 )
+      ::cHeading := __eInstVar53( Self, "HEADING", cHeading, "C", 1001 )
    ENDIF
 
    RETURN ::cHeading
@@ -149,7 +149,7 @@ METHOD heading( cHeading ) CLASS TBColumn
 METHOD footing( cFooting ) CLASS TBColumn
 
    IF cFooting != NIL
-      ::cFooting := _eInstVar( Self, "FOOTING", cFooting, "C", 1001 )
+      ::cFooting := __eInstVar53( Self, "FOOTING", cFooting, "C", 1001 )
    ENDIF
 
    RETURN ::cFooting
@@ -157,7 +157,7 @@ METHOD footing( cFooting ) CLASS TBColumn
 METHOD headSep( cHeadSep ) CLASS TBColumn
 
    IF cHeadSep != NIL
-      ::cHeadSep := _eInstVar( Self, "HEADSEP", cHeadSep, "C", 1001 )
+      ::cHeadSep := __eInstVar53( Self, "HEADSEP", cHeadSep, "C", 1001 )
    ENDIF
 
    RETURN ::cHeadSep
@@ -165,7 +165,7 @@ METHOD headSep( cHeadSep ) CLASS TBColumn
 METHOD footSep( cFootSep ) CLASS TBColumn
 
    IF cFootSep != NIL
-      ::cFootSep := _eInstVar( Self, "FOOTSEP", cFootSep, "C", 1001 )
+      ::cFootSep := __eInstVar53( Self, "FOOTSEP", cFootSep, "C", 1001 )
    ENDIF
 
    RETURN ::cFootSep
@@ -173,7 +173,7 @@ METHOD footSep( cFootSep ) CLASS TBColumn
 METHOD width( nWidth ) CLASS TBColumn
 
    IF nWidth != NIL
-      ::nWidth := _eInstVar( Self, "WIDTH", nWidth, "N", 1001 )
+      ::nWidth := __eInstVar53( Self, "WIDTH", nWidth, "N", 1001 )
    ENDIF
 
    RETURN ::nWidth
@@ -183,7 +183,7 @@ METHOD width( nWidth ) CLASS TBColumn
 METHOD preBlock( bPreBlock ) CLASS TBColumn
 
    IF bPreBlock != NIL
-      ::bPreBlock := _eInstVar( Self, "PREBLOCK", bPreBlock, "B", 1001 )
+      ::bPreBlock := __eInstVar53( Self, "PREBLOCK", bPreBlock, "B", 1001 )
    ENDIF
 
    RETURN ::bPreBlock
@@ -191,7 +191,7 @@ METHOD preBlock( bPreBlock ) CLASS TBColumn
 METHOD postBlock( bPostBlock ) CLASS TBColumn
 
    IF bPostBlock != NIL
-      ::bPostBlock := _eInstVar( Self, "POSTBLOCK", bPostBlock, "B", 1001 )
+      ::bPostBlock := __eInstVar53( Self, "POSTBLOCK", bPostBlock, "B", 1001 )
    ENDIF
 
    RETURN ::bPostBlock

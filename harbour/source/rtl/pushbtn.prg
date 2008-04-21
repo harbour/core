@@ -267,7 +267,7 @@ METHOD display() CLASS PUSHBUTTON
 METHOD bitmap( cBitmap ) CLASS PUSHBUTTON
 
    IF cBitmap != NIL
-      ::cBitmap := _eInstVar( Self, "BITMAP", cBitmap, "C", 1001 )
+      ::cBitmap := __eInstVar53( Self, "BITMAP", cBitmap, "C", 1001 )
    ENDIF
 
    RETURN ::cBitmap
@@ -278,7 +278,7 @@ METHOD buffer() CLASS PUSHBUTTON
 METHOD caption( cCaption ) CLASS PUSHBUTTON
 
    IF cCaption != NIL
-      ::cCaption := _eInstVar( Self, "CAPTION", cCaption, "C", 1001 )
+      ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
    ENDIF
 
    RETURN ::cCaption
@@ -286,7 +286,7 @@ METHOD caption( cCaption ) CLASS PUSHBUTTON
 METHOD col( nCol ) CLASS PUSHBUTTON
 
    IF nCol != NIL
-      ::nCol := _eInstVar( Self, "COL", nCol, "N", 1001 )
+      ::nCol := __eInstVar53( Self, "COL", nCol, "N", 1001 )
    ENDIF
 
    RETURN ::nCol
@@ -294,7 +294,7 @@ METHOD col( nCol ) CLASS PUSHBUTTON
 METHOD colorSpec( cColorSpec ) CLASS PUSHBUTTON
 
    IF cColorSpec != NIL
-      ::cColorSpec := _eInstVar( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
          {|| !Empty( hb_ColorIndex( cColorSpec, 3 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 5 ) ) } )
    ENDIF
 
@@ -303,7 +303,7 @@ METHOD colorSpec( cColorSpec ) CLASS PUSHBUTTON
 METHOD fBlock( bFBlock ) CLASS PUSHBUTTON
    
    IF PCount() > 0
-      ::bFBlock := iif( bFBlock == NIL, NIL, _eInstVar( Self, "FBLOCK", bFBlock, "B", 1001 ) )
+      ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
    ENDIF
 
    RETURN ::bFBlock
@@ -314,7 +314,7 @@ METHOD hasFocus() CLASS PUSHBUTTON
 METHOD message( cMessage ) CLASS PUSHBUTTON
 
    IF cMessage != NIL
-      ::cMessage := _eInstVar( Self, "MESSAGE", cMessage, "C", 1001 )
+      ::cMessage := __eInstVar53( Self, "MESSAGE", cMessage, "C", 1001 )
    ENDIF
 
    RETURN ::cMessage
@@ -322,7 +322,7 @@ METHOD message( cMessage ) CLASS PUSHBUTTON
 METHOD row( nRow ) CLASS PUSHBUTTON
 
    IF nRow != NIL
-      ::nRow := _eInstVar( Self, "ROW", nRow, "N", 1001 )
+      ::nRow := __eInstVar53( Self, "ROW", nRow, "N", 1001 )
    ENDIF
 
    RETURN ::nRow
@@ -330,7 +330,7 @@ METHOD row( nRow ) CLASS PUSHBUTTON
 METHOD sBlock( bSBlock ) CLASS PUSHBUTTON
    
    IF PCount() > 0
-      ::bSBlock := iif( bSBlock == NIL, NIL, _eInstVar( Self, "SBLOCK", bSBlock, "B", 1001 ) )
+      ::bSBlock := iif( bSBlock == NIL, NIL, __eInstVar53( Self, "SBLOCK", bSBlock, "B", 1001 ) )
    ENDIF
 
    RETURN ::bSBlock
@@ -341,7 +341,7 @@ METHOD typeOut() CLASS PUSHBUTTON
 METHOD style( cStyle ) CLASS PUSHBUTTON
 
    IF cStyle != NIL
-      ::cStyle := _eInstVar( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 2 .OR. Len( cStyle ) == 8 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 2 .OR. Len( cStyle ) == 8 } )
    ENDIF
 
    RETURN ::cStyle

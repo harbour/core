@@ -53,21 +53,28 @@
 
 #include "common.ch"
 
-FUNCTION _eInstVar( ... )
-#ifdef HB_COMPAT_C53
-   RETURN __eInstVar53( ... )
-#else
-   RETURN __eInstVar52( ... )
-#endif
-
 /* NOTE: In CA-Cl*pper 5.2/5.3 the cMethod argument seems to be ignored. */
 
-FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )
+FUNCTION __eInstVar52( oVar, cMethod, xValue, cType, nSubCode, xMin, xMax )
 
    LOCAL oError
+   LOCAL lError
 
-   IF VALTYPE( xValue ) != cType .OR. ;
-      ( bValid != NIL .AND. !EVAL( bValid, oVar, xValue ) )
+   IF VALTYPE( xValue ) == cType
+      lError := .F.
+      IF xMin != NIL
+         lError := !( xValue >= xMin )
+      ENDIF
+      /* NOTE: In CA-Cl*pper 5.2, xMin validation result is 
+               ignored when xMax != NIL. Harbour is doing the same. */
+      IF xMax != NIL
+         lError := !( xValue <= xMax )
+      ENDIF
+   ELSE
+      lError := .T.
+   ENDIF
+
+   IF lError
       oError := ErrorNew()
       oError:description := HB_LANGERRMSG( 1 )
       oError:gencode := 1

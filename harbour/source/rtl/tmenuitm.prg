@@ -99,7 +99,7 @@ METHOD caption( cCaption ) CLASS MENUITEM
 
    IF cCaption != NIL
 
-      ::cCaption := _eInstVar( Self, "CAPTION", cCaption, "C", 1001 )
+      ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
 
       IF ::cCaption == MENU_SEPARATOR
          ::boData   := NIL
@@ -113,7 +113,7 @@ METHOD caption( cCaption ) CLASS MENUITEM
 METHOD checked( lChecked ) CLASS MENUITEM
 
    IF lChecked != NIL .AND. !( ::cCaption == MENU_SEPARATOR )
-      ::lChecked := _eInstVar( Self, "CHECKED", lChecked, "L", 1001 )
+      ::lChecked := __eInstVar53( Self, "CHECKED", lChecked, "L", 1001 )
    ENDIF
 
    RETURN ::lChecked
@@ -124,7 +124,7 @@ METHOD data( boData ) CLASS MENUITEM
       IF ISBLOCK( boData )
          ::boData := boData
       ELSE
-         ::boData := _eInstVar( Self, "DATA", boData, "O", 1001, {|| boData:ClassName() == "POPUPMENU" } )
+         ::boData := __eInstVar53( Self, "DATA", boData, "O", 1001, {|| boData:ClassName() == "POPUPMENU" } )
       ENDIF
    ENDIF
 
@@ -133,7 +133,7 @@ METHOD data( boData ) CLASS MENUITEM
 METHOD enabled( lEnabled ) CLASS MENUITEM
 
    IF lEnabled != NIL .AND. !( ::cCaption == MENU_SEPARATOR )
-      ::lEnabled := _eInstVar( Self, "ENABLED", lEnabled, "L", 1001 )
+      ::lEnabled := __eInstVar53( Self, "ENABLED", lEnabled, "L", 1001 )
    ENDIF
 
    RETURN ::lEnabled
@@ -141,7 +141,7 @@ METHOD enabled( lEnabled ) CLASS MENUITEM
 METHOD id( nID ) CLASS MENUITEM
 
    IF nID != NIL
-      ::nID := _eInstVar( Self, "ID", nID, "N", 1001 )
+      ::nID := __eInstVar53( Self, "ID", nID, "N", 1001 )
    ENDIF
 
    RETURN ::nID
@@ -149,7 +149,7 @@ METHOD id( nID ) CLASS MENUITEM
 METHOD message( cMessage ) CLASS MENUITEM
 
    IF cMessage != NIL
-      ::cMessage := _eInstVar( Self, "MESSAGE", cMessage, "C", 1001 )
+      ::cMessage := __eInstVar53( Self, "MESSAGE", cMessage, "C", 1001 )
    ENDIF
 
    RETURN ::cMessage
@@ -157,7 +157,7 @@ METHOD message( cMessage ) CLASS MENUITEM
 METHOD shortcut( nShortcut ) CLASS MENUITEM
 
    IF nShortcut != NIL
-      ::nShortcut := _eInstVar( Self, "SHORTCUT", nShortcut, "N", 1001 )
+      ::nShortcut := __eInstVar53( Self, "SHORTCUT", nShortcut, "N", 1001 )
    ENDIF
 
    RETURN ::nShortcut
@@ -165,7 +165,7 @@ METHOD shortcut( nShortcut ) CLASS MENUITEM
 METHOD style( cStyle ) CLASS MENUITEM
 
    IF cStyle != NIL
-      ::cStyle := _eInstVar( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 2 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 2 } )
    ENDIF
 
    RETURN ::cStyle
