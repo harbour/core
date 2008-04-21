@@ -67,7 +67,7 @@
 
 CREATE CLASS SCROLLBAR FUNCTION HBScrollBar
 
-   EXPORT:
+   EXPORTED:
 
    VAR cargo
 

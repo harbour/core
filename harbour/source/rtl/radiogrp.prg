@@ -68,7 +68,7 @@
 
 CREATE CLASS RADIOGROUP FUNCTION HBRadioGroup
 
-   EXPORT:
+   EXPORTED:
 
    VAR cargo
 

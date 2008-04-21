@@ -68,7 +68,7 @@
 
 CREATE CLASS PUSHBUTTON FUNCTION HBPushButton
 
-   EXPORT:
+   EXPORTED:
 
    VAR cargo                          /* NOTE: CA-Clipper 5.3 has a bug, where this var cannot be assigned NIL. */
 

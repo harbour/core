@@ -70,7 +70,7 @@
 
 CREATE CLASS HBMenuSys
 
-   EXPORT:
+   EXPORTED:
 
    METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList )
    METHOD New( oMenu )

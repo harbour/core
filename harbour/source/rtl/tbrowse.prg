@@ -54,13 +54,14 @@
 
 #define HB_CLS_NOTOBJECT
 
-#include "common.ch"
 #include "hbclass.ch"
+
+#include "button.ch"
 #include "color.ch"
+#include "common.ch"
 #include "error.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
-#include "button.ch"
 #include "tbrowse.ch"
 
 /* HB_BRW_STATICMOUSE controls if mouse position is static
@@ -107,6 +108,11 @@
 #define _TBR_CONF_COLUMNS     2
 #define _TBR_CONF_ALL         3
 
+/* Footing/heading line separator. */
+#define _TBR_CHR_LINEDELIMITER ";"
+
+#define _TBR_COORD( n )       Int( n )
+
 /* NOTE: In CA-Cl*pper TBROWSE class does not inherit from any other classes
          and there is no public class function like TBrowse(). There is 
          in XPP though. */ 
@@ -123,10 +129,10 @@ CREATE CLASS TBrowse
    VAR cargo      AS USUAL          EXPORTED    // 01. User-definable variable
 
 HIDDEN:
-   VAR n_Top      AS INTEGER INIT 0             // 02. Top row number for the TBrowse display
-   VAR n_Left     AS INTEGER INIT 0             // 03. Leftmost column for the TBrowse display
-   VAR n_Bottom   AS INTEGER INIT 0             // 04. Bottom row number for the TBrowse display
-   VAR n_Right    AS INTEGER INIT 0             // 05. Rightmost column for the TBrowse display
+   VAR n_Top      AS NUMERIC INIT 0             // 02. Top row number for the TBrowse display
+   VAR n_Left     AS NUMERIC INIT 0             // 03. Leftmost column for the TBrowse display
+   VAR n_Bottom   AS NUMERIC INIT 0             // 04. Bottom row number for the TBrowse display
+   VAR n_Right    AS NUMERIC INIT 0             // 05. Rightmost column for the TBrowse display
 
    VAR columns    AS ARRAY INIT {}              // 06. Array of TBrowse columns
 
@@ -248,6 +254,11 @@ EXPORTED:
 
    /* NOTE: nMode is an undocumented parameter in CA-Cl*pper */
    METHOD configure( nMode )                    // mark that the internal settings of the TBrowse object should be reconfigured
+
+#ifdef HB_COMPAT_XPP
+   METHOD viewArea()                            // Xbase++ compatible method
+   METHOD firstScrCol()                         // Xbase++ compatible method
+#endif
 
    METHOD new( nTop, nLeft, nBottom, nRight )   // constructor, NOTE: This method is a Harbour extension [vszakats]
 
@@ -421,7 +432,7 @@ STATIC FUNCTION _DISP_FHNAME( nRow, nHeight, nLeft, nRight, nType, nColor, aColo
          ENDIF
          FOR nPos := 1 TO nHeight
             DispOutAt( nRow + nPos - 1, nCol, ;
-                       PadR( hb_tokenGet( cName, nPos, ";" ), nWidth ), ;
+                       PadR( hb_tokenGet( cName, nPos, _TBR_CHR_LINEDELIMITER ), nWidth ), ;
                        IIF( aCol[ _TBCI_DEFCOLOR ][ nColor ] == 0, "N/N", ;
                             aColors[ aCol[ _TBCI_DEFCOLOR ][ nColor ] ] ) )
          NEXT
@@ -970,7 +981,7 @@ STATIC FUNCTION _SETDEFCOLOR( aColData, aColors )
       aClr := { aCol[ _TBCI_DEFCOLOR ][ 1 ], aCol[ _TBCI_DEFCOLOR ][ 2 ] }
    NEXT
 
-RETURN NIL
+   RETURN NIL
 
 
 /* If oCol:colorBlock does not return array length enough then colors
@@ -1399,7 +1410,7 @@ METHOD doConfigure() CLASS TBROWSE
       ENDIF
    NEXT
 
-   nHeight := MAx( ::n_Bottom - ::n_Top, 0 )
+   nHeight := Max( _TBR_COORD( ::n_Bottom ) - _TBR_COORD( ::n_Top ), 0 )
    IF lHeadSep .AND. nHeight > 0
       --nHeight
    ELSE
@@ -1427,7 +1438,7 @@ METHOD doConfigure() CLASS TBROWSE
 
    /* update headings to maximum size and missing head/foot separators */
    FOR EACH aCol IN ::aColData
-      aCol[ _TBCI_HEADING ] := Replicate( ";", nHeadHeight - hb_TokenCount( aCol[ _TBCI_HEADING ], ";" ) ) + ;
+      aCol[ _TBCI_HEADING ] := Replicate( _TBR_CHR_LINEDELIMITER, nHeadHeight - hb_TokenCount( aCol[ _TBCI_HEADING ], _TBR_CHR_LINEDELIMITER ) ) + ;
                                aCol[ _TBCI_HEADING ]
       IF lHeadSep .AND. aCol[ _TBCI_HEADSEP ] == ""
          aCol[ _TBCI_HEADSEP ] := " "
@@ -1469,7 +1480,7 @@ METHOD doConfigure() CLASS TBROWSE
    /* CA-Clipper update visible columns here but without
     * colPos repositioning. [druzus]
     */
-   _SETVISIBLE( ::aColData, ::n_Right - ::n_Left + 1, ;
+   _SETVISIBLE( ::aColData, _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1, ;
                 @::nFrozen, @::nLeftVisible, @::nRightVisible )
 
    ::nLastPos := 0
@@ -1517,12 +1528,12 @@ STATIC FUNCTION _DECODE_FH( cName, nHeight, nWidth )
          /* When last character of heading/footing is ';' then CA-Cl*pper
           * does not calculate it as separator
           */
-         IF Right( cName, 1 ) == ";"
+         IF Right( cName, 1 ) == _TBR_CHR_LINEDELIMITER
             cName := Left( cName, Len( cName ) - 1 )
          ENDIF
-         nHeight := hb_TokenCount( cName, ";" )
+         nHeight := hb_TokenCount( cName, _TBR_CHR_LINEDELIMITER )
          FOR i := 1 TO nHeight
-            nWidth := Max( nWidth, Len( hb_TokenGet( cName, i, ";" ) ) )
+            nWidth := Max( nWidth, Len( hb_TokenGet( cName, i, _TBR_CHR_LINEDELIMITER ) ) )
          NEXT
       ENDIF
 
@@ -1725,7 +1736,7 @@ METHOD setVisible() CLASS TBROWSE
 
    lFrames := .F.
    nColumns := Len( ::aColData )
-   nWidth := ::n_Right - ::n_Left + 1
+   nWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
 
    nColPos := ::nColPos
    IF nColPos > nColumns
@@ -1769,7 +1780,7 @@ METHOD setVisible() CLASS TBROWSE
 #endif
 
    /* update column size and positions on the screen */
-   nLeft := ::n_Left
+   nLeft := _TBR_COORD( ::n_Left )
    lFirst := .T.
    FOR nCol := 1 TO ::nRightVisible
       aCol := ::aColData[ nCol ]
@@ -1784,7 +1795,7 @@ METHOD setVisible() CLASS TBROWSE
          ELSE
             nLeft += aCol[ _TBCI_SEPWIDTH ]
          ENDIF
-         nLast := IIF( nCol == ::nRightVisible, ::n_Right - nLeft + 1, 0 )
+         nLast := IIF( nCol == ::nRightVisible, _TBR_COORD( ::n_Right ) - nLeft + 1, 0 )
 
          IF aCol[ _TBCI_COLPOS      ] != nColPos  .OR. ;
             aCol[ _TBCI_FROZENSPACE ] != nFrozen  .OR. ;
@@ -1832,8 +1843,8 @@ METHOD hiLite() CLASS TBROWSE
    IF ::setCursorPos()
       IF ( cValue := ::cellValue( ::nRowPos, ::nColPos ) ) != NIL
          cColor := ::colorValue( ::cellColor( ::nRowPos, ::nColPos )[ _TBC_CLR_SELECTED ] )
-         IF ::n_Col + Len( cValue ) > ::n_Right
-            cValue := Left( cValue, ::n_Right - ::n_Col + 1 )
+         IF ::n_Col + Len( cValue ) > _TBR_COORD( ::n_Right )
+            cValue := Left( cValue, _TBR_COORD( ::n_Right ) - ::n_Col + 1 )
          ENDIF
          DispOut( cValue, cColor )
          SetPos( ::n_Row, ::n_Col )
@@ -1859,8 +1870,8 @@ METHOD deHilite() CLASS TBROWSE
    IF ::setCursorPos()
       IF ( cValue := ::cellValue( ::nRowPos, ::nColPos ) ) != NIL
          cColor := ::colorValue( ::cellColor( ::nRowPos, ::nColPos )[ _TBC_CLR_STANDARD ] )
-         IF ::n_Col + Len( cValue ) > ::n_Right
-            cValue := Left( cValue, ::n_Right - ::n_Col + 1 )
+         IF ::n_Col + Len( cValue ) > _TBR_COORD( ::n_Right )
+            cValue := Left( cValue, _TBR_COORD( ::n_Right ) - ::n_Col + 1 )
          ENDIF
          DispOut( cValue, cColor )
          SetPos( ::n_Row, ::n_Col )
@@ -1909,7 +1920,7 @@ METHOD freeze( nColumns ) CLASS TBROWSE
    IF ISNUMBER( nColumns )
 
       nCols := Int( nColumns )
-      IF _MAXFREEZE( nCols, ::aColData, ::n_Right - ::n_Left + 1 ) == nCols
+      IF _MAXFREEZE( nCols, ::aColData, _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1 ) == nCols
 
          ::nFrozen := nCols
          ::lFrames := .T.
@@ -1917,7 +1928,7 @@ METHOD freeze( nColumns ) CLASS TBROWSE
          /* CA-Clipper update visible columns here but without
           * colPos repositioning. [druzus]
           */
-         _SETVISIBLE( ::aColData, ::n_Right - ::n_Left + 1, ;
+         _SETVISIBLE( ::aColData, _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1, ;
                       @::nFrozen, @::nLeftVisible, @::nRightVisible )
       ENDIF
       /* NOTE: CA-Cl*pper compatible behaviour. [vszakats] */
@@ -1951,7 +1962,7 @@ METHOD rowCount() CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   nRows := ::n_Bottom - ::n_Top + 1 - ;
+   nRows := _TBR_COORD( ::n_Bottom ) - _TBR_COORD( ::n_Top ) + 1 - ;
             ::nHeadHeight - IIF( ::lHeadSep, 1, 0 ) - ;
             ::nFootHeight - IIF( ::lFootSep, 1, 0 )
 
@@ -2133,7 +2144,7 @@ METHOD rightVisible() CLASS TBROWSE
 /* Adds a TBColumn object to the TBrowse object */
 METHOD addColumn( oCol ) CLASS TBROWSE
 
-   /* NOTE: CA-Cl*pper does not check at all on the parameters. */
+   /* NOTE: CA-Cl*pper doesn't check the parameters. */
 
    AAdd( ::columns, oCol )
    ::configure( _TBR_CONF_COLUMNS )
@@ -2146,7 +2157,7 @@ METHOD delColumn( nColumn ) CLASS TBROWSE
 
    LOCAL oCol
 
-   /* NOTE: CA-Cl*pper does not check at all on the parameters. */
+   /* NOTE: CA-Cl*pper doesn't check the parameters. */
 #ifndef HB_C52_STRICT
    IF nColumn >= 1 .AND. nColumn <= ::colCount
 #else
@@ -2164,7 +2175,7 @@ METHOD delColumn( nColumn ) CLASS TBROWSE
 /* Insert a column object in a browse */
 METHOD insColumn( nColumn, oCol ) CLASS TBROWSE
 
-   /* NOTE: CA-Cl*pper does not check at all on the parameters. */
+   /* NOTE: CA-Cl*pper doesn't check the parameters. */
 #ifndef HB_C52_STRICT
    IF nColumn >= 1 .AND. nColumn <= ::colCount + 1
 #else
@@ -2363,6 +2374,30 @@ METHOD nRight( nRight ) CLASS TBROWSE
    #endif
 
    RETURN ::n_Right
+
+
+#ifdef HB_COMPAT_XPP
+
+METHOD viewArea() CLASS TBROWSE
+
+   // TOFIX
+
+   RETURN { ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ),;
+            ::n_Left,;
+            ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ),;
+            ::n_Right,; 
+            0 /* nFrozenWidth */ }
+
+
+/* NOTE: Returns the left margin relative column position of the first 
+         non-freezed column. Xbase++ compatible method. */
+METHOD firstScrCol() CLASS TBROWSE
+
+   // TOFIX
+
+   RETURN iif( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
+
+#endif
 
 
 #ifdef HB_COMPAT_C53

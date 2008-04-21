@@ -104,7 +104,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    s_lCallBackStack := "CALLBACKSTACK" $ Upper( cCommandLine )
    s_lRTEDetails := "RTEDETAILS" $ Upper( cCommandLine )
    s_lIgnoreErrOp := "IGNERROP" $ Upper( cCommandLine )
-   s_lObjectDump := "ODUMP" $ Upper( cCommandLine )
+   s_lObjectDump := !( "NODUMP" $ Upper( cCommandLine ) )
    s_lCatchErr := .T.
    s_lCheckResult := .F.
 

@@ -54,7 +54,7 @@
 
 CREATE CLASS Symbol
 
-   EXPORT:
+   EXPORTED:
 
    METHOD New( cSymName )    // Constructor. cSymName may already exists or not
    METHOD name()             // retrieves the symbol name

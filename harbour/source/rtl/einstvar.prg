@@ -59,9 +59,12 @@
          validation codeblock. In other words, in case of _eInstVar() 
          Harbour is compatible with CA-Cl*pper 5.3, not with 5.2. */
 
+FUNCTION _eInstVar( ... )
+   RETURN _eInstVar53( ... )
+
 /* NOTE: In CA-Cl*pper 5.2/5.3 the cMethod argument seems to be ignored. */
 
-FUNCTION _eInstVar( oVar, cMethod, xValue, cType, nSubCode, bValid )
+FUNCTION _eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )
 
    LOCAL oError
 
@@ -72,7 +75,48 @@ FUNCTION _eInstVar( oVar, cMethod, xValue, cType, nSubCode, bValid )
       oError:gencode := 1
       oError:severity := 2
       oError:cansubstitute := .T.
-      oError:subsystem := oVar:classname
+      oError:subsystem := oVar:className
+#ifdef HB_C52_STRICT
+      HB_SYMBOL_UNUSED( cMethod )
+#else
+      oError:operation := cMethod
+#endif
+      oError:subcode := nSubCode
+      oError:args := { xValue }
+      xValue := EVAL( ERRORBLOCK(), oError )
+      IF VALTYPE( xValue ) != cType
+         __errInHandler()
+      ENDIF
+   ENDIF
+
+   RETURN xValue
+
+FUNCTION _eInstVar52( oVar, cMethod, xValue, cType, nSubCode, xMin, xMax )
+
+   LOCAL oError
+   LOCAL lError
+
+   IF VALTYPE( xValue ) == cType
+      lError := .F.
+      IF xMin != NIL
+         lError := !( xValue >= xMin )
+      ENDIF
+      /* NOTE: In CA-Cl*pper 5.2, xMin validation result is 
+               ignored when xMax != NIL. Harbour is doing the same. */
+      IF xMax != NIL
+         lError := !( xValue <= xMax )
+      ENDIF
+   ELSE
+      lError := .T.
+   ENDIF
+
+   IF lError
+      oError := ErrorNew()
+      oError:description := HB_LANGERRMSG( 1 )
+      oError:gencode := 1
+      oError:severity := 2
+      oError:cansubstitute := .T.
+      oError:subsystem := oVar:className
 #ifdef HB_C52_STRICT
       HB_SYMBOL_UNUSED( cMethod )
 #else

@@ -68,7 +68,7 @@
 
 CREATE CLASS CHECKBOX FUNCTION HBCheckBox
 
-   EXPORT:
+   EXPORTED:
 
    VAR cargo
 

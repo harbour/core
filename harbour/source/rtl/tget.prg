@@ -255,9 +255,9 @@ METHOD display( lForced ) CLASS Get
    LOCAL nOldCursor := SetCursor( SC_NONE )
    LOCAL cBuffer
    LOCAL nDispPos
-   LOCAL nPos
 
 #ifdef HB_COMPAT_C53
+   LOCAL nPos
    LOCAL cCaption
 #endif
 
@@ -330,8 +330,14 @@ METHOD display( lForced ) CLASS Get
                  iif( ::lHideInput, PadR( Replicate( SubStr( ::cStyle, 1, 1 ), Len( RTrim( cBuffer ) ) ), ::nDispLen ), SubStr( cBuffer, nDispPos, ::nDispLen ) ),;
                  hb_ColorIndex( ::cColorSpec, iif( ::hasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
       IF Set( _SET_DELIMITERS ) .AND. !::hasFocus
+#ifdef HB_COMPAT_C53
+         DispOutAt( ::nRow, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
+         DispOutAt( ::nRow, ::nCol + ::nDispLen, SubStr( Set( _SET_DELIMCHARS ), 2, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
+#else
+         /* NOTE: C5.x will use the default color. We're replicating this here. [vszakats] */
          DispOutAt( ::nRow, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ) )
          DispOutAt( ::nRow, ::nCol + ::nDispLen, SubStr( Set( _SET_DELIMCHARS ), 2, 1 ) )
+#endif
       ENDIF
    ENDIF
 
@@ -1181,11 +1187,30 @@ METHOD colorSpec( cColorSpec ) CLASS Get
                       "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( cClrOth := hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) )
 #endif
 
-      RETURN cColorSpec
+   /* NOTE: CA-Cl*pper oddity. [vszakats] */
+   ELSEIF ValType( cColorSpec ) $ "UNDBA"
 
+      RETURN NIL
+
+#ifdef HB_COMPAT_C53
+   /* NOTE: This code doesn't seem to make any sense, but seems to 
+            replicate some original C5.3 behaviour. */
+   ELSE
+      IF Set( _SET_INTENSITY )
+         ::cColorSpec := hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +; 
+                         hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," +;   
+                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;   
+                         hb_ColorIndex( SetColor(), CLR_BACKGROUND )
+      ELSE
+         ::cColorSpec := hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +; 
+                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;   
+                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;   
+                         hb_ColorIndex( SetColor(), CLR_STANDARD )
+      ENDIF
+#endif
    ENDIF
 
-   RETURN iif( ValType( cColorSpec ) $ "UNDBA", NIL, cColorSpec ) /* ; CA-Cl*pper oddity [vszakats] */
+   RETURN cColorSpec
 
 METHOD pos( nPos ) CLASS Get
 
@@ -1196,6 +1221,8 @@ METHOD pos( nPos ) CLASS Get
    ENDIF
 
    IF ISNUMBER( nPos )
+
+      nPos := Int( nPos )
 
       IF ::hasFocus
 
@@ -1875,7 +1902,7 @@ METHOD minus( lMinus ) CLASS Get
 METHOD row( nRow ) CLASS Get
 
    IF PCount() > 0
-      ::nRow := iif( ISNUMBER( nRow ), nRow, 0 )
+      ::nRow := iif( ISNUMBER( nRow ), Int( nRow ), 0 )
    ENDIF
 
    RETURN ::nRow
@@ -1886,7 +1913,7 @@ METHOD row( nRow ) CLASS Get
 METHOD col( nCol ) CLASS Get
 
    IF PCount() > 0
-      ::nCol := iif( ISNUMBER( nCol ), nCol, 0 )
+      ::nCol := iif( ISNUMBER( nCol ), Int( nCol ), 0 )
    ENDIF
 
    RETURN ::nCol

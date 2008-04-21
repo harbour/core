@@ -75,7 +75,7 @@
 
 CREATE CLASS LISTBOX FUNCTION HBListBox
 
-   EXPORT:
+   EXPORTED:
 
    VAR cargo
 

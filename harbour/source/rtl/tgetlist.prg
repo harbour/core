@@ -87,7 +87,7 @@
 
 CREATE CLASS HBGetList
 
-   EXPORT:
+   EXPORTED:
 
    VAR HasFocus        AS LOGICAL   INIT .F.
 

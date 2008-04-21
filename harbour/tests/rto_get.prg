@@ -94,7 +94,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
 
    s_lCallBackStack := "CALLBACKSTACK" $ Upper( cCommandLine )
    s_lRTEDetails := "RTEDETAILS" $ Upper( cCommandLine )
-   s_lObjectDump := "ODUMP" $ Upper( cCommandLine )
+   s_lObjectDump := !( "NODUMP" $ Upper( cCommandLine ) )
 
    // ;
 
@@ -250,17 +250,55 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    // ; ColorSpec
 
    SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01",,, )
-   o:ColorSpec := "BG/RB,BG/RB" ; TEST_LINE( o:ColorSpec := "" )
-   o:ColorSpec := "BG/RB,BG/RB" ; TEST_LINE( o:ColorSpec := ",N/G" )
-   o:ColorSpec := "BG/RB,BG/RB" ; TEST_LINE( o:ColorSpec := "N/G" )
-   o:ColorSpec := "BG/RB,BG/RB" ; TEST_LINE( o:ColorSpec := "," )
-   o:ColorSpec := "BG/RB,BG/RB" ; TEST_LINE( o:ColorSpec := "N/G,N/N" )
-   o:ColorSpec := "BG/RB,BG/RB" ; TEST_LINE( o:ColorSpec := "N/G,N /N" )
-   o:ColorSpec := "BG/RB,BG/RB" ; TEST_LINE( o:ColorSpec := "N/G,N/ N" )
-   o:ColorSpec := "BG/RB,BG/RB" ; TEST_LINE( o:ColorSpec := "N/G, N/N" )
-   o:ColorSpec := "BG/RB,BG/RB" ; TEST_LINE( o:ColorSpec := "N/G, N/N " )
-   o:ColorSpec := "BG/RB,BG/RB" ; TEST_LINE( o:ColorSpec := "N/G,hkjhkj" )
-   o:ColorSpec := "BG/RB,BG/RB" ; TEST_LINE( o:ColorSpec := "n/g,n/bg" )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := NIL )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := .T. )
+   Set( _SET_INTENSITY, .F. )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := .T. )
+   Set( _SET_INTENSITY, .T. )
+   SetColor( "W+/R,G+/BR,RG+/B,BG+/G,N/GR,GR+/BG,B/GR*" )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := .T. )
+   Set( _SET_INTENSITY, .F. )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := .T. )
+   Set( _SET_INTENSITY, .T. )
+   SetColor( "" )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := 100 )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := {} )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := "" )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := ",N/G" )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := "N/G" )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := "," )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := "N/G,N/N" )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := "N/G,N /N" )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := "N/G,N/ N" )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := "N/G, N/N" )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := "N/G, N/N " )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := "N/G,hkjhkj" )
+   o:ColorSpec := "BG/RB,RG+/B" ; TEST_LINE( o:ColorSpec := "n/g,n/bg" )
+
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := NIL )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := .T. )
+   Set( _SET_INTENSITY, .F. )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := .T. )
+   Set( _SET_INTENSITY, .T. )
+   SetColor( "W+/R,G+/BR,RG+/B,BG+/G,N/GR,GR+/BG,B/GR*" )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := .T. )
+   Set( _SET_INTENSITY, .F. )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := .T. )
+   Set( _SET_INTENSITY, .T. )
+   SetColor( "" )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := 100 )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := {} )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := "" )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := ",N/G" )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := "N/G" )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := "," )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := "N/G,N/N" )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := "N/G,N /N" )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := "N/G,N/ N" )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := "N/G, N/N" )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := "N/G, N/N " )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := "N/G,hkjhkj" )
+   o:ColorSpec := "BG/RB,RG+/B,N/GR,W+/R" ; TEST_LINE( o:ColorSpec := "n/g,n/bg" )
 
    // ; Pos
 
@@ -322,6 +360,8 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    TGetAssign( 0 )
    TGetAssign( 1 )
    TGetAssign( 3 )
+   TGetAssign( 3.3 )
+   TGetAssign( 3.7 )
    TGetAssign( 100 )
    TGetAssign( "" )
    TGetAssign( "az" )
@@ -944,7 +984,11 @@ PROCEDURE LogGETVars( o, desc, xResult )
 #endif
          /* Both indexes contain binary trash
             (except the first char of [11] which is type. [vszakats] */
+#ifdef HB_COMPAT_C53
+         IF tmp != 8 .AND. tmp != 17
+#else
          IF tmp != 8 .AND. tmp != 11
+#endif
             FWrite( s_fhnd, "   [ " + Str( tmp, 3 ) + " ]       " + XToStrX( o[ tmp ] ) + hb_OSNewLine() )
          ENDIF
       NEXT
@@ -985,12 +1029,25 @@ FUNCTION XToStr( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN '{||...}'
-   CASE cType == "A" ; RETURN '{.[' + LTrim( Str( Len( xValue ) ) ) + '].}'
+   CASE cType == "B" ; RETURN '{||...} -> ' + XToStr( Eval( xValue ) )
+   CASE cType == "A" ; RETURN '{ ' + ArrayToList( xValue ) + ' }'
    CASE cType == "M" ; RETURN 'M:"' + xValue + '"'
    ENDCASE
 
    RETURN ""
+
+FUNCTION ArrayToList( a )
+   LOCAL tmp
+   LOCAL cString := ""
+
+   FOR tmp := 1 TO Len( a )
+      cString += XToStr( a[ tmp ] )
+      IF tmp < Len( a )
+         cString += ", "
+      ENDIF
+   NEXT
+
+   RETURN cString
 
 FUNCTION XToStrE( xValue )
    LOCAL cType := ValType( xValue )
@@ -1011,8 +1068,8 @@ FUNCTION XToStrE( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN '{||...}'
-   CASE cType == "A" ; RETURN '{.[' + LTrim( Str( Len( xValue ) ) ) + '].}'
+   CASE cType == "B" ; RETURN '{||...} -> ' + XToStr( Eval( xValue ) )
+   CASE cType == "A" ; RETURN '{ ' + ArrayToList( xValue ) + ' }'
    CASE cType == "M" ; RETURN 'M:' + xValue
    ENDCASE
 

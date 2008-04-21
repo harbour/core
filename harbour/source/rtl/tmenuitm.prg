@@ -62,7 +62,7 @@
 
 CREATE CLASS MENUITEM FUNCTION HBMenuItem
 
-   EXPORT:
+   EXPORTED:
 
    VAR cargo
 

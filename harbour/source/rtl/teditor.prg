@@ -62,7 +62,7 @@
 
 CREATE CLASS HBEditor
 
-   EXPORT:
+   EXPORTED:
 
    METHOD LoadFile( cFileName )                          // Load cFileName into active editor
    METHOD LoadText( cString )                            // Load cString into active editor

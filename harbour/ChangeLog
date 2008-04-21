@@ -8,6 +8,65 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-21 14:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * tests/rto_get.prg
+   * tests/rto_tb.prg
+     + Added more tests.
+     + Enabled object as array results by default.
+     + More details for TGet test results.
+
+   * bin/bld_os2.cmd
+     ! Fixed lib names. Thanks David.
+
+   * source/rtl/tobject.prg
+     * Formatting.
+
+   * source/rtl/tget.prg
+     ! Delimiter colors in C5.3 mode made compatible.
+     ! ::colorSpec handling in C5.3 mode made compatible 
+       for some invalid parameter types.
+     ! Fixed handling decimals in :row, :col, :pos 
+       methods.
+     ! Fixed to compile in C5.2 mode without warning
+       (introduced in recent commit).
+
+   * source/rtl/tbrowse.prg
+     ! Fixed handling decimals in :nTop, :nBottom, :nLeft, :nRight.
+     + Added unfinished XPP method :viewArea()
+     + Added untested XPP method :firstScrCol()
+     ; Few minor formatting.
+
+   * include/hbextern.ch
+   * source/rtl/einstvar.prg
+     + Added _eInstVar52() which is the C5.2 compatible version 
+       of this function. It also replicates a bug.
+     * _eInstVar() renamed to _eInstVar53().
+     * _eInstVar() made a stub to call _eInstVar53().
+
+   * source/rtl/checkbox.prg
+   * source/rtl/listbox.prg
+   * source/rtl/pushbtn.prg
+   * source/rtl/radiobtn.prg
+   * source/rtl/radiogrp.prg
+   * source/rtl/scrollbr.prg
+   * source/rtl/symbol.prg
+   * source/rtl/teditor.prg
+   * source/rtl/tget.prg
+   * source/rtl/tget1.prg
+   * source/rtl/tgetlist.prg
+   * source/rtl/tmenuitm.prg
+   * source/rtl/tmenusys.prg
+   * source/rtl/tpopup.prg
+   * source/rtl/ttopbar.prg
+     * Formatting (EXPORT: -> EXPORTED:)
+
+   * contrib/hbtip/thtml.prg
+   * contrib/hbtip/ftpcln.prg
+     ! Fixed to work regardless of SET EXACT setting.
+     ; NOTE: I'd suggest an optional compiler warning 
+             to detect plain "=" usage. It's bad practice 
+             in most cases.
+
 2008-04-20 13:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/tobject.prg
     ! fixed the problem with SET EXACT ON I introduced recently by mistake

@@ -1240,7 +1240,7 @@ METHOD getAttributes() CLASS THtmlNode
       // Tag has no valid attributes
       RETURN NIL
 
-   ELSEIF ::htmlTagName = "!"
+   ELSEIF Left( ::htmlTagName, 1 ) == "!"
       // <!DOCTYPE > and <!-- comments --> have no HTML attributes
       RETURN ::htmlAttributes
 

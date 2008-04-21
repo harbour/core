@@ -86,7 +86,7 @@ FUNCTION HBObject()
       /*s_oClass:AddInline( "CLASSNAME"      , {| Self | __OBJGETCLSNAME( Self )     }, HB_OO_CLSTP_EXPORTED ) */
       /*s_oClass:AddInline( "CLASSH"         , {| Self | __CLASSH( Self )            }, HB_OO_CLSTP_EXPORTED ) */
       /*s_oClass:AddInline( "CLASSSEL"       , {| Self | __CLASSSEL( Self:CLASSH() ) }, HB_OO_CLSTP_EXPORTED ) */
-      /*s_oClass:AddInline( "EVAL"           , {| Self | __EVAL( Self )             }, HB_OO_CLSTP_EXPORTED ) */
+      /*s_oClass:AddInline( "EVAL"           , {| Self | __EVAL( Self )              }, HB_OO_CLSTP_EXPORTED ) */
 
       /* xBase++ */
       s_oClass:AddInline( "ISDERIVEDFROM"  , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, HB_OO_CLSTP_EXPORTED )
@@ -102,11 +102,11 @@ FUNCTION HBObject()
 
       s_oClass:AddInline( "MSGNOTFOUND" , {| Self, cMsg | ::Error( "Message not found", __OBJGETCLSNAME( Self ), cMsg, IIF( Left( cMsg, 1 ) == "_", 1005, 1004 ) ) }, HB_OO_CLSTP_EXPORTED )
 
-      /*s_oClass:AddMultiData(,,HB_OO_CLSTP_EXPORTED,{"CLASS"}, .F. )*/
+      /*s_oClass:AddMultiData( , , HB_OO_CLSTP_EXPORTED, { "CLASS" }, .F. ) */
 
-      /*s_oClass:AddInline( "ADDMETHOD" , { | Self, cMeth, pFunc, nScopeMeth                 |  __clsAddMsg( __CLASSH( Self ) , cMeth , pFunc ,HB_OO_MSG_METHOD , NIL, iif(nScopeMeth==NIL,1,nScopeMeth) ) }, HB_OO_CLSTP_EXPORTED )                                */
-      /*s_oClass:AddInline( "ADDVAR"    , { | Self, cVAR, nScopeMeth, uiData , hClass  |  __clsAddMsg( hClass:=__CLASSH( Self ) ,     cVar , uidata := __CLS_INCDATA(hClass) , HB_OO_MSG_ACCESS, NIL  , iif(nScopeMeth==NIL,1,nScopeMeth) )  , ;        */
-      /*                                                                               __clsAddMsg( hClass                   , "_"+cVar , uiData                          , HB_OO_MSG_ASSIGN, NIL  , iif(nScopeMeth==NIL,1,nScopeMeth) ) }, HB_OO_CLSTP_EXPORTED )    */
+      /*s_oClass:AddInline( "ADDMETHOD" , { | Self, cMeth, pFunc, nScopeMeth         | __clsAddMsg( __CLASSH( Self ) , cMeth , pFunc ,HB_OO_MSG_METHOD , NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED ) */
+      /*s_oClass:AddInline( "ADDVAR"    , { | Self, cVAR, nScopeMeth, uiData, hClass | __clsAddMsg( hClass:=__CLASSH( Self ) ,     cVar , uidata := __CLS_INCDATA( hClass ), HB_OO_MSG_ACCESS, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) )  , ; */
+      /*                                                                               __clsAddMsg( hClass                   , "_"+cVar , uiData                           , HB_OO_MSG_ASSIGN, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED ) */
 
       /* Those one exist within Class(y), so we will probably try to implement it               */
 
@@ -137,7 +137,7 @@ FUNCTION HBObject()
       /*s_oClass:AddInline( "badMethod"      , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
 
       /* this one exist within VO and seem to be Auto Called when object ran out of scope */
-      /*s_oClass:AddInline( "Axit"           , {| Self |  }, HB_OO_CLSTP_EXPORTED ) */
+      /*s_oClass:AddInline( "Axit"           , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
 
       s_oClass:Create()
 
@@ -152,16 +152,16 @@ FUNCTION HBObject()
    RETURN s_oClass:Instance()
 
 
-static function HBObject_New( ... )
-return QSelf():Init( ... )
+STATIC function HBObject_New( ... )
+   RETURN QSelf():Init( ... )
 
-static function HBObject_Init()
-return QSelf()
+STATIC FUNCTION HBObject_Init()
+   RETURN QSelf()
 
-static function HBObject_Dftonerror( ... )
-return QSelf():MSGNOTFOUND( __GetMessage(), ... )
+STATIC FUNCTION HBObject_Dftonerror( ... )
+   RETURN QSelf():MSGNOTFOUND( __GetMessage(), ... )
 
-static function HBObject_Error( cDesc, cClass, cMsg, nCode )
+STATIC FUNCTION HBObject_Error( cDesc, cClass, cMsg, nCode )
 
    DEFAULT nCode TO 1004
 

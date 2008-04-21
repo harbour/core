@@ -64,7 +64,7 @@
 
 CREATE CLASS TOPBARMENU FUNCTION HBTopBarMenu
 
-   EXPORT:
+   EXPORTED:
 
    METHOD addItem( oItem )
    METHOD delItem( nPos )
