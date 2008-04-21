@@ -20,7 +20,7 @@
    * contrib/hbtip/mail.prg
    * contrib/hbtip/ftpcln.prg
      ! Fixed ambigous "=" and "!=" to "==" or ":=" 
-       or "!( == )" contructs.
+       or "!( == )" constructs.
        Someone pls verify if these fixes are right in 
        the broader context.
 
