@@ -383,7 +383,7 @@ RETURN .T.
 METHOD List( cSpec ) CLASS tIPClientFTP
    LOCAL cStr
 
-   IF cSpec=nil
+   IF cSpec == nil
       cSpec := ''
    ELSE
       cSpec := ' ' + cSpec

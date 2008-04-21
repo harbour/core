@@ -106,7 +106,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    IF !( (".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. File(cBody) )
 
-      IF Right(cBody,2) != HB_OSNewLine()
+      IF !( Right( cBody, 2 ) == HB_OSNewLine() )
          cBody += HB_OsNewLine()
       ENDIF
 

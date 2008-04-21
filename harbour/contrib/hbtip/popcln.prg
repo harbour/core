@@ -133,7 +133,7 @@ METHOD GetOk() CLASS tIPClientPOP
    LOCAL nLen
 
    ::cReply := ::InetRecvLine( ::SocketCon, @nLen, 128 )
-   IF ::InetErrorCode( ::SocketCon ) != 0 .or. SubStr( ::cReply, 1, 1 ) != '+'
+   IF ::InetErrorCode( ::SocketCon ) != 0 .or. !( SubStr( ::cReply, 1, 1 ) == '+' )
       RETURN .F.
    ENDIF
 RETURN .T.
@@ -193,9 +193,9 @@ METHOD Top( nMsgId ) CLASS tIPClientPOP
    ENDIF
 
    cRet := ""
-   DO WHILE cStr != "." .and. ::InetErrorCode( ::SocketCon ) == 0
+   DO WHILE !( cStr == "." ) .and. ::InetErrorCode( ::SocketCon ) == 0
       cStr := ::InetRecvLine( ::SocketCon, @nPos, 256 )
-      IF cStr != "."
+      IF !( cStr == "." )
          cRet += cStr + ::cCRLF
       ELSE
          ::bEof := .T.
@@ -221,9 +221,9 @@ METHOD List() CLASS tIPClientPOP
    ENDIF
 
    cRet := ""
-   DO WHILE cStr != "." .and. ::InetErrorCode( ::SocketCon ) == 0
+   DO WHILE !( cStr == "." ) .and. ::InetErrorCode( ::SocketCon ) == 0
       cStr := ::InetRecvLine( ::SocketCon, @nPos, 256 )
-      IF cStr != "."
+      IF !( cStr == "." )
          cRet += cStr + ::cCRLF
       ELSE
          ::bEof := .T.
@@ -262,9 +262,9 @@ METHOD UIDL( nMsgId ) CLASS tIPClientPOP
    ELSE
 
       cRet := ""
-      DO WHILE cStr != "." .and. ::InetErrorCode( ::SocketCon ) == 0
+      DO WHILE !( cStr == "." ) .and. ::InetErrorCode( ::SocketCon ) == 0
          cStr := ::InetRecvLine( ::SocketCon, @nPos, 256 )
-         IF cStr != "."
+         IF !( cStr == "." )
             cRet += cStr + ::cCRLF
          ELSE
             ::bEof := .T.

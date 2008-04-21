@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-21 15:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tbrowse.prg
+     ! Added some new lines to XPP methods.
+
+   * contrib/hbtip/thtml.prg
+   * contrib/hbtip/popcln.prg
+   * contrib/hbtip/sendmail.prg
+   * contrib/hbtip/cgi.prg
+   * contrib/hbtip/url.prg
+   * contrib/hbtip/mail.prg
+   * contrib/hbtip/ftpcln.prg
+     ! Fixed ambigous "=" and "!=" to "==" or ":=" 
+       or "!( == )" contructs.
+       Someone pls verify if these fixes are right in 
+       the broader context.
+
 2008-04-21 15:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * include/hbextern.ch

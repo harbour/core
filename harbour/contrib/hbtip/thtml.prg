@@ -440,7 +440,7 @@ RETURN Self
 METHOD MatchCriteria( oFound ) CLASS THtmlIteratorScan
    LOCAL xData
 
-   IF ::cName != NIL .and. ( Lower(::cName) != Lower(oFound:htmlTagName) )
+   IF ::cName != NIL .and. !( Lower(::cName) == Lower(oFound:htmlTagName) )
       RETURN .F.
    ENDIF
 

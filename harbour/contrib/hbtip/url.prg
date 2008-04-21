@@ -168,7 +168,7 @@ METHOD BuildAddress() CLASS tURL
       ENDIF
    ENDIF
 
-   IF Len( ::cPath ) == 0 .or. Right( ::cPath, 1 ) != "/"
+   IF Len( ::cPath ) == 0 .or. !( Right( ::cPath, 1 ) == "/" )
       ::cPath += "/"
    ENDIF
 
@@ -188,7 +188,7 @@ RETURN cRet
 METHOD BuildQuery( ) CLASS tURL
    LOCAL cLine
 
-   IF Len( ::cPath ) == 0 .or. Right( ::cPath, 1 ) != "/"
+   IF Len( ::cPath ) == 0 .or. !( Right( ::cPath, 1 ) == "/" )
       ::cPath += "/"
    ENDIF
 
@@ -216,8 +216,8 @@ METHOD AddGetForm( cPostData )
          cData += cTmp + "&"
       NEXT
       cData := Left( cData, Len( cData ) - 1 )
-   elseIF HB_IsArray( cPostData )
-      y:=Len(cPostData)
+   ELSEIF HB_IsArray( cPostData )
+      y := Len(cPostData)
       FOR nI := 1 TO y
          cTmp := cPostData[ nI ,1]
          cTmp := hb_cStr( cTmp )
@@ -229,14 +229,14 @@ METHOD AddGetForm( cPostData )
          cTmp := AllTrim( cTmp )
          cTmp := TipEncoderUrl_Encode( cTmp )
          cData += cTmp
-         IF nI!=y
-            cData+="&"
+         IF nI != y
+            cData += "&"
          ENDIF
       NEXT
 
    ELSEIF HB_IsString( cPostData )
       cData := cPostData
-   Endif
+   ENDIF
 
    IF !empty(cData)
       cRet := ::cQuery+=if(empty(::cQuery),'','&')+cData

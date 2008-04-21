@@ -463,7 +463,7 @@ STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
       cVal := cDefault
    endif
 
-   if '' != cVal
+   if !( cVal == '' )
       cVal := '<' + cKey + '>' + cVal + '</' + cKey + '>'
    endif
 

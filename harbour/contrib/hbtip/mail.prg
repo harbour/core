@@ -336,9 +336,13 @@ METHOD ToString() CLASS TipMail
 
    FOR i := 1 TO Len( ::hHeaders )
       cElem := Lower(hb_HKeyAt( ::hHeaders, i ))
-      IF cElem != "return-path" .and. cElem != "delivered-to" .and.;
-            cElem != "date" .and. cElem != "from" .and.;
-            cElem != "to" .and. cElem != "subject" .and. cElem !="mime-version"
+      IF !( cElem == "return-path" ) .and. ;
+         !( cElem == "delivered-to" ) .and.;
+         !( cElem == "date" ) .and. ;
+         !( cElem == "from" ) .and.;
+         !( cElem == "to" ) .and. ;
+         !( cElem == "subject" ) .and. ;
+         !( cElem == "mime-version" )
          cRet += hb_HKeyAt( ::hHeaders, i ) + ": " +;
                  hb_HValueAt( ::hHeaders, i ) + e"\r\n"
       ENDIF

@@ -2380,6 +2380,10 @@ METHOD nRight( nRight ) CLASS TBROWSE
 
 METHOD viewArea() CLASS TBROWSE
 
+   IF ::nConfigure != 0
+      ::doConfigure()
+   ENDIF
+
    // TOFIX
 
    RETURN { ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ),;
@@ -2392,6 +2396,10 @@ METHOD viewArea() CLASS TBROWSE
 /* NOTE: Returns the left margin relative column position of the first 
          non-freezed column. Xbase++ compatible method. */
 METHOD firstScrCol() CLASS TBROWSE
+
+   IF ::nConfigure != 0
+      ::doConfigure()
+   ENDIF
 
    // TOFIX
 
