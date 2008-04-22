@@ -823,7 +823,7 @@ METHOD stabilize() CLASS TBROWSE
          DispEnd()
 
       ELSE
-         /* TODO: CA-Clipper displays or valid records in the buffer when
+         /* TODO: CA-Clipper displays all valid records in the buffer when
           *       they should be drawn on the screen f.e. after horizontal
           *       scrolling in each stabilize call not only at the end of
           *       stabilization process. [druzus]
@@ -2445,10 +2445,10 @@ METHOD hitTest( mRow, mCol ) CLASS TBROWSE
 #endif
 
    IF !ISNUMBER( mRow ) .OR. !ISNUMBER( mCol ) .OR. ;
-      mRow < ( nTop    := ::n_Top    ) .OR. ;
-      mRow > ( nBottom := ::n_Bottom ) .OR. ;
-      mCol < ( nLeft   := ::n_Left   ) .OR. ;
-      mCol > ( nRight  := ::n_Right  )
+      mRow < ( nTop    := _TBR_COORD( ::n_Top    ) ) .OR. ;
+      mRow > ( nBottom := _TBR_COORD( ::n_Bottom ) ) .OR. ;
+      mCol < ( nLeft   := _TBR_COORD( ::n_Left   ) ) .OR. ;
+      mCol > ( nRight  := _TBR_COORD( ::n_Right  ) )
       RETURN HTNOWHERE
    ENDIF
 
@@ -2534,16 +2534,13 @@ STATIC PROCEDURE _mBrwPos( oBrw, mRow, mCol )
 
    LOCAL nTop, nLeft, nBottom, nRight, nPos, nCol, aCol
 
-   mRow := MROW()
-   mCol := MCOL()
+   mRow := MRow()
+   mCol := MCol()
 
-   nTop    := oBrw:n_Top   
-   nBottom := oBrw:n_Bottom
-   nLeft   := oBrw:n_Left  
-   nRight  := oBrw:n_Right 
-
-   IF mRow >= nTop  .AND. mRow <= nBottom .AND. ;
-      mCol >= nLeft .AND. mCol <= nRight
+   IF mRow >= ( nTop    := _TBR_COORD( oBrw:n_Top    ) ) .AND. ;
+      mRow <= ( nBottom := _TBR_COORD( oBrw:n_Bottom ) ) .AND. ;
+      mCol >= ( nLeft   := _TBR_COORD( oBrw:n_Left   ) ) .AND. ;
+      mCol <= ( nRight  := _TBR_COORD( oBrw:n_Right  ) )
 
       IF mRow < nTop + oBrw:nHeadHeight + IIF( oBrw:lHeadSep, 1, 0 ) .OR. ;
          mRow > nBottom - oBrw:nFootHeight - IIF( oBrw:lFootSep, 1, 0 )
