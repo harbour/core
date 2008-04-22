@@ -83,7 +83,6 @@ DATA  lIgnoreErrors  Init .F.
 DATA  lExtended      Init .T.
 DATA  lOs2           Init .F.
 DATA  lRecurse       Init .F.
-DATA  aDir
 DATA  lEditMode      Init .F.
 DATA  aDir
 DATA  aLangMessages  init {}

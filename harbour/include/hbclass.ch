@@ -170,11 +170,12 @@
 
 /* should we use _HB_CLASS/_HB_MEMBER declarations? */
 #ifdef HB_CLS_NO_DECLARATIONS
-   #xcommand _HB_CLASS  <name>      =>
-   #xcommand _HB_MEMBER <name>      =>
-   #xcommand DECLARE    <*decl*>    =>
-   #xtranslate AS <type>            =>
-   #xtranslate AS CLASS <name>      =>
+   #xcommand _HB_CLASS  <name>        =>
+   #xcommand _HB_CLASS  <name> <name> =>
+   #xcommand _HB_MEMBER <name>        =>
+   #xcommand DECLARE    <*decl*>      =>
+   #xtranslate AS <type>              =>
+   #xtranslate AS CLASS <name>        =>
 #endif
 
 /* should we inherit from HBObject class by default ? */
@@ -264,7 +265,7 @@ DECLARE HBClass ;
              [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] ;
              [ <modulfriend: MODULE FRIENDLY> ] ;
              [ <static: STATIC> ] [ FUNCTION <FuncName> ] => ;
-   _HB_CLASS <ClassName> ;;
+   _HB_CLASS <ClassName> <FuncName> ;;
    <static> function __HB_CLS_OPT([<FuncName>,] <ClassName>) ( HB_CLS_PARAM_LIST ) ;;
       static s_oClass ;;
       local nScope, oInstance ;;

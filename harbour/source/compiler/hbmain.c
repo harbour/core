@@ -981,7 +981,23 @@ BOOL hb_compIsValidMacroText( HB_COMP_DECL, char * szText, ULONG ulLen )
  * DECLARATIONS
  */
 
-PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * szClassName )
+PCOMCLASS hb_compClassFind( HB_COMP_DECL, char * szClassName )
+{
+   PCOMCLASS pClass = HB_COMP_PARAM->pFirstClass;
+
+   if( HB_COMP_PARAM->iWarnings < 3 )
+      return NULL;
+
+   while( pClass )
+   {
+      if( ! strcmp( pClass->szName, szClassName ) )
+         return pClass;
+      pClass = pClass->pNext;
+   }
+   return NULL;
+}
+
+PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * szClassName, char * szClassFunc )
 {
    PCOMCLASS pClass;
    PCOMDECLARED pDeclared;
@@ -991,10 +1007,27 @@ PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * szClassName )
    if( HB_COMP_PARAM->iWarnings < 3 )
       return NULL;
 
-   if ( ( pClass = hb_compClassFind( HB_COMP_PARAM, szClassName ) ) != NULL )
+   if( ( pClass = hb_compClassFind( HB_COMP_PARAM, szClassName ) ) != NULL )
    {
-      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Class", szClassName );
-      return pClass;
+      PCOMCLASS * pClassPtr = &HB_COMP_PARAM->pFirstClass;
+
+      while( *pClassPtr && *pClassPtr != HB_COMP_PARAM->pReleaseClass )
+      {
+         /* It's predefined class, allow to redefine them */
+         if( *pClassPtr == pClass )
+         {
+            *pClassPtr = pClass->pNext;
+            pClass = NULL;
+            break;
+         }
+         pClassPtr = &( *pClassPtr )->pNext;
+      }
+
+      if( pClass )
+      {
+         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Class", szClassName );
+         return pClass;
+      }
    }
 
    pClass = ( PCOMCLASS ) hb_xgrab( sizeof( COMCLASS ) );
@@ -1003,7 +1036,7 @@ PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * szClassName )
    pClass->pMethod = NULL;
    pClass->pNext = NULL;
 
-   if ( HB_COMP_PARAM->pFirstClass == NULL )
+   if( HB_COMP_PARAM->pFirstClass == NULL )
       HB_COMP_PARAM->pFirstClass = pClass;
    else
       HB_COMP_PARAM->pLastClass->pNext = pClass;
@@ -1011,7 +1044,7 @@ PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * szClassName )
    HB_COMP_PARAM->pLastClass = pClass;
 
    /* Auto declaration for the Class Function. */
-   pDeclared = hb_compDeclaredAdd( HB_COMP_PARAM, szClassName );
+   pDeclared = hb_compDeclaredAdd( HB_COMP_PARAM, szClassFunc ? szClassFunc : szClassName );
    pDeclared->cType = 'S';
    pDeclared->pClass = pClass;
    
@@ -1023,25 +1056,20 @@ PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * szClassName )
    return pClass;
 }
 
-PCOMCLASS hb_compClassFind( HB_COMP_DECL, char * szClassName )
+PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, char * szMethodName )
 {
-   PCOMCLASS pClass = HB_COMP_PARAM->pFirstClass;
-
-   if ( HB_COMP_PARAM->iWarnings < 3 )
-      return NULL;
-
-   while( pClass )
+   if( pClass )
    {
-      if( ! strcmp( pClass->szName, szClassName ) )
-         return pClass;
-      else
+      PCOMDECLARED pMethod = pClass->pMethod;
+
+      while( pMethod )
       {
-         if( pClass->pNext )
-            pClass = pClass->pNext;
-         else
-            return NULL;
+         if( ! strcmp( pMethod->szName, szMethodName ) )
+            return pMethod;
+         pMethod = pMethod->pNext;
       }
    }
+
    return NULL;
 }
 
@@ -1051,10 +1079,10 @@ PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, char * szMethodNa
 
    /*printf( "\nDeclaring Method: %s of Class: %s Pointer: %li\n", szMethodName, pClass->szName, pClass );*/
 
-   if ( HB_COMP_PARAM->iWarnings < 3 )
+   if( HB_COMP_PARAM->iWarnings < 3 )
       return NULL;
 
-   if ( ( pMethod = hb_compMethodFind( pClass, szMethodName ) ) != NULL )
+   if( ( pMethod = hb_compMethodFind( pClass, szMethodName ) ) != NULL )
    {
       hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Method", szMethodName );
 
@@ -1075,7 +1103,7 @@ PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, char * szMethodNa
    pMethod->pParamClasses = NULL;
    pMethod->pNext = NULL;
 
-   if ( pClass->pMethod == NULL )
+   if( pClass->pMethod == NULL )
       pClass->pMethod = pMethod;
    else
       pClass->pLastMethod->pNext = pMethod;
@@ -1085,28 +1113,6 @@ PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, char * szMethodNa
    HB_COMP_PARAM->pLastMethod = pMethod;
 
    return pMethod;
-}
-
-PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, char * szMethodName )
-{
-   PCOMDECLARED pMethod = NULL;
-
-   if ( pClass )
-     pMethod = pClass->pMethod;
-
-   while( pMethod )
-   {
-      if( ! strcmp( pMethod->szName, szMethodName ) )
-         return pMethod;
-      else
-      {
-         if( pMethod->pNext )
-            pMethod = pMethod->pNext;
-         else
-            return NULL;
-      }
-   }
-   return NULL;
 }
 
 static void hb_compDeclaredInit( HB_COMP_DECL )
@@ -1418,9 +1424,9 @@ static void hb_compDeclaredInit( HB_COMP_DECL )
    /* -------------------------------------------------- Standard Classes --------------------------------------------------- */
 
    static COMCLASS s_ERROR    = { "ERROR"   , NULL, NULL, NULL };
-   static COMCLASS s_GET      = { "GET"     , NULL, NULL, &s_ERROR };
-   static COMCLASS s_TBCOLUMN = { "TBCOLUMN", NULL, NULL, &s_GET };
-   static COMCLASS s_TBROWSE  = { "TBROWSE" , NULL, NULL, &s_TBCOLUMN };
+   static COMCLASS s_GET      = { "GET"     , NULL, NULL, NULL };
+   static COMCLASS s_TBCOLUMN = { "TBCOLUMN", NULL, NULL, NULL };
+   static COMCLASS s_TBROWSE  = { "TBROWSE" , NULL, NULL, NULL };
 
   /*       Name     Ret  # of Prams  Param Types   Ret Class  Param Classes  Next
    ---------------  ---  ----------  --------------------  ---------  -------------  --------------- */
@@ -1504,6 +1510,8 @@ static void hb_compDeclaredInit( HB_COMP_DECL )
    s_ERROR.pMethod     = &s_ERROR_14;
    /* Last (top) Method. */
    s_ERROR.pLastMethod = &s_ERROR_01;
+   /* Next class definition pointer */
+   s_ERROR.pNext = NULL;
 
    /* ------- */
 
@@ -1511,6 +1519,8 @@ static void hb_compDeclaredInit( HB_COMP_DECL )
    s_GET.pMethod     = &s_GET_33; /* Change to BOTTOM Method. */
    /* Last (top) Method. */
    s_GET.pLastMethod = &s_GET_01;
+   /* Next class definition pointer */
+   s_GET.pNext = &s_ERROR;
 
    /* ------- */
 
@@ -1518,6 +1528,17 @@ static void hb_compDeclaredInit( HB_COMP_DECL )
    s_TBCOLUMN.pMethod     = &s_TBCOLUMN_12; /* Change to BOTTOM Method. */
    /* Last (top) Method. */
    s_TBCOLUMN.pLastMethod = &s_TBCOLUMN_01;
+   /* Next class definition pointer */
+   s_TBCOLUMN.pNext = &s_GET;
+
+   /* ------- */
+
+   /* First (bottom) Method */
+   s_TBROWSE.pMethod     = NULL; /* Change to BOTTOM Method. */
+   /* Last (top) Method. */
+   s_TBROWSE.pLastMethod = NULL;
+   /* Next class definition pointer */
+   s_TBROWSE.pNext = &s_TBCOLUMN;
 
    /* ------- */
 
@@ -1551,12 +1572,12 @@ PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, char * szDeclaredName )
 {
    PCOMDECLARED pDeclared;
 
-   if ( HB_COMP_PARAM->iWarnings < 3 )
+   if( HB_COMP_PARAM->iWarnings < 3 )
       return NULL;
 
    /*printf( "\nDeclaring Function: %s\n", szDeclaredName, NULL );*/
 
-   if ( ( pDeclared = hb_compDeclaredFind( HB_COMP_PARAM, szDeclaredName ) ) != NULL )
+   if( ( pDeclared = hb_compDeclaredFind( HB_COMP_PARAM, szDeclaredName ) ) != NULL )
    {
       hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_DUP_DECLARATION, "Function", szDeclaredName );
 
@@ -1591,7 +1612,7 @@ PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, char * szDeclaredName )
 void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cValueType )
 {
    /* Nothing to do since no warnings requested.*/
-   if ( HB_COMP_PARAM->iWarnings < 3 )
+   if( HB_COMP_PARAM->iWarnings < 3 )
    {
       HB_SYMBOL_UNUSED( szVarName );
       return;
@@ -1603,13 +1624,13 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cValueTyp
       /* Find the Declared Function owner of this parameter. */
       PCOMDECLARED pDeclared = hb_compDeclaredFind( HB_COMP_PARAM, HB_COMP_PARAM->szDeclaredFun );
 
-      if ( pDeclared )
+      if( pDeclared )
       {
          pDeclared->iParamCount++;
 
 
          /* TOFIX: these allocations causes memory leaks */
-         if ( pDeclared->cParamTypes )
+         if( pDeclared->cParamTypes )
          {
             pDeclared->cParamTypes = ( BYTE * ) hb_xrealloc( pDeclared->cParamTypes, pDeclared->iParamCount );
             pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xrealloc( pDeclared->pParamClasses, pDeclared->iParamCount * sizeof( PCOMCLASS ) );
@@ -1622,7 +1643,7 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cValueTyp
 
          pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = cValueType;
 
-         if ( toupper( cValueType ) == 'S' )
+         if( toupper( cValueType ) == 'S' )
          {
             pDeclared->pParamClasses[ pDeclared->iParamCount - 1 ] = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
 
@@ -1638,7 +1659,7 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cValueTyp
       HB_COMP_PARAM->pLastMethod->iParamCount++;
 
       /* TOFIX: these allocations causes memory leaks */
-      if ( HB_COMP_PARAM->pLastMethod->cParamTypes )
+      if( HB_COMP_PARAM->pLastMethod->cParamTypes )
       {
          HB_COMP_PARAM->pLastMethod->cParamTypes = ( BYTE * ) hb_xrealloc( HB_COMP_PARAM->pLastMethod->cParamTypes, HB_COMP_PARAM->pLastMethod->iParamCount );
          HB_COMP_PARAM->pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xrealloc( HB_COMP_PARAM->pLastMethod->pParamClasses, HB_COMP_PARAM->pLastMethod->iParamCount * sizeof( COMCLASS ) );
@@ -1651,7 +1672,7 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, char * szVarName, BYTE cValueTyp
 
       HB_COMP_PARAM->pLastMethod->cParamTypes[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ] = cValueType;
 
-      if ( toupper( cValueType ) == 'S' )
+      if( toupper( cValueType ) == 'S' )
       {
          HB_COMP_PARAM->pLastMethod->pParamClasses[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ] = hb_compClassFind( HB_COMP_PARAM, HB_COMP_PARAM->szFromClass );
 
@@ -2045,11 +2066,11 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
             {
                /*printf( "\nChecking: %s Used: %i\n", pVar->szName, pVar->iUsed );*/
 
-               if ( ! ( pVar->iUsed & VU_USED ) && (pVar->iUsed & VU_INITIALIZED) )
+               if( ! ( pVar->iUsed & VU_USED ) && (pVar->iUsed & VU_INITIALIZED) )
                   hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAL_NOT_USED, pVar->szName, NULL );
 
                /* May have been initialized in previous execution of the function.
-                  else if ( ( pVar->iUsed & VU_USED ) && ! ( pVar->iUsed & VU_INITIALIZED ) )
+                  else if( ( pVar->iUsed & VU_USED ) && ! ( pVar->iUsed & VU_INITIALIZED ) )
                   hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
                */
                pVar = pVar->pNext;

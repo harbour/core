@@ -8,6 +8,42 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-22 20:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbclass.ch
+  * harbour/include/hbcomp.h
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.y
+    ! fixed -w3 warnings when class name is different then function name
+    * allow to overwrite predefined classes definitions
+      it's a dirty hack but current implementation of predefined
+      function and class declarations has to be rewritten from scratch
+      in the future so I make it intentionally - at least it resolves
+      some memory leaks like: harbour -n -w3 tbcolumn.prg
+
+  * harbour/config/rules.cf
+  * harbour/make_b32.mak
+  * harbour/make_gcc.mak
+  * harbour/make_vc.mak
+  * harbour/make_vcce.mak
+  * harbour/contrib/mtpl_b32.mak
+  * harbour/contrib/mtpl_gcc.mak
+  * harbour/contrib/mtpl_vc.mak
+    * changed default Harbour compiler switch -w2 to -w3
+
+  * harbour/contrib/xhb/xhbcomp.prg
+    * replaced repeated declarations by small hack
+
+  * harbour/utils/hbmake/tmake.prg
+    ! fixed reported by -w3 repeated aDir declaration
+
+  * harbour/source/rtl/tbrowse.prg
+    * calculate frozen area size for 5-th element of array returned
+      by xbase++ compatible method :viewArea(). Viktor please check me.
+      If you can also describe what exactly TOFIX in :firstScrCol()
+      and :viewArea() means then maybe I can help - I do not have
+      xbase++ so I do not know what should be fixed.
+
 2008-04-22 15:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/bld_os2.cmd
     * changed eol-style from native to CRLF

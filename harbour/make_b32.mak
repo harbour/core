@@ -148,7 +148,7 @@ CEXEFLAGSDLL   = -tWM $(CLIBFLAGSxxx) $(CEXEFLAGSDLL)
 #**********************************************************
 
 # Harbour Compiler Flags
-HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w2 -es2 -gc0 -kM $(PRG_USR)
+HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -gc0 -kM $(PRG_USR)
 !ifdef HB_DOC_PDF
     HBFLAGSCMN = $(HBFLAGSCMN) -dPDF
 !endif

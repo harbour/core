@@ -55,36 +55,28 @@
 
 ANNOUNCE XHB_LIB
 
+
+/* It's a hack which directly manipulates class definition.
+ * It should not be used in user code. [druzus]
+ */
+#xcommand OPTIONAL INHERIT <!className!> =>                 ;
+            if type( <"className">+"()" ) == "UI"          ;;
+               aadd( s_oClass:asSuper, @__<className>() )  ;;
+            end
+
+
 INIT PROCEDURE xhb_Init()
    /* Add calls to do initial settings to Harbour to be more compatible with xhb. */
 
-   if type("HBCHARACTER()")=="UI"
-      ASSOCIATE CLASS _Character    WITH TYPE Character
-   else
-      ASSOCIATE CLASS xhb_Character WITH TYPE Character
-   endif
-
-   if type("HBNUMERIC()")=="UI"
-      ASSOCIATE CLASS _Numeric      WITH TYPE Numeric
-   else
-      ASSOCIATE CLASS xhb_Numeric   WITH TYPE Numeric
-   endif
-
-   if type("HBARRAY()")=="UI"
-      ASSOCIATE CLASS _Array        WITH TYPE Array
-   else
-      ASSOCIATE CLASS xhb_Array     WITH TYPE Array
-   endif
-
-   if type("HBHASH()")=="UI"
-      ASSOCIATE CLASS _Hash         WITH TYPE Hash
-   else
-      ASSOCIATE CLASS xhb_Hash      WITH TYPE Hash
-   endif
+   ASSOCIATE CLASS _Character    WITH TYPE Character
+   ASSOCIATE CLASS _Numeric      WITH TYPE Numeric
+   ASSOCIATE CLASS _Array        WITH TYPE Array
+   ASSOCIATE CLASS _Hash         WITH TYPE Hash
 
 RETURN
 
-CREATE CLASS Character FUNCTION xhb_Character
+CREATE CLASS Character FUNCTION _Character
+   OPTIONAL INHERIT HBCharacter
    OPERATOR "[]" FUNCTION XHB_INDEX()
    OPERATOR "+"  FUNCTION XHB_PLUS()
    OPERATOR "-"  FUNCTION XHB_MINUS()
@@ -96,8 +88,8 @@ CREATE CLASS Character FUNCTION xhb_Character
    OPERATOR "--" FUNCTION XHB_DEC()
 ENDCLASS
 
-CREATE CLASS Character INHERIT __HBCharacter FUNCTION _Character
-   OPERATOR "[]" FUNCTION XHB_INDEX()
+CREATE CLASS Numeric FUNCTION _Numeric
+   OPTIONAL INHERIT HBNumeric
    OPERATOR "+"  FUNCTION XHB_PLUS()
    OPERATOR "-"  FUNCTION XHB_MINUS()
    OPERATOR "*"  FUNCTION XHB_MULT()
@@ -108,46 +100,14 @@ CREATE CLASS Character INHERIT __HBCharacter FUNCTION _Character
    OPERATOR "--" FUNCTION XHB_DEC()
 ENDCLASS
 
-CREATE CLASS Numeric FUNCTION xhb_Numeric
-   OPERATOR "+"  FUNCTION XHB_PLUS()
-   OPERATOR "-"  FUNCTION XHB_MINUS()
-   OPERATOR "*"  FUNCTION XHB_MULT()
-   OPERATOR "/"  FUNCTION XHB_DIV()
-   OPERATOR "%"  FUNCTION XHB_MOD()
-   OPERATOR "^"  FUNCTION XHB_POW()
-   OPERATOR "++" FUNCTION XHB_INC()
-   OPERATOR "--" FUNCTION XHB_DEC()
-ENDCLASS
-
-CREATE CLASS Numeric INHERIT __HBNumeric FUNCTION _Numeric
-   OPERATOR "+"  FUNCTION XHB_PLUS()
-   OPERATOR "-"  FUNCTION XHB_MINUS()
-   OPERATOR "*"  FUNCTION XHB_MULT()
-   OPERATOR "/"  FUNCTION XHB_DIV()
-   OPERATOR "%"  FUNCTION XHB_MOD()
-   OPERATOR "^"  FUNCTION XHB_POW()
-   OPERATOR "++" FUNCTION XHB_INC()
-   OPERATOR "--" FUNCTION XHB_DEC()
-ENDCLASS
-
-CREATE CLASS Array FUNCTION xhb_Array
+CREATE CLASS Array FUNCTION _Array
+   OPTIONAL INHERIT HBArray
    OPERATOR "[]" FUNCTION XHB_INDEX()
-   OPERATOR "$$" FUNCTION XHB_INCLUDE()
-ENDCLASS
-
-CREATE CLASS Array INHERIT __HBArray FUNCTION _Array
-   OPERATOR "[]" FUNCTION XHB_INDEX()
-   OPERATOR "$$" FUNCTION XHB_INCLUDE()
-ENDCLASS
-
-CREATE CLASS Hash FUNCTION xhb_Hash
-   ON ERROR FUNCTION XHB_HASHERROR()
-   OPERATOR "+"  FUNCTION XHB_PLUS()
-   OPERATOR "-"  FUNCTION XHB_MINUS()
    OPERATOR "$$" FUNCTION XHB_INCLUDE()
 ENDCLASS
 
 CREATE CLASS Hash INHERIT __HBHash FUNCTION _Hash
+   OPTIONAL INHERIT HBHash
    ON ERROR FUNCTION XHB_HASHERROR()
    OPERATOR "+"  FUNCTION XHB_PLUS()
    OPERATOR "-"  FUNCTION XHB_MINUS()

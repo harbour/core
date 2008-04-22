@@ -2380,17 +2380,23 @@ METHOD nRight( nRight ) CLASS TBROWSE
 
 METHOD viewArea() CLASS TBROWSE
 
+   LOCAL nWidth, nFrozenWidth
+
    IF ::nConfigure != 0
       ::doConfigure()
    ENDIF
 
    // TOFIX
 
+   nWidth := nFrozenWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
+   _MAXFREEZE( ::nFrozen, ::aColData, @nWidth )
+   nFrozenWidth -= nWidth
+
    RETURN { ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ),;
             ::n_Left,;
             ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ),;
             ::n_Right,; 
-            0 /* nFrozenWidth */ }
+            nFrozenWidth }
 
 
 /* NOTE: Returns the left margin relative column position of the first 
@@ -2403,7 +2409,7 @@ METHOD firstScrCol() CLASS TBROWSE
 
    // TOFIX
 
-   RETURN iif( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
+   RETURN IIF( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
 
 #endif
 

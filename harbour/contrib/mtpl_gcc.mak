@@ -126,7 +126,7 @@ endif
 
 CFLAGS         := -W -Wall -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
 CLIBFLAGS      := -c $(CFLAGS) $(CLIBFLAGS)
-HARBOURFLAGS   := -i$(INCLUDE_DIR) -n -q0 -w2 -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+HARBOURFLAGS   := -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        := $(LDFLAGS)
 
 #**********************************************************

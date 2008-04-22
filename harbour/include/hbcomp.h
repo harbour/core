@@ -158,7 +158,7 @@ extern char * hb_compSymbolName( HB_COMP_DECL, USHORT );   /* returns a symbol n
 
 extern PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, char * );
 
-extern PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char * );
+extern PCOMCLASS hb_compClassAdd( HB_COMP_DECL, char *, char * );
 extern PCOMCLASS hb_compClassFind( HB_COMP_DECL, char * );
 extern PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, char * );
 extern PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, char * );

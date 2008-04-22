@@ -1248,8 +1248,9 @@ Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( HB_COMP_PARAM, $2 ); HB
                HB_COMP_PARAM->cVarType = ' ';
                HB_COMP_PARAM->iVarScope = VS_NONE;
              }
-           | DECLARE IdentName { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2 ); } ClassInfo Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
-           | DECLARE_CLASS IdentName Crlf { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2 ); HB_COMP_PARAM->iVarScope = VS_NONE; }
+           | DECLARE IdentName { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, NULL ); } ClassInfo Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
+           | DECLARE_CLASS IdentName Crlf { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, NULL ); HB_COMP_PARAM->iVarScope = VS_NONE; }
+           | DECLARE_CLASS IdentName IdentName Crlf { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, $3 ); HB_COMP_PARAM->iVarScope = VS_NONE; }
            | DECLARE_MEMBER DecMethod Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
            | DECLARE_MEMBER '{' AsType { HB_COMP_PARAM->cDataListType = HB_COMP_PARAM->cVarType; } DecDataList '}' Crlf { HB_COMP_PARAM->cDataListType = 0; HB_COMP_PARAM->iVarScope = VS_NONE; }
            ;
