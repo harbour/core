@@ -126,6 +126,8 @@ HB_EXPORT extern BOOL       hb_objHasMessage( PHB_ITEM pObject, PHB_DYNS pMessag
 HB_EXPORT extern PHB_ITEM   hb_objSendMsg( PHB_ITEM pObj, const char *sMsg, ULONG ulArg, ... );
 HB_EXPORT extern PHB_ITEM   hb_objSendMessage( PHB_ITEM pObj, PHB_DYNS pMessage, ULONG ulArg, ... );
 
+/* send message which allows to set execution context for debugger */
+HB_EXPORT extern void       hb_dbgObjSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, int iParamOffset );
 
 /* Harbour equivalent for Clipper internal __mdCreate() */
 USHORT hb_clsCreate( USHORT usSize, const char * szClassName );

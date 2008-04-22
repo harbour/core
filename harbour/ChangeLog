@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-22 04:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapicls.h
+  * harbour/source/vm/classes.c
+    + added new function hb_dbgObjSendMessage() which allows to
+      call messages with given given execution context for proper
+      scope checking
+
+  * harbour/source/debug/dbgentry.c
+    + added HB_DBG_SENDMSG() for calling messages with given execution
+      context
+
+  * harbour/source/debug/dbgtobj.prg
+    * removed all __obj*() function calls
+    * use HB_DBG_SENDMSG() to access/assign object variables
+    ! fixed default value in GET operation called from object
+      inspector to always show current object variable value
+    ! fixed set for object variables which hold value: "Method"
+      they were recognized as method
+      Now object variables can be inspected by debugger.
+      If object has multiple private messages with the same name
+      inherited from parent classes then their context will be
+      dynamically changed depending on position in currently
+      debugged code.
+
 2008-04-21 15:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tbrowse.prg
      ! Added some new lines to XPP methods.

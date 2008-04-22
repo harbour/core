@@ -1520,7 +1520,7 @@ static PHB_SYMB hb_clsScalarMethod( PCLASS pClass, PHB_DYNS pMsg,
 
    if( pStack )
    {
-      pStack->uiClass = pClass - s_pClasses;
+      pStack->uiClass = ( USHORT ) ( pClass - s_pClasses );
       if( pMethod )
       {
          pStack->uiMethod = ( USHORT ) ( pMethod - pClass->pMethods );
@@ -2262,6 +2262,74 @@ static PHB_SYMB hb_objGetFuncSym( PHB_ITEM pItem )
    }
 
    return NULL;
+}
+
+/* send message which allows to set execution context for debugger */
+HB_EXPORT void hb_dbgObjSendMessage( int iProcLevel, PHB_ITEM pObject, PHB_ITEM pMessage, int iParamOffset )
+{
+   PHB_DYNS pMsgSym;
+
+   pMsgSym = hb_objGetMsgSym( pMessage );
+   if( pObject && pMsgSym )
+   {
+      USHORT uiParams = 0;
+
+      /* set requested sender class and method id for scope verification */
+      if( iProcLevel > 0 )
+      {
+         int iLevel = hb_stackCallDepth();
+         if( iProcLevel < iLevel )
+         {
+            LONG lOffset = hb_stackBaseProcOffset( iLevel - iProcLevel );
+            if( lOffset > 0 )
+            {
+               PHB_ITEM pItem = hb_stackItem( lOffset );
+               PHB_ITEM pBase = hb_stackBaseItem();
+               pBase->item.asSymbol.stackstate->uiClass =
+                                    pItem->item.asSymbol.stackstate->uiClass;
+               pBase->item.asSymbol.stackstate->uiMethod =
+                                    pItem->item.asSymbol.stackstate->uiMethod;
+            }
+         }
+      }
+      else if( iProcLevel == 0 )
+      {
+         /* set scope like for internal object messages to any visible
+            method without respecting overloaded methods */
+         USHORT uiClass = hb_objGetClassH( pObject );
+
+         if( uiClass && uiClass <= s_uiClasses )
+         {
+            PMETHOD pMethod = hb_clsFindMsg( &s_pClasses[ uiClass ], pMsgSym );
+            if( pMethod )
+            {
+               PHB_ITEM pBase = hb_stackBaseItem();
+
+               pBase->item.asSymbol.stackstate->uiClass = uiClass;
+               pBase->item.asSymbol.stackstate->uiMethod =
+                     ( USHORT ) ( pMethod - s_pClasses[ uiClass ].pMethods );
+            }
+         }
+      }
+
+      hb_vmPushSymbol( pMsgSym->pSymbol );
+      hb_vmPush( pObject );
+
+      if( iParamOffset > 0 )
+      {
+         int iPCount = hb_pcount();
+
+         while( iParamOffset <= iPCount )
+         {
+            hb_vmPush( hb_stackItemFromBase( iParamOffset ) );
+            ++uiParams;
+            ++iParamOffset;
+         }
+      }
+      hb_vmSend( uiParams );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 3000, NULL, "hb_dbgObjSendMessage()", 2, pObject, pMsgSym );
 }
 
 static USHORT hb_clsUpdateScope( USHORT uiScope, BOOL fAssign )
@@ -4332,25 +4400,32 @@ HB_FUNC( __CLSGETPROPERTIES )
    if( uiClass && uiClass <= s_uiClasses )
    {
       PCLASS  pClass  = &s_pClasses[ uiClass ];
-      PMETHOD pMethod = pClass->pMethods;
-      ULONG ulLimit = hb_clsMthNum( pClass );
-      PHB_ITEM pItem = NULL;
+      PMETHOD pMethod;
+      ULONG ulLimit, ulCount;
 
-      hb_arrayNew( pReturn, 0 );
-
+      ulCount = 0;
+      ulLimit = hb_clsMthNum( pClass );
+      pMethod = pClass->pMethods;
       do
       {
          if( pMethod->pMessage && ( pMethod->uiScope & HB_OO_CLSTP_PERSIST ) )
-         {
-            pItem = hb_itemPutC( pItem, pMethod->pMessage->pSymbol->szName );
-            hb_arrayAdd( pReturn, pItem );
-         }
+            ++ulCount;
          ++pMethod;
       }
       while( --ulLimit );
 
-      if( pItem )
-         hb_itemRelease( pItem );
+      hb_arrayNew( pReturn, ulCount );
+
+      ulCount = 0;
+      ulLimit = hb_clsMthNum( pClass );
+      pMethod = pClass->pMethods;
+      do
+      {
+         if( pMethod->pMessage && ( pMethod->uiScope & HB_OO_CLSTP_PERSIST ) )
+            hb_arraySetC( pReturn, ++ulCount, pMethod->pMessage->pSymbol->szName );
+         ++pMethod;
+      }
+      while( --ulLimit );
    }
 
    hb_itemReturnRelease( pReturn );
@@ -4412,7 +4487,6 @@ void hb_clsAssociate( USHORT usClassH )
    if( pSelf )
       hb_itemReturnRelease( pSelf );
 }
-
 
 #if 1
 /*

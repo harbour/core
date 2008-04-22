@@ -54,6 +54,7 @@
 #include "hbvmopt.h"
 #include "hbapidbg.h"
 #include "hbapiitm.h"
+#include "hbapicls.h"
 #include "hbapirdd.h"
 #include "hbstack.h"
 #include "hbvm.h"
@@ -1748,4 +1749,10 @@ HB_FUNC( HB_DBG_SETWATCH )
    void * ptr = hb_parptr( 1 );
    if( ptr )
       hb_dbgSetWatch( ptr, hb_parni( 2 ), hb_parc( 3 ), hb_parl( 4 ) );
+}
+
+HB_FUNC( HB_DBG_SENDMSG )
+{
+   hb_dbgObjSendMessage( hb_parnl( 1 ), hb_param( 2, HB_IT_ANY ),
+                         hb_param( 3, HB_IT_ANY ), 4 );
 }
