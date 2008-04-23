@@ -8,6 +8,56 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-23 14:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tget.prg
+     ! Fixed o[13] and o[14] content (they were swapped) in C5.3 mode.
+     ! Fixed ::varPut() to not have the extra Harbour parameter.
+     ! Fixed ::picture to not mess with ::nDispLen when @S is used.
+       Now solved with new internal var ::nPicLen.
+     % ::ResetPar() internal method moved inside ::display()
+     ! Fixed ::updateBuffer() to set ::xVarGet (o[19] in C5.3 mode 
+       and o[11] in C5.2 mode when ::hasFocus) to ::original.
+     ! Fixed ::display() behavior when not in focus.
+     ! Fixed ::reset() to be more compatible by setting ::xVarGet.
+     ! Fixed ::undo() for non-gettable variable types.
+     ! Fixed ::killFocus() to never call ::assign().
+     ! Fixed ::varPut() to never touch internal vars (old 'lReFormat' mode).
+     ! Fixed ::varGet() to not touch ::xVarGet internal var.
+     ! Fixed ::insert()/::overStrike() to call ::display() in 
+       out of bound and rejected cases.
+     ! Fixed ::insert()/::overStrike() to not set ::Rejected 
+       when position is out of bound.
+     ! Fixed internal ::PutMask() to never initiate a ::block 
+       evaluation.
+     ; NOTE: Since Get() object is a highly complicated beast, 
+             bumps are expected. Pls test this code with your 
+             applications and report any problems with reduced 
+             code snippet. I'll include those tests in the 
+             regression test suite.
+             Notice that after these changes, the number of 
+             differences between C5.x and Harbour are further 
+             reduced, especially regarding the "object as array" 
+             kind of access and regarding block evaluation.
+             Currently, differences are mostly present in o[16] 
+             in C5.3 mode, plus some odd cases testing 
+             mostly invalid picture values, and a few other minor 
+             differences here and there. Plus of course further 
+             differences may happen to exist in cases not covered 
+             by rto_get.prg.
+
+   * source/rtl/einstvar.prg
+     ! Fixed to only include _eInstVar() if HB_C52_UNDOC is 
+       #defined (it is by default).
+
+   * source/rtl/tbrowse.prg
+     + Added missing XPP methods (three synomyms to 
+       existing methods).
+
+   * tests/rto_get.prg
+     + Added even more tests.
+     + Added some additional info about errors.
+     ! Fixed ::block SETGET tracing.
+
 2008-04-23 09:46 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/ppcore.c
     ! fixed some combinations of user functions in stream pragmas, f.e.:

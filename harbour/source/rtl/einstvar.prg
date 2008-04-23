@@ -53,11 +53,15 @@
 
 #include "common.ch"
 
+#ifdef HB_C52_UNDOC
+
 FUNCTION _eInstVar( ... )
 #ifdef HB_COMPAT_C53
    RETURN __eInstVar53( ... )
 #else
    RETURN __eInstVar52( ... )
+#endif
+
 #endif
 
 /* NOTE: In CA-Cl*pper 5.2/5.3 the cMethod argument seems to be ignored. */

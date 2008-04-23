@@ -258,6 +258,10 @@ EXPORTED:
 #ifdef HB_COMPAT_XPP
    METHOD viewArea()                            // Xbase++ compatible method
    METHOD firstScrCol()                         // Xbase++ compatible method
+
+   MESSAGE _left() METHOD Left()
+   MESSAGE _right() METHOD Right()
+   MESSAGE _end() METHOD End()
 #endif
 
    METHOD new( nTop, nLeft, nBottom, nRight )   // constructor, NOTE: This method is a Harbour extension [vszakats]

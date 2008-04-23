@@ -105,8 +105,8 @@ CREATE CLASS Get
 #ifdef HB_COMPAT_C53
    VAR oControl       PROTECTED         /* 11. CA-Clipper 5.3 only. */
    VAR cCaption       PROTECTED INIT "" /* 12. CA-Clipper 5.3 only. */
-   VAR nCapRow        PROTECTED INIT 0  /* 13. CA-Clipper 5.3 only. */
-   VAR nCapCol        PROTECTED INIT 0  /* 14. CA-Clipper 5.3 only. */
+   VAR nCapCol        PROTECTED INIT 0  /* 13. CA-Clipper 5.3 only. */
+   VAR nCapRow        PROTECTED INIT 0  /* 14. CA-Clipper 5.3 only. */
    VAR cMessage       PROTECTED INIT "" /* 15. CA-Clipper 5.3 only. */
    VAR nDispLen       PROTECTED         /* 16. CA-Clipper 5.3 places it here. */
 #endif
@@ -160,7 +160,7 @@ CREATE CLASS Get
    METHOD unTransform()
    METHOD updateBuffer()
    METHOD varGet()
-   METHOD varPut( xValue, lReFormat ) /* NOTE: lReFormat is an undocumented Harbour parameter. Should not be used by app code. [vszakats] */
+   METHOD varPut( xValue )
 
    METHOD end()
    METHOD home()
@@ -209,6 +209,7 @@ CREATE CLASS Get
 
    VAR cPicMask       INIT ""
    VAR cPicFunc       INIT ""
+   VAR nPicLen
    VAR nMaxLen
    VAR lEdit          INIT .F.
    VAR lDecRev        INIT .F.
@@ -227,7 +228,6 @@ CREATE CLASS Get
    METHOD PutMask( xValue, lEdit )
    METHOD FirstEditable()
    METHOD LastEditable()
-   METHOD ResetPar()
 
 ENDCLASS
 
@@ -243,6 +243,7 @@ METHOD updateBuffer() CLASS Get
 
    IF ::hasFocus
       ::cBuffer := ::PutMask( ::varGet() )
+      ::xVarGet := ::original
       ::display()
    ELSE
       ::varGet()
@@ -263,22 +264,25 @@ METHOD display( lForced ) CLASS Get
 
    DEFAULT lForced TO .T.
 
-   IF ! ISCHARACTER( ::cBuffer )
-      ::cType    := ValType( ::xVarGet )
-      ::picture  := ::cPicture
-   ENDIF
-
    IF ::hasFocus
-      cBuffer := ::cBuffer
+      cBuffer   := ::cBuffer
+
+      IF ::nMaxLen == NIL
+         ::nMaxLen := Len( cBuffer )
+      ENDIF
+      IF ::nDispLen == NIL
+         ::nDispLen := ::nMaxLen
+      ENDIF
    ELSE
-      cBuffer := ::PutMask( ::varGet() )
+      ::cType   := ValType( ::xVarGet := ::varGet() )
+      ::picture := ::cPicture
+      cBuffer   := ::PutMask( ::xVarGet )
+      ::nMaxLen := Len( cBuffer )
+      ::nDispLen := ::nMaxLen
    ENDIF
 
-   IF ::nMaxLen == NIL
-      ::nMaxLen := Len( cBuffer )
-   ENDIF
-   IF ::nDispLen == NIL
-      ::nDispLen := ::nMaxLen
+   IF ::nPicLen != NIL
+      ::nDispLen := ::nPicLen
    ENDIF
 
    IF ::cType == "N" .AND. ::hasFocus .AND. ! ::lMinusPrinted .AND. ;
@@ -401,6 +405,8 @@ METHOD reset() CLASS Get
 
    IF ::hasFocus
       ::cBuffer   := ::PutMask( ::varGet(), .F. )
+      ::xVarGet   := ::original
+      ::cType     := ValType( ::xVarGet )
       ::Pos       := ::FirstEditable() /* ; Simple 0 in CA-Cl*pper [vszakats] */
       ::lClear    := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
       ::lEdit     := .F.
@@ -415,8 +421,9 @@ METHOD reset() CLASS Get
 METHOD undo() CLASS Get
 
    IF ::hasFocus
-      /* ! TOFIX: when PICTURE "@S" is used on a longer buffer. */
-      ::varPut( ::original )
+      IF ValType( ::original ) $ "CNDL"
+         ::varPut( ::original )
+      ENDIF
       ::reset()
       ::lChanged := .F.
    ENDIF
@@ -431,7 +438,7 @@ METHOD setFocus() CLASS Get
       RETURN Self
    ENDIF
 
-   xVarGet := ::varGet()
+   xVarGet := ::xVarGet := ::varGet()
 
    ::hasFocus   := .T.
    ::rejected   := .F.
@@ -440,7 +447,23 @@ METHOD setFocus() CLASS Get
    ::cType      := ValType( xVarGet )
    ::picture    := ::cPicture
    ::cBuffer    := ::PutMask( xVarGet, .F. )
-   ::ResetPar()
+
+   ::nMaxLen := Len( ::cBuffer )
+
+   IF ::nDispLen == NIL
+      ::nDispLen := ::nMaxLen
+   ENDIF
+   
+   IF ::cType == "N"
+      ::decPos := At( iif( ::lDecRev .OR. "E" $ ::cPicFunc, ",", "." ), ::cBuffer )
+      IF ::decPos == 0
+         ::decPos := Len( ::cBuffer ) + 1
+      ENDIF
+      ::lMinus2 := ( ::xVarGet < 0 )
+   ELSE
+      ::decPos := 0 /* ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
+   ENDIF
+
    ::lChanged   := .F.
    ::lClear     := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
    ::lEdit      := .F.
@@ -455,13 +478,7 @@ METHOD setFocus() CLASS Get
 
 METHOD killFocus() CLASS Get
 
-   LOCAL lHadFocus
-
-   IF ::lEdit
-      ::assign()
-   ENDIF
-
-   lHadFocus := ::hasFocus
+   LOCAL lHadFocus := ::hasFocus
 
    ::hasFocus := .F.
    ::nPos     := 0
@@ -481,12 +498,12 @@ METHOD killFocus() CLASS Get
 
    RETURN Self
 
-METHOD varPut( xValue, lReFormat ) CLASS Get
+METHOD varPut( xValue ) CLASS Get
 
    LOCAL aSubs
    LOCAL nLen
-   LOCAL aValue
    LOCAL i
+   LOCAL aValue
 
    IF ISBLOCK( ::bBlock )
       aSubs := ::subScript
@@ -505,16 +522,6 @@ METHOD varPut( xValue, lReFormat ) CLASS Get
          ENDIF
       ELSE
          Eval( ::bBlock, xValue )
-      ENDIF
-
-      DEFAULT lReFormat TO .T.
-
-      IF lReFormat
-         ::cType    := ValType( xValue )
-         ::xVarGet  := xValue
-         ::lEdit    := .F.
-         ::picture  := ::cPicture
-         ::nDispLen := NIL
       ENDIF
    ELSE
       xValue := NIL
@@ -547,8 +554,6 @@ METHOD varGet() CLASS Get
    ELSE
       xValue := ::xVarGet
    ENDIF
-
-   ::xVarGet := xValue
 
    RETURN xValue
 
@@ -685,7 +690,7 @@ METHOD overStrike( cChar ) CLASS Get
    ENDIF
    
    IF ::Pos > ::nMaxEdit
-      ::rejected := .T.
+      ::display()
       RETURN Self
    ENDIF
    
@@ -693,6 +698,7 @@ METHOD overStrike( cChar ) CLASS Get
    
    IF cChar == ""
       ::rejected := .T.
+      ::display()
       RETURN Self
    ELSE
       ::rejected := .F.
@@ -742,7 +748,7 @@ METHOD insert( cChar ) CLASS Get
    ENDIF
    
    IF ::nPos > ::nMaxEdit
-      ::rejected := .T.
+      ::display()
       RETURN Self
    ENDIF
    
@@ -750,6 +756,7 @@ METHOD insert( cChar ) CLASS Get
    
    IF cChar == ""
       ::rejected := .T.
+      ::display()
       RETURN Self
    ELSE
       ::rejected := .F.
@@ -1292,10 +1299,10 @@ METHOD picture( cPicture ) CLASS Get
       ::cPicFunc    := ""
       ::cPicMask    := ""
       ::lPicComplex := .F.
+      ::nPicLen     := NIL
       
       IF ISCHARACTER( cPicture )
       
-         ::nDispLen := NIL
          cNum := ""
          
          IF Left( cPicture, 1 ) == "@"
@@ -1331,7 +1338,7 @@ METHOD picture( cPicture ) CLASS Get
                   ENDIF
                NEXT
                IF Val( cNum ) > 0
-                  ::nDispLen := Val( cNum )
+                  ::nPicLen := Val( cNum )
                ENDIF
                ::cPicFunc := SubStr( ::cPicFunc, 1, nAt - 1 ) + SubStr( ::cPicFunc, nFor )
             ENDIF
@@ -1351,11 +1358,6 @@ METHOD picture( cPicture ) CLASS Get
             ::cPicMask   := cPicture
             ::lCleanZero := .F.
          ENDIF
-         
-//       IF ::cType == NIL
-//          ::original := ::xVarGet
-//          ::cType    := ValType( ::original )
-//       ENDIF
          
          IF ::cType == "D"
             ::cPicMask := LTrim( ::cPicMask )
@@ -1476,26 +1478,6 @@ METHOD lastEditable() CLASS Get
    ENDIF
 
    RETURN 0
-
-METHOD resetPar() CLASS Get
-
-   ::nMaxLen := Len( ::cBuffer )
-
-   IF ::nDispLen == NIL
-      ::nDispLen := ::nMaxLen
-   ENDIF
-   
-   IF ::cType == "N"
-      ::decPos := At( iif( ::lDecRev .OR. "E" $ ::cPicFunc, ",", "." ), ::cBuffer )
-      IF ::decPos == 0
-         ::decPos := Len( ::cBuffer ) + 1
-      ENDIF
-      ::lMinus2 := ( ::xVarGet < 0 )
-   ELSE
-      ::decPos := 0 /* ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
-   ENDIF
-
-   RETURN Self
 
 METHOD badDate() CLASS Get
 
@@ -1761,8 +1743,7 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
    LOCAL nFor
    LOCAL nNoEditable := 0
 
-   DEFAULT xValue TO ::varGet()
-   DEFAULT lEdit  TO ::hasFocus
+   DEFAULT lEdit TO ::hasFocus
 
    IF !( ValType( xValue ) $ "CNDL" )
       xValue := ""

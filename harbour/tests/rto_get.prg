@@ -74,12 +74,21 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    LOCAL nInt01 := 98
    LOCAL cStr01 := "AbC DF 974"
    LOCAL cStr02E := ""
+   LOCAL cStr03 := ""
+   LOCAL cStr04 := ""
+   LOCAL cStr05 := ""
+   LOCAL cStr06 := ""
+#ifdef NULL
    LOCAL dDate01
+#endif
 
    LOCAL bOldBlock
    LOCAL o
 
    LOCAL cCommandLine
+
+   LOCAL nOldRow
+   LOCAL nOldCol
 
    DEFAULT cArg01 TO ""
    DEFAULT cArg02 TO ""
@@ -151,15 +160,87 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
 
    // ; colorDisp / VarPut / display (::nDispLen recalc)
 
-   SetPos( 14, 16 ) ; o := _GET_( uNIL, "uNIL" )
+   SetPos( 14, 16 ) ; o := _GET_( cStr03, "cStr03" )
    TEST_LINE( o:colorDisp( "GR/N" ) )
    TEST_LINE( o:VarPut( "<hello>" ) )
    TEST_LINE( o:display() )
-
-   SetPos( 14, 16 ) ; o := _GET_( uNIL, "uNIL" )
+   
+   SetPos( 14, 16 ) ; o := _GET_( cStr04, "cStr04" )
    TEST_LINE( o:colorSpec := "GR/N" )
    TEST_LINE( o:VarPut( "<hello>" ) )
    TEST_LINE( o:display() )
+
+   SetPos( 14, 16 ) ; o := _GET_( cStr05, "cStr05",,, )
+   TEST_LINE( o:VarPut(Space(30)) )
+   TEST_LINE( o:display() )
+   TEST_LINE( o:VarPut(1) )
+   TEST_LINE( o:VarGet() )
+   TEST_LINE( o:VarPut("abcdefghijklm1234nopqrstuvwxyz") )
+   TEST_LINE( o:setFocus() )
+   TEST_LINE( o:assign() )
+   TEST_LINE( o:VarPut("abcdefghijklmnopqrstuvwxyz1234") )
+   TEST_LINE( o:updateBuffer() )
+   nOldRow := o:row
+   nOldCol := o:col
+   TEST_LINE( o:row := 50 )
+   TEST_LINE( o:col := 80 )
+   TEST_LINE( o:VarPut(2) )
+   TEST_LINE( o:VarGet() )
+   TEST_LINE( o:VarPut("1234abcdefghijklmnopqrstuvwxyz") )
+   TEST_LINE( o:updateBuffer() )
+   TEST_LINE( o:row := nOldRow )
+   TEST_LINE( o:col := nOldCol )
+   TEST_LINE( o:killFocus() )
+   TEST_LINE( o:VarPut(4) )
+
+   SetPos( 14, 16 ) ; o := _GET_( cStr05, "cStr05",,, )
+   TEST_LINE( o:VarPut(Space(30)) )
+   TEST_LINE( o:display() )
+   TEST_LINE( o:VarPut(1) )
+   TEST_LINE( o:VarGet() )
+   TEST_LINE( o:VarPut("abcdefghijklm1234nopqrstuvwxyz") )
+   TEST_LINE( o:setFocus() )
+   TEST_LINE( o:assign() )
+   TEST_LINE( o:VarPut("abcdefghijklmnopqrstuvwxyz1234") )
+   TEST_LINE( o:updateBuffer() )
+   TEST_LINE( o:VarPut(2) )
+   TEST_LINE( o:Type )
+
+   // ;
+
+   SetPos( 14, 16 ) ; o := _GET_( cStr06, "cStr06",,, )
+   TEST_LINE( o:VarPut(Replicate("a", 30)) )
+   TEST_LINE( o:display() )
+   TEST_LINE( o:VarPut(1) )
+
+   SetPos( 14, 16 ) ; o := _GET_( cStr06, "cStr06",,, )
+   TEST_LINE( o:VarPut(Replicate("a", 30)) )
+   TEST_LINE( o:display() )
+   TEST_LINE( o:VarPut(Replicate("b", 20)) )
+
+   SetPos( 14, 16 ) ; o := _GET_( cStr06, "cStr06",,, )
+   TEST_LINE( o:VarPut(Replicate("a", 30)) )
+   TEST_LINE( o:display() )
+   TEST_LINE( o:VarPut(NIL) )
+   TEST_LINE( o:VarPut(Replicate("b", 20)) )
+
+   SetPos( 14, 16 ) ; o := _GET_( cStr06, "cStr06",,, )
+   TEST_LINE( o:VarPut(Replicate("a", 30)) )
+   TEST_LINE( o:setFocus() )
+   TEST_LINE( o:VarPut(1) )
+
+   SetPos( 14, 16 ) ; o := _GET_( cStr06, "cStr06",,, )
+   TEST_LINE( o:VarPut(Replicate("a", 30)) )
+   TEST_LINE( o:setFocus() )
+   TEST_LINE( o:VarPut(Replicate("b", 20)) )
+
+   SetPos( 14, 16 ) ; o := _GET_( cStr06, "cStr06",,, )
+   TEST_LINE( o:VarPut(Replicate("a", 30)) )
+   TEST_LINE( o:setFocus() )
+   TEST_LINE( o:VarPut(NIL) )
+   TEST_LINE( o:VarPut(Replicate("b", 20)) )
+   TEST_LINE( o:setFocus() )
+   TEST_LINE( o:assign() )
 
    // ; Minus
 
@@ -378,7 +459,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:KillFocus() )
-   TEST_LINE( o:block := {| h | LogMe( h ), iif( h == NIL, cStr01, cStr01 := h ) } )
+   TEST_LINE( o:block := {| h | LogMe( PCount(), h ), iif( PCount() == 0, cStr01, cStr01 := h ) } )
    TEST_LINE( o:SetFocus() )
 
    // ; Reform
@@ -397,7 +478,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" )
    TEST_LINE( OBJ_CREATE() )
    bOldBlock := o:block
-   TEST_LINE( o:block := {| h | LogMe( h ), iif( h == NIL, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
+   TEST_LINE( o:block := {| h | LogMe( PCount(), h ), iif( PCount() == 0, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:insert("-") )
    TEST_LINE( o:KillFocus() )
@@ -409,6 +490,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
 
    SET CENTURY ON
 
+#ifdef NULL
    SetPos( 14, 16 ) ; dDate01 := hb_SToD( "20070425" )
    o := _GET_( dDate01, "dDate01" )
    TEST_LINE( OBJ_CREATE() )
@@ -466,6 +548,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:OverStrike("12345678") )
    TEST_LINE( o:KillFocus() )
+#endif
 
    // ; Exercises
 
@@ -531,6 +614,13 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ) ; TEST_LINE( o:SubScript := xVar )
    SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ) ; TEST_LINE( o:Type      := xVar )
    SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ) ; TEST_LINE( o:TypeOut   := xVar )
+#ifdef HB_COMPAT_C53
+   SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ) ; TEST_LINE( o:control   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ) ; TEST_LINE( o:message   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ) ; TEST_LINE( o:caption   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ) ; TEST_LINE( o:capRow    := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ) ; TEST_LINE( o:capCol    := xVar )
+#endif
 
    s_cTest := "Non-Focus Assign To C: " + XToStr( xVar )
 
@@ -558,6 +648,13 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ) ; TEST_LINE( o:SubScript := xVar )
    SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ) ; TEST_LINE( o:Type      := xVar )
    SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ) ; TEST_LINE( o:TypeOut   := xVar )
+#ifdef HB_COMPAT_C53
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "nStr01" ) ; TEST_LINE( o:control   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "nStr01" ) ; TEST_LINE( o:message   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "nStr01" ) ; TEST_LINE( o:caption   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "nStr01" ) ; TEST_LINE( o:capRow    := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "nStr01" ) ; TEST_LINE( o:capCol    := xVar )
+#endif
 
    s_cTest := "Non-Focus Assign To D: " + XToStr( xVar )
 
@@ -585,6 +682,13 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ) ; TEST_LINE( o:SubScript := xVar )
    SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ) ; TEST_LINE( o:Type      := xVar )
    SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ) ; TEST_LINE( o:TypeOut   := xVar )
+#ifdef HB_COMPAT_C53
+   SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ) ; TEST_LINE( o:control   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ) ; TEST_LINE( o:message   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ) ; TEST_LINE( o:caption   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ) ; TEST_LINE( o:capRow    := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ) ; TEST_LINE( o:capCol    := xVar )
+#endif
 
    s_cTest := "Non-Focus Assign To L: " + XToStr( xVar )
 
@@ -612,6 +716,13 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ) ; TEST_LINE( o:SubScript := xVar )
    SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ) ; TEST_LINE( o:Type      := xVar )
    SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ) ; TEST_LINE( o:TypeOut   := xVar )
+#ifdef HB_COMPAT_C53
+   SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ) ; TEST_LINE( o:control   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ) ; TEST_LINE( o:message   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ) ; TEST_LINE( o:caption   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ) ; TEST_LINE( o:capRow    := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ) ; TEST_LINE( o:capCol    := xVar )
+#endif
 
    s_cTest := "Non-Focus Assign To B: " + XToStr( xVar )
 
@@ -639,6 +750,13 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ) ; TEST_LINE( o:SubScript := xVar )
    SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ) ; TEST_LINE( o:Type      := xVar )
    SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ) ; TEST_LINE( o:TypeOut   := xVar )
+#ifdef HB_COMPAT_C53
+   SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ) ; TEST_LINE( o:control   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ) ; TEST_LINE( o:message   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ) ; TEST_LINE( o:caption   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ) ; TEST_LINE( o:capRow    := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ) ; TEST_LINE( o:capCol    := xVar )
+#endif
 
    s_cTest := "InFocus Assign to N: " + XToStr( xVar )
 
@@ -666,6 +784,13 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ):SetFocus ; TEST_LINE( o:SubScript := xVar )
    SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ):SetFocus ; TEST_LINE( o:Type      := xVar )
    SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ):SetFocus ; TEST_LINE( o:TypeOut   := xVar )
+#ifdef HB_COMPAT_C53
+   SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ):SetFocus ; TEST_LINE( o:control   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ):SetFocus ; TEST_LINE( o:message   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ):SetFocus ; TEST_LINE( o:caption   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ):SetFocus ; TEST_LINE( o:capRow    := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( nInt01, "nInt01" ):SetFocus ; TEST_LINE( o:capCol    := xVar )
+#endif
                                                   
    s_cTest := "InFocus Assign to C: " + XToStr( xVar )
 
@@ -693,6 +818,13 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ):SetFocus ; TEST_LINE( o:SubScript := xVar )
    SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ):SetFocus ; TEST_LINE( o:Type      := xVar )
    SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ):SetFocus ; TEST_LINE( o:TypeOut   := xVar )
+#ifdef HB_COMPAT_C53
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ):SetFocus ; TEST_LINE( o:control   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ):SetFocus ; TEST_LINE( o:message   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ):SetFocus ; TEST_LINE( o:caption   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ):SetFocus ; TEST_LINE( o:capRow    := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( cStr01, "cStr01" ):SetFocus ; TEST_LINE( o:capCol    := xVar )
+#endif
                                                   
    s_cTest := "InFocus Assign to D: " + XToStr( xVar )
 
@@ -720,6 +852,13 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ):SetFocus ; TEST_LINE( o:SubScript := xVar )
    SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ):SetFocus ; TEST_LINE( o:Type      := xVar )
    SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ):SetFocus ; TEST_LINE( o:TypeOut   := xVar )
+#ifdef HB_COMPAT_C53
+   SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ):SetFocus ; TEST_LINE( o:control   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ):SetFocus ; TEST_LINE( o:message   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ):SetFocus ; TEST_LINE( o:caption   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ):SetFocus ; TEST_LINE( o:capRow    := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( dDat01, "dDat01" ):SetFocus ; TEST_LINE( o:capCol    := xVar )
+#endif
                                                   
    s_cTest := "InFocus Assign to L: " + XToStr( xVar )
 
@@ -747,6 +886,13 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ):SetFocus ; TEST_LINE( o:SubScript := xVar )
    SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ):SetFocus ; TEST_LINE( o:Type      := xVar )
    SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ):SetFocus ; TEST_LINE( o:TypeOut   := xVar )
+#ifdef HB_COMPAT_C53
+   SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ):SetFocus ; TEST_LINE( o:control   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ):SetFocus ; TEST_LINE( o:message   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ):SetFocus ; TEST_LINE( o:caption   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ):SetFocus ; TEST_LINE( o:capRow    := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( lLog01, "lLog01" ):SetFocus ; TEST_LINE( o:capCol    := xVar )
+#endif
                                                   
    s_cTest := "InFocus Assign to B: " + XToStr( xVar )
 
@@ -774,6 +920,13 @@ PROCEDURE TGetAssign( xVar )
    SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ):SetFocus ; TEST_LINE( o:SubScript := xVar )
    SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ):SetFocus ; TEST_LINE( o:Type      := xVar )
    SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ):SetFocus ; TEST_LINE( o:TypeOut   := xVar )
+#ifdef HB_COMPAT_C53
+   SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ):SetFocus ; TEST_LINE( o:control   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ):SetFocus ; TEST_LINE( o:message   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ):SetFocus ; TEST_LINE( o:caption   := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ):SetFocus ; TEST_LINE( o:capRow    := xVar )
+   SetPos( 14, 16 ) ; o := _GET_( bBlo01, "bBlo01" ):SetFocus ; TEST_LINE( o:capCol    := xVar )
+#endif
 
    s_cTest := "InFocus/SetFocus " + XToStr( xVar )
 
@@ -806,7 +959,7 @@ PROCEDURE TGetTest( xVar, cPic )
    SetPos( 14, 16 ) ; o := _GET_( s_xVar, "s_xVar" )
    TEST_LINE( OBJ_CREATE() )
    bOldBlock := o:block
-   TEST_LINE( o:block := {| h | LogMe( h ), iif( h == NIL, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
+   TEST_LINE( o:block := {| h | LogMe( PCount(), h ), iif( PCount() == 0, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
    TEST_LINE( o:SetFocus() )
    IF cPic != NIL
       TEST_LINE( o:picture := "99999" )
@@ -826,7 +979,7 @@ PROCEDURE TGetTest( xVar, cPic )
    SetPos( 14, 16 ) ; o := _GET_( s_xVar, "s_xVar" )
    TEST_LINE( OBJ_CREATE() )
    bOldBlock := o:block
-   TEST_LINE( o:block := {| h | LogMe( h ), iif( h == NIL, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
+   TEST_LINE( o:block := {| h | LogMe( PCount(), h ), iif( PCount() == 0, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
    IF cPic != NIL
       TEST_LINE( o:picture := "99999" )
       TEST_LINE( o:picture := cPic )
@@ -844,7 +997,36 @@ PROCEDURE TGetTest( xVar, cPic )
 
    SetPos( 14, 16 ) ; o := _GET_( s_xVar, "s_xVar" )
    bOldBlock := o:block
-   TEST_LINE( o:block := {| h | LogMe( h ), iif( h == NIL, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
+   TEST_LINE( o:block := {| h | LogMe( PCount(), h ), iif( PCount() == 0, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
+   TEST_LINE( o:SetFocus() )
+   TEST_LINE( o:Insert( "6" ) )
+   TEST_LINE( o:Undo(.T.) )
+   TEST_LINE( o:Insert( "5" ) )
+   TEST_LINE( o:Assign() )
+   TEST_LINE( o:Reset() )
+   TEST_LINE( o:KillFocus() )
+   TEST_LINE( o:VarPut( "newvalue " ) )
+   TEST_LINE( o:Insert( "7" ) )
+   TEST_LINE( o:Undo(.T.) )
+   TEST_LINE( o:Assign() )
+   TEST_LINE( o:SetFocus() )
+   TEST_LINE( o:Insert( "3" ) )
+   TEST_LINE( o:Undo(.T.) )
+   TEST_LINE( o:KillFocus() )
+   TEST_LINE( o:VarPut( 0 ) )
+   TEST_LINE( o:SetFocus() )
+   TEST_LINE( o:Insert( "3" ) )
+   TEST_LINE( o:Undo(.T.) )
+   TEST_LINE( o:KillFocus() )
+
+   // ;
+
+   s_xVar := xVar
+
+   SetPos( 14, 16 ) ; o := _GET_( s_xVar, "s_xVar" )
+   TEST_LINE( o:picture := cPic )
+   bOldBlock := o:block
+   TEST_LINE( o:block := {| h | LogMe( PCount(), h ), iif( PCount() == 0, Eval( bOldBlock ), Eval( bOldBlock, h ) ) } )
    TEST_LINE( o:SetFocus() )
    TEST_LINE( o:Insert( "6" ) )
    TEST_LINE( o:Undo(.T.) )
@@ -879,7 +1061,7 @@ PROCEDURE TEST_CALL( o, cBlock, bBlock )
 
    SetPos( 0, 0 ) // ; To check where the cursor was moved after evaluating the block.
 
-   bOldError := ErrorBlock( {|oError| Break( oError ) } )
+   bOldError := ErrorBlock( {|oError| oError:cargo := CallStack(), Break( oError ) } )
 
    BEGIN SEQUENCE
       xResult := Eval( bBlock )
@@ -893,7 +1075,18 @@ PROCEDURE TEST_CALL( o, cBlock, bBlock )
 
    RETURN
 
-PROCEDURE LogMe( data, desc )
+FUNCTION CallStack()
+   LOCAL tmp := 1
+   LOCAL cString := ""
+
+   DO WHILE !Empty( ProcName( tmp ) )
+      cString += ProcName( tmp ) + " (" + LTrim( Str( ProcLine( tmp ) ) ) + ") "
+      tmp++
+   ENDDO
+
+   RETURN RTrim( cString )
+
+PROCEDURE LogMe( nPCount, data, desc )
    LOCAL nLevel
    LOCAL cStack
 
@@ -914,10 +1107,10 @@ PROCEDURE LogMe( data, desc )
       cStack := ""
    ENDIF
 
-   IF PCount() > 2
-      FWrite( s_fhnd, cStack + "BLOCK_SET  " + iif( data == NIL, "NIL", data ) + "  " + desc + hb_OSNewLine() )
-   ELSE
+   IF nPCount == 0
       FWrite( s_fhnd, cStack + "BLOCK_GET  " + desc + hb_OSNewLine() )
+   ELSE
+      FWrite( s_fhnd, cStack + "BLOCK_SET  " + XToStr( data ) + "  " + desc + hb_OSNewLine() )
    ENDIF
 
    RETURN
@@ -1173,6 +1366,10 @@ STATIC FUNCTION ErrorMessage( oError )
          IF oError:canSubstitute
             cMessage += "S"
          ENDIF
+      ENDIF
+
+      IF !Empty( oError:cargo )
+         cMessage += " " + oError:cargo
       ENDIF
    ELSE
       cMessage := "(ERROR)"
