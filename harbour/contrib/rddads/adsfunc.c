@@ -2584,4 +2584,83 @@ HB_FUNC( ADSCLOSECACHEDTABLES )
 
 #endif   /* ADS_REQUIRE_VERSION >= 7  */
 
+#if ADS_REQUIRE_VERSION >= 800
+
+HB_FUNC( ADSCREATESAVEPOINT )
+{
+   ADSHANDLE  hConnect = HB_ADS_PARCONNECTION( 1 );
+   char*      pucSavepoint = hb_parc( 2 );
+   UNSIGNED32 ulOptions = ADS_DEFAULT;
+
+   hb_retnl( AdsCreateSavepoint( hConnect, (UNSIGNED8 *) pucSavepoint, ulOptions ) );
+}
+
+HB_FUNC( ADSROLLBACKSAVEPOINT )
+{
+   ADSHANDLE  hConnect       = HB_ADS_PARCONNECTION( 1 );
+   char*     pucSavepoint = hb_parc( 2 );
+   UNSIGNED32  ulOptions = ADS_DEFAULT;
+   hb_retnl( AdsRollbackTransaction80( hConnect, (UNSIGNED8 *) pucSavepoint, ulOptions ) );
+}
+
+#endif
+
+#if ADS_REQUIRE_VERSION >= 900
+
+HB_FUNC( ADSDDCREATELINK )
+{
+   UNSIGNED32 ulRetVal;
+   ADSHANDLE  hConnect       = HB_ADS_PARCONNECTION( 1 );
+   UNSIGNED8  *pucLinkAlias  = (UNSIGNED8 *) hb_parcx( 2 );
+   UNSIGNED8  *pucServerPath = (UNSIGNED8 *) hb_parcx( 3 );
+   UNSIGNED8  *pucUserName   = ISCHAR( 4 ) ? (UNSIGNED8 *) hb_parcx( 4 ) : NULL;
+   UNSIGNED8  *pucPassword   = ISCHAR( 5 ) ? (UNSIGNED8 *) hb_parcx( 5 ) : NULL;
+   UNSIGNED32 ulOptions      = ISNUM( 6 ) ? hb_parnl( 6 ) : ADS_DEFAULT;
+
+   ulRetVal = AdsDDCreateLink(  hConnect      ,
+                                pucLinkAlias  ,
+                                pucServerPath ,
+                                pucUserName   ,
+                                pucPassword   ,
+                                ulOptions     );
+
+   hb_retl( ulRetVal == AE_SUCCESS );
+}
+
+HB_FUNC( ADSDDMODIFYLINK )
+{
+   UNSIGNED32 ulRetVal;
+   ADSHANDLE  hConnect       = HB_ADS_PARCONNECTION( 1 );
+   UNSIGNED8  *pucLinkAlias  = (UNSIGNED8 *) hb_parcx( 2 );
+   UNSIGNED8  *pucServerPath = (UNSIGNED8 *) hb_parcx( 3 );
+   UNSIGNED8  *pucUserName   = ISCHAR( 4 ) ? (UNSIGNED8 *) hb_parcx( 4 ) : NULL;
+   UNSIGNED8  *pucPassword   = ISCHAR( 5 ) ? (UNSIGNED8 *) hb_parcx( 5 ) : NULL;
+   UNSIGNED32 ulOptions      = ISNUM( 6 ) ? hb_parnl( 6 ) : ADS_DEFAULT;
+
+   ulRetVal = AdsDDModifyLink( hConnect      ,
+                               pucLinkAlias  ,
+                               pucServerPath ,
+                               pucUserName   ,
+                               pucPassword   ,
+                               ulOptions     );
+
+   hb_retl( ulRetVal == AE_SUCCESS );
+}
+
+HB_FUNC( ADSDDDROPLINK )
+{
+   UNSIGNED32 ulRetVal;
+   ADSHANDLE  hConnect       = HB_ADS_PARCONNECTION( 1 );
+   UNSIGNED8  *pucLinkAlias  = (UNSIGNED8 *) hb_parcx( 2 );
+   UNSIGNED16 ulOptions      = ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
+
+   ulRetVal = AdsDDDropLink( hConnect,
+                             pucLinkAlias,
+                             ulOptions );
+
+   hb_retl( ulRetVal == AE_SUCCESS );
+}
+
+#endif
+
 /*  Please add all-version functions above this block */

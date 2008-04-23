@@ -320,11 +320,11 @@ HB_FUNC( ADSMGGETCONFIGINFO )
          hb_stornl( stConfigValues.usNumSendECBs          , -1, 13);  /* number send ECBs (NLM only)   */
          hb_stornd( stConfigValues.usNumBurstPackets      , -1, 14);  /* number packets per burst      */
          hb_stornl( stConfigValues.usNumWorkerThreads     , -1, 15);  /* number worker threads         */
-#if defined(ADS_VER) && ADS_VER >= 810
+#if defined(ADS_REQUIRE_VERSION) && ADS_REQUIRE_VERSION >= 810
          hb_stornl( stConfigValues.ulSortBuffSize         , -1, 16);  /* index sort buffer size        */
          hb_storni( 0                                     , -1, 17);  /* reserved                      */
          hb_storni( 0                                     , -1, 18);  /* reserved                      */
-#elif defined(ADS_VER) && ADS_VER < 810
+#elif defined(ADS_REQUIRE_VERSION) && ADS_REQUIRE_VERSION < 810
          hb_stornl( stConfigValues.usSortBuffSize         , -1, 16);  /* index sort buffer size        */
          hb_storni( stConfigValues.ucReserved1            , -1, 17);  /* reserved                      */
          hb_storni( stConfigValues.ucReserved2            , -1, 18);  /* reserved                      */
@@ -408,13 +408,25 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
       for ( ulCount = 1; ulCount <= ulMaxUsers; ulCount++ )
       {
          pArrayItm = hb_arrayGetItemPtr( pArray, ulCount );
+#if ADS_REQUIRE_VERSION >= 800
+         hb_arrayNew( pArrayItm, 6 );
+#else
          hb_arrayNew( pArrayItm, 3 );
+#endif
          hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 1 ),
                       ( char * ) pastUserInfo[ulCount].aucUserName );
          hb_itemPutNL( hb_arrayGetItemPtr( pArrayItm, 2 ),
                        pastUserInfo[ulCount].usConnNumber );
          hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 3 ),
                       ( char * ) pastUserInfo[ulCount].aucAddress );
+#if ADS_REQUIRE_VERSION >= 800
+         hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 4 ),
+                      ( char * ) pastUserInfo[ulCount].aucAuthUserName );
+         hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 5 ),
+                      ( char * ) pastUserInfo[ulCount].aucOSUserLoginName );
+         hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 6 ),
+                      ( char * ) pastUserInfo[ulCount].aucTSAddress );
+#endif
       }
       hb_itemReturnRelease( pArray );
    }

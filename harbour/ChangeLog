@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-23 22:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/adsfunc.c
+     + Added these functions:
+       ADSCREATESAVEPOINT() (for ADS 8 and above)
+       ADSROLLBACKSAVEPOINT() (for ADS 8 and above)
+       ADSDDCREATELINK() (for ADS 9 and above)
+       ADSDDMODIFYLINK() (for ADS 9 and above)
+       ADSDDDROPLINK() (for ADS 9 and above)
+     + Extended AdsMgGetUserNames() to return aucAuthUserName,
+       aucOSUserLoginName and aucTSAddress from ADS_MGMT_USER_INFO
+       structure. Only available for ADS >= 8.
+     ; Borrowed from xhb / Luiz Rafael Culik.
+
+   * contrib/rddads/ads1.c
+     + Made it compile with ADS 9.
+
+   * contrib/rddads/adsmgmnt.c
+     ! Fixed ADS_VER -> ADS_REQUIRE_VERSION
+
 2008-04-23 20:11 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tget.prg
      + Some protected object vars renamed to better show their roles.

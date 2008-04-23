@@ -2860,8 +2860,12 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    u32RetVal = AdsGetHandleType( hConnection, &pusType);
    if( u32RetVal == AE_SUCCESS )
    {
+#if ADS_REQUIRE_VERSION >= 900
+      fDictionary = ( pusType == ADS_DATABASE_CONNECTION );
+#else
       fDictionary = ( pusType == ADS_DATABASE_CONNECTION
                    || pusType == ADS_SYS_ADMIN_CONNECTION );
+#endif
    }
    szFile = ( char * ) pOpenInfo->abName;
 
