@@ -85,6 +85,7 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
 
    /* create list of object messages */
    aMessages := oObject:classSel()
+   ASort( aMessages,,, {|x,y| PAdR( x, 64 ) <= PAdR( y, 64 ) } )
    aMethods := {}
    FOR EACH cMsg IN aMessages
       IF Left( cMsg, 1 ) == "_" .AND. ;
@@ -97,7 +98,7 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
       ENDIF
    NEXT
    FOR EACH cMsg IN aMethods
-      AAdd( ::pItems, { cMsg, "Method", .F. } )
+      AAdd( ::pItems, { Lower( cMsg ), "Method", .F. } )
       AAdd( ::AllNames, cMsg )
    NEXT
 
@@ -137,6 +138,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
    oBrwSets := HBDbBrowser():New( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
    ::ArrayReference := aArray
 
+   oBrwSets:autolite := .T.
    oBrwSets:ColorSpec := __Dbg():ClrModal()
    oBrwSets:GoTopBlock := { || ::Arrayindex := 1 }
    oBrwSets:GoBottomBlock := { || ::arrayindex := Len( ::ArrayReference ) }
@@ -181,19 +183,12 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    LOCAL bInsSave   := SetKey( K_INS )
    LOCAL cValue
    LOCAL lCanAcc
+   LOCAL oErr
 
    // make sure browse is stable
    oBrowse:forceStable()
    // if confirming new record, append blank
 
-
-
-   // set insert key to toggle insert mode and cursor
-   SetKey( K_INS, { || SetCursor( iif( ReadInsert( ! ReadInsert() ),;
-           SC_NORMAL, SC_INSERT ) ) } )
-
-   // initial cursor setting
-   SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
    // get column object from browse
    column := oBrowse:getColumn( oBrowse:colPos )
@@ -205,7 +200,15 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
       RETURN NIL
    ENDIF
    cValue := PadR( __dbgValToStr( cValue ), column:Width )
-   @ Row(), Col() GET cValue ;
+
+   // set insert key to toggle insert mode and cursor
+   SetKey( K_INS, { || SetCursor( iif( ReadInsert( ! ReadInsert() ),;
+                                       SC_NORMAL, SC_INSERT ) ), inkey(0) } )
+
+   // initial cursor setting
+   SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+
+   @ Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1 GET cValue ;
        VALID iif( Type( cValue ) == "UE", ( Alert( "Expression error" ), .F. ), .T. )
 
    READ
@@ -216,7 +219,11 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    SetKey( K_INS, bInsSave )
 
    IF LastKey() == K_ENTER
-      __dbgObjSetValue( ::TheObj, pitem[ nSet, 1 ], &cValue )
+      BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
+         __dbgObjSetValue( ::TheObj, pitem[ nSet, 1 ], &cValue )
+      RECOVER USING oErr
+         Alert( oErr:description )
+      END SEQUENCE
    ENDIF
 
    // check exit key from get

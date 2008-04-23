@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-23 02:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/dbgbrwsr.prg
+    * respect oCol:colorBlock() used by debugger code in few places
+
+  * harbour/source/debug/dbgtobj.prg
+    * sort messages and show methods in lower letters just like Clipper
+
+  * harbour/source/debug/dbgtobj.prg
+  * harbour/source/debug/dbgthsh.prg
+  * harbour/source/debug/dbgtarr.prg
+    ! added protection against RT error when user type wrong expression 
+      in OBJECT, ARRAY and HASH inspectors
+
 2008-04-22 20:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbclass.ch
   * harbour/include/hbcomp.h

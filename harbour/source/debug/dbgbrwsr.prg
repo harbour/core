@@ -146,7 +146,7 @@ METHOD MoveCursor( nSkip )
    RETURN Self
 
 METHOD ForceStable()
-   LOCAL nRow, nCol, xData, oCol, nColX, nWid, xOldColor := SetColor()
+   LOCAL nRow, nCol, xData, oCol, nColX, nWid, aClr, nClr
 
    IF !::lConfigured
        ::Configure()
@@ -155,21 +155,26 @@ METHOD ForceStable()
       IF Empty( ::aRowState[ nRow ] )
          ::GoTo( ::nFirstVisible + nRow - 1 )
          IF ::hitBottom
-            SetColor( ::aColorSpec[ 1 ] )
-            @ ::nTop + nRow - 1, ::nLeft SAY Space( ::nRight - ::nLeft + 1 )
+            DispOutAt( ::nTop + nRow - 1, ::nLeft, Space( ::nRight - ::nLeft + 1 ), ::aColorSpec[ 1 ] )
          ELSE
             nColX := ::nLeft
             FOR nCol := 1 TO Len( ::aColumns )
                IF nColX <= ::nRight
                   oCol := ::aColumns[ nCol ]
-                  SetColor( ::aColorSpec[ oCol:defColor[ IIf( nRow == ::rowPos, 2, 1 ) ] ] )
                   xData := Eval( oCol:block )
+                  nClr := IIf( nRow == ::rowPos, 2, 1 )
+                  aClr := Eval( oCol:colorBlock, xData )
+                  IF VALTYPE( aClr ) == "A"
+                     nClr := aClr[ nClr ]
+                  ELSE
+                     nClr := oCol:defColor[ nClr ]
+                  ENDIF
                   IF oCol:width == NIL
                      nWid := Len( xData )
                   ELSE
                      nWid := oCol:width
                   ENDIF
-                  @ ::nTop + nRow - 1, nColX SAY PadR( xData, nWid ) + IIf( nCol < Len( ::aColumns ), " ", "" )
+                  DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + IIf( nCol < Len( ::aColumns ), " ", "" ), ::aColorSpec[ nClr ] )
                   nColX += nWid + 1
                ENDIF
             NEXT
@@ -178,7 +183,6 @@ METHOD ForceStable()
       ENDIF
    NEXT
    ::GoTo( ::nFirstVisible + ::rowPos - 1 )
-   SetColor( xOldColor )
    SetPos( ::nTop + ::rowPos - 1, ::nLeft )
    RETURN Self
 

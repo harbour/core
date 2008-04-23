@@ -163,6 +163,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbHash
 #ifndef HB_NO_READDBG
 
    LOCAL nKey
+   LOCAL oErr
    LOCAL GetList := {}
    LOCAL lScoreSave := Set( _SET_SCOREBOARD, .F. )
    LOCAL lExitSave  := Set( _SET_EXIT, .T. )
@@ -188,7 +189,11 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbHash
    READ
 
    IF LastKey() == K_ENTER
-      HB_HValueAt( pItem, nSet, &cValue )
+      BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
+         HB_HValueAt( pItem, nSet, &cValue )
+      RECOVER USING oErr
+         Alert( oErr:description )
+      END SEQUENCE
    ENDIF
 
    SetCursor( SC_NONE )
