@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-23 20:11 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tget.prg
+     + Some protected object vars renamed to better show their roles.
+     ! Fixed ::setFocus() to not mess with width related vars.
+     ! Fixed ::PutMask() to not mess with display width.
+     ! Fixed ::varPut() to only accept certain var types.
+     ! Fixed ::picture() to more consistently reset picture related vars.
+     ! Hack added to ::Reform() to try to set ::nDispLen like CA-Cl*pper.
+     ! Fixed ::posInBuffer() to only work when in focus.
+       (I didn't test if this is XPP compatible, but it surely avoids 
+       a possible RTE now.)
+     ! Removed ::display() non-compatible 'lForce' parameter.
+     ! Minor cleanups.
+     ; NOTE: Now o[16] (aka ::nDispLen) is almost totally CA-Cl*pper 
+             compatible.
+
+   * tests/rto_get.prg
+     + Added some more tests.
+
 2008-04-23 18:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/achoice.prg
    * source/rtl/alert.prg

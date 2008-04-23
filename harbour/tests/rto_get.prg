@@ -223,6 +223,13 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_LINE( o:display() )
    TEST_LINE( o:VarPut(NIL) )
    TEST_LINE( o:VarPut(Replicate("b", 20)) )
+   TEST_LINE( o:VarPut({|| "" }) )
+   TEST_LINE( o:setFocus() )
+   TEST_LINE( o:VarPut({|| "" }) )
+   TEST_LINE( o:VarPut({}) )
+   TEST_LINE( o:VarPut(ErrorNew()) )
+
+   cStr06 := ""
 
    SetPos( 14, 16 ) ; o := _GET_( cStr06, "cStr06",,, )
    TEST_LINE( o:VarPut(Replicate("a", 30)) )
