@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-23 09:46 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    ! fixed some combinations of user functions in stream pragmas, f.e.:
+         #pragma __cstream|f1(%s)|f2()
+      or:
+         #pragma __cstream||f2(%s)
+    + added support for:
+         #pragma __[c]streaminclude "fileName"|<code with %s result marker>
+      f.e.:
+         #pragma __streaminclude "foo1.html"|cHtml:=%s
+      __cstreaminclude decode C like escape sequences, __streaminclude
+      doesn't do that and takes file body in raw form. Maximum file size
+      is arbitrary set to 65520.
+
 2008-04-23 02:32 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
   * contrib/hbgd/gdimage.prg
     ! Fixed at gdimage.prg(271):

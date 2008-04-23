@@ -88,12 +88,13 @@
 #define HB_PP_ERR_PRAGMA                        24    /* C20?? */
 #define HB_PP_ERR_DIRECTIVE_IF                  25    /* C20?? */
 #define HB_PP_ERR_CANNOT_OPEN_INPUT             26    /* C30?? */
-#define HB_PP_ERR_CANNOT_CREATE_FILE            27    /* C3006 */
-#define HB_PP_ERR_CANNOT_OPEN_FILE              28    /* C3007 */
-#define HB_PP_ERR_WRONG_FILE_NAME               29    /* C3008 */
-#define HB_PP_ERR_NESTED_INCLUDES               30    /* C3009 */
-#define HB_PP_ERR_INVALID_DIRECTIVE             31    /* C3010 */
-#define HB_PP_ERR_CANNOT_OPEN_RULES             32    /* C3011 */
+#define HB_PP_ERR_FILE_TOO_LONG                 27    /* C30?? */
+#define HB_PP_ERR_CANNOT_CREATE_FILE            28    /* C3006 */
+#define HB_PP_ERR_CANNOT_OPEN_FILE              29    /* C3007 */
+#define HB_PP_ERR_WRONG_FILE_NAME               30    /* C3008 */
+#define HB_PP_ERR_NESTED_INCLUDES               31    /* C3009 */
+#define HB_PP_ERR_INVALID_DIRECTIVE             32    /* C3010 */
+#define HB_PP_ERR_CANNOT_OPEN_RULES             33    /* C3011 */
 
 
 /* warning messages */
@@ -133,6 +134,8 @@ static const char * hb_pp_szErrors[] =
    "Error in #if expression",                                           /* C20?? */
 
    "Cannot open input file: %s'",                                       /* C30?? */
+
+   "File %s is too long",                                               /* C30?? */
 
    "Can't create preprocessed output file",                             /* C3006 */
    "Can't open #include file: '%s'",                                    /* C3007 */
@@ -1031,17 +1034,27 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             else if( hb_pp_hasCommand( pBuffer, ulLen, &ul, 1, "ENDTEXT" ) ||
                      hb_pp_hasCommand( pBuffer, ulLen, &ul, 3, "#", "pragma", "__endtext" ) )
             {
-               if( pState->iStreamDump != HB_PP_STREAM_CLIPPER )
+               if( pState->iStreamDump == HB_PP_STREAM_CLIPPER )
+               {
+                  if( pState->pFuncEnd )
+                     hb_pp_tokenAddStreamFunc( pState, pState->pFuncEnd, NULL, 0 );
+               }
+               else
                {
                   /* HB_PP_STREAM_PRG, HB_PP_STREAM_C */
                   hb_pp_tokenAddStreamFunc( pState, pState->pFuncOut,
                                             hb_membufPtr( pState->pStreamBuffer ),
                                             hb_membufLen( pState->pStreamBuffer ) );
+                  if( pState->pFuncEnd )
+                  {
+                     if( pState->pFuncOut )
+                        hb_pp_tokenAddCmdSep( pState );
+                     hb_pp_tokenAddStreamFunc( pState, pState->pFuncEnd,
+                                               hb_membufPtr( pState->pStreamBuffer ),
+                                               hb_membufLen( pState->pStreamBuffer ) );
+                  }
                   hb_membufFlush( pState->pStreamBuffer );
                }
-               if( pState->pFuncEnd )
-                  hb_pp_tokenAddStreamFunc( pState, pState->pFuncEnd, NULL, 0 );
-
                hb_pp_tokenListFree( &pState->pFuncOut );
                hb_pp_tokenListFree( &pState->pFuncEnd );
                pState->iStreamDump = HB_PP_STREAM_OFF;
@@ -2059,9 +2072,60 @@ static BOOL hb_pp_pragmaStream( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    BOOL fError = FALSE;
 
    pToken = hb_pp_streamFuncGet( pToken, &pState->pFuncOut );
-   hb_pp_streamFuncGet( pToken, &pState->pFuncEnd );
+   pToken = hb_pp_streamFuncGet( pToken, &pState->pFuncEnd );
+   if( pToken && HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_PIPE )
+   {
+      hb_pp_tokenSetValue( pToken, ";", 1 );
+      HB_PP_TOKEN_SETTYPE( pToken, HB_PP_TOKEN_EOC );
+   }
 
    return fError;
+}
+
+#define MAX_STREAM_SIZE       0xFFF0
+
+static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, char * szFileName )
+{
+   PHB_PP_FILE pFile = hb_pp_FileNew( pState, szFileName, FALSE, NULL, NULL,
+                                      TRUE, pState->pOpenFunc );
+   if( pFile )
+   {
+      char * pBuffer = ( char * ) hb_xgrab( MAX_STREAM_SIZE + 1 );
+      ULONG ulSize;
+
+      if( ! pState->pStreamBuffer )
+         pState->pStreamBuffer = hb_membufNew();
+
+      ulSize = fread( pBuffer, sizeof( char ), MAX_STREAM_SIZE + 1, pFile->file_in );
+      hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
+      if( ulSize <= MAX_STREAM_SIZE )
+      {
+         if( pState->iStreamDump == HB_PP_STREAM_C )
+            hb_strRemEscSeq( pBuffer, &ulSize );
+         hb_membufAddData( pState->pStreamBuffer, pBuffer, ulSize );
+         if( pState->pFuncOut )
+            hb_pp_tokenAddStreamFunc( pState, pState->pFuncOut,
+                                      hb_membufPtr( pState->pStreamBuffer ),
+                                      hb_membufLen( pState->pStreamBuffer ) );
+         if( pState->pFuncEnd )
+         {
+            if( pState->pFuncOut )
+               hb_pp_tokenAddCmdSep( pState );
+            hb_pp_tokenAddStreamFunc( pState, pState->pFuncEnd,
+                                      hb_membufPtr( pState->pStreamBuffer ),
+                                      hb_membufLen( pState->pStreamBuffer ) );
+         }
+         hb_membufFlush( pState->pStreamBuffer );
+      }
+      else
+         hb_pp_error( pState, 'F', HB_PP_ERR_FILE_TOO_LONG, szFileName );
+      hb_xfree( pBuffer );
+   }
+   else
+      hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_OPEN_FILE, szFileName );
+
+   hb_pp_tokenListFree( &pState->pFuncOut );
+   hb_pp_tokenListFree( &pState->pFuncEnd );
 }
 
 static BOOL hb_pp_pragmaOperatorNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
@@ -2300,6 +2364,36 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
             if( ! pState->pStreamBuffer )
                pState->pStreamBuffer = hb_membufNew();
          }
+      }
+      else if( hb_pp_tokenValueCmp( pToken, "__streaminclude", HB_PP_CMP_DBASE ) )
+      {
+         if( pToken->pNext && HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_STRING )
+         {
+            fError = hb_pp_pragmaStream( pState, pToken->pNext->pNext );
+            if( !fError )
+            {
+               pState->iStreamDump = HB_PP_STREAM_PRG;
+               hb_pp_pragmaStreamFile( pState, pToken->pNext->value );
+               pState->iStreamDump = HB_PP_STREAM_OFF;
+            }
+         }
+         else
+            fError = TRUE;
+      }
+      else if( hb_pp_tokenValueCmp( pToken, "__cstreaminclude", HB_PP_CMP_DBASE ) )
+      {
+         if( pToken->pNext && HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_STRING )
+         {
+            fError = hb_pp_pragmaStream( pState, pToken->pNext->pNext );
+            if( !fError )
+            {
+               pState->iStreamDump = HB_PP_STREAM_C;
+               hb_pp_pragmaStreamFile( pState, pToken->pNext->value );
+               pState->iStreamDump = HB_PP_STREAM_OFF;
+            }
+         }
+         else
+            fError = TRUE;
       }
       else if( hb_pp_tokenValueCmp( pToken, "__endtext", HB_PP_CMP_DBASE ) )
       {
