@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-23 02:32 UTC-0500 Teo Fonrouge (teo/at/windtelsoft/dot/com)
+  * contrib/hbgd/gdimage.prg
+    ! Fixed at gdimage.prg(271):
+      "Warning W0019  Duplicate declaration of Method 'GETTRUECOLOR'"
+      the method was having a INLINE to the gdImageTrueColorPixel() function
+      and the fix simply renamed the method name from 'GetTrueColor' to
+      'GetTrueColorPixel'. Please, someone used to the hbgd lib check if the
+      new method name is correct.
+
 2008-04-23 02:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/dbgbrwsr.prg
     * respect oCol:colorBlock() used by debugger code in few places
