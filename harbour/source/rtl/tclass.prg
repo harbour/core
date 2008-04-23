@@ -296,10 +296,12 @@ STATIC PROCEDURE Create()
 //----------------------------------------------------------------------------//
 
 STATIC FUNCTION Instance()
- LOCAL Self := QSelf()
- Local oInstance := __clsInst( ::hClass )
- /*oInstance:Class := Self:Class*/
-RETURN oInstance
+   LOCAL Self := QSelf()
+   LOCAL oInstance := __clsInst( ::hClass )
+
+   /*oInstance:Class := Self:Class*/
+
+   RETURN oInstance
 
 //----------------------------------------------------------------------------//
 

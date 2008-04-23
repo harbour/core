@@ -295,7 +295,7 @@ STATIC FUNCTION StatLine( oBrw, lAppend )
 
    DispOutAt( nTop, nRight - 27, "Record " )
 
-   IF LastRec() == 0 .and. ! lAppend
+   IF LastRec() == 0 .AND. ! lAppend
       DispOutAt( nTop, nRight - 20, "<none>               " )
    ELSEIF RecNo() == LastRec() + 1
       DispOutAt( nTop, nRight - 40, "         " )

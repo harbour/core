@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-23 18:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/achoice.prg
+   * source/rtl/alert.prg
+   * source/rtl/browse.prg
+   * source/rtl/einstv52.prg
+   * source/rtl/einstvar.prg
+   * source/rtl/persist.prg
+   * source/rtl/tclass.prg
+   * source/rtl/teditor.prg
+   * source/rtl/typefile.prg
+   * source/rtl/wait.prg
+     * Formatting.
+     * != -> !( == ) for strings.
+
 2008-04-23 14:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tget.prg
      ! Fixed o[13] and o[14] content (they were swapped) in C5.3 mode.

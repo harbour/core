@@ -112,7 +112,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
       aOptions := {}
    ENDIF
 
-   IF !ISCHARACTER( cColorNorm ) .or. EMPTY( cColorNorm )
+   IF !ISCHARACTER( cColorNorm ) .OR. EMPTY( cColorNorm )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
       cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE

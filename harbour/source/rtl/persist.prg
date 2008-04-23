@@ -130,7 +130,7 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
       uNewValue := __objSendMsg( oNew, aProperties[ n ] )
       cType  := ValType( uValue )
 
-      if cType != ValType( uNewValue ) .OR. ! uValue == uNewValue
+      if !( cType == ValType( uNewValue ) ) .OR. ! uValue == uNewValue
 
          do case
             case cType == "A"

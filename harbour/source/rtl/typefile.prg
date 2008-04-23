@@ -108,7 +108,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
       oErr:OsCode      := FERROR()
       oErr:tries       := ++nRetries
       xRecover := Eval( ErrorBlock(), oErr )
-      IF ISLOGICAL( xRecover ) .and. !xRecover      // user select "Default"
+      IF ISLOGICAL( xRecover ) .AND. !xRecover      // user select "Default"
          RETURN
       ENDIF
    ENDDO

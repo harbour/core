@@ -89,7 +89,7 @@ FUNCTION __eInstVar52( oVar, cMethod, xValue, cType, nSubCode, xMin, xMax )
       oError:subcode := nSubCode
       oError:args := { xValue }
       xValue := EVAL( ERRORBLOCK(), oError )
-      IF VALTYPE( xValue ) != cType
+      IF !( VALTYPE( xValue ) == cType )
          __errInHandler()
       ENDIF
    ENDIF

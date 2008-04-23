@@ -131,7 +131,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             nPos := 0
             nAtTop := Max( 1, nPos - nNumRows + 1 )
          ELSE
-            DO WHILE nPos < nLastItem .and. !Eval( bSelect, alSelect[ nPos ] )
+            DO WHILE nPos < nLastItem .AND. !Eval( bSelect, alSelect[ nPos ] )
                nPos++
             ENDDO
 
@@ -455,7 +455,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             // Do nothing
             nMode := AC_CONT
          CASE nUserFunc == AC_GOTO
-            // Do nothing.  The next keystroke won't be read and
+            // Do nothing. The next keystroke won't be read and
             // this keystroke will be processed as a goto.
             nMode := AC_GOTO
          ENDCASE
@@ -469,7 +469,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
                nPos := 0
                nAtTop := Max( 1, nPos - nNumRows + 1 )
             ELSE
-               DO WHILE nPos < nLastItem .and. !Eval( bSelect, alSelect[ nPos ] )
+               DO WHILE nPos < nLastItem .AND. !Eval( bSelect, alSelect[ nPos ] )
                   nPos++
                ENDDO
 
@@ -562,7 +562,7 @@ STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, bSelect, alSelect, acI
    ELSE
       nMode     := AC_IDLE
       nLastItem := nItems               // Last valid item
-      DO WHILE nLastItem>0 .and. !Eval( bSelect, alSelect[ nLastItem ] )
+      DO WHILE nLastItem > 0 .AND. !Eval( bSelect, alSelect[ nLastItem ] )
          nLastItem--
       ENDDO
    ENDIF
