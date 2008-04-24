@@ -214,7 +214,7 @@ CLASS GDImage
    METHOD CreatePaletteFromTrueColor( lDither, nColorsWanted ) ;
                                            INLINE gdImageCreatePaletteFromTrueColor( ::pImage, lDither, nColorsWanted )
    METHOD GetPalette( x, y )               INLINE gdImagePalettePixel( ::pImage, x, y )
-   METHOD GetTrueColorPixel( x, y )        INLINE gdImageTrueColorPixel( ::pImage, x, y )
+   METHOD GetTrueColor( x, y )             INLINE gdImageTrueColorPixel( ::pImage, x, y )
    METHOD GetThickness()                   INLINE gdImageGetThickness( ::pImage )
 
    /* FONTS AND TEXT-HANDLING FUNCTIONS */
@@ -267,9 +267,6 @@ CLASS GDImage
    METHOD SetInterlace( lOnOff )           INLINE gdImageInterlace( ::pImage, lOnOff )
    METHOD SetInterlaceOn()                 INLINE gdImageInterlace( ::pImage, TRUE )
    METHOD SetInterlaceOff()                INLINE gdImageInterlace( ::pImage, FALSE )
-
-   METHOD GetTrueColor( r, g, b )          INLINE gdTrueColor( r, g, b )
-   METHOD GetTrueColorAlpha( r, g, b, a )  INLINE gdTrueColorAlpha( r, g, b, a )
 
    /* COPY AND RESIZING FUNCTIONS */
    METHOD Copy()

@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-24 13:00 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * contrib/hbgd/gdimage.prg
+    * removed two method that simply call public function
+	 * renamed GetTrueColorPixel back to GetTrueColor
+  * contrib/hbtip/sendmail.prg
+  * contrib/hbtip/smtpcln.prg
+    * added support for smtp with authentication
+	 * added timeout parameter
+	 * borrowed from xHarbour
+
 2008-04-24 11:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/achoice.prg
      ! Fixed to abort (rather than crash), when user callback 
