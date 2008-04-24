@@ -292,7 +292,9 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       outstd( "          /chm Generate HTML source files for Windows .chm Help files"+ hb_osnewline() )
       outstd( "          /ch2 Generate HTML source files for Windows .chm Help files"+ hb_osnewline() )
       outstd( "               (new doc model)"+ hb_osnewline() ) 
+#ifdef HBDOC_PDF
       outstd( "          /pdf Generate an Adobe Portable Document (.PDF)"+ hb_osnewline() )
+#endif
       outstd( "          /trf Gerenate Linux TROFF code"+ hb_osnewline() )
       outstd( "          /doc Create continuous ASCII file w/o author information"+ hb_osnewline() )
       outstd( " "+ hb_osnewline() )
@@ -400,11 +402,11 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             ELSEIF lRtf
                aRtfid := ProcessRtf()
 //             tracelog(aRtfid,aRtfid[1])
+#ifdef HBDOC_PDF
             ELSEIF lPdf
-            #ifdef PDF
                ProcessPDF(.t.)
                ProcessPDF(.f.)
-         #endif
+#endif
             ELSEIF lWww
                ProcessWww()
             ELSEIF lWww2
@@ -435,11 +437,11 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             ASCIIFILES()
          ELSEIF lNorton
             ProcessFiles()
+#ifdef HBDOC_PDF
          ELSEIF lPdf
-         #ifdef PDF
             ProcessPDF(.t.)
             ProcessPDF(.f.)
-         #endif
+#endif
          ELSEIF lRtf
              aRtfid := ProcessRtf()
 //                          tracelog(aRtfid,aRtfid[1])

@@ -167,7 +167,7 @@ $(OBJ_DIR);\
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
 {$(ALL_LIB_SRC_DIRS)}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
-    $(CC) $(CLIBFLAGS) -P -o$@ $(OBJ_DIR)\$&.c
+    $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)\$&.c
 #**********************************************************
 
 !include common.mak

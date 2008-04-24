@@ -51,9 +51,7 @@
 #                           Harbour will be installed when the command
 #                           "make_bc.bat install" is lauched. Defaults
 #                           to current directory
-#
-#       HB_DOC_PDF        - Turns on the .PDF file support in the HBDOC utility.
-#                           Note that this will require the pdflib contrib.
+
 #**********************************************************
 
 #.KEEP
@@ -149,9 +147,6 @@ CEXEFLAGSDLL   = -tWM $(CLIBFLAGSxxx) $(CEXEFLAGSDLL)
 
 # Harbour Compiler Flags
 HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -gc0 -kM $(PRG_USR)
-!ifdef HB_DOC_PDF
-    HBFLAGSCMN = $(HBFLAGSCMN) -dPDF
-!endif
 HARBOURFLAGS   = -n $(HBFLAGSCMN) $(HARBOURFLAGS)
 HARBOURFLAGSDLL= -D__EXPORT__ -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 

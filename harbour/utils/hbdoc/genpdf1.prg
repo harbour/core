@@ -50,6 +50,8 @@
  *
  */
 
+#ifdef HBDOC_PDF
+
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
@@ -1450,5 +1452,6 @@ nSize:=Len(aItems4)
 endif
 Return nSize
 
+#endif
 
 *+ EOF: GENNG.PRG

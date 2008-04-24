@@ -148,10 +148,6 @@ HBDOC_DIR    = utils\hbdoc
 HBMAKE_DIR   = utils\hbmake
 HBVER_DIR    = utils\hbver
 
-!ifdef HB_DOC_PDF
-HBPDF_DIR   = contrib\pdflib
-!endif
-
 #**********************************************************
 
 # Where Bcc-Make should look for C and PRG sources
@@ -1076,6 +1072,7 @@ HBDOC_EXE_OBJS = \
     $(OBJ_DIR)\genos2$(OBJEXT)   \
     $(OBJ_DIR)\genrtf$(OBJEXT)   \
     $(OBJ_DIR)\gentrf$(OBJEXT)   \
+    $(OBJ_DIR)\genpdf1$(OBJEXT)  \
     $(OBJ_DIR)\teeasc$(OBJEXT)   \
     $(OBJ_DIR)\html$(OBJEXT)     \
     $(OBJ_DIR)\ng$(OBJEXT)       \
@@ -1085,17 +1082,6 @@ HBDOC_EXE_OBJS = \
     $(OBJ_DIR)\fclass1$(OBJEXT)  \
     $(OBJ_DIR)\ffile1$(OBJEXT)   \
     $(OBJ_DIR)\ft_funcs$(OBJEXT) \
-
-!ifdef HB_DOC_PDF
-
-# PDF support for HBDOC
-HBDOC_EXE_OBJS = \
-    $(HBDOC_EXE_OBJS)            \
-    $(OBJ_DIR)\pdfhbdoc$(OBJEXT) \
-    $(OBJ_DIR)\genpdf1$(OBJEXT)  \
-
-
-!endif
 
 #**********************************************************
 

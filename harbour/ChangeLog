@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-24 21:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * make_vcce.mak
+   * make_b32.mak
+   * make_gcc.mak
+   * make_vc.mak
+   * utils/hbdoc/Makefile
+   * utils/hbdoc/hbdoc.prg
+   * utils/hbdoc/genpdf1.prg
+     - Removed pdflib references from make file, since the 
+       contrib was not working and got removed.
+     + PDF enabling logic in HBDOC made local to HBDOC.
+       Now HBDOC_PDF should be #defined in HARBOURFLAGS 
+       (or PRG_USR) envvar, proper pdf library should be 
+       specified using LDFLAGS envvar.
+
+   * contrib/mtpl_b32.mak
+     ! Removed permanent '-P' C compiler switch 
+       from .prg -> .c rule. Thanks Rafa.
+       Marek pls check me.
+
 2008-04-24 13:00 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * contrib/hbgd/gdimage.prg
     * removed two method that simply call public function

@@ -49,9 +49,6 @@
 #                           to current directory
 #       HB_VISUALC_VER    - Version of Visual C++ compiler (defaults to 60).
 #                           Possible values are : 60, 70, 71, 80
-#
-#       HB_DOC_PDF        - Turns on the .PDF file support in the HBDOC utility.
-#                           Note that this will require the pdflib contrib.
 
 #**********************************************************
 
@@ -160,9 +157,6 @@ CEXEFLAGSDLL   = -MT$(DBGMARKER) $(CLIBFLAGS) $(CEXEFLAGSDLL)
 
 # Harbour Compiler Flags
 HBFLAGSCMN     = -i$(INCLUDE_DIR) -q0 -w3 -es2 -gc0 -kM $(PRG_USR)
-!ifdef HB_DOC_PDF
-HBFLAGSCMN  = $(HBFLAGSCMN) -dPDF
-!endif
 HARBOURFLAGS   = -n $(HBFLAGSCMN) $(HARBOURFLAGS)
 HARBOURFLAGSDLL= -D__EXPORT__ -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 

@@ -18,6 +18,7 @@ PRG_SOURCES=\
 	genrtf.prg \
 	genhpc.prg \
 	genasc.prg \
+	genpdf1.prg \
 	teeasc.prg \
 	html.prg \
 	ng.prg \
