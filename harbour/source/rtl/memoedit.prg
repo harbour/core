@@ -81,7 +81,7 @@ METHOD MemoInit( xUserFunction ) CLASS HBMemoEditor
    ::xUserFunction := xUserFunction
 
    IF ISCHARACTER( ::xUserFunction )
-      // Keep calling user function until it returns 0
+      // Keep calling user function until it returns ME_DEFAULT
       DO WHILE ( nKey := ::xDo( ME_INIT ) ) != ME_DEFAULT
 
          // At this time there is no input from user of MemoEdit() only handling
@@ -223,6 +223,11 @@ METHOD HandleUserKey( nKey, nUserKey ) CLASS HBMemoEditor
    CASE nUserKey == ME_BOTTOMRIGHT
       ::MoveCursor( K_CTRL_END )
 
+#ifdef HB_COMPAT_XPP
+   CASE nUserKey == ME_PASTE
+      // TODO
+#endif
+
    OTHERWISE
       // Do nothing
    ENDCASE
@@ -236,6 +241,10 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
    LOCAL nOldCur := SetCursor()
    
    LOCAL xResult := Do( ::xUserFunction, nStatus, ::nRow, ::nCol - 1 )
+
+   IF ! ISNUMBER( xResult )
+      xResult := ME_DEFAULT
+   ENDIF
 
    ::SetPos( nOldRow, nOldCol )
    SetCursor( nOldCur )

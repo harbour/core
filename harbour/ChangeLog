@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-24 10:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/memoedit.ch
+   * source/rtl/memoedit.prg
+     ! XPP feature marked with HB_COMPAT_XPP.
+     ! Fixed to not crash if user callback function 
+       returns non-numeric type.
+
 2008-04-24 10:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/xhb/xhb.ch
    * contrib/xhb/xhbfunc.c
