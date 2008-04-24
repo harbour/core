@@ -55,8 +55,6 @@
 #include "hbapiitm.h"
 #include "hbapigt.h"
 
-HB_FUNC_EXTERN( __KEYBOARD );
-
 HB_FUNC( XHB__KEYBOARD )
 {
    /* Clear the typeahead buffer without reallocating the keyboard buffer */
@@ -83,11 +81,11 @@ HB_FUNC( XHB__KEYBOARD )
       {
          PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulIndex );
 
-         if ( HB_IS_NUMBER( pItem ) )
+         if( HB_IS_NUMBER( pItem ) )
          {
             hb_inkeySetText( NULL, ( ULONG ) hb_itemGetNL( pItem ) );
          }
-         else if ( HB_IS_STRING( pItem ) )
+         else if( HB_IS_STRING( pItem ) )
          {
             hb_inkeySetText( ( const char * ) hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
          }
