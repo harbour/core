@@ -296,6 +296,9 @@ STATIC FUNCTION dbEditCallUser( oBrowse, xUserFunc, nKey )
    nPrevRecNo := RecNo()
 
    IF ( ISCHARACTER( xUserFunc ) .AND. !Empty( xUserFunc ) ) .OR. ISBLOCK( xUserFunc )
+      /* NOTE: CA-Cl*pper won't check the type of the return value here, 
+               and will crash if it's a non-NIL, non-numeric type. We're 
+               replicating this behavior. */
       nResult := Do( xUserFunc, nMode, oBrowse:ColPos() )
    ELSE
       nResult := iif( nKey == K_ENTER .OR. nKey == K_ESC, DE_ABORT, DE_CONT )

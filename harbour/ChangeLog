@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-24 11:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/achoice.prg
+     ! Fixed to abort (rather than crash), when user callback 
+       function returns a non-numeric type. This is CA-Cl*pper 
+       compatible behaviour.
+
+   * source/rtl/dbedit.prg
+     + Documented CA-Cl*pper behaviour when it crashes if 
+       a non-numeric (and non-NIL) var is returned from 
+       the user callback function.
+
 2008-04-24 10:51 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/memoedit.ch
    * source/rtl/memoedit.prg

@@ -443,53 +443,58 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
       IF lUserFunc
 
          nUserFunc := Do( xUserFunc, nMode, nPos, nPos - nAtTop )
-         // DISPVAR nUserFunc
 
-         DO CASE
-         CASE nUserFunc == AC_ABORT .OR. nMode == AC_NOITEM
-            lFinished := .T.
-            nPos      := 0
-         CASE nUserFunc == AC_SELECT
-            lFinished := .T.
-         CASE nUserFunc == AC_CONT .OR. nUserFunc == AC_REDRAW
-            // Do nothing
-            nMode := AC_CONT
-         CASE nUserFunc == AC_GOTO
-            // Do nothing. The next keystroke won't be read and
-            // this keystroke will be processed as a goto.
-            nMode := AC_GOTO
-         ENDCASE
-
-         IF nPos > 0 .AND. nMode != AC_GOTO
-
-            nRowsClr := Min( nNumRows, nItems )
-            nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, bSelect, alSelect, acItems )
-
-            IF nMode == AC_NOITEM
-               nPos := 0
-               nAtTop := Max( 1, nPos - nNumRows + 1 )
-            ELSE
-               DO WHILE nPos < nLastItem .AND. !Eval( bSelect, alSelect[ nPos ] )
-                  nPos++
-               ENDDO
-
-               IF nPos > nLastItem
-                  nPos := BETWEEN( nFrstItem, nPos, nLastItem )
+         IF ISNUMBER( nUserFunc )
+            
+            DO CASE
+            CASE nUserFunc == AC_ABORT .OR. nMode == AC_NOITEM
+               lFinished := .T.
+               nPos      := 0
+            CASE nUserFunc == AC_SELECT
+               lFinished := .T.
+            CASE nUserFunc == AC_CONT .OR. nUserFunc == AC_REDRAW
+               // Do nothing
+               nMode := AC_CONT
+            CASE nUserFunc == AC_GOTO
+               // Do nothing. The next keystroke won't be read and
+               // this keystroke will be processed as a goto.
+               nMode := AC_GOTO
+            ENDCASE
+            
+            IF nPos > 0 .AND. nMode != AC_GOTO
+            
+               nRowsClr := Min( nNumRows, nItems )
+               nMode := Ach_Limits( @nFrstItem, @nLastItem, @nItems, bSelect, alSelect, acItems )
+            
+               IF nMode == AC_NOITEM
+                  nPos := 0
+                  nAtTop := Max( 1, nPos - nNumRows + 1 )
+               ELSE
+                  DO WHILE nPos < nLastItem .AND. !Eval( bSelect, alSelect[ nPos ] )
+                     nPos++
+                  ENDDO
+            
+                  IF nPos > nLastItem
+                     nPos := BETWEEN( nFrstItem, nPos, nLastItem )
+                  ENDIF
+            
+                  nAtTop := MIN( nAtTop, nPos )
+            
+                  IF nAtTop + nNumRows - 1 > nItems
+                     nAtTop := BETWEEN( 1, nPos - nNumRows + 1, nItems - nNumRows + 1 )
+                  ENDIF
+            
+                  IF nAtTop < 1
+                     nAtTop := 1
+                  ENDIF
+            
                ENDIF
-
-               nAtTop := MIN( nAtTop, nPos )
-
-               IF nAtTop + nNumRows - 1 > nItems
-                  nAtTop := BETWEEN( 1, nPos - nNumRows + 1, nItems - nNumRows + 1 )
-               ENDIF
-
-               IF nAtTop < 1
-                  nAtTop := 1
-               ENDIF
-
+            
+               DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect, nRowsClr )
             ENDIF
-
-            DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPos, nAtTop, nItems, bSelect, nRowsClr )
+         ELSE
+            nPos      := 0
+            lFinished := .T.
          ENDIF
       ENDIF
 
