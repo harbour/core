@@ -37,7 +37,7 @@
 
    * source/rtl/tbrowse.prg
      ! Committed patch to ::setPosition() 
-       submitted by Prezemek on the devl list.
+       submitted by Przemek on the devl list.
 
    * source/rtl/tget.prg
      * Minor changes. Copyright updated.
