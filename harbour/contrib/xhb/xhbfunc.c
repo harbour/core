@@ -62,7 +62,7 @@ HB_FUNC( XHB__KEYBOARD )
    /* Clear the typeahead buffer without reallocating the keyboard buffer */
    if( !hb_parl( 2 ) )
    {
-     hb_inkeyReset();
+      hb_inkeyReset();
    }
 
    if( ISCHAR( 1 ) )
