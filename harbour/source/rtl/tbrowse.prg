@@ -725,7 +725,7 @@ METHOD setPosition( nPos ) CLASS TBROWSE
             ::nBufferPos := nRowCount
          ENDIF
          nPos := 0
-         WHILE ( nPos := AScan( ::aCellStatus, _TBR_NONE, nPos, ::nBufferPos - nPos ) ) != 0
+         WHILE ( nPos := AScan( ::aCellStatus, _TBR_NONE, nPos + 1, ::nBufferPos - nPos ) ) != 0
             ::aCellStatus[ nPos ] := _TBR_UNDEF
             ::aDispStatus[ nPos ] := .T.
          ENDDO

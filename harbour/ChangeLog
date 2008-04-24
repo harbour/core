@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-24 10:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/xhb/xhb.ch
+   * contrib/xhb/xhbfunc.c
+     ! xhb flavour of __KEYBOARD() synced with current xhb code.
+
+   * contrib/hbmisc/hb_f.c
+     ! Swapped C file seek constants to Harbour ones.
+     * Minor cleanups and formatting.
+
+   * source/rtl/tbrowse.prg
+     ! Committed patch to ::setPosition() 
+       submitted by Prezemek on the devl list.
+
+   * source/rtl/tget.prg
+     * Minor changes. Copyright updated.
+
 2008-04-23 22:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/adsfunc.c
      + Added these functions:

@@ -6,6 +6,7 @@
  * Harbour Project source code:
  * Get Class
  *
+ * Copyright 2007-2008 Viktor Szakats <viktor.szakats@syenar.hu>
  * Copyright 1999 Ignacio Ortiz de Z£niga <ignacio@fivetech.com>
  * www - http://www.harbour-project.org
  *
@@ -47,18 +48,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 2007 Viktor Szakats <viktor.szakats@syenar.hu>
- *    Several smaller methods and lots of fixes using
- *    regression/unit testing.
- *
- * See doc/license.txt for licensing terms.
  *
  */
 
@@ -441,6 +430,14 @@ METHOD setFocus() CLASS Get
    ::cType      := ValType( xVarGet )
    ::picture    := ::cPicture
    ::cBuffer    := ::PutMask( xVarGet, .F. )
+
+   ::lChanged   := .F.
+   ::lClear     := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
+   ::lEdit      := .F.
+   ::Pos        := 1
+
+   ::lMinusPrinted := .F.
+   ::lMinus        := .F.
    
    IF ::cType == "N"
       ::decPos := At( iif( ::lPicDecRev .OR. "E" $ ::cPicFunc, ",", "." ), ::cBuffer )
@@ -451,14 +448,6 @@ METHOD setFocus() CLASS Get
    ELSE
       ::decPos := 0 /* ; CA-Cl*pper NG says that it contains NIL, but in fact it contains zero. [vszakats] */
    ENDIF
-
-   ::lChanged   := .F.
-   ::lClear     := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
-   ::lEdit      := .F.
-   ::Pos        := 1
-   
-   ::lMinusPrinted := .F.
-   ::lMinus    := .F.
    
    ::display()
 

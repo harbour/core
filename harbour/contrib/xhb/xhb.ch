@@ -61,7 +61,7 @@
    #pragma -ks+
    REQUEST XHB_LIB
 
-   #xtranslate __Keyboard([<k>])              => xhb__Keyboard(<k>)
+   #xtranslate __Keyboard([<x,...>])        => xhb__Keyboard(<x>)
 #endif
 
 #endif /* __HARBOUR__ */

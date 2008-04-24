@@ -59,30 +59,40 @@ HB_FUNC_EXTERN( __KEYBOARD );
 
 HB_FUNC( XHB__KEYBOARD )
 {
+   /* Clear the typeahead buffer without reallocating the keyboard buffer */
+   if( !hb_parl( 2 ) )
+   {
+     hb_inkeyReset();
+   }
+
    if( ISCHAR( 1 ) )
    {
-      HB_FUNC_EXEC( __KEYBOARD );
+      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
    }
    else if( ISNUM( 1 ) )
    {
-      hb_inkeyReset();
-      hb_inkeyPut( hb_parni(1) );
+      hb_inkeySetText( NULL, ( ULONG ) hb_parnl( 1 ) );
    }
    else if( ISARRAY( 1 ) )
    {
       PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-      ULONG ulElements = hb_arrayLen( pArray ), ulIndex;
-
-      hb_inkeyReset();
+      ULONG ulIndex;
+      ULONG ulElements = hb_arrayLen( pArray );
 
       for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
       {
-         if( hb_arrayGetType( pArray, ulIndex ) & HB_IT_NUMERIC )
-            hb_inkeyPut( hb_arrayGetNI( pArray, ulIndex ) );
+         PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulIndex );
+
+         if ( HB_IS_NUMBER( pItem ) )
+         {
+            hb_inkeySetText( NULL, ( ULONG ) hb_itemGetNL( pItem ) );
+         }
+         else if ( HB_IS_STRING( pItem ) )
+         {
+            hb_inkeySetText( ( const char * ) hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
+         }
       }
    }
-   else
-      hb_inkeyReset();
 }
 
 HB_FUNC_EXTERN( HB_DESERIALIZE );
