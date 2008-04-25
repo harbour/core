@@ -94,10 +94,6 @@
 #define _TBC_SETKEY_KEY       1
 #define _TBC_SETKEY_BLOCK     2
 
-#define _TBR_UNDEF            0
-#define _TBR_VALID            1
-#define _TBR_NONE             2
-
 #define _TBC_CLR_STANDARD     1
 #define _TBC_CLR_SELECTED     2
 #define _TBC_CLR_HEADING      3
@@ -278,6 +274,8 @@ HIDDEN:
    VAR nFrozen       AS INTEGER INIT 0          // number of frozen columns
    VAR nBufferPos    AS INTEGER INIT 1          // position in row buffer
    VAR nMoveOffset   AS INTEGER INIT 0          // requested repositioning
+   VAR nLastRow      AS INTEGER INIT 0          // last row in the buffer
+   VAR nLastScroll   AS INTEGER INIT 0          // last srcoll value
    VAR nConfigure    AS INTEGER INIT _TBR_CONF_ALL // configuration status
    VAR nLastPos      AS INTEGER INIT 0          // last calculated column position
    VAR lHitTop       AS LOGICAL INIT .F.        // indicates the beginning of available data
@@ -492,8 +490,7 @@ METHOD dispRow( nRow ) CLASS TBROWSE
    LOCAL cValue, cColor, cStdColor
    LOCAL aColors
 
-   IF nRow >= 1 .AND. nRow <= ::rowCount .AND. ;
-      ::aCellStatus[ nRow ] != _TBR_UNDEF
+   IF nRow >= 1 .AND. nRow <= ::rowCount
 
       DispBegin()
 
@@ -515,9 +512,6 @@ METHOD dispRow( nRow ) CLASS TBROWSE
             ENDIF
             nColPos += aCol[ _TBCI_CELLPOS ]
             cColor := ::colorValue( aColors[ _TBC_CLR_STANDARD ] )
-            IF ::aCellStatus[ nRow ] != _TBR_VALID
-               cValue := Space( aCol[ _TBCI_CELLWIDTH ] )
-            ENDIF
             IF aCol[ _TBCI_LASTSPACE ] < 0
                DispOutAt( nRowPos, nColPos, ;
                           Left( cValue, ::n_Right - nColPos + 1 ), cColor )
@@ -542,7 +536,7 @@ METHOD dispRow( nRow ) CLASS TBROWSE
 
 METHOD colorRect( aRect, aColors ) CLASS TBROWSE
 
-   LOCAL nRow, nCol, nNewPos
+   LOCAL nRow, nCol
 
    nRow := ::rowCount
    nCol := ::colCount
@@ -563,16 +557,7 @@ METHOD colorRect( aRect, aColors ) CLASS TBROWSE
       aColors[ 2 ] >= 1 .AND. aColors[ 2 ] <= Len( ::aColors )
 
       FOR nRow := aRect[ 1 ] TO aRect[ 3 ]
-         IF ::aCellStatus[ nRow ] == _TBR_UNDEF
-            IF ::nMoveOffset != 0
-               nNewPos := ::nMoveOffset + ::nRowPos
-               IF nNewPos >= 1 .AND. nNewPos <= ::rowCount
-                  ::nRowPos := nNewPos
-               ENDIF
-            ENDIF
-            ::setPosition( nRow )
-            ::readRecord()
-         ENDIF
+         ::readRecord( nRow )
          FOR nCol := aRect[ 2 ] TO aRect[ 4 ]
             ::aCellColors[ nRow, nCol, 1 ] := aColors[ 1 ]
             ::aCellColors[ nRow, nCol, 2 ] := aColors[ 2 ]
@@ -584,167 +569,188 @@ METHOD colorRect( aRect, aColors ) CLASS TBROWSE
    RETURN Self
 
 
-METHOD readRecord() CLASS TBROWSE
+METHOD scrollBuffer( nRows ) CLASS TBROWSE
+
+   LOCAL nRowCount
+   LOCAL aValues, aColors
+   LOCAL cOldColor
+
+   nRowCount := ::rowCount
+
+   /* Store last scroll value to chose refresh order. [druzus] */
+   ::nLastScroll := nRows
+
+   IF nRows >= nRowCount .OR. nRows <= -nRowCount
+      AFill( ::aCellStatus, .F. )
+   ELSE
+      cOldColor := SetColor( ::colorValue( _TBC_CLR_STANDARD ) )
+      Scroll( ::n_Top + ::nHeadHeight + IIF( ::lHeadSep, 1, 0 ), ::n_Left, ;
+              ::n_Bottom - ::nFootHeight - IIF( ::lFootSep, 1, 0 ), ::n_Right, ;
+              nRows )
+      SetColor( cOldColor )
+      IF nRows > 0
+         WHILE --nRows >= 0
+            aValues := ::aCellValues[ 1 ]
+            aColors := ::aCellColors[ 1 ]
+            ADel( ::aCellValues, 1 )
+            ADel( ::aCellColors, 1 )
+            ADel( ::aCellStatus, 1 )
+            ADel( ::aDispStatus, 1 )
+            ::aCellValues[ nRowCount ] := aValues
+            ::aCellColors[ nRowCount ] := aColors
+            ::aCellStatus[ nRowCount ] := .F.
+            ::aDispStatus[ nRowCount ] := .T.
+         ENDDO
+      ELSEIF nRows < 0
+         WHILE ++nRows <= 0
+            HB_AIns( ::aCellValues, 1, ATail( ::aCellValues ) )
+            HB_AIns( ::aCellColors, 1, ATail( ::aCellColors ) )
+            HB_AIns( ::aCellStatus, 1, .F. )
+            HB_AIns( ::aDispStatus, 1, .T. )
+         ENDDO
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+
+METHOD readRecord( nRow ) CLASS TBROWSE
 
    LOCAL aCol
    LOCAL oCol
-   LOCAL nRow
    LOCAL cValue
    LOCAL aColor
-   LOCAL nColors
+   LOCAL nColors, nToMove, nMoved, nRowCount
+   LOCAL lRead
 
-   nRow := ::nBufferPos
+   lRead := .F.
+   nRowCount := ::rowCount
+   IF nRow >= 1 .AND. nRow <= nRowCount .AND. !::aCellStatus[ nRow ]
 
-   IF nRow >= 1 .AND. nRow <= ::rowCount .AND. ;
-      ::aCellStatus[ nRow ] == _TBR_UNDEF
+      IF nRow <= ::nLastRow
+         nToMove := nRow - ::nBufferPos
+         nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, nToMove ) )
+         /* TOFIX: add protection against unexpected results
+          *        CA-Cl*pper does not fully respect here the returned
+          *        value an current code below replicates what Clipper
+          *        seems to do but it means that in network environment
+          *        with concurent modifications wrong records can be
+          *        shown. [druzus]
+          */
+         IF nToMove > 0
+            IF nMoved < 0
+               nMoved := 0
+            ENDIF
+         ELSEIF nToMove < 0
+            nMoved := nToMove
+         ELSE
+            nMoved := 0
+         ENDIF
+         ::nBufferPos += nMoved
+         IF nToMove > 0 .AND. nMoved < nToMove
+            ::nLastRow := ::nBufferPos
+         ELSE
+            lRead := .T.
+         ENDIF
+      ENDIF
 
       nColors := Len( ::aColors )
-      FOR EACH aCol, cValue, aColor IN ::aColData, ::aCellValues[ nRow ], ::aCellColors[ nRow ]
-         oCol := aCol[ _TBCI_COLOBJECT ]
-         cValue := Eval( oCol:block )
-         aColor := _CELLCOLORS( aCol, cValue, nColors )
-         IF ValType( cValue ) $ "CMNDL"
-            cValue := PadR( Transform( cValue, oCol:picture ), aCol[ _TBCI_CELLWIDTH ] )
-         ELSE
+      IF nRow <= ::nLastRow
+         FOR EACH aCol, cValue, aColor IN ::aColData, ::aCellValues[ nRow ], ::aCellColors[ nRow ]
+            oCol := aCol[ _TBCI_COLOBJECT ]
+            cValue := Eval( oCol:block )
+            aColor := _CELLCOLORS( aCol, cValue, nColors )
+            IF ValType( cValue ) $ "CMNDL"
+               cValue := PadR( Transform( cValue, oCol:picture ), aCol[ _TBCI_CELLWIDTH ] )
+            ELSE
+               cValue := Space( aCol[ _TBCI_CELLWIDTH ] )
+            ENDIF
+         NEXT
+      ELSE
+         FOR EACH aCol, cValue, aColor IN ::aColData, ::aCellValues[ nRow ], ::aCellColors[ nRow ]
+            aColor := { aCol[ _TBCI_DEFCOLOR ][ 1 ], aCol[ _TBCI_DEFCOLOR ][ 2 ] }
             cValue := Space( aCol[ _TBCI_CELLWIDTH ] )
-         ENDIF
-      NEXT
+         NEXT
+      ENDIF
 
-      ::aCellStatus[ nRow ] := _TBR_VALID
+      ::aCellStatus[ nRow ] := .T.
       ::aDispStatus[ nRow ] := .T.
 
    ENDIF
 
-   RETURN Self
+   RETURN lRead
 
 
-METHOD scrollBuffer( nRows ) CLASS TBROWSE
+METHOD setPosition() CLASS TBROWSE
 
-   LOCAL nRowCount, nStatus
-   LOCAL aValues, aColors
-   LOCAL cOldColor
+   LOCAL nMoved, nNewPos, nMoveOffset, nRowCount
+   LOCAL lSetPos
 
-   IF nRows > 0
-      nRowCount := ::rowCount
-      nStatus := ATail( ::aCellStatus )
-      IF nStatus != _TBR_NONE
-         nStatus := _TBR_UNDEF
+   nRowCount := ::rowCount
+   nMoveOffset := ::nMoveOffset
+   nNewPos := ::nBufferPos + nMoveOffset
+   lSetPos := .T.
+
+   IF nNewPos < 1
+      IF nMoveOffset < -1
+         nMoveOffset -= ::nBufferPos - 1
       ENDIF
-      cOldColor := SetColor( ::colorValue( _TBC_CLR_STANDARD ) )
-      Scroll( ::n_Top + ::nHeadHeight + IIF( ::lHeadSep, 1, 0 ), ::n_Left, ;
-              ::n_Bottom - ::nFootHeight - IIF( ::lFootSep, 1, 0 ), ::n_Right, ;
-              nRows )
-      SetColor( cOldColor )
-      WHILE --nRows >= 0
-         aValues := ::aCellValues[ 1 ]
-         aColors := ::aCellColors[ 1 ]
-         ADel( ::aCellValues, 1 )
-         ADel( ::aCellColors, 1 )
-         ADel( ::aCellStatus, 1 )
-         ADel( ::aDispStatus, 1 )
-         ::aCellValues[ nRowCount ] := aValues
-         ::aCellColors[ nRowCount ] := aColors
-         ::aCellStatus[ nRowCount ] := nStatus
-         ::aDispStatus[ nRowCount ] := .T.
-         IF nStatus == _TBR_NONE
-            _SETDEFCOLOR( ::aColData, aColors )
-         ENDIF
-      ENDDO
-   ELSEIF nRows < 0
-      cOldColor := SetColor( ::colorValue( _TBC_CLR_STANDARD ) )
-      Scroll( ::n_Top + ::nHeadHeight + IIF( ::lHeadSep, 1, 0 ), ::n_Left, ;
-              ::n_Bottom - ::nFootHeight - IIF( ::lFootSep, 1, 0 ), ::n_Right, ;
-              nRows )
-      SetColor( cOldColor )
-      WHILE ++nRows <= 0
-         HB_AIns( ::aCellValues, 1, ATail( ::aCellValues ) )
-         HB_AIns( ::aCellColors, 1, ATail( ::aCellColors ) )
-         HB_AIns( ::aCellStatus, 1, _TBR_UNDEF )
-         HB_AIns( ::aDispStatus, 1, .T. )
-      ENDDO
+   ELSEIF nNewPos > ::nLastRow
+      IF nMoveOffset > 1
+         nMoveOffset += ::nLastRow - ::nBufferPos
+      ENDIF
+   ELSEIF lSetPos
+      ::nRowPos := nNewPos
    ENDIF
 
-   RETURN Self
+   nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, nMoveOffset ) )
 
-
-METHOD setPosition( nPos ) CLASS TBROWSE
-
-   LOCAL nMoved, nToMove, nRowCount
-   LOCAL lNewPos
-
-   nToMove := ::nMoveOffset + nPos - ::nBufferPos
-   lNewPos := .F.
-   nRowCount := ::rowCount
-
-   IF !Empty( ::aCellStatus ) .AND. ;
-      ( nToMove != 0 .OR. ::aCellStatus[ nPos ] == _TBR_UNDEF )
-
-      IF nToMove >= nRowCount
-         nToMove += nRowCount - ::nBufferPos
-         lNewPos := .T.
-      ELSEIF nToMove <= -nRowCount
-         nToMove -= ::nBufferPos - 1
-         lNewPos := .T.
+   IF nMoved > 0
+      ::nBufferPos += nMoved
+      IF ::nBufferPos > ::nLastRow
+         AFill( ::aCellStatus, .F., ::nLastRow + 1, ::nBufferPos - ::nLastRow )
       ENDIF
-
-      nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, nToMove ) )
-
-      IF nMoved == 0
-         IF nToMove > 0
-            FOR nPos := ::nBufferPos + 1 TO nRowCount
-               IF ::aCellStatus[ nPos ] != _TBR_NONE
-                  ::aCellStatus[ nPos ] := _TBR_NONE
-                  ::aDispStatus[ nPos ] := .T.
-                  _SETDEFCOLOR( ::aColData, ::aCellColors[ nPos ] )
-               ENDIF
-            NEXT
-            IF ::nMoveOffset != 0
-               ::lHitBottom := .T.
-            ENDIF
-         ELSEIF nToMove < 0
-            IF ::nBufferPos > 1
-               ::scrollBuffer( ::nBufferPos - 1 )
-               ::nBufferPos := 1
-            ENDIF
-            IF ::nMoveOffset != 0
-               ::lHitTop := .T.
-            ENDIF
-         ENDIF
-      ELSEIF nMoved >= nRowCount
-         AFill( ::aCellStatus, _TBR_UNDEF )
-         AFill( ::aDispStatus, .T. )
+      IF ::nBufferPos > nRowCount
+         ::scrollBuffer( ::nBufferPos - nRowCount )
          ::nBufferPos := nRowCount
-      ELSEIF nMoved <= -nRowCount
-         AFill( ::aCellStatus, _TBR_UNDEF )
-         AFill( ::aDispStatus, .T. )
-         ::nBufferPos := 1
-      ELSEIF nMoved > 0
-         ::nBufferPos += nMoved
-         IF ::nBufferPos > nRowCount
-            ::scrollBuffer( ::nBufferPos - nRowCount )
-            ::nBufferPos := nRowCount
+         lSetPos := .F.
+      ENDIF
+      IF ::nBufferPos > ::nLastRow
+         ::nLastRow := ::nBufferPos
+         IF nMoved != nMoveOffset
+            lSetPos := .F.
          ENDIF
-         nPos := 0
-         WHILE ( nPos := AScan( ::aCellStatus, _TBR_NONE, nPos + 1, ::nBufferPos - nPos ) ) != 0
-            ::aCellStatus[ nPos ] := _TBR_UNDEF
-            ::aDispStatus[ nPos ] := .T.
-         ENDDO
-      ELSE     /* nMoved < 0 */
-         ::nBufferPos += nMoved
-         IF ::nBufferPos < 1
+      ENDIF
+   ELSEIF nMoved < 0
+      ::nBufferPos += nMoved
+      IF ::nBufferPos < 1
+         ::nLastRow := Min( nRowCount, ::nLastRow - ::nBufferPos + 1 )
+         ::scrollBuffer( ::nBufferPos - 1 )
+         ::nBufferPos := 1
+         lSetPos := .F.
+      ENDIF
+   ELSE  /* nMoved == 0 */
+      IF nMoveOffset > 0
+         IF nMoveOffset != 0 .AND. ::nBufferPos == ::nRowPos
+            ::lHitBottom := .T.
+         ENDIF
+         ::nLastRow := ::nBufferPos
+         /* CA-Cl*pper does not do that */
+         AFill( ::aCellStatus, .F., ::nLastRow + 1 )
+      ELSEIF nMoveOffset < 0
+         IF nMoveOffset != 0 .AND. ::nBufferPos == ::nRowPos
+            ::lHitTop := .T.
+         ENDIF
+         /* CA-Cl*pper does not do that */
+         IF ::nBufferPos > 1
             ::scrollBuffer( ::nBufferPos - 1 )
             ::nBufferPos := 1
          ENDIF
       ENDIF
+   ENDIF
 
-      IF lNewPos .AND. AScan( ::aCellStatus, _TBR_UNDEF ) == 0
-         IF nToMove > 0
-            nPos := AScan( ::aCellStatus, _TBR_NONE )
-            ::nRowPos := IIF( nPos == 0, nRowCount, Max( 1, nPos - 1 ) )
-         ELSE
-            ::nRowPos := 1
-         ENDIF 
-      ENDIF
+   IF lSetPos
+      ::nRowPos := ::nBufferPos
    ENDIF
 
    ::nMoveOffset := 0
@@ -754,8 +760,8 @@ METHOD setPosition( nPos ) CLASS TBROWSE
 
 METHOD stabilize() CLASS TBROWSE
 
-   LOCAL nPos, nNewPos
-   LOCAL lDisp
+   LOCAL nCol, nRowCount, nToMove, nMoved
+   LOCAL lDisp, lRead, lStat
 
    IF ::nConfigure != 0
       ::doConfigure()
@@ -764,15 +770,19 @@ METHOD stabilize() CLASS TBROWSE
    IF !::lStable .OR. ::lInvalid .OR. ::lFrames .OR. ::lRefresh .OR. ;
       ::nMoveOffset != 0 .OR. ::nBufferPos != ::nRowPos
 
+      nRowCount := ::rowCount
+
       IF ::lRefresh
-         AFill( ::aCellStatus, _TBR_UNDEF )
+         AFill( ::aCellStatus, .F. )
+         ::nLastRow := nRowCount
+         ::nLastScroll := 0
          ::lRefresh := .F.
       ENDIF
 
-      nPos := ::nColPos
-      IF nPos < 1 .OR. nPos > ::colCount .OR. ::nLastPos != nPos .OR. ;
+      nCol := ::nColPos
+      IF nCol < 1 .OR. nCol > ::colCount .OR. ::nLastPos != nCol .OR. ;
          ::lFrames .OR. ::nLeftVisible == 0 .OR. ::nRightVisible == 0 .OR. ;
-         ::aColData[ nPos ][ _TBCI_COLPOS ] == NIL
+         ::aColData[ nCol ][ _TBCI_COLPOS ] == NIL
 
          ::setVisible()
       ENDIF
@@ -782,58 +792,65 @@ METHOD stabilize() CLASS TBROWSE
          AFill( ::aDispStatus, .T. )
       ENDIF
 
-      nNewPos := ::nMoveOffset + ::nRowPos
-      IF nNewPos < 1 .OR. nNewPos > ::rowCount
-         nPos := ::nBufferPos
-      ELSE
-         IF ::aCellStatus[ nNewPos ] == _TBR_NONE
-            ::setPosition( nNewPos )
-            ::readRecord()
-            ::dispRow( ::nBufferPos )
-            ::nRowPos := ::nBufferPos
-            nPos := 0
-         ELSE
-            ::nRowPos += ::nMoveOffset
-            ::nMoveOffset := 0
-            nPos := AScan( ::aCellStatus, _TBR_UNDEF )
-            IF nPos != 0
-               IF nPos < ::nBufferPos .AND. ;
-                  HB_RAScan( ::aCellStatus, _TBR_UNDEF ) == ::nBufferPos - 1
-                  nPos := ::nBufferPos - 1
+      lRead := .F.
+      IF ::nMoveOffset != 0
+         ::setPosition()
+         lRead := .T.
+      ENDIF
+
+      IF ::nLastScroll > 0
+         FOR EACH lStat, lDisp IN ::aCellStatus, ::aDispStatus DESCEND
+            IF !lStat
+               IF lRead
+                  RETURN .F.
                ENDIF
+               lRead := ::readRecord( lStat:__enumIndex() )
             ENDIF
-         ENDIF
-      ENDIF
-
-      IF nPos != 0
-         ::setPosition( nPos )
-         ::readRecord()
-         ::dispRow( ::nBufferPos )
-      ENDIF
-
-      nPos := AScan( ::aCellStatus, _TBR_UNDEF )
-      IF nPos == 0
-         ::setPosition( ::nRowPos )
-         ::nRowPos := ::nBufferPos
-         ::lStable := .T.
-         ::lInvalid := .F.
-
-         DispBegin()
-         FOR EACH lDisp IN ::aDispStatus
             IF lDisp
                ::dispRow( lDisp:__enumIndex() )
             ENDIF
          NEXT
-         DispEnd()
-
       ELSE
-         /* TODO: CA-Clipper displays all valid records in the buffer when
-          *       they should be drawn on the screen f.e. after horizontal
-          *       scrolling in each stabilize call not only at the end of
-          *       stabilization process. [druzus]
-          */
-         RETURN .F.
+         FOR EACH lStat, lDisp IN ::aCellStatus, ::aDispStatus
+            IF !lStat
+               IF lRead
+                  RETURN .F.
+               ENDIF
+               lRead := ::readRecord( lStat:__enumIndex() )
+            ENDIF
+            IF lDisp
+               ::dispRow( lDisp:__enumIndex() )
+            ENDIF
+         NEXT
       ENDIF
+
+      IF ::nRowPos > ::nLastRow
+         ::nRowPos := ::nLastRow
+      ENDIF
+      IF ::nBufferPos != ::nRowPos
+         /* TOFIX: add protection against unexpected results
+          *        CA-Cl*pper does not fully respect here the returned
+          *        value an current code below replicates what Clipper
+          *        seems to do but it means that in network environment
+          *        with concurent modifications wrong records can be
+          *        shown. [druzus]
+          */
+         nToMove := ::nRowPos - ::nBufferPos
+         nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, nToMove ) )
+         IF nToMove > 0
+            IF nMoved < 0
+               nMoved := 0
+            ENDIF
+         ELSEIF nToMove < 0
+            nMoved := nToMove
+         ELSE
+            nMoved := 0
+         ENDIF
+         ::nBufferPos += nMoved
+         ::nRowPos := ::nBufferPos
+      ENDIF
+      ::lStable := .T.
+      ::lInvalid := .F.
    ENDIF
 
    IF ::autoLite
@@ -888,7 +905,7 @@ METHOD cellValue( nRow, nCol ) CLASS TBROWSE
 
    IF nRow >= 1 .AND. nRow <= ::rowCount .AND. ;
       nCol >= 1 .AND. nCol <= ::colCount .AND. ;
-      ::aCellStatus[ nRow ] == _TBR_VALID
+      ::aCellStatus[ nRow ]
 
       RETURN ::aCellValues[ nRow, nCol ]
    ENDIF
@@ -900,7 +917,7 @@ METHOD cellColor( nRow, nCol ) CLASS TBROWSE
 
    IF nRow >= 1 .AND. nRow <= ::rowCount .AND. ;
       nCol >= 1 .AND. nCol <= ::colCount .AND. ;
-      ::aCellStatus[ nRow ] == _TBR_VALID
+      ::aCellStatus[ nRow ]
 
       RETURN ::aCellColors[ nRow, nCol ]
    ENDIF
@@ -975,17 +992,6 @@ STATIC FUNCTION _COLDEFCOLORS( aDefColorsIdx, nMaxColorIndex )
    ENDIF
 
    RETURN aColorsIdx
-
-
-STATIC FUNCTION _SETDEFCOLOR( aColData, aColors )
-
-   LOCAL aCol, aClr
-
-   FOR EACH aCol, aClr IN aColData, aColors
-      aClr := { aCol[ _TBCI_DEFCOLOR ][ 1 ], aCol[ _TBCI_DEFCOLOR ][ 2 ] }
-   NEXT
-
-   RETURN NIL
 
 
 /* If oCol:colorBlock does not return array length enough then colors
@@ -1083,14 +1089,14 @@ METHOD refreshAll() CLASS TBROWSE
 
    ::setUnstable()
 
+   Eval( ::bSkipBlock, 1 - ::nBufferPos )
+   ::nBufferPos := 1
+   ::lFrames := .T.
    /* In CA-Cl*pper refreshAll method does not discards
     * record buffer here but only set's flag that the record
     * buffer should be reloaded in stabilize method. [druzus]
     */
    ::lRefresh := .T.
-   Eval( ::bSkipBlock, 1 - ::nBufferPos )
-   ::nBufferPos := 1
-   ::lFrames := .T.
 
    RETURN Self
 
@@ -1100,7 +1106,7 @@ METHOD refreshCurrent() CLASS TBROWSE
    ::setUnstable()
 
    IF ::nRowPos >= 1 .AND. ::nRowPos <= ::rowCount
-      ::aCellStatus[ ::nRowPos ] := _TBR_UNDEF
+      ::aCellStatus[ ::nRowPos ] := .F.
    ENDIF
 
    RETURN Self
@@ -1234,12 +1240,12 @@ METHOD goTop() CLASS TBROWSE
 
    ::setUnstable()
 
+   Eval( ::bGoTopBlock )
    /* In CA-Cl*pper refreshAll method does not discards
     * record buffer here but only set's flag that the record
     * buffer should be reloaded in stabilize method. [druzus]
     */
    ::lRefresh := .T.
-   Eval( ::bGoTopBlock )
    ::nRowPos := 1
    ::nBufferPos := 1
    ::nMoveOffset := 0
@@ -1254,18 +1260,13 @@ METHOD goBottom() CLASS TBROWSE
 
    ::setUnstable()
 
+   Eval( ::bGoBottomBlock )
+   nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, -( ::rowCount - 1 ) ) )
    /* In CA-Cl*pper refreshAll method does not discards
     * record buffer here but only set's flag that the record
     * buffer should be reloaded in stabilize method. [druzus]
     */
    ::lRefresh := .T.
-   Eval( ::bGoBottomBlock )
-   nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, -( ::rowCount - 1 ) ) )
-
-   AFill( ::aCellStatus, _TBR_NONE, -nMoved + 2 )
-   AFill( ::aDispStatus, .T., -nMoved + 2 )
-   AEval( ::aCellColors, { |aColors| _SETDEFCOLOR( ::aColData, aColors ) }, -nMoved + 2 )
-
    ::nRowPos := 1
    ::nBufferPos := 1
    ::nMoveOffset := -nMoved
@@ -1462,7 +1463,7 @@ METHOD doConfigure() CLASS TBROWSE
    ASize( ::aDispStatus, nRowCount )
    ASize( ::aCellValues, nRowCount )
    ASize( ::aCellColors, nRowCount )
-   AFill( ::aCellStatus, _TBR_UNDEF )
+   AFill( ::aCellStatus, .F. )
    AFill( ::aDispStatus, .T. )
    FOR EACH aVal, aCol IN ::aCellValues, ::aCellColors
       IF aVal == NIL
@@ -1475,11 +1476,11 @@ METHOD doConfigure() CLASS TBROWSE
       ELSE
          ASize( aCol, nColCount )
       ENDIF
-      _SETDEFCOLOR( ::aColData, aCol )
    NEXT
 
-   ::lFrames := .T.
    ::lStable := .F.
+   ::lFrames := .T.
+   ::lRefresh := .T.
 
    /* CA-Clipper update visible columns here but without
     * colPos repositioning. [druzus]

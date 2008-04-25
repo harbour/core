@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-25 12:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/tbrowse.prg
+    * changed internal logic used for vertical movements. Now it should
+      be much closer to Clipper though it also replicates some wrong
+      Clipper behaviors due to removed protection against some concurrent
+      modifications in browsed object. I left two TOFIX notes and I'll
+      reimplement them later. Please test. Lorenzo it should resolve
+      the problem you reported.
+
 2008-04-24 21:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * make_vcce.mak
