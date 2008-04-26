@@ -159,8 +159,8 @@ CREATE CLASS Get
    METHOD wordLeft()
    METHOD wordRight()
 
-   METHOD backSpace( lDisplay ) /* NOTE: lDisplay is an undocumented Harbour parameter. Should not be used by app code. [vszakats] */
-   METHOD delete( lDisplay ) /* NOTE: lDisplay is an undocumented Harbour parameter. Should not be used by app code. [vszakats] */
+   METHOD backSpace()
+   METHOD delete()
    METHOD delEnd()
    METHOD delLeft()
    METHOD delRight()
@@ -211,6 +211,11 @@ CREATE CLASS Get
    VAR lPicComplex    INIT .F.
    VAR lPicDecRev     INIT .F.
    VAR lPicBlankZero  INIT .F.
+
+   METHOD leftLow()
+   METHOD rightLow()
+   METHOD backSpaceLow()
+   METHOD deleteLow()
 
    METHOD DeleteAll()
    METHOD IsEditable( nPos )
@@ -703,7 +708,7 @@ METHOD overStrike( cChar ) CLASS Get
    
    ::lChanged := .T.
    
-   ::right( .F. )
+   ::rightLow()
    
    ::display()
 
@@ -775,80 +780,32 @@ METHOD insert( cChar ) CLASS Get
    
    ::lChanged := .T.
    
-   ::right( .F. )
+   ::rightLow()
    
    ::display()
 
    RETURN Self
 
-METHOD right( lDisplay ) CLASS Get
-
-   LOCAL nPos
+METHOD right() CLASS Get
 
    IF ! ::hasFocus
       RETURN Self
    ENDIF
 
-   DEFAULT lDisplay TO .T.
-   
-   ::typeOut := .F.
-   ::lClear  := .F.
-   
-   IF ::nPos == ::nMaxEdit
-      ::typeOut := .T.
-      RETURN Self
-   ENDIF
-   
-   nPos := ::nPos + 1
-   
-   DO WHILE ! ::IsEditable( nPos ) .AND. nPos <= ::nMaxEdit
-      nPos++
-   ENDDO
-   
-   IF nPos <= ::nMaxEdit
-      ::Pos := nPos
-   ELSE
-      ::typeOut := .T.
-   ENDIF
-   
-   IF lDisplay
+   IF ::rightLow()
       ::lSuppDisplay := .T.
       ::display()
    ENDIF
-   
+
    RETURN Self
 
-METHOD left( lDisplay ) CLASS Get
-
-   LOCAL nPos
+METHOD left() CLASS Get
 
    IF ! ::hasFocus
       RETURN Self
    ENDIF
 
-   DEFAULT lDisplay TO .T.
-
-   ::typeOut := .F.
-   ::lClear  := .F.
-
-   IF ::nPos == ::FirstEditable()
-      ::typeOut := .T.
-      RETURN Self
-   ENDIF
-
-   nPos := ::nPos - 1
-
-   DO WHILE ! ::IsEditable( nPos ) .AND. nPos > 0
-      nPos--
-   ENDDO
-
-   IF nPos > 0
-      ::Pos := nPos
-   ELSE
-      ::typeOut := .T.
-   ENDIF
-
-   IF lDisplay
+   IF ::leftLow()
       ::lSuppDisplay := .T.
       ::display()
    ENDIF
@@ -961,96 +918,30 @@ METHOD toDecPos() CLASS Get
       ENDIF
 
       ::display()
-
    ENDIF
 
    RETURN Self
 
-METHOD backSpace( lDisplay ) CLASS Get
-
-   LOCAL nPos
-   LOCAL nMinus
+METHOD backSpace() CLASS Get
 
    IF ! ::hasFocus
       RETURN Self
    ENDIF
 
-   nPos := ::nPos
-
-   DEFAULT lDisplay TO .T.
-
-   IF nPos > 1 .AND. nPos == ::FirstEditable() .AND. ::lMinus2
-
-      /* To delete the parenthesis (negative indicator) in a non editable position */
-
-      nMinus := At( "(", SubStr( ::cBuffer, 1, nPos-1 ) )
-
-      IF nMinus > 0 .AND. !( SubStr( ::cPicMask, nMinus, 1 ) == "(" )
-
-         ::lEdit := .T.
-
-         ::cBuffer := SubStr( ::cBuffer, 1, nMinus - 1 ) + " " +;
-                      SubStr( ::cBuffer, nMinus + 1 )
-
-         ::lChanged := .T.
-
-         IF lDisplay
-            ::display()
-         ENDIF
-
-         RETURN Self
-
-      ENDIF
-
-   ENDIF
-
-   ::left()
-
-   IF ::nPos < nPos
-      ::delete( lDisplay )
-   ENDIF
-
-   RETURN Self
-
-METHOD delete( lDisplay ) CLASS Get
-
-   LOCAL nMaxLen
-   LOCAL n
-
-   IF ! ::hasFocus
-      RETURN Self
-   ENDIF
-
-   nMaxLen := ::nMaxLen
-
-   DEFAULT lDisplay TO .T.
-
-   ::lClear := .F.
-   ::lEdit := .T.
-
-   IF ::lPicComplex
-      /* Calculating different nMaxLen for ::lPicComplex */
-      FOR n := ::nPos TO nMaxLen
-         IF !::IsEditable( n )
-            EXIT
-         ENDIF
-      NEXT
-      nMaxLen := n - 1
-   ENDIF
-
-   IF ::cType == "N" .AND. SubStr( ::cBuffer, ::nPos, 1 ) $ "(-"
-      ::lMinus2 := .F.
-   ENDIF
-
-   ::cBuffer := PadR( SubStr( ::cBuffer, 1, ::nPos - 1 ) + ;
-                SubStr( ::cBuffer, ::nPos + 1, nMaxLen - ::nPos ) + " " +;
-                SubStr( ::cBuffer, nMaxLen + 1 ), ::nMaxLen )
-
-   ::lChanged := .T.
-
-   IF lDisplay
+   IF ::backSpaceLow()
       ::display()
    ENDIF
+
+   RETURN Self
+
+METHOD delete() CLASS Get
+
+   IF ! ::hasFocus
+      RETURN Self
+   ENDIF
+
+   ::deleteLow()
+   ::display()
 
    RETURN Self
 
@@ -1065,9 +956,9 @@ METHOD delEnd() CLASS Get
    nPos := ::nPos
    ::Pos := ::nMaxEdit
 
-   ::delete( .F. )
+   ::deleteLow()
    DO WHILE ::nPos > nPos
-      ::backSpace( .F. )
+      ::backSpaceLow()
    ENDDO
 
    ::display()
@@ -1076,16 +967,16 @@ METHOD delEnd() CLASS Get
 
 METHOD delLeft() CLASS Get
 
-   ::left( .F. )
-   ::delete( .F. )
+   ::leftLow()
+   ::deleteLow()
    ::right()
 
    RETURN Self
 
 METHOD delRight() CLASS Get
 
-   ::right( .F. )
-   ::delete( .F. )
+   ::rightLow()
+   ::deleteLow()
    ::left()
 
    RETURN Self
@@ -1101,7 +992,7 @@ METHOD delWordLeft() CLASS Get
 
    IF !( SubStr( ::cBuffer, ::nPos, 1 ) == " " )
       IF SubStr( ::cBuffer, ::nPos - 1, 1 ) == " "
-         ::backSpace( .F. )
+         ::backSpaceLow()
       ELSE
          ::wordRight()
          ::left()
@@ -1109,11 +1000,11 @@ METHOD delWordLeft() CLASS Get
    ENDIF
 
    IF SubStr( ::cBuffer, ::nPos, 1 ) == " "
-      ::delete( .F. )
+      ::deleteLow()
    ENDIF
 
    DO WHILE ::nPos > 1 .AND. !( SubStr( ::cBuffer, ::nPos - 1, 1 ) == " " )
-      ::backSpace( .F. )
+      ::backSpaceLow()
    ENDDO
 
    ::display()
@@ -1135,11 +1026,11 @@ METHOD delWordRight() CLASS Get
    ENDIF
 
    DO WHILE ::nPos <= ::nMaxEdit .AND. !( SubStr( ::cBuffer, ::nPos, 1 ) == " " )
-      ::delete( .F. )
+      ::deleteLow()
    ENDDO
 
    IF ::nPos <= ::nMaxEdit
-      ::delete( .F. )
+      ::deleteLow()
    ENDIF
 
    ::display()
@@ -1563,6 +1454,122 @@ METHOD posInBuffer( nRow, nCol ) CLASS Get
 #endif
 
 /* ------------------------------------------------------------------------- */
+
+METHOD rightLow() CLASS Get
+
+   LOCAL nPos
+   
+   ::typeOut := .F.
+   ::lClear  := .F.
+   
+   IF ::nPos == ::nMaxEdit
+      ::typeOut := .T.
+      RETURN .F.
+   ENDIF
+   
+   nPos := ::nPos + 1
+   
+   DO WHILE ! ::IsEditable( nPos ) .AND. nPos <= ::nMaxEdit
+      nPos++
+   ENDDO
+   
+   IF nPos <= ::nMaxEdit
+      ::Pos := nPos
+   ELSE
+      ::typeOut := .T.
+   ENDIF
+   
+   RETURN .T.
+
+METHOD leftLow() CLASS Get
+
+   LOCAL nPos
+
+   ::typeOut := .F.
+   ::lClear  := .F.
+
+   IF ::nPos == ::FirstEditable()
+      ::typeOut := .T.
+      RETURN .F.
+   ENDIF
+
+   nPos := ::nPos - 1
+
+   DO WHILE ! ::IsEditable( nPos ) .AND. nPos > 0
+      nPos--
+   ENDDO
+
+   IF nPos > 0
+      ::Pos := nPos
+   ELSE
+      ::typeOut := .T.
+   ENDIF
+
+   RETURN .T.
+
+METHOD backSpaceLow() CLASS Get
+
+   LOCAL nPos
+   LOCAL nMinus
+
+   nPos := ::nPos
+
+   IF nPos > 1 .AND. nPos == ::FirstEditable() .AND. ::lMinus2
+
+      /* To delete the parenthesis (negative indicator) in a non editable position */
+
+      nMinus := At( "(", SubStr( ::cBuffer, 1, nPos - 1 ) )
+
+      IF nMinus > 0 .AND. !( SubStr( ::cPicMask, nMinus, 1 ) == "(" )
+
+         ::cBuffer := SubStr( ::cBuffer, 1, nMinus - 1 ) + " " +;
+                      SubStr( ::cBuffer, nMinus + 1 )
+
+         ::lEdit := .T.
+         ::lChanged := .T.
+
+         RETURN .T.
+      ENDIF
+   ENDIF
+
+   ::left()
+
+   IF ::nPos < nPos
+      ::deleteLow()
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
+
+METHOD deleteLow() CLASS Get
+
+   LOCAL nMaxLen := ::nMaxLen
+   LOCAL n
+
+   ::lClear := .F.
+   ::lEdit := .T.
+
+   IF ::lPicComplex
+      /* Calculating different nMaxLen for ::lPicComplex */
+      FOR n := ::nPos TO nMaxLen
+         IF !::IsEditable( n )
+            EXIT
+         ENDIF
+      NEXT
+      nMaxLen := n - 1
+   ENDIF
+
+   IF ::cType == "N" .AND. SubStr( ::cBuffer, ::nPos, 1 ) $ "(-"
+      ::lMinus2 := .F.
+   ENDIF
+
+   ::cBuffer := PadR( SubStr( ::cBuffer, 1, ::nPos - 1 ) + ;
+                SubStr( ::cBuffer, ::nPos + 1, nMaxLen - ::nPos ) + " " +;
+                SubStr( ::cBuffer, nMaxLen + 1 ), ::nMaxLen )
+
+   ::lChanged := .T.
+
+   RETURN NIL
 
 METHOD DeleteAll() CLASS Get
 

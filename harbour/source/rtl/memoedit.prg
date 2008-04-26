@@ -265,8 +265,10 @@ METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 /*----------------------------------------------------------------------------------------*/
 
 FUNCTION MemoEdit( cString,;
-                   nTop, nLeft,;
-                   nBottom, nRight,;
+                   nTop,;
+                   nLeft,;
+                   nBottom,;
+                   nRight,;
                    lEditMode,;
                    xUserFunction,;
                    nLineLength,;

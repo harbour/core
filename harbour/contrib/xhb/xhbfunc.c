@@ -63,13 +63,13 @@ HB_FUNC( XHB__KEYBOARD )
       hb_inkeyReset();
    }
 
-   if( ISCHAR( 1 ) )
+   if( ISNUM( 1 ) )
+   {
+      hb_inkeyPut( hb_parni( 1 ) );
+   }
+   else if( ISCHAR( 1 ) )
    {
       hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
-   }
-   else if( ISNUM( 1 ) )
-   {
-      hb_inkeySetText( NULL, ( ULONG ) hb_parnl( 1 ) );
    }
    else if( ISARRAY( 1 ) )
    {
@@ -83,7 +83,7 @@ HB_FUNC( XHB__KEYBOARD )
 
          if( HB_IS_NUMBER( pItem ) )
          {
-            hb_inkeySetText( NULL, ( ULONG ) hb_itemGetNL( pItem ) );
+            hb_inkeyPut( hb_itemGetNI( pItem ) );
          }
          else if( HB_IS_STRING( pItem ) )
          {

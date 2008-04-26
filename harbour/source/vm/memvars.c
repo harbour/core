@@ -1397,10 +1397,17 @@ HB_FUNC( __MVSAVE )
       {
          fhnd = hb_fsCreate( ( BYTE * ) szFileName, FC_NORMAL );
       }
+#ifdef HB_C52_STRICT
+      while( fhnd == FS_ERROR &&
+             hb_errRT_BASE_Ext1( EG_CREATE, 2006, NULL, szFileName,
+                                 hb_fsError(), EF_CANDEFAULT | EF_CANRETRY,
+                                 0 ) == E_RETRY );
+#else
       while( fhnd == FS_ERROR &&
              hb_errRT_BASE_Ext1( EG_CREATE, 2006, NULL, szFileName,
                                  hb_fsError(), EF_CANDEFAULT | EF_CANRETRY,
                                  HB_ERR_ARGS_BASEPARAMS ) == E_RETRY );
+#endif
 
       if( fhnd != FS_ERROR )
       {
@@ -1471,10 +1478,17 @@ HB_FUNC( __MVRESTORE )
       {
          fhnd = hb_fsOpen( ( BYTE * ) szFileName, FO_READ | FO_DENYWRITE | FO_PRIVATE );
       }
+#ifdef HB_C52_STRICT
+      while( fhnd == FS_ERROR &&
+             hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName,
+                                 hb_fsError(), EF_CANDEFAULT | EF_CANRETRY,
+                                 0 ) == E_RETRY );
+#else
       while( fhnd == FS_ERROR &&
              hb_errRT_BASE_Ext1( EG_OPEN, 2005, NULL, szFileName,
                                  hb_fsError(), EF_CANDEFAULT | EF_CANRETRY,
                                  HB_ERR_ARGS_BASEPARAMS ) == E_RETRY );
+#endif
 
       if( fhnd != FS_ERROR )
       {

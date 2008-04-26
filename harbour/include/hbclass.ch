@@ -110,7 +110,7 @@
 #ifndef HB_CLS_VO
 #ifndef HB_CLS_TOP
 
-/* IF NOTHING DECIDED BY THE PROGRAMER USE ALL */
+/* IF NOTHING DECIDED BY THE PROGRAMMER USE ALL */
 #define HB_CLS_FWO
 #define HB_CLS_CSY
 #define HB_CLS_VO
@@ -147,7 +147,7 @@
 #endif
 
 /*
- * I have to enable this definition by default untill we will not fix
+ * I have to enable this definition by default until we will not fix
  * preprocessor. [druzus]
  */
 #ifndef HB_CLS_PARAMS_ERR
@@ -163,7 +163,7 @@
    #xtranslate __HB_CLS_MTHNAME <ClassName> <MethodName> => <ClassName>_<MethodName>
 #endif
 
-/* parameters list passed throw - it's Harbour extnesion */
+/* parameters list passed throw - it's Harbour extension */
 #ifndef HB_CLS_PARAM_LIST
    #define HB_CLS_PARAM_LIST ...
 #endif

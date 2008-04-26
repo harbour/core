@@ -811,11 +811,9 @@ PROCEDURE OBJ_CREATE()
 
    RETURN
 
-#ifdef __HARBOUR__
+/* We use this to wash out a small incompatibility in Harbour's built-in __eInstVar53(). */
 
-/* We use this to wash out a small incompatibility in Harbour's built-in _eInstVar(). */
-
-FUNCTION _eInstVar( oVar, cMethod, xValue, cType, nSubCode, bValid )
+FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )
 
    LOCAL oError
 
@@ -837,5 +835,3 @@ FUNCTION _eInstVar( oVar, cMethod, xValue, cType, nSubCode, bValid )
    ENDIF
 
    RETURN xValue
-
-#endif

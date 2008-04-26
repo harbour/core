@@ -76,8 +76,8 @@
 #include "hbset.h"
 #include "hbvm.h"
 
-static PHB_ITEM s_inKeyBlockBefore = NULL;
-static PHB_ITEM s_inKeyBlockAfter  = NULL;
+static PHB_ITEM s_inkeyBlockBefore = NULL;
+static PHB_ITEM s_inkeyBlockAfter  = NULL;
 
 HB_FUNC( INKEY )
 {
@@ -85,8 +85,8 @@ HB_FUNC( INKEY )
    PHB_ITEM pKey = NULL;
    int iKey;
 
-   if( s_inKeyBlockBefore )
-      hb_vmEvalBlock( s_inKeyBlockBefore );
+   if( s_inkeyBlockBefore )
+      hb_vmEvalBlock( s_inkeyBlockBefore );
 
    do
    {
@@ -94,11 +94,11 @@ HB_FUNC( INKEY )
                        hb_parnd( 1 ),
                        ISNUM( 2 ) ? hb_parni( 2 ) : hb_set.HB_SET_EVENTMASK );
 
-      if( iKey == 0 || !s_inKeyBlockAfter )
+      if( iKey == 0 || !s_inkeyBlockAfter )
          break;
 
       pKey = hb_itemPutNI( pKey, iKey );
-      iKey = hb_itemGetNI( hb_vmEvalBlockV( s_inKeyBlockAfter, 1, pKey ) );
+      iKey = hb_itemGetNI( hb_vmEvalBlockV( s_inkeyBlockAfter, 1, pKey ) );
       hb_inkeySetLast( iKey );
    }
    while( iKey == 0 );
@@ -111,37 +111,38 @@ HB_FUNC( INKEY )
 
 /* temporary disabled */
 #if 0
+
 static BOOL s_fInit = FALSE;
 
-static void hb_inKeyBlockFree( void * cargo )
+static void hb_inkeyBlockFree( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( s_inKeyBlockBefore )
+   if( s_inkeyBlockBefore )
    {
-      hb_itemRelease( s_inKeyBlockBefore );
-      s_inKeyBlockBefore = NULL;
+      hb_itemRelease( s_inkeyBlockBefore );
+      s_inkeyBlockBefore = NULL;
    }
-   if( s_inKeyBlockAfter )
+   if( s_inkeyBlockAfter )
    {
-      hb_itemRelease( s_inKeyBlockAfter );
-      s_inKeyBlockAfter = NULL;
+      hb_itemRelease( s_inkeyBlockAfter );
+      s_inkeyBlockAfter = NULL;
    }
 }
 
-static void hb_inKeySetDestructor( void )
+static void hb_inkeySetDestructor( void )
 {
    if( !s_fInit )
    {
       s_fInit = TRUE;
-      hb_vmAtExit( hb_inKeyBlockFree, NULL );
+      hb_vmAtExit( hb_inkeyBlockFree, NULL );
    }
 }
 
 HB_FUNC( HB_SETINKEYBEFOREBLOCK )
 {
-   if( s_inKeyBlockBefore )
-      hb_itemReturn( s_inKeyBlockBefore );
+   if( s_inkeyBlockBefore )
+      hb_itemReturn( s_inkeyBlockBefore );
 
    if( hb_pcount() > 0 )
    {
@@ -149,20 +150,20 @@ HB_FUNC( HB_SETINKEYBEFOREBLOCK )
 
       if( pBlock )
       {
-         hb_inKeySetDestructor();
+         hb_inkeySetDestructor();
          pBlock = hb_itemNew( pBlock );
       }
 
-      if( s_inKeyBlockBefore )
-         hb_itemRelease( s_inKeyBlockBefore );
-      s_inKeyBlockBefore = pBlock;
+      if( s_inkeyBlockBefore )
+         hb_itemRelease( s_inkeyBlockBefore );
+      s_inkeyBlockBefore = pBlock;
    }
 }
 
 HB_FUNC( HB_SETINKEYAFTERBLOCK )
 {
-   if( s_inKeyBlockAfter )
-      hb_itemReturn( s_inKeyBlockAfter );
+   if( s_inkeyBlockAfter )
+      hb_itemReturn( s_inkeyBlockAfter );
 
    if( hb_pcount() > 0 )
    {
@@ -170,15 +171,16 @@ HB_FUNC( HB_SETINKEYAFTERBLOCK )
 
       if( pBlock )
       {
-         hb_inKeySetDestructor();
+         hb_inkeySetDestructor();
          pBlock = hb_itemNew( pBlock );
       }
 
-      if( s_inKeyBlockAfter )
-         hb_itemRelease( s_inKeyBlockAfter );
-      s_inKeyBlockAfter = pBlock;
+      if( s_inkeyBlockAfter )
+         hb_itemRelease( s_inkeyBlockAfter );
+      s_inkeyBlockAfter = pBlock;
    }
 }
+
 #endif
 
 HB_FUNC( __KEYBOARD )
@@ -193,25 +195,31 @@ HB_FUNC( __KEYBOARD )
 HB_FUNC( HB_KEYPUT )
 {
    if( ISNUM( 1 ) )
+   {
       hb_inkeyPut( hb_parni( 1 ) );
+   }
    else if( ISCHAR( 1 ) )
    {
-      PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
-      char * szText = hb_itemGetCPtr( pText );
-      ULONG ulLen = hb_itemGetCLen( pText ), ulIndex;
-
-      for( ulIndex = 0; ulIndex < ulLen; ulIndex++ )
-         hb_inkeyPut( ( UCHAR ) szText[ ulIndex ] );
+      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
    }
    else if( ISARRAY( 1 ) )
    {
       PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-      ULONG ulElements = hb_arrayLen( pArray ), ulIndex;
+      ULONG ulIndex;
+      ULONG ulElements = hb_arrayLen( pArray );
 
       for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
       {
-         if( hb_arrayGetType( pArray, ulIndex ) & HB_IT_NUMERIC )
-            hb_inkeyPut( hb_arrayGetNI( pArray, ulIndex ) );
+         PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulIndex );
+
+         if( HB_IS_NUMBER( pItem ) )
+         {
+            hb_inkeyPut( hb_itemGetNI( pItem ) );
+         }
+         else if( HB_IS_STRING( pItem ) )
+         {
+            hb_inkeySetText( ( const char * ) hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
+         }
       }
    }
 }

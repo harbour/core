@@ -248,7 +248,7 @@ METHOD New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nReco
       ::nMaxLinesAvail := ::aReportData[RPT_LINES]
 
       // Modify ::aReportData based on the report parameters
-      IF lSummary == .T.             // Set the summary only flag
+      IF lSummary                    // Set the summary only flag
          ::aReportData[ RPT_SUMMARY ] := lSummary
       ENDIF
       IF lBEject != NIL .AND. lBEject

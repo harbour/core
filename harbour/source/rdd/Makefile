@@ -7,6 +7,7 @@ ROOT = ../../
 C_SOURCES=\
 	dbcmd.c \
 	dbcmd53.c \
+	dbcmdhb.c \
 	dbcmdx.c \
 	dbdrop.c \
 	dbexists.c \

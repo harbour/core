@@ -4195,7 +4195,11 @@ static void hb_vmArrayPush( void )
                hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, NULL ) )
          hb_stackPop();
       else
+#ifdef HB_C52_STRICT
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 0 );
+#else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
+#endif
    }
    else if( hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, NULL ) )
       hb_stackPop();
@@ -4286,7 +4290,11 @@ static void hb_vmArrayPushRef( void )
          return;
       }
       else
+#ifdef HB_C52_STRICT
+         hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 0 );
+#else
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pArray, pIndex );
+#endif
    }
    else if( hb_objHasOperator( pArray, HB_OO_OP_ARRAYINDEX ) )
    {
@@ -4382,7 +4390,11 @@ static void hb_vmArrayPop( void )
          hb_stackPop();
       }
       else
+#ifdef HB_C52_STRICT
+         hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 0 );
+#else
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
+#endif
    }
    else if( hb_objOperatorCall( HB_OO_OP_ARRAYINDEX, pArray, pArray, pIndex, pValue ) )
    {
@@ -9098,8 +9110,12 @@ static void hb_vmArrayItemPush( ULONG ulIndex )
                                  hb_stackItemFromTop( -1 ), NULL ) )
             hb_stackPop();
          else
+#ifdef HB_C52_STRICT
+            hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 0 );
+#else
             hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ),
                            2, pArray, hb_stackItemFromTop( -1 ) );
+#endif
       }
    }
    else if( HB_IS_HASH( pArray ) )
@@ -9177,8 +9193,12 @@ static void hb_vmArrayItemPop( ULONG ulIndex )
             hb_stackPop();
          }
          else
+#ifdef HB_C52_STRICT
+            hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 0 );
+#else
             hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ),
                            1, hb_stackItemFromTop( -1 ) );
+#endif
       }
    }
    else if( HB_IS_HASH( pArray ) )

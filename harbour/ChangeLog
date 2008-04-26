@@ -8,6 +8,59 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-26 07:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tget.prg
+     ! Fixed to not extend ::left(), ::right(), ::backspace(), 
+       ::delete() with an internally used (but also externally 
+       accessible) extra parameter. This is interface is now 
+       made fully C5x compatible.
+
+   * tests/rto_tb.prg
+     ! Fixed to override __eInstVar53() (instead of _eInstVar())
+
+   * include/hbextern.ch
+   * common.mak
+   * source/rdd/Makefile
+   + source/rdd/dbcmdhb.c
+     + Added non-internal versions of __dbPack() and __dbZap(), 
+       named: hb_dbPack() and hb_dbZap(). If group needs it I 
+       can add dbPack() and dbZap() too in separate files to 
+       lessen the problem of name collision with app code.
+
+   * source/rtl/inkey.c
+     * Formatting.
+     + HB_KEYPUT(): Now possible to pass an array with string elements.
+       (see feature in xhb/__KEYBOARD())
+     * HB_KEYPUT(): For string parameter it now uses hb_inkeySetText()
+       API, rather than a loop of hb_inkeyPut()s.
+
+   * contrib/xhb/xhbfunc.c
+     ! xhb flavour of __KEYBOARD() sync fixed. (hb_inkeySetText() got 
+       extended in xhb, so here we're using hb_inkeyPut() for single 
+       numeric key codes).
+     ; Now same code is used as in HB_KEYPUT().
+
+   * source/vm/memvars.c
+   * source/vm/hvm.c
+   * source/vm/arrayshb.c
+     + Added HB_C52_STRICT branches for the remaining RTEs 
+       which produced different results in hbtest.
+     ! Fixed HB_C52_STRICT RTE for AFill().
+     ; NOTE: It's not possible to build Harbour currently when 
+             HB_C52_STRICT, so it's not easy to test these.
+
+   * include/hbclass.ch
+     ! Typos.
+
+   * source/rtl/memoedit.prg
+   * source/rtl/achoice.prg
+   * source/rtl/treport.prg
+     * Formatting.
+
+   * source/rtl/tobject.prg
+     * Formatting.
+     % Minor opt.
+
 2008-04-25 12:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/tbrowse.prg
     * changed internal logic used for vertical movements. Now it should
