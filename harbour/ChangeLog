@@ -12,7 +12,7 @@
    * source/rtl/tget.prg
      ! Fixed to not extend ::left(), ::right(), ::backspace(), 
        ::delete() with an internally used (but also externally 
-       accessible) extra parameter. This is interface is now 
+       accessible) extra parameter. This interface is now 
        made fully C5x compatible.
 
    * tests/rto_tb.prg
