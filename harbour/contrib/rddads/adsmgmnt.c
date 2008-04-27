@@ -98,7 +98,7 @@ HB_FUNC( ADSMGGETINSTALLINFO )
    //   printf( "\nMore possible info available." );
    */
 
-   if ( ulRetVal == AE_SUCCESS )
+   if( ulRetVal == AE_SUCCESS )
    {
       hb_reta( 8 );
       hb_stornl( stInstallInfo.ulUserOption               , -1, 1 );  /* User option purchased*/
@@ -504,23 +504,131 @@ HB_FUNC( ADSMGGETSERVERTYPE )   /* Determine OS ADS is running on; see ADS_MGMT_
    }
 }
 
+
+HB_FUNC( ADSMGGETOPENTABLES )           /* nMaxNumberOfFilesToReturn, cUserName, nConnection */
+{                                       /* TODO: We're throwing away the locktype info. First edition
+                                         * should have returned a 2-dim array. Perhaps see if a 4th arg
+                                         * is passed as an (empty) array, if so populate parallel array
+                                         * of locktypes.  OR pass a logical to tell it to return 2-dim array */
+   UNSIGNED32 ulRetVal;
+   char * pucUserName = hb_parc( 2 );
+   UNSIGNED16 pusArrayLen = 300;
+   UNSIGNED16 ulCount;
+   UNSIGNED16 pusStructSize = sizeof( ADS_MGMT_TABLE_INFO );
+   ADS_MGMT_TABLE_INFO * astOpenTableInfo;
+   UNSIGNED16 usConnNumber = 0 ;       //  = HB_ADS_PARCONNECTION( 3 ) >>> only valid for netware,
+                                       // so don't default to current, only take a passed value
+
+   if( ISNUM( 1 ) )
+   {
+      pusArrayLen = ( UNSIGNED16 ) hb_parnl( 1 );
+   }
+
+   if( !pucUserName || ( strlen( pucUserName ) == 0 ) )
+   {
+      pucUserName  = NULL;
+   }
+
+   if( ISNUM( 3 ) )
+   {
+      usConnNumber = (UNSIGNED16) hb_parnl( 3 );
+   }
+
+   astOpenTableInfo = ( ADS_MGMT_TABLE_INFO * ) hb_xgrab( sizeof( ADS_MGMT_TABLE_INFO ) * pusArrayLen );
+
+   ulRetVal = AdsMgGetOpenTables( hMgmtHandle,
+                                  (UNSIGNED8 *) pucUserName,
+                                  usConnNumber,
+                                  astOpenTableInfo,
+                                  &pusArrayLen,
+                                  &pusStructSize );
+
+   if( ulRetVal == AE_SUCCESS )
+   {
+      PHB_ITEM pArray = hb_itemArrayNew( pusArrayLen );
+
+      for( ulCount = 1; ulCount <= pusArrayLen; ulCount++ )
+      {
+         hb_itemPutC( hb_arrayGetItemPtr( pArray, ( ULONG ) ulCount ), ( char * ) astOpenTableInfo[ ulCount - 1 ].aucTableName );
+      }
+      hb_itemReturnRelease( pArray );
+   }
+   else
+   {
+      hb_reta( 0 );
+   }
+
+   if( astOpenTableInfo )
+   {
+      hb_xfree( astOpenTableInfo );
+   }
+}
+
+
+HB_FUNC( ADSMGGETOPENINDEXES )      /* nMaxNumberOfFilesToReturn, cTableName, cUserName, nConnection */
+{
+   UNSIGNED32 ulRetVal;
+   UNSIGNED16 pusArrayLen = 300;
+   char * pucTableName = hb_parc( 2 );  // fully qualified path to that table
+   char * pucUserName  = hb_parc( 3 );
+   UNSIGNED16 usConnNumber = 0 ;        // = HB_ADS_PARCONNECTION( 4 ) >>> only valid for netware,
+                                        // so don't default to current, only take a passed value
+   UNSIGNED16 ulCount;
+   UNSIGNED16 pusStructSize = sizeof( ADS_MGMT_INDEX_INFO );
+   ADS_MGMT_INDEX_INFO * astOpenIndexInfo;
+
+   if( ISNUM( 1 ) )
+   {
+      pusArrayLen = ( UNSIGNED16 ) hb_parnl( 1 );
+   }
+
+   if( !pucTableName || ( strlen( pucTableName ) == 0 ) )
+   {
+      pucTableName  = NULL;
+   }
+
+   if( !pucUserName || ( strlen( pucUserName ) == 0 ) )
+   {
+      pucUserName  = NULL;
+   }
+
+   if( ISNUM( 4 ) )
+   {
+      usConnNumber = (UNSIGNED16) hb_parnl( 4 );
+   }
+
+   astOpenIndexInfo = ( ADS_MGMT_INDEX_INFO * ) hb_xgrab( sizeof( ADS_MGMT_INDEX_INFO ) * pusArrayLen );
+
+   ulRetVal = AdsMgGetOpenIndexes( hMgmtHandle,
+                                   (UNSIGNED8 *) pucTableName,
+                                   (UNSIGNED8 *) pucUserName,
+                                   usConnNumber,
+                                   astOpenIndexInfo,
+                                   &pusArrayLen,
+                                   &pusStructSize );
+
+   if( ulRetVal == AE_SUCCESS )
+   {
+      PHB_ITEM pArray = hb_itemArrayNew( pusArrayLen );
+
+      for( ulCount = 1; ulCount <= pusArrayLen; ulCount++ )
+      {
+         hb_itemPutC( hb_arrayGetItemPtr( pArray, ( ULONG ) ulCount ), ( char * ) astOpenIndexInfo[ ulCount - 1 ].aucIndexName );
+      }
+      hb_itemReturnRelease( pArray );
+   }
+   else
+   {
+      hb_reta( 0 );
+   }
+
+   if( astOpenIndexInfo )
+   {
+      hb_xfree( astOpenIndexInfo );
+   }
+}
+
 /*
-
-HB_FUNC( ADSMGGETOPENTABLES )
-{
-   UNSIGNED32  ulRetVal ;
-   UNSIGNED32  ulMaxUsers = 100 ;        // needed for array memory allocation; caller can set with 2nd arg
-   UNSIGNED32  ulCount;
-   UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
-   ADS_MGMT_USER_INFO*  pastUserInfo;
-Get # of tables from ADS_MGMT_ACTIVITY_INFO
-}
-
-HB_FUNC( ADSMGGETOPENINDEXES )
-{
-   UNSIGNED32              ulRetVal = AE_SUCCESS;
-   AdsMgGetOpenIndexes();
-}
 
 HB_FUNC( ADSMGGETLOCKS )
 {
@@ -539,7 +647,9 @@ HB_FUNC( ADSMGKILLUSER )
    UNSIGNED32              ulRetVal = AE_SUCCESS;
    AdsMgKillUser();
 }
+
 */
+
 HB_FUNC( ADSMGKILLUSER )
 {
    hb_retnl( (UNSIGNED16) AdsMgKillUser( hMgmtHandle, (UNSIGNED8 *) hb_parc(1), (UNSIGNED16) hb_parnl(2) ));

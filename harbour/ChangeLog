@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-28 01:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rdd_ads/adsfunc.c
+     ! Fixed warning in ADSDIRECTORY() for ADS >= 9.00.
+
+   * contrib/rdd_ads/adsfunc.c
+   * contrib/rdd_ads/adsmgmnt.c
+     + Added AdsIsEmpty( <cFieldName | nFieldPos> ) -> <lValue>
+       With .adt tables will return .T. if value of the field is NULL.
+       With .dbf it's just equivalent to Empty().
+       (by Luis Krause Mantilla)
+     + Added ADSMGGetOpenTables( nMaxNumberOfFilesToReturn, cUserName, nConnection )
+     + Added ADSMGGetOpenIndexes( nMaxNumberOfFilesToReturn, cTableName, cUserName, nConnection )
+       (by Antonio Carlos Pantaglione & Brian Hays)
+     ; Changes borrowed from xhb, added minor optimization, formatting and warning fix.
+
+   * include/hbclass.ch
+     ! Comment typos.
+
 2008-04-27 22:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/common/hbver.c
      + OS(), hb_verPlatform(): Added detection of Windows Server 2008.

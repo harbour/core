@@ -2002,6 +2002,35 @@ HB_FUNC( ADSCACHEOPENCURSORS )
    hb_retnl( ulRetVal );
 }
 
+// Use AdsIsEmpty() to determine if the indicated field is NULL for ADTs or empty for DBFs
+HB_FUNC( ADSISEMPTY )
+{
+   UNSIGNED32 ulRetVal = ~AE_SUCCESS;
+   UNSIGNED16 pbEmpty = FALSE;
+   ADSAREAP   pArea;
+   UNSIGNED8* pucFldName;
+
+   pArea = hb_rddGetADSWorkAreaPointer();
+   if( ! ISCHAR( 1 ) && ! ISNUM( 1 ) )
+   {
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSISEMPTY" );
+      return;
+   }
+   else if( pArea )
+   {
+      pucFldName = ( ISCHAR( 1 ) ?  ( UNSIGNED8* ) hb_parcx( 1 ) : ADSFIELD( hb_parni( 1 ) ) );
+      ulRetVal = AdsIsEmpty( pArea->hTable, pucFldName, &pbEmpty );
+   }
+
+   if( ! pArea || ulRetVal != AE_SUCCESS )
+   {
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISEMPTY" );
+      return;
+   }
+
+   hb_retl( pbEmpty );
+}
+
 #if ADS_REQUIRE_VERSION >= 6
 
 HB_FUNC( ADSGETNUMACTIVELINKS )         // requires 6.2 ! Only valid for a DataDict
@@ -2469,7 +2498,11 @@ HB_FUNC( ADSDIRECTORY )
    UNSIGNED32 ulRetVal;
    UNSIGNED8  ucFileName[ ADS_MAX_TABLE_NAME ];
    UNSIGNED16 usFileNameLen;
+#if ADS_REQUIRE_VERSION >= 900
+   ADSHANDLE  sHandle = 0;
+#else
    SIGNED32   sHandle = 0;
+#endif
    PHB_ITEM   pitmDir, pitmFileName;
    ADSHANDLE  hConnect = HB_ADS_PARCONNECTION( 2 );
 
@@ -2477,7 +2510,7 @@ HB_FUNC( ADSDIRECTORY )
    hb_arrayNew( pitmDir, 0 );
 
    usFileNameLen = ADS_MAX_TABLE_NAME;
-   ulRetVal = AdsFindFirstTable( hConnect, ( UNSIGNED8* ) ( ISCHAR( 1 ) ? hb_parcx( 1 ) : "" ), ucFileName, &usFileNameLen, &sHandle );
+   ulRetVal = AdsFindFirstTable( hConnect, ( UNSIGNED8* ) ( ISCHAR( 1 ) ? hb_parcx( 1 ) : "" ), ( UNSIGNED8* ) ucFileName, &usFileNameLen, &sHandle );
    if ( ulRetVal == AE_SUCCESS || ulRetVal == AE_NO_FILE_FOUND )
    {
       while( ulRetVal == AE_SUCCESS )

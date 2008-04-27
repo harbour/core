@@ -82,17 +82,17 @@
 /* This is work in progress ... */
 /* FWOBJECT AND CLASSY compatibility are the base of this work */
 /* VO is just here as I like it's way of */
-/* instanciating object but there is only a very few VO keywords here :-( */
+/* instantiating object but there is only a very few VO keywords here :-( */
 /* TOPCLASS is better implemented because I like the way some Classy command */
 /* are simplified */
 /* There is also a big common block extending in fact each of the four base syntax */
 /* it seem actually impossible to completely separate it without creating */
-/* four differents include file (what I would not see in fact ) */
+/* four different include files (what I would not see in fact ) */
 
 /* There is also two compatibility define you can use */
-/* HB_CLS_NOTOBJECT wich IF DEFINED, disable the auto inherit of HBObject */
-/* (wich in fact also disable the classy compatibility :new(...) => :Init(...)  */
-/* HB_CLS_NOAUTOINIT wich disable the (VO like) AutoInit for Logical and Numeric */
+/* HB_CLS_NOTOBJECT which IF DEFINED, disable the auto inherit of HBObject */
+/* (which in fact also disable the classy compatibility :new(...) => :Init(...)  */
+/* HB_CLS_NOAUTOINIT which disable the (VO like) AutoInit for Logical and Numeric */
 /* when not specifically initiated */
 /* These two are disabled by default */
 /* So Each class _inherit_ of HBObject by default and */
@@ -156,7 +156,7 @@
    #endif
 #endif
 
-/* should we use <<ClassName>_ prefix for real method names? */
+/* should we use <ClassName>_ prefix for real method names? */
 #ifdef HB_CLS_NO_DECORATION
    #xtranslate __HB_CLS_MTHNAME <ClassName> <MethodName> => <MethodName>
 #else
