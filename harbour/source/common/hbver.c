@@ -222,9 +222,23 @@ char * hb_verPlatform( void )
             case VER_PLATFORM_WIN32_NT:
 
                if( osVer.dwMajorVersion == 6 )
-                  pszName = "Windows Vista";
+               {
+                  OSVERSIONINFOEXA osVerEx;
+
+                  osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
+
+                  if( GetVersionExA( &osVerEx ) )
+                  {
+                     if( osVerEx.wProductType == VER_NT_SERVER || osVerEx.wProductType == VER_NT_DOMAIN_CONTROLLER )
+                        pszName = "Windows Server 2008";
+                     else /* VER_NT_WORKSTATION */
+                        pszName = "Windows Vista";
+                  }
+                  else
+                     pszName = "Windows";
+               }
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion >= 2 )
-                  pszName = "Windows 2003";
+                  pszName = "Windows Server 2003";
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion == 1 )
                   pszName = "Windows XP";
                else if( osVer.dwMajorVersion == 5 )

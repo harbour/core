@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-27 22:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbver.c
+     + OS(), hb_verPlatform(): Added detection of Windows Server 2008.
+
+   * source/rtl/tobject.prg
+     ! XPP feature guarded with HB_COMPAT_XPP
+
 2008-04-26 07:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tget.prg
      ! Fixed to not extend ::left(), ::right(), ::backspace(), 

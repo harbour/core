@@ -89,7 +89,9 @@ FUNCTION HBObject()
       /*s_oClass:AddInline( "EVAL"           , {| Self | __EVAL( Self )              }, HB_OO_CLSTP_EXPORTED ) */
 
       /* xBase++ */
+#ifdef HB_COMPAT_XPP
       s_oClass:AddInline( "ISDERIVEDFROM"  , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, HB_OO_CLSTP_EXPORTED )
+#endif
       /* Class(y) */
       s_oClass:AddInline( "ISKINDOF"       , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, HB_OO_CLSTP_EXPORTED )
                                     
