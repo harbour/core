@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-28 09:38 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbver.c
+     ! Fixed warning in recent change.
+     * Minor adjustment to Vista/Server 2008 detection to be 
+       exactly along MS recommendation.
+
 2008-04-28 09:28 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * source/rtl/Makefile

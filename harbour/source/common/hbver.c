@@ -227,12 +227,12 @@ char * hb_verPlatform( void )
 
                   osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
 
-                  if( GetVersionExA( &osVerEx ) )
+                  if( GetVersionExA( ( OSVERSIONINFOA * ) &osVerEx ) )
                   {
-                     if( osVerEx.wProductType == VER_NT_SERVER || osVerEx.wProductType == VER_NT_DOMAIN_CONTROLLER )
-                        pszName = "Windows Server 2008";
-                     else /* VER_NT_WORKSTATION */
+                     if( osVerEx.wProductType == VER_NT_WORKSTATION )
                         pszName = "Windows Vista";
+                     else
+                        pszName = "Windows Server 2008";
                   }
                   else
                      pszName = "Windows";
