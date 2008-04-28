@@ -98,6 +98,10 @@
 #  include <conio.h>
 #endif
 
+#ifndef MOUSE_WHEELED
+#  define MOUSE_WHEELED 0x0004
+#endif
+
 /*
  To disable mouse, initialization was made in cmdarg.c
 */
@@ -1408,59 +1412,50 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                iEventMask & ~( INKEY_KEYBOARD | INKEY_RAW ) )
       {
 
-        hb_mouse_iCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
-        hb_mouse_iRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
+         hb_mouse_iCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
+         hb_mouse_iRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
 
-        if( iEventMask & INKEY_MOVE &&
-           s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
-        {
-          ch = K_MOUSEMOVE;
-        }
-
-        else if( iEventMask & INKEY_LDOWN &&
-            s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
-               FROM_LEFT_1ST_BUTTON_PRESSED )
-        {
-          if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK )
-          {
-            ch = K_LDBLCLK;
-          }
-          else
-          {
-            ch = K_LBUTTONDOWN;
-          }
-
-          s_mouseLast = K_LBUTTONDOWN;
-        }
-
-        else if( iEventMask & INKEY_RDOWN &&
-               s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
-               RIGHTMOST_BUTTON_PRESSED )
-        {
-          if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK )
-          {
-            ch = K_RDBLCLK;
-          }
-          else
-          {
-            ch = K_RBUTTONDOWN;
-          }
-
-          s_mouseLast = K_RBUTTONDOWN;
-        }
-
-        else if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == 0 &&
-               s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState == 0 )
-        {
-          if( iEventMask & INKEY_LUP && s_mouseLast == K_LBUTTONDOWN )
-          {
-            ch = K_LBUTTONUP;
-          }
-          else if( iEventMask & INKEY_RUP && s_mouseLast == K_RBUTTONDOWN )
-          {
-            ch = K_RBUTTONUP;
-          }
-        }
+         if( iEventMask & INKEY_MOVE &&
+             s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
+         {
+            ch = K_MOUSEMOVE;
+         }
+         else if( iEventMask & INKEY_MWHEEL &&
+                  s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_WHEELED )
+         {
+            ch = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState & 0xFF000000 ?
+                 K_MWBACKWARD : K_MWFORWARD;
+         }
+         else if( iEventMask & INKEY_LDOWN &&
+                  s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
+                  FROM_LEFT_1ST_BUTTON_PRESSED )
+         {
+            ch = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK ?
+                 K_LDBLCLK : K_LBUTTONDOWN;
+            s_mouseLast = K_LBUTTONDOWN;
+         }
+         else if( iEventMask & INKEY_RDOWN &&
+                  s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
+                  RIGHTMOST_BUTTON_PRESSED )
+         {
+            ch = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK ?
+                 K_RDBLCLK : K_RBUTTONDOWN;
+            s_mouseLast = K_RBUTTONDOWN;
+         }
+         else if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == 0 &&
+                  s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState == 0 )
+         {
+            if( iEventMask & INKEY_LUP && s_mouseLast == K_LBUTTONDOWN )
+            {
+               ch = K_LBUTTONUP;
+               s_mouseLast = 0;
+            }
+            else if( iEventMask & INKEY_RUP && s_mouseLast == K_RBUTTONDOWN )
+            {
+               ch = K_RBUTTONUP;
+               s_mouseLast = 0;
+            }
+         }
       }
 
       /* Set up to process the next input event (if any) */
