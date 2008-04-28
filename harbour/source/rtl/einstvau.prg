@@ -51,33 +51,13 @@
  *
  */
 
-#include "common.ch"
+#ifdef HB_C52_UNDOC
 
-/* NOTE: In CA-Cl*pper 5.2/5.3 the cMethod argument seems to be ignored. */
-
-FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )
-
-   LOCAL oError
-
-   IF !( VALTYPE( xValue ) == cType ) .OR. ;
-      ( bValid != NIL .AND. !EVAL( bValid, oVar, xValue ) )
-      oError := ErrorNew()
-      oError:description := HB_LANGERRMSG( 1 )
-      oError:gencode := 1
-      oError:severity := 2
-      oError:cansubstitute := .T.
-      oError:subsystem := oVar:className
-#ifdef HB_C52_STRICT
-      HB_SYMBOL_UNUSED( cMethod )
+FUNCTION _eInstVar( ... )
+#ifdef HB_COMPAT_C53
+   RETURN __eInstVar53( ... )
 #else
-      oError:operation := cMethod
+   RETURN __eInstVar52( ... )
 #endif
-      oError:subcode := nSubCode
-      oError:args := { xValue }
-      xValue := EVAL( ERRORBLOCK(), oError )
-      IF !( VALTYPE( xValue ) == cType )
-         __errInHandler()
-      ENDIF
-   ENDIF
 
-   RETURN xValue
+#endif

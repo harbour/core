@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-28 09:28 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * source/rtl/Makefile
+   * source/rtl/einstvar.prg
+   + source/rtl/einstvau.prg
+     * Undoc function moved to separate file.
+
 2008-04-28 01:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rdd_ads/adsfunc.c
      ! Fixed warning in ADSDIRECTORY() for ADS >= 9.00.

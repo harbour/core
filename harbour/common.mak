@@ -599,6 +599,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\dircmd$(OBJEXT)   \
     $(OBJ_DIR)\einstv52$(OBJEXT) \
     $(OBJ_DIR)\einstvar$(OBJEXT) \
+    $(OBJ_DIR)\einstvau$(OBJEXT) \
     $(OBJ_DIR)\errorsys$(OBJEXT) \
     $(OBJ_DIR)\fieldbl$(OBJEXT)  \
     $(OBJ_DIR)\getlist$(OBJEXT)  \

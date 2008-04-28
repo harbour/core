@@ -170,6 +170,7 @@ PRG_SOURCES=\
 	dircmd.prg   \
 	einstv52.prg \
 	einstvar.prg \
+	einstvau.prg \
 	errorsys.prg \
 	fieldbl.prg  \
 	getlist.prg  \
