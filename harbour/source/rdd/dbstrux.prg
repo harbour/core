@@ -158,15 +158,6 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
 
    RETURN Used()
 
-/* NOTE: Undocumented, internal Clipper function */
-
-#ifdef HB_C52_UNDOC
-
-FUNCTION __FLEDIT( aStruct, aFieldList )
-   RETURN __dbStructFilter( aStruct, aFieldList )
-
-#endif
-
 /* NOTE: Internal helper function, CA-Cl*pper name is: __FLEDIT() */
 
 FUNCTION __dbStructFilter( aStruct, aFieldList )

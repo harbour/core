@@ -54,6 +54,7 @@
 #define ADS_NTX                  1
 #define ADS_CDX                  2
 #define ADS_ADT                  3
+#define ADS_VFP                  4
 
 /* Advantage Optimized Filter (AOF) optimization levels */
 #define ADS_OPTIMIZED_FULL       1

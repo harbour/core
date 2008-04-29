@@ -86,7 +86,7 @@ static BOOL hb_itemIsLess( PHB_ITEM pItem1, PHB_ITEM pItem2, PHB_ITEM pBlock )
    else if( HB_IS_NUMERIC( pItem1 ) && HB_IS_NUMERIC( pItem2 ) )
       return hb_itemGetND( pItem1 ) < hb_itemGetND( pItem2 );
    else if( HB_IS_DATE( pItem1 ) && HB_IS_DATE( pItem2 ) )
-      return pItem1->item.asDate.value < pItem2->item.asDate.value;
+      return hb_itemGetDL( pItem1 ) < hb_itemGetDL( pItem2 );
    else if( HB_IS_LOGICAL( pItem1 ) && HB_IS_LOGICAL( pItem2 ) )
       return hb_itemGetL( pItem1 ) < hb_itemGetL( pItem2 );
    else

@@ -8,6 +8,48 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-04-29 13:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * source/rdd/Makefile
+   * source/rdd/dbstrux.prg
+   * source/rdd/rddord.prg
+   + source/rdd/rddordu.prg
+   + source/rdd/dbstruxu.prg
+     + Moved some UNDOC functions to separate files.
+     * Removed STRICT guard from _dtxCondSet().
+
+   * include/hbextern.ch
+     ! Added missing _dtxCondSet().
+
+   * source/rtl/colorind.c
+   * source/rtl/direct.c
+     * Minor formatting.
+
+   * source/vm/asort.c
+     ! Changed one direct item access to item API call.
+
+   * contrib/rddads/ads.ch
+   * contrib/rddads/adsfunc.c
+   * contrib/rddads/ads1.c
+     ! Added support for ADS9 VFP file type and fields.
+     ; Borrowed from xhb / Luiz Rafael Culik.
+       (changed to compile using original - older - ADS headers)
+     ; Please review & test.
+
+   * source/vm/pcount.c
+     % Minor opt.
+
+   * contrib/hbtip/sendmail.prg
+     ! SF bugtracker#1934698 fix applied. Thanks Chen.
+
+   - contrib/hbapollo/tests/bld.bat
+   * contrib/hbapollo/tests/bld_b32.bat
+     % Using central bld.bat instead of modified local copy.
+
+   + contrib/gtwvg/tests/bld_b32.bat
+     + Added BCC32 build batch file for GTWVG tests.
+     ; NOTE: demowvg still doesn't seem to work.
+
 2008-04-28 18:45 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwin/gtwin.c
     * added mouse wheel support to GTWIN

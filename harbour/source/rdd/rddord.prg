@@ -94,17 +94,3 @@ FUNCTION IndexKey( nOrder )
 
 FUNCTION ordSetRelation( xArea, bRelation, cRelation )
    RETURN dbSetRelation( xArea, bRelation, cRelation, .T. )
-
-/* NOTE: Undocumented Clipper function */
-
-#ifdef HB_C52_UNDOC
-#ifdef HB_C52_STRICT
-
-FUNCTION _dtxCondSet( cFor, bFor, lAll, bWhile, bEval, nEvery, xDummy, nRecNo, nNext, nRecord, lRest )
-
-   HB_SYMBOL_UNUSED( xDummy )
-
-   RETURN ordCondSet( cFor, bFor, lAll, bWhile, bEval, nEvery, nRecNo, nNext, nRecord, lRest )
-
-#endif
-#endif

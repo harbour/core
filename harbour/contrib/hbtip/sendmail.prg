@@ -373,7 +373,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    NEXT
 
    IF lRead
-      oMail:hHeaders[ "Disposition-Notification-To" ] := cUser
+      oMail:hHeaders[ "Disposition-Notification-To" ] := cFrom
    ENDIF
 
    IF nPriority != 3

@@ -98,7 +98,7 @@
 
 #include "directry.ch"
 
-/* NOTE: 8.3 three support should be added in a separate way, like 
+/* NOTE: 8.3 support should be added in a separate way, like 
          as a function which converts full names to 8.3 names, since 
          this issue is very much platform specific, and this is 
          not the only place which may need the conversion [vszakats]. */
@@ -146,10 +146,10 @@ HB_FUNC( DIRECTORY )
           */
          int iLen = strlen( szDirSpec ) - 1;
 #ifdef OS_HAS_DRIVE_LETTER
-         if( szDirSpec[iLen] == OS_PATH_DELIMITER ||
-             szDirSpec[iLen] == OS_DRIVE_DELIMITER )
+         if( szDirSpec[ iLen ] == OS_PATH_DELIMITER ||
+             szDirSpec[ iLen ] == OS_DRIVE_DELIMITER )
 #else
-         if( szDirSpec[iLen] == OS_PATH_DELIMITER )
+         if( szDirSpec[ iLen ] == OS_PATH_DELIMITER )
 #endif
          {
             if( fFree )

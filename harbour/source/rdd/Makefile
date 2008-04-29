@@ -35,12 +35,14 @@ PRG_SOURCES=\
 	dbsort.prg \
 	dbsortx.prg \
 	dbstrux.prg \
+	dbstruxu.prg \
 	dbstruxx.prg \
 	dbtotal.prg \
 	dbtotalx.prg \
 	dbupdat.prg \
 	dbupdatx.prg \
 	rddord.prg \
+	rddordu.prg \
 	rddsys.prg \
 
 LIBNAME=hbrdd

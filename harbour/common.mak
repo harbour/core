@@ -881,10 +881,12 @@ RDD_LIB_OBJS = \
     $(OBJ_DIR)\dbsort$(OBJEXT)   \
     $(OBJ_DIR)\dbsortx$(OBJEXT)  \
     $(OBJ_DIR)\dbstrux$(OBJEXT)  \
+    $(OBJ_DIR)\dbstruxu$(OBJEXT) \
     $(OBJ_DIR)\dbstruxx$(OBJEXT) \
     $(OBJ_DIR)\dbupdat$(OBJEXT)  \
     $(OBJ_DIR)\dbupdatx$(OBJEXT) \
     $(OBJ_DIR)\rddord$(OBJEXT)   \
+    $(OBJ_DIR)\rddordu$(OBJEXT)  \
     $(OBJ_DIR)\rddsys$(OBJEXT)   \
 
 #**********************************************************

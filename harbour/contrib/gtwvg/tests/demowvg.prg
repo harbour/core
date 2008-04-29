@@ -23,18 +23,6 @@
 //           Thanks Peter Rees! You have laid the foundation!
 //
 //-------------------------------------------------------------------//
-#pragma BEGINDUMP
-
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include <windows.h>
-
-HB_FUNC( UIDEBUG )
-{
-   OutputDebugString( hb_parc( 1 ) );
-}
-
-#pragma ENDDUMP
 //-------------------------------------------------------------------//
 
 #include    'inkey.ch'
@@ -2108,3 +2096,15 @@ FUNCTION DrawSlide( hDlg, nSlide )
 
 //-------------------------------------------------------------------//
 
+#pragma BEGINDUMP
+
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include <windows.h>
+
+HB_FUNC( UIDEBUG )
+{
+   OutputDebugString( hb_parc( 1 ) );
+}
+
+#pragma ENDDUMP

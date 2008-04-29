@@ -58,7 +58,5 @@
 HB_FUNC( PCOUNT )
 {
    /* Skip current function */
-   PHB_ITEM pBase = hb_stackItem( hb_stackBaseItem()->item.asSymbol.stackstate->lBaseItem );
-
-   hb_retni( pBase->item.asSymbol.paramcnt );
+   hb_retni( ( hb_stackItem( hb_stackBaseItem()->item.asSymbol.stackstate->lBaseItem ) )->item.asSymbol.paramcnt );
 }
