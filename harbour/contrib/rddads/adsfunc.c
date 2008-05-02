@@ -1380,7 +1380,7 @@ HB_FUNC( ADSCREATESQLSTATEMENT )
          {
             AdsStmtSetTableType( adsStatementHandle, ADS_CDX );
          }
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
          if( hb_parni( 2 ) == ADS_VFP )
          {
             AdsStmtSetTableType( adsStatementHandle, ADS_VFP );

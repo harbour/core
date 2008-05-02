@@ -10,6 +10,8 @@ echo IMPORTANT: You'll need Advantage Client Engine installed and
 echo            these envvars set to successfully build this library:
 echo            set ADS_VER=8
 echo            set ADS_DIR=C:\ads\acesdk
+echo            NOTE: The lowest tested version is ACE 6.x, it 
+echo                  may also work with 5.x.
 echo ---------------------------------------------------------------
 goto POST_EXIT
 

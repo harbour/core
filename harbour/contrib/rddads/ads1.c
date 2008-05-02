@@ -89,7 +89,7 @@ static USHORT s_uiRddIdADS = ( USHORT ) -1;
 static USHORT s_uiRddIdADT = ( USHORT ) -1;
 static USHORT s_uiRddIdADSNTX = ( USHORT ) -1;
 static USHORT s_uiRddIdADSCDX = ( USHORT ) -1;
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
 static USHORT s_uiRddIdADSVFP = ( USHORT ) -1;
 #endif
 
@@ -275,7 +275,7 @@ static int adsGetFileType( USHORT uiRddID )
       return ADS_NTX;
    else if( uiRddID == s_uiRddIdADT )
       return ADS_ADT;
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
    else if( uiRddID == s_uiRddIdADSVFP )
       return ADS_VFP;
 #endif
@@ -294,7 +294,7 @@ static const char * adsMemoExt( int iFileType )
    {
    case ADS_ADT: return ".adm";
    case ADS_CDX: return ".fpt";
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
    case ADS_VFP: return ".fpt";
 #endif
    }
@@ -308,7 +308,7 @@ static const char * adsIndexExt( int iFileType )
    {
    case ADS_ADT: return ".adi";
    case ADS_CDX: return ".cdx";
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
    case ADS_VFP: return ".cdx";
 #endif
    }
@@ -1472,7 +1472,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
 
          case 'A':
          case '+':
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
             if( pArea->iFileType == ADS_ADT || 
                 pArea->iFileType == ADS_VFP )
 #else
@@ -1498,7 +1498,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             {
                dbFieldInfo.uiType = HB_FT_BLOB;
                dbFieldInfo.uiTypeExtended = ADS_BINARY;
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
                dbFieldInfo.uiLen = ( pArea->iFileType == ADS_ADT ) ? 9 : 
                                    ( pArea->iFileType == ADS_VFP ) ? 4 : 10;
 #else
@@ -1552,7 +1552,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             break;
 
          case '@':
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
             if( pArea->iFileType == ADS_ADT || 
                 pArea->iFileType == ADS_VFP )
 #else
@@ -1607,7 +1607,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                   dbFieldInfo.uiLen = 4;
                }
             }
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
             else if( pArea->iFileType == ADS_VFP &&
                 (  iNameLen >= 4 &&
                   hb_strnicmp( szFieldType, "timestamp", iNameLen ) == 0 ) ) 
@@ -1648,7 +1648,7 @@ static ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
                return FAILURE;
             break;
 
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
          case 'Y':
             if( pArea->iFileType == ADS_VFP)
             {
@@ -1984,7 +1984,8 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             hb_itemPutNLLen( pItem, ( LONG ) lVal, 11 );
          break;
       }
-#ifndef HB_LONG_LONG_OFF
+#if ADS_REQUIRE_VERSION >= 700 && !defined(HB_LONG_LONG_OFF)
+
       case HB_FT_AUTOINC:
       {
          SIGNED64 qVal = 0;
@@ -2038,9 +2039,14 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             dVal = 0.0;
             pArea->fEof = TRUE;
          }
+#ifdef ADS_MONEY /* Not defined below 7.00 */
          if( pField->uiTypeExtended == ADS_CURDOUBLE ||
              pField->uiTypeExtended == ADS_DOUBLE ||
              pField->uiTypeExtended == ADS_MONEY )
+#else
+         if( pField->uiTypeExtended == ADS_CURDOUBLE ||
+             pField->uiTypeExtended == ADS_DOUBLE )
+#endif
          {
             hb_itemPutNDLen( pItem, dVal,
                              20 - ( pField->uiDec > 0 ? ( pField->uiDec + 1 ) : 0 ),
@@ -2913,7 +2919,7 @@ static ERRCODE adsNewArea( ADSAREAP pArea )
          pArea->iFileType = ADS_CDX;
          pArea->uiMaxFieldNameLength = ADS_MAX_DBF_FIELD_NAME;
       }
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
       else if( pArea->rddID == s_uiRddIdADSVFP )
       {
          pArea->iFileType = ADS_VFP;
@@ -2948,11 +2954,11 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    u32RetVal = AdsGetHandleType( hConnection, &pusType);
    if( u32RetVal == AE_SUCCESS )
    {
-#if ADS_REQUIRE_VERSION >= 900
-      fDictionary = ( pusType == ADS_DATABASE_CONNECTION );
-#else
+#ifdef ADS_SYS_ADMIN_CONNECTION /* Defined below 9.00 */
       fDictionary = ( pusType == ADS_DATABASE_CONNECTION
                    || pusType == ADS_SYS_ADMIN_CONNECTION );
+#else
+      fDictionary = ( pusType == ADS_DATABASE_CONNECTION );
 #endif
    }
    szFile = ( char * ) pOpenInfo->abName;
@@ -2975,7 +2981,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       {
          char * szSQL = hb_adsOemToAnsi( szFile, strlen( szFile ) );
 
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
          if( pArea->iFileType == ADS_CDX || 
              pArea->iFileType == ADS_VFP )
 #else
@@ -3110,11 +3116,13 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             dbFieldInfo.uiDec = ( USHORT ) pusDecimals;
             break;
 
+#ifdef ADS_MONEY /* Not defined below 7.00 */
          case ADS_MONEY:
             dbFieldInfo.uiType = HB_FT_CURRENCY;
             AdsGetFieldDecimals( pArea->hTable, szName, &pusDecimals );
             dbFieldInfo.uiDec = ( USHORT ) pusDecimals;
             break;
+#endif
 
          case ADS_INTEGER:
          case ADS_SHORTINT:
@@ -3245,7 +3253,7 @@ static ERRCODE adsSysName( ADSAREAP pArea, BYTE * pBuffer )
       case ADS_CDX:
          hb_strncpy( ( char * ) pBuffer, "ADSCDX", HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
          break;
-#if ADS_REQUIRE_VERSION >= 900
+#ifdef ADS_VFP /* Not defined below 9.00 */
       case ADS_VFP:
          hb_strncpy( ( char * ) pBuffer, "ADSVFP", HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
          break;

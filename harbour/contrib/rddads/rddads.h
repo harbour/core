@@ -50,10 +50,6 @@
  *
  */
 
-#ifndef ADS_REQUIRE_VERSION
-   #define ADS_REQUIRE_VERSION 5
-#endif
-
 #include "hbapirdd.h"
 #if defined( HB_OS_WIN_32 ) && !defined( WIN32 )
    #define WIN32

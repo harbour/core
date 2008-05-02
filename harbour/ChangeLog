@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-02 10:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+   * contrib/rddads/rddads.h
+   * contrib/rddads/ads1.c
+   * contrib/rddads/adsfunc.c
+     ! Fixed to compile without ADS_VER/ADS_REQUIRE_VERSION 
+       being set.
+     + Some features are automatically detected.
+       NOTE1: To get all supported features included, it's still 
+              recommended to set ADS_VER/ADS_REQUIRE_VERSION 
+              before building this lib.
+       NOTE2: Lowest tested ACE version is 6.11, and it may 
+              work with 5.x (if someone has this version, pls 
+              send it to me)
+
 2008-04-29 13:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * source/rdd/Makefile
