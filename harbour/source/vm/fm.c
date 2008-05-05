@@ -898,6 +898,14 @@ ULONG hb_xquery( USHORT uiMode )
 #endif
       break;
 
+   case HB_MEM_BLOCKS:       /* Harbour extension (Memory blocks used)           */
+#ifdef HB_FM_STATISTICS
+      ulResult = s_lMemoryBlocks;
+#else
+      ulResult = 0;
+#endif
+      break;
+
    case HB_MEM_USEDMAX:    /* Harbour extension (Maximum memory used [bytes])   */
 #ifdef HB_FM_STATISTICS
       ulResult = s_lMemoryMaxConsumed;

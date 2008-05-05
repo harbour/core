@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+
+2008-05-05 11:31 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
+   * include/hbmemory.ch
+   * source/vm/fm.c
+     + Added Memory( HB_MEM_BLOCKS )
+
 2008-05-02 10:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/make_b32.bat
    * contrib/rddads/make_vc.bat
