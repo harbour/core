@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-06 02:44 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    ! do not add .exe suffix if user added it explicitly in W32/DOS builds
+
+  * harbour/source/vm/dynsym.c
+    * added internal error when size of dynamic table exceed maximal size
+    % small optimization in hb_dynsymFind() function
+
+  * harbour/source/pp/ppcore.c
+    * added support for generating #line directives in strictly Clipper
+      compatible way even if they are redundant. It can be enabled
+      by HB_PP_STRICT_LINEINFO_TOKEN compiler time macro, f.e. using
+      environment variables:
+         set C_USR=-DHB_PP_STRICT_LINEINFO_TOKEN %C_USR%
+      and making clean build.
+
 
 2008-05-05 11:31 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
    * include/hbmemory.ch

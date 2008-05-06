@@ -53,8 +53,14 @@
 /* #define HB_PP_MULTILINE_STRING */
 /* #define HB_C52_STRICT */
 /* #define HB_PP_NO_LINEINFO_TOKEN */
+/* #define HB_PP_STRICT_LINEINFO_TOKEN */
 
 #define _HB_PP_INTERNAL
+
+#if defined( HB_PP_STRICT_LINEINFO_TOKEN ) && \
+    defined( HB_PP_NO_LINEINFO_TOKEN )
+#  undef HB_PP_NO_LINEINFO_TOKEN
+#endif
 
 #include "hbpp.h"
 #include "hbver.h"
@@ -1991,43 +1997,6 @@ static void hb_pp_stateFree( PHB_PP_STATE pState )
    hb_pp_tokenListFree( &pState->pFuncEnd );
 
    hb_xfree( pState );
-}
-
-static void hb_pp_includeFile( PHB_PP_STATE pState, char * szFileName, BOOL fSysFile )
-{
-   if( pState->iFiles >= HB_PP_MAX_INCLUDED_FILES )
-   {
-      hb_pp_error( pState, 'F', HB_PP_ERR_NESTED_INCLUDES, NULL );
-   }
-   else
-   {
-      BOOL fNested = FALSE;
-      PHB_PP_FILE pFile = hb_pp_FileNew( pState, szFileName, fSysFile, &fNested,
-                                         NULL, TRUE, pState->pOpenFunc );
-      if( pFile )
-      {
-         pFile->pPrev = pState->pFile;
-         pState->pFile = pFile;
-         pState->iFiles++;
-         pFile->fGenLineInfo = TRUE;
-      }
-      else if( fNested )
-         hb_pp_error( pState, 'F', HB_PP_ERR_NESTED_INCLUDES, NULL );
-      else
-         hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_OPEN_FILE, szFileName );
-   }
-}
-
-static void hb_pp_includeClose( PHB_PP_STATE pState )
-{
-   PHB_PP_FILE pFile = pState->pFile;
-
-   pState->pFile = pFile->pPrev;
-   pState->iFiles--;
-   if( pState->pFile )
-      pState->pFile->fGenLineInfo = TRUE;
-
-   hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
 }
 
 static PHB_PP_TOKEN hb_pp_streamFuncGet( PHB_PP_TOKEN pToken, PHB_PP_TOKEN * pFuncPtr )
@@ -4667,6 +4636,21 @@ static void hb_pp_condCompileElif( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
    }
 }
 
+#if !defined( HB_PP_NO_LINEINFO_TOKEN )
+static void hb_pp_lineTokens( PHB_PP_TOKEN ** pTokenPtr, char * szFileName, int iLine )
+{
+   char szLine[ 12 ];
+
+   snprintf( szLine, sizeof( szLine ), "%d", iLine );
+   hb_pp_tokenAdd( pTokenPtr, "#", 1, 0, HB_PP_TOKEN_DIRECTIVE | HB_PP_TOKEN_STATIC );
+   hb_pp_tokenAdd( pTokenPtr, "line", 4, 0, HB_PP_TOKEN_KEYWORD | HB_PP_TOKEN_STATIC );
+   hb_pp_tokenAdd( pTokenPtr, szLine, strlen( szLine ), 1, HB_PP_TOKEN_NUMBER );
+   if( szFileName )
+      hb_pp_tokenAdd( pTokenPtr, szFileName, strlen( szFileName ), 1, HB_PP_TOKEN_STRING );
+   hb_pp_tokenAdd( pTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
+}
+#endif
+
 static void hb_pp_genLineTokens( PHB_PP_STATE pState )
 {
    pState->pNextTokenPtr = &pState->pTokenOut;
@@ -4676,16 +4660,8 @@ static void hb_pp_genLineTokens( PHB_PP_STATE pState )
 #else
    if( pState->pFile->fGenLineInfo )
    {
-      char szLine[ 12 ];
-
-      snprintf( szLine, sizeof( szLine ), "%d", pState->pFile->iCurrentLine );
-      hb_pp_tokenAdd( &pState->pNextTokenPtr, "#", 1, 0, HB_PP_TOKEN_DIRECTIVE | HB_PP_TOKEN_STATIC );
-      hb_pp_tokenAdd( &pState->pNextTokenPtr, "line", 4, 0, HB_PP_TOKEN_KEYWORD | HB_PP_TOKEN_STATIC );
-      hb_pp_tokenAdd( &pState->pNextTokenPtr, szLine, strlen( szLine ), 1, HB_PP_TOKEN_NUMBER );
-      if( pState->pFile->szFileName )
-         hb_pp_tokenAdd( &pState->pNextTokenPtr, pState->pFile->szFileName,
-                         strlen( pState->pFile->szFileName ), 1, HB_PP_TOKEN_STRING );
-      hb_pp_tokenAdd( &pState->pNextTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
+      hb_pp_lineTokens( &pState->pNextTokenPtr, pState->pFile->szFileName,
+                                                pState->pFile->iCurrentLine );
       pState->pFile->fGenLineInfo = FALSE;
    }
    else if( pState->pFile->iLastLine < pState->pFile->iCurrentLine )
@@ -4698,6 +4674,62 @@ static void hb_pp_genLineTokens( PHB_PP_STATE pState )
                         hb_pp_tokenMoveCommand( pState->pNextTokenPtr,
                                                 &pState->pFile->pTokenList );
 #endif
+}
+
+static void hb_pp_includeFile( PHB_PP_STATE pState, char * szFileName, BOOL fSysFile )
+{
+   if( pState->iFiles >= HB_PP_MAX_INCLUDED_FILES )
+   {
+      hb_pp_error( pState, 'F', HB_PP_ERR_NESTED_INCLUDES, NULL );
+   }
+   else
+   {
+      BOOL fNested = FALSE;
+      PHB_PP_FILE pFile = hb_pp_FileNew( pState, szFileName, fSysFile, &fNested,
+                                         NULL, TRUE, pState->pOpenFunc );
+      if( pFile )
+      {
+#if defined( HB_PP_STRICT_LINEINFO_TOKEN )
+         pState->pNextTokenPtr = &pState->pTokenOut;
+         if( pState->pFile->fGenLineInfo )
+         {
+            hb_pp_lineTokens( &pState->pNextTokenPtr, pState->pFile->szFileName,
+                                                      pState->pFile->iCurrentLine );
+            pState->pFile->fGenLineInfo = FALSE;
+         }
+         hb_pp_lineTokens( &pState->pNextTokenPtr, szFileName, 1 );
+#else
+         pFile->fGenLineInfo = TRUE;
+#endif
+         pFile->pPrev = pState->pFile;
+         pState->pFile = pFile;
+         pState->iFiles++;
+      }
+      else if( fNested )
+         hb_pp_error( pState, 'F', HB_PP_ERR_NESTED_INCLUDES, NULL );
+      else
+         hb_pp_error( pState, 'F', HB_PP_ERR_CANNOT_OPEN_FILE, szFileName );
+   }
+}
+
+static void hb_pp_includeClose( PHB_PP_STATE pState )
+{
+   PHB_PP_FILE pFile = pState->pFile;
+
+   pState->pFile = pFile->pPrev;
+   pState->iFiles--;
+
+#if defined( HB_PP_STRICT_LINEINFO_TOKEN )
+   if( pFile->fGenLineInfo )
+   {
+      pState->pNextTokenPtr = &pState->pTokenOut;
+      hb_pp_lineTokens( &pState->pNextTokenPtr, pFile->szFileName, pFile->iCurrentLine + 1 );
+   }
+#endif
+   if( pState->pFile )
+      pState->pFile->fGenLineInfo = TRUE;
+
+   hb_pp_FileFree( pState, pFile, pState->pCloseFunc );
 }
 
 static void hb_pp_preprocessToken( PHB_PP_STATE pState )

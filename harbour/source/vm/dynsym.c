@@ -53,6 +53,7 @@
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapierr.h"
 #include "hbstack.h"
 
 typedef struct
@@ -221,21 +222,26 @@ HB_EXPORT PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )    /* creates a new dynamic 
    }
 
    if( s_uiDynSymbols == 0 )   /* Do we have any symbols ? */
+   {
       pDynSym = s_pDynItems[ 0 ].pDynSym;     /* Point to first symbol */
                             /* *<1>* Remember we already got this one */
+      s_uiDynSymbols++;
+   }
    else
    {                        /* We want more symbols ! */
-      s_pDynItems = ( PDYNHB_ITEM ) hb_xrealloc( s_pDynItems, ( s_uiDynSymbols + 1 ) * sizeof( DYNHB_ITEM ) );
+      if( ++s_uiDynSymbols == 0 )
+         hb_errInternal( 6004, "Internal error: size of dynamic symbol table exceed", NULL, NULL );
 
-      memmove( &s_pDynItems[ s_uiClosestDynSym + 1 ], 
-               &s_pDynItems[ s_uiClosestDynSym ], 
-               sizeof( DYNHB_ITEM ) * ( s_uiDynSymbols - s_uiClosestDynSym ) );
+      s_pDynItems = ( PDYNHB_ITEM ) hb_xrealloc( s_pDynItems, s_uiDynSymbols * sizeof( DYNHB_ITEM ) );
+
+      memmove( &s_pDynItems[ s_uiClosestDynSym + 1 ],
+               &s_pDynItems[ s_uiClosestDynSym ],
+               sizeof( DYNHB_ITEM ) * ( s_uiDynSymbols - s_uiClosestDynSym - 1 ) );
 
       pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
       s_pDynItems[ s_uiClosestDynSym ].pDynSym = pDynSym;    /* Enter DynSym */
    }
 
-   s_uiDynSymbols++;                   /* Got one more symbol */
    pDynSym->pSymbol  = pSymbol;
    pDynSym->hMemvar  = 0;
    pDynSym->uiArea   = 0;
@@ -332,12 +338,10 @@ HB_EXPORT PHB_DYNS hb_dynsymFind( const char * szName )
 
    if( s_pDynItems == NULL )
    {
-      s_pDynItems = ( PDYNHB_ITEM ) hb_xgrab( sizeof( DYNHB_ITEM ) );     /* Grab array */
+      s_pDynItems = ( PDYNHB_ITEM ) hb_xgrab( sizeof( DYNHB_ITEM ) );   /* Grab array */
       s_pDynItems->pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
-                /* Always grab a first symbol. Never an empty bucket. *<1>* */
+      /* Always grab a first symbol. Never an empty bucket. *<1>* */
       memset( s_pDynItems->pDynSym, 0, sizeof( HB_DYNS ) );
-
-      return NULL;
    }
    else
    {
@@ -361,7 +365,7 @@ HB_EXPORT PHB_DYNS hb_dynsymFind( const char * szName )
 
       USHORT uiFirst = 0;
       USHORT uiLast = s_uiDynSymbols;
-      USHORT uiMiddle = uiLast / 2;
+      USHORT uiMiddle = uiLast >> 1;
 
       s_uiClosestDynSym = uiMiddle;                  /* Start in the middle      */
 
@@ -384,8 +388,7 @@ HB_EXPORT PHB_DYNS hb_dynsymFind( const char * szName )
             uiFirst = uiMiddle + 1;
             s_uiClosestDynSym = uiFirst;
          }
-
-         uiMiddle = uiFirst + ( ( uiLast - uiFirst ) / 2 );
+         uiMiddle = ( uiFirst + uiLast ) >> 1;
       }
    }
 

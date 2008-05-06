@@ -481,7 +481,8 @@ fi
 FOUTC="\${DIROUT}/\${FILEOUT%.*}.c"
 FOUTO="\${DIROUT}/\${FILEOUT%.*}.o"
 FOUTE="\${DIROUT}/\${FILEOUT%.[Pp][Rr][Gg]}"
-FOUTE="\${FOUTE%.[oc]}${hb_exesuf}"
+FOUTE="\${FOUTE%.[oc]}"
+FOUTE="\${FOUTE%${hb_exesuf}}${hb_exesuf}"
 
 hb_cc()
 {
