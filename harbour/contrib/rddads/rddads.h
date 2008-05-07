@@ -64,8 +64,36 @@
 
 #include "ace.h"
 
+/* Autodetect ACE version. */
+
+/* Compatibility */
+#ifdef ADS_REQUIRE_VERSION
+   #define ADS_LIB_VERSION ADS_REQUIRE_VERSION
+#endif
+
+#ifndef ADS_LIB_VERSION
+   #if   defined(ADS_NOTIFICATION_CONNECTION)
+      #define ADS_LIB_VERSION 900 // or upper
+   #elif defined(ADS_UDP_IP_CONNECTION)
+      #define ADS_LIB_VERSION 810 // or upper
+   #elif defined(ADS_REPLICATION_CONNECTION)
+      #define ADS_LIB_VERSION 800 // or upper
+   #elif defined(ADS_NOT_AUTO_OPEN)
+      #define ADS_LIB_VERSION 710 // or upper
+   #elif defined(ADS_FTS_INDEX_ORDER)
+      #define ADS_LIB_VERSION 700 // or upper
+   #elif defined(ADS_COMPRESS_ALWAYS)
+      #define ADS_LIB_VERSION 620 // or upper
+   #elif defined(ADS_USER_DEFINED)
+      #define ADS_LIB_VERSION 611 // or upper
+   #else
+      #define ADS_LIB_VERSION 500 // or lower
+   #endif
+#endif
+
+/* QUESTION: Why do we redefine this? Normally it is 4082 in 7.10 or upper and 256 in lower versions. */
 #undef ADS_MAX_KEY_LENGTH
-#if ADS_REQUIRE_VERSION >= 8
+#if ADS_LIB_VERSION >= 800
    #define ADS_MAX_KEY_LENGTH   4082   /* maximum key value length.  This is the max key length */
 #else                                  /* of ADI indexes.  Max CDX key length is 240.  Max */
    #define ADS_MAX_KEY_LENGTH    256   /* NTX key length is 256 */

@@ -73,7 +73,7 @@
 
 HB_STACK hb_stack;
 
-static HB_SYMB s_initSymbol = { "hb_stackInit", {HB_FS_STATIC}, {NULL}, NULL };
+static HB_SYMB s_initSymbol = { "hb_stackInit", { HB_FS_STATIC }, { NULL }, NULL };
 
 /* ------------------------------- */
 
@@ -251,7 +251,6 @@ HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pStack, USHORT uiParams )
 
    if( ! HB_IS_SYMBOL( pItem ) )
    {
-      /* QUESTION: Is this call needed ? [vszakats] */
       hb_stackDispLocal();
       hb_errInternal( HB_EI_VMNOTSYMBOL, NULL, "hb_vmDo()", NULL );
    }

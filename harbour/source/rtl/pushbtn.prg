@@ -70,7 +70,7 @@ CREATE CLASS PUSHBUTTON FUNCTION HBPushButton
 
    EXPORTED:
 
-   VAR cargo                          /* NOTE: CA-Clipper 5.3 has a bug, where this var cannot be assigned NIL. */
+   VAR cargo                          /* NOTE: CA-Cl*pper 5.3 has a bug, where this var cannot be assigned NIL. */
 
    VAR bmpXOff    INIT -1             /* NOTE: Fully compatible behaviour not implemented. */
    VAR bmpYOff    INIT -1             /* NOTE: Fully compatible behaviour not implemented. */

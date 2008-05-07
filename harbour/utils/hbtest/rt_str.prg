@@ -387,7 +387,7 @@ FUNCTION Main_STR()
 
 /* NOTE: It seems like CA-Cl*pper 5.x is not aware of the BREAK return value of
          the error handler, so the error is thrown, but we can't catch it.
-         This bug is fixed in CA-Clipper 5.3 [vszakats] */
+         This bug is fixed in CA-Cl*pper 5.3 [vszakats] */
 #ifndef __CLIPPER__
 #ifndef __XPP__
    TEST_LINE( StrTran()                       , "E BASE 1126 Argument error STRTRAN F:S" ) /* CA-Cl*pper bug, it will exit on this */

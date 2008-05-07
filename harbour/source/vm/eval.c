@@ -88,15 +88,15 @@ BOOL hb_evalNew( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 /* NOTE: CA-Cl*pper is buggy and will not check if more parameters are
          added than the maximum (9). [vszakats] */
 
-/* NOTE: CA-Cl*pper NG suggest that the Items passed as parameters should/may
+/* NOTE: CA-Cl*pper NG suggests that the Items passed as parameters should/may
          be released by the programmer explicitly. But in fact hb_evalRelease()
-         will automatically release all of them. The sample programs in the
+         will automatically release them all. The sample programs in the
          NG are doing it that way. Releasing the parameters explicitly in
          Harbour will cause an internal error, while it will be silently
          ignored (?) in CA-Cl*pper. This is due to the different internal
-         handling of the Items, but IIRC it causes leak in CA-Clipper. All in
+         handling of the Items, but IIRC it causes leak in CA-Cl*pper. All in
          all, don't release the eval parameter Items explicitly to make both
-         Harbour and CA-Clipper happy. [vszakats] */
+         Harbour and CA-Cl*pper happy. [vszakats] */
 
 BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 {
@@ -153,7 +153,7 @@ PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
    return pResult;
 }
 
-/* NOTE: CA-Clipper NG states that hb_evalLaunch() must be called at least
+/* NOTE: CA-Cl*pper NG states that hb_evalLaunch() must be called at least
          once and only once before calling hb_evalRelease(). Harbour doesn't
          have these requirements. [vszakats] */
 

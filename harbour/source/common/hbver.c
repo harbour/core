@@ -555,8 +555,8 @@ char * hb_verHarbour( void )
    pszVersion = ( char * ) hb_xgrab( 80 );
 
    /* NOTE: 
-      CA-Clipper 5.2e returns: "Clipper (R) 5.2e Intl. (x216)  (1995.02.07)"
-      CA-Clipper 5.3b returns: "Clipper (R) 5.3b Intl. (Rev. 338) (1997.04.25)"
+      CA-Cl*pper 5.2e returns: "Clipper (R) 5.2e Intl. (x216)  (1995.02.07)"
+      CA-Cl*pper 5.3b returns: "Clipper (R) 5.3b Intl. (Rev. 338) (1997.04.25)"
    */
 
    snprintf( pszVersion, 80, "Harbour %s build %d.%d-%d Intl. (Rev. %d)",

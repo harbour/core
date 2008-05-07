@@ -55,7 +55,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2001 Luiz Rafael Culik
- *    Support for CA-Clipper 5.3 Getsystem
+ *    Support for CA-Cl*pper 5.3 Getsystem
  *
  * See doc/license.txt for licensing terms.
  *

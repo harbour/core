@@ -62,7 +62,7 @@
 /* NOTE: Guard all Harbour extensions with __HARBOUR__ #ifdefs */
 /* NOTE: Use ":className()" instead of ":className" to make your code work
          with Xbase++. Xbase++ seem to take differenciate between the
-         object method and object variable form. In CA-Clipper and Harbour
+         object method and object variable form. In CA-Cl*pper and Harbour
          both syntax is accepted. Same goes for ":Eval()" */
 
 /* TODO: Add checks for string parameters with embedded NUL character */
@@ -422,8 +422,8 @@ STATIC FUNCTION TEST_END()
 
    IF s_nFail != 0
       IF "CLIPPER (R)" $ Upper( Version() )
-         OutMsg( s_nFhnd, "WARNING ! Failures detected using CA-Clipper." + HB_OSNewLine() +;
-                          "Please fix those expected results which are not bugs in CA-Clipper itself." + HB_OSNewLine() )
+         OutMsg( s_nFhnd, "WARNING ! Failures detected using CA-Cl*pper." + HB_OSNewLine() +;
+                          "Please fix those expected results which are not bugs in CA-Cl*pper itself." + HB_OSNewLine() )
       ELSE
          OutMsg( s_nFhnd, "WARNING ! Failures detected" + HB_OSNewLine() )
       ENDIF

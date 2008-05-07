@@ -448,7 +448,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
    hb_vmDoModuleInitFunctions();    /* process AtInit registered functions */
    hb_vmDoInitFunctions();          /* process defined INIT functions */
 
-   /* This is undocumented CA-Clipper, if there's a function called _APPMAIN
+   /* This is undocumented CA-Cl*pper, if there's a function called _APPMAIN
       it will be executed first. [vszakats] */
    {
       PHB_DYNS pDynSym = hb_dynsymFind( "_APPMAIN" );

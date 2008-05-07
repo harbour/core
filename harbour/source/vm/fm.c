@@ -898,7 +898,7 @@ ULONG hb_xquery( USHORT uiMode )
 #endif
       break;
 
-   case HB_MEM_BLOCKS:       /* Harbour extension (Memory blocks used)           */
+   case HB_MEM_BLOCKS:     /* Harbour extension (Memory blocks used)            */
 #ifdef HB_FM_STATISTICS
       ulResult = s_lMemoryBlocks;
 #else

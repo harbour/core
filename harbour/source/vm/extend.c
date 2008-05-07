@@ -184,7 +184,7 @@ HB_EXPORT char * hb_parc( int iParam, ... )
       }
    }
 
-   return ( char * ) 0;
+   return ( char * ) NULL;
 }
 
 HB_EXPORT char * hb_parcx( int iParam, ... )

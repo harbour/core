@@ -122,7 +122,7 @@ void hb_conInit( void )
 
 #ifdef HB_C52_UNDOC
    {
-      /* Undocumented CA-Clipper switch //STDERR:x */
+      /* Undocumented CA-Cl*pper switch //STDERR:x */
       FHANDLE hStderr = ( FHANDLE ) hb_cmdargNum( "STDERR" );
 
       if( hStderr == 0 )      /* //STDERR with no parameter or 0 */

@@ -1459,7 +1459,7 @@ BOOL hb_compExprReduceAT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING )
    {
-      /* This is CA-Clipper compiler optimizer behavior,
+      /* This is CA-Cl*pper compiler optimizer behavior,
        * macro compiler does not have optimizer [druzus]
        */
       if( pSub->ulLength == 0 )

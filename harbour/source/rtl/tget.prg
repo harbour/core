@@ -92,12 +92,12 @@ CREATE CLASS Get
    VAR exitState                        /* 09. */
    VAR reader                           /* 10. */
 #ifdef HB_COMPAT_C53
-   VAR oControl       PROTECTED         /* 11. CA-Clipper 5.3 only. */
-   VAR cCaption       PROTECTED INIT "" /* 12. CA-Clipper 5.3 only. */
-   VAR nCapCol        PROTECTED INIT 0  /* 13. CA-Clipper 5.3 only. */
-   VAR nCapRow        PROTECTED INIT 0  /* 14. CA-Clipper 5.3 only. */
-   VAR cMessage       PROTECTED INIT "" /* 15. CA-Clipper 5.3 only. */
-   VAR nDispLen       PROTECTED         /* 16. CA-Clipper 5.3 places it here. */
+   VAR oControl       PROTECTED         /* 11. CA-Cl*pper 5.3 only. */
+   VAR cCaption       PROTECTED INIT "" /* 12. CA-Cl*pper 5.3 only. */
+   VAR nCapCol        PROTECTED INIT 0  /* 13. CA-Cl*pper 5.3 only. */
+   VAR nCapRow        PROTECTED INIT 0  /* 14. CA-Cl*pper 5.3 only. */
+   VAR cMessage       PROTECTED INIT "" /* 15. CA-Cl*pper 5.3 only. */
+   VAR nDispLen       PROTECTED         /* 16. CA-Cl*pper 5.3 places it here. */
 #endif
    VAR cType          PROTECTED         /* +1. Only accessible in CA-Cl*pper when ::hasFocus == .T. In CA-Cl*pper the field may contain random chars after the first one, which is the type. */
    VAR cBuffer        PROTECTED         /* +2. Only accessible in CA-Cl*pper when ::hasFocus == .T. */

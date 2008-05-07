@@ -109,6 +109,7 @@ C_SOURCES=\
 	samples.c    \
 	saverest.c   \
 	scroll.c     \
+	scrrow.c     \
 	secondfs.c   \
 	seconds.c    \
 	set.c        \

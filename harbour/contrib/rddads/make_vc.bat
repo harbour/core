@@ -18,10 +18,6 @@ goto POST_EXIT
 :DIR_OK
 
 set CFLAGS=-I%ADS_DIR%
-if "%ADS_VER%" == "" goto DEFAULT_VER
-set CFLAGS=%CFLAGS% -DADS_REQUIRE_VERSION=%ADS_VER%
-:DEFAULT_VER
-
 set HB_DLL_NAME=ace32
 if exist "%SystemRoot%\system32\%HB_DLL_NAME%.dll"  set HB_DLL_DIR=%SystemRoot%\system32
 if exist "%ADS_DIR%\Redistribute\%HB_DLL_NAME%.dll" set HB_DLL_DIR=%ADS_DIR%\Redistribute

@@ -168,7 +168,7 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 
       /* Step through all envvar switches. */
 
-      /* NOTE: CA-Clipper doesn't need the switches to be separated by any
+      /* NOTE: CA-Cl*pper doesn't need the switches to be separated by any
                chars at all, Harbour is more strict/standard in this respect,
                it requires the switches to be separated. */
 
@@ -338,7 +338,7 @@ ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
    if( hb_cmdargCheck( "BUILD" ) )
       hb_verBuildInfo();
       
-   if( (cFlags = hb_cmdargString( "FLAGS" )) != NULL ) 
+   if( ( cFlags = hb_cmdargString( "FLAGS" ) ) != NULL ) 
    {
       int i = 0;
       while( cFlags[ i ] )
@@ -371,7 +371,7 @@ ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
       hb_xfree( cFlags );
    }
 
-   if( (cFlags=hb_cmdargString( "CANCEL" )) != NULL ) 
+   if( ( cFlags = hb_cmdargString( "CANCEL" ) ) != NULL ) 
    {
       int iVal = atoi( cFlags );
       if( iVal )
@@ -379,7 +379,7 @@ ULONG hb_cmdargProcessVM( int *pCancelKey, int *pCancelKeyEx )
       hb_xfree( cFlags );
    }
 
-   if( (cFlags=hb_cmdargString( "CANCELEX" )) != NULL ) 
+   if( ( cFlags = hb_cmdargString( "CANCELEX" ) ) != NULL ) 
    {
       int iVal = atoi( cFlags );
       if( iVal )

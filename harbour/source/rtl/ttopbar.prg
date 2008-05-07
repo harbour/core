@@ -446,7 +446,7 @@ METHOD right( nRight ) CLASS TOPBARMENU
 METHOD row( nRow ) CLASS TOPBARMENU
 
    IF nRow != NIL
-      /* NOTE: CA-Clipper 5.3 has a bug, where it would show "TOP" in case of an error. */
+      /* NOTE: CA-Cl*pper 5.3 has a bug, where it would show "TOP" in case of an error. */
       ::nRow := __eInstVar53( Self, "ROW", nRow, "N", 1001 )
    ENDIF
 

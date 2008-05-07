@@ -109,9 +109,9 @@
 /*
    If you want to limit your app to use an ADS version
    earlier than the current one, you must set this constant
-      ADS_REQUIRE_VERSION
+      ADS_LIB_VERSION
    to the *latest* version you want to allow/require, as in
-      -DADS_REQUIRE_VERSION=5
+      -DADS_LIB_VERSION=500
 
    As of 6/7/2004, the default supports linking to v6 and v7,
    as there are no v7-specific features yet.
@@ -123,7 +123,7 @@
          dll that imports these functions, and
 
    2) Set this "define" when compiling rddads:
-      -DADS_REQUIRE_VERSION=5
+      -DADS_LIB_VERSION=500
 
 */
 

@@ -8,6 +8,91 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-07 11:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+   * contrib/rddads/ads.ch
+   * contrib/rddads/rddads.h
+   * contrib/rddads/ads1.c
+   * contrib/rddads/adsfunc.c
+   * contrib/rddads/adsmgmnt.c
+     + Added ACE version autodetection.
+       You can override with: -DADS_LIB_VERSION=700 (and similar)
+       (ADS_REQUIRE_VERSION still accepted for compatibility)
+     ! Fixed a few lib version related problems.
+     ! hMgmtHandle global renamed to ads_g_hMgmtHandle.
+     * Formatting.
+
+   * contrib/rddads/rddads.h
+     + QUESTION: added about ADS_MAX_KEY_LENGTH redefinition.
+       Is it needed?
+
+   * source/compiler/hbmain.c
+     * Changed output device (hb_compOutStd() -> hb_compOutErr()) 
+       for following texts:
+       "Compiling..."
+       "No code generated"
+       "Lines x, Functions/Procedures x"
+       This is to replicate CA-Cl*pper behaviour a bit more.
+
+   * include/hbextern.ch
+   * common.mak
+   * source/rtl/Makefile
+   * source/rtl/maxrow.c
+   + source/rtl/scrrow.c
+   * contrib/xhb/hbcompat.ch
+     + Added hb_ScrMaxRow(), hb_ScrMaxCol()
+       These will return the screen dimensions regardless 
+       of the size of an active window (when using CT 
+       windows for example). Functionality is the same 
+       as MaxRow(.T.) and MaxCol(.T.) previously.
+     ! MaxRow()/MaxCol() extended parameters removed.
+     + Added MaxRow(.T.)/MaxCol(.T.) conversions for 
+       xhb lib (hbcompat.ch) in both directions.
+     ; XBase++ doesn't have any extended parameters 
+       for Max*() function. Flagship has two of them, 
+       both of them doing something different. CAVO doesn't 
+       have these functions at all.
+
+   * contrib/xhb/hbcompat.ch
+     ! GTI_* macros updated to HB_GTI_*.
+
+   * source/vm/memvclip.c
+     % Minor opt in __QQPUB().
+
+   * source/vm/extend.c
+     * 0 -> NULL
+
+   * source/vm/estack.c
+     - QUESTION removed.
+
+   * source/lang/msgbgmik.c
+   * source/rtl/console.c
+   * source/rtl/philes.c
+   * source/rtl/adir.prg
+   * source/rtl/getsys53.prg
+   * source/rtl/getsys.prg
+   * source/rtl/tget.prg
+   * source/rtl/ttopbar.prg
+   * source/rtl/pushbtn.prg
+   * source/rtl/mod.c
+   * source/rtl/memofile.c
+   * source/rtl/radiobtn.prg
+   * source/rtl/filesys.c
+   * source/rtl/tbrowse.prg
+   * source/vm/estack.c
+   * source/vm/itemapi.c
+   * source/vm/hvm.c
+   * source/vm/cmdarg.c
+   * source/vm/fm.c
+   * source/vm/eval.c
+   * source/common/hbver.c
+   * source/common/expropt2.c
+   * utils/hbtest/hbtest.prg
+   * utils/hbtest/rt_misc.prg
+   * utils/hbtest/rt_str.prg
+     ! Comment fixes and minor formatting.
+
 2008-05-06 02:44 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     ! do not add .exe suffix if user added it explicitly in W32/DOS builds
@@ -23,7 +108,6 @@
       environment variables:
          set C_USR=-DHB_PP_STRICT_LINEINFO_TOKEN %C_USR%
       and making clean build.
-
 
 2008-05-05 11:31 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
    * include/hbmemory.ch

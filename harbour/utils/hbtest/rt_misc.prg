@@ -408,7 +408,7 @@ FUNCTION Main_MISC()
    TEST_LINE( NationMsg(11)                   , " - "                                                 )
    TEST_LINE( NationMsg(12)                   , "Y/N"                                                 )
    TEST_LINE( NationMsg(13)                   , "INVALID EXPRESSION"                                  )
-   TEST_LINE( NationMsg(14)                   , "" ) /* Bug in CA-Clipper 5.3a/b, it will return "ATSORT v1.3i x19 06/Mar/95" */
+   TEST_LINE( NationMsg(14)                   , "" ) /* Bug in CA-Cl*pper 5.3a/b, it will return "ATSORT v1.3i x19 06/Mar/95" */
 #ifndef __CLIPPER__ /* Causes GPF in CA-Cl*pper (5.2e International, 5.3b) */
    TEST_LINE( NationMsg(200)                  , "" ) /* Bug in CA-Cl*pper, it will return "74?" or other trash */
 #endif

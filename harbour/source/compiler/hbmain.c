@@ -4631,7 +4631,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
                             szFileName, szPpoName );
                else
                   snprintf( buffer, sizeof( buffer ), "Compiling '%s'...\n", szFileName );
-               hb_compOutStd( HB_COMP_PARAM, buffer );
+               hb_compOutErr( HB_COMP_PARAM, buffer );
             }
 
             if( HB_COMP_PARAM->fI18n )
@@ -4749,7 +4749,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
                          "\r%i error%s\n\nNo code generated\n",
                          HB_COMP_PARAM->iErrorCount,
                          HB_COMP_PARAM->iErrorCount > 1 ? "s" : "" );
-               hb_compOutStd( HB_COMP_PARAM, buffer );
+               hb_compOutErr( HB_COMP_PARAM, buffer );
             }
             else if( HB_COMP_PARAM->iExitLevel == HB_EXITLEVEL_SETEXIT )
             {
@@ -4759,7 +4759,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
             {
                iStatus = EXIT_FAILURE;
                bSkipGen = TRUE;
-               hb_compOutStd( HB_COMP_PARAM, "\nNo code generated.\n" );
+               hb_compOutErr( HB_COMP_PARAM, "\nNo code generated.\n" );
             }
          }
 
@@ -4817,7 +4817,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
                          "\rLines %i, Functions/Procedures %i\n",
                          hb_pp_lineTot( HB_COMP_PARAM->pLex->pPP ),
                          HB_COMP_PARAM->iFunctionCnt );
-               hb_compOutStd( HB_COMP_PARAM, buffer );
+               hb_compOutErr( HB_COMP_PARAM, buffer );
             }
 
             hb_compGenOutput( HB_COMP_PARAM, HB_COMP_PARAM->iLanguage );

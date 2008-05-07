@@ -69,7 +69,7 @@ CREATE CLASS RADIOBUTTN FUNCTION HBRadioButton
 
    EXPORTED:
 
-   VAR cargo                                 /* NOTE: CA-Clipper 5.3 has a bug, where this var is filled with NIL everytime its value is read ( cargo := o:cargo ). */
+   VAR cargo                                 /* NOTE: CA-Cl*pper 5.3 has a bug, where this var is filled with NIL everytime its value is read ( cargo := o:cargo ). */
 
    METHOD display()
    METHOD hitTest( nMRow, nMCol )

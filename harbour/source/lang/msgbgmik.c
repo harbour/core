@@ -93,7 +93,7 @@ static HB_LANG s_lang =
       "Пе▓║к",
       "С║бо▓а",
 
-      /* CA-Clipper compatible natmsg items */
+      /* CA-Cl*pper compatible natmsg items */
 
       "Файлове ▒ данни   # Запи▒      По▒л.Поп░ави    Разме░",
       "Do you want more samples?",

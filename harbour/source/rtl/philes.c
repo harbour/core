@@ -111,7 +111,7 @@ HB_FUNC( FREAD )
    {
       ulRead = hb_parnl( 3 );
 
-      /* NOTE: CA-Clipper determines the maximum size by calling _parcsiz()
+      /* NOTE: CA-Cl*pper determines the maximum size by calling _parcsiz()
                instead of _parclen(), this means that the maximum read length
                will be one more than the length of the passed buffer, because
                the terminating zero could be used if needed. [vszakats] */

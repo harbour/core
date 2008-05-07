@@ -67,7 +67,7 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
    LOCAL cName
    LOCAL cExt
 
-   // ; CA-Clipper would fail on this case.
+   // ; CA-Cl*pper would fail on this case.
 
    IF !ISCHARACTER( cFileMask )
       RETURN 0

@@ -265,7 +265,7 @@ HB_EXPORT PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLe
    else
       pItem = hb_itemNew( NULL );
 
-   /* NOTE: CA-Clipper seems to be buggy here, it will return ulLen bytes of
+   /* NOTE: CA-Cl*pper seems to be buggy here, it will return ulLen bytes of
             trash if the szText buffer is NULL, at least with hb_retclen().
             [vszakats] */
 

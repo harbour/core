@@ -61,6 +61,9 @@
    #xtranslate hb_gtInfo([<x,...>])    => gtInfo(<x>)
    #xtranslate hb_gtVersion([<x>])     => hb_gt_Version(<x>)
 
+   #xtranslate hb_ScrMaxRow()          => MaxRow(.T.)
+   #xtranslate hb_ScrMaxCol()          => MaxCol(.T.)
+
    #xtranslate hb_isregex([<x>])       => hb_isregexstring(<x>)
    #xtranslate hb_pvalue([<x,...>])    => pvalue(<x>)
    #xtranslate hb_methodName([<x,...>])=> methodName(<x>)
@@ -114,13 +117,15 @@
    #xtranslate gtInfo([<x,...>])       => hb_gtInfo(<x>)
    #xtranslate hb_gt_Version([<x>])    => hb_gtVersion(<x>)
 
-   #xtranslate gtSetClipboard(<x>)     => hb_gtInfo( GTI_CLIPBOARDDATA, <x> )
-   #xtranslate gtGetClipboard()        => hb_gtInfo( GTI_CLIPBOARDDATA )
-   #xtranslate gtGetClipBoardSize()    => Len( hb_gtInfo( GTI_CLIPBOARDDATA ) )
-   #xtranslate gtPasteClipBoard([<n>]) => hb_gtInfo( GTI_CLIPBOARDPAST )
+   #xtranslate gtSetClipboard(<x>)     => hb_gtInfo( HB_GTI_CLIPBOARDDATA, <x> )
+   #xtranslate gtGetClipboard()        => hb_gtInfo( HB_GTI_CLIPBOARDDATA )
+   #xtranslate gtGetClipBoardSize()    => Len( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) )
+   #xtranslate gtPasteClipBoard([<n>]) => hb_gtInfo( HB_GTI_CLIPBOARDPAST )
    #xtranslate gtProcessMessages()     => NextKey()
    #xtranslate gfxPrimitive([<x,...>]) => hb_gfxPrimitive(<x>)
    #xtranslate gfxText([<x,...>])      => hb_gfxText(<x>)
+   #xtranslate MaxRow(.T.)             => hb_ScrMaxRow()
+   #xtranslate MaxCol(.T.)             => hb_ScrMaxCol()
 
    #xtranslate hb_isregexstring([<x>]) => hb_isregex(<x>)
    #xtranslate pvalue([<x,...>])       => hb_pvalue(<x>)
@@ -259,4 +264,3 @@
 #endif
 
 #endif /* __HARBOUR__ */
-

@@ -81,10 +81,10 @@
  *
  */
 
-/* NOTE: In DOS/DJGPP under WinNT4 hb_fsSeek( fhnd, offset < 0, FS_SET) will
-         set the file pointer to the passed negative value, and the subsequent
-         hb_fsWrite() call will fail. In CA-Clipper hb_fsSeek() will fail,
-         the pointer will not be moved, and thus the hb_fsWrite() call will
+/* NOTE: In DOS/DJGPP under WinNT4 hb_fsSeek( fhnd, offset < 0, FS_SET ) will
+         set the file pointer to the passed negative value and the subsequent
+         hb_fsWrite() call will fail. In CA-Cl*pper, _fsSeek() will fail,
+         the pointer will not be moved and thus the _fsWrite() call will
          successfully write the buffer to the current file position. [vszakats]
 
    This has been corrected by ptucker

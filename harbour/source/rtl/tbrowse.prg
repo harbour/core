@@ -1320,7 +1320,7 @@ METHOD doConfigure() CLASS TBROWSE
    nColCount := Len( ::columns )
    ASize( ::aColData, nColCount )
    FOR EACH oCol, aCol IN ::columns, ::aColData
-      /* CA-Clipper always evaluates column block even if column is
+      /* CA-Cl*pper always evaluates column block even if column is
        * hidden by setting :width to 0. [druzus]
        */
       xValue := Eval( oCol:block )
@@ -1482,7 +1482,7 @@ METHOD doConfigure() CLASS TBROWSE
    ::lFrames := .T.
    ::lRefresh := .T.
 
-   /* CA-Clipper update visible columns here but without
+   /* CA-Cl*pper update visible columns here but without
     * colPos repositioning. [druzus]
     */
    _SETVISIBLE( ::aColData, _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1, ;
@@ -1776,7 +1776,7 @@ METHOD setVisible() CLASS TBROWSE
 
 #if 0
    /* Always try to locate visible column.
-    * CA-Clipper does not have such condition. [druzus]
+    * CA-Cl*pper does not have such condition. [druzus]
     */
    IF ::nColPos >= 1 .AND. ::aColData[ ::nColPos ][ _TBCI_CELLWIDTH ] <= 0
       nCol := _PREVCOLUMN( ::aColData, ::nColPos - 1 )
@@ -1930,7 +1930,7 @@ METHOD freeze( nColumns ) CLASS TBROWSE
          ::nFrozen := nCols
          ::lFrames := .T.
          ::nLastPos := 0
-         /* CA-Clipper update visible columns here but without
+         /* CA-Cl*pper update visible columns here but without
           * colPos repositioning. [druzus]
           */
          _SETVISIBLE( ::aColData, _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1, ;

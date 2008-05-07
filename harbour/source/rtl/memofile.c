@@ -54,7 +54,7 @@
 #include "hbapiitm.h"
 #include "hbapifs.h"
 
-/* NOTE: CA-Clipper has 64K (65516 bytes exactly) limit on read, in Harbour
+/* NOTE: CA-Cl*pper has 64K (65516 bytes exactly) limit on read, in Harbour
          this limit is extended, so we are not *strictly* compatible here.
          [vszakats] */
 
@@ -123,8 +123,8 @@ static BOOL hb_memowrit( BOOL bWriteEOF )
 
          bRetVal = ( hb_fsWriteLarge( fhnd, ( BYTE * ) hb_itemGetCPtr( pString ), ulSize ) == ulSize );
 
-         /* NOTE: CA-Clipper will add the EOF even if the write failed. [vszakats] */
-         /* NOTE: CA-Clipper will not return .F. when the EOF could not be written. [vszakats] */
+         /* NOTE: CA-Cl*pper will add the EOF even if the write failed. [vszakats] */
+         /* NOTE: CA-Cl*pper will not return .F. when the EOF could not be written. [vszakats] */
 #if ! defined(OS_UNIX_COMPATIBLE)
          if( bWriteEOF )  /* if true, then write EOF */
          {

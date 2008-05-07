@@ -540,6 +540,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\samples$(OBJEXT)  \
     $(OBJ_DIR)\saverest$(OBJEXT) \
     $(OBJ_DIR)\scroll$(OBJEXT)   \
+    $(OBJ_DIR)\scrrow$(OBJEXT)   \
     $(OBJ_DIR)\secondfs$(OBJEXT) \
     $(OBJ_DIR)\seconds$(OBJEXT)  \
     $(OBJ_DIR)\set$(OBJEXT)      \

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * CA-Cl*pper compatibility memvar support
+ * hb_SCRMAXROW(), hb_SCRMAXCOL() functions
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,54 +51,28 @@
  */
 
 #include "hbapi.h"
+#include "hbapigt.h"
 
-HB_FUNC_EXTERN( __MVPUBLIC );
-HB_FUNC_EXTERN( __MVCLEAR );
-HB_FUNC_EXTERN( __MVRELEASE );
-HB_FUNC_EXTERN( __MVXRELEASE );
-HB_FUNC_EXTERN( __MVSAVE );
-HB_FUNC_EXTERN( __MVRESTORE );
+/*
+ * Normally it gives exactly the same result in all standard GT drivers 
+ * as MaxRow()/MaxCol(). The difference can appear in some extended
+ * GT drivers which have additional functionality, f.e. CTW GT which
+ * is upper level GT and add CTIII Window support. When it's activated
+ * then MaxRow() will return current window max row and hb_ScrMaxRow() real
+ * screen (window 0) max row what is the exact behavior of MaxRow()
+ * in CT3, [druzus]
+ */
 
-/* NOTE: Undocumented Clipper internal function. */
-
-#ifdef HB_C52_UNDOC
-
-HB_FUNC( __QQPUB )
+HB_FUNC( HB_SCRMAXROW ) /* Return the maximum screen row number (zero origin) */
 {
-   /* In Clipper __QQPUB function does not check number of parameters
-      or parameter type - just simply takes directly the top item from
-      VM stack */
-   if( hb_pcount() == 1 && hb_param( 1, HB_IT_STRING ) )
-   {
-      HB_FUNC_EXEC( __MVPUBLIC );
-   }
+   USHORT uiRows, uiCols;
+   hb_gtScrDim( &uiRows, &uiCols );
+   hb_retni( uiRows - 1 );
 }
 
-#endif
-
-/* CA-Cl*pper 5.2e compatibility functions. */
-
-HB_FUNC( __MCLEAR )
+HB_FUNC( HB_SCRMAXCOL ) /* Return the maximum screen column number (zero origin) */
 {
-   HB_FUNC_EXEC( __MVCLEAR );
-}
-
-HB_FUNC( __MRELEASE )
-{
-   HB_FUNC_EXEC( __MVRELEASE );
-}
-
-HB_FUNC( __MXRELEASE )
-{
-   HB_FUNC_EXEC( __MVXRELEASE );
-}
-
-HB_FUNC( __MSAVE )
-{
-   HB_FUNC_EXEC( __MVSAVE );
-}
-
-HB_FUNC( __MRESTORE )
-{
-   HB_FUNC_EXEC( __MVRESTORE );
+   USHORT uiRows, uiCols;
+   hb_gtScrDim( &uiRows, &uiCols );
+   hb_retni( uiCols - 1 );
 }
