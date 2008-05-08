@@ -329,3 +329,30 @@ HB_FUNC( CTWLASTKEY )
 {
    hb_retni( hb_ctwLastKey() );
 }
+
+/* NOTE: These two functions are emulating the MaxRow()/MaxCol() core functions 
+         "overloaded" by the CT3 library. */
+
+HB_FUNC( HBCT_MAXROW ) /* Return the maximum screen/window row number (zero origin) */
+{
+   if( ISLOG( 1 ) && hb_parl( 1 ) )
+   {
+      USHORT uiRows, uiCols;
+      hb_gtScrDim( &uiRows, &uiCols );
+      hb_retni( uiRows - 1 );
+   }
+   else
+      hb_retni( hb_gtMaxRow() );
+}
+
+HB_FUNC( HBCT_MAXCOL ) /* Return the maximum screen/window column number (zero origin) */
+{
+   if( ISLOG( 1 ) && hb_parl( 1 ) )
+   {
+      USHORT uiRows, uiCols;
+      hb_gtScrDim( &uiRows, &uiCols );
+      hb_retni( uiCols - 1 );
+   }
+   else
+      hb_retni( hb_gtMaxCol() );
+}

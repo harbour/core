@@ -56,7 +56,7 @@
 
 #define HB_GTI_ISGRAPHIC        0   /* 1 if GT has graphic support / pixel oriented */
 #define HB_GTI_SCREENWIDTH      1   /* Get/set width of application window in pixels */
-#define HB_GTI_SCREENHEIGHT     2   /* Get/set height of appl. window in pixels */
+#define HB_GTI_SCREENHEIGHT     2   /* Get/set height of application window in pixels */
 #define HB_GTI_SCREENDEPTH      3   /* Amount of bits used for colors in the application */
 #define HB_GTI_FONTSIZE         4   /* Get/set height of application font in pixels */
 #define HB_GTI_FONTWIDTH        5   /* Get/set width of application font characters */

@@ -50,6 +50,26 @@
  *
  */
 
+/*
+   If you want to limit your app to use an ADS version
+   earlier than the current one, you must set this constant
+      ADS_LIB_VERSION
+   to the *latest* version you want to allow/require, as in
+      -DADS_LIB_VERSION=500
+
+   As of 6/7/2004, the default supports linking to v6 and v7,
+   as there are no v7-specific features yet.
+   It does cover v6 data dictionary support, built-in
+   Internet Server capabilities, etc.
+
+   So to link to v5, do this:
+   1) Link with an ACE32.LIB created from the version 5
+         dll that imports these functions, and
+
+   2) Set this "define" when compiling rddads:
+      -DADS_LIB_VERSION=500
+*/
+
 /* Supported file types */
 #define ADS_NTX                  1
 #define ADS_CDX                  2
@@ -82,21 +102,64 @@
 #define ADS_IGNOREFILTERS        2
 #define ADS_RESPECTSCOPES        3
 
-#command SET FILETYPE TO <x:NTX,CDX,ADT>                              ;
-      => AdsSetFileType( if( upper( <(x)> ) == "NTX", 1,              ;
-                         if( upper( <(x)> ) == "CDX", 2, 3 ) ) )
-
-#command SET SERVER LOCAL   => AdsSetServerType( 1 )
-#command SET SERVER REMOTE  => AdsSetServerType( 2 )
+#command SET FILETYPE TO <x:NTX,CDX,ADT,VFP>                              ;
+      => AdsSetFileType( iif( Upper( <(x)> ) == "NTX", ADS_NTX,           ;
+                         iif( Upper( <(x)> ) == "CDX", ADS_CDX,           ;
+                         iif( Upper( <(x)> ) == "VFP", ADS_VFP, ADS_ADT ) ) ) )
 
 /* Server type constants for ORing with AdsSetServerType() */
 #define ADS_LOCAL_SERVER         1
 #define ADS_REMOTE_SERVER        2
 #define ADS_AIS_SERVER           4
 
+#command SET SERVER LOCAL   => AdsSetServerType( ADS_LOCAL_SERVER )
+#command SET SERVER REMOTE  => AdsSetServerType( ADS_REMOTE_SERVER )
+
+#command SET AXS LOCKING <x:ON,OFF>                                   ;
+      => AdsLocking( Upper( <(x)> ) == "ON" )
+
+#command SET RIGHTS CHECKING <x:ON,OFF>                               ;
+      => AdsRightsCheck( Upper( <(x)> ) == "ON" )
+
+/* character set types */
+#define ADS_ANSI                       1
+#define ADS_OEM                        2
+
+#command SET CHARTYPE TO <x:ANSI,OEM>                                 ;
+      => AdsSetCharType( iif( Upper( <(x)> ) == "OEM", ADS_OEM, ADS_ANSI ) )
+
+#command COMMIT                 => AdsWriteAllRecords()
+#command BEGIN TRANSACTION      => AdsBeginTransaction()
+#command COMMIT TRANSACTION     => AdsCommitTransaction()
+#command ROLLBACK TRANSACTION   => AdsRollback()
+
+#command AUTOUSE <(db)> VIA <rdd> ALTERNATE <altrdd>                       ;
+         [ALIAS <a>]                                                       ;
+         [<new: NEW>]                                                      ;
+         [<ex: EXCLUSIVE>]                                                 ;
+         [<sh: SHARED>]                                                    ;
+         [<ro: READONLY>]                                                  ;
+         [INDEX <(index1)> [, <(indexn)>]]                                 ;
+                                                                           ;
+      => IF AdsIsServerLoaded( <(db)> ) > 0                                ;
+       ;    dbUseArea(                                                     ;
+                      <.new.>, <rdd>, <(db)>, <(a)>,                       ;
+                      iif( <.sh.> .OR. <.ex.>, !<.ex.>, NIL ), <.ro.>      ;
+                     )                                                     ;
+            [; dbSetIndex( <(index1)> )]                                   ;
+            [; dbSetIndex( <(indexn)> )]                                   ;
+       ; ELSE                                                              ;
+       ;    dbUseArea(                                                     ;
+                      <.new.>, <altrdd>, <(db)>, <(a)>,                    ;
+                      iif( <.sh.> .OR. <.ex.>, !<.ex.>, NIL ), <.ro.>      ;
+                     )                                                     ;
+            [; dbSetIndex( <(index1)> )]                                   ;
+            [; dbSetIndex( <(indexn)> )]                                   ;
+       ; ENDIF
+
 /*
- * Constants for AdsMgGetServerType
- * Note ADS_MGMT_NETWARE_SERVER remains for backwards compatibility only
+ * Constants for AdsMgGetServerType()
+ * Note ADS_MGMT_NETWARE_SERVER remains for backwards compatibility only.
  */
 #define ADS_MGMT_NETWARE_SERVER           1
 #define ADS_MGMT_NETWARE4_OR_OLDER_SERVER 1
@@ -105,35 +168,6 @@
 #define ADS_MGMT_WIN9X_SERVER             4
 #define ADS_MGMT_NETWARE5_OR_NEWER_SERVER 5
 #define ADS_MGMT_LINUX_SERVER             6
-
-/*
-   If you want to limit your app to use an ADS version
-   earlier than the current one, you must set this constant
-      ADS_LIB_VERSION
-   to the *latest* version you want to allow/require, as in
-      -DADS_LIB_VERSION=500
-
-   As of 6/7/2004, the default supports linking to v6 and v7,
-   as there are no v7-specific features yet.
-   It does cover v6 data dictionary support, built-in
-   Internet Server capabilities, etc.
-
-   So to link to v5, do this:
-   1) Link with an ACE32.LIB created from the version 5
-         dll that imports these functions, and
-
-   2) Set this "define" when compiling rddads:
-      -DADS_LIB_VERSION=500
-
-*/
-
-#command SET AXS LOCKING <x:ON,OFF>                                   ;
-      => AdsLocking( if( upper( <(x)> ) == "ON", .t., .f. )  )
-
-#command SET CHARTYPE TO <x:ANSI,OEM>                                 ;
-      => AdsSetCharType( if( upper( <(x)> ) == "OEM", 2, 1 ) )
-
-#command COMMIT                 => AdsWriteAllRecords()
 
 /* ACE Handle types */
 #define ADS_CONNECTION            1
@@ -146,13 +180,6 @@
 #define ADS_FTS_INDEX_ORDER       8
 
 #define AE_NO_CONNECTION          5036
-
-
-#command BEGIN TRANSACTION      => AdsBeginTransaction()
-
-#command COMMIT TRANSACTION     => AdsCommitTransaction()
-
-#command ROLLBACK TRANSACTION   => AdsRollback()
 
 #define ADS_DD_TABLE_OBJECT              1
 #define ADS_DD_RELATION_OBJECT           2
@@ -169,12 +196,10 @@
 #define ADS_DD_LINK_OBJECT               12
 #define ADS_DD_TABLE_VIEW_OR_LINK_OBJECT 13  /* Used in v6.2 AdsFindFirst/NextTable */
 
-
 /* Common properties numbers < 100 */
 #define ADS_DD_COMMENT           1
 #define ADS_DD_VERSION           2
 #define ADS_DD_USER_DEFINED_PROP 3
-
 
 /* Database properties between 100 and 199 */
 #define ADS_DD_DEFAULT_TABLE_PATH      100
@@ -281,7 +306,6 @@
 #define ADS_DD_LINK_OPTIONS            1301
 #define ADS_DD_LINK_USERNAME           1302
 
-
 #define ADS_DD_LEVEL_0  0
 #define ADS_DD_LEVEL_1  1
 #define ADS_DD_LEVEL_2  2
@@ -296,30 +320,3 @@
 #define ADS_DD_DFV_UNKNOWN         1
 #define ADS_DD_DFV_NONE            2
 #define ADS_DD_DFV_VALUES_STORED   3
-
-#command AUTOUSE <(db)> VIA <rdd> ALTERNATE <altrdd>                       ;
-         [ALIAS <a>]                                                       ;
-         [<new: NEW>]                                                      ;
-         [<ex: EXCLUSIVE>]                                                 ;
-         [<sh: SHARED>]                                                    ;
-         [<ro: READONLY>]                                                  ;
-         [INDEX <(index1)> [, <(indexn)>]]                                 ;
-                                                                           ;
-      => if ADSISSERVERLOADED(  <(db)>  ) >0                             ;
-       ;    dbUseArea(                                                     ;
-                      <.new.>, <rdd>, <(db)>, <(a)>,                       ;
-                      if (<.sh.> .or. <.ex.>, !<.ex.>, NIL), <.ro.>        ;
-                     )                                                     ;
-            [; dbSetIndex( <(index1)> )]                                   ;
-            [; dbSetIndex( <(indexn)> )]                                   ;
-       ; else                                                              ;
-       ;    dbUseArea(                                                     ;
-                      <.new.>, <altrdd>, <(db)>, <(a)>,                    ;
-                      if (<.sh.> .or. <.ex.>, !<.ex.>, NIL), <.ro.>        ;
-                     )                                                     ;
-            [; dbSetIndex( <(index1)> )]                                   ;
-            [; dbSetIndex( <(indexn)> )]                                   ;
-       ; endif
-
-#command SET RIGHTS CHECKING  <x:ON,OFF>                              ;
-      => ADSRIGHTSCHECK ( if( upper( <(x)> ) == "ON", 1,0)          )

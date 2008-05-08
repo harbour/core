@@ -51,6 +51,7 @@
  */
 
 #include "hbapirdd.h"
+
 #if defined( HB_OS_WIN_32 ) && !defined( WIN32 )
    #define WIN32
 #endif
@@ -111,7 +112,8 @@
 
 HB_EXTERN_BEGIN
 
-
+/* Function is not documented, but exists in ace32.dll version 6.x, 7.x */
+UNSIGNED32 ENTRYPOINT AdsDeleteFile( ADSHANDLE hConnection, UNSIGNED8* pucFileName );
 
 /*
  *  ADS WORKAREA
@@ -232,6 +234,5 @@ extern ADSAREAP hb_rddGetADSWorkAreaPointer( void );
 #  define hb_adsAnsiToOem( s, l )     ( s )
 #  define hb_adsOemAnsiFree( s )
 #endif
-
 
 HB_EXTERN_END

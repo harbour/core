@@ -6,12 +6,9 @@ rem
 if not "%ADS_DIR%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
-echo IMPORTANT: You'll need Advantage Client Engine installed and
-echo            these envvars set to successfully build this library:
-echo            set ADS_VER=8
+echo IMPORTANT: You'll need Advantage Client Engine (5.0 or upper) 
+echo            and this envvar to be set to successfully build this library:
 echo            set ADS_DIR=C:\ads\acesdk
-echo            NOTE: The lowest tested version is ACE 6.x, it 
-echo                  may also work with 5.x.
 echo ---------------------------------------------------------------
 goto POST_EXIT
 
@@ -19,7 +16,6 @@ goto POST_EXIT
 
 set CFLAGS=-I%ADS_DIR%
 set HB_DLL_NAME=ace32
-if exist "%SystemRoot%\system32\%HB_DLL_NAME%.dll"  set HB_DLL_DIR=%SystemRoot%\system32
 if exist "%ADS_DIR%\Redistribute\%HB_DLL_NAME%.dll" set HB_DLL_DIR=%ADS_DIR%\Redistribute
 if exist "%ADS_DIR%\%HB_DLL_NAME%.dll"              set HB_DLL_DIR=%ADS_DIR%
 if exist "%ADS_DIR%\32bit\%HB_DLL_NAME%.dll"        set HB_DLL_DIR=%ADS_DIR%\32bit

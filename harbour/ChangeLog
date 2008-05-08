@@ -8,6 +8,81 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-08 21:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/ads.ch
+   * contrib/rddads/rddads.h
+   * contrib/rddads/adsfunc.c
+   * contrib/rddads/ads1.c
+   * contrib/rddads/adsmgmnt.c
+     * Lots of minor code cleanups, formatting fixes, optimizations, 
+       and several minor fixes.
+     ! Lib version related fixes. (some features were not updated 
+       for newer ACE versions).
+     + Automatic version detection extended with 6.20 and 5.00.
+       6.00 is still missing, if someone has it, pls send it to 
+       me. Even 6.11-8.00 versions disappeared from the vendor's 
+       site lately.
+     + Added support for all possible properties in
+       ADSDDGETDATABASEPROPERTY()
+       ADSDDSETDATABASEPROPERTY()
+     * ADSMGGETUSERNAMES() will now always return an array of 
+       users with 6 elements in each item, all data which 
+       is not available for the compiled version of the lib, 
+       will be filled with empty strings. Previously the 
+       number of elements depended on the compiled version.
+     ; Besides the above, no functionality change should be 
+       experienced.
+     ; Please test.
+
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+     ! Changed to never look for ace32.dll in system32 dir 
+       to generate the ace32.lib.
+     ! Some other fixes to prev change where ADS_VER 
+       was obsoleted.
+
+   * contrib/hbct/ctwfunc.c
+   * contrib/hbct/ctextern.ch
+     + Added hbct_MaxRow()/hbct_MaxCol() emulating 
+       the original overloaded MaxRow()/MaxCol() 
+       functions of CT3 lib.
+
+   * source/rtl/maxrow.c
+     * Reverted previous change on request, thus introducing 
+       a 3rd party lib specific function parameter extension.
+       Users of CT3 lib's overloaded MaxRow(.T.)/MaxCol(.T.) 
+       functions are encouraged to change the app code 
+       to rather use hbct_MaxRow()/hbct_MaxCol() 
+       or hb_ScrMaxRow()/hbScrMaxCol(). These functions are 
+       easy to implement in CA-Cl*pper too (simple wrappers 
+       to Max*()).
+
+   * source/compiler/hbmain.c
+     * Reverted previous change on request. Some outputs 
+       are not exactly CA-Cl*pper compatible this way, but 
+       functionally it probably doesn't matter for most ppl.
+
+   * contrib/xhb/hbcompat.ch
+     ! Corrected MaxRow()/MaxCol()/hb_ScrMaxRow()/hb_ScrMaxCol()
+       translations. (hopefully, someone using xhb please test)
+
+   - tests/ctwtest.prg
+   + contrib/hbct/tests/ctwtest.prg
+     * Moved CT lib specific test to contrib local test 
+       directory (containing lots of other CT tests 
+       already). Building these is yet to be solved.
+
+   * contrib/hbct/tests/math.prg
+   * contrib/hbct/tests/trig.prg
+   * contrib/hbct/tests/num1.prg
+     ! Added SVN header.
+
+   * include/hbgtinfo.ch
+     * Minor comment.
+
+   * contrib/rddads/make_gcc.sh
+     * Help text sync with *.bat.
+
 2008-05-08 14:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/tbrowse.prg
     ! fixed positioning when cursor is moved by :rowpos assignment and

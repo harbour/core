@@ -189,15 +189,15 @@ static ERRCODE commonError( ADSAREAP pArea, USHORT uiGenCode, USHORT uiSubCode,
 #if 0
 static void DumpArea( ADSAREAP pArea )  /* For debugging: call this to dump ads server settings to HB_TRACE. Currently in a quick-and-dirty state... */
 {
-   UNSIGNED8  pucTemp[1025];
+   UNSIGNED8  pucTemp[ 1025 ];
    UNSIGNED16 pusLen = 1024;
    UNSIGNED32 ulRetVal, ulRetAOF, ulRetFilt;
-   UNSIGNED8  pucFormat[16];
-   UNSIGNED8  pucFilter[1025];
-   /*UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];*/
-   UNSIGNED8  pucIndexName[MAX_STR_LEN + 1];
-   UNSIGNED8  pucIndexExpr[MAX_STR_LEN + 1];
-   UNSIGNED8  pucIndexCond[MAX_STR_LEN + 1];
+   UNSIGNED8  pucFormat[ 16 ];
+   UNSIGNED8  pucFilter[ 1025 ];
+/* UNSIGNED8  aucBuffer[ MAX_STR_LEN + 1 ]; */
+   UNSIGNED8  pucIndexName[ MAX_STR_LEN + 1 ];
+   UNSIGNED8  pucIndexExpr[ MAX_STR_LEN + 1 ];
+   UNSIGNED8  pucIndexCond[ MAX_STR_LEN + 1 ];
 
    if( pArea )
    {
@@ -225,13 +225,12 @@ static void DumpArea( ADSAREAP pArea )  /* For debugging: call this to dump ads 
          AdsGetIndexExpr( pArea->hOrdCurrent, pucIndexExpr, &pusLen );
 
          pusLen = 1024;   /*ADS top/bottom are 1,2 instead of 0,1*/
-         ulRetVal  = AdsGetScope( pArea->hOrdCurrent, 1, pucTemp, &pusLen );
+         ulRetVal  = AdsGetScope( pArea->hOrdCurrent, ADS_TOP, pucTemp, &pusLen );
          pusLen = 1024;
-         ulRetFilt = AdsGetScope( pArea->hOrdCurrent, 2, pucFilter, &pusLen );
+         ulRetFilt = AdsGetScope( pArea->hOrdCurrent, ADS_BOTTOM, pucFilter, &pusLen );
 
          HB_TRACE(HB_TR_ALWAYS, ("DumpArea Index: %s   Expr: %s  Cond: %s\n        Scope: (RetVal %lu) %s  Bottom: (RetVal %lu) %s",
                pucIndexName, pucIndexExpr, pucIndexCond, ulRetVal, pucTemp, ulRetFilt, pucFilter));
-
       }
    }
 }
@@ -241,8 +240,8 @@ static BOOL adsIndexKeyCmp( ADSHANDLE hIndex, UNSIGNED8 * pszKey, UNSIGNED16 u16
 {
    UNSIGNED32 u32RetVal;
    UNSIGNED16 u16Found = FALSE;
+   UNSIGNED8  pucCurKey[ ADS_MAX_KEY_LENGTH + 1 ];
    UNSIGNED16 u16CurKeyLen = ADS_MAX_KEY_LENGTH;
-   UNSIGNED8  pucCurKey[ADS_MAX_KEY_LENGTH + 1];
 
    /*
     * test if current record has fields that match the given key expression.
@@ -462,7 +461,7 @@ static void adsGetKeyItem( ADSAREAP pArea, PHB_ITEM pItem, int iKeyType,
          {
             hb_itemPutDS( pItem, pKeyBuf );
          }
-         else     /* ADS_CDX, ADS_ADT */
+         else /* ADS_CDX, ADS_ADT, ADS_VFP */
          {
             HB_ORD2DBL( pKeyBuf, &dValue );
             hb_itemPutDL( pItem, ( LONG ) dValue );
@@ -481,7 +480,7 @@ static void adsGetKeyItem( ADSAREAP pArea, PHB_ITEM pItem, int iKeyType,
 
 static void adsScopeGet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, PHB_ITEM pItem )
 {
-   UNSIGNED8  pucScope[ ADS_MAX_KEY_LENGTH+1 ];
+   UNSIGNED8  pucScope[ ADS_MAX_KEY_LENGTH + 1 ];
    UNSIGNED16 u16Len = ADS_MAX_KEY_LENGTH;
    UNSIGNED32 u32RetVal;
    UNSIGNED16 u16KeyType = 0;
@@ -2818,8 +2817,8 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
       case DBI_FULLPATH :
          {
-            UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
-            UNSIGNED16 pusLen   = MAX_STR_LEN;
+            UNSIGNED8  aucBuffer[ MAX_STR_LEN + 1 ];
+            UNSIGNED16 pusLen = MAX_STR_LEN;
             AdsGetTableFilename( pArea->hTable, ADS_FULLPATHNAME, aucBuffer, &pusLen );
             hb_itemPutCL( pItem, (char*)aucBuffer, pusLen );
             break;
@@ -2863,9 +2862,9 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          UNSIGNED32 ulMajor;
          UNSIGNED32 ulMinor;
          UNSIGNED8  ucLetter;
-         UNSIGNED8  ucDesc[128];
+         UNSIGNED8  ucDesc[ 128 ];
          UNSIGNED16 usDescLen = sizeof( ucDesc ) - 1;
-         UNSIGNED8  ucVersion[256];
+         UNSIGNED8  ucVersion[ 256 ];
 
          AdsGetVersion( &ulMajor, &ulMinor, &ucLetter, ucDesc, &usDescLen);
 
@@ -2954,11 +2953,13 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    u32RetVal = AdsGetHandleType( hConnection, &pusType);
    if( u32RetVal == AE_SUCCESS )
    {
-#ifdef ADS_SYS_ADMIN_CONNECTION /* Defined below 9.00 */
+#if ADS_LIB_VERSION >= 600 /* ADS_*_CONNECTION was added in >= 6.00 */
+#if ADS_LIB_VERSION < 900 /* ADS_SYS_ADMIN_CONNECTION was removed in >= 9.00 */
       fDictionary = ( pusType == ADS_DATABASE_CONNECTION
                    || pusType == ADS_SYS_ADMIN_CONNECTION );
 #else
       fDictionary = ( pusType == ADS_DATABASE_CONNECTION );
+#endif
 #endif
    }
    szFile = ( char * ) pOpenInfo->abName;
@@ -3077,7 +3078,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       dbFieldInfo.uiFlags = 0;
       if( u32Length > pArea->maxFieldLen )
       {
-        pArea->maxFieldLen = u32Length;
+         pArea->maxFieldLen = u32Length;
       }
 
       dbFieldInfo.uiTypeExtended = pusType;
@@ -3093,9 +3094,11 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
             dbFieldInfo.uiFlags = HB_FF_BINARY;
             break;
 
+#ifdef ADS_CISTRING /* Not defined below 7.10 */
          case ADS_CISTRING:
             dbFieldInfo.uiType = HB_FT_STRING;
             break;
+#endif
 
          case ADS_NUMERIC:
             dbFieldInfo.uiTypeExtended = 0;
@@ -3418,7 +3421,7 @@ static ERRCODE adsSetRel( ADSAREAP pArea, LPDBRELINFO  lpdbRelations )
 
 static ERRCODE adsOrderListAdd( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
-   ADSHANDLE ahIndex[50];
+   ADSHANDLE ahIndex[ 50 ];
    UNSIGNED16 u16ArrayLen = 50;
    UNSIGNED32 u32RetVal;
 
@@ -3695,7 +3698,7 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 
    if( fClose )
    {
-      ADSHANDLE ahIndex[50];
+      ADSHANDLE ahIndex[ 50 ];
       UNSIGNED16 pusArrayLen = 50;
 
       u32RetVal = AdsOpenIndex( pArea->hTable,
@@ -3750,7 +3753,7 @@ static ERRCODE adsOrderDestroy( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
 static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrderInfo )
 {
    ADSHANDLE  hIndex;
-   UNSIGNED8  aucBuffer[MAX_STR_LEN + 1];
+   UNSIGNED8  aucBuffer[ MAX_STR_LEN + 1 ];
    UNSIGNED16 u16len  = MAX_STR_LEN;
    UNSIGNED16 u16     = 0;
    UNSIGNED32 u32     = 0;

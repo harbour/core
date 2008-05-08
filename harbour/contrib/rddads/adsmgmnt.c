@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Advantage Database Server RDD ( Management functions )
+ * Advantage Database Server RDD (Management functions)
  *
- * Copyright 2001 Brian Hays  <bhays@abacuslaw.com>
+ * Copyright 2001 Brian Hays <bhays@abacuslaw.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -67,14 +67,10 @@ ADSHANDLE ads_g_hMgmtHandle = 0;
 
 HB_FUNC( ADSMGCONNECT )
 {
-      /*   ulRetVal = AdsMgConnect( "\\\\server\\volume:", NULL, NULL, &ads_g_hMgmtHandle );
-      //   UNSIGNED32 ENTRYPOINT AdsMgConnect( UNSIGNED8   *pucServerName,
-      //                                       UNSIGNED8   *pucUserName,
-      //                                       UNSIGNED8   *pucPassword,
-      //                                       ADSHANDLE   *pads_g_hMgmtHandle );
-      */
-
-   hb_retnl( AdsMgConnect( (UNSIGNED8 *) hb_parcx(1), (UNSIGNED8 *) hb_parcx(2), (UNSIGNED8 *) hb_parcx(3), &ads_g_hMgmtHandle ) );
+   hb_retnl( AdsMgConnect( (UNSIGNED8 *) hb_parcx( 1 ) /* pucServerName */, 
+                           (UNSIGNED8 *) hb_parcx( 2 ) /* pucUserName */, 
+                           (UNSIGNED8 *) hb_parcx( 3 ) /* pucPassword */, 
+                           &ads_g_hMgmtHandle ) );
 }
 
 HB_FUNC( ADSMGDISCONNECT )
@@ -86,60 +82,63 @@ HB_FUNC( ADSMGDISCONNECT )
 HB_FUNC( ADSMGGETINSTALLINFO )
 {
    UNSIGNED32  ulRetVal;
-   UNSIGNED16  usStructSize;
    ADS_MGMT_INSTALL_INFO  stInstallInfo;
+   UNSIGNED16  usStructSize = sizeof( ADS_MGMT_INSTALL_INFO );
 
-   usStructSize = sizeof( ADS_MGMT_INSTALL_INFO );
    ulRetVal = AdsMgGetInstallInfo( ads_g_hMgmtHandle, &stInstallInfo, &usStructSize );
 
    /*
-   //if( sizeof( ADS_MGMT_INSTALL_INFO ) < usStructSize )
-   //   printf( "\nInstallation Information structure on server is larger." );
-   //   printf( "\nMore possible info available." );
+   if( sizeof( ADS_MGMT_INSTALL_INFO ) < usStructSize )
+   {
+      HB_TRACE(HB_TR_INFO, ("AdsMgGetInstallInfo() structure on the server is larger.\n"
+                            "More info is available with newer client lib." ));
+   }
    */
 
    if( ulRetVal == AE_SUCCESS )
    {
       hb_reta( 8 );
-      hb_stornl( stInstallInfo.ulUserOption               , -1, 1 );  /* User option purchased*/
-      hb_storc ( (char *) stInstallInfo.aucRegisteredOwner, -1, 2 );  /* Registered owner     */
-      hb_storc ( (char *) stInstallInfo.aucVersionStr     , -1, 3 );  /* Advantage version    */
-      hb_storc ( (char *) stInstallInfo.aucInstallDate    , -1, 4 );  /* Install date string  */
-      hb_storc ( (char *) stInstallInfo.aucOemCharName    , -1, 5 );  /* OEM char language    */
-      hb_storc ( (char *) stInstallInfo.aucAnsiCharName   , -1, 6 );  /* ANSI char language   */
-      hb_storc ( (char *) stInstallInfo.aucEvalExpireDate , -1, 7 );  /* Eval expiration date */
-      hb_storc ( (char *) stInstallInfo.aucSerialNumber   , -1, 8 );  /* Serial number string */
+      hb_stornl( stInstallInfo.ulUserOption               , -1, 1 );  /* User option purchased */
+      hb_storc ( (char *) stInstallInfo.aucRegisteredOwner, -1, 2 );  /* Registered owner      */
+      hb_storc ( (char *) stInstallInfo.aucVersionStr     , -1, 3 );  /* Advantage version     */
+      hb_storc ( (char *) stInstallInfo.aucInstallDate    , -1, 4 );  /* Install date string   */
+      hb_storc ( (char *) stInstallInfo.aucOemCharName    , -1, 5 );  /* OEM char language     */
+      hb_storc ( (char *) stInstallInfo.aucAnsiCharName   , -1, 6 );  /* ANSI char language    */
+      hb_storc ( (char *) stInstallInfo.aucEvalExpireDate , -1, 7 );  /* Eval expiration date  */
+      hb_storc ( (char *) stInstallInfo.aucSerialNumber   , -1, 8 );  /* Serial number string  */
    }
 }
 
 HB_FUNC( ADSMGGETACTIVITYINFO )
 {
    UNSIGNED32  ulRetVal;
-   UNSIGNED16  usStructSize;
    ADS_MGMT_ACTIVITY_INFO  stActivityInfo;
+   UNSIGNED16  usStructSize = sizeof( ADS_MGMT_ACTIVITY_INFO );
    unsigned int iOption = hb_parni( 1 );
 
-   usStructSize = sizeof( ADS_MGMT_ACTIVITY_INFO );
    ulRetVal = AdsMgGetActivityInfo( ads_g_hMgmtHandle, &stActivityInfo, &usStructSize );
-      /*
-      //   if( sizeof( ADS_MGMT_ACTIVITY_INFO ) < usStructSize )
-      //      printf( "\nActivity Information structure on server is larger." );
-      //      printf( "\nMore possible info available." );
-      */
+
+   /*
+   if( sizeof( ADS_MGMT_ACTIVITY_INFO ) < usStructSize )
+   {
+      HB_TRACE(HB_TR_INFO, ("AdsMgGetActivityInfo() structure on the server is larger.\n"
+                            "More info is available with newer client lib." ));
+   }
+   */
+
    if( iOption && ulRetVal == AE_SUCCESS )
    {
       switch( iOption )
       {
-         case 1 :
+         case 1:
             hb_retnl( stActivityInfo.ulOperations );     /* Number operations since started */
             break;
 
-         case 2 :
+         case 2:
             hb_retnl( stActivityInfo.ulLoggedErrors );   /* Number logged errors            */
             break;
 
-
-         case 3 :
+         case 3:
             hb_reta( 4 );                                /* Length of time ADS has been up  */
             hb_stornl( stActivityInfo.stUpTime.usDays,    -1, 1 );
             hb_stornl( stActivityInfo.stUpTime.usHours,   -1, 2 );
@@ -147,86 +146,75 @@ HB_FUNC( ADSMGGETACTIVITYINFO )
             hb_stornl( stActivityInfo.stUpTime.usSeconds, -1, 4 );
             break;
 
-
-         case 4 :
+         case 4:
             hb_reta( 3 );                                /* Users in use, max, rejected     */
             hb_stornl( stActivityInfo.stUsers.ulInUse,    -1, 1 );
             hb_stornl( stActivityInfo.stUsers.ulMaxUsed,  -1, 2 );
             hb_stornl( stActivityInfo.stUsers.ulRejected, -1, 3 );
             break;
 
-
-         case 5 :
+         case 5:
             hb_reta( 3 );                                /* Conns in use, max, rejected     */
             hb_stornl( stActivityInfo.stConnections.ulInUse,    -1, 1 );
             hb_stornl( stActivityInfo.stConnections.ulMaxUsed,  -1, 2 );
             hb_stornl( stActivityInfo.stConnections.ulRejected, -1, 3 );
             break;
 
-
-         case 6 :
+         case 6:
             hb_reta( 3 );                                /* WAs in use, max, rejected       */
             hb_stornl( stActivityInfo.stWorkAreas.ulInUse,    -1, 1 );
             hb_stornl( stActivityInfo.stWorkAreas.ulMaxUsed,  -1, 2 );
             hb_stornl( stActivityInfo.stWorkAreas.ulRejected, -1, 3 );
             break;
 
-
-         case 7 :
+         case 7:
             hb_reta( 3 );                                /* Tables in use, max, rejected    */
             hb_stornl( stActivityInfo.stTables.ulInUse,    -1, 1 );
             hb_stornl( stActivityInfo.stTables.ulMaxUsed,  -1, 2 );
             hb_stornl( stActivityInfo.stTables.ulRejected, -1, 3 );
             break;
 
-
-         case 8 :
+         case 8:
             hb_reta( 3 );                                /* Indexes in use, max, rejected   */
             hb_stornl( stActivityInfo.stIndexes.ulInUse,    -1, 1 );
             hb_stornl( stActivityInfo.stIndexes.ulMaxUsed,  -1, 2 );
             hb_stornl( stActivityInfo.stIndexes.ulRejected, -1, 3 );
             break;
 
-
-         case 9 :
+         case 9:
             hb_reta( 3 );                                /* Locks in use, max, rejected     */
             hb_stornl( stActivityInfo.stLocks.ulInUse,    -1, 1 );
             hb_stornl( stActivityInfo.stLocks.ulMaxUsed,  -1, 2 );
             hb_stornl( stActivityInfo.stLocks.ulRejected, -1, 3 );
             break;
 
-
-         case 10 :
+         case 10:
             hb_reta( 3 );                                /* TPS header elems in use, max    */
             hb_stornl( stActivityInfo.stTpsHeaderElems.ulInUse,    -1, 1 );
             hb_stornl( stActivityInfo.stTpsHeaderElems.ulMaxUsed,  -1, 2 );
             hb_stornl( stActivityInfo.stTpsHeaderElems.ulRejected, -1, 3 );
             break;
 
-
-         case 11 :
+         case 11:
             hb_reta( 3 );                                /* TPS vis elems in use, max       */
             hb_stornl( stActivityInfo.stTpsVisElems.ulInUse,    -1, 1 );
             hb_stornl( stActivityInfo.stTpsVisElems.ulMaxUsed,  -1, 2 );
             hb_stornl( stActivityInfo.stTpsVisElems.ulRejected, -1, 3 );
             break;
 
-
-         case 12 :
+         case 12:
             hb_reta( 3 );                                /* TPS memo elems in use, max      */
             hb_stornl( stActivityInfo.stTpsMemoElems.ulInUse,    -1, 1 );
             hb_stornl( stActivityInfo.stTpsMemoElems.ulMaxUsed,  -1, 2 );
             hb_stornl( stActivityInfo.stTpsMemoElems.ulRejected, -1, 3 );
             break;
 
-
-         case 13 :
+         case 13:
             hb_reta( 3 );                                /* Worker threads in use, max      */
             hb_stornl( stActivityInfo.stWorkerThreads.ulInUse,    -1, 1 );
             hb_stornl( stActivityInfo.stWorkerThreads.ulMaxUsed,  -1, 2 );
             hb_stornl( stActivityInfo.stWorkerThreads.ulRejected, -1, 3 );
             break;
-
       }
    }
 }
@@ -234,32 +222,33 @@ HB_FUNC( ADSMGGETACTIVITYINFO )
 HB_FUNC( ADSMGGETCOMMSTATS )
 {
    UNSIGNED32  ulRetVal;
-   UNSIGNED16  usStructSize;
    ADS_MGMT_COMM_STATS  stCommStats;
+   UNSIGNED16  usStructSize = sizeof( ADS_MGMT_COMM_STATS );
 
-   usStructSize = sizeof( ADS_MGMT_COMM_STATS );
    ulRetVal = AdsMgGetCommStats( ads_g_hMgmtHandle, &stCommStats, &usStructSize );
-      /*
-      //   if( sizeof( ADS_MGMT_COMM_STATS ) < usStructSize )
-      //   {
-      //      HB_TRACE(HB_TR_INFO, ("The Communication Statistics structure on the server is larger.
-      //         \nMore info is available with the current ACE.H." ));
-      //   }
-      */
+
+   /*
+   if( sizeof( ADS_MGMT_COMM_STATS ) < usStructSize )
+   {
+      HB_TRACE(HB_TR_INFO, ("AdsMgGetCommStats() structure on the server is larger.\n"
+                            "More info is available with newer client lib." ));
+   }
+   */
+
    if( ulRetVal == AE_SUCCESS )
    {
       hb_reta( 11 );
-      hb_stornd( stCommStats.dPercentCheckSums,  -1, 1 );  /* % of pkts with checksum failures */
-      hb_stornl( stCommStats.ulTotalPackets,     -1, 2 );  /* Total packets received           */
-      hb_stornl( stCommStats.ulRcvPktOutOfSeq  , -1, 3 );  /* Receive packets out of sequence  */
-      hb_stornl( stCommStats.ulNotLoggedIn     , -1, 4 );  /* Packet owner not logged in       */
-      hb_stornl( stCommStats.ulRcvReqOutOfSeq  , -1, 5 );  /* Receive requests out of sequence */
-      hb_stornl( stCommStats.ulCheckSumFailures, -1, 6 );  /* Checksum failures                */
-      hb_stornl( stCommStats.ulDisconnectedUsers,-1, 7 );  /* Server initiated disconnects     */
-      hb_stornl( stCommStats.ulPartialConnects , -1, 8 );  /* Removed partial connections      */
-      hb_stornl( stCommStats.ulInvalidPackets  , -1, 9 );  /* Rcvd invalid packets (NT only)   */
-      hb_stornl( stCommStats.ulRecvFromErrors  , -1, 10);  /* RecvFrom failed (NT only)        */
-      hb_stornl( stCommStats.ulSendToErrors    , -1, 11);  /* SendTo failed (NT only)          */
+      hb_stornd( stCommStats.dPercentCheckSums  , -1, 1 );  /* % of pkts with checksum failures */
+      hb_stornl( stCommStats.ulTotalPackets     , -1, 2 );  /* Total packets received           */
+      hb_stornl( stCommStats.ulRcvPktOutOfSeq   , -1, 3 );  /* Receive packets out of sequence  */
+      hb_stornl( stCommStats.ulNotLoggedIn      , -1, 4 );  /* Packet owner not logged in       */
+      hb_stornl( stCommStats.ulRcvReqOutOfSeq   , -1, 5 );  /* Receive requests out of sequence */
+      hb_stornl( stCommStats.ulCheckSumFailures , -1, 6 );  /* Checksum failures                */
+      hb_stornl( stCommStats.ulDisconnectedUsers, -1, 7 );  /* Server initiated disconnects     */
+      hb_stornl( stCommStats.ulPartialConnects  , -1, 8 );  /* Removed partial connections      */
+      hb_stornl( stCommStats.ulInvalidPackets   , -1, 9 );  /* Rcvd invalid packets (NT only)   */
+      hb_stornl( stCommStats.ulRecvFromErrors   , -1, 10);  /* RecvFrom failed (NT only)        */
+      hb_stornl( stCommStats.ulSendToErrors     , -1, 11);  /* SendTo failed (NT only)          */
    }
 }
 
@@ -277,29 +266,33 @@ HB_FUNC( ADSMGRESETCOMMSTATS )
 
 HB_FUNC( ADSMGGETCONFIGINFO )
 {
-   UNSIGNED32 ulRetVal ;
-   ADS_MGMT_CONFIG_PARAMS  stConfigValues;
-   ADS_MGMT_CONFIG_MEMORY  stConfigMemory;
-   UNSIGNED16 usConfigValuesStructSize;
-   UNSIGNED16 usConfigMemoryStructSize;
-   int iOption = ISNUM(1) ? hb_parni(1) : 1 ;  /* Pass 0 for Values, 1 for memory */
+   UNSIGNED32 ulRetVal;
+   ADS_MGMT_CONFIG_PARAMS stConfigValues;
+   ADS_MGMT_CONFIG_MEMORY stConfigMemory;
+   UNSIGNED16 usConfigValuesStructSize = sizeof( ADS_MGMT_CONFIG_PARAMS );
+   UNSIGNED16 usConfigMemoryStructSize = sizeof( ADS_MGMT_CONFIG_MEMORY );
+   int iOption = ISNUM( 1 ) ? hb_parni( 1 ) : 1;  /* Pass 0 for Values, 1 for memory */
 
-   usConfigValuesStructSize = sizeof( ADS_MGMT_CONFIG_PARAMS );
-   usConfigMemoryStructSize = sizeof( ADS_MGMT_CONFIG_MEMORY );
+   ulRetVal = AdsMgGetConfigInfo( ads_g_hMgmtHandle,
+                                  &stConfigValues,
+                                  &usConfigValuesStructSize,
+                                  &stConfigMemory,
+                                  &usConfigMemoryStructSize );
 
-   usConfigValuesStructSize = sizeof( ADS_MGMT_CONFIG_PARAMS );
-   usConfigMemoryStructSize = sizeof( ADS_MGMT_CONFIG_MEMORY );
+   /*
+   if( sizeof( ADS_MGMT_CONFIG_PARAMS ) < usConfigValuesStructSize )
+   {
+      HB_TRACE(HB_TR_INFO, ("AdsMgGetConfigInfo() values structure on the server is larger.\n"
+                            "More info is available with newer client lib." ));
+   }
 
-   ulRetVal = AdsMgGetConfigInfo( ads_g_hMgmtHandle, &stConfigValues,
-                                 &usConfigValuesStructSize,
-                                 &stConfigMemory, &usConfigMemoryStructSize );
+   if( sizeof( ADS_MGMT_CONFIG_MEMORY ) < usConfigMemoryStructSize )
+   {
+      HB_TRACE(HB_TR_INFO, ("AdsMgGetConfigInfo() memory structure on the server is larger.\n"
+                            "More info is available with newer client lib." ));
+   }
+   */
 
-      /*
-      //   if( sizeof( ADS_MGMT_CONFIG_PARAMS ) < usConfigValuesStructSize )
-      //      printf( "\nConfiguration Values structure on server is larger." );
-      //   if( sizeof( ADS_MGMT_CONFIG_MEMORY ) < usConfigMemoryStructSize )
-      //      printf( "\nConfiguration Memory structure on server is larger." );
-      */
    if( ulRetVal == AE_SUCCESS )
    {
       if( iOption == 0 )
@@ -366,41 +359,33 @@ HB_FUNC( ADSMGGETCONFIGINFO )
 
 HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
 {
-
-   UNSIGNED32  ulRetVal;
-   UNSIGNED16  ulMaxUsers = 2000;        /* needed for array memory allocation; caller can set with 2nd arg */
-   UNSIGNED16  ulCount;
-   UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
-   ADS_MGMT_USER_INFO * pastUserInfo;
-
 /*
-   ADS_MGMT_USER_INFO  astUserInfo[MAX_NUM_USERS];
+   ADS_MGMT_USER_INFO  astUserInfo[ MAX_NUM_USERS ];
    bh:  Enhancement:  Get # of tables from ADS_MGMT_ACTIVITY_INFO.stUsers instead of set size
  */
-   if( ISNUM( 2 ) )
-   {
-      ulMaxUsers = (UNSIGNED16) hb_parnl( 2 );
-   }
+
+   UNSIGNED32  ulRetVal;
+   UNSIGNED16  ulMaxUsers = ISNUM( 2 ) ? (UNSIGNED16) hb_parnl( 2 ) : 2000; /* needed for array memory allocation; caller can set with 2nd arg */
+   UNSIGNED16  ulCount;
+   ADS_MGMT_USER_INFO * pastUserInfo;
+   UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
 
    pastUserInfo = (ADS_MGMT_USER_INFO *) hb_xgrab( sizeof( ADS_MGMT_USER_INFO ) * ulMaxUsers );
-      /*
-         AdsMgGetUserNames ( ADSHANDLE hMgmtConnect,
-                            UNSIGNED8 *pucFileName,
-                            ADS_MGMT_USER_INFO astUserInfo[],
-                            UNSIGNED16 *pusArrayLen,
-                            UNSIGNED16 *pusStructSize );
-      */
-   ulRetVal = AdsMgGetUserNames( ads_g_hMgmtHandle, ISCHAR( 1 ) ? (UNSIGNED8 *) hb_parcx( 1 ) : NULL,
+
+   ulRetVal = AdsMgGetUserNames( ads_g_hMgmtHandle,
+                                 (UNSIGNED8 *) hb_parc( 1 ) /* pucFileName */,
                                  pastUserInfo,
                                  &ulMaxUsers,
                                  &usStructSize );
-      /*
-      if( sizeof( ADS_MGMT_USER_INFO ) < usStructSize )
-         {
-            HB_TRACE(HB_TR_INFO, ("The \nUser Information structure on the server is larger.
-               \nMore info is available with the current ACE.H." ));
-         }
-      */
+
+   /*
+   if( sizeof( ADS_MGMT_USER_INFO ) < usStructSize )
+   {
+      HB_TRACE(HB_TR_INFO, ("AdsMgGetUserNames() structure on the server is larger.\n"
+                            "More info is available with newer client lib." ));
+   }
+   */
+
    if( ulRetVal == AE_SUCCESS )
    {
       PHB_ITEM pArray = hb_itemArrayNew( ulMaxUsers ), pArrayItm;
@@ -408,28 +393,32 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
       for( ulCount = 1; ulCount <= ulMaxUsers; ulCount++ )
       {
          pArrayItm = hb_arrayGetItemPtr( pArray, ulCount );
-#if ADS_LIB_VERSION >= 810
          hb_arrayNew( pArrayItm, 6 );
-#elif ADS_LIB_VERSION >= 800
-         hb_arrayNew( pArrayItm, 5 );
-#else
-         hb_arrayNew( pArrayItm, 3 );
-#endif
+
          hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 1 ),
                       ( char * ) pastUserInfo[ulCount].aucUserName );
          hb_itemPutNL( hb_arrayGetItemPtr( pArrayItm, 2 ),
                        pastUserInfo[ulCount].usConnNumber );
+#if ADS_LIB_VERSION >= 600
          hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 3 ),
                       ( char * ) pastUserInfo[ulCount].aucAddress );
+#else
+         hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 3 ), NULL );
+#endif
 #if ADS_LIB_VERSION >= 800
          hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 4 ),
                       ( char * ) pastUserInfo[ulCount].aucAuthUserName );
          hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 5 ),
                       ( char * ) pastUserInfo[ulCount].aucOSUserLoginName );
+#else
+         hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 4 ), NULL );
+         hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 5 ), NULL );
 #endif
 #if ADS_LIB_VERSION >= 810
          hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 6 ),
                       ( char * ) pastUserInfo[ulCount].aucTSAddress );
+#else
+         hb_itemPutC( hb_arrayGetItemPtr( pArrayItm, 6 ), NULL );
 #endif
       }
       hb_itemReturnRelease( pArray );
@@ -440,19 +429,11 @@ HB_FUNC( ADSMGGETUSERNAMES )   /* Return array of connected users */
    }
 
    hb_xfree( pastUserInfo );
-
 }
 
 HB_FUNC( ADSMGGETLOCKOWNER )
 {
    /*
-   // UNSIGNED32  AdsMgGetLockOwner  (ADSHANDLE hMgmtConnect,
-   //                                     UNSIGNED8 *pucTableName,
-   //                                     UNSIGNED32 ulRecordNumber,
-   //                                     ADS_MGMT_USER_INFO *pstUserInfo,
-   //                                     UNSIGNED16 *pusStructSize,
-   //                                     UNSIGNED16 *pusLockType);
-   //
    // returns an array of 5 elements if successful
    // [1] Client machine name when server runs on NT/2000
    //     Client Username when server runs on Netware
@@ -465,25 +446,30 @@ HB_FUNC( ADSMGGETLOCKOWNER )
    //
    */
    UNSIGNED32  ulRetVal;
-   UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
    UNSIGNED16  pusLockType;
    ADS_MGMT_USER_INFO * pstUserInfo;
+   UNSIGNED16  usStructSize = sizeof( ADS_MGMT_USER_INFO );
    pstUserInfo = (ADS_MGMT_USER_INFO *) hb_xgrab( sizeof( ADS_MGMT_USER_INFO ) );
 
    ulRetVal = AdsMgGetLockOwner( ads_g_hMgmtHandle,
-                                 (UNSIGNED8 *) hb_parcx( 1 ),
-                                 (UNSIGNED32) hb_parnl(2),
+                                 (UNSIGNED8 *) hb_parcx( 1 ) /* pucTableName */,
+                                 (UNSIGNED32) hb_parnl( 2 ) /* ulRecordNumber */,
                                  pstUserInfo,
                                  &usStructSize,
-                                 &pusLockType);
-   if( ulRetVal== AE_SUCCESS )
+                                 &pusLockType );
+   if( ulRetVal == AE_SUCCESS )
    {
-      hb_reta(5);
-      hb_storc ( (char *)  pstUserInfo->aucUserName , -1, 1); /* Machine name under NT */
-      hb_stornl( (UNSIGNED16) pstUserInfo->usConnNumber, -1, 2); /* NetWare conn # (NLM only) */
-      hb_storc ( (char *) pstUserInfo->aucAuthUserName, -1, 3); /* logon name with Data Dictionary */
-      hb_storc ( (char *) pstUserInfo->aucAddress, -1, 4); /* IP adddress */
-      hb_stornl( pusLockType, -1, 5);                /* type of lock */
+      hb_reta( 5 );
+      hb_storc( ( char * ) pstUserInfo->aucUserName , -1, 1 ); /* Machine name under NT */
+      hb_stornl( (UNSIGNED16) pstUserInfo->usConnNumber, -1, 2 ); /* NetWare conn # (NLM only) */
+#if ADS_LIB_VERSION >= 600
+      hb_storc( ( char * ) pstUserInfo->aucAuthUserName, -1, 3 ); /* logon name with Data Dictionary */
+      hb_storc( ( char * ) pstUserInfo->aucAddress, -1, 4 ); /* IP adddress */
+#else
+      hb_storc( NULL, -1, 3 ); /* logon name with Data Dictionary */
+      hb_storc( NULL, -1, 4 ); /* IP adddress */
+#endif
+      hb_stornl( pusLockType, -1, 5 );                /* type of lock */
    }
    else
    {
@@ -494,8 +480,8 @@ HB_FUNC( ADSMGGETLOCKOWNER )
 
 HB_FUNC( ADSMGGETSERVERTYPE )   /* Determine OS ADS is running on; see ADS_MGMT_* constants */
 {
-   UNSIGNED32  ulRetVal;
-   UNSIGNED16  usServerType;
+   UNSIGNED32 ulRetVal;
+   UNSIGNED16 usServerType = 0;
 
    ulRetVal = AdsMgGetServerType( ads_g_hMgmtHandle, &usServerType );
    if( ulRetVal == AE_SUCCESS )
@@ -530,7 +516,7 @@ HB_FUNC( ADSMGGETOPENTABLES )           /* nMaxNumberOfFilesToReturn, cUserName,
 
    if( !pucUserName || ( strlen( pucUserName ) == 0 ) )
    {
-      pucUserName  = NULL;
+      pucUserName = NULL;
    }
 
    if( ISNUM( 3 ) )
@@ -588,12 +574,12 @@ HB_FUNC( ADSMGGETOPENINDEXES )      /* nMaxNumberOfFilesToReturn, cTableName, cU
 
    if( !pucTableName || ( strlen( pucTableName ) == 0 ) )
    {
-      pucTableName  = NULL;
+      pucTableName = NULL;
    }
 
    if( !pucUserName || ( strlen( pucUserName ) == 0 ) )
    {
-      pucUserName  = NULL;
+      pucUserName = NULL;
    }
 
    if( ISNUM( 4 ) )
@@ -646,20 +632,16 @@ HB_FUNC( ADSMGGETWORKERTHREADACTIVITY )
    AdsMgGetWorkerThreadActivity();
 }
 
-HB_FUNC( ADSMGKILLUSER )
-{
-   UNSIGNED32              ulRetVal = AE_SUCCESS;
-   AdsMgKillUser();
-}
-
 */
 
 HB_FUNC( ADSMGKILLUSER )
 {
-   hb_retnl( (UNSIGNED16) AdsMgKillUser( ads_g_hMgmtHandle, (UNSIGNED8 *) hb_parc(1), (UNSIGNED16) hb_parnl(2) ));
+   hb_retnl( (UNSIGNED16) AdsMgKillUser( ads_g_hMgmtHandle,
+                                         (UNSIGNED8 *) hb_parc( 1 ),
+                                         (UNSIGNED16) hb_parnl( 2 ) ) );
 }
 
 HB_FUNC( ADSMGGETHANDLE )
 {
-   hb_retnl( (LONG) ads_g_hMgmtHandle );
+   hb_retnl( ( LONG ) ads_g_hMgmtHandle );
 }

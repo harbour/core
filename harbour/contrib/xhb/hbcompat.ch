@@ -61,8 +61,10 @@
    #xtranslate hb_gtInfo([<x,...>])    => gtInfo(<x>)
    #xtranslate hb_gtVersion([<x>])     => hb_gt_Version(<x>)
 
-   #xtranslate hb_ScrMaxRow()          => MaxRow(.T.)
-   #xtranslate hb_ScrMaxCol()          => MaxCol(.T.)
+   #xtranslate hb_ScrMaxRow()          => hb_gtInfo( HB_GTI_SCREENHEIGHT )
+   #xtranslate hb_ScrMaxCol()          => hb_gtInfo( HB_GTI_SCREENWIDTH )
+   #xtranslate MaxRow(.T.)             => hb_gtInfo( HB_GTI_SCREENHEIGHT )
+   #xtranslate MaxCol(.T.)             => hb_gtInfo( HB_GTI_SCREENWIDTH )
 
    #xtranslate hb_isregex([<x>])       => hb_isregexstring(<x>)
    #xtranslate hb_pvalue([<x,...>])    => pvalue(<x>)
@@ -124,8 +126,8 @@
    #xtranslate gtProcessMessages()     => NextKey()
    #xtranslate gfxPrimitive([<x,...>]) => hb_gfxPrimitive(<x>)
    #xtranslate gfxText([<x,...>])      => hb_gfxText(<x>)
-   #xtranslate MaxRow(.T.)             => hb_ScrMaxRow()
-   #xtranslate MaxCol(.T.)             => hb_ScrMaxCol()
+   #xtranslate MaxRow(.T.)             => hb_gtInfo( HB_GTI_VIEWPORTHEIGHT )
+   #xtranslate MaxCol(.T.)             => hb_gtInfo( HB_GTI_VIEWPORTWIDTH )
 
    #xtranslate hb_isregexstring([<x>]) => hb_isregex(<x>)
    #xtranslate pvalue([<x,...>])       => hb_pvalue(<x>)
