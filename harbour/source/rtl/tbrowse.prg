@@ -687,16 +687,16 @@ METHOD setPosition() CLASS TBROWSE
    LOCAL lSetPos
 
    nRowCount := ::rowCount
-   nMoveOffset := ::nMoveOffset
+   nMoveOffset := ::nMoveOffset + ( ::nRowPos - ::nBufferPos )
    nNewPos := ::nBufferPos + nMoveOffset
    lSetPos := .T.
 
    IF nNewPos < 1
-      IF nMoveOffset < -1
+      IF ::nMoveOffset < -1
          nMoveOffset -= ::nBufferPos - 1
       ENDIF
    ELSEIF nNewPos > ::nLastRow
-      IF nMoveOffset > 1
+      IF ::nMoveOffset > 1
          nMoveOffset += ::nLastRow - ::nBufferPos
       ENDIF
    ELSEIF lSetPos
@@ -830,7 +830,7 @@ METHOD stabilize() CLASS TBROWSE
       IF ::nBufferPos != ::nRowPos
          /* TOFIX: add protection against unexpected results
           *        CA-Cl*pper does not fully respect here the returned
-          *        value an current code below replicates what Clipper
+          *        value and current code below replicates what Clipper
           *        seems to do but it means that in network environment
           *        with concurent modifications wrong records can be
           *        shown. [druzus]

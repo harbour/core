@@ -7137,13 +7137,12 @@ void hb_vmRequestCancel( void )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
       USHORT uiLine;
-      int i = 0, l;
+      int iLevel = 0, l;
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "Cancelled at: ", 0 );
-      hb_stackBaseProcInfo( buffer, &uiLine );
 
-      do
+      while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
       {
          l = strlen( buffer );
          snprintf( buffer + l, sizeof( buffer ) - l, " (%hu)", uiLine );
@@ -7151,7 +7150,6 @@ void hb_vmRequestCancel( void )
          hb_conOutErr( buffer, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
       }
-      while( hb_procinfo( ++i, buffer, &uiLine, NULL ) );
 
       /*
        * Clipper does not execute EXIT procedures when quiting using break key

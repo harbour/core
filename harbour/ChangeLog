@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-08 14:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/tbrowse.prg
+    ! fixed positioning when cursor is moved by :rowpos assignment and
+      vertical move methods used together
+
+  * harbour/source/vm/estack.c
+    * updated hb_stackDispCall(), hb_UnhandledExceptionFilter(),
+      OS2TermHandler() to show functions where codeblock where
+      defined instead of EVAL() just like in call stack presented
+      by cancel operation
+    * updated hb_UnhandledExceptionFilter() to work in unicode mode
+
+  * harbour/source/vm/hvm.c
+    ! fixed 1-st procedure presented in call stack during cancel operation
+      to use the same conditions as for all others
+
 2008-05-07 11:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/make_b32.bat
    * contrib/rddads/make_vc.bat

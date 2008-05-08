@@ -587,27 +587,22 @@ void hb_stackDispLocal( void )
 
 void hb_stackDispCall( void )
 {
-   PHB_ITEM * pBase = hb_stack.pBase;
+   char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
+   USHORT uiLine;
+   int iLevel;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_stackDispCall()"));
 
-   while( pBase > hb_stack.pItems )
+   iLevel = 0;
+
+   while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
    {
-      char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
+      int l = strlen( buffer );
+      snprintf( buffer + l, sizeof( buffer ) - l, "(%hu)", uiLine );
 
-      if( HB_IS_OBJECT( *( pBase + 1 ) ) )
-         snprintf( buffer, sizeof( buffer ), HB_I_("Called from %s:%s(%i)"), hb_objGetClsName( *(pBase + 1) ),
-                   ( *pBase )->item.asSymbol.value->szName,
-                   ( *pBase )->item.asSymbol.stackstate->uiLineNo );
-      else
-         snprintf( buffer, sizeof( buffer ), HB_I_("Called from %s(%i)"),
-                   ( *pBase )->item.asSymbol.value->szName,
-                   ( *pBase )->item.asSymbol.stackstate->uiLineNo );
-
+      hb_conOutErr( "Called from ", 0 );
       hb_conOutErr( buffer, 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
-
-      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackstate->lBaseItem;
    }
 }
 
@@ -642,33 +637,29 @@ void hb_vmIsLocalRef( void )
 
 LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo )
 {
-   PHB_ITEM *pBase = hb_stack.pBase;
-
-   char msg[ ( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ) * 32 ];
+   char msg[ ( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ) * 32 ], *ptr;
+   char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+   USHORT uiLine;
+   int iLevel;
 
    HB_SYMBOL_UNUSED( ExceptionInfo );
 
    msg[ 0 ] = '\0';
+   ptr = msg;
+   iLevel = 0;
 
-   while( pBase > hb_stack.pItems )
+   while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
    {
-      char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
-
-      if( HB_IS_OBJECT( *( pBase + 1 ) ) )
-         snprintf( buffer, sizeof( buffer ), HB_I_("Called from %s:%s(%i)\n"), hb_objGetClsName( *(pBase + 1) ),
-                   ( *pBase )->item.asSymbol.value->szName,
-                   ( *pBase )->item.asSymbol.stackstate->uiLineNo );
-      else
-         snprintf( buffer, sizeof( buffer ), HB_I_("Called from %s(%i)\n"),
-                   ( *pBase )->item.asSymbol.value->szName,
-                   ( *pBase )->item.asSymbol.stackstate->uiLineNo );
-
-      hb_strncat( msg, buffer, sizeof( msg ) - 1 );
-
-      pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackstate->lBaseItem;
+      snprintf( ptr, sizeof( msg ) - ( ptr - msg ), 
+                HB_I_("Called from %s(%hu)\n"), buffer, uiLine );
+      ptr += strlen( ptr );
    }
 
-   MessageBox( NULL, msg, HB_I_("Harbour Exception"), MB_ICONSTOP );
+   {
+      LPTSTR lpStr = HB_TCHAR_CONVTO( msg );
+      MessageBox( NULL, lpStr, TEXT( "Harbour Exception" ), MB_ICONSTOP );
+      HB_TCHAR_FREE( lpStr );
+   }
 
    return EXCEPTION_CONTINUE_SEARCH; /* EXCEPTION_EXECUTE_HANDLER; */
 }
@@ -693,23 +684,14 @@ ULONG _System OS2TermHandler( PEXCEPTIONREPORTRECORD       p1,
       during debugging */
    if( p1->ExceptionNum != XCPT_UNWIND && p1->ExceptionNum < XCPT_BREAKPOINT )
    {
-      PHB_ITEM *pBase = hb_stack.pBase;
+      char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+      USHORT uiLine;
+      int iLevel = 0;
 
       fprintf(stderr, HB_I_("\nException %lx at address %p \n"), p1->ExceptionNum, p1->ExceptionAddress);
 
-      while( pBase > hb_stack.pItems )
-      {
-         if( HB_IS_OBJECT( *( pBase + 1 ) ) )
-            fprintf( stderr, HB_I_("Called from %s:%s(%i)\n"), hb_objGetClsName( *(pBase + 1) ),
-                     ( *pBase )->item.asSymbol.value->szName,
-                     ( *pBase )->item.asSymbol.stackstate->uiLineNo );
-         else
-            fprintf( stderr, HB_I_("Called from %s(%i)\n"),
-                     ( *pBase )->item.asSymbol.value->szName,
-                     ( *pBase )->item.asSymbol.stackstate->uiLineNo );
-
-         pBase = hb_stack.pItems + ( *pBase )->item.asSymbol.stackstate->lBaseItem;
-      }
+      while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
+         fprintf( stderr, HB_I_("Called from %s(%hu)\n"), buffer, uiLine );
    }
 
    return XCPT_CONTINUE_SEARCH;          /* Exception not resolved... */
