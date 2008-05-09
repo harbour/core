@@ -57,33 +57,33 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-ADSHANDLE ads_g_hMgmtHandle = 0;
+static ADSHANDLE s_hMgmtHandle = 0;
 
 HB_FUNC( ADSMGCONNECT )
 {
    hb_retnl( AdsMgConnect( ( UNSIGNED8 * ) hb_parcx( 1 ) /* pucServerName */, 
                            ( UNSIGNED8 * ) hb_parc( 2 ) /* pucUserName */, 
                            ( UNSIGNED8 * ) hb_parc( 3 ) /* pucPassword */, 
-                           &ads_g_hMgmtHandle ) );
+                           &s_hMgmtHandle ) );
 }
 
 HB_FUNC( ADSMGDISCONNECT )
 {
-   hb_retnl( AdsMgDisconnect( ads_g_hMgmtHandle ) );
+   hb_retnl( AdsMgDisconnect( s_hMgmtHandle ) );
 
-   ads_g_hMgmtHandle = 0;
+   s_hMgmtHandle = 0;
 }
 
 HB_FUNC( ADSMGGETHANDLE )
 {
-   hb_retnl( ( long ) ads_g_hMgmtHandle );
+   hb_retnl( ( long ) s_hMgmtHandle );
 }
 
 HB_FUNC( ADSMGKILLUSER )
 {
-   hb_retnl( ( UNSIGNED16 ) AdsMgKillUser( ads_g_hMgmtHandle,
+   hb_retnl( ( UNSIGNED16 ) AdsMgKillUser( s_hMgmtHandle,
                                            ( UNSIGNED8 * ) hb_parc( 1 ),
-                                           ( UNSIGNED16 ) hb_parnl( 2 ) ) );
+                                           ( UNSIGNED16 ) hb_parni( 2 ) ) );
 }
 
 /* Determine OS ADS is running on; see ADS_MGMT_* constants */
@@ -92,7 +92,7 @@ HB_FUNC( ADSMGGETSERVERTYPE )
    UNSIGNED32 ulRetVal;
    UNSIGNED16 usServerType = 0;
 
-   ulRetVal = AdsMgGetServerType( ads_g_hMgmtHandle, 
+   ulRetVal = AdsMgGetServerType( s_hMgmtHandle, 
                                   &usServerType );
 
    hb_retnl( ulRetVal == AE_SUCCESS ? usServerType : 0 );
@@ -104,7 +104,7 @@ HB_FUNC( ADSMGGETINSTALLINFO )
    ADS_MGMT_INSTALL_INFO stInstallInfo;
    UNSIGNED16 usStructSize = sizeof( ADS_MGMT_INSTALL_INFO );
 
-   ulRetVal = AdsMgGetInstallInfo( ads_g_hMgmtHandle,
+   ulRetVal = AdsMgGetInstallInfo( s_hMgmtHandle,
                                    &stInstallInfo,
                                    &usStructSize );
 
@@ -136,7 +136,7 @@ HB_FUNC( ADSMGGETACTIVITYINFO )
    ADS_MGMT_ACTIVITY_INFO stActivityInfo;
    UNSIGNED16 usStructSize = sizeof( ADS_MGMT_ACTIVITY_INFO );
 
-   ulRetVal = AdsMgGetActivityInfo( ads_g_hMgmtHandle,
+   ulRetVal = AdsMgGetActivityInfo( s_hMgmtHandle,
                                     &stActivityInfo,
                                     &usStructSize );
 
@@ -247,7 +247,7 @@ HB_FUNC( ADSMGGETCOMMSTATS )
    ADS_MGMT_COMM_STATS stCommStats;
    UNSIGNED16 usStructSize = sizeof( ADS_MGMT_COMM_STATS );
 
-   ulRetVal = AdsMgGetCommStats( ads_g_hMgmtHandle,
+   ulRetVal = AdsMgGetCommStats( s_hMgmtHandle,
                                  &stCommStats,
                                  &usStructSize );
 
@@ -278,7 +278,7 @@ HB_FUNC( ADSMGGETCOMMSTATS )
 
 HB_FUNC( ADSMGRESETCOMMSTATS )
 {
-   hb_retnl( ads_g_hMgmtHandle ? AdsMgResetCommStats( ads_g_hMgmtHandle ) : -1 );
+   hb_retnl( s_hMgmtHandle ? AdsMgResetCommStats( s_hMgmtHandle ) : -1 );
 }
 
 HB_FUNC( ADSMGGETCONFIGINFO )
@@ -289,7 +289,7 @@ HB_FUNC( ADSMGGETCONFIGINFO )
    UNSIGNED16 usConfigValuesStructSize = sizeof( ADS_MGMT_CONFIG_PARAMS );
    UNSIGNED16 usConfigMemoryStructSize = sizeof( ADS_MGMT_CONFIG_MEMORY );
 
-   ulRetVal = AdsMgGetConfigInfo( ads_g_hMgmtHandle,
+   ulRetVal = AdsMgGetConfigInfo( s_hMgmtHandle,
                                   &stConfigValues,
                                   &usConfigValuesStructSize,
                                   &stConfigMemory,
@@ -382,13 +382,13 @@ HB_FUNC( ADSMGGETCONFIGINFO )
 HB_FUNC( ADSMGGETUSERNAMES )
 {
    UNSIGNED32 ulRetVal;
-   UNSIGNED16 ulMaxUsers = ISNUM( 2 ) ? ( UNSIGNED16 ) hb_parnl( 2 ) : 2000; /* needed for array memory allocation; caller can set with 2nd arg */
+   UNSIGNED16 ulMaxUsers = ISNUM( 2 ) ? ( UNSIGNED16 ) hb_parni( 2 ) : 2000; /* needed for array memory allocation; caller can set with 2nd arg */
    UNSIGNED16 usStructSize = sizeof( ADS_MGMT_USER_INFO );
    ADS_MGMT_USER_INFO * pastUserInfo;
 
    pastUserInfo = ( ADS_MGMT_USER_INFO * ) hb_xgrab( sizeof( ADS_MGMT_USER_INFO ) * ulMaxUsers );
 
-   ulRetVal = AdsMgGetUserNames( ads_g_hMgmtHandle,
+   ulRetVal = AdsMgGetUserNames( s_hMgmtHandle,
                                  ( UNSIGNED8 * ) hb_parc( 1 ) /* pucFileName */,
                                  pastUserInfo,
                                  &ulMaxUsers,
@@ -469,7 +469,7 @@ HB_FUNC( ADSMGGETLOCKOWNER )
 
    pstUserInfo = ( ADS_MGMT_USER_INFO * ) hb_xgrab( sizeof( ADS_MGMT_USER_INFO ) );
 
-   ulRetVal = AdsMgGetLockOwner( ads_g_hMgmtHandle,
+   ulRetVal = AdsMgGetLockOwner( s_hMgmtHandle,
                                  ( UNSIGNED8 * ) hb_parcx( 1 ) /* pucTableName */,
                                  ( UNSIGNED32 ) hb_parnl( 2 ) /* ulRecordNumber */,
                                  pstUserInfo,
@@ -506,16 +506,16 @@ HB_FUNC( ADSMGGETLOCKOWNER )
 HB_FUNC( ADSMGGETOPENTABLES ) /* nMaxNumberOfFilesToReturn, cUserName, nConnection */
 {
    UNSIGNED32 ulRetVal;
-   UNSIGNED16 pusArrayLen = ISNUM( 1 ) ? ( UNSIGNED16 ) hb_parnl( 1 ) : 300;
+   UNSIGNED16 pusArrayLen = ISNUM( 1 ) ? ( UNSIGNED16 ) hb_parni( 1 ) : 300;
    char * pucUserName = hb_parclen( 2 ) > 0 ? hb_parc( 2 ) : NULL;
-   UNSIGNED16 usConnNumber = ( UNSIGNED16 ) hb_parnl( 3 ); // = HB_ADS_PARCONNECTION( 3 ) >>> only valid for netware,
-                                                           // so don't default to current, only take a passed value
+   UNSIGNED16 usConnNumber = ( UNSIGNED16 ) hb_parni( 3 ); /* = HB_ADS_PARCONNECTION( 3 ) >>> only valid for netware,
+                                                              so don't default to current, only take a passed value */
    UNSIGNED16 pusStructSize = sizeof( ADS_MGMT_TABLE_INFO );
    ADS_MGMT_TABLE_INFO * astOpenTableInfo;
 
    astOpenTableInfo = ( ADS_MGMT_TABLE_INFO * ) hb_xgrab( sizeof( ADS_MGMT_TABLE_INFO ) * pusArrayLen );
 
-   ulRetVal = AdsMgGetOpenTables( ads_g_hMgmtHandle,
+   ulRetVal = AdsMgGetOpenTables( s_hMgmtHandle,
                                   ( UNSIGNED8 * ) pucUserName,
                                   usConnNumber,
                                   astOpenTableInfo,
@@ -530,7 +530,7 @@ HB_FUNC( ADSMGGETOPENTABLES ) /* nMaxNumberOfFilesToReturn, cUserName, nConnecti
       for( ulCount = 1; ulCount <= pusArrayLen; ulCount++ )
       {
          hb_itemPutC( hb_arrayGetItemPtr( pArray, ( ULONG ) ulCount ), ( char * ) astOpenTableInfo[ ulCount - 1 ].aucTableName );
-         // UNSIGNED16 astOpenTableInfo[ ulCount - 1 ].usLockType; /* Advantage locking mode     */
+         /* UNSIGNED16 astOpenTableInfo[ ulCount - 1 ].usLockType; */ /* Advantage locking mode     */
       }
       hb_itemReturnRelease( pArray );
    }
@@ -545,17 +545,17 @@ HB_FUNC( ADSMGGETOPENTABLES ) /* nMaxNumberOfFilesToReturn, cUserName, nConnecti
 HB_FUNC( ADSMGGETOPENINDEXES ) /* nMaxNumberOfFilesToReturn, cTableName, cUserName, nConnection */
 {
    UNSIGNED32 ulRetVal;
-   UNSIGNED16 pusArrayLen = ISNUM( 1 ) ? ( UNSIGNED16 ) hb_parnl( 1 ) : 300;
-   char * pucTableName = hb_parclen( 2 ) > 0 ? hb_parc( 2 ) : NULL;  // fully qualified path to that table
+   UNSIGNED16 pusArrayLen = ISNUM( 1 ) ? ( UNSIGNED16 ) hb_parni( 1 ) : 300;
+   char * pucTableName = hb_parclen( 2 ) > 0 ? hb_parc( 2 ) : NULL; /* fully qualified path to that table */
    char * pucUserName  = hb_parclen( 3 ) > 0 ? hb_parc( 3 ) : NULL;
-   UNSIGNED16 usConnNumber = ( UNSIGNED16 ) hb_parnl( 4 ); // = HB_ADS_PARCONNECTION( 4 ) >>> only valid for netware,
-                                                           // so don't default to current, only take a passed value
+   UNSIGNED16 usConnNumber = ( UNSIGNED16 ) hb_parni( 4 ); /* = HB_ADS_PARCONNECTION( 4 ) >>> only valid for netware,
+                                                              so don't default to current, only take a passed value */
    UNSIGNED16 pusStructSize = sizeof( ADS_MGMT_INDEX_INFO );
    ADS_MGMT_INDEX_INFO * astOpenIndexInfo;
 
    astOpenIndexInfo = ( ADS_MGMT_INDEX_INFO * ) hb_xgrab( sizeof( ADS_MGMT_INDEX_INFO ) * pusArrayLen );
 
-   ulRetVal = AdsMgGetOpenIndexes( ads_g_hMgmtHandle,
+   ulRetVal = AdsMgGetOpenIndexes( s_hMgmtHandle,
                                    ( UNSIGNED8 * ) pucTableName,
                                    ( UNSIGNED8 * ) pucUserName,
                                    usConnNumber,
@@ -585,17 +585,17 @@ HB_FUNC( ADSMGGETOPENINDEXES ) /* nMaxNumberOfFilesToReturn, cTableName, cUserNa
 HB_FUNC( ADSMGGETLOCKS )
 {
    UNSIGNED32 ulRetVal;
-   UNSIGNED16 pusArrayLen = ISNUM( 1 ) ? ( UNSIGNED16 ) hb_parnl( 1 ) : 2000;
-   char * pucTableName = hb_parclen( 2 ) > 0 ? hb_parc( 2 ) : NULL;  // fully qualified path to that table
+   UNSIGNED16 pusArrayLen = ISNUM( 1 ) ? ( UNSIGNED16 ) hb_parni( 1 ) : 2000;
+   char * pucTableName = hb_parclen( 2 ) > 0 ? hb_parc( 2 ) : NULL; /* fully qualified path to that table */
    char * pucUserName  = hb_parclen( 3 ) > 0 ? hb_parc( 3 ) : NULL;
-   UNSIGNED16 usConnNumber = ( UNSIGNED16 ) hb_parnl( 4 ); // = HB_ADS_PARCONNECTION( 4 ) >>> only valid for netware,
-                                                           // so don't default to current, only take a passed value
+   UNSIGNED16 usConnNumber = ( UNSIGNED16 ) hb_parni( 4 ); /* = HB_ADS_PARCONNECTION( 4 ) >>> only valid for netware,
+                                                              so don't default to current, only take a passed value */
    UNSIGNED16 pusStructSize = sizeof( ADS_MGMT_RECORD_INFO );
    ADS_MGMT_RECORD_INFO * astRecordInfo;
 
    astRecordInfo = ( ADS_MGMT_RECORD_INFO * ) hb_xgrab( sizeof( ADS_MGMT_RECORD_INFO ) * pusArrayLen );
 
-   ulRetVal = AdsMgGetLocks( ads_g_hMgmtHandle,
+   ulRetVal = AdsMgGetLocks( s_hMgmtHandle,
                              ( UNSIGNED8 * ) pucTableName,
                              ( UNSIGNED8 * ) pucUserName,
                              usConnNumber,
@@ -625,13 +625,13 @@ HB_FUNC( ADSMGGETLOCKS )
 HB_FUNC( ADSMGGETWORKERTHREADACTIVITY )
 {
    UNSIGNED32 ulRetVal;
-   UNSIGNED16 pusArrayLen = ISNUM( 1 ) ? ( UNSIGNED16 ) hb_parnl( 1 ) : 2000;
+   UNSIGNED16 pusArrayLen = ISNUM( 1 ) ? ( UNSIGNED16 ) hb_parni( 1 ) : 2000;
    UNSIGNED16 pusStructSize = sizeof( ADS_MGMT_THREAD_ACTIVITY );
    ADS_MGMT_THREAD_ACTIVITY * astWorkerThreadActivity;
 
    astWorkerThreadActivity = ( ADS_MGMT_THREAD_ACTIVITY * ) hb_xgrab( sizeof( ADS_MGMT_THREAD_ACTIVITY ) * pusArrayLen );
 
-   ulRetVal = AdsMgGetWorkerThreadActivity( ads_g_hMgmtHandle,
+   ulRetVal = AdsMgGetWorkerThreadActivity( s_hMgmtHandle,
                                             astWorkerThreadActivity,
                                             &pusArrayLen,
                                             &pusStructSize );
