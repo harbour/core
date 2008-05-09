@@ -112,7 +112,7 @@
 
 HB_EXTERN_BEGIN
 
-/* Function is not documented, but exists in ace32.dll version 6.x, 7.x */
+/* Function is not documented, but exists in ace32.dll version 6.00 and upper. */
 UNSIGNED32 ENTRYPOINT AdsDeleteFile( ADSHANDLE hConnection, UNSIGNED8* pucFileName );
 
 /*
@@ -191,13 +191,13 @@ typedef ADSAREA * ADSAREAP;
 
 #define HB_RDD_ADS_VERSION_STRING "ADS RDD 1.4"
 
-#if ADS_REQUIRE_VERSION >= 6 && defined( HB_OS_WIN_32 )
+#if ADS_LIB_VERSION >= 600 && defined( HB_OS_WIN_32 )
 #  define ADS_USE_OEM_TRANSLATION
 #else
 #  undef ADS_USE_OEM_TRANSLATION
 #endif
 
-#define HB_ADS_PARCONNECTION( n )      ( ISNUM( n ) ?  ( ADSHANDLE ) hb_parnl( n ) : adsConnectHandle )
+#define HB_ADS_PARCONNECTION( n )      ( ISNUM( n ) ? ( ADSHANDLE ) hb_parnl( n ) : adsConnectHandle )
 #define HB_ADS_RETCONNECTION( h )      hb_retnl( h )
 #define HB_ADS_GETCONNECTION( p )      ( ( hb_itemType( p ) & HB_IT_NUMERIC ) ? ( ADSHANDLE ) hb_itemGetNL( p ) : adsConnectHandle )
 #define HB_ADS_PUTCONNECTION( p, h )   hb_itemPutNL( ( p ), ( LONG ) ( h ) )

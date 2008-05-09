@@ -328,7 +328,7 @@ HB_FUNC( ADSISTABLELOCKED )
    {
       ulRetVal = AdsIsTableLocked( pArea->hTable, &pbLocked );
 
-      hb_retl( pbLocked );
+      hb_retl( pbLocked != 0 );
    }
 
    if( ulRetVal != AE_SUCCESS )
@@ -357,7 +357,7 @@ HB_FUNC( ADSISRECORDLOCKED )
       }
       ulRetVal = AdsIsRecordLocked( pArea->hTable, ulRec, &pbLocked );
 
-      hb_retl( pbLocked );
+      hb_retl( pbLocked != 0 );
    }
 
    if( ulRetVal != AE_SUCCESS )
@@ -468,10 +468,10 @@ HB_FUNC( ADSSETDELETED )
 
 HB_FUNC( ADSSETEXACT )
 {
-   UNSIGNED16 pbExact;
+   UNSIGNED16 pbExact = 0;
 
    AdsGetExact( &pbExact );
-   hb_retl( pbExact );
+   hb_retl( pbExact != 0 );
 
    if( ISLOG( 1 ) )
    {
@@ -1785,7 +1785,7 @@ HB_FUNC( ADSINTRANSACTION )
    if( AdsInTransaction( hConnect,
                          &pbInTrans ) == AE_SUCCESS )
    {
-      hb_retl( pbInTrans );
+      hb_retl( pbInTrans != 0 );
    }
    else
    {
@@ -1916,7 +1916,7 @@ HB_FUNC( ADSISEMPTY )
 
       if( pArea && ulRetVal == AE_SUCCESS )
       {
-         hb_retl( pbEmpty );
+         hb_retl( pbEmpty != 0 );
       }
       else
       {
