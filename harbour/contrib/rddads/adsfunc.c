@@ -191,7 +191,6 @@ HB_FUNC( ADSAPPLICATIONEXIT )
 #endif
 }
 
-
 HB_FUNC( ADSISSERVERLOADED )
 {
    UNSIGNED16 pbLoaded = 0;
@@ -445,7 +444,6 @@ HB_FUNC( ADSGETTABLECHARTYPE )
    }
 }
 
-
 HB_FUNC( ADSSETDEFAULT )
 {
    UNSIGNED8  pucDefault[ MAX_STR_LEN + 1 ];
@@ -460,7 +458,6 @@ HB_FUNC( ADSSETDEFAULT )
       AdsSetDefault( ( UNSIGNED8 * ) hb_parcx( 1 ) );
    }
 }
-
 
 HB_FUNC( ADSSETSEARCHPATH )
 {
@@ -641,7 +638,6 @@ HB_FUNC( ADSKEYNO )
    }
 }
 
-
 /* 2nd parameter: unsupported Bag Name. */
 HB_FUNC( ADSKEYCOUNT )
 {
@@ -770,7 +766,6 @@ HB_FUNC( ADSKEYCOUNT )
    }
 }
 
-
 HB_FUNC( ADSADDCUSTOMKEY )
 {
    ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
@@ -869,7 +864,6 @@ HB_FUNC( ADSCLEARAOF )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCLEARAOF" );
    }
 }
-
 
 HB_FUNC( ADSEVALAOF )
 {
@@ -1699,7 +1693,6 @@ UNSIGNED32 WINAPI ShowPercentage( UNSIGNED16 usPercentDone )
 
 } /* ShowPercentage */
 
-
 HB_FUNC( ADSREGCALLBACK )
 {
    /* NOTE: current implementation is not thread safe.
@@ -1735,7 +1728,6 @@ HB_FUNC( ADSREGCALLBACK )
 
    hb_retl( FALSE );
 }
-
 
 HB_FUNC( ADSCLRCALLBACK )
 {
@@ -1805,7 +1797,6 @@ HB_FUNC( ADSGETHANDLETYPE )             /* DD, admin, table */
    hb_retni( ulRetVal == AE_SUCCESS ? usType : AE_INVALID_HANDLE );
 }
 
-
 /* nLastErr := AdsGetLastError( [ @cLastErr ] ) */
 HB_FUNC( ADSGETLASTERROR )
 {
@@ -1857,7 +1848,6 @@ HB_FUNC( ADSFAILEDTRANSACTIONRECOVERY )
    hb_retl( AdsFailedTransactionRecovery( pucServer ) == AE_SUCCESS );
 }
 
-
 HB_FUNC( ADSINTRANSACTION )
 {
    ADSHANDLE hConnect = hb_parnl( 1 );
@@ -1873,7 +1863,6 @@ HB_FUNC( ADSINTRANSACTION )
       hb_retl( FALSE );
    }
 }
-
 
 HB_FUNC( ADSROLLBACK )
 {
@@ -1957,7 +1946,7 @@ HB_FUNC( ADSVERSION )
    }
 
    usPos = strlen( ucVersion ) - 1;
-   while( ucVersion[usPos] == ' ' && usPos > 0 )  /* remove trailing spaces */
+   while( ucVersion[ usPos ] == ' ' && usPos > 0 )  /* remove trailing spaces */
    {
       ucVersion[ usPos-- ] = '\0';
    }
@@ -2270,7 +2259,6 @@ HB_FUNC( ADSDDGETDATABASEPROPERTY )
 #endif
    }
 }
-
 
 HB_FUNC( ADSDDSETDATABASEPROPERTY )
 {
