@@ -4234,7 +4234,7 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
       case DBOI_SKIPUNIQUE:
          {
             if( hIndex && 
-                AdsSkipUnique( hIndex, ( SIGNED32 ) ( HB_IS_NUMBER( pOrderInfo->itmNewVal ) ? hb_itemGetNL( pOrderInfo->itmNewVal ) : 1 ) ) == AE_SUCCESS )
+                AdsSkipUnique( hIndex, ( SIGNED32 ) ( pOrderInfo && HB_IS_NUMBER( pOrderInfo->itmNewVal ) ? hb_itemGetNL( pOrderInfo->itmNewVal ) : 1 ) ) == AE_SUCCESS )
             {
                hb_itemPutL( pOrderInfo->itmResult, TRUE );
             }
