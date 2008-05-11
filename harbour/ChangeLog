@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-12 18:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/ads1.c
+     + Added DBOI_SKIPUNIQUE (C5.3 ordSkipUnique()) implementation 
+       when compiled for ADS 9.00 or above.
+
 2008-05-10 00:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/rddads.h
    * contrib/rddads/adsfunc.c

@@ -4229,6 +4229,20 @@ static ERRCODE adsOrderInfo( ADSAREAP pArea, USHORT uiIndex, LPDBORDERINFO pOrde
          hb_itemPutL( pOrderInfo->itmResult, u16 != 0 );
          break;
 
+#if ADS_LIB_VERSION >= 900
+
+      case DBOI_SKIPUNIQUE:
+         {
+            if( hIndex && 
+                AdsSkipUnique( hIndex, ( SIGNED32 ) ( HB_IS_NUMBER( pOrderInfo->itmNewVal ) ? hb_itemGetNL( pOrderInfo->itmNewVal ) : 1 ) ) == AE_SUCCESS )
+            {
+               hb_itemPutL( pOrderInfo->itmResult, TRUE );
+            }
+         }
+         break;
+
+#endif
+
       case DBOI_OPTLEVEL :
          AdsGetAOFOptLevel( pArea->hTable, &u16, NULL, NULL );
          switch( u16 )
@@ -4264,7 +4278,6 @@ Unsupported TODO:
    DBOI_HPLOCKING
    DBOI_LOCKOFFSET
    DBOI_KEYSINCLUDED
-   DBOI_SKIPUNIQUE
 these are really global settings:
    DBOI_STRICTREAD
    DBOI_OPTIMIZE
