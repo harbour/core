@@ -100,6 +100,7 @@
    #define ADS_MAX_KEY_LENGTH    256   /* NTX key length is 256 */
 #endif
 
+/* TOFIX: These should rather be guarded with ADS_LIB_VERSION than being defined here. [vszakats] */
 #ifndef ADS_CISTRING
    #define ADS_CISTRING             20    /* CaSe INSensiTIVE character data (>= 7.10) */
 #endif
@@ -112,8 +113,10 @@
 
 HB_EXTERN_BEGIN
 
-/* Function is not documented, but exists in ace32.dll version 6.00 and upper. */
-UNSIGNED32 ENTRYPOINT AdsDeleteFile( ADSHANDLE hConnection, UNSIGNED8* pucFileName );
+#if ADS_LIB_VERSION >= 600
+/* NOTE: Undocumented ACE function. */
+UNSIGNED32 ENTRYPOINT AdsDeleteFile( ADSHANDLE hConnection, UNSIGNED8 * pucFileName );
+#endif
 
 /*
  *  ADS WORKAREA
@@ -219,15 +222,17 @@ extern ADSAREAP hb_rddGetADSWorkAreaPointer( void );
    extern char * hb_adsAnsiToOem( char * pcString, ULONG ulLen );
    void hb_adsOemAnsiFree( char * pcString );
 
-   UNSIGNED32 ENTRYPOINT AdsSetFieldRaw( ADSHANDLE  hObj,
-                                         UNSIGNED8  *pucFldName,
-                                         UNSIGNED8  *pucBuf,
-                                         UNSIGNED32 ulLen );
+   /* NOTE: Undocumented ACE function. */
+   UNSIGNED32 ENTRYPOINT AdsSetFieldRaw( ADSHANDLE   hObj,
+                                         UNSIGNED8 * pucFldName,
+                                         UNSIGNED8 * pucBuf,
+                                         UNSIGNED32  ulLen );
 
-   UNSIGNED32 ENTRYPOINT AdsGetFieldRaw( ADSHANDLE  hTbl,
-                                         UNSIGNED8  *pucFldName,
-                                         UNSIGNED8  *pucBuf,
-                                         UNSIGNED32 *pulLen );
+   /* NOTE: Undocumented ACE function. */
+   UNSIGNED32 ENTRYPOINT AdsGetFieldRaw( ADSHANDLE    hTbl,
+                                         UNSIGNED8 *  pucFldName,
+                                         UNSIGNED8 *  pucBuf,
+                                         UNSIGNED32 * pulLen );
 
 #else
 #  define hb_adsOemToAnsi( s, l )     ( s )
