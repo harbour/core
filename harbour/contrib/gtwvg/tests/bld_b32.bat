@@ -14,5 +14,6 @@ rem ---------------------------------------------------------------
 set HB_ARCHITECTURE=w32
 set HB_COMPILER=bcc32
 set HB_USER_LIBS=gtwvg.lib
+set CFLAGS=-tW
 
 call ..\..\..\bin\bld.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
