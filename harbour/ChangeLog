@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-12 14:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * bin/bld.bat
+     + Added hbpcre to lib list.
+
+   * source/rtl/hbini.prg
+     ; Some formatting.
+
+   * tests/Makefile
+   + tests/parseini.prg
+   + tests/parseini.ini
+   + tests/parseins.ini
+     + Added .ini handling tests. Adapted from xhb.
+
 2008-05-12 13:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * bin/bld.bat
      + Added %HB_USER_LIB% for w32/msvc.

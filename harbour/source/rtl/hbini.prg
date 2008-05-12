@@ -6,7 +6,7 @@
  * xHarbour Project source code:
  * Handling .ini files
  *
- * Copyright 2002 Giancarlo Niccolai [gian@niccolai.ws]
+ * Copyright 2002 Giancarlo Niccolai <gian@niccolai.ws>
  * www - http://www.xharbour.org
  *
  * this program is free software; you can redistribute it and/or modify
@@ -83,36 +83,39 @@ STATIC s_cHalfLineComment := "#"
 
 
 PROCEDURE hb_IniSetComment( cLc, cHlc )
+
    s_cLineComment := cLc
    s_cHalfLineComment := cHlc
-RETURN
 
-FUNCTION HB_IniNew( bAutoMain )
+   RETURN
+
+FUNCTION HB_IniNew( lAutoMain )
    LOCAL hIni := hb_Hash()
 
-   IF bAutoMain
+   IF lAutoMain
       hIni[ "MAIN" ] := hb_Hash()
    ENDIF
 
-RETURN hIni
+   RETURN hIni
 
-FUNCTION hb_IniRead( cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
+
+FUNCTION hb_IniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
    LOCAL hIni := hb_Hash()
 
    /* Default case sensitiveness for keys */
-   DEFAULT bKeyCaseSens TO .T.
+   DEFAULT lKeyCaseSens TO .T.
    DEFAULT cSplitters TO "=|:"
-   DEFAULT bAutoMain TO .T.
+   DEFAULT lAutoMain TO .T.
 
-   hb_HCaseMatch( hIni, bKeyCaseSens )
+   hb_HCaseMatch( hIni, lKeyCaseSens )
 
-   IF bAutoMain
+   IF lAutoMain
       hIni[ "MAIN" ] := hb_Hash()
    ENDIF
 
-RETURN hb_IniRdLow( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
+   RETURN hb_IniRdLow( hIni, cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
 
-STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMain )
+STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
    LOCAL aFiles
    LOCAL cFile, nLen
    LOCAL aKeyVal, hCurrentSection
@@ -151,7 +154,7 @@ STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMai
    FClose( hFile )
 
    /* Always begin with the MAIN section */
-   IF bAutoMain
+   IF lAutoMain
       hCurrentSection := hIni[ "MAIN" ]
    ELSE
       hCurrentSection := hIni
@@ -215,7 +218,7 @@ STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMai
          IF Len( aKeyVal[ 2 ] ) == 0
             LOOP
          ENDIF
-         hb_IniRdLow( hIni, aKeyVal[ 2 ], bKeyCaseSens, cSplitters, bAutoMain )
+         hb_IniRdLow( hIni, aKeyVal[ 2 ], lKeyCaseSens, cSplitters, lAutoMain )
          cLine := ""
          LOOP
       ENDIF
@@ -226,7 +229,7 @@ STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMai
          cLine := AllTrim( aKeyVal[ 2 ] )
          IF Len( cLine ) != 0
             hCurrentSection := hb_Hash()
-            IF ! bKeyCaseSens
+            IF ! lKeyCaseSens
                cLine := Upper( cLine )
             ENDIF
             hIni[ cLine ] := hCurrentSection
@@ -244,7 +247,7 @@ STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMai
       ENDIF
 
       /* If not case sensitive, use upper keys */
-      IF ! bKeyCaseSens
+      IF ! lKeyCaseSens
          aKeyVal[ 1 ] := Upper( aKeyVal[ 1 ] )
       ENDIF
 
@@ -252,10 +255,10 @@ STATIC FUNCTION hb_IniRdLow( hIni, cFileSpec, bKeyCaseSens, cSplitters, bAutoMai
       cLine := ""
    ENDDO
 
-RETURN hIni
+   RETURN hIni
 
 
-FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, bAutoMain )
+FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
    LOCAL hFile
    LOCAL lClose
    LOCAL cNewLine := hb_OSNewLine()
@@ -286,10 +289,10 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, bAutoMain )
       ENDIF
    ENDIF
 
-   DEFAULT bAutoMain TO .T.
+   DEFAULT lAutoMain TO .T.
 
    /* Write toplevel section */
-   IF bAutoMain
+   IF lAutoMain
       /* When automain is on, write the main section */
       hb_HEval( hIni[ "MAIN" ], ;
                { |cKey, xVal| FWrite( hFile, hb_CStr( cKey ) + " = " + ;
@@ -305,7 +308,7 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, bAutoMain )
    FOR EACH cSection IN hIni
 
       /* Avoid re-processing main section */
-      IF bAutoMain
+      IF lAutoMain
          /* When automain is on, skip section named MAIN */
          IF cSection:__enumKey == "MAIN"
             LOOP
@@ -344,4 +347,4 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, bAutoMain )
       FClose( hFile )
    ENDIF
 
-RETURN .T.
+   RETURN .T.

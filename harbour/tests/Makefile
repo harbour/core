@@ -97,6 +97,7 @@ PRG_SOURCES=\
 	output.prg \
 	overload.prg \
 	parexpr.prg \
+	parseini.prg \
 	passref.prg \
 	procline.prg \
 	procname.prg \
