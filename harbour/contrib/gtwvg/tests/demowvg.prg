@@ -2093,18 +2093,3 @@ FUNCTION DrawSlide( hDlg, nSlide )
    Win_ReleaseDC( hDlg,hDC )
 
    Return nil
-
-//-------------------------------------------------------------------//
-
-#pragma BEGINDUMP
-
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include <windows.h>
-
-HB_FUNC( UIDEBUG )
-{
-   OutputDebugString( hb_parc( 1 ) );
-}
-
-#pragma ENDDUMP

@@ -12,7 +12,7 @@ rem this batch file from your customized one. [vszakats]
 rem ---------------------------------------------------------------
 
 set HB_ARCHITECTURE=w32
-set HB_COMPILER=bcc32
+set HB_COMPILER=msvc
 set HB_USER_LIBS=gtwvg.lib
 
 call ..\..\..\bin\bld.bat %1 %2 %3 %4 %5 %6 %7 %8 %9

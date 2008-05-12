@@ -214,7 +214,7 @@ if not "%HB_ARCHITECTURE%" == "w32" goto A_OS2
    if "%HB_COMPILER%" == "mingw32" gcc %1.c -o%1.exe %CFLAGS% -mno-cygwin -I%HB_INC_INSTALL% %HB_INC_TEMP% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon
    if "%HB_COMPILER%" == "rsxnt"   gcc %1.c -Zwin32 %CFLAGS% -I%HB_INC_INSTALL% -L%HB_LIB_INSTALL% -lhbcpage -lhbdebug -lhbvm -lhbrtl -l%_HB_GT_LIB% -lhblang -lhbrdd -lhbrtl -lhbvm -lhbmacro -lhbpp -lrddfpt -lrddntx -lrddcdx -lhbsix -lhbcommon
 
-   if "%HB_COMPILER%" == "msvc"    cl -TP -W3 %CFLAGS% -I%HB_INC_INSTALL% %1.c /link /subsystem:CONSOLE %HB_LIB_INSTALL%\hbcpage.lib %HB_LIB_INSTALL%\hbdebug.lib %HB_LIB_INSTALL%\hbvm.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\%_HB_GT_LIB%.lib %HB_LIB_INSTALL%\hblang.lib %HB_LIB_INSTALL%\hbrdd.lib %HB_LIB_INSTALL%\hbmacro.lib %HB_LIB_INSTALL%\hbpp.lib %HB_LIB_INSTALL%\rddntx.lib %HB_LIB_INSTALL%\rddcdx.lib %HB_LIB_INSTALL%\rddfpt.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\hbcommon.lib user32.lib winspool.lib
+   if "%HB_COMPILER%" == "msvc"    cl -TP -W3 %CFLAGS% -I%HB_INC_INSTALL% %1.c /link /subsystem:CONSOLE %HB_USER_LIBS% %HB_LIB_INSTALL%\hbcpage.lib %HB_LIB_INSTALL%\hbdebug.lib %HB_LIB_INSTALL%\hbvm.lib %HB_LIB_INSTALL%\hbrtl.lib %HB_LIB_INSTALL%\%_HB_GT_LIB%.lib %HB_LIB_INSTALL%\hblang.lib %HB_LIB_INSTALL%\hbrdd.lib %HB_LIB_INSTALL%\hbmacro.lib %HB_LIB_INSTALL%\hbpp.lib %HB_LIB_INSTALL%\rddntx.lib %HB_LIB_INSTALL%\rddcdx.lib %HB_LIB_INSTALL%\rddfpt.lib %HB_LIB_INSTALL%\hbsix.lib %HB_LIB_INSTALL%\hbcommon.lib user32.lib winspool.lib
    if "%HB_COMPILER%" == "msvc"    echo Ignore LNK4033 warning
 
 :C_WATCOM

@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-12 13:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * bin/bld.bat
+     + Added %HB_USER_LIB% for w32/msvc.
+
+   + contrib/hbapollo/tests/bld_vc.bat
+   + contrib/gtwvg/tests/bld_vc.bat
+     + Added VC make files.
+
+   * contrib/gtwvg/tests/demowvg.prg
+     - Removed (unused) embedded C code.
+     ; It still doesn't run though.
+
+   * contrib/gtwvg/tests/bld_b32.bat
+     ! Fixed eol-style.
+
 2008-05-12 11:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/adsfunc.c
      ! Readded one mistakenly removed cast.
