@@ -178,7 +178,7 @@ METHOD update() CLASS SCROLLBAR
    LOCAL nOldCol
    LOCAL lOldMCur
 
-   LOCAL nThumbPos
+   LOCAL nThumbPos := ::nThumbPos
 
    IF ISBLOCK( ::bSBlock )
       Eval( ::bSBlock )
@@ -186,21 +186,21 @@ METHOD update() CLASS SCROLLBAR
 
    IF ::CalcThumbPos() .AND. nThumbPos != ::nThumbPos
 
-      nOldRow := Row()             
-      nOldCol := Col()             
+      nOldRow := Row()
+      nOldCol := Col()
       lOldMCur := MSetCursor( .F. )
 
       DispBegin()
 
-      nThumbPos := ::nThumbPos
-
       IF ::nOrient == SCROLL_VERTICAL
-         DispOutAt( ::nStart + nThumbPos, ::nOffSet, SubStr( ::cStyle, 2, 1 ), hb_ColorIndex( ::cColorSpec, 0 ) )
-         DispOutAt( ::nStart + nThumbPos, ::nOffset, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
+         DispOutAt( ::nStart + nThumbPos, ::nOffSet, SubStr( ::cStyle, 2,  1), hb_ColorIndex( ::cColorSpec, 0 ) )
+         DispOutAt( ::nStart + ::nThumbPos, ::nOffset, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
       ELSE
          DispOutAt( ::nOffset, ::nStart + nThumbPos, SubStr( ::cStyle, 2, 1 ), hb_ColorIndex( ::cColorSpec, 0 ) )
-         DispOutAt( ::nOffset, ::nStart + nThumbPos, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
+         DispOutAt( ::nOffset, ::nStart + ::nThumbPos, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
       ENDIF
+
+      nThumbPos := ::nThumbPos
 
       DispEnd()
 
@@ -411,7 +411,7 @@ METHOD CalcThumbPos() CLASS SCROLLBAR
    ENDIF
 
    IF !::lOverride
-      ::ThumbPos := Min( Max( Round( ( ( nBarLength - 1 ) * ::nCurrent + nTotal - 2 * nBarLength + 1 ) / ( nTotal - nBarLength ), 0 ), 1 ), nBarLength )
+      ::nThumbPos := Min( Max( Round( ::nCurrent * ( ( nBarLength - 1 ) / nTotal ) + 1, 0 ), 1 ), nBarLength )
    ENDIF
 
    RETURN .T.

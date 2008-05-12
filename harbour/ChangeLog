@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-12 11:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/scrollbr.prg
+     ! Fixed :Update(). Submitted by Edmer.
+     ! Fixed formula in :CalcThumbPos(). Reported by Edmer.
+     ! Fixed assigment in :CalcThumbPos() to not interfere 
+       with ::lOverride. Reported by Edmer.
+     ; Please test.
+
 2008-05-12 18:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/ads1.c
      + Added DBOI_SKIPUNIQUE (C5.3 ordSkipUnique()) implementation 
