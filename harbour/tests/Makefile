@@ -19,6 +19,7 @@ LIBS=\
 	hbmacro \
 	hbpp \
 	hbcommon \
+	hbpcre \
 
 ifeq ($(PM),)
   PM := $(pm)
