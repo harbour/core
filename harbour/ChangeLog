@@ -10,7 +10,7 @@
 
 2008-05-12 22:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/gtwvg/tests/bld_b32.bat
-     ! Added switch to compile in GUI mode. :/
+     + Added switch to compile in GUI mode.
 
 2008-05-12 21:50 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/rddads.h
