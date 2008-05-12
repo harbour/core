@@ -1055,7 +1055,7 @@ HB_FUNC( ADSISRECORDINAOF )
 HB_FUNC( ADSISRECORDVALID )
 {
    BOOL bReturn = FALSE;
-   AREAP pArea = hb_rddGetCurrentWorkAreaPointer();
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
    {

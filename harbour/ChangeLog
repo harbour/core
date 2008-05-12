@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-12 11:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/adsfunc.c
+     ! Readded one mistakenly removed cast.
+
 2008-05-12 11:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/scrollbr.prg
      ! Fixed :Update(). Submitted by Edmer.
