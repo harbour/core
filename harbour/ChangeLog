@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-14 01:09 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rddads/adsfunc.c
+    ! use OemToCharBuffA() and CharToOemBuffA() for UNICODE W32 builds
+
 2008-05-14 00:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/complex.c
     ! added casting to unsigned char to force syntax error when

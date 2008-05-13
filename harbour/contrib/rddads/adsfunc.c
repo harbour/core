@@ -86,7 +86,7 @@ char * hb_adsOemToAnsi( char * pcString, ULONG ulLen )
    if( adsOEM )
    {
       char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
-      OemToCharBuff( ( LPCSTR ) pcString, ( LPSTR ) pszDst, ( DWORD ) ulLen );
+      OemToCharBuffA( ( LPCSTR ) pcString, ( LPSTR ) pszDst, ( DWORD ) ulLen );
       pszDst[ ulLen ] = '\0';
       return pszDst;
    }
@@ -98,7 +98,7 @@ char * hb_adsAnsiToOem( char * pcString, ULONG ulLen )
    if( adsOEM )
    {
       char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
-      CharToOemBuff( ( LPCSTR ) pcString, ( LPSTR ) pszDst, ( DWORD ) ulLen );
+      CharToOemBuffA( ( LPCSTR ) pcString, ( LPSTR ) pszDst, ( DWORD ) ulLen );
       pszDst[ ulLen ] = '\0';
       return pszDst;
    }
