@@ -278,7 +278,7 @@ HB_FUNC( ADSMGGETCOMMSTATS )
 
 HB_FUNC( ADSMGRESETCOMMSTATS )
 {
-   hb_retnl( s_hMgmtHandle ? AdsMgResetCommStats( s_hMgmtHandle ) : -1 );
+   hb_retnl( s_hMgmtHandle ? ( LONG ) AdsMgResetCommStats( s_hMgmtHandle ) : -1 );
 }
 
 HB_FUNC( ADSMGGETCONFIGINFO )

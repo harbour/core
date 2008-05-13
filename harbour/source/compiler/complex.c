@@ -684,7 +684,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
             return IDENTIFIER;
          }
          pLex->iState = OPERATOR;
-         return pToken->value[ 0 ];
+         return ( UCHAR ) pToken->value[ 0 ];
 
       case HB_PP_TOKEN_EQ:
          if( HB_SUPPORT_HARBOUR && pToken->pNext && pToken->pNext->spaces == 0 &&
@@ -709,13 +709,13 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
       case HB_PP_TOKEN_GT:
       case HB_PP_TOKEN_REFERENCE:
          pLex->iState = OPERATOR;
-         return pToken->value[ 0 ];
+         return ( UCHAR ) pToken->value[ 0 ];
 
       case HB_PP_TOKEN_EOL:
          pLex->fEol = TRUE;
       case HB_PP_TOKEN_EOC:
          pLex->iState = LOOKUP;
-         return pToken->value[ 0 ];
+         return ( UCHAR ) pToken->value[ 0 ];
 
       case HB_PP_TOKEN_KEYWORD:
       {
@@ -1311,7 +1311,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
          return iType;
       }
       default:
-         return pToken->value[ 0 ];
+         return ( UCHAR ) pToken->value[ 0 ];
    }
 }
 

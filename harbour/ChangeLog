@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-14 00:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/complex.c
+    ! added casting to unsigned char to force syntax error when
+      some unknown tokens appear. Negative values bison recognizes
+      as end of input.
+
+  * harbour/contrib/rddads/adsmgmnt.c
+    ! cleaned one warning
+
 2008-05-13 11:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/xhb/txml.prg
     ! fixed wrongly defined scopes. Note: during porting xHarbour code
