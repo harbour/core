@@ -66,6 +66,7 @@ PRG_SOURCES=\
 	csetatmu.prg \
 	csetarge.prg \
 	csetref.prg \
+	ctwtest.prg \
 	datetime.prg \
 	expomant.prg \
 	finan.prg \

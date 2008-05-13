@@ -1873,7 +1873,7 @@ HB_FUNC( ADSROLLBACK )
 
 /*
    set the number of records to read ahead, for the current work area
-   Call :    ADSCACHERECORDS(nRecords)
+   Call :    ADSCACHERECORDS( nRecords )
    Returns : True if successful
 */
 HB_FUNC( ADSCACHERECORDS )

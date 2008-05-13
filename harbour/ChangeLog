@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-13 09:43 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/hbct/tests/bld_b32.bat
+   + contrib/hbct/tests/bld_vc.bat
+     + Added non-GNU make files for tests.
+
+   * contrib/hbct/tests/Makefile
+     + Added ctwtest.prg to GNU makefile for hbct tests.
+       (so building of these was actually solved already)
+
+   * contrib/rddads/adsfunc.c
+     ! Minor comment.
+
 2008-05-12 22:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/gtwvg/tests/bld_b32.bat
      + Added switch to compile in GUI mode.
@@ -75,7 +87,7 @@
      ! ADSTESTLOGIN() fixed to not write into the 7th 
        param string buffer directly since this may cause 
        HVM corruption. To solve this properly, this parameter 
-       must now be passed by reference. 8th parameter no 
+       must now be passed by reference. 8th parameter is no 
        longer needed.
      ! ADSBLOB2FILE(), ADSFILE2BLOB(), ADSGETTABLECHARTYPE() 
        fixed to not GPF when selected workarea is not ADS.
@@ -138,7 +150,7 @@
        Users of CT3 lib's overloaded MaxRow(.T.)/MaxCol(.T.) 
        functions are encouraged to change the app code 
        to rather use hbct_MaxRow()/hbct_MaxCol() 
-       or hb_ScrMaxRow()/hbScrMaxCol(). These functions are 
+       or hb_ScrMaxRow()/hb_ScrMaxCol(). These functions are 
        easy to implement in CA-Cl*pper too (simple wrappers 
        to Max*()).
 
