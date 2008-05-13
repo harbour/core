@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-13 11:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/xhb/txml.prg
+    ! fixed wrongly defined scopes. Note: during porting xHarbour code
+      to Harbour scopes should be carefully checked because in xHarbour
+      in many cases wrong scopes does not cause any RT errors.
+
 2008-05-13 09:43 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    + contrib/hbct/tests/bld_b32.bat
    + contrib/hbct/tests/bld_vc.bat

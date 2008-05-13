@@ -169,18 +169,20 @@ CLASS TXmlIterator
    METHOD SetContext()
    METHOD Clone()
 
-HIDDEN:
+PROTECTED:
+   METHOD MatchCriteria()
+
    DATA cName
    DATA cAttribute
    DATA cValue
    DATA cData
 
+HIDDEN:
    DATA nTopLevel
 
    DATA oNode
    DATA oTop
 
-   METHOD MatchCriteria()
 ENDCLASS
 
 
@@ -244,7 +246,7 @@ METHOD Next() CLASS TXmlIterator
 RETURN NIL
 
 METHOD MatchCriteria( oNode ) CLASS TXmlIterator
-HB_SYMBOL_UNUSED( oNode )
+   HB_SYMBOL_UNUSED( oNode )
 RETURN .T.
 
 
@@ -254,7 +256,7 @@ RETURN .T.
 
 CLASS TXmlIteratorScan FROM TXmlIterator
    METHOD New( oNodeTop ) CONSTRUCTOR
-HIDDEN:
+PROTECTED:
    METHOD MatchCriteria( oFound )
 ENDCLASS
 
@@ -273,7 +275,7 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorScan
    ENDIF
 
    IF ::cValue != NIL .and. ;
-         hb_HScan( oFound:aAttributes, {| xKey, cValue| HB_SYMBOL_UNUSED( xKey ), ::cValue == cValue}) == 0
+      hb_HScan( oFound:aAttributes, {| xKey, cValue| HB_SYMBOL_UNUSED( xKey ), ::cValue == cValue}) == 0
       RETURN .F.
    ENDIF
 
@@ -289,7 +291,7 @@ RETURN .T.
 
 CLASS TXmlIteratorRegex FROM TXmlIterator
    METHOD New( oNodeTop ) CONSTRUCTOR
-HIDDEN:
+PROTECTED:
    METHOD MatchCriteria( oFound )
 ENDCLASS
 
