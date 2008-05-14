@@ -70,20 +70,20 @@
 static PHB_ITEM s_pItmCobCallBack = NULL;
 #endif
 
-int       adsFileType      = ADS_CDX;
-int       adsLockType      = ADS_PROPRIETARY_LOCKING;
-int       adsRights        = ADS_CHECKRIGHTS;
-int       adsCharType      = ADS_ANSI;
-BOOL      bTestRecLocks    = FALSE;             /* Debug Implicit locks */
-ADSHANDLE adsConnectHandle = 0;
+int       hb_ads_iFileType = ADS_CDX;
+int       hb_ads_iLockType = ADS_PROPRIETARY_LOCKING;
+int       hb_ads_iCheckRights = ADS_CHECKRIGHTS;
+int       hb_ads_iCharType = ADS_ANSI;
+BOOL      hb_ads_bTestRecLocks = FALSE;             /* Debug Implicit locks */
+ADSHANDLE hb_ads_hConnect = 0;
 
 #ifdef ADS_USE_OEM_TRANSLATION
 
-BOOL adsOEM = FALSE;
+BOOL hb_ads_bOEM = FALSE;
 
 char * hb_adsOemToAnsi( char * pcString, ULONG ulLen )
 {
-   if( adsOEM )
+   if( hb_ads_bOEM )
    {
       char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
       OemToCharBuffA( ( LPCSTR ) pcString, ( LPSTR ) pszDst, ( DWORD ) ulLen );
@@ -95,7 +95,7 @@ char * hb_adsOemToAnsi( char * pcString, ULONG ulLen )
 
 char * hb_adsAnsiToOem( char * pcString, ULONG ulLen )
 {
-   if( adsOEM )
+   if( hb_ads_bOEM )
    {
       char * pszDst = ( char * ) hb_xgrab( ulLen + 1 );
       CharToOemBuffA( ( LPCSTR ) pcString, ( LPSTR ) pszDst, ( DWORD ) ulLen );
@@ -107,7 +107,7 @@ char * hb_adsAnsiToOem( char * pcString, ULONG ulLen )
 
 void hb_adsOemAnsiFree( char * pcString )
 {
-   if( adsOEM )
+   if( hb_ads_bOEM )
    {
       hb_xfree( pcString );
    }
@@ -117,17 +117,17 @@ void hb_adsOemAnsiFree( char * pcString )
 
 HB_FUNC( ADSTESTRECLOCKS )              /* Debug Implicit locks Set/Get call */
 {
-   hb_retl( bTestRecLocks );
+   hb_retl( hb_ads_bTestRecLocks );
 
    if( ISLOG( 1 ) )
    {
-      bTestRecLocks = hb_parl( 1 );
+      hb_ads_bTestRecLocks = hb_parl( 1 );
    }
 }
 
 HB_FUNC( ADSSETFILETYPE )
 {
-   hb_retni( adsFileType );
+   hb_retni( hb_ads_iFileType );
 
    if( hb_pcount() > 0 )
    {
@@ -140,7 +140,7 @@ HB_FUNC( ADSSETFILETYPE )
           fileType <= ADS_ADT )
 #endif
       {
-         adsFileType = fileType;
+         hb_ads_iFileType = fileType;
       }
    }
 }
@@ -215,7 +215,7 @@ HB_FUNC( ADSGETCONNECTIONTYPE )
    ADSHANDLE hConnToCheck = HB_ADS_PARCONNECTION( 1 );
 
    /* NOTE: Caller can specify a connection. Otherwise use default handle.
-            The global adsConnectHandle will continue to be 0 if no adsConnect60() (Data
+            The global hb_ads_hConnect will continue to be 0 if no adsConnect60() (Data
             Dictionary) calls are made. Simple table access uses an implicit connection
             whose handle we don't see unless you get it from an opened table
             with ADSGETTABLECONTYPE(). */
@@ -380,27 +380,27 @@ HB_FUNC( ADSISRECORDLOCKED )
 
 HB_FUNC( ADSLOCKING )
 {
-   hb_retl( adsLockType );
+   hb_retl( hb_ads_iLockType == ADS_PROPRIETARY_LOCKING );
 
    if( hb_pcount() > 0 )
    {
-      adsLockType = hb_parl( 1 );
+      hb_ads_iLockType = hb_parl( 1 ) ? ADS_PROPRIETARY_LOCKING : ADS_COMPATIBLE_LOCKING;
    }
 }
 
 HB_FUNC( ADSRIGHTSCHECK )
 {
-   hb_retl( adsRights == ADS_CHECKRIGHTS );
+   hb_retl( hb_ads_iCheckRights == ADS_CHECKRIGHTS );
 
    if( hb_pcount() > 0 )
    {
-      adsRights = hb_parl( 1 ) ? ADS_CHECKRIGHTS : ADS_IGNORERIGHTS;
+      hb_ads_iCheckRights = hb_parl( 1 ) ? ADS_CHECKRIGHTS : ADS_IGNORERIGHTS;
    }
 }
 
 HB_FUNC( ADSSETCHARTYPE )
 {
-   hb_retni( adsCharType );
+   hb_retni( hb_ads_iCharType );
 
    if( hb_pcount() > 0 )
    {
@@ -413,13 +413,13 @@ HB_FUNC( ADSSETCHARTYPE )
           charType <= ADS_OEM )
 #endif
       {
-         adsCharType = charType;
+         hb_ads_iCharType = charType;
       }
 
 #ifdef ADS_USE_OEM_TRANSLATION
       if( ISLOG( 2 ) )
       {
-         adsOEM = hb_parl( 2 );
+         hb_ads_bOEM = hb_parl( 2 );
       }
 #endif
    }
@@ -1331,7 +1331,7 @@ HB_FUNC( ADSCONNECT )
 
       if( ulRetVal == AE_SUCCESS )
       {
-         adsConnectHandle = hConnect;
+         hb_ads_hConnect = hConnect;
          hb_retl( TRUE );
       }
       else
@@ -1360,7 +1360,7 @@ HB_FUNC( ADSDISCONNECT )
 
    ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 1 );
 
-   /* NOTE: Only allow disconnect of 0 if explicitly passed or adsConnectHandle is 0
+   /* NOTE: Only allow disconnect of 0 if explicitly passed or hb_ads_hConnect is 0
             (hConnect might be 0 if caller accidentally disconnects twice; 
             this should not close all connections! */
 
@@ -1372,9 +1372,9 @@ HB_FUNC( ADSDISCONNECT )
 
       if( ulRetVal == AE_SUCCESS )
       {
-         if( hConnect == adsConnectHandle )
+         if( hConnect == hb_ads_hConnect )
          {
-            adsConnectHandle = 0;
+            hb_ads_hConnect = 0;
          }
 
          hb_retl( TRUE );
@@ -1454,14 +1454,14 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
 {
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
-   /* NOTE: Removed test for adsConnectHandle as it is not actually used;
+   /* NOTE: Removed test for hb_ads_hConnect as it is not actually used;
             the func was just trying to confirm a real connection existed
             but we're trying to remove dependence on statics;
             if we saved the nConnection to a WA, that would take care of it.
             As is, it requires pArea->hStatement which we only allow created if
             there's Connection so we should be OK. [bh 10/9/2005 2:51PM] */
 
-   if( /* adsConnectHandle && */ pArea && pArea->hStatement && ISCHAR( 1 ) )
+   if( /* hb_ads_hConnect && */ pArea && pArea->hStatement && ISCHAR( 1 ) )
    {
       UNSIGNED32 ulRetVal;
       char * pucStmt = hb_adsOemToAnsi( hb_parc( 1 ), hb_parclen( 1 ) );
@@ -1507,14 +1507,14 @@ HB_FUNC( ADSPREPARESQL )
 {
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
-   /* NOTE: Removed test for adsConnectHandle as it is not actually used;
+   /* NOTE: Removed test for hb_ads_hConnect as it is not actually used;
             the func was just trying to confirm a real connection existed
             but we're trying to remove dependence on statics;
             if we saved the nConnection to a WA, that would take care of it.
             As is, it requires pArea->hStatement which we only allow created if
             there's Connection so we should be OK. [bh 10/9/2005 2:51PM] */
 
-   if( /* adsConnectHandle && */ pArea && pArea->hStatement && ISCHAR( 1 ) )
+   if( /* hb_ads_hConnect && */ pArea && pArea->hStatement && ISCHAR( 1 ) )
    {
       UNSIGNED32 ulRetVal;
       char * pucStmt = hb_adsOemToAnsi( hb_parc( 1 ), hb_parclen( 1 ) );
@@ -1544,14 +1544,14 @@ HB_FUNC( ADSEXECUTESQL )
 {
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
-   /* NOTE: Removed test for adsConnectHandle as it is not actually used;
+   /* NOTE: Removed test for hb_ads_hConnect as it is not actually used;
             the func was just trying to confirm a real connection existed
             but we're trying to remove dependence on statics;
             if we saved the nConnection to a WA, that would take care of it.
             As is, it requires pArea->hStatement which we only allow created if
             there's Connection so we should be OK. [bh 10/9/2005 2:51PM] */
 
-   if( /* adsConnectHandle && */ pArea && pArea->hStatement )
+   if( /* hb_ads_hConnect && */ pArea && pArea->hStatement )
    {
       UNSIGNED32 ulRetVal;
       ADSHANDLE hCursor = 0;
@@ -1781,9 +1781,9 @@ HB_FUNC( ADSGETNUMINDEXES )
 
 HB_FUNC( ADSCONNECTION )                /* Get/Set func to switch between connections. */
 {
-   HB_ADS_RETCONNECTION( adsConnectHandle );
+   HB_ADS_RETCONNECTION( hb_ads_hConnect );
 
-   adsConnectHandle = HB_ADS_PARCONNECTION( 1 );
+   hb_ads_hConnect = HB_ADS_PARCONNECTION( 1 );
 }
 
 HB_FUNC( ADSGETHANDLETYPE )             /* DD, admin, table */
@@ -2030,8 +2030,8 @@ HB_FUNC( ADSDDADDTABLE )
    ulRetVal = AdsDDAddTable( hConnect,
                              pTableName,
                              pTableFileName,
-                             adsFileType,
-                             adsCharType,
+                             ( UNSIGNED16 ) hb_ads_iFileType,
+                             ( UNSIGNED16 ) hb_ads_iCharType,
                              pTableIndexFileName,
                              NULL );
 
@@ -2115,7 +2115,7 @@ HB_FUNC( ADSCONNECT60 )
 
    if( ulRetVal == AE_SUCCESS )
    {
-      adsConnectHandle = hConnect;       /* set new default */
+      hb_ads_hConnect = hConnect;       /* set new default */
 
       hb_stornl( hConnect, 6 );
 
@@ -2142,7 +2142,7 @@ HB_FUNC( ADSDDCREATE )
 
    if( ulRetVal == AE_SUCCESS )
    {
-      adsConnectHandle = hConnect;
+      hb_ads_hConnect = hConnect;
       hb_retl( TRUE );
    }
    else
@@ -2449,10 +2449,10 @@ HB_FUNC( ADSRESTRUCTURETABLE )
    ulRetVal = AdsRestructureTable( hConnect,
                                    pTableName,
                                    NULL /* pucAlias */,
-                                   adsFileType,
-                                   adsCharType,
-                                   adsLockType,
-                                   adsRights,
+                                   ( UNSIGNED16 ) hb_ads_iFileType,
+                                   ( UNSIGNED16 ) hb_ads_iCharType,
+                                   ( UNSIGNED16 ) hb_ads_iLockType,
+                                   ( UNSIGNED16 ) hb_ads_iCheckRights,
                                    pucAddFields,
                                    pucDeleteFields,
                                    pucChangeFields );

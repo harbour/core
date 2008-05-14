@@ -279,7 +279,7 @@ static int adsGetFileType( USHORT uiRddID )
       return ADS_VFP;
 #endif
 
-   return adsFileType;
+   return hb_ads_iFileType;
 }
 
 static const char * adsTableExt( int iFileType )
@@ -389,7 +389,7 @@ static ERRCODE hb_adsUpdateAreaFlags( ADSAREAP pArea )
 
 static ERRCODE hb_adsCheckLock( ADSAREAP pArea )
 {
-   if( bTestRecLocks && pArea->fShared && !pArea->fFLocked )
+   if( hb_ads_bTestRecLocks && pArea->fShared && !pArea->fFLocked )
    {
       UNSIGNED16 u16Locked = FALSE;
       UNSIGNED32 u32RetVal;
@@ -532,7 +532,7 @@ static ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, USHORT nScope, PHB
                {
                   /* bTypeError = FALSE; */
 #ifdef ADS_USE_OEM_TRANSLATION
-                  if( adsOEM )
+                  if( hb_ads_bOEM )
                   {
                      u16DataType = ADS_RAWKEY;
                   }
@@ -923,7 +923,7 @@ static ERRCODE adsSeek( ADSAREAP pArea, BOOL bSoftSeek, PHB_ITEM pKey, BOOL bFin
       pszKey = ( UNSIGNED8* ) hb_itemGetCPtr( pKey );
       u16KeyLen = ( UNSIGNED16 ) hb_itemGetCLen( pKey );
 #ifdef ADS_USE_OEM_TRANSLATION
-      u16KeyType = adsOEM ? ADS_RAWKEY : ADS_STRINGKEY;
+      u16KeyType = hb_ads_bOEM ? ADS_RAWKEY : ADS_STRINGKEY;
 #else
       u16KeyType = ADS_STRINGKEY;
 #endif
@@ -1694,7 +1694,7 @@ static ERRCODE adsDeleteRec( ADSAREAP pArea )
    if( !pArea->fPositioned )
       return SUCCESS;
 
-   if( bTestRecLocks )
+   if( hb_ads_bTestRecLocks )
    {
       if( ! hb_adsCheckLock( pArea ) == SUCCESS )
          return FAILURE;
@@ -1940,7 +1940,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             memset( pBuffer, ' ', pField->uiLen );
          }
 #ifdef ADS_USE_OEM_TRANSLATION
-         else if( adsOEM )
+         else if( hb_ads_bOEM )
          {
             AdsGetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), pBuffer, &u32Length );
          }
@@ -2213,7 +2213,7 @@ static ERRCODE adsPutRec( ADSAREAP pArea, BYTE * pBuffer )
    if( !pArea->fPositioned )
       return SUCCESS;
 
-   if( bTestRecLocks )
+   if( hb_ads_bTestRecLocks )
    {
       if( ! hb_adsCheckLock( pArea ) == SUCCESS )
          return FAILURE;
@@ -2245,7 +2245,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       field with no lock in effect. The lock can potentially remain in
       effect indefinitely if the record pointer is not moved.
 
-      The bTestRecLocks flag can be set using
+      The hb_ads_bTestRecLocks flag can be set using
           AdsTestRecLocks( lOnOff ) in adsfunc.c.
       If ON, we see if the file is open exclusively or locked, and whether
       the record has been explicitly locked already. If not, we throw
@@ -2266,7 +2266,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       return FAILURE;
    }
 
-   if( bTestRecLocks )
+   if( hb_ads_bTestRecLocks )
    {
       if( ! hb_adsCheckLock( pArea ) == SUCCESS )
          return FAILURE;
@@ -2291,7 +2291,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             }
 
 #ifdef ADS_USE_OEM_TRANSLATION
-            if( adsOEM )
+            if( hb_ads_bOEM )
             {
                ulRetVal = AdsSetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), uiCount );
             }
@@ -2416,7 +2416,7 @@ static ERRCODE adsRecall( ADSAREAP pArea )
    if( !pArea->fPositioned )
       return SUCCESS;
 
-   if( bTestRecLocks )
+   if( hb_ads_bTestRecLocks )
    {
       if( ! hb_adsCheckLock( pArea ) == SUCCESS )
          return FAILURE;
@@ -2702,8 +2702,8 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    *ucfieldPtr = '\0';
 
    uRetVal = AdsCreateTable( hConnection, pCreateInfo->abName, pCreateInfo->atomAlias,
-                             pArea->iFileType, adsCharType,
-                             adsLockType, adsRights,
+                             pArea->iFileType, hb_ads_iCharType,
+                             hb_ads_iLockType, hb_ads_iCheckRights,
                              hb_setGetNL( HB_SET_MBLOCKSIZE ),
                              ucfieldDefs, &hTable );
    hb_xfree( ucfieldDefs );
@@ -2923,7 +2923,7 @@ static ERRCODE adsNewArea( ADSAREAP pArea )
 #endif
       else /* if( pArea->rddID == s_uiRddIdADS ) */
       {
-         pArea->iFileType = adsFileType;
+         pArea->iFileType = hb_ads_iFileType;
          pArea->uiMaxFieldNameLength = ( pArea->iFileType == ADS_ADT ) ?
                                     ADS_MAX_FIELD_NAME : ADS_MAX_DBF_FIELD_NAME;
       }
@@ -3015,7 +3015,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
          u32RetVal = AdsOpenTable( hConnection,
                         pOpenInfo->abName, pOpenInfo->atomAlias,
                         (fDictionary ? ADS_DEFAULT : pArea->iFileType),
-                        adsCharType, adsLockType, adsRights,
+                        hb_ads_iCharType, hb_ads_iLockType, hb_ads_iCheckRights,
                         ( pOpenInfo->fShared ? ADS_SHARED : ADS_EXCLUSIVE ) |
                         ( pOpenInfo->fReadonly ? ADS_READONLY : ADS_DEFAULT ),
                         &hTable );
@@ -4551,7 +4551,7 @@ static ERRCODE adsPutValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile, U
    if( !pArea->fPositioned )
       return SUCCESS;
 
-   if( bTestRecLocks )
+   if( hb_ads_bTestRecLocks )
    {
       if( ! hb_adsCheckLock( pArea ) == SUCCESS )
          return FAILURE;
@@ -4735,9 +4735,9 @@ static ERRCODE adsRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, PHB_
 
       case RDDI_CONNECTION:
       {
-         ADSHANDLE hOldConnection = adsConnectHandle;
+         ADSHANDLE hOldConnection = hb_ads_hConnect;
 
-         adsConnectHandle = HB_ADS_GETCONNECTION( pItem );
+         hb_ads_hConnect = HB_ADS_GETCONNECTION( pItem );
          HB_ADS_PUTCONNECTION( pItem, hOldConnection );
          break;
       }
