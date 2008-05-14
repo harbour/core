@@ -774,7 +774,7 @@ HB_FUNC( ADSADDCUSTOMKEY )
    {
       if( hb_pcount() > 0 )
       {
-         ADSHANDLE hIndex;
+         ADSHANDLE hIndex = 0;
 
          if( ISNUM( 1 ) )
          {
@@ -817,7 +817,7 @@ HB_FUNC( ADSDELETECUSTOMKEY )
    {
       if( hb_pcount() > 0 )
       {
-         ADSHANDLE hIndex;
+         ADSHANDLE hIndex = 0;
 
          if( ISNUM( 1 ) )
          {
@@ -927,10 +927,10 @@ HB_FUNC( ADSGETAOF )
 
    if( pArea )
    {
-      UNSIGNED8  pucFilter[ HARBOUR_MAX_RDD_FILTER_LENGTH + 1 ];
-      UNSIGNED8 *pucFilter2 = NULL;
-      UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH + 1;
-      UNSIGNED32 ulRetVal;
+      UNSIGNED8   pucFilter[ HARBOUR_MAX_RDD_FILTER_LENGTH + 1 ];
+      UNSIGNED8 * pucFilter2 = NULL;
+      UNSIGNED16  pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH + 1;
+      UNSIGNED32  ulRetVal;
 
       ulRetVal = AdsGetAOF( pArea->hTable,
                             pucFilter,
@@ -939,6 +939,7 @@ HB_FUNC( ADSGETAOF )
       if( pusLen > HARBOUR_MAX_RDD_FILTER_LENGTH )
       {
          pucFilter2 = ( UNSIGNED8 * ) hb_xgrab( pusLen + 1 );
+
          ulRetVal = AdsGetAOF( pArea->hTable,
                                pucFilter2,
                                &pusLen );
@@ -946,8 +947,7 @@ HB_FUNC( ADSGETAOF )
 
       if( ulRetVal == AE_SUCCESS )
       {
-         char * szRet;
-         szRet = hb_adsAnsiToOem( ( char * ) ( pucFilter2 ? pucFilter2 : pucFilter ), pusLen );
+         char * szRet = hb_adsAnsiToOem( ( char * ) ( pucFilter2 ? pucFilter2 : pucFilter ), pusLen );
          hb_retc( szRet );
          hb_adsOemAnsiFree( szRet );
       }
@@ -995,10 +995,10 @@ HB_FUNC( ADSGETAOFNOOPT )
 
    if( pArea )
    {
-      UNSIGNED16  pusOptLevel;
-      UNSIGNED8   pucNonOpt[ HARBOUR_MAX_RDD_FILTER_LENGTH + 1 ];
-      UNSIGNED16  pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH + 1;
-      UNSIGNED32  ulRetVal;
+      UNSIGNED16 pusOptLevel;
+      UNSIGNED8  pucNonOpt[ HARBOUR_MAX_RDD_FILTER_LENGTH + 1 ];
+      UNSIGNED16 pusLen = HARBOUR_MAX_RDD_FILTER_LENGTH + 1;
+      UNSIGNED32 ulRetVal;
 
       ulRetVal = AdsGetAOFOptLevel( pArea->hTable,
                                     &pusOptLevel,
@@ -1103,9 +1103,7 @@ HB_FUNC( ADSSETAOF )
       {
          UNSIGNED32 ulRetVal;
          UNSIGNED16 usResolve = ( UNSIGNED16 ) ( hb_pcount() > 1 ? hb_parni( 2 ) : ADS_RESOLVE_DYNAMIC ); /* ADS_RESOLVE_IMMEDIATE */
-         char * pucFilter;
-      
-         pucFilter = hb_adsOemToAnsi( hb_parc( 1 ), hb_parclen( 1 ) );
+         char * pucFilter = hb_adsOemToAnsi( hb_parc( 1 ), hb_parclen( 1 ) );
       
          ulRetVal = AdsSetAOF( pArea->hTable,
                                ( UNSIGNED8 * ) pucFilter,
@@ -1905,14 +1903,7 @@ HB_FUNC( ADSREINDEX )
    UNSIGNED32 ulRetVal;
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
-   if( pArea )
-   {
-      ulRetVal = AdsReindex( pArea->hTable );
-   }
-   else
-   {
-      ulRetVal = AdsReindex( ( ADSHANDLE ) -1 ); /* should return error! */
-   }
+   ulRetVal = AdsReindex( pArea ? pArea->hTable : ( ADSHANDLE ) -1 );
 
    hb_retl( ulRetVal == AE_SUCCESS );
 }
@@ -2055,8 +2046,8 @@ HB_FUNC( ADSDDREMOVETABLE )
 HB_FUNC( ADSDDREMOVEINDEXFILE )
 {
    UNSIGNED32 ulRetVal;
-   UNSIGNED8 *pTableName     = ( UNSIGNED8 * ) hb_parcx( 1 );
-   UNSIGNED8 *pIndexName     = ( UNSIGNED8 * ) hb_parcx( 2 );
+   UNSIGNED8 * pTableName    = ( UNSIGNED8 * ) hb_parcx( 1 );
+   UNSIGNED8 * pIndexName    = ( UNSIGNED8 * ) hb_parcx( 2 );
    UNSIGNED16 usDeleteFiles  = ( UNSIGNED16 ) ( ISNUM( 3 ) ? hb_parni( 3 ) : ( ISLOG( 3 ) ? hb_parl( 3 ) : 0 ) );
    ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 4 );
 
@@ -2135,9 +2126,9 @@ HB_FUNC( ADSDDCREATE )
    UNSIGNED8 * pucDescription    = ( UNSIGNED8 * ) hb_parc( 3 );
    ADSHANDLE hConnect = 0;
 
-   ulRetVal = AdsDDCreate( ( UNSIGNED8 * ) pucDictionaryPath,
+   ulRetVal = AdsDDCreate( pucDictionaryPath,
                            usEncrypt,
-                           ( UNSIGNED8 * ) pucDescription,
+                           pucDescription,
                            &hConnect );
 
    if( ulRetVal == AE_SUCCESS )
@@ -2402,7 +2393,7 @@ HB_FUNC( ADSTESTLOGIN )
    UNSIGNED8 * pucUserName   = ( UNSIGNED8 * ) hb_parc( 3 );
    UNSIGNED8 * pucPassword   = ( UNSIGNED8 * ) hb_parc( 4 );
    UNSIGNED32 ulOptions      = ( UNSIGNED32 ) ( ISNUM( 5 ) ? hb_parnl( 5 ) : ADS_DEFAULT );
-   ADSHANDLE adsTestHandle;
+   ADSHANDLE adsTestHandle   = 0;
 
    ulRetVal = AdsConnect60( pucServerPath,
                             usServerTypes,
@@ -2627,23 +2618,23 @@ HB_FUNC( ADSCLOSECACHEDTABLES )
 
 HB_FUNC( ADSCREATESAVEPOINT )
 {
-   ADSHANDLE  hConnect = HB_ADS_PARCONNECTION( 1 );
-   char *     pucSavepoint = hb_parc( 2 );
+   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 1 );
+   UNSIGNED8 * pucSavepoint = ( UNSIGNED8 * ) hb_parc( 2 );
    UNSIGNED32 ulOptions = ADS_DEFAULT;
 
    hb_retnl( AdsCreateSavepoint( hConnect,
-                                 ( UNSIGNED8 * ) pucSavepoint, 
+                                 pucSavepoint, 
                                  ulOptions ) );
 }
 
 HB_FUNC( ADSROLLBACKSAVEPOINT )
 {
-   ADSHANDLE  hConnect = HB_ADS_PARCONNECTION( 1 );
-   char *     pucSavepoint = hb_parc( 2 );
+   ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 1 );
+   UNSIGNED8 * pucSavepoint = ( UNSIGNED8 * ) hb_parc( 2 );
    UNSIGNED32 ulOptions = ADS_DEFAULT;
 
    hb_retnl( AdsRollbackTransaction80( hConnect,
-                                       ( UNSIGNED8 * ) pucSavepoint,
+                                       pucSavepoint,
                                        ulOptions ) );
 }
 
