@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-14 13:04 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * tests/bld4dll.bat
+   * tests/gnu_test.bat
+   - tests/test.ch
+   - tests/testinc.prg
+   - tests/db_brows.ch
+   * tests/db_brows.prg
+   - tests/entries.ini
+   - tests/hversion.prg
+   - tests/cgi.ch
+   * tests/testcgi.prg
+     ! Cleanups.
+
 2008-05-14 12:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    + contrib/hbclipsm/tests/bld_b32.bat
    + contrib/hbclipsm/tests/bld_vc.bat

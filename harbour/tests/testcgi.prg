@@ -1,31 +1,51 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 /*
-*
-*  TestCGI.PRG
-*  Harbour Test of a CGI/HTML-Generator class.
-*
-*  1999/05/30  First implementation.
-*
-*              Tips: - Use ShowResults to make dynamic html (to test dynamic
-*                      results, put the exe file on CGI-BIN dir or equivalent);
-*                    - Use SaveToFile to make static html page
-*
-*  1999/05/31  Initial CGI functionality.
-*  1999/06/01  Translated %nn to correct chars.
-*  1999/06/02  Dynamic TAG matching routines (inspired on Delphi).
-*              First attempt to convert Delphi's ISAPI dll of WebSites'
-*              Function List
-*              (See http://www.flexsys-ci.com/harbour-project/functions.htm)
-*  1999/06/11  List can be viewed online at
-*              http://www.flexsys-ci.com/cgi-bin/testcgi.exe
-*  1999/07/29  Changed qOut() calls to OutStd() calls.
-*
-**/
+ *
+ * TestCGI.PRG
+ * Harbour Test of a CGI/HTML-Generator class.
+ *
+ * 1999/05/30  First implementation.
+ *
+ *             Tips: - Use ShowResults to make dynamic html (to test dynamic
+ *                     results, put the exe file on CGI-BIN dir or equivalent);
+ *                   - Use SaveToFile to make static html page
+ *
+ * 1999/05/31  Initial CGI functionality.
+ * 1999/06/01  Translated %nn to correct chars.
+ * 1999/06/02  Dynamic TAG matching routines (inspired on Delphi).
+ *             First attempt to convert Delphi's ISAPI dll of WebSites'
+ *             Function List
+ *             (See http://www.flexsys-ci.com/harbour-project/functions.htm)
+ * 1999/06/11  List can be viewed online at
+ *             http://www.flexsys-ci.com/cgi-bin/testcgi.exe
+ * 1999/07/29  Changed qOut() calls to OutStd() calls.
+ *
+ */
 
-#include "cgi.ch"
+#define CGI_SERVER_SOFTWARE     01
+#define CGI_SERVER_NAME         02
+#define CGI_GATEWAY_INTERFACE   03
+#define CGI_SERVER_PROTOCOL     04
+#define CGI_SERVER_PORT         05
+#define CGI_REQUEST_METHOD      06
+#define CGI_HTTP_ACCEPT         07
+#define CGI_HTTP_USER_AGENT     08
+#define CGI_HTTP_REFERER        09
+#define CGI_PATH_INFO           10
+#define CGI_PATH_TRANSLATED     11
+#define CGI_SCRIPT_NAME         12
+#define CGI_QUERY_STRING        13
+#define CGI_REMOTE_HOST         14
+#define CGI_REMOTE_ADDR         15
+#define CGI_REMOTE_USER         16
+#define CGI_AUTH_TYPE           17
+#define CGI_CONTENT_TYPE        18
+#define CGI_CONTENT_LENGTH      19
+#define CGI_ANNOTATION_SERVER   20
+
 #define IF_BUFFER 65535
 
 FUNCTION Main()

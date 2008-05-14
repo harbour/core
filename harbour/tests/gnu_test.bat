@@ -3,17 +3,18 @@ rem
 rem $Id$
 rem 
 
-if %hb_architecture%.==. goto bad_arch
-if %hb_compiler%.==. goto bad_comp
+if %HB_ARCHITECTURE%.==. goto BAD_ARCH
+if %HB_COMPILER%.==. goto BAD_COMP
 
-if exist %hb_architecture%\%hb_compiler%\%1.* del %hb_architecture%\%hb_compiler%\%1.*
+if exist %HB_ARCHITECTURE%\%HB_COMPILER%\%1.* del %HB_ARCHITECTURE%\%HB_COMPILER%\%1.*
 make -r "PRG_SOURCES=%1.prg"
-if not errorlevel 1 %hb_architecture%\%hb_compiler%\%1 %2 %3 %4 %5 %6 %7 %8 %9
-goto exit
+if not errorlevel 1 %HB_ARCHITECTURE%\%HB_COMPILER%\%1 %2 %3 %4 %5 %6 %7 %8 %9
+goto EXIT
 
-:bad_arch
+:BAD_ARCH
 echo HB_ARCHITECTURE is not set.
-goto exit
-:bad_comp
+goto EXIT
+
+:BAD_COMP
 echo HB_COMPILER is not set.
-:exit
+:EXIT
