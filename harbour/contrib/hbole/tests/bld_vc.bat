@@ -17,6 +17,6 @@ set HB_LIB_INSTALL=..\..\..\lib
 
 set HB_ARCHITECTURE=w32
 set HB_COMPILER=msvc
-set HB_USER_LIBS=hbct.lib
+set HB_USER_LIBS=hbole.lib
 
 call %HB_BIN_INSTALL%\bld.bat %1 %2 %3 %4 %5 %6 %7 %8 %9

@@ -178,13 +178,13 @@ METHOD update() CLASS SCROLLBAR
    LOCAL nOldCol
    LOCAL lOldMCur
 
-   LOCAL nThumbPos := ::nThumbPos
+   LOCAL nOldThumbPos := ::nThumbPos
 
    IF ISBLOCK( ::bSBlock )
       Eval( ::bSBlock )
    ENDIF
 
-   IF ::CalcThumbPos() .AND. nThumbPos != ::nThumbPos
+   IF ::CalcThumbPos() .AND. nOldThumbPos != ::nThumbPos
 
       nOldRow := Row()
       nOldCol := Col()
@@ -193,14 +193,12 @@ METHOD update() CLASS SCROLLBAR
       DispBegin()
 
       IF ::nOrient == SCROLL_VERTICAL
-         DispOutAt( ::nStart + nThumbPos, ::nOffSet, SubStr( ::cStyle, 2,  1), hb_ColorIndex( ::cColorSpec, 0 ) )
+         DispOutAt( ::nStart + nOldThumbPos, ::nOffSet, SubStr( ::cStyle, 2,  1), hb_ColorIndex( ::cColorSpec, 0 ) )
          DispOutAt( ::nStart + ::nThumbPos, ::nOffset, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
       ELSE
-         DispOutAt( ::nOffset, ::nStart + nThumbPos, SubStr( ::cStyle, 2, 1 ), hb_ColorIndex( ::cColorSpec, 0 ) )
+         DispOutAt( ::nOffset, ::nStart + nOldThumbPos, SubStr( ::cStyle, 2, 1 ), hb_ColorIndex( ::cColorSpec, 0 ) )
          DispOutAt( ::nOffset, ::nStart + ::nThumbPos, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
       ENDIF
-
-      nThumbPos := ::nThumbPos
 
       DispEnd()
 
@@ -417,7 +415,7 @@ METHOD CalcThumbPos() CLASS SCROLLBAR
    RETURN .T.
 
 /* New definitions for better coding. These are screen codepage dependent, 
-   but can be changed with the setStyle method. */
+	   but can be changed with the setStyle method. */
 #define SB_UPARROW      Chr( 24 )
 #define SB_DNARROW      Chr( 25 )
 #define SB_THUMB        Chr( 176 )

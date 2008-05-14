@@ -3,7 +3,20 @@ rem
 rem $Id$
 rem
 
-..\..\..\bin\harbour %1 /n /i..\..\include /i..\ %2
-bcc32 -e%1.exe -O2 -d -I..\..\..\include -L..\..\..\lib\b32 %1.c hbdebug.lib hbvm.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbcommon.lib hbsix.lib hbole.lib
+rem ---------------------------------------------------------------
+rem This is a generic template file, if it doesn't fit your own needs 
+rem please DON'T MODIFY IT.
+rem
+rem Instead, make a local copy and modify that one, or make a call to 
+rem this batch file from your customized one. [vszakats]
+rem ---------------------------------------------------------------
 
-rem del %1.c
+set HB_BIN_INSTALL=..\..\..\bin
+set HB_INC_INSTALL=..\..\..\include
+set HB_LIB_INSTALL=..\..\..\lib
+
+set HB_ARCHITECTURE=w32
+set HB_COMPILER=bcc32
+set HB_USER_LIBS=hbole.lib
+
+call %HB_BIN_INSTALL%\bld.bat %1 %2 %3 %4 %5 %6 %7 %8 %9

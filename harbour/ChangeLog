@@ -8,6 +8,35 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-14 08:29 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbct/tests/bld_b32.bat
+   * contrib/hbct/tests/bld_vc.bat
+   * contrib/hbodbc/tests/bld_b32.bat
+   + contrib/hbodbc/tests/bld_vc.bat
+   * contrib/hbole/tests/bld_b32.bat
+   + contrib/hbole/tests/bld_vc.bat
+   * contrib/hbfbird/tests/bld_b32.bat
+   + contrib/hbfbird/tests/bld_vc.bat
+   * contrib/gtwvg/tests/bld_vc.bat
+   * contrib/gtwvg/tests/bld_b32.bat
+   * contrib/hbpgsql/tests/bld_b32.bat
+   + contrib/hbpgsql/tests/bld_vc.bat
+   * contrib/hbgf/tests/bld_b32.bat
+   + contrib/hbgf/tests/bld_vc.bat
+   * contrib/hbgd/tests/bld_b32.bat
+   * contrib/hbgd/tests/bld_vc.bat
+   - contrib/hbgd/tests/bldtest.bat
+     + Standardized contrib test build batch files 
+       for non-GNU make systems.
+     + Added MSVC flavour of these.
+     + Now automatically set Harbour bin/inc/lib paths.
+
+   * source/rtl/scrollbr.prg
+     % Minor opt, slipped in by last change.
+
+   * contrib/hbfbird/tfirebird.prg
+     ! Fixed duplicate class var declaration.
+
 2008-05-14 01:09 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/rddads/adsfunc.c
     ! use OemToCharBuffA() and CharToOemBuffA() for UNICODE W32 builds

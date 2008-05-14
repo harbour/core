@@ -453,7 +453,6 @@ RETURN result
 
 
 CLASS TFbQuery
-    DATA     ErrorNo
     DATA     nError
     DATA     lError
     DATA     Dialect
