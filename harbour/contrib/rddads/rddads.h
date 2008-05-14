@@ -65,12 +65,23 @@
 
 #include "ace.h"
 
-/* Autodetect ACE version. */
-
-/* Compatibility */
-#ifdef ADS_REQUIRE_VERSION
-   #define ADS_LIB_VERSION ADS_REQUIRE_VERSION
+/* Compatibility ACE version override.
+   Usage is discouraged and unnecessary unless we want to 
+   override autodetection. For the latter, ADS_LIB_VERSION 
+   is recommended. [vszakats] */
+#if ADS_REQUIRE_VERSION == 5
+   #define ADS_LIB_VERSION 500
+#elif ADS_REQUIRE_VERSION == 6
+   #define ADS_LIB_VERSION 600
+#elif ADS_REQUIRE_VERSION == 7
+   #define ADS_LIB_VERSION 700
+#elif ADS_REQUIRE_VERSION == 8
+   #define ADS_LIB_VERSION 800
+#elif ADS_REQUIRE_VERSION == 9
+   #define ADS_LIB_VERSION 900
 #endif
+
+/* Autodetect ACE version. */
 
 #ifndef ADS_LIB_VERSION
    #if   defined(ADS_NOTIFICATION_CONNECTION)
@@ -213,8 +224,8 @@ extern int adsRights;
 extern int adsCharType;
 extern BOOL bTestRecLocks;
 extern ADSHANDLE adsConnectHandle;
-extern ERRCODE adsCloseCursor( ADSAREAP pArea );
-extern ADSAREAP hb_rddGetADSWorkAreaPointer( void );
+extern ERRCODE hb_adsCloseCursor( ADSAREAP pArea );
+extern ADSAREAP hb_adsGetWorkAreaPointer( void );
 
 #ifdef ADS_USE_OEM_TRANSLATION
    extern BOOL adsOEM;

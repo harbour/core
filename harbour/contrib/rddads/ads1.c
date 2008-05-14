@@ -672,11 +672,11 @@ static void adsSetRelPos( ADSAREAP pArea, ADSHANDLE hOrder, double dPos )
    pArea->hOrdCurrent = hCurrOrder;
 }
 
-ERRCODE adsCloseCursor( ADSAREAP pArea )
+ERRCODE hb_adsCloseCursor( ADSAREAP pArea )
 {
    ERRCODE uiError;
 
-   HB_TRACE(HB_TR_DEBUG, ("adsCloseCursor(%p)", pArea));
+   HB_TRACE(HB_TR_DEBUG, ("hb_adsCloseCursor(%p)", pArea));
 
    pArea->hOrdCurrent = 0;
    if( pArea->hTable )
@@ -2540,13 +2540,9 @@ static ERRCODE adsRecId( ADSAREAP pArea, PHB_ITEM pRecNo )
 
 static ERRCODE adsClose( ADSAREAP pArea )
 {
-   ERRCODE uiError;
-
    HB_TRACE(HB_TR_DEBUG, ("adsClose(%p)", pArea));
 
-   uiError = adsCloseCursor( pArea );
-
-   return uiError;
+   return hb_adsCloseCursor( pArea );
 }
 
 static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
@@ -4995,7 +4991,7 @@ HB_CALL_ON_STARTUP_END( _hb_ads_rdd_init_ )
 #  pragma data_seg()
 #endif
 
-ADSAREAP hb_rddGetADSWorkAreaPointer( void )
+ADSAREAP hb_adsGetWorkAreaPointer( void )
 {
    ADSAREAP pArea = ( ADSAREAP ) hb_rddGetCurrentWorkAreaPointer();
 
@@ -5011,7 +5007,7 @@ ADSAREAP hb_rddGetADSWorkAreaPointer( void )
 
 HB_FUNC( ADSGETRELKEYPOS )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
    if( pArea )
    {
       hb_retnd( adsGetRelPos( pArea, pArea->hOrdCurrent ) );
@@ -5024,7 +5020,7 @@ HB_FUNC( ADSGETRELKEYPOS )
 
 HB_FUNC( ADSSETRELKEYPOS )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
    if( pArea )
    {
       adsSetRelPos( pArea, pArea->hOrdCurrent, hb_parnd( 1 ) );
@@ -5044,7 +5040,7 @@ HB_FUNC( ADSCUSTOMIZEAOF )
    UNSIGNED16 u16Option = ADS_AOF_ADD_RECORD;
    UNSIGNED32 * pu32Records;
 
-   pArea = hb_rddGetADSWorkAreaPointer();
+   pArea = hb_adsGetWorkAreaPointer();
    if( pArea )
    {
       if( ISNUM( 2 ) )                  /* add, delete or toggle */

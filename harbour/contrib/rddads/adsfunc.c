@@ -244,7 +244,7 @@ HB_FUNC( ADSGETCONNECTIONTYPE )
 
 HB_FUNC( ADSUNLOCKRECORD )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -263,7 +263,7 @@ HB_FUNC( ADSUNLOCKRECORD )
 HB_FUNC( ADSGETTABLECONTYPE )
 {
    UNSIGNED16 pusConnectType = 0;
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -324,7 +324,7 @@ HB_FUNC( ADSGETSERVERTIME )
 
 HB_FUNC( ADSISTABLELOCKED )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -351,7 +351,7 @@ HB_FUNC( ADSISTABLELOCKED )
 HB_FUNC( ADSISRECORDLOCKED )
 {
    UNSIGNED32 ulRetVal = ~AE_SUCCESS;
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -428,7 +428,7 @@ HB_FUNC( ADSSETCHARTYPE )
 /* Return whether the current table is opened with OEM or ANSI character set. */
 HB_FUNC( ADSGETTABLECHARTYPE )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -510,7 +510,7 @@ HB_FUNC( ADSBLOB2FILE )
    if( strlen( szFileName ) && 
        strlen( szFieldName ) )
    {
-      ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+      ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
       if( pArea )
       {
@@ -541,7 +541,7 @@ HB_FUNC( ADSFILE2BLOB )
    if( strlen( szFileName ) && 
        strlen( szFieldName ) )
    {
-      ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+      ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
       if( pArea )
       {
@@ -575,7 +575,7 @@ HB_FUNC( ADSKEYNO )
    if( ( pxOrder == NULL || HB_IS_STRING( pxOrder ) || HB_IS_NUMBER( pxOrder ) || HB_IS_NIL( pxOrder ) ) &&
        ( pFilterOption == NULL || HB_IS_NUMBER( pFilterOption ) ) )
    {
-      ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+      ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
       if( pArea )
       {
@@ -648,7 +648,7 @@ HB_FUNC( ADSKEYCOUNT )
    if( ( pxOrder == NULL || HB_IS_STRING( pxOrder ) || HB_IS_NUMBER( pxOrder ) || HB_IS_NIL( pxOrder ) ) &&
        ( pFilterOption == NULL || HB_IS_NUMBER( pFilterOption ) ) )
    {
-      ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+      ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
       if( pArea )
       {
@@ -768,7 +768,7 @@ HB_FUNC( ADSKEYCOUNT )
 
 HB_FUNC( ADSADDCUSTOMKEY )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -811,7 +811,7 @@ HB_FUNC( ADSADDCUSTOMKEY )
 
 HB_FUNC( ADSDELETECUSTOMKEY )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -853,7 +853,7 @@ HB_FUNC( ADSDELETECUSTOMKEY )
 
 HB_FUNC( ADSCLEARAOF )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -867,7 +867,7 @@ HB_FUNC( ADSCLEARAOF )
 
 HB_FUNC( ADSEVALAOF )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -894,7 +894,7 @@ HB_FUNC( ADSEVALAOF )
 
 HB_FUNC( ADSGETTABLEALIAS )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -923,7 +923,7 @@ HB_FUNC( ADSGETTABLEALIAS )
 
 HB_FUNC( ADSGETAOF )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -969,7 +969,7 @@ HB_FUNC( ADSGETAOF )
 
 HB_FUNC( ADSGETAOFOPTLEVEL )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -991,7 +991,7 @@ HB_FUNC( ADSGETAOFOPTLEVEL )
 
 HB_FUNC( ADSGETAOFNOOPT )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1031,7 +1031,7 @@ HB_FUNC( ADSGETAOFNOOPT )
 
 HB_FUNC( ADSISRECORDINAOF )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1081,7 +1081,7 @@ HB_FUNC( ADSISRECORDVALID )
 
 HB_FUNC( ADSREFRESHAOF )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1097,7 +1097,7 @@ HB_FUNC( ADSSETAOF )
 {
    if( ISCHAR( 1 ) )
    {
-      ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+      ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
       if( pArea )
       {
@@ -1128,7 +1128,7 @@ HB_FUNC( ADSSETAOF )
 
 HB_FUNC( ADSGETFILTER )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1179,7 +1179,7 @@ HB_FUNC( ADSENABLEENCRYPTION )
 
    if( strlen( pucPassword ) )
    {
-      ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+      ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
       if( pArea )
       {
@@ -1203,7 +1203,7 @@ HB_FUNC( ADSENABLEENCRYPTION )
 
 HB_FUNC( ADSDISABLEENCRYPTION )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1217,7 +1217,7 @@ HB_FUNC( ADSDISABLEENCRYPTION )
 
 HB_FUNC( ADSENCRYPTTABLE )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1231,7 +1231,7 @@ HB_FUNC( ADSENCRYPTTABLE )
 
 HB_FUNC( ADSDECRYPTTABLE )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1245,7 +1245,7 @@ HB_FUNC( ADSDECRYPTTABLE )
 
 HB_FUNC( ADSENCRYPTRECORD )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1259,7 +1259,7 @@ HB_FUNC( ADSENCRYPTRECORD )
 
 HB_FUNC( ADSDECRYPTRECORD )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1273,7 +1273,7 @@ HB_FUNC( ADSDECRYPTRECORD )
 
 HB_FUNC( ADSISENCRYPTIONENABLED )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1289,7 +1289,7 @@ HB_FUNC( ADSISENCRYPTIONENABLED )
 
 HB_FUNC( ADSISRECORDENCRYPTED )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1305,7 +1305,7 @@ HB_FUNC( ADSISRECORDENCRYPTED )
 
 HB_FUNC( ADSISTABLEENCRYPTED )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1421,7 +1421,7 @@ HB_FUNC( ADSCREATESQLSTATEMENT )
          }
          else
          {
-            ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+            ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
             if( pArea )
             {
@@ -1452,7 +1452,7 @@ HB_FUNC( ADSCREATESQLSTATEMENT )
 
 HB_FUNC( ADSEXECUTESQLDIRECT )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    /* NOTE: Removed test for adsConnectHandle as it is not actually used;
             the func was just trying to confirm a real connection existed
@@ -1487,7 +1487,7 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
          }
          else
          {
-            adsCloseCursor( pArea );
+            hb_adsCloseCursor( pArea );
          }
          hb_retl( TRUE );
       }
@@ -1505,7 +1505,7 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
 
 HB_FUNC( ADSPREPARESQL )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    /* NOTE: Removed test for adsConnectHandle as it is not actually used;
             the func was just trying to confirm a real connection existed
@@ -1542,7 +1542,7 @@ HB_FUNC( ADSPREPARESQL )
 
 HB_FUNC( ADSEXECUTESQL )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    /* NOTE: Removed test for adsConnectHandle as it is not actually used;
             the func was just trying to confirm a real connection existed
@@ -1572,7 +1572,7 @@ HB_FUNC( ADSEXECUTESQL )
          }
          else
          {
-            adsCloseCursor( pArea );
+            hb_adsCloseCursor( pArea );
          }
          hb_retl( TRUE );
       }
@@ -1600,7 +1600,7 @@ HB_FUNC( ADSWRITEALLRECORDS )
 
 HB_FUNC( ADSREFRESHRECORD )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1615,7 +1615,7 @@ HB_FUNC( ADSREFRESHRECORD )
 /* lSuccess := AdsCopyTable( cTargetFile [, nAdsFilterOption ] ) */
 HB_FUNC( ADSCOPYTABLE )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1644,7 +1644,7 @@ HB_FUNC( ADSCOPYTABLE )
 
 HB_FUNC( ADSCONVERTTABLE )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1673,7 +1673,7 @@ HB_FUNC( ADSCONVERTTABLE )
 
 #if !defined( ADS_LINUX )
 
-UNSIGNED32 WINAPI ShowPercentage( UNSIGNED16 usPercentDone )
+UNSIGNED32 WINAPI hb_adsShowPercentageCB( UNSIGNED16 usPercentDone )
 {
    if( s_pItmCobCallBack && HB_IS_BLOCK( s_pItmCobCallBack ) )
    {
@@ -1686,12 +1686,12 @@ UNSIGNED32 WINAPI ShowPercentage( UNSIGNED16 usPercentDone )
    }
    else
    {
-      HB_TRACE(HB_TR_DEBUG, ("ShowPercentage(%d) called with no codeblock set.\n", usPercentDone ));
+      HB_TRACE(HB_TR_DEBUG, ("hb_adsShowPercentageCB(%d) called with no codeblock set.\n", usPercentDone ));
    }
 
    return 0;
 
-} /* ShowPercentage */
+} /* hb_adsShowPercentageCB() */
 
 HB_FUNC( ADSREGCALLBACK )
 {
@@ -1712,7 +1712,7 @@ HB_FUNC( ADSREGCALLBACK )
       }
       s_pItmCobCallBack = hb_itemNew( hb_param( 1, HB_IT_BLOCK ) );
 
-      ulRetVal = AdsRegisterProgressCallback( ShowPercentage );
+      ulRetVal = AdsRegisterProgressCallback( hb_adsShowPercentageCB );
 
       if( ulRetVal == AE_SUCCESS )
       {
@@ -1744,7 +1744,7 @@ HB_FUNC( ADSCLRCALLBACK )
 
 HB_FUNC( ADSISINDEXED )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    hb_retl( pArea && pArea->hOrdCurrent != 0 );
 }
@@ -1752,7 +1752,7 @@ HB_FUNC( ADSISINDEXED )
 /* QUESTION: Shouldn't we generate a NOTABLE/NOARG RTEs like in similar functions? [vszakats] */
 HB_FUNC( ADSISEXPRVALID )               /* cExpr */
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
    UNSIGNED16 bValidExpr = 0;
 
    if( pArea && ISCHAR( 1 ) )
@@ -1768,7 +1768,7 @@ HB_FUNC( ADSISEXPRVALID )               /* cExpr */
 /* QUESTION: Shouldn't we generate a NOTABLE RTE like in similar functions? [vszakats] */
 HB_FUNC( ADSGETNUMINDEXES )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
    UNSIGNED16 pusCnt = 0;
 
    if( pArea )
@@ -1879,7 +1879,7 @@ HB_FUNC( ADSROLLBACK )
 HB_FUNC( ADSCACHERECORDS )
 {
    UNSIGNED32 ulRetVal = ~AE_SUCCESS;
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1903,7 +1903,7 @@ HB_FUNC( ADSCACHERECORDS )
 HB_FUNC( ADSREINDEX )
 {
    UNSIGNED32 ulRetVal;
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( pArea )
    {
@@ -1967,7 +1967,7 @@ HB_FUNC( ADSCACHEOPENCURSORS )
 /* Use AdsIsEmpty() to determine if the indicated field is NULL for ADTs or empty for DBFs. */
 HB_FUNC( ADSISEMPTY )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
    if( ISCHAR( 1 ) || ISNUM( 1 ) )
    {
@@ -2462,13 +2462,13 @@ HB_FUNC( ADSRESTRUCTURETABLE )
 
 HB_FUNC( ADSCOPYTABLECONTENTS )
 {
-   ADSAREAP pArea = hb_rddGetADSWorkAreaPointer(); /* Source */
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer(); /* Source */
 
    if( pArea )
    {
       if( hb_rddSelectWorkAreaAlias( hb_parcx( 1 ) /* szAliasDest */ ) == SUCCESS )
       {
-         ADSAREAP pDest = hb_rddGetADSWorkAreaPointer();
+         ADSAREAP pDest = hb_adsGetWorkAreaPointer();
 
          if( pDest )
          {
@@ -2561,7 +2561,7 @@ HB_FUNC( ADSSTMTSETTABLEPASSWORD )
 
       if( hConnect )
       {
-         ADSAREAP pArea = hb_rddGetADSWorkAreaPointer();
+         ADSAREAP pArea = hb_adsGetWorkAreaPointer();
          
          if( pArea )
          {

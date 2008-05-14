@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-14 11:19 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/rddads.h
+   * contrib/rddads/adsfunc.c
+   * contrib/rddads/ads1.c
+     ! Fixed and extended ADS_REQUIRE_VERSION compatibility 
+       handling. Thanks Brian.
+       Usage of this #define is obsoleted, and in case 
+       someone wants to override version autodetection, 
+       ADS_LIB_VERSION should be used instead.
+     ! Some public C level functions renamed to respect 
+       namespace:
+       adsCloseCursor()              -> hb_adsCloseCursor()
+       hb_rddGetADSWorkAreaPointer() -> hb_adsGetWorkAreaPointer()
+       ShowPercentage()              -> hb_adsShowPercentageCB()
+
 2008-05-14 10:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbfimage/tests/bld_b32.bat
    + contrib/hbfimage/tests/bld_vc.bat
