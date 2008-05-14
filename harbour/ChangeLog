@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-14 10:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbfimage/tests/bld_b32.bat
+   + contrib/hbfimage/tests/bld_vc.bat
+     + Standardized.
+
 2008-05-14 10:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbfbird/make_b32.bat
    * contrib/hbfbird/make_vc.bat
