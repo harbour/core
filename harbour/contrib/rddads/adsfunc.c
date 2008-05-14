@@ -1639,7 +1639,7 @@ HB_FUNC( ADSCONVERTTABLE )
 
          ulRetVal = AdsConvertTable( pArea->hTable,
                                      ADS_IGNOREFILTERS,
-                                     ( UNSIGNED8 * ) hb_parcx( 1 /* pucFile */ ),
+                                     ( UNSIGNED8 * ) hb_parcx( 1 ) /* pucFile */,
                                      usTableType );
 
          hb_retl( ulRetVal == AE_SUCCESS );
