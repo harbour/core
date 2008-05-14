@@ -69,7 +69,7 @@
    Usage is discouraged and unnecessary unless we want to 
    override autodetection. For the latter, ADS_LIB_VERSION 
    is recommended. [vszakats] */
-#if ADS_REQUIRE_VERSION == 5
+#if   ADS_REQUIRE_VERSION == 5
    #define ADS_LIB_VERSION 500
 #elif ADS_REQUIRE_VERSION == 6
    #define ADS_LIB_VERSION 600
