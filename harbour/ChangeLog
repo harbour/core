@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-14 20:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/adsfunc.c
+     % Some optimizations and cleanups.
+     ! ADSVERSION(): Fixed possible memory corruption when 
+       wrong parameter was passed (not 0 or 3).
+     ! ADSVERSION(): Fixed not trimming first char if it's a space.
+     ! ADSSTMTSETTABLEPASSWORD(): Fixed to check pArea->hStatement 
+       rather than hConnect before making the call to ACE API 
+       AdsStmtSetTablePassword().
+       Someone please check me on this.
+
 2008-05-14 15:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/adsfunc.c
      ! Minor cleanups.
@@ -149,7 +160,7 @@
      + Standardized contrib test build batch files 
        for non-GNU make systems.
      + Added MSVC flavour of these.
-     + Now automatically set Harbour bin/inc/lib paths.
+     + Now automatically sets Harbour bin/inc/lib paths.
 
    * source/rtl/scrollbr.prg
      % Minor opt, slipped in by last change.
@@ -196,7 +207,7 @@
    * contrib/rddads/rddads.h
    * contrib/rddads/ads1.c
    * contrib/rddads/adsfunc.c
-     * Some cleanup. Minor fixes, comments added.
+     * Some cleanups. Minor fixes, comments added.
 
 2008-05-12 19:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * tests/Makefile
@@ -329,7 +340,7 @@
 
    * contrib/xhb/hbcompat.ch
      ! Corrected MaxRow()/MaxCol()/hb_ScrMaxRow()/hb_ScrMaxCol()
-       translations. (hopefully, someone using xhb please test)
+       translations. (hopefully. someone using xhb please test)
 
    - tests/ctwtest.prg
    + contrib/hbct/tests/ctwtest.prg
