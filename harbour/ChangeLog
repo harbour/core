@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-14 10:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbfbird/make_b32.bat
+   * contrib/hbfbird/make_vc.bat
+   * contrib/hbfimage/make_vc.bat
+   * contrib/hbgd/make_vc.bat
+   * contrib/hbmysql/make_vc.bat
+   * contrib/hbzlib/make_vc.bat
+   * contrib/rddads/make_vc.bat
+     + Use .lib files supplied with 3rd party packages 
+       (where available), rather than generating them locally.
+     ; Please test.
+
 2008-05-14 10:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/tbrowse.prg
     ! fixed :insColumn() - added missing hb_aIns() parameter.
