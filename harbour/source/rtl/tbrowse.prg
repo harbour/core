@@ -2186,7 +2186,7 @@ METHOD insColumn( nColumn, oCol ) CLASS TBROWSE
 #else
    IF .T.      /* It's optimized by compiler without any RT overhead */
 #endif
-      HB_AIns( ::columns, nColumn, oCol )
+      HB_AIns( ::columns, nColumn, oCol, .T. )
       ::configure( _TBR_CONF_COLUMNS )
    ENDIF
 
