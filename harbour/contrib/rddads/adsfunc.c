@@ -1562,7 +1562,7 @@ HB_FUNC( ADSEXECUTESQL )
       }
       else
       {
-         AdsShowError( ( UNSIGNED8 * ) "AdsExecuteSQL error" );
+         AdsShowError( ( UNSIGNED8 * ) "AdsExecuteSQL() error" );
          hb_retl( FALSE );
       }
    }
