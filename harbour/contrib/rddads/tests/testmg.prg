@@ -59,7 +59,7 @@ function Main()
 
    local i
 
-   REQUEST _ADS
+   REQUEST ADS
    rddRegister( "ADS", 1 )
    rddsetdefault( "ADS" )
    SET SERVER LOCAL    // REMOTE

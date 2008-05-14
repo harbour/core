@@ -8,6 +8,48 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-14 12:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/hbclipsm/tests/bld_b32.bat
+   + contrib/hbclipsm/tests/bld_vc.bat
+   + contrib/hbmisc/tests/bld_b32.bat
+   + contrib/hbmisc/tests/bld_vc.bat
+   + contrib/hbmysql/tests/bld_b32.bat
+   + contrib/hbmysql/tests/bld_vc.bat
+   + contrib/hbnf/tests/bld_b32.bat
+   + contrib/hbnf/tests/bld_vc.bat
+   + contrib/hbtpathy/tests/bld_b32.bat
+   + contrib/hbtpathy/tests/bld_vc.bat
+   + contrib/hbw32/tests/bld_b32.bat
+   + contrib/hbw32/tests/bld_vc.bat
+   + contrib/hbw32ddr/tests/bld_b32.bat
+   + contrib/hbw32ddr/tests/bld_vc.bat
+   + contrib/hbzlib/tests/bld_b32.bat
+   + contrib/hbzlib/tests/bld_vc.bat
+   + contrib/rddado/tests/bld_b32.bat
+   + contrib/rddado/tests/bld_vc.bat
+   + contrib/rddads/tests/bld_b32.bat
+   + contrib/rddads/tests/bld_vc.bat
+     + Added non-GNU make files to make it easy to build 
+       contrib tests.
+
+   * contrib/hbw32ddr/make_b32.bat
+   * contrib/hbw32ddr/make_vc.bat
+     + Added automatic generation of ddraw.lib.
+
+   * contrib/rddads/tests/testmg.prg
+     ! _ADS -> ADS
+
+   * contrib/rddads/ads1.c
+     ! Fixed MSVC warning.
+
+   * contrib/hbbtree/tests/test.prg
+   * contrib/hbbtree/tests/ttest.prg
+     * License moved to top of the files.
+
+   * contrib/hbw32ddr/tests/testdx.prg
+     ! SVN ID added.
+     * Some formatting.
+
 2008-05-14 11:38 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/rddads.h
    * contrib/rddads/adsfunc.c

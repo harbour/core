@@ -2704,7 +2704,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    uRetVal = AdsCreateTable( hConnection, pCreateInfo->abName, pCreateInfo->atomAlias,
                              pArea->iFileType, hb_ads_iCharType,
                              hb_ads_iLockType, hb_ads_iCheckRights,
-                             hb_setGetNL( HB_SET_MBLOCKSIZE ),
+                             hb_setGetNI( HB_SET_MBLOCKSIZE ),
                              ucfieldDefs, &hTable );
    hb_xfree( ucfieldDefs );
 
