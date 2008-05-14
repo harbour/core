@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-14 10:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   - lib/b32/empty
+   - lib/vc/empty
+   - bin/b32/empty
+   - bin/vc/empty
+   - contrib/hbgd/tests/images_out/EMPTY
+   - obj/b32/empty
+   - obj/vc/empty
+     - No longer needed for SVN.
+
 2008-05-14 08:29 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbct/tests/bld_b32.bat
    * contrib/hbct/tests/bld_vc.bat
