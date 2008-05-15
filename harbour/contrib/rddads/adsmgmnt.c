@@ -470,12 +470,12 @@ HB_FUNC( ADSMGGETLOCKOWNER )
    else
       hb_retnl( ulRetVal );
 
+   hb_xfree( pstUserInfo );
+
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_USER_INFO ) )
       HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetLockOwner()"));
 #endif
-
-   hb_xfree( pstUserInfo );
 }
 
 /* TODO: We're throwing away the locktype info. First edition
@@ -511,12 +511,12 @@ HB_FUNC( ADSMGGETOPENTABLES ) /* nMaxNumberOfFilesToReturn, cUserName, nConnecti
    else
       hb_reta( 0 );
 
+   hb_xfree( astOpenTableInfo );
+
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_TABLE_INFO ) )
       HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetOpenTables()"));
 #endif
-
-   hb_xfree( astOpenTableInfo );
 }
 
 HB_FUNC( ADSMGGETOPENINDEXES ) /* nMaxNumberOfFilesToReturn, cTableName, cUserName, nConnection */
@@ -546,12 +546,12 @@ HB_FUNC( ADSMGGETOPENINDEXES ) /* nMaxNumberOfFilesToReturn, cTableName, cUserNa
    else
       hb_reta( 0 );
 
+   hb_xfree( astOpenIndexInfo );
+
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_INDEX_INFO ) )
       HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetOpenIndexes()"));
 #endif
-
-   hb_xfree( astOpenIndexInfo );
 }
 
 HB_FUNC( ADSMGGETLOCKS )
@@ -581,12 +581,12 @@ HB_FUNC( ADSMGGETLOCKS )
    else
       hb_reta( 0 );
 
+   hb_xfree( astRecordInfo );
+
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_RECORD_INFO ) )
       HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetLocks()"));
 #endif
-
-   hb_xfree( astRecordInfo );
 }
 
 HB_FUNC( ADSMGGETWORKERTHREADACTIVITY )
@@ -632,10 +632,10 @@ HB_FUNC( ADSMGGETWORKERTHREADACTIVITY )
    else
       hb_reta( 0 );
 
+   hb_xfree( astWorkerThreadActivity );
+
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_THREAD_ACTIVITY ) )
       HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetWorkerThreadActivity()"));
 #endif
-
-   hb_xfree( astWorkerThreadActivity );
 }
