@@ -90,15 +90,15 @@
    is recommended. If ADS_LIB_VERSION is defined, the old 
    define will be ignored. [vszakats] */
 #if !defined( ADS_LIB_VERSION )
-   #if   ADS_REQUIRE_VERSION == 5 && ADS_LIB_VERSION > 500
+   #if   ADS_REQUIRE_VERSION == 5
       #define ADS_LIB_VERSION 500
-   #elif ADS_REQUIRE_VERSION == 6 && ADS_LIB_VERSION > 600
+   #elif ADS_REQUIRE_VERSION == 6
       #define ADS_LIB_VERSION 600
-   #elif ADS_REQUIRE_VERSION == 7 && ADS_LIB_VERSION > 700
+   #elif ADS_REQUIRE_VERSION == 7
       #define ADS_LIB_VERSION 700
-   #elif ADS_REQUIRE_VERSION == 8 && ADS_LIB_VERSION > 800
+   #elif ADS_REQUIRE_VERSION == 8
       #define ADS_LIB_VERSION 800
-   #elif ADS_REQUIRE_VERSION == 9 && ADS_LIB_VERSION > 900
+   #elif ADS_REQUIRE_VERSION == 9
       #define ADS_LIB_VERSION 900
    #endif
 #endif
