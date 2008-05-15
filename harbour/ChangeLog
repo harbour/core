@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-15 11:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/rddads.h
+     ! Fix to previous commit to avoid warning.
+
+   * contrib/rddads/adsmgmnt.c
+   * contrib/rddads/tests/testmg.prg
+     % Final cleanup, minor optim.
+     + HB_TRACE messages made shorter, added to all functions, consume 
+       less string space, now enabled if HB_TRACE trace level is INFO 
+       or above (instead of being commented out). Maybe they could be 
+       deleted, even.
+     + ADSMGGETINSTALLINFO(), ADSMGGETACTIVITYINFO(), ADSMGGETCOMMSTATS(), 
+       ADSMGGETCONFIGINFO() now return an empty array in case of error 
+       instead of NIL, to be in sync with the rest of the functions.
+       Now the only exception is ADSMGGETLOCKOWNER() which will return 
+       an ADS error code on failure and array on success. Please tell 
+       if the above functionality change hurts compatibility too much.
+       WARNING: Change in error behavior.
+
 2008-05-15 09:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/rddads.h
      ! Fixed to not allow to override to a higher lib version 

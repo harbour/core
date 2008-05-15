@@ -105,7 +105,10 @@
 
 /* Make sure to not allow a manual override requesting 
    a higher version than the one of ACE. [vszakats] */
-#if !defined( ADS_LIB_VERSION ) || ADS_LIB_VERSION > _ADS_LIB_VERSION
+#if !defined( ADS_LIB_VERSION )
+   #define ADS_LIB_VERSION _ADS_LIB_VERSION
+#elif ADS_LIB_VERSION > _ADS_LIB_VERSION
+   #undef ADS_LIB_VERSION
    #define ADS_LIB_VERSION _ADS_LIB_VERSION
 #endif
 

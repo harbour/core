@@ -77,7 +77,7 @@ function Main()
    ?
 
    aRay := AdsMgGetInstallInfo()
-   IF aRay != NIL .AND. len(aRay) > 7
+   IF len(aRay) > 7
       ? "Install info:"
       ? aRay[1]
       ? aRay[2]
@@ -95,59 +95,59 @@ function Main()
    ? AdsMgGetActivityInfo(2)
 
    aRay := AdsMgGetActivityInfo(3)
-   IF aRay != NIL .AND. len(aRay) > 3
+   IF len(aRay) > 3
       ? "Up Time:", aRay[1], aRay[2], aRay[3], aRay[4]
       ?
    ENDIF
 
    ?    "    Item          In Use     MaxUsed    Rejected"
    aRay := AdsMgGetActivityInfo(4)
-   IF aRay != NIL .AND. len(aRay) > 2
+   IF len(aRay) > 2
       ? "Users:         ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
    aRay := AdsMgGetActivityInfo(5)
-   IF aRay != NIL .AND. len(aRay) > 2
+   IF len(aRay) > 2
       ? "Connections:   ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
    aRay := AdsMgGetActivityInfo(6)
-   IF aRay != NIL .AND. len(aRay) > 2
+   IF len(aRay) > 2
       ? "WorkAreas:     ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
    aRay := AdsMgGetActivityInfo(7)
-   IF aRay != NIL .AND. len(aRay) > 2
+   IF len(aRay) > 2
       ? "Tables:        ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
    aRay := AdsMgGetActivityInfo(8)
-   IF aRay != NIL .AND. len(aRay) > 2
+   IF len(aRay) > 2
       ? "Indexes:       ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
    aRay := AdsMgGetActivityInfo(9)
-   IF aRay != NIL .AND. len(aRay) > 2
+   IF len(aRay) > 2
       ? "Locks:         ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
    aRay := AdsMgGetActivityInfo(10)
-   IF aRay != NIL .AND. len(aRay) > 2
+   IF len(aRay) > 2
       ? "TpsHeaderElems:", aRay[1], aRay[2], aRay[3]
    ENDIF
 
    aRay := AdsMgGetActivityInfo(11)
-   IF aRay != NIL .AND. len(aRay) > 2
+   IF len(aRay) > 2
       ? "TpsVisElems:   ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
    aRay := AdsMgGetActivityInfo(12)
-   IF aRay != NIL .AND. len(aRay) > 2
+   IF len(aRay) > 2
       ? "TpsMemoElems:  ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
    aRay := AdsMgGetActivityInfo(13)
-   IF aRay != NIL .AND. len(aRay) > 2
+   IF len(aRay) > 2
       ? "WorkerThreads: ", aRay[1], aRay[2], aRay[3]
    ENDIF
 
@@ -155,7 +155,7 @@ function Main()
    ?
 
    aRay := AdsMgGetCommStats()
-   IF aRay != NIL .AND. len(aRay) > 10
+   IF len(aRay) > 10
       ? aRay[1] , "% of pkts with checksum failures "
       ? aRay[2] , "Total packets received           "
       ? aRay[3] , "Receive packets out of sequence  "
@@ -173,7 +173,7 @@ function Main()
    ?
 
    aRay := AdsMgGetConfigInfo(0)
-   IF aRay != NIL .AND. len(aRay) > 24
+   IF len(aRay) > 24
       ? aRay[1] , " number connections            "
       ? aRay[2] , " number work areas             "
       ? aRay[3] , " number tables                 "
@@ -206,7 +206,7 @@ function Main()
    ?
 
    aRay := AdsMgGetConfigInfo(1)
-   IF aRay != NIL .AND. len(aRay) > 12
+   IF len(aRay) > 12
       ? aRay[1] , " Total mem taken by cfg params "
       ? aRay[2] , " memory taken by connections   "
       ? aRay[3] , " memory taken by work areas    "
