@@ -362,7 +362,8 @@ static BOOL hb_gt_wvt_GetWindowTitle( HWND hWnd, char ** title )
    if( iResult > 0 )
    {
       *title = ( char * ) hb_xgrab( iResult + 1 );
-      HB_TCHAR_CONVNREV( *title, buffer, iResult );
+      HB_TCHAR_GETFROM( *title, buffer, iResult );
+      ( *title )[ iResult ] = '\0';
       return TRUE;
    }
 
