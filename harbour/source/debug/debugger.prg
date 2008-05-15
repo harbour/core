@@ -1178,6 +1178,7 @@ METHOD EditVar( nVar ) CLASS HBDebugger
    LOCAL uVarValue  := ::aVars[ nVar ][ 2 ]
    LOCAL cVarType   := ::aVars[ nVar ][ 3 ]
    LOCAL cVarStr
+   LOCAL oErr
 
    uVarValue := ::VarGetValue( ::aVars[ nVar ] )
 
@@ -1203,7 +1204,11 @@ METHOD EditVar( nVar ) CLASS HBDebugger
          __DbgObject( uVarValue, cVarName )
 
       OTHERWISE
-         ::VarSetValue( ::aVars[ nVar ], &cVarStr )
+         BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
+            ::VarSetValue( ::aVars[ nVar ], &cVarStr )
+         RECOVER USING oErr
+            Alert( oErr:description )
+         END SEQUENCE
       ENDCASE
    ENDIF
 

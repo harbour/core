@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-15 02:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/tbrwtext.prg
+    ! declare HBDebugger as friend class of HBBrwText to avoid scope
+      errors when debugger code executes some protected messages.
+      It will be better to clean debugger code but I do not have
+      time for it now.
+    ! use HBEditor() in edit mode to eliminate problems with cursor
+      positioning in source code window
+
+  * harbour/source/debug/debugger.prg
+    * added protection against RT error during macro evaluation of wrong
+      user expressions
+
 2008-05-14 20:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/adsfunc.c
      % Some optimizations and cleanups.

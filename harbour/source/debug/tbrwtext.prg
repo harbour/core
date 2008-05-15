@@ -96,6 +96,8 @@ CREATE CLASS HBBrwText INHERIT HBEditor
    METHOD Search( cString, lCaseSensitive, nMode ) // 0 from Begining to end, 1 Forward, 2 Backwards
    METHOD RowPos()
 
+   FRIEND CLASS HBDebugger
+
 ENDCLASS
 
 METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers, nTabWidth ) CLASS HBBrwText
@@ -106,7 +108,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColor, lLineNumbers, nTabW
    ::cFileName := cFileName
    ::lLineNumbers := lLineNumbers
 
-   ::Super:New( "", nTop, nLeft, nBottom, nRight, .F., NIL, nTabWidth )
+   ::Super:New( "", nTop, nLeft, nBottom, nRight, .T., NIL, nTabWidth )
    ::Super:SetColor( cColor )
    ::Super:LoadFile( cFileName )
 
