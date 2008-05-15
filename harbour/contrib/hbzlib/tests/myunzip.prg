@@ -53,11 +53,11 @@
 
 
 PROC MyUnzip( ... )
-   LOCAL hUnzip, aWild, cFileName, cWild, cFile, dDate, cTime, nSize, nCompSize, nErr
+   LOCAL hUnzip, aWild, cFileName, cWild, cFile, dDate, cTime, nSize, nCompSize, nErr, cPassword, tmp
 
    aWild := { ... }
    IF LEN( aWild ) < 1
-      ? "Usage: myunzip <ZipName> [ <FilePattern1> ... ]"
+      ? "Usage: myunzip <ZipName> [ --pass <password> ] [ <FilePattern1> ... ]"
       RETURN
    ENDIF
 
@@ -68,6 +68,15 @@ PROC MyUnzip( ... )
 
    ADEL( aWild, 1 )
    ASIZE( aWild, LEN( aWild ) - 1 )
+
+   FOR tmp := 1 TO LEN( aWild ) - 1
+      IF LOWER( aWild[ tmp ] ) == "--pass"
+         cPassword := aWild[ tmp + 1 ]
+         aWild[ tmp ] := ""
+         aWild[ tmp + 1 ] := ""
+      ENDIF
+   NEXT
+
    AEVAL( aWild, {|cPattern, nPos| aWild[ nPos ] := STRTRAN( cPattern, "\", "/" ) } )
 
    hUnzip := HB_UNZIPOPEN( cFileName )
@@ -84,7 +93,7 @@ PROC MyUnzip( ... )
 
         IF ASCAN( aWild, {|cPattern| HB_WILDMATCH( cPattern, cFile, .T. ) } ) > 0
            ?? " Extracting"
-           HB_UnzipExtractCurrentFile( hUnzip )
+           HB_UnzipExtractCurrentFile( hUnzip, NIL, cPassword )
         ELSE
            ?? " Skipping"
         ENDIF

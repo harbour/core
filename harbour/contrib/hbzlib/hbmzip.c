@@ -164,7 +164,8 @@ HB_FUNC( HB_ZIPCLOSE )
 
 /* HB_ZipFileCreate( hZip, cZipName, dDate, cTime, nInternalAttr, nExternalAttr,
                        [ nMethod = HB_ZLIB_METHOD_DEFLATE ], 
-                       [ nLevel = HB_ZLIB_COMPRESSION_DEFAULT ] ) --> nError */
+                       [ nLevel = HB_ZLIB_COMPRESSION_DEFAULT ], 
+                       [ cPassword ] ) --> nError */
 HB_FUNC( HB_ZIPFILECREATE )
 {
    char*  szZipName = hb_parc( 2 );
@@ -195,8 +196,10 @@ HB_FUNC( HB_ZIPFILECREATE )
          iLevel = hb_parni( 8 );
 
       if( hZip )
-         hb_retni( zipOpenNewFileInZip( hZip, szZipName, &zfi, 
-                                        NULL, 0, NULL, 0, NULL, iMethod, iLevel ) );
+         hb_retni( zipOpenNewFileInZip3( hZip, szZipName, &zfi, 
+                                         NULL, 0, NULL, 0, NULL, iMethod, iLevel, 0, 
+                                         -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
+                                         hb_parc( 9 ), 0 ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
@@ -373,7 +376,7 @@ HB_FUNC( HB_UNZIPFILEOPEN )
    unzFile  hUnzip = hb_unzipfileParam( 1 );
 
    if( hUnzip )
-      hb_retni( unzOpenCurrentFile( hUnzip ) );
+      hb_retni( unzOpenCurrentFilePassword( hUnzip, hb_parc( 2 ) ) );
 }
 
 
@@ -424,7 +427,7 @@ HB_FUNC( HB_UNZIPFILECLOSE )
 *
 */
 
-static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName )
+static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* szPassword )
 {
    char          * szZipName, * pString;
    FHANDLE       hFile;
@@ -561,8 +564,10 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName )
 
    if( ulExtAttr & 0x40000000 )
    {
-      iResult = zipOpenNewFileInZip( hZip, szZipName, &zfi, NULL, 0, NULL, 0, NULL, 
-                                     Z_DEFLATED, Z_DEFAULT_COMPRESSION );
+      iResult = zipOpenNewFileInZip3( hZip, szZipName, &zfi, NULL, 0, NULL, 0, NULL, 
+                                      Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, 
+                                      -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
+                                      szPassword, 0 );
       if( iResult == 0 )
          zipCloseFileInZip( hZip );
    }
@@ -590,8 +595,10 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName )
             }
          }
 #endif
-         iResult = zipOpenNewFileInZip( hZip, szZipName, &zfi, NULL, 0, NULL, 0, NULL, 
-                                        Z_DEFLATED, Z_DEFAULT_COMPRESSION );
+         iResult = zipOpenNewFileInZip3( hZip, szZipName, &zfi, NULL, 0, NULL, 0, NULL, 
+                                         Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0,
+                                         -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
+                                         szPassword, 0 );
          if( iResult == 0 )
          {
             pString = (char*) hb_xgrab( 1024 * 16 );
@@ -615,7 +622,7 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName )
 }
 
 
-/*  HB_ZipStoreFile( hZip, cFileName [, cZipName ] ) --> nError */
+/*  HB_ZipStoreFile( hZip, cFileName, [ cZipName ], [ cPassword ] ) --> nError */
 HB_FUNC( HB_ZIPSTOREFILE )
 {
    char*  szFileName = hb_parc( 2 );
@@ -625,14 +632,14 @@ HB_FUNC( HB_ZIPSTOREFILE )
       zipFile hZip = hb_zipfileParam( 1 );
 
       if( hZip )
-         hb_retni( hb_zipStoreFile( hZip, szFileName, hb_parc( 3 ) ) );
+         hb_retni( hb_zipStoreFile( hZip, szFileName, hb_parc( 3 ), hb_parc( 4 ) ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
-static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName )
+static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* szPassword )
 {
    char           szName[ _POSIX_PATH_MAX + 1 ];
    ULONG          ulPos, ulLen;
@@ -646,7 +653,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName )
    if( iResult != 0 )
       return iResult;
 
-   iResult = unzOpenCurrentFile( hUnzip );
+   iResult = unzOpenCurrentFilePassword( hUnzip, szPassword );
 
    if( iResult != 0 )
       return iResult;
@@ -761,12 +768,12 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName )
 }
 
 
-/*  HB_UnzipExtractCurrentFile( hZip [, cFileName ] ) --> nError */
+/*  HB_UnzipExtractCurrentFile( hZip, [ cFileName ], [ cPassword ] ) --> nError */
 HB_FUNC( HB_UNZIPEXTRACTCURRENTFILE )
 {
    unzFile hUnzip = hb_unzipfileParam( 1 );
 
    if( hUnzip )
-      hb_retni( hb_unzipExtractCurrentFile( hUnzip, hb_parc( 2 ) ) );
+      hb_retni( hb_unzipExtractCurrentFile( hUnzip, hb_parc( 2 ), hb_parc( 3 ) ) );
 }
 

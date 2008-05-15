@@ -53,11 +53,11 @@
 
 
 PROC MyZip( ... )
-   LOCAL hZip, aDir, aFile, aWild, cFileName, cPath, cWild
+   LOCAL hZip, aDir, aFile, aWild, cFileName, cPath, cWild, cPassword, tmp
 
    aWild := { ... }
    IF LEN(aWild) < 2
-      ? "Usage: myzip <ZipName> <FilePattern1> [ <FilePattern2> ... ]"
+      ? "Usage: myzip <ZipName> [ --pass <password> ] <FilePattern1> [ <FilePattern2> ... ]"
       RETURN
    ENDIF
 
@@ -69,18 +69,28 @@ PROC MyZip( ... )
    ADEL( aWild, 1 )
    ASIZE( aWild, LEN( aWild ) - 1 )
 
+   FOR tmp := 1 TO LEN( aWild ) - 1
+      IF LOWER( aWild[ tmp ] ) == "--pass"
+         cPassword := aWild[ tmp + 1 ]
+         aWild[ tmp ] := ""
+         aWild[ tmp + 1 ] := ""
+      ENDIF
+   NEXT
+
    hZip := HB_ZIPOPEN( cFileName )
    IF ! EMPTY( hZip )
       ? "Archive file:", cFileName
       FOR EACH cWild IN aWild
-         aDir := DIRECTORY( cWild )
-         cPath = LEFT( cWild, RAT( HB_OSPATHSEPARATOR(), cWild ) )
-         FOR EACH aFile IN aDir
-            IF cPath + aFile[ 1 ] != cFileName
-               ? "Adding", cPath + aFile[ 1 ]
-               HB_ZipStoreFile( hZip, cPath + aFile[ 1 ], cPath + aFile[ 1 ] )
-            ENDIF
-         NEXT
+         IF !EMPTY( cWild )
+            aDir := DIRECTORY( cWild )
+            cPath = LEFT( cWild, RAT( HB_OSPATHSEPARATOR(), cWild ) )
+            FOR EACH aFile IN aDir
+               IF cPath + aFile[ 1 ] != cFileName
+                  ? "Adding", cPath + aFile[ 1 ]
+                  HB_ZipStoreFile( hZip, cPath + aFile[ 1 ], cPath + aFile[ 1 ], cPassword )
+               ENDIF
+            NEXT
+         ENDIF
       NEXT
       HB_ZIPCLOSE( hZip )
    ENDIF

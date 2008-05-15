@@ -119,9 +119,12 @@ BOOL hb_cmdargIsInternal( const char * szArg )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargIsInternal(%s)", szArg));
 
-   return strlen( szArg ) >= 2 &&
-          ( ( szArg[ 0 ] == '/' && szArg[ 1 ] == '/' ) || 
-            ( szArg[ 0 ] == '-' && szArg[ 1 ] == '-' ) ) ;
+   /* NOTE: Not checking for '--' here, as it would filter out 
+            valid command line options used by applications. [vszakats] */
+
+   return strlen( szArg ) >= 2 && 
+          szArg[ 0 ] == '/' && 
+          szArg[ 1 ] == '/';
 }
 
 static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )

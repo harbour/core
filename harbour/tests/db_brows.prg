@@ -1,6 +1,7 @@
 //
 // $Id$
 //
+
 *+께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께
 *+ Browse function
 *+
@@ -9,8 +10,6 @@
 *+ Date : 30/09/1999
 *+ Time : 19:20
 *+ Placed in the public domain
-*+
-*+    To compile it you need to build libmisc.lib from /contrib/libmisc
 *+
 *+    Source Module => DB_BROWS.PRG
 *+
