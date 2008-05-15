@@ -65,42 +65,48 @@
 
 #include "ace.h"
 
+/* Autodetect ACE version. */
+#if   defined(ADS_NOTIFICATION_CONNECTION)
+   #define _ADS_LIB_VERSION 900 /* or upper */
+#elif defined(ADS_UDP_IP_CONNECTION)
+   #define _ADS_LIB_VERSION 810 /* or upper */
+#elif defined(ADS_REPLICATION_CONNECTION)
+   #define _ADS_LIB_VERSION 800 /* or upper */
+#elif defined(ADS_NOT_AUTO_OPEN)
+   #define _ADS_LIB_VERSION 710 /* or upper */
+#elif defined(ADS_FTS_INDEX_ORDER)
+   #define _ADS_LIB_VERSION 700 /* or upper */
+#elif defined(ADS_COMPRESS_ALWAYS)
+   #define _ADS_LIB_VERSION 620 /* or upper */
+#elif defined(ADS_USER_DEFINED)
+   #define _ADS_LIB_VERSION 611 /* or upper */
+#else
+   #define _ADS_LIB_VERSION 500 /* or lower */
+#endif
+
 /* Compatibility ACE version override.
    Usage is discouraged and unnecessary unless we want to 
    override autodetection. For the latter, ADS_LIB_VERSION 
-   is recommended. [vszakats] */
-#if   ADS_REQUIRE_VERSION == 5
-   #define ADS_LIB_VERSION 500
-#elif ADS_REQUIRE_VERSION == 6
-   #define ADS_LIB_VERSION 600
-#elif ADS_REQUIRE_VERSION == 7
-   #define ADS_LIB_VERSION 700
-#elif ADS_REQUIRE_VERSION == 8
-   #define ADS_LIB_VERSION 800
-#elif ADS_REQUIRE_VERSION == 9
-   #define ADS_LIB_VERSION 900
+   is recommended. If ADS_LIB_VERSION is defined, the old 
+   define will be ignored. [vszakats] */
+#if !defined( ADS_LIB_VERSION )
+   #if   ADS_REQUIRE_VERSION == 5 && ADS_LIB_VERSION > 500
+      #define ADS_LIB_VERSION 500
+   #elif ADS_REQUIRE_VERSION == 6 && ADS_LIB_VERSION > 600
+      #define ADS_LIB_VERSION 600
+   #elif ADS_REQUIRE_VERSION == 7 && ADS_LIB_VERSION > 700
+      #define ADS_LIB_VERSION 700
+   #elif ADS_REQUIRE_VERSION == 8 && ADS_LIB_VERSION > 800
+      #define ADS_LIB_VERSION 800
+   #elif ADS_REQUIRE_VERSION == 9 && ADS_LIB_VERSION > 900
+      #define ADS_LIB_VERSION 900
+   #endif
 #endif
 
-/* Autodetect ACE version. */
-
-#ifndef ADS_LIB_VERSION
-   #if   defined(ADS_NOTIFICATION_CONNECTION)
-      #define ADS_LIB_VERSION 900 /* or upper */
-   #elif defined(ADS_UDP_IP_CONNECTION)
-      #define ADS_LIB_VERSION 810 /* or upper */
-   #elif defined(ADS_REPLICATION_CONNECTION)
-      #define ADS_LIB_VERSION 800 /* or upper */
-   #elif defined(ADS_NOT_AUTO_OPEN)
-      #define ADS_LIB_VERSION 710 /* or upper */
-   #elif defined(ADS_FTS_INDEX_ORDER)
-      #define ADS_LIB_VERSION 700 /* or upper */
-   #elif defined(ADS_COMPRESS_ALWAYS)
-      #define ADS_LIB_VERSION 620 /* or upper */
-   #elif defined(ADS_USER_DEFINED)
-      #define ADS_LIB_VERSION 611 /* or upper */
-   #else
-      #define ADS_LIB_VERSION 500 /* or lower */
-   #endif
+/* Make sure to not allow a manual override requesting 
+   a higher version than the one of ACE. [vszakats] */
+#if !defined( ADS_LIB_VERSION ) || ADS_LIB_VERSION > _ADS_LIB_VERSION
+   #define ADS_LIB_VERSION _ADS_LIB_VERSION
 #endif
 
 /* QUESTION: Why do we redefine this? Normally it is 4082 in 7.10 or upper and 256 in lower versions. [vszakats] */

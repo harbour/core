@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-15 09:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/rddads.h
+     ! Fixed to not allow to override to a higher lib version 
+       of the one of ACE lib. This applies to both ADS_LIB_VERSION 
+       and the compatibility ADS_REQUIRE_VERSION.
+     ! Fixed so that ADS_LIB_VERSION override always takes precedence 
+       over ADS_REQUIRE_VERSION.
+
+   * contrib/rddads/tests/testmg.prg
+     ! Fixed to not crash when there's no server.
+
+   * contrib/rddads/adsmgmnt.c
+     % Minor opt.
+
 2008-05-15 03:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * tests/db_brows.prg
      ! Removed note of hbmisc requirement.

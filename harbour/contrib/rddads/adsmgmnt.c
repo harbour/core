@@ -89,13 +89,10 @@ HB_FUNC( ADSMGKILLUSER )
 /* Determine OS ADS is running on; see ADS_MGMT_* constants */
 HB_FUNC( ADSMGGETSERVERTYPE )
 {
-   UNSIGNED32 ulRetVal;
    UNSIGNED16 usServerType = 0;
 
-   ulRetVal = AdsMgGetServerType( s_hMgmtHandle, 
-                                  &usServerType );
-
-   hb_retnl( ulRetVal == AE_SUCCESS ? usServerType : 0 );
+   hb_retnl( AdsMgGetServerType( s_hMgmtHandle, 
+                                 &usServerType ) == AE_SUCCESS ? usServerType : 0 );
 }
 
 HB_FUNC( ADSMGGETINSTALLINFO )
