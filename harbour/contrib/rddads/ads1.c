@@ -3397,8 +3397,13 @@ static ERRCODE adsSetRel( ADSAREAP pArea, LPDBRELINFO  lpdbRelations )
 
    szExp = ( UNSIGNED8 * ) hb_itemGetCPtr( lpdbRelations->abKey );
    rddID = lpdbRelations->lpaChild->rddID;
-   if( *szExp && ( rddID == s_uiRddIdADS || rddID == s_uiRddIdADT ||
-                   rddID == s_uiRddIdADSNTX || rddID == s_uiRddIdADSCDX ) )
+   if( *szExp && ( rddID == s_uiRddIdADS || 
+                   rddID == s_uiRddIdADT ||
+#if ADS_LIB_VERSION >= 900
+                   rddID == s_uiRddIdADSVFP ||
+#endif
+                   rddID == s_uiRddIdADSNTX || 
+                   rddID == s_uiRddIdADSCDX ) )
    {
       ADSHANDLE hIndex = ( ( ADSAREAP ) lpdbRelations->lpaChild )->hOrdCurrent;
 
@@ -4940,6 +4945,17 @@ HB_FUNC_STATIC( ADSCDX_GETFUNCTABLE )
    adsRegisterRDD( &s_uiRddIdADSCDX );
 }
 
+#if ADS_LIB_VERSION >= 900
+
+HB_FUNC_STATIC( ADSVFP_GETFUNCTABLE )
+{
+   HB_TRACE(HB_TR_DEBUG, ("ADSVFP_GETFUNCTABLE()"));
+
+   adsRegisterRDD( &s_uiRddIdADSVFP );
+}
+
+#endif
+
 HB_FUNC( ADS ) { ; }
 
 #define __PRG_SOURCE__ __FILE__
@@ -4957,6 +4973,9 @@ static void hb_adsRddInit( void * cargo )
 
    if( hb_rddRegister( "ADS", RDT_FULL ) > 1 ||
        hb_rddRegister( "ADT", RDT_FULL ) > 1 ||
+#if ADS_LIB_VERSION >= 900
+       hb_rddRegister( "ADSVFP", RDT_FULL ) > 1 ||
+#endif
        hb_rddRegister( "ADSCDX", RDT_FULL ) > 1 ||
        hb_rddRegister( "ADSNTX", RDT_FULL ) > 1 )
    {
@@ -4968,6 +4987,9 @@ HB_INIT_SYMBOLS_BEGIN( ads1__InitSymbols )
 { "ADS",                 {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADS )}, NULL },
 { "ADS_GETFUNCTABLE",    {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADS_GETFUNCTABLE )}, NULL },
 { "ADT_GETFUNCTABLE",    {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADT_GETFUNCTABLE )}, NULL },
+#if ADS_LIB_VERSION >= 900
+{ "ADSVFP_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSVFP_GETFUNCTABLE )}, NULL },
+#endif
 { "ADSNTX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSNTX_GETFUNCTABLE )}, NULL },
 { "ADSCDX_GETFUNCTABLE", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( ADSCDX_GETFUNCTABLE )}, NULL }
 HB_INIT_SYMBOLS_END( ads1__InitSymbols )
@@ -4998,8 +5020,14 @@ ADSAREAP hb_adsGetWorkAreaPointer( void )
    if( pArea )
    {
       USHORT rddID = pArea->rddID;
-      if( rddID == s_uiRddIdADS || rddID == s_uiRddIdADT ||
-          rddID == s_uiRddIdADSNTX || rddID == s_uiRddIdADSCDX )
+
+      if( rddID == s_uiRddIdADS ||
+          rddID == s_uiRddIdADT ||
+#if ADS_LIB_VERSION >= 900
+          rddID == s_uiRddIdADSVFP ||
+#endif
+          rddID == s_uiRddIdADSNTX ||
+          rddID == s_uiRddIdADSCDX )
          return pArea;
    }
    return NULL;

@@ -124,7 +124,7 @@ CREATE CLASS TBrowse
    /* === Start of CA-Cl*pper compatible TBrowse instance area === */
    VAR cargo      AS USUAL          EXPORTED    // 01. User-definable variable
 
-HIDDEN:
+PROTECTED:
    VAR n_Top      AS NUMERIC INIT 0             // 02. Top row number for the TBrowse display
    VAR n_Left     AS NUMERIC INIT 0             // 03. Leftmost column for the TBrowse display
    VAR n_Bottom   AS NUMERIC INIT 0             // 04. Bottom row number for the TBrowse display
@@ -262,7 +262,7 @@ EXPORTED:
 
    METHOD new( nTop, nLeft, nBottom, nRight )   // constructor, NOTE: This method is a Harbour extension [vszakats]
 
-HIDDEN:
+PROTECTED:
    VAR nRowPos       AS INTEGER INIT 1          // current cursor row position
    VAR nColPos       AS INTEGER INIT 1          // current cursor column position
    VAR nLeftVisible  AS INTEGER INIT 0          // indicates position of leftmost unfrozen column in display

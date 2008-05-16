@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-16 09:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tbrowse.prg
+     + HIDDEN -> PROTECTED
+
+   * contrib/rddads/rddads.h
+     * Comment.
+
+   * contrib/rddads/adsfunc.c
+     ! ADSCOPYTABLECONTENTS() fixed to throw an RTE if 
+       destination area is not ADS.
+     ! ADSCOPYTABLECONTENTS() fixed to not change the 
+       current workarea to the destination area
+       (even if destination area wasn't ADS).
+
+   * contrib/rddads/ads1.c
+     ! Added some missing bits to VFP support.
+       Requires ACE 9.00 or upper.
+
 2008-05-15 17:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/gtwvg/gtwvg.c
   * harbour/source/rtl/gtwvt/gtwvt.c

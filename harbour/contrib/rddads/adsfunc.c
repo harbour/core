@@ -115,7 +115,8 @@ void hb_adsOemAnsiFree( char * pcString )
 
 #endif
 
-HB_FUNC( ADSTESTRECLOCKS )              /* Debug Implicit locks Set/Get call */
+/* Debug Implicit locks Set/Get call */
+HB_FUNC( ADSTESTRECLOCKS )
 {
    hb_retl( hb_ads_bTestRecLocks );
 
@@ -1305,23 +1306,14 @@ HB_FUNC( ADSISTABLEENCRYPTED )
 
 HB_FUNC( ADSCONNECT )
 {
-   if( ISCHAR( 1 ) )
+   ADSHANDLE hConnect = 0;
+
+   if( ISCHAR( 1 ) && 
+       AdsConnect( ( UNSIGNED8 * ) hb_parcx( 1 ),
+                   &hConnect ) == AE_SUCCESS )
    {
-      ADSHANDLE hConnect = 0;
-      UNSIGNED32 ulRetVal;
-
-      ulRetVal = AdsConnect( ( UNSIGNED8 * ) hb_parcx( 1 ),
-                             &hConnect );
-
-      if( ulRetVal == AE_SUCCESS )
-      {
-         hb_ads_hConnect = hConnect;
-         hb_retl( TRUE );
-      }
-      else
-      {
-         hb_retl( FALSE );
-      }
+      hb_ads_hConnect = hConnect;
+      hb_retl( TRUE );
    }
    else
    {
@@ -1331,7 +1323,7 @@ HB_FUNC( ADSCONNECT )
 
 HB_FUNC( ADSDISCONNECT )
 {
-   /* NOTE: From ACE.HLP:
+   /* NOTE: From ace.hlp:
     *
     *       AdsDisconnect() is used to disconnect a connection from the specified server.
     *       If tables are currently opened, all data is flushed, locks are released,
@@ -1348,25 +1340,15 @@ HB_FUNC( ADSDISCONNECT )
             (hConnect might be 0 if caller accidentally disconnects twice; 
             this should not close all connections! */
 
-   if( hConnect != 0 || ISNUM( 1 ) )
+   if( ( hConnect != 0 || ISNUM( 1 ) ) &&
+       AdsDisconnect( hConnect ) == AE_SUCCESS )
    {
-      UNSIGNED32 ulRetVal;
-
-      ulRetVal = AdsDisconnect( hConnect );
-
-      if( ulRetVal == AE_SUCCESS )
+      if( hConnect == hb_ads_hConnect )
       {
-         if( hConnect == hb_ads_hConnect )
-         {
-            hb_ads_hConnect = 0;
-         }
+         hb_ads_hConnect = 0;
+      }
 
-         hb_retl( TRUE );
-      }
-      else
-      {
-         hb_retl( FALSE );
-      }
+      hb_retl( TRUE );
    }
    else
    {
@@ -1399,11 +1381,7 @@ HB_FUNC( ADSCREATESQLSTATEMENT )
          }
 #endif
 
-         if( !hb_rddInsertAreaNode( "ADS" ) )
-         {
-            AdsCloseSQLStatement( adsStatementHandle );
-         }
-         else
+         if( hb_rddInsertAreaNode( "ADS" ) )
          {
             ADSAREAP pArea = hb_adsGetWorkAreaPointer();
 
@@ -1427,6 +1405,17 @@ HB_FUNC( ADSCREATESQLSTATEMENT )
                   hb_rddReleaseCurrentArea();
                }
             }
+#if 0
+            /* QUESTION: Shouldn't we call AdsCloseSQLStatement() if pArea was NULL? [vszakats] */
+            else
+            {
+               AdsCloseSQLStatement( adsStatementHandle );
+            }
+#endif
+         }
+         else
+         {
+            AdsCloseSQLStatement( adsStatementHandle );
          }
       }
    }
@@ -2430,18 +2419,23 @@ HB_FUNC( ADSCOPYTABLECONTENTS )
 
    if( pArea )
    {
+      int iOldArea = hb_rddGetCurrentWorkAreaNumber();
+
       if( hb_rddSelectWorkAreaAlias( hb_parcx( 1 ) /* szAliasDest */ ) == SUCCESS )
       {
          ADSAREAP pDest = hb_adsGetWorkAreaPointer();
 
+         hb_rddSelectWorkAreaNumber( iOldArea );
+
          if( pDest )
          {
-            UNSIGNED32 ulRetVal;
-
-            ulRetVal = AdsCopyTableContents( pArea->hTable,
-                                             pDest->hTable,
-                                             ADS_IGNOREFILTERS );
-            hb_retl( ulRetVal == AE_SUCCESS );
+            hb_retl( AdsCopyTableContents( pArea->hTable,
+                                           pDest->hTable,
+                                           ADS_IGNOREFILTERS ) == AE_SUCCESS );
+         }
+         else
+         {
+            hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCOPYTABLECONTENTS" );
          }
       }
       else

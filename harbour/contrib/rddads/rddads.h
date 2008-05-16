@@ -81,14 +81,14 @@
 #elif defined(ADS_USER_DEFINED)
    #define _ADS_LIB_VERSION 611 /* or upper */
 #else
-   #define _ADS_LIB_VERSION 500 /* or lower */
+   #define _ADS_LIB_VERSION 500
 #endif
 
 /* Compatibility ACE version override.
    Usage is discouraged and unnecessary unless we want to 
    override autodetection. For the latter, ADS_LIB_VERSION 
-   is recommended. If ADS_LIB_VERSION is defined, the old 
-   define will be ignored. [vszakats] */
+   is recommended. If ADS_LIB_VERSION is #defined,
+   ADS_REQUIRE_VERSION will be ignored. [vszakats] */
 #if !defined( ADS_LIB_VERSION )
    #if   ADS_REQUIRE_VERSION == 5
       #define ADS_LIB_VERSION 500
