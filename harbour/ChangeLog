@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-16 19:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbcomp.h
+  * harbour/include/hbcompdf.h
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/complex.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    ! moved function related variables and structures from HB_COMP to
+      PFUNCTION - it fixes many different problems which can appear in
+      some code, also the recent Mindaugas' example
+    ! initialize statement value in error action to avoid valgrind/CodeGuard
+      warning reports when syntax error appear in some complex statements
+
+  * harbour/source/rtl/scrollbr.prg
+    * repalced TAB with SPACEs
+
 2008-05-16 09:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tbrowse.prg
      + HIDDEN -> PROTECTED

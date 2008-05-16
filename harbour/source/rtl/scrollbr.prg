@@ -415,7 +415,7 @@ METHOD CalcThumbPos() CLASS SCROLLBAR
    RETURN .T.
 
 /* New definitions for better coding. These are screen codepage dependent, 
-	   but can be changed with the setStyle method. */
+   but can be changed with the setStyle method. */
 #define SB_UPARROW      Chr( 24 )
 #define SB_DNARROW      Chr( 25 )
 #define SB_THUMB        Chr( 176 )

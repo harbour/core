@@ -116,117 +116,6 @@ typedef struct HB_CBVAR_
    struct HB_CBVAR_ * pNext;
 } HB_CBVAR, * HB_CBVAR_PTR;
 
-typedef struct HB_ENUMERATOR_
-{
-   char *szName;
-   BOOL bForEach;
-   struct HB_ENUMERATOR_ *pNext;
-} HB_ENUMERATOR, *HB_ENUMERATOR_PTR; /* support structure for FOR EACH statements */
-
-/* structure to hold a Clipper defined function */
-typedef struct __FUNC
-{
-   char *       szName;                   /* name of a defined Clipper function */
-   HB_SYMBOLSCOPE cScope;                 /* scope of a defined Clipper function */
-   BYTE         bFlags;                   /* some flags we may need */
-   USHORT       wParamCount;              /* number of declared parameters */
-   USHORT       wParamNum;                /* current parameter number */
-   PVAR         pLocals;                  /* pointer to local variables list */
-   PVAR         pStatics;                 /* pointer to static variables list */
-   PVAR         pFields;                  /* pointer to fields variables list */
-   PVAR         pMemvars;                 /* pointer to memvar variables list */
-   PVAR         pDetached;                /* pointer to detached local variables list */
-   PVAR         pPrivates;                /* pointer to private variables list */
-   BYTE *       pCode;                    /* pointer to a memory block where pcode is stored */
-   ULONG        lPCodeSize;               /* total memory size for pcode */
-   ULONG        lPCodePos;                /* actual pcode offset */
-   int          iStaticsBase;             /* base for this function statics */
-   ULONG *      pNOOPs;                   /* pointer to the NOOP array */
-   ULONG *      pJumps;                   /* pointer to the Jumps array */
-   ULONG        iNOOPs;                   /* NOOPs Counter */
-   ULONG        iJumps;                   /* Jumps Counter */
-   BOOL         bLateEval;                /* TRUE if accessing of declared (compile time) variables is allowed */
-   BOOL         fVParams;                 /* TRUE if variable number of parameters is used */
-   BOOL         bError;                   /* error during function compilation */
-   struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
-   struct __FUNC * pNext;                 /* pointer to the next defined function */
-   HB_ENUMERATOR_PTR pEnum;               /* pointer to FOR EACH variables */
-} _FUNC, * PFUNCTION;
-
-/* structure to hold an INLINE block of source */
-typedef struct __INLINE
-{
-   char *       szName;                   /* name of a inline function */
-   BYTE *       pCode;                    /* pointer to a memory block where pcode is stored */
-   ULONG        lPCodeSize;               /* total memory size for pcode */
-   char *       szFileName;               /* Source file name */
-   int          iLine;                    /* Source line number */
-   struct __INLINE * pNext;               /* pointer to the next defined inline */
-} _INLINE, * PINLINE;
-
-/* structure to hold a called functions */
-typedef struct __FUNCALL
-{
-   char *       szName;                   /* name of a called function */
-   struct __FUNCALL * pNext;              /* pointer to the next called function */
-} _FUNCALL, * PFUNCALL;
-
-/* structure to control all Clipper defined functions */
-typedef struct
-{
-   PFUNCTION pFirst;            /* pointer to the first defined funtion */
-   PFUNCTION pLast;             /* pointer to the last defined function */
-   int       iCount;            /* number of defined functions */
-} FUNCTIONS;
-
-/* structure to control all Clipper defined functions */
-typedef struct
-{
-   PINLINE pFirst;            /* pointer to the first defined inline */
-   PINLINE pLast;             /* pointer to the last defined inline */
-   int     iCount;            /* number of defined inlines */
-} INLINES;
-
-/* structure to control all Clipper defined functions */
-typedef struct
-{
-   PFUNCALL  pFirst;            /* pointer to the first called funtion */
-   PFUNCALL  pLast;             /* pointer to the last called function */
-   int       iCount;            /* number of defined functions */
-} FUNCALLS;
-
-/* compiler symbol support structure */
-typedef struct _COMSYMBOL
-{
-   char *         szName;               /* the name of the symbol */
-   HB_SYMBOLSCOPE cScope;               /* the scope of the symbol */
-   BOOL           bFunc;      /* is it a function name (TRUE) or memvar (FALSE) */
-   PCOMCLASS      pClass;
-   struct _COMSYMBOL * pNext; /* pointer to the next defined symbol */
-} COMSYMBOL, * PCOMSYMBOL;
-
-/* symbol table support structures */
-typedef struct
-{
-   PCOMSYMBOL pFirst;           /* pointer to the first defined symbol */
-   PCOMSYMBOL pLast;            /* pointer to the last defined symbol */
-   int        iCount;           /* number of defined symbols */
-} SYMBOLS;
-
-typedef struct __EXTERN
-{
-   char * szName;               /* name of the extern function */
-   HB_SYMBOLSCOPE cScope;       /* the scope of the function */
-   struct __EXTERN * pNext;
-} _EXTERN, * PEXTERN;      /* support structure for extern symbols */
-/* as they have to be placed on the symbol table later than the first public symbol */
-
-typedef struct _AUTOOPEN
-{
-   char * szName;
-   struct _AUTOOPEN * pNext;
-} AUTOOPEN, * PAUTOOPEN;      /* support structure for extern symbols */
-
 /* value types seen at language level
  */
 #define  HB_EV_UNKNOWN     0x0000
@@ -422,6 +311,13 @@ typedef struct HB_EXPR_
    struct HB_EXPR_ *pNext;    /* next expression in the list of expressions */
 } HB_EXPR, *HB_EXPR_PTR;
 
+typedef struct HB_ENUMERATOR_
+{
+   char *szName;
+   BOOL bForEach;
+   struct HB_ENUMERATOR_ *pNext;
+} HB_ENUMERATOR, *HB_ENUMERATOR_PTR; /* support structure for FOR EACH statements */
+
 /* support structure for else if pcode fixups */
 typedef struct HB_ELSEIF_
 {
@@ -469,6 +365,122 @@ typedef struct HB_RTVAR_
    struct HB_RTVAR_ *pNext;
    struct HB_RTVAR_ *pPrev;
 } HB_RTVAR, *HB_RTVAR_PTR;
+
+/* structure to hold a Clipper defined function */
+typedef struct __FUNC
+{
+   char *       szName;                   /* name of a defined Clipper function */
+   HB_SYMBOLSCOPE cScope;                 /* scope of a defined Clipper function */
+   BYTE         bFlags;                   /* some flags we may need */
+   USHORT       wParamCount;              /* number of declared parameters */
+   USHORT       wParamNum;                /* current parameter number */
+   PVAR         pLocals;                  /* pointer to local variables list */
+   PVAR         pStatics;                 /* pointer to static variables list */
+   PVAR         pFields;                  /* pointer to fields variables list */
+   PVAR         pMemvars;                 /* pointer to memvar variables list */
+   PVAR         pDetached;                /* pointer to detached local variables list */
+   PVAR         pPrivates;                /* pointer to private variables list */
+   BYTE *       pCode;                    /* pointer to a memory block where pcode is stored */
+   ULONG        lPCodeSize;               /* total memory size for pcode */
+   ULONG        lPCodePos;                /* actual pcode offset */
+   int          iStaticsBase;             /* base for this function statics */
+   ULONG *      pNOOPs;                   /* pointer to the NOOP array */
+   ULONG *      pJumps;                   /* pointer to the Jumps array */
+   ULONG        iNOOPs;                   /* NOOPs Counter */
+   ULONG        iJumps;                   /* Jumps Counter */
+   BOOL         bLateEval;                /* TRUE if accessing of declared (compile time) variables is allowed */
+   BOOL         fVParams;                 /* TRUE if variable number of parameters is used */
+   BOOL         bError;                   /* error during function compilation */
+   struct __FUNC * pOwner;                /* pointer to the function/procedure that owns the codeblock */
+   struct __FUNC * pNext;                 /* pointer to the next defined function */
+   HB_ENUMERATOR_PTR pEnum;               /* pointer to FOR EACH variables */
+   HB_LOOPEXIT_PTR   pLoops;
+   HB_SWITCHCMD_PTR  pSwitch;
+   HB_ELSEIF_PTR     elseif;
+   HB_RTVAR_PTR      rtvars;
+   USHORT            wSeqCounter;
+   USHORT            wAlwaysCounter;
+   USHORT            wForCounter;
+   USHORT            wIfCounter;
+   USHORT            wWhileCounter;
+   USHORT            wCaseCounter;
+   USHORT            wSwitchCounter;
+   USHORT            wWithObjectCnt;
+} _FUNC, * PFUNCTION;
+
+/* structure to hold an INLINE block of source */
+typedef struct __INLINE
+{
+   char *       szName;                   /* name of a inline function */
+   BYTE *       pCode;                    /* pointer to a memory block where pcode is stored */
+   ULONG        lPCodeSize;               /* total memory size for pcode */
+   char *       szFileName;               /* Source file name */
+   int          iLine;                    /* Source line number */
+   struct __INLINE * pNext;               /* pointer to the next defined inline */
+} _INLINE, * PINLINE;
+
+/* structure to hold a called functions */
+typedef struct __FUNCALL
+{
+   char *       szName;                   /* name of a called function */
+   struct __FUNCALL * pNext;              /* pointer to the next called function */
+} _FUNCALL, * PFUNCALL;
+
+/* structure to control all Clipper defined functions */
+typedef struct
+{
+   PFUNCTION pFirst;            /* pointer to the first defined funtion */
+   PFUNCTION pLast;             /* pointer to the last defined function */
+   int       iCount;            /* number of defined functions */
+} FUNCTIONS;
+
+/* structure to control all Clipper defined functions */
+typedef struct
+{
+   PINLINE pFirst;            /* pointer to the first defined inline */
+   PINLINE pLast;             /* pointer to the last defined inline */
+   int     iCount;            /* number of defined inlines */
+} INLINES;
+
+/* structure to control all Clipper defined functions */
+typedef struct
+{
+   PFUNCALL  pFirst;            /* pointer to the first called funtion */
+   PFUNCALL  pLast;             /* pointer to the last called function */
+   int       iCount;            /* number of defined functions */
+} FUNCALLS;
+
+/* compiler symbol support structure */
+typedef struct _COMSYMBOL
+{
+   char *         szName;               /* the name of the symbol */
+   HB_SYMBOLSCOPE cScope;               /* the scope of the symbol */
+   BOOL           bFunc;      /* is it a function name (TRUE) or memvar (FALSE) */
+   PCOMCLASS      pClass;
+   struct _COMSYMBOL * pNext; /* pointer to the next defined symbol */
+} COMSYMBOL, * PCOMSYMBOL;
+
+/* symbol table support structures */
+typedef struct
+{
+   PCOMSYMBOL pFirst;           /* pointer to the first defined symbol */
+   PCOMSYMBOL pLast;            /* pointer to the last defined symbol */
+   int        iCount;           /* number of defined symbols */
+} SYMBOLS;
+
+typedef struct __EXTERN
+{
+   char * szName;               /* name of the extern function */
+   HB_SYMBOLSCOPE cScope;       /* the scope of the function */
+   struct __EXTERN * pNext;
+} _EXTERN, * PEXTERN;      /* support structure for extern symbols */
+/* as they have to be placed on the symbol table later than the first public symbol */
+
+typedef struct _AUTOOPEN
+{
+   char * szName;
+   struct _AUTOOPEN * pNext;
+} AUTOOPEN, * PAUTOOPEN;      /* support structure for extern symbols */
 
 typedef struct _HB_DEBUGINFO
 {
@@ -598,10 +610,6 @@ typedef struct _HB_COMP
    HB_HASH_TABLE_PTR pIdentifiers;
    FUNCTIONS         functions;
    FUNCALLS          funcalls;
-   HB_LOOPEXIT_PTR   pLoops;
-   HB_SWITCHCMD_PTR  pSwitch;
-   HB_ELSEIF_PTR     elseif;
-   HB_RTVAR_PTR      rtvars;
    SYMBOLS           symbols;
    INLINES           inlines;
    PEXTERN           externs;
@@ -614,6 +622,7 @@ typedef struct _HB_COMP
    PCOMCLASS         pFirstClass;
    PCOMCLASS         pLastClass;
    PCOMCLASS         pReleaseClass;
+
    PFUNCTION         pInitFunc;
    PFUNCTION         pLineFunc;
    PHB_FNAME         pMainFileName;
@@ -648,7 +657,8 @@ typedef struct _HB_COMP
    char              cDataListType;       /* current declared variable list type */
    char              cCastType;           /* current casting type */
 
-   int               iPassByRef;
+   int               iPassByRef;          /* check if it's possible to pass variable be reference, can be removed */
+
    int               iErrorCount;
    int               iFunctionCnt;
    int               iMaxTransCycles;     /* maximum translate cycles in PP (-r=<n>) */
@@ -682,15 +692,6 @@ typedef struct _HB_COMP
    BOOL              fAutoOpen;           /* automatically compile DO...[WITH...] external modules (-m) */
    BOOL              fError;              /* error appeared during compilation */
    BOOL              fMeaningful;         /* do not generate warnings about meaningless expression usage */
-
-   USHORT            wSeqCounter;
-   USHORT            wAlwaysCounter;
-   USHORT            wForCounter;
-   USHORT            wIfCounter;
-   USHORT            wWhileCounter;
-   USHORT            wCaseCounter;
-   USHORT            wSwitchCounter;
-   USHORT            wWithObjectCnt;
 }
 HB_COMP, * HB_COMP_PTR;
 

@@ -170,10 +170,10 @@ extern void hb_compExternGen( HB_COMP_DECL ); /* generates the symbols for the E
 extern void hb_compExternAdd( HB_COMP_DECL, char * szExternName, HB_SYMBOLSCOPE cScope ); /* defines a new extern name */
 extern void hb_compAutoOpenAdd( HB_COMP_DECL, const char * szName );
 
-extern void hb_compSwitchKill( HB_COMP_DECL );
-extern void hb_compLoopKill( HB_COMP_DECL );
-extern void hb_compRTVariableKill( HB_COMP_DECL );
-extern void hb_compElseIfKill( HB_COMP_DECL );
+extern void hb_compRTVariableKill( HB_COMP_DECL, PFUNCTION );
+extern void hb_compSwitchKill( HB_COMP_DECL, PFUNCTION );
+extern void hb_compElseIfKill( PFUNCTION );
+extern void hb_compLoopKill( PFUNCTION );
 
 extern void hb_compGenError( HB_COMP_DECL, const char * szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
 extern void hb_compGenWarning( HB_COMP_DECL, const char * szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
@@ -232,7 +232,7 @@ extern int  hb_compFieldsCount( HB_COMP_DECL );
 extern void hb_compStaticDefStart( HB_COMP_DECL );
 extern void hb_compStaticDefEnd( HB_COMP_DECL, char * );
 
-extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL );
+extern BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PFUNCTION );
 
 #define HB_COMP_ERROR_TYPE( x )     HB_COMP_PARAM->funcs->ErrorType( HB_COMP_PARAM, x )
 #define HB_COMP_ERROR_SYNTAX( x )   HB_COMP_PARAM->funcs->ErrorSyntax( HB_COMP_PARAM, x )

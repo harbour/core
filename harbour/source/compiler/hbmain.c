@@ -2180,6 +2180,13 @@ static void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined fu
          hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
       }
 
+      hb_compCheckUnclosedStru( HB_COMP_PARAM, pFunc );
+
+      hb_compRTVariableKill( HB_COMP_PARAM, pFunc );
+      hb_compSwitchKill( HB_COMP_PARAM, pFunc );
+      hb_compElseIfKill( pFunc );
+      hb_compLoopKill( pFunc );
+
       if( !pFunc->bError )
       {
          if( pFunc->wParamCount && !( pFunc->bFlags & FUN_USES_LOCAL_PARAMS ) )
@@ -2248,32 +2255,15 @@ static PFUNCTION hb_compFunctionNew( HB_COMP_DECL, char * szName, HB_SYMBOLSCOPE
 {
    PFUNCTION pFunc;
 
-   pFunc                  = ( PFUNCTION ) hb_xgrab( sizeof( _FUNC ) );
+   pFunc = ( PFUNCTION ) hb_xgrab( sizeof( _FUNC ) );
+   memset( pFunc, 0, sizeof( _FUNC ) );
+
    pFunc->szName          = szName;
    pFunc->cScope          = cScope;
-   pFunc->pLocals         = NULL;
-   pFunc->pStatics        = NULL;
-   pFunc->pFields         = NULL;
-   pFunc->pMemvars        = NULL;
-   pFunc->pDetached       = NULL;
-   pFunc->pPrivates       = NULL;
-   pFunc->pCode           = NULL;
-   pFunc->lPCodeSize      = 0;
-   pFunc->lPCodePos       = 0;
-   pFunc->pNext           = NULL;
-   pFunc->wParamCount     = 0;
-   pFunc->wParamNum       = 0;
    pFunc->iStaticsBase    = HB_COMP_PARAM->iStaticCnt;
-   pFunc->pOwner          = NULL;
-   pFunc->bFlags          = 0;
-   pFunc->iNOOPs          = 0;
-   pFunc->iJumps          = 0;
-   pFunc->pNOOPs          = NULL;
-   pFunc->pJumps          = NULL;
    pFunc->bLateEval       = TRUE;
    pFunc->fVParams        = FALSE;
    pFunc->bError          = FALSE;
-   pFunc->pEnum           = NULL;
 
    return pFunc;
 }
@@ -2296,11 +2286,16 @@ static PINLINE hb_compInlineNew( HB_COMP_DECL, char * szName, int iLine )
 }
 
 /* NOTE: Names of variables and functions are released in hbident.c on exit */
-static PFUNCTION hb_compFunctionKill( PFUNCTION pFunc )
+static PFUNCTION hb_compFunctionKill( HB_COMP_DECL, PFUNCTION pFunc )
 {
    PFUNCTION pNext = pFunc->pNext;
    HB_ENUMERATOR_PTR pEVar;
    PVAR pVar;
+
+   hb_compRTVariableKill( HB_COMP_PARAM, pFunc );
+   hb_compSwitchKill( HB_COMP_PARAM, pFunc );
+   hb_compElseIfKill( pFunc );
+   hb_compLoopKill( pFunc );
 
    while( pFunc->pLocals )
    {
@@ -2431,7 +2426,7 @@ static void hb_compAddFunc( HB_COMP_DECL, PFUNCTION pFunc )
    {
       PFUNCTION pBlock = HB_COMP_PARAM->functions.pLast;
       HB_COMP_PARAM->functions.pLast = pBlock->pOwner;
-      hb_compFunctionKill( pBlock );
+      hb_compFunctionKill( HB_COMP_PARAM, pBlock );
    }
 
    if( HB_COMP_PARAM->functions.iCount == 0 )
@@ -3997,7 +3992,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
       }
    }
 
-   hb_compFunctionKill( pCodeblock );
+   hb_compFunctionKill( HB_COMP_PARAM, pCodeblock );
 }
 
 void hb_compCodeBlockStop( HB_COMP_DECL )
@@ -4027,7 +4022,7 @@ void hb_compCodeBlockStop( HB_COMP_DECL )
       }
    }
 
-   hb_compFunctionKill( pCodeblock );
+   hb_compFunctionKill( HB_COMP_PARAM, pCodeblock );
 }
 
 void hb_compCodeBlockRewind( HB_COMP_DECL )
@@ -4424,11 +4419,6 @@ static void hb_compAddInitFunc( HB_COMP_DECL, PFUNCTION pFunc )
 
 void hb_compCompileEnd( HB_COMP_DECL )
 {
-   hb_compRTVariableKill( HB_COMP_PARAM );
-   hb_compLoopKill( HB_COMP_PARAM );
-   hb_compSwitchKill( HB_COMP_PARAM );
-   hb_compElseIfKill( HB_COMP_PARAM );
-
    if( HB_COMP_PARAM->pI18n )
    {
       hb_compI18nFree( HB_COMP_PARAM->pI18n );
@@ -4462,7 +4452,7 @@ void hb_compCompileEnd( HB_COMP_DECL )
    {
       PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
       HB_COMP_PARAM->functions.pLast = pFunc->pOwner;
-      hb_compFunctionKill( pFunc );
+      hb_compFunctionKill( HB_COMP_PARAM, pFunc );
    }
    HB_COMP_PARAM->functions.pLast = NULL;
 
@@ -4471,7 +4461,7 @@ void hb_compCompileEnd( HB_COMP_DECL )
       PFUNCTION pFunc = HB_COMP_PARAM->functions.pFirst;
 
       while( pFunc )
-         pFunc = hb_compFunctionKill( pFunc );
+         pFunc = hb_compFunctionKill( HB_COMP_PARAM, pFunc );
       HB_COMP_PARAM->functions.pFirst = NULL;
    }
 
@@ -4619,7 +4609,6 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
          {
             hb_compFunctionAdd( HB_COMP_PARAM, "", 0, FUN_PROCEDURE );
             hb_compparse( HB_COMP_PARAM );
-            hb_compCheckUnclosedStru( HB_COMP_PARAM );
          }
          else if( iFileType == HB_COMP_SINGLEFILE )
          {
@@ -4656,7 +4645,6 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
             if( !HB_COMP_PARAM->fExit )
             {
                hb_compparse( HB_COMP_PARAM );
-               hb_compCheckUnclosedStru( HB_COMP_PARAM );
             }
          }
          else
@@ -4786,7 +4774,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, int iFileType )
                /* remove function frames with no names */
                if( ! HB_COMP_PARAM->fStartProc && ! (*pFunPtr)->szName[0] )
                {
-                  *pFunPtr = hb_compFunctionKill( *pFunPtr );
+                  *pFunPtr = hb_compFunctionKill( HB_COMP_PARAM, *pFunPtr );
                   HB_COMP_PARAM->functions.iCount--;
                   HB_COMP_PARAM->iFunctionCnt--;
                }
