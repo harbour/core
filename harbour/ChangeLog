@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-17 15:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/hbppgen.c
+    * cleaned code used to locate ChangeLog file
+
 2008-05-16 19:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbcomp.h
   * harbour/include/hbcompdf.h
@@ -1909,7 +1913,7 @@
   * harbour/contrib/hbct/ctwin.h
   * harbour/contrib/hbct/ctwfunc.c
     * overload ReadKey() method for future window moving when scroll lock
-      is  set and for KEYREAD() implementation.
+      is set and for KEYREAD() implementation.
     * store real last key value in CTWIN GT.
 
 2008-02-21 22:17 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)

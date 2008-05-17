@@ -370,14 +370,15 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
 
    pszFile = pszFileName ? pszFileName : "../../../../ChangeLog";
 
-   do
+   if( !pszFileName )
    {
-      if( hb_fsFileExists( pszFile ) )
-         break;
-      pszFile += 3;
+      while( *pszFile == '.' )
+      {
+         if( hb_fsFileExists( pszFile ) )
+            break;
+         pszFile += 3;
+      }
    }
-   while( !pszFileName && ( *pszFile == '.' || *pszFile == 'C' ) );
-
    file_in = hb_fopen( pszFile, "r" );
    if( !file_in )
    {
