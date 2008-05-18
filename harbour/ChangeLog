@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-18 22:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbhpdf/harupdf.c
+     + Calling hb_fsNameConv() in filename parameters.
+       Thanks Petr for the suggestion.
+     ! Changed hb_parnl()/hb_retnl() calls to hb_parptr()/hb_retptr() 
+       where a "handle" (which is a memory pointer) is passed.
+     ; TOFIX: Some of these calls should be changed to the GC version 
+       to avoid leaks by bad or interrupted program code.
+
 2008-05-18 20:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbhpdf/harupdf.c
      ! Fixed GPFs. Thanks to Petr Chornyj.
