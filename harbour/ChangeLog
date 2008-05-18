@@ -8,6 +8,55 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-17 18:45 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  + harbour/contrib/hbhpdf
+    + harbour/contrib/hbhpdf/harupdf.c
+    + harbour/contrib/hbhpdf/hpdf.h
+      Initial upload of wrappers for HaruPDF Library (http://sourceforge.net/projects/libharu/).
+  + harbour/contrib/hbhpdf/tests
+    + harbour/contrib/hbhpdf/tests/harupdf.prg
+    + harbour/contrib/hbhpdf/tests/harupdf.ch
+      Test program.
+    + harbour/contrib/hbhpdf/tests/32_32_color.dat
+    + harbour/contrib/hbhpdf/tests/32_32_gray.dat
+    + harbour/contrib/hbhpdf/tests/32_32_rgb.dat
+    + harbour/contrib/hbhpdf/tests/a010013l.afm
+    + harbour/contrib/hbhpdf/tests/a010013l.pfb
+    + harbour/contrib/hbhpdf/tests/basn0g01.png
+    + harbour/contrib/hbhpdf/tests/basn0g02.png
+    + harbour/contrib/hbhpdf/tests/basn0g04.png
+    + harbour/contrib/hbhpdf/tests/basn0g08.png
+    + harbour/contrib/hbhpdf/tests/basn2c08.png
+    + harbour/contrib/hbhpdf/tests/basn0g16.png
+    + harbour/contrib/hbhpdf/tests/basn2c16.png
+    + harbour/contrib/hbhpdf/tests/basn3p01.png
+    + harbour/contrib/hbhpdf/tests/basn3p02.png
+    + harbour/contrib/hbhpdf/tests/basn3p04.png
+    + harbour/contrib/hbhpdf/tests/basn3p08.png
+    + harbour/contrib/hbhpdf/tests/basn4a08.png
+    + harbour/contrib/hbhpdf/tests/basn4a16.png
+    + harbour/contrib/hbhpdf/tests/basn6a08.png
+    + harbour/contrib/hbhpdf/tests/basn6a16.png
+    + harbour/contrib/hbhpdf/tests/maskimage.png
+    + harbour/contrib/hbhpdf/tests/cp932.txt
+    + harbour/contrib/hbhpdf/tests/cp936.txt
+    + harbour/contrib/hbhpdf/tests/elic_jp.txt
+    + harbour/contrib/hbhpdf/tests/euc.txt
+    + harbour/contrib/hbhpdf/tests/gray.jpg
+    + harbour/contrib/hbhpdf/tests/rgb.jpg
+    + harbour/contrib/hbhpdf/tests/penguinattack.ttf
+    + harbour/contrib/hbhpdf/tests/sjis.txt
+      Needed files to run the haruprf.prg. Files are pulled from HaruPDF library distribution.
+
+      /*
+         NOTE! this library need distribution from :
+         http://sourceforge.net/projects/libharu/
+         The distribution contains libpng.lib and zlib.lib for Windows.
+         
+         Viktor, please put copyright notices and all other necessary batch files
+         to build this library.
+      */
+
 2008-05-17 15:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/hbppgen.c
     * cleaned code used to locate ChangeLog file
