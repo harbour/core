@@ -54,6 +54,7 @@ if not "%MYSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% hbmysql
 if not "%PGSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
 if not "%ADS_DIR%"       == "" set _HB_DIRS=%_HB_DIRS% rddads
 if not "%ZLIB_DIR%"      == "" set _HB_DIRS=%_HB_DIRS% hbzlib
+if not "%LIBHARU_DIR%"   == "" set _HB_DIRS=%_HB_DIRS% hbhpdf
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %__BATWORKER__% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem *******************************************************

@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /*
  * Copyright 2008 Pritpal Bedi<pritpal@vouchcac.com>
  *
@@ -45,6 +46,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
@@ -132,7 +134,7 @@ HB_FUNC( HPDF_GETSTREAMSIZE )
 HB_FUNC( HPDF_READFROMSTREAM )
 {
    HPDF_UINT32 size = strlen( hb_parc( 2 ) );
-   HPDF_ReadFromStream( (HPDF_Doc) hb_parnl( 1 ), hb_parc( 2 ), &size );
+   HPDF_ReadFromStream( (HPDF_Doc) hb_parnl( 1 ), (HPDF_BYTE*) hb_parc( 2 ), &size );
    hb_retnl( size );
 }
 //----------------------------------------------------------------------//
@@ -407,7 +409,7 @@ HB_FUNC( HPDF_LOADRAWIMAGEFROMFILE )
 //
 HB_FUNC( HPDF_LOADRAWIMAGEFROMMEM )
 {
-   hb_retnl( (long) HPDF_LoadRawImageFromMem( (HPDF_Doc) hb_parnl( 1 ), hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), (HPDF_ColorSpace) hb_parni( 5 ), hb_parni( 6 ) ) );
+   hb_retnl( (long) HPDF_LoadRawImageFromMem( (HPDF_Doc) hb_parnl( 1 ), (HPDF_BYTE*) hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), (HPDF_ColorSpace) hb_parni( 5 ), hb_parni( 6 ) ) );
 }
 //----------------------------------------------------------------------//
 // HPdf_LoadJPEGImageFromFile( hDoc, cHPEGFileName ) -> hImage
@@ -1481,7 +1483,7 @@ HB_FUNC( HPDF_FONT_TEXTWIDTH )
    PHB_ITEM info = hb_itemArrayNew( 4 );
    PHB_ITEM temp = hb_itemNew( NULL );
 
-   tw = HPDF_Font_TextWidth( (HPDF_Font) hb_parnl( 1 ), hb_parc( 2 ), hb_parni( 3 ) );
+   tw = HPDF_Font_TextWidth( (HPDF_Font) hb_parnl( 1 ), (HPDF_BYTE*) hb_parc( 2 ), hb_parni( 3 ) );
 
    hb_arraySet( info, 1, hb_itemPutNI( temp, tw.numchars ) );
    hb_arraySet( info, 2, hb_itemPutNI( temp, tw.numwords ) );
@@ -1498,14 +1500,14 @@ HB_FUNC( HPDF_FONT_TEXTWIDTH )
 HB_FUNC( HPDF_FONT_MEASURETEXT )
 {
    hb_retni( HPDF_Font_MeasureText( (HPDF_Font) hb_parnl( 1 ),
-                                      hb_parc ( 2 ),
-                                      hb_parni( 3 ),
-                                      hb_parnd( 4 ),
-                                      hb_parnd( 5 ),
-                                      hb_parnd( 6 ),
-                                      hb_parnd( 7 ),
-                                      hb_parl ( 8 ),
-                                      NULL          ) );
+                                    (HPDF_BYTE*) hb_parc ( 2 ),
+                                    hb_parni( 3 ),
+                                    hb_parnd( 4 ),
+                                    hb_parnd( 5 ),
+                                    hb_parnd( 6 ),
+                                    hb_parnd( 7 ),
+                                    hb_parl ( 8 ),
+                                    NULL ) );
 }
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//

@@ -1,7 +1,13 @@
 /*
  * $Id$
  */
+
 /*
+ * Harbour level header for hbhpdf/libharu Library.
+ *
+ * Copyright 2008 {list of individual authors and e-mail addresses}
+ * www - http://www.harbour-project.org
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option )
@@ -42,6 +48,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
@@ -51,6 +58,9 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
+
+#ifndef _HARUPDF_CH
+#define _HARUPDF_CH
 
 // HPDF_InfoType
 #define HPDF_INFO_CREATION_DATE             0
@@ -800,3 +810,5 @@
 #define HPDF_GMODE_EXTERNAL_OBJECT          0x0040
 
 //----------------------------------------------------------------------//
+
+#endif // _HARUPDF_CH

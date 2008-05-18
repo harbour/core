@@ -8,6 +8,53 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-18 08:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/hbhpdf/Makefile
+   + contrib/hbhpdf/make_b32.bat
+   + contrib/hbhpdf/make_vc.bat
+   + contrib/hbhpdf/make_gcc.sh
+   + contrib/hbhpdf/common.mak
+   + contrib/hbhpdf/tests/bld_b32.bat
+   + contrib/hbhpdf/tests/bld_vc.bat
+     + Added build/make files.
+     ; Please test GNU make files.
+
+   * contrib/make_b32_all.bat
+   * contrib/make_gcc_all.sh
+   * contrib/make_vc_all.bat
+     + Added hbhpdf to 'all' make files.
+       (not yet to GNU make files though)
+
+   - contrib/hbhpdf/tests/<data files>
+   + contrib/hbhpdf/tests/files/<data files>
+     * Data files needed for test app moved 
+       to a subdir.
+
+   * contrib/hbhpdf/tests/harupdf.prg
+     ! Absolute paths changed to relative ones 
+       (for both input and output ones).
+     ! NumToHex() -> hb_NumToHex()
+     + hbct added to liblist because test program 
+       uses SIN()/COS()/TAN() from it.
+
+   - contrib/hbhpdf/tests/harupdf.ch
+   + contrib/hbhpdf/harupdf.ch
+     * Moved to main dir.
+
+   - contrib/hbhpdf/hpdf.h
+     - Removed original libharu header. This 
+       will be picked up from the package dir, 
+       along with the rest of the .h files.
+
+   * contrib/hbhpdf/harupdf.ch
+     + Added self-guard.
+
+   * contrib/hbhpdf/harupdf.c
+     ! Fixed a few BCC warnings. It now builds cleanly.
+     ; NOTE: There are a lot MSVC casting warnings and errors left.
+
+   ; Many thanks for this contrib to Pritpal Bedi.
+
 2008-05-17 18:45 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   + harbour/contrib/hbhpdf
     + harbour/contrib/hbhpdf/harupdf.c

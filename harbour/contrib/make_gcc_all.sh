@@ -56,6 +56,7 @@ if [ "${MYSQL_INC}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbmysql "; fi;
 if [ "${PGSQL_INC}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbpgsql "; fi;
 if [ "${ZLIB_INC}"      != "" ]; then _HB_DIRS="${_HB_DIRS} hbzlib  "; fi;
 if [ "${ADS_INC}"       != "" ]; then _HB_DIRS="${_HB_DIRS} rddads  "; fi;
+if [ "${LIBHARU_INC}"   != "" ]; then _HB_DIRS="${_HB_DIRS} hbhpdf  "; fi;
 
 _HB_DIRS="${_HB_DIRS} ${_HB_DIRS_ADD}"
 

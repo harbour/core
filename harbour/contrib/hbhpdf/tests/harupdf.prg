@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /*
  * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
  *
@@ -45,6 +46,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
@@ -66,7 +68,7 @@
 Function Main( cFileToSave )
 
    if empty( cFileToSave )
-      cFileToSave := CurDrive()+'\myharu.pdf'
+      cFileToSave := 'myharu.pdf'
    endif
 
    if DesignHaruPDF( cFileToSave )
@@ -968,7 +970,7 @@ static function show_description( page, x, y, text )
 
 Static function Page_CodePages( pdf )
    Local page, outline, font2, font_name, root, i, font, dst, fname
-   Local cResPath := "c:\harbour\contrib\hbhpdf\tests\"
+   Local cResPath := "files\"
    Local cAfm := cResPath+"a010013l.afm"
    Local cPfb := cResPath+"a010013l.pfb"
    Local encodings := { ;
@@ -1062,7 +1064,7 @@ static function draw_graph( page )
        if (i > 0 .and. i <= 16)
            HPDF_Page_BeginText(page)
            HPDF_Page_MoveTextPos(page, x + 5, PAGE_HEIGHT - 75)
-           buf := NumToHex( i-1 )
+           buf := hb_NumToHex( i-1 )
            HPDF_Page_ShowText(page, buf)
            HPDF_Page_EndText(page)
        endif
@@ -1079,7 +1081,7 @@ static function draw_graph( page )
        if (i < 14)
            HPDF_Page_BeginText(page)
            HPDF_Page_MoveTextPos(page, 45, y + 5)
-           buf := NumToHex( 15-i )
+           buf := hb_NumToHex( 15-i )
            HPDF_Page_ShowText(page, buf)
            HPDF_Page_EndText(page)
        endif
@@ -1279,7 +1281,7 @@ Static Function Page_Annotation( pdf )
 Static function Page_Images( pdf )
    Local font, page, dst, image, image1, image2, image3
    Local x, y, angle, angle1, angle2, rad, rad1, rad2,  iw,  ih
-   Local cImagePath := "c:\harbour\contrib\hbhpdf\tests\"
+   Local cImagePath := "files\"
 
    /* create default-font */
    font := HPDF_GetFont(pdf, "Helvetica", NULL)
