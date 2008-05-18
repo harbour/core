@@ -970,7 +970,7 @@ static function show_description( page, x, y, text )
 
 Static function Page_CodePages( pdf )
    Local page, outline, font2, font_name, root, i, font, dst, fname
-   Local cResPath := "files\"
+   Local cResPath := "files" + hb_OSPathSeparator()
    Local cAfm := cResPath+"a010013l.afm"
    Local cPfb := cResPath+"a010013l.pfb"
    Local encodings := { ;
@@ -1281,7 +1281,7 @@ Static Function Page_Annotation( pdf )
 Static function Page_Images( pdf )
    Local font, page, dst, image, image1, image2, image3
    Local x, y, angle, angle1, angle2, rad, rad1, rad2,  iw,  ih
-   Local cImagePath := "files\"
+   Local cImagePath := "files" + hb_OSPathSeparator()
 
    /* create default-font */
    font := HPDF_GetFont(pdf, "Helvetica", NULL)
