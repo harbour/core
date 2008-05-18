@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-19 00:07 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbhpdf/harupdf.c
+     ! Fixed to use garbage collector to automatically free 
+       HPDF_Doc pointers. The rest of pointers seem to be handled 
+       automatically by internal memory manager of libharu. Also 
+       note that leaks wouldn't be reported by Harbour, because 
+       libharu currently uses memory via std C calls, not via 
+       hb_x*() functions.
+
 2008-05-18 22:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbhpdf/harupdf.c
      ! Added one TOFIX.
