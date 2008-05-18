@@ -1402,6 +1402,7 @@ HB_FUNC( ADSCREATESQLSTATEMENT )
                }
                else
                {
+                  /* QUESTION: Is this right? [vszakats] */
                   hb_rddReleaseCurrentArea();
                }
             }
@@ -2231,7 +2232,10 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
       case ADS_DD_ADMIN_PASSWORD:
       case ADS_DD_ENCRYPT_TABLE_PASSWORD:
       {
-         ulRetVal = AdsDDSetDatabaseProperty( hConnect, ulProperty, HB_IS_STRING( pParam ) ? hb_itemGetCPtr( pParam ) : NULL, ( UNSIGNED16 ) hb_itemGetCLen( pParam ) + 1 );
+         ulRetVal = AdsDDSetDatabaseProperty( hConnect,
+                                              ulProperty,
+                                              HB_IS_STRING( pParam ) ? hb_itemGetCPtr( pParam ) : NULL,
+                                              ( UNSIGNED16 ) hb_itemGetCLen( pParam ) + 1 );
          break;
       }
       /* String properties (NULL not accepted) */
