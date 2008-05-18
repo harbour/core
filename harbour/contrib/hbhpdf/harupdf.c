@@ -53,6 +53,7 @@
 //
 //                      HaruLib (x)Harbour Wrappers
 //                                   .
+//                        http://www.libharu.org/
 //                http://sourceforge.net/projects/libharu/
 //
 //                   Pritpal Bedi <pritpal@hotmail.com>
@@ -69,7 +70,6 @@
 // harupdf header
 //
 #include "hpdf.h"
-
 
 static HB_GARBAGE_FUNC( HPDF_Doc_release )
 {
@@ -168,9 +168,12 @@ HB_FUNC( HPDF_GETSTREAMSIZE )
 //
 HB_FUNC( HPDF_READFROMSTREAM )
 {
-   HPDF_UINT32 size = strlen( hb_parc( 2 ) );
-   HPDF_ReadFromStream( HPDF_Doc_par( 1 ), (HPDF_BYTE*) hb_parc( 2 ), &size );
-   hb_retnl( ( long ) size );
+   HPDF_UINT32 size = hb_parclen( 2 );
+   HPDF_BYTE * buffer = ( HPDF_BYTE * ) hb_xgrab( size );
+
+   hb_retnl( (long) HPDF_ReadFromStream( HPDF_Doc_par( 1 ), buffer, &size ) );
+
+   hb_storclen_buffer( ( char * ) buffer, size, 2 );
 }
 //----------------------------------------------------------------------//
 // HPdf_ResetStream( hDoc ) -> hStatus

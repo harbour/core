@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-19 00:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbhpdf/harupdf.c
+     ! Fixed HPDF_READFROMSTREAM() to not directly write into 
+       the variable buffer. The function will now return the 
+       status code instead of buffer length. The latter can 
+       be determined using Len().
+
 2008-05-19 00:07 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbhpdf/harupdf.c
      ! Fixed to use garbage collector to automatically free 
