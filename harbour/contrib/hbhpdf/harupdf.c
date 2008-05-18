@@ -640,16 +640,13 @@ HB_FUNC( HPDF_PAGE_GETCURRENTPOS )
 {
    HPDF_Point pt;
    PHB_ITEM info = hb_itemArrayNew( 2 );
-   PHB_ITEM temp = hb_itemNew( NULL );
-
-   pt = HPDF_Page_GetCurrentPos( (HPDF_Page) hb_parnl( 1 ) );
-
-   hb_arraySet( info, 1, hb_itemPutND( temp, pt.x ) );
-   hb_arraySet( info, 2, hb_itemPutND( temp, pt.y ) );
-
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   
+   HPDF_Page_GetCurrentPos2( (HPDF_Page) hb_parnl( 1 ), &pt );
+   
+   hb_arraySetND( info, 1, pt.x );
+   hb_arraySetND( info, 2, pt.y );
+   
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPdf_Page_GetCurrentTextPos( hPage ) -> aCurTextPos[ nX, nY ]
@@ -658,16 +655,13 @@ HB_FUNC( HPDF_PAGE_GETCURRENTTEXTPOS )
 {
    HPDF_Point pt;
    PHB_ITEM info = hb_itemArrayNew( 2 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
-   pt = HPDF_Page_GetCurrentTextPos( (HPDF_Page) hb_parnl( 1 ) );
+   HPDF_Page_GetCurrentTextPos2( (HPDF_Page) hb_parnl( 1 ), &pt );
 
-   hb_arraySet( info, 1, hb_itemPutND( temp, pt.x ) );
-   hb_arraySet( info, 2, hb_itemPutND( temp, pt.y ) );
+   hb_arraySetND( info, 1, pt.x );
+   hb_arraySetND( info, 2, pt.y );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPdf_Page_GetCurrentFont( hPage ) -> hFont
@@ -690,20 +684,17 @@ HB_FUNC( HPDF_PAGE_GETTRANSMATRIX )
 {
    HPDF_TransMatrix matrix;
    PHB_ITEM info = hb_itemArrayNew( 6 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
-   matrix = HPDF_Page_GetTransMatrix( (HPDF_Page) hb_parnl( 1 ) ) ;
+   matrix = HPDF_Page_GetTransMatrix( (HPDF_Page) hb_parnl( 1 ) );
 
-   hb_arraySet( info, 1, hb_itemPutND( temp, matrix.a ) );
-   hb_arraySet( info, 2, hb_itemPutND( temp, matrix.b ) );
-   hb_arraySet( info, 3, hb_itemPutND( temp, matrix.c ) );
-   hb_arraySet( info, 4, hb_itemPutND( temp, matrix.d ) );
-   hb_arraySet( info, 5, hb_itemPutND( temp, matrix.x ) );
-   hb_arraySet( info, 6, hb_itemPutND( temp, matrix.y ) );
+   hb_arraySetND( info, 1, matrix.a );
+   hb_arraySetND( info, 2, matrix.b );
+   hb_arraySetND( info, 3, matrix.c );
+   hb_arraySetND( info, 4, matrix.d );
+   hb_arraySetND( info, 5, matrix.x );
+   hb_arraySetND( info, 6, matrix.y );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPdf_Page_GetLineWidth( hPage ) -> nLineWidth
@@ -740,24 +731,21 @@ HB_FUNC( HPDF_PAGE_GETDASH )
 {
    HPDF_DashMode dash;
    PHB_ITEM info = hb_itemArrayNew( 10 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    dash = HPDF_Page_GetDash( (HPDF_Page) hb_parnl( 1 ) );
 
-   hb_arraySet( info, 1, hb_itemPutNI( temp, dash.ptn[0] ) );
-   hb_arraySet( info, 2, hb_itemPutNI( temp, dash.ptn[1] ) );
-   hb_arraySet( info, 3, hb_itemPutNI( temp, dash.ptn[2] ) );
-   hb_arraySet( info, 4, hb_itemPutNI( temp, dash.ptn[3] ) );
-   hb_arraySet( info, 5, hb_itemPutNI( temp, dash.ptn[4] ) );
-   hb_arraySet( info, 6, hb_itemPutNI( temp, dash.ptn[5] ) );
-   hb_arraySet( info, 7, hb_itemPutNI( temp, dash.ptn[6] ) );
-   hb_arraySet( info, 8, hb_itemPutNI( temp, dash.ptn[7] ) );
-   hb_arraySet( info, 9, hb_itemPutND( temp, dash.num_ptn ) );
-   hb_arraySet( info,10, hb_itemPutND( temp, dash.phase   ) );
+   hb_arraySetNI( info, 1, dash.ptn[0] );
+   hb_arraySetNI( info, 2, dash.ptn[1] );
+   hb_arraySetNI( info, 3, dash.ptn[2] );
+   hb_arraySetNI( info, 4, dash.ptn[3] );
+   hb_arraySetNI( info, 5, dash.ptn[4] );
+   hb_arraySetNI( info, 6, dash.ptn[5] );
+   hb_arraySetNI( info, 7, dash.ptn[6] );
+   hb_arraySetNI( info, 8, dash.ptn[7] );
+   hb_arraySetND( info, 9, dash.num_ptn );
+   hb_arraySetND( info,10, dash.phase   );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPdf_Page_GetFlat( hPage ) -> nCurFlatness
@@ -815,17 +803,14 @@ HB_FUNC( HPDF_PAGE_GETRGBFILL )
 {
    HPDF_RGBColor rgb;
    PHB_ITEM info = hb_itemArrayNew( 3 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    rgb = HPDF_Page_GetRGBFill( (HPDF_Page) hb_parnl( 1 ) );
 
-   hb_arraySet( info, 1, hb_itemPutND( temp, rgb.r ) );
-   hb_arraySet( info, 2, hb_itemPutND( temp, rgb.g ) );
-   hb_arraySet( info, 3, hb_itemPutND( temp, rgb.b ) );
+   hb_arraySetND( info, 1, rgb.r );
+   hb_arraySetND( info, 2, rgb.g );
+   hb_arraySetND( info, 3, rgb.b );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPdf_Page_GetRGBStroke( hPage ) -> aRGBStroke[ nRed, nGreen, nBlue ]
@@ -834,17 +819,14 @@ HB_FUNC( HPDF_PAGE_GETRGBSTROKE )
 {
    HPDF_RGBColor rgb;
    PHB_ITEM info = hb_itemArrayNew( 3 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    rgb = HPDF_Page_GetRGBStroke( (HPDF_Page) hb_parnl( 1 ) );
 
-   hb_arraySet( info, 1, hb_itemPutND( temp, rgb.r ) );
-   hb_arraySet( info, 2, hb_itemPutND( temp, rgb.g ) );
-   hb_arraySet( info, 3, hb_itemPutND( temp, rgb.b ) );
+   hb_arraySetND( info, 1, rgb.r );
+   hb_arraySetND( info, 2, rgb.g );
+   hb_arraySetND( info, 3, rgb.b );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPdf_Page_GetCMYKFill( hPage ) -> aCMYKFill[ nC, nM, nY, nK ]
@@ -853,18 +835,15 @@ HB_FUNC( HPDF_PAGE_GETCMYKFILL )
 {
    HPDF_CMYKColor cmyk;
    PHB_ITEM info = hb_itemArrayNew( 4 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    cmyk = HPDF_Page_GetCMYKFill( (HPDF_Page) hb_parnl( 1 ) );
 
-   hb_arraySet( info, 1, hb_itemPutND( temp, cmyk.c ) );
-   hb_arraySet( info, 2, hb_itemPutND( temp, cmyk.m ) );
-   hb_arraySet( info, 3, hb_itemPutND( temp, cmyk.y ) );
-   hb_arraySet( info, 4, hb_itemPutND( temp, cmyk.k ) );
+   hb_arraySetND( info, 1, cmyk.c );
+   hb_arraySetND( info, 2, cmyk.m );
+   hb_arraySetND( info, 3, cmyk.y );
+   hb_arraySetND( info, 4, cmyk.k );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPdf_Page_GetCMYKStroke( hPage ) -> aCMYKStroke[ nC, nM, nY, nK ]
@@ -873,18 +852,15 @@ HB_FUNC( HPDF_PAGE_GETCMYKSTROKE )
 {
    HPDF_CMYKColor cmyk;
    PHB_ITEM info = hb_itemArrayNew( 4 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    cmyk = HPDF_Page_GetCMYKStroke( (HPDF_Page) hb_parnl( 1 ) );
 
-   hb_arraySet( info, 1, hb_itemPutND( temp, cmyk.c ) );
-   hb_arraySet( info, 2, hb_itemPutND( temp, cmyk.m ) );
-   hb_arraySet( info, 3, hb_itemPutND( temp, cmyk.y ) );
-   hb_arraySet( info, 4, hb_itemPutND( temp, cmyk.k ) );
+   hb_arraySetND( info, 1, cmyk.c );
+   hb_arraySetND( info, 2, cmyk.m );
+   hb_arraySetND( info, 3, cmyk.y );
+   hb_arraySetND( info, 4, cmyk.k );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPdf_Page_GetGrayFill( hPage ) -> nGrayFillValue
@@ -921,20 +897,17 @@ HB_FUNC( HPDF_PAGE_GETTEXTMATRIX )
 {
    HPDF_TransMatrix matrix;
    PHB_ITEM info = hb_itemArrayNew( 6 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    matrix = HPDF_Page_GetTextMatrix( (HPDF_Page) hb_parnl( 1 ) ) ;
 
-   hb_arraySet( info, 1, hb_itemPutND( temp, matrix.a ) );
-   hb_arraySet( info, 2, hb_itemPutND( temp, matrix.b ) );
-   hb_arraySet( info, 3, hb_itemPutND( temp, matrix.c ) );
-   hb_arraySet( info, 4, hb_itemPutND( temp, matrix.d ) );
-   hb_arraySet( info, 5, hb_itemPutND( temp, matrix.x ) );
-   hb_arraySet( info, 6, hb_itemPutND( temp, matrix.y ) );
+   hb_arraySetND( info, 1, matrix.a );
+   hb_arraySetND( info, 2, matrix.b );
+   hb_arraySetND( info, 3, matrix.c );
+   hb_arraySetND( info, 4, matrix.d );
+   hb_arraySetND( info, 5, matrix.x );
+   hb_arraySetND( info, 6, matrix.y );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPdf_Page_GetGStateDepth( hPage ) -> nGStateDepth
@@ -1433,18 +1406,15 @@ HB_FUNC( HPDF_FONT_GETBBOX )
 {
    HPDF_Box rc;
    PHB_ITEM info = hb_itemArrayNew( 4 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    rc =  HPDF_Font_GetBBox( (HPDF_Font) hb_parnl( 1 ) );
 
-   hb_arraySet( info, 1, hb_itemPutND( temp, rc.left   ) );
-   hb_arraySet( info, 2, hb_itemPutND( temp, rc.top    ) );
-   hb_arraySet( info, 3, hb_itemPutND( temp, rc.right  ) );
-   hb_arraySet( info, 4, hb_itemPutND( temp, rc.bottom ) );
+   hb_arraySetND( info, 1, rc.left   );
+   hb_arraySetND( info, 2, rc.top    );
+   hb_arraySetND( info, 3, rc.right  );
+   hb_arraySetND( info, 4, rc.bottom );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPDF_Font_GetAscent( hFont ) -> nAscent
@@ -1481,18 +1451,15 @@ HB_FUNC( HPDF_FONT_TEXTWIDTH )
 {
    HPDF_TextWidth tw;
    PHB_ITEM info = hb_itemArrayNew( 4 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    tw = HPDF_Font_TextWidth( (HPDF_Font) hb_parnl( 1 ), (HPDF_BYTE*) hb_parc( 2 ), hb_parni( 3 ) );
 
-   hb_arraySet( info, 1, hb_itemPutNI( temp, tw.numchars ) );
-   hb_arraySet( info, 2, hb_itemPutNI( temp, tw.numwords ) );
-   hb_arraySet( info, 3, hb_itemPutNI( temp, tw.width    ) );
-   hb_arraySet( info, 4, hb_itemPutNI( temp, tw.numspace ) );
+   hb_arraySetNI( info, 1, tw.numchars );
+   hb_arraySetNI( info, 2, tw.numwords );
+   hb_arraySetNI( info, 3, tw.width    );
+   hb_arraySetNI( info, 4, tw.numspace );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPDF_Font_MeasureText( hFont, cText, nTextLen, nWidth, nFontSize, nCharSpace, nWordSpace, lWordWrap ) -> nByteLengthTobeIncludedInWidth
@@ -1698,16 +1665,13 @@ HB_FUNC( HPDF_IMAGE_GETSIZE )
 {
    HPDF_Point pt;
    PHB_ITEM info = hb_itemArrayNew( 2 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    pt = HPDF_Image_GetSize( (HPDF_Image) hb_parnl( 1 ) );
 
-   hb_arraySet( info, 1, hb_itemPutND( temp, pt.x ) );
-   hb_arraySet( info, 2, hb_itemPutND( temp, pt.y ) );
+   hb_arraySetND( info, 1, pt.x );
+   hb_arraySetND( info, 2, pt.y );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 //----------------------------------------------------------------------//
 // HPDF_Image_GetWidth( hImage ) -> nWidth

@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-18 20:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbhpdf/harupdf.c
+     ! Fixed GPFs. Thanks to Petr Chornyj.
+
 2008-05-18 19:09 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbhpdf/tests/harupdf.prg
      ! "\" -> hb_OSPathSeparator().
