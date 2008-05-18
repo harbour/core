@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-18 09:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbhpdf/harupdf.c
+     ! Fixed all MSVC warnings. Now builds cleanly.
+
 2008-05-18 08:52 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    + contrib/hbhpdf/Makefile
    + contrib/hbhpdf/make_b32.bat
