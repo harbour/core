@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-18 22:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbhpdf/harupdf.c
+     ! Added one TOFIX.
+     ! Fixed some casts.
+
 2008-05-18 22:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbhpdf/harupdf.c
      + Calling hb_fsNameConv() in filename parameters.
