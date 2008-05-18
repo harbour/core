@@ -8,6 +8,42 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-18 18:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/rddads/tests/datad.prg
+     + Added new test program for ADS DD/SQL functionality.
+       Kindly sent by Brian Hays.
+       NOTE: The code will show some errors on SQL execution.
+       I couldn't investigate, but it does the same with older 
+       versions of rddads, too.
+
+   * contrib/rddads/ads1.c
+     ! Two occurences of AdsShowError() calls guarded with 
+       DEBUG. This call pops up a visual dialog box on screen 
+       and halts execution until this is confirmed by the user. 
+       Not very desirable inside RDD code in real life 
+       environments. Proper error code were and are still 
+       returned in these cases.
+
+   * contrib/rddads/adsfunc.c
+     * Final reformat and optimization.
+     ! Fixed to not call AdsShowError() by default, only when 
+       DEBUG is #define-d. For about the same reason as above. 
+       Caller should use AdsGetLastError() to get the error 
+       code and string and present it to the user as required.
+     + QUESTIONs added.
+
+   * contrib/rddads/adsmgmnt.c
+     * ADSMGGETOPENTABLES() changed to return empty array 
+       instead of error code in case of error. This way it 
+       now behaves consistently with the rest of the mgmnt 
+       functions. Error code and string can be get by 
+       the caller using ADSGETLASTERROR().
+     + ADSMGGETOPENTABLES2() added, which is similar to 
+       ADSMGGETOPENTABLES(), but will also return lock type 
+       for all tables, this way clearing a long standing 
+       TODO in the source.
+
+
 2008-05-18 09:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/adsfunc.c
      + QUESTION added.

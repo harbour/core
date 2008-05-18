@@ -2710,7 +2710,9 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    if( uRetVal != AE_SUCCESS )
    {
+#ifdef DEBUG
       AdsShowError( ( UNSIGNED8 * ) "Error" );
+#endif
       return FAILURE;
    }
    /*
@@ -4485,7 +4487,9 @@ static ERRCODE adsLock( ADSAREAP pArea, LPDBLOCKINFO pLockInfo )
 
       default  :
          /* This should probably throw a real error... */
+#ifdef DEBUG
          AdsShowError( ( UNSIGNED8 * ) "Error in pLockInfo->uiMethod" );
+#endif
          pLockInfo->fResult = FALSE;
          return FAILURE;
    }

@@ -439,21 +439,18 @@ HB_FUNC( ADSMGGETUSERNAMES )
  */
 HB_FUNC( ADSMGGETLOCKOWNER )
 {
-   UNSIGNED32 ulRetVal;
-   UNSIGNED16 pusLockType;
+   UNSIGNED16 pusLockType = 0;
    UNSIGNED16 usStructSize = sizeof( ADS_MGMT_USER_INFO );
    ADS_MGMT_USER_INFO * pstUserInfo;
 
    pstUserInfo = ( ADS_MGMT_USER_INFO * ) hb_xgrab( sizeof( ADS_MGMT_USER_INFO ) );
 
-   ulRetVal = AdsMgGetLockOwner( s_hMgmtHandle,
-                                 ( UNSIGNED8 * ) hb_parcx( 1 ) /* pucTableName */,
-                                 ( UNSIGNED32 ) hb_parnl( 2 ) /* ulRecordNumber */,
-                                 pstUserInfo,
-                                 &usStructSize,
-                                 &pusLockType );
-
-   if( ulRetVal == AE_SUCCESS )
+   if( AdsMgGetLockOwner( s_hMgmtHandle,
+                          ( UNSIGNED8 * ) hb_parcx( 1 ) /* pucTableName */,
+                          ( UNSIGNED32 ) hb_parnl( 2 ) /* ulRecordNumber */,
+                          pstUserInfo,
+                          &usStructSize,
+                          &pusLockType ) == AE_SUCCESS )
    {
       hb_reta( 5 );
       hb_storc( ( char * ) pstUserInfo->aucUserName , -1, 1 ); /* Machine name under NT */
@@ -468,7 +465,7 @@ HB_FUNC( ADSMGGETLOCKOWNER )
       hb_stornl( pusLockType, -1, 5 );                /* type of lock */
    }
    else
-      hb_retnl( ulRetVal );
+      hb_reta( 0 );
 
    hb_xfree( pstUserInfo );
 
@@ -478,11 +475,8 @@ HB_FUNC( ADSMGGETLOCKOWNER )
 #endif
 }
 
-/* TODO: We're throwing away the locktype info. First edition
- *       should have returned a 2-dim array. Perhaps see if a 4th arg
- *       is passed as an (empty) array, if so populate parallel array
- *       of locktypes.  OR pass a logical to tell it to return 2-dim array.
- */
+/* NOTE: For a newer edition of this function, which also returns locktype 
+         info, see ADSMGGETOPENTABLES2(). */
 HB_FUNC( ADSMGGETOPENTABLES ) /* nMaxNumberOfFilesToReturn, cUserName, nConnection */
 {
    UNSIGNED16 usArrayLen = ISNUM( 1 ) ? ( UNSIGNED16 ) hb_parni( 1 ) : 300;
@@ -502,10 +496,50 @@ HB_FUNC( ADSMGGETOPENTABLES ) /* nMaxNumberOfFilesToReturn, cUserName, nConnecti
       UNSIGNED16 ulCount;
 
       for( ulCount = 1; ulCount <= usArrayLen; ulCount++ )
-      {
          hb_itemPutC( hb_arrayGetItemPtr( pArray, ( ULONG ) ulCount ), ( char * ) astOpenTableInfo[ ulCount - 1 ].aucTableName );
-         /* UNSIGNED16 astOpenTableInfo[ ulCount - 1 ].usLockType; */ /* Advantage locking mode     */
+
+      hb_itemReturnRelease( pArray );
+   }
+   else
+      hb_reta( 0 );
+
+   hb_xfree( astOpenTableInfo );
+
+#if HB_TR_LEVEL >= HB_TR_INFO
+   if( usStructSize > sizeof( ADS_MGMT_TABLE_INFO ) )
+      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetOpenTables()"));
+#endif
+}
+
+HB_FUNC( ADSMGGETOPENTABLES2 ) /* nMaxNumberOfFilesToReturn, cUserName, nConnection */
+{
+   UNSIGNED16 usArrayLen = ISNUM( 1 ) ? ( UNSIGNED16 ) hb_parni( 1 ) : 300;
+   UNSIGNED16 usStructSize = sizeof( ADS_MGMT_TABLE_INFO );
+   ADS_MGMT_TABLE_INFO * astOpenTableInfo;
+
+   astOpenTableInfo = ( ADS_MGMT_TABLE_INFO * ) hb_xgrab( sizeof( ADS_MGMT_TABLE_INFO ) * usArrayLen );
+
+   if( AdsMgGetOpenTables( s_hMgmtHandle,
+                           ( UNSIGNED8 * ) ( hb_parclen( 2 ) > 0 ? hb_parc( 2 ) : NULL ) /* pucUserName */,
+                           ( UNSIGNED16 ) hb_parni( 3 ) /* usConnNumber */, /* = HB_ADS_PARCONNECTION( 3 ) only valid for netware so don't default to current, only take a passed value */
+                           astOpenTableInfo,
+                           &usArrayLen,
+                           &usStructSize ) == AE_SUCCESS )
+   {
+      PHB_ITEM pArray = hb_itemArrayNew( usArrayLen );
+      UNSIGNED16 ulCount;
+
+      for( ulCount = 1; ulCount <= usArrayLen; ulCount++ )
+      {
+         PHB_ITEM pArrayItm = hb_arrayGetItemPtr( pArray, ulCount );
+         hb_arrayNew( pArrayItm, 2 );
+
+         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 3 ),
+                       ( char * ) astOpenTableInfo[ ulCount - 1 ].aucTableName );
+         hb_itemPutNI( hb_arrayGetItemPtr( pArrayItm, 2 ),
+                       astOpenTableInfo[ ulCount - 1 ].usLockType ); /* Advantage locking mode */
       }
+
       hb_itemReturnRelease( pArray );
    }
    else
