@@ -29,13 +29,16 @@ PRG_SOURCES=\
 	xhbcomp.prg \
 
 PRG_HEADERS=\
-	xhb.ch \
+	classex.ch \
+	cstruct.ch \
 	hbcompat.ch \
+	hbctypes.ch \
 	hblog.ch \
 	hblogdef.ch \
-	cstruct.ch \
-	hbctypes.ch \
+	math.ch \
+	usrrdd.ch \
 	wintypes.ch \
+	xhb.ch \
 	xhbextrn.ch \
 
 LIBNAME=xhb

@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-19 09:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/xhb/usrrdd.ch
+   + contrib/xhb/math.ch
+   + contrib/xhb/classex.ch
+   * contrib/xhb/Makefile
+   * contrib/xhb/common.mak
+     + Some more xhb compatibility.
+
 2008-05-19 09:01 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tget.prg
      % Minor code optimization.
@@ -66,7 +74,7 @@
        DEBUG. This call pops up a visual dialog box on screen 
        and halts execution until this is confirmed by the user. 
        Not very desirable inside RDD code in real life 
-       environments. Proper error code were and are still 
+       environments. Proper error codes were and are still 
        returned in these cases.
 
    * contrib/rddads/adsfunc.c
