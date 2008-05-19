@@ -2,6 +2,44 @@
  * $Id$
  */
 
+
+Version 1.1.1 RC1 (2008-05-20) tag: build49
+
+- Fixed TBrowse() class to be 100% compatible.
+- Fixed TGet() class to be more compatible.
+- Made C5.3 UI classes fully working and compatible.
+- Cleaned up lots of namespace issues.
+- Separated xhb functionality into a contrib lib.
+- Cleaned Harbour from any dangerous extensions, now 
+  disabled by default. Use HB_EXTENSION to enable them.
+- Cleaned up build process for all contribs.
+- rddads contrib cleanup and new features.
+- hbhpdf contrib added. (interface for Haru Free PDF Library)
+- hbzlib contrib added. (interface for ZLIB and minizip)
+- hbwhat32 contrib added. (Windows API interface)
+- hbtpathy contrib added. (Telepath(y) compatible comm. library)
+- gtwvg contrib added.
+- hbfbird contrib added. (Firebird db access interface)
+- hbfimage contrib added. (FreeImage interface)
+- hbnf contrib fixes (NanFor Library).
+- hbw32 (OLE and printing) contrib enhancements.
+- Debugger fixes.
+- Accessing built-in objects as arrays is almost fully 
+  C5.x compatible.
+- New national modules and flavors (SK, BG, BE, HR, UA, LT, SV, etc.)
+- New UTF8 handling functions.
+- hbct contrib enhancements and fixes.
+- hbtip contrib enhancements.
+- Added WinCE support.
+- Added partial i18n support.
+- Scalar class cleanup.
+- Added SIx3 compatible functions and command, trigger support.
+- Filsystem compatibility and filename conditioning features.
+- Mostly complete 5.3 support.
+- GT terminal handling enhancements.
+- HB_BIT*() functions.
+- and lots more...
+
 ----------------------------------------------------------------------
 Version 1.1.1 Devel Build (2007-06-14) tag: build48
 
