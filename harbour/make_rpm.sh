@@ -20,7 +20,7 @@
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build ADS RDD
 # --with zlib        - build zlib and minizip wrapper
-# --without gpl      - do not build libs which needs GPL 3-rd party code
+# --without gpllib   - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
 # --without x11      - do not build GTXWC
 # --without gpm      - build GTSLN and GTCRS without GPM support
@@ -118,7 +118,7 @@ then
 fi
 if [ "${HB_COMMERCE}" = "yes" ]
 then
-    INST_PARAM="${INST_PARAM} --without gpl"
+    INST_PARAM="${INST_PARAM} --without gpllib"
 fi
 if [ "${HB_COMMERCE}" = "yes" ] || ! test_reqrpm "gpm-devel"
 then

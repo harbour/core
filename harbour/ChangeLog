@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-19 23:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_rpm.sh
+  * harbour/harbour.spec
+    * changed --without gpl to --without gpllib
+
+  * harbour/source/compiler/complex.c
+    * changed END terminal symbol used for END SEQUENCE to ENDSEQ
+      for better error reporting in wrong .prg code
+
 2008-05-19 18:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbwhat32/Makefile
    * contrib/hbwhat32/common.mak

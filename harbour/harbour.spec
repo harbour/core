@@ -22,7 +22,7 @@
 # --with zlib        - build zlib and minizip wrapper
 # --with odbc        - build odbc lib
 # --without nf       - do not build nanforum lib
-# --without gpl      - do not build libs which needs GPL 3-rd party code
+# --without gpllib   - do not build libs which needs GPL 3-rd party code
 # --without x11      - do not build GTXWC
 # --without gpm      - build GTTRM, GTSLN and GTCRS without GPM support
 # --without gtsln    - do not build GTSLN
@@ -78,7 +78,7 @@
 %define hb_idir  export HB_INC_INSTALL=%{_includedir}/%{name}
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_opt   export HB_GTALLEG=%{?_with_allegro:yes}
-%define hb_cmrc  export HB_COMMERCE=%{?_without_gpl:yes}
+%define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
 %define hb_ctrb  export HB_CONTRIBLIBS="%{?_with_odbc:hbodbc} %{?_with_zlib:hbzlib} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
 %define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_defgt} ; %{hb_gpm} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_opt} ; %{hb_ctrb} ; %{hb_cmrc}
 

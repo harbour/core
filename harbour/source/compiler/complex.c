@@ -809,7 +809,7 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                                                          HB_PP_TOKEN_KEYWORD )
                   {
                      pLex->iState = END;
-                     return END;
+                     return ENDSEQ;
                   }
                   if( !HB_SUPPORT_HARBOUR )
                   {
