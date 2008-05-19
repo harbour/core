@@ -5,9 +5,9 @@
 ROOT = ../../
 
 C_SOURCES=\
-   ads1.c \
-   adsfunc.c \
-   adsmgmnt.c \
+	ads1.c \
+	adsfunc.c \
+	adsmgmnt.c \
 
 PRG_HEADERS=\
 	ads.ch \
