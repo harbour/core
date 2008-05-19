@@ -1136,6 +1136,15 @@ HB_FUNC( ADSDISCONNECT )
       hb_retl( FALSE );
 }
 
+HB_FUNC( ADSSTMTSETTABLELOCKTYPE )
+{
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
+   hb_retl( pArea && pArea->hStatement &&
+            AdsStmtSetTableLockType( pArea->hStatement, 
+                                     ( UNSIGNED16 ) hb_parni( 1 ) /* usLockType */ ) == AE_SUCCESS );
+}
+
 HB_FUNC( ADSCREATESQLSTATEMENT )
 {
    BOOL fResult = FALSE;
@@ -1322,6 +1331,26 @@ HB_FUNC( ADSEXECUTESQL )
    else
       hb_retl( FALSE );
 }
+
+#if ADS_LIB_VERSION >= 620
+
+HB_FUNC( ADSVERIFYSQL )
+{
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
+   if( pArea && pArea->hStatement && ISCHAR( 1 ) )
+   {
+      char * pucStmt = hb_adsOemToAnsi( hb_parc( 1 ), hb_parclen( 1 ) );
+
+      hb_retl( AdsVerifySQL( pArea->hStatement, ( UNSIGNED8 * ) pucStmt ) == AE_SUCCESS );
+
+      hb_adsOemAnsiFree( pucStmt );
+   }
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSVERIFYSQL" );
+}
+
+#endif /* ADS_LIB_VERSION >= 620 */
 
 HB_FUNC( ADSCLOSEALLTABLES )
 {
@@ -2144,6 +2173,33 @@ HB_FUNC( ADSCLOSECACHEDTABLES )
    }
    else
       hb_retl( FALSE );
+}
+
+HB_FUNC( ADSCREATEFTSINDEX )
+{
+   ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
+   if( pArea )
+      hb_retnl( AdsCreateFTSIndex( pArea->hTable,
+                                   ( UNSIGNED8 * ) hb_parc( 1 )                               /* pucFileName              */ , /* if NULL or the base name is the same as the table, then creates a compound AutoOpen index. */
+                                   ( UNSIGNED8 * ) hb_parc( 2 )                               /* pucTag                   */ ,
+                                   ( UNSIGNED8 * ) hb_parc( 3 )                               /* pucField                 */ ,
+                                   ( UNSIGNED32 )  hb_parnl( 4 )                              /* ulPageSize               */ ,
+                                   ( UNSIGNED32 )  ISNUM( 5 ) ? hb_parnl( 5 ) : 3             /* ulMinWordLen             */ ,
+                                   ( UNSIGNED32 )  ISNUM( 6 ) ? hb_parnl( 6 ) : 30            /* ulMaxWordLen             */ ,
+                                   ( UNSIGNED16 )  ISLOG( 7 ) ? hb_parl( 7 ) : TRUE           /* usUseDefaultDelim        */ ,
+                                   ( UNSIGNED8 * ) hb_parc( 8 )                               /* pucDelimiters            */ ,
+                                   ( UNSIGNED16 )  ISLOG( 9 ) ? hb_parl( 9 ) : TRUE           /* usUseDefaultNoise        */ ,
+                                   ( UNSIGNED8 * ) hb_parc( 10 )                              /* pucNoiseWords            */ ,
+                                   ( UNSIGNED16 )  ISLOG( 11 ) ? hb_parl( 11 ) : TRUE         /* usUseDefaultDrop         */ ,
+                                   ( UNSIGNED8 * ) hb_parc( 12 )                              /* pucDropChars             */ ,
+                                   ( UNSIGNED16 )  ISLOG( 13 ) ? hb_parl( 13 ) : TRUE         /* usUseDefaultConditionals */ ,
+                                   ( UNSIGNED8 * ) hb_parc( 14 )                              /* pucConditionalChars      */ ,
+                                   ( UNSIGNED8 * ) hb_parc( 15 )                              /* pucReserved1             */ ,
+                                   ( UNSIGNED8 * ) hb_parc( 16 )                              /* pucReserved2             */ ,
+                                   ( UNSIGNED32 )  ISNUM( 17 ) ? hb_parnl( 17 ) : ADS_DEFAULT /* ulOptions                */ ) );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCREATEFTSINDEX" );
 }
 
 #endif /* ADS_LIB_VERSION >= 700 */
