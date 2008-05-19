@@ -5,6 +5,7 @@
 ROOT = ../../
 
 C_SOURCES = \
+	wincorec.c \
 	_winbmp.c \
 	_winbrsh.c \
 	_wincall.c \

@@ -20,6 +20,7 @@ PRG_HEADERS = \
     winuser.ch \
 
 LIB_OBJS = \
+    $(OBJ_DIR)wincorec$(OBJEXT) \
     $(OBJ_DIR)_winbmp$(OBJEXT) \
     $(OBJ_DIR)_winbrsh$(OBJEXT) \
     $(OBJ_DIR)_wincall$(OBJEXT) \

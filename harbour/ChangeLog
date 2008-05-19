@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-19 18:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbwhat32/Makefile
+   * contrib/hbwhat32/common.mak
+   + contrib/hbwhat32/wincorec.c
+   * contrib/hbwhat32/wincore.prg
+     ! Got rid of begindump/enddump
+     ; No more begindump/enddump in repo.
+
 2008-05-19 18:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbtpathy/common.mak
    * contrib/hbtpathy/Makefile
