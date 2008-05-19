@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-19 09:01 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tget.prg
+     % Minor code optimization.
+
+   * contrib/rddads/adsfunc.c
+     ! Minor correction.
+
 2008-05-19 00:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbhpdf/harupdf.c
      ! Fixed HPDF_READFROMSTREAM() to not directly write into 
@@ -80,7 +87,6 @@
        ADSMGGETOPENTABLES(), but will also return lock type 
        for all tables, this way clearing a long standing 
        TODO in the source.
-
 
 2008-05-18 09:22 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/adsfunc.c

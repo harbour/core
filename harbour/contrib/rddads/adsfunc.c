@@ -1495,7 +1495,7 @@ HB_FUNC( ADSGETHANDLETYPE )             /* DD, admin, table */
 /* nLastErr := AdsGetLastError( [ @cLastErr ] ) */
 HB_FUNC( ADSGETLASTERROR )
 {
-   UNSIGNED32 ulLastErr = 0;
+   UNSIGNED32 ulLastErr = ~AE_SUCCESS;
    UNSIGNED8  aucError[ ADS_MAX_ERROR_LEN + 1 ];
    UNSIGNED16 usLength = ADS_MAX_ERROR_LEN + 1;
 
