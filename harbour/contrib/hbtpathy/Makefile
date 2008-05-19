@@ -16,6 +16,7 @@ else
 C_SOURCES=\
 	tpos2.c \
 endif
+	tpcommon.c \
 
 PRG_SOURCES=\
 	telepath.prg \

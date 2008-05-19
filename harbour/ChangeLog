@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-19 18:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbtpathy/common.mak
+   * contrib/hbtpathy/Makefile
+   * contrib/hbtpathy/telepath.prg
+   + contrib/hbtpathy/tpcommon.c
+     ! Got rid of begindump/enddump
+
 2008-05-19 16:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
      + Added first round of whatsnew update.
