@@ -14,12 +14,11 @@ C_SOURCES=\
 	mainlgtk.c \
 
 PRG_SOURCES=\
-	form.prg    \
-	menu.prg    \
-	button.prg    \
+	form.prg \
+	menu.prg \
+	button.prg \
 	menuitem.prg \
 	winctrl.prg \
-
 
 LIBNAME=hbgfgtk
 

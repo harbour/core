@@ -5,20 +5,20 @@
 ROOT = ../../
 
 C_SOURCES=\
-	dbgentry.c   \
+	dbgentry.c \
 
 PRG_SOURCES=\
-	dbgmenu.prg  \
-	dbghelp.prg  \
+	dbgmenu.prg \
+	dbghelp.prg \
 	dbgtmenu.prg \
 	dbgtmitm.prg \
-	dbgtwin.prg  \
+	dbgtwin.prg \
 	debugger.prg \
-	dbgtarr.prg  \
-	dbgthsh.prg  \
-	dbgtobj.prg  \
+	dbgtarr.prg \
+	dbgthsh.prg \
+	dbgtobj.prg \
 	tbrwtext.prg \
-	dbgwa.prg    \
+	dbgwa.prg \
 	dbgbrwsr.prg \
 
 LIBNAME=hbdebug
