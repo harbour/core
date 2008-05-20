@@ -191,9 +191,6 @@ HB_FUNC( SYSTEMPARAMETERSINFO )
    {
       cText = (char*) hb_xgrab( hb_itemGetCLen( pBuffer )+1 );
       hb_xmemcpy( cText, hb_itemGetC( pBuffer ), hb_itemGetCLen( pBuffer )+1 );
-
-      //cText = (char*) hb_xgrab( pBuffer->item.asString.length + 1 );
-      //hb_xmemcpy( cText, pBuffer->item.asString.value, pBuffer->item.asString.length + 1 );
    }
    else
    {
@@ -208,8 +205,7 @@ HB_FUNC( SYSTEMPARAMETERSINFO )
    {
       if( ISBYREF( 3 ) )
       {
-        //hb_itemPutCRaw( pBuffer, cText, pBuffer->item.asString.length );
-        hb_itemPutCRaw( pBuffer, cText, hb_itemGetCLen( pBuffer ) );
+        hb_storclen_buffer( cText, hb_itemGetCLen( pBuffer ), 3 );
         hb_retl( TRUE );
      }
    }

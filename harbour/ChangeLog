@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-20 09:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbwhat32/wincorec.c
+     ! Removed old-style Clipper comment from C code.
+
+   * contrib/hbwhat32/_winsys.c
+     ! Fixed unresolved external in SYSTEMPARAMETERSINFO().
+
 2008-05-20 08:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/numtxthu.prg
    * contrib/hbmisc/numtxten.prg
