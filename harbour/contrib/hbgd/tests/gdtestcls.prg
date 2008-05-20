@@ -46,8 +46,8 @@ PROCEDURE Main()
    oI := GDImage():Create( 200, 200 )
 
    /* Load an image in memory from file */
-   oI2 := GDImage():LoadFromJpeg( IMAGES_IN + "conv_test.jpeg" )
-   oI5 := GDImage():LoadFromJpeg( IMAGES_IN + "conv_test.jpeg" )
+   oI2 := GDImage():LoadFromJpeg( IMAGES_IN + "conv_test.jpg" )
+   oI5 := GDImage():LoadFromJpeg( IMAGES_IN + "conv_test.jpg" )
 
    /* Now work on first empty image */
 
@@ -271,7 +271,7 @@ PROCEDURE Main()
    red   := oI5:SetColor(250, 0, 0)
 
    // Load an image as brush
-   oB := GDImage():LoadFromJpeg( IMAGES_IN + "conv_test.jpeg" )
+   oB := GDImage():LoadFromJpeg( IMAGES_IN + "conv_test.jpg" )
    oB:Zoom(15)
 
 //   oI5:AddDef( "MAXVALUE", 150 )

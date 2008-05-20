@@ -20,7 +20,7 @@
 
 
 #ifdef __HARBOUR__             //  Harbour and xHarbour
-   #include      'HBClass.ch'
+   #include      'hbclass.ch'
 #endif
 
 #ifdef __XPP__             //  xBase++

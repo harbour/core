@@ -40,7 +40,7 @@ PROCEDURE Main()
    im = gdImageCreate(200, 200)
 
    /* Load an image in memory from file */
-   im2 = gdImageCreateFromJpeg( IMAGES_IN + "conv_test.jpeg")
+   im2 = gdImageCreateFromJpeg( IMAGES_IN + "conv_test.jpg")
 
    /* Now work on first empty image */
 

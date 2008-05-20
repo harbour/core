@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-20 17:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbvpdf/hbvpdft.prg
+     ! Fixed include filename to be in lower case.
+       Reported by Lorenzo.
+
+   * contrib/hbhpdf/tests/files/gray.jpg
+   * contrib/hbhpdf/tests/files/rgb.jpg
+   * contrib/hbgd/tests/gdtest.prg
+   * contrib/hbgd/tests/gdtestcls.prg
+   * contrib/hbgd/tests/tostring.prg
+   * contrib/hbgd/tests/images_in/gdlogobig.png
+   - contrib/hbgd/tests/images_in/conv_test.jpeg
+   + contrib/hbgd/tests/images_in/conv_test.jpg
+     ! .jpg cleanup.
+
 2008-05-20 13:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    + contrib/hbvpdf
    + contrib/hbvpdf/common.mak
