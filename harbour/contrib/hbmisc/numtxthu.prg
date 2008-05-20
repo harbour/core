@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * NumToTxtHU() function to convert a number to Hungarian text
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2008 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,66 +50,69 @@
  *
  */
 
-FUNCTION NumToTxtHU(nValue)
-     LOCAL aTort := { "tized", "sz zad", "ezred", "t¡zezred", "sz zezred", "milliomod" }
-     LOCAL cRetVal
-     LOCAL tmp, tmp1, tmp2
+FUNCTION NumToTxtHU( nValue )
+   LOCAL aTort := { "tized", "sz zad", "ezred", "t¡zezred", "sz zezred", "milliomod", "milli rdod" }
+   LOCAL cRetVal
+   LOCAL tmp, tmp1, tmp2
 
-     IF nValue == 0
-          RETURN "nulla"
-     ENDIF
+   IF nValue < 0
+      nValue := -nValue
+      cRetVal := "m¡nusz "
+   ELSE
+      cRetVal := ""
+   ENDIF
 
-     IF nValue < 0
-          nValue := -nValue
-          cRetVal := "m¡nusz "
-     ELSE
-          cRetVal := ""
-     ENDIF
+   IF Int( nValue ) == 0
+      cRetVal += "nulla"
+   ENDIF
 
-     cRetVal += NumToTxtRaw(tmp := Int(nValue))
+   cRetVal += NumToTxtRaw( tmp := Int( nValue ) )
 
-     IF (tmp := (nValue-tmp)) > 0 .AND. tmp < 1
+   IF ( tmp := ( nValue - tmp ) ) > 0 .AND. tmp < 1
 
-          tmp1 := Len(tmp2 := SubStr(Str(tmp, 8, 6), 3))
+      tmp1 := Len( tmp2 := SubStr( Str( tmp, 8, 6 ), 3 ) )
 
-          WHILE SubStr(tmp2, tmp1, 1) == "0" .AND. tmp1 > 0
-               tmp1--
-          ENDDO
+      WHILE SubStr( tmp2, tmp1, 1 ) == "0" .AND. tmp1 > 0
+         tmp1--
+      ENDDO
 
-          cRetVal += " eg‚sz " + NumToTxtRaw(tmp * (10 ^ tmp1))
-          IF tmp1 >= 1 .AND. tmp1 <= Len(aTort)
-               cRetVal += " " + aTort[tmp1]
-          ENDIF
-     ENDIF
+      cRetVal += " eg‚sz " + NumToTxtRaw( tmp * ( 10 ^ tmp1 ) ) + iif( tmp1 >= 1 .AND. tmp1 <= Len( aTort ), " " + aTort[ tmp1 ], "" )
+   ENDIF
 
-     RETURN cRetVal
+   RETURN cRetVal
 
-#define NTT_MAXLENGTH                   18
+STATIC FUNCTION NumToTxtRaw( nValue )
+   LOCAL aEgesz  := { "", "ezer" , "milli¢", "milli rd", "billi¢" , "trilli¢", "kvadrilli¢", "kvintilli¢" } // , "szextilli¢", "szeptilli¢", "oktilli¢", "nontilli¢" }
+   LOCAL aEgyes  := { "", "egy"  , "kett‹" , "h rom"   , "n‚gy"   , "”t"     , "hat"       , "h‚t"       , "nyolc"     , "kilenc" }
+   LOCAL aTizes1 := { "", "t¡z"  , "h£sz"  , "harminc" , "negyven", "”tven"  , "hatvan"    , "hetven"    , "nyolcvan"  , "kilencven" }
+   LOCAL aTizes2 := { "", "tizen", "huszon", "harminc" , "negyven", "”tven"  , "hatvan"    , "hetven"    , "nyolcvan"  , "kilencven" }
 
-STATIC FUNCTION NumToTxtRaw(nValue)
-     LOCAL aDigit[NTT_MAXLENGTH]
-     LOCAL cValue := StrZero(nValue, NTT_MAXLENGTH)
-     LOCAL aEgesz :=  {"", "ezer" , "milli¢", "milli rd", "billi¢" , "ezerbilli¢"}
-     LOCAL aEgyes := {{"", "egy"  , "kett‹" , "h rom"   , "n‚gy"   , "”t"   , "hat"   , "h‚t"   , "nyolc"   , "kilenc"    },;
-                      {"", "egy"  , "kett‹" , "h rom"   , "n‚gy"   , "”t"   , "hat"   , "h‚t"   , "nyolc"   , "kilenc"    }}
-     LOCAL aTizes := {{"", "t¡z"  , "h£sz"  , "harminc" , "negyven", "”tven", "hatvan", "hetven", "nyolcvan", "kilencven" },;
-                      {"", "tizen", "huszon", "harminc" , "negyven", "”tven", "hatvan", "hetven", "nyolcvan", "kilencven" }}
-     LOCAL tmp
+   LOCAL aDigit
+   LOCAL nLen
+   LOCAL cValue
+   LOCAL tmp
 
-     FOR tmp := 1 TO NTT_MAXLENGTH
-          aDigit[tmp] := Val(SubStr(cValue, NTT_MAXLENGTH - tmp + 1, 1))
-     NEXT
+   cValue := LTrim( Str( nValue, 20, 0 ) )
+   cValue := PadL( cValue, ( Int( Max( Len( cValue ) - 1, 0 ) / 3 ) + 1 ) * 3, "0" )
 
-     cValue := ""
-     FOR tmp := 1 TO 16 STEP 3
-          IF aDigit[tmp] != 0 .OR. aDigit[tmp + 1] != 0 .OR. aDigit[tmp + 2] != 0
-               cValue := aEgyes[iif(tmp         == 1, 1, 2)][aDigit[tmp]     + 1] + aEgesz[(tmp - 1) / 3 + 1] + iif(Empty(cValue), "", "-") + cValue
-               cValue := aTizes[iif(aDigit[tmp] == 0, 1, 2)][aDigit[tmp + 1] + 1]                                                          + cValue
-               IF aDigit[tmp + 2] != 0
-                    cValue := aEgyes[                2][aDigit[tmp + 2] + 1] + "sz z"                                                     + cValue
-               ENDIF
-          ENDIF
-     NEXT
+   aDigit := Array( nLen := Len( cValue ) )
+   FOR tmp := 1 TO nLen
+      aDigit[ tmp ] := Val( SubStr( cValue, tmp, 1 ) )
+   NEXT
 
-     RETURN cValue
+   cValue := ""
+   FOR tmp := 1 TO nLen - 2 STEP 3
 
+      IF aDigit[ tmp     ] != 0 .OR. ;
+         aDigit[ tmp + 1 ] != 0 .OR. ;
+         aDigit[ tmp + 2 ] != 0
+
+         cValue += iif( Empty( cValue ), "", "-") +;
+                   iif( aDigit[ tmp ] != 0, aEgyes[ aDigit[ tmp ] + 1 ] + "sz z", "" ) +;
+                   iif( aDigit[ tmp + 2 ] == 0, aTizes1[ aDigit[ tmp + 1 ] + 1 ], aTizes2[ aDigit[ tmp + 1 ] + 1 ] ) +;
+                   aEgyes[ aDigit[ tmp + 2 ] + 1 ] +;
+                   aEgesz[ ( Int( ( nLen - tmp ) / 3 ) ) + 1 ]
+      ENDIF
+   NEXT
+
+   RETURN cValue

@@ -1758,7 +1758,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
          lCompMod        := oMake:lCompMod
          s_lGenppo       := oMake:lGenppo
          s_lGui          := oMake:lGui 
-         cRdd            := IIF( oMake:lRddAds, "RddAds", IIF( oMake:lMediator, "Mediator", "None" ) )
+         cRdd            := IIF( oMake:lRddAds, "RDDADS", IIF( oMake:lMediator, "Mediator", "None" ) )
          cGuiLib         := IIF( oMake:lFwh   , "FWH", ;
                             IIF( oMake:lMini  , "MINIGUI", ;
                             IIF( oMake:lWhoo  , "WHOO", ;
@@ -1983,7 +1983,7 @@ While .t.
    @ 02,01       SAY s_aLangMessages[ 48 ]
 
    @ 02,16,08,26 GET cRdd;
-                 LISTBOX { "None","RddAds","Mediator","Apollo"};
+                 LISTBOX { "None","RDDADS","Mediator","Apollo"};
                  WHEN cOS == "Win32" .or. cOS == "Linux";
                  DROPDOWN;
                  MESSAGE s_aLangMessages[ 52 ]
@@ -2054,7 +2054,7 @@ While .t.
    lxHGtk    := "XHGTK"    $ alltrim(cGuiLib)
    s_lGui := lWhoo .or. lFwh .or. lC4W .or. lMinigui .or. lGtWvt .or. lHwGui .or. lXwt .or. lWhat32 .or. lxHGtk .or. lGtWvw .or. lMWvw
 
-   lRddAds   := "RddAds"   $ cRdd
+   lRddAds   := "RDDADS"   $ cRdd
    lMediator := "Mediator" $ cRdd
    lApollo   := "Apollo"   $ cRdd
   
@@ -3002,9 +3002,9 @@ Endif // Create and compile
       ELSEIF lMiniGui
          FWrite( s_nMakeFileHandle, "LIBFILES = minigui.lib " + IIF( ! s_lMt, cDefaultLibs, cDefaultLibsMt ) + CRLF )
       ELSEIF lWhoo
-         FWrite( s_nMakeFileHandle, "LIBFILES = whoo.lib what32.lib " + IIF( ! s_lMt, cDefaultLibs, cDefaultLibsMt ) + CRLF )
+         FWrite( s_nMakeFileHandle, "LIBFILES = whoo.lib hbwhat32.lib " + IIF( ! s_lMt, cDefaultLibs, cDefaultLibsMt ) + CRLF )
       ELSEIF lWhat32
-         FWrite( s_nMakeFileHandle, "LIBFILES = what32.lib " + IIF( ! s_lMt, cDefaultLibs, cDefaultLibsMt ) + CRLF )
+         FWrite( s_nMakeFileHandle, "LIBFILES = hbwhat32.lib " + IIF( ! s_lMt, cDefaultLibs, cDefaultLibsMt ) + CRLF )
       ELSEIF lHwGui
          FWrite( s_nMakeFileHandle, "LIBFILES = hwgui.lib procmisc.lib hwg_qhtm.lib " + IIF( ! s_lMt, cDefaultLibs, cDefaultLibsMt ) + CRLF )
       ELSEIF lC4W
@@ -5513,27 +5513,27 @@ LOCAL aLang := Array( 67 )
       aLang[37] := "compile module only /m" 
       aLang[38] := "User Defines " 
       aLang[39] := "User include Path" 
-      aLang[40] := "Use External Libs" 
+      aLang[40] := "Use external libs" 
       aLang[41] := "<Spacebar>-Select <Enter>-Continue process <F5> Sel/Unsel All" 
       aLang[42] := "Warning level /w" 
       aLang[43] := "Numbers of source files per line on makefile" 
       aLang[44] := "Use Multi Thread Library" 
       aLang[45] := "Executable file name" 
-      aLang[46] := "Warning Level /w" 
+      aLang[46] := "Warning level /w" 
       aLang[47] := "<Tab>-Next <Sh-Tab>-Prev <Enter>-Sel <"+chr(24)+chr(25)+">-Change Sel <Spacebar>-Open Box"
       /* Messages Start Here */
-      aLang[48] := "3rd Party Rdd"
-      aLang[49] := "What OS you Use"
-      aLang[50] := "What C compiler  you has"
+      aLang[48] := "3rd Party RDD"
+      aLang[49] := "What OS you use"
+      aLang[50] := "What C compiler you have"
       aLang[51] := "This app use Graphical libraries"
-      aLang[52] := "Do you use 3rd Party Rdd"
+      aLang[52] := "Do you use 3rd Party RDD"
       aLang[53] := "Compress this app"
       aLang[54] := "Compress the app after Linked (use upx ?)" 
       aLang[55] := "Your app will be linked to user harbour.dll"
-      aLang[56] := "Where the .obj/.o files will be generates"
-      aLang[57] := "Inform executable name (without .exe extention)" 
+      aLang[56] := "Where the .obj/.o files will be generated"
+      aLang[57] := "Specify executable name (without .exe extension)" 
       /* More messages for LIB build */
-      aLang[58] := "Inform the lib name (without extension)"
+      aLang[58] := "Specify the lib name (without extension)"
       /* More Harbour options for LIB build */
       aLang[59] := "Lib name:" 
       aLang[60] := "Obj dir files:" 
