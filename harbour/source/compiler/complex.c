@@ -801,15 +801,15 @@ int hb_complex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
                         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E',
                                          HB_COMP_ERR_ENDIF, NULL, NULL );
                      hb_pp_tokenGet( pLex->pPP );
-                     pLex->iState = END;
-                     return END;
+                     pLex->iState = ENDSEQ;
+                     return ENDSEQ;
                   }
                   else if( HB_PP_TOKEN_ISEOC( pToken->pNext ) ||
                            HB_PP_TOKEN_TYPE( pToken->pNext->type ) ==
                                                          HB_PP_TOKEN_KEYWORD )
                   {
                      pLex->iState = END;
-                     return ENDSEQ;
+                     return END;
                   }
                   if( !HB_SUPPORT_HARBOUR )
                   {
