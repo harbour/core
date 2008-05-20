@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-20 20:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * added HB_USR_LIBS set during build time to list of predefined libs
+      in hb* scripts
+
+  * harbour/source/rtl/hbgtcore.c
+    ! fixed horizontal scrolling. Warning CTIII does not support
+      horizontal scrolling and ignores 6-th scroll parameters.
+      This behavior is intentionally not replicated in CTWIN
+      though it can be easy added if someone will need it but
+      covered with some macro to not change default builds.
+      It will be enough to overload SCROLL() method and set
+      iCol = 0 before calling SUPER_SCROLL().
+
 2008-05-20 17:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbvpdf/hbvpdft.prg
      ! Fixed include filename to be in lower case.

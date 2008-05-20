@@ -1067,11 +1067,11 @@ static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
    iColSize = iRight - iLeft;
    iLength = iColSize + 1;
    iColOld = iColNew = iLeft;
-   if ( iCols >= 0 )
+   if( iCols >= 0 )
    {
       iColOld += iCols;
       iColSize -= iCols;
-      iColClear = iColOld + iColSize + 1;
+      iColClear = iColOld + iColSize - 1;
       iClrs = iCols;
    }
    else
@@ -1103,7 +1103,8 @@ static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
          else
             iRowPos = iBottom--;
 
-         if( pBuffer && iRowPos + iRows >= iTop && iRowPos + iRows <= iBottom )
+         if( pBuffer && ( iRows == 0 ||
+             ( iRowPos + iRows >= iTop && iRowPos + iRows <= iBottom ) ) )
          {
             HB_GTSELF_SAVE( pGT, iRowPos + iRows, iColOld, iRowPos + iRows, iColOld + iColSize, pBuffer );
             HB_GTSELF_REST( pGT, iRowPos, iColNew, iRowPos, iColNew + iColSize, pBuffer );
@@ -1140,11 +1141,11 @@ static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
       iLength = iColSize + 1;
       iColOld = iColNew = iLeft;
 
-      if ( iCols >= 0 )
+      if( iCols >= 0 )
       {
          iColOld += iCols;
          iColSize -= iCols;
-         iColClear = iColOld + iColSize + 1;
+         iColClear = iColOld + iColSize - 1;
          iClrs = iCols;
       }
       else
@@ -1170,7 +1171,8 @@ static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
             else
                iRowPos = iBottom--;
 
-            if( fMove && iRowPos + iRows >= iTop && iRowPos + iRows <= iBottom )
+            if( fMove && ( iRows == 0 ||
+                ( iRowPos + iRows >= iTop && iRowPos + iRows <= iBottom ) ) )
             {
                lIndex = ( long ) iRowPos * iWidth + iColNew;
                if( lOffset < 0 )
@@ -1422,7 +1424,7 @@ static BOOL hb_gt_def_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP
 
 static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   switch ( iType )
+   switch( iType )
    {
       case HB_GTI_ISGRAPHIC:
       case HB_GTI_FULLSCREEN:
@@ -1882,7 +1884,7 @@ static int hb_gt_def_SetFlag( PHB_GT pGT, int iType, int iNewValue )
 {
    int iPrevValue = 0;
 
-   switch ( iType )
+   switch( iType )
    {
       case HB_GTI_COMPATBUFFER:
          iPrevValue = pGT->fVgaCell;
