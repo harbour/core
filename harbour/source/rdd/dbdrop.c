@@ -73,12 +73,9 @@ HB_FUNC( DBDROP )
 
    pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
 
-   if( !pRDDNode )
-   {
+   if( pRDDNode )
+      hb_retl( SELF_DROP( pRDDNode, hb_param( 1, HB_IT_STRING ),
+                                    hb_param( 2, HB_IT_STRING ) ) == SUCCESS );
+   else
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "DBDROP" );
-      return;
-   }
-
-   hb_retl( SELF_DROP( pRDDNode, hb_param( 1, HB_IT_STRING ),
-                                 hb_param( 2, HB_IT_STRING ) ) == SUCCESS );
 }

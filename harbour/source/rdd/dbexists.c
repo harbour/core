@@ -73,12 +73,9 @@ HB_FUNC( DBEXISTS )
 
    pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDD */
 
-   if( !pRDDNode )
-   {
+   if( pRDDNode )
+      hb_retl( SELF_EXISTS( pRDDNode, hb_param( 1, HB_IT_STRING ),
+                                      hb_param( 2, HB_IT_STRING ) ) == SUCCESS );
+   else
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "DBEXISTS" );
-      return;
-   }
-
-   hb_retl( SELF_EXISTS( pRDDNode, hb_param( 1, HB_IT_STRING ),
-                                   hb_param( 2, HB_IT_STRING ) ) == SUCCESS );
 }

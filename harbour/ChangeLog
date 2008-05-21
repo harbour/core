@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-21 19:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rdd/dbdrop.c
+   * source/rdd/dbexists.c
+     % Minor opt in source layout.
+
+   * ChangeLog
+     ! Typos.
+
 2008-05-21 17:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * harbour.spec
      + Added HU translation (cpwin).
@@ -49,7 +57,7 @@
        Only for non-GNU B32/VC/VCCE builds! For non-GNU GCC 
        it's probably LDFLAGS, for GNU it's probably LDLIBS.
        NOTE: Use full path for the libs.
-       Such dependency is anything by good though (the core 
+       Such dependency is anything but good though (the core 
        build depends on a contrib lib, the contrib lib depends 
        on the core build), so consider this a temporary solution.
        Moving HBDOC to the contrib area is one possibility, 
@@ -159,7 +167,7 @@
        any old ADS_REQUIRE_VERSION settings, if - and only 
        if - there is a need to force an older version, 
        ADS_LIB_VERSION=??? should be used, where ??? is 
-       810 for ACE 8.11 (for example).
+       810 for ACE 8.10 (for example).
 
 2008-05-21 11:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/tbrowse.prg
