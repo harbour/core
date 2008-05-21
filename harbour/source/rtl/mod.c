@@ -79,7 +79,7 @@ HB_FUNC( MOD )
       {
          double dResult = fmod( dNumber, dBase );
 
-         if ( dResult && ( dNumber > 0 ? dBase < 0 : dBase > 0 ) )
+         if( dResult && ( dNumber > 0 ? dBase < 0 : dBase > 0 ) )
             dResult += dBase;
          hb_retnd( dResult );
       }

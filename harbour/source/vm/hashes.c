@@ -319,7 +319,7 @@ HB_EXPORT PHB_ITEM hb_hashNew( PHB_ITEM pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_hashNew(%p)", pItem));
 
-   if ( pItem == NULL )
+   if( pItem == NULL )
       pItem = hb_itemNew( NULL );
    else if( HB_IS_COMPLEX( pItem ) )
       hb_itemClear( pItem );

@@ -591,7 +591,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       snprintf( buffer, sizeof( buffer ), "Total memory allocated: %li bytes (%li block(s))", s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
       hb_conOutErr( buffer, 0 );
 
-      if ( hLog )
+      if( hLog )
       {
          char szTime[ 9 ];
          int iYear, iMonth, iDay;
@@ -610,7 +610,8 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
          snprintf( buffer, sizeof( buffer ), "WARNING! Memory allocated but not released: %li bytes (%li block(s))", s_lMemoryConsumed, s_lMemoryBlocks );
          hb_conOutErr( buffer, 0 );
 
-         if ( hLog ) fprintf( hLog, "%s\n", buffer );
+         if( hLog )
+            fprintf( hLog, "%s\n", buffer );
       }
 
       hb_conOutErr( hb_conNewLine(), 0 );

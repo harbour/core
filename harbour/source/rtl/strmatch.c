@@ -70,18 +70,18 @@ HB_EXPORT BOOL hb_strMatchWild( const char *szString, const char *szPattern )
    i = j = ulAny = 0;
    ulLen = strlen( szString );
    ulSize = strlen( szPattern );
-   while ( i < ulSize )
+   while( i < ulSize )
    {
-      if ( szPattern[i] == '*' )
+      if( szPattern[i] == '*' )
       {
          fAny = TRUE;
          i++;
       }
-      else if ( j < ulLen && ( szPattern[i] == '?' || szPattern[i] == szString[j] ) )
+      else if( j < ulLen && ( szPattern[i] == '?' || szPattern[i] == szString[j] ) )
       {
-         if ( fAny )
+         if( fAny )
          {
-            if ( ulAny >= ulBufSize )
+            if( ulAny >= ulBufSize )
             {
                if( ( ulBufSize <<= 1 ) == ( HB_MAX_WILDPATTERN << 1 ) )
                {
@@ -104,11 +104,11 @@ HB_EXPORT BOOL hb_strMatchWild( const char *szString, const char *szPattern )
          j++;
          i++;
       }
-      else if ( fAny && j < ulLen )
+      else if( fAny && j < ulLen )
       {
          j++;
       }
-      else if ( ulAny > 0 )
+      else if( ulAny > 0 )
       {
          ulAny--;
          i = ulAnyPosP[ulAny];
@@ -140,19 +140,19 @@ HB_EXPORT BOOL hb_strMatchWildExact( const char *szString, const char *szPattern
    i = j = ulAny = 0;
    ulLen = strlen( szString );
    ulSize = strlen( szPattern );
-   while ( i < ulSize || ( j < ulLen && !fAny ) )
+   while( i < ulSize || ( j < ulLen && !fAny ) )
    {
-      if ( i < ulSize && szPattern[i] == '*' )
+      if( i < ulSize && szPattern[i] == '*' )
       {
          fAny = TRUE;
          i++;
       }
-      else if ( j < ulLen && i < ulSize &&
-                ( szPattern[i] == '?' || szPattern[i] == szString[j] ) )
+      else if( j < ulLen && i < ulSize &&
+               ( szPattern[i] == '?' || szPattern[i] == szString[j] ) )
       {
-         if ( fAny )
+         if( fAny )
          {
-            if ( ulAny >= ulBufSize )
+            if( ulAny >= ulBufSize )
             {
                if( ( ulBufSize <<= 1 ) == ( HB_MAX_WILDPATTERN << 1 ) )
                {
@@ -175,11 +175,11 @@ HB_EXPORT BOOL hb_strMatchWildExact( const char *szString, const char *szPattern
          j++;
          i++;
       }
-      else if ( fAny && j < ulLen )
+      else if( fAny && j < ulLen )
       {
          j++;
       }
-      else if ( ulAny > 0 )
+      else if( ulAny > 0 )
       {
          ulAny--;
          i = ulAnyPosP[ulAny];
@@ -213,18 +213,18 @@ HB_EXPORT BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPat
    ulSize = strlen( szPattern );
    while ( i < ulSize || ( j < ulLen && !fAny ) )
    {
-      if ( i < ulSize && szPattern[i] == '*' )
+      if( i < ulSize && szPattern[i] == '*' )
       {
          fAny = TRUE;
          i++;
       }
-      else if ( j < ulLen && i < ulSize &&
-                ( szPattern[i] == '?' ||
-                  hb_charUpper( szPattern[i] ) == hb_charUpper( szString[j] ) ) )
+      else if( j < ulLen && i < ulSize &&
+               ( szPattern[i] == '?' ||
+                 hb_charUpper( szPattern[i] ) == hb_charUpper( szString[j] ) ) )
       {
-         if ( fAny )
+         if( fAny )
          {
-            if ( ulAny >= ulBufSize )
+            if( ulAny >= ulBufSize )
             {
                if( ( ulBufSize <<= 1 ) == ( HB_MAX_WILDPATTERN << 1 ) )
                {
@@ -247,11 +247,11 @@ HB_EXPORT BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPat
          j++;
          i++;
       }
-      else if ( fAny && j < ulLen )
+      else if( fAny && j < ulLen )
       {
          j++;
       }
-      else if ( ulAny > 0 )
+      else if( ulAny > 0 )
       {
          ulAny--;
          i = ulAnyPosP[ulAny];

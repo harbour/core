@@ -2699,7 +2699,7 @@ static void hb_vmModulus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR p
    {
       HB_LONG lDivisor = HB_ITEM_GET_NUMINTRAW( pItem2 );
 
-      if ( lDivisor == 0 )
+      if( lDivisor == 0 )
       {
          PHB_ITEM pSubst = hb_errRT_BASE_Subst( EG_ZERODIV, 1341, NULL, "%", 2, pItem1, pItem2 );
 

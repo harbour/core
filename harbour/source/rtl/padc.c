@@ -88,12 +88,12 @@ HB_FUNC( PADC )
                            ( ULONG ) lLen - ulSize - ulPad );
 
                hb_retclen_buffer( szResult, ( ULONG ) lLen );
-               if ( bFreeReq )
+               if( bFreeReq )
                   hb_xfree( szText );
             }
             else
             {
-               if ( bFreeReq )
+               if( bFreeReq )
                   hb_retclen_buffer( szText, ( ULONG ) lLen );
                else
                   hb_retclen( szText, lLen );

@@ -616,7 +616,7 @@ HB_EXPORT FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
                   dup2( hNullHandle, 2 );
                }
                iMaxFD = sysconf( _SC_OPEN_MAX );
-               if ( iMaxFD < 3 )
+               if( iMaxFD < 3 )
                   iMaxFD = 1024;
                for( hNullHandle = 3; hNullHandle < iMaxFD; ++hNullHandle )
                   close(hNullHandle);
@@ -958,7 +958,7 @@ HB_EXPORT USHORT hb_fsWrite( FHANDLE hFileHandle, const BYTE * pBuff, USHORT uiC
          DWORD dwWritten = 0;
          BOOL fResult;
 
-         if ( uiCount )
+         if( uiCount )
          {
              fResult = WriteFile( DosToWinHandle(hFileHandle), pBuff, uiCount, &dwWritten, NULL );
          }
@@ -1567,7 +1567,7 @@ HB_EXPORT ULONG hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
          /* FIXME: it should work if DosSetFilePtr is lseek compatible
             but maybe OS2 has DosGetFilePtr too, if not then remove this
             comment, Druzus */
-         if ( DosSetFilePtr( hFileHandle, 0, SEEK_CUR, &ulPos ) != 0 )
+         if( DosSetFilePtr( hFileHandle, 0, SEEK_CUR, &ulPos ) != 0 )
          {
             ulPos = 0;
          }
@@ -1586,7 +1586,7 @@ HB_EXPORT ULONG hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
          hb_fsSetIOError( (DWORD) ulPos != INVALID_SET_FILE_POINTER, 0 );
       }
 
-      if ( (DWORD) ulPos == INVALID_SET_FILE_POINTER )
+      if( (DWORD) ulPos == INVALID_SET_FILE_POINTER )
       {
          ulPos = (DWORD) SetFilePointer( DosToWinHandle(hFileHandle), 0, NULL, SEEK_CUR );
       }
@@ -1602,10 +1602,10 @@ HB_EXPORT ULONG hb_fsSeek( FHANDLE hFileHandle, LONG lOffset, USHORT uiFlags )
          ulPos = lseek( hFileHandle, lOffset, Flags );
          hb_fsSetIOError( ulPos != (ULONG) -1, 0 );
       }
-      if ( ulPos == (ULONG) -1 )
+      if( ulPos == (ULONG) -1 )
       {
          ulPos = lseek( hFileHandle, 0L, SEEK_CUR );
-         if ( ulPos == (ULONG) -1 )
+         if( ulPos == (ULONG) -1 )
          {
             ulPos = 0;
          }
@@ -1647,7 +1647,7 @@ HB_EXPORT HB_FOFFSET hb_fsSeekLarge( FHANDLE hFileHandle, HB_FOFFSET llOffset, U
          hb_fsSetIOError( llPos != ( HB_FOFFSET ) INVALID_SET_FILE_POINTER, 0 );
       }
 
-      if ( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
+      if( llPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
       {
          ulOffsetHigh = 0;
          ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
@@ -1670,7 +1670,7 @@ HB_EXPORT HB_FOFFSET hb_fsSeekLarge( FHANDLE hFileHandle, HB_FOFFSET llOffset, U
          hb_fsSetIOError( llPos != (HB_FOFFSET) -1, 0 );
       }
 
-      if ( llPos == (HB_FOFFSET) -1 )
+      if( llPos == (HB_FOFFSET) -1 )
       {
          llPos = lseek64( hFileHandle, 0L, SEEK_CUR );
       }
@@ -2435,9 +2435,10 @@ HB_EXPORT BOOL hb_fsDisableWaitLocks( int iSet )
 {
    BOOL fRetVal = s_fUseWaitLocks;
 
-   if ( iSet >= 0 )
+   if( iSet >= 0 )
    {
       s_fUseWaitLocks = ( iSet == 0 );
    }
+
    return fRetVal;
 }

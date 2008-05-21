@@ -2521,57 +2521,57 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
          pMessage = s___msgDestructor.pDynSym;
       else if( uiType == HB_OO_MSG_ONERROR )
          pMessage = s___msgOnError.pDynSym;
-      else if (strcmp("+", szMessage) == 0)
+      else if( strcmp( "+", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_PLUS )->pDynSym;
-      else if (strcmp("-", szMessage) == 0)
+      else if( strcmp( "-", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_MINUS )->pDynSym;
-      else if (strcmp("*", szMessage) == 0)
+      else if( strcmp( "*", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_MULT )->pDynSym;
-      else if (strcmp("/", szMessage) == 0)
+      else if( strcmp( "/", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_DIVIDE )->pDynSym;
-      else if (strcmp("%", szMessage) == 0)
+      else if( strcmp( "%", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_MOD )->pDynSym;
-      else if (strcmp("^", szMessage) == 0)
+      else if( strcmp( "^", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_POWER )->pDynSym;
-      else if (strcmp("**", szMessage) == 0)
+      else if( strcmp( "**", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_POWER )->pDynSym;
-      else if (strcmp("++", szMessage) == 0)
+      else if( strcmp( "++", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_INC )->pDynSym;
-      else if (strcmp("--", szMessage) == 0)
+      else if( strcmp( "--", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_DEC )->pDynSym;
-      else if (strcmp("==", szMessage) == 0)
+      else if( strcmp( "==", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_EXACTEQUAL )->pDynSym;
-      else if (strcmp("=", szMessage) == 0)
+      else if( strcmp( "=", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_EQUAL )->pDynSym;
-      else if (strcmp("!=", szMessage) == 0)
+      else if( strcmp( "!=", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_NOTEQUAL )->pDynSym;
-      else if (strcmp("<>", szMessage) == 0)
+      else if( strcmp( "<>", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_NOTEQUAL )->pDynSym;
-      else if (strcmp("#", szMessage) == 0)
+      else if( strcmp( "#", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_NOTEQUAL )->pDynSym;
-      else if (strcmp("<", szMessage) == 0)
+      else if( strcmp( "<", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_LESS )->pDynSym;
-      else if (strcmp("<=", szMessage) == 0)
+      else if( strcmp( "<=", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_LESSEQUAL )->pDynSym;
-      else if (strcmp(">", szMessage) == 0)
+      else if( strcmp( ">", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_GREATER )->pDynSym;
-      else if (strcmp(">=", szMessage) == 0)
+      else if( strcmp( ">=", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_GREATEREQUAL )->pDynSym;
-      else if (strcmp(":=", szMessage) == 0)
+      else if( strcmp( ":=", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_ASSIGN )->pDynSym;
-      else if (strcmp("$", szMessage) == 0)
+      else if( strcmp( "$", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_INSTRING )->pDynSym;
-      else if (strcmp("$$", szMessage) == 0)
+      else if( strcmp( "$$", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_INCLUDE )->pDynSym;
-      else if (strcmp("!", szMessage) == 0)
+      else if( strcmp( "!", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_NOT )->pDynSym;
-      else if (hb_stricmp(".NOT.", szMessage) == 0)
+      else if( hb_stricmp( ".NOT.", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_NOT )->pDynSym;
-      else if (hb_stricmp(".AND.", szMessage) == 0)
+      else if( hb_stricmp( ".AND.", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_AND )->pDynSym;
-      else if (hb_stricmp(".OR.", szMessage) == 0)
+      else if( hb_stricmp( ".OR.", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_OR )->pDynSym;
-      else if( strcmp("[]", szMessage) == 0)
+      else if( strcmp( "[]", szMessage ) == 0 )
          pMessage = ( s_opSymbols + HB_OO_OP_ARRAYINDEX )->pDynSym;
       else
          pMessage = hb_dynsymGet( szMessage );

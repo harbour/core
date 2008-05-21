@@ -68,15 +68,18 @@ HB_FUNC( HB_AT )
       ULONG ulEnd = ISNUM( 4 ) ? ( ULONG ) hb_parnl( 4 ) : ulTextLength;
       ULONG ulPos;
 
-      if ( ulStart > ulTextLength || ulEnd < ulStart ) hb_retnl( 0 );
+      if( ulStart > ulTextLength || ulEnd < ulStart )
+         hb_retnl( 0 );
       else
       {
-         if ( ulEnd > ulTextLength ) ulEnd = ulTextLength;
+         if( ulEnd > ulTextLength )
+            ulEnd = ulTextLength;
 
          ulPos = hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
                            hb_itemGetCPtr( pText ) + ulStart - 1, ulEnd - ulStart + 1 );
 
-         if ( ulPos > 0) ulPos += ( ulStart - 1 );
+         if( ulPos > 0)
+            ulPos += ( ulStart - 1 );
 
          hb_retnl( ulPos );
       }

@@ -56,9 +56,9 @@
 
 HB_FUNC( HB_SETDISPCP )
 {
-   if ( ISCHAR(1) )
+   if( ISCHAR( 1 ) )
    {
-      if ( hb_pcount() == 2 && ISLOG(2) )
+      if( hb_pcount() == 2 && ISLOG( 2 ) )
          hb_gtSetDispCP( hb_parc( 1 ), NULL, hb_parl( 2 ) );
       else
          hb_gtSetDispCP( hb_parc( 1 ), hb_parc( 2 ), hb_parl( 3 ) );
@@ -69,19 +69,17 @@ HB_FUNC( HB_SETDISPCP )
 
 HB_FUNC( HB_SETKEYCP )
 {
-   if ( ISCHAR(1) )
-   {
+   if( ISCHAR( 1 ) )
       hb_gtSetKeyCP( hb_parc( 1 ), hb_parc( 2 ) );
-   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETKEYCP", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_SETTERMCP )
 {
-   if ( ISCHAR(1) )
+   if( ISCHAR( 1 ) )
    {
-      if ( hb_pcount() == 2 && ISLOG(2) )
+      if( hb_pcount() == 2 && ISLOG( 2 ) )
       {
          hb_gtSetDispCP( hb_parc( 1 ), NULL, hb_parl( 2 ) );
          hb_gtSetKeyCP( hb_parc( 1 ), NULL );
@@ -120,38 +118,29 @@ HB_FUNC( HB_GTVERSION )
 
 HB_FUNC( HB_GTALERT )
 {
-   int iClrNorm = ISCHAR( 3 ) ? hb_gtColorToN( hb_parc( 3 ) ) : hb_parni( 3 ),
-       iClrHigh = ISCHAR( 4 ) ? hb_gtColorToN( hb_parc( 4 ) ) : hb_parni( 4 );
-
-   hb_retni( hb_gtAlert( hb_param( 1, HB_IT_ANY ), hb_param( 2, HB_IT_ANY ),
-                         iClrNorm, iClrHigh, hb_parnd( 5 ) ) );
+   hb_retni( hb_gtAlert( hb_param( 1, HB_IT_ANY ), 
+                         hb_param( 2, HB_IT_ANY ),
+                         ISCHAR( 3 ) ? hb_gtColorToN( hb_parc( 3 ) ) : hb_parni( 3 ) /* iClrNorm */,
+                         ISCHAR( 4 ) ? hb_gtColorToN( hb_parc( 4 ) ) : hb_parni( 4 ) /* iClrHigh */,
+                         hb_parnd( 5 ) ) );
 }
 
 HB_FUNC( HB_GFXPRIMITIVE )
 {
-   PHB_ITEM pType   = hb_param( 1, HB_IT_NUMERIC );
-   PHB_ITEM pTop    = hb_param( 2, HB_IT_NUMERIC );
-   PHB_ITEM pLeft   = hb_param( 3, HB_IT_NUMERIC );
-   PHB_ITEM pBottom = hb_param( 4, HB_IT_NUMERIC );
-   PHB_ITEM pRight  = hb_param( 5, HB_IT_NUMERIC );
-   PHB_ITEM pColor  = hb_param( 6, HB_IT_NUMERIC );
-
-   hb_retni( hb_gtGfxPrimitive( hb_itemGetNI(pType),
-                                hb_itemGetNI(pTop), hb_itemGetNI(pLeft),
-                                hb_itemGetNI(pBottom), hb_itemGetNI(pRight),
-                                hb_itemGetNI(pColor) ) );
+   hb_retni( hb_gtGfxPrimitive( hb_parni( 1 ) /* nType   */,
+                                hb_parni( 2 ) /* nTop    */,
+                                hb_parni( 3 ) /* nLeft   */,
+                                hb_parni( 4 ) /* nBottom */,
+                                hb_parni( 5 ) /* nRight  */,
+                                hb_parni( 6 ) /* nColor  */ ) );
 }
 
 HB_FUNC( HB_GFXTEXT )
 {
-   PHB_ITEM pTop    = hb_param( 1, HB_IT_NUMERIC );
-   PHB_ITEM pLeft   = hb_param( 2, HB_IT_NUMERIC );
-   char *cText      = hb_parc(3);
-   PHB_ITEM pColor  = hb_param( 4, HB_IT_NUMERIC );
-   PHB_ITEM pSize   = hb_param( 5, HB_IT_NUMERIC );
-   PHB_ITEM pWidth  = hb_param( 6, HB_IT_NUMERIC );
-
-   hb_gtGfxText( hb_itemGetNI(pTop),
-                 hb_itemGetNI(pLeft), cText, hb_itemGetNI(pColor),
-                 hb_itemGetNI(pSize), hb_itemGetNI(pWidth) );
+   hb_gtGfxText( hb_parni( 1 ) /* nTop   */,
+                 hb_parni( 2 ) /* nLeft  */,
+                 hb_parc( 3 )  /* cText  */,
+                 hb_parni( 4 ) /* nColor */,
+                 hb_parni( 5 ) /* nSize  */, 
+                 hb_parni( 6 ) /* nWidth */ );
 }

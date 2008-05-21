@@ -139,7 +139,7 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
                break;
 
             case 'M':
-               switch ( digit_count )
+               switch( digit_count )
                {
                   case 4:
                      if( ! used_m && format_count < size )

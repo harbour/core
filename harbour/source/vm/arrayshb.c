@@ -224,15 +224,15 @@ HB_FUNC( AFILL )
          LONG lStart = hb_parnl( 3 ), lCount = hb_parnl( 4 );
 
          /* Explicy lCount of 0 - Nothing to do! */
-         if ( ISNUM(4) && lCount == 0 )
+         if( ISNUM( 4 ) && lCount == 0 )
             return;
          /* Clipper aborts if negative start. */
-         else if ( lStart < 0 )
+         else if( lStart < 0 )
             return;
          /* Clipper allows Start to be of wrong type, or 0, and corrects it to 1. */
-         else if ( lStart == 0 )
+         else if( lStart == 0 )
             lStart = 1;
-         if ( lCount < 0 )
+         if( lCount < 0 )
          {
             /* Clipper allows the Count to be negative, if start is 1, and corrects it to maximum elements. */
             if( lStart == 1 )

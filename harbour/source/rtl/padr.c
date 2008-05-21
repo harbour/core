@@ -85,12 +85,12 @@ HB_FUNC( PADR )
                hb_xmemset( szResult + ulSize, cPad, ( ULONG ) lLen - ulSize );
 
                hb_retclen_buffer( szResult, ( ULONG ) lLen );
-               if ( bFreeReq )
+               if( bFreeReq )
                   hb_xfree( szText );
             }
             else
             {
-               if ( bFreeReq )
+               if( bFreeReq )
                   hb_retclen_buffer( szText, ( ULONG ) lLen );
                else
                   hb_retclen( szText, lLen );

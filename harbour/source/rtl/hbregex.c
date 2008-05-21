@@ -273,7 +273,7 @@ static BOOL hb_regex( int iRequest )
    iMatches = hb_regexec( pRegEx, pszString, ulLen, iMaxMatch, aMatches );
    if( iMatches > 0 )
    {
-      switch ( iRequest )
+      switch( iRequest )
       {
          case 0:
             pRetArray = hb_itemArrayNew( iMatches );
@@ -386,7 +386,7 @@ static BOOL hb_regex( int iRequest )
                      if( !fOnlyMatch )
                      {
                         hb_arrayNew( pMatch, 3 );
-                        if ( iEO != -1 )
+                        if( iEO != -1 )
                         {
                            /* matched string */
                            hb_arraySetCL( pMatch, 1, pszString + iSO, iEO - iSO );

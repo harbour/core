@@ -74,7 +74,7 @@ static int hb_errnoToDosError( int ErrCode )
    /* These C compilers use DOS error codes in errno */
    iResult = ErrCode;
 #else
-   switch ( ErrCode )
+   switch( ErrCode )
    {
 #if defined( ENMFILE )
       case ENMFILE:
@@ -152,7 +152,7 @@ static int hb_WinToDosError( ULONG ulError )
 {
    int iResult;
 
-   switch ( ulError )
+   switch( ulError )
    {
       case ERROR_ALREADY_EXISTS:
          iResult = 5;
@@ -227,7 +227,7 @@ HB_EXPORT void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
    /* TODO: implement it */
    HB_SYMBOL_UNUSED( uiOperation );
 
-   if ( fResult )
+   if( fResult )
    {
       s_uiOsErrorLast = s_uiErrorLast = 0;
    }
@@ -242,7 +242,7 @@ HB_EXPORT void  hb_fsSetIOError( BOOL fResult, USHORT uiOperation )
          extern void __cdecl _dosmaperr( unsigned long oserrno );
          _dosmaperr( GetLastError() );
       #endif
-      if ( _doserrno != 0 )
+      if( _doserrno != 0 )
       {
          s_uiOsErrorLast = s_uiErrorLast = _doserrno;
       }

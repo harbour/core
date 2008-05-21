@@ -67,11 +67,11 @@ HB_FUNC( HB_HEXTONUM )
       {
          int iDigit;
          char c = *szHex++;
-         if ( c >= '0' && c <= '9' )
+         if( c >= '0' && c <= '9' )
             iDigit = c - '0';
-         else if ( c >= 'A' && c <= 'F' )
+         else if( c >= 'A' && c <= 'F' )
             iDigit = c - ( 'A' - 10 );
-         else if ( c >= 'a' && c <= 'f' )
+         else if( c >= 'a' && c <= 'f' )
             iDigit = c - ( 'a' - 10 );
          else
          {

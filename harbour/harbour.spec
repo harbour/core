@@ -92,6 +92,7 @@ Summary:        Free software Clipper compatible compiler
 Summary(pl):    Darmowy kompilator kompatybilny z jЙzykiem Clipper.
 Summary(pt_BR): Um compilador Clipper compativel Gratis
 Summary(ru):    Свободный компилятор, совместимый с языком Clipper.
+Summary(hu):    Szabad szoftver Clipper kompatibilis fordМtС
 Name:           %{name}
 Version:        %{version}
 Release:        %{releasen}%{platform}
@@ -140,6 +141,7 @@ uma maquina virtual e documentaГЦo.
 Summary:        Shared runtime libaries for %{dname} compiler
 Summary(pl):    Dzielone bilioteki dla kompilatora %{dname}
 Summary(ru):    Совместно используемые библиотеки для компилятора %{dname}
+Summary(hu):    Megosztott kЖnyvtАrak a(z) %{dname} fordМtСhoz
 Group:          Development/Languages
 Provides:       lib%{name}.so lib%{name}mt.so
 
@@ -163,6 +165,10 @@ linkados dinamicamente.
 Этот пакет содержит совместно используемые библиотеки %{dname},
 необходимые для работы динамически скомпонованных программ.
 
+%description -l hu lib
+A(z) %{dname} egy Clipper kompatibilis fordМtСprogram.
+Ez a csomag biztosМtja a dinamikusan szerkesztett %{dname} 
+programokhoz szЭksИges megosztott (dinamikus) futtatСkЖnyvtАrakat.
 
 ######################################################################
 ## static libs
@@ -172,6 +178,7 @@ linkados dinamicamente.
 Summary:        Static runtime libaries for %{dname} compiler
 Summary(pl):    Statyczne bilioteki dla kompilatora %{dname}
 Summary(ru):    Статические библиотеки для компилятора %{dname}
+Summary(hu):    Statikus kЖnyvtАrak a(z) %{dname} fordМtСhoz
 Group:          Development/Languages
 Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
@@ -195,12 +202,18 @@ dos os programas
 Этот пакет содержит статические библиотеки компилятора %{dname},
 необходимые для статической компоновки программ.
 
+%description -l hu lib
+A(z) %{dname} egy Clipper kompatibilis fordМtСprogram.
+Ez a csomag biztosМtja a statikusan szerkesztett %{dname} 
+programokhoz szЭksИges statikus futtatСkЖnyvtАrakat.
+
 
 %package contrib
 Summary:        Contrib runtime libaries for %{dname} compiler
 Summary(pl):    Bilioteki z drzewa contrib dla kompilatora %{dname}
 Summary(pt_BR): Libs contrib para %{dname}
 Summary(ru):    Библиотеки из дерева contrib для компилятора %{dname}
+Summary(hu):    KiegИszМtУ kЖnyvtАrak a(z) %{dname} fordМtСhoz
 Group:          Development/Languages
 Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 
@@ -221,6 +234,11 @@ dos programas.
 %description -l ru contrib
 %{dname} - компилятор, совместимый с языком CA-Clipper.
 Этот пакет содержит статические библиотеки %{dname} из дерева contrib.
+
+%description -l hu lib
+A(z) %{dname} egy Clipper kompatibilis fordМtСprogram.
+Ez a csomag kiegИszМtУ (contrib) kЖnyvtАrakat biztosМt 
+statikus szerkesztИshez.
 
 
 ######################################################################

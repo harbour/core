@@ -144,7 +144,7 @@ static char * hb_hrbReadId( char * szBody, ULONG ulBodySize, ULONG * ulBodyOffse
 
    do
    {
-      if ( *ulBodyOffset > ulBodySize )
+      if( *ulBodyOffset > ulBodySize )
          return NULL;
    }
    while( szBody[ ( *ulBodyOffset )++ ] );
@@ -238,7 +238,7 @@ static void hb_hrbInit( PHRB_BODY pHrbBody, int argc, char * argv[] )
 
 static void hb_hrbExit( PHRB_BODY pHrbBody )
 {
-   if ( pHrbBody->fExit )
+   if( pHrbBody->fExit )
    {
       ULONG ul;
 
@@ -540,7 +540,7 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
    hb_hrbInit( pHrbBody, argc, argv );
 
    /* May not have a startup symbol, if first symbol was an INIT Symbol (was executed already).*/
-   if ( pHrbBody->lSymStart >= 0 )
+   if( pHrbBody->lSymStart >= 0 )
    {
        hb_vmPushSymbol( &pHrbBody->pSymRead[ pHrbBody->lSymStart ] );
        hb_vmPushNil();

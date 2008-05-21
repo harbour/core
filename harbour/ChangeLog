@@ -8,6 +8,39 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-21 17:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * harbour.spec
+     + Added HU translation (cpwin).
+
+   * source/rtl/gtfunc.c
+     % Minor opt.
+
+   * source/rtl/console.c
+   * source/rtl/fserror.c
+   * source/rtl/strmatch.c
+   * source/rtl/padr.c
+   * source/rtl/hbhex.c
+   * source/rtl/at.c
+   * source/rtl/abs.c
+   * source/rtl/dates.c
+   * source/rtl/padc.c
+   * source/rtl/mod.c
+   * source/rtl/hbrandom.c
+   * source/rtl/filesys.c
+   * source/rtl/padl.c
+   * source/rtl/val.c
+   * source/rtl/hbregex.c
+   * source/vm/runner.c
+   * source/vm/hashes.c
+   * source/vm/itemapi.c
+   * source/vm/hvm.c
+   * source/vm/maindllp.c
+   * source/vm/fm.c
+   * source/vm/arrayshb.c
+   * source/vm/classes.c
+   * source/common/hbtrace.c
+     * Formatting (whitespace only)
+
 2008-05-21 16:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * make_b32.mak
    * make_vc.mak

@@ -80,7 +80,7 @@ HB_FUNC( HB_RANDOM )
    {
       double dX = hb_parnd( 2 );
       double dY = hb_parnd( 1 );
-      if ( dX > dY )
+      if( dX > dY )
       {
          double dZ = dY;
          dY = dX;
@@ -110,7 +110,7 @@ HB_FUNC( HB_RANDOMINT )
    {
       HB_LONG lX = hb_parnint( 1 );
       HB_LONG lY = hb_parnint( 2 );
-      if ( lX > lY )
+      if( lX > lY )
       {
          HB_LONG lZ = lY;
          lY = lX;

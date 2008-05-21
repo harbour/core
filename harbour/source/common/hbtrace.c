@@ -223,7 +223,7 @@ void hb_tr_trace( char * fmt, ... )
          hb_tr_line_ = -1;
       }
 
-      if ( s_flush )
+      if( s_flush )
       {
          fflush( s_fp );
       }

@@ -922,9 +922,9 @@ HB_EXPORT PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, i
 
    if( iDec > 0 )
       return hb_itemPutNDLen( pItem, dNumber, iWidth, iDec );
-   else if ( HB_DBL_LIM_INT( dNumber ) )
+   else if( HB_DBL_LIM_INT( dNumber ) )
       return hb_itemPutNILen( pItem, ( int ) dNumber, iWidth );
-   else if ( HB_DBL_LIM_LONG( dNumber ) )
+   else if( HB_DBL_LIM_LONG( dNumber ) )
 #ifdef HB_LONG_LONG_OFF
       return hb_itemPutNLLen( pItem, ( long ) dNumber, iWidth );
 #else
@@ -1118,11 +1118,11 @@ HB_EXPORT PHB_ITEM hb_itemPutNumType( PHB_ITEM pItem, double dNumber, int iDec, 
    {
       return hb_itemPutNDDec( pItem, dNumber, iDec );
    }
-   else if ( HB_DBL_LIM_INT( dNumber ) )
+   else if( HB_DBL_LIM_INT( dNumber ) )
    {
       return hb_itemPutNI( pItem, ( int ) dNumber );
    }
-   else if ( HB_DBL_LIM_LONG( dNumber ) )
+   else if( HB_DBL_LIM_LONG( dNumber ) )
    {
 #ifdef HB_LONG_LONG_OFF
       return hb_itemPutNL( pItem, ( long ) dNumber );
@@ -2048,11 +2048,11 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
    int iPos, iDot;
    BOOL fNeg;
 
-   if ( iDec < 0 )
+   if( iDec < 0 )
    {
       iDec = 0;
    }
-   if ( iDec > 0 )
+   if( iDec > 0 )
    {
       iPos = iDot = iSize - iDec - 1;
    }
@@ -2116,7 +2116,7 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
          iPrec = 16;
 #endif
 
-         if ( dNumber < 0 )
+         if( dNumber < 0 )
          {
             fNeg = TRUE;
             dFract = modf( -dNumber, &dInt );
@@ -2127,35 +2127,35 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
             dFract = modf( dNumber, &dInt );
          }
 
-         while ( iPos-- > 0 )
+         while( iPos-- > 0 )
          {
             dDig = modf( dInt / doBase + 0.01, &dInt ) * doBase;
             szResult[ iPos ] = '0' + ( char ) ( dDig + 0.01 );
-            if ( szResult[ iPos ] != '0' )
+            if( szResult[ iPos ] != '0' )
                iFirst = iPos;
-            if ( dInt < 1 )
+            if( dInt < 1 )
                break;
          }
 
-         if ( iPos > 0 )
+         if( iPos > 0 )
          {
             memset( szResult, ' ', iPos );
          }
 
-         if ( iDec > 0 && iPos >= 0 )
+         if( iDec > 0 && iPos >= 0 )
          {
-            for ( iPos = iDot + 1; iPos < iSize; iPos++ )
+            for( iPos = iDot + 1; iPos < iSize; iPos++ )
             {
                dFract = modf( dFract * doBase, &dDig );
                szResult[ iPos ] = '0' + ( char ) ( dDig + 0.01 );
-               if ( iFirst < 0 )
+               if( iFirst < 0 )
                {
-                  if ( szResult[ iPos ] != '0' )
+                  if( szResult[ iPos ] != '0' )
                   {
                      iFirst = iPos - 1;
                   }
                }
-               else if ( iPos - iFirst >= iPrec )
+               else if( iPos - iFirst >= iPrec )
                {
                   break;
                }
@@ -2164,11 +2164,11 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
 
          /* now try to round the results and set 0 in places over defined
             precision, the same is done by Clipper */
-         if ( iPos >= 0 )
+         if( iPos >= 0 )
          {
             int iZer, iLast;
 
-            if ( iFirst < 0 )
+            if( iFirst < 0 )
             {
                iZer = 0;
             }
@@ -2180,15 +2180,15 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
             iLast = ( int ) ( dDig + 0.01 );
 
             /* hack for x.xxxx4999999999, f.e. 8.995 ~FL 8.994999999999999218.. */
-            if ( iLast == 4 && iZer < 0 )
+            if( iLast == 4 && iZer < 0 )
             {
-               for ( iPos = -iZer; iPos > 0; --iPos )
+               for( iPos = -iZer; iPos > 0; --iPos )
                {
                   dFract = modf( dFract * doBase, &dDig );
-                  if ( dDig + 0.01 < 9 && ( iPos != 1 || dDig < 2 ) )
+                  if( dDig + 0.01 < 9 && ( iPos != 1 || dDig < 2 ) )
                      break;
                }
-               if ( iPos == 0 )
+               if( iPos == 0 )
                   iLast = 5;
             }
             iLast = iLast >= 5 ? 1 : 0;
@@ -2196,26 +2196,26 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
             iPos = iSize;
             while ( iPos-- > 0 )
             {
-               if ( iDec == 0 || iPos != iDot )
+               if( iDec == 0 || iPos != iDot )
                {
-                  if ( iZer > 0 )
+                  if( iZer > 0 )
                   {
-                     if ( iDec == 0 || iPos <= iDot + 1 )
+                     if( iDec == 0 || iPos <= iDot + 1 )
                      {
                         iLast = szResult[ iPos ] >= '5' ? 1 : 0;
                      }
                      szResult[ iPos ] = '0';
                      --iZer;
                   }
-                  else if ( iLast > 0 )
+                  else if( iLast > 0 )
                   {
-                     if ( szResult[ iPos ] == '9' )
+                     if( szResult[ iPos ] == '9' )
                      {
                         szResult[ iPos ] = '0';
                      }
                      else
                      {
-                        if ( szResult[ iPos ] < '0' ) /* '-' or ' ' */
+                        if( szResult[ iPos ] < '0' ) /* '-' or ' ' */
                         {
                            szResult[ iPos ] = '1';
                            iFirst = iPos;
@@ -2223,7 +2223,7 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
                         else
                         {
                            szResult[ iPos ]++;
-                           if ( iFirst < 0 )
+                           if( iFirst < 0 )
                            {
                               iFirst = iPos;
                            }
@@ -2237,10 +2237,10 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
                   }
                }
             }
-            if ( fNeg && iFirst >= 0 && iPos >= 0 )
+            if( fNeg && iFirst >= 0 && iPos >= 0 )
             {
                iPos = ( iDot > 0 && iFirst >= iDot ) ? iDot - 2 : iFirst - 1;
-               if ( iPos >= 0 )
+               if( iPos >= 0 )
                {
                   szResult[ iPos ] = '-';
                }
@@ -2275,16 +2275,16 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
       {
          szResult[ iPos ] = '0' + ( char ) ( fNeg ? -( lNumber % 10 ) : ( lNumber % 10 ) );
          lNumber /= 10;
-         if ( lNumber == 0 )
+         if( lNumber == 0 )
             break;
       }
-      if ( fNeg && iPos-- > 0 )
+      if( fNeg && iPos-- > 0 )
          szResult[ iPos ] = '-';
 
-      if ( iPos > 0 )
+      if( iPos > 0 )
          memset( szResult, ' ', iPos );
 
-      if ( iDec > 0 && iPos >= 0 )
+      if( iDec > 0 && iPos >= 0 )
          memset( &szResult[iSize - iDec], '0', iDec );
    }
 
@@ -2295,7 +2295,7 @@ HB_EXPORT BOOL hb_itemStrBuf( char *szResult, PHB_ITEM pNumber, int iSize, int i
       memset( szResult, '*', iSize );
       return FALSE;
    }
-   else if ( iDot > 0 )
+   else if( iDot > 0 )
    {
       szResult[ iDot ] = '.';
    }
@@ -2348,7 +2348,7 @@ HB_EXPORT char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 
          if( iDec <= 0 )
             iDec = 0;
-         else if ( pWidth )
+         else if( pWidth )
             iWidth -= ( iDec + 1 );
       }
 
@@ -2499,9 +2499,9 @@ HB_EXPORT char * hb_itemPadConv( PHB_ITEM pItem, ULONG * pulSize, BOOL * bFreeRe
             /* remove leading spaces if any, a little bit redundant but
              * I don't want to complicate the API interface more. Druzus
              */
-            for ( i = 0; buffer[i] == ' '; i++ );
+            for( i = 0; buffer[i] == ' '; i++ );
 
-            if ( i > 0 )
+            if( i > 0 )
             {
                int j = 0;
                * pulSize -= i;
@@ -2509,7 +2509,7 @@ HB_EXPORT char * hb_itemPadConv( PHB_ITEM pItem, ULONG * pulSize, BOOL * bFreeRe
                {
                   buffer[j++] = buffer[i];
                }
-               while ( buffer[i++] );
+               while( buffer[i++] );
             }
             return buffer;
          }
