@@ -361,7 +361,7 @@ static void hb_vmDoInitClip( void )
    {
       hb_vmPushSymbol( pDynSym->pSymbol );
       hb_vmPushNil();
-      hb_vmDo(0);
+      hb_vmDo( 0 );
    }
 }
 

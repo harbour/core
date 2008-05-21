@@ -1026,7 +1026,7 @@ void hb_clsDoInit( void )
          PHB_ITEM pObject;
          hb_vmPushDynSym( pFuncSym );
          hb_vmPushNil();
-         hb_vmDo(0);
+         hb_vmDo( 0 );
          pObject = hb_stackReturnItem();
          if( HB_IS_OBJECT( pObject ) )
             *( s_puiHandles[i] ) = pObject->item.asArray.value->uiClass;

@@ -357,9 +357,7 @@ STATIC FUNCTION _DISP_FHSEP( nRow, nType, cColor, aColData )
           * and the First column should be shown with the
           * same conditions as first visible column.
           * Now I replicated exact CA-Cl*pper behavior but
-          * probably in the future it will be changed.
-          * Now this code should exactly replicate CA-Cl*pper
-          * behavior. [druzus]
+          * probably in the future it will be changed. [druzus]
           */
          IF lFirst
             lFirst := lFirstVisible := .F.
@@ -632,7 +630,7 @@ METHOD readRecord( nRow ) CLASS TBROWSE
          nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, nToMove ) )
          /* TOFIX: add protection against unexpected results
           *        CA-Cl*pper does not fully respect here the returned
-          *        value an current code below replicates what Clipper
+          *        value and current code below replicates what Clipper
           *        seems to do but it means that in network environment
           *        with concurent modifications wrong records can be
           *        shown. [druzus]
@@ -1092,7 +1090,7 @@ METHOD refreshAll() CLASS TBROWSE
    Eval( ::bSkipBlock, 1 - ::nBufferPos )
    ::nBufferPos := 1
    ::lFrames := .T.
-   /* In CA-Cl*pper refreshAll method does not discards
+   /* In CA-Cl*pper refreshAll() method does not discards
     * record buffer here but only set's flag that the record
     * buffer should be reloaded in stabilize method. [druzus]
     */
@@ -1241,7 +1239,7 @@ METHOD goTop() CLASS TBROWSE
    ::setUnstable()
 
    Eval( ::bGoTopBlock )
-   /* In CA-Cl*pper refreshAll method does not discards
+   /* In CA-Cl*pper goTop() method does not discards
     * record buffer here but only set's flag that the record
     * buffer should be reloaded in stabilize method. [druzus]
     */
@@ -1262,7 +1260,7 @@ METHOD goBottom() CLASS TBROWSE
 
    Eval( ::bGoBottomBlock )
    nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, -( ::rowCount - 1 ) ) )
-   /* In CA-Cl*pper refreshAll method does not discards
+   /* In CA-Cl*pper goBottom() method does not discards
     * record buffer here but only set's flag that the record
     * buffer should be reloaded in stabilize method. [druzus]
     */
@@ -1305,8 +1303,9 @@ METHOD doConfigure() CLASS TBROWSE
    LOCAL nFootHeight
    LOCAL lHeadSep, lFootSep
 
-   /* TODO: I do not know yet the exact flags behavior and internal
-    *       conditions so I'll reconfigure all elements. [druzus]
+   /* TODO: I do not know yet the exact flags behavior (::nConfigure)
+    *       and internal conditions so I'll reconfigure all elements.
+    *       [druzus]
     */
 
    ::nConfigure := 0
