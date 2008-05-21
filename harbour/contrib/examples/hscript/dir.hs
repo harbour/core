@@ -6,15 +6,15 @@
 */
 FUNCTION Start()
 
-   LOCAL aDir := directory( "c:\*.*" )
+   LOCAL aDir := Directory( "*.*" )
    LOCAL i
 
-   IF !empty( GetEnv( "SERVER_NAME" ) )
+   IF !Empty( GetEnv( "SERVER_NAME" ) )
       OutStd( "HTTP/1.0 200 OK" + chr(10) )
       OutStd( "CONTENT-TYPE: TEXT/HTML" + chr(10) + chr(10) )
    ENDIF
 
-   aSort( aDir,,, { |x, y| x[1] < y[1] } )
+   ASort( aDir,,, { |x, y| x[1] < y[1] } )
 %>
 <HTML>
 <HEAD><TITLE>dir.hs - HarourScript demo of active context</TITLE></HEAD>
@@ -29,7 +29,7 @@ FUNCTION Start()
 <TD><B>Attributes</B></TD>
 </TR>
 <%
-   FOR i := 1 TO len( aDir )
+   FOR i := 1 TO Len( aDir )
 %>
 <TR>
 <TD><% OutStd( aDir[i,1] ) %></TD>

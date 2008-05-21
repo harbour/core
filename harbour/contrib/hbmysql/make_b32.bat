@@ -14,7 +14,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I%MYSQL_DIR%\include
+set CFLAGS=-I"%MYSQL_DIR%\include"
 set HB_DLL_NAME=libmySQL
 set HB_DLL_DIR=%MYSQL_DIR%\bin
 
@@ -38,7 +38,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD
 
-   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib %HB_DLL_DIR%\%HB_DLL_NAME%.dll
+   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib "%HB_DLL_DIR%\%HB_DLL_NAME%.dll"
    goto POST_EXIT
 
 :POST_CLEAN

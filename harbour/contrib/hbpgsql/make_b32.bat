@@ -14,7 +14,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I%PGSQL_DIR%\include
+set CFLAGS=-I"%PGSQL_DIR%\include"
 rem .exe
 set HB_DLL_NAME=postgres
 set HB_DLL_DIR=%PGSQL_DIR%\bin
@@ -39,7 +39,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD
 
-   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib %HB_DLL_DIR%\%HB_DLL_NAME%.exe
+   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib "%HB_DLL_DIR%\%HB_DLL_NAME%.exe"
    goto POST_EXIT
 
 :POST_CLEAN

@@ -14,7 +14,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I%GD_DIR%\include
+set CFLAGS=-I"%GD_DIR%\include"
 set HB_DLL_NAME=bgd
 set HB_DLL_DIR=%GD_DIR%\bin
 
@@ -39,7 +39,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 :POST_BUILD
 
    rem Use supplied .lib file.
-   if not exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib copy %GD_DIR%\lib\%HB_DLL_NAME%.lib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
+   if not exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib copy "%GD_DIR%\lib\%HB_DLL_NAME%.lib" ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
    goto POST_EXIT
 
 :POST_CLEAN

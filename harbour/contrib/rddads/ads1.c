@@ -56,17 +56,18 @@
 #define SUPERTABLE ( &adsSuper )
 #define MAX_STR_LEN 255
 
-#include "hbapi.h"
+#include "hbvm.h"
 #include "hbinit.h"
+#include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbdbferr.h"
 #include "hbapilng.h"
 #include "hbdate.h"
-#include "rddads.h"
 #include "hbset.h"
-#include "hbvm.h"
+
 #include "rddsys.ch"
+#include "rddads.h"
 
 #include <ctype.h>
 

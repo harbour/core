@@ -84,6 +84,7 @@
    #define _ADS_LIB_VERSION 500
 #endif
 
+#if 0
 /* Compatibility ACE version override.
    Usage is discouraged and unnecessary unless we want to 
    override autodetection. For the latter, ADS_LIB_VERSION 
@@ -97,10 +98,11 @@
    #elif ADS_REQUIRE_VERSION == 7
       #define ADS_LIB_VERSION 700
    #elif ADS_REQUIRE_VERSION == 8
-      #define ADS_LIB_VERSION 800
+      #define ADS_LIB_VERSION 810
    #elif ADS_REQUIRE_VERSION == 9
       #define ADS_LIB_VERSION 900
    #endif
+#endif
 #endif
 
 /* Make sure to not allow a manual override requesting 

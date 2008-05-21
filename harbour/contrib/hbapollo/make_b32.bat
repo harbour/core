@@ -14,7 +14,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I%APOLLO_DIR%\include
+set CFLAGS=-I"%APOLLO_DIR%\include"
 set HB_DLL_NAME=sde61
 set HB_DLL_DIR=%APOLLO_DIR%
 
@@ -38,7 +38,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD
 
-   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib %HB_DLL_DIR%\%HB_DLL_NAME%.dll
+   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib "%HB_DLL_DIR%\%HB_DLL_NAME%.dll"
    goto POST_EXIT
 
 :POST_CLEAN

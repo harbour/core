@@ -14,13 +14,13 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I%ADS_DIR%
+set CFLAGS=-I"%ADS_DIR%"
 set HB_DLL_NAME=ace32
 if exist "%ADS_DIR%\Redistribute\%HB_DLL_NAME%.dll" set HB_DLL_DIR=%ADS_DIR%\Redistribute
 if exist "%ADS_DIR%\%HB_DLL_NAME%.dll"              set HB_DLL_DIR=%ADS_DIR%
 if exist "%ADS_DIR%\32bit\%HB_DLL_NAME%.dll"        set HB_DLL_DIR=%ADS_DIR%\32bit
 
-echo Using this .dll: %HB_DLL_DIR%\%HB_DLL_NAME%.dll
+echo Using this .dll: "%HB_DLL_DIR%\%HB_DLL_NAME%.dll"
 
 rem ---------------------------------------------------------------
 
@@ -42,7 +42,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD
 
-   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib %HB_DLL_DIR%\%HB_DLL_NAME%.dll
+   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib "%HB_DLL_DIR%\%HB_DLL_NAME%.dll"
    goto POST_EXIT
 
 :POST_CLEAN

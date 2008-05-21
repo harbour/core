@@ -14,7 +14,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I%APOLLO_DIR%\include
+set CFLAGS=-I"%APOLLO_DIR%\include"
 set HB_DLL_NAME=sde61
 set HB_DLL_DIR=%APOLLO_DIR%
 
@@ -46,8 +46,8 @@ if "%1" == "INSTALL" goto POST_INSTALL
    echo.   s/^^[ \t]\+[0-9]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+\(.*\)/\1/p>> _temp.sed
    echo. }>> _temp.sed
    echo.}>> _temp.sed
-   DUMPBIN /EXPORTS %HB_DLL_DIR%\%HB_DLL_NAME%.dll > _dump.tmp
-   echo.LIBRARY %HB_DLL_DIR%\%HB_DLL_NAME%.dll > _temp.def
+   DUMPBIN /EXPORTS "%HB_DLL_DIR%\%HB_DLL_NAME%.dll" > _dump.tmp
+   echo.LIBRARY "%HB_DLL_DIR%\%HB_DLL_NAME%.dll" > _temp.def
    echo.EXPORTS >> _temp.def
    sed -nf _temp.sed < _dump.tmp >> _temp.def
    LIB /MACHINE:X86 /DEF:_temp.def /OUT:..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib

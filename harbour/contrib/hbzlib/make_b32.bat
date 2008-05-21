@@ -14,7 +14,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I%ZLIB_DIR%\include
+set CFLAGS=-I"%ZLIB_DIR%\include"
 set HB_DLL_NAME=zlib1
 set HB_DLL_DIR=%ZLIB_DIR%
 
@@ -38,7 +38,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD
 
-   implib -a ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib %HB_DLL_DIR%\%HB_DLL_NAME%.dll
+   implib -a ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib "%HB_DLL_DIR%\%HB_DLL_NAME%.dll"
    goto POST_EXIT
 
 :POST_CLEAN

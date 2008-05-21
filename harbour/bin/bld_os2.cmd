@@ -14,9 +14,9 @@ rem ---------------------------------------------------------------
 
 if "%HB_COMPILER%" == "" set HB_COMPILER=gcc
 
-if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=..\bin\
-if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=..\lib\
-if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
+if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=..\bin
+if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=..\lib
+if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
 
 :START
 

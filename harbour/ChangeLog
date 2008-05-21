@@ -8,6 +8,104 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-21 15:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * bin/bld.bat
+   * bin/bld_os2.cmd
+     ! Removed trailing backslash from default Harbour bin dirs.
+
+   * contrib/hbapollo/make_b32.bat
+   * contrib/hbapollo/make_vc.bat
+   * contrib/hbfbird/make_b32.bat
+   * contrib/hbfbird/make_vc.bat
+   * contrib/hbfimage/make_b32.bat
+   * contrib/hbfimage/make_vc.bat
+   * contrib/hbgd/make_b32.bat
+   * contrib/hbgd/make_vc.bat
+   * contrib/hbhpdf/make_b32.bat
+   * contrib/hbhpdf/make_vc.bat
+   * contrib/hbmysql/make_b32.bat
+   * contrib/hbmysql/make_vc.bat
+   * contrib/hbodbc/make_b32.bat
+   * contrib/hbodbc/make_vc.bat
+   * contrib/hbpgsql/make_b32.bat
+   * contrib/hbpgsql/make_vc.bat
+   * contrib/hbw32ddr/make_b32.bat
+   * contrib/hbw32ddr/make_vc.bat
+   * contrib/hbzlib/make_b32.bat
+   * contrib/hbzlib/make_vc.bat
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+     ! Fixed to handle long *_DIR settings in those 
+       contribs where external packages are required.
+
+   * contrib/gtwvg/tests/bld_b32.bat
+   * contrib/gtwvg/tests/bld_vc.bat
+   * contrib/hbapollo/tests/bld_b32.bat
+   * contrib/hbapollo/tests/bld_vc.bat
+   * contrib/hbclipsm/tests/bld_b32.bat
+   * contrib/hbclipsm/tests/bld_vc.bat
+   * contrib/hbct/tests/bld_b32.bat
+   * contrib/hbct/tests/bld_vc.bat
+   * contrib/hbfbird/tests/bld_b32.bat
+   * contrib/hbfbird/tests/bld_vc.bat
+   * contrib/hbfimage/tests/bld_b32.bat
+   * contrib/hbfimage/tests/bld_vc.bat
+   * contrib/hbgd/tests/bld_b32.bat
+   * contrib/hbgd/tests/bld_vc.bat
+   * contrib/hbgf/tests/bld_b32.bat
+   * contrib/hbgf/tests/bld_vc.bat
+   * contrib/hbhpdf/tests/bld_b32.bat
+   * contrib/hbhpdf/tests/bld_vc.bat
+   * contrib/hbmisc/tests/bld_b32.bat
+   * contrib/hbmisc/tests/bld_vc.bat
+   * contrib/hbmysql/tests/bld_b32.bat
+   * contrib/hbmysql/tests/bld_vc.bat
+   * contrib/hbnf/tests/bld_b32.bat
+   * contrib/hbnf/tests/bld_vc.bat
+   * contrib/hbodbc/tests/bld_b32.bat
+   * contrib/hbodbc/tests/bld_vc.bat
+   * contrib/hbole/tests/bld_b32.bat
+   * contrib/hbole/tests/bld_vc.bat
+   * contrib/hbpgsql/tests/bld_b32.bat
+   * contrib/hbpgsql/tests/bld_vc.bat
+   * contrib/hbtpathy/tests/bld_b32.bat
+   * contrib/hbtpathy/tests/bld_vc.bat
+   * contrib/hbvpdf/tests/bld_b32.bat
+   * contrib/hbvpdf/tests/bld_vc.bat
+   * contrib/hbw32/tests/bld_b32.bat
+   * contrib/hbw32/tests/bld_vc.bat
+   * contrib/hbw32ddr/tests/bld_b32.bat
+   * contrib/hbw32ddr/tests/bld_vc.bat
+   * contrib/hbzlib/tests/bld_b32.bat
+   * contrib/hbzlib/tests/bld_vc.bat
+   * contrib/rddado/tests/bld_b32.bat
+   * contrib/rddado/tests/bld_vc.bat
+   * contrib/rddads/tests/bld_b32.bat
+   * contrib/rddads/tests/bld_vc.bat
+     ! Fixed to honor HB_*_INSTALL envvar settings in 
+       bld_*.bats for /tests
+
+   * contrib/examples/hscript/dir.hs
+   * contrib/examples/hscript/bld_b32.bat
+   - contrib/examples/hscript/makehtm.bat
+     * Cleanup.
+
+   * contrib/rddads/rddads.h
+   * contrib/rddads/adsfunc.c
+   * contrib/rddads/ads1.c
+   * contrib/rddads/adsmgmnt.c
+     * Header cleanup, minor code opt.
+     * ADS_REQUIRE_VERSION==8 is now equivalent to 
+       ADS_LIB_VERSION=810. Brian suggested this is what 
+       the majority of users need. See next however.
+     * ADS_REQUIRE_VERSION compatibility handling 
+       disabled to make usage and support more 
+       straightforward. I'd suggest everyone to remove 
+       any old ADS_REQUIRE_VERSION settings, if - and only 
+       if - there is a need to force an older version, 
+       ADS_LIB_VERSION=??? should be used, where ??? is 
+       810 for ACE 8.11 (for example).
+
 2008-05-21 11:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/tbrowse.prg
     * updated some comments
@@ -304,7 +402,7 @@
      ! Absolute paths changed to relative ones 
        (for both input and output ones).
      ! NumToHex() -> hb_NumToHex()
-     + hbct added to liblist because test program 
+     + hbct added to lib list because test program 
        uses SIN()/COS()/TAN() from it.
 
    - contrib/hbhpdf/tests/harupdf.ch

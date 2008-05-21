@@ -52,14 +52,14 @@
 
 #define HB_OS_WIN_32_USED
 
+#include "hbvm.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
-#include "hbinit.h"
-#include "hbvm.h"
-#include "rddsys.ch"
+#include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbdate.h"
-#include "hbapierr.h"
+
+#include "rddsys.ch"
 #include "rddads.h"
 
 #define HARBOUR_MAX_RDD_FILTER_LENGTH     256
@@ -669,13 +669,10 @@ HB_FUNC( ADSADDCUSTOMKEY )
 
          hb_retnl( ( long ) AdsAddCustomKey( hIndex ) );
       }
+      else if( pArea->hOrdCurrent != 0 )
+         hb_retnl( ( long ) AdsAddCustomKey( pArea->hOrdCurrent ) );
       else
-      {
-         if( pArea->hOrdCurrent != 0 )
-            hb_retnl( ( long ) AdsAddCustomKey( pArea->hOrdCurrent ) );
-         else
-            hb_errRT_DBCMD( EG_NOORDER, 2001, NULL, "ADSADDCUSTOMKEY" );
-      }
+         hb_errRT_DBCMD( EG_NOORDER, 2001, NULL, "ADSADDCUSTOMKEY" );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSADDCUSTOMKEY" );
@@ -703,15 +700,13 @@ HB_FUNC( ADSDELETECUSTOMKEY )
                                ( UNSIGNED8 * ) hb_parcx( 1 ) /* ordName */,
                                &hIndex );
          }
+
          hb_retnl( ( long ) AdsDeleteCustomKey( hIndex ) );
       }
+      else if( pArea->hOrdCurrent != 0 )
+         hb_retnl( ( long ) AdsDeleteCustomKey( pArea->hOrdCurrent ) );
       else
-      {
-         if( pArea->hOrdCurrent != 0 )
-            hb_retnl( ( long ) AdsDeleteCustomKey( pArea->hOrdCurrent ) );
-         else
-            hb_errRT_DBCMD( EG_NOORDER, 2001, NULL, "ADSDELETECUSTOMKEY" );
-      }
+         hb_errRT_DBCMD( EG_NOORDER, 2001, NULL, "ADSDELETECUSTOMKEY" );
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSDELETECUSTOMKEY" );
@@ -1427,8 +1422,7 @@ UNSIGNED32 WINAPI hb_adsShowPercentageCB( UNSIGNED16 usPercentDone )
       HB_TRACE(HB_TR_DEBUG, ("hb_adsShowPercentageCB(%d) called with no codeblock set.\n", usPercentDone ));
 
    return 0;
-
-} /* hb_adsShowPercentageCB() */
+}
 
 HB_FUNC( ADSREGCALLBACK )
 {

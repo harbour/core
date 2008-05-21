@@ -24,9 +24,9 @@ rem if "%HB_ARCHITECTURE%" == "" set HB_ARCHITECTURE=w32
 rem if "%HB_COMPILER%" == "" set HB_COMPILER=mingw32
 rem if "%HB_GT_LIB%" == "" set HB_GT_LIB=
 
-if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=..\bin\
-if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=..\lib\
-if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include\
+if "%HB_BIN_INSTALL%" == "" set HB_BIN_INSTALL=..\bin
+if "%HB_LIB_INSTALL%" == "" set HB_LIB_INSTALL=..\lib
+if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\include
 
 :START
 

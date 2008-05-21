@@ -15,7 +15,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I%FREEIMAGE_DIR%\source
+set CFLAGS=-I"%FREEIMAGE_DIR%\source"
 set HB_DLL_NAME=FreeImage
 set HB_DLL_DIR=%FREEIMAGE_DIR%\Dist
 
@@ -39,7 +39,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD
 
-   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib %HB_DLL_DIR%\%HB_DLL_NAME%.dll
+   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib "%HB_DLL_DIR%\%HB_DLL_NAME%.dll"
    goto POST_EXIT
 
 :POST_CLEAN

@@ -52,10 +52,10 @@
 
 #define HB_OS_WIN_32_USED
 
-#include "rddads.h"
-
 #include "hbapi.h"
 #include "hbapiitm.h"
+
+#include "rddads.h"
 
 static ADSHANDLE s_hMgmtHandle = 0;
 

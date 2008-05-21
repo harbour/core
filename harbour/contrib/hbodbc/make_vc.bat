@@ -34,8 +34,8 @@ if "%1" == "INSTALL" goto POST_INSTALL
    echo.   s/^^[ \t]\+[0-9]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+\(.*\)/\1/p>> _temp.sed
    echo. }>> _temp.sed
    echo.}>> _temp.sed
-   DUMPBIN /EXPORTS %HB_DLL_DIR%\%HB_DLL_NAME%.dll > _dump.tmp
-   echo.LIBRARY %HB_DLL_DIR%\%HB_DLL_NAME%.dll > _temp.def
+   DUMPBIN /EXPORTS "%HB_DLL_DIR%\%HB_DLL_NAME%.dll" > _dump.tmp
+   echo.LIBRARY "%HB_DLL_DIR%\%HB_DLL_NAME%.dll" > _temp.def
    echo.EXPORTS >> _temp.def
    sed -nf _temp.sed < _dump.tmp >> _temp.def
    LIB /MACHINE:X86 /DEF:_temp.def /OUT:..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib
