@@ -29,7 +29,7 @@ function Main()
                { "Helvetica", .t., .t., .t., .t. }, ;
                { "Courier",   .t., .t., .t., .t. }  }
 
-	oPdf := tPdf():New( 'test.pdf', 200, .t. )
+   oPdf := tPdf():New( 'test.pdf', 200, .t. )
    oPdf:EditOnHeader()
    oPdf:Image( 'files\color.tif', 0, 0, "M" ) 
    oPdf:EditOffHeader()
@@ -92,7 +92,7 @@ function Main()
    oPdf:BookAdd( "Different Styles & Colors", 2, oPdf:aReport[ REPORTPAGE ], 0 )
    nWidth := 90
    nTab   := 0
-	cText  := memoread('files\test.txt')
+   cText  := memoread('files\test.txt')
 
    oPdf:Text( cText,  28, 107.95, nWidth, nTab, 3, 'M', chr(253) + chr(0) + chr(0) + chr(255) )
    oPdf:Text( cText,  58, 107.95, nWidth, nTab, 2, 'M', chr(253) + chr(0) + chr(255) + chr(0) )
@@ -109,7 +109,7 @@ function Main()
    oPdf:BookAdd( "Different Styles", 2, oPdf:aReport[ REPORTPAGE ], 0 )
    nK := 6
    for nI := 1 to len( aFonts )  // Fonts
-		++nk
+      ++nk
       for nJ := 1 to 4           // Styles
          if aFonts[ nI ][ nJ + 1 ]
             oPdf:SetFont( aFonts[ nI ][ 1 ], nJ - 1, oPdf:aReport[ FONTSIZE ] )
@@ -117,8 +117,8 @@ function Main()
                        aStyle[ nJ ], nK++, oPdf:aReport[ REPORTWIDTH ], "R")
          endif
       next
-	   oPdf:RJust(oPdf:Underline("Underline"), nK++, oPdf:aReport[ REPORTWIDTH ], "R")
-   	oPdf:RJust(oPdf:Reverse("Test"), nK, oPdf:aReport[ REPORTWIDTH ], "R")
+    oPdf:RJust(oPdf:Underline("Underline"), nK++, oPdf:aReport[ REPORTWIDTH ], "R")
+    oPdf:RJust(oPdf:Reverse("Test"), nK, oPdf:aReport[ REPORTWIDTH ], "R")
    next
 
    oPdf:NewPage( "LETTER", "P", 6 )
@@ -154,11 +154,11 @@ function Main()
    oPdf:Close()
 
 #ifndef __XPP__
-	oPdf:Execute( 'test.pdf' )
+   oPdf:Execute( 'test.pdf' )
 #endif
-	
-	// oPdf:FilePrint()
-	
+
+   // oPdf:FilePrint()
+
 return nil
 
 //컴컴컴컴컴컴컴컴컴컴컴컴�\\
@@ -179,13 +179,11 @@ local cTemp, nI, cChar := "", n := 0, nLen
       cChar = substr( cTemp, nI, 1 )
       if .not. IsDigit( cChar )
          n = n + ((Asc( cChar ) - 65) + 10) * ( nBase ^ ( nI - 1 ) )
-		else
+      else
          n = n + (( nBase ^ ( nI - 1 )) * val( cChar ))
       endif
-	next
+   next
 
 return n
 
 //컴컴컴컴컴컴컴컴컴컴컴컴�\\
-
-

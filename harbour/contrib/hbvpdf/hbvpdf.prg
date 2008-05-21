@@ -901,7 +901,7 @@ DEFAULT lOptimize to .f.
 
    // TOFIX: This external file dependency should be removed.
 
-   cTemp := memoread("fonts.dat") // times, times-bold, times-italic, times-bolditalic, helvetica..., courier... // 0.04
+   cTemp := vpdf_FontsDat() // times, times-bold, times-italic, times-bolditalic, helvetica..., courier... // 0.04
    n1 := len( cTemp ) / ( 2 * n2 )
    aReport[ FONTWIDTH ]    := array( n1, n2 )
 

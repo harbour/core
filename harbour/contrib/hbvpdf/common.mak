@@ -12,6 +12,7 @@ PRG_HEADERS = \
 LIB_OBJS = \
     $(OBJ_DIR)hbvpdf$(OBJEXT) \
     $(OBJ_DIR)hbvpdft$(OBJEXT) \
+    $(OBJ_DIR)hbvpsup$(OBJEXT) \
 
 all: \
     $(LIB_PATH) \

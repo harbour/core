@@ -24,9 +24,9 @@
 #endif
 
 #ifdef __XPP__             //  xBase++
-	#command CREATE CLASS <x> [ FROM <y> ]  =>  CLASS <x> [ FROM <y> ]
-	#command MESSAGE <x> METHOD <y>         =>  METHOD <x> IS <y>
-	#command CLASS MESSAGE <x> METHOD <y>   =>  CLASS METHOD <x> IS <y>
+   #command CREATE CLASS <x> [ FROM <y> ]  =>  CLASS <x> [ FROM <y> ]
+   #command MESSAGE <x> METHOD <y>         =>  METHOD <x> IS <y>
+   #command CLASS MESSAGE <x> METHOD <y>   =>  CLASS METHOD <x> IS <y>
 #endif
 
 #ifdef __CLP__             //  Clipper
@@ -172,7 +172,7 @@ DEFAULT lOptimize TO .f.
 
 // TOFIX: This external file dependency should be removed.
 
-cTemp := memoread( "fonts.dat" ) 
+cTemp := vpdf_FontsDat()
 n1    := len( cTemp ) / ( 2 * n2 )
 ::aReport[ FONTWIDTH    ] := array( n1, n2 )
 
@@ -281,8 +281,8 @@ local cName := ::GetFontInfo( "NAME" )
 
    IF cName = "Times"
       ::aReport[ FONTNAME ] := 1
-	ELSEIF cName = "Helvetica"
-		::aReport[ FONTNAME ] := 5
+   ELSEIF cName = "Helvetica"
+      ::aReport[ FONTNAME ] := 5
    ELSE
       ::aReport[ FONTNAME ] := 9
    ENDIF
@@ -306,7 +306,7 @@ local cName := ::GetFontInfo( "NAME" )
    ELSEIF cName = "Helvetica"
       ::aReport[ FONTNAME ] := 7
    ELSE
-   	::aReport[ FONTNAME ] := 11  
+      ::aReport[ FONTNAME ] := 11  
    ENDIF
    aadd( ::aReport[ PAGEFONTS ], ::aReport[ FONTNAME ] )
    IF ascan( ::aReport[ FONTS ], { |arr| arr[1] == ::aReport[ FONTNAME ] } ) == 0
@@ -732,7 +732,7 @@ local nWidth := 0.00, nI, nLen, nArr, nAdd := ( ::aReport[ FONTNAME ] - 1 ) % 4
    IF ::GetFontInfo("NAME") = "Times"
       nArr := 1
    ELSEIF ::GetFontInfo("NAME") = "Helvetica"
-   	nArr := 2
+      nArr := 2
    ELSE
       nArr := 3
    ENDIF
@@ -2183,15 +2183,15 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
    aadd( ::aReport[ PAGES ], ::aReport[ REPORTOBJ ] + 1 )
 
    cTemp := ;
-	   ltrim(str( ++::aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + ;
-   	"<<" + CRLF + ;
-	   "/Type /Page /Parent 1 0 R" + CRLF + ;
-   	"/Resources " + ltrim(str( ++::aReport[ REPORTOBJ ] )) + " 0 R" + CRLF + ;
-	   "/MediaBox [ 0 0 " + ltrim(transform( ::aReport[ PAGEX ], "9999.99")) + " " + ;
-   	ltrim(transform(::aReport[ PAGEY ], "9999.99")) + " ]" + CRLF + ;
-	   "/Contents " + ltrim(str( ++::aReport[ REPORTOBJ ] )) + " 0 R" + CRLF + ;
-   	">>" + CRLF + ;
-	   "endobj" + CRLF
+     ltrim(str( ++::aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + ;
+     "<<" + CRLF + ;
+     "/Type /Page /Parent 1 0 R" + CRLF + ;
+     "/Resources " + ltrim(str( ++::aReport[ REPORTOBJ ] )) + " 0 R" + CRLF + ;
+     "/MediaBox [ 0 0 " + ltrim(transform( ::aReport[ PAGEX ], "9999.99")) + " " + ;
+     ltrim(transform(::aReport[ PAGEY ], "9999.99")) + " ]" + CRLF + ;
+     "/Contents " + ltrim(str( ++::aReport[ REPORTOBJ ] )) + " 0 R" + CRLF + ;
+     ">>" + CRLF + ;
+    "endobj" + CRLF
 
 
    ::aReport[ DOCLEN ] += len( cTemp )
@@ -2304,19 +2304,19 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
          aadd( ::aReport[ REFS ], ::aReport[ DOCLEN ] )
 
          cTemp :=  ;
-	         ltrim(str( ::aReport[ IMAGES ][ nI ][ 2 ] )) + " 0 obj" + CRLF + ;
-   	      "<<" + CRLF + ;
-      	   "/Type /XObject" + CRLF + ;
-         	"/Subtype /Image" + CRLF + ;
-	         "/Name /Image" + ltrim(str(nI)) + CRLF + ;
-   	      "/Filter [" + IIF( at( ".JPG", upper( ::aReport[ IMAGES ][ nI ][ 1 ]) ) > 0, " /DCTDecode", "" ) + " ]" + CRLF + ;
-      	   "/Width " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_WIDTH ] )) + CRLF + ;
-         	"/Height " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_HEIGHT ] )) + CRLF + ;
-	         "/BitsPerComponent " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] )) + CRLF + ;
-   	      "/ColorSpace /" + IIF( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] == 1, "DeviceGray", "DeviceRGB") + CRLF + ;
-      	   "/Length " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_LENGTH ])) + CRLF + ;
-         	">>" + CRLF + ;
-	         "stream" + CRLF
+          ltrim(str( ::aReport[ IMAGES ][ nI ][ 2 ] )) + " 0 obj" + CRLF + ;
+          "<<" + CRLF + ;
+          "/Type /XObject" + CRLF + ;
+          "/Subtype /Image" + CRLF + ;
+          "/Name /Image" + ltrim(str(nI)) + CRLF + ;
+          "/Filter [" + IIF( at( ".JPG", upper( ::aReport[ IMAGES ][ nI ][ 1 ]) ) > 0, " /DCTDecode", "" ) + " ]" + CRLF + ;
+          "/Width " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_WIDTH ] )) + CRLF + ;
+          "/Height " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_HEIGHT ] )) + CRLF + ;
+          "/BitsPerComponent " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] )) + CRLF + ;
+          "/ColorSpace /" + IIF( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] == 1, "DeviceGray", "DeviceRGB") + CRLF + ;
+          "/Length " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_LENGTH ])) + CRLF + ;
+          ">>" + CRLF + ;
+          "stream" + CRLF
 
          ::aReport[ DOCLEN ] += len( cTemp )
          fwrite( ::aReport[ HANDLE ], cTemp )
@@ -2344,8 +2344,8 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
 
          ::aReport[ DOCLEN ] += len( cTemp )
          fwrite( ::aReport[ HANDLE ], cTemp )
-			
-			fClose( nImageHandle )
+
+         fClose( nImageHandle )
       ENDIF
    next
 
@@ -2566,7 +2566,7 @@ if hFile == NIL        // First Timer
    cData := space( 3 )
    fRead( hFile, @cData, 3 )
    if left( cData,1 ) != 'A'     //  If format of file <> array
-		fClose( hFile )            //////////
+      fClose( hFile )            //////////
       return( aRay )
    endif
    nLen := bin2i( right( cData,2 ) )
@@ -2630,14 +2630,14 @@ local lRet := .t.
 #endif
 
 #ifdef __HARBOUR__
-	if cVerb <> nil
+    if cVerb <> nil
 // TOFIX: This requires hbwhat32, which in turns requires xhb.
 //        This has to solved differently.
-//		ShellExecute( GetDeskTopWindow(), cVerb, cFile, , , 1 )	
+//      ShellExecute( GetDeskTopWindow(), cVerb, cFile, , , 1 )
         HB_SYMBOL_UNUSED( cFile )
-	else
+    else
       __Run( cCmd )
-	endif
+    endif
 #endif
 
 #ifdef __XPP__

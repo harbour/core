@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-21 03:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbvpdf/Makefile
+   * contrib/hbvpdf/common.mak
+   * contrib/hbvpdf/hbvpdf.prg
+   * contrib/hbvpdf/hbvpdft.prg
+   + contrib/hbvpdf/hbvpsup.prg
+   - contrib/hbvpdf/tests/fonts.dat
+     + fonts.dat embedded in code 
+       (using BASE64 encoding).
+
+2008-05-20 21:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbvpdf/tests/pdf_demo.prg
+   * contrib/hbvpdf/tests/tstpdf.prg
+   * contrib/hbvpdf/hbvpdft.prg
+     ! TABs -> SPACEs
+
+2008-05-20 21:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbvpdf/tests/pdf_demo.prg
+   * contrib/hbvpdf/tests/tstpdf.prg
+   * contrib/hbvpdf/hbvpdft.prg
+     ! TABs -> SPACEs
+
 2008-05-20 20:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * added HB_USR_LIBS set during build time to list of predefined libs

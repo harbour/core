@@ -215,10 +215,10 @@ local cTemp, nI, cChar := "", n := 0, nLen
       cChar = substr( cTemp, nI, 1 )
       if .not. IsDigit( cChar )
          n = n + ((Asc( cChar ) - 65) + 10) * ( nBase ^ ( nI - 1 ) )
-		else
+      else
          n = n + (( nBase ^ ( nI - 1 )) * val( cChar ))
       endif
-	next
+   next
 
 return n
 
