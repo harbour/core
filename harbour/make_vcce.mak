@@ -85,7 +85,7 @@ MKLIB  = lib.exe
 #**********************************************************
 
 # Include Common Object list files
-# shared between Msvc and Borland
+# shared between MSVC and Borland
 
 !include common.mak
 
@@ -885,7 +885,7 @@ $(LDFLAGS)
 /OUT:$(HBDOC_EXE)
 $(**: = ^
 )
-$(STANDARD_STATIC_HBLIBS)
+$(STANDARD_STATIC_HBLIBS) $(HBDOC_LIBS)
 coredll.lib corelibc.lib winsock.lib ws2.lib
 <<
 #**********************************************************

@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-21 16:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * make_b32.mak
+   * make_vc.mak
+   * make_vcce.mak
+     + Added HBDOC_LIBS to specify external libs for HBDOC.
+       Only for non-GNU B32/VC/VCCE builds! For non-GNU GCC 
+       it's probably LDFLAGS, for GNU it's probably LDLIBS.
+       NOTE: Use full path for the libs.
+       Such dependency is anything by good though (the core 
+       build depends on a contrib lib, the contrib lib depends 
+       on the core build), so consider this a temporary solution.
+       Moving HBDOC to the contrib area is one possibility, 
+       dropping it is another one.
+     ; There is quite a big mess regarding these envvars depending 
+       on the type of make system, platform, compiler, etc, 
+       that it's almost impossible to document or understand, so 
+       maybe it'd be worth a review after the release, and sync 
+       all these external flag and dir envvars.
+       
+   * utils/hbdoc/genpdf1.prg
+     ! Fixed warnings in HBDOC_PDF guarded code.
+
 2008-05-21 15:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * bin/bld.bat
    * bin/bld_os2.cmd

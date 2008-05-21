@@ -123,9 +123,7 @@ FUNCTION ProcessPdf(lMemory)
 
    LOCAL lData         := .F.
    LOCAL lMethod       := .F.
-   LOCAL cBuffEnd
    LOCAL nPos
-   LOCAL nPosEND
    LOCAL lIsDataLink   := .F.
    LOCAL lIsMethodLink := .F.
 
@@ -298,14 +296,14 @@ local hhh
                   FOR nAlso := 1 TO LEN( aalso )
 
                      IF nAlso == 1
-                        nPos:=ascan(awww,{|a,b| Upper(a[1])== upper(aAlso[nAlso])})
+                        nPos:=ascan(awww,{|a| Upper(a[1])== upper(aAlso[nAlso])})
                         if nPos>0
                            HB_PDFADDLINK(awww[ npos,1 ],aWww[nPos,2] )
                         else
                            HB_PDFADDLINK(awww[ 1,1 ],aWww[1,2] )
                         endif
                      ELSE
-                          nPos:=ascan(awww,{|a,b| Upper(a[1])== upper(aAlso[nAlso])})
+                          nPos:=ascan(awww,{|a| Upper(a[1])== upper(aAlso[nAlso])})
                         if nPos>0
                            HB_PDFADDLINK(awww[ npos,1 ],aWww[nPos,2] )
                         else
@@ -761,6 +759,8 @@ RETURN aAlso
 *+
 FUNCTION ProcStatusPdf( nWriteHandle, cBuffer )
 
+   HB_SYMBOL_UNUSED( nWriteHandle )
+
    IF LEN( ALLTRIM( cBuffer ) ) > 1
       hb_pdfWriteText( cBuffer )
    ELSEIF SUBSTR( ALLTRIM( cBuffer ), 1 ) == "R"
@@ -785,7 +785,9 @@ RETURN nil
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
 
-FUNCTION GenPdfTable( oPdf ,nNumTableItems)
+FUNCTION GenPdfTable( oPdf, nNumTableItems)
+
+HB_SYMBOL_UNUSED( oPdf )
 
 if nNumTableItems <3
 hb_pdfWriteText( " " )
@@ -823,7 +825,6 @@ FUNCTION ProcPdfTable( cBuffer, nNum )
    LOCAL cItem2    := ''
    LOCAL cItem3    := ''
    LOCAL cItem4    := ''
-   LOCAL xtype
    LOCAL nColorpos
    LOCAL cColor
    cBuffer := ALLTRIM( cBuffer )
@@ -838,7 +839,7 @@ FUNCTION ProcPdfTable( cBuffer, nNum )
       cBuffer   := STRTRAN( cbuffer, "<color:", "" )
       cBuffer   := STRTRAN( cbuffer, ">", "" )
       cBuffer   := STRTRAN( cBuffer, ccolor, '' )
-      nColorpos := ASCAN( aColorTable, { | x, y | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
+      nColorpos := ASCAN( aColorTable, { | x | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
       cColor    := aColortable[ nColorPos, 2 ]
    ENDIF
    IF !EMPTY( cBuffer )
@@ -905,7 +906,6 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
    LOCAL nColorPos
    LOCAL ccolor      := ''
    LOCAL cReturn     := ''
-   LOCAL ncolorend
    LOCAL nIdentLevel
    LOCAL cOldLine
    LOCAL lEndPar     := .F.
@@ -1214,7 +1214,7 @@ FUNC CheckPdfColor( cbuffer, ncolorpos )
       cOldColorString := SUBSTR( cbuffer, ncolorpos )
       nColorend       := AT( ">", cOldColorString )
       cOldColorString := SUBSTR( cOldColorString, 1, nColorEnd )
-      nreturn         := ASCAN( acolortable, { | x, y | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
+      nreturn         := ASCAN( acolortable, { | x | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
       IF nreturn > 0
          cReturn := "^a" + acolortable[ nreturn, 2 ]
       ENDIF
@@ -1238,7 +1238,6 @@ FUNC MaxElemPdf( a )
    LOCAL tam     := 0
    LOCAL nMax2   := 0
    LOCAL nPos    := 1
-   LOCAL cString
 
    LOCAL nCount
    FOR nCount := 1 TO nSize
@@ -1268,10 +1267,13 @@ FUNCTION FormatPdfBuff( cBuffer, cStyle, oPdf )
    LOCAL cBuffEnd      := ''
    LOCAL lEndBuffer    := .f.
    LOCAL nPos
-   LOCAL nPosend
    LOCAL lArgBold      := .f.
    LOCAL LFstTableItem := .t.
+
+   HB_SYMBOL_UNUSED( oPdf )
+
    cReturn := cBuffer + ' '
+
    IF AT( '</par>', cReturn ) > 0 .OR. EMPTY( cBuffer )
       IF EMPTY( cbuffer )
          cReturn := ''
@@ -1369,7 +1371,6 @@ STATIC FUNCTION ReadFromTop( nh )
    LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
    LOCAL cBuffer   := ''
    LOCAL NPOS      := 0
-   LOCAL nlenpos
    LOCAL aLocDoc   := {}
    DO WHILE FREADline( nH, @cBuffer, 4096 )
       cBuffer := TRIM( SUBSTR( cBuffer, nCommentLen ) )
@@ -1397,7 +1398,6 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
    LOCAL nPos
    LOCAL cCuritem
    LOCAL lReturn
-   LOCAL x
    LOCAL xPos
    xPos := aCurdoc[ nCurdoc ]
    nPos := ASCAN( xPos, { | x | UPPER( ALLTRIM( x ) ) == UPPER( ALLTRIM( cItem ) ) } )

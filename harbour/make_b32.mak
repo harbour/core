@@ -82,7 +82,7 @@ MKLIB  = tlib.exe
 #**********************************************************
 
 # Include Common Object list files
-# shared between Msvc and Borland
+# shared between MSVC and Borland
 
 !include common.mak
 
@@ -537,7 +537,7 @@ $(CFLAGS)
 -e$(HBDOC_EXE)
 $(**: = ^
 )
-$(STANDARD_STATIC_HBLIBS)
+$(STANDARD_STATIC_HBLIBS) $(HBDOC_LIBS)
 !
 #**********************************************************
 # HBMAKE build rule
@@ -677,7 +677,6 @@ doClean:
     -if exist $(DLL_OBJ_DIR)\*.c     $(DEL) $(DLL_OBJ_DIR)\*.c   > nul
     -if exist $(DLL_OBJ_DIR)\*.h     $(DEL) $(DLL_OBJ_DIR)\*.h   > nul
     -if exist inst_$(HB_CC_NAME).log $(DEL) inst_$(HB_CC_NAME).log > nul
-    -if exist gtlibs.mak       $(DEL) gtlibs.mak       > nul
     -if exist bin\*.exe        $(DEL) bin\*.exe        > nul
     -if exist lib\*.lib        $(DEL) lib\*.lib        > nul
 
