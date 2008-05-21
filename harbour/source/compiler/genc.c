@@ -172,14 +172,14 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       {
          int iLen = strlen( szModulname ), i;
 
-         for ( i = 0; i < iLen; i++ )
+         for( i = 0; i < iLen; i++ )
          {
             char c = szModulname[ i ];
 
-            if ( ! ( c >= 'A' && c <= 'Z' ) &&
-                 ! ( c >= 'a' && c <= 'z' ) &&
-                 ! ( c >= '0' && c <= '9' ) &&
-                 ! ( c == '_' ) )
+            if( ! ( c >= 'A' && c <= 'Z' ) &&
+                ! ( c >= 'a' && c <= 'z' ) &&
+                ! ( c >= '0' && c <= '9' ) &&
+                ! ( c == '_' ) )
             {
                szModulname[ i ] = '_';
             }
