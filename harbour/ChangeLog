@@ -8,13 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-22 12:20 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * source/common/hbstr.c
+    * fixed typo in prevoius commit
+
 2008-05-22 10:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbextern.ch
    * source/rdd/dbcmdx.c
      + Added dbPack() and dbZap() XBase++ 
        compatibility functions.
 
-2008-05-22 10:10 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+2008-05-22 10:10 UTC+0200 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
   * source/common/hbstr.c
     * casting for gcc 4.3.0
   * source/rtl/idle.c
