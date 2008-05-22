@@ -4584,6 +4584,7 @@ static ERRCODE adsPutValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile, U
 #define  adsWriteDBHeader         NULL
 
 
+/* TODO: Use AdsDeleteFile() */
 static ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
 {
    char szFileName[ _POSIX_PATH_MAX + 1 ], * szFile, * szExt;
@@ -4666,6 +4667,11 @@ static ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex
    return fResult ? SUCCESS : FAILURE;
 }
 
+/* TODO: Use AdsCheckExistence()
+         UNSIGNED32 ENTRYPOINT AdsCheckExistence( ADSHANDLE    hConnect,
+                                                  UNSIGNED8    *pucFileName,
+                                                  UNSIGNED16   *pusOnDisk );
+*/
 static ERRCODE adsExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
 {
    char szFileName[ _POSIX_PATH_MAX + 1 ], * szFile;

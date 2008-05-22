@@ -56,7 +56,8 @@
 HB_FUNC_EXTERN( HB_RDDINFO );
 
 /* NOTE: This function is a new Harbour function implemented in the 
-         original CA-Cl*pper namespace. */
+         original CA-Cl*pper namespace. This should have been 
+         marked as HB_EXTENSION, but it's not. */
 
 HB_FUNC( RDDINFO )
 {

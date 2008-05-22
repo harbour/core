@@ -8,7 +8,6 @@ LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
 LIB_OBJS = \
     $(OBJ_DIR)dates2$(OBJEXT) \
-    $(OBJ_DIR)dbftools$(OBJEXT) \
     $(OBJ_DIR)hb_f$(OBJEXT) \
     $(OBJ_DIR)mathx$(OBJEXT) \
     $(OBJ_DIR)strfmt$(OBJEXT) \

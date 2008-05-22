@@ -52,30 +52,14 @@
  */
 
 #include "hbapi.h"
-#include "hbapirdd.h"
-#include "hbapierr.h"
 
 /* NOTE: This function is a new Harbour function implemented in the 
          original CA-Cl*pper namespace. This should have been 
          marked as HB_EXTENSION, but it's not. */
 
+HB_FUNC_EXTERN( HB_DBDROP );
+
 HB_FUNC( DBDROP )
 {
-   LPRDDNODE  pRDDNode;
-   USHORT     uiRddID;
-   const char * szDriver;
-
-   szDriver = hb_parc( 3 );
-   if( !szDriver ) /* no VIA RDD parameter, use default */
-   {
-      szDriver = hb_rddDefaultDrv( NULL );
-   }
-
-   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
-
-   if( pRDDNode )
-      hb_retl( SELF_DROP( pRDDNode, hb_param( 1, HB_IT_STRING ),
-                                    hb_param( 2, HB_IT_STRING ) ) == SUCCESS );
-   else
-      hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "DBDROP" );
+   HB_FUNC_EXEC( HB_DBDROP );
 }

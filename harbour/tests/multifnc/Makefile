@@ -40,16 +40,16 @@ PRG_SOURCES=\
 PRG_MAIN=t0.prg
 
 LIBS=\
-	debug \
-	vm \
-	rtl \
-	lang \
-	codepage \
-	rdd \
-	rtl \
-	vm \
-	macro \
-	pp \
-	common \
+	hbdebug \
+	hbvm \
+	hbrtl \
+	hblang \
+	hbcpage \
+	hbrdd \
+	hbrtl \
+	hbvm \
+	hbmacro \
+	hbpp \
+	hbcommon \
 
 include $(TOP)$(ROOT)config/bin.cf

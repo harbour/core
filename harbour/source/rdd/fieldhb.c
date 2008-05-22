@@ -52,80 +52,28 @@
  */
 
 #include "hbapi.h"
-#include "hbapirdd.h"
-#include "hbapiitm.h"
 
 /* NOTE: These functions are a new Harbour functions implemented in the 
          original CA-Cl*pper namespace. These should have been marked as 
          HB_EXTENSION, but they're not. */
 
+HB_FUNC_EXTERN( HB_FIELDLEN );
+
 HB_FUNC( FIELDLEN )
 {
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-
-   if( pArea )
-   {
-      USHORT uiIndex;
-      if( ( uiIndex = hb_parni( 1 ) ) > 0 )
-      {
-         PHB_ITEM pItem = hb_itemNew( NULL );
-
-         if( SELF_FIELDINFO( pArea, uiIndex, DBS_LEN, pItem ) == SUCCESS )
-         {
-            hb_itemReturnRelease( pItem );
-            return;
-         }
-         hb_itemRelease( pItem );
-      }
-   }
-
-   hb_retni(0);
+   HB_FUNC_EXEC( HB_FIELDLEN );
 }
+
+HB_FUNC_EXTERN( HB_FIELDDEC );
 
 HB_FUNC( FIELDDEC )
 {
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-
-   if( pArea )
-   {
-      USHORT uiIndex;
-
-      if( ( uiIndex = hb_parni( 1 ) ) > 0 )
-      {
-         PHB_ITEM pItem = hb_itemNew( NULL );
-
-         if( SELF_FIELDINFO( pArea, uiIndex, DBS_DEC, pItem ) == SUCCESS )
-         {
-            hb_itemReturnRelease( pItem );
-            return;
-         }
-         hb_itemRelease( pItem );
-      }
-   }
-
-   hb_retni(0);
+   HB_FUNC_EXEC( HB_FIELDDEC );
 }
+
+HB_FUNC_EXTERN( HB_FIELDTYPE );
 
 HB_FUNC( FIELDTYPE )
 {
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-
-   if( pArea )
-   {
-      USHORT uiIndex;
-
-      if( ( uiIndex = hb_parni( 1 ) ) > 0 )
-      {
-         PHB_ITEM pItem = hb_itemNew( NULL );
-
-         if( SELF_FIELDINFO( pArea, uiIndex, DBS_TYPE, pItem ) == SUCCESS )
-         {
-            hb_itemReturnRelease( pItem );
-            return;
-         }
-         hb_itemRelease( pItem );
-      }
-   }
-
-   hb_retc( NULL );
+   HB_FUNC_EXEC( HB_FIELDTYPE );
 }

@@ -8,6 +8,66 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-22 08:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   - contrib/hbmisc/dbftools.c
+   * contrib/hbmisc/common.mak
+   * contrib/hbmisc/Makefile
+     - Removed to avoid collision with similar file in hbct.
+       Notice the content was also similar, except that 
+       in hbct it was updated and extended. There was also 
+       FIELDTYPE() implemented which was colliding with 
+       function with the same name in core.
+
+   * include/hbextern.ch
+   * source/rdd/dbcmd.c
+   * source/rdd/dbdrop.c
+   * source/rdd/dbexists.c
+   * source/rdd/fieldhb.c
+     + Added HB_ prefixed versions of DBDROP(), 
+       DBEXISTS(), FIELDDEC(), FIELDLEN(), FIELDTYPE()
+
+   * source/rdd/rddinfo.c
+     ! Comment.
+
+   * tests/multifnc/Makefile
+     ! Updated lib names.
+
+   * contrib/hbapollo/apollo.c
+     ! Fixed MSVC errors.
+
+   * contrib/mtpl_b32.bat
+   * contrib/mtpl_vc.bat
+     ! Removed one obsolete line.
+     + Now defines _HB_MAKELOG.
+
+   * contrib/hbapollo/make_b32.bat
+   * contrib/hbapollo/make_vc.bat
+   * contrib/hbfimage/make_b32.bat
+   * contrib/hbgd/make_b32.bat
+   * contrib/hbhpdf/make_b32.bat
+   * contrib/hbmysql/make_b32.bat
+   * contrib/hbodbc/make_b32.bat
+   * contrib/hbodbc/make_vc.bat
+   * contrib/hbpgsql/make_b32.bat
+   * contrib/hbpgsql/make_vc.bat
+   * contrib/hbw32ddr/make_b32.bat
+   * contrib/hbw32ddr/make_vc.bat
+   * contrib/hbzlib/make_b32.bat
+   * contrib/rddads/make_b32.bat
+     + Redirects .lib creation (implib, lib) output to log file.
+
+   * contrib/xhb/hbcompat.ch
+     + Added some more converions for xhb code.
+
+   * contrib/rddads/ads1.c
+     + Added two TODOs. (to adsDrop and adsExists)
+
+   * source/pp/hbppgen.c
+     ! MSVC warning fixed.
+
+   * make_vc.mak
+     ! Typo in prev commit.
+
 2008-05-21 19:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rdd/dbdrop.c
    * source/rdd/dbexists.c

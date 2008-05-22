@@ -6,7 +6,6 @@ ROOT = ../../
 
 C_SOURCES=\
 	dates2.c \
-	dbftools.c \
 	hb_f.c \
 	mathx.c \
 	strfmt.c \

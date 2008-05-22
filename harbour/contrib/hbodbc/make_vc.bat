@@ -38,7 +38,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
    echo.LIBRARY "%HB_DLL_DIR%\%HB_DLL_NAME%.dll" > _temp.def
    echo.EXPORTS >> _temp.def
    sed -nf _temp.sed < _dump.tmp >> _temp.def
-   LIB /MACHINE:X86 /DEF:_temp.def /OUT:..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib
+   LIB /MACHINE:X86 /DEF:_temp.def /OUT:..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib >> %_HB_MAKELOG%
    del _dump.tmp
    del _temp.def
    del _temp.sed

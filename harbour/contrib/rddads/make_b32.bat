@@ -42,7 +42,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD
 
-   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib "%HB_DLL_DIR%\%HB_DLL_NAME%.dll"
+   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib "%HB_DLL_DIR%\%HB_DLL_NAME%.dll" >> %_HB_MAKELOG%
    goto POST_EXIT
 
 :POST_CLEAN

@@ -66,6 +66,14 @@
    #xtranslate MaxRow(.T.)             => hb_gtInfo( HB_GTI_SCREENHEIGHT )
    #xtranslate MaxCol(.T.)             => hb_gtInfo( HB_GTI_SCREENWIDTH )
 
+   #xtranslate hb_dbPack()             => __dbPack()
+   #xtranslate hb_dbZap()              => __dbZap()
+   #xtranslate hb_dbDrop([<x,...>])    => dbDrop(<x>)
+   #xtranslate hb_dbExists([<x,...>])  => dbExists(<x>)
+   #xtranslate hb_FieldLen([<x>])      => FieldLen(<x>)
+   #xtranslate hb_FieldDec([<x>])      => FieldDec(<x>)
+   #xtranslate hb_FieldType([<x>])     => FieldType(<x>)
+
    #xtranslate hb_isregex([<x>])       => hb_isregexstring(<x>)
    #xtranslate hb_pvalue([<x,...>])    => pvalue(<x>)
    #xtranslate hb_methodName([<x,...>])=> methodName(<x>)

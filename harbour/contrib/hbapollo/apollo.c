@@ -103,8 +103,8 @@ HB_FUNC( SX_CREATEEXEC )
  * --------------------------------------------------*/
 HB_FUNC( SX_CREATEFIELD )
 {
-   sx_CreateField( hb_parc( 1 ),           /* Field name */
-                   hb_parc( 2 ),           /* Field type */
+   sx_CreateField( ( PBYTE ) hb_parc( 1 ), /* Field name */
+                   ( PBYTE ) hb_parc( 2 ), /* Field type */
                    hb_parni( 3 ),          /* Field lenght */
                    hb_parni( 4 ) );        /* Field decimals */
 }
@@ -117,8 +117,8 @@ HB_FUNC( SX_CREATEFIELD )
 HB_FUNC( SX_CREATENEW )
 {
     hb_retni(
-     sx_CreateNew( hb_parc( 1 ),           /* Field name */
-                   hb_parc( 2 ),           /* Alias */
+     sx_CreateNew( ( PBYTE ) hb_parc( 1 ), /* Field name */
+                   ( PBYTE ) hb_parc( 2 ), /* Alias */
                    hb_parni( 3 ),          /* RDE Type */
                    hb_parni( 4 ) ) );      /* The maximum number of fields to be added to the file structure */
 }
@@ -142,7 +142,7 @@ HB_FUNC( SX_EOF )
 HB_FUNC( SX_GETDATEJULIAN )
 {
    hb_retni(
-    sx_GetDateJulian( hb_parc( 1 ) ) );    /* Field name  */
+    sx_GetDateJulian( ( PBYTE ) hb_parc( 1 ) ) );    /* Field name  */
 }
 
 
@@ -153,7 +153,7 @@ HB_FUNC( SX_GETDATEJULIAN )
 HB_FUNC( SX_GETLOGICAL )
 {
    hb_retl(
-    sx_GetLogical( hb_parc( 1 ) ) );       /* Field name  */
+    sx_GetLogical( ( PBYTE ) hb_parc( 1 ) ) );       /* Field name  */
 }
 
 
@@ -163,7 +163,7 @@ HB_FUNC( SX_GETLOGICAL )
 HB_FUNC( SX_GETSTRING )
 {
    hb_retc(
-    ( char * )sx_GetString( hb_parc( 1 ) ) );  /* Field name  */
+    ( char * )sx_GetString( ( PBYTE ) hb_parc( 1 ) ) );  /* Field name  */
 }
 
 
@@ -173,7 +173,7 @@ HB_FUNC( SX_GETSTRING )
 HB_FUNC( SX_GETVARIANT )
 {
    hb_retc(
-    ( char * )sx_GetVariant( hb_parc( 1 ) ) );  /* Field name  */
+    ( char * )sx_GetVariant( ( PBYTE ) hb_parc( 1 ) ) );  /* Field name  */
 }
 
 
@@ -210,12 +210,12 @@ HB_FUNC( SX_GOTOP )
 HB_FUNC( SX_INDEXTAG )
 {
     hb_retni(
-     sx_IndexTag( hb_parc( 1 ),            /* Field name */
-                  hb_parc( 2 ),            /* Tag name */
-                  hb_parc( 3 ),            /* Index expression as a string */
-                  hb_parni( 4 ),           /* Option (0=Standard) (1=Unique) (2=Roll-Your-Own) */
-                  hb_parl( 5 ),            /* True for a descend index */
-                  hb_parc( 6) ) );         /* Condition */
+     sx_IndexTag( ( PBYTE ) hb_parc( 1 ),    /* Field name */
+                  ( PBYTE ) hb_parc( 2 ),    /* Tag name */
+                  ( PBYTE ) hb_parc( 3 ),    /* Index expression as a string */
+                  hb_parni( 4 ),             /* Option (0=Standard) (1=Unique) (2=Roll-Your-Own) */
+                  hb_parl( 5 ),              /* True for a descend index */
+                  ( PBYTE ) hb_parc( 6) ) ); /* Condition */
 }
 
 
@@ -257,13 +257,13 @@ HB_FUNC( SX_REPLACE )
 switch ( hb_parni( 2 ) )
 {
  case R_INTEGER :
- case R_JULIAN  : sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) ) ;  break;
- case R_LOGICAL : sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) ) ;  break;  /* TODO: somthing is wrong here... */
- case R_LONG    : sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parnl( 3) ) ;  break;
+ case R_JULIAN  : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) ) ;  break;
+ case R_LOGICAL : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) ) ;  break;  /* TODO: somthing is wrong here... */
+ case R_LONG    : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parnl( 3) ) ;  break;
  case R_DOUBLE  :
       {
         double d = hb_parnd( 3 );
-        sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) &d );
+        sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) &d );
         break;
       }
  case R_CHAR    :
@@ -271,8 +271,8 @@ switch ( hb_parni( 2 ) )
  case R_MEMO    :
  case R_BITMAP  :
  case R_BLOBFILE:
- case R_BLOBPTR : sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3)  ) ;  break;
- default:         sx_Replace( hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3)  );
+ case R_BLOBPTR : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3)  ) ;  break;
+ default:         sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3)  );
 }
 
 }
@@ -293,7 +293,7 @@ HB_FUNC( SX_RLOCK )
 HB_FUNC( SX_SEEK )
 {
     hb_retl(
-     sx_Seek( hb_parc( 1 ) ) );            /* The value to search for as a string */
+     sx_Seek( ( PBYTE ) hb_parc( 1 ) ) );            /* The value to search for as a string */
 }
 
 
@@ -304,7 +304,7 @@ HB_FUNC( SX_SEEK )
 HB_FUNC( SX_SELECT )
 {
     hb_retni(
-     sx_Seek( hb_parc( 1 ) ) );            /* The work area number returned when the file was opened.  */
+     sx_Seek( ( PBYTE ) hb_parc( 1 ) ) );            /* The work area number returned when the file was opened.  */
 }
 
 
@@ -397,8 +397,8 @@ HB_FUNC( SX_DISABLEAUTOOPEN )
 HB_FUNC( SX_USE )
 {
      hb_retni(
-      sx_Use( hb_parc( 1 ),                /* Filename */
-              hb_parc( 2 ),                /* Alias */
+      sx_Use( ( PBYTE ) hb_parc( 1 ),      /* Filename */
+              ( PBYTE ) hb_parc( 2 ),      /* Alias */
               hb_parni( 3 ),               /* OpenMode */
               hb_parni( 4) ));             /* RDE Type */
 }

@@ -477,7 +477,7 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
          if( szFrom )
          {
             hb_pp_addDefine( pState, "HB_VER_SVNID", szFrom );
-            *piSVNID = hb_strValInt( szFrom, &iLen );
+            *piSVNID = ( int ) hb_strValInt( szFrom, &iLen );
          }
          else
          {

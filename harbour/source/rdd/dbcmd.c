@@ -2033,3 +2033,117 @@ HB_FUNC( HB_RDDINFO )
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "RDDINFO" );
    }
 }
+
+HB_FUNC( HB_DBDROP )
+{
+   LPRDDNODE  pRDDNode;
+   USHORT     uiRddID;
+   const char * szDriver;
+
+   szDriver = hb_parc( 3 );
+   if( !szDriver ) /* no VIA RDD parameter, use default */
+   {
+      szDriver = hb_rddDefaultDrv( NULL );
+   }
+
+   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
+
+   if( pRDDNode )
+      hb_retl( SELF_DROP( pRDDNode, hb_param( 1, HB_IT_STRING ),
+                                    hb_param( 2, HB_IT_STRING ) ) == SUCCESS );
+   else
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "HB_DBDROP" );
+}
+
+HB_FUNC( HB_DBEXISTS )
+{
+   LPRDDNODE  pRDDNode;
+   USHORT     uiRddID;
+   const char * szDriver;
+
+   szDriver = hb_parc( 3 );
+   if( !szDriver ) /* no VIA RDD parameter, use default */
+   {
+      szDriver = hb_rddDefaultDrv( NULL );
+   }
+
+   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDD */
+
+   if( pRDDNode )
+      hb_retl( SELF_EXISTS( pRDDNode, hb_param( 1, HB_IT_STRING ),
+                                      hb_param( 2, HB_IT_STRING ) ) == SUCCESS );
+   else
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, "HB_DBEXISTS" );
+}
+
+HB_FUNC( HB_FIELDLEN )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+   {
+      USHORT uiIndex;
+
+      if( ( uiIndex = hb_parni( 1 ) ) > 0 )
+      {
+         PHB_ITEM pItem = hb_itemNew( NULL );
+
+         if( SELF_FIELDINFO( pArea, uiIndex, DBS_LEN, pItem ) == SUCCESS )
+         {
+            hb_itemReturnRelease( pItem );
+            return;
+         }
+         hb_itemRelease( pItem );
+      }
+   }
+
+   hb_retni( 0 );
+}
+
+HB_FUNC( HB_FIELDDEC )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+   {
+      USHORT uiIndex;
+
+      if( ( uiIndex = hb_parni( 1 ) ) > 0 )
+      {
+         PHB_ITEM pItem = hb_itemNew( NULL );
+
+         if( SELF_FIELDINFO( pArea, uiIndex, DBS_DEC, pItem ) == SUCCESS )
+         {
+            hb_itemReturnRelease( pItem );
+            return;
+         }
+         hb_itemRelease( pItem );
+      }
+   }
+
+   hb_retni( 0 );
+}
+
+HB_FUNC( HB_FIELDTYPE )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+   {
+      USHORT uiIndex;
+
+      if( ( uiIndex = hb_parni( 1 ) ) > 0 )
+      {
+         PHB_ITEM pItem = hb_itemNew( NULL );
+
+         if( SELF_FIELDINFO( pArea, uiIndex, DBS_TYPE, pItem ) == SUCCESS )
+         {
+            hb_itemReturnRelease( pItem );
+            return;
+         }
+         hb_itemRelease( pItem );
+      }
+   }
+
+   hb_retc( NULL );
+}

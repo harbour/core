@@ -877,7 +877,8 @@ $(LDFLAGS)
 /OUT:$(HBDOC_EXE)
 $(**: = ^
 )
-$(STANDARD_STATIC_HBLIBS $(HBDOC_LIBS)
+$(STANDARD_STATIC_HBLIBS)
+$(HBDOC_LIBS)
 user32.lib winspool.lib
 <<$(KEEPSTATE)
 #**********************************************************
