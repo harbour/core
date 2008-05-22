@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-22 08:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * hbwhat32/_winsys.c
+   * hbwhat32/_wincomm.c
+     ! Warnings.
+
+   * source/rtl/net.c
+     ! Fixed GPF in NETNAME() under DOS (in error condition only).
+     ! Fixed GPF in NETNAME()/HB_USERNAME() on unsupported 
+       platforms.
+
 2008-05-22 08:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    - contrib/hbmisc/dbftools.c
    * contrib/hbmisc/common.mak
@@ -57,7 +67,7 @@
      + Redirects .lib creation (implib, lib) output to log file.
 
    * contrib/xhb/hbcompat.ch
-     + Added some more converions for xhb code.
+     + Added some more conversions for xhb code.
 
    * contrib/rddads/ads1.c
      + Added two TODOs. (to adsDrop and adsExists)

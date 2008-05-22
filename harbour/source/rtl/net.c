@@ -143,7 +143,7 @@ char * hb_netname( void )
          HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
       }
 
-      return regs.h.ch == 0 ? "" : pszValue;
+      return regs.h.ch == 0 ? hb_strdup( "" ) : pszValue;
 #  endif
 
 #elif defined(HB_OS_WIN_32)
@@ -157,7 +157,7 @@ char * hb_netname( void )
 
 #else
 
-   return NULL;
+   return hb_strdup( "" );
 
 #endif
 }
@@ -187,7 +187,7 @@ char * hb_username( void )
 
 #else
 
-   return NULL;
+   return hb_strdup( "" );
 
 #endif
 }

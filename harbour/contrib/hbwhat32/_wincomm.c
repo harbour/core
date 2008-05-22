@@ -324,8 +324,8 @@ vi = hb_itemGetNI   ( hb_arrayGetItemPtr(wArray, s ));
 //------------------------------------------------------------------------------------------
 HB_FUNC( ADDLISTVIEWITEMS )
 {
-   PHB_ITEM hArray;
-   char *caption;
+// PHB_ITEM hArray;
+   char *caption = NULL;
    LV_ITEM LI;
    HWND h;
    int l;
@@ -334,8 +334,8 @@ HB_FUNC( ADDLISTVIEWITEMS )
 
    h = (HWND) hb_parnl( 1 ) ;
    l = hb_parinfa( 2, 0 ) - 1 ;
-   hArray = hb_param( 2, HB_IT_ARRAY );
    c = ListView_GetItemCount (h);
+// hArray = hb_param( 2, HB_IT_ARRAY );
 //   caption  = hb_itemGetCPtr ( hArray->item.asArray.value->pItems );
 
    LI.mask=LVIF_TEXT ;
@@ -376,7 +376,6 @@ HB_FUNC( LISTVIEWRESET )
 //------------------------------------------------------------------------------------------
 HB_FUNC( LISTVIEW_GETFIRSTITEM )
 {
-   hb_retni ( ListView_GetNextItem( (HWND) hb_parnl( 1 )  , -1 ,LVNI_ALL | LVNI_SELECTED) + 1);
+   hb_retni( ListView_GetNextItem( (HWND) hb_parnl( 1 ), -1, LVNI_ALL | LVNI_SELECTED ) + 1 );
 }
 //------------------------------------------------------------------------------------------
-

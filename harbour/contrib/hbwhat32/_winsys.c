@@ -410,8 +410,7 @@ HB_FUNC( HIWORD )
 
 HB_FUNC( MAKELONG )
 {
-
-   hb_retnl( ((LONG) (((WORD) (hb_parni(1))) | ((DWORD) ((WORD) (hb_parni(2)))) << 16)) ) ;
+   hb_retnl( (LONG) (((WORD) (hb_parni(1))) | (((DWORD) ((WORD) (hb_parni(2)))) << 16)) ) ;
 }
 
 //-------------------------------------------------------------------//
