@@ -337,7 +337,7 @@ static double hb_numPow10( int nPrecision )
       }
       else if( nPrecision > -16 )
       {
-         return 1.0 / s_dPow10[ ( unsigned int ) nPrecision ];
+         return 1.0 / s_dPow10[ ( unsigned int ) -nPrecision ];
       }
    }
 
