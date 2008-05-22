@@ -148,9 +148,15 @@ void hb_releaseCPU( void )
    }
 #elif defined(HB_OS_UNIX)
    {
+      struct timeval tv;
+      tv.tv_sec = 0;
+      tv.tv_usec = 1000;
+      select( 0, NULL, NULL, NULL, &tv );
+   }
+      /* the code below is more efficient but doesn't work in Centos 5.1
       static const struct timespec nanosecs = { 0, 1000000 };
       nanosleep( &nanosecs, NULL );
-   }
+      */
 #else
 
    /* Do nothing */

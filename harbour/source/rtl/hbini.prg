@@ -104,7 +104,7 @@ FUNCTION hb_IniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
 
    /* Default case sensitiveness for keys */
    DEFAULT lKeyCaseSens TO .T.
-   DEFAULT cSplitters TO "=|:"
+   DEFAULT cSplitters TO "="
    DEFAULT lAutoMain TO .T.
 
    hb_HCaseMatch( hIni, lKeyCaseSens )

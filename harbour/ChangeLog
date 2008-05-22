@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-22 10:10 UTC+0100 Lorenzo Fiorini (lorenzo.fiorini/at/gmail.com)
+  * source/common/hbstr.c
+    * casting for gcc 4.3.0
+  * source/rtl/idle.c
+    * changed for make it work in Centos 5.1
+  * source/rtl/hbini.prg
+    * set only = as default key, field separator
+
 2008-05-22 08:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * hbwhat32/_winsys.c
    * hbwhat32/_wincomm.c
