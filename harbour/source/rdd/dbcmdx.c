@@ -58,6 +58,20 @@
 
 #ifdef HB_COMPAT_XPP
 
+HB_FUNC_EXTERN( HB_DBPACK );
+
+HB_FUNC( DBPACK )
+{
+   HB_FUNC_EXEC( HB_DBPACK );
+}
+
+HB_FUNC_EXTERN( HB_DBZAP );
+
+HB_FUNC( DBZAP )
+{
+   HB_FUNC_EXEC( HB_DBZAP );
+}
+
 HB_FUNC( ORDWILDSEEK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
