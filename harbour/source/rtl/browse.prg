@@ -288,7 +288,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
    RETURN .T.
 
-STATIC FUNCTION StatLine( oBrw, lAppend )
+STATIC PROCEDURE StatLine( oBrw, lAppend )
 
    LOCAL nTop   := oBrw:nTop - 1
    LOCAL nRight := oBrw:nRight
@@ -307,7 +307,7 @@ STATIC FUNCTION StatLine( oBrw, lAppend )
                                     IIF( oBrw:HitTop(), "<bof>", "     " ) )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION DoGet( oBrw, lAppend )
 
@@ -394,7 +394,7 @@ STATIC FUNCTION ExitKey( lAppend )
 
    RETURN nKey
 
-STATIC FUNCTION FreshOrder( oBrw )
+STATIC PROCEDURE FreshOrder( oBrw )
 
    LOCAL nRec := RecNo()
 
@@ -408,7 +408,7 @@ STATIC FUNCTION FreshOrder( oBrw )
       ENDDO
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION Skipped( nRecs, lAppend )
 

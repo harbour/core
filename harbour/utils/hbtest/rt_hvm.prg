@@ -55,7 +55,7 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
-FUNCTION Main_HVM()
+PROCEDURE Main_HVM()
 
 /* NOTE: CA-Cl*pper PP fails on these
    TEST_LINE( "1" .AND. "2"                   , "E BASE 1066 Argument error conditional " )
@@ -577,7 +577,7 @@ FUNCTION Main_HVM()
    TEST_LINE( {} >= {}                        , "E BASE 1076 Argument error >= A:2:A:{.[0].};A:{.[0].} F:S"              )
    TEST_LINE( {|| NIL } >= {|| NIL }          , "E BASE 1076 Argument error >= A:2:B:{||...};B:{||...} F:S"              )
 
-   RETURN NIL
+   RETURN
 
 /* Don't change the position of this #include. */
 #include "rt_init.ch"

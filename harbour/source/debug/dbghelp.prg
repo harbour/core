@@ -62,7 +62,7 @@
 #include "common.ch"
 #include "inkey.ch"
 
-FUNCTION __dbgHelp( nTopic )
+PROCEDURE __dbgHelp( nTopic )
 
    LOCAL oDlg
    LOCAL cColor := iif( __Dbg():lMonoDisplay, "N/W, W/N, W+/W, W+/N", "N/W, N/BG, R/W, R/BG" )
@@ -92,7 +92,7 @@ FUNCTION __dbgHelp( nTopic )
 
    oDlg:ShowModal()
 
-   RETURN NIL
+   RETURN
 
 STATIC PROCEDURE PaintWindow( oDlg, oBrw, aTopics )
 

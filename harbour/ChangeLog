@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-23 21:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/browse.prg
+   * source/rtl/getsys53.prg
+   * source/rtl/profiler.prg
+   * source/rtl/tbrowse.prg
+   * source/debug/dbghelp.prg
+   * source/debug/dbgwa.prg
+   * utils/hbextern/hbextern.prg
+   * utils/hbtest/hbtest.prg
+   * utils/hbtest/rt_array.prg
+   * utils/hbtest/rt_class.prg
+   * utils/hbtest/rt_date.prg
+   * utils/hbtest/rt_file.prg
+   * utils/hbtest/rt_hvm.prg
+   * utils/hbtest/rt_hvma.prg
+   * utils/hbtest/rt_math.prg
+   * utils/hbtest/rt_misc.prg
+   * utils/hbtest/rt_str.prg
+   * utils/hbtest/rt_stra.prg
+   * utils/hbtest/rt_trans.prg
+     % FUNCTION -> PROCEDURE
+
 2008-05-23 21:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/compiler/hbfunchk.c
      ! Typo in message.

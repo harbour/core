@@ -60,7 +60,7 @@
 
 MEMVAR objHolder, cDtorResult
 
-FUNCTION Main_CLASS()
+PROCEDURE Main_CLASS()
    LOCAL oValue, aRef
    PRIVATE objHolder, cDtorResult
 
@@ -1063,7 +1063,7 @@ FUNCTION Main_CLASS()
 
 #endif
 
-   RETURN NIL
+   RETURN
 
 
 #ifdef __HARBOUR__

@@ -54,7 +54,7 @@
 #include "setcurs.ch"
 #include "inkey.ch"
 
-function __dbgShowWorkAreas()
+procedure __dbgShowWorkAreas()
 
    local oDlg
    local oCol
@@ -85,7 +85,7 @@ function __dbgShowWorkAreas()
 
    if Len( aAlias ) == 0
       Alert( "No workareas in use")
-      return nil
+      return
    endif
 
    IF !Used()
@@ -160,9 +160,9 @@ function __dbgShowWorkAreas()
    
    dbSelectArea( nOldArea )
 
-return nil
+return
 
-static function DlgWorkAreaPaint( oDlg, aBrw )
+static procedure DlgWorkAreaPaint( oDlg, aBrw )
 
    /* Display captions */
 
@@ -211,9 +211,9 @@ static function DlgWorkAreaPaint( oDlg, aBrw )
 
    UpdateInfo( oDlg, Alias() )
 
-return nil
+return
 
-static function DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
+static procedure DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
 
    static s_nFocus := 1
 
@@ -229,7 +229,7 @@ static function DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
          s_nFocus := 1
       endif
       aBrw[ s_nFocus ]:Hilite()
-      return nil
+      return
    endif
 
    do case
@@ -263,7 +263,7 @@ static function DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
       WorkAreasKeyPressed( nKey, aBrw[ 3 ], Len( aStruc ) )
    endcase
 
-return nil
+return
 
 static procedure WorkAreasKeyPressed( nKey, oBrw, nTotal )
 
@@ -347,12 +347,12 @@ static function DbfInfo( aInfo )
 
 return aInfo
 
-static function UpdateInfo( oDlg, cAlias )
+static procedure UpdateInfo( oDlg, cAlias )
 
    local nOldArea
 
    if Empty( cAlias )
-      return NIL
+      return
    endif
    
    nOldArea := Select()
@@ -373,4 +373,4 @@ static function UpdateInfo( oDlg, cAlias )
 
    dbSelectArea( nOldArea )
 
-return nil
+return

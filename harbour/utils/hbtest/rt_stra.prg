@@ -55,7 +55,7 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
-FUNCTION Main_STRA()
+PROCEDURE Main_STRA()
 
    /* STR() */
 
@@ -249,9 +249,9 @@ FUNCTION Main_STRA()
    TEST_LINE( StrZero(-100000, 8, -1)         , "-0100000"       )
 #endif
 
-   RETURN NIL
+   RETURN
 
-FUNCTION Comp_Str()
+PROCEDURE Comp_Str()
    LOCAL old_exact := SET( _SET_EXACT, .F. )
 
    TEST_LINE( "ABC" == "", .F. )
@@ -361,9 +361,9 @@ FUNCTION Comp_Str()
    TEST_LINE( "DEF" >= "ABCD", .T. )
 
    SET( _SET_EXACT, old_exact )
-   RETURN NIL
+   RETURN
 
-FUNCTION Exact_Str()
+PROCEDURE Exact_Str()
    LOCAL old_exact := SET( _SET_EXACT, .T. )
 
    TEST_LINE( "ABC" == "", .F. )
@@ -474,9 +474,9 @@ FUNCTION Exact_Str()
 
    SET( _SET_EXACT, old_exact )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION New_STRINGS()
+PROCEDURE New_STRINGS()
 
 #ifdef __HARBOUR__
 
@@ -521,15 +521,15 @@ FUNCTION New_STRINGS()
 
 #endif
 
-   RETURN NIL
+   RETURN
 
-FUNCTION Long_STRINGS()
+PROCEDURE Long_STRINGS()
 
    TEST_LINE( Right( Space( 64 * 1024 - 5 ) + "12345 7890", 10                      ), "12345 7890"                                 )
    TEST_LINE( Len( Space( 81910 ) + "1234567890"                                    ), 81920                                        )
    TEST_LINE( ( "1234567890" + Space( 810910 ) ) - ( "1234567890" + Space( 810910 ) ), "12345678901234567890" + Space( 810910 * 2 ) )
 
-   RETURN NIL
+   RETURN
 
 /* Don't change the position of this #include. */
 #include "rt_init.ch"

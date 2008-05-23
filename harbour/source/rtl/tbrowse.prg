@@ -341,7 +341,7 @@ STATIC FUNCTION _SKIP_RESULT( xResult )
    RETURN IIF( ValType( xResult ) == "N", Int( xResult ), 0 )
 
 
-STATIC FUNCTION _DISP_FHSEP( nRow, nType, cColor, aColData )
+STATIC PROCEDURE _DISP_FHSEP( nRow, nType, cColor, aColData )
    LOCAL lFirst, lFirstVisible
    LOCAL aCol
    LOCAL cSep
@@ -404,10 +404,10 @@ STATIC FUNCTION _DISP_FHSEP( nRow, nType, cColor, aColData )
       ENDIF
    NEXT
 
-   RETURN NIL
+   RETURN
 
 
-STATIC FUNCTION _DISP_FHNAME( nRow, nHeight, nLeft, nRight, nType, nColor, aColors, aColData )
+STATIC PROCEDURE _DISP_FHNAME( nRow, nHeight, nLeft, nRight, nType, nColor, aColors, aColData )
 
    LOCAL lFirst
    LOCAL aCol
@@ -439,7 +439,7 @@ STATIC FUNCTION _DISP_FHNAME( nRow, nHeight, nLeft, nRight, nType, nColor, aColo
       ENDIF
    NEXT
 
-   RETURN NIL
+   RETURN
 
 
 METHOD dispFrames() CLASS TBROWSE
@@ -1498,11 +1498,9 @@ METHOD doConfigure() CLASS TBROWSE
    RETURN Self
 
 
-STATIC FUNCTION _GENLIMITRTE()
+STATIC PROCEDURE _GENLIMITRTE()
 
-   LOCAL oError
-
-   oError := ErrorNew()
+   LOCAL oError := ErrorNew()
 
    oError:severity    := ES_ERROR
    oError:genCode     := EG_LIMIT
@@ -1517,7 +1515,7 @@ STATIC FUNCTION _GENLIMITRTE()
    Eval( ErrorBlock(), oError )
    __errInHandler()
 
-   RETURN NIL
+   RETURN
 
 
 /* helper function to take headings and footing data */
@@ -1664,7 +1662,7 @@ STATIC FUNCTION _SETCOLUMNS( nFrom, nTo, nStep, aColData, nFirst, nWidth, lFirst
    RETURN IIF( nLast == 0, nFrom - nStep, nLast )
 
 
-STATIC FUNCTION _SETVISIBLE( aColData, nWidth, nFrozen, nLeft, nRight )
+STATIC PROCEDURE _SETVISIBLE( aColData, nWidth, nFrozen, nLeft, nRight )
 
    LOCAL nColCount, nPos, nFirst
    LOCAL lLeft, lRight, lFirst
@@ -1728,7 +1726,7 @@ STATIC FUNCTION _SETVISIBLE( aColData, nWidth, nFrozen, nLeft, nRight )
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 
 /* set visible columns */

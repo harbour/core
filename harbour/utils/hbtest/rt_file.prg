@@ -60,7 +60,7 @@
 /* NOTE: The order of the tests is relevant here, so don't
          rearrange them. */
 
-FUNCTION Main_FILE()
+PROCEDURE Main_FILE()
    LOCAL cFileName := "$$FILEIO.TMP"
    LOCAL nFlags
 
@@ -214,7 +214,7 @@ FUNCTION Main_FILE()
 
    FErase("$$FILEIO.TMP")
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION TESTFIER( xRetVal )
    RETURN PadR( "E: " + LTrim( Str( FError() ) ), 9 ) + " R: " + XToStr( xRetVal )

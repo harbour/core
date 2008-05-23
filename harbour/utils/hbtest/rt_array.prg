@@ -55,7 +55,7 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
-FUNCTION Main_ARRAY()
+PROCEDURE Main_ARRAY()
 
    /* ARRAY function error conditions. */
 
@@ -359,7 +359,7 @@ FUNCTION Main_ARRAY()
    TEST_LINE( AScan( saAllTypes, scStringZ  ) , 3           )
    SET EXACT OFF
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION TANew( cChar, nLen )
    LOCAL aArray

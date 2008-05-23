@@ -99,7 +99,7 @@ STATIC s_nEndTime
    REQUEST HB_LANG_EN
 #endif
 
-FUNCTION Main( cPar1, cPar2 )
+PROCEDURE Main( cPar1, cPar2 )
 
    OutStd( "Harbour Regression Test Suite" + HB_OSNewLine() +;
            "Copyright 1999-2008, http://www.harbour-project.org" + HB_OSNewLine() )
@@ -123,7 +123,7 @@ FUNCTION Main( cPar1, cPar2 )
               "          /all          Display all tests, not only the failures." + HB_OSNewLine() +;
               "          /skip:<list>  Skip the listed test numbers." + HB_OSNewLine() )
 
-      RETURN NIL
+      RETURN
    ENDIF
 
    /* Initialize test */
@@ -159,7 +159,7 @@ FUNCTION Main( cPar1, cPar2 )
 
    TEST_END()
 
-   RETURN NIL
+   RETURN
 
 /* NOTE: These should always be called last, since they can mess up the test
          environment.
@@ -167,7 +167,7 @@ FUNCTION Main( cPar1, cPar2 )
          Right now the failing __MRestore() will clear all memory variables,
          which is absolutely normal otherwise. */
 
-STATIC FUNCTION Main_LAST()
+STATIC PROCEDURE Main_LAST()
 
    TEST_LINE( MEMVARBLOCK( "mcString" )           , "{||...}"                                         )
 #ifndef __XPP__
@@ -183,9 +183,9 @@ STATIC FUNCTION Main_LAST()
    TEST_LINE( __MSave( BADFNAME(), "*", .T. ) , "E BASE 2006 Create error " + BADFNAME() + " F:DR"    )
 #endif
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION TEST_BEGIN( cParam )
+STATIC PROCEDURE TEST_BEGIN( cParam )
 
    s_nStartTime := Seconds()
 
@@ -317,9 +317,9 @@ STATIC FUNCTION TEST_BEGIN( cParam )
    w_TEST->TYPE_L    := .T.
    w_TEST->TYPE_L_E  := .F.
 
-   RETURN NIL
+   RETURN
 
-FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
+PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
    LOCAL xResult
    LOCAL oError
    LOCAL bOldError
@@ -398,12 +398,12 @@ FUNCTION TEST_CALL( cBlock, bBlock, xResultExpected )
       s_nPass++
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 FUNCTION TEST_OPT_Z()
    RETURN s_lShortCut
 
-STATIC FUNCTION TEST_END()
+STATIC PROCEDURE TEST_END()
 
    dbSelectArea( "w_TEST" )
    dbCloseArea()
@@ -435,7 +435,7 @@ STATIC FUNCTION TEST_END()
 
    ErrorLevel( iif( s_nFail != 0, 1, 0 ) )
 
-   RETURN NIL
+   RETURN
 
 FUNCTION XToStr( xValue )
    LOCAL cType := ValType( xValue )
@@ -611,7 +611,7 @@ STATIC FUNCTION BADFNAME()
    RETURN "*BADNAM*.MEM"
 #endif
 
-STATIC FUNCTION OutMsg( hFile, cMsg )
+STATIC PROCEDURE OutMsg( hFile, cMsg )
 
    IF hFile == 1
       OutStd( cMsg )
@@ -621,7 +621,7 @@ STATIC FUNCTION OutMsg( hFile, cMsg )
       FWrite( hFile, cMsg )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 /* Don't change the position of this #include. */
 #include "rt_init.ch"

@@ -64,7 +64,7 @@
    #endif
 #endif
 
-FUNCTION Main_MISC()
+PROCEDURE Main_MISC()
    LOCAL oError
 #ifdef __HARBOUR__
    LOCAL cEOL
@@ -1040,11 +1040,11 @@ FUNCTION Main_MISC()
    Set( _SET_EOL, cEOL )
 #endif
 
-   RETURN NIL
+   RETURN
 
 #ifdef __HARBOUR__
 
-FUNCTION Main_OPOVERL()
+PROCEDURE Main_OPOVERL()
    LOCAL oString := HB_TString()
 
    oString:cValue := "Hello"
@@ -1077,7 +1077,7 @@ FUNCTION Main_OPOVERL()
    TEST_LINE( oString--                 , "HB_TSTRING Object" )
    TEST_LINE( oString:cValue            , "Hello"             )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION HB_TString()
 

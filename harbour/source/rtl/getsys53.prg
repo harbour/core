@@ -139,16 +139,16 @@ FUNCTION HitTest( oGetList, nMRow, nMCol, aMsg )
 
    RETURN iif( oGetList != NIL, oGetlist:hitTest( nMRow, nMCol, aMsg ), 0 )
 
-FUNCTION ShowGetMsg( oGet, aMsg )
+PROCEDURE ShowGetMsg( oGet, aMsg )
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
       oGetList:ShowGetMsg( oGet, aMsg )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION EraseGetMsg( oGet, aMsg )
+PROCEDURE EraseGetMsg( oGet, aMsg )
    LOCAL oGetList := __GetListActive()
 
    HB_SYMBOL_UNUSED( oGet )
@@ -157,7 +157,7 @@ FUNCTION EraseGetMsg( oGet, aMsg )
       oGetList:EraseGetMsg( aMsg )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 FUNCTION ReadStats( nElement, xNewValue )
    LOCAL oGetList := __GetListActive()

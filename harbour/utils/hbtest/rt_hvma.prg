@@ -55,7 +55,7 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
-FUNCTION Main_HVMA()
+PROCEDURE Main_HVMA()
    LOCAL nA, nB, nC
 
    // NOTE: These are compiler tests.
@@ -593,7 +593,7 @@ FUNCTION Main_HVMA()
    TEST_LINE(( nA := -500000000000000000000000     , RTSTR( -nA )) , " 20 ********************"           )
    TEST_LINE(( nA := -5000000000000000000000000    , RTSTR( -nA )) , " 20 ********************"           )
 
-   RETURN NIL
+   RETURN
 
 FUNCTION RTSTR( nValue )
    RETURN Str( Len( Str( nValue ) ), 3 ) + " " + Str( nValue )

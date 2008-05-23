@@ -55,7 +55,7 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
-FUNCTION Main_TRANS()
+PROCEDURE Main_TRANS()
    LOCAL cOldDate  := Set( _SET_DATEFORMAT )
    local cOldFixed := Set( _SET_FIXED )
    local cOldDecim := Set( _SET_DECIMALS )
@@ -784,7 +784,7 @@ FUNCTION Main_TRANS()
    SET( _SET_DECIMALS, cOldDecim )
    SET( _SET_DATEFORMAT, cOldDate )
 
-   RETURN NIL
+   RETURN
 
 /* Don't change the position of this #include. */
 #include "rt_init.ch"

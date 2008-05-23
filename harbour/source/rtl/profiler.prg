@@ -106,7 +106,7 @@
 
 #include "inkey.ch"
 
-Function Main()
+Procedure Main()
 Local oProfile := HBProfile():new()
 Local n
 
@@ -147,26 +147,26 @@ Local n
    @ 3, 0 Say "  Total Ticks: " + str( oProfile:totalTicks() )
    @ 4, 0 Say "Total Seconds: " + str( oProfile:totalSeconds() )
 
-Return NIL
+Return
 
-Static Function DrawScreen( cTitle )
+Static Procedure DrawScreen( cTitle )
 
    Scroll()
 
    @ 0, 0 SAY PadR( cTitle, MaxCol() + 1 ) COLOR "N/W"
 
-Return NIL
+Return
 
-Function DoNothingForTwoSeconds()
+Procedure DoNothingForTwoSeconds()
 
    Inkey( 2 )
 
-Return NIL
+Return
 
-Function CallMe500Times()
-Return NIL
+Procedure CallMe500Times()
+Return
 
-Static Function Browser( oBrowse )
+Static Procedure Browser( oBrowse )
 Local lBrowsing := .T.
 Local nKey
 
@@ -205,7 +205,7 @@ Local nKey
 
    EndDo
 
-Return NIL
+Return
 
 #endif
 

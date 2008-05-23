@@ -55,7 +55,7 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
-FUNCTION Main_MATH()
+PROCEDURE Main_MATH()
 
    LOCAL l, s, o
    MEMVAR s0, s1, v2
@@ -527,7 +527,7 @@ FUNCTION Main_MATH()
 
 #endif
 
-   RETURN NIL
+   RETURN
 
 /* Don't change the position of this #include. */
 #include "rt_init.ch"

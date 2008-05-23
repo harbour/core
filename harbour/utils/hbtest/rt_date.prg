@@ -55,7 +55,7 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
-FUNCTION Main_DATE()
+PROCEDURE Main_DATE()
    LOCAL cDate := "1999/11/25"
 
    /* YEAR() */
@@ -191,7 +191,7 @@ FUNCTION Main_DATE()
    TEST_LINE( DToS(sdDate)                    , "19840325"                             )
    TEST_LINE( DToS(sdDateE)                   , "        "                             )
 
-   RETURN NIL
+   RETURN
 
 /* Don't change the position of this #include. */
 #include "rt_init.ch"

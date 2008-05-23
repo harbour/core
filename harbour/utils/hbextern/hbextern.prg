@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HBEXTERN.CH generator
+ * hbextern.ch generator
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  * www - http://www.harbour-project.org
