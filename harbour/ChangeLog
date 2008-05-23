@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-23 08:00 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvtclass.prg
+    * Class TBrowseWVG
+      - METHOD ColumnsSep
+      + METHOD DoConfigure
+        Optimized population of ::aColumnsSep. Thanks Viktor pointing to this direction.
+
 2008-05-23 10:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * harbour.spec
      + Added one missing HU translation.

@@ -3539,15 +3539,20 @@ METHOD Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor ) CLASS WvtConsole
 
 CLASS TBrowseWVG FROM TBrowse
 
-   METHOD aColumnsSep()
+   DATA   aColumnsSep               INIT {}
+
+   METHOD DoConfigure( nMode )
 
    ENDCLASS
 
 //-------------------------------------------------------------------//
 
-METHOD aColumnsSep() CLASS TBrowseWVG
-   Local aSep := {}
+METHOD DoConfigure( nMode ) CLASS TBrowseWVG
    Local lFirst, aCol, nColPos
+
+   ::Super:DoConfigure( nMode )
+
+   ::aColumnsSep := {}
 
    lFirst := .T.
    FOR EACH aCol IN ::aColData
@@ -3562,13 +3567,14 @@ METHOD aColumnsSep() CLASS TBrowseWVG
                nColPos += Int( aCol[ _TBCI_SEPWIDTH ]/2 )
             ENDIF
 
-            aadd( aSep, nColPos )
+            aadd( ::aColumnsSep, nColPos )
          ENDIF
       ENDIF
    NEXT
 
-   Return aSep
+   Return Self
 
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
+
