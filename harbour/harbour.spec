@@ -132,6 +132,10 @@ uma maquina virtual e documentaГЦo.
 Этот пакет содержит компилятор, препроцессор, файлы заголовков, виртуальную
 машину и документацию.
 
+%description -l hu
+%{dname} egy tЖbb platformon is mШkЖdУ CA-Clipper kompatibilis 
+fordМtСprogram. A csomag rИsze a fordМtС maga, az elУfordМtС, fejlИc 
+АllomАnyok, a virtuАlis gИp Иs fЭggvИnykЖnyvtАrak, valamint a dokumentАciС.
 
 ######################################################################
 ## main shared lib
