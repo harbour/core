@@ -168,7 +168,7 @@ BOOL hb_compFunCallCheck( HB_COMP_DECL, char * szFuncCall, int iArgs )
             else if( pFunc->iMaxParam == -1 )
                snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected at least: %i", iArgs, pFunc->iMinParam );
             else if( pFunc->iMinParam == -1 )
-               snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected less then: %i", iArgs, pFunc->iMaxParam );
+               snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected less than: %i", iArgs, pFunc->iMaxParam );
             else
                snprintf( szMsg, sizeof( szMsg ), "\nPassed: %i, expected from: %i to: %i", iArgs, pFunc->iMinParam, pFunc->iMaxParam );
          }
