@@ -655,7 +655,8 @@ FUNCTION WvtMyBrowse()
 
    Popups( 2 )
 
-   oBrowse := TBrowseNew( nTop + 3, nLeft + 2, nBottom - 1, nRight - 2 )
+   //oBrowse := TBrowseNew( nTop + 3, nLeft + 2, nBottom - 1, nRight - 2 )
+   oBrowse := TBrowseWVG():New( nTop + 3, nLeft + 2, nBottom - 1, nRight - 2 )
 
    oBrowse:ColSep        = '  '
    oBrowse:HeadSep       = '__'
@@ -962,7 +963,8 @@ STATIC FUNCTION CfgMyBrowse( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSp
    Select( cUseAlias )
    info_:= DbStruct()
 
-   oBrowse := TBrowseNew( aTLBR[ 1 ], aTLBR[ 2 ], aTLBR[ 3 ], aTLBR[ 4 ] )
+   //oBrowse := TBrowseNew( aTLBR[ 1 ], aTLBR[ 2 ], aTLBR[ 3 ], aTLBR[ 4 ] )
+   oBrowse := TBrowseWVG():New( aTLBR[ 1 ], aTLBR[ 2 ], aTLBR[ 3 ], aTLBR[ 4 ] )
 
    oBrowse:ColSep        := '  '
    oBrowse:HeadSep       := '__'
@@ -2093,3 +2095,69 @@ FUNCTION DrawSlide( hDlg, nSlide )
    Win_ReleaseDC( hDlg,hDC )
 
    Return nil
+
+//-------------------------------------------------------------------//
+//-------------------------------------------------------------------//
+//-------------------------------------------------------------------//
+//
+//                      TBrowseWVG From TBrowse
+//
+//-------------------------------------------------------------------//
+//-------------------------------------------------------------------//
+//-------------------------------------------------------------------//
+
+#include "hbclass.ch"
+
+#define _TBCI_COLOBJECT       1   // column object
+#define _TBCI_COLWIDTH        2   // width of the column
+#define _TBCI_COLPOS          3   // column position on screen
+#define _TBCI_CELLWIDTH       4   // width of the cell
+#define _TBCI_CELLPOS         5   // cell position in column
+#define _TBCI_COLSEP          6   // column separator
+#define _TBCI_SEPWIDTH        7   // width of the separator
+#define _TBCI_HEADING         8   // column heading
+#define _TBCI_FOOTING         9   // column footing
+#define _TBCI_HEADSEP        10   // heading separator
+#define _TBCI_FOOTSEP        11   // footing separator
+#define _TBCI_DEFCOLOR       12   // default color
+#define _TBCI_FROZENSPACE    13   // space after frozen columns
+#define _TBCI_LASTSPACE      14   // space after last visible column
+#define _TBCI_SIZE           14   // size of array with TBrowse column data
+
+//-------------------------------------------------------------------//
+
+CLASS TBrowseWVG FROM TBrowse
+
+   ACCESS aColumnsSep        INLINE ::ColumnsSep()
+
+   METHOD ColumnsSep()
+
+   ENDCLASS
+
+//-------------------------------------------------------------------//
+
+METHOD ColumnsSep()
+   Local aSep := {}
+   Local lFirst, aCol, nColPos
+
+   lFirst := .T.
+   FOR EACH aCol IN ::aColData
+      IF aCol[ _TBCI_COLPOS ] != NIL
+         IF lFirst
+            lFirst := .F.
+
+         ELSE
+            nColPos := aCol[ _TBCI_COLPOS ]
+
+            IF aCol[ _TBCI_SEPWIDTH ] > 0
+               nColPos += Int( aCol[ _TBCI_SEPWIDTH ]/2 )
+            ENDIF
+
+            aadd( aSep, nColPos )
+         ENDIF
+      ENDIF
+   NEXT
+
+   Return aSep
+
+//----------------------------------------------------------------------//
