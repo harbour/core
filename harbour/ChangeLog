@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-23 10:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/gtwvg/tests/demowvg.prg
+   * contrib/gtwvg/wvtclass.prg
+     + TBrowseWVT class moved to contrib core, to make it 
+       available for all WVT apps.
+
 2008-05-22 19:00 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/tests/demowvg.prg
     + CLASS TBrowseWVG FROM TBrowse
