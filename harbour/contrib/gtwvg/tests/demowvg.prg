@@ -1711,6 +1711,7 @@ Function DynDlgProc_1( hDlg, nMsg, wParam, lParam )
       // Each box will retrieve its own text.
       //
       cText := Win_GetDlgItemText( hDlg, 10 )
+
       exit
 
    case WM_TIMER
@@ -1836,11 +1837,12 @@ Function DynDialog_2()
    if nInfo % 2 == 1
       // Modal Dialog
       //
-      hDlg := Wvt_DialogBox( aDlg, bDlgProc, Wvt_GetWindowHandle() )
+      //hDlg := Wvt_DialogBox( aDlg, bDlgProc, Wvt_GetWindowHandle() )
+      hDlg := Wvt_DialogBox( aDlg, cDlgProc, Wvt_GetWindowHandle() )
    else
       // Modeless Dialog
       //
-      hDlg := Wvt_CreateDialog( aDlg, lOnTop, bDlgProc, cDlgIcon, /*nTimerTicks*/, hMenu )
+      hDlg := Wvt_CreateDialog( aDlg, lOnTop, cDlgProc, cDlgIcon, /*nTimerTicks*/, hMenu )
 
       // Using Function name.
       //hDlg  := Wvt_CreateDialog( aDlg, lOnTop, cDlgProc, cDlgIcon, nTimerTicks, hMenu, lModal )
@@ -1850,7 +1852,7 @@ Function DynDialog_2()
 
 //-------------------------------------------------------------------//
 
-Static Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
+Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
    Local cText, lClicked, cPrompt, nIndex, hFont
 
    Switch ( nMsg )
@@ -1979,6 +1981,7 @@ Static Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
       // Each box will retrieve its own text.
       //
       cText := Win_GetDlgItemText( hDlg, ID_MLE )
+      cText := nil
       exit
 
    end
