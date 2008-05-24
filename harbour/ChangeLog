@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-24 14:55 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/wvtutils.c
+    * Uncommitted previous changes.
+    - hb_arraySet( a, hb_itemPut*(x,*) ) 
+    + hb_arraySet*( a,* )
+  * harbour/contrib/gtwvg/wvtclass.c
+    * CLASS TBrowseWVG()
+      - ::DoConfigure()
+      + ::SetVisible()
+        This method override is more appropriate for the purpose.
+
 2008-05-24 08:45 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/wvtutils.c
     ! Wvt_CreateDialogDynamic()

@@ -3541,17 +3541,16 @@ CLASS TBrowseWVG FROM TBrowse
 
    DATA   aColumnsSep               INIT {}
 
-   METHOD DoConfigure( nMode )
+   METHOD SetVisible()
 
    ENDCLASS
 
 //-------------------------------------------------------------------//
 
-METHOD DoConfigure( nMode ) CLASS TBrowseWVG
+METHOD SetVisible() CLASS TBrowseWVG
    Local lFirst, aCol, nColPos
 
-   ::Super:DoConfigure( nMode )
-
+   ::Super:SetVisible()
    ::aColumnsSep := {}
 
    lFirst := .T.
@@ -3573,7 +3572,6 @@ METHOD DoConfigure( nMode ) CLASS TBrowseWVG
    NEXT
 
    Return Self
-
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//

@@ -548,16 +548,13 @@ HB_FUNC( WVT_SETMOUSEPOS )
 HB_FUNC( WVT_GETPAINTRECT )
 {
    PHB_ITEM info = hb_itemArrayNew( 4 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
-   hb_arraySet( info, 1, hb_itemPutNI( temp, _s->rowStart ) );
-   hb_arraySet( info, 2, hb_itemPutNI( temp, _s->colStart ) );
-   hb_arraySet( info, 3, hb_itemPutNI( temp, _s->rowStop  ) );
-   hb_arraySet( info, 4, hb_itemPutNI( temp, _s->colStop  ) );
+   hb_arraySetNI( info, 1, _s->rowStart );
+   hb_arraySetNI( info, 2, _s->colStart );
+   hb_arraySetNI( info, 3, _s->rowStop  );
+   hb_arraySetNI( info, 4, _s->colStop  );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 
 //-------------------------------------------------------------------//
@@ -725,17 +722,14 @@ HB_FUNC( WVT_SETMOUSEMOVE )
 HB_FUNC( WVT_GETXYFROMROWCOL )
 {
    PHB_ITEM info = hb_itemArrayNew( 2 );
-   PHB_ITEM temp = hb_itemNew( NULL );
    POINT    xy = { 0,0 };
 
    xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
 
-   hb_arraySet( info, 1, hb_itemPutNL( temp, xy.x ) );
-   hb_arraySet( info, 2, hb_itemPutNL( temp, xy.y ) );
+   hb_arraySetNL( info, 1, xy.x );
+   hb_arraySetNL( info, 2, xy.y );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 
 //-------------------------------------------------------------------//
@@ -743,19 +737,16 @@ HB_FUNC( WVT_GETXYFROMROWCOL )
 HB_FUNC( WVT_GETFONTINFO )
 {
    PHB_ITEM info = hb_itemArrayNew( 7 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
-   hb_arraySet( info, 1, hb_itemPutC(  temp, _s->fontFace    ) );
-   hb_arraySet( info, 2, hb_itemPutNL( temp, _s->fontHeight  ) );
-   hb_arraySet( info, 3, hb_itemPutNL( temp, _s->fontWidth   ) );
-   hb_arraySet( info, 4, hb_itemPutNL( temp, _s->fontWeight  ) );
-   hb_arraySet( info, 5, hb_itemPutNL( temp, _s->fontQuality ) );
-   hb_arraySet( info, 6, hb_itemPutNL( temp, _s->PTEXTSIZE.y ) );
-   hb_arraySet( info, 7, hb_itemPutNL( temp, _s->PTEXTSIZE.x ) );
+   hb_arraySetC(  info, 1, _s->fontFace    );
+   hb_arraySetNL( info, 2, _s->fontHeight  );
+   hb_arraySetNL( info, 3, _s->fontWidth   );
+   hb_arraySetNL( info, 4, _s->fontWeight  );
+   hb_arraySetNL( info, 5, _s->fontQuality );
+   hb_arraySetNL( info, 6, _s->PTEXTSIZE.y );
+   hb_arraySetNL( info, 7, _s->PTEXTSIZE.x );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 
 //-------------------------------------------------------------------//
@@ -763,16 +754,13 @@ HB_FUNC( WVT_GETFONTINFO )
 HB_FUNC( WVT_GETPALETTE )
 {
    PHB_ITEM info = hb_itemArrayNew( 16 );
-   PHB_ITEM temp = hb_itemNew( NULL );
    int      i;
 
    for ( i = 0; i < 16; i++ )
    {
-      hb_arraySet( info, i+1, hb_itemPutNL( temp, hb_wvt_gtGetColorData( i ) ) );
+      hb_arraySetNL( info, i+1, hb_wvt_gtGetColorData( i ) );
    }
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 
 //-------------------------------------------------------------------//
@@ -1058,7 +1046,9 @@ HB_FUNC( WVT_PASTEFROMCLIPBOARD )
                                &szClipboardData, &ulLen ) )
    {
       for( ul = 0; ul < ulLen; ul++ )
+      {
          hb_wvt_gtAddCharToInputQueue( ( UCHAR ) szClipboardData[ ul ] );
+      }
    }
 }
 
@@ -1100,19 +1090,16 @@ HB_FUNC( WVT_ISLBUTTONPRESSED )
 HB_FUNC( WVT_CLIENTTOSCREEN )
 {
    PHB_ITEM info = hb_itemArrayNew( 2 );
-   PHB_ITEM temp = hb_itemNew( NULL );
    POINT    xy = { 0,0 };
 
    xy = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
 
    ClientToScreen( _s->hWnd, &xy );
 
-   hb_arraySet( info, 1, hb_itemPutNL( temp, xy.x ) );
-   hb_arraySet( info, 2, hb_itemPutNL( temp, xy.y ) );
+   hb_arraySetNL( info, 1, xy.x );
+   hb_arraySetNL( info, 2, xy.y );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 
 //-------------------------------------------------------------------//
@@ -1121,17 +1108,14 @@ HB_FUNC( WVT_GETCURSORPOS )
 {
    POINT    xy = { 0,0 };
    PHB_ITEM info = hb_itemArrayNew( 2 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    GetCursorPos( &xy );
 
-   hb_arraySet( info, 1, hb_itemPutNI( temp, xy.x ) );
-   hb_arraySet( info, 2, hb_itemPutNI( temp, xy.y ) );
+   hb_arraySetNI( info, 1, xy.x );
+   hb_arraySetNI( info, 2, xy.y );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
- }
+   hb_itemReturnRelease( info );
+}
 
 //-------------------------------------------------------------------//
 
@@ -1218,7 +1202,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
       #ifdef __XHARBOUR__
       hb_dynsymLock();
       #endif
-      pExecSym = hb_dynsymFindName( hb_itemGetC( pFirst ) );
+      pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
       #ifdef __XHARBOUR__
       hb_dynsymUnlock();
       #endif
@@ -1354,7 +1338,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
       #ifdef __XHARBOUR__
       hb_dynsymLock();
       #endif
-      pExecSym = hb_dynsymFindName( hb_itemGetC( pFirst ) );
+      pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
       #ifdef __XHARBOUR__
       hb_dynsymUnlock();
       #endif
@@ -1674,30 +1658,30 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 {
    char     *cText;
    PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
+   int      iLen;
 
    if( pText )
    {
-      cText = ( char* ) hb_xgrab( hb_itemGetCLen( pText ) + 1 );
-      hb_xmemcpy( cText, hb_itemGetC( pText ), hb_itemGetCLen( pText ) + 1 );
+      iLen  = hb_itemGetCLen( pText );
+      cText = (char*) hb_xgrab( iLen+1 );
+      hb_xmemcpy( cText, hb_itemGetCPtr( pText ), iLen+1 );
    }
    else
    {
       cText = NULL;
    }
 
-   hb_retnl( ( LONG ) SendDlgItemMessage( ( HWND ) hb_parnl( 1 ) ,
-                                          ( int  ) hb_parni( 2 ) ,
-                                          ( UINT ) hb_parni( 3 ) ,
-                                          ( ISNIL( 4 ) ? 0 : ( WPARAM ) hb_parnl( 4 ) ),
-                                          ( cText ? ( LPARAM ) cText : ( LPARAM ) hb_parnl( 5 ) )
-                                        )
-           );
+   hb_retnl( (LONG) SendDlgItemMessage( (HWND) hb_parnl( 1 ) ,
+                                        (int)  hb_parni( 2 ) ,
+                                        (UINT) hb_parni( 3 ) ,
+                                        (ISNIL(4) ? 0 : (WPARAM) hb_parnl( 4 ))   ,
+                                        (cText ? (LPARAM) cText : (LPARAM) hb_parnl( 5 ))
+                                      ) ) ;
 
-  if( pText )
+  if( ISBYREF( 5 ) && pText )
   {
-     hb_storclen( cText, hb_itemGetCLen( pText ), 5 ) ;
+     hb_storclen( cText, iLen, 5 ) ;
   }
-
   if( cText )
   {
      hb_xfree( cText );
@@ -1813,18 +1797,19 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
    USHORT iLen = SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1 ;
    LPTSTR cText = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
    char * szText;
+   USHORT iResult;
 
-   GetDlgItemText( ( HWND ) hb_parnl( 1 ),   // handle of dialog box
-                   hb_parni( 2 ),            // identifier of control
-                   cText,                    // address of buffer for text
-                   iLen                      // maximum size of string
-                 );
+   iResult = GetDlgItemText( ( HWND ) hb_parnl( 1 ),   // handle of dialog box
+                             hb_parni( 2 ),            // identifier of control
+                             cText,                    // address of buffer for text
+                             iLen                      // maximum size of string
+                            );
 
-
+   cText[ iResult ] = '\0';
    szText = HB_TCHAR_CONVFROM( cText );
    hb_retc( szText );
    HB_TCHAR_FREE( szText );
-   HB_TCHAR_FREE( cText );
+   hb_xfree( cText );
 }
 
 //-------------------------------------------------------------------//
@@ -1940,18 +1925,15 @@ HB_FUNC( WIN_GETCLIENTRECT )
 {
    RECT     rc = { 0,0,0,0 };
    PHB_ITEM info = hb_itemArrayNew( 4 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    GetClientRect( ( HWND ) hb_parnl( 1 ), &rc );
 
-   hb_arraySet( info, 1, hb_itemPutNI( temp, rc.left   ) );
-   hb_arraySet( info, 2, hb_itemPutNI( temp, rc.top    ) );
-   hb_arraySet( info, 3, hb_itemPutNI( temp, rc.right  ) );
-   hb_arraySet( info, 4, hb_itemPutNI( temp, rc.bottom ) );
+   hb_arraySetNI( info, 1, rc.left   );
+   hb_arraySetNI( info, 2, rc.top    );
+   hb_arraySetNI( info, 3, rc.right  );
+   hb_arraySetNI( info, 4, rc.bottom );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 
 //-------------------------------------------------------------------//
@@ -2022,18 +2004,15 @@ HB_FUNC( WIN_GETWINDOWRECT )
 {
    RECT rc;
    PHB_ITEM info = hb_itemArrayNew( 4 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    GetWindowRect( ( HWND ) hb_parnl( 1 ), &rc );
 
-   hb_arraySet( info, 1, hb_itemPutNI( temp, rc.left   ) );
-   hb_arraySet( info, 2, hb_itemPutNI( temp, rc.top    ) );
-   hb_arraySet( info, 3, hb_itemPutNI( temp, rc.right  ) );
-   hb_arraySet( info, 4, hb_itemPutNI( temp, rc.bottom ) );
+   hb_arraySetNI( info, 1, rc.left   );
+   hb_arraySetNI( info, 2, rc.top    );
+   hb_arraySetNI( info, 3, rc.right  );
+   hb_arraySetNI( info, 4, rc.bottom );
 
-   hb_itemRelease( temp );
-   hb_itemReturn( info );
-   hb_itemRelease( info );
+   hb_itemReturnRelease( info );
 }
 
 //-------------------------------------------------------------------//
@@ -2163,7 +2142,6 @@ PHB_ITEM wvt_Rect2Array( RECT *rc  )
    hb_itemRelease(element);
    return aRect;
 }
-
 
 //----------------------------------------------------------------------//
 
