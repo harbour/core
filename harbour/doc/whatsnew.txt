@@ -31,7 +31,7 @@ Portability
 - added support for PocketPC WINCE with MSVC, POCC, CeGCC and MinGWCE.
 - added support for cross WinCE builds
 - extended hb* scripts for cross builds: hbw* - Win32, hbce* - WinCE
-- added support for creatinf RPMs with Harbour cross build for Win32 and
+- added support for creating RPMs with Harbour cross build for Win32 and
   WinCE.
 - added support for MS-Windows UNICDE builds.
 - added support for shared libraries (.sl) in HPUX builds
@@ -91,7 +91,7 @@ internals:
 - added support for dynamically set during compilation ChangeLog entry,
   ChangeLog ID, SVN revision and compilation flags.
   Update Harbour logo message to show the exact revision number and
-- removed notworking compiler frontends: .NET CLI and JAVA.
+- removed non-working compiler frontends: .NET CLI and JAVA.
 - added support for i18n into compiler (-j[<filename>] switch)
   gettext compatible .pot files are generated
 
@@ -228,7 +228,7 @@ GT:
 - added HB_GTI_ADDKEYMAP and HB_GTI_DELKEYMAP to define/remove new
   escape key sequences in terminal based GTs. It's supported by
   GTCRS and GTTRM
-- fixed color string decoding to be fully Clipper comaptible
+- fixed color string decoding to be fully Clipper compatible
 - OUTSTD()/OUTERR() respects automatic CP translation when they
   are not redirected to GT screen
 - added common for all GTs CLIPBOARD support. If possible low level GT
@@ -278,18 +278,18 @@ Contrib
 - added hbcompat.ch file which hides many differences between Harbour
   and xHarbour compilers using PP directives.
 - added hbzlib library - it's wrapper to ZLIB and MINIZIP library which
-  alows for compress and decompres streams, character variables, .gz
+  allows for compress and decompress streams, character variables, .gz
   and .zip files
 - fixes and extensions in ADORDD
 - added automatic ACE version detection during building ADSRDD
 - added many new Ads*() functions wrappers and cleaned code for
   possible GPFs when wrong parameters were passed to some functions
-- added HBHPDF - interface for Haru Free PDF Library.
+- added HBHPDF - interface for Haru Free PDF Library.- added HBVPDF - Viktor K's PDF Library + Pritpal Bedi's OOP extension.
 - enhanced and fixed HBW32 library - OLE and printing
 
 Utilities
 =============================
-- added HBDOT utility program. It's a "DOt Prompt" Console for the Harbour Language
+- added HBDOT utility program. It's a "Dot Prompt" Console for the Harbour Language
          Syntax:  hbdot [<hrbfile[.prg]> [<parameters,...>]]
    It should look and work in similar way to pp/xBaseScript
    by Ron Pinkas but unlike xBaseScript is does not have preprocessor
