@@ -74,9 +74,9 @@ HB_FUNC( MDY )
    iYearLen = hb_setGetCentury() ? 4 : 2;
 
    iBufferLen = iLen + 5 + iYearLen;
-   szReturn = ( char * ) hb_xgrab( iBufferLen );
+   szReturn = ( char * ) hb_xgrab( iBufferLen + 1 );
 
-   memset( szReturn, ' ', iBufferLen + 1 );
+   memset( szReturn, ' ', iBufferLen );
    memcpy( szReturn, hb_dateCMonth( iMonth ), iLen );
    memcpy( szReturn + iLen + 1, szFormatted + 3, 2 );
    szReturn[ iLen + 3 ] = ',';
@@ -103,8 +103,8 @@ HB_FUNC( DMY )
    iLen = strlen( hb_dateCMonth( iMonth ) );
    iYearLen = hb_setGetCentury() ? 4 : 2;
 
-   iBufferLen = iLen + 5 + iYearLen;
-   szReturn = ( char * ) hb_xgrab( iBufferLen );
+   iBufferLen = iLen + 4 + iYearLen;
+   szReturn = ( char * ) hb_xgrab( iBufferLen + 1 );
 
    memset( szReturn, ' ', iBufferLen );
    memcpy( szReturn, szFormatted + 3, 2 );
