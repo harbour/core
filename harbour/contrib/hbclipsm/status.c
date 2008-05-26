@@ -68,26 +68,13 @@
 HB_FUNC( STATUSNEW )
 {
    PHB_ITEM pReturn = hb_itemArrayNew( ST_LEN );   /* Create array */
-   PHB_ITEM pItem;
 
-   pItem = hb_itemPutNL( NULL, ( ISNUM( ST_ROW ) ? hb_parni( ST_ROW ) : 0 ) );
-   hb_itemArrayPut( pReturn, ST_ROW, pItem );
-   hb_itemRelease( pItem );
+   hb_arraySetNL( pReturn, ST_ROW, hb_parni( ST_ROW ) );
+   hb_arraySetNL( pReturn, ST_COL, hb_parni( ST_COL ) );
+   hb_arraySetC( pReturn, ST_COLOR, ISCHAR( ST_COLOR ) ? hb_parc( ST_COLOR ) : "W+/N" );
+   hb_arraySetNL( pReturn, ST_CURRENT, 1 );
 
-   pItem = hb_itemPutNL( NULL, ( ISNUM( ST_COL ) ? hb_parni( ST_COL ) : 0 ) );
-   hb_itemArrayPut( pReturn, ST_COL, pItem );
-   hb_itemRelease( pItem );
-
-   pItem = hb_itemPutC( NULL, ( ISCHAR( ST_COLOR ) ? hb_parc( ST_COLOR ) : "W+/N" ) );
-   hb_itemArrayPut( pReturn, ST_COLOR, pItem );
-   hb_itemRelease( pItem );
-
-   pItem = hb_itemPutNL( NULL, 1 );
-   hb_itemArrayPut( pReturn, ST_CURRENT, pItem );
-   hb_itemRelease( pItem );
-
-   hb_itemReturn( pReturn );
-   hb_itemRelease( pReturn );
+   hb_itemReturnRelease( pReturn );
 }
 
 /* StatusUpdate( <aStat> ) --> nil

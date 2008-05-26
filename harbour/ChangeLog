@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-26 12:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbapi.h
+   * source/vm/extend.c
+     + Added hb_retc_null() which is equivalent to 
+       hb_retc( NULL ) and will return an empty string.
+       I opted for this because hb_retc( NULL ) usage is not 
+       compatible with CA-Cl*pper _retc(), so it might create 
+       problems when writing C code intended for both Clipper 
+       and Harbour.
+
+   * contrib/hbclipsm/stack.c
+   * contrib/hbclipsm/environ.c
+   * contrib/hbclipsm/status.c
+   * contrib/hbclipsm/gauge.c
+     % Optimizations.
+     ; TOFIX: GAUGE*() still leaks and doesn't seem to function.
+
+   * contrib/rddads/adsmgmnt.c
+     % Optimizations (using hb_arraySet*()).
+     ! Fixed typo in ADSMGGETOPENTABLES2().
+
 2008-05-26 11:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmsql/make_b32.bat
    * contrib/hbmsql/make_vc.bat

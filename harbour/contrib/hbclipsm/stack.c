@@ -57,20 +57,15 @@
 */
 HB_FUNC( STACKNEW )
 {
-   PHB_ITEM pReturn = hb_itemArrayNew( 0 );   /* Create array */
-
-   hb_itemReturn( pReturn );
-   hb_itemRelease( pReturn );
+   hb_itemReturnRelease( hb_itemArrayNew( 0 ) ); /* Create array */
 }
 
 /*  StackPush( <aStack>, <xValue> ) --> <aStack>
 */
 HB_FUNC( STACKPUSH )
 {
-   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-   PHB_ITEM pAny = hb_param( 2, HB_IT_ANY );
-
-   hb_arrayAdd( pArray, pAny );
+   hb_arrayAdd( hb_param( 1, HB_IT_ARRAY ), 
+                hb_param( 2, HB_IT_ANY ) );
 }
 
 /* StackPop( <aStack> ) --> <xValue>
@@ -90,17 +85,14 @@ HB_FUNC( STACKPOP )
       hb_arraySize( pArray, HB_MAX( ulLen, 0 ) );
    }
 
-   hb_itemReturn( pLast );
-   hb_itemRelease( pLast );
+   hb_itemReturnRelease( pLast );
 }
 
 /* StackIsEmpty( <aStack> ) --> <lEmpty>
 */
 HB_FUNC( STACKISEMPTY )
 {
-   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-
-   hb_retl( hb_arrayLen( pArray ) == 0 );
+   hb_retl( hb_arrayLen( hb_param( 1, HB_IT_ARRAY ) ) == 0 );
 }
 
 /* StackTop( <aStack> ) --> <xValue>
@@ -108,11 +100,9 @@ HB_FUNC( STACKISEMPTY )
 */
 HB_FUNC( STACKTOP )
 {
-   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
    PHB_ITEM pLast = hb_itemNew( NULL );
 
-   hb_arrayLast( pArray, pLast );
+   hb_arrayLast( hb_param( 1, HB_IT_ARRAY ), pLast );
 
-   hb_itemReturn( pLast );
-   hb_itemRelease( pLast );
+   hb_itemReturnRelease( pLast );
 }

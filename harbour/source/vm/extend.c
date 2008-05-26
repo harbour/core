@@ -734,6 +734,14 @@ HB_EXPORT void hb_retc( const char * szText )
    hb_itemPutC( hb_stackReturnItem(), szText );
 }
 
+#undef hb_retc_null
+HB_EXPORT void hb_retc_null( void )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_retc_null()"));
+
+   hb_itemPutC( hb_stackReturnItem(), NULL );
+}
+
 #undef hb_retc_buffer
 HB_EXPORT void hb_retc_buffer( char * szText )
 {

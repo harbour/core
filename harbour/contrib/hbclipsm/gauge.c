@@ -78,54 +78,27 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent );
 HB_FUNC( GAUGENEW )
 {
    PHB_ITEM pReturn = hb_itemArrayNew( B_LEN );   /* Create array */
-   PHB_ITEM pItem;
 
-   pItem = hb_itemPutNL( NULL, ( ISNUM( B_TOP ) ? hb_parni( B_TOP ) : 0 ) );
-   hb_itemArrayPut( pReturn, B_TOP, pItem );
-   hb_itemRelease( pItem );
+   hb_arraySetNL( pReturn, B_TOP, hb_parni( B_TOP ) );
+   hb_arraySetNL( pReturn, B_LEFT, hb_parni( B_LEFT ) );
+   hb_arraySetNL( pReturn, B_BOTTOM,
+              ISNUM( B_BOTTOM ) ?
+               ( hb_parni( B_BOTTOM ) < hb_parni( B_TOP ) + 2 ?
+                   hb_parni( B_TOP ) + 2 : hb_parni( B_BOTTOM ) ) : 0 );
+   hb_arraySetNL( pReturn, B_RIGHT,
+              ISNUM( B_RIGHT ) ?
+               ( hb_parni( B_RIGHT ) < hb_parni( B_LEFT ) + 4 ?
+                  hb_parni( B_LEFT ) + 4 : hb_parni( B_RIGHT ) ) : 0 );
+   hb_arraySetC( pReturn, B_BACKCOLOR, ISCHAR( B_BACKCOLOR ) ? hb_parc( B_BACKCOLOR ) : "W/N" );
+   hb_arraySetC( pReturn, B_BARCOLOR, ISCHAR( B_BARCOLOR ) ? hb_parc( B_BARCOLOR ) : "W+/N" );
+   hb_arraySetL( pReturn, B_DISPLAYNUM, 
+              !( ISNUM( B_RIGHT ) && 
+                 ISNUM( B_LEFT ) && 
+                 ( hb_parni( B_RIGHT ) < hb_parni( B_LEFT ) + 9 ) ) );
+   hb_arraySetC( pReturn, B_BARCHAR, ISCHAR( B_BARCHAR ) ? hb_parc( B_BARCHAR ) : ( char * ) '\xdb' );
+   hb_arraySetNL( pReturn, B_PERCENT, 0 );
 
-   pItem = hb_itemPutNL( NULL, ( ISNUM( B_LEFT ) ? hb_parni( B_LEFT ) : 0 ) );
-   hb_itemArrayPut( pReturn, B_LEFT, pItem );
-   hb_itemRelease( pItem );
-
-   pItem = hb_itemPutNL( NULL,
-              ( ISNUM( B_BOTTOM ) ?
-                 ( hb_parni( B_BOTTOM ) < hb_parni( B_TOP ) + 2 ?
-                     hb_parni( B_TOP ) + 2 : hb_parni( B_BOTTOM ) ) : 0 ) );
-   hb_itemArrayPut( pReturn, B_BOTTOM, pItem );
-   hb_itemRelease( pItem );
-
-   pItem = hb_itemPutNL( NULL,
-              ( ISNUM( B_RIGHT ) ?
-                 ( hb_parni( B_RIGHT ) < hb_parni( B_LEFT ) + 4 ?
-                    hb_parni( B_LEFT ) + 4 : hb_parni( B_RIGHT ) ) : 0 ) );
-   hb_itemArrayPut( pReturn, B_RIGHT, pItem );
-   hb_itemRelease( pItem );
-
-   pItem = hb_itemPutC( NULL, ( ISCHAR( B_BACKCOLOR ) ? hb_parc( B_BACKCOLOR ) : "W/N" ) );
-   hb_itemArrayPut( pReturn, B_BACKCOLOR, pItem );
-   hb_itemRelease( pItem );
-
-   pItem = hb_itemPutC( NULL, ( ISCHAR( B_BARCOLOR ) ? hb_parc( B_BARCOLOR ) : "W+/N" ) );
-   hb_itemArrayPut( pReturn, B_BARCOLOR, pItem );
-   hb_itemRelease( pItem );
-
-   pItem = hb_itemPutL( NULL, !( ISNUM( B_RIGHT ) && 
-                                 ISNUM( B_LEFT ) && 
-                                 ( hb_parni( B_RIGHT ) < hb_parni( B_LEFT ) + 9 ) ) );
-   hb_itemArrayPut( pReturn, B_DISPLAYNUM, pItem );
-   hb_itemRelease( pItem );
-
-   pItem = hb_itemPutC( NULL, ( ISCHAR( B_BARCHAR ) ? hb_parc( B_BARCHAR ) : ( char * ) '\xdb') );
-   hb_itemArrayPut( pReturn, B_BARCHAR, pItem );
-   hb_itemRelease( pItem );
-
-   pItem = hb_itemPutNL( NULL, 0 );
-   hb_itemArrayPut( pReturn, B_PERCENT, pItem );
-   hb_itemRelease( pItem );
-
-   hb_itemReturn( pReturn );
-   hb_itemRelease( pReturn );
+   hb_itemReturnRelease( pReturn );
 }
 
 /* GaugeDisplay( aGauge ) --> aGauge

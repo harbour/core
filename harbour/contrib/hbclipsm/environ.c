@@ -66,7 +66,7 @@ HB_FUNC( FILEPATH )
       hb_xfree( pFileName );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 /* FileBase( <cFile> ) --> cFileBase
@@ -80,7 +80,7 @@ HB_FUNC( FILEBASE )
       hb_xfree( pFileName );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 /* FileExt( <cFile> ) --> cFileExt
@@ -93,11 +93,11 @@ HB_FUNC( FILEEXT )
       if( pFileName->szExtension != NULL )
          hb_retc( ( pFileName->szExtension ) + 1 ); /* Skip the dot */
       else
-         hb_retc( "" );
+         hb_retc( NULL );
       hb_xfree( pFileName );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 /* FileDrive( <cFile> ) --> cFileDrive
@@ -111,5 +111,5 @@ HB_FUNC( FILEDRIVE )
       hb_xfree( pFileName );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }

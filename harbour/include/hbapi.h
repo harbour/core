@@ -603,6 +603,7 @@ extern HB_EXPORT LONGLONG   hb_parnll( int iParam, ... ); /* retrieve a numeric 
 extern HB_EXPORT int    hb_pcount( void );          /* returns the number of suplied parameters */
 extern HB_EXPORT void   hb_ret( void );             /* post a NIL return value */
 extern HB_EXPORT void   hb_retc( const char * szText );   /* returns a string */
+extern HB_EXPORT void   hb_retc_null( void );       /* returns an empty string */
 extern HB_EXPORT void   hb_retc_buffer( char * szText ); /* sames as above, but accepts an allocated buffer */
 extern HB_EXPORT void   hb_retc_const( const char * szText ); /* returns a string as a pcode based string */
 extern HB_EXPORT void   hb_retclen( const char * szText, ULONG ulLen ); /* returns a string with a specific length */
@@ -644,6 +645,7 @@ extern HB_EXPORT void   hb_retnlllen( LONGLONG lNumber, int iWidth ); /* returns
 #define hb_ret()                             hb_itemClear( hb_stackReturnItem() )
 #define hb_reta( ulLen )                     hb_arrayNew( hb_stackReturnItem(), ulLen )
 #define hb_retc( szText )                    hb_itemPutC( hb_stackReturnItem(), szText )
+#define hb_retc_null()                       hb_itemPutC( hb_stackReturnItem(), NULL )
 #define hb_retc_buffer( szText )             hb_itemPutCPtr( hb_stackReturnItem(), szText, strlen( szText ) )
 #define hb_retc_const( szText )              hb_itemPutCConst( hb_stackReturnItem(), szText )
 #define hb_retclen( szText, ulLen )          hb_itemPutCL( hb_stackReturnItem(), szText, ulLen )

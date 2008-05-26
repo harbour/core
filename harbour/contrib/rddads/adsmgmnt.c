@@ -387,30 +387,24 @@ HB_FUNC( ADSMGGETUSERNAMES )
          PHB_ITEM pArrayItm = hb_arrayGetItemPtr( pArray, ulCount );
          hb_arrayNew( pArrayItm, 6 );
 
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 1 ),
-                       ( char * ) pastUserInfo[ ulCount ].aucUserName );
-         hb_itemPutNL( hb_arrayGetItemPtr( pArrayItm, 2 ),
-                       pastUserInfo[ ulCount ].usConnNumber );
+         hb_arraySetC(  pArrayItm, 1, ( char * ) pastUserInfo[ ulCount ].aucUserName );
+         hb_arraySetNL( pArrayItm, 2, pastUserInfo[ ulCount ].usConnNumber );
 #if ADS_LIB_VERSION >= 600
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 3 ),
-                       ( char * ) pastUserInfo[ ulCount ].aucAddress );
+         hb_arraySetC(  pArrayItm, 3, ( char * ) pastUserInfo[ ulCount ].aucAddress );
 #else
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 3 ), NULL );
+         hb_arraySetC(  pArrayItm, 3, NULL );
 #endif
 #if ADS_LIB_VERSION >= 800
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 4 ),
-                       ( char * ) pastUserInfo[ ulCount ].aucAuthUserName );
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 5 ),
-                       ( char * ) pastUserInfo[ ulCount ].aucOSUserLoginName );
+         hb_arraySetC(  pArrayItm, 4, ( char * ) pastUserInfo[ ulCount ].aucAuthUserName );
+         hb_arraySetC(  pArrayItm, 5, ( char * ) pastUserInfo[ ulCount ].aucOSUserLoginName );
 #else
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 4 ), NULL );
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 5 ), NULL );
+         hb_arraySetC(  pArrayItm, 4, NULL );
+         hb_arraySetC(  pArrayItm, 5, NULL );
 #endif
 #if ADS_LIB_VERSION >= 810
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 6 ),
-                       ( char * ) pastUserInfo[ ulCount ].aucTSAddress );
+         hb_arraySetC(  pArrayItm, 6, ( char * ) pastUserInfo[ ulCount ].aucTSAddress );
 #else
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 6 ), NULL );
+         hb_arraySetC(  pArrayItm, 6, NULL );
 #endif
       }
       hb_itemReturnRelease( pArray );
@@ -496,7 +490,7 @@ HB_FUNC( ADSMGGETOPENTABLES ) /* nMaxNumberOfFilesToReturn, cUserName, nConnecti
       UNSIGNED16 ulCount;
 
       for( ulCount = 1; ulCount <= usArrayLen; ulCount++ )
-         hb_itemPutC( hb_arrayGetItemPtr( pArray, ( ULONG ) ulCount ), ( char * ) astOpenTableInfo[ ulCount - 1 ].aucTableName );
+         hb_arraySetC( pArray, ( ULONG ) ulCount, ( char * ) astOpenTableInfo[ ulCount - 1 ].aucTableName );
 
       hb_itemReturnRelease( pArray );
    }
@@ -534,10 +528,8 @@ HB_FUNC( ADSMGGETOPENTABLES2 ) /* nMaxNumberOfFilesToReturn, cUserName, nConnect
          PHB_ITEM pArrayItm = hb_arrayGetItemPtr( pArray, ulCount );
          hb_arrayNew( pArrayItm, 2 );
 
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 3 ),
-                       ( char * ) astOpenTableInfo[ ulCount - 1 ].aucTableName );
-         hb_itemPutNI( hb_arrayGetItemPtr( pArrayItm, 2 ),
-                       astOpenTableInfo[ ulCount - 1 ].usLockType ); /* Advantage locking mode */
+         hb_arraySetC(  pArrayItm, 1, ( char * ) astOpenTableInfo[ ulCount - 1 ].aucTableName );
+         hb_arraySetNI( pArrayItm, 2, astOpenTableInfo[ ulCount - 1 ].usLockType ); /* Advantage locking mode */
       }
 
       hb_itemReturnRelease( pArray );
@@ -573,7 +565,7 @@ HB_FUNC( ADSMGGETOPENINDEXES ) /* nMaxNumberOfFilesToReturn, cTableName, cUserNa
       UNSIGNED16 ulCount;
 
       for( ulCount = 1; ulCount <= usArrayLen; ulCount++ )
-         hb_itemPutC( hb_arrayGetItemPtr( pArray, ( ULONG ) ulCount ), ( char * ) astOpenIndexInfo[ ulCount - 1 ].aucIndexName );
+         hb_arraySetC( pArray, ( ULONG ) ulCount, ( char * ) astOpenIndexInfo[ ulCount - 1 ].aucIndexName );
 
       hb_itemReturnRelease( pArray );
    }
@@ -608,7 +600,7 @@ HB_FUNC( ADSMGGETLOCKS )
       UNSIGNED16 ulCount;
 
       for( ulCount = 1; ulCount <= usArrayLen; ulCount++ )
-         hb_itemPutNL( hb_arrayGetItemPtr( pArray, ( ULONG ) ulCount ), astRecordInfo[ ulCount - 1 ].ulRecordNumber );
+         hb_arraySetNL( pArray, ( ULONG ) ulCount, astRecordInfo[ ulCount - 1 ].ulRecordNumber );
 
       hb_itemReturnRelease( pArray );
    }
@@ -644,21 +636,15 @@ HB_FUNC( ADSMGGETWORKERTHREADACTIVITY )
          PHB_ITEM pArrayItm = hb_arrayGetItemPtr( pArray, ulCount );
          hb_arrayNew( pArrayItm, 6 );
 
-         hb_itemPutNL( hb_arrayGetItemPtr( pArrayItm, 1 ),
-                       astWorkerThreadActivity[ ulCount ].ulThreadNumber );
-         hb_itemPutNI( hb_arrayGetItemPtr( pArrayItm, 2 ),
-                       astWorkerThreadActivity[ ulCount ].usOpCode );
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 3 ),
-                       ( char * ) astWorkerThreadActivity[ ulCount ].aucUserName );
-         hb_itemPutNI( hb_arrayGetItemPtr( pArrayItm, 4 ), 
-                       astWorkerThreadActivity[ ulCount ].usConnNumber );
-         hb_itemPutNI( hb_arrayGetItemPtr( pArrayItm, 5 ), 
-                       astWorkerThreadActivity[ ulCount ].usReserved1 );
+         hb_arraySetNL( pArrayItm, 1, astWorkerThreadActivity[ ulCount ].ulThreadNumber );
+         hb_arraySetNI( pArrayItm, 2, astWorkerThreadActivity[ ulCount ].usOpCode );
+         hb_arraySetC(  pArrayItm, 3, ( char * ) astWorkerThreadActivity[ ulCount ].aucUserName );
+         hb_arraySetNI( pArrayItm, 4, astWorkerThreadActivity[ ulCount ].usConnNumber );
+         hb_arraySetNI( pArrayItm, 5, astWorkerThreadActivity[ ulCount ].usReserved1 );
 #if ADS_LIB_VERSION >= 800
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 6 ),
-                       ( char * ) astWorkerThreadActivity[ ulCount ].aucOSUserLoginName );
+         hb_arraySetC(  pArrayItm, 6, ( char * ) astWorkerThreadActivity[ ulCount ].aucOSUserLoginName );
 #else
-         hb_itemPutC(  hb_arrayGetItemPtr( pArrayItm, 6 ), NULL );
+         hb_arraySetC(  pArrayItm, 6, NULL );
 #endif
       }
       hb_itemReturnRelease( pArray );
