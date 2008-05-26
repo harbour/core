@@ -50,12 +50,6 @@
  *
  */
 
-/*
- *
- * See doc/license files for licensing terms.
- *
- */
-
 /* NOTE: we need this to prevent base types redefinition */
 #define _CLIPDEFS_H
 
