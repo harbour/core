@@ -8,6 +8,51 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-26 16:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * source/hbpcre/Makefile
+   * source/hbpcre/chartabs.c -- changes
+   * source/hbpcre/config.h
+   * source/hbpcre/pcre.h
+   * source/hbpcre/pcrecomp.c
+   * source/hbpcre/pcreconf.c
+   * source/hbpcre/pcredfa.c
+   * source/hbpcre/pcreexec.c
+   * source/hbpcre/pcrefind.c
+   * source/hbpcre/pcrefinf.c
+   * source/hbpcre/pcreget.c
+   * source/hbpcre/pcreinal.h
+   * source/hbpcre/pcreinfo.c
+   * source/hbpcre/pcremktb.c
+   * source/hbpcre/pcreoutf.c
+   * source/hbpcre/pcrerefc.c
+   * source/hbpcre/pcrestud.c
+   * source/hbpcre/pcretabs.c
+   * source/hbpcre/pcretryf.c
+   * source/hbpcre/pcrever.c
+   * source/hbpcre/pcrevutf.c
+   * source/hbpcre/pcrexcls.c
+   * source/hbpcre/ucp.h
+   * source/hbpcre/ucpinter.h
+   - source/hbpcre/pcreglob.c -- renames
+   + source/hbpcre/_hbpcreg.c
+   - source/hbpcre/pcreprni.c
+   + source/hbpcre/pcreprni.h
+   - source/hbpcre/ucptable.c
+   + source/hbpcre/ucptable.h
+   + source/hbpcre/_hbconf.h  -- new files
+   + source/hbpcre/pcrenewl.c
+   - source/hbpcre/dftables.c -- deletion
+     + Updated to PCRE 7.7 (from 6.3)
+     ; Original code not (yet) modified, so some warnings 
+       may appear in foreign code.
+     ; Please test.
+
+   + source/hbpcre/cnv_hb2o.bat
+   + source/hbpcre/cnv_o2hb.bat
+     + Added batch files to make to conversion from 
+       original PCRE source files into Harbour.
+
 2008-05-26 12:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbclipsm/gauge.c
      ! Fixed GPF in GaugeNew(). Old bug.

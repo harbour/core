@@ -6,7 +6,7 @@
 and semantics are as close as possible to those of the Perl 5 language.
 
                        Written by Philip Hazel
-           Copyright (c) 1997-2005 University of Cambridge
+           Copyright (c) 1997-2008 University of Cambridge
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -43,6 +43,10 @@ class (one that contains characters whose values are > 255). It is used by both
 pcre_exec() and pcre_def_exec(). */
 
 
+#if 1
+#include "_hbconf.h"
+#endif
+
 #include "pcreinal.h"
 
 
@@ -60,7 +64,7 @@ Arguments:
 Returns:      TRUE if character matches, else FALSE
 */
 
-EXPORT BOOL
+BOOL
 _pcre_xclass(int c, const uschar *data)
 {
 int t;
@@ -100,17 +104,40 @@ while ((t = *data++) != XCL_END)
 #ifdef SUPPORT_UCP
   else  /* XCL_PROP & XCL_NOTPROP */
     {
-    int chartype, othercase;
-    int rqdtype = *data++;
-    int category = ucp_findchar(c, &chartype, &othercase);
-    if (rqdtype >= 128)
+    int chartype, script;
+    int category = _pcre_ucp_findprop(c, &chartype, &script);
+
+    switch(*data)
       {
-      if ((rqdtype - 128 == category) == (t == XCL_PROP)) return !negated;
+      case PT_ANY:
+      if (t == XCL_PROP) return !negated;
+      break;
+
+      case PT_LAMP:
+      if ((chartype == ucp_Lu || chartype == ucp_Ll || chartype == ucp_Lt) ==
+          (t == XCL_PROP)) return !negated;
+      break;
+
+      case PT_GC:
+      if ((data[1] == category) == (t == XCL_PROP)) return !negated;
+      break;
+
+      case PT_PC:
+      if ((data[1] == chartype) == (t == XCL_PROP)) return !negated;
+      break;
+
+      case PT_SC:
+      if ((data[1] == script) == (t == XCL_PROP)) return !negated;
+      break;
+
+      /* This should never occur, but compilers may mutter if there is no
+      default. */
+
+      default:
+      return FALSE;
       }
-    else
-      {
-      if ((rqdtype == chartype) == (t == XCL_PROP)) return !negated;
-      }
+
+    data += 2;
     }
 #endif  /* SUPPORT_UCP */
   }
@@ -118,4 +145,4 @@ while ((t = *data++) != XCL_END)
 return negated;   /* char did not match */
 }
 
-/* End of pcrexcls.c */
+/* End of pcre_xclass.c */

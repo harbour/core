@@ -5,25 +5,25 @@
 ROOT = ../../
 
 C_SOURCES=\
+	_hbpcreg.c \
 	chartabs.c \
 	pcrecomp.c \
 	pcreconf.c \
-	pcredfa.c  \
+	pcredfa.c \
 	pcreexec.c \
+	pcrefind.c \
 	pcrefinf.c \
-	pcreget.c  \
-	pcreglob.c \
+	pcreget.c \
 	pcreinfo.c \
 	pcremktb.c \
+	pcrenewl.c \
 	pcreoutf.c \
-	pcreprni.c \
 	pcrerefc.c \
 	pcrestud.c \
 	pcretabs.c \
 	pcretryf.c \
-	pcrefind.c \
+	pcrever.c \
 	pcrevutf.c \
-	pcrever.c  \
 	pcrexcls.c \
 
 LIBNAME=hbpcre

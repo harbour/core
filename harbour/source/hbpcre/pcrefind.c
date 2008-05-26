@@ -1,12 +1,12 @@
 /*************************************************
-*     libucp - Unicode Property Table handler    *
+*      Perl-Compatible Regular Expressions       *
 *************************************************/
 
-/* Copyright (c) University of Cambridge 2004 */
+/* PCRE is a library of functions to support regular expressions whose syntax
+and semantics are as close as possible to those of the Perl 5 language.
 
-/* This little library provides a fast way of obtaining the basic Unicode
-properties of a character, using a compact binary tree that occupies less than
-100K bytes.
+                       Written by Philip Hazel
+           Copyright (c) 1997-2008 University of Cambridge
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -37,117 +37,143 @@ POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
+
+/* This module contains code for searching the table of Unicode character
+properties. */
+
+#if 1
+#include "_hbconf.h"
+#endif
+
 #include "pcreinal.h"
 
-#include "ucp.h"               /* Exported interface */
-#include "ucpinter.h"          /* Internal table details */
-#include "ucptable.c"          /* The table itself */
+#include "ucp.h"               /* Category definitions */
+#include "ucpinter.h"       /* Internal table details */
+#include "ucptable.h"          /* The table itself */
 
 
-/* In some environments, external functions have to be preceded by some magic.
-In my world (Unix), they do not. Use a macro to deal with this. */
+/* Table to translate from particular type value to the general value. */
 
-#ifndef EXPORT
-#define EXPORT
-#endif
+static const int ucp_gentype[] = {
+  ucp_C, ucp_C, ucp_C, ucp_C, ucp_C,  /* Cc, Cf, Cn, Co, Cs */
+  ucp_L, ucp_L, ucp_L, ucp_L, ucp_L,  /* Ll, Lu, Lm, Lo, Lt */
+  ucp_M, ucp_M, ucp_M,                /* Mc, Me, Mn */
+  ucp_N, ucp_N, ucp_N,                /* Nd, Nl, No */
+  ucp_P, ucp_P, ucp_P, ucp_P, ucp_P,  /* Pc, Pd, Pe, Pf, Pi */
+  ucp_P, ucp_P,                       /* Ps, Po */
+  ucp_S, ucp_S, ucp_S, ucp_S,         /* Sc, Sk, Sm, So */
+  ucp_Z, ucp_Z, ucp_Z                 /* Zl, Zp, Zs */
+};
 
 
 
 /*************************************************
-*         Search table and return data           *
+*         Search table and return type           *
 *************************************************/
 
-/* Two values are returned: the category is ucp_C, ucp_L, etc. The detailed
-character type is ucp_Lu, ucp_Nd, etc.
+/* Three values are returned: the category is ucp_C, ucp_L, etc. The detailed
+character type is ucp_Lu, ucp_Nd, etc. The script is ucp_Latin, etc.
 
 Arguments:
   c           the character value
   type_ptr    the detailed character type is returned here
-  case_ptr    for letters, the opposite case is returned here, if there
-                is one, else zero
+  script_ptr  the script is returned here
 
-Returns:      the character type category or -1 if not found
+Returns:      the character type category
 */
 
-EXPORT int
-ucp_findchar(const int c, int *type_ptr, int *case_ptr)
+int
+_pcre_ucp_findprop(const unsigned int c, int *type_ptr, int *script_ptr)
 {
-cnode *node = ucp_table;
-register int cc = c;
-int case_offset;
+int bot = 0;
+int top = sizeof(ucp_table)/sizeof(cnode);
+int mid;
+
+/* The table is searched using a binary chop. You might think that using
+intermediate variables to hold some of the common expressions would speed
+things up, but tests with gcc 3.4.4 on Linux showed that, on the contrary, it
+makes things a lot slower. */
 
 for (;;)
   {
-  register int d = node->f1 | ((node->f0 & f0_chhmask) << 16);
-  if (cc == d) break;
-  if (cc < d)
+  if (top <= bot)
     {
-    if ((node->f0 & f0_leftexists) == 0) return -1;
-    node ++;
+    *type_ptr = ucp_Cn;
+    *script_ptr = ucp_Common;
+    return ucp_C;
     }
+  mid = (bot + top) >> 1;
+  if (c == (ucp_table[mid].f0 & f0_charmask)) break;
+  if (c < (ucp_table[mid].f0 & f0_charmask)) top = mid;
   else
     {
-    register int roffset = (node->f2 & f2_rightmask) >> f2_rightshift;
-    if (roffset == 0) return -1;
-    node += 1 << (roffset - 1);
+    if ((ucp_table[mid].f0 & f0_rangeflag) != 0 &&
+        c <= (ucp_table[mid].f0 & f0_charmask) +
+             (ucp_table[mid].f1 & f1_rangemask)) break;
+    bot = mid + 1;
     }
   }
 
-switch ((*type_ptr = ((node->f0 & f0_typemask) >> f0_typeshift)))
-  {
-  case ucp_Cc:
-  case ucp_Cf:
-  case ucp_Cn:
-  case ucp_Co:
-  case ucp_Cs:
-  return ucp_C;
+/* Found an entry in the table. Set the script and detailed type values, and
+return the general type. */
 
-  case ucp_Ll:
-  case ucp_Lu:
-  case_offset = node->f2 & f2_casemask;
-  if ((case_offset & 0x0100) != 0) case_offset |= 0xfffff000;
-  *case_ptr = (case_offset == 0)? 0 : cc + case_offset;
-  return ucp_L;
+*script_ptr = (ucp_table[mid].f0 & f0_scriptmask) >> f0_scriptshift;
+*type_ptr = (ucp_table[mid].f1 & f1_typemask) >> f1_typeshift;
 
-  case ucp_Lm:
-  case ucp_Lo:
-  case ucp_Lt:
-  *case_ptr = 0;
-  return ucp_L;
-
-  case ucp_Mc:
-  case ucp_Me:
-  case ucp_Mn:
-  return ucp_M;
-
-  case ucp_Nd:
-  case ucp_Nl:
-  case ucp_No:
-  return ucp_N;
-
-  case ucp_Pc:
-  case ucp_Pd:
-  case ucp_Pe:
-  case ucp_Pf:
-  case ucp_Pi:
-  case ucp_Ps:
-  case ucp_Po:
-  return ucp_P;
-
-  case ucp_Sc:
-  case ucp_Sk:
-  case ucp_Sm:
-  case ucp_So:
-  return ucp_S;
-
-  case ucp_Zl:
-  case ucp_Zp:
-  case ucp_Zs:
-  return ucp_Z;
-
-  default:         /* "Should never happen" */
-  return -1;
-  }
+return ucp_gentype[*type_ptr];
 }
 
-/* End of pcrefind.c */
+
+
+/*************************************************
+*       Search table and return other case       *
+*************************************************/
+
+/* If the given character is a letter, and there is another case for the
+letter, return the other case. Otherwise, return -1.
+
+Arguments:
+  c           the character value
+
+Returns:      the other case or NOTACHAR if none
+*/
+
+unsigned int
+_pcre_ucp_othercase(const unsigned int c)
+{
+int bot = 0;
+int top = sizeof(ucp_table)/sizeof(cnode);
+int mid, offset;
+
+/* The table is searched using a binary chop. You might think that using
+intermediate variables to hold some of the common expressions would speed
+things up, but tests with gcc 3.4.4 on Linux showed that, on the contrary, it
+makes things a lot slower. */
+
+for (;;)
+  {
+  if (top <= bot) return -1;
+  mid = (bot + top) >> 1;
+  if (c == (ucp_table[mid].f0 & f0_charmask)) break;
+  if (c < (ucp_table[mid].f0 & f0_charmask)) top = mid;
+  else
+    {
+    if ((ucp_table[mid].f0 & f0_rangeflag) != 0 &&
+        c <= (ucp_table[mid].f0 & f0_charmask) +
+             (ucp_table[mid].f1 & f1_rangemask)) break;
+    bot = mid + 1;
+    }
+  }
+
+/* Found an entry in the table. Return NOTACHAR for a range entry. Otherwise
+return the other case if there is one, else NOTACHAR. */
+
+if ((ucp_table[mid].f0 & f0_rangeflag) != 0) return NOTACHAR;
+
+offset = ucp_table[mid].f1 & f1_casemask;
+if ((offset & f1_caseneg) != 0) offset |= f1_caseneg;
+return (offset == 0)? NOTACHAR : c + offset;
+}
+
+
+/* End of pcre_ucp_searchfuncs.c */

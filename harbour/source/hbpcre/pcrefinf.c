@@ -2,11 +2,11 @@
 *      Perl-Compatible Regular Expressions       *
 *************************************************/
 
-/*PCRE is a library of functions to support regular expressions whose syntax
+/* PCRE is a library of functions to support regular expressions whose syntax
 and semantics are as close as possible to those of the Perl 5 language.
 
                        Written by Philip Hazel
-           Copyright (c) 1997-2005 University of Cambridge
+           Copyright (c) 1997-2008 University of Cambridge
 
 -----------------------------------------------------------------------------
 Redistribution and use in source and binary forms, with or without
@@ -42,6 +42,10 @@ POSSIBILITY OF SUCH DAMAGE.
 information about a compiled pattern. */
 
 
+#if 1
+#include "_hbconf.h"
+#endif
+
 #include "pcreinal.h"
 
 
@@ -61,7 +65,7 @@ Arguments:
 Returns:           0 if data returned, negative on error
 */
 
-EXPORT int
+PCRE_EXP_DEFN int
 pcre_fullinfo(const pcre *argument_re, const pcre_extra *extra_data, int what,
   void *where)
 {
@@ -106,8 +110,8 @@ switch (what)
 
   case PCRE_INFO_FIRSTBYTE:
   *((int *)where) =
-    ((re->options & PCRE_FIRSTSET) != 0)? re->first_byte :
-    ((re->options & PCRE_STARTLINE) != 0)? -1 : -2;
+    ((re->flags & PCRE_FIRSTSET) != 0)? re->first_byte :
+    ((re->flags & PCRE_STARTLINE) != 0)? -1 : -2;
   break;
 
   /* Make sure we pass back the pointer to the bit vector in the external
@@ -121,7 +125,7 @@ switch (what)
 
   case PCRE_INFO_LASTLITERAL:
   *((int *)where) =
-    ((re->options & PCRE_REQCHSET) != 0)? re->req_byte : -1;
+    ((re->flags & PCRE_REQCHSET) != 0)? re->req_byte : -1;
   break;
 
   case PCRE_INFO_NAMEENTRYSIZE:
@@ -140,10 +144,22 @@ switch (what)
   *((const uschar **)where) = (const uschar *)(_pcre_default_tables);
   break;
 
+  case PCRE_INFO_OKPARTIAL:
+  *((int *)where) = (re->flags & PCRE_NOPARTIAL) == 0;
+  break;
+
+  case PCRE_INFO_JCHANGED:
+  *((int *)where) = (re->flags & PCRE_JCHANGED) != 0;
+  break;
+
+  case PCRE_INFO_HASCRORLF:
+  *((int *)where) = (re->flags & PCRE_HASCRORLF) != 0;
+  break;
+
   default: return PCRE_ERROR_BADOPTION;
   }
 
 return 0;
 }
 
-/* End of pcrefinf.c */
+/* End of pcre_fullinfo.c */
