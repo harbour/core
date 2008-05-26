@@ -1509,7 +1509,14 @@ static void hb_wvt_gtExitGui( void )
       ReleaseDC( _s.hWnd, _s.hdc );
       _s.hdc = NULL;
    }
-
+   if( _s.hFont )
+   {
+      DeleteObject( _s.hFont );
+   }
+   if( _s.hWndTT )
+   {
+      DestroyWindow( _s.hWndTT );
+   }
    if( _s.hCompDC )
    {
       DeleteDC( _s.hCompDC );
