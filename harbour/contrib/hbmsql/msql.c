@@ -57,6 +57,12 @@
 
 #include "extend.api"
 #include "item.api"
+
+#ifdef HB_OS_WIN_32
+   /* This is needed by msql.h to indicate the platform. */
+   #define _OS_WIN32
+#endif
+
 #include "msql.h"
 
 HB_FUNC(MSQLCONNEC) // int msqlConnect(char *)
