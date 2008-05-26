@@ -50,8 +50,10 @@
 
    + source/hbpcre/cnv_hb2o.bat
    + source/hbpcre/cnv_o2hb.bat
-     + Added batch files to make to conversion from 
-       original PCRE source files into Harbour.
+     + Added batch files to help conversion from 
+       original PCRE source files into Harbour, and also 
+       to convert back to original to make it easy to 
+       spot local changes.
 
 2008-05-26 12:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbclipsm/gauge.c
