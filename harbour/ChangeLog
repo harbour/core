@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-26 12:23 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbclipsm/gauge.c
+     ! Fixed GPF in GaugeNew(). Old bug.
+       (leak and non-function was a misreport, it 
+       was indeed this GPF. Now it works correctly.)
+
 2008-05-26 12:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbapi.h
    * source/vm/extend.c

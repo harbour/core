@@ -95,7 +95,7 @@ HB_FUNC( GAUGENEW )
               !( ISNUM( B_RIGHT ) && 
                  ISNUM( B_LEFT ) && 
                  ( hb_parni( B_RIGHT ) < hb_parni( B_LEFT ) + 9 ) ) );
-   hb_arraySetC( pReturn, B_BARCHAR, ISCHAR( B_BARCHAR ) ? hb_parc( B_BARCHAR ) : ( char * ) '\xdb' );
+   hb_arraySetC( pReturn, B_BARCHAR, ISCHAR( B_BARCHAR ) ? hb_parc( B_BARCHAR ) : "\xdb" );
    hb_arraySetNL( pReturn, B_PERCENT, 0 );
 
    hb_itemReturnRelease( pReturn );
