@@ -691,11 +691,11 @@ METHOD setPosition() CLASS TBROWSE
 
    IF nNewPos < 1
       IF ::nMoveOffset < -1
-         nMoveOffset -= ::nBufferPos - 1
+         nMoveOffset -= ::nRowPos - 1
       ENDIF
    ELSEIF nNewPos > ::nLastRow
       IF ::nMoveOffset > 1
-         nMoveOffset += ::nLastRow - ::nBufferPos
+         nMoveOffset += ::nLastRow - ::nRowPos
       ENDIF
    ELSEIF lSetPos
       ::nRowPos := nNewPos

@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-27 03:08 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/tbrowse.prg
+    ! fixed cursor positioning when it's moved faster then record
+      buffer refreshed. It should also fix flickering problem reported
+      by Viktor - please test.
+
 2008-05-26 16:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * source/hbpcre/Makefile
