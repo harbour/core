@@ -23,8 +23,15 @@ done
 
 if test_reqpkg libpq-dev
 then
-     HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbpgsql"
+    HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbpgsql"
 fi
+
+if test_reqpkg libmysqlclient15-dev
+then
+    HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbmysql"
+fi
+
+export HB_CONTRIBLIBS
 
 if [ -z "${TOINST_LST}" ] || [ "$1" = "--force" ]
 then
