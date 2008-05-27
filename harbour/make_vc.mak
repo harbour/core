@@ -124,8 +124,7 @@ CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX -FD -Gs
 !endif
 
 CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -T$(HB_BUILD_MODE) \
-                 -W3 -nologo -D__WINDOWS__ -DWIN32 -D__WIN32__ \
-                  $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
+                 -W3 -nologo $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
 CFLAGS         = -Zi $(CFLAGS)

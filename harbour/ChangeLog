@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-27 04:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * make_vc.mak
+     - No longer explicily defining WIN32, __WIN32__, __WINDOWS__ 
+       macros.
+
 2008-05-27 04:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbwhat32/_windlg.c
    * contrib/hbole/ole2.c
@@ -18,12 +23,12 @@
    * contrib/gtwvg/wvtutils.c
    * contrib/hbfimage/fi_winfu.c
    * contrib/hbfimage/fi_wrp.c
-     ! MSVC error and warnings fixes.
+     ! MSVC errors and warnings fixed.
      ; TOFIX: Several of them remain. Some contribs don't 
        compile (gtwvg, hbole, hbw32) at all in C++ mode.
 
    * contrib/mtpl_vc.mak
-     - Removed explicily defining WIN32, __WIN32__, __WINDOWS__ 
+     - No longer explicily defining WIN32, __WIN32__, __WINDOWS__ 
        macros.
 
 2008-05-27 03:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
