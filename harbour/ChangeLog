@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-27 22:36 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+  * harbour/harbour.spec
+    * added hbvpdf library
+
 2008-05-27 17:11 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/idle.c
     * updated included header files

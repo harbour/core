@@ -341,6 +341,7 @@ rm -fR $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libxhb.a
 %{_libdir}/%{name}/librddado.a
 %{_libdir}/%{name}/libhbw32.a
+%{_libdir}/%{name}/libhbvpdf.a
 %{_libdir}/%{name}/libhbgt.a
 %{_libdir}/%{name}/libhbbmcdx.a
 %{_libdir}/%{name}/libhbclipsm.a
