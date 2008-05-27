@@ -580,10 +580,10 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       PHB_MEMINFO pMemBlock;
       USHORT ui;
       char buffer[ 100 ];
-      FILE *hLog = NULL;
+      FILE * hLog = NULL;
 
       if( s_lMemoryBlocks )
-          hLog = hb_fopen( "fm.log", "a+" );
+         hLog = hb_fopen( "hb_fm.log", "a+" );
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );
@@ -591,23 +591,23 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       snprintf( buffer, sizeof( buffer ), "Total memory allocated: %li bytes (%li block(s))", s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
       hb_conOutErr( buffer, 0 );
 
-      if( hLog )
-      {
-         char szTime[ 9 ];
-         int iYear, iMonth, iDay;
-
-         hb_dateToday( &iYear, &iMonth, &iDay );
-         hb_dateTimeStr( szTime );
-
-         fprintf( hLog, "Memory Allocation Report : Application => %s\n", hb_cmdargARGV()[0] );
-         fprintf( hLog, "  Application terminated at : %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
-         fprintf( hLog, "%s\n", buffer );
-      }
-
       if( s_lMemoryBlocks )
       {
+         if( hLog )
+         {
+            char szTime[ 9 ];
+            int iYear, iMonth, iDay;
+         
+            hb_dateToday( &iYear, &iMonth, &iDay );
+            hb_dateTimeStr( szTime );
+         
+            fprintf( hLog, "Memory Allocation Report - %s\n", hb_cmdargARGV()[0] );
+            fprintf( hLog, "Terminated at: %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
+            fprintf( hLog, "%s\n", buffer );
+         }
+
          hb_conOutErr( hb_conNewLine(), 0 );
-         snprintf( buffer, sizeof( buffer ), "WARNING! Memory allocated but not released: %li bytes (%li block(s))", s_lMemoryConsumed, s_lMemoryBlocks );
+         snprintf( buffer, sizeof( buffer ), "Warning, memory allocated but not released: %li bytes (%li block(s))", s_lMemoryConsumed, s_lMemoryBlocks );
          hb_conOutErr( buffer, 0 );
 
          if( hLog )
@@ -626,12 +626,13 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
          if( hLog )
          {
             fprintf( hLog, "Block %i %p (size %lu) %s(%i), \"%s\"\n", ui,
-               (char *) pMemBlock + HB_MEMINFO_SIZE,
+               ( char * ) pMemBlock + HB_MEMINFO_SIZE,
                pMemBlock->ulSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
                hb_mem2str( membuffer, ( char * ) pMemBlock + HB_MEMINFO_SIZE,
                            HB_MIN( pMemBlock->ulSize, HB_MAX_MEM2STR_BLOCK ) ) );
          }
       }
+
       if( hLog )
       {
          fprintf( hLog, "------------------------------------------------------------------------\n");
