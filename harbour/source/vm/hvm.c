@@ -510,7 +510,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
          char ** argv = hb_cmdargARGV();
 
          /* Filter out any parameters beginning with //, like //INFO */
-         if( ! hb_cmdargIsInternal( argv[ i ] ) )
+         if( ! hb_cmdargIsInternal( argv[ i ], NULL ) )
          {
             hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
             iArgCount++;
@@ -6746,7 +6746,7 @@ static void hb_vmDoInitFunctions( void )
                for( i = 1; i < argc; i++ ) /* places application parameters on the stack */
                {
                   /* Filter out any parameters beginning with //, like //INFO */
-                  if( ! hb_cmdargIsInternal( argv[ i ] ) )
+                  if( ! hb_cmdargIsInternal( argv[ i ], NULL ) )
                   {
                      hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
                      iArgCount++;

@@ -115,22 +115,40 @@ char ** hb_cmdargARGV( void )
    return s_argv;
 }
 
-BOOL hb_cmdargIsInternal( const char * szArg )
+BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_cmdargIsInternal(%s)", szArg));
+   HB_TRACE(HB_TR_DEBUG, ("hb_cmdargIsInternal(%s, %p)", szArg, piLen));
 
    /* NOTE: Not checking for '--' here, as it would filter out 
             valid command line options used by applications. [vszakats] */
 
-   return strlen( szArg ) >= 2 && 
-          szArg[ 0 ] == '/' && 
-          szArg[ 1 ] == '/';
+   if( hb_strnicmp( szArg, "--hb:", 5 ) == 0 ||
+       hb_strnicmp( szArg, "//hb:", 5 ) == 0 )
+   {
+      if( piLen )
+         *piLen = 5;
+
+      return TRUE;
+   }
+   else if( strlen( szArg ) >= 2 && 
+            szArg[ 0 ] == '/' && 
+            szArg[ 1 ] == '/' )
+   {
+      if( piLen )
+         *piLen = 2;
+
+      return TRUE;
+   }
+
+   return FALSE;
 }
 
 static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 {
-   char * pszRetVal = NULL, * pszEnvVar;
+   char * pszRetVal = NULL;
+   char * pszEnvVar;
    int i;
+   int iPrefixLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_cmdargGet(%s, %d)", pszName, (int) bRetValue));
 
@@ -138,12 +156,12 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
 
    for( i = 1; i < s_argc; i++ )
    {
-      if( hb_cmdargIsInternal( s_argv[ i ] ) &&
-         hb_strnicmp( s_argv[ i ] + 2, pszName, strlen( pszName ) ) == 0 )
+      if( hb_cmdargIsInternal( s_argv[ i ], &iPrefixLen ) &&
+         hb_strnicmp( s_argv[ i ] + iPrefixLen, pszName, strlen( pszName ) ) == 0 )
       {
          if( bRetValue )
          {
-            char * pszPos = s_argv[ i ] + 2 + strlen( pszName );
+            char * pszPos = s_argv[ i ] + iPrefixLen + strlen( pszName );
 
             if( *pszPos == ':' )
                pszPos++;
@@ -186,8 +204,8 @@ static char * hb_cmdargGet( const char * pszName, BOOL bRetValue )
             pszNext++;
 
          /* The // is optional in the envvar */
-         if( hb_cmdargIsInternal( pszNext ) )
-            pszNext += 2;
+         if( hb_cmdargIsInternal( pszNext, &iPrefixLen ) )
+            pszNext += iPrefixLen;
 
          pszEnd = pszNext;
          /* Search for the end of this switch */
