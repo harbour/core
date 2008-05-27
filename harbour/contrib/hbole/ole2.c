@@ -94,16 +94,16 @@ static double DateToDbl( LPSTR cDate )
 
    nDate = hb_dateEncStr( cDate ) - 0x0024d9abL;
 
-   return ( nDate );
+   return nDate;
 }
 
 static LPSTR DblToDate( double nDate )
 {
-   static char *cDate = "00000000";
+   static char * cDate = "00000000";
 
-   hb_dateDecStr( cDate, nDate + 0x0024d9abL );
+   hb_dateDecStr( cDate, ( long ) nDate + 0x0024d9abL );
 
-   return ( cDate );
+   return cDate;
 }
 
 static LPSTR AnsiToWide( LPSTR cAnsi )
@@ -115,7 +115,7 @@ static LPSTR AnsiToWide( LPSTR cAnsi )
    cString = ( char * ) hb_xgrab( wLen * 2 );
    MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cAnsi, -1,
                         ( LPWSTR ) cString, wLen );
-   return ( cString );
+   return cString;
 }
 
 static LPSTR WideToAnsi( LPSTR cWide )
@@ -125,10 +125,10 @@ static LPSTR WideToAnsi( LPSTR cWide )
 
    wLen = WideCharToMultiByte( CP_ACP, 0, ( LPWSTR ) cWide, -1,
                                NULL, 0, NULL, NULL );
-   cString = hb_xgrab( (!wLen) ? 2 : wLen );
+   cString = ( LPSTR ) hb_xgrab( (!wLen) ? 2 : wLen );
    WideCharToMultiByte( CP_ACP, 0, ( LPWSTR ) cWide, -1,
                         cString, wLen, NULL, NULL );
-   return ( cString );
+   return cString;
 }
 
 static void GetParams(DISPPARAMS * dParams)
@@ -172,7 +172,7 @@ static void GetParams(DISPPARAMS * dParams)
 #endif
                  cString = AnsiToWide( hb_parc( nArg ) );
 #if !defined(__BORLANDC__) && !defined(__XCC__)
-                 pArgs[ n ].bstrVal = SysAllocString( (LPVOID) cString );
+                 pArgs[ n ].bstrVal = SysAllocString( (OLECHAR *) cString );
 #else
                  pArgs[ n ].n1.n2.n3.bstrVal = SysAllocString( (LPVOID) cString );
 #endif
@@ -420,8 +420,8 @@ HB_FUNC( OLESHOWEXCEPTION )
    {
       LPSTR source, description;
 
-      source = WideToAnsi( (LPVOID) excep.bstrSource );
-      description = WideToAnsi( (LPVOID) excep.bstrDescription );
+      source = WideToAnsi( (LPSTR) excep.bstrSource );
+      description = WideToAnsi( (LPSTR) excep.bstrDescription );
       MessageBox( NULL, description, source, MB_ICONHAND );
       hb_xfree( source );
       hb_xfree( description );

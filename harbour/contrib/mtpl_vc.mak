@@ -117,8 +117,7 @@ CFLAGS_VER     = -Ogt2yb1p -GX- -G6 -YX -FD -Gs
 !endif
 #-----------
 
-CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -W3 -nologo -T$(HB_BUILD_MODE) \
-                 -D__WINDOWS__ -DWIN32 -D__WIN32__ $(C_USR) $(CFLAGS)
+CFLAGS         = -I$(INCLUDE_DIR) $(CFLAGS_VER) -W3 -nologo -T$(HB_BUILD_MODE) $(C_USR) $(CFLAGS)
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"

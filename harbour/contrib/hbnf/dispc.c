@@ -65,9 +65,9 @@
 #include "inkey.ch"
 
 #define OFF 0
-#define ON  (!OFF)
+#define ON  1
 #define NO  0
-#define YES (!NO)
+#define YES 1
 #define OK  0
 #define K_STRING   0
 #define K_LIST     (!K_STRING)
@@ -923,4 +923,3 @@ static void strcpyn( char *dest, const char *source, int len )
 
    dest[len+1] = 0x00;
 }
-

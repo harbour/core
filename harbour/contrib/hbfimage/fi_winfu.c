@@ -95,7 +95,7 @@ HB_FUNC( FI_FITOBITMAP )
       HDC hDC;
 
       /* Retrieve parameters */
-      dib = hb_parptr( 1 );
+      dib = ( FIBITMAP * ) hb_parptr( 1 );
 
       /* run function */
       hDC = GetDC( NULL );
@@ -203,7 +203,7 @@ HB_FUNC( FI_WINDRAW )
       int scanlines;
 
       /* Retrieve parameters */
-      dib  = hb_parptr( 1 );
+      dib  = ( FIBITMAP * ) hb_parptr( 1 );
       hDC  = (HDC) hb_parnl( 2 );
       rcDest.top    = hb_parni( 3 );
       rcDest.left   = hb_parni( 4 );

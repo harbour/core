@@ -1794,7 +1794,7 @@ HB_FUNC( WIN_SETDLGITEMTEXT )
 
 HB_FUNC( WIN_GETDLGITEMTEXT )
 {
-   USHORT iLen = SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1 ;
+   USHORT iLen = ( USHORT ) SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1 ;
    LPTSTR cText = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
    char * szText;
    USHORT iResult;
@@ -2392,5 +2392,6 @@ HB_FUNC( WIN_CHOOSECOLOR )
 }
 
 //-------------------------------------------------------------------//
+
 
 

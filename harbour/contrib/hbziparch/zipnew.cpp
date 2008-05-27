@@ -210,7 +210,6 @@ PHB_ITEM hb___GetFileNamesFromZip( char *szFile, BOOL iMode )
 {
    int iNumberOfFiles;
    ULONG ulCount;
-   int iOMode ;
    bool iReturn = true;
 
    CZipArchive szZip;
@@ -563,7 +562,6 @@ int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord
    bool iReturn = true;
    ULONG ulCount;
    int iCause;
-   int iMode ;
    char  * szPath = (char*) hb_xgrab( _POSIX_PATH_MAX + 1 );
    BOOL bFreePath = TRUE;
 
@@ -681,8 +679,10 @@ int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord
                }
             }
 
-            catch ( CZipException&  e )
+            catch( CZipException& e )
             {
+                  HB_SYMBOL_UNUSED( e );
+
                   szZip.CloseFile( NULL, true);
 /*            szZip.CloseNewFile(true);*/
             }
@@ -793,7 +793,6 @@ int hb_UnzipSelIndex( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPas
    bool iReturn = true;
    ULONG ulCount;
    int iCause;
-   int iMode ;
 
    CZipArchive szZip;
    SpanCallback span;
@@ -872,8 +871,10 @@ int hb_UnzipSelIndex( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPas
                }
             }
 
-            catch ( CZipException&  e )
+            catch( CZipException&  e )
             {
+                  HB_SYMBOL_UNUSED( e );
+
                   szZip.CloseFile( NULL, true);
             }
          }
@@ -1288,4 +1289,3 @@ int hb_CheckSpanMode( char * szFile )
 
    return iReturn;
 }
-

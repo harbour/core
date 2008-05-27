@@ -121,8 +121,7 @@ HB_FUNC( SETDLGITEMTEXT )
 
 HB_FUNC( GETDLGITEMTEXT )  // GETDLGITMTEXT
 {
-
-   USHORT iLen = SendMessage( GetDlgItem( (HWND) hb_parnl( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 )+1 ;
+   USHORT iLen = ( USHORT ) SendMessage( GetDlgItem( (HWND) hb_parnl( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 )+1 ;
    char *cText = (char*) hb_xgrab( iLen );
 
    GetDlgItemText(
@@ -378,26 +377,3 @@ if( h ){
 
 
 //----------------------------------------------------------------------------//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

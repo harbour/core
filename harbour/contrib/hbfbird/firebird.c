@@ -678,7 +678,7 @@ HB_FUNC(FBGETBLOB)
     isc_tr_handle       trans = NULL;
     isc_blob_handle     blob_handle = NULL;
     short               blob_seg_len;
-    char                *blob_segment;
+    char                blob_segment[ 512 ];
     ISC_QUAD            *blob_id;
     char                p[MAX_BUFFER];
     long                blob_stat;
