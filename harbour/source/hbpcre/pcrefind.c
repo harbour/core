@@ -152,7 +152,7 @@ makes things a lot slower. */
 
 for (;;)
   {
-  if (top <= bot) return -1;
+  if (top <= bot) return (unsigned int) -1;
   mid = (bot + top) >> 1;
   if (c == (ucp_table[mid].f0 & f0_charmask)) break;
   if (c < (ucp_table[mid].f0 & f0_charmask)) top = mid;

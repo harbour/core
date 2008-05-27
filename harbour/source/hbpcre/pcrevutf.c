@@ -154,6 +154,10 @@ for (p = string; length-- > 0; p++)
     if ((*(++p) & 0xc0) != 0x80) return p - string;
     }
   }
+#else
+/* pacify warnings */
+(void)(string);
+(void)(length);
 #endif
 
 return -1;

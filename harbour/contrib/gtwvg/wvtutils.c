@@ -1656,9 +1656,9 @@ HB_FUNC( WIN_SENDMESSAGE )
 
 HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 {
-   char     *cText;
    PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
-   int      iLen;
+   char     *cText = NULL;
+   int      iLen = 0;
 
    if( pText )
    {
@@ -1666,26 +1666,22 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
       cText = (char*) hb_xgrab( iLen+1 );
       hb_xmemcpy( cText, hb_itemGetCPtr( pText ), iLen+1 );
    }
-   else
-   {
-      cText = NULL;
-   }
 
    hb_retnl( (LONG) SendDlgItemMessage( (HWND) hb_parnl( 1 ) ,
                                         (int)  hb_parni( 2 ) ,
                                         (UINT) hb_parni( 3 ) ,
                                         (ISNIL(4) ? 0 : (WPARAM) hb_parnl( 4 ))   ,
                                         (cText ? (LPARAM) cText : (LPARAM) hb_parnl( 5 ))
-                                      ) ) ;
+                                      ) );
 
-  if( ISBYREF( 5 ) && pText )
-  {
-     hb_storclen( cText, iLen, 5 ) ;
-  }
-  if( cText )
-  {
-     hb_xfree( cText );
-  }
+   if( cText )
+   {
+      if( ISBYREF( 5 ) )
+      {
+         hb_storclen( cText, iLen, 5 ) ;
+      }
+      hb_xfree( cText );
+   }
 }
 
 //-------------------------------------------------------------------//

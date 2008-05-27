@@ -78,6 +78,9 @@ for (j = i; j > 0; j--)
 *buffer = _pcre_utf8_table2[i] | cvalue;
 return i + 1;
 #else
+/* pacify warnings */
+(void)(cvalue);
+(void)(buffer);
 return 0;   /* Keep compiler happy; this function won't ever be */
 #endif      /* called when SUPPORT_UTF8 is not defined. */
 }

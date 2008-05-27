@@ -1450,6 +1450,9 @@ for (;;)
       if (code[-1] >= 0xc0) code += _pcre_utf8_table4[code[-1] & 0x3f];
       break;
       }
+#else
+    /* pacify warnings */
+    (void)(utf8);
 #endif
     }
   }
@@ -1543,6 +1546,9 @@ for (;;)
       if (code[-1] >= 0xc0) code += _pcre_utf8_table4[code[-1] & 0x3f];
       break;
       }
+#else
+    /* pacify warnings */
+    (void)(utf8);
 #endif
     }
   }
@@ -2134,6 +2140,9 @@ if (next >= 0) switch(op_code)
   case OP_CHAR:
 #ifdef SUPPORT_UTF8
   if (utf8 && item > 127) { GETCHAR(item, utf8_char); }
+#else
+  /* pacify warnings */
+  (void)(utf8_char);
 #endif
   return item != next;
 

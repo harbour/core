@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-27 17:11 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/idle.c
+    * updated included header files
+    * removed unnecessary separated code for MacOSX
+    * small modification in comment
+
+  * harbour/source/hbpcre/pcreinal.h
+    ! do not redefine BOOL type and TRUE / FALSE definitions
+
+  * harbour/source/hbpcre/_hbpcreg.c
+    * remap memory functions to Harbour core ones
+
+  * harbour/source/hbpcre/pcrevutf.c
+  * harbour/source/hbpcre/pcreoutf.c
+  * harbour/source/hbpcre/pcrecomp.c
+    * pacify warnings when utf8 mode is disabled
+
+  * harbour/source/hbpcre/pcrefind.c
+    * casting
+
+  * harbour/contrib/gtwvg/wvtutils.c
+  * harbour/contrib/rddads/adsfunc.c
+    * cleanup warnings
+
 2008-05-27 09:43 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbapi.h
    * source/vm/hvm.c

@@ -77,6 +77,7 @@
    #ifndef __USE_POSIX199309
       #define __USE_POSIX199309
    #endif
+   #include <sys/time.h>
    #include <sys/times.h>
    #include <unistd.h>
 #endif
@@ -139,13 +140,6 @@ void hb_releaseCPU( void )
 
       HB_DOS_INT86( 0x2F, &regs, &regs );
    }
-#elif defined(HB_OS_DARWIN)
-   {
-      struct timeval tv;
-      tv.tv_sec = 0;
-      tv.tv_usec = 1000;
-      select( 0, NULL, NULL, NULL, &tv );
-   }
 #elif defined(HB_OS_UNIX)
    {
       struct timeval tv;
@@ -153,10 +147,18 @@ void hb_releaseCPU( void )
       tv.tv_usec = 1000;
       select( 0, NULL, NULL, NULL, &tv );
    }
-      /* the code below is more efficient but doesn't work in Centos 5.1
+
+   /* the code below is simpler but seems that some Linux kernels
+    * (f.e. from  Centos 5.1) have problems with nanosleep()
+    * so it was replaced by above code
+    */
+
+   /*
+   {
       static const struct timespec nanosecs = { 0, 1000000 };
       nanosleep( &nanosecs, NULL );
-      */
+   }
+   */
 #else
 
    /* Do nothing */
