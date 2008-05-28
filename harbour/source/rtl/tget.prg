@@ -679,45 +679,41 @@ METHOD overStrike( cChar ) CLASS Get
          ::pos := ::FirstEditable()
       ENDIF
       
-      IF ::pos > ::nMaxEdit
-         ::display()
-         RETURN Self
+      IF ::pos <= ::nMaxEdit
+      
+         cChar := ::Input( cChar )
+         
+         IF cChar == ""
+            ::rejected := .T.
+         ELSE
+            ::rejected := .F.
+         
+            IF ::lClear .AND. ::nPos == ::FirstEditable()
+               ::DeleteAll()
+               ::lClear := .F.
+            ENDIF
+            
+            ::lEdit := .T.
+            
+            IF ::nPos == 0
+               ::pos := 1
+            ENDIF
+            
+            DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
+               ::pos++
+            ENDDO
+            
+            IF ::nPos > ::nMaxEdit
+               ::pos := ::FirstEditable()
+            ENDIF
+            ::cBuffer := SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar + SubStr( ::cBuffer, ::nPos + 1 )
+            
+            ::lChanged := .T.
+            
+            ::rightLow()
+         ENDIF
       ENDIF
-      
-      cChar := ::Input( cChar )
-      
-      IF cChar == ""
-         ::rejected := .T.
-         ::display()
-         RETURN Self
-      ELSE
-         ::rejected := .F.
-      ENDIF
-      
-      IF ::lClear .AND. ::nPos == ::FirstEditable()
-         ::DeleteAll()
-         ::lClear := .F.
-      ENDIF
-      
-      ::lEdit := .T.
-      
-      IF ::nPos == 0
-         ::pos := 1
-      ENDIF
-      
-      DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
-         ::pos++
-      ENDDO
-      
-      IF ::nPos > ::nMaxEdit
-         ::pos := ::FirstEditable()
-      ENDIF
-      ::cBuffer := SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar + SubStr( ::cBuffer, ::nPos + 1 )
-      
-      ::lChanged := .T.
-      
-      ::rightLow()
-      
+
       ::display()
    ENDIF
 
@@ -736,59 +732,55 @@ METHOD insert( cChar ) CLASS Get
          ::pos := ::FirstEditable()
       ENDIF
       
-      IF ::nPos > ::nMaxEdit
-         ::display()
-         RETURN Self
-      ENDIF
+      IF ::nPos <= ::nMaxEdit
       
-      cChar := ::Input( cChar )
-      
-      IF cChar == ""
-         ::rejected := .T.
-         ::display()
-         RETURN Self
-      ELSE
-         ::rejected := .F.
-      ENDIF
-      
-      IF ::lClear .AND. ::nPos == ::FirstEditable()
-         ::DeleteAll()
-         ::lClear := .F.
-      ENDIF
-      
-      ::lEdit := .T.
-      
-      IF ::nPos == 0
-         ::pos := 1
-      ENDIF
-      
-      DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
-         ::pos++
-      ENDDO
-      
-      IF ::nPos > ::nMaxEdit
-         ::pos := ::FirstEditable()
-      ENDIF
-      
-      IF ::lPicComplex
-         /* Calculating different nMaxEdit for ::lPicComplex */
-         FOR n := ::nPos TO nMaxEdit
-            IF !::IsEditable( n )
-               EXIT
+         cChar := ::Input( cChar )
+         
+         IF cChar == ""
+            ::rejected := .T.
+         ELSE
+            ::rejected := .F.
+         
+            IF ::lClear .AND. ::nPos == ::FirstEditable()
+               ::DeleteAll()
+               ::lClear := .F.
             ENDIF
-         NEXT
-         nMaxEdit := n
-         ::cBuffer := Left( SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar +;
-                      SubStr( ::cBuffer, ::nPos, nMaxEdit - 1 - ::nPos ) +;
-                      SubStr( ::cBuffer, nMaxEdit ), ::nMaxLen )
-      ELSE
-         ::cBuffer := Left( SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar + SubStr( ::cBuffer, ::nPos ), ::nMaxEdit )
+            
+            ::lEdit := .T.
+            
+            IF ::nPos == 0
+               ::pos := 1
+            ENDIF
+            
+            DO WHILE ! ::IsEditable( ::nPos ) .AND. ::nPos <= ::nMaxEdit
+               ::pos++
+            ENDDO
+            
+            IF ::nPos > ::nMaxEdit
+               ::pos := ::FirstEditable()
+            ENDIF
+            
+            IF ::lPicComplex
+               /* Calculating different nMaxEdit for ::lPicComplex */
+               FOR n := ::nPos TO nMaxEdit
+                  IF !::IsEditable( n )
+                     EXIT
+                  ENDIF
+               NEXT
+               nMaxEdit := n
+               ::cBuffer := Left( SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar +;
+                            SubStr( ::cBuffer, ::nPos, nMaxEdit - 1 - ::nPos ) +;
+                            SubStr( ::cBuffer, nMaxEdit ), ::nMaxLen )
+            ELSE
+               ::cBuffer := Left( SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar + SubStr( ::cBuffer, ::nPos ), ::nMaxEdit )
+            ENDIF
+            
+            ::lChanged := .T.
+            
+            ::rightLow()
+         ENDIF
       ENDIF
-      
-      ::lChanged := .T.
-      
-      ::rightLow()
-      
+
       ::display()
    ENDIF
 
@@ -822,42 +814,42 @@ METHOD wordLeft() CLASS Get
 
    IF ::hasFocus
 
-      ::typeOut := .F.
-      ::lClear  := .F.
+      ::lClear := .F.
       
       IF ::nPos == ::FirstEditable()
          ::typeOut := .T.
-         RETURN Self
-      ENDIF
+      ELSE
+         ::typeOut := .F.
       
-      nPos := ::nPos - 1
-      
-      DO WHILE nPos > 0
-         IF SubStr( ::cBuffer, nPos, 1 ) == " "
-            DO WHILE nPos > 0 .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
-               nPos--
-            ENDDO
-            DO WHILE nPos > 0 .AND. !( SubStr( ::cBuffer, nPos, 1 ) == " " )
-               nPos--
-            ENDDO
-            IF nPos > 0
-               nPos++
+         nPos := ::nPos - 1
+         
+         DO WHILE nPos > 0
+            IF SubStr( ::cBuffer, nPos, 1 ) == " "
+               DO WHILE nPos > 0 .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
+                  nPos--
+               ENDDO
+               DO WHILE nPos > 0 .AND. !( SubStr( ::cBuffer, nPos, 1 ) == " " )
+                  nPos--
+               ENDDO
+               IF nPos > 0
+                  nPos++
+               ENDIF
+               EXIT
             ENDIF
-            EXIT
+            nPos--
+         ENDDO
+         
+         IF nPos < 1
+            nPos := 1
          ENDIF
-         nPos--
-      ENDDO
-      
-      IF nPos < 1
-         nPos := 1
+         
+         IF nPos > 0
+            ::pos := nPos
+         ENDIF
+         
+         ::lSuppDisplay := .T.
+         ::display()
       ENDIF
-      
-      IF nPos > 0
-         ::pos := nPos
-      ENDIF
-      
-      ::lSuppDisplay := .T.
-      ::display()
    ENDIF
 
    RETURN Self
@@ -868,36 +860,36 @@ METHOD wordRight() CLASS Get
 
    IF ::hasFocus
 
-      ::typeOut := .F.
-      ::lClear  := .F.
+      ::lClear := .F.
       
       IF ::nPos == ::nMaxEdit
          ::typeOut := .T.
-         RETURN Self
-      ENDIF
-      
-      nPos := ::nPos + 1
-      
-      DO WHILE nPos <= ::nMaxEdit
-         IF SubStr( ::cBuffer, nPos, 1 ) == " "
-            DO WHILE nPos <= ::nMaxEdit .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
-               nPos++
-            ENDDO
-            EXIT
+      ELSE
+         ::typeOut := .F.
+         
+         nPos := ::nPos + 1
+         
+         DO WHILE nPos <= ::nMaxEdit
+            IF SubStr( ::cBuffer, nPos, 1 ) == " "
+               DO WHILE nPos <= ::nMaxEdit .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
+                  nPos++
+               ENDDO
+               EXIT
+            ENDIF
+            nPos++
+         ENDDO
+         
+         IF nPos > ::nMaxEdit
+            nPos := ::nMaxEdit
          ENDIF
-         nPos++
-      ENDDO
-      
-      IF nPos > ::nMaxEdit
-         nPos := ::nMaxEdit
+         
+         IF nPos <= ::nMaxEdit
+            ::pos := nPos
+         ENDIF
+         
+         ::lSuppDisplay := .T.
+         ::display()
       ENDIF
-      
-      IF nPos <= ::nMaxEdit
-         ::pos := nPos
-      ENDIF
-      
-      ::lSuppDisplay := .T.
-      ::display()
    ENDIF
 
    RETURN Self
@@ -1011,23 +1003,23 @@ METHOD delWordRight() CLASS Get
 
    IF ::hasFocus
 
-      ::typeOut := .F.
-      ::lClear  := .F.
+      ::lClear := .F.
       
       IF ::nPos == ::nMaxEdit
          ::typeOut := .T.
-         RETURN Self
+      ELSE
+         ::typeOut := .F.
+      
+         DO WHILE ::nPos <= ::nMaxEdit .AND. !( SubStr( ::cBuffer, ::nPos, 1 ) == " " )
+            ::deleteLow()
+         ENDDO
+         
+         IF ::nPos <= ::nMaxEdit
+            ::deleteLow()
+         ENDIF
+         
+         ::display()
       ENDIF
-      
-      DO WHILE ::nPos <= ::nMaxEdit .AND. !( SubStr( ::cBuffer, ::nPos, 1 ) == " " )
-         ::deleteLow()
-      ENDDO
-      
-      IF ::nPos <= ::nMaxEdit
-         ::deleteLow()
-      ENDIF
-      
-      ::display()
    ENDIF
 
    RETURN Self
