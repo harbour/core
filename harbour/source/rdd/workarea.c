@@ -2055,8 +2055,8 @@ static const RDDFUNCS waTable =
    /* non WorkArea functions */
    ( DBENTRYP_R )       NULL,                   /* Init    */
    ( DBENTRYP_R )       NULL,                   /* Exit    */
-   ( DBENTRYP_RVV )     hb_waRddUnsupported,    /* Drop    */
-   ( DBENTRYP_RVV )     hb_waRddUnsupported,    /* Exists  */
+   ( DBENTRYP_RVVL )    hb_waRddUnsupported,    /* Drop    */
+   ( DBENTRYP_RVVL )    hb_waRddUnsupported,    /* Exists  */
 /* ( DBENTRYP_RSLV ) */ hb_waRddInfo,           /* RddInfo */
 
    /* Special and reserved methods */

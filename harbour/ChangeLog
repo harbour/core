@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-28 11:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbrdddbf.h
+  * harbour/include/hbapirdd.h
+  * harbour/source/rdd/workarea.c
+  * harbour/source/rdd/dbcmd.c
+  * harbour/source/rdd/dbf1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/dbffpt/dbffpt1.c
+  * harbour/source/rdd/usrrdd/usrrdd.c
+  * harbour/contrib/rddads/ads1.c
+  * harbour/contrib/hbbmcdx/bmdbfcdx1.c
+    + added ULONG ulConnection parameter to DROP() and EXISTS()
+      RDD node methods
+    + added 4-th parameter with ulConncetion index to [HB_]DROP() and
+      [HB_]EXISTS() functions
+
 2008-05-27 22:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_deb.sh
     ! fixes suggested by Guy Roussin

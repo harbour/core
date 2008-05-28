@@ -4585,14 +4585,14 @@ static ERRCODE adsPutValueFile( ADSAREAP pArea, USHORT uiIndex, BYTE * szFile, U
 
 
 /* TODO: Use AdsDeleteFile() */
-static ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
+static ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, ULONG ulConnect )
 {
    char szFileName[ _POSIX_PATH_MAX + 1 ], * szFile, * szExt;
    PHB_ITEM pFileExt = NULL;
    PHB_FNAME pFileName;
    BOOL fTable = FALSE, fResult = FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("adsDrop(%p,%p,%p)", pRDD, pItemTable, pItemIndex));
+   HB_TRACE(HB_TR_DEBUG, ("adsDrop(%p,%p,%p,%lu)", pRDD, pItemTable, pItemIndex, ulConnect));
 
    szFile = hb_itemGetCPtr( pItemIndex );
    if( !szFile[ 0 ] )
@@ -4610,7 +4610,7 @@ static ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex
    {
       /* Add default extension if missing */
       pFileExt = hb_itemPutC( NULL, "" );
-      if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, 0, pFileExt ) == SUCCESS )
+      if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == SUCCESS )
          pFileName->szExtension = hb_itemGetCPtr( pFileExt );
    }
    hb_fsFNameMerge( szFileName, pFileName );
@@ -4631,7 +4631,7 @@ static ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex
           */
          pFileName = hb_fsFNameSplit( szFileName );
          pFileExt = hb_itemPutC( pFileExt, "" );
-         if( SELF_RDDINFO( pRDD, RDDI_MEMOEXT, 0, pFileExt ) == SUCCESS )
+         if( SELF_RDDINFO( pRDD, RDDI_MEMOEXT, ulConnect, pFileExt ) == SUCCESS )
          {
             szExt = hb_itemGetCPtr( pFileExt );
             if( szExt[ 0 ] )
@@ -4646,7 +4646,7 @@ static ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex
           * in the same directory as table file
           */
          pFileExt = hb_itemPutC( pFileExt, "" );
-         if( SELF_RDDINFO( pRDD, RDDI_ORDSTRUCTEXT, 0, pFileExt ) == SUCCESS )
+         if( SELF_RDDINFO( pRDD, RDDI_ORDSTRUCTEXT, ulConnect, pFileExt ) == SUCCESS )
          {
             szExt = hb_itemGetCPtr( pFileExt );
             if( szExt[ 0 ] )
@@ -4672,14 +4672,14 @@ static ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex
                                                   UNSIGNED8    *pucFileName,
                                                   UNSIGNED16   *pusOnDisk );
 */
-static ERRCODE adsExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex )
+static ERRCODE adsExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, ULONG ulConnect )
 {
    char szFileName[ _POSIX_PATH_MAX + 1 ], * szFile;
    PHB_ITEM pFileExt = NULL;
    PHB_FNAME pFileName;
    BOOL fTable = FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("adsExists(%p,%p,%p)", pRDD, pItemTable, pItemIndex));
+   HB_TRACE(HB_TR_DEBUG, ("adsExists(%p,%p,%p,%lu)", pRDD, pItemTable, pItemIndex, ulConnect));
 
    szFile = hb_itemGetCPtr( pItemIndex );
    if( !szFile[ 0 ] )
@@ -4695,7 +4695,7 @@ static ERRCODE adsExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemInd
    if( !pFileName->szExtension )
    {
       pFileExt = hb_itemPutC( NULL, "" );
-      if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, 0, pFileExt ) == SUCCESS )
+      if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == SUCCESS )
          pFileName->szExtension = hb_itemGetCPtr( pFileExt );
    }
    hb_fsFNameMerge( szFileName, pFileName );
@@ -4884,8 +4884,8 @@ static const RDDFUNCS adsTable = { ( DBENTRYP_BP ) adsBof,
                                    ( DBENTRYP_V ) adsWriteDBHeader,
                                    ( DBENTRYP_R ) adsInit,
                                    ( DBENTRYP_R ) adsExit,
-                                   ( DBENTRYP_RVV ) adsDrop,
-                                   ( DBENTRYP_RVV ) adsExists,
+                                   ( DBENTRYP_RVVL ) adsDrop,
+                                   ( DBENTRYP_RVVL ) adsExists,
                                    ( DBENTRYP_RSLV ) adsRddInfo,
                                    ( DBENTRYP_SVP ) adsWhoCares
                                  };

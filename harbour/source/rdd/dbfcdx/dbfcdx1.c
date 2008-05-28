@@ -274,8 +274,8 @@ static const RDDFUNCS cdxTable =
    /* non WorkArea functions       */
    ( DBENTRYP_R )     hb_cdxInit,
    ( DBENTRYP_R )     hb_cdxExit,
-   ( DBENTRYP_RVV )   hb_cdxDrop,
-   ( DBENTRYP_RVV )   hb_cdxExists,
+   ( DBENTRYP_RVVL )  hb_cdxDrop,
+   ( DBENTRYP_RVVL )  hb_cdxExists,
    ( DBENTRYP_RSLV )  hb_cdxRddInfo,
 
 

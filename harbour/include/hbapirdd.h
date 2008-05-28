@@ -629,7 +629,7 @@ typedef USHORT ( * DBENTRYP_LSP  )( AREAP area, ULONG p1, BOOL * p2 );
 /* this methods DO USE take a Workarea but an RDDNODE */
 
 typedef USHORT ( * DBENTRYP_R    )( struct _RDDNODE * pRDD );
-typedef USHORT ( * DBENTRYP_RVV  )( struct _RDDNODE * pRDD, PHB_ITEM p1, PHB_ITEM p2 );
+typedef USHORT ( * DBENTRYP_RVVL )( struct _RDDNODE * pRDD, PHB_ITEM p1, PHB_ITEM p2, ULONG p3 );
 typedef USHORT ( * DBENTRYP_RSLV )( struct _RDDNODE * pRDD, USHORT index, ULONG p1, PHB_ITEM p2 );
 /*--------------------* Virtual Method Table *----------------------*/
 
@@ -772,8 +772,8 @@ typedef struct _RDDFUNCS
 
    DBENTRYP_R    init;              /* init RDD after registration */
    DBENTRYP_R    exit;              /* unregister RDD */
-   DBENTRYP_RVV  drop;              /* remove table */
-   DBENTRYP_RVV  exists;            /* check if table exist */
+   DBENTRYP_RVVL drop;              /* remove table */
+   DBENTRYP_RVVL exists;            /* check if table exist */
    DBENTRYP_RSLV rddInfo;           /* RDD info */
 
 
@@ -961,8 +961,8 @@ typedef RDDNODE * LPRDDNODE;
 /* non WorkArea functions */
 #define SELF_INIT(r)                    ((*(r)->pTable.init)(r))
 #define SELF_EXIT(r)                    ((*(r)->pTable.exit)(r))
-#define SELF_DROP(r, it, ii)            ((*(r)->pTable.drop)(r, it, ii))
-#define SELF_EXISTS(r, it, ii)          ((*(r)->pTable.exists)(r, it, ii))
+#define SELF_DROP(r, it, ii, l)         ((*(r)->pTable.drop)(r, it, ii, l))
+#define SELF_EXISTS(r, it, ii, l)       ((*(r)->pTable.exists)(r, it, ii, l))
 #define SELF_RDDINFO(r, i, l, g)        ((*(r)->pTable.rddInfo)(r, i, l, g))
 
 
@@ -1130,8 +1130,8 @@ typedef RDDNODE * LPRDDNODE;
 /* non WorkArea functions */
 #define SUPER_INIT(r)                   ((*(__SUPERTABLE(r))->init)(r))
 #define SUPER_EXIT(r)                   ((*(__SUPERTABLE(r))->exit)(r))
-#define SUPER_DROP(r, it, ii)           ((*(__SUPERTABLE(r))->drop)(r, it, ii))
-#define SUPER_EXISTS(r, it, ii)         ((*(__SUPERTABLE(r))->exists)(r, it, ii))
+#define SUPER_DROP(r, it, ii, l)        ((*(__SUPERTABLE(r))->drop)(r, it, ii, l))
+#define SUPER_EXISTS(r, it, ii, l)      ((*(__SUPERTABLE(r))->exists)(r, it, ii, l))
 #define SUPER_RDDINFO(r, i, l, g)       ((*(__SUPERTABLE(r))->rddInfo)(r, i, l, g))
 
 #define ISSUPER_INIT(r)                 ((__SUPERTABLE(r))->init != NULL)

@@ -220,8 +220,8 @@ static const RDDFUNCS fptTable =
    /* non WorkArea functions       */
    ( DBENTRYP_R )     hb_fptInit,
    ( DBENTRYP_R )     hb_fptExit,
-   ( DBENTRYP_RVV )   hb_fptDrop,
-   ( DBENTRYP_RVV )   hb_fptExists,
+   ( DBENTRYP_RVVL )  hb_fptDrop,
+   ( DBENTRYP_RVVL )  hb_fptExists,
    ( DBENTRYP_RSLV )  hb_fptRddInfo,
 
    /* Special and reserved methods */
