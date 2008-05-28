@@ -334,6 +334,9 @@ $(CODEPAGE_LIB) : $(CODEPAGE_LIB_OBJS)
 $(PCRE_LIB)     : $(PCRE_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
+$(HBZLIB_LIB)   : $(HBZLIB_LIB_OBJS)
+	$(MKLIB) $(ARFLAGS) $@ $^
+#**********************************************************
 $(RDD_LIB)      : $(RDD_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************

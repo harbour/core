@@ -220,6 +220,9 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 {$(PCRE_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
+{$(HBZLIB_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
+#*******************************************************
 {$(RDD_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
@@ -330,6 +333,10 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(PCRE_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
+#*******************************************************
+{$(HBZLIB_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
@@ -465,6 +472,9 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 {$(PCRE_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
+{$(HBZLIB_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
+#*******************************************************
 {$(RDD_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
@@ -576,6 +586,10 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(PCRE_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
+    $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
+    $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
+#*******************************************************
+{$(HBZLIB_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGSDLL) -o$(DLL_OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
@@ -731,6 +745,9 @@ $(CODEPAGE_LIB) : $(CODEPAGE_LIB_OBJS)
     $(MKLIB) /out:$@ $**
 #**********************************************************
 $(PCRE_LIB)     : $(PCRE_LIB_OBJS)
+    $(MKLIB) /out:$@ $**
+#**********************************************************
+$(HBZLIB_LIB)   : $(HBZLIB_LIB_OBJS)
     $(MKLIB) /out:$@ $**
 #**********************************************************
 $(RDD_LIB)      : $(RDD_LIB_OBJS)

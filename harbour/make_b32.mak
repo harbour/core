@@ -320,6 +320,13 @@ $(PCRE_LIB)     : $(PCRE_LIB_OBJS)
 +)
 !
 #**********************************************************
+$(HBZLIB_LIB)   : $(HBZLIB_LIB_OBJS)
+    IF EXIST "$(HBZLIB_LIB)" $(DEL) "$(HBZLIB_LIB)" > NUL
+    $(MKLIB) "$(HBZLIB_LIB)" $(ARFLAGS) @&&!
++$(**: = &^
++)
+!
+#**********************************************************
 $(RDD_LIB)      :: BasicExes
 $(RDD_LIB)      :: $(RDD_LIB_OBJS)
     IF EXIST "$(RDD_LIB)" $(DEL) "$(RDD_LIB)" > NUL

@@ -117,6 +117,7 @@ DEBUG_DIR    = source\debug
 LANG_DIR     = source\lang
 CODEPAGE_DIR = source\codepage
 PCRE_DIR     = source\hbpcre
+HBZLIB_DIR   = source\hbzlib
 RDD_DIR      = source\rdd
 NULSYS_DIR   = source\rdd\nulsys
 DBFNTX_DIR   = source\rdd\dbfntx
@@ -164,6 +165,7 @@ $(DEBUG_DIR);\
 $(LANG_DIR);\
 $(CODEPAGE_DIR);\
 $(PCRE_DIR);\
+$(HBZLIB_DIR);\
 $(RDD_DIR);\
 $(NULSYS_DIR);\
 $(DBFNTX_DIR);\
@@ -221,6 +223,7 @@ DEBUG_LIB    = $(LIB_DIR)\$(LIBPREF)hbdebug$(LIBEXT)
 LANG_LIB     = $(LIB_DIR)\$(LIBPREF)hblang$(LIBEXT)
 CODEPAGE_LIB = $(LIB_DIR)\$(LIBPREF)hbcpage$(LIBEXT)
 PCRE_LIB     = $(LIB_DIR)\$(LIBPREF)hbpcre$(LIBEXT)
+HBZLIB_LIB   = $(LIB_DIR)\$(LIBPREF)hbzlib$(LIBEXT)
 RDD_LIB      = $(LIB_DIR)\$(LIBPREF)hbrdd$(LIBEXT)
 HBSIX_LIB    = $(LIB_DIR)\$(LIBPREF)hbsix$(LIBEXT)
 HSX_LIB      = $(LIB_DIR)\$(LIBPREF)hbhsx$(LIBEXT)
@@ -304,6 +307,7 @@ STANDARD_STATIC_HBLIBS = \
     $(LANG_LIB)          \
     $(CODEPAGE_LIB)      \
     $(PCRE_LIB)          \
+    $(HBZLIB_LIB)        \
     $(RDD_LIB)           \
     $(MACRO_LIB)         \
     $(DEBUG_LIB)         \
@@ -767,6 +771,21 @@ PCRE_LIB_OBJS = \
     $(OBJ_DIR)\pcrexcls$(OBJEXT) \
 
 #**********************************************************
+HBZLIB_LIB_OBJS = \
+    $(OBJ_DIR)\adler32$(OBJEXT)  \
+    $(OBJ_DIR)\compress$(OBJEXT) \
+    $(OBJ_DIR)\crc32$(OBJEXT)    \
+    $(OBJ_DIR)\deflate$(OBJEXT)  \
+    $(OBJ_DIR)\gzio$(OBJEXT)     \
+    $(OBJ_DIR)\infback$(OBJEXT)  \
+    $(OBJ_DIR)\inffast$(OBJEXT)  \
+    $(OBJ_DIR)\inflate$(OBJEXT)  \
+    $(OBJ_DIR)\inftrees$(OBJEXT) \
+    $(OBJ_DIR)\trees$(OBJEXT)    \
+    $(OBJ_DIR)\uncompr$(OBJEXT)  \
+    $(OBJ_DIR)\zutil$(OBJEXT)    \
+
+#**********************************************************
 
 CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpbg866$(OBJEXT)  \
@@ -1146,6 +1165,7 @@ TMP_DLL_OBJS = \
     $(LANG_LIB_OBJS)        \
     $(CODEPAGE_LIB_OBJS)    \
     $(PCRE_LIB_OBJS)        \
+    $(HBZLIB_LIB_OBJS)      \
     $(RDD_LIB_OBJS)         \
     $(DBFNTX_LIB_OBJS)      \
     $(DBFCDX_LIB_OBJS)      \
@@ -1188,6 +1208,7 @@ HB_BUILD_TARGETS = \
     $(LANG_LIB)             \
     $(CODEPAGE_LIB)         \
     $(PCRE_LIB)             \
+    $(HBZLIB_LIB)           \
     $(RDD_LIB)              \
     $(NULSYS_LIB)           \
     $(DBFNTX_LIB)           \

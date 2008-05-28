@@ -32,6 +32,7 @@ DIRS=\
 	lang \
 	rdd \
 	hbpcre \
+	hbzlib \
 	debug \
 
 endif

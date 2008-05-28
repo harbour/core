@@ -8,6 +8,42 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-28 13:29 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * make_b32.mak
+   * make_vc.mak
+   * make_vcce.mak
+   * make_gcc.mak
+   * source/Makefile
+   + source/hbzlib
+   + source/hbzlib/ChangeLog
+   + source/hbzlib/adler32.c
+   + source/hbzlib/compress.c
+   + source/hbzlib/crc32.c
+   + source/hbzlib/crc32.h
+   + source/hbzlib/deflate.c
+   + source/hbzlib/deflate.h
+   + source/hbzlib/gzio.c
+   + source/hbzlib/infback.c
+   + source/hbzlib/inffast.c
+   + source/hbzlib/inffast.h
+   + source/hbzlib/inffixed.h
+   + source/hbzlib/inflate.c
+   + source/hbzlib/inflate.h
+   + source/hbzlib/inftrees.c
+   + source/hbzlib/inftrees.h
+   + source/hbzlib/Makefile
+   + source/hbzlib/trees.c
+   + source/hbzlib/trees.h
+   + source/hbzlib/uncompr.c
+   + source/hbzlib/zconf.h
+   + source/hbzlib/zlib.h
+   + source/hbzlib/zutil.c
+   + source/hbzlib/zutil.h
+     + Added unmodified ZLIB sources to Harbour core.
+     + Added them to make systems.
+     ; Work in progress.
+
 2008-05-28 12:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tget.prg
      % Flow cleanup.
