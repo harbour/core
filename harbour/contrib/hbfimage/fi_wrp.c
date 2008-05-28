@@ -355,6 +355,51 @@ HB_FUNC( FI_UNLOAD )
 // --------------------------------------------------------------------------
 // Load / Save routines -----------------------------------------------------
 // --------------------------------------------------------------------------
+// DLL_API FIBITMAP *DLL_CALLCONV FreeImage_LoadFromMemory(FREE_IMAGE_FORMAT fif, FIMEMORY *stream, int flags FI_DEFAULT(0));
+// DLL_API FIMEMORY *DLL_CALLCONV FreeImage_OpenMemory(BYTE *data FI_DEFAULT(0), DWORD size_in_bytes FI_DEFAULT(0));
+// DLL_API void DLL_CALLCONV FreeImage_CloseMemory(FIMEMORY *stream);
+HB_FUNC( FI_LOADFROMMEM )
+{
+   if ( hb_pcount() == 3 &&
+        hb_parinfo( 1 ) & HB_IT_NUMERIC &&
+        hb_parinfo( 2 ) & HB_IT_STRING  &&
+        hb_parinfo( 3 ) & HB_IT_NUMERIC
+      )
+   {
+      FIBITMAP *dib;
+      FREE_IMAGE_FORMAT fif;
+      FIMEMORY *stream;
+      BYTE *szImage;
+      int flags;
+
+      /* Retrieve parameters */
+      fif      = (FREE_IMAGE_FORMAT) hb_parni( 1 );
+      szImage  = hb_parcx( 2 );
+      flags    = hb_parni( 3 );
+
+      /* run function */
+      stream   = FreeImage_OpenMemory( szImage, hb_parclen(2) );
+      dib = FreeImage_LoadFromMemory(fif, stream, flags);
+      FreeImage_CloseMemory( stream );
+
+      /* return value */
+      if ( dib != NULL )
+      {
+         hb_retptr( dib );
+      }
+
+   }
+   else
+   {
+      // Parameter error
+      {
+         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+            "FI_LOADFROMMEM", 3,
+            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
+         return;
+      }
+   }
+}
 
 // DLL_API FIBITMAP *DLL_CALLCONV FreeImage_Load(FREE_IMAGE_FORMAT fif, const char *filename, int flags FI_DEFAULT(0));
 HB_FUNC( FI_LOAD )
@@ -847,6 +892,37 @@ HB_FUNC( FI_GETFILETYPE )
 // DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeU(const wchar_t *filename, int size FI_DEFAULT(0));
 // DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeFromHandle(FreeImageIO *io, fi_handle handle, int size FI_DEFAULT(0));
 // DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeFromMemory(FIMEMORY *stream, int size FI_DEFAULT(0));
+HB_FUNC( FI_GETFILETYPEFROMMEM )
+{
+   if ( hb_pcount() >= 1 &&
+        hb_parinfo( 1 ) & HB_IT_STRING
+      )
+   {
+      BYTE * szImage;
+      FIMEMORY *stream;
+      int size;
+
+      /* Retrieve parameters */
+      szImage = hb_parcx( 1 );
+      stream  = FreeImage_OpenMemory( szImage, hb_parclen(1) );
+      size    = ( hb_parinfo( 2 ) & HB_IT_NUMERIC ? hb_parni( 1 ) : 0 );
+
+      /* run function & return value */
+      hb_retni( FreeImage_GetFileTypeFromMemory(stream, size) );
+      FreeImage_CloseMemory( stream );
+
+   }
+   else
+   {
+      // Parameter error
+      {
+         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
+            "FI_GETFILETYPE", 1,
+            hb_paramError( 1 ) );
+         return;
+      }
+   }
+}
 
 // --------------------------------------------------------------------------
 // Image type request routine -----------------------------------------------

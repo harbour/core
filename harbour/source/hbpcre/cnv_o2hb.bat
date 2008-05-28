@@ -28,6 +28,7 @@ del *.h
 attrib -R _hbconf.h
 attrib -R _hbpcreg.c
 
+copy ori_src\LICENSE                LICENSE
 copy ori_src\config.h.generic       config.h
 copy ori_src\pcre.h.generic         pcre.h
 copy ori_src\pcre_internal.h        pcreinal.h

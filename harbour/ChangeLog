@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-28 22:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/hbpcre/cnv_o2hb.bat
+   * source/hbpcre/cnv_hb2o.bat
+     + Added COPYING
+
+   * contrib/hbfimage/tests/fitest.prg
+   * contrib/hbfimage/fi_wrp.c
+     + Added FI_LOADFROMMEM(), FI_GETFILETYPEFROMMEM()
+     ; Borrowed from Pavel Tsarenko / xhb.
+
+   * contrib/hbclipsm/gauge.c
+     % Minor rearrangement.
+
+   * contrib/hbmysql/make_vc.bat
+     ! #defining __WIN32__ to make it build under VC.
+   
+   ; NOTE: C++ builds of everything related to OLE2 
+           are broken. Could someone look into it?
+           (hbw32, gtwvg, hbole under BCC and MSVC)
+
 2008-05-28 21:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/Makefile
     * respect HB_WITHOUT_ODBC and HB_WITHOUT_ADS envvars
