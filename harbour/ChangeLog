@@ -11,7 +11,7 @@
 2008-05-28 22:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/hbpcre/cnv_o2hb.bat
    * source/hbpcre/cnv_hb2o.bat
-     + Added COPYING
+     + Added LICENSE
 
    * contrib/hbfimage/tests/fitest.prg
    * contrib/hbfimage/fi_wrp.c
