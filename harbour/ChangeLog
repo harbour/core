@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-28 14:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * bin/bld.bat
+   * bin/bld_os2.cmd
+     + Added hbzlib
+     + Added hbpcre for OS/2.
+
+   - contrib/hbzlib
+     - Removed.
+
 2008-05-28 14:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * include/Makefile
