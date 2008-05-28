@@ -16,49 +16,32 @@ DIRS=\
 	hbmzip \
 #	examples \
 
+
 ifneq ($(HB_ARCHITECTURE),dos)
-
-DIRS +=\
-	hbbmcdx \
-
+DIRS += hbbmcdx
 endif
 
 ifeq ($(HB_ARCHITECTURE),w32)
-
-DIRS +=\
-	rddads \
-	gtwvg \
-
+DIRS += rddads gtwvg
 ifneq ($(HB_COMPILER),rsxnt)
-
-DIRS +=\
-	hbw32 \
-	hbodbc \
-	rddado \
-
+DIRS += hbw32 hbodbc rddado
+endif
 endif
 
-else
 ifeq ($(HB_COMPILER),icc)
-
-DIRS +=\
-	hbgf/os2pm \
-
+DIRS += hbgf/os2pm
 else
 ifeq ($(HB_ARCHITECTURE),os2)
+DIRS += hbgf/os2pm
+endif
+endif
 
-DIRS +=\
-	hbgf/os2pm \
-
-else
 ifeq ($(HB_ARCHITECTURE),linux)
-
-DIRS +=\
-	rddads \
-	hbodbc \
-
+ifneq ($(HB_WITHOUT_ODBC),yes)
+DIRS += hbodbc
 endif
-endif
+ifneq ($(HB_WITHOUT_ADS),yes)
+DIRS += rddads
 endif
 endif
 

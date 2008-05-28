@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-28 21:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/Makefile
+    * respect HB_WITHOUT_ODBC and HB_WITHOUT_ADS envvars
+
+  * harbour/debian/control
+  * harbour/make_deb.sh
+    * removed libncurses5-dev, libslang2-dev, libgpmg1-dev, libx11-dev and
+      unixodbc-dev from dependences list.
+    + added support for HB_COMMERCE=yes envvar
+    + added automatic detection for curses, slang, gpm, x11 and odbc
+      devel packages
+    + added test for ACESDK detection - it tests if ach.h file exists
+      in default user or system wide installation
+
+    The above modifications are not tested and I would like to ask
+    Debian/Ubuntu users to make necessary tests.
+
 2008-05-28 18:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/hbzlib/ChangeLog
   * harbour/source/hbzlib/zutil.c

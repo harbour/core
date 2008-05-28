@@ -16,22 +16,57 @@ test_reqpkg()
 }
 
 TOINST_LST=""
-for i in gcc binutils bash debmake libncurses5-dev libslang2-dev libgpmg1-dev libx11-dev unixodbc-dev
+for i in gcc binutils bash debhelper
 do
     test_reqpkg "$i" || TOINST_LST="${TOINST_LST} $i"
 done
 
+if [ "$HB_COMMERCE" = yes ]
+then
+    export HB_GPM_MOUSE=no
+    export HB_WITHOUT_GTSLN=yes
+else
+    if [ -z "$HB_GPM_MOUSE" ] && test_reqpkg libgpmg1-dev
+    then
+        export HB_GPM_MOUSE=yes
+    fi
+    if [ -z "$HB_WITHOUT_GTSLN" ] && test_reqpkg libslang2-dev
+    then
+        export HB_WITHOUT_GTSLN=yes
+    fi
+fi
+
+if [ -z "$HB_WITHOUT_GTCRS" ] && ! test_reqpkg libncurses5-dev
+then
+    export HB_WITHOUT_GTCRS=yes
+fi
+
+if [ -z "$HB_WITHOUT_X11" ] && ! test_reqpkg libx11-dev
+then
+    export HB_WITHOUT_X11=yes
+fi
+
+if [ -z "$HB_WITHOUT_ODBC" ] && ! test_reqpkg unixodbc-dev
+then
+    export HB_WITHOUT_ODBC=yes
+fi
+
+if [ -z "$HB_WITHOUT_ADS" ] && \
+   ! /usr/local/ads/acesdk/ace.h && \
+   ! $(HOME)/ads/acesdk/ace.h
+then
+    export HB_WITHOUT_ADS=yes
+fi
+
 if test_reqpkg libpq-dev
 then
-    HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbpgsql"
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbpgsql"
 fi
 
 if test_reqpkg libmysqlclient15-dev
 then
-    HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbmysql"
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbmysql"
 fi
-
-export HB_CONTRIBLIBS
 
 if [ -z "${TOINST_LST}" ] || [ "$1" = "--force" ]
 then
