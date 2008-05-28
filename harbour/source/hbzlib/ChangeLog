@@ -18,6 +18,15 @@
  *
  */
 
+2008-05-28 18:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/hbzlib/zutil.c
+  * harbour/source/hbzlib/gzio.c
+  * harbour/source/hbzlib/zutil.h
+  * harbour/source/hbzlib/zconf.h
+    * use _WINCE macro instead of _WIN32_WCE to detect WinCE builds
+      defining _WIN32_WCE interacts with header files and should be
+      left for user to specify exact WinCE version
+
 2008-02-18 04:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * adler32.c
   * compress.c

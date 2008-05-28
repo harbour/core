@@ -17,14 +17,14 @@
 #include "zlib.h"
 
 #ifdef STDC
-#  ifndef _WIN32_WCE
+#  ifndef _WINCE
 #    include <stddef.h>
 #  endif
 #  include <string.h>
 #  include <stdlib.h>
 #endif
 #ifdef NO_ERRNO_H
-#   ifdef _WIN32_WCE
+#   ifdef _WINCE
       /* The Microsoft C Run-Time Library for Windows CE doesn't have
        * errno.  We define it as a global variable to simplify porting.
        * Its value is always 0 and should not be used.  We rename it to
@@ -34,7 +34,7 @@
 #   endif
     extern int errno;
 #else
-#  ifndef _WIN32_WCE
+#  ifndef _WINCE
 #    include <errno.h>
 #  endif
 #endif
@@ -152,7 +152,7 @@ extern const char * const z_errmsg[10]; /* indexed by 2-zlib_error */
 #endif
 
 #if (defined(_MSC_VER) && (_MSC_VER > 600))
-#  if defined(_WIN32_WCE)
+#  if defined(_WINCE)
 #    define fdopen(fd,mode) NULL /* No fdopen() */
 #    ifndef _PTRDIFF_T_DEFINED
        typedef int ptrdiff_t;

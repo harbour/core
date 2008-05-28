@@ -69,17 +69,17 @@
 #  define WINDOWS
 #endif
 #if defined(__CEGCC__) || defined(__MINGW32CE__) || \
-    defined(UNDER_CE) || defined(_WINCE)
-#  ifndef _WIN32_WCE
-#    define _WIN32_WCE
+    defined(UNDER_CE) || defined(_WIN32_WCE)
+#  ifndef _WINCE
+#    define _WINCE
 #  endif
 #endif
-#if defined(_WIN32_WCE)
+#if defined(_WINCE)
 #  ifndef NO_ERRNO_H
 #    define NO_ERRNO_H
 #  endif
 #endif
-#if defined(_WIN32) || defined(_WIN32_WCE) || defined(__WIN32__)
+#if defined(_WIN32) || defined(_WINCE) || defined(__WIN32__)
 #  ifndef WIN32
 #    define WIN32
 #  endif

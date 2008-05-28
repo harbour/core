@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-28 18:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/hbzlib/ChangeLog
+  * harbour/source/hbzlib/zutil.c
+  * harbour/source/hbzlib/gzio.c
+  * harbour/source/hbzlib/zutil.h
+  * harbour/source/hbzlib/zconf.h
+    * use _WINCE macro instead of _WIN32_WCE to detect WinCE builds
+      defining _WIN32_WCE interacts with header files and should be
+      left for user to specify exact WinCE version
+
 2008-05-28 16:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-ce-spec
   * harbour/harbour-w32-spec
