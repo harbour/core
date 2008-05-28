@@ -17,3 +17,49 @@
  * 2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
  *
  */
+
+2008-02-18 04:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * adler32.c
+  * compress.c
+  * crc32.c
+  * deflate.c
+  * gzio.c
+  * inftrees.c
+  * inflate.c
+  * infback.c
+  * inffast.c
+  * trees.c
+  * uncompr.c
+  * zutil.c
+    * changed old-style function declaration to standard C ones for
+      C++ compilers which do not support old-style function declaration
+
+  * infback
+  * inffast
+  * inflate.c
+  * inftrees.c
+    * changed variable name from 'this' to 'self'. 'this' is reserved
+      name in C++
+
+  * deflate.c
+  * inftrees.c
+    * added extern to copyright string declaration to avoid strpipping by
+      C++ compilers
+
+  * crc32.c
+    * added #define NOBYFOUR to disable code which may not be
+      properly compiled on some platforms
+
+  * deflate.c
+    * replaced if() statement with #if to pacify warnings in some
+      C++ compilers
+    * replace if (hash_head) hash_head = 0; used to pacify warning with
+      (void)(hash_head); because the first version can cause other warning
+      in some C compilers and pacified orther warning with bflush variable
+      in the same way
+
+  * gzio.c
+    * use dummy strerror() declaration in WinCE
+
+  * zconf.h
+    * added defines for better WinCE detection
