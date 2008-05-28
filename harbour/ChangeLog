@@ -8,6 +8,49 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-28 14:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * include/Makefile
+   + include/hbzlib.ch
+   + include/hbzlib.h
+   * include/hbextern.ch
+   + source/rtl/hbzlib.c
+   * source/rtl/Makefile
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+   * contrib/make_gcc_all.sh
+   * contrib/Makefile
+   + contrib/hbmzip
+   + contrib/hbmzip/Makefile
+   + contrib/hbmzip/common.mak
+   + contrib/hbmzip/make_b32.bat
+   + contrib/hbmzip/make_vc.bat
+   + contrib/hbmzip/make_gcc.sh
+   + contrib/hbmzip/hbmzip.ch
+   + contrib/hbmzip/ioapi.c
+   + contrib/hbmzip/zip.c
+   + contrib/hbmzip/unzip.c
+   + contrib/hbmzip/ioapi.h
+   + contrib/hbmzip/crypt.h
+   + contrib/hbmzip/zip.h
+   + contrib/hbmzip/unzip.h
+   + contrib/hbmzip/hbmzip.c
+   + contrib/hbmzip/readme.txt
+   + contrib/hbmzip/tests
+   + contrib/hbmzip/tests/bld_b32.bat
+   + contrib/hbmzip/tests/bld_vc.bat
+   + contrib/hbmzip/tests/myzip.prg
+   + contrib/hbmzip/tests/myunzip.prg
+     + Added hbzlib.h which is a simple wrapper to source/hbzlib/zlib.h.
+     * Moved ZLIB specific Harbour wrappers and header from /contrib/hbzlib
+       to /source/rtl.
+     + Added /contrib/hbmzip lib based on /contrib/hbzlib.
+       Copy + modify was used to keep the repo history.
+       hbmzip contains all the MiniZip parts from former /contrib/hbzlib.
+       New hbmzip header file: hbmzip.ch
+     + Added new Harbour level zip functions to hbextern.ch.
+     ; TODO: Remove /contrib/hbzlib, add core hbzlib to lib lists.
+
 2008-05-28 13:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/hbzlib/ChangeLog
    * source/hbzlib/adler32.c

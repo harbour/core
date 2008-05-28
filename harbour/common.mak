@@ -502,6 +502,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbregex$(OBJEXT)  \
     $(OBJ_DIR)\hbregexc$(OBJEXT) \
     $(OBJ_DIR)\hbtoken$(OBJEXT)  \
+    $(OBJ_DIR)\hbzlib$(OBJEXT)   \
     $(OBJ_DIR)\idle$(OBJEXT)     \
     $(OBJ_DIR)\inkey$(OBJEXT)    \
     $(OBJ_DIR)\inkeyapi$(OBJEXT) \

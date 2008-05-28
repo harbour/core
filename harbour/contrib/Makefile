@@ -14,7 +14,7 @@ DIRS=\
 	hbvpdf \
 	xhb \
 #	examples \
-#	hbzlib \
+#	hbmzip \
 
 ifneq ($(HB_ARCHITECTURE),dos)
 

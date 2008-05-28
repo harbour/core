@@ -67,6 +67,7 @@ C_SOURCES=\
 	hbregex.c    \
 	hbregexc.c   \
 	hbtoken.c    \
+	hbzlib.c     \
 	idle.c       \
 	inkey.c      \
 	inkeyapi.c   \

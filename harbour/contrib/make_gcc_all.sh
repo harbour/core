@@ -38,7 +38,7 @@ fi
 
 #**************************************************************
 
-_HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbnf hbtip hbtpathy hbvpdf xhb"
+_HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbtpathy hbvpdf xhb"
 
 case "$HB_ARCHITECTURE" in
    w32|cyg|os2)
@@ -54,7 +54,6 @@ if [ "${FREEIMAGE_INC}" != "" ]; then _HB_DIRS="${_HB_DIRS} hbfimage"; fi;
 if [ "${GD_INC}"        != "" ]; then _HB_DIRS="${_HB_DIRS} hbgd    "; fi;
 if [ "${MYSQL_INC}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbmysql "; fi;
 if [ "${PGSQL_INC}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbpgsql "; fi;
-if [ "${ZLIB_INC}"      != "" ]; then _HB_DIRS="${_HB_DIRS} hbzlib  "; fi;
 if [ "${ADS_INC}"       != "" ]; then _HB_DIRS="${_HB_DIRS} rddads  "; fi;
 if [ "${LIBHARU_INC}"   != "" ]; then _HB_DIRS="${_HB_DIRS} hbhpdf  "; fi;
 

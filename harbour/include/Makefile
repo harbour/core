@@ -57,6 +57,7 @@ C_HEADERS=\
 	hbxvm.h      \
 	hbwince.h    \
 	hbwmain.c    \
+	hbzlib.h     \
 	hb_io.h      \
 
 PRG_HEADERS=\
@@ -94,6 +95,7 @@ PRG_HEADERS=\
 	hbsix.ch     \
 	hbstdgen.ch  \
 	hbusrrdd.ch  \
+	hbzlib.ch    \
 	inkey.ch     \
 	memoedit.ch  \
 	ord.ch       \
