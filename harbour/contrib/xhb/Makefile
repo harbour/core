@@ -16,6 +16,7 @@ C_SOURCES=\
 	xhbwith.c \
 	hbcomprs.c \
 	hbchksum.c \
+	xstrdel.c \
 
 C_HEADERS=\
 	hbcompat.h \

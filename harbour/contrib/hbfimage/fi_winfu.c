@@ -148,16 +148,13 @@ HB_FUNC( FI_BITMAPTOFI )
       if( bitmap ) {
         BITMAP bm;
         HDC hDC;
-        int Success;
 
         GetObject( bitmap, sizeof(BITMAP), (LPSTR) &bm );
         dib = FreeImage_Allocate(bm.bmWidth, bm.bmHeight, bm.bmBitsPixel, 0, 0, 0);
         hDC = GetDC( NULL );
-        Success = GetDIBits( hDC, bitmap, 0, FreeImage_GetHeight(dib),
-                             FreeImage_GetBits(dib), FreeImage_GetInfo(dib), DIB_RGB_COLORS);
+        GetDIBits( hDC, bitmap, 0, FreeImage_GetHeight(dib),
+                   FreeImage_GetBits(dib), FreeImage_GetInfo(dib), DIB_RGB_COLORS);
         ReleaseDC( NULL, hDC );
-
-        HB_SYMBOL_UNUSED( Success );
       }
 
       /* return value */

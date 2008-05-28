@@ -72,12 +72,14 @@ STATIC s_lObjectDump
 FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    LOCAL uNIL := NIL
    LOCAL nInt01 := 98
+   LOCAL nInt02 := 0
    LOCAL cStr01 := "AbC DF 974"
    LOCAL cStr02E := ""
    LOCAL cStr03 := ""
    LOCAL cStr04 := ""
    LOCAL cStr05 := ""
    LOCAL cStr06 := ""
+   LOCAL cStr07 := ""
 #ifdef NULL
    LOCAL dDate01
 #endif
@@ -273,6 +275,95 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    o:SetFocus()
    TEST_LINE( o:OverStrike( "z" ) )
    TEST_LINE( o:Assign() )
+
+   // ; Edmer #1
+
+   cStr07 := Space(10)
+   SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@R   999 9999 999999",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, "1231234123456" )
+/*
+   TEST_LINE( o:OverStrike( "1" ) )
+   TEST_LINE( o:OverStrike( "2" ) )
+   TEST_LINE( o:OverStrike( "3" ) )
+   TEST_LINE( o:OverStrike( "1" ) )
+   TEST_LINE( o:OverStrike( "2" ) )
+   TEST_LINE( o:OverStrike( "3" ) )
+   TEST_LINE( o:OverStrike( "4" ) )
+   TEST_LINE( o:OverStrike( "1" ) )
+   TEST_LINE( o:OverStrike( "2" ) )
+   TEST_LINE( o:OverStrike( "3" ) )
+   TEST_LINE( o:OverStrike( "4" ) )
+   TEST_LINE( o:OverStrike( "5" ) )
+   TEST_LINE( o:OverStrike( "6" ) )
+*/
+   TEST_LINE( o:Assign() )
+
+   cStr07 := Space(10)
+   SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@R  999  9999 999999",, )
+   o:display()
+   o:setFocus()
+   TEST_LINE( o:OverStrike( "1" ) )
+   TEST_LINE( o:OverStrike( "2" ) )
+   TEST_LINE( o:OverStrike( "3" ) )
+   TEST_LINE( o:OverStrike( "1" ) )
+   TEST_LINE( o:OverStrike( "2" ) )
+   TEST_LINE( o:OverStrike( "3" ) )
+   TEST_LINE( o:OverStrike( "4" ) )
+   TEST_LINE( o:OverStrike( "1" ) )
+   TEST_LINE( o:OverStrike( "2" ) )
+   TEST_LINE( o:OverStrike( "3" ) )
+   TEST_LINE( o:OverStrike( "4" ) )
+   TEST_LINE( o:OverStrike( "5" ) )
+   TEST_LINE( o:OverStrike( "6" ) )
+   TEST_LINE( o:Assign() )
+
+   cStr07 := Space(10)
+   SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@R  999 9999  999999",, )
+   o:display()
+   o:setFocus()
+   TEST_LINE( o:OverStrike( "1" ) )
+   TEST_LINE( o:OverStrike( "2" ) )
+   TEST_LINE( o:OverStrike( "3" ) )
+   TEST_LINE( o:OverStrike( "1" ) )
+   TEST_LINE( o:OverStrike( "2" ) )
+   TEST_LINE( o:OverStrike( "3" ) )
+   TEST_LINE( o:OverStrike( "4" ) )
+   TEST_LINE( o:OverStrike( "1" ) )
+   TEST_LINE( o:OverStrike( "2" ) )
+   TEST_LINE( o:OverStrike( "3" ) )
+   TEST_LINE( o:OverStrike( "4" ) )
+   TEST_LINE( o:OverStrike( "5" ) )
+   TEST_LINE( o:OverStrike( "6" ) )
+   TEST_LINE( o:Assign() )
+
+   // ; Edmer #2
+
+   nInt02 := 0
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "9,999,999.99",, )
+   o:display()
+   o:setFocus()
+   TEST_LINE( o:OverStrike( "1" ) )
+   TEST_LINE( o:OverStrike( "2" ) )
+   TEST_LINE( o:OverStrike( "3" ) )
+   TEST_LINE( o:OverStrike( "4" ) )
+   TEST_LINE( o:OverStrike( "5" ) )
+   TEST_LINE( o:Assign() )
+
+   // ;
+
+   nInt02 := 1234.56
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "@Z 9999999.9999",, )
+   o:display()
+   o:setFocus()
+   TEST_LINE( o:OverStrike( "0" ) )
+   TEST_LINE( o:Assign() )
+   TEST_LINE( o:reset() )
+   TEST_LINE( o:OverStrike( "1" ) )
+   TEST_LINE( o:Assign() )
+   TEST_LINE( o:reset() )
+   TEST_LINE( o:killFocus() )
 
    // ; Buffer
 
@@ -584,6 +675,24 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    FClose( s_fhnd )
 
    RETURN 0
+
+PROCEDURE TGetTOVS( o, cKeys )
+   LOCAL tmp
+
+   FOR tmp := 1 TO Len( cKeys )
+      TEST_CALL( o, "o:overStrike( '" + SubStr( cKeys, tmp, 1 ) + "' )", {|| o:overStrike( SubStr( cKeys, tmp, 1 ) ) } )
+   NEXT
+
+   RETURN
+
+PROCEDURE TGetTIns( o, cKeys )
+   LOCAL tmp
+
+   FOR tmp := 1 TO Len( cKeys )
+      TEST_CALL( o, "o:insert( '" + SubStr( cKeys, tmp, 1 ) + "' )", {|| o:insert( SubStr( cKeys, tmp, 1 ) ) } )
+   NEXT
+
+   RETURN
 
 PROCEDURE TGetAssign( xVar )
    LOCAL o

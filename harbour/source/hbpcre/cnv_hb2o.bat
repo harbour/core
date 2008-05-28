@@ -54,6 +54,7 @@ gsar -o -s":x22pcreinal.h:x22" -r":x22pcre_internal.h:x22"   *.*
 gsar -o -s":x22ucpinter.h:x22" -r":x22ucpinternal.h:x22"     *.*
 gsar -o -s":x22_hbconf.h:x22"  -r":x22config.h:x22"          *.*
 gsar -o -s":x22pcreprni.h:x22" -r":x22pcre_printint.src:x22" *.*
+gsar -o -s"if 2875"            -r"ifdef HAVE_CONFIG_H"       *.*
 gsar -o -s"if 1"               -r"ifdef HAVE_CONFIG_H"       *.*
 
 cd ..

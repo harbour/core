@@ -67,4 +67,4 @@ gsar -o -s":x22ucpinternal.h:x22"     -r":x22ucpinter.h:x22" *.h
 gsar -o -s":x22config.h:x22"          -r":x22_hbconf.h:x22"  *.c
 gsar -o -s":x22config.h:x22"          -r":x22_hbconf.h:x22"  *.h
 gsar -o -s":x22_hbconf.h:x22"         -r":x22config.h:x22"   _hbconf.h
-gsar -o -s"ifdef HAVE_CONFIG_H"       -r"if 1"               *.c
+gsar -o -s"ifdef HAVE_CONFIG_H"       -r"if 2875"            *.c

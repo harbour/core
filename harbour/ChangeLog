@@ -8,6 +8,43 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-28 11:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tget.prg
+     ! Fixed ::unTransform() padding for strings with @R picture.
+       (Edmer Issue #1)
+     ! Fixed ::unTransform() to not use the "Chr( 1 )" hack to 
+       remove certain chars from string. (there is still one such 
+       remaining)
+     ! Fixed ::unTransform() padding with zero decimals for numerics.
+       This cleared some differences in rto_get.prg.
+     ! Fixed ::toDecPos() to not crash with non-numeric vars.
+     - Removed some XBase++ specific code which is not 
+       needed for Harbour.
+     - Removed some other unnecessary code dealing with '.'/',' swapping.
+     % Minor cleanups.
+     ; WARNING! Please test these with real code, as we have no extensive 
+       regression test suite for the above code parts.
+
+   * tests/rto_get.prg
+     + Added some test cases (and counter test cases) for 
+       problems reported by Edmer.
+
+   * source/hbpcre/cnv_o2hb.bat
+   * source/hbpcre/cnv_hb2o.bat
+     ! Fix for potential s&r problem.
+       (not adapted to converted code yet)
+
+   * contrib/xhb/Makefile
+   * contrib/xhb/common.mak
+   + contrib/xhb/xstrdel.c
+     + STRDEL() added from Walter Negro / xhb.
+
+   * contrib/rddads/adsfunc.c
+     + Minor correction to HB_TRACE handling.
+
+   * contrib/hbfimage/fi_winfu.c
+     % Removed unused var.
+
 2008-05-28 11:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbrdddbf.h
   * harbour/include/hbapirdd.h
@@ -21,8 +58,8 @@
   * harbour/contrib/hbbmcdx/bmdbfcdx1.c
     + added ULONG ulConnection parameter to DROP() and EXISTS()
       RDD node methods
-    + added 4-th parameter with ulConncetion index to [HB_]DROP() and
-      [HB_]EXISTS() functions
+    + added 4-th parameter with ulConncetion index to [HB_]DBDROP() and
+      [HB_]DBEXISTS() functions
 
 2008-05-27 22:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_deb.sh
