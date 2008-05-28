@@ -19,7 +19,6 @@
 # --with gd          - build gd lib 
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build ADS RDD
-# --with zlib        - build zlib and minizip wrapper
 # --with odbc        - build odbc lib
 # --without nf       - do not build nanforum lib
 # --without gpllib   - do not build libs which needs GPL 3-rd party code
@@ -79,7 +78,7 @@
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_opt   export HB_GTALLEG=%{?_with_allegro:yes}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="%{?_with_odbc:hbodbc} %{?_with_zlib:hbzlib} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
+%define hb_ctrb  export HB_CONTRIBLIBS="%{?_with_odbc:hbodbc} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
 %define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_defgt} ; %{hb_gpm} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_opt} ; %{hb_ctrb} ; %{hb_cmrc}
 
 %define hb_host  www.harbour-project.org
@@ -266,7 +265,6 @@ case "`uname -m`" in
 esac
 
 [ "%{?_with_odbc:1}" ]  || rm -fR contrib/hbodbc
-[ "%{?_with_zlib:1}" ]  || rm -fR contrib/hbzlib
 [ "%{?_with_ads:1}" ]   || rm -fR contrib/rddads
 [ "%{?_without_nf:1}" ] && rm -fR contrib/hbnf
 
@@ -303,7 +301,6 @@ make -r -i install
 [ "%{?_with_odbc:1}" ]     || rm -f $HB_LIB_INSTALL/libhbodbc.a
 [ "%{?_with_allegro:1}" ]  || rm -f $HB_LIB_INSTALL/libgtalleg.a
 [ "%{?_with_ads:1}" ]      || rm -f $HB_LIB_INSTALL/librddads.a
-[ "%{?_with_zlib:1}" ]     || rm -f $HB_LIB_INSTALL/libhbzlib.a
 [ "%{?_without_nf:1}" ]    && rm -f $HB_LIB_INSTALL/libhbnf.a
 [ "%{?_without_gtsln:1}" ] && rm -f $HB_LIB_INSTALL/libgtsln.a
 
@@ -525,6 +522,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhblang.a
 %{_libdir}/%{name}/libhbmacro.a
 %{_libdir}/%{name}/libhbpcre.a
+%{_libdir}/%{name}/libhbzlib.a
 %{_libdir}/%{name}/libhbnulrdd.a
 %{_libdir}/%{name}/libhbpp.a
 %{_libdir}/%{name}/libhbrdd.a
@@ -539,7 +537,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/%{name}
 %{!?_without_nf: %{_libdir}/%{name}/libhbnf.a}
 %{?_with_ads: %{_libdir}/%{name}/librddads.a}
-%{?_with_zlib: %{_libdir}/%{name}/libhbzlib.a}
 %{?_with_odbc: %{_libdir}/%{name}/libhbodbc.a}
 %{?_with_mysql: %{_libdir}/%{name}/libhbmysql.a}
 %{?_with_pgsql: %{_libdir}/%{name}/libhbpgsql.a}
@@ -547,6 +544,7 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_gd: %{_libdir}/%{name}/libhbgd.a}
 %{_libdir}/%{name}/libhbbtree.a
 %{_libdir}/%{name}/libhbmisc.a
+%{_libdir}/%{name}/libhbmzip.a
 %{_libdir}/%{name}/libhbct.a
 %{_libdir}/%{name}/libhbtip.a
 %{_libdir}/%{name}/libxhb.a

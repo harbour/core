@@ -71,7 +71,7 @@ mk_hbgetlibs()
         then
             libs="$libs gtwin"
         fi
-        echo -n "hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddntx hbhsx hbsix hbusrrdd ${HB_DB_DRVEXT} hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre"
+        echo -n "hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddntx hbhsx hbsix hbusrrdd ${HB_DB_DRVEXT} hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre hbzlib"
     else
         echo -n "$@"
     fi
@@ -88,7 +88,7 @@ mk_hbgetlibsctb()
         then
             libs="$libs gtwin"
         fi
-        echo -n "$libs rddads hbct hbnf hbzlib hbtip xhb hbgd hbodbc hbpg hbmysql rddado hbw32 gtwvg $HB_USR_LIBS"
+        echo -n "$libs rddads hbct hbnf hbmzip hbtip xhb hbgd hbodbc hbpg hbmysql rddado hbw32 gtwvg $HB_USR_LIBS"
     else
         echo -n "$@"
     fi
@@ -137,6 +137,10 @@ mk_hbtools()
         hb_libs="${hb_libs//hbpcre/}"
     elif [ "${C_USR//-DHB_POSIX_REGEX/}" != "${C_USR}" ]; then
         hb_libs="${hb_libs//hbpcre/}"
+    fi
+    if [ "${C_USR//-DHB_EXT_ZLIB/}" != "${C_USR}" ]; then
+        HB_SYS_LIBS="-lz ${HB_SYS_LIBS}"
+        hb_libs="${hb_libs//hbzlib/}"
     fi
     if [ "${HB_COMPILER}" = "mingw32" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS} -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lwsock32 -lws2_32"

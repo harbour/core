@@ -231,6 +231,11 @@ ifneq ($(findstring -DHB_PCRE_REGEX, $(CFLAGS)),)
 LDFLAGS += -lpcre
 endif
 
+# ZLIB library
+ifneq ($(findstring -DHB_EXT_ZLIB, $(CFLAGS)),)
+LDFLAGS += -lz
+endif
+
 LDFLAGS += $(__GROUP_LIBS_END__) $(HB_OS_LIBS)
 
 ifeq ($(HB_ARCHITECTURE),os2)

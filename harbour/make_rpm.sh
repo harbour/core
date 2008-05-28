@@ -19,7 +19,6 @@
 # --with odbc        - build odbc lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build ADS RDD
-# --with zlib        - build zlib and minizip wrapper
 # --without gpllib   - do not build libs which needs GPL 3-rd party code
 # --without nf       - do not build nanforum lib
 # --without x11      - do not build GTXWC
@@ -107,10 +106,6 @@ fi
 if test_reqrpm "allegro-devel"
 then
     INST_PARAM="${INST_PARAM} --with allegro"
-fi
-if [ -f /usr/include/zlib.h ] || test_reqrpm "zlib-devel"
-then
-    INST_PARAM="${INST_PARAM} --with zlib"
 fi
 if [ -f /usr/local/ads/acesdk/ace.h ] || [ -f ${HOME}/ads/acesdk/ace.h ]
 then

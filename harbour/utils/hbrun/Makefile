@@ -34,4 +34,8 @@ LIBS += hbpcre
 endif
 endif
 
+ifeq ($(findstring -DHB_EXT_ZLIB, $(C_USR)),)
+LIBS += hbzlib
+endif
+
 include $(TOP)$(ROOT)config/bin.cf

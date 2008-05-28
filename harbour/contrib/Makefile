@@ -13,8 +13,8 @@ DIRS=\
 	hbclipsm \
 	hbvpdf \
 	xhb \
+	hbmzip \
 #	examples \
-#	hbmzip \
 
 ifneq ($(HB_ARCHITECTURE),dos)
 

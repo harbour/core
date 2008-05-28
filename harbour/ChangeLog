@@ -8,6 +8,45 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-28 16:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+  * harbour/harbour.spec
+  * harbour/make_rpmce.sh
+  * harbour/make_rpmw32.sh
+  * harbour/make_rpm.sh
+    * removed --with zlib switch - now zlib will be created in all builds
+    * added hbzlib library
+    * added hbmzip library - MiniZIP wrapper to manage ZIP files
+
+  * harbour/contrib/Makefile
+    * added hbmzip library to default builds
+
+  * harbour/include/hbzlib.h
+    ! changed \ in include path
+    ! added relative paths for LCC and XCC
+
+  * harbour/bin/hb-func.sh
+    * updated for hbzlib library in core code and hbmzip in contrib
+
+  * harbour/utils/hbdot/Makefile
+  * harbour/utils/hbrun/Makefile
+    * added hbzlib library to linked library list
+
+  * harbour/include/hbzlib.h
+  * harbour/bin/hb-func.sh
+  * harbour/make_gcc.mak
+  * harbour/config/darwin/gcc.cf
+  * harbour/config/hpux/gcc.cf
+  * harbour/config/linux/gcc.cf
+  * harbour/config/sunos/gcc.cf
+  * harbour/config/bsd/gcc.cf
+  * harbour/utils/hbdot/Makefile
+  * harbour/utils/hbrun/Makefile
+    + added support for compilation with HB_EXT_ZLIB macro
+      It forces using external (OS) ZLIB library instead of hbzlib.
+      Still some other make files should be updated to respect it.
+
 2008-05-28 14:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * bin/bld.bat
    * bin/bld_os2.cmd

@@ -72,10 +72,6 @@ if [ -f /usr/local/ads/acesdk/ace.h ] || \
 then
     INST_PARAM="${INST_PARAM} --with ads"
 fi
-if [ -f /opt/mingw32ce/include/zlib.h ]
-then
-    INST_PARAM="${INST_PARAM} --with zlib"
-fi
 
 TOINST_LST=""
 for i in ${NEED_RPM}

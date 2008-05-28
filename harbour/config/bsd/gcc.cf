@@ -81,6 +81,10 @@ ifneq ($(findstring -DHB_PCRE_REGEX, $(C_USR)),)
 LINKLIBS += -lpcre
 endif
 
+ifneq ($(findstring -DHB_EXT_ZLIB, $(C_USR)),)
+LINKLIBS += -lz
+endif
+
 LINKLIBS += -lm -Wl,--end-group
 
 LDFLAGS +=  $(LINKPATHS)
