@@ -43,7 +43,6 @@
           FREEIMAGE_DIR -> HB_DIR_FREEIMAGE
           GD_DIR        -> HB_DIR_GD       
           MYSQL_DIR     -> HB_DIR_MYSQL    
-          PDFLIB_DIR    -> HB_DIR_PDFLIB   
           PGSQL_DIR     -> HB_DIR_PGSQL    
           ADS_DIR       -> HB_DIR_ADS      
           LIBHARU_DIR   -> HB_DIR_LIBHARU  
