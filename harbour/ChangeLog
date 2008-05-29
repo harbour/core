@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 01:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+   * contrib/hbmysql/make_b32.bat
+   * contrib/hbmysql/make_vc.bat
+   * contrib/hbfbird/make_b32.bat
+   * contrib/hbfbird/make_vc.bat
+   * contrib/hbapollo/make_b32.bat
+   * contrib/hbapollo/make_vc.bat
+   * contrib/hbhpdf/make_b32.bat
+   * contrib/hbhpdf/make_vc.bat
+   * contrib/hbpgsql/make_b32.bat
+   * contrib/hbpgsql/make_vc.bat
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+   * contrib/hbfimage/make_b32.bat
+   * contrib/hbfimage/make_vc.bat
+   * contrib/hbgd/make_b32.bat
+   * contrib/hbgd/make_vc.bat
+     * Some internal envvars are now cleared on exit.
+     * Some internal var names standardized (-> _HB_*).
+
 2008-05-30 01:36 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/files.c
     ! fixed memory leak in FILEDELETE() reported by Ed - thanks.

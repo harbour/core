@@ -16,8 +16,8 @@ goto POST_EXIT
 
 if "%HB_INC_FIREBIRD%" == "" set HB_INC_FIREBIRD=%HB_DIR_FIREBIRD%\include
 set CFLAGS=-I"%HB_INC_FIREBIRD%"
-set HB_DLL_NAME=fbclient
-set HB_DLL_DIR=%HB_DIR_FIREBIRD%\bin
+set _HB_DLL_NAME=fbclient
+set _HB_DLL_DIR=%HB_DIR_FIREBIRD%\bin
 
 rem ---------------------------------------------------------------
 
@@ -40,24 +40,26 @@ if "%1" == "INSTALL" goto POST_INSTALL
 :POST_BUILD
 
    rem Use supplied .lib file.
-   if not exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib copy "%HB_DIR_FIREBIRD%\%HB_DLL_NAME%_ms.lib" ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
+   if not exist ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib copy "%HB_DIR_FIREBIRD%\%_HB_DLL_NAME%_ms.lib" ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib > nul
    goto POST_EXIT
 
 :POST_CLEAN
 
-   if exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib del ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
-   if exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.exp del ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.exp > nul
-   if exist %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib       del %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib       > nul
+   if exist ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib del ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib > nul
+   if exist ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.exp del ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.exp > nul
+   if exist %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib       del %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib       > nul
    goto POST_EXIT
 
 :POST_INSTALL
 
-   if exist %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib del %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib
-   if exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib copy ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib %_HB_LIB_INSTALL%
+   if exist %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib del %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib
+   if exist ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib copy ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib %_HB_LIB_INSTALL%
    goto POST_EXIT
 
 :POST_EXIT
 
 set CFLAGS=
-set HB_DLL_NAME=
-set HB_DLL_DIR=
+set _HB_DLL_NAME=
+set _HB_DLL_DIR=
+set _HB_INSTALL_PREFIX=
+set _HB_LIB_INSTALL=

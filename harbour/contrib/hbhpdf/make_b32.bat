@@ -17,8 +17,8 @@ goto POST_EXIT
 
 if "%HB_INC_LIBHARU%" == "" set HB_INC_LIBHARU=%HB_DIR_LIBHARU%\include
 set CFLAGS=-I"%HB_INC_LIBHARU%"
-set HB_DLL_NAME=libhpdf
-set HB_DLL_DIR=%HB_DIR_LIBHARU%
+set _HB_DLL_NAME=libhpdf
+set _HB_DLL_DIR=%HB_DIR_LIBHARU%
 
 rem ---------------------------------------------------------------
 
@@ -40,24 +40,26 @@ if "%1" == "INSTALL" goto POST_INSTALL
 
 :POST_BUILD
 
-   implib ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib "%HB_DLL_DIR%\%HB_DLL_NAME%.dll" >> %_HB_MAKELOG%
+   implib ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll" >> %_HB_MAKELOG%
    goto POST_EXIT
 
 :POST_CLEAN
 
-   if exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib del ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
-   if exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.exp del ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.exp > nul
-   if exist %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib       del %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib       > nul
+   if exist ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib del ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib > nul
+   if exist ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.exp del ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.exp > nul
+   if exist %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib       del %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib       > nul
    goto POST_EXIT
 
 :POST_INSTALL
 
-   if exist %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib del %_HB_LIB_INSTALL%\%HB_DLL_NAME%.lib
-   if exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib copy ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib %_HB_LIB_INSTALL%
+   if exist %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib del %_HB_LIB_INSTALL%\%_HB_DLL_NAME%.lib
+   if exist ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib copy ..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib %_HB_LIB_INSTALL%
    goto POST_EXIT
 
 :POST_EXIT
 
 set CFLAGS=
-set HB_DLL_NAME=
-set HB_DLL_DIR=
+set _HB_DLL_NAME=
+set _HB_DLL_DIR=
+set _HB_INSTALL_PREFIX=
+set _HB_LIB_INSTALL=

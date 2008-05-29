@@ -24,26 +24,26 @@ rem *******************************************************
 rem Creating a worker bat file ...
 rem *******************************************************
 
-set __BATWORKER__=_hbwrk_.bat
+set _HB_BATWORKER=_hbwrk_.bat
 
-echo @echo off                                          >%__BATWORKER__%
-echo if %%1x == x goto EXIT                            >>%__BATWORKER__%
-echo if not exist %%1\make_vc.bat goto EXIT            >>%__BATWORKER__%
-echo echo Entering: %%1                                >>%__BATWORKER__%
-echo cd %%1                                            >>%__BATWORKER__%
-echo call make_vc.bat %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9  >>%__BATWORKER__%
-echo cd ..                                             >>%__BATWORKER__%
-echo :EXIT                                             >>%__BATWORKER__%
+echo @echo off                                          >%_HB_BATWORKER%
+echo if %%1x == x goto EXIT                            >>%_HB_BATWORKER%
+echo if not exist %%1\make_vc.bat goto EXIT            >>%_HB_BATWORKER%
+echo echo Entering: %%1                                >>%_HB_BATWORKER%
+echo cd %%1                                            >>%_HB_BATWORKER%
+echo call make_vc.bat %%2 %%3 %%4 %%5 %%6 %%7 %%8 %%9  >>%_HB_BATWORKER%
+echo cd ..                                             >>%_HB_BATWORKER%
+echo :EXIT                                             >>%_HB_BATWORKER%
 
 rem *******************************************************
 rem Compiling contrib dirs ...
 rem *******************************************************
 
 set _HB_DIRS=rddado hbbmcdx hbbtree gtwvg hbct hbgt hbmisc hbnf hbmsql hbmzip
-for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %__BATWORKER__% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
+for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=hbole hbziparch hbodbc hbtpathy hbtip hbvpdf hbw32 hbwhat32 xhb
-for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %__BATWORKER__% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
+for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=hbclipsm hbw32ddr
 if not "%HB_DIR_APOLLO%"    == "" set _HB_DIRS=%_HB_DIRS% hbapollo
@@ -54,14 +54,14 @@ if not "%HB_DIR_MYSQL%"     == "" set _HB_DIRS=%_HB_DIRS% hbmysql
 if not "%HB_DIR_PGSQL%"     == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
 if not "%HB_DIR_ADS%"       == "" set _HB_DIRS=%_HB_DIRS% rddads
 if not "%HB_DIR_LIBHARU%"   == "" set _HB_DIRS=%_HB_DIRS% hbhpdf
-for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %__BATWORKER__% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
+for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem *******************************************************
 rem Cleaning ...
 rem *******************************************************
 
-del %__BATWORKER__% > nul
+del %_HB_BATWORKER% > nul
 
 set _HB_DIRS=
-set __BATWORKER__=
+set _HB_BATWORKER=
 set HB_SHOW_ERRORS=
