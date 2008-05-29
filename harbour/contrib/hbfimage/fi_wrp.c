@@ -50,9 +50,6 @@
  *
  */
 
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
@@ -60,7 +57,6 @@
 #include "hbstack.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
-//#include "hrbdll.h"
 #include "hbvm.h"
 
 #ifdef HAVE_CONFIG_H
@@ -70,6 +66,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+
 #include "FreeImage.h"
 
 /* ************************* WRAPPED FUNCTIONS ****************************** */
@@ -374,7 +371,7 @@ HB_FUNC( FI_LOADFROMMEM )
 
       /* Retrieve parameters */
       fif      = (FREE_IMAGE_FORMAT) hb_parni( 1 );
-      szImage  = hb_parcx( 2 );
+      szImage  = ( BYTE * ) hb_parcx( 2 );
       flags    = hb_parni( 3 );
 
       /* run function */
@@ -903,7 +900,7 @@ HB_FUNC( FI_GETFILETYPEFROMMEM )
       int size;
 
       /* Retrieve parameters */
-      szImage = hb_parcx( 1 );
+      szImage = ( BYTE * ) hb_parcx( 1 );
       stream  = FreeImage_OpenMemory( szImage, hb_parclen(1) );
       size    = ( hb_parinfo( 2 ) & HB_IT_NUMERIC ? hb_parni( 1 ) : 0 );
 

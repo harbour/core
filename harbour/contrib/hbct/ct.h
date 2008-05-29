@@ -56,9 +56,6 @@
 #ifndef _CT_H
 #define _CT_H 1
 
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapicdp.h"

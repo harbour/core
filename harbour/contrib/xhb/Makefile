@@ -21,6 +21,8 @@ C_SOURCES=\
 C_HEADERS=\
 	hbcompat.h \
 	hbcomprs.h \
+	hbfast.h \
+	hbxml.h \
 
 PRG_SOURCES=\
 	txml.prg \

@@ -283,59 +283,43 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    o:display()
    o:setFocus()
    TGetTOVS( o, "1231234123456" )
-/*
-   TEST_LINE( o:OverStrike( "1" ) )
-   TEST_LINE( o:OverStrike( "2" ) )
-   TEST_LINE( o:OverStrike( "3" ) )
-   TEST_LINE( o:OverStrike( "1" ) )
-   TEST_LINE( o:OverStrike( "2" ) )
-   TEST_LINE( o:OverStrike( "3" ) )
-   TEST_LINE( o:OverStrike( "4" ) )
-   TEST_LINE( o:OverStrike( "1" ) )
-   TEST_LINE( o:OverStrike( "2" ) )
-   TEST_LINE( o:OverStrike( "3" ) )
-   TEST_LINE( o:OverStrike( "4" ) )
-   TEST_LINE( o:OverStrike( "5" ) )
-   TEST_LINE( o:OverStrike( "6" ) )
-*/
    TEST_LINE( o:Assign() )
 
    cStr07 := Space(10)
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@R  999  9999 999999",, )
    o:display()
    o:setFocus()
-   TEST_LINE( o:OverStrike( "1" ) )
-   TEST_LINE( o:OverStrike( "2" ) )
-   TEST_LINE( o:OverStrike( "3" ) )
-   TEST_LINE( o:OverStrike( "1" ) )
-   TEST_LINE( o:OverStrike( "2" ) )
-   TEST_LINE( o:OverStrike( "3" ) )
-   TEST_LINE( o:OverStrike( "4" ) )
-   TEST_LINE( o:OverStrike( "1" ) )
-   TEST_LINE( o:OverStrike( "2" ) )
-   TEST_LINE( o:OverStrike( "3" ) )
-   TEST_LINE( o:OverStrike( "4" ) )
-   TEST_LINE( o:OverStrike( "5" ) )
-   TEST_LINE( o:OverStrike( "6" ) )
+   TGetTOVS( o, "1231234123456" )
    TEST_LINE( o:Assign() )
 
    cStr07 := Space(10)
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@R  999 9999  999999",, )
    o:display()
    o:setFocus()
-   TEST_LINE( o:OverStrike( "1" ) )
-   TEST_LINE( o:OverStrike( "2" ) )
-   TEST_LINE( o:OverStrike( "3" ) )
-   TEST_LINE( o:OverStrike( "1" ) )
-   TEST_LINE( o:OverStrike( "2" ) )
-   TEST_LINE( o:OverStrike( "3" ) )
-   TEST_LINE( o:OverStrike( "4" ) )
-   TEST_LINE( o:OverStrike( "1" ) )
-   TEST_LINE( o:OverStrike( "2" ) )
-   TEST_LINE( o:OverStrike( "3" ) )
-   TEST_LINE( o:OverStrike( "4" ) )
-   TEST_LINE( o:OverStrike( "5" ) )
-   TEST_LINE( o:OverStrike( "6" ) )
+   TGetTOVS( o, "1231234123456" )
+   TEST_LINE( o:Assign() )
+
+   // ;
+
+   cStr07 := Space(10)
+   SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@ER   999 9999 999999",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, "1231234123456" )
+   TEST_LINE( o:Assign() )
+
+   cStr07 := Space(10)
+   SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@ER  999  9999 999999",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, "1231234123456" )
+   TEST_LINE( o:Assign() )
+
+   cStr07 := Space(10)
+   SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@ER  999 9999  999999",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, "1231234123456" )
    TEST_LINE( o:Assign() )
 
    // ; Edmer #2
@@ -344,11 +328,16 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "9,999,999.99",, )
    o:display()
    o:setFocus()
-   TEST_LINE( o:OverStrike( "1" ) )
-   TEST_LINE( o:OverStrike( "2" ) )
-   TEST_LINE( o:OverStrike( "3" ) )
-   TEST_LINE( o:OverStrike( "4" ) )
-   TEST_LINE( o:OverStrike( "5" ) )
+   TGetTOVS( o, "12345" )
+   TEST_LINE( o:Assign() )
+
+   // ;
+
+   nInt02 := 0
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "@E 9,999,999.9999",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, "12345" )
    TEST_LINE( o:Assign() )
 
    // ;
@@ -588,19 +577,18 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
 
    SET CENTURY ON
 
-#ifdef NULL
    SetPos( 14, 16 ) ; dDate01 := hb_SToD( "20070425" )
    o := _GET_( dDate01, "dDate01" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TEST_LINE( o:OverStrike("12345678") )
+   TGetTOVS( o, "12345678" )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; dDate01 := hb_SToD( "20070425" )
    o := _GET_( dDate01, "dDate01", "@E" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TEST_LINE( o:OverStrike("12345678") )
+   TGetTOVS( o, "12345678" )
    TEST_LINE( o:KillFocus() )
 
    SET CENTURY OFF
@@ -609,44 +597,43 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    o := _GET_( dDate01, "dDate01" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TEST_LINE( o:OverStrike("12345678") )
+   TGetTOVS( o, "12345678" )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; dDate01 := hb_SToD( "20070425" )
    o := _GET_( dDate01, "dDate01", "@E" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TEST_LINE( o:OverStrike("12345678") )
+   TGetTOVS( o, "12345678" )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "!!LY!!!!!!" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TEST_LINE( o:OverStrike("12345678") )
+   TGetTOVS( o, "12345678" )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "!!!.!!!!!!" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TEST_LINE( o:OverStrike("12345678") )
+   TGetTOVS( o, "12345678" )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "@R !!LY!!!!!!" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TEST_LINE( o:OverStrike("12345678") )
+   TGetTOVS( o, "12345678" )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "@R !!!.!!!!!!" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TEST_LINE( o:OverStrike("12345678") )
+   TGetTOVS( o, "12345678" )
    TEST_LINE( o:KillFocus() )
-#endif
 
    // ; Exercises
 

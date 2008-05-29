@@ -8,6 +8,38 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-29 11:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * tests/rto_get.prg
+     + Some tests added.
+
+   * source/rtl/tget.prg
+     + Some notes about C5.x behaviour.
+     ! Formatting/indentation fixes.
+     % Minor optimizations.
+
+   * contrib/xhb/Makefile
+   * contrib/xhb/common.mak
+     ! Added hbfast.h, hbxml.h
+
+   * contrib/hbfimage/fi_winfu.c
+   * contrib/hbfimage/fi_wrp.c
+     ! Fixed two BCC warnings in new code.
+
+   * contrib/hbgd/gdwrp.c
+     ! Changed to generate proper extern references even 
+       for BCC. Now tests compile OK.
+       The trick was to explicitly #include <windows.h> 
+       before all the other headers, instead of just requesting 
+       it using HB_OS_WIN_32_USED.
+
+   * contrib/hbfimage/fi_winfu.c
+   * contrib/hbfimage/fi_wrp.c
+   * contrib/hbgd/gdwrp.c
+   * contrib/hbct/ct.h
+   * contrib/hbpgsql/postgres.c
+     - Removed #defining _CLIPDEFS_H. It's only needed when 
+       using Clipper compatibility API headers (*.api, extend.h).
+
 2008-05-29 03:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/gtwvg/gtwvg.h
   * harbour/contrib/gtwvg/wvtcore.c

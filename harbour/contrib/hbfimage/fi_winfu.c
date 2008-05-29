@@ -50,15 +50,6 @@
  *
  */
 
-/*
- *
- * See doc/license files for licensing terms.
- *
- */
-
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
@@ -66,7 +57,6 @@
 #include "hbstack.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
-//#include "hrbdll.h"
 #include "hbvm.h"
 
 #ifdef HAVE_CONFIG_H
@@ -76,6 +66,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+
 #include "FreeImage.h"
 
 // --------------------------------------------------------------------------

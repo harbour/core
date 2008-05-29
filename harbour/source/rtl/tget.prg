@@ -593,7 +593,7 @@ METHOD unTransform() CLASS Get
                   ENDIF
                NEXT
             ELSE
-                  IF "E" $ ::cPicFunc
+               IF "E" $ ::cPicFunc
                   cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) +; 
                              StrTran( StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ".", " " ), ",", "." ) +;
                              SubStr( cBuffer, ::LastEditable() + 1 )
@@ -603,20 +603,20 @@ METHOD unTransform() CLASS Get
                              SubStr( cBuffer, ::LastEditable() + 1 )
                ENDIF
          
-                  lHasDec := .F.
-                  FOR nFor := ::FirstEditable() TO ::LastEditable()
-                     IF ::IsEditable( nFor )
-                        IF lHasDec .AND. SubStr( cBuffer, nFor, 1 ) == " "
-                           cBuffer := Left( cBuffer, nFor - 1 ) + "0" + SubStr( cBuffer, nFor + 1 )
-                        ENDIF
-                     ELSE
-                        IF SubStr( cBuffer, nFor, 1 ) == "."
-                           lHasDec := .T.
-                        ELSE
-                           cBuffer := Left( cBuffer, nFor - 1 ) + Chr( 1 ) + SubStr( cBuffer, nFor + 1 )
-                        ENDIF
+               lHasDec := .F.
+               FOR nFor := ::FirstEditable() TO ::LastEditable()
+                  IF ::IsEditable( nFor )
+                     IF lHasDec .AND. SubStr( cBuffer, nFor, 1 ) == " "
+                        cBuffer := Left( cBuffer, nFor - 1 ) + "0" + SubStr( cBuffer, nFor + 1 )
                      ENDIF
-                  NEXT
+                  ELSE
+                     IF SubStr( cBuffer, nFor, 1 ) == "."
+                        lHasDec := .T.
+                     ELSE
+                        cBuffer := Left( cBuffer, nFor - 1 ) + Chr( 1 ) + SubStr( cBuffer, nFor + 1 )
+                     ENDIF
+                  ENDIF
+               NEXT
             ENDIF
          
             cBuffer := StrTran( cBuffer, Chr( 1 ), "" )
@@ -671,6 +671,9 @@ METHOD unTransform() CLASS Get
 
    RETURN xValue
 
+/* NOTE: CA-Cl*pper will corrupt memory if cChar contains 
+         multiple chars. [vszakats] */
+
 METHOD overStrike( cChar ) CLASS Get
 
    IF ::hasFocus
@@ -719,9 +722,12 @@ METHOD overStrike( cChar ) CLASS Get
 
    RETURN Self
 
+/* NOTE: CA-Cl*pper will corrupt memory if cChar contains 
+         multiple chars. [vszakats] */
+
 METHOD insert( cChar ) CLASS Get
 
-   LOCAL n
+   LOCAL nFor
    LOCAL nMaxEdit
 
    IF ::hasFocus
@@ -762,12 +768,12 @@ METHOD insert( cChar ) CLASS Get
             
             IF ::lPicComplex
                /* Calculating different nMaxEdit for ::lPicComplex */
-               FOR n := ::nPos TO nMaxEdit
-                  IF !::IsEditable( n )
+               FOR nFor := ::nPos TO nMaxEdit
+                  IF !::IsEditable( nFor )
                      EXIT
                   ENDIF
                NEXT
-               nMaxEdit := n
+               nMaxEdit := nFor
                ::cBuffer := Left( SubStr( ::cBuffer, 1, ::nPos - 1 ) + cChar +;
                             SubStr( ::cBuffer, ::nPos, nMaxEdit - 1 - ::nPos ) +;
                             SubStr( ::cBuffer, nMaxEdit ), ::nMaxLen )
@@ -1143,7 +1149,6 @@ METHOD pos( nPos ) CLASS Get
 
 METHOD picture( cPicture ) CLASS Get
 
-   LOCAL cChar
    LOCAL nAt
    LOCAL nFor
    LOCAL cNum
@@ -1151,12 +1156,11 @@ METHOD picture( cPicture ) CLASS Get
    IF PCount() > 0
 
       IF cPicture != NIL
-      
+
          ::cPicture      := cPicture
          ::nPicLen       := NIL
          ::cPicFunc      := ""
          ::cPicMask      := ""
-         ::lPicComplex   := .F.
          ::lPicBlankZero := .F.
          
          IF ISCHARACTER( cPicture )
@@ -1210,7 +1214,7 @@ METHOD picture( cPicture ) CLASS Get
                   ::cPicFunc := ""
                ENDIF
             ELSE
-               ::cPicMask      := cPicture
+               ::cPicMask := cPicture
             ENDIF
             
             IF ::cType == "D"
@@ -1255,10 +1259,10 @@ METHOD picture( cPicture ) CLASS Get
       
       /* To verify if it has non-modifiable embedded characters in the group. */
       
+      ::lPicComplex := .F.
       IF ! Empty( ::cPicMask )
          FOR nFor := 1 TO Len( ::cPicMask )
-            cChar := SubStr( ::cPicMask, nFor, 1 )
-            IF !( cChar $ "!ANX9#" )
+            IF !( SubStr( ::cPicMask, nFor, 1 ) $ "!ANX9#" )
                ::lPicComplex := .T.
                EXIT
             ENDIF

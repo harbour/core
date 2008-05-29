@@ -50,10 +50,12 @@
  *
  */
 
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
 #define HB_OS_WIN_32_USED
+
+/* NOTE: We need this to generate proper extern references. */
+#if defined(HB_OS_WIN_32_USED)
+   #include <windows.h>
+#endif
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -68,6 +70,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+
 #include "gd.h"
 #include "gdfontt.h"
 #include "gdfonts.h"

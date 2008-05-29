@@ -9,6 +9,8 @@ LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 C_HEADERS = \
     hbcompat.h \
     hbcomprs.h \
+    hbfast.h \
+    hbxml.h \
 
 PRG_HEADERS = \
     classex.ch \
