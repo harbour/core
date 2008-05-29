@@ -28,7 +28,7 @@
    * contrib/hbgd/make_b32.bat
    * contrib/hbgd/make_vc.bat
      * Some internal envvars are now cleared on exit.
-     * Some internal var names standardized (-> _HB_*).
+     * Some internal envvar names standardized (-> _HB_*).
 
 2008-05-30 01:36 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/files.c
