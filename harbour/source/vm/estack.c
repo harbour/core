@@ -67,7 +67,11 @@
    #define STACK_EXPANDHB_ITEMS    20
 #endif
 
-HB_STACK hb_stack;
+#if defined( HB_STACK_MACROS )
+   HB_STACK hb_stack;
+#else
+   static HB_STACK hb_stack;
+#endif
 
 static HB_SYMB s_initSymbol = { "hb_stackInit", { HB_FS_STATIC }, { NULL }, NULL };
 
@@ -259,7 +263,7 @@ HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pStack, USHORT uiParams )
    pItem->item.asSymbol.stackstate = pStack;
    pItem->item.asSymbol.paramcnt = uiParams;
    /* set default value of 'paramdeclcnt' - it will be updated
-    * in hb_vmVFrame only
+    * in hb_vm[V]Frame only
     */
    pItem->item.asSymbol.paramdeclcnt = uiParams;
    hb_stack.pBase = pBase;

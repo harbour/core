@@ -303,8 +303,7 @@ FUNCTION MemoEdit( cString,;
       IF oEd:Changed()
          cString := oEd:GetText()
          // dbu tests for LastKey() == K_CTRL_END, so I try to make it happy
-         KEYBOARD Chr( K_CTRL_END )
-         Inkey()
+         HB_SetLastKey( K_CTRL_END )
       ENDIF
    ENDIF
 

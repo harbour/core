@@ -5285,48 +5285,71 @@ static void hb_vmDebuggerShowLine( USHORT uiLine ) /* makes the debugger shows a
 
 static void hb_vmFrame( USHORT usLocals, BYTE bParams )
 {
-   int iTotal, iExtra;
-   int ipcount = hb_pcount();
+   PHB_ITEM pBase;
+   int iTotal;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmFrame(%d, %d)", (int) usLocals, (int) bParams));
 
-   iExtra = ipcount - bParams;
+   pBase = hb_stackBaseItem();
 
-   if( iExtra > 0 )
+#if 0
+   /* This old code which clears additional parameters to make space for
+    * local variables without updating pBase->item.asSymbol.paramdeclcnt
+    */
+   iTotal = pBase->item.asSymbol.paramcnt - bParams;
+   if( iTotal > 0 )
    {
-      hb_stackBaseItem()->item.asSymbol.paramcnt = bParams;
-      while( iExtra > 0 )
-      {
-         hb_itemClear( hb_stackItemFromTop( -iExtra ) );
-         iExtra--;
-      }
+      pBase->item.asSymbol.paramcnt = bParams;
+      do
+         hb_itemClear( hb_stackItemFromTop( -iTotal ) );
+      while( --iTotal > 0 );
    }
 
    iTotal = usLocals + bParams;
    if( iTotal )
    {
-      iTotal -= ipcount;
+      iTotal -= pBase->item.asSymbol.paramcnt;
       while( --iTotal >= 0 )
          hb_vmPushNil();
    }
+#else
+   pBase->item.asSymbol.paramdeclcnt = bParams;
+
+   iTotal = bParams - pBase->item.asSymbol.paramcnt;
+   if( iTotal < 0 )
+      iTotal = 0;
+   iTotal += usLocals;
+
+   if( iTotal )
+   {
+      do
+         hb_vmPushNil();
+      while( --iTotal > 0 );
+   }
+#endif
 }
 
 static void hb_vmVFrame( USHORT usLocals, BYTE bParams )
 {
+   PHB_ITEM pBase;
    int iTotal;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmVFrame(%d, %d)", (int) usLocals, (int) bParams));
 
-   hb_stackBaseItem()->item.asSymbol.paramdeclcnt = bParams;
+   pBase = hb_stackBaseItem();
 
-   if( hb_pcount() < bParams )
-      iTotal = usLocals + bParams - hb_pcount();
-   else
-      iTotal = usLocals;
+   pBase->item.asSymbol.paramdeclcnt = bParams;
+
+   iTotal = bParams - pBase->item.asSymbol.paramcnt;
+   if( iTotal < 0 )
+      iTotal = 0;
+   iTotal += usLocals;
+
    if( iTotal )
    {
-      while( --iTotal >= 0 )
+      do
          hb_vmPushNil();
+      while( --iTotal > 0 );
    }
 }
 

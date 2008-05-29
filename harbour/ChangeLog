@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 00:15 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/estack.c
+    * declare hb_stack as static variable when HB_STACK_MACROS is
+      disabled to be sure that non extern code will access hb_stack
+      It's very important to eliminate such code before we add MT
+      support.
+
+  * harbour/source/vm/hvm.c
+    * changed hb_vmFrame() to work in the same way as hb_vmVFrame()
+
+  * harbour/source/rtl/hbgtcore.c
+    ! fixed wrong clear column in right horizontal scrolling
+
+  * harbour/source/rtl/memoedit.prg
+    * use hb_inkeySetLast( n ) instead of KEYBOARD Chr( n ) ; InKey()
+
 2008-05-29 20:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * make_b32.mak
      - HB_NO_BCC_MAX_OPENFILES_HACK - no longer used.

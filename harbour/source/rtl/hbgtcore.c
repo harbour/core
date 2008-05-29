@@ -1071,7 +1071,7 @@ static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
    {
       iColOld += iCols;
       iColSize -= iCols;
-      iColClear = iColOld + iColSize - 1;
+      iColClear = iColNew + iColSize + 1;
       iClrs = iCols;
    }
    else
@@ -1145,7 +1145,7 @@ static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
       {
          iColOld += iCols;
          iColSize -= iCols;
-         iColClear = iColOld + iColSize - 1;
+         iColClear = iColNew + iColSize + 1;
          iClrs = iCols;
       }
       else
