@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-29 20:38 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/dateshb.c
+   * source/rtl/datesx.c
+     % Reworked to be a bit faster than non-HB_FAST_STOD.
+     - Removed HB_FAST_STOD build time option, because it wasn't 
+       safe. It caused reaching into undefined buffers when 
+       passed string was shorter than 8 chars.
+
 2008-05-29 20:20 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/hvm.c
      * Minor formatting.

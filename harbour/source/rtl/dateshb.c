@@ -204,11 +204,9 @@ HB_FUNC( DTOS )
 
 HB_FUNC( HB_STOD )
 {
-#ifdef HB_FAST_STOD
-   hb_retds( hb_parc( 1 ) );
-#else
-   hb_retds( hb_parclen( 1 ) >= 7 ? hb_parc( 1 ) : NULL );
-#endif
+   PHB_ITEM pDateString = hb_param( 1, HB_IT_STRING );
+
+   hb_retds( hb_itemGetCLen( pDateString ) >= 7 ? hb_itemGetCPtr( pDateString ) : NULL );
 }
 
 HB_FUNC( YEAR )
