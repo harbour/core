@@ -3,21 +3,22 @@ rem
 rem $Id$
 rem
 
-if not "%LIBHARU_DIR%" == "" goto DIR_OK
+if not "%HB_DIR_LIBHARU%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need Haru Free PDF Library (libharu) DLL package 
 echo            from www.libharu.org and this envvar to be set to 
 echo            successfully build this library:
-echo            set LIBHARU_DIR=-IC:\libharu
+echo            set HB_DIR_LIBHARU=-IC:\libharu
 echo ---------------------------------------------------------------
 goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I"%LIBHARU_DIR%\include"
+if "%HB_INC_LIBHARU%" == "" set HB_INC_LIBHARU=%HB_DIR_LIBHARU%\include
+set CFLAGS=-I"%HB_INC_LIBHARU%"
 set HB_DLL_NAME=libhpdf
-set HB_DLL_DIR=%LIBHARU_DIR%
+set HB_DLL_DIR=%HB_DIR_LIBHARU%
 
 rem ---------------------------------------------------------------
 
@@ -40,7 +41,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 :POST_BUILD
 
    rem Use supplied .lib file.
-   if not exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib copy "%LIBHARU_DIR%\%HB_DLL_NAME%.lib" ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
+   if not exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib copy "%HB_DIR_LIBHARU%\%HB_DLL_NAME%.lib" ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
    goto POST_EXIT
 
 :POST_CLEAN

@@ -3,20 +3,21 @@ rem
 rem $Id$
 rem
 
-if not "%FIREBIRD_DIR%" == "" goto DIR_OK
+if not "%HB_DIR_FIREBIRD%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need Firebird package and this envvar
 echo            to be set to successfully build this library:
-echo            set FIREBIRD_DIR=C:\Firebird
+echo            set HB_DIR_FIREBIRD=C:\Firebird
 echo ---------------------------------------------------------------
 goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I"%FIREBIRD_DIR%\include"
+if "%HB_INC_FIREBIRD%" == "" set HB_INC_FIREBIRD=%HB_DIR_FIREBIRD%\include
+set CFLAGS=-I"%HB_INC_FIREBIRD%"
 set HB_DLL_NAME=fbclient
-set HB_DLL_DIR=%FIREBIRD_DIR%\bin
+set HB_DLL_DIR=%HB_DIR_FIREBIRD%\bin
 
 rem ---------------------------------------------------------------
 
@@ -39,7 +40,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 :POST_BUILD
 
    rem Use supplied .lib file.
-   if not exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib copy "%FIREBIRD_DIR%\%HB_DLL_NAME%_bor.lib" ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
+   if not exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib copy "%HB_DIR_FIREBIRD%\%HB_DLL_NAME%_bor.lib" ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
    goto POST_EXIT
 
 :POST_CLEAN

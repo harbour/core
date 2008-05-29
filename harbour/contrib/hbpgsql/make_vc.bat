@@ -3,21 +3,22 @@ rem
 rem $Id$
 rem
 
-if not "%PGSQL_DIR%" == "" goto DIR_OK
+if not "%HB_DIR_PGSQL%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need PostreSQL package and this envvar
 echo            to be set to successfully build this library:
-echo            set PGSQL_DIR=C:\pgsql
+echo            set HB_DIR_PGSQL=C:\pgsql
 echo ---------------------------------------------------------------
 goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I"%PGSQL_DIR%\include"
+if "%HB_INC_PGSQL%" == "" set HB_INC_PGSQL=%HB_DIR_PGSQL%\include
+set CFLAGS=-I"%HB_INC_PGSQL%"
 rem .exe
 set HB_DLL_NAME=postgres
-set HB_DLL_DIR=%PGSQL_DIR%\bin
+set HB_DLL_DIR=%HB_DIR_PGSQL%\bin
 
 rem ---------------------------------------------------------------
 

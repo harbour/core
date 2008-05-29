@@ -3,20 +3,21 @@ rem
 rem $Id$
 rem
 
-if not "%GD_DIR%" == "" goto DIR_OK
+if not "%HB_DIR_GD%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need GD lib package from www.libgd.org and this envvar
 echo            to be set to successfully build this library:
-echo            set GD_DIR=-IC:\gd
+echo            set HB_DIR_GD=-IC:\gd
 echo ---------------------------------------------------------------
 goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I"%GD_DIR%\include"
+if "%HB_INC_GD%" == "" set HB_INC_GD=%HB_DIR_GD%\include
+set CFLAGS=-I"%HB_INC_GD%"
 set HB_DLL_NAME=bgd
-set HB_DLL_DIR=%GD_DIR%\bin
+set HB_DLL_DIR=%HB_DIR_GD%\bin
 
 rem ---------------------------------------------------------------
 
@@ -39,7 +40,7 @@ if "%1" == "INSTALL" goto POST_INSTALL
 :POST_BUILD
 
    rem Use supplied .lib file.
-   if not exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib copy "%GD_DIR%\lib\%HB_DLL_NAME%.lib" ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
+   if not exist ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib copy "%HB_DIR_GD%\lib\%HB_DLL_NAME%.lib" ..\..\lib\%_HB_CC_NAME%\%HB_DLL_NAME%.lib > nul
    goto POST_EXIT
 
 :POST_CLEAN

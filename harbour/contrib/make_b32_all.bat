@@ -46,14 +46,14 @@ set _HB_DIRS=hbole hbziparch hbodbc hbtpathy hbtip hbvpdf hbw32 hbwhat32 xhb
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %__BATWORKER__% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=hbclipsm hbw32ddr
-if not "%APOLLO_DIR%"    == "" set _HB_DIRS=%_HB_DIRS% hbapollo
-if not "%FIREBIRD_DIR%"  == "" set _HB_DIRS=%_HB_DIRS% hbfbird
-if not "%FREEIMAGE_DIR%" == "" set _HB_DIRS=%_HB_DIRS% hbfimage
-if not "%GD_DIR%"        == "" set _HB_DIRS=%_HB_DIRS% hbgd
-if not "%MYSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% hbmysql
-if not "%PGSQL_DIR%"     == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
-if not "%ADS_DIR%"       == "" set _HB_DIRS=%_HB_DIRS% rddads
-if not "%LIBHARU_DIR%"   == "" set _HB_DIRS=%_HB_DIRS% hbhpdf
+if not "%HB_DIR_APOLLO%"    == "" set _HB_DIRS=%_HB_DIRS% hbapollo
+if not "%HB_DIR_FIREBIRD%"  == "" set _HB_DIRS=%_HB_DIRS% hbfbird
+if not "%HB_DIR_FREEIMAGE%" == "" set _HB_DIRS=%_HB_DIRS% hbfimage
+if not "%HB_DIR_GD%"        == "" set _HB_DIRS=%_HB_DIRS% hbgd
+if not "%HB_DIR_MYSQL%"     == "" set _HB_DIRS=%_HB_DIRS% hbmysql
+if not "%HB_DIR_PGSQL%"     == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
+if not "%HB_DIR_ADS%"       == "" set _HB_DIRS=%_HB_DIRS% rddads
+if not "%HB_DIR_LIBHARU%"   == "" set _HB_DIRS=%_HB_DIRS% hbhpdf
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %__BATWORKER__% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem *******************************************************

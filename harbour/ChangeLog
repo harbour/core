@@ -8,6 +8,55 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-29 17:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmysql/make_gcc.sh
+   * contrib/hbmysql/make_b32.bat
+   * contrib/hbmysql/make_vc.bat
+   * contrib/make_b32_all.bat
+   * contrib/make_gcc_all.sh
+   * contrib/hbfbird/make_gcc.sh
+   * contrib/hbfbird/make_b32.bat
+   * contrib/hbfbird/make_vc.bat
+   * contrib/hbapollo/make_gcc.sh
+   * contrib/hbapollo/make_b32.bat
+   * contrib/hbapollo/make_vc.bat
+   * contrib/make_vc_all.bat
+   * contrib/hbhpdf/make_gcc.sh
+   * contrib/hbhpdf/make_b32.bat
+   * contrib/hbhpdf/make_vc.bat
+   * contrib/hbpgsql/make_gcc.sh
+   * contrib/hbpgsql/make_b32.bat
+   * contrib/hbpgsql/make_vc.bat
+   * contrib/rddads/make_gcc.sh
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+   * contrib/hbfimage/make_gcc.sh
+   * contrib/hbfimage/make_b32.bat
+   * contrib/hbfimage/make_vc.bat
+   * contrib/hbgd/make_b32.bat
+   * contrib/hbgd/make_gcc.sh
+   * contrib/hbgd/make_vc.bat
+     * Changed envvars pointing to external packages to comply 
+       with our own rules:
+          APOLLO_DIR    -> HB_DIR_APOLLO   
+          FIREBIRD_DIR  -> HB_DIR_FIREBIRD 
+          FREEIMAGE_DIR -> HB_DIR_FREEIMAGE
+          GD_DIR        -> HB_DIR_GD       
+          MYSQL_DIR     -> HB_DIR_MYSQL    
+          PDFLIB_DIR    -> HB_DIR_PDFLIB   
+          PGSQL_DIR     -> HB_DIR_PGSQL    
+          ADS_DIR       -> HB_DIR_ADS      
+          LIBHARU_DIR   -> HB_DIR_LIBHARU  
+          (same rule for <package>_INC -> HB_INC_<package>)
+       Sorry folks, but you'll need to update your env.
+       (I can send a 'gsar' script to help that)
+     + Added option for non-GNU BCC/VC contrib makes to 
+       accept HB_INC_<package> format envvars to specify 
+       the include dir only, so that we're now in sync with 
+       the non-GNU GCC build system (make_gcc.sh).
+     ; TODO: HB_LIB_<package> (or HB_BIN_<package>) is still 
+       to be done any .dll/.lib handling.
+
 2008-05-29 17:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tget.prg
      * ::picture(), ::PutMask(), ::unTransform() moved next 

@@ -3,22 +3,23 @@ rem
 rem $Id$
 rem
 
-if not "%ADS_DIR%" == "" goto DIR_OK
+if not "%HB_DIR_ADS%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need Advantage Client Engine (5.0 or upper) 
 echo            and this envvar to be set to successfully build this library:
-echo            set ADS_DIR=C:\ads\acesdk
+echo            set HB_DIR_ADS=C:\ads\acesdk
 echo ---------------------------------------------------------------
 goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I"%ADS_DIR%"
+if "%HB_INC_ADS%" == "" set HB_INC_ADS=%HB_DIR_ADS%
+set CFLAGS=-I"%HB_INC_ADS%"
 set HB_DLL_NAME=ace32
-if exist "%ADS_DIR%\Redistribute\%HB_DLL_NAME%.dll" set HB_DLL_DIR=%ADS_DIR%\Redistribute
-if exist "%ADS_DIR%\%HB_DLL_NAME%.dll"              set HB_DLL_DIR=%ADS_DIR%
-if exist "%ADS_DIR%\32bit\%HB_DLL_NAME%.dll"        set HB_DLL_DIR=%ADS_DIR%\32bit
+if exist "%HB_DIR_ADS%\Redistribute\%HB_DLL_NAME%.dll" set HB_DLL_DIR=%HB_DIR_ADS%\Redistribute
+if exist "%HB_DIR_ADS%\%HB_DLL_NAME%.dll"              set HB_DLL_DIR=%HB_DIR_ADS%
+if exist "%HB_DIR_ADS%\32bit\%HB_DLL_NAME%.dll"        set HB_DLL_DIR=%HB_DIR_ADS%\32bit
 
 echo Using this .dll: "%HB_DLL_DIR%\%HB_DLL_NAME%.dll"
 

@@ -3,20 +3,21 @@ rem
 rem $Id$
 rem
 
-if not "%MYSQL_DIR%" == "" goto DIR_OK
+if not "%HB_DIR_MYSQL%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need MySQL package and this envvar
 echo            to be set to successfully build this library:
-echo            set MYSQL_DIR=C:\mysql
+echo            set HB_DIR_MYSQL=C:\mysql
 echo ---------------------------------------------------------------
 goto POST_EXIT
 
 :DIR_OK
 
-set CFLAGS=-I"%MYSQL_DIR%\include"
+if "%HB_INC_MYSQL%" == "" set HB_INC_MYSQL=%HB_DIR_MYSQL%\include
+set CFLAGS=-I"%HB_INC_MYSQL%"
 set HB_DLL_NAME=libmySQL
-set HB_DLL_DIR=%MYSQL_DIR%\bin
+set HB_DLL_DIR=%HB_DIR_MYSQL%\bin
 
 rem ---------------------------------------------------------------
 
