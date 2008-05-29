@@ -11,9 +11,10 @@
 2008-05-29 11:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * tests/rto_get.prg
      + Some tests added.
+     + Some older tests fixed and enabled (they made C5.x crash).
 
    * source/rtl/tget.prg
-     + Some notes about C5.x behaviour.
+     + Some notes about C5.x crash behaviour.
      ! Formatting/indentation fixes.
      % Minor optimizations.
 
