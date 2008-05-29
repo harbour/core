@@ -467,6 +467,7 @@ HB_FUNC( FILEDELETE )
          }
          while( hb_fsFindNext( ffind ) );
 
+         hb_xfree( pFilepath );
          hb_fsFindClose( ffind );
       }
       if( fFree )
