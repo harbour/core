@@ -172,6 +172,12 @@
    #endif
 #endif
 
+#ifdef __cplusplus
+#  define HB_ID_REF( type, id )     id
+#else
+#  define HB_ID_REF( type, id )     ( ( type ) &id )
+#endif
+
 #if defined(__BORLANDC__)
 #if __BORLANDC__ == 0x0550
 #ifdef __cplusplus

@@ -182,7 +182,7 @@ HB_EXPORT IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR 
 
       CreateStreamOnHGlobal( hGlobal, TRUE, &iStream );
 
-      OleLoadPicture( iStream, nFileSize, TRUE, ( REFIID ) &IID_IPicture, &iPicture );
+      OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( REFIID, IID_IPicture ), &iPicture );
 
       FreeResource( mem );
    }
@@ -219,7 +219,7 @@ HB_EXPORT IPicture * hb_wvt_gtLoadPicture( char * cImage )
             if( ReadFile( hFile, hGlobal, nFileSize, &nReadByte, NULL ) )
             {
                CreateStreamOnHGlobal( hGlobal, TRUE, &iStream );
-               OleLoadPicture( iStream, nFileSize, TRUE, ( REFIID ) &IID_IPicture, &iPicture );
+               OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( REFIID, IID_IPicture ), &iPicture );
             }
             GlobalFree( hGlobal );
          }
@@ -617,7 +617,7 @@ HB_EXPORT BOOL hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char *
           IPicture ** iPictureRef = &iPicture;
 
           CreateStreamOnHGlobal( hGlobal, TRUE, &iStream );
-          OleLoadPicture( iStream, nFileSize, TRUE, (REFIID) &IID_IPicture, ( LPVOID * ) iPictureRef );
+          OleLoadPicture( iStream, nFileSize, TRUE, HB_ID_REF( REFIID, IID_IPicture ), ( LPVOID * ) iPictureRef );
 
           if ( iPicture )
           {

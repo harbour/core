@@ -89,6 +89,12 @@
    #define HB_LONG_LONG_OFF
 #endif
 
+#ifdef __cplusplus
+#  define HB_ID_REF( type, id )     id
+#else
+#  define HB_ID_REF( type, id )     ( ( type ) &id )
+#endif
+
 static void RetValue( void );
 
 static HRESULT  s_nOleError;
@@ -1072,7 +1078,7 @@ static void hb_vmRequestReset( void )
            if( pUnk )
            {
               IDispatch ** pDispPtr = &pDisp;
-              pUnk->lpVtbl->QueryInterface( pUnk, (REFIID) &IID_IDispatch, (void **) pDispPtr );
+              pUnk->lpVtbl->QueryInterface( pUnk, HB_ID_REF( REFIID, IID_IDispatch ), (void **) pDispPtr );
            }
            // Intentionally fall through
 
@@ -1539,7 +1545,7 @@ static void hb_vmRequestReset( void )
      if( SUCCEEDED( s_nOleError ) )
      {
         //HB_TRACE(HB_TR_INFO, ("Class: %i\n", ClassID));
-        s_nOleError = CoCreateInstance( (REFCLSID) &ClassID, NULL, CLSCTX_SERVER, (REFIID) riid, &pDisp );
+        s_nOleError = CoCreateInstance( HB_ID_REF( REFCLSID, ClassID ), NULL, CLSCTX_SERVER, (REFIID) riid, &pDisp );
         //HB_TRACE(HB_TR_INFO, ("Result: %p\n", s_nOleError));
      }
 
@@ -1593,7 +1599,7 @@ static void hb_vmRequestReset( void )
 
      if( SUCCEEDED( s_nOleError ) )
      {
-        s_nOleError = GetActiveObject( (REFCLSID) &ClassID, NULL, &pUnk );
+        s_nOleError = GetActiveObject( HB_ID_REF( REFCLSID, ClassID ), NULL, &pUnk );
 
         if( SUCCEEDED( s_nOleError ) )
         {
@@ -1646,7 +1652,7 @@ static void hb_vmRequestReset( void )
 
         s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                              DispID,
-                                             (REFIID) &IID_NULL,
+                                             HB_ID_REF( REFIID, IID_NULL ),
                                              LOCALE_SYSTEM_DEFAULT,
                                              DISPATCH_PROPERTYPUTREF,
                                              pDispParams,
@@ -1664,7 +1670,7 @@ static void hb_vmRequestReset( void )
 
      s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                           DispID,
-                                          (REFIID) &IID_NULL,
+                                          HB_ID_REF( REFIID, IID_NULL ),
                                           LOCALE_SYSTEM_DEFAULT,
                                           DISPATCH_PROPERTYPUT,
                                           pDispParams,
@@ -1685,7 +1691,7 @@ static void hb_vmRequestReset( void )
 
      s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                           DispID,
-                                          (REFIID) &IID_NULL,
+                                          HB_ID_REF( REFIID, IID_NULL ),
                                           LOCALE_SYSTEM_DEFAULT,
                                           DISPATCH_METHOD,
                                           pDispParams,
@@ -1703,7 +1709,7 @@ static void hb_vmRequestReset( void )
 
      s_nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                           DispID,
-                                          (REFIID) &IID_NULL,
+                                          HB_ID_REF( REFIID, IID_NULL ),
                                           LOCALE_SYSTEM_DEFAULT,
                                           DISPATCH_PROPERTYGET,
                                           pDispParams,
@@ -1856,19 +1862,19 @@ static void hb_vmRequestReset( void )
 
         if( s_RetVal.n1.n2.vt == ( VT_UNKNOWN | VT_BYREF ) )
         {
-           s_nOleError = (*s_RetVal.n1.n2.n3.ppunkVal)->lpVtbl->QueryInterface( *s_RetVal.n1.n2.n3.ppunkVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
+           s_nOleError = (*s_RetVal.n1.n2.n3.ppunkVal)->lpVtbl->QueryInterface( *s_RetVal.n1.n2.n3.ppunkVal, HB_ID_REF( REFIID, IID_IEnumVARIANT ), &pEnumVariant );
         }
         else if( s_RetVal.n1.n2.vt == VT_UNKNOWN )
         {
-           s_nOleError = s_RetVal.n1.n2.n3.punkVal->lpVtbl->QueryInterface( s_RetVal.n1.n2.n3.punkVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
+           s_nOleError = s_RetVal.n1.n2.n3.punkVal->lpVtbl->QueryInterface( s_RetVal.n1.n2.n3.punkVal, HB_ID_REF( REFIID, IID_IEnumVARIANT ), &pEnumVariant );
         }
         else if( s_RetVal.n1.n2.vt == ( VT_DISPATCH | VT_BYREF ) )
         {
-           s_nOleError = (*s_RetVal.n1.n2.n3.ppdispVal)->lpVtbl->QueryInterface( *s_RetVal.n1.n2.n3.ppdispVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
+           s_nOleError = (*s_RetVal.n1.n2.n3.ppdispVal)->lpVtbl->QueryInterface( *s_RetVal.n1.n2.n3.ppdispVal, HB_ID_REF( REFIID, IID_IEnumVARIANT ), &pEnumVariant );
         }
         else if( s_RetVal.n1.n2.vt == VT_DISPATCH )
         {
-           s_nOleError = s_RetVal.n1.n2.n3.pdispVal->lpVtbl->QueryInterface( s_RetVal.n1.n2.n3.pdispVal, (REFIID) &IID_IEnumVARIANT, &pEnumVariant );
+           s_nOleError = s_RetVal.n1.n2.n3.pdispVal->lpVtbl->QueryInterface( s_RetVal.n1.n2.n3.pdispVal, HB_ID_REF( REFIID, IID_IEnumVARIANT ), &pEnumVariant );
         }
         else
         {
@@ -1911,7 +1917,7 @@ static void hb_vmRequestReset( void )
      else*/ if( szName[0] == '_' && szName[1] && hb_pcount() >= 1 )
      {
         bstrMessage = hb_oleAnsiToSysString( szName + 1 );
-        s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, (REFIID) &IID_NULL, (wchar_t **) &bstrMessage, 1, LOCALE_SYSTEM_DEFAULT, pDispID );
+        s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ), (wchar_t **) &bstrMessage, 1, LOCALE_SYSTEM_DEFAULT, pDispID );
         SysFreeString( bstrMessage );
         //HB_TRACE(HB_TR_INFO, ("1. ID of: '%s' -> %i Result: %p\n", hb_itemGetSymbol( hb_stackBaseItem() )->szName + 1, DispID, s_nOleError));
 
@@ -1932,7 +1938,7 @@ static void hb_vmRequestReset( void )
      {
         // Try again without removing the assign prefix (_).
         bstrMessage = hb_oleAnsiToSysString( szName );
-        s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, (REFIID) &IID_NULL, (wchar_t **) &bstrMessage, 1, 0, pDispID );
+        s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ), (wchar_t **) &bstrMessage, 1, 0, pDispID );
         SysFreeString( bstrMessage );
         //HB_TRACE(HB_TR_INFO, ("2. ID of: '%s' -> %i Result: %p\n", szName, *pDispID, s_nOleError));
      }

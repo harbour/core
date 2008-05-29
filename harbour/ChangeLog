@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-29 03:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/gtwvg/gtwvg.h
+  * harbour/contrib/gtwvg/wvtcore.c
+  * harbour/contrib/hbw32/w32_ole.c
+    ! fixed compilation in C++ mode
+
 2008-05-28 22:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/hbpcre/cnv_o2hb.bat
    * source/hbpcre/cnv_hb2o.bat
