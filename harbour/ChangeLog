@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-29 19:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * source/vm/Makefile
+   * source/vm/mainwin.c
+   * source/vm/estack.c
+   + source/vm/extrap.c
+   * source/vm/hvm.c
+     * Rearranged/cleaned up exception handlers.
+     * Renamed OS/2 one to comply with namespace rules.
+     * Moved from estack.c/mainwin.c to extrap.c and hvm.c.
+     * win32 ex.handler now enabled by default at HVM startup.
+     * win32 ex.handler now writes exception info into hb_ex.log.
+     * win32 ex.handler now pops up a MessageBox() by default.
+       We should consider removing this but currently the default 
+       Windows handler kicks in anyway, which is also a GUI dialog.
+     ; TODO: A common way to log these errors across all platforms.
+     ; NOTE: HB_INCLUDE_WINEXCHANDLER is not used by Harbour anymore.
+     ; NOTE: Please test OS/2
+
 2008-05-29 17:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmysql/make_gcc.sh
    * contrib/hbmysql/make_b32.bat

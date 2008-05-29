@@ -39,6 +39,7 @@ C_SOURCES=\
 	eval.c       \
 	evalhb.c     \
 	extend.c     \
+	extrap.c     \
 	fm.c         \
 	garbage.c    \
 	hashes.c     \

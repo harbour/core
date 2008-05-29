@@ -50,10 +50,6 @@
  *
  */
 
-#if defined(HB_INCLUDE_WINEXCHANDLER)
-   #define HB_OS_WIN_32_USED
-#endif
-
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapicls.h"
@@ -630,70 +626,3 @@ void hb_vmIsLocalRef( void )
       while( --pItem > hb_stack.pItems );
    }
 }
-
-#ifdef HB_INCLUDE_WINEXCHANDLER
-
-#if defined(HB_OS_WIN_32)
-
-LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo )
-{
-   char msg[ ( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ) * 32 ], *ptr;
-   char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
-   USHORT uiLine;
-   int iLevel;
-
-   HB_SYMBOL_UNUSED( ExceptionInfo );
-
-   msg[ 0 ] = '\0';
-   ptr = msg;
-   iLevel = 0;
-
-   while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
-   {
-      snprintf( ptr, sizeof( msg ) - ( ptr - msg ), 
-                HB_I_("Called from %s(%hu)\n"), buffer, uiLine );
-      ptr += strlen( ptr );
-   }
-
-   {
-      LPTSTR lpStr = HB_TCHAR_CONVTO( msg );
-      MessageBox( NULL, lpStr, TEXT( "Harbour Exception" ), MB_ICONSTOP );
-      HB_TCHAR_FREE( lpStr );
-   }
-
-   return EXCEPTION_CONTINUE_SEARCH; /* EXCEPTION_EXECUTE_HANDLER; */
-}
-
-#endif
-
-#endif
-
-#if defined(HB_OS_OS2)
-
-ULONG _System OS2TermHandler( PEXCEPTIONREPORTRECORD       p1,
-                              PEXCEPTIONREGISTRATIONRECORD p2,
-                              PCONTEXTRECORD               p3,
-                              PVOID                        pv )
-{
-   HB_SYMBOL_UNUSED(p1);
-   HB_SYMBOL_UNUSED(p2);
-   HB_SYMBOL_UNUSED(p3);
-   HB_SYMBOL_UNUSED(pv);
-
-   /* Don't print stack trace if inside unwind, normal process termination or process killed or
-      during debugging */
-   if( p1->ExceptionNum != XCPT_UNWIND && p1->ExceptionNum < XCPT_BREAKPOINT )
-   {
-      char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
-      USHORT uiLine;
-      int iLevel = 0;
-
-      fprintf(stderr, HB_I_("\nException %lx at address %p \n"), p1->ExceptionNum, p1->ExceptionAddress);
-
-      while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
-         fprintf( stderr, HB_I_("Called from %s(%hu)\n"), buffer, uiLine );
-   }
-
-   return XCPT_CONTINUE_SEARCH;          /* Exception not resolved... */
-}
-#endif

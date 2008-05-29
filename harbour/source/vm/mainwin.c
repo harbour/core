@@ -57,16 +57,6 @@
 
 #if defined(HB_OS_WIN_32)
 
-#if defined(_MSC_VER)
-#ifdef __cplusplus
-extern "C" {
-#endif
-   LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo );
-#ifdef __cplusplus
-};
-#endif
-#endif
-
 #define MAX_ARGS     128
 
 static int    s_argc = 0;
@@ -89,16 +79,6 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    int iErrorCode;
 
    HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow));
-
-   #ifdef HB_INCLUDE_WINEXCHANDLER
-   {
-      #if ! defined(_MSC_VER)
-         LONG WINAPI hb_UnhandledExceptionFilter( struct _EXCEPTION_POINTERS * ExceptionInfo );
-      #endif
-      LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_UnhandledExceptionFilter );
-      HB_SYMBOL_UNUSED( ef );
-   }
-   #endif
 
    GetModuleFileName( hInstance, szAppName, MAX_PATH );
    HB_TCHAR_GETFROM( s_szAppName, szAppName, MAX_PATH );

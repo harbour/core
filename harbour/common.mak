@@ -398,6 +398,7 @@ VM_COMMON_LIB_OBJS = \
     $(OBJ_DIR)\eval$(OBJEXT)     \
     $(OBJ_DIR)\evalhb$(OBJEXT)   \
     $(OBJ_DIR)\extend$(OBJEXT)   \
+    $(OBJ_DIR)\extrap$(OBJEXT)   \
     $(OBJ_DIR)\fm$(OBJEXT)       \
     $(OBJ_DIR)\garbage$(OBJEXT)  \
     $(OBJ_DIR)\hashes$(OBJEXT)   \
