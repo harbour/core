@@ -22,7 +22,6 @@
    * contrib/xhb/common.mak
      ! Added hbfast.h, hbxml.h
 
-   * contrib/hbfimage/fi_winfu.c
    * contrib/hbfimage/fi_wrp.c
      ! Fixed two BCC warnings in new code.
 
