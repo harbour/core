@@ -75,6 +75,16 @@
 
 #define HB_OS_WIN_32_USED
 
+#ifndef CINTERFACE
+   #define CINTERFACE 1
+#endif
+
+#ifdef __cplusplus
+#  define HB_ID_REF( type, id )     id
+#else
+#  define HB_ID_REF( type, id )     ( ( type ) &id )
+#endif
+
 #include <windows.h>
 #include <ole2.h>
 
@@ -406,7 +416,7 @@ HB_FUNC( CREATEOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
       }
 
       if ( nOleError == S_OK )
-         nOleError = CoCreateInstance( &ClassID, NULL, CLSCTX_SERVER,
+         nOleError = CoCreateInstance( HB_ID_REF( REFCLSID, ClassID ), NULL, CLSCTX_SERVER,
                                        (REFIID) riid, &pDisp );
    }
 
@@ -440,8 +450,8 @@ HB_FUNC( OLEINVOKE ) // (hOleObject, szMethodName, uParams...)
    memset( (LPBYTE) &excep, 0, sizeof( excep ) );
 
    cMember = AnsiToWide( hb_parc( 2 ) );
-   nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL,
-                                             ( LPVOID ) &cMember, 1,
+   nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ),
+                                             ( wchar_t ** ) &cMember, 1,
                                              LOCALE_USER_DEFAULT, &lDispID );
    hb_xfree( cMember );
 
@@ -450,7 +460,7 @@ HB_FUNC( OLEINVOKE ) // (hOleObject, szMethodName, uParams...)
       GetParams( &dParams );
       nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                          lDispID,
-                                         &IID_NULL,
+                                         HB_ID_REF( REFIID, IID_NULL ),
                                          LOCALE_USER_DEFAULT,
                                          DISPATCH_METHOD,
                                          &dParams,
@@ -475,8 +485,8 @@ HB_FUNC( OLESETPROPERTY ) // (hOleObject, cPropName, uValue, uParams...)
    memset( (LPBYTE) &excep, 0, sizeof( excep ) );
 
    cMember = AnsiToWide( hb_parc( 2 ) );
-   nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL,
-                                             ( LPVOID ) &cMember, 1,
+   nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ),
+                                             ( wchar_t ** ) &cMember, 1,
                                              LOCALE_USER_DEFAULT, &lDispID );
    hb_xfree( cMember );
 
@@ -488,7 +498,7 @@ HB_FUNC( OLESETPROPERTY ) // (hOleObject, cPropName, uValue, uParams...)
 
       nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                          lDispID,
-                                         &IID_NULL,
+                                         HB_ID_REF( REFIID, IID_NULL ),
                                          LOCALE_USER_DEFAULT,
                                          DISPATCH_PROPERTYPUT,
                                          &dParams,
@@ -514,8 +524,8 @@ HB_FUNC( OLEGETPROPERTY )  // (hOleObject, cPropName, uParams...)
    memset( (LPBYTE) &excep, 0, sizeof( excep ) );
 
    cMember = AnsiToWide( hb_parc( 2 ) );
-   nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, &IID_NULL,
-                                             ( LPVOID ) &cMember, 1,
+   nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ),
+                                             ( wchar_t ** ) &cMember, 1,
                                              LOCALE_USER_DEFAULT, &lDispID );
    hb_xfree( cMember );
 
@@ -524,7 +534,7 @@ HB_FUNC( OLEGETPROPERTY )  // (hOleObject, cPropName, uParams...)
       GetParams( &dParams );
       nOleError = pDisp->lpVtbl->Invoke( pDisp,
                                          lDispID,
-                                         &IID_NULL,
+                                         HB_ID_REF( REFIID, IID_NULL ),
                                          LOCALE_USER_DEFAULT,
                                          DISPATCH_PROPERTYGET,
                                          &dParams,
@@ -697,7 +707,7 @@ HB_FUNC( GETOLEOBJECT )
 
    if ( nOleError == S_OK )
    {
-      nOleError = GetActiveObject( &ClassID, NULL, &pUnk );
+      nOleError = GetActiveObject( HB_ID_REF( REFCLSID, ClassID ), NULL, &pUnk );
 
       if ( nOleError == S_OK )
       {

@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-29 17:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tget.prg
+     * ::picture(), ::PutMask(), ::unTransform() moved next 
+       to each other for easier editing/fixing.
+
+   * common.mak
+   - source/common/hbfhnd.c
+   * source/common/Makefile
+     - Removed file not used by Harbour anymore.
+
+   * contrib/hbole/ole2.c
+     ! Fixed OLE C++ errors under MSVC. Using Przemek's method.
+     ; TOFIX: This one is still left:
+        .\ole2.c(714) : error C2664: 'HRESULT (IUnknown *,const IID &,void **)' : cannot convert parameter 2 from 'LPIID' to 'const IID &'
+            Reason: cannot convert from 'LPIID' to 'const IID'
+            No constructor could take the source type, or constructor overload resolution was ambiguous
+
 2008-05-29 11:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * tests/rto_get.prg
      + Some tests added.
