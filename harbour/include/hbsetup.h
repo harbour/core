@@ -175,22 +175,14 @@
 /* ***********************************************************************
  * You can set here the maximum symbol name length handled by Harbour
  * compiler and runtime. You can override this setting in the make process.
+ * Setting this too low, may result in clashing symbols in Harbour 
+ * itself. For strict CA-Cl*pper compatibility a value of 10 would have 
+ * to be used, but Harbour won't properly compile using this setting.
  *
  * By default this value is 63
  */
 #ifndef HB_SYMBOL_NAME_LEN
-/* NOTE: For complete CA-Cl*pper compatibility you can set the maximum
-         symbol name to 10. Sometimes this can be useful for compiling legacy
-         code. [vszakats] */
-/*
-   #ifdef HB_C52_STRICT
-      #define HB_SYMBOL_NAME_LEN   10
-   #else
-*/
-      #define HB_SYMBOL_NAME_LEN   63
-/*
-   #endif
-*/
+   #define HB_SYMBOL_NAME_LEN   63
 #endif
 
 /* ***********************************************************************
@@ -223,38 +215,6 @@
  * By default we are 100% Clipper compatible
  */
 /* #define HB_FIX_ACOPY_BUG */
-
-/* ***********************************************************************
- * This controls an optimisation in ASORT() function
- *
- * If this is defined the item copying is optimized, in a way that
- * instead of calling the official hb_itemCopy(), the item structures
- * will be directly copied with memcpy(), this means that the related
- * data areas (string space for example) will never be moved. This can be
- * safely done here, because it's guaranteed by the nature of sorting
- * that the set of items doesn't change (there're no deleted or new
- * items, just swapping) in this functions.
- * Using this option makes sorting *much* faster, but if you have a
- * problem, or the low level stuff changes, turn it off. [vszakats]
- */
-/*
- * It's not longer used - current code which uses hb_itemSwap() should
- * give similar performance (probably a little bit worser due to some small
- * function call overhead) but it's ready for automatic GC activation and
- * I'd like to keep it.
- * If the current performance is not enough then I can change sorting
- * algorithm used inside ASORT and with cost of some additional memory 
- * improve the speed but it's not my priority now. [druzus]
- */
-/* #define HB_ASORT_OPT_ITEMCOPY */
-
-/* ***********************************************************************
- * You can select here faster but less secure behaviour of STOD() function
- * There is no data validation if this is enabled.
- *
- * By default we are using secure method.
- */
-/* #define HB_FAST_STOD */
 
 /* ***********************************************************************
  * You can select here if you want a strong type support in the compiler

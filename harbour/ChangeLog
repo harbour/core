@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-29 20:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * make_b32.mak
+     - HB_NO_BCC_MAX_OPENFILES_HACK - no longer used.
+
+   * include/hbsetup.h
+     - HB_ASORT_OPT_ITEMCOPY - no longer used.
+     - HB_FAST_STOD - no longer used.
+
 2008-05-29 20:38 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/dateshb.c
    * source/rtl/datesx.c
