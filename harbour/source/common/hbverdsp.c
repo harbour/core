@@ -124,7 +124,7 @@ void hb_verBuildInfo( void )
       const char * pszFlags = hb_verFlagsPRG();
       if( pszFlags && *pszFlags )
       {
-         hb_conOutErr( "Harbour compiler switches: ", 0 );
+         hb_conOutErr( "Extra Harbour compiler switches: ", 0 );
          hb_conOutErr( pszFlags, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
       }
@@ -134,7 +134,7 @@ void hb_verBuildInfo( void )
       const char * pszFlags = hb_verFlagsC();
       if( pszFlags && *pszFlags )
       {
-         hb_conOutErr( "C compiler switches: ", 0 );
+         hb_conOutErr( "Extra C compiler switches: ", 0 );
          hb_conOutErr( pszFlags, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
       }
@@ -144,7 +144,7 @@ void hb_verBuildInfo( void )
       const char * pszFlags = hb_verFlagsL();
       if( pszFlags && *pszFlags )
       {
-         hb_conOutErr( "Linker switches: ", 0 );
+         hb_conOutErr( "Extra linker switches: ", 0 );
          hb_conOutErr( pszFlags, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
       }
@@ -152,112 +152,112 @@ void hb_verBuildInfo( void )
 
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "Harbour non-portable extensions: ", 0 );
-#if defined( HB_EXTENSION )
-   hb_conOutErr( "Yes", 0 );
-#else
-   hb_conOutErr( "No", 0 );
-#endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "CA-Clipper 5.2e undocumented: ", 0 );
-#if defined( HB_C52_UNDOC )
-   hb_conOutErr( "Yes", 0 );
-#else
-   hb_conOutErr( "No", 0 );
-#endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "CA-Clipper 5.3x compatible extensions: ", 0 );
+   hb_conOutErr( "CA-Clipper 5.3b compatible extensions: ", 0 );
 #if defined( HB_COMPAT_C53 )
-   hb_conOutErr( "Yes", 0 );
+   hb_conOutErr( "yes", 0 );
 #else
-   hb_conOutErr( "No", 0 );
+   hb_conOutErr( "no", 0 );
+#endif
+   hb_conOutErr( hb_conNewLine(), 0 );
+
+   hb_conOutErr( "CA-Clipper 5.2e/5.3b undocumented: ", 0 );
+#if defined( HB_C52_UNDOC )
+   hb_conOutErr( "yes", 0 );
+#else
+   hb_conOutErr( "no", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "CA-Clipper 5.2e/5.3b strict compatibility: ", 0 );
 #if defined( HB_C52_STRICT )
-   hb_conOutErr( "Yes", 0 );
+   hb_conOutErr( "yes", 0 );
 #else
-   hb_conOutErr( "No", 0 );
+   hb_conOutErr( "no", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "Alaska Xbase++ compatible extensions: ", 0 );
+   hb_conOutErr( "Xbase++ compatible extensions: ", 0 );
 #if defined( HB_COMPAT_XPP )
-   hb_conOutErr( "Yes", 0 );
+   hb_conOutErr( "yes", 0 );
 #else
-   hb_conOutErr( "No", 0 );
+   hb_conOutErr( "no", 0 );
+#endif
+   hb_conOutErr( hb_conNewLine(), 0 );
+
+   hb_conOutErr( "Flagship compatible extensions: ", 0 );
+#if defined( HB_COMPAT_FLAGSHIP )
+   hb_conOutErr( "yes", 0 );
+#else
+   hb_conOutErr( "no", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "CA-Visual Objects compatible extensions: ", 0 );
 #if defined( HB_COMPAT_VO )
-   hb_conOutErr( "Yes", 0 );
+   hb_conOutErr( "yes", 0 );
 #else
-   hb_conOutErr( "No", 0 );
+   hb_conOutErr( "no", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "Multisoft Flagship compatible extensions: ", 0 );
-#if defined( HB_COMPAT_FLAGSHIP )
-   hb_conOutErr( "Yes", 0 );
-#else
-   hb_conOutErr( "No", 0 );
-#endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "CLIP compatible extensions: ", 0 );
-#if defined( HB_COMPAT_CLIP )
-   hb_conOutErr( "Yes", 0 );
-#else
-   hb_conOutErr( "No", 0 );
-#endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "Microsoft FoxPro compatible extensions: ", 0 );
+   hb_conOutErr( "FoxPro compatible extensions: ", 0 );
 #if defined( HB_COMPAT_FOXPRO )
-   hb_conOutErr( "Yes", 0 );
+   hb_conOutErr( "yes", 0 );
 #else
-   hb_conOutErr( "No", 0 );
+   hb_conOutErr( "no", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "dBase compatible extensions: ", 0 );
 #if defined( HB_COMPAT_DBASE )
-   hb_conOutErr( "Yes", 0 );
+   hb_conOutErr( "yes", 0 );
 #else
-   hb_conOutErr( "No", 0 );
+   hb_conOutErr( "no", 0 );
+#endif
+   hb_conOutErr( hb_conNewLine(), 0 );
+
+   hb_conOutErr( "CLIP compatible extensions: ", 0 );
+#if defined( HB_COMPAT_CLIP )
+   hb_conOutErr( "yes", 0 );
+#else
+   hb_conOutErr( "no", 0 );
+#endif
+   hb_conOutErr( hb_conNewLine(), 0 );
+
+   hb_conOutErr( "Harbour non-portable extensions: ", 0 );
+#if defined( HB_EXTENSION )
+   hb_conOutErr( "yes", 0 );
+#else
+   hb_conOutErr( "no", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "ANSI C usage: ", 0 );
 #if defined( HARBOUR_STRICT_ANSI_C )
-   hb_conOutErr( "Strict", 0 );
+   hb_conOutErr( "strict", 0 );
 #else
-   hb_conOutErr( "Non strict", 0 );
+   hb_conOutErr( "non strict", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "C++ mode: ", 0 );
 #if defined(__cplusplus)
-   hb_conOutErr( "On", 0 );
+   hb_conOutErr( "on", 0 );
 #else
-   hb_conOutErr( "Off", 0 );
+   hb_conOutErr( "off", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "Profiler: ", 0 );
 #if defined( HB_NO_PROFILER )
-   hb_conOutErr( "Off", 0 );
+   hb_conOutErr( "off", 0 );
 #else
-   hb_conOutErr( "On", 0 );
+   hb_conOutErr( "on", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "Memory tracing and statistics: ", 0 );
-   hb_conOutErr( hb_xquery( HB_MEM_USEDMAX ) != 0 ? "On" : "Off", 0 );
+   hb_conOutErr( hb_xquery( HB_MEM_USEDMAX ) != 0 ? "on" : "off", 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 
    {

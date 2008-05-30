@@ -8,6 +8,32 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 17:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbverdsp.c
+     * Some cleanups on appearance.
+     * Company names removed (except CA).
+
+   * contrib/rddads/adsmgmnt.c
+     * Minor formatting.
+
+   + contrib/examples/dbu/hb_dbu.dif
+   * contrib/examples/dbu/bld_b32.bat
+   * contrib/examples/dbu/readme.txt
+     + Added .dif file with a patch fixing some 
+       multiplatforms issues in original dbu source.
+       It's a quick hack, I might have missed something, 
+       and I didn't do any testing. Add your own fix, 
+       if you have some.
+     * DBU_DIR -> HB_DIR_DBU
+
+   * make_b32.mak
+   * contrib/mtpl_b32.mak
+   * config/w32/bcc32.cf
+     + Added following switches for BCC:
+       -d: merge duplicate strings (was enabled already in GNU make)
+       -w: enable warnings.
+       -w-sig-: disable 'Conversion may lose significant digits' warnings.
+
 2008-05-30 12:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbdefs.h
      - Removed WIN32_LEAN_AND_MEAN to make things more standard.

@@ -388,7 +388,7 @@ HB_FUNC( ADSMGGETUSERNAMES )
          hb_arrayNew( pArrayItm, 6 );
 
          hb_arraySetC(  pArrayItm, 1, ( char * ) pastUserInfo[ ulCount ].aucUserName );
-         hb_arraySetNL( pArrayItm, 2, pastUserInfo[ ulCount ].usConnNumber );
+         hb_arraySetNL( pArrayItm, 2,            pastUserInfo[ ulCount ].usConnNumber );
 #if ADS_LIB_VERSION >= 600
          hb_arraySetC(  pArrayItm, 3, ( char * ) pastUserInfo[ ulCount ].aucAddress );
 #else
@@ -636,11 +636,11 @@ HB_FUNC( ADSMGGETWORKERTHREADACTIVITY )
          PHB_ITEM pArrayItm = hb_arrayGetItemPtr( pArray, ulCount );
          hb_arrayNew( pArrayItm, 6 );
 
-         hb_arraySetNL( pArrayItm, 1, astWorkerThreadActivity[ ulCount ].ulThreadNumber );
-         hb_arraySetNI( pArrayItm, 2, astWorkerThreadActivity[ ulCount ].usOpCode );
+         hb_arraySetNL( pArrayItm, 1,            astWorkerThreadActivity[ ulCount ].ulThreadNumber );
+         hb_arraySetNI( pArrayItm, 2,            astWorkerThreadActivity[ ulCount ].usOpCode );
          hb_arraySetC(  pArrayItm, 3, ( char * ) astWorkerThreadActivity[ ulCount ].aucUserName );
-         hb_arraySetNI( pArrayItm, 4, astWorkerThreadActivity[ ulCount ].usConnNumber );
-         hb_arraySetNI( pArrayItm, 5, astWorkerThreadActivity[ ulCount ].usReserved1 );
+         hb_arraySetNI( pArrayItm, 4,            astWorkerThreadActivity[ ulCount ].usConnNumber );
+         hb_arraySetNI( pArrayItm, 5,            astWorkerThreadActivity[ ulCount ].usReserved1 );
 #if ADS_LIB_VERSION >= 800
          hb_arraySetC(  pArrayItm, 6, ( char * ) astWorkerThreadActivity[ ulCount ].aucOSUserLoginName );
 #else
