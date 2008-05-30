@@ -170,8 +170,6 @@ DEFAULT lOptimize TO .f.
 ::aReport[ PAGEIMAGES   ] := {}
 ::aReport[ PAGEFONTS    ] := {}
 
-// TOFIX: This external file dependency should be removed.
-
 cTemp := vpdf_FontsDat()
 n1    := len( cTemp ) / ( 2 * n2 )
 ::aReport[ FONTWIDTH    ] := array( n1, n2 )
