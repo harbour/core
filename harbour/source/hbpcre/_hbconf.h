@@ -15,6 +15,7 @@
    #pragma warn -use
    #pragma warn -csu
    #pragma warn -aus
+   #pragma warn -sig
 #endif
 
 #include "config.h"

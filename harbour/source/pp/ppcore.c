@@ -1276,7 +1276,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                }
                else if( pState->pInLineFunc &&
                         pState->iInLineState == HB_PP_INLINE_OFF &&
-                        ul == 9 && hb_strnicmp( "hb_inLine", pBuffer, 9 ) == 0 )
+                        ul == 9 && hb_strnicmp( "hb_inline", pBuffer, 9 ) == 0 )
                {
                   if( pState->fCanNextLine )
                      hb_pp_tokenAddCmdSep( pState );

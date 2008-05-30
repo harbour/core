@@ -132,7 +132,7 @@ void hb_compPrintModes( HB_COMP_DECL )
            "\n          i               enable support for HB_INLINE",
            "\n          r               runtime settings enabled",
            "\n          s               allow indexed assignment on all types",
-           "\n          x               extended xbase mode",
+           "\n          x               extended Xbase++ mode",
            "\n          J               turn off jump optimization in pcode",
            "\n          M               turn off macrotext substitution",
            "\n          ?               this info",

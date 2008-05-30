@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 22:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/pp/ppcore.c
+     * "hb_inLine" -> "hb_inline"
+
+   * source/hbpcre/_hbconf.h
+     + Added #pragma warn -sig (-w-sig-)
+
+   * source/common/hbverdsp.c
+   * source/compiler/hbusage.c
+     * Minor adjustments to compatible product names.
+
 2008-05-30 19:32 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/accept.c
      * Minor format.

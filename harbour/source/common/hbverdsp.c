@@ -184,7 +184,7 @@ void hb_verBuildInfo( void )
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "Flagship compatible extensions: ", 0 );
+   hb_conOutErr( "FlagShip compatible extensions: ", 0 );
 #if defined( HB_COMPAT_FLAGSHIP )
    hb_conOutErr( "yes", 0 );
 #else
