@@ -52,8 +52,9 @@
 
 #define HB_OS_WIN_32_USED
 
-/* NOTE: We need this to generate proper extern references. */
-#if defined(HB_OS_WIN_32_USED)
+/* NOTE: This seems needed to generate proper extern references for BCC. 
+         Reasons unknown so far [vszakats]. */
+#if defined( HB_OS_WIN_32_USED ) && defined( __BORLANDC__ )
    #include <windows.h>
 #endif
 

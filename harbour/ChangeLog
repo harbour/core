@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 09:29 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbapollo/apollo.c
+     ! Added __BORLAND__ specific hack to suppress numerous 
+       non-ANSI warnings in foreign header.
+       (#define _declspec __declspec)
+
+   * contrib/hbapollo/apollo1.prg
+     + File ending CRLF.
+
+   * contrib/hbgd/gdwrp.c
+     ! Fixed to explicitly include <windows.h> for __BORLANDC__ 
+       only. The reason for this hack is still unknwown, if 
+       anyone could help to investigate this, it would be great.
+
 2008-05-30 03:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbgtcore.c
     * removed unnecessary variable

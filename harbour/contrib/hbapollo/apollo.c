@@ -51,10 +51,17 @@
  */
 
 /* -----------------29/12/2001 19:23-----------------
- * NOTE: Functions are liste alfabeticly
+ * NOTE: Functions are listed alfabetically
  * --------------------------------------------------*/
 
+/* NOTE: This hack is needed to suppress 'non-ANSI 
+         keyword' warnings inside sde61.h. */
+#if defined( __BORLANDC__ )
+   #define _declspec __declspec
+#endif
+
 #define HB_OS_WIN_32_USED
+
 #define MAX_STR_LEN 255
 
 #include "hbapi.h"
