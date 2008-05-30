@@ -152,7 +152,7 @@ void hb_verBuildInfo( void )
 
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "Harbour extensions: ", 0 );
+   hb_conOutErr( "Harbour non-portable extensions: ", 0 );
 #if defined( HB_EXTENSION )
    hb_conOutErr( "Yes", 0 );
 #else
@@ -168,16 +168,16 @@ void hb_verBuildInfo( void )
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "CA-Clipper 5.2e strict compatibility: ", 0 );
-#if defined( HB_C52_STRICT )
+   hb_conOutErr( "CA-Clipper 5.3x compatible extensions: ", 0 );
+#if defined( HB_COMPAT_C53 )
    hb_conOutErr( "Yes", 0 );
 #else
    hb_conOutErr( "No", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "CA-Clipper 5.3x compatible extensions: ", 0 );
-#if defined( HB_COMPAT_C53 )
+   hb_conOutErr( "CA-Clipper 5.2e/5.3b strict compatibility: ", 0 );
+#if defined( HB_C52_STRICT )
    hb_conOutErr( "Yes", 0 );
 #else
    hb_conOutErr( "No", 0 );
@@ -232,14 +232,6 @@ void hb_verBuildInfo( void )
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "Object file generation support: ", 0 );
-#if defined( HARBOUR_OBJ_GENERATION )
-   hb_conOutErr( "Yes", 0 );
-#else
-   hb_conOutErr( "No", 0 );
-#endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
    hb_conOutErr( "ANSI C usage: ", 0 );
 #if defined( HARBOUR_STRICT_ANSI_C )
    hb_conOutErr( "Strict", 0 );
@@ -256,23 +248,16 @@ void hb_verBuildInfo( void )
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "Compiler YACC debug mode: ", 0 );
-#if defined( HARBOUR_YYDEBUG )
-   hb_conOutErr( "On", 0 );
-#else
+   hb_conOutErr( "Profiler: ", 0 );
+#if defined( HB_NO_PROFILER )
    hb_conOutErr( "Off", 0 );
+#else
+   hb_conOutErr( "On", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "Memory tracing and statistics: ", 0 );
    hb_conOutErr( hb_xquery( HB_MEM_USEDMAX ) != 0 ? "On" : "Off", 0 );
-/*
-#if defined( HB_FM_STATISTICS )
-   hb_conOutErr( "On", 0 );
-#else
-   hb_conOutErr( "Off", 0 );
-#endif
-*/
    hb_conOutErr( hb_conNewLine(), 0 );
 
    {

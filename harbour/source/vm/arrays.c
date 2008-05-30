@@ -1224,14 +1224,14 @@ BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart,
             ulCount = ulSrcLen - ulStart + 1;
 
 /* This is probably a bug, present in all versions of CA-Cl*pper. */
-#ifdef HB_FIX_ACOPY_BUG
-         if( ulTarget <= ulDstLen )
-         {
-#else
+#if defined( HB_C52_STRICT ) || 1
          if( ulDstLen > 0 )
          {
             if( ulTarget > ulDstLen )
                ulTarget = ulDstLen;
+#else
+         if( ulTarget <= ulDstLen )
+         {
 #endif
 
             if( ulCount > ulDstLen - ulTarget )

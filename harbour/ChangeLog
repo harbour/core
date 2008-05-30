@@ -8,6 +8,32 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 12:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbsetup.ch
+   * include/hbsetup.h
+   * source/common/hbverdsp.c
+   * source/vm/arrays.c
+     - HB_FUNC_CALLCONV - no longer used.
+     - HARBOUR_OBJ_GENERATION - no longer used.
+     + Added profiler setting to build info.
+     - YACC debug setting removed frmo build info.
+     * Build info strict compatibility line now says 5.2e/5.3b.
+     * HB_EXTENSION renamed to "non-portable extension"
+     - HB_COMP_STRONG_TYPES - no longer used.
+     - HB_FIX_ACOPY_BUG
+       Replaced with a HB_C52_STRICT guard, but locally 
+       overridden to always be strict (thus replicating 
+       the bug). This means no change in functionality 
+       for default builds. In any ways this is not a decision 
+       to make by the Harbour users. If anyone had this 
+       locally #defined anyway, pls shout.
+     ; NOTE: It's nice that I'm removing unused stuff, but 
+             my impression is that by time we have added 
+             quite some new such settings burried in the code, 
+             so if you're aware of any such ones, please 
+             add them to hbsetup.h (or let's discuss which 
+             ones to add).
+
 2008-05-30 11:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbgd/gdwrp.c
      * Tweaked the BCC55 hack for WIN32_LEAN_AND_MEAN and gd.h.
