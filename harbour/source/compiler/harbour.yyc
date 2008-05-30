@@ -387,7 +387,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL );
 
 static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr );
 
-#ifdef HARBOUR_YYDEBUG
+#ifdef HB_YYDEBUG
    #define YYDEBUG        1 /* Parser debug information support */
 #endif
 

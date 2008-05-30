@@ -62,7 +62,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
 
 #if defined(_MSC_VER) && !defined(_WIN64) && \
     !defined(__LCC__) && !defined(__POCC__) && !defined(__XCC__) && \
-    !defined(HARBOUR_STRICT_ANSI_C) && !defined(HB_STATIC_STARTUP) && \
+    !defined(HB_STRICT_ANSI_C) && !defined(HB_STATIC_STARTUP) && \
     !defined(HB_PRAGMA_STARTUP) && !defined(HB_MSC_STARTUP)
 
    /* In order to maintain compatibility with other products, MSVC should
@@ -86,7 +86,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
 
 #define HB_INIT_SYMBOLS_END( func ) HB_INIT_SYMBOLS_EX_END( func, __FILE__, 0L, 0x0000 )
 
-#if defined(HARBOUR_STRICT_ANSI_C)
+#if defined(HB_STRICT_ANSI_C)
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols_table[] = {

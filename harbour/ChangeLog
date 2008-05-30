@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 18:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbsetup.h
+   * include/hbinit.h
+   * source/compiler/harbour.yyc
+   * source/compiler/harbour.y
+     * HARBOUR_YYDEBUG -> HB_YYDEBUG
+       (do we need this? it's a synomym for YYDEBUG)
+     * HARBOUR_STRICT_ANSI_C -> HB_STRICT_ANSI_C
+       (do we need this?)
+     + HB_PCRE_REGEX added.
+     + HB_PCRE_REGEX_BCC added.
+     + HB_POSIX_REGEX added.
+     - HB_MACRO_STATEMENTS
+
 2008-05-30 17:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/common/hbverdsp.c
      * Some cleanups on appearance.

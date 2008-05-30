@@ -78,35 +78,6 @@
 #endif
 
 /* ***********************************************************************
- * This symbol defines if Harbour is compiled using C compiler
- * that support strict ANSI C only
- *
- * The only non ANSI C feature that we are using is an ability
- * to call functions before the 'main' module is called.
- * This trick is used to automatically join all symbol tables defined
- * in run-time support modules and in user defined modules.
- *   If strict ANSI C compability is required then all symbol tables
- * have to be joined manually by calling special function named
- * hb_vm_SymbolInit_<module_name>
- * (for example for myfirst.prg it will be: 'hb_vm_SymbolInit_MYFIRST'
- * The generation of this function is performed by the macro called
- * HB_CALL_ON_STARTUP that is defined in 'hbinit.h'
- *
- * By default we are using extensions to ANSI C (symbol is not defined)
- */
-/* #define HARBOUR_STRICT_ANSI_C */
-
-/* ***********************************************************************
- * Define this option if you want the /y YACC trace option to be available
- * in the Harbour compiler.
- *
- * Note that if you turn this on, the compiler will slighly grow in size.
- *
- * By default this is turned off.
- */
-/* #define HARBOUR_YYDEBUG */
-
-/* ***********************************************************************
  * If you turn this on, the memory subsystem will collect trace information
  * and several statistical data about memory management, it will show
  * these on exit if memory seem to have been leaked. The memory subsystem
@@ -130,6 +101,55 @@
 #ifndef HB_USE_PROFILER
    #define HB_NO_PROFILER
 #endif
+
+/* ***********************************************************************
+ * Use system PCRE library instead of build in. I'm setting it sometimes
+ * when I want to use exactly the same PCRE version as installed in     
+ * a system.                                                            
+ */
+/* #define HB_PCRE_REGEX */
+
+/* ***********************************************************************
+ * Use old PCRE library which is part of BCC CRTL used to emulate 
+ * POSIX regex.
+ */
+/* #define HB_PCRE_REGEX_BCC */
+
+/* ***********************************************************************
+ * Use POSIX regex library which should be part of each POSIX compatible
+ * system / C compiler I also use this when I want to support exactly   
+ * the same regular expressions as other tools installed in the system  
+ */
+/* #define HB_POSIX_REGEX */
+
+/* ***********************************************************************
+ * This symbol defines if Harbour is compiled using C compiler
+ * that support strict ANSI C only
+ *
+ * The only non ANSI C feature that we are using is an ability
+ * to call functions before the 'main' module is called.
+ * This trick is used to automatically join all symbol tables defined
+ * in run-time support modules and in user defined modules.
+ *   If strict ANSI C compability is required then all symbol tables
+ * have to be joined manually by calling special function named
+ * hb_vm_SymbolInit_<module_name>
+ * (for example for myfirst.prg it will be: 'hb_vm_SymbolInit_MYFIRST'
+ * The generation of this function is performed by the macro called
+ * HB_CALL_ON_STARTUP that is defined in 'hbinit.h'
+ *
+ * By default we are using extensions to ANSI C (symbol is not defined)
+ */
+/* #define HB_STRICT_ANSI_C */
+
+/* ***********************************************************************
+ * Define this option if you want the /y YACC trace option to be available
+ * in the Harbour compiler.
+ *
+ * Note that if you turn this on, the compiler will slighly grow in size.
+ *
+ * By default this is turned off.
+ */
+/* #define HB_YYDEBUG */
 
 /* ***********************************************************************
  * Use native Windows memory allocation functions (HB_OS_WIN_32)
@@ -172,16 +192,6 @@
  * which needs it
  */
 /* #define HB_PP_MULTILINE_STRING */
-
-/* ***********************************************************************
- * You can select here, if the preprocessor should be linked
- * for commands preprocessing passed to the macro compiler.
- * (Note, that if it is linked then commands preprocessing can be
- * disabled/enabled at runtime using HB_SETMACRO() function
- *
- * By default we do not support commands in the macro compiler.
- */
-/* #define HB_MACRO_STATEMENTS */
 
 /* ***********************************************************************
  *  Detect GCC/OS2
