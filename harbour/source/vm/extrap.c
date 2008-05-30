@@ -57,7 +57,7 @@
 #include "hbapifs.h"
 #include "hbdate.h"
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
 
 LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo )
 {
@@ -149,7 +149,7 @@ ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
 
 void hb_vmSetExceptionHandler( void )
 {
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
    {
       LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_win32ExceptionHandler );
       HB_SYMBOL_UNUSED( ef );

@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 09:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/extrap.c
+    ! disabled SetUnhandledExceptionFilter() for WinCE builds
+
+  * harbour/contrib/hbole/ole2.c
+    * cleaned compilation in different env C/C++/UNICODE/compilers
+
+  * harbour/contrib/hbw32/w32_ole.c
+  * harbour/contrib/hbole/ole2.c
+  * harbour/contrib/gtwvg/gtwvg.h
+    ! do not use HB_ID_REF() for _WIN64 - I would like to ask someone
+      with Win64 to verify current Harbour build status?
+
 2008-05-30 09:29 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbapollo/apollo.c
      ! Added __BORLAND__ specific hack to suppress numerous 

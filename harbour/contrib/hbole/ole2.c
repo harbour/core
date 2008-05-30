@@ -79,7 +79,10 @@
    #define CINTERFACE 1
 #endif
 
-#if defined( __cplusplus ) && \
+#define NONAMELESSUNION
+
+
+#if defined( __cplusplus ) && !defined( _WIN64 ) && \
     ( defined( __BORLANDC__ ) || defined( _MSC_VER ) )
 #  define HB_ID_REF( type, id )     id
 #else
@@ -167,7 +170,7 @@ static void GetParams(DISPPARAMS * dParams)
          switch( hb_itemType( uParam ) )
          {
             case '\0':
-#if !defined(__BORLANDC__) && !defined(__XCC__)
+#if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
                  pArgs[ n ].vt   = VT_EMPTY;
 #else
                  pArgs[ n ].n1.n2.vt   = VT_EMPTY;
@@ -176,22 +179,22 @@ static void GetParams(DISPPARAMS * dParams)
 
             case HB_IT_STRING:
             case HB_IT_MEMO:
-#if !defined(__BORLANDC__) && !defined(__XCC__)
+#if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
                  pArgs[ n ].vt   = VT_BSTR;
 #else
                  pArgs[ n ].n1.n2.vt   = VT_BSTR;
 #endif
                  cString = AnsiToWide( hb_parc( nArg ) );
-#if !defined(__BORLANDC__) && !defined(__XCC__)
+#if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
                  pArgs[ n ].bstrVal = SysAllocString( (OLECHAR *) cString );
 #else
-                 pArgs[ n ].n1.n2.n3.bstrVal = SysAllocString( (LPVOID) cString );
+                 pArgs[ n ].n1.n2.n3.bstrVal = SysAllocString( (OLECHAR *) cString );
 #endif
                     hb_xfree( cString );
                  break;
 
             case HB_IT_LOGICAL:
-#if !defined(__BORLANDC__) && !defined(__XCC__)
+#if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
                  pArgs[ n ].vt   = VT_BOOL;
                  pArgs[ n ].boolVal = hb_parl( nArg );
 #else
@@ -203,7 +206,7 @@ static void GetParams(DISPPARAMS * dParams)
             case HB_IT_INTEGER:
             case HB_IT_LONG:
             case HB_IT_NUMERIC:
-#if !defined(__BORLANDC__) && !defined(__XCC__)
+#if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
                  pArgs[ n ].vt   = VT_I4;
                  pArgs[ n ].lVal = hb_parnl( nArg );
 #else
@@ -213,7 +216,7 @@ static void GetParams(DISPPARAMS * dParams)
                  break;
 
             case HB_IT_DOUBLE:
-#if !defined(__BORLANDC__) && !defined(__XCC__)
+#if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
                  pArgs[ n ].vt   = VT_R8;
                  pArgs[ n ].dblVal = hb_parnd( nArg );
 #else
@@ -222,7 +225,7 @@ static void GetParams(DISPPARAMS * dParams)
 #endif
                  break;
             case HB_IT_DATE:
-#if !defined(__BORLANDC__) && !defined(__XCC__)
+#if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
                  pArgs[ n ].vt   = VT_DATE;
                  pArgs[ n ].dblVal = DateToDbl( hb_pards( nArg ) );
 #else
@@ -234,7 +237,7 @@ static void GetParams(DISPPARAMS * dParams)
             case HB_IT_OBJECT:
             {
                  PHB_DYNS pData;
-#if !defined(__BORLANDC__) && !defined(__XCC__)
+#if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
                  pArgs[ n ].vt = VT_EMPTY;
 #else
                  pArgs[ n ].n1.n2.vt = VT_EMPTY;
@@ -247,7 +250,7 @@ static void GetParams(DISPPARAMS * dParams)
                        hb_vmPushSymbol( hb_dynsymSymbol( pData ) );
                        hb_vmPush( uParam );
                        hb_vmDo( 0 );
-#if !defined(__BORLANDC__) && !defined(__XCC__)
+#if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
                        pArgs[ n ].vt = VT_DISPATCH;
                        pArgs[ n ].pdispVal = ( IDispatch * ) hb_parnl( -1 );
 #else
@@ -286,7 +289,7 @@ static void RetValue( void )
 {
    LPSTR cString;
 
-#if !defined(__BORLANDC__) && !defined(__XCC__)
+#if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
    switch( RetVal.vt )
    {
       case VT_BSTR:
@@ -429,6 +432,9 @@ HB_FUNC( OLESHOWEXCEPTION )
 {
    if ( (LONG) nOleError == DISP_E_EXCEPTION )
    {
+#if defined( UNICODE )
+      MessageBox( NULL, excep.bstrDescription, excep.bstrSource, MB_ICONHAND );
+#else
       LPSTR source, description;
 
       source = WideToAnsi( (LPSTR) excep.bstrSource );
@@ -436,6 +442,7 @@ HB_FUNC( OLESHOWEXCEPTION )
       MessageBox( NULL, description, source, MB_ICONHAND );
       hb_xfree( source );
       hb_xfree( description );
+#endif
    }
 }
 
@@ -557,7 +564,7 @@ HB_FUNC( OLEERROR )
 
 HB_FUNC( OLEISOBJECT )
 {
-#if !defined(__BORLANDC__) && !defined(__XCC__)
+#if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
    hb_retl( RetVal.vt == VT_DISPATCH );
 #else
    hb_retl( RetVal.n1.n2.vt == VT_DISPATCH );
@@ -712,7 +719,7 @@ HB_FUNC( GETOLEOBJECT )
 
       if ( nOleError == S_OK )
       {
-         nOleError = pUnk->lpVtbl->QueryInterface( pUnk, riid, &pDisp );
+         nOleError = pUnk->lpVtbl->QueryInterface( pUnk, ( REFIID ) riid, &pDisp );
       }
    }
 
@@ -721,5 +728,9 @@ HB_FUNC( GETOLEOBJECT )
 
 HB_FUNC( MESSAGEBOX )
 {
-   hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), hb_parc( 2 ), hb_parc( 3 ), hb_parni( 4 ) ) );
+   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) ),
+          lpStr2 = HB_TCHAR_CONVTO( hb_parcx( 3 ) );
+   hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), lpStr1, lpStr2, hb_parni( 4 ) ) );
+   HB_TCHAR_FREE( lpStr1 );
+   HB_TCHAR_FREE( lpStr2 );
 }
