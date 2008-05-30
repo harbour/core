@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 03:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbgtcore.c
+    * removed unnecessary variable
+
+  * harbour/contrib/hbw32/w32_ole.c
+  * harbour/contrib/hbole/ole2.c
+  * harbour/contrib/gtwvg/gtwvg.h
+    ! use trick with HB_ID_REF() only for BCC and MSVC
+      some other C++ compilers like OpenWatcom have different
+      header files and does not need it.
+
 2008-05-30 02:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbvm.h
   * harbour/source/vm/hvm.c

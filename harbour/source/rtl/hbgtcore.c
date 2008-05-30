@@ -1125,7 +1125,7 @@ static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
 {
    if( iRows || iCols )
    {
-      int iColOld, iColNew, iColSize, iColClear, iClrs, iLength, iHeight, iWidth;
+      int iColNew, iColSize, iColClear, iClrs, iLength, iHeight, iWidth;
 
       HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
       if( iTop < 0 )
@@ -1139,20 +1139,19 @@ static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
 
       iColSize = iRight - iLeft;
       iLength = iColSize + 1;
-      iColOld = iColNew = iLeft;
+      iColNew = iLeft;
 
       if( iCols >= 0 )
       {
-         iColOld += iCols;
          iColSize -= iCols;
          iColClear = iColNew + iColSize + 1;
          iClrs = iCols;
       }
       else
       {
+         iColClear = iColNew;
          iColNew -= iCols;
          iColSize += iCols;
-         iColClear = iColOld;
          iClrs = -iCols;
       }
 
