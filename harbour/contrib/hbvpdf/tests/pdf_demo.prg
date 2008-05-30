@@ -147,8 +147,8 @@ procedure main()
       for nJ := 1 to 4
          if aFonts[ nI ][ nJ + 1 ]
             pdfSetFont( aFonts[ nI ][ 1 ], nJ - 1, aReport[ FONTSIZE ] )
-            pdfRJust("This is a test for " + aFonts[ nI ][ 1 ] + " " + ;
-                            aStyle[ nJ ], nK++, aReport[ REPORTWIDTH ], "R")
+            pdfRJust("0123456789 This is a test for " + aFonts[ nI ][ 1 ] + " " + ;
+                                       aStyle[ nJ ], nK++, aReport[ REPORTWIDTH ], "R")
          endif
       next
       pdfRJust(pdfUnderline("Underline"), nK++, aReport[ REPORTWIDTH ], "R")

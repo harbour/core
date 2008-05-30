@@ -84,15 +84,12 @@ HB_FUNC( __ACCEPTSTR )
 HB_FUNC( __ACCEPT )
 {
    char szAcceptResult[ ACCEPT_BUFFER_LEN ];
-   ULONG ulLen;
-   int input;
+   ULONG ulLen = 0;
+   int input = 0;
 
    /* cPrompt(s) passed ? */
    if( hb_pcount() >= 1 )
       HB_FUNC_EXEC( QOUT );
-
-   ulLen = 0;
-   input = 0;
 
    szAcceptResult[ 0 ] = '\0';
 
@@ -116,7 +113,7 @@ HB_FUNC( __ACCEPT )
             {
                szAcceptResult[ ulLen ] = input; /* Accept the input */
                hb_conOutAlt( &szAcceptResult[ ulLen ], sizeof( char ) ); /* Then display it */
-               ulLen++;  /* Then adjust the input count */
+               ulLen++; /* Then adjust the input count */
             }
       }
    }
@@ -129,4 +126,3 @@ HB_FUNC( __ACCEPT )
 
    hb_retc( szAcceptResult );
 }
-

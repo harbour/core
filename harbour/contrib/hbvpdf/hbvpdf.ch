@@ -5,6 +5,7 @@
 #include "fileio.ch"
 #include "common.ch"
 
+#define MAXBUFLEN 30000
 #define CRLF chr(13)+chr(10)
 
 #define NORMAL        0
@@ -56,7 +57,8 @@
 #define PAGEFONTS    31  // array of current page fonts
 #define FONTWIDTH    32  // array of fonts width's
 #define OPTIMIZE     33  // optimized ?
-#define PARAMLEN     33  // number of report elements
+#define BUFFERHANDLE 34  // if file buffer used
+#define PARAMLEN     34  // number of report elements
 
 #define ALIGN_LEFT    1
 #define ALIGN_CENTER  2
@@ -70,6 +72,7 @@
 #define IMAGE_BITS    5
 #define IMAGE_FROM    6
 #define IMAGE_LENGTH  7
+#define IMAGE_SPACE   8
 
 #define BYTE          1
 #define ASCII         2
