@@ -99,6 +99,8 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
    extern void        hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue );
 #endif
 
+extern void hb_vmSetExceptionHandler( void );
+
 extern HB_EXPORT void     hb_vmSymbolInit_RT( void );   /* initialization of runtime support symbols */
 
 /* Harbour virtual machine escaping API */

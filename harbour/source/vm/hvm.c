@@ -66,8 +66,6 @@
  *
  */
 
-#define HB_OS_WIN_32_USED /* for exception handler */
-
 #include <math.h>
 #include <time.h>
 
@@ -95,22 +93,6 @@
 #ifdef HB_MACRO_STATEMENTS
    #include "hbpp.h"
 #endif
-
-HB_EXTERN_BEGIN
-
-#if defined(HB_OS_WIN_32)
-   LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo );
-#elif defined(HB_OS_OS2)
-   /* 21/10/00 - maurilio.longo@libero.it
-      This Exception Handler gets called in case of an abnormal termination of an harbour program and
-      displays a full stack trace at the harbour language level */
-   extern ULONG _System hb_os2ExceptionHandler(PEXCEPTIONREPORTRECORD       p1,
-                                               PEXCEPTIONREGISTRATIONRECORD p2,
-                                               PCONTEXTRECORD               p3,
-                                               PVOID                        pv);
-#endif
-
-HB_EXTERN_END
 
 /* DEBUG only*/
 /* #include <windows.h> */
@@ -488,25 +470,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 #endif
    }
 
-#if defined(HB_OS_WIN_32)
-   {
-      LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_win32ExceptionHandler );
-      HB_SYMBOL_UNUSED( ef );
-   }
-#elif defined(HB_OS_OS2) /* Add OS2TermHandler to this thread's chain of exception handlers */
-   {
-      EXCEPTIONREGISTRATIONRECORD RegRec;    /* Exception Registration Record */
-      APIRET rc;                             /* Return code                   */
-
-      memset( &RegRec, 0, sizeof( RegRec ) );
-      RegRec.ExceptionHandler = ( ERR ) hb_os2ExceptionHandler;
-      rc = DosSetExceptionHandler( &RegRec );
-      if( rc != NO_ERROR )
-      {
-         hb_errInternal( HB_EI_ERRUNRECOV, "Unable to setup exception handler (DosSetExceptionHandler())", NULL, NULL );
-      }
-   }
-#endif
+   hb_vmSetExceptionHandler();
 
    if( bStartMainProc && s_pSymStart )
    {

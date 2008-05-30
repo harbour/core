@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 02:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbvm.h
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/extrap.c
+    * moved code to set exception handler from hvm.c to extrap.c
+    + added void hb_vmSetExceptionHandler( void ) to set exception
+      filter
+    ! fixed problem with C++ builds caused by missing extern "C"
+      declaration for exception handlers in extrap.c
+
 2008-05-30 01:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/make_b32_all.bat
    * contrib/make_vc_all.bat

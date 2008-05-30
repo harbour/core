@@ -53,6 +53,7 @@
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
+#include "hbvm.h"
 #include "hbapifs.h"
 #include "hbdate.h"
 
@@ -145,3 +146,26 @@ ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
 }
 
 #endif
+
+void hb_vmSetExceptionHandler( void )
+{
+#if defined(HB_OS_WIN_32)
+   {
+      LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_win32ExceptionHandler );
+      HB_SYMBOL_UNUSED( ef );
+   }
+#elif defined(HB_OS_OS2) /* Add OS2TermHandler to this thread's chain of exception handlers */
+   {
+      EXCEPTIONREGISTRATIONRECORD RegRec;    /* Exception Registration Record */
+      APIRET rc;                             /* Return code                   */
+
+      memset( &RegRec, 0, sizeof( RegRec ) );
+      RegRec.ExceptionHandler = ( ERR ) hb_os2ExceptionHandler;
+      rc = DosSetExceptionHandler( &RegRec );
+      if( rc != NO_ERROR )
+      {
+         hb_errInternal( HB_EI_ERRUNRECOV, "Unable to setup exception handler (DosSetExceptionHandler())", NULL, NULL );
+      }
+   }
+#endif
+}
