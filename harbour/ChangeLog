@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 11:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbgd/gdwrp.c
+     * Tweaked the BCC55 hack for WIN32_LEAN_AND_MEAN and gd.h.
+
 2008-05-30 09:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/extrap.c
     ! disabled SetUnhandledExceptionFilter() for WinCE builds
