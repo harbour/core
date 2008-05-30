@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-30 12:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbdefs.h
+     - Removed WIN32_LEAN_AND_MEAN to make things more standard.
+       We're losing some compile time performance for Windows build, 
+       but it's marginal. Runtime performance is not affected.
+
+   * contrib/hbgd/gdwrp.c
+     * Removed BCC55 hack to workaround WIN32_LEAN_AND_MEAN 
+       problem.
+
 2008-05-30 12:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbsetup.ch
    * include/hbsetup.h

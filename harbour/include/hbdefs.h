@@ -97,7 +97,6 @@
 /* Include windows.h if applicable and requested */
 #if defined( HB_OS_WIN_32_USED ) && defined( HB_OS_WIN_32 )
 
-   #define WIN32_LEAN_AND_MEAN
    #include <windows.h>
    #if defined( __GNUC__ )
       #define HB_DONT_DEFINE_BASIC_TYPES

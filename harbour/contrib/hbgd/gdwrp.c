@@ -58,14 +58,6 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 
-/* NOTE: We need this to generate proper extern references for BCC 5.5 
-         (even 5.8 don't need this hack). Harbour uses WIN32_LEAN_AND_MEAN, 
-         which makes BCC 5.5 leave out something which causes wrong 
-         extern references. So we need full windows.h and we're including it. */
-#ifdef HB_OS_WIN_32
-   #include <windows.h>
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
