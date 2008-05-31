@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-31 12:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/hbcurl
+   + contrib/hbcurl/Makefile
+   + contrib/hbcurl/make_b32.bat
+   + contrib/hbcurl/make_vc.bat
+   + contrib/hbcurl/common.mak
+   + contrib/hbcurl/make_gcc.sh
+   + contrib/hbcurl/hbcurl.ch
+   + contrib/hbcurl/hbcurl.c
+   + contrib/hbcurl/tests
+   + contrib/hbcurl/tests/bld_b32.bat
+   + contrib/hbcurl/tests/bld_vc.bat
+   + contrib/hbcurl/tests/ftp_uldl.prg
+     + Added hbcurl - CURL interface library.
+     ; Based on original work of Luiz Rafael Culik / xhb, 
+       but heavily reworked and fixed, and still a work 
+       in progress.
+
 2008-05-31 11:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/debugger.prg
     * removed some unused var, formatting
