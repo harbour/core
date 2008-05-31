@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-31 21:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+   * contrib/hbcurl/tests/ftp_uldl.prg
+     + Using hb_fsReadLarge()/hb_fsWriteLarge()
+     + Added redefinitiion of memory allocator functions.
+       (doesn't work, disabled. hb_xgrab() is getting ptrs 
+       not allocated by us.)
+     ! Fixes handling of size options in CURL_EASY_SETOPT().
+     + CURL_VERSION()
+     + CURL_VERSION_INFO()
+     + CURL_EASY_STRERROR()
+     + CURL_SHARE_STRERROR()
+     + CURL_EASY_ESCAPE() (see TOFIX)
+     + CURL_EASY_UNESCAPE() (see TOFIX)
+     + Test app extended.
+     * Renames.
+     ; Added several more TOFIXes.
+
+   * source/rtl/tget.prg
+     * Minor formatting.
+
 2008-05-31 15:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/adsfunc.c
    * contrib/rddads/ads1.c

@@ -2,28 +2,50 @@
  * $Id$
  */
 
-/* Redirect STDERR to a file to see the verbose output. */
+/* NOTE: Redirect STDERR to a file to see the verbose output. */
 
 #include "hbcurl.ch"
 
 #include "common.ch"
 
-#define LOCAL_FILE          "ftp_uldl.prg"
-#define UPLOAD_FILE_AS      "ftp_upped.prg"
+#define UPLOAD_FILE_AS      "test_ul.bin"
 #define REMOTE_URL          "ftp://harbour:power@localhost/" + UPLOAD_FILE_AS
-#define RENAME_FILE_TO      "ftp_upped_renamed.prg"
+#define RENAME_FILE_TO      "test_ul_renamed.bin"
 
-FUNCTION Main( cDL )
+FUNCTION Main( cDL, cUL )
    LOCAL curl
+   LOCAL info
+   LOCAL tmp
+   LOCAL tmp1
+
+   ? curl_version()
+   
+   info := curl_version_info()
+
+   FOR tmp := 1 TO Len( info )
+      IF tmp == 8
+         ? tmp, ""
+         FOR tmp1 := 1 TO Len( info[ 8 ] )
+            ?? info[ 8 ][ tmp1 ] + " "
+         NEXT
+      ELSE
+         ? tmp, info[ tmp ]
+      ENDIF
+   NEXT
+
+   Inkey( 0 )
 
    ? "INIT:", curl_global_init()
 
    IF ! Empty( curl := curl_easy_init() )
 
+      DEFAULT cUL TO "ftp_uldl.prg"
+
       ? curl_easy_setopt( curl, HB_CURLOPT_UPLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, REMOTE_URL )
-      ? curl_easy_setopt( curl, HB_CURLOPT_SETUPLOADFILE, LOCAL_FILE )
-      ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" ) /* May use this instead of embedding in URL */
+      ? curl_easy_setopt( curl, HB_CURLOPT_SETUPLOADFILE, cUL )
+      ? curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE, hb_FSize( cUL ) ), hb_FSize( cUL )
+//    ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" ) /* May use this instead of embedding in URL */
       ? curl_easy_setopt( curl, HB_CURLOPT_SETPROGRESS, {| nPos, nLen | DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, .F. )
       ? curl_easy_setopt( curl, HB_CURLOPT_POSTQUOTE, { "RNFR " + UPLOAD_FILE_AS, "RNTO " + RENAME_FILE_TO } )

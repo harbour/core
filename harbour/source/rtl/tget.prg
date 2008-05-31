@@ -259,9 +259,9 @@ METHOD display() CLASS Get
    IF ::hasFocus
       cBuffer   := ::cBuffer
    ELSE
-      ::cType    := ValType( ::xVarGet := ::varGet() )
-      ::picture  := ::cPicture
-      cBuffer    := ::PutMask( ::xVarGet )
+      ::cType   := ValType( ::xVarGet := ::varGet() )
+      ::picture := ::cPicture
+      cBuffer   := ::PutMask( ::xVarGet )
    ENDIF
 
    ::nMaxLen := Len( cBuffer )
@@ -391,15 +391,15 @@ METHOD home() CLASS Get
 METHOD reset() CLASS Get
 
    IF ::hasFocus
-      ::cBuffer   := ::PutMask( ::varGet(), .F. )
-      ::xVarGet   := ::original
-      ::cType     := ValType( ::xVarGet )
-      ::pos       := ::FirstEditable() /* ; Simple 0 in CA-Cl*pper [vszakats] */
-      ::lClear    := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
-      ::lEdit     := .F.
-      ::lMinus    := .F.
-      ::rejected  := .F.
-      ::typeOut   := !( ::type $ "CNDL" ) .OR. ( ::nPos == 0 ) /* ; Simple .F. in CA-Cl*pper [vszakats] */
+      ::cBuffer  := ::PutMask( ::varGet(), .F. )
+      ::xVarGet  := ::original
+      ::cType    := ValType( ::xVarGet )
+      ::pos      := ::FirstEditable() /* ; Simple 0 in CA-Cl*pper [vszakats] */
+      ::lClear   := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
+      ::lEdit    := .F.
+      ::lMinus   := .F.
+      ::rejected := .F.
+      ::typeOut  := !( ::type $ "CNDL" ) .OR. ( ::nPos == 0 ) /* ; Simple .F. in CA-Cl*pper [vszakats] */
       ::display()
    ENDIF
 
@@ -425,18 +425,18 @@ METHOD setFocus() CLASS Get
 
       xVarGet := ::xVarGet := ::varGet()
       
-      ::hasFocus   := .T.
-      ::rejected   := .F.
+      ::hasFocus := .T.
+      ::rejected := .F.
       
-      ::original   := xVarGet
-      ::cType      := ValType( xVarGet )
-      ::picture    := ::cPicture
-      ::cBuffer    := ::PutMask( xVarGet, .F. )
+      ::original := xVarGet
+      ::cType    := ValType( xVarGet )
+      ::picture  := ::cPicture
+      ::cBuffer  := ::PutMask( xVarGet, .F. )
       
-      ::lChanged   := .F.
-      ::lClear     := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
-      ::lEdit      := .F.
-      ::pos        := 1
+      ::lChanged := .F.
+      ::lClear   := ( "K" $ ::cPicFunc .OR. ::cType == "N" )
+      ::lEdit    := .F.
+      ::pos      := 1
       
       ::lMinusPrinted := .F.
       ::lMinus        := .F.
