@@ -870,11 +870,11 @@ HB_FUNC( CURL_EASY_SETOPT )
                res = ( CURLcode ) -1;
          }
          break;
-      }
 
       case HB_CURLOPT_DOWNLOAD:
          res = curl_easy_setopt( pConn->curl, CURLOPT_UPLOAD, HB_CURL_OPT_BOOL_TRUE( 3 ) ? 0 : 1 );
          break;
+      }
    }
 
    hb_retnl( res );
