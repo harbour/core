@@ -261,9 +261,11 @@ HB_FUNC( ADSGETSERVERTIME )
       hb_stornl( plTime, -1, 3 );
    }
    /* QUESTION: Returning NIL on error. Is this what we want? [vszakats] */
-#ifdef DEBUG
+#if HB_TR_LEVEL >= HB_TR_DEBUG
    else
-      AdsShowError( ( UNSIGNED8 * ) "AdsGetServerTime() error" );
+   {
+      HB_TRACE(HB_TR_DEBUG, ("AdsGetServerTime() error"));
+   }
 #endif
 }
 
@@ -1239,9 +1241,7 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
       }
       else
       {
-#ifdef DEBUG
-         AdsShowError( ( UNSIGNED8 * ) "AdsExecuteSQLDirect() error" );
-#endif
+         HB_TRACE(HB_TR_DEBUG, ("AdsExecuteSQLDirect() error"));
          hb_retl( FALSE );
       }
    }
@@ -1273,9 +1273,7 @@ HB_FUNC( ADSPREPARESQL )
          hb_retl( TRUE );
       else
       {
-#ifdef DEBUG
-         AdsShowError( ( UNSIGNED8 * ) "AdsPrepareSQL() error" );
-#endif
+         HB_TRACE(HB_TR_DEBUG, ("AdsPrepareSQL() error"));
          hb_retl( FALSE );
       }
    }
@@ -1317,9 +1315,7 @@ HB_FUNC( ADSEXECUTESQL )
       }
       else
       {
-#ifdef DEBUG
-         AdsShowError( ( UNSIGNED8 * ) "AdsExecuteSQL() error" );
-#endif
+         HB_TRACE(HB_TR_DEBUG, ("AdsExecuteSQL() error"));
          hb_retl( FALSE );
       }
    }

@@ -6,12 +6,14 @@
 
 #include "hbcurl.ch"
 
+#include "common.ch"
+
 #define LOCAL_FILE          "ftp_uldl.prg"
 #define UPLOAD_FILE_AS      "ftp_upped.prg"
 #define REMOTE_URL          "ftp://harbour:power@localhost/" + UPLOAD_FILE_AS
 #define RENAME_FILE_TO      "ftp_upped_renamed.prg"
 
-FUNCTION Main()
+FUNCTION Main( cDL )
    LOCAL curl
 
    ? "INIT:", curl_global_init()
@@ -21,11 +23,11 @@ FUNCTION Main()
       ? curl_easy_setopt( curl, HB_CURLOPT_UPLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, REMOTE_URL )
       ? curl_easy_setopt( curl, HB_CURLOPT_SETUPLOADFILE, LOCAL_FILE )
-      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, .T. )
       ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" ) /* May use this instead of embedding in URL */
       ? curl_easy_setopt( curl, HB_CURLOPT_SETPROGRESS, {| nPos, nLen | DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, .F. )
       ? curl_easy_setopt( curl, HB_CURLOPT_POSTQUOTE, { "RNFR " + UPLOAD_FILE_AS, "RNTO " + RENAME_FILE_TO } )
+      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, .T. )
 
       ? "UPLOAD:", curl_easy_perform( curl )
 
@@ -36,11 +38,17 @@ FUNCTION Main()
 
    IF ! Empty( curl := curl_easy_init() )
 
+      DEFAULT cDL TO "ftp://ftp.cisco.com/README"
+
       /* Now let's download something */
 
       ? curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
-      ? curl_easy_setopt( curl, HB_CURLOPT_URL, "ftp://ftp.cisco.com/README" )
+      ? curl_easy_setopt( curl, HB_CURLOPT_URL, cDL )
+      ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYPEER, .F. )
+      ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYHOST, .F. )
       ? curl_easy_setopt( curl, HB_CURLOPT_SETDOWNLOADFILE, "test_dl.bin" )
+      ? curl_easy_setopt( curl, HB_CURLOPT_SETPROGRESS, {| nPos, nLen | DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
+      ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, .F. )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, .T. )
 
       ? "DOWNLOAD:", curl_easy_perform( curl )

@@ -689,19 +689,6 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( pConn->curl, CURLOPT_COOKIELIST, hb_parcx( 3 ) );
          break;
 
-      case HB_CURLOPT_HTTPHEADER:
-         {
-            PHB_ITEM pHttpHeaders = hb_param( 3, HB_IT_ARRAY );
-            ULONG ulPos;
-            ULONG ulArrayPos = hb_arrayLen( pHttpHeaders );
-
-            for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
-               curl_slist_append( pConn->sHttpHeader, hb_arrayGetCPtr( pHttpHeaders, ulPos + 1 ) );
-
-            res = curl_easy_setopt( pConn->curl, CURLOPT_HTTPHEADER, pConn->sHttpHeader );
-         }
-         break;
-
       case HB_CURLOPT_HTTPPOST:
          {
             PHB_ITEM pHttpPost = hb_param( 3, HB_IT_ARRAY );
@@ -718,7 +705,21 @@ HB_FUNC( CURL_EASY_SETOPT )
                              CURLFORM_FILE, hb_arrayGetCPtr( pArray, 2 ),
                              CURLFORM_END );
             }
+
             res = curl_easy_setopt( pConn->curl, CURLOPT_HTTPPOST, pConn->sHttpPostf );
+         }
+         break;
+
+      case HB_CURLOPT_HTTPHEADER:
+         {
+            PHB_ITEM pHttpHeaders = hb_param( 3, HB_IT_ARRAY );
+            ULONG ulPos;
+            ULONG ulArrayPos = hb_arrayLen( pHttpHeaders );
+
+            for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
+               curl_slist_append( pConn->sHttpHeader, hb_arrayGetCPtr( pHttpHeaders, ulPos + 1 ) );
+
+            res = curl_easy_setopt( pConn->curl, CURLOPT_HTTPHEADER, pConn->sHttpHeader );
          }
          break;
 

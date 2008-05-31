@@ -119,9 +119,7 @@ HB_FUNC( ADSMGGETINSTALLINFO )
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_INSTALL_INFO ) )
-   {
       HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetInstallInfo()"));
-   }
 #endif
 }
 

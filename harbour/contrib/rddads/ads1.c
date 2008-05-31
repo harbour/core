@@ -103,7 +103,7 @@ static RDDFUNCS adsSuper;
 
 static void adsSetListener_callback( HB_set_enum setting, HB_set_listener_enum when )
 {
-   HB_TRACE(HB_TR_DEBUG, ("adsSetListener_callback (%d  %d)", setting, when));
+   HB_TRACE(HB_TR_DEBUG, ("adsSetListener_callback (%d, %d)", setting, when));
    if( when == HB_SET_LISTENER_AFTER )  /* we don't do anything with BEFORE calls */
    {
       switch( setting )
@@ -686,7 +686,7 @@ ERRCODE hb_adsCloseCursor( ADSAREAP pArea )
 
       if( u32RetVal != AE_SUCCESS )
       {
-         HB_TRACE(HB_TR_DEBUG, ("adsCloseTable failed (%lu, %s)", u32RetVal, pArea->szDataFileName));
+         HB_TRACE(HB_TR_DEBUG, ("adsCloseTable(%lu, %s) failed", u32RetVal, pArea->szDataFileName));
       }
       pArea->hTable = 0;
    }
@@ -723,7 +723,7 @@ ERRCODE hb_adsCloseCursor( ADSAREAP pArea )
 
 static ERRCODE adsBof( ADSAREAP pArea, BOOL * pBof )
 {
-   HB_TRACE(HB_TR_DEBUG, ("sixBof(%p, %p)", pArea, pBof));
+   HB_TRACE(HB_TR_DEBUG, ("adsBof(%p, %p)", pArea, pBof));
 
    /* resolve any pending relations */
    if( pArea->lpdbPendingRel )
@@ -2318,8 +2318,11 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             bTypeError = FALSE;
             ulRetVal = AdsSetDouble( pArea->hTable, ADSFIELD( uiIndex ), hb_itemGetND( pItem ) );
             /* write to autoincrement field will gen error 5066
-               if( pField->uiTypeExtended == ADS_AUTOINC )
-                  AdsShowError( ( UNSIGNED8 * ) "Error" ); */
+               #if HB_TR_LEVEL >= HB_TR_DEBUG
+                  if( pField->uiTypeExtended == ADS_AUTOINC )
+                     HB_TRACE(HB_TR_INFO, ("adsPutValue() error"));
+               #endif
+             */
          }
          break;
 
@@ -2711,9 +2714,7 @@ static ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    if( uRetVal != AE_SUCCESS )
    {
-#ifdef DEBUG
-      AdsShowError( ( UNSIGNED8 * ) "Error" );
-#endif
+      HB_TRACE(HB_TR_INFO, ("adsCreate() error"));
       return FAILURE;
    }
    /*
@@ -3356,7 +3357,7 @@ static ERRCODE adsChildSync( ADSAREAP pArea, LPDBRELINFO pRelInfo )
 
 static ERRCODE adsClearRel( ADSAREAP pArea )
 {
-   HB_TRACE(HB_TR_DEBUG, ("adsclearRel(%p)", pArea ));
+   HB_TRACE(HB_TR_DEBUG, ("adsClearRel(%p)", pArea ));
 
    SUPER_CLEARREL( ( AREAP ) pArea );
    AdsClearRelation( pArea->hTable );
@@ -4488,9 +4489,7 @@ static ERRCODE adsLock( ADSAREAP pArea, LPDBLOCKINFO pLockInfo )
 
       default  :
          /* This should probably throw a real error... */
-#ifdef DEBUG
-         AdsShowError( ( UNSIGNED8 * ) "Error in pLockInfo->uiMethod" );
-#endif
+         HB_TRACE(HB_TR_INFO, ("adsLock() error in pLockInfo->uiMethod"));
          pLockInfo->fResult = FALSE;
          return FAILURE;
    }
@@ -4592,7 +4591,7 @@ static ERRCODE adsDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex
    PHB_FNAME pFileName;
    BOOL fTable = FALSE, fResult = FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("adsDrop(%p,%p,%p,%lu)", pRDD, pItemTable, pItemIndex, ulConnect));
+   HB_TRACE(HB_TR_DEBUG, ("adsDrop(%p, %p, %p, %lu)", pRDD, pItemTable, pItemIndex, ulConnect));
 
    szFile = hb_itemGetCPtr( pItemIndex );
    if( !szFile[ 0 ] )
@@ -4679,7 +4678,7 @@ static ERRCODE adsExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemInd
    PHB_FNAME pFileName;
    BOOL fTable = FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("adsExists(%p,%p,%p,%lu)", pRDD, pItemTable, pItemIndex, ulConnect));
+   HB_TRACE(HB_TR_DEBUG, ("adsExists(%p, %p, %p, %lu)", pRDD, pItemTable, pItemIndex, ulConnect));
 
    szFile = hb_itemGetCPtr( pItemIndex );
    if( !szFile[ 0 ] )
