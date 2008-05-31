@@ -59,9 +59,8 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapifs.h"
 #include "hbvm.h"
-
-#include <sys/stat.h>
 
 #include "hbcurl.ch"
 
@@ -70,8 +69,8 @@
 
 typedef struct _FTPFILE
 {
-   char * name;
-   FILE * handle;
+   BYTE *  name;
+   FHANDLE handle;
 } FTPFILE, * PFTPFILE;
 
 typedef struct _CURLHANDLE
@@ -107,44 +106,44 @@ HB_FUNC( CURL_GLOBAL_CLEANUP )
 
 /* ---------------------------- */
 
-int hb_curlReadFunction( void * buffer, size_t size, size_t nmemb, void * Cargo )
+size_t hb_curlReadFunction( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
    if( Cargo )
    {
       PFTPFILE pfile_ul = ( PFTPFILE ) Cargo;
+      size_t ret;
 
-      if( ! pfile_ul->handle )
+      if( pfile_ul->handle == FS_ERROR )
       {
-         pfile_ul->handle = fopen( pfile_ul->name, "rb" );
+         pfile_ul->handle = hb_fsOpen( pfile_ul->name, FO_READ );
          
-         if( ! pfile_ul->handle )
+         if( pfile_ul->handle == FS_ERROR )
             return -1;
       }
 
-      if( ferror( pfile_ul->handle ) )
-         return CURL_READFUNC_ABORT;
-      else
-         return fread( buffer, size, nmemb, pfile_ul->handle ) * size;
+      ret = ( size_t ) hb_fsRead( pfile_ul->handle, ( BYTE * ) buffer, size * nmemb );
+
+      return hb_fsError() ? CURL_READFUNC_ABORT : ret;
    }
 
    return -1;
 }
 
-int hb_curlWriteFunction( void * buffer, size_t size, size_t nmemb, void * Cargo )
+size_t hb_curlWriteFunction( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
    if( Cargo )
    {
       PFTPFILE pfile_dl = ( PFTPFILE ) Cargo;
 
-      if( ! pfile_dl->handle )
+      if( pfile_dl->handle == FS_ERROR )
       {
-         pfile_dl->handle = fopen( pfile_dl->name, "wb" );
+         pfile_dl->handle = hb_fsCreate( pfile_dl->name, FC_NORMAL );
          
-         if( ! pfile_dl->handle )
+         if( pfile_dl->handle == FS_ERROR )
             return -1;
       }
 
-      return fwrite( buffer, size, nmemb, pfile_dl->handle );
+      return hb_fsWrite( pfile_dl->handle, ( BYTE * ) buffer, size * nmemb );
    }
 
    return -1;
@@ -213,16 +212,20 @@ static void PCURLHANDLE_free( PCURLHANDLE pConn )
       curl_slist_free_all( pConn->sPreQuote );
 
    if( pConn->file_ul.name )
+   {
       hb_xfree( pConn->file_ul.name );
 
-   if( pConn->file_ul.handle )
-      fclose( pConn->file_ul.handle);
+      if( pConn->file_ul.handle != FS_ERROR )
+         hb_fsClose( pConn->file_ul.handle );
+   }
 
    if( pConn->file_dl.name )
+   {
       hb_xfree( pConn->file_dl.name );
 
-   if( pConn->file_dl.handle )
-      fclose( pConn->file_dl.handle);
+      if( pConn->file_dl.handle != FS_ERROR )
+         hb_fsClose( pConn->file_dl.handle );
+   }
 
    if( pConn->pProgress )
       hb_itemRelease( pConn->pProgress );
@@ -791,15 +794,16 @@ HB_FUNC( CURL_EASY_SETOPT )
             {
                hb_xfree( pConn->file_ul.name );
                pConn->file_ul.name = NULL;
+
+               if( pConn->file_ul.handle != FS_ERROR )
+               {
+                  hb_fsClose( pConn->file_ul.handle );
+                  pConn->file_ul.handle = FS_ERROR;
+               }
             }
 
-            if( pConn->file_ul.handle )
-            {
-               fclose( pConn->file_ul.handle );
-               pConn->file_ul.handle = NULL;
-            }
-
-            pConn->file_ul.name = hb_strdup( hb_parc( 3 ) );
+            pConn->file_ul.name = ( BYTE * ) hb_strdup( hb_parc( 3 ) );
+            pConn->file_ul.handle = FS_ERROR;
 
             curl_easy_setopt( pConn->curl, CURLOPT_READFUNCTION, hb_curlReadFunction );
             res = curl_easy_setopt( pConn->curl, CURLOPT_READDATA, ( void * ) &pConn->file_ul );
@@ -812,17 +816,19 @@ HB_FUNC( CURL_EASY_SETOPT )
             {
                hb_xfree( pConn->file_ul.name );
                pConn->file_ul.name = NULL;
-            }
 
-            if( pConn->file_ul.handle )
-            {
-               fclose( pConn->file_ul.handle );
-               pConn->file_ul.handle = NULL;
-
-               res = CURLE_OK;
+               if( pConn->file_ul.handle != FS_ERROR )
+               {
+                  hb_fsClose( pConn->file_ul.handle );
+                  pConn->file_ul.handle = FS_ERROR;
+    
+                  res = CURLE_OK;
+               }
+               else
+                  res = ( CURLcode ) -1;
             }
             else
-               res = ( CURLcode ) -1;
+               res = CURLE_OK;
          }
          break;
 
@@ -832,15 +838,16 @@ HB_FUNC( CURL_EASY_SETOPT )
             {
                hb_xfree( pConn->file_dl.name );
                pConn->file_dl.name = NULL;
+
+               if( pConn->file_dl.handle != FS_ERROR )
+               {
+                  hb_fsClose( pConn->file_dl.handle );
+                  pConn->file_dl.handle = FS_ERROR;
+               }
             }
 
-            if( pConn->file_dl.handle )
-            {
-               fclose( pConn->file_dl.handle );
-               pConn->file_dl.handle = NULL;
-            }
-
-            pConn->file_dl.name = hb_strdup( hb_parc( 3 ) );
+            pConn->file_dl.name = ( BYTE * ) hb_strdup( hb_parc( 3 ) );
+            pConn->file_dl.handle = FS_ERROR;
 
             curl_easy_setopt( pConn->curl, CURLOPT_WRITEFUNCTION, hb_curlWriteFunction );
             res = curl_easy_setopt( pConn->curl, CURLOPT_WRITEDATA, ( void * ) &pConn->file_dl );
@@ -853,17 +860,19 @@ HB_FUNC( CURL_EASY_SETOPT )
             {
                hb_xfree( pConn->file_dl.name );
                pConn->file_dl.name = NULL;
-            }
 
-            if( pConn->file_dl.handle )
-            {
-               fclose( pConn->file_dl.handle );
-               pConn->file_dl.handle = NULL;
-
-               res = CURLE_OK;
+               if( pConn->file_dl.handle != FS_ERROR )
+               {
+                  hb_fsClose( pConn->file_dl.handle );
+                  pConn->file_dl.handle = FS_ERROR;
+    
+                  res = CURLE_OK;
+               }
+               else
+                  res = ( CURLcode ) -1;
             }
             else
-               res = ( CURLcode ) -1;
+               res = CURLE_OK;
          }
          break;
 

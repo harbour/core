@@ -6,7 +6,7 @@
 
 #include "hbcurl.ch"
 
-#define LOCAL_FILE          "ftp_up.prg"
+#define LOCAL_FILE          "ftp_uldl.prg"
 #define UPLOAD_FILE_AS      "ftp_upped.prg"
 #define REMOTE_URL          "ftp://harbour:power@localhost/" + UPLOAD_FILE_AS
 #define RENAME_FILE_TO      "ftp_upped_renamed.prg"
