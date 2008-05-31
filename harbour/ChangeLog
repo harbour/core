@@ -15,8 +15,9 @@
        _declspec( dllimport ) -> __declspec( dllimport )
        to suppress warning: Non-ANSI keyword used: '_declspec'.
        NOTE1: This warning could be normally seen when compiling 
-              contrib/rddads/ads1.c after the recent addition 
-              of -w switch to enable BCC warnings.
+              contrib/rddads/ads1.c, or creating a .dll build 
+              of Harbour, after the recent addition of -w switch 
+              to enable BCC warnings.
        NOTE2: Neither look like ANSI C, and both are undocumented 
               in BCC.
      ; Please test.
