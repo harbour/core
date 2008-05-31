@@ -109,8 +109,6 @@ HB_FUNC( CURL_GLOBAL_CLEANUP )
 
 int hb_curlReadFunction( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
-   printf( "hb_curlReadFunction()\n" );
-
    if( Cargo )
    {
       PFTPFILE pfile_ul = ( PFTPFILE ) Cargo;
@@ -134,8 +132,6 @@ int hb_curlReadFunction( void * buffer, size_t size, size_t nmemb, void * Cargo 
 
 int hb_curlWriteFunction( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
-   printf( "hb_curlWriteFunction()\n" );
-
    if( Cargo )
    {
       PFTPFILE pfile_dl = ( PFTPFILE ) Cargo;
