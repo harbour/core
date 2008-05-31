@@ -59,10 +59,6 @@
 #include "hbcomp.h"
 #include "hbstack.h"
 
-#ifdef HB_MACRO_STATEMENTS
-  #include "hbpp.h"
-#endif
-
 /* various flags for macro compiler */
 #ifdef HB_C52_STRICT
 static ULONG s_macroFlags = HB_SM_SHORTCUTS;
@@ -390,10 +386,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
       HB_MACRO struMacro;
       int iStatus;
       BOOL fFree;
-#ifdef HB_MACRO_STATEMENTS
-      char * pText;
-      char * pOut;
-#endif
+
       struMacro.mode       = HB_MODE_MACRO;
       struMacro.supported  = (flags & HB_SM_RT_MACRO) ? s_macroFlags : flags;
       struMacro.Flags      = HB_MACRO_GEN_PUSH;
@@ -436,42 +429,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
             struMacro.Flags |= HB_MACRO_GEN_PARE;
          }
       }
-
-#ifdef HB_MACRO_STATEMENTS
-      if( struMacro.supported & HB_SM_PREPROC )
-      {
-         char * ptr;
-         int slen;
-
-         pText = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
-         pOut = ( char * ) hb_xgrab( HB_PP_STR_SIZE );
-         ptr = pText;
-         slen = HB_MIN( strlen( struMacro.string ), HB_PP_STR_SIZE - 1 );
-         memcpy( pText, struMacro.string, slen );
-         pText[ slen ] = 0;
-         memset( pOut, 0, HB_PP_STR_SIZE );
-
-         HB_SKIPTABSPACES( ptr );
-
-         if( !hb_pp_topDefine )
-         {
-            hb_pp_Table();
-         }
-
-         hb_pp_ParseExpression( ptr, pOut );
-         struMacro.string = pText;
-         struMacro.length = strlen( pText );
-      }
-#endif
-
       iStatus = hb_macroParse( &struMacro );
-#ifdef HB_MACRO_STATEMENTS
-      if( struMacro.supported & HB_SM_PREPROC )
-      {
-         hb_xfree( pText );
-         hb_xfree( pOut );
-      }
-#endif
       hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
       {
@@ -962,14 +920,6 @@ HB_FUNC( HB_SETMACRO )
 
           case HB_SM_XBASE:
              /* enable/disable extended xbase compatibility */
-             hb_retl( s_macroFlags & ulFlags );
-             pValue = hb_param( 2, HB_IT_LOGICAL );
-             if( pValue )
-                hb_macroSetMacro( hb_itemGetL( pValue ), ulFlags );
-             break;
-
-          case HB_SM_PREPROC :
-             /* enable/disable preprocessing before compilation */
              hb_retl( s_macroFlags & ulFlags );
              pValue = hb_param( 2, HB_IT_LOGICAL );
              if( pValue )

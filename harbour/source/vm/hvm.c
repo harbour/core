@@ -90,12 +90,6 @@
 
 #include "hbmemory.ch"
 
-#ifdef HB_MACRO_STATEMENTS
-   #include "hbpp.h"
-#endif
-
-/* DEBUG only*/
-/* #include <windows.h> */
 
 HB_FUNC_EXTERN( SYSINIT );
 
@@ -507,10 +501,6 @@ HB_EXPORT int hb_vmQuit( void )
    HB_TRACE(HB_TR_DEBUG, ("hb_vmQuit()"));
 
    hb_vmDoExitFunctions(); /* process defined EXIT functions */
-
-   #ifdef HB_MACRO_STATEMENTS
-      hb_pp_Free();
-   #endif
 
    hb_idleShutDown();
 

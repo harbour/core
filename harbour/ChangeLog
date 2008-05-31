@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-31 14:44 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbmacro.ch
+  * harbour/source/vm/macro.c
+  * harbour/source/vm/hvm.c
+    - removed HB_MACRO_STATEMENTS and HB_SM_PREPROC
+
 2008-05-31 13:15 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
    * contrib/hbcurl/tests/ftp_uldl.prg
