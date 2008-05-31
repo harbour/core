@@ -1169,7 +1169,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
       #define HB_EXPORT __attribute__ ((visibility ("default")))
 
    #elif defined( __BORLANDC__ )
-      #define HB_EXPORT _declspec( dllexport )
+      #define HB_EXPORT __declspec( dllexport )
 
    #elif defined( __WATCOMC__ )
       #define HB_EXPORT __declspec( dllexport )
@@ -1200,7 +1200,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
    #define HB_IMPORT __attribute__ (( dllimport ))
 
 #elif defined( __BORLANDC__ )
-   #define HB_IMPORT _declspec( dllimport )
+   #define HB_IMPORT __declspec( dllimport )
 
 #elif defined( __WATCOMC__ )
    #define HB_IMPORT __declspec( dllimport )

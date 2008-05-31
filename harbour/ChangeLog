@@ -8,6 +8,32 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-31 09:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbdefs.h
+     * For __BORLANDC__:
+       _declspec( dllexport ) -> __declspec( dllexport )
+       _declspec( dllimport ) -> __declspec( dllimport )
+       to suppress warning: Non-ANSI keyword used: '_declspec'.
+       NOTE1: This warning could be normally seen when compiling 
+              contrib/rddads/ads1.c after the recent addition 
+              of -w switch to enable BCC warnings.
+       NOTE2: Neither look like ANSI C, and both are undocumented 
+              in BCC.
+     ; Please test.
+
+   * include/hberrors.h
+   * source/compiler/hbgenerr.c
+     + Pointless historical surprise added.
+
+   * contrib/mtpl_b32.mak
+     - Removed duplicate -d switch.
+
+   * contrib/rddads/ads1.c
+     + Empty line.
+
+   * TODO
+     - Removed TBrowse() item.
+
 2008-05-30 22:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/pp/ppcore.c
      * "hb_inLine" -> "hb_inline"

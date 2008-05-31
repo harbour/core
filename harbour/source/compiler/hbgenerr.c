@@ -97,7 +97,13 @@ const char * hb_comp_szErrors[] =
    "Code block size too big",
    "%s not declared with variable number of parameters",
    "Can't find %s file",
-   "Invalid ALWAYS after %s in RECOVER code"
+   "Invalid ALWAYS after %s in RECOVER code",
+   /* Some historical, funny sounding error messages from original CA-Cl*pper. 
+      They serve no purpose whatsoever. [vszakats] */
+   "END wreaks terrible vengeance on control stack",
+   "Control level closure leaves gaping wound in control stack",
+   "Ford Maverick error number",
+   "Something terrible has happened"
 };
 
 /* Table with parse warnings */

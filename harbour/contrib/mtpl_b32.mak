@@ -119,7 +119,7 @@ HB_BUILD_MODE  =
 
 #**********************************************************
 
-CFLAGS = -I$(INCLUDE_DIR) -d $(C_USR) $(CFLAGS) $(HB_BUILD_MODE)
+CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) $(HB_BUILD_MODE)
 
 #-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
