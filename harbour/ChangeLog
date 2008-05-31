@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-05-31 11:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/debugger.prg
+    * removed some unused var, formatting
+
+  * harbour/source/pp/ppcore.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/common/hbdate.c
+    * casting
+
+  * harbour/source/common/hbstr.c
+    * casting
+    * use HB_ISSPACE() instead of isspace() for strict Clipper
+      compatibility
+
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    ! never use 'char' to 'int' casting for parameters of
+      toupper()/to*()/isuper()/is*() functions
+
 2008-05-31 09:57 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbdefs.h
      * For __BORLANDC__:

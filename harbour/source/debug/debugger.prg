@@ -1122,7 +1122,10 @@ METHOD EditColor( nColor, oBrwColors ) CLASS HBDebugger
    READ
    SetCursor( SC_NONE )
 #else
-   cColor := getdbginput( Row(), Col() + 15, cColor, { | cColor | iif( Type( cColor ) != "C", ( Alert( "Must be string" ), .F. ), .T. ) }, SubStr( ::ClrModal(), 5 ) )
+   cColor := getdbginput( Row(), Col() + 15, cColor, ;
+                           { | cColor | iif( Type( cColor ) != "C", ;
+                                 ( Alert( "Must be string" ), .F. ), .T. ) }, ;
+                           SubStr( ::ClrModal(), 5 ) )
 #endif
 
    Set( _SET_SCOREBOARD, lPrevScore )
@@ -1156,7 +1159,10 @@ METHOD EditSet( nSet, oBrwSets ) CLASS HBDebugger
    READ
    SetCursor( SC_NONE )
 #else
-   cSet := getdbginput( Row(), Col() + 13, cSet, { | cSet | iif( Type( cSet ) != cType, ( Alert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, SubStr( ::ClrModal(), 5 ) )
+   cSet := getdbginput( Row(), Col() + 13, cSet, ;
+               { | cSet | iif( Type( cSet ) != cType,
+                  ( Alert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, ;
+               SubStr( ::ClrModal(), 5 ) )
 #endif
 
    Set( _SET_SCOREBOARD, lPrevScore )
@@ -1543,13 +1549,13 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
    LOCAL nWidth  := nRight - nLeft - 1
    LOCAL cPicture
    LOCAL uTemp
-   LOCAL GetList := {}
    LOCAL nOldCursor
    LOCAL lScoreBoard := Set( _SET_SCOREBOARD, .F. )
    LOCAL lExit
    LOCAL oWndInput := HBDbWindow():New( nTop, nLeft, nBottom, nRight, cMsg,;
                                        ::oPullDown:cClrPopup )
 #ifndef HB_NO_READDBG
+   LOCAL GetList := {}
    LOCAL bMouseSave
    LOCAL oGet
 #endif
@@ -1683,7 +1689,6 @@ METHOD ListBox( cCaption, aItems ) CLASS HBDebugger
    LOCAL oWndList
    LOCAL cSelected := ""
    LOCAL cColors
-   LOCAL GetList := {}
    LOCAL n
 
    nItems := Len( aItems )

@@ -1238,7 +1238,7 @@ Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( HB_COMP_PARAM, $2 ); HB
                    if( ! HB_COMP_PARAM->pLastDeclared->pClass )
                    {
                      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, HB_COMP_PARAM->pLastDeclared->szName );
-                     HB_COMP_PARAM->pLastDeclared->cType = ( isupper(  ( int ) HB_COMP_PARAM->cVarType ) ? 'O' : 'o' );
+                     HB_COMP_PARAM->pLastDeclared->cType = ( isupper( ( UCHAR ) HB_COMP_PARAM->cVarType ) ? 'O' : 'o' );
                    }
 
                    /* Resetting */
@@ -1277,7 +1277,7 @@ DecMethod  : IdentName '(' { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_C
                    if( ! HB_COMP_PARAM->pLastMethod->pClass )
                    {
                      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
-                     HB_COMP_PARAM->pLastMethod->cType = ( isupper(  ( int ) HB_COMP_PARAM->cVarType ) ? 'O' : 'o' );
+                     HB_COMP_PARAM->pLastMethod->cType = ( isupper( ( UCHAR ) HB_COMP_PARAM->cVarType ) ? 'O' : 'o' );
                    }
 
                    HB_COMP_PARAM->szFromClass = NULL;
@@ -1307,7 +1307,7 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                      if( ! HB_COMP_PARAM->pLastMethod->pClass )
                      {
                         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_CLASS_NOT_FOUND, HB_COMP_PARAM->szFromClass, HB_COMP_PARAM->pLastMethod->szName );
-                        HB_COMP_PARAM->pLastMethod->cType = ( isupper(  ( int ) HB_COMP_PARAM->cVarType ) ? 'O' :'o' );
+                        HB_COMP_PARAM->pLastMethod->cType = ( isupper( ( UCHAR ) HB_COMP_PARAM->cVarType ) ? 'O' :'o' );
                      }
                   }
                   else

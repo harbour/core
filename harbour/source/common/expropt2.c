@@ -280,7 +280,7 @@ HB_EXPR_PTR hb_compExprReduceMult( HB_EXPR_PTR pSelf, HB_COMP_DECL )
          {
             pSelf->value.asNum.val.d = pLeft->value.asNum.val.d * pRight->value.asNum.val.d;
             pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
-            pSelf->value.asNum.bDec = pLeft->value.asNum.bDec + pRight->value.asNum.bDec;
+            pSelf->value.asNum.bDec = ( UCHAR ) ( pLeft->value.asNum.bDec + pRight->value.asNum.bDec );
             pSelf->value.asNum.NumType = HB_ET_DOUBLE;
 
             break;
@@ -1681,7 +1681,7 @@ BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
                   fDealloc = TRUE;
                }
                do
-                  szValue[ ulLen ] = toupper( (unsigned char) szValue[ ulLen ] );
+                  szValue[ ulLen ] = ( char ) toupper( ( unsigned char ) szValue[ ulLen ] );
                while( ++ulLen < pArg->ulLength );
             }
          }

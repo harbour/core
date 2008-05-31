@@ -1049,7 +1049,7 @@ HB_EXPR_PTR hb_compExprNewNegate( HB_EXPR_PTR pNegExpr, HB_COMP_DECL )
       if( pNegExpr->value.asNum.NumType == HB_ET_DOUBLE )
       {
          pNegExpr->value.asNum.val.d = - pNegExpr->value.asNum.val.d;
-         pNegExpr->value.asNum.bWidth = HB_DBL_LENGTH( pNegExpr->value.asNum.val.d );
+         pNegExpr->value.asNum.bWidth = ( UCHAR ) HB_DBL_LENGTH( pNegExpr->value.asNum.val.d );
       }
       else
       {
@@ -1058,7 +1058,7 @@ HB_EXPR_PTR hb_compExprNewNegate( HB_EXPR_PTR pNegExpr, HB_COMP_DECL )
          {
             pNegExpr->value.asNum.NumType = HB_ET_DOUBLE;
             pNegExpr->value.asNum.val.d = - ( double ) pNegExpr->value.asNum.val.l;
-            pNegExpr->value.asNum.bWidth = HB_DBL_LENGTH( pNegExpr->value.asNum.val.d );
+            pNegExpr->value.asNum.bWidth = ( UCHAR ) HB_DBL_LENGTH( pNegExpr->value.asNum.val.d );
             pNegExpr->value.asNum.bDec = 0;
          }
          else

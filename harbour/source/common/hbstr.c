@@ -124,7 +124,7 @@ HB_EXPORT char * hb_strupr( char * pszText )
    HB_TRACE(HB_TR_DEBUG, ("hb_strupr(%s)", pszText));
 
    for( pszPos = pszText; *pszPos; pszPos++ )
-      *pszPos = toupper( ( UCHAR ) *pszPos );
+      *pszPos = ( char ) toupper( ( UCHAR ) *pszPos );
 
    return pszText;
 }
@@ -136,7 +136,7 @@ HB_EXPORT char * hb_strlow( char * pszText )
    HB_TRACE(HB_TR_DEBUG, ("hb_strlow(%s)", pszText));
 
    for( pszPos = pszText; *pszPos; pszPos++ )
-      *pszPos = tolower( ( UCHAR ) *pszPos );
+      *pszPos = ( char ) tolower( ( UCHAR ) *pszPos );
 
    return pszText;
 }
@@ -196,8 +196,8 @@ HB_EXPORT int hb_stricmp( const char * s1, const char * s2 )
 
    do
    {
-      c1 = toupper( (unsigned char) *s1 );
-      c2 = toupper( (unsigned char) *s2 );
+      c1 = toupper( ( unsigned char ) *s1 );
+      c2 = toupper( ( unsigned char ) *s2 );
 
       if( c1 != c2 )
       {
@@ -223,8 +223,8 @@ HB_EXPORT int hb_strnicmp( const char * s1, const char * s2, ULONG count )
 
    for( ulCount = 0; ulCount < count; ulCount++ )
    {
-      unsigned char c1 = toupper( (unsigned char) s1[ ulCount ] );
-      unsigned char c2 = toupper( (unsigned char) s2[ ulCount ] );
+      unsigned char c1 = ( char ) toupper( ( unsigned char ) s1[ ulCount ] );
+      unsigned char c2 = ( char ) toupper( ( unsigned char ) s2[ ulCount ] );
 
       if( c1 != c2 )
       {
@@ -506,7 +506,7 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
 
    HB_TRACE(HB_TR_DEBUG, ("hb_str2number(%d, %p, %lu, %p, %p, %p, %p)", (int) fPCode, szNum, ulLen, lVal, dVal, piDec, piWidth ));
 
-   while( ulPos < ulLen && isspace( (BYTE) szNum[ulPos] ) )
+   while( ulPos < ulLen && HB_ISSPACE( szNum[ulPos] ) )
       ulPos++;
 
    if( ulPos >= ulLen )
@@ -794,13 +794,13 @@ HB_EXPORT char * hb_strncpyLower( char * pDest, const char * pSource, ULONG ulLe
 
    /* some compilers implement tolower as a macro, and this has side effects! */
    /* *pDest++ = tolower( *pSource++ ); */
-   while( ulLen && (*pDest++ = tolower( *pSource )) != '\0' )
+   while( ulLen && ( *pDest++ = ( char ) tolower( ( UCHAR ) *pSource ) ) != '\0' )
    {
       ulLen--;
       pSource++;
    }
 
-   while(ulLen--)
+   while( ulLen-- )
    {
       *pDest++ = '\0';
    }
@@ -825,13 +825,13 @@ HB_EXPORT char * hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLe
 
    /* some compilers implement toupper as a macro, and this has side effects! */
    /* *pDest++ = toupper( *pSource++ ); */
-   while( ulLen && (*pDest++ = toupper( *pSource )) != '\0' )
+   while( ulLen && ( *pDest++ = ( char ) toupper( ( UCHAR ) *pSource ) ) != '\0' )
    {
       ulLen--;
       pSource++;
    }
 
-   while(ulLen--)
+   while( ulLen-- )
    {
       *pDest++ = '\0';
    }
@@ -867,7 +867,8 @@ HB_EXPORT char * hb_strncpyUpperTrim( char * pDest, const char * pSource, ULONG 
 
    /* some compilers impliment toupper as a macro, and this has side effects! */
    /* *pDest++ = toupper( *pSource++ ); */
-   while( ulLen && ulSLen && (*pDest++ = toupper( *pSource )) != '\0' )
+   while( ulLen && ulSLen &&
+          ( *pDest++ = ( char ) toupper( ( UCHAR ) *pSource ) ) != '\0' )
    {
       ulSLen--;
       ulLen--;

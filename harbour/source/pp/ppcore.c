@@ -690,7 +690,7 @@ static void hb_pp_readLine( PHB_PP_STATE pState )
       /* Clipper strips \r characters even from quoted strings */
       else if( ch != '\r' )
       {
-         hb_membufAddCh( pState->pBuffer, ch );
+         hb_membufAddCh( pState->pBuffer, ( char ) ch );
       }
    }
    pState->iLineTot += iLine;
