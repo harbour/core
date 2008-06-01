@@ -173,7 +173,7 @@
 #define HB_CURLOPT_MAXFILESIZE_LARGE          117
 #define HB_CURLOPT_NETRC_FILE                 118
 #define HB_CURLOPT_USE_SSL                    119
-#define HB_CURLOPT_FTP_SSL                    CURLOPT_USE_SSL
+#define HB_CURLOPT_FTP_SSL                    HB_CURLOPT_USE_SSL
 #define HB_CURLOPT_POSTFIELDSIZE_LARGE        120
 #define HB_CURLOPT_TCP_NODELAY                121
 #define HB_CURLOPT_SOURCE_USERPWD             123
@@ -245,12 +245,12 @@
 /* HB_CURLOPT_HTTPAUTH option */
 
 #define HB_CURLAUTH_NONE                      0                   /* nothing */
-#define HB_CURLAUTH_BASIC                     ( 1 * ( 2 ** 0 ) )  /* Basic (default) */
-#define HB_CURLAUTH_DIGEST                    ( 1 * ( 2 ** 1 ) )  /* Digest */
-#define HB_CURLAUTH_GSSNEGOTIATE              ( 1 * ( 2 ** 2 ) )  /* GSS-Negotiate */
-#define HB_CURLAUTH_NTLM                      ( 1 * ( 2 ** 3 ) )  /* NTLM */
+#define HB_CURLAUTH_BASIC                     ( 2 ** 0 )          /* Basic (default) */
+#define HB_CURLAUTH_DIGEST                    ( 2 ** 1 )          /* Digest */
+#define HB_CURLAUTH_GSSNEGOTIATE              ( 2 ** 2 )          /* GSS-Negotiate */
+#define HB_CURLAUTH_NTLM                      ( 2 ** 3 )          /* NTLM */
 #define HB_CURLAUTH_ANY                       hb_BitNot( 0 )      /* all types set */
-#define HB_CURLAUTH_ANYSAFE                   hb_BitNot( CURLAUTH_BASIC )
+#define HB_CURLAUTH_ANYSAFE                   hb_BitNot( HB_CURLAUTH_BASIC )
 
 /* HB_CURLOPT_HTTP_VERSION option */
 
@@ -300,20 +300,28 @@
 /*  HB_CURLOPT_SSH_AUTH_TYPES option */
 #define HB_CURL_CURLSSH_AUTH_ANY              hb_BitNot( 0 )      /* all types supported by the server */
 #define HB_CURL_CURLSSH_AUTH_NONE             0                   /* none allowed, silly but complete */
-#define HB_CURL_CURLSSH_AUTH_PUBLICKEY        ( 1 * ( 2 ** 0 ) )  /* public/private key files */
-#define HB_CURL_CURLSSH_AUTH_PASSWORD         ( 1 * ( 2 ** 1 ) )  /* password */
-#define HB_CURL_CURLSSH_AUTH_HOST             ( 1 * ( 2 ** 2 ) )  /* host key files */
-#define HB_CURL_CURLSSH_AUTH_KEYBOARD         ( 1 * ( 2 ** 3 ) )  /* keyboard interactive */
-#define HB_CURL_CURLSSH_AUTH_DEFAULT          CURLSSH_AUTH_ANY
+#define HB_CURL_CURLSSH_AUTH_PUBLICKEY        ( 2 ** 0 )          /* public/private key files */
+#define HB_CURL_CURLSSH_AUTH_PASSWORD         ( 2 ** 1 )          /* password */
+#define HB_CURL_CURLSSH_AUTH_HOST             ( 2 ** 2 )          /* host key files */
+#define HB_CURL_CURLSSH_AUTH_KEYBOARD         ( 2 ** 3 )          /* keyboard interactive */
+#define HB_CURL_CURLSSH_AUTH_DEFAULT          HB_CURLSSH_AUTH_ANY
 
 /* curl_easy_pause() parameters. They can be combined with hb_BitOr(). */
 
-#define HB_CURLPAUSE_RECV                     ( 1 * ( 2 ** 0 ) )
+#define HB_CURLPAUSE_RECV                     ( 2 ** 0 )
 #define HB_CURLPAUSE_RECV_CONT                0
-#define HB_CURLPAUSE_SEND                     ( 1 * ( 2 ** 2 ) )
+#define HB_CURLPAUSE_SEND                     ( 2 ** 2 )
 #define HB_CURLPAUSE_SEND_CONT                0
 #define HB_CURLPAUSE_ALL                      hb_BitOr( HB_CURLPAUSE_RECV, HB_CURLPAUSE_SEND )
 #define HB_CURLPAUSE_CONT                     hb_BitOr( HB_CURLPAUSE_RECV_CONT, HB_CURLPAUSE_SEND_CONT )
+
+/* curl_global_init() parameters. */
+
+#define HB_CURL_GLOBAL_SSL                    ( 2 ** 0 )
+#define HB_CURL_GLOBAL_WIN32                  ( 2 ** 1 )
+#define HB_CURL_GLOBAL_ALL                    hb_BitOr( HB_CURL_GLOBAL_SSL, HB_CURL_GLOBAL_WIN32 )
+#define HB_CURL_GLOBAL_NOTHING                0
+#define HB_CURL_GLOBAL_DEFAULT                HB_CURL_GLOBAL_ALL
 
 /* curl_easy_getinfo() parameters.
    (the actual values may be different from the libcurl equivalent) */
