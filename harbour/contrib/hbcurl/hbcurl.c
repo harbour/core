@@ -1468,4 +1468,3 @@ HB_FUNC( CURL_GETDATE )
    hb_retnll(           curl_getdate( hb_parcx( 1 ), NULL ) );
 #endif
 }
-
