@@ -73,8 +73,8 @@
    #define HB_CURL_OPT_LARGEN( n ) ( ( curl_off_t ) hb_parnll( 3 ) ) /* TOFIX */
 #endif
 
-/* NOTE: Since LIBCURL_VERSION_NUM doesn't reflect real revision, 
-         we're simply redefining it to the latest version available, 
+/* NOTE: Since LIBCURL_VERSION_NUM doesn't reflect real revision,
+         we're simply redefining it to the latest version available,
          and use the #ifs for documentation purposes only. [vszakats] */
 #ifdef LIBCURL_VERSION_NUM
    #undef LIBCURL_VERSION_NUM
@@ -108,7 +108,7 @@ typedef struct _HB_CURL
 
 #ifdef _HB_CURL_REDEF_MEM
 
-/* NOTE/TOFIX: _HB_CURL_REDEF_MEM doesn't work at this moment, as hb_xgrab() is 
+/* NOTE/TOFIX: _HB_CURL_REDEF_MEM doesn't work at this moment, as hb_xgrab() is
                getting pointers not allocated by our allocators. [vszakats] */
 
 void * hb_curl_xgrab( size_t size )
@@ -171,7 +171,7 @@ size_t hb_curl_read_callback( void * buffer, size_t size, size_t nmemb, void * C
       if( hb_curl->ul_handle == FS_ERROR )
       {
          hb_curl->ul_handle = hb_fsOpen( hb_curl->ul_name, FO_READ );
-         
+
          if( hb_curl->ul_handle == FS_ERROR )
             return -1;
       }
@@ -193,7 +193,7 @@ size_t hb_curl_write_callback( void * buffer, size_t size, size_t nmemb, void * 
       if( hb_curl->dl_handle == FS_ERROR )
       {
          hb_curl->dl_handle = hb_fsCreate( hb_curl->dl_name, FC_NORMAL );
-         
+
          if( hb_curl->dl_handle == FS_ERROR )
             return -1;
       }
@@ -210,9 +210,9 @@ int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow, doubl
    {
       PHB_ITEM p1 = hb_itemPutND( NULL, ulnow   > 0 ? ulnow   : dlnow   );
       PHB_ITEM p2 = hb_itemPutND( NULL, ultotal > 0 ? ultotal : dltotal );
-      
+
       BOOL bResult = hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) Cargo, 2, p1, p2 ) );
-      
+
       hb_itemRelease( p1 );
       hb_itemRelease( p2 );
 
@@ -250,7 +250,7 @@ static void hb_curl_file_ul_free( PHB_CURL hb_curl )
    {
       hb_xfree( hb_curl->ul_name );
       hb_curl->ul_name = NULL;
-   
+
       if( hb_curl->ul_handle != FS_ERROR )
       {
          hb_fsClose( hb_curl->ul_handle );
@@ -265,7 +265,7 @@ static void hb_curl_file_dl_free( PHB_CURL hb_curl )
    {
       hb_xfree( hb_curl->dl_name );
       hb_curl->dl_name = NULL;
-   
+
       if( hb_curl->dl_handle != FS_ERROR )
       {
          hb_fsClose( hb_curl->dl_handle );
@@ -296,7 +296,7 @@ static void PHB_CURL_free( PHB_CURL hb_curl, BOOL bFree )
       curl_easy_setopt( hb_curl->curl, CURLOPT_POSTQUOTE, NULL );
       curl_easy_setopt( hb_curl->curl, CURLOPT_PREQUOTE, NULL );
       curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, NULL );
-      
+
       hb_curl_form_free( &hb_curl->pHTTPPOST_First );
       hb_curl_form_free( &hb_curl->pHTTPPOST_Last );
       hb_curl_slist_free( &hb_curl->pHTTPHEADER );
@@ -305,16 +305,16 @@ static void PHB_CURL_free( PHB_CURL hb_curl, BOOL bFree )
       hb_curl_slist_free( &hb_curl->pPOSTQUOTE );
       hb_curl_slist_free( &hb_curl->pPREQUOTE );
       hb_curl_slist_free( &hb_curl->pTELNETOPTIONS );
-      
+
       hb_curl_file_ul_free( hb_curl );
       hb_curl_file_dl_free( hb_curl );
-      
+
       if( hb_curl->pProgressBlock )
       {
          hb_itemRelease( hb_curl->pProgressBlock );
          hb_curl->pProgressBlock = NULL;
       }
-      
+
       if( bFree )
       {
          curl_easy_cleanup( hb_curl->curl );
@@ -323,12 +323,12 @@ static void PHB_CURL_free( PHB_CURL hb_curl, BOOL bFree )
       else
          curl_easy_reset( hb_curl->curl );
    }
-   
+
    if( bFree )
       hb_xfree( hb_curl );
 }
 
-/* NOTE: Will create a new one. If 'from' is specified, the new one 
+/* NOTE: Will create a new one. If 'from' is specified, the new one
          will be based on the 'from' one. */
 
 static PHB_CURL PHB_CURL_create( CURL * from )
@@ -338,10 +338,10 @@ static PHB_CURL PHB_CURL_create( CURL * from )
    if( curl )
    {
       PHB_CURL hb_curl = ( PHB_CURL ) hb_xgrab( sizeof( HB_CURL ) );
-      
+
       memset( ( void * ) hb_curl, 0, sizeof( HB_CURL ) );
       hb_curl->curl = curl;
-      
+
       return hb_curl;
    }
    else
@@ -452,7 +452,7 @@ HB_FUNC( CURL_EASY_SEND )
    if( hb_curl )
    {
       size_t size = 0;
-      
+
       hb_retnl( ( long ) curl_easy_send( hb_curl->curl, ( void * ) hb_parcx( 2 ), ( size_t ) hb_parclen( 2 ), &size ) );
 
       hb_stornl( size, 3 );
@@ -468,14 +468,14 @@ HB_FUNC( CURL_EASY_RECV )
    {
       size_t size = ( size_t ) hb_parclen( 2 );
       void * buffer;
-      
+
       if( size < 1024 )
          size = 1024;
-      
+
       buffer = hb_xgrab( size );
-      
+
       hb_retnl( ( long ) curl_easy_recv( hb_curl->curl, buffer, size, &size ) );
-      
+
       hb_storclen_buffer( ( char * ) buffer, size, 2 );
    }
 }
@@ -534,7 +534,7 @@ HB_FUNC( CURL_EASY_SETOPT )
       /* HB_CURLOPT_CONV_TO_NETWORK_FUNCTION */
       /* HB_CURLOPT_CONV_FROM_NETWORK_FUNCTION */
       /* HB_CURLOPT_CONV_FROM_UTF8_FUNCTION */
-      
+
       /* Error */
 
       /* HB_CURLOPT_ERRORBUFFER */
@@ -656,18 +656,18 @@ HB_FUNC( CURL_EASY_SETOPT )
                PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
-               
+
                for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
                {
                   PHB_ITEM pSubArray = hb_arrayGetItemPtr( pArray, ulPos + 1 );
-               
+
                   curl_formadd( &hb_curl->pHTTPPOST_First,
                                 &hb_curl->pHTTPPOST_Last,
                                 CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 1 ),
                                 CURLFORM_FILE, hb_arrayGetCPtr( pSubArray, 2 ),
                                 CURLFORM_END );
                }
-               
+
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPOST, hb_curl->pHTTPPOST_First );
             }
          }
@@ -688,10 +688,10 @@ HB_FUNC( CURL_EASY_SETOPT )
                PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
-               
+
                for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
                   curl_slist_append( hb_curl->pHTTPHEADER, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
-               
+
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPHEADER, hb_curl->pHTTPHEADER );
             }
          }
@@ -706,10 +706,10 @@ HB_FUNC( CURL_EASY_SETOPT )
                PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
-               
+
                for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
                   curl_slist_append( hb_curl->pHTTP200ALIASES, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
-               
+
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP200ALIASES, hb_curl->pHTTP200ALIASES );
             }
          }
@@ -760,10 +760,10 @@ HB_FUNC( CURL_EASY_SETOPT )
                PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
-              
+
                for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
                   curl_slist_append( hb_curl->pQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
-              
+
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_QUOTE, hb_curl->pQUOTE );
             }
          }
@@ -778,10 +778,10 @@ HB_FUNC( CURL_EASY_SETOPT )
                PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
-              
+
                for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
                   curl_slist_append( hb_curl->pPOSTQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
-              
+
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_POSTQUOTE, hb_curl->pPOSTQUOTE );
             }
          }
@@ -796,10 +796,10 @@ HB_FUNC( CURL_EASY_SETOPT )
                PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
-             
+
                for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
                   curl_slist_append( hb_curl->pQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
-             
+
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_PREQUOTE, hb_curl->pPREQUOTE );
             }
          }
@@ -1041,10 +1041,10 @@ HB_FUNC( CURL_EASY_SETOPT )
                PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
-               
+
                for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
                   curl_slist_append( hb_curl->pTELNETOPTIONS, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
-               
+
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, hb_curl->pTELNETOPTIONS );
             }
          }
@@ -1087,7 +1087,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             {
                hb_curl->ul_name = ( BYTE * ) hb_strdup( hb_parc( 3 ) );
                hb_curl->ul_handle = FS_ERROR;
-               
+
                curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_callback );
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, ( void * ) hb_curl );
             }
@@ -1109,7 +1109,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             {
                hb_curl->dl_name = ( BYTE * ) hb_strdup( hb_parc( 3 ) );
                hb_curl->dl_handle = FS_ERROR;
-               
+
                curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_write_callback );
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, ( void * ) hb_curl );
             }
@@ -1324,7 +1324,7 @@ HB_FUNC( CURL_EASY_GETINFO )
                /* Count */
                for( walk_ret_slist = ret_slist, nCount = 0; walk_ret_slist->next; nCount++ )
                   walk_ret_slist = walk_ret_slist->next;
-               
+
                /* Fill */
                pArray = hb_itemArrayNew( nCount );
                for( walk_ret_slist = ret_slist, nCount = 1; walk_ret_slist->next; )
@@ -1411,11 +1411,11 @@ HB_FUNC( CURL_VERSION_INFO )
    {
       PHB_ITEM pArray = hb_itemArrayNew( 13 );
 
-      hb_arraySetC(  pArray,  1, data->version );                     /* LIBCURL_VERSION */                    
-      hb_arraySetNI( pArray,  2, data->version_num );                 /* LIBCURL_VERSION_NUM */                
+      hb_arraySetC(  pArray,  1, data->version );                     /* LIBCURL_VERSION */
+      hb_arraySetNI( pArray,  2, data->version_num );                 /* LIBCURL_VERSION_NUM */
       hb_arraySetC(  pArray,  3, data->host );                        /* OS/host/cpu/machine when configured */
-      hb_arraySetNI( pArray,  4, data->features );                    /* bitmask, see defines below */         
-      hb_arraySetC(  pArray,  5, data->ssl_version );                 /* human readable string */     
+      hb_arraySetNI( pArray,  4, data->features );                    /* bitmask, see defines below */
+      hb_arraySetC(  pArray,  5, data->ssl_version );                 /* human readable string */
       hb_arraySetNI( pArray,  6, data->ssl_version_num );             /* not used anymore, always 0 */
       hb_arraySetC(  pArray,  7, data->libz_version );                /* human readable string */
       hb_arraySetC(  pArray,  9, data->age >= CURLVERSION_SECOND ? data->ares : NULL );
@@ -1428,13 +1428,13 @@ HB_FUNC( CURL_VERSION_INFO )
          PHB_ITEM pProtocols;
          int nCount = 0;
          const char * const * prot = data->protocols;
-   
+
          while( *( prot++ ) )
             nCount++;
-   
+
          pProtocols = hb_arrayGetItemPtr( pArray, 8 );
          hb_arrayNew( pProtocols, nCount );
-   
+
          for( prot = data->protocols, nCount = 1; *prot; prot++ )
             hb_arraySetC( pProtocols, nCount++, *prot );
       }
@@ -1468,3 +1468,4 @@ HB_FUNC( CURL_GETDATE )
    hb_retnll(           curl_getdate( hb_parcx( 1 ), NULL ) );
 #endif
 }
+
