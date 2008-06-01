@@ -410,7 +410,7 @@ static BOOL hb_clsDictRealloc( PCLASS pClass )
       ulNewHashKey <<= 1;
       if( ulNewHashKey > HASH_KEYMAX )
       {
-         hb_errInternal( 6002, "Unable to realloc class message in __clsDictRealloc", NULL, NULL );
+         hb_errInternal( 6002, "Unable to realloc class message in __clsDictRealloc()", NULL, NULL );
          return FALSE;
       }
 
@@ -2828,7 +2828,7 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
 
          default:
 
-            hb_errInternal( HB_EI_CLSINVMETHOD, NULL, "__clsAddMsg", NULL );
+            hb_errInternal( HB_EI_CLSINVMETHOD, NULL, "__clsAddMsg()", NULL );
             return FALSE;
       }
 
@@ -3101,7 +3101,7 @@ static USHORT hb_clsNew( const char * szClassName, USHORT uiDatas,
                             pMethod->pFuncSym == &s___msgGetClsData )
                         {
                            if( pMethod->uiData > nLenClsDatas )
-                              hb_errInternal( HB_EI_CLSINVMETHOD, NULL, "__clsNew", NULL );
+                              hb_errInternal( HB_EI_CLSINVMETHOD, NULL, "__clsNew()", NULL );
 
                            if( puiClassData[ pMethod->uiData - 1 ] == 0 )
                            {

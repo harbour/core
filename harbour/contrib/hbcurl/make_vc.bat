@@ -17,7 +17,10 @@ goto POST_EXIT
 if "%HB_INC_CURL%" == "" set HB_INC_CURL=%HB_DIR_CURL%\include
 set CFLAGS=-I"%HB_INC_CURL%"
 set _HB_DLL_NAME=libcurl
-set _HB_DLL_DIR=%HB_DIR_CURL%
+if exist "%HB_DIR_CURL%\bin\%_HB_DLL_NAME%.dll" set _HB_DLL_DIR=%HB_DIR_CURL%\bin
+if exist "%HB_DIR_CURL%\%_HB_DLL_NAME%.dll"     set _HB_DLL_DIR=%HB_DIR_CURL%
+
+echo Using this .dll: "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll"
 
 rem ---------------------------------------------------------------
 

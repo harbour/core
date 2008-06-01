@@ -8,6 +8,53 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-01 13:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/vm/extrap.c
+     ! Fixed missing header for OS/2.
+
+   * source/vm/classes.c
+     ! Minor fix in internal error text.
+
+   * contrib/hbcurl/make_b32.bat
+   * contrib/hbcurl/make_vc.bat
+   * contrib/hbcurl/hbcurl.c
+   * contrib/hbcurl/hbcurl.ch
+   * contrib/hbcurl/tests/ftp_uldl.prg
+     ! non-GNU make will also look into the /bin folder 
+       for .dlls.
+     ! Lots of fixes, too many to mention.
+     + Enabled GC pointers. (see TOFIX though)
+     + Added all remaining CURL 'easy' API parts and 
+       implemented all options existing in 7.18.1:
+       + All option values (except bit-level ones) made available in hbcurl.ch
+       + All options updated to latest CURL version in hbcurl.ch
+       + All error codes made available in hbcurl.ch
+       + CURL_EASY_DUPLICATE()
+       + CURL_EASY_RESET()
+       + CURL_EASY_PAUSE()
+       + CURL_EASY_SEND() (not yet available in stable builds)
+       + CURL_EASY_RECV() (not yet available in stable builds)
+       + CURL_EASY_GETINFO()
+       + CURL_ESCAPE() (obsolete)
+       + CURL_UNESCAPE() (obsolete)
+       + CURL_GETDATE()
+     ; TOFIX1: Could someone look at it? In case I call the destructor 
+               (curl_easy_cleanup()) manually, the garbage collector 
+               will run into an invalid pointer, when terminating the 
+               test program.
+     ; TOFIX2: The casting to 'curl_off_t' goes wrong. Could someone 
+               help?
+     ; NOTE1:  Harbour needs at least libcurl 7.17.0. Unfortunately 
+               compile time version detection is not working at this time, 
+               so try with the latest version 7.18.1.
+     ; NOTE2:  Most callback interfaces are not implemented on the 
+               Harbour level.
+     ; NOTE3:  Harbour is currently not optimizing
+               "<const1> ** <const2>" type of expressions at compile time.
+               Could we add it? This expression is not widespread, 
+               but anyways, it cannot hurt, if isn't too much 
+               work to do.
+
 2008-05-31 21:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
    * contrib/hbcurl/tests/ftp_uldl.prg

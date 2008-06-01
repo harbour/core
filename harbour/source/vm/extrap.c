@@ -56,6 +56,7 @@
 #include "hbvm.h"
 #include "hbapifs.h"
 #include "hbdate.h"
+#include "hbapierr.h"
 
 #if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
 
