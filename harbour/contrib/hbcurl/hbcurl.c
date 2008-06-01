@@ -65,11 +65,6 @@
 
 #include "hbcurl.ch"
 
-/* TOFIX: The GC method has some flaws to be fixed. It tries 
-          to free an invalid buffer on GC collection, of the 
-          app code explicitly used curl_easy_cleanup().
-          [vszakats] */
-
 #define HB_CURL_OPT_BOOL( n )      ( ISLOG( n ) ? ( long ) hb_parl( n ) : hb_parnl( n ) )
 #define HB_CURL_OPT_BOOL_TRUE( n ) ( ISLOG( n ) ? ( long ) hb_parl( n ) : ( ISNUM( 1 ) ? hb_parnl( n ) : 1 ) )
 #ifdef HB_LONG_LONG_OFF
@@ -284,56 +279,53 @@ static void hb_curl_file_dl_free( PHB_CURL hb_curl )
 
 static void PHB_CURL_free( PHB_CURL hb_curl, BOOL bFree )
 {
-   if( hb_curl )
+   if( hb_curl->curl )
    {
-      if( hb_curl->curl )
-      {
-         curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, NULL );
-         curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, NULL );
-         curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, NULL );
-         curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, NULL );
-         curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSFUNCTION, NULL );
-         curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSFUNCTION, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, NULL );
 
-         /* Some extra safety. Set these to NULL, before freeing their pointers. */
-         curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPOST, NULL );
-         curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPHEADER, NULL );
-         curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP200ALIASES, NULL );
-         curl_easy_setopt( hb_curl->curl, CURLOPT_QUOTE, NULL );
-         curl_easy_setopt( hb_curl->curl, CURLOPT_POSTQUOTE, NULL );
-         curl_easy_setopt( hb_curl->curl, CURLOPT_PREQUOTE, NULL );
-         curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, NULL );
-         
-         hb_curl_form_free( &hb_curl->pHTTPPOST_First );
-         hb_curl_form_free( &hb_curl->pHTTPPOST_Last );
-         hb_curl_slist_free( &hb_curl->pHTTPHEADER );
-         hb_curl_slist_free( &hb_curl->pHTTP200ALIASES );
-         hb_curl_slist_free( &hb_curl->pQUOTE );
-         hb_curl_slist_free( &hb_curl->pPOSTQUOTE );
-         hb_curl_slist_free( &hb_curl->pPREQUOTE );
-         hb_curl_slist_free( &hb_curl->pTELNETOPTIONS );
-         
-         hb_curl_file_ul_free( hb_curl );
-         hb_curl_file_dl_free( hb_curl );
-         
-         if( hb_curl->pProgressBlock )
-         {
-            hb_itemRelease( hb_curl->pProgressBlock );
-            hb_curl->pProgressBlock = NULL;
-         }
-         
-         if( bFree )
-         {
-            curl_easy_cleanup( hb_curl->curl );
-            hb_curl->curl = NULL;
-         }
-         else
-            curl_easy_reset( hb_curl->curl );
+      /* Some extra safety. Set these to NULL, before freeing their pointers. */
+      curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPOST, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPHEADER, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP200ALIASES, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_QUOTE, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_POSTQUOTE, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_PREQUOTE, NULL );
+      curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, NULL );
+      
+      hb_curl_form_free( &hb_curl->pHTTPPOST_First );
+      hb_curl_form_free( &hb_curl->pHTTPPOST_Last );
+      hb_curl_slist_free( &hb_curl->pHTTPHEADER );
+      hb_curl_slist_free( &hb_curl->pHTTP200ALIASES );
+      hb_curl_slist_free( &hb_curl->pQUOTE );
+      hb_curl_slist_free( &hb_curl->pPOSTQUOTE );
+      hb_curl_slist_free( &hb_curl->pPREQUOTE );
+      hb_curl_slist_free( &hb_curl->pTELNETOPTIONS );
+      
+      hb_curl_file_ul_free( hb_curl );
+      hb_curl_file_dl_free( hb_curl );
+      
+      if( hb_curl->pProgressBlock )
+      {
+         hb_itemRelease( hb_curl->pProgressBlock );
+         hb_curl->pProgressBlock = NULL;
       }
       
       if( bFree )
-         hb_xfree( hb_curl );
+      {
+         curl_easy_cleanup( hb_curl->curl );
+         hb_curl->curl = NULL;
+      }
+      else
+         curl_easy_reset( hb_curl->curl );
    }
+   
+   if( bFree )
+      hb_xfree( hb_curl );
 }
 
 /* NOTE: Will create a new one. If 'from' is specified, the new one 
@@ -406,10 +398,16 @@ HB_FUNC( CURL_EASY_DUPLICATE )
 
 HB_FUNC( CURL_EASY_CLEANUP )
 {
-   PHB_CURL hb_curl = PHB_CURL_par( 1 );
+   void ** ph = ( void ** ) hb_parptrGC( PHB_CURL_release, 1 );
 
-   if( hb_curl )
-      PHB_CURL_free( hb_curl, TRUE );
+   if( ph && * ph )
+   {
+      /* Destroy the object */
+      PHB_CURL_free( ( PHB_CURL ) * ph, TRUE );
+
+      /* set pointer to NULL to avoid multiple freeing */
+      * ph = NULL;
+   }
 }
 
 #if LIBCURL_VERSION_NUM >= 0x071201

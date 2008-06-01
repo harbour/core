@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-01 13:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+     ! Fixed TOFIX1 from the previous entry.
+
 2008-06-01 13:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/extrap.c
      ! Fixed missing header for OS/2.
