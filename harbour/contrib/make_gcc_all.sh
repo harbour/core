@@ -38,7 +38,7 @@ fi
 
 #**************************************************************
 
-_HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbtpathy hbvpdf xhb"
+_HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf xhb"
 
 case "$HB_ARCHITECTURE" in
    w32|cyg|os2)

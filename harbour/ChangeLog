@@ -8,6 +8,53 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-01 17:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+   * contrib/make_gcc_all.sh
+   + contrib/hbsqlit3
+   + contrib/hbsqlit3/Makefile
+   + contrib/hbsqlit3/make_b32.bat
+   + contrib/hbsqlit3/make_vc.bat
+   + contrib/hbsqlit3/make_gcc.sh
+   + contrib/hbsqlit3/common.mak
+   + contrib/hbsqlit3/hbsqlit3.c
+   + contrib/hbsqlit3/hbsqlit3.ch
+   + contrib/hbsqlit3/sqlite3/sqlite3.c
+   + contrib/hbsqlit3/sqlite3/sqlite3.h
+   + contrib/hbsqlit3/tests/bld_b32.bat
+   + contrib/hbsqlit3/tests/bld_vc.bat
+   + contrib/hbsqlit3/tests/blob.prg
+   + contrib/hbsqlit3/tests/pack.prg
+   + contrib/hbsqlit3/tests/metadata.prg
+   + contrib/hbsqlit3/tests/sqlite3_test.prg
+     + Added Harbour interface for SQLite 3.x.
+
+       Thanks goes to Petr Chornyj <myorg63/at/mail.ru> for 
+       creating this code and making it available for this project.
+
+       (The code also based on Alejandro de G rate 
+       <alex_degarate/at/hotmail.com> SQLite 2 interface work)
+
+     + Added make files, arranged std contrib layout.
+     * Renamed header, source and lib name to comply with 8.3 rules.
+     + Added to 'all' make files.
+     + Added foreign SQLite 3.5.9 (amalgamation) latest version 
+       source code to the repository.
+       Compiles with lots of warnings under BCC and 
+       doesn't compile in C++ mode in MSVC (due to missing 
+       casts).
+     ; We may remove foreign code once the warnings 
+       has been fixed and retrofitted in the original 
+       package. Since the two required files are simply 
+       #included in the Harbour source code, moving them 
+       anywhere, or accessing them from anywhere is a matter 
+       of -I switch.
+     ; TOFIX:
+       - Replace MessageBox() with RTE or HB_TRACE().
+       - Remove HB_OS_WIN_32_USED dependency.
+       - Review if __XHARBOUR__ branches are indeed necessary.
+
 2008-06-01 13:50 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.ch
      ! Few typos.
