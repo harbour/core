@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-01 17:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbsqlit3/hbsqlit3.c
+     - Not needed to #include "sqlite3/sqlite3.h" 
+       if we've already #included "sqlite3/sqlite3.c"
+
 2008-06-01 17:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/make_b32_all.bat
    * contrib/make_vc_all.bat

@@ -33,7 +33,6 @@
    #error Too old version [x]Harbour
 #endif
 
-#include "sqlite3/sqlite3.h"
 #include "sqlite3/sqlite3.c"
 
 #ifdef NODLL
@@ -247,7 +246,7 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
       }
       else
       {
-         MessageBox( 0, "Directiry not exist", pszDirName, MB_OK | MB_ICONERROR | MB_SYSTEMMODAL );
+         MessageBox( 0, "Directory not exist", pszDirName, MB_OK | MB_ICONERROR | MB_SYSTEMMODAL );
       }
    }
 
