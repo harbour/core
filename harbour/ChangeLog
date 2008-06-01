@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 00:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * doc/whatsnew.txt
+     + Added some recent stuff.
+
+   * contrib/xhb/hbcompat.ch
+     + hb_FSize() <-> FileSize()
+
+   * contrib/hbcurl/hbcurl.c
+     ! Fixed typo.
+
 2008-06-01 23:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbvm.h
    * source/vm/hvm.c
