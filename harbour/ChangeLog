@@ -60,6 +60,19 @@
        - Remove HB_OS_WIN_32_USED dependency.
        - Review if __XHARBOUR__ branches are indeed necessary.
 
+2008-06-01 16:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * tests/Makefile
+   - tests/testhbf.prg
+   + contrib/hbmisc/tests/testhbf.prg
+     * Moved to its place.
+
+   * contrib/hbcurl/hbcurl.c
+   * contrib/hbcurl/hbcurl.ch
+   * contrib/hbcurl/make_b32.bat
+   * contrib/hbcurl/make_vc.bat
+   * contrib/hbcurl/make_gcc.sh
+     * Minor.
+
 2008-06-01 13:50 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.ch
      ! Few typos.
