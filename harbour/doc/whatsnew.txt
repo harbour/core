@@ -258,8 +258,7 @@ Contrib
 - renamed contrib libraries
 - TIP library borrowed from xHarbour and adopted to Harbour
 - added HBCURL - libcurl interface library. (rooted from the 
-  xHarbour version, but heavily fixed and further developed, 
-  not compatible in every respect.)
+  xHarbour version, but heavily fixed and further developed.)
 - added HBSQLIT3 - SQLite 3.x Harbour callable library.
 - fixes in MySQL and PGSQL library
 - cleanup and many fixes in NF library
