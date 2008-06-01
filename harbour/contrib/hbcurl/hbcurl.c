@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CURL lib 'easy' API - Harbour interface.
+ * libcurl 'easy' API - Harbour interface.
  *
  * Copyright 2008 Viktor Szakats <harbour.01 syenar.hu>
  * originally based on:
@@ -57,6 +57,7 @@
 #include "curl/curl.h"
 #include "curl/types.h"
 #include "curl/easy.h"
+#include "curl/multi.h"
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -1382,6 +1383,8 @@ HB_FUNC( CURL_EASY_UNESCAPE )
 /* ---------------------------------------------------------------------------- */
 /* Harbour interface (session independent) */
 
+#if 0
+
 /* NOTE: Obsolete, superceded by curl_easy_escape() */
 HB_FUNC( CURL_ESCAPE )
 {
@@ -1397,6 +1400,8 @@ HB_FUNC( CURL_UNESCAPE )
    hb_retc( buffer );
    curl_free( buffer );
 }
+
+#endif
 
 HB_FUNC( CURL_VERSION )
 {
@@ -1455,6 +1460,11 @@ HB_FUNC( CURL_EASY_STRERROR )
 HB_FUNC( CURL_SHARE_STRERROR )
 {
    hb_retc( curl_share_strerror( ( CURLSHcode ) hb_parnl( 1 ) ) );
+}
+
+HB_FUNC( CURL_MULTI_STRERROR )
+{
+   hb_retc( curl_multi_strerror( ( CURLMcode ) hb_parnl( 1 ) ) );
 }
 
 #endif

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CURL lib 'easy' API - Harbour header.
+ * libcurl 'easy' API - Harbour header.
  *
  * Copyright 2008 Viktor Szakats <harbour.01 syenar.hu>
  * originally based on:
@@ -56,7 +56,7 @@
 #define HBCURL_CH_
 
 /* curl_easy_setopt() parameters.
-   (the actual values may be different from the libcurl equivalent) */
+   NOTE: The actual values may be different from the libcurl equivalent. */
 
 #define HB_CURLOPT_FILE                       1
 #define HB_CURLOPT_URL                        2
@@ -219,7 +219,6 @@
 #define HB_CURLOPT_PROXY_TRANSFER_MODE        166
 #define HB_CURLOPT_SEEKFUNCTION               167
 #define HB_CURLOPT_SEEKDATA                   168
-
 #define HB_CURLOPT_SETUPLOADFILE              1001  /* Harbour special ones */
 #define HB_CURLOPT_CLOSEUPLOADFILE            1002
 #define HB_CURLOPT_SETDOWNLOADFILE            1003
@@ -228,7 +227,6 @@
 #define HB_CURLOPT_DOWNLOAD                   1006
 
 /* HB_CURLOPT_PROXYTYPE option */
-
 #define HB_CURLPROXY_HTTP                     0  /* added in 7.10 */
 #define HB_CURLPROXY_SOCKS4                   4  /* support added in 7.15.2, enum existed already in 7.10 */
 #define HB_CURLPROXY_SOCKS5                   5  /* added in 7.10 */
@@ -236,14 +234,11 @@
 #define HB_CURLPROXY_SOCKS5_HOSTNAME          7  /* Use the SOCKS5 protocol but pass along the host name rather than the IP address. added in 7.18.0 */
 
 /* HB_CURLOPT_NETRC option */
-
 #define HB_CURL_NETRC_IGNORED                 0  /* The .netrc will never be read.
 #define HB_CURL_NETRC_OPTIONAL                1  /* A user:password in the URL will be preferred
 #define HB_CURL_NETRC_REQUIRED                2  /* A user:password in the URL will be ignored.
-#define HB_CURL_NETRC_LAST                    3
 
 /* HB_CURLOPT_HTTPAUTH option */
-
 #define HB_CURLAUTH_NONE                      0                   /* nothing */
 #define HB_CURLAUTH_BASIC                     ( 2 ** 0 )          /* Basic (default) */
 #define HB_CURLAUTH_DIGEST                    ( 2 ** 1 )          /* Digest */
@@ -253,7 +248,6 @@
 #define HB_CURLAUTH_ANYSAFE                   hb_BitNot( HB_CURLAUTH_BASIC )
 
 /* HB_CURLOPT_HTTP_VERSION option */
-
 #define HB_CURL_HTTP_VERSION_NONE             0  /* setting this means we don't care, and that we'd like the library to choose the best possible for us! */
 #define HB_CURL_HTTP_VERSION_1_0              1  /* please use HTTP 1.0 in the request */
 #define HB_CURL_HTTP_VERSION_1_1              2  /* please use HTTP 1.1 in the request */
@@ -307,7 +301,6 @@
 #define HB_CURL_CURLSSH_AUTH_DEFAULT          HB_CURLSSH_AUTH_ANY
 
 /* curl_easy_pause() parameters. They can be combined with hb_BitOr(). */
-
 #define HB_CURLPAUSE_RECV                     ( 2 ** 0 )
 #define HB_CURLPAUSE_RECV_CONT                0
 #define HB_CURLPAUSE_SEND                     ( 2 ** 2 )
@@ -316,7 +309,6 @@
 #define HB_CURLPAUSE_CONT                     hb_BitOr( HB_CURLPAUSE_RECV_CONT, HB_CURLPAUSE_SEND_CONT )
 
 /* curl_global_init() parameters. */
-
 #define HB_CURL_GLOBAL_SSL                    ( 2 ** 0 )
 #define HB_CURL_GLOBAL_WIN32                  ( 2 ** 1 )
 #define HB_CURL_GLOBAL_ALL                    hb_BitOr( HB_CURL_GLOBAL_SSL, HB_CURL_GLOBAL_WIN32 )
@@ -324,7 +316,7 @@
 #define HB_CURL_GLOBAL_DEFAULT                HB_CURL_GLOBAL_ALL
 
 /* curl_easy_getinfo() parameters.
-   (the actual values may be different from the libcurl equivalent) */
+   NOTE: The actual values may be different from the libcurl equivalent. */
 
 #define HB_CURLINFO_EFFECTIVE_URL             1
 #define HB_CURLINFO_RESPONSE_CODE             2

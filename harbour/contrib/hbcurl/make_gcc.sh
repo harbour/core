@@ -7,7 +7,7 @@
 if [ "${HB_INC_CURL}" == "" ]
 then
     echo "---------------------------------------------------------------"
-    echo "IMPORTANT: You will need the CURL package installed and this" 
+    echo "IMPORTANT: You will need the 'libcurl' package installed and this" 
     echo "           envvar to be set to successfully build this library:"
     echo "           export HB_INC_CURL=C:/curl"
     echo "           or"

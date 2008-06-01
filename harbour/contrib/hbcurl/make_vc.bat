@@ -6,7 +6,7 @@ rem
 if not "%HB_DIR_CURL%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
-echo IMPORTANT: You'll need the CURL package and this envvar
+echo IMPORTANT: You'll need the 'libcurl' package and this envvar
 echo            to be set to successfully build this library:
 echo            set HB_DIR_CURL=C:\curl
 echo ---------------------------------------------------------------
