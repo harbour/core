@@ -554,7 +554,7 @@ static BOOL hb_str2number( BOOL fPCode, const char* szNum, ULONG ulLen, HB_LONG 
       int iLimC;
 
       lLimV = HB_LONG_MAX / 10;
-      iLimC = HB_LONG_MAX % 10;
+      iLimC = ( int ) ( HB_LONG_MAX % 10 );
 
       iWidth = ulPos;
 

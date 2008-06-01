@@ -100,6 +100,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
 #endif
 
 extern void hb_vmSetExceptionHandler( void );
+extern void hb_vmUnsetExceptionHandler( void );
 
 extern HB_EXPORT void     hb_vmSymbolInit_RT( void );   /* initialization of runtime support symbols */
 

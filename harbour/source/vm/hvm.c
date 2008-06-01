@@ -490,10 +490,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
       hb_vmDo( iArgCount ); /* invoke it with number of supplied parameters */
    }
 
-#if defined(HB_OS_OS2)
-   /* I don't do any check on return code since harbour is exiting in any case */
-   rc = DosUnsetExceptionHandler( &RegRec );
-#endif
+   hb_vmUnsetExceptionHandler();
 }
 
 HB_EXPORT int hb_vmQuit( void )

@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-01 23:56 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbvm.h
+   * source/vm/hvm.c
+   * source/vm/extrap.c
+     ! Fixed OS/2 problem reported by David.
+       (BTW, do we need really need to remove the exception 
+       handler before exiting? If yes, shouldn't we do the 
+       same under Win32?)
+
+   * source/common/hbstr.c
+     ! Silenced one 'loss of significant digit' BCC warning.
+
 2008-06-01 17:35 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit3/hbsqlit3.c
      - Not needed to #include "sqlite3/sqlite3.h" 

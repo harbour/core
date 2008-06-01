@@ -164,9 +164,21 @@ void hb_vmSetExceptionHandler( void )
       RegRec.ExceptionHandler = ( ERR ) hb_os2ExceptionHandler;
       rc = DosSetExceptionHandler( &RegRec );
       if( rc != NO_ERROR )
-      {
          hb_errInternal( HB_EI_ERRUNRECOV, "Unable to setup exception handler (DosSetExceptionHandler())", NULL, NULL );
-      }
+   }
+#endif
+}
+
+void hb_vmUnsetExceptionHandler( void )
+{
+#if defined(HB_OS_OS2) /* Add OS2TermHandler to this thread's chain of exception handlers */
+   {
+      EXCEPTIONREGISTRATIONRECORD RegRec;    /* Exception Registration Record */
+      APIRET rc;                             /* Return code                   */
+
+      /* I don't do any check on return code since harbour is exiting in any case */
+      rc = DosUnsetExceptionHandler( &RegRec );
+      HB_SYMBOL_UNUSED( rc );
    }
 #endif
 }
