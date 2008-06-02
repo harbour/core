@@ -923,7 +923,7 @@ HB_EXPORT char * hb_strncpyTrim( char * pDest, const char * pSource, ULONG ulLen
    return pBuf;
 }
 
-char * hb_strRemEscSeq( char *str, ULONG *pLen )
+HB_EXPORT char * hb_strRemEscSeq( char *str, ULONG *pLen )
 {
    ULONG ul = *pLen, ulStripped = 0;
    char *ptr, *dst, ch;

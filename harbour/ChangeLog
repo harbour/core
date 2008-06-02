@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 20:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbstr.c
+     ! HB_EXPORT added to hb_strRemEscSeq(). Thanks Javier.
+
 2008-06-02 20:11 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/ppcomp.c
   * harbour/source/compiler/cmdcheck.c
