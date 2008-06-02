@@ -109,6 +109,11 @@ HB_BUILD_MODE  = C
 
 #**********************************************************
 
+# Visual C++ version
+!ifndef HB_VISUALC_VER
+HB_VISUALC_VER = 60
+!endif
+
 # C Compiler Flags
 !if $(HB_VISUALC_VER) >= 80
 CFLAGS_VER     = -Ot2b1 -FD -Gs -D_CRT_SECURE_NO_DEPRECATE

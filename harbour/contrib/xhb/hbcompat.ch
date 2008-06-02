@@ -61,10 +61,10 @@
    #xtranslate hb_gtInfo([<x,...>])    => gtInfo(<x>)
    #xtranslate hb_gtVersion([<x>])     => hb_gt_Version(<x>)
 
-   #xtranslate hb_ScrMaxRow()          => hb_gtInfo( HB_GTI_SCREENHEIGHT )
-   #xtranslate hb_ScrMaxCol()          => hb_gtInfo( HB_GTI_SCREENWIDTH )
-   #xtranslate MaxRow(.T.)             => hb_gtInfo( HB_GTI_SCREENHEIGHT )
-   #xtranslate MaxCol(.T.)             => hb_gtInfo( HB_GTI_SCREENWIDTH )
+   #xtranslate hb_ScrMaxRow()          => gtInfo( HB_GTI_SCREENHEIGHT )
+   #xtranslate hb_ScrMaxCol()          => gtInfo( HB_GTI_SCREENWIDTH )
+   #xtranslate MaxRow(.T.)             => gtInfo( HB_GTI_SCREENHEIGHT )
+   #xtranslate MaxCol(.T.)             => gtInfo( HB_GTI_SCREENWIDTH )
 
    #xtranslate hb_dbPack()             => __dbPack()
    #xtranslate hb_dbZap()              => __dbZap()

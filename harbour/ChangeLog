@@ -8,9 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 18:59 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/xhb/hbcompat.ch
+     ! Minor fix in hb to xhb branch.
+
+   * contrib/hbcurl/hbcurl.ch
+     * '( 2 ** n )' expressions changed to actual values.
+     ; We now have these optimized, but I'm committing anyway, 
+     as some folks may be scared away by seeing these, and 
+     not knowing it's optimized (and they might not even be 
+     optimized on some Clipper platforms...).
+
+   * contrib/mtpl_vc.mak
+     ! Fixed HB_VISUALC_VER to default to '60' rather than 
+       crashing. Same default is used for core make files 
+       already.
+
+   * source/common/hbverdsp.c
+     - Removed 'CA'.
+     + Added word 'compatible' to the 'undocumented' line.
+
 2008-06-02 16:46 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprb.c
-    ! do not optimize HB_BIAND(), HB_BITOR() and HB_BITXOR() when only
+    ! do not optimize HB_BITAND(), HB_BITOR() and HB_BITXOR() when only
       one parameter is passed to keep RT error compatibility
     * use hb_compExprListStrip() to optimize function calls also when
       parameters are passed in parenthesis, f.e.:

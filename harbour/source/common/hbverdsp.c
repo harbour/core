@@ -163,7 +163,7 @@ void hb_verBuildInfo( void )
 
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "CA-Clipper 5.3b compatible extensions: ", 0 );
+   hb_conOutErr( "Clipper 5.3b compatible extensions: ", 0 );
 #if defined( HB_COMPAT_C53 )
    hb_conOutErr( "yes", 0 );
 #else
@@ -171,7 +171,7 @@ void hb_verBuildInfo( void )
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "CA-Clipper 5.2e/5.3b undocumented: ", 0 );
+   hb_conOutErr( "Clipper 5.2e/5.3b compatible undocumented: ", 0 );
 #if defined( HB_C52_UNDOC )
    hb_conOutErr( "yes", 0 );
 #else
@@ -179,7 +179,7 @@ void hb_verBuildInfo( void )
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "CA-Clipper 5.2e/5.3b strict compatibility: ", 0 );
+   hb_conOutErr( "Clipper 5.2e/5.3b strict compatibility: ", 0 );
 #if defined( HB_C52_STRICT )
    hb_conOutErr( "yes", 0 );
 #else
@@ -203,7 +203,7 @@ void hb_verBuildInfo( void )
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "CA-Visual Objects compatible extensions: ", 0 );
+   hb_conOutErr( "Visual Objects compatible extensions: ", 0 );
 #if defined( HB_COMPAT_VO )
    hb_conOutErr( "yes", 0 );
 #else
