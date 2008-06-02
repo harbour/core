@@ -113,7 +113,16 @@ HB_FUNC( HPDF_NEW )
 //
 HB_FUNC( HPDF_FREE )
 {
-   HPDF_Free( HPDF_Doc_par( 1 ) );
+   void ** ph = ( void ** ) hb_parptrGC( HPDF_Doc_release, 1 );
+
+   if( ph && * ph )
+   {
+      /* Destroy the object */
+      HPDF_Free( ( HPDF_Doc ) * ph );
+
+      /* set pointer to NULL to avoid multiple freeing */
+      * ph = NULL;
+   }
 }
 //----------------------------------------------------------------------//
 // HPdf_NewDoc( hDoc ) -> hStatus

@@ -652,9 +652,10 @@ HB_FUNC( CURL_EASY_SETOPT )
          break;
       case HB_CURLOPT_HTTPPOST:
          {
-            if( ISARRAY( 3 ) )
+            PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
+
+            if( pArray )
             {
-               PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
 
@@ -681,12 +682,13 @@ HB_FUNC( CURL_EASY_SETOPT )
          break;
       case HB_CURLOPT_HTTPHEADER:
          {
+            PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
+
             curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPHEADER, NULL );
             hb_curl_slist_free( &hb_curl->pHTTPHEADER );
 
-            if( ISARRAY( 3 ) )
+            if( pArray )
             {
-               PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
 
@@ -699,12 +701,13 @@ HB_FUNC( CURL_EASY_SETOPT )
          break;
       case HB_CURLOPT_HTTP200ALIASES:
          {
+            PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
+
             curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP200ALIASES, NULL );
             hb_curl_slist_free( &hb_curl->pHTTP200ALIASES );
 
-            if( ISARRAY( 3 ) )
+            if( pArray )
             {
-               PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
 
@@ -753,12 +756,13 @@ HB_FUNC( CURL_EASY_SETOPT )
          break;
       case HB_CURLOPT_QUOTE:
          {
+            PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
+
             curl_easy_setopt( hb_curl->curl, CURLOPT_QUOTE, NULL );
             hb_curl_slist_free( &hb_curl->pQUOTE );
 
-            if( ISARRAY( 3 ) )
+            if( pArray )
             {
-               PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
 
@@ -771,12 +775,13 @@ HB_FUNC( CURL_EASY_SETOPT )
          break;
       case HB_CURLOPT_POSTQUOTE:
          {
+            PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
+
             curl_easy_setopt( hb_curl->curl, CURLOPT_POSTQUOTE, NULL );
             hb_curl_slist_free( &hb_curl->pPOSTQUOTE );
 
-            if( ISARRAY( 3 ) )
+            if( pArray )
             {
-               PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
 
@@ -789,12 +794,13 @@ HB_FUNC( CURL_EASY_SETOPT )
          break;
       case HB_CURLOPT_PREQUOTE:
          {
+            PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
+
             curl_easy_setopt( hb_curl->curl, CURLOPT_PREQUOTE, NULL );
             hb_curl_slist_free( &hb_curl->pPREQUOTE );
 
-            if( ISARRAY( 3 ) )
+            if( pArray )
             {
-               PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
 
@@ -1034,12 +1040,13 @@ HB_FUNC( CURL_EASY_SETOPT )
 
       case HB_CURLOPT_TELNETOPTIONS:
          {
+            PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
+
             curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, NULL );
             hb_curl_slist_free( &hb_curl->pTELNETOPTIONS );
 
-            if( ISARRAY( 3 ) )
+            if( pArray )
             {
-               PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
                ULONG ulPos;
                ULONG ulArrayPos = hb_arrayLen( pArray );
 
@@ -1360,7 +1367,7 @@ HB_FUNC( CURL_EASY_ESCAPE )
       curl_free( buffer );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 HB_FUNC( CURL_EASY_UNESCAPE )
@@ -1375,7 +1382,7 @@ HB_FUNC( CURL_EASY_UNESCAPE )
       curl_free( buffer );
    }
    else
-      hb_retc( NULL );
+      hb_retc_null();
 }
 
 #endif
