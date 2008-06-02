@@ -8,6 +8,87 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 23:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/make_b32_all.bat
+   * contrib/make_gcc_all.sh
+   * contrib/make_vc_all.bat
+   + contrib/hbsqlit2
+   + contrib/hbsqlit2/Makefile
+   + contrib/hbsqlit2/make_b32.bat
+   + contrib/hbsqlit2/make_vc.bat
+   + contrib/hbsqlit2/make_gcc.sh
+   + contrib/hbsqlit2/common.mak
+   + contrib/hbsqlit2/hbsqlit2.c
+   + contrib/hbsqlit2/hbsqlit2.ch
+   + contrib/hbsqlit2/LICENSE.txt
+   + contrib/hbsqlit2/TODO.txt
+   + contrib/hbsqlit2/readme.txt
+   + contrib/hbsqlit2/attach.c
+   + contrib/hbsqlit2/auth.c
+   + contrib/hbsqlit2/btree.c
+   + contrib/hbsqlit2/btree.h
+   + contrib/hbsqlit2/btree_rb.c
+   + contrib/hbsqlit2/build.c
+   + contrib/hbsqlit2/config.h
+   + contrib/hbsqlit2/copy.c
+   + contrib/hbsqlit2/date.c
+   + contrib/hbsqlit2/delete.c
+   + contrib/hbsqlit2/encode.c
+   + contrib/hbsqlit2/expr.c
+   + contrib/hbsqlit2/func.c
+   + contrib/hbsqlit2/hash.c
+   + contrib/hbsqlit2/hash.h
+   + contrib/hbsqlit2/insert.c
+   + contrib/hbsqlit2/main.c
+   + contrib/hbsqlit2/opcodes.c
+   + contrib/hbsqlit2/opcodes.h
+   + contrib/hbsqlit2/os.c
+   + contrib/hbsqlit2/os.h
+   + contrib/hbsqlit2/pager.c
+   + contrib/hbsqlit2/pager.h
+   + contrib/hbsqlit2/parse.c
+   + contrib/hbsqlit2/parse.h
+   + contrib/hbsqlit2/pragma.c
+   + contrib/hbsqlit2/printf.c
+   + contrib/hbsqlit2/random.c
+   + contrib/hbsqlit2/select.c
+   + contrib/hbsqlit2/sqlite.h
+   + contrib/hbsqlit2/sqliteInt.h
+   + contrib/hbsqlit2/table.c
+   + contrib/hbsqlit2/tokenize.c
+   + contrib/hbsqlit2/trigger.c
+   + contrib/hbsqlit2/update.c
+   + contrib/hbsqlit2/util.c
+   + contrib/hbsqlit2/vacuum.c
+   + contrib/hbsqlit2/vdbe.c
+   + contrib/hbsqlit2/vdbe.h
+   + contrib/hbsqlit2/vdbeaux.c
+   + contrib/hbsqlit2/vdbeInt.h
+   + contrib/hbsqlit2/where.c
+   + contrib/hbsqlit2/tests/bld_b32.bat
+   + contrib/hbsqlit2/tests/bld_vc.bat
+   + contrib/hbsqlit2/tests/example.db
+   + contrib/hbsqlit2/tests/hbsqlite.prg
+     + Added hbsqlit2 SQLite 2.x interface library.
+
+       With kind permission from the author:
+       Alejandro de Gárate <alex_degarate/at/hotmail.com>
+
+     + Some renames were done here too to better fit into 
+       the contrib structure.
+     + Added std make files.
+     + Added to 'all' make files.
+     + Added foreign SQLite 2.8.16 (final 2.x version)
+       source code to the repository.
+       Compiles with an okay amount of warnings under BCC but 
+       doesn't compile in C++ mode in MSVC (due to missing 
+       casts).
+     ; NOTE: I've added this because this is the original 
+             SQLite Harbour interface, clean and working 
+             implementation, and SQLite 2 is incompatible 
+             with 3, and some may need to access existing 
+             2.x databases from Harbour.
+
 2008-06-02 21:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/hvm.c
      % Minor opt to __SETPROFILE(), __TRACEPRGCALLS()
@@ -205,7 +286,7 @@
        Thanks goes to Petr Chornyj <myorg63/at/mail.ru> for 
        creating this code and making it available for this project.
 
-       (The code also based on Alejandro de G rate 
+       (The code also based on Alejandro de Gárate 
        <alex_degarate/at/hotmail.com> SQLite 2 interface work)
 
      + Added make files, arranged std contrib layout.
