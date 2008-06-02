@@ -20,8 +20,6 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
-
 #include "hbvm.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -241,12 +239,12 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
          }
          else
          {
-            MessageBox( 0, "Can't create directory", pszDirName, MB_OK | MB_ICONERROR | MB_SYSTEMMODAL );
+            HB_TRACE(HB_TR_DEBUG, ("sqlite_temp_directory(): Can't create directory %s", pszDirName));
          }
       }
       else
       {
-         MessageBox( 0, "Directory not exist", pszDirName, MB_OK | MB_ICONERROR | MB_SYSTEMMODAL );
+         HB_TRACE(HB_TR_DEBUG, ("sqlite_temp_directory(): Directory doesn't exist %s", pszDirName));
       }
    }
 
@@ -289,7 +287,7 @@ HB_FUNC( SQLITE3_OPEN )
    #endif
    if( (!hb_fsFile( ( BYTE * ) pszdbName)) && (!hb_parl(2)) )
    {
-      MessageBox( 0, "Base not exist", pszdbName, MB_OK | MB_ICONERROR | MB_SYSTEMMODAL );
+      HB_TRACE(HB_TR_DEBUG, ("sqlite3_open(): Database doesn't exist %s", pszdbName));
 
       hb_retptr( NULL );
       return;
@@ -367,7 +365,7 @@ HB_FUNC( SQLITE3_EXEC )
 
       if( rc != SQLITE_OK )
       {
-         MessageBox( 0, pszErrMsg, "OK", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL );
+         HB_TRACE(HB_TR_DEBUG, ("sqlite3_exec(): Returned error: %s", pszErrMsg));
          sqlite3_free( pszErrMsg );
       }
 
@@ -1115,7 +1113,7 @@ HB_FUNC( SQLITE3_GET_TABLE )
       }
       else
       {
-         MessageBox( 0, pszErrMsg, "OK", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL );
+         HB_TRACE(HB_TR_DEBUG, ("sqlite3_get_table(): Returned error: %s", pszErrMsg));
          sqlite3_free( pszErrMsg );
       }
 
@@ -1422,12 +1420,10 @@ HB_FUNC( SQLITE3_BLOB_WRITE )
    pBlob = ( sqlite3_blob * ) hb_parptr( 1 );
    if( pBlob != NULL )
    {
-      int   iLen = hb_parni( 3 );
+      int iLen = hb_parni( 3 );
 
-      if( 0 == iLen )
-      {
+      if( iLen == 0 )
          iLen = hb_parcsiz( 2 ) - 1;
-      }
 
       hb_retni( sqlite3_blob_write(pBlob, hb_parcx(2), iLen, hb_parni(4)) );
    }
@@ -1479,96 +1475,50 @@ HB_FUNC( SQLITE3_ENABLE_SHARED_CACHE )
 
 static void SQL3ProfileLog( void *sFile, const char *sProfileMsg, sqlite3_uint64 int64 )
 {
-   FILE  *hFile;
-
-   if( !sProfileMsg )
+   if( sProfileMsg )
    {
-      return;
-   }
-
-   if( sFile == NULL )
-   {
-      hFile = fopen( "profile.log", "a" );
-   }
-   else
-   {
-      hFile = fopen( ( const char * ) sFile, "a" );
-   }
-
-   if( hFile )
-   {
-      fprintf( hFile, "%s - %lld\n", sProfileMsg, &int64 );
-      fclose( hFile );
+      FILE * hFile = fopen( sFile ? ( const char * ) sFile : "hbsq3_pr.log", "a" );
+      
+      if( hFile )
+      {
+         fprintf( hFile, "%s - %lld\n", sProfileMsg, &int64 );
+         fclose( hFile );
+      }
    }
 }
 
 static void SQL3TraceLog( void *sFile, const char *sTraceMsg )
 {
-   FILE  *hFile;
-
-   if( !sTraceMsg )
+   if( sTraceMsg )
    {
-      return;
-   }
-
-   if( sFile == NULL )
-   {
-      hFile = fopen( "trace.log", "a" );
-   }
-   else
-   {
-      hFile = fopen( ( const char * ) sFile, "a" );
-   }
-
-   if( hFile )
-   {
-      fprintf( hFile, "%s \n", sTraceMsg );
-      fclose( hFile );
+      FILE * hFile = fopen( sFile ? ( const char * ) sFile : "hbsq3_tr.log", "a" );
+      
+      if( hFile )
+      {
+         fprintf( hFile, "%s \n", sTraceMsg );
+         fclose( hFile );
+      }
    }
 }
 
 HB_FUNC( SQLITE3_PROFILE )
 {
-   psqlite3 db;
+   psqlite3 db = ( psqlite3 ) hb_parsqlite3( 1 );
 
-   db = ( psqlite3 ) hb_parsqlite3( 1 );
-   if( db != NULL )
-   {
-      if( hb_parl(2) )
-      {
-         sqlite3_profile( db, SQL3ProfileLog, NULL );
-      }
-      else
-      {
-         sqlite3_profile( db, NULL, NULL );
-      }
-   }
+   if( db )
+      sqlite3_profile( db, hb_parl( 2 ) ? SQL3ProfileLog : NULL, NULL );
    else
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_PROFILELOG", 1, hb_paramError(1) );
-   }
 }
 
 HB_FUNC( SQLITE3_TRACE )
 {
-   psqlite3 db;
+   psqlite3 db = ( psqlite3 ) hb_parsqlite3( 1 );
 
-   db = ( psqlite3 ) hb_parsqlite3( 1 );
-   if( db != NULL )
-   {
-      if( hb_parl(2) )
-      {
-         sqlite3_trace( db, SQL3TraceLog, NULL );
-      }
-      else
-      {
-         sqlite3_trace( db, NULL, NULL );
-      }
-   }
+   if( db )
+      sqlite3_trace( db, hb_parl( 2 ) ? SQL3TraceLog : NULL, NULL );
    else
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_TRACELOG", 1, hb_paramError(1) );
-   }
 }
 
 /*
@@ -1591,9 +1541,7 @@ HB_FUNC( SQLITE3_FILE_TO_BUFF )
       hb_fsClose( handle );
    }
    else
-   {
       iSize = 0;
-   }
 
    hb_retclen_buffer( ( char * ) buffer, iSize );
 }
@@ -1606,20 +1554,14 @@ HB_FUNC( SQLITE3_BUFF_TO_FILE )
    if( (handle != FS_ERROR) && (iSize > 0) )
    {
       if( iSize == hb_fsWriteLarge(handle, ( BYTE * ) hb_parcx(2), iSize) )
-      {
          hb_retni( 0 );
-      }
       else
-      {
          hb_retni( -1 );
-      }
 
       hb_fsClose( handle );
    }
    else
-   {
       hb_retni( 1 );
-   }
 }
 
 /*

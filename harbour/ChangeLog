@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 02:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbsqlit3/hbsqlit3.c
+     ! Removed Windows API dependencies (MessageBox() -> HB_TRACE())
+     % Minor opt.
+
 2008-06-02 02:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32/w32_prn.c
    * contrib/hbhpdf/harupdf.c
