@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 16:46 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprb.c
+    ! do not optimize HB_BIAND(), HB_BITOR() and HB_BITXOR() when only
+      one parameter is passed to keep RT error compatibility
+    * use hb_compExprListStrip() to optimize function calls also when
+      parameters are passed in parenthesis, f.e.:
+         ? CHR(65), CHR((65))
+      It's not Clipper compatible and disabled by -kc switch.
+      Viktor it will interact with some hbtest tests when compile time
+      optimization used by Clipper gives different results then RT function
+      f.e. CHR( ( 256 ) ). Please think if we should keep it.
+      It's important optimization if someone uses constant values or
+      expressions defined in parentheses.
+
 2008-06-02 15:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbsqlit3/hbsqlit3.c
     ! use char * instead of LPSTR to compile in non Windows environment

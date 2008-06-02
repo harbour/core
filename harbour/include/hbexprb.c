@@ -144,7 +144,7 @@ static void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL );
 static void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL );
 static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL );
 static void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction, HB_COMP_DECL );
-static ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr, HB_COMP_DECL );
+static ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr, BOOL fStrip, HB_COMP_DECL );
 
 
 const HB_EXPR_FUNC_PTR hb_comp_ExprTable[ HB_EXPR_COUNT ] = {
@@ -523,7 +523,7 @@ static HB_EXPR_FUNC( hb_compExprUseArray )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
+         hb_compExprReduceList( pSelf, FALSE, HB_COMP_PARAM );
          break;
 
       case HB_EA_ARRAY_AT:
@@ -619,7 +619,7 @@ static HB_EXPR_FUNC( hb_compExprUseHash )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
+         hb_compExprReduceList( pSelf, FALSE, HB_COMP_PARAM );
          break;
 
       case HB_EA_ARRAY_AT:
@@ -833,7 +833,7 @@ static HB_EXPR_FUNC( hb_compExprUseIIF )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
+         hb_compExprReduceList( pSelf, FALSE, HB_COMP_PARAM );
          pSelf = hb_compExprReduceIIF( pSelf, HB_COMP_PARAM );
          break;
 
@@ -951,7 +951,7 @@ static HB_EXPR_FUNC( hb_compExprUseList )
             }
          }
 
-         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
+         hb_compExprReduceList( pSelf, FALSE, HB_COMP_PARAM );
          /* NOTE: if the list contains a single expression then the list
           * is not reduced to this expression - if you need that reduction
           * then call hb_compExprListStrip() additionaly
@@ -1060,7 +1060,7 @@ static HB_EXPR_FUNC( hb_compExprUseArgList )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
+         hb_compExprReduceList( pSelf, FALSE, HB_COMP_PARAM );
          break;
 
       case HB_EA_ARRAY_AT:
@@ -1124,7 +1124,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
    switch( iMessage )
    {
       case HB_EA_REDUCE:
-         hb_compExprReduceList( pSelf, HB_COMP_PARAM );
+         hb_compExprReduceList( pSelf, FALSE, HB_COMP_PARAM );
          break;
 
       case HB_EA_ARRAY_AT:
@@ -1597,7 +1597,12 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
          /* Reduce the expressions on the list of arguments
           */
          if( pSelf->value.asFunCall.pParms )
-            pSelf->value.asFunCall.pParms = HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_REDUCE );
+         {
+            if( HB_SUPPORT_HARBOUR )
+               hb_compExprReduceList( pSelf->value.asFunCall.pParms, TRUE, HB_COMP_PARAM );
+            else
+               pSelf->value.asFunCall.pParms = HB_EXPR_USE( pSelf->value.asFunCall.pParms, HB_EA_REDUCE );
+         }
 
          if( pSelf->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME )
          {
@@ -1654,7 +1659,52 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   {
                      if( pArg->pNext->ExprType == HB_ET_NUMERIC )
                      {
-                        if( strcmp( "TEST", pName->value.asSymbol + 6 ) == 0 )
+                        if( strcmp( "AND", pName->value.asSymbol + 6 ) == 0 )
+                        {
+                           fOptimize = TRUE;
+                           lResult = hb_compExprAsLongNum( pArg );
+                           while( --usCount )
+                           {
+                              pArg = pArg->pNext;
+                              if( pArg->ExprType != HB_ET_NUMERIC )
+                              {
+                                 fOptimize = FALSE;
+                                 break;
+                              }
+                              lResult &= hb_compExprAsLongNum( pArg );
+                           }
+                        }
+                        else if( strcmp( "OR", pName->value.asSymbol + 6 ) == 0 )
+                        {
+                           fOptimize = TRUE;
+                           lResult = hb_compExprAsLongNum( pArg );
+                           while( --usCount )
+                           {
+                              pArg = pArg->pNext;
+                              if( pArg->ExprType != HB_ET_NUMERIC )
+                              {
+                                 fOptimize = FALSE;
+                                 break;
+                              }
+                              lResult |= hb_compExprAsLongNum( pArg );
+                           }
+                        }
+                        else if( strcmp( "XOR", pName->value.asSymbol + 6 ) == 0 )
+                        {
+                           fOptimize = TRUE;
+                           lResult = hb_compExprAsLongNum( pArg );
+                           while( --usCount )
+                           {
+                              pArg = pArg->pNext;
+                              if( pArg->ExprType != HB_ET_NUMERIC )
+                              {
+                                 fOptimize = FALSE;
+                                 break;
+                              }
+                              lResult ^= hb_compExprAsLongNum( pArg );
+                           }
+                        }
+                        else if( strcmp( "TEST", pName->value.asSymbol + 6 ) == 0 )
                         {
                            HB_LONG lBit = hb_compExprAsLongNum( pArg->pNext );
                            lResult = ( hb_compExprAsLongNum( pArg ) &
@@ -1691,54 +1741,6 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                   {
                      lResult = ~hb_compExprAsLongNum( pArg );
                      fOptimize = TRUE;
-                  }
-                  if( !fOptimize )
-                  {
-                     if( strcmp( "AND", pName->value.asSymbol + 6 ) == 0 )
-                     {
-                        fOptimize = TRUE;
-                        lResult = hb_compExprAsLongNum( pArg );
-                        while( --usCount )
-                        {
-                           pArg = pArg->pNext;
-                           if( pArg->ExprType != HB_ET_NUMERIC )
-                           {
-                              fOptimize = FALSE;
-                              break;
-                           }
-                           lResult &= hb_compExprAsLongNum( pArg );
-                        }
-                     }
-                     else if( strcmp( "OR", pName->value.asSymbol + 6 ) == 0 )
-                     {
-                        fOptimize = TRUE;
-                        lResult = hb_compExprAsLongNum( pArg );
-                        while( --usCount )
-                        {
-                           pArg = pArg->pNext;
-                           if( pArg->ExprType != HB_ET_NUMERIC )
-                           {
-                              fOptimize = FALSE;
-                              break;
-                           }
-                           lResult |= hb_compExprAsLongNum( pArg );
-                        }
-                     }
-                     else if( strcmp( "XOR", pName->value.asSymbol + 6 ) == 0 )
-                     {
-                        fOptimize = TRUE;
-                        lResult = hb_compExprAsLongNum( pArg );
-                        while( --usCount )
-                        {
-                           pArg = pArg->pNext;
-                           if( pArg->ExprType != HB_ET_NUMERIC )
-                           {
-                              fOptimize = FALSE;
-                              break;
-                           }
-                           lResult ^= hb_compExprAsLongNum( pArg );
-                        }
-                     }
                   }
                   if( fOptimize )
                      hb_compExprReduceBitFunc( pSelf, lResult, fBool, HB_COMP_PARAM );
@@ -5031,7 +5033,7 @@ static void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction, HB_
  *
  * pExpr is the first expression on the list
  */
-static ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr, HB_COMP_DECL )
+static ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr, BOOL fStrip, HB_COMP_DECL )
 {
    HB_EXPR_PTR pNext;
    HB_EXPR_PTR * pPrev;
@@ -5047,6 +5049,8 @@ static ULONG hb_compExprReduceList( HB_EXPR_PTR pExpr, HB_COMP_DECL )
    {
       pNext  = pExpr->pNext; /* store next expression in case the current will be reduced */
       pExpr  = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
+      if( fStrip )
+         pExpr = hb_compExprListStrip( pExpr, HB_COMP_PARAM );
       *pPrev = pExpr;   /* store a new expression into the previous one */
       pExpr->pNext = pNext;  /* restore the link to next expression */
       pPrev  = &pExpr->pNext;
