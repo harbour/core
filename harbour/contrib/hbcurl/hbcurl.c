@@ -52,7 +52,10 @@
  *
  */
 
-/* NOTE: Harbour requires libcurl 7.17.0 or upper. */
+/* NOTE: Harbour requires libcurl 7.17.0 or upper. 
+         This was the version where curl_easy_setopt() started to 
+         make copies of passed strings, which we currently require. 
+         [vszakats] */
 
 #include "curl/curl.h"
 #include "curl/types.h"
@@ -80,6 +83,10 @@
 #ifdef LIBCURL_VERSION_NUM
    #undef LIBCURL_VERSION_NUM
    #define LIBCURL_VERSION_NUM 0x071801
+#endif
+
+#if LIBCURL_VERSION_NUM < 0x071700
+   #error hbcurl: we need libcurl 7.17.0 or upper.
 #endif
 
 typedef struct _HB_CURL

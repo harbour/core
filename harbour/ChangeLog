@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 12:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbverdsp.c
+     ! Minor correction.
+     * Wording/layout. C++/C and ANSI C init mode is now in 
+       one line as "Other build settings".
+
+   * contrib/hbcurl/hbcurl.c
+     + Comment extended regarding libcurl version requirement.
+     + Added version guard (not currently effective).
+
 2008-06-02 11:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/extrap.c
      ! Blind fix for OS/2.

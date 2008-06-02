@@ -150,6 +150,17 @@ void hb_verBuildInfo( void )
       }
    }
 
+   hb_conOutErr( "Other build settings: ", 0 );
+#if defined(__cplusplus)
+   hb_conOutErr( "(C++ mode)", 0 );
+#else
+   hb_conOutErr( "(C mode)", 0 );
+#endif
+#if defined( HB_STRICT_ANSI_C )
+   hb_conOutErr( "(ANSI C symbol initialization)", 0 );
+#endif
+   hb_conOutErr( hb_conNewLine(), 0 );
+
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "CA-Clipper 5.3b compatible extensions: ", 0 );
@@ -224,27 +235,11 @@ void hb_verBuildInfo( void )
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "Harbour non-portable extensions: ", 0 );
+   hb_conOutErr( "Non-portable Harbour extensions: ", 0 );
 #if defined( HB_EXTENSION )
    hb_conOutErr( "yes", 0 );
 #else
    hb_conOutErr( "no", 0 );
-#endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "ANSI C usage: ", 0 );
-#if defined( HARBOUR_STRICT_ANSI_C )
-   hb_conOutErr( "strict", 0 );
-#else
-   hb_conOutErr( "non strict", 0 );
-#endif
-   hb_conOutErr( hb_conNewLine(), 0 );
-
-   hb_conOutErr( "C++ mode: ", 0 );
-#if defined(__cplusplus)
-   hb_conOutErr( "on", 0 );
-#else
-   hb_conOutErr( "off", 0 );
 #endif
    hb_conOutErr( hb_conNewLine(), 0 );
 
