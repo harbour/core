@@ -141,7 +141,12 @@ char * hb_curl_strdup( const char * s )
 
 void * hb_curl_calloc( size_t nelem, size_t elsize )
 {
-   return hb_xgrab( ( ULONG ) ( nelem * elsize ) );
+   ULONG ulSize = ( ULONG ) ( nelem * elsize );
+   void * ptr = hb_xgrab( ulSize );
+
+   memset( ptr, '\0', ulSize );
+
+   return ptr;
 }
 
 #endif

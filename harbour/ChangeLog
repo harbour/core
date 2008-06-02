@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 13:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbcurl/common.mak
+  * harbour/contrib/hbcurl/hbcurl.c
+  * harbour/contrib/hbcurl/hbcurl.ch
+  * harbour/contrib/hbcurl/Makefile
+    ! set svn:eol-style to native
+
+  * harbour/contrib/hbcurl/make_gcc.sh
+    ! set svn:eol-style to LF
+
+  * harbour/contrib/hbcurl/Makefile
+    * added missing rules to install header files and create library
+
+  * harbour/contrib/hbcurl/hbcurl.ch
+    ! closed uncloused /* comments
+
+  * harbour/contrib/hbcurl/hbcurl.c
+    ! fixed hb_curl_calloc() to clear allocated memory
+
 2008-06-02 13:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprop.h
   * harbour/include/hbexprb.c

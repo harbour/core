@@ -234,9 +234,9 @@
 #define HB_CURLPROXY_SOCKS5_HOSTNAME          7  /* Use the SOCKS5 protocol but pass along the host name rather than the IP address. added in 7.18.0 */
 
 /* HB_CURLOPT_NETRC option */
-#define HB_CURL_NETRC_IGNORED                 0  /* The .netrc will never be read.
-#define HB_CURL_NETRC_OPTIONAL                1  /* A user:password in the URL will be preferred
-#define HB_CURL_NETRC_REQUIRED                2  /* A user:password in the URL will be ignored.
+#define HB_CURL_NETRC_IGNORED                 0  /* The .netrc will never be read. */
+#define HB_CURL_NETRC_OPTIONAL                1  /* A user:password in the URL will be preferred */
+#define HB_CURL_NETRC_REQUIRED                2  /* A user:password in the URL will be ignored. */
 
 /* HB_CURLOPT_HTTPAUTH option */
 #define HB_CURLAUTH_NONE                      0                   /* nothing */
