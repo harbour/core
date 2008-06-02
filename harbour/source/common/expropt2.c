@@ -128,20 +128,44 @@ HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    if( pLeft->ExprType == HB_ET_NUMERIC && pRight->ExprType == HB_ET_NUMERIC )
    {
-      if( pLeft->value.asNum.NumType == HB_ET_LONG && pRight->value.asNum.NumType == HB_ET_LONG )
+      switch( pLeft->value.asNum.NumType & pRight->value.asNum.NumType )
       {
-         if( pRight->value.asNum.val.l )
-         {
-            HB_LONG lVal = pLeft->value.asNum.val.l % pRight->value.asNum.val.l;
+         case HB_ET_LONG:
+            if( pRight->value.asNum.val.l )
+            {
+               pSelf->value.asNum.val.l = pLeft->value.asNum.val.l % pRight->value.asNum.val.l;
+               pSelf->value.asNum.bDec = 0;
+               pSelf->value.asNum.NumType = HB_ET_LONG;
+               pSelf->ExprType = HB_ET_NUMERIC;
+               pSelf->ValType  = HB_EV_NUMERIC;
+               HB_COMP_EXPR_FREE( pLeft );
+               HB_COMP_EXPR_FREE( pRight );
+            }
+            break;
 
-            pSelf->value.asNum.val.l = lVal;
-            pSelf->value.asNum.bDec = 0;
-            pSelf->value.asNum.NumType = HB_ET_LONG;
-            pSelf->ExprType = HB_ET_NUMERIC;
-            pSelf->ValType  = HB_EV_NUMERIC;
-            HB_COMP_EXPR_FREE( pLeft );
-            HB_COMP_EXPR_FREE( pRight );
-         }
+         default:
+            if( HB_SUPPORT_HARBOUR )
+            {
+               double dValue, dDivisor;
+
+               dDivisor = pRight->value.asNum.NumType == HB_ET_LONG ?
+                          pRight->value.asNum.val.l :
+                          pRight->value.asNum.val.d;
+               if( dDivisor )
+               {
+                  dValue = pLeft->value.asNum.NumType == HB_ET_LONG ?
+                           pLeft->value.asNum.val.l :
+                           pLeft->value.asNum.val.d;
+                  pSelf->value.asNum.val.d = fmod( dValue, dDivisor );
+                  pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+                  pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
+                  pSelf->value.asNum.NumType = HB_ET_DOUBLE;
+                  pSelf->ExprType = HB_ET_NUMERIC;
+                  pSelf->ValType  = HB_EV_NUMERIC;
+                  HB_COMP_EXPR_FREE( pLeft );
+                  HB_COMP_EXPR_FREE( pRight );
+               }
+            }
       }
    }
    else
@@ -303,6 +327,56 @@ HB_EXPR_PTR hb_compExprReduceMult( HB_EXPR_PTR pSelf, HB_COMP_DECL )
             pSelf->value.asNum.NumType = HB_ET_DOUBLE;
          }
       }
+      pSelf->ExprType = HB_ET_NUMERIC;
+      pSelf->ValType  = HB_EV_NUMERIC;
+      HB_COMP_EXPR_FREE( pLeft );
+      HB_COMP_EXPR_FREE( pRight );
+   }
+   else
+   {
+      /* TODO: Check for incompatible types e.g. 3 * "txt"
+      */
+   }
+   return pSelf;
+}
+
+HB_EXPR_PTR hb_compExprReducePower( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pLeft, pRight;
+
+   pLeft  = pSelf->value.asOperator.pLeft;
+   pRight = pSelf->value.asOperator.pRight;
+
+   if( pLeft->ExprType == HB_ET_NUMERIC && pRight->ExprType == HB_ET_NUMERIC )
+   {
+      BYTE bType = ( pLeft->value.asNum.NumType & pRight->value.asNum.NumType );
+
+      switch( bType )
+      {
+         case HB_ET_LONG:
+            pSelf->value.asNum.val.d = pow( ( double ) pLeft->value.asNum.val.l,
+                                            ( double ) pRight->value.asNum.val.l );
+            break;
+
+         case HB_ET_DOUBLE:
+            pSelf->value.asNum.val.d = pow( pLeft->value.asNum.val.d,
+                                            pRight->value.asNum.val.d );
+            break;
+
+         default:
+            pSelf->value.asNum.val.d = pow( pLeft->value.asNum.val.d,
+                                            pRight->value.asNum.val.d );
+            if( pLeft->value.asNum.NumType == HB_ET_DOUBLE )
+               pSelf->value.asNum.val.d = pow( pLeft->value.asNum.val.d,
+                                               ( double ) pRight->value.asNum.val.l );
+            else
+               pSelf->value.asNum.val.d = pow( ( double ) pLeft->value.asNum.val.l,
+                                               pRight->value.asNum.val.d );
+            break;
+      }
+      pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
+      pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
+      pSelf->value.asNum.NumType = HB_ET_DOUBLE;
       pSelf->ExprType = HB_ET_NUMERIC;
       pSelf->ValType  = HB_EV_NUMERIC;
       HB_COMP_EXPR_FREE( pLeft );

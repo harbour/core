@@ -3751,7 +3751,13 @@ static HB_EXPR_FUNC( hb_compExprUsePower )
 {
    switch( iMessage )
    {
-      case HB_EA_REDUCE:      /* Clipper doesn't optimize it */
+      case HB_EA_REDUCE:
+         if( HB_SUPPORT_HARBOUR )   /* Clipper doesn't optimize it */
+         {
+            pSelf->value.asOperator.pLeft  = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pLeft,  HB_EA_REDUCE ), HB_COMP_PARAM );
+            pSelf->value.asOperator.pRight = hb_compExprListStrip( HB_EXPR_USE( pSelf->value.asOperator.pRight,  HB_EA_REDUCE ), HB_COMP_PARAM );
+            pSelf =hb_compExprReducePower( pSelf, HB_COMP_PARAM );
+         }
          break;
 
       case HB_EA_ARRAY_AT:

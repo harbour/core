@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 13:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprop.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt2.c
+    + added hb_compExprReducePower() and compile time optimization for:
+         <NumConst1> ^ <NumConst2>
+    + added compile time optimization for:
+         <NumConst1> % <NumConst2>
+      when <NumConst1> or <NumConst2> is not integer value
+    NOTE: both optimizations are not Clipper compatible and disabled
+          when -kc compiler switch is used
+
 2008-06-02 12:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbsqlit3/tests/blob.prg
   * harbour/contrib/hbsqlit3/tests/sqlite3_test.prg
