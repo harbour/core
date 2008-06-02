@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 20:11 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/ppcomp.c
+  * harbour/source/compiler/cmdcheck.c
+    ! do not disable macrotext substitution for -kc
+
 2008-06-02 19:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprop.h
   * harbour/include/hbexprb.c

@@ -373,7 +373,8 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                      case 'c':
                         /* clear all flags - minimal set of features */
                         HB_COMP_PARAM->supported &= HB_COMPFLAG_SHORTCUTS;
-                        HB_COMP_PARAM->supported |= HB_COMPFLAG_OPTJUMP;
+                        HB_COMP_PARAM->supported |= HB_COMPFLAG_OPTJUMP |
+                                                    HB_COMPFLAG_MACROTEXT;
                         break;
 
                      case 'x':
