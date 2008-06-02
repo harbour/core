@@ -9668,14 +9668,12 @@ void hb_vmIsStaticRef( void )
  * $End$ */
 HB_FUNC( __SETPROFILER )
 {
-#ifndef HB_NO_PROFILER
-   BOOL bOldValue = hb_bProfiler;
-
-   hb_bProfiler = hb_parl( 1 );
-
-   hb_retl( bOldValue );
-#else
+#ifdef HB_NO_PROFILER
    hb_retl( FALSE );
+#else
+   hb_retl( hb_bProfiler );
+   if( ISLOG( 1 ) )
+      hb_bProfiler = hb_parl( 1 );
 #endif
 }
 
@@ -9688,10 +9686,9 @@ HB_FUNC( __TRACEPRGCALLS )
 #ifdef HB_NO_TRACE
    hb_retl( FALSE );
 #else
-   BOOL bOldValue = hb_bTracePrgCalls;
+   hb_retl( hb_bTracePrgCalls );
    if( ISLOG( 1 ) )
       hb_bTracePrgCalls = hb_parl( 1 );
-   hb_retl( bOldValue );
 #endif
 }
 
@@ -9718,8 +9715,8 @@ HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
    hb_reta( 2 );
 #endif
    {
-       hb_stornl( 0, -1, 1 );
-       hb_stornl( 0, -1, 2 );
+      hb_stornl( 0, -1, 1 );
+      hb_stornl( 0, -1, 2 );
    }
 }
 

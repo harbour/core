@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 21:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/vm/hvm.c
+     % Minor opt to __SETPROFILE(), __TRACEPRGCALLS()
+     ! __SETPROFILE() to only set the value if a parameter was passed.
+       This way it's possible to read the value without destroying it.
+
 2008-06-02 20:16 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/common/hbstr.c
      ! HB_EXPORT added to hb_strRemEscSeq(). Thanks Javier.
