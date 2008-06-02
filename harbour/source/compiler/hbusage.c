@@ -128,7 +128,7 @@ void hb_compPrintModes( HB_COMP_DECL )
    static const char * szOptions [] =
    {
            "\nOptions:  c               clear all flags (strict Clipper mode)",
-           "\n          h               Harbour mode (default)",
+           "\n          h               Harbour mode",
            "\n          i               enable support for HB_INLINE",
            "\n          r               runtime settings enabled",
            "\n          s               allow indexed assignment on all types",
@@ -138,13 +138,30 @@ void hb_compPrintModes( HB_COMP_DECL )
            "\n          ?               this info",
            "\n"
    };
+   static const int flags[] =
+   {
+      0,
+      HB_COMPFLAG_HARBOUR,
+      HB_COMPFLAG_HB_INLINE,
+      HB_COMPFLAG_RT_MACRO,
+      HB_COMPFLAG_ARRSTR,
+      HB_COMPFLAG_XBASE,
+      ~HB_COMPFLAG_OPTJUMP,
+      ~HB_COMPFLAG_MACROTEXT,
+   };
    int iLine;
 
    hb_compOutStd( HB_COMP_PARAM,
                   "\nCompatibility flags (lowercase/uppercase significant): -k[options]\n" );
 
    for( iLine = 0; iLine < ( int ) ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
+   {
       hb_compOutStd( HB_COMP_PARAM, szOptions[ iLine ] );
+      if( iLine < ( int ) ( sizeof( flags ) / sizeof( int ) ) &&
+          ( flags[ iLine ] < 0 ? ! HB_COMP_ISSUPPORTED( ~flags[ iLine ] ) :
+                                   HB_COMP_ISSUPPORTED( flags[ iLine ] ) ) )
+         hb_compOutStd( HB_COMP_PARAM, " (default)" );
+   }
 }
 
 /*
