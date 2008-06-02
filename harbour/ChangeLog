@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 11:34 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/vm/extrap.c
+     ! Blind fix for OS/2.
+
 2008-06-02 02:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit3/hbsqlit3.c
      ! Removed Windows API dependencies (MessageBox() -> HB_TRACE())

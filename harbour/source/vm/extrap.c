@@ -176,6 +176,8 @@ void hb_vmUnsetExceptionHandler( void )
       EXCEPTIONREGISTRATIONRECORD RegRec;    /* Exception Registration Record */
       APIRET rc;                             /* Return code                   */
 
+      memset( &RegRec, 0, sizeof( RegRec ) );
+      RegRec.ExceptionHandler = ( ERR ) hb_os2ExceptionHandler;
       /* I don't do any check on return code since harbour is exiting in any case */
       rc = DosUnsetExceptionHandler( &RegRec );
       HB_SYMBOL_UNUSED( rc );
