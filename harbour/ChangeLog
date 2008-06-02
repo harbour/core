@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 15:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbsqlit3/hbsqlit3.c
+    ! use char * instead of LPSTR to compile in non Windows environment
+    ! fixed one printf() parames
+    ! fixed casting and parameter type in sqlite3_blob_open()
+
+  * harbour/include/hbexprop.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt1.c
+  * harbour/source/common/expropt2.c
+    - removed unused hb_compExprAsLong()
+    + added hb_compExprAsLongNum(), hb_compExprReduceBitFunc()
+    + added compiletime optimizatiob for HB_BIT*() functions:
+      HB_BITAND(), HB_BITOR(), HB_BITXOR(), HB_BITSET(), HB_BITRESET()
+      HB_BITSHIFT(), HB_BITNOT(), HB_BITTEST()
+
 2008-06-02 13:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbcurl/common.mak
   * harbour/contrib/hbcurl/hbcurl.c

@@ -163,6 +163,7 @@ extern int hb_compExprAsInteger( HB_EXPR_PTR );
 extern int hb_compExprAsNumSign( HB_EXPR_PTR );
 extern int hb_compExprIsString( HB_EXPR_PTR );
 extern int hb_compExprAsStringLen( HB_EXPR_PTR );
+extern HB_LONG hb_compExprAsLongNum( HB_EXPR_PTR );
 extern char * hb_compExprAsString( HB_EXPR_PTR );
 extern char * hb_compExprAsSymbol( HB_EXPR_PTR );
 
@@ -196,9 +197,10 @@ extern BOOL hb_compExprReduceAT( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceCHR( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceLEN( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceASC( HB_EXPR_PTR, HB_COMP_DECL );
-extern BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL );
+extern BOOL hb_compExprReduceSTOD( HB_EXPR_PTR, USHORT usCount, HB_COMP_DECL );
 extern BOOL hb_compExprReduceCTOD( HB_EXPR_PTR, HB_COMP_DECL );
 extern BOOL hb_compExprReduceUPPER( HB_EXPR_PTR, HB_COMP_DECL );
+extern BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR, HB_LONG, BOOL, HB_COMP_DECL );
 
 extern void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext, UINT uiLine );
 

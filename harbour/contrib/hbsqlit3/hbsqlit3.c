@@ -216,7 +216,7 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
    BOOL  bResult = FALSE;
 
    #ifdef NODLL
-   LPSTR pszDirName;
+   char * pszDirName;
 
    #ifdef __XHARBOUR__
    pszDirName = hb_fileNameConv( hb_strdup( ( char * ) hb_parc(1) ) );
@@ -276,14 +276,14 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
 HB_FUNC( SQLITE3_OPEN )
 {
    psqlite3 db;
-   LPSTR    pszdbName;
+   char * pszdbName;
 
    #ifdef __XHARBOUR__
    pszdbName = hb_fileNameConv( hb_strdup( ( char * ) hb_parc(1) ) );
    #else
    BOOL  fFree;
 
-   pszdbName = ( LPSTR ) hb_fsNameConv( ( BYTE * ) hb_parc(1), &fFree );
+   pszdbName = ( char * ) hb_fsNameConv( ( BYTE * ) hb_parc(1), &fFree );
    #endif
    if( (!hb_fsFile( ( BYTE * ) pszdbName)) && (!hb_parl(2)) )
    {
@@ -317,14 +317,14 @@ HB_FUNC( SQLITE3_OPEN )
 HB_FUNC( SQLITE3_OPEN_V2 )
 {
    psqlite3 db;
-   LPSTR    pszdbName;
+   char *   pszdbName;
 
    #ifdef __XHARBOUR__
    pszdbName = hb_fileNameConv( hb_strdup( ( char * ) hb_parc(1) ) );
    #else
    BOOL  fFree;
 
-   pszdbName = ( LPSTR ) hb_fsNameConv( ( BYTE * ) hb_parc(1), &fFree );
+   pszdbName = ( char * ) hb_fsNameConv( ( BYTE * ) hb_parc(1), &fFree );
    #endif
    if( sqlite3_open_v2(pszdbName, &db, hb_parni(2), NULL) == SQLITE_OK )
    {
@@ -356,7 +356,7 @@ HB_FUNC( SQLITE3_OPEN_V2 )
 HB_FUNC( SQLITE3_EXEC )
 {
    psqlite3 db;
-   LPSTR    pszErrMsg = 0;
+   char *   pszErrMsg = 0;
 
    db = ( psqlite3 ) hb_parsqlite3( 1 );
    if( db != NULL )
@@ -397,7 +397,7 @@ HB_FUNC( SQLITE3_PREPARE )
 
       if( SQL != NULL )
       {
-         LPSTR          pSQL = hb_itemGetCPtr( SQL );
+         char *         pSQL = hb_itemGetCPtr( SQL );
          ULONG          ulLen = hb_itemGetCLen( SQL );
          psqlite3_stmt  pStmt;
          const char     *pszTail;
@@ -1069,7 +1069,7 @@ HB_FUNC( SQLITE3_GET_TABLE )
    {
       PHB_ITEM pResultList = hb_itemArrayNew( 0 );
       int      iRow, iCol;
-      LPSTR    pszErrMsg = 0;
+      char *   pszErrMsg = 0;
       char     **pResult;
 
       if( sqlite3_get_table(db, hb_parc(2), &pResult, &iRow, &iCol, &pszErrMsg) == SQLITE_OK )
@@ -1298,7 +1298,7 @@ HB_FUNC( SQLITE3_BLOB_OPEN )
    pDb = ( psqlite3 ) hb_parsqlite3( 1 );
    if( pDb != NULL )
    {
-      sqlite3_blob   **ppBlob;
+      sqlite3_blob   *ppBlob;
       sqlite3_int64  iRow;
 
       #ifndef HB_LONG_LONG_OFF
@@ -1316,7 +1316,7 @@ HB_FUNC( SQLITE3_BLOB_OPEN )
                ( const char * ) hb_parc(4),
                iRow,
                hb_parni(6),
-               (HANDLE) & ppBlob
+               &ppBlob
             )
       )
       {
@@ -1481,7 +1481,7 @@ static void SQL3ProfileLog( void *sFile, const char *sProfileMsg, sqlite3_uint64
       
       if( hFile )
       {
-         fprintf( hFile, "%s - %lld\n", sProfileMsg, &int64 );
+         fprintf( hFile, "%s - %" PFLL "d\n", sProfileMsg, int64 );
          fclose( hFile );
       }
    }

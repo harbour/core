@@ -1643,6 +1643,106 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                {
                   hb_compExprReduceUPPER( pSelf, HB_COMP_PARAM );
                }
+               else if( strncmp( "HB_BIT", pName->value.asSymbol, 6 ) == 0 &&
+                        usCount && pParms->value.asList.pExprList->ExprType == HB_ET_NUMERIC )
+               {
+                  HB_EXPR_PTR   pArg = pParms->value.asList.pExprList;
+                  HB_LONG lResult = 0;
+                  BOOL fOptimize = FALSE, fBool = FALSE;
+
+                  if( usCount >= 2 )
+                  {
+                     if( pArg->pNext->ExprType == HB_ET_NUMERIC )
+                     {
+                        if( strcmp( "TEST", pName->value.asSymbol + 6 ) == 0 )
+                        {
+                           HB_LONG lBit = hb_compExprAsLongNum( pArg->pNext );
+                           lResult = ( hb_compExprAsLongNum( pArg ) &
+                                       ( ( HB_LONG ) 1 << lBit ) ) != 0;
+                           fOptimize = fBool = TRUE;
+                        }
+                        else if( strcmp( "SET", pName->value.asSymbol + 6 ) == 0 )
+                        {
+                           HB_LONG lBit = hb_compExprAsLongNum( pArg->pNext );
+                           lResult = hb_compExprAsLongNum( pArg ) |
+                                     ( ( HB_LONG ) 1 << lBit );
+                           fOptimize = TRUE;
+                        }
+                        else if( strcmp( "RESET", pName->value.asSymbol + 6 ) == 0 )
+                        {
+                           HB_LONG lBit = hb_compExprAsLongNum( pArg->pNext );
+                           lResult = hb_compExprAsLongNum( pArg ) &
+                                     ( ~ ( ( HB_LONG ) 1 << lBit ) );
+                           fOptimize = TRUE;
+                        }
+                        else if( strcmp( "SHIFT", pName->value.asSymbol + 6 ) == 0 )
+                        {
+                           HB_LONG lBits = hb_compExprAsLongNum( pArg->pNext );
+                           lResult = hb_compExprAsLongNum( pArg );
+                           if( lBits < 0 )
+                              lResult >>= -lBits;
+                           else
+                              lResult <<= lBits;
+                           fOptimize = TRUE;
+                        }
+                     }
+                  }
+                  else if( strcmp( "NOT", pName->value.asSymbol + 6 ) == 0 )
+                  {
+                     lResult = ~hb_compExprAsLongNum( pArg );
+                     fOptimize = TRUE;
+                  }
+                  if( !fOptimize )
+                  {
+                     if( strcmp( "AND", pName->value.asSymbol + 6 ) == 0 )
+                     {
+                        fOptimize = TRUE;
+                        lResult = hb_compExprAsLongNum( pArg );
+                        while( --usCount )
+                        {
+                           pArg = pArg->pNext;
+                           if( pArg->ExprType != HB_ET_NUMERIC )
+                           {
+                              fOptimize = FALSE;
+                              break;
+                           }
+                           lResult &= hb_compExprAsLongNum( pArg );
+                        }
+                     }
+                     else if( strcmp( "OR", pName->value.asSymbol + 6 ) == 0 )
+                     {
+                        fOptimize = TRUE;
+                        lResult = hb_compExprAsLongNum( pArg );
+                        while( --usCount )
+                        {
+                           pArg = pArg->pNext;
+                           if( pArg->ExprType != HB_ET_NUMERIC )
+                           {
+                              fOptimize = FALSE;
+                              break;
+                           }
+                           lResult |= hb_compExprAsLongNum( pArg );
+                        }
+                     }
+                     else if( strcmp( "XOR", pName->value.asSymbol + 6 ) == 0 )
+                     {
+                        fOptimize = TRUE;
+                        lResult = hb_compExprAsLongNum( pArg );
+                        while( --usCount )
+                        {
+                           pArg = pArg->pNext;
+                           if( pArg->ExprType != HB_ET_NUMERIC )
+                           {
+                              fOptimize = FALSE;
+                              break;
+                           }
+                           lResult ^= hb_compExprAsLongNum( pArg );
+                        }
+                     }
+                  }
+                  if( fOptimize )
+                     hb_compExprReduceBitFunc( pSelf, lResult, fBool, HB_COMP_PARAM );
+               }
 #ifndef HB_MACRO_SUPPORT
                else if( strncmp( "HB_I18N_", pName->value.asSymbol, 8 ) == 0 )
                {

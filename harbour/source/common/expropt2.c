@@ -1783,3 +1783,16 @@ BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    return FALSE;
 }
+
+BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR pSelf, HB_LONG lResult, BOOL fBool, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pExpr = fBool ? hb_compExprNewLogical( lResult != 0, HB_COMP_PARAM ) :
+                               hb_compExprNewLong( lResult, HB_COMP_PARAM );
+
+   HB_COMP_EXPR_FREE( pParms );
+   HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
+   memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+   HB_COMP_EXPR_CLEAR( pExpr );
+   return TRUE;
+}
