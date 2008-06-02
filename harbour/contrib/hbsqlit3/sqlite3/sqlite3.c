@@ -1547,7 +1547,7 @@ SQLITE_API int sqlite3_complete16(const void *sql);
 ** <a href="http://www.sqlite.org/cvstrac/wiki?p=CorruptionFollowingBusyError">
 ** CorruptionFollowingBusyError</a> wiki page for a discussion of why
 ** this is important.
-**	
+**
 ** There can only be a single busy handler defined for each database
 ** connection.  Setting a new busy handler clears any previous one. 
 ** Note that calling [sqlite3_busy_timeout()] will also set or clear
@@ -11488,9 +11488,9 @@ SQLITE_API void *sqlite3_malloc(int nByte){
         void *aAddr[40];
         pHdr->nBacktrace = backtrace(aAddr, mem.nBacktrace+1)-1;
         memcpy(pBt, &aAddr[1], pHdr->nBacktrace*sizeof(void*));
-	if( mem.xBacktrace ){
+      if( mem.xBacktrace ){
           mem.xBacktrace(nByte, pHdr->nBacktrace-1, &aAddr[1]);
-	}
+      }
       }else{
         pHdr->nBacktrace = 0;
       }
@@ -36851,7 +36851,7 @@ static int btreeCopyFile(Btree *pTo, Btree *pFrom){
           }
 
           memcpy(zTo, zFrom, nCopy);
-	  sqlite3PagerUnref(pFromPage);
+          sqlite3PagerUnref(pFromPage);
         }
       }
 
@@ -36916,7 +36916,7 @@ static int btreeCopyFile(Btree *pTo, Btree *pFrom){
           rc = sqlite3PagerGet(pBtFrom->pPager, iFrom, &pFromPage);
           if( rc==SQLITE_OK ){
             char *zFrom = sqlite3PagerGetData(pFromPage);
-  	  rc = sqlite3OsWrite(pFile, zFrom, nFromPageSize, iOff);
+            rc = sqlite3OsWrite(pFile, zFrom, nFromPageSize, iOff);
             sqlite3PagerUnref(pFromPage);
           }
         }
@@ -45240,7 +45240,7 @@ case OP_NewRowid: {           /* out2-prerelease */
         Mem *pMem;
         assert( pOp->p3>0 && pOp->p3<=p->nMem ); /* P3 is a valid memory cell */
         pMem = &p->aMem[pOp->p3];
-	REGISTER_TRACE(pOp->p3, pMem);
+        REGISTER_TRACE(pOp->p3, pMem);
         sqlite3VdbeMemIntegerify(pMem);
         assert( (pMem->flags & MEM_Int)!=0 );  /* mem(P3) holds an integer */
         if( pMem->u.i==MAX_ROWID || pC->useRandomRowid ){

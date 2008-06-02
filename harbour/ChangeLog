@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-02 12:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbsqlit3/tests/blob.prg
+  * harbour/contrib/hbsqlit3/tests/sqlite3_test.prg
+  * harbour/contrib/hbsqlit3/sqlite3/sqlite3.c
+  * harbour/contrib/hbsqlit3/sqlite3/sqlite3.h
+    * converted TABs to SPACEs
+
 2008-06-02 12:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/common/hbverdsp.c
      ! Minor correction.

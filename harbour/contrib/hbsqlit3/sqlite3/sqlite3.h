@@ -1141,7 +1141,7 @@ int sqlite3_complete16(const void *sql);
 ** <a href="http://www.sqlite.org/cvstrac/wiki?p=CorruptionFollowingBusyError">
 ** CorruptionFollowingBusyError</a> wiki page for a discussion of why
 ** this is important.
-**	
+**
 ** There can only be a single busy handler defined for each database
 ** connection.  Setting a new busy handler clears any previous one. 
 ** Note that calling [sqlite3_busy_timeout()] will also set or clear

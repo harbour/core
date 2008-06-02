@@ -31,7 +31,7 @@ PROCEDURE main()
 
    IF sqlite3_libversion_number() < 3005001
       RETURN
-   ENDIF		
+   ENDIF
 
    t1()
    t2()
@@ -236,9 +236,9 @@ PROCEDURE t2()
             ?? aTable[nI][nJ], " "
          NEXT nJ
          ? 
-      NEXT nI	
+      NEXT nI
 
-      sqlite3_sleep( 3000 )	
+      sqlite3_sleep( 3000 )
    ENDIF
 
 RETURN

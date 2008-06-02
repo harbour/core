@@ -79,7 +79,7 @@ PROCEDURE main()
          sqlite3_blob_close( blob )
          ? "Close BLOB"
       ENDIF
-      sqlite3_sleep( 3000 )	
+      sqlite3_sleep( 3000 )
 
       ?""
       ?"Save BLOB using sqlite3_column_blob()"
