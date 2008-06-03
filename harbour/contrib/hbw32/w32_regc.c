@@ -86,19 +86,20 @@ static HKEY hb_regkeyconv( ULONG nKey )
    return Result;
 }
 
-HB_FUNC( WIN32_REGCREATEKEYEX  )
+HB_FUNC( WIN32_REGCREATEKEYEX )
 {
    HKEY hWnd = ( HKEY ) hb_parnl( 8 );
    ULONG nResult = hb_parnl( 9 );
-  
-   if( RegCreateKeyEx( hb_regkeyconv( hb_parnl( 1 ) ), 
-                       ( const char * ) hb_parc( 2 ), 
-                       0, 
-                       NULL, 
-                       hb_parnl( 5 ), 
-                       hb_parnl( 6 ), 
-                       NULL, 
-                       &hWnd, 
+   LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 2 ) );
+
+   if( RegCreateKeyEx( hb_regkeyconv( hb_parnl( 1 ) ),
+                       lpText,
+                       0,
+                       NULL,
+                       hb_parnl( 5 ),
+                       hb_parnl( 6 ),
+                       NULL,
+                       &hWnd,
                        &nResult ) == ERROR_SUCCESS )
    {
       hb_stornl( ( ULONG ) hWnd, 8 );
@@ -108,16 +109,19 @@ HB_FUNC( WIN32_REGCREATEKEYEX  )
    }
    else
       hb_retnl( -1 );
+
+   HB_TCHAR_FREE( lpText );
 }
 
 HB_FUNC( WIN32_REGOPENKEYEX )
 {
    HKEY hWnd;
+   LPTSTR lpText = HB_TCHAR_CONVTO( hb_parc( 2 ) );
    
-   if( RegOpenKeyEx( hb_regkeyconv( hb_parnl( 1 ) ), 
-                     hb_parc( 2 ),
-                     0, 
-                     hb_parnl( 4 ), 
+   if( RegOpenKeyEx( hb_regkeyconv( hb_parnl( 1 ) ),
+                     lpText,
+                     0,
+                     hb_parnl( 4 ),
                      &hWnd ) == ERROR_SUCCESS )
    {
       hb_stornl( ( ULONG ) hWnd, 5 );
@@ -125,67 +129,72 @@ HB_FUNC( WIN32_REGOPENKEYEX )
    }
    else
       hb_retnl( -1 );
+
+   HB_TCHAR_FREE( lpText );
 }
 
 HB_FUNC( WIN32_REGQUERYVALUEEX )
 {
-   const char * cKey = ( const char * ) hb_parc( 2 ) ;
    DWORD nType = 0;
    DWORD nSize = 0;
-  
-   if( RegQueryValueEx( hb_regkeyconv( hb_parnl( 1 ) ), 
-                        cKey, 
-                        NULL, 
-                        &nType, 
-                        NULL, 
+   LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parc( 2 ) );
+
+   if( RegQueryValueEx( hb_regkeyconv( hb_parnl( 1 ) ),
+                        lpKey,
+                        NULL,
+                        &nType,
+                        NULL,
                         &nSize ) == ERROR_SUCCESS )
    {
       if( nSize > 0 )
       {
          BYTE * cValue = ( BYTE * ) hb_xgrab( nSize + 1 );
 
-         RegQueryValueEx( hb_regkeyconv( hb_parnl( 1 ) ), 
-                          cKey, 
-                          NULL, 
-                          &nType, 
-                          ( BYTE * ) cValue, 
+         RegQueryValueEx( hb_regkeyconv( hb_parnl( 1 ) ),
+                          lpKey,
+                          NULL,
+                          &nType,
+                          ( BYTE * ) cValue,
                           &nSize );
 
          hb_stornl( nType, 4 );
 
          if( ! hb_storclen_buffer( ( char * ) cValue, nSize, 5 ) )
-            hb_free( cValue );
+            hb_xfree( cValue );
       }
    }
+   HB_TCHAR_FREE( lpKey );
   
    hb_retnl( nSize );
 }
 
 HB_FUNC( WIN32_REGSETVALUEEX )
 {
-   const char * cKey = hb_parc( 2 );
    DWORD nType = hb_parnl( 4 );
-  
+   LPTSTR lpKey = HB_TCHAR_CONVTO( hb_parc( 2 ) );
+
    if( nType != REG_DWORD )
    {
       BYTE * cValue = ( BYTE * ) hb_parc( 5 );
-      hb_retni( RegSetValueEx( hb_regkeyconv( hb_parnl( 1 ) ), 
-                               cKey, 
-                               0, 
-                               nType, 
-                               ( BYTE * ) cValue, 
+      hb_retni( RegSetValueEx( hb_regkeyconv( hb_parnl( 1 ) ),
+                               lpKey,
+                               0,
+                               nType,
+                               ( BYTE * ) cValue,
                                hb_parclen( 5 ) + 1 ) );
    }
    else
    {
       DWORD nSpace = hb_parnl( 5 );
-      hb_retni( RegSetValueEx( hb_regkeyconv( hb_parnl( 1 ) ), 
-                               cKey, 
-                               0, 
-                               nType, 
-                               ( BYTE * ) &nSpace, 
+      hb_retni( RegSetValueEx( hb_regkeyconv( hb_parnl( 1 ) ),
+                               lpKey,
+                               0,
+                               nType,
+                               ( BYTE * ) &nSpace,
                                sizeof( REG_DWORD ) ) );
    }
+
+   HB_TCHAR_FREE( lpKey );
 }
 
 HB_FUNC( WIN32_REGCLOSEKEY )

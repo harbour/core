@@ -215,9 +215,21 @@ HB_EXPORT PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pIt
 
 HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 {
-   ULONG ulLen = szText ? strlen( szText ) : 0;
+   ULONG ulLen, ulAlloc;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutC(%p, %s)", pItem, szText));
+
+   ulLen = szText ? strlen( szText ) : 0;
+   if( ulLen > 1 )
+   {
+      ulAlloc = ulLen + 1;
+      szText = ( char * ) hb_xmemcpy( hb_xgrab( ulAlloc ), szText, ulAlloc );
+   }
+   else
+   {
+      ulAlloc = 0;
+      szText = ( char * ) ( ulLen ? hb_szAscii[ ( unsigned char ) ( szText[0] ) ] : "" );
+   }
 
    if( pItem )
    {
@@ -227,35 +239,31 @@ HB_EXPORT PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
    else
       pItem = hb_itemNew( NULL );
 
-   if( ulLen == 0 )
-   {
-      pItem->item.asString.value     = "";
-      pItem->item.asString.length    = 0;
-      pItem->item.asString.allocated = 0;
-   }
-   else if( ulLen == 1 )
-   {
-      pItem->item.asString.value     = ( char * ) hb_szAscii[ (unsigned char) ( szText[0] ) ];
-      pItem->item.asString.length    = 1;
-      pItem->item.asString.allocated = 0;
-   }
-   else
-   {
-      pItem->item.asString.value     = ( char * ) hb_xgrab( ulLen + 1 );
-      /* we used strlen() above so we know it's 0-ended string */
-      hb_xmemcpy( pItem->item.asString.value, szText, ulLen + 1 );
-      pItem->item.asString.length    = ulLen;
-      pItem->item.asString.allocated = ulLen + 1;
-   }
-
    pItem->type = HB_IT_STRING;
+   pItem->item.asString.value     = ( char * ) szText;
+   pItem->item.asString.length    = ulLen;
+   pItem->item.asString.allocated = ulAlloc;
 
    return pItem;
 }
 
 HB_EXPORT PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLen )
 {
+   ULONG ulAlloc;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCL(%p, %s, %lu)", pItem, szText, ulLen));
+
+   if( ulLen > 1 )
+   {
+      ulAlloc = ulLen + 1;
+      szText = ( char * ) hb_xmemcpy( hb_xgrab( ulAlloc ), szText, ulLen );
+      ( ( char * ) szText )[ ulLen ] = '\0';
+   }
+   else
+   {
+      ulAlloc = 0;
+      szText = ( char * ) ( ulLen ? hb_szAscii[ ( unsigned char ) ( szText[0] ) ] : "" );
+   }
 
    if( pItem )
    {
@@ -269,28 +277,10 @@ HB_EXPORT PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, ULONG ulLe
             trash if the szText buffer is NULL, at least with hb_retclen().
             [vszakats] */
 
-   if( szText == NULL || ulLen == 0 )
-   {
-      pItem->item.asString.value     = "";
-      pItem->item.asString.length    = 0;
-      pItem->item.asString.allocated = 0;
-   }
-   else if( ulLen == 1 )
-   {
-      pItem->item.asString.value     = ( char * ) hb_szAscii[ (unsigned char) ( szText[0] ) ];
-      pItem->item.asString.length    = 1;
-      pItem->item.asString.allocated = 0;
-   }
-   else
-   {
-      pItem->item.asString.value     = ( char * ) hb_xgrab( ulLen + 1 );
-      hb_xmemcpy( pItem->item.asString.value, szText, ulLen );
-      pItem->item.asString.value[ ulLen ] = '\0';
-      pItem->item.asString.length    = ulLen;
-      pItem->item.asString.allocated = ulLen + 1;
-   }
-
    pItem->type = HB_IT_STRING;
+   pItem->item.asString.value     = ( char * ) szText;
+   pItem->item.asString.length    = ulLen;
+   pItem->item.asString.allocated = ulAlloc;
 
    return pItem;
 }
@@ -336,9 +326,6 @@ HB_EXPORT PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, ULONG
    else
       pItem = hb_itemNew( NULL );
 
-   pItem->type = HB_IT_STRING;
-   pItem->item.asString.allocated = 0;
-
    if( szText == NULL )
    {
       pItem->item.asString.value  = "";
@@ -352,6 +339,9 @@ HB_EXPORT PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, ULONG
       pItem->item.asString.value  = ( char * ) szText;
       pItem->item.asString.length = ulLen;
    }
+
+   pItem->type = HB_IT_STRING;
+   pItem->item.asString.allocated = 0;
 
    return pItem;
 }

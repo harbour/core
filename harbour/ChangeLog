@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-03 17:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbw32/w32_regc.c
+    ! fixed typo hb_free() => hb_xfree()
+    ! fixed UNICODE build
+
+  * harbour/source/vm/itemapi.c
+    * changed hb_itemPutC() and hb_itemPutCL() to be safe when
+      user call it passing string which is stored in item passed
+      as first parameter. It should fix problem located by Chen.
+      Please test.
+
 2008-06-03 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/extrap.c
     ! fixed unregistering exception error handler in OS2 builds
