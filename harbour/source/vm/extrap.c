@@ -119,6 +119,8 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo
 
 #if defined(HB_OS_OS2)
 
+static EXCEPTIONREGISTRATIONRECORD s_regRec;    /* Exception Registration Record */
+
 ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
                                       PEXCEPTIONREGISTRATIONRECORD p2,
                                       PCONTEXTRECORD               p3,
@@ -157,12 +159,11 @@ void hb_vmSetExceptionHandler( void )
    }
 #elif defined(HB_OS_OS2) /* Add OS2TermHandler to this thread's chain of exception handlers */
    {
-      EXCEPTIONREGISTRATIONRECORD RegRec;    /* Exception Registration Record */
       APIRET rc;                             /* Return code                   */
 
-      memset( &RegRec, 0, sizeof( RegRec ) );
-      RegRec.ExceptionHandler = ( ERR ) hb_os2ExceptionHandler;
-      rc = DosSetExceptionHandler( &RegRec );
+      memset( &s_regRec, 0, sizeof( s_regRec ) );
+      s_regRec.ExceptionHandler = ( ERR ) hb_os2ExceptionHandler;
+      rc = DosSetExceptionHandler( &s_regRec );
       if( rc != NO_ERROR )
          hb_errInternal( HB_EI_ERRUNRECOV, "Unable to setup exception handler (DosSetExceptionHandler())", NULL, NULL );
    }
@@ -173,13 +174,10 @@ void hb_vmUnsetExceptionHandler( void )
 {
 #if defined(HB_OS_OS2) /* Add OS2TermHandler to this thread's chain of exception handlers */
    {
-      EXCEPTIONREGISTRATIONRECORD RegRec;    /* Exception Registration Record */
       APIRET rc;                             /* Return code                   */
 
-      memset( &RegRec, 0, sizeof( RegRec ) );
-      RegRec.ExceptionHandler = ( ERR ) hb_os2ExceptionHandler;
       /* I don't do any check on return code since harbour is exiting in any case */
-      rc = DosUnsetExceptionHandler( &RegRec );
+      rc = DosUnsetExceptionHandler( &s_regRec );
       HB_SYMBOL_UNUSED( rc );
    }
 #endif
