@@ -12,7 +12,7 @@
 
 test_reqpkg()
 {
-    dpkg -s "$1" &> /dev/null
+    dpkg -l "$1" 2> /dev/null | grep '^ii' &> /dev/null
 }
 
 TOINST_LST=""
@@ -30,7 +30,7 @@ else
     then
         export HB_GPM_MOUSE=yes
     fi
-    if [ -z "$HB_WITHOUT_GTSLN" ] && test_reqpkg libslang2-dev
+    if [ -z "$HB_WITHOUT_GTSLN" ] && ! test_reqpkg libslang2-dev
     then
         export HB_WITHOUT_GTSLN=yes
     fi
@@ -52,8 +52,8 @@ then
 fi
 
 if [ -z "$HB_WITHOUT_ADS" ] && \
-   ! /usr/local/ads/acesdk/ace.h && \
-   ! $(HOME)/ads/acesdk/ace.h
+   [ ! -f "/usr/local/ads/acesdk/ace.h" ] && \
+   [ ! -f "${HOME}/ads/acesdk/ace.h" ]
 then
     export HB_WITHOUT_ADS=yes
 fi
@@ -66,6 +66,12 @@ fi
 if test_reqpkg libmysqlclient15-dev
 then
     export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbmysql"
+fi
+
+if test_reqpkg libgd-xpm-dev || \
+   test_reqpkg libgd2-xpm-dev 
+then
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbgd"
 fi
 
 if [ -z "${TOINST_LST}" ] || [ "$1" = "--force" ]
