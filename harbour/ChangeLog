@@ -22,7 +22,7 @@
    + contrib/hbw32/w32_regc.c
    + contrib/hbw32/tests/testreg.prg
      + Added Windows registry handling stuff.
-       Work of Peter Rees <peter@rees.co.nz> / xhb.
+       Work of Peter Rees <peter/at/rees.co.nz> / xhb.
      * Code cleaned, formatted, optimized a bit.
      + Added an even simpler interface:
        w32_regRead( <reg_path> ) -> xValue
