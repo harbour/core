@@ -199,14 +199,14 @@ HB_FUNC( SYSTEMPARAMETERSINFO )
          if( ISBYREF( 3 ) )
          {
             if( ! hb_storclen_buffer( cText, hb_itemGetCLen( pBuffer ), 3 ) )
-               hb_xfree( xText );
+               hb_xfree( cText );
       
             hb_retl( TRUE );
             return;
          }
       }
 
-      hb_xfree( xText );
+      hb_xfree( cText );
    }
 
    hb_retl( FALSE );
