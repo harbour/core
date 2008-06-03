@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-03 22:24 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+     ! Fixed macros used in *_LARGE setopt options.
+
+   * contrib/hbcurl/hbcurl.c
+   * contrib/hbsqlit3/hbsqlit3.c
+     * Using hb_parnint()/hb_retnint() instead of messing 
+       with LONG_LONG locally.
+
 2008-06-03 19:59 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/garbage.c
     % clear hb_stack return item in HB_GCALL() function before
