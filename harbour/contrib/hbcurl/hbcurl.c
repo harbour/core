@@ -1488,9 +1488,5 @@ HB_FUNC( CURL_MULTI_STRERROR )
 /* NOTE: This returns the number of seconds since January 1st 1970 in the UTC time zone. */
 HB_FUNC( CURL_GETDATE )
 {
-#ifdef HB_LONG_LONG_OFF
-   hb_retnd( ( double ) curl_getdate( hb_parcx( 1 ), NULL ) );
-#else
-   hb_retnll(           curl_getdate( hb_parcx( 1 ), NULL ) );
-#endif
+   hb_retnint( ( HB_LONG ) curl_getdate( hb_parcx( 1 ), NULL ) );
 }
