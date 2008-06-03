@@ -193,11 +193,7 @@ HB_FUNC( SQLITE3_LAST_INSERT_ROWID )
    if( db != NULL )
    {
       int64 = sqlite3_last_insert_rowid( db );
-      #ifndef HB_LONG_LONG_OFF
-      hb_retnll( int64 );
-      #else
-      hb_retnd( int64 );
-      #endif
+      hb_retnint( int64 );
    }
    else
    {
@@ -614,11 +610,7 @@ HB_FUNC( SQLITE3_BIND_INT64 )
    psqlite3_stmt  pStmt;
    sqlite3_int64  int64;
 
-   #ifndef HB_LONG_LONG_OFF
-   int64 = hb_parnll( 3 );
-   #else
-   int64 = hb_parnd( 3 );
-   #endif
+   int64 = hb_parnint( 3 );
    pStmt = ( psqlite3_stmt ) hb_parptr( 1 );
 
    if( pStmt != NULL )
@@ -961,11 +953,7 @@ HB_FUNC( SQLITE3_COLUMN_INT64 )
 
    if( pStmt != NULL )
    {
-      #ifndef HB_LONG_LONG_OFF
-      hb_retnll( sqlite3_column_int64(pStmt, hb_parni(2) - 1) );
-      #else
-      hb_retnd( sqlite3_column_int64(pStmt, hb_parni(2) - 1) );
-      #endif
+      hb_retnint( sqlite3_column_int64(pStmt, hb_parni(2) - 1) );
    }
    else
    {
@@ -1301,11 +1289,7 @@ HB_FUNC( SQLITE3_BLOB_OPEN )
       sqlite3_blob   *ppBlob;
       sqlite3_int64  iRow;
 
-      #ifndef HB_LONG_LONG_OFF
-      iRow = hb_parnll( 5 );
-      #else
-      iRow = hb_parnd( 5 );
-      #endif
+      iRow = hb_parnint( 5 );
       if
       (
          SQLITE_OK == sqlite3_blob_open

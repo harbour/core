@@ -71,11 +71,7 @@
 
 #define HB_CURL_OPT_BOOL( n )      ( ISLOG( n ) ? ( long ) hb_parl( n ) : hb_parnl( n ) )
 #define HB_CURL_OPT_BOOL_TRUE( n ) ( ISLOG( n ) ? ( long ) hb_parl( n ) : ( ISNUM( n ) ? hb_parnl( n ) : 1 ) )
-#ifdef HB_LONG_LONG_OFF
-   #define HB_CURL_OPT_LARGEN( n ) ( ( curl_off_t ) hb_parnl( 3 ) ) /* TOFIX */
-#else
-   #define HB_CURL_OPT_LARGEN( n ) ( ( curl_off_t ) hb_parnll( 3 ) ) /* TOFIX */
-#endif
+#define HB_CURL_OPT_LARGENUM( n )  ( ( curl_off_t ) hb_parnint( n ) )
 
 /* NOTE: Since LIBCURL_VERSION_NUM doesn't reflect real revision,
          we're simply redefining it to the latest version available,
@@ -661,7 +657,7 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_POSTFIELDSIZE, hb_parnl( 3 ) );
          break;
       case HB_CURLOPT_POSTFIELDSIZE_LARGE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_POSTFIELDSIZE_LARGE, HB_CURL_OPT_LARGEN( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_POSTFIELDSIZE_LARGE, HB_CURL_OPT_LARGENUM( 3 ) );
          break;
       case HB_CURLOPT_HTTPPOST:
          {
@@ -884,7 +880,7 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_RESUME_FROM, hb_parnl( 3 ) );
          break;
       case HB_CURLOPT_RESUME_FROM_LARGE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_RESUME_FROM_LARGE, HB_CURL_OPT_LARGEN( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_RESUME_FROM_LARGE, HB_CURL_OPT_LARGENUM( 3 ) );
          break;
       case HB_CURLOPT_CUSTOMREQUEST:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_CUSTOMREQUEST, hb_parc( 3 ) );
@@ -899,7 +895,7 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_INFILESIZE, hb_parnl( 3 ) );
          break;
       case HB_CURLOPT_INFILESIZE_LARGE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_INFILESIZE_LARGE, HB_CURL_OPT_LARGEN( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_INFILESIZE_LARGE, HB_CURL_OPT_LARGENUM( 3 ) );
          break;
       case HB_CURLOPT_UPLOAD:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_UPLOAD, HB_CURL_OPT_BOOL_TRUE( 3 ) );
@@ -911,7 +907,7 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAXFILESIZE, hb_parnl( 3 ) );
          break;
       case HB_CURLOPT_MAXFILESIZE_LARGE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAXFILESIZE_LARGE, HB_CURL_OPT_LARGEN( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAXFILESIZE_LARGE, HB_CURL_OPT_LARGENUM( 3 ) );
          break;
       case HB_CURLOPT_TIMECONDITION:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_TIMECONDITION, hb_parnl( 3 ) );
@@ -935,10 +931,10 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_LOW_SPEED_TIME, hb_parnl( 3 ) );
          break;
       case HB_CURLOPT_MAX_SEND_SPEED_LARGE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAX_SEND_SPEED_LARGE, HB_CURL_OPT_LARGEN( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAX_SEND_SPEED_LARGE, HB_CURL_OPT_LARGENUM( 3 ) );
          break;
       case HB_CURLOPT_MAX_RECV_SPEED_LARGE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAX_RECV_SPEED_LARGE, HB_CURL_OPT_LARGEN( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAX_RECV_SPEED_LARGE, HB_CURL_OPT_LARGENUM( 3 ) );
          break;
       case HB_CURLOPT_MAXCONNECTS:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAXCONNECTS, hb_parnl( 3 ) );
