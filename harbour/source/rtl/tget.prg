@@ -842,8 +842,8 @@ METHOD delRight() CLASS Get
 
    RETURN Self
 
-/* NOTE ::wordLeft()
-        ::delWordRight() */
+/* ::wordLeft()
+   ::delWordRight() */
 
 METHOD delWordLeft() CLASS Get
 

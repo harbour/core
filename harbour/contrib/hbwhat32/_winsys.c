@@ -184,35 +184,32 @@ HB_FUNC( MULDIV )
 //
 HB_FUNC( SYSTEMPARAMETERSINFO )
 {
-   char *cText;
    PHB_ITEM pBuffer = hb_param( 3, HB_IT_STRING );
 
    if( pBuffer )
    {
-      cText = (char*) hb_xgrab( hb_itemGetCLen( pBuffer )+1 );
+      char * cText = (char*) hb_xgrab( hb_itemGetCLen( pBuffer )+1 );
       hb_xmemcpy( cText, hb_itemGetC( pBuffer ), hb_itemGetCLen( pBuffer )+1 );
-   }
-   else
-   {
-      hb_retl( FALSE );
-      return;
+
+      if( SystemParametersInfo( (UINT) hb_parni( 1 ),
+                                (UINT) hb_parni( 2 ),
+                                cText,
+                                (UINT) hb_parni( 4 ) ) )
+      {
+         if( ISBYREF( 3 ) )
+         {
+            if( ! hb_storclen_buffer( cText, hb_itemGetCLen( pBuffer ), 3 ) )
+               hb_xfree( xText );
+      
+            hb_retl( TRUE );
+            return;
+         }
+      }
+
+      hb_xfree( xText );
    }
 
-   if( SystemParametersInfo( (UINT) hb_parni( 1 ),
-                             (UINT) hb_parni( 2 ),
-                             cText,
-                             (UINT) hb_parni( 4 ) ) )
-   {
-      if( ISBYREF( 3 ) )
-      {
-        hb_storclen_buffer( cText, hb_itemGetCLen( pBuffer ), 3 );
-        hb_retl( TRUE );
-     }
-   }
-   else
-   {
-      hb_retl( FALSE );
-   }
+   hb_retl( FALSE );
 }
 
 //-------------------------------------------------------------------//

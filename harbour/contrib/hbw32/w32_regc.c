@@ -152,7 +152,9 @@ HB_FUNC( WIN32_REGQUERYVALUEEX )
                           &nSize );
 
          hb_stornl( nType, 4 );
-         hb_storclen_buffer( ( char * ) cValue, nSize, 5 );
+
+         if( ! hb_storclen_buffer( ( char * ) cValue, nSize, 5 ) )
+            hb_free( cValue );
       }
    }
   

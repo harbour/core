@@ -187,7 +187,8 @@ HB_FUNC( HPDF_READFROMSTREAM )
 
    hb_retnl( (long) HPDF_ReadFromStream( HPDF_Doc_par( 1 ), buffer, &size ) );
 
-   hb_storclen_buffer( ( char * ) buffer, size, 2 );
+   if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
+      hb_xfree( buffer );
 }
 //----------------------------------------------------------------------//
 // HPdf_ResetStream( hDoc ) -> hStatus

@@ -489,7 +489,8 @@ HB_FUNC( CURL_EASY_RECV )
 
       hb_retnl( ( long ) curl_easy_recv( hb_curl->curl, buffer, size, &size ) );
 
-      hb_storclen_buffer( ( char * ) buffer, size, 2 );
+      if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
+         hb_free( buffer );
    }
 }
 

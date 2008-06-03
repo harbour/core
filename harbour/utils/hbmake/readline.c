@@ -242,7 +242,9 @@ HB_FUNC( HB_FREADLINE )
 
    pBuffer = hb_fsReadLine( hFileHandle, &lSize, Term, iTermSizes, iTerms, &bFound, &bEOF  );
 
-   hb_storclen_buffer( (char*) pBuffer, lSize, 2 );
+   if( ! hb_storclen_buffer( (char*) pBuffer, lSize, 2 ) )
+      hb_xfree( pBuffer );
+
    hb_retnl( bEOF ? -1 : 0 );
    hb_xfree( Term );
    hb_xfree( iTermSizes );

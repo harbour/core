@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-03 10:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/vm/extend.c
+     ! Reverted previous change. Caller should check the 
+       retval of hb_storclen_buffer() and free the pointer 
+       in case it's zero.
+       Thanks Przemek.
+
+   * contrib/hbw32/w32_regc.c
+   * contrib/hbhpdf/harupdf.c
+   * contrib/hbwhat32/_winsys.c
+   * utils/hbmake/readline.c
+     ! Fixed hb_storclen_buffer() calls.
+
+   * contrib/hbwhat32/_winsys.c
+     ! SYSTEMPARAMETERSINFO() fixed retval and leaks.
+     ; Please test.
+
+   * source/rtl/tget.prg
+     ! Typo.
+
 2008-06-03 09:11 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/rdd.api
      + Added necessary conversions.
@@ -22,8 +42,8 @@
      ! Fixed indentation.
 
    * contrib/hbhpdf/harupdf.c
-     ! Fixed hpdf_ReadFromStream() fixed to not overflow 
-       to buffer in hb_storlen_buffer().
+     ! Fixed hpdf_ReadFromStream() to not overflow 
+       to buffer in hb_storclen_buffer().
 
 2008-06-03 01:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/extend.c
