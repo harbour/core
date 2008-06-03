@@ -501,7 +501,7 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\hbrandom$(OBJEXT) \
     $(OBJ_DIR)\hbregex$(OBJEXT)  \
     $(OBJ_DIR)\hbregexc$(OBJEXT) \
-    $(OBJ_DIR)\hbrun$(OBJEXT)    \
+    $(OBJ_DIR)\hbrunfun$(OBJEXT) \
     $(OBJ_DIR)\hbtoken$(OBJEXT)  \
     $(OBJ_DIR)\hbzlib$(OBJEXT)   \
     $(OBJ_DIR)\idle$(OBJEXT)     \

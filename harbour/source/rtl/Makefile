@@ -66,7 +66,7 @@ C_SOURCES=\
 	hbrandom.c   \
 	hbregex.c    \
 	hbregexc.c   \
-	hbrun.c      \
+	hbrunfun.c   \
 	hbtoken.c    \
 	hbzlib.c     \
 	idle.c       \
