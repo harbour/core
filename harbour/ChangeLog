@@ -523,19 +523,6 @@
    * contrib/hbcurl/tests/ftp_uldl.prg
      * Minor changes.
 
-2008-05-31 15:37 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
-   * contrib/hbcurl/hbcurl.c
-   * contrib/hbcurl/tests/ftp_uldl.prg
-     * Minor changes.
-
-   * contrib/rddads/adsfunc.c
-   * contrib/rddads/ads1.c
-     ! Replaced AdsShowError() calls with HB_TRACE() ones.
-       DEBUG guards removed.
-
-   * contrib/rddads/adsmgmnt.c
-     * Minor formatting.
-
 2008-05-31 14:44 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbmacro.ch
   * harbour/source/vm/macro.c
