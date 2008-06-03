@@ -750,5 +750,15 @@ HB_FUNC( HB_GCSTEP )
 */
 HB_FUNC( HB_GCALL )
 {
+   /* call hb_ret() to clear stack return item, HVM does not clean
+    * it before calling functions/procedures if caller does not
+    * try to retrieve returned value. It's safe and cost nearly
+    * nothing in whole GC scan process. It may help when previously
+    * called function returned complex item with cross references.
+    * It's quite common situation that people executes HB_GCALL()
+    * immediately after such function. [druzus]
+    */
+   hb_ret();
+
    hb_gcCollectAll();
 }
