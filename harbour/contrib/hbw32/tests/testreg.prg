@@ -6,12 +6,13 @@
 
 PROCEDURE Main()
 
-   ? GetRegistry( HKEY_CURRENT_USER, "Control Panel\Desktop", "Wallpaper" )
-   ? w32_regRead( "HKCU\Control Panel\Desktop\Wallpaper" )
-   ? w32_regRead( "" )
+   /* old API */
+   ? ">" + hb_ValToStr( GetRegistry( HKEY_CURRENT_USER, "Control Panel\Desktop", "Wallpaper" ) ) + "<"
 
-   // ? w32_regWrite( "HKCU\Control Panel\Desktop\Wallpaper", "harbour.bmp" )
+   /* new API */
+   ? ">" + hb_ValToStr( w32_regRead( "HKCU\Control Panel\Desktop\Wallpaper" ) ) + "<"
+   ? ">" + hb_ValToStr( w32_regRead( "" ) ) + "<"
 
-   Inkey( 0 )
+// ? w32_regWrite( "HKCU\Control Panel\Desktop\Wallpaper", "harbour.bmp" )
 
    RETURN

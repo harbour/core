@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-03 09:11 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/rdd.api
+     + Added necessary conversions.
+     ; NOTE: 3 functions are not yet implemented in Harbour.
+
+   * contrib/hbw32/w32_regc.c
+   * contrib/hbw32/tests/testreg.prg
+     % Optimizations.
+     * Formatting.
+
+   * contrib/hbw32/w32_ole.c
+     ! Fixed indentation.
+
+   * contrib/hbhpdf/harupdf.c
+     ! Fixed hpdf_ReadFromStream() fixed to not overflow 
+       to buffer in hb_storlen_buffer().
+
 2008-06-03 01:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/extend.c
      ! hb_storclen_buffer() fixed to free the passed buffer 

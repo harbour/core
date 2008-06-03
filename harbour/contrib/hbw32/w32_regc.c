@@ -93,7 +93,7 @@ HB_FUNC( WIN32_REGCREATEKEYEX  )
   
    if( RegCreateKeyEx( hb_regkeyconv( hb_parnl( 1 ) ), 
                        ( const char * ) hb_parc( 2 ), 
-                       hb_parnl( 3 ), 
+                       0, 
                        NULL, 
                        hb_parnl( 5 ), 
                        hb_parnl( 6 ), 
@@ -101,10 +101,8 @@ HB_FUNC( WIN32_REGCREATEKEYEX  )
                        &hWnd, 
                        &nResult ) == ERROR_SUCCESS )
    {
-      if( ISBYREF( 8 ) )
-         hb_stornl( ( ULONG ) hWnd, 8 );
-      if( ISBYREF( 9 ) )
-         hb_stornl( nResult, 9 );
+      hb_stornl( ( ULONG ) hWnd, 8 );
+      hb_stornl( nResult, 9 );
 
       hb_retnl( ERROR_SUCCESS );
    }
@@ -116,11 +114,13 @@ HB_FUNC( WIN32_REGOPENKEYEX )
 {
    HKEY hWnd;
    
-   if( RegOpenKeyEx( hb_regkeyconv( hb_parnl( 1 ) ), hb_parc( 2 ), 0, hb_parnl( 4 ), &hWnd ) == ERROR_SUCCESS )
+   if( RegOpenKeyEx( hb_regkeyconv( hb_parnl( 1 ) ), 
+                     hb_parc( 2 ),
+                     0, 
+                     hb_parnl( 4 ), 
+                     &hWnd ) == ERROR_SUCCESS )
    {
-      if( ISBYREF( 5 ) )
-         hb_stornl( ( ULONG ) hWnd, 5 );
-
+      hb_stornl( ( ULONG ) hWnd, 5 );
       hb_retnl( ERROR_SUCCESS );
    }
    else
@@ -133,20 +133,26 @@ HB_FUNC( WIN32_REGQUERYVALUEEX )
    DWORD nType = 0;
    DWORD nSize = 0;
   
-   if( RegQueryValueEx( hb_regkeyconv( hb_parnl( 1 ) ), cKey, 0, &nType, 0, &nSize ) == ERROR_SUCCESS )
+   if( RegQueryValueEx( hb_regkeyconv( hb_parnl( 1 ) ), 
+                        cKey, 
+                        NULL, 
+                        &nType, 
+                        NULL, 
+                        &nSize ) == ERROR_SUCCESS )
    {
       if( nSize > 0 )
       {
-         BYTE * cValue = ( BYTE * ) hb_xgrab( nSize );
+         BYTE * cValue = ( BYTE * ) hb_xgrab( nSize + 1 );
 
-         RegQueryValueEx( hb_regkeyconv( hb_parnl( 1 ) ), cKey, 0, &nType, ( BYTE * ) cValue, &nSize );
+         RegQueryValueEx( hb_regkeyconv( hb_parnl( 1 ) ), 
+                          cKey, 
+                          NULL, 
+                          &nType, 
+                          ( BYTE * ) cValue, 
+                          &nSize );
 
-         if( ISBYREF( 4 ) )
-            hb_stornl( nType, 4 );
-         if( ISBYREF( 5 ) )
-            hb_storclen( ( char * ) cValue, nSize, 5 );
-
-         hb_xfree( cValue );
+         hb_stornl( nType, 4 );
+         hb_storclen_buffer( ( char * ) cValue, nSize, 5 );
       }
    }
   
@@ -160,13 +166,23 @@ HB_FUNC( WIN32_REGSETVALUEEX )
   
    if( nType != REG_DWORD )
    {
-      BYTE * cValue = ( BYTE *) hb_parc( 5 );
-      hb_retni( RegSetValueEx( hb_regkeyconv( hb_parnl( 1 ) ), cKey, 0, nType, ( BYTE * ) cValue, hb_parclen( 5 ) + 1 ) );
+      BYTE * cValue = ( BYTE * ) hb_parc( 5 );
+      hb_retni( RegSetValueEx( hb_regkeyconv( hb_parnl( 1 ) ), 
+                               cKey, 
+                               0, 
+                               nType, 
+                               ( BYTE * ) cValue, 
+                               hb_parclen( 5 ) + 1 ) );
    }
    else
    {
       DWORD nSpace = hb_parnl( 5 );
-      hb_retni( RegSetValueEx( hb_regkeyconv( hb_parnl( 1 ) ), cKey, 0, nType, ( BYTE * ) &nSpace, sizeof( REG_DWORD ) ) );
+      hb_retni( RegSetValueEx( hb_regkeyconv( hb_parnl( 1 ) ), 
+                               cKey, 
+                               0, 
+                               nType, 
+                               ( BYTE * ) &nSpace, 
+                               sizeof( REG_DWORD ) ) );
    }
 }
 

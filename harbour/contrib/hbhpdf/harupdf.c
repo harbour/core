@@ -183,7 +183,7 @@ HB_FUNC( HPDF_READFROMSTREAM )
    if( size < 1024 )
       size = 1024;
 
-   buffer = ( HPDF_BYTE * ) hb_xgrab( size );
+   buffer = ( HPDF_BYTE * ) hb_xgrab( size + 1 );
 
    hb_retnl( (long) HPDF_ReadFromStream( HPDF_Doc_par( 1 ), buffer, &size ) );
 

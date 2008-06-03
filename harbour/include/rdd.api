@@ -59,4 +59,11 @@
 #include "hbapirdd.h"
 #include "item.api"
 
+#define _rddInherit          hb_rddInherit
+#if 0
+#define _rddDisinherit( x )  hb_rddDisinherit( ( const char * ) x )
+#define _rddExtendType       hb_rddExtendType
+#define _rddFieldType        hb_rddFieldType
+#endif
+
 #endif /* _RDD_API */
