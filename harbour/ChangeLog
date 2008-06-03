@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-03 01:31 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/vm/extend.c
+     ! hb_storclen_buffer() fixed to free the passed buffer 
+       in case it couldn't be stored. This situation was 
+       easy to miss and difficult to detect for the caller, 
+       and it might cause leaks.
+      
+   * contrib/hbw32/Makefile
+   * contrib/hbw32/common.mak
+   + contrib/hbw32/hbw32.ch
+   + contrib/hbw32/w32_reg.prg
+   + contrib/hbw32/w32_regc.c
+   + contrib/hbw32/tests/testreg.prg
+     + Added Windows registry handling stuff.
+       Work of Peter Rees <peter@rees.co.nz> / xhb.
+     * Code cleaned, formatted, optimized a bit.
+     + Added an even simpler interface:
+       w32_regRead( <reg_path> ) -> xValue
+       w32_regWrite( <reg_path>, <value> ) -> <lSuccess>
+       where <reg_path> is: "HKCU\key[\subkeys]\entry"
+
 2008-06-02 23:33 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/make_b32_all.bat
    * contrib/make_gcc_all.sh

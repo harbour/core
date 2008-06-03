@@ -1007,6 +1007,10 @@ HB_EXPORT int hb_storclen_buffer( char * szText, ULONG ulLen, int iParam, ... )
       }
    }
 
+   /* Make sure to free the pointer in case it couldn't be stored. */
+   if( szText )
+      hb_xfree( szText );
+
    return 0;
 }
 
