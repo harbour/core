@@ -8,6 +8,83 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 04:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-mkslib.sh
+  * harbour/bin/hb-func.sh
+  * harbour/bin/postinst.sh
+  * harbour/bin/pack_src.sh
+  * harbour/contrib/hbw32ddr/make_gcc.sh
+  * harbour/contrib/hbmysql/make_gcc.sh
+  * harbour/contrib/hbct/make_gcc.sh
+  * harbour/contrib/hbodbc/make_gcc.sh
+  * harbour/contrib/xhb/make_gcc.sh
+  * harbour/contrib/hbwhat32/make_gcc.sh
+  * harbour/contrib/hbtpathy/make_gcc.sh
+  * harbour/contrib/hbtpathy/make_b32.bat
+  * harbour/contrib/hbtpathy/make_vc.bat
+  * harbour/contrib/hbgt/make_gcc.sh
+  * harbour/contrib/hbw32/make_gcc.sh
+  * harbour/contrib/hbmsql/make_gcc.sh
+  * harbour/contrib/hbsqlit2/vdbeaux.c
+  * harbour/contrib/hbsqlit2/build.c
+  * harbour/contrib/hbsqlit2/hbsqlit2.ch
+  * harbour/contrib/hbsqlit2/vdbeInt.h
+  * harbour/contrib/hbsqlit2/opcodes.h
+  * harbour/contrib/hbsqlit2/btree.c
+  * harbour/contrib/hbsqlit2/delete.c
+  * harbour/contrib/hbsqlit2/printf.c
+  * harbour/contrib/hbsqlit2/trigger.c
+  * harbour/contrib/hbsqlit2/attach.c
+  * harbour/contrib/hbsqlit2/btree.h
+  * harbour/contrib/hbsqlit2/sqlite.h
+  * harbour/contrib/hbsqlit2/pragma.c
+  * harbour/contrib/hbsqlit2/config.h
+  * harbour/contrib/hbsqlit2/util.c
+  * harbour/contrib/hbsqlit2/select.c
+  * harbour/contrib/hbsqlit2/os.c
+  * harbour/contrib/hbsqlit2/tests/hbsqlite.prg
+  * harbour/contrib/hbsqlit2/hash.c
+  * harbour/contrib/hbsqlit2/os.h
+  * harbour/contrib/hbsqlit2/tokenize.c
+  * harbour/contrib/hbsqlit2/hash.h
+  * harbour/contrib/hbsqlit2/hbsqlit2.c
+  * harbour/contrib/hbsqlit2/Makefile
+  * harbour/contrib/hbsqlit2/pager.c
+  * harbour/contrib/hbsqlit2/vacuum.c
+  * harbour/contrib/hbsqlit2/auth.c
+  * harbour/contrib/hbsqlit2/pager.h
+  * harbour/contrib/hbsqlit2/insert.c
+  * harbour/contrib/hbsqlit2/copy.c
+  * harbour/contrib/hbsqlit2/parse.c
+  * harbour/contrib/hbsqlit2/where.c
+  * harbour/contrib/hbsqlit2/date.c
+  * harbour/contrib/hbsqlit2/common.mak
+  * harbour/contrib/hbsqlit2/expr.c
+  * harbour/contrib/hbsqlit2/parse.h
+  * harbour/contrib/hbsqlit2/random.c
+  * harbour/contrib/hbsqlit2/vdbe.c
+  * harbour/contrib/hbsqlit2/sqliteInt.h
+  * harbour/contrib/hbsqlit2/update.c
+  * harbour/contrib/hbsqlit2/main.c
+  * harbour/contrib/hbsqlit2/btree_rb.c
+  * harbour/contrib/hbsqlit2/vdbe.h
+  * harbour/contrib/hbsqlit2/table.c
+  * harbour/contrib/hbsqlit2/readme.txt
+  * harbour/contrib/hbsqlit2/func.c
+  * harbour/contrib/hbsqlit2/opcodes.c
+  * harbour/contrib/hbsqlit2/encode.c
+  * harbour/contrib/hbole/make_gcc.sh
+  * harbour/contrib/hbmzip/make_b32.bat
+  * harbour/contrib/hbmzip/make_vc.bat
+  * harbour/contrib/hbfbird/make_gcc.sh
+  * harbour/contrib/hbapollo/make_gcc.sh
+  * harbour/contrib/hbcurl/tests/ftp_uldl.prg
+  * harbour/contrib/mtpl_gcc.mak
+  * harbour/source/hbpcre/cnv_o2hb.bat
+  * harbour/source/hbpcre/cnv_hb2o.bat
+    * CRLF<->LF conversion
+    * set strict svn:eol-style
+
 2008-06-04 02:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/adsfunc.c
      ! Fix to ADSCREATEFTSINDEX().
