@@ -46,7 +46,7 @@
 #include "sqlite3/sqlite3.c"
 #if defined( __BORLANDC__ )
    #pragma warn +aus
-/* #pragma warn +use */ /* This effects the whole file, so don't turn it back on. */
+/* #pragma warn +use */ /* This affects the whole file, so don't turn it back on. */
    #pragma warn +par
    #pragma warn +prc
    #pragma warn +eff
