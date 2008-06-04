@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 23:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbsqlit2/hbsqlit2.c
+     * Removed commented debug code.
+     * Code cleanup, optimizations.
+     ! GPFs fixed in many function, when no db was open.
+     ! Automatically closing previous db when opening a new one.
+     ! hb_sqlite2_db initialized with NULL.
+
 2008-06-04 22:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * tests/rto_get.prg
      + Added keypress emulator to aid automated testing.
