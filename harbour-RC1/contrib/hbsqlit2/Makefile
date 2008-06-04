@@ -43,4 +43,4 @@ PRG_HEADERS=\
 
 LIBNAME=hbsqlit2
 
-include $(TOP)$(ROOT)config/lib.c
+include $(TOP)$(ROOT)config/lib.cf
