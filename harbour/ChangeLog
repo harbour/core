@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 22:13 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * tests/rto_get.prg
+     + Added keypress emulator to aid automated testing.
+     + Added test for EMG's bug case.
+       [RC1]
+
 2008-06-04 21:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.ch
    * contrib/hbcurl/hbcurl.c
