@@ -21,7 +21,7 @@
      + Added test for deleting file.
      + Added dummy upload option:
        + CURL_EASY_SETOPT() / HB_CURLOPT_UL_NULL_SETUP
-     ! Fixed all the above setopt options. Very old bug in 
+     ! Fixed all the setopt options below. Very old bug in 
        hbcurl code. Now rename, delete, other custom commands 
        plus a few other options work properly:
        HB_CURLOPT_HTTPHEADER
