@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 11:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbver.h
+     + Added HB_VERSION unified version identifier:
+       three bytes: major + minor + revision (0x000909)
+       This is to aid 3rd parties to detect version.
+
 2008-06-04 12:34 UTC-0400 Phil Barnett <philb/at/philb.us>
   * Set version in harbour.spec to 0.9.9-RC1
   * Set version in include/hbver.h to 0.9.9-RC1
