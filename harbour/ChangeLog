@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 21:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.ch
+   * contrib/hbcurl/hbcurl.c
+   * contrib/hbcurl/tests/ftp_uldl.prg
+     + Added test for deleting file.
+     + Added dummy upload option:
+       + CURL_EASY_SETOPT() / HB_CURLOPT_UL_NULL_SETUP
+     ! Fixed all the above setopt options. Very old bug in 
+       hbcurl code. Now rename, delete, other custom commands 
+       plus a few other options work properly:
+       HB_CURLOPT_HTTPHEADER
+       HB_CURLOPT_HTTP200ALIASES
+       HB_CURLOPT_QUOTE
+       HB_CURLOPT_POSTQUOTE
+       HB_CURLOPT_PREQUOTE
+       HB_CURLOPT_TELNETOPTIONS
+
 2008-06-04 20:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit3/hbsqlit3.c
      ! Fix for GCC.

@@ -10,9 +10,10 @@
 #include "fileio.ch"
 
 #define UPLOAD_FILE_AS      "test_ul.bin"
-#define REMOTE_URL          "ftp://harbour:power@localhost/" + UPLOAD_FILE_AS
-#define REMOTE_URL_MEM      "ftp://harbour:power@localhost/from_mem.txt"
 #define RENAME_FILE_TO      "test_ul_renamed.bin"
+#define REMOTE_URL          "ftp://harbour:power@localhost/" + UPLOAD_FILE_AS
+#define REMOTE_URL_DEL      "ftp://harbour:power@localhost/" + RENAME_FILE_TO
+#define REMOTE_URL_MEM      "ftp://harbour:power@localhost/from_mem.txt"
 
 FUNCTION Main( cDL, cUL )
    LOCAL curl
@@ -20,6 +21,8 @@ FUNCTION Main( cDL, cUL )
    LOCAL tmp
    LOCAL tmp1
    LOCAL f
+
+   LOCAL lVerbose := .F.
 
    ? curl_version()
    ? curl_getdate( "Sun, 1 Jun 2008 02:10:58 +0200" )
@@ -56,12 +59,11 @@ FUNCTION Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, REMOTE_URL )
       ? curl_easy_setopt( curl, HB_CURLOPT_UL_FILE_SETUP, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE, hb_FSize( cUL ) ), hb_FSize( cUL )
-//    ? curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE_LARGE, hb_FSize( cUL ) ), hb_FSize( cUL ) // TOFIX
 //    ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" ) /* May use this instead of embedding in URL */
       ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, .F. )
       ? curl_easy_setopt( curl, HB_CURLOPT_POSTQUOTE, { "RNFR " + UPLOAD_FILE_AS, "RNTO " + RENAME_FILE_TO } )
-      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, .F. )
+      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
 
       ? "UPLOAD FILE:", curl_easy_perform( curl )
 
@@ -79,6 +81,23 @@ FUNCTION Main( cDL, cUL )
       ? "Press key..."
       Inkey( 0 )
 
+      /* Delete file */
+
+      ? curl_easy_setopt( curl, HB_CURLOPT_UPLOAD )
+      ? curl_easy_setopt( curl, HB_CURLOPT_UL_NULL_SETUP )
+      ? curl_easy_setopt( curl, HB_CURLOPT_URL, REMOTE_URL_DEL )
+//    ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" ) /* May use this instead of embedding in URL */
+      ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS )
+      ? curl_easy_setopt( curl, HB_CURLOPT_POSTQUOTE, { "DELE " + RENAME_FILE_TO } )
+      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
+
+      ? "DELETE FILE:", curl_easy_perform( curl )
+
+      curl_easy_reset( curl )
+
+      ? "Press key..."
+      Inkey( 0 )
+
       /* Upload file from memory */
 
       tmp := "This will be the content of the file"
@@ -90,7 +109,7 @@ FUNCTION Main( cDL, cUL )
 //    ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" ) /* May use this instead of embedding in URL */
       ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, .F. )
-      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, .F. )
+      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
 
       ? "UPLOAD FILE FROM MEMORY:", curl_easy_perform( curl )
 
@@ -119,7 +138,7 @@ FUNCTION Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, "test_dl.bin" )
       ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, .F. )
-      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, .F. )
+      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
 
       ? "DOWNLOAD FILE:", curl_easy_perform( curl )
 
@@ -137,7 +156,7 @@ FUNCTION Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_SETUP )
       ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, .F. )
-      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, .F. )
+      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
 
       ? "DOWNLOAD FILE TO MEM:", curl_easy_perform( curl )
 
@@ -166,7 +185,7 @@ FUNCTION Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_SETUP )
       ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, .F. )
-      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, .F. )
+      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
 
       ? "DOWNLOAD DIRLIST TO STRING:", curl_easy_perform( curl )
 

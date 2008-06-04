@@ -177,6 +177,16 @@ HB_FUNC( CURL_GLOBAL_CLEANUP )
 /* ---------------------------------------------------------------------------- */
 /* Callbacks */
 
+size_t hb_curl_read_dummy_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
+{
+   HB_SYMBOL_UNUSED( buffer );
+   HB_SYMBOL_UNUSED( size );
+   HB_SYMBOL_UNUSED( nmemb );
+   HB_SYMBOL_UNUSED( Cargo );
+
+   return 0;
+}
+
 size_t hb_curl_read_file_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
    PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
@@ -749,9 +759,9 @@ HB_FUNC( CURL_EASY_SETOPT )
             if( pArray )
             {
                ULONG ulPos;
-               ULONG ulArrayPos = hb_arrayLen( pArray );
+               ULONG ulArrayLen = hb_arrayLen( pArray );
 
-               for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
+               for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
                {
                   PHB_ITEM pSubArray = hb_arrayGetItemPtr( pArray, ulPos + 1 );
 
@@ -782,10 +792,10 @@ HB_FUNC( CURL_EASY_SETOPT )
             if( pArray )
             {
                ULONG ulPos;
-               ULONG ulArrayPos = hb_arrayLen( pArray );
+               ULONG ulArrayLen = hb_arrayLen( pArray );
 
-               for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
-                  curl_slist_append( hb_curl->pHTTPHEADER, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+               for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  hb_curl->pHTTPHEADER = curl_slist_append( hb_curl->pHTTPHEADER, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPHEADER, hb_curl->pHTTPHEADER );
             }
@@ -801,10 +811,10 @@ HB_FUNC( CURL_EASY_SETOPT )
             if( pArray )
             {
                ULONG ulPos;
-               ULONG ulArrayPos = hb_arrayLen( pArray );
+               ULONG ulArrayLen = hb_arrayLen( pArray );
 
-               for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
-                  curl_slist_append( hb_curl->pHTTP200ALIASES, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+               for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  hb_curl->pHTTP200ALIASES = curl_slist_append( hb_curl->pHTTP200ALIASES, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP200ALIASES, hb_curl->pHTTP200ALIASES );
             }
@@ -856,10 +866,10 @@ HB_FUNC( CURL_EASY_SETOPT )
             if( pArray )
             {
                ULONG ulPos;
-               ULONG ulArrayPos = hb_arrayLen( pArray );
+               ULONG ulArrayLen = hb_arrayLen( pArray );
 
-               for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
-                  curl_slist_append( hb_curl->pQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+               for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  hb_curl->pQUOTE = curl_slist_append( hb_curl->pQUOTE, "FOCK eztitt" );
 
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_QUOTE, hb_curl->pQUOTE );
             }
@@ -875,10 +885,10 @@ HB_FUNC( CURL_EASY_SETOPT )
             if( pArray )
             {
                ULONG ulPos;
-               ULONG ulArrayPos = hb_arrayLen( pArray );
+               ULONG ulArrayLen = hb_arrayLen( pArray );
 
-               for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
-                  curl_slist_append( hb_curl->pPOSTQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+               for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  hb_curl->pPOSTQUOTE = curl_slist_append( hb_curl->pPOSTQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_POSTQUOTE, hb_curl->pPOSTQUOTE );
             }
@@ -894,10 +904,10 @@ HB_FUNC( CURL_EASY_SETOPT )
             if( pArray )
             {
                ULONG ulPos;
-               ULONG ulArrayPos = hb_arrayLen( pArray );
+               ULONG ulArrayLen = hb_arrayLen( pArray );
 
-               for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
-                  curl_slist_append( hb_curl->pQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+               for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  hb_curl->pQUOTE = curl_slist_append( hb_curl->pPREQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_PREQUOTE, hb_curl->pPREQUOTE );
             }
@@ -1140,10 +1150,10 @@ HB_FUNC( CURL_EASY_SETOPT )
             if( pArray )
             {
                ULONG ulPos;
-               ULONG ulArrayPos = hb_arrayLen( pArray );
+               ULONG ulArrayLen = hb_arrayLen( pArray );
 
-               for( ulPos = 0; ulPos < ulArrayPos; ulPos++ )
-                  curl_slist_append( hb_curl->pTELNETOPTIONS, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+               for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
+                  hb_curl->pTELNETOPTIONS = curl_slist_append( hb_curl->pTELNETOPTIONS, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, hb_curl->pTELNETOPTIONS );
             }
@@ -1254,6 +1264,14 @@ HB_FUNC( CURL_EASY_SETOPT )
          hb_storclen( ( char * ) hb_curl->dl_ptr, hb_curl->dl_pos, 3 );
          if( hb_curl->dl_ptr )
             res = CURLE_OK;
+         break;
+
+      case HB_CURLOPT_UL_NULL_SETUP:
+         hb_curl_file_ul_free( hb_curl );
+         hb_curl_buff_ul_free( hb_curl );
+
+         curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_dummy_callback );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, ( void * ) hb_curl );
          break;
       }
    }
