@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 17:32 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+     * Changed all logical options to default to .T.. This 
+       way all work the same way, and in real life usage 
+       the logical parameter can omitted in most cases.
+       INCOMPATIBLE.
+
+   * contrib/hbcurl/tests/ftp_uldl.prg
+     + Added small example to get a dir listing.
+
 2008-06-04 17:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      + Changed to use hb_parc() (instead of hb_parcx()) for all 

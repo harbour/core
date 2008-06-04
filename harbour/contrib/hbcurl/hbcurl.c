@@ -69,8 +69,7 @@
 
 #include "hbcurl.ch"
 
-#define HB_CURL_OPT_BOOL( n )      ( ISLOG( n ) ? ( long ) hb_parl( n ) : hb_parnl( n ) )
-#define HB_CURL_OPT_BOOL_TRUE( n ) ( ISLOG( n ) ? ( long ) hb_parl( n ) : ( ISNUM( n ) ? hb_parnl( n ) : 1 ) )
+#define HB_CURL_OPT_BOOL( n )      ( ISLOG( n ) ? ( long ) hb_parl( n ) : ( ISNUM( n ) ? hb_parnl( n ) : 1 ) )
 #define HB_CURL_OPT_LARGENUM( n )  ( ( curl_off_t ) hb_parnint( n ) )
 
 /* NOTE: Since LIBCURL_VERSION_NUM doesn't reflect real revision,
@@ -898,10 +897,10 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_INFILESIZE_LARGE, HB_CURL_OPT_LARGENUM( 3 ) );
          break;
       case HB_CURLOPT_UPLOAD:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_UPLOAD, HB_CURL_OPT_BOOL_TRUE( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_UPLOAD, HB_CURL_OPT_BOOL( 3 ) );
          break;
       case HB_CURLOPT_DOWNLOAD: /* Harbour extension */
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_UPLOAD, ! HB_CURL_OPT_BOOL_TRUE( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_UPLOAD, ! HB_CURL_OPT_BOOL( 3 ) );
          break;
       case HB_CURLOPT_MAXFILESIZE:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAXFILESIZE, hb_parnl( 3 ) );

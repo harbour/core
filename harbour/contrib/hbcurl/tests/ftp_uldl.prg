@@ -88,6 +88,26 @@ FUNCTION Main( cDL, cUL )
 
       ? "DOWNLOAD:", curl_easy_perform( curl )
 
+      curl_easy_reset( curl )
+
+      Inkey( 0 )
+
+      DEFAULT cDL TO "ftp://ftp.cisco.com/"
+
+      /* Now let's download a dirlist */
+
+      ? curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
+      ? curl_easy_setopt( curl, HB_CURLOPT_DIRLISTONLY )
+      ? curl_easy_setopt( curl, HB_CURLOPT_URL, cDL )
+      ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYPEER, .F. )
+      ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYHOST, .F. )
+      ? curl_easy_setopt( curl, HB_CURLOPT_SETDOWNLOADFILE, "test_in.txt" )
+      ? curl_easy_setopt( curl, HB_CURLOPT_SETPROGRESS, {| nPos, nLen | a := CurGet(), DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
+      ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, .F. )
+      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, .F. )
+
+      ? "DOWNLOAD:", curl_easy_perform( curl )
+
       /* Cleanup session */
 
       curl_easy_cleanup( curl )
