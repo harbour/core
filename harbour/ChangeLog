@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 14:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbsqlit2/hbsqlit2.c
+     * Further cleanup, optimizations.
+     ! Converted to use ANSI comment only.
+
+   * contrib/hbsqlit3/hbsqlit3.c
+     % Minor optimization.
+
 2008-06-04 14:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit3/hbsqlit3.c
      % Removed __XHARBOUR__ guards.

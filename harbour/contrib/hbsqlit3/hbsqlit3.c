@@ -837,7 +837,7 @@ HB_FUNC( SQLITE3_GET_TABLE )
             PHB_ITEM pArray = hb_itemArrayNew( iCol );
 
             for( j = 1; j <= iCol; j++, k++ )
-               hb_arraySetC( pArray, j, pResult[ k ] ? pResult[ k ] : NULL );
+               hb_arraySetC( pArray, j, pResult[ k ] );
 
             hb_arrayAddForward( pResultList, pArray );
             hb_itemRelease( pArray );
