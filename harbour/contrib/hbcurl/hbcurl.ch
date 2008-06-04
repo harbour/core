@@ -219,12 +219,21 @@
 #define HB_CURLOPT_PROXY_TRANSFER_MODE        166
 #define HB_CURLOPT_SEEKFUNCTION               167
 #define HB_CURLOPT_SEEKDATA                   168
-#define HB_CURLOPT_SETUPLOADFILE              1001  /* Harbour special ones */
-#define HB_CURLOPT_CLOSEUPLOADFILE            1002
-#define HB_CURLOPT_SETDOWNLOADFILE            1003
-#define HB_CURLOPT_CLOSEDOWNLOADFILE          1004
-#define HB_CURLOPT_SETPROGRESS                1005
-#define HB_CURLOPT_DOWNLOAD                   1006
+#define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
+#define HB_CURLOPT_PROGRESSBLOCK              1002
+#define HB_CURLOPT_UL_FILE_SETUP              1003
+#define HB_CURLOPT_UL_FILE_CLOSE              1004
+#define HB_CURLOPT_DL_FILE_SETUP              1005
+#define HB_CURLOPT_DL_FILE_CLOSE              1006
+#define HB_CURLOPT_UL_BUFF_SETUP              1007
+#define HB_CURLOPT_DL_BUFF_SETUP              1008
+#define HB_CURLOPT_DL_BUFF_GET                1009
+/* Compatibility ones. Please don't use these. */
+#define HB_CURLOPT_SETUPLOADFILE              HB_CURLOPT_UL_FILE_SETUP
+#define HB_CURLOPT_CLOSEUPLOADFILE            HB_CURLOPT_UL_FILE_CLOSE
+#define HB_CURLOPT_SETDOWNLOADFILE            HB_CURLOPT_DL_FILE_SETUP
+#define HB_CURLOPT_CLOSEDOWNLOADFILE          HB_CURLOPT_DL_FILE_CLOSE
+#define HB_CURLOPT_SETPROGRESS                HB_CURLOPT_PROGRESSBLOCK
 
 /* HB_CURLOPT_PROXYTYPE option */
 #define HB_CURLPROXY_HTTP                     0  /* added in 7.10 */

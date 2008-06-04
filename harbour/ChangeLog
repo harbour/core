@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 18:55 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.ch
+   * contrib/hbcurl/hbcurl.c
+   * contrib/hbcurl/tests/ftp_uldl.prg
+     + Added some more test for downloading to memory, 
+       uploading from memory.
+     + Added possibility to download to memory, and upload 
+       from memory:
+       + CURL_EASY_SETOPT() / HB_CURLOPT_UL_BUFF_SETUP
+       + CURL_EASY_SETOPT() / HB_CURLOPT_DL_BUFF_SETUP
+       + CURL_EASY_SETOPT() / HB_CURLOPT_DL_BUFF_GET
+       + CURL_EASY_DL_BUFF_GET() -> <cFileContent>
+     * Changed a few old Harbour setopt defines:
+       (old ones are still working to retain compatibility)
+       * HB_CURLOPT_SETUPLOADFILE     -> HB_CURLOPT_UL_FILE_SETUP
+       * HB_CURLOPT_CLOSEUPLOADFILE   -> HB_CURLOPT_UL_FILE_CLOSE
+       * HB_CURLOPT_SETDOWNLOADFILE   -> HB_CURLOPT_DL_FILE_SETUP
+       * HB_CURLOPT_CLOSEDOWNLOADFILE -> HB_CURLOPT_DL_FILE_CLOSE
+       * HB_CURLOPT_SETPROGRESS       -> HB_CURLOPT_PROGRESSBLOCK
+
 2008-06-04 17:32 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      * Changed all logical options to default to .T.. This 

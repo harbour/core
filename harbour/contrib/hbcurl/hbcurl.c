@@ -99,8 +99,17 @@ typedef struct _HB_CURL
 
    BYTE *  ul_name;
    FHANDLE ul_handle;
+
    BYTE *  dl_name;
    FHANDLE dl_handle;
+
+   BYTE *  ul_ptr;
+   size_t  ul_len;
+   size_t  ul_pos;
+
+   BYTE *  dl_ptr;
+   size_t  dl_len;
+   size_t  dl_pos;
 
    PHB_ITEM pProgressBlock;
 
@@ -168,7 +177,7 @@ HB_FUNC( CURL_GLOBAL_CLEANUP )
 /* ---------------------------------------------------------------------------- */
 /* Callbacks */
 
-size_t hb_curl_read_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
+size_t hb_curl_read_file_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
    PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
 
@@ -192,7 +201,29 @@ size_t hb_curl_read_callback( void * buffer, size_t size, size_t nmemb, void * C
    return -1;
 }
 
-size_t hb_curl_write_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
+size_t hb_curl_read_buff_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
+{
+   PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
+
+   if( hb_curl )
+   {
+      ULONG nTodo = ( ULONG ) ( size * nmemb );
+      ULONG nLeft = hb_curl->ul_len - hb_curl->ul_pos;
+
+      if( nTodo > nLeft )
+         nTodo = nLeft;
+
+      hb_xmemcpy( buffer, hb_curl->ul_ptr + hb_curl->ul_pos, nTodo );
+
+      hb_curl->ul_pos += nTodo;
+
+      return ( size_t ) nTodo;
+   }
+
+   return -1;
+}
+
+size_t hb_curl_write_file_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
    PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
 
@@ -207,6 +238,34 @@ size_t hb_curl_write_callback( void * buffer, size_t size, size_t nmemb, void * 
       }
 
       return hb_fsWriteLarge( hb_curl->dl_handle, ( BYTE * ) buffer, size * nmemb );
+   }
+
+   return -1;
+}
+
+#define HB_CURL_DL_BUFF_SIZE_INIT ( CURL_MAX_WRITE_SIZE * 2 )
+#define HB_CURL_DL_BUFF_SIZE_INCR ( CURL_MAX_WRITE_SIZE * 4 )
+
+size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
+{
+   PHB_CURL hb_curl = ( PHB_CURL ) Cargo;
+
+   if( hb_curl )
+   {
+      ULONG nTodo = ( ULONG ) ( size * nmemb );
+      ULONG nLeft = hb_curl->dl_len - hb_curl->dl_pos;
+
+      if( nTodo > nLeft )
+      {
+         hb_curl->dl_len += HB_CURL_DL_BUFF_SIZE_INCR;
+         hb_curl->dl_ptr = hb_xrealloc( hb_curl->dl_ptr, hb_curl->dl_len );
+      }
+
+      hb_xmemcpy( hb_curl->dl_ptr + hb_curl->dl_pos, buffer, nTodo );
+
+      hb_curl->dl_pos += nTodo;
+
+      return ( size_t ) nTodo;
    }
 
    return -1;
@@ -282,6 +341,28 @@ static void hb_curl_file_dl_free( PHB_CURL hb_curl )
    }
 }
 
+static void hb_curl_buff_ul_free( PHB_CURL hb_curl )
+{
+   if( hb_curl && hb_curl->ul_ptr )
+   {
+      hb_xfree( hb_curl->ul_ptr );
+      hb_curl->ul_ptr = NULL;
+      hb_curl->ul_len = 0;
+      hb_curl->ul_pos = 0;
+   }
+}
+
+static void hb_curl_buff_dl_free( PHB_CURL hb_curl )
+{
+   if( hb_curl && hb_curl->dl_ptr )
+   {
+      hb_xfree( hb_curl->dl_ptr );
+      hb_curl->dl_ptr = NULL;
+      hb_curl->dl_len = 0;
+      hb_curl->dl_pos = 0;
+   }
+}
+
 /* ---------------------------------------------------------------------------- */
 /* Constructor/Destructor */
 
@@ -316,6 +397,9 @@ static void PHB_CURL_free( PHB_CURL hb_curl, BOOL bFree )
 
       hb_curl_file_ul_free( hb_curl );
       hb_curl_file_dl_free( hb_curl );
+
+      hb_curl_buff_ul_free( hb_curl );
+      hb_curl_buff_dl_free( hb_curl );
 
       if( hb_curl->pProgressBlock )
       {
@@ -1072,7 +1156,7 @@ HB_FUNC( CURL_EASY_SETOPT )
 
       /* Harbour specials */
 
-      case HB_CURLOPT_SETPROGRESS:
+      case HB_CURLOPT_PROGRESSBLOCK:
          {
             PHB_ITEM pProgressBlock = hb_param( 3, HB_IT_BLOCK );
 
@@ -1095,7 +1179,7 @@ HB_FUNC( CURL_EASY_SETOPT )
          }
          break;
 
-      case HB_CURLOPT_SETUPLOADFILE:
+      case HB_CURLOPT_UL_FILE_SETUP:
          {
             hb_curl_file_ul_free( hb_curl );
 
@@ -1104,20 +1188,18 @@ HB_FUNC( CURL_EASY_SETOPT )
                hb_curl->ul_name = ( BYTE * ) hb_strdup( hb_parc( 3 ) );
                hb_curl->ul_handle = FS_ERROR;
 
-               curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_callback );
+               curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_file_callback );
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, ( void * ) hb_curl );
             }
          }
          break;
 
-      case HB_CURLOPT_CLOSEUPLOADFILE:
-         {
-            hb_curl_file_ul_free( hb_curl );
-            res = CURLE_OK;
-         }
+      case HB_CURLOPT_UL_FILE_CLOSE:
+         hb_curl_file_ul_free( hb_curl );
+         res = CURLE_OK;
          break;
 
-      case HB_CURLOPT_SETDOWNLOADFILE:
+      case HB_CURLOPT_DL_FILE_SETUP:
          {
             hb_curl_file_dl_free( hb_curl );
 
@@ -1126,22 +1208,68 @@ HB_FUNC( CURL_EASY_SETOPT )
                hb_curl->dl_name = ( BYTE * ) hb_strdup( hb_parc( 3 ) );
                hb_curl->dl_handle = FS_ERROR;
 
-               curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_write_callback );
+               curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_write_file_callback );
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, ( void * ) hb_curl );
             }
          }
          break;
 
-      case HB_CURLOPT_CLOSEDOWNLOADFILE:
+      case HB_CURLOPT_DL_FILE_CLOSE:
+         hb_curl_file_dl_free( hb_curl );
+         res = CURLE_OK;
+         break;
+
+      case HB_CURLOPT_UL_BUFF_SETUP:
          {
-            hb_curl_file_dl_free( hb_curl );
-            res = CURLE_OK;
+            hb_curl_buff_ul_free( hb_curl );
+
+            if( ISCHAR( 3 ) )
+            {
+               hb_curl->ul_pos = 0;
+               hb_curl->ul_len = hb_parclen( 3 );
+               hb_curl->ul_ptr = ( BYTE * ) hb_xgrab( hb_curl->ul_len );
+
+               hb_xmemcpy( hb_curl->ul_ptr, hb_parc( 3 ), hb_parclen( 3 ) );
+      
+               curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_buff_callback );
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, ( void * ) hb_curl );
+            }
          }
+         break;
+
+      case HB_CURLOPT_DL_BUFF_SETUP:
+         {
+            hb_curl_buff_dl_free( hb_curl );
+
+            hb_curl->dl_pos = 0;
+            hb_curl->dl_len = ISNUM( 3 ) ? hb_parnl( 3 ) : HB_CURL_DL_BUFF_SIZE_INIT;
+            hb_curl->dl_ptr = ( BYTE * ) hb_xgrab( hb_curl->dl_len );
+
+            curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_write_buff_callback );
+            res = curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, ( void * ) hb_curl );
+         }
+         break;
+
+      case HB_CURLOPT_DL_BUFF_GET:
+         hb_storclen( ( char * ) hb_curl->dl_ptr, hb_curl->dl_pos, 3 );
+         if( hb_curl->dl_ptr )
+            res = CURLE_OK;
          break;
       }
    }
 
    hb_retnl( ( long ) res );
+}
+
+/* Harbour extension. */
+HB_FUNC( CURL_EASY_DL_BUFF_GET )
+{
+   PHB_CURL hb_curl = PHB_CURL_par( 1 );
+
+   if( hb_curl )
+      hb_retclen( ( char * ) hb_curl->dl_ptr, hb_curl->dl_pos );
+   else
+      hb_retc_null();
 }
 
 #define HB_CURL_INFO_TYPE_INVALID       0
