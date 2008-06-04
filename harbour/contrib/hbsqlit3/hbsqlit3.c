@@ -211,10 +211,14 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
             if( hb_fsMkDir( pszDirName ) )
                bResult = TRUE;
             else
+            {
                HB_TRACE(HB_TR_DEBUG, ("sqlite_temp_directory(): Can't create directory %s", pszDirName));
+            }
          }
          else
+         {
             HB_TRACE(HB_TR_DEBUG, ("sqlite_temp_directory(): Directory doesn't exist %s", pszDirName));
+         }
       }
       
       if( bResult )

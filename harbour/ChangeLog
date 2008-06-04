@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 20:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbsqlit3/hbsqlit3.c
+     ! Fix for GCC.
+
 2008-06-04 20:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      * Minor.
