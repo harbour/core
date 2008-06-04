@@ -3,7 +3,7 @@
  */
 
 
-Version 1.1.1 RC1 (2008-05-20) tag: build49
+Version 0.9.9 RC1 (2008-06-04) tag: RC1
 
 General
 =============================

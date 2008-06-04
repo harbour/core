@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 12:34 UTC-0400 Phil Barnett <philb/at/philb.us>
+  * Set version in harbour.spec to 0.9.9-RC1
+  * Set version in include/hbver.h to 0.9.9-RC1
+  * Update header info in doc/whatsnew.txt to proper date and release tag
+  * Tag repository with RC1
+
 2008-06-04 04:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-mkslib.sh
   * harbour/bin/hb-func.sh

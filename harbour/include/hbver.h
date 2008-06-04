@@ -55,10 +55,10 @@
 
 /* NOTE: One of these next three fields can be incremented by the hbverfix program */
 
-#define HB_VER_MAJOR    1       /* Major version number */
-#define HB_VER_MINOR    1       /* Minor version number */
-#define HB_VER_REVISION 1       /* Revision number */
-#define HB_VER_STATUS   "devel" /* Build status */
+#define HB_VER_MAJOR    0       /* Major version number */
+#define HB_VER_MINOR    9       /* Minor version number */
+#define HB_VER_REVISION 9       /* Revision number */
+#define HB_VER_STATUS   "RC1"   /* Build status */
 
 /* #include "hb_verbld.h" */
 
