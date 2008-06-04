@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 17:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+     + Changed to use hb_parc() (instead of hb_parcx()) for all 
+       curl_easy_setopt() string options, so that NULL (NIL) will 
+       reset these options to default state, instead of passing 
+       an empty string to them.
+
 2008-06-04 15:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/hbbit.c
      + Added important NOTE about hb_bit*() functions' 

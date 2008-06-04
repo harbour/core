@@ -558,10 +558,10 @@ HB_FUNC( CURL_EASY_SETOPT )
 
       /* This is the only option that must be set before curl_easy_perform() is called. */
       case HB_CURLOPT_URL:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_URL, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_URL, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_PROXY:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXY, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXY, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_PROXYPORT:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXYPORT, hb_parnl( 3 ) );
@@ -578,7 +578,7 @@ HB_FUNC( CURL_EASY_SETOPT )
          break;
 */
       case HB_CURLOPT_INTERFACE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_INTERFACE, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_INTERFACE, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_LOCALPORT:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_LOCALPORT, hb_parnl( 3 ) );
@@ -608,13 +608,13 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_NETRC, hb_parnl( 3 ) );
          break;
       case HB_CURLOPT_NETRC_FILE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_NETRC_FILE, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_NETRC_FILE, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_USERPWD:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_USERPWD, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_USERPWD, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_PROXYUSERPWD:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXYUSERPWD, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXYUSERPWD, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_HTTPAUTH:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPAUTH, hb_parnl( 3 ) );
@@ -629,7 +629,7 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_AUTOREFERER, HB_CURL_OPT_BOOL( 3 ) );
          break;
       case HB_CURLOPT_ENCODING:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_ENCODING, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_ENCODING, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_FOLLOWLOCATION:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_FOLLOWLOCATION, HB_CURL_OPT_BOOL( 3 ) );
@@ -651,7 +651,7 @@ HB_FUNC( CURL_EASY_SETOPT )
          break;
       case HB_CURLOPT_POSTFIELDS:
       case HB_CURLOPT_COPYPOSTFIELDS:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_COPYPOSTFIELDS, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_COPYPOSTFIELDS, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_POSTFIELDSIZE:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_POSTFIELDSIZE, hb_parnl( 3 ) );
@@ -684,10 +684,10 @@ HB_FUNC( CURL_EASY_SETOPT )
          }
          break;
       case HB_CURLOPT_REFERER:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_REFERER, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_REFERER, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_USERAGENT:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_USERAGENT, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_USERAGENT, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_HTTPHEADER:
          {
@@ -728,19 +728,19 @@ HB_FUNC( CURL_EASY_SETOPT )
          }
          break;
       case HB_CURLOPT_COOKIE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_COOKIE, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_COOKIE, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_COOKIEFILE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_COOKIEFILE, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_COOKIEFILE, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_COOKIEJAR:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_COOKIEJAR, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_COOKIEJAR, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_COOKIESESSION:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_COOKIESESSION, HB_CURL_OPT_BOOL( 3 ) );
          break;
       case HB_CURLOPT_COOKIELIST:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_COOKIELIST, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_COOKIELIST, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_HTTPGET:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPGET, HB_CURL_OPT_BOOL( 3 ) );
@@ -839,7 +839,7 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTP_RESPONSE_TIMEOUT, hb_parnl( 3 ) );
          break;
       case HB_CURLOPT_FTP_ALTERNATIVE_TO_USER:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTP_ALTERNATIVE_TO_USER, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTP_ALTERNATIVE_TO_USER, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_FTP_SKIP_PASV_IP:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTP_SKIP_PASV_IP, HB_CURL_OPT_BOOL( 3 ) );
@@ -964,22 +964,22 @@ HB_FUNC( CURL_EASY_SETOPT )
       /* SSL and Security */
 
       case HB_CURLOPT_SSLCERT:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSLCERT, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSLCERT, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_SSLCERTTYPE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSLCERTTYPE, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSLCERTTYPE, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_SSLKEY:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSLKEY, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSLKEY, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_SSLKEYTYPE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSLKEYTYPE, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSLKEYTYPE, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_KEYPASSWD:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_KEYPASSWD, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_KEYPASSWD, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_SSLENGINE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSLENGINE, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSLENGINE, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_SSLENGINE_DEFAULT:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSLENGINE_DEFAULT, hb_parnl( 3 ) );
@@ -991,22 +991,22 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_VERIFYPEER, HB_CURL_OPT_BOOL( 3 ) );
          break;
       case HB_CURLOPT_CAINFO:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_CAINFO, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_CAINFO, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_CAPATH:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_CAPATH, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_CAPATH, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_RANDOM_FILE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_RANDOM_FILE, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_RANDOM_FILE, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_EGDSOCKET:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_EGDSOCKET, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_EGDSOCKET, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_SSL_VERIFYHOST:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_VERIFYHOST, HB_CURL_OPT_BOOL( 3 ) );
          break;
       case HB_CURLOPT_SSL_CIPHER_LIST:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_CIPHER_LIST, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_CIPHER_LIST, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_SSL_SESSIONID_CACHE:
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSL_VERIFYHOST, HB_CURL_OPT_BOOL( 3 ) );
@@ -1021,13 +1021,13 @@ HB_FUNC( CURL_EASY_SETOPT )
          res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_AUTH_TYPES, hb_parnl( 3 ) );
          break;
       case HB_CURLOPT_SSH_HOST_PUBLIC_KEY_MD5:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_HOST_PUBLIC_KEY_MD5, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_HOST_PUBLIC_KEY_MD5, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_SSH_PUBLIC_KEYFILE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_PUBLIC_KEYFILE, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_PUBLIC_KEYFILE, hb_parc( 3 ) );
          break;
       case HB_CURLOPT_SSH_PRIVATE_KEYFILE:
-         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_PRIVATE_KEYFILE, hb_parcx( 3 ) );
+         res = curl_easy_setopt( hb_curl->curl, CURLOPT_SSH_PRIVATE_KEYFILE, hb_parc( 3 ) );
          break;
 
       /* Other options */
