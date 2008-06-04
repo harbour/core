@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 19:54 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbsqlit3/hbsqlit3.c
+     ! Removed 'HB_VER_MAJOR < 1' version check, as it 
+       makes it fail with the new version setting.
+
 2008-06-04 11:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbver.h
      + Added HB_VERSION unified version identifier:

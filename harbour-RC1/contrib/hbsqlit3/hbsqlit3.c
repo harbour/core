@@ -27,10 +27,6 @@
 #include "hbapifs.h"
 #include "hbver.h"
 
-#if HB_VER_MAJOR < 1
-   #error Too old version [x]Harbour
-#endif
-
 #include "sqlite3/sqlite3.c"
 
 #ifdef NODLL
