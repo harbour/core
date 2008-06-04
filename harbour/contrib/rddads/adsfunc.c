@@ -2178,7 +2178,7 @@ HB_FUNC( ADSCREATEFTSINDEX )
                                    ( UNSIGNED8 * ) hb_parc( 1 )                               /* pucFileName              */ , /* if NULL or the base name is the same as the table, then creates a compound AutoOpen index. */
                                    ( UNSIGNED8 * ) hb_parc( 2 )                               /* pucTag                   */ ,
                                    ( UNSIGNED8 * ) hb_parc( 3 )                               /* pucField                 */ ,
-                                   ( UNSIGNED32 )  hb_parnl( 4 )                              /* ulPageSize               */ ,
+                                   ( UNSIGNED32 )  ISNUM( 4 ) ? hb_parnl( 4 ) : ADS_DEFAULT   /* ulPageSize               */ ,
                                    ( UNSIGNED32 )  ISNUM( 5 ) ? hb_parnl( 5 ) : 3             /* ulMinWordLen             */ ,
                                    ( UNSIGNED32 )  ISNUM( 6 ) ? hb_parnl( 6 ) : 30            /* ulMaxWordLen             */ ,
                                    ( UNSIGNED16 )  ISLOG( 7 ) ? hb_parl( 7 ) : TRUE           /* usUseDefaultDelim        */ ,
