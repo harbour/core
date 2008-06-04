@@ -60,6 +60,8 @@
 
 #if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
 
+static char * s_pszLogFileName = "hb_ex.log";
+
 LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo )
 {
    char msg[ ( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ) * 32 ];
@@ -68,7 +70,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo
    USHORT uiLine;
    int iLevel;
 
-   FILE * hLog = hb_fopen( "hb_ex.log", "a+" );
+   FILE * hLog = hb_fopen( s_pszLogFileName, "a+" );
 
    if( hLog )
    {

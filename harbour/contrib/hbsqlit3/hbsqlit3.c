@@ -1096,13 +1096,13 @@ HB_FUNC( SQLITE3_ENABLE_SHARED_CACHE )
 }
 
 /*
-    Tracing And Profiling Functions
+   Tracing And Profiling Functions
 
-    sqlite3_trace( db, lOnOff )
-    sqlite3_profile( db, lOnOff ) 
+   sqlite3_trace( db, lOnOff )
+   sqlite3_profile( db, lOnOff ) 
 */
 
-static void SQL3ProfileLog( void *sFile, const char *sProfileMsg, sqlite3_uint64 int64 )
+static void SQL3ProfileLog( void * sFile, const char * sProfileMsg, sqlite3_uint64 int64 )
 {
    if( sProfileMsg )
    {
@@ -1116,7 +1116,7 @@ static void SQL3ProfileLog( void *sFile, const char *sProfileMsg, sqlite3_uint64
    }
 }
 
-static void SQL3TraceLog( void *sFile, const char *sTraceMsg )
+static void SQL3TraceLog( void * sFile, const char * sTraceMsg )
 {
    if( sTraceMsg )
    {

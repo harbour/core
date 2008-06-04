@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 15:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/hbbit.c
+     + Added important NOTE about hb_bit*() functions' 
+       relation to the compiler optimization engine.
+
+   * source/vm/fm.c
+   * source/vm/extrap.c
+     * Log filenames converted to static variables. With the 
+       intent that they'll be converted to Set()s or similar 
+       user settable values in the future, since it's useful 
+       and more elegant to redirect these to the app's normal 
+       logfile.
+
+   * contrib/hbsqlit3/hbsqlit3.c
+     * Minor formatting.
+
 2008-06-04 14:27 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit2/hbsqlit2.c
      * Further cleanup, optimizations.

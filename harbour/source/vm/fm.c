@@ -155,6 +155,8 @@ static LONG s_lMemoryConsumed = 0;    /* memory max size consumed */
 static PHB_MEMINFO s_pFirstBlock = NULL;
 static PHB_MEMINFO s_pLastBlock = NULL;
 
+static char * s_pszLogFileName = "hb_fm.log";
+
 #else /* ! HB_FM_STATISTICS */
 
 typedef void * PHB_MEMINFO;
@@ -583,7 +585,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       FILE * hLog = NULL;
 
       if( s_lMemoryBlocks )
-         hLog = hb_fopen( "hb_fm.log", "a+" );
+         hLog = hb_fopen( s_pszLogFileName, "a+" );
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );
