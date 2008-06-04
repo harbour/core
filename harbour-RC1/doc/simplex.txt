@@ -1,0 +1,64 @@
+/*
+ * $Id$
+ */
+
+Overview:
+
+SimpLex uses high-level definitions, which for many programmers might be
+more readable, than equivalent Flex definitions. SimpLex Language
+Definitions are divided into 6 main sections:
+
+1. Delimiters. There are 3 kinds of Lexical Delimiters:
+
+   a. Ignorable. Typical example of such delimiters is "white space", i.e.
+      space and tab.
+
+   b. Returnable. Typical examples of such delimiters are commas,
+      parenthesis, and math operators.
+
+   c. Appendables. While I don't have any examples in mind, I suspect there
+      might be a need for such delimiters. This kind of delimiters should be
+      appended to the preceding token, in effect making such delimiter a
+      terminator character.
+
+2. Streams. These are also referred to as "pairs". Stream or Pair, as the
+   name may suggest, is any sequence (or stream) of characters, enclosed
+   within a STARTing character[s] and an ENDing character[s] (the pair).
+   Typical example of such lexical element is a LITERAL string, i.e. "Hello
+   World".
+
+3. Self Contained Words. These are a specific set of reserved words, which
+   do NOT require ANY delimiters. These words might be viewed as a form of
+   Meta Delimiters. These words will be extracted from the input stream,
+   regardless of any preceding, or succeeding characters. Typical example of
+   such tokens are the dBase' .AND. .OR. .NOT. logical operators, the C
+   language inline assignment operators += *= etc., as well as pre and post
+   increment/decrement operators -- and ++. The unique attribute of such
+   elements is the fact that these elements do NOT require preceding or
+   succeeding delimiters.
+
+4. Keywords. These are specific set of reserved words, which have lexical
+   significance in the defined language, when appearing as the FIRST token
+   in a given source line. Keywords may be constructed of multiple words with
+   separating white space (ignorable delimiters), when using the predefined
+   match pattern {WS}.
+
+5. Words. These are specific set of reserved words, which have lexical
+   significance in the defined language, when appearing ANYWHERE in a given
+   source line. Words may be constructed of multiple words with separating white
+   space (ignorable delimiters), when using the predefined match pattern {WS}.
+
+6. Rules. There are 2 kinds of rules:
+
+   a. Reduction Rules. These kind of rules defines the translation of a 1 or
+      more tokens into 1 or more other tokens (or custom actions). Reductions
+      are infinitely recursive, which means that the Reduction Results, are
+      pushed back onto the evaluation stack, incase they might in turn be part
+      of yet another rule. To eliminate such recursive cycle, Reduction Result
+      may be in the form of N + DONT_REDUCE, thus passing through the resulted
+      token, without further evaluation.
+
+   b. Pass Through (Left Associate). This kind of rules directs the Lexer to
+      accept such token[s] as a valid form.
+
+For a real-life language definition example, please refer to harbour.slx.

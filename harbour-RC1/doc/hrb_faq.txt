@@ -1,0 +1,74 @@
+/*
+ * $Id$
+ */
+
+.HRB FAQ list 1999/05/19:
+
+Current only available in a 32bit Intel version.
+
+HRB structure (also known as Harbour Portable Objects) and
+Runner (also known as TugBoat, Stubbing Executables (not yet) )
+
+To create a runner :
+
+        c:..> bld32exe runner
+
+Once the runner is created,
+To create a .HRB and run it :
+
+        c:..> hbrun <filename>
+
+
+If you just want to run a .HRB file :
+
+        c:..> runner <filename with .HRB>
+
+If you just want to create a .HRB file :
+
+        Use command-line switch -gHRB when invoking Harbour
+
+To see the contents of a .HRB file :
+
+        c:...> clipper readhrb /n/a/w           {I am sorry}
+        c:...> blinker @readhrb
+        c:...> readhrb <filename without .HRB>  {What do mean consistent}
+
+        If it goes too fast a readhrb.out is created containing the screen
+        output.
+
+To run a .HRB file within a .PRG (only possible if the .PRG is compiled as a
+.HRB file) :
+
+        HB_Run( <cFileName> )
+
+-------------------------------------------------------------------------------
+HRB structure (also known as Harbour Portable Objects) and
+Runner (also known as TugBoat, Stubbing Executables (not yet) )
+
+Version 1.0
+
+The ultimate version will of course feature more, but let's just stick to the
+minimal requirements.
+
+The .HRB structure consists :
+
+<ulSymbols>       Long containing the number of symbols
+{
+    <szSymbol>    Name of symbol
+    <bScope>      Scope of symbol
+    <bLinkType>   Link type :
+                  0 = NO_LINK (ie DATA symbol)
+                  1 = FUNCTION* in .PRG itself
+                  2 = EXTERN. Link function pointer at run-time.
+}
+<ulFuncs>         Long containing the number of functions
+{
+    <szSymbol>    Name of function
+    <ulLen>       Length of function
+    <aPCode>      PCode of function
+}
+
+* Since the module name itself is a symbol during compilation. ProcName()
+  was recognized as an internal function.
+  During the run-time link the runner therefore checks whether the compiler
+  has correctly identified a symbol as contained in .PRG itself.

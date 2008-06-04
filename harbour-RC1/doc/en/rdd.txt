@@ -1,0 +1,16 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*
+   NOTE: I deleted all the information in this file due to copyright
+         vilolation! 2004-4-19 [ckedem].
+ */

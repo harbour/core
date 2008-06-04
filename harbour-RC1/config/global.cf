@@ -1,0 +1,44 @@
+#
+# $Id$
+#
+
+GRANDP = ../../
+HB_ARCH := $(HB_ARCHITECTURE)/$(HB_COMPILER)
+
+#names of valid RDD libraries
+HB_DB_DRIVERS=\
+	rddntx \
+	rddcdx \
+	rddfpt \
+	hbsix \
+	hbhsx \
+	hbusrrdd \
+
+#names of valid RDD subdirectories
+HB_DB_DIRS=\
+	dbfntx \
+	dbfcdx \
+	dbffpt \
+	hbsix \
+	hsx \
+	usrrdd \
+
+
+ifneq ($(HB_DB_DRVEXT),)
+HB_DB_DRIVERS += $(HB_DB_DRVEXT)
+HB_DB_DIRS += $(HB_DB_DRVEXT)
+endif
+
+ifeq ($(HB_BIN_COMPILE),)
+HB_BIN_COMPILE := $(TOP)$(ROOT)source/main/$(HB_ARCH)
+endif
+
+ifeq ($(HB_INC_COMPILE),)
+HB_INC_COMPILE := $(TOP)$(ROOT)include
+endif
+
+ifeq ($(HB_LIB_COMPILE),)
+HB_LIB_COMPILE :=
+endif
+
+include $(TOP)$(ROOT)config/$(HB_ARCH).cf

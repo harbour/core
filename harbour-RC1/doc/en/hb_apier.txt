@@ -1,0 +1,1377 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ *   Header file for the Error API
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errGetDescription()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errGetDescription( PHB_ITEM pError ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errGetFileName()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errGetFileName( PHB_ITEM pError ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errGetFlags()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errGetFlags( PHB_ITEM pError ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errGetGenCode()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errGetGenCode( PHB_ITEM pError ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errGetOperation()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errGetOperation( PHB_ITEM pError ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errGetOsCode()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errGetOsCode( PHB_ITEM pError ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errGetSeverity()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errGetSeverity( PHB_ITEM pError ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errGetSubCode()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errGetSubCode( PHB_ITEM pError ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errGetSubSystem()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errGetSubSystem( PHB_ITEM pError ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errGetTries()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errGetTries( PHB_ITEM pError ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errLaunch()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errLaunch( PHB_ITEM pError ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errNew()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errNew( void ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errPutArgs()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errPutArgs( PHB_ITEM pError, USHORT uiArgCount, ... ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ * 
+ *      <uiArgCount>
+ * 
+ *      <...>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errPutDescription()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errPutDescription( PHB_ITEM pError, char * szDescription ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ * 
+ *      <szDescription>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errPutFileName()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errPutFileName( PHB_ITEM pError, char * szFileName ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ * 
+ *      <szFileName>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errPutFlags()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ * 
+ *      <uiFlags>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errPutGenCode()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ * 
+ *      <uiGenCode>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errPutOperation()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errPutOperation( PHB_ITEM pError, char * szOperation ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ * 
+ *      <szOperation>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errPutOsCode()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ * 
+ *      <uiOsCode>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errPutSeverity()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ * 
+ *      <uiSeverity>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errPutSubCode()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ * 
+ *      <uiSubCode>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errPutSubSystem()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ * 
+ *      <szSubSystem>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errPutTries()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errPutTries( PHB_ITEM pError, USHORT uiTries ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ * 
+ *      <uiTries>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errRelease()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errRelease( PHB_ITEM pError ) --> void
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errInit()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errInit( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errExit()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errExit( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errLaunchSubst()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errLaunchSubst( PHB_ITEM pError ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <pError>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errRT_New()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errRT_New( USHORT uiSeverity, char * szSubSystem, ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <uiSeverity>
+ * 
+ *      <szSubSystem>
+ * 
+ *      <ulGenCode>
+ * 
+ *      <ulSubCode>
+ * 
+ *      <szDescription>
+ * 
+ *      <szOperation>
+ * 
+ *      <uiOsCode>
+ * 
+ *      <uiFlags>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errRT_New_Subst()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errRT_New_Subst( USHORT uiSeverity, char * szSubSystem, ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <uiSeverity>
+ * 
+ *      <szSubSystem>
+ * 
+ *      <ulGenCode>
+ * 
+ *      <ulSubCode>
+ * 
+ *      <szDescription>
+ * 
+ *      <szOperation>
+ * 
+ *      <uiOsCode>
+ * 
+ *      <uiFlags>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errRT_BASE()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <ulGenCode>
+ * 
+ *      <ulSubCode>
+ * 
+ *      <szDescription>
+ * 
+ *      <szOperation>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errRT_BASE_Ext1()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <ulGenCode>
+ * 
+ *      <ulSubCode>
+ * 
+ *      <szDescription>
+ * 
+ *      <szOperation>
+ * 
+ *      <uiOsCode>
+ * 
+ *      <uiFlags>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errRT_BASE_Subst()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( PHB_ITEM )pResult
+ *  $ARGUMENTS$
+ *      <ulGenCode>
+ * 
+ *      <ulSubCode>
+ * 
+ *      <szDescription>
+ * 
+ *      <szOperation>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errRT_BASE_SubstR()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> void
+ *  $ARGUMENTS$
+ *      <ulGenCode>
+ * 
+ *      <ulSubCode>
+ * 
+ *      <szDescription>
+ * 
+ *      <szOperation>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errRT_TERM()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errRT_TERM( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOSCode, USHORT uiFlags ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <ulGenCode>
+ * 
+ *      <ulSubCode>
+ * 
+ *      <szDescription>
+ * 
+ *      <szOperation>
+ * 
+ *      <uiOSCode>
+ * 
+ *      <uiFlags>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errRT_DBCMD()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <ulGenCode>
+ * 
+ *      <ulSubCode>
+ * 
+ *      <szDescription>
+ * 
+ *      <szOperation>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errRT_TOOLS()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <ulGenCode>
+ * 
+ *      <ulSubCode>
+ * 
+ *      <szDescription>
+ * 
+ *      <szOperation>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errInternal()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 ) --> void
+ *  $ARGUMENTS$
+ *      <ulIntCode>
+ * 
+ *      <szText>
+ * 
+ *      <szPar1>
+ * 
+ *      <szPar2>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_errorHandler()
+ *  $CATEGORY$
+ *      Error API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapierr.h>
+ *      hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler ) --> ( HB_ERROR_INFO_PTR )hParam
+ *  $ARGUMENTS$
+ *      <pNewHandler>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is rtl
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+

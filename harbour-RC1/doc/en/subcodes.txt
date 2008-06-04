@@ -1,0 +1,1362 @@
+/*
+ * $Id$
+ */
+/*
+ Proposition:
+
+*   If the error is raised in the same condition as in Clipper then the same
+subcode number should be used.
+
+*   Errors specific to the Harbour and generated in RTL modules should
+start from 3000
+
+*   Errors generated in tools functions should start from 4000
+*/
+/* ************************************************************************** */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1003
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Attempt to acces nonexisting or hidden variable
+ *  $DESCRIPTION$
+ *      The specified variable was not found. </par>
+ *      If it is a database field make sure that the required database is open.  </par>
+ *      If it is a private or public variable then you must first create it
+ *      using PRIVATE or PUBLIC statement.  </par>
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1068
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of argument
+ *  $DESCRIPTION$
+ *      The used data is not of logical type  </par>
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1068
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Bound error in array access
+ *  $DESCRIPTION$
+ *      The attempt to retrieve data from non-array value  </par>
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1069
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Bound error in array access
+ *  $DESCRIPTION$
+ *      The attempt to set data to non-array value  </par>
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1078
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The type of compared arguments do not match  </par>
+ *  $FUNCTION$
+ *      ==  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1072
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The type of compared arguments do not match  </par>
+ *  $FUNCTION$
+ *      <>  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1073
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The type of compared argument do not match  </par>
+ *  $FUNCTION$
+ *      <  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1074
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The type of compared arguments do not match  </par>
+ *  $FUNCTION$
+ *      <=  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1075
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The type of compared arguments do not match  </par>
+ *  $FUNCTION$
+ *      >  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1076
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The type of compared arguments do not match  </par>
+ *  $FUNCTION$
+ *      >=  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1077
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      Operation is not allowed for passed argument. The argument is not
+ *      a logical value.  </par>
+ *  $FUNCTION$
+ *      !  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1078
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The type of one or both arguments is not a logical  </par>
+ *  $FUNCTION$
+ *      .AND.  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1079
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The type of one or both arguments is not a logical  </par>
+ *  $FUNCTION$
+ *      .OR.  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1076
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The value of argument cannot be incremented  </par>
+ *  $FUNCTION$
+ *      ++  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1081
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The plus operation is not allowed for used arguments.  </par>
+ *  $FUNCTION$
+ *      +  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1082
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The minus operation is not allowed for used arguments.  </par>
+ *  $FUNCTION$
+ *      -  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1100
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect type of argument
+ *  $DESCRIPTION$
+ *      The specified argument is not a string.  </par>
+ *  $FUNCTION$
+ *      RTRIM, TRIM  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1101
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect type of argument
+ *  $DESCRIPTION$
+ *      The specified argument is not a string.  </par>
+ *  $FUNCTION$
+ *      LTRIM  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1102
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The first argument passed to a function is not a string.  </par>
+ *  $FUNCTION$
+ *      UPPER  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1103
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The first argument passed to a function is not a string.  </par>
+ *  $FUNCTION$
+ *      LOWER  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1104
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect type of argument
+ *  $DESCRIPTION$
+ *      The specified argument is not a numeric value.  </par>
+ *  $FUNCTION$
+ *      CHR  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1105
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The arguments passed to a function are of incorrect type.  </par>
+ *  $FUNCTION$
+ *      SPACE  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1106
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The arguments passed to a function are of incorrect type.  </par>
+ *  $FUNCTION$
+ *      REPLICATE  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1107
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect type of argument
+ *  $DESCRIPTION$
+ *      The specified argument is not a string.  </par>
+ *  $FUNCTION$
+ *      ASC  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1108
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect type of argument
+ *  $DESCRIPTION$
+ *      The specified argument is not a string.  </par>
+ *  $FUNCTION$
+ *      AT  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1076
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of arguments
+ *  $DESCRIPTION$
+ *      The arguments of '$' operator are not a strings.  </par>
+ *  $FUNCTION$
+ *      $  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1110
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The first argument passed to a function is not a string.  </par>
+ *  $FUNCTION$
+ *      SUBSTR  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1110
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The passed argument is neither a string nor an array.  </par>
+ *  $FUNCTION$
+ *      LEN  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+ /*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1112
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function are of incorrect
+ *      type  </par>
+ *  $FUNCTION$
+ *      YEAR  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1113
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function are of incorrect
+ *      type  </par>
+ *  $FUNCTION$
+ *      MONTH  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1114
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function are of incorrect
+ *      type   </par>
+ *  $FUNCTION$
+ *      DAY  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1115
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function are of incorrect
+ *      type  </par>
+ *  $FUNCTION$
+ *      DOW   </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1116
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function are of incorrect
+ *      type  </par>
+ *  $FUNCTION$
+ *      CMONTH  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1117
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is of incorrect
+ *      type    </par>
+ *  $FUNCTION$
+ *      CDOW    </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1120
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is of incorrect
+ *      type  </par>
+ *  $FUNCTION$
+ *      DTOS  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1122
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect type of argument
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is of incorrect
+ *      type  </par>
+ *  $FUNCTION$
+ *      TRANSFORM  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1124
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect type of argument
+ *  $DESCRIPTION$
+ *      The first argument is not a string.  </par>
+ *  $FUNCTION$
+ *      LEFT  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1126
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The first arguments passed to a function is not a string.  </par>
+ *  $FUNCTION$
+ *      STRTRAN  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1132
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Bound error in array access
+ *  $DESCRIPTION$
+ *      The specified index into an array was greater then the number of
+ *      elements in the array.  </par>
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1133
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Bound error in array assigment
+ *  $DESCRIPTION$
+ *      The specified index into an array was greater then the number of
+ *      elements in the array.  </par>
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1068
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Bound error in array element assigment
+ *  $DESCRIPTION$
+ *      The specified index into an array was greater then the number of
+ *      elements in the array.  </par>
+ *  $FUNCTION$
+ *
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1085
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is not an numeric
+ *      value  </par>
+ *  $FUNCTION$
+ *      MOD  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1089
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is not an numeric
+ *      value  </par>
+ *  $FUNCTION$
+ *      ABS  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1090
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is not an numeric
+ *      value  </par>
+ *  $FUNCTION$
+ *      INT  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1092
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is not an numeric
+ *      value  </par>
+ *  $FUNCTION$
+ *      MIN  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1093
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is not an numeric
+ *      value  </par>
+ *  $FUNCTION$
+ *      MAX  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1094
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is not an numeric
+ *      value  </par>
+ *  $FUNCTION$
+ *      ROUND  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1095
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is not an numeric
+ *      value  </par>
+ *  $FUNCTION$
+ *      LOG  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1096
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is not an numeric
+ *      value  </par>
+ *  $FUNCTION$
+ *      EXP  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1097
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is not an numeric
+ *      value  </par>
+ *  $FUNCTION$
+ *      SQRT  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1098
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is not a string
+ *      value  </par>
+ *  $FUNCTION$
+ *      VAL  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/1099
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The argument (or arguments) passed to a function is not a numeric
+ *      value  </par>
+ *  $FUNCTION$
+ *      STR  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/* ************************************************************************** */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/2010
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect arguments type
+ *  $DESCRIPTION$
+ *      Passed Run Time Errors was not strings with filenames to copy/  </par>
+ *  $FUNCTION$
+ *      __COPYFILE  </par>
+ *  $COMPLIANCE$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/2012
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      File error
+ *  $DESCRIPTION$
+ *      An error has occured during the attempt to open, create or write
+ *      during copy operation  </par>
+ *  $FUNCTION$
+ *      __COPYFILE  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/2017
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to a function
+ *  $DESCRIPTION$
+ *      The first argument is not an array or/and the second argument
+ *      is not a code block  </par>
+ *  $FUNCTION$
+ *      AEVAL  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/2020
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The passed value is negative. Only values > 0 are allowed.  </par>
+ *  $FUNCTION$
+ *      SET DECIMALS  </par>
+ *      SET EPOCH     </par>
+ *      SET MARGIN    </par>
+ *      SET MESSAGE   </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/* ************************************************************************** */
+
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3001
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect argument type
+ *  $DESCRIPTION$
+ *      The passed argument is not an object. Only data of type OBJECT
+ *      can be cloned by this function  </par>
+ *  $FUNCTION$
+ *      OCLONE  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3002
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Super class does not return an object
+ *  $DESCRIPTION$
+ *      Passed argument is not a name of defined class or specified class
+ *      doesn't have a super class  </par>
+ *  $FUNCTION$
+ *      __INSTSUPER  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3003
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Cannot find super class
+ *  $DESCRIPTION$
+ *      Passed argument is not a name of defined class  </par>
+ *  $FUNCTION$
+ *      __INSTSUPER  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3004
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Cannot modify a DATA item in a class
+ *  $DESCRIPTION$
+ *      The attempt to modify a data member of a class was made.
+ *      Only INLINE and METHOD can be modified  </par>
+ *  $FUNCTION$
+ *      CLASSMOD  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3005
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect arguments type
+ *  $DESCRIPTION$
+ *      Either the first argument was not an object or the second argument
+ *      wasn't a string.  </par>
+ *  $FUNCTION$
+ *      ISMESSAGE, OSEND  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3007
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of argument
+ *  $DESCRIPTION$
+ *      The passed arguments are causing conflict in hanndling of the request.
+ *      There is no point in waiting forever for no input events!  </par>
+ *  $FUNCTION$
+ *      INKEY  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3008
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid type of argument
+ *  $DESCRIPTION$
+ *      The passed argument(s) is not a string. It should be a string with
+ *      a variable name or an one-dimensional array of strings.  </par>
+ *  $FUNCTION$
+ *      __MVPRIVATE, __MVPUBLIC  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3009
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect argument passed to __MVGET function
+ *  $DESCRIPTION$
+ *      __MVGET function expects only one argument: a string with a name
+ *      of variable. The value of this variable will be returned.  </par>
+ *  $FUNCTION$
+ *      __MVGET  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3010
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Incorrect argument passed to __MVPUT function
+ *  $DESCRIPTION$
+ *      __MVPUT function expects at least one argument: a string with a name
+ *      of variable. The value of this variable will be set.  </par>
+ *  $FUNCTION$
+ *      __MVPUT  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3011
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to a function
+ *  $DESCRIPTION$
+ *      The attempt to retrieve the function argument that was not passed.
+ *      The number of requested argument is greated then the number of
+ *      passed arguments.  </par>
+ *  $FUNCTION$
+ *      PVALUE  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3012
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to a function
+ *  $DESCRIPTION$
+ *      The first argument is not a string with function/procedure name
+ *      that should be called.  </par>
+ *  $FUNCTION$
+ *      DO  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3101
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to an object/class function
+ *  $DESCRIPTION$
+ *      One passed argument is not of the required type.  </par>
+ *  $FUNCTION$
+ *      __OBJ*()  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3102
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      A symbol should be modified or deleted from a class, but the symbol
+ *      doesn't exist.
+ *  $DESCRIPTION$
+ *      A symbol should be modified or deleted from a class, but the symbol
+ *      doesn't exist.  </par>
+ *  $FUNCTION$
+ *      __OBJ*()  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      BASE/3103
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      A symbol should be added to a class, but the symbol already exists.
+ *  $DESCRIPTION$
+ *      A symbol should be added to a class, but the symbol already exists.  </par>
+ *  $FUNCTION$
+ *      __OBJ*()  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+ /* ************************************************************************** */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      TOOLS/4001
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Invalid argument passed to function
+ *  $DESCRIPTION$
+ *      The second arguments passed to a function is not a string.  </par>
+ *  $FUNCTION$
+ *      ISLEAPYEAR  </par>
+ *  $STATUS$
+ *      Harbour specific
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/* ************************************************************************** */
+
+/*  $DOC$
+ *  $SUBCODE$
+ *      TERM/2013
+ *  $CATEGORY$
+ *      Run Time Errors
+ *  $ONELINER$
+ *      Create error
+ *  $DESCRIPTION$
+ *      The specified file cannot be created due some OS error.  </par>
+ *  $FUNCTION$
+ *      SET, SET ALTERNATE TO  </par>
+ *  $STATUS$
+ *      Clipper
+ *  $SEEALSO$
+ *
+ *  $END$
+ */

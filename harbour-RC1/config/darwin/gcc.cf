@@ -1,0 +1,112 @@
+#
+# $Id$
+#
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+OBJ_EXT = .o
+EXE_EXT =
+LIB_PREF = lib
+LIB_EXT = .a
+
+# intentionally used 'cc' instead of 'gcc' - I'm not an Darwin user
+# but the system where I was testing it has GCC 2.95 named 'cc'
+CC = $(CCACHE) cc
+CC_IN = -c
+CC_OUT = -o
+
+# -no-cpp-precomp prevents from using buggy precompiled headers
+CPPFLAGS = -no-cpp-precomp -I. -I$(TOP)include -I$(HB_INC_COMPILE)
+
+# -fno-common enables building .dylib files
+CFLAGS = -fno-common -Wall -W
+
+# It's to avoid warning message generated when 'long double' is used
+# remove it if you have newer compiler version
+CFLAGS += -Wno-long-double
+
+CFLAGS += -DHB_OS_DARWIN
+
+LD = cc
+LD_OUT = -o
+
+# Add all libraries specified in CONTRIBS and LIBS.
+ifeq ($(HB_LIB_COMPILE),)
+LINKPATHS += -L$(LIB_DIR)
+else
+LINKPATHS += -L$(HB_LIB_COMPILE)
+endif
+
+# Add all libraries specified in HB_USER_LIBS.
+LINKLIBS += $(foreach lib, $(HB_USER_LIBS), -l$(lib))
+
+LINKLIBS += $(foreach lib, $(CONTRIBS), -l$(subst lib,,$(lib)))
+LINKLIBS += $(foreach lib, $(LIBS), -l$(lib))
+
+# If LIBS specifies the rdd library, add all DB drivers.
+ifeq ($(findstring rdd,$(LIBS)),rdd)
+LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), -l$(drv))
+endif
+
+# Add the specified GT driver library and other RTLs
+ifeq ($(findstring rtl,$(LIBS)),rtl)
+
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), -l$(gt)) -lhbrtl
+
+# screen driver libraries
+ifeq ($(HB_CRS_LIB),)
+HB_CRS_LIB=ncurses
+endif
+
+ifneq ($(findstring gtcrs, $(HB_GT_LIBS)),)
+LINKLIBS += -l$(HB_CRS_LIB)
+endif
+
+ifneq ($(findstring gtsln, $(HB_GT_LIBS)),)
+LINKLIBS += -lslang
+# In BSD, slang still needs curses :(
+ifeq ($(findstring gtcrs, $(HB_GT_LIBS)),)
+LINKLIBS += -l$(HB_CRS_LIB)
+endif
+endif
+
+ifneq ($(findstring gtalleg, $(HB_GT_LIBS)),)
+LINKLIBS += `allegro-config --static`
+endif
+
+ifneq ($(findstring gtxwc, $(HB_GT_LIBS)),)
+LINKLIBS += -lX11
+#LINKPATHS += -L/usr/X11R6/lib64
+LINKPATHS += -L/usr/X11R6/lib
+endif
+
+# HB_GPM_MOUSE: use gpm mouse driver
+# Actually, there is no gpm on BSD.
+ifeq ($(HB_GPM_MOUSE),yes)
+LINKLIBS += -lgpm
+endif
+
+endif
+
+ifneq ($(findstring -DHB_PCRE_REGEX, $(C_USR)),)
+LINKLIBS += -lpcre
+endif
+
+ifneq ($(findstring -DHB_EXT_ZLIB, $(C_USR)),)
+LINKLIBS += -lz
+endif
+
+LINKLIBS += -lm
+
+LDFLAGS = $(LINKPATHS)
+LD_RULE = $(LD) $(CFLAGS) $(LD_OUT) $@ $(^F) $(LDFLAGS) $(L_USR) $(LINKLIBS) $(LINKLIBS)
+
+#AR = ar
+#ARFLAGS = $(A_USR)
+#AR_RULE = $(AR) $(ARFLAGS) r $@ $(^F) || $(RM) $@
+LIBTOOL = libtool
+LIBTOOLFLAGS = $(LIBTOOL_USR)
+AR_RULE = $(LIBTOOL) -static $(LIBTOOLFLAGS) -o $(LIB_DIR)/$@ $(^F) || ( $(RM) $(LIB_DIR)/$@ && false )
+RANLIB = ranlib
+
+include $(TOP)$(ROOT)config/rules.cf

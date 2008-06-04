@@ -1,0 +1,56 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Project - http://www.harbour-project.org
+ * xHarbour Project - http://www.xharbour.org
+ *
+ * Please left here information about any modifications to original
+ * PCRE files. It will make upgrading PCRE library much more easier
+ * and safer in the future.
+ *
+ *
+ * Use this format for the entry headers:
+ * YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email@address>
+ * For example:
+ * 2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
+ *
+ */
+
+2007-12-02 04:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/hbpcre/pcrecomp.c
+    * minor modification to pacify MSVC warnings
+
+2007-05-31 17:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/hbpcre/pcredfa.c
+  * harbour/source/hbpcre/pcreexec.c
+  * harbour/source/hbpcre/pcrefind.c
+  * harbour/source/hbpcre/pcreprni.c
+  * harbour/source/hbpcre/pcrestud.c
+  * harbour/source/hbpcre/pcretryf.c
+    * cleaned some warnings
+
+2007-05-31 15:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * initial upload to Harbour CVS
+  * filenames changed to keep 8.3 DOS format
+
+2006-01-31 22:00 UTC+0100 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * Makefile
+  * config.h
+    * moved SUPPORT_UCP and SUPPORT_UTF8 setting to reduce command line
+      overhead in DOS builds
+
+2005-09-27 10:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * pcreglob.c
+    * minor modification to avoid G++ warning messages
+
+2005-09-01 12:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  + ChangeLog
+    + added change log for PCRE files
+  * pcredfa.c
+    * removed unused variables: is_repeated, endcode
+  * chartabs.c
+  * dftables.c
+    * add extern declaration for _pcre_default_tables - some C++ compilers
+      may need it

@@ -1,0 +1,316 @@
+/* A Bison parser, made by GNU Bison 2.3.  */
+
+/* Skeleton interface for Bison's Yacc-like parsers in C
+
+   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.  */
+
+/* As a special exception, you may create a larger work that contains
+   part or all of the Bison parser skeleton and distribute that work
+   under terms of your choice, so long as that work isn't itself a
+   parser generator using the skeleton or a modified version thereof
+   as a parser skeleton.  Alternatively, if you modify or redistribute
+   the parser skeleton itself, you may (at your option) remove this
+   special exception, which will cause the skeleton and the resulting
+   Bison output files to be licensed under the GNU General Public
+   License without this special exception.
+
+   This special exception was added by the Free Software Foundation in
+   version 2.2 of Bison.  */
+
+/* Tokens.  */
+#ifndef YYTOKENTYPE
+# define YYTOKENTYPE
+   /* Put the tokens into the symbol table, so that GDB and other debuggers
+      know about them.  */
+   enum yytokentype {
+     FUNCTION = 258,
+     PROCEDURE = 259,
+     IDENTIFIER = 260,
+     RETURN = 261,
+     NIL = 262,
+     NUM_DOUBLE = 263,
+     INASSIGN = 264,
+     NUM_LONG = 265,
+     LOCAL = 266,
+     STATIC = 267,
+     IIF = 268,
+     IF = 269,
+     ELSE = 270,
+     ELSEIF = 271,
+     END = 272,
+     ENDIF = 273,
+     LITERAL = 274,
+     TRUEVALUE = 275,
+     FALSEVALUE = 276,
+     ANNOUNCE = 277,
+     EXTERN = 278,
+     DYNAMIC = 279,
+     INIT = 280,
+     EXIT = 281,
+     AND = 282,
+     OR = 283,
+     NOT = 284,
+     PUBLIC = 285,
+     EQ = 286,
+     NE1 = 287,
+     NE2 = 288,
+     INC = 289,
+     DEC = 290,
+     ALIASOP = 291,
+     DOCASE = 292,
+     CASE = 293,
+     OTHERWISE = 294,
+     ENDCASE = 295,
+     ENDDO = 296,
+     MEMVAR = 297,
+     WHILE = 298,
+     LOOP = 299,
+     FOR = 300,
+     NEXT = 301,
+     TO = 302,
+     STEP = 303,
+     LE = 304,
+     GE = 305,
+     FIELD = 306,
+     IN = 307,
+     PARAMETERS = 308,
+     PLUSEQ = 309,
+     MINUSEQ = 310,
+     MULTEQ = 311,
+     DIVEQ = 312,
+     POWER = 313,
+     EXPEQ = 314,
+     MODEQ = 315,
+     PRIVATE = 316,
+     BEGINSEQ = 317,
+     BREAK = 318,
+     RECOVER = 319,
+     RECOVERUSING = 320,
+     ALWAYS = 321,
+     ENDSEQ = 322,
+     DO = 323,
+     WITH = 324,
+     SELF = 325,
+     LINE = 326,
+     MACROVAR = 327,
+     MACROTEXT = 328,
+     AS_ARRAY = 329,
+     AS_BLOCK = 330,
+     AS_CHARACTER = 331,
+     AS_CLASS = 332,
+     AS_DATE = 333,
+     AS_LOGICAL = 334,
+     AS_NUMERIC = 335,
+     AS_OBJECT = 336,
+     AS_VARIANT = 337,
+     DECLARE = 338,
+     OPTIONAL = 339,
+     DECLARE_CLASS = 340,
+     DECLARE_MEMBER = 341,
+     AS_ARRAY_ARRAY = 342,
+     AS_BLOCK_ARRAY = 343,
+     AS_CHARACTER_ARRAY = 344,
+     AS_CLASS_ARRAY = 345,
+     AS_DATE_ARRAY = 346,
+     AS_LOGICAL_ARRAY = 347,
+     AS_NUMERIC_ARRAY = 348,
+     AS_OBJECT_ARRAY = 349,
+     PROCREQ = 350,
+     CBSTART = 351,
+     DOIDENT = 352,
+     FOREACH = 353,
+     DESCEND = 354,
+     DOSWITCH = 355,
+     ENDSWITCH = 356,
+     WITHOBJECT = 357,
+     ENDWITH = 358,
+     NUM_DATE = 359,
+     EPSILON = 360,
+     HASHOP = 361,
+     POST = 362,
+     UNARY = 363,
+     PRE = 364
+   };
+#endif
+/* Tokens.  */
+#define FUNCTION 258
+#define PROCEDURE 259
+#define IDENTIFIER 260
+#define RETURN 261
+#define NIL 262
+#define NUM_DOUBLE 263
+#define INASSIGN 264
+#define NUM_LONG 265
+#define LOCAL 266
+#define STATIC 267
+#define IIF 268
+#define IF 269
+#define ELSE 270
+#define ELSEIF 271
+#define END 272
+#define ENDIF 273
+#define LITERAL 274
+#define TRUEVALUE 275
+#define FALSEVALUE 276
+#define ANNOUNCE 277
+#define EXTERN 278
+#define DYNAMIC 279
+#define INIT 280
+#define EXIT 281
+#define AND 282
+#define OR 283
+#define NOT 284
+#define PUBLIC 285
+#define EQ 286
+#define NE1 287
+#define NE2 288
+#define INC 289
+#define DEC 290
+#define ALIASOP 291
+#define DOCASE 292
+#define CASE 293
+#define OTHERWISE 294
+#define ENDCASE 295
+#define ENDDO 296
+#define MEMVAR 297
+#define WHILE 298
+#define LOOP 299
+#define FOR 300
+#define NEXT 301
+#define TO 302
+#define STEP 303
+#define LE 304
+#define GE 305
+#define FIELD 306
+#define IN 307
+#define PARAMETERS 308
+#define PLUSEQ 309
+#define MINUSEQ 310
+#define MULTEQ 311
+#define DIVEQ 312
+#define POWER 313
+#define EXPEQ 314
+#define MODEQ 315
+#define PRIVATE 316
+#define BEGINSEQ 317
+#define BREAK 318
+#define RECOVER 319
+#define RECOVERUSING 320
+#define ALWAYS 321
+#define ENDSEQ 322
+#define DO 323
+#define WITH 324
+#define SELF 325
+#define LINE 326
+#define MACROVAR 327
+#define MACROTEXT 328
+#define AS_ARRAY 329
+#define AS_BLOCK 330
+#define AS_CHARACTER 331
+#define AS_CLASS 332
+#define AS_DATE 333
+#define AS_LOGICAL 334
+#define AS_NUMERIC 335
+#define AS_OBJECT 336
+#define AS_VARIANT 337
+#define DECLARE 338
+#define OPTIONAL 339
+#define DECLARE_CLASS 340
+#define DECLARE_MEMBER 341
+#define AS_ARRAY_ARRAY 342
+#define AS_BLOCK_ARRAY 343
+#define AS_CHARACTER_ARRAY 344
+#define AS_CLASS_ARRAY 345
+#define AS_DATE_ARRAY 346
+#define AS_LOGICAL_ARRAY 347
+#define AS_NUMERIC_ARRAY 348
+#define AS_OBJECT_ARRAY 349
+#define PROCREQ 350
+#define CBSTART 351
+#define DOIDENT 352
+#define FOREACH 353
+#define DESCEND 354
+#define DOSWITCH 355
+#define ENDSWITCH 356
+#define WITHOBJECT 357
+#define ENDWITH 358
+#define NUM_DATE 359
+#define EPSILON 360
+#define HASHOP 361
+#define POST 362
+#define UNARY 363
+#define PRE 364
+
+
+
+
+#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
+typedef union YYSTYPE
+#line 109 "harbour.y"
+{
+   char *  string;      /* to hold a string returned by lex */
+   int     iNumber;     /* to hold a temporary integer number */
+   HB_LONG lNumber;     /* to hold a temporary long number */
+   BOOL    bTrue;
+   HB_EXPR_PTR asExpr;
+   void * pVoid;        /* to hold any memory structure we may need */
+   struct
+   {
+      HB_LONG  lNumber;    /* to hold a long number returned by lex */
+      UCHAR    bWidth;     /* to hold the width of the value */
+   } valLong;
+   struct
+   {
+      double   dNumber;    /* to hold a double number returned by lex */
+      /* NOTE: Intentionally using "unsigned char" instead of "BYTE" */
+      UCHAR    bWidth;     /* to hold the width of the value */
+      UCHAR    bDec;       /* to hold the number of decimal points in the value */
+   } valDouble;
+   struct
+   {
+      char *   string;
+      int      length;
+      BOOL     dealloc;
+   } valChar;
+   struct
+   {
+      char *   string;
+      int      length;
+      int      flags;   /* Flag for early {|| &macro} (1) or late {|| &(macro)} (2) binding */
+   } asCodeblock;
+   struct
+   {
+      BOOL bMacro;
+      union 
+      {
+         char * string;
+         HB_EXPR_PTR macro;
+      } value;
+   } asMessage;
+}
+/* Line 1535 of yacc.c.  */
+#line 309 "harboury.h"
+	YYSTYPE;
+# define yystype YYSTYPE /* obsolescent; will be withdrawn */
+# define YYSTYPE_IS_DECLARED 1
+# define YYSTYPE_IS_TRIVIAL 1
+#endif
+
+
+

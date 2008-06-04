@@ -1,0 +1,1062 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 Ryszard Glab
+ *   Header file for the Macro compiler
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_macroError()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_macroError( int iError, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <iError>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_macroYYParse()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_macroYYParse( HB_MACRO_PTR pMacro ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPCode1()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPCode1( BYTE byte, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <byte>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPCode2()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <byte1>
+ * 
+ *      <byte2>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPCode3()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <byte1>
+ * 
+ *      <byte2>
+ * 
+ *      <byte3>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPCode4()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <byte1>
+ * 
+ *      <byte2>
+ * 
+ *      <byte3>
+ * 
+ *      <byte4>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPCodeN()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <pBuffer>
+ * 
+ *      <ulSize>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compLocalVarGetPos()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compLocalVarGetPos( char * szVarName, HB_BISON_PTR pMacro ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      <szVarName>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenJump()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenJump( LONG lOffset, HB_BISON_PTR pMacro ) --> ( ULONG )ulResult
+ *  $ARGUMENTS$
+ *      <lOffset>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenJumpFalse()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenJumpFalse( LONG lOffset, HB_BISON_PTR pMacro ) --> ( ULONG )ulResult
+ *  $ARGUMENTS$
+ *      <lOffset>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenJumpThere()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <ulFrom>
+ * 
+ *      <ulTo>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenJumpHere()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenJumpHere( ULONG ulOffset, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <ulOffset>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenJumpTrue()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenJumpTrue( LONG lOffset, HB_BISON_PTR pMacro ) --> ( ULONG )ulResult
+ *  $ARGUMENTS$
+ *      <lOffset>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compMemvarGenPCode()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <bPCode>
+ * 
+ *      <szVarName>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPushSymbol()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPushSymbol( char * szSymbolName, int isFunction, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <szSymbolName>
+ * 
+ *      <isFunction>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPushLong()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPushLong( long lNumber, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <lNumber>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenMessage()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenMessage( char * szMsgName, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <szMsgName>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenMessageData()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenMessageData( char * szMsg, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <szMsg>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPopVar()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPopVar( char * szVarName, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <szVarName>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPopAliasedVar()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPopAliasedVar( char * szVarName, BOOL bPushAliasValue, char * szAlias, long lWorkarea, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <szVarName>
+ * 
+ *      <bPushAliasValue>
+ * 
+ *      <szAlias>
+ * 
+ *      <lWorkarea>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPushVar()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPushVar( char * szVarName, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <szVarName>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPushVarRef()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPushVarRef( char * szVarName, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <szVarName>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPushAliasedVar()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPushAliasedVar( char * szVarName, BOOL bPushAliasValue, char * szAlias, long lWorkarea, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <szVarName>
+ * 
+ *      <bPushAliasValue>
+ * 
+ *      <szAlias>
+ * 
+ *      <lWorkarea>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPushLogical()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPushLogical( int iTrueFalse, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <iTrueFalse>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPushDouble()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <dNumber>
+ * 
+ *      <bWidth>
+ * 
+ *      <bDec>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPushFunCall()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPushFunCall( char * szFunName, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <szFunName>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compGenPushString()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compGenPushString( char * szText, ULONG ulStrLen, HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <szText>
+ * 
+ *      <ulStrLen>
+ * 
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compCodeBlockStart()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compCodeBlockStart( HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_compCodeBlockEnd()
+ *  $CATEGORY$
+ *      Macro API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbmacro.h>
+ *      hb_compCodeBlockEnd( HB_BISON_PTR pMacro ) --> void
+ *  $ARGUMENTS$
+ *      <pMacro>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is macro
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+

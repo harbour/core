@@ -1,0 +1,217 @@
+/*
+ * $Id$
+ */
+
+Language codes
+==============
+
+RFC ID Name                           ISO Language ID
+------ ------------------------------ ---------------
+AA     Afar                           AA
+AB     Abkhazian                      AB
+AF     Afrikaans                      AF
+AM     Amharic                        AM
+AR     Arabic                         AR
+AR-AE  Arabic (U.A.E.)                AR
+AR-BH  Arabic (Bahrain)               AR
+AR-DZ  Arabic (Algeria)               AR
+AR-EG  Arabic (Egypt)                 AR
+AR-IQ  Arabic (Iraq)                  AR
+AR-JO  Arabic (Jordan)                AR
+AR-KW  Arabic (Kuwait)                AR
+AR-LB  Arabic (Lebanon)               AR
+AR-LY  Arabic (Libya)                 AR
+AR-MA  Arabic (Morocco)               AR
+AR-OM  Arabic (Oman)                  AR
+AR-QA  Arabic (Qatar)                 AR
+AR-SA  Arabic (Saudi Arabia)          AR
+AR-SY  Arabic (Syria)                 AR
+AR-TN  Arabic (Tunisia)               AR
+AR-YE  Arabic (Yemen)                 AR
+AS     Assamese                       AS
+AY     Aymara                         AY
+AZ     Azerbaijani                    AZ
+BA     Bashkir                        BA
+BE     Byelorussian                   BE
+BG     Bulgarian                      BG
+BH     Bihari                         BH
+BI     Bislama                        BI
+BN     Bengali, Bangla                BN
+BO     Tibetan                        BO
+BR     Breton                         BR
+CA     Catalan                        CA
+CO     Corsican                       CO
+CS     Czech                          CS
+CY     Welsh                          CY
+DA     Danish                         DA
+DE     German                         DE
+DE-AT  German (Austria)               DE
+DE-CH  German (Swiss)                 DE
+DE-LI  German (Liechtenstein)         DE
+DE-LU  German (Luxembourg)            DE
+DZ     Bhutani                        DZ
+EL     Greek                          EL
+EN     English                        EN
+EN-AU  English (Australian)           EN
+EN-BZ  English (Belize)               EN
+EN-CA  English (Canadian)             EN
+EN-GB  English (British)              EN
+EN-IE  English (Ireland)              EN
+EN-JM  English (Jamaica)              EN
+EN-JP  English (Japan)                EN
+EN-NZ  English (New Zealand)          EN
+EN-TT  English (Trinidad)             EN
+EN-US  English (USA)                  EN
+EN-ZA  English (South Africa)         EN
+EO     Esperanto                      EO
+ES     Spanish                        ES
+ES-AR  Spanish (Argentina)            ES
+ES-BO  Spanish (Bolivia)              ES
+ES-CL  Spanish (Chile)                ES
+ES-CO  Spanish (Colombia)             ES
+ES-CR  Spanish (Costa Rica)           ES
+ES-DO  Spanish (Dominican Republic)   ES
+ES-EC  Spanish (Ecuador)              ES
+ES-GT  Spanish (Guatemala)            ES
+ES-HN  Spanish (Honduras)             ES
+ES-MX  Spanish (Mexican)              ES
+ES-NI  Spanish (Nicaragua)            ES
+ES-PA  Spanish (Panama)               ES
+ES-PE  Spanish (Peru)                 ES
+ES-PR  Spanish (Puerto Rico)          ES
+ES-PY  Spanish (Paraguay)             ES
+ES-SV  Spanish (El Salvador)          ES
+ES-UY  Spanish (Uruguay)              ES
+ES-VE  Spanish (Venezuela)            ES
+ET     Estonian                       ET
+EU     Basque                         EU
+FA     Persian                        FA
+FI     Finnish                        FI
+FJ     Fiji                           FJ
+FO     Faeroese                       FO
+FR     French                         FR
+FR-BE  French (Belgian)               FR
+FR-CA  French (Canadian)              FR
+FR-CH  French (Swiss)                 FR
+FR-LU  French (Luxembourg)            FR
+FY     Frisian                        FY
+GA     Irish                          GA
+GD     Scots Gaelic                   GD
+GL     Galician                       GL
+GN     Guarani                        GN
+GU     Gujarati                       GU
+HA     Hausa                          HA
+HE     Hebrew                         HE
+HI     Hindi                          HI
+HR     Croatian                       HR
+HU     Hungarian                      HU
+HY     Armenian                       HY
+IA     Interlingua                    IA
+ID     Indonesian                     ID
+IE     Interlingue                    IE
+IK     Inupiak                        IK
+IN     Indonesian (-)                 IN
+IS     Icelandic                      IS
+IT     Italian                        IT
+IT-CH  Italian (Swiss)                IT
+IU     Inuktitut                      IU
+IW     Hebrew (-)                     IW
+JA     Japanese                       JA
+JI     Yiddish (-)                    JI
+JW     Javanese                       JW
+KA     Georgian                       KA
+KK     Kazakh                         KK
+KL     Greenlandic                    KL
+KM     Cambodian                      KM
+KN     Kannada                        KN
+KO     Korean                         KO
+KS     Kashmiri                       KS
+KU     Kurdish                        KU
+KY     Kirghiz                        KY
+LA     Latin                          LA
+LN     Lingala                        LN
+LO     Laothian                       LO
+LT     Lithuanian                     LT
+LV     Latvian, Lettish               LV
+MG     Malagasy                       MG
+MI     Maori                          MI
+MK     Macedonian                     MK
+ML     Malayalam                      ML
+MN     Mongolian                      MN
+MO     Moldavian                      MO
+MR     Marathi                        MR
+MS     Malay                          MS
+MT     Maltese                        MT
+MY     Burmese                        MY
+NA     Nauru                          NA
+NE     Nepali                         NE
+NL     Dutch                          NL
+NL-BE  Dutch (Belgian)                NL
+NO     Norwegian                      NO
+NO-BOK Norwegian (bokmal)             NO
+NO-NYN Norwegian (Nynorsk)            NO
+OC     Occitan                        OC
+OM     (Afan) Oromo                   OM
+OR     Oriya                          OR
+PA     Punjabi                        PA
+PL     Polish                         PL
+PS     Pashto, Pushto                 PS
+PT     Portuguese                     PT
+PT-BR  Portuguese (Brazilian)         PT
+QU     Quechua                        QU
+RM     Rhaeto-Romance                 RM
+RN     Kirundi                        RN
+RO     Romanian                       RO
+RO-MO  Romanian (Moldavia)            RO
+RU     Russian                        RU
+RU-MO  Russian (Moldavia)             RU
+RW     Kinyarwanda                    RW
+SA     Sanskrit                       SA
+SD     Sindhi                         SD
+SG     Sangro                         SG
+SH     Serbo-Croatian                 SH
+SI     Singhalese                     SI
+SK     Slovak                         SK
+SL     Slovenian                      SL
+SM     Samoan                         SM
+SN     Shona                          SN
+SO     Somali                         SO
+SQ     Albanian                       SQ
+SR     Serbian                        SR
+SS     Siswati                        SS
+ST     Sesotho                        ST
+SU     Sundanese                      SU
+SV     Swedish                        SV
+SV-FI  Swedish (Finland)              SV
+SW     Swahili                        SW
+TA     Tamil                          TA
+TE     Tegulu                         TE
+TG     Tajik                          TG
+TH     Thai                           TH
+TI     Tigrinya                       TI
+TK     Turkmen                        TK
+TL     Tagalog                        TL
+TN     Setswana                       TN
+TO     Tonga                          TO
+TR     Turkish                        TR
+TS     Tsonga                         TS
+TT     Tatar                          TT
+TW     Twi                            TW
+UG     Uigur                          UG
+UK     Ukrainian                      UK
+UR     Urdu                           UR
+UZ     Uzbek                          UZ
+VI     Vietnamese                     VI
+VO     Volapuk                        VO
+WO     Wolof                          WO
+XH     Xhosa                          XH
+YI     Yiddish                        YI
+YO     Yoruba                         YO
+ZA     Zhuang                         ZA
+ZH     Chinese                        ZH
+ZH-CN  Chinese (PRC)                  ZH
+ZH-HK  Chinese (Hong Kong)            ZH
+ZH-SG  Chinese (Singapore)            ZH
+ZH-TW  Chinese (Taiwan)               ZH
+ZU     Zulu                           ZU
+

@@ -1,0 +1,15 @@
+harbour (0.45.0-0.1) unstable; urgency=low
+
+  * NMU
+  * New upstream release.
+  * Bump to Standards-Version 3.6.2.
+  * Drop gcc-3.3 build-dep.
+
+ -- Clint Adams <schizo@debian.org>  Thu, 18 May 2006 14:43:11 -0400
+
+harbour (0.44-1) unstable; urgency=low
+
+  * Initial Release (closes: Bug#251486).
+
+ -- Luis Mayoral <mayoral@linuxadicto.org>  Sun, 05 Sep 2004 14:33:19 +0200
+

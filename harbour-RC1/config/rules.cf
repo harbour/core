@@ -1,0 +1,88 @@
+#
+# $Id$
+#
+
+# How to run yacc.
+YACC = bison
+YACC_FLAGS := -d $(YACC_FLAGS)
+
+# How to run lex.
+LEX = flex
+LEX_FLAGS := -i -8 $(LEX_FLAGS)
+
+#
+# How to run Harbour.
+#
+HB := $(notdir $(HB_BIN_COMPILE))
+ifneq ($(HB),)
+# there is no slash at the end
+HB := $(HB_BIN_COMPILE)/
+endif
+HB := $(HB)harbour$(EXE_EXT)
+
+HB_FLAGS = -n -q0 -w3 -es2 -gc0 -kM -I$(TOP) -I$(HB_INC_COMPILE)
+
+# The rule to link an executable.
+ifeq ($(LD_RULE),)
+# Use default rule if architecture/compiler specific rule is not defined
+LD_RULE = $(LD) $(CFLAGS) $(LD_OUT)$@ $(^F) $(LDFLAGS) $(L_USR) $(LINKLIBS)
+endif
+
+# The rule to compile a C source file.
+ifeq ($(CC_RULE),)
+# Use default rule if architecture/compiler specific rule is not defined
+CC_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_IN) $? $(CC_OUT)$(?F:.c=$(OBJ_EXT))
+endif
+
+# The rule to compile a C++ source file.
+ifeq ($(CPP_RULE),)
+# Use default rule if architecture/compiler specific rule is not defined
+CPP_RULE = $(CC) $(CPPFLAGS) $(CFLAGS) $(C_USR) $(CC_IN) $? $(CC_OUT)$(?F:.cpp=$(OBJ_EXT))
+endif
+
+
+# Eliminate these rules.
+
+%.c : %.y
+
+%.c : %.l
+
+# Location of source C files
+# Some DOS compilers doesn't like '/' in filenames - however the MAKE system
+# requires '/' in filenames - this trick allows to solve this conflict
+SOURCE_DIR := $($(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP)
+ifeq ($(SOURCE_DIR),)
+SOURCE_DIR = $(GRANDP)
+endif
+
+# Rule to generate an object file from a C source file in the parent.
+%$(OBJ_EXT) : $(SOURCE_DIR)%.c
+	$(CC_RULE)
+
+# Rule to generate an object file from a C source file.
+%$(OBJ_EXT) : %.c
+	$(CC_RULE)
+
+#rules for CPP files
+%$(OBJ_EXT) : $(SOURCE_DIR)%.cpp
+	$(CPP_RULE)
+
+%$(OBJ_EXT) : %.cpp
+	$(CPP_RULE)
+
+
+# Rule to generate an executable file from an object file.
+%$(EXE_EXT) : %$(OBJ_EXT)
+	$(LD_RULE)
+
+# Rule to generate a C file from a PRG file.
+%.c : $(GRANDP)%.prg
+	$(HB) $? $(PRG_USR) $(HB_FLAGS)
+
+ifeq ($(SHLVL),) # COMMAND.COM
+# Do nothing. the $(hb_architecture)/global.cf will handle clean up.
+else
+# Generic rule to clean up.
+clean::
+	-$(RM) *.bak *.obj core *.core *~ *.o *.ppo
+endif

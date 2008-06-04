@@ -1,0 +1,192 @@
+/*
+ * $Id$
+ */
+
+HOW TO USE THE SVN
+------------------
+
+Content
+=======
+
+1.1 Here's how to prepare for uploading to the SVN server
+1.2 Here's how to upload your changes to the SVN server
+1.3 Here's how to format your ChangeLog entries
+1.4 Here's how to use the SVN server in anonymous read-only mode
+1.5 Things to do to avoid damaging the SourceForge SVN tree
+1.6 How to add SVN ID to new files
+
+1.1 Here's how to prepare for uploading to the SVN server
+=========================================================
+by Viktor Szakats
+
+ 1) Read the Harbour FAQ (http://www.harbour-project.org/faq), monitor the
+    mailing-list (http://www.harbour-project.org/faq/harbour34.html),
+    consult with the developers, make contributions. This way your chances
+    are high to get a RW access to the repository.
+ 2) Before uploading anything you'll need Developer (RW) status for the
+    Harbour SVN server. To get this please make a request on the list,
+    or contact the Harbour Administrators. Note that getting Developer
+    status is not an automatic process.
+ 3) You'll need an SVN client for your platform.
+ 4) Do a complete checkout to get the fresh source tree.
+
+1.2 Here's how to upload your changes to the SVN server
+=======================================================
+by Viktor Szakats
+
+ 1) Do the changes in the source, and in parallel modify ChangeLog
+ 2) Go online (if needed)
+ 3) SVN UPDATE
+ 4) Resolve all conflicts
+ 5) Copy the last ChangeLog entry to the clipboard
+ 6) SVN COMMIT --editor-cmd notepad.exe --username sfuser
+    Change notepad.exe to the editor of your choice and platform.
+    Change "sfuser" to your sf.net username.
+ 7) New email message, paste the new ChangeLog entry
+ 8) Copy and paste the ChangeLog entry header to the subject after
+    "CHANGELOG: "
+ 9) The SVN pops up a window with the changed filenames
+10) Check if all the changed filenames are referred in the ChangeLog entry,
+    if not, make the corrections and start again
+11) Paste the ChangeLog entry header to the SVN window, save, exit
+12) SVN is now uploading,
+    if there are any errors, make the corrections and start again
+13) Always check if the upload session ended without errors.
+14) Send the email message containing the changes
+15) Go offline (if needed)
+
+alternative method:
+by Ryszard Glab
+
+ 1) Do the changes in the source
+ 2) Run SVN UPDATE redirecting the output into a file
+    (for example: "SVN update -d >.log"
+ 3) Resolve all conflicts, run SVN update again (see point 2), recompile
+    all sources, fix all errors
+ 4) Run SVN STATUS redirecting the output into a file
+    (for example: "svn status >.log"
+ 5) Copy all names of modifed, added or deleted files (files marked with
+    'M', 'A' or 'D' flag) from update log into a ChangeLog
+ 6) Write necessary comments in the ChangeLog
+ 7) Save all your changes from ChangeLog into a file
+ 8) Run SVN UPDATE again
+ 9) Commit changes running:
+    SVN commit -F file_with_saved_ChangeLog_changes --username sfuser
+ 10) Mail file_with_saved_ChangeLog_changes as an email body (do not
+    send it as an attachment) to the harbour list
+
+Important notes:
+
+ 1) *Always* add a ChangeLog entry when committing to the SVN.
+ 2) When adding a new file to the SVN, always use lower case 8.3
+    filenames (*), add a SVN ID header to the file, don't use tabs
+    in the file, end the file with a newline char.
+    Possibly consult other Developers about the new filename and file
+    placement.
+    Add the new filename to the related makefiles.
+    (*) There are some exceptions: ChangeLog.*, Makefile, COPYING,
+        ERRATA and TODO for example.
+
+1.3 Here's how to format your ChangeLog entries
+===============================================
+by Viktor Szakats
+
+- Always add new entries to the top of the ChangeLog file.
+
+- Add an entry header using this format:
+  YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email_address>
+
+  For example:
+    2000-05-27 23:12 UTC+0100 Viktor Szakats <harbour.01 syenar.hu>
+
+- Add a entry body which lists all filenames changed, all of
+  them with full path spec. Mention the name of the changed function or
+  macro. Describe what you've changed, the reasons, and other comments
+  and explanations you find useful. If the change needs some related work
+  to be done by someone else (documentation, makefile), make a clear note
+  about this.
+  Group the related changes into logical sections separated by empty lines.
+
+  Sample:
+
+   * dir/filenam1.txt
+   + dir/filenam2.txt
+   - dir/filenam3.txt
+     * Changed, bla-bla
+     ! Fixed
+     % Optimized
+     + Added
+     - Removed
+     ; Comment
+
+  Note that using these specific marks is preferred although not a
+  requirement.
+
+- Leave an empty line between the header and body and one after the body.
+
+1.4 Here's how to use the SVN server in anonymous read-only mode
+================================================================
+
+Please read the following FAQ entry:
+http://www.harbour-project.org/faq/harbour25.html
+
+1.5 Things to do to avoid damaging the SourceForge SVN tree
+===========================================================
+by David G. Holm
+
+1) Always do your Harbour development using your local SVN tree. Do not
+   do your development outside your local SVN tree and then copy your
+   changes into your local SVN tree to commit them, because that leads
+   easily to accidentally overwriting changes made by others, because
+   you didn't notice that a module that you were also working on was
+   changed by someone else. By always doing Harbour development using
+   your local SVN tree, changes made by others will be merged with your
+   changes and you only need to recompile and retest before committing.
+
+2) Always run 'SVN update' from the 'harbour' directory before you run
+   'SVN commit'. Ideally, you should redirect the output from the update
+   to a file and look at the results to confirm that you are ready to do
+   a commit. Any files marked M, A or D are files that you have modified
+   or are adding or deleting. Confirm that you have comments for all of
+   them in your ChangeLog entry. If you see many modules marked P or U,
+   then you need to recompile and retest before you commit your changes.
+
+   If you see any conflicts reported in the update output, then you need
+   to resolve them before committing. SVN is generally good at merging
+   changes, so you probably won't see conflicts very often, but if you
+   edit the ChangeLog file before you run 'SVN update' and other changes
+   have been committed by others, then ChangeLog will have conflicts. To
+   resolve those conflicts, simply remove the conflict markers. What I do
+   to avoid conflicts to ChangeLog is to record my changes in changes.txt
+   and then copy them into ChangeLog between the update and the commit.
+
+1.6 How to add SVN ID to new files
+==================================
+by Maurilio Longo
+
+When a new file is added to SVN tree it has not a SVN ID.
+SVN IDs look like this:
+
+/*
+ * $Id$
+ */
+
+
+To add one to a file lacking it simply put as first lines:
+
+/*
+ * Chr(36) + "Id" + Chr(36)
+ */
+
+I can't write it here because SVN server would change it as soon as I
+commit this file, but second line should not have Chr(36) but $ signs
+and no spaces between dollar sign and Id.
+
+as soon as you commit your file SVN ID string will be expanded
+by SVN server to full length.
+
+Note that last dollar sign is mandatory.
+
+Run these commands and commit:
+svn propset svn:keywords "Author Date Id Revision" "filename"
+svn propset svn:eol-style native "filename"

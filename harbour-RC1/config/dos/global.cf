@@ -1,0 +1,111 @@
+#
+# $Id$
+#
+
+ifndef MK
+
+all : first
+
+HB_GT_LIST=\
+	gtcgi \
+	gtpca \
+	gtstd \
+	gtdos \
+
+#	gtcrs \
+#	gtsln \
+
+ifeq ($(HB_GTALLEG),yes)
+   HB_GT_LIST += gtalleg
+endif
+
+# verify if GT drivers exist
+#HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
+HB_GT_LIBS := $(HB_GT_LIST)
+
+ifeq ($(HB_GT_LIB),)
+   HB_GT_LIB = gtdos
+endif
+
+ifeq ($(SHLVL),) # COMMAND.COM
+
+# There is a conflict with the use of '\' and '/' characters
+# The MAKE requires '/' in filenames (ARCH_DIR) however some compilers
+# and some DOS commands require '\' (ARCH_DOS)
+ARCH_DIR = $(subst \,/,$(HB_ARCH))
+ARCH_DOS = $(subst /,\,$(HB_ARCH))
+LIB_DIR_DOS = $(subst /,\,$(LIB_DIR))
+LIB_PATH_DOS = $(subst /,\,$(LIB_PATH))
+LIB_ARCH_DOS = $(subst /,\,$(LIB_ARCH))
+DIRSEP = $(subst /,\,\)
+
+MK := $(subst \,/,$(subst \~,~,$(MAKE)))
+
+ifeq ($(COMSPEC),) #location of command.com
+   COMSPEC := command.com
+else
+   ifeq ($(HB_COMPILER),bcc16)
+      #Use standard dos path, which is already set up.
+   else
+      ifeq ($(HB_COMPILER),rsx32)
+         #Use standard dos path, which is already set up.
+      else
+         ifneq ($(findstring watcom,$(HB_COMPILER)),)
+            #Use standard dos path, which is already set up.
+         else
+            ifeq ($(HB_COMPILER),djgpp)
+               #Use standard dos path, which is already set up.
+            else
+               ifeq ($(HB_COMPILER),emx)
+                  #Use standard dos path, which is already set up.
+               else
+                  COMSPEC := $(subst \,/,$(COMSPEC))
+               endif
+            endif
+         endif
+      endif
+   endif
+endif
+
+RM = del
+RD = rmdir
+CP = $(COMSPEC) /Ccopy
+MV = move
+MD = md
+
+#this will be used only under DJGPP
+RANLIB = ranlib
+
+dirbase::
+	-@$(COMSPEC) /Cfor %d in ($(HB_ARCHITECTURE) $(ARCH_DOS)) do if not exist %d\nul $(MD) %d
+	$(if $(LIB_PATH_DOS),-@$(COMSPEC) /Cfor %d in ($(LIB_PATH_DOS) $(LIB_DIR_DOS)) do if not exist %d\nul $(MD) %d,)
+
+clean::
+	-@$(COMSPEC) /Cfor %f in ($(ARCH_DOS)\*.* *.bak *.obj *.o *.tds) do $(RM) %f
+	-@$(COMSPEC) /Cfor %d in ($(ARCH_DOS) $(HB_ARCHITECTURE)) do if exist %d\nul $(RD) %d
+	$(if $(LIB_ARCH_DOS),-@$(COMSPEC) /Cif exist $(LIB_ARCH_DOS) $(RM) $(LIB_ARCH_DOS),)
+
+else  # bash
+
+ARCH_DIR = $(HB_ARCH)
+MK = $(MAKE)
+
+RM = rm -f
+RD = rm -f -r
+CP = cp -f
+MV = mv -f
+MD = mkdir
+MDP = mkdir -p
+
+#this will be used only under MINGW
+RANLIB = ranlib
+
+dirbase::
+	@[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)
+	@[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
+
+clean::
+	-$(RD) $(ARCH_DIR) $(LIB_ARCH)
+
+endif
+endif

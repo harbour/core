@@ -1,0 +1,4359 @@
+/*
+ * $Id$
+ */
+
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 1999 {list of individual authors and e-mail addresses}
+ *   Header file for the Terminal API
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtInit()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtInit( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr ) --> void
+ *  $ARGUMENTS$
+ *      <iFilenoStdin>
+ * 
+ *      <iFilenoStdout>
+ * 
+ *      <iFilenoStderr>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtExit()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtExit( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtAdjustPos()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen ) --> void
+ *  $ARGUMENTS$
+ *      <iHandle>
+ * 
+ *      <pStr>
+ * 
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtBox()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <pbyFrame>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtBoxD()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtBoxS()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtColorSelect()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtColorSelect( USHORT uiColorIndex ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiColorIndex>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtColorToN()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *
+ *  $SYNTAX$
+ *      C Prototype
+ *
+ *      #include <hbapigt.h>
+ *      hb_gtColorToN( char * szColorString ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <szColorString>
+ *  $RETURNS$
+ *
+ *  $DESCRIPTION$
+ *
+ *  $EXAMPLES$
+ *
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtDispBegin()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtDispBegin( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtDispCount()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtDispCount( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtDispEnd()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtDispEnd( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtDrawShadow()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <byAttr>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtGetBlink()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtGetBlink( BOOL * pbBlink ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pbBlink>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtGetColorStr()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtGetColorStr( char * pszColorString ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pszColorString>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtGetCursor()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtGetCursor( USHORT * puiCursorShape ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <puiCursorShape>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtGetPos()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtGetPos( SHORT * piRow, SHORT * piCol ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <piRow>
+ * 
+ *      <piCol>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtIsColor()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtIsColor( void ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtMaxCol()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtMaxCol( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtMaxRow()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtMaxRow( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtPostExt()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtPostExt( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtPreExt()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtPreExt( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSuspend()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      Prepare the reminal for shell output
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSuspend( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtResume()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      Resume the terminal after the shell output
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtResume( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtReadKey()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtReadKey( HB_inkey_enum eventmask ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      <eventmask>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtRectSize()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * puiBuffSize ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <puiBuffSize>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtRepChar()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiRow>
+ * 
+ *      <uiCol>
+ * 
+ *      <byChar>
+ * 
+ *      <uiCount>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtRest()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * pScrBuff ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <pScrBuff>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSave()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * pScrBuff ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <pScrBuff>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtScrDim()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtScrDim( USHORT * puiHeight, USHORT * puiWidth ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <puiHeight>
+ * 
+ *      <puiWidth>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtScroll()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <iRows>
+ * 
+ *      <iCols>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSetBlink()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSetBlink( BOOL bBlink ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <bBlink>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSetColorStr()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSetColorStr( char * pszColorString ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pszColorString>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSetCursor()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSetCursor( USHORT uiCursorShape ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiCursorShape>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSetMode()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSetMode( USHORT uiRows, USHORT uiCols ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiRows>
+ * 
+ *      <uiCols>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSetPos()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSetPos( SHORT iRow, SHORT iCol ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <iRow>
+ * 
+ *      <iCol>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSetPosContext()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSetPosContext( SHORT iRow, SHORT iCol, SHORT iMode ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <iRow>
+ * 
+ *      <iCol>
+ * 
+ *      <iMode>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSetSnowFlag()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSetSnowFlag( BOOL bNoSnow ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <bNoSnow>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtTone()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtTone( double dFrequency, double dDuration ) --> void
+ *  $ARGUMENTS$
+ *      <dFrequency>
+ * 
+ *      <dDuration>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtWrite()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtWrite( BYTE * pbyStr, ULONG ulLen ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pbyStr>
+ * 
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtWriteAt()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pbyStr, ULONG ulLen ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiRow>
+ * 
+ *      <uiCol>
+ * 
+ *      <pbyStr>
+ * 
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtWriteCon()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtWriteCon( BYTE * pbyStr, ULONG ulLen ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pbyStr>
+ * 
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtVersion()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtVersion( void ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtWCreate()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtWCreate( HB_GT_RECT * rect, HB_GT_WND ** wnd ) --> void
+ *  $ARGUMENTS$
+ *      <rect>
+ * 
+ *      <wnd>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtWDestroy()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtWDestroy( HB_GT_WND * wnd ) --> void
+ *  $ARGUMENTS$
+ *      <wnd>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtWFlash()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtWFlash( void ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtWApp()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtWApp( HB_GT_WND ** wnd ) --> void
+ *  $ARGUMENTS$
+ *      <wnd>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtWCurrent()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtWCurrent( HB_GT_WND * wnd ) --> void
+ *  $ARGUMENTS$
+ *      <wnd>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtWPos()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect ) --> void
+ *  $ARGUMENTS$
+ *      <wnd>
+ * 
+ *      <rect>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtWVis()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtWVis( HB_GT_WND * wnd, USHORT uiStatus ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <wnd>
+ * 
+ *      <uiStatus>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSLR()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      System Level Request
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSLR( HB_GT_SLR * pSLR ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <pSLR>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtModalRead()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtModalRead( void * ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <void *>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtBeginWrite()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtBeginWrite( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtEndWrite()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtEndWrite( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtFlushCursor()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtFlushCursor( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSetColor()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSetColor( HB_GT_RGB * color ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <color>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtGetColor()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtGetColor( HB_GT_RGB * color ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <color>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gtSetBorder()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gtSetBorder( HB_GT_RGB * color ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <color>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Init()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr ) --> void
+ *  $ARGUMENTS$
+ *      <iFilenoStdin>
+ * 
+ *      <iFilenoStdout>
+ * 
+ *      <iFilenoStderr>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Exit()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Exit( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_AdjustPos()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <pStr>
+ * 
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Box()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <pbyFrame>
+ * 
+ *      <byAttr>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_BoxD()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <pbyFrame>
+ * 
+ *      <byAttr>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_BoxS()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <pbyFrame>
+ * 
+ *      <byAttr>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Col()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Col( void ) --> ( SHORT )sResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_DispBegin()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_DispBegin( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_DispCount()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_DispCount( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_DispEnd()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_DispEnd( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_GetBlink()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_GetBlink( void ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_GetCursorStyle()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_GetCursorStyle( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_GetScreenHeight()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_GetScreenHeight( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_GetScreenWidth()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_GetScreenWidth( void ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_GetText()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyDst ) --> void
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <pbyDst>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_HorizLine()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiRow>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiRight>
+ * 
+ *      <byChar>
+ * 
+ *      <byAttr>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_IsColor()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_IsColor( void ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_PreExt()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_PreExt( void ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_PostExt()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_PostExt( void ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Suspend()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      Suspend the terminal before the shell call
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Suspend( void ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Resume()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      Resume the terminal after the shell call
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Resume( void ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Puts()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen ) --> void
+ *  $ARGUMENTS$
+ *      <uiRow>
+ * 
+ *      <uiCol>
+ * 
+ *      <byAttr>
+ * 
+ *      <pbyStr>
+ * 
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_PutText()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc ) --> void
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <pbySrc>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_ReadKey()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_ReadKey( HB_inkey_enum eventmask ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      <eventmask>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_RectSize()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_RectSize( USHORT rows, USHORT cols ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      <rows>
+ * 
+ *      <cols>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Replicate()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Replicate( USHORT uiTop, USHORT uiLeft, BYTE byAttr, BYTE byChar, ULONG ulLen ) --> void
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <byAttr>
+ * 
+ *      <byChar>
+ * 
+ *      <ulLen>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Row()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Row( void ) --> ( SHORT )sResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Scroll()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr, SHORT iRows, SHORT iCols ) --> void
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <byAttr>
+ * 
+ *      <iRows>
+ * 
+ *      <iCols>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_SetAttribute()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr ) --> void
+ *  $ARGUMENTS$
+ *      <uiTop>
+ * 
+ *      <uiLeft>
+ * 
+ *      <uiBottom>
+ * 
+ *      <uiRight>
+ * 
+ *      <byAttr>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_SetBlink()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_SetBlink( BOOL bBlink ) --> void
+ *  $ARGUMENTS$
+ *      <bBlink>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_SetCursorStyle()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_SetCursorStyle( USHORT uiCursorShape ) --> void
+ *  $ARGUMENTS$
+ *      <uiCursorShape>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_SetMode()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_SetMode( USHORT uiRows, USHORT uiCols ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <uiRows>
+ * 
+ *      <uiCols>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_SetPos()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod ) --> void
+ *  $ARGUMENTS$
+ *      <iRow>
+ * 
+ *      <iCol>
+ * 
+ *      <iMethod>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Tone()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Tone( double dFrequency, double dDuration ) --> void
+ *  $ARGUMENTS$
+ *      <dFrequency>
+ * 
+ *      <dDuration>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_Version()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_Version( void ) --> ( char * )pszResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_gt_VertLine()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr ) --> ( USHORT )usResult
+ *  $ARGUMENTS$
+ *      <uiCol>
+ * 
+ *      <uiTop>
+ * 
+ *      <uiBottom>
+ * 
+ *      <byChar>
+ * 
+ *      <byAttr>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_inkey()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      Wait for keyboard input
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_inkey( BOOL bWait, double dSeconds, HB_inkey_enum event_mask ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      <bWait>
+ * 
+ *      <dSeconds>
+ * 
+ *      <event_mask>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_inkeyGet()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      Extract the next key from the Harbour keyboard buffer
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_inkeyGet( void ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_inkeyPut()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      Inserts an inkey code into the keyboard buffer
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_inkeyPut( int ch ) --> void
+ *  $ARGUMENTS$
+ *      <ch>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_inkeyLast()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      Return the value of the last key that was extracted
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_inkeyLast( void ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_inkeyNext()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      Return the next key without extracting it
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_inkeyNext( void ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_inkeyPoll()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      Poll the console keyboard to stuff the Harbour buffer
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_inkeyPoll( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_inkeyReset()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      Reset the Harbour keyboard buffer
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_inkeyReset( BOOL allocate ) --> void
+ *  $ARGUMENTS$
+ *      <allocate>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouseIsPresent()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouseIsPresent( void ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouseGetCursor()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouseGetCursor( void ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouseSetCursor()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouseSetCursor( BOOL bVisible ) --> void
+ *  $ARGUMENTS$
+ *      <bVisible>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouseCol()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouseCol( void ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouseRow()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouseRow( void ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouseSetPos()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouseSetPos( int iRow, int iCol ) --> void
+ *  $ARGUMENTS$
+ *      <iRow>
+ * 
+ *      <iCol>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouseIsButtonPressed()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouseIsButtonPressed( int iButton ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <iButton>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouseCountButton()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouseCountButton( void ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouseSetBounds()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouseSetBounds( int iTop, int iLeft, int iBottom, int iRight ) --> void
+ *  $ARGUMENTS$
+ *      <iTop>
+ * 
+ *      <iLeft>
+ * 
+ *      <iBottom>
+ * 
+ *      <iRight>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouseGetBounds()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight ) --> void
+ *  $ARGUMENTS$
+ *      <piTop>
+ * 
+ *      <piLeft>
+ * 
+ *      <piBottom>
+ * 
+ *      <piRight>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_Init()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_Init( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_Exit()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_Exit( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_IsPresent()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_IsPresent( void ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_Show()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_Show( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_Hide()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_Hide( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_Col()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_Col( void ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_Row()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_Row( void ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_SetPos()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_SetPos( int iRow, int iCol ) --> void
+ *  $ARGUMENTS$
+ *      <iRow>
+ * 
+ *      <iCol>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_IsButtonPressed()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_IsButtonPressed( int iButton ) --> ( BOOL )bResult
+ *  $ARGUMENTS$
+ *      <iButton>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_CountButton()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_CountButton( void ) --> ( int )iResult
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_SetBounds()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight ) --> void
+ *  $ARGUMENTS$
+ *      <iTop>
+ * 
+ *      <iLeft>
+ * 
+ *      <iBottom>
+ * 
+ *      <iRight>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_mouse_GetBounds()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight ) --> void
+ *  $ARGUMENTS$
+ *      <piTop>
+ * 
+ *      <piLeft>
+ * 
+ *      <piBottom>
+ * 
+ *      <piRight>
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_setkeyInit()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_setkeyInit( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      hb_setkeyExit()
+ *  $CATEGORY$
+ *      Terminal API
+ *  $ONELINER$
+ *      
+ *  $SYNTAX$
+ *      C Prototype
+ *      
+ *      #include <hbapigt.h>
+ *      hb_setkeyExit( void ) --> void
+ *  $ARGUMENTS$
+ *      
+ *  $RETURNS$
+ *      
+ *  $DESCRIPTION$
+ *      
+ *  $EXAMPLES$
+ *      
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Compliance is not applicable to API calls.
+ *  $FILES$
+ *      Library is gt* (ie. gtdos)
+ *  $PLATFORMS$
+ *      All
+ *  $SEEALSO$
+ *      
+ *  $END$
+ */
+

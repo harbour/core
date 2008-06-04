@@ -1,0 +1,28 @@
+.TH HBDOT 1
+
+.SH NAME
+hbdot \- "DOt Prompt" Console for the Harbour Language
+
+.SH SYNOPSIS
+\fBhbdot\fP \fB[<file[.prg]>\fP \fB[<parameters,...>]]\fP
+
+.SH DESCRIPTION
+\fBhbdot\fP is "DOt Prompt" console for the Harbour Language.
+It can work as interpreter when run without parameters
+or can execute xBase/Clipper source code in .prg file given
+as first parameter.
+.PP
+\fBhbdot\fP can be also used to execute .prg files as scripts
+It's enough to add in the first line of .prg file:
+.PP
+\fB#!/usr/bin/hbdot\fP
+.PP
+and set executable attribute.
+
+.SH OPTIONS
+This program has no options. \fB<parameters,...>\fP are passed to
+startup function in executed code coming from \fB<file[.prg]>\fP.
+
+.SH AUTHOR
+
+Przemyslaw Czerpak, The Harbour Project (http://www.harbour-project.org)

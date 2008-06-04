@@ -1,0 +1,83 @@
+#
+# $Id$
+#
+# The Harbour project
+# GNU MAKE file for Watcom C/C++ 10.x
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+OBJ_EXT = .obj
+EXE_EXT = .exe
+LIB_PREF =
+LIB_EXT = .lib
+
+$(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP = $(subst /,\\,$(GRANDP))
+
+CC = wpp386
+CC_IN =
+CC_OUT = -fo=
+CPPFLAGS = -d2 -w2 -5r -zq -zt0 -bt=DOS4G
+CFLAGS := -i$(subst \,\\,$(WATCOM))\\h -i$(subst /,\\,$(HB_INC_COMPILE)) -i.
+
+# Note: The empty line directly before 'endef' HAVE TO exist!
+# It causes that the 'echo' command is separated by LF
+define link_file
+$(COMSPEC) /E:2048 /Cecho FILE $(file) >> __link__.tmp
+
+endef
+
+#Note: The empty line directly before 'endef' HAVE TO exist!
+define link_lib
+$(COMSPEC) /E:2048 /Cecho LIB $(lib) >> __link__.tmp
+
+endef
+
+define link_exe_file
+$(COMSPEC) /E:2048 /Cecho $(LDFLAGS) NAME $@ > __link__.tmp
+$(foreach file, $(^F), $(link_file))
+$(foreach lib, $(LINKLIBS), $(link_lib))
+$(foreach lib, $(RDDLIBS), $(link_lib))
+$(foreach lib, $(GTLIBS), $(link_lib))
+-$(LD) @__link__.tmp
+endef
+
+LD = wlink
+LDFLAGS = debug all OP osn=DOS4G OP stack=65536 OP CASEEXACT
+ifeq ($(HB_LIB_COMPILE),)
+LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(LIB_DIR)/$(lib)))
+LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(LIB_DIR)/$(lib)))
+else
+LINKLIBS := $(foreach lib, $(CONTRIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
+LINKLIBS += $(foreach lib, $(LIBS), $(subst /,\,$(HB_LIB_COMPILE)/$(lib)))
+endif
+
+# If LIBS specifies the rdd library, add all DB drivers.
+ifeq ($(findstring rdd,$(LIBS)),rdd)
+RDDLIBS := $(foreach drv, $(HB_DB_DRIVERS), $(subst /,\,$(LIB_DIR)/$(drv)))
+endif
+
+GTLIBS := $(foreach gt, $(HB_GT_LIBS), $(subst /,\,$(LIB_DIR)/$(gt)))
+
+LD_RULE = $(link_exe_file)
+
+#Note: The empty line below HAVE TO exist!
+define lib_object
+$(COMSPEC) /E:2048 /Cecho -+$(file) >> __lib__.tmp
+
+endef
+
+LIB_DDIR := $(subst /,\,$(LIB_DIR))
+
+define create_library
+$(COMSPEC) /E:2048 /Cecho $(LIB_DDIR)\$@ > __lib__.tmp
+$(foreach file, $(^F), $(lib_object))
+$(AR) $(ARFLAGS) @__lib__.tmp
+endef
+
+AR = wlib
+ARFLAGS = -p=32 -c $(A_USR)
+AR_RULE = $(create_library)
+
+include $(TOP)$(ROOT)config/rules.cf
+
+HB := $(subst /,\\,$(HB))

@@ -1,0 +1,30 @@
+#
+# $Id$
+#
+
+ifeq ($(PM),) # Only traverse directories if not compiling a specific module
+
+ifeq ($(SHLVL),) # COMMAND.COM
+
+ifeq ($(DIRS),) # Empty directory list
+DIR_RULE =\
+	@echo Done
+else
+DIR_LIST := $(subst /,\,$(DIRS))
+DIR_MAKE := $(subst /,\,$(MK))
+DIR_RULE =\
+	$(COMSPEC) /C FOR %d IN ($(DIR_LIST)) DO $(DIR_MAKE) -C %d $@
+endif
+
+else  # bash
+
+DIR_RULE =\
+	@for d in $(DIRS); do \
+	  if [ -d $$d ]; then \
+	    $(MAKE) -C $$d $@; \
+	  fi \
+	done
+
+endif # ! Windows     
+
+endif # ! compiling a specific program module

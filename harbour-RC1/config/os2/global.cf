@@ -1,0 +1,87 @@
+#
+# $Id$
+#
+
+all : first
+
+HB_GT_LIST=\
+	gtcgi \
+	gtos2 \
+	gtpca \
+	gtstd \
+
+# verify if GT drivers exist
+#HB_GT_LIBS := $(foreach gt, $(HB_GT_LIST), $(if $(wildcard $(TOP)$(ROOT)source/rtl/$(gt)),$(gt),))
+# temporary workaround for some possible problems with some GNU make versions
+HB_GT_LIBS := $(HB_GT_LIST)
+
+ifeq ($(HB_GT_LIB),)
+	HB_GT_LIB = gtos2
+endif
+
+ifeq ($(SHLVL),) # An OS/2 command shell
+
+ARCH_DIR = $(HB_ARCH)
+OS2_ARCH_DIR = $(subst /,\,$(HB_ARCH))
+OS2_LIB_DIR  = $(subst /,\,$(LIB_DIR))
+OS2_LIB_PATH = $(subst /,\,$(LIB_PATH))
+OS2_LIB_ARCH = $(subst /,\\,$(LIB_ARCH))
+DIRSEP = $(subst /,\,\)
+
+MK = $(subst /,\,$(subst \~,~,$(MAKE)))
+
+ifeq ($(OS2_SHELL),)
+	# Not running on OS/2 (which comes in handy for 'make -r clean')
+	RM = del /q
+else
+	# Running on OS/2
+	RM = del /n
+endif
+RD = rmdir
+CP = copy
+MV = move
+MD = md
+
+ifeq ($(LIB_PATH),)
+
+dirbase::
+	-CMD.EXE /C FOR %d IN ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR)) DO IF NOT EXIST %d $(MD) %d
+
+clean::
+	-CMD.EXE /C IF EXIST $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\\*.*
+	-CMD.EXE /C FOR %d IN ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) DO IF EXIST %d $(RD) %d
+
+else
+
+dirbase::
+	-CMD.EXE /C FOR %d IN ($(HB_ARCHITECTURE) $(OS2_ARCH_DIR) $(OS2_LIB_PATH) $(OS2_LIB_DIR)) DO IF NOT EXIST %d $(MD) %d
+
+clean::
+	-CMD.EXE /C IF EXIST $(OS2_ARCH_DIR)\*.* $(RM) $(OS2_ARCH_DIR)\\*.*
+	-CMD.EXE /C FOR %d IN ($(OS2_ARCH_DIR) $(HB_ARCHITECTURE)) DO IF EXIST %d $(RD) %d
+	-CMD.EXE /C IF EXIST $(OS2_LIB_ARCH) $(RM) $(OS2_LIB_ARCH)
+
+endif
+
+else  # bash
+
+ARCH_DIR = $(HB_ARCH)
+MK = $(MAKE)
+
+RM = rm -f
+RD = rm -f -r
+CP = cp -f
+MV = mv -f
+MD = mkdir
+MDP = mkdir -p
+
+OS2_LIB_ARCH = $(LIB_ARCH)
+
+dirbase::
+	@[ -d $(ARCH_DIR) ] || $(MDP) $(ARCH_DIR)
+	@[ -z $(LIB_DIR) ] || [ -d $(LIB_DIR) ] || $(MDP) $(LIB_DIR)
+
+clean::
+	-$(RD) $(ARCH_DIR) $(LIB_ARCH)
+
+endif

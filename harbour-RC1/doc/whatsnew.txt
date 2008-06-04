@@ -1,0 +1,1483 @@
+/*
+ * $Id$
+ */
+
+
+Version 0.9.9 RC1 (2008-06-04) tag: RC1
+
+General
+=============================
+- The SourceForge repository was moved from CVS to SVN
+- added docs/howtosvn.txt
+- changed pack_src.sh to extract list of files from local SVN copy using
+  SVN commands
+- improved CYGWIN compatibility
+- new alternative make system for BCC, MSVC and GCC (maybe others in the
+  future) which uses common dependences list. The old GNU make system is
+  still functional and working
+- added support for pure C MSVC builds (not C++)
+- added rules to generate DEB packages - by Luis Mayoral taken from Debian
+  distribution updated for current code
+- added new man pages and updated the old ones taken from Debian
+- fully removed flex and bison dependences in normal builds. Only developers
+  who want to change the grammar files needs bison
+- removed all HB_COMPAT_XHB definitions from source code - now all covered
+  extensions should be supported by hbcompat.ch and/or xhb library
+- removed 3-rd party header files from SVN, f.e.: ace.h
+
+Portability
+-----------
+- eliminated errno access for platforms which do not have it.
+- added support for PocketPC WINCE with MSVC, POCC, CeGCC and MinGWCE.
+- added support for cross WinCE builds
+- extended hb* scripts for cross builds: hbw* - Win32, hbce* - WinCE
+- added support for creating RPMs with Harbour cross build for Win32 and
+  WinCE.
+- added support for MS-Windows UNICDE builds.
+- added support for shared libraries (.sl) in HPUX builds
+- added large file support (64bit) in HPUX builds
+- disabled in default BSD* builds DOS/Windows DENY_* flags emulation
+  implemented by BSD locks - tests on FreeBSD 6.2 and MacOSX shows
+  that it badly interacts with POSIX locks and it's possible to create
+  deadlock.
+
+The compiler
+==============================
+syntax:
+-------
+- added direct support to compiler for ENDSW[ICTH], ENDDO, ENDC[ASE], ENDI[F],
+  ENDW[ITH], ENDSEQ[UENCE]
+  Now they are not translated by preprocessor to END what allows better typos
+  detection in .prg code because each statement can use its own unique close
+  directive
+- forbidden using EXIT and LOOP inside ALWAYS code in BEGIN/END sequence
+- forbidden using ALWAYS statement if RECOVER code has EXIT or LOOP
+  statement
+- removed some restrictions on reserved words like using IF, IIF, _FIELD
+  as field name
+- added support for (@var):<msg>
+- fixed many syntax expressions which where accepted by grammar definition
+  but not supported by compiler, f.e. @func(p)
+- added support for HB_ENUM*([@]<varname>) functions - disabled
+  by default can be enabled by HB_USE_ENUM_FUNCTIONS macro
+- added support for DYNAMIC functions - references resolved at runtime.
+
+internals:
+----------
+- fixed LOOP used inside SWITCH/CASE.../END[SWITCH] statements
+- fixed using EXIT/LOOP inside WITH OBJECT / END[WITH] statement
+- fixed optimization of empty BEGIN/END sequence when recover has
+  EXIT or LOOP statement
+- fixed using EXIT/LOOP inside extended codeblocks when loop is
+  external to codeblock definition
+- fixed using RETURN inside extended codeblocks when they are defined
+  inside BEGIN SEQUENCE statement
+- many other fixes for problems which can appears in nested extended
+  codeblock definitions
+- fixed problems with line numbering in extended code blocks
+- fixed compiler -w3 warning when class has different name then class
+  function.
+- optimizations in generated PCODE and extended compile time optimizations
+- added support for --version compiler switch for platforms which
+  use '-' as option separator
+- added new compiler switches:
+   -q2 - disable _ALL_ stdout/stderr messages
+   -kM - turn off macrotext substitution
+   -ks - changed to pass base value by reference what allow full []
+    operator overloading
+- added new compiler switches for automatic filename, pathname and path
+  separators translations (-fn*, -fd*, -fs*, -fp*) used for file open
+  during compilation
+- added support for dynamically set during compilation ChangeLog entry,
+  ChangeLog ID, SVN revision and compilation flags.
+  Update Harbour logo message to show the exact revision number and
+- removed non-working compiler frontends: .NET CLI and JAVA.
+- added support for i18n into compiler (-j[<filename>] switch)
+  gettext compatible .pot files are generated
+
+preprocessor:
+-------------
+- added support for logical constants .T., .F., .Y., .N. in
+  #IF ... / #ELIF ... PP directives
+- added support for changing all -k? switches by #pragma, f.e.;
+         #pragma -ks+
+         #pragma -kM-
+         #pragma -kx1
+         #pragma -kJ0
+- added to PP predefined defines: HB_VER_LENTRY, HB_VER_CHLID, HB_VER_SVNID
+  with ChangeLog entry, ChangeLog ID and SVN revision
+- added to PP support for:
+      #pragma __[c]streaminclude "fileName"|<code with %s result marker>
+
+The runtime modules
+=============================
+- renamed core libraries
+- cleaned code and guards all extensions to pure CL5[23] with HB_EXTENSION
+  macro.
+- turned off HB_EXTENSION for the default builds.
+
+API
+---
+- added C functions to access SET values (hb_setGet*()) which should be used
+  instead of direct accessing HB_SET structure
+- added hb_fsFileExists() and hb_fsDirExists()
+- added hb_arraySet*() functions - they should help 3-rd party developers
+  to eliminate using C stack level HB_ITEM and reduce usage of potentially
+  danger function like hb_arrayGetItemPtr()
+- added hb_itemParamStore[Forward]() functions
+- added hb_dateMilliSeconds()
+
+VM
+--
+- FOR EACH detached enumerators now does not change on next iterations
+- added support for scalar classes with operator overloading
+- added full support for passing object items by reference even if they
+  are not real variables but SETGET methods
+- added support for setting string characters by assigning FOR EACH
+  iterator, f.e.: FOR EACH c IN (@cVar)
+                     c := Upper( c )
+                  NEXT
+- added full support for FOR EACH overloading
+- extended PROCFILE() function - now it can accept <nLevel> | <sFuncSym> |
+  <cFuncName> as first parameter, f.e.: PROCFILE( @someFunc() ) or
+  PROCFILE( "PUBLICFUNC" ) or PROCFILE( nStackLevel ). For non character
+  parameters it fully works also for static functions even if source code
+  have many static functions with the same name
+- added support for detecting not cleanly overloaded by linker .prg
+  functions.
+- cleaned PCODE module unload procedure.
+- added support for executing all inherited multiple object destructors.
+
+DEBUGGER
+--------
+- many fixes and extensions in debugger code mostly by Phil Krylov borrowed
+  from xHarbour
+- added to debugger support for inspecting objects which use hidden
+  methods and members with the same names in different classes in
+  inheritance tree - now context is dynamically changed
+
+RTL
+---
+- added functions for translation to/from UTF8 mode and operations
+  on UTF8 strings
+- added functions for bit manipulations: HB_BIT*() and for conversions
+  to/from hexadecimal format
+- added set of functions with hb_ prefix supported extended parameters,
+  f.e.: HB_AINS(), HB_ADEL(), HB_ASCAN(), HB_RASCAN(), HB_GETENV(),
+  HB_AT(), ...
+- added HB_FILEEXISTS(), HB_DIREXISTS()
+- new TBROWSE class which is now very highly compatible with Clipper
+  It should resolve 99.9% problems with BROWSE reported in the past.
+- TBCOLUMN class is now fully Clipper compatible
+- many fixes and cleanups in TGET class
+- many fixes to GETSYS functionality, especially 5.3 compatible features.
+- many fixes and cleanups in CL53 classes like TOPBAR, POPUP, MENUSYS,
+  MENUITEM
+  and related functions.
+- Made C5.3 UI classes fully working and compatible.
+- ERROR class rewritten in C so now it's possible to create new error
+  objects also with active exceptions
+- added missing support for _SET_FILECASE, _SET_DIRCASE switches in some
+  functions
+- added _SET_TRIMFILENAME - when enabled low level hb_fs*() functions strip
+  trailing and leading spaces from file names to emulate DOS like behavior
+- added support for _SET_DEFEXTENSIONS to native all RDDs
+- many fixes in transform() function and fixed 64bit integer transformation.
+  Now transform() passes our all compatibility tests
+- added undocumented Clipper error functions
+- added functions to manage .ini files: HB_INI*()
+- extended HB_KEYPUT to support strings and arrays.
+- converted HIDDEN methods and members in RTL objects to PROTECTED for
+  easier class extension in user code
+- added many undocumented Clipper's C and .prg functions.
+
+MACRO COMPILER
+--------------
+- removed some restrictions on reserved words like using IF, IIF, _FIELD
+  as field name
+
+COMPILER
+--------
+- added support for full compiler code integration with compiled programs
+  WARNING: Please remember that compiler in Harbour is covered by pure GPL
+  license and final programs should respect it so use compiler library
+  only with programs which respects GPL.
+
+GT:
+---
+- Added new GT driver GTTRM. It's terminal GT which can be used in different
+  *nixes. Unlike GTCRS or GTSLN it does not use any external libraries
+  like [n]curses or slang or databases with terminal description (termcap/
+  terminfo). It has hard coded support only for few terminals (Linux,ANSI,
+  XTERM) but because uses only very limited set of escape sequences then
+  on most currently used terminals it works better then curses or slang
+  based programs. GTTRM automatically detects ISO/UTF8 terminal mode at
+  startup and chose valid output what should also help *nix users - it
+  resolves problems with some box drawing characters and others which
+  are not accessible in ISO mode. It also respects /etc/harbour/hb-charmap.def
+  like GTCRS.
+  As long as user code does not execute and full screen commands then
+  it works like GTSTD so can be used also for simple stream programs.
+- added new GT driver GTWVG. It's works like GTWVT but has additional
+  support for GUI elements
+- changed GTI_* defines to HB_GTI_*
+- added optional hb_gtInfo() switch HB_GTI_COMPATBUFFER which can force
+  using DOS compatible video buffers in all GTs. Anyhow please remember
+  that it may cause that some extended information stored by GT driver
+  in video buffer will be lost.
+- added HB_GTI_ADDKEYMAP and HB_GTI_DELKEYMAP to define/remove new
+  escape key sequences in terminal based GTs. It's supported by
+  GTCRS and GTTRM
+- fixed color string decoding to be fully Clipper compatible
+- OUTSTD()/OUTERR() respects automatic CP translation when they
+  are not redirected to GT screen
+- added common for all GTs CLIPBOARD support. If possible low level GT
+  drivers uses system clipboard otherwise they emulate it for Harbour
+  application only
+
+Multilangual:
+-------------
+- added new lang and codepage modules: SK, BG, BE, HR, UA, LT, SV, etc.
+- updated codepage code for better handling accented and multibyte
+  characters.
+
+RDD
+=============================
+- added support for memo file packing in PACK operation
+- added new DBF fields like: AUTOINC (+), ROWVERSION (^), TIME (T),
+  DAYTIME (@/T), MODTIME (=), binary integers with fixed decimal places, etc.
+- removed limit for maximum size of relation string expression
+- fixed registering workareas with numbers from 65280 to 65534.
+- added SIX3 compatible library - now Harbour supports all SIX3 functions
+  and extensions like triggers. The HiPer-SEEK and CFTS (HS_*() and CFS*()
+  functions) was added before in hsx library. Now only bitmap filters
+  (m6_*() functions) are not supported in SVN Harbour version.
+
+Contrib
+=============================
+- renamed contrib libraries
+- TIP library borrowed from xHarbour and adopted to Harbour
+- added HBCURL - libcurl interface library. (rooted from the 
+  xHarbour version, but heavily fixed and further developed.)
+- added HBSQLIT3 - SQLite 3.x Harbour callable library.
+- fixes in MySQL and PGSQL library
+- cleanup and many fixes in NF library
+- cleanup code of CT3 library with many modifications and fixes
+- most of in/out CT3 functions rewritten to use GT API so now they can work
+  on all platforms and with all GTs
+- added support for contrib libraries and new make system
+- many contrib libraries borrowed from xHarbour code
+- added xHarbour compatibility library: xhb. It emulates many of xHarbour
+  behavior which cannot be covered by PP rules like extended operators,
+  strings like arrays, one byte string in math operations, HB_ENUMINDEX(),
+  HB_QWith(), HB_QSelf(), accessing hash item using OOP interface,
+  accessing/assigning string characters using [] operators (many of the
+  above fully works only in Harbour but not in native xHarbour code :-))
+  and many extensions like HBLOG, HBXML, HBCSTRUCT, HASH, INET*(), etc.
+- added HBTPATHY - Telepath(y) compatible comm. library.
+- added HBWHAT32 - Windows API interface.
+- added HBFBIRD - Firebird db access interface.
+- added hbcompat.ch file which hides many differences between Harbour
+  and xHarbour compilers using PP directives.
+- added hbzlib library - it's wrapper to ZLIB and MINIZIP library which
+  allows for compress and decompress streams, character variables, .gz
+  and .zip files
+- fixes and extensions in ADORDD
+- added automatic ACE version detection during building ADSRDD
+- added many new Ads*() functions wrappers and cleaned code for
+  possible GPFs when wrong parameters were passed to some functions
+- added HBHPDF - interface for Haru Free PDF Library.- added HBVPDF - Viktor K's PDF Library + Pritpal Bedi's OOP extension.
+- enhanced and fixed HBW32 library - OLE and printing
+
+Utilities
+=============================
+- added HBDOT utility program. It's a "Dot Prompt" Console for the Harbour Language
+         Syntax:  hbdot [<hrbfile[.prg]> [<parameters,...>]]
+   It should look and work in similar way to pp/xBaseScript
+   by Ron Pinkas but unlike xBaseScript is does not have preprocessor
+   or simulated runtime environment but simply uses Harbour pp and
+   compiler libraries to preprocess and compile commands. It means
+   that it supports all language constructions also statements, f.e.:
+         "for i:=1 to 10; ? i; next"
+   Additionally it can also compile and execute .prg files given as
+   first parameter just like hbrun.
+- added many new tests to hbtest
+- renamed ppgen to hbppgen.
+
+----------------------------------------------------------------------
+Version 1.1.1 Devel Build (2007-06-14) tag: build48
+
+- added support for writable string enumerators (s:="abc";for each c in @s;...)
+- cleaned the syntax and strange unsupported but accepted by [macro]compiler
+  constructions
+- added BEGIN SEQUENCE [WITH <bErrorBlock>] / RECOVER [USING <oErr>] /
+        ALWAYS / END
+- new debugger code with low level C interface borrowed from xHarbour
+- added hash tables
+- speed improvement
+- added regular expressions
+- added internet sockets
+- added checksum functions
+- added support for execution .prg scripts in hbrun
+- added HB_COMPAT_XHB macro which allows to enable many xHarbour extensions
+- added to default PP tables defines from hbsetup.ch
+- added #ytranslate, #ycommand, #yuntranslate, #yuncommand
+- fixes in BROWSE, GET and some other .prg classes
+- fixed UFT8/UNICODE translations for control characters in GTSLN and GTXWC
+- cleaned many memory leaks in Compiler
+- added separated compiler library which can be linked with VM and RTL
+  libraries
+- cleaned some possible bad side effects in cross references
+- many other fixes, improvements and extensions - see ChangeLog for details
+
+----------------------------------------------------------------------
+Version 0.47 Alpha Build 47 (2007-01-09) tag: build47
+
+The compiler
+==============================
+syntax:
+-------
+- Added support for variable number of parameters functions.
+- reimplemented xbase++ multi-value macro support.
+- Added support for WITH OBJECT.
+- Changed HB_INLINE() syntax.
+- Added support for macro compiled messages.
+- Added support for passing array items and object variables by reference.
+internals:
+----------
+- Preprocessor, compiler and macrocompiler code are fully MT safe.
+- New lexer which translate preprocessor tokens to grammar parser
+  terminal symbols - FLEX is not longer used by Harbour.
+- Added prebuild grammar parser source code to CVS - BISON is no
+  longer needed to build Harbour from source code - only developers
+  which want to change Harbour grammar rules need BISON.
+- Cleaned grammar rules with many small fixes
+- Added PCODE version information to compiled files - it's checked at
+  runtime by HVM to detect problems when files with old unsupported
+  PCODE are linked with current HVM.
+- Fixes in memvar core code (memory leaks, GPF, Clipper compatibility, etc.)
+- Added POINTER items which inspected by GC.
+- Added SYMBOL items with support for :exec() and :name() messages.
+- Changed function references to use SYMBOL item instead of POINTER item.
+- Added support for loading and unloading dynamic libraries with PCODE
+  and HRB files.
+- Many new different optimizations.
+preprocessor:
+-------------
+- New written from scratch preprocessor code.
+- Added std.ch file with standard preprocessor definitions.
+
+The runtime modules
+=============================
+- Modifications to make HVM code reentrant safe.
+- Class code extensively changed with many extensions like nonvirtual
+  methods and members, scopes, friend classes and functions,
+  destructors, etc.
+- Added support for PROCFILE()
+- Profiler code disabled in default build.
+GT:
+---
+- Added GTGUI.
+- Added support for: REQUEST HB_GT_<name>_DEFAULT
+
+RDD
+=============================
+- New USRRDD library. It allows to create new RDD from scratch
+  or by inheriting from any other RDDs (except USRRDDs) and
+  overloading any of their methods at PRG level.
+- Added missing undocumented Clipper RDD functions.
+
+General
+=============================
+- New non GNU make files with common dependencies list.
+- Many speed improvements and fixes.
+
+----------------------------------------------------------------------
+Version 0.46 Alpha Build 46 (2006-05-29) tag: build46
+
+The compiler
+=============================
+syntax:
+-------
+- Added support for DATE type constants in the format 0dYYYYMMDD
+  (FLEX version only).
+- Added support for SWITCH command (see tests/switch.prg)
+  (FLEX version only).
+- Added support for FOR EACH loop (see tests/foreach.prg)
+  (FLEX version only).
+- Added new compiler switch -gc3 to generate real C code output
+  (instead of PCODE array called by a C wrapper).
+- Added new command line switch -r=<max_recursive_preprocessor_passes>
+- Added -undef: compiler switch (borrowed from xHarbour).
+- Added support for @filelst[.clp] - partially borrowed from xHarbour.
+  It's not exactly the same as in Clipper because Clipper creates one
+  final file when [x]Harbour series of files.
+- Emit warning and error messages to stderr instead of stdout on *nix
+  platforms.
+- Added warnings in cases of duplicated loop variables.
+- Fixed compilation of included files in cases when the file ends
+  with ';' (with no LF or CR).
+internals:
+----------
+- Fixed bug in divide by 0 substitution.
+- Fixed bug in ASC() optimization (when character code > 127)
+- Fixed path delimiters in included file names.
+- Removed strong typing in the compiler. Reactivate it by compiling
+  with -DHB_COMP_STRONG_TYPES.
+- Fixed to release the memory if macro compiled code contains a
+  variable or a function reference.
+- Rewritten jump optimization.
+- Added optimization for: IF .T.
+                          IF .F.
+                          WHILE .T.
+                          WHILE .F.
+- Added dead code eliminator. It works only when Jump Optimization is
+  not disabled. As a result, we have smaller and faster PCODE.
+- Do not strip redundant line information when compiled for debug (-b).
+- Fixed many more memory leaks in the compiler. Now, the Harbour code
+  compiles itself with no memory leaks.
+- Added optimalization of '+=' '-=' '*=' '/=' operators using new
+  PCODS: HB_[PLUS|MINUS|MULT|DIV]EQ
+         HB_[PLUS|MINUS|MULT|DIV]EQPOP
+- Added more optimization for localvar+=integer using
+  HB_P_LOCALNEARADDINT pcode (borrowed from xHarbour).
+- Enabled FM statistic by default when compiled without
+  -DHB_FM_STATISTICS_OFF.
+- Added new errors (memory corruption and memory overflow) for
+  compiler level FM statistic.
+- Fixed double value presented in verbose genc mode for
+  HB_P_PUSHDOUBLE.
+- Fixed stripping non identifier characters from symbol table name.
+- Added escaping of '?' character in generated strings to avoid
+  possible conflicts with trigraph sequences which are part of ANSI C
+  standard.
+- Force .0 at the end of double numbers to avoid possible range
+  conflicts in generated .c files.
+- Upper the default .prg function name created from .prg file name
+  when compiled without -n switch.
+- Fixed registering of startup procedure name.
+- Changed code generated for double values to avoid limitation in some
+  C compilers like MSC and possible differ conversion inside C RTL
+  then the one which uses Harbour RTL.
+preprocessor:
+-------------
+- Fixed to release memory allocated with the preprocessor.
+- Fixed bug in processing the list of optional repeatable code.
+- Fixed handling of optional clauses in command/translate.
+- Fixed <-x-> match marker.
+- Fixed compilation of \[ and \] in command/translate.
+- Fixed to preserve spaces the same way (almost) as Clipper.
+- Fixed translation of nested command/translate.
+- Fixed translation of TEXT/ENDTEXT to be more Clipper compatible.
+- Added new hidden preprocessor directive
+  __text|ParseBlockCode|EndBlockCode|StartBlockCode
+- Modified TEXT/ENDTEXT to use '#pragma __text'.
+- Added #pragma __stream and #pragma __cstream (see doc/pragma.txt)
+
+The runtime modules
+=============================
+API
+---
+- Separated internal and external API. Now the definitions for
+  internal HVM structures and functions are excluded by default they
+  could be enabled if user include hbvmopt.h before other header
+  files. Such operation should be done ONLY by core code! If 3rd party
+  developers use something like that then it's for their own risk and
+  such code may stop to work with next Harbour versions. Without
+  hbvmopt.h the internal structures like HB_ITEM, HB_DYNS, ... are
+  mapped to 'void' so there is no way to access their members so we
+  can modify them in the future without afford for 3-rd party code.
+- Remove default API and stack macros. Now API/stack macros can be
+  enabled by including hb_vmopt.h file. This file should be included
+  ONLY by core code because binary object/libraries generated after
+  can work only with EXACTLY the same HVM compiled the same C
+  alignment switches. 3-rd party code should include hbvmpub.h only.
+- Added support to passing function references as HB_IT_SYMBOL.
+- hb_itemType() return "S" for HB_IT_SYMBOL.
+- Message symbols are not function symbols, cleaned the HB_FS_MESSAGE
+  usage and fix the problem with registering static function in global
+  symbol table.
+- Added HB_TYPE to as HB_ITEM type marker (UINT32 currently).
+- Cleaned some ~HB_IT_BYREF which has no effect in current VM.
+- Added new functions: hb_extIsObject(), hb_codeblockId(),
+  hb_idleSleep(), hb_fsGetOsHandle(), hb_dynsymFindSymbol(),
+  hb_dynsymGetSymbol(), hb_dynsymSymbol(), hb_dynsymName(),
+  hb_dynsymMemvarHandle(), hb_dynsymAreaHandle(),
+  hb_dynsymSetAreaHandle().
+- Changed definition of HB_SYMB structure.
+- Cleaned some HB_EXTERN_C declaration.
+- Changed hb_arrayClone() declaration to:
+  PHB_ITEM hb_arrayClone( PHB_ITEM pArray )
+- Changed hb_arrayFromParams() declaration to:
+  PHB_ITEM hb_arrayFromParams( int iLevel )
+  The previous version needed a pointer to stack relocatable area so
+  any stack resizing could cause GPF.
+- Allow hb_param() to return parameters accessed by HB_IT_BYREF.
+- Cleaned the code which created HB_ITEMs on C stack.
+- Changed main VM loop to eliminate one comparision done on each loop.
+  Now HB_P_ENDBLOCK and HB_P_ENDPROC pcodes set HB_ENDPROC_REQUESTED
+  and the main loop can be exited only from one place. It gives some
+  small but noticeable speed improvement.
+- Possible problem fixed in __CLSADDMSG() where message parameter was
+  required to be uppercase when overloading operators .NOT. .AND. .OR.
+- Fixed GPF when unshareing string item buffer with embedded 0 by
+  using hb_itemUnShare().
+- Make HB_SET_TYPEAHEAD Clipper compatible.
+- Set DOSERROR() to oError:OSCODE when RT error is generated.
+- Fixed some small incompatibilities with Clipper in number to string
+  conversions.
+- Added HB_STR_DATE_BASE for conversion to string, Clipper
+  compatibility though we are not 100% Clipper compatible in STOD()
+  because we will have to reduce functionality (supported date range)
+  to reach it. In Clipper STOD(DTOS()) is not revertible, it is
+  revertible in [x]Harbour for the whole supported in string
+  conversion range: 0000/01/01 : 9999/01/01.
+- Fixed possible GPF in CTOD when badly formated date is given.
+- Optimized hb_dateEncode().
+- Fixed RT error number in hb_vmAddInt() for negative values to be
+  Clipper compatible.
+- Optimized __CLSADDMSG() to call hb_parc() only once instead of 25
+  times for most cases.
+- Synced file IO with xHarbour, it fixed some problems, added some
+  missing functionality and long (64bit) file support for Windows.
+- hb_DiskSpace() changed to not give a runtime error in case of any
+  error, but set the FError() value instead.
+- Added C -> OS file error translations - not perfect but better then
+  the used hacks (borrowed from xHarbour).
+- Use hb_fileNameConv() instead of hb_filecase(), hb_fileNameConv()
+  is the only one function to make file name conversions dependent on
+  some SETs.
+- HB_MATHERRMODE() input validation logic moved to the lower level
+  function. This is a step to make this a simple Set().
+- Added STRPEEK and STRPOKE FS functions covered by HB_COMPAT_FLAGSHIP
+  macro.
+- Added hb_fsSetDevMode() Unix branch added.
+- hb_secondsCPU() move inside FlagShip guard instead of HB_EXTENSION.
+- Fixed invalid handle error in Windows when file() fails (borrowed
+  from xHarbour).
+- SetUnhandledExceptionFilter() is called if HB_INCLUDE_WINEXCHANDLER
+  define is used.
+- UnhandledExceptionFilter renamed as hb_UnhandledExceptionFilter, and
+  WINBASEAPI removed.
+- Added new functions HBDLLENTRY1() and HBDLLENTRY2(). These function
+  allow to call a Harbour (self contained) DLL and provide it one or
+  two Harbour items as parameters.
+- Fixed GPF in HB_LIBDO called with wrong parameter.
+- Fixed optimization of 'EVAL' in macro compiler.
+GT:
+---
+- New GTAPI.
+- Multi GT support with an option to link many GT drivers in a
+  single binary and switch between GTs at application startup based
+  on its environment.
+- Added GTI_* defintions for hb_gtInfo() function. This function
+  works in similar way to dbInfo() in RDD.
+- New driver GTCRS based on xHarbour and Flagship curses code.
+- New driver GTWVT for Win32 using GUI window instead of console.
+- New driver GTXWC for XWindow Console.
+- New driver GTALLEG for Allegro cross platform graphic libraries.
+- Respect pure REQUEST HB_GT_NUL as user GT choice if only GTNUL
+  is linked.
+- Fixed displaying of boxes under the xterm, use @ TO instead of @ BOX.
+Multilangual:
+-------------
+- Cleaned startup initialization code for lang and codepages.
+  at least one lang module defined at startup.
+- Codepage: Updated UNICODE values for characters in range 1-31 to
+  keep DOS compatibility.
+- Codepage: Renamed files (cdp*.c -> cd*.c).
+- Codepage: Added UTF8 related functions: hb_cdpUTF8StringLength(),
+  hb_cdpStringInUTF8Length(), hb_cdpUTF8ToStrn().
+- Moved EN lang definitions to core lang code so we always have
+- HU sorting order fixed to be more compatible with Clipper.
+- Added BG language support.
+
+RDD
+=============================
+- DBT, FPT, SMT memos are fully support and automatically detected in
+  USE command. For newly created tables the memo type can be set with
+  rddInfo(RDDI_MEMOTYPE,<DB_MEMO_DBT|DB_MEMO_FPT|DB_MEMO_SMT> [,<cRdd>])
+  It's possible to use any combinations of memo and index files.
+- Added RDDINFO() to set global RDD parameters. See dbinfo.ch for
+  possible actions.
+- Rewritten DBFNTX, now it supports in practice all CDX features with
+  multi tags and many others. With RDDINFO() some important new
+  features in DBFNTX can be enabled like increased maximum NTX file
+  size up to 4TB, support structural/autoopen indexes, bounding record
+  number with index key (like in CDX format what resaolves the
+  performance problem with indexes which have a lot of non unique
+  keys, etc.)
+- User setable locking DBF mode.
+- Added SIXCDX which is modified version of DBFCDX without trailing
+  spaces compresion for SIX3 compatibility.
+- Added ordKeyRelPos([nNewPos])->nOldPos which works with all RDDs
+  and returns relative (from 0.0 to 1.0) position in index file but
+  much faster then ordKeyPos()/ordKeyCount() combination. It works
+  like AdsGetRelKeyPos()/AdsSetRelKeyPos() and the results for CDX are
+  the same. For NTX ADS implementation is broken, just simply Extended
+  System uses the same algorithm as for CDX what is wrong.
+- Fixed ordKeyPos() for records out of scope.
+- Implemented RDD level transforms (COPY TO/APPEND FROM).
+- Long file support for all native RDDs. Now the maximum file size
+  is reduced only by its structure if OS/file system supports 64bit
+  file IO, f.e. for DBF it's 2^32 records. For memos it's:
+  2^32 * MemoBlockSize, etc.
+- Synhronize RDD code with xHarbour.
+- New HSX RDD.
+- New HBSIX RDD.
+- Fixed possible GPF when "/an/existing/path/" was used as file name.
+- Enable 'Y' (currency) fields, translated to HB_IT_DOUBLE.
+- Fixed some wrong behavior in SORT parameters setting in __dbArrange()
+- Removed hack with COPY TO when lastrec() == 1.
+- Fixed GPF in DBF2TEXT when work are is not in use.
+- __dbDelim() generate 2001 RT error when work area is not in USED()
+  before export file is created.
+- Added DBI_SCOPEDRELATION action. It alow to test if given relation
+  on current work area sets scope on child index.
+- Set Operation in error object to field name in field{put,get}
+  methods.
+- Added DBI_LOCKOFFSET.
+- Added support for NULL value set in memo fields by ACCESS.
+- Added all Clipper 5.3 BLOB*() functions support.
+- Added new RDD DBFBLOB compatible with Clipper 5.3 DBFBLOB. It
+  operates on memo files only (.dbv) without tables (.dbf).
+- Do not report error when empty structure table is passed to
+  DBCREATE().
+- Added support for NIL value in SIX3 FPT files.
+- Changed definition of SUPERTABLE for optional dynamic overloading.
+- Added default SYSNAME method.
+- Fixed possible memory leak when APPEND failed in TRANSREC method.
+
+Contrib
+=============================
+- ADS: Added ADSCDX, ADSNTX and ADT RDDs. ADS RDD should not be longer
+  used, it's only for backward compatibility.
+- ADS: Call AdsFlushFileBuffers() only when _SET_HARDCOMMIT is set.
+- ADS: Added possibility to save memo fields > 64K.
+- ADS: Added support for relations in ADS* RDDs which are not
+  supported directly by ADS or are for other non ADS* tables.
+- ADS: Synced base RDD with xHarbour.
+- Added conversion from tiny int MySQL type into numeric DBF.
+- Added MYSQL_DECIMAL_TYPE for MySQL versions 5.0 and above.
+- libct: Added CT3 like Window System, it's a GT driver which inherits
+  from the existing one and adds CTW functionality.
+- libct: Updated for GTAPI modifications.
+- libnf: Use hb_fs*() API functions instead of calling DOS interrupts.
+  Now NF dir functions works on all platforms.
+
+Utilities
+=============================
+- HbExtern: Heavily modified to produce more accurate output.
+
+General
+=============================
+- Fixed for popper compilation with GNU C++ and OpenWatcom on Linux.
+- Added support for cross compilation (Windows binaries at Linux) with
+  MinGW (borrowed from xHarbour).
+- Added functions for machine independent double and long long
+  conversions.
+- Enable HB_COMPAT_FLAGSHIP by default.
+- Include ADSRDD by default in RPMs.
+- Updated for new RPM which does not accept some old tags.
+- Some modification in xhb* scripts building, adding passing
+  predefined compiler and linker switches.
+- hb-func.sh: Support for detecting startup function in C++ mode.
+- hb-func.sh: Added support -go[0-3] and other -g* switches to xhb*
+  scripts.
+
+----------------------------------------------------------------------
+Version 0.45 Alpha Build 45 (2005-05-25) tag: build45
+
+The compiler
+------------
+- Fixed problem with dates.
+- Some Out of bound buffer access fixed.
+- Support for Clipper undocumented <x:&> match marker. Notice that this
+  fixes support for: SET FILTER TO &macro / SET FILTER TO &macro. .AND. expr
+- Support for static functions used in macro compiled expressions
+- Added new .prg #defines: __PLATFORM__<cPlatfrom>, __ARCH{16|32|64}BIT__,
+  __LITTLE_ENDIAN__|__BIG_ENDIAN__|__PDP_ENDIAN__
+- Several internal changes in the way Harbour handle numbers.
+  Better Clipper compatibility in operations with numbers.
+- Fixed accessing to uninitialized memory
+- Fixed memvars and detached locals handling related to reallocation of
+  memvar's buffer and detaching of locals in a loop
+- Changed algorithm for recycling of unused memvar values
+- Improved memory handling.
+- Removed hack for GCC and old Bison versions
+- Modified creation of symbols table:
+  Symbol of function name never share a symbol of variable
+  Symbol for INIT/EXIT procedure has now '$' suffix - this means that
+  such procedures cannot be called from user code (Clipper compatible)
+- Harbour now Run on 64 bits !
+- Some small optimizations in harbour/source/vm/itemapi.c
+
+The runtime modules
+-------------------
+- Enabled creation of classes from C level using functions:
+  hb_clsCreate(), hb_clsAdd() and hb_clsAssociate().
+- Implementation of several Classes as in Class(y) lib:
+  ScalarObject, Character, Array, Block, Date, Logical,Nil, Numeric
+- GetNew() no longer evaluates passed set/get codeblock
+- A new function 'hb_dynsymScope' was added to check if the passed symbol
+  has requested scope
+- Added many functions to the extend system: hb_parnll, hb_stornll,
+  hb_retnll, hbretnlllen, hb_itemPutNLL, hb_itemPutNLLLen, hb_itemGetNLL
+  which operates on LONGLONG
+  Added hb_parnint, hb_stornint, hb_retnint, hb_retnintlen, hb_itemPutNInt,
+  hb_itemPutNIntLen, hb_itemGetNInt which operates on HB_LONG
+  Added HB_PUSHLONGLONG pcode
+- Cleaned all endian dependend code found - now Harbour can be compiled
+  on LITLE and BIG endian machines - for some other like PDP ENDIAN it's
+  enough to define proper macros in hbdefs.h
+- Added macros for to get/put values in chosen byte order:
+         HB_GET_LE_[U]INT{16,24,32,64}( pPtr )
+         HB_GET_BE_[U]INT{16,24,32,64}( pPtr )
+         HB_PUT_LE_[U]INT{16,24,32,64}( pPtr, nVal )
+         HB_PUT_BE_[U]INT{16,24,32,64}( pPtr, nVal )
+- Added macro HB_CAST_BYTE_NUMBERS_OFF which disables casting in
+  HB_{GET|PUT}_{LE|BE}_* macros - it's necessary for some platforms like
+  ALPHA DEC.
+- Many macros added for easier manipulation of different APIs and platforms.
+- Clean the code (no more warning messages under Linux and GCC and DOS
+  OpenWatcom) - some of them were real bugs
+- Replaced code which made pointer casting without respecting machine
+  alignment with proper macros and fixed some problems with byte alignment
+- Added function hb_stackIncrease() and modifications for new stack macros
+- Improved Clipper compatibility in AFILL()
+- Replace of malloc()/free() that still remains by hb_xgrab()/hb_xfree()
+- Added new functions: HB_IDLESLEEP() and hb_idleSleep()
+- Add the missing Greek language and codepage files.
+- Added Spanish Modern codepage
+- Synced HB CDP API with xHarbour - added basic Unicode support
+- Added functions hb_fsLockLarge() and hb_fsSeekLarge() which uses 64bit
+  offsets in filesys.c for files larger than 2Gb
+
+RDD
+---
+- Fixed a bug, causing random GPFs while seeking in NTX.
+- Added some sets for RDD synchronization with xHarbour
+- Improved indexing speed of DBFs with very big number of records (more
+  than 1 million records).
+
+Contrib
+-------
+- New functions has been added to ODBC: sqlSetStmtOption() and sqlColumns()
+- Changes in contrib MySQL module: sqlUseRes() added, sqlListTbl() is
+  modified, and other changes in tmysql.prg, tsqlbrw.prg
+
+General
+-------
+- Updated build process for Debian Linux distribution (.DEB) packages.
+  Now hb* scripts and shared libs are created by standard make install
+- Added support for Solaris (SunOS) and Darwin (Mac OS-X).
+- Added support for Hewlett Packard Unix (HP_UX) and ALPHA DEC.
+- Many adds and fix in compilation scripts on all platforms.
+- Fixed some error messages
+- Some speed improvements
+- Many errors fixed
+
+----------------------------------------------------------------------
+Version 0.44 Alpha Build 44 (2004-07-19) tag: build44
+
+The compiler
+------------
+- Fixed support for late/early evaluation of macro exressions in a codeblock
+  (Flex version). Harbour(flex) is now full Clipper compatible here.
+- Fixed support for stringify match markers <""> and <()> in Flex version.
+- New compiler flag -ks was added to enable support for
+  strings as array of bytes. (Notice that support for strings
+  as array of bytes is disabled by default both in the Harbour compiler
+  and in harbour's runtime modules)
+- Added a new compiler switch -kJ to disable jump optimalization and
+  NOOP pcode removal (optimalization is enabled by default).
+- When xbase mode is not used (-kc or -kch) then compiler doesn't
+  generate the pcode for these xbase extended features.
+- Added support for DO <proc> WITH @variable
+- Fixed optimalization of literal strings that contain macro operator.
+- Enabled support for break[].
+- Fixed optimalization of far jumps (this fixes generation of pcode
+  for abnormally large (DO CASE/IF/ELSEIF statements)
+- Added support to OpenWatcom DOS/Win32.
+- Fixed compilation of &(exp) in normal stringify
+  markers (this fixes INDEX ON bug).
+- Added missing support for @&macro and @M->memvar (aAdded a new
+  pcode HB_MACROPUSHREF)
+- Fixed generation of pcode for &(macro)->() syntax.
+- Fixed #define parsing of pseudofunctions in cases where
+  passed argument has the same name as declared parameter.
+- Fixed parsing of nested #defines in command/translate
+- Macro - Added HB_SM_ARRSTR support.
+- Clipper preproceses '**' into '^' - harbour too
+- Added HB_COUNTER and HB_PTRDIFF types - first for reference counters and
+  second for any pointer differences and pointer to integer conversions.
+- HB_EXPORT is added to ITEM API, FILE API and some other function
+  definitions to make it possible to call them when they are in the dll.
+- Removed all pointer/long castings (except runner.c).
+- Fixed optimalization of AT,ASC,LEN,CHR functions
+- Added posibility to specify the output PPO filename with -p flag
+  e.g.  -pppo/myfile.ppo
+- harbour.l modified to compile correctly with flex version 2.5.31.
+- Fixed to compile FOR var[index]
+
+The runtime modules
+-------------------
+- Enhanced Debugger.
+- Added missing code to use HB_IT_POINTER just like other value's type.
+  For example:
+      p = GET_SOME_POINTER()
+      ? VALTYPE(p)   //prints: 'P'
+      ? p   //prints: 0x12345678
+- The support for runtime definition of keycodes mapping was added
+  (translation from terminal key sequences into INKEY() codes)
+  eterm.map and linux.map are example files with keycode mapping
+  HB_GT_KEYMAP() function was added (ncurses GT only)
+- Added possibility to load a character mapping using HB_GT_CHARMAP()
+  (ncurses GT only)
+- Improved recognition of xterm compatible terminals (ncurses GT only)
+- New internal command line arguments were added to control
+  application at runtime:
+        //FLAGS:switches
+            this flag controls compatibility issues of the virtual
+            machine
+            Available switches:
+            c - Clipper compatibility
+            h - Harbour extensions (enabled by default)
+            s - enable support for strings as array of bytes (disabled
+                by default)
+            For example:
+            myapp //FLAGS:ch
+            will disable support for strings as array of bytes
+
+        //CANCEL:key
+        //CANCELEX:keyex
+            this flag allows change the keycode of application cancel
+            request (usually Alt-C) - using normal INKEY() keycodes
+            or extended keycodes (CANCELEX)
+            For example:
+            myapp //CANCEL:304
+            will change Alt-c into Alt-b for cancelling (Alt-c is used
+            to insert polish diactric letter)
+- Fixed to release PUBLIC variables correctly
+- Fixed bug in Directory( "c:\*.*" ) that returned 0 when hidden files
+  were present.
+- Alert() Fixed bug with messages longer then 60 bytes.
+- TGet:display() fixed to always evaluate the get block before
+  displaying like in C52.
+- TBColumn - Added PreBlock and PostBlock instance variables for
+  Clipper 5.3x compatibility.
+- Fixed TYPE() function to return correct value when an  assigment to
+  undeclared variable is checked (Clipper creates the memvar variable).
+- TGet - Fixed to correctly display buffer when negative value
+  and '0' was pressed in the position next to decimal point.
+- TGet - Fixed support for '9999.' picture.
+- TRANSFORM(1.23,"999.") correctly returns "  1." now instead of empty string.
+- Fixed to correctly check for infinity on Unix STR(LOG(-1)) no longer
+  core dumps.
+- Fixed infinite support for WatcomC.
+- Fixed to release memory in cases where invalid syntax was macro compiled.
+- Added DATA CapRow and DATA CapCol values to TGET class
+  (for Clipper 5.3x compatibility).
+- Fixed to correctly return the procedure name where the codeblock was created.
+- Greek and Serbian language codepage files added.
+- fixed to use 'mkstemp' on Unix (no more GCC linker warnings)
+- Fixed file find API to be compatible with CA-Cl*pper on the lower level.
+- Fixes in TBColumn class
+
+RDD
+---
+- Latest RDD changes synced with xHarbour.
+- Fixed dbCreate() bug that closed an open dbf with same name as newly
+  created dbf in a different folder.
+- FIELDPUT() Fixed to accept and ignore field NIL values
+  without runtime error. C52 compatible.
+- Added scopped relations. Now OrdSetRelation() works with DBFCDX like
+  it does with Clipper 5.3b.
+- Changes to ADSCOPYTABLE.
+- Changes to ADSCOPYTABLECONTENTS.
+- Fixed rddMoveRecords() so that copied records, which are
+  deleted, maintain their deleted status.
+
+Utilities
+---------
+- HBVer - A utility to automatically update include/hbver.h.
+- BLDTEST : simple C program to check if Harbour can be compiled on
+  used machine / system / C compiler.
+- Some updates for the Spanish documents.
+
+----------------------------------------------------------------------
+Version 0.43 Alpha Build 43 (2003-10-01) tag: build43 (tag date: 2003-09-26)
+
+- RDD DBFCDX is highly improved, it is very close to be stable now.
+- New national codepages has been added.
+- .NET support has been started.
+- OLE support library has been added to contributions section.
+- Many bug fixes and enhancements in all subsystems.
+
+----------------------------------------------------------------------
+Version 0.42 Alpha Build 42 (2003-04-08) tag: build42
+
+- Further speed improvements
+- Codepage subsystem added
+- strings as (C-alike) bytes arrays management
+- Classes "[]" operator overloading support
+- Classes ":=" operator overloading support for locals and statics variables
+- Extend system Clipper more complete compatibility
+- RDDADS enhancements: SET PATH, DEFAULT, DELETED, EXACT, DATEFORMAT
+  and EPOCH and their Set() function equivalents are now automatically
+  synchronized with the server instead of using the preprocessor
+- Added support for some ADS version 6 features
+- Many bug fixes and enhancements
+
+----------------------------------------------------------------------
+Version 0.41 Alpha Build 41 (2002-12-31) tag: build41
+
+** was not officially released **
+
+----------------------------------------------------------------------
+Version 0.40 Alpha Build 40 (2002-06-16) tag: build40
+
+- Great speed improvements
+- ADS RDD: added support of extended data types, fixed seeking and
+  scoping on date type indexes
+- HbMake enhanced : Now support MuniGUI. Internationalization
+  (Portuguese/English/Spanish) + HbMake with Windows user interface
+- AltD() debugger invoke function fixed behavior
+- DBFNTX functionality is significantly extended over standard Clipper's.
+  Few bugs fixed, internal algorithms improved, what gives much better
+  performance and index quality. Now DBFNTX is fully ready to Beta 1.0 stage
+- DBFCDX more ready
+- New enhancements and bug fixes in the debugger
+- Many bug fixes and enhancements
+
+----------------------------------------------------------------------
+Version 0.39 Alpha Build 39 (2002-04-08) tag: build39
+
+- Delphi integration started
+- Dbfntx basic functionality is ready
+- Added new possibilities in hrb handling
+- __dbSdf() is ready
+- Enhacements to hbmake,hbzlib
+- Great speed improvement
+- New enhancements and bug fixes in the debugger
+- Many bug fixes and enhancements
+- Strings sharing and statics strings implementation (thanks to Ron Pinkas)
+- RTL strings management functions optimization thanks to new function
+  hb_retclen_buffer() and optimized use for hb_retc( NULL )
+- Optimized objects messages sending (thanks to Ron Pinkas)
+- Harbour persistence (Class HBPersistent) optimized and impresively
+  more faster
+
+----------------------------------------------------------------------
+Version 0.38 Alpha Build 38 (2001-12-15) tag: build38
+
+- Added new function __VMVARSLEN() --> nStatics
+  It returns the total amount of used statics variables
+- include/hbapi.h Enhanced HB_IS_OBJECT( PHB_ITEM )
+- __ClsAddMsg() case HB_OO_MSG_ONERROR modifed to use hb_parnl( 3 )
+- __ClsAddMsg() call, for ON ERROR clause, modified suplied parameters
+- ::Super(::oneVar) is now correctly interpreted
+- Freezed Scooping because it was not anymore working after the
+  previous fix. Waiting after Alpha build 38 to fix and re-enable it
+- HGF (Harbour GUI multiplatform Framework) started
+- Class HBPersistent added to RTL to provide Harbour objects persistence
+- New PROPERTY | PERSISTENT clause added as a DATA feature
+- New function __ClsGetProperties() added. Syntax:
+  __ClsGetProperties( <nClassHandle> ) --> <aPropertiesNames>
+- Harbour Profiler foundation functions added
+- New Apollo.lib for SIXNSX database connection via SDE60.DLL
+- RDD Scope handling was changed to handle non-character
+  scopes correctly. Numeric scopes now work in RDDADS, but
+  scopes are not yet supported in DBFCDX.
+- HB_FM_STATISTICS can be turned off by defining
+  HB_FM_STATISTICS_OFF in your make or bat files.
+  Rebuilding Harbour this way yields a faster program,
+  but it loses the ability to report on memory usage and leaks
+- adssetServerType now returns any error numbers
+- Added AdsRefreshRecord, AdsIsTableLocked, AdsIsRecordLocked
+- Dave Pearson's bitflags.c, which I ported to Harbour.
+  Has functions to use a Harbour string for storing On/Off bit flags
+- Added HB_TRACESTRING() which lets prg code trace a string into same
+  trace file/window as C traces
+- Added __TRACEPRGCALLS( <lOnOff> ) --> <lOldValue>
+  Turns on | off tracing of PRG-level function and method calls.
+  Dumps symbol name just before it's called. This is very useful when
+  debugging GPFs as it will trace all PRG-level calls up until the crash.
+  Uses HB_TRACE so traces are in line with any C-level traces
+- Martin and Walter added a bunch of functions to libct
+- David added the Path stuff so file() and other functions can work right
+- Platform support for FreeBSD 4.4, which requires installation
+  of the gmake (GNU make) port (instead of using FreeBSD's make)
+- Hbzlib enhacements
+- Some debugger fixes - it is now really usable.
+- Hbmake enhacements
+- On Win32 platforms, Harbour now supports the ability to create and
+  use .DLL files. These .DLL files can be used as pcode storage,
+  Harbour Runtime storage, or both, and if both, can be made callable
+  from other languages that use .DLL's as fully functional standalone
+  modules
+- Extended run-time preprocessing possibilities
+
+----------------------------------------------------------------------
+Version 0.37 Alpha Build 37 (2001-06-26) tag: build37
+
+- Fixed and improved NTX support
+- Improved and fixed OOP
+- More enhanced DOT prompt with scripting engine
+- Enhanced HBMake utility
+- New HBZLib library for ZIP support in Harbour
+- COPY TO DELIMITED and COPY TO SDF implemented
+- Added support for HB_TR_FLUSH environment variable
+- New Harbour License based on the license used for Guile 1.4
+- New HB_INKEY_EXTENDED keyboard input mode
+- More complete ADS support
+- Extended run-time preprocessing possibilities (TPreprocessor class)
+- Debugger fixes. It is really usable now.
+- Access OLEDB & COM objects with the TOleAuto() class
+
+----------------------------------------------------------------------
+Version 0.36 Alpha Build 36 (2001-02-22)
+
+- NTX read and write support
+- Support for Inline C code
+- Dot prompt and limited Harbour Interpreter
+- More support and fixes for ADS databases
+- Improved and fixed stack handling
+- Improved OOP
+- Better Class(y) and TopClass compatibility
+- MemoEdit() for 95% complete
+- More improved and enhanced TBrowse class
+- Lots of improvements on the Harbour Debugger
+- APPEND FROM & COPY TO started
+- New hbMake utility
+
+----------------------------------------------------------------------
+Version 0.35 Alpha Build 35 (2000-08-15)
+
+- Added HB_IDLE*() idle state handling functions.
+- Watcom C++ fixes.
+- SET RELATION support for RDDADS
+- New language modules: IT, DE, PL
+- Slang support enhanced
+- MemoEdit()/TEditor enhancements
+- .NTX support started (creation now works)
+- HBDOC .CHM output
+- Garbage collector added
+- Compiler -u, -m support, support for automatically compiled files for
+  DO, SET FORMAT TO, etc., memory usage optimizations
+- Added HB_DISKSPACE(), __DBLIST(), __DBAPPEND()
+- Fixes: Line numbering, PP, macro compiler, RTL (Extend API, Item API,
+  TRANSFORM(), DISKSPACE(), CURDIR(), __GET()), HBDOC,
+  HBTEST (for Xbase++ and Linux), Documentation, Class engine
+- HBZLIB enhancements
+- MySQL database access contribution started
+- ADS RDD encryption/decryption functions added
+- New GTCGI driver
+- Improved command line parsing
+- Alternate Lexer (SimpLex), utilizes less memory, smaller Harbour.exe
+  as well as smaller compiled applications (due to smaller macro compiler)
+
+----------------------------------------------------------------------
+Version 0.34 Alpha Build 34 (2000-06-02)
+
+- OO engine enhanced (multiple inheritance, scoping, forwarding and delegating)
+- Linux/Unix ncurses screen output and xterm mouse input support
+- MEMOEDIT support started
+- CONTRIBs better separated from core Harbour (TOOLS moved there)
+- Simplified and enhanced base for multiplatform coding
+- Language API (link/compile time language module selection)
+- Several small optimizations, enhancements and fixes (compiler, macro, GT,
+  inkey, make and build systems, more strict compiler warnings)
+- Compiler pcode size optimizations (new compact pcode versions added and
+  other tricks)
+- Far jump pcode support
+- Double number size support in pcode
+- Pcode finalized in the compiler, instead of the output generation modules
+- OS/2 support improved (DISKSPACE(), MEMORY(), locks, etc...)
+- Linux/Unix support for file locks and commit
+- DBFCDX index creation support (started)
+- Strong Typing support
+- OBJ generation support for BCC5x + Blinker5
+- Several new CONTRIBs (Nanfor LIB, ZLIB, MSQL, CA-Tools LIB, GT LIB)
+- Clipper 5.3 compatible MENUITEM, POPUP, TOPBAR classes
+- HBDOC further enhanced
+- RSX32 and RSXNT compiler support
+- SETKEY functions, ASORT(), SAVESCREEN/RESTSCREEN rewritten in C
+- Extensions (XPP, C53, Harbour) are easier to switch of and better separated
+  from Harbour
+- Some fixes for 10 chars support
+- New most compact and fast -gc0 (C language) output method added
+- -gf switch renamed to -go
+- Compiler /BUILD switch added
+- Crew list added to /CREDIT compiler switch
+- CURDIR(), CURDRIVE() fixed
+- Updated national language modules
+- More documented functions
+- Documented all db* related functions
+- New Item and Extend API functions
+- New tests
+- HBTEST made compatible with Xbase++
+- DBU sources can be compiled with Harbour without changes
+- Added more ADS RDD functions
+
+----------------------------------------------------------------------
+Version 0.33 Alpha Build 33 (2000-04-07)
+
+- Final cleanups on global macro and symbol names
+  (date*(), console*(), HB_FUNC())
+- DISKSPACE() enhancements
+- Microsoft C++ 8.x compiler support started
+- 10 character symbol support finalized
+- VAL() made fully compatible
+- New functions HB_COMPILER(), HB_FSIZE(), HB_FTEMPNAME(), HB_FTEMPCREATE()
+- PP bug fixes
+- More functions documented
+- Fixed to compile with Borland C++ in C++ mode
+- Handling of double/long number widths and decimals made completely CA-Cl*pper
+  compatible
+- Some new CA-Tools compatible functions added
+- MEMO type support
+- OS/2 DispBegin()/DispEnd() support
+- #pragma fixes and enhancements. (better XPP compatibility)
+- Source files split to several smaller files
+- GT API selection is now at link time instead of compile time
+- Make and build files further cleaned up, enhanced, optimized, synchronized
+  etc...
+- Compiler and platform detection enhanced, some hacks removed,
+  multiplatform cleanups and fixes.
+- Warning levels upped, warnings fixed, code quality raised
+- Version numbering standardized
+- Multiple source file support in Harbour command line
+- HBCLIP and RUNJAVA contribution dirs added
+- HBDOC Enhacements: New subtags for better output: <par>,</par> for paragraph
+  <b></b> for bold, <i></i> for italic, <em></em> for bold italic font
+  <color:></color> for color <fixed></fixed> for fixed text
+  <table></table> for tables <insertfile:> to insert the content of another
+  file
+
+----------------------------------------------------------------------
+Version 0.32 Alpha Build 32 (2000-03-07)
+
+- New Borland make files
+- Many make and build processes fixes, enhancements, warning fixes
+- Borland, MSVC and GNU-make processes don't collide anymore
+- PP now supports code in header files
+- Docs separated from the source
+- Docs enhanced
+- Compiler and macro fixes
+- FRM and LBL support
+- TBrowse fixes
+- HBDOC improvments
+- Some mouse support added
+- New C include file names
+- Many other small fixes and changes
+- PP __DATE__ and __TIME__ support
+- __TYPEFILE() added
+
+----------------------------------------------------------------------
+Version 0.31a Alpha Build 31a (2000-02-02) tag: build31a
+
+- Bugs fixed
+
+----------------------------------------------------------------------
+Version 0.31 Alpha Build 31 (2000-01-27) tag: build31
+
+- Added macro support
+- Many changes, fixes, and enhancements to compiler internals
+- Many changes, fixes, and enhancements to RDD system
+- Many changes, fixes, and enhancements to the GT API system
+- Improved SETCURSOR() and SET( _SET_CURSOR )
+- Added FIELDBLOCK() and FIELDWBLOCK()
+- The Harbour '-w' command line option can set the maximal level of reported
+  warnings. The following levels are supported currently:
+   '-w0'         - no warnings
+   '-w' or '-w1' - Clipper compatible warnings
+   '-w2'         - some useful warnings missed in Clipper
+   '-w3'         - warnings generated for Harbour language extensions
+- The 'libs' directory is now named 'lib'
+- The 'runner' program is now named 'hbrun'
+- Some include files now have an 'hb' prefix in the name
+- db_brows significantly enhanced
+- Regression testing enhanced and expanded, replacing several standalone
+  test modules. Now in tests/regress directory
+- Added FSETDEVMOD()
+- Added READINSERT()
+- Added MEMOLINE()
+- Added undocumented DISPOUTAT()
+- Added DEFPATH() and __DEFPATH()
+- Enhanced VERSION() to optionally include the compiler version used to
+  create Harbour
+- Enhanced OS() to include more Windows version details
+- Added __INPUT(), __WAIT(), and SETTYPEAHEAD()
+- Added several undocumented __BOX*() functions
+- Added HB_VALTOSTR()
+- Improved Windows INKEY() support
+- Added missing Clipper 5.3 SETs:
+  _SET_VIDEOMODE
+  _SET_MBLOCKSIZE
+  _SET_MFILEEXT
+  _SET_STRICTREAD
+  _SET_OPTIMIZE
+  _SET_AUTOPEN
+  _SET_AUTORDER
+- Added undocumented GETE()
+- Compatibility functions added:
+  __CLASSNEW()
+  __CLASSINSTANCE()
+  __CLASSADD()
+  __CLASSNAME()
+  __CLASSSEL()
+  __CLEAR()
+  __ATCLEAR()
+- Added ANNOUNCE CLIPPER520 and ANNOUNCE CLIPPER530
+- Added PROCFILE()
+- Added national message related functions:
+  ISAFFIRM(), ISNEGATIVE(), NATIONMSG(), _NATSORTVER(), _NATMSGVER()
+- Added Harbour compiler tracing (i.e., debug output)
+- Many changes, fixes, and enhancements to documentation
+- Program added to extract documentation from source code and create NG,
+  HLP, OS2, IPF and TROFF output files
+- Compile time expression optimizer
+- Some preprocessor fixes
+- Added ADS RDD
+- Added TYPE() function
+- MlCount() and MlPos() functions
+- Get system completely finished
+- Added HARBOURCMD/CLIPPERCMD environment variables
+- Added support for #pragma directives
+- Enhanced Getenv() function
+- Added //BUILD app command line option
+
+----------------------------------------------------------------------
+Version 0.30 Alpha Build 30 (1999-09-30)
+
+- RDD support
+- Support for MEM files
+- The debugger
+- Support for BEGIN/END/RECOVER/BREAK statements
+- The preprocessor supports changed order of keywords in xcommand/xtranslate
+- Error handler supports retry/substitute operations
+- Support for aliased expressions
+- Support for FIELD variables
+- Support for canceling the application by pressing Alt-C
+- Enhanced ITEM API
+- Support for internal command line options '//'
+- Severe speed improvement
+- Better Directory() compatibility
+- Redirected output works now
+- Even more Preprocessor compatibility
+- Set HARBOUR= in environment to override Set CLIPPER= settings
+- Rudimentary Unix keyboard support added
+- Tone support added
+- SET KEY support was added
+- Extensive regression test suite added (RTL_TEST)
+- Array handling fixed and made Clipper compatible
+- Ragged array declaration and initialization support added
+- FileSys API extensions, more C5.3 compatible functions added
+- Compiler command line compatibility enhanced
+- Internal errors made uniform
+- Source code cleanup and formatting
+- Many new functions, samples and bug fixes
+
+----------------------------------------------------------------------
+Version 0.29 Alpha Build 29 (1999-07-27)
+
+- Support for these compilers:
+   C++ Builder
+   DJGPP for Dos/Windows
+   MacIntosh
+   BC 3.1, 4.0, 4.5, 5.2
+   GCC OS/2
+   GCC Win32
+   MS VC
+   GCC Linux / Unix
+   IBM C
+   Watcom C/C++ 10
+- New INI file support
+- Enhanced support for MEMVAR's
+- Added support for PUBLIC, PRIVATE and PARAMETERS
+- Added support for empty arguments in functions.
+- Added colors support
+- Added support for concatenation operator "-"
+- Added support to generate runtime errors in functions
+
+----------------------------------------------------------------------
+Version 0.28 Alpha Build 28 (1999-07-18)
+
+- Added support for MS Visual C++
+- First support for Apple Macintosh
+- Almost complete preprocessor
+- Error handling improved
+- Extend Library complete
+- First version of OOPS syntax added
+- MEMVAR support started
+- Pre processor available as a run-time function
+- Rich Text Format Class added
+- Many Terminal functions created
+- Many national modules added
+- Many new functions
+- Many bug fixes
+
+----------------------------------------------------------------------
+Version 0.27a Alpha Build 27a (1999-06-19)
+
+- Corrected build numbers in Harbour.exe
+- Corrected a little bug in HScript.prg
+
+----------------------------------------------------------------------
+Version 0.27 Alpha Build 27 (1999-06-18)
+
+- Added new directory with GNU MAKE files for GCC on Linux
+- Added support for Watcom C/C++ compiler
+- Harbour compiles fine on Linux now
+- Optional Strong Typed Variables
+- New DosShell function for DOS, OS/2 & Windows
+- First release of hScript added. Internet Scripting Samples!
+- Integrated preprocessor into compiler
+- Check on non used variables in codeblocks
+- Extended syntax for AllTrim and RTrim
+- Many resolved bugs
+- Many new functions
+
+----------------------------------------------------------------------
+Version 0.26 Alpha Build 26 (1999-06-12)
+
+- Check for non used declared variable
+- Better support for different platforms and compilers.
+- New Inifiles class
+- Support for IBM C++ compiler for OS/2
+- Harb26.Zip includes Runner.exe now
+  So NO NEED for any external software to run Harbour PRG's!
+- Many resolved Bugs
+- Many new functions
+- New National language message files
+- New TestBank. It compiles ALL Harbour samples
+- <object>:<data> := <value> can now be used inside expressions (codeblocks)
+
+----------------------------------------------------------------------
+Version 0.25 Alpha Build 25 (1999-06-05)
+
+- Almost complete Clipper syntax
+- Better makefiles
+- gtApi included
+- Preprocessor included
+- Files* functions working
+- Many fixes, enhancements and new functions
+- HTML and CGI examples included
+- Inheritance
+- Even more test PRG's!
+
+----------------------------------------------------------------------
+Version 0.24 Alpha Build 24 (1999-06-03)
+
+----------------------------------------------------------------------
+Version 0.23 Alpha Build 23 (1999-05-19)
+
+- Harbour.exe for DOS/Windows is included now
+- The Windows libs are also included (HBW.BAT to build Windows EXE's)
+- HRB files! These files can be run with the Runner.exe (Source included)
+- No need for a C compiler anymore to run Harbour source!
+- New MAKE and BUILD files for IBM C++ 3.0 for OS/2
+- Many fixes, Many enhancements (See ChangeLog in the Harbour directory)
+- Added support for '-i' option (#include file search path)
+- Even more test PRG's
+
+----------------------------------------------------------------------
+Version 0.21-2 Alpha Build 21-2 (1999-05-13)
+
+- 32 bits OBJ's generation
+- More Clipper language compatibility
+- New object oriented features
+
+----------------------------------------------------------------------
+Version 0.20-2 Alpha Build 20-2 (1999-05-01)
+
+- It is not required to name Main() as the starting function.
+  You may use any function name there
+- Logical AND shortcutting
+- New compiler /z to suppress shortcutting (see tests\working\and_or.prg)
+- Memory unreleased blocks improved
+- Many latest diffs implemented
+
+----------------------------------------------------------------------
+Version 0.18 Alpha Build 18 (1999-04-23)
+
+- Statics support
+- Classes creation: just a very very brief
+- Most important changes are related to the Harbour object oriented
+  capabilities
+- Dynamic symbol table implementation
+
+----------------------------------------------------------------------
+Version 0.17 Alpha Build 17 (1999-04-20)
+
+- Multidimensional arrays support!!!
+- Spitted files
+- We have started the runtime library implementation (source\rtl)
+- The harbour.lib gets built from the make file
+- Dates support
+- Dynamic stack is properly working
+- Much improved extend system
+- More tests for dates, strings
+- Dates support including adding and subtracting!
+- Variables by reference support
+- Labeled C pcode output
+- Many diffs implemented
+
+----------------------------------------------------------------------
+Version 0.16 Alpha Build 16 (1999-04-17)
+
+- New project directories structure
+- Added support for command line parameters
+- Compiler /o options changed to /g
+- /gc added (default option)
+- Changes on types.h
+- Extend system functions enhanced
+- Do case support
+- _POWER support on hvm
+- _MODULUS support on hvm
+- Latest proposed diffs implemented
+
+----------------------------------------------------------------------
+Version 0.15 Alpha Build 15 (1999-04-14)
+
+----------------------------------------------------------------------
+Version 0.14 Alpha Build 14 (1999-04-13)
+
+----------------------------------------------------------------------
+Version 0.13 Alpha Build 13 (1999-04-10)
+
+----------------------------------------------------------------------
+Version 0.12 Alpha Build 12 (1999-08-08)
+
+----------------------------------------------------------------------
+Version 0.11 Alpha Build 11 (1999-04-07)
+
+----------------------------------------------------------------------
+Version 0.10 Alpha Build 10 (1999-04-03)
+
+----------------------------------------------------------------------
+OpenClipper #9 Alpha build 9 (1999-04-01)
+
+- PARAMETERS support
+- BEGIN SEQUENCE support
+- #include support (it opens the include files and parse them)
+- #define support for both identifiers and expressions
+  (though expressions are not translated yet)
+- #ifdef and #ifndef support
+- while loops without statements support
+- Bison 1.24 is used now instead of byacc as byacc were returning
+  a 'Out of space' error (parser execution is faster now!)
+- We are linking using huge memory model now cause DGROUP was already
+  over 64Kb
+
+----------------------------------------------------------------------
+OpenClipper #8 Alpha build 8 (1999-03-29)
+
+----------------------------------------------------------------------
+OpenClipper #7 Alpha build 7 (1999-03-26)
+
+----------------------------------------------------------------------
+OpenClipper #6 Alpha build 6 (1999-03-25)
+
+----------------------------------------------------------------------
