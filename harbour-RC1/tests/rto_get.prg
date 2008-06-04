@@ -55,6 +55,7 @@
 #include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
+#include "inkey.ch"
 
 #ifndef __HARBOUR__
    #define hb_OSNewLine() ( Chr( 13 ) + Chr( 10 ) )
@@ -282,21 +283,21 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@R   999 9999 999999",, )
    o:display()
    o:setFocus()
-   TGetTOVS( o, "1231234123456" )
+   TGetTOVS( o, { "1231234123456" } )
    TEST_LINE( o:Assign() )
 
    cStr07 := Space(10)
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@R  999  9999 999999",, )
    o:display()
    o:setFocus()
-   TGetTOVS( o, "1231234123456" )
+   TGetTOVS( o, { "1231234123456" } )
    TEST_LINE( o:Assign() )
 
    cStr07 := Space(10)
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@R  999 9999  999999",, )
    o:display()
    o:setFocus()
-   TGetTOVS( o, "1231234123456" )
+   TGetTOVS( o, { "1231234123456" } )
    TEST_LINE( o:Assign() )
 
    // ;
@@ -305,21 +306,21 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@ER   999 9999 999999",, )
    o:display()
    o:setFocus()
-   TGetTOVS( o, "1231234123456" )
+   TGetTOVS( o, { "1231234123456" } )
    TEST_LINE( o:Assign() )
 
    cStr07 := Space(10)
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@ER  999  9999 999999",, )
    o:display()
    o:setFocus()
-   TGetTOVS( o, "1231234123456" )
+   TGetTOVS( o, { "1231234123456" } )
    TEST_LINE( o:Assign() )
 
    cStr07 := Space(10)
    SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "@ER  999 9999  999999",, )
    o:display()
    o:setFocus()
-   TGetTOVS( o, "1231234123456" )
+   TGetTOVS( o, { "1231234123456" } )
    TEST_LINE( o:Assign() )
 
    // ; Edmer #2
@@ -328,7 +329,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "9,999,999.99",, )
    o:display()
    o:setFocus()
-   TGetTOVS( o, "12345" )
+   TGetTOVS( o, { "12345" } )
    TEST_LINE( o:Assign() )
 
    // ;
@@ -337,7 +338,16 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "@E 9,999,999.9999",, )
    o:display()
    o:setFocus()
-   TGetTOVS( o, "12345" )
+   TGetTOVS( o, { "12345" } )
+   TEST_LINE( o:Assign() )
+
+   // ; EMG
+
+   nInt02 := 0
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "@EZ 999,999.99",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, { "1", K_RIGHT } )
    TEST_LINE( o:Assign() )
 
    // ;
@@ -581,14 +591,14 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    o := _GET_( dDate01, "dDate01" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TGetTOVS( o, "12345678" )
+   TGetTOVS( o, { "12345678" } )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; dDate01 := hb_SToD( "20070425" )
    o := _GET_( dDate01, "dDate01", "@E" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TGetTOVS( o, "12345678" )
+   TGetTOVS( o, { "12345678" } )
    TEST_LINE( o:KillFocus() )
 
    SET CENTURY OFF
@@ -597,42 +607,42 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    o := _GET_( dDate01, "dDate01" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TGetTOVS( o, "12345678" )
+   TGetTOVS( o, { "12345678" } )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; dDate01 := hb_SToD( "20070425" )
    o := _GET_( dDate01, "dDate01", "@E" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TGetTOVS( o, "12345678" )
+   TGetTOVS( o, { "12345678" } )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "!!LY!!!!!!" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TGetTOVS( o, "12345678" )
+   TGetTOVS( o, { "12345678" } )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "!!!.!!!!!!" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TGetTOVS( o, "12345678" )
+   TGetTOVS( o, { "12345678" } )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "@R !!LY!!!!!!" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TGetTOVS( o, "12345678" )
+   TGetTOVS( o, { "12345678" } )
    TEST_LINE( o:KillFocus() )
 
    SetPos( 14, 16 ) ; cStr01 := "hello world"
    o := _GET_( cStr01, "cStr01", "@R !!!.!!!!!!" )
    TEST_LINE( OBJ_CREATE() )
    TEST_LINE( o:SetFocus() )
-   TGetTOVS( o, "12345678" )
+   TGetTOVS( o, { "12345678" } )
    TEST_LINE( o:KillFocus() )
 
    // ; Exercises
@@ -663,23 +673,44 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
 
    RETURN 0
 
-PROCEDURE TGetTOVS( o, cKeys )
-   LOCAL tmp
+PROCEDURE TGetTOVS( o, aKeys, lInsert )
+   LOCAL tmp, tmp1
 
-   FOR tmp := 1 TO Len( cKeys )
-      TEST_CALL( o, "o:overStrike( '" + SubStr( cKeys, tmp, 1 ) + "' )", {|| o:overStrike( SubStr( cKeys, tmp, 1 ) ) } )
+   DEFAULT lInsert TO .F.
+
+   FOR tmp := 1 TO Len( aKeys )
+      IF ISCHAR( aKeys[ tmp ] )
+         FOR tmp1 := 1 TO Len( aKeys[ tmp ] )
+            IF lInsert
+               TEST_CALL( o, "o:insert( '" + SubStr( aKeys[ tmp ], tmp1, 1 ) + "' )", {|| o:insert( SubStr( aKeys[ tmp ], tmp1, 1 ) ) } )
+            ELSE
+               TEST_CALL( o, "o:overStrike( '" + SubStr( aKeys[ tmp ], tmp1, 1 ) + "' )", {|| o:overStrike( SubStr( aKeys[ tmp ], tmp1, 1 ) ) } )
+            ENDIF
+         NEXT
+      ELSEIF ISNUM( aKeys[ tmp ] )
+         DO CASE
+         CASE aKeys[ tmp ] == K_INS                          ; lInsert := ! lInsert
+         CASE aKeys[ tmp ] == K_HOME                         ; TEST_LINE( oGet:Home() )
+         CASE aKeys[ tmp ] == K_END                          ; TEST_LINE( oGet:End() )
+         CASE aKeys[ tmp ] == K_RIGHT                        ; TEST_LINE( oGet:Right() )
+         CASE aKeys[ tmp ] == K_LEFT                         ; TEST_LINE( oGet:Left() )
+         CASE aKeys[ tmp ] == K_CTRL_RIGHT                   ; TEST_LINE( oGet:WordRight() )
+         CASE aKeys[ tmp ] == K_CTRL_LEFT                    ; TEST_LINE( oGet:WordLeft() )
+         CASE aKeys[ tmp ] == K_BS                           ; TEST_LINE( oGet:BackSpace() )
+         CASE aKeys[ tmp ] == K_DEL                          ; TEST_LINE( oGet:Delete() )
+         CASE aKeys[ tmp ] == K_CTRL_T                       ; TEST_LINE( oGet:DelWordRight() )
+         CASE aKeys[ tmp ] == K_CTRL_Y                       ; TEST_LINE( oGet:DelEnd() )
+         CASE aKeys[ tmp ] == K_CTRL_BS                      ; TEST_LINE( oGet:DelWordLeft() )
+         CASE aKeys[ tmp ] == K_CTRL_U                       ; TEST_LINE( oGet:Undo() )
+         CASE o:type == "N" .AND. Chr( aKeys[ tmp ] ) $ ".," ; TEST_LINE( oGet:ToDecPos() )
+         ENDCASE
+      ENDIF
    NEXT
 
    RETURN
 
-PROCEDURE TGetTIns( o, cKeys )
-   LOCAL tmp
-
-   FOR tmp := 1 TO Len( cKeys )
-      TEST_CALL( o, "o:insert( '" + SubStr( cKeys, tmp, 1 ) + "' )", {|| o:insert( SubStr( cKeys, tmp, 1 ) ) } )
-   NEXT
-
-   RETURN
+PROCEDURE TGetTIns( o, aKeys )
+   RETURN TGetTOVS( o, aKeys, .T. )
 
 PROCEDURE TGetAssign( xVar )
    LOCAL o
