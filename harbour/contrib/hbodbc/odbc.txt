@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 First ODBC routines library
 Felipe Coury <fcoury@flexsys-ci.com>
 

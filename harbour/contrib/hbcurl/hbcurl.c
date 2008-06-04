@@ -1229,7 +1229,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                hb_curl->ul_len = hb_parclen( 3 );
                hb_curl->ul_ptr = ( BYTE * ) hb_xgrab( hb_curl->ul_len );
 
-               hb_xmemcpy( hb_curl->ul_ptr, hb_parc( 3 ), hb_parclen( 3 ) );
+               hb_xmemcpy( hb_curl->ul_ptr, hb_parc( 3 ), hb_curl->ul_len );
       
                curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_buff_callback );
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, ( void * ) hb_curl );

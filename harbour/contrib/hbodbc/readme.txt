@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 ODBCDEMO - ODBC Access Class Demonstration
 Felipe G. Coury <fcoury@flexsys-ci.com>
 

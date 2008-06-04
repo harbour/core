@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 20:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+     * Minor.
+
+   * contrib/hbodbc/todbc.prg
+   * contrib/hbodbc/odbc.txt
+   * contrib/hbodbc/sql.ch
+   * contrib/hbodbc/readme.txt
+     + Added SVN headers.
+
+   * contrib/hbodbc/sql.ch
+     ! Aligned #define values.
+
 2008-06-04 19:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      ! Missing cast.
