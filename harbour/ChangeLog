@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-04 14:02 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbsqlit3/hbsqlit3.c
+     % Removed __XHARBOUR__ guards.
+     * Minor cleanups.
+
+   * contrib/hbsqlit2/hbsqlit2.c
+     % Major cleanup, formatting, optimizations.
+     ! INCOMPATIBLE: public vars prefixed with 'hb_sqlite2_'.
+
 2008-06-04 11:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbver.h
      + Added HB_VERSION unified version identifier:

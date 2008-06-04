@@ -199,14 +199,8 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
 
    #ifdef NODLL
    {
-      char * pszDirName;
-      
-      #ifdef __XHARBOUR__
-         pszDirName = hb_fileNameConv( hb_strdup( ( char * ) hb_parc( 1 ) ) );
-      #else
-         BOOL fFree;
-         pszDirName = hb_fsNameConv( ( BYTE * ) hb_parc( 1 ), &fFree );
-      #endif
+      BOOL fFree;
+      char * pszDirName = hb_fsNameConv( ( BYTE * ) hb_parc( 1 ), &fFree );
 
       if( hb_fsIsDirectory( pszDirName ) )
          bResult = TRUE;
@@ -226,12 +220,8 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
       if( bResult )
          sqlite3_temp_directory = hb_strdup( pszDirName );
       
-      #ifdef __XHARBOUR__
+      if( fFree )
          hb_xfree( pszDirName );
-      #else
-         if( fFree )
-            hb_xfree( pszDirName );
-      #endif
    }
    #endif
 
@@ -249,14 +239,8 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
 HB_FUNC( SQLITE3_OPEN )
 {
    psqlite3 db;
-   char * pszdbName;
-
-   #ifdef __XHARBOUR__
-      pszdbName = hb_fileNameConv( hb_strdup( ( char * ) hb_parc( 1 ) ) );
-   #else
-      BOOL fFree;
-      pszdbName = ( char * ) hb_fsNameConv( ( BYTE * ) hb_parc( 1 ), &fFree );
-   #endif
+   BOOL fFree;
+   char * pszdbName = ( char * ) hb_fsNameConv( ( BYTE * ) hb_parc( 1 ), &fFree );
 
    if( hb_fsFile( ( BYTE * ) pszdbName ) || hb_parl( 2 ) )
    {
@@ -276,25 +260,15 @@ HB_FUNC( SQLITE3_OPEN )
       hb_retptr( NULL );
    }
 
-   #ifdef __XHARBOUR__
+   if( fFree )
       hb_xfree( pszdbName );
-   #else
-      if( fFree )
-         hb_xfree( pszdbName );
-   #endif
 }
 
 HB_FUNC( SQLITE3_OPEN_V2 )
 {
    psqlite3 db;
-   char *   pszdbName;
-
-   #ifdef __XHARBOUR__
-      pszdbName = hb_fileNameConv( hb_strdup( ( char * ) hb_parc( 1 ) ) );
-   #else
-      BOOL fFree;
-      pszdbName = ( char * ) hb_fsNameConv( ( BYTE * ) hb_parc( 1 ), &fFree );
-   #endif
+   BOOL fFree;
+   char * pszdbName = ( char * ) hb_fsNameConv( ( BYTE * ) hb_parc( 1 ), &fFree );
 
    if( sqlite3_open_v2( pszdbName, &db, hb_parni( 2 ), NULL ) == SQLITE_OK )
       hb_retsqlite3( db );
@@ -305,12 +279,8 @@ HB_FUNC( SQLITE3_OPEN_V2 )
       hb_retptr( NULL );
    }
 
-   #ifdef __XHARBOUR__
+   if( fFree )
       hb_xfree( pszdbName );
-   #else
-      if( fFree )
-         hb_xfree( pszdbName );
-   #endif
 }
 
 /*
@@ -322,10 +292,10 @@ HB_FUNC( SQLITE3_OPEN_V2 )
 HB_FUNC( SQLITE3_EXEC )
 {
    psqlite3 db = hb_parsqlite3( 1 );
-   char * pszErrMsg = NULL;
 
    if( db )
    {
+      char * pszErrMsg = NULL;
       int rc = sqlite3_exec( db, hb_parc( 2 ), NULL, 0, &pszErrMsg );
 
       if( rc != SQLITE_OK )
@@ -442,7 +412,7 @@ HB_FUNC( SQLITE3_RESET )
 {
    psqlite3_stmt pStmt = ( psqlite3_stmt ) hb_parptr( 1 );
 
-   if( pStmt != NULL )
+   if( pStmt )
       hb_retni( sqlite3_reset( pStmt ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_RESET", 1, hb_paramError( 1 ) );
@@ -855,47 +825,23 @@ HB_FUNC( SQLITE3_GET_TABLE )
    {
       PHB_ITEM pResultList = hb_itemArrayNew( 0 );
       int      iRow, iCol;
-      char *   pszErrMsg = 0;
+      char *   pszErrMsg = NULL;
       char **  pResult;
 
       if( sqlite3_get_table( db, hb_parc( 2 ), &pResult, &iRow, &iCol, &pszErrMsg ) == SQLITE_OK )
       {
          int i, j, k = 0;
-         #ifdef __XHARBOUR__
-            PHB_ITEM pTemp = hb_itemNew( NULL );
-         #endif
 
          for( i = 0; i < iRow + 1; i++ )
          {
             PHB_ITEM pArray = hb_itemArrayNew( iCol );
 
             for( j = 1; j <= iCol; j++, k++ )
-            {
-               if( pResult[ k ] != NULL )
-               {
-                  #ifdef __XHARBOUR__
-                     hb_arraySetForward( pArray, j, hb_itemPutC( pTemp, pResult[ k ] ) );
-                  #else
-                     hb_arraySetC( pArray, j, pResult[k] );
-                  #endif
-               }
-               else
-               {
-                  #ifdef __XHARBOUR__
-                     hb_arraySetForward( pArray, j, hb_itemPutC( pTemp, "NULL" ) );
-                  #else
-                     hb_arraySetC( pArray, j, "NULL" );
-                  #endif
-               }
-            }
+               hb_arraySetC( pArray, j, pResult[ k ] ? pResult[ k ] : NULL );
 
             hb_arrayAddForward( pResultList, pArray );
             hb_itemRelease( pArray );
          }
-
-         #ifdef __XHARBOUR__
-            hb_itemRelease( pTemp );
-         #endif
       }
       else
       {
@@ -905,11 +851,7 @@ HB_FUNC( SQLITE3_GET_TABLE )
 
       sqlite3_free_table( pResult );
 
-      #ifdef __XHARBOUR__
-         hb_itemRelease( hb_itemReturn( pResultList ) );
-      #else
-         hb_itemReturnRelease( pResultList );
-      #endif
+      hb_itemReturnRelease( pResultList );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_GET_TABLE", 1, hb_paramError( 1 ) );
@@ -957,27 +899,13 @@ HB_FUNC( SQLITE3_TABLE_COLUMN_METADATA )
       {
          PHB_ITEM pArray = hb_itemArrayNew( 5 );
 
-         #ifdef __XHARBOUR__
-            PHB_ITEM pTemp = hb_itemNew( NULL );
-            hb_arraySetForward( pArray, 1, hb_itemPutC( pTemp, ( char * ) pzDataType ) );
-            hb_arraySetForward( pArray, 2, hb_itemPutC( pTemp, ( char * ) pzCollSeq ) );
-            hb_arraySetForward( pArray, 3, hb_itemPutL( pTemp, iNotNull ) );
-            hb_arraySetForward( pArray, 4, hb_itemPutL( pTemp, iPrimaryKey ) );
-            hb_arraySetForward( pArray, 5, hb_itemPutL( pTemp, iAutoinc ) );
-            hb_itemRelease( pTemp );
-         #else
-            hb_arraySetC( pArray, 1, ( char * ) pzDataType );
-            hb_arraySetC( pArray, 2, ( char * ) pzCollSeq );
-            hb_arraySetL( pArray, 3, ( BOOL ) iNotNull );
-            hb_arraySetL( pArray, 4, ( BOOL ) iPrimaryKey );
-            hb_arraySetL( pArray, 5, ( BOOL ) iAutoinc );
-         #endif
+         hb_arraySetC( pArray, 1, ( char * ) pzDataType );
+         hb_arraySetC( pArray, 2, ( char * ) pzCollSeq );
+         hb_arraySetL( pArray, 3, ( BOOL ) iNotNull );
+         hb_arraySetL( pArray, 4, ( BOOL ) iPrimaryKey );
+         hb_arraySetL( pArray, 5, ( BOOL ) iAutoinc );
 
-         #ifdef __XHARBOUR__
-            hb_itemRelease( hb_itemReturn( pArray ) );
-         #else
-            hb_itemReturnRelease( pArray );
-         #endif
+         hb_itemReturnRelease( pArray );
       }
    }
    else
@@ -1228,23 +1156,24 @@ HB_FUNC( SQLITE3_TRACE )
 
 HB_FUNC( SQLITE3_FILE_TO_BUFF )
 {
-   BYTE * buffer = NULL;
-   int    handle = hb_fsOpen( ( BYTE * ) hb_parc( 1 ), FO_READ );
-   ULONG  iSize;
+   int handle = hb_fsOpen( ( BYTE * ) hb_parc( 1 ), FO_READ );
 
    if( handle != FS_ERROR )
    {
+      BYTE * buffer;
+      ULONG  iSize;
+
       iSize = ( int ) hb_fsSeek( handle, 0, FS_END );
       iSize -= ( int ) hb_fsSeek( handle, 0, FS_SET );
       buffer = ( BYTE * ) hb_xgrab( iSize + 1 );
       iSize = hb_fsReadLarge( handle, buffer, iSize );
       buffer[ iSize ] = '\0';
       hb_fsClose( handle );
+
+      hb_retclen_buffer( ( char * ) buffer, iSize );
    }
    else
-      iSize = 0;
-
-   hb_retclen_buffer( ( char * ) buffer, iSize );
+      hb_retc_null();
 }
 
 HB_FUNC( SQLITE3_BUFF_TO_FILE )
