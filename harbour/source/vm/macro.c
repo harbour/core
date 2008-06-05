@@ -125,9 +125,9 @@ static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_macroCheckParam(%p)", pItem));
 
-   if( ! HB_IS_STRING(pItem) )
+   if( ! HB_IS_STRING( pItem ) )
    {
-      HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 1065, NULL, "&", 0 );
+      HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 1065, NULL, "&", 1, pItem );
 
       bValid = FALSE;
       if( pResult )
@@ -135,7 +135,6 @@ static BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
          hb_stackPop();
          hb_vmPush( pResult );
          hb_itemRelease( pResult );
-         bValid = TRUE;
       }
    }
    return bValid;
@@ -180,16 +179,19 @@ static void hb_macroSyntaxError( HB_MACRO_PTR pMacro )
    {
       HB_TRACE(HB_TR_DEBUG, ("hb_macroSyntaxError.(%s)", pMacro->string));
 
+      hb_stackPop();    /* remove compiled string */
+
       hb_errLaunch( pMacro->pError );
       hb_errRelease( pMacro->pError );
       pMacro->pError = NULL;
    }
    else
    {
-      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&", 0 );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_SYNTAX, 1449, NULL, "&", 1, hb_stackItemFromTop( -1 ) );
 
       if( pResult )
       {
+         hb_stackPop();    /* remove compiled string */
          hb_vmPush( pResult );
          hb_itemRelease( pResult );
       }
@@ -429,10 +431,12 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
             struMacro.Flags |= HB_MACRO_GEN_PARE;
          }
       }
+
       iStatus = hb_macroParse( &struMacro );
-      hb_stackPop();    /* remove compiled string */
+
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
       {
+         hb_stackPop();    /* remove compiled string */
          hb_macroRun( &struMacro );
 
          if( iContext == HB_P_MACROPUSHLIST )
@@ -445,6 +449,10 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, BYTE iContext, BYTE flags )
          hb_xfree( struMacro.string );
 
       hb_macroDelete( &struMacro );
+   }
+   else if( iContext == HB_P_MACROPUSHLIST && hb_vmRequestQuery() == 0 )
+   {
+      hb_vmPushInteger( 1 );
    }
 }
 
@@ -472,13 +480,20 @@ void hb_macroSetValue( HB_ITEM_PTR pItem, BYTE flags )
 
       iStatus = hb_macroParse( &struMacro );
 
-      hb_stackPop();    /* remove compiled string */
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
+      {
+         hb_stackPop();    /* remove compiled string */
          hb_macroRun( &struMacro );
+      }
       else
          hb_macroSyntaxError( &struMacro );
 
       hb_macroDelete( &struMacro );
+   }
+   else if( hb_vmRequestQuery() == 0 )
+   {
+      hb_stackPop();
+      hb_stackPop();
    }
 }
 
@@ -520,18 +535,23 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       struMacro.status     = HB_MACRO_CONT;
       struMacro.string     = szString;
       struMacro.length     = ulLen;
+
       iStatus = hb_macroParse( &struMacro );
-      hb_xfree( szString );
-      struMacro.string = NULL;
 
       hb_stackPop();    /* remove compiled variable name */
       hb_stackPop();    /* remove compiled alias */
 
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
+      {
          hb_macroRun( &struMacro );
+      }
       else
+      {
+         hb_vmPushString( szString, ulLen );
          hb_macroSyntaxError( &struMacro );
+      }
 
+      hb_xfree( szString );
       hb_macroDelete( &struMacro );
    }
    else if( hb_macroCheckParam( pVar ) )
@@ -549,12 +569,14 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
       struMacro.status     = HB_MACRO_CONT;
       struMacro.string     = pVar->item.asString.value;
       struMacro.length     = pVar->item.asString.length;
+
       iStatus = hb_macroParse( &struMacro );
 
-      hb_stackPop();    /* remove compiled string */
-
       if( iStatus == HB_MACRO_OK && ( struMacro.status & HB_MACRO_CONT ) )
+      {
+         hb_stackPop();    /* remove compiled string */
          hb_macroRun( &struMacro );
+      }
       else
          hb_macroSyntaxError( &struMacro );
 
@@ -729,19 +751,24 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
       {
          HB_DYNS_PTR pDynSym = hb_dynsymGetCase( szString );
 
+         if( fNewBuffer )
+            hb_xfree( szString );   /* free space allocated in hb_macroTextSymbol */
+
          hb_stackPop();    /* remove compiled string */
          /* NOTE: checking for valid function name (valid pointer) is done
           * in hb_vmDo()
           */
          hb_vmPushSymbol( pDynSym->pSymbol );  /* push compiled symbol instead of a string */
+         return;
       }
       else
-      {
-         hb_stackPop();    /* remove compiled string */
          hb_macroSyntaxError( NULL );
-      }
-      if( fNewBuffer )
-         hb_xfree( szString );   /* free space allocated in hb_macroTextSymbol */
+   }
+
+   if( !HB_IS_SYMBOL( hb_stackItemFromTop( -1 ) ) && hb_vmRequestQuery() == 0 )
+   {
+      hb_stackPop();    /* remove compiled string */
+      hb_vmPushDynSym( hb_dynsymGetCase( "" ) );  /* push compiled symbol instead of a string */
    }
 }
 
