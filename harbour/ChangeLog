@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 22:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbapollo/common.mak
+   * contrib/hbapollo/Makefile
+   + contrib/hbapollo/apollo.ch
+   - contrib/hbapollo/tests/apollo.ch
+     ! apollo.ch file was in tests by mistake.
+     ; TOMERGE [RC1]
+
 2008-06-05 20:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    - contrib/examples/pp/hbpp.c
    + contrib/examples/pp/pp.c
