@@ -869,7 +869,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                ULONG ulArrayLen = hb_arrayLen( pArray );
 
                for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
-                  hb_curl->pQUOTE = curl_slist_append( hb_curl->pQUOTE, "FOCK eztitt" );
+                  hb_curl->pQUOTE = curl_slist_append( hb_curl->pQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_QUOTE, hb_curl->pQUOTE );
             }
