@@ -172,7 +172,7 @@ make -r -i install
 ${CCPREFIX}strip --strip-debug $HB_LIB_INSTALL/*
 
 # remove unused files
-rm -fR ${HB_BIN_INSTALL}/{harbour,hbdoc,hbdot,hbmake,hbpp,hbrun,hbtest,hbverfix,hbpptest}.exe
+rm -fR ${HB_BIN_INSTALL}/{harbour,hbppgen,hbdoc,hbdot,hbmake,hbrun,hbtest,hbverfix,hbpptest}.exe
 rm -fR $HB_INC_INSTALL
 
 # Create a README file for people using this RPM.

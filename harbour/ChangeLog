@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 14:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+  * harbour/harbour.spec
+  * harbour/make_tgz.sh
+    * removed not longer used HBPP references, thanks to Adam
+    * added hbppgen to list of installed binaries for native builds
+    * removed hbppgen from cross builds
+
+  * harbour/source/pp/Makefile
+  * harbour/config/install.cf
+    * added hack to install also hbppgen
+      I do not want to make deeper modifications in non GNU makefiles now.
+      Looks that now we are ready to rename hbppgen to hbpp. I would like
+      to keep -w hbppgen option semantic as is. Does anyone find it as
+      a problem?
+
 2008-06-05 13:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_vcce.mak
   * harbour/make_vc.mak
