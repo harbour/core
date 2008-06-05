@@ -496,7 +496,8 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
  */
 static void hb_pp_usage( char * szName )
 {
-   printf( "Syntax:  %s <file>[.prg] [options]\n\n", szName );
+   printf( "\n" );
+   printf( "Syntax:  %s <file[.prg]> [options]\n\n", szName );
    printf( "Options: -i<path>  \tadd #include file search path\n"
            "         -c[<file>]\tlook for ChangeLog file\n"
            "         -o<file>  \tcreates .c file with PP rules\n"
@@ -513,6 +514,10 @@ int main( int argc, char * argv[] )
    char * szChangeLogID = NULL, * szLastEntry = NULL;
    int iSVNID = 0, iResult = 0, i;
    PHB_PP_STATE pState;
+
+   printf( "Harbour Preprocessor %d.%d.%d\n",
+      HB_VER_MAJOR, HB_VER_MINOR, HB_VER_REVISION );
+   printf( "Copyright 1999-2008, http://www.harbour-project.org\n" );
 
    pState = hb_pp_new();
 

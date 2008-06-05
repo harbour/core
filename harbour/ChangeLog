@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 12:53 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/pp/hbppgen.c
+   * contrib/examples/pp/hbpp.c
+     * Headers cleaned.
+
 2008-06-05 12:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * make_b32.mak
    * make_gcc.mak
