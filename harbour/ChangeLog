@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 02:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * hbpgsql/postgres.c
+     ! Don't request windows.h.
+     + Using hb_parptrGC() for PGconn()
+     + PQCONNECT() larger buffer for connect string.
+     ! PQCONNECT() not passing trash to PG API if no. of params != 5
+     ! PQCONNECT() buffer overflow vulnerability.
+     ! PQSETDBLOGIN() password could not be passed to PG API due 
+       to typo.
+     ! PQMETADATA() now returns empty array instead of NIL in case 
+       of failure (so test.prg won't RTE).
+     ! PQCREATETRACE(), PQCLOSETRACE(), PQTRACE() now only activated 
+       in 'NODLL' (temp name) is defined, since passing 'FILE *' to 
+       .dlls results in crash.
+     ; TOFIX? added to PQESCAPEBYTEA()
+     * Formatting.
+     % Cleanup, optimizations.
+     ; NOTE: I've tried test.prg and while it runs, it doesn't seem 
+             to work properly for some reason.
+     ; TOFIX: Use bh_parptrGC() for PGresult, FILE*.
+
+   * hbpgsql/make_vc.bat
+     + Now uses the .lib provided in the binary package.
+       (This needs the current 8.3.1 version)
+
 2008-06-05 02:34 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/macro.c
     ! pass macro compiled string to error object. It fixes Clipper
