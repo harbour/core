@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 13:53 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_vcce.mak
+  * harbour/make_vc.mak
+  * harbour/common.mak
+    * removed not longer used HBPP references
+
 2008-06-05 13:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/hbppgen.c
     + added -d<id>[=<val>] command line switch

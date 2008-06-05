@@ -140,7 +140,6 @@ GTCRS_DIR    = source\rtl\gtcrs
 GTSLN_DIR    = source\rtl\gtsln
 GTXWC_DIR    = source\rtl\gtxwc
 
-HBPP_DIR     = utils\hbpp
 HBPPTEST_DIR = utils\hbpptest
 HBRUN_DIR    = utils\hbrun
 HBDOT_DIR    = utils\hbdot
@@ -198,7 +197,6 @@ $(HBVER_DIR)\
 
 ALL_SRC_DIRS_TMP=\
 $(ALL_LIB_SRC_DIRS_TMP);\
-$(HBPP_DIR);\
 $(ALL_EXE_SRC_DIRS_TMP)\
 
 ALL_LIB_SRC_DIRS = $(ALL_LIB_SRC_DIRS_TMP: =)

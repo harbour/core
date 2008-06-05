@@ -268,9 +268,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 {$(COMPILER_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBPP_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
-    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
-#*******************************************************
 {$(HBPPTEST_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
@@ -400,10 +397,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBPP_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
-#*******************************************************
 {$(HBPPTEST_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGS) $< -o$(OBJ_DIR)\\
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
@@ -523,9 +516,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 # which use Harbour SHARED Library compiled as DLL
 #*******************************************************
 #{$(COMPILER_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
-#    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
-#*******************************************************
-#{$(HBPP_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
 {$(HBPPTEST_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
@@ -659,10 +649,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 # which use Harbour SHARED Library compiled as DLL
 #*******************************************************
 #{$(COMPILER_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
-#    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
-#    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
-#*******************************************************
-#{$(HBPP_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
 #    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
