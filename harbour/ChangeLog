@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 20:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   - contrib/examples/pp/hbpp.c
+   + contrib/examples/pp/pp.c
+   * contrib/examples/pp/bld_b32.bat
+   * contrib/examples/pp/Makefile
+     * hbpp.c -> pp.c to generate pp.exe using GNU make files.
+
+   * contrib/examples/pp/bld_b32.bat
+     % Removed unnecessary libs.
+
 2008-06-05 18:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * harbour-ce-spec

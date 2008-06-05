@@ -7,10 +7,10 @@ ROOT = ../../../
 C_SOURCES=\
 	hbppcore.c \
 	hbppcomp.c \
-	hbpptbl.c  \
+	hbpptbl.c \
 	hbpragma.c \
 
-C_MAIN=hbpp.c
+C_MAIN=pp.c
 
 LIBS=\
 	hbcommon \
