@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 02:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * hbpgsql/make_b32.bat
+   * hbpgsql/make_vc.bat
+   * hbpgsql/tests/bld_b32.bat
+   * hbpgsql/tests/bld_vc.bat
+     ! Fixed to use the right .dll to generate the .lib.
+     ; TOMERGE [RC1]
+
+   * hbpgsql/tpostgre.prg
+     * Comment.
+
 2008-06-05 00:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit2/Makefile
      ! Readded last char of last line.

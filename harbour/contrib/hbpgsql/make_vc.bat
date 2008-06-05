@@ -16,9 +16,8 @@ goto POST_EXIT
 
 if "%HB_INC_PGSQL%" == "" set HB_INC_PGSQL=%HB_DIR_PGSQL%\include
 set CFLAGS=-I"%HB_INC_PGSQL%"
-rem .exe
-set _HB_DLL_NAME=postgres
-set _HB_DLL_DIR=%HB_DIR_PGSQL%\bin
+set _HB_DLL_NAME=libpq
+set _HB_DLL_DIR=%HB_DIR_PGSQL%\lib
 
 rem ---------------------------------------------------------------
 
@@ -48,8 +47,8 @@ if "%1" == "INSTALL" goto POST_INSTALL
    echo.   s/^^[ \t]\+[0-9]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+[0-9A-Fa-f]\+[ \t]\+\(.*\)/\1/p>> _temp.sed
    echo. }>> _temp.sed
    echo.}>> _temp.sed
-   DUMPBIN /EXPORTS "%_HB_DLL_DIR%\%_HB_DLL_NAME%.exe" > _dump.tmp
-   echo.LIBRARY "%_HB_DLL_DIR%\%_HB_DLL_NAME%.exe" > _temp.def
+   DUMPBIN /EXPORTS "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll" > _dump.tmp
+   echo.LIBRARY "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll" > _temp.def
    echo.EXPORTS >> _temp.def
    sed -nf _temp.sed < _dump.tmp >> _temp.def
    LIB /MACHINE:X86 /DEF:_temp.def /OUT:..\..\lib\%_HB_CC_NAME%\%_HB_DLL_NAME%.lib >> %_HB_MAKELOG%
