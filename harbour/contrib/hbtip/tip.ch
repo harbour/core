@@ -11,8 +11,8 @@
 * (C) 2002 Giancarlo Niccolai
 ************************************************/
 
-#ifndef TIP_H
-#define TIP_H
+#ifndef TIP_CH
+#define TIP_CH
 
 /* Tip read only protocol */
 #define TIP_RO    0

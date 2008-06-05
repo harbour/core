@@ -51,12 +51,8 @@
  *
  */
 
-
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
-#include "extend.api"
-#include "item.api"
+#include "hbapi.h"
+#include "hbapiitm.h"
 
 #ifdef HB_OS_WIN_32
    /* This is needed by msql.h to indicate the platform. */
@@ -65,52 +61,50 @@
 
 #include "msql.h"
 
-HB_FUNC(MSQLCONNEC) // int msqlConnect(char *)
+HB_FUNC(MSQLCONNEC) /* int msqlConnect(char *) */
 {
-   _retni(msqlConnect(_parc(1)));
+   hb_retni(msqlConnect(hb_parc(1)));
 }
 
 
-HB_FUNC(MSQLCLOSE) // void msqlClose(int)
+HB_FUNC(MSQLCLOSE) /* void msqlClose(int) */
 {
-   msqlClose(_parni(1));
-   _ret();
+   msqlClose(hb_parni(1));
 }
 
 
-HB_FUNC(MSQLSELECT) // int msqlSelectDB(int, char *)
+HB_FUNC(MSQLSELECT) /* int msqlSelectDB(int, char *) */
 {
-   _retni(msqlSelectDB(_parni(1), _parc(2)));
+   hb_retni(msqlSelectDB(hb_parni(1), hb_parc(2)));
 }
 
 
-HB_FUNC(MSQLQUERY) // int msqlQuery(int, char *)
+HB_FUNC(MSQLQUERY) /* int msqlQuery(int, char *) */
 {
-   _retni(msqlQuery(_parni(1), _parc(2)));
+   hb_retni(msqlQuery(hb_parni(1), hb_parc(2)));
 }
 
 
-HB_FUNC(MSQLSTORER) // m_result *msqlStoreResult()
+HB_FUNC(MSQLSTORER) /* m_result *msqlStoreResult() */
 {
-   _retnl((long) msqlStoreResult());
+   hb_retnl((long) msqlStoreResult());
 }
 
 
-HB_FUNC(MSQLFREER) // void msqlFreeResult(m_result *)
+HB_FUNC(MSQLFREER) /* void msqlFreeResult(m_result *) */
 {
-   msqlFreeResult((m_result *)_parnl(1));
-   _ret();
+   msqlFreeResult((m_result *)hb_parnl(1));
 }
 
 
 /* NOTE: need number of retrieved fields */
-HB_FUNC(MSQLFETCHR) // m_row msqlFetchRow(m_result *, int)
+HB_FUNC(MSQLFETCHR) /* m_row msqlFetchRow(m_result *, int) */
 {
-   m_result *mresult = (m_result *)_parnl(1);
-   int num_fields = _parnl(2);
+   m_result *mresult = (m_result *)hb_parnl(1);
+   int num_fields = hb_parnl(2);
 
-   ITEM aRow = _itemArrayNew(num_fields);
-   ITEM temp;
+   PHB_ITEM aRow = hb_itemArrayNew(num_fields);
+   PHB_ITEM temp;
    m_row mrow;
    int i;
 
@@ -120,140 +114,133 @@ HB_FUNC(MSQLFETCHR) // m_row msqlFetchRow(m_result *, int)
 
       /* if field is not empty */
       if (mrow[i] != NULL) {
-         temp = _itemPutC(NULL, mrow[i]);
+         temp = hb_itemPutC(NULL, mrow[i]);
        } else {
-         temp = _itemPutC(NULL, "");
+         temp = hb_itemPutC(NULL, "");
        }
 
-      _itemArrayPut(aRow, i + 1, temp);
-      _itemRelease(temp);
+      hb_itemArrayPut(aRow, i + 1, temp);
+      hb_itemRelease(temp);
    }
-   _itemReturn(aRow);
-   _itemRelease(aRow);
+   hb_itemReturnRelease(aRow);
 }
 
 
-HB_FUNC(MSQLDATASE) // void msqlDataSeek(m_result *, int)
+HB_FUNC(MSQLDATASE) /* void msqlDataSeek(m_result *, int) */
 {
-   msqlDataSeek((m_result *)_parnl(1), _parni(2));
-   _ret();
+   msqlDataSeek((m_result *)hb_parnl(1), hb_parni(2));
 }
 
 
-HB_FUNC(MSQLNUMROW) // int msqlNumRows(m_result *)
+HB_FUNC(MSQLNUMROW) /* int msqlNumRows(m_result *) */
 {
-   _retni(msqlNumRows(((m_result *)_parnl(1))));
+   hb_retni(msqlNumRows(((m_result *)hb_parnl(1))));
 }
 
 
-HB_FUNC(MSQLFETCHF) // m_field *msqlFetchField(m_result *)
+HB_FUNC(MSQLFETCHF) /* m_field *msqlFetchField(m_result *) */
 {
    /* NOTE: m_field structure of mSQL 2.x has 5 members */
-   ITEM aField = _itemArrayNew(5);
+   PHB_ITEM aField = hb_itemArrayNew(5);
 
-   ITEM temp;
+   PHB_ITEM temp;
    m_field *mfield;
 
-   mfield = msqlFetchField((m_result *)_parnl(1));
+   mfield = msqlFetchField((m_result *)hb_parnl(1));
    if (!(mfield == NULL)) {
-      temp = _itemPutC(NULL, mfield->name);
-      _itemArrayPut(aField, 1, temp);
-      _itemRelease(temp);
-      temp = _itemPutC(NULL, mfield->table);
-      _itemArrayPut(aField, 2, temp);
-      _itemRelease(temp);
-      temp = _itemPutNL(NULL, mfield->type);
-      _itemArrayPut(aField, 3, temp);
-      _itemRelease(temp);
-      temp = _itemPutNL(NULL, mfield->length);
-      _itemArrayPut(aField, 4, temp);
-      _itemRelease(temp);
-      temp = _itemPutNL(NULL, mfield->flags);
-      _itemArrayPut(aField, 5, temp);
-      _itemRelease(temp);
+      temp = hb_itemPutC(NULL, mfield->name);
+      hb_itemArrayPut(aField, 1, temp);
+      hb_itemRelease(temp);
+      temp = hb_itemPutC(NULL, mfield->table);
+      hb_itemArrayPut(aField, 2, temp);
+      hb_itemRelease(temp);
+      temp = hb_itemPutNL(NULL, mfield->type);
+      hb_itemArrayPut(aField, 3, temp);
+      hb_itemRelease(temp);
+      temp = hb_itemPutNL(NULL, mfield->length);
+      hb_itemArrayPut(aField, 4, temp);
+      hb_itemRelease(temp);
+      temp = hb_itemPutNL(NULL, mfield->flags);
+      hb_itemArrayPut(aField, 5, temp);
+      hb_itemRelease(temp);
    }
-   _itemReturn(aField);
-   _itemRelease(aField);
-
+   hb_itemReturnRelease(aField);
 }
 
 
-HB_FUNC(MSQLFIELDS) // void msqlFieldSeek(m_result *, int)
+HB_FUNC(MSQLFIELDS) /* void msqlFieldSeek(m_result *, int) */
 {
-   msqlFieldSeek((m_result *)_parnl(1), _parni(2));
-   _ret();
+   msqlFieldSeek((m_result *)hb_parnl(1), hb_parni(2));
 }
 
 
-HB_FUNC(MSQLNUMFIE) // int msqlNumFields(m_result *)
+HB_FUNC(MSQLNUMFIE) /* int msqlNumFields(m_result *) */
 {
-   _retni(msqlNumFields(((m_result *)_parnl(1))));
+   hb_retni(msqlNumFields(((m_result *)hb_parnl(1))));
 }
 
 
-HB_FUNC(MSQLLISTFI) // m_result *msqlListFields(int, char *);
+HB_FUNC(MSQLLISTFI) /* m_result *msqlListFields(int, char *); */
 {
-   _retnl((long) msqlListFields(_parni(1), _parc(2)));
+   hb_retnl((long) msqlListFields(hb_parni(1), hb_parc(2)));
 }
 
 
-HB_FUNC(MSQLGETERR) // char *msqlGetErrMsg(char *);
+HB_FUNC(MSQLGETERR) /* char *msqlGetErrMsg(char *); */
 {
-   _retc(msqlGetErrMsg(NULL));
+   hb_retc(msqlGetErrMsg(NULL));
 }
 
 
-HB_FUNC(MSQLLISTDB) // m_result * msqlListDBs(int);
+HB_FUNC(MSQLLISTDB) /* m_result * msqlListDBs(int); */
 {
-   int sock = _parnl(1);
+   int sock = hb_parnl(1);
    m_result *mresult;
    m_row mrow;
    long nr, i;
-   ITEM aDBs;
-   ITEM temp;
+   PHB_ITEM aDBs;
+   PHB_ITEM temp;
 
    mresult = msqlListDBs(sock);
    nr = msqlNumRows(mresult);
-   aDBs = _itemArrayNew(nr);
+   aDBs = hb_itemArrayNew(nr);
 
    for (i = 0; i < nr; i++) {
       mrow = msqlFetchRow(mresult);
-      temp = _itemPutC(NULL, mrow[0]);
+      temp = hb_itemPutC(NULL, mrow[0]);
 
-      _itemArrayPut(aDBs, i + 1, temp);
-      _itemRelease(temp);
+      hb_itemArrayPut(aDBs, i + 1, temp);
+      hb_itemRelease(temp);
    }
 
    msqlFreeResult(mresult);
-   _itemReturn(aDBs);
-   _itemRelease(aDBs);
+   hb_itemReturnRelease(aDBs);
 }
 
 
-HB_FUNC(MSQLLISTTA) // m_result * msqlListTables(int);
+HB_FUNC(MSQLLISTTA) /* m_result * msqlListTables(int); */
 {
-   int sock = _parnl(1);
+   int sock = hb_parnl(1);
    m_result *mresult;
    m_row mrow;
    long nr, i;
-   ITEM aTables;
-   ITEM temp;
+   PHB_ITEM aTables;
+   PHB_ITEM temp;
 
    mresult = msqlListTables(sock);
    nr = msqlNumRows(mresult);
-   aTables = _itemArrayNew(nr);
+   aTables = hb_itemArrayNew(nr);
 
    for (i = 0; i < nr; i++) {
 
       mrow = msqlFetchRow(mresult);
-      temp = _itemPutC(NULL, mrow[0]);
+      temp = hb_itemPutC(NULL, mrow[0]);
 
-      _itemArrayPut(aTables, i + 1, temp);
-      _itemRelease(temp);
+      hb_itemArrayPut(aTables, i + 1, temp);
+      hb_itemRelease(temp);
    }
 
    msqlFreeResult(mresult);
-   _itemReturn(aTables);
-   _itemRelease(aTables);
+   hb_itemReturnRelease(aTables);
 }
 

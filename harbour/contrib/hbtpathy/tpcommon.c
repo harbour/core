@@ -54,10 +54,8 @@
 
 /* ----- platform neutral C code -------------------------------------- */
 
-#define _CLIPDEFS_H     // Don't ridefine basic types
-
+#include "hbapi.h"
 #include "hbapifs.h"
-#include "extend.api"
 
 /* crctab calculated by Mark G. Mendel, Network Systems Corporation */
 static unsigned short crctab[ 256 ] = {
@@ -102,8 +100,8 @@ static unsigned short crctab[ 256 ] = {
 
 HB_FUNC( P_CRC16 ) {
 
-   char *ptr = _parc( 1 );
-   int count = _parclen( 1 );
+   char *ptr = hb_parc( 1 );
+   int count = hb_parclen( 1 );
 
    register unsigned short crc = 0;
 
@@ -112,7 +110,7 @@ HB_FUNC( P_CRC16 ) {
    }
 
    /* swap Hi and Lo byte */
-   _retnl( ( crc >> 8 ) | ( ( crc << 8 ) & 0xFF00 ) );
+   hb_retnl( ( crc >> 8 ) | ( ( crc << 8 ) & 0xFF00 ) );
 }
 
 
@@ -172,8 +170,8 @@ static ULONG crc32tbl[ 256 ] = {
 
 HB_FUNC( P_CRC32 ) {
 
-   char *ptr = _parc( 1 );
-   int count = _parclen( 1 );
+   char *ptr = hb_parc( 1 );
+   int count = hb_parclen( 1 );
 
    register ULONG crc = CRC32INIT;
 
@@ -181,5 +179,5 @@ HB_FUNC( P_CRC32 ) {
       crc = updcrc32( *ptr++, crc );
    }
 
-   _retnl( crc ^ CRC32INIT );
+   hb_retnl( crc ^ CRC32INIT );
 }

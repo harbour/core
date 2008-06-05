@@ -8,6 +8,39 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 10:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * contrib/hbbtree/hb_btree.c
+   * contrib/hbclipsm/gauge.c
+   * contrib/hbfbird/firebird.c
+   * contrib/hbgd/gdwrp.c
+   * contrib/hbmsql/msql.c
+   * contrib/hbmysql/mysql.c
+   * contrib/hbnf/dispc.c
+   * contrib/hbnf/getenvrn.c
+   * contrib/hbnf/getver.c
+   * contrib/hbnf/kspeed.c
+   * contrib/hbodbc/odbc.c
+   * contrib/hbole/ole2.c
+   * contrib/hbsqlit2/hbsqlit2.c
+   * contrib/hbsqlit3/hbsqlit3.ch
+   * contrib/hbtpathy/tplinux.c
+   * contrib/hbtpathy/tpwin32.c
+   * contrib/hbtpathy/tpos2.c
+   * contrib/hbtpathy/tpcommon.c
+   * contrib/hbtip/thtml.ch
+   * contrib/hbtip/utils.c
+   * contrib/hbtip/tip.ch
+   * contrib/xhb/hboutdbg.c
+   * utils/hbpp/Makefile
+   - utils/hbpp/pragma.c
+   + utils/hbpp/hbpragma.c
+     * General code quality improvements.
+       (.api usage, sprintf -> snprintf, ANSI comments, CLIPDEFS, 
+       windows.h inclusion, hb_retc*_buffer, hb_ret(), hb_itemReturnRelease(), 
+       formatting.)
+     ! Collision between two pragma.c files resolved.
+
 2008-06-05 12:50 UTC-0400 Phil Barnett <philb/at/philb.us>
   * Set version in harbour.spec to 1.0.0-RC1
   * Set version in include/hbver.h to 1.0.0-RC1

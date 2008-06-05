@@ -36,13 +36,7 @@
  *
  */
 
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
 #include "hbapi.h"
-#include "extend.api"
-#include "item.api"
-#include "hbstack.h"
 #include "hbapiitm.h"
 
 #include "sqlite.h"

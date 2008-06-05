@@ -296,5 +296,4 @@
 
 #define  HTML_ATTR_TYPE_COUNT               37
 
-#endif // _HB_THTML
-
+#endif /* _HB_THTML */

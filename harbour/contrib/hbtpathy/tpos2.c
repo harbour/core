@@ -51,8 +51,8 @@
  *
  */
 
-#define _CLIPDEFS_H
-
+#include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapifs.h"
 
 #ifdef HB_OS_OS2
@@ -64,9 +64,6 @@
 #include <os2.h>
 
 #include <stdio.h>
-
-#include "extend.api"
-#include "item.api"
 
 HB_FUNC( P_INITPORTSPEED ) {
 
@@ -105,7 +102,7 @@ HB_FUNC( P_INITPORTSPEED ) {
    }
 
    lctl.bDataBits = hb_parnl( 3 );
-   lctl.bStopBits = hb_parnl( 5 ) == 1 ? 0 : hb_parnl( 5 );    // 1 == 1.5 stop bits only valid with 5 data bits
+   lctl.bStopBits = hb_parnl( 5 ) == 1 ? 0 : hb_parnl( 5 );    /* 1 == 1.5 stop bits only valid with 5 data bits */
    lctl.fTransBreak = 0;
 
    if ( DosDevIOCtl( (HFILE) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_SETBAUDRATE, &Baud,
@@ -180,7 +177,7 @@ HB_FUNC( P_WRITEPORT ) {
    if ( rc == NO_ERROR ) {
       hb_retnl( nWritten );
    } else {
-      // Put GetLastError() here, or better a second byref param?
+      /* Put GetLastError() here, or better a second byref param? */
       hb_retnl( -1 );
    }
 
@@ -199,7 +196,7 @@ HB_FUNC( P_OUTFREE ) {
       hb_retnl( rxqueue.cb - rxqueue.cch );
 
    } else {
-      // Put GetLastError() here, or better a second byref param?
+      /* Put GetLastError() here, or better a second byref param? */
       hb_retnl( -1 );
    }
 
@@ -277,4 +274,4 @@ HB_FUNC( P_CTRLCTS ) {
    hb_retni( 0 );
 
 }
-#endif // HB_OS_OS2
+#endif /* HB_OS_OS2 */

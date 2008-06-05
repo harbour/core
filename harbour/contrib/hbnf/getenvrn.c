@@ -95,13 +95,6 @@
  *  $END$
  */
 
-/* NOTE: we need this to prevent base types redefinition */
-/*
-#define _CLIPDEFS_H
-#include "extend.api"
-#include "fm.api"
-*/
-
 #define HB_OS_WIN_32_USED
 #include "hbapi.h"
 

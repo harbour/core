@@ -51,17 +51,15 @@
  *
  */
 
-#define _CLIPDEFS_H
+#define HB_OS_WIN_32_USED
 
+#include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapifs.h"
 
 #ifdef HB_OS_WIN_32
 
-#include <windows.h>
 #include <stdio.h>
-
-#include "extend.api"
-#include "item.api"
 
 HB_FUNC( P_INITPORTSPEED ) {
 
@@ -71,7 +69,7 @@ HB_FUNC( P_INITPORTSPEED ) {
    FillMemory(&dcb, sizeof(dcb), 0);
    dcb.DCBlength = sizeof(dcb);
 
-   sprintf(values, "%u,%1s,%1u,%1u", hb_parnl(2), hb_parcx(4), hb_parnl(3), hb_parnl(5));
+   snprintf(values, sizeof( values ), "%u,%1s,%1u,%1u", hb_parnl(2), hb_parcx(4), hb_parnl(3), hb_parnl(5));
 
    if ( ! BuildCommDCB(values, &dcb)) {
       hb_retnl(-1);
@@ -83,7 +81,7 @@ HB_FUNC( P_INITPORTSPEED ) {
       } else {
          COMMTIMEOUTS timeouts;
 
-         // read/write operations return immediatly
+         /* read/write operations return immediatly */
          timeouts.ReadIntervalTimeout = MAXDWORD;
          timeouts.ReadTotalTimeoutMultiplier = 0;
          timeouts.ReadTotalTimeoutConstant = 0;
@@ -113,7 +111,7 @@ HB_FUNC( P_READPORT ) {
    if ( bRet ) {
       hb_retclen( Buffer, nRead );
    } else {
-      hb_retclen( "", 0 );
+      hb_retc( NULL );
    }
 }
 
@@ -130,8 +128,9 @@ HB_FUNC( P_WRITEPORT ) {
    if ( bRet ) {
       hb_retnl( nWritten );
    } else {
-      // Put GetLastError() here, or better a second byref param?
+      /* Put GetLastError() here, or better a second byref param? */
       hb_retnl( -1 );
    }
 }
-#endif // HB_OS_WIN_32
+
+#endif /* HB_OS_WIN_32 */

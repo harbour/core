@@ -54,8 +54,8 @@
  *
  */
 
-#define _CLIPDEFS_H
-
+#include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapifs.h"
 
 #ifdef HB_OS_UNIX
@@ -67,9 +67,6 @@
 #include <errno.h>   /* Error number definitions */
 #include <termios.h> /* POSIX terminal control definitions */
 #include <sys/ioctl.h>
-
-#include "extend.api"
-#include "item.api"
 
 HB_FUNC( P_OPEN ) {
 
@@ -103,11 +100,11 @@ HB_FUNC( P_INITPORTSPEED ) {
 
    tcgetattr( port, &options );
 
-   // let's set baud rate
+   /* let's set baud rate */
    switch ( hb_parnl( 2 ) ) {
 
       case 0:
-         baud = B0;  // Drop line
+         baud = B0;  /* Drop line */
          break;
 
       case 50:
@@ -182,16 +179,16 @@ HB_FUNC( P_INITPORTSPEED ) {
    cfsetispeed( &options, baud );
    cfsetospeed( &options, baud );
 
-   // Enable the receiver and set local mode...
+   /* Enable the receiver and set local mode... */
    options.c_cflag |= ( CLOCAL | CREAD );
 
-   // Raw input from device
+   /* Raw input from device */
    cfmakeraw( &options );
 
-   // Reset data bits ( cfmakeraw() puts it to CS8 )
+   /* Reset data bits ( cfmakeraw() puts it to CS8 ) */
    options.c_cflag &= ~CSIZE;
 
-   // Data bits
+   /* Data bits */
    if ( hb_parni( 3 ) == 8 ) {
 
       options.c_cflag |= CS8;
@@ -201,12 +198,12 @@ HB_FUNC( P_INITPORTSPEED ) {
       options.c_cflag |= CS7;
    }
 
-   // Stop bits
+   /* Stop bits */
    if ( hb_parni( 5 ) == 1 ) {
       options.c_cflag &= ~CSTOPB;
    }
 
-   // Parity, only No, Even, Odd supported
+   /* Parity, only No, Even, Odd supported */
    switch ( *ptr )  {
 
       case 'N':
@@ -234,11 +231,11 @@ HB_FUNC( P_INITPORTSPEED ) {
    }
 
 
-   // Every read() call returns as soon as a char is available OR after 3 tenths of a second
+   /* Every read() call returns as soon as a char is available OR after 3 tenths of a second */
    options.c_cc[ VMIN ] = 0;
    options.c_cc[ VTIME ] = 3;
 
-   // Set the new options for the port...
+   /* Set the new options for the port... */
    rc = tcsetattr( port, TCSAFLUSH, &options );
 
    hb_retnl( rc );
@@ -249,36 +246,24 @@ HB_FUNC( P_INITPORTSPEED ) {
 HB_FUNC( P_READPORT ) {
 
    char Buffer[512];
-   int nRead;
+   int nRead = read( hb_parnl( 1 ), Buffer, sizeof( Buffer ) );
 
-   nRead = read( hb_parnl( 1 ), Buffer, 512 );
-
-   if ( nRead < 0 ) {
-
-      hb_retclen( "", 0 );
-
-   } else {
-
+   if ( nRead < 0 )
+      hb_retc( NULL );
+   else
       hb_retclen( Buffer, nRead );
-   }
 }
 
 
 
 HB_FUNC( P_WRITEPORT ) {
 
-   long n;
+   long n = write( hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ) );
 
-   n = write( hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ) );
-
-   if ( n < 0 ) {
-
+   if ( n < 0 )
       hb_retnl( -1 );
-
-   } else {
-
+   else
       hb_retnl( n );
-   }
 }
 
 
@@ -302,30 +287,22 @@ HB_FUNC( P_OUTFREE ) {
       hb_retnl( rxqueue.cb - rxqueue.cch );
 
    } else {
-      // Put GetLastError() here, or better a second byref param?
+      /* Put GetLastError() here, or better a second byref param? */
       hb_retnl( -1 );
    }
 
    */
-
 }
-
 
 
 HB_FUNC( P_ISDCD ) {
 
    int status;
-   int rc;
 
-   rc = ioctl( hb_parnl( 1 ), TIOCMGET, &status );
-
-   if ( rc == 0 ) {
+   if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_CD ) == TIOCM_CD );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
 
 
@@ -333,17 +310,11 @@ HB_FUNC( P_ISDCD ) {
 HB_FUNC( P_ISRI ) {
 
    int status;
-   int rc;
 
-   rc = ioctl( hb_parnl( 1 ), TIOCMGET, &status );
-
-   if ( rc == 0 ) {
+   if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_RI ) == TIOCM_RI );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
 
 
@@ -351,17 +322,11 @@ HB_FUNC( P_ISRI ) {
 HB_FUNC( P_ISDSR ) {
 
    int status;
-   int rc;
 
-   rc = ioctl( hb_parnl( 1 ), TIOCMGET, &status );
-
-   if ( rc == 0 ) {
+   if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_DSR ) == TIOCM_DSR );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
 
 
@@ -369,19 +334,12 @@ HB_FUNC( P_ISDSR ) {
 HB_FUNC( P_ISCTS ) {
 
    int status;
-   int rc;
 
-   rc = ioctl( hb_parnl( 1 ), TIOCMGET, &status );
-
-   if ( rc == 0 ) {
+   if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_CTS ) == TIOCM_CTS );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
-
 
 
 HB_FUNC( P_CTRLCTS ) {
@@ -411,4 +369,4 @@ HB_FUNC( P_CTRLCTS ) {
    hb_retni( curvalue ? 1 : 0 );
 
 }
-#endif // HB_OS_UNIX
+#endif /* HB_OS_UNIX */

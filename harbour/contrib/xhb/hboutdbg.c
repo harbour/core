@@ -108,7 +108,7 @@ static void debugInit( void )
       {
          pFileName->szName[20] = 0;
       }
-      sprintf( szDebugTitle, "%s - Debug", pFileName->szName );
+      snprintf( szDebugTitle, sizeof( szDebugTitle ), "%s - Debug", pFileName->szName );
 
 
       iPid = fork();

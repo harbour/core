@@ -51,17 +51,10 @@
  *
  */
 
-
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
-
-#include "hbdefs.h"
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapigt.h"
 
-#include "fm.api"
 #include "inkey.ch"
 
 #define OFF 0

@@ -174,16 +174,12 @@ see ChangeLog 2002-07-14 14:14 UTC+0500 April White <awhite@mail.rosecom.ca>
     - implement code to handle big & little endian systems
 */
 
-/* NOTE: we need this to prevent base types redefinition */
-#define _CLIPDEFS_H
-
-#include "extend.api"
-#include "item.api"
 #include "hbvm.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapifs.h"
-#include "hbtrace.h"
-#include "hbinit.h"
 #include "hbapierr.h"
+#include "hbinit.h"
 
 #include "hb_btree.api"
 
@@ -1665,7 +1661,7 @@ struct hb_BTree * hb_BTreeNew( BYTE * FileName, USHORT usPageSize, USHORT usKeyS
       BufferRelease( buffer );
       BufferRelease( pBTree );
       hb_RaiseError( HB_BTree_WriteError_EC, "write error", "hb_btreenew", 0 );
-      _retni( -1 );
+      hb_retni( -1 );
     }
     BufferRelease( buffer );
   }
@@ -1797,7 +1793,7 @@ static struct hb_BTree *BTree_GetTreeIndex( const char * GetSource )
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
 
-  index = _parni( 1 );
+  index = hb_parni( 1 );
   if ( index < 1 || index > s_BTree_List_Count || s_BTree_List[ index ] == NULL ) \
   {
     hb_RaiseError( HB_BTree_TreeHandle_EC, "Bad BTree handle", GetSource, 1 );
@@ -1811,26 +1807,26 @@ HB_FUNC( HB_BTREEOPEN  )  /* hb_BTreeOpen( CHAR cFileName, ULONG ulFlags [ , int
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( ISCHAR( 1 ) )
-    _retni( BTree_SetTreeIndex( hb_BTreeOpen( ( BYTE * ) _parc( 1 ), _parnl( 2 ), _parni( 3 ) ) ) );
+    hb_retni( BTree_SetTreeIndex( hb_BTreeOpen( ( BYTE * ) hb_parc( 1 ), hb_parnl( 2 ), hb_parni( 3 ) ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeopen", hb_pcount() );
-    _retni( 0 );
+    hb_retni( 0 );
   }
 }
 
 HB_FUNC( HB_BTREENEW )  /* hb_BTreeNew( CHAR cFileName, int nPageSize, int nKeySize, [ ULONG ulFlags ], [ int nBuffers=1 ] )  ->  hb_Btree_Handle */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  if ( ( ( _parnl( 4 ) & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY || ISCHAR( 1 ) ) &&
+  if ( ( ( hb_parnl( 4 ) & HB_BTREE_INMEMORY ) == HB_BTREE_INMEMORY || ISCHAR( 1 ) ) &&
        ISNUM( 2 ) && ISNUM( 3 ) )
   {
-    _retni( BTree_SetTreeIndex( hb_BTreeNew( ( BYTE * ) _parc( 1 ), _parni( 2 ), _parni( 3 ), _parnl( 4 ), _parni( 5 ) ) ) );
+    hb_retni( BTree_SetTreeIndex( hb_BTreeNew( ( BYTE * ) hb_parc( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parnl( 4 ), hb_parni( 5 ) ) ) );
   }
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreenew", hb_pcount() );
-    _retni( 0 );
+    hb_retni( 0 );
   }
 }
 
@@ -1838,7 +1834,7 @@ HB_FUNC( HB_BTREECLOSE )  /* hb_BTreeClose( hb_BTree_Handle ) -> NIL */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   hb_BTreeClose( BTree_GetTreeIndex( "hb_btreeclose" ) );
-  s_BTree_List[ _parni( 1 ) - 1 ] = NULL;
+  s_BTree_List[ hb_parni( 1 ) - 1 ] = NULL;
 }
 
 HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG lData | ANY xData ) -> lSuccess */
@@ -1848,11 +1844,11 @@ HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG l
 
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( ISNUM( 1 ) && ISCHAR( 2 ) && ( hb_pcount() == 2 || GETFLAG( pBTree, IsInMemory ) || ISNUM( 3 ) ) )
-    _retl( hb_BTreeInsert( BTree_GetTreeIndex( "hb_btreeinsert" ), ( BYTE * ) _parc( 2 ), hb_paramError( 3 ) ) );
+    hb_retl( hb_BTreeInsert( BTree_GetTreeIndex( "hb_btreeinsert" ), ( BYTE * ) hb_parc( 2 ), hb_paramError( 3 ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeinsert", hb_pcount() );
-    _retl( 0 );
+    hb_retl( 0 );
   }
 }
 
@@ -1860,18 +1856,18 @@ HB_FUNC( HB_BTREEDELETE )  /* hb_BTreeDelete( hb_BTree_Handle, CHAR cKey, LONG l
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( ISNUM( 1 ) && ISCHAR( 2 ) && ( hb_pcount() == 2 || ISNUM( 3 ) ) )
-    _retl( hb_BTreeDelete( BTree_GetTreeIndex( "hb_btreedelete" ), ( BYTE * ) _parc( 2 ), _parnl( 3 ) ) );
+    hb_retl( hb_BTreeDelete( BTree_GetTreeIndex( "hb_btreedelete" ), ( BYTE * ) hb_parc( 2 ), hb_parnl( 3 ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreedelete", hb_pcount() );
-    _retl( 0 );
+    hb_retl( 0 );
   }
 }
 
 HB_FUNC( HB_BTREEKEY )  /* hb_BTreeKey( hb_BTree_Handle ) -> CHAR cKey */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
-  _retc( ( char * ) BTree_GetTreeIndex( "hb_btreekey" )->pThisKeyData->szKey );
+  hb_retc( ( char * ) BTree_GetTreeIndex( "hb_btreekey" )->pThisKeyData->szKey );
 }
 
 HB_FUNC( HB_BTREEDATA )  /* hb_BtreeData( hb_BTree_Handle ) -> LONG lOldData | xOldData */
@@ -1883,11 +1879,11 @@ HB_FUNC( HB_BTREEDATA )  /* hb_BtreeData( hb_BTree_Handle ) -> LONG lOldData | x
     if ( pBTree->pThisKeyData->xData.pData )
       hb_itemReturn( pBTree->pThisKeyData->xData.pData );
     else
-      _ret();
+      hb_ret();
   }
   else
   {
-    _retnl( pBTree->pThisKeyData->xData.lData );
+    hb_retnl( pBTree->pThisKeyData->xData.lData );
 
   }
 }
@@ -1896,25 +1892,23 @@ HB_FUNC( HB_BTREEGOTOP )  /* hb_BTreeGoTop( hb_BTree_Handle ) --> NIL */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   hb_BTreeGoTop( BTree_GetTreeIndex( "hb_btreegotop" ) );
-  _ret();
 }
 
 HB_FUNC( HB_BTREEGOBOTTOM )  /* hb_BTreeGoBottom( hb_BTree_Handle ) --> NIL */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   hb_BTreeGoBottom( BTree_GetTreeIndex( "hb_btreegobottom" ) );
-  _ret();
 }
 
 HB_FUNC( HB_BTREESKIP )  /* hb_BTreeSkip( hb_BTree_Handle, LONG nRecords ) -> LONG nRecordsSkipped */
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( ISNUM( 1 ) && ISNUM( 2 ) )
-    _retnl( hb_BTreeSkip( BTree_GetTreeIndex( "hb_btreeskip" ), _parnl( 2 ) ) );
+    hb_retnl( hb_BTreeSkip( BTree_GetTreeIndex( "hb_btreeskip" ), hb_parnl( 2 ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeskip", hb_pcount() );
-    _retnl( 0 );
+    hb_retnl( 0 );
   }
 }
 
@@ -1922,11 +1916,11 @@ HB_FUNC( HB_BTREESEEK )  /* hb_BTreeSeek( hb_BTree_Handle, CHAR cKey, LONG lData
 {
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
   if ( ISNUM( 1 ) && ISCHAR( 2 ) )
-    _retl( hb_BTreeSeek( BTree_GetTreeIndex( "hb_btreeseek" ), ( BYTE * ) _parc( 2 ), _parnl( 3 ), _parl( 4 ) ) );
+    hb_retl( hb_BTreeSeek( BTree_GetTreeIndex( "hb_btreeseek" ), ( BYTE * ) hb_parc( 2 ), hb_parnl( 3 ), hb_parl( 4 ) ) );
   else
   {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeseek", hb_pcount() );
-    _retl( 0 );
+    hb_retl( 0 );
   }
 }
 
@@ -1937,14 +1931,14 @@ HB_FUNC( HB_BTREEINFO )  /* hb_BTreeInfo( hb_BTree_Handle, [index] ) -> aResults
   HB_TRACE( HB_TR_DEBUG, ( SRCLINENO ) );
 
   if ( pBTree )
-    switch ( _parni( 2 ) ) {
-    case HB_BTREEINFO_FILENAME:  _retc( ( char * ) pBTree->szFileName ); break;
-    case HB_BTREEINFO_PAGESIZE:  _retni( pBTree->usPageSize ); break;
-    case HB_BTREEINFO_KEYSIZE:   _retni( pBTree->usKeySize ); break;
-    case HB_BTREEINFO_MAXKEYS:   _retni( pBTree->usMaxKeys ); break;
-    case HB_BTREEINFO_MINKEYS:   _retni( pBTree->usMinKeys ); break;
-    case HB_BTREEINFO_FLAGS:     _retnl( pBTree->ulFlags ); break;
-    case HB_BTREEINFO_KEYCOUNT:  _retnl( pBTree->ulKeyCount ); break;
+    switch ( hb_parni( 2 ) ) {
+    case HB_BTREEINFO_FILENAME:  hb_retc( ( char * ) pBTree->szFileName ); break;
+    case HB_BTREEINFO_PAGESIZE:  hb_retni( pBTree->usPageSize ); break;
+    case HB_BTREEINFO_KEYSIZE:   hb_retni( pBTree->usKeySize ); break;
+    case HB_BTREEINFO_MAXKEYS:   hb_retni( pBTree->usMaxKeys ); break;
+    case HB_BTREEINFO_MINKEYS:   hb_retni( pBTree->usMinKeys ); break;
+    case HB_BTREEINFO_FLAGS:     hb_retnl( pBTree->ulFlags ); break;
+    case HB_BTREEINFO_KEYCOUNT:  hb_retnl( pBTree->ulKeyCount ); break;
     case HB_BTREEINFO_ALL:
     default:  /* build an array and store all elements from above into it */
     {
@@ -1989,10 +1983,7 @@ HB_FUNB( HB_BTREEEVAL )  /* hb_BTreeEval( hb_BTree_Handle, bBlock, [bForConditio
   if ( ISNUM( 1 ) && ISBLOCK( 2 ) )
     hb_BTreeEval( BTree_GetTreeIndex( "hb_btreeeval" ), 0 );
   else
-  {
     hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeeval", hb_pcount() );
-    _ret();
-  }
 }
 #endif
 

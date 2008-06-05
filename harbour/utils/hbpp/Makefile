@@ -8,7 +8,7 @@ C_SOURCES=\
 	hbppcore.c \
 	hbppcomp.c \
 	hbpptbl.c  \
-	pragma.c   \
+	hbpragma.c \
 
 C_MAIN=hbpp.c
 

@@ -112,7 +112,7 @@ HB_FUNC( TIP_TIMESTAMP )
    {
       GetLocalTime( &st );
 
-      sprintf( szRet, "%s, %u %s %u %02u:%02u:%02u %+03d%02d",
+      snprintf( szRet, 64, "%s, %u %s %u %02u:%02u:%02u %+03d%02d",
             days[ st.wDayOfWeek ], st.wDay, months[ st.wMonth -1],
             st.wYear,
             st.wHour, st.wMinute, st.wSecond,
@@ -124,7 +124,7 @@ HB_FUNC( TIP_TIMESTAMP )
       lDate = hb_itemGetDL( pDate );
       hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
 
-      sprintf( szRet, "%s, %d %s %d %02u:%02u:%02u %+03d%02d",
+      snprintf( szRet, 64, "%s, %d %s %d %02u:%02u:%02u %+03d%02d",
             days[ hb_dateDOW( iYear, iMonth, iDay ) - 1 ], iDay,
             months[ iMonth -1], iYear,
             (UINT)( ulHour / 3600 ), (UINT)( (ulHour % 3600) / 60 ), (UINT)( ulHour % 60 ),
@@ -854,7 +854,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
       return;
    }
 
-   // Giving maximum final length possible
+   /* Giving maximum final length possible */
    cRet = (char *) hb_xgrab( nLen * 6 +1);
 
    while ( nPos < nLen )

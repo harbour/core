@@ -56,16 +56,9 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br>
- *    HB_SQLNUMRES()
- *    HB_SQLDESCRIB()
- *    HB_SQLEXTENDE()
- *
- * See doc/license.txt for licensing terms.
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.xharbour.org
+ *    SQLNUMRES()
+ *    SQLDESCRIB()
+ *    SQLEXTENDE()
  *
  * Copyright 1996 Marcelo Lombardo <lombardo@uol.com.br>
  *    SQLGETINFO()
@@ -82,13 +75,11 @@
  * See doc/license.txt for licensing terms.
  */
 
+#define HB_OS_WIN_32_USED
+
 #include "hbapi.h"
 
 #if !defined(HB_OS_DOS) && !defined(HB_OS_OS2)
-
-#if defined(HB_OS_WIN_32)
-   #include <windows.h>
-#endif
 
 #include <limits.h>
 #include <math.h>
