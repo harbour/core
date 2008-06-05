@@ -35,6 +35,8 @@
    char *sqlite3_snprintf(int,char*,const char*, ...);
 */
 
+/* NOTE: It's not possible to suppress warnings in GCC (as of 2008) 
+         [vszakats] */
 #if defined( __BORLANDC__ )
    #pragma warn -aus
    #pragma warn -use
@@ -42,6 +44,8 @@
    #pragma warn -prc
    #pragma warn -eff
    #pragma warn -amp
+#elif defined( _MSC_VER )
+   #pragma warning( disable: 4018 4244 )
 #endif
 #include "sqlite3/sqlite3.c"
 #if defined( __BORLANDC__ )
@@ -51,6 +55,8 @@
    #pragma warn +prc
    #pragma warn +eff
    #pragma warn +amp
+#elif defined( _MSC_VER )
+   #pragma warning( default: 4018 4244 )
 #endif
 
 #ifdef NODLL

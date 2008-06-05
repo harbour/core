@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 03:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbsqlit3/hbsqlit3.c
+     * Suppressed MSVC warnings in foreign code.
+     ; Added NOTE that suppressing warnings with #pragmas 
+       is not possible in GCC.
+
 2008-06-05 02:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbpgsql/postgres.c
      ! Don't request windows.h.
