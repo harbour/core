@@ -248,7 +248,7 @@ GTXWC_LIB    = $(LIB_DIR)\$(LIBPREF)gtxwc$(LIBEXT)
 HARBOUR_EXE  = $(BIN_DIR)\harbour$(EXEEXT)
 # required (intermediate) utility
 #     to generate pptable.c
-HBPPGEN_EXE  = $(BIN_DIR)\hbppgen$(EXEEXT)
+HBPP_EXE     = $(BIN_DIR)\hbpp$(EXEEXT)
 HBPPTEST_EXE = $(BIN_DIR)\hbpptest$(EXEEXT)
 HBRUN_EXE    = $(BIN_DIR)\hbrun$(EXEEXT)
 HBDOT_EXE    = $(BIN_DIR)\hbdot$(EXEEXT)
@@ -1036,8 +1036,8 @@ HARBOUR_EXE_OBJS = \
 
 #**********************************************************
 
-HBPPGEN_EXE_OBJS = \
-    $(OBJ_DIR)\hbppgen$(OBJEXT)  \
+HBPP_EXE_OBJS = \
+    $(OBJ_DIR)\hbpp$(OBJEXT)  \
 
 #**********************************************************
 
@@ -1182,7 +1182,7 @@ DISABLED_SHARED_MODULES=    \
 
 HB_BUILD_TARGETS = \
     $(COMMON_LIB)           \
-    $(HBPPGEN_EXE)          \
+    $(HBPP_EXE)             \
     $(PP_LIB)               \
     \
     $(COMPILER_LIB)         \
@@ -1231,8 +1231,8 @@ HB = $(HARBOUR_EXE)
 !endif
 
 # allows to do cross-compiling if neccesary.
-!ifndef HBPPGEN
-HBPPGEN = $(HBPPGEN_EXE)
+!ifndef HBPP
+HBPP = $(HBPP_EXE)
 !endif
 
 #**********************************************************

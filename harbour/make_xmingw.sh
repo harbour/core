@@ -110,7 +110,7 @@ else
     exit 1
 fi
 
-ln -s "$DIR/source/pp/$UNAMEL/gcc/hbppgen" ${HB_BIN_COMPILE}/hbppgen.exe
+ln -s "$DIR/source/pp/$UNAMEL/gcc/hbpp" ${HB_BIN_COMPILE}/hbpp.exe
 export HB_PPGEN_PATH=${HB_BIN_COMPILE}
 
 case "$1" in

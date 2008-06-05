@@ -48,9 +48,9 @@ if "%1" == "INSTALL" goto INSTALL
 
 rem ---------------------------------------------------------------
 
-rem Checking if HB and HBPPGEN are set
+rem Checking if HB and HBPP are set
 
-if not "%HB%" == "" if exist %HB% goto CHECK_HBPPGEN
+if not "%HB%" == "" if exist %HB% goto CHECK_HBPP
    echo.
    echo *******************************************
    echo You must set HB environment variable to a
@@ -61,13 +61,13 @@ if not "%HB%" == "" if exist %HB% goto CHECK_HBPPGEN
    echo.
    goto EXIT
 
-:CHECK_HBPPGEN
-if not "%HBPPGEN%" == "" if exist %HBPPGEN% goto BUILD
+:CHECK_HBPP
+if not "%HBPP%" == "" if exist %HBPP% goto BUILD
    echo.
    echo **********************************************
-   echo You must set HBPPGEN environment variable to a
-   echo working copy of hbppgen.exe helper executable
-   echo. Example : set HBPPGEN=C:\Harbour\hbppgen.exe
+   echo You must set HBPP environment variable to a
+   echo working copy of hbpp.exe helper executable
+   echo. Example : set HBPP=C:\Harbour\hbpp.exe
    echo **********************************************
    echo.
    goto EXIT

@@ -492,7 +492,7 @@ rm -rf $RPM_BUILD_ROOT
 %verify(not md5 mtime) %config /etc/harbour.cfg
 %verify(not md5 mtime) %config /etc/harbour/hb-charmap.def
 %{_bindir}/harbour
-%{_bindir}/hbppgen
+%{_bindir}/hbpp
 %{_bindir}/hb-mkslib
 %{_bindir}/%{hb_pref}-build
 %{_bindir}/%{hb_pref}cc

@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 18:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * harbour.spec
+   * make_b32.mak
+   * make_gcc.mak
+   * make_vc.mak
+   * make_vcce.bat
+   * make_vcce.mak
+   * make_xmingw.sh
+   * make_xmingwce.sh
+   + source/pp/hbpp.c
+   - source/pp/hbppgen.c
+   * source/pp/Makefile
+     * hbppgen -> hbpp
+     ; Please test.
+
+   * harbour-w32-spec
+     ! Added 'svn:keywords "Author Date Id Revision"'
+     ; TOMERGE [RC1]
+
 2008-06-05 14:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-ce-spec
   * harbour/harbour-w32-spec

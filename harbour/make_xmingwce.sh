@@ -70,7 +70,7 @@ else
     exit 1
 fi
 
-ln -s "$DIR/source/pp/$HB_HOST_ARCH/$HB_HOST_CC/hbppgen" ${HB_BIN_COMPILE}/hbppgen.exe
+ln -s "$DIR/source/pp/$HB_HOST_ARCH/$HB_HOST_CC/hbpp" ${HB_BIN_COMPILE}/hbpp.exe
 export HB_PPGEN_PATH=${HB_BIN_COMPILE}
 
 case "$1" in
