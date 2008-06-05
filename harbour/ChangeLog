@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 10:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmysql/mysql.c
+     ! Fixes to previous commit.
+     ! Using hb_retptr().
+     ! SQLNROWS() fixed to return 64 bit values.
+     % Using array API optimally.
+
 2008-06-05 10:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
    * contrib/hbbtree/hb_btree.c
