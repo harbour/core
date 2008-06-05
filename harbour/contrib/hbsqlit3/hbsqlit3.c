@@ -35,9 +35,11 @@
    char *sqlite3_snprintf(int,char*,const char*, ...);
 */
 
-/* NOTE: It's not possible to suppress warnings in GCC (as of 2008) 
-         [vszakats] */
-#if defined( __BORLANDC__ )
+#if defined( __GCC__ ) && __GNUC__ >= 4 && __GNUC_MINOR__ >= 2
+   #pragma GCC diagnostic ignored "-Wunused"
+   #pragma GCC diagnostic ignored "-Wsign-compare"
+   #pragma GCC diagnostic ignored "-Wuninitialized"
+#elif defined( __BORLANDC__ )
    #pragma warn -aus
    #pragma warn -use
    #pragma warn -par
@@ -48,7 +50,11 @@
    #pragma warning( disable: 4018 4244 )
 #endif
 #include "sqlite3/sqlite3.c"
-#if defined( __BORLANDC__ )
+#if defined( __GCC__ ) && __GNUC__ >= 4 && __GNUC_MINOR__ >= 2
+   #pragma GCC diagnostic warning "-Wunused"
+   #pragma GCC diagnostic warning "-Wsign-compare"
+   #pragma GCC diagnostic warning "-Wuninitialized"
+#elif defined( __BORLANDC__ )
    #pragma warn +aus
 /* #pragma warn +use */ /* This affects the whole file, so don't turn it back on. */
    #pragma warn +par

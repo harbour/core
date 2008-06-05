@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 03:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbsqlit3/hbsqlit3.c
+     * Suppressed GCC warnings in foreign code.
+       Only works for GCC 4.2.x and above. 
+       Please test.
+
 2008-06-05 03:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit3/hbsqlit3.c
      * Suppressed MSVC warnings in foreign code.
