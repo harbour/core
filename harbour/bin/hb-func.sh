@@ -51,6 +51,16 @@ get_hbver()
     echo -n "${MAJOR}.${MINOR}.${REVIS}"
 }
 
+get_hbverstat()
+{
+    local FVER VERSTAT hb_rootdir
+
+    hb_rootdir="${1-.}"
+    FVER="${hb_rootdir}/include/hbver.h"
+    VERSTAT=`sed -e '/HB_VER_STATUS/ !d' -e 's/[^\"]*\"\([^\"]*\).*/\1/g' "${FVER}"`
+    echo -n "${VERSTAT}"
+}
+
 get_solibname()
 {
     local name

@@ -49,6 +49,7 @@ get_rpmmacro()
 cd `dirname $0`
 . bin/hb-func.sh
 hb_ver=`get_hbver`
+hb_verstat=`get_hbverstat`
 
 NEED_RPM="make gcc binutils bash cegcc-mingw32ce"
 
@@ -104,6 +105,7 @@ then
         fi
         mv ${hb_filename} ${RPMDIR}/SOURCES/
         sed -e "s/^%define version .*$/%define version   ${hb_ver}/g" \
+            -e "s/^%define releasen .*$/%define releasen  ${hb_verstat}/g" \
             harbour-ce-spec > ${RPMDIR}/SPECS/harbour-ce.spec
         if which rpmbuild &>/dev/null
         then

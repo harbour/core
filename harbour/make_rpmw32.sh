@@ -71,6 +71,7 @@ CCPATH="$MINGW_DIR/bin"
 cd `dirname $0`
 . bin/hb-func.sh
 hb_ver=`get_hbver`
+hb_verstat=`get_hbverstat`
 
 NEED_RPM="make gcc binutils bash"
 
@@ -126,6 +127,7 @@ then
         fi
         mv ${hb_filename} ${RPMDIR}/SOURCES/
         sed -e "s|^%define version .*$|%define version   ${hb_ver}|g" \
+            -e "s|^%define releasen .*$|%define releasen  ${hb_verstat}|g" \
             -e "s|^%define hb_ccpath .*$|%define hb_ccpath ${CCPATH}|g" \
             -e "s|^%define hb_ccpref .*$|%define hb_ccpref ${CCPREFIX}|g" \
             harbour-w32-spec > ${RPMDIR}/SPECS/harbour-w32.spec
