@@ -1004,21 +1004,16 @@ static void hb_compChkDefineSwitch( HB_COMP_DECL, char *pszSwitch )
    {
       if( pszSwitch[1] == 'd' || pszSwitch[1] == 'D' )
       {
-         char *szDefText = hb_strdup( pszSwitch + 2 ), *pAssign;
-         unsigned int i = 0;
-
-         while( szDefText[i] /*&& !HB_ISOPTSEP( szDefText[i] )*/ )
-            i++;
-
-         szDefText[i] = '\0';
-         if( szDefText )
+         if( pszSwitch[2] )
          {
-            pAssign = strchr( szDefText, '=' );
-            if( pAssign )
-               *pAssign++ = '\0';
-            hb_pp_addDefine( HB_COMP_PARAM->pLex->pPP, szDefText, pAssign );
+            char *szDefText = hb_strdup( pszSwitch + 2 ), *szAssign;
+
+            szAssign = strchr( szDefText, '=' );
+            if( szAssign )
+               *szAssign++ = '\0';
+            hb_pp_addDefine( HB_COMP_PARAM->pLex->pPP, szDefText, szAssign );
+            hb_xfree( szDefText );
          }
-         hb_xfree( szDefText );
       }
       else if( pszSwitch[1] && toupper( pszSwitch[1] ) == 'U' &&
                pszSwitch[2] && toupper( pszSwitch[2] ) == 'N' &&

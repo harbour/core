@@ -498,12 +498,13 @@ static void hb_pp_usage( char * szName )
 {
    printf( "\n" );
    printf( "Syntax:  %s <file[.prg]> [options]\n\n", szName );
-   printf( "Options: -i<path>  \tadd #include file search path\n"
-           "         -c[<file>]\tlook for ChangeLog file\n"
-           "         -o<file>  \tcreates .c file with PP rules\n"
-           "         -v<file>  \tcreates .h file with version information\n"
-           "         -w        \twrite preprocessed (.ppo) input file\n"
-           "         -q        \tdisable information messages\n" );
+   printf( "Options: -d<id>[=<val>]\t#define <id>\n"
+           "         -i<path>      \tadd #include file search path\n"
+           "         -c[<file>]    \tlook for ChangeLog file\n"
+           "         -o<file>      \tcreates .c file with PP rules\n"
+           "         -v<file>      \tcreates .h file with version information\n"
+           "         -w            \twrite preprocessed (.ppo) input file\n"
+           "         -q            \tdisable information messages\n" );
 }
 
 int main( int argc, char * argv[] )
@@ -538,6 +539,22 @@ int main( int argc, char * argv[] )
                      szFile = NULL;
                   else
                      fQuiet = TRUE;
+                  break;
+
+               case 'd':
+               case 'D':
+                  if( !argv[i][2] )
+                     szFile = NULL;
+                  else
+                  {
+                     char *szDefText = hb_strdup( argv[i] + 2 ), *szAssign;
+
+                     szAssign = strchr( szDefText, '=' );
+                     if( szAssign )
+                        *szAssign++ = '\0';
+                     hb_pp_addDefine( pState, szDefText, szAssign );
+                     hb_xfree( szDefText );
+                  }
                   break;
 
                case 'w':

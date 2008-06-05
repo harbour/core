@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 13:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/hbppgen.c
+    + added -d<id>[=<val>] command line switch
+
+  * harbour/source/compiler/cmdcheck.c
+    * cleaned processing -d<id>[=<val>] switches
+
 2008-06-05 12:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     + added get_hbverstat function to extract build status from hbver.h
