@@ -9,7 +9,7 @@
 */
 
 2008-06-05 02:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
-   * hbpgsql/postgres.c
+   * contrib/hbpgsql/postgres.c
      ! Don't request windows.h.
      + Using hb_parptrGC() for PGconn()
      + PQCONNECT() larger buffer for connect string.
@@ -29,7 +29,7 @@
              to work properly for some reason.
      ; TOFIX: Use bh_parptrGC() for PGresult, FILE*.
 
-   * hbpgsql/make_vc.bat
+   * contrib/hbpgsql/make_vc.bat
      + Now uses the .lib provided in the binary package.
        (This needs the current 8.3.1 version)
 
@@ -41,14 +41,14 @@
       try to force wrong substitution
 
 2008-06-05 02:05 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
-   * hbpgsql/make_b32.bat
-   * hbpgsql/make_vc.bat
-   * hbpgsql/tests/bld_b32.bat
-   * hbpgsql/tests/bld_vc.bat
+   * contrib/hbpgsql/make_b32.bat
+   * contrib/hbpgsql/make_vc.bat
+   * contrib/hbpgsql/tests/bld_b32.bat
+   * contrib/hbpgsql/tests/bld_vc.bat
      ! Fixed to use the right .dll to generate the .lib.
      ; TOMERGE [RC1]
 
-   * hbpgsql/tpostgre.prg
+   * contrib/hbpgsql/tpostgre.prg
      * Comment.
 
 2008-06-05 00:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
