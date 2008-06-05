@@ -468,19 +468,6 @@ $(**: = ^
 $(COMMON_LIB)
 !
 #**********************************************************
-# HBPP build rule
-#**********************************************************
-$(HBPP_EXE) :: BasicLibs
-$(HBPP_EXE) :: $(HBPP_EXE_OBJS)
-    IF EXIST "$(HBPP_EXE)" $(DEL) "$(HBPP_EXE)" > NUL
-    $(CC) @&&!
-$(CFLAGS)
--e$(HBPP_EXE)
-$(**: = ^
-)
-$(COMMON_LIB)
-!
-#**********************************************************
 # HBRUN build rule
 #**********************************************************
 $(HBRUN_EXE)  :: BasicLibs BasicExes StdLibs

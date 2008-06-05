@@ -827,19 +827,6 @@ $(COMMON_LIB)
 coredll.lib corelibc.lib
 <<$(KEEPSTATE)
 #**********************************************************
-# HBPP build rule
-#**********************************************************
-$(HBPP_EXE) : $(HBPP_EXE_OBJS)
-    IF EXIST "$(HBPP_EXE)" $(DEL) "$(HBPP_EXE)" > nul
-    $(LINKER) @<<
-$(LDFLAGS)
-/OUT:$(HBPP_EXE)
-$(**: = ^
-)
-$(COMMON_LIB)
-coredll.lib corelibc.lib
-<<
-#**********************************************************
 # HBPPTEST build rule
 #**********************************************************
 $(HBPPTEST_EXE) : $(HBPPTEST_EXE_OBJS)

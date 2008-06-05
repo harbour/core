@@ -251,7 +251,6 @@ HARBOUR_EXE  = $(BIN_DIR)\harbour$(EXEEXT)
 # required (intermediate) utility
 #     to generate pptable.c
 HBPPGEN_EXE  = $(BIN_DIR)\hbppgen$(EXEEXT)
-HBPP_EXE     = $(BIN_DIR)\hbpp$(EXEEXT)
 HBPPTEST_EXE = $(BIN_DIR)\hbpptest$(EXEEXT)
 HBRUN_EXE    = $(BIN_DIR)\hbrun$(EXEEXT)
 HBDOT_EXE    = $(BIN_DIR)\hbdot$(EXEEXT)
@@ -1039,17 +1038,6 @@ HARBOUR_EXE_OBJS = \
 
 #**********************************************************
 
-HBPP_EXE_OBJS = \
-    $(OBJ_DIR)\hbpp$(OBJEXT)     \
-    $(OBJ_DIR)\hbpptbl$(OBJEXT)  \
-    $(OBJ_DIR)\hbppcomp$(OBJEXT) \
-    $(OBJ_DIR)\hbppcore$(OBJEXT) \
-    $(OBJ_DIR)\hbpragma$(OBJEXT) \
-
-#    $(OBJ_DIR)\hbpplib$(OBJEXT)  \
-
-#**********************************************************
-
 HBPPGEN_EXE_OBJS = \
     $(OBJ_DIR)\hbppgen$(OBJEXT)  \
 
@@ -1201,7 +1189,6 @@ HB_BUILD_TARGETS = \
     \
     $(COMPILER_LIB)         \
     $(HARBOUR_EXE)          \
-    $(HBPP_EXE)             \
     \
     $(VM_LIB)               \
     $(RTL_LIB)              \

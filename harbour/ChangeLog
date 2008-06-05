@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-05 12:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * make_b32.mak
+   * make_gcc.mak
+   * make_vc.mak
+   * make_vcce.mak
+   * common.mak
+   * utils/Makefile
+   - utils/hbpp/hbpplib.c
+   - utils/hbpp
+   + contrib/examples/pp
+   + contrib/examples/pp/bld_b32.bat
+     * Moved utils/hbpp -> contrib/examples/pp
+     + Added BCC make file.
+
+   * contrib/examples/pe/bld_b32.bat
+     ! Fixed.
+
 2008-06-05 10:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmysql/mysql.c
      ! Fixes to previous commit.

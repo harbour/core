@@ -413,9 +413,6 @@ $(HBPPGEN_EXE)  : $(HBPPGEN_EXE_OBJS) $(COMMON_LIB)
 $(HARBOUR_EXE)  : $(HARBOUR_EXE_OBJS) $(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
 	$(CC) $(CFLAGS) -o $@ $^ $(HB_OS_LIBS)
 #**********************************************************
-$(HBPP_EXE)     : $(HBPP_EXE_OBJS) $(COMPILER_LIB) $(PP_LIB) $(COMMON_LIB)
-	$(CC) $(CFLAGS) -o $@ $^ $(HB_OS_LIBS)
-#**********************************************************
 $(HBRUN_EXE)    :: $(StdLibs)
 $(HBRUN_EXE)    :: $(HBRUN_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)

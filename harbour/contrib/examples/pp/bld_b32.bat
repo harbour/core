@@ -3,12 +3,9 @@ rem
 rem $Id$
 rem
 
-..\..\..\bin\harbour /n pe       /i..\..\..\include\
-..\..\..\bin\harbour /n editorhi /i..\..\..\include\
-
 echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
-echo -epe.exe >> build.tmp
-echo pe.c editorhi.c editorlo.c >> build.tmp
+echo -epp.exe >> build.tmp
+echo hbpp.c hbppcomp.c hbppcore.c hbpptbl.c hbpragma.c >> build.tmp
 echo hbdebug.lib >> build.tmp
 echo hbvm.lib >> build.tmp
 echo hbrtl.lib >> build.tmp
@@ -25,4 +22,5 @@ echo hbcommon.lib >> build.tmp
 bcc32 @build.tmp
 del build.tmp
 
-pe
+pp
+

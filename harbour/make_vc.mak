@@ -819,18 +819,6 @@ $(**: = ^
 $(COMMON_LIB)
 <<$(KEEPSTATE)
 #**********************************************************
-# HBPP build rule
-#**********************************************************
-$(HBPP_EXE) : $(HBPP_EXE_OBJS)
-    IF EXIST "$(HBPP_EXE)" $(DEL) "$(HBPP_EXE)" > nul
-    $(LINKER) @<<
-$(LDFLAGS)
-/OUT:$(HBPP_EXE)
-$(**: = ^
-)
-$(COMMON_LIB)
-<<$(KEEPSTATE)
-#**********************************************************
 # HBRUN build rule
 #**********************************************************
 $(HBRUN_EXE)  : $(HBRUN_EXE_OBJS)
