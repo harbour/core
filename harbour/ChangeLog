@@ -20,14 +20,14 @@
      ! PQMETADATA() now returns empty array instead of NIL in case 
        of failure (so test.prg won't RTE).
      ! PQCREATETRACE(), PQCLOSETRACE(), PQTRACE() now only activated 
-       in 'NODLL' (temp name) is defined, since passing 'FILE *' to 
+       when 'NODLL' (temp name) is defined, since passing 'FILE *' to 
        .dlls results in crash.
      ; TOFIX? added to PQESCAPEBYTEA()
      * Formatting.
      % Cleanup, optimizations.
      ; NOTE: I've tried test.prg and while it runs, it doesn't seem 
              to work properly for some reason.
-     ; TOFIX: Use bh_parptrGC() for 'PGresult', 'FILE*'.
+     ; TOFIX: Use hb_parptrGC() for 'PGresult', 'FILE*'.
 
    * contrib/hbpgsql/make_vc.bat
      + Now uses the .lib provided in the binary package.
