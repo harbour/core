@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-06 14:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+     + Now throws RTEs when required parameters are missing 
+       or the wrong type. The concept here is that RTEs are 
+       only to catch syntax mistakes, and not errors resulting 
+       from actual libcurl usage/functionality/states.
+       
+   * contrib/hbapollo/apollo.ch
+     * Formatting.
+
 2008-06-06 10:21 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
   * harbour/source/pp/ppcore.c
