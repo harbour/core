@@ -8,15 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-06 17:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * ChangeLog
+     + Marked changes merged with RC1.
+
+   * contrib/hbpgsql/make_b32.bat
+     - Removed special compiler switches no longer necessary. [RC1]
+
 2008-06-06 14:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      + Now throws RTEs when required parameters are missing 
        or the wrong type. The concept here is that RTEs are 
        only to catch syntax mistakes, and not errors resulting 
-       from actual libcurl usage/functionality/states.
+       from actual libcurl usage/functionality/states. [RC1]
        
    * contrib/hbapollo/apollo.ch
-     * Formatting.
+     * Formatting. [RC1]
 
 2008-06-06 10:21 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
@@ -47,8 +54,7 @@
    * contrib/hbapollo/Makefile
    + contrib/hbapollo/apollo.ch
    - contrib/hbapollo/tests/apollo.ch
-     ! apollo.ch file was in tests by mistake.
-     ; TOMERGE [RC1]
+     ! apollo.ch file was in tests by mistake. [RC1]
 
 2008-06-05 20:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    - contrib/examples/pp/hbpp.c
@@ -79,8 +85,7 @@
      ; Please test.
 
    * harbour-w32-spec
-     ! Added 'svn:keywords "Author Date Id Revision"'
-     ; TOMERGE [RC1]
+     ! Added 'svn:keywords "Author Date Id Revision"' [RC1]
 
 2008-06-05 14:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-ce-spec
@@ -142,7 +147,7 @@
      + Added BCC make file.
 
    * contrib/examples/pe/bld_b32.bat
-     ! Fixed.
+     ! Fixed. [RC1]
 
 2008-06-05 10:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmysql/mysql.c
@@ -222,7 +227,7 @@
      ; TOFIX: Use hb_parptrGC() for 'PGresult', 'FILE*'.
 
    * contrib/hbpgsql/make_vc.bat
-     + Now uses the .lib provided in the binary package.
+     + Now uses the .lib provided in the binary package. [RC1]
        (This needs the current 8.3.1 version)
 
 2008-06-05 02:34 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -237,8 +242,7 @@
    * contrib/hbpgsql/make_vc.bat
    * contrib/hbpgsql/tests/bld_b32.bat
    * contrib/hbpgsql/tests/bld_vc.bat
-     ! Fixed to use the right .dll to generate the .lib.
-     ; TOMERGE [RC1]
+     ! Fixed to use the right .dll to generate the .lib. [RC1]
 
    * contrib/hbpgsql/tpostgre.prg
      * Comment.
@@ -278,6 +282,7 @@
        HB_CURLOPT_POSTQUOTE
        HB_CURLOPT_PREQUOTE
        HB_CURLOPT_TELNETOPTIONS
+     ; [RC1]
 
 2008-06-04 20:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit3/hbsqlit3.c
@@ -285,7 +290,7 @@
 
 2008-06-04 20:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
-     * Minor.
+     * Minor. [RC1]
 
    * contrib/hbodbc/todbc.prg
    * contrib/hbodbc/odbc.txt
@@ -298,7 +303,7 @@
 
 2008-06-04 19:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
-     ! Missing cast.
+     ! Missing cast. [RC1]
 
 2008-06-04 18:55 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.ch
@@ -319,28 +324,29 @@
        * HB_CURLOPT_SETDOWNLOADFILE   -> HB_CURLOPT_DL_FILE_SETUP
        * HB_CURLOPT_CLOSEDOWNLOADFILE -> HB_CURLOPT_DL_FILE_CLOSE
        * HB_CURLOPT_SETPROGRESS       -> HB_CURLOPT_PROGRESSBLOCK
+     ; [RC1]
 
 2008-06-04 17:32 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      * Changed all logical options to default to .T.. This 
        way all work the same way, and in real life usage 
        the logical parameter can omitted in most cases.
-       INCOMPATIBLE.
+       INCOMPATIBLE. [RC1]
 
    * contrib/hbcurl/tests/ftp_uldl.prg
-     + Added small example to get a dir listing.
+     + Added small example to get a dir listing. [RC1]
 
 2008-06-04 17:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      + Changed to use hb_parc() (instead of hb_parcx()) for all 
        curl_easy_setopt() string options, so that NULL (NIL) will 
        reset these options to default state, instead of passing 
-       an empty string to them.
+       an empty string to them. [RC1]
 
 2008-06-04 15:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/hbbit.c
      + Added important NOTE about hb_bit*() functions' 
-       relation to the compiler optimization engine.
+       relation to the compiler optimization engine. [RC1]
 
    * source/vm/fm.c
    * source/vm/extrap.c
