@@ -15,7 +15,9 @@ cd `dirname $0`
 
 name="harbour"
 hb_ver=`get_hbver`
+hb_verstat=`get_hbverstat`
 hb_platform=`get_hbplatform`
+[ "${hb_verstat}" = "" ] || hb_ver="${hb_ver}-${hb_verstat}"
 [ "${hb_platform}" = "" ] || hb_platform="-${hb_platform}${HB_BUILDSUF}"
 [ "${HB_XBUILD}" = "" ] || hb_platform="-${HB_XBUILD}"
 hb_archfile="${name}-${hb_ver}${hb_platform}.bin.tar.gz"
