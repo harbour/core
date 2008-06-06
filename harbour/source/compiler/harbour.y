@@ -1389,7 +1389,7 @@ IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1, HB_COMP_
            | IfBegin IfElseIf IfElse EndIf    { hb_compGenJumpHere( $1, HB_COMP_PARAM ); hb_compElseIfFix( HB_COMP_PARAM, $2 ); }
            ;
 
-IfBegin    : IF Expression
+IfBegin    : IF ExpList
                { ++HB_COMP_PARAM->functions.pLast->wIfCounter; hb_compLinePushIfInside( HB_COMP_PARAM ); }
              Crlf
                { HB_COMP_EXPR_DELETE( hb_compExprGenPush( $2, HB_COMP_PARAM ) ); $$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM ); }
@@ -1402,7 +1402,7 @@ IfElse     : ELSE Crlf { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_C
            ;
 
 IfElseIf   : ELSEIF { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); }
-               Expression Crlf
+               ExpList Crlf
                { HB_COMP_EXPR_DELETE( hb_compExprGenPush( $3, HB_COMP_PARAM ) );
                   $<iNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                }
@@ -1412,7 +1412,7 @@ IfElseIf   : ELSEIF { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE
                }
 
            | IfElseIf ELSEIF { HB_COMP_PARAM->functions.pLast->bFlags &= ~ FUN_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); }
-               Expression Crlf
+               ExpList Crlf
                { HB_COMP_EXPR_DELETE( hb_compExprGenPush( $4, HB_COMP_PARAM ) );
                   $<iNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
                }
@@ -1474,7 +1474,7 @@ DoCaseBegin : DoCaseStart
                      }
            ;
 
-Cases      : CASE { hb_compLinePushIfInside( HB_COMP_PARAM ); } Expression Crlf
+Cases      : CASE { hb_compLinePushIfInside( HB_COMP_PARAM ); } ExpList Crlf
                {
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( $3, HB_COMP_PARAM ) );
                   $<iNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
@@ -1486,7 +1486,7 @@ Cases      : CASE { hb_compLinePushIfInside( HB_COMP_PARAM ); } Expression Crlf
                   hb_compGenJumpHere( $<iNumber>5, HB_COMP_PARAM );
                }
 
-           | Cases CASE { hb_compLinePushIfInside( HB_COMP_PARAM ); } Expression Crlf
+           | Cases CASE { hb_compLinePushIfInside( HB_COMP_PARAM ); } ExpList Crlf
                {
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( $4, HB_COMP_PARAM ) );
                   $<iNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
@@ -1505,7 +1505,7 @@ Otherwise  : OTHERWISE {hb_compLinePushIfDebugger( HB_COMP_PARAM ); } Crlf { HB_
                 EmptyStats
            ;
 
-DoWhile    : WhileBegin Expression Crlf
+DoWhile    : WhileBegin ExpList Crlf
                {
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( $2, HB_COMP_PARAM ) );
                   $<lNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
@@ -1554,7 +1554,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                      hb_compForStart( HB_COMP_PARAM, hb_compExprAsSymbol( $<asExpr>2 ), FALSE );
                   }
                }
-             TO Expression StepExpr                   /* 6  7  8 */
+             TO ExpList StepExpr                      /* 6  7  8 */
                {                                      /* 9 */
                   hb_compLoopStart( HB_COMP_PARAM, TRUE );
                   $<lNumber>$ = hb_compGenJump( 0, HB_COMP_PARAM );
@@ -1606,7 +1606,7 @@ ForAssign  : '='
            ;
 
 StepExpr   : /* default step expression */       { $<asExpr>$ = NULL; }
-           | STEP Expression                     { $<asExpr>$ = hb_compExprReduce( $2, HB_COMP_PARAM ); }
+           | STEP ExpList                        { $<asExpr>$ = hb_compExprReduce( $2, HB_COMP_PARAM ); }
            ;
 
 ForStatements : EmptyStats EndForID

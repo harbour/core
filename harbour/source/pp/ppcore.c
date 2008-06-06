@@ -247,7 +247,10 @@ static void hb_pp_error( PHB_PP_STATE pState, char type, int iError, const char 
       hb_pp_disp( pState, buffer );
    }
    if( type != 'W' )
+   {
       pState->fError = TRUE;
+      pState->iErrors++;
+   }
 }
 
 static void hb_pp_operatorsFree( PHB_PP_OPERATOR pOperators, int iOperators )
@@ -5128,6 +5131,7 @@ void hb_pp_init( PHB_PP_STATE pState, BOOL fQuiet, int iCycles, void * cargo,
 void hb_pp_reset( PHB_PP_STATE pState )
 {
    pState->fError = FALSE;
+   pState->iErrors = 0;
 
    hb_pp_InFileFree( pState );
    hb_pp_OutFileFree( pState );
@@ -5409,6 +5413,14 @@ BOOL hb_pp_traceFile( PHB_PP_STATE pState, const char * szTraceFileName, FILE * 
 BOOL hb_pp_lasterror( PHB_PP_STATE pState )
 {
    return pState->fError;
+}
+
+/*
+ * retrieve number of errors which appeared during preprocessing
+ */
+int hb_pp_errorCount( PHB_PP_STATE pState )
+{
+   return pState->iErrors;
 }
 
 /*

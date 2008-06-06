@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-06 10:21 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+  * harbour/source/pp/ppcore.c
+    + added hb_pp_errorCount() which returns total number of errors
+      which appeared during preprocessing
+
+  * harbour/source/pp/hbpp.c
+    * added new switch:
+         -u[<file>] use command def set in <file> (or none)
+    * if neither -o nor -v is specified then -w is default action
+    + added to default search paths INCLUDE envvar
+    * set application exit code to non 0 value if errors appear
+      during preprocessing
+
+  * harbour/source/compiler/harbour.yyc
+  * harbour/source/compiler/harbour.y
+    ! added support for expression list without parenthesis used in
+      statements - Clipper compatibility fix.
+
 2008-06-06 07:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_tgz.sh
     * added build status (RC1) extracted automatically from hbver.h

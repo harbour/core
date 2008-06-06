@@ -580,9 +580,10 @@ typedef struct
    char *   szTraceFileName;     /* trace output file name */
    FILE *   file_trace;          /* trace output file handle */
 
-   BOOL     fError;              /* error during preprocessing */
    BOOL     fQuiet;              /* do not show standard information */
    BOOL     fEscStr;             /* use \ in strings as escape character */
+   BOOL     fError;              /* indicates error in last operation */
+   int      iErrors;             /* number of error during preprocessing */
    int      iCondCompile;        /* current conditional compilation flag, when not 0 disable preprocessing and output */
    int      iCondCount;          /* number of nested #if[n]def directive */
    int      iCondStackSize;      /* size of conditional compilation stack */
@@ -663,6 +664,7 @@ extern char * hb_pp_parseLine( PHB_PP_STATE pState, const char * pLine, ULONG * 
 extern void   hb_pp_addDefine( PHB_PP_STATE pState, const char * szDefName, const char * szDefValue );
 extern void   hb_pp_delDefine( PHB_PP_STATE pState, const char * szDefName );
 extern BOOL   hb_pp_lasterror( PHB_PP_STATE pState );
+extern int    hb_pp_errorCount( PHB_PP_STATE pState );
 extern BOOL   hb_pp_eof( PHB_PP_STATE pState );
 
 extern void   hb_pp_tokenUpper( PHB_PP_TOKEN pToken );

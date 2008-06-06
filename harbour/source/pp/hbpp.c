@@ -500,17 +500,19 @@ static void hb_pp_usage( char * szName )
    printf( "Syntax:  %s <file[.prg]> [options]\n\n", szName );
    printf( "Options: -d<id>[=<val>]\t#define <id>\n"
            "         -i<path>      \tadd #include file search path\n"
+           "         -u[<file>]    \tuse command def set in <file> (or none)\n"
            "         -c[<file>]    \tlook for ChangeLog file\n"
            "         -o<file>      \tcreates .c file with PP rules\n"
            "         -v<file>      \tcreates .h file with version information\n"
-           "         -w            \twrite preprocessed (.ppo) input file\n"
-           "         -q            \tdisable information messages\n" );
+           "         -w            \twrite preprocessed (.ppo) file\n"
+           "         -q            \tdisable information messages\n"
+           "if neither -o nor -v is specified then -w is default action\n\n" );
 }
 
 int main( int argc, char * argv[] )
 {
    char * szFile = NULL, * szRuleFile = NULL, * szVerFile = NULL;
-   char * szLogFile = NULL;
+   char * szStdCh = NULL, * szLogFile = NULL, * szInclude;
    BOOL fQuiet = FALSE, fWrite = FALSE, fChgLog = FALSE;
    char * szChangeLogID = NULL, * szLastEntry = NULL;
    int iSVNID = 0, iResult = 0, i;
@@ -596,6 +598,14 @@ int main( int argc, char * argv[] )
                      szFile = NULL;
                   break;
 
+               case 'u':
+               case 'U':
+                  if( argv[i][2] )
+                     szStdCh = argv[i] + 2;
+                  else
+                     szStdCh = NULL;
+                  break;
+
                default:
                   szFile = NULL;
                   break;
@@ -606,7 +616,22 @@ int main( int argc, char * argv[] )
 
    if( szFile )
    {
+      if( !szRuleFile && !szVerFile )
+         fWrite = TRUE;
+
       hb_pp_init( pState, fQuiet, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
+
+      szInclude = hb_getenv( "INCLUDE" );
+      if( szInclude )
+      {
+         if( szInclude[0] )
+            hb_pp_addSearchPath( pState, szInclude, FALSE );
+         hb_xfree( szInclude );
+      }
+
+      if( szStdCh )
+         hb_pp_readRules( pState, szStdCh );
+
       if( hb_pp_inFile( pState, szFile, TRUE, NULL, TRUE ) )
       {
          if( fWrite )
@@ -632,6 +657,8 @@ int main( int argc, char * argv[] )
          if( iResult == 0 && szVerFile )
             iResult = hb_pp_generateVerInfo( szVerFile, iSVNID,
                                              szChangeLogID, szLastEntry );
+         if( iResult == 0 && hb_pp_errorCount( pState ) > 0 )
+            iResult = 1;
       }
       else
          iResult = 1;
