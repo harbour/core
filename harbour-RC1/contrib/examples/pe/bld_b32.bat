@@ -3,10 +3,10 @@ rem
 rem $Id$
 rem
 
-..\..\bin\harbour /n pe       /i..\..\include\
-..\..\bin\harbour /n editorhi /i..\..\include\
+..\..\..\bin\harbour /n pe       /i..\..\..\include\
+..\..\..\bin\harbour /n editorhi /i..\..\..\include\
 
-echo -O2 -I..\..\include -L..\..\lib > build.tmp
+echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
 echo -epe.exe >> build.tmp
 echo pe.c editorhi.c editorlo.c >> build.tmp
 echo hbdebug.lib >> build.tmp

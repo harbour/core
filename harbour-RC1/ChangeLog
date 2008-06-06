@@ -8,6 +8,103 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-06 17:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbpgsql/make_b32.bat
+     - Removed special compiler switches no longer necessary. [RC1]
+
+   * contrib/hbcurl/hbcurl.c
+     + Now throws RTEs when required parameters are missing 
+       or the wrong type. The concept here is that RTEs are 
+       only to catch syntax mistakes, and not errors resulting 
+       from actual libcurl usage/functionality/states. [RC1]
+       
+   * contrib/hbapollo/apollo.ch
+     * Formatting. [RC1]
+
+   * contrib/hbapollo/common.mak
+   * contrib/hbapollo/Makefile
+   + contrib/hbapollo/apollo.ch
+   - contrib/hbapollo/tests/apollo.ch
+     ! apollo.ch file was in tests by mistake. [RC1]
+
+   * harbour-w32-spec
+     ! Added 'svn:keywords "Author Date Id Revision"' [RC1]
+
+   * contrib/examples/pe/bld_b32.bat
+     ! Fixed. [RC1]
+
+   * contrib/hbpgsql/make_vc.bat
+     + Now uses the .lib provided in the binary package. [RC1]
+       (This needs the current 8.3.1 version)
+
+   * contrib/hbpgsql/make_b32.bat
+   * contrib/hbpgsql/make_vc.bat
+   * contrib/hbpgsql/tests/bld_b32.bat
+   * contrib/hbpgsql/tests/bld_vc.bat
+     ! Fixed to use the right .dll to generate the .lib. [RC1]
+
+   * contrib/hbcurl/hbcurl.ch
+   * contrib/hbcurl/hbcurl.c
+   * contrib/hbcurl/tests/ftp_uldl.prg
+     + Added test for deleting file.
+     + Added dummy upload option:
+       + CURL_EASY_SETOPT() / HB_CURLOPT_UL_NULL_SETUP
+     ! Fixed all the setopt options below. Very old bug in 
+       hbcurl code. Now rename, delete, other custom commands 
+       plus a few other options work properly:
+       HB_CURLOPT_HTTPHEADER
+       HB_CURLOPT_HTTP200ALIASES
+       HB_CURLOPT_QUOTE
+       HB_CURLOPT_POSTQUOTE
+       HB_CURLOPT_PREQUOTE
+       HB_CURLOPT_TELNETOPTIONS
+     ; [RC1]
+
+   * contrib/hbcurl/hbcurl.c
+     * Minor. [RC1]
+
+   * contrib/hbcurl/hbcurl.c
+     ! Missing cast. [RC1]
+
+   * contrib/hbcurl/hbcurl.ch
+   * contrib/hbcurl/hbcurl.c
+   * contrib/hbcurl/tests/ftp_uldl.prg
+     + Added some more test for downloading to memory, 
+       uploading from memory.
+     + Added possibility to download to memory, and upload 
+       from memory:
+       + CURL_EASY_SETOPT() / HB_CURLOPT_UL_BUFF_SETUP
+       + CURL_EASY_SETOPT() / HB_CURLOPT_DL_BUFF_SETUP
+       + CURL_EASY_SETOPT() / HB_CURLOPT_DL_BUFF_GET
+       + CURL_EASY_DL_BUFF_GET() -> <cFileContent>
+     * Changed a few old Harbour setopt defines:
+       (old ones are still working to retain compatibility)
+       * HB_CURLOPT_SETUPLOADFILE     -> HB_CURLOPT_UL_FILE_SETUP
+       * HB_CURLOPT_CLOSEUPLOADFILE   -> HB_CURLOPT_UL_FILE_CLOSE
+       * HB_CURLOPT_SETDOWNLOADFILE   -> HB_CURLOPT_DL_FILE_SETUP
+       * HB_CURLOPT_CLOSEDOWNLOADFILE -> HB_CURLOPT_DL_FILE_CLOSE
+       * HB_CURLOPT_SETPROGRESS       -> HB_CURLOPT_PROGRESSBLOCK
+     ; [RC1]
+
+   * contrib/hbcurl/hbcurl.c
+     * Changed all logical options to default to .T.. This 
+       way all work the same way, and in real life usage 
+       the logical parameter can omitted in most cases.
+       INCOMPATIBLE. [RC1]
+
+   * contrib/hbcurl/tests/ftp_uldl.prg
+     + Added small example to get a dir listing. [RC1]
+
+   * contrib/hbcurl/hbcurl.c
+     + Changed to use hb_parc() (instead of hb_parcx()) for all 
+       curl_easy_setopt() string options, so that NULL (NIL) will 
+       reset these options to default state, instead of passing 
+       an empty string to them. [RC1]
+
+   * source/rtl/hbbit.c
+     + Added important NOTE about hb_bit*() functions' 
+       relation to the compiler optimization engine. [RC1]
+
 2008-06-05 00:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit2/Makefile
      ! Readded last char of last line.
