@@ -1698,7 +1698,6 @@ HB_FUNC( CURL_MULTI_STRERROR )
 #endif
 
 /* NOTE: This returns the number of seconds since January 1st 1970 in the UTC time zone. */
-/* TODO: Add support for second curl_getdate() parameter: 'time_t * now' */
 HB_FUNC( CURL_GETDATE )
 {
    if( ISCHAR( 1 ) )
