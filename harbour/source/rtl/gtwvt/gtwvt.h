@@ -155,6 +155,10 @@ typedef struct
    BOOL     IgnoreWM_SYSCHAR;
 
    BOOL     bMaximized;                   /* Flag is set when window has been maximized */
+   BOOL     bBeingMarked;                 /* Flag to control DOS window like copy operation */
+   BOOL     bBeginMarked;
+   POINT    markStartColRow;
+   POINT    markEndColRow;
 
 } HB_GTWVT, * PHB_GTWVT;
 
@@ -177,5 +181,7 @@ typedef struct
 #ifndef WM_MOUSEWHEEL
 #  define WM_MOUSEWHEEL 0x020A
 #endif
+
+#define SYS_EV_MARK  1000
 
 #endif /* HB_WVT_H_ */

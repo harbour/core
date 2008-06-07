@@ -222,6 +222,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
    pWVT->IgnoreWM_SYSCHAR  = FALSE;
 
    pWVT->bMaximized        = FALSE;
+   pWVT->bBeingMarked      = FALSE;
+   pWVT->bBeginMarked      = FALSE;
 
    return pWVT;
 }
@@ -841,7 +843,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
    HB_SYMBOL_UNUSED( wParam );
 
-   if( ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
+   if( ! pWVT->bBeginMarked && ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
       return;
 
    xy.x = LOWORD( lParam );
@@ -861,9 +863,18 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          break;
 
       case WM_LBUTTONDOWN:
-         keyCode = K_LBUTTONDOWN;
-         break;
-
+      {
+         if( pWVT->bBeginMarked )
+         {
+            pWVT->bBeingMarked = TRUE;
+            pWVT->markStartColRow = colrow;
+         }
+         else
+         {
+            keyCode = K_LBUTTONDOWN;
+            break;
+         }
+      }
       case WM_RBUTTONDOWN:
          keyCode = K_RBUTTONDOWN;
          break;
@@ -873,9 +884,73 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          break;
 
       case WM_LBUTTONUP:
-         keyCode = K_LBUTTONUP;
-         break;
+      {
+         if( pWVT->bBeingMarked )
+         {
+            pWVT->bBeginMarked = FALSE;
+            pWVT->bBeingMarked = FALSE;
 
+            RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+            {
+               ULONG  ulSize;
+               USHORT irow, icol, j, top, left, bottom, right, bytes = 0;
+               BYTE * sBuffer;
+
+               left   = pWVT->markStartColRow.x;
+               top    = pWVT->markStartColRow.y;
+               right  = pWVT->markEndColRow.x;
+               bottom = pWVT->markEndColRow.y;
+               /*  Check boundaries and reverse operation */
+               if( right < left )
+               {
+                  USHORT x = left;
+                  left = right;
+                  right = x;
+               }
+               if( bottom < top )
+               {
+                  USHORT x = top;
+                  top = bottom;
+                  bottom = x;
+               }
+               ulSize = ( (bottom-top+1) * (right - left+1) );
+               sBuffer = hb_xgrab( ulSize );
+
+               for( j = 0, irow = top; irow < bottom; irow++ )
+               {
+                  for( icol = left; icol < right; icol++ )
+                  {
+                     BYTE bColor, bAttr;
+                     USHORT usChar;
+
+                     if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
+                        break;
+
+                     sBuffer[ j ] = (BYTE) usChar;
+                     j++;
+                     bytes++;
+                  }
+               }
+               sBuffer[ bytes ] = '\0';
+
+               if( bytes > 0 )
+               {
+                  hb_gt_w32_setClipboard( pWVT->CodePage == OEM_CHARSET ?
+                                          CF_OEMTEXT : CF_TEXT,
+                                          sBuffer,
+                                          bytes );
+               }
+
+               hb_xfree( sBuffer );
+            }
+            return;
+         }
+         else
+         {
+            keyCode = K_LBUTTONUP;
+            break;
+         }
+      }
       case WM_MBUTTONDOWN:
          keyCode = K_MBUTTONDOWN;
          break;
@@ -889,23 +964,50 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          break;
 
       case WM_MOUSEMOVE:
-         keyState = wParam;
-         switch( keyState )
+      {
+         if( pWVT->bBeingMarked )
          {
-            case MK_LBUTTON:
-               keyCode = K_MMLEFTDOWN;
-               break;
-            case MK_RBUTTON:
-               keyCode = K_MMRIGHTDOWN;
-               break;
-            case MK_MBUTTON:
-               keyCode = K_MMMIDDLEDOWN;
-               break;
-            default:
-               keyCode = K_MOUSEMOVE;
-         }
-         break;
+            POINT a0,a1;
+            RECT  rect = {0,0,0,0};
+            HDC   hdc = GetDC( pWVT->hWnd );
 
+            pWVT->markEndColRow = colrow;
+
+            a0 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markStartColRow.x, ( USHORT ) pWVT->markStartColRow.y );
+            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x, ( USHORT ) pWVT->markEndColRow.y );
+
+            RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+
+            rect.left = a0.x;
+            rect.top = a0.y;
+            rect.right = a1.x;
+            rect.bottom = a1.y;
+
+            InvertRect( hdc, &rect );
+
+            ReleaseDC( pWVT->hWnd, hdc );
+            return;
+         }
+         else
+         {
+            keyState = wParam;
+            switch( keyState )
+            {
+               case MK_LBUTTON:
+                  keyCode = K_MMLEFTDOWN;
+                  break;
+               case MK_RBUTTON:
+                  keyCode = K_MMRIGHTDOWN;
+                  break;
+               case MK_MBUTTON:
+                  keyCode = K_MMMIDDLEDOWN;
+                  break;
+               default:
+                  keyCode = K_MOUSEMOVE;
+            }
+            break;
+         }
+      }
       case WM_MOUSEWHEEL:
          keyState = HIWORD( wParam );
          keyCode = keyState > 0 ? K_MWFORWARD : K_MWBACKWARD;
@@ -1443,6 +1545,12 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                                                        (LPARAM) (rc.bottom-rc.top-(pWVT->PTEXTSIZE.y*1)) );
                return 0;
             }
+
+            case SYS_EV_MARK:
+            {
+               pWVT->bBeginMarked = TRUE;
+               return 0;
+            }
          }
          break;
    }
@@ -1598,6 +1706,12 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[0] );
       hb_gt_wvt_SetWindowTitle( pWVT->hWnd, pFileName->szName );
       hb_xfree( pFileName );
+   }
+
+   /* Create "Mark" prompt in SysMenu to allow console type copy operation */
+   {
+      HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+      AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, "Mark" );
    }
 
    /* SUPER GT initialization */
@@ -2091,13 +2205,9 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             SetCaretBlinkTime( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
-      case GTI_SCREENSIZE:
+      case HB_GTI_SCREENSIZE:
       {
          int iX, iY;
-         RECT rc  = {0,0,0,0};
-         RECT rc1 = {0,0,0,0};
-
-         GetWindowRect( pWVT->hWnd, &rc );
 
          if( !pInfo->pResult )
          {
@@ -2118,11 +2228,11 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       }
-      case GTI_SETTIMER:
+      case HB_GTI_SETTIMER:
          SetTimer( pWVT->hWnd, hb_arrayGetNI( pInfo->pNewVal,1 ), hb_arrayGetNI( pInfo->pNewVal,2 ), NULL );
          break;
 
-      case GTI_KILLTIMER:
+      case HB_GTI_KILLTIMER:
          KillTimer( pWVT->hWnd, hb_itemGetNI( pInfo->pNewVal ) );
          break;
 

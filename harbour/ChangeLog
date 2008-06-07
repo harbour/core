@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-07 15:32 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/source/rtl/gtwvt/gtwvt.c
+   * harbour/source/rtl/gtwvt/gtwvt.h
+     + Added feature to copy text from WVT console just like any console window.
+     /*
+        1. Click on SysMenu icon at the left on Title Bar
+        2. Click on "Mark" option
+        3. Place cursor on top of the text you wish to copy.
+        4. Keep left button down and drag to desired end of console text.
+        5. Release left button.
+        6. Right click anywhere "Paste" operation is supported.
+        7. Copies text is there.
+
+        You can drag the mouse in any direction, copied text will always be in order.
+     */
+
 2008-06-07 20:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbodbc/make_vc.bat
      ! Removed .dll -> .lib conversion for MSVC, 
