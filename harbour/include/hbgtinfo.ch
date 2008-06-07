@@ -118,7 +118,13 @@
 
 #define HB_GTI_ISUNICODE        47  /* is Unicode input/output enabled? */
 
-/* Font weights */              
+/* Additional constants to enhance GT */
+#define HB_GTI_CALLBACK         51  /* holds information about callback fired when a key is pressed */
+#define HB_GTI_SCREENSIZE       52  /* Get/Set height/width of application window in pixels */
+#define HB_GTI_SETTIMER         53  /* Sets the Timer with ID, callback will be defined with GTI_CALLBACK */
+#define HB_GTI_KILLTIMER        54  /* Deactivates the Timer set with GTI_SETTIMER */
+
+/* Font weights */
 #define HB_GTI_FONTW_THIN       1
 #define HB_GTI_FONTW_NORMAL     2
 #define HB_GTI_FONTW_BOLD       3
@@ -145,83 +151,110 @@
 #define HB_GTI_KBD_ACCENT3      16384
 #define HB_GTI_KBD_ACCENT4      32768
 
+/* Callback constants - list has a room for future extensions */
+#define HB_GTI_CB_INKEY         1
+#define HB_GTI_CB_TIMER         2
+#define HB_GTI_CB_ACTIVATE      3
+#define HB_GTI_CB_SETFOCUS      4
+#define HB_GTI_CB_KILLFOCUS     5
+#define HB_GTI_CB_MOUSE         6
+#define HB_GTI_CB_CLOSE         7
+#define HB_GTI_CB_COMMAND       8
+#define HB_GTI_CB_SIZE          9
+
 /* Compatibility #defines */
 
 #ifndef HB_GT_NO_XHB
 
-#define GTI_ISGRAPHIC           HB_GTI_ISGRAPHIC      
-#define GTI_SCREENWIDTH         HB_GTI_SCREENWIDTH    
-#define GTI_SCREENHEIGHT        HB_GTI_SCREENHEIGHT   
-#define GTI_SCREENDEPTH         HB_GTI_SCREENDEPTH    
-#define GTI_FONTSIZE            HB_GTI_FONTSIZE       
-#define GTI_FONTWIDTH           HB_GTI_FONTWIDTH      
-#define GTI_DESKTOPWIDTH        HB_GTI_DESKTOPWIDTH   
-#define GTI_DESKTOPHEIGHT       HB_GTI_DESKTOPHEIGHT  
-#define GTI_DESKTOPDEPTH        HB_GTI_DESKTOPDEPTH   
-#define GTI_COMPATBUFFER        HB_GTI_COMPATBUFFER   
-#define GTI_KBDSHIFTS           HB_GTI_KBDSHIFTS      
-#define GTI_KBDSPECIAL          HB_GTI_KBDSPECIAL     
-#define GTI_KBDALT              HB_GTI_KBDALT         
-#define GTI_FULLSCREEN          HB_GTI_FULLSCREEN     
-#define GTI_KBDSUPPORT          HB_GTI_KBDSUPPORT     
-#define GTI_CLIPBOARDDATA       HB_GTI_CLIPBOARDDATA  
-#define GTI_CLIPBOARDPAST       HB_GTI_CLIPBOARDPAST  
+#define GTI_ISGRAPHIC           HB_GTI_ISGRAPHIC
+#define GTI_SCREENWIDTH         HB_GTI_SCREENWIDTH
+#define GTI_SCREENHEIGHT        HB_GTI_SCREENHEIGHT
+#define GTI_SCREENDEPTH         HB_GTI_SCREENDEPTH
+#define GTI_FONTSIZE            HB_GTI_FONTSIZE
+#define GTI_FONTWIDTH           HB_GTI_FONTWIDTH
+#define GTI_DESKTOPWIDTH        HB_GTI_DESKTOPWIDTH
+#define GTI_DESKTOPHEIGHT       HB_GTI_DESKTOPHEIGHT
+#define GTI_DESKTOPDEPTH        HB_GTI_DESKTOPDEPTH
+#define GTI_COMPATBUFFER        HB_GTI_COMPATBUFFER
+#define GTI_KBDSHIFTS           HB_GTI_KBDSHIFTS
+#define GTI_KBDSPECIAL          HB_GTI_KBDSPECIAL
+#define GTI_KBDALT              HB_GTI_KBDALT
+#define GTI_FULLSCREEN          HB_GTI_FULLSCREEN
+#define GTI_KBDSUPPORT          HB_GTI_KBDSUPPORT
+#define GTI_CLIPBOARDDATA       HB_GTI_CLIPBOARDDATA
+#define GTI_CLIPBOARDPAST       HB_GTI_CLIPBOARDPAST
 #define GTI_CURSORBLINKRATE     HB_GTI_CURSORBLINKRATE
-#define GTI_DESKTOPROWS         HB_GTI_DESKTOPROWS    
-#define GTI_DESKTOPCOLS         HB_GTI_DESKTOPCOLS    
-#define GTI_FONTWEIGHT          HB_GTI_FONTWEIGHT     
-#define GTI_FONTQUALITY         HB_GTI_FONTQUALITY    
-#define GTI_FONTNAME            HB_GTI_FONTNAME       
-#define GTI_CODEPAGE            HB_GTI_CODEPAGE       
-#define GTI_WINTITLE            HB_GTI_WINTITLE       
-#define GTI_ICONFILE            HB_GTI_ICONFILE       
-#define GTI_ICONRES             HB_GTI_ICONRES        
-#define GTI_MOUSESTATUS         HB_GTI_MOUSESTATUS    
-#define GTI_INPUTFD             HB_GTI_INPUTFD        
-#define GTI_OUTPUTFD            HB_GTI_OUTPUTFD       
-#define GTI_ERRORFD             HB_GTI_ERRORFD        
-#define GTI_ESCDELAY            HB_GTI_ESCDELAY       
-#define GTI_VIEWMAXHEIGHT       HB_GTI_VIEWMAXHEIGHT  
-#define GTI_VIEWMAXWIDTH        HB_GTI_VIEWMAXWIDTH   
-#define GTI_VIEWPORTHEIGHT      HB_GTI_VIEWPORTHEIGHT 
-#define GTI_VIEWPORTWIDTH       HB_GTI_VIEWPORTWIDTH  
-#define GTI_STDOUTCON           HB_GTI_STDOUTCON      
-#define GTI_STDERRCON           HB_GTI_STDERRCON      
-#define GTI_ISCTWIN             HB_GTI_ISCTWIN        
-#define GTI_ISMULTIWIN          HB_GTI_ISMULTIWIN     
-#define GTI_GETWIN              HB_GTI_GETWIN         
-#define GTI_SETWIN              HB_GTI_SETWIN         
-#define GTI_NEWWIN              HB_GTI_NEWWIN         
-#define GTI_ADDKEYMAP           HB_GTI_ADDKEYMAP      
-#define GTI_DELKEYMAP           HB_GTI_DELKEYMAP      
+#define GTI_DESKTOPROWS         HB_GTI_DESKTOPROWS
+#define GTI_DESKTOPCOLS         HB_GTI_DESKTOPCOLS
+#define GTI_FONTWEIGHT          HB_GTI_FONTWEIGHT
+#define GTI_FONTQUALITY         HB_GTI_FONTQUALITY
+#define GTI_FONTNAME            HB_GTI_FONTNAME
+#define GTI_CODEPAGE            HB_GTI_CODEPAGE
+#define GTI_WINTITLE            HB_GTI_WINTITLE
+#define GTI_ICONFILE            HB_GTI_ICONFILE
+#define GTI_ICONRES             HB_GTI_ICONRES
+#define GTI_MOUSESTATUS         HB_GTI_MOUSESTATUS
+#define GTI_INPUTFD             HB_GTI_INPUTFD
+#define GTI_OUTPUTFD            HB_GTI_OUTPUTFD
+#define GTI_ERRORFD             HB_GTI_ERRORFD
+#define GTI_ESCDELAY            HB_GTI_ESCDELAY
+#define GTI_VIEWMAXHEIGHT       HB_GTI_VIEWMAXHEIGHT
+#define GTI_VIEWMAXWIDTH        HB_GTI_VIEWMAXWIDTH
+#define GTI_VIEWPORTHEIGHT      HB_GTI_VIEWPORTHEIGHT
+#define GTI_VIEWPORTWIDTH       HB_GTI_VIEWPORTWIDTH
+#define GTI_STDOUTCON           HB_GTI_STDOUTCON
+#define GTI_STDERRCON           HB_GTI_STDERRCON
+#define GTI_ISCTWIN             HB_GTI_ISCTWIN
+#define GTI_ISMULTIWIN          HB_GTI_ISMULTIWIN
+#define GTI_GETWIN              HB_GTI_GETWIN
+#define GTI_SETWIN              HB_GTI_SETWIN
+#define GTI_NEWWIN              HB_GTI_NEWWIN
+#define GTI_ADDKEYMAP           HB_GTI_ADDKEYMAP
+#define GTI_DELKEYMAP           HB_GTI_DELKEYMAP
 #define GTI_ISUNICODE           HB_GTI_ISUNICODE
 
+#define GTI_CALLBACK            HB_GTI_CALLBACK
+#define GTI_SCREENSIZE          HB_GTI_SCREENSIZE
+#define GTI_SETTIMER            HB_GTI_SETTIMER
+#define GTI_KILLTIMER           HB_GTI_KILLTIMER
+
 /* Font weights */
-#define GTI_FONTW_THIN          HB_GTI_FONTW_THIN  
+#define GTI_FONTW_THIN          HB_GTI_FONTW_THIN
 #define GTI_FONTW_NORMAL        HB_GTI_FONTW_NORMAL
-#define GTI_FONTW_BOLD          HB_GTI_FONTW_BOLD  
+#define GTI_FONTW_BOLD          HB_GTI_FONTW_BOLD
 
 /* Font sizes */
-#define GTI_FONTQ_DRAFT         HB_GTI_FONTQ_DRAFT 
+#define GTI_FONTQ_DRAFT         HB_GTI_FONTQ_DRAFT
 #define GTI_FONTQ_NORMAL        HB_GTI_FONTQ_NORMAL
-#define GTI_FONTQ_HIGH          HB_GTI_FONTQ_HIGH  
+#define GTI_FONTQ_HIGH          HB_GTI_FONTQ_HIGH
 
 /* Keyboard shifts states */
-#define GTI_KBD_SHIFT           HB_GTI_KBD_SHIFT     
-#define GTI_KBD_CTRL            HB_GTI_KBD_CTRL      
-#define GTI_KBD_ALT             HB_GTI_KBD_ALT       
-#define GTI_KBD_LWIN            HB_GTI_KBD_LWIN      
-#define GTI_KBD_RWIN            HB_GTI_KBD_RWIN      
-#define GTI_KBD_MENU            HB_GTI_KBD_MENU      
-#define GTI_KBD_INSERT          HB_GTI_KBD_INSERT    
-#define GTI_KBD_SCROLOCK        HB_GTI_KBD_SCROLOCK  
-#define GTI_KBD_NUMLOCK         HB_GTI_KBD_NUMLOCK   
-#define GTI_KBD_CAPSLOCK        HB_GTI_KBD_CAPSLOCK  
-#define GTI_KBD_INALTSEQ        HB_GTI_KBD_INALTSEQ  
-#define GTI_KBD_ACCENT1         HB_GTI_KBD_ACCENT1   
-#define GTI_KBD_ACCENT2         HB_GTI_KBD_ACCENT2   
-#define GTI_KBD_ACCENT3         HB_GTI_KBD_ACCENT3   
-#define GTI_KBD_ACCENT4         HB_GTI_KBD_ACCENT4   
+#define GTI_KBD_SHIFT           HB_GTI_KBD_SHIFT
+#define GTI_KBD_CTRL            HB_GTI_KBD_CTRL
+#define GTI_KBD_ALT             HB_GTI_KBD_ALT
+#define GTI_KBD_LWIN            HB_GTI_KBD_LWIN
+#define GTI_KBD_RWIN            HB_GTI_KBD_RWIN
+#define GTI_KBD_MENU            HB_GTI_KBD_MENU
+#define GTI_KBD_INSERT          HB_GTI_KBD_INSERT
+#define GTI_KBD_SCROLOCK        HB_GTI_KBD_SCROLOCK
+#define GTI_KBD_NUMLOCK         HB_GTI_KBD_NUMLOCK
+#define GTI_KBD_CAPSLOCK        HB_GTI_KBD_CAPSLOCK
+#define GTI_KBD_INALTSEQ        HB_GTI_KBD_INALTSEQ
+#define GTI_KBD_ACCENT1         HB_GTI_KBD_ACCENT1
+#define GTI_KBD_ACCENT2         HB_GTI_KBD_ACCENT2
+#define GTI_KBD_ACCENT3         HB_GTI_KBD_ACCENT3
+#define GTI_KBD_ACCENT4         HB_GTI_KBD_ACCENT4
+
+/* Callback constants - list has a room for future extensions */
+#define GTI_CB_INKEY            HB_GTI_CB_INKEY
+#define GTI_CB_TIMER            HB_GTI_CB_TIMER
+#define GTI_CB_ACTIVATE         HB_GTI_CB_ACTIVATE
+#define GTI_CB_SETFOCUS         HB_GTI_CB_SETFOCUS
+#define GTI_CB_KILLFOCUS        HB_GTI_CB_KILLFOCUS
+#define GTI_CB_MOUSE            HB_GTI_CB_MOUSE
+#define GTI_CB_CLOSE            HB_GTI_CB_CLOSE
+#define GTI_CB_COMMAND          HB_GTI_CB_COMMAND
+#define GTI_CB_SIZE             HB_GTI_CB_SIZE
 
 #endif
 

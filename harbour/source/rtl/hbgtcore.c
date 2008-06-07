@@ -152,6 +152,52 @@ static void hb_gt_def_Free( PHB_GT pGT )
    if( pGT->iColorCount > 0 )
       hb_xfree( pGT->pColor );
 
+   /* Pritpal Bedi */
+   if( hb_itemType( pGT->pDynSymINKEY ) & HB_IT_BLOCK )
+      hb_itemRelease( pGT->pDynSymINKEY );
+   if( pGT->pDynSymINKEYdata )
+      hb_itemRelease( pGT->pDynSymINKEYdata );
+
+   if( hb_itemType( pGT->pDynSymCLOSE ) & HB_IT_BLOCK )
+      hb_itemRelease( pGT->pDynSymCLOSE );
+   if( pGT->pDynSymCLOSEdata )
+      hb_itemRelease( pGT->pDynSymCLOSEdata );
+
+   if( hb_itemType( pGT->pDynSymCOMMAND ) & HB_IT_BLOCK )
+      hb_itemRelease( pGT->pDynSymCOMMAND );
+   if( pGT->pDynSymCOMMANDdata )
+      hb_itemRelease( pGT->pDynSymCOMMANDdata );
+
+   if( hb_itemType( pGT->pDynSymTIMER ) & HB_IT_BLOCK )
+      hb_itemRelease( pGT->pDynSymTIMER );
+   if( pGT->pDynSymTIMERdata )
+      hb_itemRelease( pGT->pDynSymTIMERdata );
+
+   if( hb_itemType( pGT->pDynSymACTIVATE ) & HB_IT_BLOCK )
+      hb_itemRelease( pGT->pDynSymACTIVATE );
+   if( pGT->pDynSymACTIVATEdata )
+      hb_itemRelease( pGT->pDynSymACTIVATEdata );
+
+   if( hb_itemType( pGT->pDynSymSETFOCUS ) & HB_IT_BLOCK )
+      hb_itemRelease( pGT->pDynSymSETFOCUS );
+   if( pGT->pDynSymSETFOCUSdata )
+      hb_itemRelease( pGT->pDynSymSETFOCUSdata );
+
+   if( hb_itemType( pGT->pDynSymKILLFOCUS ) & HB_IT_BLOCK )
+      hb_itemRelease( pGT->pDynSymKILLFOCUS );
+   if( pGT->pDynSymKILLFOCUSdata )
+      hb_itemRelease( pGT->pDynSymKILLFOCUSdata );
+
+   if( hb_itemType( pGT->pDynSymMOUSE ) & HB_IT_BLOCK )
+      hb_itemRelease( pGT->pDynSymMOUSE );
+   if( pGT->pDynSymMOUSEdata )
+      hb_itemRelease( pGT->pDynSymMOUSEdata );
+
+   if( hb_itemType( pGT->pDynSymSIZE ) & HB_IT_BLOCK )
+      hb_itemRelease( pGT->pDynSymSIZE );
+   if( pGT->pDynSymSIZEdata )
+      hb_itemRelease( pGT->pDynSymSIZEdata );
+
    if( s_curGT == pGT )
       s_curGT = NULL;
    hb_xfree( pGT );
@@ -1539,6 +1585,92 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+      case GTI_CALLBACK:
+      {
+         BOOL bSet  = TRUE;
+         int iElems = hb_arrayLen( pInfo->pNewVal );
+         PHB_DYNS pDynSym;
+
+         if( iElems >= 2 )
+         {
+           if( hb_itemType( hb_arrayGetItemPtr( pInfo->pNewVal,2 ) ) & HB_IT_STRING )
+           {
+              pDynSym = hb_dynsymFind( hb_arrayGetCPtr( pInfo->pNewVal,2 ) );
+           }
+           else if( hb_itemType( hb_arrayGetItemPtr( pInfo->pNewVal,2 ) ) & HB_IT_BLOCK )
+           {
+              pDynSym = hb_itemNew( hb_arrayGetItemPtr( pInfo->pNewVal,2 ) );
+           }
+
+           if ( pDynSym )
+           {
+              switch ( hb_arrayGetNI( pInfo->pNewVal,1 ) )
+              {
+                 case GTI_CB_CLOSE:
+                    pGT->pDynSymCLOSE = pDynSym;
+                    if ( iElems >= 3 )
+                    {
+                       pGT->pDynSymCLOSEdata = hb_itemNew( hb_arrayGetItemPtr( pInfo->pNewVal,3 ) );
+                    }
+                    break;
+
+                  case GTI_CB_INKEY:
+                    pGT->pDynSymINKEY = pDynSym;
+                    if ( iElems >= 3 )
+                    {
+                       pGT->pDynSymINKEYdata = hb_itemNew( hb_arrayGetItemPtr( pInfo->pNewVal,3 ) );
+                    }
+                    break;
+
+                 case GTI_CB_TIMER:
+                    pGT->pDynSymTIMER = pDynSym;
+                    if ( iElems >= 3 )
+                    {
+                       pGT->pDynSymTIMERdata = hb_itemNew( hb_arrayGetItemPtr( pInfo->pNewVal,3 ) );
+                    }
+                    break;
+
+                 case GTI_CB_ACTIVATE:
+                    pGT->pDynSymACTIVATE = pDynSym;
+                    break;
+
+                 case GTI_CB_SETFOCUS:
+                    pGT->pDynSymSETFOCUS = pDynSym;
+                    if ( iElems >= 3 )
+                    {
+                       pGT->pDynSymSETFOCUSdata = hb_itemNew( hb_arrayGetItemPtr( pInfo->pNewVal,3 ) );
+                    }
+                    break;
+
+                 case GTI_CB_KILLFOCUS:
+                    pGT->pDynSymKILLFOCUS = pDynSym;
+                    if ( iElems >= 3 )
+                    {
+                       pGT->pDynSymKILLFOCUSdata = hb_itemNew( hb_arrayGetItemPtr( pInfo->pNewVal,3 ) );
+                    }
+                    break;
+
+                 case GTI_CB_MOUSE:
+                    pGT->pDynSymMOUSE = pDynSym;
+                    if ( iElems >= 3 )
+                    {
+                       pGT->pDynSymKILLFOCUSdata = hb_itemNew( hb_arrayGetItemPtr( pInfo->pNewVal,3 ) );
+                    }
+                    break;
+
+                 case GTI_CB_SIZE:
+                    pGT->pDynSymSIZE = pDynSym;
+                    if ( iElems >= 3 )
+                    {
+                       pGT->pDynSymSIZEdata = hb_itemNew( hb_arrayGetItemPtr( pInfo->pNewVal,3 ) );
+                    }
+                    break;
+              }
+           }
+         }
+         break;
+      }
+
       default:
          return FALSE;
    }
@@ -1868,7 +2000,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          }
          if( iKey >= 32 && iKey <= 255 )
          {
-            char szVal[2]; 
+            char szVal[2];
             szVal[ 0 ] = ( char ) iKey;
             szVal[ 1 ] = '\0';
             HB_GTSELF_WRITECON( pGT, ( BYTE * ) szVal, 1 );
@@ -1999,7 +2131,7 @@ static void hb_gt_def_ColdArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, in
    if( iLeft > iRight )
    {
       i = iLeft;
-      iLeft = iRight; 
+      iLeft = iRight;
       iRight = i;
    }
    while( iTop <= iBottom )
@@ -2032,7 +2164,7 @@ static void hb_gt_def_ExposeArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
    if( iLeft > iRight )
    {
       i = iLeft;
-      iLeft = iRight; 
+      iLeft = iRight;
       iRight = i;
    }
    while( iTop <= iBottom )

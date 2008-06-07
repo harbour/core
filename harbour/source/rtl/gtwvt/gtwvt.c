@@ -221,7 +221,253 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
 
    pWVT->IgnoreWM_SYSCHAR  = FALSE;
 
+   pWVT->bMaximized        = FALSE;
+
    return pWVT;
+}
+
+static void hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int message, WPARAM wParam, LPARAM lParam )
+{
+   switch( message )
+   {
+      case GTI_CB_CLOSE:
+      {
+         if( pWVT->pGT->pDynSymCLOSE )
+         {
+            if( hb_vmRequestReenter() )
+            {
+               if( hb_itemType( pWVT->pGT->pDynSymCLOSE ) & HB_IT_BLOCK )
+               {
+                  hb_vmPushEvalSym();
+                  hb_vmPush( pWVT->pGT->pDynSymCLOSE );
+               }
+               else
+               {
+                  hb_vmPushDynSym( pWVT->pGT->pDynSymCLOSE );
+                  hb_vmPushNil();
+               }
+               hb_vmPushNumInt( message );
+               hb_vmPushNumInt( pWVT->iHandle );
+               if ( pWVT->pGT->pDynSymCLOSEdata )
+               {
+                  hb_vmPushItemRef( pWVT->pGT->pDynSymCLOSEdata );
+               }
+               else
+               {
+                  hb_vmPushNil();
+               }
+               hb_vmDo( 3 );
+               hb_vmRequestRestore();
+            }
+         }
+         break;
+      }
+
+      case GTI_CB_INKEY:
+      {
+         if( pWVT->pGT->pDynSymINKEY )
+         {
+            if( hb_vmRequestReenter() )
+            {
+               if( hb_itemType( pWVT->pGT->pDynSymINKEY ) & HB_IT_BLOCK )
+               {
+                  hb_vmPushEvalSym();
+                  hb_vmPush( pWVT->pGT->pDynSymINKEY );
+               }
+               else
+               {
+                  hb_vmPushDynSym( pWVT->pGT->pDynSymINKEY );
+                  hb_vmPushNil();
+               }
+               hb_vmPushNumInt( message );
+               hb_vmPushNumInt( pWVT->iHandle );
+               if ( pWVT->pGT->pDynSymINKEYdata )
+               {
+                  hb_vmPushItemRef( pWVT->pGT->pDynSymINKEYdata );
+               }
+               else
+               {
+                  hb_vmPushNil();
+               }
+               hb_vmPushNumInt( wParam );
+               hb_vmDo( 4 );
+               hb_vmRequestRestore();
+            }
+         }
+         break;
+      }
+
+      case GTI_CB_SIZE:
+      {
+         if( pWVT->pGT->pDynSymSIZE )
+         {
+            if( hb_vmRequestReenter() )
+            {
+               if( hb_itemType( pWVT->pGT->pDynSymSIZE ) & HB_IT_BLOCK )
+               {
+                  hb_vmPushEvalSym();
+                  hb_vmPush( pWVT->pGT->pDynSymSIZE );
+               }
+               else
+               {
+                  hb_vmPushDynSym( pWVT->pGT->pDynSymSIZE );
+                  hb_vmPushNil();
+               }
+               hb_vmPushNumInt( message );
+               hb_vmPushNumInt( pWVT->iHandle );
+               if ( pWVT->pGT->pDynSymSIZEdata )
+               {
+                  hb_vmPushItemRef( pWVT->pGT->pDynSymSIZEdata );
+               }
+               else
+               {
+                  hb_vmPushNil();
+               }
+               hb_vmPushInteger( (int) wParam );
+               hb_vmPushInteger( (int) lParam );
+               hb_vmDo( 5 );
+               hb_vmRequestRestore();
+            }
+         }
+         break;
+      }
+
+      case GTI_CB_SETFOCUS:
+      {
+         if( pWVT->pGT->pDynSymSETFOCUS )
+         {
+            if( hb_vmRequestReenter() )
+            {
+               if( hb_itemType( pWVT->pGT->pDynSymSETFOCUS ) & HB_IT_BLOCK )
+               {
+                  hb_vmPushEvalSym();
+                  hb_vmPush( pWVT->pGT->pDynSymSETFOCUS );
+               }
+               else
+               {
+                  hb_vmPushDynSym( pWVT->pGT->pDynSymSETFOCUS );
+                  hb_vmPushNil();
+               }
+               hb_vmPushNumInt( message );
+               hb_vmPushNumInt( pWVT->iHandle );
+               if ( pWVT->pGT->pDynSymSETFOCUSdata )
+               {
+                  hb_vmPushItemRef( pWVT->pGT->pDynSymSETFOCUSdata );
+               }
+               else
+               {
+                  hb_vmPushNil();
+               }
+               hb_vmDo( 3 );
+               hb_vmRequestRestore();
+            }
+         }
+         break;
+      }
+
+      case GTI_CB_KILLFOCUS:
+      {
+         if( pWVT->pGT->pDynSymKILLFOCUS )
+         {
+            if( hb_vmRequestReenter() )
+            {
+               if( hb_itemType( pWVT->pGT->pDynSymKILLFOCUS ) & HB_IT_BLOCK )
+               {
+                  hb_vmPushEvalSym();
+                  hb_vmPush( pWVT->pGT->pDynSymKILLFOCUS );
+               }
+               else
+               {
+                  hb_vmPushDynSym( pWVT->pGT->pDynSymKILLFOCUS );
+                  hb_vmPushNil();
+               }
+               hb_vmPushNumInt( message );
+               hb_vmPushNumInt( pWVT->iHandle );
+               if ( pWVT->pGT->pDynSymKILLFOCUSdata )
+               {
+                  hb_vmPushItemRef( pWVT->pGT->pDynSymKILLFOCUSdata );
+               }
+               else
+               {
+                  hb_vmPushNil();
+               }
+               hb_vmDo( 3 );
+               hb_vmRequestRestore();
+            }
+         }
+         break;
+      }
+
+      case GTI_CB_COMMAND:
+      {
+         if( pWVT->pGT->pDynSymCOMMAND )
+         {
+            if( hb_vmRequestReenter() )
+            {
+               if( hb_itemType( pWVT->pGT->pDynSymCOMMAND ) & HB_IT_BLOCK )
+               {
+                  hb_vmPushEvalSym();
+                  hb_vmPush( pWVT->pGT->pDynSymCOMMAND );
+               }
+               else
+               {
+                  hb_vmPushDynSym( pWVT->pGT->pDynSymCOMMAND );
+                  hb_vmPushNil();
+               }
+               hb_vmPushNumInt( message );
+               hb_vmPushNumInt( pWVT->iHandle );
+               if ( pWVT->pGT->pDynSymCOMMANDdata )
+               {
+                  hb_vmPushItemRef( pWVT->pGT->pDynSymCOMMANDdata );
+               }
+               else
+               {
+                  hb_vmPushNil();
+               }
+               hb_vmPushNumInt( wParam );
+               hb_vmPushNumInt( lParam );
+               hb_vmDo( 5 );
+               hb_vmRequestRestore();
+            }
+         }
+         break;
+      }
+
+      case GTI_CB_TIMER:
+      {
+         if( pWVT->pGT->pDynSymTIMER )
+         {
+            if( hb_vmRequestReenter() )
+            {
+               if( hb_itemType( pWVT->pGT->pDynSymTIMER ) & HB_IT_BLOCK )
+               {
+                  hb_vmPushEvalSym();
+                  hb_vmPush( pWVT->pGT->pDynSymTIMER );
+               }
+               else
+               {
+                  hb_vmPushDynSym( pWVT->pGT->pDynSymTIMER );
+                  hb_vmPushNil();
+               }
+               hb_vmPushNumInt( message );
+               hb_vmPushNumInt( pWVT->iHandle );
+               if ( pWVT->pGT->pDynSymTIMERdata )
+               {
+                  hb_vmPushItemRef( pWVT->pGT->pDynSymTIMERdata );
+               }
+               else
+               {
+                  hb_vmPushNil();
+               }
+               hb_vmPushNumInt( wParam );
+               hb_vmPushNumInt( lParam );
+               hb_vmDo( 5 );
+               hb_vmRequestRestore();
+            }
+         }
+         break;
+      }
+   }
 }
 
 static BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRow, int iCol )
@@ -453,6 +699,9 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
       iPos = 0;
    if( iPos != pWVT->keyPointerOut )
       pWVT->keyPointerIn = iPos;
+
+   /* Pritpal Bedi - 06 Jun 2008 */
+   hb_gt_wvt_FireEvent( pWVT, GTI_CB_INKEY, iKey, 0 );
 }
 
 static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
@@ -1121,6 +1370,10 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_CLOSE:  /* Clicked 'X' on system menu */
+         /* NOTE: this follows more code . will post later as it needs to be cleaned */
+         /* But it demonstrates the concept */
+         hb_gt_wvt_FireEvent( pWVT, GTI_CB_CLOSE, wParam, lParam );
+
          if( hb_set.HB_SET_CANCEL )
             hb_vmRequestCancel();
          return 0;
@@ -1149,6 +1402,46 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          }
          return 0;
 */
+      /* Pritpal Bedi - 06 Jun 2008 */
+      case WM_ACTIVATE:
+         hb_gt_wvt_FireEvent( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? GTI_CB_KILLFOCUS : GTI_CB_SETFOCUS ), wParam, lParam );
+         return 0;
+
+      case WM_COMMAND:
+         hb_gt_wvt_FireEvent( pWVT, GTI_CB_COMMAND, wParam, lParam );
+         return 0;
+
+      case WM_SIZE:
+         if( !pWVT->bMaximized )
+         {
+            hb_gt_wvt_FireEvent( pWVT, GTI_CB_SIZE, (WPARAM) LOWORD( lParam ), (LPARAM) HIWORD( lParam ) );
+         }
+         else
+         {
+            pWVT->bMaximized = FALSE;
+         }
+         return 0;
+      /* NOTE: This message has more powerful features than what I implemented as above commented out */
+      case WM_TIMER:
+         hb_gt_wvt_FireEvent( pWVT, GTI_CB_TIMER, wParam, lParam );
+         return 0;
+
+      case WM_SYSCOMMAND:
+         switch(wParam)
+         {
+            case SC_MAXIMIZE:
+            {
+               RECT rc = {0,0,0,0};
+               pWVT->bMaximized = TRUE;
+
+               SystemParametersInfo( SPI_GETWORKAREA,0, &rc, 0 );
+
+               hb_gt_wvt_FireEvent( pWVT, GTI_CB_SIZE, (WPARAM) (rc.right-rc.left-pWVT->PTEXTSIZE.x),
+                                                       (LPARAM) (rc.bottom-rc.top-(pWVT->PTEXTSIZE.y*1)) );
+               return 0;
+            }
+         }
+         break;
    }
 
    return DefWindowProc( hWnd, message, wParam, lParam );

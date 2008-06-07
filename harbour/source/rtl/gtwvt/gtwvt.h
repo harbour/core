@@ -154,6 +154,8 @@ typedef struct
 
    BOOL     IgnoreWM_SYSCHAR;
 
+   BOOL     bMaximized;                   /* Flag is set when window has been maximized */
+
 } HB_GTWVT, * PHB_GTWVT;
 
 /* xHarbour compatible definitions */
