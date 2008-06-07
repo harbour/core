@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-07 09:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     ! Fixed cursor width to be synced properly after 
+       a font change.
+     ! Fixed cursor SC_NORMAL height to be calculated 
+       from the font height, instead of being a static 
+       number. [RC1_TOMERGE]
+
+   * contrib/hbcurl/hbcurl.c
+     + Added RTEs when wrong parameter was passed 
+       to the remaining functions:
+       CURL_EASY_STRERROR()
+       CURL_SHARE_STRERROR()
+       CURL_MULTI_STRERROR()
+       CURL_GETDATE()
+
 2008-06-06 23:30 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c   
      ! hb_gt_wvt_Info() 
