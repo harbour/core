@@ -1702,7 +1702,7 @@ HB_FUNC( CURL_MULTI_STRERROR )
 HB_FUNC( CURL_GETDATE )
 {
    if( ISCHAR( 1 ) )
-      hb_retnint( ( HB_LONG ) curl_getdate( hb_parcx( 1 ), NULL ) );
+      hb_retnint( ( HB_LONG ) curl_getdate( hb_parc( 1 ), NULL ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_GETDATE", HB_ERR_ARGS_BASEPARAMS );
 }
