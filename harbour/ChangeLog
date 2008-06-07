@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-06 20:45 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+   * harbour/source/rtl/hbgtcore.c
+   * harbour/include/hbgtcore.h
+   * harbour/include/hbgtinfo.ch
+   * harbour/source/rtl/gtwvt/gtwvt.c
+   * harbour/source/rtl/gtwvt/gtwvt.h
+     + Added building blocks for CallBacks to be set with Hb_GtInfo( GTI_* ).
+   * harbour/tests/wvtext.prg
+     + Test program to taste few of the callbacks.
+
+     /* This also sets the ground for futuristic multi-window GT 
+        I have kept MW GT code out of current implementation.
+        This implementation does not interfere nor affects current functionality.
+
+        A work in progress.
+
+        Viktor, I have found a way to implement 'consol shearing, working on it
+        and for that to happen these building blocks are a must.
+
+        Przemek, please review the structure of <PHB_PGT>. I have added a few members.
+        Please bear with my meagre knowledge if I did something stupid, just correct it.
+     */
+
 2008-06-06 17:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * ChangeLog
      + Marked changes merged with RC1.
