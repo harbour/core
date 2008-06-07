@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-07 09:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+     + Added RTEs when wrong parameter was passed 
+       to the remaining functions:
+       CURL_EASY_STRERROR()
+       CURL_SHARE_STRERROR()
+       CURL_MULTI_STRERROR()
+       CURL_GETDATE()
+       [RC1]
+
+   * contrib/hbcurl/hbcurl.c
+     % Minor opt. [RC1]
+
+   ; Not bugfixes per se, but I didn't want to leave a gap 
+     in behaviour. This are the final finishes to this lib.
+
 2008-06-07 09:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      ! Fixed cursor width to be synced properly after 

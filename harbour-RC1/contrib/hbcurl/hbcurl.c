@@ -1673,23 +1673,36 @@ HB_FUNC( CURL_VERSION_INFO )
 
 HB_FUNC( CURL_EASY_STRERROR )
 {
-   hb_retc( curl_easy_strerror( ( CURLcode ) hb_parnl( 1 ) ) );
+   if( ISNUM( 1 ) )
+      hb_retc( curl_easy_strerror( ( CURLcode ) hb_parnl( 1 ) ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_STRERROR", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( CURL_SHARE_STRERROR )
 {
-   hb_retc( curl_share_strerror( ( CURLSHcode ) hb_parnl( 1 ) ) );
+   if( ISNUM( 1 ) )
+      hb_retc( curl_share_strerror( ( CURLSHcode ) hb_parnl( 1 ) ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_SHARE_STRERROR", HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( CURL_MULTI_STRERROR )
 {
-   hb_retc( curl_multi_strerror( ( CURLMcode ) hb_parnl( 1 ) ) );
+   if( ISNUM( 1 ) )
+      hb_retc( curl_multi_strerror( ( CURLMcode ) hb_parnl( 1 ) ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_MULTI_STRERROR", HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif
 
 /* NOTE: This returns the number of seconds since January 1st 1970 in the UTC time zone. */
+/* TODO: Add support for second curl_getdate() parameter: 'time_t * now' */
 HB_FUNC( CURL_GETDATE )
 {
-   hb_retnint( ( HB_LONG ) curl_getdate( hb_parcx( 1 ), NULL ) );
+   if( ISCHAR( 1 ) )
+      hb_retnint( ( HB_LONG ) curl_getdate( hb_parc( 1 ), NULL ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_GETDATE", HB_ERR_ARGS_BASEPARAMS );
 }
