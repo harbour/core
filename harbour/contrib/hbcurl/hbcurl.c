@@ -1620,7 +1620,7 @@ HB_FUNC( CURL_ESCAPE )
       curl_free( buffer );
    }
    else
-      hb_retc_null();
+      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_ESCAPE", HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* NOTE: Obsolete, superceded by curl_easy_unescape() */
@@ -1633,7 +1633,7 @@ HB_FUNC( CURL_UNESCAPE )
       curl_free( buffer );
    }
    else
-      hb_retc_null();
+      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_UNESCAPE", HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif
