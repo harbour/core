@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-06 23:30 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/source/rtl/gtwvt/gtwvt.c   
+     ! hb_gt_wvt_Info() 
+       + GTI_SCREENSIZE
+         Hb_GtInfo( GTI_SCREENSIZE, { nPxlWidth, nPxlHeight } )
+         Try to adjust the mode to rows and columns best fitting nPxlWidth, nPxlHeight.
+       + GTI_SETTIMER
+         Hb_GtInfo( GTI_SETTIMER, { nTimerId, nMiliSeconds } ) 
+       + GTI_KILLTIMER 
+         Hb_GtInfo( GTI_KILLTIMER, nTimerId ) 
+
 2008-06-06 20:45 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * harbour/source/rtl/hbgtcore.c
    * harbour/include/hbgtcore.h

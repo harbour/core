@@ -2088,6 +2088,41 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             SetCaretBlinkTime( hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
+      case GTI_SCREENSIZE:
+      {
+         int iX, iY;
+         RECT rc  = {0,0,0,0};
+         RECT rc1 = {0,0,0,0};
+
+         GetWindowRect( pWVT->hWnd, &rc );
+
+         if( !pInfo->pResult )
+         {
+            pInfo->pResult = hb_itemNew( NULL );
+         }
+         hb_arrayNew( pInfo->pResult, 2 );
+         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult,2 ), pWVT->PTEXTSIZE.y * pWVT->ROWS );
+         hb_itemPutNI( hb_arrayGetItemPtr( pInfo->pResult,1 ), pWVT->PTEXTSIZE.x * pWVT->COLS );
+         iY = hb_itemGetNI( hb_arrayGetItemPtr( pInfo->pNewVal,2 ) );
+         iX = hb_itemGetNI( hb_arrayGetItemPtr( pInfo->pNewVal,1 ) );
+
+         if ( iY  > 0 )
+         {
+            BOOL bOldCentre = pWVT->CentreWindow;
+            pWVT->CentreWindow = pWVT->bMaximized ? TRUE : FALSE;
+            HB_GTSELF_SETMODE( pGT, (USHORT) ( iY / pWVT->PTEXTSIZE.y ), (USHORT) ( iX / pWVT->PTEXTSIZE.x ) );
+            pWVT->CentreWindow = bOldCentre;
+         }
+         break;
+      }
+      case GTI_SETTIMER:
+         SetTimer( pWVT->hWnd, hb_arrayGetNI( pInfo->pNewVal,1 ), hb_arrayGetNI( pInfo->pNewVal,2 ), NULL );
+         break;
+
+      case GTI_KILLTIMER:
+         KillTimer( pWVT->hWnd, hb_itemGetNI( pInfo->pNewVal ) );
+         break;
+
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
