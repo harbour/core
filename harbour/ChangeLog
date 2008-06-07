@@ -18,12 +18,12 @@
    * contrib/hbcurl/hbcurl.ch
    * contrib/hbcurl/tests/ftp_uldl.prg
      ! Cleanup the rare case when curl_easy_init() returns NULL.
-       Functions always return the same type, even in case libcurl 
+       Functions now always return the same type, even in case libcurl 
        failed to initialize.
-     + Returns value for above cases is now HB_CURLE_ERROR (== -1).
-     ! CURL_*() passed pointers now are also checked for the pointer's 
+     + Return values for above cases is now HB_CURLE_ERROR (== -1).
+     ! CURL_*() passed pointers now are also checked for the pointer 
        type, and RTE is thrown if they are not HBCURL ones. So for 
-       example in the very rare case that any hbcurl functions would 
+       example in the very rare case when any hbcurl functions would 
        get passed a GC pointer returned by another API, an argument 
        error would be thrown now.
      ! CURL_ESCAPE()/CURL_UNESCAPE() fixed picked parameter ordinal.
