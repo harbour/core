@@ -7,7 +7,7 @@ ROOT = ../../
 C_SOURCES=\
 	dates2.c \
 	hb_f.c \
-	mathx.c \
+	spd.c \
 	strfmt.c \
 	stringsx.c \
 

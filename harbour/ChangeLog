@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-07 13:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmisc/common.mak
+   * contrib/hbmisc/Makefile
+   - contrib/hbmisc/mathx.c
+   + contrib/hbmisc/spd.c
+     - Removed math functions equivalent with CT3 ones.
+       INCOMPATIBLE: If your code used CEIL() from hbmisc, please 
+                     update it to use CEILING() from hbct. Functionality 
+                     is the same.
+     + Added _SPD() function.
+       Contributed by Javier (jarabal at gmail.com)
+
 2008-06-07 09:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      % Minor opt. [RC1]
