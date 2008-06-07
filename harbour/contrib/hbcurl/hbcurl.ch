@@ -362,6 +362,7 @@
 
 /* curl result codes. */
 
+#define HB_CURLE_ERROR                        -1 /* request not passed to libcurl (libcurl not initialized or unknown parameter) */
 #define HB_CURLE_OK                           0
 #define HB_CURLE_UNSUPPORTED_PROTOCOL         1  /* */
 #define HB_CURLE_FAILED_INIT                  2  /* */

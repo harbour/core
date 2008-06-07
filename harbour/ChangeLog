@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-07 20:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbodbc/make_vc.bat
+     ! Removed .dll -> .lib conversion for MSVC, 
+       since the .lib is provided by the MS SDK anyway.
+     ; [TOMERGE RC1]
+
+   * contrib/hbcurl/hbcurl.c
+   * contrib/hbcurl/hbcurl.ch
+   * contrib/hbcurl/tests/ftp_uldl.prg
+     ! Cleanup the rare case when curl_easy_init() returns NULL.
+       Functions always return the same type, even in case libcurl 
+       failed to initialize.
+     + Returns value for above cases is now HB_CURLE_ERROR (== -1).
+     ! CURL_*() passed pointers now are also checked for the pointer's 
+       type, and RTE is thrown if they are not HBCURL ones. So for 
+       example in the very rare case that any hbcurl functions would 
+       get passed a GC pointer returned by another API, an argument 
+       error would be thrown now.
+     ! CURL_ESCAPE()/CURL_UNESCAPE() fixed picked parameter ordinal.
+     + CURL_ESCAPE()/CURL_UNESCAPE() added parameter checking.
+     ; [TOMERGE RC1]
+
+   * contrib/rddads/adsmgmnt.c
+     * Minor formatting.
+
 2008-06-07 13:26 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/common.mak
    * contrib/hbmisc/Makefile
