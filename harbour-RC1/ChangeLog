@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-07 09:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     ! Fixed cursor width to be synced properly after 
+       a font change.
+     ! Fixed cursor SC_NORMAL height to be calculated 
+       from the font height, instead of being a static 
+       number. [RC1]
+     % Few ""s -> NULL (also from RC1, but I forgot this 
+       one from the ChangeLog) [RC1]
+
 2008-06-06 17:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbpgsql/make_b32.bat
      - Removed special compiler switches no longer necessary. [RC1]
