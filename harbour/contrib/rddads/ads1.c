@@ -398,7 +398,7 @@ static ERRCODE hb_adsCheckLock( ADSAREAP pArea )
       u32RetVal = AdsIsRecordLocked( pArea->hTable, 0, &u16Locked );
       if( u32RetVal != AE_SUCCESS )
       {
-         hb_errRT_DBCMD( EG_UNLOCKED, u32RetVal, "Lock Required by TestRecLocks", "ADSISRECORDLOCKED" );
+         hb_errRT_DBCMD( EG_UNLOCKED, u32RetVal, "Lock Required by ADSTESTRECLOCKS()", &hb_errFuncName );
          return FAILURE;
       }
       if( !u16Locked )
@@ -5046,27 +5046,21 @@ ADSAREAP hb_adsGetWorkAreaPointer( void )
 HB_FUNC( ADSGETRELKEYPOS )
 {
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
    if( pArea )
-   {
       hb_retnd( adsGetRelPos( pArea, pArea->hOrdCurrent ) );
-   }
    else
-   {
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETRELKEYPOS" );
-   }
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSSETRELKEYPOS )
 {
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
+
    if( pArea )
-   {
       adsSetRelPos( pArea, pArea->hOrdCurrent, hb_parnd( 1 ) );
-   }
    else
-   {
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSSETRELKEYPOS" );
-   }
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSCUSTOMIZEAOF )
@@ -5132,7 +5126,5 @@ HB_FUNC( ADSCUSTOMIZEAOF )
       hb_retnl( u32RetVal );
    }
    else
-   {
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCUSTOMIZEAOF" );
-   }
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }

@@ -3826,15 +3826,15 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
 
    switch( iType )
    {
-      case GFX_ACQUIRESCREEN:
+      case HB_GFX_ACQUIRESCREEN:
          /* TODO: */
          break;
 
-      case GFX_RELEASESCREEN:
+      case HB_GFX_RELEASESCREEN:
          /* TODO: */
          break;
 
-      case GFX_MAKECOLOR:
+      case HB_GFX_MAKECOLOR:
          /* TODO: */
          color.red = iTop * 256;
          color.green = iLeft * 256;
@@ -3844,23 +3844,23 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          iRet = color.pixel;
          break;
 
-      case GFX_CLIPTOP:
+      case HB_GFX_CLIPTOP:
          iRet = wnd->ClipRect.y;
          break;
 
-      case GFX_CLIPLEFT:
+      case HB_GFX_CLIPLEFT:
          iRet = wnd->ClipRect.x;
          break;
 
-      case GFX_CLIPBOTTOM:
+      case HB_GFX_CLIPBOTTOM:
          iRet = wnd->ClipRect.y + wnd->ClipRect.height - 1;
          break;
 
-      case GFX_CLIPRIGHT:
+      case HB_GFX_CLIPRIGHT:
          iRet = wnd->ClipRect.x + wnd->ClipRect.width - 1;
          break;
 
-      case GFX_SETCLIP:
+      case HB_GFX_SETCLIP:
          wnd->ClipRect.y = iTop;
          wnd->ClipRect.x = iLeft;
          wnd->ClipRect.width = iBottom;
@@ -3868,43 +3868,43 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          XSetClipRectangles( wnd->dpy, wnd->gc, 0, 0, &wnd->ClipRect, 1, YXBanded );
          break;
 
-      case GFX_DRAWINGMODE:
-         iRet = GFX_MODE_SOLID;
+      case HB_GFX_DRAWINGMODE:
+         iRet = HB_GFX_MODE_SOLID;
          break;
 
-      case GFX_GETPIXEL:
+      case HB_GFX_GETPIXEL:
          /* TODO: */
          iRet = 0;
          break;
 
-      case GFX_PUTPIXEL:
+      case HB_GFX_PUTPIXEL:
          XSetForeground( wnd->dpy, wnd->gc, iBottom );
          XDrawPoint( wnd->dpy, wnd->drw, wnd->gc, iLeft, iTop );
          hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iLeft, iTop );
          break;
 
-      case GFX_LINE:
+      case HB_GFX_LINE:
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XDrawLine( wnd->dpy, wnd->drw, wnd->gc,
                     iLeft, iTop, iRight, iBottom );
          hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iRight, iBottom );
          break;
 
-      case GFX_RECT:
+      case HB_GFX_RECT:
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XDrawRectangle( wnd->dpy, wnd->drw, wnd->gc,
                          iLeft, iTop, iRight - iLeft, iBottom - iTop );
          hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iRight, iBottom );
          break;
 
-      case GFX_FILLEDRECT:
+      case HB_GFX_FILLEDRECT:
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                          iLeft, iTop, iRight - iLeft, iBottom - iTop );
          hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iRight, iBottom );
          break;
 
-      case GFX_CIRCLE:
+      case HB_GFX_CIRCLE:
          XSetForeground( wnd->dpy, wnd->gc, iRight );
          XDrawArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iBottom, iBottom, 0, 360*64 );
@@ -3912,7 +3912,7 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
                                        iLeft + iBottom, iTop + iBottom );
          break;
 
-      case GFX_FILLEDCIRCLE:
+      case HB_GFX_FILLEDCIRCLE:
          XSetForeground( wnd->dpy, wnd->gc, iRight );
          XFillArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iBottom, iBottom, 0, 360*64 );
@@ -3920,7 +3920,7 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
                                        iLeft + iBottom, iTop + iBottom );
          break;
 
-      case GFX_ELLIPSE:
+      case HB_GFX_ELLIPSE:
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XDrawArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iRight, iBottom, 0, 360*64 );
@@ -3928,7 +3928,7 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
                                        iLeft + iRight, iTop + iBottom );
          break;
 
-      case GFX_FILLEDELLIPSE:
+      case HB_GFX_FILLEDELLIPSE:
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XFillArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iRight, iBottom, 0, 360*64 );
@@ -3936,7 +3936,7 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
                                        iLeft + iRight, iTop + iBottom );
          break;
 
-      case GFX_FLOODFILL:
+      case HB_GFX_FLOODFILL:
          /* TODO: */
          hb_gt_xwc_InvalidatePts( wnd, 0, 0, wnd->width, wnd->height );
          break;

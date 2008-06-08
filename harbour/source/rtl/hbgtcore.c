@@ -1606,7 +1606,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
            {
               switch ( hb_arrayGetNI( pInfo->pNewVal,1 ) )
               {
-                 case GTI_CB_CLOSE:
+                 case HB_GTE_CLOSE:
                     pGT->pDynSymCLOSE = pDynSym;
                     if ( iElems >= 3 )
                     {
@@ -1614,7 +1614,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                     }
                     break;
 
-                  case GTI_CB_INKEY:
+                 case HB_GTE_INKEY:
                     pGT->pDynSymINKEY = pDynSym;
                     if ( iElems >= 3 )
                     {
@@ -1622,7 +1622,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                     }
                     break;
 
-                 case GTI_CB_TIMER:
+                 case HB_GTE_TIMER:
                     pGT->pDynSymTIMER = pDynSym;
                     if ( iElems >= 3 )
                     {
@@ -1630,11 +1630,11 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                     }
                     break;
 
-                 case GTI_CB_ACTIVATE:
+                 case HB_GTE_ACTIVATE:
                     pGT->pDynSymACTIVATE = pDynSym;
                     break;
 
-                 case GTI_CB_SETFOCUS:
+                 case HB_GTE_SETFOCUS:
                     pGT->pDynSymSETFOCUS = pDynSym;
                     if ( iElems >= 3 )
                     {
@@ -1642,7 +1642,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                     }
                     break;
 
-                 case GTI_CB_KILLFOCUS:
+                 case HB_GTE_KILLFOCUS:
                     pGT->pDynSymKILLFOCUS = pDynSym;
                     if ( iElems >= 3 )
                     {
@@ -1650,7 +1650,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                     }
                     break;
 
-                 case GTI_CB_MOUSE:
+                 case HB_GTE_MOUSE:
                     pGT->pDynSymMOUSE = pDynSym;
                     if ( iElems >= 3 )
                     {
@@ -1658,7 +1658,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                     }
                     break;
 
-                 case GTI_CB_SIZE:
+                 case HB_GTE_SIZE:
                     pGT->pDynSymSIZE = pDynSym;
                     if ( iElems >= 3 )
                     {

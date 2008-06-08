@@ -469,7 +469,7 @@ static void PHB_CURL_ret( PHB_CURL from )
    hb_retptrGC( ph );
 }
 
-static void ** PHB_CURL_is( int iParam )
+static void * PHB_CURL_is( int iParam )
 {
    return hb_parptrGC( PHB_CURL_release, iParam );
 }
@@ -494,7 +494,7 @@ HB_FUNC( CURL_EASY_DUPLICATE )
    if( PHB_CURL_is( 1 ) )
       PHB_CURL_ret( PHB_CURL_par( 1 ) );
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_DUPLICATE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( CURL_EASY_CLEANUP )
@@ -513,7 +513,7 @@ HB_FUNC( CURL_EASY_CLEANUP )
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_CLEANUP", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #if LIBCURL_VERSION_NUM >= 0x071201
@@ -528,7 +528,7 @@ HB_FUNC( CURL_EASY_RESET )
          PHB_CURL_free( hb_curl, FALSE );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_RESET", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif
@@ -544,7 +544,7 @@ HB_FUNC( CURL_EASY_PAUSE )
       hb_retnl( hb_curl ? ( long ) curl_easy_pause( hb_curl->curl, hb_parni( 2 ) ) : HB_CURLE_ERROR );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_PAUSE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif
@@ -558,7 +558,7 @@ HB_FUNC( CURL_EASY_PERFORM )
       hb_retnl( hb_curl ? ( long ) curl_easy_perform( hb_curl->curl ) : HB_CURLE_ERROR );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_PERFORM", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #if LIBCURL_VERSION_NUM >= 0x071802
@@ -583,7 +583,7 @@ HB_FUNC( CURL_EASY_SEND )
       hb_retnl( ( long ) res );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_SEND", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* NOTE: curl_easy_recv( curl, @cBuffer ) -> nResult */
@@ -613,7 +613,7 @@ HB_FUNC( CURL_EASY_RECV )
       hb_retnl( ( long ) res );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_RECV", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif
@@ -1314,7 +1314,7 @@ HB_FUNC( CURL_EASY_SETOPT )
       hb_retnl( ( long ) res );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_SETOPT", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Harbour extension. */
@@ -1330,7 +1330,7 @@ HB_FUNC( CURL_EASY_DL_BUFF_GET )
          hb_retc_null();
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_DL_BUFF_GET", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #define HB_CURL_INFO_TYPE_INVALID       0
@@ -1553,7 +1553,7 @@ HB_FUNC( CURL_EASY_GETINFO )
       hb_stornl( ( long ) res, 3 );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_GETINFO", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #if LIBCURL_VERSION_NUM >= 0x071504
@@ -1574,7 +1574,7 @@ HB_FUNC( CURL_EASY_ESCAPE )
          hb_retc_null();
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_ESCAPE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( CURL_EASY_UNESCAPE )
@@ -1594,7 +1594,7 @@ HB_FUNC( CURL_EASY_UNESCAPE )
          hb_retc_null();
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_UNESCAPE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif
@@ -1614,7 +1614,7 @@ HB_FUNC( CURL_ESCAPE )
       curl_free( buffer );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_ESCAPE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* NOTE: Obsolete, superceded by curl_easy_unescape() */
@@ -1627,7 +1627,7 @@ HB_FUNC( CURL_UNESCAPE )
       curl_free( buffer );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_UNESCAPE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif
@@ -1686,7 +1686,7 @@ HB_FUNC( CURL_EASY_STRERROR )
    if( ISNUM( 1 ) )
       hb_retc( curl_easy_strerror( ( CURLcode ) hb_parnl( 1 ) ) );
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_EASY_STRERROR", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( CURL_SHARE_STRERROR )
@@ -1694,7 +1694,7 @@ HB_FUNC( CURL_SHARE_STRERROR )
    if( ISNUM( 1 ) )
       hb_retc( curl_share_strerror( ( CURLSHcode ) hb_parnl( 1 ) ) );
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_SHARE_STRERROR", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( CURL_MULTI_STRERROR )
@@ -1702,7 +1702,7 @@ HB_FUNC( CURL_MULTI_STRERROR )
    if( ISNUM( 1 ) )
       hb_retc( curl_multi_strerror( ( CURLMcode ) hb_parnl( 1 ) ) );
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_MULTI_STRERROR", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif
@@ -1713,5 +1713,5 @@ HB_FUNC( CURL_GETDATE )
    if( ISCHAR( 1 ) )
       hb_retnint( ( HB_LONG ) curl_getdate( hb_parc( 1 ), NULL ) );
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, "CURL_GETDATE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2010, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
 }

@@ -88,6 +88,8 @@ HB_FUNC( DIRREMOVE )
 
 /* NOTE: Clipper 5.3 undocumented */
 
+#ifdef HB_C52_UNDOC
+
 HB_FUNC( ISDISK )
 {
    hb_retl( ( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 ) ?
@@ -112,3 +114,4 @@ HB_FUNC( DISKNAME )
 
 #endif
 
+#endif

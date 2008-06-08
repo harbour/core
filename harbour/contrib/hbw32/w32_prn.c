@@ -206,24 +206,16 @@ HB_FUNC( WIN32_DELETEDC )
 
 HB_FUNC( WIN32_STARTPAGE )
 {
-   BOOL Result = FALSE;
    HDC hDC = win32_HDC_par( 1 );
 
-   if( hDC )
-      Result = ( StartPage( hDC ) > 0 );
-
-   hb_retl( Result );
+   hb_retl( hDC && StartPage( hDC ) > 0 );
 }
 
 HB_FUNC( WIN32_ENDPAGE )
 {
-   BOOL Result = FALSE;
    HDC hDC = win32_HDC_par( 1 );
 
-   if( hDC )
-      Result = ( EndPage( hDC ) > 0 );
-
-   hb_retl( Result );
+   hb_retl( hDC && EndPage( hDC ) > 0 );
 }
 
 HB_FUNC( WIN32_TEXTOUT )
@@ -334,24 +326,16 @@ HB_FUNC( WIN32_GETCHARSIZE )
 
 HB_FUNC( WIN32_GETDEVICECAPS )
 {
-   LONG Result = 0;
    HDC hDC = win32_HDC_par( 1 );
 
-   if( hDC && ISNUM( 2 ) )
-      Result = ( LONG ) GetDeviceCaps( hDC, hb_parnl( 2 ) );
-
-   hb_retnl( Result );
+   hb_retnl( hDC && ISNUM( 2 ) ? ( long ) GetDeviceCaps( hDC, hb_parnl( 2 ) ) : 0 );
 }
 
 HB_FUNC( WIN32_SETMAPMODE )
 {
-   LONG Result = 0;
    HDC hDC = win32_HDC_par( 1 );
 
-   if( hDC && ISNUM( 2 ) )
-      Result = SetMapMode( hDC, hb_parnl( 2 ) );
-
-   hb_retnl( Result );
+   hb_retnl( hDC && ISNUM( 2 ) ? SetMapMode( hDC, hb_parnl( 2 ) ) : 0 );
 }
 
 HB_FUNC( WIN32_MULDIV )
@@ -406,9 +390,10 @@ HB_FUNC( WIN32_GETPRINTERFONTNAME )
 
    if( hDC )
    {
-      unsigned char cFont[128];
+      unsigned char cFont[ 128 ];
 
-      GetTextFace( hDC, 127, ( LPTSTR ) cFont );
+      GetTextFace( hDC, sizeof( cFont ) - 1, ( LPTSTR ) cFont );
+
       hb_retc( ( char * ) cFont );
    }
    else
@@ -417,13 +402,9 @@ HB_FUNC( WIN32_GETPRINTERFONTNAME )
 
 HB_FUNC( WIN32_BITMAPSOK )
 {
-   BOOL Result = FALSE;
    HDC hDC = win32_HDC_par( 1 );
 
-   if( hDC )
-      Result = ( GetDeviceCaps( hDC, RASTERCAPS ) & RC_STRETCHDIB );
-
-   hb_retl( Result );
+   hb_retl( hDC && ( GetDeviceCaps( hDC, RASTERCAPS ) & RC_STRETCHDIB ) );
 }
 
 HB_FUNC( WIN32_SETDOCUMENTPROPERTIES )
@@ -654,8 +635,6 @@ HB_FUNC( WIN32_FILLRECT )
    FillRect( hDC, &rct, hBrush );
 
    DeleteObject( hBrush );
-
-   hb_ret();
 }
 
 HB_FUNC( WIN32_LINETO )

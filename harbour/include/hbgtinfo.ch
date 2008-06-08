@@ -151,18 +151,20 @@
 #define HB_GTI_KBD_ACCENT3      16384
 #define HB_GTI_KBD_ACCENT4      32768
 
-/* Callback constants - list has a room for future extensions */
-#define HB_GTI_CB_INKEY         1
-#define HB_GTI_CB_TIMER         2
-#define HB_GTI_CB_ACTIVATE      3
-#define HB_GTI_CB_SETFOCUS      4
-#define HB_GTI_CB_KILLFOCUS     5
-#define HB_GTI_CB_MOUSE         6
-#define HB_GTI_CB_CLOSE         7
-#define HB_GTI_CB_COMMAND       8
-#define HB_GTI_CB_SIZE          9
+/* Harbour GT callback events - WORK IN PROGRESS */
+#define HB_GTE_INKEY            1
+#define HB_GTE_TIMER            2
+#define HB_GTE_ACTIVATE         3
+#define HB_GTE_SETFOCUS         4
+#define HB_GTE_KILLFOCUS        5
+#define HB_GTE_MOUSE            6
+#define HB_GTE_CLOSE            7
+#define HB_GTE_COMMAND          8
+#define HB_GTE_SIZE             9
 
-/* Compatibility #defines */
+/* Compatibility #defines.
+   These codes are deprecated, _don't use them_. Please upgrade to the above versions. 
+   For developers: Don't add any more new codes to this section. */
 
 #ifndef HB_GT_NO_XHB
 
@@ -244,17 +246,6 @@
 #define GTI_KBD_ACCENT2         HB_GTI_KBD_ACCENT2
 #define GTI_KBD_ACCENT3         HB_GTI_KBD_ACCENT3
 #define GTI_KBD_ACCENT4         HB_GTI_KBD_ACCENT4
-
-/* Callback constants - list has a room for future extensions */
-#define GTI_CB_INKEY            HB_GTI_CB_INKEY
-#define GTI_CB_TIMER            HB_GTI_CB_TIMER
-#define GTI_CB_ACTIVATE         HB_GTI_CB_ACTIVATE
-#define GTI_CB_SETFOCUS         HB_GTI_CB_SETFOCUS
-#define GTI_CB_KILLFOCUS        HB_GTI_CB_KILLFOCUS
-#define GTI_CB_MOUSE            HB_GTI_CB_MOUSE
-#define GTI_CB_CLOSE            HB_GTI_CB_CLOSE
-#define GTI_CB_COMMAND          HB_GTI_CB_COMMAND
-#define GTI_CB_SIZE             HB_GTI_CB_SIZE
 
 #endif
 

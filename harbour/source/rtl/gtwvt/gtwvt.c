@@ -232,7 +232,7 @@ static void hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int message, WPARAM wParam, LPA
 {
    switch( message )
    {
-      case GTI_CB_CLOSE:
+      case HB_GTE_CLOSE:
       {
          if( pWVT->pGT->pDynSymCLOSE )
          {
@@ -265,7 +265,7 @@ static void hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int message, WPARAM wParam, LPA
          break;
       }
 
-      case GTI_CB_INKEY:
+      case HB_GTE_INKEY:
       {
          if( pWVT->pGT->pDynSymINKEY )
          {
@@ -299,7 +299,7 @@ static void hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int message, WPARAM wParam, LPA
          break;
       }
 
-      case GTI_CB_SIZE:
+      case HB_GTE_SIZE:
       {
          if( pWVT->pGT->pDynSymSIZE )
          {
@@ -334,7 +334,7 @@ static void hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int message, WPARAM wParam, LPA
          break;
       }
 
-      case GTI_CB_SETFOCUS:
+      case HB_GTE_SETFOCUS:
       {
          if( pWVT->pGT->pDynSymSETFOCUS )
          {
@@ -367,7 +367,7 @@ static void hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int message, WPARAM wParam, LPA
          break;
       }
 
-      case GTI_CB_KILLFOCUS:
+      case HB_GTE_KILLFOCUS:
       {
          if( pWVT->pGT->pDynSymKILLFOCUS )
          {
@@ -400,7 +400,7 @@ static void hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int message, WPARAM wParam, LPA
          break;
       }
 
-      case GTI_CB_COMMAND:
+      case HB_GTE_COMMAND:
       {
          if( pWVT->pGT->pDynSymCOMMAND )
          {
@@ -435,7 +435,7 @@ static void hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int message, WPARAM wParam, LPA
          break;
       }
 
-      case GTI_CB_TIMER:
+      case HB_GTE_TIMER:
       {
          if( pWVT->pGT->pDynSymTIMER )
          {
@@ -772,7 +772,7 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
       pWVT->keyPointerIn = iPos;
 
    /* Pritpal Bedi - 06 Jun 2008 */
-   hb_gt_wvt_FireEvent( pWVT, GTI_CB_INKEY, iKey, 0 );
+   hb_gt_wvt_FireEvent( pWVT, HB_GTE_INKEY, iKey, 0 );
 }
 
 static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
@@ -1479,7 +1479,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_CLOSE:  /* Clicked 'X' on system menu */
          /* NOTE: this follows more code . will post later as it needs to be cleaned */
          /* But it demonstrates the concept */
-         hb_gt_wvt_FireEvent( pWVT, GTI_CB_CLOSE, wParam, lParam );
+         hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE, wParam, lParam );
 
          if( hb_set.HB_SET_CANCEL )
             hb_vmRequestCancel();
@@ -1511,17 +1511,17 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 */
       /* Pritpal Bedi - 06 Jun 2008 */
       case WM_ACTIVATE:
-         hb_gt_wvt_FireEvent( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? GTI_CB_KILLFOCUS : GTI_CB_SETFOCUS ), wParam, lParam );
+         hb_gt_wvt_FireEvent( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_GTE_KILLFOCUS : HB_GTE_SETFOCUS ), wParam, lParam );
          return 0;
 
       case WM_COMMAND:
-         hb_gt_wvt_FireEvent( pWVT, GTI_CB_COMMAND, wParam, lParam );
+         hb_gt_wvt_FireEvent( pWVT, HB_GTE_COMMAND, wParam, lParam );
          return 0;
 
       case WM_SIZE:
          if( !pWVT->bMaximized )
          {
-            hb_gt_wvt_FireEvent( pWVT, GTI_CB_SIZE, (WPARAM) LOWORD( lParam ), (LPARAM) HIWORD( lParam ) );
+            hb_gt_wvt_FireEvent( pWVT, HB_GTE_SIZE, (WPARAM) LOWORD( lParam ), (LPARAM) HIWORD( lParam ) );
          }
          else
          {
@@ -1530,7 +1530,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
       /* NOTE: This message has more powerful features than what I implemented as above commented out */
       case WM_TIMER:
-         hb_gt_wvt_FireEvent( pWVT, GTI_CB_TIMER, wParam, lParam );
+         hb_gt_wvt_FireEvent( pWVT, HB_GTE_TIMER, wParam, lParam );
          return 0;
 
       case WM_SYSCOMMAND:
@@ -1543,7 +1543,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
                SystemParametersInfo( SPI_GETWORKAREA,0, &rc, 0 );
 
-               hb_gt_wvt_FireEvent( pWVT, GTI_CB_SIZE, (WPARAM) (rc.right-rc.left-pWVT->PTEXTSIZE.x),
+               hb_gt_wvt_FireEvent( pWVT, HB_GTE_SIZE, (WPARAM) (rc.right-rc.left-pWVT->PTEXTSIZE.x),
                                                        (LPARAM) (rc.bottom-rc.top-(pWVT->PTEXTSIZE.y*1)) );
                return 0;
             }
@@ -2291,16 +2291,16 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
    {
       switch( iType )
       {
-         case GFX_ACQUIRESCREEN:
-         case GFX_RELEASESCREEN:
+         case HB_GFX_ACQUIRESCREEN:
+         case HB_GFX_RELEASESCREEN:
             iRet = 1;
             break;
 
-         case GFX_MAKECOLOR:
+         case HB_GFX_MAKECOLOR:
             iRet = (iTop << 16) | (iLeft << 8) | ( iBottom );
             break;
 
-         case GFX_PUTPIXEL:
+         case HB_GFX_PUTPIXEL:
             SetGFXContext( iBottom );
 
             MoveToEx( hdc, iLeft, iTop, NULL );
@@ -2310,7 +2310,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_LINE:
+         case HB_GFX_LINE:
             SetGFXContext( iColor );
 
             MoveToEx( hdc, iLeft, iTop, NULL );
@@ -2320,7 +2320,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_RECT:
+         case HB_GFX_RECT:
          {
             RECT r;
 
@@ -2337,7 +2337,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
          }
-         case GFX_FILLEDRECT:
+         case HB_GFX_FILLEDRECT:
             SetGFXContext( iColor );
 
             Rectangle( hdc, iLeft, iTop, iRight, iBottom );
@@ -2346,7 +2346,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_CIRCLE:
+         case HB_GFX_CIRCLE:
             SetGFXContext( iRight );
 
             Arc( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
@@ -2355,7 +2355,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_FILLEDCIRCLE:
+         case HB_GFX_FILLEDCIRCLE:
             SetGFXContext( iRight );
 
             Ellipse( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2 );
@@ -2364,7 +2364,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_ELLIPSE:
+         case HB_GFX_ELLIPSE:
             SetGFXContext( iColor );
 
             Arc( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
@@ -2373,7 +2373,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_FILLEDELLIPSE:
+         case HB_GFX_FILLEDELLIPSE:
             SetGFXContext( iColor );
 
             Ellipse( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2 );
@@ -2382,7 +2382,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_FLOODFILL:
+         case HB_GFX_FLOODFILL:
             SetGFXContext( iBottom );
 
             FloodFill( hdc, iLeft, iTop, iColor );

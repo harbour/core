@@ -282,10 +282,10 @@ HB_FUNC( ADSISTABLELOCKED )
       if( AdsIsTableLocked( pArea->hTable, &pbLocked ) == AE_SUCCESS )
          hb_retl( pbLocked != 0 );
       else
-         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISTABLELOCKED" );
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISTABLELOCKED" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSISRECORDLOCKED )
@@ -305,10 +305,10 @@ HB_FUNC( ADSISRECORDLOCKED )
       if( AdsIsRecordLocked( pArea->hTable, ulRec, &pbLocked ) == AE_SUCCESS )
          hb_retl( pbLocked != 0 );
       else
-         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISRECORDLOCKED" );
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISRECORDLOCKED" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSLOCKING )
@@ -363,7 +363,7 @@ HB_FUNC( ADSGETTABLECHARTYPE )
       hb_retni( usCharType );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETTABLECHARTYPE" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSSETDEFAULT )
@@ -431,10 +431,10 @@ HB_FUNC( ADSBLOB2FILE )
                                    ( UNSIGNED8 * ) szFieldName,
                                    ( UNSIGNED8 * ) szFileName ) == AE_SUCCESS );
       else
-         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSBLOB2FILE" );
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSBLOB2FILE" );
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSFILE2BLOB )
@@ -453,10 +453,10 @@ HB_FUNC( ADSFILE2BLOB )
                                    ( UNSIGNED16 ) ( hb_pcount() > 2 ? hb_parni( 3 ) : ADS_BINARY ) /* usBinaryType */,
                                    ( UNSIGNED8 * ) szFileName ) == AE_SUCCESS );
       else
-         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSFILE2BLOB" );
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSFILE2BLOB" );
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, &hb_errFuncName );
 }
 
 /* 2nd parameter: unsupported Bag Name. */
@@ -520,10 +520,10 @@ HB_FUNC( ADSKEYNO )
          hb_retnl( pulKey );
       }
       else
-         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSKEYNO" );
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSKEYNO" );
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, &hb_errFuncName );
 }
 
 /* 2nd parameter: unsupported Bag Name. */
@@ -640,10 +640,10 @@ HB_FUNC( ADSKEYCOUNT )
          hb_retnl( pulKey );
       }
       else
-         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSKEYCOUNT" );
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSKEYCOUNT" );
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSADDCUSTOMKEY )
@@ -674,10 +674,10 @@ HB_FUNC( ADSADDCUSTOMKEY )
       else if( pArea->hOrdCurrent != 0 )
          hb_retnl( ( long ) AdsAddCustomKey( pArea->hOrdCurrent ) );
       else
-         hb_errRT_DBCMD( EG_NOORDER, 2001, NULL, "ADSADDCUSTOMKEY" );
+         hb_errRT_DBCMD( EG_NOORDER, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSADDCUSTOMKEY" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSDELETECUSTOMKEY )
@@ -708,10 +708,10 @@ HB_FUNC( ADSDELETECUSTOMKEY )
       else if( pArea->hOrdCurrent != 0 )
          hb_retnl( ( long ) AdsDeleteCustomKey( pArea->hOrdCurrent ) );
       else
-         hb_errRT_DBCMD( EG_NOORDER, 2001, NULL, "ADSDELETECUSTOMKEY" );
+         hb_errRT_DBCMD( EG_NOORDER, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSDELETECUSTOMKEY" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSCLEARAOF )
@@ -721,7 +721,7 @@ HB_FUNC( ADSCLEARAOF )
    if( pArea )
       AdsClearAOF( pArea->hTable );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCLEARAOF" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSEVALAOF )
@@ -746,7 +746,7 @@ HB_FUNC( ADSEVALAOF )
       hb_retni( pusOptLevel );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSEVALAOF" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSGETTABLEALIAS )
@@ -766,7 +766,7 @@ HB_FUNC( ADSGETTABLEALIAS )
          hb_retc( NULL );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETTABLEALIAS" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSGETAOF )
@@ -804,7 +804,7 @@ HB_FUNC( ADSGETAOF )
          hb_xfree( pucFilter2 );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOF" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSGETAOFOPTLEVEL )
@@ -821,7 +821,7 @@ HB_FUNC( ADSGETAOFOPTLEVEL )
                                    NULL ) == AE_SUCCESS ? pusOptLevel : ADS_OPTIMIZED_NONE );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOFOPTLEVEL" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSGETAOFNOOPT )
@@ -854,7 +854,7 @@ HB_FUNC( ADSGETAOFNOOPT )
          hb_retc( ulRetVal == AE_SUCCESS ? ( char * ) pucNonOpt : NULL );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSGETAOFNOOPT" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSISRECORDINAOF )
@@ -870,7 +870,7 @@ HB_FUNC( ADSISRECORDINAOF )
                                  &bIsInAOF ) == AE_SUCCESS && bIsInAOF != 0 );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISRECORDINAOF" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 /* Does current record match any current filter? */
@@ -906,7 +906,7 @@ HB_FUNC( ADSREFRESHAOF )
    if( pArea )
       AdsRefreshAOF( pArea->hTable );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSREFRESHAOF" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSSETAOF )
@@ -929,10 +929,10 @@ HB_FUNC( ADSSETAOF )
          hb_retl( ulRetVal == AE_SUCCESS );
       }
       else
-         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSSETAOF" );
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSSETAOF" );
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSGETFILTER )
@@ -989,10 +989,10 @@ HB_FUNC( ADSENABLEENCRYPTION )
          hb_retnl( AdsEnableEncryption( pArea->hTable,
                                         ( UNSIGNED8 * ) pucPassword ) );
       else
-         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSENABLEENCRYPTION" );
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSENABLEENCRYPTION" );
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSDISABLEENCRYPTION )
@@ -1002,7 +1002,7 @@ HB_FUNC( ADSDISABLEENCRYPTION )
    if( pArea )
       hb_retnl( AdsDisableEncryption( pArea->hTable ) );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSDISABLEENCRYPTION" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSENCRYPTTABLE )
@@ -1012,7 +1012,7 @@ HB_FUNC( ADSENCRYPTTABLE )
    if( pArea )
       hb_retnl( AdsEncryptTable( pArea->hTable ) );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSENCRYPTTABLE" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSDECRYPTTABLE )
@@ -1022,7 +1022,7 @@ HB_FUNC( ADSDECRYPTTABLE )
    if( pArea )
       hb_retnl( AdsDecryptTable( pArea->hTable ) );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSDECRYPTTABLE" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSENCRYPTRECORD )
@@ -1032,7 +1032,7 @@ HB_FUNC( ADSENCRYPTRECORD )
    if( pArea )
       hb_retnl( AdsEncryptRecord( pArea->hTable ) );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSENCRYPTRECORD" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSDECRYPTRECORD )
@@ -1042,7 +1042,7 @@ HB_FUNC( ADSDECRYPTRECORD )
    if( pArea )
       hb_retnl( AdsDecryptRecord( pArea->hTable ) );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSDECRYPTRECORD" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSISENCRYPTIONENABLED )
@@ -1056,7 +1056,7 @@ HB_FUNC( ADSISENCRYPTIONENABLED )
       hb_retl( usIsEnabled != 0 );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISENCRYPTIONENABLED" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSISRECORDENCRYPTED )
@@ -1070,7 +1070,7 @@ HB_FUNC( ADSISRECORDENCRYPTED )
       hb_retl( usIsEnabled != 0 );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISRECORDENCRYPTED" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSISTABLEENCRYPTED )
@@ -1084,7 +1084,7 @@ HB_FUNC( ADSISTABLEENCRYPTED )
       hb_retl( usIsEnabled != 0 );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISTABLEENCRYPTED" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSCONNECT )
@@ -1338,7 +1338,7 @@ HB_FUNC( ADSVERIFYSQL )
       hb_adsOemAnsiFree( pucStmt );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSVERIFYSQL" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 #endif /* ADS_LIB_VERSION >= 620 */
@@ -1360,7 +1360,7 @@ HB_FUNC( ADSREFRESHRECORD )
    if( pArea )
       AdsRefreshRecord( pArea->hTable );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSREFRESHRECORD" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 /* lSuccess := AdsCopyTable( cTargetFile [, nAdsFilterOption ] ) */
@@ -1375,10 +1375,10 @@ HB_FUNC( ADSCOPYTABLE )
                                 ( UNSIGNED16 ) ( ISNUM( 2 ) ? hb_parni( 2 ) : ADS_RESPECTFILTERS ) /* usFilterOption */,
                                 ( UNSIGNED8 * ) hb_parcx( 1 ) /* pucFile */ ) == AE_SUCCESS );
       else
-         hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSCOPYTABLE" );
+         hb_errRT_DBCMD( EG_ARG, 1014, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCOPYTABLE" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSCONVERTTABLE )
@@ -1395,10 +1395,10 @@ HB_FUNC( ADSCONVERTTABLE )
                                    ( UNSIGNED16 ) ( ISNUM( 2 ) ? hb_parni( 2 ) : ADS_ADT ) /* usTableType */ ) == AE_SUCCESS );
       }
       else
-         hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSCONVERTTABLE" );
+         hb_errRT_DBCMD( EG_ARG, 1014, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCONVERTTABLE" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 #if !defined( ADS_LINUX )
@@ -1586,7 +1586,7 @@ HB_FUNC( ADSCACHERECORDS )
                                  ( UNSIGNED16 ) hb_parni( 1 ) ) == AE_SUCCESS )
       hb_retl( TRUE );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCACHERECORDS" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 /*
@@ -1659,10 +1659,10 @@ HB_FUNC( ADSISEMPTY )
                                &pbEmpty ) == AE_SUCCESS )
          hb_retl( pbEmpty != 0 );
       else
-         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSISEMPTY" );
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSISEMPTY" );
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, &hb_errFuncName );
 }
 
 /*  Please add all-version functions above this block */
@@ -1968,7 +1968,7 @@ HB_FUNC( ADSDDGETUSERPROPERTY )
       hb_retl( ulRetVal == AE_SUCCESS );
    }
    else
-      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSDDGETUSERPROPERTY" );
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, &hb_errFuncName );
 }
 
 
@@ -2050,13 +2050,13 @@ HB_FUNC( ADSCOPYTABLECONTENTS )
                                            pDest->hTable,
                                            ADS_IGNOREFILTERS ) == AE_SUCCESS );
          else
-            hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCOPYTABLECONTENTS" );
+            hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
       }
       else
-         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCOPYTABLECONTENTS" );
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCOPYTABLECONTENTS" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSDIRECTORY )
@@ -2133,10 +2133,10 @@ HB_FUNC( ADSSTMTSETTABLEPASSWORD )
                                             ( UNSIGNED8 * ) pucTableName,
                                             ( UNSIGNED8 * ) pucPassword ) );
       else
-         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSSTMTSETTABLEPASSWORD" );
+         hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
    }
    else
-      hb_errRT_DBCMD( EG_ARG, 1014, NULL, "ADSSTMTSETTABLEPASSWORD" );
+      hb_errRT_DBCMD( EG_ARG, 1014, NULL, &hb_errFuncName );
 }
 
 HB_FUNC( ADSGETSERVERNAME )
@@ -2193,7 +2193,7 @@ HB_FUNC( ADSCREATEFTSINDEX )
                                    ( UNSIGNED8 * ) hb_parc( 16 )                              /* pucReserved2             */ ,
                                    ( UNSIGNED32 )  ISNUM( 17 ) ? hb_parnl( 17 ) : ADS_DEFAULT /* ulOptions                */ ) );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, "ADSCREATEFTSINDEX" );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
 }
 
 #endif /* ADS_LIB_VERSION >= 700 */

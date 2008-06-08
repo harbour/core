@@ -8,6 +8,52 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-08 15:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbgtinfo.ch
+     + Added comment to compatibility #defines, to not use 
+       them, since they deprecated.
+       [TOMERGE RC1]
+     * HB_GTI_CB_* -> HB_GTE_* (stands for GT Event). Removed 
+       plain GTI_ versions, GTI_* range is frozen, pls don't 
+       and new codes to them and especially don't use them in 
+       core code.
+
+   * include/hbgfx.ch
+   * include/hbgfxdef.ch
+   * contrib/gtwvg/gtwvg.c
+   * source/rtl/gtxwc/gtxwc.c
+   * source/rtl/gtwvt/gtwvt.c
+     * GFX_* constants renamed to HB_GFX_*. The old ones are 
+       still working but it's recommended to update to use HB_GFX_*.
+       #define HB_GT_NO_XHB to disable the compatibility #defines, 
+       if it collides with your code or you want to test after 
+       transition.
+     ; [TOMERGE RC1]
+
+   * source/rtl/dirdrive.c
+     ! Guarded C53 undoc functions with HB_C52_UNDOC, which is enabled 
+       so it won't make a difference in default builds.
+     ; [TOMERGE RC1]
+
+   * source/rtl/filesys.c
+     ! Fixed hb_fsIsDrv() to use GetDriveTypeA() API, to avoid some 
+       win32 system MessageBox() to be shown when certain types of 
+       drives (f.e. USB reader devices) are queried.
+     ; Please test.
+     ; TOFIX: hb_fsChDrv() suffers from the same problem.
+     ; [TOMERGE RC1 - after testing]
+
+   * contrib/hbcurl/hbcurl.c
+   * contrib/rddads/adsfunc.c
+   * contrib/rddads/ads1.c
+     % Optimized out explicit function name strings in RTE calls.
+     ! The above is actually a fix (I hope) for the one in 
+       hb_adsCheckLock(). Error text also made more consistent.
+     ; [TOMERGE RC1 - after testing]
+
+   * contrib/hbw32/w32_prn.c
+     % Minor optimizations, cleanups.
+
 2008-06-08 12:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      + Appending CRLF to each marked row before copying to 

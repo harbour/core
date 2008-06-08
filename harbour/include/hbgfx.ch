@@ -51,11 +51,7 @@
  *
  */
 
-/*
- * WARNING: this file is also included in C code, so don't add xHarbour specific stuff,
- * or protect it under #ifdef __XHARBOUR__
- *
- */
+/* NOTE: This file is also used by C code. */
 
 #ifndef _HBGFX_CH_
 #define _HBGFX_CH_
@@ -65,31 +61,28 @@
 /*
  * NOTE: ACQUIRE / RELEASE screen pair must work same way DispBegin()/DispEnd() pair does
  *       (that is, with an internal counter), as lots of function may want to 'acquire/release' it.
- *
  *       However, a GT must properly manage its gfx output if the user didn't requested to acquire the
  *       screen, so this is under user choice.
  *       (the user just needs to know that it is not the same to aquire the screen, draw 100 lines, then
- *        release screen, than simply drawing 100 lines -as the GT will be acquiring/releasing the screen
- *        100 times, which will slow down things a lot-)
- *
- * Mauricio
- *
+ *       release screen, than simply drawing 100 lines -as the GT will be acquiring/releasing the screen
+ *       100 times, which will slow down things a lot-) [Mauricio] 
  */
-#xtranslate HB_GFXACQUIRESCREEN() => hb_gfxPrimitive(GFX_ACQUIRESCREEN)
-#xtranslate HB_GFXRELEASESCREEN() => hb_gfxPrimitive(GFX_RELEASESCREEN)
-#xtranslate HB_GFXMAKECOLOR(<nRed>, <nGreen>, <nBlue>[, <nAlpha>]) => hb_gfxPrimitive(GFX_MAKECOLOR, <nRed>, <nGreen>, <nBlue>[, <nAlpha>])
-#xtranslate HB_GFXGETCLIP(<nTop>, <nLeft>, <nBottom>, <nRight>) => <nTop> := hb_gfxPrimitive(GFX_CLIPTOP); <nLeft> := hb_gfxPrimitive(GFX_CLIPLEFT); <nBottom> := hb_gfxPrimitive(GFX_CLIPBOTTOM); <nRight> := hb_gfxPrimitive(GFX_CLIPRIGHT)
-#xtranslate HB_GFXSETCLIP(<nTop>, <nLeft>, <nBottom>, <nRight>) => hb_gfxPrimitive(GFX_SETCLIP, <nTop>, <nLeft>, <nBottom>, <nRight>)
-#xtranslate HB_GFXDRAWINGMODE([<nMode>]) => hb_gfxPrimitive(GFX_DRAWINGMODE[, <nMode>])
-#xtranslate HB_GFXGETPIXEL(<nY>, <nX>) => hb_gfxPrimitive(GFX_GETPIXEL, <nY>, <nX>)
-#xtranslate HB_GFXPUTPIXEL(<nY>, <nX>, <nColor>) => hb_gfxPrimitive(GFX_PUTPIXEL, <nY>, <nX>, <nColor>)
-#xtranslate HB_GFXLINE(<nTop>, <nLeft>, <nBottom>, <nRight>, <nColor>) => hb_gfxPrimitive(GFX_LINE, <nTop>, <nLeft>, <nBottom>, <nRight>, <nColor>)
-#xtranslate HB_GFXRECT(<nTop>, <nLeft>, <nBottom>, <nRight>, <nColor>) => hb_gfxPrimitive(GFX_RECT, <nTop>, <nLeft>, <nBottom>, <nRight>, <nColor>)
-#xtranslate HB_GFXFILLEDRECT(<nTop>, <nLeft>, <nBottom>, <nRight>, <nColor>) => hb_gfxPrimitive(GFX_FILLEDRECT, <nTop>, <nLeft>, <nBottom>, <nRight>, <nColor>)
-#xtranslate HB_GFXCIRCLE(<nY>, <nX>, <nRadius>, <nColor>) => hb_gfxPrimitive(GFX_CIRCLE, <nY>, <nX>, <nRadius>, <nColor>)
-#xtranslate HB_GFXFILLEDCIRCLE(<nY>, <nX>, <nRadius>, <nColor>) => hb_gfxPrimitive(GFX_FILLEDCIRCLE, <nY>, <nX>, <nRadius>, <nColor>)
-#xtranslate HB_GFXELLIPSE(<nY>, <nX>, <nRadY>, <nRadX>, <nColor>) => hb_gfxPrimitive(GFX_ELLIPSE, <nY>, <nX>, <nRadY>, <nRadX>, <nColor>)
-#xtranslate HB_GFXFILLEDELLIPSE(<nY>, <nX>, <nRadY>, <nRadX>, <nColor>) => hb_gfxPrimitive(GFX_FILLEDELLIPSE, <nY>, <nX>, <nRadY>, <nRadX>, <nColor>)
-#xtranslate HB_GFXFLOODFILL(<nY>, <nX>, <nColor>) => hb_gfxPrimitive(GFX_FLOODFILL, <nY>, <nX>, <nColor>)
 
-#endif  /* _HBGFX_CH_ */
+#xtranslate hb_gfxAcquireScreen() => hb_gfxPrimitive( HB_GFX_ACQUIRESCREEN )
+#xtranslate hb_gfxReleaseScreen() => hb_gfxPrimitive( HB_GFX_RELEASESCREEN )
+#xtranslate hb_gfxMakeColor( <nRed>, <nGreen>, <nBlue>[, <nAlpha>] ) => hb_gfxPrimitive( HB_GFX_MAKECOLOR, <nRed>, <nGreen>, <nBlue>[, <nAlpha>] )
+#xtranslate hb_gfxGetClip( <nTop>, <nLeft>, <nBottom>, <nRight> ) => <nTop> := hb_gfxPrimitive( HB_GFX_CLIPTOP ); <nLeft> := hb_gfxPrimitive( HB_GFX_CLIPLEFT ); <nBottom> := hb_gfxPrimitive( HB_GFX_CLIPBOTTOM ); <nRight> := hb_gfxPrimitive( HB_GFX_CLIPRIGHT )
+#xtranslate hb_gfxSetClip( <nTop>, <nLeft>, <nBottom>, <nRight> ) => hb_gfxPrimitive( HB_GFX_SETCLIP, <nTop>, <nLeft>, <nBottom>, <nRight> )
+#xtranslate hb_gfxDrawingMode( [<nMode>] ) => hb_gfxPrimitive( HB_GFX_DRAWINGMODE[, <nMode>] )
+#xtranslate hb_gfxGetPixel( <nY>, <nX> ) => hb_gfxPrimitive( HB_GFX_GETPIXEL, <nY>, <nX> )
+#xtranslate hb_gfxPutPixel( <nY>, <nX>, <nColor> ) => hb_gfxPrimitive( HB_GFX_PUTPIXEL, <nY>, <nX>, <nColor> )
+#xtranslate hb_gfxLine( <nTop>, <nLeft>, <nBottom>, <nRight>, <nColor> ) => hb_gfxPrimitive( HB_GFX_LINE, <nTop>, <nLeft>, <nBottom>, <nRight>, <nColor> )
+#xtranslate hb_gfxRect( <nTop>, <nLeft>, <nBottom>, <nRight>, <nColor> ) => hb_gfxPrimitive( HB_GFX_RECT, <nTop>, <nLeft>, <nBottom>, <nRight>, <nColor> )
+#xtranslate hb_gfxFilledRect( <nTop>, <nLeft>, <nBottom>, <nRight>, <nColor> ) => hb_gfxPrimitive( HB_GFX_FILLEDRECT, <nTop>, <nLeft>, <nBottom>, <nRight>, <nColor> )
+#xtranslate hb_gfxCircle( <nY>, <nX>, <nRadius>, <nColor> ) => hb_gfxPrimitive( HB_GFX_CIRCLE, <nY>, <nX>, <nRadius>, <nColor> )
+#xtranslate hb_gfxFilledCircle( <nY>, <nX>, <nRadius>, <nColor> ) => hb_gfxPrimitive( HB_GFX_FILLEDCIRCLE, <nY>, <nX>, <nRadius>, <nColor> )
+#xtranslate hb_gfxEllipse( <nY>, <nX>, <nRadY>, <nRadX>, <nColor> ) => hb_gfxPrimitive( HB_GFX_ELLIPSE, <nY>, <nX>, <nRadY>, <nRadX>, <nColor> )
+#xtranslate hb_gfxFilledEllipse( <nY>, <nX>, <nRadY>, <nRadX>, <nColor> ) => hb_gfxPrimitive( HB_GFX_FILLEDELLIPSE, <nY>, <nX>, <nRadY>, <nRadX>, <nColor> )
+#xtranslate hb_gfxFloodFill( <nY>, <nX>, <nColor> ) => hb_gfxPrimitive( HB_GFX_FLOODFILL, <nY>, <nX>, <nColor> )
+
+#endif  /* _HBHB_GFX_CH_ */

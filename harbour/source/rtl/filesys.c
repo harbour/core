@@ -2029,7 +2029,21 @@ HB_EXPORT USHORT hb_fsIsDrv( BYTE nDrive )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDrv(%d)", (int) nDrive));
 
-#if defined(OS_HAS_DRIVE_LETTER)
+#if defined(HB_OS_WIN_32)
+   {
+      char buffer[ 4 ];
+      UINT type;
+
+      buffer[ 0 ] = nDrive + 'A';
+      buffer[ 1 ] = ':';
+      buffer[ 2 ] = '\\';
+      buffer[ 3 ] = '\0';
+
+      type = GetDriveTypeA( ( LPCSTR ) buffer );
+      uiResult = ( type == DRIVE_UNKNOWN || type == DRIVE_NO_ROOT_DIR ) ? FS_ERROR : 0;
+      hb_fsSetError( 0 );
+   }
+#elif defined(OS_HAS_DRIVE_LETTER)
    {
       /* 'unsigned int' _have to_ be used in Watcom
        */
