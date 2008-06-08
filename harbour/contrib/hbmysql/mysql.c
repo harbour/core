@@ -69,10 +69,6 @@
 
 #include "mysql.h"
 
-#include <stdio.h>
-#include <hb_io.h>
-#include <fcntl.h>
-
 /* NOTE: OS/2 EMX port of MySQL needs libmysqlclient.a from 3.21.33b build which has st and mt
          versions of client library. I'm using ST version since harbour is single threaded. 
          You need also .h files from same distribution. */
@@ -95,7 +91,7 @@ HB_FUNC( SQLCONNECT ) /* MYSQL *mysql_real_connect(MYSQL*, char * host, char * u
    unsigned int port  = ISNUM( 4 ) ? ( unsigned int ) hb_parni( 4 ) : MYSQL_PORT;
    unsigned int flags = ISNUM( 5 ) ? ( unsigned int ) hb_parni( 5 ) : 0;
 
-   if( ( mysql = mysql_init( ( MYSQL * ) NULL ) ) )
+   if( ( mysql = mysql_init( ( MYSQL * ) NULL ) ) != NULL )
    {
       /* from 3.22.x of MySQL there is a new parameter in mysql_real_connect() call, that is char * db
          which is not used here */
