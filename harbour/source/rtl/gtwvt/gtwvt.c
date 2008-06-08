@@ -927,6 +927,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
    SHORT keyCode = 0;
    SHORT keyState;
 
+   static RECT s_rectOld = { 0, 0, 0, 0 };
+
    HB_SYMBOL_UNUSED( wParam );
 
    if( ! pWVT->bBeginMarked && ! pWVT->MouseMove && ( message == WM_MOUSEMOVE || message == WM_NCMOUSEMOVE ) )
@@ -954,6 +956,11 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          {
             pWVT->bBeingMarked = TRUE;
             pWVT->markStartColRow = colrow;
+
+            s_rectOld.left   = 0;
+            s_rectOld.top    = 0;
+            s_rectOld.right  = 0;
+            s_rectOld.bottom = 0;
          }
          else
          {
@@ -1057,23 +1064,35 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          {
             POINT a0,a1;
             RECT  rect = {0,0,0,0};
-            HDC   hdc = GetDC( pWVT->hWnd );
 
             pWVT->markEndColRow = colrow;
 
             a0 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markStartColRow.x, ( USHORT ) pWVT->markStartColRow.y );
             a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x, ( USHORT ) pWVT->markEndColRow.y );
 
-            RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
-
-            rect.left = a0.x;
-            rect.top = a0.y;
-            rect.right = a1.x;
+            rect.left   = a0.x;
+            rect.top    = a0.y;
+            rect.right  = a1.x;
             rect.bottom = a1.y;
 
-            InvertRect( hdc, &rect );
+            if( ( rect.left   != s_rectOld.left   ) ||
+                ( rect.top    != s_rectOld.top    ) ||
+                ( rect.right  != s_rectOld.right  ) ||
+                ( rect.bottom != s_rectOld.bottom )  )
+            {
+               HDC   hdc = GetDC( pWVT->hWnd );
 
-            ReleaseDC( pWVT->hWnd, hdc );
+               RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+
+               InvertRect( hdc, &rect );
+
+               s_rectOld.left   = rect.left;
+               s_rectOld.top    = rect.top;
+               s_rectOld.right  = rect.right;
+               s_rectOld.bottom = rect.bottom;
+
+               ReleaseDC( pWVT->hWnd, hdc );
+            }
             return;
          }
          else

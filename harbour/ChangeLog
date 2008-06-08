@@ -10,6 +10,11 @@
 
 2008-06-08 08:57 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
+     * Fixed flickering in "Mark and Copy" operation.
+       /* Viktor, see the slight change in your code. */
+
+2008-06-08 08:57 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/source/rtl/gtwvt/gtwvt.c
      + Added functionality to disable "Mark and Copy" prompt in the SysMenu.
        Include Function Hb_NoCopyConsole() if you do not want this functionality.
 
