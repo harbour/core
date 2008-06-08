@@ -116,13 +116,7 @@ return Self
 
 METHOD FieldGet(cnField) CLASS TMySQLRow
 
-   local nNum
-
-   if ValType(cnField) == "C"
-      nNum := ::FieldPos(cnField)
-   else
-      nNum := cnField
-   endif
+   local nNum := iif( ISCHARACTER( cnField ), ::FieldPos(cnField), cnField )
 
    if nNum > 0 .AND. nNum <= Len(::aRow)
 
@@ -140,17 +134,10 @@ return nil
 
 METHOD FieldPut(cnField, Value) CLASS TMySQLRow
 
-   local nNum
-
-   if ValType(cnField) == "C"
-      nNum := ::FieldPos(cnField)
-   else
-      nNum := cnField
-   endif
+   local nNum := iif( ISCHARACTER( cnField ), ::FieldPos(cnField), cnField )
 
    if nNum > 0 .AND. nNum <= Len(::aRow)
 
-//DAVID:      if Valtype(Value) == Valtype(::aRow[nNum]) .OR. Empty(::aRow[nNum])
       if Valtype(Value) == Valtype(::aRow[nNum]) .OR. ::aRow[nNum]==NIL
 
          // if it is a char field remove trailing spaces
@@ -176,45 +163,20 @@ return nil
 // Given a field name returns it's position
 METHOD FieldPos(cFieldName) CLASS TMySQLRow
 
-   local cUpperName, nPos := 0
+   local cUpperName := Upper(cFieldName)
 
-   cUpperName := Upper(cFieldName)
-
-//DAVID:   nPos := AScan(::aFieldStruct, {|aItem| iif(Upper(aItem[MYSQL_FS_NAME]) == cUpperName, .T., .F.)})
-   nPos := AScan(::aFieldStruct, {|aItem| (Upper(aItem[MYSQL_FS_NAME]) == cUpperName)})
-
-   /*while ++nPos <= Len(::aFieldStruct)
-      if Upper(::aFieldStruct[nPos][MYSQL_FS_NAME]) == cUpperName
-         exit
-      endif
-   enddo
-
-   // I haven't found field name
-   if nPos > Len(::aFieldStruct)
-      nPos := 0
-   endif*/
-
-return nPos
+return AScan(::aFieldStruct, {|aItem| (Upper(aItem[MYSQL_FS_NAME]) == cUpperName)})
 
 
 // Returns name of field N
 METHOD FieldName(nNum) CLASS TMySQLRow
 
-   if nNum >=1 .AND. nNum <= Len(::aFieldStruct)
-      return ::aFieldStruct[nNum][MYSQL_FS_NAME]
-   endif
-
-return ""
+return iif( nNum >=1 .AND. nNum <= Len(::aFieldStruct), ::aFieldStruct[nNum][MYSQL_FS_NAME], "" )
 
 
 METHOD FieldLen(nNum) CLASS TMySQLRow
 
-   if nNum >=1 .AND. nNum <= Len(::aFieldStruct)
-      return ::aFieldStruct[nNum][MYSQL_FS_LENGTH]
-   endif
-
-//DAVID: return ""
-return 0
+return iif( nNum >=1 .AND. nNum <= Len(::aFieldStruct), ::aFieldStruct[nNum][MYSQL_FS_LENGTH], 0 )
 
 METHOD FieldDec(nNum) CLASS TMySQLRow
 
@@ -227,7 +189,6 @@ METHOD FieldDec(nNum) CLASS TMySQLRow
       endif
    endif
 
-//DAVID: return ""
 return 0
 
 

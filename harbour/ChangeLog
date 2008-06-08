@@ -8,6 +8,39 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-08 12:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmysql/tmysql.prg
+   * contrib/hbmysql/mysql.c
+   * contrib/hbmysql/mysql.ch
+   * contrib/hbtpathy/telepath.ch
+   * contrib/hbtpathy/tplinux.c
+   * contrib/hbtpathy/tpwin32.c
+   * contrib/hbtpathy/tpos2.c
+   * contrib/hbtpathy/tpcommon.c
+   * contrib/hbmsql/msql.h
+   * contrib/hbmsql/msql.ch
+   * contrib/hbmsql/msql.c
+   * contrib/hbfbird/firebird.c
+   * contrib/hbfbird/tests/test.prg
+   * contrib/hbapollo/apollo.c
+   * contrib/hbmisc/hb_f.c
+     * General code cleanup, formatting, minor optimizations, 
+       Harbour API usage cleanup, ANSI comments.
+     ! Several minor fixes to Firebird interface code, but it 
+       still doesn't seem to work, and the code is very unclear, 
+       partly because of the strange/unsafe Firebird API.
+     ! Firebird test.prg fixes: Variable name typos, undeclared 
+       vars, hard-coded paths.
+
+   * contrib/hbfbird/make_b32.bat
+   * contrib/hbfbird/make_vc.bat
+     * Fixed location where .libs are looked for.
+       [TOMERGE RC1]
+
+   * contrib/hbcurl/hbcurl.c
+     % Minor cleanups.
+       [TOMERGE RC1]
+
 2008-06-07 15:32 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
    * harbour/source/rtl/gtwvt/gtwvt.h

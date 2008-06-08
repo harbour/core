@@ -54,7 +54,7 @@
 #endif
 
 
-#if (defined(__STDC__) || defined(__cplusplus) || defined(__BORLANDC__) || defined(_MSC_VER))
+#if defined(__STDC__) || defined(__cplusplus) || defined(__BORLANDC__) || defined(_MSC_VER)
 #  define __ANSI_PROTO(x)	x
 #else
 #  define __ANSI_PROTO(x)	()

@@ -53,8 +53,6 @@
  */
 
 #include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 #include <time.h>
 
 #define HB_OS_WIN_32_USED
@@ -69,661 +67,600 @@
 #define MAX_LEN              256
 #define MAX_BUFFER          1024
 
-#define ERREXIT(status) { hb_retnl(isc_sqlcode(status)); return; }
+#define ERREXIT( status ) { hb_retnl( isc_sqlcode( status ) ); return; }
 
 #ifndef ISC_INT64_FORMAT
-
-#if (defined(_MSC_VER) && defined(WIN32)) || (defined(__BORLANDC__) && defined(__WIN32__))
-#define ISC_INT64_FORMAT        "I64"
-#else
-#define ISC_INT64_FORMAT        "ll"
+   #if (defined(_MSC_VER) && defined(WIN32)) || (defined(__BORLANDC__) && defined(__WIN32__))
+      #define ISC_INT64_FORMAT        "I64"
+   #else
+      #define ISC_INT64_FORMAT        "ll"
+   #endif
 #endif
-#endif
 
-HB_FUNC(FBCREATEDB)
+HB_FUNC( FBCREATEDB )
 {
-    isc_db_handle   newdb = NULL;
-    isc_tr_handle   trans = NULL;
-    long            status[ 20 ];
-    char            create_db[ MAX_BUFFER ];
+   if( hb_pcount() == 6 )
+   {
+      isc_db_handle newdb = NULL;
+      isc_tr_handle trans = NULL;
+      ISC_STATUS status[ 20 ];
+      char create_db[ MAX_BUFFER ];
 
-    char            *db_name;
-    char            *user;
-    char            *pass;
-    char            *charset;
-    int             page;
-    int             dialect;
+      char * db_name = hb_parcx( 1 );
+      char * user    = hb_parcx( 2 );
+      char * pass    = hb_parcx( 3 );
+      int    page    = hb_parni( 4 );
+      char * charset = hb_parcx( 5 );
+      int    dialect = hb_parni( 6 );
+       
+      snprintf( create_db, sizeof( create_db ), 
+                "CREATE DATABASE '%s' USER '%s' PASSWORD '%s' PAGE_SIZE = %i DEFAULT CHARACTER SET %s",
+                db_name, user, pass, page, charset );
+      
+      if( isc_dsql_execute_immediate( status, &newdb, &trans, 0, create_db, dialect, NULL ) )
+         hb_retnl( isc_sqlcode( status ) );
+      else
+         hb_retnl( 1 );
+   }
+   else
+      hb_retnl( 0 );
+}
 
-    if (hb_pcount() != 6)
-    {
-        hb_retni(0);
-        return;
-     }
+HB_FUNC( FBCONNECT )
+{
+   ISC_STATUS    status[ MAX_FIELDS ];
+   isc_db_handle db = NULL;
+   char *        db_connect = hb_parcx( 1 );
+   char *        user = hb_parcx( 2 );
+   char *        passwd = hb_parcx( 3 );
+   char          dpb[ 128 ];
+   int           i = 0;
+   int           len;
 
-    db_name = hb_parcx(1);
-    user = hb_parcx(2);
-    pass = hb_parcx(3);
-    page = hb_parni(4);
-    charset = hb_parcx(5);
-    dialect = hb_parni(6);
+   /* TOFIX: Possible buffer overflow. Use snprintf(). */
+   dpb[ i++ ] = isc_dpb_version1;
+   dpb[ i++ ] = isc_dpb_user_name;
+   len = strlen( user );
+   dpb[ i++ ] = ( char ) len;
+   strncpy( &( dpb[ i ] ), user, len );
+   i += len;
+   dpb[ i++ ] = isc_dpb_password;
+   len = strlen( passwd );
+   dpb[ i++ ] = len;
+   strncpy( &( dpb[ i ] ), passwd, len );
+   i += len;
 
-    snprintf(create_db, sizeof( create_db ), 
-            "CREATE DATABASE '%s' USER '%s' PASSWORD '%s' PAGE_SIZE = %i DEFAULT CHARACTER SET %s",
-            db_name, user, pass, page, charset );
-
-    if (isc_dsql_execute_immediate(status, &newdb, &trans, 0, create_db, dialect, NULL))
-        ERREXIT(status);
-
-    hb_retni(1);
+   if( isc_attach_database( status, 0, db_connect, &db, i, dpb ) )
+      hb_retnl( isc_sqlcode( status ) );
+   else
+      hb_retptr( ( void * ) db );
 }
 
 
-HB_FUNC(FBCONNECT)
+HB_FUNC( FBCLOSE )
 {
-    ISC_STATUS      status[MAX_FIELDS];
-    isc_db_handle   db = NULL;
-    char            *db_connect = NULL;
-    char            *user = NULL;
-    char            *passwd = NULL;
-    char            dpb[128];
-    int             i = 0, len;
+   isc_db_handle db = ( isc_db_handle ) hb_parptr( 1 );
+   ISC_STATUS status[ 20 ];
 
-    PHB_ITEM db_handle;
-
-    if (hb_parinfo(1))
-        db_connect = hb_parcx(1);
-
-    if (hb_parinfo(2))
-        user = hb_parcx(2);
-
-    if (hb_parinfo(3))
-        passwd = hb_parcx(3);
-
-    dpb[i++] = isc_dpb_version1;
-
-    dpb[i++] = isc_dpb_user_name;
-    len = strlen(user);
-    dpb[i++] = (char) len;
-    strncpy(&(dpb[i]), user, len);
-    i += len;
-
-    dpb[i++] = isc_dpb_password;
-    len = strlen (passwd);
-    dpb[i++] = len;
-    strncpy(&(dpb[i]), passwd, len);
-    i += len;
-
-    if ( isc_attach_database ( status, 0, db_connect, &db, i, dpb ) )
-        ERREXIT(status);
-
-    db_handle = hb_itemPutPtr( NULL, ( void * ) db );
-    hb_itemReturnRelease(db_handle);
+   if( isc_detach_database( status, &db ) )
+      hb_retnl( isc_sqlcode( status ) );
+   else
+      hb_retnl( 1 );
 }
 
 
-HB_FUNC(FBCLOSE)
+HB_FUNC( FBERROR )
 {
-    isc_db_handle   db = NULL;
-    long            status[20];
+   char msg[ MAX_BUFFER ];
 
-    db = ( isc_db_handle ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
+   isc_sql_interprete( hb_parni( 1 ) /* sqlcode */, 
+                       msg,
+                       sizeof( msg ) );
 
-    if ( isc_detach_database ( status, &db ) )
-        ERREXIT(status);
-
-    hb_retnl(1);
+   hb_retc( msg );
 }
 
-
-HB_FUNC(FBERROR)
+HB_FUNC( FBSTARTTRANSACTION )
 {
-    int sqlcode;
-    char msg[MAX_BUFFER];
+   isc_db_handle db = ( isc_db_handle ) hb_parptr( 1 );
+   isc_tr_handle trans = NULL;
+   ISC_STATUS status[ MAX_FIELDS ];
 
-    sqlcode = hb_parni(1);
-
-    isc_sql_interprete(sqlcode, msg, 512);
-
-    hb_retc(msg);
+   if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
+      hb_retnl( isc_sqlcode( status ) );
+   else
+      hb_retptr( ( void * ) trans );
 }
 
-HB_FUNC(FBSTARTTRANSACTION)
+HB_FUNC( FBCOMMIT )
 {
-    isc_db_handle   db = NULL;
-    isc_tr_handle   trans = NULL;
-    long            status[MAX_FIELDS];
+   isc_tr_handle trans = ( isc_db_handle ) hb_parptr( 1 );
+   ISC_STATUS status[ MAX_FIELDS ];
 
-    PHB_ITEM        var;
-
-    db = ( isc_db_handle ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-
-    if (isc_start_transaction(status, &trans, 1, &db, 0, NULL))
-        ERREXIT(status);
-
-    var = hb_itemPutPtr( NULL, ( void * ) trans );
-    hb_itemReturnRelease(var);
+   if( isc_commit_transaction( status, &trans ) )
+      hb_retnl( isc_sqlcode( status ) );
+   else
+      hb_retnl( 1 );
 }
 
-
-HB_FUNC(FBCOMMIT)
+HB_FUNC( FBROLLBACK )
 {
-    isc_tr_handle   trans = NULL;
-    long status[MAX_FIELDS];
+   isc_tr_handle trans = ( isc_db_handle ) hb_parptr( 1 );
+   ISC_STATUS status[ MAX_FIELDS ];
 
-    trans = ( isc_db_handle ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-
-    if (isc_commit_transaction(status, &trans))
-        ERREXIT(status);
-
-    trans = NULL;
-    hb_retnl(1);
+   if( isc_rollback_transaction( status, &trans ) )
+      hb_retnl( isc_sqlcode( status ) );
+   else
+      hb_retnl( 1 );
 }
 
-HB_FUNC(FBROLLBACK)
+HB_FUNC( FBEXECUTE )
 {
-    isc_tr_handle   trans = NULL;
-    long status[MAX_FIELDS];
+   isc_db_handle   db = ( isc_db_handle ) hb_parptr( 1 );
+   isc_tr_handle   trans = NULL;
+   char          * exec_str = hb_parcx( 2 );
+   ISC_STATUS      status[ 20 ];
+   ISC_STATUS      status_rollback[ 20 ];
+   int             dialect = hb_parni( 3 );
 
-    trans = ( isc_db_handle ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
+   if( ISPOINTER( 4 ) )
+   {
+      trans = ( isc_tr_handle ) hb_parptr( 4 );
+   }
+   else
+   {
+      if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
+      {
+         hb_retnl( isc_sqlcode( status ) );
+         return;
+      }
+   }
 
-    if (isc_rollback_transaction(status, &trans))
-        ERREXIT(status);
+   if( isc_dsql_execute_immediate( status, &db, &trans, 0, exec_str, dialect, NULL ) )
+   {
+      if( ! ISPOINTER( 4 ) )
+         isc_rollback_transaction( status_rollback, &trans );
 
-    trans = NULL;
-    hb_retnl(1);
+      hb_retnl( isc_sqlcode( status ) );
+      return;
+   }
+
+   if( ! ISPOINTER( 4 ) )
+   {
+      if( isc_commit_transaction( status, &trans ) )
+      {
+         hb_retnl( isc_sqlcode( status ) );
+         return;
+      }
+   }
+
+   hb_retnl( 1 );
 }
 
-
-HB_FUNC(FBEXECUTE)
+HB_FUNC( FBQUERY )
 {
-    isc_db_handle   db = NULL;
-    isc_tr_handle   trans = NULL;
-    char            *exec_str;
-    long            status[20];
-    long            status_rollback[20];
-    int             dialect;
+   isc_db_handle       db = ( isc_db_handle ) hb_parptr( 1 );
+   isc_tr_handle       trans = NULL;
+   ISC_STATUS          status[ MAX_FIELDS ];
+   XSQLDA *            sqlda;
+   isc_stmt_handle     stmt = NULL;
+   XSQLVAR           * var;
 
-    db = ( isc_db_handle ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-    exec_str = hb_parcx(2);
-    dialect = hb_parni(3);
+   char                sel_str[ MAX_LEN ];
+   int                 dialect = ISNUM( 3 ) ? hb_parni( 3 ) : DIALECT;
+   int                 n;
+   int                 i;
+   int                 dtype;
+   int                 num_cols;
 
-    if (hb_parinfo(4)) {
-        trans = (isc_tr_handle) hb_itemGetPtr( hb_param( 4, HB_IT_POINTER ) );
-    } else {
-        if ( isc_start_transaction ( status, &trans, 1, &db, 0, NULL ) )
-            ERREXIT(status);
-    }
+   PHB_ITEM qry_handle;
+   PHB_ITEM aTemp;
+   PHB_ITEM aNew;
 
-    if (isc_dsql_execute_immediate(status, &db, &trans, 0, exec_str, dialect, NULL)) {
-        if (! hb_parinfo(4))
-            isc_rollback_transaction ( status_rollback, &trans );
+   strncpy( sel_str, hb_parcx( 2 ), sizeof( sel_str ) );
 
-        ERREXIT(status);
-    }
+   if( ISPOINTER( 4 ) )
+   {
+      trans = ( isc_tr_handle ) hb_parptr( 4 );
+   }
+   else if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
+   {
+      ERREXIT( status );
+   }
 
-    if (!hb_parinfo(4))
-        if ( isc_commit_transaction ( status, &trans ) )
-            ERREXIT(status);
+   /* Allocate an output SQLDA. Just to check number of columns */
+   sqlda = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH ( 1 ) );
+   sqlda->sqln = 1;
+   sqlda->version = 1;
 
-    hb_retnl(1);
+   /* Allocate a statement */
+   if( isc_dsql_allocate_statement( status, &db, &stmt ) )
+   {
+      ERREXIT( status );
+   }
+
+   /* Prepare the statement. */
+   if( isc_dsql_prepare( status, &trans, &stmt, 0, sel_str, dialect, sqlda ) )
+   {
+      ERREXIT( status );
+   }
+
+   /* Describe sql contents */
+   if( isc_dsql_describe( status, &stmt, dialect, sqlda ) )
+   {
+      ERREXIT( status );
+   }
+
+   num_cols = sqlda->sqld;
+   aNew = hb_itemArrayNew( num_cols );
+
+   /* Relocate necessary number of columns */
+   if( sqlda->sqld > sqlda->sqln )
+   {
+      hb_xfree( sqlda );
+      n = sqlda->sqld;
+      sqlda = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH( n ) );
+      sqlda->sqln = n;
+      sqlda->version = 1;
+
+      if( isc_dsql_describe( status, &stmt, dialect, sqlda ) )
+      {
+         ERREXIT( status );
+      }
+   }
+
+   for( i = 0, var = sqlda->sqlvar; i < sqlda->sqld; i++, var++ )
+   {
+      dtype = ( var->sqltype & ~1 );
+      switch( dtype )
+      {
+      case SQL_VARYING:
+         var->sqltype = SQL_TEXT;
+         var->sqldata = ( char * ) hb_xgrab( sizeof ( char ) * var->sqllen + 2 );
+         break;
+      case SQL_TEXT:
+         var->sqldata = ( char * ) hb_xgrab( sizeof ( char ) * var->sqllen + 2 );
+         break;
+      case SQL_LONG:
+         var->sqltype = SQL_LONG;
+         var->sqldata = ( char * ) hb_xgrab( sizeof ( long ) );
+         break;
+      default:
+         var->sqldata = ( char * ) hb_xgrab( sizeof ( char ) * var->sqllen );
+         break;
+      }
+
+      if( var->sqltype & 1 )
+         var->sqlind = ( short * ) hb_xgrab( sizeof ( short ) );
+
+      aTemp = hb_itemArrayNew( 5 );
+
+      hb_arraySetC(  aTemp, 1, sqlda->sqlvar[ i ].sqlname );
+      hb_arraySetNL( aTemp, 2, ( long ) dtype );
+      hb_arraySetNL( aTemp, 3, sqlda->sqlvar[ i ].sqllen );
+      hb_arraySetNL( aTemp, 4, sqlda->sqlvar[ i ].sqlscale );
+      hb_arraySetC(  aTemp, 5, sqlda->sqlvar[ i ].relname );
+
+      hb_itemArrayPut( aNew, i+1, aTemp );
+
+      hb_itemRelease( aTemp );
+   }
+
+   if( ! sqlda->sqld )
+   {
+      /* Execute and commit non-select querys */
+      if( isc_dsql_execute( status, &trans, &stmt, dialect, NULL ) )
+      {
+         ERREXIT( status );
+      }
+   }
+   else
+   {
+      if( isc_dsql_execute( status, &trans, &stmt, dialect, sqlda ) )
+      {
+         ERREXIT( status );
+      }
+   }
+
+   qry_handle = hb_itemArrayNew( 6 );
+
+   hb_arraySetPtr( qry_handle, 1, ( void * ) stmt );
+   hb_arraySetPtr( qry_handle, 2, ( void * ) sqlda );
+
+   if( ! ISPOINTER( 4 ) )
+      hb_arraySetPtr( qry_handle, 3, ( void * ) trans );
+
+   hb_arraySetNL( qry_handle, 4, ( long ) num_cols );
+   hb_arraySetNL( qry_handle, 5, ( long ) dialect );
+   hb_arraySet(   qry_handle, 6, aNew );
+
+   hb_itemReturnRelease( qry_handle );
+   hb_itemRelease( aNew );
 }
 
-HB_FUNC(FBQUERY)
+HB_FUNC( FBFETCH )
 {
-    isc_db_handle       db = NULL;
-    isc_tr_handle       trans = NULL;
-    ISC_STATUS          status[MAX_FIELDS];
-    XSQLDA  ISC_FAR *   sqlda;
-    isc_stmt_handle     stmt = NULL;
-    XSQLVAR             *var;
+   if( ISARRAY( 1 ) )
+   {
+      PHB_ITEM aParam = hb_param( 1, HB_IT_ARRAY );
 
-    char                sel_str[MAX_LEN];
-    int                 dialect;
-    int                 n, i, dtype;
-    int                 num_cols;
+      isc_stmt_handle stmt = ( isc_stmt_handle ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
+      ISC_STATUS      status[ MAX_FIELDS ];
+      XSQLDA *        sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
+      int             dialect = hb_itemGetNI( hb_itemArrayGet( aParam, 5 ) );
+      long            fetch_stat;
 
-    PHB_ITEM qry_handle;
-    PHB_ITEM temp;
-    PHB_ITEM aTemp;
-    PHB_ITEM aNew;
+      /* TOFIX */
+      fetch_stat = isc_dsql_fetch( status, &stmt, dialect, sqlda );
 
-    PHB_ITEM itemSqlname;
-    PHB_ITEM itemSqltype;
-    PHB_ITEM itemSqllen ;
-    PHB_ITEM itemSqlscale;
-    PHB_ITEM itemRelname;
+      if( fetch_stat != 100L )
+      {
+         ERREXIT( status );
+      }
+   }
 
-    db = ( isc_db_handle ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-    strcpy(sel_str, hb_parcx(2));
-
-    if (hb_parinfo(3)) {
-        dialect = hb_parni(3);
-    } else {
-        dialect = DIALECT;
-    }
-
-    if (hb_parinfo(4)) {
-        trans = (isc_tr_handle) hb_itemGetPtr( hb_param( 4, HB_IT_POINTER ) );
-
-    } else if ( isc_start_transaction ( status, &trans, 1, &db, 0, NULL ) )
-        ERREXIT(status);
-
-    // Allocate an output SQLDA. Just to check number of columns
-    sqlda = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH ( 1 ) );
-    sqlda->sqln = 1;
-    sqlda->version = 1;
-
-    // Allocate a statement
-    if (isc_dsql_allocate_statement(status, &db, &stmt))
-        ERREXIT(status);
-
-    // Prepare the statement.
-    if (isc_dsql_prepare(status, &trans, &stmt, 0, sel_str, dialect, sqlda))
-        ERREXIT(status);
-
-    // Describe sql contents
-    if (isc_dsql_describe(status, &stmt, dialect, sqlda))
-        ERREXIT(status);
-
-    num_cols = sqlda->sqld;
-    aNew = hb_itemArrayNew( num_cols );
-
-    // Relocate necessary number of columns
-    if ( sqlda->sqld > sqlda->sqln ) {
-        hb_xfree( sqlda );
-        n = sqlda->sqld;
-        sqlda = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH ( n ) );
-        sqlda->sqln = n;
-        sqlda->version = 1;
-
-        if (isc_dsql_describe(status, &stmt, dialect, sqlda))
-            ERREXIT(status);
-    }
-
-    for ( i = 0, var = sqlda->sqlvar; i < sqlda->sqld; i++, var++ ) {
-        dtype = ( var->sqltype & ~1 );
-        switch ( dtype ) {
-        case SQL_VARYING:
-            var->sqltype = SQL_TEXT;
-            var->sqldata = ( char * ) hb_xgrab( sizeof ( char ) * var->sqllen + 2 );
-            break;
-        case SQL_TEXT:
-            var->sqldata = ( char * ) hb_xgrab( sizeof ( char ) * var->sqllen + 2 );
-            break;
-        case SQL_LONG:
-            var->sqltype = SQL_LONG;
-            var->sqldata = ( char * ) hb_xgrab( sizeof ( long ) );
-            break;
-        default:
-            var->sqldata = ( char * ) hb_xgrab( sizeof ( char ) * var->sqllen );
-            break;
-        }
-        if ( var->sqltype & 1 ) {
-            var->sqlind = ( short * ) hb_xgrab( sizeof ( short ) );
-        }
-
-        aTemp = hb_itemArrayNew( 5 );
-
-        itemSqlname = hb_itemPutC( NULL, sqlda->sqlvar[i].sqlname );
-        hb_itemArrayPut( aTemp, 1, itemSqlname );
-
-        itemSqltype = hb_itemPutNL( NULL, (long)dtype );
-        hb_itemArrayPut( aTemp, 2, itemSqltype );
-
-        itemSqllen = hb_itemPutNL( NULL, sqlda->sqlvar[i].sqllen );
-        hb_itemArrayPut( aTemp, 3, itemSqllen );
-
-        itemSqlscale = hb_itemPutNL( NULL, sqlda->sqlvar[i].sqlscale );
-        hb_itemArrayPut( aTemp, 4, itemSqlscale );
-
-        itemRelname = hb_itemPutC( NULL, sqlda->sqlvar[i].relname );
-        hb_itemArrayPut( aTemp, 5, itemRelname );
-
-        hb_itemRelease( itemSqlname );
-        hb_itemRelease( itemSqltype );
-        hb_itemRelease( itemSqllen );
-        hb_itemRelease( itemSqlscale );
-        hb_itemRelease( itemRelname );
-
-        hb_itemArrayPut( aNew, i+1, aTemp );
-        hb_itemRelease( aTemp );
-    }
-
-    if ( !sqlda->sqld ) {
-        // Execute and commit non-select querys
-        if ( isc_dsql_execute ( status, &trans, &stmt, dialect, NULL ) )
-            ERREXIT(status);
-
-    } else {
-        if ( isc_dsql_execute ( status, &trans, &stmt, dialect, sqlda ) )
-             ERREXIT(status);
-    }
-
-    qry_handle = hb_itemArrayNew(6);
-
-    temp = hb_itemPutPtr( NULL, ( void * ) stmt );
-    hb_arraySet(qry_handle, 1, temp);
-    hb_itemRelease(temp);
-
-    temp = hb_itemPutPtr( NULL, ( void * ) sqlda );
-    hb_arraySet(qry_handle, 2, temp);
-    hb_itemRelease(temp);
-
-    if (! hb_parinfo(4))
-    {
-        temp = hb_itemPutPtr( NULL, ( void * ) trans );
-        hb_arraySet(qry_handle, 3, temp);
-        hb_itemRelease(temp);
-    }
-
-    temp = hb_itemPutNL(NULL, (long) num_cols);
-    hb_arraySet(qry_handle, 4, temp);
-    hb_itemRelease(temp);
-
-    temp = hb_itemPutNL(NULL, (long) dialect);
-    hb_arraySet(qry_handle, 5, temp);
-    hb_itemRelease(temp);
-
-    hb_arraySet(qry_handle, 6, aNew);
-
-    hb_itemReturnRelease(qry_handle);
-    hb_itemRelease(aNew);
+   hb_retnl( 0 );
 }
 
-
-HB_FUNC(FBFETCH)
+HB_FUNC( FBFREE )
 {
-    isc_stmt_handle     stmt = NULL;
-    ISC_STATUS          status[MAX_FIELDS];
-    XSQLDA              ISC_FAR * sqlda;
-    long                fetch_stat;
-    int                 dialect;
+   if( ISARRAY( 1 ) )
+   {
+      PHB_ITEM aParam = hb_param( 1, HB_IT_ARRAY );
 
-    PHB_ITEM aParam;
+      isc_stmt_handle stmt = ( isc_stmt_handle ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
+      XSQLDA *        sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
+      isc_tr_handle   trans = ( isc_tr_handle ) hb_itemGetPtr( hb_itemArrayGet( aParam, 3 ) );
+      ISC_STATUS      status[ MAX_FIELDS ];
 
-    if (ISARRAY( 1 ) )
-    {
-        aParam = hb_param(1,HB_IT_ARRAY);
+      if( isc_dsql_free_statement( status, &stmt, DSQL_drop ) )
+      {
+         ERREXIT( status );
+      }
 
-        stmt = ( isc_stmt_handle ) hb_itemGetPtr(hb_itemArrayGet( aParam, 1 ));
-        sqlda = ( XSQLDA ISC_FAR * ) hb_itemGetPtr(hb_itemArrayGet( aParam, 2 ));
-        dialect = hb_itemGetNI(hb_itemArrayGet( aParam, 5 ));
+      if( trans )
+      {
+         if( isc_commit_transaction( status, &trans ) )
+         {
+            ERREXIT( status );
+         }
+      }
 
-        fetch_stat = isc_dsql_fetch(status, &stmt, dialect, sqlda);
+      /* TOFIX: Freeing pointer received as parameter? We should at least set the item NULL. */
+      if( sqlda )
+         hb_xfree( sqlda );
 
-        if (fetch_stat != 100L)
-            ERREXIT(status);
-
-    }
-    hb_retnl(fetch_stat);
+      hb_retnl( 1 );
+   }
+   else
+      hb_retnl( 0 );
 }
 
-
-HB_FUNC(FBFREE)
+HB_FUNC( FBGETDATA )
 {
-    isc_stmt_handle     stmt = NULL;
-    isc_tr_handle       trans = NULL;
-    ISC_STATUS          status[MAX_FIELDS];
-    XSQLDA              ISC_FAR *  sqlda;
+   PHB_ITEM aParam = hb_param( 1, HB_IT_ARRAY );
 
-    PHB_ITEM aParam;
+   int        pos = hb_parni( 2 ) - 1;
+   short      dtype;
+   char       data[ MAX_BUFFER ];
+   char       date_s[ 25 ];
 
-    if (ISARRAY( 1 ) )
-    {
-        aParam = hb_param(1,HB_IT_ARRAY);
+   struct     tm times;
+   XSQLVAR *  var;
+   XSQLDA *   sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
+   ISC_STATUS status[ MAX_FIELDS ];
+   ISC_QUAD * blob_id;
 
-        stmt = ( isc_stmt_handle ) hb_itemGetPtr(hb_itemArrayGet( aParam, 1 ));
-        sqlda = ( XSQLDA ISC_FAR * ) hb_itemGetPtr(hb_itemArrayGet( aParam, 2 ));
-        trans = ( isc_tr_handle ) hb_itemGetPtr( hb_itemArrayGet( aParam, 3 ));
+   if( ( pos + 1 ) > sqlda->sqln )
+   {
+      ERREXIT( status );
+   }
 
-        if (isc_dsql_free_statement(status, &stmt, DSQL_drop))
-             ERREXIT(status);
+   var = sqlda->sqlvar + pos;
+   dtype = var->sqltype & ~1;
 
-        if (trans)
-            if (isc_commit_transaction(status, &trans))
-                ERREXIT(status);
+   if( ( var->sqltype & 1 ) && ( *var->sqlind < 0 ) )
+   {
+      /* null field */
+      hb_ret();
+   }
+   else
+   {
+      switch( dtype )
+      {
+      case SQL_TEXT:
+      case SQL_VARYING:
+         hb_retclen( var->sqldata, var->sqllen );
+         break;
 
-        if ( sqlda )
-            hb_xfree( sqlda );
+      case SQL_TIMESTAMP:
+         isc_decode_timestamp ( ( ISC_TIMESTAMP * ) var->sqldata, &times );
+         snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d %02d:%02d:%02d.%04lu",
+                   times.tm_year + 1900,
+                   times.tm_mon + 1,
+                   times.tm_mday,
+                   times.tm_hour,
+                   times.tm_min,
+                   times.tm_sec,
+                   ( ( ISC_TIMESTAMP * ) var->sqldata )->timestamp_time % 10000 );
+         snprintf( data, sizeof( data ), "%*s ", 24, date_s );
 
-        hb_retnl(1);
-    }
-    else
-        hb_retnl(0);
+         hb_retc( data );
+         break;
 
+      case SQL_TYPE_DATE:
+         isc_decode_sql_date( ( ISC_DATE * ) var->sqldata, &times );
+         snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d", times.tm_year + 1900, times.tm_mon + 1, times.tm_mday );
+         snprintf( data, sizeof( data ), "%*s ", 8, date_s );
+
+         hb_retc( data );
+         break;
+
+      case SQL_TYPE_TIME:
+         isc_decode_sql_time ( ( ISC_TIME * ) var->sqldata, &times );
+         snprintf( date_s, sizeof( date_s ), "%02d:%02d:%02d.%04lu",
+                   times.tm_hour,
+                   times.tm_min,
+                   times.tm_sec, ( *( ( ISC_TIME * ) var->sqldata ) ) % 10000 );
+         snprintf( data, sizeof( data ), "%*s ", 13, date_s );
+
+         hb_retc( data );
+         break;
+
+      case SQL_BLOB:
+         blob_id = ( ISC_QUAD * ) var->sqldata;
+         hb_retptr( ( void * ) blob_id );
+         break;
+
+      case SQL_SHORT:
+      case SQL_LONG:
+      case SQL_INT64:
+         {
+            ISC_INT64 value;
+            short field_width;
+            short dscale;
+
+            switch( dtype )
+            {
+               case SQL_SHORT:
+                  value = ( ISC_INT64 ) *( short * ) var->sqldata;
+                  field_width = 6;
+                  break;
+
+               case SQL_LONG:
+                  value = ( ISC_INT64 ) *( long * ) var->sqldata;
+                  field_width = 11;
+                  break;
+
+               case SQL_INT64:
+                  value = ( ISC_INT64 ) *( ISC_INT64 * ) var->sqldata;
+                  field_width = 21;
+                  break;
+            }
+
+            dscale = var->sqlscale;
+
+            if( dscale < 0 )
+            {
+               ISC_INT64 tens = 1;
+               short     i;
+           
+               for( i = 0; i > dscale; i-- )
+                  tens *= 10;
+
+               if( value >= 0 )
+                  snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
+                            field_width - 1 + dscale,
+                            ( ISC_INT64 ) value / tens,
+                            -dscale,
+                            ( ISC_INT64 ) value % tens);
+               else if( ( value / tens ) != 0 )
+                  snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
+                            field_width - 1 + dscale,
+                            ( ISC_INT64 ) ( value / tens ),
+                            -dscale,
+                            ( ISC_INT64 ) -( value % tens ) );
+               else
+                  snprintf( data, sizeof( data ), "%*s.%0*" ISC_INT64_FORMAT "d",
+                            field_width - 1 + dscale,
+                            "-0",
+                            -dscale,
+                            ( ISC_INT64 ) -( value % tens ) );
+            }
+            else if( dscale )
+               snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d%0*d", field_width, ( ISC_INT64 ) value, dscale, 0 );
+            else
+               snprintf( data, sizeof( data ), "%*" ISC_INT64_FORMAT "d", field_width, ( ISC_INT64 ) value );
+         }
+
+         hb_retc( data );
+         break;
+
+      case SQL_FLOAT:
+         snprintf( data, sizeof( data ), "%15g ", *( float * ) ( var->sqldata ) );
+         hb_retc( data );
+         break;
+
+      case SQL_DOUBLE:
+         snprintf( data, sizeof( data ), "%24f ", *( double * ) ( var->sqldata ) );
+         hb_retc( data );
+         break;
+
+      default:
+         hb_ret();
+         break;
+      }
+   }
 }
 
-
-HB_FUNC(FBGETDATA)
+HB_FUNC( FBGETBLOB )
 {
-    int             pos;
-    short           dtype;
-    char            data[MAX_BUFFER], *p;
-    char            date_s[25];
+   ISC_STATUS      status[ MAX_FIELDS ];
+   isc_db_handle   db = ( isc_db_handle ) hb_parptr( 1 );
+   isc_tr_handle   trans = NULL;
+   isc_blob_handle blob_handle = NULL;
+   short           blob_seg_len;
+   char            blob_segment[ 512 ];
+   ISC_QUAD *      blob_id = ( ISC_QUAD * ) hb_parptr( 2 );
+   char            p[ MAX_BUFFER ];
+   long            blob_stat;
 
-    struct          tm times;
-    XSQLVAR         *var;
-    XSQLDA          ISC_FAR * sqlda;
-    ISC_STATUS      status[MAX_FIELDS];
-    ISC_QUAD        *blob_id;
+   PHB_ITEM temp;
+   PHB_ITEM aNew;
 
-    PHB_ITEM aParam;
-    PHB_ITEM temp;
+   if( ISPOINTER( 3 ) )
+   {
+      trans = ( isc_tr_handle ) hb_parptr( 3 );
+   }
+   else
+   {
+      if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
+      {
+         ERREXIT( status );
+      }
+   }
 
-    aParam = hb_param(1,HB_IT_ARRAY);
+   if( isc_open_blob2( status, &db, &trans, &blob_handle, blob_id, 0, NULL ) )
+   {
+      ERREXIT( status );
+   }
 
-    sqlda = ( XSQLDA ISC_FAR * ) hb_itemGetPtr(hb_itemArrayGet( aParam, 2 ));
-    pos = (int) hb_parnl(2);
+   /* Get blob segments and their lengths and print each segment. */
+   blob_stat = isc_get_segment( status, &blob_handle,
+                                ( unsigned short * ) &blob_seg_len,
+                                sizeof( blob_segment ), blob_segment );
 
-    pos--;
+   if( blob_stat == 0 || status[ 1 ] == isc_segment )
+      aNew = hb_itemArrayNew( 0 );
 
-    if ( ( pos + 1 ) > sqlda->sqln )
-        ERREXIT(status);
+   while( blob_stat == 0 || status[ 1 ] == isc_segment )
+   {
+      /* p = ( char * ) hb_xgrab( blob_seg_len + 1 ); */
+      snprintf( p, sizeof( p ), "%*.*s", blob_seg_len, blob_seg_len, blob_segment );
 
-        var = sqlda->sqlvar;
+      temp = hb_itemPutC( NULL, p );
+      hb_arrayAdd( aNew, temp );
+      hb_itemRelease( temp );
 
-        var += pos;
+      /* hb_xfree(p); */
+      blob_stat = isc_get_segment( status, &blob_handle,
+                                   ( unsigned short * ) &blob_seg_len,
+                                   sizeof( blob_segment ), blob_segment );
+   }
 
-        dtype = var->sqltype & ~1;
-        p = data;
+   if( isc_close_blob( status, &blob_handle ) )
+   {
+      hb_itemRelease( aNew );
+      ERREXIT( status );
+   }
 
-        if ( ( var->sqltype & 1 ) && ( *var->sqlind < 0 ) ) {
-            /* null field */
-             hb_ret();
+   if( ! ISPOINTER( 3 ) )
+   {
+      if( isc_commit_transaction( status, &trans ) )
+      {
+         ERREXIT( status );
+      }
+   }
 
-        } else {
-                switch ( dtype ) {
-                case SQL_TEXT:
-                case SQL_VARYING:
-                    hb_retclen( var->sqldata, var->sqllen );
-                    break;
-
-                case SQL_TIMESTAMP:
-                    isc_decode_timestamp ( ( ISC_TIMESTAMP ISC_FAR * ) var->sqldata, &times );
-                    snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d %02d:%02d:%02d.%04lu",
-                              times.tm_year + 1900,
-                              times.tm_mon + 1,
-                              times.tm_mday,
-                              times.tm_hour,
-                              times.tm_min,
-                              times.tm_sec,
-                              ( ( ISC_TIMESTAMP * ) var->sqldata )->timestamp_time % 10000 );
-                    snprintf( p, sizeof( data ), "%*s ", 24, date_s );
-
-                    hb_retc(p);
-                    break;
-
-                case SQL_TYPE_DATE:
-                    isc_decode_sql_date ( ( ISC_DATE ISC_FAR * ) var->sqldata, &times );
-                    snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d", times.tm_year + 1900, times.tm_mon + 1, times.tm_mday );
-                    snprintf( p, sizeof( data ), "%*s ", 8, date_s );
-
-                    hb_retc(p);
-                    break;
-
-                case SQL_TYPE_TIME:
-                    isc_decode_sql_time ( ( ISC_TIME ISC_FAR * ) var->sqldata, &times );
-                    snprintf( date_s, sizeof( date_s ), "%02d:%02d:%02d.%04lu",
-                              times.tm_hour,
-                              times.tm_min,
-                              times.tm_sec, ( *( ( ISC_TIME * ) var->sqldata ) ) % 10000 );
-                    snprintf( p, sizeof( data ), "%*s ", 13, date_s );
-
-                    hb_retc(p);
-                    break;
-
-                case SQL_BLOB:
-
-                    blob_id = ( ISC_QUAD * ) var->sqldata;
-
-                    temp = hb_itemPutPtr( NULL, ( void * ) blob_id );
-                    hb_itemReturnRelease(temp);
-
-                    break;
-
-                case SQL_SHORT:
-                case SQL_LONG:
-                    case SQL_INT64:
-                        {
-                        ISC_INT64       value;
-                        short           field_width;
-                        short           dscale;
-                        switch (dtype)
-                            {
-                                case SQL_SHORT:
-                                        value = (ISC_INT64) *(short ISC_FAR *) var->sqldata;
-                                        field_width = 6;
-                                        break;
-
-                                case SQL_LONG:
-                                        value = (ISC_INT64) *(long ISC_FAR *) var->sqldata;
-                                        field_width = 11;
-                                        break;
-
-                                case SQL_INT64:
-                                        value = (ISC_INT64) *(ISC_INT64 ISC_FAR *) var->sqldata;
-                                        field_width = 21;
-                                        break;
-                    }
-
-                            dscale = var->sqlscale;
-
-                            if (dscale < 0)
-                            {
-                                ISC_INT64   tens;
-                                short       i;
-
-                            tens = 1;
-                            for (i = 0; i > dscale; i--)
-                                    tens *= 10;
-
-                                if (value >= 0)
-                                        snprintf(p, sizeof( data ), "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
-                                                field_width - 1 + dscale,
-                                                (ISC_INT64) value / tens,
-                                                -dscale,
-                                                (ISC_INT64) value % tens);
-
-                                else if ((value / tens) != 0)
-                                        snprintf(p, sizeof( data ), "%*" ISC_INT64_FORMAT "d.%0*" ISC_INT64_FORMAT "d",
-                                                field_width - 1 + dscale,
-                                                (ISC_INT64) (value / tens),
-                                                -dscale,
-                                                (ISC_INT64) -(value % tens));
-
-                                else
-                                        snprintf(p, sizeof( data ), "%*s.%0*" ISC_INT64_FORMAT "d",
-                                                field_width - 1 + dscale,
-                                                "-0",
-                                                -dscale,
-                                                (ISC_INT64) -(value % tens));
-                            }
-                            else if (dscale)
-                                snprintf(p, sizeof( data ), "%*" ISC_INT64_FORMAT "d%0*d", field_width, (ISC_INT64) value, dscale, 0);
-                            else
-                                snprintf(p, sizeof( data ), "%*" ISC_INT64_FORMAT "d", field_width, (ISC_INT64) value);
-                };
-                    hb_retc(p);
-                    break;
-
-                case SQL_FLOAT:
-                    snprintf(p, sizeof( data ), "%15g ", *(float ISC_FAR *) (var->sqldata));
-                    hb_retc(p);
-                    break;
-
-                case SQL_DOUBLE:
-                    snprintf(p, sizeof( data ), "%24f ", *(double ISC_FAR *) (var->sqldata));
-                    hb_retc(p);
-                    break;
-
-                default:
-                    hb_ret();
-                    break;
-                }
-        }
-}
-
-
-HB_FUNC(FBGETBLOB)
-{
-    ISC_STATUS          status[MAX_FIELDS];
-    isc_db_handle       db = NULL;
-    isc_tr_handle       trans = NULL;
-    isc_blob_handle     blob_handle = NULL;
-    short               blob_seg_len;
-    char                blob_segment[ 512 ];
-    ISC_QUAD            *blob_id;
-    char                p[MAX_BUFFER];
-    long                blob_stat;
-
-    PHB_ITEM temp;
-    PHB_ITEM aNew;
-
-    db = ( isc_db_handle ) hb_itemGetPtr( hb_param( 1, HB_IT_POINTER ) );
-    blob_id = ( ISC_QUAD * ) hb_itemGetPtr( hb_param( 2, HB_IT_POINTER ) );
-
-    if (hb_parinfo(3)) {
-        trans = (isc_tr_handle) hb_itemGetPtr( hb_param( 3, HB_IT_POINTER ) );
-    } else {
-        if ( isc_start_transaction ( status, &trans, 1, &db, 0, NULL ) ) {
-            ERREXIT(status);
-        }
-    }
-
-    if (isc_open_blob2(status, &db, &trans, &blob_handle, blob_id, 0, NULL))
-        ERREXIT(status);
-
-    // Get blob segments and their lengths and print each segment.
-    blob_stat = isc_get_segment(status, &blob_handle,
-                               (unsigned short ISC_FAR *) &blob_seg_len,
-                                sizeof(blob_segment), blob_segment);
-
-    if (blob_stat == 0 || status[1] == isc_segment)
-        aNew = hb_itemArrayNew( 0 );
-
-    while (blob_stat == 0 || status[1] == isc_segment)
-    {
-        //p = ( char * ) hb_xgrab( blob_seg_len + 1 );
-        snprintf( p, sizeof( p ), "%*.*s", blob_seg_len, blob_seg_len, blob_segment);
-
-        temp = hb_itemPutC( NULL, p );
-        hb_arrayAdd( aNew, temp ) ;
-        hb_itemRelease(temp);
-
-        //hb_xfree(p);
-        blob_stat = isc_get_segment(status, &blob_handle,
-                                   (unsigned short ISC_FAR *)&blob_seg_len,
-                                    sizeof(blob_segment), blob_segment);
-    }
-
-    if (isc_close_blob(status, &blob_handle)) {
-        hb_itemRelease(aNew);
-        ERREXIT(status);
-    }
-
-    if (!hb_parinfo(3))
-        if ( isc_commit_transaction ( status, &trans ) )
-            ERREXIT(status);
-
-    hb_itemReturnRelease(aNew);
+   hb_itemReturnRelease( aNew );
 }

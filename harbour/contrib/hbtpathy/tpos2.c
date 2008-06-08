@@ -65,21 +65,20 @@
 
 #include <stdio.h>
 
-HB_FUNC( P_INITPORTSPEED ) {
-
+HB_FUNC( P_INITPORTSPEED )
+{
    APIRET rc;
    LINECONTROL lctl;
    DCBINFO dcb;
-   USHORT Baud;
-   char *ptr = hb_parcx(4);
+   USHORT Baud = ( USHORT ) hb_parnl( 2 );
+   char * ptr = hb_parcx( 4 );
 
-   memset( &dcb, 0, sizeof(dcb) );
-   memset( &lctl, 0, sizeof(lctl) );
-
-   Baud = (USHORT) hb_parnl(2);
+   memset( &dcb, 0, sizeof( dcb ) );
+   memset( &lctl, 0, sizeof( lctl ) );
 
    /* OS/2 has Mark and Space parity options */
-   switch ( *ptr )  {
+   switch( *ptr )
+   {
       case 'N':
       case 'n':
          lctl.bParity = 0;
@@ -105,19 +104,12 @@ HB_FUNC( P_INITPORTSPEED ) {
    lctl.bStopBits = hb_parnl( 5 ) == 1 ? 0 : hb_parnl( 5 );    /* 1 == 1.5 stop bits only valid with 5 data bits */
    lctl.fTransBreak = 0;
 
-   if ( DosDevIOCtl( (HFILE) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_SETBAUDRATE, &Baud,
-                     sizeof(USHORT), NULL, NULL, 0L, NULL) != NO_ERROR ) {
-
-      hb_retnl( -1 );
-
-   } else {
-
-      if ( DosDevIOCtl( (HFILE) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_SETLINECTRL,
-                         &lctl, sizeof(LINECONTROL), NULL, NULL, 0L, NULL) != NO_ERROR ) {
-         hb_retnl( -2 );
-
-      } else {
-
+   if( DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_SETBAUDRATE, &Baud,
+                    sizeof( USHORT ), NULL, NULL, 0L, NULL ) == NO_ERROR )
+   {
+      if( DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_SETLINECTRL,
+                       &lctl, sizeof( LINECONTROL ), NULL, NULL, 0L, NULL ) == NO_ERROR )
+      {
          /* tp_ help says: on port open
          DTR      ON   (value 1)
          CTS      OFF
@@ -133,145 +125,96 @@ HB_FUNC( P_INITPORTSPEED ) {
 
          dcb.fbTimeout = MODE_NO_WRITE_TIMEOUT | MODE_NOWAIT_READ_TIMEOUT;
 
-         if ( DosDevIOCtl( (HFILE) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_SETDCBINFO, &dcb,
-                           sizeof(DCBINFO), 0L, NULL, 0L, NULL) == NO_ERROR ) {
-
+         if( DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_SETDCBINFO, &dcb,
+                          sizeof(DCBINFO), 0L, NULL, 0L, NULL ) == NO_ERROR )
             hb_retnl( 0 );
-
-         } else {
-
+         else
             hb_retnl( -3 );
-         }
       }
+      else
+         hb_retnl( -2 );
    }
-}
-
-
-
-HB_FUNC( P_READPORT ) {
-
-   char  Buffer[512];
-   ULONG nRead = 0;
-   APIRET rc;
-
-   rc = DosRead( (HFILE) hb_parnl( 1 ), Buffer, 512, &nRead );
-
-   if ( rc == NO_ERROR ) {
-      hb_retclen( Buffer, nRead );
-   } else {
-      hb_retclen( "", 0 );
-   }
-
-}
-
-
-
-HB_FUNC( P_WRITEPORT ) {
-
-   ULONG nWritten = 0;
-   APIRET rc;
-
-
-   rc = DosWrite( (HFILE) hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten );
-
-   if ( rc == NO_ERROR ) {
-      hb_retnl( nWritten );
-   } else {
-      /* Put GetLastError() here, or better a second byref param? */
+   else
       hb_retnl( -1 );
-   }
-
 }
 
+HB_FUNC( P_READPORT )
+{
+   char Buffer[ 512 ];
+   ULONG nRead = 0;
+   APIRET rc = DosRead( ( HFILE ) hb_parnl( 1 ), Buffer, sizeof( Buffer ), &nRead );
 
+   hb_retclen( rc == NO_ERROR ? Buffer : NULL, nRead );
+}
 
-HB_FUNC( P_OUTFREE ) {
+HB_FUNC( P_WRITEPORT )
+{
+   ULONG nWritten = 0;
+   APIRET rc = DosWrite( ( HFILE ) hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten );
 
+   hb_retnl( rc == NO_ERROR ? nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
+}
+
+HB_FUNC( P_OUTFREE )
+{
    APIRET rc;
    RXQUEUE rxqueue = { 0 };
 
-   if ( ( rc = DosDevIOCtl( (HFILE) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETOUTQUECOUNT,
-                            NULL, 0L, NULL, &rxqueue, sizeof(RXQUEUE), NULL ) ) == NO_ERROR ) {
-
+   if( ( rc = DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETOUTQUECOUNT,
+                           NULL, 0L, NULL, &rxqueue, sizeof(RXQUEUE), NULL ) ) == NO_ERROR )
       hb_retnl( rxqueue.cb - rxqueue.cch );
-
-   } else {
-      /* Put GetLastError() here, or better a second byref param? */
-      hb_retnl( -1 );
-   }
-
+   else
+      hb_retnl( -1 ); /* Put GetLastError() here, or better a second byref param? */
 }
 
-
-
-HB_FUNC( P_ISDCD ) {
-
+HB_FUNC( P_ISDCD )
+{
    BYTE instat;
 
    /* if DosDevIOCtl() returns an error, return no DCD */
-   if ( DosDevIOCtl( (HFILE) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETMODEMINPUT,
-                     NULL, 0, NULL, &instat, sizeof(instat), NULL) == NO_ERROR ) {
+   if( DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETMODEMINPUT,
+                    NULL, 0, NULL, &instat, sizeof( instat ), NULL ) == NO_ERROR )
       hb_retl( ( instat & DCD_ON ) == DCD_ON );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
 
-
-
-HB_FUNC( P_ISRI ) {
-
+HB_FUNC( P_ISRI )
+{
    BYTE instat;
 
-   if ( DosDevIOCtl( (HFILE) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETMODEMINPUT,
-                     NULL, 0, NULL, &instat, sizeof(instat), NULL) == NO_ERROR ) {
+   if( DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETMODEMINPUT,
+                    NULL, 0, NULL, &instat, sizeof( instat ), NULL ) == NO_ERROR )
       hb_retl( ( instat & RI_ON ) == RI_ON );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
 
-
-
-HB_FUNC( P_ISDSR ) {
-
+HB_FUNC( P_ISDSR )
+{
    BYTE instat;
 
-   if ( DosDevIOCtl( (HFILE) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETMODEMINPUT,
-                     NULL, 0, NULL, &instat, sizeof(instat), NULL) == NO_ERROR ) {
+   if( DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETMODEMINPUT,
+                    NULL, 0, NULL, &instat, sizeof( instat ), NULL ) == NO_ERROR )
       hb_retl( ( instat & DSR_ON ) == DSR_ON );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
 
-
-
-HB_FUNC( P_ISCTS ) {
-
+HB_FUNC( P_ISCTS )
+{
    BYTE instat;
 
-   if ( DosDevIOCtl( (HFILE) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETMODEMINPUT,
-                     NULL, 0, NULL, &instat, sizeof(instat), NULL) == NO_ERROR ) {
+   if( DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETMODEMINPUT,
+                    NULL, 0, NULL, &instat, sizeof( instat ), NULL ) == NO_ERROR )
       hb_retl( ( instat & CTS_ON ) == CTS_ON );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
 
-
-
-HB_FUNC( P_CTRLCTS ) {
-
+HB_FUNC( P_CTRLCTS )
+{
    hb_retni( 0 );
-
 }
+
 #endif /* HB_OS_OS2 */

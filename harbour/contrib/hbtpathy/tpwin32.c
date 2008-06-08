@@ -64,21 +64,17 @@
 HB_FUNC( P_INITPORTSPEED ) {
 
    DCB dcb;
-   char values[20];
+   char values[ 20 ];
 
-   FillMemory(&dcb, sizeof(dcb), 0);
-   dcb.DCBlength = sizeof(dcb);
+   FillMemory( &dcb, sizeof( dcb ), 0 );
+   dcb.DCBlength = sizeof( dcb );
 
-   snprintf(values, sizeof( values ), "%u,%1s,%1u,%1u", hb_parnl(2), hb_parcx(4), hb_parnl(3), hb_parnl(5));
+   snprintf( values, sizeof( values ), "%u,%1s,%1u,%1u", hb_parnl( 2 ), hb_parcx( 4 ), hb_parnl( 3 ), hb_parnl( 5 ) );
 
-   if ( ! BuildCommDCB(values, &dcb)) {
-      hb_retnl(-1);
-
-   } else {
-      if ( ! SetCommState( (HANDLE) hb_parnl(1), &dcb) ) {
-         hb_retnl(-1);
-
-      } else {
+   if( BuildCommDCB( values, &dcb ) )
+   {
+      if( SetCommState( ( HANDLE ) hb_parnl( 1 ), &dcb ) )
+      {
          COMMTIMEOUTS timeouts;
 
          /* read/write operations return immediatly */
@@ -88,49 +84,32 @@ HB_FUNC( P_INITPORTSPEED ) {
          timeouts.WriteTotalTimeoutMultiplier = 0;
          timeouts.WriteTotalTimeoutConstant = 0;
 
-         if ( SetCommTimeouts( (HANDLE) hb_parnl(1), &timeouts ) ) {
-            hb_retnl(0);
-         } else {
-            hb_retnl(-1);
-         }
+         hb_retnl( SetCommTimeouts( ( HANDLE ) hb_parnl( 1 ), &timeouts ) ? 0 : -1 );
       }
+      else
+         hb_retnl( -1 );
    }
-}
-
-
-
-HB_FUNC( P_READPORT ) {
-
-   char  Buffer[512];
-   DWORD nRead = 0;
-   BOOL  bRet;
-   OVERLAPPED Overlapped = {0};
-
-   bRet = ReadFile( (HANDLE) hb_parnl( 1 ), Buffer, 512, &nRead, &Overlapped );
-
-   if ( bRet ) {
-      hb_retclen( Buffer, nRead );
-   } else {
-      hb_retc( NULL );
-   }
-}
-
-
-
-HB_FUNC( P_WRITEPORT ) {
-
-   DWORD nWritten = 0;
-   BOOL  bRet;
-   OVERLAPPED Overlapped = {0};
-
-   bRet = WriteFile( (HANDLE) hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten, &Overlapped );
-
-   if ( bRet ) {
-      hb_retnl( nWritten );
-   } else {
-      /* Put GetLastError() here, or better a second byref param? */
+   else
       hb_retnl( -1 );
-   }
+}
+
+HB_FUNC( P_READPORT )
+{
+   char Buffer[ 512 ];
+   DWORD nRead = 0;
+   OVERLAPPED Overlapped = { 0 };
+   BOOL bRet = ReadFile( ( HANDLE ) hb_parnl( 1 ), Buffer, sizeof( Buffer ), &nRead, &Overlapped );
+
+   hb_retclen( bRet ? Buffer : NULL, nRead );
+}
+
+HB_FUNC( P_WRITEPORT )
+{
+   DWORD nWritten = 0;
+   OVERLAPPED Overlapped = { 0 };
+   BOOL bRet = WriteFile( ( HANDLE ) hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten, &Overlapped );
+
+   hb_retnl( bRet ? nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
 }
 
 #endif /* HB_OS_WIN_32 */

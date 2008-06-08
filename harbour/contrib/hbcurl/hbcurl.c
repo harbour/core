@@ -379,56 +379,50 @@ static void hb_curl_buff_dl_free( PHB_CURL hb_curl )
 
 static void PHB_CURL_free( PHB_CURL hb_curl, BOOL bFree )
 {
-   if( hb_curl->curl )
+   curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, NULL );
+   curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, NULL );
+   curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, NULL );
+   curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, NULL );
+   curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSFUNCTION, NULL );
+   curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, NULL );
+
+   /* Some extra safety. Set these to NULL, before freeing their pointers. */
+   curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPOST, NULL );
+   curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPHEADER, NULL );
+   curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP200ALIASES, NULL );
+   curl_easy_setopt( hb_curl->curl, CURLOPT_QUOTE, NULL );
+   curl_easy_setopt( hb_curl->curl, CURLOPT_POSTQUOTE, NULL );
+   curl_easy_setopt( hb_curl->curl, CURLOPT_PREQUOTE, NULL );
+   curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, NULL );
+
+   hb_curl_form_free( &hb_curl->pHTTPPOST_First );
+   hb_curl_form_free( &hb_curl->pHTTPPOST_Last );
+   hb_curl_slist_free( &hb_curl->pHTTPHEADER );
+   hb_curl_slist_free( &hb_curl->pHTTP200ALIASES );
+   hb_curl_slist_free( &hb_curl->pQUOTE );
+   hb_curl_slist_free( &hb_curl->pPOSTQUOTE );
+   hb_curl_slist_free( &hb_curl->pPREQUOTE );
+   hb_curl_slist_free( &hb_curl->pTELNETOPTIONS );
+
+   hb_curl_file_ul_free( hb_curl );
+   hb_curl_file_dl_free( hb_curl );
+
+   hb_curl_buff_ul_free( hb_curl );
+   hb_curl_buff_dl_free( hb_curl );
+
+   if( hb_curl->pProgressBlock )
    {
-      curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, NULL );
-      curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, NULL );
-      curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, NULL );
-      curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, NULL );
-      curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSFUNCTION, NULL );
-      curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, NULL );
-
-      /* Some extra safety. Set these to NULL, before freeing their pointers. */
-      curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPOST, NULL );
-      curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPHEADER, NULL );
-      curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP200ALIASES, NULL );
-      curl_easy_setopt( hb_curl->curl, CURLOPT_QUOTE, NULL );
-      curl_easy_setopt( hb_curl->curl, CURLOPT_POSTQUOTE, NULL );
-      curl_easy_setopt( hb_curl->curl, CURLOPT_PREQUOTE, NULL );
-      curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, NULL );
-
-      hb_curl_form_free( &hb_curl->pHTTPPOST_First );
-      hb_curl_form_free( &hb_curl->pHTTPPOST_Last );
-      hb_curl_slist_free( &hb_curl->pHTTPHEADER );
-      hb_curl_slist_free( &hb_curl->pHTTP200ALIASES );
-      hb_curl_slist_free( &hb_curl->pQUOTE );
-      hb_curl_slist_free( &hb_curl->pPOSTQUOTE );
-      hb_curl_slist_free( &hb_curl->pPREQUOTE );
-      hb_curl_slist_free( &hb_curl->pTELNETOPTIONS );
-
-      hb_curl_file_ul_free( hb_curl );
-      hb_curl_file_dl_free( hb_curl );
-
-      hb_curl_buff_ul_free( hb_curl );
-      hb_curl_buff_dl_free( hb_curl );
-
-      if( hb_curl->pProgressBlock )
-      {
-         hb_itemRelease( hb_curl->pProgressBlock );
-         hb_curl->pProgressBlock = NULL;
-      }
-
-      if( bFree )
-      {
-         curl_easy_cleanup( hb_curl->curl );
-         hb_curl->curl = NULL;
-      }
-      else
-         curl_easy_reset( hb_curl->curl );
+      hb_itemRelease( hb_curl->pProgressBlock );
+      hb_curl->pProgressBlock = NULL;
    }
 
    if( bFree )
+   {
+      curl_easy_cleanup( hb_curl->curl );
       hb_xfree( hb_curl );
+   }
+   else
+      curl_easy_reset( hb_curl->curl );
 }
 
 /* NOTE: Will create a new one. If 'from' is specified, the new one
@@ -1347,7 +1341,7 @@ HB_FUNC( CURL_EASY_DL_BUFF_GET )
 #define HB_CURL_INFO_TYPE_SLIST         5
 
 #define HB_CURL_EASY_GETINFO( hb_curl, n, p ) \
-        ( ( hb_curl && hb_curl->curl ) ? curl_easy_getinfo( hb_curl->curl, n, p ) : ( CURLcode ) HB_CURLE_ERROR )
+        ( hb_curl ? curl_easy_getinfo( hb_curl->curl, n, p ) : ( CURLcode ) HB_CURLE_ERROR )
 
 /* NOTE: curl_easy_getinfo( curl, x, @nError ) -> xValue */
 HB_FUNC( CURL_EASY_GETINFO )

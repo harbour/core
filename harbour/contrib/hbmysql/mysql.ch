@@ -2,7 +2,6 @@
  * $Id$
  */
 
-
 /*
  * Harbour Project source code:
  * MySQL DBMS defines
@@ -52,12 +51,8 @@
  *
  */
 
-
-
-// MySQL field types
-
-// NOTE: TINY is used to map clipper logical values to MySQL tables, so 0 == .F., 1 == .T.
-#define  MYSQL_TINY_TYPE         1
+/* MySQL field types */
+#define  MYSQL_TINY_TYPE         1  /* NOTE: TINY is used to map clipper logical values to MySQL tables, so 0 == .F., 1 == .T. */
 #define  MYSQL_SHORT_TYPE        2
 #define  MYSQL_LONG_TYPE         3
 #define  MYSQL_FLOAT_TYPE        4
@@ -81,11 +76,8 @@
 #define  MYSQL_VAR_STRING_TYPE   253
 #define  MYSQL_STRING_TYPE       254
 
-
-
-// MySQL field structure item number (C level structure is translated
-// to a clipper array)
-
+/* MySQL field structure item number
+   (C level structure is translated to a clipper array) */
 #define  MYSQL_FS_NAME           1     /* Name of column */
 #define  MYSQL_FS_TABLE          2     /* Table of column if column was a field */
 #define  MYSQL_FS_DEF            3     /* Default value (set by mysql_list_fields) */
@@ -95,9 +87,7 @@
 #define  MYSQL_FS_FLAGS          7     /* Div flags */
 #define  MYSQL_FS_DECIMALS       8     /* Number of decimals in field */
 
-
-// MySQL field flags
-
+/* MySQL field flags */
 #define  NOT_NULL_FLAG           1     /* Field can't be NULL */
 #define  PRI_KEY_FLAG            2     /* Field is part of a primary key */
 #define  UNIQUE_KEY_FLAG         4     /* Field is part of a unique key */
@@ -113,7 +103,5 @@
 #define  PART_KEY_FLAG           16384 /* Intern; Part of some key */
 #define  GROUP_FLAG              32768 /* Intern group field */
 
-
-// Extension to DBS_xxx defines to encompass NOT NULL fields, needed by indexes
-#define  DBS_NOTNULL             5        /* True if field has to be NOT NULL */
-
+/* Extension to DBS_xxx defines to encompass NOT NULL fields, needed by indexes */
+#define  DBS_NOTNULL             5     /* True if field has to be NOT NULL */

@@ -50,7 +50,7 @@
  *
  */
 
-/* please run $(HARBOUR)\tests\testhbf.prg for testing */
+/* please run tests\testhbf.prg for testing */
 
 #include "hbapifs.h"
 

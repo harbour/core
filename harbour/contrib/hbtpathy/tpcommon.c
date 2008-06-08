@@ -95,25 +95,21 @@ static unsigned short crctab[ 256 ] = {
 
 
 /* updcrc() macro by Pete Disdale */
-#define updcrc(cp, crc)  ( ( crc << 8 ) ^ ( crctab[ ( ( crc >> 8 ) ^ cp ) & 0xFF ] ) )
+#define updcrc( cp, crc )  ( ( crc << 8 ) ^ ( crctab[ ( ( crc >> 8 ) ^ cp ) & 0xFF ] ) )
 
-
-HB_FUNC( P_CRC16 ) {
-
+HB_FUNC( P_CRC16 )
+{
    char *ptr = hb_parc( 1 );
    int count = hb_parclen( 1 );
 
    register unsigned short crc = 0;
 
-   while ( count-- > 0 ) {
+   while ( count-- > 0 )
       crc = updcrc( *ptr++, crc );
-   }
 
    /* swap Hi and Lo byte */
    hb_retnl( ( crc >> 8 ) | ( ( crc << 8 ) & 0xFF00 ) );
 }
-
-
 
 /* Taken from: contrib/unicode/hbcrc32.c
 
@@ -164,20 +160,17 @@ static ULONG crc32tbl[ 256 ] = {
 0xB3667A2El,0xC4614AB8l,0x5D681B02l,0x2A6F2B94l,0xB40BBE37l,0xC30C8EA1l,0x5A05DF1Bl,0x2D02EF8Dl };
 
 
+#define updcrc32( cp, crc )  ( crc32tbl[ ( crc ^ cp ) & 0xff ] ^ ( crc >> 8 ) )
 
-#define updcrc32(cp, crc)  ( crc32tbl[ ( crc ^ cp ) & 0xff ] ^ ( crc >> 8 ) )
-
-
-HB_FUNC( P_CRC32 ) {
-
-   char *ptr = hb_parc( 1 );
+HB_FUNC( P_CRC32 )
+{
+   char * ptr = hb_parc( 1 );
    int count = hb_parclen( 1 );
 
    register ULONG crc = CRC32INIT;
 
-   while ( count-- > 0 ) {
+   while( count-- > 0 )
       crc = updcrc32( *ptr++, crc );
-   }
 
    hb_retnl( crc ^ CRC32INIT );
 }

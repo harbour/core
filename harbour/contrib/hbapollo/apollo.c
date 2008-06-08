@@ -73,7 +73,7 @@
  * --------------------------------------------------*/
 HB_FUNC( SX_APPENDBLANK )
 {
-   sx_AppendBlank( );
+   sx_AppendBlank();
 }
 
 
@@ -82,7 +82,7 @@ HB_FUNC( SX_APPENDBLANK )
  * --------------------------------------------------*/
 HB_FUNC( SX_CLOSE )
 {
-    sx_Close( ) ;
+   sx_Close();
 }
 
 
@@ -91,7 +91,7 @@ HB_FUNC( SX_CLOSE )
  * --------------------------------------------------*/
 HB_FUNC( SX_COMMIT )
 {
-    sx_Commit( );
+   sx_Commit();
 }
 
 
@@ -101,7 +101,7 @@ HB_FUNC( SX_COMMIT )
  * --------------------------------------------------*/
 HB_FUNC( SX_CREATEEXEC )
 {
-    sx_CreateExec( );
+   sx_CreateExec();
 }
 
 
@@ -123,11 +123,11 @@ HB_FUNC( SX_CREATEFIELD )
  * --------------------------------------------------*/
 HB_FUNC( SX_CREATENEW )
 {
-    hb_retni(
-     sx_CreateNew( ( PBYTE ) hb_parc( 1 ), /* Field name */
-                   ( PBYTE ) hb_parc( 2 ), /* Alias */
-                   hb_parni( 3 ),          /* RDE Type */
-                   hb_parni( 4 ) ) );      /* The maximum number of fields to be added to the file structure */
+   hb_retni(
+      sx_CreateNew( ( PBYTE ) hb_parc( 1 ), /* Field name */
+                    ( PBYTE ) hb_parc( 2 ), /* Alias */
+                    hb_parni( 3 ),          /* RDE Type */
+                    hb_parni( 4 ) ) );      /* The maximum number of fields to be added to the file structure */
 }
 
 
@@ -136,7 +136,7 @@ HB_FUNC( SX_CREATENEW )
  * --------------------------------------------------*/
 HB_FUNC( SX_EOF )
 {
-    hb_retl( sx_Eof( ) );
+   hb_retl( sx_Eof() );
 }
 
 
@@ -148,8 +148,7 @@ HB_FUNC( SX_EOF )
  * --------------------------------------------------*/
 HB_FUNC( SX_GETDATEJULIAN )
 {
-   hb_retni(
-    sx_GetDateJulian( ( PBYTE ) hb_parc( 1 ) ) );    /* Field name  */
+   hb_retni( sx_GetDateJulian( ( PBYTE ) hb_parc( 1 ) ) );    /* Field name  */
 }
 
 
@@ -159,8 +158,7 @@ HB_FUNC( SX_GETDATEJULIAN )
  * --------------------------------------------------*/
 HB_FUNC( SX_GETLOGICAL )
 {
-   hb_retl(
-    sx_GetLogical( ( PBYTE ) hb_parc( 1 ) ) );       /* Field name  */
+   hb_retl( sx_GetLogical( ( PBYTE ) hb_parc( 1 ) ) );       /* Field name  */
 }
 
 
@@ -169,8 +167,7 @@ HB_FUNC( SX_GETLOGICAL )
  * --------------------------------------------------*/
 HB_FUNC( SX_GETSTRING )
 {
-   hb_retc(
-    ( char * )sx_GetString( ( PBYTE ) hb_parc( 1 ) ) );  /* Field name  */
+   hb_retc( ( char * ) sx_GetString( ( PBYTE ) hb_parc( 1 ) ) );  /* Field name  */
 }
 
 
@@ -179,8 +176,7 @@ HB_FUNC( SX_GETSTRING )
  * --------------------------------------------------*/
 HB_FUNC( SX_GETVARIANT )
 {
-   hb_retc(
-    ( char * )sx_GetVariant( ( PBYTE ) hb_parc( 1 ) ) );  /* Field name  */
+   hb_retc( ( char * ) sx_GetVariant( ( PBYTE ) hb_parc( 1 ) ) );  /* Field name  */
 }
 
 
@@ -189,7 +185,7 @@ HB_FUNC( SX_GETVARIANT )
  * --------------------------------------------------*/
 HB_FUNC( SX_GO )
 {
-    sx_Go( hb_parni( 1 ) );                /* The record number to go */
+   sx_Go( hb_parni( 1 ) );                /* The record number to go */
 }
 
 
@@ -198,7 +194,7 @@ HB_FUNC( SX_GO )
  * --------------------------------------------------*/
 HB_FUNC( SX_GOBOTTOM )
 {
-    sx_GoBottom( ) ;
+   sx_GoBottom();
 }
 
 
@@ -207,7 +203,7 @@ HB_FUNC( SX_GOBOTTOM )
  * --------------------------------------------------*/
 HB_FUNC( SX_GOTOP )
 {
-    sx_GoTop( ) ;
+   sx_GoTop();
 }
 
 
@@ -216,13 +212,13 @@ HB_FUNC( SX_GOTOP )
  * --------------------------------------------------*/
 HB_FUNC( SX_INDEXTAG )
 {
-    hb_retni(
-     sx_IndexTag( ( PBYTE ) hb_parc( 1 ),    /* Field name */
-                  ( PBYTE ) hb_parc( 2 ),    /* Tag name */
-                  ( PBYTE ) hb_parc( 3 ),    /* Index expression as a string */
-                  hb_parni( 4 ),             /* Option (0=Standard) (1=Unique) (2=Roll-Your-Own) */
-                  hb_parl( 5 ),              /* True for a descend index */
-                  ( PBYTE ) hb_parc( 6) ) ); /* Condition */
+   hb_retni(
+      sx_IndexTag( ( PBYTE ) hb_parc( 1 ),    /* Field name */
+                   ( PBYTE ) hb_parc( 2 ),    /* Tag name */
+                   ( PBYTE ) hb_parc( 3 ),    /* Index expression as a string */
+                   hb_parni( 4 ),             /* Option (0=Standard) (1=Unique) (2=Roll-Your-Own) */
+                   hb_parl( 5 ),              /* True for a descend index */
+                   ( PBYTE ) hb_parc( 6) ) ); /* Condition */
 }
 
 
@@ -231,8 +227,7 @@ HB_FUNC( SX_INDEXTAG )
  * --------------------------------------------------*/
 HB_FUNC( SX_RECCOUNT )
 {
-    hb_retni(
-     sx_RecCount( ) );
+   hb_retni( sx_RecCount() );
 }
 
 
@@ -241,8 +236,7 @@ HB_FUNC( SX_RECCOUNT )
  * --------------------------------------------------*/
 HB_FUNC( SX_RECNO )
 {
-    hb_retni(
-     sx_RecNo( ) );
+   hb_retni( sx_RecNo() );
 }
 
 
@@ -251,7 +245,7 @@ HB_FUNC( SX_RECNO )
  * --------------------------------------------------*/
 HB_FUNC( SX_REINDEX )
 {
-    sx_Reindex( );
+   sx_Reindex();
 }
 
 
@@ -260,28 +254,26 @@ HB_FUNC( SX_REINDEX )
  * --------------------------------------------------*/
 HB_FUNC( SX_REPLACE )
 {
-
-switch ( hb_parni( 2 ) )
-{
- case R_INTEGER :
- case R_JULIAN  : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) ) ;  break;
- case R_LOGICAL : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) ) ;  break;  /* TODO: somthing is wrong here... */
- case R_LONG    : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parnl( 3) ) ;  break;
- case R_DOUBLE  :
-      {
-        double d = hb_parnd( 3 );
-        sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) &d );
-        break;
-      }
- case R_CHAR    :
- case R_DATESTR :
- case R_MEMO    :
- case R_BITMAP  :
- case R_BLOBFILE:
- case R_BLOBPTR : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3)  ) ;  break;
- default:         sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3)  );
-}
-
+   switch( hb_parni( 2 ) )
+   {
+      case R_INTEGER :
+      case R_JULIAN  : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) );  break;
+      case R_LOGICAL : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parni( 3) );  break;  /* TODO: somthing is wrong here... */
+      case R_LONG    : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parnl( 3) );  break;
+      case R_DOUBLE  :
+           {
+              double d = hb_parnd( 3 );
+              sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) &d );
+              break;
+           }
+      case R_CHAR    :
+      case R_DATESTR :
+      case R_MEMO    :
+      case R_BITMAP  :
+      case R_BLOBFILE:
+      case R_BLOBPTR : sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3) );  break;
+      default:         sx_Replace( ( PBYTE ) hb_parc( 1 ), hb_parni( 2 ), ( void * ) hb_parc( 3) );
+   }
 }
 
 
@@ -290,7 +282,7 @@ switch ( hb_parni( 2 ) )
  * --------------------------------------------------*/
 HB_FUNC( SX_RLOCK )
 {
-    sx_Rlock( hb_parni( 1 ) );             /* The physical record number of the record to be locked. */
+   sx_Rlock( hb_parni( 1 ) );             /* The physical record number of the record to be locked. */
 }
 
 
@@ -299,8 +291,7 @@ HB_FUNC( SX_RLOCK )
  * --------------------------------------------------*/
 HB_FUNC( SX_SEEK )
 {
-    hb_retl(
-     sx_Seek( ( PBYTE ) hb_parc( 1 ) ) );            /* The value to search for as a string */
+   hb_retl( sx_Seek( ( PBYTE ) hb_parc( 1 ) ) );            /* The value to search for as a string */
 }
 
 
@@ -310,8 +301,7 @@ HB_FUNC( SX_SEEK )
  * --------------------------------------------------*/
 HB_FUNC( SX_SELECT )
 {
-    hb_retni(
-     sx_Seek( ( PBYTE ) hb_parc( 1 ) ) );            /* The work area number returned when the file was opened.  */
+   hb_retni( sx_Seek( ( PBYTE ) hb_parc( 1 ) ) );            /* The work area number returned when the file was opened.  */
 }
 
 
@@ -323,8 +313,8 @@ HB_FUNC( SX_SELECT )
  * --------------------------------------------------*/
 HB_FUNC( SX_SETCENTURY )
 {
-    sx_SetCentury( hb_parl( 1 ) );         /* If True, the century digits will be returned.
-                                            * If False, they will not. */
+   sx_SetCentury( hb_parl( 1 ) );         /* If True, the century digits will be returned.
+                                           * If False, they will not. */
 }
 
 
@@ -334,8 +324,8 @@ HB_FUNC( SX_SETCENTURY )
  * --------------------------------------------------*/
 HB_FUNC( SX_SETDATEFORMAT )
 {
-    sx_SetDateFormat( hb_parni( 1 ) );     /* If True, the century digits will be returned.
-                                            * If False, they will not. */
+   sx_SetDateFormat( hb_parni( 1 ) );     /* If True, the century digits will be returned.
+                                           * If False, they will not. */
 }
 
 
@@ -344,8 +334,8 @@ HB_FUNC( SX_SETDATEFORMAT )
  * --------------------------------------------------*/
 HB_FUNC( SX_SETMEMOBLOCKSIZE )
 {
-    sx_SetMemoBlockSize( hb_parni( 1 ) );  /* The new default block size.
-                                            * The size must be a value from 1 through 1024. */
+   sx_SetMemoBlockSize( hb_parni( 1 ) );  /* The new default block size.
+                                           * The size must be a value from 1 through 1024. */
 }
 
 /* -----------------20/01/2002 13:33-----------------
@@ -354,8 +344,7 @@ HB_FUNC( SX_SETMEMOBLOCKSIZE )
  * --------------------------------------------------*/
 HB_FUNC( SX_SETORDER )
 {
-    hb_retni(
-     sx_SetOrder( hb_parni( 1 ) ) );       /* Selects an existing order as the controlling index order. */
+   hb_retni( sx_SetOrder( hb_parni( 1 ) ) );       /* Selects an existing order as the controlling index order. */
 }
 
 
@@ -364,7 +353,7 @@ HB_FUNC( SX_SETORDER )
  * --------------------------------------------------*/
 HB_FUNC( SX_SETSOFTSEEK )
 {
-    sx_SetSoftSeek( hb_parl( 1 ) );        /* True to set softseek ON */
+   sx_SetSoftSeek( hb_parl( 1 ) );        /* True to set softseek ON */
 }
 
 
@@ -373,7 +362,7 @@ HB_FUNC( SX_SETSOFTSEEK )
  * --------------------------------------------------*/
 HB_FUNC( SX_SKIP )
 {
-    sx_Skip( hb_parni( 1 ) );              /* Number of records to skip */
+   sx_Skip( hb_parni( 1 ) );              /* Number of records to skip */
 }
 
 
@@ -383,16 +372,16 @@ HB_FUNC( SX_SKIP )
  * --------------------------------------------------*/
 HB_FUNC( SX_SYSPROP )
 {
-    int i = hb_parni( 2 );
-    hb_retni(
-     sx_SysProp( hb_parni( 1 ),            /* One of the predefined constant values. See Apollo.ch */
-                 ( void * ) &i ));
+   int i = hb_parni( 2 );
+   hb_retni(
+    sx_SysProp( hb_parni( 1 ),            /* One of the predefined constant values. See Apollo.ch */
+                ( void * ) &i ));
 }
 /*
 HB_FUNC( SX_DISABLEAUTOOPEN )
 {
-    int i = 1;
-    sx_SysProp( 1013, ( void * ) &i );
+   int i = 1;
+   sx_SysProp( 1013, ( void * ) &i );
 }
 */
 
@@ -403,7 +392,7 @@ HB_FUNC( SX_DISABLEAUTOOPEN )
  * --------------------------------------------------*/
 HB_FUNC( SX_USE )
 {
-     hb_retni(
+   hb_retni(
       sx_Use( ( PBYTE ) hb_parc( 1 ),      /* Filename */
               ( PBYTE ) hb_parc( 2 ),      /* Alias */
               hb_parni( 3 ),               /* OpenMode */
@@ -416,8 +405,7 @@ HB_FUNC( SX_USE )
  * --------------------------------------------------*/
 HB_FUNC( SX_VERSION )
 {
-   hb_retc(
-    ( char * ) sx_Version() );
+   hb_retc( ( char * ) sx_Version() );
 }
 
 
@@ -426,7 +414,7 @@ HB_FUNC( SX_VERSION )
  * --------------------------------------------------*/
 HB_FUNC( SX_ZAP )
 {
-   sx_Zap( );
+   sx_Zap();
 }
 
 

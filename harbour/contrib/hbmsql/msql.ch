@@ -2,7 +2,6 @@
  * $Id$
  */
 
-
 /*
  * Harbour Project source code:
  * mSQL DBMS defines
@@ -52,8 +51,7 @@
  *
  */
 
-
-// mSQL fields type
+/* mSQL fields type */
 #define MSQL_INT_TYPE         1
 #define MSQL_CHAR_TYPE        2
 #define MSQL_REAL_TYPE        3
@@ -62,7 +60,7 @@
 #define MSQL_TEXT_TYPE        6
 #define MSQL_DATE_TYPE        7
 
-// NOTE: UINT is used to map clipper logical values to mSQL tables, so 0 == .F., 1 == .T.
+/* NOTE: UINT is used to map clipper logical values to mSQL tables, so 0 == .F., 1 == .T. */
 #define MSQL_UINT_TYPE        8
 #define MSQL_MONEY_TYPE       9
 #define MSQL_TIME_TYPE        10
@@ -71,14 +69,10 @@
 #define MSQL_SYSVAR_TYPE      254
 #define MSQL_ANY_TYPE         255
 
-
-
-// mSQL field structure item number (C level structure is translated
-// to a clipper array)
-
+/* mSQL field structure item number
+   (C level structure is translated to a clipper array) */
 #define MSQL_FS_NAME          1
 #define MSQL_FS_TABLE         2
 #define MSQL_FS_TYPE          3
 #define MSQL_FS_LENGTH        4
 #define MSQL_FS_FLAGS         5
-
