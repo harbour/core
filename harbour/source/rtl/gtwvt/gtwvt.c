@@ -891,9 +891,10 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             pWVT->bBeingMarked = FALSE;
 
             RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+
             {
                ULONG  ulSize;
-               USHORT irow, icol, j, top, left, bottom, right, bytes = 0;
+               USHORT irow, icol, j, top, left, bottom, right;
                BYTE * sBuffer;
 
                left   = pWVT->markStartColRow.x;
@@ -913,7 +914,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   top = bottom;
                   bottom = x;
                }
-               ulSize = ( (bottom-top+1) * (right - left+1) );
+               ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
                sBuffer = hb_xgrab( ulSize );
 
                for( j = 0, irow = top; irow < bottom; irow++ )
@@ -926,19 +927,20 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                      if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
                         break;
 
-                     sBuffer[ j ] = (BYTE) usChar;
-                     j++;
-                     bytes++;
+                     sBuffer[ j++ ] = ( BYTE ) usChar;
                   }
-               }
-               sBuffer[ bytes ] = '\0';
 
-               if( bytes > 0 )
+                  sBuffer[ j++ ] = ( BYTE ) '\r';
+                  sBuffer[ j++ ] = ( BYTE ) '\n';
+               }
+               sBuffer[ j ] = '\0';
+
+               if( j > 0 )
                {
                   hb_gt_w32_setClipboard( pWVT->CodePage == OEM_CHARSET ?
                                           CF_OEMTEXT : CF_TEXT,
                                           sBuffer,
-                                          bytes );
+                                          j );
                }
 
                hb_xfree( sBuffer );
@@ -1711,7 +1713,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    /* Create "Mark" prompt in SysMenu to allow console type copy operation */
    {
       HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-      AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, "Mark" );
+      AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, "Mark and Copy" );
    }
 
    /* SUPER GT initialization */

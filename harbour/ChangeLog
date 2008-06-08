@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-08 12:42 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     + Appending CRLF to each marked row before copying to 
+       the clipboard.
+     * "Mark" sysmenu named "Mark and Copy".
+
 2008-06-08 12:14 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmysql/tmysql.prg
    * contrib/hbmysql/mysql.c
