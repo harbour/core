@@ -11,33 +11,44 @@
 //----------------------------------------------------------------------//
 
 #include 'HbGtInfo.ch'
+#include 'inkey.ch'
 
 //----------------------------------------------------------------------//
 
 FUNCTION Main()
    Local nKey
+   Local nHeight := 20
+   Local nWidth  := Int( nHeight/2 )
+   Local cFont
+
+   //cFont := 'Courier New'
+   //cFont := 'Times New Roman'
+   cFont := 'Lucida Console'
+
+   Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
+   Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
+   Hb_GtInfo( HB_GTI_FONTSIZE , nHeight )
 
    SetMode( 25,80 )
    SetCursor( 0 )
    SetColor( 'n/w' )
 
-
    // Any CALLBACK function receive 5 parameters PLUS any additional parameters
    // supplied with the CALLBACK Block.
    //
-   HB_GtInfo( GTI_CALLBACK, { GTI_CB_SETFOCUS, {|a,b,c,d,e| MyCallBacks( a,b,c,d,e,'MyParam' ) }, { 'MyCargo' } } )
-   HB_GtInfo( GTI_CALLBACK, { GTI_CB_CLOSE   , {|a,b,c,d,e| MyCallBacks( a,b,c,d,e ) } } )
+   HB_GtInfo( HB_GTI_CALLBACK, { HB_GTE_SETFOCUS, {|a,b,c,d,e| MyCallBacks( a,b,c,d,e,'MyParam' ) }, { 'MyCargo' } } )
+   HB_GtInfo( HB_GTI_CALLBACK, { HB_GTE_CLOSE   , {|a,b,c,d,e| MyCallBacks( a,b,c,d,e ) } } )
 
    DispScreen()
 
    DO WHILE .T.
       nKey := Inkey()
-      if nKey == 27
+      if nKey == K_ESC
          exit
       endif
 
       DO CASE
-      CASE nKey == 13
+      CASE nKey == K_ENTER
          Alert( '<Enter> Pressed' )
 
       ENDCASE
@@ -50,11 +61,11 @@ STATIC FUNCTION MyCallBacks( nEvent, iGT, xCargo, wParam, lParam, xSentByMe )
 
    DO CASE
 
-   CASE nEvent == GTI_CB_SETFOCUS
+   CASE nEvent == HB_GTE_SETFOCUS
       DispOutAt( 5,10, xCargo[ 1 ], 'N/W' )  // We have sent { 'MyCargo' }
       DispOutAt( 6,10, xSentByMe  , 'R/W' )  // We are sending 'MyParam'
 
-   CASE nEvent == GTI_CB_CLOSE
+   CASE nEvent == HB_GTE_CLOSE
       DispScreen()
       if Alert( 'Close Application', {'Yes','No' } ) == 1
          QUIT
@@ -75,6 +86,17 @@ STATIC FUNCTION DispScreen()
    RETURN NIL
 
 //----------------------------------------------------------------------//
+// Comment out this function if you do not want console window be resizable with mouse
+//
+//FUNCTION Hb_NoResizeableWindow() ; RETURN NIL
+
+//----------------------------------------------------------------------//
+// Comment out this function if you do not want "Mark and Copy" prompt
+// available in SysMenu at the left of Title Bar of the application window.
+//
+//FUNCTION Hb_NoCopyConsole() ; RETURN NIL
+
+//----------------------------------------------------------------------//
 
 FUNCTION HB_GTSYS()
 
@@ -83,4 +105,3 @@ FUNCTION HB_GTSYS()
    RETURN nil
 
 //----------------------------------------------------------------------//
-

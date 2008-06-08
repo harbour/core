@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-08 08:57 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/source/rtl/gtwvt/gtwvt.c
+     + Added functionality to disable "Mark and Copy" prompt in the SysMenu.
+       Include Function Hb_NoCopyConsole() if you do not want this functionality.
+
+     + Added funtionality to resize the console window with mouse operations.
+       /*
+          Resizing of console is enabled by default. 
+          To supress this behavior include a dummy function Hb_NoResizableWindow()
+
+          Resizing is available in both directions. I mean horizontal as well as verticle.
+          Maximize button is also enabled. Click it to see to your surprize that now
+          console window will provide you DOS like terminal.
+
+          However there is a bug in maximized operation, last row does not show up correct.
+          I feel it belongs to some miscalculation, but what that is I am unable to locate, so far.
+          Please experiment.
+       */
+   * harbour/tests/wvtext.prg
+     * Updated to new HB_GT*_ constants and new functionality.
+
 2008-06-08 15:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbgtinfo.ch
      + Added comment to compatibility #defines, to not use 

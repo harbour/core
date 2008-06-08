@@ -610,6 +610,7 @@ static void hb_gt_wvt_KillCaret( PHB_GTWVT pWVT )
    }
 }
 
+
 static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 {
    HDC        hdc;
@@ -683,6 +684,91 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
    }
    SetWindowPos( pWVT->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
    HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+}
+
+static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
+{
+   HDC        hdc;
+   HFONT      hOldFont, hFont;
+   USHORT     width, height, maxWidth, maxHeight, fontHeight, fontWidth, n, left, top;
+   TEXTMETRIC tm;
+   RECT       wi, ci;
+
+   HB_SYMBOL_UNUSED( mode );
+
+   if( pWVT->bMaximized )
+   {
+      SystemParametersInfo( SPI_GETWORKAREA, 0, &ci, 0 );
+   }
+   else
+   {
+      GetWindowRect( pWVT->hWnd, &wi );
+      GetClientRect( pWVT->hWnd, &ci );
+   }
+
+   maxWidth   = ci.right  - ci.left;
+   maxHeight  = ci.bottom - ci.top ;
+   fontHeight = maxHeight / pWVT->ROWS;
+   fontWidth  = maxWidth  / pWVT->COLS;
+
+   hFont = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+   if( hFont )
+   {
+      hdc       = GetDC( pWVT->hWnd );
+      hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
+      GetTextMetrics( hdc, &tm );
+      SetTextCharacterExtra( hdc, 0 );
+      SelectObject( hdc, hOldFont );
+      ReleaseDC( pWVT->hWnd, hdc );
+
+      width     = (USHORT) ( tm.tmAveCharWidth * pWVT->COLS );
+      height    = (USHORT) ( tm.tmHeight       * pWVT->ROWS );
+
+      if( width <= maxWidth && height <= maxHeight )
+      {
+         if( pWVT->hFont )
+         {
+            DeleteObject( pWVT->hFont );
+         }
+         pWVT->hFont       = hFont;
+         pWVT->fontHeight  = tm.tmHeight;
+         pWVT->fontWidth   = tm.tmAveCharWidth;
+
+         pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
+         pWVT->PTEXTSIZE.y = tm.tmHeight;
+
+#if defined(HB_WINCE)
+         pWVT->FixedFont = FALSE;
+#else
+         pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
+                     ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
+                     ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
+#endif
+         for( n = 0; n < pWVT->COLS; n++ )
+         {
+             pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
+         }
+
+         if( pWVT->bMaximized )
+         {
+            left = ( ( ci.right  - width  ) / 2 );
+            top  = ( ( ci.bottom - height ) / 2 );
+         }
+         else
+         {
+            left   = wi.left;
+            top    = wi.top;
+            width  += ( USHORT ) ( wi.right - wi.left - ci.right );
+            height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+         }
+
+         hb_gt_wvt_KillCaret( pWVT );
+         hb_gt_wvt_UpdateCaret( pWVT );
+
+         SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
+         HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+      }
+   }
 }
 
 static void hb_gt_wvt_SetWindowTitle( HWND hWnd, char * title )
@@ -1521,6 +1607,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_SIZE:
          if( !pWVT->bMaximized )
          {
+            hb_gt_wvt_FitSize( pWVT,0 );
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_SIZE, (WPARAM) LOWORD( lParam ), (LPARAM) HIWORD( lParam ) );
          }
          else
@@ -1539,9 +1626,12 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             case SC_MAXIMIZE:
             {
                RECT rc = {0,0,0,0};
-               pWVT->bMaximized = TRUE;
 
-               SystemParametersInfo( SPI_GETWORKAREA,0, &rc, 0 );
+               pWVT->bMaximized = TRUE;
+               hb_gt_wvt_FitSize( pWVT,1 );
+               pWVT->bMaximized = FALSE;
+
+               SystemParametersInfo( SPI_GETWORKAREA, 0, &rc, 0 );
 
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_SIZE, (WPARAM) (rc.right-rc.left-pWVT->PTEXTSIZE.x),
                                                        (LPARAM) (rc.bottom-rc.top-(pWVT->PTEXTSIZE.y*1)) );
@@ -1601,6 +1691,7 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
 {
    HWND     hWnd;
    WNDCLASS wndclass;
+   ULONG    style;
 
    HB_SYMBOL_UNUSED( hPrevInstance );
    HB_SYMBOL_UNUSED( szCmdLine );
@@ -1625,9 +1716,18 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
       return 0;
    }
 
+   if( hb_dynsymFind( "HB_NORESIZEABLEWINDOW" ) != NULL )
+   {
+      style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
+   }
+   else
+   {
+      style = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
+   }
+
    hWnd = CreateWindow( s_szAppName,                       /* classname */
       TEXT( "HARBOUR_WVT" ),                               /* window name */
-      WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,  /* style */
+      style,                                               /* style */
       0,                                                   /* x */
       0,                                                   /* y */
       CW_USEDEFAULT,                                       /* width */
@@ -1711,6 +1811,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    }
 
    /* Create "Mark" prompt in SysMenu to allow console type copy operation */
+   if( hb_dynsymFind( "HB_NOCOPYCONSOLE" ) == NULL )
    {
       HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
       AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, "Mark and Copy" );
