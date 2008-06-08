@@ -298,7 +298,7 @@ HB_FUNC( DATATOSQL )
 static char * filetoBuff( char * fname, int * size )
 {
    char * buffer = NULL;
-   int handle = hb_fsOpen( ( BYTE * ) fname, 2 );
+   int handle = hb_fsOpen( ( BYTE * ) fname, FO_READWRITE );
 
    if( handle != FS_ERROR )
    {
