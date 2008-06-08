@@ -100,7 +100,7 @@ HB_FUNC( MSQLFETCHR ) /* m_row msqlFetchRow(m_result *, int) */
    int i;
 
    for( i = 0; i < num_fields; i++ )
-      hb_itemArrayPut( aRow, i + 1, mrow[ i ] );
+      hb_arraySetC( aRow, i + 1, mrow[ i ] );
 
    hb_itemReturnRelease( aRow );
 }
