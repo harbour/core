@@ -11,11 +11,11 @@
 2008-06-08 15:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * include/hbgtinfo.ch
      + Added comment to compatibility #defines, to not use 
-       them, since they deprecated.
+       them, since they're deprecated.
        [TOMERGE RC1]
      * HB_GTI_CB_* -> HB_GTE_* (stands for GT Event). Removed 
        plain GTI_ versions, GTI_* range is frozen, pls don't 
-       and new codes to them and especially don't use them in 
+       add new codes to them and especially don't use them in 
        core code.
 
    * include/hbgfx.ch
