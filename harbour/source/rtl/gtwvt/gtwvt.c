@@ -225,6 +225,9 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
    pWVT->bBeingMarked      = FALSE;
    pWVT->bBeginMarked      = FALSE;
 
+   pWVT->bResizeable       = TRUE;
+   pWVT->bMarkCopy         = TRUE;
+
    return pWVT;
 }
 
@@ -690,9 +693,11 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
 {
    HDC        hdc;
    HFONT      hOldFont, hFont;
-   USHORT     width, height, maxWidth, maxHeight, fontHeight, fontWidth, n, left, top;
+   USHORT     width, height, maxWidth, maxHeight, fontHeight, fontWidth, n;
+   SHORT      left, top;
    TEXTMETRIC tm;
    RECT       wi, ci;
+//   char       buff[ 100 ];
 
    HB_SYMBOL_UNUSED( mode );
 
@@ -706,67 +711,74 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
       GetClientRect( pWVT->hWnd, &ci );
    }
 
-   maxWidth   = ci.right  - ci.left;
-   maxHeight  = ci.bottom - ci.top ;
-   fontHeight = maxHeight / pWVT->ROWS;
-   fontWidth  = maxWidth  / pWVT->COLS;
-
-   hFont = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
-   if( hFont )
+   if( ci.left >= 0 && ci.top >= 0 )
    {
-      hdc       = GetDC( pWVT->hWnd );
-      hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
-      GetTextMetrics( hdc, &tm );
-      SetTextCharacterExtra( hdc, 0 );
-      SelectObject( hdc, hOldFont );
-      ReleaseDC( pWVT->hWnd, hdc );
+      maxWidth   = ci.right  - ci.left;
+      maxHeight  = ci.bottom - ci.top ;
+      fontHeight = maxHeight / pWVT->ROWS;
+      fontWidth  = maxWidth  / pWVT->COLS;
 
-      width     = (USHORT) ( tm.tmAveCharWidth * pWVT->COLS );
-      height    = (USHORT) ( tm.tmHeight       * pWVT->ROWS );
-
-      if( width <= maxWidth && height <= maxHeight )
+      hFont = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
+      if( hFont )
       {
-         if( pWVT->hFont )
+         hdc       = GetDC( pWVT->hWnd );
+         hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
+         GetTextMetrics( hdc, &tm );
+         SetTextCharacterExtra( hdc, 0 );
+         SelectObject( hdc, hOldFont );
+         ReleaseDC( pWVT->hWnd, hdc );
+
+         width     = (USHORT) ( tm.tmAveCharWidth * pWVT->COLS );
+         height    = (USHORT) ( tm.tmHeight       * pWVT->ROWS );
+
+         if( width <= maxWidth && height <= maxHeight )
          {
-            DeleteObject( pWVT->hFont );
+            if( pWVT->hFont )
+            {
+               DeleteObject( pWVT->hFont );
+            }
+            pWVT->hFont       = hFont;
+            pWVT->fontHeight  = tm.tmHeight;
+            pWVT->fontWidth   = tm.tmAveCharWidth;
+
+            pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
+            pWVT->PTEXTSIZE.y = tm.tmHeight;
+
+   #if defined(HB_WINCE)
+            pWVT->FixedFont = FALSE;
+   #else
+            pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
+                        ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
+                        ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
+   #endif
+            for( n = 0; n < pWVT->COLS; n++ )
+            {
+                pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
+            }
+
+            if( pWVT->bMaximized )
+            {
+               left = ( ( ci.right  - width  ) / 2 );
+               top  = ( ( ci.bottom - height ) / 2 );
+            }
+            else
+            {
+               left   = wi.left;
+               top    = wi.top;
+               width  += ( USHORT ) ( wi.right - wi.left - ci.right );
+               height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+            }
+//sprintf( buff, "%d   %d   %d   %d", left, top, width, height );
+//OutputDebugString( buff );
+            if( ( left >= 0 ) && ( top >= 0 ) )
+            {
+               hb_gt_wvt_KillCaret( pWVT );
+               hb_gt_wvt_UpdateCaret( pWVT );
+
+               SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
+               HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+            }
          }
-         pWVT->hFont       = hFont;
-         pWVT->fontHeight  = tm.tmHeight;
-         pWVT->fontWidth   = tm.tmAveCharWidth;
-
-         pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
-         pWVT->PTEXTSIZE.y = tm.tmHeight;
-
-#if defined(HB_WINCE)
-         pWVT->FixedFont = FALSE;
-#else
-         pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
-                     ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
-                     ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
-#endif
-         for( n = 0; n < pWVT->COLS; n++ )
-         {
-             pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
-         }
-
-         if( pWVT->bMaximized )
-         {
-            left = ( ( ci.right  - width  ) / 2 );
-            top  = ( ( ci.bottom - height ) / 2 );
-         }
-         else
-         {
-            left   = wi.left;
-            top    = wi.top;
-            width  += ( USHORT ) ( wi.right - wi.left - ci.right );
-            height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
-         }
-
-         hb_gt_wvt_KillCaret( pWVT );
-         hb_gt_wvt_UpdateCaret( pWVT );
-
-         SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
-         HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
       }
    }
 }
@@ -1081,10 +1093,45 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                 ( rect.bottom != s_rectOld.bottom )  )
             {
                HDC   hdc = GetDC( pWVT->hWnd );
+               RECT rectUpd;
 
-               RedrawWindow( pWVT->hWnd, NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+               if( ( abs( rect.left - rect.right ) * abs( rect.top - rect.bottom ) ) >
+                   ( abs( s_rectOld.left - s_rectOld.right ) * abs( s_rectOld.top - s_rectOld.bottom ) ) )
+               {
+                  /* Selection grown */
 
-               InvertRect( hdc, &rect );
+                  rectUpd.left   = s_rectOld.right;
+                  rectUpd.top    = s_rectOld.top;
+                  rectUpd.right  = rect.right;
+                  rectUpd.bottom = s_rectOld.bottom;
+
+                  InvertRect( hdc, &rectUpd );
+
+                  rectUpd.left   = s_rectOld.left;
+                  rectUpd.top    = s_rectOld.bottom;
+                  rectUpd.right  = rect.right;
+                  rectUpd.bottom = rect.bottom;
+
+                  InvertRect( hdc, &rectUpd );
+               }
+               else
+               {
+                  /* Selection shrunk */
+
+                  rectUpd.left   = rect.right;
+                  rectUpd.top    = rect.top;
+                  rectUpd.right  = s_rectOld.right;
+                  rectUpd.bottom = rect.bottom;
+
+                  RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+
+                  rectUpd.left   = rect.left;
+                  rectUpd.top    = rect.bottom;
+                  rectUpd.right  = s_rectOld.right;
+                  rectUpd.bottom = s_rectOld.bottom;
+
+                  RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+               }
 
                s_rectOld.left   = rect.left;
                s_rectOld.top    = rect.top;
@@ -1623,10 +1670,17 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_gt_wvt_FireEvent( pWVT, HB_GTE_COMMAND, wParam, lParam );
          return 0;
 
-      case WM_SIZE:
+      case WM_EXITSIZEMOVE:
          if( !pWVT->bMaximized )
          {
             hb_gt_wvt_FitSize( pWVT,0 );
+         }
+         return 0;
+
+      case WM_SIZE:
+         if( !pWVT->bMaximized )
+         {
+            //hb_gt_wvt_FitSize( pWVT,0 );
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_SIZE, (WPARAM) LOWORD( lParam ), (LPARAM) HIWORD( lParam ) );
          }
          else
@@ -1829,8 +1883,12 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       hb_xfree( pFileName );
    }
 
+   if( hb_dynsymFind( "HB_NORESIZEABLEWINDOW" ) != NULL )
+   {
+      pWVT->bResizeable = FALSE;
+   }
+
    /* Create "Mark" prompt in SysMenu to allow console type copy operation */
-   if( hb_dynsymFind( "HB_NOCOPYCONSOLE" ) == NULL )
    {
       HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
       AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, "Mark and Copy" );
@@ -2358,6 +2416,51 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          KillTimer( pWVT->hWnd, hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
+      case HB_GTI_RESIZEABLE:
+      {
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bResizeable );
+         if( pInfo->pNewVal )
+         {
+            BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+            if( bNewValue != pWVT->bResizeable )
+            {
+               LONG_PTR style;
+
+               if( bNewValue )
+               {
+                  style = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
+               }
+               else
+               {
+                  style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
+               }
+               SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
+               SetWindowPos( pWVT->hWnd, NULL, NULL, NULL, NULL, NULL,
+                                          SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOMOVE |
+                                          SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+               ShowWindow( pWVT->hWnd, SW_HIDE );
+               ShowWindow( pWVT->hWnd, SW_NORMAL );
+               pWVT->bResizeable = bNewValue;
+            }
+         }
+         break;
+      }
+      case HB_GTI_MARKCOPY:
+      {
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bMarkCopy );
+         if( pInfo->pNewVal )
+         {
+            BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+            if( bNewValue != pWVT->bMarkCopy )
+            {
+               HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+
+               EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
+               pWVT->bMarkCopy = bNewValue;
+            }
+         }
+         break;
+      }
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }

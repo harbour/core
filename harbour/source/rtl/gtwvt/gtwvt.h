@@ -160,6 +160,9 @@ typedef struct
    POINT    markStartColRow;
    POINT    markEndColRow;
 
+   BOOL     bResizeable;
+   BOOL     bMarkCopy;
+
 } HB_GTWVT, * PHB_GTWVT;
 
 /* xHarbour compatible definitions */

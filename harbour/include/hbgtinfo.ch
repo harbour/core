@@ -118,6 +118,9 @@
 
 #define HB_GTI_ISUNICODE        47  /* is Unicode input/output enabled? */
 
+#define HB_GTI_MARKCOPY         48  /* toggles "Mark and Copy" option in SysMenu */
+#define HB_GTI_RESIZEABLE       49  /* toggles resizeing feature of window */
+
 /* Additional constants to enhance GT */
 #define HB_GTI_CALLBACK         51  /* holds information about callback fired when a key is pressed */
 #define HB_GTI_SCREENSIZE       52  /* Get/Set height/width of application window in pixels */
@@ -163,7 +166,7 @@
 #define HB_GTE_SIZE             9
 
 /* Compatibility #defines.
-   These codes are deprecated, _don't use them_. Please upgrade to the above versions. 
+   These codes are deprecated, _don't use them_. Please upgrade to the above versions.
    For developers: Don't add any more new codes to this section. */
 
 #ifndef HB_GT_NO_XHB
@@ -214,6 +217,8 @@
 #define GTI_ADDKEYMAP           HB_GTI_ADDKEYMAP
 #define GTI_DELKEYMAP           HB_GTI_DELKEYMAP
 #define GTI_ISUNICODE           HB_GTI_ISUNICODE
+#define GTI_MARKCOPY            HB_GTI_MARKCOPY
+#define GTI_RESIZEABLE          HB_GTI_RESIZEABLE
 
 #define GTI_CALLBACK            HB_GTI_CALLBACK
 #define GTI_SCREENSIZE          HB_GTI_SCREENSIZE

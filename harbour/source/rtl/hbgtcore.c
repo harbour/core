@@ -1585,7 +1585,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      case GTI_CALLBACK:
+      case HB_GTI_CALLBACK:
       {
          BOOL bSet  = TRUE;
          int iElems = hb_arrayLen( pInfo->pNewVal );

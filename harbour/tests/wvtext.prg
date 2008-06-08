@@ -16,7 +16,7 @@
 //----------------------------------------------------------------------//
 
 FUNCTION Main()
-   Local nKey
+   Local nKey, lMark, lResize
    Local nHeight := 20
    Local nWidth  := Int( nHeight/2 )
    Local cFont
@@ -51,6 +51,14 @@ FUNCTION Main()
       CASE nKey == K_ENTER
          Alert( '<Enter> Pressed' )
 
+      CASE nKey == K_F2
+         lMark := Hb_GtInfo( HB_GTI_MARKCOPY )
+         Hb_GtInfo( HB_GTI_MARKCOPY, !lMark )
+
+      CASE nKey == K_F3
+         lResize := Hb_GtInfo( HB_GTI_RESIZEABLE )
+         Hb_GtInfo( HB_GTI_RESIZEABLE, !lResize )
+
       ENDCASE
    ENDDO
 
@@ -81,7 +89,7 @@ STATIC FUNCTION DispScreen()
 
    CLS
    DispOutAt( 0,0,padc( '[x]Harbour GT - New Features', maxcol()+1 ), 'N/GR*' )
-   DispOutAt( maxrow(),0,padc( '<Click Other Window>   <Click X Button>   <ESC Quit>', maxcol()+1 ), 'N/G*' )
+   DispOutAt( maxrow(),0,padc( '<F2 MarkCopy> <F3 Resize> <Click Other Window> <Click X Button>', maxcol()+1 ), 'N/G*' )
 
    RETURN NIL
 
@@ -104,4 +112,49 @@ FUNCTION HB_GTSYS()
 
    RETURN nil
 
+//----------------------------------------------------------------------//
+/*
+Private Sub SetWindowStyle(ByVal hwnd As Long, ByVal _
+    extended_style As Boolean, ByVal style_value As Long, _
+    ByVal new_value As Boolean, ByVal brefresh As Boolean)
+Dim style_type As Long
+Dim style As Long
+
+    If extended_style Then
+        style_type = GWL_EXSTYLE
+    Else
+        style_type = GWL_STYLE
+    End If
+
+    ' Get the current style.
+    style = GetWindowLong(hwnd, style_type)
+
+    ' Add or remove the indicated value.
+    If new_value Then
+        style = style Or style_value
+    Else
+        style = style And Not style_value
+    End If
+
+    ' Hide Window if Changing ShowInTaskBar
+    If brefresh Then
+        ShowWindow hwnd, SW_HIDE
+    End If
+
+    ' Set the style.
+    SetWindowLong hwnd, style_type, style
+
+    ' Show Window if Changing ShowInTaskBar
+    If brefresh Then
+        ShowWindow hwnd, SW_SHOW
+    End If
+
+    ' Make the window redraw.
+    SetWindowPos hwnd, 0, 0, 0, 0, 0, _
+        SWP_FRAMECHANGED Or _
+        SWP_NOMOVE Or _
+        SWP_NOSIZE Or _
+        SWP_NOZORDER
+End Sub
+*/
 //----------------------------------------------------------------------//

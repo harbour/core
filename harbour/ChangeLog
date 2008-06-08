@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-08 16:03 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/source/rtl/gtwvt/gtwvt.c
+   * harbour/source/rtl/gtwvt/gtwvt.h
+   * harbour/source/rtl/hbgtcore.c
+   * harbour/include/hbgtinfo.ch
+     + HB_GTI_MARKCOPY
+       Added feature to toggle "Mark and Copy" Sysmenu option with:
+          Hb_GtInfo( HB_GTI_MARKCOPY, TRUE|FALSE ) -> lPrevState
+
+       Removed necessity to have Hb_NoCopyConsole() to not include it.
+       Now appln always HAS this SysMenu option. 
+
+     + HB_GTI_RESIZEABLE
+       Added feature to toggle resizing of appln window as:
+          Hb_GtInfo( HB_GTI_RESIZEABLE, TRUE|FALSE ) -> lPrevState
+
+       Function Hb_NoResizeableWindow() still hold good for startup.
+       You always can activate/deactivate this feature from within appln.
+
+       Few more optimizations while resizing, still work in progress.  
+       
+   * harbour/tests/wvtext.prg
+     * Updated to demonstrate above functionality.
+
 2008-06-08 08:57 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
      * Fixed flickering in "Mark and Copy" operation.
