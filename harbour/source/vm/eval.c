@@ -114,41 +114,52 @@ BOOL hb_evalPutParam( PEVALINFO pEvalInfo, PHB_ITEM pItem )
 
 PHB_ITEM hb_evalLaunch( PEVALINFO pEvalInfo )
 {
-   PHB_ITEM pResult;
+   PHB_ITEM pResult = NULL;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_evalLaunch(%p)", pEvalInfo));
 
    if( pEvalInfo )
    {
-      USHORT uiParam = 1;
+      PHB_ITEM pItem = pEvalInfo->pItems[ 0 ];
+      PHB_SYMB pSymbol = NULL;
+      USHORT uiParam = 0;
 
-      if( HB_IS_STRING( pEvalInfo->pItems[ 0 ] ) )
+      if( HB_IS_STRING( pItem ) )
       {
-         hb_vmPushSymbol( hb_dynsymFindName( hb_itemGetCPtr( pEvalInfo->pItems[ 0 ] ) )->pSymbol );
-         hb_vmPushNil();
-         while( uiParam <= pEvalInfo->paramCount )
-            hb_vmPush( pEvalInfo->pItems[ uiParam++ ] );
-         hb_vmDo( pEvalInfo->paramCount );
+         PHB_DYNS pDynSym = hb_dynsymFindName( pItem->item.asString.value );
 
-         pResult = hb_itemNew( NULL );
-         hb_itemCopy( pResult, hb_stackReturnItem() );
+         if( pDynSym )
+         {
+            pSymbol = pDynSym->pSymbol;
+            pItem = NULL;
+         }
       }
-      else if( HB_IS_BLOCK( pEvalInfo->pItems[ 0 ] ) )
+      else if( HB_IS_SYMBOL( pItem ) )
       {
-         hb_vmPushSymbol( &hb_symEval );
-         hb_vmPush( pEvalInfo->pItems[ 0 ] );
-         while( uiParam <= pEvalInfo->paramCount )
-            hb_vmPush( pEvalInfo->pItems[ uiParam++ ] );
-         hb_vmDo( pEvalInfo->paramCount );
-
-         pResult = hb_itemNew( NULL );
-         hb_itemCopy( pResult, hb_stackReturnItem() );
+         pSymbol = pItem->item.asSymbol.value;
+         pItem = NULL;
       }
-      else
-         pResult = NULL;
+      else if( HB_IS_BLOCK( pItem ) )
+      {
+         pSymbol = &hb_symEval;
+      }
+
+      if( pSymbol )
+      {
+         hb_vmPushSymbol( pSymbol );
+         if( pItem )
+            hb_vmPush( pItem );
+         else
+            hb_vmPushNil();
+         while( uiParam < pEvalInfo->paramCount )
+            hb_vmPush( pEvalInfo->pItems[ ++uiParam ] );
+         if( pItem )
+            hb_vmSend( uiParam );
+         else
+            hb_vmDo( uiParam );
+         pResult = hb_itemNew( hb_stackReturnItem() );
+      }
    }
-   else
-      pResult = NULL;
 
    return pResult;
 }

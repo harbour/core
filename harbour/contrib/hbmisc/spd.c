@@ -142,7 +142,7 @@ HB_FUNC( _SPD )
    }else{
       PHB_ITEM pItmPar;
       char *cRes, *cBuffer, *cParFrm, *c;
-      int p, iCOut, IsIndW, IsIndP, iIndWidth, iIndPrec, iErrorPar = 0;
+      int p, iCOut, IsIndW, IsIndP, iIndWidth = 0, iIndPrec = 0, iErrorPar = 0;
       ULONG s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes = DK_INCRES;
       static char cToken[] = "scdiouxXaAeEfgGpnSC";
 
