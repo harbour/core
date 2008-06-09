@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-09 07:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * tests/wvtext.prg
+   * include/hbgtinfo.ch
+   * include/hbgtcore.h
+   * source/rtl/hbgtcore.c
+   * source/rtl/gtwvt/gtwvt.c
+     * Changed the way notifications work. It's now platform 
+       neutral and more simple.
+       hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| myhandler( nEvent, mycustomdata, ... ) })
+       may be used to set it. Use NIL to disable it. The purpose of 
+       this is to be able to get notifications from GT related
+       user interactions not initiated inside the apps UI world.
+       F.e. to save screen size after the user has changed it, 
+       or to have a last chance to commit tables, set flags, etc 
+       when user (or OS) closed the app window.
+     ; TODO: Screen interaction is not possible in the callback.
+     ; TOFIX: New TIMER stuff in GTWVT should be replace by 
+              a platform neutral solution, which is probably MT.
+              (see also "background events")
+     ; TOFIX: Is there a way to force "non full content" resize 
+              on the application level?
+
 2008-06-08 22:10 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
      * Hack to fix maxrow() display. Now maximizing the window displays 

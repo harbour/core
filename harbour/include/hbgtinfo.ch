@@ -123,7 +123,7 @@
 #define HB_GTI_CLOSEALLOWED     50  /* toggles ability to close window (supported by: GTWVT) */
 
 /* Additional constants to enhance GT */
-#define HB_GTI_CALLBACK         51  /* holds information about callback fired when a key is pressed */
+#define HB_GTI_NOTIFIERBLOCK    51  /* This optional codeblock gets called whenever certain events occur. See HB_GTE_* */
 #define HB_GTI_SCREENSIZE       52  /* Get/Set height/width of application window in pixels */
 #define HB_GTI_SETTIMER         53  /* Sets the Timer with ID, callback will be defined with GTI_CALLBACK */
 #define HB_GTI_KILLTIMER        54  /* Deactivates the Timer set with GTI_SETTIMER */
@@ -156,15 +156,12 @@
 #define HB_GTI_KBD_ACCENT4      32768
 
 /* Harbour GT callback events - WORK IN PROGRESS */
-#define HB_GTE_INKEY            1
-#define HB_GTE_TIMER            2
-#define HB_GTE_ACTIVATE         3
-#define HB_GTE_SETFOCUS         4
-#define HB_GTE_KILLFOCUS        5
-#define HB_GTE_MOUSE            6
-#define HB_GTE_CLOSE            7
-#define HB_GTE_COMMAND          8
-#define HB_GTE_SIZE             9
+#define HB_GTE_TIMER            1
+#define HB_GTE_ACTIVATE         2
+#define HB_GTE_SETFOCUS         3
+#define HB_GTE_KILLFOCUS        4
+#define HB_GTE_CLOSE            5
+#define HB_GTE_RESIZED          6
 
 /* Compatibility #defines.
    These codes are deprecated, _don't use them_. Please upgrade to the above versions.

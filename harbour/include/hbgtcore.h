@@ -347,41 +347,9 @@ typedef struct _HB_GT_BASE
    ULONG          StrBufferSize;
    ULONG          StrBufferPos;
 
-   PHB_ITEM       pNotififerBlock;
+   PHB_ITEM       pNotifierBlock;
 
    void *         pGTData[HB_GT_MAX_];    /* local GT data */
-
-   /*  Members holding information to Fire Events */
-   /*                Pritpal Bedi                 */
-
-   int            iLocalGTHandle;         /* local GT handle - FUTURISTIC */
-
-   PHB_DYNS       pDynSymINKEY;           /* for any key event independant of INKEY Loop - Useful with TCP/IP Terminals */
-   PHB_ITEM       pDynSymINKEYdata;
-
-   PHB_DYNS       pDynSymCLOSE;           /* when close button is pressed */
-   PHB_ITEM       pDynSymCLOSEdata;
-
-   PHB_DYNS       pDynSymCOMMAND;         /* though not being processed currently but FUTURISTIC */
-   PHB_ITEM       pDynSymCOMMANDdata;
-
-   PHB_DYNS       pDynSymTIMER;           /* very useful for many jobs , I use it extensively */
-   PHB_ITEM       pDynSymTIMERdata;
-
-   PHB_DYNS       pDynSymACTIVATE;        /* FUTURISTIC */
-   PHB_ITEM       pDynSymACTIVATEdata;
-
-   PHB_DYNS       pDynSymSETFOCUS;        /* when window gets WM_SETFOCUS message */
-   PHB_ITEM       pDynSymSETFOCUSdata;
-
-   PHB_DYNS       pDynSymKILLFOCUS;       /* when window gets WM_KILLFOCUS message */
-   PHB_ITEM       pDynSymKILLFOCUSdata;
-
-   PHB_DYNS       pDynSymMOUSE;           /* when mouse activity is detected */
-   PHB_ITEM       pDynSymMOUSEdata;
-
-   PHB_DYNS       pDynSymSIZE;            /* after a window is resized by mouse */
-   PHB_ITEM       pDynSymSIZEdata;
 
 } HB_GT_BASE, * PHB_GT_BASE, * PHB_GT;
 

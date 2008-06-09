@@ -1,3 +1,7 @@
+/*
+ * $Id: wcecon.prg 8236 2008-01-26 05:29:20Z vszakats $
+ */
+
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
@@ -10,7 +14,7 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
-#include 'HbGtInfo.ch'
+#include 'hbgtinfo.ch'
 #include 'inkey.ch'
 
 //----------------------------------------------------------------------//
@@ -33,11 +37,7 @@ FUNCTION Main()
    SetCursor( 0 )
    SetColor( 'n/w' )
 
-   // Any CALLBACK function receive 5 parameters PLUS any additional parameters
-   // supplied with the CALLBACK Block.
-   //
-   HB_GtInfo( HB_GTI_CALLBACK, { HB_GTE_SETFOCUS, {|a,b,c,d,e| MyCallBacks( a,b,c,d,e,'MyParam' ) }, { 'MyCargo' } } )
-   HB_GtInfo( HB_GTI_CALLBACK, { HB_GTE_CLOSE   , {|a,b,c,d,e| MyCallBacks( a,b,c,d,e ) } } )
+   HB_GtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| MyNotifier( nEvent, ... ) } )
 
    DispScreen()
 
@@ -65,13 +65,13 @@ FUNCTION Main()
    RETURN NIL
 //----------------------------------------------------------------------//
 
-STATIC FUNCTION MyCallBacks( nEvent, iGT, xCargo, wParam, lParam, xSentByMe )
+STATIC FUNCTION MyNotifier( nEvent, ... )
 
    DO CASE
 
    CASE nEvent == HB_GTE_SETFOCUS
-      DispOutAt( 5,10, xCargo[ 1 ], 'N/W' )  // We have sent { 'MyCargo' }
-      DispOutAt( 6,10, xSentByMe  , 'R/W' )  // We are sending 'MyParam'
+      DispScreen()
+      Alert( "We got focus" )
 
    CASE nEvent == HB_GTE_CLOSE
       DispScreen()
