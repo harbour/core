@@ -240,9 +240,9 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
       if( hb_vmRequestReenter() )
       {
          PHB_ITEM pEvent = hb_itemPutNI( NULL, nEvent );
-        
+
          nResult = hb_itemGetNI( hb_vmEvalBlockV( ( PHB_ITEM ) pWVT->pGT->pNotifierBlock, 1, pEvent ) );
-        
+
          hb_itemRelease( pEvent );
 
          hb_vmRequestRestore();
@@ -783,8 +783,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
                left   = pWVT->markStartColRow.x;
                top    = pWVT->markStartColRow.y;
-               right  = pWVT->markEndColRow.x;
-               bottom = pWVT->markEndColRow.y;
+               right  = pWVT->markEndColRow.x+1;
+               bottom = pWVT->markEndColRow.y+1;
                /*  Check boundaries and reverse operation */
                if( right < left )
                {
@@ -860,7 +860,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             pWVT->markEndColRow = colrow;
 
             a0 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markStartColRow.x, ( USHORT ) pWVT->markStartColRow.y );
-            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x, ( USHORT ) pWVT->markEndColRow.y );
+            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x+1, ( USHORT ) pWVT->markEndColRow.y+1 );
 
             rect.left   = a0.x;
             rect.top    = a0.y;
@@ -875,9 +875,9 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                HDC hdc = GetDC( pWVT->hWnd );
                RECT rectUpd;
 
-               if( s_rectOld.left   == 0 && 
-                   s_rectOld.right  == 0 && 
-                   s_rectOld.top    == 0 && 
+               if( s_rectOld.left   == 0 &&
+                   s_rectOld.right  == 0 &&
+                   s_rectOld.top    == 0 &&
                    s_rectOld.bottom == 0 )
                {
                   /* New selection */
@@ -886,10 +886,10 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   rect.top = a0.y;
                   rect.right = a1.x;
                   rect.bottom = a1.y;
-       
+
                   InvertRect( hdc, &rect );
                }
-               else 
+               else
                {
                   int nS = 0;
                   int nG = 0;
@@ -897,12 +897,12 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   if( abs( rect.left - rect.right ) < abs( s_rectOld.left - s_rectOld.right ) )
                   {
                      /* Selection shrunk horizontally */
-                    
+
                      rectUpd.left   = rect.right;
                      rectUpd.top    = rect.top;
                      rectUpd.right  = s_rectOld.right;
                      rectUpd.bottom = s_rectOld.bottom;
-                    
+
                      RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
 
                      ++nS;
@@ -911,12 +911,12 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   if( abs( rect.top - rect.bottom ) < abs( s_rectOld.top - s_rectOld.bottom ) )
                   {
                      /* Selection shrunk vertically */
-                    
+
                      rectUpd.left   = rect.left;
                      rectUpd.top    = rect.bottom;
                      rectUpd.right  = s_rectOld.right;
                      rectUpd.bottom = s_rectOld.bottom;
-                    
+
                      RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
 
                      ++nS;
@@ -925,24 +925,24 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   if( nS == 2 )
                   {
                      /* Selection shrunk horizontally + vertically */
-                    
+
                      rectUpd.left   = rect.right;
                      rectUpd.top    = rect.bottom;
                      rectUpd.right  = s_rectOld.right;
                      rectUpd.bottom = s_rectOld.bottom;
-                    
+
                      RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
                   }
 
                   if( abs( rect.left - rect.right ) > abs( s_rectOld.left - s_rectOld.right ) )
                   {
                      /* Selection grown horizontally */
-                     
+
                      rectUpd.left   = s_rectOld.right;
                      rectUpd.top    = s_rectOld.top;
                      rectUpd.right  = rect.right;
                      rectUpd.bottom = nS ? rect.bottom : s_rectOld.bottom;
-                     
+
                      InvertRect( hdc, &rectUpd );
 
                      ++nG;
@@ -951,12 +951,12 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   if( abs( rect.top - rect.bottom ) > abs( s_rectOld.top - s_rectOld.bottom ) )
                   {
                      /* Selection grown vertically */
-                     
+
                      rectUpd.left   = s_rectOld.left;
                      rectUpd.top    = s_rectOld.bottom;
                      rectUpd.right  = nS ? rect.right : s_rectOld.right;
                      rectUpd.bottom = rect.bottom;
-                     
+
                      InvertRect( hdc, &rectUpd );
 
                      ++nG;
@@ -965,12 +965,12 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   if( nG == 2 )
                   {
                      /* Selection grown horizontally + vertically */
-                    
-                     rectUpd.left   = s_rectOld.right; 
+
+                     rectUpd.left   = s_rectOld.right;
                      rectUpd.top    = s_rectOld.bottom;
-                     rectUpd.right  = rect.right; 
+                     rectUpd.right  = rect.right;
                      rectUpd.bottom = rect.bottom;
-                    
+
                      InvertRect( hdc, &rectUpd );
                   }
                }

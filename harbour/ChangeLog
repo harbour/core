@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-09 14:48 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/source/rtl/gtwvt/gtwvt.c
+     ! Fixed for selection in the last row and column.
+
 2008-06-09 21:28 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/errorapi.c
      * Using HB_ERR_FUNCNAME.
