@@ -94,11 +94,6 @@ STATIC FUNCTION DispScreen()
    RETURN NIL
 
 //----------------------------------------------------------------------//
-// Comment out this function if you do not want console window be resizable with mouse
-//
-//FUNCTION Hb_NoResizeableWindow() ; RETURN NIL
-
-//----------------------------------------------------------------------//
 // Comment out this function if you do not want "Mark and Copy" prompt
 // available in SysMenu at the left of Title Bar of the application window.
 //
@@ -112,49 +107,4 @@ FUNCTION HB_GTSYS()
 
    RETURN nil
 
-//----------------------------------------------------------------------//
-/*
-Private Sub SetWindowStyle(ByVal hwnd As Long, ByVal _
-    extended_style As Boolean, ByVal style_value As Long, _
-    ByVal new_value As Boolean, ByVal brefresh As Boolean)
-Dim style_type As Long
-Dim style As Long
-
-    If extended_style Then
-        style_type = GWL_EXSTYLE
-    Else
-        style_type = GWL_STYLE
-    End If
-
-    ' Get the current style.
-    style = GetWindowLong(hwnd, style_type)
-
-    ' Add or remove the indicated value.
-    If new_value Then
-        style = style Or style_value
-    Else
-        style = style And Not style_value
-    End If
-
-    ' Hide Window if Changing ShowInTaskBar
-    If brefresh Then
-        ShowWindow hwnd, SW_HIDE
-    End If
-
-    ' Set the style.
-    SetWindowLong hwnd, style_type, style
-
-    ' Show Window if Changing ShowInTaskBar
-    If brefresh Then
-        ShowWindow hwnd, SW_SHOW
-    End If
-
-    ' Make the window redraw.
-    SetWindowPos hwnd, 0, 0, 0, 0, 0, _
-        SWP_FRAMECHANGED Or _
-        SWP_NOMOVE Or _
-        SWP_NOSIZE Or _
-        SWP_NOZORDER
-End Sub
-*/
 //----------------------------------------------------------------------//

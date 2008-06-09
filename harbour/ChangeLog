@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-08 20:12 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/source/rtl/gtwvt/gtwvt.c
+     * More fixes on resizing. Now appears to be behaving correctly. Please test.
+
+   * harbour/tests/wvtext.pr
+     * Formatting and typos.
+
 2008-06-08 16:03 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
    * harbour/source/rtl/gtwvt/gtwvt.h

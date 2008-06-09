@@ -693,11 +693,12 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
 {
    HDC        hdc;
    HFONT      hOldFont, hFont;
-   USHORT     width, height, maxWidth, maxHeight, fontHeight, fontWidth, n;
+   USHORT     fontHeight, fontWidth, n;
+   LONG       width, height, maxWidth, maxHeight;
    SHORT      left, top;
    TEXTMETRIC tm;
    RECT       wi, ci;
-//   char       buff[ 100 ];
+   BOOL       bValid = TRUE;
 
    HB_SYMBOL_UNUSED( mode );
 
@@ -711,10 +712,10 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
       GetClientRect( pWVT->hWnd, &ci );
    }
 
-   if( ci.left >= 0 && ci.top >= 0 )
+   if( bValid )
    {
-      maxWidth   = ci.right  - ci.left;
       maxHeight  = ci.bottom - ci.top ;
+      maxWidth   = ci.right  - ci.left ;
       fontHeight = maxHeight / pWVT->ROWS;
       fontWidth  = maxWidth  / pWVT->COLS;
 
@@ -723,13 +724,13 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
       {
          hdc       = GetDC( pWVT->hWnd );
          hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
-         GetTextMetrics( hdc, &tm );
          SetTextCharacterExtra( hdc, 0 );
+         GetTextMetrics( hdc, &tm );
          SelectObject( hdc, hOldFont );
          ReleaseDC( pWVT->hWnd, hdc );
 
-         width     = (USHORT) ( tm.tmAveCharWidth * pWVT->COLS );
-         height    = (USHORT) ( tm.tmHeight       * pWVT->ROWS );
+         width     = ( tm.tmAveCharWidth * pWVT->COLS );
+         height    = ( tm.tmHeight       * pWVT->ROWS );
 
          if( width <= maxWidth && height <= maxHeight )
          {
@@ -744,13 +745,13 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
             pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
             pWVT->PTEXTSIZE.y = tm.tmHeight;
 
-   #if defined(HB_WINCE)
+#if defined(HB_WINCE)
             pWVT->FixedFont = FALSE;
-   #else
+#else
             pWVT->FixedFont = !pWVT->Win9X && pWVT->fontWidth >= 0 &&
                         ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) == 0 &&
                         ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
-   #endif
+#endif
             for( n = 0; n < pWVT->COLS; n++ )
             {
                 pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
@@ -758,26 +759,22 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
 
             if( pWVT->bMaximized )
             {
-               left = ( ( ci.right  - width  ) / 2 );
-               top  = ( ( ci.bottom - height ) / 2 );
+               left = 0;
+               top  = 0;
             }
             else
             {
-               left   = wi.left;
-               top    = wi.top;
-               width  += ( USHORT ) ( wi.right - wi.left - ci.right );
-               height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+               left   =  ( wi.left < 0 ? 0 : wi.left );
+               top    =  ( wi.top  < 0 ? 0 : wi.top  );
+               width  += ( wi.right  - wi.left - ci.right );
+               height += ( wi.bottom - wi.top - ci.bottom );
             }
-//sprintf( buff, "%d   %d   %d   %d", left, top, width, height );
-//OutputDebugString( buff );
-            if( ( left >= 0 ) && ( top >= 0 ) )
-            {
-               hb_gt_wvt_KillCaret( pWVT );
-               hb_gt_wvt_UpdateCaret( pWVT );
 
-               SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
-               HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
-            }
+            hb_gt_wvt_KillCaret( pWVT );
+            hb_gt_wvt_UpdateCaret( pWVT );
+
+            SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
+            HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
          }
       }
    }
