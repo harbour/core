@@ -347,6 +347,8 @@ typedef struct _HB_GT_BASE
    ULONG          StrBufferSize;
    ULONG          StrBufferPos;
 
+   PHB_ITEM       pNotififerBlock;
+
    void *         pGTData[HB_GT_MAX_];    /* local GT data */
 
    /*  Members holding information to Fire Events */

@@ -225,8 +225,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
    pWVT->bBeingMarked      = FALSE;
    pWVT->bBeginMarked      = FALSE;
 
-   pWVT->bResizeable       = TRUE;
-   pWVT->bMarkCopy         = TRUE;
+   pWVT->bSelectCopy       = TRUE;
+   pWVT->bResizable        = TRUE;
 
    return pWVT;
 }
@@ -997,7 +997,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             {
                ULONG  ulSize;
                USHORT irow, icol, j, top, left, bottom, right;
-               BYTE * sBuffer;
+               char * sBuffer;
 
                left   = pWVT->markStartColRow.x;
                top    = pWVT->markStartColRow.y;
@@ -1017,7 +1017,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   bottom = x;
                }
                ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
-               sBuffer = hb_xgrab( ulSize );
+               sBuffer = ( char * ) hb_xgrab( ulSize );
 
                for( j = 0, irow = top; irow < bottom; irow++ )
                {
@@ -1029,11 +1029,11 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                      if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
                         break;
 
-                     sBuffer[ j++ ] = ( BYTE ) usChar;
+                     sBuffer[ j++ ] = ( char ) usChar;
                   }
 
-                  sBuffer[ j++ ] = ( BYTE ) '\r';
-                  sBuffer[ j++ ] = ( BYTE ) '\n';
+                  sBuffer[ j++ ] = '\r';
+                  sBuffer[ j++ ] = '\n';
                }
                sBuffer[ j ] = '\0';
 
@@ -1071,8 +1071,9 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
       {
          if( pWVT->bBeingMarked )
          {
-            POINT a0,a1;
-            RECT  rect = {0,0,0,0};
+            POINT a0;
+            POINT a1;
+            RECT  rect = { 0, 0, 0, 0 };
 
             pWVT->markEndColRow = colrow;
 
@@ -1084,16 +1085,28 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             rect.right  = a1.x;
             rect.bottom = a1.y;
 
-            if( ( rect.left   != s_rectOld.left   ) ||
-                ( rect.top    != s_rectOld.top    ) ||
-                ( rect.right  != s_rectOld.right  ) ||
-                ( rect.bottom != s_rectOld.bottom )  )
+            if( rect.left   != s_rectOld.left   ||
+                rect.top    != s_rectOld.top    ||
+                rect.right  != s_rectOld.right  ||
+                rect.bottom != s_rectOld.bottom  )
             {
-               HDC   hdc = GetDC( pWVT->hWnd );
+               HDC hdc = GetDC( pWVT->hWnd );
                RECT rectUpd;
 
-               if( ( abs( rect.left - rect.right ) * abs( rect.top - rect.bottom ) ) >
-                   ( abs( s_rectOld.left - s_rectOld.right ) * abs( s_rectOld.top - s_rectOld.bottom ) ) )
+               int nOldSize = ( abs( s_rectOld.left - s_rectOld.right ) * abs( s_rectOld.top - s_rectOld.bottom ) );
+
+               if( nOldSize == 0 )
+               {
+                  /* New selection */
+
+                  rect.left = a0.x;
+                  rect.top = a0.y;
+                  rect.right = a1.x;
+                  rect.bottom = a1.y;
+       
+                  InvertRect( hdc, &rect );
+               }
+               else if( ( abs( rect.left - rect.right ) * abs( rect.top - rect.bottom ) ) > nOldSize )
                {
                   /* Selection grown */
 
@@ -1658,6 +1671,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          }
          return 0;
 */
+
       /* Pritpal Bedi - 06 Jun 2008 */
       case WM_ACTIVATE:
          hb_gt_wvt_FireEvent( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_GTE_KILLFOCUS : HB_GTE_SETFOCUS ), wParam, lParam );
@@ -1761,7 +1775,6 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
 {
    HWND     hWnd;
    WNDCLASS wndclass;
-   ULONG    style;
 
    HB_SYMBOL_UNUSED( hPrevInstance );
    HB_SYMBOL_UNUSED( szCmdLine );
@@ -1786,18 +1799,10 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
       return 0;
    }
 
-   if( hb_dynsymFind( "HB_NORESIZEABLEWINDOW" ) != NULL )
-   {
-      style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
-   }
-   else
-   {
-      style = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
-   }
-
    hWnd = CreateWindow( s_szAppName,                       /* classname */
       TEXT( "HARBOUR_WVT" ),                               /* window name */
-      style,                                               /* style */
+      WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|
+         WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX,         /* style */
       0,                                                   /* x */
       0,                                                   /* y */
       CW_USEDEFAULT,                                       /* width */
@@ -1812,17 +1817,6 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
       MessageBox( NULL, TEXT( "Failed to create window." ),
                   TEXT( "HARBOUR_WVT" ), MB_ICONERROR );
       return NULL;
-   }
-
-   /*
-    * If you wish to show window the way you want, put somewhere in your application
-    * ANNOUNCE HB_NOSTARTUPWINDOW
-    * If so compiled, then you need to issue Wvt_ShowWindow( SW_RESTORE )
-    * at the point you desire in your code.
-    */
-   if( hb_dynsymFind( "HB_NOSTARTUPWINDOW" ) != NULL )
-   {
-      iCmdShow = SW_HIDE;
    }
 
    ShowWindow( hWnd, iCmdShow );
@@ -1878,11 +1872,6 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGV()[0] );
       hb_gt_wvt_SetWindowTitle( pWVT->hWnd, pFileName->szName );
       hb_xfree( pFileName );
-   }
-
-   if( hb_dynsymFind( "HB_NORESIZEABLEWINDOW" ) != NULL )
-   {
-      pWVT->bResizeable = FALSE;
    }
 
    /* Create "Mark" prompt in SysMenu to allow console type copy operation */
@@ -2413,47 +2402,44 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          KillTimer( pWVT->hWnd, hb_itemGetNI( pInfo->pNewVal ) );
          break;
 
-      case HB_GTI_RESIZEABLE:
+      case HB_GTI_RESIZABLE:
       {
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bResizeable );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bResizable );
          if( pInfo->pNewVal )
          {
             BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
-            if( bNewValue != pWVT->bResizeable )
+            if( bNewValue != pWVT->bResizable )
             {
                LONG_PTR style;
 
                if( bNewValue )
-               {
                   style = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
-               }
                else
-               {
                   style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
-               }
+
                SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
                SetWindowPos( pWVT->hWnd, NULL, NULL, NULL, NULL, NULL,
                                           SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOMOVE |
                                           SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                ShowWindow( pWVT->hWnd, SW_HIDE );
                ShowWindow( pWVT->hWnd, SW_NORMAL );
-               pWVT->bResizeable = bNewValue;
+               pWVT->bResizable = bNewValue;
             }
          }
          break;
       }
-      case HB_GTI_MARKCOPY:
+      case HB_GTI_SELECTCOPY:
       {
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bMarkCopy );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bSelectCopy );
          if( pInfo->pNewVal )
          {
             BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
-            if( bNewValue != pWVT->bMarkCopy )
+            if( bNewValue != pWVT->bSelectCopy )
             {
                HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
 
                EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
-               pWVT->bMarkCopy = bNewValue;
+               pWVT->bSelectCopy = bNewValue;
             }
          }
          break;

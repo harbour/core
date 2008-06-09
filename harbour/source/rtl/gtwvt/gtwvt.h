@@ -160,8 +160,8 @@ typedef struct
    POINT    markStartColRow;
    POINT    markEndColRow;
 
-   BOOL     bResizeable;
-   BOOL     bMarkCopy;
+   BOOL     bResizable;
+   BOOL     bSelectCopy;
 
 } HB_GTWVT, * PHB_GTWVT;
 

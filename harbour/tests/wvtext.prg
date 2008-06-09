@@ -52,12 +52,12 @@ FUNCTION Main()
          Alert( '<Enter> Pressed' )
 
       CASE nKey == K_F2
-         lMark := Hb_GtInfo( HB_GTI_MARKCOPY )
-         Hb_GtInfo( HB_GTI_MARKCOPY, !lMark )
+         lMark := Hb_GtInfo( HB_GTI_SELECTCOPY )
+         Hb_GtInfo( HB_GTI_SELECTCOPY, !lMark )
 
       CASE nKey == K_F3
-         lResize := Hb_GtInfo( HB_GTI_RESIZEABLE )
-         Hb_GtInfo( HB_GTI_RESIZEABLE, !lResize )
+         lResize := Hb_GtInfo( HB_GTI_RESIZABLE )
+         Hb_GtInfo( HB_GTI_RESIZABLE, !lResize )
 
       ENDCASE
    ENDDO
@@ -88,16 +88,10 @@ STATIC FUNCTION MyCallBacks( nEvent, iGT, xCargo, wParam, lParam, xSentByMe )
 STATIC FUNCTION DispScreen()
 
    CLS
-   DispOutAt( 0,0,padc( '[x]Harbour GT - New Features', maxcol()+1 ), 'N/GR*' )
+   DispOutAt( 0,0,padc( 'Harbour GT - New Features', maxcol()+1 ), 'N/GR*' )
    DispOutAt( maxrow(),0,padc( '<F2 MarkCopy> <F3 Resize> <Click Other Window> <Click X Button>', maxcol()+1 ), 'N/G*' )
 
    RETURN NIL
-
-//----------------------------------------------------------------------//
-// Comment out this function if you do not want "Mark and Copy" prompt
-// available in SysMenu at the left of Title Bar of the application window.
-//
-//FUNCTION Hb_NoCopyConsole() ; RETURN NIL
 
 //----------------------------------------------------------------------//
 

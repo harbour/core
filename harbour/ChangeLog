@@ -8,6 +8,37 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-09 06:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * tests/wvtext.prg
+   * include/hbgtinfo.ch
+   * include/hbgtcore.h
+   * source/rtl/gtwvt/gtwvt.h
+   * source/rtl/gtwvt/gtwvt.c
+     ! Fixed a few warnings.
+     ! Fixed bad selection behaviour when starting the 
+       selection (to not let it "stick" to the upper left corner).
+     - Removed predefined symbols as a way to control GT 
+       behaviour. They may interfere with foreign libs. We have 
+       hb_gtInfo() for these kinds of settings.
+     * HB_GTI_MARKCOPY -> HB_GTI_SELECTCOPY to use more generic 
+       terminology.
+     * HB_GTI_RESIZEABLE -> HB_GTI_RESIZABLE
+     ; TODO: Clean the callback interface to not be Windows specific, 
+             and to hole one notifier block with higher level of 
+             information.
+     ; TOFIX: Sometime irreguralities appear in selection, probably due 
+              to skipped updates or the like.
+     ; TOFIX: The window gets messy while resizing to a bigger size.
+              Test: Grab the corner, resize to bigger size while not 
+              releasing the mouse button.
+     ; TOFIX: Window resized to a very small size will have "dead" 
+              (non-updated) portions on the sides.
+     ; TOFIX: Resize is without flicker now, but it's not interactive 
+              anymore, so it's difficult to predict what the result 
+              will be.
+     ; TOFIX: It's possible to resize the windows so that parts of screen 
+              disappear.
+
 2008-06-08 20:12 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
      * More fixes on resizing. Now appears to be behaving correctly. Please test.
