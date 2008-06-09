@@ -779,7 +779,7 @@ PHB_ITEM hb_errPutOperation( PHB_ITEM pError, const char * szOperation )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_errPutOperation(%p, %s)", pError, szOperation));
 
-   if( szOperation == &hb_errFuncName )
+   if( szOperation == HB_ERR_FUNCNAME )
    {
       PHB_SYMB pSym = hb_itemGetSymbol( hb_stackBaseItem() );
       if( pSym )

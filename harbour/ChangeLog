@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-09 21:28 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/errorapi.c
+     * Using HB_ERR_FUNCNAME.
+
 2008-06-09 21:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      ! Fixed windows size after maximize.
@@ -48,7 +52,7 @@
               for the proprietary interface.
 
    * include/hbapierr.h
-     + HB_ERR_FUNCNAME() added to replace &hb_errFuncName
+     + HB_ERR_FUNCNAME added to replace &hb_errFuncName
 
 2008-06-09 20:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/doc/whatsnew.txt
