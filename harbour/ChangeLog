@@ -30,6 +30,9 @@
      ; TOFIX: Is there a way to force "non full content" resize 
               on the application level?
 
+   * bld/bld.bat
+     * HB_USER_LIBS moved to the end of the lib list.
+
 2008-06-08 22:10 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
      * Hack to fix maxrow() display. Now maximizing the window displays 
