@@ -714,7 +714,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
 
    if( bValid )
    {
-      maxHeight  = ci.bottom - ci.top ;
+      maxHeight  = ci.bottom - ci.top;
       maxWidth   = ci.right  - ci.left ;
       fontHeight = maxHeight / pWVT->ROWS;
       fontWidth  = maxWidth  / pWVT->COLS;
@@ -743,7 +743,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
             pWVT->fontWidth   = tm.tmAveCharWidth;
 
             pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
-            pWVT->PTEXTSIZE.y = tm.tmHeight;
+            pWVT->PTEXTSIZE.y = tm.tmHeight - ( pWVT->bMaximized ? 1 : 0 );   /* Hack to Disp MaxRow Correctly */
 
 #if defined(HB_WINCE)
             pWVT->FixedFont = FALSE;
