@@ -754,7 +754,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
 #endif
             for( n = 0; n < pWVT->COLS; n++ )
             {
-                pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
+               pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
             }
 
             if( pWVT->bMaximized )
