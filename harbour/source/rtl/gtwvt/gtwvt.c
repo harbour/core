@@ -870,9 +870,10 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                HDC hdc = GetDC( pWVT->hWnd );
                RECT rectUpd;
 
-               int nOldSize = ( abs( s_rectOld.left - s_rectOld.right ) * abs( s_rectOld.top - s_rectOld.bottom ) );
-
-               if( nOldSize == 0 )
+               if( s_rectOld.left   == 0 && 
+                   s_rectOld.right  == 0 && 
+                   s_rectOld.top    == 0 && 
+                   s_rectOld.bottom == 0 )
                {
                   /* New selection */
 
@@ -883,41 +884,90 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
        
                   InvertRect( hdc, &rect );
                }
-               else if( ( abs( rect.left - rect.right ) * abs( rect.top - rect.bottom ) ) > nOldSize )
+               else 
                {
-                  /* Selection grown */
+                  int nS = 0;
+                  int nG = 0;
 
-                  rectUpd.left   = s_rectOld.right;
-                  rectUpd.top    = s_rectOld.top;
-                  rectUpd.right  = rect.right;
-                  rectUpd.bottom = s_rectOld.bottom;
+                  if( abs( rect.left - rect.right ) < abs( s_rectOld.left - s_rectOld.right ) )
+                  {
+                     /* Selection shrunk horizontally */
+                    
+                     rectUpd.left   = rect.right;
+                     rectUpd.top    = rect.top;
+                     rectUpd.right  = s_rectOld.right;
+                     rectUpd.bottom = s_rectOld.bottom;
+                    
+                     RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
 
-                  InvertRect( hdc, &rectUpd );
+                     ++nS;
+                  }
 
-                  rectUpd.left   = s_rectOld.left;
-                  rectUpd.top    = s_rectOld.bottom;
-                  rectUpd.right  = rect.right;
-                  rectUpd.bottom = rect.bottom;
+                  if( abs( rect.top - rect.bottom ) < abs( s_rectOld.top - s_rectOld.bottom ) )
+                  {
+                     /* Selection shrunk vertically */
+                    
+                     rectUpd.left   = rect.left;
+                     rectUpd.top    = rect.bottom;
+                     rectUpd.right  = s_rectOld.right;
+                     rectUpd.bottom = s_rectOld.bottom;
+                    
+                     RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
 
-                  InvertRect( hdc, &rectUpd );
-               }
-               else
-               {
-                  /* Selection shrunk */
+                     ++nS;
+                  }
 
-                  rectUpd.left   = rect.right;
-                  rectUpd.top    = rect.top;
-                  rectUpd.right  = s_rectOld.right;
-                  rectUpd.bottom = rect.bottom;
+                  if( nS == 2 )
+                  {
+                     /* Selection shrunk horizontally + vertically */
+                    
+                     rectUpd.left   = rect.right;
+                     rectUpd.top    = rect.bottom;
+                     rectUpd.right  = s_rectOld.right;
+                     rectUpd.bottom = s_rectOld.bottom;
+                    
+                     RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+                  }
 
-                  RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+                  if( abs( rect.left - rect.right ) > abs( s_rectOld.left - s_rectOld.right ) )
+                  {
+                     /* Selection grown horizontally */
+                     
+                     rectUpd.left   = s_rectOld.right;
+                     rectUpd.top    = s_rectOld.top;
+                     rectUpd.right  = rect.right;
+                     rectUpd.bottom = nS ? rect.bottom : s_rectOld.bottom;
+                     
+                     InvertRect( hdc, &rectUpd );
 
-                  rectUpd.left   = rect.left;
-                  rectUpd.top    = rect.bottom;
-                  rectUpd.right  = s_rectOld.right;
-                  rectUpd.bottom = s_rectOld.bottom;
+                     ++nG;
+                  }
 
-                  RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+                  if( abs( rect.top - rect.bottom ) > abs( s_rectOld.top - s_rectOld.bottom ) )
+                  {
+                     /* Selection grown vertically */
+                     
+                     rectUpd.left   = s_rectOld.left;
+                     rectUpd.top    = s_rectOld.bottom;
+                     rectUpd.right  = nS ? rect.right : s_rectOld.right;
+                     rectUpd.bottom = rect.bottom;
+                     
+                     InvertRect( hdc, &rectUpd );
+
+                     ++nG;
+                  }
+
+                  if( nG == 2 )
+                  {
+                     /* Selection grown horizontally + vertically */
+                    
+                     rectUpd.left   = s_rectOld.right; 
+                     rectUpd.top    = s_rectOld.bottom;
+                     rectUpd.right  = rect.right; 
+                     rectUpd.bottom = rect.bottom;
+                    
+                     InvertRect( hdc, &rectUpd );
+                  }
                }
 
                s_rectOld.left   = rect.left;
@@ -1591,6 +1641,17 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
       MessageBox( NULL, TEXT( "Failed to create window." ),
                   TEXT( "HARBOUR_WVT" ), MB_ICONERROR );
       return NULL;
+   }
+
+   /*
+    * If you wish to show window the way you want, put somewhere in your application
+    * ANNOUNCE HB_NOSTARTUPWINDOW
+    * If so compiled, then you need to issue Wvt_ShowWindow( SW_RESTORE )
+    * at the point you desire in your code.
+    */
+   if( hb_dynsymFind( "HB_NOSTARTUPWINDOW" ) != NULL )
+   {
+      iCmdShow = SW_HIDE;
    }
 
    ShowWindow( hWnd, iCmdShow );

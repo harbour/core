@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-09 09:47 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     ! Fixed most cases of trashing whilst marking.
+       Maybe there is a simpler way of doing this...
+     ! Readded "HB_NOSTARTUPWINDOW" feature deleted by mistake.
+     ; TOFIX: Some trashing is still visible if switching 
+              directions relative to the starting corner.
+     ; TOFIX: It doesn't seem to be possible to select 
+              the last row and the last column. Pritpal, 
+              could you take a look at it?
+
 2008-06-09 07:36 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * tests/wvtext.prg
    * include/hbgtinfo.ch
