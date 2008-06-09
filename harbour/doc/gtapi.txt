@@ -233,7 +233,118 @@ It supports only TONE and CLIPBOARD operations.
 GUI libraries can use it or create other GT driver inheriting from
 this one.
 NOTE: source/rtl/gtgui/gtdef.c is a hack which overloads the default
-      Harbour build time GT driver and should not be replicated.
+     Harbour build time GT driver and should not be replicated.
+
+
+gtnul  - base GT driver from which each other inherits.
+         it gives screen buffer functionality but does not
+         produce any screen output from disp*() commands
+         Only outStd()/outErr() are supported.
+         It's present on all platforms and i always linked.
+
+gtcgi  - very simple GT driver which does not make any output
+         formatting and simply send it as to stdout.
+         Supported by all platforms.
+
+gtstd  - it uses stdout output but tries to support full screen output but
+         without collor support and cursor shape. It format text to number
+         of row and columns if is able to detect these values on given
+         platform.
+         Supported by all platforms.
+
+gtpca  - It's PCANSI terminal GT - it works in similar way to ANSI GT
+         driver in Clipper though keyboard input is not fully supported.
+         Now GTTRM can make all GTPCA job and much more.
+         Supported by all platforms.
+
+gtdos  - GT driver for DOS - it uses BIOS and direct hardware screen output
+         so it's very similar to Clipper one - in practice due to the same
+         environment you will noticed that all small details of Clipper
+         GT drivers are replicated here. You can think about it like 100%
+         Clipper compatible.
+         Supported only by DOS builds.
+
+gtos2  - GT driver for OS2 - It's sth like GTWIN but for other OS.
+         Supported only by OS2 builds.
+
+gtwin  - GT driver for MS-Windows console window.
+         Supported only by MS-WINDOWS (W95 or higher) builds.
+
+gtcrs  - GT driver for platforms which supports curses or compatible
+         (ncurses) library - in practice POSIX systems.
+         Supported by POSIX systems (mostly different *nixes)
+
+gtsln  - GT driver for platforms which supports slang library.
+         It's like GTCRS but instead of CURSES it uses SLANG.
+         Supported by POSIX systems (mostly different *nixes).
+         It supports Unicode input/output if compiled with slang
+         version which also supports it.
+
+gttrm  - it's like GTCRS and GTSLN but it does not use any external
+         terminal library like SLANG or CURSES and it does not use
+         any external database to extract terminal capabilities so
+         it can be compiled on any POSIX system - I'll add support
+         also for DOS/Windows in the future. It should automatically
+         detect UTF-8 terminal mode and switch internally to Unicode
+         mode if necessary. In theory is less functional then GTCRS
+         and GTSLN because I hard coded escape sequences only for few
+         terminals but because I added support also for some non
+         standard terminal extensions and I'm using very limited set
+         of output sequences then it usually works better then GTCRS
+         and GTSLN.
+         Supported by POSIX systems (mostly different *nixes)
+
+gtwvt  - GT driver for MS-Windows. It creates its own GUI window
+         instead of using MS-console window. It allows to change
+         font, window size, etc.
+         Supported only by MS-WINDOWS (W95 or higher) builds.
+         is a pure console implementation of traditional Clipper terminal 
+         taking Windows API as its base console IO protocols. Its OI are 
+         rendered in a Windows window and hence all of MSDN is available 
+         for use with GTWVT.
+ To let the memory refreshed, I must remind 
+         everybody that it is a superb work of Peter Rees contributed 
+         to xHarbour on 22nd December 2003.
+GTWVG  - GUI emulation of GTWVT. It implements itself on top of GTWVT. 
+         GTWVG ( WVTGUI in xHarbour ) offers functions and classes to 
+         present a console application look like a windows one. 
+         It renderes GUI elements on top of Clipper elements 
+         ( GETS, BROWSERS, BOXES, LINES ) which makes them 
+         feel like a Windows element. GTWVG can be used with existing 
+         code just adding some more code but without sacrificing or 
+         modifying old one. 
+         Also all IO commands can be rendered on top of the GUI elements
+gtxwc  - GT driver for X-Window. It's like GTWVT but for nixes.
+         Additionaly it has set of predefined vector characters
+         (box and arrowd drawing characters) which can be used
+         instead of the one defined in font. It means that you
+         will have all boxes and arrows you know from DOS ans CP437
+         even if you chose font which does not have them. Additionally
+         it support some simple graphic output. See tests/gfx.prg
+         for simple program which demonstrates it.
+         Supported by POSIX systems (mostly different *nixes)
+
+gtalleg- GT driver which uses alegro library for input/output.
+         It's also GUI driver which support HB_GFX*() drawing.
+         Multi platform, works on all platforms for which allegro
+         library has been ported: MS-Win, DOS, VESA, X11, FB, SDL, ...
+
+gtgui  - pseudo GT driver which adds to GTNUL Clipboard and Tone
+         functionality. If you are using some MS-Windows GUI library
+         and you still want to use TONE() function or GTI_CLIPBOARD
+         actions then link this GT driver with your application.
+         If you do not want to use TONE() or GTI_CLIPBOARD then
+         do not link it - it will be only waste of memory.
+
+gtctw  - GT driver which adds CT3 Window functionality to any other
+         GT driver from which it inherits. It's activated automatically
+         when you execute first W*() function.
+         In similar way in Harbour it's possible to add support for
+         GTWVW inheriting from GTWVT.
+
+Some of the GT drivers support additional functionality with hb_gtInfo()
+interface.
+See include/hbgtinfo.ch for different actions.
 
 Best regards,
 Przemek
