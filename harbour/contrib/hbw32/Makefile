@@ -5,6 +5,7 @@
 ROOT = ../../
 
 C_SOURCES=\
+	dllcall.c \
 	tprinter.c \
 	w32_ole.c \
 	w32_prn.c \

@@ -468,14 +468,8 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 
 static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
 {
-   HDC        hdc;
-   HFONT      hOldFont, hFont;
-   USHORT     fontHeight, fontWidth, n;
-   LONG       width, height, maxWidth, maxHeight;
-   SHORT      left, top;
-   TEXTMETRIC tm;
-   RECT       wi, ci;
-   BOOL       bValid = TRUE;
+   RECT wi, ci;
+   BOOL bValid = TRUE;
 
    HB_SYMBOL_UNUSED( mode );
 
@@ -491,8 +485,15 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
 
    if( bValid )
    {
-      maxHeight  = ci.bottom - ci.top ;
-      maxWidth   = ci.right  - ci.left ;
+      HDC        hdc;
+      HFONT      hOldFont, hFont;
+      USHORT     fontHeight, fontWidth, n;
+      LONG       width, height, maxWidth, maxHeight;
+      SHORT      left, top;
+      TEXTMETRIC tm;
+
+      maxHeight  = ci.bottom - ci.top;
+      maxWidth   = ci.right  - ci.left;
       fontHeight = maxHeight / pWVT->ROWS;
       fontWidth  = maxWidth  / pWVT->COLS;
 
@@ -534,6 +535,9 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
                pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
             }
 
+            height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
+            width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
+
             if( pWVT->bMaximized )
             {
                left = 0;
@@ -541,10 +545,11 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
             }
             else
             {
-               left   =  ( wi.left < 0 ? 0 : wi.left );
-               top    =  ( wi.top  < 0 ? 0 : wi.top  );
-               width  += ( wi.right  - wi.left - ci.right );
-               height += ( wi.bottom - wi.top - ci.bottom );
+               width  += ( USHORT ) ( wi.right - wi.left - ci.right );
+               height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+
+               left   = ( wi.left < 0 ? 0 : wi.left );
+               top    = ( wi.top  < 0 ? 0 : wi.top  );
             }
 
             hb_gt_wvt_KillCaret( pWVT );
@@ -1507,7 +1512,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_EXITSIZEMOVE:
          if( !pWVT->bMaximized )
          {
-            hb_gt_wvt_FitSize( pWVT,0 );
+            hb_gt_wvt_FitSize( pWVT, 0 );
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
          }
          return 0;
@@ -1515,7 +1520,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_SIZE:
          if( !pWVT->bMaximized )
          {
-            //hb_gt_wvt_FitSize( pWVT,0 );
+            hb_gt_wvt_FitSize( pWVT, 0 );
          }
          else
          {

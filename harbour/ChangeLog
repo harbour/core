@@ -8,6 +8,48 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-09 21:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     ! Fixed windows size after maximize.
+     * Temporary restored "instant resize" on mouse move.
+
+   + contrib/hbw32/dllcall.c
+   * contrib/hbw32/common.mak
+   * contrib/hbw32/Makefile
+     + Added DLL interface. From xhb. Work of several authors.
+     ; I've applied some modifications made by Alex Strickland.
+     ; The API calls below are implemented:
+       XBase++ compatible:
+       - DLLLoad()
+       - DLLUnload()
+       - DLLPrepareCall()
+       - DLLExecuteCall()
+       - DLLCall()
+       Proprietary:
+       - LoadLibrary() - Same as DLLLoad()
+       - FreeLibrary() - Same as DLLUnload()
+       - GetProcAddress()
+       - CallDLL()
+       - CallDLLBool()
+       - GetLastError()
+       - SetLastError()
+     ! Fixed GetProcAddress() passed ordinals to always be 
+       WORDs casted to DWORD.
+     ! Fixed a few possible buffer overruns.
+     * Cleanup, format, etc.
+     ; Compile with HB_NO_ASM if you use BCC55 and don't have 
+       TASM32 (or upgrade to free BCC58 which contains TASM32).
+     ; "C struct" support was stripped (but that seems only a 
+       small portion.
+     ; Please test. I doesn't work me for simple test code, 
+       I have no idea why.
+     ; TOFIX: Replace MessageBox() calls with RTEs.
+     ; TOFIX: Solve any name clashing problems and/or use namespace 
+              for the proprietary interface.
+
+   * include/hbapierr.h
+     + HB_ERR_FUNCNAME() added to replace &hb_errFuncName
+
 2008-06-09 20:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/doc/whatsnew.txt
     * minor fixes in formatting

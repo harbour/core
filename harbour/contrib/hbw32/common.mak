@@ -10,6 +10,7 @@ PRG_HEADERS = \
     hbw32.ch \
 
 LIB_OBJS = \
+    $(OBJ_DIR)dllcall$(OBJEXT) \
     $(OBJ_DIR)tprinter$(OBJEXT) \
     $(OBJ_DIR)w32_ole$(OBJEXT) \
     $(OBJ_DIR)w32_prn$(OBJEXT) \
@@ -20,4 +21,4 @@ LIB_OBJS = \
     $(OBJ_DIR)w32_reg$(OBJEXT) \
 
 all: \
-   $(LIB_PATH) \
+    $(LIB_PATH) \
