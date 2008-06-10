@@ -62,7 +62,7 @@ PROCEDURE Main()
    ? cData
    DllUnload( hDLL )
 
-   ? "MsgBox:", DllCall( "user32.dll", NIL, "MessageBoxA", 0, "Hello world!", "Harbour sez", hb_bitOr( MB_OK, MB_ICONEXCLAMATION, MB_OKCANCEL, MB_HELP ) )
+   ? "MsgBox:", DllCall( "user32.dll", NIL, "MessageBoxA", 0, "Hello world!", "Harbour sez", hb_bitOr( MB_OKCANCEL, MB_ICONEXCLAMATION, MB_HELP ) )
 
    IF File( "libcurl.dll" )
       hDLL := DllLoad( "libcurl.dll" )
