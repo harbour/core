@@ -8,8 +8,6 @@
  *     Copyright 2004 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
  *
- * See doc/license.txt for licensing terms.
- *
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,31 +57,22 @@
 
 static HKEY hb_regkeyconv( ULONG nKey )
 {
-   HKEY Result;
-  
    switch( nKey )
    {
    case 1:
-      Result = ( HKEY ) HKEY_CLASSES_ROOT;
-      break;
+      return ( HKEY ) HKEY_CLASSES_ROOT;
    case 2:
-      Result = ( HKEY ) HKEY_CURRENT_USER;
-      break;
+      return ( HKEY ) HKEY_CURRENT_USER;
    case 3:
-      Result = ( HKEY ) HKEY_CURRENT_CONFIG;
-      break;
+      return ( HKEY ) HKEY_CURRENT_CONFIG;
    case 0:
    case 4:
-      Result = ( HKEY ) HKEY_LOCAL_MACHINE;
-      break;
+      return ( HKEY ) HKEY_LOCAL_MACHINE;
    case 5:
-      Result = ( HKEY ) HKEY_USERS;
-      break;
-   default:
-      Result = ( HKEY ) nKey;
+      return ( HKEY ) HKEY_USERS;
    }
   
-   return Result;
+   return ( HKEY ) nKey;
 }
 
 HB_FUNC( WIN32_REGCREATEKEYEX )

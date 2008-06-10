@@ -447,12 +447,14 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
  * ==================================================================
  */
 
+#define _DLLEXEC_MAXPARAM   15
+
 /* Based originally on CallDLL() from What32 */
 static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec, int iParams, int iFirst )
 {
    int iCnt;
    int i;
-   DYNAPARM Parm[ 15 ];
+   DYNAPARM Parm[ _DLLEXEC_MAXPARAM ];
    RESULT rc;
    int iArgCnt;
    BOOL bCopyBuffers = ( iFlags & DLL_CALLMODE_COPY );
@@ -479,9 +481,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
    if( iArgCnt > 0 )
    {
-      iCnt = 0;
-
-      for( i = iFirst; i <= iParams; i++ )
+      for( i = iFirst, iCnt = 0; i <= iParams && iCnt < _DLLEXEC_MAXPARAM; i++, iCnt++ )
       {
          PHB_ITEM pParam = hb_param( i, HB_IT_ANY );
 
@@ -572,8 +572,6 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
                hb_errRT_BASE( EG_ARG, 2010, "Unknown parameter type to DLL function", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
                return;
          }
-
-         iCnt++;
       }
    }
 
@@ -581,9 +579,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
    if( iArgCnt > 0 )
    {
-      iCnt = 0;
-
-      for( i = iFirst; i <= iParams; i++ )
+      for( i = iFirst, iCnt = 0; i <= iParams && iCnt < _DLLEXEC_MAXPARAM; i++, iCnt++ )
       {
          if( ISBYREF( i ) )
          {
@@ -629,8 +625,6 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
                   return;
             }
          }
-
-         iCnt++;
       }
    }
 
