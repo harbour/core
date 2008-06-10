@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-10 15:35 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/source/rtl/gtwvt/gtwvt.c
+     ! Fixed maximized state. Borders were missing.
+     + Added functionality to force Windows not to show Windows contents while 
+       resizing. This can be set manually via 
+       <Desktop><Right-Click><Properties><Appearance><Effects><Show windows contents while dragging>
+     ; To review: If this behavior be controlled via HB_GTI_SHOWRESIZING or like.
+
+   * harbour/tests/wvtext.prg 
+     * Minor changes.
+
 2008-06-10 22:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32/dllcall.c
      * Casts and cleanups.
