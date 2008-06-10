@@ -502,6 +502,18 @@ DWORD WINAPI GetFileAttributesA( LPCSTR path )
    return dw;
 }
 
+UINT WINAPI GetDriveTypeA( LPCSTR filename )
+{
+   LPWSTR wpath;
+   UINT ui
+
+   wpath = hb_mbtowc( path );
+   ui = GetDriveTypeW( wpath );
+   hb_xfree( wpath );
+
+   return ui;
+}
+
 BOOL WINAPI GetVersionExA( OSVERSIONINFOA * v )
 {
    OSVERSIONINFOW wv;

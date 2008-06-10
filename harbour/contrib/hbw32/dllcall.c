@@ -733,7 +733,7 @@ HB_FUNC( DLLPREPARECALL )
    if( ISCHAR( 1 ) )
    {
       xec->cDLL = hb_strdup( hb_parc( 1 ) );
-      xec->hDLL = LoadLibrary( xec->cDLL );
+      xec->hDLL = LoadLibraryA( xec->cDLL );
    }
    else if( ISNUM( 1 ) )
       xec->hDLL = ( HINSTANCE ) hb_parnl( 1 );
@@ -796,7 +796,7 @@ HB_FUNC( DLLCALL )
 
    if( ISCHAR( 1 ) )
    {
-      hInst = LoadLibrary( hb_parc( 1 ) );
+      hInst = LoadLibraryA( hb_parc( 1 ) );
       lUnload = TRUE;
    }
    else

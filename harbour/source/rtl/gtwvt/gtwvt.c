@@ -2259,9 +2259,9 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
 
                SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
-               SetWindowPos( pWVT->hWnd, NULL, NULL, NULL, NULL, NULL,
-                                          SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOMOVE |
-                                          SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+               SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
+                                         SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOMOVE |
+                                         SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                ShowWindow( pWVT->hWnd, SW_HIDE );
                ShowWindow( pWVT->hWnd, SW_NORMAL );
                pWVT->bResizable = bNewValue;
