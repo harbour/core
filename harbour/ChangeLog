@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-11 01:17 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbwince.c
+    ! fixed typo in GetDriveTypeA()
+    * temporary disabled GetDriveTypeW() call because not all CRTLs for
+      WinCE support it
+
+  * harbour/include/hbexpra.c
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt2.c
+  * harbour/source/compiler/harbour.y
+  * harbour/source/compiler/harbour.yyc
+    * added full expression list stripping - it enables optimizations
+      in few additional places
+    ! fixed code to always refresh expression address after direct or
+      indirect reduction - seems that we have some memory leaks and
+      possible GPFs not located so far
+   Please make tests with your code.
+
 2008-06-10 15:35 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
      ! Fixed maximized state. Borders were missing.

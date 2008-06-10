@@ -1421,13 +1421,6 @@ HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    /* get conditional expression */
    pExpr = pSelf->value.asList.pExprList;
-   if( pExpr->ExprType == HB_ET_LIST )
-   {
-      HB_EXPR_PTR pNext = pExpr->pNext;
-      pExpr = hb_compExprListStrip( pExpr, HB_COMP_PARAM );
-      pExpr->pNext = pNext;
-      pSelf->value.asList.pExprList = pExpr;
-   }
 
    if( pExpr->ExprType == HB_ET_LOGICAL )
    {

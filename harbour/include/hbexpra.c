@@ -216,10 +216,13 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
          HB_EXPR_PTR pArg, pNext;
          USHORT uiCount;
 
-         HB_EXPR_USE( pParms, HB_EA_REDUCE );
+         pParms->value.asList.pExprList = HB_EXPR_USE( pParms->value.asList.pExprList, HB_EA_REDUCE );
          pArg = pParms->value.asList.pExprList;
 
-         if( pArg->ExprType == HB_ET_LIST )
+         /* When -kc switch is used expression list is not stripped
+          * in reduce operation
+          */
+         if( !HB_SUPPORT_HARBOUR && pArg->ExprType == HB_ET_LIST )
          {
             pNext = pArg->pNext;
             pArg->pNext = NULL;
@@ -549,17 +552,23 @@ static void hb_compExprCheckStaticInitializers( HB_EXPR_PTR pLeftExpr, HB_EXPR_P
    pPrev = &pRightExpr->value.asList.pExprList;
    while( pElem )
    {
-      /* NOTE: During reduction the expression can be replaced by the
-       *    new one - this will break the linked list of expressions.
-       * (classical case of replacing an item in a linked list)
-       */
-      pNext = pElem->pNext; /* store next expression in case the current  will be reduced */
-      pElem = hb_compExprListStrip( HB_EXPR_USE( pElem, HB_EA_REDUCE ), HB_COMP_PARAM );
+      pNext = pElem->pNext; /* store next expression in case the current will be reduced */
+      if( !HB_SUPPORT_HARBOUR )
+      {
+         /* When -kc switch is used expression list is not stripped
+          * in reduce operation
+          */
+         /* NOTE: During reduction the expression can be replaced by the
+          *       new one - this will break the linked list of expressions.
+          *       (classical case of replacing an item in a linked list)
+          */
+         pElem = hb_compExprListStrip( pElem, HB_COMP_PARAM );
+         *pPrev = pElem;   /* store a new expression into the previous one */
+         pElem->pNext = pNext;  /* restore the link to next expression */
+         pPrev  = &pElem->pNext;
+      }
       if( pElem->ExprType > HB_ET_FUNREF )
          hb_compErrorStatic( HB_COMP_PARAM, pLeftExpr->value.asSymbol, pElem );
-      *pPrev = pElem;   /* store a new expression into the previous one */
-      pElem->pNext = pNext;  /* restore the link to next expression */
-      pPrev  = &pElem->pNext;
       pElem  = pNext;
    }
 }
@@ -581,7 +590,13 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
 
    pExpr->value.asOperator.pLeft  = pLeftExpr;
    /* Try to reduce the assigned value */
-   pRightExpr = hb_compExprListStrip( HB_EXPR_USE( pRightExpr, HB_EA_REDUCE ), HB_COMP_PARAM );
+   pRightExpr = HB_EXPR_USE( pRightExpr, HB_EA_REDUCE );
+   /* When -kc switch is used expression list is not stripped
+    * in reduce operation
+    */
+   if( !HB_SUPPORT_HARBOUR )
+      pRightExpr = hb_compExprListStrip( pRightExpr, HB_COMP_PARAM );
+
    pExpr->value.asOperator.pRight = pRightExpr;
 
    if( pRightExpr->ExprType == HB_ET_ARGLIST )
@@ -592,12 +607,6 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
         */
       hb_compExprCheckStaticInitializers( pLeftExpr, pRightExpr, HB_COMP_PARAM );
    }
-   else if( pRightExpr->ExprType > HB_ET_FUNREF )
-   {
-      /* Illegal initializer for static variable (not a constant value)
-       */
-      hb_compErrorStatic( HB_COMP_PARAM, pLeftExpr->value.asSymbol, pRightExpr );
-   }
    else if( pRightExpr->ExprType == HB_ET_ARRAY )
    {
       /* { elem1, elem2, elemN } was used as initializer
@@ -605,6 +614,12 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
        * An array item have to be a const value too.
        */
       hb_compExprCheckStaticInitializers( pLeftExpr, pRightExpr, HB_COMP_PARAM );
+   }
+   else if( pRightExpr->ExprType > HB_ET_FUNREF )
+   {
+      /* Illegal initializer for static variable (not a constant value)
+       */
+      hb_compErrorStatic( HB_COMP_PARAM, pLeftExpr->value.asSymbol, pRightExpr );
    }
 
    return pExpr;
@@ -693,7 +708,7 @@ HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 
 HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
-   return hb_compExprListStrip( HB_EXPR_USE( pExpr, HB_EA_REDUCE ), HB_COMP_PARAM );
+   return HB_EXPR_USE( pExpr, HB_EA_REDUCE );
 }
 #endif
 

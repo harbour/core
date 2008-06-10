@@ -882,7 +882,7 @@ LValue      : IdentName                   { $$ = hb_compExprNewVar( $1, HB_COMP_
             | MacroExpr
             | ObjectData
             | VariableAt
-            | PareExpList           { $$ = hb_compExprListStrip( $1, NULL ); }
+            | PareExpList                 { $$ = hb_compExprListStrip( $1, HB_COMP_PARAM ); }
             ;
 
 /* NOTE: The rule: Expression Operator Expression
@@ -1548,10 +1548,11 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   $<lNumber>1 = HB_COMP_PARAM->currLine;
                   hb_compDebugStart();
                   ++HB_COMP_PARAM->functions.pLast->wForCounter;
+                  $2 = hb_compExprReduce( $2, HB_COMP_PARAM );
                   $<asExpr>$ = hb_compExprGenPush( hb_compExprAssign( $2, $4, HB_COMP_PARAM ), HB_COMP_PARAM );
-                  if( hb_compExprAsSymbol( $<asExpr>2 ) )
+                  if( hb_compExprAsSymbol( $2 ) )
                   {
-                     hb_compForStart( HB_COMP_PARAM, hb_compExprAsSymbol( $<asExpr>2 ), FALSE );
+                     hb_compForStart( HB_COMP_PARAM, hb_compExprAsSymbol( $2 ), FALSE );
                   }
                }
              TO ExpList StepExpr                      /* 6  7  8 */
@@ -1574,18 +1575,28 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   hb_compLinePush( HB_COMP_PARAM );
                   HB_COMP_PARAM->currLine = iLine;
 
-                  iSign = $<asExpr>8 ? hb_compExprAsNumSign( $<asExpr>8 ) : 1;
                   if( $<asExpr>8 )
+                  {
+                     $<asExpr>8 = hb_compExprReduce( $<asExpr>8, HB_COMP_PARAM );
+                     iSign = hb_compExprAsNumSign( $<asExpr>8 );
                      HB_COMP_EXPR_CLEAR( hb_compExprGenPush( hb_compExprSetOperand( hb_compExprNewPlusEq( $2, HB_COMP_PARAM ), $<asExpr>8, HB_COMP_PARAM ), HB_COMP_PARAM ) );
-                  else
-                     HB_COMP_EXPR_CLEAR( hb_compExprGenPush( hb_compExprNewPreInc( $2, HB_COMP_PARAM ), HB_COMP_PARAM ) );
-                  hb_compGenJumpHere( ( ULONG ) $<lNumber>9, HB_COMP_PARAM );
-                  hb_compExprGenPush( $7, HB_COMP_PARAM );              /* end */
-                  if( iSign )
-                     hb_compGenPCode1( iSign > 0 ? HB_P_GREATER : HB_P_LESS, HB_COMP_PARAM );
+                  }
                   else
                   {
-                     hb_compExprGenPush( $<asExpr>8, HB_COMP_PARAM );   /* step */
+                     iSign = 1;
+                     HB_COMP_EXPR_CLEAR( hb_compExprGenPush( hb_compExprNewPreInc( $2, HB_COMP_PARAM ), HB_COMP_PARAM ) );
+                  }
+                  hb_compGenJumpHere( ( ULONG ) $<lNumber>9, HB_COMP_PARAM );
+                  HB_COMP_EXPR_DELETE( hb_compExprGenPush( $7, HB_COMP_PARAM ) );   /* end */
+                  if( iSign )
+                  {
+                     hb_compGenPCode1( iSign > 0 ? HB_P_GREATER : HB_P_LESS, HB_COMP_PARAM );
+                     if( $<asExpr>8 )
+                        HB_COMP_EXPR_DELETE( $<asExpr>8 );
+                  }
+                  else
+                  {
+                     HB_COMP_EXPR_DELETE( hb_compExprGenPush( $<asExpr>8, HB_COMP_PARAM ) );   /* step */
                      hb_compGenPCode1( HB_P_FORTEST, HB_COMP_PARAM );
                   }
 
@@ -1593,10 +1604,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   hb_compLoopEnd( HB_COMP_PARAM );
                   if( hb_compExprAsSymbol( $<asExpr>2 ) )
                      hb_compForEnd( HB_COMP_PARAM, hb_compExprAsSymbol( $<asExpr>2 ) );
-                  HB_COMP_EXPR_DELETE( $7 );
                   HB_COMP_EXPR_DELETE( $<asExpr>5 );  /* deletes $5, $2, $4 */
-                  if( $<asExpr>8 )
-                     HB_COMP_EXPR_DELETE( $<asExpr>8 );
                   HB_COMP_PARAM->functions.pLast->bFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
                }
            ;
@@ -1650,6 +1658,8 @@ ForEach    : FOREACH ForList IN ForArgs          /* 1  2  3  4 */
              {
                 /* 7
                 */
+                $2 = hb_compExprReduce( $2, HB_COMP_PARAM );
+                $4 = hb_compExprReduce( $4, HB_COMP_PARAM );
                 hb_compEnumStart( HB_COMP_PARAM, $2, $4, $6 );
                 
                 hb_compLoopStart( HB_COMP_PARAM, TRUE );
@@ -2320,11 +2330,11 @@ static void hb_compRTVariableGen( HB_COMP_DECL, char * szCreateFun )
    /* push variable names to create */
    while( pVar->pNext )
    {
-      hb_compExprGenPush( pVar->pVar, HB_COMP_PARAM );
+      pVar->pVar = hb_compExprGenPush( pVar->pVar, HB_COMP_PARAM );
       pVar = pVar->pNext;
       ++usCount;
    }
-   hb_compExprGenPush( pVar->pVar, HB_COMP_PARAM );
+   pVar->pVar = hb_compExprGenPush( pVar->pVar, HB_COMP_PARAM );
    ++usCount;
 
    /* call function that will create either PUBLIC or PRIVATE variables */
@@ -2364,7 +2374,7 @@ void hb_compRTVariableKill( HB_COMP_DECL, PFUNCTION pFunc )
 
 static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL )
 {
-   USHORT uCount = (USHORT) hb_compExprListLen( pInitValue );
+   USHORT uCount = ( USHORT ) hb_compExprListLen( pInitValue );
 
    if( uCount == 1 && hb_compExprIsInteger( pInitValue->value.asList.pExprList ) &&
        hb_compExprAsInteger( pInitValue->value.asList.pExprList ) == 0 )
@@ -2397,10 +2407,10 @@ static void hb_compVariableDim( char * szName, HB_EXPR_PTR pInitValue, HB_COMP_D
       hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
       /* create an array */
       pInitValue = hb_compArrayDimPush( pInitValue, HB_COMP_PARAM );
+      /* now pop an array */
+      pVar = hb_compExprGenPop( pVar, HB_COMP_PARAM );
       /* check if valid initializers were used but don't generate any code */
       pAssign = hb_compExprAssignStatic( pVar, pInitValue, HB_COMP_PARAM );
-      /* now pop an array */
-      hb_compExprGenPop( pVar, HB_COMP_PARAM );
       /* delete all used expressions */
       HB_COMP_EXPR_DELETE( pAssign );
       hb_compStaticDefEnd( HB_COMP_PARAM, szName );
@@ -2483,38 +2493,29 @@ BOOL hb_compForEachVarError( HB_COMP_DECL, char *szVarName )
 
 static void hb_compForEnd( HB_COMP_DECL, char *szVar )
 {
-   HB_ENUMERATOR_PTR pEnumVar;
+   HB_ENUMERATOR_PTR * pEnumVar;
    
    HB_SYMBOL_UNUSED( szVar );
    
-   pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
-   if( pEnumVar->pNext )
+   pEnumVar = &HB_COMP_PARAM->functions.pLast->pEnum;
+   if( *pEnumVar )
    {
-      HB_ENUMERATOR_PTR pLast = pEnumVar;
-      
-      while( pEnumVar->pNext )
-      {
-         pLast = pEnumVar;
-         pEnumVar = pEnumVar->pNext;
-      }
-      hb_xfree( pEnumVar );
-      pLast->pNext = NULL;
-   }
-   else
-   {
-      hb_xfree( pEnumVar );
-      HB_COMP_PARAM->functions.pLast->pEnum = NULL;
+      while( ( *pEnumVar )->pNext )
+         pEnumVar = &( *pEnumVar )->pNext;
+
+      hb_xfree( *pEnumVar );
+      *pEnumVar = NULL;
    }
 }
 
 static HB_CARGO2_FUNC( hb_compEnumEvalStart )
 {
-   char * szName = hb_compExprAsSymbol( (HB_EXPR_PTR)cargo );
+   char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
    if( szName )
       hb_compForStart( HB_COMP_PARAM, szName, TRUE );
 
-   hb_compExprGenPush( (HB_EXPR_PTR)dummy, HB_COMP_PARAM );  /* expression */
-   hb_compExprGenPush( (HB_EXPR_PTR)cargo, HB_COMP_PARAM );  /* variable */
+   hb_compExprGenPush( ( HB_EXPR_PTR ) dummy, HB_COMP_PARAM );  /* expression */
+   hb_compExprGenPush( ( HB_EXPR_PTR ) cargo, HB_COMP_PARAM );  /* variable */
 }
 
 static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend )
@@ -2555,7 +2556,7 @@ static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend )
 
 static HB_CARGO_FUNC( hb_compEnumEvalEnd )
 {
-   char * szName = hb_compExprAsSymbol( (HB_EXPR_PTR)cargo );
+   char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
 
    if( szName )
       hb_compForEnd( HB_COMP_PARAM, szName );

@@ -502,16 +502,23 @@ DWORD WINAPI GetFileAttributesA( LPCSTR path )
    return dw;
 }
 
-UINT WINAPI GetDriveTypeA( LPCSTR filename )
+UINT WINAPI GetDriveTypeA( LPCSTR path )
 {
+   /* temporary disabled - not all WinCE compilers support GetDriveTypeW() */
+#if 0
    LPWSTR wpath;
-   UINT ui
+   UINT ui;
 
    wpath = hb_mbtowc( path );
    ui = GetDriveTypeW( wpath );
    hb_xfree( wpath );
 
    return ui;
+#else
+   HB_SYMBOL_UNUSED( path );
+
+   return DRIVE_UNKNOWN;
+#endif
 }
 
 BOOL WINAPI GetVersionExA( OSVERSIONINFOA * v )
