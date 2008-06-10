@@ -789,42 +789,30 @@ HB_FUNC( DLLEXECUTECALL )
       DllExec( 0, 0, NULL, xec, hb_pcount(), 2 );
 }
 
+static LPVOID hb_getprocaddress( HMODULE hInst, int i )
+{
+   LPVOID lpFunction = ( LPVOID ) GetProcAddress( hInst, ISCHAR( i ) ? ( LPCSTR ) hb_parc( i ) : ( LPCSTR ) hb_parni( i ) );
+
+   if( lpFunction == 0 && ISCHAR( i ) ) /* try ANSI flavour? */
+   {
+      char * pszFuncName = ( char * ) hb_xgrab( hb_parclen( i ) + 2 );
+      hb_strncpy( pszFuncName, hb_parc( i ), hb_parclen( i ) );
+      lpFunction = ( LPVOID ) GetProcAddress( hInst, strcat( pszFuncName, "A" ) );
+      hb_xfree( pszFuncName );
+   }
+
+   return lpFunction;
+}
+
 HB_FUNC( DLLCALL )
 {
-   HINSTANCE hInst;
-   BOOL lUnload;
-
-   if( ISCHAR( 1 ) )
-   {
-      hInst = LoadLibraryA( hb_parc( 1 ) );
-      lUnload = TRUE;
-   }
-   else
-   {
-      hInst = ( HINSTANCE ) hb_parnl( 1 );
-      lUnload = FALSE;
-   }
+   HINSTANCE hInst = ISCHAR( 1 ) ? LoadLibraryA( hb_parc( 1 ) ) : ( HINSTANCE ) hb_parnl( 1 );
 
    if( hInst && ( DWORD ) hInst >= 32 )
    {
-      LPVOID lpFunction;
-
-      if( ( lpFunction = ( LPVOID ) GetProcAddress( ( HMODULE ) hInst, ISCHAR( 3 ) ? ( LPCSTR ) hb_parc( 3 ) :
-                                                                                     ( LPCSTR ) hb_parni( 3 ) ) ) == 0 )
-      {
-         if( ISCHAR( 3 ) )
-         {
-            /* try ANSI flavour */
-            char cFuncName[ MAX_PATH ];
-            hb_strncpy( cFuncName, hb_parc( 3 ), sizeof( cFuncName ) - 2 );
-            strcat( cFuncName, "A" );
-            lpFunction = ( LPVOID ) GetProcAddress( ( HMODULE ) hInst, cFuncName );
-         }
-      }
+      DllExec( hb_parni( 2 ), 0, hb_getprocaddress( ( HMODULE ) hInst, 3 ), NULL, hb_pcount(), 4 );
       
-      DllExec( hb_parni( 2 ), 0, lpFunction, NULL, hb_pcount(), 4 );
-      
-      if( lUnload )
+      if( ISCHAR( 1 ) )
          FreeLibrary( hInst );
    }
 }
@@ -854,23 +842,7 @@ HB_FUNC( SETLASTERROR )
 
 HB_FUNC( GETPROCADDRESS )
 {
-   LPVOID lpFunction;
-
-   if( ( lpFunction = ( LPVOID ) GetProcAddress( ( HMODULE ) hb_parnl( 1 ),
-                                    ISCHAR( 2 ) ? ( LPCSTR ) hb_parc( 2 ) :
-                                                  ( LPCSTR ) hb_parni( 2 ) ) ) == 0 )
-   {
-      if( ISCHAR( 2 ) )
-      {
-         /* try ANSI flavour */
-         char cFuncName[ MAX_PATH ];
-         hb_strncpy( cFuncName, hb_parc( 2 ), sizeof( cFuncName ) - 2 );
-         strcat( cFuncName, "A" );
-         lpFunction = ( LPVOID ) GetProcAddress( ( HMODULE ) hb_parnl( 1 ), cFuncName );
-      }
-   }
-
-   hb_retptr( lpFunction );
+   hb_retptr( hb_getprocaddress( ( HMODULE ) hb_parnl( 1 ), 2 ) );
 }
 
 /* Call a DLL function from (x)Harbour, the first parameter is a pointer returned from

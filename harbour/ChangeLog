@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-10 21:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbw32/dllcall.c
+     % Optimizations. Removed one internal limit.
+
+   + contrib/hbw32/tests/testdll.prg
+     + Added small test code.
+
 2008-06-10 19:36 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwvt/gtwvt.c
     ! do not use min()/max() C functions. These are not portable
