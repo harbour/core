@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-10 15:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbw32/dllcall.c
+     ! Fixed some xhb specific code to work in Harbour.
+       Now the DLL functions started to work.
+     ! Fixed buffer corruption (by 1 byte) when strings were 
+       passed by reference.
+     + Added some XBase++-like support to always pass a copy 
+       of our string buffers to the called functions. This is 
+       safer but slower. The support is probably not complete. 
+       Please test.
+     + Added some XBase++ compatible #defines.
+     + Added CALLDLLTYPED() function where the return value 
+       type can be specified. Untested work in progress, 
+       feel free to modify.
+     ; Now this test code works:
+       ---
+       hDLL := DllLoad( "pscript.dll" )
+       cVersion := Space(24)
+       DllCall( hDll, NIL, "PSGetVersion", @cVersion )
+       ? cVersion
+       DllUnload( hDLL )
+       ---
+     ; TODO: Add header for these #defines.
+
 2008-06-10 11:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      ! Fixed maximized window size.

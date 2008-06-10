@@ -54,15 +54,8 @@
  * If you do not wish that, delete this exception notice.
 */
 
-/*
- * Notes:
- *
- * I'm not totally familiar with how Xbase++ works.  This functionality was
- * derived from the context in which the functions are used.
- *
- * pt
- *
- */
+/* NOTE: I'm not totally familiar with how Xbase++ works.  This functionality 
+         was derived from the context in which the functions are used. [pt] */
 
 #define _WIN32_WINNT   0x0400 /* QUESTION: Do we need this? */
 
@@ -160,25 +153,29 @@ HB_EXPORT char * hb_parcstruct( int iParam, ... )
  * ------------------------------------------------------------------
  *
  *   This part used modified code of Vic McClung.
- *   The modifications were to separate the library
- *   loading and getting the procedure address
- *   from the actual function call.
- *   The parameters have been slightly re-arranged
- *   to allow for C-like syntax, on function
- *   declaration. The changes allow to load the library
- *   and to get the procedure addresses in advance,
- *   which makes it work similarly to C import libraries.
- *   From experience, when using dynamic libraries, loading
- *   the library and getting the address of the procedure
- *   part of using the DLL.
- *   Additionally the changes will allow to use standard
- *   xHarbour C type defines, as used with structure types,
- *   ande defined in cstruct.ch .
+ *   The modifications were to separate the library loading and 
+ *   getting the procedure address from the actual function call.
+ *   The parameters have been slightly re-arranged to allow for 
+ *   C-like syntax, on function declaration. The changes allow to 
+ *   load the library and to get the procedure addresses in advance,
+ *   which makes it work similarly to C import libraries. From 
+ *   experience, when using dynamic libraries, loading the library 
+ *   and getting the address of the procedure part of using the DLL.
+ *   Additionally the changes will allow to use standard [x]Harbour 
+ *   C type defines, as used with structure types, and defined in 
+ *   cstruct.ch.
  *
  *   Andrew Wos.
  *   20/07/2002.
- *
  */
+
+/* Calling conventions */
+#define DLL_CDECL                DC_CALL_CDECL
+#define DLL_STDCALL              DC_CALL_STD
+
+/* Parameter passing mode */
+#define DLL_CALLMODE_NORMAL      0x0000
+#define DLL_CALLMODE_COPY        0x2000
 
 #define DC_MICROSOFT             0x0000      /* Default */
 #define DC_BORLAND               0x0001      /* Borland compatible */
@@ -312,7 +309,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
       }
    }
 
-   if ((pRet != NULL) && ((iFlags & DC_BORLAND) || (nRetSiz > 8)))
+   if( ( pRet != NULL ) && ( ( iFlags & DC_BORLAND ) || ( nRetSiz > 8 ) ) )
    {
       /* Return value isn't passed through registers, memory copy
          is performed instead. Pass the pointer as hidden arg. */
@@ -330,25 +327,25 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
                     : "r" (dwStSize), "r" (lpFunction) );
 
       /* Possibly adjust stack and read return values. */
-      if (iFlags & DC_CALL_CDECL)
+      if( iFlags & DC_CALL_CDECL )
       {
          asm volatile( "\taddl %0, %%esp\n" : : "r" (dwStSize) );
       }
 
-      if (iFlags & DC_RETVAL_MATH4)
+      if( iFlags & DC_RETVAL_MATH4 )
       {
          asm volatile( "\tfstps (%0)\n" : "=r" (Res) );
       }
-      else if (iFlags & DC_RETVAL_MATH8)
+      else if( iFlags & DC_RETVAL_MATH8 )
       {
          asm volatile( "\tfstpl (%0)\n" : "=r" (Res) );
       }
-      else if (pRet == NULL)
+      else if( pRet == NULL )
       {
          Res.Int = dwEAX;
          (&Res.Int)[1] = dwEDX;
       }
-      else if (((iFlags & DC_BORLAND) == 0) && (nRetSiz <= 8))
+      else if( ( ( iFlags & DC_BORLAND ) == 0 ) && ( nRetSiz <= 8 ) )
       {
          /* Microsoft optimized less than 8-bytes structure passing */
          ((int *)pRet)[0] = dwEAX;
@@ -362,26 +359,26 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
       dwEDX = _EDX;
 
       /* Possibly adjust stack and read return values. */
-      if (iFlags & DC_CALL_CDECL)
+      if( iFlags & DC_CALL_CDECL )
       {
          _ESP += dwStSize;
       }
 
-      if (iFlags & DC_RETVAL_MATH4)
+      if( iFlags & DC_RETVAL_MATH4 )
       {
          _EBX = ( DWORD ) &Res;
          _EAX = dwEAX;
          _EDX = dwEDX;
          __emit__(0xd9,0x1b);   /*     _asm fnstp float ptr [ebx] */
       }
-      else if (iFlags & DC_RETVAL_MATH8)
+      else if( iFlags & DC_RETVAL_MATH8 )
       {
          _EBX = ( DWORD ) &Res;
          _EAX = dwEAX;
          _EDX = dwEDX;
          __emit__(0xdd,0x1b);   /*     _asm fnstp qword ptr [ebx] */
       }
-      else if (pRet == NULL)
+      else if( pRet == NULL )
       {
          _EBX = ( DWORD ) &Res;
          _EAX = dwEAX;
@@ -390,7 +387,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
 /*       _asm mov DWORD PTR [ebx + 4], edx */
          __emit__(0x89,0x03,0x89,0x53,0x04);
       }
-      else if (((iFlags & DC_BORLAND) == 0) && (nRetSiz <= 8))
+      else if( ( ( iFlags & DC_BORLAND ) == 0 ) && ( nRetSiz <= 8 ) )
       {
          _EBX = ( DWORD ) pRet;
          _EAX = dwEAX;
@@ -410,27 +407,27 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
       _asm mov dwEDX, edx       /* */
 
       /* Possibly adjust stack and read return values. */
-      if (iFlags & DC_CALL_CDECL)
+      if( iFlags & DC_CALL_CDECL )
       {
          _asm add esp, dwStSize
       }
 
-      if (iFlags & DC_RETVAL_MATH4)
+      if( iFlags & DC_RETVAL_MATH4 )
       {
          _asm fstp dword ptr [Res]
       }
-      else if (iFlags & DC_RETVAL_MATH8)
+      else if( iFlags & DC_RETVAL_MATH8 )
       {
          _asm fstp qword ptr [Res]
       }
-      else if (pRet == NULL)
+      else if( pRet == NULL )
       {
          _asm mov eax, [dwEAX]
          _asm mov DWORD PTR [Res], eax
          _asm mov edx, [dwEDX]
          _asm mov DWORD PTR [Res + 4], edx
       }
-      else if (((iFlags & DC_BORLAND) == 0) && (nRetSiz <= 8))
+      else if( ( ( iFlags & DC_BORLAND ) == 0 ) && ( nRetSiz <= 8 ) )
       {
          /* Microsoft optimized less than 8-bytes structure passing */
          _asm mov ecx, DWORD PTR [pRet]
@@ -458,6 +455,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
    DYNAPARM Parm[ 15 ];
    RESULT rc;
    int iArgCnt;
+   BOOL bCopyBuffers = ( iFlags & DLL_CALLMODE_COPY );
 
    if( xec )
    {
@@ -485,7 +483,9 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
       for( i = iFirst; i <= iParams; i++ )
       {
-         switch( hb_parinfo( i ) & ~HB_IT_BYREF )
+         PHB_ITEM pParam = hb_param( i, HB_IT_ANY );
+
+         switch( HB_ITEM_TYPE( pParam ) )
          {
             case HB_IT_NIL:
                Parm[ iCnt ].nWidth = sizeof( void * );
@@ -494,7 +494,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
             case HB_IT_POINTER:
                Parm[ iCnt ].nWidth = sizeof( void * );
-               Parm[ iCnt ].dwArg = ( DWORD ) hb_parptr( i );
+               Parm[ iCnt ].dwArg = ( DWORD ) hb_itemGetPtr( pParam );
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
                {
@@ -508,7 +508,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
             case HB_IT_DATE:
             case HB_IT_LOGICAL:
                Parm[ iCnt ].nWidth = sizeof( DWORD );
-               Parm[ iCnt ].dwArg = ( DWORD ) hb_parnl( i );
+               Parm[ iCnt ].dwArg = ( DWORD ) hb_itemGetNL( pParam );
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
                {
@@ -519,7 +519,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
             case HB_IT_DOUBLE:
                Parm[ iCnt ].nWidth = sizeof( double );
-               Parm[ iCnt ].dArg = hb_parnd( i );
+               Parm[ iCnt ].dArg = hb_itemGetND( pParam );
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
                {
@@ -537,12 +537,15 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
                {
-                  Parm[ iCnt ].pArg = hb_xgrab( hb_parclen( i ) );
-                  memcpy( Parm[ iCnt ].pArg, hb_parc( i ), hb_parclen( i ) );
+                  Parm[ iCnt ].pArg = hb_xgrab( hb_itemGetCLen( pParam ) + 1 );
+                  memcpy( Parm[ iCnt ].pArg, hb_itemGetCPtr( pParam ), hb_itemGetCLen( pParam ) + 1 );
                }
                else
                {
-                  Parm[ iCnt ].pArg = ( void * ) hb_parc( i );
+                  if( bCopyBuffers )
+                     pParam = hb_itemUnShareString( pParam );
+
+                  Parm[ iCnt ].pArg = ( void * ) hb_itemGetCPtr( pParam );
                }
 
                Parm[ iCnt ].dwFlags = DC_FLAG_ARGPTR;  /* use the pointer */
@@ -582,16 +585,16 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
       for( i = iFirst; i <= iParams; i++ )
       {
-         if( hb_parinfo( i ) & HB_IT_BYREF )
+         if( ISBYREF( i ) )
          {
-            switch( hb_parinfo( i ) & ~HB_IT_BYREF )
+            switch( HB_ITEM_TYPE( hb_param( i, HB_IT_ANY ) ) )
             {
                case HB_IT_NIL:
                   hb_stornl( Parm[ iCnt ].dwArg, i );
                   break;
 
                case HB_IT_POINTER:
-                  hb_storptr( (void *) Parm[ iCnt ].dwArg, i );
+                  hb_storptr( ( void * ) Parm[ iCnt ].dwArg, i );
                   break;
 
                case HB_IT_INTEGER:
