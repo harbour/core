@@ -204,7 +204,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
 
    pWVT->CaretExist        = FALSE;
    pWVT->CaretHidden       = FALSE;
-   pWVT->CaretSize         = max( ( pWVT->PTEXTSIZE.y >> 2 ) - 1, 1 );
+   pWVT->CaretSize         = HB_MAX( ( pWVT->PTEXTSIZE.y >> 2 ) - 1, 1 );
    pWVT->MousePos.x        = 0;
    pWVT->MousePos.y        = 0;
    pWVT->MouseMove         = TRUE;
@@ -346,7 +346,7 @@ static void hb_gt_wvt_UpdateCaret( PHB_GTWVT pWVT )
          iCaretSize = - ( pWVT->PTEXTSIZE.y >> 1 );
          break;
       case SC_NORMAL:
-         iCaretSize = max( ( pWVT->PTEXTSIZE.y >> 2 ) - 1, 1 );
+         iCaretSize = HB_MAX( ( pWVT->PTEXTSIZE.y >> 2 ) - 1, 1 );
          break;
       default:
          iCaretSize = 0;
