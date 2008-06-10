@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-10 21:55 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbw32/dllcall.c
+     % Futher optimizations.
+     ! Fixed LoadLibrary() handle leak in DLLPREPARECALL() when 
+       an invalid function is requested from a valid library.
+
 2008-06-10 21:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32/dllcall.c
      % Optimizations. Removed one internal limit.
@@ -27,11 +33,6 @@
 
    * contrib/hbw32/w32_regc.c
      % Minor optimization.
-
-2008-06-10 19:03 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
-   * contrib/hbw32/dllcall.c
-     ! Fixed memory corruption when more than 15 parameters 
-       were passed to a DLL function.
 
 2008-06-10 18:50 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32/dllcall.c
