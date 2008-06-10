@@ -438,13 +438,13 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
 
 typedef struct _XPP_DLLEXEC
 {
-   DWORD     dwType;       /* type info */
-   char *    cDLL;         /* DLL */
-   HINSTANCE hDLL;         /* Handle */
-   char *    cProc;        /* Ordinal or Name */
-   WORD      wOrdinal;
-   DWORD     dwFlags;      /* Calling Flags */
-   LPVOID    lpFunc;
+   DWORD   dwType;       /* type info */
+   char *  cDLL;         /* DLL */
+   HMODULE hDLL;         /* Handle */
+   char *  cProc;        /* Ordinal or Name */
+   WORD    wOrdinal;
+   DWORD   dwFlags;      /* Calling Flags */
+   LPVOID  lpFunc;
 } XPP_DLLEXEC, * PXPP_DLLEXEC;
 
 #define _DLLEXEC_SIGNATURE  0x45584543
@@ -454,12 +454,9 @@ typedef struct _XPP_DLLEXEC
 /* Based originally on CallDLL() from What32 */
 static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec, int iParams, int iFirst )
 {
-   int iCnt;
-   int i;
    DYNAPARM Parm[ _DLLEXEC_MAXPARAM ];
    RESULT rc;
-   int iArgCnt;
-   BOOL bCopyBuffers = ( iFlags & DLL_CALLMODE_COPY );
+   int i, iCnt, iArgCnt;
 
    if( xec )
    {
@@ -544,7 +541,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
                }
                else
                {
-                  if( bCopyBuffers )
+                  if( iFlags & DLL_CALLMODE_COPY )
                      pParam = hb_itemUnShareString( pParam );
 
                   Parm[ iCnt ].pArg = ( void * ) hb_itemGetCPtr( pParam );
@@ -552,7 +549,6 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
                Parm[ iCnt ].dwFlags = DC_FLAG_ARGPTR;  /* use the pointer */
                break;
-
 #ifdef __XHARBOUR__
             case HB_IT_ARRAY:
                if( strncmp( hb_objGetClsName( hb_param( i, HB_IT_ANY ) ), "C Structure", 11 ) == 0 )
@@ -562,7 +558,6 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
                   break;
                }
 #endif
-
             case HB_IT_HASH:
             case HB_IT_SYMBOL:
             case HB_IT_ALIAS:
@@ -705,7 +700,7 @@ static HB_GARBAGE_FUNC( _DLLUnload )
    {
       if( xec->cDLL )
       {
-         if( xec->hDLL != ( HINSTANCE ) 0 )
+         if( xec->hDLL )
             FreeLibrary( xec->hDLL );
 
          hb_xfree( xec->cDLL );
@@ -731,13 +726,13 @@ HB_FUNC( DLLPREPARECALL )
       xec->hDLL = LoadLibraryA( xec->cDLL );
    }
    else if( ISNUM( 1 ) )
-      xec->hDLL = ( HINSTANCE ) hb_parnl( 1 );
+      xec->hDLL = ( HMODULE ) hb_parnl( 1 );
 
    if( xec->hDLL )
    {
       if( ISCHAR( 3 ) )
       {
-         xec->cProc = ( char * ) hb_xgrab( hb_parclen( 3 ) + 2 ); /* Not a typo - reserving space for possible Ansi 'A' suffix! */
+         xec->cProc = ( char * ) hb_xgrab( hb_parclen( 3 ) + 2 ); /* Reserving space for possible ANSI "A" suffix. */
          hb_strncpy( xec->cProc, hb_parc( 3 ), hb_parclen( 3 ) );
       }
       else if( ISNUM( 3 ) )
@@ -745,7 +740,7 @@ HB_FUNC( DLLPREPARECALL )
 
       xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) xec->wOrdinal );
       
-      if( ! xec->lpFunc && xec->cProc ) /* try ANSI flavour? */
+      if( ! xec->lpFunc && xec->cProc ) /* try with ANSI suffix? */
          xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, ( LPCSTR ) strcat( xec->cProc, "A" ) );
       
       if( xec->lpFunc )
@@ -771,7 +766,7 @@ HB_FUNC( DLLPREPARECALL )
 
 HB_FUNC( DLLLOAD )
 {
-   hb_retnl( ( DWORD ) LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) ) ;
+   hb_retnl( ( long ) LoadLibraryA( ( LPCSTR ) hb_parcx( 1 ) ) ) ;
 }
 
 HB_FUNC( DLLUNLOAD )
@@ -787,15 +782,15 @@ HB_FUNC( DLLEXECUTECALL )
       DllExec( 0, 0, NULL, xec, hb_pcount(), 2 );
 }
 
-static LPVOID hb_getprocaddress( HMODULE hInst, int i )
+static LPVOID hb_getprocaddress( HMODULE hDLL, int i )
 {
-   LPVOID lpFunction = ( LPVOID ) GetProcAddress( hInst, ISCHAR( i ) ? ( LPCSTR ) hb_parc( i ) : ( LPCSTR ) hb_parni( i ) );
+   LPVOID lpFunction = ( LPVOID ) GetProcAddress( hDLL, ISCHAR( i ) ? ( LPCSTR ) hb_parc( i ) : ( LPCSTR ) hb_parni( i ) );
 
-   if( ! lpFunction && ISCHAR( i ) ) /* try ANSI flavour? */
+   if( ! lpFunction && ISCHAR( i ) ) /* try with ANSI suffix? */
    {
       char * pszFuncName = ( char * ) hb_xgrab( hb_parclen( i ) + 2 );
       hb_strncpy( pszFuncName, hb_parc( i ), hb_parclen( i ) );
-      lpFunction = ( LPVOID ) GetProcAddress( hInst, strcat( pszFuncName, "A" ) );
+      lpFunction = ( LPVOID ) GetProcAddress( hDLL, strcat( pszFuncName, "A" ) );
       hb_xfree( pszFuncName );
    }
 
@@ -804,25 +799,25 @@ static LPVOID hb_getprocaddress( HMODULE hInst, int i )
 
 HB_FUNC( DLLCALL )
 {
-   HINSTANCE hInst = ISCHAR( 1 ) ? LoadLibraryA( hb_parc( 1 ) ) : ( HINSTANCE ) hb_parnl( 1 );
+   HMODULE hDLL = ISCHAR( 1 ) ? LoadLibraryA( hb_parc( 1 ) ) : ( HMODULE ) hb_parnl( 1 );
 
-   if( hInst && ( DWORD ) hInst >= 32 )
+   if( hDLL && ( DWORD ) hDLL >= 32 )
    {
-      DllExec( hb_parni( 2 ), 0, hb_getprocaddress( ( HMODULE ) hInst, 3 ), NULL, hb_pcount(), 4 );
+      DllExec( hb_parni( 2 ), 0, hb_getprocaddress( ( HMODULE ) hDLL, 3 ), NULL, hb_pcount(), 4 );
       
       if( ISCHAR( 1 ) )
-         FreeLibrary( hInst );
+         FreeLibrary( hDLL );
    }
 }
 
 /* ------------------------------------------------------------------ */
 
-HB_FUNC( LOADLIBRARY ) /* compatibility */
+HB_FUNC( LOADLIBRARY )
 {
    HB_FUNC_EXEC( DLLLOAD );
 }
 
-HB_FUNC( FREELIBRARY ) /* compatibility */
+HB_FUNC( FREELIBRARY )
 {
    HB_FUNC_EXEC( DLLUNLOAD );
 }
@@ -840,7 +835,7 @@ HB_FUNC( SETLASTERROR )
 
 HB_FUNC( GETPROCADDRESS )
 {
-   hb_retptr( hb_getprocaddress( ( HMODULE ) hb_parnl( 1 ), 2 ) );
+   hb_retptr( ( void * ) hb_getprocaddress( ( HMODULE ) hb_parnl( 1 ), 2 ) );
 }
 
 /* Call a DLL function from (x)Harbour, the first parameter is a pointer returned from
