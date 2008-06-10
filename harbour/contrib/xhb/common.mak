@@ -26,6 +26,7 @@ PRG_HEADERS = \
     xhbextrn.ch \
 
 LIB_OBJS = \
+    $(OBJ_DIR)hbcrypt$(OBJEXT) \
     $(OBJ_DIR)hbxml$(OBJEXT) \
     $(OBJ_DIR)hbsyslog$(OBJEXT) \
     $(OBJ_DIR)hboutdbg$(OBJEXT) \

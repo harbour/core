@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-10 16:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/xhb/hbcrypt.c
+   + contrib/xhb/hbnxs.h
+   * contrib/xhb/Makefile
+   * contrib/xhb/common.mak
+     + Added HB_CRYPT()/HB_DECRYPT().
+       Thanks to Giancarlo Niccolai / xhb.
+     + Changed to not depend on hbzlib.
+     ; Minor modifications to compile smoothly in Harbour.
+
+   * bin/bld.bat
+     * Prev change undone.
+
 2008-06-10 15:45 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32/dllcall.c
      ! Fixed some xhb specific code to work in Harbour.
