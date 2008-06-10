@@ -70,7 +70,7 @@ HB_FUNC( STRPEEK )
          hb_retni( 0 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STRPEEK", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
@@ -90,7 +90,7 @@ HB_FUNC( STRPOKE )
       hb_itemReturn( pText );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "STRPOKE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif /* HB_COMPAT_FLAGSHIP */

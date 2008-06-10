@@ -398,7 +398,7 @@ static ERRCODE hb_adsCheckLock( ADSAREAP pArea )
       u32RetVal = AdsIsRecordLocked( pArea->hTable, 0, &u16Locked );
       if( u32RetVal != AE_SUCCESS )
       {
-         hb_errRT_DBCMD( EG_UNLOCKED, u32RetVal, "Lock Required by ADSTESTRECLOCKS()", &hb_errFuncName );
+         hb_errRT_DBCMD( EG_UNLOCKED, u32RetVal, "Lock Required by ADSTESTRECLOCKS()", HB_ERR_FUNCNAME );
          return FAILURE;
       }
       if( !u16Locked )
@@ -5050,7 +5050,7 @@ HB_FUNC( ADSGETRELKEYPOS )
    if( pArea )
       hb_retnd( adsGetRelPos( pArea, pArea->hOrdCurrent ) );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
 }
 
 HB_FUNC( ADSSETRELKEYPOS )
@@ -5060,7 +5060,7 @@ HB_FUNC( ADSSETRELKEYPOS )
    if( pArea )
       adsSetRelPos( pArea, pArea->hOrdCurrent, hb_parnd( 1 ) );
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
 }
 
 HB_FUNC( ADSCUSTOMIZEAOF )
@@ -5126,5 +5126,5 @@ HB_FUNC( ADSCUSTOMIZEAOF )
       hb_retnl( u32RetVal );
    }
    else
-      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, &hb_errFuncName );
+      hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
 }

@@ -71,7 +71,7 @@ HB_FUNC( SPACE )
          /* NOTE: String overflow could never occure since a string can
                   be as large as ULONG_MAX, and the maximum length that
                   can be specified is LONG_MAX here. [vszakats] */
-         /* hb_errRT_BASE( EG_STROVERFLOW, 1233, NULL, "SPACE" ); */
+         /* hb_errRT_BASE( EG_STROVERFLOW, 1233, NULL, HB_ERR_FUNCNAME ); */
 
          hb_xmemset( szResult, ' ', lLen );
          hb_retclen_buffer( szResult, lLen );
@@ -80,5 +80,5 @@ HB_FUNC( SPACE )
          hb_retc( NULL );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1105, NULL, "SPACE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1105, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

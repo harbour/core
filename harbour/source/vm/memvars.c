@@ -1431,7 +1431,7 @@ HB_FUNC( __MVSAVE )
    }
    else
       /* NOTE: Undocumented error message in CA-Cl*pper 5.2e and 5.3x. [ckedem] */
-      hb_errRT_BASE( EG_ARG, 2008, NULL, "__MSAVE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2008, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* NOTE: There's an extension in Harbour, which makes it possible to only
@@ -1594,7 +1594,7 @@ HB_FUNC( __MVRESTORE )
    }
    else
       /* NOTE: Undocumented error message in CA-Cl*pper 5.2e and 5.3x. [ckedem] */
-      hb_errRT_BASE( EG_ARG, 2007, NULL, "__MRESTORE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2007, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*

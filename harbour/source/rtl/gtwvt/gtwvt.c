@@ -240,9 +240,9 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent )
       if( hb_vmRequestReenter() )
       {
          PHB_ITEM pEvent = hb_itemPutNI( NULL, nEvent );
-
+        
          nResult = hb_itemGetNI( hb_vmEvalBlockV( ( PHB_ITEM ) pWVT->pGT->pNotifierBlock, 1, pEvent ) );
-
+        
          hb_itemRelease( pEvent );
 
          hb_vmRequestRestore();
@@ -470,17 +470,38 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
 {
    RECT wi, ci;
    BOOL bValid = TRUE;
+   LONG maxWidth;
+   LONG maxHeight;
+   LONG borderwidth;
+   LONG borderheight;
+   SHORT left;
+   SHORT top;
 
    HB_SYMBOL_UNUSED( mode );
 
+   GetClientRect( pWVT->hWnd, &ci );
+   GetWindowRect( pWVT->hWnd, &wi );
+
+   borderwidth = ( wi.right - wi.left - ( ci.right - ci.left ) );
+   borderheight = ( wi.bottom - wi.top - ( ci.bottom - ci.top ) );
+
    if( pWVT->bMaximized )
    {
-      SystemParametersInfo( SPI_GETWORKAREA, 0, &ci, 0 );
+      SystemParametersInfo( SPI_GETWORKAREA, 0, &wi, 0 );
+
+      maxHeight = wi.bottom - wi.top - borderwidth;
+      maxWidth  = wi.right  - wi.left - borderheight;
+
+      left = 0;
+      top  = 0;
    }
    else
    {
-      GetWindowRect( pWVT->hWnd, &wi );
-      GetClientRect( pWVT->hWnd, &ci );
+      maxHeight = ci.bottom - ci.top;
+      maxWidth  = ci.right  - ci.left;
+
+      left = ( wi.left < 0 ? 0 : wi.left );
+      top  = ( wi.top  < 0 ? 0 : wi.top  );
    }
 
    if( bValid )
@@ -488,12 +509,9 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
       HDC        hdc;
       HFONT      hOldFont, hFont;
       USHORT     fontHeight, fontWidth, n;
-      LONG       width, height, maxWidth, maxHeight;
-      SHORT      left, top;
+      LONG       width, height;
       TEXTMETRIC tm;
 
-      maxHeight  = ci.bottom - ci.top;
-      maxWidth   = ci.right  - ci.left;
       fontHeight = maxHeight / pWVT->ROWS;
       fontWidth  = maxWidth  / pWVT->COLS;
 
@@ -507,15 +525,14 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
          SelectObject( hdc, hOldFont );
          ReleaseDC( pWVT->hWnd, hdc );
 
-         width     = ( tm.tmAveCharWidth * pWVT->COLS );
-         height    = ( tm.tmHeight       * pWVT->ROWS );
+         width     = (   tm.tmAveCharWidth                            * pWVT->COLS );
+         height    = ( ( tm.tmHeight - ( pWVT->bMaximized ? 1 : 0 ) ) * pWVT->ROWS );
 
          if( width <= maxWidth && height <= maxHeight )
          {
             if( pWVT->hFont )
-            {
                DeleteObject( pWVT->hFont );
-            }
+
             pWVT->hFont       = hFont;
             pWVT->fontHeight  = tm.tmHeight;
             pWVT->fontWidth   = tm.tmAveCharWidth;
@@ -531,26 +548,10 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
                         ( pWVT->PTEXTSIZE.x == tm.tmMaxCharWidth );
 #endif
             for( n = 0; n < pWVT->COLS; n++ )
-            {
                pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
-            }
 
-            height = ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS );
-            width  = ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS );
-
-            if( pWVT->bMaximized )
-            {
-               left = 0;
-               top  = 0;
-            }
-            else
-            {
-               width  += ( USHORT ) ( wi.right - wi.left - ci.right );
-               height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
-
-               left   = ( wi.left < 0 ? 0 : wi.left );
-               top    = ( wi.top  < 0 ? 0 : wi.top  );
-            }
+            width  = ( ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderwidth;
+            height = ( ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderheight;
 
             hb_gt_wvt_KillCaret( pWVT );
             hb_gt_wvt_UpdateCaret( pWVT );
@@ -783,8 +784,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
                left   = pWVT->markStartColRow.x;
                top    = pWVT->markStartColRow.y;
-               right  = pWVT->markEndColRow.x+1;
-               bottom = pWVT->markEndColRow.y+1;
+               right  = pWVT->markEndColRow.x + 1;
+               bottom = pWVT->markEndColRow.y + 1;
                /*  Check boundaries and reverse operation */
                if( right < left )
                {
@@ -860,7 +861,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             pWVT->markEndColRow = colrow;
 
             a0 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markStartColRow.x, ( USHORT ) pWVT->markStartColRow.y );
-            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x+1, ( USHORT ) pWVT->markEndColRow.y+1 );
+            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x + 1, ( USHORT ) pWVT->markEndColRow.y + 1 );
 
             rect.left   = a0.x;
             rect.top    = a0.y;
@@ -875,9 +876,9 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                HDC hdc = GetDC( pWVT->hWnd );
                RECT rectUpd;
 
-               if( s_rectOld.left   == 0 &&
-                   s_rectOld.right  == 0 &&
-                   s_rectOld.top    == 0 &&
+               if( s_rectOld.left   == 0 && 
+                   s_rectOld.right  == 0 && 
+                   s_rectOld.top    == 0 && 
                    s_rectOld.bottom == 0 )
                {
                   /* New selection */
@@ -886,10 +887,10 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   rect.top = a0.y;
                   rect.right = a1.x;
                   rect.bottom = a1.y;
-
+       
                   InvertRect( hdc, &rect );
                }
-               else
+               else 
                {
                   int nS = 0;
                   int nG = 0;
@@ -897,12 +898,12 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   if( abs( rect.left - rect.right ) < abs( s_rectOld.left - s_rectOld.right ) )
                   {
                      /* Selection shrunk horizontally */
-
+                    
                      rectUpd.left   = rect.right;
                      rectUpd.top    = rect.top;
                      rectUpd.right  = s_rectOld.right;
                      rectUpd.bottom = s_rectOld.bottom;
-
+                    
                      RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
 
                      ++nS;
@@ -911,12 +912,12 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   if( abs( rect.top - rect.bottom ) < abs( s_rectOld.top - s_rectOld.bottom ) )
                   {
                      /* Selection shrunk vertically */
-
+                    
                      rectUpd.left   = rect.left;
                      rectUpd.top    = rect.bottom;
                      rectUpd.right  = s_rectOld.right;
                      rectUpd.bottom = s_rectOld.bottom;
-
+                    
                      RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
 
                      ++nS;
@@ -925,24 +926,24 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   if( nS == 2 )
                   {
                      /* Selection shrunk horizontally + vertically */
-
+                    
                      rectUpd.left   = rect.right;
                      rectUpd.top    = rect.bottom;
                      rectUpd.right  = s_rectOld.right;
                      rectUpd.bottom = s_rectOld.bottom;
-
+                    
                      RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
                   }
 
                   if( abs( rect.left - rect.right ) > abs( s_rectOld.left - s_rectOld.right ) )
                   {
                      /* Selection grown horizontally */
-
+                     
                      rectUpd.left   = s_rectOld.right;
                      rectUpd.top    = s_rectOld.top;
                      rectUpd.right  = rect.right;
                      rectUpd.bottom = nS ? rect.bottom : s_rectOld.bottom;
-
+                     
                      InvertRect( hdc, &rectUpd );
 
                      ++nG;
@@ -951,12 +952,12 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   if( abs( rect.top - rect.bottom ) > abs( s_rectOld.top - s_rectOld.bottom ) )
                   {
                      /* Selection grown vertically */
-
+                     
                      rectUpd.left   = s_rectOld.left;
                      rectUpd.top    = s_rectOld.bottom;
                      rectUpd.right  = nS ? rect.right : s_rectOld.right;
                      rectUpd.bottom = rect.bottom;
-
+                     
                      InvertRect( hdc, &rectUpd );
 
                      ++nG;
@@ -965,12 +966,12 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   if( nG == 2 )
                   {
                      /* Selection grown horizontally + vertically */
-
-                     rectUpd.left   = s_rectOld.right;
+                    
+                     rectUpd.left   = s_rectOld.right; 
                      rectUpd.top    = s_rectOld.bottom;
-                     rectUpd.right  = rect.right;
+                     rectUpd.right  = rect.right; 
                      rectUpd.bottom = rect.bottom;
-
+                    
                      InvertRect( hdc, &rectUpd );
                   }
                }

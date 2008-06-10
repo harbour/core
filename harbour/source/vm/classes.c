@@ -616,7 +616,7 @@ static BOOL hb_clsCanClearMethod( PMETHOD pMethod, BOOL fError )
    if( pMethod->pFuncSym == &s___msgSuper )
    {
       if( fError )
-         hb_errRT_BASE( EG_ARG, 3000, "Cannot delete supercast messages", &hb_errFuncName, 0 );
+         hb_errRT_BASE( EG_ARG, 3000, "Cannot delete supercast messages", HB_ERR_FUNCNAME, 0 );
       return FALSE;
    }
 #endif
@@ -2194,9 +2194,7 @@ HB_EXPORT PHB_ITEM hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, ULONG 
       hb_vmSend( (USHORT) ulArg );
    }
    else
-   {
       hb_errRT_BASE( EG_ARG, 3000, NULL, "__ObjSendMessage()", 0 );
-   }
 
    return hb_stackReturnItem();
 }
@@ -2647,7 +2645,7 @@ static BOOL hb_clsAddMsg( USHORT uiClass, const char * szMessage,
 
       if( !fOK )
       {
-         hb_errRT_BASE( EG_ARG, 3000, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_BASE( EG_ARG, 3000, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
          return FALSE;
       }
 
@@ -3223,7 +3221,7 @@ HB_FUNC( __CLSNEW )
       hb_retni( uiClass );
    }
    else
-      hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSNEW", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 3000, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*
@@ -3378,14 +3376,14 @@ HB_FUNC( __CLSMODMSG )
 
             if( pFuncSym == &s___msgSetData || pFuncSym == &s___msgGetData )
             {
-               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a DATA item", "__CLSMODMSG", 0 );
+               hb_errRT_BASE( EG_ARG, 3004, "Cannot modify a DATA item", HB_ERR_FUNCNAME, 0 );
             }
             else if( pFuncSym == &s___msgEvalInline )
             {
                PHB_ITEM pBlock = hb_param( 3, HB_IT_BLOCK );
 
                if( pBlock == NULL )
-                  hb_errRT_BASE( EG_ARG, 3000, "Cannot modify INLINE method", "__CLSMODMSG", 0 );
+                  hb_errRT_BASE( EG_ARG, 3000, "Cannot modify INLINE method", HB_ERR_FUNCNAME, 0 );
                else
                   hb_arraySet( s_pClasses[ pMethod->uiSprClass ].pInlines,
                                pMethod->uiData, pBlock );
@@ -3395,7 +3393,7 @@ HB_FUNC( __CLSMODMSG )
                pFuncSym = hb_objGetFuncSym( hb_param( 3, HB_IT_ANY ) );
 
                if( pFuncSym == NULL )
-                  hb_errRT_BASE( EG_ARG, 3000, NULL, "__CLSMODMSG", 0 );
+                  hb_errRT_BASE( EG_ARG, 3000, NULL, HB_ERR_FUNCNAME, 0 );
                else
                   pMethod->pFuncSym = pFuncSym;
             }
@@ -3436,7 +3434,7 @@ HB_FUNC( __OBJHASMSG )
    if( pMessage )
       hb_retl( hb_objHasMessage( hb_param( 1, HB_IT_ANY ), pMessage ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "__OBJHASMSG", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*
@@ -3464,7 +3462,7 @@ HB_FUNC( __OBJSENDMSG )
    }
    else
    {
-      hb_errRT_BASE( EG_ARG, 3000, NULL, "__OBJSENDMSG", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 3000, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 }
 
@@ -3485,7 +3483,7 @@ HB_FUNC( __OBJCLONE )
    }
    else
    {
-      hb_errRT_BASE( EG_ARG, 3001, NULL, "__OBJCLONE", 0 );
+      hb_errRT_BASE( EG_ARG, 3001, NULL, HB_ERR_FUNCNAME, 0 );
    }
 }
 
@@ -3557,14 +3555,12 @@ HB_FUNC( __CLSINSTSUPER )
             if( uiClassH && HB_IS_OBJECT( pObject ) )
                pObject->item.asArray.value->uiClass = 0;
             else if( hb_vmRequestQuery() == 0 )
-               hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", "__CLSINSTSUPER", 0 );
+               hb_errRT_BASE( EG_ARG, 3002, "Super class does not return an object", HB_ERR_FUNCNAME, 0 );
          }
       }
    }
    else
-   {
-      hb_errRT_BASE( EG_ARG, 3003, "Cannot find super class", "__CLSINSTSUPER", 0 );
-   }
+      hb_errRT_BASE( EG_ARG, 3003, "Cannot find super class", HB_ERR_FUNCNAME, 0 );
 
    hb_retni( uiClassH );
 }

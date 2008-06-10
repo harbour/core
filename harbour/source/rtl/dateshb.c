@@ -172,7 +172,7 @@ HB_FUNC( CTOD )
       hb_retd( y_value, m_value, d_value );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1119, NULL, "CTOD", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1119, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( DTOC )
@@ -185,7 +185,7 @@ HB_FUNC( DTOC )
       hb_retc( hb_dateFormat( hb_pardsbuff( szDate, 1 ), szFormatted, hb_set.HB_SET_DATEFORMAT ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1118, NULL, "DTOC", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1118, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( DTOS )
@@ -197,7 +197,7 @@ HB_FUNC( DTOS )
       hb_retc( hb_pardsbuff( szDate, 1 ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, "DTOS", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* NOTE: Harbour extension, exactly the same as STOD(). */
@@ -222,7 +222,7 @@ HB_FUNC( YEAR )
       hb_retnilen( iYear, 5 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1112, NULL, "YEAR", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1112, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( MONTH )
@@ -238,7 +238,7 @@ HB_FUNC( MONTH )
       hb_retnilen( iMonth, 3 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1113, NULL, "MONTH", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1113, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( DAY )
@@ -254,7 +254,7 @@ HB_FUNC( DAY )
       hb_retnilen( iDay, 3 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1114, NULL, "DAY", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1114, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( TIME )
@@ -280,5 +280,5 @@ HB_FUNC( DOW )
       hb_retnilen( hb_dateJulianDOW( hb_itemGetDL( pDate ) ), 3 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1115, NULL, "DOW", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1115, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

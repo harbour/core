@@ -64,7 +64,7 @@ HB_FUNC( HB_SETDISPCP )
          hb_gtSetDispCP( hb_parc( 1 ), hb_parc( 2 ), hb_parl( 3 ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETDISPCP", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_SETKEYCP )
@@ -72,7 +72,7 @@ HB_FUNC( HB_SETKEYCP )
    if( ISCHAR( 1 ) )
       hb_gtSetKeyCP( hb_parc( 1 ), hb_parc( 2 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETKEYCP", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_SETTERMCP )
@@ -91,7 +91,7 @@ HB_FUNC( HB_SETTERMCP )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, "HB_SETTERMCP", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_GTINFO )
@@ -108,7 +108,7 @@ HB_FUNC( HB_GTINFO )
          hb_itemReturnRelease( gtInfo.pResult );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_GTINFO", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_GTVERSION )

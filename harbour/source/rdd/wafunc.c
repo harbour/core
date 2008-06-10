@@ -628,7 +628,7 @@ ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
    /* First try to create new are node and validate RDD name */
    if( ! hb_rddInsertAreaNode( szDriver ) )
    {
-      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBUSEAREA" );
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
       return FAILURE;
    }
 
@@ -638,7 +638,7 @@ ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
    if( !szFileName )
    {
       hb_rddReleaseCurrentArea();
-      hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, "DBUSEAREA" );
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
       return FAILURE;
    }
 
@@ -684,7 +684,7 @@ ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
 
    if( !szFileName )
    {
-      hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, "DBCREATE" );
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, HB_ERR_FUNCNAME );
       return FAILURE;
    }
 
@@ -712,7 +712,7 @@ ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
    if( ! hb_rddInsertAreaNode( szDriver ) )
    {
       hb_rddSelectWorkAreaNumber( uiPrevArea );
-      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBCREATE" );
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
       return FAILURE;
    }
    pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -1055,7 +1055,7 @@ ERRCODE hb_rddTransRecords( AREAP pArea,
 
       if( !pRddNode )
       {
-         hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, "DBUSEAREA" );
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
          return FAILURE;
       }
 

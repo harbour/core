@@ -230,7 +230,7 @@ HB_FUNC( HB_DBG_VMVARLGET )
    if( pLocal )
       hb_itemReturn( pLocal );
    else
-      hb_errRT_BASE( EG_ARG, 6005, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6005, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_DBG_VMVARLSET )

@@ -87,7 +87,7 @@ HB_FUNC( INT )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1090, NULL, "INT", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1090, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( ROUND )
@@ -112,5 +112,5 @@ HB_FUNC( ROUND )
 #endif
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1094, NULL, "ROUND", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1094, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

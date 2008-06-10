@@ -138,7 +138,7 @@ PHB_REGEX hb_regexGet( PHB_ITEM pRegExItm, int iFlags )
    }
 
    if( !pRegEx )
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Invalid Regular expression", &hb_errFuncName, 1, pRegExItm );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, "Invalid Regular expression", HB_ERR_FUNCNAME, 1, pRegExItm );
 
    return pRegEx;
 }

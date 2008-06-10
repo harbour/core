@@ -235,7 +235,7 @@ HB_FUNC( HB_CRC32 )
    if( szString )
       hb_retnint( hb_crc32( ( ULONG ) hb_parnl( 2 ), ( BYTE * ) szString, hb_parclen( 1 ) ) );
    else
-      hb_errRT_BASE( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_CRC16 )
@@ -245,7 +245,7 @@ HB_FUNC( HB_CRC16 )
    if( szString )
       hb_retnint( hb_crc16( ( ULONG ) hb_parnl( 2 ), ( BYTE * ) szString, hb_parclen( 1 ) ) );
    else
-      hb_errRT_BASE( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_CRC )
@@ -260,7 +260,7 @@ HB_FUNC( HB_CRC )
       hb_retnint( hb_crc( ( HB_ULONG ) hb_parnint( 2 ), ( BYTE * ) szString, hb_parclen( 1 ), ulPolynomial ) );
    }
    else
-      hb_errRT_BASE( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_CRCCT )
@@ -275,5 +275,5 @@ HB_FUNC( HB_CRCCT )
       hb_retnint( hb_crcct( ( HB_ULONG ) hb_parnint( 2 ), ( BYTE * ) szString, hb_parclen( 1 ), ulPolynomial ) );
    }
    else
-      hb_errRT_BASE( EG_ARG, 3012, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

@@ -499,7 +499,7 @@ HB_FUNC( HB_EXECFROMARRAY )
          hb_vmDo( usPCount );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "HB_EXECFROMARRAY", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 BOOL hb_execFromArray( PHB_ITEM pParam )
@@ -564,6 +564,7 @@ BOOL hb_execFromArray( PHB_ITEM pParam )
       }
    }
 
-   hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "HB_EXECFROMARRAY", HB_ERR_ARGS_BASEPARAMS );
+   hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+
    return FALSE;
 }

@@ -91,7 +91,7 @@ HB_FUNC( HB_HHASKEY )
    if( pHash && pKey )
       hb_retl( hb_hashScan( pHash, pKey, NULL ) );
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HPOS )
@@ -106,7 +106,7 @@ HB_FUNC( HB_HPOS )
       hb_retnint( ulPos );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HGET )
@@ -123,7 +123,7 @@ HB_FUNC( HB_HGET )
          hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pHash, pKey );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HSET )
@@ -135,7 +135,7 @@ HB_FUNC( HB_HSET )
    if( pHash && pKey && pValue )
       hb_hashAdd( pHash, pKey, pValue );
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HDEL )
@@ -149,7 +149,7 @@ HB_FUNC( HB_HDEL )
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 2, pHash, pKey );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HKEYAT )
@@ -163,10 +163,10 @@ HB_FUNC( HB_HKEYAT )
       if( pKey )
          hb_itemReturn( pKey );
       else
-         hb_errRT_BASE( EG_BOUND, 1187, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_BASE( EG_BOUND, 1187, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HVALUEAT )
@@ -187,10 +187,10 @@ HB_FUNC( HB_HVALUEAT )
          hb_itemReturn( pValue );
       }
       else
-         hb_errRT_BASE( EG_BOUND, 1187, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_BASE( EG_BOUND, 1187, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HPAIRAT )
@@ -220,10 +220,10 @@ HB_FUNC( HB_HPAIRAT )
          }
       }
       else
-         hb_errRT_BASE( EG_BOUND, 1187, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+         hb_errRT_BASE( EG_BOUND, 1187, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HDELAT )
@@ -237,7 +237,7 @@ HB_FUNC( HB_HDELAT )
          hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 2, pHash, pPos );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 
@@ -248,7 +248,7 @@ HB_FUNC( HB_HKEYS )
    if( pHash )
       hb_itemReturnRelease( hb_hashGetKeys( pHash ) );
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HVALUES )
@@ -258,7 +258,7 @@ HB_FUNC( HB_HVALUES )
    if( pHash )
       hb_itemReturnRelease( hb_hashGetValues( pHash ) );
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HFILL )
@@ -277,7 +277,7 @@ HB_FUNC( HB_HFILL )
       hb_itemReturn( pHash );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HCLONE )
@@ -287,7 +287,7 @@ HB_FUNC( HB_HCLONE )
    if( pHash )
       hb_itemReturnRelease( hb_hashClone( pHash ) );
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HCOPY )
@@ -318,7 +318,7 @@ HB_FUNC( HB_HCOPY )
       hb_itemReturn( pDest );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HMERGE )
@@ -358,7 +358,7 @@ HB_FUNC( HB_HMERGE )
       hb_itemReturn( pDest );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HEVAL )
@@ -396,7 +396,7 @@ HB_FUNC( HB_HEVAL )
       hb_itemReturn( pHash );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HSCAN )
@@ -594,7 +594,7 @@ HB_FUNC( HB_HSCAN )
       hb_retnint( fFound ? ulStart : 0 );
    }
    else
-      hb_errRT_BASE( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HCASEMATCH )
@@ -614,7 +614,7 @@ HB_FUNC( HB_HCASEMATCH )
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 2017, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HAUTOADD )
@@ -647,7 +647,7 @@ HB_FUNC( HB_HAUTOADD )
       }
    }
    else
-      hb_errRT_BASE( EG_ARG, 2017, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HALLOCATE )
@@ -662,7 +662,7 @@ HB_FUNC( HB_HALLOCATE )
          hb_hashPreallocate( pHash, lMem );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2017, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HDEFAULT )
@@ -676,7 +676,7 @@ HB_FUNC( HB_HDEFAULT )
          hb_hashSetDefault( pHash, hb_param( 2, HB_IT_ANY ) );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2017, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_HSETAUTOADD )     { HB_FUNC_EXEC( HB_HAUTOADD ); hb_itemReturn( hb_param( 1, HB_IT_HASH ) ); }

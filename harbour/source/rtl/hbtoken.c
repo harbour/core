@@ -290,7 +290,7 @@ HB_FUNC( HB_ATOKENS )
       hb_itemReturnRelease( hb_tokenArray( szLine, ulLen, szDelim, ulDelim,
                                            hb_parl( 3 ), hb_parl( 4 ) ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __STRTOKEN )

@@ -160,7 +160,7 @@ HB_FUNC( HB_REGEXCOMP )
 
    if( ulLen == 0 )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameter count/type", 
-                            &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+                            HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else
    {
       int iFlags = HBREG_EXTENDED;
@@ -198,7 +198,7 @@ HB_FUNC( HB_ATX )
    if( !pString )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameters",
-                            &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+                            HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
    pszString = hb_itemGetCPtr( pString );
@@ -257,7 +257,7 @@ static BOOL hb_regex( int iRequest )
    if( !pString )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, "Wrong parameters",
-                            &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+                            HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return FALSE;
    }
    pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),

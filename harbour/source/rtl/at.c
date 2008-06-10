@@ -85,7 +85,7 @@ HB_FUNC( HB_AT )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #if defined( HB_EXTENSION )
@@ -108,7 +108,7 @@ HB_FUNC( AT )
                           hb_itemGetCPtr( pText ), hb_itemGetCLen( pText ) ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, "AT", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif

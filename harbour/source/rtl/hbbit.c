@@ -67,7 +67,7 @@ static BOOL hb_numParam( int iParam, HB_LONG * plNum )
       *plNum = hb_parnint( iParam );
       return TRUE;
    }
-   hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+   hb_errRT_BASE_SubstR( EG_ARG, 1089, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    *plNum = 0;
    return FALSE;
 }

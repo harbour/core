@@ -77,7 +77,7 @@ HB_FUNC( CHR )
 #endif
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1104, NULL, "CHR", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1104, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* converts a character value to an ASCII code */
@@ -86,9 +86,7 @@ HB_FUNC( ASC )
    char * szValue = hb_parc( 1 );
 
    if( szValue )
-   {
       hb_retni( ( UCHAR ) szValue[ 0 ] );
-   }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1107, NULL, "ASC", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1107, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

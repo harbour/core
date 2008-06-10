@@ -8,6 +8,76 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-10 11:10 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     ! Fixed maximized window size.
+
+   * contrib/hbw32/dllcall.c
+     * Further cleanup.
+     ! MessageBox()es converted to RTE calls.
+
+   * contrib/hbcurl/hbcurl.c
+   * contrib/rddads/ads1.c
+   * contrib/rddads/adsfunc.c
+   * source/rdd/dbcmd.c
+   * source/rdd/dbcmd53.c
+   * source/rdd/dbcmdx.c
+   * source/rdd/dbsql.c
+   * source/rdd/wafunc.c
+   * source/rdd/workarea.c
+   * source/rtl/abs.c
+   * source/rtl/at.c
+   * source/rtl/cdpapi.c
+   * source/rtl/chrasc.c
+   * source/rtl/copyfile.c
+   * source/rtl/datec.c
+   * source/rtl/dateshb.c
+   * source/rtl/do.c
+   * source/rtl/gtfunc.c
+   * source/rtl/hbadler.c
+   * source/rtl/hbbit.c
+   * source/rtl/hbcrc.c
+   * source/rtl/hbhex.c
+   * source/rtl/hbinet.c
+   * source/rtl/hbregex.c
+   * source/rtl/hbregexc.c
+   * source/rtl/hbrunfun.c
+   * source/rtl/hbtoken.c
+   * source/rtl/hbzlib.c
+   * source/rtl/left.c
+   * source/rtl/len.c
+   * source/rtl/math.c
+   * source/rtl/minmax.c
+   * source/rtl/philes.c
+   * source/rtl/philesx.c
+   * source/rtl/replic.c
+   * source/rtl/round.c
+   * source/rtl/run.c
+   * source/rtl/set.c
+   * source/rtl/space.c
+   * source/rtl/str.c
+   * source/rtl/strcase.c
+   * source/rtl/strpeek.c
+   * source/rtl/strtran.c
+   * source/rtl/strzero.c
+   * source/rtl/substr.c
+   * source/rtl/transfrm.c
+   * source/rtl/trim.c
+   * source/rtl/type.c
+   * source/rtl/val.c
+   * source/rtl/valtype.c
+   * source/rtl/word.c
+   * source/vm/arrayshb.c
+   * source/vm/classes.c
+   * source/vm/debug.c
+   * source/vm/eval.c
+   * source/vm/evalhb.c
+   * source/vm/hashfunc.c
+   * source/vm/memvars.c
+   * source/vm/runner.c
+     * &hb_errFuncName -> HB_ERR_FUNCNAME
+     % Using HB_ERR_FUNCNAME wherever possible.
+
 2008-06-09 14:48 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
      ! Fixed for selection in the last row and column.

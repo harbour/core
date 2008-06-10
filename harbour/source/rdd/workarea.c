@@ -453,7 +453,7 @@ static ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 
       if( errCode != SUCCESS )
       {
-         hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, &hb_errFuncName );
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, HB_ERR_FUNCNAME );
          return errCode;
       }
       /* Add field */
@@ -883,7 +883,7 @@ static ERRCODE hb_waOrderInfo( AREAP pArea, USHORT index, LPDBORDERINFO pInfo )
    /* CA-Cl*pper does not generate RT error when default ORDERINFO() method
     * is called
     */
-   /* hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, "DBORDERINFO" ); */
+   /* hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME ); */
 
    return FAILURE;
 }

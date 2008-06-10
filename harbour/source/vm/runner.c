@@ -316,7 +316,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
 
       if( iVersion == 0 )
       {
-         hb_errRT_BASE( EG_CORRUPTION, 9995, NULL, "__HRBLOAD", 0 );
+         hb_errRT_BASE( EG_CORRUPTION, 9995, NULL, HB_ERR_FUNCNAME, 0 );
          return NULL;
       }
 
@@ -333,7 +333,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
             pHrbBody->ulSymbols == 0 )
       {
          hb_hrbUnLoad( pHrbBody );
-         hb_errRT_BASE( EG_CORRUPTION, 9996, NULL, "__HRBLOAD", 0 );
+         hb_errRT_BASE( EG_CORRUPTION, 9996, NULL, HB_ERR_FUNCNAME, 0 );
          return NULL;
       }
 
@@ -362,7 +362,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
       {
          hb_hrbFreeSymbols( pSymRead, ul );
          hb_hrbUnLoad( pHrbBody );
-         hb_errRT_BASE( EG_CORRUPTION, 9997, NULL, "__HRBLOAD", 0 );
+         hb_errRT_BASE( EG_CORRUPTION, 9997, NULL, HB_ERR_FUNCNAME, 0 );
          return NULL;
       }
 
@@ -400,7 +400,7 @@ static PHRB_BODY hb_hrbLoad( char* szHrbBody, ULONG ulBodySize )
          {
             hb_hrbFreeSymbols( pSymRead, pHrbBody->ulSymbols );
             hb_hrbUnLoad( pHrbBody );
-            hb_errRT_BASE( EG_CORRUPTION, 9998, NULL, "__HRBLOAD", 0 );
+            hb_errRT_BASE( EG_CORRUPTION, 9998, NULL, HB_ERR_FUNCNAME, 0 );
             return NULL;
          }
       }
@@ -612,7 +612,7 @@ HB_FUNC( __HRBRUN )
          hb_retl( FALSE );
    }
    else
-      hb_errRT_BASE( EG_ARG, 6103, NULL, "__HRBRUN", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6103, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __HRBLOAD )
@@ -651,7 +651,7 @@ HB_FUNC( __HRBLOAD )
       hb_retptr( ( void *) pHrbBody );
    }
    else
-      hb_errRT_BASE( EG_ARG, 9998, NULL, "__HRBLOAD", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 9998, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __HRBDO )
@@ -678,7 +678,7 @@ HB_FUNC( __HRBDO )
          hb_xfree( argv );
    }
    else
-      hb_errRT_BASE( EG_ARG, 6104, NULL, "__HRBDO", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6104, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __HRBUNLOAD )
@@ -688,7 +688,7 @@ HB_FUNC( __HRBUNLOAD )
    if( pHrbBody )
       hb_hrbUnLoad( pHrbBody );
    else
-      hb_errRT_BASE( EG_ARG, 6105, NULL, "__HRBUNLOAD", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6105, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __HRBGETFU )
@@ -712,7 +712,7 @@ HB_FUNC( __HRBGETFU )
          hb_itemPutSymbol( hb_stackReturnItem(), pHrbBody->pSymRead + ulPos );
    }
    else
-      hb_errRT_BASE( EG_ARG, 6106, NULL, "__HRBGETFU", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6106, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __HRBDOFU )
@@ -733,5 +733,5 @@ HB_FUNC( __HRBDOFU )
       hb_vmDo( argc - 1 );          /* Run function        */
    }
    else
-      hb_errRT_BASE( EG_ARG, 6107, NULL, "__HRBDOFU", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 6107, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
