@@ -427,7 +427,7 @@ HB_FUNC( HB_CRYPT )
    if ( pSource == NULL || hb_itemGetCLen( pSource ) == 0 ||
         pKey == NULL || hb_itemGetCLen( pKey ) == 0 )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_CRYPT", 2,
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 2,
             hb_param(1,HB_IT_ANY), hb_param(2,HB_IT_ANY) );
       return;
    }
@@ -457,7 +457,7 @@ HB_FUNC( HB_DECRYPT )
    if ( pSource == NULL || hb_itemGetCLen( pSource ) == 0 ||
         pKey == NULL || hb_itemGetCLen( pKey ) == 0 )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_DECRYPT", 2,
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 2,
             hb_param(1,HB_IT_ANY), hb_param(2,HB_IT_ANY) );
       return;
    }

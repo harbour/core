@@ -5,6 +5,7 @@
 ROOT = ../../
 
 C_SOURCES=\
+	freadlin.c \
 	hbcrypt.c \
 	hbxml.c \
 	hbsyslog.c \
