@@ -72,4 +72,4 @@ PROCEDURE Main()
       DllUnload( hDLL )
    ENDIF
 
-   RETURN NIL
+   RETURN
