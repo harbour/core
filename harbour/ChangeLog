@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-10 18:50 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbw32/dllcall.c
+     ! Fixed to not execute code after hb_errRT*() calls.
+     ! Fixed to call hb_gcFree() if the hb_gcAlloc()ed 
+       pointer is not hb_retptrGC()d (in case of errors).
+
 2008-06-10 19:10 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * harbour/source/vm/hashfunc.c
     * extended functionality of HB_HSet(), HB_HDel() and HB_HDelAt() 

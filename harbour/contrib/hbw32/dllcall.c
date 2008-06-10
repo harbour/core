@@ -749,26 +749,32 @@ HB_FUNC( DLLPREPARECALL )
       }
       else if( ISNUM( 3 ) )
          xec->wOrdinal = hb_parni( 3 );
+
+      xec->dwType = EXEC_DLL;
+      xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) xec->wOrdinal );
+      
+      if( xec->lpFunc == NULL && xec->cProc )
+      {
+         /* try ANSI flavour ? */
+         xec->cProc[ hb_parclen( 3 ) ] = 'A';
+         xec->cProc[ hb_parclen( 3 ) + 1 ] = '\0';
+      
+         xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) xec->wOrdinal );
+      }
+      
+      if( xec->lpFunc )
+         hb_retptrGC( xec );
+      else
+      {
+         hb_gcFree( xec );
+         hb_errRT_BASE( EG_ARG, 2010, ISCHAR( 3 ) ? "GetProcAddress() invalid name argument" : "GetProcAddress() invalid ordinal argument", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      }
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, xec->cDLL ? "LoadLibrary() failed" : "Invalid handle argument", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-   xec->dwType = EXEC_DLL;
-   xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) xec->wOrdinal );
-
-   if( xec->lpFunc == NULL && xec->cProc )
    {
-      /* try ANSI flavour ? */
-      xec->cProc[ hb_parclen( 3 ) ] = 'A';
-      xec->cProc[ hb_parclen( 3 ) + 1 ] = '\0';
-
-      xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) xec->wOrdinal );
+      hb_gcFree( xec );
+      hb_errRT_BASE( EG_ARG, 2010, ISCHAR( 1 ) ? "LoadLibrary() failed" : "Invalid handle argument", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
-
-   if( xec->hDLL && xec->lpFunc )
-      hb_retptrGC( xec );
-   else if( xec->hDLL && xec->lpFunc == NULL )
-      hb_errRT_BASE( EG_ARG, 2010, xec->cProc ? "GetProcAddress() invalid name argument" : "GetProcAddress() invalid ordinal argument", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( DLLLOAD )
@@ -890,4 +896,4 @@ HB_FUNC( CALLDLLTYPED )
    DllExec( DC_CALL_STD, hb_parni( 2 ), ( LPVOID ) hb_parptr( 1 ), NULL, hb_pcount(), 3 );
 }
 
-#endif /* HB_OS_WIN32 */
+#endif
