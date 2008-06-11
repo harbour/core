@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * The Date API (C level)
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,6 +56,7 @@
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_dateFormat()
+ *    hb_dateUnformat()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -65,6 +66,7 @@
 
 #include "hbapi.h"
 #include "hbdate.h"
+#include "hbset.h"
 
 HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat )
 {
@@ -236,4 +238,98 @@ HB_EXPORT char * hb_dateFormat( const char * szDate, char * szFormattedDate, con
    szFormattedDate[ format_count ] = '\0';
 
    return szFormattedDate;
+}
+
+HB_EXPORT long hb_dateUnformat( const char * szDate, const char * szDateFormat )
+{
+   int d_value = 0, m_value = 0, y_value = 0;
+
+   if( szDate )
+   {
+      int d_pos = 0, m_pos = 0, y_pos = 0;
+      int count, digit, non_digit, size;
+
+      if( ! szDateFormat )
+         szDateFormat = hb_set.HB_SET_DATEFORMAT;
+      size = strlen( szDateFormat );
+
+      for( count = 0; count < size; count++ )
+      {
+         switch( szDateFormat[ count ] )
+         {
+            case 'D':
+            case 'd':
+               if( d_pos == 0 )
+               {
+                  if( m_pos == 0 && y_pos == 0 ) d_pos = 1;
+                  else if( m_pos == 0 || y_pos == 0 ) d_pos = 2;
+                  else d_pos = 3;
+               }
+               break;
+            case 'M':
+            case 'm':
+               if( m_pos == 0 )
+               {
+                  if( d_pos == 0 && y_pos == 0 ) m_pos = 1;
+                  else if( d_pos == 0 || y_pos == 0 ) m_pos = 2;
+                  else m_pos = 3;
+               }
+               break;
+            case 'Y':
+            case 'y':
+               if( y_pos == 0 )
+               {
+                  if( m_pos == 0 && d_pos == 0 ) y_pos = 1;
+                  else if( m_pos == 0 || d_pos == 0 ) y_pos = 2;
+                  else y_pos = 3;
+               }
+         }
+      }
+
+      /* If there are non-digits at the start of the date field,
+         they are not to be treated as date field separators */
+      non_digit = 1;
+      size = strlen( szDate );
+      for( count = 0; count < size; count++ )
+      {
+         digit = szDate[ count ];
+         if( isdigit( digit ) )
+         {
+            /* Process the digit for the current date field */
+            if( d_pos == 1 )
+               d_value = ( d_value * 10 ) + digit - '0';
+            else if( m_pos == 1 )
+               m_value = ( m_value * 10 ) + digit - '0';
+            else if( y_pos == 1 )
+               y_value = ( y_value * 10 ) + digit - '0';
+            /* Treat the next non-digit as a date field separator */
+            non_digit = 0;
+         }
+         else if( digit != ' ' )
+         {
+            /* Process the non-digit */
+            if( non_digit++ == 0 )
+            {
+               /* Only move to the next date field on the first
+                  consecutive non-digit that is encountered */
+               d_pos--;
+               m_pos--;
+               y_pos--;
+            }
+         }
+      }
+
+      if( y_value >= 0 && y_value < 100 )
+      {
+         count = hb_set.HB_SET_EPOCH % 100;
+         digit = hb_set.HB_SET_EPOCH / 100;
+
+         if( y_value >= count )
+            y_value += ( digit * 100 );
+         else
+            y_value += ( ( digit * 100 ) + 100 );
+      }
+   }
+
+   return hb_dateEncode( y_value, m_value, d_value );
 }

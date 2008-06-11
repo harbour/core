@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-11 18:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdate.h
+  * harbour/source/rtl/dates.c
+    + added hb_dateUnformat() - code by David G. Holm extracted from CTOD()
+    * updated copyright note to point original author of hb_dateFormat()
+      and hb_dateUnformat()
+
+  * harbour/source/rtl/dateshb.c
+    * use hb_dateUnformat() in CTOD()
+
 2008-06-11 16:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbw32/dllcall.c
     * added casting of wOrdinal to HB_PTR_DIFF to avoid waring
