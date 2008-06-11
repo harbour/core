@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-11 13:30 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/tests/wvtext.prg
+     + Added Massimo's contribution.
+
 2008-06-11 12:30 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
    * harbour/source/rtl/gtwvt/gtwvt.h

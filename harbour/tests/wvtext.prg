@@ -91,9 +91,17 @@ STATIC FUNCTION MyNotifier( nEvent, ... )
 STATIC FUNCTION DispScreen()
    Local nRow := 18, nCol := 28
    Local cColor := 'N/W*'
+   Local nMaxCol := MaxCol()+1
 
    CLS
    DispOutAt( 0, 0,padc( 'Harbour GT - New Features', maxcol()+1 ), 'N/GR*' )
+
+   // Contributed by Massimo Belgrano
+   DispOutAt( 2, 0, padc( "______  __             ______________________                        ",nMaxCol ), 'W+/W' )
+   DispOutAt( 3, 0, padc( "___  / / /_____ __________  /___________  _________    __  ____/____/",nMaxCol ), 'W+/W' )
+   DispOutAt( 4, 0, padc( "__  /_/ /_  __ `/_  ___/_  __ \  __ \  / / /_  ___/    _  / __ __/   ",nMaxCol ), 'W+/W' )
+   DispOutAt( 5, 0, padc( "_  __  / / /_/ /_  /   _  /_/ / /_/ / /_/ /_  /        / /_/ / _  /  ",nMaxCol ), 'W+/W' )
+   DispOutAt( 6, 0, padc( "/_/ /_/  \__,_/ /_/    /_.___/\____/\__,_/ /_/         \____/  /_/   ",nMaxCol ), 'W+/W' )
 
    DispOutAt( nRow+0, nCol, '< F2 MarkCopy    Toggle >', cColor )
    DispOutAt( nRow+1, nCol, '< F3 Resize      Toggle >', cColor )
@@ -123,3 +131,8 @@ PROCEDURE HB_GT_WVT_DEFAULT()
      RETURN
 
 //----------------------------------------------------------------------//
+   ?"______  __             ______________________                        "
+   ?"___  / / /_____ __________  /___________  _________    __  ____/____/"
+   ?"__  /_/ /_  __ `/_  ___/_  __ \  __ \  / / /_  ___/    _  / __ __/   "
+   ?"_  __  / / /_/ /_  /   _  /_/ / /_/ / /_/ /_  /        / /_/ / _  /  "
+   ?"/_/ /_/  \__,_/ /_/    /_.___/\____/\__,_/ /_/         \____/  /_/   "
