@@ -227,6 +227,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
 
    pWVT->bSelectCopy       = TRUE;
    pWVT->bResizable        = TRUE;
+   pWVT->bClosable         = TRUE;
 
    return pWVT;
 }
@@ -525,9 +526,9 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
          width     = tm.tmAveCharWidth * pWVT->COLS;
          height    = tm.tmHeight       * pWVT->ROWS;
 
-         if( width <= maxWidth && 
-             height <= maxHeight && 
-             tm.tmAveCharWidth >= 3 && 
+         if( width <= maxWidth &&
+             height <= maxHeight &&
+             tm.tmAveCharWidth >= 3 &&
              tm.tmHeight >= 4 )
          {
             if( pWVT->hFont )
@@ -1427,6 +1428,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT pWVT = hb_gt_wvt_Find( hWnd );
+   int iEvResult;
 
    if( pWVT ) switch( message )
    {
@@ -1483,10 +1485,12 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
       case WM_CLOSE:  /* Clicked 'X' on system menu */
          /* NOTE: this follows more code . will post later as it needs to be cleaned */
          /* But it demonstrates the concept */
-         hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE );
-
-         if( hb_set.HB_SET_CANCEL )
-            hb_vmRequestCancel();
+         iEvResult = hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE );
+         if( iEvResult == 0 )
+         {
+            if( hb_set.HB_SET_CANCEL )
+               hb_vmRequestCancel();
+         }
          return 0;
 
       case WM_QUIT:
@@ -2269,6 +2273,22 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
                EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
                pWVT->bSelectCopy = bNewValue;
+            }
+         }
+         break;
+      }
+      case HB_GTI_CLOSABLE:
+      {
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bClosable );
+         if( pInfo->pNewVal )
+         {
+            BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+            if( bNewValue != pWVT->bClosable )
+            {
+               HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+
+               EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
+               pWVT->bClosable = bNewValue;
             }
          }
          break;

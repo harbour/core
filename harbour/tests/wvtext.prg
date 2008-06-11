@@ -20,7 +20,7 @@
 //----------------------------------------------------------------------//
 
 FUNCTION Main()
-   Local nKey, lMark, lResize
+   Local nKey, lMark, lResize, lClose
    Local nHeight := 20
    Local nWidth  := Int( nHeight/2 )
    Local cFont
@@ -58,6 +58,10 @@ FUNCTION Main()
          lResize := Hb_GtInfo( HB_GTI_RESIZABLE )
          Hb_GtInfo( HB_GTI_RESIZABLE, !lResize )
 
+      CASE nKey == K_F4
+         lClose := Hb_GtInfo( HB_GTI_CLOSABLE )
+         hb_GtInfo( HB_GTI_CLOSABLE, !lClose )
+
       ENDCASE
    ENDDO
 
@@ -70,12 +74,12 @@ STATIC FUNCTION MyNotifier( nEvent, ... )
 
    CASE nEvent == HB_GTE_SETFOCUS
       DispScreen()
-      Alert( "We got focus" )
+      DispOutAt( maxrow(), 33, "We got focus", 'B/G*' )
 
    CASE nEvent == HB_GTE_CLOSE
       DispScreen()
-      if Alert( 'Close Application', {'Yes','No' } ) == 1
-         QUIT
+      if Alert( 'Close Application', {'Yes','No' } ) == 2
+         Return ( 1 )
       endif
 
    ENDCASE
@@ -85,15 +89,24 @@ STATIC FUNCTION MyNotifier( nEvent, ... )
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION DispScreen()
+   Local nRow := 18, nCol := 28
+   Local cColor := 'N/W*'
 
    CLS
    DispOutAt( 0, 0,padc( 'Harbour GT - New Features', maxcol()+1 ), 'N/GR*' )
-   DispOutAt( maxrow() - 1, 0, padc( '<F2 MarkCopy:Toggle> <F3 Resize:Toggle> <Click Other Window> <Click X Button>', maxcol()+1 ), 'N/G*' )
-   DispOutAt( maxrow(), 0, Space( maxcol()+1 ), 'N/G*' )
-   DispOutAt( 0, 0, "TL" )
-   DispOutAt( 0, MaxCol() - 1, "TR" )
-   DispOutAt( MaxRow(), 0, "BL" )
-   DispOutAt( MaxRow(), MaxCol() - 1, "BR" )
+
+   DispOutAt( nRow+0, nCol, '< F2 MarkCopy    Toggle >', cColor )
+   DispOutAt( nRow+1, nCol, '< F3 Resize      Toggle >', cColor )
+   DispOutAt( nRow+2, nCol, '< F4 Closable    Toggle >', cColor )
+   DispOutAt( nRow+3, nCol, '<    Click Other Window >', cColor )
+   DispOutAt( nRow+4, nCol, '<    Click X Button     >', cColor )
+
+   DispOutAt( maxrow(), 0, Space( maxcol()+1 ), "N/G*" )
+
+   DispOutAt( 0, 0                  , "TL", "N/GR*" )
+   DispOutAt( 0, MaxCol() - 1       , "TR", "N/GR*" )
+   DispOutAt( MaxRow(), 0           , "BL", "N/G*" )
+   DispOutAt( MaxRow(), MaxCol() - 1, "BR", "N/G*" )
 
    RETURN NIL
 
@@ -103,6 +116,8 @@ PROCEDURE HB_GTSYS()
      REQUEST HB_GT_WVT
      REQUEST HB_GT_WIN
      RETURN
+
+//----------------------------------------------------------------------//
 
 PROCEDURE HB_GT_WVT_DEFAULT()
      RETURN

@@ -120,7 +120,7 @@
 
 #define HB_GTI_SELECTCOPY       48  /* toggles screen content selection and copy to clipboard (supported by: GTWVT) */
 #define HB_GTI_RESIZABLE        49  /* toggles ability to resize window (supported by: GTWVT) */
-#define HB_GTI_CLOSEALLOWED     50  /* toggles ability to close window (supported by: GTWVT) */
+#define HB_GTI_CLOSABLE         50  /* toggles ability to close window (supported by: GTWVT) */
 
 /* Additional constants to enhance GT */
 #define HB_GTI_NOTIFIERBLOCK    51  /* This optional codeblock gets called whenever certain events occur. See HB_GTE_* */

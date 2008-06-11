@@ -162,6 +162,7 @@ typedef struct
 
    BOOL     bResizable;
    BOOL     bSelectCopy;
+   BOOL     bClosable;
 
 } HB_GTWVT, * PHB_GTWVT;
 

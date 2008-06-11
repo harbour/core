@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-11 12:30 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/source/rtl/gtwvt/gtwvt.c
+   * harbour/source/rtl/gtwvt/gtwvt.h
+   * harbour/include/hbgtinfo.ch
+     + Added HB_GTI_CLOSABLE
+       Hb_GtInfo( HB_GTI_CLOSABLE, TRUE|FALSE ) -> lPrevState
+       TRUE enables the "X" button, FALSE disbles it.
+     + Added functionality to respond to WM_CLOSE message. 
+       If application returns 1 then application is exited.
+    
+   * harbour/tests/wvtext.prg
+     + Added functionality to demonstrate above feature.
+
 2008-06-11 19:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * ChangeLog
      + Marked changes merged with RC1.
