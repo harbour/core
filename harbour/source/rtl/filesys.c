@@ -2029,7 +2029,7 @@ HB_EXPORT USHORT hb_fsIsDrv( BYTE nDrive )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsIsDrv(%d)", (int) nDrive));
 
-#if defined(HB_OS_WIN_32)
+#if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
    {
       char buffer[ 4 ];
       UINT type;

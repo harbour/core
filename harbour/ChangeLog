@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-11 23:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmisc/spd.c
+     + Added support for index & indirect arguments ANSI C99.
+     ; Update contributed by original author:
+       Xavi <jarabal@gmail.com>. Thanks!
+     * Function renamed from _SPD() to C_SPRINTF().
+       Name tentative.
+
+   * source/rtl/filesys.c
+     ! hb_fsIsDrv() restored to generic version fo WinCE, because 
+       it's API doesn't have GetDriveTypeA().
+
 2008-06-11 13:30 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/tests/wvtext.prg
      + Added Massimo's contribution.
