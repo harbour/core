@@ -9,6 +9,7 @@
 */
 
 2008-06-12 01:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.h
    * source/rtl/gtwvt/gtwvt.c
      ! Fixed remaining Mark&Copy trashing while doing the selection.
      * I've undone fix (2008-06-09 14:48 UTC+0800) for non-selectable 
