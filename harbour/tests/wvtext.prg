@@ -1,5 +1,5 @@
 /*
- * $Id: wcecon.prg 8236 2008-01-26 05:29:20Z vszakats $
+ * $Id$
  */
 
 //----------------------------------------------------------------------//
@@ -25,15 +25,14 @@ FUNCTION Main()
    Local nWidth  := Int( nHeight/2 )
    Local cFont
 
-   //cFont := 'Courier New'
+   //cFont := 'Courier New' // Harbour default
    //cFont := 'Times New Roman'
-   cFont := 'Lucida Console'
+   //cFont := 'Lucida Console'
 
    Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
    Hb_GtInfo( HB_GTI_FONTSIZE , nHeight )
 
-   SetMode( 25,80 )
    SetCursor( 0 )
    SetColor( 'n/w' )
 
@@ -88,17 +87,24 @@ STATIC FUNCTION MyNotifier( nEvent, ... )
 STATIC FUNCTION DispScreen()
 
    CLS
-   DispOutAt( 0,0,padc( 'Harbour GT - New Features', maxcol()+1 ), 'N/GR*' )
-   DispOutAt( maxrow(),0,padc( '<F2 MarkCopy> <F3 Resize> <Click Other Window> <Click X Button>', maxcol()+1 ), 'N/G*' )
+   DispOutAt( 0, 0,padc( 'Harbour GT - New Features', maxcol()+1 ), 'N/GR*' )
+   DispOutAt( maxrow() - 1, 0, padc( '<F2 MarkCopy:Toggle> <F3 Resize:Toggle> <Click Other Window> <Click X Button>', maxcol()+1 ), 'N/G*' )
+   DispOutAt( maxrow(), 0, Space( maxcol()+1 ), 'N/G*' )
+   DispOutAt( 0, 0, "TL" )
+   DispOutAt( 0, MaxCol() - 1, "TR" )
+   DispOutAt( MaxRow(), 0, "BL" )
+   DispOutAt( MaxRow(), MaxCol() - 1, "BR" )
 
    RETURN NIL
 
 //----------------------------------------------------------------------//
 
-FUNCTION HB_GTSYS()
+PROCEDURE HB_GTSYS()
+     REQUEST HB_GT_WVT
+     REQUEST HB_GT_WIN
+     RETURN
 
-   REQUEST HB_GT_WVT_DEFAULT
-
-   RETURN nil
+PROCEDURE HB_GT_WVT_DEFAULT()
+     RETURN
 
 //----------------------------------------------------------------------//

@@ -22,9 +22,6 @@ C_SOURCES=\
 
 C_HEADERS=\
 	hbcompat.h \
-	hbcomprs.h \
-	hbfast.h \
-	hbxml.h \
 
 PRG_SOURCES=\
 	txml.prg \
@@ -34,17 +31,8 @@ PRG_SOURCES=\
 	xhbcomp.prg \
 
 PRG_HEADERS=\
-	classex.ch \
-	cstruct.ch \
 	hbcompat.ch \
-	hbctypes.ch \
-	hblog.ch \
-	hblogdef.ch \
-	math.ch \
-	usrrdd.ch \
-	wintypes.ch \
 	xhb.ch \
-	xhbextrn.ch \
 
 LIBNAME=xhb
 

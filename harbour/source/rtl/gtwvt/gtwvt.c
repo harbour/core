@@ -1,4 +1,4 @@
-/*
+ /*
  * $Id$
  */
 
@@ -466,31 +466,28 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
    HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
 }
 
-static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
+static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
 {
    RECT wi, ci;
-   BOOL bValid = TRUE;
    LONG maxWidth;
    LONG maxHeight;
-   LONG borderwidth;
-   LONG borderheight;
+   LONG borderWidth;
+   LONG borderHeight;
    SHORT left;
    SHORT top;
-
-   HB_SYMBOL_UNUSED( mode );
 
    GetClientRect( pWVT->hWnd, &ci );
    GetWindowRect( pWVT->hWnd, &wi );
 
-   borderwidth = ( wi.right - wi.left - ( ci.right - ci.left ) );
-   borderheight = ( wi.bottom - wi.top - ( ci.bottom - ci.top ) );
+   borderWidth = ( wi.right - wi.left - ( ci.right - ci.left ) );
+   borderHeight = ( wi.bottom - wi.top - ( ci.bottom - ci.top ) );
 
    if( pWVT->bMaximized )
    {
       SystemParametersInfo( SPI_GETWORKAREA, 0, &wi, 0 );
 
-      maxHeight = wi.bottom - wi.top - borderwidth;
-      maxWidth  = wi.right - wi.left - borderheight;
+      maxHeight = wi.bottom - wi.top - borderHeight;
+      maxWidth  = wi.right - wi.left - borderWidth;
 
       left = 0;
       top  = 0;
@@ -500,17 +497,13 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
       maxHeight = ci.bottom - ci.top;
       maxWidth  = ci.right  - ci.left;
 
-      left = ( wi.left < 0 ? 0 : wi.left );
-      top  = ( wi.top  < 0 ? 0 : wi.top  );
+      left = wi.left;
+      top  = wi.top;
    }
 
-   if( bValid )
    {
-      HDC        hdc;
       HFONT      hOldFont, hFont;
       USHORT     fontHeight, fontWidth, n;
-      LONG       width, height;
-      TEXTMETRIC tm;
 
       fontHeight = maxHeight / pWVT->ROWS;
       fontWidth  = maxWidth  / pWVT->COLS;
@@ -518,6 +511,10 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
       hFont = hb_gt_wvt_GetFont( pWVT->fontFace, fontHeight, fontWidth, pWVT->fontWeight, pWVT->fontQuality, pWVT->CodePage );
       if( hFont )
       {
+         HDC        hdc;
+         LONG       width, height;
+         TEXTMETRIC tm;
+
          hdc       = GetDC( pWVT->hWnd );
          hOldFont  = ( HFONT ) SelectObject( hdc, hFont );
          SetTextCharacterExtra( hdc, 0 );
@@ -525,10 +522,13 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
          SelectObject( hdc, hOldFont );
          ReleaseDC( pWVT->hWnd, hdc );
 
-         width     = (  tm.tmAveCharWidth * pWVT->COLS );
-         height    = (  tm.tmHeight       * pWVT->ROWS );
+         width     = tm.tmAveCharWidth * pWVT->COLS;
+         height    = tm.tmHeight       * pWVT->ROWS;
 
-         //if( width <= maxWidth && height <= maxHeight )
+         if( width <= maxWidth && 
+             height <= maxHeight && 
+             tm.tmAveCharWidth >= 3 && 
+             tm.tmHeight >= 4 )
          {
             if( pWVT->hFont )
                DeleteObject( pWVT->hFont );
@@ -550,13 +550,16 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
             for( n = 0; n < pWVT->COLS; n++ )
                pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
 
-            width  = ( ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderwidth;
-            height = ( ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderheight;
+            width  = ( ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderWidth;
+            height = ( ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
 
             if( pWVT->bMaximized )
             {
                left = ( ( wi.right - width ) / 2 );
                top = ( ( wi.bottom - height ) / 2 );
+
+               left = ( left < 0 ? 0 : left );
+               top = ( top  < 0 ? 0 : top  );
             }
 
             hb_gt_wvt_KillCaret( pWVT );
@@ -1495,28 +1498,23 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_idleState();
          return 0;
 
-/*
-      case WM_TIMER:
-         if( pWVT->pSymWVT_TIMER )
-         {
-            if( hb_vmRequestReenter() )
-            {
-               hb_vmPushDynSym( pWVT->pSymWVT_TIMER );
-               hb_vmPushNil();
-               hb_vmPushNumInt( wParam );
-               hb_vmDo( 1 );
-               hb_vmRequestRestore();
-            }
-         }
-         return 0;
-*/
-
       /* Pritpal Bedi - 06 Jun 2008 */
       case WM_ACTIVATE:
          hb_gt_wvt_FireEvent( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_GTE_KILLFOCUS : HB_GTE_SETFOCUS ) );
          return 0;
 
       case WM_ENTERSIZEMOVE:
+         if( pWVT->bMaximized )
+         {
+            pWVT->bMaximized = FALSE;
+
+            /* Enable "maximize" button */
+            SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
+            SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
+                                      SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+            ShowWindow( pWVT->hWnd, SW_HIDE );
+            ShowWindow( pWVT->hWnd, SW_NORMAL );
+         }
          return 0;
 
       case WM_EXITSIZEMOVE:
@@ -1524,35 +1522,27 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_SIZE:
-         if( !pWVT->bMaximized )
-         {
-            hb_gt_wvt_FitSize( pWVT, 0 );
-         }
-         else
-         {
-            pWVT->bMaximized = FALSE;
-         }
-         return 0;
-
-      /* NOTE: This message has more powerful features than what I implemented as above commented out */
-      case WM_TIMER:
-         hb_gt_wvt_FireEvent( pWVT, HB_GTE_TIMER );
+         hb_gt_wvt_FitSize( pWVT );
          return 0;
 
       case WM_SYSCOMMAND:
-         switch(wParam)
+         switch( wParam )
          {
             case SC_MAXIMIZE:
             {
-               RECT rc = {0,0,0,0};
-
                pWVT->bMaximized = TRUE;
-               hb_gt_wvt_FitSize( pWVT,1 );
-               pWVT->bMaximized = FALSE;
 
-               SystemParametersInfo( SPI_GETWORKAREA, 0, &rc, 0 );
+               hb_gt_wvt_FitSize( pWVT );
+
+               /* Disable "maximize" button */
+               SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
+               SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
+                                         SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+               ShowWindow( pWVT->hWnd, SW_HIDE );
+               ShowWindow( pWVT->hWnd, SW_NORMAL );
 
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
+
                return 0;
             }
 
@@ -2240,13 +2230,6 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       }
-      case HB_GTI_SETTIMER:
-         SetTimer( pWVT->hWnd, hb_arrayGetNI( pInfo->pNewVal,1 ), hb_arrayGetNI( pInfo->pNewVal, 2 ), NULL );
-         break;
-
-      case HB_GTI_KILLTIMER:
-         KillTimer( pWVT->hWnd, hb_itemGetNI( pInfo->pNewVal ) );
-         break;
 
       case HB_GTI_RESIZABLE:
       {
@@ -2258,17 +2241,16 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             {
                LONG_PTR style;
 
-               if( bNewValue )
-                  style = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
+               pWVT->bResizable = bNewValue;
+
+               if( pWVT->bResizable )
+                  style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME;
                else
                   style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
 
-               pWVT->bResizable = bNewValue;
-
                SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
                SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
-                                         SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOMOVE |
-                                         SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
+                                         SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                ShowWindow( pWVT->hWnd, SW_HIDE );
                ShowWindow( pWVT->hWnd, SW_NORMAL );
             }

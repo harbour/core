@@ -125,8 +125,6 @@
 /* Additional constants to enhance GT */
 #define HB_GTI_NOTIFIERBLOCK    51  /* This optional codeblock gets called whenever certain events occur. See HB_GTE_* */
 #define HB_GTI_SCREENSIZE       52  /* Get/Set height/width of application window in pixels */
-#define HB_GTI_SETTIMER         53  /* Sets the Timer with ID, callback will be defined with GTI_CALLBACK */
-#define HB_GTI_KILLTIMER        54  /* Deactivates the Timer set with GTI_SETTIMER */
 
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
@@ -156,12 +154,11 @@
 #define HB_GTI_KBD_ACCENT4      32768
 
 /* Harbour GT callback events - WORK IN PROGRESS */
-#define HB_GTE_TIMER            1
-#define HB_GTE_ACTIVATE         2
-#define HB_GTE_SETFOCUS         3
-#define HB_GTE_KILLFOCUS        4
-#define HB_GTE_CLOSE            5
-#define HB_GTE_RESIZED          6
+#define HB_GTE_ACTIVATE         1
+#define HB_GTE_SETFOCUS         2
+#define HB_GTE_KILLFOCUS        3
+#define HB_GTE_CLOSE            4
+#define HB_GTE_RESIZED          5
 
 /* Compatibility #defines.
    These codes are deprecated, _don't use them_. Please upgrade to the above versions.
@@ -215,13 +212,6 @@
 #define GTI_ADDKEYMAP           HB_GTI_ADDKEYMAP
 #define GTI_DELKEYMAP           HB_GTI_DELKEYMAP
 #define GTI_ISUNICODE           HB_GTI_ISUNICODE
-#define GTI_MARKCOPY            HB_GTI_MARKCOPY
-#define GTI_RESIZEABLE          HB_GTI_RESIZEABLE
-
-#define GTI_CALLBACK            HB_GTI_CALLBACK
-#define GTI_SCREENSIZE          HB_GTI_SCREENSIZE
-#define GTI_SETTIMER            HB_GTI_SETTIMER
-#define GTI_KILLTIMER           HB_GTI_KILLTIMER
 
 /* Font weights */
 #define GTI_FONTW_THIN          HB_GTI_FONTW_THIN

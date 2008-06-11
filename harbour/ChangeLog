@@ -8,6 +8,52 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-11 19:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbgtinfo.ch
+   * source/rtl/gtwvt/gtwvt.c
+     ! Fixed stupid typo from me. This is why maximized size 
+       didn't want to get right.
+     ! Fixed to not reposition non-maximized windows while 
+       resizing them and their top/left corner was off screen.
+     ! Fixed to not allow font screen below a certain limit 
+       (3x4 pixels). This fixes some of the more obvious cases 
+       when window gets trashed.
+     ! Fixed to not resize the windows when toggling the 
+       resizing feature using HB_GTI_RESIZABLE.
+     + Added to disable maximize icon after maximizing and 
+       reenable it on the first resize attempt.
+     - Removed TIMER related stuff as it's very difficult 
+       (or impossible) to support on other platforms.
+       Timer support could be added to hbw32.lib, though.
+     * Some cleanups.
+     ; Remaining TOFIXes:
+       - Window trashing when settling on a size which 
+         cannot be properly filled with the console. Try with 
+         vertically or horizontally narrow window shapes.
+       - Mark&Copy is still trashing when swapping directions 
+         with the selection compared to the starting position.
+
+   * tests/wvtext.prg
+     ! Added missing SVN keywords properties.
+     ! Added missing SVN eol property.
+     ! Fixed to use the default font to have a more common 
+       ground for testing.
+     + Added markers to the corners to easily spot chopped 
+       borders.
+
+   * contrib/xhb/Makefile
+   * contrib/xhb/common.mak
+     - Removed some xhb specific non-standard headers from 
+       the list of those getting installed to the Harbour central 
+       include dir. Only hbcompat.ch, hbcompat.h and xhb.ch 
+       goes now to the official include dir. After this change 
+       has been merged with RC1, xhb.lib may be included in 
+       the default build.
+       [TOMERGE RC1]
+
+   * contrib/hbw32/tests/testdll.prg
+     + Added some more DLL calling samples.
+
 2008-06-11 18:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbdate.h
   * harbour/source/rtl/dates.c
