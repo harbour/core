@@ -70,8 +70,8 @@ FUNCTION Main( cDL, cUL )
       ? curl_easy_getinfo( curl, HB_CURLINFO_EFFECTIVE_URL )
       ? curl_easy_getinfo( curl, HB_CURLINFO_TOTAL_TIME )
 
-      info := curl_easy_getinfo( curl, HB_CURLINFO_SSL_ENGINES )
-      ?
+      info := curl_easy_getinfo( curl, HB_CURLINFO_SSL_ENGINES, @tmp )
+      ? "SSL ENGINES: ", tmp, Len( info )
       FOR tmp := 1 TO Len( info )
          ?? info[ tmp ] + " "
       NEXT
@@ -115,12 +115,6 @@ FUNCTION Main( cDL, cUL )
 
       ? curl_easy_getinfo( curl, HB_CURLINFO_EFFECTIVE_URL )
       ? curl_easy_getinfo( curl, HB_CURLINFO_TOTAL_TIME )
-
-      info := curl_easy_getinfo( curl, HB_CURLINFO_SSL_ENGINES )
-      ?
-      FOR tmp := 1 TO Len( info )
-         ?? info[ tmp ] + " "
-      NEXT
 
       curl_easy_reset( curl )
 

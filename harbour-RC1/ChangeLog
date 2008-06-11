@@ -8,6 +8,69 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-11 19:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/xhb/Makefile
+   * contrib/xhb/common.mak
+     - Removed some xhb specific non-standard headers from 
+       the list of those getting installed to the Harbour central 
+       include dir. Only hbcompat.ch, hbcompat.h and xhb.ch 
+       goes now to the official include dir. After this change 
+       has been merged with RC1, xhb.lib may be included in 
+       the default build.
+       [RC1]
+
+   * include/hbgtinfo.ch
+     + Added comment to compatibility #defines, to not use 
+       them, since they're deprecated.
+       [RC1]
+
+   * include/hbgfx.ch
+   * include/hbgfxdef.ch
+   * contrib/gtwvg/gtwvg.c
+   * source/rtl/gtxwc/gtxwc.c
+   * source/rtl/gtwvt/gtwvt.c
+     * GFX_* constants renamed to HB_GFX_*. The old ones are 
+       still working but it's recommended to update to use HB_GFX_*.
+       #define HB_GT_NO_XHB to disable the compatibility #defines, 
+       if it collides with your code or you want to test after 
+       transition.
+     ; [RC1]
+
+   * source/rtl/dirdrive.c
+     ! Guarded C53 undoc functions with HB_C52_UNDOC, which is enabled 
+       so it won't make a difference in default builds.
+     ; [RC1]
+
+   * contrib/hbfbird/make_b32.bat
+   * contrib/hbfbird/make_vc.bat
+     * Fixed location where .libs are looked for.
+       [RC1]
+
+   * contrib/hbcurl/hbcurl.c
+     % Minor cleanups.
+       [RC1]
+
+   * contrib/hbodbc/make_vc.bat
+     ! Removed .dll -> .lib conversion for MSVC, 
+       since the .lib is provided by the MS SDK anyway.
+     ; [RC1]
+
+   * contrib/hbcurl/hbcurl.c
+   * contrib/hbcurl/hbcurl.ch
+   * contrib/hbcurl/tests/ftp_uldl.prg
+     ! Cleanup the rare case when curl_easy_init() returns NULL.
+       Functions now always return the same type, even in case libcurl 
+       failed to initialize.
+     + Return values for above cases is now HB_CURLE_ERROR (== -1).
+     ! CURL_*() passed pointers now are also checked for the pointer 
+       type, and RTE is thrown if they are not HBCURL ones. So for 
+       example in the very rare case when any hbcurl functions would 
+       get passed a GC pointer returned by another API, an argument 
+       error would be thrown now.
+     ! CURL_ESCAPE()/CURL_UNESCAPE() fixed picked parameter ordinal.
+     + CURL_ESCAPE()/CURL_UNESCAPE() added parameter checking.
+     ; [RC1]
+
 2008-06-07 09:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      + Added RTEs when wrong parameter was passed 

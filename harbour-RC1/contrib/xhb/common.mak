@@ -8,24 +8,14 @@ LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
 C_HEADERS = \
     hbcompat.h \
-    hbcomprs.h \
-    hbfast.h \
-    hbxml.h \
 
 PRG_HEADERS = \
-    classex.ch \
-    cstruct.ch \
     hbcompat.ch \
-    hbctypes.ch \
-    hblog.ch \
-    hblogdef.ch \
-    math.ch \
-    usrrdd.ch \
-    wintypes.ch \
     xhb.ch \
-    xhbextrn.ch \
 
 LIB_OBJS = \
+    $(OBJ_DIR)freadlin$(OBJEXT) \
+    $(OBJ_DIR)hbcrypt$(OBJEXT) \
     $(OBJ_DIR)hbxml$(OBJEXT) \
     $(OBJ_DIR)hbsyslog$(OBJEXT) \
     $(OBJ_DIR)hboutdbg$(OBJEXT) \

@@ -1851,16 +1851,16 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
    {
       switch( iType )
       {
-         case GFX_ACQUIRESCREEN:
-         case GFX_RELEASESCREEN:
+         case HB_GFX_ACQUIRESCREEN:
+         case HB_GFX_RELEASESCREEN:
             iRet = 1;
             break;
 
-         case GFX_MAKECOLOR:
+         case HB_GFX_MAKECOLOR:
             iRet = (iTop << 16) | (iLeft << 8) | ( iBottom );
             break;
 
-         case GFX_PUTPIXEL:
+         case HB_GFX_PUTPIXEL:
             SetGFXContext( iBottom );
 
             MoveToEx( hdc, iLeft, iTop, NULL );
@@ -1870,7 +1870,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_LINE:
+         case HB_GFX_LINE:
             SetGFXContext( iColor );
 
             MoveToEx( hdc, iLeft, iTop, NULL );
@@ -1880,7 +1880,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_RECT:
+         case HB_GFX_RECT:
          {
             RECT r;
 
@@ -1897,7 +1897,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
          }
-         case GFX_FILLEDRECT:
+         case HB_GFX_FILLEDRECT:
             SetGFXContext( iColor );
 
             Rectangle( hdc, iLeft, iTop, iRight, iBottom );
@@ -1906,7 +1906,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_CIRCLE:
+         case HB_GFX_CIRCLE:
             SetGFXContext( iRight );
 
             Arc( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
@@ -1915,7 +1915,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_FILLEDCIRCLE:
+         case HB_GFX_FILLEDCIRCLE:
             SetGFXContext( iRight );
 
             Ellipse( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2 );
@@ -1924,7 +1924,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_ELLIPSE:
+         case HB_GFX_ELLIPSE:
             SetGFXContext( iColor );
 
             Arc( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2, 0, 0, 0, 0 );
@@ -1933,7 +1933,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_FILLEDELLIPSE:
+         case HB_GFX_FILLEDELLIPSE:
             SetGFXContext( iColor );
 
             Ellipse( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2 );
@@ -1942,7 +1942,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             iRet = 1;
             break;
 
-         case GFX_FLOODFILL:
+         case HB_GFX_FLOODFILL:
             SetGFXContext( iBottom );
 
             FloodFill( hdc, iLeft, iTop, iColor );

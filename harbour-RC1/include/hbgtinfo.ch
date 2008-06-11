@@ -145,7 +145,9 @@
 #define HB_GTI_KBD_ACCENT3      16384
 #define HB_GTI_KBD_ACCENT4      32768
 
-/* Compatibility #defines */
+/* Compatibility #defines.
+   These codes are deprecated, _don't use them_. Please upgrade to the above versions.
+   For developers: Don't add any more new codes to this section. */
 
 #ifndef HB_GT_NO_XHB
 
