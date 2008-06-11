@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-10 23:06 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/source/rtl/gtwvt/gtwvt.c
+     ! Fixed maximized state. Borders were missing.
+     - Removed functionality to force Windows not to show Windows contents while resizing. 
+       ; Instead application can issue :
+          To switch off full drag  
+             DllCall( "user32.dll", NIL, "SystemParametersInfo", 37, 0, 0, 0 )
+          To switch on full drag  
+             DllCall( "user32.dll", NIL, "SystemParametersInfo", 37, 1, 0, 0 )
+      ! Fixed non-refreshed client area under certain circumstances.
+      * Removed all the hacks to adjust borders.
+      * Adjusted maximize operation - now window is centered on the screen.
+      ; TODO - Find a better solution to 
+        enabling and disabling of resizing feature at run time.
+	
 2008-06-11 04:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprop.h
   * harbour/include/hbexprb.c

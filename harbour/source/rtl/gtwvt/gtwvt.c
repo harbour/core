@@ -489,8 +489,8 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
    {
       SystemParametersInfo( SPI_GETWORKAREA, 0, &wi, 0 );
 
-      maxHeight = wi.bottom;// - wi.top - borderwidth;
-      maxWidth  = wi.right;//  - wi.left - borderheight;
+      maxHeight = wi.bottom - wi.top - borderwidth;
+      maxWidth  = wi.right - wi.left - borderheight;
 
       left = 0;
       top  = 0;
@@ -525,10 +525,10 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
          SelectObject( hdc, hOldFont );
          ReleaseDC( pWVT->hWnd, hdc );
 
-         width     = (   tm.tmAveCharWidth                            * pWVT->COLS );
-         height    = ( ( tm.tmHeight - ( pWVT->bMaximized ? 1 : 0 ) ) * pWVT->ROWS );
+         width     = (  tm.tmAveCharWidth * pWVT->COLS );
+         height    = (  tm.tmHeight       * pWVT->ROWS );
 
-         if( width <= maxWidth && height <= maxHeight )
+         //if( width <= maxWidth && height <= maxHeight )
          {
             if( pWVT->hFont )
                DeleteObject( pWVT->hFont );
@@ -538,7 +538,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
             pWVT->fontWidth   = tm.tmAveCharWidth;
 
             pWVT->PTEXTSIZE.x = tm.tmAveCharWidth;
-            pWVT->PTEXTSIZE.y = tm.tmHeight - ( pWVT->bMaximized ? 1 : 0 );   /* Hack to Disp MaxRow Correctly */
+            pWVT->PTEXTSIZE.y = tm.tmHeight;
 
 #if defined(HB_WINCE)
             pWVT->FixedFont = FALSE;
@@ -550,8 +550,14 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT, USHORT mode )
             for( n = 0; n < pWVT->COLS; n++ )
                pWVT->FixedSize[ n ] = pWVT->PTEXTSIZE.x;
 
-            width  = ( ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + ( pWVT->bMaximized ? 0 : borderwidth );
+            width  = ( ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderwidth;
             height = ( ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderheight;
+
+            if( pWVT->bMaximized )
+            {
+               left = ( ( wi.right - width ) / 2 );
+               top = ( ( wi.bottom - height ) / 2 );
+            }
 
             hb_gt_wvt_KillCaret( pWVT );
             hb_gt_wvt_UpdateCaret( pWVT );
@@ -1510,12 +1516,11 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          hb_gt_wvt_FireEvent( pWVT, ( LOWORD( wParam ) == WA_INACTIVE ? HB_GTE_KILLFOCUS : HB_GTE_SETFOCUS ) );
          return 0;
 
+      case WM_ENTERSIZEMOVE:
+         return 0;
+
       case WM_EXITSIZEMOVE:
-         if( !pWVT->bMaximized )
-         {
-            hb_gt_wvt_FitSize( pWVT, 0 );
-            hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
-         }
+         hb_gt_wvt_FireEvent( pWVT, HB_GTE_RESIZED );
          return 0;
 
       case WM_SIZE:
@@ -1720,10 +1725,6 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
       HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
       AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, "Mark and Copy" );
    }
-
-   /* Force Windows not to show dragged windows contents */
-   /* If desired it can be controlled via HB_GTI_SETDRAGFULLWINDOW or something like */
-   SystemParametersInfo( SPI_SETDRAGFULLWINDOWS, 0, NULL, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE );
 
    /* SUPER GT initialization */
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
@@ -2262,13 +2263,14 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                else
                   style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
 
+               pWVT->bResizable = bNewValue;
+
                SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
                SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                          SWP_FRAMECHANGED | SWP_NOACTIVATE | SWP_NOMOVE |
                                          SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                ShowWindow( pWVT->hWnd, SW_HIDE );
                ShowWindow( pWVT->hWnd, SW_NORMAL );
-               pWVT->bResizable = bNewValue;
             }
          }
          break;
