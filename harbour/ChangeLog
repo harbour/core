@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-11 16:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbw32/dllcall.c
+    * added casting of wOrdinal to HB_PTR_DIFF to avoid waring
+    * disabled asm code for WIN64 builds
+    * disabled asm code for WINCE builds
+    * disabled some code which breaks WINCE builds
+    ; TODO: add support for WINCE/ARM and WIN64
+
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    ! always use literal strings inside TEXT() macro for UNICODE builds
+
 2008-06-10 23:06 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
      ! Fixed maximized state. Borders were missing.

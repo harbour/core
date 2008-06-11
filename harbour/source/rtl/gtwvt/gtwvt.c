@@ -1723,7 +1723,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    /* Create "Mark" prompt in SysMenu to allow console type copy operation */
    {
       HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-      AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, "Mark and Copy" );
+      AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, TEXT( "Mark and Copy" ) );
    }
 
    /* SUPER GT initialization */

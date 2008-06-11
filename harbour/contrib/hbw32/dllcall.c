@@ -239,6 +239,14 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
    /* Call the specified function with the given parameters. Build a
       proper stack and take care of correct return value processing. */
    RESULT  Res = { 0 };
+#if defined(HB_WINCE) || defined(_WIN64)
+   HB_SYMBOL_UNUSED( iFlags );
+   HB_SYMBOL_UNUSED( lpFunction );
+   HB_SYMBOL_UNUSED( nArgs );
+   HB_SYMBOL_UNUSED( Parm );
+   HB_SYMBOL_UNUSED( pRet );
+   HB_SYMBOL_UNUSED( nRetSiz );
+#else
    int     i, nInd, nSize, nLoops;
    DWORD   dwEAX, dwEDX, dwVal, * pStack, dwStSize = 0;
    BYTE *  pArg;
@@ -428,6 +436,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
 
       _asm mov esp, pESP
    #endif
+#endif
 
    return Res;
 }
@@ -438,13 +447,13 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
 
 typedef struct _XPP_DLLEXEC
 {
-   DWORD   dwType;       /* type info */
-   char *  cDLL;         /* DLL */
-   HMODULE hDLL;         /* Handle */
-   char *  cProc;        /* Ordinal or Name */
-   WORD    wOrdinal;
-   DWORD   dwFlags;      /* Calling Flags */
-   LPVOID  lpFunc;
+   DWORD    dwType;     /* type info */
+   char *   cDLL;       /* DLL */
+   HMODULE  hDLL;       /* Handle */
+   char *   cProc;      /* function name */
+   WORD     wOrdinal;   /* function ordinal */
+   DWORD    dwFlags;    /* Calling Flags */
+   LPVOID   lpFunc;
 } XPP_DLLEXEC, * PXPP_DLLEXEC;
 
 #define _DLLEXEC_SIGNATURE  0x45584543
@@ -692,6 +701,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
 /* ------------------------------------------------------------------ */
 
+#if !defined(HB_WINCE)
 static HB_GARBAGE_FUNC( _DLLUnload )
 {
    PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) Cargo;
@@ -712,9 +722,11 @@ static HB_GARBAGE_FUNC( _DLLUnload )
       xec->dwType = 0;
    }
 }
+#endif
 
 HB_FUNC( DLLPREPARECALL )
 {
+#if !defined(HB_WINCE)
    PXPP_DLLEXEC xec = ( PXPP_DLLEXEC ) hb_gcAlloc( sizeof( XPP_DLLEXEC ), _DLLUnload );
    char * pszErrorText;
 
@@ -736,9 +748,9 @@ HB_FUNC( DLLPREPARECALL )
          hb_strncpy( xec->cProc, hb_parc( 3 ), hb_parclen( 3 ) );
       }
       else if( ISNUM( 3 ) )
-         xec->wOrdinal = hb_parni( 3 );
+         xec->wOrdinal = ( WORD ) hb_parni( 3 );
 
-      xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) xec->wOrdinal );
+      xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) ( HB_PTR_DIFF ) xec->wOrdinal );
       
       if( ! xec->lpFunc && xec->cProc ) /* try with ANSI suffix? */
          xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, ( LPCSTR ) strcat( xec->cProc, "A" ) );
@@ -762,6 +774,7 @@ HB_FUNC( DLLPREPARECALL )
    hb_gcFree( xec );
 
    hb_errRT_BASE( EG_ARG, 2010, pszErrorText, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 HB_FUNC( DLLLOAD )
@@ -784,6 +797,11 @@ HB_FUNC( DLLEXECUTECALL )
 
 static LPVOID hb_getprocaddress( HMODULE hDLL, int i )
 {
+#if defined(HB_WINCE)
+   HB_SYMBOL_UNUSED( hDLL );
+   HB_SYMBOL_UNUSED( i );
+   return NULL;
+#else
    LPVOID lpFunction = ( LPVOID ) GetProcAddress( hDLL, ISCHAR( i ) ? ( LPCSTR ) hb_parc( i ) : ( LPCSTR ) hb_parni( i ) );
 
    if( ! lpFunction && ISCHAR( i ) ) /* try with ANSI suffix? */
@@ -795,6 +813,7 @@ static LPVOID hb_getprocaddress( HMODULE hDLL, int i )
    }
 
    return lpFunction;
+#endif
 }
 
 HB_FUNC( DLLCALL )
