@@ -757,7 +757,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          if( pWVT->bBeginMarked )
          {
             pWVT->bBeingMarked = TRUE;
-            pWVT->markStartColRow = colrow;
+            pWVT->markStaColRow = colrow;
 
             s_rectOld.left   = 0;
             s_rectOld.top    = 0;
@@ -792,10 +792,10 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                USHORT irow, icol, j, top, left, bottom, right;
                char * sBuffer;
 
-               left   = pWVT->markStartColRow.x;
-               top    = pWVT->markStartColRow.y;
-               right  = pWVT->markEndColRow.x + 1;
-               bottom = pWVT->markEndColRow.y + 1;
+               left   = pWVT->markStaColRow.x;
+               top    = pWVT->markStaColRow.y;
+               right  = pWVT->markEndColRow.x;
+               bottom = pWVT->markEndColRow.y;
                /*  Check boundaries and reverse operation */
                if( right < left )
                {
@@ -870,8 +870,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
             pWVT->markEndColRow = colrow;
 
-            a0 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markStartColRow.x, ( USHORT ) pWVT->markStartColRow.y );
-            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x + 1, ( USHORT ) pWVT->markEndColRow.y + 1 );
+            a0 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markStaColRow.x, ( USHORT ) pWVT->markStaColRow.y );
+            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x, ( USHORT ) pWVT->markEndColRow.y );
 
             rect.left   = a0.x;
             rect.top    = a0.y;
@@ -884,7 +884,6 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                 rect.bottom != s_rectOld.bottom  )
             {
                HDC hdc = GetDC( pWVT->hWnd );
-               RECT rectUpd;
 
                if( s_rectOld.left   == 0 &&
                    s_rectOld.right  == 0 &&
@@ -902,87 +901,103 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                }
                else
                {
-                  int nS = 0;
-                  int nG = 0;
-
-                  if( abs( rect.left - rect.right ) < abs( s_rectOld.left - s_rectOld.right ) )
+                  int width     =      rect.left -      rect.right;
+                  int widthOld  = s_rectOld.left - s_rectOld.right;
+                  int height    =      rect.top  -      rect.bottom;
+                  int heightOld = s_rectOld.top  - s_rectOld.bottom;
+               
+                  if( ( width  && widthOld  && ( width  / abs( width  ) ) != widthOld  / abs( widthOld  ) ) || 
+                      ( height && heightOld && ( height / abs( height ) ) != heightOld / abs( heightOld ) ) )
                   {
-                     /* Selection shrunk horizontally */
-
-                     rectUpd.left   = rect.right;
-                     rectUpd.top    = rect.top;
-                     rectUpd.right  = s_rectOld.right;
-                     rectUpd.bottom = s_rectOld.bottom;
-
-                     RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
-
-                     ++nS;
+                     RedrawWindow( pWVT->hWnd, &s_rectOld, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+                     InvertRect( hdc, &rect );
                   }
-
-                  if( abs( rect.top - rect.bottom ) < abs( s_rectOld.top - s_rectOld.bottom ) )
+                  else
                   {
-                     /* Selection shrunk vertically */
+                     RECT rectUpd;
 
-                     rectUpd.left   = rect.left;
-                     rectUpd.top    = rect.bottom;
-                     rectUpd.right  = s_rectOld.right;
-                     rectUpd.bottom = s_rectOld.bottom;
-
-                     RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
-
-                     ++nS;
-                  }
-
-                  if( nS == 2 )
-                  {
-                     /* Selection shrunk horizontally + vertically */
-
-                     rectUpd.left   = rect.right;
-                     rectUpd.top    = rect.bottom;
-                     rectUpd.right  = s_rectOld.right;
-                     rectUpd.bottom = s_rectOld.bottom;
-
-                     RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
-                  }
-
-                  if( abs( rect.left - rect.right ) > abs( s_rectOld.left - s_rectOld.right ) )
-                  {
-                     /* Selection grown horizontally */
-
-                     rectUpd.left   = s_rectOld.right;
-                     rectUpd.top    = s_rectOld.top;
-                     rectUpd.right  = rect.right;
-                     rectUpd.bottom = nS ? rect.bottom : s_rectOld.bottom;
-
-                     InvertRect( hdc, &rectUpd );
-
-                     ++nG;
-                  }
-
-                  if( abs( rect.top - rect.bottom ) > abs( s_rectOld.top - s_rectOld.bottom ) )
-                  {
-                     /* Selection grown vertically */
-
-                     rectUpd.left   = s_rectOld.left;
-                     rectUpd.top    = s_rectOld.bottom;
-                     rectUpd.right  = nS ? rect.right : s_rectOld.right;
-                     rectUpd.bottom = rect.bottom;
-
-                     InvertRect( hdc, &rectUpd );
-
-                     ++nG;
-                  }
-
-                  if( nG == 2 )
-                  {
-                     /* Selection grown horizontally + vertically */
-
-                     rectUpd.left   = s_rectOld.right;
-                     rectUpd.top    = s_rectOld.bottom;
-                     rectUpd.right  = rect.right;
-                     rectUpd.bottom = rect.bottom;
-
-                     InvertRect( hdc, &rectUpd );
+                     int nS = 0;
+                     int nG = 0;
+                  
+                     if( abs( width ) < abs( widthOld ) )
+                     {
+                        /* Selection shrunk horizontally */
+                  
+                        rectUpd.left   = rect.right;
+                        rectUpd.top    = rect.top;
+                        rectUpd.right  = s_rectOld.right;
+                        rectUpd.bottom = s_rectOld.bottom;
+                  
+                        RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+                  
+                        ++nS;
+                     }
+                  
+                     if( abs( height ) < abs( heightOld ) )
+                     {
+                        /* Selection shrunk vertically */
+                  
+                        rectUpd.left   = rect.left;
+                        rectUpd.top    = rect.bottom;
+                        rectUpd.right  = s_rectOld.right;
+                        rectUpd.bottom = s_rectOld.bottom;
+                  
+                        RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+                  
+                        ++nS;
+                     }
+                  
+                     if( nS == 2 )
+                     {
+                        /* Selection shrunk horizontally + vertically */
+                  
+                        rectUpd.left   = rect.right;
+                        rectUpd.top    = rect.bottom;
+                        rectUpd.right  = s_rectOld.right;
+                        rectUpd.bottom = s_rectOld.bottom;
+                  
+                        RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
+                     }
+                  
+                     if( abs( width ) > abs( widthOld ) )
+                     {
+                        /* Selection grown horizontally */
+                  
+                        rectUpd.left   = s_rectOld.right;
+                        rectUpd.top    = s_rectOld.top;
+                        rectUpd.right  = rect.right;
+                        rectUpd.bottom = nS ? rect.bottom : s_rectOld.bottom;
+                  
+                        InvertRect( hdc, &rectUpd );
+                  
+                        ++nG;
+                     }
+                  
+                     if( abs( height ) > abs( heightOld ) )
+                     {
+                        /* Selection grown vertically */
+                  
+                        rectUpd.left   = s_rectOld.left;
+                        rectUpd.top    = s_rectOld.bottom;
+                        rectUpd.right  = nS ? rect.right : s_rectOld.right;
+                        rectUpd.bottom = rect.bottom;
+                  
+                        InvertRect( hdc, &rectUpd );
+                  
+                        ++nG;
+                     }
+                  
+                     if( nG == 2 )
+                     {
+                        /* Selection grown horizontally + vertically */
+                  
+                        rectUpd.left   = s_rectOld.right;
+                        rectUpd.top    = s_rectOld.bottom;
+                        rectUpd.right  = rect.right;
+                        rectUpd.bottom = rect.bottom;
+                  
+                        InvertRect( hdc, &rectUpd );
+                     }
                   }
                }
 

@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-12 01:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     ! Fixed remaining Mark&Copy trashing while doing the selection.
+     * I've undone fix (2008-06-09 14:48 UTC+0800) for non-selectable 
+       maxrow/maxcol, since after the fix the _first_ row/col couldn't 
+       be selected.
+       TOFIX: Reopened.
+
 2008-06-12 01:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbw32/dllcall.c
     ! fixed typo in previous modification. It should be HB_PTRDIFF
