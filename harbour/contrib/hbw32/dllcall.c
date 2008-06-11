@@ -750,7 +750,7 @@ HB_FUNC( DLLPREPARECALL )
       else if( ISNUM( 3 ) )
          xec->wOrdinal = ( WORD ) hb_parni( 3 );
 
-      xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) ( HB_PTR_DIFF ) xec->wOrdinal );
+      xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, xec->cProc ? ( LPCSTR ) xec->cProc : ( LPCSTR ) ( HB_PTRDIFF ) xec->wOrdinal );
       
       if( ! xec->lpFunc && xec->cProc ) /* try with ANSI suffix? */
          xec->lpFunc = ( LPVOID ) GetProcAddress( xec->hDLL, ( LPCSTR ) strcat( xec->cProc, "A" ) );

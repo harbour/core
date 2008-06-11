@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-12 01:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbw32/dllcall.c
+    ! fixed typo in previous modification. It should be HB_PTRDIFF
+      instead of HB_PTR_DIFF
+
 2008-06-11 23:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/spd.c
      + Added support for index & indirect arguments ANSI C99.
