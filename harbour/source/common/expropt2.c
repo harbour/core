@@ -1671,6 +1671,28 @@ BOOL hb_compExprReduceINT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return FALSE;
 }
 
+BOOL hb_compExprReduceDTOS( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+
+   if( pArg->ExprType == HB_ET_DATE )
+   {
+      char szBuffer[ 9 ];
+      char * szDate = ( char * ) memcpy( hb_xgrab( 9 ),
+                      hb_dateDecStr( szBuffer, pArg->value.asNum.val.l ), 9 );
+      HB_EXPR_PTR pExpr = hb_compExprNewString( szDate, 8, TRUE, HB_COMP_PARAM );
+
+      HB_COMP_EXPR_FREE( pParms );
+      HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
+      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+      HB_COMP_EXPR_CLEAR( pExpr );
+      return TRUE;
+   }
+
+   return FALSE;
+}
+
 BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, USHORT usCount, HB_COMP_DECL )
 {
    if( usCount == 1 )

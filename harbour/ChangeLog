@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-11 04:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbexprop.h
+  * harbour/include/hbexprb.c
+  * harbour/source/common/expropt2.c
+    * added optimization for DTOS( <date_constant> ), f.e.:
+      static s := DTOS( 0d20080611 )
+
 2008-06-11 01:17 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbwince.c
     ! fixed typo in GetDriveTypeA()
