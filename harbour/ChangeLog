@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-11 19:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * ChangeLog
+     + Marked changes merged with RC1.
+
 2008-06-11 19:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbgtinfo.ch
    * source/rtl/gtwvt/gtwvt.c
@@ -49,7 +53,7 @@
        goes now to the official include dir. After this change 
        has been merged with RC1, xhb.lib may be included in 
        the default build.
-       [TOMERGE RC1]
+       [RC1]
 
    * contrib/hbw32/tests/testdll.prg
      + Added some more DLL calling samples.
@@ -514,7 +518,7 @@
    * include/hbgtinfo.ch
      + Added comment to compatibility #defines, to not use 
        them, since they're deprecated.
-       [TOMERGE RC1]
+       [RC1]
      * HB_GTI_CB_* -> HB_GTE_* (stands for GT Event). Removed 
        plain GTI_ versions, GTI_* range is frozen, pls don't 
        add new codes to them and especially don't use them in 
@@ -530,12 +534,12 @@
        #define HB_GT_NO_XHB to disable the compatibility #defines, 
        if it collides with your code or you want to test after 
        transition.
-     ; [TOMERGE RC1]
+     ; [RC1]
 
    * source/rtl/dirdrive.c
      ! Guarded C53 undoc functions with HB_C52_UNDOC, which is enabled 
        so it won't make a difference in default builds.
-     ; [TOMERGE RC1]
+     ; [RC1]
 
    * source/rtl/filesys.c
      ! Fixed hb_fsIsDrv() to use GetDriveTypeA() API, to avoid some 
@@ -543,7 +547,7 @@
        drives (f.e. USB reader devices) are queried.
      ; Please test.
      ; TOFIX: hb_fsChDrv() suffers from the same problem.
-     ; [TOMERGE RC1 - after testing]
+     ; [CANCELLED RC1]
 
    * contrib/hbcurl/hbcurl.c
    * contrib/rddads/adsfunc.c
@@ -551,7 +555,7 @@
      % Optimized out explicit function name strings in RTE calls.
      ! The above is actually a fix (I hope) for the one in 
        hb_adsCheckLock(). Error text also made more consistent.
-     ; [TOMERGE RC1 - after testing]
+     ; [CANCELLED RC1]
 
    * contrib/hbw32/w32_prn.c
      % Minor optimizations, cleanups.
@@ -589,11 +593,11 @@
    * contrib/hbfbird/make_b32.bat
    * contrib/hbfbird/make_vc.bat
      * Fixed location where .libs are looked for.
-       [TOMERGE RC1]
+       [RC1]
 
    * contrib/hbcurl/hbcurl.c
      % Minor cleanups.
-       [TOMERGE RC1]
+       [RC1]
 
 2008-06-07 15:32 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
@@ -615,7 +619,7 @@
    * contrib/hbodbc/make_vc.bat
      ! Removed .dll -> .lib conversion for MSVC, 
        since the .lib is provided by the MS SDK anyway.
-     ; [TOMERGE RC1]
+     ; [RC1]
 
    * contrib/hbcurl/hbcurl.c
    * contrib/hbcurl/hbcurl.ch
@@ -631,7 +635,7 @@
        error would be thrown now.
      ! CURL_ESCAPE()/CURL_UNESCAPE() fixed picked parameter ordinal.
      + CURL_ESCAPE()/CURL_UNESCAPE() added parameter checking.
-     ; [TOMERGE RC1]
+     ; [RC1]
 
    * contrib/rddads/adsmgmnt.c
      * Minor formatting.
