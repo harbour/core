@@ -871,7 +871,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             pWVT->markEndColRow = colrow;
 
             a0 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markStaColRow.x, ( USHORT ) pWVT->markStaColRow.y );
-            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x+1, ( USHORT ) pWVT->markEndColRow.y+1 );
+            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x + 1, ( USHORT ) pWVT->markEndColRow.y + 1 );
 
             rect.left   = a0.x;
             rect.top    = a0.y;
@@ -883,28 +883,26 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                 rect.right  != s_rectOld.right  ||
                 rect.bottom != s_rectOld.bottom  )
             {
-               HDC hdc = GetDC( pWVT->hWnd );
-               HRGN rgn1,rgn2,rgn3;
-               int hr;
-
                /* Concept forwarded by Andy Wos - thanks. */
-               rgn1 = CreateRectRgn( s_rectOld.left, s_rectOld.top, s_rectOld.right, s_rectOld.bottom );
-               rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
-               rgn3 = CreateRectRgn( 0,0,0,0 );
+               HRGN rgn1 = CreateRectRgn( s_rectOld.left, s_rectOld.top, s_rectOld.right, s_rectOld.bottom );
+               HRGN rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
+               HRGN rgn3 = CreateRectRgn( 0, 0, 0, 0 );
 
-               hr = CombineRgn( rgn3, rgn1, rgn2, RGN_XOR );
-               if( hr != 0 )
+               if( CombineRgn( rgn3, rgn1, rgn2, RGN_XOR ) != 0 )
+               {
+                  HDC hdc = GetDC( pWVT->hWnd );
                   InvertRgn( hdc, rgn3 );
+                  ReleaseDC( pWVT->hWnd, hdc );
+               }
+
+               DeleteObject( rgn1 );
+               DeleteObject( rgn2 );
+               DeleteObject( rgn3 );
 
                s_rectOld.left   = rect.left;
                s_rectOld.top    = rect.top;
                s_rectOld.right  = rect.right;
                s_rectOld.bottom = rect.bottom;
-
-               DeleteObject( rgn1 );
-               DeleteObject( rgn2 );
-               DeleteObject( rgn3 );
-               ReleaseDC( pWVT->hWnd, hdc );
             }
             return;
          }

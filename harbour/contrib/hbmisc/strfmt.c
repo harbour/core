@@ -53,110 +53,71 @@
 #include "hbapi.h"
 
 #define HB_STRFORMAT_PARNUM_MAX_ 9
+#define POS_TO_PAR( pos ) ( pos + 2 )
 
 HB_FUNC( STRFORMAT )
 {
-   char* pszMask = hb_parc(1);
-   ULONG nMaskLen = hb_parclen(1);
-   ULONG nMaskPos;
    ULONG nParNum = hb_pcount();
-   ULONG nLenTable [HB_STRFORMAT_PARNUM_MAX_];
-   char* pszVarTable [HB_STRFORMAT_PARNUM_MAX_];
 
-   ULONG nRetValLen;
-   char* pszRetVal;
-   char* pszRetValSave;
-
-   ULONG tmp;
-
-   if (nParNum < 1)
+   if( nParNum >= 1 )
    {
-      hb_retc("");
-      return;
-   }
+      char * pszMask = hb_parc( 1 );
+      ULONG  nMaskLen = hb_parclen( 1 );
+      ULONG  nMaskPos;
+   
+      ULONG  nRetValLen;
+      char * pszRetVal;
+      char * pszRetValSave;
 
-   nParNum--;
+      nParNum--;
 
-   if (nParNum > HB_STRFORMAT_PARNUM_MAX_) nParNum = HB_STRFORMAT_PARNUM_MAX_;
-
-   for (tmp = 0; tmp < nParNum; tmp++)
-   {
-      nLenTable[tmp] = hb_parclen(tmp + 2);
-      pszVarTable[tmp] = hb_parc(tmp + 2);
-   }
-
-   nMaskPos = 0;
-
-   nRetValLen = 0;
-   while (nMaskPos < nMaskLen)
-   {
-      if (pszMask[nMaskPos] == '%')
+      if( nParNum > HB_STRFORMAT_PARNUM_MAX_ )
+         nParNum = HB_STRFORMAT_PARNUM_MAX_;
+      
+      nRetValLen = 0;
+      for( nMaskPos = 0; nMaskPos < nMaskLen; nMaskPos++ )
       {
-         nMaskPos++;
-
-         if (pszMask[nMaskPos] == '\0')
+         if( pszMask[ nMaskPos ] == '%' )
          {
-            break;
+            nMaskPos++;
+      
+            if( pszMask[ nMaskPos ] == '\0' )
+               break;
+            else if( pszMask[ nMaskPos ] == '%' )
+               nRetValLen++;
+            else if( pszMask[ nMaskPos ] >= '1' && pszMask[ nMaskPos ] <= ( int )( nParNum + '0' ) )
+               nRetValLen += hb_parclen( POS_TO_PAR( pszMask[ nMaskPos ] - '1' ) );
          }
-         else if (pszMask[nMaskPos] == '%')
-         {
+         else
             nRetValLen++;
-         }
-         else if (pszMask[nMaskPos] >= '1' && pszMask[nMaskPos] <= (int)(nParNum + '0'))
+      }
+      
+      pszRetVal = pszRetValSave = ( char * ) hb_xgrab( nRetValLen + 1 );
+      for( nMaskPos = 0; nMaskPos < nMaskLen; nMaskPos++ )
+      {
+         if( pszMask[ nMaskPos ] == '%' )
          {
-            nRetValLen += nLenTable[pszMask[nMaskPos] - '1'];
+            nMaskPos++;
+      
+            if( pszMask[ nMaskPos ] == '\0' )
+               break;
+            else if( pszMask[ nMaskPos ] == '%' )
+               *pszRetVal++ = pszMask[ nMaskPos ];
+            else if( pszMask[ nMaskPos ] >= '1' && pszMask[ nMaskPos ] <= ( int ) ( nParNum + '0' ) )
+            {
+               ULONG nPos = pszMask[ nMaskPos ] - '1';
+               ULONG nLen = hb_parclen( POS_TO_PAR( nPos ) );
+      
+               memcpy( pszRetVal, hb_parc( POS_TO_PAR( nPos ) ), nLen );
+               pszRetVal += nLen;
+            }
          }
          else
-         {
-            /* ; do nothing */
-         }
+            *pszRetVal++ = pszMask[ nMaskPos ];
       }
-      else
-      {
-         nRetValLen++;
-      }
-
-      nMaskPos++;
+      
+      hb_retclen_buffer( pszRetValSave, nRetValLen );
    }
-
-   nMaskPos = 0;
-
-   pszRetVal = pszRetValSave = (char *) hb_xgrab(nRetValLen + 1);
-   while (nMaskPos < nMaskLen)
-   {
-      if (pszMask[nMaskPos] == '%')
-      {
-         nMaskPos++;
-
-         if (pszMask[nMaskPos] == '\0')
-         {
-            break;
-         }
-         else if (pszMask[nMaskPos] == '%')
-         {
-            *pszRetVal++ = pszMask[nMaskPos];
-         }
-         else if (pszMask[nMaskPos] >= '1' && pszMask[nMaskPos] <= (int)(nParNum + '0'))
-         {
-            ULONG nPos = pszMask[nMaskPos] - '1';
-
-            memcpy(pszRetVal, pszVarTable[nPos], nLenTable[nPos]);
-            pszRetVal += nLenTable[nPos];
-         }
-         else
-         {
-            /* ; do nothing */
-         }
-      }
-      else
-      {
-         *pszRetVal++ = pszMask[nMaskPos];
-      }
-
-      nMaskPos++;
-   }
-
-   hb_retclen(pszRetValSave, nRetValLen);
-
-   hb_xfree(pszRetValSave);
+   else
+      hb_retc_null();
 }

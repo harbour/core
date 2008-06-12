@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * _SPD() function
+ * SQL_SPRINTF() function
  *
  * Copyright 2008 Xavi <jarabal/at/gmail.com>
  *
@@ -127,7 +127,7 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 /*******************************************************************************
 * ANSI C sprintf() for ANSI SQL with DATE, DATETIME, LOGICAL, NIL, NUMERIC
 * ------------------------------------------------------------------------
-* cRes := _SPD( cFrm, ... )
+* cRes := SQL_SPRINTF( cFrm, ... )
 * cFrm : %s for DATE = YYYY-MM-DD, DATETIME = YYYY-MM-DD HH:MM:SS
 *        %t for DATE = 'YYYY-MM-DD', DATETIME = 'YYYY-MM-DD HH:MM:SS'
 *        %t for STRING = 'String''s ANSI SQL'
@@ -137,11 +137,11 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 *
 * NOTE .-
 * Remove C ESC sequences and converts them to Clipper chars in cRes.
-*    OutStd( _SPD( 'Hello\nworld!' ) ) => like printf( "Hello\nworld!" );
+*    OutStd( SQL_SPRINTF( 'Hello\nworld!' ) ) => like printf( "Hello\nworld!" );
 * Accepts conversion inside if variable is passed by reference.
-*    Local xDate := Date(); _SPD('%s', @xDate) => xDate == '2008-05-19'
+*    Local xDate := Date(); SQL_SPRINTF('%s', @xDate) => xDate == '2008-05-19'
 * Support index & indirect arguments C99.
-*    cRes := _SPD( "Phi = %2$0*3$.*1$f \n", 10, (1 + 5**0.5) / 2, 13 )
+*    cRes := SQL_SPRINTF( "Phi = %2$0*3$.*1$f \n", 10, (1 + 5**0.5) / 2, 13 )
 *******************************************************************************/
 
 #define DK_INCRES 1024
@@ -150,10 +150,10 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 #define DK_FRMTIM "HH:MM:SS"
 	
 #if defined( __XHARBOUR__ ) && ! defined( HB_ERR_FUNCNAME )
-   #define HB_ERR_FUNCNAME "C_SPRINTF"
+   #define HB_ERR_FUNCNAME "SQL_SPRINTF"
 #endif
 
-HB_FUNC( C_SPRINTF )
+HB_FUNC( SQL_SPRINTF )
 {
    ULONG ulItmFrm;
    char *cRes, *cItmFrm;
