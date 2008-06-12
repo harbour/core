@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-13 09:12 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
+   * harbour/source/rtl/gtwvt/gtwvt.c
+   * harbour/include/hbgtinfo.ch
+     + Added functionality to change Palette. 
+       Hb_GtInfo( HB_GTI_PALETTE, aNewPalette ) -> aOldPalette
+       <aNewPalette> must be of 16 elements containg RGB colors.
+
+   * harbour/tests/wvtext.prg
+     * Updated to demonstrate palette info.
+     ; TODO : Hb_GtInfo( HB_GTI_PALETTEBYINDEX, nIndex[, nNewRGB ] ) -> nOldRGB
+       Needs deeper modifications in GT core. Needs additional parameter 
+       in core setup. Will commit today.
+
 2008-06-12 17:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/strfmt.c
    + contrib/hbmisc/tests/tsstrfmt.prg

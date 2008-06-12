@@ -1703,6 +1703,19 @@ static BOOL hb_gt_wvt_SetMode( PHB_GT pGT, int iRow, int iCol )
 
 /* ********************************************************************** */
 
+static BOOL hb_gt_wvt_PutChar( PHB_GT pGT, int iRow, int iCol,
+                                BYTE bColor, BYTE bAttr, USHORT usChar )
+{
+   if( HB_GTSUPER_PUTCHAR( pGT, iRow, iCol, bColor, bAttr, usChar ) )
+   {
+      HB_GTSELF_TOUCHCELL( pGT, iRow, iCol );
+      return TRUE;
+   }
+   return FALSE;
+}
+
+/* ********************************************************************** */
+
 static char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Version(%p,%d)", pGT, iType ) );
@@ -2204,6 +2217,28 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
       }
+      case HB_GTI_PALETTE:
+      {
+         int i;
+
+         if( !pInfo->pResult )
+         {
+            pInfo->pResult = hb_itemNew( NULL );
+         }
+         hb_arrayNew( pInfo->pResult, 16 );
+         for( i = 0; i < 16; i++ )
+            hb_itemPutNL( hb_arrayGetItemPtr( pInfo->pResult,i ), pWVT->COLORS[ i ] );
+
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
+         {
+            if( hb_arrayLen( pInfo->pNewVal ) == 16 )
+            {
+               for( i = 0; i < 16; i++ )
+                  pWVT->COLORS[ i ] = hb_arrayGetNL( pInfo->pNewVal, i );
+            }
+         }
+         break;
+      }
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
@@ -2491,7 +2526,7 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->Info                 = hb_gt_wvt_Info;
    pFuncTable->SetDispCP            = hb_gt_wvt_SetDispCP;
    pFuncTable->SetKeyCP             = hb_gt_wvt_SetKeyCP;
-
+   pFuncTable->PutChar              = hb_gt_wvt_PutChar;
    pFuncTable->ReadKey              = hb_gt_wvt_ReadKey;
 
    pFuncTable->MouseIsPresent       = hb_gt_wvt_mouse_IsPresent;

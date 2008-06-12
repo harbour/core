@@ -125,6 +125,7 @@
 /* Additional constants to enhance GT */
 #define HB_GTI_NOTIFIERBLOCK    51  /* This optional codeblock gets called whenever certain events occur. See HB_GTE_* */
 #define HB_GTI_SCREENSIZE       52  /* Get/Set height/width of application window in pixels */
+#define HB_GTI_PALETTE          53  /* Get/Set console colors 1 - 16 given an array of 16 elements containing RGB colors */
 
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
