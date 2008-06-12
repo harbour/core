@@ -794,8 +794,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
                left   = pWVT->markStaColRow.x;
                top    = pWVT->markStaColRow.y;
-               right  = pWVT->markEndColRow.x;
-               bottom = pWVT->markEndColRow.y;
+               right  = pWVT->markEndColRow.x + 1;
+               bottom = pWVT->markEndColRow.y + 1;
                /*  Check boundaries and reverse operation */
                if( right < left )
                {
@@ -871,7 +871,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             pWVT->markEndColRow = colrow;
 
             a0 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markStaColRow.x, ( USHORT ) pWVT->markStaColRow.y );
-            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x, ( USHORT ) pWVT->markEndColRow.y );
+            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x+1, ( USHORT ) pWVT->markEndColRow.y+1 );
 
             rect.left   = a0.x;
             rect.top    = a0.y;
@@ -884,128 +884,26 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                 rect.bottom != s_rectOld.bottom  )
             {
                HDC hdc = GetDC( pWVT->hWnd );
+               HRGN rgn1,rgn2,rgn3;
+               int hr;
 
-               if( s_rectOld.left   == 0 &&
-                   s_rectOld.right  == 0 &&
-                   s_rectOld.top    == 0 &&
-                   s_rectOld.bottom == 0 )
-               {
-                  /* New selection */
+               /* Concept forwarded by Andy Wos - thanks. */
+               rgn1 = CreateRectRgn( s_rectOld.left, s_rectOld.top, s_rectOld.right, s_rectOld.bottom );
+               rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
+               rgn3 = CreateRectRgn( 0,0,0,0 );
 
-                  rect.left = a0.x;
-                  rect.top = a0.y;
-                  rect.right = a1.x;
-                  rect.bottom = a1.y;
-
-                  InvertRect( hdc, &rect );
-               }
-               else
-               {
-                  int width     =      rect.left -      rect.right;
-                  int widthOld  = s_rectOld.left - s_rectOld.right;
-                  int height    =      rect.top  -      rect.bottom;
-                  int heightOld = s_rectOld.top  - s_rectOld.bottom;
-               
-                  if( ( width  && widthOld  && ( width  / abs( width  ) ) != widthOld  / abs( widthOld  ) ) || 
-                      ( height && heightOld && ( height / abs( height ) ) != heightOld / abs( heightOld ) ) )
-                  {
-                     RedrawWindow( pWVT->hWnd, &s_rectOld, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
-                     InvertRect( hdc, &rect );
-                  }
-                  else
-                  {
-                     RECT rectUpd;
-
-                     int nS = 0;
-                     int nG = 0;
-                  
-                     if( abs( width ) < abs( widthOld ) )
-                     {
-                        /* Selection shrunk horizontally */
-                  
-                        rectUpd.left   = rect.right;
-                        rectUpd.top    = rect.top;
-                        rectUpd.right  = s_rectOld.right;
-                        rectUpd.bottom = s_rectOld.bottom;
-                  
-                        RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
-                  
-                        ++nS;
-                     }
-                  
-                     if( abs( height ) < abs( heightOld ) )
-                     {
-                        /* Selection shrunk vertically */
-                  
-                        rectUpd.left   = rect.left;
-                        rectUpd.top    = rect.bottom;
-                        rectUpd.right  = s_rectOld.right;
-                        rectUpd.bottom = s_rectOld.bottom;
-                  
-                        RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
-                  
-                        ++nS;
-                     }
-                  
-                     if( nS == 2 )
-                     {
-                        /* Selection shrunk horizontally + vertically */
-                  
-                        rectUpd.left   = rect.right;
-                        rectUpd.top    = rect.bottom;
-                        rectUpd.right  = s_rectOld.right;
-                        rectUpd.bottom = s_rectOld.bottom;
-                  
-                        RedrawWindow( pWVT->hWnd, &rectUpd, NULL, RDW_INVALIDATE | RDW_UPDATENOW );
-                     }
-                  
-                     if( abs( width ) > abs( widthOld ) )
-                     {
-                        /* Selection grown horizontally */
-                  
-                        rectUpd.left   = s_rectOld.right;
-                        rectUpd.top    = s_rectOld.top;
-                        rectUpd.right  = rect.right;
-                        rectUpd.bottom = nS ? rect.bottom : s_rectOld.bottom;
-                  
-                        InvertRect( hdc, &rectUpd );
-                  
-                        ++nG;
-                     }
-                  
-                     if( abs( height ) > abs( heightOld ) )
-                     {
-                        /* Selection grown vertically */
-                  
-                        rectUpd.left   = s_rectOld.left;
-                        rectUpd.top    = s_rectOld.bottom;
-                        rectUpd.right  = nS ? rect.right : s_rectOld.right;
-                        rectUpd.bottom = rect.bottom;
-                  
-                        InvertRect( hdc, &rectUpd );
-                  
-                        ++nG;
-                     }
-                  
-                     if( nG == 2 )
-                     {
-                        /* Selection grown horizontally + vertically */
-                  
-                        rectUpd.left   = s_rectOld.right;
-                        rectUpd.top    = s_rectOld.bottom;
-                        rectUpd.right  = rect.right;
-                        rectUpd.bottom = rect.bottom;
-                  
-                        InvertRect( hdc, &rectUpd );
-                     }
-                  }
-               }
+               hr = CombineRgn( rgn3, rgn1, rgn2, RGN_XOR );
+               if( hr != 0 )
+                  InvertRgn( hdc, rgn3 );
 
                s_rectOld.left   = rect.left;
                s_rectOld.top    = rect.top;
                s_rectOld.right  = rect.right;
                s_rectOld.bottom = rect.bottom;
 
+               DeleteObject( rgn1 );
+               DeleteObject( rgn2 );
+               DeleteObject( rgn3 );
                ReleaseDC( pWVT->hWnd, hdc );
             }
             return;
