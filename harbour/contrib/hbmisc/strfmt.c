@@ -51,9 +51,21 @@
  */
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 
 #define HB_STRFORMAT_PARNUM_MAX_ 9
 #define POS_TO_PAR( pos ) ( pos + 2 )
+
+typedef struct
+{
+   char * raw;
+   char * buffer;
+   ULONG  ulLen;
+   BOOL   bFreeReq;
+} STRPAR;
+
+/* TODO: Add support for embedded PICTURE string in mask string. */
+/* TODO: Add a way to control trimming. (but 99.99% of the time, trimming is actually useful) */
 
 HB_FUNC( STRFORMAT )
 {
@@ -64,16 +76,22 @@ HB_FUNC( STRFORMAT )
       char * pszMask = hb_parc( 1 );
       ULONG  nMaskLen = hb_parclen( 1 );
       ULONG  nMaskPos;
+      ULONG  nPos;
    
       ULONG  nRetValLen;
       char * pszRetVal;
       char * pszRetValSave;
+
+      STRPAR strpar[ HB_STRFORMAT_PARNUM_MAX_ ];
+
+      memset( &strpar, 0, sizeof( strpar ) );
 
       nParNum--;
 
       if( nParNum > HB_STRFORMAT_PARNUM_MAX_ )
          nParNum = HB_STRFORMAT_PARNUM_MAX_;
       
+      /* Calculate length of return value */
       nRetValLen = 0;
       for( nMaskPos = 0; nMaskPos < nMaskLen; nMaskPos++ )
       {
@@ -81,17 +99,26 @@ HB_FUNC( STRFORMAT )
          {
             nMaskPos++;
       
-            if( pszMask[ nMaskPos ] == '\0' )
-               break;
-            else if( pszMask[ nMaskPos ] == '%' )
+            if( pszMask[ nMaskPos ] == '%' )
                nRetValLen++;
             else if( pszMask[ nMaskPos ] >= '1' && pszMask[ nMaskPos ] <= ( int )( nParNum + '0' ) )
-               nRetValLen += hb_parclen( POS_TO_PAR( pszMask[ nMaskPos ] - '1' ) );
+            {
+               nPos = pszMask[ nMaskPos ] - '1';
+
+               strpar[ nPos ].raw = hb_itemString( hb_param( POS_TO_PAR( nPos ), HB_IT_ANY ), &strpar[ nPos ].ulLen, &strpar[ nPos ].bFreeReq );
+
+               /* AllTrim() */
+               strpar[ nPos ].ulLen = hb_strRTrimLen( strpar[ nPos ].raw, strpar[ nPos ].ulLen, FALSE );
+               strpar[ nPos ].buffer = hb_strLTrim( strpar[ nPos ].raw, &strpar[ nPos ].ulLen );
+
+               nRetValLen += strpar[ nPos ].ulLen;
+            }
          }
          else
             nRetValLen++;
       }
       
+      /* Assemble return value */
       pszRetVal = pszRetValSave = ( char * ) hb_xgrab( nRetValLen + 1 );
       for( nMaskPos = 0; nMaskPos < nMaskLen; nMaskPos++ )
       {
@@ -99,24 +126,28 @@ HB_FUNC( STRFORMAT )
          {
             nMaskPos++;
       
-            if( pszMask[ nMaskPos ] == '\0' )
-               break;
-            else if( pszMask[ nMaskPos ] == '%' )
+            if( pszMask[ nMaskPos ] == '%' )
                *pszRetVal++ = pszMask[ nMaskPos ];
             else if( pszMask[ nMaskPos ] >= '1' && pszMask[ nMaskPos ] <= ( int ) ( nParNum + '0' ) )
             {
-               ULONG nPos = pszMask[ nMaskPos ] - '1';
-               ULONG nLen = hb_parclen( POS_TO_PAR( nPos ) );
+               nPos = pszMask[ nMaskPos ] - '1';
       
-               memcpy( pszRetVal, hb_parc( POS_TO_PAR( nPos ) ), nLen );
-               pszRetVal += nLen;
+               memcpy( pszRetVal, strpar[ nPos ].buffer, strpar[ nPos ].ulLen );
+               pszRetVal += strpar[ nPos ].ulLen;
             }
          }
          else
             *pszRetVal++ = pszMask[ nMaskPos ];
       }
-      
+
       hb_retclen_buffer( pszRetValSave, nRetValLen );
+
+      /* Free parameter buffers */ 
+      for( nPos = 0; nPos < HB_STRFORMAT_PARNUM_MAX_; nPos++ )
+      {
+         if( strpar[ nPos ].raw && strpar[ nPos ].bFreeReq )
+            hb_xfree( strpar[ nPos ].raw );
+      }
    }
    else
       hb_retc_null();

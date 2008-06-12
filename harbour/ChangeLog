@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-12 17:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmisc/strfmt.c
+   + contrib/hbmisc/tests/tsstrfmt.prg
+     + StrFormat() extended to automatically convert parameters 
+       to strings, above that the result will AllTrim()-med too 
+       before being inserted into the mask string:
+       StrFormat( "%2 %1 born on %3", "Smith", "Mr.", Date() ) ->
+       "Mr. Smith born on 06/12/08"
+
 2008-06-12 11:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      % Minor optimization in new screen marking code.
@@ -65,7 +74,7 @@
 
    * source/rtl/filesys.c
      ! hb_fsIsDrv() restored to generic version fo WinCE, because 
-       it's API doesn't have GetDriveTypeA().
+       its API doesn't have GetDriveTypeA().
 
 2008-06-11 13:30 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/tests/wvtext.prg
