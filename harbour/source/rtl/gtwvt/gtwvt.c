@@ -2219,22 +2219,35 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
       case HB_GTI_PALETTE:
       {
-         int i;
-
-         if( !pInfo->pResult )
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
-            pInfo->pResult = hb_itemNew( NULL );
-         }
-         hb_arrayNew( pInfo->pResult, 16 );
-         for( i = 0; i < 16; i++ )
-            hb_itemPutNL( hb_arrayGetItemPtr( pInfo->pResult,i ), pWVT->COLORS[ i ] );
-
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
-         {
-            if( hb_arrayLen( pInfo->pNewVal ) == 16 )
+            int iIndex = hb_itemGetNI( pInfo->pNewVal );
+            if( iIndex > 0 && iIndex <= 16 )
             {
-               for( i = 0; i < 16; i++ )
-                  pWVT->COLORS[ i ] = hb_arrayGetNL( pInfo->pNewVal, i );
+               pInfo->pResult = hb_itemPutNL( pInfo->pResult, pWVT->COLORS[ iIndex - 1 ] );
+
+               if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC )
+                  pWVT->COLORS[ iIndex - 1 ] = hb_itemGetNL( pInfo->pNewVal2 );
+            }
+         }
+         else
+         {
+            int i;
+            if( !pInfo->pResult )
+            {
+               pInfo->pResult = hb_itemNew( NULL );
+            }
+            hb_arrayNew( pInfo->pResult, 16 );
+            for( i = 1; i <= 16; i++ )
+               hb_itemPutNL( hb_arrayGetItemPtr( pInfo->pResult, i ), pWVT->COLORS[ i - 1 ] );
+
+            if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
+            {
+               if( hb_arrayLen( pInfo->pNewVal ) == 16 )
+               {
+                  for( i = 0; i < 16; i++ )
+                     pWVT->COLORS[ i ] = hb_arrayGetNL( pInfo->pNewVal, i + 1 );
+               }
             }
          }
          break;

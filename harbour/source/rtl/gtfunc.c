@@ -100,8 +100,9 @@ HB_FUNC( HB_GTINFO )
    {
       HB_GT_INFO gtInfo;
 
-      gtInfo.pNewVal = hb_param( 2, HB_IT_ANY );
-      gtInfo.pResult = NULL;
+      gtInfo.pNewVal  = hb_param( 2, HB_IT_ANY );
+      gtInfo.pNewVal2 = hb_param( 3, HB_IT_ANY );
+      gtInfo.pResult  = NULL;
 
       hb_gtInfo( hb_parni( 1 ), &gtInfo );
       if( gtInfo.pResult )
@@ -118,7 +119,7 @@ HB_FUNC( HB_GTVERSION )
 
 HB_FUNC( HB_GTALERT )
 {
-   hb_retni( hb_gtAlert( hb_param( 1, HB_IT_ANY ), 
+   hb_retni( hb_gtAlert( hb_param( 1, HB_IT_ANY ),
                          hb_param( 2, HB_IT_ANY ),
                          ISCHAR( 3 ) ? hb_gtColorToN( hb_parc( 3 ) ) : hb_parni( 3 ) /* iClrNorm */,
                          ISCHAR( 4 ) ? hb_gtColorToN( hb_parc( 4 ) ) : hb_parni( 4 ) /* iClrHigh */,
@@ -141,6 +142,6 @@ HB_FUNC( HB_GFXTEXT )
                  hb_parni( 2 ) /* nLeft  */,
                  hb_parc( 3 )  /* cText  */,
                  hb_parni( 4 ) /* nColor */,
-                 hb_parni( 5 ) /* nSize  */, 
+                 hb_parni( 5 ) /* nSize  */,
                  hb_parni( 6 ) /* nWidth */ );
 }

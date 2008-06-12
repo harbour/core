@@ -130,6 +130,7 @@ typedef struct
 {
    PHB_ITEM pNewVal;
    PHB_ITEM pResult;
+   PHB_ITEM pNewVal2;
 } HB_GT_INFO, * PHB_GT_INFO;
 
 /* Public interface. These should never change, only be added to. */
@@ -201,7 +202,7 @@ extern HB_EXPORT ERRCODE hb_gtScrollEx( int iTop, int iLeft, int iBottom, int iR
 extern HB_EXPORT ERRCODE hb_gtBoxEx( int iTop, int iLeft, int iBottom, int iRight, BYTE * pbyFrame, BYTE bColor );
 extern HB_EXPORT int     hb_gtGfxPrimitive( int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor );
 extern HB_EXPORT ERRCODE hb_gtGfxText( int iTop, int iLeft, char * szText, int iColor, int iSize, int iWidth );
-       
+
 extern HB_EXPORT BOOL    hb_mouseIsPresent( void );
 extern HB_EXPORT BOOL    hb_mouseGetCursor( void );
 extern HB_EXPORT void    hb_mouseSetCursor( BOOL bVisible );
@@ -251,7 +252,7 @@ extern HB_EXPORT void    hb_gtWApp( HB_GT_WND ** wnd );
 extern HB_EXPORT void    hb_gtWCurrent( HB_GT_WND * wnd );
 extern HB_EXPORT void    hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect );
 extern HB_EXPORT BOOL    hb_gtWVis( HB_GT_WND * wnd, USHORT uiStatus );
-       
+
 extern HB_EXPORT ERRCODE hb_gtSLR( HB_GT_SLR * pSLR ); /* System Level Request */
 extern HB_EXPORT ERRCODE hb_gtModalRead( void * );
 extern HB_EXPORT ERRCODE hb_gtFlushCursor( void );

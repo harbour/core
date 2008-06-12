@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-13 10:56 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+   * harbour/source/rtl/gtwvt/gtwvt.c
+   * harbour/source/rtl/gtfunc.c
+   * harbour/include/hbapigt.h
+     + Added Palette implementation by color index.
+       Hb_GtInfo( HB_GTI_PALETTE, nIndex[, nNewRGB ] ) -> nOldRGB
+   
+   * harbour/tests/wvtext.prg
+     * Updated to demonstrate above functionality.
+
 2008-06-13 09:12 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
    * harbour/include/hbgtinfo.ch

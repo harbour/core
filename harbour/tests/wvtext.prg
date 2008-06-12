@@ -65,10 +65,13 @@ FUNCTION Main()
          hb_GtInfo( HB_GTI_CLOSABLE, !lClose )
 
       CASE nKey == K_F5
-         SetPallete( 1 )
+         SetPalette( 1 )
 
       CASE nKey == K_F6
-         SetPallete( 0 )
+         SetPalette( 0 )
+
+      CASE nKey == K_F7
+         SetPaletteIndex()
 
       ENDCASE
    ENDDO
@@ -118,6 +121,7 @@ STATIC FUNCTION DispScreen()
    DispOutAt( ++nRow, nCol, '< F4 Closable    Toggle >', cColor )
    DispOutAt( ++nRow, nCol, '< F5 Palette L   Repeat >', cColor )
    DispOutAt( ++nRow, nCol, '< F6 Palette D   Repeat >', cColor )
+   DispOutAt( ++nRow, nCol, '< F7 Palette By Index R >', cColor )
    DispOutAt( ++nRow, nCol, '<    Click Other Window >', cColor )
    DispOutAt( ++nRow, nCol, '<    Click X Button     >', cColor )
 
@@ -145,7 +149,7 @@ PROCEDURE HB_GT_WVT_DEFAULT()
 
 //----------------------------------------------------------------------//
 
-Function SetPallete( nMode )
+FUNCTION SetPalette( nMode )
    Local aPalette := Hb_GtInfo( HB_GTI_PALETTE )
 
    static nR := 198
@@ -158,10 +162,19 @@ Function SetPallete( nMode )
 
    // Change 'W' to slightly gray everytime you press F5
    //
-   aPalette[ 7 ] := RGB( nR, nG, nB )
+   aPalette[ 8 ] := RGB( nR, nG, nB )
 
    Hb_GtInfo( HB_GTI_PALETTE, aPalette )
    DispScreen()
 
    RETURN NIL
+//----------------------------------------------------------------------//
+
+FUNCTION SetPaletteIndex()
+
+   Hb_GtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
+   DispScreen()
+
+   RETURN NIL
+
 //----------------------------------------------------------------------//
