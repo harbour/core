@@ -807,10 +807,10 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                RECT   rect = { 0, 0, 0, 0 };
                RECT   colrowRC = { 0, 0, 0, 0 };
 
-               rect.left   = min( s_rcNew.left, s_rcNew.right  );
-               rect.top    = min( s_rcNew.top , s_rcNew.bottom );
-               rect.right  = max( s_rcNew.left, s_rcNew.right  );
-               rect.bottom = max( s_rcNew.top , s_rcNew.bottom );
+               rect.left   = HB_MIN( s_rcNew.left, s_rcNew.right  );
+               rect.top    = HB_MIN( s_rcNew.top , s_rcNew.bottom );
+               rect.right  = HB_MAX( s_rcNew.left, s_rcNew.right  );
+               rect.bottom = HB_MAX( s_rcNew.top , s_rcNew.bottom );
 
                colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
 
@@ -879,10 +879,10 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             s_rcNew.right  = xy.x;
             s_rcNew.bottom = xy.y;
 
-            rect.left   = min( s_rcNew.left, s_rcNew.right  );
-            rect.top    = min( s_rcNew.top , s_rcNew.bottom );
-            rect.right  = max( s_rcNew.left, s_rcNew.right  );
-            rect.bottom = max( s_rcNew.top , s_rcNew.bottom );
+            rect.left   = HB_MIN( s_rcNew.left, s_rcNew.right  );
+            rect.top    = HB_MIN( s_rcNew.top , s_rcNew.bottom );
+            rect.right  = HB_MAX( s_rcNew.left, s_rcNew.right  );
+            rect.bottom = HB_MAX( s_rcNew.top , s_rcNew.bottom );
 
             colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
             rect = hb_gt_wvt_GetXYFromColRowRect( pWVT, colrowRC );
