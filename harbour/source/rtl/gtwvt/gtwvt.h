@@ -157,8 +157,6 @@ typedef struct
    BOOL     bMaximized;                   /* Flag is set when window has been maximized */
    BOOL     bBeingMarked;                 /* Flag to control DOS window like copy operation */
    BOOL     bBeginMarked;
-   POINT    markStaColRow;
-   POINT    markEndColRow;
 
    BOOL     bResizable;
    BOOL     bSelectCopy;

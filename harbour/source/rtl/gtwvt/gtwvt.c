@@ -758,12 +758,11 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          if( pWVT->bBeginMarked )
          {
             pWVT->bBeingMarked = TRUE;
-            pWVT->markStaColRow = colrow;
 
-            s_rcNew.left = xy.x;
-            s_rcNew.top  = xy.y;
-            s_rcNew.right = xy.x;
-            s_rcNew.bottom = xy.y;
+            s_rcNew.left     = xy.x;
+            s_rcNew.top      = xy.y;
+            s_rcNew.right    = xy.x;
+            s_rcNew.bottom   = xy.y;
 
             s_rectOld.left   = 0;
             s_rectOld.top    = 0;
@@ -866,11 +865,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
       {
          if( pWVT->bBeingMarked )
          {
-            POINT a0;
-            POINT a1;
             RECT  rect = { 0, 0, 0, 0 };
             RECT  colrowRC = { 0, 0, 0, 0 };
-            char  buff[ 100 ];
 
             s_rcNew.right  = xy.x;
             s_rcNew.bottom = xy.y;

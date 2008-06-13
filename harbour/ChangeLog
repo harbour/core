@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-13 22:24 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+   * harbour/source/rtl/gtwvt/gtwvt.c
+   * harbour/source/rtl/gtwvt/gtwvt.h
+     * Minor cleanups.
+
 2008-06-13 21:56 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * harbour/source/rtl/gtwvt/gtwvt.c
      ! Fixed selection of left most column and top row.
