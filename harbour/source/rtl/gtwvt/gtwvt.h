@@ -160,7 +160,7 @@ typedef struct
 
    BOOL     bResizable;
    BOOL     bSelectCopy;
-   LPWSTR   wSelectCopy;
+   char *   pszSelectCopy;
    BOOL     bClosable;
 
 } HB_GTWVT, * PHB_GTWVT;

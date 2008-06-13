@@ -153,8 +153,8 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    --s_wvtCount;
    s_wvtWindows[pWVT->iHandle] = NULL;
 
-   if( pWVT->wSelectCopy )
-      HB_TCHAR_FREE( pWVT->wSelectCopy );
+   if( pWVT->pszSelectCopy )
+      hb_xfree( pWVT->pszSelectCopy );
 
    hb_xfree( pWVT );
 }
@@ -229,7 +229,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
    pWVT->bBeingMarked      = FALSE;
    pWVT->bBeginMarked      = FALSE;
 
-   pWVT->wSelectCopy       = HB_TCHAR_CONVTO( "Mark and Copy" );
+   pWVT->pszSelectCopy     = hb_strdup( "Mark and Copy" );
    pWVT->bSelectCopy       = TRUE;
    pWVT->bResizable        = TRUE;
    pWVT->bClosable         = TRUE;
@@ -1642,7 +1642,9 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    /* Create "Mark" prompt in SysMenu to allow console type copy operation */
    {
       HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-      AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->wSelectCopy );
+      LPTSTR buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
+      AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, buffer );
+      HB_TCHAR_FREE( buffer );
    }
 
    /* SUPER GT initialization */
@@ -2205,19 +2207,22 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            pInfo->pResult = hb_itemPutCPtr2( pInfo->pResult, HB_TCHAR_CONVFROM( pWVT->wSelectCopy ) );
+            pInfo->pResult = hb_itemPutC( pInfo->pResult, pWVT->pszSelectCopy );
 
             if( hb_itemGetCLen( pInfo->pNewVal ) )
             {
                HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+               LPTSTR buffer;
                
-               if( pWVT->wSelectCopy )
-                  HB_TCHAR_FREE( pWVT->wSelectCopy );
+               if( pWVT->pszSelectCopy )
+                  hb_xfree( pWVT->pszSelectCopy );
                
-               pWVT->wSelectCopy = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
+               pWVT->pszSelectCopy = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
                pWVT->bSelectCopy = TRUE;
                
-               ModifyMenu( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | MF_STRING | MF_ENABLED, SYS_EV_MARK, pWVT->wSelectCopy );
+               buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
+               ModifyMenu( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | MF_STRING | MF_ENABLED, SYS_EV_MARK, buffer );
+               HB_TCHAR_FREE( buffer );
             }
          }
          else if( pInfo->pNewVal )
