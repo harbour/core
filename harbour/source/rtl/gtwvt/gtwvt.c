@@ -730,6 +730,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
    SHORT keyState;
 
    static RECT s_rectOld = { 0, 0, 0, 0 };
+   static RECT s_rcNew = { 0, 0, 0, 0 };
 
    HB_SYMBOL_UNUSED( wParam );
 
@@ -758,6 +759,11 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          {
             pWVT->bBeingMarked = TRUE;
             pWVT->markStaColRow = colrow;
+
+            s_rcNew.left = xy.x;
+            s_rcNew.top  = xy.y;
+            s_rcNew.right = xy.x;
+            s_rcNew.bottom = xy.y;
 
             s_rectOld.left   = 0;
             s_rectOld.top    = 0;
@@ -791,34 +797,30 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                ULONG  ulSize;
                USHORT irow, icol, j, top, left, bottom, right;
                char * sBuffer;
+               RECT   rect = { 0, 0, 0, 0 };
+               RECT   colrowRC = { 0, 0, 0, 0 };
 
-               left   = pWVT->markStaColRow.x;
-               top    = pWVT->markStaColRow.y;
-               right  = pWVT->markEndColRow.x + 1;
-               bottom = pWVT->markEndColRow.y + 1;
-               /*  Check boundaries and reverse operation */
-               if( right < left )
-               {
-                  USHORT x = left;
-                  left = right;
-                  right = x;
-               }
-               if( bottom < top )
-               {
-                  USHORT x = top;
-                  top = bottom;
-                  bottom = x;
-               }
+               rect.left   = min( s_rcNew.left, s_rcNew.right  );
+               rect.top    = min( s_rcNew.top , s_rcNew.bottom );
+               rect.right  = max( s_rcNew.left, s_rcNew.right  );
+               rect.bottom = max( s_rcNew.top , s_rcNew.bottom );
+
+               colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
+
+               left   = colrowRC.left;
+               top    = colrowRC.top;
+               right  = colrowRC.right;
+               bottom = colrowRC.bottom;
+
                ulSize = ( ( bottom - top + 1 ) * ( right - left + 1 + 2 ) );
-               sBuffer = ( char * ) hb_xgrab( ulSize );
+               sBuffer = ( char * ) hb_xgrab( ulSize + 1 );
 
-               for( j = 0, irow = top; irow < bottom; irow++ )
+               for( j = 0, irow = top; irow <= bottom; irow++ )
                {
-                  for( icol = left; icol < right; icol++ )
+                  for( icol = left; icol <= right; icol++ )
                   {
                      BYTE bColor, bAttr;
                      USHORT usChar;
-
                      if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
                         break;
 
@@ -867,16 +869,19 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             POINT a0;
             POINT a1;
             RECT  rect = { 0, 0, 0, 0 };
+            RECT  colrowRC = { 0, 0, 0, 0 };
+            char  buff[ 100 ];
 
-            pWVT->markEndColRow = colrow;
+            s_rcNew.right  = xy.x;
+            s_rcNew.bottom = xy.y;
 
-            a0 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markStaColRow.x, ( USHORT ) pWVT->markStaColRow.y );
-            a1 = hb_gt_wvt_GetXYFromColRow( pWVT, ( USHORT ) pWVT->markEndColRow.x + 1, ( USHORT ) pWVT->markEndColRow.y + 1 );
+            rect.left   = min( s_rcNew.left, s_rcNew.right  );
+            rect.top    = min( s_rcNew.top , s_rcNew.bottom );
+            rect.right  = max( s_rcNew.left, s_rcNew.right  );
+            rect.bottom = max( s_rcNew.top , s_rcNew.bottom );
 
-            rect.left   = a0.x;
-            rect.top    = a0.y;
-            rect.right  = a1.x;
-            rect.bottom = a1.y;
+            colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
+            rect = hb_gt_wvt_GetXYFromColRowRect( pWVT, colrowRC );
 
             if( rect.left   != s_rectOld.left   ||
                 rect.top    != s_rectOld.top    ||
