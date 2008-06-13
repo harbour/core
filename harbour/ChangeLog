@@ -50,15 +50,15 @@
      * I did a mistake in 1999 by giving the name hb_itemPutCPtr() 
        to the function which would have to be correctly named 
        hb_itemPutCLPtr() (notice the 'L' for 'length').
-       So, now this was renamed to hb_itemPutCLPtr(), and stub was 
+       So, now this was renamed to hb_itemPutCLPtr(), stub was 
        added with the old name, and Harbour code was changed to use 
        the new one. I've also added hb_itemPutCPtr2() as a version 
        not requiring len parameter, the proper name would be hb_itemPutCPtr() 
-       for this, but we cannot use without breakin compatiblity.
+       for this, but we cannot use it without breakin compatiblity.
 
        IMPORTANT: I'd strongly suggest all 3rd parties to update 
        their code to use the call hb_itemPutCLPtr() instead of 
-       hb_itemPutCLPtr().
+       hb_itemPutCPtr().
 
        The final goal would be to have hb_itemPutCPtr() with two 
        parameters instead of the hakish looking hb_itemPutCPtr2().
