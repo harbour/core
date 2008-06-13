@@ -152,6 +152,10 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 {
    --s_wvtCount;
    s_wvtWindows[pWVT->iHandle] = NULL;
+
+   if( pWVT->wSelectCopy )
+      HB_TCHAR_FREE( pWVT->wSelectCopy );
+
    hb_xfree( pWVT );
 }
 
@@ -225,6 +229,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
    pWVT->bBeingMarked      = FALSE;
    pWVT->bBeginMarked      = FALSE;
 
+   pWVT->wSelectCopy       = HB_TCHAR_CONVTO( "Mark and Copy" );
    pWVT->bSelectCopy       = TRUE;
    pWVT->bResizable        = TRUE;
    pWVT->bClosable         = TRUE;
@@ -1637,7 +1642,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    /* Create "Mark" prompt in SysMenu to allow console type copy operation */
    {
       HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-      AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, TEXT( "Mark and Copy" ) );
+      AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->wSelectCopy );
    }
 
    /* SUPER GT initialization */
@@ -2038,7 +2043,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          char * szTitle = NULL;
          if( hb_gt_wvt_GetWindowTitle( pWVT->hWnd, &szTitle ) )
-            pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, szTitle, strlen( szTitle ) );
+            pInfo->pResult = hb_itemPutCPtr2( pInfo->pResult, szTitle );
          else
             pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
@@ -2127,7 +2132,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                         CF_OEMTEXT : CF_TEXT,
                                         &szClipboardData, &ulLen ) )
             {
-               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult,
+               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
                                                 szClipboardData,
                                                 ulLen );
             }
@@ -2197,7 +2202,25 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SELECTCOPY:
       {
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bSelectCopy );
-         if( pInfo->pNewVal )
+
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         {
+            pInfo->pResult = hb_itemPutCPtr2( pInfo->pResult, HB_TCHAR_CONVFROM( pWVT->wSelectCopy ) );
+
+            if( hb_itemGetCLen( pInfo->pNewVal ) )
+            {
+               HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+               
+               if( pWVT->wSelectCopy )
+                  HB_TCHAR_FREE( pWVT->wSelectCopy );
+               
+               pWVT->wSelectCopy = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
+               pWVT->bSelectCopy = TRUE;
+               
+               ModifyMenu( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | MF_STRING | MF_ENABLED, SYS_EV_MARK, pWVT->wSelectCopy );
+            }
+         }
+         else if( pInfo->pNewVal )
          {
             BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bSelectCopy )

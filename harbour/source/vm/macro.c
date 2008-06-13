@@ -792,7 +792,7 @@ void hb_macroTextValue( HB_ITEM_PTR pItem )
       {
          /* replace the old value on the eval stack with the new one
          */
-         hb_itemPutCPtr( pItem, szString, ulLength );
+         hb_itemPutCLPtr( pItem, szString, ulLength );
       }
       /*
        * else

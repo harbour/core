@@ -747,7 +747,7 @@ HB_EXPORT void hb_retc_buffer( char * szText )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retc_buffer(%s)", szText));
 
-   hb_itemPutCPtr( hb_stackReturnItem(), szText, strlen( szText ) );
+   hb_itemPutCPtr2( hb_stackReturnItem(), szText );
 }
 
 #undef hb_retc_const
@@ -771,7 +771,7 @@ HB_EXPORT void  hb_retclen_buffer( char * szText, ULONG ulLen )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_retclen_buffer(%s, %lu)", szText, ulLen));
 
-   hb_itemPutCPtr( hb_stackReturnItem(), szText, ulLen );
+   hb_itemPutCLPtr( hb_stackReturnItem(), szText, ulLen );
 }
 
 /* szDate must have YYYYMMDD format */
@@ -1002,7 +1002,7 @@ HB_EXPORT int hb_storclen_buffer( char * szText, ULONG ulLen, int iParam, ... )
       }
       else if( bByRef || iParam == -1 )
       {
-         hb_itemPutCPtr( pItem, szText, ulLen );
+         hb_itemPutCLPtr( pItem, szText, ulLen );
          return 1;
       }
    }

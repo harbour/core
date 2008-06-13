@@ -1590,7 +1590,7 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          dwLen = GetConsoleTitle( buff, sizeof( buff ) / sizeof( TCHAR ) );
          szTitle = ( char * ) hb_xgrab( dwLen + 1 );
          HB_TCHAR_GETFROM( szTitle, buff, dwLen );
-         pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, szTitle, dwLen );
+         pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult, szTitle, dwLen );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             LPTSTR lpTitle = HB_TCHAR_CONVTO( hb_itemGetCPtr( pInfo->pNewVal ) );
@@ -1651,7 +1651,7 @@ static BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             ULONG ulLen;
             if( hb_gt_w32_getClipboard( CF_OEMTEXT, &szClipboardData, &ulLen ) )
             {
-               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult,
+               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
                                                 szClipboardData,
                                                 ulLen );
             }

@@ -684,7 +684,7 @@ static PHB_ITEM hb_cdxKeyGetItem( LPCDXKEY pKey, PHB_ITEM pItem, LPCDXTAG pTag, 
                pVal[ pKey->len ] = '\0';
                hb_cdpnTranslate( pVal, pTag->pIndex->pArea->cdPage, hb_cdp_page,
                                  pKey->len );
-               pItem = hb_itemPutCPtr( pItem, pVal, pKey->len );
+               pItem = hb_itemPutCLPtr( pItem, pVal, pKey->len );
             }
             else
 #else

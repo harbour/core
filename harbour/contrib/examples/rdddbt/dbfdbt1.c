@@ -324,7 +324,7 @@ static void hb_dbtGetMemo( DBTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
    else
       *pBuffer = '\0';
 
-   hb_itemPutCPtr( pItem, ( char * ) pBuffer, ulSize );
+   hb_itemPutCLPtr( pItem, ( char * ) pBuffer, ulSize );
    hb_itemSetCMemo( pItem );
 }
 

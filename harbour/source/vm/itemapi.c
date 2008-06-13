@@ -346,9 +346,54 @@ HB_EXPORT PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, ULONG
    return pItem;
 }
 
+HB_EXPORT PHB_ITEM hb_itemPutCPtr2( PHB_ITEM pItem, char * szText )
+{
+   ULONG ulLen;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCPtr2(%p, %s)", pItem, szText));
+
+   if( pItem )
+   {
+      if( HB_IS_COMPLEX( pItem ) )
+         hb_itemClear( pItem );
+   }
+   else
+      pItem = hb_itemNew( NULL );
+
+   ulLen = szText ? strlen( szText ) : 0;
+
+   pItem->type = HB_IT_STRING;
+   pItem->item.asString.length = ulLen;
+   if( ulLen == 0 )
+   {
+      pItem->item.asString.allocated = 0;
+      pItem->item.asString.value     = "";
+      hb_xfree( szText );
+   }
+   else if( ulLen == 1 )
+   {
+      pItem->item.asString.allocated = 0;
+      pItem->item.asString.value     = ( char * ) hb_szAscii[ (unsigned char) ( szText[0] ) ];
+      hb_xfree( szText );
+   }
+   else
+   {
+      szText[ ulLen ] = '\0';
+      pItem->item.asString.allocated = ulLen + 1;
+      pItem->item.asString.value     = szText;
+   }
+
+   return pItem;
+}
+
 HB_EXPORT PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCPtr(%p, %s, %lu)", pItem, szText, ulLen));
+   return hb_itemPutCLPtr( pItem, szText, ulLen );
+}
+
+HB_EXPORT PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_itemPutCLPtr(%p, %s, %lu)", pItem, szText, ulLen));
 
    if( pItem )
    {
@@ -2521,7 +2566,7 @@ HB_EXPORT PHB_ITEM hb_itemValToStr( PHB_ITEM pItem )
 
    buffer = hb_itemString( pItem, &ulLen, &bFreeReq );
    if( bFreeReq )
-      pResult = hb_itemPutCPtr( NULL, buffer, ulLen );
+      pResult = hb_itemPutCLPtr( NULL, buffer, ulLen );
    else
       pResult = hb_itemPutCL( NULL, buffer, ulLen );
 

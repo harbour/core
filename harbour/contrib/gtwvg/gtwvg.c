@@ -2371,7 +2371,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       {
          char * szTitle = NULL;
          if( hb_gt_wvt_GetWindowTitle( &szTitle ) )
-            pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, szTitle, strlen( szTitle ) );
+            pInfo->pResult = hb_itemPutCPtr2( pInfo->pResult, szTitle );
          else
             pInfo->pResult = hb_itemPutC( pInfo->pResult, "" );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
@@ -2460,7 +2460,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                         CF_OEMTEXT : CF_TEXT,
                                         &szClipboardData, &ulLen ) )
             {
-               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult,
+               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
                                                 szClipboardData,
                                                 ulLen );
             }

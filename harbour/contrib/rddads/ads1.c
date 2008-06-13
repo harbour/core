@@ -2138,7 +2138,7 @@ static ERRCODE adsGetValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
                pulLen++;                  /* make room for NULL */
                pucBuf = ( UNSIGNED8 * ) hb_xgrab( pulLen );
                AdsGetBinary( pArea->hTable, ADSFIELD( uiIndex ), 0, pucBuf, &pulLen );
-               hb_itemPutCPtr( pItem, ( char * ) pucBuf, pulLen );
+               hb_itemPutCLPtr( pItem, ( char * ) pucBuf, pulLen );
             }
          }
          hb_itemSetCMemo( pItem );

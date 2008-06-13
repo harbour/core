@@ -73,6 +73,9 @@ FUNCTION Main()
       CASE nKey == K_F7
          SetPaletteIndex()
 
+      CASE nKey == K_F8
+         Alert( "Menu text changed. Was: " + hb_GtInfo( HB_GTI_SELECTCOPY, DToS(Date()) + " " + Time() ) )
+
       ENDCASE
    ENDDO
 
@@ -122,6 +125,7 @@ STATIC FUNCTION DispScreen()
    DispOutAt( ++nRow, nCol, '< F5 Palette L   Repeat >', cColor )
    DispOutAt( ++nRow, nCol, '< F6 Palette D   Repeat >', cColor )
    DispOutAt( ++nRow, nCol, '< F7 Palette By Index R >', cColor )
+   DispOutAt( ++nRow, nCol, '< F8 MarkCopy menu text >', cColor )
    DispOutAt( ++nRow, nCol, '<    Click Other Window >', cColor )
    DispOutAt( ++nRow, nCol, '<    Click X Button     >', cColor )
 

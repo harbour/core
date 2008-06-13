@@ -8,6 +8,68 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-13 19:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.h
+   * source/rtl/gtwvt/gtwvt.c
+   * tests/wvtext.prg
+     + Added hb_gtInfo( HB_GTI_SELECTCOPY, <cMenuText> )
+       to set the menu text ("Mark and Copy" on startup).
+       cMenuText mustn't be zero length. Setting the menu text 
+       also enables select&copy automatically. The call 
+       will return the previously set menu text. To get 
+       the menu text without setting a new one, use: 
+       hb_gtInfo( HB_GTI_SELECTCOPY, "" )
+       This is good if someone wants to adapt the menu 
+       text to the OS's or app's language.
+
+   * doc/en/hb_apiit.txt
+   * include/hbapi.h
+   * include/hbapiitm.h
+   * source/rtl/gtwin/gtwin.c
+   * source/rtl/hbgtcore.c
+   * source/rtl/gtgui/gtgui.c
+   * source/rtl/gtwvt/gtwvt.c
+   * source/vm/macro.c
+   * source/vm/debug.c
+   * source/vm/itemapi.c
+   * source/vm/hvm.c
+   * source/vm/arrays.c
+   * source/vm/extend.c
+   * source/rdd/dbfntx/dbfntx1.c
+   * source/rdd/sdf1.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/delim1.c
+   * source/rdd/dbf1.c
+   * source/rdd/dbffpt/dbffpt1.c
+   * contrib/hbw32/w32_ole.c
+   * contrib/gtwvg/gtwvg.c
+   * contrib/rddads/ads1.c
+   * contrib/hbmisc/spd.c
+   * contrib/hbbmcdx/bmdbfcdx1.c
+   * contrib/examples/rdddbt/dbfdbt1.c
+     * I did a mistake in 1999 by giving the name hb_itemPutCPtr() 
+       to the function which would have to be correctly named 
+       hb_itemPutCLPtr() (notice the 'L' for 'length').
+       So, now this was renamed to hb_itemPutCLPtr(), and stub was 
+       added with the old name, and Harbour code was changed to use 
+       the new one. I've also added hb_itemPutCPtr2() as a version 
+       not requiring len parameter, the proper name would be hb_itemPutCPtr() 
+       for this, but we cannot use without breakin compatiblity.
+
+       IMPORTANT: I'd strongly suggest all 3rd parties to update 
+       their code to use the call hb_itemPutCLPtr() instead of 
+       hb_itemPutCLPtr().
+
+       The final goal would be to have hb_itemPutCPtr() with two 
+       parameters instead of the hakish looking hb_itemPutCPtr2().
+
+       I'd welcome any opinions how to reach this goal. I didn't want to 
+       break compatiblity with 3rd parties this time, but IMO we may do 
+       it in 1.1, or even before 1.0.
+
+     ! The above also fixes the (potential) problem when hb_retc_buffer()'s 
+       szText parameter was evaluated twice if HB_API_MACROS was #defined.
+
 2008-06-14 06:18 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * harbour/source/rtl/gtwvt/gtwvt.c
      ! Replaced min()/max() functions with HB_MIN()/HB_MAX() macro.

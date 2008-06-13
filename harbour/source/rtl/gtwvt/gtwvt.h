@@ -118,7 +118,7 @@ typedef struct
    USHORT   ROWS;                         /* number of displayable rows in window */
    USHORT   COLS;                         /* number of displayable columns in window */
 
-   COLORREF COLORS[16];                   /* colors */
+   COLORREF COLORS[ 16 ];                 /* colors */
 
    BOOL     CaretExist;                   /* TRUE if a caret has been created */
    BOOL     CaretHidden;                  /* TRUE if a caret has been hiden */
@@ -160,6 +160,7 @@ typedef struct
 
    BOOL     bResizable;
    BOOL     bSelectCopy;
+   LPWSTR   wSelectCopy;
    BOOL     bClosable;
 
 } HB_GTWVT, * PHB_GTWVT;

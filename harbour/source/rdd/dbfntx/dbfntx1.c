@@ -477,7 +477,7 @@ static PHB_ITEM hb_ntxKeyGetItem( PHB_ITEM pItem, LPKEYINFO pKey,
                pVal[ pTag->KeyLength ] = '\0';
                hb_cdpnTranslate( pVal, pTag->Owner->Owner->cdPage, hb_cdp_page,
                                  pTag->KeyLength );
-               pItem = hb_itemPutCPtr( pItem, pVal, pTag->KeyLength );
+               pItem = hb_itemPutCLPtr( pItem, pVal, pTag->KeyLength );
             }
             else
 #else

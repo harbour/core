@@ -559,7 +559,7 @@ static ERRCODE hb_delimGetValue( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pIte
             memcpy( pVal, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], pField->uiLen );
             pVal[ pField->uiLen ] = '\0';
             hb_cdpnTranslate( pVal, pArea->cdPage, hb_cdp_page, pField->uiLen );
-            hb_itemPutCPtr( pItem, pVal, pField->uiLen );
+            hb_itemPutCLPtr( pItem, pVal, pField->uiLen );
          }
          else
 #endif

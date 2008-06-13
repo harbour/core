@@ -1512,7 +1512,7 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
          {
             ULONG ulSize = ( ULONG ) HB_PCODE_MKUSHORT( &pCode[ w + 2 ] );
             char * szText = hb_compDecodeString( pCode[ w + 1 ], ( char * ) pCode + w + 4, &ulSize );
-            hb_itemPutCPtr( hb_stackAllocItem(), szText, ulSize );
+            hb_itemPutCLPtr( hb_stackAllocItem(), szText, ulSize );
             w += ( 4 + ulSize );
             break;
          }

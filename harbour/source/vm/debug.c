@@ -75,7 +75,7 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
          char * szBuff = ( char * ) hb_xgrab( ulLen + 1 );
 
          snprintf( szBuff, ulLen + 1, "[%s]", pItem->item.asSymbol.value->szName );
-         hb_itemPutCPtr( pArrayItem, szBuff, ulLen );
+         hb_itemPutCLPtr( pArrayItem, szBuff, ulLen );
       }
    }
    else                                         /* Normal types             */

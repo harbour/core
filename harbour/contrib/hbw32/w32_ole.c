@@ -724,12 +724,12 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                case VT_BYREF | VT_BSTR:
                  SysFreeString( *pVariant->n1.n2.n3.pbstrVal );
                  sString = hb_oleWideToAnsi( *( pVariant->n1.n2.n3.pbstrVal ) );
-                 hb_itemPutCPtr( pItem, sString, strlen( sString ) );
+                 hb_itemPutCPtr2( pItem, sString );
                  break;
 
                case VT_BSTR:
                  sString = hb_oleWideToAnsi( pVariant->n1.n2.n3.bstrVal );
-                 hb_itemPutCPtr( pItem, sString, strlen( sString ) );
+                 hb_itemPutCPtr2( pItem, sString );
                  break;
 
                case VT_BYREF | VT_BOOL:
@@ -1048,7 +1048,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
 
          if( sString )
          {
-            hb_itemPutCPtr( pItem, sString, strlen( sString ) );
+            hb_itemPutCPtr2( pItem, sString );
          }
          else
          {
@@ -2120,7 +2120,7 @@ HB_FUNC( TOLEAUTO_ONERROR )
 
          //HB_TRACE(HB_TR_INFO, ("Class: '%s'\n", sOleClassName));
 
-         hb_itemPutCPtr( pOleClassName, sOleClassName, iClassNameLen + 1 + iMsgNameLen );
+         hb_itemPutCLPtr( pOleClassName, sOleClassName, iClassNameLen + 1 + iMsgNameLen );
 
          hb_vmPushSymbol( hb_dynsymSymbol( s_pSym_cClassName ) );
          hb_vmPush( pReturn );

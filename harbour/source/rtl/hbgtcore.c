@@ -1537,7 +1537,7 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             ULONG ulLen;
 
             if( hb_gt_getClipboard( &pszClipData, &ulLen ) )
-               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, pszClipData, ulLen );
+               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult, pszClipData, ulLen );
             else
                pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
          }

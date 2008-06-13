@@ -1456,7 +1456,7 @@ static ERRCODE hb_fptReadRawSMTItem( FPTAREAP pArea, PHB_ITEM pItem )
 #ifndef HB_CDP_SUPPORT_OFF
          hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_cdp_page, ulLen );
 #endif
-         hb_itemPutCPtr( pItem, ( char *) pBuffer, ulLen );
+         hb_itemPutCLPtr( pItem, ( char *) pBuffer, ulLen );
          break;
 
       case SMT_IT_INT:
@@ -2497,7 +2497,7 @@ static ERRCODE hb_fptReadBlobBlock( FPTAREAP pArea, PHB_ITEM pItem,
          hb_xfree( bBuffer );
          return EDBF_READ;
       }
-      hb_itemPutCPtr( pItem, ( char * ) bBuffer, ulSize );
+      hb_itemPutCLPtr( pItem, ( char * ) bBuffer, ulSize );
    }
    return SUCCESS;
 }
@@ -2652,7 +2652,7 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
          hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_cdp_page, ulSize );
 #endif
          pBuffer[ ulSize ] = '\0';
-         hb_itemPutCPtr( pItem, ( char * ) pBuffer, ulSize );
+         hb_itemPutCLPtr( pItem, ( char * ) pBuffer, ulSize );
          hb_itemSetCMemo( pItem );
          pBuffer = NULL;
       }
@@ -2664,7 +2664,7 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
             hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_cdp_page, ulSize );
 #endif
             pBuffer[ ulSize ] = '\0';
-            hb_itemPutCPtr( pItem, ( char * ) pBuffer, ulSize );
+            hb_itemPutCLPtr( pItem, ( char * ) pBuffer, ulSize );
             hb_itemSetCMemo( pItem );
             pBuffer = NULL;
          }
@@ -2744,13 +2744,13 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
                hb_cdpnTranslate( ( char *) pBuffer, pArea->cdPage, hb_cdp_page, ulSize );
 #endif
                pBuffer[ ulSize ] = '\0';
-               hb_itemPutCPtr( pItem, ( char * ) pBuffer, ulSize );
+               hb_itemPutCLPtr( pItem, ( char * ) pBuffer, ulSize );
                hb_itemSetCMemo( pItem );
                pBuffer = NULL;
                break;
             case FPTIT_PICT:
                pBuffer[ ulSize ] = '\0';
-               hb_itemPutCPtr( pItem, ( char * ) pBuffer, ulSize );
+               hb_itemPutCLPtr( pItem, ( char * ) pBuffer, ulSize );
                pBuffer = NULL;
                break;
             default:
@@ -3271,7 +3271,7 @@ static ERRCODE hb_fptGetVarField( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem
                }
                else
                {
-                  hb_itemPutCPtr( pItem, pString, uiType );
+                  hb_itemPutCLPtr( pItem, pString, uiType );
                }
             }
             else
@@ -4204,7 +4204,7 @@ static ERRCODE hb_fptPutValueFile( FPTAREAP pArea, USHORT uiIndex, BYTE * szFile
          else
          {
             pAlloc[ ulSize ] = '\0';
-            pItem = hb_itemPutCPtr( NULL, ( char * ) pAlloc, ulSize );
+            pItem = hb_itemPutCLPtr( NULL, ( char * ) pAlloc, ulSize );
             uiError = hb_fptPutVarField( pArea, uiIndex, pItem );
             hb_itemRelease( pItem );
          }

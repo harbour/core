@@ -747,7 +747,7 @@ HB_EXPORT BOOL hb_arraySetCPtr( PHB_ITEM pArray, ULONG ulIndex, char * szText, U
 
    if( HB_IS_ARRAY( pArray ) && ulIndex > 0 && ulIndex <= pArray->item.asArray.value->ulLen )
    {
-      hb_itemPutCPtr( pArray->item.asArray.value->pItems + ulIndex - 1, szText, ulLen );
+      hb_itemPutCLPtr( pArray->item.asArray.value->pItems + ulIndex - 1, szText, ulLen );
       return TRUE;
    }
    else

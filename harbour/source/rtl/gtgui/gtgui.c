@@ -118,7 +118,7 @@ static BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
             if( hb_gt_w32_getClipboard( CF_TEXT, &szClipboardData, &ulLen ) )
             {
-               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult,
+               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
                                                 szClipboardData, ulLen );
             }
             else

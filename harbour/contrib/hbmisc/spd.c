@@ -69,7 +69,7 @@ static void STAItm( PHB_ITEM pItmPar )
       cRes[i++] = *c++;
    }
    cRes[i++] = '\''; /* cRes[i] = '\0'; */
-   hb_itemPutCPtr( pItmPar, cRes, i );
+   hb_itemPutCLPtr( pItmPar, cRes, i );
 }
 
 static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int IsIndW, int iIndWidth, int IsIndP, int iIndPrec, PHB_ITEM pItmPar )

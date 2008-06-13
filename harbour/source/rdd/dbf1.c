@@ -1868,7 +1868,7 @@ static ERRCODE hb_dbfGetValue( DBFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
             memcpy( pVal, pArea->pRecord + pArea->pFieldOffset[ uiIndex ], pField->uiLen );
             pVal[ pField->uiLen ] = '\0';
             hb_cdpnTranslate( pVal, pArea->cdPage, hb_cdp_page, pField->uiLen );
-            hb_itemPutCPtr( pItem, pVal, pField->uiLen );
+            hb_itemPutCLPtr( pItem, pVal, pField->uiLen );
          }
          else
 #endif
@@ -3526,7 +3526,7 @@ static ERRCODE hb_dbfRecInfo( DBFAREAP pArea, PHB_ITEM pRecID, USHORT uiInfoType
                }
             }
          }
-         hb_itemPutCPtr( pInfo, ( char * ) pResult, ulLength );
+         hb_itemPutCLPtr( pInfo, ( char * ) pResult, ulLength );
          break;
       }
 
@@ -5408,7 +5408,7 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
          }
 
          if( fFree && szTrigger )
-            hb_itemPutCPtr( pItem, szTrigger, strlen( szTrigger ) );
+            hb_itemPutCPtr2( pItem, szTrigger );
          else
             hb_itemPutC( pItem, szTrigger );
 
@@ -5430,8 +5430,7 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
          }
          else if( pData->szPendingTrigger )
          {
-            hb_itemPutCPtr( pItem, pData->szPendingTrigger,
-                            strlen( pData->szPendingTrigger ) );
+            hb_itemPutCPtr2( pItem, pData->szPendingTrigger );
             pData->szPendingTrigger = NULL;
          }
          else
@@ -5451,7 +5450,7 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
          }
 
          if( fFree && szPasswd )
-            hb_itemPutCPtr( pItem, szPasswd, strlen( szPasswd ) );
+            hb_itemPutCPtr2( pItem, szPasswd );
          else
             hb_itemPutC( pItem, szPasswd );
 
@@ -5473,8 +5472,7 @@ static ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnect, P
          }
          else if( pData->szPendingPasswd )
          {
-            hb_itemPutCPtr( pItem, pData->szPendingPasswd,
-                            strlen( pData->szPendingPasswd ) );
+            hb_itemPutCPtr2( pItem, pData->szPendingPasswd );
             pData->szPendingPasswd = NULL;
          }
          else
