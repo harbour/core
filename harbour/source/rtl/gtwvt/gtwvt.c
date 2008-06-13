@@ -569,6 +569,14 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
             SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
             HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
          }
+         else
+         {
+            width  = ( ( USHORT ) ( pWVT->PTEXTSIZE.x * pWVT->COLS ) ) + borderWidth;
+            height = ( ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
+
+            SetWindowPos( pWVT->hWnd, NULL, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE );
+            HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+         }
       }
    }
 }

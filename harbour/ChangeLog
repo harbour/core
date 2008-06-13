@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-13 13:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     ! Fixed window trashing for tall/wide windows where the 
+       content cannot fill the entire window client area.
+     ; There is still a great amount of flickering, while doing 
+       the resize. I wonder if there is any solution for this 
+       besides turning off full-content drag/resize. Anyways 
+       it's only really bad when trying insane sizes, so it's 
+       not a big problem for normal usage.
+
 2008-06-13 22:24 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * harbour/source/rtl/gtwvt/gtwvt.c
    * harbour/source/rtl/gtwvt/gtwvt.h
