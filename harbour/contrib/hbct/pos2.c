@@ -224,7 +224,7 @@ HB_FUNC( POSDEL )
 
       if( sStrLen <= sDelLen )
       {
-         hb_retclen( "", 0 );
+         hb_retc( NULL );
          return;
       }
 

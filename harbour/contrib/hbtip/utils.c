@@ -850,7 +850,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
 
    if ( ! nLen )
    {
-      hb_retc( "" );
+      hb_retc( NULL );
       return;
    }
 

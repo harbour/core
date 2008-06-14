@@ -8,6 +8,50 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-14 09:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbbmcdx/bmdbfcdx1.c
+   * contrib/hbct/ctnet.c
+   * contrib/hbct/pos2.c
+   * contrib/hbgf/gtk/creabutt.c
+   * contrib/hbgf/gtk/creawin.c
+   * contrib/hbgt/bitflags.c
+   * contrib/hbmisc/stringsx.c
+   * contrib/hbtip/encmthd.c
+   * contrib/hbtip/utils.c
+   * contrib/hbw32/w32_ole.c
+   * contrib/hbwhat32/_wincdlg.c
+   * contrib/hbwhat32/_winclpb.c
+   * contrib/hbwhat32/_wintree.c
+   * contrib/rddads/ads1.c
+   * contrib/xhb/xstrdel.c
+   * source/rdd/dbcmd.c
+   * source/rdd/dbf1.c
+   * source/rdd/dbfcdx/dbfcdx1.c
+   * source/rdd/dbffpt/dbffpt1.c
+   * source/rdd/dbfntx/dbfntx1.c
+   * source/rdd/delim1.c
+   * source/rdd/hbsix/sxsem.c
+   * source/rdd/sdf1.c
+   * source/rdd/workarea.c
+   * source/rtl/alert.prg
+   * source/rtl/errorsys.prg
+   * source/rtl/gtcrs/gtcrs.c
+   * source/rtl/gtgui/gtgui.c
+   * source/rtl/gtsln/gtsln.c
+   * source/rtl/gtwin/gtwin.c
+   * source/rtl/gtxwc/gtxwc.c
+   * source/rtl/hbgtcore.c
+   * source/rtl/hbregex.c
+   * source/vm/cmdarg.c
+   * source/vm/dynsym.c
+     ! LUPDATE() buffer overread fixed. (hb_retds(""))
+     % hb_itemPutC*()/hb_retc*()/hb_errInternal() "" parameter -> NULL
+       NOTE: gtwvg not changed.
+     * Few minor cleanups.
+     * Some formatting in ads1.c.
+       (verified to result in no actual codeflow change)
+     ; TODO: hb_retc( NULL ) -> hb_retc_null()
+
 2008-06-13 20:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.h
    * source/rtl/gtwvt/gtwvt.c
@@ -59,7 +103,7 @@
        added with the old name, and Harbour code was changed to use 
        the new one. I've also added hb_itemPutCPtr2() as a version 
        not requiring len parameter, the proper name would be hb_itemPutCPtr() 
-       for this, but we cannot use it without breakin compatiblity.
+       for this, but we cannot use it without breaking compatiblity.
 
        IMPORTANT: I'd strongly suggest all 3rd parties to update 
        their code to use the call hb_itemPutCLPtr() instead of 

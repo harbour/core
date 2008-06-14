@@ -105,5 +105,5 @@ HB_FUNC( ROT13 )
       hb_xfree(szResult);
     }
   else
-    hb_retc("");
+    hb_retc(NULL);
 }

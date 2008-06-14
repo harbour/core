@@ -2736,7 +2736,7 @@ static ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
    {
-      pItem = hb_itemPutC( pItem, "" );
+      pItem = hb_itemPutC( pItem, NULL );
       if( SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem ) != SUCCESS )
       {
          hb_itemRelease( pItem );
@@ -5187,7 +5187,7 @@ static ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIn
    if( hb_set.HB_SET_DEFEXTENSIONS && !pFileName->szExtension )
    {
       /* Add default extension if missing */
-      pFileExt = hb_itemPutC( NULL, "" );
+      pFileExt = hb_itemPutC( NULL, NULL );
       if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == SUCCESS )
          pFileName->szExtension = hb_itemGetCPtr( pFileExt );
    }
@@ -5208,7 +5208,7 @@ static ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIn
           * the path set by hb_spFile()
           */
          pFileName = hb_fsFNameSplit( szFileName );
-         pFileExt = hb_itemPutC( pFileExt, "" );
+         pFileExt = hb_itemPutC( pFileExt, NULL );
          if( SELF_RDDINFO( pRDD, RDDI_MEMOEXT, ulConnect, pFileExt ) == SUCCESS )
          {
             szExt = hb_itemGetCPtr( pFileExt );
@@ -5223,7 +5223,7 @@ static ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIn
           * and try to delete production index also if it exists
           * in the same directory as table file
           */
-         pFileExt = hb_itemPutC( pFileExt, "" );
+         pFileExt = hb_itemPutC( pFileExt, NULL );
          if( SELF_RDDINFO( pRDD, RDDI_ORDSTRUCTEXT, ulConnect, pFileExt ) == SUCCESS )
          {
             szExt = hb_itemGetCPtr( pFileExt );
@@ -5267,7 +5267,7 @@ static ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItem
 
    if( hb_set.HB_SET_DEFEXTENSIONS && !pFileName->szExtension )
    {
-      pFileExt = hb_itemPutC( NULL, "" );
+      pFileExt = hb_itemPutC( NULL, NULL );
       if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == SUCCESS )
          pFileName->szExtension = hb_itemGetCPtr( pFileExt );
    }

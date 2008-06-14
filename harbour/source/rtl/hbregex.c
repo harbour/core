@@ -408,7 +408,7 @@ static BOOL hb_regex( int iRequest )
                            /* matched string */
                            hb_itemPutCL( pMatch, pszString + iSO, iEO - iSO );
                         else
-                           hb_itemPutCL( pMatch, "", 0 );
+                           hb_itemPutC( pMatch, NULL );
                      }
                   }
                   hb_arrayAddForward( pRetArray, pAtxArray );
@@ -445,7 +445,7 @@ static BOOL hb_regex( int iRequest )
                         /* matched string */
                         hb_itemPutCL( pMatch, pszString + iSO, iEO - iSO );
                      else
-                        hb_itemPutCL( pMatch, "", 0 );
+                        hb_itemPutC( pMatch, NULL );
                   }
                   hb_arrayAddForward( pRetArray, pMatch );
                   hb_itemRelease( pMatch );

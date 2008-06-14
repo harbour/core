@@ -441,7 +441,7 @@ static ERRCODE hb_sdfGetValue( SDFAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case HB_FT_MEMO:
-         hb_itemPutC( pItem, "" );
+         hb_itemPutC( pItem, NULL );
          break;
 
       case HB_FT_NONE:
@@ -991,7 +991,7 @@ static ERRCODE hb_sdfCreate( SDFAREAP pArea, LPDBOPENINFO pCreateInfo )
    pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
    if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
    {
-      PHB_ITEM pItem = hb_itemPutC( NULL, "" );
+      PHB_ITEM pItem = hb_itemPutC( NULL, NULL );
       SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pItem );
       pFileName->szExtension = hb_itemGetCPtr( pItem );
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );
@@ -1083,7 +1083,7 @@ static ERRCODE hb_sdfOpen( SDFAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Add default file name extension if necessary */
    if( hb_set.HB_SET_DEFEXTENSIONS && ! pFileName->szExtension )
    {
-      PHB_ITEM pFileExt = hb_itemPutC( NULL, "" );
+      PHB_ITEM pFileExt = hb_itemPutC( NULL, NULL );
       SELF_INFO( ( AREAP ) pArea, DBI_TABLEEXT, pFileExt );
       pFileName->szExtension = hb_itemGetCPtr( pFileExt );
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );

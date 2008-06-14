@@ -319,7 +319,7 @@ HB_FUNC( HB_ARGV )
    {
       int argc = hb_parni( 1 );
 
-      hb_retc( ( argc >= 0 && argc < s_argc ) ? s_argv[ argc ] : "" );
+      hb_retc( ( argc >= 0 && argc < s_argc ) ? s_argv[ argc ] : NULL );
    }
    else
       hb_retc( NULL );

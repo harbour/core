@@ -187,7 +187,7 @@ HB_FUNC( GETCLIPBOARDDATA )
             GlobalUnlock( hMem );
          }
          else
-            hb_retc( "" );
+            hb_retc( NULL );
          break;
 
       case CF_BITMAP:
@@ -220,7 +220,7 @@ HB_FUNC( GETCLIPBOARDFORMATNAME )
    nRet = GetClipboardFormatName( (UINT) hb_parni(1), cName, 127 ) ;
 
    if ( nRet == 0 )
-      hb_retc("") ;
+      hb_retc(NULL) ;
    else
       hb_retclen(cName, nRet) ;
 }
@@ -268,7 +268,7 @@ HB_FUNC( SETCLIPBOARDDATA )
             GlobalUnlock( hMem );
          }
          else
-            hb_retc( "" );
+            hb_retc( NULL );
          break;
 
       case CF_BITMAP:

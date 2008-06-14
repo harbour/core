@@ -237,7 +237,7 @@ HB_FUNC( NETRMTNAME )
                                  ( LPTSTR ) lpRemoteDevice, &cchBuff );
    HB_TCHAR_FREE( lpLocalDevice );
    szRemoteDevice = HB_TCHAR_CONVFROM( lpRemoteDevice );
-   hb_retc( dwResult == NO_ERROR ? szRemoteDevice : "" );
+   hb_retc( dwResult == NO_ERROR ? szRemoteDevice : NULL );
    HB_TCHAR_FREE( szRemoteDevice );
 }
 

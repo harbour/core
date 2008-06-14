@@ -2482,7 +2482,7 @@ static ERRCODE hb_fptReadBlobBlock( FPTAREAP pArea, PHB_ITEM pItem,
       return hb_fptCopyToFile( pArea->hMemoFile, hFile, ulSize );
 
    if( ulSize == 0 )
-      hb_itemPutC( pItem, "" );
+      hb_itemPutC( pItem, NULL );
    else
    {
       BYTE * bBuffer = ( BYTE * ) hb_xalloc( ulSize + 1 );
@@ -2763,7 +2763,7 @@ static ERRCODE hb_fptGetMemo( FPTAREAP pArea, USHORT uiIndex, PHB_ITEM pItem,
    }
    else
    {
-      hb_itemPutC( pItem, "" );
+      hb_itemPutC( pItem, NULL );
       hb_itemSetCMemo( pItem );
    }
    return errCode;
@@ -3850,7 +3850,7 @@ static ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo )
       pFileName = hb_fsFNameSplit( ( char * ) pCreateInfo->abName );
       if( ! pFileName->szExtension )
       {
-         pItem = hb_itemPutC( pItem, "" );
+         pItem = hb_itemPutC( pItem, NULL );
          SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pItem );
          pFileName->szExtension = hb_itemGetCPtr( pItem );
          hb_fsFNameMerge( ( char * ) szFileName, pFileName );
@@ -4039,7 +4039,7 @@ static ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
    pFileName = hb_fsFNameSplit( ( char * ) pOpenInfo->abName );
    if( ! pFileName->szExtension )
    {
-      PHB_ITEM pItem = hb_itemPutC( NULL, "" );
+      PHB_ITEM pItem = hb_itemPutC( NULL, NULL );
       SELF_INFO( ( AREAP ) pArea, DBI_MEMOEXT, pItem );
       pFileName->szExtension = hb_itemGetCPtr( pItem );
       hb_fsFNameMerge( ( char * ) szFileName, pFileName );

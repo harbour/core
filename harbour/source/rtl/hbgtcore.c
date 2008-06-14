@@ -1701,9 +1701,9 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          iRight = iLeft + ulWidth + 3;
 
          if( iClrNorm == 0 )
-            iClrNorm = 79;
+            iClrNorm = 0x4F;
          if( iClrHigh == 0 )
-            iClrHigh = 31;
+            iClrHigh = 0x1F;
          iDspCount = HB_GTSELF_DISPCOUNT( pGT );
          if( iDspCount == 0 )
             HB_GTSELF_DISPBEGIN( pGT );

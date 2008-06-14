@@ -223,7 +223,7 @@ HB_FUNC( _GETOPENFILENAME )
    }
    else
    {
-      hb_retc( "" );
+      hb_retc( NULL );
    }
 }
 
@@ -257,7 +257,7 @@ HB_FUNC( _GETSAVEFILENAME )
      }
     else
      {
-      hb_retc( "" );
+      hb_retc( NULL );
    }
 }
 
@@ -291,7 +291,7 @@ HB_FUNC( SHBROWSEFORFOLDER )
    }
    else
    {
-     hb_retc( "" );
+     hb_retc( NULL );
    }
 
    hb_xfree( lpBuffer);

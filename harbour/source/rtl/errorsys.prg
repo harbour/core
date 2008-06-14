@@ -53,7 +53,7 @@
 #include "common.ch"
 #include "error.ch"
 
-PROCEDURE ErrorSys
+PROCEDURE ErrorSys()
 
    ErrorBlock( { | oError | DefError( oError ) } )
 

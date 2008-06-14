@@ -747,7 +747,7 @@ static ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       case DBI_GETDELIMITER:
       case DBI_SETDELIMITER:
       case DBI_SEPARATOR:
-         hb_itemPutC( pItem, "" );
+         hb_itemPutC( pItem, NULL );
          return FAILURE;
 
       case DBI_GETHEADERSIZE:
@@ -789,7 +789,7 @@ static ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          if( pArea->dbfi.abFilterText )
             hb_itemCopy( pItem, pArea->dbfi.abFilterText );
          else
-            hb_itemPutC( pItem, "" );
+            hb_itemPutC( pItem, NULL );
          break;
 
       case DBI_FOUND:
@@ -853,11 +853,11 @@ static ERRCODE hb_waInfo( AREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_DB_VERSION:
-         hb_itemPutC( pItem, "" );
+         hb_itemPutC( pItem, NULL );
          break;
 
       case DBI_RDD_VERSION:
-         hb_itemPutC( pItem, "" );
+         hb_itemPutC( pItem, NULL );
          break;
 
       default:
@@ -1852,7 +1852,7 @@ static ERRCODE hb_waRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnection,
             }
             else
             {
-               hb_itemPutC( pItem, "" );
+               hb_itemPutC( pItem, NULL );
             }
             hb_set.HB_SET_MFILEEXT = hb_strdup( hb_itemGetCPtr( pItem ) );
             break;
@@ -1871,7 +1871,7 @@ static ERRCODE hb_waRddInfo( LPRDDNODE pRDD, USHORT uiIndex, ULONG ulConnection,
       case RDDI_SEPARATOR:
       case RDDI_TRIGGER:
       case RDDI_PENDINGTRIGGER:
-         hb_itemPutC( pItem, "" );
+         hb_itemPutC( pItem, NULL );
          /* no break - return FAILURE */
 
       default:

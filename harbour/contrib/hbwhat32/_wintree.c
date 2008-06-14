@@ -65,7 +65,7 @@ HB_FUNC( TVGETSELTEXT ) // ( hWnd ) --> cText
       hb_retc( tvi.pszText );
    }
    else
-      hb_retc( "" );
+      hb_retc( NULL );
 }
 
 //-------------------------------------------------------------------------//

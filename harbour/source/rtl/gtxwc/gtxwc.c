@@ -470,7 +470,7 @@ static int s_errorHandler( Display *dpy, XErrorEvent *e )
                   errorText + strlen( errorText ),
                   sizeof(errorText) - strlen( errorText ) );
    s_fNoXServer = TRUE;
-   hb_errInternal( 10001, errorText, "", "" );
+   hb_errInternal( 10001, errorText, NULL, NULL );
    return 1;
 }
 
@@ -3041,7 +3041,7 @@ static BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, BOOL fExit )
          hb_errRT_TERM( EG_CREATE, 10001, NULL, "Can't connect to X server", 0, 0 );
          */
          s_fNoXServer = TRUE;
-         hb_errInternal( 10001, "Can't connect to X server.", "", "" );
+         hb_errInternal( 10001, "Can't connect to X server.", NULL, NULL );
       }
       return FALSE;
    }
@@ -3133,7 +3133,7 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
          return;
          */
          s_fNoXServer = TRUE;
-         hb_errInternal( 10001, "Can't load 'fixed' font", "", "" );
+         hb_errInternal( 10001, "Can't load 'fixed' font", NULL, NULL );
       }
    }
 

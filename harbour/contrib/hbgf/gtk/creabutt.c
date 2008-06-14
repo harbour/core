@@ -109,10 +109,10 @@ HB_FUNC( HB_GTKBUTTONGETTEXT )
         if( Label )
             hb_retc( ( char * )Label->label );
         else
-            hb_retc( "" );
+            hb_retc( NULL );
     }
     else
-        hb_retc( "" );
+        hb_retc( NULL );
 }
 
 /* ********************************************************************* */

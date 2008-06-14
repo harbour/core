@@ -132,7 +132,7 @@ FUNCTION Alert( xMessage, aOptions, cColorNorm, nDelay )
    NEXT
 
    IF Len( aOptionsOK ) == 0
-      aOptionsOK := { 'Ok' }
+      aOptionsOK := { "Ok" }
 #ifdef HB_C52_STRICT
    /* NOTE: Clipper allows only four options [vszakats] */
    ELSEIF Len( aOptionsOK ) > 4

@@ -566,14 +566,12 @@ HB_FUNC( __DYNSN2SYM )
    char * szName = hb_parc( 1 );
 
    if( szName )
-   {
       hb_itemPutSymbol( hb_stackReturnItem(), hb_dynsymGet( szName )->pSymbol );
-   }
 }
 
 HB_FUNC( __DYNSP2NAME )
 {
    PHB_DYNS pDynSym = ( PHB_DYNS ) hb_parptr( 1 );
 
-   hb_retc( ( pDynSym != NULL ? pDynSym->pSymbol->szName : "" ) );
+   hb_retc( pDynSym != NULL ? pDynSym->pSymbol->szName : NULL );
 }
