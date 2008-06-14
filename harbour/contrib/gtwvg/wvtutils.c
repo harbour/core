@@ -527,6 +527,20 @@ HB_FUNC( WVT_MAXIMIZE )
 
 //-------------------------------------------------------------------//
 
+HB_FUNC( WVT_HIDE )
+{
+   ShowWindow( _s->hWnd, SW_HIDE );
+}
+
+//-------------------------------------------------------------------//
+
+HB_FUNC( WVT_SHOW )
+{
+   ShowWindow( _s->hWnd, SW_SHOWNORMAL );
+}
+
+//-------------------------------------------------------------------//
+
 HB_FUNC( WVT_SETMOUSEPOS )
 {
    POINT xy = { 0,0 };
@@ -640,81 +654,30 @@ HB_FUNC( WVT_SETPOINTER )
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( WVT_SETFONT )
-{
-   hb_retl( hb_wvt_gtSetFont(
-            ISNIL( 1 ) ? _s->fontFace   : hb_parc( 1 ),
-            ISNIL( 2 ) ? _s->fontHeight : hb_parni( 2 ),
-            ISNIL( 3 ) ? _s->fontWidth  : hb_parni( 3 ),
-            ISNIL( 4 ) ? _s->fontWeight : hb_parni( 4 ),
-            ISNIL( 5 ) ? _s->fontQuality: hb_parni( 5 )
-           ) ) ;
-}
-
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_SETICON )
-{
-   if ( ISNUM( 1 ) || ISCHAR( 2 ) )
-   {
-      hb_retnl( hb_wvt_gtSetWindowIcon( hb_parni( 1 ), hb_parc( 2 ) ) ) ;
-   }
-   else
-   {
-      hb_retnl( hb_wvt_gtSetWindowIconFromFile( hb_parc( 1 ) ) ) ;
-   }
-}
-
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_SETTITLE )
-{
-   hb_wvt_gtSetWindowTitle( hb_parc( 1 ) ) ;
-   return ;
-}
-
-//-------------------------------------------------------------------//
-
 HB_FUNC( WVT_SETWINDOWPOS )
 {
-   hb_wvt_gtSetWindowPos( hb_parni( 1 ), hb_parni( 2 ) );
-}
+   RECT rect = { 0,0,0,0 };
 
-//-------------------------------------------------------------------//
+   GetWindowRect( _s->hWnd, &rect );
 
-HB_FUNC( WVT_GETWINDOWHANDLE )
-{
-   hb_retnl( ( LONG ) hb_wvt_gtGetWindowHandle() ) ;
-}
-
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_SETCODEPAGE )
-{
-   hb_retni( hb_wvt_gtSetCodePage( hb_parni( 1 ) ) );
-}
-
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_CENTERWINDOW )
-{
-   hb_retl( hb_wvt_gtSetCentreWindow(
-               ISNIL( 1 ) ? TRUE  : hb_parl( 1 ),
-               ISNIL( 2 ) ? FALSE : hb_parl( 2 ) ) );
+   hb_retl( SetWindowPos( _s->hWnd, NULL,
+                          hb_parni( 1 ),
+                          hb_parni( 2 ),
+                          rect.right - rect.left + 1,
+                          rect.bottom - rect.top + 1,
+                          SWP_NOZORDER ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_SETMOUSEMOVE )
 {
-   if ( ISNIL( 1 ) )
-   {
-      hb_retl( _s->MouseMove );
-   }
-   else
-   {
-      hb_retl( hb_wvt_gtSetMouseMove( hb_parl( 1 ) ) );
-   }
+   BOOL bMouseMove = _s->MouseMove;
+
+   if( ISLOG( 1 ) )
+     _s->MouseMove = hb_parl( 1 );
+
+   hb_retl( bMouseMove );
 }
 
 //-------------------------------------------------------------------//
@@ -750,34 +713,6 @@ HB_FUNC( WVT_GETFONTINFO )
 }
 
 //-------------------------------------------------------------------//
-
-HB_FUNC( WVT_GETPALETTE )
-{
-   PHB_ITEM info = hb_itemArrayNew( 16 );
-   int      i;
-
-   for ( i = 0; i < 16; i++ )
-   {
-      hb_arraySetNL( info, i+1, hb_wvt_gtGetColorData( i ) );
-   }
-   hb_itemReturnRelease( info );
-}
-
-//-------------------------------------------------------------------//
-//
-//    Wvt_SetPalette( aRGBValues ) -> An array of 16 elements with RGB values
-//
-HB_FUNC( WVT_SETPALETTE )
-{
-   int       i;
-
-   for ( i = 0; i < 16; i++ )
-   {
-      hb_wvt_gtSetColorData( i, hb_parnl( 1, i+1 ) );
-   }
-}
-
-//-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 //
@@ -789,9 +724,28 @@ HB_FUNC( WVT_SETPALETTE )
 
 HB_FUNC( WVT_SETMENU )
 {
+   RECT wi = { 0, 0, 0, 0 };
+   RECT ci = { 0, 0, 0, 0 };
+   RECT rc = { 0, 0, 0, 0 };
+   USHORT height, width;
+
    SetMenu( _s->hWnd, ( HMENU ) hb_parni( 1 ) ) ;
 
-   hb_wvt_gtResetWindow();
+   GetWindowRect( _s->hWnd, &wi );
+   GetClientRect( _s->hWnd, &ci );
+
+   height = ( USHORT ) ( _s->PTEXTSIZE.y * _s->ROWS );
+   width  = ( USHORT ) ( _s->PTEXTSIZE.x * _s->COLS );
+
+   width  += ( USHORT ) ( wi.right - wi.left - ci.right );
+   height += ( USHORT ) ( wi.bottom - wi.top - ci.bottom );
+
+   if( _s->CentreWindow && SystemParametersInfo( SPI_GETWORKAREA, 0, &rc, 0 ) )
+   {
+      wi.left = rc.left + ( ( rc.right - rc.left - width  ) / 2 );
+      wi.top  = rc.top  + ( ( rc.bottom - rc.top - height ) / 2 );
+   }
+   SetWindowPos( _s->hWnd, NULL, wi.left, wi.top, width, height, SWP_NOZORDER );
 }
 
 //-------------------------------------------------------------------//
@@ -884,28 +838,30 @@ HB_FUNC( WVT_ENABLEMENUITEM )
 
 HB_FUNC( WVT_GETLASTMENUEVENT )
 {
-  hb_retni( hb_wvt_gtGetLastMenuEvent() ) ;
+  hb_retni( _s->LastMenuEvent );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_SETLASTMENUEVENT )
 {
-  hb_retni( hb_wvt_gtSetLastMenuEvent( hb_parni(1) ) );
+  int iEvent = _s->LastMenuEvent;
+  if ( ISNUM( 1 ) )
+      _s->LastMenuEvent = hb_parni( 1 );
+
+  hb_retni( iEvent );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_SETMENUKEYEVENT )
 {
-  int iEvent = 0;
+  int iOldEvent = _s->MenuKeyEvent;
 
-  if ( ISNUM( 1 ) )
-  {
-    iEvent = hb_parnl( 1 ) ;
-  }
+  if( ISNUM( 1 ) )
+     _s->MenuKeyEvent = hb_parni( 1 );
 
-  hb_retni( hb_wvt_gtSetMenuKeyEvent( iEvent ) ) ;
+  hb_retni( iOldEvent ) ;
 }
 
 //-------------------------------------------------------------------//
@@ -917,148 +873,14 @@ HB_FUNC( WVT_DRAWMENUBAR )
 
 //-------------------------------------------------------------------//
 
-HB_FUNC( WVT_GETSCREENWIDTH )
+HB_FUNC( WVT_ENABLESHORTCUTS )
 {
-  hb_retni( GetSystemMetrics( SM_CXSCREEN ) );
-}
+   BOOL bWas = _s->EnableShortCuts;
 
-//-------------------------------------------------------------------//
+   if( ISLOG( 1 ) )
+      _s->EnableShortCuts = hb_parl( 1 );
 
-HB_FUNC( WVT_GETSCREENHEIGHT )
-{
-  hb_retni( GetSystemMetrics( SM_CYSCREEN ) );
-}
-
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_SETWINDOWCENTRE )
-{
-  hb_wvt_gtSetCentreWindow( hb_parl( 1 ), hb_parl( 2 ) ) ;
-}
-
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_SETALTF4CLOSE )
-{
-  hb_retl( hb_wvt_gtSetAltF4Close( hb_parl( 1 ) ) );
-}
-
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_PROCESSMESSAGES )
-{
-  hb_wvt_gtDoProcessMessages();
-
-  hb_retl( 1 );
-}
-
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_GETTITLE )
-{
-   TCHAR buffer[WVT_MAX_TITLE_SIZE];
-   int iResult;
-
-   iResult = GetWindowText( _s->hWnd, buffer, WVT_MAX_TITLE_SIZE );
-   if( iResult > 0 )
-   {
-      hb_retc( HB_TCHAR_CONVFROM( buffer ) );
-   }
-   else
-   {
-      hb_retc( "" );
-   }
-}
-
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//   Author.....: Francesco Saverio Giudice <info@fsgiudice.com>
-//   Syntax.....: Wvt_GetRGBColor( nColor ) --> nRGBColor
-//   Description: Return the RGB values passing the color positional value
-//                0=Black, 1=Blue, etc
-//                as returned from hb_ColorToN()
-//   Creat. Date: 2004/01/15
-//   Last Modif.: 2004/01/15
-//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_GETRGBCOLOR )
-{
-   int iColor;
-   if ( !ISNIL( 1 ) )
-   {
-      iColor = hb_parni( 1 );
-      if ( iColor >= 0 && iColor < 16 )  /* Test bound error */
-      {
-         hb_retnl( hb_wvt_gtGetColorData( iColor ) );
-      }
-   }
-}
-
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//
-//                       Giancarlo Niccolai
-//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_GETCLIPBOARD )
-{
-   char * szClipboardData;
-   ULONG ulLen;
-
-   if( hb_gt_w32_getClipboard( _s->CodePage == OEM_CHARSET ?
-                               CF_OEMTEXT : CF_TEXT,
-                               &szClipboardData, &ulLen ) )
-   {
-      hb_retclen_buffer( szClipboardData, ulLen );
-   }
-}
-
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_SETCLIPBOARD )
-{
-   if( ISCHAR( 1 ) )
-      hb_retl( hb_gt_w32_setClipboard( _s->CodePage == OEM_CHARSET ?
-                                       CF_OEMTEXT : CF_TEXT,
-                                       hb_parc( 1 ), hb_parclen( 1 ) ) );
-   else
-      hb_retl( FALSE );
-}
-
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_PASTEFROMCLIPBOARD )
-{
-   char * szClipboardData;
-   ULONG ulLen, ul;
-
-   if( hb_gt_w32_getClipboard( _s->CodePage == OEM_CHARSET ?
-                               CF_OEMTEXT : CF_TEXT,
-                               &szClipboardData, &ulLen ) )
-   {
-      for( ul = 0; ul < ulLen; ul++ )
-      {
-         hb_wvt_gtAddCharToInputQueue( ( UCHAR ) szClipboardData[ ul ] );
-      }
-   }
-}
-
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-
-HB_FUNC( WVT_KEYBOARD )
-{
-   hb_wvt_gtAddCharToInputQueue( hb_parnl( 1 ) );
+   hb_retl( bWas );
 }
 
 //-------------------------------------------------------------------//
@@ -2389,5 +2211,17 @@ HB_FUNC( WIN_CHOOSECOLOR )
 
 //-------------------------------------------------------------------//
 
+HB_FUNC( WIN_FINDWINDOW )
+{
+   HWND hwnd = FindWindow( NULL, hb_parc( 1 ) );
+   if ( hwnd )
+   {
+      hb_retnl( (LONG) hwnd );
+   }
+   else
+   {
+      hb_retnl( -1 );
+   }
+}
 
-
+//----------------------------------------------------------------------//

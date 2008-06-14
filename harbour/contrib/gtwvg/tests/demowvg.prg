@@ -120,7 +120,7 @@ static paint_:= { { '', {} } }
 //-------------------------------------------------------------------//
 PROCEDURE Main( cDSN )
 
-   LOCAL aLastPaint, clr, scr, bWhen, bValid
+   LOCAL aLastPaint, clr, scr, bWhen, bValid, a_:={}
    LOCAL dDate   := ctod( '' )
    LOCAL cName   := Pad( 'Pritpal Bedi', 35 )
    LOCAL cAdd1   := Pad( '60, New Professor Colony', 35 )
@@ -153,6 +153,7 @@ PROCEDURE Main( cDSN )
    Popups( 1 )
 
    Wvt_SetFont( 'Courier New', 18, 0, 0 )
+
    Wvt_SetMouseMove( .t. )
    Wvt_ShowWindow( SW_RESTORE )
 
@@ -250,7 +251,7 @@ PROCEDURE Main( cDSN )
    SetColor( 'N/W,N/GR*,,,N/W*' )
 
    Wvt_SetMenu( oMenu:hMenu )
-   Wvt_DrawMenuBar()
+
    SetKey( Wvt_SetMenuKeyEvent(), { || ActivateMenu( oMenu ) } )
 
    @  6, nColGet SAY '< Date >'
@@ -423,7 +424,7 @@ FUNCTION Wvt_SetFocus( hWnd )
    LOCAL nRow := row()
    LOCAL nCol := col()
 
-   DispOutAt( 1,3, 'Focus Gained!', 'r/w' )
+   DispOutAt( 1,3, 'Focus Gained!', 'R/W' )
 
    DevPos( nRow, nCol )
 
@@ -438,7 +439,7 @@ FUNCTION Wvt_KillFocus( hWnd )
    LOCAL nRow := row()
    LOCAL nCol := col()
 
-   DispOutAt( 1,3, 'Focus Lost...', 'B/w' )
+   DispOutAt( 1,3, 'Focus Lost...', 'B/W' )
 
    DevPos( nRow, nCol )
 
@@ -684,7 +685,7 @@ FUNCTION WvtMyBrowse()
    aAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight ) } )
    aAdd( aBlocks, {|| Wvt_DrawBoxRecessed( nTop+3, nLeft+2, nBottom-1, nRight-2 ) } )
    aAdd( aBlocks, {|| Wvt_DrawGridHorz( oBrowse:nTop+3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
-   //aAdd( aBlocks, {|| Wvt_DrawGridVert( oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, len( oBrowse:aColumnsSep ) ) } )
+   aAdd( aBlocks, {|| Wvt_DrawGridVert( oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, len( oBrowse:aColumnsSep ) ) } )
 
    aLastPaint := WvtSetBlocks( aBlocks )
 
@@ -2098,3 +2099,6 @@ FUNCTION DrawSlide( hDlg, nSlide )
    Win_ReleaseDC( hDlg,hDC )
 
    Return nil
+
+//----------------------------------------------------------------------//
+

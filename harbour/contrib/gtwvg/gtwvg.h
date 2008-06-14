@@ -98,42 +98,43 @@
 #include "hbgfxdef.ch"
 
 
-#define WVT_CHAR_QUEUE_SIZE   128
-#define WVT_MAX_TITLE_SIZE    128
-#define WVT_MAX_ROWS          256
-#define WVT_MAX_COLS          256
+#define WVT_CHAR_QUEUE_SIZE         128
+#define WVT_MAX_TITLE_SIZE          128
+#define WVT_MAX_ROWS                256
+#define WVT_MAX_COLS                256
 #if defined( HB_WINCE )
 #  define WVT_DEFAULT_ROWS          15
 #  define WVT_DEFAULT_COLS          50
 #  define WVT_DEFAULT_FONT_HEIGHT   12
-#  define WVT_DEFAULT_FONT_WIDTH     8
+#  define WVT_DEFAULT_FONT_WIDTH    8
 #else
 #  define WVT_DEFAULT_ROWS          25
 #  define WVT_DEFAULT_COLS          80
 #  define WVT_DEFAULT_FONT_HEIGHT   16
-#  define WVT_DEFAULT_FONT_WIDTH     8
+#  define WVT_DEFAULT_FONT_WIDTH    8
 #endif
 #define WVT_DEFAULT_FONT_NAME    "Terminal"
 
-#define BLACK          RGB( 0x0 ,0x0 ,0x0  )
-#define BLUE           RGB( 0x0 ,0x0 ,0x85 )
-#define GREEN          RGB( 0x0 ,0x85,0x0  )
-#define CYAN           RGB( 0x0 ,0x85,0x85 )
-#define RED            RGB( 0x85,0x0 ,0x0  )
-#define MAGENTA        RGB( 0x85,0x0 ,0x85 )
-#define BROWN          RGB( 0x85,0x85,0x0  )
-#define WHITE          RGB( 0xC6,0xC6,0xC6 )
-#define LIGHT_GRAY     RGB( 0x60,0x60,0x60 )
-#define BRIGHT_BLUE    RGB( 0x00,0x00,0xFF )
-#define BRIGHT_GREEN   RGB( 0x60,0xFF,0x60 )
-#define BRIGHT_CYAN    RGB( 0x60,0xFF,0xFF )
-#define BRIGHT_RED     RGB( 0xF8,0x00,0x26 )
-#define BRIGHT_MAGENTA RGB( 0xFF,0x60,0xFF )
-#define YELLOW         RGB( 0xFF,0xFF,0x00 )
-#define BRIGHT_WHITE   RGB( 0xFF,0xFF,0xFF )
+#define BLACK                       RGB( 0x0 ,0x0 ,0x0  )
+#define BLUE                        RGB( 0x0 ,0x0 ,0x85 )
+#define GREEN                       RGB( 0x0 ,0x85,0x0  )
+#define CYAN                        RGB( 0x0 ,0x85,0x85 )
+#define RED                         RGB( 0x85,0x0 ,0x0  )
+#define MAGENTA                     RGB( 0x85,0x0 ,0x85 )
+#define BROWN                       RGB( 0x85,0x85,0x0  )
+#define WHITE                       RGB( 0xC6,0xC6,0xC6 )
+#define LIGHT_GRAY                  RGB( 0x60,0x60,0x60 )
+#define BRIGHT_BLUE                 RGB( 0x00,0x00,0xFF )
+#define BRIGHT_GREEN                RGB( 0x60,0xFF,0x60 )
+#define BRIGHT_CYAN                 RGB( 0x60,0xFF,0xFF )
+#define BRIGHT_RED                  RGB( 0xF8,0x00,0x26 )
+#define BRIGHT_MAGENTA              RGB( 0xFF,0x60,0xFF )
+#define YELLOW                      RGB( 0xFF,0xFF,0x00 )
+#define BRIGHT_WHITE                RGB( 0xFF,0xFF,0xFF )
 
 #define WM_MY_UPDATE_CARET ( WM_USER + 0x0101 )
 
+#define SYS_EV_MARK    1000
 //-------------------------------------------------------------------//
 #define WVT_PICTURES_MAX            50
 #define WVT_FONTS_MAX               50
@@ -145,7 +146,7 @@
 #if defined(__DMC__)
    #if (_WIN32_IE >= 0x0300)
       #if !defined(ICC_BAR_CLASSES)
-         #define ICC_BAR_CLASSES      0x00000004
+         #define ICC_BAR_CLASSES    0x00000004
       #endif
       #if !defined(COLOR16)
          typedef USHORT COLOR16;
@@ -244,6 +245,16 @@ typedef struct global_data
 
    BOOL     IgnoreWM_SYSCHAR;
 
+   BOOL      bMaximized;                   /* Flag is set when window has been maximized */
+   BOOL      bBeingMarked;                 /* Flag to control DOS window like copy operation */
+   BOOL      bBeginMarked;
+
+   char *    pszSelectCopy;
+   BOOL      bResizable;
+   BOOL      bSelectCopy;
+   BOOL      bClosable;
+
+   BOOL      bResizing;
 
 
    /* *** GUI part *** */
@@ -307,48 +318,6 @@ typedef struct global_data
    BOOL      bKillFocus;
 
 } GLOBAL_DATA, * LPGLOBAL_DATA;
-
-//-------------------------------------------------------------------//
-
-POINT  HB_EXPORT hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
-BOOL   HB_EXPORT hb_wvt_gtSetMenuKeyEvent( int iMenuKeyEvent );
-BOOL   HB_EXPORT hb_wvt_gtSetCentreWindow( BOOL bCentre, BOOL bPaint );
-void   HB_EXPORT hb_wvt_gtResetWindow( void );
-BOOL   HB_EXPORT hb_wvt_gtSetCodePage( int iCodePage );
-int    HB_EXPORT hb_wvt_gtGetLastMenuEvent( void );
-int    HB_EXPORT hb_wvt_gtSetLastMenuEvent( int iLastMenuEvent );
-void   HB_EXPORT hb_wvt_gtSetWindowTitle( char * title );
-DWORD  HB_EXPORT hb_wvt_gtSetWindowIcon( int icon, char *lpicon );
-DWORD  HB_EXPORT hb_wvt_gtSetWindowIconFromFile( char *icon );
-int    HB_EXPORT hb_wvt_gtGetWindowTitle( char *title, int length );
-BOOL   HB_EXPORT hb_wvt_gtSetFont( char *fontFace, int height, int width, int Bold, int Quality );
-//void   HB_EXPORT hb_wvt_gtSetCloseEvent( int iEvent );
-//void   HB_EXPORT hb_wvt_gtSetShutdownEvent( int iEvent );
-HWND   HB_EXPORT hb_wvt_gtGetWindowHandle( void );
-void   HB_EXPORT hb_wvt_gtPostMessage( int message );
-BOOL   HB_EXPORT hb_wvt_gtSetWindowPos( int left, int top );
-BOOL   HB_EXPORT hb_wvt_gtSetAltF4Close( BOOL bCanClose );
-void   HB_EXPORT hb_wvt_gtDoProcessMessages( void );
-BOOL   HB_EXPORT hb_wvt_gtSetMouseMove( BOOL bHandleEvent );
-BOOL   HB_EXPORT hb_wvt_gtEnableShortCuts( BOOL bEnable );
-void   HB_EXPORT hb_wvt_gtAddCharToInputQueue( int data );
-HB_EXPORT IPicture * hb_wvt_gtLoadPicture( char * image );
-HB_EXPORT IPicture * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection );
-BOOL   HB_EXPORT hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture );
-BOOL   HB_EXPORT hb_wvt_gtDestroyPicture( IPicture * iPicture );
-COLORREF HB_EXPORT hb_wvt_gtGetColorData( int iIndex );
-BOOL   HB_EXPORT hb_wvt_gtSetColorData( int iIndex, COLORREF ulCr );
-BOOL   HB_EXPORT hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image );
-
-LPWORD HB_EXPORT lpwAlign( LPWORD lpIn );
-int    HB_EXPORT nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn );
-BOOL   HB_EXPORT CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
-BOOL   HB_EXPORT CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
-
-GLOBAL_DATA HB_EXPORT * hb_wvt_gtGetGlobalData( void );
-
-void   HB_EXPORT hb_wvt_wvtCore( void );
-void   HB_EXPORT hb_wvt_wvtUtils( void );
 
 //-------------------------------------------------------------------//
 
@@ -431,5 +400,39 @@ typedef struct _tag_HB_GT_COLDEF
 #ifndef WM_MOUSEWHEEL
 #  define WM_MOUSEWHEEL 0x020A
 #endif
+
+//----------------------------------------------------------------------//
+
+POINT    HB_EXPORT hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
+IPicture HB_EXPORT  * hb_wvt_gtLoadPicture( char * image );
+IPicture HB_EXPORT  * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection );
+BOOL     HB_EXPORT hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture );
+BOOL     HB_EXPORT hb_wvt_gtDestroyPicture( IPicture * iPicture );
+BOOL     HB_EXPORT hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image );
+
+LPWORD   HB_EXPORT lpwAlign( LPWORD lpIn );
+int      HB_EXPORT nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn );
+BOOL     HB_EXPORT CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+BOOL     HB_EXPORT CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+
+void     HB_EXPORT hb_wvt_wvtCore( void );
+void     HB_EXPORT hb_wvt_wvtUtils( void );
+
+GLOBAL_DATA HB_EXPORT * hb_wvt_gtGetGlobalData( void );
+
+//-------------------------------------------------------------------//
+//
+//  Candidates for inculsion in hbgtinfo.ch
+//
+#define HB_GTI_SETFONT             71
+#define HB_GTI_USER              1000
+
+#define HB_GTU_WINDOWHANDLE         1
+#define HB_GTU_CENTERWINDOW         2
+#define HB_GTU_PROCESSMESSAGES      3
+#define HB_GTU_KEYBOARD             4
+#define HB_GTU_RESETWINDOW          5
+
+//----------------------------------------------------------------------//
 
 #endif /* HB_WVT_H_ */

@@ -556,5 +556,182 @@ FUNCTION WVT_GetSaveFileName( hWnd, cFile, cTitle, aFilter, nFlags, cIniDir, cDe
 
    Return ( cFile )
 
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//
+//                      C Functions to PRG Ports
+//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+//----------------------------------------------------------------------//
+
+#include 'hbgtinfo.ch'
+
+//  Eventually the defines below should go into hbgtinfo.ch
+//
+#define HB_GTI_SETFONT             71
+#define HB_GTI_USER              1000
+
+#define HB_GTU_WINDOWHANDLE         1
+#define HB_GTU_CENTERWINDOW         2
+#define HB_GTU_PROCESSMESSAGES      3
+#define HB_GTU_KEYBOARD             4
+#define HB_GTU_RESETWINDOW          5
+
+//----------------------------------------------------------------------//
+
+FUNCTION Wvt_SetTitle( cTitle )
+
+   RETURN Hb_GtInfo( HB_GTI_WINTITLE, cTitle )
+
+//----------------------------------------------------------------------//
+
+FUNCTION Wvt_GetTitle()
+
+   RETURN Hb_GtInfo( HB_GTI_WINTITLE )
+
+//----------------------------------------------------------------------//
+
+FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
+
+   if     valtype( ncIconRes ) == 'N'
+      Hb_GtInfo( HB_GTI_ICONRES, ncIconRes )
+
+   elseif valtype( cIconName ) == 'C'
+      Hb_GtInfo( HB_GTI_ICONRES, cIconName )
+
+   elseif valtype( ncIconRes ) == 'C'
+      Hb_GtInfo( HB_GTI_ICONFILE, ncIconRes )
+
+   endif
+
+   RETURN NIL
+
+//----------------------------------------------------------------------//
+
+FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
+
+   DEFAULT cFontName TO Hb_GtInfo( HB_GTI_FONTNAME    )
+   DEFAULT nWidth    TO Hb_GtInfo( HB_GTI_FONTWIDTH   )
+   DEFAULT nWeight   TO Hb_GtInfo( HB_GTI_FONTWEIGHT  )
+   DEFAULT nQuality  TO Hb_GtInfo( HB_GTI_FONTQUALITY )
+   DEFAULT nSize     TO Hb_GtInfo( HB_GTI_FONTSIZE    )
+
+   RETURN Hb_GtInfo( HB_GTI_SETFONT, { cFontName, nSize, nWidth, nWeight, nQuality } )
+
+//----------------------------------------------------------------------//
+
+FUNCTION Wvt_SetCodePage( nCodePage )
+
+   RETURN Hb_GtInfo( HB_GTI_CODEPAGE, nCodePage )
+
+//----------------------------------------------------------------------//
+
+FUNCTION Wvt_GetPalette()
+
+   RETURN Hb_GtInfo( HB_GTI_PALETTE )
+
+//----------------------------------------------------------------------//
+
+FUNCTION Wvt_SetPalette( aRGB )
+
+   RETURN Hb_GtInfo( HB_GTI_PALETTE, aRGB )
+
+//----------------------------------------------------------------------//
+
+FUNCTION Wvt_GetRGBColor( nIndex )
+
+   RETURN Hb_GtInfo( HB_GTI_PALETTE, nIndex )
+
+//----------------------------------------------------------------------//
+
+FUNCTION Wvt_SetAltF4Close( lSetClose )
+
+   RETURN Hb_GtInfo( HB_GTI_CLOSABLE, lSetClose )
+
+//----------------------------------------------------------------------//
+
+FUNCTION Wvt_GetScreenWidth()
+
+   RETURN Hb_GtInfo( HB_GTI_DESKTOPWIDTH )
+
 //-------------------------------------------------------------------//
 
+FUNCTION Wvt_GetScreenHeight()
+
+   RETURN Hb_GtInfo( HB_GTI_DESKTOPHEIGHT )
+
+//-------------------------------------------------------------------//
+
+FUNCTION WVT_GETWINDOWHANDLE()
+
+   RETURN Hb_GtInfo( HB_GTI_USER, HB_GTU_WINDOWHANDLE )
+
+//-------------------------------------------------------------------//
+
+FUNCTION WVT_CENTERWINDOW( lCenter, lRePaint )
+
+   DEFAULT lCenter  TO .t.
+   DEFAULT lRePaint TO .f.
+
+   RETURN Hb_GtInfo( HB_GTI_USER, HB_GTU_CENTERWINDOW, { lCenter, lRePaint } )
+
+//-------------------------------------------------------------------//
+
+FUNCTION WVT_SETWINDOWCENTRE( lCenter, lRePaint )
+
+   DEFAULT lCenter  TO .t.
+   DEFAULT lRePaint TO .f.
+
+   RETURN Hb_GtInfo( HB_GTI_USER, HB_GTU_CENTERWINDOW, { lCenter, lRePaint } )
+
+//-------------------------------------------------------------------//
+
+FUNCTION WVT_PROCESSMESSAGES()
+
+   Hb_GtInfo( HB_GTI_USER, HB_GTU_PROCESSMESSAGES )
+
+   RETURN .t.
+
+//----------------------------------------------------------------------//
+
+FUNCTION WVT_KEYBOARD( nKey )
+
+   Hb_GtInfo( HB_GTI_USER, HB_GTU_KEYBOARD, nKey )
+
+   RETURN NIL
+
+//-------------------------------------------------------------------//
+
+FUNCTION WVT_GETCLIPBOARD()
+
+   RETURN Hb_GtInfo( HB_GTI_CLIPBOARDDATA )
+
+//-------------------------------------------------------------------//
+
+FUNCTION WVT_SETCLIPBOARD( cText )
+
+   RETURN Hb_GtInfo( HB_GTI_CLIPBOARDDATA, cText )
+
+//-------------------------------------------------------------------//
+
+FUNCTION WVT_PASTEFROMCLIPBOARD()
+   Local cText, nLen, i
+
+   cText := Hb_GtInfo( HB_GTI_CLIPBOARDDATA )
+   if ( nLen := Len( cText ) ) > 0
+      for i := 1 to nLen
+         Wvt_KeyBoard( asc( substr( cText, i, 1 ) ) )
+      next
+   endif
+
+   RETURN NIL
+
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_ResetWindow()
+
+   RETURN Hb_GtInfo( HB_GTI_USER, HB_GTU_RESETWINDOW )
+
+//----------------------------------------------------------------------//

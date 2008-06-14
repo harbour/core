@@ -908,7 +908,7 @@ static COLORREF hb_wvt_BgColorParam( int iParam )
       int iColor = ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) : - 1;
       if( iColor == -1 )
          iColor = hb_gtGetCurrColor();
-      color = hb_wvt_gtGetColorData( ( iColor >> 4 ) & 0x0f );
+      color = _s->COLORS[ ( ( iColor >> 4 ) & 0x0f ) ];
    }
 
    return color;
@@ -925,7 +925,7 @@ static COLORREF hb_wvt_FgColorParam( int iParam )
       int iColor = ISCHAR( iParam ) ? hb_gtColorToN( hb_parc( iParam ) ) : - 1;
       if( iColor == -1 )
          iColor = hb_gtGetCurrColor();
-      color = hb_wvt_gtGetColorData( iColor & 0x0f );
+      color = _s->COLORS[ ( ( iColor >> 4 ) & 0x0f ) ];
    }
 
    return color;
@@ -1686,8 +1686,8 @@ HB_FUNC( WVT_DRAWBUTTON )
    BOOL     bText     = ISCHAR( 5 );
    BOOL     bImage    = !( ISNIL( 6 ) );
    int      iFormat   = ISNIL(  7 ) ? 0 : hb_parni( 7 );
-   COLORREF textColor = ISNIL(  8 ) ? hb_wvt_gtGetColorData( 0 ) : ( COLORREF ) hb_parnl( 8 ) ;
-   COLORREF bkColor   = ISNIL(  9 ) ? hb_wvt_gtGetColorData( 7 ) : ( COLORREF ) hb_parnl( 9 ) ;
+   COLORREF textColor = ISNIL(  8 ) ? _s->COLORS[ 0 ] : ( COLORREF ) hb_parnl( 8 ) ;
+   COLORREF bkColor   = ISNIL(  9 ) ? _s->COLORS[ 7 ] : ( COLORREF ) hb_parnl( 9 ) ;
    // int      iImageAt  = ISNIL( 10 ) ? 0 : hb_parni( 10 );
 
    xy         = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
@@ -2980,7 +2980,7 @@ HB_FUNC( WVT_DRAWPROGRESSBAR )
    }
    else
    {
-      crBarColor  = ISNIL( 8 ) ? hb_wvt_gtGetColorData(  0 ) : ( COLORREF ) hb_parnl( 8 );
+      crBarColor  = ISNIL( 8 ) ? _s->COLORS[ 0 ] : ( COLORREF ) hb_parnl( 8 );
 
       lb.lbStyle  = BS_SOLID;
       lb.lbColor  = crBarColor;

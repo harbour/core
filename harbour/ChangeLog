@@ -8,6 +8,33 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-15 11:34 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+   * contrib/gtwvg/gtwvg.c
+   * contrib/gtwvg/gtwvg.h
+   * contrib/gtwvg/wvtutils.c
+   * contrib/gtwvg/wvtcore.c
+   * contrib/gtwvg/wvtpaint.prg
+   * contrib/gtwvg/wvtclass.prg
+     + Implemented all features recently added in gtwvt.
+
+   * contrib/gtwvg/tests/demowvg.prg
+     * Just refreshed to match the date/time stamps with gtwvg.lib
+
+     ; This is first attempt in this series of optimizations in gtwvg
+       to synchronize it with gtwvt builing a basis for inheretance
+       from gtwvt. 
+    
+       Now all EXPORTed funtions in gtwvg.c are stripped and isolated
+       in wvtpaint.prg as prg code taking use of Hb_GtInfo() architecture.
+
+       gtwvg.c contains only static functions and as such GT layer is made
+       self contained. For this to happen I had to define few more GTI_* 
+       constants which goes in gtwvg.h and local to wvtpaint.prg. One or two 
+       of them validly become candidate fot gtwvt/hbgtinfo.ch also.
+
+       TODO: To clean wvtutils.c by plugging the functionality in HB_GTINFO
+             structure. Please do not update any of these files.
+
 2008-06-14 12:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    + contrib/hbtip/tests
    + contrib/hbtip/tests/bld_b32.bat

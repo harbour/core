@@ -353,15 +353,14 @@ METHOD Destroy() CLASS wvtDialog
 
    if ::oldMenuHandle <> nil .and. ::oldMenuHandle <> 0
       Wvt_SetMenu( ::oldMenuHandle )
-      Wvt_DrawMenuBar()
    endif
    SetKey( Wvt_SetMenuKeyEvent(), ::oldMenuBlock )
-
    RestScreen( 0, 0, maxrow(), maxcol(), ::cScreen )
    Wvt_RestScreen( 0, 0 ,maxrow(), maxcol(), ::aWvtScreen )
    PurgePaint( ::cPaintBlockID )
    WvtSetPaint( ::aOldPnt )
    Wvt_SetGui( ::lGui )
+
 
    RETURN nil
 
