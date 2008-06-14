@@ -1050,7 +1050,7 @@ HB_FUNC( LUPDATE )
       hb_itemReturnRelease( pItem );
    }
    else
-      hb_retds( "" );
+      hb_retds( NULL );
 }
 
 HB_FUNC( NETERR )
