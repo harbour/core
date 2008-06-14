@@ -45,6 +45,7 @@
    * source/vm/cmdarg.c
    * source/vm/dynsym.c
      ! LUPDATE() buffer overread fixed. (hb_retds(""))
+       [RC1]
      % hb_itemPutC*()/hb_retc*()/hb_errInternal() "" parameter -> NULL
        NOTE: gtwvg not changed.
      * Few minor cleanups.
