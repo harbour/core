@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-14 12:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/hbtip/tests
+   + contrib/hbtip/tests/bld_b32.bat
+   + contrib/hbtip/tests/bld_vc.bat
+   + contrib/hbtip/tests/base64.prg
+   + contrib/hbtip/tests/dbToHtml.prg
+   + contrib/hbtip/tests/dnldftp.prg
+   + contrib/hbtip/tests/ftpadv.prg
+   + contrib/hbtip/tests/httpadv.prg
+   + contrib/hbtip/tests/loadhtml.prg
+   + contrib/hbtip/tests/tipmail.prg
+   + contrib/hbtip/tests/tipmime.prg
+   + contrib/hbtip/tests/tipmmail.prg
+   + contrib/hbtip/tests/tiptest.prg
+   + contrib/hbtip/tests/tiptime.prg
+   + contrib/hbtip/tests/uploadftp.prg
+     + Added TIP library tests from xhb repository.
+       [TOMERGE RC1]
+
 2008-06-14 09:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32/w32_ole.c
      * Fix to previous commit.
