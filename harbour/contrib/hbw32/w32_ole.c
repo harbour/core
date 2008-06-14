@@ -943,7 +943,7 @@ static PHB_ITEM SafeArrayToArray( SAFEARRAY *parray, UINT iDim, long* rgIndices,
          if( vt == VT_I1 || vt == VT_UI1 )
          {
             // Ugly hack, but needed to allocate our signature as hidden bytes!
-            hb_itemPutCL( pArray, NULL );
+            hb_itemPutC( pArray, NULL );
             HB_STRING_ALLOC( pArray, (ULONG)(iLen + 5) );
             pArray->item.asString.length = iLen; // TOFIX
 
