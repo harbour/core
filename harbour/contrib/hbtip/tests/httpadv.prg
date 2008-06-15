@@ -45,10 +45,10 @@ PROCEDURE MAIN( cUrl )
       ? "Can't connect with", oUrl:cServer
       IF oCon:SocketCon == NIL
          ? "Connection not initiated"
-      ELSEIF InetErrorCode( oCon:SocketCon ) == 0
+      ELSEIF hb_InetErrorCode( oCon:SocketCon ) == 0
          ? "Server sayed:", oCon:cReply
       ELSE
-         ? "Error in connection:", InetErrorDesc( oCon:SocketCon )
+         ? "Error in connection:", hb_InetErrorDesc( oCon:SocketCon )
       ENDIF
    END
 

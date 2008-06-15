@@ -77,15 +77,13 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
          cStr := "No se ha podido conectar con el servidor FTP" + " " + oURL:cServer
          IF oFTP:SocketCon == NIL
             cStr += Chr( 13 ) + Chr( 10 ) + "Conexión no inicializada"
-         ELSEIF InetErrorCode( oFTP:SocketCon ) == 0
+         ELSEIF hb_InetErrorCode( oFTP:SocketCon ) == 0
             cStr += Chr( 13 ) + Chr( 10 ) + "Respuesta del servidor:" + " " + oFTP:cReply
          ELSE
-            cStr += Chr( 13 ) + Chr( 10 ) + "Error en la conexión:" + " " + InetErrorDesc( oFTP:SocketCon )
+            cStr += Chr( 13 ) + Chr( 10 ) + "Error en la conexión:" + " " + hb_InetErrorDesc( oFTP:SocketCon )
          ENDIF
          ? cStr
          lRetorno := .F.
       ENDIF
    ENDIF
 RETURN lRetorno
-
-*+ EOF: PEGAFTP.PRG

@@ -10,8 +10,8 @@ PROCEDURE Main
    oHttp:= TIpClientHttp():new( "http://www.google.de/search" )
    
    // build the Google query
-   hQUery := Hash()
-   hSetCaseMatch( hQuery, .F. )
+   hQUery := hb_Hash()
+   hb_hSetCaseMatch( hQuery, .F. )
 
    hQuery["q"]    := "xHarbour"
    hQuery["hl"]   := "en"

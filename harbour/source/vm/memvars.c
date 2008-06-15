@@ -715,7 +715,7 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, BYTE bScope, PHB_ITE
             /*       to .T., this is normal Clipper behaviour. [vszakats] */
 
             if( strcmp( pDynVar->pSymbol->szName, "HARBOUR" ) == 0 ||
-                 strcmp( pDynVar->pSymbol->szName, "CLIPPER" ) == 0 )
+                strcmp( pDynVar->pSymbol->szName, "CLIPPER" ) == 0 )
                s_globalTable[ pDynVar->hMemvar ].pVarItem->item.asLogical.value = TRUE;
             else
                s_globalTable[ pDynVar->hMemvar ].pVarItem->item.asLogical.value = FALSE;

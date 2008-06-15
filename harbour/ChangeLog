@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-15 23:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/vm/memvars.c
+     * Minor format.
+
+   * contrib/hbmzip/hbmzip.c
+     * Minor cleanups.
+
+   * contrib/hbtip/tests/httpadv.prg
+   * contrib/hbtip/tests/dnldftp.prg
+   * contrib/hbtip/tests/upld_ftp.prg
+   * contrib/hbtip/tests/tipmail.prg
+   * contrib/hbtip/tests/loadhtml.prg
+   * contrib/hbtip/tests/ftpadv.prg
+     * Changed to compile in Harbour.
+
 2008-06-15 11:34 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * contrib/gtwvg/gtwvg.c
    * contrib/gtwvg/gtwvg.h
@@ -154,7 +169,7 @@
        added with the old name, and Harbour code was changed to use 
        the new one. I've also added hb_itemPutCPtr2() as a version 
        not requiring len parameter, the proper name would be hb_itemPutCPtr() 
-       for this, but we cannot use it without breaking compatiblity.
+       for this, but we cannot use it without breaking compatibility.
 
        IMPORTANT: I'd strongly suggest all 3rd parties to update 
        their code to use the call hb_itemPutCLPtr() instead of 
@@ -10074,7 +10089,7 @@
    * source/rdd/delim1.c
      ! Removed two __XHARBOUR__ guards, by making the guarded
        code the default. We have SET EOL support in Harbour now,
-       so this seems okey. If not, tell.
+       so this seems okay. If not, tell.
      ; TOFIX: We still have __XHARBOUR__ #defines in pp/ppcore.c
        and debug/debugger.prg.
 
@@ -10523,7 +10538,7 @@
              on every flavour of Windows. It should for
              W2K and above though, probably NT too.
      ! Fixed to pick .dlls from HB_DLL_DIR, which when not
-       defined points to system32 dir.
+       defined, points to system32 dir.
      ; I know "sed" dependency is not optimal, but we can remove
        this later if we have better solution, until then
        it cannot hurt and it's better than nothing.
@@ -10574,7 +10589,7 @@
    * source/rtl/adir.prg
      * __DEFPATH() is now always included, not just when HB_C52_UNDOC
        is defined, since we use this function from core, and __*()
-       functions are okey to be included without this guard.
+       functions are okay to be included without this guard.
        DEFPATH() is still marked as HB_C52_UNDOC.
      ! ADIR() now uses __DEFPATH() instead of DEFPATH() to compile
        with HB_C52_UNDOC turned off.
@@ -10585,7 +10600,7 @@
      * Changed HB_EXTENSION to HB_C52_STRICT. Reason: This
        is a Harbour internal (undocumented) function, where extension
        is possible. CA-Cl*pper internal (undocumented) function __MRESTORE()
-       is mapped to this function, which is still okey. We could
+       is mapped to this function, which is still okay. We could
        create a fully CA-Cl*pper compatible, non-extended __MRESTORE()
        without any trouble, if this is an issue.
 
@@ -14422,7 +14437,7 @@
      % Optimizations and cleanups.
      % Unused vars/functions removed.
      * Formatting (except large parts of debugger.prg and
-       those files which were okey).
+       those files which were okay).
      ; Majority of formatting, optimization and code cleanup
        work is still left to do.
 

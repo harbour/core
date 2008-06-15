@@ -7,6 +7,8 @@
 */
 
 #include "common.ch"
+#include "directry.ch"
+
 FUNCTION MAIN( cMask )
 
    LOCAL lRet
@@ -63,8 +65,8 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
 
       IF oFTP:Open( cUrl )
          FOR each cFile IN afiles
-            ? "arquivo : " + cFile[ 1 ]
-            IF !oFtp:UploadFile( cFile[ 1 ] )
+            ? "arquivo : " + cFile[ F_NAME ]
+            IF !oFtp:UploadFile( cFile[ F_NAME ] )
                lRetorno := .F.
                EXIT
             ELSE
@@ -77,15 +79,13 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
          cStr := "No se ha podido conectar con el servidor FTP" + " " + oURL:cServer
          IF oFTP:SocketCon == NIL
             cStr += Chr( 13 ) + Chr( 10 ) + "Conexión no inicializada"
-         ELSEIF InetErrorCode( oFTP:SocketCon ) == 0
+         ELSEIF hb_InetErrorCode( oFTP:SocketCon ) == 0
             cStr += Chr( 13 ) + Chr( 10 ) + "Respuesta del servidor:" + " " + oFTP:cReply
          ELSE
-            cStr += Chr( 13 ) + Chr( 10 ) + "Error en la conexión:" + " " + InetErrorDesc( oFTP:SocketCon )
+            cStr += Chr( 13 ) + Chr( 10 ) + "Error en la conexión:" + " " + hb_InetErrorDesc( oFTP:SocketCon )
          ENDIF
          ? cStr
          lRetorno := .F.
       ENDIF
    ENDIF
 RETURN lRetorno
-
-*+ EOF: MANDAFTP.PRG
