@@ -132,7 +132,8 @@ typedef enum
    HB_SET_DBFLOCKSCHEME = 108,
    HB_SET_DEFEXTENSIONS = 109,
    HB_SET_EOL           = 110,
-   HB_SET_TRIMFILENAME  = 111
+   HB_SET_TRIMFILENAME  = 111,
+   HB_SET_HBOUTLOG      = 112
 
 } HB_set_enum;
 
@@ -202,6 +203,7 @@ typedef struct
    BOOL    HB_SET_DEFEXTENSIONS;
    char *  HB_SET_EOL;
    BOOL    HB_SET_TRIMFILENAME;
+   char *  HB_SET_HBOUTLOG;
 
 } HB_SET_STRUCT;
 
@@ -302,6 +304,7 @@ extern HB_EXPORT BOOL    hb_setGetForceOpt( void );
 extern HB_EXPORT BOOL    hb_setGetDefExtension( void );
 extern HB_EXPORT char *  hb_setGetEOL( void );
 extern HB_EXPORT BOOL    hb_setGetTrimFileName( void );
+extern HB_EXPORT char *  hb_setGetHBOUTLOG( void );
 
 HB_EXTERN_END
 

@@ -57,10 +57,9 @@
 #include "hbapifs.h"
 #include "hbdate.h"
 #include "hbapierr.h"
+#include "hbset.h"
 
 #if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
-
-static char * s_pszLogFileName = "hb_ex.log";
 
 LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo )
 {
@@ -70,7 +69,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo
    USHORT uiLine;
    int iLevel;
 
-   FILE * hLog = hb_fopen( s_pszLogFileName, "a+" );
+   FILE * hLog = hb_fopen( hb_setGetCPtr( HB_SET_HBOUTLOG ), "a+" );
 
    if( hLog )
    {

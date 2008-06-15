@@ -572,7 +572,6 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
             hb_gt_wvt_UpdateCaret( pWVT );
 
             SetWindowPos( pWVT->hWnd, NULL, left, top, width, height, SWP_NOZORDER );
-            HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
          }
          else
          {
@@ -580,8 +579,9 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
             height = ( ( USHORT ) ( pWVT->PTEXTSIZE.y * pWVT->ROWS ) ) + borderHeight;
 
             SetWindowPos( pWVT->hWnd, NULL, 0, 0, width, height, SWP_NOZORDER | SWP_NOMOVE );
-            HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
          }
+
+         HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
       }
    }
 }

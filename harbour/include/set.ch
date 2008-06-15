@@ -126,8 +126,9 @@
 #define _SET_DEFEXTENSIONS    109 /* Harbour extension */
 #define _SET_EOL              110 /* Harbour extension */
 #define _SET_TRIMFILENAME     111 /* Harbour extension */
+#define _SET_HBLOG            112 /* Harbour extension */
 
 #define HB_SET_BASE           100
-#define HB_SET_COUNT          12
+#define HB_SET_COUNT          13
 
 #endif /* _SET_CH */

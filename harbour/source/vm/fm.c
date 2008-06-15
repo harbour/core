@@ -87,6 +87,7 @@
 #include "hbapierr.h"
 #include "hbmemory.ch"
 #include "hbdate.h"
+#include "hbset.h"
 
 /* #define HB_FM_WIN32_ALLOC */
 /* #define HB_PARANOID_MEM_CHECK */
@@ -154,8 +155,6 @@ static LONG s_lMemoryConsumed = 0;    /* memory max size consumed */
 
 static PHB_MEMINFO s_pFirstBlock = NULL;
 static PHB_MEMINFO s_pLastBlock = NULL;
-
-static char * s_pszLogFileName = "hb_fm.log";
 
 #else /* ! HB_FM_STATISTICS */
 
@@ -585,7 +584,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       FILE * hLog = NULL;
 
       if( s_lMemoryBlocks )
-         hLog = hb_fopen( s_pszLogFileName, "a+" );
+         hLog = hb_fopen( hb_setGetCPtr( HB_SET_HBOUTLOG ), "a+" );
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );
@@ -603,7 +602,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
             hb_dateToday( &iYear, &iMonth, &iDay );
             hb_dateTimeStr( szTime );
          
-            fprintf( hLog, "Memory Allocation Report - %s\n", hb_cmdargARGV()[0] );
+            fprintf( hLog, "Harbour Memory Allocation Report - %s\n", hb_cmdargARGV()[0] );
             fprintf( hLog, "Terminated at: %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
             fprintf( hLog, "%s\n", buffer );
          }
