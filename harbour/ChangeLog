@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-15 15:16 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+   * contrib/gtwvg/gtwvg.c
+   * contrib/gtwvg/wvtutils.c
+   * contrib/gtwvg/wvtcore.c
+   * contrib/gtwvg/wvtpaint.prg
+   * contrib/gtwvg/gtwvg.h
+   + contrib/gtwvg/hbgtwvg.ch
+     ! Syntactically and parameters wise GTWVG matches GTWVT.
+     ! More functions ported to Hb_GtInfo().
+     ! wvtcore.c and wvtutils.c are now based on function call 
+          instead of static variables.
+     + Separate hbgtwvg.ch included containg GTI_ constants 
+          proprietory to GTWVG only.
+     ! Organizing, formatting and code clean ups.
+   ; TODO: Separate HB_GTWVT structure in 3 units 
+       1) Core GT member.
+       2) WVG specif member -  per GT.
+       3) GDI members
+     
+     Work-in-progress. Please deffer updates in GTWVG.
+
 2008-06-15 23:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/memvars.c
      * Minor format.
@@ -23,7 +44,7 @@
    * contrib/hbtip/tests/ftpadv.prg
      * Changed to compile in Harbour.
 
-2008-06-15 11:34 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+2008-06-14 11:34 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * contrib/gtwvg/gtwvg.c
    * contrib/gtwvg/gtwvg.h
    * contrib/gtwvg/wvtutils.c

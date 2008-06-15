@@ -56,7 +56,6 @@
 
 #define HB_GT_NAME  WVG
 
-
 //-------------------------------------------------------------------//
 
 #ifndef _WIN32_IE
@@ -97,11 +96,15 @@
 #include "hbvm.h"
 #include "hbgfxdef.ch"
 
+#include "hbgtwvg.ch"
+
+//----------------------------------------------------------------------//
 
 #define WVT_CHAR_QUEUE_SIZE         128
 #define WVT_MAX_TITLE_SIZE          128
 #define WVT_MAX_ROWS                256
 #define WVT_MAX_COLS                256
+#define WVT_MAX_WINDOWS             256
 #if defined( HB_WINCE )
 #  define WVT_DEFAULT_ROWS          15
 #  define WVT_DEFAULT_COLS          50
@@ -113,7 +116,7 @@
 #  define WVT_DEFAULT_FONT_HEIGHT   16
 #  define WVT_DEFAULT_FONT_WIDTH    8
 #endif
-#define WVT_DEFAULT_FONT_NAME    "Terminal"
+#define WVT_DEFAULT_FONT_NAME       "Terminal"
 
 #define BLACK                       RGB( 0x0 ,0x0 ,0x0  )
 #define BLUE                        RGB( 0x0 ,0x0 ,0x85 )
@@ -132,9 +135,9 @@
 #define YELLOW                      RGB( 0xFF,0xFF,0x00 )
 #define BRIGHT_WHITE                RGB( 0xFF,0xFF,0xFF )
 
-#define WM_MY_UPDATE_CARET ( WM_USER + 0x0101 )
+#define WM_MY_UPDATE_CARET          ( WM_USER + 0x0101 )
 
-#define SYS_EV_MARK    1000
+#define SYS_EV_MARK                 1000
 //-------------------------------------------------------------------//
 #define WVT_PICTURES_MAX            50
 #define WVT_FONTS_MAX               50
@@ -202,14 +205,15 @@ typedef BOOL ( WINAPI *wvtGradientFill )     (
 
 //-------------------------------------------------------------------//
 
-typedef struct global_data
+typedef struct
 {
    PHB_GT   pGT;                          /* core GT pointer */
+   int      iHandle;                      /* window number */
 
    USHORT   ROWS;                         /* number of displayable rows in window */
    USHORT   COLS;                         /* number of displayable columns in window */
 
-   COLORREF COLORS[16];                   /* colors */
+   COLORREF COLORS[ 16 ];                 /* colors */
 
    BOOL     CaretExist;                   /* TRUE if a caret has been created */
    BOOL     CaretHidden;                  /* TRUE if a caret has been hiden */
@@ -245,22 +249,19 @@ typedef struct global_data
 
    BOOL     IgnoreWM_SYSCHAR;
 
-   BOOL      bMaximized;                   /* Flag is set when window has been maximized */
-   BOOL      bBeingMarked;                 /* Flag to control DOS window like copy operation */
-   BOOL      bBeginMarked;
+   BOOL     bMaximized;                   /* Flag is set when window has been maximized */
+   BOOL     bBeingMarked;                 /* Flag to control DOS window like copy operation */
+   BOOL     bBeginMarked;
 
-   char *    pszSelectCopy;
-   BOOL      bResizable;
-   BOOL      bSelectCopy;
-   BOOL      bClosable;
+   BOOL     bResizable;
+   BOOL     bSelectCopy;
+   char *   pszSelectCopy;
+   BOOL     bClosable;
+
+   //          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed>            //
 
    BOOL      bResizing;
 
-
-   /* *** GUI part *** */
-
-//   int       closeEvent;                // command to return ( in ReadKey ) on close
-//   int       shutdownEvent;             // command to return ( in ReadKey ) on shutdown
    int       LastMenuEvent;             // Last menu item selected
    int       MenuKeyEvent;              // User definable event number for windows menu command
    BOOL      InvalidateWindow;          // Flag for controlling whether to use ScrollWindowEx()
@@ -317,9 +318,9 @@ typedef struct global_data
    BOOL      bSetFocus;
    BOOL      bKillFocus;
 
-} GLOBAL_DATA, * LPGLOBAL_DATA;
+} HB_GTWVT, * PHB_GTWVT;
 
-//-------------------------------------------------------------------//
+//----------------------------------------------------------------------//
 
 #ifndef INVALID_FILE_SIZE
    #define INVALID_FILE_SIZE (DWORD)0xFFFFFFFF
@@ -341,28 +342,28 @@ typedef struct global_data
 
 typedef enum
 {
-   GTO_POINT      = 0,
-   GTO_LINE       = 1,
-   GTO_SQUARE     = 3,
-   GTO_RECTANGLE  = 4,
-   GTO_CIRCLE     = 5,
-   GTO_DISK       = 7,
+   GTO_POINT          = 0,
+   GTO_LINE           = 1,
+   GTO_SQUARE         = 3,
+   GTO_RECTANGLE      = 4,
+   GTO_CIRCLE         = 5,
+   GTO_DISK           = 7,
    /* TODO: add other types */
-   GTO_TEXT       = 100,
+   GTO_TEXT           = 100,
 } HB_gt_object_enum;
 
 /* Event subsystem */
 
 typedef enum
 {
-   GTEVENT_RESIZE   = 0,
-   GTEVENT_CLOSE    = 1,
-   GTEVENT_ICONIZE  = 2,
-   GTEVENT_MAXH     = 3,
-   GTEVENT_MAXV     = 4,
-   GTEVENT_MAXIMIZE = 5,
-   GTEVENT_DEICONIZE= 6,
-   GTEVENT_SHUTDOWN = 7
+   GTEVENT_RESIZE     = 0,
+   GTEVENT_CLOSE      = 1,
+   GTEVENT_ICONIZE    = 2,
+   GTEVENT_MAXH       = 3,
+   GTEVENT_MAXV       = 4,
+   GTEVENT_MAXIMIZE   = 5,
+   GTEVENT_DEICONIZE  = 6,
+   GTEVENT_SHUTDOWN   = 7
 } HB_gt_event_enum;
 
 typedef struct _tag_HB_GT_GCOLOR
@@ -403,35 +404,22 @@ typedef struct _tag_HB_GT_COLDEF
 
 //----------------------------------------------------------------------//
 
-POINT    HB_EXPORT hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
-IPicture HB_EXPORT  * hb_wvt_gtLoadPicture( char * image );
-IPicture HB_EXPORT  * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection );
-BOOL     HB_EXPORT hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture );
-BOOL     HB_EXPORT hb_wvt_gtDestroyPicture( IPicture * iPicture );
-BOOL     HB_EXPORT hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image );
+POINT       HB_EXPORT   hb_wvt_gtGetXYFromColRow( USHORT col, USHORT row );
+IPicture    HB_EXPORT * hb_wvt_gtLoadPicture( char * image );
+IPicture    HB_EXPORT * hb_wvt_gtLoadPictureFromResource( LPCSTR cResource, LPCSTR cSection );
+BOOL        HB_EXPORT   hb_wvt_gtRenderPicture( int x1, int y1, int wd, int ht, IPicture * iPicture );
+BOOL        HB_EXPORT   hb_wvt_gtDestroyPicture( IPicture * iPicture );
+BOOL        HB_EXPORT   hb_wvt_DrawImage( HDC hdc, int x1, int y1, int wd, int ht, char * image );
 
-LPWORD   HB_EXPORT lpwAlign( LPWORD lpIn );
-int      HB_EXPORT nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn );
-BOOL     HB_EXPORT CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
-BOOL     HB_EXPORT CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+LPWORD      HB_EXPORT   lpwAlign( LPWORD lpIn );
+int         HB_EXPORT   nCopyAnsiToWideChar( LPWORD lpWCStr, LPSTR lpAnsiIn );
+BOOL        HB_EXPORT CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
+BOOL        HB_EXPORT CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 
-void     HB_EXPORT hb_wvt_wvtCore( void );
-void     HB_EXPORT hb_wvt_wvtUtils( void );
+void        HB_EXPORT   hb_wvt_wvtCore( void );
+void        HB_EXPORT   hb_wvt_wvtUtils( void );
 
-GLOBAL_DATA HB_EXPORT * hb_wvt_gtGetGlobalData( void );
-
-//-------------------------------------------------------------------//
-//
-//  Candidates for inculsion in hbgtinfo.ch
-//
-#define HB_GTI_SETFONT             71
-#define HB_GTI_USER              1000
-
-#define HB_GTU_WINDOWHANDLE         1
-#define HB_GTU_CENTERWINDOW         2
-#define HB_GTU_PROCESSMESSAGES      3
-#define HB_GTU_KEYBOARD             4
-#define HB_GTU_RESETWINDOW          5
+PHB_GTWVT   HB_EXPORT   hb_wvt_gtGetWVT( void );
 
 //----------------------------------------------------------------------//
 

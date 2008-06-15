@@ -61,7 +61,6 @@
 
 #include 'wvtwin.ch'
 #include 'common.ch'
-//#include 'xhb.ch'
 
 //-------------------------------------------------------------------//
 
@@ -567,17 +566,7 @@ FUNCTION WVT_GetSaveFileName( hWnd, cFile, cTitle, aFilter, nFlags, cIniDir, cDe
 //----------------------------------------------------------------------//
 
 #include 'hbgtinfo.ch'
-
-//  Eventually the defines below should go into hbgtinfo.ch
-//
-#define HB_GTI_SETFONT             71
-#define HB_GTI_USER              1000
-
-#define HB_GTU_WINDOWHANDLE         1
-#define HB_GTU_CENTERWINDOW         2
-#define HB_GTU_PROCESSMESSAGES      3
-#define HB_GTU_KEYBOARD             4
-#define HB_GTU_RESETWINDOW          5
+#include 'hbgtwvg.ch'
 
 //----------------------------------------------------------------------//
 
@@ -664,59 +653,59 @@ FUNCTION Wvt_GetScreenHeight()
 
 //-------------------------------------------------------------------//
 
-FUNCTION WVT_GETWINDOWHANDLE()
+FUNCTION Wvt_GetWindowHandle()
 
-   RETURN Hb_GtInfo( HB_GTI_USER, HB_GTU_WINDOWHANDLE )
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
 //-------------------------------------------------------------------//
 
-FUNCTION WVT_CENTERWINDOW( lCenter, lRePaint )
+FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
 
    DEFAULT lCenter  TO .t.
    DEFAULT lRePaint TO .f.
 
-   RETURN Hb_GtInfo( HB_GTI_USER, HB_GTU_CENTERWINDOW, { lCenter, lRePaint } )
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 
 //-------------------------------------------------------------------//
 
-FUNCTION WVT_SETWINDOWCENTRE( lCenter, lRePaint )
+FUNCTION Wvt_WindowCentre( lCenter, lRePaint )
 
    DEFAULT lCenter  TO .t.
    DEFAULT lRePaint TO .f.
 
-   RETURN Hb_GtInfo( HB_GTI_USER, HB_GTU_CENTERWINDOW, { lCenter, lRePaint } )
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 
 //-------------------------------------------------------------------//
 
-FUNCTION WVT_PROCESSMESSAGES()
+FUNCTION Wvt_ProcessMessages()
 
-   Hb_GtInfo( HB_GTI_USER, HB_GTU_PROCESSMESSAGES )
+   Hb_GtInfo( HB_GTI_SPEC, HB_GTS_PROCESSMESSAGES )
 
    RETURN .t.
 
-//----------------------------------------------------------------------//
+//-------------------------------------------------------------------//
 
-FUNCTION WVT_KEYBOARD( nKey )
+FUNCTION Wvt_KeyBoard( nKey )
 
-   Hb_GtInfo( HB_GTI_USER, HB_GTU_KEYBOARD, nKey )
+   Hb_GtInfo( HB_GTI_SPEC, HB_GTS_KEYBOARD, nKey )
 
    RETURN NIL
 
 //-------------------------------------------------------------------//
 
-FUNCTION WVT_GETCLIPBOARD()
+FUNCTION Wvt_GetClipboard()
 
    RETURN Hb_GtInfo( HB_GTI_CLIPBOARDDATA )
 
 //-------------------------------------------------------------------//
 
-FUNCTION WVT_SETCLIPBOARD( cText )
+FUNCTION Wvt_SetClipboard( cText )
 
    RETURN Hb_GtInfo( HB_GTI_CLIPBOARDDATA, cText )
 
 //-------------------------------------------------------------------//
 
-FUNCTION WVT_PASTEFROMCLIPBOARD()
+FUNCTION Wvt_PasteFromClipboard()
    Local cText, nLen, i
 
    cText := Hb_GtInfo( HB_GTI_CLIPBOARDDATA )
@@ -732,6 +721,72 @@ FUNCTION WVT_PASTEFROMCLIPBOARD()
 
 FUNCTION Wvt_ResetWindow()
 
-   RETURN Hb_GtInfo( HB_GTI_USER, HB_GTU_RESETWINDOW )
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_RESETWINDOW )
 
-//----------------------------------------------------------------------//
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_SetTimer( nTimerID, nMiliSeconds )
+
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SETTIMER, { nTimerID, nMiliSeconds } )
+
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_KillTimer( nTimerID )
+
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_KILLTIMER, nTimerID )
+
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_SetOnTop()
+
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_SETONTOP )
+
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_SetAsNormal()
+
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_SETASNORMAL )
+
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_Minimize()
+
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_MINIMIZED )
+
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_Maximize()
+
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_MAXIMIZED )
+
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_Hide()
+
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_HIDDEN )
+
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_Show()
+
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, WNDS_NORMAL )
+
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_SetWindowPos( nX, nY )
+
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SETPOSITION, { nX, nY } )
+
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_ShowWindow( nState )
+
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, nState )
+
+//-------------------------------------------------------------------//
+
+FUNCTION Wvt_Update()
+
+   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_UPDATEWINDOW )
+
+//-------------------------------------------------------------------//
