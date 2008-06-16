@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-16 13:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbole/ole2.c
+     * Further cleanup.
+
 2008-06-16 11:04 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/set.ch
      ! Fix to previous commit.
