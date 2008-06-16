@@ -430,7 +430,7 @@
  *  $CATEGORY$
  *      Advantage Database RDD
  *  $ONELINER$
- *      Estimated key position of current record within the specified index
+ *      Estimated key position of current record within the current index
  *  $SYNTAX$
  *      ADSGetRelKeyPos() --> nKeyPos
  *  $ARGUMENTS$
@@ -621,12 +621,12 @@
  *      The Advantage Database Server has a fast Proprietary locking mode that
  *      is more efficient than traditional network locking. It is only available
  *      when using the remote server (not the local server).
- *
+
  *      If a file is opened in the proprietary mode, other applications cannot
  *      open it in a "write" mode. So if non-Advantage applications need
  *      concurrent access to the data files, use the Compatibility locking mode
  *      by calling  ADSLocking( .F. ).
- *
+
  *      ADSLocking() is a Get/Set function for the locking mode. It affects
  *      files at the time they are opened. So when a data
  *      file is opened, the current setting is used for that file until it is
@@ -668,7 +668,7 @@
  *      Database Server will use the rights of the connected user when
  *      opening the file. If the user does not have rights to the
  *      directory or server, then the open call will fail.
- *
+
  *      If the setting is .F., then the ADS will
  *      ignore the connected user's rights and open the file
  *      regardless. This lets you allow only
@@ -930,7 +930,7 @@
  *  $ONELINER$
  *      Sets the type of character data expected when opening tables.
  *  $SYNTAX$
- *      ADSSetCharType( <nCharType> ) --> nPriorSetting
+ *      ADSSetCharType( <nCharType>, [lOEM] ) --> nPriorSetting
  *  $ARGUMENTS$
  *      <nCharType>    Type of character data in the table.
  *      From ADS docs:
@@ -939,6 +939,9 @@
  *      DOS-based CA-Clipper applications, ADS_OEM should be specified.
  *      When usTableType is ADS_ADT, this parameter is ignored and ANSI
  *      is always used.
+ *      <lOEM> This parameter used for console mode applications, when
+ *      character data stored in OEM charset. If lOEM is passed as .T.,
+ *      rddads doesn't convert character data into ANSI charset.
  *
  *  $RETURNS$
  *      <nPriorSetting>
@@ -1013,7 +1016,7 @@
  *      bugs later in program execution that are hard to find.
  *      In Harbour internal RDDs, a runtime error occurs if an attempt is made
  *      to write to a shared file without a proper lock.
- *
+
  *      AdsTestRecLocks( .T. ) will turn on a debugging mode to mimic this behavior
  *      and throw an error instead of allowing an implicit lock. Each time a field
  *      is set, we see if the file is open exclusively or locked, and whether
@@ -1023,7 +1026,7 @@
  *      Although the call to AdsIsRecordLocked is documented as a client
  *      call, not a server request, and should be fast, it will be
  *      called for EACH FIELD as it is assigned a value.
- *
+
  *      See ACE.HLP for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
@@ -1092,7 +1095,7 @@
  *      (See ACE.HLP under Advantage Expression Engine for a list of functions
  *      allowed by ADS.)
  *      Call AdsIsExprValid() to determine if the server can process the expression.
- *
+
  *      For illustration, consider filter expressions.
  *      Since Harbour attempts to be as compatible with Clipper as possible,
  *      you CAN set a filter that ADS DOES NOT understand, but the filtering
@@ -1117,38 +1120,307 @@
  *  $END$
  */
 
-/* TO-DO:
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AdsGetConnectionType()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Returns the type of Server used by the given connection handle.
+ *  $SYNTAX$
+ *      AdsGetConnectionType( [<hConnection>] ) --> nConnectionType
+ *  $ARGUMENTS$
+ *      <hConnection>    A connection handle retrieved via AdsConnect()
+ *      or AdsConnect60(). If omitted, the RDD's current connection
+ *      handle is used, but this only exists if AdsConnect() or AdsConnect60()
+ *      were previously called.
+ *
+ *  $RETURNS$
+ *      The type of Advantage Server that the connection uses, either
+ *      ADS_REMOTE_SERVER, ADS_AIS_SERVER, or ADS_LOCAL_SERVER.
+ *  $DESCRIPTION$
+ *      Advantage uses Handles to control connections to various servers.
+ *      It's possible that an app may open some files via the Remote server,
+ *      but others via the Local server or an Internect connection.
+ *      This function identifies the type of server used by a connection handle.
+ *      Note that after a table is opened, the type of connection used for
+ *      that workarea can be retrieved with AdsGetTableConType().
+ *      See ACE.HLP for full details.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      AdsGetTableConType(),AdsConnect(),AdsConnect60()
+ *  $END$
+ */
 
-ADSGETCONNECTIONHANDLE
+/*  $DOC$
+ *  $FUNCNAME$
+ *      AdsGetTableConType()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Returns the type of Server used by current workarea.
+ *  $SYNTAX$
+ *      AdsGetTableConType() --> nConnectionType
+ *  $ARGUMENTS$
+ *      None.
+ *
+ *  $RETURNS$
+ *      The type of Advantage Server that the current workarea uses, either
+ *      ADS_REMOTE_SERVER, ADS_AIS_SERVER, or ADS_LOCAL_SERVER.
+ *      Returns zero if the current workarea does not have an Advantage table opened.
+ *  $DESCRIPTION$
+ *      Advantage uses Handles to control connections to various servers.
+ *      It's possible that an app may open some files via the Remote server,
+ *      but others via the Local server or an Internect connection.
+ *      This function identifies the type of server used in the current workarea.
+ *  $EXAMPLES$
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      AdsGetConnectionType(),AdsConnect(),AdsConnect60()
+ *  $END$
+ */
 
-v6:
-   AdsAddTable
-   AdsAddUserToGroup
-   ADSUSEDICTIONARY
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ADSDDADDTABLE()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Add a new table to a Data dictionary
+ *  $SYNTAX$
+ *      ADSDDADDTABLE( <cTableName>, <cFileName>, <cIndexFileName> ) --> lSuccess
+ *  $ARGUMENTS$
+ *      <cTableName> Name of the table inside the data dictionary
+ *      <cFileName>  Name of the adt or dbf file name
+ *      <cIndexFileName> Optional name of the index file
+ *  $RETURNS$
+ *      <lSuccess> -> .T. if file was added, otherwise .F.
+ *  $DESCRIPTION$
+ *      See ACE.HLP for full details about the Advantage Database Server.
+ *      AdsDDAddTable() adds a new table to an ADS data dictionary.
+ *      To add the table you must be connected as ADSSYS user using the AdsConnect60() function
+ *  $EXAMPLES$
+ *  IF adsConnect60("xharbour.add", 7/* All types of connection*/, "ADSSYS", "",)
+ *     // Add one user
+ *      AdsDDCreateUser(,"Luiz", "papael", "This is luiz User")
+ *     // Add the tables
+ *      AdsDDaddTable("Table1", "table1.adt", "table1.adi")
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      xHarbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      ADSCONNECT60(),ADSUSEDICTIONARY()
+ *  $END$
+ */
 
-AdsAddCustomKey
-AdsDeleteCustomKey
-AdsGetTableAlias
-AdsConnect
-AdsDisconnect
-AdsCloseAllTables
-AdsWriteAllRecords
-AdsRefreshRecord
-AdsCopyTable
-AdsConvertTable
-AdsGetNumIndexes
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ADSUSEDICTIONARY()*
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      This function has been REMOVED.  It specified usage of a datadictionary connection
+ *  $SYNTAX$
+ *      None
+ *  $ARGUMENTS$
+ *      None
+ *  $RETURNS$
+ *      None
+ *  $DESCRIPTION$
+ *      This function no longer exists.  See the Data Dictionary topic
+ *  $TESTS$
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      xHarbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *  $SEEALSO$
+ *      ADSCONNECT60()
+ *  $END$
+ */
 
-ADSDecryptRecord
-ADSDecryptTable
-ADSDisableEncryption
-ADSEnableEncryption
-ADSEncryptRecord
-ADSEncryptTable
-ADSIsEncryptionEnabled
-ADSIsRecordEncrypted
-ADSIsTableEncrypted
 
-*/
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ADSCONNECT60()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Connect to a local/remote/internet server
+ *  $SYNTAX$
+ *      ADSCONNECT60(<cFilePath>, <nServertype>, [<cUserName>], [<cUserPass>], [<nOptions>]) -> lSuccess
+ *  $ARGUMENTS$
+ *      <cFilePath>   Name of data dictionary to connect to.
+ *      <nServertype> The server type to connect (LOCAL, REMOTE, AIS or all together)
+ *      <cUserName>   Optional Name of the user connecting to the server
+ *      <cUserPass>   Optional password for the user Name
+ *      <nOptions>    The optional connection options
+ *
+ *  $RETURNS$
+ *      <lSuccess>   True if connected, otherwise False.
+ *  $DESCRIPTION$
+ *      Adsconnect60() makes the connection to an advantage database server.
+ *      See ACE.HLP for full details about the Advantage Database Server.
+ *  $EXAMPLES$
+ *      IF adsConnect60("xharbour.add", 7/* All types of connection*/, "ADSSYS", "",)
+ *         // Add one user
+ *         AdsDDCreateUser(, "Luiz", "papael", "This is luiz User")
+ *      ENDIF
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      ADSDDADDTABLE()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ADSCACHEOPENTABLES()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Provides caching of open tables
+ *  $SYNTAX$
+ *      ADSCACHEOPENTABLES(<nOpen>) -> nRetVal
+ *  $ARGUMENTS$
+ *      <nOpen>       Number of tables to cache.
+ *
+ *  $RETURNS$
+ *      <nRetVal>     ???
+ *  $DESCRIPTION$
+ *      AdsCacheOpenTables allows table closes to be cached in order for
+ *      subsequent opens to occur faster. A call to AdsCloseTable with
+ *      the table cache greater than zero results in the table appearing
+ *      closed to an application, but still open on the Advantage server.
+ *      AdsCacheOpenTables is a global setting that affects the behavior
+ *      of the entire application. The default number of open tables that
+ *      are cached is 0.
+ *  $EXAMPLES$
+ *      AdsCacheOpenTables( 25 )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      AdsCacheOpenCursors()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ADSCACHEOPENCURSORS()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Provides caching of open cursors
+ *  $SYNTAX$
+ *      ADSCACHEOPENCURSORS(<nOpen>) -> nRetVal
+ *  $ARGUMENTS$
+ *      <nOpen>       Number of cursors to cache.
+ *
+ *  $RETURNS$
+ *      <nRetVal>     ???
+ *  $DESCRIPTION$
+ *      AdsCacheOpenCursors allows cursor closes to be cached in
+ *      order for subsequent SELECTS to occur faster. A call to
+ *      AdsCloseTable with the cursor cache greater than zero results
+ *      in the cursor appearing closed to an application, but still
+ *      open on the Advantage server.
+ *      AdsCacheOpenCursors is a global setting that affects the
+ *      behavior of the entire application. The default number of
+ *      open cursors that are cached is 25.
+ *  $EXAMPLES$
+ *      AdsCacheOpenCursors( 0 )
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      AdsCacheOpenTables()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *      ADSCLOSECACHEDTABLES()
+ *  $CATEGORY$
+ *      Advantage Database RDD
+ *  $ONELINER$
+ *      Close all cached tables on the given connection
+ *  $SYNTAX$
+ *      ADSCLOSECACHEDTABLES([<hConnection>]) -> nRetVal
+ *  $ARGUMENTS$
+ *      <hConnection>    A connection handle retrieved via AdsConnect()
+ *      or AdsConnect60(). If omitted, the RDD's current connection
+ *      handle is used, but this only exists if AdsConnect() or AdsConnect60()
+ *      were previously called.
+ *  $RETURNS$
+ *      <nRetVal>     ???
+ *  $DESCRIPTION$
+ *      AdsCloseCachedTables can be used to close all cached tables
+ *      on a given connection. All cached closed tables on the client
+ *      will be closed, as well as all cache closed tables on the server
+ *      that might have been used when executing SQL statements.
+ *  $EXAMPLES$
+ *      AdsCloseCachedTables()
+ *  $STATUS$
+ *      R
+ *  $COMPLIANCE$
+ *      Harbour extension
+ *  $PLATFORMS$
+ *      Ads 7.x and above, Windows 32-bit, Linux
+ *  $FILES$
+ *      Library is RddAds
+ *      Header is ads.ch
+ *  $SEEALSO$
+ *      AdsCacheOpenTables(), AdsCacheOpenCursors()
+ *  $END$
+ */
 
 
 /*  $DOC$
@@ -1184,5 +1456,34 @@ ADSIsTableEncrypted
  *      xxx()
  *  $END$
  */
+
+/* TO-DO:
+
+v6:
+   AdsAddUserToGroup
+
+AdsAddCustomKey
+AdsDeleteCustomKey
+AdsGetTableAlias
+AdsConnect
+AdsDisconnect
+AdsCloseAllTables
+AdsWriteAllRecords
+AdsRefreshRecord
+AdsCopyTable
+AdsConvertTable
+AdsGetNumIndexes
+
+ADSDecryptRecord
+ADSDecryptTable
+ADSDisableEncryption
+ADSEnableEncryption
+ADSEncryptRecord
+ADSEncryptTable
+ADSIsEncryptionEnabled
+ADSIsRecordEncrypted
+ADSIsTableEncrypted
+
+*/
 
 

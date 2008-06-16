@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-16 18:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbole/ole2.c
+     * More cleanups.
+
+   * contrib/rddads/doc/en/adsfuncs.txt
+   * contrib/rddads/doc/en/readme.txt
+     + Updated.
+       [RC1]
+
 2008-06-16 14:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbole/ole2.c
      * And some more.
@@ -78,6 +87,7 @@
    * contrib/hbtip/tests/loadhtml.prg
    * contrib/hbtip/tests/ftpadv.prg
      * Changed to compile in Harbour.
+       [RC1]
 
 2008-06-14 11:34 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * contrib/gtwvg/gtwvg.c
@@ -123,7 +133,7 @@
    + contrib/hbtip/tests/tiptime.prg
    + contrib/hbtip/tests/uploadftp.prg
      + Added TIP library tests from xhb repository.
-       [TOMERGE RC1]
+       [RC1]
 
 2008-06-14 09:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32/w32_ole.c
@@ -318,7 +328,7 @@
 2008-06-12 08:55 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbct/fcopy.prg
      ! Fixed crash in FILECOPY() (reported by Mario H. Sabado)
-       [TOMERGE RC1 - if correct]
+       [RC1]
 
    * contrib/hbodbc/odbc.c
      * Using sizeof() wherever possible.

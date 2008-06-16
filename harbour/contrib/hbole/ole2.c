@@ -153,7 +153,7 @@ static void GetParams( DISPPARAMS * dParams )
       {
          PHB_ITEM uParam;
 
-         // Los parametros en VARIANTARG[] hay que ponerlos en orden inverso
+         /* Los parametros en VARIANTARG[] hay que ponerlos en orden inverso */
          nArg = nArgs + 2 - n;
 
          VariantInit( &( pArgs[ n ] ) );
@@ -366,24 +366,25 @@ static void RetValue( void )
 }
 
 
-HB_FUNC( CREATEOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
+HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 {
-   LPSTR cCLSID;
-   GUID ClassID, iid;
-   LPIID riid = (LPIID) &IID_IDispatch;
    void * pDisp = NULL; /* IDispatch */
    /* 'void *' used intentionally to inform compiler that there is no strict-aliasing */
 
-   s_nOleError = S_OK;
-
-   if( !s_bInitialized )
+   if( s_bInitialized )
+      s_nOleError = S_OK;
+   else
    {
       s_nOleError = OleInitialize( NULL );
       s_bInitialized = TRUE;
    }
 
-   if( (s_nOleError == S_OK) || (s_nOleError == (HRESULT) S_FALSE) )
+   if( s_nOleError == S_OK || 
+       s_nOleError == S_FALSE )
    {
+      LPSTR cCLSID;
+      GUID ClassID, iid;
+      LPIID riid = (LPIID) &IID_IDispatch;
 
       cCLSID = AnsiToWide( hb_parc( 1 ) );
       if( hb_parc( 1 )[ 0 ] == '{' )
@@ -430,7 +431,7 @@ HB_FUNC( OLESHOWEXCEPTION )
    }
 }
 
-HB_FUNC( OLEINVOKE ) // (hOleObject, szMethodName, uParams...)
+HB_FUNC( OLEINVOKE ) /* (hOleObject, szMethodName, uParams...) */
 {
    IDispatch * pDisp = ( IDispatch * ) hb_parptr( 1 );
    LPSTR cMember;
@@ -465,7 +466,7 @@ HB_FUNC( OLEINVOKE ) // (hOleObject, szMethodName, uParams...)
    RetValue();
 }
 
-HB_FUNC( OLESETPROPERTY ) // (hOleObject, cPropName, uValue, uParams...)
+HB_FUNC( OLESETPROPERTY ) /* (hOleObject, cPropName, uValue, uParams...) */
 {
    IDispatch * pDisp = ( IDispatch * ) hb_parptr( 1 );
    LPSTR cMember;
@@ -497,7 +498,7 @@ HB_FUNC( OLESETPROPERTY ) // (hOleObject, cPropName, uValue, uParams...)
                                            LOCALE_USER_DEFAULT,
                                            DISPATCH_PROPERTYPUT,
                                            &dParams,
-                                           NULL,    // No return value
+                                           NULL,    /* No return value */
                                            &s_excep,
                                            &uArgErr );
 
@@ -505,7 +506,7 @@ HB_FUNC( OLESETPROPERTY ) // (hOleObject, cPropName, uValue, uParams...)
    }
 }
 
-HB_FUNC( OLEGETPROPERTY )  // (hOleObject, cPropName, uParams...)
+HB_FUNC( OLEGETPROPERTY )  /* (hOleObject, cPropName, uParams...) */
 {
    IDispatch * pDisp = ( IDispatch * ) hb_parptr( 1 );
    LPSTR cMember;
