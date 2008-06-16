@@ -443,8 +443,8 @@ HB_FUNC( OLEINVOKE ) // (hOleObject, szMethodName, uParams...)
 
    cMember = AnsiToWide( hb_parc( 2 ) );
    s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ),
-                                             ( wchar_t * ) cMember, 1,
-                                             LOCALE_USER_DEFAULT, &lDispID );
+                                               ( wchar_t ** ) &cMember, 1,
+                                               LOCALE_USER_DEFAULT, &lDispID );
    hb_xfree( cMember );
 
    if( s_nOleError == S_OK )
@@ -478,9 +478,11 @@ HB_FUNC( OLESETPROPERTY ) // (hOleObject, cPropName, uValue, uParams...)
    memset( (LPBYTE) &s_excep, 0, sizeof( s_excep ) );
 
    cMember = AnsiToWide( hb_parc( 2 ) );
+
    s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ),
-                                               ( wchar_t * ) cMember, 1,
+                                               ( wchar_t ** ) &cMember, 1,
                                                LOCALE_USER_DEFAULT, &lDispID );
+
    hb_xfree( cMember );
 
    if( s_nOleError == S_OK )
@@ -515,6 +517,7 @@ HB_FUNC( OLEGETPROPERTY )  // (hOleObject, cPropName, uParams...)
    memset( (LPBYTE) &s_excep, 0, sizeof( s_excep ) );
 
    cMember = AnsiToWide( hb_parc( 2 ) );
+
    s_nOleError = pDisp->lpVtbl->GetIDsOfNames( pDisp, HB_ID_REF( REFIID, IID_NULL ),
                                                ( wchar_t ** ) &cMember, 1,
                                                LOCALE_USER_DEFAULT, &lDispID );
@@ -595,9 +598,9 @@ HB_FUNC( GETOLEOBJECT )
    BSTR wCLSID;
    IID ClassID, iid;
    LPIID riid = (LPIID) &IID_IDispatch;
-   IUnknown *pUnk = NULL;
-   char *cOleName = hb_parc( 1 );
-   void *pDisp = NULL; /* IDispatch */
+   IUnknown * pUnk = NULL;
+   char * cOleName = hb_parc( 1 );
+   void * pDisp = NULL; /* IDispatch */
    /* 'void *' used intentionally to inform compiler that there is no strict-aliasing */
 
    s_nOleError = S_OK;
