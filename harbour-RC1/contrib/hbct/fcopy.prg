@@ -99,7 +99,7 @@ FUNCTION FILECOPY( cSource, cDest, lMode )
          DO WHILE !lDone
             nSrcBytes := FREAD( s_hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
-               lDone := 0
+               lDone := .T.
                EXIT
             ENDIF
             nDstBytes := FWRITE( hDstFile, cBuffer, nSrcBytes )

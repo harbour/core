@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /*
  * $DOC$
  * $FUNCNAME$
@@ -67,6 +68,45 @@
  *      See ACE.HLP under ADSLOCAL.CFG, or the Advantage Error Guide for
  *      error 7005.
 
+ *      SPEED AND PERFORMANCE ISSUES
+
+ *      If you have sluggish browsers, one issue could be the scrollbar.
+ *      If it's fast with the scrollbar disabled, the browse/scrolling logic
+ *      may not be as optimized as it could be. Scrollbars should always use
+ *      ADSGetRelKeyPos() and ADSSetRelKeyPos() instead of key counting functions.
+
+ *      If filtered data seems slower than expected, check these things:
+ *      First, optimization is not on by default, so at the top of the app
+ *      call
+
+ *         set(_SET_OPTIMIZE, .t.)
+
+ *      or its command equivalent.  RDDADS will use an AOF whenever
+ *      dbSetFilter is called *if it can*.
+
+ *      Second, make sure the filter is one ADS can understand. UDFs are out,
+ *      as are references to public or private variables. It's also best to
+ *      remove field aliases from the string. ADS cannot reference aliases for other
+ *      related tables, so they're superfluous.
+ *      You can call
+
+ *         ? AdsIsExprValid( cFilter )
+
+ *      to check.  If this returns False, neither the Local Server nor the
+ *      Remote Server can process it, so optimization will never occur (but
+ *      the Harbour RDD will process the filtering locally by eval'ing the
+ *      codeblock and testing each record). The only way to speed it up is to
+ *      fix the filter so ADS understands it.
+
+ *      You can also use dbOrderInfo(DBOI_OPTLEVEL) to see if the current
+ *      filter is optimized or not. COMIX users can use:
+ *
+ *            func rlOptLevel()
+ *            return dbOrderInfo(DBOI_OPTLEVEL)
+
+ *      This returns the Clipper/COMIX values (not ADS-defined values) because
+ *      this is an RDD call, not just a wrapper to the ADS call, which uses different numbers).
+
  *  $COMPLIANCE$
  *      Every attempt has been made to make the rdd compliant with the
  *      standard dbfcdx rdd at the .PRG level.
@@ -125,7 +165,7 @@
  *      One problem with this scenario is that index key counting
  *      functions that are supposed to give an accurate count respecting
  *      the filter (e.g. dbOrderInfo(DBOI_KEYCOUNT) will return the values the
- *      Server knows about, so the counts will be inaccurate.
+ *      Server knows about, so the counts may be inaccurate.
 
  *      3) When setting a relation, the expression must be one that can be
  *      evaluated by the Advantage Expression Engine.  UDFs will fail.
