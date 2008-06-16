@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-16 10:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/set.c
+     ! Fix to previous commit.
+
+   * contrib/hbole/oleauto.prg
+   * contrib/hbole/ole2.c
+     * Some cleanups.
+
 2008-06-16 01:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/set.ch
    * include/hbset.h

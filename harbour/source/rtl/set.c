@@ -1034,6 +1034,7 @@ void hb_setRelease( void )
    if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
    if( hb_set.HB_SET_COLOR )      hb_xfree( hb_set.HB_SET_COLOR );
    if( hb_set.HB_SET_EOL )        hb_xfree( hb_set.HB_SET_EOL );
+   if( hb_set.HB_SET_HBOUTLOG )   hb_xfree( hb_set.HB_SET_HBOUTLOG );
 
    hb_set.HB_SET_TYPEAHEAD = 0;   hb_inkeyReset(); /* reset keyboard buffer */
 

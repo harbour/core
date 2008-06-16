@@ -52,6 +52,7 @@
 
 
 #include "hbclass.ch"
+#include "common.ch"
 
 
 CLASS TOleAuto
@@ -74,25 +75,25 @@ ENDCLASS
 
 METHOD New( uObj ) CLASS TOleAuto
 
-   IF ValType( uObj )="C"
+   IF ISCHARACTER( uObj )
       ::hObj := CreateOleObject( uObj )
    ELSE
       ::hObj := uObj
    ENDIF
 
-RETURN Self
+   RETURN Self
 
 METHOD GetActiveObject( cClass ) CLASS TOleAuto
 
-   IF ValType( cClass ) = 'C'
+   IF ISCHARACTER( cClass )
       ::hObj := GetOleObject( cClass )
       // ::cClassName := cClass
    ELSE
-      MessageBox( 0,"Invalid parameter type to constructor TOleAuto():GetActiveObject()!", "OLE Interface",0 )
+      MessageBox( 0, "Invalid parameter type to constructor TOleAuto():GetActiveObject()!", "OLE Interface", 0 )
       ::hObj := 0
    ENDIF
 
-RETURN Self
+   RETURN Self
 
 //--------------------------------------------------------------------
 
@@ -100,7 +101,7 @@ METHOD End() CLASS TOleAuto
 
    ::hObj := NIL
 
-RETURN NIL
+   RETURN NIL
 
 //--------------------------------------------------------------------
 
@@ -130,10 +131,10 @@ METHOD Invoke( cMethod, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) C
       OLEShowException()
       RETURN Self
    ELSEIF OleError() != 0
-      MessageBox( 0,cMethod + ":   " + Ole2TxtError(), "OLE Error",0 )
+      MessageBox( 0, cMethod + ":   " + Ole2TxtError(), "OLE Error", 0 )
    ENDIF
 
-RETURN uObj
+   RETURN uObj
 
 //--------------------------------------------------------------------
 
@@ -156,10 +157,10 @@ METHOD Set( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CL
    IF Ole2TxtError() == "DISP_E_EXCEPTION"
       OLEShowException()
    ELSEIF OleError() != 0
-      MessageBox( 0,cProperty + ":   " + Ole2TxtError(), "OLE Error",0 )
+      MessageBox( 0, cProperty + ":   " + Ole2TxtError(), "OLE Error", 0 )
    ENDIF
 
-RETURN nil
+   RETURN nil
 
 //--------------------------------------------------------------------
 
@@ -183,18 +184,19 @@ METHOD Get( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CL
       uObj := OLEGetProperty( ::hObj, cProperty )
    ENDIF
 
-   IF Ole2TxtError() $ "DISP_E_MEMBERNOTFOUND | DISP_E_BADPARAMCOUNT | " + ;
+   IF Ole2TxtError() $ "DISP_E_MEMBERNOTFOUND | "+;
+                       "DISP_E_BADPARAMCOUNT | " +;
                        "DISP_E_EXCEPTION"
       uObj := ::Invoke( cProperty, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
    ELSE
       IF OleIsObject()
          RETURN TOleAuto():New( uObj )
       ELSEIF OleError() != 0
-         MessageBox( 0,cProperty + ":   " + Ole2TxtError(), "OLE Error",0 )
+         MessageBox( 0, cProperty + ":   " + Ole2TxtError(), "OLE Error", 0 )
       ENDIF
    ENDIF
 
-RETURN uObj
+   RETURN uObj
 
 //--------------------------------------------------------------------
 
@@ -202,21 +204,17 @@ METHOD OnError( uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 ) CLASS TOl
 
    LOCAL cMsg := __GetMessage()
 
-   LOCAL uObj
-
-   IF LEFT( cMsg, 1 ) == '_'
-      ::Set( SUBS( cMsg, 2 ), uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
-   ELSE
-      uObj := ::Get( cMsg, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
+   IF !( Left( cMsg, 1 ) == "_" )
+      RETURN ::Get( cMsg, uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
    ENDIF
 
-RETURN uObj
+   RETURN ::Set( SubStr( cMsg, 2 ), uParam1, uParam2, uParam3, uParam4, uParam5, uParam6 )
 
-EXIT PROCEDURE OLEEXIT
+EXIT PROCEDURE OLEEXIT()
 
    OLEUninitialize()
 
-RETURN
+   RETURN
 
 FUNCTION CreateObject( cString )
    RETURN TOleAuto():New( cString )
