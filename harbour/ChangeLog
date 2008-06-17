@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-17 13:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmzip/hbmzip.ch
+   * contrib/hbmzip/hbmzip.c
+     + Added error codes to hbmzip.ch
+     + Interface code changed to use manifest constants 
+       instead of literals in a few places.
+       [TOMERGE RC1]
+
 2008-06-17 09:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/spd.c
      + SQL_SPRINTF() enhancements from Javier.

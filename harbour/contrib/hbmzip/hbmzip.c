@@ -647,12 +647,12 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
 
    iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szName, _POSIX_PATH_MAX, 
                                     NULL, 0, NULL, 0 );
-   if( iResult != 0 )
+   if( iResult != UNZ_OK )
       return iResult;
 
    iResult = unzOpenCurrentFilePassword( hUnzip, szPassword );
 
-   if( iResult != 0 )
+   if( iResult != UNZ_OK )
       return iResult;
 
    if( szFileName )
@@ -683,7 +683,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
    if( ufi.external_fa & 0x40000000 ) /* DIRECTORY */
    {
       hb_fsMkDir( (BYTE*) szName );
-      iResult = 0;
+      iResult = UNZ_OK;
    }
    else
    {
