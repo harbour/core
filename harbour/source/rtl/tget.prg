@@ -226,9 +226,14 @@ CREATE CLASS Get
 ENDCLASS
 
 METHOD assign() CLASS Get
+   LOCAL xValue
 
    IF ::hasFocus
-      ::varPut( ::unTransform() )
+      xValue := ::unTransform()
+      IF ::cType == "C"
+         xValue += SubStr( ::original, Len( xValue ) + 1 )
+      ENDIF   
+      ::varPut( xValue )
    ENDIF
 
    RETURN Self
