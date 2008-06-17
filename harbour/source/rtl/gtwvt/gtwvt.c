@@ -1554,7 +1554,7 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
 
    hWnd = CreateWindow(
       s_szAppName,                                         /* classname */
-      TEXT( "HARBOUR_WVT" ),                               /* window name */
+      s_szAppName,                                         /* window name */
       WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|
          WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX,         /* style */
       0,                                                   /* x */
@@ -1568,8 +1568,7 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
 
    if( hWnd == NULL )
    {
-      MessageBox( NULL, TEXT( "Failed to create window." ),
-                  TEXT( "HARBOUR_WVT" ), MB_ICONERROR );
+      MessageBox( NULL, TEXT( "Failed to create window." ), s_szAppName, MB_ICONERROR );
       return NULL;
    }
 
@@ -2135,8 +2134,8 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                         &szClipboardData, &ulLen ) )
             {
                pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
-                                                szClipboardData,
-                                                ulLen );
+                                                 szClipboardData,
+                                                 ulLen );
             }
             else
             {
