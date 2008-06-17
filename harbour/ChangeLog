@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-17 21:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtclip.c
+     ! Added three LPWSTR casts to pacify warnings.
+       [TOMERGE RC1]
+
 2008-06-17 18:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtclip.c
      ! Fixed get/set clipboard when UNICODE is #defined.

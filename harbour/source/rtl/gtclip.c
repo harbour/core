@@ -109,7 +109,7 @@ BOOL hb_gt_w32_setClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
          {
             if( uFormat == CF_UNICODETEXT )
             {
-               hb_mbtowcset( lptstrCopy, szClipData, ulLen );
+               hb_mbtowcset( ( LPWSTR ) lptstrCopy, szClipData, ulLen );
                lptstrCopy[ ulLen * sizeof( wchar_t ) ] = L'\0';
             }
             else
@@ -143,9 +143,9 @@ BOOL hb_gt_w32_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
             switch( uFormat )
             {
             case CF_UNICODETEXT:
-               *pulLen = wcslen( lptstr );
+               *pulLen = wcslen( ( LPWSTR ) lptstr );
                if( *pulLen )
-                  *pszClipData = hb_wctomb( lptstr );
+                  *pszClipData = hb_wctomb( ( LPWSTR ) lptstr );
                break;
             case CF_OEMTEXT:
             case CF_TEXT:
