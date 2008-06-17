@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-17 23:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tget.prg
+     % Minor opt.
+
+   * contrib/hbwhat32/_winkbrd.c
+   * contrib/hbwhat32/_wintext.c
+   * contrib/hbwhat32/_windc.c
+   * contrib/hbwhat32/_winsys.c
+   * contrib/hbwhat32/_windir.c
+   * contrib/hbwhat32/_winmsg.c
+   * contrib/hbwhat32/_winmisc.c
+   * contrib/hbwhat32/_winfont.c
+   * contrib/hbwhat32/_winreg.c
+     ! Potential warning fixes.
+
 2008-06-17 23:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * tests/rto_get.prg
    * source/rtl/tget.prg

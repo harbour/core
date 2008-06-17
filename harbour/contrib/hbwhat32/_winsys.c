@@ -931,7 +931,7 @@ HB_FUNC( HTMLHELP )
 HB_FUNC( CREATEFILE )
 {
 
-   SECURITY_ATTRIBUTES *sa ;
+   SECURITY_ATTRIBUTES *sa = NULL;
 
    if( ISCHAR( 4 ) )
       sa = ( SECURITY_ATTRIBUTES *) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value ;
@@ -972,7 +972,7 @@ HB_FUNC( READFILE )
    char * Buffer = ( char * ) hb_xgrab( hb_parnl( 3 ) ) ;
    DWORD nRead   = 0      ;
    BOOL  bRet             ;
-   OVERLAPPED *Overlapped ;
+   OVERLAPPED *Overlapped = NULL;
 
    if( ISCHAR( 5 ) )
       Overlapped = ( OVERLAPPED *) hb_parc( 5 ); //hb_param( 5, HB_IT_STRING )->item.asString.value ;
@@ -1006,8 +1006,8 @@ BOOL WriteFile(
 HB_FUNC( WRITEFILE )
 {
 
-   DWORD nWritten = 0     ;
-   OVERLAPPED *Overlapped ;
+   DWORD nWritten = 0;
+   OVERLAPPED *Overlapped = NULL;
 
    if( ISCHAR( 4 ))
      Overlapped = ( OVERLAPPED *) hb_parc( 4 ); //hb_param( 4, HB_IT_STRING )->item.asString.value ;

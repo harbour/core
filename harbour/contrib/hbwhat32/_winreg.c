@@ -207,7 +207,7 @@ HB_FUNC( REGCREATEKEYEX )
   HKEY hkResult ;
   DWORD dwDisposition ;
   LONG nErr ;
-  SECURITY_ATTRIBUTES *sa ;
+  SECURITY_ATTRIBUTES *sa = NULL;
 
   if (ISCHAR(7))
        sa = (SECURITY_ATTRIBUTES *) hb_parc( 7 ); //hb_param(7, HB_IT_STRING)->item.asString.value;

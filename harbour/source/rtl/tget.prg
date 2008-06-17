@@ -972,11 +972,7 @@ METHOD pos( nPos ) CLASS Get
          DO CASE
          CASE nPos > ::nMaxLen
 
-            IF ::nMaxLen == 0
-               ::nPos := 1
-            ELSE
-               ::nPos := ::nMaxLen
-            ENDIF
+            ::nPos := iif( ::nMaxLen == 0, 1, ::nMaxLen )
             ::typeOut := .T.
 
          CASE nPos > 0

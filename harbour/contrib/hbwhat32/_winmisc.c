@@ -507,7 +507,7 @@ int nCopyAnsiToWideChar (LPWORD lpWCStr, LPSTR lpAnsiIn)
 
 HB_FUNC( CREATEMUTEX )
 {
-   SECURITY_ATTRIBUTES *sa;
+   SECURITY_ATTRIBUTES *sa = NULL;
 
    if( ISCHAR(1) )
    {

@@ -177,7 +177,7 @@ HB_FUNC( SETVOLUMELABEL )
 
 HB_FUNC( CREATEDIRECTORY )
 {
-   SECURITY_ATTRIBUTES *sa ;
+   SECURITY_ATTRIBUTES *sa = NULL;
 
    if (ISCHAR(2))
        sa = (SECURITY_ATTRIBUTES *) hb_parc( 2 ); //hb_param(2, HB_IT_STRING)->item.asString.value;

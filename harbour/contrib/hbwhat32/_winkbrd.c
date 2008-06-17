@@ -250,7 +250,7 @@ HB_FUNC( DESTROYACCELERATORTABLE )
 
 HB_FUNC( COPYACCELERATORTABLE )
 {
-   LPACCEL lpAccelDst    ;
+   LPACCEL lpAccelDst = NULL;
    int iCount = 0;
    int iRet ;
    PHB_ITEM aParam ;

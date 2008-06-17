@@ -72,7 +72,7 @@ HB_FUNC( POLYTEXTOUTA )
 HB_FUNC( EXTTEXTOUT )
 {
    RECT  rc    ;
-   INT * lpDx  ;
+   INT * lpDx = NULL;
    BOOL rcOk   ;
    UINT iCount ;
    UINT i      ;
@@ -137,7 +137,7 @@ HB_FUNC( DRAWTEXTEX )
 {
    char *cText = (char *) hb_parcx( 2 );
    RECT rc;
-   DRAWTEXTPARAMS *dtp ;
+   DRAWTEXTPARAMS *dtp = NULL;
 
    if ( ISCHAR( 5 ))
       dtp = (DRAWTEXTPARAMS *) hb_parc( 5 ); //hb_param( 5, HB_IT_STRING )->item.asString.value;
