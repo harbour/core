@@ -49,6 +49,8 @@
  *
  */
 
+#define HB_OS_WIN_32_USED
+
 #ifndef CINTERFACE
    #define CINTERFACE 1
 #endif
@@ -152,13 +154,9 @@ HB_EXPORT BSTR hb_oleAnsiToSysString( const char * cString )
       BSTR bstrString = SysAllocStringLen( NULL, nConvertedLen - 1 );
 
       if( MultiByteToWideChar( CP_ACP, 0, cString, -1, bstrString, nConvertedLen ) )
-      {
          return bstrString;
-      }
       else
-      {
          SysFreeString( bstrString );
-      }
    }
 
    return NULL;
@@ -174,13 +172,9 @@ HB_EXPORT LPWSTR hb_oleAnsiToWide( LPSTR cString )
       LPWSTR wString = (LPWSTR) hb_xgrab( nConvertedLen * 2 + 1 );
 
       if( MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cString, -1, wString, nConvertedLen ) )
-      {
          return wString;
-      }
       else
-      {
          hb_xfree( wString );
-      }
    }
 
    return NULL;
@@ -212,30 +206,30 @@ HB_FUNC( __HB_OLE_INIT )
 {
    if( s_pSym_TOleAuto == NULL )
    {
-       s_pSym_TOleAuto       = hb_dynsymFind( "TOLEAUTO" );
-       s_pSym_New            = hb_dynsymFind( "NEW" );
-       s_pSym_hObj           = hb_dynsymFind( "HOBJ" );
-       s_pSym_cClassName     = hb_dynsymFind( "CCLASSNAME" );
+      s_pSym_TOleAuto       = hb_dynsymFind( "TOLEAUTO" );
+      s_pSym_New            = hb_dynsymFind( "NEW" );
+      s_pSym_hObj           = hb_dynsymFind( "HOBJ" );
+      s_pSym_cClassName     = hb_dynsymFind( "CCLASSNAME" );
 
-       s_pSym_VTWrapper      = hb_dynsymFind( "VTWRAPPER" );
-       s_pSym_VTArrayWrapper = hb_dynsymFind( "VTARRAYWRAPPER" );
-       s_pSym_vt             = hb_dynsymGetCase( "VT" );
-       s_pSym_Value          = hb_dynsymFind( "VALUE" );
+      s_pSym_VTWrapper      = hb_dynsymFind( "VTWRAPPER" );
+      s_pSym_VTArrayWrapper = hb_dynsymFind( "VTARRAYWRAPPER" );
+      s_pSym_vt             = hb_dynsymGetCase( "VT" );
+      s_pSym_Value          = hb_dynsymFind( "VALUE" );
 
-       s_EmptyDispParams.rgvarg            = NULL;
-       s_EmptyDispParams.cArgs             = 0;
-       s_EmptyDispParams.rgdispidNamedArgs = 0;
-       s_EmptyDispParams.cNamedArgs        = 0;
+      s_EmptyDispParams.rgvarg            = NULL;
+      s_EmptyDispParams.cArgs             = 0;
+      s_EmptyDispParams.rgdispidNamedArgs = 0;
+      s_EmptyDispParams.cNamedArgs        = 0;
 
-       if( ! s_bInit )
-       {
-          OleInitialize( NULL );
-          hb_retptrGC( hb_gcAlloc( 1, hb_oleRelease ) );
-          s_bInit = TRUE;
-       }
+      if( ! s_bInit )
+      {
+         OleInitialize( NULL );
+         hb_retptrGC( hb_gcAlloc( 1, hb_oleRelease ) );
+         s_bInit = TRUE;
+      }
 
-       VariantInit( &s_RetVal );
-       VariantInit( &s_OleVal );
+      VariantInit( &s_RetVal );
+      VariantInit( &s_OleVal );
    }
 }
 
@@ -250,14 +244,8 @@ HB_FUNC( ANSITOWIDE )  // ( cAnsiStr ) -> cWideStr
       BSTR wString = hb_oleAnsiToWide( cString );
 
       if( wString )
-      {
          hb_retclen_buffer( (char *) wString, SysStringLen( wString ) );
-         return;
-      }
    }
-
-   hb_ret();
-   return;
 }
 
 //---------------------------------------------------------------------------//
@@ -270,13 +258,9 @@ HB_EXPORT LPSTR hb_oleWideToAnsi( BSTR wString )
       char *cString = (char *) hb_xgrab( nConvertedLen + 1 );
 
       if( WideCharToMultiByte( CP_ACP, 0, wString, -1, cString, nConvertedLen + 1, NULL, NULL ) )
-      {
          return cString;
-      }
       else
-      {
          hb_xfree( cString );
-      }
    }
 
    //wprintf( L"\nWide: '%s'\n", wString );
@@ -295,14 +279,8 @@ HB_FUNC( WIDETOANSI )  // ( cWideStr, nLen ) -> cAnsiStr
       char *cString = hb_oleWideToAnsi( wString );
 
       if( cString )
-      {
          hb_retclen_buffer( cString, strlen( cString ) );
-         return;
-      }
    }
-
-   hb_ret();
-   return;
 }
 
 //---------------------------------------------------------------------------//
@@ -322,9 +300,7 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
       bByRef = TRUE;
    }
    else
-   {
       bByRef = FALSE;
-   }
 
    VariantClear( pVariant );
 
@@ -448,27 +424,25 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
          break;
 
       case HB_IT_DATE:
-        {
-           long lDate = hb_itemGetDL( pItem );
-           
-           if( lDate == 0 )
-           {
-              pVariant->n1.n2.vt = VT_NULL;
-           }
-           else if( bByRef )
-           {
-              hb_itemPutND( pItem, (double) ( lDate - 2415019 ) );
-           
-              pVariant->n1.n2.vt = VT_BYREF | VT_DATE;
-              pVariant->n1.n2.n3.pdblVal = &( pItem->item.asDouble.value );
-           }
-           else
-           {
-              pVariant->n1.n2.vt = VT_DATE;
-              pVariant->n1.n2.n3.dblVal = (double) ( lDate - 2415019 );
-           }
-        }
-        break;
+         {
+            long lDate = hb_itemGetDL( pItem );
+            
+            if( lDate == 0 )
+               pVariant->n1.n2.vt = VT_NULL;
+            else if( bByRef )
+            {
+               hb_itemPutND( pItem, (double) ( lDate - 2415019 ) );
+            
+               pVariant->n1.n2.vt = VT_BYREF | VT_DATE;
+               pVariant->n1.n2.n3.pdblVal = &( pItem->item.asDouble.value );
+            }
+            else
+            {
+               pVariant->n1.n2.vt = VT_DATE;
+               pVariant->n1.n2.n3.dblVal = (double) ( lDate - 2415019 );
+            }
+         }
+         break;
 
       case HB_IT_POINTER:
          pVariant->n1.n2.vt = VT_PTR;
@@ -529,7 +503,7 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
 
                   sString = hb_itemGetCPtr( pItem );
 
-                 ItemToVariant_StringArray:
+ItemToVariant_StringArray:
 
                   rgsabound.cElements = hb_itemGetCLen( pItem );
                   rgsabound.lLbound = 0;
@@ -550,9 +524,7 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
                   }
 
                   for( i = 0; i < rgsabound.cElements; i++ )
-                  {
                      SafeArrayPutElement( parray, (LONG *) &i, &( sString[i]) );
-                  }
 
                   break;
                }
@@ -601,14 +573,14 @@ HB_EXPORT void hb_oleItemToVariant( VARIANT *pVariant, PHB_ITEM pItem )
          }
          else
          {
-            unsigned long  i;
+            unsigned long i;
             SAFEARRAY *parray;
 
             vt = VT_VARIANT;
             VariantInit( &mVariant );
             pSource = &mVariant;
 
-          ItemToVariant_ProcessArray:
+ItemToVariant_ProcessArray:
 
             rgsabound.cElements = hb_arrayLen( pItem );
             rgsabound.lLbound = 0;
@@ -709,9 +681,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
             pItem = hb_itemUnRef( pItem );
          }
          else
-         {
             bByRef = FALSE;
-         }
 
          //nParam = pDispParams->cArgs - n;
 
@@ -762,9 +732,7 @@ static void FreeParams( DISPPARAMS *pDispParams, PHB_ITEM *aPrgParams )
                        break;
                     }
                     else
-                    {
                        pDisp = pVariant->n1.n2.n3.pdispVal;
-                    }
                  }
 
                  if( s_pOleAuto == NULL )
@@ -1026,9 +994,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
 
    // Don't "optimize" (VT_ARRAY | VT_VARIANT) must not match!
    while( pVariant->n1.n2.vt == ( VT_BYREF | VT_VARIANT ) || pVariant->n1.n2.vt == VT_VARIANT || pVariant->n1.n2.vt == VT_BYREF )
-   {
       pVariant = pVariant->n1.n2.n3.pvarVal;
-   }
 
    switch( pVariant->n1.n2.vt )
    {
@@ -1038,22 +1004,14 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
          char *sString;
 
          if( pVariant->n1.n2.vt & VT_BYREF )
-         {
             sString = hb_oleWideToAnsi( *pVariant->n1.n2.n3.pbstrVal );
-         }
          else
-         {
             sString = hb_oleWideToAnsi( pVariant->n1.n2.n3.bstrVal );
-         }
 
          if( sString )
-         {
             hb_itemPutCPtr2( pItem, sString );
-         }
          else
-         {
             hb_itemPutC( pItem, NULL );
-         }
 
          break;
       }
@@ -1072,9 +1030,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
 
       case VT_UNKNOWN:
          if( pVariant->n1.n2.vt == VT_UNKNOWN )
-         {
             pUnk = pVariant->n1.n2.n3.punkVal;
-         }
 
          if( pUnk )
          {
@@ -1085,16 +1041,12 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
 
       case ( VT_DISPATCH | VT_BYREF ):
          if( pVariant->n1.n2.vt == ( VT_DISPATCH | VT_BYREF ) )
-         {
             pDisp = *pVariant->n1.n2.n3.ppdispVal;
-         }
          // Intentionally fall through
 
       case VT_DISPATCH:
          if( pVariant->n1.n2.vt == VT_DISPATCH )
-         {
             pDisp = pVariant->n1.n2.n3.pdispVal;
-         }
 
          if( pDisp == NULL )
          {
@@ -1110,9 +1062,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
                hb_vmDo( 2 );
 
                if( pItem != hb_stackReturnItem() )
-               {
                   hb_itemForwardValue( pItem, hb_stackReturnItem() );
-               }
 
                hb_itemRelease( pVT );
                hb_itemRelease( pUnknown );
@@ -1142,9 +1092,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
 
             // If retrieved from IUnknown than doubly added!
             if( pVariant->n1.n2.vt == VT_UNKNOWN || pVariant->n1.n2.vt == ( VT_UNKNOWN | VT_BYREF ) )
-            {
                pDisp->lpVtbl->Release( pDisp );
-            }
 
             hb_itemRelease( pOleAuto );
 
@@ -1152,9 +1100,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
             hb_vmRequestReset();
 
             if( pItem != hb_stackReturnItem() )
-            {
                hb_itemForwardValue( pItem, hb_stackReturnItem() );
-            }
          }
          break;
 
@@ -1214,13 +1160,9 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
          double tmp = 0;
 
          if( pVariant->n1.n2.vt & VT_BYREF )
-         {
             VarR8FromCy( *pVariant->n1.n2.n3.pcyVal, &tmp );
-         }
          else
-         {
             VarR8FromCy( pVariant->n1.n2.n3.cyVal, &tmp );
-         }
 
          hb_itemPutND( pItem, tmp );
          break;
@@ -1232,13 +1174,9 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
          double tmp = 0;
 
          if( pVariant->n1.n2.vt & VT_BYREF )
-         {
             VarR8FromDec( pVariant->n1.n2.n3.pdecVal, &tmp );
-         }
          else
-         {
             VarR8FromDec( &pVariant->n1.decVal, &tmp );
-         }
 
          hb_itemPutND( pItem, tmp );
          break;
@@ -1277,13 +1215,9 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
             VARTYPE vt;
 
             if( pVariant->n1.n2.vt & VT_BYREF )
-            {
                parray = *pVariant->n1.n2.n3.pparray;
-            }
             else
-            {
                parray = pVariant->n1.n2.n3.parray;
-            }
 
             if( parray )
             {
@@ -1304,9 +1238,7 @@ HRESULT hb_oleVariantToItem( PHB_ITEM pItem, VARIANT *pVariant )
                hb_itemRelease( pArray );
             }
             else
-            {
                hb_arrayNew( pItem, 0 );
-            }
          }
          else
          {
@@ -1376,30 +1308,20 @@ HB_FUNC( OLESHOWEXCEPTION )
 HB_FUNC( OLEEXCEPTIONSOURCE )
 {
    if( (LONG) s_nOleError == DISP_E_EXCEPTION )
-   {
-      LPSTR source;
-
-      source = hb_oleWideToAnsi( excep.bstrSource );
-      hb_retc_buffer( source );
-   }
+      hb_retc_buffer( hb_oleWideToAnsi( excep.bstrSource ) );
 }
 
 //---------------------------------------------------------------------------//
 HB_FUNC( OLEEXCEPTIONDESCRIPTION )
 {
    if( (LONG) s_nOleError == DISP_E_EXCEPTION )
-   {
-      LPSTR description;
-
-      description = hb_oleWideToAnsi( excep.bstrDescription );
-      hb_retc_buffer( description );
-   }
+      hb_retc_buffer( hb_oleWideToAnsi( excep.bstrDescription ) );
 }
 
 //---------------------------------------------------------------------------//
 HB_FUNC( OLEERROR )
 {
-   hb_retnl( (LONG) s_nOleError );
+   hb_retnl( ( long ) s_nOleError );
 }
 
 //---------------------------------------------------------------------------//
@@ -1515,13 +1437,9 @@ HB_FUNC( CREATEOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
    bstrClassID = hb_oleAnsiToSysString( hb_parcx( 1 ) );
 
    if( hb_parcx( 1 )[ 0 ] == '{' )
-   {
       s_nOleError = CLSIDFromString( bstrClassID, (LPCLSID) &ClassID );
-   }
    else
-   {
       s_nOleError = CLSIDFromProgID( bstrClassID, (LPCLSID) &ClassID );
-   }
 
    SysFreeString( bstrClassID );
 
@@ -1536,9 +1454,7 @@ HB_FUNC( CREATEOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
          SysFreeString( bstrClassID );
       }
       else
-      {
          memcpy( ( LPVOID ) &iid, hb_parcx( 2 ), sizeof( iid ) );
-      }
 
       riid = &iid;
    }
@@ -1569,13 +1485,9 @@ HB_FUNC( GETOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
    bstrClassID = hb_oleAnsiToSysString( hb_parcx( 1 ) );
 
    if( hb_parcx( 1 )[ 0 ] == '{' )
-   {
       s_nOleError = CLSIDFromString( bstrClassID, (LPCLSID) &ClassID );
-   }
    else
-   {
       s_nOleError = CLSIDFromProgID( bstrClassID, (LPCLSID) &ClassID );
-   }
 
    //s_nOleError = ProgIDFromCLSID( &ClassID, &pOleStr );
    //wprintf( L"Result %i ProgID: '%s'\n", s_nOleError, pOleStr );
@@ -1591,9 +1503,7 @@ HB_FUNC( GETOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
          SysFreeString( bstrClassID );
       }
       else
-      {
          memcpy( ( LPVOID ) &iid, hb_parcx( 2 ), sizeof( iid ) );
-      }
 
       riid = &iid;
    }
@@ -1609,9 +1519,7 @@ HB_FUNC( GETOLEOBJECT ) // ( cOleName | cCLSID  [, cIID ] )
          pUnk->lpVtbl->Release( pUnk );
 
          if( SUCCEEDED( s_nOleError ) )
-         {
             hb_retnl( ( LONG ) pDisp );
-         }
       }
    }
 }
@@ -1662,9 +1570,7 @@ static HRESULT OleSetProperty( IDispatch *pDisp, DISPID DispID, DISPPARAMS *pDis
                                            &uArgErr );
 
       if( SUCCEEDED( s_nOleError ) )
-      {
          return s_nOleError;
-      }
    }
 
    memset( (LPBYTE) &excep, 0, sizeof( excep ) );
@@ -1759,9 +1665,7 @@ static void OleThrowError( void )
       hb_xfree( sTemp );
    }
    else
-   {
       sDescription = Ole2TxtError();
-   }
 
    //HB_TRACE(HB_TR_INFO, ("Desc: '%s'\n", sDescription));
 
@@ -1773,9 +1677,7 @@ static void OleThrowError( void )
    }
 
    if( pReturn )
-   {
-      hb_itemRelease( hb_itemReturn( pReturn ) );
-   }
+      hb_itemReturnRelease( pReturn );
 }
 
 //---------------------------------------------------------------------------//
@@ -1797,13 +1699,9 @@ HB_FUNC( TOLEAUTO_OLEVALUE )
       //HB_TRACE(HB_TR_INFO, ("GetDefault: %p\n", s_nOleError));
 
       if( SUCCEEDED( s_nOleError ) )
-      {
          RetValue();
-      }
       else
-      {
          OleThrowError();
-      }
    }
 }
 
@@ -1832,13 +1730,9 @@ HB_FUNC( TOLEAUTO__OLEVALUE )
       FreeParams( &DispParams, aPrgParams );
 
       if( SUCCEEDED( s_nOleError ) )
-      {
          hb_itemReturn( hb_stackItemFromBase( 1 ) );
-      }
       else
-      {
          OleThrowError();
-      }
    }
 }
 
@@ -1862,41 +1756,23 @@ HB_FUNC( TOLEAUTO_OLENEWENUMERATOR ) // (hOleObject, szMethodName, uParams...)
       LPVOID pEnumVariant = NULL; /* IEnumVARIANT */
 
       if( s_RetVal.n1.n2.vt == ( VT_UNKNOWN | VT_BYREF ) )
-      {
          s_nOleError = (*s_RetVal.n1.n2.n3.ppunkVal)->lpVtbl->QueryInterface( *s_RetVal.n1.n2.n3.ppunkVal, HB_ID_REF( REFIID, IID_IEnumVARIANT ), &pEnumVariant );
-      }
       else if( s_RetVal.n1.n2.vt == VT_UNKNOWN )
-      {
          s_nOleError = s_RetVal.n1.n2.n3.punkVal->lpVtbl->QueryInterface( s_RetVal.n1.n2.n3.punkVal, HB_ID_REF( REFIID, IID_IEnumVARIANT ), &pEnumVariant );
-      }
       else if( s_RetVal.n1.n2.vt == ( VT_DISPATCH | VT_BYREF ) )
-      {
          s_nOleError = (*s_RetVal.n1.n2.n3.ppdispVal)->lpVtbl->QueryInterface( *s_RetVal.n1.n2.n3.ppdispVal, HB_ID_REF( REFIID, IID_IEnumVARIANT ), &pEnumVariant );
-      }
       else if( s_RetVal.n1.n2.vt == VT_DISPATCH )
-      {
          s_nOleError = s_RetVal.n1.n2.n3.pdispVal->lpVtbl->QueryInterface( s_RetVal.n1.n2.n3.pdispVal, HB_ID_REF( REFIID, IID_IEnumVARIANT ), &pEnumVariant );
-      }
       else
-      {
          s_nOleError = E_FAIL;
-      }
 
       VariantClear( &s_RetVal );
 
       if( SUCCEEDED( s_nOleError ) )
-      {
          hb_retptr( pEnumVariant );
-      }
-      else
-      {
-         hb_ret();
-      }
    }
    else
-   {
       OleThrowError();
-   }
 }
 
 //---------------------------------------------------------------------------//
@@ -1905,9 +1781,7 @@ static HRESULT OleGetID( IDispatch *pDisp, const char *szName, DISPID *pDispID, 
    BSTR bstrMessage;
 
    if( pbSetFirst )
-   {
       *pbSetFirst = FALSE;
-   }
 
    /*
    if( strcmp( szName, "OLEVALUE" ) == 0 || strcmp( szName, "_OLEVALUE" ) == 0 )
@@ -1925,15 +1799,11 @@ static HRESULT OleGetID( IDispatch *pDisp, const char *szName, DISPID *pDispID, 
       if( SUCCEEDED( s_nOleError ) )
       {
          if( pbSetFirst )
-         {
             *pbSetFirst = TRUE;
-         }
       }
    }
    else
-   {
       s_nOleError = E_PENDING;
-   }
 
    if( FAILED( s_nOleError ) )
    {
@@ -1966,9 +1836,7 @@ HB_FUNC( TOLEAUTO_INVOKE )
       PHB_ITEM *aPrgParams = GetParams( &DispParams, 1 );
 
       if( SUCCEEDED( OleInvoke( pDisp, DispID, &DispParams ) ) )
-      {
          RetValue();
-      }
 
       FreeParams( &DispParams, aPrgParams );
    }
@@ -1978,7 +1846,7 @@ HB_FUNC( TOLEAUTO_INVOKE )
 HB_FUNC( TOLEAUTO_SET )
 {
    IDispatch *pDisp;
-   char *szName = hb_parc(1);
+   char *szName = hb_parc( 1 );
    DISPID DispID;
    DISPPARAMS DispParams;
 
@@ -1992,9 +1860,7 @@ HB_FUNC( TOLEAUTO_SET )
       PHB_ITEM *aPrgParams = GetParams( &DispParams, 1 );
 
       if( SUCCEEDED( OleSetProperty( pDisp, DispID, &DispParams ) ) )
-      {
          RetValue();
-      }
 
       FreeParams( &DispParams, aPrgParams );
    }
@@ -2018,9 +1884,7 @@ HB_FUNC( TOLEAUTO_GET )
       PHB_ITEM *aPrgParams = GetParams( &DispParams, 1 );
 
       if( SUCCEEDED( OleGetProperty( pDisp, DispID, &DispParams ) ) )
-      {
          RetValue();
-      }
 
       FreeParams( &DispParams, aPrgParams );
    }
@@ -2042,7 +1906,7 @@ HB_FUNC( TOLEAUTO_ONERROR )
    hb_vmSend( 0 );
    pDisp = ( IDispatch * ) hb_parnl( -1 );
 
-  OleGetID :
+OleGetID:
 
    if( SUCCEEDED( OleGetID( pDisp, hb_itemGetSymbol( hb_stackBaseItem() )->szName, &DispID, &bSetFirst ) ) )
    {
@@ -2051,23 +1915,17 @@ HB_FUNC( TOLEAUTO_ONERROR )
       if( bSetFirst )
       {
          if( SUCCEEDED( OleSetProperty( pDisp, DispID, &DispParams ) ) )
-         {
             hb_itemReturn( hb_stackItemFromBase( 1 ) );
-         }
 
          //HB_TRACE(HB_TR_INFO, ("FIRST OleSetProperty %i\n", s_nOleError));
       }
       else
-      {
          s_nOleError = E_PENDING;
-      }
 
       if( FAILED( s_nOleError ) )
       {
          if( SUCCEEDED( OleInvoke( pDisp, DispID, &DispParams ) ) )
-         {
             RetValue();
-         }
 
          //HB_TRACE(HB_TR_INFO, ("OleInvoke %i\n", s_nOleError));
       }
@@ -2075,9 +1933,7 @@ HB_FUNC( TOLEAUTO_ONERROR )
       if( FAILED( s_nOleError ) )
       {
          if( SUCCEEDED( OleGetProperty( pDisp, DispID, &DispParams ) ) )
-         {
             RetValue();
-         }
 
          //HB_TRACE(HB_TR_INFO, ("OleGetProperty(%i) %i\n", DispParams.cArgs, s_nOleError));
       }
@@ -2085,9 +1941,7 @@ HB_FUNC( TOLEAUTO_ONERROR )
       if( FAILED( s_nOleError ) && bSetFirst == FALSE && hb_pcount() >= 1 )
       {
          if( SUCCEEDED( OleSetProperty( pDisp, DispID, &DispParams ) ) )
-         {
             hb_itemReturn( hb_stackItemFromBase( 1 ) );
-         }
 
          //HB_TRACE(HB_TR_INFO, ("OleSetProperty %i\n", s_nOleError));
       }
@@ -2156,7 +2010,5 @@ HB_FUNC( TOLEAUTO_ONERROR )
 
    // We are responsible to release the Default Interface which we retrieved
    if( bTryDefault == FALSE && pDisp )
-   {
       pDisp->lpVtbl->Release( pDisp );
-   }
 }

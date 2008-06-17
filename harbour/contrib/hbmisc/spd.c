@@ -53,6 +53,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbdate.h"
+#include "hbset.h"
 
 static void STAItm( PHB_ITEM pItmPar )
 {
@@ -69,7 +70,11 @@ static void STAItm( PHB_ITEM pItmPar )
       cRes[i++] = *c++;
    }
    cRes[i++] = '\''; /* cRes[i] = '\0'; */
+#ifdef __XHARBOUR__
+   hb_itemPutCPtr( pItmPar, cRes, i );
+#else
    hb_itemPutCLPtr( pItmPar, cRes, i );
+#endif
 }
 
 static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int IsIndW, int iIndWidth, int IsIndP, int iIndPrec, PHB_ITEM pItmPar )
@@ -127,28 +132,50 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 /*******************************************************************************
 * ANSI C sprintf() for ANSI SQL with DATE, DATETIME, LOGICAL, NIL, NUMERIC
 * ------------------------------------------------------------------------
-* cRes := SQL_SPRINTF( cFrm, ... )
-* cFrm : %s for DATE = YYYY-MM-DD, DATETIME = YYYY-MM-DD HH:MM:SS
-*        %t for DATE = 'YYYY-MM-DD', DATETIME = 'YYYY-MM-DD HH:MM:SS'
-*        %t for STRING = 'String''s ANSI SQL'
-*        %t & %s for LOGICAL = TRUE | FALSE, %d for LOGICAL = 1 | 0
-*        %t & %s is also for NUMERIC with FIXED DECIMALS
-*        NIL or HB_IT_NULL = NULL
+*                    cRes := Sql_sprintf( cFrm, ... )
 *
-* NOTE .-
+* Full compatible ANSI C99 formats with C,S converters wchar_t (UNICODE)
+* Integer & Floating point converters with Width and Precision for NUMERIC & STRING
+* a,A converters Hexadecimal floating point format. Thanks Rafa.
+*  ? Sql_sprintf( "Phi = %A", (1 + 5**0.5) / 2 ) // Phi = 0X1,9E3779B97F4A8P+0
+* %m$,*m$ Index & Indirect arguments C99. Thanks Viktor.
+*  ? Sql_sprintf( "Phi = %2$0*3$.*1$f", 4, (1 + 5**0.5) / 2, 7 ) // Phi = 01.6180
+*
+* s converter for format Harbour data types.
+*    NUMERIC with FIXED DECIMALS = n | n.d   STRING = String's ANSI C
+*    DATE = HB_SET_DATEFORMAT      DATETIME = HB_SET_DATEFORMAT hh:mm:ss
+*     New Internal Modifier {}. Thanks Mindaugas.
+*     Date and Time Format separate by first space {DD/MM/YYYY hh:mm:ss.ccc pm}
+*     {DD/MM/YYYY} = Only Date | { hh:mm:ss.ccc pm} = Only Time
+*        ? Sql_sprintf( "%s", Date() )                // 16/06/08
+*        ? Sql_sprintf( "%s", DateTime() )            // 16/06/08 04:11:21
+*        ? Sql_sprintf( "%{YYYYMMDD}s", DateTime() )  // 20080616
+*        ? Sql_sprintf( "%{ hh:mm pm}s", DateTime() ) // 04:11 AM
+*    LOGICAL = TRUE | FALSE        %d converter for LOGICAL = 1 | 0
+*     Accepts Internal Modifier TRUE and FALSE Format separate by first comma
+*     {T .T.,F .F.} = TRUE & FALSE | {ON} = Only TRUE | {,OFF} = Only FALSE
+*        ? Sql_sprintf( "%{VERDADERO,FALSO}s", .F. ) // FALSO
+*        ? Sql_sprintf( "%{ONLY IF TRUE}s", .T. ) // ONLY IF TRUE
+*
+* New t converter for format ANSI SQL types.
+*    NUMERIC with FIXED DECIMALS = n | n.d   STRING = 'String''s ANSI SQL'
+*    DATE = 'YYYY-MM-DD' DATETIME = 'YYYY-MM-DD HH:MM:SS'
+*     Accepts Internal Modifier like s converter {DD/MM/YYYY hh:mm:ss.ccc pm}
+*    LOGICAL = TRUE | FALSE        Accepts Internal Modifier like s {ON,OFF}
+*
+* Print NULL if the parameter is NIL or HB_IT_NULL
+* Processing %% and n converter Position.
 * Remove C ESC sequences and converts them to Clipper chars in cRes.
-*    OutStd( SQL_SPRINTF( 'Hello\nworld!' ) ) => like printf( "Hello\nworld!" );
+*  ? Sql_sprintf( 'Hello\nworld!' ) ) // like printf( "Hello\nworld!" );
+*
 * Accepts conversion inside if variable is passed by reference.
-*    Local xDate := Date(); SQL_SPRINTF('%s', @xDate) => xDate == '2008-05-19'
-* Support index & indirect arguments C99.
-*    cRes := SQL_SPRINTF( "Phi = %2$0*3$.*1$f \n", 10, (1 + 5**0.5) / 2, 13 )
-*******************************************************************************/
+*  Local xDate := Date(); Sql_sprintf('%s', @xDate) => xDate == '2008-05-19'
+/******************************************************************************/
 
 #define DK_INCRES 1024
 #define DK_INCBUF 512
 #define DK_BLKBUF HB_MAX_DOUBLE_LENGTH   /* Expense of DK_INCBUF */
-#define DK_FRMTIM "HH:MM:SS"
-	
+
 #if defined( __XHARBOUR__ ) && ! defined( HB_ERR_FUNCNAME )
    #define HB_ERR_FUNCNAME "SQL_SPRINTF"
 #endif
@@ -171,11 +198,12 @@ HB_FUNC( SQL_SPRINTF )
       hb_retclen_buffer( cRes, ulItmFrm );
    }else{
       PHB_ITEM pItmPar;
-      char *cBuffer, *cParFrm, *c;
+      char *cIntMod, *cBuffer, *cParFrm, *c;
       int p, arg, iCOut, IsType, IsIndW, IsIndP, iIndWidth, iIndPrec, iErrorPar = 0;
       ULONG s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes = DK_INCRES;
       static char cToken[] = "stcdiouxXaAeEfgGpnSC";
 
+      cIntMod = NULL;
       cRes = (char *)hb_xgrab( ulMaxRes );
       cBuffer = (char *)hb_xgrab( ulMaxBuf );
       cParFrm = (char *)hb_xgrab( ulItmFrm + sizeof(char) );
@@ -183,7 +211,7 @@ HB_FUNC( SQL_SPRINTF )
       for( p = 0; p < argc; /* Not p++ by support index & indirect arguments */ ){
 
          c = cItmFrm + ulParPos;
-         f = i = ulWidth = arg = iCOut = IsType = IsIndW = iIndWidth = IsIndP = iIndPrec = 0;
+         s = f = i = ulWidth = arg = iCOut = IsType = IsIndW = iIndWidth = IsIndP = iIndPrec = 0;
          do{   /* Get Par Format */
             cParFrm[i++] = *c;
             if( f && *c == '%' ){
@@ -219,6 +247,19 @@ HB_FUNC( SQL_SPRINTF )
                }
                while( i && cParFrm[--i] != iCOut );
                ++i; iCOut = 0;
+            }else if( f && *c == '{' ){
+               if( s ){
+                  f = 3; iErrorPar = 1;
+               }else{   /* Remove Internal Modifier */
+                  if( cIntMod == NULL ){
+                     cIntMod = (char *)hb_xgrab( ulItmFrm + sizeof(char) );
+                  }
+                  while( *c++ && *c != '}' ) cIntMod[s++] = *c;
+                  --i; cIntMod[s] = '\0';
+                  if( *(c - 1) == '\0' ){
+                     f = 3; iErrorPar = 1;
+                  }
+               }
             }else if( f && strchr(cToken, *c) ){
                f = 3; iCOut = *c;
             }else if( *c == '%' ){
@@ -307,8 +348,8 @@ HB_FUNC( SQL_SPRINTF )
                iCOut = cParFrm[f + 1] = 's'; /* Change format with %s */
                memcpy( cParFrm + f + 2, cParFrm + ulWidth, i - ulWidth + 1 );
                i -= ulWidth - f - 2;   /* i == strlen(cParFrm) */
-               if( (f = i + 5) > ulMaxBuf ){
-                  ulMaxBuf += f + DK_INCBUF;   /* size of "NULL" == 5 */
+               if( (f = i + 5) > ulMaxBuf ){ /* size of "NULL" == 5 */
+                  ulMaxBuf += f + DK_INCBUF;
                   cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
                }
                hb_itemPutCL( pItmPar, "NULL", 4 );
@@ -326,12 +367,27 @@ HB_FUNC( SQL_SPRINTF )
             }else if( HB_IS_DATE( pItmPar ) && iCOut == 's' ){
                char cDTBuf[ 19 ], cDTFrm[ 28 ]; /* 26 + 2 if %t and change format time */
 
+               if( s ){ /* Internal Modifier */
+                  for( f = 0; cIntMod[f] && cIntMod[f] != ' '; f++);
+                  if( f != s ) cIntMod[f++] = '\0';   /* Date & Time */
+               }
+
 #           ifdef __XHARBOUR__
                if( HB_IS_DATETIME( pItmPar ) ){
-                  hb_datetimeFormat( hb_itemGetDTS( pItmPar, cDTBuf ), cDTFrm, "YYYY-MM-DD", DK_FRMTIM );
+                  hb_datetimeFormat( hb_itemGetDTS( pItmPar, cDTBuf ), cDTFrm,
+                                       (s ? cIntMod : (IsType ? "YYYY-MM-DD" : hb_set.HB_SET_DATEFORMAT)),
+                                       (s ? cIntMod + f : "HH:MM:SS") );
+                  if( s ){
+                     if( !cIntMod[0] ){
+                        memcpy( cDTFrm, cDTFrm + 1, 27 );   /* LTrim 1 space if only Time */
+                     }else if( cDTFrm[s] == ' ' ){
+                        cDTFrm[s] = '\0'; /* RTrim 1 space if only Date */
+                     }
+                  }
                }else
 #           endif
-                  hb_dateFormat( hb_itemGetDS( pItmPar, cDTBuf ), cDTFrm, "YYYY-MM-DD" );
+                  hb_dateFormat( hb_itemGetDS( pItmPar, cDTBuf ), cDTFrm,
+                                    (s ? cIntMod : (IsType ? "YYYY-MM-DD" : hb_set.HB_SET_DATEFORMAT)) );
 
                if( (f = i + HB_MAX(ulWidth, 28)) > ulMaxBuf ){
                   ulMaxBuf += f + DK_INCBUF;
@@ -342,12 +398,17 @@ HB_FUNC( SQL_SPRINTF )
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmPar );
 
             }else if( HB_IS_LOGICAL( pItmPar ) ){
-               if( (f = i + (iCOut == 's' ? HB_MAX(ulWidth, 6) : HB_MAX(ulWidth, DK_BLKBUF))) > ulMaxBuf ){
-                  ulMaxBuf += f + DK_INCBUF;   /* size of "FALSE" == 6 */
-                  cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
+
+               if( s ){ /* Internal Modifier */
+                  for( f = 0; cIntMod[f] && cIntMod[f] != ','; f++);
+                  if( f != s ) cIntMod[f++] = '\0';   /* TRUE & FALSE */
                }
                if( iCOut == 's' ){
-                  hb_itemPutC( pItmPar, (hb_itemGetL( pItmPar ) ? "TRUE" : "FALSE") );
+                  hb_itemPutC( pItmPar, (hb_itemGetL( pItmPar ) ? (s ? cIntMod : "TRUE") : (s ? cIntMod + f : "FALSE")) );
+               }
+               if( (f = i + (iCOut == 's' ? HB_MAX(ulWidth, (s ? s : 6)) : HB_MAX(ulWidth, DK_BLKBUF))) > ulMaxBuf ){
+                  ulMaxBuf += f + DK_INCBUF;   /* size of "FALSE" == 6 */
+                  cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
                }
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmPar );
 
@@ -389,6 +450,7 @@ HB_FUNC( SQL_SPRINTF )
             break;   /* No more Par Format */
          }
       }
+      if( cIntMod ) hb_xfree( cIntMod );
       hb_xfree( cParFrm ); hb_xfree( cBuffer );
       if( iErrorPar ){
          hb_xfree( cRes );

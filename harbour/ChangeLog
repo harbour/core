@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-17 09:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmisc/spd.c
+     + SQL_SPRINTF() enhancements from Javier.
+       (internal modifiers for date and numeric types 
+       are now accepted).
+
+   * contrib/hbw32/w32_ole.c
+   * contrib/hbole/ole2.c
+     * Formatting.
+
 2008-06-16 18:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbole/ole2.c
      * More cleanups.

@@ -118,7 +118,7 @@ static LPSTR AnsiToWide( LPSTR cAnsi )
    unsigned short wLen;
    LPSTR cString;
 
-   wLen  = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cAnsi, -1, 0, 0 );
+   wLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cAnsi, -1, 0, 0 );
    cString = ( char * ) hb_xgrab( wLen * 2 );
    MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cAnsi, -1,
                         ( LPWSTR ) cString, wLen );
@@ -409,7 +409,7 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
 
       if( s_nOleError == S_OK )
          s_nOleError = CoCreateInstance( HB_ID_REF( REFCLSID, ClassID ), NULL, CLSCTX_SERVER,
-                                       (REFIID) riid, &pDisp );
+                                         (REFIID) riid, &pDisp );
    }
 
    hb_retptr( pDisp );
