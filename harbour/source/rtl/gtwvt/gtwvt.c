@@ -1603,24 +1603,23 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
 
    if( ! hb_winmainArgGet( &s_hInstance, &s_hPrevInstance, &s_iCmdShow ) )
    {
-      hb_errInternal( 10001, "It's not a window GUI program.", NULL, NULL );
+      hb_errInternal( 10001, "It's not a Windows GUI program", NULL, NULL );
    }
 
    pWVT = hb_gt_wvt_New( pGT );
    if( !pWVT )
    {
-      hb_errInternal( 10001, "Cannot allocate new window", NULL, NULL );
+      hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );
    }
 
    HB_GTLOCAL( pGT ) = ( void * ) pWVT;
 
    pWVT->hWnd = hb_gt_wvt_CreateWindow( ( HINSTANCE ) s_hInstance,
                                         ( HINSTANCE ) s_hPrevInstance,
-                                        "", s_iCmdShow );
+                                        NULL, s_iCmdShow );
    if( !pWVT->hWnd )
    {
-      /* hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_wvt_Init()", 0, 0 ); */
-      hb_errInternal( 10001, "WINAPI CreateWindow() failed", NULL, NULL );
+      hb_errInternal( 10001, "WVT window creation failed", NULL, NULL );
    }
 
    hb_gt_wvt_InitWindow( pWVT, WVT_DEFAULT_ROWS, WVT_DEFAULT_COLS );

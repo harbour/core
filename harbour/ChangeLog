@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-18 11:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtclip.c
+     ! hb_gt_w32_setClipboard() fix to CF_UNICODETEXT 
+       EOS char setting.
+       [TOMERGE RC1]
+
+   * source/rtl/gtwvt/gtwvt.c
+     + Internal error string cleanup.
+
 2008-06-18 10:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      + Now showing the application's executable name 

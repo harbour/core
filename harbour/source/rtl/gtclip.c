@@ -91,12 +91,12 @@ BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen )
 
 BOOL hb_gt_w32_setClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
 {
-   LPTSTR  lptstrCopy;
-   HGLOBAL hglbCopy;
    BOOL fResult = FALSE;
 
    if( OpenClipboard( NULL ) )
    {
+      HGLOBAL hglbCopy;
+
       EmptyClipboard();
 
       /* Allocate a global memory object for the text. */
@@ -104,13 +104,13 @@ BOOL hb_gt_w32_setClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
       if( hglbCopy )
       {
          /* Lock the handle and copy the text to the buffer. */
-         lptstrCopy = ( LPTSTR ) GlobalLock( hglbCopy );
+         LPTSTR lptstrCopy = ( LPTSTR ) GlobalLock( hglbCopy );
          if( lptstrCopy )
          {
             if( uFormat == CF_UNICODETEXT )
             {
                hb_mbtowcset( ( LPWSTR ) lptstrCopy, szClipData, ulLen );
-               lptstrCopy[ ulLen * sizeof( wchar_t ) ] = L'\0';
+               * ( ( ( LPWSTR ) lptstrCopy ) + ulLen ) = L'\0';
             }
             else
             {
