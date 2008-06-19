@@ -675,8 +675,8 @@ METHOD CodeWindowProcessKey( nKey ) CLASS HBDebugger
       CASE nKey == K_END .OR. nKey == K_CTRL_PGDN .OR. nKey == K_CTRL_END
 
          ::oBrwText:GoBottom()
-         ::oBrwText:nCol = ::oWndCode:nLeft + 1
-         ::oBrwText:nFirstCol = ::oWndCode:nLeft + 1
+         ::oBrwText:nCol := ::oWndCode:nLeft + 1
+         ::oBrwText:nFirstCol := ::oWndCode:nLeft + 1
          SetPos( Row(), ::oWndCode:nLeft + 1 )
          IF ::oWndCode:lFocused
             SetCursor( SC_SPECIAL1 )

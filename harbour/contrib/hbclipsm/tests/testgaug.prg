@@ -23,7 +23,7 @@ function Test()
 
    GaugeDisplay( aGauge )
 
-   while i <> K_ESC
+   while i != K_ESC
       i := Inkey( 0 )
       do case
          case i == K_UP

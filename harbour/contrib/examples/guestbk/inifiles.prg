@@ -260,7 +260,7 @@ static function ReadSection(cSection)
 
          for j := 1 to Len(::Contents[i][2])
 
-            if ::Contents[i][2][j][1] <> NIL
+            if ::Contents[i][2][j][1] != NIL
                AAdd(aSection, ::Contents[i][2][j][1])
             endif
          next

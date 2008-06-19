@@ -571,7 +571,7 @@ METHOD OleValueEqual( xArg ) CLASS TOleAuto
    LOCAL xRet, oErr
 
    TRY
-      xRet := ::OleValue = xArg
+      xRet := ( ::OleValue = xArg ) /* NOTE: Intentionally using '=' operator. */
    CATCH
       oErr := ErrorNew()
       oErr:Args          := { Self, xArg }
@@ -596,7 +596,7 @@ METHOD OleValueExactEqual( xArg ) CLASS TOleAuto
    LOCAL xRet, oErr
 
    TRY
-      xRet := ::OleValue == xArg
+      xRet := ( ::OleValue == xArg )
    CATCH
       oErr := ErrorNew()
       oErr:Args          := { Self, xArg }

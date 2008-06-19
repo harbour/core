@@ -220,7 +220,7 @@ STATIC PROCEDURE WriteSymbol( nOutput, cLine )
 STATIC aNames := { "MAIN" }   // Init with names you want to skip
 
    IF len( cLine ) > 0
-      cLine = upper( cLine )
+      cLine := upper( cLine )
       IF ASCAN( aNames, {|c| c == cLine } ) == 0
          AADD( aNames, cLine )
          FWRITE( nOutput, "EXTERNAL " +cLine + EOL )

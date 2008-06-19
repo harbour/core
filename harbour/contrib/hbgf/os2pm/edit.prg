@@ -64,7 +64,7 @@ ENDCLASS
 
 METHOD New( oContainer ) CLASS HBEdit
 
-   ::hWnd = WinCreateWindow(oContainer:hWndClient,;   /* Parent window  */
+   ::hWnd := WinCreateWindow(oContainer:hWndClient,;   /* Parent window  */
                             WC_ENTRYFIELD,;           /* Class window   */
                             "",;                      /* Button text    */
                             WS_VISIBLE + WS_TABSTOP+; /* Visible style  */
@@ -77,7 +77,7 @@ METHOD New( oContainer ) CLASS HBEdit
                             nil,;                     /* Control data   */
                             nil)                      /* parameters     */
 
-   //::Width  = 121
-   //::Height = 21
+   //::Width  := 121
+   //::Height := 21
 
 return Self

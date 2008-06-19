@@ -131,7 +131,7 @@ Function DesignHaruPDF( cFileToSave )
    HPDF_Page_Stroke( page )
 
    /* Print the title of the page(with positioning center). */
-   def_font = HPDF_GetFont( pdf, "Helvetica", NIL )
+   def_font := HPDF_GetFont( pdf, "Helvetica", NIL )
 
    HPDF_Page_SetFontAndSize( page, def_font, 24 )
    tw := HPDF_Page_TextWidth( page, page_title )
@@ -210,7 +210,7 @@ Static Function Page_Lines( pdf )
 
    /* print the title of the page(with positioning center). */
    HPDF_Page_SetFontAndSize(page, font, 24)
-   tw = HPDF_Page_TextWidth(page, page_title)
+   tw := HPDF_Page_TextWidth(page, page_title)
    HPDF_Page_BeginText(page)
    HPDF_Page_MoveTextPos(page,(HPDF_Page_GetWidth(page) - tw) / 2, ;
                                 HPDF_Page_GetHeight(page) - 50)
@@ -475,7 +475,7 @@ Static Function Page_Text( pdf )
    Local angle1, angle2, rad1, rad2,i,x,y,buf
 
    /* add a new page object. */
-   page = HPDF_AddPage(pdf)
+   page := HPDF_AddPage(pdf)
    HPDF_Page_SetSize(page, HPDF_PAGE_SIZE_A5, HPDF_PAGE_PORTRAIT)
 
    //print_grid( pdf, page )
@@ -687,10 +687,10 @@ Static Function Page_TextScaling( pdf )
    //HPDF_SetCompressionMode(pdf, HPDF_COMP_ALL)
 
    /* create default-font */
-   font = HPDF_GetFont(pdf, "Helvetica", NIL)
+   font := HPDF_GetFont(pdf, "Helvetica", NIL)
 
    /* add a new page object. */
-   page = HPDF_AddPage(pdf)
+   page := HPDF_AddPage(pdf)
 
    /* draw grid to the page */
    //print_grid(pdf, page)
@@ -704,7 +704,7 @@ Static Function Page_TextScaling( pdf )
 
    /* print the title of the page(with positioning center). */
    HPDF_Page_SetFontAndSize(page, font, 24)
-   tw = HPDF_Page_TextWidth(page, page_title)
+   tw := HPDF_Page_TextWidth(page, page_title)
    HPDF_Page_BeginText(page)
    HPDF_Page_TextOut(page,(HPDF_Page_GetWidth(page) - tw) / 2,;
                HPDF_Page_GetHeight(page) - 50, page_title)
@@ -771,7 +771,7 @@ Static Function Page_TextScaling( pdf )
    next
    HPDF_Page_MoveTextPos(page, 0, -25)
 
-   for i = 1 to len
+   for i := 1 to len
        b := i /len
        g := 1 -(i /len)
        buf := substr( samp_text, i, 1 )
@@ -867,10 +867,10 @@ Static Function Page_TextScaling( pdf )
    show_description(page, 320, ypos - 120, "Skewing text")
    HPDF_Page_BeginText(page)
 
-   angle1 = 10
-   angle2 = 20
-   rad1 = angle1 / 180 * 3.141592
-   rad2 = angle2 / 180 * 3.141592
+   angle1 := 10
+   angle2 := 20
+   rad1 := angle1 / 180 * 3.141592
+   rad2 := angle2 / 180 * 3.141592
 
    HPDF_Page_SetTextMatrix(page, 1, tan(rad1), tan(rad2), 1, 320, ypos - 120)
    HPDF_Page_ShowText(page, "ABCabc123")
@@ -1006,17 +1006,17 @@ Static function Page_CodePages( pdf )
    font_name := HPDF_LoadType1FontFromFile(pdf, cAfm, cPfb )
 
    /* create outline root. */
-   root = HPDF_CreateOutline(pdf, NIL, "Encoding list", NIL)
+   root := HPDF_CreateOutline(pdf, NIL, "Encoding list", NIL)
    HPDF_Outline_SetOpened(root, .t.)
 
    for i := 1 to len( encodings )
-       page = HPDF_AddPage(pdf)
+       page := HPDF_AddPage(pdf)
 
        HPDF_Page_SetWidth(page, PAGE_WIDTH)
        HPDF_Page_SetHeight(page, PAGE_HEIGHT)
 
-       outline = HPDF_CreateOutline(pdf, root, encodings[i], NIL)
-       dst = HPDF_Page_CreateDestination(page)
+       outline := HPDF_CreateOutline(pdf, root, encodings[i], NIL)
+       dst := HPDF_Page_CreateDestination(page)
        HPDF_Destination_SetXYZ(dst, 0, HPDF_Page_GetHeight(page), 1)
 
        /* HPDF_Destination_SetFitB(dst) */
@@ -1033,11 +1033,11 @@ Static function Page_CodePages( pdf )
        HPDF_Page_EndText(page)
 
        if (encodings[i] == "Symbol-Set")
-           font2 = HPDF_GetFont(pdf, "Symbol", NIL)
+           font2 := HPDF_GetFont(pdf, "Symbol", NIL)
        elseif (encodings[i] == "ZapfDingbats-Set")
-           font2 = HPDF_GetFont(pdf, "ZapfDingbats", NIL)
+           font2 := HPDF_GetFont(pdf, "ZapfDingbats", NIL)
        else
-           font2 = HPDF_GetFont(pdf, font_name, encodings[i])
+           font2 := HPDF_GetFont(pdf, font_name, encodings[i])
        endif
 
        HPDF_Page_SetFontAndSize(page, font2, 14)
@@ -1055,7 +1055,7 @@ static function draw_graph( page )
    HPDF_Page_SetLineWidth(page, 0.5)
 
    for i := 0 to 17
-       x = i * CELL_WIDTH + 40;
+       x := i * CELL_WIDTH + 40;
 
        HPDF_Page_MoveTo(page, x, PAGE_HEIGHT - 60)
        HPDF_Page_LineTo(page, x, 40)
@@ -1096,8 +1096,8 @@ Static function draw_fonts(page)
    /* Draw all character from 0x20 to 0xFF to the canvas. */
    for i := 1 to 16
      for j := 1 to 16
-        y = PAGE_HEIGHT - 55 - ((i - 1) * CELL_HEIGHT)
-        x = j * CELL_WIDTH + 50
+        y := PAGE_HEIGHT - 55 - ((i - 1) * CELL_HEIGHT)
+        x := j * CELL_WIDTH + 50
 
         buf := (i - 1) * 16 + (j - 1)
         if (buf >= 32)
@@ -1188,9 +1188,9 @@ Static Function Page_Annotation( pdf )
    Local page, font, encoding, annot
 
    /* use Times-Roman font. */
-   font = HPDF_GetFont(pdf, "Times-Roman", "WinAnsiEncoding")
+   font := HPDF_GetFont(pdf, "Times-Roman", "WinAnsiEncoding")
 
-   page = HPDF_AddPage(pdf)
+   page := HPDF_AddPage(pdf)
 
    HPDF_Page_SetWidth(page, 400)
    HPDF_Page_SetHeight(page, 500)
@@ -1202,7 +1202,7 @@ Static Function Page_Annotation( pdf )
    HPDF_Page_EndText(page)
 
 
-   annot = HPDF_Page_CreateTextAnnot(page, rect1, ;
+   annot := HPDF_Page_CreateTextAnnot(page, rect1, ;
                "Annotation with Comment Icons"+chr(13)+chr(10)+;
                "This annotation set to be opened initially.",;
                NIL)
@@ -1210,25 +1210,25 @@ Static Function Page_Annotation( pdf )
    HPDF_TextAnnot_SetIcon(annot, HPDF_ANNOT_ICON_COMMENT)
    HPDF_TextAnnot_SetOpened(annot, HPDF_TRUE)
 
-   annot = HPDF_Page_CreateTextAnnot(page, rect2, "Annotation with Key Icon", NIL)
+   annot := HPDF_Page_CreateTextAnnot(page, rect2, "Annotation with Key Icon", NIL)
    HPDF_TextAnnot_SetIcon(annot, HPDF_ANNOT_ICON_PARAGRAPH)
 
-   annot = HPDF_Page_CreateTextAnnot(page, rect3, "Annotation with Note Icon", NIL)
+   annot := HPDF_Page_CreateTextAnnot(page, rect3, "Annotation with Note Icon", NIL)
    HPDF_TextAnnot_SetIcon(annot, HPDF_ANNOT_ICON_NOTE)
 
-   annot = HPDF_Page_CreateTextAnnot(page, rect4, "Annotation with Help Icon", NIL)
+   annot := HPDF_Page_CreateTextAnnot(page, rect4, "Annotation with Help Icon", NIL)
    HPDF_TextAnnot_SetIcon(annot, HPDF_ANNOT_ICON_HELP)
 
-   annot = HPDF_Page_CreateTextAnnot(page, rect5, "Annotation with NewParagraph Icon", NIL)
+   annot := HPDF_Page_CreateTextAnnot(page, rect5, "Annotation with NewParagraph Icon", NIL)
    HPDF_TextAnnot_SetIcon(annot, HPDF_ANNOT_ICON_NEW_PARAGRAPH)
 
-   annot = HPDF_Page_CreateTextAnnot(page, rect6, "Annotation with Paragraph Icon", NIL)
+   annot := HPDF_Page_CreateTextAnnot(page, rect6, "Annotation with Paragraph Icon", NIL)
    HPDF_TextAnnot_SetIcon(annot, HPDF_ANNOT_ICON_PARAGRAPH)
 
-   annot = HPDF_Page_CreateTextAnnot(page, rect7, "Annotation with Insert Icon", NIL)
+   annot := HPDF_Page_CreateTextAnnot(page, rect7, "Annotation with Insert Icon", NIL)
    HPDF_TextAnnot_SetIcon(annot, HPDF_ANNOT_ICON_INSERT)
 
-   encoding = HPDF_GetEncoder(pdf, "ISO8859-2")
+   encoding := HPDF_GetEncoder(pdf, "ISO8859-2")
 
    HPDF_Page_CreateTextAnnot(page, rect8,"Annotation with ISO8859 text гдежзий", encoding)
 
@@ -1314,7 +1314,7 @@ Static function Page_Images( pdf )
    /* image3 is a RGB-color image. we use this image for color-mask
     * demo.
     */
-   image3 = HPDF_LoadPngImageFromFile(pdf, cImagePath+"maskimage.png")
+   image3 := HPDF_LoadPngImageFromFile(pdf, cImagePath+"maskimage.png")
 
    iw := HPDF_Image_GetWidth(image)
    ih := HPDF_Image_GetHeight(image)
@@ -1360,8 +1360,8 @@ Static function Page_Images( pdf )
    x += 150
 
    /* Rotating image */
-   angle = 30     /* rotation of 30 degrees. */
-   rad = angle / 180 * 3.141592 /* Calcurate the radian value. */
+   angle := 30     /* rotation of 30 degrees. */
+   rad := angle / 180 * 3.141592 /* Calcurate the radian value. */
 
    HPDF_Page_GSave(page)
    HPDF_Page_Concat(page, iw * cos(rad), ;

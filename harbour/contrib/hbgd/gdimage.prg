@@ -93,25 +93,25 @@ CLASS GDImage
    METHOD CreateTrueColor( sx, sy )        INLINE ::pImage := gdImageCreateTrueColor( sx, sy ), Self
 
    // Load From File
-   METHOD LoadFromPng( cFile )             INLINE ::pImage := gdImageCreateFromPng( cFile )          , IIF( ::pImage <> NIL, Self, NIL )
-   METHOD LoadFromJpeg( cFile )            INLINE ::pImage := gdImageCreateFromJpeg( cFile )         , IIF( ::pImage <> NIL, Self, NIL )
-   METHOD LoadFromWBmp( cFile )            INLINE ::pImage := gdImageCreateFromWBMP( cFile )         , IIF( ::pImage <> NIL, Self, NIL )
-   METHOD LoadFromGd( cFile )              INLINE ::pImage := gdImageCreateFromGD( cFile )           , IIF( ::pImage <> NIL, Self, NIL )
-   METHOD LoadFromGif( cFile )             INLINE ::pImage := gdImageCreateFromGif( cFile )          , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD LoadFromPng( cFile )             INLINE ::pImage := gdImageCreateFromPng( cFile )          , IIF( ::pImage != NIL, Self, NIL )
+   METHOD LoadFromJpeg( cFile )            INLINE ::pImage := gdImageCreateFromJpeg( cFile )         , IIF( ::pImage != NIL, Self, NIL )
+   METHOD LoadFromWBmp( cFile )            INLINE ::pImage := gdImageCreateFromWBMP( cFile )         , IIF( ::pImage != NIL, Self, NIL )
+   METHOD LoadFromGd( cFile )              INLINE ::pImage := gdImageCreateFromGD( cFile )           , IIF( ::pImage != NIL, Self, NIL )
+   METHOD LoadFromGif( cFile )             INLINE ::pImage := gdImageCreateFromGif( cFile )          , IIF( ::pImage != NIL, Self, NIL )
 
    // Load From a specific File handle
-   METHOD InputPng( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromPng( nHandle, nSize ) , IIF( ::pImage <> NIL, Self, NIL )
-   METHOD InputJpeg( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromJpeg( nHandle, nSize ), IIF( ::pImage <> NIL, Self, NIL )
-   METHOD InputWBmp( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromWBMP( nHandle, nSize ), IIF( ::pImage <> NIL, Self, NIL )
-   METHOD InputGd( nHandle, nSize )        INLINE ::pImage := gdImageCreateFromGD( nHandle, nSize )  , IIF( ::pImage <> NIL, Self, NIL )
-   METHOD InputGif( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromGif( nHandle, nSize ) , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD InputPng( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromPng( nHandle, nSize ) , IIF( ::pImage != NIL, Self, NIL )
+   METHOD InputJpeg( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromJpeg( nHandle, nSize ), IIF( ::pImage != NIL, Self, NIL )
+   METHOD InputWBmp( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromWBMP( nHandle, nSize ), IIF( ::pImage != NIL, Self, NIL )
+   METHOD InputGd( nHandle, nSize )        INLINE ::pImage := gdImageCreateFromGD( nHandle, nSize )  , IIF( ::pImage != NIL, Self, NIL )
+   METHOD InputGif( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromGif( nHandle, nSize ) , IIF( ::pImage != NIL, Self, NIL )
 
    // Create from an image pointer in memory
-   METHOD CreateFromPng( pImage, nSize )   INLINE ::pImage := gdImageCreateFromPng( pImage, nSize )  , IIF( ::pImage <> NIL, Self, NIL )
-   METHOD CreateFromJpeg( pImage, nSize )  INLINE ::pImage := gdImageCreateFromJpeg( pImage, nSize ) , IIF( ::pImage <> NIL, Self, NIL )
-   METHOD CreateFromWBmp( pImage, nSize )  INLINE ::pImage := gdImageCreateFromWBMP( pImage, nSize ) , IIF( ::pImage <> NIL, Self, NIL )
-   METHOD CreateFromGd( pImage, nSize )    INLINE ::pImage := gdImageCreateFromGD( pImage, nSize )   , IIF( ::pImage <> NIL, Self, NIL )
-   METHOD CreateFromGif( pImage, nSize )   INLINE ::pImage := gdImageCreateFromGif( pImage, nSize )  , IIF( ::pImage <> NIL, Self, NIL )
+   METHOD CreateFromPng( pImage, nSize )   INLINE ::pImage := gdImageCreateFromPng( pImage, nSize )  , IIF( ::pImage != NIL, Self, NIL )
+   METHOD CreateFromJpeg( pImage, nSize )  INLINE ::pImage := gdImageCreateFromJpeg( pImage, nSize ) , IIF( ::pImage != NIL, Self, NIL )
+   METHOD CreateFromWBmp( pImage, nSize )  INLINE ::pImage := gdImageCreateFromWBMP( pImage, nSize ) , IIF( ::pImage != NIL, Self, NIL )
+   METHOD CreateFromGd( pImage, nSize )    INLINE ::pImage := gdImageCreateFromGD( pImage, nSize )   , IIF( ::pImage != NIL, Self, NIL )
+   METHOD CreateFromGif( pImage, nSize )   INLINE ::pImage := gdImageCreateFromGif( pImage, nSize )  , IIF( ::pImage != NIL, Self, NIL )
 
    METHOD LoadFromFile( cFile )
 

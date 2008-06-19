@@ -19,7 +19,7 @@ inkey(0)
 ? ft_mylimit(0,8*maxrow())
 inkey(0)
 
-do while lastkey()<>27
+do while lastkey()!=27
 ? 'mouse row is',ft_mgetx()
 ? 'mouse col is',ft_mgety()
 if lastkey()==27

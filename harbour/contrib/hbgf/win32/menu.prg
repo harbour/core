@@ -67,10 +67,10 @@ ENDCLASS
 
 METHOD New( oForm ) CLASS HBMenu
 
-   ::Items   = {}
+   ::Items   := {}
 
    if oForm != nil
-      ::nHandle = WinCreateMenu( oForm:hWnd )
+      ::nHandle := WinCreateMenu( oForm:hWnd )
    endif
 
 return Self
@@ -80,7 +80,7 @@ METHOD Add( oMenuItem ) CLASS HBMenu
    WinAddMenuItem( ::nHandle, oMenuItem:Caption, Len( ::Items ),;
                    nil, oMenuItem:nId, oMenuItem:Enabled )
 
-   oMenuItem:oParent = Self
+   oMenuItem:oParent := Self
    AAdd( ::Items, oMenuItem )
 
 return nil
@@ -89,7 +89,7 @@ METHOD FindItem( nId ) CLASS HBMenu
 
    local oMenuItem, n
 
-   for n = 1 to Len( ::Items )
+   for n := 1 to Len( ::Items )
       if ( oMenuItem := ::Items[ n ] ):nId == nId
          return oMenuItem
       else

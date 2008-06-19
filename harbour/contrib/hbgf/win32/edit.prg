@@ -63,9 +63,9 @@ ENDCLASS
 
 METHOD New( oContainer ) CLASS HBEdit
 
-   ::hWnd  = WinCreateStdWindow( , nOr( WS_BORDER, WS_CHILD, WS_TABSTOP ),,;
+   ::hWnd  := WinCreateStdWindow( , nOr( WS_BORDER, WS_CHILD, WS_TABSTOP ),,;
                                  "EDIT", "",, oContainer:hWnd, ::GetNewId() )
-   ::Width  = 121
-   ::Height = 21
+   ::Width  := 121
+   ::Height := 21
 
 return Self

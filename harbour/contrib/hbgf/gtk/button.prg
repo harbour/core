@@ -77,7 +77,7 @@ ENDCLASS
 METHOD New( oContainer ) CLASS HBButton
     ::Container := oContainer
 
-    ::hWnd  = hb_GtkButtonCreate( oContainer:hWnd, ::GetNewID() )
+    ::hWnd  := hb_GtkButtonCreate( oContainer:hWnd, ::GetNewID() )
 
     ::XSize := 80
     ::YSize := 25

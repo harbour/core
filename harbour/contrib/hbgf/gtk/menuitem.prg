@@ -109,7 +109,7 @@ METHOD Add( oMenuItem ) CLASS HGFMenuItem
 
     ::nHandle := nHandle
 
-    oMenuItem:oParent = Self
+    oMenuItem:oParent := Self
     AAdd( ::Items, oMenuItem )
 RETURN nil
 
@@ -118,7 +118,7 @@ RETURN nil
 METHOD FindItem( nId ) CLASS HGFMenuItem
    LOCAL oMenuItem, n
 
-   FOR n = 1 TO Len( ::Items )
+   FOR n := 1 TO Len( ::Items )
       IF ( oMenuItem := ::Items[ n ] ):nId == nId
          RETURN oMenuItem
       ELSE

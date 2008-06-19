@@ -8,6 +8,90 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-19 18:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/examples/guestbk/guestbk.prg
+   * contrib/examples/guestbk/inifiles.prg
+   * contrib/examples/guestbk/testcgi.prg
+   * contrib/examples/hscript/hscript.prg
+   * contrib/examples/pe/editorhi.prg
+   * contrib/gtwvg/tests/demowvg.prg
+   * contrib/hbbtree/tests/test.prg
+   * contrib/hbbtree/tests/ttest.prg
+   * contrib/hbclipsm/tests/testgaug.prg
+   * contrib/hbct/getinfo.prg
+   * contrib/hbct/getinput.prg
+   * contrib/hbct/getsecrt.prg
+   * contrib/hbct/keytime.prg
+   * contrib/hbct/numconv.prg
+   * contrib/hbfbird/tfirebird.prg
+   * contrib/hbgd/gd.prg
+   * contrib/hbgd/gdbar.prg
+   * contrib/hbgd/gdbarcod.prg
+   * contrib/hbgd/gdimage.prg
+   * contrib/hbgd/tests/animgif.prg
+   * contrib/hbgd/tests/gdtest.prg
+   * contrib/hbgd/tests/test_out.prg
+   * contrib/hbgf/gtk/button.prg
+   * contrib/hbgf/gtk/form.prg
+   * contrib/hbgf/gtk/menuitem.prg
+   * contrib/hbgf/gtk/winctrl.prg
+   * contrib/hbgf/os2pm/button.prg
+   * contrib/hbgf/os2pm/edit.prg
+   * contrib/hbgf/os2pm/tform.prg
+   * contrib/hbgf/os2pm/tmenu.prg
+   * contrib/hbgf/os2pm/tmenuitm.prg
+   * contrib/hbgf/tests/formtext.prg
+   * contrib/hbgf/tests/testctrl.prg
+   * contrib/hbgf/tests/testform.prg
+   * contrib/hbgf/win32/button.prg
+   * contrib/hbgf/win32/edit.prg
+   * contrib/hbgf/win32/form.prg
+   * contrib/hbgf/win32/menu.prg
+   * contrib/hbgf/win32/menuitem.prg
+   * contrib/hbhpdf/tests/harupdf.prg
+   * contrib/hbmsql/tests/dbf2msql.prg
+   * contrib/hbmsql/tmsql.prg
+   * contrib/hbmysql/dbf2mysql.prg
+   * contrib/hbmysql/tmysql.prg
+   * contrib/hbmysql/tsqlbrw.prg
+   * contrib/hbmzip/tests/myzip.prg
+   * contrib/hbnf/aredit.prg
+   * contrib/hbnf/calendar.prg
+   * contrib/hbnf/clrsel.prg
+   * contrib/hbnf/pending.prg
+   * contrib/hbnf/sqzn.prg
+   * contrib/hbnf/tbwhile.prg
+   * contrib/hbnf/tests/test.prg
+   * contrib/hbodbc/todbc.prg
+   * contrib/hbpgsql/tests/dbf2pg.prg
+   * contrib/hbpgsql/tpostgre.prg
+   * contrib/hbsqlit2/tests/hbsqlite.prg
+   * contrib/hbsqlit3/tests/sqlite3_test.prg
+   * contrib/hbtpathy/telepath.prg
+   * contrib/hbvpdf/hbvpdf.prg
+   * contrib/hbvpdf/hbvpdft.prg
+   * contrib/hbvpdf/tests/pdf_demo.prg
+   * contrib/hbvpdf/tests/tstpdf.prg
+   * contrib/hbw32/w32_tole.prg
+   * contrib/hbw32/w32_tprn.prg
+   * contrib/hbw32ddr/tests/testdx.prg
+   * contrib/rddado/adordd.prg
+   * contrib/rddado/tests/access2.prg
+   * source/debug/debugger.prg
+   * source/rdd/hbsix/sxini.prg
+   * utils/hbdot/hbdot.prg
+   * utils/hbextern/hbextern.prg
+     * Cleanup.
+       <>    -> != or !( == ) for strings
+       if()  -> iif() (for inline, where noticed)
+       ' = ' -> := or == for comparisons, or left as '=' in the few 
+          rare cases where this was (probably) intended (sxini.prg).
+       Excluded: most tests, hbnf, util/hbdoc, util/hbmake, hbwhat32, gtwvg, 
+          hbvpdf has some difficult to judge '=' operators, so I left them.
+     ! Fixed some _SET_EXACT dependencies in a few places.
+     ; TODO: If possible, add a compile switch to catch these, as 
+             it's not very easy using 'grep'.
+
 2008-06-19 11:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      ! Avoid using the "Windows" word in public message.

@@ -305,10 +305,10 @@ SETCOLOR( IIF( lColour, "N/W,W+/R", "N/W,W+/N" ) )
 ClearS( nT, nL,   nB, nR )
 
 *.... prompt for colour setting and modify
-DO WHILE nChoice <> 0
+DO WHILE nChoice != 0
   Double( nT, nL+1, nB, nR-1 )
   nChoice := aChoice( nt+1, nL+2, nB-1, nR-2, aPrompt, , , nChoice )
-  IF nChoice <> 0
+  IF nChoice != 0
     _ftHiLite( ROW(), nL+2, aPrompt[ nChoice ], nLen )
     Single( nT, nL+1, nB, nR-1 )
     aClrs[ nChoice ] := _ftColours( aClrs[ nChoice ], aClrPal, lColour )
@@ -379,7 +379,7 @@ DO CASE
      aPrompt := { " Standard ", " Selected ", " Border ", " Unselected " }
 ENDCASE
 
-IF aOpt[ C_TYPE ] <> "T"  // no prompt for titles
+IF !( aOpt[ C_TYPE ] == "T" )  // no prompt for titles
   *.... we need to know top,left,bottom,right for the prompt window
   aEval( aPrompt, { |cPrompt| nLen := MAX( nLen, LEN( cPrompt ) ) } )
   nLen := MAX( nLen, LEN( aOpt[ C_NAME ] ) + 2 )
@@ -398,7 +398,7 @@ DO WHILE .T.
   *.... show sample window
   _ftShowIt( aOpt )
 
-  IF aOpt[ C_TYPE ] <> "T"  // no prompt for titles
+  IF !( aOpt[ C_TYPE ] == "T" )  // no prompt for titles
     SETCOLOR( IIF( lColour, "N/W,W+/R,,,N/W", "N/W,W+/N,,,N/W" ) )
     Double( nT, nL+1, nB, nR-1 )
     @ nT, nL+2 SAY PadC( " "+ aOpt[C_NAME] +" ", nR -nL -3, "Í" )
@@ -414,7 +414,7 @@ DO WHILE .T.
          *....  desktop character
          aOpt := _ftDeskChar( aOpt )
          LOOP
-       CASE nChoice == 4 .AND. aOpt[ C_TYPE ] <> "M"
+       CASE nChoice == 4 .AND. !( aOpt[ C_TYPE ] == "M" )
          nChoice := 5      // 4th color param is unused
     ENDCASE
   ENDIF
@@ -432,7 +432,7 @@ DO WHILE .T.
   cClr := aClrs[ nChoice ]    // selected colour
 
   *.... allow change to specific part of colour string
-  IF aOpt[ C_TYPE ] <> "T"
+  IF !( aOpt[ C_TYPE ] == "T" )
     Single( nT, nL+1, nB, nR-1 )
     @ nT, nL+2 SAY PadC( " "+ aOpt[C_NAME] +" ", nR -nL -3, "Ä" )
   ENDIF
@@ -459,7 +459,7 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
 LOCAL aClr := _ftChr2Arr( aOpt[ C_CLR ] )
 
-IF aOpt[ C_TYPE ] <> "M"     // no borders in menu colour selection
+IF !( aOpt[ C_TYPE ] == "M" ) // no borders in menu colour selection
   SETCOLOR( aOpt[ C_CLR ] )  // this will set the border on VGA
 ENDIF
 

@@ -366,7 +366,7 @@ METHOD Delete( oRow, cWhere ) CLASS TFbServer
 
                 cWhere += aKeys[i] + '=' + DataToSql(xField)                    
 
-                if i <> len(aKeys)
+                if i != len(aKeys)
                     cWhere += ','
                 end                    
             Next                        
@@ -430,7 +430,7 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
 
                 cWhere += aKeys[i] + '=' + DataToSql(xField)
                 
-                if i <> len(aKeys)
+                if i != len(aKeys)
                     cWhere += ', '
                 end
             Next                        
@@ -954,7 +954,7 @@ Static Function StructConvert( aStru, db, dialect)
         xtables += DataToSql(aStru[i, 5])
         xfields += DataToSql(aStru[i, 1])
         
-        if i <> len(aStru)
+        if i != len(aStru)
             xtables += ','
             xfields += ','
          end

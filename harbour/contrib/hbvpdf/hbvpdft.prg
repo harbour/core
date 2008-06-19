@@ -215,7 +215,7 @@ DEFAULT cId    TO ""
       cString := left( cString, nAt - 1 ) + ltrim(str( ::PageNumber())) + substr( cString, nAt + 12 )
    ENDIF
 
-   lReverse = .f.
+   lReverse := .f.
    IF cUnits == "M"
       nRow := ::M2Y( nRow )
       nCol := ::M2X( nCol )
@@ -235,7 +235,7 @@ DEFAULT cId    TO ""
          cString := left( cString, len( cString ) - 1 )
          ::Box( ::aReport[ PAGEY ] - nRow - ::aReport[ FONTSIZE ] + 2.0 , nCol, ::aReport[ PAGEY ] - nRow + 2.0, nCol + ::M2X( ::length( cString )) + 1,,100, "D")
          ::aReport[ PAGEBUFFER ] += " 1 g "
-         lReverse = .t.
+         lReverse := .t.
       ELSEIF right( cString, 1 ) == chr(254) //underline
          cString := left( cString, len( cString ) - 1 )
          ::Box( ::aReport[ PAGEY ] - nRow + 0.5,  nCol, ::aReport[ PAGEY ] - nRow + 1, nCol + ::M2X( ::length( cString )) + 1,,100, "D")
@@ -252,10 +252,10 @@ DEFAULT cId    TO ""
       // version 0.01
 
       _nFont := ascan( ::aReport[ FONTS ], {|arr| arr[1] == ::aReport[ FONTNAME ]} )
-      IF ::aReport[ FONTNAME ] <> ::aReport[ FONTNAMEPREV ]
+      IF !( ::aReport[ FONTNAME ] == ::aReport[ FONTNAMEPREV ] )
          ::aReport[ FONTNAMEPREV ] := ::aReport[ FONTNAME ]
          ::aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( ::aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
-      ELSEIF ::aReport[ FONTSIZE ] <> ::aReport[ FONTSIZEPREV ]
+      ELSEIF ::aReport[ FONTSIZE ] != ::aReport[ FONTSIZEPREV ]
          ::aReport[ FONTSIZEPREV ] := ::aReport[ FONTSIZE ]
          ::aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( ::aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
       ELSE
@@ -625,7 +625,7 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
                  IIF( ::aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ] > 0, "/Next " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ])) + " 0 R" + CRLF, "") + ;
                  IIF( ::aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ] > 0, "/First " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ])) + " 0 R" + CRLF, "") + ;
                  IIF( ::aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ] > 0, "/Last " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ])) + " 0 R" + CRLF, "") + ;
-                 IIF( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ] <> 0, "/Count " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ])) + CRLF, "") + ;
+                 IIF( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ] != 0, "/Count " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ])) + CRLF, "") + ;
                  ">>" + CRLF + "endobj" + CRLF
 //                 "/Dest [" + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKPAGE ] * 3 )) + " 0 R /XYZ 0 " + ltrim( str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
 //                 "/Dest [" + ltrim(str( ::aReport[ PAGES ][ nRecno ] )) + " 0 R /XYZ 0 " + ltrim( str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
@@ -826,7 +826,7 @@ DEFAULT _cPageSize TO "LETTER"
 
    nSize := ascan( aSize, { |arr| arr[ 1 ] = _cPageSize } )
 
-   IF nSize = 0 .or. nSize > 2
+   IF nSize == 0 .or. nSize > 2
       nSize := 1
    ENDIF
 
@@ -1053,7 +1053,7 @@ DEFAULT cColor   TO ""
                nL := nLeft
                IF lParagraph
                   nLineLen += nSpace * nNew
-                  IF nJustify <> 2
+                  IF nJustify != 2
                      nL += nSpace * nNew
                   ENDIF
                   lParagraph := .f.
@@ -1521,13 +1521,13 @@ local nI, nLen := len( ::aReport[ HEADER ] ), nTemp, aTemp, nHeight
       ENDIF
    next
 
-   IF nTop <> NIL
+   IF nTop != NIL
       ::aReport[ PDFTOP] := nTop
    ENDIF
-   IF nLeft <> NIL
+   IF nLeft != NIL
       ::aReport[ PDFLEFT ] := nLeft
    ENDIF
-   IF nBottom <> NIL
+   IF nBottom != NIL
       ::aReport[ PDFBOTTOM ] := nBottom
    ENDIF
 
@@ -1680,7 +1680,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
    cTemp  := space(12)
    nPages := 0
 
-   while cIFDNext <> c40 //read IFD's
+   while !( cIFDNext == c40 ) //read IFD's
 
       nIFD := bin2l( cIFDNext )
 
@@ -2109,7 +2109,7 @@ local nFinish, nL, nB, nJ, cToken, nRow
 
    nL := nLeft
    IF lParagraph
-      IF nJustify <> 2
+      IF nJustify != 2
          nL += nSpace * nNew
       ENDIF
    ENDIF
@@ -2414,7 +2414,7 @@ return str(asc( cChar ) / 255, 4, 2)
 static function TimeAsAMPM( cTime )
    IF VAL(cTime) < 12
       cTime += " am"
-   ELSEIF VAL(cTime) = 12
+   ELSEIF VAL(cTime) == 12
       cTime += " pm"
    ELSE
       cTime := STR(VAL(cTime) - 12, 2) + SUBSTR(cTime, 3) + " pm"
@@ -2504,7 +2504,7 @@ RETURN cRet
 static function Array2File( cFile, aRay, nDepth, hFile )
 local nBytes := 0
 local i
-local lOpen  := ( hFile <> nil )
+local lOpen  := ( hFile != nil )
 
 nDepth := if( ISNUMBER( nDepth ), nDepth, 0 )
 //if hFile == NIL
@@ -2555,7 +2555,7 @@ static function File2Array( cFile, nLen, hFile )
 LOCAL cData,cType,nDataLen,nBytes
 local nDepth := 0
 local aRay   := {}
-local lOpen  := ( hFile <> nil )
+local lOpen  := ( hFile != nil )
 
 if hFile == NIL        // First Timer
    if ( hFile := fOpen( cFile,FO_READ ) ) == -1
@@ -2563,7 +2563,7 @@ if hFile == NIL        // First Timer
    endif
    cData := space( 3 )
    fRead( hFile, @cData, 3 )
-   if left( cData,1 ) != 'A'     //  If format of file <> array
+   if left( cData,1 ) != 'A'     //  If format of file != array
       fClose( hFile )            //////////
       return( aRay )
    endif
@@ -2628,7 +2628,7 @@ local lRet := .t.
 #endif
 
 #ifdef __HARBOUR__
-    if cVerb <> nil
+    if cVerb != nil
 // TOFIX: This requires hbwhat32, which in turns requires xhb.
 //        This has to solved differently.
 //      ShellExecute( GetDeskTopWindow(), cVerb, cFile, , , 1 )

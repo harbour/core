@@ -189,7 +189,7 @@ FUNCTION gdImageToString( oImage )
 
   IF ValType( oImage ) == "O" .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
      WITH OBJECT oImage
-        IF :cType <> NIL
+        IF :cType != NIL
            DO CASE
               CASE :cType == "jpeg"
                    cString := :ToStringJpeg()
@@ -213,7 +213,7 @@ PROCEDURE gdImageToFile( oImage, cFile )
 
   IF ValType( oImage ) == "O" .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
      WITH OBJECT oImage
-        IF :cType <> NIL
+        IF :cType != NIL
            DO CASE
               CASE :cType == "jpeg"
                    cString := :ToStringJpeg()
@@ -225,7 +225,7 @@ PROCEDURE gdImageToFile( oImage, cFile )
                    cString := :ToStringPng()
                    cExt    := "png"
            ENDCASE
-           IF cString <> NIL
+           IF cString != NIL
               MemoWrit( cFile + "." + cExt, cString )
            ENDIF
         ENDIF
@@ -243,7 +243,7 @@ PROCEDURE gdImageToHandle( oImage, nHandle )
 
   IF ValType( oImage ) == "O" .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
      WITH OBJECT oImage
-        IF :cType <> NIL
+        IF :cType != NIL
            DO CASE
               CASE :cType == "jpeg"
                    :OutputJpeg( nHandle )

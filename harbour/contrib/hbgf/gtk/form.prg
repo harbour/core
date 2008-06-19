@@ -126,7 +126,7 @@ METHOD CtrlCommand( nCmd, nID, aEventData ) CLASS HBForm
     LOCAL nAt, oControl
 
     IF ( nAt := AScan( ::aControls, { | o | o:nID == nID } ) ) != 0
-        oControl = ::aControls[ nAt ]
+        oControl := ::aControls[ nAt ]
         IF oControl:OnClick != nil
             __ObjSendMsg( Self, oControl:OnClick, oControl )
         ENDIF

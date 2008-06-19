@@ -67,11 +67,11 @@ PROCEDURE Main(...)
    //DEFAULT cText TO "Testo di Prova"
    DEFAULT nPt TO 30
 
-   IF cImg <> NIL
+   IF cImg != NIL
       //OutJpg( cImg, nPt )
       OutPhoto( cImg, nWidth, nHeight )
 
-   ELSEIF cPhoto <> NIL
+   ELSEIF cPhoto != NIL
       StartHTML()
       //OutHTML ValToPrg( hParams ) + "<br>"
       //OutHTML ValToPrg( cParams ) + "<br>"
@@ -83,8 +83,8 @@ PROCEDURE Main(...)
       OutHTML "</td></tr>"
       OutHTML "<tr><td align='center'>"
       OutHTML "<img src='test_out.exe?img=" + cPhoto + ;
-              IIF( nWidth <> NIL , "&width="  + AllTrim( Str( nWidth ) ) , "" ) + ;
-              IIF( nHeight <> NIL, "&height=" + AllTrim( Str( nHeight ) ), "" ) + ;
+              IIF( nWidth != NIL , "&width="  + AllTrim( Str( nWidth ) ) , "" ) + ;
+              IIF( nHeight != NIL, "&height=" + AllTrim( Str( nHeight ) ), "" ) + ;
               "'>" + "<br>"
       OutHTML "</td></tr>"
       OutHTML "<tr><td align='center'>"
@@ -130,12 +130,12 @@ PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
    LOCAL oImage := GDImage():LoadFromFile( cPhoto )
 
-   IF nWidth <> NIL .AND. nHeight <> NIL
+   IF nWidth != NIL .AND. nHeight != NIL
       oImage:Resize( nWidth, nHeight )
-   ELSEIF nWidth <> NIL .AND. nHeight == NIL
+   ELSEIF nWidth != NIL .AND. nHeight == NIL
       nHeight := oImage:Height() * ( nWidth / oImage:Width() )
       oImage:Resize( nWidth, nHeight )
-   ELSEIF nWidth == NIL .AND. nHeight <> NIL
+   ELSEIF nWidth == NIL .AND. nHeight != NIL
       nWidth := oImage:Width() * ( nHeight / oImage:Height() )
       oImage:Resize( nWidth, nHeight )
    ENDIF

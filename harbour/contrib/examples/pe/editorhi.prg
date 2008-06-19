@@ -73,22 +73,22 @@ EXPORT FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
 LOCAL nEdit, oEdit
 
     IF( nLength == NIL )
-        nLength =80
+        nLength := 80
     ENDIF
-    nEdit =ED_New( nLength, 4, IIFNIL(nESize, nSize), nEscape )
+    nEdit := ED_New( nLength, 4, IIFNIL(nESize, nSize), nEscape )
     IF( nEdit >= 0 )
         oEdit :=ARRAY( E_STRUCT_LEN )
-        oEdit[E_EDIT]   =nEdit
+        oEdit[E_EDIT]   := nEdit
 
-        oEdit[E_TOP]     =nTop
-        oEdit[E_LEFT]    =nLeft
-        oEdit[E_BOTTOM]  =nBottom
-        oEdit[E_RIGHT]   =nRight
-        oEdit[E_LINELEN] =nLength
-        oEdit[E_FRAME]   =IIFNIL( B_DOUBLE, cFrame )
-        oEdit[E_TITLE]   =cTitle
-        oEdit[E_COLOR]   =IIFNIL( "W/N,W+/N,W+/R,GR+/N,G+/N", cColor )
-        oEdit[E_MODE]    =EDIT_VIEW
+        oEdit[E_TOP]     := nTop
+        oEdit[E_LEFT]    := nLeft
+        oEdit[E_BOTTOM]  := nBottom
+        oEdit[E_RIGHT]   := nRight
+        oEdit[E_LINELEN] := nLength
+        oEdit[E_FRAME]   := IIFNIL( B_DOUBLE, cFrame )
+        oEdit[E_TITLE]   := cTitle
+        oEdit[E_COLOR]   := IIFNIL( "W/N,W+/N,W+/R,GR+/N,G+/N", cColor )
+        oEdit[E_MODE]    := EDIT_VIEW
 
         ED_Config( nEdit, nTop, nLeft, nBottom, nRight, 0, 0 )
     ENDIF
@@ -121,7 +121,7 @@ EXPORT FUNCTION EditorCargo( oEdit, xCargo )
 LOCAL _xCargo:=oEdit[E_CARGO]
 
     IFANY( xCargo )
-        oEdit[E_CARGO] =xCargo
+        oEdit[E_CARGO] := xCargo
     ENDIF
 
 RETURN( _xCargo )
@@ -133,7 +133,7 @@ EXPORT FUNCTION EditorTitle( oEdit, cTitle )
 LOCAL _cTitle:=oEdit[E_TITLE]
 
     IFANY( cTitle )
-        oEdit[E_TITLE] =cTitle
+        oEdit[E_TITLE] := cTitle
     ENDIF
 
 RETURN( _cTitle )
@@ -149,7 +149,7 @@ EXPORT FUNCTION EditorMode( oEdit, lMode )
 LOCAL _lMode:=oEdit[E_MODE]
 
     IFANY( lMode )
-        oEdit[E_MODE] =lMode
+        oEdit[E_MODE] := lMode
     ENDIF
 
 RETURN( _lMode )
@@ -161,7 +161,7 @@ EXPORT FUNCTION EditorSize( nSize )
 LOCAL _nSize:=nESize
 
     IF nSize != NIL
-        nESize =nSize
+        nESize := nSize
     ENDIF
 
 RETURN( _nSize )
@@ -212,10 +212,10 @@ RETURN
 EXPORT FUNCTION EditorGetText( oEdit, nUpper, nCarret )
 
     IFNIL( nUpper )
-        nUpper =EDIT_SAME
+        nUpper := EDIT_SAME
     ENDIF
     IFNIL( nCarret )
-        nCarret =EDIT_HARD
+        nCarret := EDIT_HARD
     ENDIF
 
 RETURN( ED_GetText( oEdit[E_EDIT], nUpper, nCarret ) )
@@ -274,23 +274,23 @@ LOCAL nHandle, nLen, oEdit, bF2, bF8, oHelp, lSaved:=.F., lClose:=.F.
 LOCAL nSize
 
     IF( lSave == NIL )
-        lSave =.T.
+        lSave := .T.
     ENDIF
-    IF( VALTYPE(xInput) == 'C' )
-        nHandle =FOPEN( xInput )
-        lClose =.T.
+    IF( VALTYPE(xInput) == "C" )
+        nHandle := FOPEN( xInput )
+        lClose := .T.
     ELSE
-        nHandle =xInput
+        nHandle := xInput
     ENDIF
 
     IF( nHandle > 0 )
-        nLen =MAX( FileLength( nHandle ), nESize )
+        nLen := MAX( FileLength( nHandle ), nESize )
     ELSE
-        nLen =nESize
+        nLen := nESize
     ENDIF
 
-    nSize =IIF( nLen < 8192, nLen*2, INT(nLen*1.5) )
-    oEdit =EditorNew( 01,00,23,79, nLineLen, '---      ', cOutput, , ;
+    nSize := IIF( nLen < 8192, nLen*2, INT(nLen*1.5) )
+    oEdit := EditorNew( 01,00,23,79, nLineLen, "---      ", cOutput, , ;
                       nSize, nEscape )
 
     IF( nHandle > 0 )
@@ -300,7 +300,7 @@ LOCAL nSize
             FCLOSE( nHandle )
         ENDIF
     ELSE
-        EditorSetText( oEdit, ' ' )
+        EditorSetText( oEdit, " " )
     ENDIF
 
     EditorCargo( oEdit, cOutput )
@@ -308,11 +308,11 @@ LOCAL nSize
 //    SAVELINE 24 TO oHelp WITH 80, ColorHelp( ,COLOR_EXTEND )
 //    IF( lSave )
 //        DisplayHelp( 73 )     //F2-save
-//        bF2 =SETKEY( K_F2, {|oE| lSaved:=EditorSave(oE)} )
+//        bF2 := SETKEY( K_F2, {|oE| lSaved:=EditorSave(oE)} )
 //    ENDIF
 //    IF( lPrint != NIL .AND. lPrint )
 //        DisplayHelp( 74 )      //F8-print
-//        bF8 =SETKEY( K_F8, {|oE| EditorPrint(oE)} )
+//        bF8 := SETKEY( K_F8, {|oE| EditorPrint(oE)} )
 //    ENDIF
 
     lSaved :=EditorEdit( oEdit, EDIT_EDIT, .F., nHelp )
@@ -365,31 +365,31 @@ LOCAL nTop, nLeft, nBottom, nRight
 LOCAL lSaveAllowed, lSaved:=.F.
 //HELPSAVE( IIF(nHelp==NIL, H_EDITOR, nHelp ) )
 
-    oBox =SAVEBOX( oEdit[E_TOP], oEdit[E_LEFT], ;
+    oBox := SAVEBOX( oEdit[E_TOP], oEdit[E_LEFT], ;
                    oEdit[E_BOTTOM], oEdit[E_RIGHT], ;
                    oEdit[E_COLOR], oEdit[E_FRAME], oEdit[E_TITLE], .F. )
 
-    lInsert =SET( _SET_INSERT )
+    lInsert := SET( _SET_INSERT )
 //    SayInsert()
-    nCursor =SetCursor( IIF(lInsert, SC_NORMAL, SC_SPECIAL1) )
+    nCursor := SetCursor( IIF(lInsert, SC_NORMAL, SC_SPECIAL1) )
     IFANY( lEdit )
-        oEdit[E_MODE] =lEdit
+        oEdit[E_MODE] := lEdit
     ENDIF
     lSaveAllowed :=( SETKEY(K_F2) == NIL )
 //    IF( lSaveAllowed )
 //        DisplayHelp( 73 )     //F2-save
 //    ENDIF
 
-    nTop    =oEdit[E_TOP] +1
-    nLeft   =oEdit[E_LEFT] +1
-    nBottom =oEdit[E_BOTTOM] -1
-    nRight  =oEdit[E_RIGHT] -1
+    nTop    := oEdit[E_TOP] +1
+    nLeft   := oEdit[E_LEFT] +1
+    nBottom := oEdit[E_BOTTOM] -1
+    nRight  := oEdit[E_RIGHT] -1
     IF( lFrame != NIL .AND. !lFrame )
         nLeft--
         nBottom++
         nRight++
     ENDIF
-    nState =oEdit[E_RIGHT] -8
+    nState := oEdit[E_RIGHT] -8
 
     /* It uses static variable 'oEditor' to speed access to the editor
        If this function is called recursively then we have to push 
@@ -409,21 +409,21 @@ LOCAL lSaveAllowed, lSaved:=.F.
     ED_Config( oEditor[E_EDIT], nTop, nLeft, nBottom, nRight, 0, 0 )
 
     DO WHILE .T.
-        nRow =ED_Stabilize()    //displays all visible lines
+        nRow := ED_Stabilize()    //displays all visible lines
         // It don't uses incremantal stabilization for performance reasons
 
         IF( nRow != ED_Row() )
-            nRow =ED_Row()
+            nRow := ED_Row()
             @ oEditor[E_TOP], nState SAY STRZERO( nRow,4 )
         ENDIF
         IF( nCol != ED_Col() )
-            nCol =ED_Col()
+            nCol := ED_Col()
             @ oEditor[E_TOP], nState+5 SAY STRZERO( nCol,3 )
         ENDIF
         SETPOS( nTop+ED_WinRow(), nLeft+ED_WinCol() )
 
-//        nKey =WaitForKey()
-        nKey =INKEY(0)
+//        nKey := WaitForKey()
+        nKey := INKEY(0)
 
         DO CASE
         CASE( nKey>=32 .AND. nKey<256 )
@@ -432,7 +432,7 @@ LOCAL lSaveAllowed, lSaved:=.F.
             ENDIF
 
         CASE( nKey == K_F2 .AND. lSaveAllowed )
-            lSaved :=EditorSave( oEditor )     //save the copy of edited buffer
+            lSaved := EditorSave( oEditor )     //save the copy of edited buffer
 
         CASE( EditorMove( nKey ) )
 
@@ -450,7 +450,7 @@ LOCAL lSaveAllowed, lSaved:=.F.
             EXIT
 
         OTHERWISE
-            bKey =SETKEY( nKey )
+            bKey := SETKEY( nKey )
             IFNIL( bKey )
                 IF( oEdit[E_MODE] )
                     EditorKeys( nKey )
@@ -501,12 +501,12 @@ LOCAL i
 
     CASE( nKey == K_TAB )
 //        ED_Tab( lInsert )
-        FOR i=1 TO 4
+        FOR i := 1 TO 4
             ED_PutChar( 32, lInsert )
         NEXT
 
     CASE( nKey == K_INS )
-        lInsert = !lInsert
+        lInsert := !lInsert
         SET( _SET_INSERT, lInsert )
         SetCursor( IIF(lInsert, SC_NORMAL, SC_SPECIAL1) )
 //        SayInsert()
@@ -559,7 +559,7 @@ LOCAL lMoved:=.T.
         ED_PWord()
 
     OTHERWISE
-        lMoved =.F.
+        lMoved := .F.
 
     ENDCASE
 
@@ -573,7 +573,7 @@ STATIC PROCEDURE EditorPush( oEdit )
 
     ED_Push()
     AADD( aEdit, oEditor )
-    oEditor =oEdit
+    oEditor := oEdit
 
 RETURN
 
@@ -583,8 +583,8 @@ RETURN
 STATIC PROCEDURE EditorPop( )
 LOCAL nLen
 
-    nLen =LEN( aEdit )
-    oEditor =aEdit[ nLen ]
+    nLen := LEN( aEdit )
+    oEditor := aEdit[ nLen ]
     ASIZE( aEdit, nLen-1 )
     ED_Pop()
 
@@ -596,9 +596,9 @@ RETURN
 STATIC FUNCTION EditorSave( oEdit )
 LOCAL nHandle, cFile, cNew
 
-    cFile =EditorCargo(oEdit)
+    cFile := EditorCargo(oEdit)
     IF( EMPTY(cFile) )
-        cFile ='TESTFILE.TXT'     //GetFileName( 10, 10 )
+        cFile := "TESTFILE.TXT"     //GetFileName( 10, 10 )
     ENDIF
 
     IF( EMPTY(cFile) )
@@ -607,9 +607,9 @@ LOCAL nHandle, cFile, cNew
 /*
     WorkStart( 75 )
     IF( FILE(cFile) )
-        cNew =FileExtension( cFile, 'BAK' )
+        cNew := FileExtension( cFile, "BAK" )
         DELETEFILE( cNew )
-        nHandle =RENAMEFILE( cFile, cNew )
+        nHandle := RENAMEFILE( cFile, cNew )
         IF( nHandle < 0 )
             FileError( cFile, -nHandle )
             WorkEnd()
@@ -618,7 +618,7 @@ LOCAL nHandle, cFile, cNew
         ENDIF
     ENDIF
 */
-    nHandle =FCREATE( cFile, FC_NORMAL )
+    nHandle := FCREATE( cFile, FC_NORMAL )
     IF( nHandle > 0 )
         FWRITE( nHandle, EditorGetText(oEdit) )
 
@@ -639,7 +639,7 @@ LOCAL oParm
 
     IF PrintReady()
         PrintNewQue()
-        PrintSetHead( AppsOwner(), , '-', PRN_OFF )
+        PrintSetHead( AppsOwner(), , "-", PRN_OFF )
 
         PrintAddJob( oEdit, PRN_EDITOR )
         PrintJob(PRN_OFF)
@@ -656,17 +656,17 @@ EXPORT FUNCTION SaveBox( top,left,bott,right, kolor, patt, head, shadow )
 LOCAL cBox, cClr, nBottom,nRight
 
     IF( PCOUNT() > 4 )
-        cClr    =SETCOLOR(kolor)
-        cBox    =SAVESCREEN(top,left,bott,right)
-//        cBox    =BoxShadow(top,left,bott,right, , patt, head, shadow)
+        cClr    := SETCOLOR(kolor)
+        cBox    := SAVESCREEN(top,left,bott,right)
+//        cBox    := BoxShadow(top,left,bott,right, , patt, head, shadow)
         @ top, left, bott, right BOX patt
-//        nBottom =bott+1
-//        nRight  =right+1
+//        nBottom := bott+1
+//        nRight  := right+1
     ELSE
-        cClr    =SETCOLOR()
-        cBox    =SAVESCREEN(top,left,bott,right)
-        nBottom =bott
-        nRight  =right
+        cClr    := SETCOLOR()
+        cBox    := SAVESCREEN(top,left,bott,right)
+        nBottom := bott
+        nRight  := right
     ENDIF
 
 RETURN( {top,left,nBottom,nRight, cBox, cClr} )

@@ -74,7 +74,7 @@ METHOD New( oForm ) CLASS HBMenu
    ::Items  := {}
 
    if oForm != nil
-      ::nHandle = WinCreateMenu( oForm:hWnd )
+      ::nHandle := WinCreateMenu( oForm:hWnd )
    endif
 
 return Self
@@ -94,7 +94,7 @@ METHOD FindItem( nId ) CLASS HBMenu
 
    local oMenuItem, n
 
-   for n = 1 to Len( ::Items )
+   for n := 1 to Len( ::Items )
       if ( oMenuItem := ::Items[ n ] ):nId == nId
          return oMenuItem
       else

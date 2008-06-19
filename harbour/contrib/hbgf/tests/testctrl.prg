@@ -10,39 +10,39 @@ function Main()
    local oForm := HBFormControls():New()
    local oEdit, oBtn
 
-   oForm:Caption = "Harbour GUI Framework controls"
-   oForm:Top     = 175
-   oForm:Left    = 197
-   oForm:Width   = 382
-   oForm:Height  = 249
+   oForm:Caption := "Harbour GUI Framework controls"
+   oForm:Top     := 175
+   oForm:Left    := 197
+   oForm:Width   := 382
+   oForm:Height  := 249
 
-   oEdit = HBEdit():New( oForm )
-   oEdit:Top     = 30
-   oEdit:Left    = 100
-   oEdit:Width   = 200
-   oEdit:Caption = "Edit control"
+   oEdit := HBEdit():New( oForm )
+   oEdit:Top     := 30
+   oEdit:Left    := 100
+   oEdit:Width   := 200
+   oEdit:Caption := "Edit control"
    oForm:InsertControl( oEdit )
 
-   oBtn = HBButton():New( oForm )
-   oBtn:Caption = "&View as text"
-   oBtn:Top     = 150
-   oBtn:Left    = 10
-   oBtn:Width   = 100
-   oBtn:OnClick = "BtnViewAsTextClick"
+   oBtn := HBButton():New( oForm )
+   oBtn:Caption := "&View as text"
+   oBtn:Top     := 150
+   oBtn:Left    := 10
+   oBtn:Width   := 100
+   oBtn:OnClick := "BtnViewAsTextClick"
    oForm:InsertControl( oBtn )
 
-   oBtn = HBButton():New( oForm )
-   oBtn:Caption = "&Ok"
-   oBtn:Top     = 150
-   oBtn:Left    = 180
-   oBtn:OnClick = "BtnOkClick"
+   oBtn := HBButton():New( oForm )
+   oBtn:Caption := "&Ok"
+   oBtn:Top     := 150
+   oBtn:Left    := 180
+   oBtn:OnClick := "BtnOkClick"
    oForm:InsertControl( oBtn )
 
-   oBtn = HBButton():New( oForm )
-   oBtn:Caption = "&Cancel"
-   oBtn:Top     = 150
-   oBtn:Left    = 280
-   oBtn:OnClick = "BtnCancelClick"
+   oBtn := HBButton():New( oForm )
+   oBtn:Caption := "&Cancel"
+   oBtn:Top     := 150
+   oBtn:Left    := 280
+   oBtn:OnClick := "BtnCancelClick"
    oForm:InsertControl( oBtn )
 
    oForm:ShowModal()

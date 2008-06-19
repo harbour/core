@@ -389,7 +389,7 @@ function tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
       return ""
    endif
 
-   if ValType( cDelim ) <> "C" .OR. Empty( cDelim )
+   if !( ValType( cDelim ) == "C" ) .OR. Empty( cDelim )
       return ""
    endif
 

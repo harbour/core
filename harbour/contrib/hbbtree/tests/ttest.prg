@@ -62,7 +62,7 @@ Procedure TTest()
     n:gotop()
     while .t.
       ? n:key(), n:data()
-      if 1 <> n:skip( 1 )
+      if 1 != n:skip( 1 )
         exit
       endif
     end
@@ -72,7 +72,7 @@ Procedure TTest()
     n:gobottom()
     while .t.
       ? n:key(), n:data()
-      if -1 <> n:skip( -1 )
+      if -1 != n:skip( -1 )
         exit
       endif
     end

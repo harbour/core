@@ -37,22 +37,22 @@ PROCEDURE Main()
    ? gdVersion()
 
    /* Create an image in memory */
-   im = gdImageCreate(200, 200)
+   im := gdImageCreate(200, 200)
 
    /* Load an image in memory from file */
-   im2 = gdImageCreateFromJpeg( IMAGES_IN + "conv_test.jpg")
+   im2 := gdImageCreateFromJpeg( IMAGES_IN + "conv_test.jpg")
 
    /* Now work on first empty image */
 
    /* Allocate background */
-   white = gdImageColorAllocate(im, 255, 255, 255)
+   white := gdImageColorAllocate(im, 255, 255, 255)
 
    /* Allocate drawing color */
-   black = gdImageColorAllocate(im, 0, 0, 0)
-   blue  = gdImageColorAllocate(im, 0, 0, 255)
-   red   = gdImageColorAllocate(im, 255, 0, 0)
-   green = gdImageColorAllocate(im, 0, 255, 0)
-   cyan  = gdImageColorAllocate(im, 0, 255, 255)
+   black := gdImageColorAllocate(im, 0, 0, 0)
+   blue  := gdImageColorAllocate(im, 0, 0, 255)
+   red   := gdImageColorAllocate(im, 255, 0, 0)
+   green := gdImageColorAllocate(im, 0, 255, 0)
+   cyan  := gdImageColorAllocate(im, 0, 255, 255)
 
    /* Draw rectangle */
    gdImageFilledRectangle(im, 0, 0, 199, 199, cyan)

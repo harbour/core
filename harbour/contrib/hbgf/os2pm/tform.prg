@@ -98,12 +98,12 @@ METHOD New() CLASS HBForm
       // Notice that this code may be moved to a method Register()
       // so we hide again the OS API details
       WinRegisterClass("HB_HBForm", CS_SIZEREDRAW, 0, 0 )
-      ::lRegistered = .t.
+      ::lRegistered := .t.
    endif
 
    // Again this code may be moved to a method Create() to hide the
    // OS API details
-   ::hWnd = WinCreateStdWindow( HWND_DESKTOP,;
+   ::hWnd := WinCreateStdWindow( HWND_DESKTOP,;
                                 WS_VISIBLE,;
                                 (FCF_TITLEBAR + FCF_SYSMENU +;
                                 FCF_SIZEBORDER + FCF_TASKLIST +;
@@ -135,9 +135,9 @@ METHOD Command( nNotifyCode, nId, hWndCtl ) CLASS HBForm
          endif
 
       case nNotifyCode == CMDSRC_PUSHBUTTON
-         nAt = AScan( ::aControls, { | o | o:nId == nId } )
+         nAt := AScan( ::aControls, { | o | o:nId == nId } )
          if nAt != 0
-            oControl = ::aControls[ nAt ]
+            oControl := ::aControls[ nAt ]
             if oControl:OnClick != nil
                __ObjSendMsg( Self, oControl:OnClick, oControl )
             endif
@@ -230,7 +230,7 @@ function HB_GUI( hWnd, nMsg, nParam1, nParam2 ) // messages entry point
    local nForm := AScan( aForms, { | oForm | oForm:hWndClient == hWnd } )
 
    if nForm != 0
-      aReturn[ 1 ] = aForms[ nForm ]:HandleEvent( nMsg, nParam1, nParam2 )
+      aReturn[ 1 ] := aForms[ nForm ]:HandleEvent( nMsg, nParam1, nParam2 )
    endif
 
 return aReturn

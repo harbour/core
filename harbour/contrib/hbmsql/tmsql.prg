@@ -280,7 +280,7 @@ METHOD GetRow(nRow) CLASS TmSQLQuery
 
    default nRow to 0
 
-   if ::nResultHandle <> NIL
+   if ::nResultHandle != NIL
       if nRow >= 1 .AND. nRow <= ::nNumRows
 
          // NOTE: row count starts from 0
@@ -292,7 +292,7 @@ METHOD GetRow(nRow) CLASS TmSQLQuery
 
       aRow := msqlFetchR(::nResultHandle, ::nNumFields)
 
-      if aRow <> NIL
+      if aRow != NIL
 
          if ::lRowID
             aRow[1] := Val(aRow[1])
@@ -412,7 +412,7 @@ METHOD GetRow(nRow) CLASS TmSQLTable
 
    local oRow := super:GetRow(nRow)
 
-   if oRow <> NIL
+   if oRow != NIL
       oRow:cTable := ::cTable
    endif
 
@@ -743,9 +743,10 @@ METHOD Query(cQuery) CLASS TmSQLServer
    i := 1
    nNumTables := 0
 
-   while __StrToken(cUpperQuery, i++, " ") <> "FROM"
+   while !( __StrToken(cUpperQuery, i++, " ") == "FROM" )
    enddo
-   while (cToken := __StrToken(cUpperQuery, i++, " ")) <> "WHERE" .AND. cToken <> "LIMIT" .AND. !Empty(cToken)
+
+   while !( (cToken := __StrToken(cUpperQuery, i++, " ")) == "WHERE" ) .AND. !( cToken == "LIMIT" ) .AND. !Empty(cToken)
       cTableName := __StrToken(cQuery, i - 1, " ")
       nNumTables++
    enddo

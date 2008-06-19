@@ -83,7 +83,7 @@ PROC MyZip( ... )
       FOR EACH cWild IN aWild
          IF !EMPTY( cWild )
             aDir := DIRECTORY( cWild )
-            cPath = LEFT( cWild, RAT( HB_OSPATHSEPARATOR(), cWild ) )
+            cPath := LEFT( cWild, RAT( HB_OSPATHSEPARATOR(), cWild ) )
             FOR EACH aFile IN aDir
                IF cPath + aFile[ 1 ] != cFileName
                   ? "Adding", cPath + aFile[ 1 ]

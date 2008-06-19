@@ -9,7 +9,7 @@ function Main()
 
    local oForm2 := HBForm2():New()
 
-   oForm2:OnClick = "Form2Click"
+   oForm2:OnClick := "Form2Click"
 
    oForm2:ShowModal()
 
@@ -32,23 +32,23 @@ METHOD New() CLASS HBForm2
 
    Super:New()
 
-   ::Caption = "Harbour GUI demo"
+   ::Caption := "Harbour GUI demo"
 
-   oMenu = HBMenu():New( Self )
+   oMenu := HBMenu():New( Self )
 
-   oMenuItem = HGFMenuItem():New( oMenu )
-   oMenuitem:Caption = "View as Text"
-   oMenuitem:Name    = "ViewAsText"
-   oMenuItem:OnClick  = "ViewAsTextClick"  // The container method to execute
+   oMenuItem := HGFMenuItem():New( oMenu )
+   oMenuitem:Caption := "View as Text"
+   oMenuitem:Name    := "ViewAsText"
+   oMenuItem:OnClick  := "ViewAsTextClick"  // The container method to execute
    oMenu:Add( oMenuItem )
 
-   oMenuItem = HGFMenuItem():New( oMenu )
-   oMenuitem:Caption = "Exit"
-   oMenuitem:Name    = "Exit"
-   oMenuItem:OnClick  = "ExitClick"  // The container method to execute
+   oMenuItem := HGFMenuItem():New( oMenu )
+   oMenuitem:Caption := "Exit"
+   oMenuitem:Name    := "Exit"
+   oMenuItem:OnClick  := "ExitClick"  // The container method to execute
    oMenu:Add( oMenuItem )
 
-   ::Menu = oMenu
+   ::Menu := oMenu
 
 return Self
 

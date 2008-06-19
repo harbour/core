@@ -182,7 +182,7 @@ METHOD New(nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable) CLASS TBrowseS
       // No bBlock now since New() would use it to find column length, but column is not ready yet at this point
       oCol := TBColumnSQL():New(::oCurRow:FieldName(i),, Self)
 
-      if ::oCurRow:FieldType(i) <> "M"
+      if !( ::oCurRow:FieldType(i) == "M" )
          oCol:Width := Max(::oCurRow:FieldLen(i), Len(oCol:Heading))
       else
          oCol:Width := 10

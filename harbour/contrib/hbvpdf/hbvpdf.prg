@@ -24,7 +24,7 @@ DEFAULT cId to ""
       cString := left( cString, nAt - 1 ) + ltrim(str( pdfPageNumber())) + substr( cString, nAt + 12 )
    ENDIF
 
-   lReverse = .f.
+   lReverse := .f.
    IF cUnits == "M"
       nRow := pdfM2Y( nRow )
       nCol := pdfM2X( nCol )
@@ -46,7 +46,7 @@ DEFAULT cId to ""
          pdfBox( aReport[ PAGEY ] - nRow - aReport[ FONTSIZE ] + 2.0 , nCol, aReport[ PAGEY ] - nRow + 2.0, nCol + pdfM2X( pdfLen( cString )) + 1,,100, "D")
          //aReport[ PAGEBUFFER ] += " 1 g "
          pdfAddBuffer( " 1 g " )
-         lReverse = .t.
+         lReverse := .t.
       ELSEIF right( cString, 1 ) == chr(254) //underline
          cString := left( cString, len( cString ) - 1 )
          //pdfBox( nCol, nRow - 1.5,  nCol + pdfM2X( pdfLen( cString )) + 1, nRow - 1,,100, "D")
@@ -70,11 +70,11 @@ DEFAULT cId to ""
       // version 0.01
 
       _nFont := ascan( aReport[ FONTS ], {|arr| arr[1] == aReport[ FONTNAME ]} )
-      IF aReport[ FONTNAME ] <> aReport[ FONTNAMEPREV ]
+      IF !( aReport[ FONTNAME ] == aReport[ FONTNAMEPREV ] )
          aReport[ FONTNAMEPREV ] := aReport[ FONTNAME ]
          //aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
          pdfAddBuffer( CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET" )
-      ELSEIF aReport[ FONTSIZE ] <> aReport[ FONTSIZEPREV ]
+      ELSEIF aReport[ FONTSIZE ] != aReport[ FONTSIZEPREV ]
          aReport[ FONTSIZEPREV ] := aReport[ FONTSIZE ]
          //aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
          pdfAddBuffer( CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET" )
@@ -498,7 +498,7 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
                  IIF( aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ] > 0, "/Next " + ltrim(str( aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ])) + " 0 R" + CRLF, "") + ;
                  IIF( aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ] > 0, "/First " + ltrim(str( aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ])) + " 0 R" + CRLF, "") + ;
                  IIF( aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ] > 0, "/Last " + ltrim(str( aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ])) + " 0 R" + CRLF, "") + ;
-                 IIF( aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ] <> 0, "/Count " + ltrim(str( aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ])) + CRLF, "") + ;
+                 IIF( aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ] != 0, "/Count " + ltrim(str( aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ])) + CRLF, "") + ;
                  ">>" + CRLF + "endobj" + CRLF
 //                 "/Dest [" + ltrim(str( aReport[ BOOKMARK ][ nRecno ][ BOOKPAGE ] * 3 )) + " 0 R /XYZ 0 " + ltrim( str( aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
 //                 "/Dest [" + ltrim(str( aReport[ PAGES ][ nRecno ] )) + " 0 R /XYZ 0 " + ltrim( str( aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
@@ -1083,7 +1083,7 @@ DEFAULT _cPageSize to "LETTER"
 
    nSize := ascan( aSize, { |arr| arr[ 1 ] = _cPageSize } )
 
-   IF nSize = 0 //.or. nSize > 2 //0.05
+   IF nSize == 0 //.or. nSize > 2 //0.05
       nSize := 1
    ENDIF
 
@@ -1277,7 +1277,7 @@ DEFAULT cColor to ""
                nL := nLeft
                IF lParagraph
                   nLineLen += nSpace * nNew
-                  IF nJustify <> 2
+                  IF nJustify != 2
                      nL += nSpace * nNew
                   ENDIF
                   lParagraph := .f.
@@ -1313,7 +1313,7 @@ DEFAULT cColor to ""
 
             nL := nLeft
             IF lParagraph
-               IF nJustify <> 2
+               IF nJustify != 2
                   nL += nSpace * nNew
                ENDIF
             ENDIF
@@ -1357,7 +1357,7 @@ DEFAULT cColor to ""
 
             nL := nLeft
             IF lParagraph
-               IF nJustify <> 2
+               IF nJustify != 2
                   nL += nSpace * nNew
                ENDIF
             ENDIF
@@ -1416,7 +1416,7 @@ local nFinish, nL, nB, nJ, cToken, nRow
 
    nL := nLeft
    IF lParagraph
-      IF nJustify <> 2
+      IF nJustify != 2
          nL += nSpace * nNew
       ENDIF
    ENDIF
@@ -1483,7 +1483,7 @@ static function TimeAsAMPM( cTime )                                           /*
 ‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                           */
    IF VAL(cTime) < 12
       cTime += " am"
-   ELSEIF VAL(cTime) = 12
+   ELSEIF VAL(cTime) == 12
       cTime += " pm"
    ELSE
       cTime := STR(VAL(cTime) - 12, 2) + SUBSTR(cTime, 3) + " pm"
@@ -1958,7 +1958,7 @@ endif
 */
    fread( nHandle, @c2, 2 )
 /*
-if c2 <> '*' + chr(0)
+if !( c2 == '*' ) + chr(0)
    alert("Not *")
 endif
 */
@@ -1968,7 +1968,7 @@ endif
    cTemp := space(12)
    nPages := 0
 
-   while cIFDNext <> c40 //read IFD's
+   while !( cIFDNext == c40 ) //read IFD's
 
       nIFD := bin2l( cIFDNext )
 
@@ -2036,7 +2036,7 @@ endif
             //??'ImageWidth'
             cTag := 'ImageWidth'
 /*
-               IF nFieldType <> SHORT .and. nFieldType <> LONG
+               IF nFieldType != SHORT .and. nFieldType != LONG
                   alert('Wrong Type for ImageWidth')
                ENDIF
 */
@@ -2056,7 +2056,7 @@ endif
             //??'ImageLength'
             cTag := 'ImageLength'
 /*
-               IF nFieldType <> SHORT .and. nFieldType <> LONG
+               IF nFieldType != SHORT .and. nFieldType != LONG
                   alert('Wrong Type for ImageLength')
                ENDIF
 */
@@ -2084,7 +2084,7 @@ endif
                //alert('Wrong Type for BitsPerSample')
             ENDIF
             nBits := nTemp
-            //IF nTemp <> 4 .and. nTemp <> 8
+            //IF nTemp != 4 .and. nTemp != 8
             //   alert('Wrong Value for BitsPerSample')
             //ENDIF
          case nTag == 259
@@ -2112,7 +2112,7 @@ endif
             ELSE
                //alert('Wrong Type for Compression')
             ENDIF
-            //IF nTemp <> 1 .and. nTemp <> 2 .and. nTemp <> 32773
+            //IF nTemp != 1 .and. nTemp != 2 .and. nTemp != 32773
             //   alert('Wrong Value for Compression')
             //ENDIF
          case nTag == 262
@@ -2135,7 +2135,7 @@ endif
             ELSE
                //alert('Wrong Type for PhotometricInterpretation')
             ENDIF
-            IF nTemp <> 0 .and. nTemp <> 1 .and. nTemp <> 2 .and. nTemp <> 3
+            IF nTemp != 0 .and. nTemp != 1 .and. nTemp != 2 .and. nTemp != 3
                //alert('Wrong Value for PhotometricInterpretation')
             ENDIF
          case nTag == 264
@@ -2149,7 +2149,7 @@ endif
                */
             //??'CellWidth'
             cTag := 'CellWidth'
-            IF nFieldType <> SHORT
+            IF nFieldType != SHORT
                //alert('Wrong Type for CellWidth')
             ENDIF
          case nTag == 265
@@ -2165,7 +2165,7 @@ endif
                */
             //??'CellLength'
             cTag := 'CellLength'
-            IF nFieldType <> SHORT
+            IF nFieldType != SHORT
                //alert('Wrong Type for CellLength')
             ENDIF
          case nTag == 266
@@ -2178,7 +2178,7 @@ endif
                */
             //??'FillOrder'
             cTag := 'FillOrder'
-            IF nFieldType <> SHORT
+            IF nFieldType != SHORT
                //alert('Wrong Type for FillOrder')
             ENDIF
          case nTag == 273
@@ -2190,7 +2190,7 @@ endif
                */
             //??'StripOffsets'
             cTag := 'StripOffsets'
-            IF nFieldType <> SHORT .and. nFieldType <> LONG
+            IF nFieldType != SHORT .and. nFieldType != LONG
                //alert('Wrong Type for StripOffsets')
             ENDIF
 
@@ -2210,7 +2210,7 @@ endif
                */
             //??'SamplesPerPixel'
             cTag := 'SamplesPerPixel'
-            IF nFieldType <> SHORT
+            IF nFieldType != SHORT
                //alert('Wrong Type for SamplesPerPixel')
             ENDIF
          case nTag == 278
@@ -2226,7 +2226,7 @@ endif
                */
             //??'RowsPerStrip'
             cTag := 'RowsPerStrip'
-            IF nFieldType <> SHORT .and. nFieldType <> LONG
+            IF nFieldType != SHORT .and. nFieldType != LONG
                //alert('Wrong Type for RowsPerStrip')
             ENDIF
          case nTag == 279
@@ -2238,7 +2238,7 @@ endif
                */
             //??'StripByteCounts'
             cTag := 'StripByteCounts'
-            IF nFieldType <> SHORT .and. nFieldType <> LONG
+            IF nFieldType != SHORT .and. nFieldType != LONG
                //alert('Wrong Type for StripByteCounts')
             ENDIF
 
@@ -2260,7 +2260,7 @@ endif
                */
             //??'XResolution'
             cTag := 'XResolution'
-            IF nFieldType <> RATIONAL
+            IF nFieldType != RATIONAL
                //alert('Wrong Type for XResolution')
             ENDIF
             xRes := bin2l(substr( cValues, 1, 4 ))
@@ -2274,14 +2274,14 @@ endif
                */
             //??'YResolution'
             cTag := 'YResolution'
-            IF nFieldType <> RATIONAL
+            IF nFieldType != RATIONAL
                //alert('Wrong Type for YResolution')
             ENDIF
             yRes := bin2l(substr( cValues, 1, 4 ))
          case nTag == 284
             //??'PlanarConfiguration'
             cTag := 'PlanarConfiguration'
-            IF nFieldType <> SHORT
+            IF nFieldType != SHORT
                //alert('Wrong Type for PlanarConfiguration')
             ENDIF
          case nTag == 288
@@ -2296,7 +2296,7 @@ endif
                */
             //??'FreeOffsets'
             cTag := 'FreeOffsets'
-            IF nFieldType <> LONG
+            IF nFieldType != LONG
                //alert('Wrong Type for FreeOffsets')
             ENDIF
          case nTag == 289
@@ -2311,7 +2311,7 @@ endif
                */
             //??'FreeByteCounts'
             cTag := 'FreeByteCounts'
-            IF nFieldType <> LONG
+            IF nFieldType != LONG
                //alert('Wrong Type for FreeByteCounts')
             ENDIF
          case nTag == 296
@@ -2334,13 +2334,13 @@ endif
             ELSE
                //alert('Wrong Type for ResolutionUnit')
             ENDIF
-            IF nTemp <> 1 .and. nTemp <> 2 .and. nTemp <> 3
+            IF nTemp != 1 .and. nTemp != 2 .and. nTemp != 3
                //alert('Wrong Value for ResolutionUnit')
             ENDIF
          case nTag == 305
             //??'Software'
             cTag := 'Software'
-            IF nFieldType <> ASCII
+            IF nFieldType != ASCII
                //alert('Wrong Type for Software')
             ENDIF
          case nTag == 306
@@ -2356,7 +2356,7 @@ endif
                */
             //??'DateTime'
             cTag := 'DateTime'
-            IF nFieldType <> ASCII
+            IF nFieldType != ASCII
                //alert('Wrong Type for DateTime')
             ENDIF
          case nTag == 315
@@ -2369,7 +2369,7 @@ endif
                */
             //??'Artist'
             cTag := 'Artist'
-            IF nFieldType <> ASCII
+            IF nFieldType != ASCII
                //alert('Wrong Type for Artist')
             ENDIF
          case nTag == 320
@@ -2388,7 +2388,7 @@ endif
                */
             //??'ColorMap'
             cTag := 'ColorMap'
-            IF nFieldType <> SHORT
+            IF nFieldType != SHORT
                //alert('Wrong Type for ColorMap')
             ENDIF
          case nTag == 338
@@ -2401,7 +2401,7 @@ endif
                */
             //??'ExtraSamples'
             cTag := 'ExtraSamples'
-            IF nFieldType <> SHORT
+            IF nFieldType != SHORT
                //alert('Wrong Type for ExtraSamples')
             ENDIF
          case nTag == 33432
@@ -2417,7 +2417,7 @@ endif
                */
             //??'Copyright'
             cTag := 'Copyright'
-            IF nFieldType <> ASCII
+            IF nFieldType != ASCII
                //alert('Wrong Type for Copyright')
             ENDIF
          otherwise

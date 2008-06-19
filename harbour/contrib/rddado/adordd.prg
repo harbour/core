@@ -98,7 +98,7 @@ static function HB_TokenGet( cText, nPos, cSep )
 
    local aTokens := HB_ATokens( cText, cSep )
 
-return If( nPos <= Len( aTokens ), aTokens[ nPos ], "" )
+return iif( nPos <= Len( aTokens ), aTokens[ nPos ], "" )
 
 #endif
 
@@ -114,8 +114,8 @@ static function ADO_NEW( nWA )
 
    local aWAData := Array( WA_SIZE )
 
-   aWAData[ WA_BOF ] = .F.
-   aWAData[ WA_EOF ] = .F.
+   aWAData[ WA_BOF ] := .F.
+   aWAData[ WA_EOF ] := .F.
 
    USRRDD_AREADATA( nWA, aWAData )
 
@@ -177,24 +177,24 @@ static function ADO_CREATEFIELDS( nWA, aStruct )
    local aWAData := USRRDD_AREADATA( nWA )
    local n
 
-   aWAData[ WA_SQLSTRUCT ] = ""
+   aWAData[ WA_SQLSTRUCT ] := ""
 
-  for n = 1 to Len( aStruct )
-     if n > 1
-        aWAData[ WA_SQLSTRUCT ] += ", "
-     endif
-     aWAData[ WA_SQLSTRUCT ] += "[" + aStruct[ n ][ DBS_NAME ] + "]"
-     do case
-        case aStruct[ n ][ DBS_TYPE ] $ "C,Character"
-             aWAData[ WA_SQLSTRUCT ] += " CHAR(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ") NULL"
-
-        case aStruct[ n ][ DBS_TYPE ] == "N"
-             aWAData[ WA_SQLSTRUCT ] += " NUMERIC(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ")"
-
-        case aStruct[ n ][ DBS_TYPE ] == "L"
-             aWAData[ WA_SQLSTRUCT ] += " LOGICAL"
-     endcase
-  next
+   for n := 1 to Len( aStruct )
+      if n > 1
+         aWAData[ WA_SQLSTRUCT ] += ", "
+      endif
+      aWAData[ WA_SQLSTRUCT ] += "[" + aStruct[ n ][ DBS_NAME ] + "]"
+      do case
+         case aStruct[ n ][ DBS_TYPE ] $ "C,Character"
+              aWAData[ WA_SQLSTRUCT ] += " CHAR(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ") NULL"
+   
+         case aStruct[ n ][ DBS_TYPE ] == "N"
+              aWAData[ WA_SQLSTRUCT ] += " NUMERIC(" + AllTrim( Str( aStruct[ n ][ DBS_LEN ] ) ) + ")"
+   
+         case aStruct[ n ][ DBS_TYPE ] == "L"
+              aWAData[ WA_SQLSTRUCT ] += " LOGICAL"
+      endcase
+   next
 
 return SUCCESS
 
@@ -210,13 +210,13 @@ static function ADO_OPEN( nWA, aOpenInfo )
       aOpenInfo[ UR_OI_ALIAS ] := cName
    endif
 
-   aWAData[ WA_CONNECTION ] = TOleAuto():New( "ADODB.Connection" )
-   aWAData[ WA_TABLENAME ] = s_cTableName
-   aWAData[ WA_QUERY ]    = s_cQuery
-   aWAData[ WA_USERNAME ] = s_cUserName
-   aWAData[ WA_PASSWORD ] = s_cPassword
-   aWAData[ WA_SERVER ] = s_cServer
-   aWAData[ WA_ENGINE ] = s_cEngine
+   aWAData[ WA_CONNECTION ] := TOleAuto():New( "ADODB.Connection" )
+   aWAData[ WA_TABLENAME ] := s_cTableName
+   aWAData[ WA_QUERY ]    := s_cQuery
+   aWAData[ WA_USERNAME ] := s_cUserName
+   aWAData[ WA_PASSWORD ] := s_cPassword
+   aWAData[ WA_SERVER ] := s_cServer
+   aWAData[ WA_ENGINE ] := s_cEngine
 
    do case
       case Lower( Right( aOpenInfo[ UR_OI_NAME ], 4 ) ) == ".mdb"
@@ -252,7 +252,7 @@ static function ADO_OPEN( nWA, aOpenInfo )
       case aWAData[ WA_ENGINE ] == "ORACLE"
            aWAData[ WA_CONNECTION ]:Open( "Provider=MSDAORA.1;" + ;
                                           "Persist Security Info=False" + ;
-                                          If( Empty( aWAData[ WA_SERVER ] ),;
+                                          iif( Empty( aWAData[ WA_SERVER ] ),;
                                           "", ";Data source=" + aWAData[ WA_SERVER ] ) + ;
                                           ";User ID=" + aWAData[ WA_USERNAME ] + ;
                                           ";Password=" + aWAData[ WA_PASSWORD ] )
@@ -260,13 +260,13 @@ static function ADO_OPEN( nWA, aOpenInfo )
    endcase
 
    oRecordSet := TOleAuto():New( "ADODB.Recordset" )
-   oRecordSet:CursorType     = adOpenDynamic
-   oRecordSet:CursorLocation = adUseClient
-   oRecordSet:LockType       = adLockPessimistic
+   oRecordSet:CursorType     := adOpenDynamic
+   oRecordSet:CursorLocation := adUseClient
+   oRecordSet:LockType       := adLockPessimistic
    oRecordSet:Open( aWAData[ WA_QUERY ] + aWAData[ WA_TABLENAME ], aWAData[ WA_CONNECTION ] )
 
-   aWAData[ WA_CATALOG ] = TOleAuto():New( "ADOX.Catalog" )
-   aWAData[ WA_CATALOG ]:ActiveConnection = aWAData[ WA_CONNECTION ]
+   aWAData[ WA_CATALOG ] := TOleAuto():New( "ADOX.Catalog" )
+   aWAData[ WA_CATALOG ]:ActiveConnection := aWAData[ WA_CONNECTION ]
 
    if oRecordSet == NIL
       oError := ErrorNew()
@@ -286,7 +286,7 @@ static function ADO_OPEN( nWA, aOpenInfo )
 
    UR_SUPER_SETFIELDEXTENT( nWA, nTotalFields := oRecordSet:Fields:Count )
 
-   FOR n = 1 TO nTotalFields
+   FOR n := 1 TO nTotalFields
       aField := ARRAY( UR_FI_SIZE )
       aField[ UR_FI_NAME ]    := oRecordSet:Fields( n - 1 ):Name
       aField[ UR_FI_TYPE ]    := ADO_GETFIELDTYPE( oRecordSet:Fields( n - 1 ):Type )
@@ -338,7 +338,7 @@ static function ADO_GOTOID( nWA, nRecord )
     endif
     ADO_RECID( nWA, @nRecNo )
 
-RETURN If( nRecord == nRecNo, SUCCESS, FAILURE )
+RETURN iif( nRecord == nRecNo, SUCCESS, FAILURE )
 
 static function ADO_GOTOP( nWA )
 
@@ -349,8 +349,8 @@ static function ADO_GOTOP( nWA )
       oRecordSet:MoveFirst()
    endif
 
-   aWAData[ WA_BOF ] = .F.
-   aWAData[ WA_EOF ] = .F.
+   aWAData[ WA_BOF ] := .F.
+   aWAData[ WA_EOF ] := .F.
 
 return SUCCESS
 
@@ -361,8 +361,8 @@ static function ADO_GOBOTTOM( nWA )
 
    oRecordSet:MoveLast()
 
-   aWAData[ WA_BOF ] = .F.
-   aWAData[ WA_EOF ] = .F.
+   aWAData[ WA_BOF ] := .F.
+   aWAData[ WA_EOF ] := .F.
 
 return SUCCESS
 
@@ -438,7 +438,7 @@ static function ADO_RECID( nWA, nRecNo )
 
    local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   nRecno := If( oRecordSet:AbsolutePosition == -3, oRecordSet:RecordCount() + 1, oRecordSet:AbsolutePosition )
+   nRecno := iif( oRecordSet:AbsolutePosition == -3, oRecordSet:RecordCount() + 1, oRecordSet:AbsolutePosition )
 
 return SUCCESS
 
@@ -499,9 +499,9 @@ static function ADO_ORDINFO( nWA, nIndex, aOrderInfo )
    do case
       case nIndex == UR_ORI_TAG
            if aOrderInfo[ UR_ORI_TAG ] < aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
-              aOrderInfo[ UR_ORI_RESULT ] = aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( aOrderInfo[ UR_ORI_TAG ] ):Name
+              aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( aOrderInfo[ UR_ORI_TAG ] ):Name
            else
-              aOrderInfo[ UR_ORI_RESULT ] = ""
+              aOrderInfo[ UR_ORI_RESULT ] := ""
            endif
    endcase
 
@@ -544,7 +544,7 @@ static function ADO_SETFILTER( nWA, aFilterInfo )
 
    local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
-   oRecordSet:Filter = SQLTranslate( aFilterInfo[ UR_FRI_CEXPR ] )
+   oRecordSet:Filter := SQLTranslate( aFilterInfo[ UR_FRI_CEXPR ] )
 
 return SUCCESS
 
@@ -553,7 +553,7 @@ static function ADO_CLEARFILTER( nWA )
    local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    TRY
-      oRecordSet:Filter = ""
+      oRecordSet:Filter := ""
    CATCH
    END
 
@@ -579,9 +579,9 @@ static function ADO_SETLOCATE( nWA, aScopeInfo )
 
    local aWAData := USRRDD_AREADATA( nWA )
 
-   aScopeInfo[ UR_SI_CFOR ] = SQLTranslate( aWAData[ WA_LOCATEFOR ] )
+   aScopeInfo[ UR_SI_CFOR ] := SQLTranslate( aWAData[ WA_LOCATEFOR ] )
 
-   aWAData[ WA_SCOPEINFO ] = aScopeInfo
+   aWAData[ WA_SCOPEINFO ] := aScopeInfo
 
 return SUCCESS
 
@@ -590,9 +590,9 @@ static function ADO_LOCATE( nWA, lContinue )
    local aWAData    := USRRDD_AREADATA( nWA )
    local oRecordSet := aWAData[ WA_RECORDSET ]
 
-   oRecordSet:Find( aWAData[ WA_SCOPEINFO ][ UR_SI_CFOR ], If( lContinue, 1, 0 ) )
+   oRecordSet:Find( aWAData[ WA_SCOPEINFO ][ UR_SI_CFOR ], iif( lContinue, 1, 0 ) )
    USRRDD_SETFOUND( nWA, ! oRecordSet:EOF )
-   aWAData[ WA_EOF ] = oRecordSet:EOF
+   aWAData[ WA_EOF ] := oRecordSet:EOF
 
 return SUCCESS
 
@@ -605,13 +605,13 @@ static function ADO_CLEARREL( nWA )
 
    if aWAData[ WA_CATALOG ] != nil .and. aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys != nil
       TRY
-         nKeys = aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count
+         nKeys := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count
       CATCH
       END
    endif
 
    if nKeys > 0
-      cKeyName = aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nKeys - 1 ):Name
+      cKeyName := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nKeys - 1 ):Name
       if Upper( cKeyName ) != "PRIMARYKEY"
          aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Delete( cKeyName )
       endif
@@ -624,7 +624,7 @@ static function ADO_RELAREA( nWA, nRelNo, nRelArea )
    local aWAData := USRRDD_AREADATA( nWA )
 
    if nRelNo <= aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count()
-      nRelArea = Select( aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):RelatedTable )
+      nRelArea := Select( aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):RelatedTable )
    endif
 
 return SUCCESS
@@ -634,7 +634,7 @@ static function ADO_RELTEXT( nWA, nRelNo, cExpr )
    local aWAData := USRRDD_AREADATA( nWA )
 
    if nRelNo <= aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Count()
-      cExpr = aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):Columns( 0 ):RelatedColumn
+      cExpr := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):Columns( 0 ):RelatedColumn
    endif
 
 return SUCCESS
@@ -660,7 +660,7 @@ static function ADO_ORDLSTADD( nWA, aOrderInfo )
    local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    TRY
-      oRecordSet:Index = aOrderInfo[ UR_ORI_BAG ]
+      oRecordSet:Index := aOrderInfo[ UR_ORI_BAG ]
    CATCH
    END
 
@@ -671,7 +671,7 @@ static function ADO_ORDLSTCLEAR( nWA )
    local oRecordSet := USRRDD_AREADATA( nWA )[ WA_RECORDSET ]
 
    TRY
-      oRecordSet:Index = ""
+      oRecordSet:Index := ""
    CATCH
    END
 
@@ -683,10 +683,10 @@ static function ADO_ORDCREATE( nWA, aOrderCreateInfo )
    local oIndex, oError, n, lFound := .f.
 
    if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != nil
-      for n = 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
-          oIndex = aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
-          if oIndex:Name == If( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
-             lFound = .T.
+      for n := 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
+          oIndex := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
+          if oIndex:Name == iif( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
+             lFound := .T.
              exit
           endif
       next
@@ -694,10 +694,10 @@ static function ADO_ORDCREATE( nWA, aOrderCreateInfo )
 
    TRY
       if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes == nil .or. ! lFound
-         oIndex = TOleAuto():New( "ADOX.Index" )
-         oIndex:Name = If( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
-         oIndex:PrimaryKey = .F.
-         oIndex:Unique = aOrderCreateInfo[ UR_ORCR_UNIQUE ]
+         oIndex := TOleAuto():New( "ADOX.Index" )
+         oIndex:Name := iif( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
+         oIndex:PrimaryKey := .F.
+         oIndex:Unique := aOrderCreateInfo[ UR_ORCR_UNIQUE ]
          oIndex:Columns:Append( aOrderCreateInfo[ UR_ORCR_CKEY ] )
          aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Append( oIndex )
       endif
@@ -719,8 +719,8 @@ static function ADO_ORDDESTROY( nWA, aOrderInfo )
    local aWAData := USRRDD_AREADATA( nWA ), n, oIndex
 
    if aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != nil
-      for n = 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
-          oIndex = aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
+      for n := 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
+          oIndex := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
           if oIndex:Name == aOrderInfo[ UR_ORI_TAG ]
              aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Delete( oIndex:Name )
           endif
@@ -916,31 +916,31 @@ return nDBFFieldType
 
 function HB_AdoSetTable( cTableName )
 
-   s_cTableName = cTableName
+   s_cTableName := cTableName
 
 return nil
 
 function HB_AdoSetEngine( cEngine )
 
-   s_cEngine = cEngine
+   s_cEngine := cEngine
 
 return nil
 
 function HB_AdoSetServer( cServer )
 
-   s_cServer = cServer
+   s_cServer := cServer
 
 return nil
 
 function HB_AdoSetUser( cUser )
 
-   s_cUserName = cUser
+   s_cUserName := cUser
 
 return nil
 
 function HB_AdoSetPassword( cPassword )
 
-   s_cPassword = cPassword
+   s_cPassword := cPassword
 
 return nil
 
@@ -948,30 +948,30 @@ function HB_AdoSetQuery( cQuery )
 
    DEFAULT cQuery TO "SELECT * FROM "
 
-   s_cQuery = cQuery
+   s_cQuery := cQuery
 
 return nil
 
 function HB_AdoSetLocateFor( cLocateFor )
 
-   USRRDD_AREADATA( Select() )[ WA_LOCATEFOR ] = cLocateFor
+   USRRDD_AREADATA( Select() )[ WA_LOCATEFOR ] := cLocateFor
 
 return nil
 
 static function SQLTranslate( cExpr )
 
-  if Left( cExpr, 1 ) == '"' .and. Right( cExpr, 1 ) == '"'
-     cExpr = SubStr( cExpr, 2, Len( cExpr ) - 2 )
-  endif
-
-  cExpr = StrTran( cExpr, '""', "" )
-  cExpr = StrTran( cExpr, '"', "'" )
-  cExpr = StrTran( cExpr, "''", "'" )
-  cExpr = StrTran( cExpr, "==", "=" )
-  cExpr = StrTran( cExpr, ".and.", "AND" )
-  cExpr = StrTran( cExpr, ".or.", "OR" )
-  cExpr = StrTran( cExpr, ".AND.", "AND" )
-  cExpr = StrTran( cExpr, ".OR.", "OR" )
+   if Left( cExpr, 1 ) == '"' .and. Right( cExpr, 1 ) == '"'
+      cExpr := SubStr( cExpr, 2, Len( cExpr ) - 2 )
+   endif
+  
+   cExpr := StrTran( cExpr, '""', "" )
+   cExpr := StrTran( cExpr, '"', "'" )
+   cExpr := StrTran( cExpr, "''", "'" )
+   cExpr := StrTran( cExpr, "==", "=" )
+   cExpr := StrTran( cExpr, ".and.", "AND" )
+   cExpr := StrTran( cExpr, ".or.", "OR" )
+   cExpr := StrTran( cExpr, ".AND.", "AND" )
+   cExpr := StrTran( cExpr, ".OR.", "OR" )
 
 return cExpr
 
@@ -993,8 +993,6 @@ function HB_AdoRddGetRecordSet( nWA )
 
    DEFAULT nWA TO Select()
 
-   aWAData = USRRDD_AREADATA( nWA )
+   aWAData := USRRDD_AREADATA( nWA )
 
-return If( aWAData != nil, aWAData[ WA_RECORDSET ], nil )
-
-
+return iif( aWAData != nil, aWAData[ WA_RECORDSET ], nil )

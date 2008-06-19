@@ -194,9 +194,9 @@ METHOD Draw13(cText)  CLASS TCode
 
    If !lerror
 
-      If( ::book .AND. Len( ::text) != 10 )
+      If ::book .AND. Len( ::text) != 10
 			::DrawError("Must contains 10 chars if ISBN is true.")
-			lerror = .T.
+			lerror := .T.
       EndIf
 
 		// book, we changed the code to the right
@@ -207,13 +207,13 @@ METHOD Draw13(cText)  CLASS TCode
   	   //  contain only 12 characters ?
       If Len( ::text ) != 12
 			::DrawError( "Must contains 12 chars, the 13th digit is automatically added.")
-			lerror = .t.
+			lerror := .t.
       EndIf
 
       If !lerror
 
 			// If we have to write text, we moved the barcode to the right to have space to put digit
-         ::positionX = If( ::textfont == 0 , 0, 10 )
+         ::positionX := iif( ::textfont == 0 , 0, 10 )
 
          xParity := ::Parity[ Val( SubStr( ::text, 1, 1 ) ) ]
 
@@ -228,14 +228,14 @@ METHOD Draw13(cText)  CLASS TCode
          For ii := 1 To Len( ::text )
 
              // Calculate check digit
-             If Mod( ((Len(::text) + 1) - ii), 2 ) = 0
+             If Mod( ((Len(::text) + 1) - ii), 2 ) == 0
                 nchkSum := nchkSum +  Int( Val( Substr(::text , ii, 1) ) )
              Else
                 nchkSum := nchkSum +  Int( Val( Substr( ::text , ii, 1) ) ) * 3
              EndIf
 
         		 // ANow, the bar of the middle
-             If ii = 8
+             If ii == 8
                ::positionX += 1
          		::maxHeight := ::maxHeight + 9
          		::DrawSingleBar("101")
@@ -245,13 +245,13 @@ METHOD Draw13(cText)  CLASS TCode
 
              jj := Val( SubStr( ::text, ii, 1) )
 
-             If jj = 0
+             If jj == 0
                 jj := 10
              EndIf
 
              If ii > 1 .And. ii < 8
 
-               ::DrawSingleBar( If( Substr(xParity, ii - 1, 1) = "E",;
+               ::DrawSingleBar( iif( Substr(xParity, ii - 1, 1) == "E",;
                                         ::LeftHand_Even[jj],;
                                               ::LeftHand_Odd[jj] ) )
              ElseIf ii > 1 .And. ii >= 8
@@ -264,8 +264,8 @@ METHOD Draw13(cText)  CLASS TCode
 
         jj := Mod( nchkSum, 10 )
 
-        If jj <> 0
-           nChk = 10 - jj
+        If jj != 0
+           nChk := 10 - jj
         EndIf
 
         If nChk == 0
@@ -326,7 +326,7 @@ METHOD Draw8( cText ) CLASS TCode
 
 	If !lerror
 
-      ::positionX = If( ::textfont == 0 , 0, 10 )
+      ::positionX := iif( ::textfont == 0 , 0, 10 )
 
       xParity := ::Parity[ 7 ]
 
@@ -338,15 +338,15 @@ METHOD Draw8( cText ) CLASS TCode
 		// Start Code
  		::maxHeight := ::maxHeight - 9
 
-      For ii = 1 To Len(::text)
+      For ii := 1 To Len(::text)
 
-           If Mod( ((Len(::text) + 1 ) - ii ), 2 ) = 0
+           If Mod( ((Len(::text) + 1 ) - ii ), 2 ) == 0
               nchkSum := nchkSum +  Int( Val(Substr( ::text, ii, 1) ) )
            Else
               nchkSum := nchkSum +  Int( Val(Substr( ::text, ii, 1) ) ) * 3
            EndIf
 
-           If ii = 5
+           If ii == 5
               ::positionX += 1
         		  ::maxHeight := ::maxHeight + 9
       		  ::DrawSingleBar("01010")
@@ -370,8 +370,8 @@ METHOD Draw8( cText ) CLASS TCode
 
       jj := Mod( nchkSum, 10 )
 
-      If jj <> 0
-         nChk = 10 - jj
+      If jj != 0
+         nChk := 10 - jj
       EndIf
 
       ::DrawSingleBar(::Right_Hand[nChk])
@@ -468,7 +468,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
 			 If ::FindCharCode( ::KeysmodeB, SubStr( ::Text, i, 1 ) ) == 0
 		       ::DrawError('Char '+ SubStr( ::text, i, 1 )+" not allowed.")
-  			    lerror = .T.
+  			    lerror := .T.
 			 EndIf
 
 		ElseiF cModeCode == "A"
@@ -486,7 +486,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
        If Empty(cModeCode)
 
-          If Str( Val( ::text ), Len( ::text ) ) = ::text
+          If Str( Val( ::text ), Len( ::text ) ) == ::text
 
               lTypeCodeC :=  .T.
               cconc  := ::aCode[ STARTC ]
@@ -495,7 +495,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
           Else
 
               For n := 1 TO  Len( ::text )
-                  nC += If( substr( ::text ,n,1 ) > 31, 1, 0 )
+                  nC += iif( substr( ::text ,n,1 ) > 31, 1, 0 )
               Next
 
               If nC < Len( ::text ) / 2
@@ -542,7 +542,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
            if lTypeCodeC
 
-              If Len( ::TEXT ) = n
+              If Len( ::TEXT ) == n
                  cconc += ::aCode[101]
                  nvalchar := Asc(cchar)-31
               Else
@@ -620,11 +620,11 @@ METHOD GenCodei25() CLASS TCode
 
    If !lError
 
-      bc_string = upper( ::text )
+      bc_string := upper( ::text )
 
       // encode itemId to I25 barcode standard. //////////////////////////////////////
 
-      bc_string = ::MixCode( bc_string )
+      bc_string := ::MixCode( bc_string )
 
       ///////////////////////////////////////////////////////////////////////////////////////////////
       //Adding Start and Stop Pattern

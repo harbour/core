@@ -209,16 +209,15 @@ local cTemp, nI, cChar := "", n := 0, nLen
    for nI := nLen to 1 step -1
        cTemp += substr( cString, nI, 1 )
    next
-   cTemp = upper( cTemp )
+   cTemp := upper( cTemp )
 
-   for nI = 1 to nLen
-      cChar = substr( cTemp, nI, 1 )
+   for nI := 1 to nLen
+      cChar := substr( cTemp, nI, 1 )
       if .not. IsDigit( cChar )
-         n = n + ((Asc( cChar ) - 65) + 10) * ( nBase ^ ( nI - 1 ) )
+         n := n + ((Asc( cChar ) - 65) + 10) * ( nBase ^ ( nI - 1 ) )
       else
-         n = n + (( nBase ^ ( nI - 1 )) * val( cChar ))
+         n := n + (( nBase ^ ( nI - 1 )) * val( cChar ))
       endif
    next
 
 return n
-

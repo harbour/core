@@ -282,7 +282,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
 
               * Other exception handling ...
               CASE VALTYPE(bGetFunc) == "B"
-                 IF nKey <> K_ENTER
+                 IF nKey != K_ENTER
                     * want last key to be part of GET edit so KEYBOARD it
                     KEYBOARD CHR(LASTKEY())
                  ENDIF

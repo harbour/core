@@ -499,7 +499,7 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
    //DAVID: use current row  default nRow to 0
    default nRow to ::nCurRow
 
-   if ::nResultHandle <> NIL
+   if ::nResultHandle != NIL
 
       //DAVID:
       ::lBof := ( EMPTY( ::LastRec() ) )
@@ -533,7 +533,7 @@ METHOD GetRow(nRow) CLASS TMySQLQuery
          ::aRow := sqlFetchR(::nResultHandle)
       endif
 
-      if ::aRow <> NIL
+      if ::aRow != NIL
 
          // Convert answer from text field to correct clipper types
          for i := 1 to ::nNumFields
@@ -810,7 +810,7 @@ METHOD GetRow(nRow) CLASS TMySQLTable
 
    local oRow := super:GetRow(nRow),i := 0
 
-   if oRow <> NIL
+   if oRow != NIL
       oRow:cTable := ::cTable
    endif
 
@@ -857,7 +857,7 @@ METHOD Update(oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
          for i := 1 to  ::nNumFields
 
-            if ::aOldValue[i]<>::FieldGet(i)
+            if !( ::aOldValue[i] == ::FieldGet(i) )
                cUpdateQuery += ::aFieldStruct[i][MYSQL_FS_NAME] + "=" + ClipValue2SQL(::FieldGet(i)) + ","
             endif
          next
@@ -906,7 +906,7 @@ METHOD Update(oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
          endif
 
-      Case oRow<>nil
+      Case oRow!=nil
 
          if oRow:cTable == ::cTable
 
@@ -1021,7 +1021,7 @@ METHOD Delete(oRow, lOldRecord, lRefresh) CLASS TMySQLTable
 
          endif
 
-      Case oRow<>nil
+      Case oRow!=nil
          if oRow:cTable == ::cTable
 
             //DAVID:
@@ -1078,7 +1078,7 @@ METHOD Append(oRow, lRefresh) CLASS TMySQLTable
 
             // field names
             for i := 1 to ::nNumFields
-               if ::aFieldStruct[i][MYSQL_FS_FLAGS]<>AUTO_INCREMENT_FLAG
+               if ::aFieldStruct[i][MYSQL_FS_FLAGS]!=AUTO_INCREMENT_FLAG
                   cInsertQuery += ::aFieldStruct[i][MYSQL_FS_NAME] + ","
                endif
             next
@@ -1087,7 +1087,7 @@ METHOD Append(oRow, lRefresh) CLASS TMySQLTable
 
             // field values
             for i := 1 to ::nNumFields
-               if ::aFieldStruct[i][MYSQL_FS_FLAGS]<>AUTO_INCREMENT_FLAG
+               if ::aFieldStruct[i][MYSQL_FS_FLAGS]!=AUTO_INCREMENT_FLAG
                   cInsertQuery += ClipValue2SQL(::FieldGet(i)) + ","
                endif
             next
@@ -1117,13 +1117,13 @@ METHOD Append(oRow, lRefresh) CLASS TMySQLTable
                ::lError := .T.
             endif
 
-    Case oRow<>nil
+    Case oRow!=nil
 
          if oRow:cTable == ::cTable
 
             // field names
             for i := 1 to Len(oRow:aRow)
-               if oRow:aFieldStruct[i][MYSQL_FS_FLAGS]<>AUTO_INCREMENT_FLAG
+               if oRow:aFieldStruct[i][MYSQL_FS_FLAGS]!=AUTO_INCREMENT_FLAG
                   cInsertQuery += oRow:aFieldStruct[i][MYSQL_FS_NAME] + ","
                endif
             next
@@ -1132,7 +1132,7 @@ METHOD Append(oRow, lRefresh) CLASS TMySQLTable
 
             // field values
             for i := 1 to Len(oRow:aRow)
-               if oRow:aFieldStruct[i][MYSQL_FS_FLAGS]<>AUTO_INCREMENT_FLAG
+               if oRow:aFieldStruct[i][MYSQL_FS_FLAGS]!=AUTO_INCREMENT_FLAG
                   cInsertQuery += ClipValue2SQL(oRow:aRow[i]) + ","
                endif
             next
@@ -1591,14 +1591,14 @@ METHOD Query(cQuery) CLASS TMySQLServer
    i := 1
    nNumTables := 1
 
-   while (cToken := __StrToken(cUpperQuery, i++, " ")) <> "FROM" .AND. !Empty(cToken)
+   while !( (cToken := __StrToken(cUpperQuery, i++, " ")) == "FROM" ) .AND. !Empty(cToken)
    enddo
 
    // first token after "FROM" is a table name
    // NOTE: SubSelects ?
    cTableName := __StrToken(cUpperQuery, i++, " ")
 
-   while (cToken := __StrToken(cUpperQuery, i++, " ")) <> "WHERE" .AND. !Empty(cToken)
+   while !( (cToken := __StrToken(cUpperQuery, i++, " ")) == "WHERE" ) .AND. !Empty(cToken)
       // do we have more than one table referenced ?
       if cToken == "," .OR. cToken == "JOIN"
          nNumTables++

@@ -230,7 +230,7 @@ PROCEDURE t2()
       ?
       ? "sqlite3_get_table"
       ?
-      aTable = sqlite3_get_table( db, "SELECT name, age  FROM t1 WHERE age BETWEEN 10 AND 20" )
+      aTable := sqlite3_get_table( db, "SELECT name, age  FROM t1 WHERE age BETWEEN 10 AND 20" )
       FOR nI := 1 TO Len( aTable )
          FOR nJ := 1 TO Len( aTable[nI] )
             ?? aTable[nI][nJ], " "

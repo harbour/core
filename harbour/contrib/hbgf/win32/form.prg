@@ -87,10 +87,10 @@ METHOD New() CLASS HBForm
 
    if ! ::lRegistered
       WinRegisterClass( "HB_TFORM" )
-      ::lRegistered = .t.
+      ::lRegistered := .t.
    endif
 
-   ::hWnd  = WinCreateStdWindow( , nOr( WS_OVERLAPPEDWINDOW ),,;
+   ::hWnd  := WinCreateStdWindow( , nOr( WS_OVERLAPPEDWINDOW ),,;
                                  "HB_TFORM", "Harbour TForm" )
 
    AAdd( aForms, Self )
@@ -109,9 +109,9 @@ METHOD Command( nNotifyCode, nId, hWndCtl ) CLASS HBForm
             endif
          endif
       else              // Control command
-         nAt = AScan( ::aControls, { | o | o:hWnd == hWndCtl } )
+         nAt := AScan( ::aControls, { | o | o:hWnd == hWndCtl } )
          if nAt != 0
-            oControl = ::aControls[ nAt ]
+            oControl := ::aControls[ nAt ]
             if oControl:OnClick != nil
                __ObjSendMsg( Self, oControl:OnClick, oControl )
             endif
@@ -165,7 +165,7 @@ return nil
 
 ASSIGN Menu( oNewMenu ) CLASS HBForm
 
-   ::oMainMenu = oNewMenu
+   ::oMainMenu := oNewMenu
 
    SetMenu( ::hWnd, oNewMenu:nHandle )
 
@@ -178,7 +178,7 @@ function HB_GUI( hWnd, nMsg, nParam1, nParam2 ) // messages entry point
    static aReturn := { nil, nil }
 
    if nForm != 0
-      aReturn[ 1 ] = aForms[ nForm ]:HandleEvent( nMsg, nParam1, nParam2 )
+      aReturn[ 1 ] := aForms[ nForm ]:HandleEvent( nMsg, nParam1, nParam2 )
    endif
 
 return aReturn

@@ -93,7 +93,7 @@ PROCEDURE MAIN()
 
  cDbase := PickSQLiteFile()
 
- cDatabase = IIF( ! EMPTY(cDbase), LOWER( cDbase ), "" )  // set public var
+ cDatabase := IIF( ! EMPTY(cDbase), LOWER( cDbase ), "" )  // set public var
 
 * cDBase := "example.db"   // sample database with a couple of tables
 * cDbase := ChooseDB()
@@ -122,7 +122,7 @@ PROCEDURE MAIN()
  nOption := 1
 
 
-DO WHILE nOption <> 0
+DO WHILE nOption != 0
 
    @ 1,1 CLEAR TO 21,78
 
@@ -240,7 +240,7 @@ FOR n := 3 TO nLen
                PADR( "SPACES", 12), PADR( aResult[ n ][FLD_DFLT], 12) )
 
     * Try to get Lenght
-    cc = aResult[ n ][FLD_TYPE]
+    cc := aResult[ n ][FLD_TYPE]
     nFrom := AT( "(", cc ) + 1
     nTo   := AT( ")", cc )
 
@@ -328,7 +328,7 @@ LOCAL aTables, cStatment, nLen
     int nRow, rc;
     char *zErrMsg;
     open_db(p);
-    if( nArg==1 ){
+    if( nArg==1 )
       rc = sqlite_get_table(p->db,
         "SELECT name FROM sqlite_master "
         "WHERE type IN ('table','view') "
@@ -387,7 +387,7 @@ cDBase := "Tablon"
 nFields := LEN( aStruct )
 
 /*
-FOR n = 1 TO nFields
+FOR n := 1 TO nFields
     cFList := cFList + ;
               cSpace + aStruct[ n][DBS_NAME] + cSpace +;
               ConvertFldType( aStruct[ n][DBS_TYPE] ) +;
@@ -410,7 +410,7 @@ DO WHILE ! EOF()
 
    * Put all fields in a row list comma separated
    cFList := ""
-   FOR n = 1 TO nFields
+   FOR n := 1 TO nFields
        cFList := cFList + ;
        cQuote + RTRIM( xconvert( FIELDGET( n )) ) + cQuote+ ;
        IIF( n < FCOUNT(), ",", "")
@@ -615,15 +615,15 @@ RETURN 0
 * It's a work in progress and would have some errors
 *---------------------------------------------------------------------------
 LOCAL cData, cType, nLen
-cType = VALTYPE( xData )
+cType := VALTYPE( xData )
 
 DO CASE
    CASE cType == "N"
-        cData = STR( xData )
+        cData := STR( xData )
    CASE cType == "C"
-        cData = xData
+        cData := xData
    CASE cType == "L"
-       cData = IIF( xData == .T., "TRUE", "FALSE")
+       cData := IIF( xData == .T., "TRUE", "FALSE")
    CASE cType == "A"
         nLen := LEN(xData)
         cData := "ARRAY[" + IIF( nLen > 0, STR( nLen, 2), "0") + "]"
@@ -635,12 +635,12 @@ DO CASE
         ? xData
         cData := DTOS( xData )
    OTHERWISE
-        cData = VALTYPE( xData)
+        cData := VALTYPE( xData)
 ENDCASE
 
 IF nPad == NIL .OR. VALTYPE(nPad ) != "N"
 ELSE
-   cData = PADL( LTRIM(cData), nPad, " ")
+   cData := PADL( LTRIM(cData), nPad, " ")
 ENDIF
 
 RETURN( cData)
@@ -917,7 +917,7 @@ RETURN( nOpt )
   SETPOS( nOldRow, nOldCol )
   SETCOLOR( cOldColor )
 
-  cDatabase = IIF( ! EMPTY(cDB), LOWER( RTRIM( cDB ) ), "" )
+  cDatabase := IIF( ! EMPTY(cDB), LOWER( RTRIM( cDB ) ), "" )
 
   RETURN( cDataBase )
 
@@ -935,7 +935,7 @@ LOCAL nLength
 
 IF FILE( cFilename )
 
-   nHandle = FOPEN( cFilename, FO_READ)
+   nHandle := FOPEN( cFilename, FO_READ)
 
    * Don't show any error here
 *   IF FERROR() != 0
@@ -1062,8 +1062,8 @@ RETURN( cQuery )
 * insert
 * CAMBIA EL MODO INSERT ON /OFF DESDE UN "READ"
 *---------------------------------------------------------------------------
-ins_on = .NOT. ins_on
-IIF (ins_on, READINSERT(.T.), READINSERT(.F.))
+ins_on := .NOT. ins_on
+IIF(ins_on, READINSERT(.T.), READINSERT(.F.))
 Ins_stat()
 RETURN
 
@@ -1159,4 +1159,4 @@ RETURN 0
   SETPOS( nOldRow, nOldCol )
   SETCOLOR( cOldColor )
 
-RETURN( cPick )
+RETURN cPick

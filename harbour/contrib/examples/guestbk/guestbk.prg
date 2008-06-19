@@ -62,7 +62,7 @@ FUNCTION Main()
 
    oHTML:ProcessCGI()
 
-   IF oHTML:QueryFields( "Oper" ) = "A"  // Add Entry
+   IF oHTML:QueryFields( "Oper" ) == "A"  // Add Entry
 
       nEntry := oIni:ReadNumber( "Entries", "Entries", 0 ) + 1
       oIni:WriteNumber( "Entries", "Entries", nEntry )

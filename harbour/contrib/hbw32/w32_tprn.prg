@@ -362,23 +362,23 @@ METHOD EndDoc(lAbortDoc) CLASS WIN32PRN
 METHOD StartPage() CLASS WIN32PRN
   LOCAL lLLandScape, nLBinNumber, nLFormType, nLDuplexType, nLPrintQuality
   LOCAL lChangeDP:= .F.
-  IF ::LandScape <> ::fOldLandScape  // Direct-modify property
+  IF ::LandScape != ::fOldLandScape  // Direct-modify property
     lLLandScape:= ::fOldLandScape := ::LandScape
     lChangeDP:= .T.
   ENDIF
-  IF ::BinNumber <> ::fOldBinNumber  // Direct-modify property
+  IF ::BinNumber != ::fOldBinNumber  // Direct-modify property
     nLBinNumber:= ::fOldBinNumber := ::BinNumber
     lChangeDP:= .T.
   ENDIF
-  IF ::FormType <> ::fOldFormType  // Direct-modify property
+  IF ::FormType != ::fOldFormType  // Direct-modify property
     nLFormType:= ::fOldFormType := ::FormType
     lChangeDP:= .T.
   ENDIF
-  IF ::fDuplexType <> ::fNewDuplexType  // Get/Set property
+  IF ::fDuplexType != ::fNewDuplexType  // Get/Set property
     nLDuplexType:= ::fDuplexType:= ::fNewDuplexType
     lChangeDP:= .T.
   ENDIF
-  IF ::fPrintQuality <> ::fNewPrintQuality  // Get/Set property
+  IF ::fPrintQuality != ::fNewPrintQuality  // Get/Set property
     nLPrintQuality:= ::fPrintQuality:= ::fNewPrintQuality
     lChangeDP:= .T.
   ENDIF

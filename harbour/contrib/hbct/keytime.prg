@@ -79,7 +79,7 @@ STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
    LOCAL nMn := VAL( SUBSTR( ccTime, 4, 2 ) )
    LOCAL nSc := VAL( SUBSTR( ccTime, 7, 2 ) )
 
-   IF nHour = 99
+   IF nHour == 99
       IF nHr > nLast
          __KEYBOARD( nKey )
          nLast := nHr
@@ -88,7 +88,7 @@ STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
             s_hIdle := NIL
          ENDIF
       ENDIF
-   ELSEIF nMin = 99 .AND. nHr == nHour
+   ELSEIF nMin == 99 .AND. nHr == nHour
       IF nMn > nLast
          __KEYBOARD( nKey )
          nLast := nMn
@@ -97,7 +97,7 @@ STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
             s_hIdle := NIL
          ENDIF
       ENDIF
-   ELSEIF nSec = 99 .AND. nHr == nHour .AND. nMn == nMin
+   ELSEIF nSec == 99 .AND. nHr == nHour .AND. nMn == nMin
       IF nSc > nLast
          __KEYBOARD( nKey )
          nLast := nSc

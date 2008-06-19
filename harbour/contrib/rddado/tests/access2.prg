@@ -13,21 +13,21 @@ function Main()
    USE test2.mdb VIA "ADORDD" TABLE "table1"
 
    APPEND BLANK
-   test2->First   = "Homer"
-   test2->Last    = "Simpson"
-   test2->Age     = 45
+   test2->First   := "Homer"
+   test2->Last    := "Simpson"
+   test2->Age     := 45
 
    APPEND BLANK
-   test2->First   = "Lara"
-   test2->Last    = "Croft"
-   test2->Age     = 32
+   test2->First   := "Lara"
+   test2->Last    := "Croft"
+   test2->Age     := 32
    
 
    GO TOP
    Browse()
    
    GO TOP
-   locate for TEST2->First="Lara"
+   locate for TEST2->First = "Lara"
    ? FOUND()
    USE
 

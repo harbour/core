@@ -208,7 +208,7 @@ METHOD DrawSingleBar( pcode ) CLASS TBarCode
 
        For i := 1  TO ::res
            ::Line( ::positionX + i  , ::positionY , ::positionX + i , (::positionY+::maxHeight) ,;
-                        If( SubStr(pcode,j,1) $ "0", ::BackColor, ::FillColor  ) )
+                        iif( SubStr(pcode,j,1) $ "0", ::BackColor, ::FillColor  ) )
        Next
 
       ::NextX()
@@ -234,8 +234,8 @@ METHOD DrawSingleI25( pcode ) CLASS TBarCode
 
     For j := 1 To Len( pcode )
 
-       imgBar := If( j % 2 == 0, ::FillColor, ::BackColor )
-       imgWid := If( SubStr(pcode,j,1) =="0" , widthSlimBar, widthFatBar )
+       imgBar := iif( j % 2 == 0, ::FillColor, ::BackColor )
+       imgWid := iif( SubStr(pcode,j,1) =="0" , widthSlimBar, widthFatBar )
 
  		 end_y := ::maxHeight
 
@@ -255,7 +255,7 @@ METHOD DrawError(ptext) CLASS TBarCode
 
 	::error++
 
-	::lastX := If( (::GetFontWidth()*Len(ptext) ) > ::lastX , ( ::GetFontWidth()*Len(ptext)) , ::lastX )
+	::lastX := iif( (::GetFontWidth()*Len(ptext) ) > ::lastX , ( ::GetFontWidth()*Len(ptext)) , ::lastX )
 	::lastY := ::error*15
 
 Return NIL
@@ -279,13 +279,13 @@ METHOD DrawText(lIsI25) CLASS TBarCode
    DEFAULT lIsI25 TO .F.
 
    If lIsI25
-      If( ::textfont != 0 )
+      If ::textfont != 0
           xPosition  := 10 * ::GetFontWidth()
           ::say(  xPosition, ::maxHeight, "*" + ::text + "*" , ::FillColor )
           ::lastY    := ::maxHeight + ::GetFontHeight()
       EndIf
    Else
-      If( ::textfont != 0 )
+      If ::textfont != 0
           xPosition  := ( ::positionX / 2) - ( Len( ::text ) /2 ) * ::GetFontWidth()
           ::say(  xPosition, ::maxHeight, ::text, ::FillColor )
             ::lastY    := ::maxHeight + ::GetFontHeight()
@@ -300,7 +300,7 @@ METHOD CheckCode() CLASS TBarCode
    LOCAL i
 
    For i := 1 To Len( ::text )
-       If( !IsInt( ::CheckValInArray( SubStr( ::text, i, 1 ) ) ) )
+       If !IsInt( ::CheckValInArray( SubStr( ::text, i, 1 ) ) )
            ::DrawError("Character  "+SubStr( ::text, i, 1 )+" not allowed .")
            lRet := .F.
        EndIf
@@ -329,7 +329,7 @@ METHOD Finish( image_style, quality, nFG  ) CLASS TBarCode
    DEFAULT quality     TO 95
    DEFAULT nFG         TO {255,255,255}
 
-   If Empty( ::filename ) .OR. ::filename = NIL
+   If Empty( ::filename ) .OR. ::filename == NIL
 
       // Output std handle == 1
 

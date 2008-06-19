@@ -505,22 +505,22 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
 
    DO CASE
    CASE nKey == K_MOUSEMOVE
-      if aObjects[ nLastObj, WVT_OBJ_STATE ] <> OBJ_STATE_MOUSEOVER
+      if aObjects[ nLastObj, WVT_OBJ_STATE ] != OBJ_STATE_MOUSEOVER
            aObjects[ nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_MOUSEOVER
-         if aObjects[ nObj, WVT_OBJ_ONMOUSEOVER ] <> nil
+         if aObjects[ nObj, WVT_OBJ_ONMOUSEOVER ] != nil
             eval( aObjects[ nObj, WVT_OBJ_ONMOUSEOVER ] )
          endif
       endif
 
    CASE nKey == K_LBUTTONDOWN
         aObjects[ nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_BUTTONDOWN
-        if aObjects[ nObj, WVT_OBJ_ONBUTTONDOWN ] <> nil
+        if aObjects[ nObj, WVT_OBJ_ONBUTTONDOWN ] != nil
            eval( aObjects[ nObj, WVT_OBJ_ONBUTTONDOWN ] )
       endif
 
    CASE nKey == K_LBUTTONUP
         aObjects[ nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_DISP
-        if aObjects[ nObj, WVT_OBJ_ONBUTTONUP ] <> nil
+        if aObjects[ nObj, WVT_OBJ_ONBUTTONUP ] != nil
            eval( aObjects[ nObj, WVT_OBJ_ONBUTTONUP ] )
       endif
 
@@ -537,7 +537,7 @@ FUNCTION WvtSetBlocks( a_ )
 
    o := aclone( s )
 
-   IF a_ <> nil
+   IF a_ != nil
       s := aclone( a_ )
    ENDIF
 
@@ -552,7 +552,7 @@ FUNCTION WvtSetObjects( aObject )
 
    oObjects := aclone( aObjects )
 
-   if aObject <> nil
+   if aObject != nil
       if empty( aObject )
          aObjects := {}
       else
@@ -575,7 +575,7 @@ FUNCTION SetMouseCheck( lYes )
    STATIC lSYes := .t.
 
    lOYes := lSYes
-   if lYes <> nil
+   if lYes != nil
       lSYes := lYes
    endif
 
@@ -659,11 +659,11 @@ FUNCTION WvtMyBrowse()
    //oBrowse := TBrowseNew( nTop + 3, nLeft + 2, nBottom - 1, nRight - 2 )
    oBrowse := TBrowseWVG():New( nTop + 3, nLeft + 2, nBottom - 1, nRight - 2 )
 
-   oBrowse:ColSep        = '  '
-   oBrowse:HeadSep       = '__'
-   oBrowse:GoTopBlock    = { || dbGoTop() }
-   oBrowse:GoBottomBlock = { || dbGoBottom() }
-   oBrowse:SkipBlock     = { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
+   oBrowse:ColSep        := '  '
+   oBrowse:HeadSep       := '__'
+   oBrowse:GoTopBlock    := { || dbGoTop() }
+   oBrowse:GoBottomBlock := { || dbGoBottom() }
+   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
 
    for i := 1 to len( info_ )
       bBlock := VouBlockField( i )
@@ -695,7 +695,7 @@ FUNCTION WvtMyBrowse()
    While !lEnd
       oBrowse:ForceStable()
 
-      nKey = InKey( 0 )
+      nKey := InKey( 0 )
 
       BrwHandleKey( oBrowse, nKey, @lEnd )
 
@@ -728,7 +728,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
 
    LOCAL nSkipped := 0
 
-   if n = 0
+   if n == 0
       DBSkip( 0 )
 
    elseif n > 0
@@ -782,7 +782,7 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
    do case
    case nKey == K_ESC
-      lEnd = .t.
+      lEnd.t.
 
    case nKey == K_ENTER
       lEnd := .t.
@@ -799,34 +799,34 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
    case nKey == K_RIGHT
       oBrowse:Right()
 
-   case nKey = K_PGDN
+   case nKey == K_PGDN
       oBrowse:pageDown()
 
-   case nKey = K_PGUP
+   case nKey == K_PGUP
       oBrowse:pageUp()
 
-   case nKey = K_CTRL_PGUP
+   case nKey == K_CTRL_PGUP
       oBrowse:goTop()
 
-   case nKey = K_CTRL_PGDN
+   case nKey == K_CTRL_PGDN
       oBrowse:goBottom()
 
-   case nKey = K_HOME
+   case nKey == K_HOME
       oBrowse:home()
 
-   case nKey = K_END
+   case nKey == K_END
       oBrowse:end()
 
-   case nKey = K_CTRL_LEFT
+   case nKey == K_CTRL_LEFT
       oBrowse:panLeft()
 
-   case nKey = K_CTRL_RIGHT
+   case nKey == K_CTRL_RIGHT
       oBrowse:panRight()
 
-   case nKey = K_CTRL_HOME
+   case nKey == K_CTRL_HOME
       oBrowse:panHome()
 
-   case nKey = K_CTRL_END
+   case nKey == K_CTRL_END
       oBrowse:panEnd()
 
    case nKey == K_MWBACKWARD
@@ -860,38 +860,38 @@ STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
    case nKey == K_RIGHT
       oBrowse:Right()
 
-   case nKey = K_PGDN
+   case nKey == K_PGDN
       oBrowse:pageDown()
       lRefAll := .t.
 
-   case nKey = K_PGUP
+   case nKey == K_PGUP
       oBrowse:pageUp()
       lRefAll := .t.
 
-   case nKey = K_CTRL_PGUP
+   case nKey == K_CTRL_PGUP
       oBrowse:goTop()
       lRefAll := .t.
 
-   case nKey = K_CTRL_PGDN
+   case nKey == K_CTRL_PGDN
       oBrowse:goBottom()
       lRefAll := .t.
 
-   case nKey = K_HOME
+   case nKey == K_HOME
       oBrowse:home()
 
-   case nKey = K_END
+   case nKey == K_END
       oBrowse:end()
 
-   case nKey = K_CTRL_LEFT
+   case nKey == K_CTRL_LEFT
       oBrowse:panLeft()
 
-   case nKey = K_CTRL_RIGHT
+   case nKey == K_CTRL_RIGHT
       oBrowse:panRight()
 
-   case nKey = K_CTRL_HOME
+   case nKey == K_CTRL_HOME
       oBrowse:panHome()
 
-   case nKey = K_CTRL_END
+   case nKey == K_CTRL_END
       oBrowse:panEnd()
 
    case nKey == K_MWBACKWARD
@@ -1018,7 +1018,7 @@ FUNCTION WvtPartialScreen()
 
    wvtScr1 := Wvt_SaveScreen( 7,20,15,60 )
 
-   do while inkey( 0 ) <> K_ESC
+   do while inkey( 0 ) != K_ESC
    enddo
 
    DispBox( 7, 20, 15, 60, '         ', 'W/B*' )
@@ -1027,12 +1027,12 @@ FUNCTION WvtPartialScreen()
    @ 13,25 SAY 'Press Esc '       COLOR 'N/B*'
    Wvt_DrawBoxRecessed( 8,22,14,58 )
 
-   do while inkey( 0 ) <> K_ESC
+   do while inkey( 0 ) != K_ESC
    enddo
 
    Wvt_RestScreen( 7,20,15,60, wvtScr1 )
 
-   do while inkey( 0 ) <> K_ESC
+   do while inkey( 0 ) != K_ESC
    enddo
 
    RestScreen( 7,20,15,60,scr )
@@ -1088,7 +1088,7 @@ function WvtLines()
    @ 15,8 Say 'D'
    @ 16,9 Say 'E'
 
-   do while ( inkey(0) <> 27 )
+   do while ( inkey(0) != 27 )
    enddo
 
    //  Restore Environments
@@ -1136,7 +1136,7 @@ FUNCTION Popups( nID, lDestroy )
       return nil
    endif
 
-   if lDestroy <> nil
+   if lDestroy != nil
       Wvt_DestroyMenu( hPop_[ nID ] )
       return nil
    endif
@@ -1197,8 +1197,8 @@ FUNCTION Popups( nID, lDestroy )
 
 FUNCTION WvtPictures( nSlot,cFilePic )
 
-   if nSlot <> nil .and. nSlot <= 20 .and. file( cFilePic )
-      if pic_[ nSlot ] <> cFilePic
+   if nSlot != nil .and. nSlot <= 20 .and. file( cFilePic )
+      if pic_[ nSlot ] != cFilePic
          if Wvt_LoadPicture( cFilePic, nSlot )
             pic_[ nSlot ] := cFilePic
          endif
@@ -1211,7 +1211,7 @@ FUNCTION WvtPictures( nSlot,cFilePic )
 
 FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
-   if pic_[ nSlot ] <> nil
+   if pic_[ nSlot ] != nil
       Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aOffSet )
    endif
 
@@ -1725,7 +1725,7 @@ Function DynDlgProc_1( hDlg, nMsg, wParam, lParam )
 
       case wParam == 11
          lClicked := ( Win_IsDlgButtonChecked( hDlg,11 ) == 1 )
-         Win_MessageBox( hDlg, 'Button ' + if( lClicked, 'Clicked', 'Unclicked' ), 'CheckBoxStatus' )
+         Win_MessageBox( hDlg, 'Button ' + iif( lClicked, 'Clicked', 'Unclicked' ), 'CheckBoxStatus' )
 
       endcase
       exit
@@ -1768,7 +1768,7 @@ Function DynDialog_2()
 
    aDlg := Wvt_MakeDlgTemplate( 1, 4, 21, 60, {0,0,0,0},  ;
                'Dialog First [ ' + ltrim( str( nInfo,10,0 ) ) + ' ] '+;
-                        if( nInfo%2==0, 'Modeless', 'Modal' ),' Dialog !', nStyle )
+                        iif( nInfo%2==0, 'Modeless', 'Modal' ),' Dialog !', nStyle )
 
    // Multi line edit control
    //
@@ -1867,7 +1867,7 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
 
       case wParam == ID_CHK_SATIS
          lClicked := ( Win_IsDlgButtonChecked( hDlg,ID_CHK_SATIS ) == 1 )
-         Win_MessageBox( hDlg, if( lClicked, 'Satisfied', 'UnSatisfied' ), 'CheckBoxStatus' )
+         Win_MessageBox( hDlg, iif( lClicked, 'Satisfied', 'UnSatisfied' ), 'CheckBoxStatus' )
 
       case wParam == ID_RDO_XH
          Win_MessageBox( hDlg, '(x)Harbour', 'Compiler' )
@@ -1927,7 +1927,7 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
       Win_SetTimer( hDlg, 5001, 1000 ) // 1 sec
 
       if empty( ahFonts )
-         if ( hFont := Wvt_CreateFont( "Times New Roman", 18 ) ) <> 0
+         if ( hFont := Wvt_CreateFont( "Times New Roman", 18 ) ) != 0
             aadd( ahFonts, hFont )
          endif
       endif
@@ -1939,7 +1939,7 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
       if shIcon == nil
          shIcon := Win_LoadIcon( 'Vr_1.ico' )
       endif
-      if shIcon <> nil .or. shIcon <> 0
+      if shIcon != nil .or. shIcon != 0
          Win_SendMessage( Win_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, shIcon )
       endif
 
@@ -1947,7 +1947,7 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
       if shImage == nil
          shImage := Win_LoadImage( 'Vouch1.bmp', 2 )
       endif
-      if shImage <> nil .and. shImage <> 0
+      if shImage != nil .and. shImage != 0
          Win_SendMessage( Win_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, shImage )
       endif
       */
@@ -2030,11 +2030,11 @@ EXIT PROCEDURE CleanHandles()
       Win_DeleteObject( ahFonts[ i ] )
    next
 
-   if shIcon <> nil
+   if shIcon != nil
       Win_DeleteObject( shIcon )
    endif
 
-   if shImage <> nil
+   if shImage != nil
       Win_DeleteObject( shImage )
    endif
 

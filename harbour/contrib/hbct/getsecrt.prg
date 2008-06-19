@@ -74,7 +74,7 @@ FUNCTION GETSECRET( cVar, nRow, nCol, lSay, xPrompt )
    ENDIF
 
    SETPOS( nRow, nCol )
-   IF xPrompt <> Nil
+   IF xPrompt != Nil
       DEVOUT( xPrompt )
       nRow := ROW()
       nCol := COL() + 1

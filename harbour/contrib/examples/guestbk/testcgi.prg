@@ -78,9 +78,9 @@ FUNCTION Hex2Dec( cHex )
    LOCAL nRet
    LOCAL nRes
 
-   nRet := ascan( aHex, { |x| upper( x[1] ) = upper( left( cHex, 1 ) ) } )
+   nRet := ascan( aHex, { |x| upper( x[1] ) == upper( left( cHex, 1 ) ) } )
    nRes := aHex[nRet, 2] * 16
-   nRet := ascan( aHex, { |x| upper( x[1] ) = upper( right( cHex, 1 ) ) } )
+   nRet := ascan( aHex, { |x| upper( x[1] ) == upper( right( cHex, 1 ) ) } )
    nRes += aHex[nRet, 2]
 
    RETURN( nRes )
@@ -92,7 +92,7 @@ FUNCTION THTML
    STATIC oClass
 
    IF oClass == NIL
-      oClass = HBClass():New( "THTML" )
+      oClass := HBClass():New( "THTML" )
 
       oClass:AddData( "cTitle" )                       // Page Title
       oClass:AddData( "cBody" )                        // HTML Body Handler
@@ -322,12 +322,12 @@ STATIC FUNCTION ProcessCGI()
                      len( cBuff ) - at( "=", cBuff ) + 1 ), "+", " " ) } )
              cBuff := ""
           ELSE
-             IF substr( cQuery, i, 1 ) = "%"
+             IF substr( cQuery, i, 1 ) == "%"
                 cBuff += chr( Hex2Dec( substr( cQuery, i + 1, 2 ) ) )
                 nBuff := 3
              ENDIF
 
-             IF nBuff = 0
+             IF nBuff == 0
                 cBuff += substr( cQuery, i, 1 )
              ELSE
                 nBuff--
@@ -364,7 +364,7 @@ STATIC FUNCTION QueryFields( cQueryName )
    ::ProcessCGI()
 
    nRet := aScan( ::aQueryFields, ;
-      { |x| upper( x[1] ) = upper( cQueryName ) } )
+      { |x| upper( x[1] ) == upper( cQueryName ) } )
 
    IF nRet > 0
       cRet := ::aQueryFields[nRet, 2]

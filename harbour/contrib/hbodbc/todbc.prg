@@ -766,7 +766,7 @@ METHOD LoadData(nPos) CLASS TODBC
            uData := stod( substr(uData,1,4) + substr(uData,6,2) + substr(uData,9,2) )
 
         case nType == SQL_BIT
-           uData = Val( uData ) == 1
+           uData := Val( uData ) == 1
 
         case nType == SQL_NUMERIC;
          .or. nType == SQL_DECIMAL;

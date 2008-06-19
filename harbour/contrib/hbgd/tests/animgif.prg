@@ -30,16 +30,16 @@ PROCEDURE Main()
    */
 
    /* Create the image */
-   im = gdImageCreate(100, 100)
+   im := gdImageCreate(100, 100)
 
    /* Allocate background */
-   white = gdImageColorAllocate(im, 255, 255, 255)
+   white := gdImageColorAllocate(im, 255, 255, 255)
 
    /* Allocate drawing color */
-   black = gdImageColorAllocate(im, 0, 0, 0)
+   black := gdImageColorAllocate(im, 0, 0, 0)
 
    /* Allocate transparent color for animation compression */
-   trans = gdImageColorAllocate(im, 1, 1, 1)
+   trans := gdImageColorAllocate(im, 1, 1, 1)
 
    /* Draw rectangle */
    gdImageRectangle(im, 0, 0, 10, 10, black)
@@ -53,7 +53,7 @@ PROCEDURE Main()
    gdImageGifAnimAdd(im, hFile, 0, 0, 0, 100, 1, NIL)
    gdImageGifAnimAdd(im, IMAGES_OUT + "anim2.gif", 0, 0, 0, 100, 1, NIL)
    /* construct the second frame */
-   im2 = gdImageCreate(100, 100)
+   im2 := gdImageCreate(100, 100)
    /* Allocate background to make it white */
    gdImageColorAllocate(im2, 255, 255, 255)
    /* Make sure the palette is identical */
@@ -66,7 +66,7 @@ PROCEDURE Main()
    gdImageGifAnimAdd(im2, hFile, 0, 0, 0, 100, 1, im)
    gdImageGifAnimAdd(im2, IMAGES_OUT + "anim2.gif", 0, 0, 0, 100, 1, im)
    /* construct the second frame */
-   im3 = gdImageCreate(100, 100)
+   im3 := gdImageCreate(100, 100)
    /* Allocate background to make it white */
    gdImageColorAllocate(im3, 255, 255, 255)
    /* Make sure the palette is identical */

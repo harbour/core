@@ -127,7 +127,7 @@ FUNCTION Main( cScript )
 
             c := SubStr( cLine, i, 1 )
 
-            IF c = "%" .AND. substr( cLine, i + 1, 1 ) = ">"
+            IF c == "%" .AND. substr( cLine, i + 1, 1 ) == ">"
                IF lOpen
                   // Error - Already in htm mode
                ELSE
@@ -144,7 +144,7 @@ FUNCTION Main( cScript )
                ENDIF
                i++
 
-            ELSEIF c = "<" .AND. substr( cLine, i + 1, 1 ) = "%"
+            ELSEIF c == "<" .AND. substr( cLine, i + 1, 1 ) == "%"
                IF !lOpen
                   // Error - Not in htm mode
                ELSE
@@ -164,7 +164,7 @@ FUNCTION Main( cScript )
             ENDIF
          NEXT
 
-         IF lOpen .AND. substr( cLine, nLen - 1, 2 ) <> "%>"
+         IF lOpen .AND. !( substr( cLine, nLen - 1, 2 ) == "%>" )
             cTrans += "' + chr(10) )"
          ENDIF
 

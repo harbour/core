@@ -109,7 +109,7 @@ ENDCLASS
 
 ACCESS Top() CLASS HBWinControl
     LOCAL PosY := hb_GtkWidgetGetGeometry( ::hWnd, 1 )
-    IF PosY <> HGF_GTK_WIDGET_GEOMETRY_UNKNOWN
+    IF PosY != HGF_GTK_WIDGET_GEOMETRY_UNKNOWN
         ::YPos := PosY
     ENDIF
 RETURN ::YPos
@@ -118,7 +118,7 @@ RETURN ::YPos
 
 ACCESS Left() CLASS HBWinControl
     LOCAL PosX := hb_GtkWidgetGetGeometry( ::hWnd, 2 )
-    IF PosX <> HGF_GTK_WIDGET_GEOMETRY_UNKNOWN
+    IF PosX != HGF_GTK_WIDGET_GEOMETRY_UNKNOWN
         ::XPos := PosX
     ENDIF
 RETURN ::XPos
@@ -127,7 +127,7 @@ RETURN ::XPos
 
 ACCESS Height() CLASS HBWinControl
     LOCAL SizeY := hb_GtkWidgetGetGeometry( ::hWnd, 3 )
-    IF SizeY <> HGF_GTK_WIDGET_GEOMETRY_UNKNOWN
+    IF SizeY != HGF_GTK_WIDGET_GEOMETRY_UNKNOWN
         ::YSize := SizeY
     ENDIF
 RETURN ::YSize
@@ -136,7 +136,7 @@ RETURN ::YSize
 
 ACCESS Width() CLASS HBWinControl
     LOCAL SizeX := hb_GtkWidgetGetGeometry( ::hWnd, 4 )
-    IF SizeX <> HGF_GTK_WIDGET_GEOMETRY_UNKNOWN
+    IF SizeX != HGF_GTK_WIDGET_GEOMETRY_UNKNOWN
         ::XSize := SizeX
     ENDIF
 RETURN ::XSize

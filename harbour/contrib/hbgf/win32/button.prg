@@ -65,9 +65,9 @@ ENDCLASS
 
 METHOD New( oContainer ) CLASS HBButton
 
-   ::hWnd  = WinCreateStdWindow( , nOr( WS_CHILD, WS_TABSTOP ),, "BUTTON", "",,;
+   ::hWnd  := WinCreateStdWindow( , nOr( WS_CHILD, WS_TABSTOP ),, "BUTTON", "",,;
                                  oContainer:hWnd, ::GetNewId() )
-   ::Width  = 80
-   ::Height = 25
+   ::Width  := 80
+   ::Height := 25
 
 return Self

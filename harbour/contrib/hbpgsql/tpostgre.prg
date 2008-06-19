@@ -355,7 +355,7 @@ METHOD TableStruct( cTable ) CLASS TPQserver
 
             end
 
-            if cType <> 'U'
+            if !( cType == 'U' )
                 aadd( result, { cField, cType, nSize, nDec } )
             end
 
@@ -834,7 +834,7 @@ METHOD Delete(oRow) CLASS TPQquery
 
             AADD( aParams, ValueToString(xField) )
 
-            if i <> len(::aKeys)
+            if i != len(::aKeys)
                 cWhere += ' and '
             endif
         Next
@@ -937,7 +937,7 @@ METHOD Update(oRow) CLASS TPQquery
 
             cWhere += ::aKeys[i] + '=' + DataToSql(xField)
 
-            if i <> len(::aKeys)
+            if i != len(::aKeys)
                 cWhere += ' and '
             end
         Next

@@ -146,7 +146,7 @@ procedure main(c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14)
       quit
    endif
 
-   while !dbffile->(eof()) .AND. Inkey() <> K_ESC
+   while !dbffile->(eof()) .AND. Inkey() != K_ESC
 
       oRecord := oTable:GetBlankRow()
 

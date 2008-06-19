@@ -89,8 +89,8 @@ Default cPad to " "
 Default nBase to 10
 
 IF VALTYPE( xNum ) == "C"
-   xNum = UPPER( ALLTRIM( xNum ) )
-   xNum = CTON( xNum, 16 )
+   xNum := UPPER( ALLTRIM( xNum ) )
+   xNum := CTON( xNum, 16 )
 ENDIF
 IF nBase > 36 .OR. nBase < 2
    RETURN ""
@@ -99,13 +99,13 @@ ENDIF
 if xNum < 0
   xNum += 4294967296
 endif
-cNum = B10TOBN( xNum, @nBase )
+cNum := B10TOBN( xNum, @nBase )
 
 IF ISNUMBER( nLenght )
    IF LEN(cNum) > nLenght
-      cNum = REPLICATE( "*", nLenght )
+      cNum := REPLICATE( "*", nLenght )
    ELSEIF ISCHARACTER( cPad ) .AND. LEN( cNum ) < nLenght
-      cNum = REPLICATE( cPad, nLenght - LEN( cNum ) ) + cNum
+      cNum := REPLICATE( cPad, nLenght - LEN( cNum ) ) + cNum
    ENDIF
 ENDIF
 
@@ -216,17 +216,17 @@ FUNCTION BITTOC( nInteger, cBitPattern, lMode )
 
 
   cBitPattern := RIGHT( cBitPattern, 16 )
-  cBinary = NTOC( nInteger, 2, 16 )
+  cBinary := NTOC( nInteger, 2, 16 )
 
-  FOR nI = 1 TO 16
+  FOR nI := 1 TO 16
      
      IF SUBSTR( cBinary, -nI, 1 ) == '1'
 
-        cString = SUBSTR( cBitPattern, -nI, 1 ) + cString
+        cString := SUBSTR( cBitPattern, -nI, 1 ) + cString
 
      ELSEIF lMode
            
-        cString = ' ' + cString
+        cString := ' ' + cString
 
      ENDIF
 
@@ -264,12 +264,12 @@ FUNCTION CTOBIT( cCharString, cBitPattern )
 
   LOCAL nI, cString := ''
 
-  cCharString = RIGHT( cCharString, 16 )
-  cBitPattern = RIGHT( cBitPattern, 16 )
+  cCharString := RIGHT( cCharString, 16 )
+  cBitPattern := RIGHT( cBitPattern, 16 )
 
-  FOR nI = 1 TO LEN( cBitPattern )
+  FOR nI := 1 TO LEN( cBitPattern )
 
-     cString = IF( AT(SUBSTR( cBitPattern, -nI, 1), cCharString) > 0, '1', '0') + cString
+     cString := IF( AT(SUBSTR( cBitPattern, -nI, 1), cCharString) > 0, '1', '0') + cString
 
   NEXT
 

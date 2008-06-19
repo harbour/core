@@ -63,7 +63,7 @@ FUNCTION SAVEGETS()
 RETURN aGetList
 
 FUNCTION RESTGETS( aGetList )
-RETURN ( GetList := aGetList ) <> NIL
+RETURN ( GetList := aGetList ) != NIL
 
 FUNCTION COUNTGETS()
 RETURN LEN( GetList )

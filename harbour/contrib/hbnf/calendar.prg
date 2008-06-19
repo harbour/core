@@ -126,9 +126,9 @@ FUNCTION FT_CALENDAR (nRow, nCol, cColor, lShadow, lShowHelp)
  LOCAL  aRetVal[8]
  LOCAL  nHelpRow, cSaveHelp, lHelpIsDisplayed :=.F.
 
- nRow    := IIF ( nRow <> NIL, nRow, 1 )           //check display row
- nCol    := IIF ( nCol <> NIL, nCol, 63)           //check display col
- cColor  := IIF ( cColor <> NIL, cColor, 'W+/G' )  //check display color
+ nRow    := IIF ( nRow != NIL, nRow, 1 )           //check display row
+ nCol    := IIF ( nCol != NIL, nCol, 63)           //check display col
+ cColor  := IIF ( cColor != NIL, cColor, 'W+/G' )  //check display color
  lShadow := IIF ( lShadow == NIL , .F., lShadow )  //check shadow switch
  lShowHelp := IIF ( lShowHelp == NIL , .F., lShowHelp )//check help switch
 
@@ -148,7 +148,7 @@ FUNCTION FT_CALENDAR (nRow, nCol, cColor, lShadow, lShowHelp)
    nHelpRow := IIF (nRow > 10 , nRow - 10 , nRow + 6 )
  ENDIF
 
- DO WHILE nKey <> K_ESC
+ DO WHILE nKey != K_ESC
 
     DO CASE
     CASE nKey == K_HOME

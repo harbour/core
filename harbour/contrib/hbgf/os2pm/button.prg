@@ -72,7 +72,7 @@ ENDCLASS
 
 METHOD New( oContainer ) CLASS HBButton
 
-   ::hWnd = WinCreateWindow(oContainer:hWndClient,;         /* Parent window  */
+   ::hWnd := WinCreateWindow(oContainer:hWndClient,;         /* Parent window  */
                             WC_BUTTON,;                     /* Class window   */
                             "",;                            /* Button text    */
                             WS_VISIBLE + WS_TABSTOP+;       /* Visible style  */
@@ -87,7 +87,7 @@ METHOD New( oContainer ) CLASS HBButton
 
    // NOTE: There is no need to modify it later since I can give it an initial
    //       size during window creartion
-   //::Width  = 80
-   //::Height = 25
+   //::Width  := 80
+   //::Height := 25
 
 return Self

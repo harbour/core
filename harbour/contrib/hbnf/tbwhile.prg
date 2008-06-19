@@ -28,7 +28,7 @@
  *        - Added refreshCurrent and another stabilize around line 349
  *        - TbSkipWhile was redone
  *             Note: Leo's line was changed to:
- *                 ELSEIF ( n > 0 .AND. RECNO() <> LASTREC() + 1)
+ *                 ELSEIF ( n > 0 .AND. RECNO() != LASTREC() + 1)
  *
  *  3.  Added DispBegin() and DispEnd() around both Stabilize sections
  *
@@ -325,7 +325,7 @@ FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    NEXT
 
    /* freeze columns */
-   IF nFreeze <> 0
+   IF nFreeze != 0
       b:freeze := nFreeze
    ENDIF
 
@@ -452,7 +452,7 @@ STATIC FUNCTION TbSkipWhil(n, bWhileCond)
    IF n == 0 .OR. LASTREC() == 0
       SKIP 0  // significant on a network
 
-   ELSEIF ( n > 0 .AND. RECNO() <> LASTREC() + 1)
+   ELSEIF ( n > 0 .AND. RECNO() != LASTREC() + 1)
       WHILE ( i < n )
          SKIP 1
          IF ( EOF() .OR. .NOT. Eval(bWhileCond) )

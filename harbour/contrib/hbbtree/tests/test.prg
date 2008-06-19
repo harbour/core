@@ -41,7 +41,7 @@ Procedure Main()
   local n, a
   local c
 
-  if fileattr( "test_1.out") = 1 + 32
+  if fileattr( "test_1.out") == 1 + 32
     setfattr( "test_1.out", 32 )
     ferase( "test_1.out" )
   endif
@@ -64,7 +64,7 @@ Procedure Main()
     c := 0
     while .t.
       ? hb_btreekey( n ), hb_btreedata( n ), ++c
-      if 1 <> hb_btreeskip( n, 1 )// .or. c == hb_btreeinfo( n, HB_BTREEINFO_KEYCOUNT )-1
+      if 1 != hb_btreeskip( n, 1 )// .or. c == hb_btreeinfo( n, HB_BTREEINFO_KEYCOUNT )-1
         exit
       endif
     end
@@ -76,7 +76,7 @@ Procedure Main()
     c := 0
     while .t.
       ? hb_btreekey( n ), hb_btreedata( n ), ++c
-      if -1 <> hb_btreeskip( n, -1 )// .or. c == hb_btreeinfo( n, HB_BTREEINFO_KEYCOUNT )-1
+      if -1 != hb_btreeskip( n, -1 )// .or. c == hb_btreeinfo( n, HB_BTREEINFO_KEYCOUNT )-1
         exit
       endif
     end
@@ -143,7 +143,7 @@ Procedure Main()
     c := 0
     while .t.
       ? hb_btreekey( n ), hb_btreedata( n ), ++c
-      if 1 <> hb_btreeskip( n, 1 )
+      if 1 != hb_btreeskip( n, 1 )
         exit
       endif
     end
@@ -154,7 +154,7 @@ Procedure Main()
     c := 0
     while .t.
       ? hb_btreekey( n ), hb_btreedata( n ), ++c
-      if -1 <> hb_btreeskip( n, -1 )
+      if -1 != hb_btreeskip( n, -1 )
         exit
       endif
     end

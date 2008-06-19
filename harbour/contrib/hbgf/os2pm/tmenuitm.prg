@@ -82,11 +82,11 @@ METHOD New( oOwner ) CLASS HGFMenuItem
 
    DEFAULT ::nIdStart TO 110
 
-   ::Caption = ""
-   ::nId     = ::nIdStart++
-   ::Enabled = .t.
-   ::oParent = oOwner
-   ::nHandle = nil
+   ::Caption := ""
+   ::nId     := ::nIdStart++
+   ::Enabled := .t.
+   ::oParent := oOwner
+   ::nHandle := nil
 
 return Self
 
@@ -113,7 +113,7 @@ METHOD FindItem( nId ) CLASS HGFMenuItem
 
    local oMenuItem, n
 
-   for n = 1 to Len( ::Items )
+   for n := 1 to Len( ::Items )
       if ( oMenuItem := ::Items[ n ] ):nId == nId
          return oMenuItem
       else

@@ -85,7 +85,7 @@ function _sx_INIinit( nArea )
     * by workarea number. In Harbour we are using hash arrays.
     */
 
-   if Type( "SxIniInfo" ) = "U"
+   if Type( "SxIniInfo" ) = "U" /* NOTE: Intentionally using '=' operator */
       public SxIniInfo := {=>}
       HB_HCaseMatch( SxIniInfo, .f. )
       HB_HAutoAdd( SxIniInfo, HB_HAUTOADD_ASSIGN )

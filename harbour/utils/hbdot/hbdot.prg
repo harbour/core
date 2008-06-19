@@ -170,7 +170,7 @@ PROCEDURE _APPMAIN( cFile, ... )
 
          IF s_nRow >= MaxRow()
             Scroll( 2, 0, MaxRow(), MaxCol(), 1 )
-            s_nRow = MaxRow() - 1
+            s_nRow := MaxRow() - 1
          ENDIF
 
       ENDDO
