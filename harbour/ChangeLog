@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-19 01:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbw32/tests/testdll.prg
+   * source/rtl/colorind.c
+   * contrib/hbodbc/odbc.c
+     * Minor cleanups.
+
+   * contrib/hbtip/tests/base64.prg
+   * contrib/hbtip/tests/dbtohtml.prg
+   * contrib/hbtip/tests/httpadv.prg
+   * contrib/hbtip/tests/tipmail.prg
+   * contrib/hbtip/tests/tipmmail.prg
+   * contrib/hbtip/tests/tiptest.prg
+     ! All tip tests fixed and tested to compile/link
+       with Harbour.
+     * Changed to not require hbw32.lib.
+       [TOMERGE RC1]
+
+   + contrib/hbtip/tests/test.dbf
+     + Added for tests.
+       [TOMERGE RC1]
+
 2008-06-18 11:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtclip.c
      ! hb_gt_w32_setClipboard() fix to CF_UNICODETEXT 

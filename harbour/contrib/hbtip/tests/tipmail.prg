@@ -32,7 +32,7 @@ PROCEDURE MAIN( cFileName )
    WITH OBJECT oMail
       ? "-------------============== HEADERS =================--------------"
       FOR i := 1 TO Len( :hHeaders )
-         ? hb_HGetKeyAt( :hHeaders, i ), ":", hb_HGetValueAt( :hHeaders, i )
+         ? hb_HKeyAt( :hHeaders, i ), ":", hb_HValueAt( :hHeaders, i )
       NEXT
       ?
 

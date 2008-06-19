@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * HB_COLORINDEX() function
  *
- * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
+ * Copyright 1999-2008 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,13 +56,12 @@ HB_FUNC( HB_COLORINDEX )
 {
    if( ISCHAR( 1 ) && ISNUM( 2 ) )
    {
-      char * pszColor = hb_parcx( 1 );
+      char * pszColor = hb_parc( 1 );
       ULONG ulColorPos;
       ULONG ulColorLen;
       USHORT uiColorIndex = ( USHORT ) hb_parni( 2 );
 
       /* Skip the given number of commas */
-
       for( ulColorPos = 0; pszColor[ ulColorPos ] != '\0' && uiColorIndex > 0; ulColorPos++ )
       {
          if( pszColor[ ulColorPos ] == ',' )
@@ -70,27 +69,24 @@ HB_FUNC( HB_COLORINDEX )
       }
 
       /* if found, continue */
-
       if( uiColorIndex == 0 )
       {
          /* Skip the spaces after the comma */
-
-         while( pszColor[ ulColorPos ] == ' ' ) ulColorPos++;
+         while( pszColor[ ulColorPos ] == ' ' )
+            ulColorPos++;
 
          /* Search for next comma or end of string */
-
          ulColorLen = 0;
-
          while( pszColor[ ulColorPos + ulColorLen ] != '\0' &&
-                pszColor[ ulColorPos + ulColorLen ] != ',' ) ulColorLen++;
+                pszColor[ ulColorPos + ulColorLen ] != ',' )
+            ulColorLen++;
 
          /* Skip the trailing spaces */
-
          while( ulColorLen > 0 &&
-                pszColor[ ulColorPos + ulColorLen - 1 ] == ' ' ) ulColorLen--;
+                pszColor[ ulColorPos + ulColorLen - 1 ] == ' ' )
+            ulColorLen--;
 
          /* Return the string */
-
          hb_retclen( pszColor + ulColorPos, ulColorLen );
       }
       else
@@ -99,4 +95,3 @@ HB_FUNC( HB_COLORINDEX )
    else
       hb_retc( NULL );
 }
-

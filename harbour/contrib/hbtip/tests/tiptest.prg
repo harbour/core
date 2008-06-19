@@ -115,7 +115,7 @@ PROCEDURE MAIN( cUrl, cFile )
          IF oClient:WriteFromFile( cFile )
             @7,5 SAY "Data sucessfully sent"
          ELSE
-            @7,5 SAY "ERROR: Data not sent", oClient:lastErrorMessage()
+            @7,5 SAY "ERROR: Data not sent " + oClient:lastErrorMessage()
          ENDIF
       ELSE
          IF Empty( cFile )
@@ -124,7 +124,7 @@ PROCEDURE MAIN( cUrl, cFile )
                @7,5 SAY "First 80 characters:"
                ? Trim(SubStr( cData, 1, 80 ))
             ELSE
-               @7,5 SAY "ERROR - file can't be retreived", oClient:lastErrorMessage()
+               @7,5 SAY "ERROR - file can't be retreived " + oClient:lastErrorMessage()
             ENDIF
          ELSE
             IF oClient:ReadToFile( cFile )
