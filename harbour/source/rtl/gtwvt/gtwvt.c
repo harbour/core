@@ -1603,7 +1603,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
 
    if( ! hb_winmainArgGet( &s_hInstance, &s_hPrevInstance, &s_iCmdShow ) )
    {
-      hb_errInternal( 10001, "It's not a Windows GUI program", NULL, NULL );
+      hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
    }
 
    pWVT = hb_gt_wvt_New( pGT );
