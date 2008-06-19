@@ -237,14 +237,14 @@ METHOD GetReply() CLASS tIPClientFTP
       RETURN .F.
    ENDIF
 
-   // now, if the reply has a '-' as fourth character, we need to proceed...
-   DO WHILE .not. Empty(cRep) .and. SubStr( cRep, 4, 1 ) == '-'
+   // now, if the reply has a "-" as fourth character, we need to proceed...
+   DO WHILE .not. Empty(cRep) .and. SubStr( cRep, 4, 1 ) == "-"
       ::cReply := ::InetRecvLine( ::SocketCon, @nLen, 128 )
       cRep := IIf(ValType(::cReply) == "C", ::cReply, "")
    ENDDO
 
    // 4 and 5 are error codes
-   IF ::InetErrorCode( ::SocketCon ) != 0 .or. SubStr( ::cReply, 1, 1) >= '4'
+   IF ::InetErrorCode( ::SocketCon ) != 0 .or. SubStr( ::cReply, 1, 1) >= "4"
       RETURN .F.
    ENDIF
 RETURN .T.
@@ -299,7 +299,7 @@ RETURN ::GetReply()
 
 
 METHOD Rest( nPos ) CLASS tIPClientFTP
-   ::InetSendall( ::SocketCon, "REST " + alltrim( Str( If( Empty( nPos ), 0, nPos ) ) ) + ::cCRLF )
+   ::InetSendall( ::SocketCon, "REST " + alltrim( Str( iif( Empty( nPos ), 0, nPos ) ) ) + ::cCRLF )
 RETURN ::GetReply()
 
 
@@ -384,9 +384,9 @@ METHOD List( cSpec ) CLASS tIPClientFTP
    LOCAL cStr
 
    IF cSpec == nil
-      cSpec := ''
+      cSpec := ""
    ELSE
-      cSpec := ' ' + cSpec
+      cSpec := " " + cSpec
    ENDIF
    IF ::bUsePasv
       IF .not. ::Pasv()
@@ -611,10 +611,10 @@ METHOD MGET( cSpec,cLocalPath ) CLASS tIPClientFTP
    LOCAL cStr,cfile,aFiles
 
    IF cSpec == nil
-      cSpec := ''
+      cSpec := ""
    ENDIF
    IF cLocalPath=nil
-      cLocalPath:=''
+      cLocalPath:=""
    ENDIF
    IF ::bUsePasv
       IF .not. ::Pasv()
@@ -627,7 +627,7 @@ METHOD MGET( cSpec,cLocalPath ) CLASS tIPClientFTP
    cStr := ::ReadAuxPort()
 
    IF !empty(cStr)
-      aFiles:=hb_atokens(strtran(cStr,chr(13),''),chr(10))
+      aFiles:=hb_atokens(strtran(cStr,chr(13),""),chr(10))
       FOR each cFile in aFiles
          IF !Empty(cFile) //PM:09-08-2007 Needed because of the new HB_aTokens()
             ::downloadfile( cLocalPath+trim(cFile), trim(cFile) )
@@ -644,7 +644,7 @@ METHOD MPUT( cFileSpec, cAttr ) CLASS tIPClientFTP
    LOCAL nCount := 0
    LOCAL cStr := ""
 
-   IF Valtype( cFileSpec ) <> "C"
+   IF !( Valtype( cFileSpec ) == "C" )
       RETURN 0
    ENDIF
 
@@ -707,7 +707,7 @@ METHOD LS( cSpec ) CLASS tIPClientFTP
    LOCAL cStr
 
    IF cSpec == nil
-      cSpec := ''
+      cSpec := ""
    ENDIF
 
    IF ::bUsePasv .AND. ! ::Pasv()
@@ -723,7 +723,7 @@ METHOD LS( cSpec ) CLASS tIPClientFTP
    IF ::GetReply()
       cStr := ::ReadAuxPort()
    ELSE
-      cStr := ''
+      cStr := ""
    ENDIF
 
 RETURN cStr
@@ -815,7 +815,7 @@ METHOD listFiles( cFileSpec ) CLASS tIPClientFTP
       RETURN {}
    ENDIF
 
-   aList := HB_ATokens( StrTran( cList, Chr(13),''), Chr(10) )
+   aList := HB_ATokens( StrTran( cList, Chr(13),""), Chr(10) )
 
    FOR EACH cEntry IN aList
 

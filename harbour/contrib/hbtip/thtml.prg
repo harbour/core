@@ -143,7 +143,7 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
                     ' </body>' + hb_OSNewLine() +;
                     '</html>'
 
-   IF Valtype( cHtmlString ) <> "C"
+   IF !( Valtype( cHtmlString ) == "C" )
       ::root := THtmlNode():new( cEmptyHtmlDoc )
    ELSE
       IF .NOT. "<html" $ Lower( Left( cHtmlString, 4096 ) )
@@ -245,14 +245,14 @@ METHOD writeFile( cFileName ) CLASS THtmlDocument
    LOCAL cHtml := ::toString()
    LOCAL nFileHandle := FCreate( cFileName )
 
-   IF FError() <> 0
+   IF FError() != 0
       RETURN .F.
    ENDIF
 
    FWrite( nFileHandle, cHtml, Len(cHtml) )
    FClose( nFileHandle )
    ::changed := .F.
-RETURN ( FError()==0 )
+RETURN FError() == 0
 
 
 // builds a one dimensional array of all nodes contained in the HTML document
@@ -450,14 +450,15 @@ METHOD MatchCriteria( oFound ) CLASS THtmlIteratorScan
 
    IF ::cValue != NIL
       xData := oFound:getAttributes()
-      IF hb_HScan( xData, {| xKey,cValue| HB_SYMBOL_UNUSED(xKey), Lower(::cValue) == Lower(cValue) }) == 0
+      IF hb_HScan( xData, {| xKey, cValue | HB_SYMBOL_UNUSED(xKey), Lower(::cValue) == Lower(cValue) }) == 0
          RETURN .F.
       ENDIF
    ENDIF
 
    IF ::cData != NIL
       xData := oFound:getText(" ")
-      IF Empty(xData) .OR. ( Alltrim(::cData)  <> Alltrim(xData)  )
+      /* NOTE: != changed to !( == ) */
+      IF Empty(xData) .OR. !( Alltrim(::cData) == Alltrim(xData) )
          RETURN .F.
       ENDIF
    ENDIF
@@ -663,7 +664,7 @@ RETURN hb_bitAnd( ::htmlTagType[2], CM_OPT ) > 0
 
 // checks if this is a node (leafs contain no further nodes, e.g. <br>,<hr>,_text_)
 METHOD isNode CLASS THtmlNode
-RETURN ( Valtype( ::htmlContent ) == "A" .AND. Len( ::htmlContent ) > 0 )
+RETURN Valtype( ::htmlContent ) == "A" .AND. Len( ::htmlContent ) > 0
 
 
 // checks if this is a block node that must be closed with an ending tag: eg: <table></table>, <ul></ul>
@@ -704,10 +705,10 @@ METHOD parseHtml( parser ) CLASS THtmlNode
             // ending tag of previous node
             cText := Lower( Alltrim( SubStr( CutStr( ">", @cText ), 3 ) ) )
             oLastTag := oThisTag:parent
-            DO WHILE oLastTag <> NIL .AND. Lower( oLastTag:htmlTagName ) <> cText
+            DO WHILE oLastTag != NIL .AND. !( Lower( oLastTag:htmlTagName ) == cText ) /* NOTE: != changed to !( == ) */
                oLastTag := oLastTag:parent
             ENDDO
-            IF oLastTag <> NIL
+            IF oLastTag != NIL
                oLastTag:htmlEndTagName := "/" + oLastTag:htmlTagName
             ENDIF
 
@@ -743,7 +744,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
          ELSE
 
             oNextTag := oThisTag:parent
-            DO WHILE oNextTag <> NIL .AND. Lower( oNextTag:htmlTagName ) <> Lower( SubStr(cTagName,2) )
+            DO WHILE oNextTag != NIL .AND. !( Lower( oNextTag:htmlTagName ) == Lower( SubStr(cTagName,2) ) ) /* NOTE: != changed to !( == ) */
                oNextTag := oNextTag:parent
             ENDDO
 
@@ -858,7 +859,7 @@ METHOD parseHtmlFixed( parser ) CLASS THtmlNode
    ENDIF
 
    // back to "<"
-   DO WHILE P_PREV( parser ) <> "<" ; ENDDO
+   DO WHILE !( P_PREV( parser ) == "<" ) ; ENDDO /* NOTE: != changed to !( == ) */
 
    nEnd  := parser:p_pos
    ::addNode( THtmlNode():new( self, "_text_", , SubStr( parser:p_Str, nStart, nEnd - nStart ) ) )
@@ -870,7 +871,7 @@ RETURN self
 
 // adds a new CHILD node to the current one
 METHOD addNode( oTHtmlNode ) CLASS THtmlNode
-   IF oTHtmlNode:parent <> NIL .AND. .NOT. oTHtmlNode:parent == self
+   IF oTHtmlNode:parent != NIL .AND. .NOT. oTHtmlNode:parent == self
       oTHtmlNode:delete()
    ENDIF
 
@@ -879,7 +880,7 @@ METHOD addNode( oTHtmlNode ) CLASS THtmlNode
 
    AAdd( ::htmlContent, oTHtmlNode )
 
-   IF ::root <> NIL .AND. ::root:_document <> NIL
+   IF ::root != NIL .AND. ::root:_document != NIL
       ::root:_document:changed := .T.
    ENDIF
 
@@ -892,14 +893,14 @@ METHOD insertBefore( oTHtmlNode ) CLASS THtmlNode
       RETURN ::error( "Cannot insert before root node", ::className(), ":insertBefore()", EG_ARG, HB_AParams() )
    ENDIF
 
-   IF oTHtmlNode:parent <> NIL .AND. .NOT. oTHtmlNode:parent == self
+   IF oTHtmlNode:parent != NIL .AND. .NOT. oTHtmlNode:parent == self
       oTHtmlNode:delete()
    ENDIF
 
    oTHtmlNode:parent := ::parent
    oTHtmlNode:root   := ::root
 
-   IF ::root <> NIL .AND. ::root:_document <> NIL
+   IF ::root != NIL .AND. ::root:_document != NIL
       ::root:_document:changed := .T.
    ENDIF
 
@@ -913,14 +914,14 @@ RETURN oTHtmlNode
 METHOD insertAfter( oTHtmlNode ) CLASS THtmlNode
    LOCAL nPos
 
-   IF oTHtmlNode:parent <> NIL .AND. .NOT. oTHtmlNode:parent == self
+   IF oTHtmlNode:parent != NIL .AND. .NOT. oTHtmlNode:parent == self
       oTHtmlNode:delete()
    ENDIF
 
    oTHtmlNode:parent := ::parent
    oTHtmlNode:root   := ::root
 
-   IF ::root <> NIL .AND. ::root:_document <> NIL
+   IF ::root != NIL .AND. ::root:_document != NIL
       ::root:_document:changed := .T.
    ENDIF
 
@@ -942,7 +943,7 @@ METHOD delete()  CLASS THtmlNode
       RETURN self
    ENDIF
 
-   IF ::root <> NIL .AND. ::root:_document <> NIL
+   IF ::root != NIL .AND. ::root:_document != NIL
       ::root:_document:changed := .T.
    ENDIF
 
@@ -958,7 +959,7 @@ RETURN self
 
 // returns first node in subtree (.F.) or first node of entire tree (.T.)
 METHOD firstNode( lRoot ) CLASS THtmlNode
-   IF Valtype( lRoot ) <> "L"
+   IF !( Valtype( lRoot ) == "L" )
       lRoot := .F.
    ENDIF
 
@@ -974,7 +975,7 @@ RETURN IIF( Empty(::htmlContent), NIL, ::htmlContent[1] )
 // returns last node in subtree (.F.) or last node of entire tree (.T.)
 METHOD lastNode( lRoot ) CLASS THtmlNode
    LOCAL aNodes
-   IF Valtype( lRoot ) <> "L"
+   IF !( Valtype( lRoot ) == "L" )
       lRoot := .F.
    ENDIF
    IF ::htmlTagName == "_text_"
@@ -992,7 +993,8 @@ METHOD nextNode() CLASS THtmlNode
       RETURN ::htmlContent[1]
    ENDIF
 
-   IF ::htmlTagName <> "_text_" .AND. .NOT. Empty( ::htmlContent )
+   /* NOTE: != changed to !( == ) */
+   IF !( ::htmlTagName == "_text_" ) .AND. .NOT. Empty( ::htmlContent )
       RETURN ::htmlContent[1]
    ENDIF
 
@@ -1073,11 +1075,11 @@ METHOD toString( nIndent ) CLASS THtmlNode
       cHtml += ::htmlContent
    ENDIF
 
-   IF ::htmlEndTagName <> NIL
+   IF ::htmlEndTagName != NIL
       IF ::isInline() .OR. ::keepFormatting() .OR. ::isType( CM_HEADING ) .OR. ::isType( CM_HEAD )
          RETURN cHtml += IIf( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
       ENDIF
-      IF Right( cHtml, 1 ) <> Chr(10)
+      IF !( Right( cHtml, 1 ) == Chr(10) )
          cHtml += Chr(13)+Chr(10)
       ENDIF
       RETURN cHtml += cIndent + IIf( ::htmlEndTagName == "/", " />", "<" + ::htmlEndTagName + ">" )
@@ -1221,7 +1223,7 @@ METHOD getAttribute( cName ) CLASS THtmlNode
    LOCAL hHash := ::getAttributes()
    LOCAL cValue
 
-   IF Valtype( hHash ) <> "H"
+   IF !( Valtype( hHash ) == "H" )
       RETURN hHash
    ENDIF
 
@@ -1363,7 +1365,7 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
    LOCAL nType
    LOCAL hHash := ::getAttributes()
 
-   IF Valtype( hHash ) <> "H"
+   IF !( Valtype( hHash ) == "H" )
       // Tag doesn't have any attribute
       RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, {cName, cValue} )
    ENDIF
@@ -1399,7 +1401,7 @@ RETURN ::getAttributes()
 METHOD delAttribute( cName ) CLASS THtmlNode
    LOCAL xVal := ::getAttribute( cName )
    LOCAL lRet := .F.
-   IF xVal <> NIL
+   IF xVal != NIL
       BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
          hb_HDel( ::htmlAttributes, cName )
          lRet := .T.
@@ -1636,7 +1638,7 @@ FUNCTION THtmlIsValid( cTagName, cAttrName )
 
    BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
       aValue := shTagTypes[ cTagName ]
-      IF cAttrName <> NIL
+      IF cAttrName != NIL
          aValue := HB_Exec( aValue[1] )
          lRet   := ( Ascan( aValue, {|a| Lower(a[1]) == Lower( cAttrName ) } ) > 0 )
       ENDIF

@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-19 11:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbtip/cgi.prg
+   * contrib/hbtip/encoder.prg
+   * contrib/hbtip/ftpcln.prg
+   * contrib/hbtip/httpcln.prg
+   * contrib/hbtip/mail.prg
+   * contrib/hbtip/popcln.prg
+   * contrib/hbtip/sendmail.prg
+   * contrib/hbtip/sessid.prg
+   * contrib/hbtip/smtpcln.prg
+   * contrib/hbtip/thtml.prg
+   * contrib/hbtip/url.prg
+     * Some formatting, cleanups, <> -> !=
+
+   * contrib/hbtip/sendmail.prg
+     + hb_SendMail(): Added <cReplyTo> parameter.
+
+   * contrib/hbtip/thtml.prg
+     ! Removed five remaining _SET_EXACT dependent 
+       string comparisons. Exact comparisons were 
+       used for all these cases, with a NOTE added.
+
 2008-06-19 02:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbtip/common.mak
      ! Added missing sendmail.prg

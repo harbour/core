@@ -69,7 +69,7 @@
 FUNCTION TIp_GetEncoder( cModel )
    LOCAL oEncoder
 
-   IF Valtype( cModel ) <> "C"
+   IF !( Valtype( cModel ) == "C" )
       cModel := "as-is"
    ENDIF
 
@@ -108,7 +108,7 @@ ENDCLASS
 
 
 METHOD New( cModel ) class TIPEncoder
-   IF Valtype( cModel ) <> "C"
+   IF !( Valtype( cModel ) == "C" )
       cModel := "as-is"
    ENDIF
    ::cName := cModel

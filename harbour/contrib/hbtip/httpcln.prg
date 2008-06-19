@@ -356,7 +356,7 @@ RETURN cData
 
 METHOD ReadAll() CLASS tIPClientHTTP
 
-   local cOut:='', cChunk
+   local cOut:="", cChunk
    IF .not. ::bInitialized
       ::bInitialized := .T.
       IF .not. ::Get()
@@ -382,12 +382,12 @@ METHOD setCookie(cLine) CLASS tIPClientHTTP
    local cDefaultHost:=::oUrl:cServer, cDefaultPath:=::oUrl:cPath
    local x,y
    IF empty(cDefaultPath)
-      cDefaultPath:='/'
+      cDefaultPath:="/"
    ENDIF
    //this function currently ignores expires, secure and other tags that may be in the cookie for now...
-//   ?'Setting COOKIE:',cLine
+//   ?"Setting COOKIE:",cLine
    aParam := HB_RegexSplit( ";", cLine )
-   cName:=cValue:=''
+   cName:=cValue:=""
    cHost:=cDefaultHost
    cPath:=cDefaultPath
    y:=len(aParam)
@@ -400,10 +400,10 @@ METHOD setCookie(cLine) CLASS tIPClientHTTP
          else
             cElement:=upper(alltrim(aElements[1]))
             do case
-            //case cElement=='EXPIRES'
-            case cElement=='PATH'
+            //case cElement=="EXPIRES"
+            case cElement=="PATH"
                cPath:=alltrim(aElements[2])
-            case cElement=='DOMAIN'
+            case cElement=="DOMAIN"
                cHost:=alltrim(aElements[2])
             endcase
          ENDIF
@@ -424,14 +424,14 @@ return NIL
 
 METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
    local x,y,aDomKeys:={},aKeys,z,cKey,aPathKeys,nPath
-   local a,b,cOut:='',c,d
+   local a,b,cOut:="",c,d
    IF cHost=nil
       cHost:=::oUrl:cServer
    ENDIF
    IF cPath=nil
       cPath:=::oUrl:cPath
       IF empty(cPath)
-         cPath:='/'
+         cPath:="/"
       ENDIF
    ENDIF
    IF empty(cHost)
@@ -445,7 +445,7 @@ METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
    cHost:=upper(cHost)
    FOR x := 1 TO y
       cKey:=upper(aKeys[x])
-      IF upper(right(cKey,z))==cHost.and.(len(cKey)=z .OR. substr(aKeys[x],0-z,1)=='.')
+      IF upper(right(cKey,z))==cHost.and.(len(cKey)=z .OR. substr(aKeys[x],0-z,1)==".")
          aadd(aDomKeys,aKeys[x])
       ENDIF
    NEXT
@@ -461,7 +461,7 @@ METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
       FOR  a:= 1 TO b
          cKey:=aKeys[a]
          z:=len(cKey)
-         IF cKey=='/'.or.(z<=nPath.and.substr(cKey,1,nPath)==cKey)
+         IF cKey=="/".or.(z<=nPath.and.substr(cKey,1,nPath)==cKey)
             aadd(aPathKeys,aKeys[a])
          ENDIF
       NEXT
@@ -472,9 +472,9 @@ METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
          d:=len(aKeys)
          FOR c := 1 TO d
             IF !empty(cOut)
-               cOut+='; '
+               cOut+="; "
             ENDIF
-            cOut+=aKeys[c]+'='+::hCookies[aDomKeys[x]][aPathKeys[a]][aKeys[c]]
+            cOut+=aKeys[c]+"="+::hCookies[aDomKeys[x]][aPathKeys[a]][aKeys[c]]
          NEXT
       NEXT
    NEXT
@@ -497,13 +497,13 @@ METHOD Boundary(nType) CLASS tIPClientHTTP
       nType=0
    ENDIF
    IF empty(cBound)
-      cBound:=replicate('-',27)+space(11)
+      cBound:=replicate("-",27)+space(11)
       FOR i := 28 TO 38
          cBound := Stuff( cBound, i, 1, str(int(HB_Random(0, 9 )),1,0) )
       NEXT
       ::cBoundary:=cBound
    endif
-   cBound:=if(nType<2,'--','')+cBound+if(nType=1,'--','')
+   cBound:=iif(nType<2,"--","")+cBound+if(nType=1,"--","")
    RETURN(cBound)
 
 METHOD Attach(cName,cFileName,cType) CLASS tIPClientHTTP
@@ -553,7 +553,7 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
       cName:=oSub[1]
       cFile:=oSub[2]
       cType:=oSub[3]
-      cTmp:=strtran(cFile,'/','\')
+      cTmp:=strtran(cFile,"/","\")
       if ( nPos := rat( "\", cTmp ) ) != 0
           cFilePath := substr( cTmp, 1, nPos )
       elseif ( nPos := rat( ":", cTmp ) ) != 0
@@ -563,7 +563,7 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
       endif
       cTmp:=substr(cFile,Len(cFilePath)+1)
       IF empty(cType)
-         cType:='text/html'
+         cType:="text/html"
       ENDIF
       cData += cBound+cCrlf+'Content-Disposition: form-data; name="'+cName +'"; filename="'+cTmp+'"'+cCrlf+'Content-Type: '+cType+cCrLf+cCrLf
       //hope this is not a big file....
@@ -584,7 +584,7 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
       fClose(nFile)
       cData+=cCrlf
    NEXT
-   cData+=cBound+'--'+cCrlf
+   cData+=cBound+"--"+cCrlf
    IF .not. HB_IsString( cQuery )
       cQuery := ::oUrl:BuildQuery()
    ENDIF

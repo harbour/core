@@ -114,7 +114,7 @@ METHOD SetAddress( cUrl ) CLASS tURL
    // TOPLEVEL url parsing
    aMatch:= HB_Regex( ::cREuri, cUrl )
 
-   //May fail
+   // May fail
    IF Empty( aMatch )
       RETURN .F.
    ENDIF
@@ -200,7 +200,7 @@ METHOD BuildQuery( ) CLASS tURL
 RETURN cLine
 
 METHOD AddGetForm( cPostData )
-   LOCAL cData:='', nI, cTmp,y, cRet
+   LOCAL cData:="", nI, cTmp,y, cRet
 
    IF HB_IsHash( cPostData )
       FOR nI := 1 TO Len( cPostData )
@@ -239,7 +239,7 @@ METHOD AddGetForm( cPostData )
    ENDIF
 
    IF !empty(cData)
-      cRet := ::cQuery+=if(empty(::cQuery),'','&')+cData
+      cRet := ::cQuery += iif(empty(::cQuery),"","&") + cData
    ENDIF
 
 RETURN cRet

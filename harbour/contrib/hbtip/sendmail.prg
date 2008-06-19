@@ -56,7 +56,7 @@
 
 #translate ( <exp1> LIKE <exp2> )   => ( HB_REGEXLIKE( (<exp2>), (<exp1>) ) )
 
-FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, lTrace, lPopAuth, lNoAuth, nTimeOut)
+FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aFiles, cUser, cPass, cPopServer, nPriority, lRead, lTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo )
    /*
    cServer    -> Required. IP or domain name of the mail server
    nPort      -> Optional. Port used my email server
@@ -75,6 +75,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    lTrace     -> Optional. If set to .T., a log file is created (sendmail<nNr>.log). Standard setting is .F.
    lNoAuth    -> Optional. Disable Autentication methods
    nTimeOut   -> Optional. Number os ms to wait default 20000 (20s)
+   cReplyTo   -> Optional.
    */
 
    LOCAL oInMail, cBodyTemp, oUrl, oMail, oAttach, aThisFile, cFile, cFname, cFext, cData, oUrl1
@@ -91,6 +92,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    LOCAL lAuthPlain    := .F.
    LOCAL lConnect      := .T.
    LOCAL oPop
+
    DEFAULT cUser       TO ""
    DEFAULT cPass       TO ""
    DEFAULT nPort       TO 25
@@ -98,9 +100,10 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    DEFAULT nPriority   TO 3
    DEFAULT lRead       TO .F.
    DEFAULT lTrace      TO .F.
-   DEFAULT lPopAuth to .T.
-   DEFAULT lNoAuth  TO .F.
-   DEFAULT nTimeOut to 100
+   DEFAULT lPopAuth    TO .T.
+   DEFAULT lNoAuth     TO .F.
+   DEFAULT nTimeOut    TO 100
+   DEFAULT cReplyTo    TO ""
 
    cUser := StrTran( cUser, "@", "&at;" )
 
@@ -175,9 +178,9 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ENDIF
 
    BEGIN SEQUENCE
-    oUrl := tUrl():New( "smtp://" + cUser + "@" + cServer + '/' + cTo )
+      oUrl := tUrl():New( "smtp://" + cUser + "@" + cServer + "/" + cTo )
    RECOVER
-    lReturn := .F.
+      lReturn := .F.
    END
 
    IF !lReturn
@@ -203,7 +206,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
 
    oAttach:SetBody( cBody )
    oMail:Attach( oAttach )
-   oUrl:cFile := cTo + If( Empty(cCC), "", "," + cCC ) + If( Empty(cBCC), "", "," + cBCC)
+   oUrl:cFile := cTo + iif( Empty(cCC), "", "," + cCC ) + iif( Empty(cBCC), "", "," + cBCC)
 
    oMail:hHeaders[ "Date" ] := tip_Timestamp()
    oMail:hHeaders[ "From" ] := cFrom
@@ -213,6 +216,9 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
    ENDIF
    IF !Empty(cBCC)
       oMail:hHeaders[ "Bcc" ] := cBCC
+   ENDIF
+   IF !Empty(cReplyTo)
+      oMail:hHeaders[ "Reply-To" ] := cReplyTo
    ENDIF
 
    BEGIN SEQUENCE

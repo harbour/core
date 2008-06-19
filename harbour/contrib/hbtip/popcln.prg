@@ -133,7 +133,7 @@ METHOD GetOk() CLASS tIPClientPOP
    LOCAL nLen
 
    ::cReply := ::InetRecvLine( ::SocketCon, @nLen, 128 )
-   IF ::InetErrorCode( ::SocketCon ) != 0 .or. !( SubStr( ::cReply, 1, 1 ) == '+' )
+   IF ::InetErrorCode( ::SocketCon ) != 0 .or. !( SubStr( ::cReply, 1, 1 ) == "+" )
       RETURN .F.
    ENDIF
 RETURN .T.
@@ -318,7 +318,7 @@ METHOD Retrieve( nId, nLen ) CLASS tIPClientPOP
                       otherwise if response breaks EOM in two, it will never
                       be found
       */
-      IF ( nPos := hb_At( cEOM, cRet, Max( nRetLen - Len( cEOM ), 1 ) ) ) <> 0
+      IF ( nPos := hb_At( cEOM, cRet, Max( nRetLen - Len( cEOM ), 1 ) ) ) != 0
          // Remove ".CRLF"
          cRet := Left( cRet, nPos + 1 )
          ::bEof := .T.
@@ -337,7 +337,7 @@ METHOD Retrieve( nId, nLen ) CLASS tIPClientPOP
       RETURN NIL
    ENDIF
 
-       // Remove byte-stuffed termination octet(s) if any
+   // Remove byte-stuffed termination octet(s) if any
 RETURN StrTran( cRet, ::cCRLF + "..", ::cCRLF + "." )
 
 
@@ -352,7 +352,7 @@ METHOD countMail CLASS TIpClientPop
    LOCAL aMails
    IF ::isOpen
       ::reset()
-      aMails := HB_ATokens( StrTran( ::list(), Chr(13),''), Chr(10) )
+      aMails := HB_ATokens( StrTran( ::list(), Chr(13),""), Chr(10) )
       RETURN Len( aMails )
    ENDIF
 RETURN -1
@@ -361,7 +361,7 @@ RETURN -1
 METHOD retrieveAll( lDelete )
    LOCAL aMails, i, imax, cMail
 
-   IF Valtype( lDelete ) <> "L"
+   IF !( Valtype( lDelete ) == "L" )
       lDelete := .F.
    ENDIF
 

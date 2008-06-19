@@ -126,7 +126,7 @@ METHOD GetOk() CLASS tIPClientSMTP
    LOCAL nLen
 
    ::cReply := ::InetRecvLine( ::SocketCon, @nLen, 512 )
-   IF ::InetErrorCode( ::SocketCon ) != 0 .or. Substr( ::cReply, 1, 1 ) == '5'
+   IF ::InetErrorCode( ::SocketCon ) != 0 .or. Substr( ::cReply, 1, 1 ) == "5"
       RETURN .F.
    ENDIF
 RETURN .T.
@@ -193,14 +193,14 @@ RETURN ::getOk()
 
 METHOD AUTH( cUser, cPass) CLASS tIPClientSMTP
 
-   Local cs:=''
+   Local cs:=""
    Local cEncodedUser
    Local cEncodedPAss
 
    cUser := StrTran( cUser,"&at;", "@")
 
    cEncodedUser := alltrim(HB_BASE64(cuser,len(cuser)))
-   cEncodedPAss :=alltrim(HB_BASE64(cPass,len(cpass)))
+   cEncodedPAss := alltrim(HB_BASE64(cPass,len(cpass)))
 
 
    ::InetSendall( ::SocketCon, "AUTH LOGIN" +::ccrlf )
@@ -212,7 +212,7 @@ METHOD AUTH( cUser, cPass) CLASS tIPClientSMTP
       endif
    endif
 
-   return ( ::isAuth := ::GetOk() )
+   return ::isAuth := ::GetOk()
 
 METHOD AuthPlain( cUser, cPass) CLASS tIPClientSMTP
 
@@ -220,7 +220,7 @@ METHOD AuthPlain( cUser, cPass) CLASS tIPClientSMTP
    Local cen   := HB_BASE64( cBase, 2 + Len( cUser ) + Len( cPass ) )
 
    ::InetSendall( ::SocketCon, "AUTH PLAIN" + cen + ::cCrlf)
-   return ( ::isAuth := ::GetOk() )
+   return ::isAuth := ::GetOk()
 
 
 METHOD Write( cData, nLen, bCommit ) CLASS tIPClientSMTP
@@ -304,4 +304,3 @@ METHOD sendMail( oTIpMail ) CLASS TIpClientSmtp
    NEXT
 
 RETURN ::data( oTIpMail:toString() )
-

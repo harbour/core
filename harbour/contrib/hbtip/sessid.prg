@@ -126,7 +126,7 @@ FUNCTION TIP_CHECKSID( cSID, cCRCKey )
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
    next
 
-   RETURN ( Right( cSID, 5 ) == cSIDCRC )
+   RETURN Right( cSID, 5 ) == cSIDCRC
 
 FUNCTION TIP_DATETOGMT( dDate, cTime )
    LOCAL cStr := ""

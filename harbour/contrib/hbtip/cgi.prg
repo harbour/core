@@ -61,15 +61,15 @@
  *
  */
 
-#include 'hbclass.ch'
-#include 'tip.ch'
-#include 'common.ch'
-#include 'fileio.ch'
+#include "hbclass.ch"
+#include "tip.ch"
+#include "common.ch"
+#include "fileio.ch"
 
 #define CGI_IN  0
 #define CGI_OUT 1
 #define _CRLF chr(13)+chr(10)
-#define _BR '<br />'
+#define _BR "<br />"
 
 CLASS TIpCgi
 
@@ -121,22 +121,22 @@ METHOD New() CLASS TIpCgi
 
    ::bSavedErrHandler := ErrorBlock( { |e| ::ErrHandler( e ) } )
 
-   ::cCgiHeader := ''
-   ::cHtmlPage := ''
+   ::cCgiHeader := ""
+   ::cHtmlPage := ""
 
-   lPost := ( 'POST' $ Upper( getenv( 'REQUEST_METHOD' ) ) )
+   lPost := ( "POST" $ Upper( getenv( "REQUEST_METHOD" ) ) )
    if lPost
-      nLen := val( getenv( 'CONTENT_LENGTH' ) )
+      nLen := val( getenv( "CONTENT_LENGTH" ) )
       cTemp := space( nLen )
       if ( ( nRead := fread( CGI_IN, @cTemp, nLen, 0 ) ) != nLen )
-         ::ErrHandler( 'post error read ' + str( nRead ) + ' instead of ' + str( nLen ) )
+         ::ErrHandler( "post error read " + str( nRead ) + " instead of " + str( nLen ) )
       else
          ::HTTP_RAW_POST_DATA := cTemp
-         aTemp := HB_ATOKENS( cTemp, '&' )
+         aTemp := HB_ATOKENS( cTemp, "&" )
          nLen := Len( aTemp )
          if nLen > 0
             for nCount := 1 TO nLen
-               aVar := HB_ATOKENS( aTemp[ nCount ], '=' )
+               aVar := HB_ATOKENS( aTemp[ nCount ], "=" )
                if Len( aVar ) == 2
                   ::hPosts[ alltrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
                endif
@@ -144,13 +144,13 @@ METHOD New() CLASS TIpCgi
          endif
       endif
    else
-      cTemp := getenv( 'QUERY_STRING' )
+      cTemp := getenv( "QUERY_STRING" )
       if !empty( cTemp )
-         aTemp := HB_ATOKENS( cTemp, '&' )
+         aTemp := HB_ATOKENS( cTemp, "&" )
          nLen := Len( aTemp )
          if nLen > 0
             for nCount := 1 TO nLen
-               aVar := HB_ATOKENS( aTemp[ nCount ], '=' )
+               aVar := HB_ATOKENS( aTemp[ nCount ], "=" )
                if Len( aVar ) == 2
                   ::hGets[ alltrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
                endif
@@ -159,13 +159,13 @@ METHOD New() CLASS TIpCgi
       endif
    endif
 
-   cTemp := getenv( 'HTTP_COOKIE' )
+   cTemp := getenv( "HTTP_COOKIE" )
    if !empty( cTemp )
-      aTemp := HB_ATOKENS( cTemp, ';' )
+      aTemp := HB_ATOKENS( cTemp, ";" )
       nLen := Len( aTemp )
       if nLen > 0
          for nCount := 1 TO nLen
-            aVar := HB_ATOKENS( aTemp[ nCount ], '=' )
+            aVar := HB_ATOKENS( aTemp[ nCount ], "=" )
             if Len( aVar ) == 2
                ::hCookies[ alltrim( TipEncoderUrl_Decode( aVar[ 1 ] ) ) ] := TipEncoderUrl_Decode( aVar[ 2 ] )
             endif
@@ -178,7 +178,7 @@ METHOD New() CLASS TIpCgi
 METHOD Header( cValue ) CLASS TIpCgi
 
    if empty( cValue )
-      ::cCgiHeader += 'Content-Type: text/html' + _CRLF
+      ::cCgiHeader += "Content-Type: text/html" + _CRLF
    else
       ::cCgiHeader += cValue + _CRLF
    endif
@@ -187,7 +187,7 @@ METHOD Header( cValue ) CLASS TIpCgi
 
 METHOD Redirect( cUrl ) CLASS TIpCgi
 
-   ::cCgiHeader += 'Location: ' + cUrl + _CRLF
+   ::cCgiHeader += "Location: " + cUrl + _CRLF
 
    RETURN Self
 
@@ -210,7 +210,7 @@ METHOD Flush() CLASS TIpCgi
    local cSID := ::cSID
    local cSession
 
-   hb_hEval( ::hCookies, { |k,v| ::cCgiHeader += 'Set-Cookie: ' + k + '=' + v + ';' + _CRLF } )
+   hb_hEval( ::hCookies, { |k,v| ::cCgiHeader += "Set-Cookie: " + k + "=" + v + ";" + _CRLF } )
 
    cStream := ::cCgiHeader + _CRLF + ::cHtmlPage + _CRLF
 
@@ -228,8 +228,8 @@ METHOD Flush() CLASS TIpCgi
       fclose( nH )
    endif
 
-   ::cCgiHeader := ''
-   ::cHtmlPage := ''
+   ::cCgiHeader := ""
+   ::cHtmlPage := ""
 
    if !empty( cSID )
 
@@ -271,10 +271,10 @@ METHOD DestroySession( cID ) CLASS TIpCgi
       if !( lRet := ( FErase( cFile ) == 0 ) )
          ::Print( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
       else
-        ::hCookies[ 'SESSIONID' ] := cSID + "; expires= " + TIP_DateToGMT( DATE() - 1 )
+        ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + TIP_DateToGMT( DATE() - 1 )
         ::CreateSID()
         cSID := ::cSID
-        ::hCookies[ 'SESSIONID' ] := cSID
+        ::hCookies[ "SESSIONID" ] := cSID
       endif
 
    endif
@@ -389,11 +389,11 @@ METHOD StartSession( cSID ) CLASS TIpCgi
 
    if empty( cSID )
 
-      if ( nH := hb_HPos( ::hGets, 'SESSIONID' ) ) != 0
+      if ( nH := hb_HPos( ::hGets, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hGets, nH )
-      elseif ( nH := hb_HPos( ::hPosts, 'SESSIONID' ) ) != 0
+      elseif ( nH := hb_HPos( ::hPosts, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hPosts, nH )
-      elseif ( nH := hb_HPos( ::hCookies, 'SESSIONID' ) ) != 0
+      elseif ( nH := hb_HPos( ::hCookies, "SESSIONID" ) ) != 0
          cSID := hb_HValueAt( ::hCookies, nH )
       endif
 
@@ -432,7 +432,7 @@ METHOD StartSession( cSID ) CLASS TIpCgi
 
    endif
 
-   ::hCookies[ 'SESSIONID' ] := ::cSID
+   ::hCookies[ "SESSIONID" ] := ::cSID
 
    RETURN Self
 
@@ -448,9 +448,9 @@ METHOD SessionDecode( cData ) CLASS TIpCgi
 
 STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
 
-   local cVal := ''
+   local cVal := ""
 
-   DEFAULT cDefault TO ''
+   DEFAULT cDefault TO ""
 
    if !empty( xVal ) .and. !empty( cKey )
       if hb_hHasKey( xVal, cKey )
@@ -459,21 +459,21 @@ STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
       endif
    endif
 
-   if cVal == ''
+   if cVal == ""
       cVal := cDefault
    endif
 
-   if !( cVal == '' )
-      cVal := '<' + cKey + '>' + cVal + '</' + cKey + '>'
+   if !( cVal == "" )
+      cVal := "<" + cKey + ">" + cVal + "</" + cKey + ">"
    endif
 
    return cVal
 
 STATIC FUNCTION HtmlAllTag( hTags, cSep )
 
-   local cVal := ''
+   local cVal := ""
 
-   DEFAULT cSep TO ' '
+   DEFAULT cSep TO " "
 
    hb_hEval( hTags, { |k| cVal += HtmlTag( hTags, k ) + cSep } )
 
@@ -481,7 +481,7 @@ STATIC FUNCTION HtmlAllTag( hTags, cSep )
 
 STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
 
-   local cVal := ''
+   local cVal := ""
 
    if !empty( xVal )
       if empty( cKey )
@@ -505,9 +505,9 @@ STATIC FUNCTION HtmlOption( xVal, cKey, cPre, cPost, lScan )
 
 STATIC FUNCTION HtmlAllOption( hOptions, cSep )
 
-   local cVal := ''
+   local cVal := ""
 
-   DEFAULT cSep TO ' '
+   DEFAULT cSep TO " "
 
    if !empty( hOptions )
       hb_hEval( hOptions, { |k| cVal += HtmlOption( hOptions, k,,, .t. ) + cSep } )
@@ -517,9 +517,9 @@ STATIC FUNCTION HtmlAllOption( hOptions, cSep )
 
 STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
 
-   local cVal := ''
+   local cVal := ""
 
-   DEFAULT cDefault TO ''
+   DEFAULT cDefault TO ""
 
    if !empty( xVal ) .and. !empty( cKey )
       if hb_hHasKey( xVal, cKey )
@@ -528,7 +528,7 @@ STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
       endif
    endif
 
-   if cVal == ''
+   if cVal == ""
       cVal := cDefault
    endif
 
@@ -536,9 +536,9 @@ STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
 
 STATIC FUNCTION HtmlAllValue( hValues, cSep )
 
-   local cVal := ''
+   local cVal := ""
 
-   DEFAULT cSep TO ' '
+   DEFAULT cSep TO " "
 
    if !empty( hValues )
       hb_hEval( hValues, { |k| cVal += HtmlValue( hValues, k ) + cSep } )
@@ -548,34 +548,34 @@ STATIC FUNCTION HtmlAllValue( hValues, cSep )
 
 STATIC FUNCTION HtmlScript( xVal, cKey )
 
-   local cVal := ''
+   local cVal := ""
    local nPos
    local cTmp
 
-   DEFAULT cKey TO 'script'
+   DEFAULT cKey TO "script"
 
    if !empty( xVal )
       if ( nPos := hb_HPos( xVal, cKey ) ) != 0
          cVal := hb_HValueAt( xVal, nPos )
          if valtype( cVal ) == "H"
-            if ( nPos := hb_HPos( cVal, 'src' ) ) != 0
+            if ( nPos := hb_HPos( cVal, "src" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif
                if valtype( cVal ) == "A"
-                  cTmp := ''
+                  cTmp := ""
                   ascan( cVal, { |cFile| cTmp += '<script src="' + cFile + '" type="text/javascript">' + _CRLF } )
                   cVal := cTmp
                endif
             endif
-            if ( nPos := hb_HPos( cVal, 'var' ) ) != 0
+            if ( nPos := hb_HPos( cVal, "var" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif
                if valtype( cVal ) == "A"
-                  cTmp := ''
+                  cTmp := ""
                   ascan( cVal, { |cVar| cTmp += cVar } )
                   cVal := '<script type="text/javascript">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</script>' + _CRLF
                endif
@@ -589,34 +589,34 @@ STATIC FUNCTION HtmlScript( xVal, cKey )
 
 STATIC FUNCTION HtmlStyle( xVal, cKey )
 
-   local cVal := ''
+   local cVal := ""
    local nPos
    local cTmp
 
-   DEFAULT cKey TO 'style'
+   DEFAULT cKey TO "style"
 
    if !empty( xVal )
       if ( nPos := hb_HPos( xVal, cKey ) ) != 0
          cVal := hb_HValueAt( xVal, nPos )
          if valtype( cVal ) == "H"
-            if ( nPos := hb_HPos( cVal, 'src' ) ) != 0
+            if ( nPos := hb_HPos( cVal, "src" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif
                if valtype( cVal ) == "A"
-                  cTmp := ''
+                  cTmp := ""
                   ascan( cVal, { |cFile| cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css" />' + _CRLF } )
                   cVal := cTmp
                endif
             endif
-            if ( nPos := hb_HPos( cVal, 'var' ) ) != 0
+            if ( nPos := hb_HPos( cVal, "var" ) ) != 0
                cVal := hb_HValueAt( cVal, nPos )
                if valtype( cVal ) == "C"
                   cVal := { cVal }
                endif
                if valtype( cVal ) == "A"
-                  cTmp := ''
+                  cTmp := ""
                   ascan( cVal, { |cVar| cTmp += cVar } )
                   cVal := '<style type="text/css">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</style>' + _CRLF
                endif
@@ -627,5 +627,3 @@ STATIC FUNCTION HtmlStyle( xVal, cKey )
    endif
 
    return cVal
-
-
