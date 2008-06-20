@@ -560,6 +560,7 @@ function tp_waitfor( ... )
    endif
 
    while ( nDone > _clock() .or. nFirst == 100000 ) .and. ! tp_idle()
+
       if nFirst == 100000
          nFirst := 99999
       endif
@@ -582,7 +583,9 @@ function tp_waitfor( ... )
          exit
       endif
 
-      /* sched_yield() */ /* C level function */
+#if 0
+      sched_yield() // C level function
+#endif
 
    enddo
 
