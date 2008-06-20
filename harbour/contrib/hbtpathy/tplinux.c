@@ -273,4 +273,36 @@ HB_FUNC( P_CTRLCTS ) {
    hb_retni( curvalue ? 1 : 0 );
 }
 
+#if 0
+
+/* Inline function moved here from telepath.prg */
+HB_FUNC( _P_CTRLDTR )
+{
+   double nph = hb_parnd( 1 );
+   double nnewval, noldval;
+   unsigned int result = 0;
+
+   ioctl( nph, TIOCMGET, &result );
+
+   if( result & TIOCM_DTR )
+      noldval = 1;
+   else
+      noldval = 0;
+
+   if( noldval != nnewval )
+   {
+      if( nnewval == 0 )
+         result &= ~TIOCM_DTR;
+      else
+         result |= TIOCM_DTR;
+
+      ioctl( nph, TIOCMSET, &result );
+   }
+
+   hb_stornd( nnewval, 2 );
+   hb_stornd( noldval, 3 );
+}
+
+#endif
+
 #endif /* HB_OS_UNIX */

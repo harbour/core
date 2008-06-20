@@ -132,7 +132,7 @@
 #define HB_GTI_FONTW_NORMAL     2
 #define HB_GTI_FONTW_BOLD       3
 
-/* Font sizes */
+/* Font qualities */
 #define HB_GTI_FONTQ_DRAFT      1
 #define HB_GTI_FONTQ_NORMAL     2
 #define HB_GTI_FONTQ_HIGH       3

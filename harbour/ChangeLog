@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-20 14:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * ChangeLog
+     + Marked changes merged with RC1.
+
+   * include/hbgtinfo.ch
+     ! Comment typo.
+       [TOMERGE RC1]
+
+   * contrib/hbtpathy/tplinux.c
+   * contrib/hbtpathy/telepath.prg
+     ! Moved some commented "inline" stuff to C level.
+       [TOMERGE RC1]
+
 2008-06-20 09:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/spd.c
      ! Fix for OS/2 warning.
@@ -18,7 +31,7 @@
 
    * contrib/examples/hscript/bld_b32.bat
      ! Fixed to have hbzlib.lib
-       [TOMERGE RC1]
+       [RC1]
 
 2008-06-19 18:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/examples/guestbk/guestbk.prg
@@ -133,7 +146,7 @@
 2008-06-19 02:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbtip/common.mak
      ! Added missing sendmail.prg
-       [TOMERGE RC1]
+       [RC1]
 
    * contrib/hbtip/sendmail.prg
      * Formatting.
@@ -153,17 +166,17 @@
      ! All tip tests fixed and tested to compile/link
        with Harbour.
      * Changed to not require hbw32.lib.
-       [TOMERGE RC1]
+       [RC1]
 
    + contrib/hbtip/tests/test.dbf
      + Added for tests.
-       [TOMERGE RC1]
+       [RC1]
 
 2008-06-18 11:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtclip.c
      ! hb_gt_w32_setClipboard() fix to CF_UNICODETEXT 
        EOS char setting.
-       [TOMERGE RC1]
+       [RC1]
 
    * source/rtl/gtwvt/gtwvt.c
      + Internal error string cleanup.
@@ -173,7 +186,7 @@
      + Now showing the application's executable name 
        in the window title on startup, instead of "Harbour WVT".
      * Window class name handling and control flow cleaned.
-       [TOMERGE RC1]
+       [RC1]
 
 2008-06-17 23:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tget.prg
@@ -197,12 +210,12 @@
        to the original length with the original content. 
        This also clears some existing differences in rto_get.prg.
      + Added regression test specifically for this.
-       [TOMERGE RC1]
+       [RC1]
 
 2008-06-17 21:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtclip.c
      ! Added three LPWSTR casts to pacify warnings.
-       [TOMERGE RC1]
+       [RC1]
 
 2008-06-17 18:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtclip.c
@@ -213,12 +226,12 @@
      ! Fixed get clipboard when CF_TEXT/CF_OEMTEXT format 
        is used, so that an additionaly zero byte won't be 
        appended anymore to the returned string.
-       [TOMERGE RC1 if correct]
+       [RC1] (someone pls verify this)
 
    * source/rtl/gtwvt/gtwvt.c
      * "HARBOUR_WVT" -> "Harbour WVT". This text is visible, 
        so it's better to make it "desktop friendlier"".
-       [TOMERGE RC1]
+       [RC1]
 
 2008-06-17 13:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmzip/hbmzip.ch
@@ -226,7 +239,7 @@
      + Added error codes to hbmzip.ch
      + Interface code changed to use manifest constants 
        instead of literals in a few places.
-       [TOMERGE RC1]
+       [RC1]
 
 2008-06-17 09:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/spd.c
