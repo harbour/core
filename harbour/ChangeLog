@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-20 09:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmisc/spd.c
+     ! Fix for OS/2 warning.
+
+   * contrib/examples/pe/editorhi.prg
+   * contrib/examples/hscript/hscript.prg
+     * Cleanups.
+
+   * contrib/examples/hscript/bld_b32.bat
+     ! Fixed to have hbzlib.lib
+       [TOMERGE RC1]
+
 2008-06-19 18:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/examples/guestbk/guestbk.prg
    * contrib/examples/guestbk/inifiles.prg

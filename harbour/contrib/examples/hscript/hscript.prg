@@ -183,7 +183,7 @@ FUNCTION Main( cScript )
       FClose( hFile )
 
       // Creates the temporary HRB, erases the PRG
-      __Run( cHarbourDir + "harbour.exe " + cFile + " /q /n /gh /o" + Left( cHarbourDir, Len( cHarbourDir ) - 1 ) + iif( !Empty( Left( cHarbourDir, Len( cHarbourDir ) - 1 ) ), "\", "" ) )
+      hb_Run( cHarbourDir + "harbour.exe " + cFile + " /q /n /gh /o" + Left( cHarbourDir, Len( cHarbourDir ) - 1 ) + iif( !Empty( Left( cHarbourDir, Len( cHarbourDir ) - 1 ) ), "\", "" ) )
       FErase( cFile )
 
       // Runs using Tugboat

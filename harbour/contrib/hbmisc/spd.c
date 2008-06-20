@@ -170,7 +170,7 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 *
 * Accepts conversion inside if variable is passed by reference.
 *  Local xDate := Date(); Sql_sprintf('%s', @xDate) => xDate == '2008-05-19'
-/******************************************************************************/
+*******************************************************************************/
 
 #define DK_INCRES 1024
 #define DK_INCBUF 512

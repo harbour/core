@@ -1,15 +1,16 @@
 /*
  * $Id$
 */
+
 //#include "expand.ch"
 //#include "windows.ch"
 //#include "print.ch"
 //#include "helpsys.ch"
 
-#include <inkey.ch>
-#include <setcurs.ch>
-#include <fileio.ch>
-#include <box.ch>
+#include "inkey.ch"
+#include "setcurs.ch"
+#include "fileio.ch"
+#include "box.ch"
 
 
 #define EXPORT
@@ -366,8 +367,8 @@ LOCAL lSaveAllowed, lSaved:=.F.
 //HELPSAVE( IIF(nHelp==NIL, H_EDITOR, nHelp ) )
 
     oBox := SAVEBOX( oEdit[E_TOP], oEdit[E_LEFT], ;
-                   oEdit[E_BOTTOM], oEdit[E_RIGHT], ;
-                   oEdit[E_COLOR], oEdit[E_FRAME], oEdit[E_TITLE], .F. )
+                     oEdit[E_BOTTOM], oEdit[E_RIGHT], ;
+                     oEdit[E_COLOR], oEdit[E_FRAME], oEdit[E_TITLE], .F. )
 
     lInsert := SET( _SET_INSERT )
 //    SayInsert()
@@ -598,7 +599,7 @@ LOCAL nHandle, cFile, cNew
 
     cFile := EditorCargo(oEdit)
     IF( EMPTY(cFile) )
-        cFile := "TESTFILE.TXT"     //GetFileName( 10, 10 )
+        cFile := "testfile.txt"     //GetFileName( 10, 10 )
     ENDIF
 
     IF( EMPTY(cFile) )
@@ -607,7 +608,7 @@ LOCAL nHandle, cFile, cNew
 /*
     WorkStart( 75 )
     IF( FILE(cFile) )
-        cNew := FileExtension( cFile, "BAK" )
+        cNew := FileExtension( cFile, "bak" )
         DELETEFILE( cNew )
         nHandle := RENAMEFILE( cFile, cNew )
         IF( nHandle < 0 )
