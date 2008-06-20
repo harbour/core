@@ -296,7 +296,7 @@ int CALLBACK GenericCallblockProc( LONG param1, LONG param2, int wParam, LPARAM 
 
 HB_FUNC( GETFONTDATA )
 {
-   char *cBuffer == NULL;
+   char * cBuffer = NULL;
    DWORD dwRet ;
    if ( ! ISNIL( 5 ) && ( hb_parnl( 5 ) > 0 ) )
       cBuffer = (char *) hb_xgrab( hb_parnl(5));

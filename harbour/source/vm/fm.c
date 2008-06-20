@@ -602,7 +602,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
             hb_dateToday( &iYear, &iMonth, &iDay );
             hb_dateTimeStr( szTime );
          
-            fprintf( hLog, "Harbour Memory Allocation Report - %s\n", hb_cmdargARGV()[0] );
+            fprintf( hLog, "Application Memory Allocation Report - %s\n", hb_cmdargARGV()[0] );
             fprintf( hLog, "Terminated at: %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
             fprintf( hLog, "%s\n", buffer );
          }

@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-20 21:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     + Refreshing whole screen after palette change.
+       This replaces the previous method which had some 
+       side effects.
+
+   * source/vm/fm.c
+   * source/vm/extrap.c
+     * Changed "Harbour" to "Application" in user visible 
+       screen/log messages.
+
+   * contrib/hbwhat32/_winfont.c
+     ! Fixed typo in previous commit.
+
 2008-06-20 17:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbtpathy/telepath.prg
      ! Fixed embedded comments.

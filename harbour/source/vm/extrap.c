@@ -79,7 +79,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo
       hb_dateToday( &iYear, &iMonth, &iDay );
       hb_dateTimeStr( szTime );
          
-      fprintf( hLog, "Harbour Exception - %s\n", hb_cmdargARGV()[0] );
+      fprintf( hLog, "Application Exception - %s\n", hb_cmdargARGV()[0] );
       fprintf( hLog, "Terminated at: %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
    }
 
@@ -103,7 +103,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo
    /* GUI */
    {
       LPTSTR lpStr = HB_TCHAR_CONVTO( msg );
-      MessageBox( NULL, lpStr, TEXT( "Harbour Exception" ), MB_ICONSTOP );
+      MessageBox( NULL, lpStr, TEXT( "Application Exception" ), MB_ICONSTOP );
       HB_TCHAR_FREE( lpStr );
    }
 
