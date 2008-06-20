@@ -10,12 +10,12 @@ PROCEDURE Main
    LOCAL nDll, pApi
    CLS
 
-   TRY
-      USE ..\Test.dbf
-   CATCH
-      ? "Error: Database not found TEST.DBF"
+   BEGIN SEQUENCE
+      USE test.dbf
+   RECOVER
+      ? "Error: Database not found test.dbf"
       QUIT
-   END
+   END SEQUENCE
 
    oDoc          := THtmlDocument():new()
 
@@ -84,8 +84,8 @@ PROCEDURE Main
 
    DbCloseArea()
 
-   IF oDoc:writeFile( "Address.html" )
-      ? "File created: Address.html" 
+   IF oDoc:writeFile( "address.html" )
+      ? "File created: address.html" 
    ELSE
       ? "Error: ", FError()
    ENDIF
@@ -93,10 +93,7 @@ PROCEDURE Main
    WAIT
    ? HtmlToOem( oDoc:body:getText() )
 
-   nDll := DllLoad( "Shell32.dll" )
-   pApi := GetProcAddress( nDll, "ShellExecute" )
+// DllCall( "shell32.dll", NIL, "ShellExecute", 0, "open", "address.html", NIL, "", 1 )
+   hb_run( "address.html" )
 
-   CallDll( pApi, 0, "open", "Address.html", NIL, "", 1 )
-
-   DllUnload( nDll )    
 RETURN

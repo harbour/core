@@ -53,8 +53,26 @@
 #ifndef HB_MZIP_CH_
 #define HB_MZIP_CH_
 
-#define HB_ZIP_OPEN_CREATE               0
-#define HB_ZIP_OPEN_CREATEAFTER          1
-#define HB_ZIP_OPEN_ADDINZIP             2
+#define HB_ZIP_OPEN_CREATE              0
+#define HB_ZIP_OPEN_CREATEAFTER         1
+#define HB_ZIP_OPEN_ADDINZIP            2
+
+#define Z_ERRNO                         -1
+
+#define UNZ_OK                          0
+#define UNZ_END_OF_LIST_OF_FILE         -100
+#define UNZ_ERRNO                       Z_ERRNO
+#define UNZ_EOF                         0
+#define UNZ_PARAMERROR                  -102
+#define UNZ_BADZIPFILE                  -103
+#define UNZ_INTERNALERROR               -104
+#define UNZ_CRCERROR                    -105
+
+#define ZIP_OK                          0
+#define ZIP_EOF                         0
+#define ZIP_ERRNO                       Z_ERRNO
+#define ZIP_PARAMERROR                  -102
+#define ZIP_BADZIPFILE                  -103
+#define ZIP_INTERNALERROR               -104
 
 #endif

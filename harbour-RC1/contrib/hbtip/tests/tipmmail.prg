@@ -40,7 +40,7 @@ PROCEDURE MAIN( ... )
 
    i := 1
    DO WHILE i < PCount()
-      cData := PValue(i)
+      cData := hb_PValue(i)
 
       IF lower( cData ) == "-h"
          Usage()
@@ -49,35 +49,35 @@ PROCEDURE MAIN( ... )
 
       IF lower( cData ) == "-f"
          i++
-         cData := PValue(i)
+         cData := hb_PValue(i)
          IF cData != NIL
             oMail:hHeaders[ "From" ] := cData
          ENDIF
       ELSEIF lower( cData ) == "-t"
          i++
-         cData := PValue(i)
+         cData := hb_PValue(i)
          IF cData != NIL
             oMail:hHeaders[ "To" ] := cData
          ENDIF
       ELSEIF lower( cData ) == "-s"
          i++
-         cData := PValue(i)
+         cData := hb_PValue(i)
          IF cData != NIL
             oMail:hHeaders[ "Subject" ] := cData
          ENDIF
       ELSEIF lower( cData ) == "-b"
          i++
-         cData := PValue(i)
+         cData := hb_PValue(i)
          IF cData != NIL
             oMail:SetBody( cData + e"\r\n" )
          ENDIF
       ELSEIF lower( cData ) == "-m"
          i++
-         cData := PValue(i)
+         cData := hb_PValue(i)
          IF cData != NIL
             cData := Memoread( cData )
             IF Empty(cData)
-               ? "FATAL: Can't read", PValue(i)
+               ? "FATAL: Can't read", hb_PValue(i)
                QUIT
             ENDIF
             oMail:SetBody( cData + e"\r\n")
@@ -85,14 +85,14 @@ PROCEDURE MAIN( ... )
       ELSE  // it is an attachment file
          cData := Memoread( cData )
          IF Empty(cData)
-            ? "FATAL: Can't read attachment", PValue(i)
+            ? "FATAL: Can't read attachment", hb_PValue(i)
             QUIT
          ENDIF
          oAttach := TipMail():New()
 
          oAttach:SetEncoder( "base64" )
          //TODO: mime type magic auto-finder
-         HB_FNameSplit( PValue(i),,@cFname, @cFext )
+         HB_FNameSplit( hb_PValue(i),,@cFname, @cFext )
          // Some EMAIL readers use Content-Type to check for filename
          oAttach:hHeaders[ "Content-Type" ] := ;
                "application/X-TIP-Attachment; filename=";

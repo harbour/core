@@ -226,9 +226,14 @@ CREATE CLASS Get
 ENDCLASS
 
 METHOD assign() CLASS Get
+   LOCAL xValue
 
    IF ::hasFocus
-      ::varPut( ::unTransform() )
+      xValue := ::unTransform()
+      IF ::cType == "C"
+         xValue += SubStr( ::original, Len( xValue ) + 1 )
+      ENDIF   
+      ::varPut( xValue )
    ENDIF
 
    RETURN Self
@@ -967,11 +972,7 @@ METHOD pos( nPos ) CLASS Get
          DO CASE
          CASE nPos > ::nMaxLen
 
-            IF ::nMaxLen == 0
-               ::nPos := 1
-            ELSE
-               ::nPos := ::nMaxLen
-            ENDIF
+            ::nPos := iif( ::nMaxLen == 0, 1, ::nMaxLen )
             ::typeOut := .T.
 
          CASE nPos > 0

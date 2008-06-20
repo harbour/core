@@ -91,24 +91,32 @@ BOOL hb_gt_getClipboard( char ** pszClipData, ULONG *pulLen )
 
 BOOL hb_gt_w32_setClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
 {
-   LPTSTR  lptstrCopy;
-   HGLOBAL hglbCopy;
    BOOL fResult = FALSE;
 
    if( OpenClipboard( NULL ) )
    {
+      HGLOBAL hglbCopy;
+
       EmptyClipboard();
 
       /* Allocate a global memory object for the text. */
-      hglbCopy = GlobalAlloc( GMEM_MOVEABLE, ulLen + 1 );
+      hglbCopy = GlobalAlloc( GMEM_MOVEABLE, uFormat == CF_UNICODETEXT ? ( ulLen + 1 ) * sizeof( wchar_t ) : ulLen + 1 );
       if( hglbCopy )
       {
          /* Lock the handle and copy the text to the buffer. */
-         lptstrCopy = ( LPTSTR ) GlobalLock( hglbCopy );
+         LPTSTR lptstrCopy = ( LPTSTR ) GlobalLock( hglbCopy );
          if( lptstrCopy )
          {
-            HB_TCHAR_SETTO( lptstrCopy, szClipData, ulLen );
-            lptstrCopy[ ulLen ] = '\0';
+            if( uFormat == CF_UNICODETEXT )
+            {
+               hb_mbtowcset( ( LPWSTR ) lptstrCopy, szClipData, ulLen );
+               * ( ( ( LPWSTR ) lptstrCopy ) + ulLen ) = L'\0';
+            }
+            else
+            {
+               memcpy( lptstrCopy, szClipData, ulLen );
+               lptstrCopy[ ulLen ] = '\0';
+            }
             fResult = TRUE;
          }
          GlobalUnlock( hglbCopy );
@@ -122,27 +130,44 @@ BOOL hb_gt_w32_setClipboard( UINT uFormat, char * szClipData, ULONG ulLen )
 
 BOOL hb_gt_w32_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
 {
-   HGLOBAL hglb;
-   LPTSTR  lptstr;
-
    *pulLen = 0;
    *pszClipData = NULL;
    if( IsClipboardFormatAvailable( uFormat ) && OpenClipboard( NULL ) )
    {
-      hglb = GetClipboardData( uFormat );
+      HGLOBAL hglb = GetClipboardData( uFormat );
       if( hglb )
       {
-         lptstr = ( LPTSTR ) GlobalLock( hglb );
+         LPTSTR lptstr = ( LPTSTR ) GlobalLock( hglb );
          if( lptstr != NULL )
          {
-            *pulLen = GlobalSize( hglb );
-
-            if( *pulLen )
+            switch( uFormat )
             {
-               *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
-               HB_TCHAR_GETFROM( *pszClipData, lptstr, *pulLen );
-               ( *pszClipData )[ *pulLen ] = '\0';
+            case CF_UNICODETEXT:
+               *pulLen = wcslen( ( LPWSTR ) lptstr );
+               if( *pulLen )
+                  *pszClipData = hb_wctomb( ( LPWSTR ) lptstr );
+               break;
+            case CF_OEMTEXT:
+            case CF_TEXT:
+               *pulLen = strlen( lptstr );
+               if( *pulLen )
+               {
+                  *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
+                  memcpy( *pszClipData, lptstr, *pulLen );
+                  ( *pszClipData )[ *pulLen ] = '\0';
+               }
+               break;
+            default:
+               *pulLen = GlobalSize( hglb );
+               if( *pulLen )
+               {
+                  *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
+                  memcpy( *pszClipData, lptstr, *pulLen );
+                  ( *pszClipData )[ *pulLen ] = '\0';
+               }
+               break;
             }
+
             GlobalUnlock( hglb );
          }
       }

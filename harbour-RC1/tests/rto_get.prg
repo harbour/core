@@ -352,6 +352,15 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
 
    // ;
 
+   cStr07 := "12:34:56"
+   SetPos( 14, 16 ) ; o := _GET_( cStr07, "cStr07", "99:99",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, { "78" } )
+   TEST_LINE( o:Assign() )
+
+   // ;
+
    nInt02 := 1234.56
    SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "@Z 9999999.9999",, )
    o:display()

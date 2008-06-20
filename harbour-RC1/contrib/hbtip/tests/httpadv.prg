@@ -34,7 +34,7 @@ PROCEDURE MAIN( cUrl )
       IF oCon:Get( oUrl:cPath )
          ? "Get Sucessful"
          FOR i := 1 to Len( oCon:hHeaders )
-            ? HGetkeyAt( oCon:hHeaders, i ) +":", HGetValueAt( oCon:hHeaders, i )
+            ? hb_HKeyAt( oCon:hHeaders, i ) +":", hb_HValueAt( oCon:hHeaders, i )
          NEXT
       ELSE
          ? "Get failure (server reply:", oCon:cReply , ")"

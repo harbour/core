@@ -8,6 +8,74 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-20 14:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/examples/hscript/bld_b32.bat
+     ! Fixed to have hbzlib.lib
+       [RC1]
+
+   * contrib/hbtip/common.mak
+     ! Added missing sendmail.prg
+       [RC1]
+
+   * contrib/hbtip/tests/base64.prg
+   * contrib/hbtip/tests/dbtohtml.prg
+   * contrib/hbtip/tests/httpadv.prg
+   * contrib/hbtip/tests/tipmail.prg
+   * contrib/hbtip/tests/tipmmail.prg
+   * contrib/hbtip/tests/tiptest.prg
+     ! All tip tests fixed and tested to compile/link
+       with Harbour.
+     * Changed to not require hbw32.lib.
+       [RC1]
+
+   + contrib/hbtip/tests/test.dbf
+     + Added for tests.
+       [RC1]
+
+   * source/rtl/gtclip.c
+     ! hb_gt_w32_setClipboard() fix to CF_UNICODETEXT 
+       EOS char setting.
+       [RC1]
+
+   * source/rtl/gtwvt/gtwvt.c
+     + Now showing the application's executable name 
+       in the window title on startup, instead of "Harbour WVT".
+     * Window class name handling and control flow cleaned.
+       [RC1]
+
+   * tests/rto_get.prg
+   * source/rtl/tget.prg
+     ! Fixed TGet():assign() to pad character values 
+       to the original length with the original content. 
+       This also clears some existing differences in rto_get.prg.
+     + Added regression test specifically for this.
+       [RC1]
+
+   * source/rtl/gtclip.c
+     ! Added three LPWSTR casts to pacify warnings.
+
+   * source/rtl/gtclip.c
+     ! Fixed get/set clipboard when UNICODE is #defined.
+       (WinCE mostly).
+     ! Fixed get/set clipboard when format is CF_UNICODETEXT.
+       (untested, please someone review me)
+     ! Fixed get clipboard when CF_TEXT/CF_OEMTEXT format 
+       is used, so that an additionaly zero byte won't be 
+       appended anymore to the returned string.
+       [RC1]
+
+   * source/rtl/gtwvt/gtwvt.c
+     * "HARBOUR_WVT" -> "Harbour WVT". This text is visible, 
+       so it's better to make it "desktop friendlier"".
+       [RC1]
+
+   * contrib/hbmzip/hbmzip.ch
+   * contrib/hbmzip/hbmzip.c
+     + Added error codes to hbmzip.ch
+     + Interface code changed to use manifest constants 
+       instead of literals in a few places.
+       [RC1]
+
 2008-06-16 18:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/doc/en/adsfuncs.txt
    * contrib/rddads/doc/en/readme.txt

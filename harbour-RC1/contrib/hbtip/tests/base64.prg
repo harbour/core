@@ -31,7 +31,7 @@ PROCEDURE MAIN( ... )
 
    /* Parameter parsing */
    FOR nLen := 1 TO PCount()
-      cData := Lower( PValue( nLen ) )
+      cData := Lower( hb_PValue( nLen ) )
       DO CASE
          CASE cData == '-h'
             lHelp := .T.

@@ -100,7 +100,7 @@ static HANDLE  s_hInstance;
 static HANDLE  s_hPrevInstance;
 static int     s_iCmdShow;
 
-static const TCHAR s_szAppName[] = TEXT( "Harbour WVT" );
+static const TCHAR s_szClassName[] = TEXT( "Harbour_WVT_Class" );
 
 static const int K_Ctrl[] =
 {
@@ -1196,8 +1196,9 @@ static BOOL hb_gt_wvt_ValidWindowSize( HWND hWnd, int rows, int cols, HFONT hFon
 
 static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR szCmdLine, int iCmdShow )
 {
-   HWND     hWnd;
+   HWND     hWnd = ( HWND ) 0;
    WNDCLASS wndclass;
+   LPTSTR   szAppName = HB_TCHAR_CONVTO( hb_cmdargARGV()[ 0 ] );
 
    HB_SYMBOL_UNUSED( hPrevInstance );
    HB_SYMBOL_UNUSED( szCmdLine );
@@ -1213,47 +1214,46 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
    wndclass.hbrBackground = NULL;
    wndclass.lpszMenuName  = NULL;
-   wndclass.lpszClassName = s_szAppName;
+   wndclass.lpszClassName = s_szClassName;
 
-   if( ! RegisterClass( &wndclass ) )
+   if( RegisterClass( &wndclass ) )
    {
-      MessageBox( NULL, TEXT( "Failed to register class." ),
-                  s_szAppName, MB_ICONERROR );
-      return 0;
+      hWnd = CreateWindow(
+         s_szClassName,                                       /* classname */
+         szAppName,                                           /* window name */
+         WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|
+            WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX,         /* style */
+         0,                                                   /* x */
+         0,                                                   /* y */
+         CW_USEDEFAULT,                                       /* width */
+         CW_USEDEFAULT,                                       /* height */
+         NULL,                                                /* window parent */
+         NULL,                                                /* menu */
+         hInstance,                                           /* instance */
+         NULL );                                              /* lpParam */
+      
+      if( hWnd )
+      {
+         /*
+          * If you wish to show window the way you want, put somewhere in your application
+          * ANNOUNCE HB_NOSTARTUPWINDOW
+          * If so compiled, then you need to issue Wvt_ShowWindow( SW_RESTORE )
+          * at the point you desire in your code.
+          * QUESTION: Do we need this feature in Harbour? [vszakats]
+          */
+         if( hb_dynsymFind( "HB_NOSTARTUPWINDOW" ) != NULL )
+            iCmdShow = SW_HIDE;
+         
+         ShowWindow( hWnd, iCmdShow );
+         UpdateWindow( hWnd );
+      }
+      else
+         MessageBox( NULL, TEXT( "Failed to create window." ), szAppName, MB_ICONERROR );
    }
+   else
+      MessageBox( NULL, TEXT( "Failed to register class." ), szAppName, MB_ICONERROR );
 
-   hWnd = CreateWindow( s_szAppName,                       /* classname */
-      TEXT( "HARBOUR_WVT" ),                               /* window name */
-      WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,  /* style */
-      0,                                                   /* x */
-      0,                                                   /* y */
-      CW_USEDEFAULT,                                       /* width */
-      CW_USEDEFAULT,                                       /* height */
-      NULL,                                                /* window parent */
-      NULL,                                                /* menu */
-      hInstance,                                           /* instance */
-      NULL );                                              /* lpParam */
-
-   if( hWnd == NULL )
-   {
-      MessageBox( NULL, TEXT( "Failed to create window." ),
-                  TEXT( "HARBOUR_WVT" ), MB_ICONERROR );
-      return NULL;
-   }
-
-   /*
-    * If you wish to show window the way you want, put somewhere in your application
-    * ANNOUNCE HB_NOSTARTUPWINDOW
-    * If so compiled, then you need to issue Wvt_ShowWindow( SW_RESTORE )
-    * at the point you desire in your code.
-    */
-   if( hb_dynsymFind( "HB_NOSTARTUPWINDOW" ) != NULL )
-   {
-      iCmdShow = SW_HIDE;
-   }
-
-   ShowWindow( hWnd, iCmdShow );
-   UpdateWindow( hWnd );
+   HB_TCHAR_FREE( szAppName );
 
    return hWnd;
 }
@@ -1273,24 +1273,23 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
 
    if( ! hb_winmainArgGet( &s_hInstance, &s_hPrevInstance, &s_iCmdShow ) )
    {
-      hb_errInternal( 10001, "It's not a window GUI program.", NULL, NULL );
+      hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
    }
 
    pWVT = hb_gt_wvt_New( pGT );
    if( !pWVT )
    {
-      hb_errInternal( 10001, "Cannot allocate new window", NULL, NULL );
+      hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );
    }
 
    HB_GTLOCAL( pGT ) = ( void * ) pWVT;
 
    pWVT->hWnd = hb_gt_wvt_CreateWindow( ( HINSTANCE ) s_hInstance,
                                         ( HINSTANCE ) s_hPrevInstance,
-                                        "", s_iCmdShow );
+                                        NULL, s_iCmdShow );
    if( !pWVT->hWnd )
    {
-      /* hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_wvt_Init()", 0, 0 ); */
-      hb_errInternal( 10001, "WINAPI CreateWindow() failed", NULL, NULL );
+      hb_errInternal( 10001, "WVT window creation failed", NULL, NULL );
    }
 
    hb_gt_wvt_InitWindow( pWVT, WVT_DEFAULT_ROWS, WVT_DEFAULT_COLS );
@@ -1331,7 +1330,7 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
          DestroyWindow( pWVT->hWnd );
          pWVT->hWnd = NULL;
       }
-      UnregisterClass( s_szAppName, ( HINSTANCE ) s_hInstance );
+      UnregisterClass( s_szClassName, ( HINSTANCE ) s_hInstance );
       hb_gt_wvt_Free( pWVT );
    }
 }
