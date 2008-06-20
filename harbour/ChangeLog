@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-20 16:23 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
+   * contrib/hbziparch/zip.c
+   * contrib/hbziparch/zipfile.cpp
+   * contrib/hbziparch/zipnew.cpp
+   * contrib/hbziparch/zipplatform.cpp
+   * contrib/hbziparch/zipstorage.cpp
+     * Synced with xharbour. Added relative paths capability, removed memory leaks and minor refinements.
+     ( code aported by Juan Galvez )
+
 2008-06-20 15:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      ! Removed PutChar override. This was added along the 

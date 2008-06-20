@@ -220,20 +220,24 @@ ZIPINLINE void ZipPlatform::AnsiOem(CZipAutoBuffer& buffer, bool bAnsiToOem)
 ZIPINLINE  bool ZipPlatform::RemoveFile(LPCTSTR lpszFileName, bool bThrow)
 {
 	if (!::DeleteFile((LPTSTR)lpszFileName))
+	{
 		if (bThrow)
 			CZipException::Throw(CZipException::notRemoved, lpszFileName);
 		else
 			return false;
+	}
 	return true;
 
 }
 ZIPINLINE  bool ZipPlatform::RenameFile( LPCTSTR lpszOldName, LPCTSTR lpszNewName, bool bThrow)
 {
 	if (!::MoveFile((LPTSTR)lpszOldName, (LPTSTR)lpszNewName))
+	{
 		if (bThrow)
 			CZipException::Throw(CZipException::notRenamed, lpszOldName);
 		else
 			return false;
+	}
 	return true;
 
 }
