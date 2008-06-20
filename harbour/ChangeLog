@@ -12,8 +12,8 @@
    * source/rtl/gtwvt/gtwvt.c
      ! Removed PutChar override. This was added along the 
        palette support, but I'm afraid we'll need to find 
-       an alternative solution, as this change caused an 
-       huge amount flickering on every screen update, 
+       an alternative solution, as this change caused a 
+       huge amount of flickering on every screen update, 
        essentially nilling all screen change buffering 
        efforts.
      ; TOFIX: Solve realtime palette change in an 
