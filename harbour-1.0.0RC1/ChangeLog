@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 12:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * xhb/Makefile
+   * xhb/common.mak
+   + xhb/freadlin.c
+     + Adopted HB_FREADLINE().
+       Work of Marcelo Lombardo / xhb.
+     ! Fixed one potential leak (probably not exploited 
+       by current control flow).
+     ; Please test.
+       [1.0.0RC1]
+
+2008-06-10 16:06 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/xhb/hbcrypt.c
+   + contrib/xhb/hbnxs.h
+   * contrib/xhb/Makefile
+   * contrib/xhb/common.mak
+     + Added HB_CRYPT()/HB_DECRYPT().
+       Thanks to Giancarlo Niccolai / xhb.
+     + Changed to not depend on hbzlib.
+     ; Minor modifications to compile smoothly in Harbour.
+       [1.0.0RC1]
+
 2008-06-21 12:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * harbour-ce-spec
    * harbour-w32-spec
