@@ -41,9 +41,7 @@
 #ifndef _unz_H
 #define _unz_H
 
-#ifndef _HBCOMPRESS_H
-#include "hbcomprs.h"
-#endif
+#include "hbzlib.h"
 
 
 #ifdef __cplusplus

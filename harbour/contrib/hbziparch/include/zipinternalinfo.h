@@ -22,11 +22,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 #include "zipautobuffer.h"
-#include "zconf.h"
-
-#ifndef _HBCOMPRESS_H
-#include "hbcomprs.h"
-#endif
+#include "hbzlib.h"
 
 /**
 	The purpose of this structure is to hold the data that allow communication

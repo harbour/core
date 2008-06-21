@@ -8,6 +8,35 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 16:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbfbird/firebird.c
+     ! Fixed two bugs signaled by GCC 4.30.
+
+   * contrib/hbziparch/hbcomprs.c
+   * contrib/hbziparch/zip.c
+   * contrib/hbziparch/ziparchive.cpp
+   * contrib/hbziparch/include/zip.h
+   * contrib/hbziparch/include/ziparchive.h
+   * contrib/hbziparch/include/unzip.h
+   * contrib/hbziparch/include/zipinternalinfo.h
+   - contrib/hbziparch/include/hbcomprs.h
+   - contrib/hbziparch/include/zutil.h
+   - contrib/hbziparch/include/zconf.h
+     ! Stripped an old version (1.1.4) of ZLIB embedded in this 
+       contrib. Some warnings and even more security problems 
+       fixed this way. Users of this lib should link hbzlib.lib 
+       from now on.
+     ! Fixed some warnings after recent update.
+       NOTE: One is still there (unused ..HBZIPCLEANUP function).
+     ; NOTE: The quality of this code is not up to Harbour 
+             standard. It compiles with a large amount of warnings 
+             on all (BCC, MSVC, GCC) compilers. Also the included 
+             ziparch source is dated.
+             Anybody volunteering to clear these up?
+     ; NOTE: Please test these changes, I'm not a user of this 
+             contrib.
+       [TOMERGE 1.0.0RC1]
+
 2008-06-21 12:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * ChangeLog
      + Marked changes merged with 1.0.0RC1.

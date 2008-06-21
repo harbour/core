@@ -522,20 +522,25 @@ HB_FUNC( FBGETDATA )
 
             switch( dtype )
             {
-               case SQL_SHORT:
-                  value = ( ISC_INT64 ) *( short * ) var->sqldata;
-                  field_width = 6;
-                  break;
+            case SQL_SHORT:
+               value = ( ISC_INT64 ) *( short * ) var->sqldata;
+               field_width = 6;
+               break;
 
-               case SQL_LONG:
-                  value = ( ISC_INT64 ) *( long * ) var->sqldata;
-                  field_width = 11;
-                  break;
+            case SQL_LONG:
+               value = ( ISC_INT64 ) *( long * ) var->sqldata;
+               field_width = 11;
+               break;
 
-               case SQL_INT64:
-                  value = ( ISC_INT64 ) *( ISC_INT64 * ) var->sqldata;
-                  field_width = 21;
-                  break;
+            case SQL_INT64:
+               value = ( ISC_INT64 ) *( ISC_INT64 * ) var->sqldata;
+               field_width = 21;
+               break;
+
+            default:
+               value = 0;
+               field_width = 10;
+               break;
             }
 
             dscale = var->sqlscale;
@@ -605,9 +610,6 @@ HB_FUNC( FBGETBLOB )
    char            p[ MAX_BUFFER ];
    long            blob_stat;
 
-   PHB_ITEM temp;
-   PHB_ITEM aNew;
-
    if( ISPOINTER( 3 ) )
    {
       trans = ( isc_tr_handle ) hb_parptr( 3 );
@@ -631,26 +633,31 @@ HB_FUNC( FBGETBLOB )
                                 sizeof( blob_segment ), blob_segment );
 
    if( blob_stat == 0 || status[ 1 ] == isc_segment )
-      aNew = hb_itemArrayNew( 0 );
-
-   while( blob_stat == 0 || status[ 1 ] == isc_segment )
    {
-      /* p = ( char * ) hb_xgrab( blob_seg_len + 1 ); */
-      snprintf( p, sizeof( p ), "%*.*s", blob_seg_len, blob_seg_len, blob_segment );
+      PHB_ITEM aNew = hb_itemArrayNew( 0 );
 
-      temp = hb_itemPutC( NULL, p );
-      hb_arrayAdd( aNew, temp );
-      hb_itemRelease( temp );
+      while( blob_stat == 0 || status[ 1 ] == isc_segment )
+      {
+         PHB_ITEM temp;
 
-      /* hb_xfree(p); */
-      blob_stat = isc_get_segment( status, &blob_handle,
-                                   ( unsigned short * ) &blob_seg_len,
-                                   sizeof( blob_segment ), blob_segment );
+         /* p = ( char * ) hb_xgrab( blob_seg_len + 1 ); */
+         snprintf( p, sizeof( p ), "%*.*s", blob_seg_len, blob_seg_len, blob_segment );
+      
+         temp = hb_itemPutC( NULL, p );
+         hb_arrayAdd( aNew, temp );
+         hb_itemRelease( temp );
+      
+         /* hb_xfree(p); */
+         blob_stat = isc_get_segment( status, &blob_handle,
+                                      ( unsigned short * ) &blob_seg_len,
+                                      sizeof( blob_segment ), blob_segment );
+      }
+
+      hb_itemReturnRelease( aNew );
    }
 
    if( isc_close_blob( status, &blob_handle ) )
    {
-      hb_itemRelease( aNew );
       ERREXIT( status );
    }
 
@@ -661,6 +668,4 @@ HB_FUNC( FBGETBLOB )
          ERREXIT( status );
       }
    }
-
-   hb_itemReturnRelease( aNew );
 }
