@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 22:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbfimage/Makefile
+     ! Fixed to compile with MinGW.
+       [TOMERGE 1.0.0RC1]
+
 2008-06-21 22:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtalleg/gtalleg.c
    * source/rtl/gtgui/gtgui.c

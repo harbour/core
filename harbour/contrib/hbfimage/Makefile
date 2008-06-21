@@ -16,3 +16,5 @@ PRG_HEADERS=\
 LIBNAME=hbfimage
 
 include $(TOP)$(ROOT)config/lib.cf
+
+CFLAGS := $(CFLAGS) -D_WINDOWS_
