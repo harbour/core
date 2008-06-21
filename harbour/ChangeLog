@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 18:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbole/Makefile
+     + Marked as w32 only.
+
+   + contrib/hbgf/hbgfw32/Makefile
+   * contrib/hbgf/hbgfos2/Makefile
+   * contrib/hbgf/hbgfgtk/Makefile
+     + Added w32 GNU make file.
+     + Added platforms guards.
+
 2008-06-21 18:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    - contrib/hbgf/hbgfw32/win32.ch
    + contrib/hbgf/hbgfw32/hbgfw32.ch

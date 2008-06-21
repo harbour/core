@@ -2,6 +2,8 @@
 # $Id$
 #
 
+ifeq ($(HB_ARCHITECTURE),os2)
+
 ROOT = ../../../
 
 C_SOURCES=\
@@ -18,3 +20,5 @@ PRG_SOURCES=\
 LIBNAME=hbgfos2
 
 include $(TOP)$(ROOT)config/lib.cf
+
+endif

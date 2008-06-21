@@ -2,6 +2,8 @@
 # $Id$
 #
 
+ifeq ($(HB_ARCHITECTURE),w32)
+
 ROOT = ../../
 
 C_SOURCES=\
@@ -13,3 +15,5 @@ PRG_SOURCES=\
 LIBNAME=hbole
 
 include $(TOP)$(ROOT)config/lib.cf
+
+endif
