@@ -8,6 +8,48 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 17:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbw32ddr/Makefile
+     ! Fixed to compile with GNU make.
+     ! Found a way to compile with MingW.
+       [TOMERGE 1.0.0RC1]
+
+   * contrib/hbtpathy/Makefile
+     ! Fixed to work at all.
+       [TOMERGE 1.0.0RC1]
+
+   * contrib/Makefile
+   * contrib/gtwvg/Makefile
+   * contrib/hbbmcdx/Makefile
+   * contrib/hbodbc/Makefile
+   * contrib/hbtip/Makefile
+   * contrib/hbw32/Makefile
+   * contrib/hbw32ddr/Makefile
+   * contrib/hbwhat32/Makefile
+   * contrib/rddads/Makefile
+     + Platform/compiler checks moved to the contrib level 
+       Makefiles instead of being in /contrib/Makefile.
+       This way it's modular, anyone can easily find out 
+       any platform/compiler dependencies and the central 
+       Makefile is easier to manage since it's global for all 
+       platforms/compilers.
+       As a side effect HB_WITHOUT_ODBC, HB_WITHOUT_ADS now 
+       behaves similarly on all platforms.
+     ; Work in progress. The goal is to be safe to include 
+       all contribs in /contrib/Makefile.
+
+   - contrib/hbw32ddr/w32_ddrw.h
+   * contrib/hbw32ddr/w32_ddrw.cpp
+     * Cleanups, removing unneeded fluffs.
+       [TOMERGE 1.0.0RC1]
+
+   * contrib/hbziparch/make_b32_dll.mak
+     - Removed many unneeded command line switches.
+     ; This make file should better be standardized.
+
+   * contrib/hbziparch/Makefile
+     - Removed many unneeded command line switches.
+
 2008-06-21 16:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbfbird/firebird.c
      ! Fixed two bugs signaled by GCC 4.30.

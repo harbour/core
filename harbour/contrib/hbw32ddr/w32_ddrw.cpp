@@ -27,11 +27,14 @@
 
 #define INITGUID
 
-#include "w32_ddrw.h"
+#define HB_OS_WIN_32_USED
 
-HB_EXTERN_BEGIN
+#include "hbapi.h"
+#include "hbvm.h"
 
-BOOL hb_dd_g_handling_events = FALSE;   // painting?
+/* DDraw initialize */
+
+#include "ddraw.h"
 
 #define HB_DD_TIMER_ID        1
 #define HB_DD_TIMER_RATE      100
@@ -39,11 +42,11 @@ BOOL hb_dd_g_handling_events = FALSE;   // painting?
 // DDRAW MANAGEMENT
 // Global Data
 
-LPDIRECTDRAW4 hb_dd_g_pDD = NULL;    // DirectDraw object
-HWND          hb_dd_g_DDHwnd;        // Our hWnd
-
-long hb_dd_g_xWindow = 0;
-long hb_dd_g_yWindow = 0;
+BOOL          hb_dd_g_handling_events = FALSE;   // painting?
+LPDIRECTDRAW4 hb_dd_g_pDD = NULL;                // DirectDraw object
+HWND          hb_dd_g_DDHwnd;                    // Our hWnd
+long          hb_dd_g_xWindow = 0;
+long          hb_dd_g_yWindow = 0;
 
 //------------------------------------------------------------------------------//
 // Management Structs for surfaces...
@@ -52,7 +55,7 @@ long hb_dd_g_yWindow = 0;
 
 LPDIRECTDRAWSURFACE4 hb_dd_g_DDSFaces[ MAX_DDSURFACES + 1 ];
 
-long hb_dd_g_DDSFaceCount=0;
+long hb_dd_g_DDSFaceCount = 0;
 
 //------------------------------------------------------------------------------//
 // Sprites Management
@@ -100,202 +103,35 @@ long hb_dd_g_SpritesCount = 0;
 
 short int hb_dd_g_KeyDown[ 256 ];
 
-HB_FUNC( DD_ISKEYPRESSED )
-{
-   if( hb_dd_g_KeyDown[ hb_parnl( 1 ) ] )
-      hb_retl( 1 );
-   else
-      hb_retl( 0 );
-}
-
 //------------------------------------------------------------------//
 
-HB_FUNC( DD_SPGETXY )
+long hb_dd_checkError( HRESULT hr )
 {
-   // This function is Broken ( hb_stornl fail );
+   long p = 0;
 
-   long n = hb_parnl( 1 );
-
-   hb_reta( 2 );
-
-   hb_stornl( hb_dd_Sprites[ n ].x, -1, 0  );
-   hb_stornl( hb_dd_Sprites[ n ].y, -1, 1  );
-}
-
-HB_FUNC( DD_SPGETX )
-{
-   hb_retnl( hb_dd_Sprites[ hb_parnl( 1 ) ].x );
-}
-
-HB_FUNC( DD_SPGETY )
-{
-   hb_retnl( hb_dd_Sprites[ hb_parnl( 1 ) ].y );
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPGETVISIBLE )
-{
-   hb_retl( hb_dd_Sprites[ hb_parnl( 1 ) ].Visible );
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPSETVISIBLE )
-{
-   hb_dd_Sprites[ hb_parnl( 1 ) ].Visible = ( int ) hb_parl( 2 );
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPONRENDER )
-{
-   hb_dd_Sprites[ hb_parnl( 1 ) ].OnRender = hb_strdup( hb_parc(1) );
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPCLEARDIRECTION )
-{
-   long n = hb_parnl( 1 );
-   hb_dd_Sprites[ n ].xIncrement =  0;
-   hb_dd_Sprites[ n ].yIncrement =  0;
-   hb_dd_Sprites[ n ].Direction  = -1;
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPSETSOLID )
-{
-   hb_dd_Sprites[hb_parnl( 1 ) ].Solid = hb_parl( 2 );
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPSETMASKED )
-{
-   hb_dd_Sprites[hb_parnl( 1 ) ].Masked = hb_parl( 2 );
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPSETDIRECTION )
-{
-   long n = hb_parnl( 1 );
-
-   hb_dd_Sprites[ n ].Direction   = hb_parnl( 2 );
-   hb_dd_Sprites[ n ].xIncrement += hb_parnl( 3 );
-   hb_dd_Sprites[ n ].yIncrement += hb_parnl( 4 );
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPONFIRSTFRAME )
-{
-   long n = hb_parnl( 1 );
-   hb_dd_Sprites[ n ].OnFirstFrame = hb_strdup( hb_parc(2) );
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPONOUTSCREEN )
-{
-   long n = hb_parnl( 1 );
-   hb_dd_Sprites[ n ].OnOutScreen = hb_strdup( hb_parc(2) );
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPONCOLLISION )
-{
-   long n = hb_parnl( 1 );
-   hb_dd_Sprites[ n ].OnCollision = hb_strdup( hb_parc(2) );
-   hb_dd_Sprites[ n ].lCollision = 1;
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_CREATESPRITE )
-{
-   long n = hb_dd_g_SpritesCount;
-
-   ZeroMemory(  &hb_dd_Sprites[ n ], sizeof( struct st_Sprites ) );
-
-   hb_dd_Sprites[ n ].Surface    = hb_parnl( 1 );
-   hb_dd_Sprites[ n ].cName      = hb_strdup( hb_parc( 2 ) );
-   hb_dd_Sprites[ n ].Width      = hb_parnl( 3 );
-   hb_dd_Sprites[ n ].Height     = hb_parnl( 4 );
-   hb_dd_Sprites[ n ].Images     = hb_parnl( 5 );
-   hb_dd_Sprites[ n ].zOrder     = hb_parnl( 6 );
-   hb_dd_Sprites[ n ].Visible    = hb_parl( 7 );
-   hb_dd_Sprites[ n ].FrameSpeed = hb_parnl( 8 );
-
-   hb_dd_g_SpritesCount++;
-
-   hb_retnl( n );
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPSETXY )
-{
-   long n = hb_parnl( 1 );
-   long x = hb_parnl( 2 );
-   long y = hb_parnl( 3 );
-   hb_dd_Sprites[ n ].x = x;
-   hb_dd_Sprites[ n ].y = y;
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_SPSETINVERTED )
-{
-   LPDIRECTDRAWSURFACE4 pdds;
-   long n = hb_parnl( 1 );
-   RECT rt;
-   DDBLTFX todo;
-
-   long dir = hb_parnl( 2 );
-   if( dir != hb_dd_Sprites[ n ].DrawInverted )
+   switch( hr )
    {
-       rt.top   = 0;
-       rt.left   = 0;
-       rt.bottom= hb_dd_Sprites[ n ].Height;
-       rt.right = hb_dd_Sprites[ n ].Width * hb_dd_Sprites[ n ].Images;
-       ZeroMemory( &todo, sizeof( DDBLTFX ) );
-
-       hb_dd_Sprites[ n ].DrawInverted = dir;
-       todo.dwSize = sizeof( DDBLTFX );
-       todo.dwDDFX =  DDBLTFX_MIRRORLEFTRIGHT;
-       pdds = hb_dd_g_DDSFaces[ hb_dd_Sprites[ n ].Surface ];
-       pdds->Blt(&rt, pdds, &rt, DDBLT_DDFX ,&todo );
+      case DDERR_EXCEPTION          : p++;break;
+      case DDERR_GENERIC            : p++;break;
+      case DDERR_INVALIDOBJECT      : p++;break;
+      case DDERR_INVALIDPARAMS      : p++;break;
+      case DDERR_INVALIDRECT        : p++;break;
+      case DDERR_NOBLTHW            : p++;break;
+      case DDERR_SURFACEBUSY        : p++;break;
+      case DDERR_SURFACELOST        : p++;break;
+      case DDERR_UNSUPPORTED        : p++;break;
+      case DDERR_WASSTILLDRAWING    : p++;break;
+      case DDERR_NOOVERLAYHW        : p++;break;
+      case DDERR_NOTAOVERLAYSURFACE : p++;break;
+      case DDERR_INVALIDSURFACETYPE : p++;break;
    }
+
+   return p;
 }
 
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_MSGBOX )
+void hb_dd_g_Error( char *, long , char *)
 {
-   char *m1;
-   char *m2;
-   char deftitle [100] = "";
-   char defmsg   [2]   = "";
-
-   if( hb_pcount() > 0 )
-      m1 = hb_parc( 1 );
-   else
-      m1 = defmsg;
-
-   if( hb_pcount() > 1 )
-      m2 = hb_parc( 2 );
-   else
-      m2 = deftitle;
-
-   MessageBox( hb_dd_g_DDHwnd, m1, m2, NULL);
 }
-
-//------------------------------------------------------------------//
 
 void hb_dd_WinError( void )
 {
@@ -308,6 +144,32 @@ void hb_dd_WinError( void )
    MessageBox( NULL, (LPCTSTR)lpMsgBuf, "Error", MB_OK | MB_ICONINFORMATION );
    // Free the buffer.
    LocalFree( lpMsgBuf );
+}
+
+//------------------------------------------------------------------//
+
+void hb_dd_ReleaseAllObjects(void)
+{
+   long t;
+   if( hb_dd_g_pDD != NULL )
+   {
+      if( hb_dd_g_DDSFaces[ 0 ] != NULL )
+      {
+         hb_dd_g_DDSFaces[ 0 ]->Release();
+         hb_dd_g_DDSFaces[ 0 ] = NULL;
+      }
+      
+      for( t = 2; t < MAX_DDSURFACES; t++ )
+      {
+         if( hb_dd_g_DDSFaces[ t ] != NULL )
+         {
+            hb_dd_g_DDSFaces[ t ]->Release();
+            hb_dd_g_DDSFaces[ t ] = NULL;
+         }
+      }
+      hb_dd_g_pDD->Release();
+      hb_dd_g_pDD = NULL;
+   }
 }
 
 //------------------------------------------------------------------//
@@ -574,43 +436,6 @@ long _stdcall hb_dd_DDWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
 
 //------------------------------------------------------------------//
 
-HB_FUNC( DD_CREATEWINDOW )
-{
-   HWND m_hWnd;
-   HINSTANCE m_hInstance = GetModuleHandle(NULL);
-   long x,y;
-
-   x= hb_pcount() > 10 ?hb_parnl( 1 ) : GetSystemMetrics(SM_CXSCREEN);
-   y= hb_pcount() > 11 ?hb_parnl( 2 ) : GetSystemMetrics(SM_CYSCREEN);
-
-   hb_dd_g_xWindow = x;
-   hb_dd_g_yWindow = y;
-
-
-   WNDCLASS wndClass = { CS_HREDRAW | CS_VREDRAW, hb_dd_DDWndProc, 0, 0, m_hInstance,
-             NULL,
-             LoadCursor(NULL, IDC_ARROW),
-             (HBRUSH)GetStockObject(BLACK_BRUSH),
-                         NULL,
-             TEXT("4dNow") };
-
-   RegisterClass( &wndClass );
-
-   m_hWnd = CreateWindow( TEXT("4dNow"), TEXT("4dNow"),
-                WS_POPUP, 0,
-                0, x,y, NULL, NULL, m_hInstance, 0L );
-
-   if( !m_hWnd )
-      hb_dd_WinError();
-
-   ShowWindow( m_hWnd,SW_SHOWMAXIMIZED );
-
-   hb_dd_DDrawStartup( m_hWnd );
-   hb_retnl( ( long ) m_hWnd );
-}
-
-//------------------------------------------------------------------//
-
 int hb_dd_InitFail( HWND hWnd, HRESULT hRet, LPCTSTR szError, ... )
 {
    char szBuff[ 128 ];
@@ -625,63 +450,6 @@ int hb_dd_InitFail( HWND hWnd, HRESULT hRet, LPCTSTR szError, ... )
 }
 
 //------------------------------------------------------------------//
-
-HB_FUNC( DD_LOADBMPINTOSURFACE )
-{
-   long   nSurface = hb_parnl( 1 );
-   char * cBitmap  = hb_parc ( 2 );
-   long   x        = hb_parnl( 3 );
-   long   y        = hb_parnl( 4 );
-   long   dx       = hb_parnl( 5 );
-   long   dy       = hb_parnl( 6 );
-
-   HBITMAP hbm;
-
-   // Load our bitmap resource.
-
-   hbm = (HBITMAP) LoadImage(GetModuleHandle(NULL), cBitmap, IMAGE_BITMAP, 0,
-             0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
-
-   if( hbm == NULL )
-      hb_dd_g_Error( "Can't load Bitmap.",100,cBitmap );
-
-   if( hb_dd_g_DDSFaces[ nSurface ] == NULL )
-      hb_dd_g_Error( "Invalid Surface",nSurface,"LoadBmpIntoSurface");
-
-   if( DD_OK != hb_dd_DDCopyBitmap( hb_dd_g_DDSFaces[ nSurface ], hbm, x,y, dx, dy ) )
-      hb_dd_g_Error( "DDCopyBitmap",nSurface,"LoadBmpIntoSurface");
-
-   DeleteObject( hbm );
-}
-
-//------------------------------------------------------------------//
-
-HB_FUNC( DD_CREATEOFFSCREENBITMAP )
-{
-   DDSURFACEDESC2 ddsd;
-   HRESULT hRet;
-
-   if( ! hb_dd_g_pDD )
-      hb_dd_g_Error("No DDraw Initialized",1000,"");
-
-   if( hb_dd_g_DDSFaceCount >= MAX_DDSURFACES )
-      hb_dd_g_Error( "No more DDSurfaces -> Limit reached -> CreateDDSurface()",1000,"DDraw extend sys");
-   else
-   {
-      ZeroMemory(&ddsd, sizeof(ddsd));
-      ddsd.dwSize = sizeof(ddsd);
-      ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH  ;
-      ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
-      ddsd.dwHeight = hb_dd_g_yWindow;
-      ddsd.dwWidth = hb_dd_g_xWindow;
-      hRet = hb_dd_g_pDD->CreateSurface(&ddsd, &hb_dd_g_DDSFaces[ hb_dd_g_DDSFaceCount ], NULL);
-      if( hRet != DD_OK )
-         hb_dd_InitFail( hb_dd_g_DDHwnd, hRet, "CreateSurface FAILED" );
-   }
-
-   hb_retnl( hb_dd_g_DDSFaceCount );
-   hb_dd_g_DDSFaceCount++;
-}
 
 //------------------------------------------------------------------//
 
@@ -698,32 +466,6 @@ void hb_RestoreAll(void)
          if( hb_dd_g_DDSFaces[ t ] != NULL )
             hb_dd_g_DDSFaces[ t ]->Restore();
       }
-   }
-}
-
-//------------------------------------------------------------------//
-
-void hb_dd_ReleaseAllObjects(void)
-{
-   long t;
-   if( hb_dd_g_pDD != NULL )
-   {
-      if( hb_dd_g_DDSFaces[ 0 ] != NULL )
-      {
-         hb_dd_g_DDSFaces[ 0 ]->Release();
-         hb_dd_g_DDSFaces[ 0 ] = NULL;
-      }
-      
-      for( t = 2; t < MAX_DDSURFACES; t++ )
-      {
-         if( hb_dd_g_DDSFaces[ t ] != NULL )
-         {
-            hb_dd_g_DDSFaces[ t ]->Release();
-            hb_dd_g_DDSFaces[ t ] = NULL;
-         }
-      }
-      hb_dd_g_pDD->Release();
-      hb_dd_g_pDD = NULL;
    }
 }
 
@@ -790,25 +532,6 @@ void hb_dd_DDrawStartup( HWND hWnd )
 }
 
 //------------------------------------------------------------------//
-
-HB_FUNC( DD_STARTWINDOW )
-{
-   MSG msg;
-   BOOL loop = TRUE;
-
-   while(  loop  )
-   {
-      if( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
-      {
-         TranslateMessage( &msg );
-         DispatchMessage( &msg );
-      }
-      if( WM_CLOSE == msg.message  )
-         loop = FALSE;
-   }
-}
-
-//------------------------------------------------------------------//
 HRESULT hb_dd_DDCopyBitmap(IDirectDrawSurface4 * pdds, HBITMAP hbm, int x, int y,
          int dx, int dy)
 {
@@ -847,32 +570,313 @@ HRESULT hb_dd_DDCopyBitmap(IDirectDrawSurface4 * pdds, HBITMAP hbm, int x, int y
    return hr;
 }
 
-long hb_dd_checkError( HRESULT hr )
-{
-   long p = 0;
+//------------------------------------------------------------------//
 
-   switch( hr )
+HB_FUNC( DD_ISKEYPRESSED )
+{
+   if( hb_dd_g_KeyDown[ hb_parnl( 1 ) ] )
+      hb_retl( 1 );
+   else
+      hb_retl( 0 );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPGETXY )
+{
+   // This function is Broken ( hb_stornl fail );
+
+   long n = hb_parnl( 1 );
+
+   hb_reta( 2 );
+
+   hb_stornl( hb_dd_Sprites[ n ].x, -1, 0  );
+   hb_stornl( hb_dd_Sprites[ n ].y, -1, 1  );
+}
+
+HB_FUNC( DD_SPGETX )
+{
+   hb_retnl( hb_dd_Sprites[ hb_parnl( 1 ) ].x );
+}
+
+HB_FUNC( DD_SPGETY )
+{
+   hb_retnl( hb_dd_Sprites[ hb_parnl( 1 ) ].y );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPGETVISIBLE )
+{
+   hb_retl( hb_dd_Sprites[ hb_parnl( 1 ) ].Visible );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPSETVISIBLE )
+{
+   hb_dd_Sprites[ hb_parnl( 1 ) ].Visible = ( int ) hb_parl( 2 );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPONRENDER )
+{
+   hb_dd_Sprites[ hb_parnl( 1 ) ].OnRender = hb_strdup( hb_parc(1) );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPCLEARDIRECTION )
+{
+   long n = hb_parnl( 1 );
+   hb_dd_Sprites[ n ].xIncrement =  0;
+   hb_dd_Sprites[ n ].yIncrement =  0;
+   hb_dd_Sprites[ n ].Direction  = -1;
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPSETSOLID )
+{
+   hb_dd_Sprites[hb_parnl( 1 ) ].Solid = hb_parl( 2 );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPSETMASKED )
+{
+   hb_dd_Sprites[hb_parnl( 1 ) ].Masked = hb_parl( 2 );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPSETDIRECTION )
+{
+   long n = hb_parnl( 1 );
+
+   hb_dd_Sprites[ n ].Direction   = hb_parnl( 2 );
+   hb_dd_Sprites[ n ].xIncrement += hb_parnl( 3 );
+   hb_dd_Sprites[ n ].yIncrement += hb_parnl( 4 );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPONFIRSTFRAME )
+{
+   long n = hb_parnl( 1 );
+   hb_dd_Sprites[ n ].OnFirstFrame = hb_strdup( hb_parc(2) );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPONOUTSCREEN )
+{
+   long n = hb_parnl( 1 );
+   hb_dd_Sprites[ n ].OnOutScreen = hb_strdup( hb_parc(2) );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPONCOLLISION )
+{
+   long n = hb_parnl( 1 );
+   hb_dd_Sprites[ n ].OnCollision = hb_strdup( hb_parc(2) );
+   hb_dd_Sprites[ n ].lCollision = 1;
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_CREATESPRITE )
+{
+   long n = hb_dd_g_SpritesCount;
+
+   ZeroMemory(  &hb_dd_Sprites[ n ], sizeof( struct st_Sprites ) );
+
+   hb_dd_Sprites[ n ].Surface    = hb_parnl( 1 );
+   hb_dd_Sprites[ n ].cName      = hb_strdup( hb_parc( 2 ) );
+   hb_dd_Sprites[ n ].Width      = hb_parnl( 3 );
+   hb_dd_Sprites[ n ].Height     = hb_parnl( 4 );
+   hb_dd_Sprites[ n ].Images     = hb_parnl( 5 );
+   hb_dd_Sprites[ n ].zOrder     = hb_parnl( 6 );
+   hb_dd_Sprites[ n ].Visible    = hb_parl( 7 );
+   hb_dd_Sprites[ n ].FrameSpeed = hb_parnl( 8 );
+
+   hb_dd_g_SpritesCount++;
+
+   hb_retnl( n );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPSETXY )
+{
+   long n = hb_parnl( 1 );
+   long x = hb_parnl( 2 );
+   long y = hb_parnl( 3 );
+   hb_dd_Sprites[ n ].x = x;
+   hb_dd_Sprites[ n ].y = y;
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_SPSETINVERTED )
+{
+   LPDIRECTDRAWSURFACE4 pdds;
+   long n = hb_parnl( 1 );
+   RECT rt;
+   DDBLTFX todo;
+
+   long dir = hb_parnl( 2 );
+   if( dir != hb_dd_Sprites[ n ].DrawInverted )
    {
-      case DDERR_EXCEPTION          : p++;break;
-      case DDERR_GENERIC            : p++;break;
-      case DDERR_INVALIDOBJECT      : p++;break;
-      case DDERR_INVALIDPARAMS      : p++;break;
-      case DDERR_INVALIDRECT        : p++;break;
-      case DDERR_NOBLTHW            : p++;break;
-      case DDERR_SURFACEBUSY        : p++;break;
-      case DDERR_SURFACELOST        : p++;break;
-      case DDERR_UNSUPPORTED        : p++;break;
-      case DDERR_WASSTILLDRAWING    : p++;break;
-      case DDERR_NOOVERLAYHW        : p++;break;
-      case DDERR_NOTAOVERLAYSURFACE : p++;break;
-      case DDERR_INVALIDSURFACETYPE : p++;break;
+       rt.top   = 0;
+       rt.left   = 0;
+       rt.bottom= hb_dd_Sprites[ n ].Height;
+       rt.right = hb_dd_Sprites[ n ].Width * hb_dd_Sprites[ n ].Images;
+       ZeroMemory( &todo, sizeof( DDBLTFX ) );
+
+       hb_dd_Sprites[ n ].DrawInverted = dir;
+       todo.dwSize = sizeof( DDBLTFX );
+       todo.dwDDFX =  DDBLTFX_MIRRORLEFTRIGHT;
+       pdds = hb_dd_g_DDSFaces[ hb_dd_Sprites[ n ].Surface ];
+       pdds->Blt(&rt, pdds, &rt, DDBLT_DDFX ,&todo );
+   }
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_MSGBOX )
+{
+   char *m1;
+   char *m2;
+   char deftitle [100] = "";
+   char defmsg   [2]   = "";
+
+   if( hb_pcount() > 0 )
+      m1 = hb_parc( 1 );
+   else
+      m1 = defmsg;
+
+   if( hb_pcount() > 1 )
+      m2 = hb_parc( 2 );
+   else
+      m2 = deftitle;
+
+   MessageBox( hb_dd_g_DDHwnd, m1, m2, NULL);
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_CREATEWINDOW )
+{
+   HWND m_hWnd;
+   HINSTANCE m_hInstance = GetModuleHandle(NULL);
+   long x,y;
+
+   x= hb_pcount() > 10 ?hb_parnl( 1 ) : GetSystemMetrics(SM_CXSCREEN);
+   y= hb_pcount() > 11 ?hb_parnl( 2 ) : GetSystemMetrics(SM_CYSCREEN);
+
+   hb_dd_g_xWindow = x;
+   hb_dd_g_yWindow = y;
+
+
+   WNDCLASS wndClass = { CS_HREDRAW | CS_VREDRAW, hb_dd_DDWndProc, 0, 0, m_hInstance,
+             NULL,
+             LoadCursor(NULL, IDC_ARROW),
+             (HBRUSH)GetStockObject(BLACK_BRUSH),
+                         NULL,
+             TEXT("4dNow") };
+
+   RegisterClass( &wndClass );
+
+   m_hWnd = CreateWindow( TEXT("4dNow"), TEXT("4dNow"),
+                WS_POPUP, 0,
+                0, x,y, NULL, NULL, m_hInstance, 0L );
+
+   if( !m_hWnd )
+      hb_dd_WinError();
+
+   ShowWindow( m_hWnd,SW_SHOWMAXIMIZED );
+
+   hb_dd_DDrawStartup( m_hWnd );
+   hb_retnl( ( long ) m_hWnd );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_LOADBMPINTOSURFACE )
+{
+   long   nSurface = hb_parnl( 1 );
+   char * cBitmap  = hb_parc ( 2 );
+   long   x        = hb_parnl( 3 );
+   long   y        = hb_parnl( 4 );
+   long   dx       = hb_parnl( 5 );
+   long   dy       = hb_parnl( 6 );
+
+   HBITMAP hbm;
+
+   // Load our bitmap resource.
+
+   hbm = (HBITMAP) LoadImage(GetModuleHandle(NULL), cBitmap, IMAGE_BITMAP, 0,
+             0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+
+   if( hbm == NULL )
+      hb_dd_g_Error( "Can't load Bitmap.",100,cBitmap );
+
+   if( hb_dd_g_DDSFaces[ nSurface ] == NULL )
+      hb_dd_g_Error( "Invalid Surface",nSurface,"LoadBmpIntoSurface");
+
+   if( DD_OK != hb_dd_DDCopyBitmap( hb_dd_g_DDSFaces[ nSurface ], hbm, x,y, dx, dy ) )
+      hb_dd_g_Error( "DDCopyBitmap",nSurface,"LoadBmpIntoSurface");
+
+   DeleteObject( hbm );
+}
+
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_CREATEOFFSCREENBITMAP )
+{
+   DDSURFACEDESC2 ddsd;
+   HRESULT hRet;
+
+   if( ! hb_dd_g_pDD )
+      hb_dd_g_Error("No DDraw Initialized",1000,"");
+
+   if( hb_dd_g_DDSFaceCount >= MAX_DDSURFACES )
+      hb_dd_g_Error( "No more DDSurfaces -> Limit reached -> CreateDDSurface()",1000,"DDraw extend sys");
+   else
+   {
+      ZeroMemory(&ddsd, sizeof(ddsd));
+      ddsd.dwSize = sizeof(ddsd);
+      ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH  ;
+      ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
+      ddsd.dwHeight = hb_dd_g_yWindow;
+      ddsd.dwWidth = hb_dd_g_xWindow;
+      hRet = hb_dd_g_pDD->CreateSurface(&ddsd, &hb_dd_g_DDSFaces[ hb_dd_g_DDSFaceCount ], NULL);
+      if( hRet != DD_OK )
+         hb_dd_InitFail( hb_dd_g_DDHwnd, hRet, "CreateSurface FAILED" );
    }
 
-   return p;
+   hb_retnl( hb_dd_g_DDSFaceCount );
+   hb_dd_g_DDSFaceCount++;
 }
 
-void hb_dd_g_Error( char *, long , char *)
+//------------------------------------------------------------------//
+
+HB_FUNC( DD_STARTWINDOW )
 {
-}
+   MSG msg;
+   BOOL loop = TRUE;
 
-HB_EXTERN_END
+   while(  loop  )
+   {
+      if( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) )
+      {
+         TranslateMessage( &msg );
+         DispatchMessage( &msg );
+      }
+      if( WM_CLOSE == msg.message  )
+         loop = FALSE;
+   }
+}

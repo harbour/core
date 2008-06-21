@@ -2,6 +2,8 @@
 # $Id$
 #
 
+ifeq ($(HB_ARCHITECTURE),w32)
+
 ROOT = ../../
 
 C_SOURCES = \
@@ -82,3 +84,5 @@ PRG_HEADERS= \
 LIBNAME=hbwhat32
 
 include $(TOP)$(ROOT)config/lib.cf
+
+endif

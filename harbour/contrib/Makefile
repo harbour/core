@@ -5,6 +5,8 @@
 ROOT = ../
 
 DIRS=\
+	gtwvg \
+	hbbmcdx \
 	hbbtree \
 	hbct \
 	hbgt \
@@ -12,41 +14,24 @@ DIRS=\
 	hbnf \
 	hbclipsm \
 	hbvpdf \
-	xhb \
 	hbmzip \
+	hbtip \
+	xhb \
 #	examples \
 
-
-ifneq ($(HB_ARCHITECTURE),dos)
-DIRS += hbbmcdx
-endif
-
 ifeq ($(HB_ARCHITECTURE),w32)
-DIRS += rddads gtwvg
+DIRS += rddads
 ifneq ($(HB_COMPILER),rsxnt)
 DIRS += hbw32 hbodbc rddado
 endif
 endif
 
-ifeq ($(HB_COMPILER),icc)
-DIRS += hbgf/os2pm
-else
 ifeq ($(HB_ARCHITECTURE),os2)
 DIRS += hbgf/os2pm
 endif
-endif
 
 ifeq ($(HB_ARCHITECTURE),linux)
-ifneq ($(HB_WITHOUT_ODBC),yes)
-DIRS += hbodbc
-endif
-ifneq ($(HB_WITHOUT_ADS),yes)
-DIRS += rddads
-endif
-endif
-
-ifneq ($(HB_ARCHITECTURE),dos)
-DIRS += hbtip
+DIRS += rddads hbodbc
 endif
 
 ifneq ($(HB_CONTRIBLIBS),)

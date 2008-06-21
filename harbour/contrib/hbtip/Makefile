@@ -2,6 +2,8 @@
 # $Id$
 #
 
+ifneq ($(HB_ARCHITECTURE),dos)
+
 ROOT = ../../
 
 C_SOURCES = \
@@ -34,3 +36,5 @@ PRG_HEADERS= \
 LIBNAME=hbtip
 
 include $(TOP)$(ROOT)config/lib.cf
+
+endif

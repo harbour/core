@@ -2,6 +2,8 @@
 # $Id$
 #
 
+ifneq ($(HB_WITHOUT_ADS),yes)
+
 ROOT = ../../
 
 C_SOURCES=\
@@ -29,3 +31,5 @@ include $(TOP)$(ROOT)config/lib.cf
 
 install::
 	$(INSTALL_RULE_HEADERS)
+
+endif

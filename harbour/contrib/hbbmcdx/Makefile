@@ -2,6 +2,8 @@
 # $Id$
 #
 
+ifneq ($(HB_ARCHITECTURE),dos)
+
 ROOT = ../../
 
 C_SOURCES=\
@@ -11,3 +13,5 @@ C_SOURCES=\
 LIBNAME=hbbmcdx
 
 include $(TOP)$(ROOT)config/lib.cf
+
+endif

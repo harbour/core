@@ -47,10 +47,7 @@ include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
 
-CFLAGS := $(CFLAGS) -I../../include -DZLIB_DLL 
-ifeq ($(HB_ARCHITECTURE),w32)
-CFLAGS += -DWIN32 -DASSERT
-endif
+CFLAGS := $(CFLAGS) -I../../include
 
 install::
 	$(INSTALL_RULE_HEADERS)

@@ -2,6 +2,8 @@
 # $Id$
 #
 
+ifneq ($(HB_WITHOUT_ODBC),yes)
+
 ROOT = ../../
 
 C_SOURCES= \
@@ -17,3 +19,5 @@ PRG_HEADERS=\
 LIBNAME=hbodbc
 
 include $(TOP)$(ROOT)config/lib.cf
+
+endif
