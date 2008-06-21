@@ -31,7 +31,7 @@ DIRS=\
 	xhb \
 
 # contribs with external dependencies
-DIRS +=
+DIRS +=\
 	hbapollo \
 	hbcurl \
 	hbfbird \

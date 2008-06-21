@@ -2,7 +2,6 @@
  * $Id$
  */
 
-
 Version 1.0.0 RC1 (2008-06-04) tag: RC1
 
 General
@@ -190,6 +189,8 @@ RTL
 - converted HIDDEN methods and members in RTL objects to PROTECTED for
   easier class extension in user code
 - added many undocumented Clipper's C and .prg functions.
+- added hbzlib and Harbour level compression functions.
+- PCRE library updated to version 7.7.
 
 MACRO COMPILER
 --------------
@@ -279,9 +280,9 @@ Contrib
 - added HBFBIRD - Firebird db access interface.
 - added hbcompat.ch file which hides many differences between Harbour
   and xHarbour compilers using PP directives.
-- added hbzlib library - it's wrapper to ZLIB and MINIZIP library which
-  allows for compress and decompress streams, character variables, .gz
-  and .zip files
+- added hbmzip library - it's wrapper to MINIZIP library which
+  allows for compress and decompress streams, character variables, 
+  .gz and .zip files
 - fixes and extensions in ADORDD
 - added automatic ACE version detection during building ADSRDD
 - added many new Ads*() functions wrappers and cleaned code for
