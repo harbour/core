@@ -1562,7 +1562,12 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
          hInstance,                                           /* instance */
          NULL );                                              /* lpParam */
       
-      if( ! hWnd )
+      if( hWnd )
+      {
+         ShowWindow( hWnd, iCmdShow );
+         UpdateWindow( hWnd );
+      }
+      else
          MessageBox( NULL, TEXT( "Failed to create window." ), szAppName, MB_ICONERROR );
    }
    else
