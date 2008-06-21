@@ -47,6 +47,6 @@ ifneq ($(HB_CONTRIBLIBS),)
 DIRS += $(HB_CONTRIBLIBS)
 endif
 
-#DIRS += examples
+# DIRS += examples
 
 include $(ROOT)config/dir.cf
