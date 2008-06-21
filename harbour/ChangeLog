@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 18:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbwhat32/_winsock.c
+   * contrib/hbwhat32/_winmous.c
+     ! Silenced GCC 4.30 warnings.
+       NOTE: These warnings are pointing to important potential 
+             bugs (GPFs) in these functions. It would be better 
+             to fix them properly.
+
 2008-06-21 18:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbole/Makefile
      + Marked as w32 only.

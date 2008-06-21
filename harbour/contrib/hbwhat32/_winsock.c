@@ -274,10 +274,10 @@ HB_FUNC( RECVFROM )
 
 HB_FUNC( SOCKSELECT )
 {
-   fd_set   *readfds   ;
-   fd_set   *writefds  ;
-   fd_set   *exceptfds ;
-   struct timeval  *timeout   ;
+   fd_set   *readfds   = NULL;
+   fd_set   *writefds  = NULL;
+   fd_set   *exceptfds = NULL;
+   struct timeval  *timeout = NULL;
 
    if ( ISCHAR( 2 ) )
       readfds = (fd_set *) hb_parc( 2 ); //hb_param( 2, HB_IT_STRING )->item.asString.value ;
@@ -327,7 +327,7 @@ HB_FUNC( SENDTO )
 {
 
    int  iBuffLen = (ISNIL(3) ? ( ISNIL(2) ? 0 : hb_parclen(2) ) : hb_parni(3));
-   struct sockaddr *to   ;
+   struct sockaddr *to = NULL;
    int iToLen = 0 ;
 
    if ( ISCHAR( 5 ) )

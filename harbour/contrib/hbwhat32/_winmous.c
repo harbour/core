@@ -169,15 +169,10 @@ HB_FUNC( CLIPCURSOR )
 
 HB_FUNC( GETCLIPCURSOR )
 {
-   RECT rc ;
-   PHB_ITEM aRect;
+   RECT rc;
 
    if ( GetClipCursor( &rc ) )
-
-     aRect = Rect2Array(&rc) ;
-     _itemReturn(aRect);
-     _itemRelease(aRect);
-
+      hb_itemReturnRelease( Rect2Array( &rc ) );
 }
 
 
