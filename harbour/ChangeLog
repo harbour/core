@@ -895,6 +895,7 @@
      ! Fixed one potential leak (probably not exploited 
        by current control flow).
      ; Please test.
+       [1.0.0RC1]
 
    * xhb/hbcrypt.c
      % Minor opt. (HB_ERR_FUNCNAME)
@@ -908,6 +909,7 @@
        Thanks to Giancarlo Niccolai / xhb.
      + Changed to not depend on hbzlib.
      ; Minor modifications to compile smoothly in Harbour.
+       [1.0.0RC1]
 
    * bin/bld.bat
      * Prev change undone.
