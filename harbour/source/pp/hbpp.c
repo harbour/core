@@ -297,6 +297,35 @@ static int hb_pp_preprocesfile( PHB_PP_STATE pState, char * szRuleFile )
    return iResult;
 }
 
+/* NOTE: Caller should free the pointer. */
+static char * hb_pp_escapeString( char * szString )
+{
+   int iPos;
+   int iCountBackslash = 0;
+   int iLen = strlen( szString );
+   int iResult;
+   char * szResult;
+
+   for( iPos = 0; iPos < iLen; iPos++ )
+   {
+      if( szString[ iPos ] == '\\' )
+         ++iCountBackslash;
+   }
+
+   szResult = ( char * ) hb_xgrab( iLen + iCountBackslash + 1 );
+
+   for( iPos = 0, iResult = 0; iPos < iLen; iPos++ )
+   {
+      szResult[ iResult++ ] = szString[ iPos ];
+      if( szString[ iPos ] == '\\' )
+         szResult[ iResult++ ] = '\\';
+   }
+
+   szResult[ iResult ] = '\0';
+
+   return szResult;
+}
+
 static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeLogID, char * szLastEntry )
 {
    int iResult = 0;
@@ -313,6 +342,8 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
    }
    else
    {
+      char * pszEscaped;
+
       fprintf( fout, "/*\n * $Id$\n */\n\n/*\n"
          " * Harbour Project source code:\n"
          " *    Version information and build time switches.\n"
@@ -328,29 +359,43 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
          fprintf( fout, "\n#define HB_VER_SVNID    %d\n", iSVNID );
 
       if( szChangeLogID )
-         fprintf( fout, "\n#define HB_VER_CHLID    \"%s\"\n", szChangeLogID );
+      {
+         pszEscaped = hb_pp_escapeString( szChangeLogID );
+         fprintf( fout, "\n#define HB_VER_CHLID    \"%s\"\n", pszEscaped );
+         hb_xfree( pszEscaped );
+      }
 
       if( szLastEntry )
-         fprintf( fout, "\n#define HB_VER_LENTRY   \"%s\"\n", szLastEntry );
+      {
+         pszEscaped = hb_pp_escapeString( szChangeLogID );
+         fprintf( fout, "\n#define HB_VER_LENTRY   \"%s\"\n", pszEscaped );
+         hb_xfree( pszEscaped );
+      }
 
       pszEnv = hb_getenv( "C_USR" );
       if( pszEnv )
       {
-         fprintf( fout, "\n#define HB_VER_C_USR    \"%s\"\n", pszEnv );
+         pszEscaped = hb_pp_escapeString( pszEnv );
+         fprintf( fout, "\n#define HB_VER_C_USR    \"%s\"\n", pszEscaped );
+         hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
 
       pszEnv = hb_getenv( "L_USR" );
       if( pszEnv )
       {
-         fprintf( fout, "\n#define HB_VER_L_USR    \"%s\"\n", pszEnv );
+         pszEscaped = hb_pp_escapeString( pszEnv );
+         fprintf( fout, "\n#define HB_VER_L_USR    \"%s\"\n", pszEscaped );
+         hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
 
       pszEnv = hb_getenv( "PRG_USR" );
       if( pszEnv )
       {
-         fprintf( fout, "\n#define HB_VER_PRG_USR  \"%s\"\n", pszEnv );
+         pszEscaped = hb_pp_escapeString( pszEnv );
+         fprintf( fout, "\n#define HB_VER_PRG_USR  \"%s\"\n", pszEscaped );
+         hb_xfree( pszEscaped );
          hb_xfree( pszEnv );
       }
 

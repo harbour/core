@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 19:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/pp/hbpp.c
+     ! Fixed to escape strings in generated hbverbld.h.
+       [TOMERGE 1.0.0RC1]
+
 2008-06-21 18:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbwhat32/_winsock.c
    * contrib/hbwhat32/_winmous.c
