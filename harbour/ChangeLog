@@ -8,12 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 11:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * doc/whatsnew.txt
+     ! Fixed version to be 1.0.0 RC1
+       [TOMERGE RC1]
+
+   * ChangeLog
+     ! Marked a few changes as [TOMERGE RC1]
+
 2008-06-20 16:25 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * contrib/hbwhat32/winuser.ch
      ! Pulled from MinGW distribution.
      ; HbWhat32 compiles fine but I have seen a lot of contradictions
        in the header. Anybody using hbwhat32 needs to test it 
        properly. May be in normal usage this is OK.  
+       [TOMERGE RC1]
 
 2008-06-20 13:25 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * contrib/hbwhat32/winuser.ch
