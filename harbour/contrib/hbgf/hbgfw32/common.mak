@@ -7,7 +7,7 @@ LIBNAME = hbgfw32
 LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
 PRG_HEADERS = \
-    win32.ch \
+    hbgfw32.ch \
 
 LIB_OBJS = \
     $(OBJ_DIR)win32$(OBJEXT) \

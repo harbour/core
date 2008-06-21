@@ -54,7 +54,7 @@
 
 #include "common.ch"
 #include "hbclass.ch"
-#include "win32.ch"
+#include "hbgfw32.ch"
 
 static aForms := {}
 

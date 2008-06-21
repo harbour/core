@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 18:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   - contrib/hbgf/hbgfw32/win32.ch
+   + contrib/hbgf/hbgfw32/hbgfw32.ch
+   * contrib/hbgf/hbgfw32/common.mak
+   * contrib/hbgf/hbgfw32/button.prg
+   * contrib/hbgf/hbgfw32/form.prg
+   * contrib/hbgf/hbgfw32/edit.prg
+     ! Made the .ch name less generic.
+
 2008-06-21 17:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/Makefile
    - contrib/hbgf/gtk

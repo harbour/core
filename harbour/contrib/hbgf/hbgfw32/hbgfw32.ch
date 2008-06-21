@@ -51,8 +51,8 @@
  *
  */
 
-#ifndef HB_WIN32_CH_
-#define HB_WIN32_CH_
+#ifndef HB_GFW32_CH_
+#define HB_GFW32_CH_
 
 #define WM_CLOSE        0x0010
 #define WM_COMMAND      0x0111
