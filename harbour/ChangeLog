@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-22 00:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmysql/mysql.c
+     ! Fixed GCC warning.
+
 2008-06-21 23:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      - Removed HB_NOSTARTUPWINDOW link time GTWVT window 

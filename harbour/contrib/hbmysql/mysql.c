@@ -310,7 +310,7 @@ static char * filetoBuff( char * fname, int * size )
       hb_fsClose( handle );
    }
    else
-      *size = NULL;
+      *size = 0;
 
    return buffer;
 }
