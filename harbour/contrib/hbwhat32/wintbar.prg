@@ -284,7 +284,7 @@ METHOD tbProc(nMsg,nwParam,nlParam)
          nmt:buffer(peek(nlParam,nmt:sizeof))
          IF (n:=ASCAN(::aMenus,{|a| a[1]==nmt:iItem})) > 0
             ::nBtn:=nmt:iItem
-            hMenu = CreatePopupMenu( )
+            hMenu := CreatePopupMenu( )
             FOR x:=1 TO LEN(::aMenus)
                 IF ::aMenus[x][1] == nmt:iItem
                    IF ::aMenus[x][3] == "-".and. ::aMenus[x][2] == 0
@@ -422,7 +422,7 @@ RETURN(SELF)
 
 METHOD enable(nBtn,lFlag)
 DEFAULT lFlag TO .T.
-SendMessage(::hWnd,TB_ENABLEBUTTON,nBtn,If(lFlag,1,0))
+SendMessage(::hWnd,TB_ENABLEBUTTON,nBtn,iif(lFlag,1,0))
 RETURN(SELF)
 
 *-----------------------------------------------------------------------------*
@@ -439,7 +439,7 @@ return(self)
 
 METHOD CheckButton(nBtn,lFlag)
 DEFAULT lFlag TO !::IsButtonChecked(nBtn)
-SendMessage(::hWnd,TB_CHECKBUTTON,nBtn,If(lFlag,1,0))
+SendMessage(::hWnd,TB_CHECKBUTTON,nBtn,iif(lFlag,1,0))
 RETURN(SELF)
 
 METHOD IsButtonChecked(nBtn)

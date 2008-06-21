@@ -14,7 +14,7 @@
 #include "error.ch"
 #include "debug.ch"
 
-#xtranslate NTRIM( < n > ) = > lTrim( Str( < n > ) )
+#xtranslate NTRIM( <n> ) => lTrim( Str( <n> ) )
 //#define LOGFILE  error.log // don't use quotes
 
 *------------------------------------------------------------------------------*
@@ -122,7 +122,7 @@ STATIC FUNCTION ErrorMessage( e )
    LOCAL cMessage
 
    // start error message
-   cMessage := IF( e:severity > ES_WARNING, "Error", "Warning" )
+   cMessage := iif( e:severity > ES_WARNING, "Error", "Warning" )
 
    // add error description if available
    IF ( ValType( e:description ) == "C" )
@@ -249,7 +249,7 @@ STATIC FUNCTION ConvertArgs( a )
 
    LOCAL Ret_Val
    LOCAL x, cType
-   LOCAL NumArgs := IF( ValType( a ) == "A", Len( a ) , IF( ValType( a ) == "C", ( a := { a } , 1 ) , 0 ) )
+   LOCAL NumArgs := iif( ValType( a ) == "A", Len( a ) , iif( ValType( a ) == "C", ( a := { a } , 1 ) , 0 ) )
 
    IF NumArgs > 0
       Ret_Val := '{ '
@@ -263,7 +263,7 @@ STATIC FUNCTION ConvertArgs( a )
          CASE cType == "D"
             Ret_Val += dtoc( a[ x ] )
          CASE cType == "L"
-            Ret_Val += IF( a[ x ] , ".T.", ".F." )
+            Ret_Val += iif( a[ x ] , ".T.", ".F." )
          CASE cType == "O"
             Ret_Val += a[ x ] :className + " Object"
          CASE cType == "U"
@@ -497,7 +497,7 @@ STATIC FUNCTION eAlert( cMsg, aChoices, cDetail )
    LOCAL crPos    := 0, txth := 0, atm := { }
    LOCAL isDetail := .F.
 
-   IF ValType( cMsg ) != "C"
+   IF !ISCHARACTER( cMsg )
       cMsg := asString( cMsg )
    ENDIF
    cTitle := 'Alert'
@@ -532,10 +532,10 @@ STATIC FUNCTION eAlert( cMsg, aChoices, cDetail )
 
    txth := 8 //ATM[TM_Height]
    Msgh := Len( aMsg ) * txth
-   FOR i = 1 TO n
+   FOR i := 1 TO n
       ButWidth := Max( 20, GetTextExtentpoint32( hDC, aChoices[ i ] ) [ 1 ] + 6 )
       t := Max( t, ButWidth )
-      aChoose[ i ] := IF( at( "&", aChoices[ i ] ) == 0, "&" + aChoices[ i ] , aChoices[ i ] )
+      aChoose[ i ] := iif( at( "&", aChoices[ i ] ) == 0, "&" + aChoices[ i ] , aChoices[ i ] )
    NEXT i
 
    ReleaseDC( , hDC )
@@ -548,28 +548,28 @@ STATIC FUNCTION eAlert( cMsg, aChoices, cDetail )
 
    //----------- create dialog
 
-   aDlg = MakeDlgTemplate( cTitle, ;
+   aDlg := MakeDlgTemplate( cTitle, ;
                            WS_CAPTION + DS_MODALFRAME + WS_VISIBLE + 4 + WS_POPUP + DS_SETFONT , ;
                            0, 0, w, h, 8, 'MS Sans Serif' )
 
    FOR i := 1 TO n
-      aDlg = AddDlgItem( aDlg, i, "BUTTON", ;
+      aDlg := AddDlgItem( aDlg, i, "BUTTON", ;
                          BS_PUSHBUTTON + WS_TABSTOP + WS_CHILD + WS_VISIBLE, ;
                          w - ( n - i ) * ( ButWidth + 5 ) - ButWidth - 5, h - 18, ButWidth, 14, ;
                          aChoose[ i ] )
    NEXT i
 
-   aDlg = AddDlgItem( aDlg, - 1, "STATIC", ;
+   aDlg := AddDlgItem( aDlg, - 1, "STATIC", ;
                       SS_CENTER + WS_CHILD + WS_VISIBLE, ;
                       10, 8, w - 20, Msgh, ;
                       cMsg )
 
-   aDlg = AddDlgItem( aDlg, - 1, "BUTTON", ;
+   aDlg := AddDlgItem( aDlg, - 1, "BUTTON", ;
                       BS_GROUPBOX + WS_CHILD + WS_VISIBLE, ;
                       5, 1, w - 10, Msgh + 10, ;
                       "" )
 
-   aDlg = AddDlgItem( aDlg, 101, "EDIT", ;
+   aDlg := AddDlgItem( aDlg, 101, "EDIT", ;
                       WS_CHILD + WS_VISIBLE + WS_BORDER + ES_MULTILINE + ES_READONLY + WS_VSCROLL + WS_TABSTOP, ;
                       5, h + 1, w - 10, 115, ;
                       cDetail )

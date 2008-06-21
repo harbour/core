@@ -20,7 +20,7 @@ function _trace(c)
    endif
 
 
-   OutputDebugString(if(empty(cn),'',cn+':')+procname(1)+'('+alltrim(str(procline(1)))+')'+;
+   OutputDebugString(iif(empty(cn),'',cn+':')+procname(1)+'('+alltrim(str(procline(1)))+')'+;
    ' <- '+procname(2)+'('+alltrim(str(procline(2)))+')'+;
    ' <- '+procname(3)+'('+alltrim(str(procline(3)))+')'+;
    ' <- '+procname(4)+'('+alltrim(str(procline(4)))+')'+;
@@ -46,8 +46,8 @@ FUNCTION _DVIEW
    OutputDebugString( '------------------------------' +CRLF)
    BEGIN SEQUENCE
       FOR x := 1 TO half
-         dbg_array = "p" + lTrim( STR( x, 2, 0 ) )
-         description = "p" + lTrim( STR( x + half, 2, 0 ) )
+         dbg_array := "p" + lTrim( STR( x, 2, 0 ) )
+         description := "p" + lTrim( STR( x + half, 2, 0 ) )
          DLIST( &dbg_array, &description )
       NEXT
    END
@@ -60,8 +60,8 @@ STATIC FUNCTION DLIST( dbg_array, description )
    LOCAL heading, x, a_len, data_type, value
 
    IF ValType( dbg_array ) $ 'AOS'
-      a_len = Len( dbg_array )
-      DQOUT( '     Array:', description, '', IF( a_len == 0, '', dbg_array ) , Len( dbg_array ) )
+      a_len := Len( dbg_array )
+      DQOUT( '     Array:', description, '', iif( a_len == 0, '', dbg_array ) , Len( dbg_array ) )
       FOR x := 1 TO a_len
          heading := description + "[" + STR( x, 3, 0 ) + "]"
          data_type := ValType( dbg_array[ x ] )

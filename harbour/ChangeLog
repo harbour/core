@@ -8,6 +8,38 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 23:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     - Removed HB_NOSTARTUPWINDOW link time GTWVT window 
+       hiding option.
+     ; For the same effect, but with the advantage that the 
+       screen output won't slow the application at all, and 
+       that behaviour is controllable from the command line 
+       and/or at link time, please use gtgui.lib.
+       With GTGUI the application window is neither created 
+       nor updated, while GTWVT will create the window, 
+       update the window, but it will be fully invisible with 
+       no way to unhide. Clipboard and sound generation works 
+       in both cases.
+       For 100% similar end-user experience as the old hack:
+         - link gtgui.lib
+         - replace ANNOUNCE HB_NOSTARTUPWINDOW with 
+                   ANNOUNCE HB_GT_GUI_DEFAULT
+         - add REQUEST HB_GT_GUI
+       to your application.
+
+   * contrib/hbwhat32/whatutil.prg
+   * contrib/hbwhat32/wincomm.prg
+   * contrib/hbwhat32/wincore.prg
+   * contrib/hbwhat32/windebug.prg
+   * contrib/hbwhat32/winerror.prg
+   * contrib/hbwhat32/winini.prg
+   * contrib/hbwhat32/winrbar.prg
+   * contrib/hbwhat32/wintabs.prg
+   * contrib/hbwhat32/wintbar.prg
+     * Some .prg level code cleanup. (= operators, 
+       if(), <> -> !=). No actual problem found.
+
 2008-06-21 22:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbfimage/Makefile
      ! Fixed to compile with MinGW.

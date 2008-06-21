@@ -13,7 +13,7 @@
 
 FUNCTION GetPrivateProfileLog( cSection, cEntry, lDefault, cFile )
 
-  LOCAL cDefault:=IF(lDefault,"YES","NO")
+  LOCAL cDefault:=iif(lDefault,"YES","NO")
   LOCAL cRet:=GetPrivateProfileString(cSection, cEntry, cDefault, cFile )
 
   RETURN(UPPER(cRet) $ "YESON1")
@@ -43,7 +43,7 @@ FUNCTION GetPrivateProfileDate( cSection, cEntry, dDefault, cFile )
 
 FUNCTION GetProfileLog( cSection, cEntry, lDefault )
 
-  LOCAL cDefault:=IF(lDefault,"YES","NO")
+  LOCAL cDefault:=iif(lDefault,"YES","NO")
   LOCAL cRet:=GetProfileString(cSection, cEntry, cDefault )
 
   RETURN(UPPER(cRet) $ "YESON1")
@@ -79,7 +79,7 @@ FUNCTION WritePrivateProfileInt( cSection, cEntry, nData, cFile )
 
 FUNCTION WritePrivateProfileLog( cSection, cEntry, lData, cFile )
 
-  RETURN( WritePrivateProfileString( cSection, cEntry, IF(lData,"Yes","No") , cFile ) )
+  RETURN( WritePrivateProfileString( cSection, cEntry, iif(lData,"Yes","No") , cFile ) )
 
 *-----------------------------------------------------------------------------*
 
@@ -101,7 +101,7 @@ FUNCTION WritePrivateProfileDate( cSection, cEntry, dData, cFile )
 
 FUNCTION WriteProfileLog( cSection, cEntry, lData )
 
-  RETURN( WriteProfileString( cSection, cEntry, IF(lData,"Yes","No") ) )
+  RETURN( WriteProfileString( cSection, cEntry, iif(lData,"Yes","No") ) )
 
 
 *-----------------------------------------------------------------------------*

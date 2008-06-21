@@ -79,7 +79,7 @@ METHOD New( hDlg, nL, nT, nW, nH, nStyle, nSel,nId )
    ::Dlgs:={}
    ::Procs:={}
    ::nId:=nId
-   ::nCurSel:=IF(nSel==NIL,1,nSel)
+   ::nCurSel:=iif(nSel==NIL,1,nSel)
    ::hTab:=TabCtrl_Create( hDlg, nL, nT, nW, nH, nStyle,nId)
    ::nProc:=SetProcedure( hDlg, {|hDlg,nMsg,nwParam,nlParam|;
             ::TabProc(hDlg,nMsg,nwParam,nlParam)} , {WM_NOTIFY} )
@@ -113,7 +113,7 @@ METHOD TabProc(hDlg, nMsg, nwParam, nlParam)
       IF tnhdr:code==0//TCN_SELCHANGE
 
         nSel:=TabCtrl_GetCurSel( ::hTab )+1
-        IF ::nCursel <> nSel
+        IF ::nCursel != nSel
            ShowWindow(::Tabs[::nCurSel], SW_HIDE)
            ::nCurSel:=nSel
            ShowWindow(::Tabs[::nCurSel], SW_SHOW)
@@ -121,7 +121,7 @@ METHOD TabProc(hDlg, nMsg, nwParam, nlParam)
            IF ::nCurSel > 0
 
               //nLen:=len(::Tabs[::nCurSel])
-              nLen:=if(EMPTY(::Tabs[::nCurSel]),0,len(::Tabs[::nCurSel]))
+              nLen:=iif(EMPTY(::Tabs[::nCurSel]),0,len(::Tabs[::nCurSel]))
               FOR n:=1 TO nLen
                  ::Tabs[::nCurSel,n,2]:=isWindowEnabled(::Tabs[::nCurSel,n,1])
                  ::Tabs[::nCurSel,n,3]:=isWindowVisible(::Tabs[::nCurSel,n,1])
@@ -131,7 +131,7 @@ METHOD TabProc(hDlg, nMsg, nwParam, nlParam)
            ENDIF
 
            ::nCurSel:=nSel
-           nLen:=if(EMPTY(::Tabs[::nCurSel]),0,len(::Tabs[::nCurSel]))
+           nLen:=iif(EMPTY(::Tabs[::nCurSel]),0,len(::Tabs[::nCurSel]))
 
            FOR n:=1 TO nLen
               IF ::Tabs[::nCurSel,n,2]
@@ -252,7 +252,7 @@ METHOD Configure()
          hCtrl:=CreatePage(::Dlgs[i],::hParent,::Procs, i )
          ::Tabs[i]:=hCtrl
          MoveWindow( hCtrl, acRect[1]+4, acRect[2]+acRect[4]+4, aTab[3]-aTab[1]-8, aTab[4]-(acRect[4]+acRect[2])- 8, .F. )
-         IF i<>::nCurSel
+         IF i != ::nCurSel
             ShowWindow(hCtrl,SW_HIDE)
          ENDIF
       ENDIF
@@ -262,7 +262,7 @@ METHOD Configure()
 
 *-----------------------------------------------------------------------------*
 Static Function CreatePage(acRes,hParent,aProcs, i)
-   Local bBlock:=IF(valtype( aProcs[i])== "B", aProcs[i], {|nMsg| _TempPageProc(nMsg)} )
+   Local bBlock:=iif(valtype( aProcs[i])== "B", aProcs[i], {|nMsg| _TempPageProc(nMsg)} )
    RETURN CreateDialog( , acRes, hParent, bBlock )
 
 *-----------------------------------------------------------------------------*
@@ -277,7 +277,7 @@ METHOD DeleteAll()
 
   Local lRet:=TabCtrl_DeleteAllItems(::hTab)
 
-  AEVAL(::Tabs,{|hWnd| IF(isWindow(hWnd),DestroyWindow(hWnd),)})
+  AEVAL(::Tabs,{|hWnd| iif(isWindow(hWnd),DestroyWindow(hWnd),)})
   ::Tabs:={}
   ::aDlg:={}
   ::Procs:={}

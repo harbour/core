@@ -1562,22 +1562,7 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
          hInstance,                                           /* instance */
          NULL );                                              /* lpParam */
       
-      if( hWnd )
-      {
-         /*
-          * If you wish to show window the way you want, put somewhere in your application
-          * ANNOUNCE HB_NOSTARTUPWINDOW
-          * If so compiled, then you need to issue Wvt_ShowWindow( SW_RESTORE )
-          * at the point you desire in your code.
-          * QUESTION: Do we need this feature in Harbour? [vszakats]
-          */
-         if( hb_dynsymFind( "HB_NOSTARTUPWINDOW" ) != NULL )
-            iCmdShow = SW_HIDE;
-         
-         ShowWindow( hWnd, iCmdShow );
-         UpdateWindow( hWnd );
-      }
-      else
+      if( ! hWnd )
          MessageBox( NULL, TEXT( "Failed to create window." ), szAppName, MB_ICONERROR );
    }
    else

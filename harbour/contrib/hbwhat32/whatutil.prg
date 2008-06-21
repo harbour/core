@@ -6,15 +6,15 @@
 
 #include "common.ch"
 
-#Include "winuser.ch"
-#Include "What32.ch"
-#Include 'debug.ch'
-#Include 'wingdi.ch'
+#include "winuser.ch"
+#include "What32.ch"
+#include 'debug.ch'
+#include 'wingdi.ch'
 
-#Include 'wintypes.ch'
-#Include 'cstruct.ch'
+#include 'wintypes.ch'
+#include 'cstruct.ch'
 
-#Define CTYPE_BOOL 5
+#define CTYPE_BOOL 5
 
 //#DEFINE NTRIM( n ) AllTrim( str( n ) )
 
@@ -62,7 +62,7 @@ typedef struct tagNONCLIENTMETRICS { ;
 
 function toUnicode( cString )
    local i, cTemp := ""
-   for i = 1 to len(cString)
+   for i := 1 to len(cString)
       cTemp += substr(cString, i, 1) + chr(0)
    next
    return cTemp + chr(0)
@@ -72,7 +72,7 @@ function toUnicode( cString )
 
 function fromUnicode( cString )
    local i, cTemp := ""
-   for i = 1 to len(cString) Step 2
+   for i := 1 to len(cString) Step 2
       cTemp += substr(cString, i, 1)
    next
    return cTemp
@@ -88,28 +88,28 @@ Function Alert( cMsg, aChoices )
    LOCAL hOldFont
    LOCAL xBase
 
-   If ValType( cMsg ) != "C"
-      IF VALTYPE( cMsg)=="A"
+   If !ISCHARACTER( cMsg )
+      IF ISARRAY( cMsg )
          cMsg:=a2str(cMsg,";")
       Else
-        cMsg = asString( cMsg )
+         cMsg := asString( cMsg )
       Endif
    EndIf
 
    cTitle := 'Alert'
 
    If aChoices == NIL
-      aChoices = { "&Ok" }
+      aChoices := { "&Ok" }
    EndIf
 
-   cMsg = StrTran( cMsg, ";", CR )
+   cMsg := StrTran( cMsg, ";", CR )
 
    If ( crpos := at( CR, cMsg ) ) > 0
       cTitle := Left( cMsg, crpos - 1 )
       cMsg := SubStr( cMsg, crpos + 1 )
    EndIf
 
-   hDC = GetDC( 0 )
+   hDC := GetDC( 0 )
    hOldFont := SelectObject( hDC, hFont )
 
 * ------------- total width without buttons
@@ -128,10 +128,10 @@ Function Alert( cMsg, aChoices )
 
    txth := 8 //ATM[TM_Height]
    msgh := Len( amSG ) * txth
-   For i = 1 To n
+   For i := 1 To n
       butwidth := Max( 20, GetTextExtentPoint32( hDC, aChoices[ i ] ) [ 1 ] + 20 )
       t := Max( t, butwidth )
-      aChoose[ i ] = If( at( "&", aChoices[ i ] ) == 0, "&" + aChoices[ i ] , aChoices[ i ] )
+      aChoose[ i ] := iif( at( "&", aChoices[ i ] ) == 0, "&" + aChoices[ i ] , aChoices[ i ] )
    Next i
 
    SelectObject( hDC, hOldFont )
@@ -141,8 +141,8 @@ Function Alert( cMsg, aChoices )
 
    butwidth := t
    t *= ( n + 1 )
-   w = Max( w+40, t )
-   h = msgh + 33
+   w := Max( w+40, t )
+   h := msgh + 33
    //w /= 2
    xBase:=LOWORD(GetDialogBaseUnits())
    w:=(w*4)/xBase
@@ -150,30 +150,30 @@ Function Alert( cMsg, aChoices )
 
 * ---------- get space between choices
    butwidth:=(butwidth*4)/xBase
-   t = Max( Int( ( w - butwidth * n ) / ( n + 1 ) ) , 0 )
+   t := Max( Int( ( w - butwidth * n ) / ( n + 1 ) ) , 0 )
 
 * ----------- create dialog
 
    hWnd := GetFocus( ) // default parent
 
-   aDlg = MakeDlgTemplate( cTitle, ;
+   aDlg := MakeDlgTemplate( cTitle, ;
                            WS_CAPTION + DS_MODALFRAME + WS_VISIBLE + 4 + WS_POPUP + DS_SETFONT, ;
                            0, 0, w, h, 8, 'MS Sans Serif' )
 
-   For i = 1 To n
-      aDlg = AddDlgItem( aDlg, i, "BUTTON", ;
+   For i := 1 To n
+      aDlg := AddDlgItem( aDlg, i, "BUTTON", ;
                          BS_PUSHBUTTON + WS_TABSTOP + WS_CHILD + WS_VISIBLE, ;
                          i * ( butwidth + t ) - butwidth, h - 16, butwidth, 14, ;
                          aChoose[ i ] )
    Next i
 
 
-   aDlg = AddDlgItem( aDlg, "", "STATIC", ;
+   aDlg := AddDlgItem( aDlg, "", "STATIC", ;
                       WS_BORDER + WS_CHILD + WS_VISIBLE, ;
                       0, 0, w , msgh + 14, ;
                       "" )
 
-   aDlg = AddDlgItem( aDlg, "", "STATIC", ;
+   aDlg := AddDlgItem( aDlg, "", "STATIC", ;
                       SS_CENTER + WS_CHILD + WS_VISIBLE, ;
                       2, 8, w - 4, msgh, ;
                       cMsg )
@@ -209,7 +209,7 @@ Function AlertProc( hDlg, nMsg, nwParam, nlParam )
 
 Function Ceiling( x )
 
-   Return( If( x - Int( x ) > 0, Int( x ) + 1, x ) )
+   Return( iif( x - Int( x ) > 0, Int( x ) + 1, x ) )
 
 
 *-----------------------------------------------------------------------------*
@@ -499,7 +499,7 @@ Function Array2Bin( aValues, aTypes )
          xType  := aTypes[ i ]
          If valtype( xType ) == "A"
             If cType == "A"
-               If ( cTempRet := Array2Bin( xValue, xType ) ) <> NIL
+               If ( cTempRet := Array2Bin( xValue, xType ) ) != NIL
                   cRet += cTempRet
                   nDone ++
                   Loop
@@ -522,14 +522,14 @@ Function Array2Bin( aValues, aTypes )
       EndIf
 
       Do Case
-      Case xType  == CTYPE_SHORT .OR. xType == CTYPE_UNSIGNED_SHORT
-         If cType <> "N"
+      Case xType == CTYPE_SHORT .OR. xType == CTYPE_UNSIGNED_SHORT
+         If !( cType == "N" )
             Return NIL
          EndIf
          cRet += W2BIN( xValue )
 
       Case xType == CTYPE_INT .OR. xType == CTYPE_UNSIGNED_INT
-         If cType <> "N"
+         If !( cType == "N" )
             Return NIL
          EndIf
          cRet += L2BIN( xValue )
@@ -548,26 +548,26 @@ Function Array2Bin( aValues, aTypes )
          If cType == "N"
             cRet += L2BIN( xValue )
          ElseIf cType == "L"
-            cRet += L2BIN( If( xValue, 1, 0 ) )
+            cRet += L2BIN( iif( xValue, 1, 0 ) )
          Else
             Return NIL
          EndIf
 
       Case xType == CTYPE_UNSIGNED_LONG
-         If cType <> "N"
+         If !( cType == "N" )
             Return NIL
          EndIf
          cRet += U2BIN( xValue )
 
       Case xType == CTYPE_CHAR_PTR .OR. xType == CTYPE_UNSIGNED_CHAR_PTR
-         If cType <> "C"
+         If !( cType == "C" )
             Return NIL
          EndIf
          cRet += xValue
 
       Case xType == CTYPE_BOOL
          If cType == "L"
-            cRet += U2BIN( If( xValue, 1, 0 ) )
+            cRet += U2BIN( iif( xValue, 1, 0 ) )
          ElseIf cType == "N"
             cRet += U2BIN( xValue )
          Else
@@ -575,13 +575,13 @@ Function Array2Bin( aValues, aTypes )
          EndIf
 
       Case xType == CTYPE_FLOAT
-         If cType <> "N"
+         If !( cType == "N" )
             Return NIL
          EndIf
          cRet += F2BIN( xValue )
 
       Case xType == CTYPE_DOUBLE
-         If cType <> "N"
+         If !( cType == "N" )
             Return NIL
          EndIf
          cRet += D2BIN( xValue )
@@ -597,7 +597,7 @@ Function Array2Bin( aValues, aTypes )
 
    Next
 
-   Return If( nDone == nLen, cRet, NIL )
+   Return iif( nDone == nLen, cRet, NIL )
 
 
 *  ..........................................................................
@@ -676,7 +676,7 @@ Function Bin2Array( cBin, aTypes )
         cBin := SubStr( cBin, 5 )
 
       Case xType == CTYPE_BOOL
-         aAdd( aArr, If( BIN2U( cBin ) == 0, .F., .T. ) )
+         aAdd( aArr, iif( BIN2U( cBin ) == 0, .F., .T. ) )
          cBin := SubStr( cBin, 5 )
 
       Case xType == CTYPE_FLOAT
@@ -698,7 +698,7 @@ Function Bin2Array( cBin, aTypes )
 
    EndDo
 
-   Return if( nDone == nLen, aArr, NIL )
+   Return iif( nDone == nLen, aArr, NIL )
 
 
 *-----------------------------------------------------------------------------*
@@ -734,7 +734,7 @@ FUNCTION WinColors( nfg, nbg )
   LOCAL ccolor := Left( setcolor( ) , at( ',', setcolor( ) ) - 1 )
   LOCAL ishibg := ( '*' $ ccolor )
   LOCAL cfg := Upper(StrTran( Left( ccolor, at( '/', ccolor ) - 1 ) , '*', '' ))
-  LOCAL cbg := Upper(StrTran(SubStr( ccolor, at( '/', ccolor ) + 1 ),'*','')) + IF( ishibg, '+', '' )
+  LOCAL cbg := Upper(StrTran(SubStr( ccolor, at( '/', ccolor ) + 1 ),'*','')) + iif( ishibg, '+', '' )
   LOCAL npos := 0
 
   nfg := RGB( 255, 255, 255 )
@@ -762,7 +762,7 @@ nlen:=len(cStr)
 
 FOR n:=1 TO nLen
    ch:=substr(cStr,n,1)
-   c+=if(l,upper(ch),ch)
+   c+=iif(l,upper(ch),ch)
    l:=(ch==" ")
 NEXT
 

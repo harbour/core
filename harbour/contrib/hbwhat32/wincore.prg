@@ -13,8 +13,8 @@
 
 */
 
-#xCommand ? ? < x > = > OutputDebugString( asString( < x > ) )
-#xCommand ? < x > = > OutputDebugString( asString( < x > ) + chr( 13 ) )
+#xCommand ? ? <x> => OutputDebugString( asString( <x> ) )
+#xCommand ? <x> => OutputDebugString( asString( <x> ) + chr( 13 ) )
 
 #Define WT_DIALOG     0      // used internally (user custom dialog class - advanced option)
 #Define WT_WINDOW     1      // use DefWindowProc()
@@ -69,16 +69,16 @@ Function RegisterClass( wndclass, nType, bAction, anWM, oObj, xCargo)
 
   // wndclass:cbSize        := LEN( wndclass:value )
    wndclass:lpfnWndProc   := 0
-   wndclass:style         := if( wndclass:style==NIL,(CS_HREDRAW + CS_VREDRAW + CS_OWNDC + CS_DBLCLKS), wndclass:style )
-   wndclass:cbClsExtra    := if( wndclass:cbClsExtra==NIL, 0, wndclass:cbClsExtra )
-   wndclass:cbWndExtra    := if( wndclass:cbWndExtra==NIL, 0, wndclass:cbWndExtra )
-   wndclass:hInstance     := if( wndclass:hInstance==NIL, GetModuleHandle(), wndclass:hInstance )
-   wndclass:hIcon         := if( wndclass:hIcon==NIL, LoadIcon(GetModuleHandle(),""), wndclass:hIcon )
-   wndclass:hCursor       := if( wndclass:hCursor==NIL, LoadCursor(, IDC_ARROW), wndclass:hCursor)
-   wndclass:hbrBackground := if( wndclass:hbrBackground==NIL, COLOR_WINDOW  + 1, wndclass:hbrBackground )
-   wndclass:lpszMenuName  := if( wndclass:lpszMenuName==NIL, "", wndclass:lpszMenuName ) ;
+   wndclass:style         := iif( wndclass:style==NIL,(CS_HREDRAW + CS_VREDRAW + CS_OWNDC + CS_DBLCLKS), wndclass:style )
+   wndclass:cbClsExtra    := iif( wndclass:cbClsExtra==NIL, 0, wndclass:cbClsExtra )
+   wndclass:cbWndExtra    := iif( wndclass:cbWndExtra==NIL, 0, wndclass:cbWndExtra )
+   wndclass:hInstance     := iif( wndclass:hInstance==NIL, GetModuleHandle(), wndclass:hInstance )
+   wndclass:hIcon         := iif( wndclass:hIcon==NIL, LoadIcon(GetModuleHandle(),""), wndclass:hIcon )
+   wndclass:hCursor       := iif( wndclass:hCursor==NIL, LoadCursor(, IDC_ARROW), wndclass:hCursor)
+   wndclass:hbrBackground := iif( wndclass:hbrBackground==NIL, COLOR_WINDOW  + 1, wndclass:hbrBackground )
+   wndclass:lpszMenuName  := iif( wndclass:lpszMenuName==NIL, "", wndclass:lpszMenuName ) ;
 
-   IF VALTYPE(wndclass:lpszClassName)<> "C" .OR. EMPTY(wndclass:lpszClassName) .OR. ;
+   IF !ISCHARACTER(wndclass:lpszClassName) .OR. EMPTY(wndclass:lpszClassName) .OR. ;
       ! _RegisterClass( wndclass:value )
       Return( .F. )
    ENDIF
@@ -255,7 +255,7 @@ Function _ProcessMsg( hWnd, nMsg, nwParam, nlParam, nIndex )
    // still in creation process ?
 
    If ( n := aScan( aWindow, { | x | hWnd == x[ 1 ] } ) ) == 0 //find the window
-      If ( ( n := aScan( aWindow, { | x | 0 == x[ 1 ] .AND. WT_DIALOG <> x[ 2 ] } ) ) > 0 )
+      If ( ( n := aScan( aWindow, { | x | 0 == x[ 1 ] .AND. WT_DIALOG != x[ 2 ] } ) ) > 0 )
          aWindow[ n, 1 ] := hWnd
       EndIf
    EndIf
@@ -272,7 +272,7 @@ Function _ProcessMsg( hWnd, nMsg, nwParam, nlParam, nIndex )
          oObj  := aWindow[ n, 3, i, 5 ]
          xCargo:= aWindow[ n, 3, i, 6 ]
          If ! ( ValType( bProc ) $ "BN" .AND.  ( nMsg >= WM_USER .OR. anWM[ 1 ] == - 1 .OR. aScan( anWM, nMsg ) > 0 ) )
-            If ( nProc := aWindow[ n, 3, i, 4 ] ) <> 0 // old procedure exists
+            If ( nProc := aWindow[ n, 3, i, 4 ] ) != 0 // old procedure exists
                If aScan( aProc, nProc ) == 0  // not our procedure
                   Return CallWindowProc( nProc, hWnd, nMsg, nwParam, nlParam ) // external
                EndIf
@@ -324,7 +324,7 @@ Function __KillWindow( hWnd )
 
    Local n
 
-   If hWnd <> NIL .AND. ( n := aScan( aWindow, { | x | hWnd == x[ 1 ] } ) ) > 0
+   If hWnd != NIL .AND. ( n := aScan( aWindow, { | x | hWnd == x[ 1 ] } ) ) > 0
       aWindow[ n ] := { NIL, NIL, { } }
    EndIf
 
@@ -357,9 +357,9 @@ Function _ProcessDlgMsg( hDlg, nMsg, nwParam, nlParam )
       EndIf
    EndIf
 
-   nResult := if( ValType(aDialog[ nIndex, 2 ]) == "B", ;
+   nResult := iif( ValType(aDialog[ nIndex, 2 ]) == "B", ;
                   eval( aDialog[ nIndex, 2 ] , hDlg, nMsg, nwParam, nlParam ),;
-                  if(Valtype(aDialog[ nIndex, 2 ])=="N", ;
+                  iif(Valtype(aDialog[ nIndex, 2 ])=="N", ;
                      HB_Exec( aDialog[ nIndex,2 ], aDialog[ nIndex, 4], hDlg, nMsg, nwParam, nlParam, aDialog[ nIndex, 5 ]  ),;
                      0 );
                 )
@@ -448,7 +448,7 @@ FUNCTION MakeDlgTemplate( cTitle, nStyle , x, y, nWidth, nHeight, nPointSize, ;
 
 
    // style
-   If ValType( nStyle ) <> "N" // nStyle
+   If !ISNUMERIC( nStyle ) // nStyle
       nStyle := 0
       //   acnDlg:=DS_SETFONT
       //elseif AND(acnDlg,DS_SETFONT)==0
@@ -457,8 +457,8 @@ FUNCTION MakeDlgTemplate( cTitle, nStyle , x, y, nWidth, nHeight, nPointSize, ;
 
    // But the programming interface and the result is the same.
 
-   aAdd( aDlg[ 1 ] , If( Empty( nHelpId ) , 0, nHelpId ) )   // new
-   aAdd( aDlg[ 1 ] , If( Empty( nExStyle ) , 0, nExStyle ) ) // new
+   aAdd( aDlg[ 1 ] , iif( Empty( nHelpId ) , 0, nHelpId ) )   // new
+   aAdd( aDlg[ 1 ] , iif( Empty( nExStyle ) , 0, nExStyle ) ) // new
    aAdd( aDlg[ 1 ] , nStyle ) // nStyle
    aAdd( aDlg[ 1 ] , 0 ) // no. of items
    aAdd( aDlg[ 1 ] , x )
@@ -467,13 +467,13 @@ FUNCTION MakeDlgTemplate( cTitle, nStyle , x, y, nWidth, nHeight, nPointSize, ;
    aAdd( aDlg[ 1 ] , nHeight )
    aAdd( aDlg[ 1 ] , 0 ) // no menu ? pity, maybe I'll add later
    aAdd( aDlg[ 1 ] , 0 ) // default windows class
-   aAdd( aDlg[ 1 ] , If( ValType( cTitle ) == "C", cTitle, "" ) )
+   aAdd( aDlg[ 1 ] , iif( ValType( cTitle ) == "C", cTitle, "" ) )
 
    If AND( nStyle, DS_SETFONT ) == DS_SETFONT
-      aAdd( aDlg[ 1 ] , If( ValType( nPointSize ) == "N", nPointSize, 8 ) )
-      aAdd( aDlg[ 1 ] , If( ValType( nWeight ) == "N", nWeight, 400 ) )
-      aAdd( aDlg[ 1 ] , If( ValType( lItalic ) == "L", lItalic, .F. ) )
-      aAdd( aDlg[ 1 ] , If( ValType( cFaceName ) == "C", cFaceName, "MS Sans Serif" ) )
+      aAdd( aDlg[ 1 ] , iif( ValType( nPointSize ) == "N", nPointSize, 8 ) )
+      aAdd( aDlg[ 1 ] , iif( ValType( nWeight ) == "N", nWeight, 400 ) )
+      aAdd( aDlg[ 1 ] , iif( ValType( lItalic ) == "L", lItalic, .F. ) )
+      aAdd( aDlg[ 1 ] , iif( ValType( cFaceName ) == "C", cFaceName, "MS Sans Serif" ) )
    EndIf
 
    Return( aDlg )
@@ -542,16 +542,16 @@ Function AddDlgItem( aDlg, cnId, cnDlgClass, nStyle, nX, nY, ;
 
    aDlg[ 1, 4 ] ++ // item count
 
-   aAdd( aDlg[ 2 ] ,  If( ValType( nHelpId ) == "N", nHelpId, 0 ) )
-   aAdd( aDlg[ 3 ] ,  If( ValType( nExStyle ) == "N", nExStyle, 0 ) )
-   aAdd( aDlg[ 4 ] ,  If( ValType( nStyle ) == "N", nStyle, WS_CHILD + WS_VISIBLE ) )
+   aAdd( aDlg[ 2 ] ,  iif( ValType( nHelpId ) == "N", nHelpId, 0 ) )
+   aAdd( aDlg[ 3 ] ,  iif( ValType( nExStyle ) == "N", nExStyle, 0 ) )
+   aAdd( aDlg[ 4 ] ,  iif( ValType( nStyle ) == "N", nStyle, WS_CHILD + WS_VISIBLE ) )
    aAdd( aDlg[ 5 ] ,  nX )
    aAdd( aDlg[ 6 ] ,  nY )
    aAdd( aDlg[ 7 ] ,  nWidth )
    aAdd( aDlg[ 8 ] ,  nHeight )
    aAdd( aDlg[ 9 ] ,  cnId )
    aAdd( aDlg[ 10 ] , cnDlgClass )
-   aAdd( aDlg[ 11 ] , If( ValType( cText ) <> "C", If( ValType( cText ) == "N", cText, "" ) , cText ) )
+   aAdd( aDlg[ 11 ] , iif( ISCHARACTER( cText ), cText, iif( ISNUMERIC( cText ), cText, "" ) ) )
    aAdd( aDlg[ 12 ] , 0 )    // cData
 
    Return aDlg
@@ -597,7 +597,7 @@ Function SetProcedure( hWnd, bAction, anWM, oObj, xCargo )
 
       nOldProc := GetWindowLong( hWnd, GWL_WNDPROC )
       For i := 1 To 10
-         If aProc[ i ] <> nOldProc
+         If aProc[ i ] != nOldProc
             If aScan( aWindow[ n, 3 ] , { | x | x[ 3 ] == aProc[ i ] .OR. x[ 4 ] == aProc[ i ] } ) == 0
                nProc := aProc[ i ]
                Exit
@@ -605,7 +605,7 @@ Function SetProcedure( hWnd, bAction, anWM, oObj, xCargo )
          EndIf
       Next
 
-      If nProc <> 0
+      If nProc != 0
          SetWindowLong( hWnd, GWL_WNDPROC, nProc )
          If Empty( anWM )
             anWM := { 0 }
@@ -632,7 +632,7 @@ Function ResetProcedure( hWnd, nProc )
    Local lRet := .F.
 
    If ( n := aScan( aWindow, { | x | hWnd == x[ 1 ] } ) ) > 0 //find the window
-      If ValType( nProc ) <> "N" .OR. nProc == 0  // unsubclass all
+      If !ISNUMERIC( nProc ) .OR. nProc == 0  // unsubclass all
 
          If Len( aWindow[ n, 3 ] ) > 0 // is subclassed
             If aWindow[ n, 3, 1, 4 ] == 0
@@ -642,7 +642,7 @@ Function ResetProcedure( hWnd, nProc )
                nProc := aWindow[ n, 3, 1, 4 ]
                aSize( aWindow[ n, 3 ] , 0 )
             EndIf
-            If nProc <> 0
+            If nProc != 0
                SetWindowLong( hWnd, GWL_WNDPROC, nProc )
                lRet := .T.
             EndIf
@@ -673,7 +673,7 @@ Function WinProcCount( hWnd, nProc )
    Local nRet := 0
 
    If ( n := aScan( aWindow, { | x | hWnd == x[ 1 ] } ) ) > 0 //find the window
-      If ValType( nProc ) <> "N" .OR. nProc == 0
+      If !ISNUMERIC( nProc ) .OR. nProc == 0
          nRet := Max( 0, Len( aWindow[ n, 3 ] ) - 1 )
       Else
          If ( i := aScan( aWindow[ n, 3 ] , { | x | x[ 3 ] == nProc } ) ) > 0
@@ -691,7 +691,7 @@ Function SelectWindow( hNewWnd )
 
    Local hOldActive := hWndActive
 
-   If hNewWnd <> NIL .AND. IsWindow( hNewWnd )
+   If hNewWnd != NIL .AND. IsWindow( hNewWnd )
       hWndActive := hNewWnd
    EndIf
 

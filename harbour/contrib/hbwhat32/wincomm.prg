@@ -16,7 +16,7 @@
 FUNCTION CreateStatusBar(nStyle, cText, hParent, nId  )
 LOCAL hSBWnd
 LOCAL nProc
-   IF ( hSBWnd := CreateStatusWindow(nStyle, cText,hParent, nId )) <> 0
+   IF ( hSBWnd := CreateStatusWindow(nStyle, cText,hParent, nId )) != 0
       nProc:=SetProcedure(hParent, {|hWnd, nMsg, nwParam, nlParam| ;
              _SBMove( nProc, hWnd, nMsg, nwParam, nlParam, hSBWnd ) }, WM_SIZE )
    ENDIF
