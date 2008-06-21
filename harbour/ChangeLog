@@ -8,15 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 12:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * ChangeLog
+     + Marked changes merged with 1.0.0RC1.
+     * RC1 markings renamed to 1.0.0RC1.
+
 2008-06-21 11:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * harbour-ce-spec
    * harbour-w32-spec
    * doc/whatsnew.txt
      ! Fixed version to be 1.0.0 RC1
-       [TOMERGE RC1]
+       [1.0.0RC1]
 
    * ChangeLog
-     ! Marked a few changes as [TOMERGE RC1]
+     ! Marked a few changes for merge with 1.0.0RC1.
 
 2008-06-20 16:25 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * contrib/hbwhat32/winuser.ch
@@ -24,7 +29,7 @@
      ; HbWhat32 compiles fine but I have seen a lot of contradictions
        in the header. Anybody using hbwhat32 needs to test it 
        properly. May be in normal usage this is OK.  
-       [TOMERGE RC1]
+       [1.0.0RC1]
 
 2008-06-20 13:25 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * contrib/hbwhat32/winuser.ch
@@ -50,6 +55,7 @@
 2008-06-20 17:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbtpathy/telepath.prg
      ! Fixed embedded comments.
+       [1.0.0RC1]
 
 2008-06-20 16:23 UTC+0100 Miguel Angel Marchuet Frutos <miguelangel@marchuet.net>
    * contrib/hbziparch/zip.c
@@ -59,6 +65,7 @@
    * contrib/hbziparch/zipstorage.cpp
      * Synced with xharbour. Added relative paths capability, removed memory leaks and minor refinements.
      ( code aported by Juan Galvez )
+       [1.0.0RC1]
 
 2008-06-20 15:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
@@ -73,16 +80,16 @@
 
 2008-06-20 14:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * ChangeLog
-     + Marked changes merged with RC1.
+     + Marked changes merged with 1.0.0RC1.
 
    * include/hbgtinfo.ch
      ! Comment typo.
-       [TOMERGE RC1]
+       [1.0.0RC1]
 
    * contrib/hbtpathy/tplinux.c
    * contrib/hbtpathy/telepath.prg
      ! Moved some commented "inline" stuff to C level.
-       [TOMERGE RC1]
+       [1.0.0RC1]
 
 2008-06-20 09:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/spd.c
@@ -94,7 +101,7 @@
 
    * contrib/examples/hscript/bld_b32.bat
      ! Fixed to have hbzlib.lib
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-19 18:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/examples/guestbk/guestbk.prg
@@ -209,7 +216,7 @@
 2008-06-19 02:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbtip/common.mak
      ! Added missing sendmail.prg
-       [RC1]
+       [1.0.0RC1]
 
    * contrib/hbtip/sendmail.prg
      * Formatting.
@@ -229,17 +236,17 @@
      ! All tip tests fixed and tested to compile/link
        with Harbour.
      * Changed to not require hbw32.lib.
-       [RC1]
+       [1.0.0RC1]
 
    + contrib/hbtip/tests/test.dbf
      + Added for tests.
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-18 11:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtclip.c
      ! hb_gt_w32_setClipboard() fix to CF_UNICODETEXT 
        EOS char setting.
-       [RC1]
+       [1.0.0RC1]
 
    * source/rtl/gtwvt/gtwvt.c
      + Internal error string cleanup.
@@ -249,7 +256,7 @@
      + Now showing the application's executable name 
        in the window title on startup, instead of "Harbour WVT".
      * Window class name handling and control flow cleaned.
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-17 23:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tget.prg
@@ -273,12 +280,12 @@
        to the original length with the original content. 
        This also clears some existing differences in rto_get.prg.
      + Added regression test specifically for this.
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-17 21:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtclip.c
      ! Added three LPWSTR casts to pacify warnings.
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-17 18:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtclip.c
@@ -289,12 +296,12 @@
      ! Fixed get clipboard when CF_TEXT/CF_OEMTEXT format 
        is used, so that an additionaly zero byte won't be 
        appended anymore to the returned string.
-       [RC1] (someone pls verify this)
+       [1.0.0RC1] (someone pls verify this)
 
    * source/rtl/gtwvt/gtwvt.c
      * "HARBOUR_WVT" -> "Harbour WVT". This text is visible, 
        so it's better to make it "desktop friendlier"".
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-17 13:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmzip/hbmzip.ch
@@ -302,7 +309,7 @@
      + Added error codes to hbmzip.ch
      + Interface code changed to use manifest constants 
        instead of literals in a few places.
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-17 09:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/spd.c
@@ -321,7 +328,7 @@
    * contrib/rddads/doc/en/adsfuncs.txt
    * contrib/rddads/doc/en/readme.txt
      + Updated.
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-16 14:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbole/ole2.c
@@ -393,7 +400,7 @@
    * contrib/hbtip/tests/loadhtml.prg
    * contrib/hbtip/tests/ftpadv.prg
      * Changed to compile in Harbour.
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-14 11:34 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
    * contrib/gtwvg/gtwvg.c
@@ -439,7 +446,7 @@
    + contrib/hbtip/tests/tiptime.prg
    + contrib/hbtip/tests/uploadftp.prg
      + Added TIP library tests from xhb repository.
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-14 09:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32/w32_ole.c
@@ -482,7 +489,7 @@
    * source/vm/cmdarg.c
    * source/vm/dynsym.c
      ! LUPDATE() buffer overread fixed. (hb_retds(""))
-       [RC1]
+       [1.0.0RC1]
      % hb_itemPutC*()/hb_retc*()/hb_errInternal() "" parameter -> NULL
        NOTE: gtwvg not changed.
      * Few minor cleanups.
@@ -634,7 +641,7 @@
 2008-06-12 08:55 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbct/fcopy.prg
      ! Fixed crash in FILECOPY() (reported by Mario H. Sabado)
-       [RC1]
+       [1.0.0RC1]
 
    * contrib/hbodbc/odbc.c
      * Using sizeof() wherever possible.
@@ -691,7 +698,7 @@
 
 2008-06-11 19:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * ChangeLog
-     + Marked changes merged with RC1.
+     + Marked changes merged with 1.0.0RC1.
 
 2008-06-11 19:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbgtinfo.ch
@@ -732,9 +739,9 @@
        the list of those getting installed to the Harbour central 
        include dir. Only hbcompat.ch, hbcompat.h and xhb.ch 
        goes now to the official include dir. After this change 
-       has been merged with RC1, xhb.lib may be included in 
+       has been merged with 1.0.0RC1, xhb.lib may be included in 
        the default build.
-       [RC1]
+       [1.0.0RC1]
 
    * contrib/hbw32/tests/testdll.prg
      + Added some more DLL calling samples.
@@ -1199,7 +1206,7 @@
    * include/hbgtinfo.ch
      + Added comment to compatibility #defines, to not use 
        them, since they're deprecated.
-       [RC1]
+       [1.0.0RC1]
      * HB_GTI_CB_* -> HB_GTE_* (stands for GT Event). Removed 
        plain GTI_ versions, GTI_* range is frozen, pls don't 
        add new codes to them and especially don't use them in 
@@ -1215,12 +1222,12 @@
        #define HB_GT_NO_XHB to disable the compatibility #defines, 
        if it collides with your code or you want to test after 
        transition.
-     ; [RC1]
+     ; [1.0.0RC1]
 
    * source/rtl/dirdrive.c
      ! Guarded C53 undoc functions with HB_C52_UNDOC, which is enabled 
        so it won't make a difference in default builds.
-     ; [RC1]
+     ; [1.0.0RC1]
 
    * source/rtl/filesys.c
      ! Fixed hb_fsIsDrv() to use GetDriveTypeA() API, to avoid some 
@@ -1228,7 +1235,7 @@
        drives (f.e. USB reader devices) are queried.
      ; Please test.
      ; TOFIX: hb_fsChDrv() suffers from the same problem.
-     ; [CANCELLED RC1]
+     ; [CANCELLED 1.0.0RC1]
 
    * contrib/hbcurl/hbcurl.c
    * contrib/rddads/adsfunc.c
@@ -1236,7 +1243,7 @@
      % Optimized out explicit function name strings in RTE calls.
      ! The above is actually a fix (I hope) for the one in 
        hb_adsCheckLock(). Error text also made more consistent.
-     ; [CANCELLED RC1]
+     ; [CANCELLED 1.0.0RC1]
 
    * contrib/hbw32/w32_prn.c
      % Minor optimizations, cleanups.
@@ -1274,11 +1281,11 @@
    * contrib/hbfbird/make_b32.bat
    * contrib/hbfbird/make_vc.bat
      * Fixed location where .libs are looked for.
-       [RC1]
+       [1.0.0RC1]
 
    * contrib/hbcurl/hbcurl.c
      % Minor cleanups.
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-07 15:32 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c
@@ -1300,7 +1307,7 @@
    * contrib/hbodbc/make_vc.bat
      ! Removed .dll -> .lib conversion for MSVC, 
        since the .lib is provided by the MS SDK anyway.
-     ; [RC1]
+     ; [1.0.0RC1]
 
    * contrib/hbcurl/hbcurl.c
    * contrib/hbcurl/hbcurl.ch
@@ -1316,7 +1323,7 @@
        error would be thrown now.
      ! CURL_ESCAPE()/CURL_UNESCAPE() fixed picked parameter ordinal.
      + CURL_ESCAPE()/CURL_UNESCAPE() added parameter checking.
-     ; [RC1]
+     ; [1.0.0RC1]
 
    * contrib/rddads/adsmgmnt.c
      * Minor formatting.
@@ -1335,10 +1342,10 @@
 
 2008-06-07 09:40 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
-     % Minor opt. [RC1]
+     % Minor opt. [1.0.0RC1]
 
    * ChangeLog
-     + Marked changes merged with RC1.
+     + Marked changes merged with 1.0.0RC1.
 
 2008-06-07 09:39 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
@@ -1346,7 +1353,7 @@
        a font change.
      ! Fixed cursor SC_NORMAL height to be calculated 
        from the font height, instead of being a static 
-       number. [RC1]
+       number. [1.0.0RC1]
 
    * contrib/hbcurl/hbcurl.c
      + Added RTEs when wrong parameter was passed 
@@ -1355,7 +1362,7 @@
        CURL_SHARE_STRERROR()
        CURL_MULTI_STRERROR()
        CURL_GETDATE()
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-06 23:30 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com
    * harbour/source/rtl/gtwvt/gtwvt.c   
@@ -1393,20 +1400,20 @@
 
 2008-06-06 17:58 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * ChangeLog
-     + Marked changes merged with RC1.
+     + Marked changes merged with 1.0.0RC1.
 
    * contrib/hbpgsql/make_b32.bat
-     - Removed special compiler switches no longer necessary. [RC1]
+     - Removed special compiler switches no longer necessary. [1.0.0RC1]
 
 2008-06-06 14:46 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      + Now throws RTEs when required parameters are missing 
        or the wrong type. The concept here is that RTEs are 
        only to catch syntax mistakes, and not errors resulting 
-       from actual libcurl usage/functionality/states. [RC1]
+       from actual libcurl usage/functionality/states. [1.0.0RC1]
        
    * contrib/hbapollo/apollo.ch
-     * Formatting. [RC1]
+     * Formatting. [1.0.0RC1]
 
 2008-06-06 10:21 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
@@ -1437,7 +1444,7 @@
    * contrib/hbapollo/Makefile
    + contrib/hbapollo/apollo.ch
    - contrib/hbapollo/tests/apollo.ch
-     ! apollo.ch file was in tests by mistake. [RC1]
+     ! apollo.ch file was in tests by mistake. [1.0.0RC1]
 
 2008-06-05 20:30 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    - contrib/examples/pp/hbpp.c
@@ -1468,7 +1475,7 @@
      ; Please test.
 
    * harbour-w32-spec
-     ! Added 'svn:keywords "Author Date Id Revision"' [RC1]
+     ! Added 'svn:keywords "Author Date Id Revision"' [1.0.0RC1]
 
 2008-06-05 14:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-ce-spec
@@ -1530,7 +1537,7 @@
      + Added BCC make file.
 
    * contrib/examples/pe/bld_b32.bat
-     ! Fixed. [RC1]
+     ! Fixed. [1.0.0RC1]
 
 2008-06-05 10:41 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmysql/mysql.c
@@ -1575,6 +1582,7 @@
 2008-06-05 12:50 UTC-0400 Phil Barnett <philb/at/philb.us>
   * Set version in harbour.spec to 1.0.0-RC1
   * Set version in include/hbver.h to 1.0.0-RC1
+       [1.0.0RC1]
 
 2008-06-05 03:25 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit3/hbsqlit3.c
@@ -1610,7 +1618,7 @@
      ; TOFIX: Use hb_parptrGC() for 'PGresult', 'FILE*'.
 
    * contrib/hbpgsql/make_vc.bat
-     + Now uses the .lib provided in the binary package. [RC1]
+     + Now uses the .lib provided in the binary package. [1.0.0RC1]
        (This needs the current 8.3.1 version)
 
 2008-06-05 02:34 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -1625,7 +1633,7 @@
    * contrib/hbpgsql/make_vc.bat
    * contrib/hbpgsql/tests/bld_b32.bat
    * contrib/hbpgsql/tests/bld_vc.bat
-     ! Fixed to use the right .dll to generate the .lib. [RC1]
+     ! Fixed to use the right .dll to generate the .lib. [1.0.0RC1]
 
    * contrib/hbpgsql/tpostgre.prg
      * Comment.
@@ -1633,7 +1641,7 @@
 2008-06-05 00:00 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit2/Makefile
      ! Readded last char of last line.
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-04 23:18 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit2/hbsqlit2.c
@@ -1647,7 +1655,7 @@
    * tests/rto_get.prg
      + Added keypress emulator to aid automated testing.
      + Added test for EMG's bug case.
-       [RC1]
+       [1.0.0RC1]
 
 2008-06-04 21:44 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.ch
@@ -1665,7 +1673,7 @@
        HB_CURLOPT_POSTQUOTE
        HB_CURLOPT_PREQUOTE
        HB_CURLOPT_TELNETOPTIONS
-     ; [RC1]
+     ; [1.0.0RC1]
 
 2008-06-04 20:17 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit3/hbsqlit3.c
@@ -1673,7 +1681,7 @@
 
 2008-06-04 20:12 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
-     * Minor. [RC1]
+     * Minor. [1.0.0RC1]
 
    * contrib/hbodbc/todbc.prg
    * contrib/hbodbc/odbc.txt
@@ -1686,7 +1694,7 @@
 
 2008-06-04 19:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
-     ! Missing cast. [RC1]
+     ! Missing cast. [1.0.0RC1]
 
 2008-06-04 18:55 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.ch
@@ -1707,29 +1715,29 @@
        * HB_CURLOPT_SETDOWNLOADFILE   -> HB_CURLOPT_DL_FILE_SETUP
        * HB_CURLOPT_CLOSEDOWNLOADFILE -> HB_CURLOPT_DL_FILE_CLOSE
        * HB_CURLOPT_SETPROGRESS       -> HB_CURLOPT_PROGRESSBLOCK
-     ; [RC1]
+     ; [1.0.0RC1]
 
 2008-06-04 17:32 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      * Changed all logical options to default to .T.. This 
        way all work the same way, and in real life usage 
        the logical parameter can omitted in most cases.
-       INCOMPATIBLE. [RC1]
+       INCOMPATIBLE. [1.0.0RC1]
 
    * contrib/hbcurl/tests/ftp_uldl.prg
-     + Added small example to get a dir listing. [RC1]
+     + Added small example to get a dir listing. [1.0.0RC1]
 
 2008-06-04 17:21 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      + Changed to use hb_parc() (instead of hb_parcx()) for all 
        curl_easy_setopt() string options, so that NULL (NIL) will 
        reset these options to default state, instead of passing 
-       an empty string to them. [RC1]
+       an empty string to them. [1.0.0RC1]
 
 2008-06-04 15:48 UTC+0100 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/hbbit.c
      + Added important NOTE about hb_bit*() functions' 
-       relation to the compiler optimization engine. [RC1]
+       relation to the compiler optimization engine. [1.0.0RC1]
 
    * source/vm/fm.c
    * source/vm/extrap.c
@@ -1764,7 +1772,7 @@
      + Added HB_VERSION unified version identifier:
        three bytes: major + minor + revision (0x000909)
        This is to aid 3rd parties to detect version.
-       [RC1]
+       [1.0.0RC1]
 
    * contrib/hbsqlit3/make_b32.bat
    * contrib/hbsqlit3/hbsqlit3.c
