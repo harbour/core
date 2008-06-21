@@ -25,8 +25,8 @@
 ######################################################################
 
 %define name      harbour-ce
-%define version   0.0.0
-%define releasen  0
+%define version   1.0.0
+%define releasen  RC1
 %define hb_pref   hbce
 %define hb_ccpath /opt/mingw32ce/bin
 %define hb_ccpref arm-wince-mingw32ce-
@@ -97,7 +97,7 @@ export HB_ARCHITECTURE=w32
 export HB_COMPILER=cemgw
 
 mkdir -p source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}
-ln -s ../../linux/gcc/hbppgen source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}/hbppgen.exe
+ln -s ../../linux/gcc/hbpp source/pp/${HB_ARCHITECTURE}/${HB_COMPILER}/hbpp.exe
 mkdir -p source/main/${HB_ARCHITECTURE}/${HB_COMPILER}
 ln -s ../../linux/gcc/harbour source/main/${HB_ARCHITECTURE}/${HB_COMPILER}/harbour.exe
 
@@ -172,7 +172,7 @@ make -r -i install
 ${CCPREFIX}strip --strip-debug $HB_LIB_INSTALL/*
 
 # remove unused files
-rm -fR ${HB_BIN_INSTALL}/{harbour,hbdoc,hbdot,hbmake,hbpp,hbrun,hbtest,hbverfix,hbpptest}.exe
+rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbdoc,hbdot,hbmake,hbrun,hbtest,hbverfix,hbpptest}.exe
 rm -fR $HB_INC_INSTALL
 
 # Create a README file for people using this RPM.

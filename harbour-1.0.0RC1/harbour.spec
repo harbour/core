@@ -60,8 +60,8 @@
 
 %define name     harbour
 %define dname    Harbour
-%define version  0.9.9-RC1
-%define releasen 0
+%define version  1.0.0
+%define releasen RC1
 %define hb_pref  hb
 %define hb_arch  export HB_ARCHITECTURE=linux
 %define hb_cc    export HB_COMPILER=gcc
@@ -328,7 +328,7 @@ then
     export L_USR="${CC_L_USR} -L${HB_LIB_INSTALL} -l%{name} -lncurses %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11} %{?_with_pgsql4:/usr/lib/libpq.so.4} %{?_with_pgsql:-lpq} %{?_with_gd:-lgd}"
     export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${PRG_USR}"
 
-    for utl in hbmake hbrun hbdot hbpp hbdoc
+    for utl in hbmake hbrun hbdot hbdoc
     do
         pushd utils/${utl}
         rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
@@ -492,6 +492,7 @@ rm -rf $RPM_BUILD_ROOT
 %verify(not md5 mtime) %config /etc/harbour.cfg
 %verify(not md5 mtime) %config /etc/harbour/hb-charmap.def
 %{_bindir}/harbour
+%{_bindir}/hbpp
 %{_bindir}/hb-mkslib
 %{_bindir}/%{hb_pref}-build
 %{_bindir}/%{hb_pref}cc
@@ -501,7 +502,6 @@ rm -rf $RPM_BUILD_ROOT
 #%{_bindir}/hbtest
 %{_bindir}/hbrun
 %{_bindir}/hbdot
-%{_bindir}/hbpp
 %{_bindir}/hbmake
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}

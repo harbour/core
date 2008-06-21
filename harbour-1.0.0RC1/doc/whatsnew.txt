@@ -3,7 +3,7 @@
  */
 
 
-Version 0.9.9 RC1 (2008-06-04) tag: RC1
+Version 1.0.0 RC1 (2008-06-04) tag: RC1
 
 General
 =============================
@@ -286,12 +286,14 @@ Contrib
 - added automatic ACE version detection during building ADSRDD
 - added many new Ads*() functions wrappers and cleaned code for
   possible GPFs when wrong parameters were passed to some functions
-- added HBHPDF - interface for Haru Free PDF Library.- added HBVPDF - Viktor K's PDF Library + Pritpal Bedi's OOP extension.
+- added HBHPDF - interface for Haru Free PDF Library.
+- added HBVPDF - Viktor K's PDF Library + Pritpal Bedi's OOP extension.
 - enhanced and fixed HBW32 library - OLE and printing
 
 Utilities
 =============================
-- added HBDOT utility program. It's a "Dot Prompt" Console for the Harbour Language
+- added HBDOT utility program. It's a "Dot Prompt" Console for the
+  Harbour Language
          Syntax:  hbdot [<hrbfile[.prg]> [<parameters,...>]]
    It should look and work in similar way to pp/xBaseScript
    by Ron Pinkas but unlike xBaseScript is does not have preprocessor

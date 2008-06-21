@@ -54,8 +54,8 @@
  *
  */
 
-#define _CLIPDEFS_H
-
+#include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapifs.h"
 
 #ifdef HB_OS_UNIX
@@ -68,23 +68,15 @@
 #include <termios.h> /* POSIX terminal control definitions */
 #include <sys/ioctl.h>
 
-#include "extend.api"
-#include "item.api"
+HB_FUNC( P_OPEN )
+{
+   int fd = open( hb_parcx( 1 ), O_RDWR | O_NOCTTY | O_NDELAY ); /* File descriptor for the port */
 
-HB_FUNC( P_OPEN ) {
-
-   int fd; /* File descriptor for the port */
-
-   fd = open( hb_parcx( 1 ), O_RDWR | O_NOCTTY | O_NDELAY );
-
-   if (fd != -1) {
+   if( fd != -1 )
       fcntl( fd, F_SETFL, 0 );
-   }
 
    hb_retnl( fd );
 }
-
-
 
 /*
 p_InitPortSpeed( aPorts[ nPort, TPFP_HANDLE ] ,;
@@ -93,122 +85,64 @@ p_InitPortSpeed( aPorts[ nPort, TPFP_HANDLE ] ,;
                  aPorts[ nPort, TPFP_PARITY ] ,;
                  aPorts[ nPort, TPFP_SBITS  ] )
 */
-HB_FUNC( P_INITPORTSPEED ) {
-
+HB_FUNC( P_INITPORTSPEED )
+{
    struct termios options;
    int port = hb_parnl( 1 );
    int baud = B300;
-   char *ptr = hb_parcx( 4 );
+   char * ptr = hb_parcx( 4 );
    int rc;
 
    tcgetattr( port, &options );
 
-   // let's set baud rate
-   switch ( hb_parnl( 2 ) ) {
-
-      case 0:
-         baud = B0;  // Drop line
-         break;
-
-      case 50:
-         baud = B50;
-         break;
-
-      case 75:
-         baud = B75;
-         break;
-
-      case 110:
-         baud = B110;
-         break;
-
-      case 150:
-         baud = B150;
-         break;
-
-      case 200:
-         baud = B200;
-         break;
-
-      case 300:
-         baud = B300;
-         break;
-
-      case 600:
-         baud = B600;
-         break;
-
-      case 1200:
-         baud = B1200;
-         break;
-
-      case 1800:
-         baud = B1800;
-         break;
-
-      case 2400:
-         baud = B2400;
-         break;
-
-      case 4800:
-         baud = B4800;
-         break;
-
-      case 9600:
-         baud = B9600;
-         break;
-
-      case 19200:
-         baud = B19200;
-         break;
-
-      case 38400:
-         baud = B38400;
-         break;
-
-      case 57600:
-         baud = B57600;
-         break;
-
-      case 115200:
-         baud = B115200;
-         break;
-
-      case 230400:
-         baud = B230400;
-         break;
+   /* let's set baud rate */
+   switch( hb_parnl( 2 ) )
+   {
+      case 0:       baud = B0;       break; /* Drop line */
+      case 50:      baud = B50;      break;
+      case 75:      baud = B75;      break;
+      case 110:     baud = B110;     break;
+      case 150:     baud = B150;     break;
+      case 200:     baud = B200;     break;
+      case 300:     baud = B300;     break;
+      case 600:     baud = B600;     break;
+      case 1200:    baud = B1200;    break;
+      case 1800:    baud = B1800;    break;
+      case 2400:    baud = B2400;    break;
+      case 4800:    baud = B4800;    break;
+      case 9600:    baud = B9600;    break;
+      case 19200:   baud = B19200;   break;
+      case 38400:   baud = B38400;   break;
+      case 57600:   baud = B57600;   break;
+      case 115200:  baud = B115200;  break;
+      case 230400:  baud = B230400;  break;
    }
 
    cfsetispeed( &options, baud );
    cfsetospeed( &options, baud );
 
-   // Enable the receiver and set local mode...
+   /* Enable the receiver and set local mode... */
    options.c_cflag |= ( CLOCAL | CREAD );
 
-   // Raw input from device
+   /* Raw input from device */
    cfmakeraw( &options );
 
-   // Reset data bits ( cfmakeraw() puts it to CS8 )
+   /* Reset data bits ( cfmakeraw() puts it to CS8 ) */
    options.c_cflag &= ~CSIZE;
 
-   // Data bits
-   if ( hb_parni( 3 ) == 8 ) {
-
+   /* Data bits */
+   if( hb_parni( 3 ) == 8 )
       options.c_cflag |= CS8;
-
-   } else {
-
+   else
       options.c_cflag |= CS7;
-   }
 
-   // Stop bits
-   if ( hb_parni( 5 ) == 1 ) {
+   /* Stop bits */
+   if( hb_parni( 5 ) == 1 )
       options.c_cflag &= ~CSTOPB;
-   }
 
-   // Parity, only No, Even, Odd supported
-   switch ( *ptr )  {
-
+   /* Parity, only No, Even, Odd supported */
+   switch ( *ptr )
+   {
       case 'N':
       case 'n':
          options.c_cflag &= ~PARENB;
@@ -233,156 +167,89 @@ HB_FUNC( P_INITPORTSPEED ) {
          break;
    }
 
-
-   // Every read() call returns as soon as a char is available OR after 3 tenths of a second
+   /* Every read() call returns as soon as a char is available OR after 3 tenths of a second */
    options.c_cc[ VMIN ] = 0;
    options.c_cc[ VTIME ] = 3;
 
-   // Set the new options for the port...
+   /* Set the new options for the port... */
    rc = tcsetattr( port, TCSAFLUSH, &options );
 
    hb_retnl( rc );
 }
 
+HB_FUNC( P_READPORT )
+{
+   char Buffer[ 512 ];
+   int nRead = read( hb_parnl( 1 ), Buffer, sizeof( Buffer ) );
 
-
-HB_FUNC( P_READPORT ) {
-
-   char Buffer[512];
-   int nRead;
-
-   nRead = read( hb_parnl( 1 ), Buffer, 512 );
-
-   if ( nRead < 0 ) {
-
-      hb_retclen( "", 0 );
-
-   } else {
-
-      hb_retclen( Buffer, nRead );
-   }
+   hb_retclen( nRead > 0 ? Buffer : NULL, nRead );
 }
 
+HB_FUNC( P_WRITEPORT )
+{
+   long n = write( hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ) );
 
-
-HB_FUNC( P_WRITEPORT ) {
-
-   long n;
-
-   n = write( hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ) );
-
-   if ( n < 0 ) {
-
-      hb_retnl( -1 );
-
-   } else {
-
-      hb_retnl( n );
-   }
+   hb_retnl( n < 0 ? -1 : n );
 }
 
-
-
-HB_FUNC( P_DRAIN ) {
-
+HB_FUNC( P_DRAIN )
+{
    hb_retnl( tcdrain( hb_parnl( 1 ) ) );
-
 }
 
-
-
-HB_FUNC( P_OUTFREE ) {
+HB_FUNC( P_OUTFREE )
+{
    /*
    APIRET rc;
    RXQUEUE rxqueue = { 0 };
 
-   if ( ( rc = DosDevIOCtl( (HFILE) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETOUTQUECOUNT,
-                            NULL, 0L, NULL, &rxqueue, sizeof(RXQUEUE), NULL ) ) == NO_ERROR ) {
-
+   if ( ( rc = DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETOUTQUECOUNT,
+                            NULL, 0L, NULL, &rxqueue, sizeof( RXQUEUE ), NULL ) ) == NO_ERROR )
       hb_retnl( rxqueue.cb - rxqueue.cch );
-
-   } else {
-      // Put GetLastError() here, or better a second byref param?
-      hb_retnl( -1 );
-   }
-
+   else
+      hb_retnl( -1 ); /* Put GetLastError() here, or better a second byref param? */
    */
-
 }
 
-
-
-HB_FUNC( P_ISDCD ) {
-
+HB_FUNC( P_ISDCD )
+{
    int status;
-   int rc;
 
-   rc = ioctl( hb_parnl( 1 ), TIOCMGET, &status );
-
-   if ( rc == 0 ) {
+   if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_CD ) == TIOCM_CD );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
 
-
-
-HB_FUNC( P_ISRI ) {
-
+HB_FUNC( P_ISRI )
+{
    int status;
-   int rc;
 
-   rc = ioctl( hb_parnl( 1 ), TIOCMGET, &status );
-
-   if ( rc == 0 ) {
+   if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_RI ) == TIOCM_RI );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
 
-
-
-HB_FUNC( P_ISDSR ) {
-
+HB_FUNC( P_ISDSR )
+{
    int status;
-   int rc;
 
-   rc = ioctl( hb_parnl( 1 ), TIOCMGET, &status );
-
-   if ( rc == 0 ) {
+   if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_DSR ) == TIOCM_DSR );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
 
-
-
-HB_FUNC( P_ISCTS ) {
-
+HB_FUNC( P_ISCTS )
+{
    int status;
-   int rc;
 
-   rc = ioctl( hb_parnl( 1 ), TIOCMGET, &status );
-
-   if ( rc == 0 ) {
+   if ( ioctl( hb_parnl( 1 ), TIOCMGET, &status ) == 0 )
       hb_retl( ( status & TIOCM_CTS ) == TIOCM_CTS );
-
-   } else {
-
+   else
       hb_retl( FALSE );
-   }
 }
-
-
 
 HB_FUNC( P_CTRLCTS ) {
 
@@ -395,20 +262,47 @@ HB_FUNC( P_CTRLCTS ) {
    tcgetattr( port, &options );
    curvalue = ( options.c_cflag & CRTSCTS ) == CRTSCTS;
 
-   if ( newvalue == 0  ) {
+   if( newvalue == 0 )
       options.c_cflag &= ~CRTSCTS;
+   else if( newvalue == 1 )
+      options.c_cflag |= CRTSCTS;
 
-   } else {
-      if ( newvalue == 1 ) {
-         options.c_cflag |= CRTSCTS;
-      }
-   }
-
-   if ( newvalue >= 0 ) {
+   if( newvalue >= 0 )
       rc = tcsetattr( port, TCSAFLUSH, &options );
-   }
 
    hb_retni( curvalue ? 1 : 0 );
-
 }
-#endif // HB_OS_UNIX
+
+#if 0
+
+/* Inline function moved here from telepath.prg */
+HB_FUNC( _P_CTRLDTR )
+{
+   double nph = hb_parnd( 1 );
+   double nnewval, noldval;
+   unsigned int result = 0;
+
+   ioctl( nph, TIOCMGET, &result );
+
+   if( result & TIOCM_DTR )
+      noldval = 1;
+   else
+      noldval = 0;
+
+   if( noldval != nnewval )
+   {
+      if( nnewval == 0 )
+         result &= ~TIOCM_DTR;
+      else
+         result |= TIOCM_DTR;
+
+      ioctl( nph, TIOCMSET, &result );
+   }
+
+   hb_stornd( nnewval, 2 );
+   hb_stornd( noldval, 3 );
+}
+
+#endif
+
+#endif /* HB_OS_UNIX */

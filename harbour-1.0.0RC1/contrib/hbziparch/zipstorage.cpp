@@ -52,10 +52,12 @@ DWORD CZipStorage::Read(void *pBuf, DWORD iSize, bool bAtOnce)
 	{
 		iRead = m_pFile->Read(pBuf, iSize);
 		if (!iRead)
+		{
 			if (IsSpanMode())
 				ChangeDisk(m_iCurrentDisk + 1);
 			else
 				ThrowError(CZipException::badZipFile);
+		}
 	}
 
 	if (iRead == iSize)

@@ -682,7 +682,7 @@ int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord
             catch( CZipException& e )
             {
                   HB_SYMBOL_UNUSED( e );
-
+                  iReturn = false;
                   szZip.CloseFile( NULL, true);
 /*            szZip.CloseNewFile(true);*/
             }
@@ -874,7 +874,7 @@ int hb_UnzipSelIndex( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPas
             catch( CZipException&  e )
             {
                   HB_SYMBOL_UNUSED( e );
-
+                  iReturn = false;
                   szZip.CloseFile( NULL, true);
             }
          }
@@ -1000,7 +1000,7 @@ DWORD GetCurrentFileSize( LPCTSTR szFile )
 #endif
 
 
-int hb_UnzipAll(char *szFile,PHB_ITEM pBlock,BOOL bWithPath,char *szPassWord,char *pbyBuffer,PHB_ITEM pDiskBlock,PHB_ITEM pProgress)
+int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,char *pbyBuffer,PHB_ITEM pDiskBlock,PHB_ITEM pProgress)
 {
 bool iReturn=true;
 uLong uiCount=0;

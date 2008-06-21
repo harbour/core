@@ -84,10 +84,12 @@ bool CZipFile::Open(LPCTSTR lpszFileName, UINT openFlags, bool bThrow)
 
 	m_hFile = ZipPlatform::OpenFile(lpszFileName, iNewFlags, openFlags & 0x1C);
 	if (m_hFile == -1)
+	{
 		if (bThrow)
 			ThrowError();
 		else
 			return false;
+	}
 	m_szFileName = lpszFileName;
 	return true;
 }
