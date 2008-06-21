@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 10:42 UTC+0800 Pritpal Bedi (pritpal@vouchcac.com)
+   * contrib/hbwhat32/commctrl.ch
+   * contrib/hbwhat32/commdlg.ch
+   * contrib/hbwhat32/wingdi.ch
+   * contrib/hbwhat32/wininet.ch
+     ! Pulled from MinGW distribution.
+     ; TODO: Refinement for UNICODE version which I realized a little later.
+
 2008-06-21 19:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/pp/hbpp.c
      ! Fixed to escape strings in generated hbverbld.h.
