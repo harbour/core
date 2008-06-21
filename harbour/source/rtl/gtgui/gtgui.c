@@ -79,7 +79,7 @@ static char * hb_gt_gui_Version( PHB_GT pGT, int iType )
    if ( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Strep GT driver for W32 GUI programs";
+   return "Harbour Terminal: Windows dummy console for GUI programs";
 }
 
 /* *********************************************************************** */

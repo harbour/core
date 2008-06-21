@@ -856,7 +856,7 @@ static char * hb_gt_win_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Win32 buffered console";
+   return "Harbour Terminal: Windows native console";
 }
 
 /* *********************************************************************** */

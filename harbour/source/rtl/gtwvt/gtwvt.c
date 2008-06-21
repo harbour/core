@@ -1725,7 +1725,7 @@ static char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Win32 buffered WVT";
+   return "Harbour Terminal: Windows GUI console (WVT)";
 }
 
 /* ********************************************************************** */

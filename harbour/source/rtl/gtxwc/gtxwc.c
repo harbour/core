@@ -3434,7 +3434,7 @@ static char * hb_gt_xwc_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: XWindow Console XWC";
+   return "Harbour Terminal: XWindow GUI console (XWC)";
 }
 
 /* *********************************************************************** */
