@@ -9,5 +9,7 @@ DIRS=\
 	hscript \
 	misc \
 	pe \
+	pp \
+	rdddbt \
 
 include $(ROOT)config/dir.cf

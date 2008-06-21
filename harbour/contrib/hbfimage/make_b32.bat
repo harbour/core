@@ -26,6 +26,8 @@ call ..\mtpl_b32.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem ---------------------------------------------------------------
 
+if "_HB_DLL_DIR" == "" goto POST_EXIT
+
 set _HB_INSTALL_PREFIX=%HB_INSTALL_PREFIX%
 if "%_HB_INSTALL_PREFIX%" == "" set _HB_INSTALL_PREFIX=..\..
 set _HB_LIB_INSTALL=%HB_LIB_INSTALL%

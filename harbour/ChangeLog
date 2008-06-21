@@ -8,6 +8,75 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-21 17:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/Makefile
+   - contrib/hbgf/gtk
+   - contrib/hbgf/os2pm
+   - contrib/hbgf/win32
+   + contrib/hbgf/hbgfw32
+   + contrib/hbgf/hbgfos2
+   + contrib/hbgf/hbgfgtk
+   + contrib/hbgf/Makefile
+   * contrib/hbgf/hbgfos2/Makefile
+     + Decentralized GNU make for these contribs.
+     * Renamed according to stds.
+     ! Fix to be built under Linux/Win32.
+       (if they don't work they should be fixed/disabled locally)
+
+   * contrib/Makefile
+   * contrib/hbodbc/Makefile
+   * contrib/hbw32/Makefile
+   * contrib/rddado/Makefile
+     * Further decentralization of contrib building decisions.
+     + Added all existing contribs to the list. Separated into 
+       two sections: standalone contribs, and ones with external 
+       dependencies.
+     ; TODO: Refine this by some clever commenting.
+             This is a multiplatform issue, so we need to 
+             work together.
+
+   * contrib/examples/Makefile
+     ! Fixed to include newly added examples.
+
+   * contrib/hbapollo/make_b32.bat
+   * contrib/hbapollo/make_vc.bat
+   * contrib/hbcurl/make_b32.bat
+   * contrib/hbcurl/make_vc.bat
+   * contrib/hbfbird/make_b32.bat
+   * contrib/hbfbird/make_vc.bat
+   * contrib/hbfimage/make_b32.bat
+   * contrib/hbfimage/make_vc.bat
+   * contrib/hbgd/make_b32.bat
+   * contrib/hbgd/make_vc.bat
+   * contrib/hbhpdf/make_b32.bat
+   * contrib/hbhpdf/make_vc.bat
+   * contrib/hbmysql/make_b32.bat
+   * contrib/hbmysql/make_vc.bat
+   * contrib/hbpgsql/make_b32.bat
+   * contrib/hbpgsql/make_vc.bat
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+     + Some steps made to make it possible to disable 
+       any messings with .dlls. This is not yet complete, 
+       and the goal is to be able to use HB_INC_* to 
+       specify include dirs for external packages on 
+       all make systems (GNU, non-GNU .bat, non-GNU .sh)
+       [TOMERGE 1.0.0RC1]
+
+2008-06-21 17:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   - contrib/hbgf/gtk
+   - contrib/hbgf/os2pm
+   - contrib/hbgf/win32
+   + contrib/hbgf/hbgfw32
+   + contrib/hbgf/hbgfos2
+   + contrib/hbgf/hbgfgtk
+   + contrib/hbgf/Makefile
+   * contrib/hbgf/hbgfos2/Makefile
+     + Decentralized GNU make for these contribs.
+     * Renamed according to stds.
+     ! Fix to be built under Linux/Win32.
+       (if they don't work they should be fixed/disabled locally)
+
 2008-06-21 17:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32ddr/Makefile
      ! Fixed to compile with GNU make.

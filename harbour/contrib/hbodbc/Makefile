@@ -3,6 +3,7 @@
 #
 
 ifneq ($(HB_WITHOUT_ODBC),yes)
+ifneq ($(HB_COMPILER),rsxnt)
 
 ROOT = ../../
 
@@ -20,4 +21,5 @@ LIBNAME=hbodbc
 
 include $(TOP)$(ROOT)config/lib.cf
 
+endif
 endif

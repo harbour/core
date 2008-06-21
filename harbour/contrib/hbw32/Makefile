@@ -3,6 +3,7 @@
 #
 
 ifeq ($(HB_ARCHITECTURE),w32)
+ifneq ($(HB_COMPILER),rsxnt)
 
 ROOT = ../../
 
@@ -25,4 +26,5 @@ LIBNAME=hbw32
 
 include $(TOP)$(ROOT)config/lib.cf
 
+endif
 endif

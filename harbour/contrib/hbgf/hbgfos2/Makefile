@@ -15,6 +15,6 @@ PRG_SOURCES=\
 	button.prg \
 	edit.prg \
 
-LIBNAME=hbgfos2pm
+LIBNAME=hbgfos2
 
 include $(TOP)$(ROOT)config/lib.cf
