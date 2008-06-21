@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-22 01:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbwhat32/Makefile
+     ! Fixed to compile using GNU make system. This 
+       contrib needs xhb header in order to compile.
+       (solved with an ugly hack)
+       [TOMERGE 1.0.0RC1]
+
 2008-06-22 00:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmysql/mysql.c
      ! Fixed GCC warning.
