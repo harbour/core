@@ -600,7 +600,7 @@ HB_FUNC( WVT_SETPOINTER )
       break;
    }
 
-   SetClassLong( _s->hWnd, GCL_HCURSOR, ( DWORD ) hCursor );
+   SetClassLong( _s->hWnd, GCLP_HCURSOR, ( DWORD ) hCursor );
 }
 
 //-------------------------------------------------------------------//

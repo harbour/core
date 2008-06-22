@@ -1056,13 +1056,14 @@ NOTE: This function is not supported and returns .F. under Windows 9x
 */
 HB_FUNC( GETPROCESSWORKINGSETSIZE )
 {
-   DWORD MinimumWorkingSetSize=0;
-   DWORD MaximumWorkingSetSize=0;
+   PSIZE_T MinimumWorkingSetSize = NULL;
+   PSIZE_T MaximumWorkingSetSize = NULL;
 
    hb_retl(GetProcessWorkingSetSize(ISNIL(1) ? GetCurrentProcess() : (HANDLE) hb_parnl( 1 ),
-                            &MinimumWorkingSetSize, &MaximumWorkingSetSize ));
-   hb_stornl(MinimumWorkingSetSize,2);
-   hb_stornl(MaximumWorkingSetSize,3);
+                            MinimumWorkingSetSize, MaximumWorkingSetSize ));
+
+   hb_stornl( MinimumWorkingSetSize ? ( long ) *MinimumWorkingSetSize : 0, 2 );
+   hb_stornl( MaximumWorkingSetSize ? ( long ) *MaximumWorkingSetSize : 0, 3 );
 }
 
 //-------------------------------------------------------------------//
@@ -1085,7 +1086,7 @@ DWORD VirtualQuery( LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer,  SIZE
 */
 HB_FUNC( VIRTUALQUERY )
 {
-   if (hb_parni(1) >= sizeof(MEMORY_BASIC_INFORMATION))
+   if( hb_parni(1) >= sizeof(MEMORY_BASIC_INFORMATION) )
    {
       hb_retl(VirtualQuery((void *) hb_parnl(1), (struct _MEMORY_BASIC_INFORMATION *) hb_parnl(2), sizeof(MEMORY_BASIC_INFORMATION)));
    }

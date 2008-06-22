@@ -283,6 +283,12 @@
    #endif
 #endif
 
+#ifndef HB_OS_WIN_64
+   #if defined(_WIN64)
+      #define HB_OS_WIN_64
+   #endif
+#endif
+
 #if !defined(HB_WINCE) && \
     ( defined(_WINCE) || defined(__CEGCC__) || defined(__MINGW32CE__) )
    #define HB_WINCE

@@ -239,7 +239,7 @@ RESULT DynaCall( int iFlags,      LPVOID lpFunction, int nArgs,
    /* Call the specified function with the given parameters. Build a
       proper stack and take care of correct return value processing. */
    RESULT  Res = { 0 };
-#if defined(HB_WINCE) || defined(_WIN64)
+#if defined(HB_WINCE) || defined(HB_OS_WIN_64)
    HB_SYMBOL_UNUSED( iFlags );
    HB_SYMBOL_UNUSED( lpFunction );
    HB_SYMBOL_UNUSED( nArgs );

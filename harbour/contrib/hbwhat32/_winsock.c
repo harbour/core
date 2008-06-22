@@ -755,7 +755,7 @@ HB_FUNC( WSAASYNCSELECT )
 
 int _stdcall _WSACondFunc( LPWSABUF lpCallerId,  LPWSABUF lpCallerData, LPQOS lpSQOS,
                  LPQOS lpGQOS, LPWSABUF lpCalleeId, LPWSABUF lpCalleeData,
-                 GROUP * g, DWORD dwCallbackData )
+                 GROUP * g, DWORD_PTR dwCallbackData )
 {
 
    int res = CF_ACCEPT ;
@@ -777,8 +777,7 @@ int _stdcall _WSACondFunc( LPWSABUF lpCallerId,  LPWSABUF lpCallerData, LPQOS lp
       res = hb_itemGetNI( (PHB_ITEM) hb_param( -1, HB_IT_ANY ) );
 
    }
-   return res ;
-
+   return res;
 }
 
 

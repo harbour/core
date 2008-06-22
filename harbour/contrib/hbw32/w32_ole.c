@@ -91,7 +91,7 @@
    #define HB_LONG_LONG_OFF
 #endif
 
-#if defined( __cplusplus ) && !defined( _WIN64 ) && \
+#if defined( __cplusplus ) && !defined( HB_OS_WIN_64 ) && \
     ( defined( __BORLANDC__ ) || defined( _MSC_VER ) )
 #  define HB_ID_REF( type, id )     id
 #else

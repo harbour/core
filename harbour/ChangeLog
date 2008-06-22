@@ -8,11 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-22 21:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbsetup.h
+     + Added HB_OS_WIN_64 macro to replace _WIN64.
+       [TOMERGE 1.0.0RC1]
+
+   * contrib/hbwhat32/_winsys.c
+   * contrib/hbwhat32/_winsock.c
+   * contrib/hbwhat32/_wincall.c
+   * contrib/gtwvg/wvtutils.c
+     ! Fixed WIN64 compile errors.
+       [TOMERGE 1.0.0RC1]
+
+   * contrib/hbw32/dllcall.c
+   * contrib/hbw32/w32_ole.c
+     * _WIN64 -> HB_OS_WIN_64
+       [TOMERGE 1.0.0RC1]
+
 2008-06-22 13:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      + Code cleanup for 64bit. Only calls to Harbour APIs are 
        generating warnings now. (hb_xgrab, hb_xrealloc, 
-       hb_fsWriteLarge, hb_fsReadLarge, hb_retclen, hb_storlen)
+       hb_fsWriteLarge, hb_fsReadLarge, hb_retclen, hb_storclen)
+       [TOMERGE 1.0.0RC1]
 
 2008-06-22 12:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32ddr/w32_ddrw.cpp
