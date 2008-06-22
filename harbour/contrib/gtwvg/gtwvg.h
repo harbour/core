@@ -176,8 +176,7 @@
    #endif
 #endif
 
-#if defined( __cplusplus ) && !defined( _WIN64 ) && \
-    ( defined( __BORLANDC__ ) || defined( _MSC_VER ) )
+#if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) )
 #  define HB_ID_REF( type, id )     id
 #else
 #  define HB_ID_REF( type, id )     ( ( type ) &id )

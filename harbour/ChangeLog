@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-22 21:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbw32/w32_ole.c
+   * contrib/hbole/ole2.c
+   * contrib/gtwvg/gtwvg.h
+     ! HB_ID_REF() declaration changed to compile with MSVS2008 
+       in AMD64.
+       Przemek please verify me.
+     ; With this, all 64bit contrib errors are fixed.
+       [TOMERGE 1.0.0RC1]
+
 2008-06-22 21:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbsetup.h
      + Added HB_OS_WIN_64 macro to replace _WIN64.
