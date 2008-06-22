@@ -469,7 +469,7 @@ static void PHB_CURL_ret( PHB_CURL from )
    hb_retptrGC( ph );
 }
 
-static void ** PHB_CURL_is( int iParam )
+static void * PHB_CURL_is( int iParam )
 {
    return hb_parptrGC( PHB_CURL_release, iParam );
 }
