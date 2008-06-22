@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-22 10:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_gcc.mak
+   * contrib/mtpl_vc.mak
+     + Added HB envvar harbour.exe override. This is currently 
+       useful in VC only to create cross-platform builds.
+       [1.0.0RC1]
+
 2008-06-22 10:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * ChangeLog
      + Marked changes merged with 1.0.0RC1.

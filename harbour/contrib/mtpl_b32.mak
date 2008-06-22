@@ -91,7 +91,9 @@ INCLUDE_DIR = $(HB_ROOT)\include
 # Macros to access Harbour executable and other goodies
 #**********************************************************
 
-HARBOUR_EXE = $(BIN_DIR)harbour.exe
+!ifndef HB
+HB = $(BIN_DIR)harbour.exe
+!endif
 
 #**********************************************************
 # C compiler definition and C flags. These should never have to change.
@@ -166,7 +168,7 @@ $(OBJ_DIR);\
 #**********************************************************
 # General *.prg --> *.obj COMPILE rule for STATIC Libraries
 {$(ALL_LIB_SRC_DIRS)}.prg{$(OBJ_DIR)}$(OBJEXT):
-    $(HARBOUR_EXE) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
+    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $**
     $(CC) $(CLIBFLAGS) -o$@ $(OBJ_DIR)\$&.c
 #**********************************************************
 
