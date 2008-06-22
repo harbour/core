@@ -112,7 +112,7 @@ static void do_count( int iSwitch )
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_COUNT_COUNTLEFT ?
                                   CT_ERROR_COUNTLEFT : CT_ERROR_COUNTRIGHT,
-                                  NULL, &hb_errFuncName, 0, EF_CANSUBSTITUTE,
+                                  NULL, HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                   HB_ERR_ARGS_BASEPARAMS );
       }
 

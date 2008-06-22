@@ -95,7 +95,8 @@ HB_EXTERN_BEGIN
 #define HB_ERR_ARGS_BASEPARAMS          0xFFFFFFFF
 #define HB_ERR_ARGS_SELFPARAMS          0xFFFFFFFE
 
-/* pseudo function name in operation description */
+/* pseudo function name in operation description
+   (deprecated, kept for compatibility, use HB_ERR_FUNCNAME instead) */
 extern const char hb_errFuncName;
 
 #define HB_ERR_FUNCNAME ( ( char * ) 1 )

@@ -195,7 +195,7 @@ static void do_charone( int iSwitch )
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_CHARONE_CHARONE ?
                                   CT_ERROR_CHARONE : CT_ERROR_WORDONE,
-                                  NULL, &hb_errFuncName, 0, EF_CANSUBSTITUTE,
+                                  NULL, HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                   HB_ERR_ARGS_BASEPARAMS );
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

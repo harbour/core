@@ -106,7 +106,7 @@ static void do_ascpos( int iSwitch )
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_ASCPOS_VALPOS ?
                                   CT_ERROR_VALPOS : CT_ERROR_ASCPOS, NULL,
-                                  &hb_errFuncName, 0, EF_CANSUBSTITUTE,
+                                  HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                   HB_ERR_ARGS_BASEPARAMS );
       }
 

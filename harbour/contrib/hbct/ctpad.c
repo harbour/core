@@ -80,7 +80,7 @@ static void do_pad( int iSwitch )
             ct_error( ( USHORT ) iArgErrorMode, EG_ARG,
                       iSwitch == DO_PAD_PADLEFT ?
                       CT_ERROR_PADLEFT : CT_ERROR_PADRIGHT, NULL,
-                      &hb_errFuncName, 0, EF_CANDEFAULT,
+                      HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                       HB_ERR_ARGS_BASEPARAMS );
          }
          hb_retc( NULL );
@@ -133,7 +133,7 @@ static void do_pad( int iSwitch )
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_PAD_PADLEFT ?
                                   CT_ERROR_PADLEFT : CT_ERROR_PADRIGHT, NULL,
-                                  &hb_errFuncName, 0, EF_CANSUBSTITUTE,
+                                  HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                   HB_ERR_ARGS_BASEPARAMS );
       }
 

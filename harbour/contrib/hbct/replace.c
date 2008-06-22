@@ -146,7 +146,7 @@ static void do_replace( int iSwitch )
       {
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
                                   sulErrorSubcodes[iSwitch],
-                                  NULL, &hb_errFuncName, 0,
+                                  NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
       }
 

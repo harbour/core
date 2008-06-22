@@ -8,6 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-22 22:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbapierr.h
+   * source/rtl/errorapi.c
+   * source/rdd/hbsix/sxtable.c
+   * contrib/hbct/charonly.c
+   * contrib/hbct/charevod.c
+   * contrib/hbct/charone.c
+   * contrib/hbct/pos1.c
+   * contrib/hbct/ascpos.c
+   * contrib/hbct/token1.c
+   * contrib/hbct/atnum.c
+   * contrib/hbct/count.c
+   * contrib/hbct/replace.c
+   * contrib/hbct/ctpad.c
+   * contrib/hbct/justify.c
+   * contrib/hbct/remove.c
+   * contrib/xhb/hbxml.c
+   * contrib/hbmzip/hbmzip.c
+   * contrib/hbtip/utils.c
+     * Changed remaining &hb_errFuncName -> HB_ERR_FUNCNAME
+     + Added compatibility comments.
+     ! Fixed hb_errFuncName value (changed to 1 to be the 
+       same as HB_ERR_FUNCNAME).
+     ; NOTE: 3rd party developers are encouraged to use 
+             HB_ERR_FUNCNAME instead of hb_errFuncName. 
+             There is no change in functionality.
+       [TOMERGE 1.0.0RC1]
+
 2008-06-22 22:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/xhb/hbcompat.ch
      + Added HB_SYMBOL_UNUSED() to xhb branch.

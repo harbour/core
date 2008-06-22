@@ -81,7 +81,7 @@ static void do_charevod( int iSwitch )
             ct_error( ( USHORT ) iArgErrorMode, EG_ARG,
                       iSwitch == DO_CHAREVOD_CHAREVEN ?
                       CT_ERROR_CHAREVEN : CT_ERROR_CHARODD,
-                      NULL, &hb_errFuncName, 0, EF_CANDEFAULT,
+                      NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                       HB_ERR_ARGS_BASEPARAMS );
          }
          hb_retc( NULL );
@@ -116,7 +116,7 @@ static void do_charevod( int iSwitch )
          pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_CHAREVOD_CHAREVEN ?
                                   CT_ERROR_CHAREVEN : CT_ERROR_CHARODD, NULL,
-                                  &hb_errFuncName, 0, EF_CANSUBSTITUTE,
+                                  HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                   HB_ERR_ARGS_BASEPARAMS );
       }
 

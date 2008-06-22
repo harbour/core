@@ -271,7 +271,7 @@ static void do_atnum( int iSwitch )
                pSubst = ct_error_subst( ( USHORT ) iArgErrorMode, EG_ARG,
                                         iSwitch ==
                                         DO_ATNUM_AFTERATNUM ? CT_ERROR_AFTERATNUM :
-                                        CT_ERROR_BEFORATNUM, NULL, &hb_errFuncName, 0,
+                                        CT_ERROR_BEFORATNUM, NULL, HB_ERR_FUNCNAME, 0,
                                         EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
             }
 

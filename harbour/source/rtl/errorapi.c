@@ -108,7 +108,9 @@
 #define HB_TERROR_IVARCOUNT         12
 
 
-const char hb_errFuncName = 0;
+/* pseudo function name in operation description
+   (deprecated, kept for compatibility, use HB_ERR_FUNCNAME instead) */
+const char hb_errFuncName = 1;
 
 static HB_ERROR_INFO_PTR s_errorHandler = NULL;
 static PHB_ITEM s_errorBlock = NULL;

@@ -729,7 +729,7 @@ HB_FUNC( PSTRCOMPI )
       hb_retl( hb_strnicmp( pcBase + uStart - 1, pcSub, uSublen ) == 0 );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Case insensitive hb_strAt() function */
@@ -806,7 +806,7 @@ HB_FUNC( ATI )
    }
    else
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 }
 
@@ -830,7 +830,7 @@ HB_FUNC( HB_EXEC )
          hb_vmDo( ( USHORT ) iParams );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, &hb_errFuncName, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( TIP_HTMLSPECIALCHARS )
