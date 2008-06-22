@@ -44,7 +44,7 @@
 #                           Harbour will be installed when the command
 #                           "make_vc.bat install" is lauched. Defaults
 #                           to current directory
-#       HB_VISUALC_VER    - Version of Visual C++ compiler (defaults to 60).
+#       HB_VISUALC_VER    - Version of Visual C++ compiler (defaults to 80).
 #                           Possible values are : 60, 70, 71, 80
 
 #**********************************************************
@@ -110,12 +110,16 @@ DLL_OBJS = $(TMP_DLL_OBJS:obj\vc=obj\dll\vc)
 # Main "Include" directory
 INCLUDE_DIR    = include
 
+#**********************************************************
+
 # In which mode compile Harbour C or CPP
 !if "$(HB_BUILD_MODE)" == "cpp"
 HB_BUILD_MODE  = P
 !else
 HB_BUILD_MODE  = C
 !endif
+
+#**********************************************************
 
 # C Compiler Flags
 !if $(HB_VISUALC_VER) >= 80
@@ -152,14 +156,20 @@ CFLAGS         = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)
 #-----------
 CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
 
+#**********************************************************
+
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSDLL   = -D__EXPORT__ $(CLIBFLAGS) $(CLIBFLAGSDLL)
 CEXEFLAGSDLL   =  $(CLIBFLAGS) $(CEXEFLAGSDLL)
+
+#**********************************************************
 
 # Harbour Compiler Flags
 HBFLAGSCMN     = -DHB_WINCE -D__PLATFORM__WINCE -i$(INCLUDE_DIR) -q0 -w3 -es2 -gc1 $(PRG_USR)
 HARBOURFLAGS   = -n $(HBFLAGSCMN) $(HARBOURFLAGS)
 HARBOURFLAGSDLL= -D__EXPORT__ -n1 $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
+
+#**********************************************************
 
 # Linker Flags
 LDFLAGS        = /NOLOGO /SUBSYSTEM:windowsce,4.20 /MACHINE:ARM /ARMPADCODE \
@@ -781,6 +791,8 @@ $(GTWVT_LIB)    : $(GTWVT_LIB_OBJS)
 $(GTGUI_LIB)    : $(GTGUI_LIB_OBJS)
     $(MKLIB) /out:$@ $**
 #**********************************************************
+
+#**********************************************************
 # EXECUTABLE Targets
 #**********************************************************
 
@@ -813,20 +825,6 @@ $(COMMON_LIB)
 coredll.lib corelibc.lib
 <<$(KEEPSTATE)
 #**********************************************************
-# HBPPTEST build rule
-#**********************************************************
-$(HBPPTEST_EXE) : $(HBPPTEST_EXE_OBJS)
-    IF EXIST "$(HBPPTEST_EXE)" $(DEL) "$(HBPPTEST_EXE)" > nul
-    $(LINKER) @<<
-$(LDFLAGS)
-/OUT:$(HBPPTEST_EXE)
-$(**: = ^
-)
-$(PP_LIB)
-$(STANDARD_STATIC_HBLIBS)
-coredll.lib corelibc.lib winsock.lib ws2.lib
-<<
-#**********************************************************
 # HBRUN build rule
 #**********************************************************
 $(HBRUN_EXE)  : $(HBRUN_EXE_OBJS)
@@ -838,7 +836,7 @@ $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
 coredll.lib corelibc.lib winsock.lib ws2.lib
-<<
+<<$(KEEPSTATE)
 #**********************************************************
 # HBDOT build rule
 #**********************************************************
@@ -864,7 +862,21 @@ $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
 coredll.lib corelibc.lib winsock.lib ws2.lib
-<<
+<<$(KEEPSTATE)
+#**********************************************************
+# HBPPTEST build rule
+#**********************************************************
+$(HBPPTEST_EXE) : $(HBPPTEST_EXE_OBJS)
+    IF EXIST "$(HBPPTEST_EXE)" $(DEL) "$(HBPPTEST_EXE)" > nul
+    $(LINKER) @<<
+$(LDFLAGS)
+/OUT:$(HBPPTEST_EXE)
+$(**: = ^
+)
+$(PP_LIB)
+$(STANDARD_STATIC_HBLIBS)
+coredll.lib corelibc.lib winsock.lib ws2.lib
+<<$(KEEPSTATE)
 #**********************************************************
 # HBDOC build rule
 #**********************************************************
@@ -875,9 +887,10 @@ $(LDFLAGS)
 /OUT:$(HBDOC_EXE)
 $(**: = ^
 )
-$(STANDARD_STATIC_HBLIBS) $(HBDOC_LIBS)
+$(STANDARD_STATIC_HBLIBS)
+$(HBDOC_LIBS)
 coredll.lib corelibc.lib winsock.lib ws2.lib
-<<
+<<$(KEEPSTATE)
 #**********************************************************
 # HBMAKE build rule
 #**********************************************************
@@ -890,7 +903,7 @@ $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
 coredll.lib corelibc.lib winsock.lib ws2.lib
-<<
+<<$(KEEPSTATE)
 #**********************************************************
 # HBVER build rule
 #**********************************************************
@@ -903,24 +916,24 @@ $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
 coredll.lib corelibc.lib winsock.lib ws2.lib
-<<
+<<$(KEEPSTATE)
 #**********************************************************
 
 #**********************************************************
 # DLL Targets
 #**********************************************************
-$(HARBOUR_DLL) : $(HARBOUR_EXE) $(DLL_OBJS)
+$(HARBOUR_DLL) : $(HB) $(DLL_OBJS)
     $(LINKER) @<<
 $(LDFLAGSDLL) /OUT:$(@)
 /IMPLIB:$(@:.dll=.lib)
 $(DLL_OBJS: = ^
 )
 coredll.lib gdi32.lib
-<<
+<<$(KEEPSTATE)
 #**********************************************************
 # DLL EXECUTABLE Targets
 #**********************************************************
-HBTESTDLL_OBJS =  $(DLL_OBJ_DIR)\mainstd.obj $(HBTEST_EXE_OBJS:obj\vc=obj\dll\vc)
+HBTESTDLL_OBJS =  $(DLL_OBJ_DIR)\mainstd$(OBJEXT) $(HBTEST_EXE_OBJS:obj\vc=obj\dll\vc)
 $(HBTESTDLL_EXE) : $(HARBOUR_DLL) $(HBTESTDLL_OBJS)
     $(LINKER) @<<
 $(LDFLAGS)
@@ -928,9 +941,9 @@ $(LDFLAGS)
 $(HBTESTDLL_OBJS: = ^
 )
 $(HARBOUR_DLL:.dll=.lib)
-<<
+<<$(KEEPSTATE)
 #----------------------------------------------------------
-$(DLL_OBJ_DIR)\mainstd.obj : $(VM_DIR)\mainstd.c
+$(DLL_OBJ_DIR)\mainstd$(OBJEXT) : $(VM_DIR)\mainstd.c
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $**
 #**********************************************************
 

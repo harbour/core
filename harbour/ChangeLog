@@ -8,12 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-22 10:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * ChangeLog
+     + Marked changes merged with 1.0.0RC1.
+
+   * make_vc.mak
+   * make_vcce.mak
+     * Syncing between these two.
+     ! Fixed minor typo in CE comment.
+     ! Fixed one rule where HB var was not respected in CE 
+       DLL generation. Marek please check me.
+
 2008-06-22 01:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbwhat32/Makefile
      ! Fixed to compile using GNU make system. This 
        contrib needs xhb header in order to compile.
        (solved with an ugly hack)
-       [TOMERGE 1.0.0RC1]
+       [1.0.0RC1]
 
 2008-06-22 00:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmysql/mysql.c
@@ -54,7 +65,7 @@
 2008-06-21 22:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbfimage/Makefile
      ! Fixed to compile with MinGW.
-       [TOMERGE 1.0.0RC1]
+       [1.0.0RC1]
 
 2008-06-21 22:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtalleg/gtalleg.c
@@ -74,7 +85,7 @@
 2008-06-21 21:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
      + Some updates.
-       [TOMERGE 1.0.0RC1]
+       [1.0.0RC1]
 
    * contrib/Makefile
      ! Fix to prev.
@@ -86,12 +97,12 @@
    * contrib/hbwhat32/wininet.ch
      ! Pulled from MinGW distribution.
      ; TODO: Refinement for UNICODE version which I realized a little later.
-       [TOMERGE 1.0.0RC1]
+       [1.0.0RC1]
 
 2008-06-21 19:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/pp/hbpp.c
      ! Fixed to escape strings in generated hbverbld.h.
-       [TOMERGE 1.0.0RC1]
+       [1.0.0RC1]
 
 2008-06-21 18:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbwhat32/_winsock.c
@@ -173,7 +184,6 @@
        and the goal is to be able to use HB_INC_* to 
        specify include dirs for external packages on 
        all make systems (GNU, non-GNU .bat, non-GNU .sh)
-       [TOMERGE 1.0.0RC1]
 
 2008-06-21 17:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    - contrib/hbgf/gtk
@@ -193,11 +203,11 @@
    * contrib/hbw32ddr/Makefile
      ! Fixed to compile with GNU make.
      ! Found a way to compile with MingW.
-       [TOMERGE 1.0.0RC1]
+       [1.0.0RC1]
 
    * contrib/hbtpathy/Makefile
      ! Fixed to work at all.
-       [TOMERGE 1.0.0RC1]
+       [1.0.0RC1]
 
    * contrib/Makefile
    * contrib/gtwvg/Makefile
@@ -222,7 +232,7 @@
    - contrib/hbw32ddr/w32_ddrw.h
    * contrib/hbw32ddr/w32_ddrw.cpp
      * Cleanups, removing unneeded fluffs.
-       [TOMERGE 1.0.0RC1]
+       [1.0.0RC1]
 
    * contrib/hbziparch/make_b32_dll.mak
      - Removed many unneeded command line switches.
@@ -258,7 +268,7 @@
              Anybody volunteering to clear these up?
      ; NOTE: Please test these changes, I'm not a user of this 
              contrib.
-       [TOMERGE 1.0.0RC1]
+       [1.0.0RC1]
 
 2008-06-21 12:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * ChangeLog

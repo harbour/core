@@ -902,7 +902,6 @@ user32.lib winspool.lib
 #**********************************************************
 # DLL Targets
 #**********************************************************
-#$(HARBOUR_DLL) : $(HARBOUR_EXE) $(DLL_OBJS)
 $(HARBOUR_DLL) : $(HB) $(DLL_OBJS)
     $(LINKER) @<<
 $(LDFLAGSDLL) /OUT:$(@)
