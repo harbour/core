@@ -126,7 +126,7 @@ typedef struct _HB_CURL
 
 void * hb_curl_xgrab( size_t size )
 {
-   return hb_xgrab( ( ULONG ) size );
+   return hb_xgrab( size );
 }
 
 void hb_curl_xfree( void * p )
@@ -136,7 +136,7 @@ void hb_curl_xfree( void * p )
 
 void * hb_curl_xrealloc( void * p, size_t size )
 {
-   return hb_xrealloc( p, ( ULONG ) size );
+   return hb_xrealloc( p, size );
 }
 
 char * hb_curl_strdup( const char * s )
@@ -146,10 +146,10 @@ char * hb_curl_strdup( const char * s )
 
 void * hb_curl_calloc( size_t nelem, size_t elsize )
 {
-   ULONG ulSize = ( ULONG ) ( nelem * elsize );
-   void * ptr = hb_xgrab( ulSize );
+   size_t size = nelem * elsize;
+   void * ptr = hb_xgrab( size );
 
-   memset( ptr, '\0', ulSize );
+   memset( ptr, '\0', size );
 
    return ptr;
 }
@@ -218,8 +218,8 @@ size_t hb_curl_read_buff_callback( void * buffer, size_t size, size_t nmemb, voi
 
    if( hb_curl )
    {
-      ULONG nTodo = ( ULONG ) ( size * nmemb );
-      ULONG nLeft = hb_curl->ul_len - hb_curl->ul_pos;
+      size_t nTodo = size * nmemb;
+      size_t nLeft = hb_curl->ul_len - hb_curl->ul_pos;
 
       if( nTodo > nLeft )
          nTodo = nLeft;
@@ -228,7 +228,7 @@ size_t hb_curl_read_buff_callback( void * buffer, size_t size, size_t nmemb, voi
 
       hb_curl->ul_pos += nTodo;
 
-      return ( size_t ) nTodo;
+      return nTodo;
    }
 
    return -1;
@@ -263,8 +263,8 @@ size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nmemb, vo
 
    if( hb_curl )
    {
-      ULONG nTodo = ( ULONG ) ( size * nmemb );
-      ULONG nLeft = hb_curl->dl_len - hb_curl->dl_pos;
+      size_t nTodo = size * nmemb;
+      size_t nLeft = hb_curl->dl_len - hb_curl->dl_pos;
 
       if( nTodo > nLeft )
       {
@@ -276,7 +276,7 @@ size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nmemb, vo
 
       hb_curl->dl_pos += nTodo;
 
-      return ( size_t ) nTodo;
+      return nTodo;
    }
 
    return -1;

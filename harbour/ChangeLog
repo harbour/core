@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-22 13:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+     + Code cleanup for 64bit. Only calls to Harbour APIs are 
+       generating warnings now. (hb_xgrab, hb_xrealloc, 
+       hb_fsWriteLarge, hb_fsReadLarge, hb_retclen, hb_storlen)
+
 2008-06-22 12:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32ddr/w32_ddrw.cpp
    * contrib/hbodbc/odbc.c
