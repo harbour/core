@@ -372,7 +372,7 @@ void hb_dd_RenderSprites( long control )
 
 //------------------------------------------------------------------//
 
-long _stdcall hb_dd_DDWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
+LRESULT _stdcall hb_dd_DDWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
    HRESULT hRet;
    int   nVirtKey;
@@ -780,12 +780,11 @@ HB_FUNC( DD_CREATEWINDOW )
    hb_dd_g_xWindow = x;
    hb_dd_g_yWindow = y;
 
-
    WNDCLASS wndClass = { CS_HREDRAW | CS_VREDRAW, hb_dd_DDWndProc, 0, 0, m_hInstance,
              NULL,
              LoadCursor(NULL, IDC_ARROW),
              (HBRUSH)GetStockObject(BLACK_BRUSH),
-                         NULL,
+             NULL,
              TEXT("4dNow") };
 
    RegisterClass( &wndClass );

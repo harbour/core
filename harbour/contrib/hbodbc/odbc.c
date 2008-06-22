@@ -240,7 +240,7 @@ HB_FUNC( SQLFETCH )   /* HB_SQLFETCH( hStmt ) --> nRetCode */
 
 HB_FUNC( SQLGETDATA ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBuffer ) --> nRetCode */
 {
-   SDWORD lLen, lInitBuff;
+   SQLLEN lLen, lInitBuff;
    PTR  bBuffer, bOut;
    WORD wType, wResult;
    int iReallocs = 0;
@@ -317,7 +317,7 @@ HB_FUNC( SQLDESCRIB )
     SDWORD      lLen      = ( SDWORD ) hb_parnl( 4 );
     SQLSMALLINT wBufLen   = hb_parni( 5 );
     SQLSMALLINT wDataType = hb_parni( 6 );
-    SQLUINTEGER wColSize  = hb_parni( 7 );
+    SQLULEN     wColSize  = hb_parni( 7 );
     SQLSMALLINT wDecimals = hb_parni( 8 );
     SQLSMALLINT wNullable = hb_parni( 9 );
 #if defined( HB_OS_WIN_32 ) && defined( UNICODE )
@@ -327,9 +327,14 @@ HB_FUNC( SQLDESCRIB )
 #endif
     WORD        wResult;
 
-    wResult = SQLDescribeCol( ( HSTMT ) hb_parnl( 1 ), hb_parni( 2 ),
-                              buffer, ( SQLSMALLINT ) lLen, &wBufLen,
-                              &wDataType, &wColSize, &wDecimals,
+    wResult = SQLDescribeCol( ( HSTMT ) hb_parnl( 1 ),
+                              hb_parni( 2 ),
+                              buffer,
+                              ( SQLSMALLINT ) lLen,
+                              &wBufLen,
+                              &wDataType, 
+                              &wColSize,
+                              &wDecimals,
                               &wNullable );
 
     if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
@@ -367,7 +372,7 @@ HB_FUNC( SQLCOLATTRIBUTE )
 #if defined(__DMC__)
                                              (SQLINTEGER FAR*) &wNumPtr );
 #else
-                                             (SQLPOINTER) &wNumPtr );
+                                             (SQLLEN *) &wNumPtr );
 #endif
 
     if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
@@ -385,7 +390,7 @@ HB_FUNC( SQLCOLATTRIBUTE )
 /* HB_SQLEXTENDEDFETCH( hStmt, nOrientation, nOffset, @nRows, @nRowStatus ) */
 HB_FUNC( SQLEXTENDE )
 {
-    SQLUINTEGER  uiRowCountPtr = hb_parni( 4 );
+    SQLULEN      uiRowCountPtr = hb_parni( 4 );
     SQLUSMALLINT siRowStatus   = hb_parni( 5 );
     WORD         wResult       = SQLExtendedFetch( ( HSTMT ) hb_parnl( 1 ),
                                                    ( USHORT )hb_parnl( 2 ),
@@ -535,7 +540,7 @@ HB_FUNC( SQLEXECUTE )  /* HB_SQLEXECUTE( hStmt ) --> nRetCode */
 HB_FUNC( SQLEXECUTESCALAR )
 {
    HSTMT hStmt;
-   SDWORD lLen;
+   SQLLEN lLen;
    BYTE bBuffer[ 256 ];
    SWORD wResult;
 
