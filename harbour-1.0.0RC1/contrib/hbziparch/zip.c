@@ -98,7 +98,7 @@ static void ResetAttribs( void )
    hb_itemRelease( FileToZip );
 }
 
-static void UnzipCreateArray( char *szZipFileName, char *szSkleton, int uiOption)
+static void UnzipCreateArray( char *szSkleton, int uiOption)
 {
    int ul;
    char * szEntry;
@@ -713,7 +713,7 @@ HB_FUNC( HB_UNZIPFILE )
       {
          if( HB_IS_STRING( pUnzip ) )
          {
-            UnzipCreateArray( szZipFileName, hb_itemGetCPtr( pUnzip ), 1 );
+            UnzipCreateArray( hb_itemGetCPtr( pUnzip ), 1 );
          }
          else if( HB_IS_ARRAY( pUnzip ) )
          {
@@ -726,7 +726,7 @@ HB_FUNC( HB_UNZIPFILE )
 
                if ( szUnzip )
                {
-                  UnzipCreateArray( szZipFileName, szUnzip, 1 );
+                  UnzipCreateArray( szUnzip, 1 );
                   hb_xfree( szUnzip );
                }
             }
@@ -735,7 +735,7 @@ HB_FUNC( HB_UNZIPFILE )
       else
       {
 //s.r. change "*.*" to "*" because file without extension were ignored
-         UnzipCreateArray( szZipFileName, (char*) "*", 1 );
+         UnzipCreateArray( (char*) "*", 1 );
       }
       if ( hb_arrayLen(UnzipFiles) > 0 )
       {
@@ -802,7 +802,7 @@ HB_FUNC( HB_ZIPDELETEFILES )
          {
             if ( hb_itemGetCLen( pDelZip ) > 0 )
             {
-               UnzipCreateArray( szZipFileName, hb_itemGetCPtr( pDelZip ), 2 );
+               UnzipCreateArray( hb_itemGetCPtr( pDelZip ), 2 );
             }
          }
          else if ( HB_IS_ARRAY( pDelZip ) )
@@ -820,7 +820,7 @@ HB_FUNC( HB_ZIPDELETEFILES )
 
                   if( szInput )
                   {
-                     UnzipCreateArray( szZipFileName, szInput, 2 );
+                     UnzipCreateArray( szInput, 2 );
                      hb_xfree( szInput );
                   }
                }
@@ -1011,14 +1011,13 @@ HB_FUNC(HB_UNZIPALLFILE)
     }
 }
 
-HB_FUNC_EXIT(HBZIPCLEANUP)
+HB_FUNC_EXIT( HBZIPCLEANUP )
 {
-   if ( ChangeDiskBlock )
+   if( ChangeDiskBlock )
    {
       hb_itemRelease( ChangeDiskBlock );
-      ChangeDiskBlock  = NULL ;
+      ChangeDiskBlock = NULL;
    }
-
 }
 
 
@@ -1026,12 +1025,13 @@ HB_FUNC_EXIT(HBZIPCLEANUP)
 
 int GetFileAttributes( char *szEntry )
 {
-      struct stat sStat;
-      stat( szEntry, &sStat );
-      return (int) sStat.st_mode;
+   struct stat sStat;
+   stat( szEntry, &sStat );
+   return (int) sStat.st_mode;
 }
 void SetFileAttributes( char * szEntry,ULONG ulAttr)
 {
    chmod(szEntry,ulAttr);
 }
+
 #endif

@@ -1044,7 +1044,7 @@ HBPP_EXE_OBJS = \
     $(OBJ_DIR)\hbpptbl$(OBJEXT)  \
     $(OBJ_DIR)\hbppcomp$(OBJEXT) \
     $(OBJ_DIR)\hbppcore$(OBJEXT) \
-    $(OBJ_DIR)\pragma$(OBJEXT)   \
+    $(OBJ_DIR)\hbpragma$(OBJEXT) \
 
 #    $(OBJ_DIR)\hbpplib$(OBJEXT)  \
 

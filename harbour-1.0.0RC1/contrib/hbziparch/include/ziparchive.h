@@ -83,9 +83,7 @@
 //#ifdef __cplusplus
 //extern "C" {
 //#endif
-#ifndef _HBCOMPRESS_H
-#include "hbcomprs.h"
-#endif
+#include "hbzlib.h"
 //#ifdef __cplusplus
 //}
 //#endif

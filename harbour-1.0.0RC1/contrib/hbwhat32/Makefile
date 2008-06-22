@@ -2,6 +2,8 @@
 # $Id$
 #
 
+ifeq ($(HB_ARCHITECTURE),w32)
+
 ROOT = ../../
 
 C_SOURCES = \
@@ -81,4 +83,10 @@ PRG_HEADERS= \
 
 LIBNAME=hbwhat32
 
+# This lib needs xhb headers to compile, and this is 
+# the hack to help Harbour find them.
+PRG_USR := $(PRG_USR) -I../../../xhb
+
 include $(TOP)$(ROOT)config/lib.cf
+
+endif

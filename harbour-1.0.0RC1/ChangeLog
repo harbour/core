@@ -8,6 +8,80 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-22 10:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   + utils/hbpp/hbpragma.c
+   - utils/hbpp/pragma.c
+   * utils/hbpp/Makefile
+     ! Renamed one file to not collide with contrib.
+       [1.0.0RC1 ONLY]
+       (this was solved in a different way in main branch)
+
+   * contrib/hbwhat32/Makefile
+     ! Fixed to compile using GNU make system. This 
+       contrib needs xhb header in order to compile.
+       (solved with an ugly hack)
+       [1.0.0RC1]
+
+   * contrib/hbfimage/Makefile
+     ! Fixed to compile with MinGW.
+       [1.0.0RC1]
+
+   * doc/whatsnew.txt
+     + Some updates.
+       [1.0.0RC1]
+
+   * contrib/hbwhat32/commctrl.ch
+   * contrib/hbwhat32/commdlg.ch
+   * contrib/hbwhat32/wingdi.ch
+   * contrib/hbwhat32/wininet.ch
+     ! Pulled from MinGW distribution.
+     ; TODO: Refinement for UNICODE version which I realized a little later.
+       [1.0.0RC1]
+
+   * source/pp/hbppgen.c
+     ! Fixed to escape strings in generated hbverbld.h.
+       [1.0.0RC1]
+
+   * contrib/hbw32ddr/Makefile
+     ! Fixed to compile with GNU make.
+     ! Found a way to compile with MingW.
+       [1.0.0RC1]
+
+   * contrib/hbtpathy/Makefile
+     ! Fixed to work at all.
+       [1.0.0RC1]
+
+   - contrib/hbw32ddr/w32_ddrw.h
+   * contrib/hbw32ddr/w32_ddrw.cpp
+     * Cleanups, removing unneeded fluffs.
+       [1.0.0RC1]
+
+   * contrib/hbziparch/hbcomprs.c
+   * contrib/hbziparch/zip.c
+   * contrib/hbziparch/ziparchive.cpp
+   * contrib/hbziparch/include/zip.h
+   * contrib/hbziparch/include/ziparchive.h
+   * contrib/hbziparch/include/unzip.h
+   * contrib/hbziparch/include/zipinternalinfo.h
+   - contrib/hbziparch/include/hbcomprs.h
+   - contrib/hbziparch/include/zutil.h
+   - contrib/hbziparch/include/zconf.h
+     ! Stripped an old version (1.1.4) of ZLIB embedded in this 
+       contrib. Some warnings and even more security problems 
+       fixed this way. Users of this lib should link hbzlib.lib 
+       from now on.
+     ! Fixed some warnings after recent update.
+       NOTE: One is still there (unused ..HBZIPCLEANUP function).
+     ; NOTE: The quality of this code is not up to Harbour 
+             standard. It compiles with a large amount of warnings 
+             on all (BCC, MSVC, GCC) compilers. Also the included 
+             ziparch source is dated.
+             Anybody volunteering to clear these up?
+     ; NOTE: Please test these changes, I'm not a user of this 
+             contrib.
+       [1.0.0RC1]
+
 2008-06-21 12:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * xhb/Makefile
    * xhb/common.mak

@@ -9,14 +9,21 @@ ifneq ($(HB_ARCHITECTURE),dos)
 ifeq ($(HB_ARCHITECTURE),linux)
 C_SOURCES=\
 	tplinux.c \
-else ($(HB_ARCHITECTURE),win32)
+	tpcommon.c \
+
+endif
+ifeq ($(HB_ARCHITECTURE),win32)
 C_SOURCES=\
 	tpwin32.c \
-else
+	tpcommon.c \
+
+endif
+ifeq ($(HB_ARCHITECTURE),os2)
 C_SOURCES=\
 	tpos2.c \
-endif
 	tpcommon.c \
+
+endif
 
 PRG_SOURCES=\
 	telepath.prg \
