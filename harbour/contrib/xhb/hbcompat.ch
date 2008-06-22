@@ -113,6 +113,10 @@
    #xcommand END WITH => END
    #xcommand END OBJECT => END
 
+   #ifndef HB_SYMBOL_UNUSED
+      #define HB_SYMBOL_UNUSED( symbol )  ( symbol := ( symbol ) )
+   #endif
+
 #else
 
    #include "hbgtinfo.ch"

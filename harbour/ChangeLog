@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-22 22:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/xhb/hbcompat.ch
+     + Added HB_SYMBOL_UNUSED() to xhb branch.
+       [TOMERGE 1.0.0RC1]
+
 2008-06-22 21:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32/w32_ole.c
    * contrib/hbole/ole2.c
