@@ -99,30 +99,28 @@ static void hb_fsGrabDirectory( PHB_ITEM pDir, const char * szDirSpec, USHORT ui
       }
       while( hb_fsFindNext( ffind ) );
 
-      hb_fsFindClose( ffind );
       hb_itemRelease( pSubarray );
+      hb_fsFindClose( ffind );
    }
 }
 
 void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttributes, BOOL bDirOnly, BOOL bFullPath )
 {
-   USHORT    uiMask, uiMaskNoLabel;
+   USHORT uiMask;
+   USHORT uiMaskNoLabel;
    BYTE      *szDirSpec;
 
 /*
 #if defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >= 910 )
    PHB_ITEM pEightDotThree = hb_param( 3, HB_IT_LOGICAL );
-   BOOL     bEightDotThree;
-
-   // Do we want 8.3 support?
-   bEightDotThree = ( pEightDotThree ? hb_itemGetL( pEightDotThree ) : FALSE );
+   BOOL     bEightDotThree = pEightDotThree ? hb_itemGetL( pEightDotThree ) : FALSE; // Do we want 8.3 support?
 #endif
 */
 
    PHB_FNAME pDirSpec = NULL;
    BOOL bAlloc = FALSE;
-   /* Get the passed attributes and convert them to Harbour Flags */
 
+   /* Get the passed attributes and convert them to Harbour Flags */
    uiMask = HB_FA_ARCHIVE
           | HB_FA_READONLY
           | HB_FA_NORMAL
@@ -141,9 +139,7 @@ void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttribute
    hb_arrayNew( pDir, 0 );
 
    if ( bDirOnly )
-   {
       szAttributes = "D";
-   }
 
    if( szAttributes && strlen( szAttributes ) > 0 )
    {
@@ -155,13 +151,9 @@ void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttribute
    }
 
    if ( szSkleton && strlen( szSkleton ) > 0 )
-   {
       szDirSpec = hb_fsNameConv( ( BYTE * ) szSkleton, &bAlloc );
-   }
    else
-   {
       szDirSpec = (BYTE *) OS_FILE_MASK;
-   }
 
    if( bDirOnly || bFullPath )
    {
@@ -185,7 +177,7 @@ void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttribute
       hb_fsGrabDirectory( pDir, (const char*) szDirSpec, uiMaskNoLabel, pDirSpec, bFullPath, bDirOnly );
    }
 
-   if ( pDirSpec != NULL )
+   if( pDirSpec )
       hb_xfree( pDirSpec );
 
    if( bAlloc )

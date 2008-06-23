@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-24 00:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/hbziparch/tests
+   + contrib/hbziparch/tests/bld_b32.bat
+   + contrib/hbziparch/tests/bld_vc.bat
+   + contrib/hbziparch/tests/zipa.prg
+   + contrib/hbziparch/tests/unzipa.prg
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbzipcom.cpp
+   * contrib/hbziparch/hbcomprs.c
+   * contrib/hbziparch/hbzipnew.cpp
+     * Further cleanup.
+     ! Several potential buffer overruns fixed.
+       (there are still quite some left)
+     + Added simple tests.
+
 2008-06-23 20:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbextern.ch
      * HB_GETREADVAR() added.

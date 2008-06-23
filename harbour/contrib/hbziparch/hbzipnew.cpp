@@ -109,12 +109,12 @@ static int hb_CheckSpanMode( char * szFile )
       {
          szZip.Close( true );
          iReturn = 114;
-      } else if ( e.m_iCause == CZipException::noCallback )
+      }
+      else if ( e.m_iCause == CZipException::noCallback )
       {
          szZip.Close( true );
          iReturn = 103;
       }
-      
       else if ( e.m_iCause == CZipException::generic )
       {
          szZip.Close( true );
@@ -125,103 +125,73 @@ static int hb_CheckSpanMode( char * szFile )
          szZip.Close( true );
          iReturn = 101;
       }
-
-      
       else if ( e.m_iCause == CZipException::badCrc )
       {
          szZip.Close( true );
          iReturn = 102;
       }
-
-
-      
       else if ( e.m_iCause == CZipException::aborted )
       {
          szZip.Close( true );
          iReturn = 104;
       }
-
-      
       else if ( e.m_iCause == CZipException::abortedAction )
       {
          szZip.Close( true );
          iReturn = 105;
       }
-
-      
       else if ( e.m_iCause == CZipException::abortedSafely )
       {
          szZip.Close( true );
          iReturn = 106;
       }
-
-      
       else if ( e.m_iCause == CZipException::nonRemovable )
       {
          szZip.Close( true );
          iReturn = 107;
       }
-
-      
       else if ( e.m_iCause == CZipException::tooManyVolumes )
       {
          szZip.Close( true );
          iReturn = 108;
       }
-
-      
       else if ( e.m_iCause == CZipException::tooLongFileName )
       {
          szZip.Close( true );
          iReturn = 109;
       }
-
-      
       else if ( e.m_iCause == CZipException::badPassword )
       {
          szZip.Close( true );
          iReturn = 110;
       }
-
-      
       else if ( e.m_iCause == CZipException::dirWithSize )
       {
          szZip.Close( true );
          iReturn = 111;
       }
-
-      
       else if ( e.m_iCause == CZipException::internal )
       {
          szZip.Close( true );
          iReturn = 112;
       }
-
-      
       else if ( e.m_iCause == CZipException::notRemoved )
       {
          szZip.Close( true );
          iReturn = 113;
       }
-
-      
       else if ( e.m_iCause == CZipException::notRenamed )
       {
          szZip.Close( true );
          iReturn = 114;
       }
-
-      
       else if ( e.m_iCause == CZipException::platfNotSupp)
       {
          szZip.Close( true );
          iReturn = 115;
       }
-
-
-
-
    }
+
    if ( ! iReturn )
    {
       iReturn = szZip.GetSpanMode( );
