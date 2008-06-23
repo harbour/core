@@ -71,7 +71,7 @@
 
 FUNCTION ReadModal( GetList, nPos, oMenu, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
 #else
-FUNCTION ReadModal( GetList, nPos )
+FUNCTION ReadModal( GetList )
 #endif
 
    LOCAL oGetList
@@ -97,7 +97,7 @@ FUNCTION ReadModal( GetList, nPos )
 #ifdef HB_COMPAT_C53
    oGetList:ReadModal( nPos, oMenu, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
 #else
-   oGetList:ReadModal( nPos )
+   oGetList:ReadModal()
 #endif
 
    __GetListSetActive( oSaveGetList )
@@ -319,3 +319,15 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
    ENDIF
 
    RETURN .F.
+
+FUNCTION hb_GetReadVar( oGet )
+   LOCAL cName := Upper( oGet:name )
+   LOCAL n
+
+   IF oGet:subScript != NIL
+      FOR n := 1 TO Len( oGet:subScript )
+         cName += "[" + LTrim( Str( oGet:subScript[ n ] ) ) + "]"
+      NEXT
+   ENDIF
+
+   RETURN cName

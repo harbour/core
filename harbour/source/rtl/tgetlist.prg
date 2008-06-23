@@ -94,7 +94,7 @@ CREATE CLASS HBGetList
 #ifdef HB_COMPAT_C53
    METHOD ReadModal( nPos, oMenu, nMsgRow, nMsgLeft, nMsgRight, cMsgColor )
 #else
-   METHOD ReadModal( nPos )
+   METHOD ReadModal()
 #endif
    METHOD Settle( nPos, lInit )
    METHOD Reader( oMenu, aMsg )
@@ -162,7 +162,7 @@ ENDCLASS
 #ifdef HB_COMPAT_C53
 METHOD ReadModal( nPos, oMenu, nMsgRow, nMsgLeft, nMsgRight, cMsgColor ) CLASS HBGetList
 #else
-METHOD ReadModal( nPos ) CLASS HBGetList
+METHOD ReadModal() CLASS HBGetList
 #endif
 
 #ifdef HB_COMPAT_C53
@@ -198,9 +198,7 @@ METHOD ReadModal( nPos ) CLASS HBGetList
 
    aMsg := { lMsgFlag, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, , , , , }
 #else
-   IF ! ( ISNUMBER( nPos ) .AND. nPos > 0 )
-      ::nPos := ::Settle( 0 )
-   ENDIF
+   ::nPos := ::Settle( 0 )
 #endif
 
    DO WHILE ::nPos != 0
@@ -752,17 +750,7 @@ METHOD PostActiveGet() CLASS HBGetList
 
 METHOD GetReadVar() CLASS HBGetList
 
-   LOCAL oGet := ::oGet
-   LOCAL cName := Upper( oGet:Name )
-   LOCAL n
-
-   IF oGet:Subscript != NIL
-      FOR n := 1 TO Len( oGet:Subscript )
-         cName += "[" + LTrim( Str( oGet:Subscript[ n ] ) ) + "]"
-      NEXT
-   ENDIF
-
-   RETURN cName
+   RETURN hb_GetReadVar( ::oGet )
 
 METHOD SetFormat( bFormat ) CLASS HBGetList
 

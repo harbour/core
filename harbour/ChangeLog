@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-23 19:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/getsys.prg
+   * source/rtl/tgetlist.prg
+     ! Fixed ReadModal() for C5.2 mode to not accept a 
+       (BTW unused) nPos parameter. This could cause an 
+       RTE in Harbour if ReadModal( <number> ) was used, 
+       with HB_COMPAT_C53 turned off. Default build was 
+       not affected.
+     + Added hb_GetReadVar( <oGet> ) -> <cVariableName> 
+       to get the name of a GET variable in uppercase 
+       and including the subscripts.
+       Same as existing HBGetList():GetReadVar() on the 
+       active GET object.
+
 2008-06-23 15:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/common.mak
    - contrib/hbziparch/zip.h
