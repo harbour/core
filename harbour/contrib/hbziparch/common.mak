@@ -10,11 +10,11 @@ LIB_OBJS = \
     $(OBJ_DIR)hbziparc$(OBJEXT) \
     $(OBJ_DIR)hbcomprs$(OBJEXT) \
     $(OBJ_DIR)ziparchive$(OBJEXT) \
-    $(OBJ_DIR)zipplatform$(OBJEXT) \
+    $(OBJ_DIR)ZipPlatform_win$(OBJEXT) \
     $(OBJ_DIR)zipstorage$(OBJEXT) \
     $(OBJ_DIR)zipstring$(OBJEXT) \
     $(OBJ_DIR)zipplatformcomm$(OBJEXT) \
-    $(OBJ_DIR)zippathcomponent$(OBJEXT) \
+    $(OBJ_DIR)ZipPathComponent_win$(OBJEXT) \
     $(OBJ_DIR)zipmemfile$(OBJEXT) \
     $(OBJ_DIR)zipfileheader$(OBJEXT) \
     $(OBJ_DIR)zipfile$(OBJEXT) \

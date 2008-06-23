@@ -55,13 +55,14 @@ HARBOUR_DLL = ..\..\lib\b32\hbziparchdll.dll
 #  ßßßßßßßßßßßßßßßßßßßßß
 
 HARBOUR_DLL_OBJS = \
+   $(OBJ_DIR)\hbziparc.obj\
+   $(OBJ_DIR)\hbcomprs.obj\
    $(OBJ_DIR)\ziparchive.obj\
-   $(OBJ_DIR)\zip.obj\
-   $(OBJ_DIR)\zipplatform.obj\
+   $(OBJ_DIR)\ZipPlatform_win.obj\
    $(OBJ_DIR)\zipstorage.obj\
    $(OBJ_DIR)\zipstring.obj\
    $(OBJ_DIR)\zipplatformcomm.obj\
-   $(OBJ_DIR)\zippathcomponent.obj\
+   $(OBJ_DIR)\ZipPathComponent_win.obj\
    $(OBJ_DIR)\zipmemfile.obj\
    $(OBJ_DIR)\zipfileheader.obj\
    $(OBJ_DIR)\zipfile.obj\
@@ -102,30 +103,31 @@ $(HARBOUR_DLL)  : \
 # ³ HARBOUR_DLL linking ³Û
 # ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙÛ
 #  ßßßßßßßßßßßßßßßßßßßßßßß
-  echo. $(OBJ_DIR)\ziparchive.obj        + > hdll.tmp
-  echo. $(OBJ_DIR)\zip.obj               + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipplatform.obj       + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipstorage.obj        + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipstring.obj         + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipplatformcomm.obj   + >> hdll.tmp
-  echo. $(OBJ_DIR)\zippathcomponent.obj  + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipmemfile.obj        + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipfileheader.obj     + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipfile.obj           + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipnew.obj            + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipcomp.obj           + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipexception.obj      + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipcompatibility.obj  + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipcentraldir.obj     + >> hdll.tmp
-  echo. $(OBJ_DIR)\zipautobuffer.obj     + >> hdll.tmp
-  echo. $(OBJ_DIR)\stdafx.obj            + >> hdll.tmp
-  echo. c0d32w.obj,                      + >> hdll.tmp
-  echo. $(HARBOUR_DLL),                  + >> hdll.tmp
-  echo. ,                                + >> hdll.tmp
-  echo. cw32.lib                         + >> hdll.tmp
-  echo. ..\..\lib\harbour.lib            + >> hdll.tmp
-  echo. import32.lib                     + >> hdll.tmp
-  echo. uuid.lib                           >> hdll.tmp
+  echo. $(OBJ_DIR)\hbziparc.obj             + > hdll.tmp
+  echo. $(OBJ_DIR)\hbcomprs.obj             + >> hdll.tmp
+  echo. $(OBJ_DIR)\ziparchive.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\ZipPlatform_win.obj      + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipstorage.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipstring.obj            + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipplatformcomm.obj      + >> hdll.tmp
+  echo. $(OBJ_DIR)\ZipPathComponent_win.obj + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipmemfile.obj           + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipfileheader.obj        + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipfile.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipnew.obj               + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipcomp.obj              + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipexception.obj         + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipcompatibility.obj     + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipcentraldir.obj        + >> hdll.tmp
+  echo. $(OBJ_DIR)\zipautobuffer.obj        + >> hdll.tmp
+  echo. $(OBJ_DIR)\stdafx.obj               + >> hdll.tmp
+  echo. c0d32w.obj,                         + >> hdll.tmp
+  echo. $(HARBOUR_DLL),                     + >> hdll.tmp
+  echo. ,                                   + >> hdll.tmp
+  echo. cw32.lib                            + >> hdll.tmp
+  echo. ..\..\lib\harbour.lib               + >> hdll.tmp
+  echo. import32.lib                        + >> hdll.tmp
+  echo. uuid.lib                              >> hdll.tmp
   ILINK32 -aa -Tpd -Gn @hdll.tmp
 
 # ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
@@ -133,13 +135,13 @@ $(HARBOUR_DLL)  : \
 # ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙÛ
 #  ßßßßßßßßßßßßßßßßßßßßßßßß
 
+$(OBJ_DIR)\hbziparc.obj : $(COMMON_DIR)\hbziparc.c
+   $(CC) $(CLIBFLAGS) -o$@ $**
+
 $(OBJ_DIR)\ziparchive.obj : $(COMMON_DIR)\ziparchive.cpp
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\zip.obj : $(COMMON_DIR)\zip.c
-   $(CC) $(CLIBFLAGS) -o$@ $**
-
-$(OBJ_DIR)\zipplatform.obj : $(COMMON_DIR)\zipplatform.cpp
+$(OBJ_DIR)\ZipPlatform_win.obj : $(COMMON_DIR)\ZipPlatform_win.cpp
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\zipstorage.obj : $(COMMON_DIR)\zipstorage.cpp
@@ -151,7 +153,7 @@ $(OBJ_DIR)\zipstring.obj : $(COMMON_DIR)\zipstring.cpp
 $(OBJ_DIR)\zipplatformcomm.obj : $(COMMON_DIR)\zipplatformcomm.cpp
    $(CC) $(CLIBFLAGS) -o$@ $**
 
-$(OBJ_DIR)\zippathcomponent.obj : $(COMMON_DIR)\zippathcomponent.cpp
+$(OBJ_DIR)\ZipPathComponent_win.obj : $(COMMON_DIR)\ZipPathComponent_win.cpp
    $(CC) $(CLIBFLAGS) -o$@ $**
 
 $(OBJ_DIR)\zipmemfile.obj : $(COMMON_DIR)\zipmemfile.cpp

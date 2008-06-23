@@ -8,6 +8,39 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-23 10:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/make_b32_dll.mak
+   * contrib/hbziparch/make_b32.bat
+   * contrib/hbziparch/make_vc.bat
+   * contrib/hbziparch/Makefile
+   * contrib/hbziparch/common.mak
+   - contrib/hbziparch/lincompile.sh
+   - contrib
+   - contrib/hbziparch/include -> contrib/hbziparch
+   - contrib/hbziparch/Linux
+   + contrib/hbziparch/ZipFileMapping.h
+   + contrib/hbziparch/ZipPathComponent_lnx.cpp
+   + contrib/hbziparch/ZipPlatform_lnx.cpp
+   - contrib/hbziparch/zippathcomponent.cpp
+   + contrib/hbziparch/ZipPathComponent_win.cpp
+   - contrib/hbziparch/zipplatform.cpp
+   + contrib/hbziparch/ZipPlatform_win.cpp
+     * Directory cleanup.
+     ! Fixed #include.
+
+2008-06-23 10:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/Makefile
+   * contrib/hbziparch/common.mak
+   - contrib/hbziparch/Linux
+   + contrib/hbziparch/ZipFileMapping.h
+   + contrib/hbziparch/ZipPathComponent_lnx.cpp
+   + contrib/hbziparch/ZipPlatform_lnx.cpp
+   - contrib/hbziparch/zippathcomponent.cpp
+   + contrib/hbziparch/ZipPathComponent_win.cpp
+   - contrib/hbziparch/zipplatform.cpp
+   + contrib/hbziparch/ZipPlatform_win.cpp
+     * Directory cleanup.
+
 2008-06-23 10:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_vcce.mak
    * make_vc.mak

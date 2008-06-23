@@ -53,7 +53,9 @@
 
 #ifndef HB_APIZLIB_H_
 #define HB_APIZLIB_H_
+
 #define HB_OS_WIN_32_USED
+
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbstack.h"
@@ -61,8 +63,9 @@
 #include "hbapierr.h"
 #include "hbapicls.h"
 #include "hbapifs.h"
-/* #include <hbapigt.h> */
+/* #include "hbapigt.h" */
 #include "hbvm.h"
+
 #if defined(__GNUC__) && !defined(__MINGW32__)
    #include <sys/types.h>
    #include <sys/stat.h>
@@ -73,7 +76,7 @@
 #include <time.h>
 
 #ifdef HB_EXTERN_C
-#include <ziparchive.h>
+#include "ziparchive.h"
 #endif
 
 HB_EXTERN_BEGIN

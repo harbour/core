@@ -28,13 +28,13 @@ CPP_SOURCES = \
 
 ifeq ($(HB_ARCHITECTURE),linux)
 CPP_SOURCES += \
-	../../Linux/ZipPathComponent.cpp \
-	../../Linux/ZipPlatform.cpp \
+	ZipPathComponent_lnx.cpp \
+	ZipPlatform_lnx.cpp \
 
 else
 CPP_SOURCES += \
-	zippathcomponent.cpp \
-	zipplatform.cpp \
+	ZipPathComponent_win.cpp \
+	ZipPlatform_win.cpp \
 
 endif
 
