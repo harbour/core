@@ -1390,16 +1390,16 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
    LOCAL lGUI
 
    IF nKey >= K_ALT_Q .AND. nKey <= K_ALT_P
-      cKey := substr( "qwertyuiop", nKey - K_ALT_Q + 1, 1 )
+      cKey := SubStr( "qwertyuiop", nKey - K_ALT_Q + 1, 1 )
 
    ELSEIF nKey >= K_ALT_A .AND. nKey <= K_ALT_L
-      cKey := substr( "asdfghjkl", nKey - K_ALT_A + 1, 1 )
+      cKey := SubStr( "asdfghjkl", nKey - K_ALT_A + 1, 1 )
 
    ELSEIF nKey >= K_ALT_Z .AND. nKey <= K_ALT_M
-      cKey := substr( "zxcvbnm", nKey - K_ALT_Z + 1, 1 )
+      cKey := SubStr( "zxcvbnm", nKey - K_ALT_Z + 1, 1 )
 
    ELSEIF nKey >= K_ALT_1 .AND. nKey <= K_ALT_0
-      cKey := substr( "1234567890", nKey - K_ALT_1 + 1, 1 )
+      cKey := SubStr( "1234567890", nKey - K_ALT_1 + 1, 1 )
 
    ELSE
       RETURN 0
