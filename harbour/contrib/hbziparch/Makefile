@@ -11,17 +11,18 @@ C_SOURCES = \
 	hbcomprs.c \
 
 CPP_SOURCES = \
+	hbzipnew.cpp \
+	hbzipcom.cpp \
+    /
 	stdafx.cpp \
 	ziparchive.cpp \
 	zipautobuffer.cpp \
 	zipcentraldir.cpp \
-	zipcomp.cpp \
 	zipcompatibility.cpp \
 	zipexception.cpp \
 	zipfile.cpp  \
 	zipfileheader.cpp \
 	zipmemfile.cpp \
-	zipnew.cpp \
 	zipplatformcomm.cpp \
 	zipstorage.cpp \
 	ZipString.cpp

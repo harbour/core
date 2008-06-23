@@ -8,6 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-23 14:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   - hbziparch/make_b32_dll.bat
+   - hbziparch/make_b32_dll.mak
+   - hbziparch/doc
+   * hbziparch/Makefile
+   * hbziparch/common.mak
+   * hbziparch/hbziparc.c
+   * hbziparch/hbziparc.h
+   - hbziparch/zipcomp.cpp
+   + hbziparch/hbzipcom.cpp
+   - hbziparch/zipnew.cpp
+   + hbziparch/hbzipnew.cpp
+     - Docs integrated into source.
+     - Removed .dll building batch files (highly redundant, 
+       non-maintained and probably non-working), so now the make 
+       system is fully standard. If .dll generation is that 
+       important, we will have to add it to the central 
+       contrib make files, so that we can use it for 
+       all contribs.
+     * Renamed some files so separate ZipArch and Harbour parts.
+     * Cleanups, renames (statics, globals), warning fixes, 
+       deleted unneeded stuff, some functions made static.
+     ; This is still a mess.
+     ; NOTE: Since there is no sample or test program, neither
+             do I use this contrib, I couldn't test any of these 
+             changes. Please test.
+             (if you have test code, upload it to hbziparch/tests)
+
 2008-06-23 10:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/make_b32_dll.mak
    * contrib/hbziparch/make_b32.bat

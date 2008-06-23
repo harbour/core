@@ -62,15 +62,17 @@
    #include <dirent.h>
 #endif
 
-extern PHB_ITEM ZipArray;
+extern void hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttributes, BOOL bDirOnly, BOOL bFullPath );
 
-static PHB_ITEM FileToZip;
-static PHB_ITEM ExcludeFile;
-static PHB_ITEM UnzipFiles;
-static PHB_ITEM DelZip;
-static PHB_ITEM FileAttribs;
+static PHB_ITEM s_FileToZip;
+static PHB_ITEM s_ExcludeFile;
+static PHB_ITEM s_UnzipFiles;
+static PHB_ITEM s_DelZip;
+static PHB_ITEM s_FileAttribs;
 
-PHB_ITEM ChangeDiskBlock;
+PHB_ITEM hbza_ChangeDiskBlock;
+PHB_ITEM hbza_pProgressInfo = NULL;
+PHB_ITEM hbza_ZipArray;
 
 #define FA_RDONLY           1   /* R */
 #define FA_HIDDEN           2   /* H */
@@ -80,27 +82,36 @@ PHB_ITEM ChangeDiskBlock;
 #define FA_ARCH            32   /* A */
 #define FA_NORMAL         128
 
-extern void hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttributes, BOOL bDirOnly, BOOL bFullPath );
-
 #if defined(HB_OS_LINUX)
-extern int GetFileAttributes( char *szEntry );
-extern void SetFileAttributes( char * szEntry, ULONG ulAttr );
+
+static int GetFileAttributes( char * szEntry )
+{
+   struct stat sStat;
+   stat( szEntry, &sStat );
+   return (int) sStat.st_mode;
+}
+
+static void SetFileAttributes( char * szEntry, ULONG ulAttr)
+{
+   chmod(szEntry,ulAttr);
+}
+
 #endif
 
 static void ResetAttribs( void )
 {
-   ULONG ulAtt, ulZipLen = hb_arrayLen(FileToZip);
+   ULONG ulAtt, ulZipLen = hb_arrayLen(s_FileToZip);
 
    for( ulAtt = 0; ulAtt < ulZipLen; ulAtt ++ )
    {
-     char *szFile = hb_arrayGetC( FileToZip, ulAtt + 1 );
-     int iAttr  = hb_arrayGetNI( FileAttribs, ulAtt + 1 );
+     char *szFile = hb_arrayGetC( s_FileToZip, ulAtt + 1 );
+     int iAttr  = hb_arrayGetNI( s_FileAttribs, ulAtt + 1 );
      SetFileAttributes( szFile, iAttr  );
      hb_xfree( szFile );
    }
 
-   hb_itemRelease( FileAttribs );
-   hb_itemRelease( FileToZip );
+   hb_itemRelease( s_FileAttribs );
+   hb_itemRelease( s_FileToZip );
 }
 
 static void UnzipCreateArray( char *szSkleton, int uiOption)
@@ -110,13 +121,13 @@ static void UnzipCreateArray( char *szSkleton, int uiOption)
    PHB_ITEM pZipEntry;
    PHB_ITEM Temp;
    BOOL bOkAdd;
-   int ulLen = hb_arrayLen(ZipArray);
+   int ulLen = hb_arrayLen(hbza_ZipArray);
    char sRegEx[ _POSIX_PATH_MAX + _POSIX_PATH_MAX ];
 
    for ( ul = 0 ; ul < ulLen; ul ++ )
    {
       bOkAdd = TRUE;
-      pZipEntry = hb_arrayGetItemPtr( ZipArray, ul + 1 );
+      pZipEntry = hb_arrayGetItemPtr( hbza_ZipArray, ul + 1 );
       szEntry = hb_arrayGetC( pZipEntry, 1 );
 
       if ( szSkleton )
@@ -150,13 +161,13 @@ static void UnzipCreateArray( char *szSkleton, int uiOption)
          if ( uiOption == 1 )
          {
             Temp = hb_itemNew( NULL ) ;
-            hb_arrayAddForward( UnzipFiles, hb_itemPutC( Temp, szEntry ) );
+            hb_arrayAddForward( s_UnzipFiles, hb_itemPutC( Temp, szEntry ) );
             hb_itemRelease( Temp );
          }
          else
          {
             Temp = hb_itemNew( NULL ) ;
-            hb_arrayAddForward( DelZip, hb_itemPutC( Temp, szEntry ) );
+            hb_arrayAddForward( s_DelZip, hb_itemPutC( Temp, szEntry ) );
             hb_itemRelease( Temp );
          }
       }
@@ -169,11 +180,11 @@ static BOOL ZipTestExclude ( char *szEntry )
 {
    int uiEx;
    BOOL bNotFound = TRUE;
-   int uiExLen = hb_arrayLen(ExcludeFile);
+   int uiExLen = hb_arrayLen(s_ExcludeFile);
 
    for ( uiEx = 0; uiEx < uiExLen; uiEx ++ )
    {
-      char *szExclude = hb_arrayGetC( ExcludeFile, uiEx + 1 );
+      char *szExclude = hb_arrayGetC( s_ExcludeFile, uiEx + 1 );
       if ( strcmp ( szExclude, hb_strupr( szEntry ) ) == 0 )
       {
          hb_xfree( szExclude );
@@ -190,7 +201,7 @@ static void ZipCreateExclude( PHB_ITEM pExclude )
 {
    PHB_ITEM ExTmp;
 
-   ExcludeFile = hb_itemArrayNew(0);
+   s_ExcludeFile = hb_itemArrayNew(0);
 
    if( pExclude == NULL )
    {
@@ -225,7 +236,7 @@ static void ZipCreateExclude( PHB_ITEM pExclude )
             if( szEntry )
             {
                ExTmp = hb_itemPutC( NULL, hb_strupr( szEntry ) );
-               hb_arrayAddForward( ExcludeFile, ExTmp );
+               hb_arrayAddForward( s_ExcludeFile, ExTmp );
                hb_xfree( szEntry );
                hb_itemRelease( ExTmp );
             }
@@ -236,7 +247,7 @@ static void ZipCreateExclude( PHB_ITEM pExclude )
       else
       {
          ExTmp = hb_itemPutC( NULL, hb_itemGetCPtr( pExclude ) );
-         hb_arrayAddForward( ExcludeFile, ExTmp );
+         hb_arrayAddForward( s_ExcludeFile, ExTmp );
          hb_itemRelease( ExTmp ) ;
       }
    }
@@ -274,7 +285,7 @@ static void ZipCreateExclude( PHB_ITEM pExclude )
                   pDirEntry = hb_arrayGetItemPtr( WildFile, uiW + 1 );
                   szEntry = hb_arrayGetC( pDirEntry, 1 );
                   ExTmp = hb_itemNew( NULL);
-                  hb_arrayAddForward( ExcludeFile, hb_itemPutC( ExTmp, szEntry ));
+                  hb_arrayAddForward( s_ExcludeFile, hb_itemPutC( ExTmp, szEntry ));
                   hb_itemRelease( ExTmp );
                   hb_xfree( szEntry );
                }
@@ -282,7 +293,7 @@ static void ZipCreateExclude( PHB_ITEM pExclude )
             else
             {
                ExTmp = hb_itemNew( NULL);
-               hb_arrayAddForward( ExcludeFile, hb_itemPutC( ExTmp, szExclude ));
+               hb_arrayAddForward( s_ExcludeFile, hb_itemPutC( ExTmp, szExclude ));
                hb_itemRelease( ExTmp );
             }
 
@@ -300,10 +311,10 @@ static void ZipCreateArray( PHB_ITEM pParam, BYTE *pCurDir, BOOL bFullPath )    
    PHB_ITEM WildFile = hb_itemNew( NULL );
    int ul, ulLen, ulArr, ulLenArr;
 
-   FileToZip = hb_itemArrayNew(0);
-   FileAttribs = hb_itemArrayNew(0);
+   s_FileToZip = hb_itemArrayNew(0);
+   s_FileAttribs = hb_itemArrayNew(0);
 
-   if( pParam->type == HB_IT_STRING )
+   if( HB_IS_STRING( pParam ) )
    {
       TempArray = hb_itemArrayNew( 0 );
       Temp = hb_itemPutC( NULL, hb_itemGetCPtr( pParam ) );
@@ -364,10 +375,10 @@ static void ZipCreateArray( PHB_ITEM pParam, BYTE *pCurDir, BOOL bFullPath )    
                if ( ZipTestExclude ( szEntry ) )
                {
                   Temp= hb_itemNew(NULL);
-                  hb_arrayAddForward( FileToZip, hb_itemPutC( Temp, szEntry ) );
+                  hb_arrayAddForward( s_FileToZip, hb_itemPutC( Temp, szEntry ) );
                   hb_itemRelease( Temp ) ;
                   Temp= hb_itemNew(NULL);
-                  hb_arrayAddForward( FileAttribs, hb_itemPutNI( Temp, GetFileAttributes( szEntry ) ) );
+                  hb_arrayAddForward( s_FileAttribs, hb_itemPutNI( Temp, GetFileAttributes( szEntry ) ) );
                   hb_itemRelease( Temp ) ;
                   #if defined(HB_OS_LINUX)
                   SetFileAttributes( szEntry, 0777 );
@@ -396,10 +407,10 @@ static void ZipCreateArray( PHB_ITEM pParam, BYTE *pCurDir, BOOL bFullPath )    
          else
          {
             Temp = hb_itemPutC( NULL, szArrEntry ) ;
-            hb_arrayAddForward( FileToZip, Temp );
+            hb_arrayAddForward( s_FileToZip, Temp );
             hb_itemRelease( Temp ) ;
             Temp = hb_itemPutNI( NULL, GetFileAttributes( szArrEntry ) );
-            hb_arrayAddForward( FileAttribs, Temp );
+            hb_arrayAddForward( s_FileAttribs, Temp );
             hb_itemRelease( Temp ) ;
 
                   #if defined(HB_OS_LINUX)
@@ -416,6 +427,104 @@ static void ZipCreateArray( PHB_ITEM pParam, BYTE *pCurDir, BOOL bFullPath )    
    hb_itemRelease( WildFile );
    hb_itemRelease( TempArray );
 }
+
+/*
+ * $DOC$
+ * $FUNCNAME$
+ *      HB_ZIPFILE()
+ * $CATEGORY$
+ *      Zip Functions
+ * $ONELINER$
+ *      Create a zip file
+ * $SYNTAX$
+ *      HB_ZIPFILE( <cFile>, <cFileToCompress> | <aFiles>, <nLevel>,
+ *      <bBlock>, <lOverWrite>, <cPassword>, <lWithPath>, <lWithDrive>,
+ *      <pFileProgress> ) ---> lCompress
+ * $ARGUMENTS$
+ *      <cFile>   Name of the zip file to create
+ *
+ *      <cFileToCompress>  Name of a file to Compress, Drive and/or path
+ *      can be used
+ *         _or_
+ *      <aFiles>  An array containing files to compress, Drive and/or path
+ *      can be used
+ *
+ *      <nLevel>  Compression level ranging from 0 to 9
+ *
+ *      <bBlock>  Code block to execute while compressing
+ *
+ *      <lOverWrite>  Toggle to overwrite the file if exists
+ *
+ *      <cPassword> Password to encrypt the files
+ *
+ *      <lWithPath> Toggle to store the path or not
+ *
+ *      <lWithDrive> Toggle to store the Drive letter and path or not
+ *
+ *      <pFileProgress> Code block for File Progress
+ * $RETURNS$
+ *      <lCompress>  .t. if file was create, otherwise .f.
+ * $DESCRIPTION$
+ *      This function creates a zip file named <cFile>. If the extension
+ *      is omitted, .ZIP will be assumed. If the second parameter is a
+ *      character string, this file will be added to the zip file. If the
+ *      second parameter is an array, all file names contained in <aFiles>
+ *      will be compressed.
+ *
+ *      If <nLevel> is used, it determines the compression type where 0 means
+ *      no compression and 9 means best compression.
+ *
+ *      If <bBlock> is used, every time the file is opened to compress it
+ *      will evaluate bBlock. Parameters of bBlock are cFile and nPos.
+ *
+ *      If <lOverWrite> is used, it toggles to overwrite or not the existing
+ *      file. Default is to overwrite the file,otherwise if <lOverWrite> is false
+ *      the new files are added to the <cFile>.
+ *
+ *      If <cPassword> is used, all files that are added to the archive are encrypted
+ *      with the password.
+ *
+ *      If <lWithPath> is used, it tells  the path should also be stored with
+ *      the file name. Default is false.
+ *
+ *      If <lWithDrive> is used, it tells thats the Drive and path should also be stored
+ *      with the file name. Default is false.
+ *
+ *      If <pFileProgress> is used, an Code block is evaluated, showing the total
+ *      of that file has being processed.
+ *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
+ *
+ * $EXAMPLES$
+ *      FUNCTION MAIN()
+ *
+ *      IF HB_ZIPFILE( "TEST.ZIP", "TEST.PRG" )
+ *         qout( "File was successfully created" )
+ *      ENDIF
+ *
+ *      IF HB_ZIPFILE( "TEST1.ZIP", { "TEST.PRG", "c:\windows\win.ini" } )
+ *         qout( "File was successfully created" )
+ *      ENDIF
+ *
+ *      IF HB_ZIPFILE( "TEST2.ZIP", { "TEST.PRG", "c:\windows\win.ini" }, 9, {|cFile,nPos,| qout(cFile) } )
+ *         qout( "File was successfully created" )
+ *      ENDIF
+ *
+ *      aFiles := { "TEST.PRG", "c:\windows\win.ini" }
+ *      nLen   := Len( aFiles )
+ *      aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B" , "²" )
+ *      GaugeDisplay( aGauge )
+ *      HB_ZIPFILE( "test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen ) },, "hello" )
+ *      Return Nil
+ * $STATUS$
+ *      R
+ * $COMPLIANCE$
+ *      This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
+ * $FILES$
+ *      Library is hbzip.lib
+ * $END$
+ */
 
 HB_FUNC( HB_ZIPFILE )
 {
@@ -475,11 +584,11 @@ HB_FUNC( HB_ZIPFILE )
          hb_xfree( pCurDir) ;
          szZipFileName = hb___CheckFile( szFile );
 
-         if ( hb_arrayLen(FileToZip) > 0 )
+         if ( hb_arrayLen(s_FileToZip) > 0 )
          {
             PHB_ITEM pProgress = ISBLOCK( 9 ) ? hb_itemNew( hb_param( 9, HB_IT_BLOCK ) ) : hb_itemNew( NULL );
             bRet = hb_CompressFile( szZipFileName,
-                                    FileToZip,
+                                    s_FileToZip,
                                     ISNUM( 3 ) ? hb_parni( 3 ) : ( -1 ),
                                     hb_param( 4, HB_IT_BLOCK ),
                                     ISLOG( 5 ) ? hb_parl( 5 ) : 0,
@@ -492,7 +601,7 @@ HB_FUNC( HB_ZIPFILE )
          }
 
          hb_xfree( szZipFileName );
-         hb_itemRelease(ExcludeFile);
+         hb_itemRelease(s_ExcludeFile);
       }
    }
 
@@ -544,6 +653,102 @@ HB_FUNC( HB_GETFILECOUNT )
    hb_retni( iRet );
 }
 
+/*
+ * $DOC$
+ * $FUNCNAME$
+ *      HB_ZIPFILEBYTDSPAN()
+ * $CATEGORY$
+ *      Zip Functions
+ * $ONELINER$
+ *      Create a zip file
+ * $SYNTAX$
+ *      HB_ZIPFILEBYTDSPAN( <cFile> ,<cFileToCompress> | <aFiles>, <nLevel>,
+ *      <bBlock>, <lOverWrite>, <cPassword>, <iSize>, <lWithPath>, <lWithDrive>,
+ *      <pFileProgress>) ---> lCompress
+ * $ARGUMENTS$
+ *      <cFile>   Name of the zip file
+ *
+ *      <cFileToCompress>  Name of a file to Compress, Drive and/or path
+ *      can be used
+ *          _or_
+ *      <aFiles>  An array containing files to compress, Drive and/or path
+ *      can be used
+ *
+ *      <nLevel>  Compression level ranging from 0 to 9
+ *
+ *      <bBlock>  Code block to execute while compressing
+ *
+ *      <lOverWrite>  Toggle to overwrite the file if exists
+ *
+ *      <cPassword> Password to encrypt the files
+ *
+ *      <iSize> Size of the archive, in bytes. Default is 1457664 bytes
+ *
+ *      <lWithPath> Toggle to store the path or not
+ *
+ *      <lWithDrive> Toggle to store the Drive letter and path or not
+ *
+ *      <pFileProgress> Code block for File Progress
+ * $RETURNS$
+ *      <lCompress>  .t. if file was create, otherwise .f.
+ * $DESCRIPTION$
+ *      This function creates a zip file named <cFile>. If the extension
+ *      is omitted, .ZIP will be assumed. If the second parameter is a
+ *      character string, this file will be added to the zip file. If the
+ *      second parameter is an array, all file names contained in <aFiles>
+ *      will be compressed.
+ *
+ *      If <nLevel> is used, it determines the compression type where 0 means
+ *      no compression and 9 means best compression.
+ *
+ *      If <bBlock> is used, every time the file is opened to compress it
+ *      will evaluate bBlock. Parameters of bBlock are cFile and nPos.
+ *
+ *      If <lOverWrite> is used, it toggles to overwrite or not the existing
+ *      file. Default is to overwrite the file, otherwise if <lOverWrite> is
+ *      false the new files are added to the <cFile>.
+ *
+ *      If <lWithPath> is used, it tells thats the path should also be stored '
+ *      with the file name. Default is false.
+ *
+ *      If <lWithDrive> is used, it tells thats the Drive and path should also
+ *      be stored with the file name. Default is false.
+ *
+ *      If <pFileProgress> is used, an Code block is evaluated, showing the total
+ *      of that file has being processed.
+ *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
+ * $EXAMPLES$
+ *      FUNCTION MAIN()
+ *
+ *      IF HB_ZIPFILEBYTDSPAN( "TEST.ZIP", "TEST.PRG" )
+ *         qout( "File was successfully created" )
+ *      ENDIF
+ *
+ *      IF HB_ZIPFILEBYTDSPAN( "TEST1.ZIP", { "TEST.PRG", "c:\windows\win.ini" } )
+ *         qout( "File was successfully created" )
+ *      ENDIF
+ *
+ *      IF HB_ZIPFILEBYTDSPAN( "TEST2.ZIP", { "TEST.PRG", "c:\windows\win.ini" }, 9, {|nPos,cFile| qout(cFile) }, "hello",, 521421 )
+ *         qout("File was successfully created" )
+ *      ENDIF
+ *
+ *      aFiles := { "TEST.PRG", "c:\windows\win.ini" }
+ *      nLen   := Len( aFiles )
+ *      aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "²" )
+ *      GaugeDisplay( aGauge )
+ *      HB_ZIPFILEBYTDSPAN( "test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen) },, "hello",, 6585452 )
+ *      Return Nil
+ * $STATUS$
+ *      R
+ * $COMPLIANCE$
+ *      This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
+ * $FILES$
+ *      Library is hbzip.lib
+ * $END$
+ */
+
 HB_FUNC( HB_ZIPFILEBYTDSPAN )
 {
    BOOL bRet = FALSE;
@@ -592,11 +797,11 @@ HB_FUNC( HB_ZIPFILEBYTDSPAN )
          hb_xfree( pCurDir ) ;	/* by JGS */
          szZipFileName = hb___CheckFile( szFile );
 
-         if ( hb_arrayLen(FileToZip) > 0 )
+         if ( hb_arrayLen(s_FileToZip) > 0 )
          {
             PHB_ITEM pProgress = ISBLOCK( 10 ) ? hb_itemNew( hb_param( 10, HB_IT_BLOCK ) ) : hb_itemNew( NULL );
             bRet = hb_CmpTdSpan( szZipFileName,
-                                 FileToZip,
+                                 s_FileToZip,
                                  ISNUM( 3 ) ? hb_parni( 3 ) : ( -1 ),
                                  hb_param( 4, HB_IT_BLOCK ),
                                  ISLOG( 5 ) ? hb_parl( 5 ) : 0,
@@ -610,12 +815,116 @@ HB_FUNC( HB_ZIPFILEBYTDSPAN )
          }
 
          hb_xfree( szZipFileName );
-         hb_itemRelease(ExcludeFile);
+         hb_itemRelease(s_ExcludeFile);
       }
    }
 
    hb_retl( bRet );
 }
+
+/*
+ * $DOC$
+ * $FUNCNAME$
+ *      HB_ZIPFILEBYPKSPAN()
+ * $CATEGORY$
+ *      Zip Functions
+ * $ONELINER$
+ *      Create a zip file on removable media
+ * $SYNTAX$
+ *      HB_ZIPFILEBYPKSPAN( <cFile>, <cFileToCompress> | <aFiles>, <nLevel>,
+ *      <bBlock>, <lOverWrite>, <cPassword>, <lWithPath>, <lWithDrive>,
+ *      <pFileProgress>) ---> lCompress
+ * $ARGUMENTS$
+ *      <cFile>   Name of the zip file
+ *
+ *      <cFileToCompress>  Name of a file to Compress, Drive and/or path
+ *      can be used
+ *          _or_
+ *      <aFiles>  An array containing files to compress, Drive and/or path
+ *      can be used
+ *
+ *      <nLevel>  Compression level ranging from 0 to 9
+ *
+ *      <bBlock>  Code block to execute while compressing
+ *
+ *      <lOverWrite>  Toggle to overwrite the file if exists
+ *
+ *      <cPassword> Password to encrypt the files
+ *
+ *      <lWithPath> Toggle to store the path or not
+ *
+ *      <lWithDrive> Toggle to store the Drive letter and path or not
+ *
+ *      <pFileProgress> Code block for File Progress
+ * $RETURNS$
+ *      <lCompress>  .t. if file was create, otherwise .f.
+ * $DESCRIPTION$
+ *      This function creates a zip file named <cFile>. If the extension
+ *      is omitted, .ZIP will be assumed. If the second parameter is a
+ *      character string, this file will be added to the zip file. If the
+ *      second parameter is an array, all file names contained in <aFiles>
+ *      will be compressed.  Also, the use of this function is for creating
+ *      backup in removable media like an floppy drive/zip drive.
+ *
+ *      If <nLevel> is used, it determines the compression type where 0 means
+ *      no compression and 9 means best compression.
+ *
+ *      If <bBlock> is used, every time the file is opened to compress it
+ *      will evaluate bBlock. Parameters of bBlock are cFile and nPos.
+ *
+ *      If <lOverWrite> is used , it toggles to overwrite or not the existing
+ *      file. Default is to overwrite the file, otherwise if <lOverWrite> is false
+ *      the new files are added to the <cFile>.
+ *
+ *      If <cPassword> is used, all files that are added to the archive are encrypted
+ *      with the password.
+ *
+ *      If <lWithPath> is used, it tells thats the path should also be stored with
+ *      the file name. Default is false.
+ *
+ *      If <lWithDrive> is used, it tells thats the Drive and path should also be stored
+ *      with the file name. Default is false.
+ *
+ *      If <pFileProgress> is used, an Code block is evaluated, showing the total
+ *      of that file has being processed.
+ *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
+ *
+ *      Before calling this function, Set an Changedisk codeblock by calling
+ *      the HB_SETDISKZIP().
+ * $EXAMPLES$
+ *      FUNCTION MAIN()
+ *
+ *      hb_setdiskzip( {|nDisk| Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
+ *
+ *      IF HB_ZIPFILEBYPKSPAN( "a:\TEST.ZIP", "TEST.PRG" )
+ *         qout( "File was successfully created" )
+ *      ENDIF
+ *
+ *      IF HB_ZIPFILEBYPKSPAN( "a:\TEST1.ZIP", { "TEST.PRG", "c:\windows\win.ini" } )
+ *         qout( "File was successfully created" )
+ *      ENDIF
+ *
+ *      IF HB_ZIPFILEBYPKSPAN( "TEST2.ZIP", { "TEST.PRG", "c:\windows\win.ini"}, 9, {|nPos,cFile| qout(cFile) } )
+ *         qout( "File was successfully created" )
+ *      ENDIF
+ *
+ *      aFiles := { "TEST.PRG", "c:\windows\win.ini" }
+ *      nLen   := Len( aFiles )
+ *      aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "²" )
+ *      GaugeDisplay( aGauge )
+ *      HB_ZIPFILEBYPKSPAN( "f:\test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen ) },, "hello" )
+ *      // assuming f:\ is a Zip Drive
+ *      Return Nil
+ * $STATUS$
+ *      R
+ * $COMPLIANCE$
+ *      This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
+ * $FILES$
+ *      Library is hbzip.lib
+ * $END$
+ */
 
 HB_FUNC( HB_ZIPFILEBYPKSPAN )
 {
@@ -667,11 +976,11 @@ HB_FUNC( HB_ZIPFILEBYPKSPAN )
          /* by JGS */
          szZipFileName = hb___CheckFile( szFile );
 
-         if ( hb_arrayLen(FileToZip) > 0 )
+         if ( hb_arrayLen(s_FileToZip) > 0 )
          {
             PHB_ITEM pProgress = ISBLOCK( 9 ) ? hb_itemNew( hb_param( 9, HB_IT_BLOCK ) ) : hb_itemNew( NULL );
             bRet = hb_CmpPkSpan( szZipFileName,
-                                 FileToZip,
+                                 s_FileToZip,
                                  ISNUM( 3 ) ? hb_parni( 3 ) : ( -1 ),
                                  hb_param( 4, HB_IT_BLOCK ),
                                  ISLOG( 5 ) ? hb_parl( 5 ) : 0,
@@ -684,12 +993,80 @@ HB_FUNC( HB_ZIPFILEBYPKSPAN )
          }
 
          hb_xfree( szZipFileName );
-         hb_itemRelease(ExcludeFile);
+         hb_itemRelease(s_ExcludeFile);
       }
    }
 
    hb_retl( bRet );
 }
+
+/*
+ * $DOC$
+ * $FUNCNAME$
+ *      HB_UNZIPFILE()
+ * $CATEGORY$
+ *      Zip Functions
+ * $ONELINER$
+ *      Unzip a compressed file
+ * $SYNTAX$
+ *      HB_UNZIPFILE( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>,
+ *      <cFile> | <aFile>, <pFileProgress> ) ---> lCompress
+ * $ARGUMENTS$
+ *      <cFile>   Name of the zip file to extract
+ *
+ *      <bBlock>  Code block to execute while extracting
+ *
+ *      <lWithPath> Toggle to create directory if needed
+ *
+ *      <cPassWord> Password to use to extract files
+ *
+ *      <cPath>    Path to extract the files to - mandatory
+ *
+ *      <cFile> | <aFiles> A File or Array of files to extract - mandatory
+ *
+ *      <pFileProgress> Code block for File Progress
+ * $RETURNS$
+ *      <lCompress>  .t. if all file was successfully restored, otherwise .f.
+ * $DESCRIPTION$
+ *      This function restores all files contained inside the <cFile>.
+ *      If the extension is omitted, .ZIP will be assumed. If a file already
+ *      exists, it will be overwritten.
+ *
+ *      If <bBlock> is used, every time the file is opened to compress it
+ *      will evaluate bBlock. Parameters of bBlock are cFile and nPos.
+ *
+ *      The <cPath> is a mandatory parameter. Set to ".\" to extract to the
+ *      current directory
+ *
+ *      If <cFile> or <aFiles> are not provided, no files will be extracted!
+ *      Make sure you provide the file or files you want extracted
+ *
+ *      If <pFileProgress> is used, an Code block is evaluated, showing the total
+ *      of that file has being processed.
+ *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
+ * $EXAMPLES$
+ *      FUNCTION MAIN()
+ *
+ *      aExtract := hb_GetFilesInZip( "TEST.ZIP" )  // extract all files in zip
+ *      IF HB_UNZIPFILE( "TEST.ZIP",,,, ".\", aExtract )
+ *         qout("File was successfully extracted")
+ *      ENDIF
+ *
+ *      aExtract := hb_GetFilesInZip( "TEST2.ZIP" )  // extract all files in zip
+ *      IF HB_UNZIPFILE( "TEST2.ZIP", {|cFile| qout( cFile ) },,, ".\", aExtract )
+ *         qout("File was successfully extracted")
+ *      ENDIF
+ *      Return Nil
+ * $STATUS$
+ *      R
+ * $COMPLIANCE$
+ *      This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
+ * $FILES$
+ *      Library is hbzip.lib
+ * $END$
+ */
 
 HB_FUNC( HB_UNZIPFILE )
 {
@@ -707,7 +1084,7 @@ HB_FUNC( HB_UNZIPFILE )
       strcpy( szFile, hb_parc( 1 ) );
       szZipFileName = hb___CheckFile( szFile );
 
-      UnzipFiles = hb_itemArrayNew(0);
+      s_UnzipFiles = hb_itemArrayNew(0);
 
       if(  hb_TestForPKS( szZipFileName ) <=0 )
       {
@@ -742,7 +1119,7 @@ HB_FUNC( HB_UNZIPFILE )
 //s.r. change "*.*" to "*" because file without extension were ignored
          UnzipCreateArray( (char*) "*", 1 );
       }
-      if ( hb_arrayLen(UnzipFiles) > 0 )
+      if ( hb_arrayLen(s_UnzipFiles) > 0 )
       {
          PHB_ITEM pProgress = ISBLOCK( 7 ) ? hb_itemNew( hb_param( 7 , HB_IT_BLOCK ) ) : hb_itemNew( NULL );
          bRet = hb_UnzipSel( szZipFileName,
@@ -750,27 +1127,95 @@ HB_FUNC( HB_UNZIPFILE )
                              ISLOG( 3 ) ? hb_parl( 3 ) : 0,
                              ISCHAR( 4 ) ? hb_parc( 4 ) : NULL,
                              ISCHAR( 5 ) ? hb_parc( 5 ) : ".\\",
-                             UnzipFiles,
+                             s_UnzipFiles,
                              pProgress );
          hb_itemRelease( pProgress );
       }
 
       hb_xfree( szZipFileName );
-      hb_itemRelease( UnzipFiles );
+      hb_itemRelease( s_UnzipFiles );
       hb_fsChDir( pCurDir ) ;
       hb_xfree( pCurDir ) ;
-      hb_itemClear( ZipArray );
-      hb_itemRelease( ZipArray );
+      hb_itemClear( hbza_ZipArray );
+      hb_itemRelease( hbza_ZipArray );
     }
    }
 
    hb_retl( bRet );
 }
 
+/* $DOC$
+ * $FUNCNAME$
+ *     HB_SETDISKZIP()
+ * $CATEGORY$
+ *     Zip Functions
+ * $ONELINER$
+ *     Set an codeblock for disk changes
+ * $SYNTAX$
+ *     HB_SETDISKZIP( <bBlock> ) ---> TRUE
+ * $ARGUMENTS$
+ *     <bBlock> an Code block that contains an function that will be performed
+ *     when the need of changing disk are need.
+ * $RETURNS$
+ *     It always returns True
+ * $DESCRIPTION$
+ *     This function will set an codeblock that will be evaluated every time
+ *     that an changedisk event is necessary. <bBlock> receives nDisk as a
+ *     code block param that corresponds to the diskette number to be processed.
+ *
+ *     Set this function before opening archives that are in removable media.
+ *     This block will be released, when the caller finish it job.
+ * $EXAMPLES$
+ *      HB_SETDISKZIP( {|nDisk| Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
+ * $COMPLIANCE$
+ *      This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
+ * $FILES$
+ *      Library is hbzip.lib
+ * $END$
+ */
+
 HB_FUNC( HB_SETDISKZIP )
 {
    hb_retl( hb___SetCallbackFunc( hb_param( 1, HB_IT_BLOCK ) ) );
 }
+
+/* $DOC$
+ * $FUNCNAME$
+ *     HB_ZIPDELETEFILES()
+ * $CATEGORY$
+ *     Zip Functions
+ * $ONELINER$
+ *     Delete files from an zip archive
+ * $SYNTAX$
+ *     HB_ZIPDELETEFILES( <cFile>, <cFiletoDelete> | <aFiles> | <nFilePos> ) --> <lDeleted>
+ * $ARGUMENTS$
+ *     <cFile>  The name of the zip files from where the files will be deleted
+ *
+ *     <cFiletoDelete> An File to be removed
+ *        _or_
+ *     <aFiles>    An Array of Files to be removed
+ *        _or_
+ *     <nFilePos> The Position of the file to be removed
+ * $RETURNS$
+ *     <lDeleted> If the files are deleted, it will return .T.; otherwise
+ *     it will return .f. in the following cases: Spanned Archives; the file(s)
+ *     could not be found in the zip file.
+ * $DESCRIPTION$
+ *     This  function removes files from an Zip archive.
+ * $EXAMPLES$
+ *     ? "has the file zipnew.i been deleted ", if( HB_ZIPDELETEFILES( "\test23.zip", "zipnew.i" ), "Yes", "No" )
+ * $STATUS$
+ *     R
+ * $COMPLIANCE$
+ *      This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
+ * $FILES$
+ *      Library is hbzip.lib
+ * $END$
+ */
 
 HB_FUNC( HB_ZIPDELETEFILES )
 {
@@ -780,7 +1225,7 @@ HB_FUNC( HB_ZIPDELETEFILES )
    {
       PHB_ITEM pDelZip = hb_param( 2, HB_IT_STRING | HB_IT_ARRAY | HB_IT_NUMERIC );
 
-      DelZip = hb_itemArrayNew(0);
+      s_DelZip = hb_itemArrayNew(0);
 
       if ( pDelZip )
       {
@@ -792,13 +1237,13 @@ HB_FUNC( HB_ZIPDELETEFILES )
          szZipFileName = hb___CheckFile( szFile );
 
          hb___GetFileNamesFromZip( szZipFileName, TRUE );
-         ulLen = hb_arrayLen(ZipArray);
+         ulLen = hb_arrayLen(hbza_ZipArray);
 
          if ( !ulLen )
          {
             hb_xfree( szZipFileName );
-            hb_itemClear( ZipArray );
-            hb_itemRelease( ZipArray );
+            hb_itemClear( hbza_ZipArray );
+            hb_itemRelease( hbza_ZipArray );
             hb_retl ( bRet );
             return;
          }
@@ -840,32 +1285,74 @@ HB_FUNC( HB_ZIPDELETEFILES )
 
             if( iIndex > 0 && iIndex <= ulLen )
             {
-               PHB_ITEM pZipEntry = hb_arrayGetItemPtr( ZipArray, iIndex );
+               PHB_ITEM pZipEntry = hb_arrayGetItemPtr( hbza_ZipArray, iIndex );
                char* szEntry = hb_arrayGetC( pZipEntry, 1 );
                Temp = hb_itemNew(NULL);
-               hb_arrayAddForward( DelZip, hb_itemPutC( Temp, szEntry ) );
+               hb_arrayAddForward( s_DelZip, hb_itemPutC( Temp, szEntry ) );
                hb_xfree( szEntry );
                hb_itemRelease( Temp );
             }
          }
 
-         if ( hb_arrayLen(DelZip) > 0 )
+         if ( hb_arrayLen(s_DelZip) > 0 )
          {
             bRet = hb_DeleteSel( szZipFileName,
-                                 DelZip,
+                                 s_DelZip,
                                  ISLOG( 3 ) ? hb_parl( 3 ) : 0 );
          }
 
          hb_xfree(szZipFileName);
-         hb_itemClear( ZipArray );
-         hb_itemRelease( ZipArray );
+         hb_itemClear( hbza_ZipArray );
+         hb_itemRelease( hbza_ZipArray );
       }
 
-      hb_itemRelease( DelZip );
+      hb_itemRelease( s_DelZip );
    }
 
    hb_retl( bRet );
 }
+
+/* $DOC$
+ * $FUNCNAME$
+ *     HB_ZIPTESTPK()
+ * $CATEGORY$
+ *     Zip Functions
+ * $ONELINER$
+ *     Test pkSpanned zip files
+ * $SYNTAX$
+ *     HB_ZIPTESTPK( <cFile> ) --> <nReturnCode>
+ * $ARGUMENTS$
+ *     <cFile>  File to be tested.
+ * $RETURNS$
+ *     <nReturn> A code that tells if the current disk is the last of a
+ *     pkSpanned disk set.
+ * $DESCRIPTION$
+ *     This function tests if the disk inserted is the last disk of an backup
+ *     set or not.
+ *     It will return the follow return code when an error is found
+ *
+ *     <table>
+ *     Error code     Meaning
+ *     114            Incorrect Disk
+ *     103            No Call back was set with HB_SETDISKZIP()
+ *     </table>
+ *
+ *     Call this function to determine if the disk inserted is the correct
+ *     one before any other function.
+ * $EXAMPLES$
+ *      if HB_ZIPTESTPK( "a:\test22.zip" ) == 114
+ *          ? "Invalid Diskette"
+ *      endif
+ * $STATUS$
+ *     R
+ * $COMPLIANCE$
+ *      This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
+ * $FILES$
+ *      Library is hbzip.lib
+ * $END$
+ */
 
 HB_FUNC( HB_ZIPTESTPK )
 {
@@ -880,21 +1367,187 @@ HB_FUNC( HB_ZIPTESTPK )
    hb_xfree(szZipFileName);
 }
 
+/* $DOC$
+ * $FUNCNAME$
+ *     HB_SETBUFFER()
+ * $CATEGORY$
+ *     Zip Functions
+ * $ONELINER$
+ *
+ * $SYNTAX$
+ *     HB_SETBUFFER( [<nWriteBuffer>], [<nExtractBuffer>], [<nReadBuffer>] ) --> Nil
+ * $ARGUMENTS$
+ *     <nWriteBuffer>   The size of the write buffer.
+ *
+ *     <nExtractBuffer> The size of the extract buffer.
+ *
+ *     <nReadBuffer>    The size of the read buffer.
+ * $RETURNS$
+ *     <NIL>            This function always returns NIL.
+ * $DESCRIPTION$
+ *     This function set the size of the internal buffers for write/extract/read
+ *     operation
+ *
+ *     If the size of the buffer is smaller then the default, the function
+ *     will automatically use the default values, which are 65535/16384/32768
+ *     respectively.
+ *
+ *     This function be called before any of the compression/decompression
+ *     functions.
+ * $EXAMPLES$
+ *     HB_SETBUFFER( 100000, 115214, 65242 )
+ * $STATUS$
+ *     R
+ * $COMPLIANCE$
+ *     This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
+ * $FILES$
+ *      Library is hbzip.lib
+ * $END$
+ */
+
 HB_FUNC( HB_SETBUFFER )
 {
    hb_SetZipBuff( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ));
 }
+
+/* $DOC$
+ * $FUNCNAME$
+ *     HB_SETZIPCOMMENT()
+ * $CATEGORY$
+ *     Zip Functions
+ * $ONELINER$
+ *     Set an Zip archive Comment
+ * $SYNTAX$
+ *     HB_SETZIPCOMMENT( <cComment> ) --> Nil
+ * $ARGUMENTS$
+ *     <cComment>   Comment to add to the zip archive
+ * $RETURNS$
+ *     <NIL> this function always return NIL
+ * $DESCRIPTION$
+ *     This function stored an global comment to an zip archive.
+ *     It should be called before any of the compression functions.
+ * $EXAMPLES$
+ *     HB_SETZIPCOMMENT( "This is an Test" )
+ *     hb_zipfile( "test.zip", { "\windows\ios.ini", "\windows\win.ini" } )
+ * $STATUS$
+ *     R
+ * $COMPLIANCE$
+ *     This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
+ * $FILES$
+ *      Library is hbzip.lib
+ * $END$
+ */
 
 HB_FUNC( HB_SETZIPCOMMENT )
 {
    hb_SetZipComment( hb_parc( 1 ) );
 }
 
+/* $DOC$
+ * $FUNCNAME$
+ *     HB_GETZIPCOMMENT()
+ * $CATEGORY$
+ *     Zip Functions
+ * $ONELINER$
+ *     Return the comment of an zip file
+ * $SYNTAX$
+ *     HB_GETZIPCOMMENT( <szFile> ) --> <szComment>
+ * $ARGUMENTS$
+ *     <szFile>  File to get the comment from
+ * $RETURNS$
+ *     <szComment>  The comment that was stored in <szFile>
+ * $DESCRIPTION$
+ *     This function receives a valid zip file name as parameter,
+ *     and returns the global comment stored within.
+ * $EXAMPLES$
+ *     ? "The comment in test.zip is ", HB_GETZIPCOMMENT( "test.zip" )
+ * $STATUS$
+ *     R
+ * $COMPLIANCE$
+ *     This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
+ * $FILES$
+ *      Library is hbzip.lib
+ * $END$
+ */
+
 HB_FUNC( HB_GETZIPCOMMENT )
 {
    char *szComment=( char* )hb_GetZipComment( hb_parc( 1 ) );
    hb_retcAdopt( szComment );
 }
+
+/*
+ * $DOC$
+ * $FUNCNAME$
+ *      HB_UNZIPFILEINDEX()
+ * $CATEGORY$
+ *      Zip Functions
+ * $ONELINER$
+ *      Unzip a compressed file referenced by it number in the zipfile
+ * $SYNTAX$
+ *      HB_UNZIPFILE( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>,
+ *      <nFile> | <anFiles>, <pFileProgress> ) ---> lCompress
+ * $ARGUMENTS$
+ *      <cFile>   Name of the zip file
+ *
+ *      <bBlock>  Code block to execute while compressing
+ *
+ *      <lWithPath> Toggle to create directory if needed
+ *
+ *      <cPassWord> Password to use to extract files
+ *
+ *      <cPath>    Path to extract the files to - mandatory.
+ *
+ *      <cFile> | <anFiles> A File or Array of files position to extract - mandatory
+ *
+ *      <pFileProgress> Code block for File Progress
+ * $RETURNS$
+ *      <lCompress>  .t. if all file was successfully restored, otherwise .f.
+ * $DESCRIPTION$
+ *      This function restores all files contained inside the <cFile>.
+ *      If the extension is omitted, .ZIP will be assumed. If a file already
+ *      exists, it will be overwritten.
+ *
+ *      If <bBlock> is used, every time the file is opened to compress it
+ *      will evaluate bBlock. Parameters of bBlock are cFile and nPos.
+ *
+ *      The <cPath> is a mandatory parameter. Set to ".\" to extract to the
+ *      current dir
+ *
+ *      If <cFile> or <anFiles> are not provided, no files will be extracted!
+ *      Make sure you provide the file or files you want extracted
+ *
+ *      If <pFileProgress> is used, an Code block is evaluated, showing the total
+ *      of that file has being processed.
+ *      The codeblock must be defined as follow {|nPos,nTotal| GaugeUpdate(aGauge1,(nPos/nTotal))}
+ * $EXAMPLES$
+ *      FUNCTION MAIN()
+ *
+ *      IF HB_UNZIPFILEINDEX( "TEST.ZIP",,,, ".\", 1 )
+ *         qout( "File was successfully created" )
+ *      ENDIF
+ *
+ *      IF HB_UNZIPFILEINDEX( "TEST2.ZIP", {|cFile|, qout(cFile) },,, ".\", { 1, 2 } )
+ *         qout( "File was successfully created" )
+ *      ENDIF
+ *
+ *      Return Nil
+ * $STATUS$
+ *      R
+ * $COMPLIANCE$
+ *      This function is a Harbour extension
+ * $PLATFORMS$
+ *      All
+ * $FILES$
+ *      Library is hbzip.lib
+ * $END$
+ */
 
 HB_FUNC( HB_UNZIPFILEINDEX )
 {
@@ -917,7 +1570,7 @@ HB_FUNC( HB_UNZIPFILEINDEX )
          szZipFileName = hb___CheckFile( szFile );
 
          hb___GetFileNamesFromZip( szZipFileName, TRUE );
-         ulLen = hb_arrayLen(ZipArray);
+         ulLen = hb_arrayLen(hbza_ZipArray);
 
          if ( HB_IS_NUMERIC ( pDelZip ) )
          {
@@ -962,8 +1615,8 @@ HB_FUNC( HB_UNZIPFILEINDEX )
 
          hb_itemRelease( DelZip );
          hb_xfree( szZipFileName );
-         hb_itemClear( ZipArray );
-         hb_itemRelease( ZipArray );
+         hb_itemClear( hbza_ZipArray );
+         hb_itemRelease( hbza_ZipArray );
 
       }
    }
@@ -990,12 +1643,12 @@ HB_FUNC( TRANSFERFROMZIP )
                                      hb_param( 3, HB_IT_ARRAY ) ) );
 }
 
-HB_FUNC(SETZIPREADONLY)
+HB_FUNC( SETZIPREADONLY )
 {
    hb_SetZipReadOnly( hb_parl( 1 ) );
 }
-HB_FUNC(HB_UNZIPALLFILE)
 
+HB_FUNC(HB_UNZIPALLFILE)
 {
     if ( ! ISCHAR(6) && ! ISARRAY(6) )
     {
@@ -1018,25 +1671,9 @@ HB_FUNC(HB_UNZIPALLFILE)
 
 HB_FUNC_EXIT( HBZIPCLEANUP )
 {
-   if( ChangeDiskBlock )
+   if( hbza_ChangeDiskBlock )
    {
-      hb_itemRelease( ChangeDiskBlock );
-      ChangeDiskBlock = NULL;
+      hb_itemRelease( hbza_ChangeDiskBlock );
+      hbza_ChangeDiskBlock = NULL;
    }
 }
-
-#if defined(HB_OS_LINUX)
-
-int GetFileAttributes( char *szEntry )
-{
-   struct stat sStat;
-   stat( szEntry, &sStat );
-   return (int) sStat.st_mode;
-}
-
-void SetFileAttributes( char * szEntry,ULONG ulAttr)
-{
-   chmod(szEntry,ulAttr);
-}
-
-#endif

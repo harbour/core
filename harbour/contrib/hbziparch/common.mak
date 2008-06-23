@@ -8,6 +8,8 @@ LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
 LIB_OBJS = \
     $(OBJ_DIR)hbziparc$(OBJEXT) \
+    $(OBJ_DIR)hbzipnew$(OBJEXT) \
+    $(OBJ_DIR)hbzipcom$(OBJEXT) \
     $(OBJ_DIR)hbcomprs$(OBJEXT) \
     $(OBJ_DIR)ziparchive$(OBJEXT) \
     $(OBJ_DIR)ZipPlatform_win$(OBJEXT) \
@@ -18,8 +20,6 @@ LIB_OBJS = \
     $(OBJ_DIR)zipmemfile$(OBJEXT) \
     $(OBJ_DIR)zipfileheader$(OBJEXT) \
     $(OBJ_DIR)zipfile$(OBJEXT) \
-    $(OBJ_DIR)zipnew$(OBJEXT) \
-    $(OBJ_DIR)zipcomp$(OBJEXT) \
     $(OBJ_DIR)zipexception$(OBJEXT) \
     $(OBJ_DIR)zipcompatibility$(OBJEXT) \
     $(OBJ_DIR)zipcentraldir$(OBJEXT) \
