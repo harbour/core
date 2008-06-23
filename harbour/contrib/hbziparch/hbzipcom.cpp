@@ -58,27 +58,27 @@
 extern "C" {
 #endif
 
-class SpanCallbackc : public CZipSpanCallback
+class SegmCallbackc : public CZipSegmCallback
 {
-   bool Callback( int iProgress )
+   bool Callback( ZIP_SIZE_TYPE iProgress )
    {
-      PHB_ITEM Disk=hb_itemPutNL( NULL, m_uDiskNeeded );
+      PHB_ITEM Disk=hb_itemPutNL( NULL, m_uVolumeNeeded );
         
-      hb_vmEvalBlockV( hbza_ChangeDiskBlock, 1, Disk  );
+      hb_vmEvalBlockV( hbza_ChangeDiskBlock, 1, Disk );
       hb_itemRelease( Disk );
 
       return TRUE;
    }
 };
 
-class SpanActionCallbackc : public CZipActionCallback
+class SegmActionCallbackc : public CZipActionCallback
 {
-   bool Callback( int iProgress )
+   bool Callback( ZIP_SIZE_TYPE iProgress )
    {
-      PHB_ITEM Disk = hb_itemPutNL( NULL, m_uTotalSoFar );
-      PHB_ITEM Total = hb_itemPutNL( NULL, m_uTotalToDo );
+      PHB_ITEM Disk = hb_itemPutNL( NULL, m_uProcessed );
+      PHB_ITEM Total = hb_itemPutNL( NULL, m_uTotalToProcess );
 
-      hb_vmEvalBlockV( hbza_pProgressInfo, 2, Disk,Total);
+      hb_vmEvalBlockV( hbza_pProgressInfo, 2, Disk, Total );
 
       hb_itemRelease( Disk );
       hb_itemRelease( Total );
@@ -101,9 +101,14 @@ static DWORD hb_GetCurrentFileSize( LPCTSTR szFile )
       if ( dwFlags & hFilesFind.dwFileAttributes )
       {
          if( hFilesFind.nFileSizeHigh>0 )
+         {
             return ( ( hFilesFind.nFileSizeHigh*MAXDWORD )+hFilesFind.nFileSizeLow );
+         }
          else
+         {
             return ( hFilesFind.nFileSizeLow );
+         }
+
       }
    }
 
@@ -122,22 +127,22 @@ static DWORD hb_GetCurrentFileSize( LPCTSTR szFile )
 int hb_CompressFile( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock, BOOL bOverWrite, char *szPassWord, BOOL bPath, BOOL bDrive, PHB_ITEM pProgress )
 {
    ULONG ulCount;
-   const char *szDummy ;
-   char *szDummyLower ;
-   char *szFileLower = hb_strdup((char *)szFile) ;
-   BOOL bFileExist = hb_fsFile( ( BYTE* )szFile );
+   const char *szDummy;
+   char *szDummyLower;
+   char *szFileLower = hb_strdup( ( char * ) szFile );
+   BOOL bFileExist = hb_fsFile( ( BYTE* ) szFile );
    BOOL bAdded;
-   BOOL bReturn    = TRUE;
+   BOOL bReturn = TRUE;
    DWORD dwSize;
 
    CZipArchive szZip;
-   SpanCallbackc span;
-   SpanActionCallbackc spanac;
+   SegmCallbackc span;
+   SegmActionCallbackc spanac;
 
-   szZip.SetSpanCallback( &span );
+   szZip.SetSegmCallback( &span );
 
    #ifdef HB_OS_WIN_32
-   hb_strLower( szFileLower, strlen( szFileLower )) ;
+      hb_strLower( szFileLower, strlen( szFileLower )) ;
    #endif
 
    try
@@ -157,8 +162,10 @@ int hb_CompressFile( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBl
    if ( bReturn )
    {
 
-      if( szPassWord )
+      if ( szPassWord != NULL )
+      {
          szZip.SetPassword( szPassWord );
+      }
 
       if ( hbza_pZipI.szComment != NULL )
       {
@@ -203,9 +210,14 @@ int hb_CompressFile( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBl
                try
                {
                   if ( bPath && !bAdded  )
+                  {
                      szZip.AddNewFile( szDummy, iCompLevel, true, CZipArchive::zipsmSafeSmart, 65536 );
+                     // bAdded = TRUE;
+                  }
                   else if ( !bDrive && !bPath && !bAdded  )
+                  {
                      szZip.AddNewFile( szDummy, iCompLevel, false, CZipArchive::zipsmSafeSmart, 65536 );
+                  }
 
                }
                catch( ... ){}
@@ -215,11 +227,11 @@ int hb_CompressFile( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBl
       }
    }
    hb_xfree( szFileLower ) ;
-
    try
    {
       szZip.Close(  );
    }
+
    catch ( CZipException )
    {
       bReturn = FALSE;
@@ -240,19 +252,22 @@ int hb_CmpTdSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
    BOOL bFileExist = hb_fsFile( ( BYTE* )szFile );
 
    CZipArchive szZip;
-   SpanCallbackc span;
-   SpanActionCallbackc spanac;
+   SegmCallbackc span;
+   SegmActionCallbackc spanac;
 
-   szZip.SetSpanCallback( &span );
+   szZip.SetSegmCallback( &span );
 
-   if( iSpanSize  == 0 )
+
+   if ( iSpanSize  == 0 )
+   {
       iSpanSize = 1457664;
+   }
 
    try
    {
       if( ( bFileExist && bOverWrite ) || !bFileExist )
       {
-         szZip.Open( szFile, CZipArchive::zipCreateSpan, iSpanSize );
+         szZip.Open( szFile, CZipArchive::zipCreateSegm, iSpanSize );
       }
       else
       {
@@ -271,8 +286,10 @@ int hb_CmpTdSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
    //if (! bReturn )
    //{
 
-      if( szPassWord )
+      if ( szPassWord != NULL )
+      {
          szZip.SetPassword( szPassWord );
+      }
 
       if ( hbza_pZipI.szComment != NULL )
       {
@@ -307,10 +324,17 @@ int hb_CmpTdSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
 
             try
             {
+
                if ( bPath && !bAdded  )
+               {
                   szZip.AddNewFile( szDummy, iCompLevel, true, CZipArchive::zipsmSafeSmart, 65536 );
+                  // bAdded = TRUE;
+               }
                else if ( !bDrive && !bPath && !bAdded  )
+               {
                   szZip.AddNewFile( szDummy, iCompLevel, false, CZipArchive::zipsmSafeSmart, 65536 );
+               }
+
             }
             catch( ... ){}
          }
@@ -321,6 +345,7 @@ int hb_CmpTdSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
    {
       szZip.Close();
    }
+
    catch ( CZipException )
    {
       bReturn = FALSE;
@@ -340,18 +365,23 @@ int hb_CompressFileStd( char *szFile, char *szFiletoCompress, int iCompLevel, PH
    BOOL bAdded     = FALSE;
 
    CZipArchive szZip;
-   SpanCallbackc span;
-   SpanActionCallbackc spanac;
+   SegmCallbackc span;
+   SegmActionCallbackc spanac;
 
-   szZip.SetSpanCallback( &span );
+   szZip.SetSegmCallback( &span );
 
    try
    {
       if( ( bFileExist && bOverWrite ) || !bFileExist )
+      {
          szZip.Open( szFile, CZipArchive::zipCreate, 0 );
+      }
       else
+      {
          szZip.Open( szFile, CZipArchive::zipOpen, 0 );
+      }
    }
+
    catch ( CZipException )
    {
       bReturn = FALSE;
@@ -359,8 +389,10 @@ int hb_CompressFileStd( char *szFile, char *szFiletoCompress, int iCompLevel, PH
 
    if ( bReturn )
    {
-      if( szPassWord )
+      if ( szPassWord != NULL )
+      {
          szZip.SetPassword( szPassWord );
+      }
 
       if ( hbza_pZipI.szComment != NULL )
       {
@@ -388,12 +420,14 @@ int hb_CompressFileStd( char *szFile, char *szFiletoCompress, int iCompLevel, PH
                hb_vmEvalBlockV( pBlock, 1, FileName);
 
                hb_itemRelease( FileName );
+               
             }
 
             #if ( defined( __WIN32__ ) || defined( __MINGW32__ ) ) && defined( HB_USE_DRIVE_ADD )
                if ( bDrive && !bAdded  )
                {
-                  if (! szZip.AddNewFileDrv( szFiletoCompress, iCompLevel, true, CZipArchive::zipsmSafeSmart, 65536 ) )
+                  /* NOTE: Was AddNewFileDrv() */
+                  if (! szZip.AddNewFile( szFiletoCompress, iCompLevel, true, CZipArchive::zipsmSafeSmart, 65536 ) )
                   {
                      bReturn = FALSE;
                   }
@@ -407,22 +441,32 @@ int hb_CompressFileStd( char *szFile, char *szFiletoCompress, int iCompLevel, PH
             if ( bPath && !bAdded  )
             {
                if( ! szZip.AddNewFile( szFiletoCompress, iCompLevel, true, CZipArchive::zipsmSafeSmart, 65536 ))
+               {
                   bReturn = FALSE;
+               }
+               else
+               {
+                  // bAdded = TRUE;
+               }
             }
             else if ( !bDrive && !bPath && !bAdded  )
             {
                if (! szZip.AddNewFile( szFiletoCompress, iCompLevel, false, CZipArchive::zipsmSafeSmart, 65536 ))
+               {
                   bReturn = FALSE;
+               }
             }
+
+
          }
       }
       catch( ... ){}
    }
-
    try
    {
       szZip.Close(  );
    }
+
    catch ( CZipException )
    {
       bReturn = FALSE;
@@ -440,21 +484,29 @@ int hb_CmpTdSpanStd( char *szFile, char * szFiletoCompress, int iCompLevel, PHB_
    BOOL bFileExist = hb_fsFile( ( BYTE* )szFile );
 
    CZipArchive szZip;
-   SpanCallbackc span;
-   SpanActionCallbackc spanac;
+   SegmCallbackc span;
+   SegmActionCallbackc spanac;
 
-   szZip.SetSpanCallback( &span );
+   szZip.SetSegmCallback( &span );
 
-   if( iSpanSize  == 0 )
+
+   if ( iSpanSize  == 0 )
+   {
       iSpanSize = 1457664;
+   }
 
    try
    {
       if( ( bFileExist && bOverWrite ) || !bFileExist )
-         szZip.Open( szFile, CZipArchive::zipCreateSpan, iSpanSize );
+      {
+         szZip.Open( szFile, CZipArchive::zipCreateSegm, iSpanSize );
+      }
       else
+      {
          return ( int ) false;
+      }
    }
+
    catch ( CZipException )
    {
       bReturn = FALSE;
@@ -462,8 +514,10 @@ int hb_CmpTdSpanStd( char *szFile, char * szFiletoCompress, int iCompLevel, PHB_
 
    catch( ... ){}
 
-   if( szPassWord )
+   if ( szPassWord != NULL )
+   {
       szZip.SetPassword( szPassWord );
+   }
 
    if ( hbza_pZipI.szComment != NULL )
    {
@@ -476,42 +530,57 @@ int hb_CmpTdSpanStd( char *szFile, char * szFiletoCompress, int iCompLevel, PHB_
       hbza_pProgressInfo = pProgress;
       szZip.SetCallback( &spanac );
    }
-
    if ( bReturn )
    {
       try
       {
-         if( szPassWord )
+         if ( szPassWord != NULL )
+         {
             szZip.SetPassword( szPassWord );
+         }
 
-         if( pBlock )
+         if( pBlock  != NULL )
          {
             PHB_ITEM FileName=hb_itemPutC( NULL, szFiletoCompress  ) ;
 
             hb_vmEvalBlockV(  pBlock, 1, FileName);
 
             hb_itemRelease( FileName );
+           
          }
 
          #if defined( __WIN32__ ) || defined( __MINGW32__ )
             if ( bDrive && !bAdded  )
             {
-               if (! szZip.AddNewFileDrv( szFiletoCompress, iCompLevel, true, CZipArchive::zipsmSafeSmart, 65536 ) )
+               /* NOTE: Was AddNewFileDrv() */
+               if (! szZip.AddNewFile( szFiletoCompress, iCompLevel, true, CZipArchive::zipsmSafeSmart, 65536 ) )
+               {
                   bReturn = FALSE;
+               }
                else
+               {
                   bAdded = TRUE;
+               }
             }
          #endif
 
          if ( bPath && !bAdded )
          {
             if (! szZip.AddNewFile( szFiletoCompress, iCompLevel, true, CZipArchive::zipsmSafeSmart, 65536 ) )
+            {
                bReturn = FALSE;
+            }
+            else
+            {
+               // bAdded = TRUE;
+            }
          }
          else if ( !bDrive && !bPath && !bAdded  )
          {
             if (! szZip.AddNewFile( szFiletoCompress, iCompLevel, false, CZipArchive::zipsmSafeSmart, 65536 ) )
+            {
                bReturn = FALSE;
+            }
          }
 
       }

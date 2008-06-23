@@ -1,30 +1,27 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipPathComponent.cpp $
-// $Archive: /ZipArchive_Linux/ZipPathComponent.cpp $
-// $Date$ $Author$
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2003 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 // 
-// For the licensing details see the file License.txt
+// For the licensing details refer to the License.txt file.
+//
+// Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
-#include "zippathcomponent.h"
+#include "_platform.h"
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+#ifdef ZIP_ARCHIVE_LNX
+
+#include "stdafx.h"
+#include "ZipPathComponent.h"
 
 
 CZipPathComponent::~CZipPathComponent()
 {
-
 }
 
 void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
@@ -83,7 +80,6 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 	
 }
 
-
 CZipString CZipPathComponent::GetNoDrive() const
 {
 	CZipString szPath = m_szDirectory;
@@ -95,3 +91,4 @@ CZipString CZipPathComponent::GetNoDrive() const
 	return szPath;	
 }
 
+#endif // ZIP_ARCHIVE_LNX

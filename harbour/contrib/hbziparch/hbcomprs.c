@@ -79,10 +79,10 @@ static void hb_fsGrabDirectory( PHB_ITEM pDir, const char * szDirSpec, USHORT ui
             char buffer[ 32 ];
 
             hb_arrayNew( pSubarray, 5 );
-            if ( bFullPath )
+            if( bFullPath )
             {
-               char *szFullName = hb_xstrcpy(NULL,fDirSpec->szPath?fDirSpec->szPath:"",ffind->szName,NULL);
-               hb_itemPutC( hb_arrayGetItemPtr( pSubarray, F_NAME), szFullName );
+               char * szFullName = hb_xstrcpy( NULL, fDirSpec->szPath ? fDirSpec->szPath : "", ffind->szName, NULL );
+               hb_itemPutC( hb_arrayGetItemPtr( pSubarray, F_NAME ), szFullName );
                hb_xfree( szFullName );
             }
             else
@@ -100,15 +100,16 @@ static void hb_fsGrabDirectory( PHB_ITEM pDir, const char * szDirSpec, USHORT ui
       while( hb_fsFindNext( ffind ) );
 
       hb_itemRelease( pSubarray );
+
       hb_fsFindClose( ffind );
    }
 }
 
-void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttributes, BOOL bDirOnly, BOOL bFullPath )
+void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char * szSkleton, char * szAttributes, BOOL bDirOnly, BOOL bFullPath )
 {
    USHORT uiMask;
    USHORT uiMaskNoLabel;
-   BYTE      *szDirSpec;
+   BYTE * szDirSpec;
 
 /*
 #if defined(__MINGW32__) || ( defined(_MSC_VER) && _MSC_VER >= 910 )
@@ -138,7 +139,7 @@ void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttribute
 
    hb_arrayNew( pDir, 0 );
 
-   if ( bDirOnly )
+   if( bDirOnly )
       szAttributes = "D";
 
    if( szAttributes && strlen( szAttributes ) > 0 )
@@ -153,28 +154,28 @@ void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttribute
    if ( szSkleton && strlen( szSkleton ) > 0 )
       szDirSpec = hb_fsNameConv( ( BYTE * ) szSkleton, &bAlloc );
    else
-      szDirSpec = (BYTE *) OS_FILE_MASK;
+      szDirSpec = ( BYTE * ) OS_FILE_MASK;
 
    if( bDirOnly || bFullPath )
    {
-      if ( ( pDirSpec = hb_fsFNameSplit( (char*) szDirSpec ) ) !=NULL )
+      if ( ( pDirSpec = hb_fsFNameSplit( ( char * ) szDirSpec ) ) !=NULL )
       {
          if( pDirSpec->szDrive )
-            hb_fsChDrv( (BYTE) ( pDirSpec->szDrive[0] - 'A' ) );
+            hb_fsChDrv( ( BYTE ) ( pDirSpec->szDrive[ 0 ] - 'A' ) );
 
          if( pDirSpec->szPath )
-            hb_fsChDir( (BYTE *) pDirSpec->szPath );
+            hb_fsChDir( ( BYTE * ) pDirSpec->szPath );
       }
    }
 
    /* Get the file list */
-   hb_fsGrabDirectory( pDir, (const char*) szDirSpec, uiMask, pDirSpec, bFullPath, bDirOnly );
+   hb_fsGrabDirectory( pDir, ( const char * ) szDirSpec, uiMask, pDirSpec, bFullPath, bDirOnly );
 
-   if ( uiMask == HB_FA_LABEL )
+   if( uiMask == HB_FA_LABEL )
    {
       uiMaskNoLabel |= hb_fsAttrEncode( szAttributes );
       uiMaskNoLabel &= ~HB_FA_LABEL;
-      hb_fsGrabDirectory( pDir, (const char*) szDirSpec, uiMaskNoLabel, pDirSpec, bFullPath, bDirOnly );
+      hb_fsGrabDirectory( pDir, ( const char * ) szDirSpec, uiMaskNoLabel, pDirSpec, bFullPath, bDirOnly );
    }
 
    if( pDirSpec )

@@ -1,40 +1,51 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipPlatform.cpp $
-// $Archive: /ZipArchive_Linux/ZipPlatform.cpp $
-// $Date$ $Author$
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2003 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 // 
-// For the licensing details see the file License.txt
+// For the licensing details refer to the License.txt file.
+//
+// Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "_platform.h"
+
+#ifdef ZIP_ARCHIVE_LNX
+
+#if defined __APPLE__ || defined __CYGWIN__
+	#define FILE_FUNCTIONS_64B_BY_DEFAULT
+#else
+	#undef FILE_FUNCTIONS_64B_BY_DEFAULT	
+#endif	
 
 #include "stdafx.h"
-#include "zipplatform.h"
-#include "zipfileheader.h"
-#include "zipexception.h"
-#include "zipautobuffer.h"
-
+#include "ZipPlatform.h"
+#include "ZipFileHeader.h"
+#include "ZipException.h"
+#include "ZipAutoBuffer.h"
 
 #include <utime.h>
 
+#include "ZipPathComponent.h"
+#include "ZipCompatibility.h"
 
+#include <sys/types.h>
 
-#include "zippathcomponent.h"
+#if defined (__FreeBSD__) || defined (__APPLE__)
+	#include <sys/param.h>
+	#include <sys/mount.h>
+#else
+	#include <sys/vfs.h>
+#endif
+#include <sys/stat.h>
 
-
-#include "zipcompatibility.h"
-#include <sys/vfs.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+
 #include <fcntl.h>
 
 const TCHAR CZipPathComponent::m_cSeparator = _T('/');
@@ -43,70 +54,46 @@ const TCHAR CZipPathComponent::m_cSeparator = _T('/');
 #define _utimbuf utimbuf
 #endif
 
+#define ZIP_DEFAULT_DIR_ATTRIBUTES (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-DWORD ZipPlatform::GetDeviceFreeSpace(LPCTSTR lpszPath)
+ULONGLONG ZipPlatform::GetDeviceFreeSpace(LPCTSTR lpszPath)
 {
 	struct statfs sStats;
-	if (statfs(lpszPath, &sStats) == -1)
+
+	#if defined (__SVR4) && defined (__sun)
+		if (statvfs(lpszPath, &sStats) == -1) // Solaris
+	#else
+		if (statfs(lpszPath, &sStats) == -1)
+	#endif
 		return 0;
 
         return sStats.f_bsize * sStats.f_bavail;
 }
 
-bool ZipPlatform::GetFileSize(LPCTSTR lpszFileName, DWORD& dSize)
-{
-	int f = open(lpszFileName, O_RDONLY);
-	if (f == -1)
-		return false;
-	int iSize = lseek(f, 0, SEEK_END);
-	close(f);
-	if (iSize == -1)
-		return false;
-	dSize = (DWORD)iSize;
-	return true;
-}
 
-CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, DWORD iSizeNeeded)
+CZipString ZipPlatform::GetTmpFileName(LPCTSTR lpszPath, ZIP_SIZE_TYPE uSizeNeeded)
 {
 	TCHAR empty[] = _T(""), prefix [] = _T("zar");
-	TCHAR* buf = NULL;
-	CZipString tempPath;
-	if (lpszPath)
+	CZipString tempPath = lpszPath;
+	if (tempPath.IsEmpty())
+		tempPath = "/tmp";
+	if (ZipPlatform::GetDeviceFreeSpace(tempPath) < uSizeNeeded)
+		return empty;
+	CZipPathComponent::AppendSeparator(tempPath);
+	tempPath += prefix;
+	tempPath += _T("XXXXXX");
+	int handle = mkstemp(tempPath.GetBuffer(tempPath.GetLength()));
+	tempPath.ReleaseBuffer();
+	if (handle != -1)
 	{
-		// first try the user provided directory
-		tempPath = lpszPath;
-		if (ZipPlatform::GetDeviceFreeSpace(tempPath) < iSizeNeeded)
-			tempPath.Empty();
-		else
-		{
-			CZipPathComponent::AppendSeparator(tempPath);
-			tempPath += prefix;
-			tempPath += _T("XXXXXX");
-			TCHAR* c = mktemp(tempPath.GetBuffer(tempPath.GetLength()));
-			tempPath.ReleaseBuffer();
-			if (c)
-				return tempPath;
-			else
-				tempPath.Empty();
-		}
-	}
-
-
-	TCHAR* v = tempnam(tempPath, prefix);
-	tempPath = v;
-        free(v);
-
-	if (!tempPath.IsEmpty())
-	{
-		CZipPathComponent zpc(tempPath);
-		if (ZipPlatform::GetDeviceFreeSpace(zpc.GetFilePath()) < iSizeNeeded)
-			return empty;
+		close(handle); // we just create the file and open it later
 		return tempPath;
 	}
-	else 
-		return empty;
+	else
+		return empty;		
 }
 
 bool ZipPlatform::GetCurrentDirectory(CZipString& sz)
@@ -121,8 +108,7 @@ bool ZipPlatform::GetCurrentDirectory(CZipString& sz)
 
 bool ZipPlatform::SetFileAttr(LPCTSTR lpFileName, DWORD uAttr)
 {
-	return chmod(lpFileName, uAttr >> 16) == 0;
-
+	return chmod(lpFileName, uAttr) == 0;
 }
 
 bool ZipPlatform::GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr)
@@ -130,21 +116,34 @@ bool ZipPlatform::GetFileAttr(LPCTSTR lpFileName, DWORD& uAttr)
 	struct stat sStats;
 	if (stat(lpFileName, &sStats) == -1)
 		return false;
-  	uAttr = (sStats.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO | S_IFMT)) << 16;
+  	uAttr = (sStats.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO | S_IFMT));
   	return true;
-
-
 }
+
+bool ZipPlatform::SetExeAttr(LPCTSTR lpFileName)
+{
+	DWORD uAttr;
+	if (!GetFileAttr(lpFileName, uAttr))
+		return false;
+	uAttr |= S_IXUSR;
+	return ZipPlatform::SetFileAttr(lpFileName, uAttr);
+}
+
 
 bool ZipPlatform::GetFileModTime(LPCTSTR lpFileName, time_t & ttime)
 {
-
-    	struct stat st;
+    struct stat st;
 	if (stat(lpFileName, &st) != 0)
 		return false;
 
  	ttime = st.st_mtime;
-	return ttime != -1;
+	if (ttime == (time_t)-1)
+	{
+		ttime = time(NULL);
+		return false;
+	}
+	else
+		return true;
 }
 
 bool ZipPlatform::SetFileModTime(LPCTSTR lpFileName, time_t ttime)
@@ -172,9 +171,6 @@ int ZipPlatform::FileExists(LPCTSTR lpszName)
 		else
 			return 1;
 	}
-
-
-
 }
 
 ZIPINLINE  bool ZipPlatform::IsDriveRemovable(LPCTSTR lpszFilePath)
@@ -218,22 +214,22 @@ ZIPINLINE  bool ZipPlatform::RenameFile( LPCTSTR lpszOldName, LPCTSTR lpszNewNam
 }
 ZIPINLINE  bool ZipPlatform::IsDirectory(DWORD uAttr)
 {
-	return S_ISDIR(uAttr >> 16) != 0;
+	return S_ISDIR(uAttr) != 0;
 }
-ZIPINLINE  bool ZipPlatform::CreateDirectory(LPCTSTR lpDirectory)
-{
-	return mkdir(lpDirectory, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH) == 0;
 
+ZIPINLINE  bool ZipPlatform::CreateDirectory(LPCTSTR lpDirectory)
+{	
+	return mkdir(lpDirectory, ZIP_DEFAULT_DIR_ATTRIBUTES) == 0;
 }
 
 ZIPINLINE  DWORD ZipPlatform::GetDefaultAttributes()
 {
-	return 0x81a40000;
+	return S_IFREG | S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 }
 
 ZIPINLINE  DWORD ZipPlatform::GetDefaultDirAttributes()
 {
-	return 0x41ff0010;
+	return S_IFDIR | ZIP_DEFAULT_DIR_ATTRIBUTES;
 }
 
 
@@ -248,15 +244,15 @@ ZIPINLINE bool ZipPlatform::GetSystemCaseSensitivity()
 }
 
 
-bool ZipPlatform::TruncateFile(int iDes, DWORD iSize)
+bool ZipPlatform::TruncateFile(int iDes, ULONGLONG uSize)
 {
-	return ftruncate(iDes, iSize) == 0;
+	return ftruncate(iDes, uSize) == 0;
 
 }
 
 int ZipPlatform::OpenFile(LPCTSTR lpszFileName, UINT iMode, int iShareMode)
 {
-	return  open(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );
+	return open(lpszFileName, iMode, S_IRUSR | S_IWUSR | S_IRGRP |S_IROTH );	
 }
 
 bool ZipPlatform::FlushFile(int iDes)
@@ -264,10 +260,10 @@ bool ZipPlatform::FlushFile(int iDes)
 	return fsync(iDes) == 0;
 }
 
-int ZipPlatform::GetFileSystemHandle(int iDes)
+intptr_t ZipPlatform::GetFileSystemHandle(int iDes)
 {
         return iDes;
 }
 
 
-
+#endif // ZIP_ARCHIVE_LNX

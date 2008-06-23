@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by version.rc
+// Used by ZipArchive.rc
 //
 
 // Next default values for new objects

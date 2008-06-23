@@ -8,6 +8,61 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-24 00:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   + contrib/hbziparch/readme.txt
+   + contrib/hbziparch/zlib
+   + contrib/hbziparch/zlib/deflate.h
+   + contrib/hbziparch/zlib/zlib.h
+   * contrib/hbziparch/common.mak
+   * contrib/hbziparch/hbcomprs.c
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbzipcom.cpp
+   * contrib/hbziparch/hbzipnew.cpp
+   * contrib/hbziparch/License.txt
+   * contrib/hbziparch/make_gcc.sh
+   * contrib/hbziparch/make_vc.bat
+   * contrib/hbziparch/Makefile
+   * contrib/hbziparch/resource.h
+   * contrib/hbziparch/stdafx.h
+   * contrib/hbziparch/ZipExport.h
+   * contrib/hbziparch/ZipPathComponent_lnx.cpp
+   * contrib/hbziparch/ZipPathComponent_win.cpp
+   * contrib/hbziparch/ZipPlatform_lnx.cpp
+   * contrib/hbziparch/ZipPlatform_win.cpp
+   * contrib/hbziparch/ZipString.cpp
+   - contrib/hbziparch/stdafx.cpp
+   - contrib/hbziparch/zipabstractfile.h
+   - contrib/hbziparch/ziparchive.cpp
+   - contrib/hbziparch/ziparchive.h
+   - contrib/hbziparch/zipautobuffer.cpp
+   - contrib/hbziparch/zipautobuffer.h
+   - contrib/hbziparch/zipbaseexception.h
+   - contrib/hbziparch/zipcentraldir.cpp
+   - contrib/hbziparch/zipcentraldir.h
+   - contrib/hbziparch/zipcollections.h
+   - contrib/hbziparch/zipcompatibility.cpp
+   - contrib/hbziparch/zipcompatibility.h
+   - contrib/hbziparch/zipexception.cpp
+   - contrib/hbziparch/zipexception.h
+   - contrib/hbziparch/zipfile.cpp
+   - contrib/hbziparch/zipfile.h
+   - contrib/hbziparch/zipfileheader.cpp
+   - contrib/hbziparch/zipfileheader.h
+   - contrib/hbziparch/zipfilemapping.h
+   - contrib/hbziparch/zipinternalinfo.h
+   - contrib/hbziparch/zipmemfile.cpp
+   - contrib/hbziparch/zipmemfile.h
+   - contrib/hbziparch/zippathcomponent.h
+   - contrib/hbziparch/zipplatform.h
+   - contrib/hbziparch/zipplatformcomm.cpp
+   - contrib/hbziparch/zipstorage.cpp
+   - contrib/hbziparch/zipstorage.h
+   - contrib/hbziparch/zipstring.h
+     * ZipArchive 2.x -> ZipArchive 3.2.0 (latest)
+       Only one minor modification (reported to author)
+       Plus integrated ZLIB replaced with hbzlib.
+     ; Pass 1
+
 2008-06-24 00:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    + contrib/hbziparch/tests
    + contrib/hbziparch/tests/bld_b32.bat

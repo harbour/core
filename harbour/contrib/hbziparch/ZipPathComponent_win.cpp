@@ -1,26 +1,23 @@
 ////////////////////////////////////////////////////////////////////////////////
-// $Workfile: ZipPathComponent.cpp $
-// $Archive: /ZipArchive/ZipPathComponent.cpp $
-// $Date$ $Author$
-////////////////////////////////////////////////////////////////////////////////
 // This source file is part of the ZipArchive library source distribution and
-// is Copyright 2000-2003 by Tadeusz Dracz (http://www.artpol-software.com/)
+// is Copyrighted 2000 - 2007 by Artpol Software - Tadeusz Dracz
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
 // as published by the Free Software Foundation; either version 2
 // of the License, or (at your option) any later version.
 // 
-// For the licensing details see the file License.txt
+// For the licensing details refer to the License.txt file.
+//
+// Web Site: http://www.artpol-software.com
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "_platform.h"
+
+#ifdef ZIP_ARCHIVE_WIN
+
 #include "stdafx.h"
-#include "zippathcomponent.h"
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
+#include "ZipPathComponent.h"
 
 CZipPathComponent::~CZipPathComponent()
 {
@@ -31,7 +28,11 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 {
 
 	TCHAR szDrive[_MAX_DRIVE];
+#if defined _UNICODE && _MSC_VER >= 1400
+	TCHAR szDir[32767];
+#else
 	TCHAR szDir[_MAX_DIR];
+#endif
 	TCHAR szFname[_MAX_FNAME];
 	TCHAR szExt[_MAX_EXT];
 	
@@ -51,8 +52,12 @@ void CZipPathComponent::SetFullPath(LPCTSTR lpszFullPath)
 	}
 	else
 		m_szPrefix.Empty();
-
+#if _MSC_VER >= 1400	
+	_tsplitpath_s(szTempPath, szDrive , szDir, szFname, szExt);
+#else
 	_tsplitpath(szTempPath, szDrive , szDir, szFname, szExt);
+#endif
+	
 	m_szDrive = szDrive;
 	m_szDirectory = szDir;
 	
@@ -74,3 +79,4 @@ CZipString CZipPathComponent::GetNoDrive() const
 	return szPath;	
 }
 
+#endif // ZIP_ARCHIVE_WIN

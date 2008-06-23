@@ -89,12 +89,12 @@ static int GetFileAttributes( char * szEntry )
 {
    struct stat sStat;
    stat( szEntry, &sStat );
-   return (int) sStat.st_mode;
+   return ( int ) sStat.st_mode;
 }
 
 static void SetFileAttributes( char * szEntry, ULONG ulAttr)
 {
-   chmod(szEntry,ulAttr);
+   chmod( szEntry, ulAttr );
 }
 
 #endif
@@ -634,7 +634,7 @@ HB_FUNC( HB_GETFILECOUNT )
    if( ISCHAR( 1 ) )
    {
       char szFile[ _POSIX_PATH_MAX ];
-      char *szZipFileName;
+      char * szZipFileName;
 
       hb_strncpy( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
 
@@ -1072,18 +1072,17 @@ HB_FUNC( HB_UNZIPFILE )
       char *szZipFileName;
       BYTE *pCurDir;
 
-      pCurDir = ( BYTE * )hb_xstrcpy( NULL, OS_PATH_DELIMITER_STRING, ( const char * )hb_fsCurDir( 0 ) , NULL );
+      pCurDir = ( BYTE * ) hb_xstrcpy( NULL, OS_PATH_DELIMITER_STRING, ( const char * ) hb_fsCurDir( 0 ) , NULL );
 
       hb_strncpy( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
 
       szZipFileName = hb___CheckFile( szFile );
 
-      s_UnzipFiles = hb_itemArrayNew(0);
+      s_UnzipFiles = hb_itemArrayNew( 0 );
 
-      if(  hb_TestForPKS( szZipFileName ) <=0 )
+      if( hb_TestForPKS( szZipFileName ) <= 0 )
       {
-      hb___GetFileNamesFromZip( szZipFileName, TRUE );
-
+         hb___GetFileNamesFromZip( szZipFileName, TRUE );
 
       if( pUnzip )
       {
@@ -1113,6 +1112,7 @@ HB_FUNC( HB_UNZIPFILE )
 //s.r. change "*.*" to "*" because file without extension were ignored
          UnzipCreateArray( (char*) "*", 1 );
       }
+
       if ( hb_arrayLen(s_UnzipFiles) > 0 )
       {
          PHB_ITEM pProgress = ISBLOCK( 7 ) ? hb_itemNew( hb_param( 7 , HB_IT_BLOCK ) ) : hb_itemNew( NULL );
@@ -1275,7 +1275,6 @@ HB_FUNC( HB_ZIPDELETEFILES )
          {
             int iIndex = hb_itemGetNI( pDelZip );
             PHB_ITEM Temp;
-
 
             if( iIndex > 0 && iIndex <= ulLen )
             {
@@ -1551,7 +1550,7 @@ HB_FUNC( HB_UNZIPFILEINDEX )
    {
       PHB_ITEM pDelZip = hb_param( 6, HB_IT_NUMERIC | HB_IT_ARRAY );
 
-      if ( pDelZip )
+      if( pDelZip )
       {
          char szFile[ _POSIX_PATH_MAX ];
          PHB_ITEM Temp,DelZip;
@@ -1566,11 +1565,11 @@ HB_FUNC( HB_UNZIPFILEINDEX )
          hb___GetFileNamesFromZip( szZipFileName, TRUE );
          ulLen = hb_arrayLen(hbza_ZipArray);
 
-         if ( HB_IS_NUMERIC ( pDelZip ) )
+         if( HB_IS_NUMERIC( pDelZip ) )
          {
             int iIndex = hb_itemGetNI( pDelZip );
 
-            if ( iIndex > 0 && iIndex <= ulLen )
+            if( iIndex > 0 && iIndex <= ulLen )
             {
                Temp = hb_itemNew(NULL);
                hb_arrayAddForward( DelZip, hb_itemPutNI( Temp, iIndex ) );
@@ -1581,12 +1580,12 @@ HB_FUNC( HB_UNZIPFILEINDEX )
          {
             int ui, iIndex;
 
-            for ( ui = 0 ; ui < ulLen; ui ++ )
+            for( ui = 0 ; ui < ulLen; ui ++ )
             {
                iIndex = hb_arrayGetNI( pDelZip, ui + 1 );
                if ( iIndex && iIndex > 0 && iIndex <= ulLen )
                {
-                  Temp = hb_itemNew(NULL);
+                  Temp = hb_itemNew( NULL );
                   hb_arrayAddForward( DelZip, hb_itemPutNI( Temp, iIndex ) );
                   hb_itemRelease( Temp );
                }
@@ -1594,7 +1593,7 @@ HB_FUNC( HB_UNZIPFILEINDEX )
 
          }
 
-         if( hb_arrayLen(DelZip) > 0 )
+         if( hb_arrayLen( DelZip ) > 0 )
          {
             PHB_ITEM pProgress = ISBLOCK( 7 ) ? hb_itemNew( hb_param( 7 , HB_IT_BLOCK ) ) : hb_itemNew( NULL );
             bRet = hb_UnzipSelIndex( szZipFileName,
@@ -1652,9 +1651,9 @@ HB_FUNC(HB_UNZIPALLFILE)
         hb_strncpy( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
         szZipFile = hb___CheckFile(szFile);
         hb_retl( hb_UnzipAll( szZipFile,
-                              hb_param( 2, HB_IT_BLOCK),
+                              hb_param( 2, HB_IT_BLOCK ),
                               ISLOG(3) ? hb_parl(3) : FALSE,
-                              hb_parc(4),
+                              hb_parc( 4 ),
                               ISCHAR(5) ? hb_parc(5) : NULL,
                               hb_param( 6, HB_IT_BLOCK ),
                               pProgress ) );
