@@ -8,9 +8,10 @@ LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
 LIB_OBJS = \
     $(OBJ_DIR)hbziparc$(OBJEXT) \
+    $(OBJ_DIR)hbcomprs$(OBJEXT) \
+    \
     $(OBJ_DIR)hbzipnew$(OBJEXT) \
     $(OBJ_DIR)hbzipcom$(OBJEXT) \
-    $(OBJ_DIR)hbcomprs$(OBJEXT) \
     $(OBJ_DIR)ziparchive$(OBJEXT) \
     $(OBJ_DIR)ZipPlatform_win$(OBJEXT) \
     $(OBJ_DIR)zipstorage$(OBJEXT) \
