@@ -7,9 +7,9 @@ LIBNAME = $(LIBPREF)hbziparch
 LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
 LIB_OBJS = \
-    $(OBJ_DIR)ziparchive$(OBJEXT) \
-    $(OBJ_DIR)zip$(OBJEXT) \
+    $(OBJ_DIR)hbziparc$(OBJEXT) \
     $(OBJ_DIR)hbcomprs$(OBJEXT) \
+    $(OBJ_DIR)ziparchive$(OBJEXT) \
     $(OBJ_DIR)zipplatform$(OBJEXT) \
     $(OBJ_DIR)zipstorage$(OBJEXT) \
     $(OBJ_DIR)zipstring$(OBJEXT) \

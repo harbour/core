@@ -50,7 +50,7 @@
  *
  */
 
-#include "hbzip2.h"
+#include "hbziparc.h"
 #include "hbapifs.h"
 
 PHB_ITEM ZipArray;

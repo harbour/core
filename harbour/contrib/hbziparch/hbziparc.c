@@ -50,22 +50,28 @@
  *
  */
 
-#include <hbzip2.h>
+#include "hbziparc.h"
+
 #include "hbapifs.h"
 #include "hbapierr.h"
+
 #if defined(HB_OS_LINUX)
    #include <sys/types.h>
    #include <sys/stat.h>
    #include <fcntl.h>
    #include <dirent.h>
 #endif
+
 extern PHB_ITEM ZipArray;
+
 static PHB_ITEM FileToZip;
 static PHB_ITEM ExcludeFile;
 static PHB_ITEM UnzipFiles;
 static PHB_ITEM DelZip;
 static PHB_ITEM FileAttribs;
+
 PHB_ITEM ChangeDiskBlock;
+
 #define FA_RDONLY           1   /* R */
 #define FA_HIDDEN           2   /* H */
 #define FA_SYSTEM           4   /* S */
@@ -80,7 +86,6 @@ extern void hb_fsDirectory( PHB_ITEM pDir, char* szSkleton, char* szAttributes, 
 extern int GetFileAttributes( char *szEntry );
 extern void SetFileAttributes( char * szEntry, ULONG ulAttr );
 #endif
-
 
 static void ResetAttribs( void )
 {
@@ -1020,7 +1025,6 @@ HB_FUNC_EXIT( HBZIPCLEANUP )
    }
 }
 
-
 #if defined(HB_OS_LINUX)
 
 int GetFileAttributes( char *szEntry )
@@ -1029,6 +1033,7 @@ int GetFileAttributes( char *szEntry )
    stat( szEntry, &sStat );
    return (int) sStat.st_mode;
 }
+
 void SetFileAttributes( char * szEntry,ULONG ulAttr)
 {
    chmod(szEntry,ulAttr);

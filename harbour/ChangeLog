@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-23 10:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_vcce.mak
+   * make_vc.mak
+   * contrib/mtpl_vc.mak
+     * KEEPSTATE -> HB_KEEPSTATE
+
+   * contrib/hbziparch/Makefile
+   * contrib/hbziparch/make_b32.bat
+   * contrib/hbziparch/make_vc.bat
+   * contrib/hbziparch/common.mak
+   - contrib/hbziparch/zip.c
+   + contrib/hbziparch/hbziparc.c
+   - contrib/hbziparch/include/hbzip2.h
+   + contrib/hbziparch/hbziparc.h
+   - contrib/hbziparch/include/hbzip.h
+   - contrib/hbziparch/include/hbz.h
+   * contrib/hbziparch/zipcomp.cpp
+   * contrib/hbziparch/zipnew.cpp
+     - Removed unnecessary headers.
+     * Renamed include/hbzip2.h to hbziparc.h
+     * Renamed zip.c to hbziparc.c
+     * Some cleanups to source.
+     * BCC warnings suppressed.
+     % Unecessary compilation flags removed.
+
 2008-06-22 22:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbapierr.h
    * source/rtl/errorapi.c

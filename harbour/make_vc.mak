@@ -791,7 +791,7 @@ $(**: = ^
 $(COMMON_LIB)
 $(COMPILER_LIB)
 $(PP_LIB)
-<<$(KEEPSTATE)
+<<$(HB_KEEPSTATE)
 #**********************************************************
 # HBPP build rule
 #**********************************************************
@@ -803,7 +803,7 @@ $(LDFLAGS)
 $(**: = ^
 )
 $(COMMON_LIB)
-<<$(KEEPSTATE)
+<<$(HB_KEEPSTATE)
 #**********************************************************
 # HBRUN build rule
 #**********************************************************
@@ -816,7 +816,7 @@ $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
 user32.lib winspool.lib wsock32.lib advapi32.lib
-<<$(KEEPSTATE)
+<<$(HB_KEEPSTATE)
 #**********************************************************
 # HBDOT build rule
 #**********************************************************
@@ -829,7 +829,7 @@ $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
 user32.lib winspool.lib wsock32.lib advapi32.lib
-<<$(KEEPSTATE)
+<<$(HB_KEEPSTATE)
 #**********************************************************
 # HBTEST build rule
 #**********************************************************
@@ -842,7 +842,7 @@ $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
 user32.lib winspool.lib
-<<$(KEEPSTATE)
+<<$(HB_KEEPSTATE)
 #**********************************************************
 # HBPPTEST build rule
 #**********************************************************
@@ -856,7 +856,7 @@ $(**: = ^
 $(PP_LIB)
 $(STANDARD_STATIC_HBLIBS)
 user32.lib winspool.lib
-<<$(KEEPSTATE)
+<<$(HB_KEEPSTATE)
 #**********************************************************
 # HBDOC build rule
 #**********************************************************
@@ -870,7 +870,7 @@ $(**: = ^
 $(STANDARD_STATIC_HBLIBS)
 $(HBDOC_LIBS)
 user32.lib winspool.lib
-<<$(KEEPSTATE)
+<<$(HB_KEEPSTATE)
 #**********************************************************
 # HBMAKE build rule
 #**********************************************************
@@ -883,7 +883,7 @@ $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
 user32.lib winspool.lib
-<<$(KEEPSTATE)
+<<$(HB_KEEPSTATE)
 #**********************************************************
 # HBVER build rule
 #**********************************************************
@@ -896,7 +896,7 @@ $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)
 user32.lib winspool.lib
-<<$(KEEPSTATE)
+<<$(HB_KEEPSTATE)
 #**********************************************************
 
 #**********************************************************
@@ -909,7 +909,7 @@ $(LDFLAGSDLL) /OUT:$(@)
 $(DLL_OBJS: = ^
 )
 advapi32.lib gdi32.lib user32.lib winspool.lib wsock32.lib
-<<$(KEEPSTATE)
+<<$(HB_KEEPSTATE)
 #**********************************************************
 # DLL EXECUTABLE Targets
 #**********************************************************
@@ -921,7 +921,7 @@ $(LDFLAGS)
 $(HBTESTDLL_OBJS: = ^
 )
 $(HARBOUR_DLL:.dll=.lib)
-<<$(KEEPSTATE)
+<<$(HB_KEEPSTATE)
 #----------------------------------------------------------
 $(DLL_OBJ_DIR)\mainstd$(OBJEXT) : $(VM_DIR)\mainstd.c
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $**

@@ -7,7 +7,7 @@ ROOT = ../../
 PRG_HEADERS = \
 
 C_SOURCES = \
-	zip.c \
+	hbziparc.c \
 	hbcomprs.c \
 
 CPP_SOURCES = \
@@ -37,7 +37,6 @@ CPP_SOURCES += \
 	zipplatform.cpp \
 
 endif
-
 
 PRG_SOURCES= \
 

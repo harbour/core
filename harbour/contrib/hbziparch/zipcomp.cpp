@@ -49,8 +49,10 @@
  * If you do not wish that,  delete this exception notice.
  *
  */
+
 #define HB_OS_WIN_32_USED
-#include "hbzip2.h"
+
+#include "hbziparc.h"
 
 //extern PHB_ITEM ZipArray;
 PHB_ITEM pDiskStatus = NULL;
