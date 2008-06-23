@@ -58,10 +58,6 @@
 extern "C" {
 #endif
 
-extern HB_ZIP_INTERNAL pZipI;
-
-//bool hb_SetProgressofTdSpan( DWORD, int iSoFar, void* pData );
-
 class SpanCallbackc : public CZipSpanCallback
 {
    bool Callback( int iProgress )
@@ -79,8 +75,7 @@ class SpanActionCallbackc : public CZipActionCallback
 {
    bool Callback( int iProgress )
    {
-      PHB_ITEM Disk =hb_itemPutNL(NULL, m_uTotalSoFar ),  Total=hb_itemPutNL( NULL, m_uTotalToDo );
-
+      PHB_ITEM Disk = hb_itemPutNL(NULL, m_uTotalSoFar ),  Total=hb_itemPutNL( NULL, m_uTotalToDo );
 
       hb_vmEvalBlockV( hbza_pProgressInfo, 2, Disk,Total);
 
@@ -185,10 +180,10 @@ int hb_CompressFile( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBl
          szZip.SetPassword( szPassWord );
       }
 
-      if ( pZipI.szComment != NULL )
+      if ( hbza_pZipI.szComment != NULL )
       {
-         szZip.SetGlobalComment( pZipI.szComment );
-         hb_xfree( pZipI.szComment );
+         szZip.SetGlobalComment( hbza_pZipI.szComment );
+         hb_xfree( hbza_pZipI.szComment );
       }
 
       if ( HB_IS_BLOCK( pProgress ) )
@@ -309,10 +304,10 @@ int hb_CmpTdSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
          szZip.SetPassword( szPassWord );
       }
 
-      if ( pZipI.szComment != NULL )
+      if ( hbza_pZipI.szComment != NULL )
       {
-         szZip.SetGlobalComment( pZipI.szComment );
-         hb_xfree( pZipI.szComment );
+         szZip.SetGlobalComment( hbza_pZipI.szComment );
+         hb_xfree( hbza_pZipI.szComment );
       }
 
       if ( HB_IS_BLOCK( pProgress ) )
@@ -375,20 +370,6 @@ int hb_CmpTdSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
    return ( int ) bReturn;
 }
 
-bool hb_SetProgressofTdSpan( DWORD a, int iSoFar, void* pData ){
-
-   PHB_ITEM Disk=hb_itemPutNL( NULL, iSoFar ), Total= hb_itemPutNL( NULL, a ) ;
-
-
-   HB_SYMBOL_UNUSED( pData );
-
-   hb_vmEvalBlockV( hbza_pProgressInfo, 2, Disk, Total);
-
-   hb_itemRelease( Disk );
-   hb_itemRelease( Total );  
-   return TRUE;
-}
-
 int hb_CompressFileStd( char *szFile, char *szFiletoCompress, int iCompLevel, PHB_ITEM pBlock, BOOL bOverWrite, char *szPassWord, BOOL bPath, BOOL bDrive, PHB_ITEM pProgress )
 {
    DWORD dwSize;
@@ -426,10 +407,10 @@ int hb_CompressFileStd( char *szFile, char *szFiletoCompress, int iCompLevel, PH
          szZip.SetPassword( szPassWord );
       }
 
-      if ( pZipI.szComment != NULL )
+      if ( hbza_pZipI.szComment != NULL )
       {
-         szZip.SetGlobalComment( pZipI.szComment );
-         hb_xfree( pZipI.szComment );
+         szZip.SetGlobalComment( hbza_pZipI.szComment );
+         hb_xfree( hbza_pZipI.szComment );
       }
 
       if ( HB_IS_BLOCK( pProgress ) )
@@ -550,10 +531,10 @@ int hb_CmpTdSpanStd( char *szFile, char * szFiletoCompress, int iCompLevel, PHB_
       szZip.SetPassword( szPassWord );
    }
 
-   if ( pZipI.szComment != NULL )
+   if ( hbza_pZipI.szComment != NULL )
    {
-      szZip.SetGlobalComment( pZipI.szComment );
-      hb_xfree( pZipI.szComment );
+      szZip.SetGlobalComment( hbza_pZipI.szComment );
+      hb_xfree( hbza_pZipI.szComment );
    }
 
    if ( HB_IS_BLOCK( pProgress ) )

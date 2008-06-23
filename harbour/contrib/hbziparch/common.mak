@@ -12,6 +12,7 @@ LIB_OBJS = \
     \
     $(OBJ_DIR)hbzipnew$(OBJEXT) \
     $(OBJ_DIR)hbzipcom$(OBJEXT) \
+    \
     $(OBJ_DIR)ziparchive$(OBJEXT) \
     $(OBJ_DIR)ZipPlatform_win$(OBJEXT) \
     $(OBJ_DIR)zipstorage$(OBJEXT) \

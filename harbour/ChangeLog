@@ -8,18 +8,33 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-23 15:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/common.mak
+   - contrib/hbziparch/zip.h
+   - contrib/hbziparch/unzip.h
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbziparc.h
+   * contrib/hbziparch/hbzipcom.cpp
+   * contrib/hbziparch/hbzipnew.cpp
+     * Further cleanup.
+     ; Now the Harbour part compiles cleanly, except the 
+       recently added HB_FUNC_EXIT( HBZIPCLEANUP ).
+     ; I have a version ready using the unmodified sources 
+       of the latest ZipArchive version. Waiting for 
+       testers or test code.
+
 2008-06-23 14:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
-   - hbziparch/make_b32_dll.bat
-   - hbziparch/make_b32_dll.mak
-   - hbziparch/doc
-   * hbziparch/Makefile
-   * hbziparch/common.mak
-   * hbziparch/hbziparc.c
-   * hbziparch/hbziparc.h
-   - hbziparch/zipcomp.cpp
-   + hbziparch/hbzipcom.cpp
-   - hbziparch/zipnew.cpp
-   + hbziparch/hbzipnew.cpp
+   - contrib/hbziparch/make_b32_dll.bat
+   - contrib/hbziparch/make_b32_dll.mak
+   - contrib/hbziparch/doc
+   * contrib/hbziparch/Makefile
+   * contrib/hbziparch/common.mak
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbziparc.h
+   - contrib/hbziparch/zipcomp.cpp
+   + contrib/hbziparch/hbzipcom.cpp
+   - contrib/hbziparch/zipnew.cpp
+   + contrib/hbziparch/hbzipnew.cpp
      - Docs integrated into source.
      - Removed .dll building batch files (highly redundant, 
        non-maintained and probably non-working), so now the make 

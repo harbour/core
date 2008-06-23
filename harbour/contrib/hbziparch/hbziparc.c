@@ -73,6 +73,7 @@ static PHB_ITEM s_FileAttribs;
 PHB_ITEM hbza_ChangeDiskBlock;
 PHB_ITEM hbza_pProgressInfo = NULL;
 PHB_ITEM hbza_ZipArray;
+HB_ZIP_INTERNAL hbza_pZipI;
 
 #define FA_RDONLY           1   /* R */
 #define FA_HIDDEN           2   /* H */

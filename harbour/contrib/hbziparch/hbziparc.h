@@ -61,6 +61,7 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 #include "hbvm.h"
+#include "hbzlib.h"
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
    #include <sys/types.h>
@@ -109,6 +110,7 @@ typedef LPCSTR LPCTSTR;
 extern PHB_ITEM hbza_ZipArray;
 extern PHB_ITEM hbza_ChangeDiskBlock;
 extern PHB_ITEM hbza_pProgressInfo;
+extern HB_ZIP_INTERNAL hbza_pZipI;
 
 extern char *       hb___CheckFile( char * szFile);
 extern PHB_ITEM     hb___GetFileNamesFromZip(char *szFile,BOOL iMode);
