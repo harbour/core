@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-24 14:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/tgetlist.prg
+     ! Fixed Settle() calls.
+     ! Removed type constraint from ::nLastExitState.
+       (this value may be of any type, even in TGet())
+     * Formatting.
+
 2008-06-24 07:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/gtwvg/common.mak
    * contrib/gtwvg/Makefile
