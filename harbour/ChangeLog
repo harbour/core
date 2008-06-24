@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-24 07:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/gtwvg/common.mak
+   * contrib/gtwvg/Makefile
+     ! Added missing new public .ch header.
+
 2008-06-24 00:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    + contrib/hbziparch/_features.h
    + contrib/hbziparch/_platform.h

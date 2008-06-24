@@ -10,6 +10,7 @@ C_HEADERS=\
    gtwvg.h \
 
 PRG_HEADERS=\
+   hbgtwvg.ch \
    wvtwin.ch \
 
 LIB_OBJS = \

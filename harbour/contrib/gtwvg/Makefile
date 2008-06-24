@@ -19,6 +19,7 @@ PRG_SOURCES=\
 	wvtpaint.prg \
 
 PRG_HEADERS=\
+	hbgtwvg.ch \
 	wvtwin.ch \
 
 LIBNAME=gtwvg
