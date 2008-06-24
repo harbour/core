@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-24 19:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmsql/msql.c
+   * contrib/hbmysql/mysql.c
+     ! Partially undone previous change where hb_par/retnl() 
+       calls were swapped for hb_par/retptr(). HB_PAR/RETPTR() 
+       macros are used in the time being, until .prg level 
+       code isn't updated to expect pointers rather then 
+       numerics. The problem is that these pointers are checked 
+       for zero on the .prg level. Notice that using par/retnl() 
+       for pointers makes these function fail on Win64.
+       TOFIX: Two solutions come to mind: 1) extend HVM to make 
+              it possible to compare pointer types against zero. 
+              2) develop different ways to return errors and modify 
+              .prg level code accordingly.
+              I'd vote for 1) if doable.
+
+   * contrib/hbfimage/fi_winfu.c
+   * contrib/hbfimage/fi_wrp.c
+   * contrib/hbfimage/Makefile
+     * __GNUC__ macro requirement moved to C source 
+       from GNU-make CFLAGS.
+
 2008-06-24 14:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/tgetlist.prg
      ! Fixed Settle() calls.

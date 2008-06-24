@@ -75,9 +75,12 @@
 
 /* TODO: Use hb_retptrGC() */
 
+#define HB_PARPTR( n ) hb_parnl( n )
+#define HB_RETPTR( n ) hb_retnl( n )
+
 HB_FUNC( SQLVERSION ) /* long mysql_get_server_version( MYSQL * ) */
 {
-   hb_retnl( ( long ) mysql_get_server_version( ( MYSQL * ) hb_parptr( 1 ) ) );
+   hb_retnl( ( long ) mysql_get_server_version( ( MYSQL * ) HB_PARPTR( 1 ) ) );
 }
 
 HB_FUNC( SQLCONNECT ) /* MYSQL *mysql_real_connect(MYSQL*, char * host, char * user, char * password, char * db, uint port, char *, uint flags) */
@@ -96,63 +99,63 @@ HB_FUNC( SQLCONNECT ) /* MYSQL *mysql_real_connect(MYSQL*, char * host, char * u
       /* from 3.22.x of MySQL there is a new parameter in mysql_real_connect() call, that is char * db
          which is not used here */
       if( mysql_real_connect( mysql, szHost, szUser, szPass, 0, port, NULL, flags ) )
-         hb_retptr( ( void * ) mysql );
+         HB_RETPTR( ( void * ) mysql );
       else
       {
          mysql_close( mysql );
-         hb_retptr( NULL );
+         HB_RETPTR( NULL );
       }
    }
    else
-      hb_retptr( NULL );
+      HB_RETPTR( NULL );
 #else
-   hb_retptr( ( void * ) mysql_real_connect( NULL, szHost, szUser, szPass, 0, NULL, 0 ) );
+   HB_RETPTR( ( void * ) mysql_real_connect( NULL, szHost, szUser, szPass, 0, NULL, 0 ) );
 #endif
 }
 
 HB_FUNC( SQLCLOSE ) /* void mysql_close(MYSQL *mysql) */
 {
-   mysql_close( ( MYSQL * ) hb_parptr( 1 ) );
+   mysql_close( ( MYSQL * ) HB_PARPTR( 1 ) );
 }
 
 HB_FUNC( SQLCOMMIT ) /* bool mysql_commit(MYSQL *mysql) */
 {
-   hb_retnl( ( long ) mysql_commit( ( MYSQL * ) hb_parptr( 1 ) ) );
+   hb_retnl( ( long ) mysql_commit( ( MYSQL * ) HB_PARPTR( 1 ) ) );
 }
 
 HB_FUNC( SQLROLLBACK ) /* bool mysql_rollback(MYSQL *mysql) */
 {
-   hb_retnl( ( long ) mysql_rollback( ( MYSQL * ) hb_parptr( 1 ) ) );
+   hb_retnl( ( long ) mysql_rollback( ( MYSQL * ) HB_PARPTR( 1 ) ) );
 }
 
 HB_FUNC( SQLSELECTD ) /* int mysql_select_db(MYSQL *, char *) */
 {
-   hb_retnl( ( long ) mysql_select_db( ( MYSQL * ) hb_parptr( 1 ), ( const char * ) hb_parc( 2 ) ) );
+   hb_retnl( ( long ) mysql_select_db( ( MYSQL * ) HB_PARPTR( 1 ), ( const char * ) hb_parc( 2 ) ) );
 }
 
 HB_FUNC( SQLQUERY ) /* int mysql_query(MYSQL *, char *) */
 {
-   hb_retnl( ( long ) mysql_query( ( MYSQL * ) hb_parptr( 1 ), hb_parc( 2 ) ) );
+   hb_retnl( ( long ) mysql_query( ( MYSQL * ) HB_PARPTR( 1 ), hb_parc( 2 ) ) );
 }
 
 HB_FUNC( SQLSTORER ) /* MYSQL_RES *mysql_store_result( MYSQL * ) */
 {
-   hb_retptr( ( void * ) mysql_store_result( ( MYSQL * ) hb_parptr( 1 ) ) );
+   HB_RETPTR( ( void * ) mysql_store_result( ( MYSQL * ) HB_PARPTR( 1 ) ) );
 }
 
 HB_FUNC( SQLUSERES ) /* MYSQL_RES *mysql_use_result( MYSQL * ) */
 {
-   hb_retptr( ( void * ) mysql_use_result( ( MYSQL * ) hb_parptr( 1 ) ) );
+   HB_RETPTR( ( void * ) mysql_use_result( ( MYSQL * ) HB_PARPTR( 1 ) ) );
 }
 
 HB_FUNC( SQLFREER ) /* void mysql_free_result(MYSQL_RES *) */
 {
-   mysql_free_result( ( MYSQL_RES * ) hb_parptr( 1 ) );
+   mysql_free_result( ( MYSQL_RES * ) HB_PARPTR( 1 ) );
 }
 
 HB_FUNC( SQLFETCHR ) /* MYSQL_ROW *mysql_fetch_row(MYSQL_RES *) */
 {
-   MYSQL_RES * mresult = ( MYSQL_RES * ) hb_parptr( 1 );
+   MYSQL_RES * mresult = ( MYSQL_RES * ) HB_PARPTR( 1 );
    int num_fields = mysql_num_fields( mresult );
    PHB_ITEM aRow = hb_itemArrayNew( num_fields );
    MYSQL_ROW mrow = mysql_fetch_row( mresult );
@@ -169,19 +172,19 @@ HB_FUNC( SQLFETCHR ) /* MYSQL_ROW *mysql_fetch_row(MYSQL_RES *) */
 
 HB_FUNC( SQLDATAS ) /* void mysql_data_seek(MYSQL_RES *, unsigned int) */
 {
-   mysql_data_seek( ( MYSQL_RES * ) hb_parptr( 1 ), ( unsigned int ) hb_parni( 2 ) );
+   mysql_data_seek( ( MYSQL_RES * ) HB_PARPTR( 1 ), ( unsigned int ) hb_parni( 2 ) );
 }
 
 HB_FUNC( SQLNROWS ) /* my_ulongulong  mysql_num_rows(MYSQL_RES *) */
 {
-   hb_retnint( mysql_num_rows( ( ( MYSQL_RES * ) hb_parptr( 1 ) ) ) );
+   hb_retnint( mysql_num_rows( ( ( MYSQL_RES * ) HB_PARPTR( 1 ) ) ) );
 }
 
 HB_FUNC( SQLFETCHF ) /* MYSQL_FIELD *mysql_fetch_field(MYSQL_RES *) */
 {
    /* NOTE: field structure of MySQL has 8 members as of MySQL 3.22.x */
    PHB_ITEM aField = hb_itemArrayNew( 8 );
-   MYSQL_FIELD * mfield = mysql_fetch_field( ( MYSQL_RES * ) hb_parptr( 1 ) );
+   MYSQL_FIELD * mfield = mysql_fetch_field( ( MYSQL_RES * ) HB_PARPTR( 1 ) );
 
    if( mfield )
    {
@@ -200,36 +203,36 @@ HB_FUNC( SQLFETCHF ) /* MYSQL_FIELD *mysql_fetch_field(MYSQL_RES *) */
 
 HB_FUNC( SQLFSEEK ) /* MYSQL_FIELD_OFFSET mysql_field_seek(MYSQL_RES *, MYSQL_FIELD_OFFSET) */
 {
-   mysql_field_seek( ( MYSQL_RES * ) hb_parptr( 1 ), ( MYSQL_FIELD_OFFSET ) hb_parni( 2 ) );
+   mysql_field_seek( ( MYSQL_RES * ) HB_PARPTR( 1 ), ( MYSQL_FIELD_OFFSET ) hb_parni( 2 ) );
 }
 
 HB_FUNC( SQLNUMFI ) /* unsigned int mysql_num_fields(MYSQL_RES *) */
 {
-   hb_retnl( mysql_num_fields( ( ( MYSQL_RES * ) hb_parptr( 1 ) ) ) );
+   hb_retnl( mysql_num_fields( ( ( MYSQL_RES * ) HB_PARPTR( 1 ) ) ) );
 }
 
 #if MYSQL_VERSION_ID > 32200
 
 HB_FUNC( SQLFICOU ) /* unsigned int mysql_field_count( MYSQL * ) */
 {
-   hb_retnl( mysql_field_count( ( ( MYSQL * ) hb_parptr( 1 ) ) ) );
+   hb_retnl( mysql_field_count( ( ( MYSQL * ) HB_PARPTR( 1 ) ) ) );
 }
 
 #endif
 
 HB_FUNC( SQLLISTF ) /* MYSQL_RES *mysql_list_fields(MYSQL *, char *); */
 {
-   hb_retnl( ( long ) mysql_list_fields( ( MYSQL * ) hb_parptr( 1 ), hb_parc( 2 ), NULL ) );
+   hb_retnl( ( long ) mysql_list_fields( ( MYSQL * ) HB_PARPTR( 1 ), hb_parc( 2 ), NULL ) );
 }
 
 HB_FUNC( SQLGETERR ) /* char *mysql_error( MYSQL * ); */
 {
-   hb_retc( mysql_error( ( MYSQL * ) hb_parptr( 1 ) ) );
+   hb_retc( mysql_error( ( MYSQL * ) HB_PARPTR( 1 ) ) );
 }
 
 HB_FUNC( SQLLISTDB ) /* MYSQL_RES * mysql_list_dbs(MYSQL *, char * wild); */
 {
-   MYSQL * mysql = ( MYSQL * ) hb_parptr( 1 );
+   MYSQL * mysql = ( MYSQL * ) HB_PARPTR( 1 );
    MYSQL_RES * mresult = mysql_list_dbs( mysql, NULL );
    long nr = ( long ) mysql_num_rows( mresult );
    PHB_ITEM aDBs = hb_itemArrayNew( nr );
@@ -248,7 +251,7 @@ HB_FUNC( SQLLISTDB ) /* MYSQL_RES * mysql_list_dbs(MYSQL *, char * wild); */
 
 HB_FUNC( SQLLISTTBL ) /* MYSQL_RES * mysql_list_tables(MYSQL *, char * wild); */
 {
-   MYSQL * mysql = ( MYSQL * ) hb_parptr( 1 );
+   MYSQL * mysql = ( MYSQL * ) HB_PARPTR( 1 );
    char  * cWild = hb_parc( 2 );
    MYSQL_RES * mresult = mysql_list_tables( mysql, cWild );
    long nr = ( long ) mysql_num_rows( mresult );
@@ -273,17 +276,17 @@ HB_FUNC( SQLAND )
 
 HB_FUNC( SQLAFFROWS )
 {
-   hb_retnl( ( long ) mysql_affected_rows( ( MYSQL * ) hb_parptr( 1 ) ) );
+   hb_retnl( ( long ) mysql_affected_rows( ( MYSQL * ) HB_PARPTR( 1 ) ) );
 }
 
 HB_FUNC( SQLHOSTINFO )
 {
-   hb_retc( mysql_get_host_info( ( MYSQL * ) hb_parptr( 1 ) ) );
+   hb_retc( mysql_get_host_info( ( MYSQL * ) HB_PARPTR( 1 ) ) );
 }
 
 HB_FUNC( SQLSRVINFO )
 {
-   hb_retc( mysql_get_server_info( ( MYSQL * ) hb_parptr( 1 ) ) );
+   hb_retc( mysql_get_server_info( ( MYSQL * ) HB_PARPTR( 1 ) ) );
 }
 
 HB_FUNC( DATATOSQL )

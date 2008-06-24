@@ -60,6 +60,9 @@
 
 #include "msql.h"
 
+#define HB_PARPTR( n ) hb_parnl( n )
+#define HB_RETPTR( n ) hb_retnl( n )
+
 HB_FUNC( MSQLCONNEC ) /* int msqlConnect(char *) */
 {
    hb_retni( msqlConnect( hb_parc( 1 ) ) );
@@ -82,18 +85,18 @@ HB_FUNC( MSQLQUERY ) /* int msqlQuery(int, char *) */
 
 HB_FUNC( MSQLSTORER ) /* m_result *msqlStoreResult() */
 {
-   hb_retptr( ( void * ) msqlStoreResult() );
+   HB_RETPTR( ( void * ) msqlStoreResult() );
 }
 
 HB_FUNC( MSQLFREER ) /* void msqlFreeResult(m_result *) */
 {
-   msqlFreeResult( ( m_result * ) hb_parptr( 1 ) );
+   msqlFreeResult( ( m_result * ) HB_PARPTR( 1 ) );
 }
 
 /* NOTE: need number of retrieved fields */
 HB_FUNC( MSQLFETCHR ) /* m_row msqlFetchRow(m_result *, int) */
 {
-   m_result * mresult = ( m_result * ) hb_parptr( 1 );
+   m_result * mresult = ( m_result * ) HB_PARPTR( 1 );
    int num_fields = hb_parnl( 2 );
    PHB_ITEM aRow = hb_itemArrayNew( num_fields );
    m_row mrow = msqlFetchRow( mresult );
@@ -107,17 +110,17 @@ HB_FUNC( MSQLFETCHR ) /* m_row msqlFetchRow(m_result *, int) */
  
 HB_FUNC( MSQLDATASE ) /* void msqlDataSeek(m_result *, int) */
 {
-   msqlDataSeek( ( m_result * ) hb_parptr( 1 ), hb_parni( 2 ) );
+   msqlDataSeek( ( m_result * ) HB_PARPTR( 1 ), hb_parni( 2 ) );
 }
 
 HB_FUNC( MSQLNUMROW ) /* int msqlNumRows(m_result *) */
 {
-   hb_retni( msqlNumRows( ( ( m_result * ) hb_parptr( 1 ) ) ) );
+   hb_retni( msqlNumRows( ( ( m_result * ) HB_PARPTR( 1 ) ) ) );
 }
 
 HB_FUNC( MSQLFETCHF ) /* m_field *msqlFetchField(m_result *) */
 {
-   m_field * mfield = msqlFetchField( ( m_result * ) hb_parptr( 1 ) );
+   m_field * mfield = msqlFetchField( ( m_result * ) HB_PARPTR( 1 ) );
    PHB_ITEM aField = hb_itemArrayNew( 5 ); /* NOTE: m_field structure of mSQL 2.x has 5 members */
 
    if( mfield )
@@ -134,17 +137,17 @@ HB_FUNC( MSQLFETCHF ) /* m_field *msqlFetchField(m_result *) */
 
 HB_FUNC( MSQLFIELDS ) /* void msqlFieldSeek(m_result *, int) */
 {
-   msqlFieldSeek( ( m_result * ) hb_parptr( 1 ), hb_parni( 2 ) );
+   msqlFieldSeek( ( m_result * ) HB_PARPTR( 1 ), hb_parni( 2 ) );
 }
 
 HB_FUNC( MSQLNUMFIE ) /* int msqlNumFields(m_result *) */
 {
-   hb_retni( msqlNumFields( ( ( m_result * ) hb_parptr( 1 ) ) ) );
+   hb_retni( msqlNumFields( ( ( m_result * ) HB_PARPTR( 1 ) ) ) );
 }
 
 HB_FUNC( MSQLLISTFI ) /* m_result *msqlListFields(int, char *); */
 {
-   hb_retptr( ( void * ) msqlListFields( hb_parni( 1 ), hb_parc( 2 ) ) );
+   HB_RETPTR( ( void * ) msqlListFields( hb_parni( 1 ), hb_parc( 2 ) ) );
 }
 
 HB_FUNC( MSQLGETERR ) /* char *msqlGetErrMsg(char *); */
