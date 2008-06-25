@@ -52,16 +52,16 @@
 
 #define HB_OS_WIN_32_USED
 
-#if defined(__GNUC__) && !defined(_WINDOWS_)
-   #define _WINDOWS_
-#endif
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbstack.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
 #include "hbvm.h"
+
+#if defined(HB_OS_WIN_32) && defined(__GNUC__) && !defined(_WINDOWS_)
+   #define _WINDOWS_
+#endif
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

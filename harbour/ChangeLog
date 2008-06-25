@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-25 18:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbfimage/fi_winfu.c
+   * contrib/hbfimage/fi_wrp.c
+     ! I cannot test it right now, but this should fix the 
+       build problem for hbfimage under Linux.
+
 2008-06-25 16:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbver.h
     * removed unnecessary EOL inside comment
