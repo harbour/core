@@ -106,7 +106,7 @@ static HANDLE         s_hInstance;
 static HANDLE         s_hPrevInstance;
 static int            s_iCmdShow;
 
-static const TCHAR    s_szAppName[] = TEXT( "Harbour WVT" );
+static const TCHAR    s_szClassName[] = TEXT( "Harbour_WVG_Class" );
 
 static const int      K_Ctrl[] =
 {
@@ -179,14 +179,32 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    hb_xfree( pWVT );
 }
 
+static void hb_gt_wvt_FreeAll( void )
+{
+   if( s_wvtCount > 0 )
+   {
+      int iPos;
+      for ( iPos = 1; iPos < WVT_MAX_WINDOWS; iPos++ )
+      {
+         if( !s_wvtWindows[ iPos ] == NULL )
+         {
+            PHB_GTWVT pWVT;
+
+            pWVT = s_wvtWindows[ iPos ];
+
+            DestroyWindow( pWVT->hWnd );
+            pWVT->hWnd = NULL;
+            hb_gt_wvt_Free( pWVT );
+            HB_GTSUPER_EXIT( pWVT->pGT );
+         }
+      }
+   }
+}
+
 static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT )
 {
    PHB_GTWVT pWVT;
    OSVERSIONINFO osvi;
-
-   LOGBRUSH    lb;
-   HINSTANCE   h;
-   int         iIndex;
 
    osvi.dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
    GetVersionEx( &osvi );
@@ -1444,7 +1462,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT pWVT = hb_gt_wvt_Find( hWnd );
-   int iEvResult;
+   //int iEvResult;
 
    if( pWVT ) switch( message )
    {
@@ -1758,17 +1776,18 @@ static HWND hb_gt_wvt_CreateWindow( HINSTANCE hInstance, HINSTANCE hPrevInstance
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
    wndclass.hbrBackground = NULL;
    wndclass.lpszMenuName  = NULL;
-   wndclass.lpszClassName = s_szAppName;
+   wndclass.lpszClassName = s_szClassName;
 
    if( ! RegisterClass( &wndclass ) )
    {
       MessageBox( NULL, TEXT( "Failed to register class." ),
-                  s_szAppName, MB_ICONERROR );
+                  s_szClassName, MB_ICONERROR );
       return 0;
    }
 
-   hWnd = CreateWindow( s_szAppName,                       /* classname */
-      TEXT( "HARBOUR_WVG" ),                               /* window name */
+   hWnd = CreateWindow(
+      s_szClassName,                                       /* classname */
+      TEXT( "Harbour WVG" ),                               /* window name */
       WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|
          WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX,         /* style */
       0,                                                   /* x */
@@ -1884,6 +1903,8 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
    pWVT = HB_GTWVT_GET( pGT );
    HB_GTSUPER_EXIT( pGT );
 
+   hb_gt_wvt_FreeAll();  /*  MW  */
+
    if( pWVT )
    {
       if( pWVT->hWnd )
@@ -1895,7 +1916,7 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
       if( pWVT->pszSelectCopy )
          hb_xfree( pWVT->pszSelectCopy );
 
-      UnregisterClass( s_szAppName, ( HINSTANCE ) s_hInstance );
+      UnregisterClass( s_szClassName, ( HINSTANCE ) s_hInstance );
       hb_gt_wvt_Free( pWVT );
    }
 }
@@ -2902,6 +2923,98 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
 }
 
 /* ********************************************************************** */
+/*                  Keeping as a prototype for MW GT                      */
+/* ********************************************************************** */
+
+static int hb_gt_wvt_wnd_Create( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight )
+{
+   PHB_GTWVT pWVT;
+
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_wnd_Create(%p,%d,%d,%d,%d)", pGT,iTop,iLeft,iBottom,iRight) );
+
+
+   pWVT = hb_gt_wvt_New( pGT );
+   if( !pWVT )
+   {
+      hb_errInternal( 10001, "Cannot allocate new window", "", "" );
+   }
+
+   HB_GTLOCAL( pGT ) = ( void * ) pWVT;
+
+   pGT->iLocalGTHandle = pWVT->iHandle;
+
+   pWVT->ROWS = iBottom - iTop + 1;
+   pWVT->COLS = iRight - iLeft + 1;
+
+   pWVT->hWnd = CreateWindow( s_szClassName,               /* classname */
+      TEXT( "Harbour WVT" ),                               /* window name */
+      WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX,  /* style */
+      0,                                                   /* x */
+      0,                                                   /* y */
+      CW_USEDEFAULT,                                       /* width */
+      CW_USEDEFAULT,                                       /* height */
+      NULL,                                                /* window parent */
+      NULL,                                                /* menu */
+      ( HINSTANCE ) s_hInstance,                           /* instance */
+      NULL );                                              /* lpParam */
+
+   if( !pWVT->hWnd )
+   {
+      hb_errInternal( 10001, "WINAPI CreateWindow() failed", "", "" );
+   }
+
+#ifndef HB_CDP_SUPPORT_OFF
+   pWVT->hostCDP    = hb_cdp_page;
+   pWVT->inCDP      = hb_cdp_page;
+#endif
+
+   hb_gt_wvt_SetMode( pGT, pWVT->ROWS, pWVT->COLS );
+
+   /* SUPER GT initialization */
+   HB_GTSELF_RESIZE( pGT, pWVT->ROWS, pWVT->COLS );
+   HB_GTSELF_EXPOSEAREA( pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
+   ShowWindow( pWVT->hWnd, SW_NORMAL );
+   UpdateWindow( pWVT->hWnd );
+
+   return pWVT->iHandle;
+}
+
+static void hb_gt_wvt_wnd_Destroy( PHB_GT pGT )
+{
+   PHB_GTWVT pWVT;
+
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_wnd_Destroy(%p)", pGT) );
+
+   pWVT = HB_GTWVT_GET( pGT );
+
+   if ( pWVT->hWnd )
+   {
+      DestroyWindow( pWVT->hWnd );
+      pWVT->hWnd = NULL;
+   }
+   hb_gt_wvt_Free( pWVT );
+   HB_GTSUPER_EXIT( pGT );
+}
+
+static int hb_gt_wvt_wnd_Select( PHB_GT pGT )
+{
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_wnd_Select(%p)", pGT) );
+
+   HB_SYMBOL_UNUSED( pGT );
+
+   return 0;
+}
+
+static int hb_gt_wvt_wnd_Current( PHB_GT pGT )
+{
+   HB_TRACE( HB_TR_DEBUG, ("hb_gt_wvt_wnd_Current(%p)", pGT) );
+
+   HB_SYMBOL_UNUSED( pGT );
+
+   return 0;
+}
+
+/* ********************************************************************** */
 
 static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP, BOOL fBox )
 {
@@ -2995,6 +3108,13 @@ static BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    pFuncTable->MouseCountButton     = hb_gt_wvt_mouse_CountButton;
 
    pFuncTable->GfxPrimitive         = hb_gt_wvt_gfx_Primitive;
+
+/*                     MULTI WINDOW GT                    */
+/* pFuncTable->WndCreate            = hb_gt_wvt_wnd_Create;
+   pFuncTable->WndDestroy           = hb_gt_wvt_wnd_Destroy;
+   pFuncTable->WndSelect            = hb_gt_wvt_wnd_Select;
+   pFuncTable->WndCurrent           = hb_gt_wvt_wnd_Current; */
+/*                     MULTI WINDOW GT                    */
 
    return TRUE;
 }

@@ -148,6 +148,8 @@ PROCEDURE Main( cDSN )
 
    SET DATE BRITISH
 
+   SET( _SET_EVENTMASK, INKEY_ALL )
+
    Wvt_SetGui( .t. )
    WvtSetKeys( .t. )
    Popups( 1 )
@@ -782,7 +784,7 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
    do case
    case nKey == K_ESC
-      lEnd.t.
+      lEnd := .t.
 
    case nKey == K_ENTER
       lEnd := .t.

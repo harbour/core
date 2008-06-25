@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-25 15:55 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/contrib/gtwvg/gtwvg.c
+    * Some futuristic additions and synchronization with GTWVT.
+  * harbour/contrib/gtwvg/tests/demowvg.prg
+    * Update to recognize all key events.
+
+    ;DONE: I am done with the update og GTWVG. 
+     Open to previous modifications, Viktor?
+
 2008-06-25 18:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbfimage/fi_winfu.c
    * contrib/hbfimage/fi_wrp.c
