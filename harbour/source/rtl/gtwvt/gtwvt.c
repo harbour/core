@@ -1353,7 +1353,6 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT pWVT = hb_gt_wvt_Find( hWnd );
-   int iEvResult;
 
    if( pWVT ) switch( message )
    {
@@ -1408,13 +1407,10 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_CLOSE:  /* Clicked 'X' on system menu */
-         /* NOTE: this follows more code . will post later as it needs to be cleaned */
-         /* But it demonstrates the concept */
-         iEvResult = hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE );
-         if( iEvResult == 0 )
+         if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE ) == 0 )
          {
-            if( hb_set.HB_SET_CANCEL )
-               hb_vmRequestCancel();
+            hb_set.HB_SET_CANCEL = TRUE;
+            hb_vmRequestCancel();
          }
          return 0;
 

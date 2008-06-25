@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-25 11:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     * Slightly changed the way CLOSE button works.
+       Now the close button, if enabled, will always 
+       force a shutdown. So this setting is made independent 
+       of SetCancel(). I choose this because there might 
+       be cases when we need to use <Alt+C> in app code, yet 
+       we want to allow closing the window. Previously it was 
+       also easy to create confusing scenarios by using various 
+       combinations of HB_GTI_CLOSABLE + SetCancel(). Another 
+       kind of fix - without the advantage above - would be 
+       to fully sync SetCancel() with HB_GTI_CLOSABLE.
+
+   * contrib/hbtpathy/tplinux.c
+     ! Fixed embedded comments in Linux code.
+
+   * contrib/hbziparch/hbziparc.h
+     ! Fixed header casing.
+
 2008-06-24 19:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmsql/msql.c
    * contrib/hbmysql/mysql.c

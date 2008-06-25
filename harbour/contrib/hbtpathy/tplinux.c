@@ -199,7 +199,7 @@ HB_FUNC( P_DRAIN )
 
 HB_FUNC( P_OUTFREE )
 {
-   /*
+#if 0
    APIRET rc;
    RXQUEUE rxqueue = { 0 };
 
@@ -208,7 +208,7 @@ HB_FUNC( P_OUTFREE )
       hb_retnl( rxqueue.cb - rxqueue.cch );
    else
       hb_retnl( -1 ); /* Put GetLastError() here, or better a second byref param? */
-   */
+#endif
 }
 
 HB_FUNC( P_ISDCD )

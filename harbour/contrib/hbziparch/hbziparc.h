@@ -73,7 +73,7 @@
 #include <time.h>
 
 #ifdef HB_EXTERN_C
-#include "ziparchive.h"
+#include "ZipArchive.h"
 #endif
 
 HB_EXTERN_BEGIN
