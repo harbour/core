@@ -1,5 +1,5 @@
 /*
- * $Id: win32.c,v 1.2 2004/08/25 13:43:53 mauriliolongo Exp $
+ * $Id$
  */
 
 /*

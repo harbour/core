@@ -587,7 +587,7 @@ static void hb_pp_tokenAddNext( PHB_PP_STATE pState, const char * value, ULONG u
          else if( pState->iBlockState == 2 &&
                   HB_PP_TOKEN_TYPE( type ) == HB_PP_TOKEN_COMMA )
             pState->iBlockState = 1;
-         else 
+         else
             pState->iBlockState = 0;
       }
 

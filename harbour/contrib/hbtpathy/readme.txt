@@ -1,5 +1,5 @@
 /*
- * $Id: README,v 1.2 2004/08/16 14:30:18 mauriliolongo Exp $
+ * $Id$
  */
 
 Telepathy is the best serial communication library for Nantucket/CA Clipper.

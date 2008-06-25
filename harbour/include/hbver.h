@@ -59,8 +59,7 @@
 #define HB_VER_MINOR    0        /* Minor version number */
 #define HB_VER_REVISION 0        /* Revision number */
 #define HB_VER_STATUS   "RC1"    /* Build status */
-#define HB_VERSION      0x010000 /* Three bytes: Major + Minor + 
-Revision */
+#define HB_VERSION      0x010000 /* Three bytes: Major + Minor + Revision */
 
 /* #include "hb_verbld.h" */
 

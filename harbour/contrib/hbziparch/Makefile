@@ -60,7 +60,7 @@ PRG_SOURCES= \
 LIBNAME=hbziparch
 
 ifeq ($(HB_ARCHITECTURE),linux)
-CFLAGS := $(CFLAGS) -DZIP_ARCHIVE_LNX
+C_USR += -DZIP_ARCHIVE_LNX
 endif
 
 include $(TOP)$(ROOT)config/lib.cf

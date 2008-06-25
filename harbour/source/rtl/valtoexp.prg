@@ -63,7 +63,7 @@ FUNCTION hb_VALTOEXP( xVal )
          cVal := LTRIM( STR( xVal ) )
          EXIT
       CASE "D"
-         cVal := "0d" + DTOS( xVal )
+         cVal := IIF( EMPTY( xVal ), "0d00000000", "0d" + DTOS( xVal ) )
          EXIT
       CASE "L"
          cVal := IIF( xVal, ".T.", ".F." )
@@ -117,7 +117,7 @@ FUNCTION hb_CSTR( xVal )
       CASE "N"
          RETURN STR( xVal )
       CASE "D"
-         RETURN "0d" + DTOS( xVal )
+         RETURN IIF( EMPTY( xVal ), "0d00000000", "0d" + DTOS( xVal ) )
       CASE "L"
          RETURN IIF( xVal, ".T.", ".F." )
       CASE "S"

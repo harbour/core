@@ -8,6 +8,71 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-25 16:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbver.h
+    * removed unnecessary EOL inside comment
+
+  * harbour/contrib/hbodbc/odbc.c
+    ! use valid integer type instead of explicit casting in function call.
+      Such casting is vary dangerous and may cause unpredictible results
+      when integer value has different binary size
+
+  * harbour/contrib/hbtpathy/Makefile
+  * harbour/contrib/hbtpathy/common.mak
+  * harbour/contrib/hbtpathy/telepath.ch
+  * harbour/contrib/hbtpathy/tplinux.c
+  * harbour/contrib/hbtpathy/tpwin32.c
+  * harbour/contrib/hbtpathy/tpos2.c
+  * harbour/contrib/hbtpathy/telepath.prg
+  * harbour/contrib/hbtpathy/readme.txt
+  * harbour/contrib/hbtpathy/tests/testtp.prg
+    * converted EOL style to native
+    * set valid SVN attributes
+
+  * harbour/contrib/hbapollo/Makefile
+    * disabled non W32 builds, SDE exists only for MS-Windows
+
+  * harbour/contrib/hbziparch/Makefile
+    ! fixed C flag setting for Linux builds
+
+  * harbour/source/pp/ppcore.c
+    * formatting
+
+  * harbour/source/rtl/valtoexp.prg
+    ! fixed empty date conversion
+
+  * harbour/hbgtmk.sh
+  * harbour/make_xmingwce.sh
+  * harbour/make_deb.sh
+  * harbour/make_rpmw32.sh
+  * harbour/make_gcc.sh
+  * harbour/make_rpm.sh
+  * harbour/make_xmingw.sh
+  * harbour/make_tgz.sh
+  * harbour/make_rpmce.sh
+  * harbour/contrib/hbmzip/make_gcc.sh
+  * harbour/contrib/hbsqlit3/make_gcc.sh
+  * harbour/contrib/make_gcc_all.sh
+  * harbour/contrib/hbziparch/make_gcc.sh
+  * harbour/contrib/hbnf/make_gcc.sh
+  * harbour/contrib/hbhpdf/tests/files/cp932.txt
+  * harbour/contrib/hbhpdf/make_gcc.sh
+  * harbour/contrib/rddado/make_gcc.sh
+  * harbour/contrib/gtwvg/make_gcc.sh
+  * harbour/contrib/hbpgsql/make_gcc.sh
+  * harbour/contrib/rddads/make_gcc.sh
+  * harbour/contrib/hbclipsm/make_gcc.sh
+  * harbour/contrib/mtpl_gcc.sh
+  * harbour/contrib/hbfimage/make_gcc.sh
+  * harbour/contrib/hbgd/tests/bld.sh
+  * harbour/contrib/hbgd/make_gcc.sh
+  * harbour/contrib/hbmisc/make_gcc.sh
+  * harbour/contrib/hbtip/make_gcc.sh
+  * harbour/contrib/hbbmcdx/make_gcc.sh
+  * harbour/contrib/hbvpdf/make_gcc.sh
+  * harbour/contrib/hbbtree/make_gcc.sh
+    * set valid SVN EOL attribute
+
 2008-06-25 11:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      * Slightly changed the way CLOSE button works.

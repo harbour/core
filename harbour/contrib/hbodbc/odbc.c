@@ -366,14 +366,14 @@ HB_FUNC( SQLCOLATTRIBUTE )
     SDWORD      lLen      = ( SDWORD ) hb_parnl( 5 );
     PTR         bBuffer   = hb_xgrab( lLen );
     SQLSMALLINT wBufLen   = hb_parni( 6 );
-    SQLSMALLINT wNumPtr   = hb_parni( 7 );
+#if defined(__DMC__)
+    SQLINTEGER  wNumPtr   = hb_parni( 7 );
+#else
+    SQLLEN      wNumPtr   = hb_parni( 7 );
+#endif
     WORD        wResult   = SQLColAttribute( ( HSTMT ) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ),
                                              (unsigned char*) bBuffer, hb_parni( 5 ), &wBufLen,
-#if defined(__DMC__)
-                                             (SQLINTEGER FAR*) &wNumPtr );
-#else
-                                             (SQLLEN *) &wNumPtr );
-#endif
+                                             &wNumPtr );
 
     if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
     {
