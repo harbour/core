@@ -381,7 +381,7 @@ METHOD New(nSocket, cQuery, cTableName) CLASS TmSQLTable
 
       nRes := msqlListFi(nSocket, cTableName)
 
-      if nRes > 0
+      if !Empty( nRes )
          for i := 1 to msqlNumFie(nRes)
             aField := msqlFetchF(nRes)
             // don't count indexes as real fields
@@ -804,7 +804,7 @@ METHOD TableStruct(cTable) CLASS TmSQLServer
    aStruct := {}
    nRes := msqlListFi(::nSocket, cTable)
 
-   if nRes > 0
+   if !Empty( nRes )
       for i := 1 to msqlNumFie(nRes)
 
          aField := msqlFetchF(nRes)

@@ -350,7 +350,7 @@ METHOD New(nSocket, cQuery) CLASS TMySQLQuery
    if (rc := sqlQuery(nSocket, cQuery)) == 0
 
       // save result set
-      if (::nResultHandle := sqlStoreR(nSocket)) > 0
+      if !Empty(::nResultHandle := sqlStoreR(nSocket))
 
          ::nNumRows := sqlNRows(::nResultHandle)
          ::nNumFields := sqlNumFi(::nResultHandle)
@@ -1373,7 +1373,7 @@ METHOD New(cServer, cUser, cPassword) CLASS TMySQLServer
    ::nSocket := sqlConnect(cServer, cUser, cPassword)
    ::lError := .F.
 
-   if ::nSocket == 0
+   if Empty( ::nSocket )
       ::lError := .T.
    endif
 
@@ -1622,7 +1622,7 @@ METHOD Error() CLASS TMySQLServer
 
    ::lError := .F.
 
-return iif(::nSocket > 0, sqlGetErr(::nSocket), "No connection to server")
+return iif(Empty( ::nSocket ), "No connection to server", sqlGetErr(::nSocket))
 
 
 METHOD ListDBs() CLASS TMySQLServer

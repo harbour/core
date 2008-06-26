@@ -2,7 +2,6 @@
  * $Id$
  */
 
-
 /*
  * Harbour Project source code:
  * Harbour GUI framework for IBM OS/2 Presentation Manager

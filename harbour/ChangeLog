@@ -8,6 +8,33 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-26 12:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmysql/mysql.c
+   * contrib/hbmysql/tmysql.prg
+   * contrib/hbmsql/msql.c
+   * contrib/hbmsql/tmsql.prg
+     ! Fixed again to use hb_parptr()/hb_retptr() 
+       instead of hb_parnl()/hb_retnl(). This fixes these libs 
+       on 64 bit systems.
+       This is an INCOMPATIBLE change, users of these libs will 
+       have to update their code when dealing with return values 
+       of the following functions:
+       - hbmysql / SQLCONNECT()
+       - hbmysql / SQLSTORER()
+       - hbmysql / SQLUSERES()
+       - hbmsql / MSQLSTORER()
+       - hbmsql / MSQLLISTFI()
+       They will now return pointer type instead of a number, 
+       so error checking will have to be changed from r > 0, 
+       r ==/=/!=/> 0 to !Empty( r ).
+     ; Please test.
+
+   * contrib/hbgf/hbgfw32/win32.c
+   * contrib/hbgf/hbgfos2/os2pm.c
+   * contrib/hbgf/hbgfos2/os2pm.ch
+     * Some cleanups.
+     ; Please test for OS/2.
+
 2008-06-26 11:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbmsql/msql.c
     ! changed msqlGetErrMsg( NULL ) => msqlErrMsg

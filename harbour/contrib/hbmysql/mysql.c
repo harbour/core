@@ -75,8 +75,8 @@
 
 /* TODO: Use hb_retptrGC() */
 
-#define HB_PARPTR( n ) hb_parnl( n )
-#define HB_RETPTR( n ) hb_retnl( n )
+#define HB_PARPTR( n ) hb_parptr( n )
+#define HB_RETPTR( n ) hb_retptr( n )
 
 HB_FUNC( SQLVERSION ) /* long mysql_get_server_version( MYSQL * ) */
 {

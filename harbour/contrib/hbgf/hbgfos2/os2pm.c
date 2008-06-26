@@ -52,8 +52,6 @@
  *
  */
 
-
-
 #define INCL_BASE
 #define INCL_PM
 #include <os2.h>
@@ -70,12 +68,13 @@ MRESULT EXPENTRY WndProc( HWND, ULONG, MPARAM, MPARAM );
 
 MRESULT EXPENTRY WndProc( HWND hWnd, ULONG Msg, MPARAM mp1, MPARAM mp2 )
 {
-   static PHB_DYNS pDynSym = 0;
+   static PHB_DYNS s_pDynSym = 0;
+
    MRESULT mResult;
    HPS hps;
 
-   if( ! pDynSym )
-      pDynSym = hb_dynsymFind( "HB_GUI" );
+   if( ! s_pDynSym )
+      s_pDynSym = hb_dynsymFind( "HB_GUI" );
 
    switch (Msg)
    {
@@ -87,7 +86,7 @@ MRESULT EXPENTRY WndProc( HWND hWnd, ULONG Msg, MPARAM mp1, MPARAM mp2 )
 
       default:
          hb_vmPushState();
-         hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
+         hb_vmPushSymbol( hb_dynsymSymbol( s_pDynSym ) );
          hb_vmPushNil();
          hb_vmPushLong( (LONG) hWnd );
          hb_vmPushLong( (LONG) Msg );
@@ -102,13 +101,11 @@ MRESULT EXPENTRY WndProc( HWND hWnd, ULONG Msg, MPARAM mp1, MPARAM mp2 )
 
          return mResult;
    }
-
 }
 
 
 HB_FUNC( WINREGISTERCLASS )
 {
-
    hb_retl( WinRegisterClass( hb_pm_GetHab(),               /* anchor block handle */
                               hb_parc( 1 ),                 /* Class Name */
                               ( PFNWP ) WndProc,            /* default Class procedure */
@@ -119,42 +116,37 @@ HB_FUNC( WINREGISTERCLASS )
 
 HB_FUNC(WINCREATEWINDOW)
 {
-   HWND hwnd;
-
-   hwnd =  WinCreateWindow( (HWND) hb_parnl(1),             /* hWnd parent  */
-                            (PCSZ) hb_parc(2),              /* pszClass     */
-                            (PCSZ) hb_parc(3),              /* pszName      */
-                            (ULONG) hb_parnl(4),            /* flStyle      */
-                            (LONG) hb_parnl(5),             /* x            */
-                            (LONG) hb_parnl(6),             /* y            */
-                            (LONG) hb_parnl(7),             /* cx           */
-                            (LONG) hb_parnl(8),             /* cy           */
-                            (HWND) hb_parnl(9),             /* hwndOwner    */
-                            (HWND) hb_parnl(10),            /* hwndInsertBehind */
-                            (ULONG) hb_parnl(11),           /* id           */
-                            (PVOID) hb_parnl(12),           /* pCtlData,    */
-                            (PVOID) hb_parnl(13));          /* pPresParams  */
-
-   hb_retnl((LONG) hwnd);
+   hb_retnl( (LONG) WinCreateWindow( (HWND) hb_parnl(1),             /* hWnd parent  */
+                                     (PCSZ) hb_parc(2),              /* pszClass     */
+                                     (PCSZ) hb_parc(3),              /* pszName      */
+                                     (ULONG) hb_parnl(4),            /* flStyle      */
+                                     (LONG) hb_parnl(5),             /* x            */
+                                     (LONG) hb_parnl(6),             /* y            */
+                                     (LONG) hb_parnl(7),             /* cx           */
+                                     (LONG) hb_parnl(8),             /* cy           */
+                                     (HWND) hb_parnl(9),             /* hwndOwner    */
+                                     (HWND) hb_parnl(10),            /* hwndInsertBehind */
+                                     (ULONG) hb_parnl(11),           /* id           */
+                                     (PVOID) hb_parnl(12),           /* pCtlData,    */
+                                     (PVOID) hb_parnl(13)));         /* pPresParams  */
 }
 
 
 HB_FUNC( WINCREATESTDWINDOW )
 {
    ULONG lFrame = hb_parnl( 3 );
-   HWND hWndClient, hWndFrame;
+   HWND hWndClient;
 
-   hWndFrame = WinCreateStdWindow( ( HWND ) hb_parnl( 1 ),              /* hWndParent */
-                                    hb_parnl( 2 ),                      /* style */
-                                    &lFrame,                            /* lFrame */
-                                    hb_parc( 4 ),                       /* cClassName */
-                                    hb_parc( 5 ),                       /* cCaption */
-                                    hb_parnl( 6 ),                      /* lStyleClient */
-                                    hb_parnl( 7 ),                      /* hModule */
-                                    hb_parnl( 8 ),                      /* nId */
-                                    ( PHWND ) &hWndClient );            /* Window client handle */
+   hb_retnl( (LONG) WinCreateStdWindow( ( HWND ) hb_parnl( 1 ),             /* hWndParent */
+                                        hb_parnl( 2 ),                      /* style */
+                                        &lFrame,                            /* lFrame */
+                                        hb_parc( 4 ),                       /* cClassName */
+                                        hb_parc( 5 ),                       /* cCaption */
+                                        hb_parnl( 6 ),                      /* lStyleClient */
+                                        hb_parnl( 7 ),                      /* hModule */
+                                        hb_parnl( 8 ),                      /* nId */
+                                        ( PHWND ) &hWndClient ));           /* Window client handle */
 
-   hb_retnl( (LONG) hWndFrame);
    hb_stornl( ( LONG ) hWndClient, 9 );
 }
 
@@ -166,9 +158,7 @@ HB_FUNC( HB_FORMSHOWMODAL )
 
    WinShowWindow( ( HWND ) hb_parnl( 1 ), 1 );
    while( WinGetMsg( hab, &qmsg, 0, 0, 0 ) )
-   {
       WinDispatchMsg( hab, &qmsg );
-   }
 }
 
 
@@ -195,7 +185,7 @@ HB_FUNC( WINGETTEXT )
 {
    BYTE bBuffer[ 255 ];
 
-   WinQueryWindowText( ( HWND ) hb_parnl( 1 ), 254, bBuffer );
+   WinQueryWindowText( ( HWND ) hb_parnl( 1 ), sizeof( bBuffer ) - 1, bBuffer );
    hb_retc( bBuffer );
 }
 
@@ -210,11 +200,9 @@ HB_FUNC( MSGINFO )
 }
 
 
-HAB hb_pm_GetHab() {
-
-   HWND hWnd = WinQueryActiveWindow( HWND_DESKTOP);
-   return WinQueryAnchorBlock(hWnd);
-
+HAB hb_pm_GetHab()
+{
+   return WinQueryAnchorBlock( WinQueryActiveWindow( HWND_DESKTOP ) );
 }
 
 
@@ -232,7 +220,7 @@ HB_FUNC( WINCREATEMENU )
 
 
 /* Some xBase for C language */
-#define IF(x,y,z) ((x)?(y):(z))
+#define IIF(x,y,z) ((x)?(y):(z))
 
 
 HB_FUNC( WINADDMENUITEM )
@@ -240,8 +228,8 @@ HB_FUNC( WINADDMENUITEM )
    MENUITEM mit;
 
    mit.iPosition   = hb_parni( 3 );
-   mit.afStyle     = IF( ISCHAR( 2 ), MIS_TEXT, MIS_SEPARATOR );
-   mit.afAttribute = IF( ! hb_parl( 6 ), MIA_DISABLED, 0 );
+   mit.afStyle     = IIF( ISCHAR( 2 ), MIS_TEXT, MIS_SEPARATOR );
+   mit.afAttribute = IIF( ! hb_parl( 6 ), MIA_DISABLED, 0 );
    mit.id          = hb_parni( 5 );
    mit.hwndSubMenu = hb_parnl( 4 );
    mit.hItem       = 0;
@@ -258,11 +246,11 @@ HB_FUNC( WINMAKESUBMENUITEM )
 {
    MENUITEM mit;
    MRESULT rc;
-   char text[100];
+   char text[ 100 ];
 
    rc = WinSendMsg((HWND) hb_parnl(1), MM_QUERYITEM, MPFROM2SHORT(hb_parni(2), FALSE ), &mit );
    if ((BOOL)rc) {
-      WinSendMsg((HWND) hb_parnl(1), MM_QUERYITEMTEXT, MPFROM2SHORT(hb_parni(2), 100), &text );
+      WinSendMsg((HWND) hb_parnl(1), MM_QUERYITEMTEXT, MPFROM2SHORT(hb_parni(2), sizeof( text ) ), &text );
       WinSendMsg((HWND) hb_parnl(1), MM_DELETEITEM, MPFROM2SHORT(hb_parni(2), FALSE ), 0L );
 
       mit.hwndSubMenu = hb_parnl(3);
@@ -291,8 +279,8 @@ HB_FUNC( WINSETOWNER )
 HB_FUNC( WINSENDMSG )
 {
    hb_retnl( ( LONG ) WinSendMsg( ( HWND ) hb_parnl( 1 ), hb_parnl( 2 ),
-             ( MPARAM ) IF( ISCHAR( 3 ), (ULONG) hb_parc( 3 ), (ULONG) hb_parnl( 3 ) ),
-             ( MPARAM ) IF( ISCHAR( 4 ), (ULONG) hb_parc( 4 ), (ULONG) hb_parnl( 4 ) ) ) );
+             ( MPARAM ) IIF( ISCHAR( 3 ), (ULONG) hb_parc( 3 ), (ULONG) hb_parnl( 3 ) ),
+             ( MPARAM ) IIF( ISCHAR( 4 ), (ULONG) hb_parc( 4 ), (ULONG) hb_parnl( 4 ) ) ) );
 }
 
 

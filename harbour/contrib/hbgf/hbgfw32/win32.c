@@ -52,16 +52,18 @@
  */
 
 #define _WIN32_WINNT 0x0400
-#include <windows.h>
+
+#define HB_OS_WIN_32_USED
+
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbstack.h"
 
-LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM) ;
+LRESULT CALLBACK WndProc( HWND, UINT, WPARAM, LPARAM );
 
 HB_FUNC( WINREGISTERCLASS )
 {
-   WNDCLASS     wndclass ;
+   WNDCLASS     wndclass;
 
    wndclass.lpszClassName = hb_parc( 1 );
    wndclass.style = CS_OWNDC | CS_VREDRAW | CS_HREDRAW;   // hb_parnl( 2 );
@@ -96,7 +98,7 @@ HB_FUNC( HB_FORMSHOWMODAL )
    ShowWindow( ( HWND ) hb_parnl( 1 ), 1 );
    while( GetMessage( &msg, NULL, 0, 0 ) )
    {
-      TranslateMessage( &msg );
+       TranslateMessage( &msg );
       DispatchMessage( &msg );
    }
 }
@@ -124,7 +126,7 @@ HB_FUNC( WINGETTEXT )
 {
    BYTE bBuffer[ 255 ];
 
-   GetWindowText( ( HWND ) hb_parnl( 1 ), (char*) bBuffer, 254 );
+   GetWindowText( ( HWND ) hb_parnl( 1 ), (char*) bBuffer, sizeof( bBuffer ) - 1 );
    hb_retc( (char*) bBuffer );
 }
 
@@ -144,7 +146,7 @@ HB_FUNC( WINCREATEMENU )
 
 
 /* Some xBase for C language */
-#define IF(x,y,z) ((x)?(y):(z))
+#define IIF(x,y,z) ((x)?(y):(z))
 
 
 HB_FUNC( WINADDMENUITEM )
@@ -155,7 +157,7 @@ HB_FUNC( WINADDMENUITEM )
 
    mii.cbSize = sizeof( MENUITEMINFO );
    mii.fMask = MIIM_TYPE | MIIM_STATE | MIIM_ID | ((hSubMenu)? MIIM_SUBMENU:0);
-   mii.fState = IF( ! hb_parl( 6 ), MFS_DISABLED, 0 );
+   mii.fState = IIF( ! hb_parl( 6 ), MFS_DISABLED, 0 );
    mii.wID = hb_parni( 5 );
    mii.hSubMenu = hSubMenu;
    if( ISCHAR( 2 ) )

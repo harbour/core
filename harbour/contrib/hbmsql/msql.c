@@ -60,8 +60,8 @@
 
 #include "msql.h"
 
-#define HB_PARPTR( n ) hb_parnl( n )
-#define HB_RETPTR( n ) hb_retnl( n )
+#define HB_PARPTR( n ) hb_parptr( n )
+#define HB_RETPTR( n ) hb_retptr( n )
 
 HB_FUNC( MSQLCONNEC ) /* int msqlConnect(char *) */
 {
