@@ -628,7 +628,7 @@ METHOD MouseOver()  CLASS wvtDialog
                          mCol >= o:nLeft .and. mCol <= o:nRight      } )
 
    ::nObjOver := nObj
-   ::oObjOver := if( nObj > 0, ::aObjects[ nObj ], nil )
+   ::oObjOver := iif( nObj > 0, ::aObjects[ nObj ], nil )
    if nObj > 0
       ::aObjects[ nObj ]:nmRow := mRow
       ::aObjects[ nObj ]:nmCol := mCol
@@ -801,7 +801,7 @@ CLASS WvtObject
    DATA   nAlignVert
    DATA   nAngle
 
-   ACCESS ToolTip               INLINE if( ::cTooltip == nil, '', ::cTooltip )
+   ACCESS ToolTip               INLINE iif( ::cTooltip == nil, '', ::cTooltip )
    ASSIGN ToolTip( cTip )       INLINE ::cToolTip := cTip
 
    DATA   bHandleEvent
@@ -854,7 +854,7 @@ CLASS WvtObject
             Wvt_InvalidateRect( ::nTop, ::nLeft, ::nTop, ::nLeft )
 
    METHOD Eval( bBlock )        INLINE ;
-            if( ISBLOCK( bBlock ), Eval( bBlock, self ), nil )
+            iif( ISBLOCK( bBlock ), Eval( bBlock, self ), nil )
 
    METHOD CreatePopup()
    METHOD ShowPopup()
@@ -1041,7 +1041,7 @@ CLASS WvtBrowse FROM WvtObject
    DATA   bTotalColumns
    DATA   bCurrentColumn
 
-   ACCESS cDesc                 INLINE if( ::cText == nil, '', ::cText )
+   ACCESS cDesc                 INLINE iif( ::cText == nil, '', ::cText )
    ASSIGN cDesc( cText )        INLINE ::cText := cText
 
    METHOD New()
@@ -1076,8 +1076,8 @@ METHOD Create() CLASS WvtBrowse
 
    ::nTop    := ::oBrw:nTop-2
    ::nLeft   := ::oBrw:nLeft-2
-   ::nBottom := if( ::lHSBar, ::oBrw:nBottom, ::oBrw:nBottom+1 )
-   ::nRight  := if( ::lVSBar, ::oBrw:nRight , ::oBrw:nRight+2  )
+   ::nBottom := iif( ::lHSBar, ::oBrw:nBottom, ::oBrw:nBottom+1 )
+   ::nRight  := iif( ::lVSBar, ::oBrw:nRight , ::oBrw:nRight+2  )
 
    ::PaintBlock( 1 )
    ::PaintBlock( 2 )
@@ -1428,7 +1428,7 @@ METHOD Update( nPanel, cText, cColor )
    if nPanel > 0 .and. nPanel <= len( ::aPanels )
       oPanel        := ::aPanels[ nPanel ]
       oPanel:Text   := cText
-      oPanel:cColor := if( cColor == nil, 'N/W', cColor )
+      oPanel:cColor := iif( cColor == nil, 'N/W', cColor )
       oPanel:Refresh()
    endif
 
@@ -1524,8 +1524,8 @@ METHOD Refresh() CLASS WvtPanel
 
 CLASS WvtLabel FROM WvtObject
 
-   ACCESS Text                  INLINE if( ::cText == nil, '', ::cText )
-   ASSIGN Text( cTxt )          INLINE ::cText := if( cTxt == nil, '', cTxt )
+   ACCESS Text                  INLINE iif( ::cText == nil, '', ::cText )
+   ASSIGN Text( cTxt )          INLINE ::cText := iif( cTxt == nil, '', cTxt )
 
    METHOD New()
    METHOD Create()
@@ -1988,7 +1988,7 @@ METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight ) CLASS WvtImage
 
 METHOD Create() CLASS WvtImage
 
-   ::bPaint := {|| if( file( ::cImage ), ;
+   ::bPaint := {|| iif( file( ::cImage ), ;
         Wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cImage ),'' ) }
 
    aadd( ::aPaint, { ::bPaint,;
@@ -2948,7 +2948,7 @@ METHOD Create() CLASS WvtBanner
    ::oLabel:lStrikeout        := ::lStrikeout
    ::oLabel:lUnderline        := ::lUnderline
    ::oLabel:nAlignVert        := ::nAlignVert
-   ::oLabel:nAlignHorz        := if( ::nDirection == 0, 0, 1 )
+   ::oLabel:nAlignHorz        := iif( ::nDirection == 0, 0, 1 )
    ::oLabel:nTextColor        := ::nTextColor
    ::oLabel:nBackColor        := ::nBackColor
    ::oLabel:nTextColorHoverOn := ::nTextColorHoverOn
@@ -2958,7 +2958,7 @@ METHOD Create() CLASS WvtBanner
 
    ::nCurSeconds := Seconds()
    ::nTextLen    := len( ::cText )
-   ::nTextIndex  := if( ::nDirection == 0, 1, ::nTextLen )
+   ::nTextIndex  := iif( ::nDirection == 0, 1, ::nTextLen )
    ::nCurAlign   := ::nDirection
 
    ::Super:Create()
@@ -3010,7 +3010,7 @@ METHOD Refresh() CLASS WvtBanner
          ::nTextIndex++
          if ::nTextIndex > ::nTextLen
             ::nTextIndex := 1
-            ::nCurAlign  := if( ::nCurAlign == 0, 1, 0 )
+            ::nCurAlign  := iif( ::nCurAlign == 0, 1, 0 )
          endif
 
          if ::nCurAlign == 0   // Left
@@ -3022,7 +3022,7 @@ METHOD Refresh() CLASS WvtBanner
          ::nTextIndex--
          if ::nTextIndex < 0
             ::nTextIndex := ::nTextLen
-            ::nCurAlign := if( ::nCurAlign == 0, 1, 0 )
+            ::nCurAlign := iif( ::nCurAlign == 0, 1, 0 )
          endif
 
          if ::nCurAlign == 0   // Left
@@ -3204,8 +3204,8 @@ METHOD Create() CLASS WvtProgressBar
 
    DEFAULT ::nTop       TO 0
    DEFAULT ::nLeft      TO 0
-   DEFAULT ::nBottom    TO if( ::lVertical, ::nTop + 9, ::nTop )
-   DEFAULT ::nRight     TO if( ::lVertical, ::nLeft + 1, ::nLeft + 19 )
+   DEFAULT ::nBottom    TO iif( ::lVertical, ::nTop + 9, ::nTop )
+   DEFAULT ::nRight     TO iif( ::lVertical, ::nLeft + 1, ::nLeft + 19 )
    DEFAULT ::nTextColor TO RGB( 255,255,255 )
    DEFAULT ::nBackColor TO RGB( 198,198,198 )
 

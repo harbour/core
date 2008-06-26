@@ -2994,7 +2994,6 @@ HB_FUNC( WVT_SAVESCREEN )
    POINT    xy = { 0,0 };
    int      iTop, iLeft, iBottom, iRight, iWidth, iHeight;
    PHB_ITEM info = hb_itemArrayNew( 3 );
-   PHB_ITEM temp = hb_itemNew( NULL );
 
    xy        = hb_wvt_gtGetXYFromColRow( hb_parni( 2 ), hb_parni( 1 ) );
    iTop      = xy.y;
@@ -3012,10 +3011,9 @@ HB_FUNC( WVT_SAVESCREEN )
    BitBlt( _s->hCompDC, 0, 0, iWidth, iHeight, _s->hdc, iLeft, iTop, SRCCOPY );
    SelectObject( _s->hCompDC, oldBmp );
 
-   hb_arraySet( info, 1, hb_itemPutNI( temp, iWidth ) );
-   hb_arraySet( info, 2, hb_itemPutNI( temp, iHeight ) );
-   hb_arraySet( info, 3, hb_itemPutNL( temp, ( ULONG ) hBmp ) );
-   hb_itemRelease( temp );
+   hb_arraySetNI( info, 1, iWidth );
+   hb_arraySetNI( info, 2, iHeight );
+   hb_arraySetNL( info, 3, ( ULONG ) hBmp );
 
    hb_itemReturnRelease( info );
 }

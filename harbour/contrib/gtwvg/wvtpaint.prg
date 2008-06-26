@@ -297,15 +297,15 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    nW  := ( nW * nXM / nBaseUnitsX )
    nH  := ( nH * nYM / nBaseUnitsY )
 
-   If ValType( nStyle ) <> "N"
+   If !ISNUMBER( nStyle )
       nStyle := + WS_CAPTION    + WS_SYSMENU              ;
                 + WS_GROUP      + WS_TABSTOP + DS_SETFONT ;
                 + WS_THICKFRAME + WS_VISIBLE + WS_POPUP   ;
                 + DS_3DLOOK
    EndIf
 
-   aAdd( aDlg[ 1 ] , If( Empty( nHelpId  ), 0, nHelpId  ) )
-   aAdd( aDlg[ 1 ] , If( Empty( nExStyle ), 0, nExStyle ) )
+   aAdd( aDlg[ 1 ] , iif( Empty( nHelpId  ), 0, nHelpId  ) )
+   aAdd( aDlg[ 1 ] , iif( Empty( nExStyle ), 0, nExStyle ) )
    aAdd( aDlg[ 1 ] , nStyle  )
    aAdd( aDlg[ 1 ] , 0       )
    aAdd( aDlg[ 1 ] , nX      )
@@ -314,14 +314,14 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    aAdd( aDlg[ 1 ] , nH      )
    aAdd( aDlg[ 1 ] , 0       )
    aAdd( aDlg[ 1 ] , 0       )
-   aAdd( aDlg[ 1 ] , If( ValType( cTitle ) == "C", cTitle, "" ) )
+   aAdd( aDlg[ 1 ] , iif( ValType( cTitle ) == "C", cTitle, "" ) )
 
    //IF ( nStyle & DS_SETFONT ) == DS_SETFONT
    if hb_bitAnd( nStyle, DS_SETFONT ) == DS_SETFONT
-      aAdd( aDlg[ 1 ], If( ValType( nPointSize ) == "N", nPointSize, 8               ) )
-      aAdd( aDlg[ 1 ], If( ValType( nWeight    ) == "N", nWeight   , 400             ) )
-      aAdd( aDlg[ 1 ], If( ValType( lItalic    ) == "L", lItalic   , .F.             ) )
-      aAdd( aDlg[ 1 ], If( ValType( cFaceName  ) == "C", cFaceName , "MS Sans Serif" ) )
+      aAdd( aDlg[ 1 ], iif( ValType( nPointSize ) == "N", nPointSize, 8               ) )
+      aAdd( aDlg[ 1 ], iif( ValType( nWeight    ) == "N", nWeight   , 400             ) )
+      aAdd( aDlg[ 1 ], iif( ValType( lItalic    ) == "L", lItalic   , .F.             ) )
+      aAdd( aDlg[ 1 ], iif( ValType( cFaceName  ) == "C", cFaceName , "MS Sans Serif" ) )
    EndIf
 
    Return( aDlg )
@@ -368,16 +368,16 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
 
    aDlg[ 1,4 ]++      // item count
 
-   aAdd( aDlg[  2 ] , If( ValType( nHelpId  ) == "N", nHelpId , 0                     ) )
-   aAdd( aDlg[  3 ] , If( ValType( nExStyle ) == "N", nExStyle, 0                     ) )
-   aAdd( aDlg[  4 ] , If( ValType( nStyle   ) == "N", nStyle  , WS_CHILD + WS_VISIBLE ) )
+   aAdd( aDlg[  2 ] , iif( ValType( nHelpId  ) == "N", nHelpId , 0                     ) )
+   aAdd( aDlg[  3 ] , iif( ValType( nExStyle ) == "N", nExStyle, 0                     ) )
+   aAdd( aDlg[  4 ] , iif( ValType( nStyle   ) == "N", nStyle  , WS_CHILD + WS_VISIBLE ) )
    aAdd( aDlg[  5 ] , nX         )
    aAdd( aDlg[  6 ] , nY         )
    aAdd( aDlg[  7 ] , nW         )
    aAdd( aDlg[  8 ] , nH         )
    aAdd( aDlg[  9 ] , cnId       )
    aAdd( aDlg[ 10 ] , cnDlgClass )
-   aAdd( aDlg[ 11 ] , If( ValType( cText ) <> "C", If( ValType( cText ) == "N", cText, "" ) , cText ) )
+   aAdd( aDlg[ 11 ] , iif( ISCHARACTER( cText ), cText, iif( ISNUMBER( cText ), cText, "" ) ) )
    aAdd( aDlg[ 12 ] , 0 )
 
    Return aDlg
@@ -393,7 +393,7 @@ Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
 
    hDlg     := 0
    cType    := Valtype( acnDlg )
-   nDlgMode := if( cType == 'C', 0, if( cType == 'N', 1, 2 ) )
+   nDlgMode := iif( cType == 'C', 0, iif( cType == 'N', 1, 2 ) )
 
    if cType == 'A'
       xTemplate := Wvt__MakeDlgTemplate( acnDlg[ 1 ] , acnDlg[  2 ] , acnDlg[  3 ] , acnDlg[  4 ] , ;
@@ -435,7 +435,7 @@ Function Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
    endif
 
    cType    := Valtype( acnDlg )
-   nDlgMode := if( cType == 'C', 0, if( cType == 'N', 1, 2 ) )
+   nDlgMode := iif( cType == 'C', 0, iif( cType == 'N', 1, 2 ) )
 
    if cType == 'A'
       xTemplate := Wvt__MakeDlgTemplate( acnDlg[ 1 ] , acnDlg[  2 ] , acnDlg[  3 ] , acnDlg[  4 ] , ;

@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-26 11:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbver.c
+     * Changed version information layout:
+       "Harbour a build x.y-z" -> "Harbour x.y.za" format.
+
+   * contrib/gtwvg/gtwvg.c
+     ! Fixed compile error. (commented line, please check this code)
+       [ pGT->iLocalGTHandle = pWVT->iHandle; ]
+
+   * contrib/gtwvg/wvtutils.c
+   * contrib/gtwvg/wvtcore.c
+   * contrib/gtwvg/wvtpaint.prg
+   * contrib/gtwvg/wvtclass.prg
+     % hb_arraySet( ..., hb_itemPut*() ) -> hb_arraySet*( ... )
+     * if() -> iif()
+     * != on strings to IS*() macros.
+     ; TODO: I'd suggest to change "WVT" references to "WVG" 
+             to avoid confusion with core WVT. At least in those places
+             which wouldn't break compatibility (like source names).
+             If there is no objection I can do it.
+
+   * source/rtl/gtwvt/gtwvt.c
+     * Minor cleanup.
+
 2008-06-25 15:55 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/contrib/gtwvg/gtwvg.c
     * Some futuristic additions and synchronization with GTWVT.

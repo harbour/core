@@ -671,9 +671,6 @@ static void hb_gt_wvt_AddCharToInputQueue( PHB_GTWVT pWVT, int iKey )
       iPos = 0;
    if( iPos != pWVT->keyPointerOut )
       pWVT->keyPointerIn = iPos;
-
-   /* Pritpal Bedi - 06 Jun 2008 */
-   //hb_gt_wvt_FireEvent( pWVT, HB_GTE_INKEY, iKey, 0 );
 }
 
 static BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )

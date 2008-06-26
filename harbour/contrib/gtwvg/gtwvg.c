@@ -2941,7 +2941,7 @@ static int hb_gt_wvt_wnd_Create( PHB_GT pGT, int iTop, int iLeft, int iBottom, i
 
    HB_GTLOCAL( pGT ) = ( void * ) pWVT;
 
-   pGT->iLocalGTHandle = pWVT->iHandle;
+// pGT->iLocalGTHandle = pWVT->iHandle;
 
    pWVT->ROWS = iBottom - iTop + 1;
    pWVT->COLS = iRight - iLeft + 1;

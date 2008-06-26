@@ -1903,14 +1903,13 @@ BOOL wvt_Array2Rect(PHB_ITEM aRect, RECT *rc )
 
 PHB_ITEM wvt_Rect2Array( RECT *rc  )
 {
-   PHB_ITEM aRect   = hb_itemArrayNew( 4 );
-   PHB_ITEM element = hb_itemNew( NULL );
+   PHB_ITEM aRect = hb_itemArrayNew( 4 );
 
-   hb_arraySet(aRect, 1, hb_itemPutNL( element, rc->left   ));
-   hb_arraySet(aRect, 2, hb_itemPutNL( element, rc->top    ));
-   hb_arraySet(aRect, 3, hb_itemPutNL( element, rc->right  ));
-   hb_arraySet(aRect, 4, hb_itemPutNL( element, rc->bottom ));
-   hb_itemRelease(element);
+   hb_arraySetNL(aRect, 1, rc->left   );
+   hb_arraySetNL(aRect, 2, rc->top    );
+   hb_arraySetNL(aRect, 3, rc->right  );
+   hb_arraySetNL(aRect, 4, rc->bottom );
+
    return aRect;
 }
 
@@ -1931,11 +1930,10 @@ BOOL wvt_Array2Point(PHB_ITEM aPoint, POINT *pt )
 PHB_ITEM wvt_Point2Array( POINT *pt  )
 {
    PHB_ITEM aPoint = hb_itemArrayNew(2);
-   PHB_ITEM element = hb_itemNew(NULL);
 
-   hb_arraySet(aPoint, 1, hb_itemPutNL(element, pt->x));
-   hb_arraySet(aPoint, 2, hb_itemPutNL(element, pt->y));
-   hb_itemRelease(element);
+   hb_arraySetNL(aPoint, 1, pt->x );
+   hb_arraySetNL(aPoint, 2, pt->y );
+
    return aPoint;
 }
 
@@ -1956,11 +1954,10 @@ BOOL wvt_Array2Size(PHB_ITEM aSize, SIZE *siz )
 PHB_ITEM wvt_Size2Array( SIZE *siz  )
 {
    PHB_ITEM aSize   = hb_itemArrayNew(2);
-   PHB_ITEM element = hb_itemNew(NULL);
 
-   hb_arraySet(aSize, 1, hb_itemPutNL(element, siz->cx));
-   hb_arraySet(aSize, 2, hb_itemPutNL(element, siz->cy));
-   hb_itemRelease(element);
+   hb_arraySetNL(aSize, 1, siz->cx);
+   hb_arraySetNL(aSize, 2, siz->cy);
+
    return aSize;
 }
 
@@ -1968,36 +1965,26 @@ PHB_ITEM wvt_Size2Array( SIZE *siz  )
 
 void  wvt_Rect2ArrayEx( RECT *rc ,PHB_ITEM aRect )
 {
-   PHB_ITEM element = hb_itemNew(NULL);
-
-   hb_arraySet(aRect, 1, hb_itemPutNL(element, rc->left));
-   hb_arraySet(aRect, 2, hb_itemPutNL(element, rc->top));
-   hb_arraySet(aRect, 3, hb_itemPutNL(element, rc->right));
-   hb_arraySet(aRect, 4, hb_itemPutNL(element, rc->bottom));
-   hb_itemRelease(element);
+   hb_arraySetNL(aRect, 1, rc->left);
+   hb_arraySetNL(aRect, 2, rc->top);
+   hb_arraySetNL(aRect, 3, rc->right);
+   hb_arraySetNL(aRect, 4, rc->bottom);
 }
 
 //----------------------------------------------------------------------//
 
 void wvt_Point2ArrayEx( POINT *pt, PHB_ITEM aPoint)
 {
-
-   PHB_ITEM element = hb_itemNew(NULL);
-
-   hb_arraySet(aPoint, 1, hb_itemPutNL(element, pt->x));
-   hb_arraySet(aPoint, 2, hb_itemPutNL(element, pt->y));
-   hb_itemRelease(element);
+   hb_arraySetNL(aPoint, 1, pt->x);
+   hb_arraySetNL(aPoint, 2, pt->y);
 }
 
 //----------------------------------------------------------------------//
 
 void wvt_Size2ArrayEx( SIZE *siz, PHB_ITEM aSize )
 {
-   PHB_ITEM element = hb_itemNew(NULL);
-
-   hb_arraySet(aSize, 1, hb_itemPutNL(element, siz->cx));
-   hb_arraySet(aSize, 2, hb_itemPutNL(element, siz->cy));
-   hb_itemRelease(element);
+   hb_arraySetNL(aSize, 1, siz->cx);
+   hb_arraySetNL(aSize, 2, siz->cy);
 }
 
 //----------------------------------------------------------------------//
