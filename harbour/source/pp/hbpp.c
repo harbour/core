@@ -367,7 +367,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
 
       if( szLastEntry )
       {
-         pszEscaped = hb_pp_escapeString( szChangeLogID );
+         pszEscaped = hb_pp_escapeString( szLastEntry );
          fprintf( fout, "\n#define HB_VER_LENTRY   \"%s\"\n", pszEscaped );
          hb_xfree( pszEscaped );
       }

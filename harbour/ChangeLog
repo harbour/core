@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-26 15:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/pp/hbpp.c
+     ! Fixed typo in recent modification.
+       Thanks to Grigory Filatov for spotting it.
+
 2008-06-26 12:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmysql/mysql.c
    * contrib/hbmysql/tmysql.prg
