@@ -142,32 +142,31 @@ BOOL hb_gt_w32_getClipboard( UINT uFormat, char ** pszClipData, ULONG *pulLen )
          {
             switch( uFormat )
             {
-            case CF_UNICODETEXT:
-               *pulLen = wcslen( ( LPWSTR ) lptstr );
-               if( *pulLen )
-                  *pszClipData = hb_wctomb( ( LPWSTR ) lptstr );
-               break;
-            case CF_OEMTEXT:
-            case CF_TEXT:
-               *pulLen = strlen( lptstr );
-               if( *pulLen )
-               {
-                  *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
-                  memcpy( *pszClipData, lptstr, *pulLen );
-                  ( *pszClipData )[ *pulLen ] = '\0';
-               }
-               break;
-            default:
-               *pulLen = GlobalSize( hglb );
-               if( *pulLen )
-               {
-                  *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
-                  memcpy( *pszClipData, lptstr, *pulLen );
-                  ( *pszClipData )[ *pulLen ] = '\0';
-               }
-               break;
+               case CF_UNICODETEXT:
+                  *pulLen = wcslen( ( LPWSTR ) lptstr );
+                  if( *pulLen )
+                     *pszClipData = hb_wctomb( ( LPWSTR ) lptstr );
+                  break;
+               case CF_OEMTEXT:
+               case CF_TEXT:
+                  *pulLen = strlen( ( char * ) lptstr );
+                  if( *pulLen )
+                  {
+                     *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
+                     memcpy( *pszClipData, lptstr, *pulLen );
+                     ( *pszClipData )[ *pulLen ] = '\0';
+                  }
+                  break;
+               default:
+                  *pulLen = GlobalSize( hglb );
+                  if( *pulLen )
+                  {
+                     *pszClipData = ( char * ) hb_xgrab( *pulLen + 1 );
+                     memcpy( *pszClipData, lptstr, *pulLen );
+                     ( *pszClipData )[ *pulLen ] = '\0';
+                  }
+                  break;
             }
-
             GlobalUnlock( hglb );
          }
       }

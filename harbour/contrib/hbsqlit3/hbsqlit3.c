@@ -20,13 +20,6 @@
  *
  */
 
-#include "hbvm.h"
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
-#include "hbapifs.h"
-#include "hbver.h"
-
 /*
    TODO?: Formatted String Printing Functions
 
@@ -64,6 +57,13 @@
 #elif defined( _MSC_VER )
    #pragma warning( default: 4018 4244 )
 #endif
+
+#include "hbvm.h"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbapifs.h"
+#include "hbver.h"
 
 #ifdef NODLL
 extern char * sqlite3_temp_directory;

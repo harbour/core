@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-26 11:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmsql/msql.c
+    ! changed msqlGetErrMsg( NULL ) => msqlErrMsg
+
+  * harbour/contrib/hbsqlit3/hbsqlit3.c
+    ! include harbour header files after sqlite3.c which needs some
+      extra sets for system header files
+
+  * harbour/contrib/hbgf/hbgfw32/win32.c
+    ! removed wrongly used TEXT( hb_parc( 1 ) ) macro. The TEXT()
+      macro can be used _ONLY_ for literal strings.
+
+  * harbour/contrib/hbgf/hbgfgtk/Makefile
+  * harbour/contrib/hbgf/hbgfgtk/dispatch.c
+  * harbour/contrib/hbgf/hbgfgtk/msginfo.c
+  * harbour/contrib/hbgf/hbgfgtk/form.prg
+  * harbour/contrib/hbgf/hbgfgtk/creawin.c
+    ! fixed compilation in Linux
+
+  * harbour/source/rtl/gtclip.c
+    * pacified warning
+
 2008-06-26 11:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/common/hbver.c
      * Changed version information layout:

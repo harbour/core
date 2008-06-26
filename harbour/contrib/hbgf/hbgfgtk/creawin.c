@@ -62,7 +62,9 @@
 
 static gint DeleteEventWindowCallback( GtkWidget *Widget, GdkEventAny *Event, gpointer Data )
 {
-    return( CallHarbour( Widget, Widget, HGF_EV_CLOSE, GPOINTER_TO_INT( Data ), ( PHB_ITEM )NULL ) );
+    HB_SYMBOL_UNUSED( Event );
+
+    return( CallHarbour( Widget, Widget, HGF_EV_CLOSE, GPOINTER_TO_INT( Data ), ( PHB_ITEM ) NULL ) );
 }
 
 /* ********************************************************************* */

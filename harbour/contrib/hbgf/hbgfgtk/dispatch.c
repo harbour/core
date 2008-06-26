@@ -66,7 +66,7 @@ glong CallHarbour( GtkWidget *hWnd, GtkWidget *Widget, glong Command, gint ObjId
 
     if( pDynSym )
     {
-        hb_vmPushSymbol( pDynSym->pSymbol );
+        hb_vmPushDynSym( pDynSym );
         hb_vmPushNil();
         hb_vmPushLong( GPOINTER_TO_UINT( hWnd )  );
         hb_vmPushLong( GPOINTER_TO_UINT( Widget )  );

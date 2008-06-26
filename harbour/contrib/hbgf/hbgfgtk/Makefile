@@ -24,6 +24,9 @@ PRG_SOURCES=\
 
 LIBNAME=hbgfgtk
 
+C_USR += `pkg-config --cflags gtk+-2.0`
+
+
 include $(TOP)$(ROOT)config/lib.cf
 
 endif

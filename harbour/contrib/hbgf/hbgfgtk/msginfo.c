@@ -62,6 +62,8 @@
 
 static void GtkMsgInfoCallback( GtkWidget *Widget, gpointer Data )
 {
+    HB_SYMBOL_UNUSED( Widget );
+
     if( GTK_IS_WIDGET( ( GtkWidget * ) Data ) )
         gtk_widget_destroy( ( GtkWidget * ) Data );
 

@@ -111,6 +111,9 @@ RETURN Self
 METHOD Command( nCmd, nID, aEventData ) CLASS HBForm
     LOCAL oMenuItem
 
+    HB_SYMBOL_UNUSED( nCmd )
+    HB_SYMBOL_UNUSED( aEventData )
+
     IF ::Menu != nil
         IF ( oMenuItem := ::Menu:FindItem( nId ) ) != nil
             IF oMenuItem:OnClick != nil
@@ -125,6 +128,9 @@ RETURN nil
 METHOD CtrlCommand( nCmd, nID, aEventData ) CLASS HBForm
     LOCAL nAt, oControl
 
+    HB_SYMBOL_UNUSED( nCmd )
+    HB_SYMBOL_UNUSED( aEventData )
+
     IF ( nAt := AScan( ::aControls, { | o | o:nID == nID } ) ) != 0
         oControl := ::aControls[ nAt ]
         IF oControl:OnClick != nil
@@ -137,6 +143,10 @@ RETURN 1
 /* ********************************************************************* */
 
 METHOD LButtonDown( nCmd, nID, aEventData ) CLASS HBForm
+
+   HB_SYMBOL_UNUSED( nCmd )
+   HB_SYMBOL_UNUSED( nID )
+
    IF ::OnClick != nil
        /* NOTE: aEventData[ 1 ] conatins mouse y position   */
        /*       aEventData[ 2 ] conatins mouse x position   */
@@ -202,6 +212,8 @@ RETURN nil
 FUNCTION HB_GUI( hWnd, Widget, nCmd, nID, aEventData )
    LOCAL aReturn := 0
    LOCAL nForm := AScan( aForms, { | oForm | oForm:hWnd[ 1 ] == hWnd } )
+
+   HB_SYMBOL_UNUSED( Widget )
 
    IF nForm != 0
       aReturn := aForms[ nForm ]:HandleEvent( nCmd, nID, aEventData )

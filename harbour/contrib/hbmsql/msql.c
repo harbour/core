@@ -152,7 +152,7 @@ HB_FUNC( MSQLLISTFI ) /* m_result *msqlListFields(int, char *); */
 
 HB_FUNC( MSQLGETERR ) /* char *msqlGetErrMsg(char *); */
 {
-   hb_retc( msqlGetErrMsg( NULL ) );
+   hb_retc( msqlErrMsg );
 }
 
 HB_FUNC( MSQLLISTDB ) /* m_result * msqlListDBs(int); */

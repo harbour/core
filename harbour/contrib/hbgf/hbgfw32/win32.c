@@ -63,7 +63,7 @@ HB_FUNC( WINREGISTERCLASS )
 {
    WNDCLASS     wndclass ;
 
-   wndclass.lpszClassName = TEXT( hb_parc( 1 ) );
+   wndclass.lpszClassName = hb_parc( 1 );
    wndclass.style = CS_OWNDC | CS_VREDRAW | CS_HREDRAW;   // hb_parnl( 2 );
    wndclass.cbClsExtra    = hb_parnl( 3 );
    wndclass.cbWndExtra    = 0;
