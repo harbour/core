@@ -60,6 +60,8 @@
 
 /* ********************************************************************* */
 
+gchar *MultiLineDelimiters = "\n\r";
+
 static void GtkMsgInfoCallback( GtkWidget *Widget, gpointer Data )
 {
     HB_SYMBOL_UNUSED( Widget );
