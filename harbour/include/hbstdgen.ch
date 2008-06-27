@@ -50,20 +50,20 @@
  *
  */
 
-/* include hbsetup.ch to set default build settings */
-#include "hbsetup.ch"
-/* include version macros */
-#ifndef _HB_PRG_LEVEL
-   #define _HB_PRG_LEVEL
-#endif
-#include "hbver.h"
-#undef _HB_PRG_LEVEL
-/* include std.ch to set default rules */
-#include "std.ch"
+#include "hbver.h"     /* include version macros (__HARBOUR__) */
+#include "hbsetup.ch"  /* include hbsetup.ch to set default build settings */
+#include "std.ch"      /* include to set default rules */
 
 /* undefine all rules which are not necessary in default PP tables */
 #undef HB_VER_H_
 #undef HB_SETUP_CH_
+#undef HB_STD_CH_
+
+#undef HB_VER_MAJOR
+#undef HB_VER_MINOR
+#undef HB_VER_REVISION
+#undef HB_VER_STATUS
+#undef HB_VERSION
 
 #undef __DATE__
 #undef __TIME__

@@ -53,7 +53,9 @@
 #ifndef HB_VER_H_
 #define HB_VER_H_
 
-#ifndef _HB_PRG_LEVEL
+#if defined(__HARBOUR__)
+   #undef __HARBOUR__
+#endif
 
 /* NOTE: One of these next three fields can be incremented by the hbverfix program */
 
@@ -62,15 +64,6 @@
 #define HB_VER_REVISION 0        /* Revision number */
 #define HB_VER_STATUS   "RC1"    /* Build status */
 #define HB_VERSION      0x010000 /* Three bytes: Major + Minor + Revision */
-
-#endif
-
-/* #include "hb_verbld.h" */
-
-#if defined(__HARBOUR__)
-   #undef __HARBOUR__
-#endif
-
 #define __HARBOUR__     0x0100   /* Two bytes: Major + Minor. This is recommented for 3rd party .c and .prg level code. */
 
 #endif /* HB_VER_H_ */
