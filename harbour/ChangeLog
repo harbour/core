@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-27 03:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/gtwvg/Makefile
+   * contrib/gtwvg/common.mak
+   - contrib/gtwvg/wvtclass.prg
+   + contrib/gtwvg/wvgclass.prg
+   - contrib/gtwvg/wvtpaint.prg
+   + contrib/gtwvg/wvgpaint.prg
+   - contrib/gtwvg/wvtcore.c
+   + contrib/gtwvg/wvgcore.c
+   - contrib/gtwvg/wvtutils.c
+   + contrib/gtwvg/wvgutils.c
+   * contrib/gtwvg/hbgtwvg.ch
+   * contrib/gtwvg/wvtwin.ch
+     + Added self-guards for headers.
+     ! Added missing SVN header and copyright to hbgtwvg.ch.
+     ! Deleted ISBLOCK() from wvtwin.ch since it's already  
+       #defined in common.ch.
+     * Renamed local source files from wvt*.* -> wvg*.*
+
 2008-06-26 15:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/pp/hbpp.c
      ! Fixed typo in recent modification.

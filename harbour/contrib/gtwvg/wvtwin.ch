@@ -49,6 +49,10 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
+#ifndef _WVGWIN_CH
+#define _WVGWIN_CH
+
 //-------------------------------------------------------------------//
 //
 //                         GTWVT Specific
@@ -191,8 +195,6 @@
 #define WVT_MENU_MENUOBJ                 4
 
 //-------------------------------------------------------------------//
-
-#define ISBLOCK( x )      valtype( x ) == 'B'
 
 #define RGB( nR,nG,nB )   ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
 
@@ -1233,3 +1235,5 @@
 #define OFN_FORCESHOWHIDDEN       268435456  // Show All files including System and hidden files
 
 //----------------------------------------------------------------------//
+
+#endif

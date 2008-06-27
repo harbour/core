@@ -8,15 +8,15 @@ ROOT = ../../
 
 C_SOURCES=\
 	gtwvg.c \
-	wvtcore.c \
-	wvtutils.c \
+	wvgcore.c \
+	wvgutils.c \
 
 C_HEADERS=\
 	gtwvg.h \
 
 PRG_SOURCES=\
-	wvtclass.prg \
-	wvtpaint.prg \
+	wvgclass.prg \
+	wvgpaint.prg \
 
 PRG_HEADERS=\
 	hbgtwvg.ch \
