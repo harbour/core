@@ -429,47 +429,47 @@ HB_FUNC( GETWNDPROC )
   switch ( hb_parni(1) )
   {
     case 10:
-      hb_retnl( (ULONG) __WndProc10 ) ;
+      hb_retptr( __WndProc10 ) ;
       return ;
 
     case 9:
-      hb_retnl( (ULONG) __WndProc9 ) ;
+      hb_retptr( __WndProc9 ) ;
       return ;
 
     case 8:
-      hb_retnl( (ULONG) __WndProc8 ) ;
+      hb_retptr( __WndProc8 ) ;
       return ;
 
     case 7:
-      hb_retnl( (ULONG) __WndProc7 ) ;
+      hb_retptr( __WndProc7 ) ;
       return ;
 
     case 6:
-      hb_retnl( (ULONG) __WndProc6 ) ;
+      hb_retptr( __WndProc6 ) ;
       return ;
 
     case 5:
-      hb_retnl( (ULONG) __WndProc5 ) ;
+      hb_retptr( __WndProc5 ) ;
       return ;
 
     case 4:
-      hb_retnl( (ULONG) __WndProc4 ) ;
+      hb_retptr( __WndProc4 ) ;
       return ;
 
     case 3:
-      hb_retnl( (ULONG) __WndProc3 ) ;
+      hb_retptr( __WndProc3 ) ;
       return ;
 
     case 2:
-      hb_retnl( (ULONG) __WndProc2 ) ;
+      hb_retptr( __WndProc2 ) ;
       return ;
 
     case 1:
-      hb_retnl( (ULONG) __WndProc ) ;
+      hb_retptr( __WndProc ) ;
       return ;
 
     default:
-      hb_retnl( (ULONG) 0 ) ;
+      hb_retptr( NULL ) ;
       return ;
 
   }
@@ -481,7 +481,7 @@ HB_FUNC( GETWNDPROC )
 
 HB_FUNC( _GETDLGPROC )
 {
-    hb_retnl( (ULONG) __DlgProc ) ;
+    hb_retptr( __DlgProc ) ;
 }
 
 //-----------------------------------------------------------------------------
@@ -523,7 +523,7 @@ HB_FUNC( _DIALOGBOX )
   hb_retni( DialogBox( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) )  ,
                        (hb_parinfo(2)==HB_IT_STRING ? hb_parc(2) : MAKEINTRESOURCE( (WORD) hb_parni(2))) ,
                        (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) )        ,
-                       (DLGPROC) hb_parnl(4)
+                       (DLGPROC) hb_parptr(4)
                      ));
 
 }
@@ -537,7 +537,7 @@ HB_FUNC( _DIALOGBOXINDIRECT )
    hb_retni( DialogBoxIndirect( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) )   ,
                                (LPDLGTEMPLATE) hb_parc(2)  ,
                                (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) )        ,
-                               (DLGPROC) hb_parnl(4)
+                               (DLGPROC) hb_parptr(4)
                              ));
 }
 
@@ -550,7 +550,7 @@ HB_FUNC( _CREATEDIALOG )
   hb_retnl( (ULONG) CreateDialog( (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) )  ,
                                   (hb_parinfo(2)==HB_IT_STRING ? hb_parc(2) : MAKEINTRESOURCE( (WORD) hb_parni(2))) ,
                                   (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) )        ,
-                                  (DLGPROC) hb_parnl(4)
+                                  (DLGPROC) hb_parptr(4)
                                 ) );
 }
 
@@ -564,7 +564,7 @@ HB_FUNC( _CREATEDIALOGINDIRECT )
             (ISNIL(1)  ? GetModuleHandle(NULL) : (HINSTANCE) hb_parnl(1) )   ,
             (LPDLGTEMPLATE) hb_parc(2) ,
             (ISNIL(3) ?  NULL : (HWND) hb_parnl(3) )        ,
-            (DLGPROC) hb_parnl(4)
+            (DLGPROC) hb_parptr(4)
           ));
 }
 

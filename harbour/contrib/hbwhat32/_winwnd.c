@@ -192,7 +192,7 @@ HB_FUNC( DEFFRAMEPROC )
 
 HB_FUNC( CALLWINDOWPROC )
 {
-  hb_retnl( CallWindowProc( (WNDPROC) hb_parnl(1), (HWND) hb_parnl(2), hb_parni(3), hb_parnl(4), hb_parnl(5)));
+  hb_retnl( CallWindowProc( (WNDPROC) hb_parptr(1), (HWND) hb_parnl(2), hb_parni(3), hb_parnl(4), hb_parnl(5)));
 }
 
 //-----------------------------------------------------------------------------
@@ -1005,7 +1005,7 @@ HB_FUNC( ADJUSTWINDOWRECTEX )
 
 HB_FUNC( GETWINDOWLONGPTR )
 {
-   hb_retnl( (LONG) GetWindowLongPtr( (HWND) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
+   hb_retptr( ( void * ) GetWindowLongPtr( (HWND) hb_parnl( 1 ), hb_parni( 2 ) ) ) ;
 }
 
 //-----------------------------------------------------------------------------
@@ -1015,7 +1015,7 @@ HB_FUNC( SETWINDOWLONGPTR )
 {
    hb_retnl( (LONG) SetWindowLongPtr( (HWND) hb_parnl( 1 ),
                                       hb_parni( 2 )       ,
-                                      (LONG_PTR) hb_parnl(3)
+                                      ISPOINTER( 3 ) ? (LONG_PTR) hb_parptr( 3 ) : (LONG_PTR) hb_parnl( 3 )
                                     ) ) ;
 }
 

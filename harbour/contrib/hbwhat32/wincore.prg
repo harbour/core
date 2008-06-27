@@ -264,7 +264,7 @@ Function _ProcessMsg( hWnd, nMsg, nwParam, nlParam, nIndex )
    // bypass Windows procedure chain, where applicable
 
    nProc := aProc[ nIndex ]
-   If n > 0
+   If !Empty( n )
       nType := aWindow[ n, 2 ]
       Do While ( i := aScan( aWindow[ n, 3 ] , { | x | nProc == x[ 3 ] } ) ) > 0 // does custom procedure exist ?
          anWM  := aWindow[ n, 3, i, 1 ]
@@ -605,8 +605,8 @@ Function SetProcedure( hWnd, bAction, anWM, oObj, xCargo )
          EndIf
       Next
 
-      If nProc != 0
-         SetWindowLong( hWnd, GWL_WNDPROC, nProc )
+      If !Empty( nProc )
+         SetWindowLongPtr( hWnd, GWL_WNDPROC, nProc )
          If Empty( anWM )
             anWM := { 0 }
          ElseIf ValType( anWM ) == "N"
@@ -643,7 +643,7 @@ Function ResetProcedure( hWnd, nProc )
                aSize( aWindow[ n, 3 ] , 0 )
             EndIf
             If nProc != 0
-               SetWindowLong( hWnd, GWL_WNDPROC, nProc )
+               SetWindowLongPtr( hWnd, GWL_WNDPROC, nProc )
                lRet := .T.
             EndIf
          EndIf
@@ -655,7 +655,7 @@ Function ResetProcedure( hWnd, nProc )
                aDel( aWindow[ n, 3 ] , i )
                aSize( aWindow[ n, 3 ] , Len( aWindow[ n, 3 ] ) - 1 )
             EndDo
-            SetWindowLong( hWnd, GWL_WNDPROC, nProc )
+            SetWindowLongPtr( hWnd, GWL_WNDPROC, nProc )
             lRet := .T.
          EndIf
 
