@@ -299,28 +299,33 @@ static int hb_pp_preprocesfile( PHB_PP_STATE pState, char * szRuleFile )
 /* NOTE: Caller should free the pointer. */
 static char * hb_pp_escapeString( char * szString )
 {
-   int iPos;
-   int iCountBackslash = 0;
-   int iLen = strlen( szString );
-   int iResult;
-   char * szResult;
+   char * szResult, ch;
+   int iLen;
 
-   for( iPos = 0; iPos < iLen; iPos++ )
+   szResult = szString;
+   iLen = 0;
+   do
    {
-      if( szString[ iPos ] == '\\' )
-         ++iCountBackslash;
+      ch = *szResult++;
+      /* NOTE: ? is escaped to avoid conflicts with trigraph sequences which
+       *       are part of ANSI C standard
+       */
+      if( ch == '"' || ch == '\\' || ch == '?' )
+         ++iLen;
+      ++iLen;
    }
+   while( ch );
 
-   szResult = ( char * ) hb_xgrab( iLen + iCountBackslash + 1 );
-
-   for( iPos = 0, iResult = 0; iPos < iLen; iPos++ )
+   szResult = ( char * ) hb_xgrab( iLen );
+   iLen = 0;
+   do
    {
-      szResult[ iResult++ ] = szString[ iPos ];
-      if( szString[ iPos ] == '\\' )
-         szResult[ iResult++ ] = '\\';
+      ch = *szString++;
+      if( ch == '"' || ch == '\\' || ch == '?' )
+         szResult[ iLen++ ] = '\\';
+      szResult[ iLen++ ] = ch;
    }
-
-   szResult[ iResult ] = '\0';
+   while( ch );
 
    return szResult;
 }

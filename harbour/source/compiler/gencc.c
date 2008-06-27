@@ -56,7 +56,7 @@ void hb_compGenCString( FILE * yyc, BYTE * pText, ULONG ulLen )
       BYTE uchr = ( BYTE ) pText[ ulPos ];
       /*
        * NOTE: After optimization some CHR(n) can be converted
-       *    into a string containing nonprintable characters.
+       *       into a string containing nonprintable characters.
        *
        * TODO: add switch to use hexadecimal format "%#04x"
        *

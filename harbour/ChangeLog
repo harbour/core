@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-27 14:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    ! fixed GPF in expressions like:
+         #command CMD => #translate abc => \
+      problem located by Ron in xHarbour
+
+  * harbour/source/pp/hbpp.c
+    * extended string escaping to also quote " and ? (possible trigraph)
+
+  * harbour/source/compiler/gencc.c
+    ; comment formatting
+
 2008-06-27 14:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/Makefile
      * After this change, HB_CONTRIBLIBS will _override_ the 
@@ -1682,7 +1694,7 @@
       * Adjusted maximize operation - now window is centered on the screen.
       ; TODO - Find a better solution to 
         enabling and disabling of resizing feature at run time.
-	
+
 2008-06-11 04:10 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbexprop.h
   * harbour/include/hbexprb.c
