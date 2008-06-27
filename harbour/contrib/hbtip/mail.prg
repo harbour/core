@@ -336,12 +336,12 @@ METHOD ToString() CLASS TipMail
 
    FOR i := 1 TO Len( ::hHeaders )
       cElem := Lower(hb_HKeyAt( ::hHeaders, i ))
-      IF !( cElem == "return-path" ) .and. ;
+      IF !( cElem == "return-path" ) .and.;
          !( cElem == "delivered-to" ) .and.;
-         !( cElem == "date" ) .and. ;
+         !( cElem == "date" ) .and.;
          !( cElem == "from" ) .and.;
-         !( cElem == "to" ) .and. ;
-         !( cElem == "subject" ) .and. ;
+         !( cElem == "to" ) .and.;
+         !( cElem == "subject" ) .and.;
          !( cElem == "mime-version" )
          cRet += hb_HKeyAt( ::hHeaders, i ) + ": " +;
                  hb_HValueAt( ::hHeaders, i ) + e"\r\n"
@@ -662,7 +662,7 @@ RETURN StrTran( ::getFieldOption( "Content-Type", "name" ), '"', "" )
 
 
 METHOD isMultiPart CLASS TipMail
-RETURN "multipart/" $ Lower( ::GetFieldPart("Content-Type"))
+RETURN "multipart/" $ Lower( ::GetFieldPart("Content-Type") )
 
 
 METHOD getMultiParts( aParts ) CLASS TipMail

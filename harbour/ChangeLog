@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-27 17:13 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
+  * contrib/hbtip/client.prg
+  * contrib/hbtip/ftpcln.prg
+  * contrib/hbtip/httpcln.prg
+  * contrib/hbtip/mail.prg
+  * contrib/hbtip/sendmail.prg
+    + Added methods setget to interrogate buffer size send/recive
+	   METHOD InetRcvBufSize( SocketCon, nSizeBuff )
+	   METHOD InetSndBufSize( SocketCon, nSizeBuff )
+    + Added data members to assign default buffer sizes
+	   DATA nDefaultRcvBuffSize
+	   DATA nDefaultSndBuffSize
+    + Asigned default buffer size to 64kb only for FTP transfer, previous to open sockets
+           ::nDefaultSndBuffSize := 65536
+           ::nDefaultRcvBuffSize := 65536
+    * Fixed port ftp protocol.
+  * source/rtl/hbinet.c
+    * now works with default system buffer, for example 8kb at W2000. instead of harcoded 1400
+
 2008-06-27 17:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbgf/hbgfgtk/msginfo.c
      ! Blind fix for missing MultiLineDelimiters definition.

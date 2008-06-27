@@ -106,8 +106,6 @@
       #include <errno.h>
    #endif
 
-   #define HB_SENDRECV_BUFFER_SIZE         1400
-
    typedef struct _HB_SOCKET_STRUCT
    {
        HB_SOCKET_T com;
@@ -118,6 +116,8 @@
        int timeout;
        int timelimit;
        PHB_ITEM caPeriodic;
+       int iSndBufSize;
+       int iRcvBufSize;
    } HB_SOCKET_STRUCT;
 
    #define HB_PARSOCKET( n )     ( ( HB_SOCKET_STRUCT * ) hb_parptrGC( hb_inetSocketFinalize, n ) )
@@ -187,6 +187,9 @@
    #include <sys/socket.h>
    #include <sys/select.h>
    #include <sys/ioctl.h>
+#endif
+
+#if defined( HB_OS_OS2 ) || defined( HB_OS_WIN_32 )
    /* NET_SIZE_T exists because of shortsightedness on the POSIX committee.  BSD
     * systems used "int *" as the parameter to accept(), getsockname(),
     * getpeername() et al.  Consequently many unixes took an int * for that
@@ -456,6 +459,32 @@ static int hb_socketConnect( HB_SOCKET_STRUCT *Socket )
          else
          {
             HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
+         }
+
+         /* 
+         * Read real buffer sizes from socket
+         */
+         {
+            int value;
+            socklen_t len = sizeof(value);
+
+            if ( getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, (char *) &value, &len ) != SOCKET_ERROR )
+            {
+                Socket->iSndBufSize = value;
+                if (getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, (char *) &value, &len ) != SOCKET_ERROR )
+                {
+                    Socket->iRcvBufSize = value;
+                }
+                else
+                {
+                    Socket->iRcvBufSize = 1400;
+                }
+            }
+            else
+            {
+                Socket->iSndBufSize = 1400;
+                Socket->iRcvBufSize = 1400;
+            }
          }
       }
    }
@@ -765,6 +794,67 @@ HB_FUNC( HB_INETCLEARPERIODCALLBACK )
    }
 }
 
+HB_FUNC( HB_INETGETSNDBUFSIZE )
+{
+   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
+   int value;
+   socklen_t len = sizeof( value );
+
+   if( Socket == NULL )
+   {
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETGETSNDBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
+   }
+
+   getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, (char *) &value, &len );
+   Socket->iSndBufSize = value;
+   hb_retni( value );
+}
+
+HB_FUNC( HB_INETGETRCVBUFSIZE )
+{
+   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
+   int value;
+   socklen_t len = sizeof( value );
+
+   if( Socket == NULL )
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETGETRCVBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
+
+   getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, (char *) &value, &len );
+   Socket->iRcvBufSize = value;
+   hb_retni( value );
+}
+
+HB_FUNC( HB_INETSETSNDBUFSIZE )
+{
+   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
+   int value;
+
+   if( Socket == NULL )
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETSETSNDBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
+
+   value = hb_parni( 2 );
+   setsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, (char *) &value, sizeof( value ) );
+   Socket->iSndBufSize = value;
+   hb_retni( value );
+}
+
+HB_FUNC( HB_INETSETRCVBUFSIZE )
+{
+   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
+   int value;
+
+   if( Socket == NULL )
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETSETRCVBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
+
+   value = hb_parni( 2 );
+   setsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, (char *) &value, sizeof( value ) );
+   Socket->iRcvBufSize = value;
+   hb_retni( value );
+}
+
+
+
+
 /********************************************************************
 * TCP receive and send functions
 ***/
@@ -805,9 +895,13 @@ static void s_inetRecvInternal( int iMode )
    do
    {
       if( iMode == 1 )
-         iBufferLen = HB_SENDRECV_BUFFER_SIZE > iMaxLen - iReceived ? iMaxLen - iReceived : HB_SENDRECV_BUFFER_SIZE;
+      {
+         iBufferLen = ( Socket->iRcvBufSize > iMaxLen - iReceived ) ? iMaxLen - iReceived : Socket->iRcvBufSize;
+      }
       else
+      {
          iBufferLen = iMaxLen;
+      }
 
       if( hb_selectReadSocket( Socket ) )
       {
@@ -1057,7 +1151,7 @@ HB_FUNC( HB_INETRECVENDBLOCK )
    BOOL bProtoFound;
 
 
-   if( Socket == NULL  )
+   if( Socket == NULL )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
@@ -1302,9 +1396,13 @@ static void s_inetSendInternal( int iMode )
    while( iSent < iSend )
    {
       if( iMode == 1 )
-         iBufferLen = HB_SENDRECV_BUFFER_SIZE > iSend - iSent ? iSend - iSent : HB_SENDRECV_BUFFER_SIZE;
+      {
+         iBufferLen = Socket->iSndBufSize > iSend - iSent ? iSend - iSent : Socket->iSndBufSize;
+      }
       else
+      {
          iBufferLen = iSend;
+      }
 
       iLen = 0;
       if( hb_selectWriteSocket( Socket ) )

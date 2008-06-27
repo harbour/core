@@ -8,6 +8,20 @@
    2002-12-01 23:12 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-27 17:13 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
+  * client.prg
+    + Added methods setget to interrogate buffer size send/recive
+	   METHOD InetRcvBufSize( SocketCon, nSizeBuff )
+	   METHOD InetSndBufSize( SocketCon, nSizeBuff )
+    + Added data members to assign default buffer sizes
+	   DATA nDefaultRcvBuffSize
+	   DATA nDefaultSndBuffSize
+  * ftpcln.prg
+    + Asigned default buffer size to 64kb only for FTP transfer, previous to open sockets
+           ::nDefaultSndBuffSize := 65536
+           ::nDefaultRcvBuffSize := 65536
+
+
 2007-05-20 01:00 UTC+0100 Hannes Ziegler <hz@knowleXbase.com>
     * source\tip\thtml.prg
 

@@ -76,10 +76,13 @@
 #include "fileio.ch"
 #include "tip.ch"
 #include "common.ch"
+
+#DEFINE RCV_BUF_SIZE Int( ::InetRcvBufSize( ::SocketCon ) / 2 )
+#DEFINE SND_BUF_SIZE Int( ::InetSndBufSize( ::SocketCon ) / 2 )
+
 /**
 * Inet Client class
 */
-
 CLASS tIPClient
 
    CLASSDATA   bInitSocks  INIT .F.
@@ -90,6 +93,9 @@ CLASS tIPClient
    DATA SocketCon
    Data lTrace
    Data nHandle
+   
+   DATA nDefaultRcvBuffSize
+   DATA nDefaultSndBuffSize
 
    /* Input stream length */
    DATA nLength
@@ -130,6 +136,9 @@ CLASS tIPClient
    METHOD lastErrorCode() INLINE ::nLastError
    METHOD lastErrorMessage(SocketCon) INLINE ::INetErrorDesc(SocketCon)
 
+   METHOD InetRcvBufSize( SocketCon, nSizeBuff ) 
+   METHOD InetSndBufSize( SocketCon, nSizeBuff ) 
+
    PROTECTED:
    DATA nLastError INIT 0
 
@@ -138,11 +147,11 @@ CLASS tIPClient
    METHOD InetRecvLine( SocketCon, nLen, size )
    METHOD InetRecvAll( SocketCon, cStr1, len )
    METHOD InetCount( SocketCon )
-   METHOD InetSendAll( SocketCon,  cData, nLen )
+   METHOD InetSendAll( SocketCon, cData, nLen )
    METHOD InetErrorCode(SocketCon)
    METHOD InetErrorDesc(SocketCon)
    METHOD InetConnect( cServer, nPort, SocketCon )
-
+   
    METHOD Log()
 
 ENDCLASS
@@ -262,20 +271,20 @@ METHOD Read( nLen ) CLASS tIPClient
 
    IF Empty( nLen ) .or. nLen < 0
       // read till end of stream
-      cStr1 := Space( 1024 )
+      cStr1 := Space( RCV_BUF_SIZE )
       cStr0 := ""
-      ::nLastRead := ::InetRecv( ::SocketCon, @cStr1, 1024 )
+      ::nLastRead := ::InetRecv( ::SocketCon, @cStr1, RCV_BUF_SIZE )
       DO WHILE ::nLastRead > 0
          ::nRead += ::nLastRead
          cStr0 += Substr( cStr1, 1, ::nLastRead )
-         ::nLastRead := ::InetRecv( ::SocketCon, @cStr1, 1024 )
+         ::nLastRead := ::InetRecv( ::SocketCon, @cStr1, RCV_BUF_SIZE )
       ENDDO
       ::bEof := .T.
    ELSE
       // read an amount of data
       cStr0 := Space( nLen )
 
-      // S.R. if len of file is less than 1024 HB_InetRecvAll return 0
+      // S.R. if len of file is less than RCV_BUF_SIZE HB_InetRecvAll return 0
       //      ::nLastRead := HB_InetRecvAll( ::SocketCon, @cStr0, nLen )
 
       ::InetRecvAll( ::SocketCon, @cStr0, nLen )
@@ -316,7 +325,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
    ::nStatus := 1
 
    DO WHILE ::InetErrorCode( ::SocketCon ) == 0 .and. .not. ::bEof
-      cData := ::Read( 1024 )
+      cData := ::Read( RCV_BUF_SIZE )
       IF cData == NIL
          IF nFout != NIL
             Fclose( nFout )
@@ -361,7 +370,7 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
    LOCAL nFin
    LOCAL cData
    LOCAL nLen
-   LOCAL nSize, nSent
+   LOCAL nSize, nSent, nBufSize
 
    ::nWrite  := 0
    ::nStatus := 0
@@ -372,6 +381,7 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
    nSize := FSeek( nFin, 0, 2 )
    FSeek( nFin, 0 )
 
+   nBufSize := SND_BUF_SIZE
 
    // allow initialization of the gauge
    nSent := 0
@@ -380,9 +390,8 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
    ENDIF
 
    ::nStatus := 1
-   cData := Space( 1024 )
-   nLen := Fread( nFin, @cData, 1024 )
-
+   cData := Space( nBufSize )
+   nLen := Fread( nFin, @cData, nBufSize )
    DO WHILE nLen > 0
       IF ::Write( @cData, nLen ) != nLen
          Fclose( nFin )
@@ -392,7 +401,7 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
       IF ! Empty( ::exGauge )
          HB_ExecFromArray( ::exGauge, {nSent, nSize, Self} )
       ENDIF
-      nLen := Fread( nFin, @cData, 1024 )
+      nLen := Fread( nFin, @cData, nBufSize )
    ENDDO
 
    // it may happen that the file has lenght 0
@@ -449,9 +458,7 @@ METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
    nRet := HB_InetSendAll( SocketCon, cData, nLen )
 
    if ::lTrace
-
       ::Log( SocketCon, nlen, cData, nRet )
-
    endif
 
 Return nRet
@@ -465,9 +472,7 @@ METHOD InetCount( SocketCon ) CLASS tIPClient
    nRet := HB_InetCount( SocketCon )
 
    if ::lTrace
-
       ::Log( SocketCon, nRet )
-
    endif
 
 Return nRet
@@ -555,6 +560,14 @@ METHOD InetConnect( cServer, nPort, SocketCon ) CLASS tIPClient
 
    HB_InetConnect( cServer, nPort, SocketCon )
 
+   IF ! Empty( ::nDefaultSndBuffSize )
+      ::InetSndBufSize( SocketCon, ::nDefaultSndBuffSize )
+   ENDIF
+   
+   IF ! Empty( ::nDefaultRcvBuffSize )
+      ::InetRcvBufSize( SocketCon, ::nDefaultRcvBuffSize )
+   ENDIF
+
    if ::lTrace
 
       ::Log( cServer, nPort, SocketCon )
@@ -563,6 +576,18 @@ METHOD InetConnect( cServer, nPort, SocketCon ) CLASS tIPClient
 
 Return Nil
 
+/* Methods to manage buffers */
+METHOD InetRcvBufSize( SocketCon, nSizeBuff ) CLASS tIPClient
+   IF ! Empty( nSizeBuff )
+      HB_InetSetRcvBufSize( SocketCon, nSizeBuff )
+   ENDIF
+RETURN HB_InetGetRcvBufSize( SocketCon )
+
+METHOD InetSndBufSize( SocketCon, nSizeBuff ) CLASS tIPClient
+   IF ! Empty( nSizeBuff )
+      HB_InetSetSndBufSize( SocketCon, nSizeBuff )
+   ENDIF
+RETURN HB_InetGetSndBufSize( SocketCon )
 
 /* Called from another method with list of parameters and, as last parameter, return code
    of function being logged.

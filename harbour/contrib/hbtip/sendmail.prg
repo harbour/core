@@ -323,6 +323,7 @@ FUNCTION HB_SendMail( cServer, nPort, cFrom, aTo, aCC, aBCC, cBody, cSubject, aF
       oAttach := TipMail():New()
 
       HB_FNameSplit( cFile,, @cFname, @cFext )
+      cFile := Lower( cFile )
 
       IF ( cFile LIKE ".+\.(vbd|asn|asz|asd|pqi|tsp|exe|sml|ofml)" ) .OR. ;
          ( cFile LIKE ".+\.(pfr|frl|spl|gz||stk|ips|ptlk|hqx|mbd)" ) .OR. ;

@@ -378,7 +378,7 @@ METHOD ReadAll() CLASS tIPClientHTTP
 METHOD setCookie(cLine) CLASS tIPClientHTTP
    //docs from http://www.ietf.org/rfc/rfc2109.txt
    local aParam
-   local cHost,cPath,cName,cValue,aElements, cElement
+   local cHost, cPath, cName, cValue, aElements, cElement
    local cDefaultHost:=::oUrl:cServer, cDefaultPath:=::oUrl:cPath
    local x,y
    IF empty(cDefaultPath)
@@ -424,7 +424,7 @@ return NIL
 
 METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
    local x,y,aDomKeys:={},aKeys,z,cKey,aPathKeys,nPath
-   local a,b,cOut:="",c,d
+   local a, b, cOut := "", c, d
    IF cHost=nil
       cHost:=::oUrl:cServer
    ENDIF

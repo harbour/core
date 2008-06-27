@@ -159,7 +159,7 @@ CLASS tIPClientFTP FROM tIPClient
    METHOD listFiles( cList )
    METHOD MPut
    METHOD StartCleanLogFile()
-   METHOD fileSize( cFileSpec ) 
+   METHOD fileSize( cFileSpec )
 ENDCLASS
 
 
@@ -170,8 +170,10 @@ METHOD New( oUrl,lTrace, oCredentials) CLASS tIPClientFTP
    ::super:new( oUrl, lTrace, oCredentials)
    ::nDefaultPort := 21
    ::nConnTimeout := 3000
-   ::bUsePasv := .T.
-   ::nAccessMode := TIP_RW  // a read-write protocol
+   ::bUsePasv     := .T.
+   ::nAccessMode  := TIP_RW  // a read-write protocol
+   ::nDefaultSndBuffSize := 65536
+   ::nDefaultRcvBuffSize := 65536
 
    if ::ltrace
       if !file("ftp.log")
@@ -244,9 +246,10 @@ METHOD GetReply() CLASS tIPClientFTP
    ENDDO
 
    // 4 and 5 are error codes
-   IF ::InetErrorCode( ::SocketCon ) != 0 .or. SubStr( ::cReply, 1, 1) >= "4"
+   IF ::InetErrorCode( ::SocketCon ) != 0 .or. Left( ::cReply, 1 ) >= "4"
       RETURN .F.
    ENDIF
+
 RETURN .T.
 
 METHOD Pasv() CLASS tIPClientFTP
@@ -299,7 +302,7 @@ RETURN ::GetReply()
 
 
 METHOD Rest( nPos ) CLASS tIPClientFTP
-   ::InetSendall( ::SocketCon, "REST " + alltrim( Str( iif( Empty( nPos ), 0, nPos ) ) ) + ::cCRLF )
+   ::InetSendall( ::SocketCon, "REST " + AllTrim( Str( iif( Empty( nPos ), 0, nPos ) ) ) + ::cCRLF )
 RETURN ::GetReply()
 
 
@@ -348,6 +351,17 @@ METHOD TransferStart() CLASS tIPClientFTP
          ENDIF
 
          HB_InetTimeout( skt, ::nConnTimeout )
+         /* Set internal socket send buffer to 64k,
+         * this should fix the speed problems some users have reported
+         */
+         IF ! Empty( ::nDefaultSndBuffSize )
+            ::InetSndBufSize( skt, ::nDefaultSndBuffSize )
+         ENDIF
+   
+         IF ! Empty( ::nDefaultRcvBuffSize )
+            ::InetRcvBufSize( skt, ::nDefaultRcvBuffSize )
+         ENDIF
+
          ::SocketCon := skt
       ENDIF
    ELSE
@@ -358,6 +372,8 @@ METHOD TransferStart() CLASS tIPClientFTP
          ::GetReply()
          RETURN .F.
       ENDIF
+      HB_InetSetRcvBufSize( ::SocketCon, 65536 )
+      HB_InetSetSndBufSize( ::SocketCon, 65536 )
    ENDIF
 
 RETURN .T.
@@ -373,7 +389,7 @@ METHOD Commit() CLASS tIPClientFTP
    ENDIF
 
    // error code?
-   IF SubStr( ::cReply, 1, 1 ) == "5"
+   IF Left( ::cReply, 1 ) == "5"
       RETURN .F.
    ENDIF
 
@@ -471,11 +487,12 @@ METHOD Stor( cFile ) CLASS tIPClientFTP
    ENDIF
 
    ::InetSendall( ::SocketCon, "STOR " + cFile + ::cCRLF )
-   //PM:08-31-2007 Remmed out 'IF ! ::GetReply()' because it always makes Stor() returning .F.
-   //              Causing the uploaded file to be sized ZERO.
-   //IF ! ::GetReply()
-   //   RETURN .F.
-   //ENDIF
+
+   // It is important not to delete these lines in order not to disrupt the timing of
+   // the responses, which can lead to failures in transfers.
+   IF ! ::bUsePasv
+      ::GetReply()
+   ENDIF
 
 RETURN ::TransferStart()
 
@@ -623,7 +640,7 @@ METHOD MGET( cSpec,cLocalPath ) CLASS tIPClientFTP
       ENDIF
    ENDIF
 
-   ::InetSendAll( ::SocketCon, "NLST "+cSpec + ::cCRLF )
+   ::InetSendAll( ::SocketCon, "NLST " + cSpec + ::cCRLF )
    cStr := ::ReadAuxPort()
 
    IF !empty(cStr)
@@ -631,7 +648,7 @@ METHOD MGET( cSpec,cLocalPath ) CLASS tIPClientFTP
       FOR each cFile in aFiles
          IF !Empty(cFile) //PM:09-08-2007 Needed because of the new HB_aTokens()
             ::downloadfile( cLocalPath+trim(cFile), trim(cFile) )
-         ENDIF   
+         ENDIF
       NEXT
 
    ENDIF
@@ -733,11 +750,11 @@ RETURN cStr
 METHOD Rename( cFrom, cTo ) CLASS tIPClientFTP
     Local lResult  := .F.
 
-    ::InetSendAll( ::SocketCon, "RNFR "+ cFrom + ::cCRLF )
+    ::InetSendAll( ::SocketCon, "RNFR " + cFrom + ::cCRLF )
 
     IF ::GetReply()
 
-       ::InetSendAll( ::SocketCon, "RNTO "+ cTo + ::cCRLF )
+       ::InetSendAll( ::SocketCon, "RNTO " + cTo + ::cCRLF )
        lResult := ::GetReply()
 
     ENDIF
@@ -891,7 +908,9 @@ METHOD listFiles( cFileSpec ) CLASS tIPClientFTP
          aFile[F_TIME] := cTime
 
          aList[ cEntry:__enumIndex() ] := aFile
+
       ENDIF
+
    NEXT
 
 RETURN aList
