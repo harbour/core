@@ -74,7 +74,6 @@ HB_FUNC( HB_GTKCREATEMENUBAR )
     if( Box )
     {
         GtkWidget *MenuBar = gtk_menu_bar_new();
-        gtk_menu_bar_set_shadow_type( GTK_MENU_BAR( MenuBar ), GTK_SHADOW_OUT );
         gtk_box_pack_start( Box, MenuBar, FALSE, FALSE, 0 );
         gtk_box_reorder_child( Box, MenuBar, 0 );
 
