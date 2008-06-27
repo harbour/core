@@ -4,6 +4,8 @@
 
 ROOT = ../
 
+ifeq ($(HB_CONTRIBLIBS),)
+
 # standalone contribs
 DIRS=\
 	gtwvg \
@@ -43,8 +45,10 @@ DIRS +=\
 	hbpgsql \
 	rddads \
 
-ifneq ($(HB_CONTRIBLIBS),)
-DIRS += $(HB_CONTRIBLIBS)
+else
+
+DIRS = $(HB_CONTRIBLIBS)
+
 endif
 
 # DIRS += examples

@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-27 14:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/Makefile
+     * After this change, HB_CONTRIBLIBS will _override_ the 
+       default list of contribs, rather than adding them to 
+       the default list (which BTW contains everything since 
+       this week, so there's no much point anyway, besides if 
+       someone was hosting local contribs in the Harbour contrib 
+       dir).
+
+   * include/hbver.h
+     - Removed recenly added HB_VERSION 0x010000.
+     * Instead I've changed both .prg level and .c level __HARBOUR__ 
+       to contain this more granular (full) version number.
+     ; NOTE: If someone is relying on the value of __HARBOUR__ in 
+             .prg code, the values should be multiplied by 256.
+
 2008-06-27 13:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbstdgen.ch
    * include/hbver.h
