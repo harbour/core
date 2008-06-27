@@ -52,13 +52,19 @@
 
 /* include hbsetup.ch to set default build settings */
 #include "hbsetup.ch"
+/* include version macros */
+#ifndef _HB_PRG_LEVEL
+   #define _HB_PRG_LEVEL
+#endif
+#include "hbver.h"
+#undef _HB_PRG_LEVEL
 /* include std.ch to set default rules */
 #include "std.ch"
 
 /* undefine all rules which are not necessary in default PP tables */
+#undef HB_VER_H_
 #undef HB_SETUP_CH_
 
-#undef __HARBOUR__
 #undef __DATE__
 #undef __TIME__
 #undef __HB_MAIN__

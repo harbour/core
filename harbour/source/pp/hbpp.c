@@ -236,8 +236,7 @@ static void hb_pp_undefCompilerRules( PHB_PP_STATE pState )
 {
    int i;
    PHB_PP_RULE * pRulePtr, pRule;
-   char * szRules[] = { "__HARBOUR__",
-                        "__DATE__",
+   char * szRules[] = { "__DATE__",
                         "__TIME__",
                         "__HB_MAIN__",
                         "__ARCH16BIT__",

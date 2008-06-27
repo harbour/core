@@ -198,9 +198,12 @@ typedef HB_PP_SWITCH_FUNC * PHB_PP_SWITCH_FUNC;
 #define HB_PP_TOKEN_MOD          84
 #define HB_PP_TOKEN_POWER        85
 #define HB_PP_TOKEN_EPSILON      86
+/* xhb stuff */
+#if 0
 #define HB_PP_TOKEN_SHIFTL       87
 #define HB_PP_TOKEN_SHIFTR       88
 #define HB_PP_TOKEN_BITXOR       89
+#endif
 
 #define HB_PP_TOKEN_TYPE(t)      ( (t) & 0xff )
 /* bitfields */

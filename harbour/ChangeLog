@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-27 12:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbstdgen.ch
+   * include/hbver.h
+   * include/hbdefs.h
+   * source/pp/pplib.c
+   * source/pp/ppcore.c
+   * source/pp/hbpp.c
+   * source/common/hbver.c
+   * source/common/hbverdsp.c
+   * contrib/hbsqlit3/hbsqlit3.c
+   * contrib/examples/pp/hbppdef.h
+     * Changed .c level __HARBOUR__ to have the same value 
+       as the existing .prg level one.
+     * PP now gets the __HARBOUR__ define directly from the .c 
+       level instead of generating it locally.
+     ; QUESTION: Should or shouldn't we change __HARBOUR__ 
+       to contain revision number too? (0x0100 -> 0x01000)
+       This would allow for a greater level of development 
+       opportunities between minor revisions, more "agile" 
+       development.
+
+   * include/hbpp.h
+   * source/pp/ppcore.c
+     - Two __XHARBOUR__ guards removed.
+
 2008-06-27 03:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/gtwvg/Makefile
    * contrib/gtwvg/common.mak

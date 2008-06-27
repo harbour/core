@@ -63,7 +63,6 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
-#include "hbver.h"
 
 #ifdef NODLL
 extern char * sqlite3_temp_directory;

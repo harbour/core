@@ -134,7 +134,7 @@ PHB_PP_STATE hb_pp_Param( int iParam )
  * initialize new PP context and return pointer to it.
  * __PP_INIT( [<cIncludePath>] [, <cStdChFile> ] )
  * when <cStdChFile> is empty string ("") then no default rules are used
- * only the dynamically created #defines like __HARBOUR__, __DATE__, __TIME__
+ * only the dynamically created #defines like __DATE__, __TIME__
  */
 HB_FUNC( __PP_INIT )
 {

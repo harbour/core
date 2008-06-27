@@ -63,7 +63,6 @@
 #endif
 
 #include "hbpp.h"
-#include "hbver.h"
 #include "hbdate.h"
 
 #define HB_PP_WARN_DEFINE_REDEF                 1     /* C1005 */
@@ -177,11 +176,6 @@ static const HB_PP_OPERATOR s_operators[] =
    { "!="   , 2, "<>"   , HB_PP_TOKEN_NE        | HB_PP_TOKEN_STATIC },
    { "<>"   , 2, "<>"   , HB_PP_TOKEN_NE        | HB_PP_TOKEN_STATIC },
    { "->"   , 2, "->"   , HB_PP_TOKEN_ALIAS     | HB_PP_TOKEN_STATIC },
-#ifdef __XHARBOUR__
-   { "<<"   , 2, "<<"   , HB_PP_TOKEN_SHIFTL    | HB_PP_TOKEN_STATIC },
-   { ">>"   , 2, ">>"   , HB_PP_TOKEN_SHIFTR    | HB_PP_TOKEN_STATIC },
-   { "^^"   , 2, "^^"   , HB_PP_TOKEN_BITXOR    | HB_PP_TOKEN_STATIC },
-#endif
    { "@"    , 1, "@"    , HB_PP_TOKEN_REFERENCE | HB_PP_TOKEN_STATIC },
    { "("    , 1, "("    , HB_PP_TOKEN_LEFT_PB   | HB_PP_TOKEN_STATIC },
    { ")"    , 1, ")"    , HB_PP_TOKEN_RIGHT_PB  | HB_PP_TOKEN_STATIC },
@@ -4382,11 +4376,14 @@ static PHB_PP_TOKEN hb_pp_calcPrecedence( PHB_PP_TOKEN pToken,
          *piNextPrec = HB_PP_PREC_BIT;
          break;
 
+/* xhb stuff */
+#if 0
       case HB_PP_TOKEN_BITXOR:
       case HB_PP_TOKEN_SHIFTL:
       case HB_PP_TOKEN_SHIFTR:
          *piNextPrec = HB_PP_PREC_BIT;
          break;
+#endif
 
       /* math plus/minus */
       case HB_PP_TOKEN_PLUS:
@@ -4448,6 +4445,8 @@ static HB_LONG hb_pp_calcOperation( HB_LONG lValueLeft, HB_LONG lValueRight,
          lValueLeft &= lValueRight;
          break;
       case HB_PP_TOKEN_POWER:
+/* xhb stuff */
+#if 0
       case HB_PP_TOKEN_BITXOR:
          lValueLeft ^= lValueRight;
          break;
@@ -4457,6 +4456,7 @@ static HB_LONG hb_pp_calcOperation( HB_LONG lValueLeft, HB_LONG lValueRight,
       case HB_PP_TOKEN_SHIFTR:
          lValueLeft >>= lValueRight;
          break;
+#endif
 
       case HB_PP_TOKEN_PLUS:
          lValueLeft += lValueRight;
@@ -5218,18 +5218,6 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
 #ifdef HB_OS_UNIX
    hb_strncpy( szDefine + 12, "UNIX", sizeof( szDefine ) - 13 );
    hb_pp_addDefine( pState, szDefine, szResult );
-#endif
-
-#if defined( __HARBOUR__ ) || defined( __XHARBOUR__ )
-   snprintf( szResult, sizeof( szResult ), "%05d", HB_MAX( ( HB_VER_MAJOR << 8 ) | HB_VER_MINOR, 1 ) );
-#ifdef __HARBOUR__
-   /* __HARBOUR__ */
-   hb_pp_addDefine( pState, "__HARBOUR__", szResult );
-#endif
-#ifdef __XHARBOUR__
-   /* __XHARBOUR__ */
-   hb_pp_addDefine( pState, "__XHARBOUR__", szResult );
-#endif
 #endif
 
    /* __DATE__ */

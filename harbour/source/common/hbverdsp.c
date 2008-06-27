@@ -50,14 +50,7 @@
  *
  */
 
-/*
- *
- * See doc/license.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
-#include "hbver.h"
 #include "hbmemory.ch"
 
 void hb_verBuildInfo( void )

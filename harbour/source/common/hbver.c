@@ -75,7 +75,6 @@
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
-#include "hbver.h"
 #include "hbmemory.ch"
 
 #if defined(HB_OS_WIN_32)

@@ -56,7 +56,6 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hberrors.h"
-#include "hbver.h"
 
 HB_EXTERN_BEGIN
 

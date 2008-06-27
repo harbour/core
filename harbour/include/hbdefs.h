@@ -61,6 +61,7 @@
 
 #include "hbsetup.h"
 #include "hbtrace.h"
+#include "hbver.h"
 
 #if defined( __XCC__ ) || defined( __MINGW32__ ) || \
     ( defined( __GNUC__ ) && \
@@ -1144,10 +1145,6 @@ typedef unsigned long HB_COUNTER;
    #define HARBOUR void HB_FUNC_CALLCONV
 #else
    #define HARBOUR void
-#endif
-
-#if ! defined(__HARBOUR__)
-   #define __HARBOUR__
 #endif
 
 typedef HARBOUR ( * PHB_FUNC )( void );
