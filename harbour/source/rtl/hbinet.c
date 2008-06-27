@@ -15,6 +15,10 @@
  *    updated and ported to Harbour
  * www - http://www.harbour-project.org
  *
+ * Copyright 2008 Miguel Angel marchuet <miguelangel@marchuet.net>
+ *    added dinamic system buffer
+ * www - http://www.harbour-project.org
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
