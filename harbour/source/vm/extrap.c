@@ -79,8 +79,10 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo
       hb_dateToday( &iYear, &iMonth, &iDay );
       hb_dateTimeStr( szTime );
          
-      fprintf( hLog, "Application Exception - %s\n", hb_cmdargARGV()[0] );
-      fprintf( hLog, "Terminated at: %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
+      fprintf( hLog, HB_I_("Application Exception - %s\n"), hb_cmdargARGV()[0] );
+      fprintf( hLog, HB_I_("Terminated at: %04d.%02d.%02d %s\n"), iYear, iMonth, iDay, szTime );
+      if( *hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) )
+         fprintf( hLog, HB_I_("Info: %s\n"), hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) );
    }
 
    HB_SYMBOL_UNUSED( ExceptionInfo );
@@ -103,7 +105,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo
    /* GUI */
    {
       LPTSTR lpStr = HB_TCHAR_CONVTO( msg );
-      MessageBox( NULL, lpStr, TEXT( "Application Exception" ), MB_ICONSTOP );
+      MessageBox( NULL, lpStr, TEXT( HB_I_("Application Exception") ), MB_ICONSTOP );
       HB_TCHAR_FREE( lpStr );
    }
 

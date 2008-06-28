@@ -50,10 +50,12 @@
  *
  */
 
+/* NOTE: This file is also used by Harbour .prg code. */
+
 #ifndef HB_VER_H_
 #define HB_VER_H_
 
-#if defined(__HARBOUR__)
+#ifdef __HARBOUR__
    #undef __HARBOUR__
 #endif
 

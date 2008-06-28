@@ -589,7 +589,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
-      snprintf( buffer, sizeof( buffer ), "Total memory allocated: %li bytes (%li block(s))", s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
+      snprintf( buffer, sizeof( buffer ), HB_I_("Total memory allocated: %li bytes (%li block(s))"), s_lMemoryMaxConsumed, s_lMemoryMaxBlocks );
       hb_conOutErr( buffer, 0 );
 
       if( s_lMemoryBlocks )
@@ -602,13 +602,15 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
             hb_dateToday( &iYear, &iMonth, &iDay );
             hb_dateTimeStr( szTime );
          
-            fprintf( hLog, "Application Memory Allocation Report - %s\n", hb_cmdargARGV()[0] );
-            fprintf( hLog, "Terminated at: %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
+            fprintf( hLog, HB_I_("Application Memory Allocation Report - %s\n"), hb_cmdargARGV()[0] );
+            fprintf( hLog, HB_I_("Terminated at: %04d.%02d.%02d %s\n"), iYear, iMonth, iDay, szTime );
+            if( *hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) )
+               fprintf( hLog, HB_I_("Info: %s\n"), hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) );
             fprintf( hLog, "%s\n", buffer );
          }
 
          hb_conOutErr( hb_conNewLine(), 0 );
-         snprintf( buffer, sizeof( buffer ), "Warning, memory allocated but not released: %li bytes (%li block(s))", s_lMemoryConsumed, s_lMemoryBlocks );
+         snprintf( buffer, sizeof( buffer ), HB_I_("Warning, memory allocated but not released: %li bytes (%li block(s))"), s_lMemoryConsumed, s_lMemoryBlocks );
          hb_conOutErr( buffer, 0 );
 
          if( hLog )
@@ -626,7 +628,7 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
          if( hLog )
          {
-            fprintf( hLog, "Block %i %p (size %lu) %s(%i), \"%s\"\n", ui,
+            fprintf( hLog, HB_I_("Block %i %p (size %lu) %s(%i), \"%s\"\n"), ui,
                ( char * ) pMemBlock + HB_MEMINFO_SIZE,
                pMemBlock->ulSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
                hb_mem2str( membuffer, ( char * ) pMemBlock + HB_MEMINFO_SIZE,

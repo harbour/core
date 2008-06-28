@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-28 08:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/set.ch
+   * include/hbset.h
+   * source/rtl/set.c
+   * source/vm/fm.c
+   * source/vm/extrap.c
+     + Added: Set( _SET_HBOUTLOGINFO[, <cValue>] ) -> <cOldValue>
+       Default value: ""
+       This user defined text will be included in each hb_out.log 
+       messages. This way it's possible to include custom information 
+       in these entries to help identify and locate them.
+     ! Fixed a few string not marked with HB_I_() translation 
+       marker.
+
 2008-06-27 17:13 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
   * contrib/hbtip/client.prg
   * contrib/hbtip/ftpcln.prg

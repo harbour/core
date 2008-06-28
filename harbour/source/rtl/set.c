@@ -878,6 +878,11 @@ HB_FUNC( SET )
          else hb_retc( NULL );
          if( args > 1 ) hb_set.HB_SET_HBOUTLOG = set_string( pArg2, hb_set.HB_SET_HBOUTLOG );
          break;
+      case HB_SET_HBOUTLOGINFO:
+         if( hb_set.HB_SET_HBOUTLOGINFO ) hb_retc( hb_set.HB_SET_HBOUTLOGINFO );
+         else hb_retc( NULL );
+         if( args > 1 ) hb_set.HB_SET_HBOUTLOGINFO = set_string( pArg2, hb_set.HB_SET_HBOUTLOGINFO );
+         break;
 
       case HB_SET_INVALID_:
          /* Return NIL if called with invalid SET specifier */
@@ -997,6 +1002,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_EOL = hb_strdup( hb_conNewLine() );
    hb_set.HB_SET_TRIMFILENAME = FALSE;
    hb_set.HB_SET_HBOUTLOG = hb_strdup( "hb_out.log" );
+   hb_set.HB_SET_HBOUTLOGINFO = hb_strdup( "" );
 
    sp_sl_first = sp_sl_last = NULL;
    s_next_listener = 1;
@@ -1023,20 +1029,21 @@ void hb_setRelease( void )
    close_text( hb_set.hb_set_extrahan );
    close_binary( hb_set.hb_set_printhan );
 
-   if( hb_set.HB_SET_ALTFILE )    hb_xfree( hb_set.HB_SET_ALTFILE );
-   if( hb_set.HB_SET_DATEFORMAT ) hb_xfree( hb_set.HB_SET_DATEFORMAT );
-   if( hb_set.HB_SET_DEFAULT )    hb_xfree( hb_set.HB_SET_DEFAULT );
-   if( hb_set.HB_SET_DELIMCHARS ) hb_xfree( hb_set.HB_SET_DELIMCHARS );
-   if( hb_set.HB_SET_DEVICE )     hb_xfree( hb_set.HB_SET_DEVICE );
-   if( hb_set.HB_SET_EXTRAFILE )  hb_xfree( hb_set.HB_SET_EXTRAFILE );
-   if( hb_set.HB_SET_MFILEEXT  )  hb_xfree( hb_set.HB_SET_MFILEEXT );
-   if( hb_set.HB_SET_PATH )       hb_xfree( hb_set.HB_SET_PATH );
-   if( hb_set.HB_SET_PRINTFILE )  hb_xfree( hb_set.HB_SET_PRINTFILE );
-   if( hb_set.HB_SET_COLOR )      hb_xfree( hb_set.HB_SET_COLOR );
-   if( hb_set.HB_SET_EOL )        hb_xfree( hb_set.HB_SET_EOL );
-   if( hb_set.HB_SET_HBOUTLOG )   hb_xfree( hb_set.HB_SET_HBOUTLOG );
+   if( hb_set.HB_SET_ALTFILE )      hb_xfree( hb_set.HB_SET_ALTFILE );
+   if( hb_set.HB_SET_DATEFORMAT )   hb_xfree( hb_set.HB_SET_DATEFORMAT );
+   if( hb_set.HB_SET_DEFAULT )      hb_xfree( hb_set.HB_SET_DEFAULT );
+   if( hb_set.HB_SET_DELIMCHARS )   hb_xfree( hb_set.HB_SET_DELIMCHARS );
+   if( hb_set.HB_SET_DEVICE )       hb_xfree( hb_set.HB_SET_DEVICE );
+   if( hb_set.HB_SET_EXTRAFILE )    hb_xfree( hb_set.HB_SET_EXTRAFILE );
+   if( hb_set.HB_SET_MFILEEXT  )    hb_xfree( hb_set.HB_SET_MFILEEXT );
+   if( hb_set.HB_SET_PATH )         hb_xfree( hb_set.HB_SET_PATH );
+   if( hb_set.HB_SET_PRINTFILE )    hb_xfree( hb_set.HB_SET_PRINTFILE );
+   if( hb_set.HB_SET_COLOR )        hb_xfree( hb_set.HB_SET_COLOR );
+   if( hb_set.HB_SET_EOL )          hb_xfree( hb_set.HB_SET_EOL );
+   if( hb_set.HB_SET_HBOUTLOG )     hb_xfree( hb_set.HB_SET_HBOUTLOG );
+   if( hb_set.HB_SET_HBOUTLOGINFO ) hb_xfree( hb_set.HB_SET_HBOUTLOGINFO );
 
-   hb_set.HB_SET_TYPEAHEAD = 0;   hb_inkeyReset(); /* reset keyboard buffer */
+   hb_set.HB_SET_TYPEAHEAD = 0;     hb_inkeyReset(); /* reset keyboard buffer */
 
    while( sp_sl_first )
    {
@@ -1192,6 +1199,7 @@ HB_EXPORT BOOL    hb_setGetL( HB_set_enum set_specifier )
       case HB_SET_DBFLOCKSCHEME:
       case HB_SET_EOL:
       case HB_SET_HBOUTLOG:
+      case HB_SET_HBOUTLOGINFO:
       case HB_SET_INVALID_:
          break;
 #if 0 
@@ -1236,6 +1244,8 @@ HB_EXPORT char *  hb_setGetCPtr( HB_set_enum set_specifier )
          return hb_set.HB_SET_EOL;
       case HB_SET_HBOUTLOG:
          return hb_set.HB_SET_HBOUTLOG;
+      case HB_SET_HBOUTLOGINFO:
+         return hb_set.HB_SET_HBOUTLOGINFO;
 
       case HB_SET_ALTERNATE:
       case HB_SET_AUTOPEN:
@@ -1380,6 +1390,7 @@ HB_EXPORT int     hb_setGetNI( HB_set_enum set_specifier )
       case HB_SET_DEFEXTENSIONS:
       case HB_SET_TRIMFILENAME:
       case HB_SET_HBOUTLOG:
+      case HB_SET_HBOUTLOGINFO:
       case HB_SET_INVALID_:
          break;
 #if 0 
@@ -1715,4 +1726,9 @@ HB_EXPORT BOOL    hb_setGetTrimFileName( void )
 HB_EXPORT char *  hb_setGetHBOUTLOG( void )
 {
    return hb_set.HB_SET_HBOUTLOG;
+}
+
+HB_EXPORT char *  hb_setGetHBOUTLOGINFO( void )
+{
+   return hb_set.HB_SET_HBOUTLOGINFO;
 }
