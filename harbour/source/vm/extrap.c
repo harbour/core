@@ -50,6 +50,17 @@
  *
  */
 
+/*
+ * The following parts are Copyright of the individual authors.
+ * www - http://www.harbour-project.org
+ *
+ * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt)
+ *    hb_win32ExceptionHandler() Windows exception info dump code.
+ *
+ * See doc/license.txt for licensing terms.
+ *
+ */
+
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
@@ -61,7 +72,7 @@
 
 #if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
 
-LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo )
+LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
 {
    char msg[ ( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ) * 32 ];
    char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
@@ -75,6 +86,9 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo
    {
       char szTime[ 9 ];
       int iYear, iMonth, iDay;
+
+      char errmsg[ 4096 ];
+      int errmsglen = sizeof( errmsg ) - 1;
       
       hb_dateToday( &iYear, &iMonth, &iDay );
       hb_dateTimeStr( szTime );
@@ -83,9 +97,79 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * ExceptionInfo
       fprintf( hLog, HB_I_("Terminated at: %04d.%02d.%02d %s\n"), iYear, iMonth, iDay, szTime );
       if( *hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) )
          fprintf( hLog, HB_I_("Info: %s\n"), hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) );
-   }
 
-   HB_SYMBOL_UNUSED( ExceptionInfo );
+      {
+         char              buf[ 32 ];
+         PEXCEPTION_RECORD pExceptionRecord = pExceptionInfo->ExceptionRecord;
+         PCONTEXT          pCtx = pExceptionInfo->ContextRecord;
+         DWORD             dwExceptCode = pExceptionInfo->ExceptionRecord->ExceptionCode;
+         unsigned char *   pc;
+         unsigned int *    sc;
+         unsigned int *    ebp;
+         unsigned int      eip;
+         unsigned int      j;
+         int               i;
+         
+         snprintf( errmsg, errmsglen,
+                   "\n"
+                   "    Exception Code:%08X\n"
+                   "    Exception Address:%08X\n"
+                   "    EAX:%08X  EBX:%08X  ECX:%08X  EDX:%08X\n"
+                   "    ESI:%08X  EDI:%08X EBP:%08X\n"
+                   "    CS:EIP:%04X:%08X  SS:ESP:%04X:%08X\n"
+                   "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
+                   "    Flags:%08X\n",
+                   dwExceptCode, pExceptionRecord->ExceptionAddress,
+                   pCtx->Eax, pCtx->Ebx, pCtx->Ecx, pCtx->Edx, pCtx->Esi, pCtx->Edi, pCtx->Ebp,
+                   pCtx->SegCs, pCtx->Eip, pCtx->SegSs, pCtx->Esp, pCtx->SegDs, pCtx->SegEs, pCtx->SegFs, pCtx->SegGs,
+                   pCtx->EFlags );
+         
+         hb_strncat( errmsg, "    CS:EIP:", errmsglen );
+         pc = ( void * ) pCtx->Eip;
+         for( i = 0; i < 16; i++ )
+         {
+            if( IsBadReadPtr( pc, 1 ) )
+               break;
+            snprintf( buf, sizeof( buf ) - 1, " %02X", ( int ) pc[ i ] );
+            hb_strncat( errmsg, buf, errmsglen );
+         }
+         hb_strncat( errmsg, "\n    SS:ESP:", errmsglen );
+         sc = ( void * ) pCtx->Esp;
+         for( i = 0; i < 16; i++ )
+         {
+            if( IsBadReadPtr( sc, 4 ) )
+               break;
+            snprintf( buf, sizeof( buf ), " %08X", sc[ i ] );
+            hb_strncat( errmsg, buf, errmsglen );
+         }
+         hb_strncat( errmsg, "\n\n", errmsglen );
+         hb_strncat( errmsg, "    C stack:\n", errmsglen );
+         hb_strncat( errmsg, "    EIP:     EBP:       Frame: OldEBP, RetAddr, Params...\n", errmsglen );
+         eip = pCtx->Eip;
+         ebp = ( unsigned int * ) pCtx->Ebp;
+         if( ! IsBadWritePtr( ebp, 8 ) )
+         {
+            for( i = 0; i < 20; i++ )
+            {
+               if( ( unsigned int ) ebp % 4 != 0 || IsBadWritePtr( ebp, 40 ) || ( unsigned int ) ebp >= ebp[ 0 ] )
+                  break;
+               snprintf( buf, sizeof( buf ), "    %08X %08X  ", ( int ) eip, ( int ) ebp );
+               hb_strncat( errmsg, buf, errmsglen );
+               for( j = 0; j < 10 && ( unsigned int )( ebp + j ) < ebp[ 0 ]; j++ )
+               {
+                  snprintf( buf, sizeof( buf ), " %08X", ebp[ j ] );
+                  hb_strncat( errmsg, buf, errmsglen );
+               }
+               hb_strncat( errmsg, "\n", errmsglen );
+               eip = ebp[ 1 ];
+               ebp = ( unsigned int * ) ebp[ 0 ];
+            }
+            hb_strncat( errmsg, "\n", errmsglen );
+         }
+
+         fwrite( errmsg, sizeof( char ), strlen( errmsg ), hLog );
+      }
+   }
 
    msg[ 0 ] = '\0';
    ptr = msg;

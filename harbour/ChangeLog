@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-28 11:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/vm/extrap.c
+     + Added Windows GPF detailed information dump (with some 
+       modifications) provided by Mindaugas Kavaliauskas.
+       Many thanks.
+     ; It would be very nice to have similar for Linux, OS/2, 
+       Darwin.
+
 2008-06-28 10:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * tests/extend2.c
    * source/debug/dbgentry.c
