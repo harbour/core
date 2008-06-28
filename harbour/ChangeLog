@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-28 11:37 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * contrib/gtwvg/gtwvg.c
+  * contrib/gtwvg/gtwvg.h
+  * contrib/gtwvg/hbgtwvg.ch
+    + Implemented application to run as a System Tray Icon.
+    ; IMPLEMENTATION:
+      Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SYSTRAYICON, ;
+                 { nMode /*NIM_ADD/MODIFY/DELETE*/, ;
+                    nIconType /*NIT_FILE/RESOURCEBYNAME/RESOURCEBYID*/, ;
+                     cnFileNameOrResourceName|Id, ;
+                      cTooltip } )
+
+      Right-click on SysTrayIcon will restore the appln in its original state.
+
+    : TOKNOW: Does it qualify for GTWVT? 
+
+  * tests/wvtext.prg
+    ! Modified to show the SysTrayIcon feature if linked with GTWVG.
+      Link Guarded againt __GTWVG__ define.
+ 
 2008-06-28 11:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/extrap.c
      + Added Windows GPF detailed information dump (with some 

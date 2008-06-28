@@ -16,6 +16,9 @@
 
 #include 'hbgtinfo.ch'
 #include 'inkey.ch'
+#ifdef __GTWVG__
+#include 'hbgtwvg.ch'
+#endif
 
 #define RGB(r,g,b) ( r + ( g * 256 ) + ( b * 256 * 256 ) )
 
@@ -27,14 +30,12 @@ FUNCTION Main()
    Local nWidth  := Int( nHeight/2 )
    Local cFont
 
-   //cFont := 'Courier New' // Harbour default
-   //cFont := 'Times New Roman'
-   //cFont := 'Lucida Console'
-
    Hb_GtInfo( HB_GTI_FONTNAME , cFont   )
    Hb_GtInfo( HB_GTI_FONTWIDTH, nWidth  )
    Hb_GtInfo( HB_GTI_FONTSIZE , nHeight )
-
+   #ifdef __GTWVG__
+   Hb_GtInfo( HB_GTI_ICONFILE, 'C:\Harbour\Contrib\Gtwvg\Tests\Vr_1.ico' )
+   #endif
    SetCursor( 0 )
    SetColor( 'n/w' )
 
@@ -76,6 +77,9 @@ FUNCTION Main()
       CASE nKey == K_F8
          Alert( "Menu text changed. Was: " + hb_GtInfo( HB_GTI_SELECTCOPY, DToS(Date()) + " " + Time() ) )
 
+      CASE nKey == K_F9
+         RunInSysTray()
+
       ENDCASE
    ENDDO
 
@@ -103,7 +107,7 @@ STATIC FUNCTION MyNotifier( nEvent, ... )
 //----------------------------------------------------------------------//
 
 STATIC FUNCTION DispScreen()
-   Local nRow := 15, nCol := 28
+   Local nRow := 12, nCol := 28
    Local cColor := 'N/W'
    Local nMaxCol := MaxCol()+1
 
@@ -128,6 +132,9 @@ STATIC FUNCTION DispScreen()
    DispOutAt( ++nRow, nCol, '< F8 MarkCopy menu text >', cColor )
    DispOutAt( ++nRow, nCol, '<    Click Other Window >', cColor )
    DispOutAt( ++nRow, nCol, '<    Click X Button     >', cColor )
+#ifdef __GTWVG__
+   DispOutAt( ++nRow, nCol, '< F9 Run in SysTray     >', cColor )
+#endif
 
    DispOutAt( maxrow(), 0, Space( maxcol()+1 ), "N/G*" )
 
@@ -142,15 +149,22 @@ STATIC FUNCTION DispScreen()
 //----------------------------------------------------------------------//
 
 PROCEDURE HB_GTSYS()
-     REQUEST HB_GT_WVT
-     REQUEST HB_GT_WIN
-     RETURN
+#ifdef __GTWVG__
+   REQUEST HB_GT_WVG
+#else
+   REQUEST HB_GT_WVT
+   REQUEST HB_GT_WIN
+#endif
+   RETURN
 
 //----------------------------------------------------------------------//
-
+#ifdef __GTWVG__
+PROCEDURE HB_GT_WVG_DEFAULT()
+   RETURN
+#else
 PROCEDURE HB_GT_WVT_DEFAULT()
-     RETURN
-
+   RETURN
+#endif
 //----------------------------------------------------------------------//
 
 FUNCTION SetPalette( nMode )
@@ -182,3 +196,21 @@ FUNCTION SetPaletteIndex()
    RETURN NIL
 
 //----------------------------------------------------------------------//
+
+#define NIM_ADD               0
+#define NIM_MODIFY            1
+#define NIM_DELETE            2
+
+FUNCTION RunInSysTray()
+   #ifdef __GTWVG__
+   Alert( 'Please check your System Tray area after exiting this alert,'+;
+             ';then right click on the icon'+;
+                 ';displaying tooltip "Harbour GT in SysTray" !' )
+
+   Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SYSTRAYICON, { NIM_ADD, NIT_FILE, ;
+                'C:\Harbour\Contrib\Gtwvg\Tests\Vr_1.ico', 'Harbour GT in SysTray' } )
+   #endif
+   RETURN NIL
+
+//----------------------------------------------------------------------//
+

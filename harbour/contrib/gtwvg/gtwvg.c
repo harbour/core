@@ -1462,10 +1462,23 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_GTWVT pWVT = hb_gt_wvt_Find( hWnd );
-   //int iEvResult;
 
    if( pWVT ) switch( message )
    {
+      case HB_MSG_NOTIFYICON:
+         if( lParam == WM_RBUTTONUP )
+         {
+            NOTIFYICONDATA tnid ;
+            tnid.cbSize           = sizeof( NOTIFYICONDATA ) ;
+            tnid.hWnd             = hWnd;
+            tnid.uID              = HB_ID_NOTIFYICON;
+            tnid.uCallbackMessage = HB_MSG_NOTIFYICON;
+            tnid.hIcon            = NULL;
+            Shell_NotifyIcon( NIM_DELETE, &tnid );
+            ShowWindow( hWnd, SW_RESTORE );
+         }
+         return 0;
+
       case WM_CREATE:
          return hb_gt_wvt_InitWindow( pWVT, WVT_DEFAULT_ROWS, WVT_DEFAULT_COLS );
 
@@ -2651,6 +2664,53 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                UpdateWindow( pWVT->hWnd );
                break;
 
+            case HB_GTS_SYSTRAYICON:
+            {
+               if( hb_itemType( pInfo->pNewVal2 ) & HB_IT_ARRAY )
+               {
+                  int            mode = hb_arrayGetNI( pInfo->pNewVal2, 1 );
+                  int            iIconType = hb_arrayGetNI( pInfo->pNewVal2, 2 );
+                  HICON          hIcon = 0;
+                  NOTIFYICONDATA tnid ;
+
+                  if( iIconType == 0 )
+                  {
+                     LPTSTR lpImage = HB_TCHAR_CONVTO( hb_arrayGetCPtr( pInfo->pNewVal2, 3 ) );
+                     hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, lpImage,
+                                                     IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+                     HB_TCHAR_FREE( lpImage );
+                  }
+                  else if( iIconType == 1 )
+                  {
+                     LPTSTR lpIcon = HB_TCHAR_CONVTO( hb_arrayGetCPtr( pInfo->pNewVal2, 3 ) );
+                     hIcon = LoadIcon( ( HINSTANCE ) s_hInstance, lpIcon );
+                     HB_TCHAR_FREE( lpIcon );
+                  }
+                  else if( iIconType == 2 )
+                  {
+                     hIcon = LoadIcon( ( HINSTANCE ) s_hInstance,
+                                          MAKEINTRESOURCE( ( UINT_PTR )
+                                                      hb_arrayGetNInt( pInfo->pNewVal2, 3 ) ) );
+                  }
+                  tnid.cbSize           = sizeof( NOTIFYICONDATA ) ;
+                  tnid.hWnd             = pWVT->hWnd;
+                  tnid.uID              = HB_ID_NOTIFYICON;
+                  tnid.uFlags           = NIF_MESSAGE + NIF_ICON + NIF_TIP;
+                  tnid.uCallbackMessage = HB_MSG_NOTIFYICON;
+                  tnid.hIcon            = hIcon ;
+
+                  lstrcpyn( tnid.szTip, hb_arrayGetCPtr( pInfo->pNewVal2, 4 ), sizeof( tnid.szTip ) ) ;
+
+                  Shell_NotifyIcon( mode, &tnid ) ;
+
+                  if( hIcon )
+                     DestroyIcon( hIcon );
+
+                  ShowWindow( pWVT->hWnd, SW_HIDE );
+               }
+               break;
+            }
+
             case HB_GTS_WNDSTATE:
             {
                int iSpec = hb_itemGetNI( pInfo->pNewVal2 );
@@ -2700,6 +2760,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   case WNDS_NORMAL:
                      ShowWindow( pWVT->hWnd, SW_SHOWNORMAL );
                      break;
+
                }
                break;
             }

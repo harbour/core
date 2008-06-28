@@ -116,7 +116,7 @@
 #  define WVT_DEFAULT_FONT_HEIGHT   16
 #  define WVT_DEFAULT_FONT_WIDTH    8
 #endif
-#define WVT_DEFAULT_FONT_NAME       "Terminal"
+#define WVT_DEFAULT_FONT_NAME       "Courier New"
 
 #define BLACK                       RGB( 0x0 ,0x0 ,0x0  )
 #define BLUE                        RGB( 0x0 ,0x0 ,0x85 )
@@ -138,6 +138,9 @@
 #define WM_MY_UPDATE_CARET          ( WM_USER + 0x0101 )
 
 #define SYS_EV_MARK                 1000
+#define HB_MSG_NOTIFYICON          ( WM_USER+1399 )
+#define HB_ID_NOTIFYICON            99
+
 //-------------------------------------------------------------------//
 #define WVT_PICTURES_MAX            50
 #define WVT_FONTS_MAX               50
