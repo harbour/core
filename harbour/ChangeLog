@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-28 10:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * tests/extend2.c
+   * source/debug/dbgentry.c
+   * contrib/hbodbc/odbc.c
+   * contrib/hbw32/tprinter.c
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbzipnew.cpp
+   * contrib/hbpgsql/postgres.c
+     ! Changed strcpy() -> hb_strncpy()
+     ! Changed strcat() -> hb_strncat()
+     ! Some possible buffer overruns fixed along the way in hbziparch.lib
+     ! Fixed some filename buffer sizes in hbziparch.lib
+     ; TOFIX: There are still some remaining strcpy()/strcat() 
+              calls in Harbour code:
+              core: dbgentry.c, hbwince.c
+              contrib: hbnf, hbw32, hbwhat32, hbtip
+              foreign code: zlib, sqlite2/3
+              Not all of these are necessarily bugs (but it's 
+              difficult to know without checking each).
+
 2008-06-28 08:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/set.ch
    * include/hbset.h

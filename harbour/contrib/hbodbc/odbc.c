@@ -240,7 +240,7 @@ HB_FUNC( SQLFETCH )   /* HB_SQLFETCH( hStmt ) --> nRetCode */
 
 HB_FUNC( SQLGETDATA ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBuffer ) --> nRetCode */
 {
-   SQLLEN lLen, lInitBuff;
+   SQLLEN lLen, lInitBuff, lBuffLen;
    PTR  bBuffer, bOut;
    WORD wType, wResult;
    int iReallocs = 0;
@@ -254,7 +254,7 @@ HB_FUNC( SQLGETDATA ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBuffer ) -
    wResult = ! SQL_NO_DATA;
    while( wResult != SQL_NO_DATA )
    {
-      wResult    = SQLGetData( ( HSTMT ) hb_parnl( 1 ), hb_parni( 2 ), wType, ( PTR ) bBuffer, lLen, &lLen );
+      wResult = SQLGetData( ( HSTMT ) hb_parnl( 1 ), hb_parni( 2 ), wType, ( PTR ) bBuffer, lLen, &lLen );
       if( wResult == SQL_SUCCESS && iReallocs == 0 )
       {
          hb_storclen( ( LPSTR ) bBuffer, ( ULONG ) ( lLen < 0 ? 0 : ( lLen < hb_parnl( 4 ) ? lLen : hb_parnl( 4 ) ) ), 5 );
@@ -266,22 +266,22 @@ HB_FUNC( SQLGETDATA ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBuffer ) -
          if( lLen >= lInitBuff )
          {
             /* data right truncated! */
-            bOut    = ( char * ) hb_xgrab( (ULONG) lLen + 1 );
-            hb_strncpy( (char *) bOut, (char *) bBuffer, lLen );
-            lLen = lLen - lInitBuff+2;
-            bBuffer = ( char * ) hb_xrealloc( bBuffer, (ULONG) lLen );
+            lBuffLen = lLen;
+            bOut = ( char * ) hb_xgrab( ( ULONG ) lBuffLen + 1 );
+            hb_strncpy( ( char * ) bOut, ( char * ) bBuffer, lLen );
+            lLen = lLen - lInitBuff + 2;
+            bBuffer = ( char * ) hb_xrealloc( bBuffer, ( ULONG ) lLen );
+            iReallocs++;
          }
          else
          {
             hb_storclen( ( LPSTR ) bBuffer, ( ULONG ) ( lLen < 0 ? 0 : ( lLen < hb_parnl( 4 ) ? lLen : hb_parnl( 4 ) ) ), 5 );
             break;
          }
-         iReallocs++;
       }
-      else if( (wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO ) && iReallocs > 0 )
+      else if( ( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO ) && iReallocs > 0 )
       {
-         /* TOFIX: Possible buffer overrun. Shouldn't we rather use memcpy()? */
-         strcat( (char*) bOut, (char *) bBuffer );
+         hb_strncat( ( char * ) bOut, ( char * ) bBuffer, lBuffLen );
          hb_storclen( ( LPSTR ) bOut, ( ULONG ) ( lLen + lInitBuff - 1 ), 5 );
          wResult = SQL_SUCCESS;
          break;

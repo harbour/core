@@ -55,21 +55,17 @@
 #if defined(HB_OS_WIN_32) && \
     !( defined(__RSXNT__) || defined(__CYGWIN__) || defined(HB_WINCE) )
 
-#   include <windows.h>
+#include <windows.h>
 
-#   if defined(__LCC__)
-#      include <winspool.h>
-#   endif
+#if defined(__LCC__)
+#   include <winspool.h>
+#endif
 
-#   define HB_OS_WIN_32_USED
-#   include "hbapi.h"
-#   include "hbapiitm.h"
+#define HB_OS_WIN_32_USED
+#include "hbapi.h"
+#include "hbapiitm.h"
 
-BOOL hb_GetDefaultPrinter( char * pPrinterName, LPDWORD pdwBufferSize );
-BOOL hb_GetPrinterNameByPort( char * pPrinterName, LPDWORD pdwBufferSize, char * pPortName,
-                              BOOL bSubStr );
-
-#   define MAXBUFFERSIZE 255
+#define MAXBUFFERSIZE 255
 
 BOOL hb_isLegacyDevice( LPSTR pPrinterName )
 {
@@ -292,7 +288,7 @@ BOOL hb_GetPrinterNameByPort( char * pPrinterName, LPDWORD pdwBufferSize,
                char * szPrinterName = HB_TCHAR_CONVFROM( pPrinterEnum->pPrinterName );
                if( *pdwBufferSize >= strlen( szPrinterName ) + 1 )
                {
-                  strcpy( pPrinterName, szPrinterName );
+                  hb_strncpy( pPrinterName, szPrinterName, *pdwBufferSize );
                   Result = TRUE;
                }
                /* Store name length + \0 char for return */
@@ -308,8 +304,8 @@ BOOL hb_GetPrinterNameByPort( char * pPrinterName, LPDWORD pdwBufferSize,
 
 HB_FUNC( PRINTERPORTTONAME )
 {
-   char szDefaultPrinter[MAXBUFFERSIZE];
-   DWORD pdwBufferSize = MAXBUFFERSIZE;
+   char szDefaultPrinter[ MAXBUFFERSIZE ];
+   DWORD pdwBufferSize = sizeof( szDefaultPrinter );
 
    if( ISCHAR( 1 ) && hb_parclen( 1 ) > 0 &&
        hb_GetPrinterNameByPort( szDefaultPrinter, &pdwBufferSize, hb_parcx( 1 ),

@@ -749,7 +749,7 @@ int hb_UnzipSel( char *szFile, PHB_ITEM pBlock, BOOL lWithPath, char *szPassWord
          }
          else
          {
-            strcpy(szPath,pbyBuffer);
+            hb_strncpy( szPath, pbyBuffer, _POSIX_PATH_MAX );
          }
 
          hb_fsChDir((BYTE*)"\\");
@@ -862,7 +862,7 @@ void hb_SetZipComment( char *szComment )
 {
    int iLen = strlen( ( const char * ) szComment ) + 1;
    hbza_pZipI.szComment = ( char* ) hb_xgrab( iLen );
-   strcpy( hbza_pZipI.szComment, szComment );
+   hb_strncpy( hbza_pZipI.szComment, szComment, iLen - 1 );
 }
 
 void hb_SetZipReadOnly(int iRead )
@@ -1151,7 +1151,7 @@ int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,ch
          }
          else
          {
-            strcpy(szPath,pbyBuffer);
+            hb_strncpy( szPath, pbyBuffer, _POSIX_PATH_MAX );
          }
 
          hb_fsChDir((BYTE*)"\\");

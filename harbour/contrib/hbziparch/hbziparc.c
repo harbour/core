@@ -123,7 +123,7 @@ static void UnzipCreateArray( char *szSkleton, int uiOption)
    PHB_ITEM Temp;
    BOOL bOkAdd;
    int ulLen = hb_arrayLen(hbza_ZipArray);
-   char sRegEx[ _POSIX_PATH_MAX + _POSIX_PATH_MAX ];
+   char sRegEx[ _POSIX_PATH_MAX + _POSIX_PATH_MAX + 1 ];
 
    for ( ul = 0 ; ul < ulLen; ul ++ )
    {
@@ -531,7 +531,7 @@ HB_FUNC( HB_ZIPFILE )
 
       if ( pParam )
       {
-         char szFile[ _POSIX_PATH_MAX ];
+         char szFile[ _POSIX_PATH_MAX + 1 ];
          PHB_ITEM pExclude = hb_param( 10, HB_IT_STRING | HB_IT_ARRAY );
          BYTE *pCurDir;
          char *szZipFileName;
@@ -567,9 +567,9 @@ HB_FUNC( HB_ZIPFILE )
 
          if ( ! strchr( hb_parc( 1 ), OS_PATH_DELIMITER ) )
          {
-            strcpy( szFile, (char *) pCurDir );
-            strcat( szFile, OS_PATH_DELIMITER_STRING) ;
-            strcat( szFile, hb_parc( 1 ) ) ;
+            hb_strncpy( szFile, (char *) pCurDir, sizeof( szFile ) - 1 );
+            hb_strncat( szFile, OS_PATH_DELIMITER_STRING, sizeof( szFile ) - 1 );
+            hb_strncat( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
          }
          else
             hb_strncpy( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
@@ -605,7 +605,7 @@ HB_FUNC( HB_GETFILESINZIP )
 {
    if( ISCHAR( 1 ) )
    {
-      char szFile[ _POSIX_PATH_MAX ];
+      char szFile[ _POSIX_PATH_MAX + 1 ];
       char *szZipFileName;
       PHB_ITEM pArray;
 
@@ -633,7 +633,7 @@ HB_FUNC( HB_GETFILECOUNT )
 
    if( ISCHAR( 1 ) )
    {
-      char szFile[ _POSIX_PATH_MAX ];
+      char szFile[ _POSIX_PATH_MAX + 1 ];
       char * szZipFileName;
 
       hb_strncpy( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
@@ -754,7 +754,7 @@ HB_FUNC( HB_ZIPFILEBYTDSPAN )
 
       if ( pParam )
       {
-         char szFile[ _POSIX_PATH_MAX ];
+         char szFile[ _POSIX_PATH_MAX + 1 ];
          PHB_ITEM pExclude = hb_param( 11, HB_IT_STRING | HB_IT_ARRAY );
          char *szZipFileName;
          BYTE *pCurDir;
@@ -781,9 +781,9 @@ HB_FUNC( HB_ZIPFILEBYTDSPAN )
          */
          if ( ! strchr( szFile, OS_PATH_DELIMITER ) )
          {
-            strcpy( szFile, (char *) pCurDir );
-            strcat( szFile, OS_PATH_DELIMITER_STRING) ;
-            strcat( szFile, hb_parc( 1 ) ) ;
+            hb_strncpy( szFile, (char *) pCurDir, sizeof( szFile ) - 1 );
+            hb_strncat( szFile, OS_PATH_DELIMITER_STRING, sizeof( szFile ) - 1 );
+            hb_strncat( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
          }
          else
             hb_strncpy( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
@@ -930,7 +930,7 @@ HB_FUNC( HB_ZIPFILEBYPKSPAN )
 
       if ( pParam )
       {
-         char szFile[ _POSIX_PATH_MAX ];
+         char szFile[ _POSIX_PATH_MAX + 1 ];
          PHB_ITEM pExclude = hb_param( 10, HB_IT_STRING | HB_IT_ARRAY );
          char *szZipFileName;
          BYTE * pCurDir ;
@@ -954,13 +954,13 @@ HB_FUNC( HB_ZIPFILEBYPKSPAN )
          hb_fsChDir( pCurDir ) ;
          /* by JGS, wait until adding the directory to the file name if not specified
          hb_xfree( pCurDir ) ;
-         strcpy( szFile, hb_parc( 1 ) );
+         hb_strncpy( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
          */
          if ( ! strchr( szFile, OS_PATH_DELIMITER ) )
          {
-            strcpy( szFile, (char *) pCurDir );
-            strcat( szFile, OS_PATH_DELIMITER_STRING) ;
-            strcat( szFile, hb_parc( 1 ) ) ;
+            hb_strncpy( szFile, (char *) pCurDir, sizeof( szFile ) - 1 );
+            hb_strncat( szFile, OS_PATH_DELIMITER_STRING, sizeof( szFile ) - 1 );
+            hb_strncat( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
          }
          else
             hb_strncpy( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
@@ -1067,7 +1067,7 @@ HB_FUNC( HB_UNZIPFILE )
 
    if( ISCHAR( 1 ) && ( ISARRAY( 6 ) || ISCHAR( 6 ) ) )
    {
-      char szFile[ _POSIX_PATH_MAX ];
+      char szFile[ _POSIX_PATH_MAX + 1 ];
       PHB_ITEM pUnzip = hb_param( 6, HB_IT_ANY );
       char *szZipFileName;
       BYTE *pCurDir;
@@ -1223,7 +1223,7 @@ HB_FUNC( HB_ZIPDELETEFILES )
 
       if ( pDelZip )
       {
-         char szFile[ _POSIX_PATH_MAX ];
+         char szFile[ _POSIX_PATH_MAX + 1 ];
          char *szZipFileName;
          int ulLen;
 
@@ -1349,7 +1349,7 @@ HB_FUNC( HB_ZIPDELETEFILES )
 
 HB_FUNC( HB_ZIPTESTPK )
 {
-   char szFile[ _POSIX_PATH_MAX ];
+   char szFile[ _POSIX_PATH_MAX + 1 ];
    char *szZipFileName;
 
    hb_strncpy( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
@@ -1552,7 +1552,7 @@ HB_FUNC( HB_UNZIPFILEINDEX )
 
       if( pDelZip )
       {
-         char szFile[ _POSIX_PATH_MAX ];
+         char szFile[ _POSIX_PATH_MAX + 1 ];
          PHB_ITEM Temp,DelZip;
          char* szZipFileName;
          int ulLen;
@@ -1645,7 +1645,7 @@ HB_FUNC(HB_UNZIPALLFILE)
 {
     if ( ! ISCHAR(6) && ! ISARRAY(6) )
     {
-        char szFile[_POSIX_PATH_MAX];
+        char szFile[ _POSIX_PATH_MAX + 1 ];
         char *szZipFile;
         PHB_ITEM pProgress = ISBLOCK( 7 ) ? hb_itemNew( hb_param( 7, HB_IT_BLOCK ) ) : hb_itemNew( NULL );
         hb_strncpy( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );

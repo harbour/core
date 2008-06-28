@@ -185,7 +185,7 @@ CLIPPER HB_UNDOC2()
    char szText[ 25 ];
 
    _retc( "Hello word" );
-   strcpy( szText, _parc( -1 ) );
+   hb_strncpy( szText, _parc( -1 ), sizeof( szText ) - 1 );
    szText[ 5 ] = 0;
    _retc( szText );
 }
@@ -201,7 +201,7 @@ CLIPPER HB_UNDOC4()
    char szText[ 25 ];
 
    _retds( _pards( 1 ) );
-   strcpy( szText, _pards( -1 ) );
+   hb_strncpy( szText, _pards( -1 ), sizeof( szText ) - 1 );
    szText[ 3 ] = '1';
    _retds( szText );
 }

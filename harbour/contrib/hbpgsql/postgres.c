@@ -375,87 +375,87 @@ HB_FUNC( PQMETADATA )
                case BITOID:
                   if( typemod >= 0 )
                      length = ( int ) typemod;
-                  strcpy( buf, "bit" );
+                  hb_strncpy( buf, "bit", sizeof( buf ) - 1 );
                   break;
 
                case BOOLOID:
                   length = 1;
-                  strcpy( buf, "boolean" );
+                  hb_strncpy( buf, "boolean", sizeof( buf ) - 1 );
                   break;
 
                case BPCHAROID:
                   if( typemod >= 0 )
                      length = ( int ) ( typemod - VARHDRSZ );
-                  strcpy( buf, "character" );
+                  hb_strncpy( buf, "character", sizeof( buf ) - 1 );
                   break;
 
                case FLOAT4OID:
-                  strcpy( buf, "real" );
+                  hb_strncpy( buf, "real", sizeof( buf ) - 1 );
                   break;
 
                case FLOAT8OID:
-                  strcpy( buf, "double precision" );
+                  hb_strncpy( buf, "double precision", sizeof( buf ) - 1 );
                   break;
 
                case INT2OID:
-                  strcpy( buf, "smallint" );
+                  hb_strncpy( buf, "smallint", sizeof( buf ) - 1 );
                   break;
 
                case INT4OID:
-                  strcpy( buf, "integer" );
+                  hb_strncpy( buf, "integer", sizeof( buf ) - 1 );
                   break;
 
                case OIDOID:
-                  strcpy( buf, "bigint" );
+                  hb_strncpy( buf, "bigint", sizeof( buf ) - 1 );
                   break;
 
                case INT8OID:
-                  strcpy( buf, "bigint" );
+                  hb_strncpy( buf, "bigint", sizeof( buf ) - 1 );
                   break;
 
                case NUMERICOID:
                   length = ( ( typemod - VARHDRSZ ) >> 16 ) & 0xffff;
                   decimal = ( typemod - VARHDRSZ ) & 0xffff;
-                  strcpy( buf, "numeric" );
+                  hb_strncpy( buf, "numeric", sizeof( buf ) - 1 );
                   break;
 
                case DATEOID:
-                  strcpy( buf, "date" );
+                  hb_strncpy( buf, "date", sizeof( buf ) - 1 );
                   break;
 
                case TIMEOID:
                case TIMETZOID:
-                  strcpy( buf, "timezone" );
+                  hb_strncpy( buf, "timezone", sizeof( buf ) - 1 );
                   break;
 
                case TIMESTAMPOID:
                case TIMESTAMPTZOID:
-                  strcpy( buf, "timestamp" );
+                  hb_strncpy( buf, "timestamp", sizeof( buf ) - 1 );
                   break;
 
                case VARBITOID:
                   if( typemod >= 0 )
                      length = (int) typemod;
-                  strcpy( buf, "bit varying" );
+                  hb_strncpy( buf, "bit varying", sizeof( buf ) - 1 );
                   break;
 
                case VARCHAROID:
                   if( typemod >= 0 )
                      length = ( int ) ( typemod - VARHDRSZ );
-                  strcpy( buf, "character varying" );
+                  hb_strncpy( buf, "character varying", sizeof( buf ) - 1 );
                   break;
 
                case TEXTOID:
-                  strcpy(buf, "text");
+                  hb_strncpy( buf, "text", sizeof( buf ) - 1 );
                   break;
 
                case CASHOID:
-                  strcpy( buf, "money" );
+                  hb_strncpy( buf, "money", sizeof( buf ) - 1 );
                   break;
 
                default:
-                 strcpy( buf, "not supported" );
-                 break;
+                  hb_strncpy( buf, "not supported", sizeof( buf ) - 1 );
+                  break;
             }
 
             pField = hb_arrayGetItemPtr( pResult, i + 1 );

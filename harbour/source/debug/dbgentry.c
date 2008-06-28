@@ -1043,6 +1043,7 @@ hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
    PHB_ITEM pBlock;
    BOOL bAfterId = FALSE;
    char *s;
+   int buffsize;
 
    watch->nVars = 0;
    while ( watch->szExpr[ i ] )
@@ -1180,10 +1181,12 @@ hb_dbgEvalMakeBlock( HB_WATCHPOINT *watch )
       i++;
    }
 
-   s = ( char * ) ALLOC( 8 + strlen( watch->szExpr ) + 1 + 1 );
-   strcpy( s, "{|__dbg|" );
-   strcat( s, watch->szExpr );
-   strcat( s, "}" );
+   buffsize = 8 + strlen( watch->szExpr ) + 1;
+
+   s = ( char * ) ALLOC( buffsize + 1 );
+   hb_strncpy( s, "{|__dbg|", buffsize );
+   hb_strncat( s, watch->szExpr, buffsize );
+   hb_strncat( s, "}", buffsize );
    pBlock = hb_itemNew( NULL );
 
    if( ! hb_dbgEvalMacro( s, pBlock ) )
