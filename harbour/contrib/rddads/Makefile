@@ -3,7 +3,9 @@
 #
 
 ifeq ($(HB_ARCHITECTURE),linux)
+ifeq ($(HB_INC_ADS),)
 HB_INC_ADS = /usr/local/ads/acesdk $(HOME)/ads/acesdk
+endif
 endif
 
 HB_INC_ADS_OK += $(foreach d, $(HB_INC_ADS), $(if $(wildcard $(d)/ace.h),$(d),))

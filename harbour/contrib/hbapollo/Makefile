@@ -3,6 +3,9 @@
 #
 
 ifeq ($(HB_ARCHITECTURE),w32)
+ifneq ($(HB_INC_APOLLO),)
+
+C_USR += -I"${HB_INC_APOLLO}"
 
 ROOT = ../../
 
@@ -24,4 +27,5 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+endif
 endif

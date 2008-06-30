@@ -2,6 +2,18 @@
 # $Id$
 #
 
+ifeq ($(HB_ARCHITECTURE),linux)
+ifeq ($(HB_INC_CURL),)
+HB_INC_CURL = /usr/include
+endif
+endif
+
+HB_INC_CURL_OK += $(foreach d, $(HB_INC_CURL), $(if $(wildcard $(d)/curl/curl.h),$(d),))
+
+ifneq ($(HB_INC_CURL_OK),)
+
+C_USR += $(foreach d, $(HB_INC_CURL_OK), -I$(d))
+
 ROOT = ../../
 
 C_SOURCES=\
@@ -12,11 +24,11 @@ PRG_HEADERS=\
 
 LIBNAME=hbcurl
 
-C_USR += -I/usr/include/curl
-
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
 
 install::
 	$(INSTALL_RULE_HEADERS)
+
+endif

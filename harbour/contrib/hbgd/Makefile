@@ -2,6 +2,18 @@
 # $Id$
 #
 
+ifeq ($(HB_ARCHITECTURE),linux)
+ifeq ($(HB_INC_GD),)
+HB_INC_GD = /usr/include
+endif
+endif
+
+HB_INC_GD_OK += $(foreach d, $(HB_INC_GD), $(if $(wildcard $(d)/gd.h),$(d),))
+
+ifneq ($(HB_INC_GD_OK),)
+
+C_USR += $(foreach d, $(HB_INC_GD_OK), -I$(d))
+
 ROOT = ../../
 
 C_SOURCES=\
@@ -20,11 +32,11 @@ PRG_SOURCES=\
 
 LIBNAME=hbgd
 
-C_USR += -I/usr/include 
-
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
 
 install::
 	$(INSTALL_RULE_HEADERS)
+
+endif

@@ -2,6 +2,21 @@
 # $Id$
 #
 
+ifeq ($(HB_ARCHITECTURE),linux)
+ifeq ($(HB_INC_MYSQL),)
+# a workaround of a problem with different include directories 
+# for mysql header files between different unix distributions
+HB_INC_MYSQL = /usr/include/mysql
+endif
+endif
+
+HB_INC_MYSQL_OK += $(foreach d, $(HB_INC_MYSQL), $(if $(wildcard $(d)/mysql.h),$(d),))
+
+ifneq ($(HB_INC_MYSQL_OK),)
+
+C_USR += $(foreach d, $(HB_INC_MYSQL_OK), -I$(d))
+C_USR += -DBIG_JOINS=1
+
 ROOT = ../../
 
 C_SOURCES=\
@@ -16,13 +31,11 @@ PRG_HEADERS=\
 
 LIBNAME=hbmysql
 
-# a workaround of a problem with different include directories 
-# for mysql header files between different unix distributions
-C_USR += -I/usr/include/mysql -DBIG_JOINS=1
-
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
 
 install::
 	$(INSTALL_RULE_HEADERS)
+
+endif

@@ -8,6 +8,38 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-30 13:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbapollo/Makefile
+   * contrib/hbcurl/Makefile
+   * contrib/hbfbird/Makefile
+   * contrib/hbfimage/Makefile
+   * contrib/hbgd/Makefile
+   * contrib/hbhpdf/Makefile
+   * contrib/hbmysql/Makefile
+   * contrib/hbpgsql/Makefile
+   * contrib/rddads/Makefile
+     + Now possible to specify external header location using 
+       the HB_INC_* envars (similar to the ones used in non-GNU 
+       makefiles). In GNU make, multiple dirs can be specified, 
+       and the make system will always autodetect whether the 
+       headers are really there. If not, the build process will 
+       be skipped for that contrib.
+       Additionally in Linux, the HB_INC_* vars will be inited 
+       with a default, if not specified by the builder. These 
+       default should be verified by Linux users and extended/fixed 
+       accordingly. Most of them were already initialized for 
+       Linux, so there should be no big surprises here.
+
+   * contrib/hbmysql/make_b32.bat
+   * contrib/hbmysql/make_vc.bat
+     + Synced C options with GNU make. (-DBIG_JOINS=1 added)
+
+   * contrib/hbmysql/make_vc.bat
+     - Removed -D__WIN32__. Now it seems to work without it.
+
+   * contrib/hbcurl/make_gcc.sh
+     ! Fixed example dir in comment.
+
 2008-06-30 11:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbapi.h
    * source/rtl/set.c
