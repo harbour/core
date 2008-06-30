@@ -472,10 +472,10 @@ static int hb_socketConnect( HB_SOCKET_STRUCT *Socket )
             int value;
             socklen_t len = sizeof(value);
 
-            if ( getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, (char *) &value, &len ) != SOCKET_ERROR )
+            if( getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, (char *) &value, &len ) == 0 )
             {
                 Socket->iSndBufSize = value;
-                if (getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, (char *) &value, &len ) != SOCKET_ERROR )
+                if( getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, (char *) &value, &len ) == 0 )
                 {
                     Socket->iRcvBufSize = value;
                 }
