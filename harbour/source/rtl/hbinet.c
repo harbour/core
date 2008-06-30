@@ -226,6 +226,12 @@ static void hb_inetLinuxSigusrHandle( int sig )
 }
 #endif
 
+// some compilers has missing this define
+#ifndef SOCKET_ERROR
+#define SOCKET_ERROR            (-1)
+#endif
+
+
 /* JC1: we need it volatile to be minimally thread safe. */
 static volatile int s_iSessions = 0;
 
@@ -472,10 +478,10 @@ static int hb_socketConnect( HB_SOCKET_STRUCT *Socket )
             int value;
             socklen_t len = sizeof(value);
 
-            if( getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, (char *) &value, &len ) == 0 )
+            if( getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, (char *) &value, &len ) != SOCKET_ERROR )
             {
                 Socket->iSndBufSize = value;
-                if( getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, (char *) &value, &len ) == 0 )
+                if( getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, (char *) &value, &len ) != SOCKET_ERROR )
                 {
                     Socket->iRcvBufSize = value;
                 }

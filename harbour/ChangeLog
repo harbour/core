@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-30 17:00 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
+  * source/rtl/hbinet.c
+    + Added define SOCKET_ERROR, that is missing in some compilers.
+
 2008-06-30 16:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbtip/tests/tiptest.prg
      ! Remove strings as arrays access. Thanks Lorenzo.
