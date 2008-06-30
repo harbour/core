@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-30 13:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmysql/make_b32.bat
+   * contrib/hbmysql/make_vc.bat
+   * contrib/hbmysql/Makefile
+     - Removed -DBIG_JOINS. If someone needs this, it can be 
+       specified via C_USR, but to me it seem this is a MySQL 
+       build-time switch, and it has no effect for interface 
+       code.
+
 2008-06-30 13:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbapollo/Makefile
    * contrib/hbcurl/Makefile

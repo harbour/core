@@ -15,7 +15,7 @@ goto POST_EXIT
 :DIR_OK
 
 if "%HB_INC_MYSQL%" == "" set HB_INC_MYSQL=%HB_DIR_MYSQL%\include
-set CFLAGS=-I"%HB_INC_MYSQL%" -DBIG_JOINS=1
+set CFLAGS=-I"%HB_INC_MYSQL%"
 set _HB_DLL_NAME=libmySQL
 set _HB_DLL_DIR=%HB_DIR_MYSQL%\bin
 

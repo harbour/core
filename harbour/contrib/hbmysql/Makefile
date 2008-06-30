@@ -15,7 +15,6 @@ HB_INC_MYSQL_OK += $(foreach d, $(HB_INC_MYSQL), $(if $(wildcard $(d)/mysql.h),$
 ifneq ($(HB_INC_MYSQL_OK),)
 
 C_USR += $(foreach d, $(HB_INC_MYSQL_OK), -I$(d))
-C_USR += -DBIG_JOINS=1
 
 ROOT = ../../
 
