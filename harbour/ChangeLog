@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-30 16:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbtip/tests/tiptest.prg
+     ! Remove strings as arrays access. Thanks Lorenzo.
+
 2008-06-30 14:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbextern.ch
      + New inet functions added.
