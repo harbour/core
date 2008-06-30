@@ -876,12 +876,20 @@ HB_FUNC( SET )
       case HB_SET_HBOUTLOG:
          if( hb_set.HB_SET_HBOUTLOG ) hb_retc( hb_set.HB_SET_HBOUTLOG );
          else hb_retc( NULL );
-         if( args > 1 ) hb_set.HB_SET_HBOUTLOG = set_string( pArg2, hb_set.HB_SET_HBOUTLOG );
+         if( args > 1 )
+         {
+            hb_set.HB_SET_HBOUTLOG = set_string( pArg2, hb_set.HB_SET_HBOUTLOG );
+            hb_xsetfilename( hb_set.HB_SET_HBOUTLOG );
+         }
          break;
       case HB_SET_HBOUTLOGINFO:
          if( hb_set.HB_SET_HBOUTLOGINFO ) hb_retc( hb_set.HB_SET_HBOUTLOGINFO );
          else hb_retc( NULL );
-         if( args > 1 ) hb_set.HB_SET_HBOUTLOGINFO = set_string( pArg2, hb_set.HB_SET_HBOUTLOGINFO );
+         if( args > 1 )
+         {
+            hb_set.HB_SET_HBOUTLOGINFO = set_string( pArg2, hb_set.HB_SET_HBOUTLOGINFO );
+            hb_xsetinfo( hb_set.HB_SET_HBOUTLOGINFO );
+         }
          break;
 
       case HB_SET_INVALID_:
@@ -1003,6 +1011,9 @@ void hb_setInitialize( void )
    hb_set.HB_SET_TRIMFILENAME = FALSE;
    hb_set.HB_SET_HBOUTLOG = hb_strdup( "hb_out.log" );
    hb_set.HB_SET_HBOUTLOGINFO = hb_strdup( "" );
+
+   hb_xsetfilename( hb_set.HB_SET_HBOUTLOG );
+   hb_xsetinfo( hb_set.HB_SET_HBOUTLOGINFO );
 
    sp_sl_first = sp_sl_last = NULL;
    s_next_listener = 1;

@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-30 11:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbapi.h
+   * source/rtl/set.c
+   * source/vm/fm.c
+     ! Fixed _SET_HBOUTLOG, _SET_HBOUTLOGINFO handling in fm.c.
+       hb_setget*() functions cannot be used here as the set 
+       system is deinited at this point. So local buffers are 
+       holding the values.
+
 2008-06-30 10:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/gtwvg/Makefile
    * contrib/hbapollo/Makefile

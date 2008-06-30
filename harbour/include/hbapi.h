@@ -470,6 +470,8 @@ extern HB_EXPORT void   hb_xfree( void * pMem );                    /* frees mem
 extern HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize );   /* reallocates memory */
 extern HB_EXPORT ULONG  hb_xsize( void * pMem );                    /* returns the size of an allocated memory block */
 extern HB_EXPORT ULONG  hb_xquery( USHORT uiMode );                 /* Query different types of memory information */
+extern HB_EXPORT void   hb_xsetfilename( char * szValue );
+extern HB_EXPORT void   hb_xsetinfo( char * szValue );
 
 extern HB_EXPORT HB_VMHANDLE hb_xvalloc( ULONG nSize, USHORT nFlags );
 extern HB_EXPORT void        hb_xvfree( HB_VMHANDLE h );

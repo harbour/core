@@ -156,6 +156,9 @@ static LONG s_lMemoryConsumed = 0;    /* memory max size consumed */
 static PHB_MEMINFO s_pFirstBlock = NULL;
 static PHB_MEMINFO s_pLastBlock = NULL;
 
+static char s_szFileName[ _POSIX_PATH_MAX + 1 ] = { '\0' };
+static char s_szInfo[ 256 ] = { '\0' };
+
 #else /* ! HB_FM_STATISTICS */
 
 typedef void * PHB_MEMINFO;
@@ -167,6 +170,25 @@ typedef void * PHB_MEMINFO;
 #endif /* HB_FM_STATISTICS */
 
 #define HB_MEM_PTR( p )       ( ( void * ) ( ( BYTE * ) ( p ) + HB_MEMINFO_SIZE ) )
+
+
+HB_EXPORT void hb_xsetfilename( char * szValue )
+{
+#ifdef HB_FM_STATISTICS
+   hb_strncpy( s_szFileName, szValue, sizeof( s_szFileName ) - 1 );
+#else
+   HB_SYMBOL_UNUSED( szValue );
+#endif
+}
+
+HB_EXPORT void hb_xsetinfo( char * szValue )
+{
+#ifdef HB_FM_STATISTICS
+   hb_strncpy( s_szInfo, szValue, sizeof( s_szInfo ) - 1 );
+#else
+   HB_SYMBOL_UNUSED( szValue );
+#endif
+}
 
 
 HB_EXPORT void * hb_xalloc( ULONG ulSize )         /* allocates fixed memory, returns NULL on failure */
@@ -583,8 +605,8 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       char buffer[ 100 ];
       FILE * hLog = NULL;
 
-      if( s_lMemoryBlocks )
-         hLog = hb_fopen( hb_setGetCPtr( HB_SET_HBOUTLOG ), "a+" );
+      if( s_lMemoryBlocks && s_szFileName[ 0 ] )
+         hLog = hb_fopen( s_szFileName, "a+" );
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );
@@ -604,8 +626,8 @@ HB_EXPORT void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
          
             fprintf( hLog, HB_I_("Application Memory Allocation Report - %s\n"), hb_cmdargARGV()[0] );
             fprintf( hLog, HB_I_("Terminated at: %04d.%02d.%02d %s\n"), iYear, iMonth, iDay, szTime );
-            if( *hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) )
-               fprintf( hLog, HB_I_("Info: %s\n"), hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) );
+            if( s_szInfo[ 0 ] )
+               fprintf( hLog, HB_I_("Info: %s\n"), s_szInfo );
             fprintf( hLog, "%s\n", buffer );
          }
 
