@@ -226,7 +226,7 @@ static void hb_inetLinuxSigusrHandle( int sig )
 }
 #endif
 
-// some compilers has missing this define
+/* some compilers has missing this define */
 #ifndef SOCKET_ERROR
 #define SOCKET_ERROR            (-1)
 #endif
