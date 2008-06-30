@@ -2,12 +2,8 @@
 # $Id$
 #
 
-ifeq ($(HB_ARCHITECTURE),linux)
 ifeq ($(HB_INC_MYSQL),)
-# a workaround of a problem with different include directories 
-# for mysql header files between different unix distributions
 HB_INC_MYSQL = /usr/include/mysql
-endif
 endif
 
 HB_INC_MYSQL_OK += $(foreach d, $(HB_INC_MYSQL), $(if $(wildcard $(d)/mysql.h),$(d),))

@@ -2,10 +2,8 @@
 # $Id$
 #
 
-ifeq ($(HB_ARCHITECTURE),linux)
 ifeq ($(HB_INC_LIBHARU),)
 HB_INC_LIBHARU = /usr/include
-endif
 endif
 
 HB_INC_LIBHARU_OK += $(foreach d, $(HB_INC_LIBHARU), $(if $(wildcard $(d)/hpdf.h),$(d),))

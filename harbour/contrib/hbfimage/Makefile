@@ -2,10 +2,8 @@
 # $Id$
 #
 
-ifeq ($(HB_ARCHITECTURE),linux)
 ifeq ($(HB_INC_FREEIMAGE),)
 HB_INC_FREEIMAGE = /usr/include
-endif
 endif
 
 HB_INC_FREEIMAGE_OK += $(foreach d, $(HB_INC_FREEIMAGE), $(if $(wildcard $(d)/FreeImage.h),$(d),))

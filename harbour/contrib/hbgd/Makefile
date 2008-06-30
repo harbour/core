@@ -2,10 +2,8 @@
 # $Id$
 #
 
-ifeq ($(HB_ARCHITECTURE),linux)
 ifeq ($(HB_INC_GD),)
-HB_INC_GD = /usr/include
-endif
+HB_INC_GD = /usr/include /opt/local/include
 endif
 
 HB_INC_GD_OK += $(foreach d, $(HB_INC_GD), $(if $(wildcard $(d)/gd.h),$(d),))

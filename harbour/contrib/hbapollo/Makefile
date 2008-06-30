@@ -3,9 +3,12 @@
 #
 
 ifeq ($(HB_ARCHITECTURE),w32)
-ifneq ($(HB_INC_APOLLO),)
 
-C_USR += -I"${HB_INC_APOLLO}"
+HB_INC_APOLLO_OK += $(foreach d, $(HB_INC_APOLLO), $(if $(wildcard $(d)/sde61.h),$(d),))
+
+ifneq ($(HB_INC_APOLLO_OK),)
+
+C_USR += $(foreach d, $(HB_INC_APOLLO_OK), -I$(d))
 
 ROOT = ../../
 

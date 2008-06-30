@@ -2,10 +2,8 @@
 # $Id$
 #
 
-ifeq ($(HB_ARCHITECTURE),linux)
 ifeq ($(HB_INC_PGSQL),)
 HB_INC_PGSQL = /usr/local/pgsql/include /usr/local/pgsql/include/libpq /usr/include/pgsql /usr/include/postgresql /postgres/include
-endif
 endif
 
 HB_INC_PGSQL_OK += $(foreach d, $(HB_INC_PGSQL), $(if $(wildcard $(d)/libpq-fe.h),$(d),))

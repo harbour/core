@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-30 19:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbapollo/Makefile
+   * contrib/hbcurl/Makefile
+   * contrib/hbfbird/Makefile
+   * contrib/hbfimage/Makefile
+   * contrib/hbgd/Makefile
+   * contrib/hbhpdf/Makefile
+   * contrib/hbmysql/Makefile
+   * contrib/hbpgsql/Makefile
+   * contrib/rddads/Makefile
+     * Changed to use default for all architecture.
+       Let's hope that checking existence for mixed platform 
+       paths won't create problems on any platforms.
+     + Added include path detection logic to hbapollo, too.
+     + Added Darwin path to hbgd include path list.
+     + Added std Linux path to hbfbird include path list.
+     ; TOFIX: Seems that 'ifneq ($(HB_INC_*_OK),)' doesn't 
+              really work if no path in the path list is valid.
+
 2008-06-30 17:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/hbinet.c
      ! Fixed non-ANSI comment.
