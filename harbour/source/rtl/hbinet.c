@@ -353,10 +353,10 @@ static struct hostent * hb_getHosts( char * name, HB_SOCKET_STRUCT *Socket )
    if( Host == NULL && Socket != NULL )
    {
 #if defined(HB_OS_WIN_32)
-      HB_SOCKET_SET_ERROR2( Socket, WSAGetLastError() , "Generic error in GetHostByName()" );
+      HB_SOCKET_SET_ERROR2( Socket, WSAGetLastError() , "Generic error in gethostbyname()" );
       WSASetLastError( 0 );
 #elif defined(HB_OS_OS2) || defined(HB_OS_HPUX) || defined(__WATCOMC__)
-      HB_SOCKET_SET_ERROR2( Socket, h_errno, "Generic error in GetHostByName()" );
+      HB_SOCKET_SET_ERROR2( Socket, h_errno, "Generic error in gethostbyname()" );
 #else
       HB_SOCKET_SET_ERROR2( Socket, h_errno, (char *) hstrerror( h_errno ) );
 #endif
