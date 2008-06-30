@@ -21,7 +21,4 @@ PRG_SOURCES=\
 
 LIBNAME=hbmisc
 
-DIRS=test
-
 include $(TOP)$(ROOT)config/lib.cf
-#include $(TOP)$(ROOT)config/dir.cf

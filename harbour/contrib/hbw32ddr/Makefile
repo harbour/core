@@ -18,6 +18,6 @@ LIBNAME=hbw32ddr
 
 include $(TOP)$(ROOT)config/lib.cf
 
-CFLAGS := $(CFLAGS) -I.
+C_USR += -I.
 
 endif

@@ -8,6 +8,65 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-06-30 10:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/gtwvg/Makefile
+   * contrib/hbapollo/Makefile
+   * contrib/hbbtree/Makefile
+   * contrib/hbclipsm/Makefile
+   * contrib/hbct/Makefile
+   * contrib/hbfbird/Makefile
+   * contrib/hbfimage/Makefile
+   * contrib/hbgd/Makefile
+   * contrib/hbhpdf/Makefile
+   * contrib/hbmisc/Makefile
+   * contrib/hbmsql/Makefile
+   * contrib/hbmysql/Makefile
+   * contrib/hbmzip/Makefile
+   * contrib/hbnf/Makefile
+   * contrib/hbodbc/Makefile
+   * contrib/hbpgsql/Makefile
+   * contrib/hbsqlit2/Makefile
+   * contrib/hbsqlit3/Makefile
+   * contrib/hbtip/Makefile
+   * contrib/hbtpathy/Makefile
+   * contrib/hbvpdf/Makefile
+   * contrib/hbw32/Makefile
+   * contrib/hbw32ddr/Makefile
+   * contrib/hbwhat32/Makefile
+   * contrib/rddado/Makefile
+   * contrib/rddads/Makefile
+     ! CFLAGS -> C_USR
+     * var = var + x -> var += x
+     ! Added header install rules for all places where such 
+       headers are defined. I wonder why isn't this the default 
+       in our GNU-make system.
+     * few other minor cleanups.
+
+   * contrib/rddads/Makefile
+     * Experimenting with HB_INC_ADS implementation in GNU-make system.
+       HB_INC_ADS can now used to enable to rddads builds.
+       In GNU-make HB_INC_ADS can contain a list of possible places 
+       where headers may be found. GNU-make will validate these and 
+       if the headers were found in any of these places, rddads will 
+       be built. For Linux there are some default dirs which will 
+       always be checked.
+       'HB_WITHOUT_ADS' and 'ACE_DIRS' is not longer used.
+     ; Please test. If this works out okay, we can use this method 
+       for the rest of 3rd party dependent contribs.
+
+   * contrib/rddads/Makefile
+     % Don't define WIN32 in GNU-makefiles for w32.
+
+   * contrib/hbmisc/Makefile
+     ! Don't include non-existing 'test' dir in make.
+
+   * contrib/gtwvg/Makefile
+   * contrib/gtwvg/common.mak
+     ! Not installing private .h file to common include dir.
+
+   * contrib/hbw32ddr/w32_ddrw.cpp
+     ! Fixed one GCC warning. (Some remain)
+
 2008-06-28 11:37 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * contrib/gtwvg/gtwvg.c
   * contrib/gtwvg/gtwvg.h

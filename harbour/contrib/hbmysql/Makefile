@@ -16,8 +16,13 @@ PRG_HEADERS=\
 
 LIBNAME=hbmysql
 
-include $(TOP)$(ROOT)config/lib.cf
-
 # a workaround of a problem with different include directories 
 # for mysql header files between different unix distributions
-CFLAGS := -I/usr/include/mysql -DBIG_JOINS=1
+C_USR += -I/usr/include/mysql -DBIG_JOINS=1
+
+include $(TOP)$(ROOT)config/header.cf
+INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+include $(TOP)$(ROOT)config/lib.cf
+
+install::
+	$(INSTALL_RULE_HEADERS)

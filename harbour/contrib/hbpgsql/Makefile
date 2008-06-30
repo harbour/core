@@ -16,8 +16,13 @@ PRG_HEADERS=\
 
 LIBNAME=hbpgsql
 
-include $(TOP)$(ROOT)config/lib.cf
-
 PG_DIRS = /usr/local/pgsql/include /usr/local/pgsql/include/libpq \
           /usr/include/pgsql /usr/include/postgresql /postgres/include
-CFLAGS += $(foreach d, $(PG_DIRS), $(if $(wildcard $(d)/libpq-fe.h),-I$(d),))
+C_USR += $(foreach d, $(PG_DIRS), $(if $(wildcard $(d)/libpq-fe.h),-I$(d),))
+
+include $(TOP)$(ROOT)config/header.cf
+INSTALL_RULE_HEADERS := $(INSTALL_RULE)
+include $(TOP)$(ROOT)config/lib.cf
+
+install::
+	$(INSTALL_RULE_HEADERS)

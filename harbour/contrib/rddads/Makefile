@@ -2,7 +2,15 @@
 # $Id$
 #
 
-ifneq ($(HB_WITHOUT_ADS),yes)
+ifeq ($(HB_ARCHITECTURE),linux)
+HB_INC_ADS = /usr/local/ads/acesdk $(HOME)/ads/acesdk
+endif
+
+HB_INC_ADS_OK += $(foreach d, $(HB_INC_ADS), $(if $(wildcard $(d)/ace.h),$(d),))
+
+ifneq ($(HB_INC_ADS_OK),)
+
+C_USR += $(foreach d, $(HB_INC_ADS_OK), -I$(d))
 
 ROOT = ../../
 
@@ -15,15 +23,6 @@ PRG_HEADERS=\
 	ads.ch \
 
 LIBNAME=rddads
-
-ifeq ($(HB_ARCHITECTURE),w32)
-   C_USR += -DWIN32
-endif
-
-ifeq ($(ACE_DIRS),)
-export ACE_DIRS = /usr/local $(HOME)
-C_USR += $(foreach d, $(ACE_DIRS), $(if $(wildcard $(d)/ads/acesdk/ace.h),-I$(d)/ads/acesdk,))
-endif
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

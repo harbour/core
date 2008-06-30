@@ -763,7 +763,7 @@ HB_FUNC( DD_MSGBOX )
    else
       m2 = deftitle;
 
-   MessageBox( hb_dd_g_DDHwnd, m1, m2, NULL);
+   MessageBox( hb_dd_g_DDHwnd, m1, m2, 0 );
 }
 
 //------------------------------------------------------------------//

@@ -11,9 +11,6 @@ C_SOURCES=\
 	wvgcore.c \
 	wvgutils.c \
 
-C_HEADERS=\
-	gtwvg.h \
-
 PRG_SOURCES=\
 	wvgclass.prg \
 	wvgpaint.prg \
@@ -24,6 +21,11 @@ PRG_HEADERS=\
 
 LIBNAME=gtwvg
 
+include $(TOP)$(ROOT)config/header.cf
+INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
+
+install::
+	$(INSTALL_RULE_HEADERS)
 
 endif

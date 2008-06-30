@@ -6,9 +6,6 @@ LIBNAME = $(LIBPREF)gtwvg
 
 LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
-C_HEADERS=\
-   gtwvg.h \
-
 PRG_HEADERS=\
    hbgtwvg.ch \
    wvtwin.ch \

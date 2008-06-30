@@ -85,8 +85,13 @@ LIBNAME=hbwhat32
 
 # This lib needs xhb headers to compile, and this is 
 # the hack to help Harbour find them.
-PRG_USR := $(PRG_USR) -I../../../xhb
+PRG_USR += -I../../../xhb
 
+include $(TOP)$(ROOT)config/header.cf
+INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
+
+install::
+	$(INSTALL_RULE_HEADERS)
 
 endif

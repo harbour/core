@@ -14,7 +14,7 @@ PRG_SOURCES=\
 
 LIBNAME=hbhpdf
 
-CFLAGS := $(CFLAGS) -I/usr/include
+C_USR += -I/usr/include
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)

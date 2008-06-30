@@ -4,7 +4,7 @@
 
 ROOT = ../../
 
-CFLAGS += -I/opt/firebird/include
+C_USR += -I/opt/firebird/include
 
 C_SOURCES=\
 	firebird.c \

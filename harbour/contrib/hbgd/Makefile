@@ -20,11 +20,7 @@ PRG_SOURCES=\
 
 LIBNAME=hbgd
 
-ifeq ($(HB_COMPILER),mingw32)
-   CFLAGS := $(CFLAGS) -I/usr/include 
-else
-   CFLAGS := $(CFLAGS) -I/usr/include
-endif
+C_USR += -I/usr/include 
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
@@ -32,4 +28,3 @@ include $(TOP)$(ROOT)config/lib.cf
 
 install::
 	$(INSTALL_RULE_HEADERS)
-
