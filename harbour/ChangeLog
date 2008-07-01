@@ -8,6 +8,29 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-01 17:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbapollo/Makefile
+   * contrib/hbcurl/Makefile
+   * contrib/hbfbird/Makefile
+   * contrib/hbfimage/Makefile
+   * contrib/hbgd/Makefile
+   * contrib/hbhpdf/Makefile
+   * contrib/hbmysql/Makefile
+   * contrib/hbpgsql/Makefile
+   * contrib/rddads/Makefile
+     ! Fixed a macro check to make autodetection really work.
+       So the previous TOFIX (2008-06-30 19:20 UTC+0200) is 
+       now cleared.
+
+   * contrib/hbgf/hbgfgtk/Makefile
+     + Added header detection. (default: /usr/include)
+
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbzipcom.cpp
+   * contrib/hbziparch/hbzipnew.cpp
+     ! Pacified Linux warnings.
+     * Some formatting.
+
 2008-07-01 16:28 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-ce-spec
   * harbour/harbour-w32-spec

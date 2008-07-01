@@ -6,7 +6,7 @@ ifeq ($(HB_ARCHITECTURE),w32)
 
 HB_INC_APOLLO_OK += $(foreach d, $(HB_INC_APOLLO), $(if $(wildcard $(d)/sde61.h),$(d),))
 
-ifneq ($(HB_INC_APOLLO_OK),)
+ifneq ($(strip $(HB_INC_APOLLO_OK)),)
 
 C_USR += $(foreach d, $(HB_INC_APOLLO_OK), -I$(d))
 

@@ -4,6 +4,17 @@
 
 ifeq ($(HB_ARCHITECTURE),linux)
 
+ifeq ($(HB_INC_GTK),)
+HB_INC_GTK = /usr/include
+endif
+
+HB_INC_GTK_OK += $(foreach d, $(HB_INC_GTK), $(if $(wildcard $(d)/glib.h),$(d),))
+
+ifneq ($(strip $(HB_INC_GTK_OK)),)
+
+C_USR += $(foreach d, $(HB_INC_GTK_OK), -I$(d))
+C_USR += `pkg-config --cflags gtk+-2.0`
+
 ROOT = ../../../
 
 C_SOURCES=\
@@ -24,9 +35,7 @@ PRG_SOURCES=\
 
 LIBNAME=hbgfgtk
 
-C_USR += `pkg-config --cflags gtk+-2.0`
-
-
 include $(TOP)$(ROOT)config/lib.cf
 
+endif
 endif

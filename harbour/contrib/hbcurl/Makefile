@@ -8,7 +8,7 @@ endif
 
 HB_INC_CURL_OK += $(foreach d, $(HB_INC_CURL), $(if $(wildcard $(d)/curl/curl.h),$(d),))
 
-ifneq ($(HB_INC_CURL_OK),)
+ifneq ($(strip $(HB_INC_CURL_OK)),)
 
 C_USR += $(foreach d, $(HB_INC_CURL_OK), -I$(d))
 

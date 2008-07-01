@@ -8,7 +8,7 @@ endif
 
 HB_INC_MYSQL_OK += $(foreach d, $(HB_INC_MYSQL), $(if $(wildcard $(d)/mysql.h),$(d),))
 
-ifneq ($(HB_INC_MYSQL_OK),)
+ifneq ($(strip $(HB_INC_MYSQL_OK)),)
 
 C_USR += $(foreach d, $(HB_INC_MYSQL_OK), -I$(d))
 

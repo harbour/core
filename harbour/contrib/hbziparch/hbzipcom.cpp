@@ -64,7 +64,10 @@ class SegmCallbackc : public CZipSegmCallback
    {
       PHB_ITEM Disk=hb_itemPutNL( NULL, m_uVolumeNeeded );
         
+      HB_SYMBOL_UNUSED( iProgress );
+
       hb_vmEvalBlockV( hbza_ChangeDiskBlock, 1, Disk );
+
       hb_itemRelease( Disk );
 
       return TRUE;
@@ -78,6 +81,8 @@ class SegmActionCallbackc : public CZipActionCallback
       PHB_ITEM Disk = hb_itemPutNL( NULL, m_uProcessed );
       PHB_ITEM Total = hb_itemPutNL( NULL, m_uTotalToProcess );
 
+      HB_SYMBOL_UNUSED( iProgress );
+
       hb_vmEvalBlockV( hbza_pProgressInfo, 2, Disk, Total );
 
       hb_itemRelease( Disk );
@@ -88,7 +93,7 @@ class SegmActionCallbackc : public CZipActionCallback
 };
 
 static DWORD hb_GetCurrentFileSize( LPCTSTR szFile )
-#if defined( HB_OS_WIN_32 ) || defined( __MINGW32__ )
+#if defined( HB_OS_WIN_32 )
 {
    DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
    HANDLE hFind;
@@ -423,7 +428,7 @@ int hb_CompressFileStd( char *szFile, char *szFiletoCompress, int iCompLevel, PH
                
             }
 
-            #if ( defined( __WIN32__ ) || defined( __MINGW32__ ) ) && defined( HB_USE_DRIVE_ADD )
+            #if defined( HB_OS_WIN_32 ) && defined( HB_USE_DRIVE_ADD )
                if ( bDrive && !bAdded  )
                {
                   /* NOTE: Was AddNewFileDrv() */
@@ -549,7 +554,7 @@ int hb_CmpTdSpanStd( char *szFile, char * szFiletoCompress, int iCompLevel, PHB_
            
          }
 
-         #if defined( __WIN32__ ) || defined( __MINGW32__ )
+         #if defined( HB_OS_WIN_32 )
             if ( bDrive && !bAdded  )
             {
                /* NOTE: Was AddNewFileDrv() */

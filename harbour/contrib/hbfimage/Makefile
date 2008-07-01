@@ -8,7 +8,7 @@ endif
 
 HB_INC_FREEIMAGE_OK += $(foreach d, $(HB_INC_FREEIMAGE), $(if $(wildcard $(d)/FreeImage.h),$(d),))
 
-ifneq ($(HB_INC_FREEIMAGE_OK),)
+ifneq ($(strip $(HB_INC_FREEIMAGE_OK)),)
 
 C_USR += $(foreach d, $(HB_INC_FREEIMAGE_OK), -I$(d))
 

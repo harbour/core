@@ -8,7 +8,7 @@ endif
 
 HB_INC_PGSQL_OK += $(foreach d, $(HB_INC_PGSQL), $(if $(wildcard $(d)/libpq-fe.h),$(d),))
 
-ifneq ($(HB_INC_PGSQL_OK),)
+ifneq ($(strip $(HB_INC_PGSQL_OK)),)
 
 C_USR += $(foreach d, $(HB_INC_PGSQL_OK), -I$(d))
 
