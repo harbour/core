@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 01:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/Makefile
+   * contrib/hbziparch/common.mak
+   - contrib/hbziparch/hbcomprs.c
+   + contrib/hbziparch/hbxdirec.c
+     ! Renamed to avoid collision with an xhb contrib file.
+
 2008-07-01 22:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/hbzipnew.cpp
      ! Fixed a potential GPFs. (GCC warnings)

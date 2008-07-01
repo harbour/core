@@ -11,7 +11,7 @@ PRG_HEADERS = \
 
 C_SOURCES = \
 	hbziparc.c \
-	hbcomprs.c \
+	hbxdirec.c \
 
 CPP_SOURCES = \
 	hbzipnew.cpp \
