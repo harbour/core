@@ -508,7 +508,7 @@ HB_FUNC( CURL_EASY_CLEANUP )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if LIBCURL_VERSION_NUM >= 0x071201
+#if LIBCURL_VERSION_NUM >= 0x070C01
 
 HB_FUNC( CURL_EASY_RESET )
 {
@@ -525,7 +525,7 @@ HB_FUNC( CURL_EASY_RESET )
 
 #endif
 
-#if LIBCURL_VERSION_NUM >= 0x071800
+#if LIBCURL_VERSION_NUM >= 0x071200
 
 HB_FUNC( CURL_EASY_PAUSE )
 {
@@ -553,7 +553,7 @@ HB_FUNC( CURL_EASY_PERFORM )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if LIBCURL_VERSION_NUM >= 0x071802
+#if LIBCURL_VERSION_NUM >= 0x071202
 
 /* NOTE: curl_easy_send( curl, cBuffer, @nSentBytes ) -> nResult */
 HB_FUNC( CURL_EASY_SEND )
@@ -643,7 +643,7 @@ HB_FUNC( CURL_EASY_SETOPT )
          /* HB_CURLOPT_WRITEDATA */
          /* HB_CURLOPT_READFUNCTION */
          /* HB_CURLOPT_READDATA */
-#if LIBCURL_VERSION_NUM >= 0x071203
+#if LIBCURL_VERSION_NUM >= 0x070C03
          /* HB_CURLOPT_IOCTLFUNCTION */
          /* HB_CURLOPT_IOCTLDATA */
 #endif
@@ -973,7 +973,7 @@ HB_FUNC( CURL_EASY_SETOPT )
          case HB_CURLOPT_FTP_SSL_CCC:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTP_SSL_CCC, hb_parnl( 3 ) );
             break;
-#if LIBCURL_VERSION_NUM >= 0x071203
+#if LIBCURL_VERSION_NUM >= 0x070C03
          case HB_CURLOPT_FTP_ACCOUNT:
             res = curl_easy_setopt( hb_curl->curl, CURLOPT_FTP_ACCOUNT, hb_parc( 3 ) );
             break;
@@ -1399,7 +1399,7 @@ HB_FUNC( CURL_EASY_GETINFO )
          type = HB_CURL_INFO_TYPE_LONG;
          break;
 #endif
-#if LIBCURL_VERSION_NUM >= 0x071802
+#if LIBCURL_VERSION_NUM >= 0x071202
       case HB_CURLINFO_REDIRECT_URL:
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_REDIRECT_URL, &ret_string );
          type = HB_CURL_INFO_TYPE_STR;
@@ -1451,13 +1451,13 @@ HB_FUNC( CURL_EASY_GETINFO )
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_CONTENT_TYPE, &ret_string );
          type = HB_CURL_INFO_TYPE_STR;
          break;
-#if LIBCURL_VERSION_NUM >= 0x071003
+#if LIBCURL_VERSION_NUM >= 0x070A03
       case HB_CURLINFO_PRIVATE:
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_PRIVATE, &ret_ptr );
          type = HB_CURL_INFO_TYPE_PTR;
          break;
 #endif
-#if LIBCURL_VERSION_NUM >= 0x071008
+#if LIBCURL_VERSION_NUM >= 0x070A08
       case HB_CURLINFO_HTTPAUTH_AVAIL:
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_HTTPAUTH_AVAIL, &ret_long );
          type = HB_CURL_INFO_TYPE_LONG;
@@ -1467,31 +1467,31 @@ HB_FUNC( CURL_EASY_GETINFO )
          type = HB_CURL_INFO_TYPE_LONG;
          break;
 #endif
-#if LIBCURL_VERSION_NUM >= 0x071202
+#if LIBCURL_VERSION_NUM >= 0x070C02
       case HB_CURLINFO_OS_ERRNO:
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_OS_ERRNO, &ret_long );
          type = HB_CURL_INFO_TYPE_LONG;
          break;
 #endif
-#if LIBCURL_VERSION_NUM >= 0x071203
+#if LIBCURL_VERSION_NUM >= 0x070C03
       case HB_CURLINFO_NUM_CONNECTS:
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_NUM_CONNECTS, &ret_long );
          type = HB_CURL_INFO_TYPE_LONG;
          break;
 #endif
-#if LIBCURL_VERSION_NUM >= 0x071401
+#if LIBCURL_VERSION_NUM >= 0x070E01
       case HB_CURLINFO_COOKIELIST:
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_COOKIELIST, &ret_slist );
          type = HB_CURL_INFO_TYPE_SLIST;
          break;
 #endif
-#if LIBCURL_VERSION_NUM >= 0x071502
+#if LIBCURL_VERSION_NUM >= 0x070F02
       case HB_CURLINFO_LASTSOCKET:
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_LASTSOCKET, &ret_long );
          type = HB_CURL_INFO_TYPE_LONG;
          break;
 #endif
-#if LIBCURL_VERSION_NUM >= 0x071504
+#if LIBCURL_VERSION_NUM >= 0x070F04
       case HB_CURLINFO_FTP_ENTRY_PATH:
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_FTP_ENTRY_PATH, &ret_string );
          type = HB_CURL_INFO_TYPE_STR;
@@ -1548,7 +1548,7 @@ HB_FUNC( CURL_EASY_GETINFO )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if LIBCURL_VERSION_NUM >= 0x071504
+#if LIBCURL_VERSION_NUM >= 0x070F04
 
 HB_FUNC( CURL_EASY_ESCAPE )
 {
@@ -1671,7 +1671,7 @@ HB_FUNC( CURL_VERSION_INFO )
       hb_reta( 0 );
 }
 
-#if LIBCURL_VERSION_NUM >= 0x071200
+#if LIBCURL_VERSION_NUM >= 0x070C00
 
 HB_FUNC( CURL_EASY_STRERROR )
 {
