@@ -778,58 +778,74 @@ HB_FUNC( HB_INETCLEARPERIODCALLBACK )
 
 HB_FUNC( HB_INETGETSNDBUFSIZE )
 {
-   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
+   HB_SOCKET_STRUCT * Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETGETSNDBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else
    {
       int value;
       socklen_t len = sizeof( value );
-      getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( void *) &value, &len );
+#if defined( HB_OS_WIN_32 )
+      getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( char * ) &value, &len );
+#else
+      getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( void * ) &value, &len );
+#endif
       hb_retni( value );
    }
 }
 
 HB_FUNC( HB_INETGETRCVBUFSIZE )
 {
-   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
+   HB_SOCKET_STRUCT * Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETGETRCVBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else
    {
       int value;
       socklen_t len = sizeof( value );
+#if defined( HB_OS_WIN_32 )
+      getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, ( char * ) &value, &len );
+#else
       getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, ( void * ) &value, &len );
+#endif
       hb_retni( value );
    }
 }
 
 HB_FUNC( HB_INETSETSNDBUFSIZE )
 {
-   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
+   HB_SOCKET_STRUCT * Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETSETSNDBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else
    {
       int value = hb_parni( 2 );
+#if defined( HB_OS_WIN_32 )
+      setsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( char * ) &value, sizeof( value ) );
+#else
       setsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( void * ) &value, sizeof( value ) );
+#endif
       hb_retni( value );
    }
 }
 
 HB_FUNC( HB_INETSETRCVBUFSIZE )
 {
-   HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
+   HB_SOCKET_STRUCT * Socket = HB_PARSOCKET( 1 );
 
    if( Socket == NULL )
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETSETRCVBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else
    {
       int value = hb_parni( 2 );
+#if defined( HB_OS_WIN_32 )
+      setsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, ( char * ) &value, sizeof( value ) );
+#else
       setsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, ( void * ) &value, sizeof( value ) );
+#endif
       hb_retni( value );
    }
 }

@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-01 20:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/hbinet.c
+     % Recently added code fixed to use HB_ERR_FUNCNAME.
+     ! Quick fix to recently added code to compile with MSVC.
+       Please review, it seem that get/setsockopt() 4th parameter 
+       is void* in Linux but char* in Windows.
+
 2008-07-01 20:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/extrap.c
      ! Fixed MSVC error in new code.
