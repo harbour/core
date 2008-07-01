@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 01:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/xhb/hbchksum.c
+   * contrib/xhb/hbcomprs.c
+   - contrib/xhb/hbcomprs.h
+   + contrib/xhb/hbcomprs.ch
+     - Removed unnecessary C header.
+     + Added xhb compatibility .ch header.
+
 2008-07-02 01:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/xhb/hbcomprs.c
    * contrib/xhb/hbcomprs.h

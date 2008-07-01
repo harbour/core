@@ -4,11 +4,11 @@
 
 /*
  * xHarbour Project source code:
- * Fast and reliable checksum function
+ * Compression related functions
  *
  * Copyright 2003 Giancarlo Niccolai <giancarlo@niccolai.ws>
  * www - http://www.xharbour.org
- * SEE ALSO COPYRIGHT NOTICE FOR ADLER32 BELOW.
+ * SEE ALSO COPYRIGHT NOTICE FOR ZLIB BELOW.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,7 +51,11 @@
  *
  */
 
-/* This file includes code slices from adler32.c for advanced CRC
+/* This file is based upon ZLIB source code, whose copyright holder is:
+ *
+ * Copyright (C) 1995-2002 Jean-loup Gailly.
+ *
+ * Also, this file includes code slices from adler32.c for advanced CRC
  * Holder of copyright for this code is:
  *
  * Copyright (C) 1995-2002 Mark Adler
@@ -60,72 +64,25 @@
  * http://www.gzip.org/zlib/
  */
 
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbstack.h"
-#include "hbvm.h"
-#include "hbapierr.h"
+#ifndef HB_COMPRESS_CH
+#define HB_COMPRESS_CH
 
-/* ========================================================================= */
+#define HB_Z_OK            0
+#define HB_Z_STREAM_END    1
+#define HB_Z_NEED_DICT     2
+#define HB_Z_ERRNO        (-1)
+#define HB_Z_STREAM_ERROR (-2)
+#define HB_Z_DATA_ERROR   (-3)
+#define HB_Z_MEM_ERROR    (-4)
+#define HB_Z_BUF_ERROR    (-5)
+#define HB_Z_VERSION_ERROR (-6)
+/* Return codes for the compression/decompression functions. Negative
+ * values are errors, positive values are used for special but normal events.
+ */
 
-#define BASE 65521L /* largest prime smaller than 65536 */
-#define NMAX 5552
-/* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
+#define HB_Z_NO_COMPRESSION         0
+#define HB_Z_BEST_SPEED             1
+#define HB_Z_BEST_COMPRESSION       9
+#define HB_Z_DEFAULT_COMPRESSION  (-1)
 
-#define DO1(buf,i)  {s1 += buf[i]; s2 += s1;}
-#define DO2(buf,i)  DO1(buf,i); DO1(buf,i+1);
-#define DO4(buf,i)  DO2(buf,i); DO2(buf,i+2);
-#define DO8(buf,i)  DO4(buf,i); DO4(buf,i+4);
-#define DO16(buf)   DO8(buf,0); DO8(buf,8);
-
-ULONG HB_EXPORT adler32( ULONG adler, const BYTE *buf, UINT len)
-{
-   ULONG s1 = adler & 0xffff;
-   ULONG s2 = (adler >> 16) & 0xffff;
-   int k;
-
-   if (buf == NULL) return 1L;
-
-   while (len > 0) {
-      k = len < NMAX ? len : NMAX;
-      len -= k;
-      while (k >= 16) {
-            DO16(buf);
-      buf += 16;
-            k -= 16;
-      }
-      if (k != 0) do {
-            s1 += *buf++;
-      s2 += s1;
-      } while (--k);
-      s1 %= BASE;
-      s2 %= BASE;
-   }
-   return (s2 << 16) | s1;
-}
-
-
-HB_FUNC( HB_CHECKSUM )
-{
-   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
-   ULONG ulSum = 0;
-
-   if(pString == NULL)
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "Must be a string", 1, hb_param(1, HB_IT_ANY) );
-      return;
-   }
-
-   if( ISNUM(2) )
-   {
-      ulSum = (ULONG) hb_parnl( 2 );
-   }
-   /*
-   hb_retnd( (LONG)
-      adler32( ulSum, ( const BYTE *) pString->item.asString.value, pString->item.asString.length ) );
-   */
-   hb_retnd( (LONG)
-      adler32( ulSum, ( const BYTE *) hb_itemGetCPtr( pString ), hb_itemGetCLen( pString ) ) );
-
-}
-
+#endif
