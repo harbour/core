@@ -98,6 +98,15 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
       if( *hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) )
          fprintf( hLog, HB_I_("Info: %s\n"), hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) );
 
+#if defined(HB_WINCE)
+      {
+         /* TODO */
+      }
+#elif defined(HB_OS_WIN_64)
+      {
+         /* TODO */
+      }
+#else
       {
          char              buf[ 32 ];
          PEXCEPTION_RECORD pExceptionRecord = pExceptionInfo->ExceptionRecord;
@@ -173,6 +182,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
 
          fwrite( errmsg, sizeof( char ), strlen( errmsg ), hLog );
       }
+#endif
    }
 
    msg[ 0 ] = '\0';
