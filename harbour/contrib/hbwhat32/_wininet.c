@@ -221,23 +221,23 @@ HB_FUNC( INTERNETWRITEFILE )
 HB_FUNC( INTERNETREADFILE )
 {
    HINTERNET hFile                    = ( HINTERNET ) hb_parnl( 1 ) ;
-   LPCVOID   lpBuffer                 = hb_parcx( 2 ) ;
+   LPVOID    lpBuffer                 = hb_parcx( 2 ) ;
    DWORD     dwNumberOfBytesToRead    = ( DWORD ) hb_parnl( 3 ) ;
    LPDWORD   lpdwNumberOfBytesRead    = ( LPDWORD ) 0  ;
    BOOL      bRet ;
 
    bRet = InternetReadFile( hFile, &lpBuffer,
-                           dwNumberOfBytesToRead, lpdwNumberOfBytesRead ) ;
+                            dwNumberOfBytesToRead, lpdwNumberOfBytesRead ) ;
 
    hb_retl( bRet );
 
-   if ( bRet )
+   if( bRet )
    {
       if ISBYREF( 4 )
       {
          hb_stornl( ( ULONG ) lpdwNumberOfBytesRead, 4 ) ;
       }
-         hb_storclen( ( char * ) lpBuffer, ( ULONG ) lpdwNumberOfBytesRead, 2 ) ;
+      hb_storclen( ( char * ) lpBuffer, ( ULONG ) lpdwNumberOfBytesRead, 2 ) ;
    }
 }
 

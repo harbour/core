@@ -269,12 +269,12 @@ HB_FUNC( PQEXECPARAMS )
       long n = hb_arrayLen( aParam );
       long i;
 
-      const char ** paramvalues = ( const char ** ) hb_xgrab( sizeof( char * ) * n );
+      char ** paramvalues = ( char ** ) hb_xgrab( sizeof( char * ) * n );
 
       for( i = 0; i < n; i++ )
          paramvalues[ i ] = hb_arrayGetCPtr( aParam, i + 1 );
 
-      res = PQexecParams( PGconn_par( 1 ), hb_parcx( 2 ), n, NULL, paramvalues, NULL, NULL, 1 );
+      res = PQexecParams( PGconn_par( 1 ), hb_parcx( 2 ), n, NULL, ( const char * const * ) paramvalues, NULL, NULL, 1 );
 
       hb_xfree( paramvalues );
    }

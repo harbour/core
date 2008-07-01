@@ -8,6 +8,53 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-01 22:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/hbzipnew.cpp
+     ! Fixed a potential GPFs. (GCC warnings)
+
+   * contrib/hbpgsql/postgres.c
+   * contrib/hbwhat32/_wininet.c
+     ! Fixed two const casting warnings in MSVS non-CPP mode.
+
+   - tests/run_test.bat
+   + tests/run_prg_all.bat
+   - tests/gnu_test.bat
+   + tests/bld_gnu.bat
+   - tests/bld4dll.bat
+   + tests/bld_b32_dll.bat
+     + Some renames in the hope they will be easier to 
+       understand, and more standard.
+     ! Fixed .dll reference.
+
+   * contrib/hbziparch/Makefile
+     ! Excluded from Darwin and OS/2 builds.
+
+   ; NOTE: The Windows build I've tried are now building relatively 
+           clearly, only with the 1) known warnings 2) warnings in 
+           foreign code, plus 3) quite some in contrib/hbwhat32.
+
+           Tested compilers:
+             Win32
+               BCC551 - OK
+               BCC582 - OK
+               MSVS2005 - OK (doesn't work with set HB_BUILD_DLL=yes)
+               MSVS2005cpp - OK (doesn't work with set HB_BUILD_DLL=yes)
+               MSVS2008 - OK (doesn't work with set HB_BUILD_DLL=yes)
+               MSVS2008cpp - OK (doesn't work with set HB_BUILD_DLL=yes)
+               MinGW412 - OK
+               MinGW430
+             Win64
+               MSVS2008
+                 Fails with:
+                 'include\hbinit.h(218) : fatal error C1189: #error :  Unknown initialization method.
+               MSVS2008cpp - OK (doesn't work with set HB_BUILD_DLL=yes)
+             Linux-Ubuntu (7.10)
+               GCC413 - OK (FreeImage f.e. fails.)
+             Darwin (OS X Leopard 10.5.4)
+               GCC401
+                 Fails with a lot of:
+                 'Wrong type of codeblock parameter, is: 1, should be: 8'
+
 2008-07-01 22:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
    * contrib/gtwvg/gtwvg.c

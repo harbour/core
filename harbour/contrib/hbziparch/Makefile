@@ -2,6 +2,9 @@
 # $Id$
 #
 
+ifneq ($(HB_ARCHITECTURE),darwin)
+ifneq ($(HB_ARCHITECTURE),os2)
+
 ROOT = ../../
 
 PRG_HEADERS = \
@@ -43,15 +46,15 @@ CPP_SOURCES = \
 	ZipStorage.cpp \
 	ZipString.cpp \
 
-ifeq ($(HB_ARCHITECTURE),linux)
-CPP_SOURCES += \
-	ZipPathComponent_lnx.cpp \
-	ZipPlatform_lnx.cpp \
-
-else
+ifeq ($(HB_ARCHITECTURE),win32)
 CPP_SOURCES += \
 	ZipPathComponent_win.cpp \
 	ZipPlatform_win.cpp \
+
+else
+CPP_SOURCES += \
+	ZipPathComponent_lnx.cpp \
+	ZipPlatform_lnx.cpp \
 
 endif
 
@@ -64,3 +67,6 @@ C_USR += -DZIP_ARCHIVE_LNX
 endif
 
 include $(TOP)$(ROOT)config/lib.cf
+
+endif
+endif
