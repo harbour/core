@@ -2,7 +2,59 @@
  * $Id$
  */
 
-Version 1.0.0 RC1 (2008-06-04) tag: RC1
+Version 1.0.0 RC2 (2008-07-01) tag: 1.0.0RC2
+
+General
+=============================
+- SVN repository cleanup in /tags and /branches
+- GNU and non-GNU make system configuration moved closer to each 
+  other.
+- Reviewed and fixed platforms issues and compiler warnings 
+  for the contrib area in most part.
+- Enhanced contrib 64bit Windows compatibility.
+
+Core
+=============================
+- __HARBOUR__ macro will now contain value in 0xAABBCC form, where 
+  AA, BB and CC are the major, minor and revision numbers in hex.
+  This is incompatible, as in previous version .c level __HARBOUR__ 
+  did return 0xAABB, while on .prg level it had no value.
+- Deprecated hb_itemPutCPtr(). Please use hb_itemPutCLPtr() instead.
+- Deprecated hb_errFuncName public var. Please use HB_ERR_FUNCNAME macro instead. 
+- Added hb_itemPutCPtr2().
+- GTWVT enhancements (mark&copy, resize with mouse, palette handling, 
+  some event callbacks, close button control)
+- Changed SetCancel() interpretation in GTWVT.
+- hbpp now uses the same engine as the Harbour compiler.
+- Added Set( _SET_HBOUTLOG[, <cFileName>] ), Set( _SET_HBOUTLOGINFO[, <cInfo>] ) 
+  to customize GPF and memory leak logging.
+- Added better GPF dumps for Windows.
+- Fixed clipboard handling on Windows under certain situations.
+- Optimizations and minor fixes.
+
+Contrib
+=============================
+- Reviewed and fixed bugs and potential security issues in contribs.
+- hbziparch updated, bugs fixed and ZipArchive library 
+  updated to latest version.
+- Added DLL call functionality to hbw32 contrib.
+- Added HB_FREADLINE(), HB_CRYPT(), HB_DECRYPT() to xhb contrib.
+- Added hbtip contrib tests.
+- GTWVG contrib enhancements.
+- Added SQL_SPRINTF() to hbmisc contrib.
+- Enhanced STRFORMAT() in hbmisc contrib.
+- Enabled hbgf contrib for all (Linux, OS/2, Windows) platforms.
+- Due to fixing 64bit portability problems, some functions became 
+  incompatible, because numeric addresses have been converted to 
+  pointer types:
+  - hbwhat32: wndproc/dlgproc parameters in related functions.
+  - hbmysql: SQLCONNECT(), SQLSTORER(), SQLUSERES()
+  - hbmsql: MSQLSTORER(), MSQLLISTFI()
+- Removed function CEIL() from hbmisc. Please use CEILING() from hbct 
+  instead.
+- Optimizations and minor fixes.
+
+Version 1.0.0 RC1 (2008-06-04) tag: 1.0.0RC1
 
 General
 =============================

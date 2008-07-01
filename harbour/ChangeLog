@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-01 19:05 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/whatsnew.txt
+     + Added RC2 changes.
+     ; Please review.
+
 2008-07-01 18:36 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      ! Fixed version checking (pass 2).
