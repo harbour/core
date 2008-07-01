@@ -15,11 +15,11 @@
 # --with static      - link all binaries with static libs
 # --with mysql       - build mysql lib
 # --with pgsql       - build pgsql lib 
-# --with pgsql4      - build pgsql4 lib
 # --with gd          - build gd lib 
 # --with allegro     - build GTALLEG - Allegro based GT driver
 # --with ads         - build ADS RDD
 # --with odbc        - build odbc lib
+# --with curl        - build CURL lib
 # --without nf       - do not build nanforum lib
 # --without gpllib   - do not build libs which needs GPL 3-rd party code
 # --without x11      - do not build GTXWC
@@ -78,9 +78,8 @@
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_opt   export HB_GTALLEG=%{?_with_allegro:yes}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="%{?_with_odbc:hbodbc} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
+%define hb_ctrb  export HB_CONTRIBLIBS="hbct hbmzip hbtip xhb hbbtree hbmisc hbvpdf hbgt hbbmcdx hbclipsm %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
 %define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_defgt} ; %{hb_gpm} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_opt} ; %{hb_ctrb} ; %{hb_cmrc}
-
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
 ######################################################################
@@ -243,6 +242,95 @@ A(z) %{dname} egy Clipper kompatibilis fordítóprogram.
 Ez a csomag kiegészítõ (contrib) könyvtárakat biztosít 
 statikus szerkesztéshez.
 
+## odbc library
+%{?_with_odbc:%package odbc}
+%{?_with_odbc:Summary:        ODBC libarary for %{dname} compiler}
+%{?_with_odbc:Summary(pl):    Bilioteka ODBC dla kompilatora %{dname}}
+%{?_with_odbc:Group:          Development/Languages}
+%{?_with_odbc:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_odbc:%description odbc}
+%{?_with_odbc:%{dname} is a Clipper compatible compiler.}
+%{?_with_odbc:This package provides %{dname} ODBC library for program linking.}
+
+%{?_with_odbc:%description -l pl odbc}
+%{?_with_odbc:%{dname} to kompatybilny z jêzykiem CA-Clipper kompilator.}
+%{?_with_odbc:Ten pakiet udostêpnia statyczn± biliotekê ODBC dla kompilatora %{dname}.}
+
+## CURL library
+%{?_with_curl:%package curl}
+%{?_with_curl:Summary:        CURL libarary for %{dname} compiler}
+%{?_with_curl:Summary(pl):    Bilioteka CURL dla kompilatora %{dname}}
+%{?_with_curl:Group:          Development/Languages}
+%{?_with_curl:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_curl:%description curl}
+%{?_with_curl:%{dname} is a Clipper compatible compiler.}
+%{?_with_curl:This package provides %{dname} CURL library for program linking.}
+
+%{?_with_curl:%description -l pl curl}
+%{?_with_curl:%{dname} to kompatybilny z jêzykiem CA-Clipper kompilator.}
+%{?_with_curl:Ten pakiet udostêpnia statyczn± biliotekê CURL dla kompilatora %{dname}.}
+
+## ADS RDD
+%{?_with_ads:%package ads}
+%{?_with_ads:Summary:        ADS RDDs for %{dname} compiler}
+%{?_with_ads:Summary(pl):    Bilioteka sterowników (RDDs) ADS dla kompilatora %{dname}}
+%{?_with_ads:Group:          Development/Languages}
+%{?_with_ads:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_ads:%description ads}
+%{?_with_ads:%{dname} is a Clipper compatible compiler.}
+%{?_with_ads:This package provides %{dname} ADS RDDs for program linking.}
+
+%{?_with_ads:%description -l pl ads}
+%{?_with_ads:%{dname} to kompatybilny z jêzykiem CA-Clipper kompilator.}
+%{?_with_ads:Ten pakiet udostêpnia sterowniki (RDD) ADS dla kompilatora %{dname}.}
+
+## mysql library
+%{?_with_mysql:%package mysql}
+%{?_with_mysql:Summary:        MYSQL libarary for %{dname} compiler}
+%{?_with_mysql:Summary(pl):    Bilioteka MYSQL dla kompilatora %{dname}}
+%{?_with_mysql:Group:          Development/Languages}
+%{?_with_mysql:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_mysql:%description mysql}
+%{?_with_mysql:%{dname} is a Clipper compatible compiler.}
+%{?_with_mysql:This package provides %{dname} MYSQL library for program linking.}
+
+%{?_with_mysql:%description -l pl mysql}
+%{?_with_mysql:%{dname} to kompatybilny z jêzykiem CA-Clipper kompilator.}
+%{?_with_mysql:Ten pakiet udostêpnia statyczn± biliotekê MYSQL dla kompilatora %{dname}.}
+
+## pgsql library
+%{?_with_pgsql:%package pgsql}
+%{?_with_pgsql:Summary:        PGSQL libarary for %{dname} compiler}
+%{?_with_pgsql:Summary(pl):    Bilioteka PGSQL dla kompilatora %{dname}}
+%{?_with_pgsql:Group:          Development/Languages}
+%{?_with_pgsql:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_pgsql:%description pgsql}
+%{?_with_pgsql:%{dname} is a Clipper compatible compiler.}
+%{?_with_pgsql:This package provides %{dname} PGSQL library for program linking.}
+
+%{?_with_pgsql:%description -l pl pgsql}
+%{?_with_pgsql:%{dname} to kompatybilny z jêzykiem CA-Clipper kompilator.}
+%{?_with_pgsql:Ten pakiet udostêpnia statyczn± biliotekê PGSQL dla kompilatora %{dname}.}
+
+## gd library
+%{?_with_gd:%package gd}
+%{?_with_gd:Summary:        GD libarary for %{dname} compiler}
+%{?_with_gd:Summary(pl):    Bilioteka GD dla kompilatora %{dname}}
+%{?_with_gd:Group:          Development/Languages}
+%{?_with_gd:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_gd:%description gd}
+%{?_with_gd:%{dname} is a Clipper compatible compiler.}
+%{?_with_gd:This package provides %{dname} GD library for program linking.}
+
+%{?_with_gd:%description -l pl gd}
+%{?_with_gd:%{dname} to kompatybilny z jêzykiem CA-Clipper kompilator.}
+%{?_with_gd:Ten pakiet udostêpnia statyczn± biliotekê GD dla kompilatora %{dname}.}
 
 ######################################################################
 ## Preperation.
@@ -263,10 +351,6 @@ case "`uname -m`" in
         export C_USR="$C_USR -fPIC"
         ;;
 esac
-
-[ "%{?_with_odbc:1}" ]  || rm -fR contrib/hbodbc
-[ "%{?_with_ads:1}" ]   || rm -fR contrib/rddads
-[ "%{?_without_nf:1}" ] && rm -fR contrib/hbnf
 
 make -r
 
@@ -298,10 +382,7 @@ mkdir -p $HB_LIB_INSTALL
 
 make -r -i install
 
-[ "%{?_with_odbc:1}" ]     || rm -f $HB_LIB_INSTALL/libhbodbc.a
 [ "%{?_with_allegro:1}" ]  || rm -f $HB_LIB_INSTALL/libgtalleg.a
-[ "%{?_with_ads:1}" ]      || rm -f $HB_LIB_INSTALL/librddads.a
-[ "%{?_without_nf:1}" ]    && rm -f $HB_LIB_INSTALL/libhbnf.a
 [ "%{?_without_gtsln:1}" ] && rm -f $HB_LIB_INSTALL/libgtsln.a
 
 # Keep the size of the binaries to a minimim.
@@ -325,7 +406,7 @@ EOF
 if [ "%{!?_with_static:1}" ]
 then
     unset HB_GTALLEG
-    export L_USR="${CC_L_USR} -L${HB_LIB_INSTALL} -l%{name} -lncurses %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11} %{?_with_pgsql4:/usr/lib/libpq.so.4} %{?_with_pgsql:-lpq} %{?_with_gd:-lgd}"
+    export L_USR="${CC_L_USR} -L${HB_LIB_INSTALL} -l%{name} -lncurses %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
     export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${PRG_USR}"
 
     for utl in hbmake hbrun hbdot hbdoc
@@ -536,12 +617,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
 %{!?_without_nf: %{_libdir}/%{name}/libhbnf.a}
-%{?_with_ads: %{_libdir}/%{name}/librddads.a}
-%{?_with_odbc: %{_libdir}/%{name}/libhbodbc.a}
-%{?_with_mysql: %{_libdir}/%{name}/libhbmysql.a}
-%{?_with_pgsql: %{_libdir}/%{name}/libhbpgsql.a}
-%{?_with_pgsql4: %{_libdir}/%{name}/libhbpgsql.a}
-%{?_with_gd: %{_libdir}/%{name}/libhbgd.a}
 %{_libdir}/%{name}/libhbbtree.a
 %{_libdir}/%{name}/libhbmisc.a
 %{_libdir}/%{name}/libhbmzip.a
@@ -558,6 +633,36 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/*.so
 %{_libdir}/*.so
+
+%{?_with_odbc:%files odbc}
+%{?_with_odbc:%defattr(644,root,root,755)}
+%{?_with_odbc:%dir %{_libdir}/%{name}}
+%{?_with_odbc:%{_libdir}/%{name}/libhbodbc.a}
+
+%{?_with_curl:%files curl}
+%{?_with_curl:%defattr(644,root,root,755)}
+%{?_with_curl:%dir %{_libdir}/%{name}}
+%{?_with_curl:%{_libdir}/%{name}/libhbcurl.a}
+
+%{?_with_ads:%files ads}
+%{?_with_ads:%defattr(644,root,root,755)}
+%{?_with_ads:%dir %{_libdir}/%{name}}
+%{?_with_ads:%{_libdir}/%{name}/librddads.a}
+
+%{?_with_mysql:%files mysql}
+%{?_with_mysql:%defattr(644,root,root,755)}
+%{?_with_mysql:%dir %{_libdir}/%{name}}
+%{?_with_mysql:%{_libdir}/%{name}/libhbmysql.a}
+
+%{?_with_pgsql:%files pgsql}
+%{?_with_pgsql:%defattr(644,root,root,755)}
+%{?_with_pgsql:%dir %{_libdir}/%{name}}
+%{?_with_pgsql:%{_libdir}/%{name}/libhbpgsql.a}
+
+%{?_with_gd:%files gd}
+%{?_with_gd:%defattr(644,root,root,755)}
+%{?_with_gd:%dir %{_libdir}/%{name}}
+%{?_with_gd:%{_libdir}/%{name}/libhbgd.a}
 
 ######################################################################
 ## Spec file Changelog.

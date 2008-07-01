@@ -8,6 +8,41 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-01 16:28 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+    * define whole contrib library list for new contrib/Makefile
+    + added header files to respect differences between platform
+      native and Windows only headers
+
+  * harbour/harbour.spec
+    * define whole contrib library list for new contrib/Makefile
+    * divided libraries which needs external references into
+      separated packages
+    ! removed unnecessary dependences in binaries rebuild in shared
+      mode
+
+  * harbour/contrib/hbodbc/odbc.c
+    * pacified warnings
+    % minor optimization
+
+  * harbour/contrib/hbcurl/hbcurl.c
+  * harbour/contrib/hbfbird/firebird.c
+  * harbour/source/vm/extrap.c
+    * casting to pacify warnings
+
+  * harbour/contrib/gtwvg/gtwvg.c
+    ! fixed pointer comparison - C uses different precedence for !
+      operator then Clipper/xbase
+
+  * harbour/source/rtl/hbinet.c
+    ! fixed GPF HB_INET[GS]ET{SND,RCV}BUFSIZE() when wrong
+      socket parameter is passed. Please remember that after
+      RT error the control is returned to application.
+    % removed any hardcoded limits for size of data passed in
+      single read/write call during normal stream operations
+    - removed iSndBufSize/iRcvBufSize
+
 2008-06-30 19:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbapollo/Makefile
    * contrib/hbcurl/Makefile

@@ -186,7 +186,7 @@ static void hb_gt_wvt_FreeAll( void )
       int iPos;
       for ( iPos = 1; iPos < WVT_MAX_WINDOWS; iPos++ )
       {
-         if( !s_wvtWindows[ iPos ] == NULL )
+         if( s_wvtWindows[ iPos ] != NULL )
          {
             PHB_GTWVT pWVT;
 

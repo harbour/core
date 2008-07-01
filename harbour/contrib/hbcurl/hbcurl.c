@@ -201,7 +201,7 @@ size_t hb_curl_read_file_callback( void * buffer, size_t size, size_t nmemb, voi
          hb_curl->ul_handle = hb_fsOpen( hb_curl->ul_name, FO_READ );
 
          if( hb_curl->ul_handle == FS_ERROR )
-            return -1;
+            return ( size_t ) -1;
       }
 
       ret = ( size_t ) hb_fsReadLarge( hb_curl->ul_handle, ( BYTE * ) buffer, size * nmemb );
@@ -209,7 +209,7 @@ size_t hb_curl_read_file_callback( void * buffer, size_t size, size_t nmemb, voi
       return hb_fsError() ? CURL_READFUNC_ABORT : ret;
    }
 
-   return -1;
+   return ( size_t ) -1;
 }
 
 size_t hb_curl_read_buff_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
@@ -231,7 +231,7 @@ size_t hb_curl_read_buff_callback( void * buffer, size_t size, size_t nmemb, voi
       return nTodo;
    }
 
-   return -1;
+   return ( size_t ) -1;
 }
 
 size_t hb_curl_write_file_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
@@ -245,13 +245,13 @@ size_t hb_curl_write_file_callback( void * buffer, size_t size, size_t nmemb, vo
          hb_curl->dl_handle = hb_fsCreate( hb_curl->dl_name, FC_NORMAL );
 
          if( hb_curl->dl_handle == FS_ERROR )
-            return -1;
+            return ( size_t ) -1;
       }
 
       return hb_fsWriteLarge( hb_curl->dl_handle, ( BYTE * ) buffer, size * nmemb );
    }
 
-   return -1;
+   return ( size_t ) -1;
 }
 
 #define HB_CURL_DL_BUFF_SIZE_INIT ( CURL_MAX_WRITE_SIZE * 2 )
@@ -279,7 +279,7 @@ size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nmemb, vo
       return nTodo;
    }
 
-   return -1;
+   return ( size_t ) -1;
 }
 
 int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow, double ultotal, double ulnow )

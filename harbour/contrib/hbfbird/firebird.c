@@ -475,14 +475,14 @@ HB_FUNC( FBGETDATA )
 
       case SQL_TIMESTAMP:
          isc_decode_timestamp ( ( ISC_TIMESTAMP * ) var->sqldata, &times );
-         snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d %02d:%02d:%02d.%04lu",
+         snprintf( date_s, sizeof( date_s ), "%04d-%02d-%02d %02d:%02d:%02d.%04d",
                    times.tm_year + 1900,
                    times.tm_mon + 1,
                    times.tm_mday,
                    times.tm_hour,
                    times.tm_min,
                    times.tm_sec,
-                   ( ( ISC_TIMESTAMP * ) var->sqldata )->timestamp_time % 10000 );
+                   ( int ) ( ( ( ISC_TIMESTAMP * ) var->sqldata )->timestamp_time % 10000 ) );
          snprintf( data, sizeof( data ), "%*s ", 24, date_s );
 
          hb_retc( data );
@@ -498,10 +498,11 @@ HB_FUNC( FBGETDATA )
 
       case SQL_TYPE_TIME:
          isc_decode_sql_time ( ( ISC_TIME * ) var->sqldata, &times );
-         snprintf( date_s, sizeof( date_s ), "%02d:%02d:%02d.%04lu",
+         snprintf( date_s, sizeof( date_s ), "%02d:%02d:%02d.%04d",
                    times.tm_hour,
                    times.tm_min,
-                   times.tm_sec, ( *( ( ISC_TIME * ) var->sqldata ) ) % 10000 );
+                   times.tm_sec,
+                   ( int ) ( ( *( ( ISC_TIME * ) var->sqldata ) ) % 10000 ) );
          snprintf( data, sizeof( data ), "%*s ", 13, date_s );
 
          hb_retc( data );

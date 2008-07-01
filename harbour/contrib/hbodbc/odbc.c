@@ -245,11 +245,16 @@ HB_FUNC( SQLGETDATA ) /* HB_SQLGETDATA( hStmt, nField, nType, nLen, @cBuffer ) -
    WORD wType, wResult;
    int iReallocs = 0;
 
-   lLen       = ( SDWORD )( hb_parnl( 4 ) ? hb_parnl( 4 ) : 64 );
+   wType = hb_parni( 3 );
+   if( !wType )
+      wType = ( WORD ) SQL_BINARY;
+   lLen = ( SQLLEN ) hb_parnl( 4 );
+   if( !lLen )
+      lLen = 64;
    bBuffer    = hb_xgrab( (ULONG) lLen + 1 );
    bOut       = NULL;
    lInitBuff  = lLen;
-   wType      = hb_parni( 3 ) ? hb_parni( 3 ) : SQL_BINARY;
+   lBuffLen   = 0;
 
    wResult = ! SQL_NO_DATA;
    while( wResult != SQL_NO_DATA )

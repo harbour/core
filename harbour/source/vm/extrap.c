@@ -119,11 +119,15 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
                    "    CS:EIP:%04X:%08X  SS:ESP:%04X:%08X\n"
                    "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
                    "    Flags:%08X\n",
-                   dwExceptCode, pExceptionRecord->ExceptionAddress,
-                   pCtx->Eax, pCtx->Ebx, pCtx->Ecx, pCtx->Edx, pCtx->Esi, pCtx->Edi, pCtx->Ebp,
-                   pCtx->SegCs, pCtx->Eip, pCtx->SegSs, pCtx->Esp, pCtx->SegDs, pCtx->SegEs, pCtx->SegFs, pCtx->SegGs,
-                   pCtx->EFlags );
-         
+                   ( UINT32 ) dwExceptCode, ( UINT32 ) pExceptionRecord->ExceptionAddress,
+                   ( UINT32 ) pCtx->Eax, ( UINT32 ) pCtx->Ebx, ( UINT32 ) pCtx->Ecx,
+                   ( UINT32 ) pCtx->Edx, ( UINT32 ) pCtx->Esi, ( UINT32 ) pCtx->Edi,
+                   ( UINT32 ) pCtx->Ebp,
+                   ( UINT32 ) pCtx->SegCs, ( UINT32 ) pCtx->Eip, ( UINT32 ) pCtx->SegSs,
+                   ( UINT32 ) pCtx->Esp, ( UINT32 ) pCtx->SegDs, ( UINT32 ) pCtx->SegEs,
+                   ( UINT32 ) pCtx->SegFs, ( UINT32 ) pCtx->SegGs,
+                   ( UINT32 ) pCtx->EFlags );
+
          hb_strncat( errmsg, "    CS:EIP:", errmsglen );
          pc = ( void * ) pCtx->Eip;
          for( i = 0; i < 16; i++ )

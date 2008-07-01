@@ -114,10 +114,10 @@ export PATH="$CCPATH$PATH"
 export HB_MT=no
 export HB_GT_LIB=gtwvt
 export HB_BIN_INSTALL=%{_bindir}
-export HB_INC_INSTALL=%{_includedir}/harbour
+export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}
 export HB_GTALLEG=%{?_with_allegro:yes}
-export HB_CONTRIBLIBS="%{?_with_odbc:hbodbc} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
+export HB_CONTRIBLIBS="hbct hbmzip hbtip xhb hbbtree hbmisc hbvpdf hbgt hbbmcdx hbclipsm gtwvg hbw32 rddado %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
 
 make -r
 
@@ -145,10 +145,10 @@ export HB_COMPILER=cemgw
 export HB_MT=no
 export HB_GT_LIB=gtwvt
 export HB_BIN_INSTALL=%{_bindir}
-export HB_INC_INSTALL=%{_includedir}/harbour
+export HB_INC_INSTALL=%{_includedir}/%{name}
 export HB_LIB_INSTALL=%{_libdir}/%{name}
 export HB_GTALLEG=%{?_with_allegro:yes}
-export HB_CONTRIBLIBS="%{?_with_odbc:hbodbc} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
+export HB_CONTRIBLIBS="hbct hbmzip hbtip xhb hbbtree hbmisc hbvpdf hbgt hbbmcdx hbclipsm gtwvg hbw32 rddado %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
 
 export _DEFAULT_BIN_DIR=$HB_BIN_INSTALL
 export _DEFAULT_INC_DIR=$HB_INC_INSTALL
@@ -159,6 +159,7 @@ export HB_LIB_INSTALL=$RPM_BUILD_ROOT/$HB_LIB_INSTALL
 export HB_TOOLS_PREF=%{hb_pref}
 
 mkdir -p $HB_BIN_INSTALL
+mkdir -p $HB_INC_INSTALL
 mkdir -p $HB_LIB_INSTALL
 
 make -r -i install
@@ -173,7 +174,6 @@ ${CCPREFIX}strip --strip-debug $HB_LIB_INSTALL/*
 
 # remove unused files
 rm -fR ${HB_BIN_INSTALL}/{harbour,hbpp,hbdoc,hbdot,hbmake,hbrun,hbtest,hbverfix,hbpptest}.exe
-rm -fR $HB_INC_INSTALL
 
 # Create a README file for people using this RPM.
 cat > doc/%{readme} <<EOF
@@ -301,6 +301,8 @@ rm -fR $RPM_BUILD_ROOT
 %{_bindir}/%{hb_pref}mk
 
 %defattr(644,root,root,755)
+%dir %{_includedir}/%{name}
+%{_includedir}/%{name}/*
 %dir %{_libdir}/%{name}
 %{_libdir}/%{name}/libhbcpage.a
 %{_libdir}/%{name}/libhbcommon.a

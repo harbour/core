@@ -120,8 +120,6 @@
        int timeout;
        int timelimit;
        PHB_ITEM caPeriodic;
-       int iSndBufSize;
-       int iRcvBufSize;
    } HB_SOCKET_STRUCT;
 
    #define HB_PARSOCKET( n )     ( ( HB_SOCKET_STRUCT * ) hb_parptrGC( hb_inetSocketFinalize, n ) )
@@ -470,32 +468,6 @@ static int hb_socketConnect( HB_SOCKET_STRUCT *Socket )
          {
             HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
          }
-
-         /* 
-         * Read real buffer sizes from socket
-         */
-         {
-            int value;
-            socklen_t len = sizeof(value);
-
-            if( getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, (char *) &value, &len ) != SOCKET_ERROR )
-            {
-                Socket->iSndBufSize = value;
-                if( getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, (char *) &value, &len ) != SOCKET_ERROR )
-                {
-                    Socket->iRcvBufSize = value;
-                }
-                else
-                {
-                    Socket->iRcvBufSize = 1400;
-                }
-            }
-            else
-            {
-                Socket->iSndBufSize = 1400;
-                Socket->iRcvBufSize = 1400;
-            }
-         }
       }
    }
 
@@ -807,61 +779,60 @@ HB_FUNC( HB_INETCLEARPERIODCALLBACK )
 HB_FUNC( HB_INETGETSNDBUFSIZE )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
-   int value;
-   socklen_t len = sizeof( value );
 
    if( Socket == NULL )
-   {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETGETSNDBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
+   else
+   {
+      int value;
+      socklen_t len = sizeof( value );
+      getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( void *) &value, &len );
+      hb_retni( value );
    }
-
-   getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, (char *) &value, &len );
-   Socket->iSndBufSize = value;
-   hb_retni( value );
 }
 
 HB_FUNC( HB_INETGETRCVBUFSIZE )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
-   int value;
-   socklen_t len = sizeof( value );
 
    if( Socket == NULL )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETGETRCVBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
-
-   getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, (char *) &value, &len );
-   Socket->iRcvBufSize = value;
-   hb_retni( value );
+   else
+   {
+      int value;
+      socklen_t len = sizeof( value );
+      getsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, ( void * ) &value, &len );
+      hb_retni( value );
+   }
 }
 
 HB_FUNC( HB_INETSETSNDBUFSIZE )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
-   int value;
 
    if( Socket == NULL )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETSETSNDBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
-
-   value = hb_parni( 2 );
-   setsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, (char *) &value, sizeof( value ) );
-   Socket->iSndBufSize = value;
-   hb_retni( value );
+   else
+   {
+      int value = hb_parni( 2 );
+      setsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( void * ) &value, sizeof( value ) );
+      hb_retni( value );
+   }
 }
 
 HB_FUNC( HB_INETSETRCVBUFSIZE )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
-   int value;
 
    if( Socket == NULL )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, "HB_INETSETRCVBUFSIZE", HB_ERR_ARGS_BASEPARAMS );
-
-   value = hb_parni( 2 );
-   setsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, (char *) &value, sizeof( value ) );
-   Socket->iRcvBufSize = value;
-   hb_retni( value );
+   else
+   {
+      int value = hb_parni( 2 );
+      setsockopt( Socket->com, SOL_SOCKET, SO_RCVBUF, ( void * ) &value, sizeof( value ) );
+      hb_retni( value );
+   }
 }
-
 
 
 
@@ -873,8 +844,8 @@ static void s_inetRecvInternal( int iMode )
 {
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
-   char *Buffer;
-   int iLen, iMaxLen, iReceived, iBufferLen;
+   char *buffer;
+   int iLen, iMaxLen, iReceived;
    int iTimeElapsed;
 
    if( Socket == NULL || pBuffer == NULL || !ISBYREF( 2 ) )
@@ -884,7 +855,7 @@ static void s_inetRecvInternal( int iMode )
    }
 
    pBuffer = hb_itemUnShare( pBuffer );
-   Buffer = hb_itemGetCPtr( pBuffer );
+   buffer = hb_itemGetCPtr( pBuffer );
    iLen = hb_itemGetCLen( pBuffer );
 
    if( ISNIL( 3 ) )
@@ -904,19 +875,9 @@ static void s_inetRecvInternal( int iMode )
 
    do
    {
-      if( iMode == 1 )
-      {
-         iBufferLen = ( Socket->iRcvBufSize > iMaxLen - iReceived ) ? iMaxLen - iReceived : Socket->iRcvBufSize;
-      }
-      else
-      {
-         iBufferLen = iMaxLen;
-      }
-
       if( hb_selectReadSocket( Socket ) )
       {
-         iLen = recv( Socket->com, Buffer + iReceived, iBufferLen, MSG_NOSIGNAL );
-
+         iLen = recv( Socket->com, buffer + iReceived, iMaxLen - iReceived, MSG_NOSIGNAL );
          if( iLen > 0 )
             iReceived += iLen;
 
@@ -1094,7 +1055,8 @@ static void s_inetRecvPattern( char *szPattern )
       {
          HB_SOCKET_SET_ERROR2( Socket, -2, "Connection closed" );
       }
-      else if( iLen == -2 ) {
+      else if( iLen == -2 )
+      {
          HB_SOCKET_SET_ERROR2( Socket, -1, "Timeout" );
       }
       else
@@ -1382,7 +1344,7 @@ static void s_inetSendInternal( int iMode )
    HB_SOCKET_STRUCT *Socket = HB_PARSOCKET( 1 );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    char *Buffer;
-   int iLen, iSent, iSend, iBufferLen;
+   int iLen, iSent, iSend;
 
    if( Socket == NULL || pBuffer == NULL )
    {
@@ -1398,25 +1360,16 @@ static void s_inetSendInternal( int iMode )
       if( iLen < iSend )
          iSend = iLen;
    }
-   iSent = 0;
 
    HB_SOCKET_ZERO_ERROR( Socket );
 
+   iSent = 0;
    iLen = 0;
    while( iSent < iSend )
    {
-      if( iMode == 1 )
-      {
-         iBufferLen = Socket->iSndBufSize > iSend - iSent ? iSend - iSent : Socket->iSndBufSize;
-      }
-      else
-      {
-         iBufferLen = iSend;
-      }
-
       iLen = 0;
       if( hb_selectWriteSocket( Socket ) )
-         iLen = send( Socket->com, Buffer + iSent, iBufferLen, MSG_NOSIGNAL );
+         iLen = send( Socket->com, Buffer + iSent, iSend - iSent, MSG_NOSIGNAL );
 
       if( iLen > 0 )
       {
@@ -1438,14 +1391,7 @@ static void s_inetSendInternal( int iMode )
 
    Socket->count = iSent;
 
-   if( iLen > 0 )
-   {
-      hb_retni( iSent );
-   }
-   else
-   {
-      hb_retni( -1 );
-   }
+   hb_retni( iLen > 0 ? iSent : -1 );
 }
 
 HB_FUNC( HB_INETSEND )
