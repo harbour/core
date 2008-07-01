@@ -21,6 +21,7 @@
      ! Fixed a macro check to make autodetection really work.
        So the previous TOFIX (2008-06-30 19:20 UTC+0200) is 
        now cleared.
+     ; TODO: Adjust hbodbc to contrib Makefile standards.
 
    * contrib/hbgf/hbgfgtk/Makefile
      + Added header detection. (default: /usr/include)
