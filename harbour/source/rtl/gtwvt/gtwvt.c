@@ -474,13 +474,14 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT )
 
 static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
 {
-   RECT wi, ci;
-   LONG maxWidth;
-   LONG maxHeight;
-   LONG borderWidth;
-   LONG borderHeight;
-   SHORT left;
-   SHORT top;
+   RECT wi;
+   RECT ci;
+   int maxWidth;
+   int maxHeight;
+   int borderWidth;
+   int borderHeight;
+   int left;
+   int top;
 
    GetClientRect( pWVT->hWnd, &ci );
    GetWindowRect( pWVT->hWnd, &wi );
@@ -508,8 +509,11 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    }
 
    {
-      HFONT      hOldFont, hFont;
-      USHORT     fontHeight, fontWidth, n;
+      HFONT      hOldFont;
+      HFONT      hFont;
+      int        fontHeight;
+      int        fontWidth;
+      int        n;
 
       fontHeight = maxHeight / pWVT->ROWS;
       fontWidth  = maxWidth  / pWVT->COLS;
@@ -518,7 +522,8 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
       if( hFont )
       {
          HDC        hdc;
-         LONG       width, height;
+         LONG       width;
+         LONG       height;
          TEXTMETRIC tm;
 
          hdc       = GetDC( pWVT->hWnd );
@@ -804,7 +809,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
             {
                ULONG  ulSize;
-               USHORT irow, icol, j, top, left, bottom, right;
+               int    irow, icol, j, top, left, bottom, right;
                char * sBuffer;
                RECT   rect = { 0, 0, 0, 0 };
                RECT   colrowRC = { 0, 0, 0, 0 };
@@ -830,6 +835,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                   {
                      BYTE bColor, bAttr;
                      USHORT usChar;
+
                      if( !HB_GTSELF_GETSCRCHAR( pWVT->pGT, irow, icol, &bColor, &bAttr, &usChar ) )
                         break;
 
