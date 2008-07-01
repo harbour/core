@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-01 18:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * include/hbver.h
+   * harbour.spec
+     * RC1 -> RC2
+
+   * contrib/hbziparch/hbziparc.c
+     ! Fixed potential GPF in HBZIPCLEANUP().
+     ! HBZIPCLEANUP() changed to be a HB_FUNC() (from HB_EXIT_FUNC()), 
+       so now it has to be called manually, but at least it's 
+       now doing something useful. (HB_EXIT_FUNC() in .c code 
+       never gets executed by itself).
+
 2008-07-01 17:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbapollo/Makefile
    * contrib/hbcurl/Makefile

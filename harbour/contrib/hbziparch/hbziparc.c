@@ -70,7 +70,7 @@ static PHB_ITEM s_UnzipFiles;
 static PHB_ITEM s_DelZip;
 static PHB_ITEM s_FileAttribs;
 
-PHB_ITEM hbza_ChangeDiskBlock;
+PHB_ITEM hbza_ChangeDiskBlock = NULL;
 PHB_ITEM hbza_pProgressInfo = NULL;
 PHB_ITEM hbza_ZipArray;
 HB_ZIP_INTERNAL hbza_pZipI;
@@ -1662,7 +1662,7 @@ HB_FUNC(HB_UNZIPALLFILE)
     }
 }
 
-HB_FUNC_EXIT( HBZIPCLEANUP )
+HB_FUNC( HBZIPCLEANUP )
 {
    if( hbza_ChangeDiskBlock )
    {
