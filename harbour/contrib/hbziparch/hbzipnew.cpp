@@ -1239,4 +1239,3 @@ return iReturn;
 #ifdef __cplusplus
 }
 #endif
-\hbzipnew.cpp 1098: 'iMode' is assigned a value that is never used in function hb_UnzipAll(char *,void *,int,char *,char *,void *,void *)
