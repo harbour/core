@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-01 18:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+     ! Fixed version checking.
+
 2008-07-01 18:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * harbour-ce-spec
    * harbour-w32-spec

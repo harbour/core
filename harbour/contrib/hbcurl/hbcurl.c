@@ -73,16 +73,8 @@
 #define HB_CURL_OPT_BOOL( n )      ( ISLOG( n ) ? ( long ) hb_parl( n ) : ( ISNUM( n ) ? hb_parnl( n ) : 1 ) )
 #define HB_CURL_OPT_LARGENUM( n )  ( ( curl_off_t ) hb_parnint( n ) )
 
-/* NOTE: Since LIBCURL_VERSION_NUM doesn't reflect real revision,
-         we're simply redefining it to the latest version available,
-         and use the #ifs for documentation purposes only. [vszakats] */
-#ifdef LIBCURL_VERSION_NUM
-   #undef LIBCURL_VERSION_NUM
-   #define LIBCURL_VERSION_NUM 0x071801
-#endif
-
-#if LIBCURL_VERSION_NUM < 0x071700
-   #error hbcurl: we need libcurl 7.17.0 or upper.
+#if LIBCURL_VERSION_NUM < 0x071100
+   #error hbcurl: Harbour hbcurl needs libcurl 7.17.0 or upper.
 #endif
 
 typedef struct _HB_CURL
