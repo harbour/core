@@ -12,7 +12,8 @@
 #define HB_OS_WIN_32_USED
 #define _WIN32_WINNT   0x0400
 
-#include <hbapi.h>
+#include "hbapi.h"
+
 #include <windows.h>
 #include <vfw.h>
 

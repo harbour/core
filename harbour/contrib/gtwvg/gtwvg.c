@@ -2987,6 +2987,8 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
 /*                  Keeping as a prototype for MW GT                      */
 /* ********************************************************************** */
 
+#if 0
+
 static int hb_gt_wvt_wnd_Create( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight )
 {
    PHB_GTWVT pWVT;
@@ -3074,6 +3076,8 @@ static int hb_gt_wvt_wnd_Current( PHB_GT pGT )
 
    return 0;
 }
+
+#endif
 
 /* ********************************************************************** */
 

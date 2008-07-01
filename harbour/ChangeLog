@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-01 21:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbwhat32/_winmmcap.c
+     ! #include <hbapi.h> -> #include "hbapi.h"
+       Harbour headers are not system headers.
+
+   * contrib/gtwvg/gtwvg.c
+     * Commented unused code to avoid warnings.
+
+   * contrib/hbziparch/hbziparc.c
+   * contrib/hbziparch/hbzipnew.cpp
+     ! Fixed BCC 5.8 warning.
+     ! Removed tabs.
+     * Some formatting.
+
 2008-07-01 21:25 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/extrap.c
      ! Excluded GPF dumping code for Win64 and WinCE.

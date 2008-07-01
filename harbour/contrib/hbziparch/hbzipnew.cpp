@@ -1095,7 +1095,7 @@ int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,ch
    bool iReturn = true;
    uLong uiCount = 0;
 //   int iCause = 0;
-   int iMode = true;
+   int iMode;
    CZipArchive szZip;
    BOOL bChange = FALSE;
    SegmCallback span;
@@ -1112,40 +1112,41 @@ int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,ch
       szZip.SetCallback( &spanac );
    }
 
-   if(szPassWord != NULL )
+   if( szPassWord != NULL )
    {
-      szZip.SetPassword(szPassWord);
+      szZip.SetPassword( szPassWord );
    }
 
-   iMode=hb_CheckSpanMode(szFile);
+   iMode = hb_CheckSpanMode( szFile );
 
-     try {
-        if(iMode==0) {
-            szZip.Open(szFile,CZipArchive::zipOpen,0);
-                     }
-        else {
-            if(iMode ==-1) {
-                szZip.SetSegmCallback( &span );
-                szZip.Open(szFile,CZipArchive::zipOpen,0);
-                            }
-             else {
-                if(iMode==-2) {
-                    szZip.Open(szFile,CZipArchive::zipOpen,1);
-                              }
-                else {
-                    iReturn =false;
-                     }
-                  }
-             }
-    }
-    catch (CZipException &e)
-    {
+   try
+   {
+      if( iMode == 0 )
+          szZip.Open( szFile, CZipArchive::zipOpen, 0 );
+      else
+      {
+         if( iMode == -1 )
+         {
+            szZip.SetSegmCallback( &span );
+            szZip.Open( szFile, CZipArchive::zipOpen, 0 );
+         }
+         else
+         {
+            if( iMode == -2 )
+               szZip.Open( szFile, CZipArchive::zipOpen, 1 );
+            else
+               iReturn = false;
+         }
+      }
+   }
+   catch( CZipException &e )
+   {
       HB_SYMBOL_UNUSED( e );
-      // iCause=e.m_iCause       ;
-	}
+      // iCause=e.m_iCause;
+   }
 
- if(iReturn) {
-
+   if( iReturn )
+   {
       if( pbyBuffer )
       {
          if(hb_stricmp(pbyBuffer,".\\")==0 )
@@ -1163,7 +1164,7 @@ int hb_UnzipAll(char *szFile,PHB_ITEM pBlock, BOOL bWithPath,char *szPassWord,ch
 
     for( uiCount = 0; uiCount < (uLong)szZip.GetCount(); uiCount++ )
     {
-		CZipFileHeader fh;
+            CZipFileHeader fh;
             const char *  szFileNameInZip;
             CZipString szTempString;
             PHB_FNAME pOut;
@@ -1238,3 +1239,4 @@ return iReturn;
 #ifdef __cplusplus
 }
 #endif
+\hbzipnew.cpp 1098: 'iMode' is assigned a value that is never used in function hb_UnzipAll(char *,void *,int,char *,char *,void *,void *)

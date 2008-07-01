@@ -788,7 +788,7 @@ HB_FUNC( HB_ZIPFILEBYTDSPAN )
          else
             hb_strncpy( szFile, hb_parc( 1 ), sizeof( szFile ) - 1 );
 
-         hb_xfree( pCurDir ) ;	/* by JGS */
+         hb_xfree( pCurDir ); /* by JGS */
          szZipFileName = hb___CheckFile( szFile );
 
          if( hb_arrayLen(s_FileToZip) > 0 )
