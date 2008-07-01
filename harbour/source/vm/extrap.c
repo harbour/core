@@ -129,7 +129,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
                    ( UINT32 ) pCtx->EFlags );
 
          hb_strncat( errmsg, "    CS:EIP:", errmsglen );
-         pc = ( void * ) pCtx->Eip;
+         pc = ( unsigned char * ) pCtx->Eip;
          for( i = 0; i < 16; i++ )
          {
             if( IsBadReadPtr( pc, 1 ) )
@@ -138,7 +138,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
             hb_strncat( errmsg, buf, errmsglen );
          }
          hb_strncat( errmsg, "\n    SS:ESP:", errmsglen );
-         sc = ( void * ) pCtx->Esp;
+         sc = ( unsigned int * ) pCtx->Esp;
          for( i = 0; i < 16; i++ )
          {
             if( IsBadReadPtr( sc, 4 ) )
