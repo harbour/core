@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 01:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/xhb/hbcomprs.c
+   * contrib/xhb/hbcomprs.h
+     % Stripped yet another copy of an old embedded ZLIB version 
+       from Harbour. Now xhb compatibility compression functions 
+       use Harbour hbzlib.lib, thus reducing binary size and 
+       avoiding security problems with old ZLIB.
+     ; Now the only copy of ZLIB in Harbour is in source/hbzlib.
+     % Using HB_ERR_FUNCNAME.
+
 2008-07-02 01:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/Makefile
    * contrib/hbziparch/common.mak
