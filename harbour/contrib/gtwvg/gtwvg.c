@@ -2705,7 +2705,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   tnid.uCallbackMessage = HB_MSG_NOTIFYICON;
                   tnid.hIcon            = hIcon ;
 
-                  lstrcpyn( tnid.szTip, hb_arrayGetCPtr( pInfo->pNewVal2, 4 ), sizeof( tnid.szTip ) ) ;
+                  HB_TCHAR_CPTO( tnid.szTip, hb_arrayGetCPtr( pInfo->pNewVal2, 4 ), sizeof( tnid.szTip ) - 1 );
 
                   Shell_NotifyIcon( mode, &tnid ) ;
 

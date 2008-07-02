@@ -2,9 +2,11 @@
 # $Id$
 #
 
-ifeq ($(HB_ARCHITECTURE),w32)
-
 ROOT = ../../
+
+LIBNAME=hbwhat32
+
+ifeq ($(HB_ARCHITECTURE),w32)
 
 C_SOURCES = \
 	wincorec.c \
@@ -81,8 +83,6 @@ PRG_HEADERS= \
 	wintypes.ch \
 	winuser.ch \
 
-LIBNAME=hbwhat32
-
 # This lib needs xhb headers to compile, and this is 
 # the hack to help Harbour find them.
 PRG_USR += -I../../../xhb
@@ -94,4 +94,6 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
 endif

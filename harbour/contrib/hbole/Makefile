@@ -2,9 +2,11 @@
 # $Id$
 #
 
-ifeq ($(HB_ARCHITECTURE),w32)
-
 ROOT = ../../
+
+LIBNAME=hbole
+
+ifeq ($(HB_ARCHITECTURE),w32)
 
 C_SOURCES=\
 	ole2.c \
@@ -12,8 +14,8 @@ C_SOURCES=\
 PRG_SOURCES=\
 	oleauto.prg \
 
-LIBNAME=hbole
-
 include $(TOP)$(ROOT)config/lib.cf
 
+else
+include $(TOP)$(ROOT)config/none.cf
 endif

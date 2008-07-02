@@ -2,10 +2,11 @@
 # $Id$
 #
 
-ifeq ($(HB_ARCHITECTURE),w32)
-ifneq ($(HB_COMPILER),rsxnt)
-
 ROOT = ../../
+
+LIBNAME=hbw32
+
+ifeq ($(HB_ARCHITECTURE),w32)
 
 C_SOURCES=\
 	dllcall.c \
@@ -22,8 +23,6 @@ PRG_SOURCES=\
 PRG_HEADERS = \
 	hbw32.ch \
 
-LIBNAME=hbw32
-
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
@@ -31,5 +30,6 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
-endif
+else
+include $(TOP)$(ROOT)config/none.cf
 endif

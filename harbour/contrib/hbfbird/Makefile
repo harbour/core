@@ -2,6 +2,10 @@
 # $Id$
 #
 
+ROOT = ../../
+
+LIBNAME=hbfbird
+
 ifeq ($(HB_INC_FIREBIRD),)
 HB_INC_FIREBIRD = /usr/include /opt/firebird/include
 endif
@@ -12,16 +16,14 @@ ifneq ($(strip $(HB_INC_FIREBIRD_OK)),)
 
 C_USR += $(foreach d, $(HB_INC_FIREBIRD_OK), -I$(d))
 
-ROOT = ../../
-
 C_SOURCES=\
 	firebird.c \
 
 PRG_SOURCES=\
 	tfirebird.prg \
 
-LIBNAME=hbfbird
-
 include $(TOP)$(ROOT)config/lib.cf
 
+else
+include $(TOP)$(ROOT)config/none.cf
 endif

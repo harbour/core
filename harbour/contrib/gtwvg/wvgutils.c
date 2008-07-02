@@ -2153,7 +2153,13 @@ HB_FUNC( WIN_CHOOSECOLOR )
 
 HB_FUNC( WIN_FINDWINDOW )
 {
-   HWND hwnd = FindWindow( NULL, hb_parc( 1 ) );
+   HWND hwnd;
+   LPTSTR lpStr;
+
+   lpStr = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+   hwnd = FindWindow( NULL, lpStr );
+   HB_TCHAR_FREE( lpStr );
+
    if ( hwnd )
    {
       hb_retnl( (LONG) hwnd );

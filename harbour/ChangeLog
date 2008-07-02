@@ -8,6 +8,61 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 11:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/xhb/Makefile
+  * harbour/contrib/xhb/common.mak
+  - harbour/contrib/xhb/hbchksum.c
+    * removed HB_CHECKSUM() code - it's not necessary
+
+  * harbour/contrib/xhb/xhbfunc.c
+    + redirected HB_CHECKSUM() to HB_ADLER32()
+
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    ! fixed WINCE builds. It was only for MiGWCE which partially emulates
+      GetSystemMenu() but probably other builds will report that this
+      function is missing.
+      If possible please test if current Harbour application can be
+      executed in real WinCE environment.
+
+  * harbour/make_deb.sh
+    * updated contrib library list
+
+  * harbour/contrib/hbmysql/mysql.c
+    ! fixed compilation for older MYSQL versions
+
+  * harbour/contrib/gtwvg/gtwvg.c
+  * harbour/contrib/gtwvg/wvgutils.c
+    ! fixed UNICODE builds
+
+  + harbour/config/none.cf
+    + added dummy header file for GNU make to avoid errors on unsupported
+      platforms
+
+  * harbour/contrib/hbw32ddr/Makefile
+  * harbour/contrib/hbmysql/Makefile
+  * harbour/contrib/hbodbc/Makefile
+  * harbour/contrib/hbwhat32/Makefile
+  * harbour/contrib/hbtpathy/Makefile
+  * harbour/contrib/hbw32/Makefile
+  * harbour/contrib/hbole/Makefile
+  * harbour/contrib/hbapollo/Makefile
+  * harbour/contrib/hbfbird/Makefile
+  * harbour/contrib/hbziparch/Makefile
+  * harbour/contrib/hbcurl/Makefile
+  * harbour/contrib/hbhpdf/Makefile
+  * harbour/contrib/rddado/Makefile
+  * harbour/contrib/gtwvg/Makefile
+  * harbour/contrib/hbpgsql/Makefile
+  * harbour/contrib/rddads/Makefile
+  * harbour/contrib/hbfimage/Makefile
+  * harbour/contrib/hbgd/Makefile
+  * harbour/contrib/hbgf/hbgfw32/Makefile
+  * harbour/contrib/hbgf/hbgfos2/Makefile
+  * harbour/contrib/hbgf/hbgfgtk/Makefile
+  * harbour/contrib/hbtip/Makefile
+  * harbour/contrib/hbbmcdx/Makefile
+    * updated to not generate errors for unsupported builds
+
 2008-07-02 11:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbdefs.h
      ! Fixed DLL creation for MSVC (and maybe compilers, too).

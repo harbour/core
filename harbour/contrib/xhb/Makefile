@@ -17,7 +17,6 @@ C_SOURCES=\
 	xhbqself.c \
 	xhbwith.c \
 	hbcomprs.c \
-	hbchksum.c \
 	xstrdel.c \
 
 C_HEADERS=\

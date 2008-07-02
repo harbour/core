@@ -2,10 +2,20 @@
 # $Id$
 #
 
-ifneq ($(HB_ARCHITECTURE),darwin)
-ifneq ($(HB_ARCHITECTURE),os2)
-
 ROOT = ../../
+
+LIBNAME=hbziparch
+
+ifeq ($(HB_WITH_ZIPARCH),)
+ifeq ($(HB_ARCHITECTURE),w32)
+   HB_WITH_ZIPARCH=yes
+endif
+ifeq ($(HB_ARCHITECTURE),linux)
+   HB_WITH_ZIPARCH=yes
+endif
+endif
+
+ifeq ($(HB_WITH_ZIPARCH),yes)
 
 PRG_HEADERS = \
 
@@ -60,13 +70,12 @@ endif
 
 PRG_SOURCES= \
 
-LIBNAME=hbziparch
-
 ifeq ($(HB_ARCHITECTURE),linux)
 C_USR += -DZIP_ARCHIVE_LNX
 endif
 
 include $(TOP)$(ROOT)config/lib.cf
 
-endif
+else
+include $(TOP)$(ROOT)config/none.cf
 endif

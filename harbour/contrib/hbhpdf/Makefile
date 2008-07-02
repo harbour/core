@@ -2,6 +2,10 @@
 # $Id$
 #
 
+ROOT = ../../
+
+LIBNAME=hbhpdf
+
 ifeq ($(HB_INC_LIBHARU),)
 HB_INC_LIBHARU = /usr/include
 endif
@@ -12,8 +16,6 @@ ifneq ($(strip $(HB_INC_LIBHARU_OK)),)
 
 C_USR += $(foreach d, $(HB_INC_LIBHARU_OK), -I$(d))
 
-ROOT = ../../
-
 C_SOURCES=\
 	harupdf.c \
 
@@ -22,8 +24,6 @@ PRG_HEADERS=\
 
 PRG_SOURCES=\
 
-LIBNAME=hbhpdf
-
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
@@ -31,4 +31,6 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
 endif

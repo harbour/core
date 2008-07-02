@@ -26,7 +26,6 @@ LIB_OBJS = \
     $(OBJ_DIR)xhbqself$(OBJEXT) \
     $(OBJ_DIR)xhbwith$(OBJEXT) \
     $(OBJ_DIR)hbcomprs$(OBJEXT) \
-    $(OBJ_DIR)hbchksum$(OBJEXT) \
     $(OBJ_DIR)xstrdel$(OBJEXT) \
     \
     $(OBJ_DIR)txml$(OBJEXT) \

@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+
+ifneq ($(HB_ARCHITECTURE),)
+ifneq ($(HB_COMPILER),)
+
+ifneq ($(LIBNAME),)
+   DIR_RULE := @echo "The '$(LIBNAME)' library ignored."
+else
+   DIR_RULE :=
+endif
+
+all : first
+
+
+first clean install::
+	$(DIR_RULE)
+
+endif
+endif

@@ -46,16 +46,18 @@ then
     export HB_WITHOUT_X11=yes
 fi
 
-if [ -z "$HB_WITHOUT_ODBC" ] && ! test_reqpkg unixodbc-dev
-then
-    export HB_WITHOUT_ODBC=yes
-fi
+export HB_CONTRIBLIBS="hbct hbmzip hbtip xhb hbbtree hbmisc hbvpdf hbgt hbbmcdx hbclipsm hbnf"
 
 if [ -z "$HB_WITHOUT_ADS" ] && \
    [ ! -f "/usr/local/ads/acesdk/ace.h" ] && \
    [ ! -f "${HOME}/ads/acesdk/ace.h" ]
 then
-    export HB_WITHOUT_ADS=yes
+   export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} rddads"
+fi
+
+if [ -z "$HB_WITHOUT_ODBC" ] && ! test_reqpkg unixodbc-dev
+then
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbodbc"
 fi
 
 if test_reqpkg libpq-dev

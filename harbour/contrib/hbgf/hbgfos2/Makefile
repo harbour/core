@@ -2,9 +2,11 @@
 # $Id$
 #
 
-ifeq ($(HB_ARCHITECTURE),os2)
-
 ROOT = ../../../
+
+LIBNAME=hbgfos2
+
+ifeq ($(HB_ARCHITECTURE),os2)
 
 C_SOURCES=\
 	os2pm.c \
@@ -17,8 +19,8 @@ PRG_SOURCES=\
 	button.prg \
 	edit.prg \
 
-LIBNAME=hbgfos2
-
 include $(TOP)$(ROOT)config/lib.cf
 
+else
+include $(TOP)$(ROOT)config/none.cf
 endif

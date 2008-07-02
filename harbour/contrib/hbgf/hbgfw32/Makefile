@@ -2,9 +2,11 @@
 # $Id$
 #
 
-ifeq ($(HB_ARCHITECTURE),w32)
-
 ROOT = ../../../
+
+LIBNAME=hbgfw32
+
+ifeq ($(HB_ARCHITECTURE),w32)
 
 C_SOURCES=\
 	win32.c \
@@ -17,8 +19,8 @@ PRG_SOURCES=\
 	menuitem.prg \
 	winctrl.prg \
 
-LIBNAME=hbgfw32
-
 include $(TOP)$(ROOT)config/lib.cf
 
+else
+include $(TOP)$(ROOT)config/none.cf
 endif

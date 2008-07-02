@@ -4,7 +4,9 @@
 
 ROOT = ../../
 
-ifneq ($(HB_ARCHITECTURE),dos)
+LIBNAME=hbtpathy
+
+C_SOURCES=
 
 ifeq ($(HB_ARCHITECTURE),linux)
 C_SOURCES=\
@@ -25,13 +27,13 @@ C_SOURCES=\
 
 endif
 
+ifneq ($(C_SOURCES),)
+
 PRG_SOURCES=\
 	telepath.prg \
 
 PRG_HEADERS=\
 	telepath.ch \
-
-LIBNAME=hbtpathy
 
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
@@ -40,4 +42,6 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
 endif

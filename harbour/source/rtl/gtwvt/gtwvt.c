@@ -1,4 +1,4 @@
- /*
+/*
  * $Id$
  */
 
@@ -900,6 +900,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                 rect.right  != s_rectOld.right  ||
                 rect.bottom != s_rectOld.bottom  )
             {
+#if !defined(HB_WINCE)  /* WinCE does not support InvertRgn */
                /* Concept forwarded by Andy Wos - thanks. */
                HRGN rgn1 = CreateRectRgn( s_rectOld.left, s_rectOld.top, s_rectOld.right, s_rectOld.bottom );
                HRGN rgn2 = CreateRectRgn( rect.left, rect.top, rect.right, rect.bottom );
@@ -915,7 +916,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                DeleteObject( rgn1 );
                DeleteObject( rgn2 );
                DeleteObject( rgn3 );
-
+#endif
                s_rectOld.left   = rect.left;
                s_rectOld.top    = rect.top;
                s_rectOld.right  = rect.right;
@@ -1628,9 +1629,12 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    /* Create "Mark" prompt in SysMenu to allow console type copy operation */
    {
       HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-      LPTSTR buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
-      AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, buffer );
-      HB_TCHAR_FREE( buffer );
+      if( hSysMenu )
+      {
+         LPTSTR buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
+         AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, buffer );
+         HB_TCHAR_FREE( buffer );
+      }
    }
 
    /* SUPER GT initialization */
@@ -2185,17 +2189,22 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( hb_itemGetCLen( pInfo->pNewVal ) )
             {
                HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-               LPTSTR buffer;
-               
-               if( pWVT->pszSelectCopy )
-                  hb_xfree( pWVT->pszSelectCopy );
-               
-               pWVT->pszSelectCopy = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
-               pWVT->bSelectCopy = TRUE;
-               
-               buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
-               ModifyMenu( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | MF_STRING | MF_ENABLED, SYS_EV_MARK, buffer );
-               HB_TCHAR_FREE( buffer );
+               if( hSysMenu )
+               {
+                  if( pWVT->pszSelectCopy )
+                     hb_xfree( pWVT->pszSelectCopy );
+                  pWVT->pszSelectCopy = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
+                  pWVT->bSelectCopy = TRUE;
+
+#if !defined(HB_WINCE)  /* WinCE does not support ModifyMenu */
+                  {
+                     LPTSTR buffer;
+                     buffer = HB_TCHAR_CONVTO( pWVT->pszSelectCopy );
+                     ModifyMenu( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | MF_STRING | MF_ENABLED, SYS_EV_MARK, buffer );
+                     HB_TCHAR_FREE( buffer );
+                  }
+#endif
+               }
             }
          }
          else if( pInfo->pNewVal )
@@ -2204,9 +2213,11 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( bNewValue != pWVT->bSelectCopy )
             {
                HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-
-               EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
-               pWVT->bSelectCopy = bNewValue;
+               if( hSysMenu )
+               {
+                  EnableMenuItem( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
+                  pWVT->bSelectCopy = bNewValue;
+               }
             }
          }
          break;
@@ -2220,9 +2231,11 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( bNewValue != pWVT->bClosable )
             {
                HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
-
-               EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
-               pWVT->bClosable = bNewValue;
+               if( hSysMenu )
+               {
+                  EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND | ( bNewValue ? MF_ENABLED : MF_GRAYED )  );
+                  pWVT->bClosable = bNewValue;
+               }
             }
          }
          break;

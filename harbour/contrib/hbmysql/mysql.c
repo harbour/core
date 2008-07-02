@@ -80,7 +80,20 @@
 
 HB_FUNC( SQLVERSION ) /* long mysql_get_server_version( MYSQL * ) */
 {
+#if MYSQL_VERSION_ID > 32399
    hb_retnl( ( long ) mysql_get_server_version( ( MYSQL * ) HB_PARPTR( 1 ) ) );
+#else
+   const char * szVer = mysql_get_server_info( ( MYSQL * ) HB_PARPTR( 1 ) );
+   long lVer = 0;
+
+   while( *szVer )
+   {
+      if( *szVer >= '0' && *szVer <= '9' )
+         lVer = lVer * 10 + *szVer;
+      szVer++;
+   }
+   hb_retnl( lVer );
+#endif
 }
 
 HB_FUNC( SQLCONNECT ) /* MYSQL *mysql_real_connect(MYSQL*, char * host, char * user, char * password, char * db, uint port, char *, uint flags) */
@@ -120,12 +133,20 @@ HB_FUNC( SQLCLOSE ) /* void mysql_close(MYSQL *mysql) */
 
 HB_FUNC( SQLCOMMIT ) /* bool mysql_commit(MYSQL *mysql) */
 {
+#if MYSQL_VERSION_ID >= 40100
    hb_retnl( ( long ) mysql_commit( ( MYSQL * ) HB_PARPTR( 1 ) ) );
+#else
+   hb_retnl( ( long ) mysql_query( ( MYSQL * ) HB_PARPTR( 1 ), "COMMIT" ) );
+#endif
 }
 
 HB_FUNC( SQLROLLBACK ) /* bool mysql_rollback(MYSQL *mysql) */
 {
+#if MYSQL_VERSION_ID >= 40100
    hb_retnl( ( long ) mysql_rollback( ( MYSQL * ) HB_PARPTR( 1 ) ) );
+#else
+   hb_retnl( ( long ) mysql_query( ( MYSQL * ) HB_PARPTR( 1 ), "ROLLBACK" ) );
+#endif
 }
 
 HB_FUNC( SQLSELECTD ) /* int mysql_select_db(MYSQL *, char *) */

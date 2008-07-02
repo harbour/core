@@ -2,9 +2,11 @@
 # $Id$
 #
 
-ifneq ($(HB_ARCHITECTURE),dos)
-
 ROOT = ../../
+
+LIBNAME=hbtip
+
+ifneq ($(HB_ARCHITECTURE),dos)
 
 C_SOURCES = \
 	base64x.c \
@@ -33,8 +35,6 @@ PRG_HEADERS= \
 	thtml.ch \
 	tip.ch \
 
-LIBNAME=hbtip
-
 include $(TOP)$(ROOT)config/header.cf
 INSTALL_RULE_HEADERS := $(INSTALL_RULE)
 include $(TOP)$(ROOT)config/lib.cf
@@ -42,4 +42,6 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
 endif

@@ -5,19 +5,21 @@
 # Needs Windows official ddraw.h to be copied to this directory, 
 # in order to compile under MingW. [vszakats]
 
-ifeq ($(HB_ARCHITECTURE),w32)
-
 ROOT = ../../
+
+LIBNAME=hbw32ddr
+
+ifeq ($(HB_ARCHITECTURE),w32)
 
 CPP_SOURCES=\
 	w32_ddrw.cpp \
 
 PRG_SOURCES=\
 
-LIBNAME=hbw32ddr
-
 include $(TOP)$(ROOT)config/lib.cf
 
 C_USR += -I.
 
+else
+include $(TOP)$(ROOT)config/none.cf
 endif
