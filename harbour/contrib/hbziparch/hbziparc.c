@@ -54,7 +54,7 @@
 
 #include "hbapifs.h"
 #include "hbapierr.h"
-
+#include "hbinit.h"
 #if defined(HB_OS_LINUX)
    #include <sys/types.h>
    #include <sys/stat.h>
@@ -1662,7 +1662,7 @@ HB_FUNC(HB_UNZIPALLFILE)
     }
 }
 
-HB_FUNC( HBZIPCLEANUP )
+HB_FUNC_EXIT( HBZIPCLEANUP )
 {
    if( hbza_ChangeDiskBlock )
    {
@@ -1670,3 +1670,25 @@ HB_FUNC( HBZIPCLEANUP )
       hbza_ChangeDiskBlock = NULL;
    }
 }
+#define __PRG_SOURCE__ (char*) "hbziparc.c"
+#ifdef HB_PCODE_VER
+#  undef HB_PRG_PCODE_VER
+#  define HB_PRG_PCODE_VER HB_PCODE_VER
+#endif
+
+HB_INIT_SYMBOLS_BEGIN( hbziparch_CLEANUP )
+{ (char*) "HBZIPCLEANUP$", {HB_FS_EXIT | HB_FS_LOCAL}, {HB_EXIT_FUNCNAME( HBZIPCLEANUP )}, NULL }
+HB_INIT_SYMBOLS_END( hbziparch_CLEANUP )
+
+#if defined(HB_PRAGMA_STARTUP)
+   #pragma startup hbziparch_CLEANUP
+#elif defined(HB_MSC_STARTUP)
+   #if _MSC_VER >= 1010
+      #pragma data_seg( ".CRT$XIY" )
+      #pragma comment( linker, "/Merge:.CRT=.data" )
+   #else
+      #pragma data_seg( "XIY" )
+   #endif
+   static HB_$INITSYM hb_vm_auto_SymbolInit_INIT = hbziparch_CLEANUP;
+   #pragma data_seg()
+#endif

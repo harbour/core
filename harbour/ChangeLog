@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 13:06 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
+   * contrib/hbziparch/hbziparc.c
+     + Added HBZIPCLEANUP() as EXIT function to clean. It will be called 
+       automatically at end application.
+
 2008-07-02 12:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbapollo/make_b32.bat
    * contrib/hbapollo/make_vc.bat
