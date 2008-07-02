@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 12:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbapollo/make_b32.bat
+   * contrib/hbapollo/make_vc.bat
+   * contrib/hbcurl/make_b32.bat
+   * contrib/hbcurl/make_vc.bat
+   * contrib/hbfbird/make_b32.bat
+   * contrib/hbfbird/make_vc.bat
+   * contrib/hbfimage/make_b32.bat
+   * contrib/hbfimage/make_vc.bat
+   * contrib/hbgd/make_b32.bat
+   * contrib/hbgd/make_vc.bat
+   * contrib/hbhpdf/make_b32.bat
+   * contrib/hbhpdf/make_vc.bat
+   * contrib/hbmysql/make_b32.bat
+   * contrib/hbmysql/make_vc.bat
+   * contrib/hbpgsql/make_b32.bat
+   * contrib/hbpgsql/make_vc.bat
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+     ! Fixed previous modification. More to come.
+
 2008-07-02 11:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/xhb/Makefile
   * harbour/contrib/xhb/common.mak
