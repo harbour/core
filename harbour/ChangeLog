@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 11:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbdefs.h
+     ! Fixed DLL creation for MSVC (and maybe compilers, too).
+       Thanks to Marek Paliwoda for the hint.
+
+   * contrib/hbtpathy/tpos2.c
+     ! Blind attempt to fix OS/2 compile error.
+
 2008-07-02 10:52 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
    * contrib/hbziparch/hbziparc.c
      * corrected library name in comments.

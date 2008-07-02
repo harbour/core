@@ -1174,7 +1174,7 @@ typedef PHB_FUNC HB_FUNC_PTR;
    #elif defined( ASANLM ) || defined( ASANT )
       #define HB_EXPORT
 
-   #elif defined( WIN32 )
+   #elif defined( HB_OS_WIN_32 )
       #define HB_EXPORT _declspec( dllexport )
 
    #else

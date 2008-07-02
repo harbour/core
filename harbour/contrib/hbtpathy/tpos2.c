@@ -60,6 +60,7 @@
 #define INCL_BASE
 #define INCL_DOS
 #define INCL_DOSERROR
+#define INCL_DOSDEVICES
 #define INCL_DOSDEVIOCTL
 #include <os2.h>
 
