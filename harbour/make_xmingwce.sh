@@ -26,8 +26,9 @@ else
     HB_HOST_CC="gcc"
     case "$HB_HOST_ARCH" in
         *windows*|*mingw32*|msys*)  HB_HOST_ARCH="w32"; HB_HOST_CC="mingw32" ;;
-        *dos)   HB_HOST_ARCH="dos" ;;
-        *bsd)   HB_HOST_ARCH="bsd" ;;
+        *dos)    HB_HOST_ARCH="dos" ;;
+        *bsd)    HB_HOST_ARCH="bsd" ;;
+        *darwin) HB_HOST_ARCH="darwin" ;;
     esac
 fi
 

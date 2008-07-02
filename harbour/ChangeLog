@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 21:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_xmingwce.sh
+  * harbour/bin/hb-mkslib.sh
+  * harbour/make_tgz.sh
+    + added Darwin and OS2 to architecure autodetection.
+
 2008-07-02 20:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_gcc.sh
    * make_gnu.sh
