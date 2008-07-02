@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 22:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbsqlit3/Makefile
+   * contrib/Makefile
+     + Reenabled hbsqlit3 for w32 platform.
+
+2008-07-02 22:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmzip/hbmzip.c
+     + Added DOS branches but not actual content. Sorry.
+
+   * contrib/hbsqlit3/Makefile
+   * contrib/Makefile
+     + Reenabled hbsqlit3 for w32 platform.
+
 2008-07-02 22:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit2/Makefile
    * contrib/hbsqlit3/Makefile

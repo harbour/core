@@ -21,7 +21,7 @@ DIRS=\
 	hbodbc \
 	hbole \
 #	hbsqlit2 \
-#	hbsqlit3 \
+	hbsqlit3 \
 	hbtip \
 	hbtpathy \
 	hbvpdf \
