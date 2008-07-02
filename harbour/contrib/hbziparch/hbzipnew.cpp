@@ -619,15 +619,29 @@ int hb___GetNumberofFilestoUnzip( char * szFile )
    return iNumberOfFiles;
 }
 
-int hb___SetCallbackFunc( PHB_ITEM pFunc )
+static void hb___CallbackFuncFree( void * cargo )
 {
+   HB_SYMBOL_UNUSED( cargo );
+
    if( hbza_ChangeDiskBlock )
    {
       hb_itemRelease( hbza_ChangeDiskBlock );
       hbza_ChangeDiskBlock = NULL;
    }
+}
 
-   hbza_ChangeDiskBlock = hb_itemNew( NULL );
+int hb___SetCallbackFunc( PHB_ITEM pFunc )
+{
+   if( hbza_ChangeDiskBlock )
+   {
+      hb_itemClear( hbza_ChangeDiskBlock );
+   }
+   else
+   {
+      /* register cleanup function, it's executed only once */
+      hb_vmAtExit( hb___CallbackFuncFree, NULL );
+      hbza_ChangeDiskBlock = hb_itemNew( NULL );
+   }
 
    if( pFunc )
       hb_itemCopy( hbza_ChangeDiskBlock, pFunc );
