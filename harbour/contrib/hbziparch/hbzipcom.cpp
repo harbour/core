@@ -147,7 +147,7 @@ int hb_CompressFile( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBl
    szZip.SetSegmCallback( &span );
 
    #ifdef HB_OS_WIN_32
-      hb_strLower( szFileLower, strlen( szFileLower )) ;
+      hb_strLower( szFileLower, strlen( szFileLower ));
    #endif
 
    try
@@ -184,16 +184,16 @@ int hb_CompressFile( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBl
          szZip.SetCallback( &spanac );
       }
 
-      for ( ulCount = 1; ( ulCount <= hb_arrayLen( pArray ) ) ;ulCount++ )
+      for( ulCount = 1; ulCount <= hb_arrayLen( pArray ); ulCount++ )
       {
-         szDummy = ( char * ) hb_arrayGetCPtr( pArray, ulCount ) ;
+         szDummy = ( char * ) hb_arrayGetCPtr( pArray, ulCount );
          dwSize  = hb_GetCurrentFileSize( szDummy );
          bAdded  = FALSE;
 
-         szDummyLower = hb_strdup( (char *)szDummy ) ;
+         szDummyLower = hb_strdup( (char *)szDummy );
 
          #ifdef HB_OS_WIN_32
-         hb_strLower( szDummyLower, strlen( szDummyLower )) ;
+         hb_strLower( szDummyLower, strlen( szDummyLower ));
          #endif
 
 // Prevent adding current archive file !
@@ -217,7 +217,7 @@ int hb_CompressFile( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBl
                   if ( bPath && !bAdded  )
                   {
                      szZip.AddNewFile( szDummy, iCompLevel, true, CZipArchive::zipsmSafeSmart, 65536 );
-                     // bAdded = TRUE;
+                     bAdded = TRUE;
                   }
                   else if ( !bDrive && !bPath && !bAdded  )
                   {
@@ -228,16 +228,17 @@ int hb_CompressFile( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBl
                catch( ... ){}
             }
          }
-         hb_xfree( szDummyLower ) ;
+         hb_xfree( szDummyLower );
       }
    }
-   hb_xfree( szFileLower ) ;
+
+   hb_xfree( szFileLower );
+
    try
    {
-      szZip.Close(  );
+      szZip.Close();
    }
-
-   catch ( CZipException )
+   catch( CZipException )
    {
       bReturn = FALSE;
    }
@@ -308,9 +309,9 @@ int hb_CmpTdSpan( char *szFile, PHB_ITEM pArray, int iCompLevel, PHB_ITEM pBlock
          szZip.SetCallback( &spanac );
       }
 
-      for ( ulCount = 1;( ulCount<= hb_arrayLen( pArray ) ) ;ulCount++ )
+      for ( ulCount = 1;( ulCount<= hb_arrayLen( pArray ) );ulCount++ )
       {
-         szDummy     = ( char * )hb_arrayGetCPtr( pArray, ulCount ) ;
+         szDummy     = ( char * )hb_arrayGetCPtr( pArray, ulCount );
          dwSize      = hb_GetCurrentFileSize( szDummy );
 
          bAdded      = FALSE;
@@ -420,7 +421,7 @@ int hb_CompressFileStd( char *szFile, char *szFiletoCompress, int iCompLevel, PH
 
             if( pBlock  != NULL )
             {
-               PHB_ITEM FileName=hb_itemPutC( NULL, szFiletoCompress ) ;
+               PHB_ITEM FileName=hb_itemPutC( NULL, szFiletoCompress );
 
                hb_vmEvalBlockV( pBlock, 1, FileName);
 
@@ -469,7 +470,7 @@ int hb_CompressFileStd( char *szFile, char *szFiletoCompress, int iCompLevel, PH
    }
    try
    {
-      szZip.Close(  );
+      szZip.Close();
    }
 
    catch ( CZipException )
@@ -546,9 +547,9 @@ int hb_CmpTdSpanStd( char *szFile, char * szFiletoCompress, int iCompLevel, PHB_
 
          if( pBlock  != NULL )
          {
-            PHB_ITEM FileName=hb_itemPutC( NULL, szFiletoCompress  ) ;
+            PHB_ITEM FileName=hb_itemPutC( NULL, szFiletoCompress  );
 
-            hb_vmEvalBlockV(  pBlock, 1, FileName);
+            hb_vmEvalBlockV( pBlock, 1, FileName );
 
             hb_itemRelease( FileName );
            
@@ -594,9 +595,8 @@ int hb_CmpTdSpanStd( char *szFile, char * szFiletoCompress, int iCompLevel, PHB_
 
    try
    {
-      szZip.Close(  );
+      szZip.Close();
    }
-
    catch ( CZipException )
    {
       bReturn = FALSE;

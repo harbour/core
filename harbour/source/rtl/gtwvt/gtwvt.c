@@ -740,12 +740,12 @@ static void hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )
 
 static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
 {
+   static RECT s_rectOld = { 0, 0, 0, 0 };
+   static RECT s_rectNew = { 0, 0, 0, 0 };
+
    POINT xy, colrow;
    SHORT keyCode = 0;
    SHORT keyState;
-
-   static RECT s_rectOld = { 0, 0, 0, 0 };
-   static RECT s_rcNew = { 0, 0, 0, 0 };
 
    HB_SYMBOL_UNUSED( wParam );
 
@@ -774,10 +774,10 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          {
             pWVT->bBeingMarked = TRUE;
 
-            s_rcNew.left     = xy.x;
-            s_rcNew.top      = xy.y;
-            s_rcNew.right    = xy.x;
-            s_rcNew.bottom   = xy.y;
+            s_rectNew.left     = xy.x;
+            s_rectNew.top      = xy.y;
+            s_rectNew.right    = xy.x;
+            s_rectNew.bottom   = xy.y;
 
             s_rectOld.left   = 0;
             s_rectOld.top    = 0;
@@ -814,10 +814,10 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
                RECT   rect = { 0, 0, 0, 0 };
                RECT   colrowRC = { 0, 0, 0, 0 };
 
-               rect.left   = HB_MIN( s_rcNew.left, s_rcNew.right  );
-               rect.top    = HB_MIN( s_rcNew.top , s_rcNew.bottom );
-               rect.right  = HB_MAX( s_rcNew.left, s_rcNew.right  );
-               rect.bottom = HB_MAX( s_rcNew.top , s_rcNew.bottom );
+               rect.left   = HB_MIN( s_rectNew.left, s_rectNew.right  );
+               rect.top    = HB_MIN( s_rectNew.top , s_rectNew.bottom );
+               rect.right  = HB_MAX( s_rectNew.left, s_rectNew.right  );
+               rect.bottom = HB_MAX( s_rectNew.top , s_rectNew.bottom );
 
                colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
 
@@ -881,19 +881,19 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
       {
          if( pWVT->bBeingMarked )
          {
-            RECT  rect = { 0, 0, 0, 0 };
-            RECT  colrowRC = { 0, 0, 0, 0 };
+            RECT rect     = { 0, 0, 0, 0 };
+            RECT colrowRC = { 0, 0, 0, 0 };
 
-            s_rcNew.right  = xy.x;
-            s_rcNew.bottom = xy.y;
+            s_rectNew.right  = xy.x;
+            s_rectNew.bottom = xy.y;
 
-            rect.left   = HB_MIN( s_rcNew.left, s_rcNew.right  );
-            rect.top    = HB_MIN( s_rcNew.top , s_rcNew.bottom );
-            rect.right  = HB_MAX( s_rcNew.left, s_rcNew.right  );
-            rect.bottom = HB_MAX( s_rcNew.top , s_rcNew.bottom );
+            rect.left   = HB_MIN( s_rectNew.left, s_rectNew.right  );
+            rect.top    = HB_MIN( s_rectNew.top , s_rectNew.bottom );
+            rect.right  = HB_MAX( s_rectNew.left, s_rectNew.right  );
+            rect.bottom = HB_MAX( s_rectNew.top , s_rectNew.bottom );
 
             colrowRC = hb_gt_wvt_GetColRowFromXYRect( pWVT, rect );
-            rect = hb_gt_wvt_GetXYFromColRowRect( pWVT, colrowRC );
+            rect     = hb_gt_wvt_GetXYFromColRowRect( pWVT, colrowRC );
 
             if( rect.left   != s_rectOld.left   ||
                 rect.top    != s_rectOld.top    ||
@@ -927,6 +927,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          else
          {
             keyState = wParam;
+
             switch( keyState )
             {
                case MK_LBUTTON:
