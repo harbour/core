@@ -517,7 +517,7 @@ static void ZipCreateArray( PHB_ITEM pParam, BYTE *pCurDir, BOOL bFullPath )    
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbzip.lib
+ *      Library is hbziparch.lib
  * $END$
  */
 
@@ -740,7 +740,7 @@ HB_FUNC( HB_GETFILECOUNT )
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbzip.lib
+ *      Library is hbziparch.lib
  * $END$
  */
 
@@ -916,7 +916,7 @@ HB_FUNC( HB_ZIPFILEBYTDSPAN )
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbzip.lib
+ *      Library is hbziparch.lib
  * $END$
  */
 
@@ -1057,7 +1057,7 @@ HB_FUNC( HB_ZIPFILEBYPKSPAN )
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbzip.lib
+ *      Library is hbziparch.lib
  * $END$
  */
 
@@ -1166,7 +1166,7 @@ HB_FUNC( HB_UNZIPFILE )
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbzip.lib
+ *      Library is hbziparch.lib
  * $END$
  */
 
@@ -1207,7 +1207,7 @@ HB_FUNC( HB_SETDISKZIP )
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbzip.lib
+ *      Library is hbziparch.lib
  * $END$
  */
 
@@ -1343,7 +1343,7 @@ HB_FUNC( HB_ZIPDELETEFILES )
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbzip.lib
+ *      Library is hbziparch.lib
  * $END$
  */
 
@@ -1396,7 +1396,7 @@ HB_FUNC( HB_ZIPTESTPK )
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbzip.lib
+ *      Library is hbziparch.lib
  * $END$
  */
 
@@ -1431,7 +1431,7 @@ HB_FUNC( HB_SETBUFFER )
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbzip.lib
+ *      Library is hbziparch.lib
  * $END$
  */
 
@@ -1465,7 +1465,7 @@ HB_FUNC( HB_SETZIPCOMMENT )
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbzip.lib
+ *      Library is hbziparch.lib
  * $END$
  */
 
@@ -1538,7 +1538,7 @@ HB_FUNC( HB_GETZIPCOMMENT )
  * $PLATFORMS$
  *      All
  * $FILES$
- *      Library is hbzip.lib
+ *      Library is hbziparch.lib
  * $END$
  */
 
