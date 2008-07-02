@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 20:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_gcc.sh
+   * make_gnu.sh
+     + Added Darwin to architecure autodetection.
+
 2008-07-02 20:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbgf/Makefile
     * do not include dir.cf when there is no platform dependent
