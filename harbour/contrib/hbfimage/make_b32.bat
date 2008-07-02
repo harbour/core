@@ -3,13 +3,16 @@ rem
 rem $Id$
 rem
 
-if not "%HB_DIR_FREEIMAGE%" == "" goto DIR_OK
+if not "%HB_INC_FREEIMAGE%%HB_DIR_FREEIMAGE%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need Freeimage headers and binary from here:
 echo            http://freeimage.sourceforge.net/download.html
 echo            and this envvar to be set to successfully build this library:
+echo            set HB_INC_FREEIMAGE=C:\FreeImage\source
+echo            or
 echo            set HB_DIR_FREEIMAGE=C:\FreeImage
+echo            if you want to generate .lib for the .dll.
 echo ---------------------------------------------------------------
 goto POST_EXIT
 

@@ -3,12 +3,15 @@ rem
 rem $Id$
 rem
 
-if not "%HB_DIR_CURL%" == "" goto DIR_OK
+if not "%HB_INC_CURL%%HB_DIR_CURL%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need the 'libcurl' package and this envvar
 echo            to be set to successfully build this library:
+echo            set HB_INC_CURL=C:\curl\include
+echo            or
 echo            set HB_DIR_CURL=C:\curl
+echo            if you want to generate .lib for the .dll.
 echo ---------------------------------------------------------------
 goto POST_EXIT
 
@@ -20,7 +23,7 @@ set _HB_DLL_NAME=libcurl
 if exist "%HB_DIR_CURL%\bin\%_HB_DLL_NAME%.dll" set _HB_DLL_DIR=%HB_DIR_CURL%\bin
 if exist "%HB_DIR_CURL%\%_HB_DLL_NAME%.dll"     set _HB_DLL_DIR=%HB_DIR_CURL%
 
-echo Using this .dll: "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll"
+if not "%_HB_DLL_DIR%" == "" echo Using .dll: "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll"
 
 rem ---------------------------------------------------------------
 

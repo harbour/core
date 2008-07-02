@@ -8,6 +8,41 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 12:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbapollo/make_b32.bat
+   * contrib/hbapollo/make_vc.bat
+   * contrib/hbcurl/make_b32.bat
+   * contrib/hbcurl/make_vc.bat
+   * contrib/hbfbird/make_b32.bat
+   * contrib/hbfbird/make_vc.bat
+   * contrib/hbfimage/make_b32.bat
+   * contrib/hbfimage/make_vc.bat
+   * contrib/hbgd/make_b32.bat
+   * contrib/hbgd/make_vc.bat
+   * contrib/hbhpdf/make_b32.bat
+   * contrib/hbhpdf/make_vc.bat
+   * contrib/hbmysql/make_b32.bat
+   * contrib/hbmysql/make_vc.bat
+   * contrib/hbpgsql/make_b32.bat
+   * contrib/hbpgsql/make_vc.bat
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+     + Added possibility to use HB_INC_* envvars to 
+       specify the header directories for external 
+       packages. This way _all_ Harbour make systems 
+       now able to use the same common logic to specify 
+       external header dirs. (For GNU-make you can even 
+       use a dir list).
+       If HB_INC_* is used with the non-GNU make system, 
+       the .dll to .lib generation _won't_ happen, which 
+       is desirable for binary builds for distribution.
+       HB_DIR_* envvars continue to work, in this case 
+       .libs are copied/generated from the external .dlls, 
+       and this is useful who build their Harbour from 
+       source.
+       For official Harbour binary distributions HB_INC_* 
+       must be used.
+
 2008-07-02 12:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbapollo/make_b32.bat
    * contrib/hbapollo/make_vc.bat

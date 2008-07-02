@@ -3,13 +3,16 @@ rem
 rem $Id$
 rem
 
-if not "%HB_DIR_LIBHARU%" == "" goto DIR_OK
+if not "%HB_INC_LIBHARU%%HB_DIR_LIBHARU%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need Haru Free PDF Library (libharu) DLL package 
 echo            from www.libharu.org and this envvar to be set to 
 echo            successfully build this library:
+echo            set HB_INC_LIBHARU=-IC:\libharu\include
+echo            or
 echo            set HB_DIR_LIBHARU=-IC:\libharu
+echo            if you want to generate .lib for the .dll.
 echo ---------------------------------------------------------------
 goto POST_EXIT
 

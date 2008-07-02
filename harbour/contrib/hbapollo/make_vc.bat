@@ -3,12 +3,15 @@ rem
 rem $Id$
 rem
 
-if not "%HB_DIR_APOLLO%" == "" goto DIR_OK
+if not "%HB_INC_APOLLO%%HB_DIR_APOLLO%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need Apollo headers and lib and this envvar
 echo            to be set to successfully build this library:
+echo            set HB_INC_APOLLO=C:\Apollo\include
+echo            or
 echo            set HB_DIR_APOLLO=C:\Apollo
+echo            if you want to generate .lib for the .dll.
 echo ---------------------------------------------------------------
 goto POST_EXIT
 

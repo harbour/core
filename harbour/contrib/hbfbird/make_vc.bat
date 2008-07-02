@@ -3,12 +3,15 @@ rem
 rem $Id$
 rem
 
-if not "%HB_DIR_FIREBIRD%" == "" goto DIR_OK
+if not "%HB_INC_FIREBIRD%%HB_DIR_FIREBIRD%" == "" goto DIR_OK
 
 echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need Firebird package and this envvar
 echo            to be set to successfully build this library:
+echo            set HB_INC_FIREBIRD=C:\Firebird\include
+echo            or
 echo            set HB_DIR_FIREBIRD=C:\Firebird
+echo            if you want to generate .lib for the .dll.
 echo ---------------------------------------------------------------
 goto POST_EXIT
 
