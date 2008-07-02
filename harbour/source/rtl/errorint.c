@@ -53,8 +53,7 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
-#include "hbdate.h"
-#include "hbset.h"
+#include "hbstack.h"
 
 /* NOTE: Use as minimal calls from here, as possible.
          Don't allocate memory from this function. [vszakats] */
@@ -62,10 +61,6 @@
 void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
 {
    char buffer[ 1024 ];
-   USHORT uiLine;
-   int iLevel;
-   FILE * hLog;
-
    BOOL fLang;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%lu, %s, %s, %s)", ulIntCode, szText, szPar1, szPar2));
@@ -78,22 +73,6 @@ void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, 
 
    fLang = ( hb_langID() != NULL );
 
-   hLog = hb_fopen( hb_setGetCPtr( HB_SET_HBOUTLOG ), "a+" );
-
-   if( hLog )
-   {
-      char szTime[ 9 ];
-      int iYear, iMonth, iDay;
-      
-      hb_dateToday( &iYear, &iMonth, &iDay );
-      hb_dateTimeStr( szTime );
-         
-      fprintf( hLog, HB_I_("Application Internal Error - %s\n"), hb_cmdargARGV()[0] );
-      fprintf( hLog, HB_I_("Terminated at: %04d.%02d.%02d %s\n"), iYear, iMonth, iDay, szTime );
-      if( *hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) )
-         fprintf( hLog, HB_I_("Info: %s\n"), hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) );
-   }
-
    hb_conOutErr( hb_conNewLine(), 0 );
    if( fLang )
       snprintf( buffer, sizeof( buffer ), ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR ), ulIntCode );
@@ -101,38 +80,16 @@ void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, 
       snprintf( buffer, sizeof( buffer ), "Unrecoverable error %lu: ", ulIntCode );
 
    hb_conOutErr( buffer, 0 );
-   if( hLog )
-      fwrite( buffer, sizeof( buffer[ 0 ] ), strlen( buffer ), hLog );
-
    if( szText )
       snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
    else if( fLang )
       snprintf( buffer, sizeof( buffer ), ( char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + ulIntCode - 9000 ), szPar1, szPar2 );
    else
       buffer[ 0 ] = '\0';
-
    hb_conOutErr( buffer, 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
-   if( hLog )
-      fprintf( hLog, "%s\n", buffer );
 
-   iLevel = 0;
-   while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
-   {
-      char msg[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
-
-      snprintf( msg, sizeof( msg ), HB_I_("Called from %s(%hu)\n"), buffer, uiLine );
-
-      hb_conOutErr( msg, 0 );
-      if( hLog )
-         fwrite( msg, sizeof( msg[ 0 ] ), strlen( msg ), hLog );
-   }
-
-   if( hLog )
-   {
-      fprintf( hLog, "------------------------------------------------------------------------\n");
-      fclose( hLog );
-   }
+   hb_stackDispCall();
 
    /* release console settings */
    hb_conRelease();
