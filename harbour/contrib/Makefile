@@ -20,15 +20,15 @@ DIRS=\
 	hbnf \
 	hbodbc \
 	hbole \
-	hbsqlit2 \
-	hbsqlit3 \
+#	hbsqlit2 \
+#	hbsqlit3 \
 	hbtip \
 	hbtpathy \
 	hbvpdf \
 	hbw32 \
-	hbw32ddr \
-	hbwhat32 \
-	hbziparch \
+#	hbw32ddr \
+#	hbwhat32 \
+#	hbziparch \
 	rddado \
 	xhb \
 

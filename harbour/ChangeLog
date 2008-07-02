@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 22:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbsqlit2/Makefile
+   * contrib/hbsqlit3/Makefile
+     ! Excluded from DOS builds.
+
+   * contrib/Makefile
+     - Commented following contribs from GNU-make default builds 
+       until different platform/compiler issues and excessive 
+       warnings are resolved:
+       hbsqlit2, hbsqlit3, hbw32ddr, hbwhat32, hbziparch
+
 2008-07-02 21:26 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_xmingwce.sh
   * harbour/bin/hb-mkslib.sh
