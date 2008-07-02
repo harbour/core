@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 23:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     ! Removed unused variable.
+
 2008-07-02 14:35 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * contrib/gtwvg/gtwvg.c
   * source/rtl/gtwvt/gtwvt.c

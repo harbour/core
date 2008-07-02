@@ -150,8 +150,6 @@ static BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 
 static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 {
-   int iIndex;
-
    --s_wvtCount;
    s_wvtWindows[pWVT->iHandle] = NULL;
 
