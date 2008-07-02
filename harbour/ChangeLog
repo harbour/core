@@ -88,7 +88,7 @@
                MSVS2008 - OK (doesn't work with set HB_BUILD_DLL=yes)
                MSVS2008cpp - OK (doesn't work with set HB_BUILD_DLL=yes)
                MinGW412 - OK
-               MinGW430
+               MinGW430 - OK
              Win64
                MSVS2008
                  Fails with:
