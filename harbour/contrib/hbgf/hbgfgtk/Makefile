@@ -9,7 +9,7 @@ LIBNAME=hbgfgtk
 ifeq ($(HB_ARCHITECTURE),linux)
 
 ifeq ($(HB_INC_GTK),)
-HB_INC_GTK = /usr/include
+HB_INC_GTK = /usr/include /usr/include/glib-2.0/
 endif
 HB_INC_GTK_OK += $(foreach d, $(HB_INC_GTK), $(if $(wildcard $(d)/glib.h),$(d),))
 

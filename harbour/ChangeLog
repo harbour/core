@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-02 18:39 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbodbc/Makefile
+    * added test for header files in non W32 builds
+      ODBC is not standard system part in other then MS-Window platforms
+
+  * harbour/contrib/hbgf/hbgfgtk/Makefile
+    * updated path check for GTK header files
+      In fact it still can give wrong results in different
+      Linux or other *nixes distributions. The real path to GTK
+      header files is unknown and should be always tested by
+      pkg-config
+
 2008-07-02 15:34 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbziparch/hbziparc.c
     - removed HB_FUNC_EXIT( HBZIPCLEANUP )
