@@ -593,7 +593,7 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
    }
 #  endif
 
-#elif defined( HB_OS_OS2 )
+#elif defined( HB_OS_OS2 ) && defined( _TEMP_GUARD_FOR_RC2_ )
    {
       FILESTATUS3 fs3;
       APIRET ulrc;
@@ -869,7 +869,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
    }
 #  endif
 
-#elif defined( HB_OS_OS2 )
+#elif defined( HB_OS_OS2 ) && defined( _TEMP_GUARD_FOR_RC2_ )
    {
       FILESTATUS3 fs3;
       APIRET ulrc;
