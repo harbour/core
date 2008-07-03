@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 18:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmzip/hbmzip.c
+     ! Fixed previous TOFIX for DOS.
+     ! Fixed warning.
+     ! Fixed mistake in previous commit.
+
 2008-07-03 16:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmzip/hbmzip.c
      + Added ".cmd" to the (commented) list of OS/2 executable 

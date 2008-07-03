@@ -560,12 +560,12 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
          ulExtAttr = iAttr & ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM | 
                                HB_FA_DIRECTORY | HB_FA_ARCHIVE );
      
-         if( ulExtAttr | FILE_ATTRIBUTE_READONLY )
+         if( ulExtAttr | HB_FA_READONLY )
             ulExtAttr |= 0x01240000;  /* r--r--r-- */
          else
             ulExtAttr |= 0x01B60000;  /* rw-rw-rw- */
 
-         if( ulExtAttr & FILE_ATTRIBUTE_DIRECTORY )
+         if( ulExtAttr & HB_FA_DIRECTORY )
             ulExtAttr |= 0x40000000;
          else
             ulExtAttr |= 0x80000000;
@@ -624,7 +624,7 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
          else
             ulExtAttr |= 0x80000000;
 
-#if 0 /* Please enable it if .exe, .bat and .com are executable files under OS2  
+#if 0 /* Please enable it if .exe, .bat and .com are executable files under OS2 */
          ulLen = strlen( szZipName );
          if( ulLen > 4 )
          {
@@ -649,17 +649,17 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
       ulExtAttr = 0x81B60020;  /* FILE_ATTRIBUTE_ARCHIVE | rw-rw-rw- */
    }
 #endif
-   zfi.external_fa = ulExtAttr;
-
-   /* TODO: zip.exe test: 0 for binary file, 1 for text. Does not depend on 
-      extension. We should analyse content of file to determine this??? */
-   zfi.internal_fa = 0; 
 
    if( fError )
    {
       hb_xfree( szZipName );
       return -200;
    }
+
+   zfi.external_fa = ulExtAttr;
+   /* TODO: zip.exe test: 0 for binary file, 1 for text. Does not depend on 
+      extension. We should analyse content of file to determine this??? */
+   zfi.internal_fa = 0; 
 
    if( ulExtAttr & 0x40000000 )
    {
