@@ -4,7 +4,7 @@
 # $Id$
 #
 
-if [ "${HB_INC_LIBHARU}" == "" ]
+if [ "${HB_INC_LIBHARU}" = "" ]
 then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You will need Haru Free PDF Library (libharu) DLL 

@@ -4,7 +4,7 @@
 # $Id$
 #
 
-if [ "${HB_INC_FIREBIRD}" == "" ]
+if [ "${HB_INC_FIREBIRD}" = "" ]
 then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You'll need Firebird package and this envvar"

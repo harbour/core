@@ -4,7 +4,7 @@
 # $Id$
 #
 
-if [ "${HB_INC_CURL}" == "" ]
+if [ "${HB_INC_CURL}" = "" ]
 then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You will need the 'libcurl' package installed and this" 

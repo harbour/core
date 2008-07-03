@@ -4,7 +4,7 @@
 # $Id$
 #
 
-if [ "${HB_INC_ADS}" == "" ]
+if [ "${HB_INC_ADS}" = "" ]
 then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You will need Advantage Client Engine (5.0 or upper)"

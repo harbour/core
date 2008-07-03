@@ -4,7 +4,7 @@
 # $Id$
 #
 
-if [ "${HB_INC_FREEIMAGE}" == "" ]
+if [ "${HB_INC_FREEIMAGE}" = "" ]
 then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You will need FreeImage package installed and this"

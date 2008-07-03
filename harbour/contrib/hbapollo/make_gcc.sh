@@ -4,7 +4,7 @@
 # $Id$
 #
 
-if [ "${HB_INC_APOLLO}" == "" ]
+if [ "${HB_INC_APOLLO}" = "" ]
 then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You will need Apollo package installed and this"

@@ -4,7 +4,7 @@
 # $Id$
 #
 
-if [ "${HB_INC_MYSQL}" == "" ]
+if [ "${HB_INC_MYSQL}" = "" ]
 then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You will need MYSQL package installed and this"

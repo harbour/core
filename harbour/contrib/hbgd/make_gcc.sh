@@ -4,7 +4,7 @@
 # $Id$
 #
 
-if [ "${HB_INC_GD}" == "" ]
+if [ "${HB_INC_GD}" = "" ]
 then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You will need GD package installed and this"

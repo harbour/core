@@ -4,7 +4,7 @@
 # $Id$
 #
 
-if [ "${HB_INC_PGSQL}" == "" ]
+if [ "${HB_INC_PGSQL}" = "" ]
 then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You will need PostgreSQL package installed and this"

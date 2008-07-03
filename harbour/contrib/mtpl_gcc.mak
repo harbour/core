@@ -98,9 +98,9 @@ INCLUDE_DIR = $(HB_ROOT)/include
 # Macros to access Harbour executable and other goodies
 #**********************************************************
 
-!ifndef HB
+ifndef HB
 HB = $(BIN_DIR)harbour
-!endif
+endif
 
 #**********************************************************
 # C compiler definition and C flags. These should never have to change.
