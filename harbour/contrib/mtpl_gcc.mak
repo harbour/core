@@ -167,7 +167,7 @@ CLEAN: doClean
 
 doClean:
 	-@if [ -f $(LIB_PATH) ]; then $(DEL) $(LIB_PATH); fi
-	-@if [ "$(HB_INSTALL_PREFIX)" == "$(HB_ROOT)" ]; then    \
+	-@if [ "$(HB_INSTALL_PREFIX)" = "$(HB_ROOT)" ]; then     \
 	   if [ -f $(HB_LIB_INSTALL)/$(LIBNAME)$(LIBEXT) ]; then \
 	     $(DEL) $(HB_LIB_INSTALL)/$(LIBNAME)$(LIBEXT);       \
 	   fi;                                                   \
