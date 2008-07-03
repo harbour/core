@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 11:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * hbziparch/hbziparc.c
+   * hbziparch/hbziparc.h
+   * hbziparch/hbzipcom.cpp
+   * hbziparch/hbzipnew.cpp
+     ! Fixed reintroduced warnings. Sorry Miguel, but the 
+       latest fix was not needed, since bAdded was reinited 
+       to FALSE in each iteration of the loop.
+     ! sprintf() -> snprintf()
+     % Optimizations.
+     * Formatting, cleanups.
+     ; Tested with BCC55, MSVC9 and MinGW.
+
 2008-07-03 10:09 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/make_gcc.sh
    * contrib/hbgd/tests/bld.sh

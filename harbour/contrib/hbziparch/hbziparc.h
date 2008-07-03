@@ -60,6 +60,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
+#include "hbdate.h"
 #include "hbvm.h"
 #include "hbzlib.h"
 
