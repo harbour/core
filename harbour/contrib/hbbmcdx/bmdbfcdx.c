@@ -92,7 +92,7 @@
 #include "hbapilng.h"
 #include "hbvm.h"
 #include "hbset.h"
-#include "hbrddbmcdx.h"
+#include "hbbmcdx.h"
 #include "hbmath.h"
 #include "rddsys.ch"
 #include "hbregex.h"

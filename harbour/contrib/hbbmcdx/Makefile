@@ -5,8 +5,8 @@
 ROOT = ../../
 
 C_SOURCES=\
-	bmdbfcdx1.c \
-	bmsixcdx1.c
+	bmdbfcdx.c \
+	bmsixcdx.c
 
 LIBNAME=hbbmcdx
 
