@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 16:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/Makefile
+    ! fixed some contrib library comments: # used before 1-st commented
+      library created long comment to the end of library list
+
 2008-07-03 15:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    - contrib/hbmysql/dbf2mysql.prg
    + contrib/hbmysql/dbf2mysq.prg

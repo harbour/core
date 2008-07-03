@@ -20,17 +20,18 @@ DIRS=\
 	hbnf \
 	hbodbc \
 	hbole \
-#	hbsqlit2 \
 	hbsqlit3 \
 	hbtip \
 	hbtpathy \
 	hbvpdf \
 	hbw32 \
+	rddado \
+	xhb \
+
+#	hbsqlit2 \
 #	hbw32ddr \
 #	hbwhat32 \
 #	hbziparch \
-	rddado \
-	xhb \
 
 # contribs with external dependencies
 DIRS +=\
