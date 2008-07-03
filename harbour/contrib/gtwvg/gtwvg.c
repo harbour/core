@@ -212,11 +212,11 @@ static void hb_gt_wvt_FreeAll( void )
 {
    if( s_wvtCount > 0 )
    {
-      int iPos, iIndex;
+      int iPos;
 
       for ( iPos = 1; iPos < WVT_MAX_WINDOWS; iPos++ )
       {
-         if( !s_wvtWindows[ iPos ] == NULL )
+         if( s_wvtWindows[ iPos ] != NULL )
          {
             hb_gt_wvt_Free( s_wvtWindows[ iPos ] );
             HB_GTSUPER_EXIT( s_wvtWindows[ iPos ]->pGT );

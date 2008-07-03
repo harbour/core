@@ -46,7 +46,7 @@ then
     export HB_WITHOUT_X11=yes
 fi
 
-export HB_CONTRIBLIBS="hbct hbmzip hbtip xhb hbbtree hbmisc hbvpdf hbgt hbbmcdx hbclipsm hbnf"
+export HB_CONTRIBLIBS="hbct hbmzip hbtip xhb hbbtree hbmisc hbvpdf hbgt hbbmcdx hbclipsm hbnf hbtpathy hbmsql hbsqlit2 hbsqlit3"
 
 if [ -z "$HB_WITHOUT_ADS" ] && \
    [ ! -f "/usr/local/ads/acesdk/ace.h" ] && \
@@ -55,7 +55,7 @@ then
    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} rddads"
 fi
 
-if [ -z "$HB_WITHOUT_ODBC" ] && ! test_reqpkg unixodbc-dev
+if [ -z "$HB_WITHOUT_ODBC" ] && test_reqpkg unixodbc-dev
 then
     export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbodbc"
 fi
@@ -74,6 +74,22 @@ if test_reqpkg libgd-xpm-dev || \
    test_reqpkg libgd2-xpm-dev 
 then
     export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbgd"
+fi
+
+if test_reqpkg libcurl4-gnutls-dev || \
+   test_reqpkg libcurl4-openssl-dev
+then
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbcurl"
+fi
+
+if test_reqpkg libgtk2.0-dev
+then
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbgf"
+fi
+
+if test_reqpkg firebird2.0-dev
+then
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbfbird"
 fi
 
 if [ -z "${TOINST_LST}" ] || [ "$1" = "--force" ]

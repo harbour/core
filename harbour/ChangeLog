@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 19:28 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/debian/changelog
+  * harbour/make_deb.sh
+    * added modifications by Guy Roussin - thanks
+
+  * harbour/contrib/gtwvg/gtwvg.c
+    ! fixed pointer comparison - C uses different precedence for !
+      operator then Clipper/xbase
+      I thought that I've already fixed it once :-o
+
 2008-07-03 18:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbbmcdx/bmdbfcdx.c
    * contrib/hbbtree/hb_btree.c
