@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 22:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/errorint.c
+     + Internal error are now logged to hb_out.log (by default).
+     ; This addition looks quite humble, yet very useful, please 
+       test and comment it.
+       Credits to Randy Portnoff for the idea.
+     ; First post-RC2, RC3/FINAL modification.
+
+2008-07-03 22:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   ; Tagged: /tags/harbour-1.0.0RC2
+
 2008-07-03 21:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/common/hbver.c
      ! Fixed version detection to not break when compiling for WinCE.
