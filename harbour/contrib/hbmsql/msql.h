@@ -24,7 +24,7 @@
 #define MSQL_H
 
 #include <sys/types.h>
-#if defined(__BORLANDC__) || defined(_MSC_VER)
+#if defined(__BORLANDC__) || defined(_MSC_VER) || defined(__WATCOMC__)
 #include <sys/types.h>	/* needed for time_t prototypes */
 #else
 #include <sys/time.h>	/* needed for time_t prototypes */

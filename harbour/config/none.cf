@@ -5,8 +5,15 @@
 ifneq ($(HB_ARCHITECTURE),)
 ifneq ($(HB_COMPILER),)
 
+CMDPREF:=
+ifeq ($(SHLVL),)
+ifneq ($(COMSPEC),)
+CMDPREF:=$(COMSPEC) /C
+endif
+endif
+
 ifneq ($(LIBNAME),)
-   DIR_RULE := @echo "The '$(LIBNAME)' library ignored."
+   DIR_RULE := @$(CMDPREF)echo "The '$(LIBNAME)' library ignored."
 else
    DIR_RULE :=
 endif

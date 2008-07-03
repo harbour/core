@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 13:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmsql/msql.h
+    * updated for [Open]Watcom builds. Now DOS OpenWatcom builds
+      works fine except hbbmcdx which needs special trick for long
+      file names. Question: Should we change filenames in this library
+      to 8.3 standard?
+
+  * harbour/config/none.cf
+    ! fixed to work with DOS and pure command.com
+
 2008-07-03 12:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/Makefile
    * contrib/hbfimage/Makefile
