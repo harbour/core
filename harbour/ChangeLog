@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 16:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmzip/hbmzip.c
+     + Added ".cmd" to the (commented) list of OS/2 executable 
+       extensions.
+     + Added headers for DOS/GCC line.
+     + Guarded new DOS section with GCC guards, added dummy 
+       branch for other DOS compilers.
+     ! Fixed embedded comment.
+     ; TOFIX: 
+       ../../hbmzip.c:563: error: 'FILE_ATTRIBUTE_READONLY' undeclared (first use in this function)
+       ../../hbmzip.c:568: error: 'FILE_ATTRIBUTE_DIRECTORY' undeclared (first use in this function)
+
+   * contrib/hbmisc/spd.c
+     - Removed two __XHARBOUR__ guards, because these feature 
+       have since been implemented in xhb.
+     ! Fixed DJGPP warning. The problem is that DJGPP will preprocess 
+       snprintf() to sprintf() (not very safe), which makes ulMaxBuf 
+       var unused.
+
 2008-07-03 16:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/Makefile
     ! fixed some contrib library comments: # used before 1-st commented

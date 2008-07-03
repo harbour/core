@@ -70,16 +70,19 @@ static void STAItm( PHB_ITEM pItmPar )
       cRes[i++] = *c++;
    }
    cRes[i++] = '\''; /* cRes[i] = '\0'; */
-#ifdef __XHARBOUR__
-   hb_itemPutCPtr( pItmPar, cRes, i );
-#else
    hb_itemPutCLPtr( pItmPar, cRes, i );
-#endif
 }
 
 static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int IsIndW, int iIndWidth, int IsIndP, int iIndPrec, PHB_ITEM pItmPar )
 {
    ULONG s;
+
+   /* NOTE: In DJGPP (4.2.3) snprintf() will be preprocessed to sprintf(), which 
+            makes ulMaxBuf unused, and this in turn causes a warning, so we're 
+            manually suppressing it. [vszakats] */
+   #if defined(__DJGPP__)
+      HB_SYMBOL_UNUSED( ulMaxBuf );
+   #endif
 
    if( IsIndW && IsIndP ){
       switch( iCOut ){
@@ -175,10 +178,6 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 #define DK_INCRES 1024
 #define DK_INCBUF 512
 #define DK_BLKBUF HB_MAX_DOUBLE_LENGTH   /* Expense of DK_INCBUF */
-
-#if defined( __XHARBOUR__ ) && ! defined( HB_ERR_FUNCNAME )
-   #define HB_ERR_FUNCNAME "SQL_SPRINTF"
-#endif
 
 HB_FUNC( SQL_SPRINTF )
 {

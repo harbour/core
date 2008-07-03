@@ -68,6 +68,11 @@
    #include <unistd.h>
    #include <time.h>
    #include <utime.h>
+#elif defined( HB_OS_DOS )
+   #if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+      #include "hb_io.h"
+      #include <sys/param.h>
+   #endif
 #endif
 
 
@@ -544,6 +549,8 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
          fError = TRUE;
    }
 #elif defined( HB_OS_DOS )
+
+#  if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
    {
       int iAttr;
 
@@ -567,7 +574,8 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
          if( ulLen > 4 )
          {
             pString = &szZipName[ ulLen - 4 ];
-            if( hb_stricmp( pString, ".exe" ) == 0 || hb_stricmp( pString, ".com" ) == 0 ||
+            if( hb_stricmp( pString, ".exe" ) == 0 || 
+                hb_stricmp( pString, ".com" ) == 0 ||
                 hb_stricmp( pString, ".bat" ) == 0 )
             {
                ulExtAttr |= 0x00490000; /* --x--x--x */
@@ -577,6 +585,14 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
       else
          fError = TRUE;
    }
+#  else
+   {
+      int TODO; /* To force warning */
+
+      ulExtAttr = 0x81B60020;  /* FILE_ATTRIBUTE_ARCHIVE | rw-rw-rw- */
+   }
+#  endif
+
 #elif defined( HB_OS_OS2 )
    {
       FILESTATUS3 fs3;
@@ -608,18 +624,20 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
          else
             ulExtAttr |= 0x80000000;
 
-/* Please uncomment it if .exe, .bat and .com are executable files under OS2  
+#if 0 /* Please enable it if .exe, .bat and .com are executable files under OS2  
          ulLen = strlen( szZipName );
          if( ulLen > 4 )
          {
             pString = &szZipName[ ulLen - 4 ];
-            if( hb_stricmp( pString, ".exe" ) == 0 || hb_stricmp( pString, ".com" ) == 0 ||
+            if( hb_stricmp( pString, ".exe" ) == 0 || 
+                hb_stricmp( pString, ".com" ) == 0 ||
+                hb_stricmp( pString, ".cmd" ) == 0 ||
                 hb_stricmp( pString, ".bat" ) == 0 )
             {
                ulExtAttr |= 0x00490000; /* --x--x--x */
             }
          }
-*/
+#endif
       }
       else
          fError = TRUE;
@@ -840,9 +858,17 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
       utime( szName, &utim );
    }
 #elif defined( HB_OS_DOS )
+
+#  if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
    {
       _chmod( szName, 1, ufi.external_fa & 0xFF );
    }
+#  else
+   {
+      int TODO; /* To force warning */
+   }
+#  endif
+
 #elif defined( HB_OS_OS2 )
    {
       FILESTATUS3 fs3;
