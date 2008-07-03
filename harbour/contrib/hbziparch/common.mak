@@ -11,7 +11,6 @@ LIB_OBJS = \
     $(OBJ_DIR)hbxdirec$(OBJEXT) \
     \
     $(OBJ_DIR)hbzipnew$(OBJEXT) \
-    $(OBJ_DIR)hbzipcom$(OBJEXT) \
     \
     $(OBJ_DIR)Aes$(OBJEXT) \
     $(OBJ_DIR)BaseLibCompressor$(OBJEXT) \

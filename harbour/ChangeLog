@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 11:37 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/Makefile
+   - contrib/hbziparch/hbzipcom.cpp
+   * contrib/hbziparch/hbzipnew.cpp
+   * contrib/hbziparch/common.mak
+     * Merged source module hbzipcom.cpp into hbzipnew.cpp.
+     + Using hb_fsSize() Harbour API instead of implementing 
+       this functionality locally and only for a limited 
+       number of platforms/compilers.
+
 2008-07-03 11:21 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * hbziparch/hbziparc.c
    * hbziparch/hbziparc.h

@@ -25,7 +25,6 @@ C_SOURCES = \
 
 CPP_SOURCES = \
 	hbzipnew.cpp \
-	hbzipcom.cpp \
 	\
 	Aes.cpp \
 	BaseLibCompressor.cpp \
