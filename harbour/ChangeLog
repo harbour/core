@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 21:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/common/hbver.c
+     ! Fixed version detection to not break when compiling for WinCE.
+     ; Marek, thanks a lot.
+
 2008-07-03 21:26 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmzip/hbmzip.c
      * Temply disabled new OS/2 code to go on with the RC2 release.

@@ -222,6 +222,7 @@ char * hb_verPlatform( void )
 
                if( osVer.dwMajorVersion == 6 )
                {
+#if !defined(HB_WINCE)
                   OSVERSIONINFOEXA osVerEx;
 
                   osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
@@ -234,6 +235,7 @@ char * hb_verPlatform( void )
                         pszName = "Windows Server 2008";
                   }
                   else
+#endif
                      pszName = "Windows";
                }
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion >= 2 )
