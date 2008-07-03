@@ -111,7 +111,7 @@ HB_FUNC( FI_FITOBITMAP )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_FITOBITMAP", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -164,7 +164,7 @@ HB_FUNC( FI_BITMAPTOFI )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_BITMAPTOFI", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -222,7 +222,7 @@ HB_FUNC( FI_WINDRAW )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_WINDRAW", 6,
+            HB_ERR_FUNCNAME, 6,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ),
             hb_paramError( 4 ), hb_paramError( 5 ), hb_paramError( 6 )
          );

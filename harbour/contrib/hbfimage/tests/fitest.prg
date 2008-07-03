@@ -14,7 +14,7 @@
 #include "fileio.ch"
 
 #define IMAGES_IN  ""
-#define IMAGES_OUT "images_out/"
+#define IMAGES_OUT "imgs_out/"
 
 PROCEDURE Main()
 
@@ -79,7 +79,7 @@ PROCEDURE Main()
    
    ? "Save TIFF ?      :", fi_Save( FIF_TIFF, clone, IMAGES_OUT + "sample1.tif", TIFF_DEFAULT )
    ? "Flip Horizontal ?:", fi_FlipHorizontal( clone )
-   ? "Save JPG ?       :", fi_Save( FIF_JPEG, clone, IMAGES_OUT + "horizontal.jpg", JPEG_DEFAULT )
+   ? "Save JPG ?       :", fi_Save( FIF_JPEG, clone, IMAGES_OUT + "horizont.jpg", JPEG_DEFAULT )
    ? "Flip Vertical ?  :", fi_FlipVertical( clone )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, clone, IMAGES_OUT + "vertical.jpg", JPEG_DEFAULT )
    
@@ -90,7 +90,7 @@ PROCEDURE Main()
    centerx := fi_GetWidth( clone ) / 2
    centery := fi_GetHeight( clone ) / 2
    ? "Rotate Ex        :", ValToPrg( rotatedEx := fi_RotateEx( clone, 15, 0, 0, centerx, centery, TRUE ) )
-   ? "Save JPG ?       :", fi_Save( FIF_JPEG, rotatedEx, IMAGES_OUT + "rotateEx.jpg", JPEG_DEFAULT )
+   ? "Save JPG ?       :", fi_Save( FIF_JPEG, rotatedEx, IMAGES_OUT + "rotateex.jpg", JPEG_DEFAULT )
    fi_Unload( rotatedEx )
    
    width   := fi_GetWidth( im )
@@ -107,12 +107,12 @@ PROCEDURE Main()
    
    im2 := fi_Clone( im )
    ? "Adjust Brightness:", fi_AdjustBrightness( im2, -30 )
-   ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "adjbright.jpg", JPEG_DEFAULT )
+   ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "adjbrigh.jpg", JPEG_DEFAULT )
    fi_Unload( im2 )
    
    im2 := fi_Clone( im )
    ? "Adjust Contrast ?:", fi_AdjustContrast( im2, -30 )
-   ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "adjcontrast.jpg", JPEG_DEFAULT )
+   ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "adjcontr.jpg", JPEG_DEFAULT )
    fi_Unload( im2 )
    
    im2 := fi_Clone( im )

@@ -194,7 +194,7 @@ HB_FUNC( FI_SETOUTPUTMESSAGE )
          // Parameter error
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-               "FI_SETOUTPUTMESSAGE", 1,
+               HB_ERR_FUNCNAME, 1,
                hb_paramError( 1 )
             );
             return;
@@ -235,7 +235,7 @@ HB_FUNC( FI_ALLOCATE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_ALLOCATE", 3,
+            HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 )
          );
          return;
@@ -276,7 +276,7 @@ HB_FUNC( FI_ALLOCATET )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_ALLOCATET", 3,
+            HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 )
          );
          return;
@@ -314,7 +314,7 @@ HB_FUNC( FI_CLONE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CLONE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -346,7 +346,7 @@ HB_FUNC( FI_UNLOAD )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_UNLOAD", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -395,7 +395,7 @@ HB_FUNC( FI_LOADFROMMEM )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_LOADFROMMEM", 3,
+            HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
          return;
       }
@@ -436,7 +436,7 @@ HB_FUNC( FI_LOAD )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_LOAD", 3,
+            HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
          return;
       }
@@ -480,7 +480,7 @@ HB_FUNC( FI_SAVE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_SAVE", 4,
+            HB_ERR_FUNCNAME, 4,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
          return;
       }
@@ -573,7 +573,7 @@ HB_FUNC( FI_OPENMULTIBITMAP )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_OPENMULTIBITMAP", 4,
+            HB_ERR_FUNCNAME, 4,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
          return;
       }
@@ -605,7 +605,7 @@ HB_FUNC( FI_CLOSEMULTIBITMAP )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CLOSEMULTIBITMAP", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -635,7 +635,7 @@ HB_FUNC( FI_GETPAGECOUNT )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETPAGECOUNT", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -668,7 +668,7 @@ HB_FUNC( FI_APPENDPAGE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_APPENDPAGE", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
          return;
       }
@@ -704,7 +704,7 @@ HB_FUNC( FI_INSERTPAGE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_INSERTPAGE", 3,
+            HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
          return;
       }
@@ -737,7 +737,7 @@ HB_FUNC( FI_DELETEPAGE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_DELETEPAGE", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
          return;
       }
@@ -770,7 +770,7 @@ HB_FUNC( FI_LOCKPAGE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_LOCKPAGE", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
          return;
       }
@@ -806,7 +806,7 @@ HB_FUNC( FI_UNLOCKPAGE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_UNLOCKPAGE", 3,
+            HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
          return;
       }
@@ -841,7 +841,7 @@ HB_FUNC( FI_MOVEPAGE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_MOVEPAGE", 3,
+            HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
          return;
       }
@@ -881,7 +881,7 @@ HB_FUNC( FI_GETFILETYPE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETFILETYPE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -918,7 +918,7 @@ HB_FUNC( FI_GETFILETYPEFROMMEM )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETFILETYPE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -950,7 +950,7 @@ HB_FUNC( FI_GETIMAGETYPE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETIMAGETYPE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -999,7 +999,7 @@ HB_FUNC( FI_GETBITS )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETBITS", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1032,7 +1032,7 @@ HB_FUNC( FI_GETSCANLINE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETSCANLINE", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
          return;
       }
@@ -1072,7 +1072,7 @@ HB_FUNC( FI_GETCOLORSUSED )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETCOLORSUSED", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1102,7 +1102,7 @@ HB_FUNC( FI_GETBPP )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETBPP", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1132,7 +1132,7 @@ HB_FUNC( FI_GETWIDTH )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETWIDTH", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1162,7 +1162,7 @@ HB_FUNC( FI_GETHEIGHT )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETHEIGHT", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1192,7 +1192,7 @@ HB_FUNC( FI_GETLINE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETLINE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1222,7 +1222,7 @@ HB_FUNC( FI_GETPITCH )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETPITCH", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1252,7 +1252,7 @@ HB_FUNC( FI_GETDIBSIZE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETDIBSIZE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1282,7 +1282,7 @@ HB_FUNC( FI_GETPALETTE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETPALETTE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1312,7 +1312,7 @@ HB_FUNC( FI_GETDOTSPERMETERX )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETDOTSPERMETERX", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1342,7 +1342,7 @@ HB_FUNC( FI_GETDOTSPERMETERY )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETDOTSPERMETERY", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1375,7 +1375,7 @@ HB_FUNC( FI_SETDOTSPERMETERX )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_SETDOTSPERMETERX", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
          return;
       }
@@ -1408,7 +1408,7 @@ HB_FUNC( FI_SETDOTSPERMETERY )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_SETDOTSPERMETERY", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
          return;
       }
@@ -1446,7 +1446,7 @@ HB_FUNC( FI_GETINFOHEADER )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETINFOHEADER", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1480,7 +1480,7 @@ HB_FUNC( FI_GETINFO )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETINFO", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1510,7 +1510,7 @@ HB_FUNC( FI_GETCOLORTYPE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETCOLORTYPE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1541,7 +1541,7 @@ HB_FUNC( FI_GETREDMASK )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETREDMASK", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1571,7 +1571,7 @@ HB_FUNC( FI_GETGREENMASK )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETGREENMASK", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1601,7 +1601,7 @@ HB_FUNC( FI_GETBLUEMASK )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETBLUEMASK", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1632,7 +1632,7 @@ HB_FUNC( FI_GETTRANSPARENCYCOUNT )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETTRANSPARENCYCOUNT", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1662,7 +1662,7 @@ HB_FUNC( FI_GETTRANSPARENCYTABLE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETTRANSPARENCYTABLE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1695,7 +1695,7 @@ HB_FUNC( FI_SETTRANSPARENT )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_SETTRANSPARENT", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
          return;
       }
@@ -1731,7 +1731,7 @@ HB_FUNC( FI_SETTRANSPARENCYTABLE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_SETTRANSPARENCYTABLE", 3,
+            HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
          return;
       }
@@ -1761,7 +1761,7 @@ HB_FUNC( FI_ISTRANSPARENT )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_ISTRANSPARENT", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1792,7 +1792,7 @@ HB_FUNC( FI_HASBACKGROUNDCOLOR )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_HASBACKGROUNDCOLOR", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1829,7 +1829,7 @@ HB_FUNC( FI_GETBACKGROUNDCOLOR )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETBACKGROUNDCOLOR", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
          return;
       }
@@ -1867,7 +1867,7 @@ HB_FUNC( FI_SETBACKGROUNDCOLOR )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_SETBACKGROUNDCOLOR", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
          return;
       }
@@ -1904,7 +1904,7 @@ HB_FUNC( FI_GETICCPROFILE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETICCPROFILE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -1941,7 +1941,7 @@ HB_FUNC( FI_CREATEICCPROFILE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CREATEICCPROFILE", 3,
+            HB_ERR_FUNCNAME, 3,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 )
          );
          return;
@@ -1973,7 +1973,7 @@ HB_FUNC( FI_DESTROYICCPROFILE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_DESTROYICCPROFILE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -2046,7 +2046,7 @@ HB_FUNC( FI_CONVERTTO4BITS )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CONVERTTO4BITS", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 )
          );
          return;
@@ -2077,7 +2077,7 @@ HB_FUNC( FI_CONVERTTO8BITS )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CONVERTTO8BITS", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 )
          );
          return;
@@ -2108,7 +2108,7 @@ HB_FUNC( FI_CONVERTTOGREYSCALE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CONVERTTOGREYSCALE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 )
          );
          return;
@@ -2139,7 +2139,7 @@ HB_FUNC( FI_CONVERTTO16BITS555 )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CONVERTTO16BITS555", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 )
          );
          return;
@@ -2170,7 +2170,7 @@ HB_FUNC( FI_CONVERTTO16BITS565 )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CONVERTTO16BITS565", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 )
          );
          return;
@@ -2201,7 +2201,7 @@ HB_FUNC( FI_CONVERTTO24BITS )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CONVERTTO24BITS", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 )
          );
          return;
@@ -2232,7 +2232,7 @@ HB_FUNC( FI_CONVERTTO32BITS )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CONVERTTO32BITS", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 )
          );
          return;
@@ -2266,7 +2266,7 @@ HB_FUNC( FI_COLORQUANTIZE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_COLORQUANTIZE", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 )
          );
          return;
@@ -2305,7 +2305,7 @@ HB_FUNC( FI_DITHER )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_DITHER", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 )
          );
          return;
@@ -2342,7 +2342,7 @@ HB_FUNC( FI_CONVERTTORGBF )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CONVERTTORGBF", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 )
          );
          return;
@@ -2376,7 +2376,7 @@ HB_FUNC( FI_CONVERTTOSTANDARDTYPE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CONVERTTOSTANDARDTYPE", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 )
          );
          return;
@@ -2412,7 +2412,7 @@ HB_FUNC( FI_CONVERTTOTYPE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_CONVERTTOTYPE", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 )
          );
          return;
@@ -2511,7 +2511,7 @@ HB_FUNC( FI_ROTATECLASSIC )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_ROTATECLASSIC", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 ) );
          return;
       }
@@ -2555,7 +2555,7 @@ HB_FUNC( FI_ROTATEEX )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_ROTATEEX", 7,
+            HB_ERR_FUNCNAME, 7,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 )
          );
@@ -2587,7 +2587,7 @@ HB_FUNC( FI_FLIPHORIZONTAL )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_FLIPHORIZONTAL", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -2617,7 +2617,7 @@ HB_FUNC( FI_FLIPVERTICAL )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_FLIPVERTICAL", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 ) );
          return;
       }
@@ -2663,7 +2663,7 @@ HB_FUNC( FI_RESCALE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_RESCALE", 4,
+            HB_ERR_FUNCNAME, 4,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 )
          );
          return;
@@ -2705,7 +2705,7 @@ HB_FUNC( FI_ADJUSTGAMMA )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_ADJUSTGAMMA", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 )
          );
          return;
@@ -2739,7 +2739,7 @@ HB_FUNC( FI_ADJUSTBRIGHTNESS )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_ADJUSTBRIGHTNESS", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 )
          );
          return;
@@ -2773,7 +2773,7 @@ HB_FUNC( FI_ADJUSTCONTRAST )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_ADJUSTCONTRAST", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 )
          );
          return;
@@ -2804,7 +2804,7 @@ HB_FUNC( FI_INVERT )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_INVERT", 1,
+            HB_ERR_FUNCNAME, 1,
             hb_paramError( 1 )
          );
          return;
@@ -2846,7 +2846,7 @@ HB_FUNC( FI_GETCHANNEL )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_GETCHANNEL", 2,
+            HB_ERR_FUNCNAME, 2,
             hb_paramError( 1 ), hb_paramError( 2 )
          );
          return;
@@ -2896,7 +2896,7 @@ HB_FUNC( FI_COPY )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_COPY", 5,
+            HB_ERR_FUNCNAME, 5,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 )
          );
@@ -2938,7 +2938,7 @@ HB_FUNC( FI_PASTE )
       // Parameter error
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-            "FI_PASTE", 5,
+            HB_ERR_FUNCNAME, 5,
             hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
             hb_paramError( 5 )
          );

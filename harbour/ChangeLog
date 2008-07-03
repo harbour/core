@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 15:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   - contrib/hbmysql/dbf2mysql.prg
+   + contrib/hbmysql/dbf2mysq.prg
+   * contrib/hbfbird/common.mak
+   * contrib/hbfbird/Makefile
+   - contrib/hbfbird/tfirebird.prg
+   + contrib/hbfbird/tfirebrd.prg
+   * contrib/hbfimage/tests/fitest.prg
+   + contrib/hbfimage/tests/imgs_out
+   - contrib/hbfimage/tests/images_out
+     * Some more long filenames removed.
+     ; TOFIX?: freeimage.ch is still long.
+
+   * contrib/hbfimage/fi_winfu.c
+   * contrib/hbfimage/fi_wrp.c
+     % Using HB_ERR_FUNCNAME
+
 2008-07-03 16:30 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * contrib/hbmzip/hbmzip.c
     + implemented file get attributes and file set attributes for DOS and OS2
