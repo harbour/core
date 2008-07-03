@@ -11,12 +11,11 @@
  * i.e.: counter 34524
  */
 
-
 #include "gd.ch"
 #include "common.ch"
 
 #define IMAGES_IN  "digits/"
-#define IMAGES_OUT "images_out/"
+#define IMAGES_OUT "imgs_out/"
 
 #define DISPLAY_NUM  10
 

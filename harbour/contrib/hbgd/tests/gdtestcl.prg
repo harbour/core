@@ -8,12 +8,11 @@
  * GD Class test file
  */
 
-
 #include "gd.ch"
 #include "common.ch"
 
-#define IMAGES_IN  "images_in/"
-#define IMAGES_OUT "images_out/"
+#define IMAGES_IN  "imgs_in/"
+#define IMAGES_OUT "imgs_out/"
 
 PROCEDURE Main()
 
@@ -237,7 +236,7 @@ PROCEDURE Main()
    red   := oI5:SetColor(250, 0, 0)
 
    // Load an image as brush
-   oB := GDImage():LoadFromGif( IMAGES_IN + "theclipper.gif" )
+   oB := GDImage():LoadFromGif( IMAGES_IN + "harbour.gif" )
    oB:Zoom(15)
 
    //oI5:Circle( 200, 200, oI5:Width() )

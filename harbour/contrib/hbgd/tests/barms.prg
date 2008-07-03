@@ -1,5 +1,8 @@
+/*
+ * $Id$
+ */
 
-#define IMAGES_OUT "images_out/"
+#define IMAGES_OUT "imgs_out/"
 
 Function Main()
 

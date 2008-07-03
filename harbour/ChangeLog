@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 15:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   - hbgd/tests/images_in
+   - hbgd/tests/images_out
+   + hbgd/tests/imgs_in
+   + hbgd/tests/imgs_out
+   * hbgd/tests/gdtest.prg
+   * hbgd/tests/bartest.prg
+   * hbgd/tests/barms.prg
+   * hbgd/tests/test_out.prg
+   * hbgd/tests/tostring.prg
+   * hbgd/tests/gdtestcl.prg
+   * hbgd/tests/animgif.prg
+   * hbgd/tests/testdpi.prg
+   * hbgd/tests/counter.prg
+   * hbgd/tests/antialia.prg
+     * Removing long filenames in hbgd (part 2/3)
+     ! Added SVN headers.
+     ! Fixed to not use hbcompat.ch.
+
 2008-07-03 14:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbgd/Makefile
    * contrib/hbgd/common.mak
@@ -17,7 +36,7 @@
    + contrib/hbgd/tests/gdtestcl.prg
    - contrib/hbgd/tests/antialiased.prg
    + contrib/hbgd/tests/antialia.prg
-     ! Removing long filenames in hbgd (part 1/2)
+     ! Removing long filenames in hbgd (part 1/3)
 
 2008-07-03 14:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbbmcdx/Makefile

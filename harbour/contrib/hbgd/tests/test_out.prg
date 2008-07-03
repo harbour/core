@@ -10,7 +10,6 @@
 
 #include "gd.ch"
 #include "common.ch"
-#include "hbcompat.ch"
 
 #command WRITE <c> => FWrite( 1, <c> + CHR(13)+CHR(10) )
 #command OutHTML <c> => WRITE <c>
@@ -20,7 +19,7 @@ PROCEDURE Main(...)
    LOCAL cPar
    LOCAL aParams := hb_aParams()
    LOCAL cQuery  := GetEnv( "QUERY_STRING" )
-   LOCAL hParams := Hash()
+   LOCAL hParams := hb_Hash()
 
    LOCAL cText, cImg, nPt, nSize, nWidth, nHeight, cPhoto
 
@@ -40,22 +39,22 @@ PROCEDURE Main(...)
 
         do case
         case cPar == "txt"
-             cText := hGet( hParams, cPar )
+             cText := hb_hGet( hParams, cPar )
 
         case cPar == "img"
-             cImg := hGet( hParams, cPar )
+             cImg := hb_hGet( hParams, cPar )
 
         case cPar == "photo"
-             cPhoto := hGet( hParams, cPar )
+             cPhoto := hb_hGet( hParams, cPar )
 
         case cPar == "width"
-             nWidth := Val( hGet( hParams, cPar ) )
+             nWidth := Val( hb_hGet( hParams, cPar ) )
 
         case cPar == "height"
-             nHeight := Val( hGet( hParams, cPar ) )
+             nHeight := Val( hb_hGet( hParams, cPar ) )
 
         case cPar == "pt"
-             nPt := Val( hGet( hParams, cPar ) )
+             nPt := Val( hb_hGet( hParams, cPar ) )
 
         endcase
      NEXT
@@ -212,7 +211,7 @@ PROCEDURE OutJpg( cText, nPitch )
 RETURN
 
 FUNCTION GetVars( cFields, cSeparator )
-   LOCAL hHashVars := Hash()
+   LOCAL hHashVars := hb_Hash()
    LOCAL aField, cField, aFields
    LOCAL cName, xValue
    DEFAULT cSeparator TO "&"
@@ -248,7 +247,7 @@ FUNCTION GetVars( cFields, cSeparator )
 RETURN hHashVars
 
 FUNCTION GetParams( aParams )
-   LOCAL hHashVars := Hash()
+   LOCAL hHashVars := hb_Hash()
    LOCAL aField, cField, aFields
    LOCAL cName, xValue
 
@@ -299,7 +298,7 @@ FUNCTION URLDecode( cStr )
 
          CASE cCar == "%"
             i ++
-            cRet += Chr( HexToNum( SubStr( cStr, i, 2 ) ) )
+            cRet += Chr( hb_HexToNum( SubStr( cStr, i, 2 ) ) )
             i ++
 
          OTHERWISE
@@ -339,7 +338,7 @@ FUNCTION URLEncode( cStr )
 
          OTHERWISE
             nVal := Asc( cCar )
-            cRet += "%" + NumToHex( nVal )
+            cRet += "%" + hb_NumToHex( nVal )
       ENDCASE
    NEXT
 

@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
  * GD graphic library.
  * graphic font DPI demo
  *
@@ -8,8 +12,8 @@
 #include "gd.ch"
 #include "common.ch"
 
-#define IMAGES_IN  "images_in/"
-#define IMAGES_OUT "images_out/"
+#define IMAGES_IN  "imgs_in/"
+#define IMAGES_OUT "imgs_out/"
 
 PROCEDURE Main()
 
