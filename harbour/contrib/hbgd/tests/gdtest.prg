@@ -40,7 +40,7 @@ PROCEDURE Main()
    im := gdImageCreate(200, 200)
 
    /* Load an image in memory from file */
-   im2 := gdImageCreateFromJpeg( IMAGES_IN + "conv_test.jpg")
+   im2 := gdImageCreateFromJpeg( IMAGES_IN + "conv_tst.jpg")
 
    /* Now work on first empty image */
 
@@ -108,8 +108,8 @@ PROCEDURE Main()
    /* Write Images on files */
    gdImagePng(im, IMAGES_OUT + "rect.png")
 
-   gdImagePng(im2, IMAGES_OUT + "conv_test.png")
-   gdImageJpeg(im2, IMAGES_OUT + "conv_test.jpg")
+   gdImagePng(im2, IMAGES_OUT + "conv_tst.png")
+   gdImageJpeg(im2, IMAGES_OUT + "conv_tst.jpg")
 
    /* Destroy images in memory */
    gdImageDestroy(im)

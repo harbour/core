@@ -32,7 +32,7 @@ PROCEDURE Main()
    */
 
    /* Load an image from file */
-   oI := GDImage():LoadFromFile( IMAGES_IN + "conv_test.jpg" )
+   oI := GDImage():LoadFromFile( IMAGES_IN + "conv_tst.jpg" )
 
    oI:SaveJpeg( IMAGES_OUT + "testfile.jpg" )
 
