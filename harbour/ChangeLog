@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 18:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbbmcdx/bmdbfcdx.c
+   * contrib/hbbtree/hb_btree.c
+   * contrib/hbgd/gdwrp.c
+   * contrib/hbsqlit3/hbsqlit3.c
+   * contrib/hbtip/encmthd.c
+   * contrib/hbtip/utils.c
+   * contrib/xhb/cstructc.c
+   * contrib/xhb/xhbwith.c
+     % Using HB_ERR_FUNCNAME
+
 2008-07-03 18:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmzip/hbmzip.c
      ! Fixed previous TOFIX for DOS.

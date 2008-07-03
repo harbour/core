@@ -1810,7 +1810,7 @@ HB_FUNC( HB_BTREEOPEN  )  /* hb_BTreeOpen( CHAR cFileName, ULONG ulFlags [ , int
     hb_retni( BTree_SetTreeIndex( hb_BTreeOpen( ( BYTE * ) hb_parc( 1 ), hb_parnl( 2 ), hb_parni( 3 ) ) ) );
   else
   {
-    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeopen", hb_pcount() );
+    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
     hb_retni( 0 );
   }
 }
@@ -1825,7 +1825,7 @@ HB_FUNC( HB_BTREENEW )  /* hb_BTreeNew( CHAR cFileName, int nPageSize, int nKeyS
   }
   else
   {
-    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreenew", hb_pcount() );
+    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
     hb_retni( 0 );
   }
 }
@@ -1847,7 +1847,7 @@ HB_FUNC( HB_BTREEINSERT )  /* hb_BTreeInsert( hb_BTree_Handle, CHAR cKey, LONG l
     hb_retl( hb_BTreeInsert( BTree_GetTreeIndex( "hb_btreeinsert" ), ( BYTE * ) hb_parc( 2 ), hb_paramError( 3 ) ) );
   else
   {
-    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeinsert", hb_pcount() );
+    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
     hb_retl( 0 );
   }
 }
@@ -1859,7 +1859,7 @@ HB_FUNC( HB_BTREEDELETE )  /* hb_BTreeDelete( hb_BTree_Handle, CHAR cKey, LONG l
     hb_retl( hb_BTreeDelete( BTree_GetTreeIndex( "hb_btreedelete" ), ( BYTE * ) hb_parc( 2 ), hb_parnl( 3 ) ) );
   else
   {
-    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreedelete", hb_pcount() );
+    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
     hb_retl( 0 );
   }
 }
@@ -1907,7 +1907,7 @@ HB_FUNC( HB_BTREESKIP )  /* hb_BTreeSkip( hb_BTree_Handle, LONG nRecords ) -> LO
     hb_retnl( hb_BTreeSkip( BTree_GetTreeIndex( "hb_btreeskip" ), hb_parnl( 2 ) ) );
   else
   {
-    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeskip", hb_pcount() );
+    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
     hb_retnl( 0 );
   }
 }
@@ -1919,7 +1919,7 @@ HB_FUNC( HB_BTREESEEK )  /* hb_BTreeSeek( hb_BTree_Handle, CHAR cKey, LONG lData
     hb_retl( hb_BTreeSeek( BTree_GetTreeIndex( "hb_btreeseek" ), ( BYTE * ) hb_parc( 2 ), hb_parnl( 3 ), hb_parl( 4 ) ) );
   else
   {
-    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeseek", hb_pcount() );
+    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
     hb_retl( 0 );
   }
 }
@@ -1983,7 +1983,7 @@ HB_FUNB( HB_BTREEEVAL )  /* hb_BTreeEval( hb_BTree_Handle, bBlock, [bForConditio
   if ( ISNUM( 1 ) && ISBLOCK( 2 ) )
     hb_BTreeEval( BTree_GetTreeIndex( "hb_btreeeval" ), 0 );
   else
-    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", "hb_btreeeval", hb_pcount() );
+    hb_RaiseError( HB_BTreeArgError_EC, "Bad argument(s)", HB_ERR_FUNCNAME, hb_pcount() );
 }
 #endif
 

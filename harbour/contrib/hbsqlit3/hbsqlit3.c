@@ -139,7 +139,7 @@ HB_FUNC( SQLITE3_EXTENDED_RESULT_CODES )
    if( db )
       hb_retni( sqlite3_extended_result_codes( db, hb_parl( 2 ) ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_EXTENDED_RESULT_CODES", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -158,7 +158,7 @@ HB_FUNC( SQLITE3_ERRCODE )
    if( db )
       hb_retni( sqlite3_errcode( db ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_ERRCODE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_ERRMSG )
@@ -168,7 +168,7 @@ HB_FUNC( SQLITE3_ERRMSG )
    if( db )
       hb_retc( sqlite3_errmsg( db ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_ERRMSG", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -195,7 +195,7 @@ HB_FUNC( SQLITE3_LAST_INSERT_ROWID )
    if( db )
       hb_retnint( sqlite3_last_insert_rowid( db ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_LAST_INSERT_ROWID", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -322,7 +322,7 @@ HB_FUNC( SQLITE3_EXEC )
       hb_retni( rc );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_EXEC", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -359,10 +359,10 @@ HB_FUNC( SQLITE3_PREPARE )
          }
       }
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_PREPARE", 1, hb_paramError( 2 ) );
+         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 2 ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_PREPARE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -378,7 +378,7 @@ HB_FUNC( SQLITE3_DB_HANDLE )
    if( pStmt )
       hb_retsqlite3( sqlite3_db_handle( pStmt ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_DB_HANDLE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -394,7 +394,7 @@ HB_FUNC( SQLITE3_STEP )
    if( pStmt )
       hb_retni( sqlite3_step( pStmt ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_STEP", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -414,7 +414,7 @@ HB_FUNC( SQLITE3_CLEAR_BINDINGS )
    if( pStmt )
       hb_retni( sqlite3_clear_bindings( pStmt ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_CLEAR_BINDINGS", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -430,7 +430,7 @@ HB_FUNC( SQLITE3_RESET )
    if( pStmt )
       hb_retni( sqlite3_reset( pStmt ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_RESET", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -446,7 +446,7 @@ HB_FUNC( SQLITE3_FINALIZE )
    if( pStmt )
       hb_retni( sqlite3_finalize( pStmt ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_FINALIZE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -478,7 +478,7 @@ HB_FUNC( SQLITE3_BIND_BLOB )
    if( pStmt )
       hb_retni( sqlite3_bind_blob( pStmt, hb_parni( 2 ), ( const char * ) hb_parcx( 3 ), hb_parcsiz( 3 ) - 1, SQLITE_TRANSIENT ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BIND_BLOB", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_BIND_DOUBLE )
@@ -488,7 +488,7 @@ HB_FUNC( SQLITE3_BIND_DOUBLE )
    if( pStmt )
       hb_retni( sqlite3_bind_double( pStmt, hb_parni( 2 ), hb_parnd( 3 ) ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BIND_DOUBLE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_BIND_INT )
@@ -498,7 +498,7 @@ HB_FUNC( SQLITE3_BIND_INT )
    if( pStmt )
       hb_retni( sqlite3_bind_int( pStmt, hb_parni( 2 ), hb_parni( 3 ) ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BIND_INT", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_BIND_INT64 )
@@ -509,7 +509,7 @@ HB_FUNC( SQLITE3_BIND_INT64 )
    if( pStmt )
       hb_retni( sqlite3_bind_int64( pStmt, hb_parni( 2 ), int64 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BIND_INT64", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_BIND_NULL )
@@ -519,7 +519,7 @@ HB_FUNC( SQLITE3_BIND_NULL )
    if( pStmt )
       hb_retni( sqlite3_bind_null( pStmt, hb_parni( 2 ) ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BIND_NULL", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_BIND_TEXT )
@@ -529,7 +529,7 @@ HB_FUNC( SQLITE3_BIND_TEXT )
    if( pStmt )
       hb_retni( sqlite3_bind_text( pStmt, hb_parni( 2 ), ( const char * ) hb_parc( 3 ), hb_parclen( 3 ), SQLITE_TRANSIENT ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BIND_TEXT", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_BIND_ZEROBLOB )
@@ -539,7 +539,7 @@ HB_FUNC( SQLITE3_BIND_ZEROBLOB )
    if( pStmt )
       hb_retni( sqlite3_bind_zeroblob( pStmt, hb_parni( 2 ), hb_parni( 3 ) ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BIND_ZEROBLOB", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -555,7 +555,7 @@ HB_FUNC( SQLITE3_BIND_PARAMETER_COUNT )
    if( pStmt )
       hb_retni( sqlite3_bind_parameter_count( pStmt ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BIND_PARAMETER_COUNT", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -571,7 +571,7 @@ HB_FUNC( SQLITE3_BIND_PARAMETER_INDEX )
    if( pStmt )
       hb_retni( sqlite3_bind_parameter_index( pStmt, hb_parc( 2 ) ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BIND_PARAMETER_INDEX", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -587,7 +587,7 @@ HB_FUNC( SQLITE3_BIND_PARAMETER_NAME )
    if( pStmt )
       hb_retc( sqlite3_bind_parameter_name( pStmt, hb_parni( 2 ) ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BIND_PARAMETER_NAME", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -603,7 +603,7 @@ HB_FUNC( SQLITE3_CHANGES )
    if( db )
       hb_retni( sqlite3_changes(db) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_CHANGES", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -619,7 +619,7 @@ HB_FUNC( SQLITE3_TOTAL_CHANGES )
    if( db )
       hb_retni( sqlite3_total_changes(db) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_TOTAL_CHANGES", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -635,7 +635,7 @@ HB_FUNC( SQLITE3_COLUMN_COUNT )
    if( pStmt )
       hb_retni( sqlite3_column_count( pStmt ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_COUNT", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -661,7 +661,7 @@ HB_FUNC( SQLITE3_COLUMN_TYPE )
    if( pStmt )
       hb_retni( sqlite3_column_type( pStmt, hb_parni( 2 ) - 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_TYPE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_COLUMN_DECLTYPE )
@@ -671,7 +671,7 @@ HB_FUNC( SQLITE3_COLUMN_DECLTYPE )
    if( pStmt )
       hb_retc( sqlite3_column_decltype( pStmt, hb_parni( 2 ) - 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_DECLTYPE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -687,7 +687,7 @@ HB_FUNC( SQLITE3_COLUMN_NAME )
    if( pStmt )
       hb_retc( sqlite3_column_name( pStmt, hb_parni( 2 ) - 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_NAME", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -710,7 +710,7 @@ HB_FUNC( SQLITE3_COLUMN_BYTES )
    if( pStmt )
       hb_retni( sqlite3_column_bytes( pStmt, hb_parni( 2 ) - 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_BYTES", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_COLUMN_BLOB )
@@ -725,7 +725,7 @@ HB_FUNC( SQLITE3_COLUMN_BLOB )
                   sqlite3_column_bytes( pStmt, index ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_BLOB", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_COLUMN_DOUBLE )
@@ -735,7 +735,7 @@ HB_FUNC( SQLITE3_COLUMN_DOUBLE )
    if( pStmt )
       hb_retnd( sqlite3_column_double( pStmt, hb_parni( 2 ) - 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_DOUBLE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_COLUMN_INT )
@@ -745,7 +745,7 @@ HB_FUNC( SQLITE3_COLUMN_INT )
    if( pStmt )
       hb_retni( sqlite3_column_int( pStmt, hb_parni( 2 ) - 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_INT", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_COLUMN_INT64 )
@@ -755,7 +755,7 @@ HB_FUNC( SQLITE3_COLUMN_INT64 )
    if( pStmt )
       hb_retnint( sqlite3_column_int64( pStmt, hb_parni( 2 ) - 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_INT64", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_COLUMN_TEXT )
@@ -769,7 +769,7 @@ HB_FUNC( SQLITE3_COLUMN_TEXT )
                   sqlite3_column_bytes( pStmt, index ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_TEXT", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -785,7 +785,7 @@ HB_FUNC( SQLITE3_ENABLE_LOAD_EXTENSION )
    if( db )
       hb_retni( sqlite3_enable_load_extension( db, hb_parl( 2 ) ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_ENABLE_LOAD_EXTENSION", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -812,7 +812,7 @@ HB_FUNC( SQLITE3_BUSY_TIMEOUT )
    if( db )
       hb_retni( sqlite3_busy_timeout( db, hb_parni( 2 ) ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_ENABLE_LOAD_EXTENSION", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -869,7 +869,7 @@ HB_FUNC( SQLITE3_GET_TABLE )
       hb_itemReturnRelease( pResultList );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_GET_TABLE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 #ifdef SQLITE_ENABLE_COLUMN_METADATA
@@ -924,7 +924,7 @@ HB_FUNC( SQLITE3_TABLE_COLUMN_METADATA )
       }
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_TABLE_COLUMN_METADATA", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -942,7 +942,7 @@ HB_FUNC( SQLITE3_COLUMN_DATABASE_NAME )
    if( pStmt )
       hb_retc( sqlite3_column_database_name( pStmt, hb_parni( 2 ) - 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_DATABASE_NAME", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_COLUMN_TABLE_NAME )
@@ -952,7 +952,7 @@ HB_FUNC( SQLITE3_COLUMN_TABLE_NAME )
    if( pStmt )
       hb_retc( sqlite3_column_table_name( pStmt, hb_parni( 2 ) - 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_TABLE_NAME", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_COLUMN_ORIGIN_NAME )
@@ -962,7 +962,7 @@ HB_FUNC( SQLITE3_COLUMN_ORIGIN_NAME )
    if( pStmt )
       hb_retc( sqlite3_column_origin_name( pStmt, hb_parni( 2 ) - 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_COLUMN_ORIGIN_NAME", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 #endif
@@ -1014,7 +1014,7 @@ HB_FUNC( SQLITE3_BLOB_CLOSE )
    if( pBlob )
       hb_retni( sqlite3_blob_close( pBlob ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BLOB_CLOSE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -1028,7 +1028,7 @@ HB_FUNC( SQLITE3_BLOB_BYTES )
    if( pBlob )
       hb_retni( sqlite3_blob_bytes( pBlob ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BLOB_BYTES", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -1059,7 +1059,7 @@ HB_FUNC( SQLITE3_BLOB_READ )
          hb_xfree( buffer );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BLOB_READ", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -1080,7 +1080,7 @@ HB_FUNC( SQLITE3_BLOB_WRITE )
       hb_retni( sqlite3_blob_write( pBlob, hb_parcx( 2 ), iLen, hb_parni( 4 ) ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_BLOB_WRITE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -1096,7 +1096,7 @@ HB_FUNC( SQLITE3_GET_AUTOCOMMIT )
    if( db )
       hb_retl( sqlite3_get_autocommit( db ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_GET_AUTOCOMMIT", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*
@@ -1152,7 +1152,7 @@ HB_FUNC( SQLITE3_PROFILE )
    if( db )
       sqlite3_profile( db, hb_parl( 2 ) ? SQL3ProfileLog : NULL, NULL );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_PROFILE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 HB_FUNC( SQLITE3_TRACE )
@@ -1162,7 +1162,7 @@ HB_FUNC( SQLITE3_TRACE )
    if( db )
       sqlite3_trace( db, hb_parl( 2 ) ? SQL3TraceLog : NULL, NULL );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "SQLITE3_TRACE", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 /*

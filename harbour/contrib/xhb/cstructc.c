@@ -1422,7 +1422,7 @@ HB_FUNC( HB_POINTER2STRING )
       hb_retclen( (char *) (HB_PTRDIFF) hb_itemGetNL( pPointer ), (ULONG) hb_itemGetNL( pLen ) );
    }
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "HB_Pointer2String", 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 2, hb_paramError( 1 ), hb_paramError( 2 ) );
 }
 
 HB_FUNC( HB_STRING2POINTER )
@@ -1432,7 +1432,7 @@ HB_FUNC( HB_STRING2POINTER )
    if( pszString )
       hb_retptr( ( void * ) pszString );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, "HB_String2Pointer", 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }
 
 

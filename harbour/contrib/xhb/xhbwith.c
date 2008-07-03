@@ -107,5 +107,5 @@ HB_FUNC( HB_RESETWITH )
    if( hb_pcount() >= 1 && pItem )
       hb_itemMove( pItem, hb_stackItemFromBase( 1 ) );
    else
-      hb_errRT_BASE( EG_ARG, 1607, NULL, "HB_RESETWITH", 0, NULL );
+      hb_errRT_BASE( EG_ARG, 1607, NULL, HB_ERR_FUNCNAME, 0, NULL );
 }

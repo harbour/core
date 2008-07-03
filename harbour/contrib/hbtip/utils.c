@@ -624,8 +624,7 @@ HB_FUNC( TIP_FILEMIMETYPE )
 
    if ( pFile == NULL )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "TIP_FILEMIMETYPE",
-         1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
       return;
    }
 
@@ -685,8 +684,7 @@ HB_FUNC( TIP_MIMETYPE )
 
    if ( pData == NULL )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "TIP_MIMETYPE",
-         1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
       return;
    }
 
@@ -843,8 +841,7 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
    
    if ( ! cData )
    {
-      hb_errRT_BASE( EG_ARG, 3012, NULL,
-         "TIP_HTMLSPECIALCHARS", 1, hb_paramError(1) );
+      hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError(1) );
       return;
    }
 

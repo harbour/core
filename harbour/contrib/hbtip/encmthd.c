@@ -71,7 +71,7 @@ HB_FUNC( TIPENCODERBASE64_ENCODE )
    if ( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         "TIPENCODERBASE64_ENCODE", 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
       return;
    }
 
@@ -197,7 +197,7 @@ HB_FUNC( TIPENCODERBASE64_DECODE )
    if ( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         "TIPENCODERBASE64_DECODE", 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
       return;
    }
 
@@ -295,7 +295,7 @@ HB_FUNC( TIPENCODERQP_ENCODE )
    if ( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         "TIPENCODEQP_ENCODE", 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
       return;
    }
 
@@ -368,7 +368,7 @@ HB_FUNC( TIPENCODERQP_DECODE )
    if ( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         "TIPENCODERQP_DECODE", 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
       return;
    }
 
@@ -450,7 +450,7 @@ HB_FUNC( TIPENCODERURL_ENCODE )
    if ( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         "TIPENCODERBASE64_ENCODE", 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
       return;
    }
 
@@ -511,7 +511,7 @@ HB_FUNC( TIPENCODERURL_DECODE )
    if ( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         "TIPENCODERBASE64_DECODE", 1, hb_paramError(1) );
+         HB_ERR_FUNCNAME, 1, hb_paramError(1) );
       return;
    }
 
