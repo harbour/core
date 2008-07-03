@@ -8,7 +8,7 @@ LIB_PATH = $(LIB_DIR)$(LIBNAME)$(LIBEXT)
 
 PRG_HEADERS = \
     gd.ch \
-    gdexternal.ch \
+    gdextern.ch \
 
 LIB_OBJS = \
     $(OBJ_DIR)gdwrp$(OBJEXT) \

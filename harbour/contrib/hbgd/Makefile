@@ -21,7 +21,7 @@ C_SOURCES=\
 
 PRG_HEADERS=\
 	gd.ch \
-	gdexternal.ch \
+	gdextern.ch \
 
 PRG_SOURCES=\
 	gd.prg \

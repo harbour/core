@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 14:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbgd/Makefile
+   * contrib/hbgd/common.mak
+   - contrib/hbgd/gdexternal.ch
+   + contrib/hbgd/gdextern.ch
+   - contrib/hbgd/tests/gdtestcls.prg
+   + contrib/hbgd/tests/gdtestcl.prg
+   - contrib/hbgd/tests/antialiased.prg
+   + contrib/hbgd/tests/antialia.prg
+     ! Removing long filenames in hbgd (part 1/2)
+
 2008-07-03 14:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbbmcdx/Makefile
    * contrib/hbbmcdx/common.mak
