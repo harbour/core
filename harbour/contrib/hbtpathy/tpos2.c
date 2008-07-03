@@ -69,7 +69,6 @@
 
 HB_FUNC( P_INITPORTSPEED )
 {
-   APIRET rc;
    LINECONTROL lctl;
    DCBINFO dcb;
    USHORT Baud = ( USHORT ) hb_parnl( 2 );
@@ -154,13 +153,15 @@ HB_FUNC( P_WRITEPORT )
    ULONG nWritten = 0;
    APIRET rc = DosWrite( ( HFILE ) hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten );
 
-   hb_retnl( rc == NO_ERROR ? nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
+   hb_retnl( rc == NO_ERROR ? ( long ) nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
 }
 
 HB_FUNC( P_OUTFREE )
 {
    APIRET rc;
-   RXQUEUE rxqueue = { 0 };
+   RXQUEUE rxqueue;
+
+   memset( &rxqueue, 0, sizeof( rxqueue ) );
 
    if( ( rc = DosDevIOCtl( ( HFILE ) hb_parnl( 1 ), IOCTL_ASYNC, ASYNC_GETOUTQUECOUNT,
                            NULL, 0L, NULL, &rxqueue, sizeof(RXQUEUE), NULL ) ) == NO_ERROR )
