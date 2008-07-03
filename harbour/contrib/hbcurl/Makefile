@@ -6,6 +6,8 @@ ROOT = ../../
 
 LIBNAME=hbcurl
 
+ifneq ($(HB_ARCHITECTURE),dos)
+
 ifeq ($(HB_INC_CURL),)
 HB_INC_CURL = /usr/include
 endif
@@ -29,6 +31,9 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

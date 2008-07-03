@@ -6,6 +6,8 @@ ROOT = ../../
 
 LIBNAME=hbfimage
 
+ifneq ($(HB_ARCHITECTURE),dos)
+
 ifeq ($(HB_INC_FREEIMAGE),)
 HB_INC_FREEIMAGE = /usr/include
 endif
@@ -32,6 +34,9 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

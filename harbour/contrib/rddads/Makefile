@@ -6,6 +6,8 @@ ROOT = ../../
 
 LIBNAME=rddads
 
+ifneq ($(HB_ARCHITECTURE),dos)
+
 ifeq ($(HB_INC_ADS),)
 HB_INC_ADS = /usr/local/ads/acesdk $(HOME)/ads/acesdk
 endif
@@ -31,6 +33,9 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
