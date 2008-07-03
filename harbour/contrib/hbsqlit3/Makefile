@@ -7,7 +7,8 @@ ROOT = ../../
 LIBNAME=hbsqlit3
 
 ifneq ($(HB_ARCHITECTURE),dos)
-ifeq ($(HB_ARCHITECTURE),w32)
+ifneq ($(HB_ARCHITECTURE),bsd)
+ifneq ($(HB_ARCHITECTURE),hpux)
 
 C_SOURCES =\
 	hbsqlit3.c \
@@ -22,6 +23,9 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
