@@ -17,7 +17,7 @@
    + contrib/hbbmcdx/bmdbfcdx.c
    - contrib/hbbmcdx/hbrddbmcdx.h
    + contrib/hbbmcdx/hbbmcdx.h
-     ! Removed long filename.
+     ! Removed long filenames.
 
 2008-07-03 14:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/spd.c
