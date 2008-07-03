@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 14:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmisc/spd.c
+     ! DJGPP warning fixed, plus another update from Xavi.
+     ; Sorry I've removed _SPD() as IMO there is not much point 
+       in keeping compatibility with a name which was never used 
+       by Harbour. That can be easily done outside Harbour 
+       though for those (few) who need it nevertheless.
+
 2008-07-03 13:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbmsql/msql.h
     * updated for [Open]Watcom builds. Now DOS OpenWatcom builds

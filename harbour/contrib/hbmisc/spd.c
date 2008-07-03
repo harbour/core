@@ -79,7 +79,7 @@ static void STAItm( PHB_ITEM pItmPar )
 
 static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int IsIndW, int iIndWidth, int IsIndP, int iIndPrec, PHB_ITEM pItmPar )
 {
-   ULONG s = 0;
+   ULONG s;
 
    if( IsIndW && IsIndP ){
       switch( iCOut ){
@@ -92,7 +92,8 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
       case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
          s = snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetND( pItmPar ) );
          break;
-      case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X':
+      /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
+      default:
          s = snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, (HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar )) );
       }
    }else if( IsIndW || IsIndP ){
@@ -108,7 +109,8 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
       case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
          s = snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetND( pItmPar ) );
          break;
-      case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X':
+      /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
+      default:
          s = snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, (HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar )) );
       }
    }else{
@@ -122,7 +124,8 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
       case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
          s = snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetND( pItmPar ) );
          break;
-      case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X':
+      /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
+      default:
          s = snprintf( cBuffer, ulMaxBuf, cParFrm, (HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar )) );
       }
    }
@@ -132,7 +135,7 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 /*******************************************************************************
 * ANSI C sprintf() for ANSI SQL with DATE, DATETIME, LOGICAL, NIL, NUMERIC
 * ------------------------------------------------------------------------
-*                    cRes := Sql_sprintf( cFrm, ... )
+*       cRes := Sql_sprintf( cFrm, ... ) or cRes := _Spd( cFrm, ... )
 *
 * Full compatible ANSI C99 formats with C,S converters wchar_t (UNICODE)
 * Integer & Floating point converters with Width and Precision for NUMERIC & STRING
@@ -165,9 +168,6 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 *
 * Print NULL if the parameter is NIL or HB_IT_NULL
 * Processing %% and n converter Position.
-* Remove C ESC sequences and converts them to Clipper chars in cRes.
-*  ? Sql_sprintf( 'Hello\nworld!' ) ) // like printf( "Hello\nworld!" );
-*
 * Accepts conversion inside if variable is passed by reference.
 *  Local xDate := Date(); Sql_sprintf('%s', @xDate) => xDate == '2008-05-19'
 *******************************************************************************/
@@ -194,7 +194,6 @@ HB_FUNC( SQL_SPRINTF )
    }else if( !argc ){
       cRes = (char *)hb_xgrab( ulItmFrm + sizeof(char) );
       memcpy( cRes, cItmFrm, ulItmFrm + sizeof(char) );
-      cRes = hb_strRemEscSeq( cRes, &ulItmFrm );
       hb_retclen_buffer( cRes, ulItmFrm );
    }else{
       PHB_ITEM pItmPar;
@@ -368,7 +367,7 @@ HB_FUNC( SQL_SPRINTF )
                char cDTBuf[ 19 ], cDTFrm[ 28 ]; /* 26 + 2 if %t and change format time */
 
                if( s ){ /* Internal Modifier */
-                  for( f = 0; cIntMod[f] && cIntMod[f] != ' '; f++);
+                  for( f = 0; cIntMod[f] && cIntMod[f] != ' '; f++ );
                   if( f != s ) cIntMod[f++] = '\0';   /* Date & Time */
                }
 
@@ -400,7 +399,7 @@ HB_FUNC( SQL_SPRINTF )
             }else if( HB_IS_LOGICAL( pItmPar ) ){
 
                if( s ){ /* Internal Modifier */
-                  for( f = 0; cIntMod[f] && cIntMod[f] != ','; f++);
+                  for( f = 0; cIntMod[f] && cIntMod[f] != ','; f++ );
                   if( f != s ) cIntMod[f++] = '\0';   /* TRUE & FALSE */
                }
                if( iCOut == 's' ){
@@ -460,7 +459,6 @@ HB_FUNC( SQL_SPRINTF )
             hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
          }
       }else{
-         cRes = hb_strRemEscSeq( cRes, &ulResPos );
          hb_retclen_buffer( cRes, ulResPos );
       }
    }
