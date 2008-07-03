@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-03 16:30 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * contrib/hbmzip/hbmzip.c
+    + implemented file get attributes and file set attributes for DOS and OS2
+    ; I've not even tried to compile the code. I have no required OS and 
+      compile enviroment. DOS implementation is written using docs from 
+      http://www.delorie.com/djgpp/doc/libc-2.02/, OS2 implementation
+      is just guess... Please test, I hope adding some #include <xxx.h> 
+      will make this code usable.
+
 2008-07-03 15:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    - contrib/hbgd/tests/imgs_in/gdlogobig.png
    - contrib/hbgd/tests/imgs_in/conv_test.jpg
