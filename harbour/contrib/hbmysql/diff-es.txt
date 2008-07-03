@@ -1,12 +1,12 @@
 /*
- * $Id $
+ * $Id$
  */
 
 
 Febrero 2004
 I.Q. David Arturo Macias Corona
 
-Modificaciones a los programas de harbour\contrib\mysql
+Modificaciones a los programas de harbour\contrib\hbmysql
 
 
 Programa TMySql.prg *****************************************
