@@ -2,7 +2,7 @@
  * $Id$
  */
 
-Version 1.0.0 RC2 (2008-07-01) tag: 1.0.0RC2
+Version 1.0.0 rc2 (2008-07-01) tag: 1.0.0rc2
 
 General
 =============================
@@ -54,7 +54,7 @@ Contrib
   instead.
 - Optimizations and minor fixes.
 
-Version 1.0.0 RC1 (2008-06-04) tag: 1.0.0RC1
+Version 1.0.0 rc1 (2008-06-04) tag: 1.0.0rc1
 
 General
 =============================

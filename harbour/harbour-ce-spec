@@ -26,7 +26,7 @@
 
 %define name      harbour-ce
 %define version   1.0.0
-%define releasen  RC2
+%define releasen  rc2
 %define hb_pref   hbce
 %define hb_ccpath /opt/mingw32ce/bin
 %define hb_ccpref arm-wince-mingw32ce-

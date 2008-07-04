@@ -78,7 +78,7 @@ void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, 
 
    fLang = ( hb_langID() != NULL );
 
-   hLog = hb_fopen( hb_setGetCPtr( HB_SET_HBOUTLOG ), "a+" );
+   hLog = hb_fopen( hb_setGetCPtr( HB_SET_HBOUTLOG ) ? hb_setGetCPtr( HB_SET_HBOUTLOG ) : "hb_out.log", "a+" );
 
    if( hLog )
    {

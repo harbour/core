@@ -47,13 +47,14 @@ CPP_SOURCES = \
 	ZipException.cpp \
 	ZipExtraData.cpp \
 	ZipExtraField.cpp \
-#	ZipFile_mfc.cpp \
 	ZipFile_stl.cpp \
 	ZipFileHeader.cpp \
 	ZipMemFile.cpp \
 	ZipPlatformComm.cpp \
 	ZipStorage.cpp \
 	ZipString.cpp \
+
+#	ZipFile_mfc.cpp \
 
 ifeq ($(HB_ARCHITECTURE),win32)
 CPP_SOURCES += \

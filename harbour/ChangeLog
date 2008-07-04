@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-04 19:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbziparch/Makefile
+     ! Fixed commented file in file list.
+     ; This may fix some GNU-make problems regarding hbziparch.
+     ; hbziparch may not work in RC2 GNU-make builds for this 
+       reason.
+
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * doc/whatsnew.txt
+   * include/hbver.h
+   * harbour.spec
+     * RC2 -> rc2
+     ; We should use lowercase for 'RC' in the future, for consistency 
+       with 'alpha', 'beta' (and with other projects too). It looks 
+       smoother too.
+
+   * source/rtl/errorint.c
+     ! hb_setGetCPtr( HB_SET_HBOUTLOG ) checked for NULL value.
+       I'm not sure if this is required in real life, so this may 
+       be unnecessary safety.
+
+   * utils/Makefile
+     * Formatting.
+
 2008-07-04 04:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmzip/hbmzip.c
      + Reenabled new OS/2 code.
