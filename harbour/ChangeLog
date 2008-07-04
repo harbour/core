@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-04 04:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmzip/hbmzip.c
+     + Reenabled new OS/2 code.
+     ! Fixed defines in OS/2 part. Requested definitions.
+       Fixed one potential error. Pls review and test, all 
+       this was done blindly.
+
 2008-07-04 03:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/Makefile
      ! Removed hbwmain.c from the header list to be installed.

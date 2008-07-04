@@ -51,6 +51,7 @@
  *
  */
 
+#define INCL_DOSFILEMGR
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -498,7 +499,8 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
          if( ulLen > 4 )
          {
             pString = &szZipName[ ulLen - 4 ];
-            if( hb_stricmp( pString, ".exe" ) == 0 || hb_stricmp( pString, ".com" ) == 0 ||
+            if( hb_stricmp( pString, ".exe" ) == 0 || 
+                hb_stricmp( pString, ".com" ) == 0 ||
                 hb_stricmp( pString, ".bat" ) == 0 )
             {
                ulExtAttr |= 0x00490000; /* --x--x--x */
@@ -593,7 +595,7 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
    }
 #  endif
 
-#elif defined( HB_OS_OS2 ) && defined( _TEMP_GUARD_FOR_RC2_ )
+#elif defined( HB_OS_OS2 )
    {
       FILESTATUS3 fs3;
       APIRET ulrc;
@@ -604,22 +606,23 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
       {
          ulAttr = 0;
          if( fs3.attrFile & FILE_READONLY )
-            ulAttr |= FA_READONLY;
+            ulAttr |= HB_FA_READONLY;
          if( fs3.attrFile & FILE_HIDDEN )
-            ulAttr |= FA_HIDDEN;
+            ulAttr |= HB_FA_HIDDEN;
          if( fs3.attrFile & FILE_SYSTEM )
-            ulAttr |= FA_SYSTEM;
+            ulAttr |= HB_FA_SYSTEM;
          if( fs3.attrFile & FILE_DIRECTORY )
-            ulAttr |= FA_DIRECTORY;
+            ulAttr |= HB_FA_DIRECTORY;
          if( fs3.attrFile & FILE_ARCHIVED )
-            ulAttr |= FA_ARCHIVE;
-            
-         if( ulExtAttr | FILE_ATTRIBUTE_READONLY )
+            ulAttr |= HB_FA_ARCHIVE;
+
+         ulExtAttr = ulAttr; 
+         if( ulExtAttr | HB_FA_READONLY )
             ulExtAttr |= 0x01240000;  /* r--r--r-- */
          else
             ulExtAttr |= 0x01B60000;  /* rw-rw-rw- */
 
-         if( ulExtAttr & FILE_ATTRIBUTE_DIRECTORY )
+         if( ulExtAttr & HB_FA_DIRECTORY )
             ulExtAttr |= 0x40000000;
          else
             ulExtAttr |= 0x80000000;
@@ -869,20 +872,20 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
    }
 #  endif
 
-#elif defined( HB_OS_OS2 ) && defined( _TEMP_GUARD_FOR_RC2_ )
+#elif defined( HB_OS_OS2 )
    {
       FILESTATUS3 fs3;
       APIRET ulrc;
       ULONG ulAttr = FILE_NORMAL;
       int iAttr = ufi.external_fa & 0xFF;
     
-      if( iAttr & FA_READONLY )
+      if( iAttr & HB_FA_READONLY )
          ulAttr |= FILE_READONLY;
-      if( iAttr & FA_HIDDEN )
+      if( iAttr & HB_FA_HIDDEN )
          ulAttr |= FILE_HIDDEN;
-      if( iAttr & FA_SYSTEM )
+      if( iAttr & HB_FA_SYSTEM )
          ulAttr |= FILE_SYSTEM;
-      if( iAttr & FA_ARCHIVE )
+      if( iAttr & HB_FA_ARCHIVE )
          ulAttr |= FILE_ARCHIVED;
     
       ulrc = DosQueryPathInfo( szName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
