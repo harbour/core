@@ -56,7 +56,6 @@ C_HEADERS=\
 	hbvmpub.h    \
 	hbxvm.h      \
 	hbwince.h    \
-	hbwmain.c    \
 	hbzlib.h     \
 	hb_io.h      \
 

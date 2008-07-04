@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-04 03:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/Makefile
+     ! Removed hbwmain.c from the header list to be installed.
+       (Przemek please verify me)
+
 2008-07-03 22:45 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/errorint.c
      + Internal error are now logged to hb_out.log (by default).
