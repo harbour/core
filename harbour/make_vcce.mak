@@ -35,6 +35,7 @@
 #                           (GNU make compatible envvar)
 #       HB_GT_LIB         - To override the default GT driver
 #                           (search for HB_GT_LIBS for a list of values)
+#       HB_BUILD_ST       - If set to yes builds harbour in SingleThread mode
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
 #       HB_BUILD_MODE     - If set to cpp causes to compile in C++ mode
@@ -135,26 +136,30 @@ CFLAGS         = -I$(INCLUDE_DIR) -I$(CFLAGS_VER) -T$(HB_BUILD_MODE) -W3 -nologo
                  -DHB_WINCE $(C_USR) $(CFLAGS) -D_UWIN -I$(OBJ_DIR)
 #     -D"_CONSOLE"
 
+#-----------
 !ifndef HB_WINCE_COMPILE_WITH_GTWIN
-CFLAGS = $(CFLAGS) -DHB_NO_WIN_CONSOLE
+CFLAGS    = $(CFLAGS) -DHB_NO_WIN_CONSOLE
 !endif
-
+#-----------
 !if "$(HB_BUILD_DEBUG)" == "yes"
-CFLAGS         = $(CFLAGS) -D "_DEBUG" -D "DEBUG"
-DBGMARKER      = d
+CFLAGS    = $(CFLAGS) -D "_DEBUG" -D "DEBUG"
+DBGMARKER = d
 !else
-CFLAGS         = $(CFLAGS) -D "NDEBUG"
+CFLAGS    = $(CFLAGS) -D "NDEBUG"
+!endif
+#-----------
+!if "$(HB_BUILD_ST)" != "yes"
+CFLAGS    = -MT$(DBGMARKER) $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_GT_DEFAULT)" != ""
-CFLAGS         = -D"HB_GT_DEFAULT=$(HB_GT_DEFAULT:gt=)" $(CFLAGS)
+CFLAGS    = -D"HB_GT_DEFAULT=$(HB_GT_DEFAULT:gt=)" $(CFLAGS)
 !endif
 #-----------
 !if "$(HB_GT_LIB)" != ""
-CFLAGS         = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)
+CFLAGS    = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)
 !endif
 #-----------
-CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
 
 #**********************************************************
 
@@ -177,6 +182,9 @@ LDFLAGS        = /NOLOGO /SUBSYSTEM:windowsce,4.20 /MACHINE:ARM /ARMPADCODE \
                  /NODEFAULTLIB:"kernel32.lib" /MANIFEST:NO /LIBPATH:$(LIB_DIR) \
                  /OPT:REF /OPT:ICF $(LDFLAGS)
 #                /ERRORREPORT:PROMPT /ENTRY:"mainWCRTStartup"
+!if $(HB_VISUALC_VER) >= 80
+LDFLAGS        = $(LDFLAGS) /MANIFEST:NO
+!endif
 
 LDFLAGSDLL     = /NOLOGO /DLL /MACHINE:ARM /ARMPADCODE \
                  /STACK:65536,4096 /ALIGN:4096 /NODEFAULTLIB:"oldnames.lib" \
