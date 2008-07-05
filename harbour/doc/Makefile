@@ -13,7 +13,6 @@ DOC_FILES=\
 	dirstruc.txt \
 	funclist.txt \
 	genhtm.bat \
-	genhtm.cmd \
 	genhtm.lnk \
 	genhtm.rsp \
 	gmake.txt \
@@ -22,7 +21,7 @@ DOC_FILES=\
 	hbpplib.txt \
 	hdr_tpl.txt \
 	howtobsd.txt \
-	howtocvs.txt \
+	howtosvn.txt \
 	howtomak.txt \
 	hrb_faq.txt \
 	lang_id.txt \

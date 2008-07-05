@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-05 02:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/Makefile
+     ! Removed non-existing genhtm.cmd
+     ! howtocvs.txt -> howtosvn.txt
+
 2008-07-05 02:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/pp/hbpp.c
    * source/pp/ppcore.c
