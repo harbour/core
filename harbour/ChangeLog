@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-05 02:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/pp/hbpp.c
+   * source/pp/ppcore.c
+   * source/pp/pplib.c
+     ! Fixed bug introduced in r8836, so that now __HARBOUR__ 
+       will again be #defined when 'harbour /u' switch is used.
+       Thanks Randy.
+
 2008-07-05 01:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbver.h
      ! Typo in comment.
