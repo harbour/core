@@ -278,6 +278,11 @@ HB_FUNC( TRANSFORM )
 
                else
                {
+/* NOTE: This is a FoxPro compatible [jarabal] */
+#if defined(HB_COMPAT_FOXPRO)
+                  ulPicLen = 0;
+                  break;
+#else
                   switch( *szPic )
                   {
                      case '!':
@@ -301,6 +306,7 @@ HB_FUNC( TRANSFORM )
                      default:
                         szResult[ ulResultPos++ ] = *szPic;
                   }
+#endif                  
                }
 
                szPic++;
