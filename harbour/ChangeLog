@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-06 23:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbundoc.api
+     ! Casting in _tctemp()
+
 2008-07-05 03:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/transfrm.c
      + Added patch by Javier. This will make @R picture 
