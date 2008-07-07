@@ -44,9 +44,27 @@ export C_USR="$CC_C_USR $C_USR"
 export CC_PRG_USR
 export PRG_USR="$CC_PRG_USR $PRG_USR"
 
-export CCPATH="/opt/mingw32ce/bin:"
-export CCPREFIX="arm-wince-mingw32ce-"
-export PATH="$CCPATH$PATH"
+# default cegcc instalation path
+[ -z "$CCPATH" ] && \
+export CCPATH="/opt/mingw32ce/bin"
+export PATH="$CCPATH:$PATH"
+
+# cegcc executables prefix - this
+# has changed in cegcc/gcc4.3.0
+if [ -z "$CCPREFIX" ]; then
+    if [ -x "${CCPATH}/arm-wince-mingw32ce-gcc" ]; then
+        export CCPREFIX="arm-wince-mingw32ce-"
+    else
+        if [ -x "${CCPATH}/arm-mingw32ce-gcc" ]; then
+            export CCPREFIX="arm-mingw32ce-"
+        else
+            echo "cegcc compiler executable not found. Ensure you have cegcc package installed in"
+            echo "/opt/mingw32ce dir, or (alternativly) set environment variable CCPATH to a cegcc"
+            echo "instalation directory"
+            exit 1
+        fi
+    fi
+fi
 
 export HB_TOOLS_PREF="hbce"
 export HB_XBUILD="wce"
@@ -59,20 +77,39 @@ trap cleanup EXIT &>/dev/null
 mkdir ${HB_BIN_COMPILE}
 
 DIR=`cd $(dirname $0);pwd`
-if which harbour &> /dev/null; then
-    HB_COMP_PATH=`which harbour 2> /dev/null`
-else
-    HB_COMP_PATH="$DIR/source/main/$HB_HOST_ARCH/$HB_HOST_CC/harbour"
+if [ -z "${HB_COMP_PATH}" ]; then
+    if which harbour &> /dev/null; then
+        HB_COMP_PATH=`which harbour 2> /dev/null`
+    else
+        HB_COMP_PATH="$DIR/source/main/$HB_HOST_ARCH/$HB_HOST_CC/harbour"
+    fi
 fi
 if [ -x "${HB_COMP_PATH}" ]; then
     ln -s "${HB_COMP_PATH}" ${HB_BIN_COMPILE}/harbour.exe
 else
-    echo "You must have a working Harbour executable for your platform on your PATH."
+    echo "You must have a working 'harbour' executable for your platform on your PATH."
     exit 1
 fi
 
-ln -s "$DIR/source/pp/$HB_HOST_ARCH/$HB_HOST_CC/hbpp" ${HB_BIN_COMPILE}/hbpp.exe
-export HB_PPGEN_PATH=${HB_BIN_COMPILE}
+if [ -z "${HB_PPGEN_PATH}" ]; then
+    if which hbpp &> /dev/null; then
+        HB_PPGEN_PATH=`which hbpp 2> /dev/null`
+    else
+        DIR=`dirname ${HB_COMP_PATH}`
+        if [ -x "${DIR}/hbpp" ]; then
+            HB_PPGEN_PATH="${DIR}/hbpp"
+        else
+            HB_PPGEN_PATH="$DIR/source/pp/$HB_HOST_ARCH/$HB_HOST_CC/hbpp"
+        fi
+    fi
+fi
+if [ -x "${HB_PPGEN_PATH}" ]; then
+    ln -s ${HB_PPGEN_PATH} ${HB_BIN_COMPILE}/hbpp.exe
+else
+    echo "You must have a working 'hbpp' executable for your platform on your PATH."
+    exit 1
+fi
+export HB_PPGEN_PATH
 
 case "$1" in
     tgz|gnu)

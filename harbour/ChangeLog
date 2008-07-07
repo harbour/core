@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-07 19:00 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
+   * make_xmingwce.mak
+     * Changed the way HB_COMP_PATH, HB_PPGEN_PATH,
+       CCPATH and CCPREFIX environment variables are
+       handled
+
 2008-07-07 17:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/vm/extrap.c
      ! Warning fixed.
@@ -51,7 +57,7 @@
 
    * contrib/hbtpathy/Makefile
    * contrib/hbziparch/Makefile
-     ! Fixed referring to win32 archictecture as 'win32' 
+     ! Fixed referring to win32 archictecture as 'win32'
        (should be 'w32'). Recently introduced bugs.
 
    * contrib/hbfimage/fi_winfu.c
@@ -64,8 +70,8 @@
 
 2008-07-05 03:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/transfrm.c
-     + Added patch by Javier. This will make @R picture 
-       compatible with Clipper 5.01 and VFP if HB_COMPAT_FOXPRO 
+     + Added patch by Javier. This will make @R picture
+       compatible with Clipper 5.01 and VFP if HB_COMPAT_FOXPRO
        is enabled.
 
 2008-07-05 02:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
@@ -77,7 +83,7 @@
    * source/pp/hbpp.c
    * source/pp/ppcore.c
    * source/pp/pplib.c
-     ! Fixed bug introduced in r8836, so that now __HARBOUR__ 
+     ! Fixed bug introduced in r8836, so that now __HARBOUR__
        will again be #defined when 'harbour /u' switch is used.
        Thanks Randy.
 
