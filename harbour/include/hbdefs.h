@@ -536,7 +536,7 @@ typedef unsigned long HB_COUNTER;
 #endif
 
 #if defined( HB_WIN32_IO )
-#if 0
+#if 1
    typedef HB_PTRDIFF FHANDLE;
 #else
    typedef void * FHANDLE;

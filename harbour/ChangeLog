@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 00:38 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+    * disabled internal pointer handles I enabled by mistake for MS-WIN
+      builds
+
 2008-07-08 00:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbapifs.h
   * harbour/include/hbdefs.h
