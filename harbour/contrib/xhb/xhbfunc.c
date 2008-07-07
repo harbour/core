@@ -126,10 +126,7 @@ HB_FUNC( HB_ARRAYID )  /* for debugging: returns the array's "address" so dual r
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
-   if( pArray )
-      hb_retnl( ( long ) hb_arrayId( pArray ) );
-   else
-      hb_retnl( -1 );
+   hb_retptr( pArray ? hb_arrayId( pArray ) : NULL );
 }
 
 /* Hash utem functions */
