@@ -85,8 +85,11 @@ void hb_compGenBufPortObj( HB_COMP_DECL, BYTE ** pBufPtr, ULONG * pulSize )
    /* additional 0 byte is for passing buffer directly as string item */
    ptr = * pBufPtr = ( BYTE * ) hb_xgrab( * pulSize + 1 );
 
-   memcpy( ptr, "\300HRB", 4 );  /* signature */
-   ptr += 4;
+   /* signature */
+   *ptr++ = 0xC0;
+   *ptr++ = 'H';
+   *ptr++ = 'R';
+   *ptr++ = 'B';
    HB_PUT_LE_UINT16( ptr, 2 );   /* version number */
    ptr += 2;
 

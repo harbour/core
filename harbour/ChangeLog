@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 00:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/compiler/genhrb.c
+   * contrib/hbtip/utils.c
+     ! Changed octal values in strings (and chars too) to make 
+       these functions work with Pelles C 5.00.1.
+
 2008-07-07 20:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/xhb/xhbfunc.c
      ! Changed hb_ArrayID() to be in sync with xhb, and at the 

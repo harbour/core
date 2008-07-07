@@ -235,16 +235,16 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 
    /* ELF file */
    /*  1*/ { 0, "\177ELF", NULL, 1, 0, 0 },
-   /*  2*/ { 4, "\0", NULL, 3, 1, MIME_FLAG_CONTINUE },
-   /*  3*/ { 4, "\1", NULL, 2, 1, MIME_FLAG_CONTINUE },
-   /*  4*/ { 4, "\2", NULL, 1, 0, MIME_FLAG_CONTINUE },
-   /*  5*/ { 5, "\0", NULL, 2, 1, MIME_FLAG_CONTINUE },
-   /*  6*/ { 5, "\1", NULL, 1, 0, MIME_FLAG_CONTINUE },
-   /*  7*/ { 16, "\0", "application/x-object", 0, 1, MIME_FLAG_CONTINUE },
-   /*  8*/ { 16, "\1", "application/x-object", 0, 1, MIME_FLAG_CONTINUE },
-   /*  9*/ { 16, "\2", "application/x-executable", 0, 1, MIME_FLAG_CONTINUE },
-   /* 10*/ { 16, "\3", "application/x-sharedlib", 0, 1, MIME_FLAG_CONTINUE },
-   /* 11*/ { 16, "\4", "application/x-coredump", 0, 0, MIME_FLAG_CONTINUE },
+   /*  2*/ { 4, "\x00", NULL, 3, 1, MIME_FLAG_CONTINUE },
+   /*  3*/ { 4, "\x01", NULL, 2, 1, MIME_FLAG_CONTINUE },
+   /*  4*/ { 4, "\x02", NULL, 1, 0, MIME_FLAG_CONTINUE },
+   /*  5*/ { 5, "\x00", NULL, 2, 1, MIME_FLAG_CONTINUE },
+   /*  6*/ { 5, "\x01", NULL, 1, 0, MIME_FLAG_CONTINUE },
+   /*  7*/ { 16, "\x00", "application/x-object", 0, 1, MIME_FLAG_CONTINUE },
+   /*  8*/ { 16, "\x01", "application/x-object", 0, 1, MIME_FLAG_CONTINUE },
+   /*  9*/ { 16, "\x02", "application/x-executable", 0, 1, MIME_FLAG_CONTINUE },
+   /* 10*/ { 16, "\x03", "application/x-sharedlib", 0, 1, MIME_FLAG_CONTINUE },
+   /* 11*/ { 16, "\x04", "application/x-coredump", 0, 0, MIME_FLAG_CONTINUE },
 
    /* Shell script */
    /* 12*/ { 0, "#!/bin/sh", "application/x-shellscript", 0, 0, 0 },
@@ -263,7 +263,7 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
    /* 25*/ { 0, "#! /usr/local/bin/bash", "application/x-shellscript", 0, 0, 0 },
 
    /* Java object code*/
-   /* 26*/ { 0, "\xca\xfe\xba\xbe", "application/java", 0, 0, 0 },
+   /* 26*/ { 0, "\xCA\xFE\xBA\xBE", "application/java", 0, 0, 0 },
 
    /* Perl */
    /* 27*/ { 0, "#!/bin/perl", "application/x-perl", 0, 0, 0 },
@@ -288,13 +288,13 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
    /* 44*/ { 0, "eval \"exec /usr/local/bin/python", "application/x-python", 0, 0, 0 },
 
    /* Unix compress (.Z) */
-   /* 45*/ { 0, "\037\235", "application/x-compress", 0, 0, 0 },
+   /* 45*/ { 0, "\x1F\x9D", "application/x-compress", 0, 0, 0 },
 
    /* Unix gzip */
-   /* 46*/ { 0, "\037\213", "application/x-gzip", 0, 0, 0 },
+   /* 46*/ { 0, "\x1F\x8B", "application/x-gzip", 0, 0, 0 },
 
    /* PKzip */
-   /* 47*/ { 0, "PK\003\004", "application/x-zip", 0, 0, 0 },
+   /* 47*/ { 0, "PK\x03\x04", "application/x-zip", 0, 0, 0 },
 
    /* xml */
    /* 48*/ { 0, "<?xml", "text/xml", 0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
@@ -310,13 +310,13 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 
    /* Postscript */
    /* 56*/ { 0, "%!", "application/postscript", 0, 0, 0 },
-   /* 57*/ { 0, "\004%!", "application/postscript", 0, 0, 0 },
+   /* 57*/ { 0, "\x04%!", "application/postscript", 0, 0, 0 },
 
    /* PDF */
    /* 58*/ { 0, "%PDF-", "application/pdf", 0, 0, 0 },
 
    /* DVI */
-   /* 59*/ { 0, "\367\002", "application/dvi", 0, 0, 0 },
+   /* 59*/ { 0, "\xF7\x02", "application/dvi", 0, 0, 0 },
 
    /* PNG image */
    /* 60*/ { 0, "\x89PNG", "image/png", 0, 0, 0 },
@@ -333,7 +333,7 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
    /* 65*/ { 0, "GIF", "image/gif", 0, 0, 0 },
 
    /* JPEG image */
-   /* 66*/ { 0, "\xff\xd8", "image/jpeg", 0, 0, 0 },
+   /* 66*/ { 0, "\xFF\xD8", "image/jpeg", 0, 0, 0 },
 
    /* ICO image */
    /* 67*/ { 2, "\x01\x00", "image/x-icon", 0, 0, 0 }
@@ -927,4 +927,5 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
 
    hb_retclen_buffer( cRet, nPosRet );
 }
+
 
