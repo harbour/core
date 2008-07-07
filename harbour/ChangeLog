@@ -39,6 +39,10 @@
    * source/vm/extrap.c
      ! Warning fixed.
 
+   * source/rtl/hbffind.c
+     ! Added workaround for PellesC 5.00.1 compiler bug.
+       (hang -> out of memory) when compiling a certain expression.
+
    * contrib/hbmysql/mysql.c
    * contrib/hbmysql/tmysql.prg
      ! sqlListF() return value changed to pointer from numeric.
