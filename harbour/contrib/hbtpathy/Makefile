@@ -14,7 +14,7 @@ C_SOURCES=\
 	tpcommon.c \
 
 endif
-ifeq ($(HB_ARCHITECTURE),win32)
+ifeq ($(HB_ARCHITECTURE),w32)
 C_SOURCES=\
 	tpwin32.c \
 	tpcommon.c \

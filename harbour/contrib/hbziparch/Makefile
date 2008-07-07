@@ -56,7 +56,7 @@ CPP_SOURCES = \
 
 #	ZipFile_mfc.cpp \
 
-ifeq ($(HB_ARCHITECTURE),win32)
+ifeq ($(HB_ARCHITECTURE),w32)
 CPP_SOURCES += \
 	ZipPathComponent_win.cpp \
 	ZipPlatform_win.cpp \

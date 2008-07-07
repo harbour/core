@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-07 06:57 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_deb.sh
+     + Added libgpm-dev to mouse test. Thanks Guy.
+
+   - doc/simplex.txt
+   * doc/Makefile
+     - Removed obsolete file.
+
+   * doc/linux1st.txt
+     + Added libgpm*-dev requirements.
+
+   * contrib/hbtpathy/Makefile
+   * contrib/hbziparch/Makefile
+     ! Fixed referring to win32 archictecture as 'win32' 
+       (should be 'w32'). Recently introduced bugs.
+
+   * contrib/hbfimage/fi_winfu.c
+   * contrib/hbfimage/fi_wrp.c
+     ! Fixed for POCC, XCC compilers.
+
 2008-07-06 23:01 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbundoc.api
      ! Casting in _tctemp()

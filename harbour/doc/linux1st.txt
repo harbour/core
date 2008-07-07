@@ -20,7 +20,12 @@ sudo apt-get install libslang2-dev
 For GTXWC terminal lib:
 sudo apt-get install libx11-dev
 
-For Contrib/ODBC lib:
+For mouse support:
+sudo apt-get install libgpmg1-dev
+or
+sudo apt-get install libgpm-dev
+
+For contrib/hbodbc lib:
 sudo apt-get install unixodbc-dev
 
 DEBIAN distro
@@ -98,7 +103,3 @@ folks can clean it up a bit and add/remove things that are important.
 At least this worked on my particular Debian system.   Your mileage may
 vary and other distributions will probably have their own setups and
 issues.  
-
-
-
-

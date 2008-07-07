@@ -26,7 +26,7 @@ then
     export HB_GPM_MOUSE=no
     export HB_WITHOUT_GTSLN=yes
 else
-    if [ -z "$HB_GPM_MOUSE" ] && test_reqpkg libgpmg1-dev
+    if [ -z "$HB_GPM_MOUSE" ] && ( test_reqpkg libgpmg1-dev || test_reqpkg libgpm-dev )
     then
         export HB_GPM_MOUSE=yes
     fi

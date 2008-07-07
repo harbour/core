@@ -29,7 +29,6 @@ DOC_FILES=\
 	pcode.txt \
 	pragma.txt \
 	readme.txt \
-	simplex.txt \
 	statics.txt \
 	tracing.txt \
 	transfrm.txt \
