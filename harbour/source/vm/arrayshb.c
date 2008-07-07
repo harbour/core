@@ -130,17 +130,6 @@ HB_FUNC( AADD )
       hb_errRT_BASE_SubstR( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_ARRAYID )  /* for debugging: returns the array's "address" so dual references to same array can be seen */
-{
-   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-
-   if( pArray )
-      hb_retnl( ( long ) hb_arrayId( pArray ) );
-   else
-      hb_retnl( -1 );
-}
-
-
 /* NOTE: CA-Cl*pper 5.3 and older will return NIL on bad parameter, 5.3a,b
          will throw a runtime error. [vszakats] */
 

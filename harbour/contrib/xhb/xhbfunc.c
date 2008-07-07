@@ -122,6 +122,16 @@ HB_FUNC( HB_CHECKSUM )
    HB_FUNC_EXEC( HB_ADLER32 );
 }
 
+HB_FUNC( HB_ARRAYID )  /* for debugging: returns the array's "address" so dual references to same array can be seen */
+{
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+
+   if( pArray )
+      hb_retnl( ( long ) hb_arrayId( pArray ) );
+   else
+      hb_retnl( -1 );
+}
+
 /* Hash utem functions */
 HB_FUNC_EXTERN( HB_HASH );
 HB_FUNC_EXTERN( HB_HHASKEY );
