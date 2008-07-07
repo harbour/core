@@ -367,7 +367,7 @@ HB_FUNC( __DBSQL )
                                   FO_READWRITE | FO_EXCLUSIVE |
                                   FXO_DEFAULTS | FXO_SHARELOCK,
                                   NULL, pError );
-            if( hFile == F_ERROR )
+            if( hFile == FS_ERROR )
             {
                if( !pError )
                {
@@ -400,7 +400,7 @@ HB_FUNC( __DBSQL )
          if( pError )
             hb_itemRelease( pError );
 
-         if( hFile != F_ERROR )
+         if( hFile != FS_ERROR )
          {
             if( fAppend )
                hb_fsSeekLarge( hFile, 0, FS_END );

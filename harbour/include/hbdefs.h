@@ -536,11 +536,18 @@ typedef unsigned long HB_COUNTER;
 #endif
 
 #if defined( HB_WIN32_IO )
-   typedef long   FHANDLE;
+#if 0
+   typedef HB_PTRDIFF FHANDLE;
 #else
-   typedef int    FHANDLE;
+   typedef void * FHANDLE;
 #endif
-
+   typedef HB_PTRDIFF HB_NHANDLE;
+#  define hb_numToHandle( h )   ( ( FHANDLE ) ( HB_NHANDLE ) ( h ) )
+#else
+   typedef int FHANDLE;
+   typedef int HB_NHANDLE;
+#  define hb_numToHandle( h )   ( ( int ) ( h ) )
+#endif
 
 /* maximum length of double number in decimal representation:
    log10(2^1024) ~ 308.25 */

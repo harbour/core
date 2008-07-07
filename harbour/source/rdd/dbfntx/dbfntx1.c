@@ -6765,7 +6765,7 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             hb_itemPutNI( pInfo->itmResult, hb_ntxFindTagNum( pArea, pTag ) );
             break;
          case DBOI_FILEHANDLE:
-            hb_itemPutNInt( pInfo->itmResult, pTag->Owner->DiskFile );
+            hb_itemPutNInt( pInfo->itmResult, ( HB_NHANDLE ) pTag->Owner->DiskFile );
             break;
          case DBOI_FULLPATH:
             hb_itemPutC( pInfo->itmResult, pTag->Owner->IndexName );
@@ -7199,7 +7199,7 @@ static ERRCODE ntxOrderInfo( NTXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pInfo
             hb_itemPutNI( pInfo->itmResult, 0 );
             break;
          case DBOI_FILEHANDLE:
-            hb_itemPutNInt( pInfo->itmResult, FS_ERROR );
+            hb_itemPutNInt( pInfo->itmResult, ( HB_NHANDLE ) FS_ERROR );
             break;
          case DBOI_INDEXTYPE:
             hb_itemPutNI( pInfo->itmResult, DBOI_TYPE_UNDEF );

@@ -831,7 +831,7 @@ HB_EXPORT ERRCODE hb_gtOutStd( BYTE * pbyStr, ULONG ulLen )
    if( pGT )
       HB_GTSELF_OUTSTD( pGT, pbyStr, ulLen );
    else
-      hb_fsWriteLarge( HB_STDOUT_HANDLE, pbyStr, ulLen );
+      hb_fsWriteLarge( ( FHANDLE ) HB_STDOUT_HANDLE, pbyStr, ulLen );
 
    return SUCCESS;
 }
@@ -846,7 +846,7 @@ HB_EXPORT ERRCODE hb_gtOutErr( BYTE * pbyStr, ULONG ulLen )
    if( pGT )
       HB_GTSELF_OUTERR( pGT, pbyStr, ulLen );
    else
-      hb_fsWriteLarge( HB_STDERR_HANDLE, pbyStr, ulLen );
+      hb_fsWriteLarge( ( FHANDLE ) HB_STDERR_HANDLE, pbyStr, ulLen );
 
    return SUCCESS;
 }

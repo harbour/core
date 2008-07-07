@@ -8109,7 +8109,7 @@ static ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, USHORT uiIndex, LPDBORDERINFO pI
          break;
 
       case DBOI_FILEHANDLE:
-         pInfo->itmResult = hb_itemPutNInt( pInfo->itmResult, pTag ? pTag->pIndex->hFile : FS_ERROR );
+         pInfo->itmResult = hb_itemPutNInt( pInfo->itmResult, ( HB_NHANDLE ) ( pTag ? pTag->pIndex->hFile : FS_ERROR ) );
          break;
 
       case DBOI_ISCOND:

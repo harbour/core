@@ -58,8 +58,8 @@ HB_FUNC( FOPEN )
 {
    if( ISCHAR( 1 ) )
    {
-      hb_retni( hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
-                           ISNUM( 2 ) ? hb_parni( 2 ) : FO_READ | FO_COMPAT ) );
+      hb_retnint( ( HB_NHANDLE ) hb_fsOpen( ( BYTE * ) hb_parc( 1 ),
+                  ISNUM( 2 ) ? hb_parni( 2 ) : FO_READ | FO_COMPAT ) );
       hb_fsSetFError( hb_fsError() );
    }
    else
@@ -74,13 +74,13 @@ HB_FUNC( FCREATE )
 {
    if( ISCHAR( 1 ) )
    {
-      hb_retni( hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
-                             ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
+      hb_retnint( ( HB_NHANDLE ) hb_fsCreate( ( BYTE * ) hb_parc( 1 ),
+                  ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL ) );
       hb_fsSetFError( hb_fsError() );
    }
    else
    {
-      hb_retni( FS_ERROR );
+      hb_retni( F_ERROR );
       hb_fsSetFError( 0 );
    }
 }
@@ -89,14 +89,14 @@ HB_FUNC( HB_FCREATE )
 {
    if( ISCHAR( 1 ) )
    {
-      hb_retni( hb_fsCreateEx( ( BYTE * ) hb_parc( 1 ),
-                               ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
-                               ISNUM( 3 ) ? hb_parni( 3 ) : FO_COMPAT ) );
+      hb_retnint( ( HB_NHANDLE ) hb_fsCreateEx( ( BYTE * ) hb_parc( 1 ),
+                  ISNUM( 2 ) ? hb_parni( 2 ) : FC_NORMAL,
+                  ISNUM( 3 ) ? hb_parni( 3 ) : FO_COMPAT ) );
       hb_fsSetFError( hb_fsError() );
    }
    else
    {
-      hb_retni( FS_ERROR );
+      hb_retni( F_ERROR );
       hb_fsSetFError( 0 );
    }
 }
@@ -125,7 +125,7 @@ HB_FUNC( FREAD )
             other items which shares this buffer. [druzus] */
          pBuffer = hb_itemUnShareString( pBuffer );
 
-         ulRead = hb_fsReadLarge( hb_parni( 1 ),
+         ulRead = hb_fsReadLarge( hb_numToHandle( hb_parnint( 1 ) ),
                                   ( BYTE * ) hb_itemGetCPtr( pBuffer ),
                                   ulRead );
          uiError = hb_fsError();
@@ -144,13 +144,13 @@ HB_FUNC( FWRITE )
 
    if( ISNUM( 1 ) && ISCHAR( 2 ) )
    {
-      hb_retnl( hb_fsWriteLarge( hb_parni( 1 ),
+      hb_retnl( hb_fsWriteLarge( hb_numToHandle( hb_parnint( 1 ) ),
                                  ( BYTE * ) hb_parc( 2 ),
                                  ISNUM( 3 ) ? ( ULONG ) hb_parnl( 3 ) : hb_parclen( 2 ) ) );
       uiError = hb_fsError();
    }
    else
-      hb_retnl( 0 );
+      hb_retni( 0 );
    hb_fsSetFError( uiError );
 }
 
@@ -164,7 +164,7 @@ HB_FUNC( FCLOSE )
    USHORT uiError = 0;
    if( ISNUM( 1 ) )
    {
-      hb_fsClose( hb_parni( 1 ) );
+      hb_fsClose( hb_numToHandle( hb_parnint( 1 ) ) );
       uiError = hb_fsError();
       hb_retl( uiError == 0 );
    }
@@ -179,11 +179,11 @@ HB_FUNC( FERASE )
 
    if( ISCHAR( 1 ) )
    {
-      hb_retni( hb_fsDelete( ( BYTE * ) hb_parc( 1 ) ) ? 0 : FS_ERROR );
+      hb_retni( hb_fsDelete( ( BYTE * ) hb_parc( 1 ) ) ? 0 : F_ERROR );
       uiError = hb_fsError();
    }
    else
-      hb_retni( FS_ERROR );
+      hb_retni( F_ERROR );
    hb_fsSetFError( uiError );
 }
 
@@ -194,11 +194,11 @@ HB_FUNC( FRENAME )
    if( ISCHAR( 1 ) && ISCHAR( 2 ) )
    {
       hb_retni( hb_fsRename( ( BYTE * ) hb_parc( 1 ),
-                             ( BYTE * ) hb_parc( 2 ) ) ? 0 : FS_ERROR );
+                             ( BYTE * ) hb_parc( 2 ) ) ? 0 : F_ERROR );
       uiError = hb_fsError();
    }
    else
-      hb_retni( FS_ERROR );
+      hb_retni( F_ERROR );
    hb_fsSetFError( uiError );
 }
 
@@ -208,7 +208,7 @@ HB_FUNC( FSEEK )
 
    if( ISNUM( 1 ) && ISNUM( 2 ) )
    {
-      hb_retnint( hb_fsSeekLarge( hb_parni( 1 ),
+      hb_retnint( hb_fsSeekLarge( hb_numToHandle( hb_parnint( 1 ) ),
                                   hb_parnint( 2 ),
                                   ISNUM( 3 ) ? hb_parni( 3 ) : FS_SET ) );
       uiError = hb_fsError();
@@ -269,7 +269,7 @@ HB_FUNC( HB_FEOF )
 
    if( ISNUM( 1 ) )
    {
-      hb_retl( hb_fsEof( hb_parni( 1 ) ) );
+      hb_retl( hb_fsEof( hb_numToHandle( hb_parnint( 1 ) ) ) );
       uiError = hb_fsError();
    }
    else
@@ -283,7 +283,7 @@ HB_FUNC( HB_FCOMMIT )
 
    if( ISNUM( 1 ) )
    {
-      hb_fsCommit( hb_parni(1) );
+      hb_fsCommit( hb_numToHandle( hb_parnint( 1 ) ) );
       uiError = hb_fsError();
    }
 

@@ -70,7 +70,9 @@
 /* these variables are used for stdout/stderr output when GT subsystem
  * is not initialized
  */
-static FHANDLE s_hStdIn = 0, s_hStdOut = 1, s_hStdErr = 2;
+static FHANDLE s_hStdIn  = ( FHANDLE ) 0,
+               s_hStdOut = ( FHANDLE ) 1,
+               s_hStdErr = ( FHANDLE ) 2;
 
 /* base GT strucure */
 static PHB_GT_BASE   s_curGT = NULL;
@@ -1439,15 +1441,15 @@ static BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_INPUTFD:
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, pGT->hStdIn );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_NHANDLE ) pGT->hStdIn );
          break;
 
       case HB_GTI_OUTPUTFD:
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, pGT->hStdOut );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_NHANDLE ) pGT->hStdOut );
          break;
 
       case HB_GTI_ERRORFD:
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, pGT->hStdErr );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_NHANDLE ) pGT->hStdErr );
          break;
 
       case HB_GTI_COMPATBUFFER:

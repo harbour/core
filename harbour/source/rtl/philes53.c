@@ -62,7 +62,7 @@ HB_FUNC( FSETDEVMOD )
    /* C53 checks only number of parameters: hb_pcount() == 2 */
    if( ISNUM( 1 ) && ISNUM( 2 ) )
    {
-      hb_fsSetDevMode( hb_parni( 1 ), hb_parni( 2 ) );
+      hb_fsSetDevMode( hb_numToHandle( hb_parnint( 1 ) ), hb_parni( 2 ) );
       hb_fsSetFError( hb_fsError() );
    }
    /* NOTE: INCOMPATIBILITY! C53 will return the device flags 

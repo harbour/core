@@ -258,10 +258,10 @@ HB_FUNC( HB_FTEMPCREATE )
 {
    BYTE szName[ _POSIX_PATH_MAX + 1 ];
 
-   hb_retni( hb_fsCreateTemp( ( BYTE * ) hb_parc( 1 ),
-                              ( BYTE * ) hb_parc( 2 ),
-                              ( USHORT ) ( ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : FC_NORMAL ),
-                              szName ) );
+   hb_retnint( ( HB_NHANDLE ) hb_fsCreateTemp( ( BYTE * ) hb_parc( 1 ),
+               ( BYTE * ) hb_parc( 2 ),
+               ( USHORT ) ( ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : FC_NORMAL ),
+                szName ) );
 
    hb_storc( ( char *) szName, 4 );
 }

@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 00:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbapifs.h
+  * harbour/include/hbdefs.h
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/philes.c
+  * harbour/source/rtl/hbgtcore.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/philes53.c
+  * harbour/source/rtl/gtapi.c
+  * harbour/source/rtl/filesys.c
+  * harbour/source/rdd/dbfntx/dbfntx1.c
+  * harbour/source/rdd/dbsql.c
+  * harbour/source/rdd/sdf1.c
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+  * harbour/source/rdd/delim1.c
+  * harbour/contrib/hbbmcdx/bmdbfcdx.c
+    + added HB_NHANDLE
+    + added hb_numToHandle() macro
+    ! fixed WIN32 HANDLE to integer number conversions in Harbour file API
+    ! fixed F_ERROR and FS_ERROR usage
+    * added support for optional FHANDLE mapped to pointer instead of
+      integer number - disable by default in hbdefs.h
+      Now Harbour can be compiled with internal pointer and integer file
+      handles (FHANDLE)
+
 2008-07-08 00:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/compiler/genhrb.c
    * contrib/hbtip/utils.c

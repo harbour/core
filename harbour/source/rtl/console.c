@@ -97,9 +97,9 @@
    static const int  s_iCrLfLen = 2;
 #endif
 
-static FHANDLE s_hFilenoStdin  = 0;
-static FHANDLE s_hFilenoStdout = 1;
-static FHANDLE s_hFilenoStderr = 2;
+static FHANDLE s_hFilenoStdin  = ( FHANDLE ) 0;
+static FHANDLE s_hFilenoStdout = ( FHANDLE ) 1;
+static FHANDLE s_hFilenoStderr = ( FHANDLE ) 2;
 
 static USHORT  s_uiPRow;
 static USHORT  s_uiPCol;
@@ -123,12 +123,18 @@ void hb_conInit( void )
 #ifdef HB_C52_UNDOC
    {
       /* Undocumented CA-Cl*pper switch //STDERR:x */
-      FHANDLE hStderr = ( FHANDLE ) hb_cmdargNum( "STDERR" );
+      int iStderr = hb_cmdargNum( "STDERR" );
 
-      if( hStderr == 0 )      /* //STDERR with no parameter or 0 */
+      if( iStderr == 0 || iStderr == 1 )  /* //STDERR with no parameter or 0 */
          s_hFilenoStderr = s_hFilenoStdout;
-      else if( hStderr > 0 ) /* //STDERR:x */
-         s_hFilenoStderr = hStderr;
+      /* disabled in default builds. It's not multiplatform and very
+       * dangerous because it can redirect error messages to data files
+       * [druzus]
+       */
+#ifdef HB_C52_STRICT
+      else if( iStderr > 0 ) /* //STDERR:x */
+         s_hFilenoStderr = ( FHANDLE ) iStderr;
+#endif
    }
 #endif
 
@@ -555,15 +561,15 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
 
 HB_FUNC( HB_GETSTDIN ) /* Return Handel for STDIN */
 {
-   hb_retni( s_hFilenoStdin );
+   hb_retnint( ( HB_NHANDLE ) s_hFilenoStdin );
 }
 
 HB_FUNC( HB_GETSTDOUT ) /* Return Handel for STDOUT */
 {
-   hb_retni( s_hFilenoStdout );
+   hb_retnint( ( HB_NHANDLE ) s_hFilenoStdout );
 }
 
 HB_FUNC( HB_GETSTDERR ) /* Return Handel for STDERR */
 {
-   hb_retni( s_hFilenoStderr );
+   hb_retnint( ( HB_NHANDLE ) s_hFilenoStderr );
 }

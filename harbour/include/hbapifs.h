@@ -58,7 +58,7 @@
 
 HB_EXTERN_BEGIN
 
-#define FS_ERROR F_ERROR
+#define FS_ERROR ( FHANDLE ) F_ERROR
 
 /* File locking flags */
 #define FL_LOCK       0x0000   /* Lock a region   */

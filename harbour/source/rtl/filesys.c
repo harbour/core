@@ -272,54 +272,19 @@ static BOOL s_fUseWaitLocks = TRUE;
 
 #if defined(HB_WIN32_IO)
 
-   #if defined( __LCC__ ) || ( defined( _MSC_VER ) && defined( HB_WINCE ) && \
-                               !defined( __POCC__ ) && !defined( __XCC__ ) )
-      __inline void * LongToHandle( const long h )
-      {
-          return( ( void * ) ( INT_PTR ) h );
-      }
-   #endif
-
-   #if ( defined(__DMC__) || ( defined( _MSC_VER ) && ( _MSC_VER >= 1010 ) && ( ! defined( _BASETSD_H_) || ! defined( HandleToLong ) || defined(__USE_INLINE__) ) && ! defined( __POCC__ ) ) )
-       #if defined(__DMC__) && !defined(INT_PTR)
-          #ifdef _WIN64
-             typedef __int64 INT_PTR, *PINT_PTR;
-          #else
-             typedef long INT_PTR, *PINT_PTR;
-          #endif
-       #endif
-
-      #ifndef _WIN64 /* MSVC64 already provides these funtions */
-      __inline void * LongToHandle( const long h )
-      {
-          return((void *) (INT_PTR) h );
-      }
-
-      __inline long HandleToLong( const void *h )
-      {
-         return((long) h );
-      }
-      #endif
-   #endif
-
 static HANDLE DosToWinHandle( FHANDLE fHandle )
 {
-   HANDLE hHandle = (HANDLE) LongToHandle( fHandle );
+   if( fHandle == ( FHANDLE ) 0 )
+      return GetStdHandle( STD_INPUT_HANDLE );
 
-   switch( fHandle )
-   {
-      case 0:
-        return GetStdHandle(STD_INPUT_HANDLE);
+   else if( fHandle == ( FHANDLE ) 1 )
+      return GetStdHandle( STD_OUTPUT_HANDLE );
 
-      case 1:
-        return GetStdHandle(STD_OUTPUT_HANDLE);
+   else if( fHandle == ( FHANDLE ) 2 )
+      return GetStdHandle( STD_ERROR_HANDLE) ;
 
-      case 2:
-        return GetStdHandle(STD_ERROR_HANDLE);
-
-      default:
-        return hHandle;
-   }
+   else
+      return ( HANDLE ) fHandle;
 }
 
 static void convert_open_flags( BOOL fCreate, USHORT uiAttr, USHORT uiFlags,
@@ -671,7 +636,7 @@ HB_EXPORT FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
 
-      hFileHandle = HandleToLong(hFile);
+      hFileHandle = ( FHANDLE ) hFile;
    }
 #elif defined(HB_FS_FILE_IO)
    {
@@ -728,7 +693,7 @@ HB_EXPORT FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
 
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
 
-      hFileHandle = HandleToLong(hFile);
+      hFileHandle = ( FHANDLE ) hFile;
    }
 #elif defined(HB_FS_FILE_IO)
    {
@@ -785,7 +750,7 @@ HB_EXPORT FHANDLE hb_fsCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags
 
       hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
 
-      hFileHandle = HandleToLong(hFile);
+      hFileHandle = ( FHANDLE ) hFile;
    }
 #elif defined(HB_FS_FILE_IO)
    {
@@ -869,18 +834,18 @@ HB_EXPORT BOOL hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
    int iRet = 0;
 
 #if defined(HB_WIN32_IO)
-   if( hFileHandle > 2 )
+   if( ( HB_NHANDLE ) hFileHandle > 2 )
       iRet = -1;
    else
 #endif
    switch( uiDevMode )
    {
       case FD_BINARY:
-         iRet = _setmode( hFileHandle, _O_BINARY );
+         iRet = _setmode( ( HB_NHANDLE ) hFileHandle, _O_BINARY );
          break;
 
       case FD_TEXT:
-         iRet = _setmode( hFileHandle, _O_TEXT );
+         iRet = _setmode( ( HB_NHANDLE ) hFileHandle, _O_TEXT );
          break;
    }
 
@@ -2040,7 +2005,7 @@ HB_EXPORT USHORT hb_fsIsDrv( BYTE nDrive )
       buffer[ 3 ] = '\0';
 
       type = GetDriveTypeA( ( LPCSTR ) buffer );
-      uiResult = ( type == DRIVE_UNKNOWN || type == DRIVE_NO_ROOT_DIR ) ? FS_ERROR : 0;
+      uiResult = ( type == DRIVE_UNKNOWN || type == DRIVE_NO_ROOT_DIR ) ? F_ERROR : 0;
       hb_fsSetError( 0 );
    }
 #elif defined(OS_HAS_DRIVE_LETTER)

@@ -977,7 +977,7 @@ static ERRCODE hb_delimInfo( DELIMAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
          break;
 
       case DBI_FILEHANDLE:
-         hb_itemPutNInt( pItem, ( HB_LONG ) pArea->hFile );
+         hb_itemPutNInt( pItem, ( HB_NHANDLE ) pArea->hFile );
          break;
 
       case DBI_SHARED:
