@@ -184,7 +184,7 @@ FUNCTION GetRegistry( nHKEYHandle, cKeyName, cEntryName )
          ENDIF
       ENDIF
 
-      win32_RegCloseKey( nKeyHandle)
+      win32_RegCloseKey( nKeyHandle )
    ENDIF
 
    RETURN xRetVal
@@ -223,7 +223,7 @@ FUNCTION SetRegistry( nHKEYHandle, cKeyName, cEntryName, xValue )
          rVal := ( win32_RegSetValueEx( nKeyHandle, cEntryName, 0, nValueType, cName ) == ERROR_SUCCESS )
       ENDIF
 
-      win32_RegCloseKey( nKeyHandle)
+      win32_RegCloseKey( nKeyHandle )
    ENDIF
 
    RETURN rVal

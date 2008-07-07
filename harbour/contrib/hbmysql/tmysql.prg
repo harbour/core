@@ -1656,7 +1656,7 @@ METHOD TableStruct(cTable) CLASS TMySQLServer
    aStruct := {}
    nRes := sqlListF(::nSocket, cTable)
 
-   if nRes > 0
+   if !Empty( nRes )
       for i := 1 to sqlNumFi(nRes)
 
          aField := sqlFetchF(nRes)

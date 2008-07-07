@@ -243,7 +243,7 @@ HB_FUNC( SQLFICOU ) /* unsigned int mysql_field_count( MYSQL * ) */
 
 HB_FUNC( SQLLISTF ) /* MYSQL_RES *mysql_list_fields(MYSQL *, char *); */
 {
-   hb_retnl( ( long ) mysql_list_fields( ( MYSQL * ) HB_PARPTR( 1 ), hb_parc( 2 ), NULL ) );
+   hb_retptr( mysql_list_fields( ( MYSQL * ) HB_PARPTR( 1 ), hb_parc( 2 ), NULL ) );
 }
 
 HB_FUNC( SQLGETERR ) /* char *mysql_error( MYSQL * ); */

@@ -650,7 +650,7 @@ HB_FUNC( HPDF_PAGE_CREATEDESTINATION )
    hb_retptr( ( void * ) HPDF_Page_CreateDestination( (HPDF_Page) hb_parptr( 1 ) ) );
 }
 //----------------------------------------------------------------------//
-// HPdf_Page_CreateAnnot( hPage, aRect[nLeft,nTop,nRight,nBottom], cText, cEncoder ) -> hStatus
+// HPdf_Page_CreateAnnot( hPage, aRect[nLeft,nTop,nRight,nBottom], cText, cEncoder ) -> nHandle
 //
 HB_FUNC( HPDF_PAGE_CREATETEXTANNOT )
 {
@@ -661,10 +661,10 @@ HB_FUNC( HPDF_PAGE_CREATETEXTANNOT )
    rc.right  = (HPDF_REAL) hb_parnd( 2, 3 );
    rc.bottom = (HPDF_REAL) hb_parnd( 2, 4 );
 
-   hb_retnl( (long) HPDF_Page_CreateTextAnnot( (HPDF_Page) hb_parptr( 1 ), rc, hb_parc( 3 ), (HPDF_Encoder) hb_parptr( 4 ) ) );
+   hb_retptr( HPDF_Page_CreateTextAnnot( (HPDF_Page) hb_parptr( 1 ), rc, hb_parc( 3 ), (HPDF_Encoder) hb_parptr( 4 ) ) );
 }
 //----------------------------------------------------------------------//
-// HPdf_Page_CreateLinkAnnot( hPage, aRect, hDestn ) -> hStatus
+// HPdf_Page_CreateLinkAnnot( hPage, aRect, hDestn ) -> nHandle
 //
 HB_FUNC( HPDF_PAGE_CREATELINKANNOT )
 {
@@ -675,10 +675,10 @@ HB_FUNC( HPDF_PAGE_CREATELINKANNOT )
    rc.right  = (HPDF_REAL) hb_parnd( 2, 3 );
    rc.bottom = (HPDF_REAL) hb_parnd( 2, 4 );
 
-   hb_retnl( (long) HPDF_Page_CreateLinkAnnot( (HPDF_Page) hb_parptr( 1 ), rc, (HPDF_Destination) hb_parptr( 3 ) ) );
+   hb_retptr( HPDF_Page_CreateLinkAnnot( (HPDF_Page) hb_parptr( 1 ), rc, (HPDF_Destination) hb_parptr( 3 ) ) );
 }
 //----------------------------------------------------------------------//
-// HPdf_Page_CreateURILinkAnnot( hPage, aRect, cURI ) -> hStatus
+// HPdf_Page_CreateURILinkAnnot( hPage, aRect, cURI ) -> nHandle
 //
 HB_FUNC( HPDF_PAGE_CREATEURILINKANNOT )
 {
@@ -689,7 +689,7 @@ HB_FUNC( HPDF_PAGE_CREATEURILINKANNOT )
    rc.right  = (HPDF_REAL) hb_parnd( 2, 3 );
    rc.bottom = (HPDF_REAL) hb_parnd( 2, 4 );
 
-   hb_retnl( (long) HPDF_Page_CreateURILinkAnnot( (HPDF_Page) hb_parptr( 1 ), rc, hb_parc( 3 ) ) );
+   hb_retptr( HPDF_Page_CreateURILinkAnnot( (HPDF_Page) hb_parptr( 1 ), rc, hb_parc( 3 ) ) );
 }
 //----------------------------------------------------------------------//
 // HPdf_Page_TextWidth( hPage, cText ) -> nTextWidth

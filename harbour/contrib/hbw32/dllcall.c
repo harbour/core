@@ -497,7 +497,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
          {
             case HB_IT_NIL:
                Parm[ iCnt ].nWidth = sizeof( void * );
-               Parm[ iCnt ].dwArg = ( DWORD ) NULL;
+               Parm[ iCnt ].dwArg = 0;
                break;
 
             case HB_IT_POINTER:

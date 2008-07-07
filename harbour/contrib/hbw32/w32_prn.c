@@ -449,7 +449,7 @@ HB_FUNC( WIN32_SETDOCUMENTPROPERTIES )
                if( ISNUM( 8 ) && hb_parnl( 8 ) )        // 22/02/2007 don't change if 0
                   pDevMode->dmPrintQuality = ( short ) hb_parnl( 8 );
 
-               Result = ( BOOL ) ResetDC( hDC, pDevMode );
+               Result = ( ResetDC( hDC, pDevMode ) != NULL );
 
                hb_xfree( pDevMode );
             }

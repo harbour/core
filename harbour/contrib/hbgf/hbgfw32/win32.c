@@ -81,21 +81,21 @@ HB_FUNC( WINREGISTERCLASS )
 
 HB_FUNC( WINCREATESTDWINDOW )
 {
-   hb_retnl( ( LONG ) CreateWindow( TEXT( hb_parc( 4 ) ),   /* cClassName */
-                        TEXT (hb_parc( 5 )),                /* cCaption */
-                        hb_parnl( 2 ),                      /* style */
-                        CW_USEDEFAULT, CW_USEDEFAULT,
-                        CW_USEDEFAULT, CW_USEDEFAULT,
-                        ( HWND ) hb_parnl( 7 ),  /* hWndParent */
-                        ( HMENU ) hb_parnl( 8 ), /* hMenu or nId */
-                        GetModuleHandle( NULL ), NULL) );
+   hb_retptr( CreateWindow( TEXT( hb_parc( 4 ) ),    /* cClassName */
+                            TEXT( hb_parc( 5 ) ),    /* cCaption */
+                            hb_parnl( 2 ),           /* style */
+                            CW_USEDEFAULT, CW_USEDEFAULT,
+                            CW_USEDEFAULT, CW_USEDEFAULT,
+                            ( HWND ) hb_parptr( 7 ),  /* hWndParent */
+                            ( HMENU ) hb_parptr( 8 ), /* hMenu or nId */
+                            GetModuleHandle( NULL ), NULL) );
 }
 
 HB_FUNC( HB_FORMSHOWMODAL )
 {
    MSG  msg;
 
-   ShowWindow( ( HWND ) hb_parnl( 1 ), 1 );
+   ShowWindow( ( HWND ) hb_parptr( 1 ), 1 );
    while( GetMessage( &msg, NULL, 0, 0 ) )
    {
        TranslateMessage( &msg );
@@ -118,7 +118,7 @@ HB_FUNC( NOR )
 
 HB_FUNC( WINSETWINDOWTEXT )
 {
-   hb_retl( SetWindowText( (HWND) hb_parnl( 1 ), (LPCTSTR) hb_parc( 2 ) ) );
+   hb_retl( SetWindowText( (HWND) hb_parptr( 1 ), (LPCTSTR) hb_parc( 2 ) ) );
 }
 
 
@@ -126,7 +126,7 @@ HB_FUNC( WINGETTEXT )
 {
    BYTE bBuffer[ 255 ];
 
-   GetWindowText( ( HWND ) hb_parnl( 1 ), (char*) bBuffer, sizeof( bBuffer ) - 1 );
+   GetWindowText( ( HWND ) hb_parptr( 1 ), (char*) bBuffer, sizeof( bBuffer ) - 1 );
    hb_retc( (char*) bBuffer );
 }
 
@@ -141,7 +141,7 @@ HB_FUNC( MSGINFO )
 
 HB_FUNC( WINCREATEMENU )
 {
-   hb_retnl( ( LONG ) CreateMenu() );
+   hb_retptr( CreateMenu() );
 }
 
 
@@ -153,7 +153,7 @@ HB_FUNC( WINADDMENUITEM )
 {
 
    MENUITEMINFO mii;
-   HMENU hSubMenu = ( !ISNIL(4) )? (HMENU) hb_parnl( 4 ):0;
+   HMENU hSubMenu = ( !ISNIL(4) )? (HMENU) hb_parptr( 4 ):0;
 
    mii.cbSize = sizeof( MENUITEMINFO );
    mii.fMask = MIIM_TYPE | MIIM_STATE | MIIM_ID | ((hSubMenu)? MIIM_SUBMENU:0);
@@ -169,7 +169,7 @@ HB_FUNC( WINADDMENUITEM )
    else
       mii.fType = MFT_SEPARATOR;
 
-   hb_retl( InsertMenuItem( ( HMENU ) hb_parnl( 1 ),
+   hb_retl( InsertMenuItem( ( HMENU ) hb_parptr( 1 ),
      hb_parni( 3 ), 1, &mii
    ) );
 }
@@ -184,22 +184,23 @@ HB_FUNC( WINCREATESUBMENU )
    mii.fMask = MIIM_SUBMENU;
    mii.hSubMenu = hSubMenu;
 
-   SetMenuItemInfo( ( HMENU ) hb_parnl( 1 ),
+   SetMenuItemInfo( ( HMENU ) hb_parptr( 1 ),
      hb_parni( 2 ),
      0,
      &mii );
-   hb_retnl( (LONG) hSubMenu );
+
+   hb_retptr( hSubMenu );
 }
 
 HB_FUNC( SETMENU )
 {
-   hb_retl( SetMenu( ( HWND ) hb_parnl( 1 ), ( HMENU ) hb_parnl( 2 ) ) );
+   hb_retl( SetMenu( ( HWND ) hb_parptr( 1 ), ( HMENU ) hb_parptr( 2 ) ) );
 }
 
 HB_FUNC( SENDMESSAGE )
 {
    hb_retnl( (LONG) SendMessage(
-                       (HWND) hb_parnl( 1 ),    // handle of destination window
+                       (HWND) hb_parptr( 1 ),   // handle of destination window
                        (UINT) hb_parni( 2 ),    // message to send
                        (WPARAM) hb_parnl( 3 ),  // first message parameter
                        (LPARAM) hb_parnl( 4 )   // second message parameter
@@ -218,7 +219,7 @@ LRESULT CALLBACK WndProc (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
    {
       hb_vmPushSymbol( hb_dynsymSymbol( pDynSym ) );
       hb_vmPushNil();
-      hb_vmPushLong( ( LONG ) hWnd );
+      hb_vmPushPointer( hWnd );
       hb_vmPushLong( message );
       hb_vmPushLong( wParam );
       hb_vmPushLong( lParam );
@@ -248,7 +249,7 @@ HB_FUNC( NHIWORD )
 
 HB_FUNC( WINGETWIDTH )
 {
-   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   HWND hWnd = ( HWND ) hb_parptr( 1 );
    RECT rct;
 
    GetWindowRect( hWnd, &rct );
@@ -258,7 +259,7 @@ HB_FUNC( WINGETWIDTH )
 
 HB_FUNC( WINSETWIDTH )
 {
-   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   HWND hWnd = ( HWND ) hb_parptr( 1 );
    RECT rct;
    POINT pt;
    WORD wHeight;
@@ -280,7 +281,7 @@ HB_FUNC( WINSETWIDTH )
 
 HB_FUNC( WINGETHEIGHT )
 {
-   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   HWND hWnd = ( HWND ) hb_parptr( 1 );
    RECT rct;
 
    GetWindowRect( hWnd, &rct );
@@ -290,7 +291,7 @@ HB_FUNC( WINGETHEIGHT )
 
 HB_FUNC( WINSETHEIGHT )
 {
-   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   HWND hWnd = ( HWND ) hb_parptr( 1 );
    RECT rct;
    POINT pt;
    WORD wWidth;
@@ -312,7 +313,7 @@ HB_FUNC( WINSETHEIGHT )
 
 HB_FUNC( WINGETTOP )
 {
-   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   HWND hWnd = ( HWND ) hb_parptr( 1 );
    RECT rct;
    POINT pt;
 
@@ -332,7 +333,7 @@ HB_FUNC( WINGETTOP )
 
 HB_FUNC( WINSETTOP )
 {
-   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   HWND hWnd = ( HWND ) hb_parptr( 1 );
    RECT rct;
    POINT pt;
    WORD wHeight, wWidth;
@@ -355,7 +356,7 @@ HB_FUNC( WINSETTOP )
 
 HB_FUNC( WINGETLEFT )
 {
-   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   HWND hWnd = ( HWND ) hb_parptr( 1 );
    RECT rct;
    POINT pt;
 
@@ -375,7 +376,7 @@ HB_FUNC( WINGETLEFT )
 
 HB_FUNC( WINSETLEFT )
 {
-   HWND hWnd = ( HWND ) hb_parnl( 1 );
+   HWND hWnd = ( HWND ) hb_parptr( 1 );
    RECT rct;
    POINT pt;
    WORD wHeight, wWidth;
@@ -398,5 +399,5 @@ HB_FUNC( WINSETLEFT )
 
 HB_FUNC( SHOWWINDOW )
 {
-   hb_retl( ShowWindow( ( HWND ) hb_parnl( 1 ), hb_parl( 2 ) ) );
+   hb_retl( ShowWindow( ( HWND ) hb_parptr( 1 ), hb_parl( 2 ) ) );
 }

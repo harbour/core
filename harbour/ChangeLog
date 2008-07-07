@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-07 17:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/vm/extrap.c
+     ! Warning fixed.
+
+   * contrib/hbmysql/mysql.c
+   * contrib/hbmysql/tmysql.prg
+     ! sqlListF() return value changed to pointer from numeric.
+       Now compatible with Win64.
+       INCOMPATIBLE.
+
+   * contrib/hbw32/w32_prn.c
+     ! Warning suppressed (pointer to BOOL conversion).
+
+   * contrib/hbw32/dllcall.c
+   * contrib/hbhpdf/harupdf.c
+   * contrib/hbfimage/fi_winfu.c
+   * contrib/hbgf/hbgfw32/win32.c
+     ! Fixed several pointer (handle) passings to be 64bit compatible.
+
+   * contrib/hbw32/w32_reg.prg
+     * Minor formatting.
+
+   ; TOFIX: There are still some PellesC 64bit warnings to be fixed.
+     (posted separately)
+
 2008-07-07 12:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/gencc.c
     ! fixed bud with wrong C code generated for doubly negated integer

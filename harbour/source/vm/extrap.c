@@ -86,9 +86,6 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
    {
       char szTime[ 9 ];
       int iYear, iMonth, iDay;
-
-      char errmsg[ 4096 ];
-      int errmsglen = sizeof( errmsg ) - 1;
       
       hb_dateToday( &iYear, &iMonth, &iDay );
       hb_dateTimeStr( szTime );
@@ -108,6 +105,9 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
       }
 #else
       {
+         char errmsg[ 4096 ];
+         int errmsglen = sizeof( errmsg ) - 1;
+
          char              buf[ 32 ];
          PEXCEPTION_RECORD pExceptionRecord = pExceptionInfo->ExceptionRecord;
          PCONTEXT          pCtx = pExceptionInfo->ContextRecord;

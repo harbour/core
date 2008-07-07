@@ -102,7 +102,7 @@ HB_FUNC( FI_FITOBITMAP )
       /* return value */
       if ( bitmap != NULL )
       {
-         hb_retnl( (LONG) bitmap );
+         hb_retptr( bitmap );
       }
 
    }
@@ -135,7 +135,7 @@ HB_FUNC( FI_BITMAPTOFI )
       HBITMAP bitmap;
 
       /* Retrieve parameters */
-      bitmap = (HBITMAP) hb_parnl( 1 );
+      bitmap = (HBITMAP) hb_parptr( 1 );
 
       /* run function */
       dib = NULL;
