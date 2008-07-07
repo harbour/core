@@ -14,7 +14,7 @@ LIB_EXT = .lib
 CC = pocc.exe
 CC_IN = -c
 CC_OUT = -Fo
-CPPFLAGS = -I. -I$(TOP) -I$(TOP)$(ROOT)
+CPPFLAGS = -I.
 
 CPPFLAGS += -Ze -Zx -Go
 
@@ -59,7 +59,7 @@ endif
 LDFLAGS = $(LINKPATHS) kernel32.lib user32.lib \
           winspool.lib ole32.lib oleaut32.lib uuid.lib \
           comctl32.lib mapi32.lib advapi32.lib \
-          gdi32.lib mpr.lib wsock32.lib ws2.lib ws2_32.lib \
+          gdi32.lib mpr.lib wsock32.lib ws2_32.lib \
           comdlg32.lib
 
 # ws2 ws2_32

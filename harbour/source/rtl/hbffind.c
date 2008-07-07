@@ -596,8 +596,15 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
                ffind->size = 0;
             else
+#if defined(__XCC__) || __POCC__ >= 500
+               /* NOTE: PellesC 5.00.1 will go into an infinite loop if we don't 
+                        split this into two operations. [vszakats] */
+               ffind->size = ( HB_FOFFSET ) info->pFindFileData.nFileSizeLow;
+               ffind->size += ( HB_FOFFSET ) info->pFindFileData.nFileSizeHigh << 32;
+#else
                ffind->size = ( HB_FOFFSET ) info->pFindFileData.nFileSizeLow +
                      ( ( HB_FOFFSET ) info->pFindFileData.nFileSizeHigh << 32 );
+#endif
 
             raw_attr = ( USHORT ) info->pFindFileData.dwFileAttributes;
 
