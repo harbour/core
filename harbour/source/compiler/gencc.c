@@ -198,12 +198,17 @@ static int hb_gencc_checkNumAhead( LONG lValue, PFUNCTION pFunc, ULONG lPCodePos
             fprintf( cargo->yyc, "\tif( hb_xvmDivideByInt( %ld ) ) break;\n", lValue );
             return 1;
 
+         case HB_P_MINUS:
+            if( lValue > 0 )
+            {
+               fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%ld ) ) break;\n", lValue );
+               return 1;
+            }
+            lValue = -lValue;
+            /* no break */
+
          case HB_P_PLUS:
             fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %ld ) ) break;\n", lValue );
-            return 1;
-
-         case HB_P_MINUS:
-            fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%ld ) ) break;\n", lValue );
             return 1;
       }
    }
