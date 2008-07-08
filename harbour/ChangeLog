@@ -8,6 +8,36 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 07:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbodbc/odbc.c
+     ! Fixed all ODBC handles to be pointers. This way it's Win64 
+       compatible. This is an INCOMPATIBLE change. Since normal 
+       app code is using ODBC error values to check for error 
+       conditions, the type of handles shouldn't be a concern for 
+       most app code.
+       I'd ask everyone using hbodbc to do some tests.
+     + TOFIXes added where deprecated (and potentially dangerous) 
+       APIs are used.
+
+   * contrib/hbw32/dllcall.c
+     ! Using hb_parnint()/hb_retnint() instead of hb_parnl()/hb_retnl() 
+       to make Harbour level .dll functions compatible with Win64, and 
+       at the same time stay compatible with XBase++.
+
+   * contrib/rddado/adordd.prg
+     ! Fixed a few places where _SET_EXACT dependent string 
+       comparisons were used. One of them could cause
+       problems updating field values.
+
+   * contrib/hbodbc/todbc.prg
+     * Formatting.
+
+   * contrib/hbodbc/tests/odbcdemo.prg
+   * contrib/hbodbc/tests/odbccall.prg
+   * contrib/hbodbc/tests/testodbc.prg
+     ! Made them work out of the box.
+     ; TOFIX: All of them gives "unrecognized database format" for harbour.mdb.
+
 2008-07-08 02:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/runner.c
     + added support for passing non string parameters to .HRB INIT/<main>

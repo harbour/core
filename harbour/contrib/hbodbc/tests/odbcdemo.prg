@@ -13,15 +13,16 @@ FUNCTION Main()
    LOCAL aOrders
    LOCAL nOp
    LOCAL dsFunctions
+   LOCAL cConStr
+   LOCAL cDir
 
-//   LOCAL cExePath := substr( cargv(), 1, rat( "\", cargv() ) - 1 )
-   LOCAL cConStr  := ;
-           "DBQ=" + "harbour.mdb;" + ;
-           "Driver={Microsoft Access Driver (*.mdb)}"
+   hb_FNameSplit( hb_ArgV( 0 ), @cDir )
+
+   cConStr := "DBQ=" + hb_FNameMerge( cDir, "harbour.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
    dsFunctions := TODBC():New( cConStr )
 
-   set COLOR TO "W+/B"
+   SET COLOR TO "W+/B"
    CLS
 
    WHILE .T.

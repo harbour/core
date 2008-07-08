@@ -7,12 +7,15 @@
 
 FUNCTION Main()
 
-   LOCAL cExePath  := substr( hb_argv(0), 1, rat( "\", hb_argv(0) ) - 1 )
-   LOCAL cConStr   := ;
-      "DBQ=" + cExePath + "\harbour.mdb;" + ;
-      "Driver={Microsoft Access Driver (*.mdb)}"
+   LOCAL cConStr
+   LOCAL cDir
+   LOCAL dsFunctions
 
-   LOCAL dsFunctions := TODBC():New( "xx" ) // cConStr )
+   hb_FNameSplit( hb_ArgV( 0 ), @cDir )
+
+   cConStr := "DBQ=" + hb_FNameMerge( cDir, "harbour.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
+
+   dsFunctions := TODBC():New( cConStr )
 
    WITH dsFunctions DO
 

@@ -135,7 +135,7 @@ static function ADO_CREATE( nWA, aOpenInfo )
    local oError
 
    do case
-      case Upper( Right( cDataBase, 4 ) ) == ".MDB"
+      case Lower( Right( cDataBase, 4 ) ) == ".mdb"
            if ! File( cDataBase )
               oCatalog:Create( "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + cDataBase )
            endif
@@ -455,7 +455,7 @@ static function ADO_PUTVALUE( nWA, nField, xValue )
    local aWAData := USRRDD_AREADATA( nWA )
    local oRecordSet := aWAData[ WA_RECORDSET ]
 
-   if ! aWAData[ WA_EOF ] .and. oRecordSet:Fields( nField - 1 ):Value != xValue
+   if ! aWAData[ WA_EOF ] .and. !( oRecordSet:Fields( nField - 1 ):Value == xValue )
       oRecordSet:Fields( nField - 1 ):Value := xValue
       TRY
          oRecordSet:Update()
@@ -612,7 +612,7 @@ static function ADO_CLEARREL( nWA )
 
    if nKeys > 0
       cKeyName := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nKeys - 1 ):Name
-      if Upper( cKeyName ) != "PRIMARYKEY"
+      if !( Upper( cKeyName ) == "PRIMARYKEY" )
          aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Delete( cKeyName )
       endif
    endif
