@@ -2210,10 +2210,7 @@ static ERRCODE adsPutValue( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
       SELF_FORCEREL( ( AREAP ) pArea );
 
    if( !pArea->fPositioned )
-   {
-      /* TODO: it should return SUCCESS for Clipper compatibility */
-      return FAILURE;
-   }
+      return SUCCESS;
 
    if( hb_ads_bTestRecLocks )
    {

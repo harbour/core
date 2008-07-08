@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 10:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/ads1.c
+     ! Fixed to behave Clipper-like when trying to write 
+       when on EOF position. This way a TODO is cleared in the 
+       source.
+
 2008-07-08 08:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbodbc/odbc.c
      ! Fixed compilation error with Pelles C 5.00.1.
