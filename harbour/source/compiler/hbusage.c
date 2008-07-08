@@ -158,8 +158,8 @@ void hb_compPrintModes( HB_COMP_DECL )
    {
       hb_compOutStd( HB_COMP_PARAM, szOptions[ iLine ] );
       if( iLine < ( int ) ( sizeof( flags ) / sizeof( int ) ) &&
-          ( flags[ iLine ] < 0 ? ! HB_COMP_ISSUPPORTED( ~flags[ iLine ] ) :
-                                   HB_COMP_ISSUPPORTED( flags[ iLine ] ) ) )
+          ( flags[ iLine ] < 0 ? HB_COMP_ISSUPPORTED( ~flags[ iLine ] ) == 0 :
+                                 HB_COMP_ISSUPPORTED( flags[ iLine ] ) != 0 ) )
          hb_compOutStd( HB_COMP_PARAM, " (default)" );
    }
 }

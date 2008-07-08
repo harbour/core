@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 17:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/hbusage.c
+    * cleaned possible warning in some C compilers
+
 2008-07-08 16:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbw32/Makefile
    * contrib/hbw32/common.mak
