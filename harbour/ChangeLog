@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 19:03 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
+  * contrib/hbmzip/hbmzip.c
+    + implemented file date/time get/set for OS2
+    ; TODO: DOS implementation is still missing
+    ; Implementation is not tested!
+
 2008-07-08 17:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/hbusage.c
     * cleaned possible warning in some C compilers

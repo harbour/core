@@ -641,6 +641,13 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
             }
          }
 #endif
+
+         zfi.tmz_date.tm_sec = fs3.ftimeLastWrite.twosec * 2;
+         zfi.tmz_date.tm_min = fs3.ftimeLastWrite.minutes;
+         zfi.tmz_date.tm_hour = fs3.ftimeLastWrite.hours;
+         zfi.tmz_date.tm_mday = fs3.fdateLastWrite.day;
+         zfi.tmz_date.tm_mon = fs3.fdateLastWrite.month;
+         zfi.tmz_date.tm_year = fs3.fdateLastWrite.year + 1980;
       }
       else
          fError = TRUE;
@@ -891,7 +898,20 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
       ulrc = DosQueryPathInfo( szName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
       if( ulrc == NO_ERROR )
       {
+         FDATE   fdate;
+         FTIME   ftime;
+
+         fdate.year = ufi.tmu_date.tm_year - 1980;
+         fdate.month = ufi.tmu_date.tm_mo;
+         fdate.day = ufi.tmu_date.tm_mday;
+         ftime.hours = tmu_date.tm_hour;
+         ftime.minutes = ufi.tmu_date.tm_min;
+         ftime.twosecs = ufi.tmu_date.tm_sec / 2;
+
          fs3.attrFile = ulAttr;
+
+         fs3.fdateCreation = fs3.fdateLastAccess = fs3.fdateLastWrite = fdate;
+         fs3.ftimeCreation = fs3.ftimeLastAccess = fs3.ftimeLastWrite = ftime;
          ulrc = DosSetPathInfo( szName, FIL_STANDARD,
                                 &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
       }
