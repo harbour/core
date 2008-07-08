@@ -258,8 +258,8 @@ typedef struct _CDXPAGE
    ULONG    Right;
 
    BYTE     PageType;
-   SHORT    iKeys;
-   SHORT    iCurKey;
+   int      iKeys;
+   int      iCurKey;
 
    BOOL     fChanged;
    BYTE     bUsed;
@@ -296,7 +296,7 @@ typedef CDXPAGE * LPCDXPAGE;
 typedef struct _CDXSTACK
 {
    LPCDXPAGE Page;
-   SHORT     iKey;
+   int       iKey;
 } CDXSTACK;
 typedef CDXSTACK * LPCDXSTACK;
 

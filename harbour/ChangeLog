@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 14:13 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbrddcdx.h
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    ! fixed casting for indexes with key length greater then 196 bytes
+      created on tables with record number smaller then 256. In such
+      case if keys have equal value then after decoding they may need
+      more then 32767 bytes and casting to SHORT gives negative indexes.
+      Thanks to Saulius Zrelskis for example.
+    % changed some SHORT to INT to reduce runtime overhead
+
 2008-07-08 10:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/ads1.c
      ! Fixed to behave Clipper-like when trying to write 
