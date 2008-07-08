@@ -497,11 +497,13 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
          {
             case HB_IT_NIL:
                Parm[ iCnt ].nWidth = sizeof( void * );
+               /* TOFIX: Store NULL pointer in pointer variable. */
                Parm[ iCnt ].dwArg = 0;
                break;
 
             case HB_IT_POINTER:
                Parm[ iCnt ].nWidth = sizeof( void * );
+               /* TOFIX: Store pointer in pointer variable. */
                Parm[ iCnt ].dwArg = ( DWORD ) hb_itemGetPtr( pParam );
 
                if( hb_parinfo( i ) & HB_IT_BYREF )
@@ -820,7 +822,7 @@ HB_FUNC( DLLCALL )
 {
    HMODULE hDLL = ISCHAR( 1 ) ? LoadLibraryA( hb_parc( 1 ) ) : ( HMODULE ) hb_parnint( 1 );
 
-   if( hDLL && ( DWORD ) hDLL >= 32 )
+   if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
    {
       DllExec( hb_parni( 2 ), 0, hb_getprocaddress( ( HMODULE ) hDLL, 3 ), NULL, hb_pcount(), 4 );
       

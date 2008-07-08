@@ -406,13 +406,17 @@ HB_FUNC( SQLCOLATTRIBUTE )
 /* HB_SQLEXTENDEDFETCH( hStmt, nOrientation, nOffset, @nRows, @nRowStatus ) */
 HB_FUNC( SQLEXTENDE )
 {
-   SQLULEN      uiRowCountPtr = hb_parni( 4 );
-   SQLUSMALLINT siRowStatus   = hb_parni( 5 );
-   WORD         wResult       = SQLExtendedFetch( ( HSTMT ) hb_parptr( 1 ),
-                                                  ( USHORT ) hb_parnl( 2 ),
-                                                  ( USHORT ) hb_parnl( 3 ),
-                                                  &uiRowCountPtr,
-                                                  &siRowStatus );
+#if defined(__POCC__) || defined(__XCC__)
+   SQLROWSETSIZE uiRowCountPtr = hb_parni( 4 );
+#else
+   SQLULEN       uiRowCountPtr = hb_parni( 4 );
+#endif
+   SQLUSMALLINT  siRowStatus   = hb_parni( 5 );
+   WORD          wResult       = SQLExtendedFetch( ( HSTMT ) hb_parptr( 1 ),
+                                                   ( USHORT ) hb_parnl( 2 ),
+                                                   ( USHORT ) hb_parnl( 3 ),
+                                                   &uiRowCountPtr,
+                                                   &siRowStatus );
 
    if( wResult == SQL_SUCCESS || wResult == SQL_SUCCESS_WITH_INFO )
    {
@@ -502,16 +506,16 @@ HB_FUNC( SQLSETCONNECTOPTION ) /* hDbc, nOption, uOption */
 {
    /* TOFIX: SQLSetConnectOption() deprecated. */
    hb_retnl( ( LONG ) SQLSetConnectOption( ( HDBC ) hb_parptr( 1 ),
-             ( UWORD ) hb_parnl( 2 ),
-             ( UDWORD ) ISCHAR( 3 ) ? ( LONG ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
+                                           ( UWORD ) hb_parnl( 2 ),
+                                           ( UDWORD ) ISCHAR( 3 ) ? ( LONG ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
 }
 
 HB_FUNC( SQLSETSTMTOPTION ) /* hStmt, nOption, uOption )  --> nRetCode */
 {
    /* TOFIX: SQLSetStmtOption() deprecated. */
    hb_retnl( ( LONG ) SQLSetStmtOption( ( SQLHSTMT ) hb_parptr( 1 ),
-             ( UWORD ) hb_parnl( 2 ),
-             ( UDWORD ) ISCHAR( 3 ) ? ( LONG ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
+                                        ( UWORD ) hb_parnl( 2 ),
+                                        ( UDWORD ) ISCHAR( 3 ) ? ( LONG ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
 }
 
 HB_FUNC( SQLGETCONNECTOPTION ) /* hDbc, nOption, @cOption */

@@ -8,6 +8,21 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 08:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbodbc/odbc.c
+     ! Fixed compilation error with Pelles C 5.00.1.
+     * Some formatting.
+
+   * contrib/hbw32/dllcall.c
+     + Two TOFIXes added for Win64 support.
+     ! One Warning fixed under Win64.
+
+   * contrib/hbfimage/make_gcc.sh
+   * contrib/hbfimage/make_b32.bat
+   * contrib/hbfimage/make_vc.bat
+     ! Corrected to look in Dist subdir instead of 'source', 
+       so that simple .dll ditribution is enough to compile.
+
 2008-07-08 07:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbodbc/odbc.c
      ! Fixed all ODBC handles to be pointers. This way it's Win64 

@@ -9,7 +9,7 @@ then
     echo "---------------------------------------------------------------"
     echo "IMPORTANT: You will need FreeImage package installed and this"
     echo "           envvar to be set to successfully build this library:"
-    echo "           export HB_INC_FREEIMAGE=C:/FreeImage/source"
+    echo "           export HB_INC_FREEIMAGE=C:/FreeImage/Dist"
     echo "           or"
     echo "           export HB_INC_FREEIMAGE=/usr/include/freeimage"
     echo "---------------------------------------------------------------"

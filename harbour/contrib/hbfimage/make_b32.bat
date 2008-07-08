@@ -9,7 +9,7 @@ echo ---------------------------------------------------------------
 echo IMPORTANT: You'll need Freeimage headers and binary from here:
 echo            http://freeimage.sourceforge.net/download.html
 echo            and this envvar to be set to successfully build this library:
-echo            set HB_INC_FREEIMAGE=C:\FreeImage\source
+echo            set HB_INC_FREEIMAGE=C:\FreeImage\Dist
 echo            or
 echo            set HB_DIR_FREEIMAGE=C:\FreeImage
 echo            if you want to generate .lib for the .dll.
@@ -18,7 +18,7 @@ goto POST_EXIT
 
 :DIR_OK
 
-if "%HB_INC_FREEIMAGE%" == "" set HB_INC_FREEIMAGE=%HB_DIR_FREEIMAGE%\source
+if "%HB_INC_FREEIMAGE%" == "" set HB_INC_FREEIMAGE=%HB_DIR_FREEIMAGE%\Dist
 set CFLAGS=-I"%HB_INC_FREEIMAGE%"
 set _HB_DLL_NAME=FreeImage
 set _HB_DLL_DIR=%HB_DIR_FREEIMAGE%\Dist
