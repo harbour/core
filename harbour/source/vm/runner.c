@@ -99,6 +99,7 @@ static const BYTE szHead[] = { 192,'H','R','B' };
 #define SYM_DEFERRED 3              /* lately bound function             */
 #define SYM_NOT_FOUND 0xFFFFFFFFUL  /* Symbol not found.                 */
 
+
 static int hb_hrbReadHead( char * szBody, ULONG ulBodySize, ULONG * pulBodyOffset )
 {
    char * pVersion;
@@ -211,27 +212,33 @@ static void hb_hrbInitStatic( PHRB_BODY pHrbBody )
    }
 }
 
-static void hb_hrbInit( PHRB_BODY pHrbBody, int argc, char * argv[] )
+static void hb_hrbInit( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
 {
    if( pHrbBody->fInit )
    {
-      ULONG ul;
-      int i;
-
-      pHrbBody->fInit = FALSE;
-      pHrbBody->fExit = TRUE;
-
-      for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )    /* Check INIT functions */
+      if( hb_vmRequestReenter() )
       {
-         if( ( pHrbBody->pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_INIT )
-         {
-            hb_vmPushSymbol( pHrbBody->pSymRead + ul );
-            hb_vmPushNil();
-            for( i = 0; i < argc; i++ ) /* Push other cmdline params*/
-               hb_vmPushString( argv[i], strlen( argv[i] ) );
+         ULONG ul;
+         int i;
 
-            hb_vmDo( argc );            /* Run init function        */
+         pHrbBody->fInit = FALSE;
+         pHrbBody->fExit = TRUE;
+
+         for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )    /* Check INIT functions */
+         {
+            if( ( pHrbBody->pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_INIT )
+            {
+               hb_vmPushSymbol( pHrbBody->pSymRead + ul );
+               hb_vmPushNil();
+               for( i = 0; i < iPCount; i++ )
+                  hb_vmPush( pParams[ i ] );
+               hb_vmDo( iPCount );
+               if( hb_vmRequestQuery() != 0 )
+                  break;
+            }
          }
+
+         hb_vmRequestRestore();
       }
    }
 }
@@ -240,19 +247,26 @@ static void hb_hrbExit( PHRB_BODY pHrbBody )
 {
    if( pHrbBody->fExit )
    {
-      ULONG ul;
-
-      pHrbBody->fExit = FALSE;
-      pHrbBody->fInit = TRUE;
-
-      for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )
+      if( hb_vmRequestReenter() )
       {
-         if( ( pHrbBody->pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_EXIT )
+         ULONG ul;
+
+         pHrbBody->fExit = FALSE;
+         pHrbBody->fInit = TRUE;
+
+         for( ul = 0; ul < pHrbBody->ulSymbols; ul++ )
          {
-            hb_vmPushSymbol( pHrbBody->pSymRead + ul );
-            hb_vmPushNil();
-            hb_vmDo( 0 );
+            if( ( pHrbBody->pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_EXIT )
+            {
+               hb_vmPushSymbol( pHrbBody->pSymRead + ul );
+               hb_vmPushNil();
+               hb_vmDo( 0 );
+               if( hb_vmRequestQuery() != 0 )
+                  break;
+            }
          }
+
+         hb_vmRequestRestore();
       }
    }
 }
@@ -532,15 +546,15 @@ static PHRB_BODY hb_hrbLoadFromFile( char* szHrb )
    return pHrbBody;
 }
 
-static void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
+static void hb_hrbDo( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
 {
    PHB_ITEM pRetVal = NULL;
    int i;
 
-   hb_hrbInit( pHrbBody, argc, argv );
+   hb_hrbInit( pHrbBody, iPCount, pParams );
 
    /* May not have a startup symbol, if first symbol was an INIT Symbol (was executed already).*/
-   if( pHrbBody->lSymStart >= 0 )
+   if( pHrbBody->lSymStart >= 0 && hb_vmRequestQuery() == 0 )
    {
        hb_vmPushSymbol( &pHrbBody->pSymRead[ pHrbBody->lSymStart ] );
        hb_vmPushNil();
@@ -564,6 +578,32 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int argc, char * argv[] )
    }
 }
 
+/* HRB module destructor */
+static HB_GARBAGE_FUNC( hb_hrb_Destructor )
+{
+   PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) Cargo;
+
+   if( *pHrbPtr )
+   {
+      hb_hrbUnLoad( *pHrbPtr );
+      *pHrbPtr = NULL;
+   }
+}
+
+static PHRB_BODY hb_hrbParam( int iParam )
+{
+   PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_parptrGC( hb_hrb_Destructor, iParam );
+
+   return pHrbPtr ? *pHrbPtr : NULL;
+}
+
+static void hb_hrbReturn( PHRB_BODY pHrbBody )
+{
+   PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_gcAlloc( sizeof( PHRB_BODY ),
+                                                     hb_hrb_Destructor );
+   *pHrbPtr = pHrbBody;
+   hb_retptrGC( pHrbPtr );
+}
 
 /*
    __HRBRUN( <cFile> [, xParam1 [, xParamN ] ] ) -> return value.
@@ -590,20 +630,20 @@ HB_FUNC( __HRBRUN )
 
       if( pHrbBody )
       {
-         int argc = hb_pcount(), i;
-         char **argv = NULL;
+         int iPCount = hb_pcount() - 1, i;
+         PHB_ITEM * pParams = NULL;
 
-         if( argc > 1 )
+         if( iPCount > 0 )
          {
-            argv = (char**) hb_xgrab( sizeof(char*) * (argc-1) );
-            for( i=0; i<argc-1; i++ )
-               argv[i] = hb_parcx( i+2 );
+            pParams = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * iPCount );
+            for( i = 0; i < iPCount; i++ )
+               pParams[ i ] = hb_param( i + 2, HB_IT_ANY );
          }
 
-         hb_hrbDo( pHrbBody, argc-1, argv );
+         hb_hrbDo( pHrbBody, iPCount, pParams );
 
-         if( argv )
-            hb_xfree( argv );
+         if( pParams )
+            hb_xfree( pParams );
 
          hb_hrbUnLoad( pHrbBody );
          hb_retl( TRUE );
@@ -631,24 +671,24 @@ HB_FUNC( __HRBLOAD )
 
       if( pHrbBody )
       {
-         int argc = hb_pcount();
-         char ** argv = NULL;
+         int iPCount = hb_pcount() - 1;
+         PHB_ITEM * pParams = NULL;
          int i;
 
-         if( argc > 1 )
+         if( iPCount > 0 )
          {
-            argv = ( char ** ) hb_xgrab( sizeof( char * ) * ( argc - 1 ) );
+            pParams = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * iPCount );
 
-            for( i = 0; i < argc - 1; i++ )
-               argv[i] = hb_parcx( i + 2 );
+            for( i = 0; i < iPCount; i++ )
+               pParams[ i ] = hb_param( i + 2, HB_IT_ANY );
          }
 
-         hb_hrbInit( pHrbBody, argc - 1, argv );
+         hb_hrbInit( pHrbBody, iPCount, pParams );
 
-         if( argv )
-            hb_xfree( argv );
+         if( pParams )
+            hb_xfree( pParams );
       }
-      hb_retptr( ( void *) pHrbBody );
+      hb_hrbReturn( pHrbBody );
    }
    else
       hb_errRT_BASE( EG_ARG, 9998, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -656,26 +696,26 @@ HB_FUNC( __HRBLOAD )
 
 HB_FUNC( __HRBDO )
 {
-   PHRB_BODY pHrbBody = ( PHRB_BODY ) hb_parptr( 1 );
+   PHRB_BODY pHrbBody = hb_hrbParam( 1 );
 
    if( pHrbBody )
    {
-      int argc = hb_pcount();
-      char **argv = NULL;
+      int iPCount = hb_pcount() - 1;
+      PHB_ITEM * pParams = NULL;
       int i;
 
-      if( argc > 1 )
+      if( iPCount > 0 )
       {
-         argv = ( char ** ) hb_xgrab( sizeof( char * ) * ( argc - 1 ) );
+         pParams = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * iPCount );
 
-         for( i = 0; i < argc - 1; i++ )
-            argv[i] = hb_parcx( i + 2 );
+         for( i = 0; i < iPCount; i++ )
+            pParams[ i ] = hb_param( i + 2, HB_IT_ANY );
       }
 
-      hb_hrbDo( pHrbBody, argc - 1, argv );
+      hb_hrbDo( pHrbBody, iPCount, pParams );
 
-      if( argv )
-         hb_xfree( argv );
+      if( pParams )
+         hb_xfree( pParams );
    }
    else
       hb_errRT_BASE( EG_ARG, 6104, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -683,17 +723,25 @@ HB_FUNC( __HRBDO )
 
 HB_FUNC( __HRBUNLOAD )
 {
-   PHRB_BODY pHrbBody = ( PHRB_BODY ) hb_parptr( 1 );
+   PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_parptrGC( hb_hrb_Destructor, 1 );
 
-   if( pHrbBody )
-      hb_hrbUnLoad( pHrbBody );
+   if( pHrbPtr )
+   {
+      PHRB_BODY pHrbBody = *pHrbPtr;
+
+      if( pHrbBody )
+      {
+         *pHrbPtr = NULL;
+         hb_hrbUnLoad( pHrbBody );
+      }
+   }
    else
       hb_errRT_BASE( EG_ARG, 6105, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( __HRBGETFU )
 {
-   PHRB_BODY pHrbBody = ( PHRB_BODY ) hb_parptr( 1 );
+   PHRB_BODY pHrbBody = hb_hrbParam( 1 );
 
    if( pHrbBody && hb_parclen( 2 ) > 0 )
    {
@@ -721,16 +769,16 @@ HB_FUNC( __HRBDOFU )
 
    if( pSymItem )
    {
-      int argc = hb_pcount();
+      int iPCount = hb_pcount() - 1;
       int i;
 
       hb_vmPushSymbol( hb_itemGetSymbol( pSymItem ) );
       hb_vmPushNil();
 
-      for( i = 2; i <= argc; i++ )  /* Push other  params  */
-         hb_vmPush( hb_stackItemFromBase( i ) );
+      for( i = 0; i < iPCount; i++ )
+         hb_vmPush( hb_stackItemFromBase( i + 2 ) );
 
-      hb_vmDo( argc - 1 );          /* Run function        */
+      hb_vmDo( iPCount );
    }
    else
       hb_errRT_BASE( EG_ARG, 6107, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
