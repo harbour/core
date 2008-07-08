@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 20:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+     ! CURL_EASY_GETINFO() will now return the proper type 
+       (with an empty value) if the given info type is not 
+       supported in the libcurl version used at build-time.
+       (This makes the test program not crash after latest 
+       hbcurl changes.)
+
 2008-07-08 19:03 UTC+0300 Mindaugas Kavaliauskas (dbtopas/at/dbtopas.lt)
   * contrib/hbmzip/hbmzip.c
     + implemented file date/time get/set for OS2

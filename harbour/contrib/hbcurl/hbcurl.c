@@ -1417,22 +1417,24 @@ HB_FUNC( CURL_EASY_GETINFO )
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_STARTTRANSFER_TIME, &ret_double );
          type = HB_CURL_INFO_TYPE_DOUBLE;
          break;
-#if LIBCURL_VERSION_NUM >= 0x070907
       case HB_CURLINFO_REDIRECT_TIME:
+#if LIBCURL_VERSION_NUM >= 0x070907
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_REDIRECT_TIME, &ret_double );
+#endif
          type = HB_CURL_INFO_TYPE_DOUBLE;
          break;
       case HB_CURLINFO_REDIRECT_COUNT:
+#if LIBCURL_VERSION_NUM >= 0x070907
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_REDIRECT_COUNT, &ret_long );
+#endif
          type = HB_CURL_INFO_TYPE_LONG;
          break;
-#endif
-#if LIBCURL_VERSION_NUM >= 0x071202
       case HB_CURLINFO_REDIRECT_URL:
+#if LIBCURL_VERSION_NUM >= 0x071202
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_REDIRECT_URL, &ret_string );
+#endif
          type = HB_CURL_INFO_TYPE_STR;
          break;
-#endif
       case HB_CURLINFO_SIZE_UPLOAD:
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_SIZE_UPLOAD, &ret_double );
          type = HB_CURL_INFO_TYPE_DOUBLE;
@@ -1461,12 +1463,12 @@ HB_FUNC( CURL_EASY_GETINFO )
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_SSL_VERIFYRESULT, &ret_long );
          type = HB_CURL_INFO_TYPE_LONG;
          break;
-#if LIBCURL_VERSION_NUM >= 0x071203
       case HB_CURLINFO_SSL_ENGINES:
+#if LIBCURL_VERSION_NUM >= 0x071203
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_SSL_ENGINES, &ret_slist );
+#endif
          type = HB_CURL_INFO_TYPE_SLIST;
          break;
-#endif
       case HB_CURLINFO_CONTENT_LENGTH_DOWNLOAD:
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &ret_double );
          type = HB_CURL_INFO_TYPE_DOUBLE;
@@ -1479,52 +1481,54 @@ HB_FUNC( CURL_EASY_GETINFO )
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_CONTENT_TYPE, &ret_string );
          type = HB_CURL_INFO_TYPE_STR;
          break;
-#if LIBCURL_VERSION_NUM >= 0x070A03
       case HB_CURLINFO_PRIVATE:
+#if LIBCURL_VERSION_NUM >= 0x070A03
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_PRIVATE, &ret_ptr );
+#endif
          type = HB_CURL_INFO_TYPE_PTR;
          break;
-#endif
-#if LIBCURL_VERSION_NUM >= 0x070A08
       case HB_CURLINFO_HTTPAUTH_AVAIL:
+#if LIBCURL_VERSION_NUM >= 0x070A08
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_HTTPAUTH_AVAIL, &ret_long );
+#endif
          type = HB_CURL_INFO_TYPE_LONG;
          break;
       case HB_CURLINFO_PROXYAUTH_AVAIL:
+#if LIBCURL_VERSION_NUM >= 0x070A08
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_PROXYAUTH_AVAIL, &ret_long );
+#endif
          type = HB_CURL_INFO_TYPE_LONG;
          break;
-#endif
-#if LIBCURL_VERSION_NUM >= 0x070C02
       case HB_CURLINFO_OS_ERRNO:
+#if LIBCURL_VERSION_NUM >= 0x070C02
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_OS_ERRNO, &ret_long );
+#endif
          type = HB_CURL_INFO_TYPE_LONG;
          break;
-#endif
-#if LIBCURL_VERSION_NUM >= 0x070C03
       case HB_CURLINFO_NUM_CONNECTS:
+#if LIBCURL_VERSION_NUM >= 0x070C03
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_NUM_CONNECTS, &ret_long );
+#endif
          type = HB_CURL_INFO_TYPE_LONG;
          break;
-#endif
-#if LIBCURL_VERSION_NUM >= 0x070E01
       case HB_CURLINFO_COOKIELIST:
+#if LIBCURL_VERSION_NUM >= 0x070E01
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_COOKIELIST, &ret_slist );
+#endif
          type = HB_CURL_INFO_TYPE_SLIST;
          break;
-#endif
-#if LIBCURL_VERSION_NUM >= 0x070F02
       case HB_CURLINFO_LASTSOCKET:
+#if LIBCURL_VERSION_NUM >= 0x070F02
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_LASTSOCKET, &ret_long );
+#endif
          type = HB_CURL_INFO_TYPE_LONG;
          break;
-#endif
-#if LIBCURL_VERSION_NUM >= 0x070F04
       case HB_CURLINFO_FTP_ENTRY_PATH:
+#if LIBCURL_VERSION_NUM >= 0x070F04
          res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_FTP_ENTRY_PATH, &ret_string );
+#endif
          type = HB_CURL_INFO_TYPE_STR;
          break;
-#endif
       }
 
       switch( type )
