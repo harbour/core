@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 16:47 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbw32/Makefile
+   * contrib/hbw32/common.mak
+   + contrib/hbw32/w32_osc.c
+   + contrib/hbw32/w32_os.prg
+     + Ported some Windows specific version detection and 
+       networking checker/setup code. From Peter Rees/xhb:
+       OS_ISWINNT()
+       OS_ISWINNT351()
+       OS_ISWINNT4()
+       OS_ISWIN2000_OR_LATER()
+       OS_ISWIN2000()
+       OS_ISWINXP()
+       OS_ISWIN2003()
+       OS_ISWINVISTA()
+       OS_ISWIN9X()
+       OS_ISWIN95()
+       OS_ISWIN98()
+       OS_ISWINME()
+       OS_ISWTSCLIENT()
+       OS_VERSIONINFO()
+       OS_NETREGOK()
+       OS_NETVREDIROK()
+
 2008-07-08 14:13 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbrddcdx.h
   * harbour/source/rdd/dbfcdx/dbfcdx1.c
