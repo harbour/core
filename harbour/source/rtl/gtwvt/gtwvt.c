@@ -2113,13 +2113,13 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                                         CF_OEMTEXT : CF_TEXT,
                                         &szClipboardData, &ulLen ) )
             {
-               pInfo->pResult = hb_itemPutCLPtr( pInfo->pResult,
+               pInfo->pResult = hb_itemPutCPtr( pInfo->pResult,
                                                  szClipboardData,
                                                  ulLen );
             }
             else
             {
-               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
+               pInfo->pResult = hb_itemPutC( pInfo->pResult, "" );
             }
          }
          break;

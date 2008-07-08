@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-08 16:45 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * contrib/gtwvg/gtwvg.c
+  * source/rtl/gtwvt/gtwvt.c
+    ! Fixed GPF in HB_GTI_CLIPBOARDDATA.
+
 2008-07-08 20:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      ! CURL_EASY_GETINFO() will now return the proper type 
