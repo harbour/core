@@ -103,8 +103,14 @@ if [ -z "${HB_PPGEN_PATH}" ]; then
         fi
     fi
 fi
-if [ -x "${HB_PPGEN_PATH}" ]; then
+if [ -d "${HB_PPGEN_PATH}" ]; then
+   if [ -x "${HB_PPGEN_PATH}/hbpp" ]; then
+      HB_PPGEN_PATH="${HB_PPGEN_PATH}/hbpp"
+   fi
+fi
+if [ -x "${HB_PPGEN_PATH}" ] && [ -f "${HB_PPGEN_PATH}" ]; then
     ln -s ${HB_PPGEN_PATH} ${HB_BIN_COMPILE}/hbpp.exe
+    HB_PPGEN_PATH="${HB_BIN_COMPILE}"
 else
     echo "You must have a working 'hbpp' executable for your platform on your PATH."
     exit 1
