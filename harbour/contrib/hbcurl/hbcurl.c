@@ -111,11 +111,6 @@ typedef struct _HB_CURL
 /* ---------------------------------------------------------------------------- */
 /* Global initialization/deinitialization */
 
-#ifdef _HB_CURL_REDEF_MEM
-
-/* NOTE/TOFIX: _HB_CURL_REDEF_MEM doesn't work at this moment, as hb_xgrab() is
-               getting pointers not allocated by our allocators. [vszakats] */
-
 void * hb_curl_xgrab( size_t size )
 {
    return hb_xgrab( size );
@@ -146,20 +141,14 @@ void * hb_curl_calloc( size_t nelem, size_t elsize )
    return ptr;
 }
 
-#endif
-
 HB_FUNC( CURL_GLOBAL_INIT )
 {
-#ifdef _HB_CURL_REDEF_MEM
    hb_retnl( ( long ) curl_global_init_mem( ISNUM( 1 ) ? hb_parnl( 1 ) : CURL_GLOBAL_ALL,
                                             hb_curl_xgrab,
                                             hb_curl_xfree,
                                             hb_curl_xrealloc,
                                             hb_curl_strdup,
                                             hb_curl_calloc ) );
-#else
-   hb_retnl( ( long ) curl_global_init( ISNUM( 1 ) ? hb_parnl( 1 ) : CURL_GLOBAL_ALL ) );
-#endif
 }
 
 HB_FUNC( CURL_GLOBAL_CLEANUP )
