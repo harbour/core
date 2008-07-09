@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-09 18:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/filesys.c
+    ! casting
+
 2008-07-09 18:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbwince.h
   * harbour/source/common/hbwince.c
