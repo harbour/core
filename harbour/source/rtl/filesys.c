@@ -299,7 +299,7 @@ static HANDLE DosToWinHandle( FHANDLE fHandle )
       return ( HANDLE ) fHandle;
 }
 
-static void convert_open_flags( BOOL fCreate, USHORT uiAttr, USHORT uiFlags,
+static void convert_open_flags( BOOL fCreate, ULONG ulAttr, USHORT uiFlags,
                                 DWORD *dwMode, DWORD *dwShare,
                                 DWORD *dwCreat, DWORD *dwAttr )
 {
@@ -361,18 +361,18 @@ static void convert_open_flags( BOOL fCreate, USHORT uiAttr, USHORT uiFlags,
    }
 
    /* file attributes flags */
-   if( uiAttr == FC_NORMAL )
+   if( ulAttr == FC_NORMAL )
    {
       *dwAttr = FILE_ATTRIBUTE_NORMAL;
    }
    else
    {
       *dwAttr = FILE_ATTRIBUTE_ARCHIVE;
-      if( uiAttr & FC_READONLY )
+      if( ulAttr & FC_READONLY )
          *dwAttr |= FILE_ATTRIBUTE_READONLY;
-      if( uiAttr & FC_HIDDEN )
+      if( ulAttr & FC_HIDDEN )
          *dwAttr |= FILE_ATTRIBUTE_HIDDEN;
-      if( uiAttr & FC_SYSTEM )
+      if( ulAttr & FC_SYSTEM )
          *dwAttr |= FILE_ATTRIBUTE_SYSTEM;
    }
 }
@@ -688,12 +688,12 @@ HB_EXPORT FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
    return hFileHandle;
 }
 
-HB_EXPORT FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
+HB_EXPORT FHANDLE hb_fsCreate( BYTE * pFilename, ULONG ulAttr )
 {
    FHANDLE hFileHandle;
    BOOL fFree;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%p, %hu)", pFilename, uiAttr));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreate(%p, %lu)", pFilename, ulAttr));
 
    pFilename = hb_fsNameConv( pFilename, &fFree );
 
@@ -702,7 +702,7 @@ HB_EXPORT FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
       DWORD dwMode, dwShare, dwCreat, dwAttr;
       HANDLE hFile;
 
-      convert_open_flags( TRUE, uiAttr, FO_EXCLUSIVE, &dwMode, &dwShare, &dwCreat, &dwAttr );
+      convert_open_flags( TRUE, ulAttr, FO_EXCLUSIVE, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
       hFile = ( HANDLE ) CreateFileA( ( char * ) pFilename, dwMode, dwShare,
                                       NULL, dwCreat, dwAttr, NULL );
@@ -715,7 +715,7 @@ HB_EXPORT FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
    {
       int flags, share, attr;
       unsigned mode;
-      convert_open_flags( TRUE, uiAttr, FO_EXCLUSIVE, &flags, &mode, &share, &attr );
+      convert_open_flags( TRUE, ulAttr, FO_EXCLUSIVE, &flags, &mode, &share, &attr );
 
 #if defined(HB_FS_DOSCREAT)
       hFileHandle = _creat( ( char * ) pFilename, attr );
@@ -745,12 +745,12 @@ HB_EXPORT FHANDLE hb_fsCreate( BYTE * pFilename, USHORT uiAttr )
          [vszakats]
  */
 
-HB_EXPORT FHANDLE hb_fsCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags )
+HB_EXPORT FHANDLE hb_fsCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags )
 {
    FHANDLE hFileHandle;
    BOOL fFree;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreateEx(%p, %hu, %hu)", pFilename, uiAttr, uiFlags));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsCreateEx(%p, %lu, %hu)", pFilename, ulAttr, uiFlags));
 
    pFilename = hb_fsNameConv( pFilename, &fFree );
 
@@ -759,7 +759,7 @@ HB_EXPORT FHANDLE hb_fsCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags
       DWORD dwMode, dwShare, dwCreat, dwAttr;
       HANDLE hFile;
 
-      convert_open_flags( TRUE, uiAttr, uiFlags, &dwMode, &dwShare, &dwCreat, &dwAttr );
+      convert_open_flags( TRUE, ulAttr, uiFlags, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
       hFile = ( HANDLE ) CreateFileA( ( char * ) pFilename, dwMode, dwShare,
                                       NULL, dwCreat, dwAttr, NULL );
@@ -772,7 +772,7 @@ HB_EXPORT FHANDLE hb_fsCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags
    {
       int flags, share, attr;
       unsigned mode;
-      convert_open_flags( TRUE, uiAttr, uiFlags, &flags, &mode, &share, &attr );
+      convert_open_flags( TRUE, ulAttr, uiFlags, &flags, &mode, &share, &attr );
 
 #if defined(HB_FS_SOPEN)
       hFileHandle = open( ( char * ) pFilename, flags, mode );
@@ -1058,7 +1058,6 @@ HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
 #if defined( HB_OS_WIN_32 )
    {
       DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
-      LPTSTR lpFile = HB_TCHAR_CONVTO( pszFileName );
 
       if( ulAttr & HB_FA_READONLY )
          dwFlags |= FILE_ATTRIBUTE_READONLY;
@@ -1068,9 +1067,8 @@ HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
          dwFlags |= FILE_ATTRIBUTE_SYSTEM;
       if( ulAttr & HB_FA_NORMAL )
          dwFlags |= FILE_ATTRIBUTE_NORMAL;
-      fResult = SetFileAttributes( lpFile, dwFlags );
+      fResult = SetFileAttributesA( ( char * ) pszFileName, dwFlags );
       hb_fsSetIOError( fResult, 0 );
-      HB_TCHAR_FREE( lpFile );
    }
 #elif defined( HB_OS_OS2 )
    {

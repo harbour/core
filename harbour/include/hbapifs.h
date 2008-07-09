@@ -88,24 +88,35 @@ HB_EXTERN_BEGIN
 /* File attributes flags */
 #define HB_FA_ALL             0x00000000
 
-#define HB_FA_READONLY        0x00000001
-#define HB_FA_HIDDEN          0x00000002
-#define HB_FA_SYSTEM          0x00000004
-#define HB_FA_LABEL           0x00000008
-#define HB_FA_DIRECTORY       0x00000010
-#define HB_FA_ARCHIVE         0x00000020
-#define HB_FA_DEVICE          0x00000040
-#define HB_FA_NORMAL          0x00000080
+#define HB_FA_READONLY        0x00000001     /* R */
+#define HB_FA_HIDDEN          0x00000002     /* H */
+#define HB_FA_SYSTEM          0x00000004     /* S */
+#define HB_FA_LABEL           0x00000008     /* V */
+#define HB_FA_DIRECTORY       0x00000010     /* D | S_ISDIR() */
+#define HB_FA_ARCHIVE         0x00000020     /* A | S_ISREG() */
+#define HB_FA_DEVICE          0x00000040     /* I | S_ISBLK() */
+#define HB_FA_NORMAL          0x00000080     /*   */
 
-#define HB_FA_TEMPORARY       0x00000100
-#define HB_FA_SPARSE          0x00000200
-#define HB_FA_REPARSE         0x00000400
-#define HB_FA_COMPRESSED      0x00000800
-#define HB_FA_OFFLINE         0x00001000
-#define HB_FA_NOTINDEXED      0x00002000
-#define HB_FA_ENCRYPTED       0x00004000
-#define HB_FA_VOLCOMP         0x00008000     /* volume supports compression. */
+#define HB_FA_TEMPORARY       0x00000100     /* T | S_ISFIFO()??? */
+#define HB_FA_SPARSE          0x00000200     /* P | S_ISSOCK()??? */
+#define HB_FA_REPARSE         0x00000400     /* L | S_ISLNK() */
+#define HB_FA_COMPRESSED      0x00000800     /* C | S_ISCHR()??? */
+#define HB_FA_OFFLINE         0x00001000     /* O */
+#define HB_FA_NOTINDEXED      0x00002000     /* X */
+#define HB_FA_ENCRYPTED       0x00004000     /* E */
+#define HB_FA_VOLCOMP         0x00008000     /* M volume supports compression. */
 
+/* these definitions should be cleared,
+ * now they only help to clean lower level code
+ */
+#define HB_FA_FIFO            HB_FA_TEMPORARY   /* S_ISFIFO() */
+#define HB_FA_FILE            HB_FA_ARCHIVE     /* S_ISREG() */
+#define HB_FA_BLKDEVICE       HB_FA_DEVICE      /* S_ISBLK() */
+#define HB_FA_CHRDEVICE       HB_FA_COMPRESSED  /* S_ISCHR() */
+#define HB_FA_SOCKET          HB_FA_SPARSE      /* S_ISSOCK() */
+#define HB_FA_LINK            HB_FA_REPARSE     /* S_ISLNK() */
+
+/* POSIX file permission */
 #define HB_FA_SUID            0x08000000     /* set user ID on execution */
 #define HB_FA_SGID            0x04000000     /* set group ID on execution */
 #define HB_FA_SVTX            0x02000000     /* sticky bit */
@@ -140,9 +151,9 @@ extern HB_EXPORT BOOL     hb_fsChDir      ( BYTE * pszDirName ); /* change worki
 extern HB_EXPORT USHORT   hb_fsChDrv      ( BYTE nDrive ); /* change working drive */
 extern HB_EXPORT void     hb_fsClose      ( FHANDLE hFileHandle ); /* close a file */
 extern HB_EXPORT void     hb_fsCommit     ( FHANDLE hFileHandle ); /* commit updates of a file */
-extern HB_EXPORT FHANDLE  hb_fsCreate     ( BYTE * pszFileName, USHORT uiAttr ); /* create a file */
-extern HB_EXPORT FHANDLE  hb_fsCreateEx   ( BYTE * pszFilename, USHORT uiAttr, USHORT uiFlags ); /* create a file, with specific open mode */
-extern HB_EXPORT FHANDLE  hb_fsCreateTemp ( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttr, BYTE * pszName ); /* create a temporary file from components */
+extern HB_EXPORT FHANDLE  hb_fsCreate     ( BYTE * pszFileName, ULONG ulAttr ); /* create a file */
+extern HB_EXPORT FHANDLE  hb_fsCreateEx   ( BYTE * pszFilename, ULONG ulAttr, USHORT uiFlags ); /* create a file, with specific open mode */
+extern HB_EXPORT FHANDLE  hb_fsCreateTemp ( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName ); /* create a temporary file from components */
 extern HB_EXPORT BYTE *   hb_fsCurDir     ( USHORT uiDrive ); /* retrieve a static pointer containing current directory for specified drive */
 extern HB_EXPORT USHORT   hb_fsCurDirBuff ( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen ); /* copy current directory for given drive into a buffer */
 extern HB_EXPORT BYTE     hb_fsCurDrv     ( void ); /* retrieve current drive number */
@@ -234,8 +245,8 @@ extern HB_EXPORT void    hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList );
        
 extern HB_EXPORT BOOL    hb_spFile( BYTE * pFilename, BYTE * pRetPath );
 extern HB_EXPORT FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags );
-extern HB_EXPORT FHANDLE hb_spCreate( BYTE * pFilename, USHORT uiAttr );
-extern HB_EXPORT FHANDLE hb_spCreateEx( BYTE * pFilename, USHORT uiAttr, USHORT uiFlags );
+extern HB_EXPORT FHANDLE hb_spCreate( BYTE * pFilename, ULONG ulAttr );
+extern HB_EXPORT FHANDLE hb_spCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags );
 
 /* File Find API structure */
 typedef struct
@@ -244,13 +255,13 @@ typedef struct
    LONG        lDate;
    char        szDate[ 9 ]; /* in YYYYMMDD format */
    char        szTime[ 9 ]; /* in HH:MM:SS format */
-   USHORT      attr;
+   ULONG       attr;
    HB_FOFFSET  size;
 
    /* Private */
 
    const char * pszFileMask;
-   USHORT attrmask;
+   ULONG  attrmask;
    BOOL   bFirst;
 
    void * info; /* Pointer to the platform specific find info */
@@ -258,15 +269,15 @@ typedef struct
 } HB_FFIND, * PHB_FFIND;
 
 /* File Find API functions */
-extern HB_EXPORT PHB_FFIND hb_fsFindFirst( const char * pszFileName, USHORT uiAttr );
+extern HB_EXPORT PHB_FFIND hb_fsFindFirst( const char * pszFileName, ULONG ulAttrMask );
 extern HB_EXPORT BOOL      hb_fsFindNext( PHB_FFIND ffind );
 extern HB_EXPORT void      hb_fsFindClose( PHB_FFIND ffind );
 
 /* Misc helper functions */
-extern USHORT    hb_fsAttrFromRaw( ULONG raw_attr );
-extern ULONG     hb_fsAttrToRaw( USHORT uiAttr );
-extern USHORT    hb_fsAttrEncode( const char * szAttr );
-extern char *    hb_fsAttrDecode( USHORT uiAttr, char * szAttr );
+extern ULONG     hb_fsAttrFromRaw( ULONG raw_attr );
+extern ULONG     hb_fsAttrToRaw( ULONG  ulAttr );
+extern ULONG     hb_fsAttrEncode( const char * szAttr );
+extern char *    hb_fsAttrDecode( ULONG  ulAttr, char * szAttr );
 extern HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree );
 extern HB_EXPORT BYTE * hb_fileNameConv( char *str );
 extern HB_EXPORT BOOL hb_fsMaxFilesError( void );

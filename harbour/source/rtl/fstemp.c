@@ -110,7 +110,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
 /* NOTE: The buffer must be at least _POSIX_PATH_MAX chars long */
 
-HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttr, BYTE * pszName )
+HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName )
 {
    USHORT nAttemptLeft = 999;
 
@@ -118,7 +118,7 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
    {
       if( hb_fsTempName( pszName, pszDir, pszPrefix ) )
       {
-          FHANDLE fhnd = hb_fsCreateEx( pszName, uiAttr, FO_EXCLUSIVE | FO_EXCL );
+          FHANDLE fhnd = hb_fsCreateEx( pszName, ulAttr, FO_EXCLUSIVE | FO_EXCL );
 
           /* This function may fail, if the generated filename got
              used between generation and the file creation. */
@@ -166,13 +166,11 @@ static BOOL fsGetTempDirByCase( BYTE *pszName, const char *pszTempDir )
    return fOK;
 }
 
-HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, USHORT uiAttr, BYTE * pszName )
+HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName )
 {
    /* less attemps */
    int iAttemptLeft = 99, iLen;
    FHANDLE fd;
-
-   HB_SYMBOL_UNUSED( uiAttr );
 
    do
    {
@@ -241,7 +239,7 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
             pszName[ iLen++ ] = n + ( n > 9 ? 'a' - 10 : '0' );
          }
          hb_fsNameConv( pszName, NULL );
-         fd = hb_fsCreateEx( pszName, uiAttr, FO_EXCLUSIVE | FO_EXCL );
+         fd = hb_fsCreateEx( pszName, ulAttr, FO_EXCLUSIVE | FO_EXCL );
       }
 
       if( fd != (FHANDLE) FS_ERROR )
@@ -260,7 +258,7 @@ HB_FUNC( HB_FTEMPCREATE )
 
    hb_retnint( ( HB_NHANDLE ) hb_fsCreateTemp( ( BYTE * ) hb_parc( 1 ),
                ( BYTE * ) hb_parc( 2 ),
-               ( USHORT ) ( ISNUM( 3 ) ? ( USHORT ) hb_parni( 3 ) : FC_NORMAL ),
+               ( ULONG ) ( ISNUM( 3 ) ? ( ULONG ) hb_parnl( 3 ) : FC_NORMAL ),
                 szName ) );
 
    hb_storc( ( char *) szName, 4 );

@@ -432,6 +432,18 @@ BOOL WINAPI CreateDirectoryA( LPCSTR path, LPSECURITY_ATTRIBUTES attr )
    return b;
 }
 
+BOOL WINAPI SetFileAttributesA( LPCSTR filename, DWORD attr )
+{
+   LPWSTR wfilename;
+   BOOL b;
+
+   wfilename = hb_mbtowc( filename );
+   b = SetFileAttributesW( wfilename, attr );
+   hb_xfree( wfilename );
+
+   return b;
+}
+
 BOOL WINAPI CharToOemBuffA( LPCSTR src, LPSTR dst, DWORD len )
 {
    if( len )

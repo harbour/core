@@ -108,14 +108,14 @@ HB_FUNC( DIRECTORY )
    char *    szDirSpec = hb_parc( 1 );
    char *    szAttributes = hb_parc( 2 );
    BOOL      fFree = FALSE;
-   USHORT    uiMask;
+   ULONG     ulMask;
 
    PHB_ITEM  pDir = hb_itemArrayNew( 0 );
    PHB_FFIND ffind;
 
    /* Get the passed attributes and convert them to Harbour Flags */
 
-   uiMask = HB_FA_ARCHIVE
+   ulMask = HB_FA_ARCHIVE
           | HB_FA_READONLY
           | HB_FA_DEVICE
           | HB_FA_TEMPORARY
@@ -129,10 +129,10 @@ HB_FUNC( DIRECTORY )
 
    if( szAttributes && *szAttributes )
    {
-      if( ( uiMask |= hb_fsAttrEncode( szAttributes ) ) & HB_FA_LABEL )
+      if( ( ulMask |= hb_fsAttrEncode( szAttributes ) ) & HB_FA_LABEL )
       {
          /* NOTE: This is Clipper Doc compatible. (not operationally) */
-         uiMask = HB_FA_LABEL;
+         ulMask = HB_FA_LABEL;
       }
    }
 
@@ -180,7 +180,7 @@ HB_FUNC( DIRECTORY )
 
    /* Get the file list */
 
-   if( ( ffind = hb_fsFindFirst( szDirSpec, uiMask ) ) != NULL )
+   if( ( ffind = hb_fsFindFirst( szDirSpec, ulMask ) ) != NULL )
    {
       PHB_ITEM pSubarray = hb_itemNew( NULL );
 

@@ -124,6 +124,7 @@ extern char *strerror( int errnum );
    BOOL WINAPI DeleteFileA( LPCSTR path );
    BOOL WINAPI RemoveDirectoryA( LPCSTR path );
    BOOL WINAPI CreateDirectoryA( LPCSTR path, LPSECURITY_ATTRIBUTES attr );
+   BOOL WINAPI SetFileAttributesA( LPCSTR filename, DWORD attr );
    BOOL WINAPI CharToOemBuffA( LPCSTR src, LPSTR dst, DWORD len );
    BOOL WINAPI OemToCharBuffA( LPCSTR src, LPSTR dst, DWORD len );
    HANDLE WINAPI FindFirstFileA( LPCSTR path, WIN32_FIND_DATAA * data );

@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-09 18:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbwince.h
+  * harbour/source/common/hbwince.c
+    + added SetFileAttributesA() for WinCE builds
+
+  * harbour/source/rtl/filesys.c
+    * replaced UNICODE translations for SetFileAttributes()
+      with direct call to SetFileAttributesA()
+
+  * harbour/include/hbapifs.h
+  * harbour/source/rtl/spfiles.c
+  * harbour/source/rtl/fstemp.c
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/direct.c
+  * harbour/source/rtl/filesys.c
+    * changed internal representation for file attributes from USHORT
+      to ULONG
+    + added support for POSIX permission attributes in .c code
+    ; added some comments about used attribute translations which
+      should be cleand
+
 2008-07-09 13:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbmzip/hbmzip.c
     ! added missing DJGPP header files
