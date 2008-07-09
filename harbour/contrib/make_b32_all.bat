@@ -49,15 +49,15 @@ set _HB_DIRS=hbtip hbtpathy hbvpdf hbw32 hbw32ddr hbwhat32
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set _HB_DIRS=hbziparch rddado xhb
-if not "%HB_DIR_APOLLO%"    == "" set _HB_DIRS=%_HB_DIRS% hbapollo
-if not "%HB_DIR_CURL%"      == "" set _HB_DIRS=%_HB_DIRS% hbcurl
-if not "%HB_DIR_FIREBIRD%"  == "" set _HB_DIRS=%_HB_DIRS% hbfbird
-if not "%HB_DIR_FREEIMAGE%" == "" set _HB_DIRS=%_HB_DIRS% hbfimage
-if not "%HB_DIR_GD%"        == "" set _HB_DIRS=%_HB_DIRS% hbgd
-if not "%HB_DIR_LIBHARU%"   == "" set _HB_DIRS=%_HB_DIRS% hbhpdf
-if not "%HB_DIR_MYSQL%"     == "" set _HB_DIRS=%_HB_DIRS% hbmysql
-if not "%HB_DIR_PGSQL%"     == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
-if not "%HB_DIR_ADS%"       == "" set _HB_DIRS=%_HB_DIRS% rddads
+if not "%HB_INC_APOLLO%%HB_DIR_APOLLO%"       == "" set _HB_DIRS=%_HB_DIRS% hbapollo
+if not "%HB_INC_CURL%%HB_DIR_CURL%"           == "" set _HB_DIRS=%_HB_DIRS% hbcurl
+if not "%HB_INC_FIREBIRD%%HB_DIR_FIREBIRD%"   == "" set _HB_DIRS=%_HB_DIRS% hbfbird
+if not "%HB_INC_FREEIMAGE%%HB_DIR_FREEIMAGE%" == "" set _HB_DIRS=%_HB_DIRS% hbfimage
+if not "%HB_INC_GD%%HB_DIR_GD%"               == "" set _HB_DIRS=%_HB_DIRS% hbgd
+if not "%HB_INC_LIBHARU%%HB_DIR_LIBHARU%"     == "" set _HB_DIRS=%_HB_DIRS% hbhpdf
+if not "%HB_INC_MYSQL%%HB_DIR_MYSQL%"         == "" set _HB_DIRS=%_HB_DIRS% hbmysql
+if not "%HB_INC_PGSQL%%HB_DIR_PGSQL%"         == "" set _HB_DIRS=%_HB_DIRS% hbpgsql
+if not "%HB_INC_ADS%%HB_DIR_ADS%"             == "" set _HB_DIRS=%_HB_DIRS% rddads
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem *******************************************************
