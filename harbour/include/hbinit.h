@@ -60,7 +60,7 @@ HB_EXTERN_BEGIN
 extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols ); /* old module symbols initialization */
 extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSymbols, char * szModuleName, ULONG ulID, USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 
-#if defined(_MSC_VER) && !defined(_WIN64) && \
+#if defined(_MSC_VER) && \
     !defined(__LCC__) && !defined(__POCC__) && !defined(__XCC__) && \
     !defined(HB_STRICT_ANSI_C) && !defined(HB_STATIC_STARTUP) && \
     !defined(HB_PRAGMA_STARTUP) && !defined(HB_MSC_STARTUP)
@@ -133,6 +133,12 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbolsEx( PHB_SYMB pSymbols, USHORT uiSym
 #elif defined(HB_MSC_STARTUP)
 
    typedef int (* HB_$INITSYM)( void );
+
+   #if _MSC_VER >= 1010
+      #define HB_MSC_START_SEGMENT ".CRT$XIY"
+   #else
+      #define HB_MSC_START_SEGMENT "XIY"
+   #endif
 
    #define HB_INIT_SYMBOLS_BEGIN( func ) \
       static HB_SYMB symbols_table[] = {

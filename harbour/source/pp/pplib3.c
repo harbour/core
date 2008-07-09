@@ -70,12 +70,7 @@ HB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_PPLIB3, "pplib3.c", 0, 0 )
 #if defined(HB_PRAGMA_STARTUP)
    #pragma startup hb_vm_SymbolInit_PPLIB3
 #elif defined(HB_MSC_STARTUP)
-   #if _MSC_VER >= 1010
-      #pragma data_seg( ".CRT$XIY" )
-      #pragma comment( linker, "/Merge:.CRT=.data" )
-   #else
-      #pragma data_seg( "XIY" )
-   #endif
+   #pragma data_seg( HB_MSC_START_SEGMENT )
    static HB_$INITSYM hb_vm_auto_SymbolInit_PPLIB3 = hb_vm_SymbolInit_PPLIB3;
    #pragma data_seg()
 #endif

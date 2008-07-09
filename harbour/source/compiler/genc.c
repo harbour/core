@@ -387,14 +387,7 @@ static void hb_writeEndInit( HB_COMP_DECL, FILE* yyc, char * szModulname, char *
    fprintf( yyc, "#if defined(HB_PRAGMA_STARTUP)\n"
                  "   #pragma startup hb_vm_SymbolInit_%s%s\n"
                  "#elif defined(HB_MSC_STARTUP)\n"
-                 "   #if _MSC_VER >= 1010\n"
-                 /* [pt] First version of MSC I have that supports this */
-                 /* is msvc4.1 (which is msc 10.10) */
-                 "      #pragma data_seg( \".CRT$XIY\" )\n"
-                 "      #pragma comment( linker, \"/Merge:.CRT=.data\" )\n"
-                 "   #else\n"
-                 "      #pragma data_seg( \"XIY\" )\n"
-                 "   #endif\n"
+                 "   #pragma data_seg( HB_MSC_START_SEGMENT )\n"
                  "   static HB_$INITSYM hb_vm_auto_SymbolInit_%s%s = hb_vm_SymbolInit_%s%s;\n"
                  "   #pragma data_seg()\n"
                  "#endif\n\n",
@@ -420,7 +413,7 @@ static void hb_compGenCFunc( FILE * yyc, char *cDecor, char *szName, int iStrip 
          }
          i +=2;
       }
-      else   
+      else
       {
          fwrite( (void*)(cDecor+i), 1, 1, yyc );
          i++;
@@ -1929,13 +1922,13 @@ static HB_GENC_FUNC( hb_p_staticname )
 {
    ULONG ulStart = lPCodePos;
 
-   fprintf( cargo->yyc, "\tHB_P_STATICNAME, %i, %i, %i,", 
+   fprintf( cargo->yyc, "\tHB_P_STATICNAME, %i, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
             pFunc->pCode[ lPCodePos + 2 ],
             pFunc->pCode[ lPCodePos + 3 ] );
    if( cargo->bVerbose ) fprintf( cargo->yyc, "\t/* %s */", ( char * ) pFunc->pCode + lPCodePos + 4 );
    fprintf( cargo->yyc, "\n" );
-   
+
    lPCodePos += 4;
    while( pFunc->pCode[ lPCodePos ] )
    {
@@ -2054,17 +2047,17 @@ static HB_GENC_FUNC( hb_p_switch )
 
 static HB_GENC_FUNC( hb_p_pushdate )
 {
-   
+
    fprintf( cargo->yyc, "\tHB_P_PUSHDATE, %i, %i, %i, %i,",
             pFunc->pCode[ lPCodePos + 1 ],
             pFunc->pCode[ lPCodePos + 2 ],
             pFunc->pCode[ lPCodePos + 3 ],
             pFunc->pCode[ lPCodePos + 4 ] );
-   if( cargo->bVerbose ) 
+   if( cargo->bVerbose )
    {
       int year, month, day;
       char date[9];
-      
+
       hb_dateDecode( HB_PCODE_MKLONG( &pFunc->pCode[ lPCodePos + 1 ] ), &year, &month, &day );
       hb_dateStrPut( date, year, month, day );
       date[8] = '\0';

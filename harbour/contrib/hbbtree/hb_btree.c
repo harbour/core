@@ -2023,16 +2023,11 @@ HB_CALL_ON_STARTUP_BEGIN( _hb_BTree_Initialize_ )
 HB_CALL_ON_STARTUP_END( _hb_BTree_Initialize_ )
 
 #if defined(HB_PRAGMA_STARTUP)
-#  pragma startup _hb_BTree_Initialize_
+   #pragma startup _hb_BTree_Initialize_
 #elif defined(HB_MSC_STARTUP)
-#  if _MSC_VER >= 1010
-#     pragma data_seg( ".CRT$XIY" )
-#     pragma comment( linker, "/Merge:.CRT=.data" )
-#  else
-#     pragma data_seg( "XIY" )
-#  endif
+   #pragma data_seg( HB_MSC_START_SEGMENT )
    static HB_$INITSYM hb_vm_auto_hb_BTree_Initialize_ = _hb_BTree_Initialize_;
-#  pragma data_seg()
+   #pragma data_seg()
 #endif
 
 HB_EXTERN_END
