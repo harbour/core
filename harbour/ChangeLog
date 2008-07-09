@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-09 10:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+   * contrib/gtwvg/gtwvg.c
+     ! Restored previous change.
+       In Harbour, passing NULL to hb_itemPutC() is valid and 
+       will result in an empty string being stored in an optimized way.
+       hb_itemPutCLPtr() should be used instead of hb_itemPutCPtr().
+       The GPF in question used to happen when setting the clipboard, 
+       and it looks to happen inside the OS. I'm still investigating.
+
+   * contrib/hbapollo/tests/bld_b32.bat
+   * contrib/hbapollo/tests/bld_vc.bat
+     ! Fixed external .lib name.
+
 2008-07-08 16:45 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * contrib/gtwvg/gtwvg.c
   * source/rtl/gtwvt/gtwvt.c

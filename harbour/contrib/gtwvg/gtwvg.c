@@ -2472,7 +2472,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             }
             else
             {
-               pInfo->pResult = hb_itemPutC( pInfo->pResult, "" );
+               pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
             }
          }
          break;

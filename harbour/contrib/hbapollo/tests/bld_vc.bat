@@ -9,6 +9,6 @@ if "%HB_INC_INSTALL%" == "" set HB_INC_INSTALL=..\..\..\include
 
 set HB_ARCHITECTURE=w32
 set HB_COMPILER=msvc
-set HB_USER_LIBS=hbapollo.lib sde60.lib
+set HB_USER_LIBS=hbapollo.lib sde61.lib
 
 call %HB_BIN_INSTALL%\bld.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
