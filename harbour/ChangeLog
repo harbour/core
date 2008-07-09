@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-09 12:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/set.c
+    ! do not add .prn extension to printer/extra filenames if file name
+      is one of well known device name: PRN, LPT[1-3], COM[1-9]
+      This code is enabled only for OS2 builds where it's necessary
+      but maybe MS-Windows/DOS users should think about adding it to
+      their builds too because sometimes also DOS/Win does not recognize
+      correctly device name when it has extension.
+
 2008-07-09 12:05 UTC+0100 Marek Paliwoda (mpaliwoda at interia pl)
    * source/codepage/cp_tpl.c
    * source/codepage/cpbg866.c

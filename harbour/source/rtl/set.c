@@ -219,10 +219,28 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
    {
       PHB_FNAME pFilename = hb_fsFNameSplit( file_name );
 
+      if( hb_set.HB_SET_DEFEXTENSIONS && pFilename->szExtension == NULL && def_ext )
+      {
+#if defined(HB_OS_OS2)
+         if( pFilename->szName )
+         {
+            int iLen = ( int ) strlen( pFilename->szName );
+            if( ( iLen == 3 && hb_stricmp( pFilename->szName, "PRN" ) == 0 ) ||
+                ( iLen == 4 &&
+                  ( ( hb_strnicmp( pFilename->szName, "LPT", 3 ) == 0 &&
+                      pFilename->szName[3] >= '1' && pFilename->szName[3] <= '3' ) ||
+                    ( hb_strnicmp( pFilename->szName, "COM", 3 ) == 0 &&
+                      pFilename->szName[3] >= '1' && pFilename->szName[3] <= '9' ) ) ) )
+            {
+               hb_strupr( pFilename->szName );
+               def_ext = NULL;
+            }
+         }
+#endif
+         pFilename->szExtension = def_ext;
+      }
       if( pFilename->szPath == NULL && hb_set.HB_SET_DEFAULT )
          pFilename->szPath = hb_set.HB_SET_DEFAULT;
-      if( hb_set.HB_SET_DEFEXTENSIONS && pFilename->szExtension == NULL && def_ext )
-         pFilename->szExtension = def_ext;
 
       hb_fsFNameMerge( path, pFilename );
       hb_xfree( pFilename );
@@ -434,7 +452,7 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             close_text( hb_set.hb_set_althan );
-            if( hb_set.HB_SET_ALTFILE && strlen( hb_set.HB_SET_ALTFILE ) > 0 )
+            if( hb_set.HB_SET_ALTFILE && hb_set.HB_SET_ALTFILE[0] != '\0' )
                hb_set.hb_set_althan = open_handle( hb_set.HB_SET_ALTFILE, bFlag, ".txt", HB_SET_ALTFILE );
             else
                hb_set.hb_set_althan = FS_ERROR;
@@ -562,7 +580,7 @@ HB_FUNC( SET )
             /* If the print file is not already open, open it in overwrite mode. */
             hb_set.HB_SET_DEVICE = set_string( pArg2, hb_set.HB_SET_DEVICE );
             if( hb_stricmp( hb_set.HB_SET_DEVICE, "PRINTER" ) == 0 && hb_set.hb_set_printhan == FS_ERROR
-            && hb_set.HB_SET_PRINTFILE && strlen( hb_set.HB_SET_PRINTFILE ) > 0 )
+            && hb_set.HB_SET_PRINTFILE && hb_set.HB_SET_PRINTFILE[0] != '\0' )
                hb_set.hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, FALSE, NULL, HB_SET_PRINTFILE );
          }
          break;
@@ -628,7 +646,7 @@ HB_FUNC( SET )
          if( args > 1 && ! HB_IS_NIL( pArg2 ) )
          {
             close_text( hb_set.hb_set_extrahan );
-            if( hb_set.HB_SET_EXTRAFILE && strlen( hb_set.HB_SET_EXTRAFILE ) > 0 )
+            if( hb_set.HB_SET_EXTRAFILE && hb_set.HB_SET_EXTRAFILE[0] != '\0' )
                hb_set.hb_set_extrahan = open_handle( hb_set.HB_SET_EXTRAFILE, bFlag, ".prn", HB_SET_EXTRAFILE );
             else
                hb_set.hb_set_extrahan = FS_ERROR;
@@ -724,7 +742,7 @@ HB_FUNC( SET )
          {
             close_binary( hb_set.hb_set_printhan );
             hb_set.hb_set_printhan = FS_ERROR;
-            if( hb_set.HB_SET_PRINTFILE && strlen( hb_set.HB_SET_PRINTFILE ) > 0 )
+            if( hb_set.HB_SET_PRINTFILE && hb_set.HB_SET_PRINTFILE[0] != '\0' )
                hb_set.hb_set_printhan = open_handle( hb_set.HB_SET_PRINTFILE, bFlag, ".prn", HB_SET_PRINTFILE );
          }
          break;
