@@ -86,23 +86,54 @@ HB_EXTERN_BEGIN
 #define FXO_COPYNAME  0x8000   /* copy final szPath into pFilename */
 
 /* File attributes flags */
-#define HB_FA_ALL               0
-#define HB_FA_READONLY          1
-#define HB_FA_HIDDEN            2
-#define HB_FA_SYSTEM            4
-#define HB_FA_LABEL             8
-#define HB_FA_DIRECTORY         16
-#define HB_FA_ARCHIVE           32
-#define HB_FA_DEVICE            64
-#define HB_FA_NORMAL            128
-#define HB_FA_TEMPORARY         256
-#define HB_FA_SPARSE            512
-#define HB_FA_REPARSE           1024
-#define HB_FA_COMPRESSED        2048
-#define HB_FA_OFFLINE           4096
-#define HB_FA_NOTINDEXED        8192
-#define HB_FA_ENCRYPTED         16384
-#define HB_FA_VOLCOMP           32768   /* volume supports compression. */
+#define HB_FA_ALL             0x00000000
+
+#define HB_FA_READONLY        0x00000001
+#define HB_FA_HIDDEN          0x00000002
+#define HB_FA_SYSTEM          0x00000004
+#define HB_FA_LABEL           0x00000008
+#define HB_FA_DIRECTORY       0x00000010
+#define HB_FA_ARCHIVE         0x00000020
+#define HB_FA_DEVICE          0x00000040
+#define HB_FA_NORMAL          0x00000080
+
+#define HB_FA_TEMPORARY       0x00000100
+#define HB_FA_SPARSE          0x00000200
+#define HB_FA_REPARSE         0x00000400
+#define HB_FA_COMPRESSED      0x00000800
+#define HB_FA_OFFLINE         0x00001000
+#define HB_FA_NOTINDEXED      0x00002000
+#define HB_FA_ENCRYPTED       0x00004000
+#define HB_FA_VOLCOMP         0x00008000     /* volume supports compression. */
+
+#define HB_FA_SUID            0x08000000     /* set user ID on execution */
+#define HB_FA_SGID            0x04000000     /* set group ID on execution */
+#define HB_FA_SVTX            0x02000000     /* sticky bit */
+#define HB_FA_RUSR            0x01000000     /* read by owner */
+#define HB_FA_WUSR            0x00800000     /* write by owner */
+#define HB_FA_XUSR            0x00400000     /* execute/search by owner */
+#define HB_FA_RGRP            0x00200000     /* read by group */
+#define HB_FA_WGRP            0x00100000     /* write by group */
+#define HB_FA_XGRP            0x00080000     /* execute/search by group */
+#define HB_FA_ROTH            0x00040000     /* read by others */
+#define HB_FA_WOTH            0x00020000     /* write by others */
+#define HB_FA_XOTH            0x00010000     /* execute/search by others */
+
+#define HB_FA_UGVS            ( HB_FA_SUID | HB_FA_SGID | HB_FA_SVTX )
+#define HB_FA_RWXU            ( HB_FA_RUSR | HB_FA_WUSR | HB_FA_XUSR )
+#define HB_FA_RWXG            ( HB_FA_RGRP | HB_FA_WGRP | HB_FA_XGRP )
+#define HB_FA_RWXO            ( HB_FA_ROTH | HB_FA_WOTH | HB_FA_XOTH )
+
+/* macros to convert Harbour attributes to POSIX ones */
+#define HB_FA_POSIX_OTH(a)    ( ( ( a ) & 0x00070000 ) >> 16 )
+#define HB_FA_POSIX_GRP(a)    ( ( ( a ) & 0x00380000 ) >> 15 )
+#define HB_FA_POSIX_USR(a)    ( ( ( a ) & 0x01C00000 ) >> 14 )
+#define HB_FA_POSIX_SID(a)    ( ( ( a ) & 0x0E000000 ) >> 13 )
+
+#define HB_FA_POSIX_ATTR(a)   ( HB_FA_POSIX_OTH(a) | \
+                                HB_FA_POSIX_GRP(a) | \
+                                HB_FA_POSIX_USR(a) | \
+                                HB_FA_POSIX_SID(a) )
 
 
 extern HB_EXPORT BOOL     hb_fsChDir      ( BYTE * pszDirName ); /* change working directory */
@@ -139,6 +170,8 @@ extern HB_EXPORT ULONG    hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, U
 extern HB_EXPORT HB_FOFFSET hb_fsSeekLarge( FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT uiFlags ); /* reposition an open file using 64bit API */
 extern HB_EXPORT ULONG    hb_fsTell       ( FHANDLE hFileHandle ); /* retrieve the current position of a file */
 extern HB_EXPORT BOOL     hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode ); /* change the device mode of a file (text/binary) */
+extern HB_EXPORT BOOL     hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec );
+extern HB_EXPORT BOOL     hb_fsSetAttr    ( BYTE * pszFileName, ULONG ulAttr );
 extern HB_EXPORT void     hb_fsSetError   ( USHORT uiError ); /* set the file system DOS error number */
 extern HB_EXPORT void     hb_fsSetIOError ( BOOL fResult, USHORT uiOperation ); /* set the file system error number after IO operation */
 extern HB_EXPORT USHORT   hb_fsWrite      ( FHANDLE hFileHandle, const BYTE * pBuff, USHORT ulCount ); /* write to an open file from a buffer (<=64K) */

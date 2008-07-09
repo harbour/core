@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-09 11:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdate.h
+  * harbour/source/common/hbdate.c
+    + added hb_timeStampEncode()
+
+  * harbour/include/hbapifs.h
+  * harbour/source/rtl/filesys.c
+    + added hb_fsSetFileTime()
+    + added POSIX file attributes with some macros to convert Harbour
+      definitions into OS ones.
+    + added initial version of hb_fsSetAttr() - work in progress, I should
+      finish it in the evening.
+
+  * harbour/contrib/hbmzip/hbmzip.c
+    * added setting file attribute in DJGPP builds
+    ! fixed some small typos in OS2 builds reported by David
+
+  * harbour/source/vm/fm.c
+    * changed hb_xrealloc() to be ANSI-C realloc() compatible
+
 2008-07-09 10:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/make_b32_all.bat
    * contrib/make_vc_all.bat

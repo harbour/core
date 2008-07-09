@@ -327,6 +327,28 @@ HB_EXPORT void hb_dateTimeStr( char * pszTime )
 #endif
 }
 
+HB_EXPORT LONG hb_timeStampEncode( int iHour, int iMinutes, int iSeconds, int iMSec )
+{
+   LONG lMillisec;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampEncode(%d, %d, %d, %d)", iHour, iMinutes, iSeconds, iMSec));
+
+   if( iHour >= 0 && iHour < 24 &&
+       iMinutes >= 0 && iMinutes < 60 &&
+       iSeconds >= 0 && iSeconds < 60 &&
+       iMSec >= 0 && iMSec < 1000 )
+   {
+      lMillisec = ( ( LONG ) ( iHour * 60 + iMinutes ) * 60 + iSeconds ) *
+                  1000 + iMSec;
+   }
+   else
+   {
+      lMillisec = 0;
+   }
+
+   return lMillisec;
+}
+
 HB_EXPORT void hb_timeStampDecode( LONG lMillisec, int * piHour, int * piMinutes,
                                    int * piSeconds, int * piMSec )
 {

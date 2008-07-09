@@ -107,7 +107,7 @@
 #endif
 
 #if defined(HB_FM_STATISTICS) && !defined(HB_TR_LEVEL)
-   #define HB_TR_LEVEL HB_TR_ERROR
+#  define HB_TR_LEVEL HB_TR_ERROR
 #endif
 
 
@@ -325,13 +325,28 @@ HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
 {
    HB_TRACE_FM(HB_TR_DEBUG, ("hb_xrealloc(%p, %lu)", pMem, ulSize));
 
+#if 0
+   /* disabled to make hb_xrealloc() ANSI-C realloc() compatible */
    if( ! pMem )
       hb_errInternal( HB_EI_XREALLOCNULL, NULL, NULL, NULL );
 
    if( ulSize == 0 )
       hb_errInternal( HB_EI_XREALLOCNULLSIZE, NULL, NULL, NULL );
+#endif
 
 #ifdef HB_FM_STATISTICS
+   if( pMem == NULL )
+   {
+      if( ulSize == 0 )
+         hb_errInternal( HB_EI_XREALLOCNULLSIZE, NULL, NULL, NULL );
+      return hb_xgrab( ulSize );
+   }
+   else if( ulSize == 0 )
+   {
+      hb_xfree( pMem );
+      return NULL;
+   }
+   else
    {
       PHB_MEMINFO pMemBlock;
       ULONG ulMemSize;
@@ -387,7 +402,22 @@ HB_EXPORT void * hb_xrealloc( void * pMem, ULONG ulSize )       /* reallocates m
    }
 #else
 
-   pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( ulSize ) );
+   if( pMem == NULL )
+   {
+      if( ulSize == 0 )
+         hb_errInternal( HB_EI_XREALLOCNULLSIZE, NULL, NULL, NULL );
+      pMem = malloc( HB_ALLOC_SIZE( ulSize ) );
+   }
+   else if( ulSize == 0 )
+   {
+      free( HB_FM_PTR( pMem ) );
+      return NULL;
+   }
+   else
+   {
+      pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( ulSize ) );
+   }
+
    if( !pMem )
       hb_errInternal( HB_EI_XREALLOC, NULL, NULL, NULL );
 

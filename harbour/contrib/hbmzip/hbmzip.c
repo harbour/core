@@ -642,7 +642,7 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
          }
 #endif
 
-         zfi.tmz_date.tm_sec = fs3.ftimeLastWrite.twosec * 2;
+         zfi.tmz_date.tm_sec = fs3.ftimeLastWrite.twosecs * 2;
          zfi.tmz_date.tm_min = fs3.ftimeLastWrite.minutes;
          zfi.tmz_date.tm_hour = fs3.ftimeLastWrite.hours;
          zfi.tmz_date.tm_mday = fs3.fdateLastWrite.day;
@@ -846,14 +846,19 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
    {
       SetFileAttributesA( szName, ufi.external_fa & 0xFF );
    }
-#elif defined( HB_OS_UNIX )
+#elif defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    {
       struct utimbuf   utim;
       struct tm        st;
 
-      chmod( szName, ( ufi.external_fa & 0x00070000 ) >> 16 | 
-                     ( ufi.external_fa & 0x00380000 ) >> 15 | 
-                     ( ufi.external_fa & 0x01C00000 ) >> 13 );
+#  if defined( __DJGPP__ )
+      _chmod( szName, 1, ufi.external_fa & 0xFF );
+#  else
+      chmod( szName, ( ufi.external_fa & 0x00070000 ) >> 16 |
+                     ( ufi.external_fa & 0x00380000 ) >> 15 |
+                     ( ufi.external_fa & 0x01C00000 ) >> 14 );
+#  endif
+      memset( &st, 0, sizeof( st ) );
 
       st.tm_sec = ufi.tmu_date.tm_sec;
       st.tm_min = ufi.tmu_date.tm_min;
@@ -869,7 +874,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
    }
 #elif defined( HB_OS_DOS )
 
-#  if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+#  if defined(__RSX32__) || defined(__GNUC__)
    {
       _chmod( szName, 1, ufi.external_fa & 0xFF );
    }
@@ -902,9 +907,9 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
          FTIME   ftime;
 
          fdate.year = ufi.tmu_date.tm_year - 1980;
-         fdate.month = ufi.tmu_date.tm_mo;
+         fdate.month = ufi.tmu_date.tm_mon;
          fdate.day = ufi.tmu_date.tm_mday;
-         ftime.hours = tmu_date.tm_hour;
+         ftime.hours = ufi.tmu_date.tm_hour;
          ftime.minutes = ufi.tmu_date.tm_min;
          ftime.twosecs = ufi.tmu_date.tm_sec / 2;
 
