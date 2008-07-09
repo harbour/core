@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-09 13:57 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/hbmzip.c
+    ! added missing DJGPP header files
+
+  * harbour/source/rtl/filesys.c
+    * finished hb_fsSetAttr()
+
+  * harbour/source/rtl/set.c
+    % optimized for loop
+
 2008-07-09 12:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/set.c
     ! do not add .prn extension to printer/extra filenames if file name

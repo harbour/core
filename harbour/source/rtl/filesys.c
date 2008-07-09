@@ -932,6 +932,7 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
          SystemTimeToFileTime( &st, &local_ft );
          LocalFileTimeToFileTime( &local_ft, &ft );
          fResult = SetFileTime( DosToWinHandle( hFile ), NULL, &ft, &ft ) != 0;
+         hb_fsSetIOError( fResult, 0 );
          hb_fsClose( hFile );
       }
    }
@@ -981,6 +982,7 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
                                 &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
       }
       fResult = ulrc == NO_ERROR;
+      hb_fsSetIOError( fResult, 0 );
       if( fFree )
          hb_xfree( pszFileName );
    }
@@ -1028,6 +1030,7 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
          buf.actime = buf.modtime = mktime( &new_value );
          fResult = utime( pszFileName, &buf ) == 0;
       }
+      hb_fsSetIOError( fResult, 0 );
       if( fFree )
          hb_xfree( pszFileName );
    }
@@ -1046,10 +1049,97 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
 HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
 {
    BOOL fResult;
+   BOOL fFree;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsSetAttr(%s, %lu)", pszFileName, ulAttr));
 
-   fResult = ulAttr != 0 && pszFileName != NULL;
+   pszFileName = hb_fsNameConv( pszFileName, &fFree );
+
+#if defined( HB_OS_WIN_32 )
+   {
+      DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
+      LPTSTR lpFile = HB_TCHAR_CONVTO( pszFileName );
+
+      if( ulAttr & HB_FA_READONLY )
+         dwFlags |= FILE_ATTRIBUTE_READONLY;
+      if( ulAttr & HB_FA_HIDDEN )
+         dwFlags |= FILE_ATTRIBUTE_HIDDEN;
+      if( ulAttr & HB_FA_SYSTEM )
+         dwFlags |= FILE_ATTRIBUTE_SYSTEM;
+      if( ulAttr & HB_FA_NORMAL )
+         dwFlags |= FILE_ATTRIBUTE_NORMAL;
+      fResult = SetFileAttributes( lpFile, dwFlags );
+      hb_fsSetIOError( fResult, 0 );
+      HB_TCHAR_FREE( lpFile );
+   }
+#elif defined( HB_OS_OS2 )
+   {
+      FILESTATUS3 fs3;
+      APIRET ulrc;
+      ULONG ulOsAttr = FILE_NORMAL;
+
+      if( ulAttr & HB_FA_READONLY )
+         ulOsAttr |= FILE_READONLY;
+      if( ulAttr & HB_FA_HIDDEN )
+         ulOsAttr |= FILE_HIDDEN;
+      if( ulAttr & HB_FA_SYSTEM )
+         ulOsAttr |= FILE_SYSTEM;
+      if( ulAttr & HB_FA_ARCHIVE )
+         ulOsAttr |= FILE_ARCHIVED;
+
+      ulrc = DosQueryPathInfo( pszFileName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+      if( ulrc == NO_ERROR )
+      {
+         fs3.attrFile = ulOsAttr;
+         ulrc = DosSetPathInfo( pszFileName, FIL_STANDARD,
+                                &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
+      }
+      fResult = ulrc == NO_ERROR;
+      hb_fsSetIOError( fResult, 0 );
+   }
+#elif defined( HB_OS_DOS )
+
+   ulAttr &= ~( HB_FA_ARCHIVE | HB_FA_HIDDEN | HB_FA_READONLY | HB_FA_SYSTEM );
+#  if defined( __DJGPP__ ) || defined( __BORLANDC__ )
+   fResult = _chmod( pszFileName, 1, ulAttr ) != -1;
+#  else
+   fResult = _dos_setfileattr( pszFileName, ulAttr ) != -1;
+#  endif
+   hb_fsSetIOError( fResult, 0 );
+
+#elif defined( OS_UNIX_COMPATIBLE )
+   {
+      int iAttr = HB_FA_POSIX_ATTR( ulAttr );
+      if( iAttr == 0 )
+      {
+         iAttr = ( ulAttr & HB_FA_HIDDEN ) ? S_IRUSR : ( S_IRUSR | S_IRGRP | S_IROTH );
+         if( !( ulAttr & HB_FA_READONLY ) )
+         {
+            if( iAttr & S_IRUSR ) iAttr |= S_IWUSR;
+            if( iAttr & S_IRGRP ) iAttr |= S_IWGRP;
+            if( iAttr & S_IROTH ) iAttr |= S_IWOTH;
+         }
+         if( ulAttr & HB_FA_SYSTEM )
+         {
+            if( iAttr & S_IRUSR ) iAttr |= S_IXUSR;
+            if( iAttr & S_IRGRP ) iAttr |= S_IXGRP;
+            if( iAttr & S_IROTH ) iAttr |= S_IXOTH;
+         }
+      }
+      fResult = chmod( pszFileName, iAttr ) != -1;
+      hb_fsSetIOError( fResult, 0 );
+   }
+#else
+   {
+      int TODO; /* To force warning */
+
+      fResult = FALSE;
+      hb_fsSetError( (USHORT) FS_ERROR );
+   }
+#endif
+
+   if( fFree )
+      hb_xfree( pszFileName );
 
    return fResult;
 }

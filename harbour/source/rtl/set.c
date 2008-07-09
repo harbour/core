@@ -516,12 +516,12 @@ HB_FUNC( SET )
          if( args > 1 )
          {
             BOOL flag = FALSE;
-            unsigned int i;
+            unsigned int i, iLen;
             int ch, year = 0;
 
             hb_set.HB_SET_DATEFORMAT = set_string( pArg2, hb_set.HB_SET_DATEFORMAT );
-
-            for( i = 0; i < strlen( hb_set.HB_SET_DATEFORMAT ); i++ )
+            iLen = ( unsigned int ) strlen( hb_set.HB_SET_DATEFORMAT );
+            for( i = 0; i < iLen; i++ )
             {
                ch = hb_set.HB_SET_DATEFORMAT[i];
                if( !flag && ( ch == 'Y' || ch == 'y' ) )
