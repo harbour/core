@@ -687,9 +687,10 @@ char * hb_macroTextSymbol( char *szString, ULONG ulLength, BOOL *pfNewString )
             szResult[ ulLen ] = '\0';
          }
       }
-      else if( szResult != szString )
+      else
       {
-         hb_xfree( szResult );
+         if( szResult != szString )
+            hb_xfree( szResult );
          szResult = NULL;
       }
    }

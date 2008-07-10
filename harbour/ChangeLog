@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-10 20:59 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/macro.c
+    ! fixed RT error when invalid symbol string is precompiled
+
 2008-07-10 18:51 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
   * contrib/hbbmcdx/bmdbfcdx.c
   * contrib/hbbmcdx/hbbmcdx.h
