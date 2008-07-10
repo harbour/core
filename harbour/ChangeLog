@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-10 18:51 UTC+0100 Miguel Angel Marchuet <miguelangel@marchuet.net>
+  * contrib/hbbmcdx/bmdbfcdx.c
+  * contrib/hbbmcdx/hbbmcdx.h
+    ! fixed casting for indexes with key length greater then 196 bytes
+      created on tables with record number smaller then 256. In such
+      case if keys have equal value then after decoding they may need
+      more then 32767 bytes and casting to SHORT gives negative indexes.
+      Thanks to Saulius Zrelskis for example.
+    % changed some SHORT to INT to reduce runtime overhead
+  * contrib/hbziparch/hbziparc.c
+    ! fixed some unused variables.
+    * minor sintax corrections.
+
 2008-07-09 22:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      + Changed to use Harbour memory allocation functions in 

@@ -54,7 +54,6 @@
 
 #include "hbapifs.h"
 #include "hbapierr.h"
-#include "hbinit.h"
 #if defined(HB_OS_LINUX)
    #include <sys/types.h>
    #include <sys/stat.h>

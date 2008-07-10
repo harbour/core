@@ -7,7 +7,7 @@
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * Copyright 2006 Miguel Angel Marchuet <miguelangel@marchuet.net>
+ * Copyright 2006-2008 Miguel Angel Marchuet <miguelangel@marchuet.net>
  * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -54,7 +54,6 @@
 #ifndef HB_RDDCDX_H_
 #define HB_RDDCDX_H_
 
-#include "hbsetup.h"
 #include "hbapirdd.h"
 #include "hbdbferr.h"
 #define HB_EXTERNAL_RDDDBF_USE
@@ -262,8 +261,8 @@ typedef struct _CDXPAGE
    ULONG    Right;
 
    BYTE     PageType;
-   SHORT    iKeys;
-   SHORT    iCurKey;
+   int      iKeys;
+   int      iCurKey;
 
    BOOL     fChanged;
    BYTE     bUsed;
@@ -300,7 +299,7 @@ typedef CDXPAGE * LPCDXPAGE;
 typedef struct _CDXSTACK
 {
    LPCDXPAGE Page;
-   SHORT     iKey;
+   int       iKey;
 } CDXSTACK;
 typedef CDXSTACK * LPCDXSTACK;
 
