@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-11 19:13 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbct/files.c
+    * changed SETFATTR() to use hb_fsSetAttr()
+
 2008-07-11 18:20 UTC+0200 JF Lefebvre (MAFACT) (jfl/at/mafact.com)
   * harbour/source/common/hbver.c
     * protected by a #define the use of the new structure OSVERSIONINFOEXA, not know by MSVC 6 (_MSC_VER < 1400)

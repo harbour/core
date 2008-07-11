@@ -94,7 +94,7 @@
 #endif
 
 static PHB_FFIND s_ffind = NULL;
-static USHORT s_uiAttr = 0;
+static ULONG s_ulAttr = 0;
 static BOOL s_fInit = FALSE;
 
 static void _hb_fileClose( void * cargo )
@@ -108,7 +108,7 @@ static void _hb_fileClose( void * cargo )
    }
 }
 
-static PHB_FFIND _hb_fileStart( BOOL fNext, USHORT uiAttr )
+static PHB_FFIND _hb_fileStart( BOOL fNext, ULONG ulAttr )
 {
    if( hb_pcount() > 0 )
    {
@@ -130,12 +130,12 @@ static PHB_FFIND _hb_fileStart( BOOL fNext, USHORT uiAttr )
          }
          szFile = ( char * ) hb_fsNameConv( ( BYTE * ) szFile, &fFree );
          if( ISNUM( 2 ) )
-            uiAttr = ( USHORT ) hb_parni( 2 );
-         s_uiAttr = ISLOG( 3 ) && hb_parl( 3 ) ? uiAttr : 0;
-         s_ffind = hb_fsFindFirst( szFile, uiAttr );
+            ulAttr = ( ULONG ) hb_parnl( 2 );
+         s_ulAttr = ISLOG( 3 ) && hb_parl( 3 ) ? ulAttr : 0;
+         s_ffind = hb_fsFindFirst( szFile, ulAttr );
          if( fFree )
             hb_xfree( szFile );
-         while( s_ffind && s_uiAttr && s_ffind->attr != s_uiAttr )
+         while( s_ffind && s_ulAttr && s_ffind->attr != s_ulAttr )
          {
             if( !hb_fsFindNext( s_ffind ) )
             {
@@ -156,7 +156,7 @@ static PHB_FFIND _hb_fileStart( BOOL fNext, USHORT uiAttr )
             break;
          }
       }
-      while( s_uiAttr && s_ffind->attr != s_uiAttr );
+      while( s_ulAttr && s_ffind->attr != s_ulAttr );
    }
 
    return s_ffind;
@@ -204,85 +204,15 @@ HB_FUNC( FILETIME )
 
 HB_FUNC( SETFATTR )
 {
-#if defined( HB_OS_DOS )
+   int iResult;
 
-   int iReturn = -1;
-   int iFlags;
-   const char *szFile = hb_parcx( 1 );
-
-   if( ISNUM( 2 ) )
-      iFlags = hb_parni( 2 );
+   if( hb_fsSetAttr( ( BYTE * ) hb_parcx( 1 ),
+                        ISNUM( 2 ) ? hb_parnl( 2 ) : HB_FA_ARCHIVE ) )
+      iResult = 0;
    else
-      iFlags = 32;
+      iResult = -1;
 
-   if( !( iFlags & ~( FA_ARCHIVE | FA_HIDDEN | FA_READONLY | FA_SYSTEM ) ) )
-   {
-#if defined( __DJGPP__ ) || defined( __BORLANDC__ )
-      iReturn = _chmod( szFile, 1, iFlags );
-#else
-      iReturn = _dos_setfileattr( szFile, iFlags );
-#endif
-   }
-   hb_retni( iReturn );
-
-#elif defined( HB_OS_WIN_32 )
-
-   DWORD dwFlags = FILE_ATTRIBUTE_ARCHIVE;
-   DWORD dwLastError = ERROR_SUCCESS;
-   LPTSTR lpFile = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
-   int iAttr = hb_parni( 2 );
-
-   if( iAttr & FA_READONLY )
-      dwFlags |= FILE_ATTRIBUTE_READONLY;
-   if( iAttr & FA_HIDDEN )
-      dwFlags |= FILE_ATTRIBUTE_HIDDEN;
-   if( iAttr & FA_SYSTEM )
-      dwFlags |= FILE_ATTRIBUTE_SYSTEM;
-   if( iAttr & FA_NORMAL )
-      dwFlags |= FILE_ATTRIBUTE_NORMAL;
-   if( !SetFileAttributes( lpFile, dwFlags ) )
-      dwLastError = GetLastError();
-   HB_TCHAR_FREE( lpFile );
-   hb_retni( dwLastError );
-
-#elif defined( HB_OS_OS2 )
-
-   FILESTATUS3 fs3;
-   APIRET ulrc;
-   ULONG ulAttr = FILE_NORMAL;
-   int iAttr = hb_parni( 2 );
-   const char *szFile = hb_parcx( 1 );
-
-   if( iAttr & FA_READONLY )
-      ulAttr |= FILE_READONLY;
-   if( iAttr & FA_HIDDEN )
-      ulAttr |= FILE_HIDDEN;
-   if( iAttr & FA_SYSTEM )
-      ulAttr |= FILE_SYSTEM;
-   if( iAttr & FA_ARCHIVE )
-      ulAttr |= FILE_ARCHIVED;
-
-   ulrc = DosQueryPathInfo( szFile, FIL_STANDARD, &fs3, sizeof( fs3 ) );
-   if( ulrc == NO_ERROR )
-   {
-      fs3.attrFile = ulAttr;
-      ulrc = DosSetPathInfo( szFile, FIL_STANDARD,
-                             &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
-   }
-   hb_retni( ulrc );
-
-#elif defined( OS_UNIX_COMPATIBLE )
-
-   /* *nixes do not use DOS like file attributes */
-   hb_retnl( -1 );
-
-#else
-
-   /* int TODO; */ /* To force warning */
-
-   hb_retnl( -1 );
-
-#endif
+   hb_retni( iResult );
 }
 
 
@@ -441,14 +371,14 @@ HB_FUNC( FILEDELETE )
    {
       BYTE * pDirSpec;
       PHB_FFIND ffind;
-      USHORT uiAttr = HB_FA_ALL;
+      ULONG ulAttr = HB_FA_ALL;
       BOOL fFree;
 
       pDirSpec = hb_fsNameConv( ( BYTE * ) hb_parc( 1 ), &fFree );
       if( ISNUM( 2 ) )
-         uiAttr = hb_parni( 2 );
+         ulAttr = hb_parnl( 2 );
 
-      if( ( ffind = hb_fsFindFirst( ( char * ) pDirSpec, uiAttr ) ) != NULL )
+      if( ( ffind = hb_fsFindFirst( ( char * ) pDirSpec, ulAttr ) ) != NULL )
       {
          PHB_FNAME pFilepath;
 
