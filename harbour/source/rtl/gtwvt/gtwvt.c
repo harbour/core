@@ -2168,7 +2168,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bResizable )
             {
-               LONG style;
+               HB_LONG style;
 
                pWVT->bResizable = bNewValue;
 
