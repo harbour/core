@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-11 17:33 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/dbedit.ch
+  * harbour/source/rtl/dbedit.prg
+    + added support for undocumented Clipper DE_APPEND mode - code
+      covered by HB_C52_UNDOC
+    % ignore K_MOUSEMOVE events to avoid flickering just like CA-Cl*pper
+      does
+    + added support for cell positioning with mouse left key - CL53
+      compatible behavior covered by HB_COMPAT_C53 macro
+    * changed static function name dbEditCallUser() to CallUser() for
+      strict Clipper compatibility - some user function code may check
+      PROCNAME()
+    * some minor optimizations and fixes
+
+  * harbour/contrib/hbmzip/hbmzip.c
+    * indenting
+
+  * harbour/source/vm/hvm.c
+    * formatting
+
 2008-07-10 20:59 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/macro.c
     ! fixed RT error when invalid symbol string is precompiled

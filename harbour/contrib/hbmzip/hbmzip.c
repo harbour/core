@@ -543,7 +543,7 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
 #else
          memcpy( &st, localtime( &statbuf.st_mtime ), sizeof( st ) );
 #endif
-      
+
          zfi.tmz_date.tm_sec = st.tm_sec;
          zfi.tmz_date.tm_min = st.tm_min;
          zfi.tmz_date.tm_hour = st.tm_hour;

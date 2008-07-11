@@ -6660,46 +6660,6 @@ static void hb_vmDoInitStatics( void )
    }
 }
 
-static void hb_vmDoExitFunctions( void )
-{
-   PHB_SYMBOLS pLastSymbols = s_pSymbols;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_vmDoExitFunctions()"));
-
-   /* EXIT procedures should be processed? */
-   if( s_fDoExitProc )
-   {
-      s_fDoExitProc = FALSE;
-      hb_stackSetActionRequest( 0 );
-
-      while( pLastSymbols )
-      {
-         /* only if module contains some EXIT functions */
-         if( pLastSymbols->fActive && pLastSymbols->hScope & HB_FS_EXIT )
-         {
-            USHORT ui;
-
-            for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
-            {
-               HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & ( HB_FS_EXIT | HB_FS_INIT );
-
-               if( scope == HB_FS_EXIT )
-               {
-                  hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
-                  hb_vmPushNil();
-                  hb_vmDo( 0 );
-                  if( hb_stackGetActionRequest() )
-                     /* QUIT or BREAK was issued - stop processing
-                     */
-                     return;
-               }
-            }
-         }
-         pLastSymbols = pLastSymbols->pNext;
-      }
-   }
-}
-
 static void hb_vmDoInitFunctions( void )
 {
    PHB_SYMBOLS pLastSymbols = s_pSymbols;
@@ -6744,6 +6704,46 @@ static void hb_vmDoInitFunctions( void )
          }
       }
       pLastSymbols = pLastSymbols->pNext;
+   }
+}
+
+static void hb_vmDoExitFunctions( void )
+{
+   PHB_SYMBOLS pLastSymbols = s_pSymbols;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_vmDoExitFunctions()"));
+
+   /* EXIT procedures should be processed? */
+   if( s_fDoExitProc )
+   {
+      s_fDoExitProc = FALSE;
+      hb_stackSetActionRequest( 0 );
+
+      while( pLastSymbols )
+      {
+         /* only if module contains some EXIT functions */
+         if( pLastSymbols->fActive && pLastSymbols->hScope & HB_FS_EXIT )
+         {
+            USHORT ui;
+
+            for( ui = 0; ui < pLastSymbols->uiModuleSymbols; ui++ )
+            {
+               HB_SYMBOLSCOPE scope = ( pLastSymbols->pModuleSymbols + ui )->scope.value & ( HB_FS_EXIT | HB_FS_INIT );
+
+               if( scope == HB_FS_EXIT )
+               {
+                  hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
+                  hb_vmPushNil();
+                  hb_vmDo( 0 );
+                  if( hb_stackGetActionRequest() )
+                     /* QUIT or BREAK was issued - stop processing
+                     */
+                     return;
+               }
+            }
+         }
+         pLastSymbols = pLastSymbols->pNext;
+      }
    }
 }
 
