@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-11 18:20 UTC+0200 JF Lefebvre (MAFACT) (jfl/at/mafact.com)
+  * harbour/source/common/hbver.c
+    * protected by a #define the use of the new structure OSVERSIONINFOEXA, not know by MSVC 6 (_MSC_VER < 1400)
+
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * Change LONG_PTR to LONG as LONG_PTR was unknow by MSVC compiler and finally the expected type for SetWindowLongPtr() is LONG.
+    * protected by a #define the call to SetWindowLongPtr(), not know by MSVC 6 (_MSC_VER < 1400)
+    * not tested as working, just compile ok  !!!
+
+
 2008-07-11 17:33 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/dbedit.ch
   * harbour/source/rtl/dbedit.prg
