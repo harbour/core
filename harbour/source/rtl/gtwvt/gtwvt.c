@@ -1445,13 +1445,13 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             pWVT->bMaximized = FALSE;
 
             /* Enable "maximize" button */
-            
-#if defined(_MSC_VER) and (_MSC_VER <= 1200)
+
+#if defined(_MSC_VER) && (_MSC_VER <= 1200)
             SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
-#elif
+#else
             SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
-#endif          
-  
+#endif
+
             SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                       SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
             ShowWindow( pWVT->hWnd, SW_HIDE );
@@ -2177,12 +2177,12 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                else
                   style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
 
-#if defined(_MSC_VER) and (_MSC_VER <= 1200)
+#if defined(_MSC_VER) && (_MSC_VER <= 1200)
                SetWindowLong( pWVT->hWnd, GWL_STYLE, style );
-#elif
+#else
                SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );
 #endif
-               
+
                SetWindowPos( pWVT->hWnd, NULL, 0, 0, 0, 0,
                                          SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_DEFERERASE );
                ShowWindow( pWVT->hWnd, SW_HIDE );

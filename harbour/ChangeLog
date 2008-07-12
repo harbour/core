@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-12 16:12 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * source/rtl/gtwvt/gtwvt.c
+    * #if defined(_MSC_VER) and (_MSC_VER >= 1200) => 
+      #if defined(_MSC_VER) && (_MSC_VER >= 1200)
+    *#elif  =>  #else
+     
+     /* JF Please check with BCC also */
+
 2008-07-11 19:52 UTC+0200 JF Lefebvre (MAFACT) (jfl/at/mafact.com)
   * harbour/source/rtl/gtwvt/gtwvt.c
     * Reversed my change LONG_PTR to LONG but to HB_LONG type for 64 bit compatibility
