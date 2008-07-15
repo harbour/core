@@ -9,7 +9,7 @@
  * Copyright 2004 Dmitry V. Korzhov <dk@april26.spb.ru>
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    updated and for current Harbour code, other then x86@32 machines,
+ *    updated for current Harbour code, other then x86@32 machines,
  *    files and buffers longer then 2^32 and some fixes
  *
  * www - http://www.harbour-project.org
@@ -297,7 +297,7 @@ HB_EXPORT void hb_md5( BYTE * ucData, ULONG ulLen, BYTE * ucDigest )
    memcpy( buf + n, pad, 64 );
    /* count bits length */
    i = 56;
-   if( n > 56 )
+   if( n >= 56 )
    {
       i += 64;
       memcpy( md5.buf, buf, 64 );
@@ -350,7 +350,7 @@ HB_EXPORT void hb_md5file( FHANDLE hFile, BYTE * ucDigest )
       memcpy( buf, readbuf + i, n );
    memcpy( buf + n, pad, 64 );
    i = 56;
-   if( n > 56 )
+   if( n >= 56 )
    {
       i += 64;
       memcpy( md5.buf, buf, 64 );
