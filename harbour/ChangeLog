@@ -8,6 +8,27 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-15 14:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmysql/Makefile
+  * harbour/contrib/hbodbc/Makefile
+  * harbour/contrib/hbsqlit3/Makefile
+  * harbour/contrib/hbfbird/Makefile
+  * harbour/contrib/hbcurl/Makefile
+  * harbour/contrib/hbhpdf/Makefile
+  * harbour/contrib/hbpgsql/Makefile
+  * harbour/contrib/hbfimage/Makefile
+  * harbour/contrib/hbgd/Makefile
+  * harbour/contrib/hbgf/hbgfgtk/Makefile
+    * do not add default system include directory to C_USR during testing
+      for foreign header files when HB_XBUILD variable is set - protection
+      against including wrong header files in cross builds
+
+  * harbour/contrib/hbtpathy/ChangeLog
+    * changed SVN EOL style to 'native'
+
+  * harbour/contrib/hbbmcdx/bmdbfcdx.c
+    * pacified warning
+
 2008-07-12 16:12 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * source/rtl/gtwvt/gtwvt.c
     * #if defined(_MSC_VER) and (_MSC_VER >= 1200) => 

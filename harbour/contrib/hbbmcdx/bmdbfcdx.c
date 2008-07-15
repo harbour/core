@@ -9071,7 +9071,7 @@ static ERRCODE hb_cdxCountScope( CDXAREAP pArea, void * pPtr, LONG * plRec )
    {
       LPBM_FILTER pMap = (LPBM_FILTER) pArea->dbfi.lpvCargo;
       if( pArea->dbfi.fFilter && pMap &&
-          !BM_GetBit( pMap->rmap, pMap->Size, *plRec ) )
+          !BM_GetBit( pMap->rmap, pMap->Size, ( ULONG ) *plRec ) )
       {
          *plRec = 0;
       }

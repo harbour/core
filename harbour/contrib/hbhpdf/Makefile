@@ -6,10 +6,10 @@ ROOT = ../../
 
 LIBNAME=hbhpdf
 
-ifneq ($(HB_ARCHITECTURE),dos)
-
 ifeq ($(HB_INC_LIBHARU),)
+ifeq ($(HB_XBUILD),)
 HB_INC_LIBHARU = /usr/include
+endif
 endif
 
 HB_INC_LIBHARU_OK += $(foreach d, $(HB_INC_LIBHARU), $(if $(wildcard $(d)/hpdf.h),$(d),))
@@ -33,9 +33,6 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
-else
-include $(TOP)$(ROOT)config/none.cf
-endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

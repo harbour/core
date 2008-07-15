@@ -6,10 +6,19 @@ ROOT = ../../
 
 LIBNAME=hbsqlit3
 
-ifneq ($(HB_ARCHITECTURE),dos)
-ifneq ($(HB_ARCHITECTURE),bsd)
-ifneq ($(HB_ARCHITECTURE),hpux)
+ifeq ($(HB_WITHOUT_SQLIT3),)
+ifeq ($(HB_ARCHITECTURE),dos)
+HB_WITHOUT_SQLIT3=yes
+endif
+ifeq ($(HB_ARCHITECTURE),bsd)
+HB_WITHOUT_SQLIT3=yes
+endif
+ifeq ($(HB_ARCHITECTURE),hpux)
+HB_WITHOUT_SQLIT3=yes
+endif
+endif
 
+ifneq ($(HB_WITHOUT_SQLIT3),yes)
 C_SOURCES =\
 	hbsqlit3.c \
 
@@ -23,12 +32,6 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
-else
-include $(TOP)$(ROOT)config/none.cf
-endif
-else
-include $(TOP)$(ROOT)config/none.cf
-endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

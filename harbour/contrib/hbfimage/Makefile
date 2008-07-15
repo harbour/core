@@ -6,13 +6,18 @@ ROOT = ../../
 
 LIBNAME=hbfimage
 
+HB_INC_FREEIMAGE_OK =
+
 ifneq ($(HB_ARCHITECTURE),dos)
 
 ifeq ($(HB_INC_FREEIMAGE),)
+ifeq ($(HB_XBUILD),)
 HB_INC_FREEIMAGE = /usr/include
+endif
 endif
 
 HB_INC_FREEIMAGE_OK += $(foreach d, $(HB_INC_FREEIMAGE), $(if $(wildcard $(d)/FreeImage.h),$(d),))
+endif
 
 ifneq ($(strip $(HB_INC_FREEIMAGE_OK)),)
 
@@ -34,9 +39,6 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
-else
-include $(TOP)$(ROOT)config/none.cf
-endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif

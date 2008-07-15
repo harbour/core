@@ -14,7 +14,9 @@ ifneq ($(HB_ARCHITECTURE),w32)
 ifeq ($(HB_WITHOUT_ODBC),)
 
 ifeq ($(HB_INC_ODBC),)
+ifeq ($(HB_XBUILD),)
 HB_INC_ODBC = /usr/include /usr/local/include
+endif
 endif
 
 HB_INC_ODBC_OK += $(foreach d, $(HB_INC_ODBC), $(if $(wildcard $(d)/sql.h),$(d),))
