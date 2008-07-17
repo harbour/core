@@ -740,7 +740,7 @@ HB_FUNC( DLLPREPARECALL )
       xec->hDLL = LoadLibraryA( xec->cDLL );
    }
    else if( ISNUM( 1 ) )
-      xec->hDLL = ( HMODULE ) hb_parnint( 1 );
+      xec->hDLL = ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
 
    if( xec->hDLL )
    {
@@ -786,7 +786,7 @@ HB_FUNC( DLLLOAD )
 
 HB_FUNC( DLLUNLOAD )
 {
-   hb_retl( FreeLibrary( ( HMODULE ) hb_parnint( 1 ) ) ) ;
+   hb_retl( FreeLibrary( ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) ) ;
 }
 
 HB_FUNC( DLLEXECUTECALL )
@@ -820,7 +820,7 @@ static LPVOID hb_getprocaddress( HMODULE hDLL, int i )
 
 HB_FUNC( DLLCALL )
 {
-   HMODULE hDLL = ISCHAR( 1 ) ? LoadLibraryA( hb_parc( 1 ) ) : ( HMODULE ) hb_parnint( 1 );
+   HMODULE hDLL = ISCHAR( 1 ) ? LoadLibraryA( hb_parc( 1 ) ) : ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 );
 
    if( hDLL && ( HB_PTRDIFF ) hDLL >= 32 )
    {
@@ -856,7 +856,7 @@ HB_FUNC( SETLASTERROR )
 
 HB_FUNC( GETPROCADDRESS )
 {
-   hb_retptr( ( void * ) hb_getprocaddress( ( HMODULE ) hb_parnint( 1 ), 2 ) );
+   hb_retptr( ( void * ) hb_getprocaddress( ( HMODULE ) ( HB_PTRDIFF ) hb_parnint( 1 ), 2 ) );
 }
 
 /* Call a DLL function from (x)Harbour, the first parameter is a pointer returned from

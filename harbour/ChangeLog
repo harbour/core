@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-17 03:36 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbtpathy/tplinux.c
+    * workaround for missing CRTCTS declaration in OpenWatcom
+
+  * harbour/contrib/hbsqlit3/sqlite3/sqlite3.c
+  * harbour/contrib/hbsqlit3/hbsqlit3.c
+    * pacified warnings
+    ! fixed C++ compilation
+
+  * harbour/contrib/gtwvg/gtwvg.h
+    * add hack for missing GCLP_HCURSOR declaration in OpenWatcom
+
+  * harbour/contrib/hbtpathy/tpwin32.c
+  * harbour/contrib/hbw32/dllcall.c
+  * harbour/contrib/hbw32/w32_osc.c
+  * harbour/contrib/hbole/ole2.c
+  * harbour/contrib/hbgf/hbgfw32/win32.c
+    * updated for UNICODE builds
+    * pacified warnings
+
 2008-07-15 20:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/hbmd5.c
     ! fixed MD5 calculations

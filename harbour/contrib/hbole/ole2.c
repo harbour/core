@@ -112,13 +112,13 @@ static LPSTR DblToDate( double nDate, char * cDate )
    return cDate;
 }
 
-static LPSTR AnsiToWide( LPSTR cAnsi )
+static LPWSTR AnsiToWide( LPSTR cAnsi )
 {
    unsigned short wLen;
-   LPSTR cString;
+   LPWSTR cString;
 
    wLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cAnsi, -1, 0, 0 );
-   cString = ( char * ) hb_xgrab( wLen * 2 );
+   cString = ( LPWSTR ) hb_xgrab( wLen * 2 );
    MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, cAnsi, -1,
                         ( LPWSTR ) cString, wLen );
    return cString;
@@ -172,7 +172,7 @@ static void GetParams( DISPPARAMS * dParams )
             case HB_IT_STRING:
             case HB_IT_MEMO:
             {
-               LPSTR cString;
+               LPWSTR cString;
 
 #if !defined(__BORLANDC__) && !defined(__XCC__) && !defined(NONAMELESSUNION)
                pArgs[ n ].vt   = VT_BSTR;
@@ -381,7 +381,7 @@ HB_FUNC( CREATEOLEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
    if( s_nOleError == S_OK || 
        s_nOleError == S_FALSE )
    {
-      LPSTR cCLSID;
+      LPWSTR cCLSID;
       GUID ClassID, iid;
       LPIID riid = (LPIID) &IID_IDispatch;
 
@@ -433,7 +433,7 @@ HB_FUNC( OLESHOWEXCEPTION )
 HB_FUNC( OLEINVOKE ) /* (hOleObject, szMethodName, uParams...) */
 {
    IDispatch * pDisp = ( IDispatch * ) hb_parptr( 1 );
-   LPSTR cMember;
+   LPWSTR cMember;
    DISPID lDispID;
    DISPPARAMS dParams;
    UINT uArgErr;
@@ -468,7 +468,7 @@ HB_FUNC( OLEINVOKE ) /* (hOleObject, szMethodName, uParams...) */
 HB_FUNC( OLESETPROPERTY ) /* (hOleObject, cPropName, uValue, uParams...) */
 {
    IDispatch * pDisp = ( IDispatch * ) hb_parptr( 1 );
-   LPSTR cMember;
+   LPTSTR cMember;
    DISPID lDispID;
    DISPID lPropPut = DISPID_PROPERTYPUT;
    DISPPARAMS dParams;
@@ -508,7 +508,7 @@ HB_FUNC( OLESETPROPERTY ) /* (hOleObject, cPropName, uValue, uParams...) */
 HB_FUNC( OLEGETPROPERTY )  /* (hOleObject, cPropName, uParams...) */
 {
    IDispatch * pDisp = ( IDispatch * ) hb_parptr( 1 );
-   LPSTR cMember;
+   LPTSTR cMember;
    DISPID lDispID;
    DISPPARAMS dParams;
    UINT uArgErr;

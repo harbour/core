@@ -252,7 +252,9 @@ HB_FUNC( P_ISCTS )
 }
 
 HB_FUNC( P_CTRLCTS ) {
-
+#if !defined( CRTSCTS ) && defined( __WATCOMC__ )
+#  define CRTSCTS 020000000000
+#endif
    struct termios options;
    int port = hb_parnl( 1 );
    int newvalue = hb_pcount() == 2 ? hb_parnl( 2 ) : -1;

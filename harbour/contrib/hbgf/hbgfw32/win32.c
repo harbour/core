@@ -64,8 +64,9 @@ LRESULT CALLBACK WndProc( HWND, UINT, WPARAM, LPARAM );
 HB_FUNC( WINREGISTERCLASS )
 {
    WNDCLASS     wndclass;
+   LPTSTR       lpszClassName = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
 
-   wndclass.lpszClassName = hb_parc( 1 );
+   wndclass.lpszClassName = lpszClassName;
    wndclass.style = CS_OWNDC | CS_VREDRAW | CS_HREDRAW;   // hb_parnl( 2 );
    wndclass.cbClsExtra    = hb_parnl( 3 );
    wndclass.cbWndExtra    = 0;
@@ -77,18 +78,26 @@ HB_FUNC( WINREGISTERCLASS )
    wndclass.lpszMenuName  = NULL;
 
    hb_retl( RegisterClass (&wndclass) );
+
+   HB_TCHAR_FREE( lpszClassName );
 }
 
 HB_FUNC( WINCREATESTDWINDOW )
 {
-   hb_retptr( CreateWindow( TEXT( hb_parc( 4 ) ),    /* cClassName */
-                            TEXT( hb_parc( 5 ) ),    /* cCaption */
+   LPTSTR lpszClassName = HB_TCHAR_CONVTO( hb_parcx( 4 ) );
+   LPTSTR lpszCaption   = HB_TCHAR_CONVTO( hb_parcx( 5 ) );
+
+   hb_retptr( CreateWindow( lpszClassName,
+                            lpszCaption,
                             hb_parnl( 2 ),           /* style */
                             CW_USEDEFAULT, CW_USEDEFAULT,
                             CW_USEDEFAULT, CW_USEDEFAULT,
                             ( HWND ) hb_parptr( 7 ),  /* hWndParent */
                             ( HMENU ) hb_parptr( 8 ), /* hMenu or nId */
                             GetModuleHandle( NULL ), NULL) );
+
+   HB_TCHAR_FREE( lpszClassName );
+   HB_TCHAR_FREE( lpszCaption );
 }
 
 HB_FUNC( HB_FORMSHOWMODAL )
@@ -118,24 +127,36 @@ HB_FUNC( NOR )
 
 HB_FUNC( WINSETWINDOWTEXT )
 {
-   hb_retl( SetWindowText( (HWND) hb_parptr( 1 ), (LPCTSTR) hb_parc( 2 ) ) );
+   LPTSTR lpszText = HB_TCHAR_CONVTO( hb_parcx( 1 ) );
+
+   hb_retl( SetWindowText( (HWND) hb_parptr( 1 ), lpszText ) );
+   
+   HB_TCHAR_FREE( lpszText );
 }
 
 
 HB_FUNC( WINGETTEXT )
 {
-   BYTE bBuffer[ 255 ];
+   TCHAR bBuffer[ 256 ];
+   char * szText;
 
-   GetWindowText( ( HWND ) hb_parptr( 1 ), (char*) bBuffer, sizeof( bBuffer ) - 1 );
-   hb_retc( (char*) bBuffer );
+   GetWindowText( ( HWND ) hb_parptr( 1 ), bBuffer, sizeof( bBuffer ) - 1 );
+
+   szText = HB_TCHAR_CONVFROM( bBuffer );
+   hb_retc( szText );
+   HB_TCHAR_FREE( szText );
 }
 
 
 HB_FUNC( MSGINFO )
 {
-   char* szCaption = ( hb_pcount() > 1 && ISCHAR( 2 ) ? hb_parc( 2 ) : "Information");
+   LPTSTR lpStr1 = HB_TCHAR_CONVTO( hb_parcx( 2 ) ),
+          lpStr2 = HB_TCHAR_CONVTO( ISCHAR( 2 ) ? hb_parc( 3 ) : ( char * ) "Information" );
 
-   hb_retnl( MessageBox( GetActiveWindow(), hb_parc(1), szCaption, MB_OK | MB_ICONINFORMATION ) );
+   hb_retni( MessageBox( GetActiveWindow(), lpStr1, lpStr2, MB_OK | MB_ICONINFORMATION ) );
+
+   HB_TCHAR_FREE( lpStr1 );
+   HB_TCHAR_FREE( lpStr2 );
 }
 
 
@@ -151,7 +172,7 @@ HB_FUNC( WINCREATEMENU )
 
 HB_FUNC( WINADDMENUITEM )
 {
-
+   LPTSTR lpszText = NULL;
    MENUITEMINFO mii;
    HMENU hSubMenu = ( !ISNIL(4) )? (HMENU) hb_parptr( 4 ):0;
 
@@ -162,16 +183,17 @@ HB_FUNC( WINADDMENUITEM )
    mii.hSubMenu = hSubMenu;
    if( ISCHAR( 2 ) )
    {
-      mii.dwTypeData = hb_parc( 2 );
-      mii.cch = strlen( mii.dwTypeData );
+      lpszText = HB_TCHAR_CONVTO( hb_parc( 1 ) );
+      mii.dwTypeData = lpszText;
+      mii.cch = lstrlen( lpszText );
       mii.fType = MFT_STRING;
    }
    else
       mii.fType = MFT_SEPARATOR;
 
-   hb_retl( InsertMenuItem( ( HMENU ) hb_parptr( 1 ),
-     hb_parni( 3 ), 1, &mii
-   ) );
+   hb_retl( InsertMenuItem( ( HMENU ) hb_parptr( 1 ), hb_parni( 3 ), 1, &mii ) );
+   if( lpszText )
+      HB_TCHAR_FREE( lpszText );
 }
 
 HB_FUNC( WINCREATESUBMENU )

@@ -65,13 +65,15 @@ HB_FUNC( P_INITPORTSPEED ) {
 
    DCB dcb;
    char values[ 20 ];
+   LPTSTR lpValues;
 
    FillMemory( &dcb, sizeof( dcb ), 0 );
    dcb.DCBlength = sizeof( dcb );
 
-   snprintf( values, sizeof( values ), "%u,%1s,%1u,%1u", hb_parnl( 2 ), hb_parcx( 4 ), hb_parnl( 3 ), hb_parnl( 5 ) );
+   snprintf( values, sizeof( values ), "%lu,%1s,%1lu,%1lu", hb_parnl( 2 ), hb_parcx( 4 ), hb_parnl( 3 ), hb_parnl( 5 ) );
+   lpValues = HB_TCHAR_CONVTO( values );
 
-   if( BuildCommDCB( values, &dcb ) )
+   if( BuildCommDCB( lpValues, &dcb ) )
    {
       if( SetCommState( ( HANDLE ) hb_parnl( 1 ), &dcb ) )
       {
@@ -91,25 +93,31 @@ HB_FUNC( P_INITPORTSPEED ) {
    }
    else
       hb_retnl( -1 );
+
+   HB_TCHAR_FREE( lpValues );
 }
 
 HB_FUNC( P_READPORT )
 {
    char Buffer[ 512 ];
    DWORD nRead = 0;
-   OVERLAPPED Overlapped = { 0 };
-   BOOL bRet = ReadFile( ( HANDLE ) hb_parnl( 1 ), Buffer, sizeof( Buffer ), &nRead, &Overlapped );
+   OVERLAPPED Overlapped;
+   BOOL bRet;
 
+   memset( &Overlapped, 0, sizeof( OVERLAPPED ) );
+   bRet = ReadFile( ( HANDLE ) hb_parnl( 1 ), Buffer, sizeof( Buffer ), &nRead, &Overlapped );
    hb_retclen( bRet ? Buffer : NULL, nRead );
 }
 
 HB_FUNC( P_WRITEPORT )
 {
    DWORD nWritten = 0;
-   OVERLAPPED Overlapped = { 0 };
-   BOOL bRet = WriteFile( ( HANDLE ) hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten, &Overlapped );
+   OVERLAPPED Overlapped;
+   BOOL bRet;
 
-   hb_retnl( bRet ? nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
+   memset( &Overlapped, 0, sizeof( OVERLAPPED ) );
+   bRet = WriteFile( ( HANDLE ) hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten, &Overlapped );
+   hb_retnl( bRet ? (long) nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
 }
 
 #endif /* HB_OS_WIN_32 */

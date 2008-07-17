@@ -340,6 +340,10 @@ typedef struct
    #define GRADIENT_FILL_RECT_H 0x00
 #endif
 
+#ifndef GCLP_HCURSOR
+   #define GCLP_HCURSOR (-12)
+#endif
+
 //----------------------------------------------------------------------//
 
 typedef enum

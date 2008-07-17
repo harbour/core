@@ -181,6 +181,8 @@ HB_FUNC( OS_VERSIONINFO )
 {
    PHB_ITEM pArray = hb_itemArrayNew( 5 );
    OSVERSIONINFO osvi;
+   char * szCSDVersion;
+
    getwinver( &osvi );
    hb_arraySetNL( pArray, 1, osvi.dwMajorVersion );
    hb_arraySetNL( pArray, 2, osvi.dwMinorVersion );
@@ -188,6 +190,8 @@ HB_FUNC( OS_VERSIONINFO )
       osvi.dwBuildNumber = LOWORD( osvi.dwBuildNumber );
    hb_arraySetNL( pArray, 3, osvi.dwBuildNumber );
    hb_arraySetNL( pArray, 4, osvi.dwPlatformId );
-   hb_arraySetC(  pArray, 5, osvi.szCSDVersion );
+   szCSDVersion = HB_TCHAR_CONVFROM( osvi.szCSDVersion );
+   hb_arraySetC(  pArray, 5, szCSDVersion );
+   HB_TCHAR_FREE( szCSDVersion );
    hb_itemReturnRelease( pArray );
 }

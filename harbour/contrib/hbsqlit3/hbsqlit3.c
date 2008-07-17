@@ -721,7 +721,7 @@ HB_FUNC( SQLITE3_COLUMN_BLOB )
    {
       int index = hb_parni( 2 ) - 1;
 
-      hb_retclen( sqlite3_column_blob( pStmt, index ), 
+      hb_retclen( ( const char * ) sqlite3_column_blob( pStmt, index ), 
                   sqlite3_column_bytes( pStmt, index ) );
    }
    else
