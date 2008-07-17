@@ -640,7 +640,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
    switch( iRtype )
    {
       case CTYPE_BOOL:
-         hb_retl( ( BOOL ) rc.Long );
+         hb_retl( rc.Long != 0 );
          break;
 
       case CTYPE_VOID:
@@ -672,7 +672,7 @@ static void DllExec( int iFlags, int iRtype, LPVOID lpFunction, PXPP_DLLEXEC xec
 
       case CTYPE_UNSIGNED_INT:
       case CTYPE_UNSIGNED_LONG:
-         hb_retnl( rc.Long );
+         hb_retnint( ( ULONG ) rc.Long );
          break;
 
       case CTYPE_INT_PTR:

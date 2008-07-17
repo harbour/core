@@ -274,6 +274,33 @@ static PHB_ITEM hb_hashValuePtr( PHB_BASEHASH pBaseHash, PHB_ITEM pKey, BOOL fAd
    return &pBaseHash->pPairs[ ulPos ].value;
 }
 
+static BOOL hb_hashNewValue( PHB_BASEHASH pBaseHash, PHB_ITEM pKey, PHB_ITEM pValue )
+{
+   ULONG ulPos;
+
+   if( !hb_hashFind( pBaseHash, pKey, &ulPos ) )
+   {
+      if( pBaseHash->ulSize == pBaseHash->ulLen )
+         hb_hashResize( pBaseHash, pBaseHash->ulSize + HB_HASH_ITEM_ALLOC );
+
+      if( ulPos < pBaseHash->ulLen )
+      {
+         memmove( pBaseHash->pPairs + ulPos + 1, pBaseHash->pPairs + ulPos,
+                  ( pBaseHash->ulLen - ulPos ) * sizeof( HB_HASHPAIR ) );
+         pBaseHash->pPairs[ ulPos ].key.type = HB_IT_NIL;
+         pBaseHash->pPairs[ ulPos ].value.type = HB_IT_NIL;
+      }
+
+      hb_itemCopy( &pBaseHash->pPairs[ ulPos ].key, pKey );
+      hb_itemCopyFromRef( &pBaseHash->pPairs[ ulPos ].value, pValue );
+      pBaseHash->ulLen++;
+
+      return TRUE;
+   }
+
+   return FALSE;
+}
+
 static void hb_hashDelPair( PHB_BASEHASH pBaseHash, ULONG ulPos )
 {
    if( --pBaseHash->ulLen == 0 )
@@ -550,6 +577,16 @@ HB_EXPORT BOOL hb_hashAdd( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITEM pValue )
    }
 
    return FALSE;
+}
+
+HB_EXPORT BOOL hb_hashAddNew( PHB_ITEM pHash, PHB_ITEM pKey, PHB_ITEM pValue )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_hashAddNew(%p,%p,%p)", pHash, pKey, pValue));
+
+   if( HB_IS_HASH( pHash ) && HB_IS_HASHKEY( pKey ) )
+      return hb_hashNewValue( pHash->item.asHash.value, pKey, pValue );
+   else
+      return FALSE;
 }
 
 HB_EXPORT PHB_ITEM hb_hashGetKeyAt( PHB_ITEM pHash, ULONG ulPos )

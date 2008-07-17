@@ -774,11 +774,16 @@ HB_EXPR_PTR hb_compExprReduceIN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
       /* NOTE: CA-Cl*pper has a bug where the $ operator returns .T.
        *       when an empty string is searched [vszakats]
-       *       But this bug exists only in compiler optimizer and
-       *       macro compiler does not have optimizer [druzus]
+       *
+       *       But this bug exist only in compiler and CA-Cl*pper macro
+       *       compiler does not have optimizer. This bug is replicated
+       *       by us only when Harbour extensions in compiler (-kh) are
+       *       not enabled f.e. in strict Clipper cmpatible mode (-kc)
+       *       [druzus]
        */
       if( pSelf->value.asOperator.pLeft->ulLength == 0 )
-         bResult = HB_COMP_PARAM->mode == HB_MODE_COMPILER;
+         bResult = HB_COMP_PARAM->mode == HB_MODE_COMPILER &&
+                   ! HB_SUPPORT_HARBOUR;
       else
          bResult = ( hb_strAt( pSelf->value.asOperator.pLeft->value.asString.string, pSelf->value.asOperator.pLeft->ulLength,
                      pSelf->value.asOperator.pRight->value.asString.string, pSelf->value.asOperator.pRight->ulLength ) != 0 );
@@ -1526,12 +1531,18 @@ BOOL hb_compExprReduceAT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING )
    {
-      /* This is CA-Cl*pper compiler optimizer behavior,
-       * macro compiler does not have optimizer [druzus]
+      /* NOTE: CA-Cl*pper has a bug in AT("",cText) compile time
+       *       optimization and always set 1 as result in such cses.
+       *       This bug exist only in compiler and CA-Cl*pper macro
+       *       compiler does not have optimizer. This bug is replicated
+       *       by us only when Harbour extensions in compiler (-kh) are
+       *       not enabled f.e. in strict Clipper cmpatible mode (-kc)
+       *       [druzus]
        */
       if( pSub->ulLength == 0 )
       {
-         pReduced = hb_compExprNewLong( HB_COMP_PARAM->mode == HB_MODE_COMPILER ? 1 : 0, HB_COMP_PARAM );
+         pReduced = hb_compExprNewLong( ( HB_COMP_PARAM->mode == HB_MODE_COMPILER &&
+                                          ! HB_SUPPORT_HARBOUR ) ? 1 : 0, HB_COMP_PARAM );
       }
       else
       {
@@ -1563,8 +1574,12 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
        *       CHR() cases where the passed parameter is a constant which
        *       can be divided by 256 but it's not zero, in this case it
        *       will return an empty string instead of a Chr(0). [vszakats]
-       *       But this bug exist only in compiler and macro compiler does
-       *       not have optimizer [druzus]
+       *
+       *       But this bug exist only in compiler and CA-Cl*pper macro
+       *       compiler does not have optimizer. This bug is replicated
+       *       by us only when Harbour extensions in compiler (-kh) are
+       *       not enabled f.e. in strict Clipper cmpatible mode (-kc)
+       *       [druzus]
        */
 
       HB_EXPR_PTR pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
@@ -1573,6 +1588,7 @@ BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       if( pArg->value.asNum.NumType == HB_ET_LONG )
       {
          if( HB_COMP_PARAM->mode == HB_MODE_COMPILER &&
+             ! HB_SUPPORT_HARBOUR &&
              ( pArg->value.asNum.val.l & 0xff ) == 0 &&
                pArg->value.asNum.val.l != 0 )
          {
@@ -1609,9 +1625,70 @@ BOOL hb_compExprReduceLEN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
    HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
 
-   if( pArg->ExprType == HB_ET_STRING || pArg->ExprType == HB_ET_ARRAY )
+   /* TOFIX: do not optimize when array/hash args have user expressions */
+   if( pArg->ExprType == HB_ET_STRING || pArg->ExprType == HB_ET_ARRAY ||
+       pArg->ExprType == HB_ET_HASH )
    {
-      HB_EXPR_PTR pExpr = hb_compExprNewLong( pArg->ulLength, HB_COMP_PARAM );
+      HB_EXPR_PTR pExpr = hb_compExprNewLong( pArg->ExprType == HB_ET_HASH ?
+                        pArg->ulLength >> 1 : pArg->ulLength, HB_COMP_PARAM );
+
+      HB_COMP_EXPR_FREE( pParms );
+      HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
+      memcpy( pSelf, pExpr, sizeof( HB_EXPR ) );
+      HB_COMP_EXPR_CLEAR( pExpr );
+      return TRUE;
+   }
+   return FALSE;
+}
+
+BOOL hb_compExprReduceEMPTY( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+{
+   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
+   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   BOOL fReduced = TRUE, fResult = FALSE;
+
+   switch( pArg->ExprType )
+   {
+      case HB_ET_STRING:
+         fResult = hb_strEmpty( pArg->value.asString.string, pArg->ulLength );
+         break;
+
+      case HB_ET_ARRAY:
+      case HB_ET_HASH:
+         /* TOFIX: do not optimize when array/hash args have user expressions */
+         fResult = pArg->ulLength == 0;
+         break;
+
+      case HB_ET_NUMERIC:
+         if( pArg->value.asNum.NumType == HB_ET_DOUBLE )
+            fResult = pArg->value.asNum.val.d == 0.0;
+         else
+            fResult = pArg->value.asNum.val.l == 0;
+         break;
+
+      case HB_ET_LOGICAL:
+         fResult = !pArg->value.asLogical;
+         break;
+
+      case HB_ET_NIL:
+         fResult = TRUE;
+         break;
+
+      case HB_ET_DATE:
+         fResult = pArg->value.asNum.val.l == 0;
+         break;
+
+      case HB_ET_CODEBLOCK:
+         break;
+
+      /* case HB_ET_FUNREF: */
+      default:
+         fReduced = FALSE;
+   }
+
+   if( fReduced )
+   {
+      HB_EXPR_PTR pExpr = hb_compExprNewLogical( fResult, HB_COMP_PARAM );
 
       HB_COMP_EXPR_FREE( pParms );
       HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );

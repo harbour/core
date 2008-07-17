@@ -161,6 +161,11 @@ PROCEDURE Main_STR()
 #ifdef __HARBOUR__
    TEST_LINE( Chr( @snIntP1 )                 , "A"                                    ) /* Bug in CA-Cl*pper, it returns: "E BASE 1104 Argument error CHR F:S" */
 #endif
+
+   /* disable Harbour extensions in compiler to replicate Clipper bugs */
+#ifdef __HARBOUR__
+   #pragma -kh-
+#endif
    TEST_LINE( Chr( 0 )                        , ""+Chr(0)+""                           )
    TEST_LINE( Chr( 0.0 )                      , ""+Chr(0)+""                           )
    TEST_LINE( Chr( 0.1 )                      , ""+Chr(0)+""                           )
@@ -181,6 +186,30 @@ PROCEDURE Main_STR()
    TEST_LINE( Chr( 1000 )                     , "è"                                    )
    TEST_LINE( Chr( 100000 )                   , " "                                    )
    TEST_LINE( Chr( 100000.0 )                 , " "                                    )
+#ifdef __HARBOUR__
+   /* enable Harbour extensions and test correct results results */
+   #pragma -kh+
+   TEST_LINE( Chr( 0 )                        , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( 0.0 )                      , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( 0.1 )                      , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( -0.1 )                     , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( 66.4 )                     , "B"                                    )
+   TEST_LINE( Chr( 66.5 )                     , "B"                                    )
+   TEST_LINE( Chr( 66.6 )                     , "B"                                    )
+   TEST_LINE( Chr( 255 )                      , "ÿ"                                    )
+   TEST_LINE( Chr( 256 )                      , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( 256.0 )                    , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( 256.1 )                    , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( ( 256 ) )                  , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( 257 )                      , ""                                    )
+   TEST_LINE( Chr( ( 512 ) )                  , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( 1023 )                     , "ÿ"                                    )
+   TEST_LINE( Chr( ( 1024 ) )                 , ""+Chr(0)+""                           )
+   TEST_LINE( Chr( 1025 )                     , ""                                    )
+   TEST_LINE( Chr( 1000 )                     , "è"                                    )
+   TEST_LINE( Chr( 100000 )                   , " "                                    )
+   TEST_LINE( Chr( 100000.0 )                 , " "                                    )
+#endif
 
    /* ASC() */
 
@@ -443,8 +472,18 @@ PROCEDURE Main_STR()
    TEST_LINE( At(90, 100)                     , "E BASE 1108 Argument error AT A:2:N:90;N:100 F:S" )
    TEST_LINE( At("", 100)                     , "E BASE 1108 Argument error AT A:2:C:;N:100 F:S"   )
    TEST_LINE( At(100, "")                     , "E BASE 1108 Argument error AT A:2:N:100;C: F:S"   )
+   /* disable Harbour extensions in compiler to replicate Clipper bugs */
+#ifdef __HARBOUR__
+   #pragma -kh-
+#endif
    TEST_LINE( At("", "")                      , 1                ) /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
    TEST_LINE( At("", "ABCDEF")                , 1                ) /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
+#ifdef __HARBOUR__
+   /* enable Harbour extensions and test correct results results */
+   #pragma -kh+
+   TEST_LINE( At("", "")                      , 0                ) /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
+   TEST_LINE( At("", "ABCDEF")                , 0                ) /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
+#endif
    TEST_LINE( At(scStringE, scStringE)        , 0                )
    TEST_LINE( At(scStringE, "ABCDEF")         , 0                )
    TEST_LINE( At("ABCDEF", "")                , 0                )

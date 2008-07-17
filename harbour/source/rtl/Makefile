@@ -127,7 +127,6 @@ C_SOURCES=\
 	spfiles.c    \
 	str.c        \
 	strcase.c    \
-	strings.c    \
 	strmatch.c   \
 	strpeek.c    \
 	strtran.c    \

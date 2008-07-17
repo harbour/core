@@ -221,8 +221,18 @@ PROCEDURE Main_HVMA()
 
    TEST_LINE( scStringE $ scStringE           , .F. )
    TEST_LINE( scStringE $ "bcde"              , .F. )
+   /* disable Harbour extensions in compiler to replicate Clipper bugs */
+#ifdef __HARBOUR__
+   #pragma -kh-
+#endif
    TEST_LINE( "" $ ""                         , .T. ) /* Bug in CA-Cl*ppers compiler optimizer. It should return .F. */
    TEST_LINE( "" $ "bcde"                     , .T. ) /* Bug in CA-Cl*ppers compiler optimizer. It should return .F. */
+#ifdef __HARBOUR__
+   /* enable Harbour extensions and test correct results results */
+   #pragma -kh+
+   TEST_LINE( "" $ ""                         , .F. ) /* Bug in CA-Cl*ppers compiler optimizer. It should return .F. */
+   TEST_LINE( "" $ "bcde"                     , .F. ) /* Bug in CA-Cl*ppers compiler optimizer. It should return .F. */
+#endif
    TEST_LINE( "d" $ "bcde"                    , .T. )
    TEST_LINE( "D" $ "BCDE"                    , .T. )
    TEST_LINE( "a" $ "bcde"                    , .F. )

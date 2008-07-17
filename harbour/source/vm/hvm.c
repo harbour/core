@@ -4466,7 +4466,7 @@ static void hb_vmHashGen( ULONG ulElements ) /* generates an ulElements Hash and
       pVal = hb_stackItemFromTop( -1 );
       if( HB_IS_HASHKEY( pKey ) )
       {
-         hb_hashAdd( pHash, pKey, pVal );
+         hb_hashAddNew( pHash, pKey, pVal );
          hb_stackPop();
          hb_stackPop();
       }

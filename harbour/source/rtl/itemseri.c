@@ -91,6 +91,10 @@ UCHAR [ 1 ] - item type
   26. SYMBOL            1+n
   27. CYCLIC REFERENCE  4
   28. OBJECT MARKER     n+1+m+1
+  29. STRNUL            0
+  30. STRPAD8           1+1+n
+  31. STRPAD16          2+2+n
+  32. STRPAD32          4+4+n
 */
 
 #define HB_SERIAL_NIL         0
@@ -122,6 +126,10 @@ UCHAR [ 1 ] - item type
 #define HB_SERIAL_SYMBOL     26
 #define HB_SERIAL_REF        27
 #define HB_SERIAL_OBJ        28
+#define HB_SERIAL_STRNUL     29
+#define HB_SERIAL_STRPAD8    30
+#define HB_SERIAL_STRPAD16   31
+#define HB_SERIAL_STRPAD32   32
 
 #define HB_SERIAL_DUMMYOFFSET ( ( ULONG ) -1 )
 
@@ -255,6 +263,7 @@ static ULONG hb_itemSerialSize( PHB_ITEM pItem, PHB_CYCLIC_REF * pRefPtr, ULONG 
    HB_LONG lVal;
    double d;
    USHORT uiClass;
+   const char * szVal;
 
    switch( hb_itemType( pItem ) )
    {
@@ -298,13 +307,23 @@ static ULONG hb_itemSerialSize( PHB_ITEM pItem, PHB_CYCLIC_REF * pRefPtr, ULONG 
 
       case HB_IT_STRING:
       case HB_IT_MEMO:
+         szVal = hb_itemGetCPtr( pItem );
          ulLen = hb_itemGetCLen( pItem );
-         if( ulLen <= 255 )
-            ulSize = ulLen + 2;
-         else if( ulLen <= UINT16_MAX )
-            ulSize = ulLen + 3;
+         if( ulLen == 0 )
+            ulSize = 1;
          else
-            ulSize = ulLen + 5;
+         {
+            u = ulLen;
+            while( u && szVal[ u - 1 ] == ' ' )
+               --u;
+            u = ulLen - u;
+            if( ulLen <= 255 )
+               ulSize = u > 1 ? ulLen - u + 3: ulLen + 2;
+            else if( ulLen <= UINT16_MAX )
+               ulSize = u > 2 ? ulLen - u + 5: ulLen + 3;
+            else
+               ulSize = u > 4 ? ulLen - u + 9: ulLen + 5;
+         }
          break;
 
       case HB_IT_ARRAY:
@@ -459,26 +478,72 @@ static ULONG hb_serializeItem( PHB_ITEM pItem, UCHAR * pBuffer,
 
       case HB_IT_STRING:
       case HB_IT_MEMO:
+         szVal = hb_itemGetCPtr( pItem );
          ulLen = hb_itemGetCLen( pItem );
-         if( ulLen <= 255 )
+         if( ulLen == 0 )
          {
-            pBuffer[ ulOffset++ ] = HB_SERIAL_STRING8;
-            pBuffer[ ulOffset++ ] = ( UCHAR ) ulLen;
-         }
-         else if( ulLen <= UINT16_MAX )
-         {
-            pBuffer[ ulOffset++ ] = HB_SERIAL_STRING16;
-            HB_PUT_LE_UINT16( &pBuffer[ ulOffset ], ulLen );
-            ulOffset += 2;
+            pBuffer[ ulOffset++ ] = HB_SERIAL_STRNUL;
          }
          else
          {
-            pBuffer[ ulOffset++ ] = HB_SERIAL_STRING32;
-            HB_PUT_LE_UINT32( &pBuffer[ ulOffset ], ulLen );
-            ulOffset += 4;
+            u = ulLen;
+            while( u && szVal[ u - 1 ] == ' ' )
+               --u;
+            u = ulLen - u;
+            if( ulLen <= 255 )
+            {
+               if( u > 1 )
+               {
+                  ulLen -= u;
+                  pBuffer[ ulOffset++ ] = HB_SERIAL_STRPAD8;
+                  pBuffer[ ulOffset++ ] = ( UCHAR ) ulLen;
+                  pBuffer[ ulOffset++ ] = ( UCHAR ) u;
+               }
+               else
+               {
+                  pBuffer[ ulOffset++ ] = HB_SERIAL_STRING8;
+                  pBuffer[ ulOffset++ ] = ( UCHAR ) ulLen;
+               }
+            }
+            else if( ulLen <= UINT16_MAX )
+            {
+               if( u > 2 )
+               {
+                  ulLen -= u;
+                  pBuffer[ ulOffset++ ] = HB_SERIAL_STRPAD16;
+                  HB_PUT_LE_UINT16( &pBuffer[ ulOffset ], ulLen );
+                  ulOffset += 2;
+                  HB_PUT_LE_UINT16( &pBuffer[ ulOffset ], u );
+                  ulOffset += 2;
+               }
+               else
+               {
+                  pBuffer[ ulOffset++ ] = HB_SERIAL_STRING16;
+                  HB_PUT_LE_UINT16( &pBuffer[ ulOffset ], ulLen );
+                  ulOffset += 2;
+               }
+            }
+            else
+            {
+               if( u > 4 )
+               {
+                  ulLen -= u;
+                  pBuffer[ ulOffset++ ] = HB_SERIAL_STRPAD32;
+                  HB_PUT_LE_UINT32( &pBuffer[ ulOffset ], ulLen );
+                  ulOffset += 4;
+                  HB_PUT_LE_UINT32( &pBuffer[ ulOffset ], u );
+                  ulOffset += 4;
+               }
+               else
+               {
+                  pBuffer[ ulOffset++ ] = HB_SERIAL_STRING32;
+                  HB_PUT_LE_UINT32( &pBuffer[ ulOffset ], ulLen );
+                  ulOffset += 4;
+               }
+            }
+            memcpy( &pBuffer[ ulOffset ], szVal, ulLen );
+            ulOffset += ulLen;
          }
-         memcpy( &pBuffer[ ulOffset ], hb_itemGetCPtr( pItem ), ulLen );
-         ulOffset += ulLen;
          break;
 
       case HB_IT_ARRAY:
@@ -619,7 +684,7 @@ static ULONG hb_deserializeArray( PHB_ITEM pItem, UCHAR * pBuffer, ULONG ulOffse
 static ULONG hb_deserializeItem( PHB_ITEM pItem, UCHAR * pBuffer,
                                  ULONG ulOffset, PHB_CYCLIC_REF pRef )
 {
-   ULONG ulLen;
+   ULONG ulLen, ulPad;
    char * szVal;
 
    switch( pBuffer[ ulOffset++ ] )
@@ -682,6 +747,9 @@ static ULONG hb_deserializeItem( PHB_ITEM pItem, UCHAR * pBuffer,
          ulOffset += ulLen;
          break;
 
+      case HB_SERIAL_STRNUL:
+         hb_itemPutCL( pItem, NULL, 0 );
+         break;
       case HB_SERIAL_STRING8:
          ulLen = pBuffer[ ulOffset++ ];
          hb_itemPutCL( pItem, ( char * ) &pBuffer[ ulOffset ], ulLen );
@@ -697,6 +765,37 @@ static ULONG hb_deserializeItem( PHB_ITEM pItem, UCHAR * pBuffer,
          ulLen = HB_GET_LE_UINT32( &pBuffer[ ulOffset ] );
          ulOffset += 4;
          hb_itemPutCL( pItem, ( char * ) &pBuffer[ ulOffset ], ulLen );
+         ulOffset += ulLen;
+         break;
+      case HB_SERIAL_STRPAD8:
+         ulLen = pBuffer[ ulOffset++ ];
+         ulPad = pBuffer[ ulOffset++ ];
+         szVal = ( char * ) hb_xgrab( ulLen + ulPad + 1 );
+         memcpy( szVal, &pBuffer[ ulOffset ], ulLen );
+         memset( szVal + ulLen, ' ', ulPad + 1 );
+         hb_itemPutCLPtr( pItem, szVal, ulLen + ulPad );
+         ulOffset += ulLen;
+         break;
+      case HB_SERIAL_STRPAD16:
+         ulLen = HB_GET_LE_UINT16( &pBuffer[ ulOffset ] );
+         ulOffset += 2;
+         ulPad = HB_GET_LE_UINT16( &pBuffer[ ulOffset ] );
+         ulOffset += 2;
+         szVal = ( char * ) hb_xgrab( ulLen + ulPad + 1 );
+         memcpy( szVal, &pBuffer[ ulOffset ], ulLen );
+         memset( szVal + ulLen, ' ', ulPad + 1 );
+         hb_itemPutCLPtr( pItem, szVal, ulLen + ulPad );
+         ulOffset += ulLen;
+         break;
+      case HB_SERIAL_STRPAD32:
+         ulLen = HB_GET_LE_UINT32( &pBuffer[ ulOffset ] );
+         ulOffset += 4;
+         ulPad = HB_GET_LE_UINT32( &pBuffer[ ulOffset ] );
+         ulOffset += 4;
+         szVal = ( char * ) hb_xgrab( ulLen + ulPad + 1 );
+         memcpy( szVal, &pBuffer[ ulOffset ], ulLen );
+         hb_xmemset( szVal + ulLen, ' ', ulPad + 1 );
+         hb_itemPutCLPtr( pItem, szVal, ulLen + ulPad );
          ulOffset += ulLen;
          break;
 
@@ -779,6 +878,7 @@ static BOOL hb_deserializeTest( UCHAR ** pBufferPtr, ULONG * pulSize,
       case HB_SERIAL_TRUE:
       case HB_SERIAL_FALSE:
       case HB_SERIAL_ZERO:
+      case HB_SERIAL_STRNUL:
          ulSize = 1;
          break;
       case HB_SERIAL_INT8:
@@ -807,6 +907,15 @@ static BOOL hb_deserializeTest( UCHAR ** pBufferPtr, ULONG * pulSize,
          break;
       case HB_SERIAL_STRING32:
          ulSize = 5 + ( ulSize >= 5 ? HB_GET_LE_UINT32( pBuffer ) : ulSize );
+         break;
+      case HB_SERIAL_STRPAD8:
+         ulSize = 3 + ( ulSize >= 3 ? *pBuffer : ulSize );
+         break;
+      case HB_SERIAL_STRPAD16:
+         ulSize = 5 + ( ulSize >= 5 ? HB_GET_LE_UINT16( pBuffer ) : ulSize );
+         break;
+      case HB_SERIAL_STRPAD32:
+         ulSize = 9 + ( ulSize >= 9 ? HB_GET_LE_UINT32( pBuffer ) : ulSize );
          break;
       case HB_SERIAL_ARRAYREF8:
          if( hb_itemSerialOffsetRef( pRefPtr, NULL, ulOffset ) )

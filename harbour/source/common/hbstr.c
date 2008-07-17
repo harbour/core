@@ -117,6 +117,21 @@ HB_EXPORT ULONG hb_strAt( const char * szSub, ULONG ulSubLen, const char * szTex
       return 0;
 }
 
+HB_EXPORT BOOL hb_strEmpty( const char * szText, ULONG ulLen )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_strEmpty(%s, %lu)", szText, ulLen));
+
+   while( ulLen-- )
+   {
+      char c = szText[ ulLen ];
+
+      if( !HB_ISSPACE( c ) )
+         return FALSE;
+   }
+
+   return TRUE;
+}
+
 HB_EXPORT char * hb_strupr( char * pszText )
 {
    char * pszPos;

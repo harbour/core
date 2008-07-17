@@ -8,6 +8,51 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-17 18:19 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbw32/dllcall.c
+    * minor cleanup in return values
+
+  * harbour/contrib/hbole/ole2.c
+    * cleaned casting in UNICODE conversions
+
+  * harbour/source/common/expropt2.c
+    * replicate CA-Cl*pper compile time optimization bugs:
+         "" $ <literString>         => .T.
+         AT( "", <literString> )    => 1
+         CHR( 256 )                 => ""
+      only when Harbour extensions (-kh) are not enabled, f.e.
+      in strict Clipper compatibility mode (-kc)
+
+  * harbour/utils/hbtest/rt_hvma.prg
+  * harbour/utils/hbtest/rt_str.prg
+    * updated to test Clipper and Harbour compile time modes in
+      the above situations
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  - harbour/source/rtl/strings.c
+  * harbour/source/common/hbstr.c
+    * moved hb_strEmpty() from RTL to COMMON library
+
+  * harbour/include/hbexprb.c
+  * harbour/include/hbexprop.h
+  * harbour/source/common/expropt2.c
+    + added compile time optimization for EMPTY() function
+    ; removed 'TODO: empty optimization' note
+
+  * harbour/source/rtl/itemseri.c
+    % compress trailing spaces during string item serialization
+
+  * harbour/include/hbapi.h
+  * harbour/source/vm/hashes.c
+    + added hb_hashAddNew() - works like hb_hashAdd() but it adds item
+      only if new key is used
+
+  * harbour/source/vm/hvm.c
+    * use hb_hashAddNew() instead of hb_hashAdd() for HB_P_HASHGEN
+      I cannot revert the order of hash item during compilation because
+      it will also change the order of user expression evaluation.
+
 2008-07-17 03:36 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbtpathy/tplinux.c
     * workaround for missing CRTCTS declaration in OpenWatcom

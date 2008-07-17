@@ -560,7 +560,6 @@ RTL_LIB_OBJS = \
     $(OBJ_DIR)\str$(OBJEXT)      \
     $(OBJ_DIR)\strpeek$(OBJEXT)  \
     $(OBJ_DIR)\strcase$(OBJEXT)  \
-    $(OBJ_DIR)\strings$(OBJEXT)  \
     $(OBJ_DIR)\strmatch$(OBJEXT) \
     $(OBJ_DIR)\strtran$(OBJEXT)  \
     $(OBJ_DIR)\strzero$(OBJEXT)  \

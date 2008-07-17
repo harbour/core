@@ -112,7 +112,7 @@ static LPSTR DblToDate( double nDate, char * cDate )
    return cDate;
 }
 
-static LPWSTR AnsiToWide( LPSTR cAnsi )
+static LPWSTR AnsiToWide( LPCSTR cAnsi )
 {
    unsigned short wLen;
    LPWSTR cString;
@@ -124,7 +124,7 @@ static LPWSTR AnsiToWide( LPSTR cAnsi )
    return cString;
 }
 
-static LPSTR WideToAnsi( LPSTR cWide )
+static LPSTR WideToAnsi( LPWSTR cWide )
 {
    unsigned short wLen;
    LPSTR cString;
@@ -325,7 +325,7 @@ static void RetValue( void )
    switch( s_RetVal.n1.n2.vt )
    {
       case VT_BSTR:
-         hb_retc_buffer( WideToAnsi( ( LPSTR ) s_RetVal.n1.n2.n3.bstrVal ) );
+         hb_retc_buffer( WideToAnsi( ( LPWSTR ) s_RetVal.n1.n2.n3.bstrVal ) );
          break;
 
       case VT_BOOL:
@@ -421,8 +421,8 @@ HB_FUNC( OLESHOWEXCEPTION )
 #if defined( UNICODE )
       MessageBox( NULL, s_excep.bstrDescription, s_excep.bstrSource, MB_ICONHAND );
 #else
-      LPSTR source = WideToAnsi( (LPSTR) s_excep.bstrSource );
-      LPSTR description = WideToAnsi( (LPSTR) s_excep.bstrDescription );
+      LPSTR source = WideToAnsi( (LPWSTR) s_excep.bstrSource );
+      LPSTR description = WideToAnsi( (LPWSTR) s_excep.bstrDescription );
       MessageBox( NULL, description, source, MB_ICONHAND );
       hb_xfree( source );
       hb_xfree( description );
@@ -468,7 +468,7 @@ HB_FUNC( OLEINVOKE ) /* (hOleObject, szMethodName, uParams...) */
 HB_FUNC( OLESETPROPERTY ) /* (hOleObject, cPropName, uValue, uParams...) */
 {
    IDispatch * pDisp = ( IDispatch * ) hb_parptr( 1 );
-   LPTSTR cMember;
+   LPWSTR cMember;
    DISPID lDispID;
    DISPID lPropPut = DISPID_PROPERTYPUT;
    DISPPARAMS dParams;
@@ -508,7 +508,7 @@ HB_FUNC( OLESETPROPERTY ) /* (hOleObject, cPropName, uValue, uParams...) */
 HB_FUNC( OLEGETPROPERTY )  /* (hOleObject, cPropName, uParams...) */
 {
    IDispatch * pDisp = ( IDispatch * ) hb_parptr( 1 );
-   LPTSTR cMember;
+   LPWSTR cMember;
    DISPID lDispID;
    DISPPARAMS dParams;
    UINT uArgErr;
