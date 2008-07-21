@@ -58,7 +58,7 @@ static void GroupDef( FILE * hObjFile, BYTE bName, BYTE * aSegs );
 static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x00,
                               0x00, 0xE8, 0x00, 0x00, 0x00, 0x00, 0x83, 0xC4, 0x08, 0xC3 };
 
-static char * * externNames = 0;
+static char * * externNames = NULL;
 static USHORT wExternals = 1; /* _hb_vmExecute is always added */
 static char * szPrefix = "_HB_FUN_";
 
@@ -96,6 +96,11 @@ void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
    GenerateDataSegment( HB_COMP_PARAM, hObjFile );
    GenerateSymbolsSegment( HB_COMP_PARAM, hObjFile );
    End( hObjFile );
+   if( externNames )
+   {
+      hb_xfree( externNames );
+      externNames = NULL;
+   }
 
    fclose( hObjFile );
 
