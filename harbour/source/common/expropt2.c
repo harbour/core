@@ -1757,7 +1757,7 @@ BOOL hb_compExprReduceDTOS( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    {
       char szBuffer[ 9 ];
       char * szDate = ( char * ) memcpy( hb_xgrab( 9 ),
-                      hb_dateDecStr( szBuffer, pArg->value.asNum.val.l ), 9 );
+                      hb_dateDecStr( szBuffer, ( long ) pArg->value.asNum.val.l ), 9 );
       HB_EXPR_PTR pExpr = hb_compExprNewString( szDate, 8, TRUE, HB_COMP_PARAM );
 
       HB_COMP_EXPR_FREE( pParms );

@@ -75,21 +75,24 @@ extern char *strerror( int errnum );
 #if defined( HB_OS_WIN_32_USED ) && defined( _MSC_VER )
 
    #ifndef MAX_COMPUTERNAME_LENGTH
-      #define MAX_COMPUTERNAME_LENGTH         31
-      #define SEM_FAILCRITICALERRORS          0x0001
-      #define FILE_TYPE_CHAR                  0x0002
-      #define STD_INPUT_HANDLE                (DWORD)-10
-      #define STD_OUTPUT_HANDLE               (DWORD)-11
-      #define STD_ERROR_HANDLE                (DWORD)-12
-      #define LOCKFILE_FAIL_IMMEDIATELY       0x00000001
-      #define LOCKFILE_EXCLUSIVE_LOCK         0x00000002
-      #define OEM_FIXED_FONT                  SYSTEM_FONT
-      #define WM_NCMOUSEMOVE                  0x00A0
-      #define WM_QUERYENDSESSION              0x0011
-      #define WM_ENTERIDLE                    0x0121
-      #define SM_CMOUSEBUTTONS                43
-      #define PROOF_QUALITY                   2
-      #define LR_LOADFROMFILE                 0x0010
+      #define MAX_COMPUTERNAME_LENGTH           31
+      #define SEM_FAILCRITICALERRORS            0x0001
+      #define FILE_TYPE_CHAR                    0x0002
+      #define STD_INPUT_HANDLE                  ((DWORD)-10)
+      #define STD_OUTPUT_HANDLE                 ((DWORD)-11)
+      #define STD_ERROR_HANDLE                  ((DWORD)-12)
+      #define LOCKFILE_FAIL_IMMEDIATELY         0x00000001
+      #define LOCKFILE_EXCLUSIVE_LOCK           0x00000002
+      #define OEM_FIXED_FONT                    SYSTEM_FONT
+      #define WM_NCMOUSEMOVE                    0x00A0
+      #define WM_QUERYENDSESSION                0x0011
+      #define WM_ENTERIDLE                      0x0121
+      #define SM_CMOUSEBUTTONS                  43
+      #define PROOF_QUALITY                     2
+      #define LR_LOADFROMFILE                   0x0010
+      #ifndef DRIVE_UNKNOWN
+         #define DRIVE_UNKNOWN                     0
+      #endif
    #endif
 
    DWORD WINAPI GetEnvironmentVariableA( LPCSTR name, LPSTR value, DWORD size );
