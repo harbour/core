@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-21 21:54 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.h
+    * added some definitions which seems to be missing in some MSVC-WinCE
+      versions
+
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * cleaned SetWindowLongPtr()/SetWindowLong() usage so now all calls
+      are protected by the same #if condition
+
 2008-07-21 19:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbwince.h
     * added DRIVE_UNKNOWN declaration for MSVC WinCE builds

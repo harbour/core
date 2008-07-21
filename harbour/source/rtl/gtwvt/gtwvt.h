@@ -184,6 +184,19 @@ typedef struct
 #ifndef WM_MOUSEWHEEL
 #  define WM_MOUSEWHEEL 0x020A
 #endif
+#ifndef WM_ENTERSIZEMOVE
+#  define WM_ENTERSIZEMOVE 561
+#endif
+
+#ifndef SWP_DEFERERASE
+#  define SWP_DEFERERASE 0x2000
+#endif
+#ifndef SW_NORMAL
+#  define SW_NORMAL 1
+#endif
+#ifndef SC_MAXIMIZE
+#  define SC_MAXIMIZE 0xF030
+#endif
 
 #define SYS_EV_MARK  1000
 
