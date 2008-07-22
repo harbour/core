@@ -600,7 +600,7 @@ static void PubDef( FILE * hObjFile, char * szName, USHORT wSegment, USHORT wOff
   BYTE bChk = 0;
   BYTE bChar;
   USHORT wLen = 2 + 2 + strlen( szPrefix ) + strlen( szName ) + 2 + 1;
-  char * szTemp;
+  const char * szTemp;
 
   putbyte( 0x90, hObjFile, &bChk );
   putword( wLen, hObjFile, &bChk );
