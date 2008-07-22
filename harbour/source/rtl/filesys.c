@@ -195,6 +195,9 @@
        ( defined(__DMC__) || defined( _MSC_VER ) || defined( __LCC__ ) )
       #define INVALID_SET_FILE_POINTER ((DWORD)-1)
    #endif
+   #if !defined( INVALID_FILE_ATTRIBUTES )
+      #define INVALID_FILE_ATTRIBUTES     ( ( DWORD ) -1 )
+   #endif
 #endif
 #if defined( HB_USE_SHARELOCKS ) && defined( HB_USE_BSDLOCKS )
    #include <sys/file.h>
@@ -892,27 +895,145 @@ HB_EXPORT BOOL hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 
 HB_EXPORT BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plMillisec )
 {
+   BOOL fResult;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_fsGetFileTime(%s, %p, %p)", pszFileName, plJulian, plMillisec));
 
-   /* TODO */
+   fResult = FALSE;
 
-   HB_SYMBOL_UNUSED( pszFileName );
-   HB_SYMBOL_UNUSED( plJulian );
-   HB_SYMBOL_UNUSED( plMillisec );
+#if defined( HB_WIN32_IO )
+   {
+      FHANDLE hFile = hb_fsOpen( pszFileName, FO_READ | FO_SHARED );
 
-   return FALSE;
+      if( hFile != FS_ERROR )
+      {
+         FILETIME ft, local_ft;
+         SYSTEMTIME st;
+
+         if( GetFileTime( DosToWinHandle( hFile ), NULL, NULL, &ft ) &&
+             FileTimeToLocalFileTime( &ft, &local_ft ) &&
+             FileTimeToSystemTime( &local_ft, &st ) )
+         {
+            *plJulian = hb_dateEncode( st.wYear, st.wMonth, st.wDay );
+            *plMillisec = hb_timeStampEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
+
+            fResult = TRUE;
+         }
+         hb_fsSetIOError( fResult, 0 );
+         hb_fsClose( hFile );
+      }
+   }
+#elif defined( HB_OS_UNIX ) || defined( HB_OS_OS2 ) || defined( HB_OS_DOS ) || defined( __GNUC__ )
+   {
+      struct stat sStat;
+      BOOL fFree;
+
+      pszFileName = hb_fsNameConv( pszFileName, &fFree );
+
+      if( stat( ( char * ) pszFileName, &sStat ) == 0 )
+      {
+         time_t ftime;
+         struct tm * ft;
+
+         ftime = sStat.st_mtime;
+         ft = localtime( &ftime );
+
+         *plJulian = hb_dateEncode( ft->tm_year + 1900, ft->tm_mon + 1, ft->tm_mday );
+         *plMillisec = hb_timeStampEncode( ft->tm_hour, ft->tm_min, ft->tm_sec, 0 );
+
+         fResult = TRUE;
+      }
+
+      hb_fsSetIOError( fResult, 0 );
+
+      if( fFree )
+         hb_xfree( pszFileName );
+   }
+#else
+   {
+      int TODO; /* TODO: for given platform */
+
+      HB_SYMBOL_UNUSED( pszFileName );
+      HB_SYMBOL_UNUSED( plJulian );
+      HB_SYMBOL_UNUSED( plMillisec );
+   }
+#endif
+
+   return fResult;
 }
 
 HB_EXPORT BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
 {
+   BOOL fResult;
+   BOOL fFree;
+
    HB_TRACE(HB_TR_DEBUG, ("hb_fsGetAttr(%s, %p)", pszFileName, pulAttr));
 
-   /* TODO */
+   fResult = FALSE;
+   pszFileName = hb_fsNameConv( pszFileName, &fFree );
 
-   HB_SYMBOL_UNUSED( pszFileName );
-   HB_SYMBOL_UNUSED( pulAttr );
+#if defined( HB_OS_WIN_32 )
+   {
+      DWORD dwAttr = GetFileAttributesA( ( char * ) pszFileName );
 
-   return FALSE;
+      if( dwAttr != INVALID_FILE_ATTRIBUTES )
+      {
+         *pulAttr = hb_fsAttrFromRaw( dwAttr );
+         fResult = TRUE;
+      }
+      hb_fsSetIOError( fResult, 0 );
+   }
+#elif defined( HB_OS_DOS )
+   {
+#if defined( __DJGPP__ ) || defined(__BORLANDC__)
+      int attr = _chmod( pszFileName, 0, 0 );
+      if( attr != -1 )
+#else
+      unsigned int attr = 0;
+      if( _dos_getfileattr( pszFileName, &attr ) == 0 )
+#endif
+      {
+         *pulAttr = hb_fsAttrFromRaw( attr );
+         fResult = TRUE;
+      }
+   }
+#elif defined( HB_OS_OS2 )
+   {
+      FILESTATUS3 fs3;
+      APIRET ulrc;
+
+      ulrc = DosQueryPathInfo( ( PSZ ) pszFileName, FIL_STANDARD, &fs3, sizeof( fs3 ) );
+      if( ulrc == NO_ERROR )
+      {
+         *pulAttr = hb_fsAttrFromRaw( fs3.attrFile );
+         fResult = TRUE;
+      }
+      hb_fsSetIOError( fResult, 0 );
+   }
+#elif defined( HB_OS_UNIX )
+   {
+      struct stat sStat;
+
+      if( stat( ( char * ) pszFileName, &sStat ) == 0 )
+      {
+         *pulAttr = hb_fsAttrFromRaw( sStat.st_mode );
+         fResult = TRUE;
+      }
+      hb_fsSetIOError( fResult, 0 );
+   }
+#else
+   {
+      int TODO; /* TODO: for given platform */
+
+      HB_SYMBOL_UNUSED( pszFileName );
+      HB_SYMBOL_UNUSED( pulAttr );
+   }
+#endif
+
+   if( fFree )
+      hb_xfree( pszFileName );
+
+   return fResult;
 }
 
 HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )

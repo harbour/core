@@ -461,25 +461,25 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       if( bFound )
       {
-         strncpy( ffind->szName, info->entry.ff_name, _POSIX_PATH_MAX );
+         hb_strncpy( ffind->szName, info->entry.ff_name, _POSIX_PATH_MAX );
          ffind->size = info->entry.ff_fsize;
-      
+
          raw_attr = info->entry.ff_attrib;
-      
+
          {
             time_t ftime;
             struct tm * ft;
             struct stat sStat;
-      
+
             stat( info->entry.ff_name, &sStat );
-      
+
             ftime = sStat.st_mtime;
             ft = localtime( &ftime );
-      
+
             nYear  = ft->tm_year + 1900;
             nMonth = ft->tm_mon + 1;
             nDay   = ft->tm_mday;
-      
+
             nHour  = ft->tm_hour;
             nMin   = ft->tm_min;
             nSec   = ft->tm_sec;
@@ -526,7 +526,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       
          stat( info->entry.achName, &sStat );
       
-         strncpy( ffind->szName, info->entry.achName, _POSIX_PATH_MAX );
+         hb_strncpy( ffind->szName, info->entry.achName, _POSIX_PATH_MAX );
          ffind->size = sStat.st_size;
       
          raw_attr = info->entry.attrFile;
@@ -596,7 +596,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
          if( bFound )
          {
-            strncpy( ffind->szName, info->pFindFileData.cFileName, _POSIX_PATH_MAX );
+            hb_strncpy( ffind->szName, info->pFindFileData.cFileName, _POSIX_PATH_MAX );
 
             if( info->pFindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
                ffind->size = 0;
@@ -710,7 +710,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             if( stat( dirname, &sStat ) == 0 )
 #endif
             {
-               strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
+               hb_strncpy( ffind->szName, info->entry->d_name, _POSIX_PATH_MAX );
                ffind->size = sStat.st_size;
 
                raw_attr = sStat.st_mode;

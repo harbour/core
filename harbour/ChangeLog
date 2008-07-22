@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-22 12:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * disabled SetWindowLongPtr() in 32bit MSVC WinCE builds
+
+  * harbour/source/rtl/hbffind.c
+    * minor cleanup.
+
+  * harbour/source/rtl/filesys.c
+    + implemented hb_fsGetAttr() and hb_fsGetFileTime() for DOS, MS-Win,
+      OS2 and *nixes. Please test it on different platforms.
+
 2008-07-22 11:03 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/genobj32.c
     ! casting
