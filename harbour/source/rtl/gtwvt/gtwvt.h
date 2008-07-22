@@ -187,6 +187,9 @@ typedef struct
 #ifndef WM_ENTERSIZEMOVE
 #  define WM_ENTERSIZEMOVE 561
 #endif
+#ifndef WM_EXITSIZEMOVE
+#  define WM_EXITSIZEMOVE  562
+#endif
 
 #ifndef SWP_DEFERERASE
 #  define SWP_DEFERERASE 0x2000

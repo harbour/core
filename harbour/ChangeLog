@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-22 10:35 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/gtwvt/gtwvt.h
+    * added yet another one MSVC-WinCE missing definition
+
 2008-07-22 09:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbapifs.h
    * source/rtl/filesys.c

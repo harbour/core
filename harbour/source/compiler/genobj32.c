@@ -60,7 +60,7 @@ static BYTE prgFunction[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x
 
 static char * * externNames = NULL;
 static USHORT wExternals = 1; /* _hb_vmExecute is always added */
-static char * szPrefix = "_HB_FUN_";
+static const char * szPrefix = "_HB_FUN_";
 
 void hb_compGenObj32( HB_COMP_DECL, PHB_FNAME pFileName )
 {
