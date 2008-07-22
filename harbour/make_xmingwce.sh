@@ -45,8 +45,7 @@ export CC_PRG_USR
 export PRG_USR="$CC_PRG_USR $PRG_USR"
 
 # default cegcc instalation path
-[ -z "$CCPATH" ] && \
-export CCPATH="/opt/mingw32ce/bin"
+[ -z "$CCPATH" ] && CCPATH="/opt/mingw32ce/bin"
 export PATH="$CCPATH:$PATH"
 
 # cegcc executables prefix - this
@@ -66,6 +65,7 @@ if [ -z "$CCPREFIX" ]; then
     fi
 fi
 
+export CCPATH="${CCPATH}:"
 export HB_TOOLS_PREF="hbce"
 export HB_XBUILD="wce"
 export HB_HOST_BUILD="lib"
