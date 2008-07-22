@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-22 19:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/zip.c
+    * set OS version information in ZIP header when ZIP archive is
+      created by *nix Harbour build. It's necessary to inform some
+      zip packages (f.e. infozip/unzip) that they should respect POSIX
+      file permission during decompression.
+
 2008-07-22 17:18 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbmzip/hbmzip.c
     ! fixed storing/setting file date, time and attributes in *nixes
