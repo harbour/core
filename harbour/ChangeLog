@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-22 17:18 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/hbmzip.c
+    ! fixed storing/setting file date, time and attributes in *nixes
+
+  * harbour/include/hbapifs.h
+  * harbour/source/rtl/hbffind.c
+  * harbour/source/rtl/filesys.c
+    ! replaced hack with direct bit conversion in *nixes attributes
+      by bit testing
+
 2008-07-22 15:07 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbct/files.c
   * harbour/contrib/hbmzip/hbmzip.c

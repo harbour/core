@@ -232,10 +232,18 @@ ULONG hb_fsAttrFromRaw( ULONG raw_attr )
 
 #elif defined(HB_OS_UNIX)
 
-   ulAttr = ( ( raw_attr & S_IRWXO ) << 16 ) |
-            ( ( raw_attr & S_IRWXG ) << 15 ) |
-            ( ( raw_attr & S_IRWXU ) << 14 ) |
-            ( ( raw_attr & ( S_ISUID | S_ISGID | S_ISVTX ) ) << 13 );
+   ulAttr = ( ( raw_attr & S_IXOTH ) ? HB_FA_XOTH : 0 ) |
+            ( ( raw_attr & S_IWOTH ) ? HB_FA_WOTH : 0 ) |
+            ( ( raw_attr & S_IROTH ) ? HB_FA_ROTH : 0 ) |
+            ( ( raw_attr & S_IXGRP ) ? HB_FA_XGRP : 0 ) |
+            ( ( raw_attr & S_IWGRP ) ? HB_FA_WGRP : 0 ) |
+            ( ( raw_attr & S_IRGRP ) ? HB_FA_RGRP : 0 ) |
+            ( ( raw_attr & S_IXUSR ) ? HB_FA_XUSR : 0 ) |
+            ( ( raw_attr & S_IWUSR ) ? HB_FA_WUSR : 0 ) |
+            ( ( raw_attr & S_IRUSR ) ? HB_FA_RUSR : 0 ) |
+            ( ( raw_attr & S_ISVTX ) ? HB_FA_SVTX : 0 ) |
+            ( ( raw_attr & S_ISGID ) ? HB_FA_SGID : 0 ) |
+            ( ( raw_attr & S_ISUID ) ? HB_FA_SUID : 0 );
 
    if( S_ISREG( raw_attr ) )  ulAttr |= HB_FA_FILE;
    if( S_ISDIR( raw_attr ) )  ulAttr |= HB_FA_DIRECTORY;

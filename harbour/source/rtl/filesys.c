@@ -1148,6 +1148,7 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
       {
          struct utimbuf buf;
          struct tm new_value;
+         time_t tim;
 
          if( lJulian <= 0 || lMillisec < 0 )
          {
@@ -1175,6 +1176,12 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
             new_value.tm_min = iMinute;
             new_value.tm_sec = iSecond;
          }
+         tim = mktime( &new_value );
+#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
+         new_value = *gmtime( &tim );
+#   else
+         gmtime_r( &tim, &new_value );
+#   endif
          buf.actime = buf.modtime = mktime( &new_value );
          fResult = utime( ( char * ) pszFileName, &buf ) == 0;
       }

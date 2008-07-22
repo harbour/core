@@ -534,21 +534,27 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
             ulExtAttr |= 0x20; /* FILE_ATTRIBUTE_ARCHIVE */
          }
 
-         ulExtAttr |= ( statbuf.st_mode & S_IRWXO ) << 16;
-         ulExtAttr |= ( statbuf.st_mode & S_IRWXG ) << 15;
-         ulExtAttr |= ( statbuf.st_mode & S_IRWXU ) << 14;
+         ulExtAttr |= ( ( statbuf.st_mode & S_IXOTH ) ? 0x00010000 : 0 ) |
+                      ( ( statbuf.st_mode & S_IWOTH ) ? 0x00020000 : 0 ) |
+                      ( ( statbuf.st_mode & S_IROTH ) ? 0x00040000 : 0 ) |
+                      ( ( statbuf.st_mode & S_IXGRP ) ? 0x00080000 : 0 ) |
+                      ( ( statbuf.st_mode & S_IWGRP ) ? 0x00100000 : 0 ) |
+                      ( ( statbuf.st_mode & S_IRGRP ) ? 0x00200000 : 0 ) |
+                      ( ( statbuf.st_mode & S_IXUSR ) ? 0x00400000 : 0 ) |
+                      ( ( statbuf.st_mode & S_IWUSR ) ? 0x00800000 : 0 ) |
+                      ( ( statbuf.st_mode & S_IRUSR ) ? 0x01000000 : 0 );
 
-#if defined( HB_OS_LINUX ) && !defined( __WATCOMC__ )
+#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
+         st = *localtime( &statbuf.st_mtime );
+#   else
          localtime_r( &statbuf.st_mtime, &st );
-#else
-         memcpy( &st, localtime( &statbuf.st_mtime ), sizeof( st ) );
-#endif
+#   endif
 
          zfi.tmz_date.tm_sec = st.tm_sec;
          zfi.tmz_date.tm_min = st.tm_min;
          zfi.tmz_date.tm_hour = st.tm_hour;
          zfi.tmz_date.tm_mday = st.tm_mday;
-         zfi.tmz_date.tm_mon = st.tm_mon - 1;
+         zfi.tmz_date.tm_mon = st.tm_mon;
          zfi.tmz_date.tm_year = st.tm_year;
       }
       else
@@ -847,15 +853,22 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
    }
 #elif defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    {
-      struct utimbuf   utim;
-      struct tm        st;
+      struct utimbuf    utim;
+      struct tm         st;
+      time_t            tim;
 
 #  if defined( __DJGPP__ )
       _chmod( szName, 1, ufi.external_fa & 0xFF );
 #  else
-      chmod( szName, ( ufi.external_fa & 0x00070000 ) >> 16 |
-                     ( ufi.external_fa & 0x00380000 ) >> 15 |
-                     ( ufi.external_fa & 0x01C00000 ) >> 14 );
+      chmod( szName, ( ( ufi.external_fa & 0x00010000 ) ? S_IXOTH : 0 ) |
+                     ( ( ufi.external_fa & 0x00020000 ) ? S_IWOTH : 0 ) |
+                     ( ( ufi.external_fa & 0x00040000 ) ? S_IROTH : 0 ) |
+                     ( ( ufi.external_fa & 0x00080000 ) ? S_IXGRP : 0 ) |
+                     ( ( ufi.external_fa & 0x00100000 ) ? S_IWGRP : 0 ) |
+                     ( ( ufi.external_fa & 0x00200000 ) ? S_IRGRP : 0 ) |
+                     ( ( ufi.external_fa & 0x00400000 ) ? S_IXUSR : 0 ) |
+                     ( ( ufi.external_fa & 0x00800000 ) ? S_IWUSR : 0 ) |
+                     ( ( ufi.external_fa & 0x01000000 ) ? S_IRUSR : 0 ) );
 #  endif
       memset( &st, 0, sizeof( st ) );
 
@@ -863,11 +876,16 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
       st.tm_min = ufi.tmu_date.tm_min;
       st.tm_hour = ufi.tmu_date.tm_hour;
       st.tm_mday = ufi.tmu_date.tm_mday;
-      st.tm_mon = ufi.tmu_date.tm_mon + 1; 
-      st.tm_year = ufi.tmu_date.tm_year;
+      st.tm_mon = ufi.tmu_date.tm_mon; 
+      st.tm_year = ufi.tmu_date.tm_year - 1900;
 
-      utim.actime = mktime( &st );
-      utim.modtime = utim.actime;
+      tim = mktime( &st );
+#   if _POSIX_C_SOURCE < 199506L || defined( HB_OS_DARWIN_5 )
+      st = *gmtime( &tim );
+#   else
+      gmtime_r( &tim, &st );
+#   endif
+      utim.actime = utim.modtime = mktime( &st );
 
       utime( szName, &utim );
    }

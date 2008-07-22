@@ -136,16 +136,23 @@ HB_EXTERN_BEGIN
 #define HB_FA_RWXO            ( HB_FA_ROTH | HB_FA_WOTH | HB_FA_XOTH )
 
 /* macros to convert Harbour attributes to POSIX ones */
-#define HB_FA_POSIX_OTH(a)    ( ( ( a ) & 0x00070000 ) >> 16 )
-#define HB_FA_POSIX_GRP(a)    ( ( ( a ) & 0x00380000 ) >> 15 )
-#define HB_FA_POSIX_USR(a)    ( ( ( a ) & 0x01C00000 ) >> 14 )
-#define HB_FA_POSIX_SID(a)    ( ( ( a ) & 0x0E000000 ) >> 13 )
+#define HB_FA_POSIX_SID(a)    ( ( ( ( a ) & HB_FA_SVTX ) ? S_ISVTX : 0 ) | \
+                                ( ( ( a ) & HB_FA_SGID ) ? S_ISGID : 0 ) | \
+                                ( ( ( a ) & HB_FA_SUID ) ? S_ISUID : 0 ) )
+#define HB_FA_POSIX_OTH(a)    ( ( ( ( a ) & HB_FA_XOTH ) ? S_IXOTH : 0 ) | \
+                                ( ( ( a ) & HB_FA_WOTH ) ? S_IWOTH : 0 ) | \
+                                ( ( ( a ) & HB_FA_ROTH ) ? S_IROTH : 0 ) )
+#define HB_FA_POSIX_GRP(a)    ( ( ( ( a ) & HB_FA_XGRP ) ? S_IXGRP : 0 ) | \
+                                ( ( ( a ) & HB_FA_WGRP ) ? S_IWGRP : 0 ) | \
+                                ( ( ( a ) & HB_FA_RGRP ) ? S_IRGRP : 0 ) )
+#define HB_FA_POSIX_USR(a)    ( ( ( ( a ) & HB_FA_XUSR ) ? S_IXUSR : 0 ) | \
+                                ( ( ( a ) & HB_FA_WUSR ) ? S_IWUSR : 0 ) | \
+                                ( ( ( a ) & HB_FA_RUSR ) ? S_IRUSR : 0 ) )
 
 #define HB_FA_POSIX_ATTR(a)   ( HB_FA_POSIX_OTH(a) | \
                                 HB_FA_POSIX_GRP(a) | \
                                 HB_FA_POSIX_USR(a) | \
                                 HB_FA_POSIX_SID(a) )
-
 
 extern HB_EXPORT BOOL       hb_fsChDir      ( BYTE * pszDirName ); /* change working directory */
 extern HB_EXPORT USHORT     hb_fsChDrv      ( BYTE nDrive ); /* change working drive */
