@@ -180,10 +180,12 @@
 
 #if defined(HB_OS_DOS)
    #include <dos.h>
+   #include <time.h>
 #elif defined(HB_OS_OS2)
    #include <sys/signal.h>
    #include <sys/process.h>
    #include <sys/wait.h>
+   #include <time.h>
    #include <share.h>
    #ifndef SH_COMPAT
       #define SH_COMPAT    0x0000
@@ -990,7 +992,7 @@ HB_EXPORT BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
       if( attr != -1 )
 #else
       unsigned int attr = 0;
-      if( _dos_getfileattr( pszFileName, &attr ) == 0 )
+      if( _dos_getfileattr( ( char * ) pszFileName, &attr ) == 0 )
 #endif
       {
          *pulAttr = hb_fsAttrFromRaw( attr );
