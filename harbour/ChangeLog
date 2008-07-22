@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-22 09:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbapifs.h
+   * source/rtl/filesys.c
+     + Added skeletons for hb_fsGetAttr() and hb_fsGetFileTime()
+       TODO: Implementation.
+
+   * contrib/hbclipsm/common.mak
+   * contrib/hbclipsm/Makefile
+   - contrib/hbclipsm/dbf.c
+   	 ! Removed duplicate implementation of DBF() from hbclipsm.lib
+
+   ; TOFIX:
+     I'm getting these new warnings under BCC55:
+     Warning W8080 source\rtl\filesys.c 2718: '_fstat(int,_stat *)' is declared but never used
+     Warning W8080 source\rtl\filesys.c 2718: '_disable()' is declared but never used
+     Warning W8080 source\rtl\filesys.c 2718: '_enable()' is declared but never used
+     Warning W8080 source\rtl\fssize.c 142: '_fstat(int,_stat *)' is declared but never used
+
 2008-07-21 21:54 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwvt/gtwvt.h
     * added some definitions which seems to be missing in some MSVC-WinCE

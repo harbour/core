@@ -12,7 +12,6 @@ PRG_HEADERS = \
 LIB_OBJS = \
     $(OBJ_DIR)environ$(OBJEXT) \
     $(OBJ_DIR)date$(OBJEXT) \
-    $(OBJ_DIR)dbf$(OBJEXT) \
     $(OBJ_DIR)gauge$(OBJEXT) \
     $(OBJ_DIR)num$(OBJEXT) \
     $(OBJ_DIR)stack$(OBJEXT) \

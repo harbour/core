@@ -890,6 +890,31 @@ HB_EXPORT BOOL hb_fsSetDevMode( FHANDLE hFileHandle, USHORT uiDevMode )
 #endif
 }
 
+HB_EXPORT BOOL hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plMillisec )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsGetFileTime(%s, %p, %p)", pszFileName, plJulian, plMillisec));
+
+   /* TODO */
+
+   HB_SYMBOL_UNUSED( pszFileName );
+   HB_SYMBOL_UNUSED( plJulian );
+   HB_SYMBOL_UNUSED( plMillisec );
+
+   return FALSE;
+}
+
+HB_EXPORT BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsGetAttr(%s, %p)", pszFileName, pulAttr));
+
+   /* TODO */
+
+   HB_SYMBOL_UNUSED( pszFileName );
+   HB_SYMBOL_UNUSED( pulAttr );
+
+   return FALSE;
+}
+
 HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec )
 {
    BOOL fResult;

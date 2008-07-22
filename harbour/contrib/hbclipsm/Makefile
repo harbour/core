@@ -6,7 +6,6 @@ ROOT = ../../
 
 C_SOURCES=\
 	date.c \
-	dbf.c \
 	environ.c \
 	gauge.c \
 	num.c \
