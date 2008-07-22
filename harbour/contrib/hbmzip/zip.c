@@ -16,6 +16,7 @@
 #include <time.h>
 #include "hbzlib.h"
 #include "zip.h"
+#include "hbapi.h"      /* for hb_xgrab()/hb_xfree() */
 
 #ifdef STDC
 #  include <stddef.h>
@@ -57,10 +58,10 @@
 #endif
 
 #ifndef ALLOC
-# define ALLOC(size) (malloc(size))
+# define ALLOC(size) hb_xgrab(size)
 #endif
 #ifndef TRYFREE
-# define TRYFREE(p) {if (p) free(p);}
+# define TRYFREE(p)  do {if (p) hb_xfree(p);} while( 0 )
 #endif
 
 /*
@@ -1107,7 +1108,7 @@ extern int ZEXPORT zipCloseFileInZipRaw (
     if (err==ZIP_OK)
         err = add_data_in_datablock(&zi->central_dir,zi->ci.central_header,
                                        (uLong)zi->ci.size_centralheader);
-    free(zi->ci.central_header);
+    TRYFREE(zi->ci.central_header);
 
     if (err==ZIP_OK)
     {

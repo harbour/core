@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-22 21:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/zip.c
+  * harbour/contrib/hbmzip/unzip.c
+    * use hb_xgrab()/hb_xfree() instead of malloc()/free()
+
 2008-07-22 19:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbmzip/zip.c
     * set OS version information in ZIP header when ZIP archive is

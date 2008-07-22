@@ -40,6 +40,7 @@ woven in by Terry Thorsen 1/2003.
 #include <string.h>
 #include "hbzlib.h"
 #include "unzip.h"
+#include "hbapi.h"      /* for hb_xgrab()/hb_xfree() */
 
 #ifdef STDC
 #  include <stddef.h>
@@ -76,10 +77,10 @@ woven in by Terry Thorsen 1/2003.
 #endif
 
 #ifndef ALLOC
-# define ALLOC(size) (malloc(size))
+# define ALLOC(size) hb_xgrab(size)
 #endif
 #ifndef TRYFREE
-# define TRYFREE(p) {if (p) free(p);}
+# define TRYFREE(p)  do {if (p) hb_xfree(p);} while( 0 )
 #endif
 
 #define SIZECENTRALDIRITEM (0x2e)
