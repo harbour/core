@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-22 15:07 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbct/files.c
+  * harbour/contrib/hbmzip/hbmzip.c
+    * use new hb_fs*() functions when native platform code does not exist
+
 2008-07-22 12:55 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/filesys.c
     * casting for DOS OpenWatcom builds and added missing header file

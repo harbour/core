@@ -555,17 +555,21 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
          fError = TRUE;
    }
 #elif defined( HB_OS_DOS )
-
-#  if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
    {
-      int iAttr;
+#  if defined(__DJGPP__) || defined(__RSX32__) || defined(__GNUC__)
+      int attr;
 
-      iAttr = _chmod( szFileName, 0, 0 );
-      if( iAttr != -1 )
+      attr = _chmod( szFileName, 0, 0 );
+      if( attr != -1 )
+#else
+      ULONG attr;
+
+      if( hb_fsGetAttr( ( BYTE * ) szFileName, &attr ) )
+#endif
       {
-         ulExtAttr = iAttr & ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM | 
+         ulExtAttr = attr & ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM |
                                HB_FA_DIRECTORY | HB_FA_ARCHIVE );
-     
+
          if( ulExtAttr | HB_FA_READONLY )
             ulExtAttr |= 0x01240000;  /* r--r--r-- */
          else
@@ -575,7 +579,7 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
             ulExtAttr |= 0x40000000;
          else
             ulExtAttr |= 0x80000000;
-   
+
          ulLen = strlen( szZipName );
          if( ulLen > 4 )
          {
@@ -591,14 +595,6 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
       else
          fError = TRUE;
    }
-#  else
-   {
-      int TODO; /* To force warning */
-
-      ulExtAttr = 0x81B60020;  /* FILE_ATTRIBUTE_ARCHIVE | rw-rw-rw- */
-   }
-#  endif
-
 #elif defined( HB_OS_OS2 )
    {
       FILESTATUS3 fs3;
@@ -631,7 +627,6 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
          else
             ulExtAttr |= 0x80000000;
 
-#if 0 /* Please enable it if .exe, .bat and .com are executable files under OS2 */
          ulLen = strlen( szZipName );
          if( ulLen > 4 )
          {
@@ -644,7 +639,6 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
                ulExtAttr |= 0x00490000; /* --x--x--x */
             }
          }
-#endif
 
          zfi.tmz_date.tm_sec = fs3.ftimeLastWrite.twosecs * 2;
          zfi.tmz_date.tm_min = fs3.ftimeLastWrite.minutes;
@@ -658,9 +652,10 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
    }
 #else
    {
-      int TODO; /* To force warning */
+      ULONG attr;
 
-      ulExtAttr = 0x81B60020;  /* FILE_ATTRIBUTE_ARCHIVE | rw-rw-rw- */
+      if( !hb_fsGetAttr( ( BYTE * ) szFileName, &attr ) )
+         ulExtAttr = 0x81B60020;  /* FILE_ATTRIBUTE_ARCHIVE | rw-rw-rw- */
    }
 #endif
 
@@ -879,13 +874,9 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
 #elif defined( HB_OS_DOS )
 
 #  if defined(__RSX32__) || defined(__GNUC__)
-   {
       _chmod( szName, 1, ufi.external_fa & 0xFF );
-   }
 #  else
-   {
-      int TODO; /* To force warning */
-   }
+      hb_fsSetAttr( ( BYTE * ) szName, ufi.external_fa & 0xFF );
 #  endif
 
 #elif defined( HB_OS_OS2 )
@@ -927,7 +918,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
    }
 #else
    {
-      int TODO; /* To force warning */
+      hb_fsSetAttr( ( BYTE * ) szName, ufi.external_fa );
    }
 #endif
 

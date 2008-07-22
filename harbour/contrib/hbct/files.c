@@ -353,9 +353,15 @@ HB_FUNC( SETFDATI )
          return;
       }
 #else
+      {
+         LONG lJulian, lMillisec;
 
-      int TODO; /* To force warning */
+         lJulian = pDate ? hb_dateEncode( year, month, day ) : -1;
+         lMillisec = pTime ? hb_timeStampEncode( hour, minute, second, 0 ) : -1;
 
+         hb_retl( hb_fsSetFileTime( ( BYTE * ) szFile, lJulian, lMillisec ) );
+         return;
+      }
 #endif
    }
 
