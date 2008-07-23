@@ -110,32 +110,17 @@ typedef struct _HB_CURL
 
    PHB_ITEM pProgressBlock;
 
-#ifdef HB_CURL_HASH_STRINGS
    HB_HASH_TABLE_PTR pHash;
-#endif
 
 } HB_CURL, * PHB_CURL;
 
-#ifdef HB_CURL_HASH_STRINGS
 
 /* functions to keep passed string values accessible even if HVM
  * destroy them. It's necessary for old CURL versions which do not
  * make own copy of passed strings
  */
+
 #define HB_CURL_HASH_TABLE_SIZE    509UL
-
-static const char * hb_curl_StrHash( PHB_CURL hb_curl, const char * szValue )
-{
-   char * szHash;
-
-   szHash = ( char * ) hb_hashTableFind( hb_curl->pHash, ( void * ) szValue );
-   if( !szHash )
-   {
-      szHash = hb_strdup( szValue );
-      hb_hashTableAdd( hb_curl->pHash, ( void * ) szHash, ( void * ) szHash );
-   }
-   return szHash;
-}
 
 /* returns a hash key */
 static HB_HASH_FUNC( hb_curl_HashKey )    /* ULONG func (void *Value, void *Cargo) */
@@ -152,7 +137,7 @@ static HB_HASH_FUNC( hb_curl_HashKey )    /* ULONG func (void *Value, void *Carg
    return ulSum % HB_CURL_HASH_TABLE_SIZE;
 }
 
-/* deletes an identifier */
+/* deletes a string */
 static HB_HASH_FUNC( hb_curl_HashDel )
 {
    hb_xfree( Value );
@@ -161,16 +146,37 @@ static HB_HASH_FUNC( hb_curl_HashDel )
    return 1;
 }
 
-/* compares two identifiers */
+/* compares two strings */
 static HB_HASH_FUNC( hb_curl_HashCmp )
 {
    HB_SYMBOL_UNUSED( HashPtr );
    return strcmp( (char *)Value, (char *)Cargo );
 }
 
+static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
+{
+   char * szHash;
+
+   if( hb_curl->pHash == NULL )
+      hb_curl->pHash = hb_hashTableCreate( HB_CURL_HASH_TABLE_SIZE,
+                           hb_curl_HashKey, hb_curl_HashDel, hb_curl_HashCmp );
+
+   szHash = ( char * ) hb_hashTableFind( hb_curl->pHash, ( void * ) szValue );
+   if( !szHash )
+   {
+      szHash = hb_strdup( szValue );
+      hb_hashTableAdd( hb_curl->pHash, ( void * ) szHash, ( void * ) szHash );
+   }
+   return szHash;
+}
+
+#ifdef HB_CURL_HASH_STRINGS
+
+#  define hb_curl_StrHash( c, s )   hb_curl_StrHashNew( (c), (s) )
+
 #else
 
-#define hb_curl_StrHash( c, s )     (s)
+#  define hb_curl_StrHash( c, s )   (s)
 
 #endif /* HB_CURL_HASH_STRINGS */
 
@@ -462,13 +468,12 @@ static void PHB_CURL_free( PHB_CURL hb_curl, BOOL bFree )
       hb_itemRelease( hb_curl->pProgressBlock );
       hb_curl->pProgressBlock = NULL;
    }
-#ifdef HB_CURL_HASH_STRINGS
+
    if( hb_curl->pHash )
    {
       hb_hashTableKill( hb_curl->pHash );
       hb_curl->pHash = NULL;
    }
-#endif
 
    if( bFree )
    {
@@ -492,10 +497,6 @@ static PHB_CURL PHB_CURL_create( CURL * from )
 
       memset( ( void * ) hb_curl, 0, sizeof( HB_CURL ) );
       hb_curl->curl = curl;
-#ifdef HB_CURL_HASH_STRINGS
-      hb_curl->pHash = hb_hashTableCreate( HB_CURL_HASH_TABLE_SIZE,
-                           hb_curl_HashKey, hb_curl_HashDel, hb_curl_HashCmp );
-#endif
 
       return hb_curl;
    }
@@ -864,7 +865,7 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                      curl_formadd( &hb_curl->pHTTPPOST_First,
                                    &hb_curl->pHTTPPOST_Last,
-                                   CURLFORM_COPYNAME, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pSubArray, 1 ) ),
+                                   CURLFORM_COPYNAME, hb_curl_StrHashNew( hb_curl, hb_arrayGetCPtr( pSubArray, 1 ) ),
                                    CURLFORM_FILE, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pSubArray, 2 ) ),
                                    CURLFORM_END );
                   }
@@ -892,7 +893,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   ULONG ulArrayLen = hb_arrayLen( pArray );
 
                   for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
-                     hb_curl->pHTTPHEADER = curl_slist_append( hb_curl->pHTTPHEADER, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pArray, ulPos + 1 ) ) );
+                     hb_curl->pHTTPHEADER = curl_slist_append( hb_curl->pHTTPHEADER, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPHEADER, hb_curl->pHTTPHEADER );
                }
@@ -911,7 +912,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   ULONG ulArrayLen = hb_arrayLen( pArray );
 
                   for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
-                     hb_curl->pHTTP200ALIASES = curl_slist_append( hb_curl->pHTTP200ALIASES, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pArray, ulPos + 1 ) ) );
+                     hb_curl->pHTTP200ALIASES = curl_slist_append( hb_curl->pHTTP200ALIASES, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP200ALIASES, hb_curl->pHTTP200ALIASES );
                }
@@ -966,7 +967,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   ULONG ulArrayLen = hb_arrayLen( pArray );
 
                   for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
-                     hb_curl->pQUOTE = curl_slist_append( hb_curl->pQUOTE, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pArray, ulPos + 1 ) ) );
+                     hb_curl->pQUOTE = curl_slist_append( hb_curl->pQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_QUOTE, hb_curl->pQUOTE );
                }
@@ -985,7 +986,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   ULONG ulArrayLen = hb_arrayLen( pArray );
 
                   for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
-                     hb_curl->pPOSTQUOTE = curl_slist_append( hb_curl->pPOSTQUOTE, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pArray, ulPos + 1 ) ) );
+                     hb_curl->pPOSTQUOTE = curl_slist_append( hb_curl->pPOSTQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_POSTQUOTE, hb_curl->pPOSTQUOTE );
                }
@@ -1004,7 +1005,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   ULONG ulArrayLen = hb_arrayLen( pArray );
 
                   for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
-                     hb_curl->pQUOTE = curl_slist_append( hb_curl->pPREQUOTE, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pArray, ulPos + 1 ) ) );
+                     hb_curl->pQUOTE = curl_slist_append( hb_curl->pPREQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_PREQUOTE, hb_curl->pPREQUOTE );
                }
@@ -1274,7 +1275,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                   ULONG ulArrayLen = hb_arrayLen( pArray );
 
                   for( ulPos = 0; ulPos < ulArrayLen; ulPos++ )
-                     hb_curl->pTELNETOPTIONS = curl_slist_append( hb_curl->pTELNETOPTIONS, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pArray, ulPos + 1 ) ) );
+                     hb_curl->pTELNETOPTIONS = curl_slist_append( hb_curl->pTELNETOPTIONS, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, hb_curl->pTELNETOPTIONS );
                }

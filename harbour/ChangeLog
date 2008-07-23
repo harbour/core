@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-23 15:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbcurl/hbcurl.c
+    * activate string hasing in all builds for curl_formadd() with
+      CURLFORM_COPYNAME
+    * do not use string hasing fro curl_slist_append()
+
+    Many thanks to Viktor for help.
+
 2008-07-23 12:18 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/common/hbwince.c
     * formatting
