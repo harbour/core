@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-23 12:18 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/common/hbwince.c
+    * formatting
+
+  * harbour/contrib/hbcurl/hbcurl.c
+    + use hash table to keep strings passed to CURL library accessible
+      even if HVM destroys them. It should allow to safely use HBCURL
+      wrapper also with CURL library older then 7.17.0 though it can
+      be a little bit expensive in some cases. The allocated strings
+      are freed when CURL pointer is destroyed (directly or by
+      CURL_EASY_CLEANUP()) or reset by CURL_EASY_RESET().
+      This feature is enabled only when compiled for CURL libraries
+      older then 7.17.0 or when user set explicitly compile time macro
+      HB_CURL_HASH_STRINGS
+      Viktor, you are more familiar with this code so please check it.
+
 2008-07-23 01:04 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_xmingwce.sh
     * fixed CCPATH setting - it has to be ended with ":"
