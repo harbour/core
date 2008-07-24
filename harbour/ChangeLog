@@ -8,6 +8,24 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-24 18:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/hbinet.c
+    ! fixed possible data file corruption due to wrong use of 0 handle.
+      0 handle is perfectly valid. By default it points to stdin but
+      it can be closed and then reused for any other thing, f.e. data
+      file. In such case any data written to socket was written to
+      such file and this situation was very easy to replicate with
+      old hbinet code.
+    ! fixed resource leak due to unclosed handles in few cases
+    ! fixed possible double close of the some handle what could cause
+      that other object handles reusing the same handle number between
+      first and second close (f.e. data files) was wrongly closed
+    ! fixed s_inetRecvPattern()/HB_INETRECVLINE() - the end pattern
+      was wrongly checked and the code didn't detect end pattern in
+      streams like: "...\r\r\n" when end pattern was "\r\n"
+      NOTE: this code needs some general cleanup. IMHO it should be
+      joined with adding hbinet C API.
+
 2008-07-24 03:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbcurl/hbcurl.c
      ! Disabled string hashing for curl_formadd() with
