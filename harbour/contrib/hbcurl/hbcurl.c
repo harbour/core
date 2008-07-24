@@ -52,11 +52,6 @@
  *
  */
 
-/* NOTE: Harbour requires libcurl 7.17.0 or upper.
-         This was the version where curl_easy_setopt() started to
-         make copies of passed strings, which we currently require.
-         [vszakats] */
-
 #include "curl/curl.h"
 #include "curl/types.h"
 #include "curl/easy.h"
@@ -74,8 +69,15 @@
 #define HB_CURL_OPT_BOOL( n )      ( ISLOG( n ) ? ( long ) hb_parl( n ) : ( ISNUM( n ) ? hb_parnl( n ) : 1 ) )
 #define HB_CURL_OPT_LARGENUM( n )  ( ( curl_off_t ) hb_parnint( n ) )
 
+/* NOTE: Harbour requires libcurl 7.17.0 or upper.
+         This was the version where curl_easy_setopt() started to
+         make copies of passed strings, which we currently require.
+         Update: This requirement is now sorted out by local string 
+                 buffering logic used with pre-7.17.0 versions of 
+                 libcurl.
+         [vszakats] */
+
 #if LIBCURL_VERSION_NUM < 0x071100
-   /* #error hbcurl: Harbour hbcurl needs libcurl 7.17.0 or upper. */
 #  ifndef HB_CURL_HASH_STRINGS
 #     define HB_CURL_HASH_STRINGS
 #  endif
@@ -120,16 +122,18 @@ typedef struct _HB_CURL
  * make own copy of passed strings
  */
 
+#ifdef HB_CURL_HASH_STRINGS
+
 #define HB_CURL_HASH_TABLE_SIZE    509UL
 
 /* returns a hash key */
-static HB_HASH_FUNC( hb_curl_HashKey )    /* ULONG func (void *Value, void *Cargo) */
+static HB_HASH_FUNC( hb_curl_HashKey )    /* ULONG func( void * Value, void * Cargo ) */
 {
    ULONG ulSum = 0;
-   char *szName = ( char * )Value;
+   char * szName = ( char * ) Value;
    
    while( *szName )
-     ulSum += *szName++;
+      ulSum += *szName++;
 
    HB_SYMBOL_UNUSED( HashPtr );
    HB_SYMBOL_UNUSED( Cargo );
@@ -150,7 +154,7 @@ static HB_HASH_FUNC( hb_curl_HashDel )
 static HB_HASH_FUNC( hb_curl_HashCmp )
 {
    HB_SYMBOL_UNUSED( HashPtr );
-   return strcmp( (char *)Value, (char *)Cargo );
+   return strcmp( ( char * ) Value, ( char * ) Cargo );
 }
 
 static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
@@ -169,8 +173,6 @@ static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
    }
    return szHash;
 }
-
-#ifdef HB_CURL_HASH_STRINGS
 
 #  define hb_curl_StrHash( c, s )   hb_curl_StrHashNew( (c), (s) )
 
@@ -865,7 +867,8 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                      curl_formadd( &hb_curl->pHTTPPOST_First,
                                    &hb_curl->pHTTPPOST_Last,
-                                   CURLFORM_COPYNAME, hb_curl_StrHashNew( hb_curl, hb_arrayGetCPtr( pSubArray, 1 ) ),
+                                   CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 1 ),
+                                   CURLFORM_NAMELENGTH, hb_arrayGetCLen( pSubArray, 1 ),
                                    CURLFORM_FILE, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pSubArray, 2 ) ),
                                    CURLFORM_END );
                   }

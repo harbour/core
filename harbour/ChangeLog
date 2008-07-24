@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-24 03:42 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbcurl/hbcurl.c
+     ! Disabled string hashing for curl_formadd() with
+       CURLFORM_COPYNAME. I've misread the docs (sorry Przemek), 
+       hashing is only needed for CURLFORM_PTRNAME, which we 
+       currently don't use. I've disbled some code to avoid 
+       unused function warnings, but other than that it may 
+       be good to have the possibility for hashing for future 
+       functions too.
+     ! Fixed/Added support for CURLFORM_COPYNAME parameter 
+       with embedded zeroes by passing the string length 
+       using CURLFORM_NAMELENGTH. Not tested.
+
 2008-07-23 21:43 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbsqlit3/sqlite3/sqlite3.c
     * pacified warnings
