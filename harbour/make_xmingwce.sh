@@ -94,6 +94,8 @@ fi
 if [ -z "${HB_PPGEN_PATH}" ]; then
     if which hbpp &> /dev/null; then
         HB_PPGEN_PATH=`which hbpp 2> /dev/null`
+    elif [ -x "${DIR}/source/pp/${HB_HOST_ARCH}/${HB_HOST_CC}/hbpp" ]; then
+        HB_PPGEN_PATH="${DIR}/source/pp/${HB_HOST_ARCH}/${HB_HOST_CC}/hbpp"
     else
         DIR=`dirname ${HB_COMP_PATH}`
         if [ -x "${DIR}/hbpp" ]; then
