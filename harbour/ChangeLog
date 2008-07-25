@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-25 18:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/treport.prg
+     ! Fixed RTE by removing some type constraints from object vars 
+       which get NILs assigned. Thanks to Ciro Vargas Clemow.
+
 2008-07-25 15:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/xhb/Makefile
   * harbour/contrib/xhb/common.mak

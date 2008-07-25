@@ -152,14 +152,14 @@
 
 CREATE CLASS HBReportForm
 
-   VAR aReportData    AS ARRAY   INIT {}
-   VAR aReportTotals  AS ARRAY   INIT {}
-   VAR aGroupTotals   AS ARRAY   INIT {}
-   VAR nPageNumber    AS NUMERIC
-   VAR nLinesLeft     AS NUMERIC
-   VAR lFirstPass     AS LOGICAL
-   VAR lFormFeeds     AS LOGICAL
-   VAR nMaxLinesAvail AS NUMERIC
+   VAR aReportData    INIT {}
+   VAR aReportTotals  INIT {}
+   VAR aGroupTotals   INIT {}
+   VAR nPageNumber
+   VAR nLinesLeft
+   VAR lFirstPass
+   VAR lFormFeeds
+   VAR nMaxLinesAvail
    VAR cExprBuff      AS STRING
    VAR cOffsetsBuff   AS STRING
    VAR cLengthsBuff   AS STRING
@@ -414,13 +414,13 @@ METHOD New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nReco
 
 
    // Clean up and leave
-   ::aReportData   := NIL          // Recover the space
+   ::aReportData    := NIL          // Recover the space
    ::aReportTotals  := NIL
    ::aGroupTotals   := NIL
-   ::nPageNumber   := NIL
-   ::lFirstPass    := NIL
-   ::nLinesLeft    := NIL
-   ::lFormFeeds    := NIL
+   ::nPageNumber    := NIL
+   ::lFirstPass     := NIL
+   ::nLinesLeft     := NIL
+   ::lFormFeeds     := NIL
    ::nMaxLinesAvail := NIL
 
    // clean up
