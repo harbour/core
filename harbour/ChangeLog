@@ -8,6 +8,32 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-25 19:19 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/hbmzip.c
+    + added support to set archive comment:
+         HB_ZipClose( hZip, [ cGlobalComment ] ) --> nError
+    + added support to get archive comment in append mode:
+         HB_ZipOpen( cFileName, [ iMode = HB_ZIP_CREATE ],
+                     [ @cGlobalComment ] ) --> hZip
+    + added support to set file comment:
+         HB_ZipFileCreate( hZip, cZipName, dDate, cTime,
+                           nInternalAttr, nExternalAttr,
+                           [ nMethod = HB_ZLIB_METHOD_DEFLATE ], 
+                           [ nLevel = HB_ZLIB_COMPRESSION_DEFAULT ], 
+                           [ cPassword ], [ cComment ] ) --> nError
+         HB_ZipStoreFile( hZip, cFileName, [ cZipName ],
+                          [ cPassword ], [ cComment ] ) --> nError
+    + added new function which allow to extract archive comment:
+         HB_UnzipGlobalInfo( hUnzip, @nEntries, @cGlobalComment ) --> nError
+    + added support to extract file comment:
+         HB_UnzipFileInfo( hUnzip, @cZipName, @dDate, @cTime,
+                           @nInternalAttr, @nExternalAttr,
+                           @nMethod, @nSize, @nCompressedSize,
+                           @cComment ) --> nError
+
+  * harbour/contrib/hbmzip/readme.txt
+    + added list of Harbour ZIP/UNZIP functions with parameters
+
 2008-07-25 18:46 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/treport.prg
      ! Fixed RTE by removing some type constraints from object vars 
