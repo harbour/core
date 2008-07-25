@@ -27,6 +27,7 @@ PRG_SOURCES=\
 	hblog.prg \
 	hblognet.prg \
 	cstruct.prg \
+	dirrec.prg \
 	xhbcomp.prg \
 
 PRG_HEADERS=\

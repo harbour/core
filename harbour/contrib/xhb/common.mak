@@ -32,6 +32,7 @@ LIB_OBJS = \
     $(OBJ_DIR)hblog$(OBJEXT) \
     $(OBJ_DIR)hblognet$(OBJEXT) \
     $(OBJ_DIR)cstruct$(OBJEXT) \
+    $(OBJ_DIR)dirrec$(OBJEXT) \
     $(OBJ_DIR)xhbcomp$(OBJEXT) \
 
 all: \

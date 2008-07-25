@@ -8,6 +8,40 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-25 15:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/xhb/Makefile
+  * harbour/contrib/xhb/common.mak
+  + harbour/contrib/xhb/dirrec.prg
+    + added DirectoryRecurse() function. It's not exactly xHarbour
+      compatible as I wanted at the beginning. But when I begin
+      to carefully check what xHarbour exactly does then I dropped
+      the strict compatibility due to problems with xHarbour
+      implementation which have to be fixed. I left this note in the
+      dirrec.prg header:
+         This implementation uses different rules then xHarbour one.
+         It does not change current drive or current directory so
+         unlike the xHarbour version it's MT safe.
+         It also returns relative paths which are more similar to
+         DIRECTORY() function results so they can be easy used
+         directly in other code, f.e. to create archive without
+         absolute paths. Please note that user can easy convert
+         relative paths to absolte ones by simple adding curdir()
+         and/or cPath parameter passed to DirectoryRecurse() but
+         reverted conversion may not be possible in some cases.
+         The 3-rd xHarbour parameter <lCaseMach> is ignored because
+         harbour uses platform native rules to check filename mask
+         respecting SET FILECASE and SET DIRCASE settings.
+         xHarbour does not add "D" to attribute list used for directory
+         tree scanning so user always have to add it manually and later
+         it ignores it so it's not possible to extract file list with
+         directories entries. In Harbour it's fixed.
+
+  * harbour/source/rtl/philes.c
+    + added hb_osFileMask()
+
+  * harbour/source/rtl/direct.c
+    % minor optimization
+
 2008-07-25 11:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbziparch/hbziparc.c
      ! Fixed bug reported by Juan Galvez.
@@ -139,7 +173,7 @@
    * contrib/hbclipsm/common.mak
    * contrib/hbclipsm/Makefile
    - contrib/hbclipsm/dbf.c
-   	 ! Removed duplicate implementation of DBF() from hbclipsm.lib
+     ! Removed duplicate implementation of DBF() from hbclipsm.lib
 
    ; TOFIX:
      I'm getting these new warnings under BCC55:

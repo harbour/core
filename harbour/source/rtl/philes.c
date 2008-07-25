@@ -321,3 +321,8 @@ HB_FUNC( HB_OSDRIVESEPARATOR )
    hb_retc( NULL );
 #endif
 }
+
+HB_FUNC( HB_OSFILEMASK )
+{
+   hb_retc( OS_FILE_MASK );
+}

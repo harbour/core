@@ -196,7 +196,7 @@ HB_FUNC( DIRECTORY )
          hb_arraySetC   ( pSubarray, F_ATTR, hb_fsAttrDecode( ffind->attr, buffer ) );
 
          /* Don't exit when array limit is reached */
-         hb_arrayAdd( pDir, pSubarray );
+         hb_arrayAddForward( pDir, pSubarray );
       }
       while( hb_fsFindNext( ffind ) );
 
