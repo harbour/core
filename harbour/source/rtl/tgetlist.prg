@@ -748,7 +748,17 @@ METHOD PostActiveGet() CLASS HBGetList
 
 METHOD GetReadVar() CLASS HBGetList
 
-   RETURN hb_GetReadVar( ::oGet )
+   LOCAL oGet := ::oGet
+   LOCAL cName := Upper( oGet:Name )
+   LOCAL n
+
+   IF oGet:Subscript != NIL
+      FOR n := 1 TO Len( oGet:Subscript )
+         cName += "[" + LTrim( Str( oGet:Subscript[ n ] ) ) + "]"
+      NEXT
+   ENDIF
+
+   RETURN cName
 
 METHOD SetFormat( bFormat ) CLASS HBGetList
 
