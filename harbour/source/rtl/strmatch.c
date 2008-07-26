@@ -320,3 +320,9 @@ HB_FUNC( HB_WILDMATCH )
             hb_parl( 3 ) ? hb_strMatchWildExact( hb_parc( 2 ), hb_parc( 1 ) ) :
                            hb_strMatchWild( hb_parc( 2 ), hb_parc( 1 ) ) );
 }
+
+HB_FUNC( HB_FILEMATCH )
+{
+   hb_retl( ( ! ISCHAR( 1 ) || ! ISCHAR( 2 ) ) ? FALSE :
+            hb_strMatchFile( hb_parc( 1 ), hb_parc( 2 ) ) );
+}

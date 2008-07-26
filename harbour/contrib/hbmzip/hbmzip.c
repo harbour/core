@@ -80,6 +80,7 @@
    #endif
 #endif
 
+#define HB_Z_IOBUF_SIZE       ( 1024 * 16 )
 
 static HB_GARBAGE_FUNC( hb_zipfile_destructor )
 {
@@ -133,7 +134,7 @@ static gzFile hb_unzipfileParam( int iParam )
 /* HB_ZipOpen( cFileName, [ iMode = HB_ZIP_CREATE ], [ @cGlobalComment ] ) --> hZip */
 HB_FUNC( HB_ZIPOPEN )
 {
-   char* szFileName = hb_parc( 1 );
+   const char* szFileName = hb_parc( 1 );
 
    if( szFileName )
    {
@@ -179,7 +180,7 @@ HB_FUNC( HB_ZIPCLOSE )
                      [ cPassword ], [ cComment ] ) --> nError */
 HB_FUNC( HB_ZIPFILECREATE )
 {
-   char* szZipName = hb_parc( 2 );
+   const char* szZipName = hb_parc( 2 );
 
    if( szZipName )
    {
@@ -220,7 +221,7 @@ HB_FUNC( HB_ZIPFILECREATE )
 /*  HB_ZipFileWrite( hZip, cData [, nLen ] ) --> nError */
 HB_FUNC( HB_ZIPFILEWRITE )
 {
-   char*  pData = hb_parc( 2 );
+   const char* pData = hb_parc( 2 );
 
    if( pData )
    {
@@ -251,7 +252,7 @@ HB_FUNC( HB_ZIPFILECLOSE )
 /* HB_UnzipOpen( cFileName ) --> hUnzip */
 HB_FUNC( HB_UNZIPOPEN )
 {
-   char*  szFileName = hb_parc( 1 );
+   const char* szFileName = hb_parc( 1 );
 
    if( szFileName )
    {
@@ -508,7 +509,7 @@ HB_FUNC( HB_UNZIPFILECLOSE )
  *
  */
 
-static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* szPassword, char* szComment )
+static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* szName, const char* szPassword, const char* szComment )
 {
    char          * szZipName, * pString;
    FHANDLE       hFile;
@@ -788,8 +789,8 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
                                          szPassword, 0 );
          if( iResult == 0 )
          {
-            pString = (char*) hb_xgrab( 1024 * 16 );
-            while ( ( ulLen = hb_fsReadLarge( hFile, (BYTE*) pString, 1024 * 16 ) ) > 0 )
+            pString = ( char* ) hb_xgrab( HB_Z_IOBUF_SIZE );
+            while( ( ulLen = hb_fsReadLarge( hFile, (BYTE*) pString, HB_Z_IOBUF_SIZE ) ) > 0 )
             {
                zipWriteInFileInZip( hZip, pString, ulLen );
             }
@@ -812,7 +813,7 @@ static int hb_zipStoreFile( zipFile hZip, char* szFileName, char* szName, char* 
 /*  HB_ZipStoreFile( hZip, cFileName, [ cZipName ], [ cPassword ], [ cComment ] ) --> nError */
 HB_FUNC( HB_ZIPSTOREFILE )
 {
-   char*  szFileName = hb_parc( 2 );
+   const char* szFileName = hb_parc( 2 );
 
    if( szFileName )
    {
@@ -826,7 +827,7 @@ HB_FUNC( HB_ZIPSTOREFILE )
 }
 
 
-static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* szPassword )
+static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, const char* szPassword )
 {
    char           szName[ _POSIX_PATH_MAX + 1 ];
    ULONG          ulPos, ulLen;
@@ -881,9 +882,9 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, char* szFileName, char* s
 
       if( hFile != FS_ERROR )
       {
-         pString = (char*) hb_xgrab( 1024 * 16 );
+         pString = (char*) hb_xgrab( HB_Z_IOBUF_SIZE );
 
-         while ( ( iResult = unzReadCurrentFile( hUnzip, pString, 16 * 1024 ) ) > 0 )
+         while( ( iResult = unzReadCurrentFile( hUnzip, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
          {
             hb_fsWriteLarge( hFile, (BYTE*) pString, (ULONG) iResult );
          }
@@ -1024,4 +1025,216 @@ HB_FUNC( HB_UNZIPEXTRACTCURRENTFILE )
 
    if( hUnzip )
       hb_retni( hb_unzipExtractCurrentFile( hUnzip, hb_parc( 2 ), hb_parc( 3 ) ) );
+}
+
+
+static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
+{
+   char szTempFile[ _POSIX_PATH_MAX + 1 ];
+   char szCurrFile[ _POSIX_PATH_MAX + 1 ];
+   PHB_FNAME pFileName;
+   FHANDLE hFile;
+   unzFile hUnzip;
+   zipFile hZip;
+   unz_global_info ugi;
+   unz_file_info ufi;
+   zip_fileinfo zfi;
+   char* pszGlobalComment = NULL;
+   char* pszFileComment = NULL;
+   void* pExtraField = NULL;
+   void* pLocalExtraField = NULL;
+   int iFilesLeft = 0;
+   int iFilesDel = 0;
+   int iExtraFieldLen;
+   int method;
+   int level;
+   int iResult;
+
+   /* open source file */
+   hUnzip = unzOpen( szZipFile );
+   if( hUnzip == NULL )
+      return UNZ_ERRNO;
+
+   pFileName = hb_fsFNameSplit( szZipFile );
+   hFile = hb_fsCreateTemp( ( BYTE * ) pFileName->szPath, NULL, FC_NORMAL, ( BYTE * ) szTempFile );
+   hZip = NULL;
+   if( hFile != FS_ERROR )
+   {
+      hb_fsClose( hFile );
+      hZip = zipOpen( szTempFile, APPEND_STATUS_CREATE );
+   }
+   hb_xfree( pFileName );
+
+   if( hZip == NULL )
+   {
+      unzClose( hUnzip );
+      return UNZ_ERRNO;
+   }
+
+   iResult = unzGetGlobalInfo( hUnzip, &ugi );
+   if( iResult == UNZ_OK )
+   {
+      if( ugi.size_comment > 0 )
+      {
+         pszGlobalComment = ( char * ) hb_xgrab( ugi.size_comment + 1 );
+	   if( ( uLong ) unzGetGlobalComment( hUnzip, pszGlobalComment,
+                                 ugi.size_comment ) != ugi.size_comment )
+            iResult = UNZ_ERRNO;
+         pszGlobalComment[ ugi.size_comment ] = '\0';
+      }
+      if( iResult == UNZ_OK )
+         iResult = unzGoToFirstFile( hUnzip );
+   }
+
+   while( iResult == UNZ_OK )
+   {
+      iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szCurrFile, _POSIX_PATH_MAX, NULL, 0, NULL, 0 );
+      if( iResult != UNZ_OK )
+         break;
+
+      if( hb_strMatchFile( szCurrFile, szFileMask ) )
+         iFilesDel++;
+      else
+      {
+         if( ufi.size_file_extra )
+            pExtraField = ( char * ) hb_xgrab( ufi.size_file_extra );
+         if( ufi.size_file_comment )
+            pszFileComment = ( char * ) hb_xgrab( ufi.size_file_comment + 1 );
+
+         iResult = unzGetCurrentFileInfo( hUnzip, NULL, NULL, 0,
+                                          pExtraField, ufi.size_file_extra,
+                                          pszFileComment, ufi.size_file_comment );
+         pszFileComment[ ufi.size_file_comment ] = '\0';
+         if( iResult != UNZ_OK )
+            break;
+
+         iResult = unzOpenCurrentFile2( hUnzip, &method, &level, 1 );
+         if( iResult != UNZ_OK )
+            break;
+
+         iExtraFieldLen = unzGetLocalExtrafield( hUnzip, NULL, 0 );
+         if( iExtraFieldLen < 0 )
+         {
+            iResult = UNZ_ERRNO;
+            break;
+         }
+         else if( iExtraFieldLen > 0 )
+         {
+            pLocalExtraField = hb_xgrab( iExtraFieldLen );
+            if( unzGetLocalExtrafield( hUnzip, pLocalExtraField, iExtraFieldLen ) != iExtraFieldLen )
+            {
+               iResult = UNZ_ERRNO;
+               break;
+            }
+         }
+
+         memset( &zfi, 0, sizeof( zfi ) );
+         memcpy( &zfi.tmz_date, &ufi.tmu_date, sizeof( tm_unz ) );
+         zfi.dosDate = ufi.dosDate;
+         zfi.internal_fa = ufi.internal_fa;
+         zfi.external_fa = ufi.external_fa;
+
+         iResult = zipOpenNewFileInZip2( hZip, szCurrFile, &zfi, pLocalExtraField, iExtraFieldLen, pExtraField, ufi.size_file_extra, pszFileComment, method, level, 1 );
+         if( iResult != UNZ_OK )
+            break;
+
+         if( ufi.compressed_size )
+         {
+            BYTE * buffer = ( BYTE * ) hb_xgrab( HB_Z_IOBUF_SIZE );
+            uLong ulLeft = ufi.compressed_size;
+
+            while( ulLeft > 0 )
+            {
+               int iRead = HB_MIN( ulLeft, HB_Z_IOBUF_SIZE );
+               iResult = unzReadCurrentFile( hUnzip, ( voidp ) buffer, iRead );
+               if( iResult < 0 )
+                  break;
+               if( iResult != iRead )
+               {
+                  iResult = UNZ_ERRNO;
+                  break;
+               }
+               iResult = zipWriteInFileInZip( hZip, ( voidp ) buffer, iRead );
+               if( iResult != UNZ_OK )
+                  break;
+               ulLeft -= iRead;
+            }
+            hb_xfree( buffer );
+            if( iResult != UNZ_OK )
+               break;
+         }
+
+         iResult = zipCloseFileInZipRaw( hZip, ufi.uncompressed_size, ufi.crc );
+         if( iResult != UNZ_OK )
+            break;
+
+         iResult = unzCloseCurrentFile( hUnzip );
+         if( iResult != UNZ_OK )
+            break;
+
+         if( pExtraField )
+         {
+            hb_xfree( pExtraField );
+            pExtraField = NULL;
+         }
+         if( pszFileComment )
+         {
+            hb_xfree( pszFileComment );
+            pszFileComment = NULL;
+         }
+         if( pLocalExtraField )
+         {
+            hb_xfree( pLocalExtraField );
+            pLocalExtraField = NULL;
+         }
+         iFilesLeft++;
+      }
+      iResult = unzGoToNextFile( hUnzip );
+   }
+
+   if( pExtraField )
+      hb_xfree( pExtraField );
+   if( pszFileComment )
+      hb_xfree( pszFileComment );
+   if( pLocalExtraField )
+      hb_xfree( pLocalExtraField );
+
+   if( iFilesDel == 0 )
+      iResult = UNZ_ERRNO;
+   else if( iResult == UNZ_END_OF_LIST_OF_FILE )
+      iResult = UNZ_OK;
+
+   if( iResult != UNZ_OK )
+      zipClose( hZip, NULL );
+   else
+      iResult = zipClose( hZip, pszGlobalComment );
+   unzClose( hUnzip );
+   if( pszGlobalComment )
+      hb_xfree( pszGlobalComment );
+
+   if( iResult != UNZ_OK )
+      hb_fsDelete( ( BYTE * ) szTempFile );
+   else
+   {
+      hb_fsDelete( ( BYTE * ) szZipFile );
+
+      if( iFilesLeft == 0 )
+         hb_fsDelete( ( BYTE * ) szTempFile );
+      else if( !hb_fsRename( ( BYTE * ) szTempFile, ( BYTE * ) szZipFile ) )
+         iResult = UNZ_ERRNO;
+   }
+
+   return iResult;
+}
+
+/*  HB_ZipDeleteFile( cZipFile, cFileMask ) --> nError */
+HB_FUNC( HB_ZIPDELETEFILE )
+{
+   char * szZipFile  = hb_parc( 1 );
+   char * szFileMask = hb_parc( 2 );
+
+   if( szZipFile && szFileMask )
+      hb_retni( hb_zipDeleteFile( szZipFile, szFileMask ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

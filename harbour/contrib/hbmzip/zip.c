@@ -544,6 +544,7 @@ extern zipFile ZEXPORT zipOpen2 (
     ziinit.begin_pos = ZTELL(ziinit.z_filefunc,ziinit.filestream);
     ziinit.in_opened_file_inzip = 0;
     ziinit.ci.stream_initialised = 0;
+    ziinit.ci.stream.data_type = 0;
     ziinit.number_entry = 0;
     ziinit.add_position_when_writting_offset = 0;
     init_linkedlist(&(ziinit.central_dir));

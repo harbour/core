@@ -8,6 +8,32 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-26 16:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/zip.c
+    ! fixed access to uninitialized member of z_stream by simple
+      initialization. Anyhow it's minor bug in MINIZIP code exploited
+      HB_ZipDeleteFile() which causes that TEXT flag is not set after
+      raw binary file updating. There is also no API call to make it
+      manually.
+      
+  * harbour/contrib/hbmzip/hbmzip.c
+  * harbour/contrib/hbmzip/readme.txt
+    + added HB_ZipDeleteFile( cZipFile, cFileMask ) --> nError
+
+  * harbour/common.mak
+  * harbour/source/rtl/Makefile
+  + harbour/source/rtl/dirscan.prg
+    + added HB_DirScan( cPath, cFileMask, cAttr )
+
+  * harbour/source/rtl/strmatch.c
+    + added HB_FileMatch( cFile, cPattern )
+
+  * harbour/include/hbextern.ch
+    + added HB_DirScan(), HB_FileMatch()
+
+  * harbour/contrib/xhb/dirrec.prg
+    * changed to use HB_DirScan()
+
 2008-07-26 12:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * TODO
      * Updated.

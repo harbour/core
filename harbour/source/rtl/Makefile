@@ -170,6 +170,7 @@ PRG_SOURCES=\
 	dbedit.prg   \
 	devoutp.prg  \
 	dircmd.prg   \
+	dirscan.prg  \
 	einstv52.prg \
 	einstvar.prg \
 	einstvau.prg \

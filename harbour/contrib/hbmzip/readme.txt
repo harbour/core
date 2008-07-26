@@ -50,7 +50,7 @@ HB_ZipFileCreate( hZip, cZipName, dDate, cTime,
                   nInternalAttr, nExternalAttr,
                   [ nMethod = HB_ZLIB_METHOD_DEFLATE ], 
                   [ nLevel = HB_ZLIB_COMPRESSION_DEFAULT ], 
-                  [ cPassword ], [ cComment ] ) --> nError */
+                  [ cPassword ], [ cComment ] ) --> nError
 HB_ZipFileWrite( hZip, cData [, nLen ] ) --> nError
 HB_ZipFileClose( hZip ) --> nError
 HB_ZipStoreFile( hZip, cFileName, [ cZipName ], ;
@@ -67,8 +67,11 @@ HB_UnzipFileGoto( hUnzip, nPosition ) --> nError
 HB_UnzipFileInfo( hUnzip, @cZipName, @dDate, @cTime,
                   @nInternalAttr, @nExternalAttr,
                   @nMethod, @nSize, @nCompressedSize,
-                  @cComment ) --> nError */
+                  @cComment ) --> nError
 HB_UnzipFileOpen( hUnzip, [ cPassword ] ) --> nError
 HB_UnzipFileRead( hUnzip, @cBuf [, nLen ] ) --> nRead
 HB_UnzipFileClose( hUnzip ) --> nError
 HB_UnzipExtractCurrentFile( hZip, [ cFileName ], [ cPassword ] ) --> nError
+
+
+HB_ZipDeleteFile( cZipFile, cFileMask ) --> nError

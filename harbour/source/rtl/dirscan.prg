@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    xHarbour compatible function DirectoryRecurse()
+ *    HB_DirScan()
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
@@ -50,41 +50,47 @@
  *
  */
 
-/* This implementation uses different rules then xHarbour one.
- * It does not change current drive or current directory so
- * unlike the xHarbour version it's MT safe.
- * It also returns relative paths which are more similar to
- * DIRECTORY() function results so they can be easy used
- * directly in other code, f.e. to create archive without
- * absolute paths. Please note that user can easy convert
- * relative paths to absolte ones by simple adding curdir()
- * and/or cPath parameter passed to DirectoryRecurse() but
- * reverted conversion may not be possible in some cases.
- * The 3-rd xHarbour parameter <lCaseMach> is ignored because
- * harbour uses platform native rules to check filename mask
- * respecting SET FILECASE and SET DIRCASE settings.
- * xHarbour does not add "D" to attribute list used for directory
- * tree scanning so user always have to add it manually and later
- * it ignores it so it's not possible to extract file list with
- * directories entries. In Harbour it's fixed.
- * [druzus]
- */
+STATIC FUNCTION HB_doScan( cPath, cMask, cAttr, cPathSep )
 
-FUNCTION DirectoryRecurse( cPath, cAttr )
+   LOCAL aResult, aFile
+   LOCAL lMatch
 
-   LOCAL aResult
-   LOCAL cFilePath, cExt, cMask
+   aResult := {}
 
-   hb_FNameSplit( cPath, @cFilePath, @cMask, @cExt )
-   cMask += cExt
-
-   /* The trick with StrTran() below if for strict xHarbour
-    * compatibility though it should be reverted when it will
-    * be fixed in xHarbour
-    */
-   aResult := HB_DirScan( cFilePath, cMask + cExt, ;
-                          StrTran( Upper( cAttr ), "D" ) )
-
-   AEval( aResult, { |x| x[ 1 ] := cFilePath + x[ 1 ] } )
+   FOR EACH aFile IN Directory( cPath + hb_osFileMask(), cAttr + "D" )
+      lMatch = HB_FileMatch( aFile[ 1 ], cMask )
+      IF "D" $ aFile[ 5 ]
+         IF lMatch .AND. "D" $ cAttr
+            AAdd( aResult, aFile )
+         ENDIF
+         IF !( aFile[ 1 ] == "." .OR. aFile[ 1 ] == ".." .OR. aFile[ 1 ] == "" )
+            AEval( HB_DoScan( cPath + aFile[ 1 ] + cPathSep, cMask, cAttr, cPathSep ), ;
+                   { |x| x[ 1 ] := aFile[ 1 ] + cPathSep + x[ 1 ], ;
+                         AAdd( aResult, x ) } )
+         ENDIF
+      ELSEIF lMatch
+         AAdd( aResult, aFile )
+      ENDIF
+   NEXT
 
    RETURN aResult
+
+FUNCTION HB_DirScan( cPath, cFileMask, cAttr )
+
+   LOCAL cFilePath, cPathSep
+
+   cPathSep := hb_osPathSeparator()
+
+   IF Empty( cPath )
+      cFilePath := ""
+   ELSE
+      cFilePath := cPath
+      IF !Right( cPath, 1 ) $ hb_osPathDelimiters()
+         cFilePath += cPathSep
+      ENDIF
+   ENDIF
+
+   RETURN HB_DoScan( cFilePath, ;
+                     IIF( Empty( cFileMask ), hb_osFileMask(), cFileMask ), ;
+                     IIF( ValType( cAttr ) $ "CM", cAttr, "" ), ;
+                     cPathSep )
