@@ -2,6 +2,69 @@
  * $Id$
  */
 
+Version 1.0.0 (2008-08-01) tag: 1.0.0
+
+General
+=============================
+- Internal errors are now logged to file.
+- Fixed -gc3 for doubly negated integers.
+- Changed hb_xrealloc() to be ANSI-C realloc() compatible.
+- Cleanup of MSVC C mode static initialisation code.
+- Changed internal representation for file attributes from USHORT to ULONG.
+- Fixed memory leak in -gw mode.
+- Portability fixes (Unicode, 64 bit, Pelles C 32/64 bit, WinCE, eVC4, XCC, 
+  Linux mouse detection, OpenWatcom).
+- Deployment fixes.
+
+Core
+=============================
+- Fixed __HARBOUR__ macro on .prg level, when compiled with -u switch.
+- HB_ARRAYID() moved to xhb.lib, synced with xhb and made 64 bit compatible.
+- file handle usage cleanup and 64 bit compatibility.
+- Automatic destructors for .hrb modules.
+- Added passing non-string parameters to .hrb functions.
+- Fixed casting for indexes with key length greater then 196 bytes
+  created on tables with record number smaller then 256 in rddcdx.
+- New FS API functions: hb_fsSetFileTime(), hb_fsGetFileTime(), hb_fsSetAttr(), 
+  hb_fsGetAttr().
+- New date API function: hb_timeStampEncode().
+- Fixed printing under OS/2.
+- Implemented DBEDIT() DE_APPEND mode plus some other features and 
+  compatibility fixes.
+- MD5 calculation fixes.
+- Added C level hb_hashAddNew().
+- Compile time optimization of EMPTY() function.
+- Compress trailing spaces during string item serialization.
+- Replicated CA-Cl*pper compile time optimization bugs.
+- TCP/IP function (HB_INET*()) fixes.
+- Added HB_OSFILEMASK(), HB_DIRSCAN(), HB_FILEMATCH() Harbour level functions.
+- Fixed RTE in HBReport() class.
+
+Contrib
+=============================
+- Better cross-build support for contribs with external dependencies.
+- hbmzip OS/2 support, Unix .zip header fix, using Harbour memory 
+  management functions, global and file comment support, HB_ZIPDELETEFILE() 
+  function.
+- hbziparch fixes and better portability.
+- hbcurl fixes, now using Harbour memory allocation functions, 
+  now older libcurl versions are supported as well, CURL_EASY_GETINFO() 
+  fixed for unsupported info types.
+- 64bit compatibility fixes. hbmysql/SQLLISTF() function now 
+  uses pointer instead of numeric type.
+- Fixed adordd to be _SET_EXACT independent.
+- Fixed hbodbc tests to work out of the box.
+- hbw32, hbodbc 64 bit fixes.
+- Fixed rddads to behave Clipper-like when trying to write
+  when on EOF position.
+- Added OS version detection functions to hbw32.
+- Fixed HB_INC_* envvar usage in *_all.bat files.
+- Fixed casting for indexes with key length greater then 196 bytes
+  created on tables with record number smaller then 256 in hbbmcdx.
+- hbsqlit3 warning fixes and error fixes for some compilers/modes.
+- Added DirectoryRecurse()() to xhb.lib.
+
+
 Version 1.0.0 rc2 (2008-07-01) tag: 1.0.0rc2
 
 General
