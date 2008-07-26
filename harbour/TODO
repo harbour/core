@@ -7,8 +7,8 @@
                   Harbour Project To-Do list
 
 =======================================================================
-Tasks for v.1 beta:
--------------------
+Tasks for after v.1 release:
+----------------------------
 
 Assign to: Jean-Francois Lefebvre (JFL)
 Detail...: The following need to be added to the OO system:
@@ -22,24 +22,6 @@ Detail...: Add missing Clipper virtual memory functions.
 Status...: Open.
 
 ***
-
-=======================================================================
-Tasks for v.1 release:
-----------------------
-
-Assign to: <nobody>
-Detail...: Rewrite filesys.c to use native platform specific file I/O
-           with unlimited number of file handles, while maintaining
-           compatibility with the CA-Cl*pper legacy handle numbering
-           system. This either involves adding a linked list for the
-           translation table, or we should state that only handles 0-4
-           are number compatible.
-Status...: Open.
-
-
-=======================================================================
-Tasks for after v.1 release:
-----------------------------
 
 Assign to: <nobody>
 Detail...: Dynamic multi-language compiler/runtime support.
@@ -122,12 +104,7 @@ Detail...: Extended HB_IT_POINTER. In practice we can give them the
            writing some libraries.
 Status...: Open.
 
-
-=======================================================================
-
-                  Harbour Project To-Fix list
-
-=======================================================================
+***
 
 Assign to: Ryszard
 Detail...: SQLRDD.
@@ -140,6 +117,12 @@ Detail...: Real strong typing in the compiler.
 Status...: Open.
 
 ***
+
+=======================================================================
+
+                  Harbour Project To-Fix list
+
+=======================================================================
 
 Assign to: Przemek
 Detail...: Clean RDD code to be safe for return from RT errors

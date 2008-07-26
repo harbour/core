@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-26 12:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * TODO
+     * Updated.
+     ; QUESTION: Is this still valid?:
+       Assign to: Przemek
+       Detail...: Clean RDD code to be safe for return from RT errors
+       Status...: Open.
+
 2008-07-25 22:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbextern.ch
      + HB_OSFILEMASK() added.
