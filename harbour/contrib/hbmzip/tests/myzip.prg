@@ -53,45 +53,56 @@
 
 
 PROC MyZip( ... )
-   LOCAL hZip, aDir, aFile, aWild, cFileName, cPath, cWild, cPassword, tmp
+   LOCAL hZip, aDir, aFile, aWild, ;
+         cZipName, cPath, cFileName, cExt, cWild, cPassword, cComment,;
+         tmp
 
    aWild := { ... }
    IF LEN(aWild) < 2
-      ? "Usage: myzip <ZipName> [ --pass <password> ] <FilePattern1> [ <FilePattern2> ... ]"
+      ? "Usage: myzip <ZipName> [ --pass <password> ] [ --comment <comment> ] <FilePattern1> [ <FilePattern2> ... ]"
       RETURN
    ENDIF
 
-   cFileName := aWild[ 1 ]
-   IF ! ( "." $ cFileName )
-      cFileName += ".zip"
+   HB_FNameSplit( aWild[ 1 ], @cPath, @cFileName, @cExt )
+   IF EMPTY( cExt )
+      cExt := ".zip"
    ENDIF
+   
+   cZipName := HB_FNameMerge( cPath, cFileName, cExt )
 
-   ADEL( aWild, 1 )
-   ASIZE( aWild, LEN( aWild ) - 1 )
+   HB_ADEL( aWild, 1, .T. )
 
-   FOR tmp := 1 TO LEN( aWild ) - 1
+   FOR tmp := LEN( aWild ) - 1 TO 1 STEP -1
       IF LOWER( aWild[ tmp ] ) == "--pass"
-         cPassword := aWild[ tmp + 1 ]
+         IF EMPTY( cPassword )
+            cPassword := aWild[ tmp + 1 ]
+         ENDIF
+         aWild[ tmp ] := ""
+         aWild[ tmp + 1 ] := ""
+      ELSEIF LOWER( aWild[ tmp ] ) == "--comment"
+         IF EMPTY( cComment )
+            cComment := aWild[ tmp + 1 ]
+         ENDIF
          aWild[ tmp ] := ""
          aWild[ tmp + 1 ] := ""
       ENDIF
    NEXT
 
-   hZip := HB_ZIPOPEN( cFileName )
+   hZip := HB_ZIPOPEN( cZipName )
    IF ! EMPTY( hZip )
-      ? "Archive file:", cFileName
+      ? "Archive file:", cZipName
       FOR EACH cWild IN aWild
          IF !EMPTY( cWild )
-            aDir := DIRECTORY( cWild )
-            cPath := LEFT( cWild, RAT( HB_OSPATHSEPARATOR(), cWild ) )
+            HB_FNameSplit( cWild, @cPath, @cFileName, @cExt )
+            aDir := HB_DirScan( cPath, cFileName + cExt )
             FOR EACH aFile IN aDir
-               IF cPath + aFile[ 1 ] != cFileName
+               IF ! cPath + aFile[ 1 ] == cZipName
                   ? "Adding", cPath + aFile[ 1 ]
                   HB_ZipStoreFile( hZip, cPath + aFile[ 1 ], cPath + aFile[ 1 ], cPassword )
                ENDIF
             NEXT
          ENDIF
       NEXT
-      HB_ZIPCLOSE( hZip )
+      HB_ZIPCLOSE( hZip, cComment )
    ENDIF
 RETURN

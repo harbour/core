@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-26 17:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/tests/myzip.prg
+    + added support for setting global comment
+    + added support for scanning subdirectories
+
 2008-07-26 16:25 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbmzip/zip.c
     ! fixed access to uninitialized member of z_stream by simple
