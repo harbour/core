@@ -1194,6 +1194,9 @@ METHOD PutMask( xValue, lEdit ) CLASS Get
       FOR nFor := 1 TO ::nMaxLen
          cChar := SubStr( cPicMask, nFor, 1 )
          IF cChar $ ",." .AND. SubStr( cBuffer, nFor, 1 ) $ ",." // " " TOFIX
+            IF "E" $ cPicFunc
+               cChar := IIF( cChar == ",", ".", "," )
+            ENDIF
             cBuffer := SubStr( cBuffer, 1, nFor - 1 ) + cChar + SubStr( cBuffer, nFor + 1 )
          ENDIF
       NEXT
