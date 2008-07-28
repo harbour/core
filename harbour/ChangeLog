@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-28 16:22 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/filesys.c
+    + use utime() to set file date and time in all dos builds
+      not only in DJGPP.
+
 2008-07-28 15:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * harbour-ce-spec
    * harbour-w32-spec

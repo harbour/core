@@ -181,6 +181,7 @@
 #if defined(HB_OS_DOS)
    #include <dos.h>
    #include <time.h>
+   #include <utime.h>
 #elif defined(HB_OS_OS2)
    #include <sys/signal.h>
    #include <sys/process.h>
@@ -1134,7 +1135,7 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
       if( fFree )
          hb_xfree( pszFileName );
    }
-#elif defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#elif defined( OS_UNIX_COMPATIBLE ) || defined( HB_OS_DOS )
    {
       BOOL fFree;
 
