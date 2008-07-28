@@ -8,6 +8,36 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-28 15:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * include/hbver.h
+   * harbour.spec
+     * Removed 'rc2' tag in preparation for final release.
+
+   * doc/whatsnew.txt
+     ! Minor typos.
+
+   * contrib/hbmysql/make_b32.bat
+   * contrib/hbmysql/make_vc.bat
+   * contrib/hbapollo/make_b32.bat
+   * contrib/hbapollo/make_vc.bat
+   * contrib/hbfbird/make_b32.bat
+   * contrib/hbfbird/make_vc.bat
+   * contrib/hbcurl/make_b32.bat
+   * contrib/hbcurl/make_vc.bat
+   * contrib/hbhpdf/make_b32.bat
+   * contrib/hbhpdf/make_vc.bat
+   * contrib/hbpgsql/make_b32.bat
+   * contrib/hbpgsql/make_vc.bat
+   * contrib/rddads/make_b32.bat
+   * contrib/rddads/make_vc.bat
+   * contrib/hbfimage/make_b32.bat
+   * contrib/hbfimage/make_vc.bat
+   * contrib/hbgd/make_b32.bat
+   * contrib/hbgd/make_vc.bat
+     ! Fixed HB_DIR_* detection.
+
 2008-07-28 12:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbmzip/hbmzip.c
     * converted TABs to SPACEs

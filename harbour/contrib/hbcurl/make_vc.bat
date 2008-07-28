@@ -23,7 +23,7 @@ set _HB_DLL_NAME=libcurl
 if exist "%HB_DIR_CURL%\bin\%_HB_DLL_NAME%.dll" set _HB_DLL_DIR=%HB_DIR_CURL%\bin
 if exist "%HB_DIR_CURL%\%_HB_DLL_NAME%.dll"     set _HB_DLL_DIR=%HB_DIR_CURL%
 
-if not "%_HB_DLL_DIR%" == "" echo Using .dll: "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll"
+if not "%HB_DIR_CURL%" == "" echo Using .dll: "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll"
 
 rem ---------------------------------------------------------------
 
@@ -31,7 +31,7 @@ call ..\mtpl_vc.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem ---------------------------------------------------------------
 
-if "%_HB_DLL_DIR%" == "" goto POST_EXIT
+if "%HB_DIR_CURL%" == "" goto POST_EXIT
 
 set _HB_INSTALL_PREFIX=%HB_INSTALL_PREFIX%
 if "%_HB_INSTALL_PREFIX%" == "" set _HB_INSTALL_PREFIX=..\..

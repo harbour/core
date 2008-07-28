@@ -24,7 +24,7 @@ if exist "%HB_DIR_ADS%\Redistribute\%_HB_DLL_NAME%.dll" set _HB_DLL_DIR=%HB_DIR_
 if exist "%HB_DIR_ADS%\%_HB_DLL_NAME%.dll"              set _HB_DLL_DIR=%HB_DIR_ADS%
 if exist "%HB_DIR_ADS%\32bit\%_HB_DLL_NAME%.dll"        set _HB_DLL_DIR=%HB_DIR_ADS%\32bit
 
-if not "%_HB_DLL_DIR%" == "" echo Using .dll: "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll"
+if not "%HB_DIR_ADS%" == "" echo Using .dll: "%_HB_DLL_DIR%\%_HB_DLL_NAME%.dll"
 
 rem ---------------------------------------------------------------
 
@@ -32,7 +32,7 @@ call ..\mtpl_vc.bat %1 %2 %3 %4 %5 %6 %7 %8 %9
 
 rem ---------------------------------------------------------------
 
-if "%_HB_DLL_DIR%" == "" goto POST_EXIT
+if "%HB_DIR_ADS%" == "" goto POST_EXIT
 
 set _HB_INSTALL_PREFIX=%HB_INSTALL_PREFIX%
 if "%_HB_INSTALL_PREFIX%" == "" set _HB_INSTALL_PREFIX=..\..

@@ -20,7 +20,7 @@ Core
 =============================
 - Fixed __HARBOUR__ macro on .prg level, when compiled with -u switch.
 - HB_ARRAYID() moved to xhb.lib, synced with xhb and made 64 bit compatible.
-- file handle usage cleanup and 64 bit compatibility.
+- File handle usage cleanup and 64 bit compatibility.
 - Automatic destructors for .hrb modules.
 - Added passing non-string parameters to .hrb functions.
 - Fixed casting for indexes with key length greater then 196 bytes
@@ -38,7 +38,7 @@ Core
 - Replicated CA-Cl*pper compile time optimization bugs.
 - TCP/IP function (HB_INET*()) fixes.
 - Added HB_OSFILEMASK(), HB_DIRSCAN(), HB_FILEMATCH() Harbour level functions.
-- Fixed RTE in HBReport() class.
+- Fixed RTE in HBReportForm() class.
 
 Contrib
 =============================
