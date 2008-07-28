@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-28 02:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/tests/myzip.prg
+  * harbour/contrib/hbmzip/tests/myunzip.prg
+    * minor cleanup
+
 2008-07-26 20:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
      + Updated for 1.0.0.

@@ -53,7 +53,8 @@
 
 
 PROC MyUnzip( ... )
-   LOCAL hUnzip, aWild, cFileName, cWild, cFile, dDate, cTime, nSize, nCompSize, nErr, cPassword, tmp
+   LOCAL hUnzip, aWild, cFileName, cExt, cPath, cFile, ;
+         dDate, cTime, nSize, nCompSize, nErr, cPassword, tmp
 
    aWild := { ... }
    IF LEN( aWild ) < 1
@@ -61,10 +62,11 @@ PROC MyUnzip( ... )
       RETURN
    ENDIF
 
-   cFileName := aWild[ 1 ]
-   IF ! ( "." $ cFileName )
-      cFileName += ".zip"
+   HB_FNameSplit( aWild[ 1 ], @cPath, @cFileName, @cExt )
+   IF EMPTY( cExt )
+      cExt := ".zip"
    ENDIF
+   cFileName := HB_FNameMerge( cPath, cFileName, cExt )
 
    ADEL( aWild, 1 )
    ASIZE( aWild, LEN( aWild ) - 1 )

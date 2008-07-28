@@ -67,7 +67,6 @@ PROC MyZip( ... )
    IF EMPTY( cExt )
       cExt := ".zip"
    ENDIF
-   
    cZipName := HB_FNameMerge( cPath, cFileName, cExt )
 
    HB_ADEL( aWild, 1, .T. )
