@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-28 12:37 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/hbmzip.c
+    * converted TABs to SPACEs
+
+  * harbour/source/rtl/hbcrc.c
+  * harbour/source/rtl/hbmd5.c
+    * added const to some static array declarations
+
 2008-07-28 02:47 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbmzip/tests/myzip.prg
   * harbour/contrib/hbmzip/tests/myunzip.prg

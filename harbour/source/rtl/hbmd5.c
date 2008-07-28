@@ -129,7 +129,7 @@ typedef struct
 #define MAX_FBUF 0x20000 /* file read buffer size, MUST be 64*n */
 
 /* Static data */
-static UINT32 T[ 64 ] = {
+static const UINT32 T[ 64 ] = {
    0xD76AA478, 0xE8C7B756, 0x242070DB, 0xC1BDCEEE,
    0xF57C0FAF, 0x4787C62A, 0xA8304613, 0xFD469501,
    0x698098D8, 0x8B44F7AF, 0xFFFF5BB1, 0x895CD7BE,
@@ -148,7 +148,7 @@ static UINT32 T[ 64 ] = {
    0xF7537E82, 0xBD3AF235, 0x2AD7D2BB, 0xEB86D391
 };
 
-static BYTE pad[ 64 ] = {
+static const BYTE pad[ 64 ] = {
    0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

@@ -208,7 +208,7 @@ HB_FUNC( HB_ZIPFILECREATE )
 
          hb_retni( zipOpenNewFileInZip3( hZip, szZipName, &zfi,
                                          NULL, 0, NULL, 0,
-					 hb_parc( 10 ), iMethod, iLevel, 0,
+                                         hb_parc( 10 ), iMethod, iLevel, 0,
                                          -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
                                          hb_parc( 9 ), 0 ) );
       }
@@ -1077,7 +1077,7 @@ static int hb_zipDeleteFile( const char* szZipFile, const char* szFileMask )
       if( ugi.size_comment > 0 )
       {
          pszGlobalComment = ( char * ) hb_xgrab( ugi.size_comment + 1 );
-	   if( ( uLong ) unzGetGlobalComment( hUnzip, pszGlobalComment,
+         if( ( uLong ) unzGetGlobalComment( hUnzip, pszGlobalComment,
                                  ugi.size_comment ) != ugi.size_comment )
             iResult = UNZ_ERRNO;
          pszGlobalComment[ ugi.size_comment ] = '\0';
