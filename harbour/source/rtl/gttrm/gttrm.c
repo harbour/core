@@ -3172,6 +3172,9 @@ static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
       {
          /* scroll up the internal screen buffer */
          HB_GTSELF_SCROLLUP( pGT, iRows, bColor, bChar );
+         /* set default color for terminals which use it to erase
+          * scrolled area */
+         pTerm->SetAttributes( pTerm, bColor & pTerm->iAttrMask );
          /* update our internal row position */
          do
             hb_gt_trm_termOut( pTerm, ( BYTE * ) "\n\r", 2 );
