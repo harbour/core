@@ -332,6 +332,22 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    TGetTOVS( o, { "12345" } )
    TEST_LINE( o:Assign() )
 
+   // ; Lorenzo/Przemek #1
+
+   nInt02 := 0
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "@E 99.99",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, { "1234" } )
+   TEST_LINE( o:Assign() )
+
+   nInt02 := 0
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "@E 99.99",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, { "1" } )
+   TEST_LINE( o:Assign() )
+
    // ;
 
    nInt02 := 0

@@ -1,8 +1,8 @@
-harbour (1.0.0.RC2) unstable; urgency=low
+harbour (1.0.0-1) unstable; urgency=low
 
   * Lot of new stuff see changelog
 
- -- guy.roussin <guy.roussin@teledetection.fr>  Thu, 03 Jul 2008 14:57:48 +0200
+ -- guy.roussin <guy.roussin@teledetection.fr>  Mon, 28 Jul 2008 15:40:38 +0200
 
 harbour (0.45.0-0.1) unstable; urgency=low
 
