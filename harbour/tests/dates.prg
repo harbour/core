@@ -16,7 +16,7 @@ local cNewLine := HB_OSNewLine()
    TestCentury(cNewLine)
 
    OUTSTD (cNewLine, "")
-   OUTSTD (cNewLine,  "dDate = CToD( '02/04/1999' ) =>", dDate := CToD( "02/04/1999" ))
+   OUTSTD (cNewLine,  "dDate := CToD( '02/04/1999' ) =>", dDate := CToD( "02/04/1999" ))
 
    OUTSTD (cNewLine,  "ValType( dDate ) =", ValType( dDate ))
 

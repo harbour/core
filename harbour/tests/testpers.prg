@@ -10,12 +10,12 @@ function Main()
    local oTest := Test():New()
    local oTest2 := Test2():New()
 
-   oTest:One   = "hello"
-   oTest:Two   = 123
-   oTest:Three = "this value is not persistent"
-   oTest:Four  = oTest2   // We store another persistent object here
+   oTest:One   := "hello"
+   oTest:Two   := 123
+   oTest:Three := "this value is not persistent"
+   oTest:Four  := oTest2   // We store another persistent object here
 
-   oTest2:Five = "some more text"
+   oTest2:Five := "some more text"
 
    ? oTest:SaveToText()            // We save it to a text
 

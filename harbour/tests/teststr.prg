@@ -48,8 +48,8 @@ local nI, c, d
    outstd (a ** b)
    outstd (cNewLine)
 
-   c = a * b
-   d = b * a
+   c := a * b
+   d := b * a
    outstd (cNewLine)
    outstd( "4: " )
    outstd (str (c))

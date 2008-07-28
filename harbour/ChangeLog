@@ -8,6 +8,48 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-28 20:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * tests/ainstest.prg
+   * tests/array16.prg
+   * tests/arrays.prg
+   * tests/atest.prg
+   * tests/clasinit.prg
+   * tests/classch.prg
+   * tests/classes.prg
+   * tests/dates.prg
+   * tests/db_brows.prg
+   * tests/ddate.prg
+   * tests/debugtst.prg
+   * tests/dynobj.prg
+   * tests/files.prg
+   * tests/gfx.prg
+   * tests/inline.prg
+   * tests/keywords.prg
+   * tests/objects.prg
+   * tests/onidle.prg
+   * tests/readhrb.prg
+   * tests/rtfclass.prg
+   * tests/speed.prg
+   * tests/switch.prg
+   * tests/test_all.prg
+   * tests/testbrw.prg
+   * tests/testcgi.prg
+   * tests/testcls.prg
+   * tests/testget.prg
+   * tests/testhtml.prg
+   * tests/testidle.prg
+   * tests/testinit.prg
+   * tests/testntx.prg
+   * tests/testpers.prg
+   * tests/testrdd2.prg
+   * tests/teststr.prg
+   * tests/tstblock.prg
+   * tests/tstmacro.prg
+   * tests/videotst.prg
+   * tests/vidtest.prg
+   * tests/wcecon.prg
+     * Cleanups. SVN header, '=' operator usage.
+
 2008-07-28 18:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * debian/changelog
      * Applied Guy's patch.

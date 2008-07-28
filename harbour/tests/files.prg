@@ -72,7 +72,7 @@ PROCEDURE FILES()
    DO WHILE n < NFILES
       n++
       @14,0 SAY "Deleting files.... "+Str( n )
-      FErase ( "File" + LTrim( Str( n ) ) + ".Dbf" )
+      FErase ( "File" + LTrim( Str( n ) ) + ".dbf" )
    ENDDO
 
 RETURN NIL

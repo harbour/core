@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 PROCEDURE Main()
 
    LOCAL i, bBlock[3]
@@ -11,18 +15,18 @@ PROCEDURE Main()
 
    CLS
 
-   FOR i = 1 TO 3
+   FOR i := 1 TO 3
       M->Macro := "Var" + Str( i, 1 )
       bBlock[i] := {|| &Macro }
    NEXT
 
    ? "Early (Simple):"
 
-   FOR i = 1 TO 3
+   FOR i := 1 TO 3
       ? Eval( bBlock[i] )
    NEXT
 
-   FOR i = 1 TO 3
+   FOR i := 1 TO 3
       M->Macro := "Var" + Str( i, 1 )
       bBlock[i] := {|| &Macro + "!" }
    NEXT
@@ -30,11 +34,11 @@ PROCEDURE Main()
    ?
    ? "Early (Complex):"
 
-   FOR i = 1 TO 3
+   FOR i := 1 TO 3
       ? Eval( bBlock[i] )
    NEXT
 
-   FOR i = 1 TO 3
+   FOR i := 1 TO 3
       M->Macro := "Var" + Str( i, 1 )
       bBlock[i] := {|| &(Macro) }
    NEXT
@@ -42,7 +46,7 @@ PROCEDURE Main()
    ?
    ? "Late:"
 
-   FOR i = 1 TO 3
+   FOR i := 1 TO 3
       ? Eval( bBlock[i] )
    NEXT
 

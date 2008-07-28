@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 INIT PROCEDURE Init()
 
   ? "In Init"

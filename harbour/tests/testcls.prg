@@ -13,7 +13,7 @@ function Main()
    o:Another( "Hello" ) // "Another" message is not defined for Class Test, but
                         // it will invoke ON ERROR MyErrorManager() method
 
-   o:Another = 5  // Notice how __GetMessage() shows a underscored message
+   o:Another := 5  // Notice how __GetMessage() shows a underscored message
                   // as we are setting a DATA value.
 return nil
 
@@ -32,4 +32,3 @@ METHOD MyErrorManager( uParam1 ) CLASS Test
    Alert( __GetMessage() )  // Shows the message that was sent to the object
 
 return nil
-

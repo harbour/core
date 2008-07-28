@@ -19,7 +19,7 @@ function TForm()
    static oClass
 
    if oClass == nil
-      oClass = HBClass():New( "TFORM" )    // starts a new class definition
+      oClass := HBClass():New( "TFORM" )    // starts a new class definition
 
       oClass:AddData( "cName" )           // define this class objects datas
       oClass:AddData( "nTop" )
@@ -39,10 +39,10 @@ static function New()
 
    local Self := QSelf()
 
-   ::nTop    = 10
-   ::nLeft   = 10
-   ::nBottom = 20
-   ::nRight  = 40
+   ::nTop    := 10
+   ::nLeft   := 10
+   ::nBottom := 20
+   ::nRight  := 40
 
 return Self
 

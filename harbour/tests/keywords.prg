@@ -95,7 +95,7 @@ Local nExt, nExt7, nExtNEXT
 
    Next /*next*/ nExt     //next
 
-   FOR nExt = 1 TO nExt
+   FOR nExt := 1 TO nExt
      QOut( nExt )
    NEXT
 
@@ -123,9 +123,9 @@ Local nExt, nExt7, nExtNEXT
    ( next )->( next() )
 
   IF( nExt > nExt+4 )
-    nExt =nExt +nExt * 5
+    nExt := nExt +nExt * 5
   ELSEIF( nExt > 0 )
-    nExt = nExt * 6 + nExt
+    nExt := nExt * 6 + nExt
   ELSE
     nExt +=5
   ENDIF
@@ -176,7 +176,7 @@ FUNCTION BREAK_( break_break )
 LOCAL bReak:=0
 
   ++bReak
-  IF( bReak = 0 )
+  IF bReak == 0
     Break /*break*/ ( nil )
     BREAK   /* break to beggining */
     Break(0)   //in Clipper: syntax error: ')'
@@ -1022,28 +1022,28 @@ PROCEDURE MACRO()
 MEMVAR s
 PRIVATE s
 
- s = &s
- s = &s.
- s = &s.1
- s = &s.123
- s = &s._
- s = &s._____
- s = &s._1
- s = &s.1_bo
- s = _&s
- s = _&s.
- s = _&s.1
- s = _&s.123
- s = _&s._
- s = _&s._____
- s = _&s._1
- s = _&s.1_bo
- s = x_&s
- s = x_&s_1
- s = x_&s._1
- s = x_&s._123
- s = x_&s.123
- s = x_&s.2_
- s = x_&s.2_x
+ s := &s
+ s := &s.
+ s := &s.1
+ s := &s.123
+ s := &s._
+ s := &s._____
+ s := &s._1
+ s := &s.1_bo
+ s := _&s
+ s := _&s.
+ s := _&s.1
+ s := _&s.123
+ s := _&s._
+ s := _&s._____
+ s := _&s._1
+ s := _&s.1_bo
+ s := x_&s
+ s := x_&s_1
+ s := x_&s._1
+ s := x_&s._123
+ s := x_&s.123
+ s := x_&s.2_
+ s := x_&s.2_x
 
 RETURN

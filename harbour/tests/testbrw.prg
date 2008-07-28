@@ -21,13 +21,13 @@ function Main()
    local nRow, nCol
    local nTmpRow, nTmpCol
 
-   oBrowse:colorSpec     = "W+/B, N/BG"
-   oBrowse:ColSep        = "Ё"
-   oBrowse:HeadSep        = "ям"
-   oBrowse:FootSep        = "ом"
-   oBrowse:GoTopBlock    = { || n := 1 }
-   oBrowse:GoBottomBlock = { || n := Len( aTest0 ) }
-   oBrowse:SkipBlock     = { | nSkip, nPos | nPos := n,;
+   oBrowse:colorSpec     := "W+/B, N/BG"
+   oBrowse:ColSep        := "Ё"
+   oBrowse:HeadSep        := "ям"
+   oBrowse:FootSep        := "ом"
+   oBrowse:GoTopBlock    := { || n := 1 }
+   oBrowse:GoBottomBlock := { || n := Len( aTest0 ) }
+   oBrowse:SkipBlock     := { | nSkip, nPos | nPos := n,;
                              n := If( nSkip > 0, Min( Len( aTest0 ), n + nSkip ),;
                              Max( 1, n + nSkip )), n - nPos }
 
@@ -36,22 +36,22 @@ function Main()
    oBrowse:AddColumn( TBColumnNew( "Third",  { || aTest1[ n ] } ) )
    oBrowse:AddColumn( TBColumnNew( "Forth",  { || aTest2[ n ] } ) )
    oBrowse:AddColumn( TBColumnNew( "Fifth",  { || aTest3[ n ] } ) )
-   oBrowse:GetColumn(1):Footing = 'Number'
-   oBrowse:GetColumn(2):Footing = 'Strins'
+   oBrowse:GetColumn(1):Footing := 'Number'
+   oBrowse:GetColumn(2):Footing := 'Strins'
 
    oBrowse:GetColumn(2):Picture := '@!'
 
-   oBrowse:GetColumn(3):Footing = 'Number'
+   oBrowse:GetColumn(3):Footing := 'Number'
    oBrowse:GetColumn(3):Picture := '999,999.99'
-   oBrowse:GetColumn(4):Footing = 'Dates'
-   oBrowse:GetColumn(5):Footing = 'Logical'
+   oBrowse:GetColumn(4):Footing := 'Dates'
+   oBrowse:GetColumn(5):Footing := 'Logical'
    // needed since I've changed some columns _after_ I've added them to TBrowse object
    oBrowse:Configure()
 
    Alert( oBrowse:ClassName() )
    Alert( oBrowse:GetColumn( 1 ):ClassName() )
 
-   oBrowse:Freeze = 1
+   oBrowse:Freeze := 1
    nCursor := SetCursor( 0 )
    cColor := SetColor( "W+/B" )
    nRow := Row()
@@ -69,12 +69,12 @@ enddo
 While !lEnd
       oBrowse:ForceStable()
 
-      nKey = InKey( 0 )
+      nKey := InKey( 0 )
 
       do case
          case nKey == K_ESC
               SetPos( 17, 0 )
-              lEnd = .t.
+              lEnd := .t.
 
          case nKey == K_DOWN
               oBrowse:Down()
@@ -88,37 +88,37 @@ While !lEnd
          case nKey == K_RIGHT
               oBrowse:Right()
 
-         case nKey = K_PGDN
+         case nKey == K_PGDN
               oBrowse:pageDown()
 
-         case nKey = K_PGUP
+         case nKey == K_PGUP
               oBrowse:pageUp()
 
-         case nKey = K_CTRL_PGUP
+         case nKey == K_CTRL_PGUP
               oBrowse:goTop()
 
-         case nKey = K_CTRL_PGDN
+         case nKey == K_CTRL_PGDN
               oBrowse:goBottom()
 
-         case nKey = K_HOME
+         case nKey == K_HOME
               oBrowse:home()
 
-         case nKey = K_END
+         case nKey == K_END
               oBrowse:end()
 
-         case nKey = K_CTRL_LEFT
+         case nKey == K_CTRL_LEFT
               oBrowse:panLeft()
 
-         case nKey = K_CTRL_RIGHT
+         case nKey == K_CTRL_RIGHT
               oBrowse:panRight()
 
-         case nKey = K_CTRL_HOME
+         case nKey == K_CTRL_HOME
               oBrowse:panHome()
 
-         case nKey = K_CTRL_END
+         case nKey == K_CTRL_END
               oBrowse:panEnd()
 
-         case nKey = K_TAB
+         case nKey == K_TAB
               nTmpRow := ROW()
               nTmpCol := COL()
               @ 0, 0 SAY TIME()
@@ -136,7 +136,7 @@ return nil
 #ifdef HB_COMPAT_C53
 function  defproc(ob,nkey)
 Local nTmpRow,nTmpCol
-        if nKey = K_TAB
+        if nKey == K_TAB
               nTmpRow := ROW()
               nTmpCol := COL()
               @ 0, 0 SAY TIME()

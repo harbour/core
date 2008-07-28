@@ -35,8 +35,8 @@ proc main()
    SetMode( MaxRow() + 1, MaxCol() + 1 )
 
    /* get screen dimensions */
-   nMaxScrRow = hb_gtInfo( HB_GTI_DESKTOPROWS )
-   nMaxScrCol = hb_gtInfo( HB_GTI_DESKTOPCOLS )
+   nMaxScrRow := hb_gtInfo( HB_GTI_DESKTOPROWS )
+   nMaxScrCol := hb_gtInfo( HB_GTI_DESKTOPCOLS )
 
    /* resize console window to the screen size */
    SetMode( nMaxScrRow, nMaxScrCol )

@@ -5,9 +5,9 @@
 /*
  * ReadHRB
  *
- * This program will read the .HRB file and shows its contents
+ * This program will read the .hrb file and shows its contents
  *
- * ReadHRB <program file>  {No .HRB extension please}
+ * ReadHRB <program file>  {No .hrb extension please}
  *
  * Written by Eddie Runia <eddie@runia.com>
  * www - http://www.harbour-project.org
@@ -38,7 +38,7 @@ function Main( cFrom )
    if cFrom == NIL
       cFrom := "hello.hrb"
    else
-      cFrom := cFrom + ".hrb"
+      cFrom += ".hrb"
    endif
 
    hFile := fOpen( cFrom )

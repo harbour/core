@@ -38,8 +38,8 @@ METHOD New( One, Two ) CLASS TTest
 
    Super:New()
 
-   ::One = One
-   ::Two = Two
+   ::One := One
+   ::Two := Two
 
 return Self
 

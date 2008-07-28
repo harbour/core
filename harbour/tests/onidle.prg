@@ -21,10 +21,10 @@ LOCAL nPrev:=SECONDS()
   @ 11,2 SAY "Memory after TEST() and before collecting" + STR( MEMORY(HB_MEM_USED) )
   HB_GCALL()
   @ 12,2 SAY "Memory after collecting" + STR( MEMORY(HB_MEM_USED) )
-  nH1 = HB_IDLEADD( {|| DEVPOS(0,01), DEVOUT( TIME() ) } )
-  nH2 = HB_IDLEADD( {|| DEVPOS(0,21), TEST(), DEVOUT( MEMORY(HB_MEM_USED) ) } )
-  nH3 = HB_IDLEADD( {|| DEVPOS(0,41), IIF(n=4,n:=1,n++),DEVOUT(aSign[n]) } )
-  nH4 = HB_IDLEADD( {|| DEVPOS(0,61), DEVOUT( 1000*(SECONDS()-nPrev) ), nPrev:=SECONDS() } )
+  nH1 := HB_IDLEADD( {|| DEVPOS(0,01), DEVOUT( TIME() ) } )
+  nH2 := HB_IDLEADD( {|| DEVPOS(0,21), TEST(), DEVOUT( MEMORY(HB_MEM_USED) ) } )
+  nH3 := HB_IDLEADD( {|| DEVPOS(0,41), IIF(n=4,n:=1,n++),DEVOUT(aSign[n]) } )
+  nH4 := HB_IDLEADD( {|| DEVPOS(0,61), DEVOUT( 1000*(SECONDS()-nPrev) ), nPrev:=SECONDS() } )
 
   ? VALTYPE(nH1), nH1, VALTYPE(nH2), nH2, VALTYPE(nH3), nH3, VALTYPE(nH4), nH4
   

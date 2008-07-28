@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 #include "ORD.CH"
 
 #define  CRLF            Chr(13)+Chr(10)

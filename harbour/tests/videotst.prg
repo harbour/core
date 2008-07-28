@@ -1,12 +1,14 @@
 /*
  * $Id$
  */
-* VIDEOTST.PRG
+
+* videotst.prg
 *
 * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
 *
 * Test SETMODE() for Harbour Project
 *
+
 #define HB_NOT_SUPPORTED  "Video mode not supported on this system.."
 #define HB_VROW   1
 #define HB_VCOL   2
@@ -42,7 +44,7 @@ FUNCTION MAIN()
     MENU TO nMode
 
     If (nMode > 0)
-       lSuccess = SETMODE( aVModes [nMode] [HB_VROW], aVModes [nMode] [HB_VCOL])
+       lSuccess := SETMODE( aVModes [nMode] [HB_VROW], aVModes [nMode] [HB_VCOL])
 
         IF lSuccess == .T.
             TESTBOX( aVModes [nMode] [HB_PROMPT] )
@@ -81,4 +83,3 @@ FUNCTION MAIN()
   @ 5, 2 SAY "MaxCol() = " + STR( MAXCOL(), 3)
   INKEY(0)
   RETURN
-

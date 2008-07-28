@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 // #include "set.ch" - Preset in pptable.c
 
 PROCEDURE MAIN()

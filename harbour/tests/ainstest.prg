@@ -16,7 +16,7 @@ function Main()
 
     aFirst := aClone( { 1,2,4 } )
     aIns( aFirst, 3 )
-    aFirst[3] = "3"
+    aFirst[3] := "3"
     QQOut( "Testing aIns .. " )
     aDump( aFirst )
 
@@ -28,7 +28,7 @@ function Main()
     aSecond := { 1,2,4 }
     aSize( aSecond, 4 )
     aIns( aSecond, 3 )
-    aSecond[3] = "3"
+    aSecond[3] := "3"
     QQOut( "Testing aSize + aIns .. " )
     aDump( aSecond )
 

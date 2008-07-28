@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 Procedure Main()
 
    LOCAL   GetList := {}, cVar := "Hello"

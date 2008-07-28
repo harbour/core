@@ -56,7 +56,7 @@ FUNCTION TValue
    STATIC oClass
 
    IF oClass == NIL
-      oClass = HBClass():New( "TValue" )
+      oClass := HBClass():New( "TValue" )
 
       oClass:AddData( "cVal" )
       oClass:AddMethod( "New",        @New() )         // New Method

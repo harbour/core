@@ -49,7 +49,7 @@ function trtf()
 static oclass
 
 if oclass == nil
-   oclass = HBClass():new( "trtf" )
+   oclass := HBClass():new( "trtf" )
    oclass:adddata( "nhandle" )
    oclass:addmethod( "new",  @new() )
    oclass:addmethod( "write", @write() )
@@ -60,7 +60,7 @@ return oclass:instance()
 
 static function new( cfilename )
 local self := qself()
-::nhandle   = fcreate( cfilename )
+::nhandle   := fcreate( cfilename )
 fwrite( ::nhandle,;
     "{\rtf1\ansi\deff0{\fonttbl {\f0\fnil\fcharset0 Courier New;}{\f1\fnil\fcharset0 Arial;}}"+;
     "\uc1\pard\lang1033\ulnone\f0\fs20"+CRLF)

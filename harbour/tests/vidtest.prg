@@ -167,7 +167,7 @@ static function ColourBoxes()
     // display boxes to screen
 
     do while nFrames < 5000
-        if nDir = 1
+        if nDir == 1
             dispbegin()
         else
             dispend()

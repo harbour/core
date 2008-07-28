@@ -31,7 +31,7 @@ function TAny()         /* builds a class */
    static hClass
 
    if hClass == nil
-      hClass = __clsNew( "TANY", 3 )                 // cClassName, nDatas
+      hClass := __clsNew( "TANY", 3 )                 // cClassName, nDatas
       __clsAddMsg( hClass, "cName",      1, HB_OO_MSG_DATA )  // retrieve data
       __clsAddMsg( hClass, "_cName",     1, HB_OO_MSG_DATA )  // assign data. Note the '_'
       __clsAddMsg( hClass, "New",   @New(), HB_OO_MSG_METHOD )
@@ -50,7 +50,7 @@ static function New()
    QOut( ValType( Self ) )
    QOut( "Inside New()" )
 
-   ::cName = "Harbour OOP"
+   ::cName := "Harbour OOP"
 
 return Self
 

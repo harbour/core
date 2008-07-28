@@ -66,7 +66,7 @@ FUNCTION Main()
       i := 1
       DO WHILE i <= nPos
 
-         IF substr( cString, i, 1 ) = chr( 13 )
+         IF substr( cString, i, 1 ) == chr( 13 )
             i := i + 1
             cLine := cBuf
             cBuf  := ""
@@ -175,7 +175,7 @@ FUNCTION THTML
    STATIC oClass
 
    IF oClass == NIL
-      oClass = HBClass():New( "THTML" )
+      oClass := HBClass():New( "THTML" )
 
       oClass:AddData( "cTitle" )                       // Page Title
       oClass:AddData( "cBody" )                        // HTML Body Handler
@@ -405,12 +405,12 @@ STATIC FUNCTION ProcessCGI()
                      len( cBuff ) - at( "=", cBuff ) + 1 ), "+", " " ) } )
              cBuff := ""
           ELSE
-             IF substr( cQuery, i, 1 ) = "%"
+             IF substr( cQuery, i, 1 ) == "%"
                 cBuff += chr( Hex2Dec( substr( cQuery, i + 1, 2 ) ) )
                 nBuff := 3
              ENDIF
 
-             IF nBuff = 0
+             IF nBuff == 0
                 cBuff += substr( cQuery, i, 1 )
              ELSE
                 nBuff--

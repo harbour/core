@@ -35,7 +35,7 @@ Function Main( cOption, cCmd )
 
    FOR f=1 TO Len(aDir)
       IF TestIt(aDir[f][1])
-         p = At(".PRG",Upper(aDir[f][1]))
+         p := At(".prg",Lower(aDir[f][1]))
          IF p > 1
             n := Left(aDir[f][1],p-1)
             fWrite(o,":" + n + Chr(13) + Chr(10))

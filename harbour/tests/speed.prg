@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 Function Main()
  Local Program := { , }, Condition := 1, body := 2, Counter := 1, TheEnd := 1000000, stop, start
 
@@ -17,5 +21,3 @@ Function Main()
  ? '==============='
  ? stop - start
  Return NIL
-
-
