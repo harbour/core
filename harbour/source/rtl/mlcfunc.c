@@ -60,6 +60,19 @@ typedef struct
    ULONG    ulLen;
 } HB_EOL_INFO, * PHB_EOL_INFO;
 
+static int hb_mlEol( char * pszString, ULONG ulLen,
+                     PHB_EOL_INFO pEOLs, int iEOLs )
+{
+   int i;
+   for( i = 0; i < iEOLs; ++i )
+   {
+      if( ulLen >= pEOLs[ i ].ulLen &&
+          memcmp( pszString, pEOLs[ i ].szEOL, pEOLs[ i ].ulLen ) == 0 )
+         return i;
+   }
+   return -1;
+}
+
 static ULONG hb_mlGetLine( char * pszString, ULONG ulLen, ULONG ulOffset,
                            ULONG ulLineLength, ULONG ulTabSize, ULONG ulMaxPos,
                            BOOL fWordWrap, PHB_EOL_INFO pEOLs, int iEOLs,
@@ -73,20 +86,29 @@ static ULONG hb_mlGetLine( char * pszString, ULONG ulLen, ULONG ulOffset,
 
    while( ulOffset < ulLen && ( ulMaxPos == 0 || ulOffset < ulMaxPos ) )
    {
-      for( i = 0; i < iEOLs; ++i )
+      if( pszString[ ulOffset ] == HB_CHAR_SOFT1 &&
+          pszString[ ulOffset + 1 ] == HB_CHAR_SOFT2 )
       {
-         if( ulLen - ulOffset >= pEOLs[ i ].ulLen &&
-             memcmp( pszString + ulOffset, pEOLs[ i ].szEOL, pEOLs[ i ].ulLen ) == 0 )
+         if( !fWordWrap )
          {
-            if( ulMaxPos )
-               ulCol += pEOLs[ i ].ulLen;
-            else
-               ulOffset += pEOLs[ i ].ulLen;
-            * pulLen = ulCol;
-            if( pulEOL )
-               * pulEOL = pEOLs[ i ].ulLen;
-            return ulOffset;
+            if( ulMaxPos == 0 )
+               ulOffset += 2;
+            break;
          }
+         ulOffset += 2;
+         continue;
+      }
+
+      i = hb_mlEol( pszString + ulOffset, ulLen - ulOffset, pEOLs, iEOLs );
+      if( i >= 0 )
+      {
+         if( ulMaxPos )
+            ulCol += pEOLs[ i ].ulLen;
+         else
+            ulOffset += pEOLs[ i ].ulLen;
+         if( pulEOL )
+            * pulEOL = pEOLs[ i ].ulLen;
+         break;
       }
 
       if( pszString[ ulOffset ] == ' ' || pszString[ ulOffset ] == HB_CHAR_HT )
@@ -95,23 +117,6 @@ static ULONG hb_mlGetLine( char * pszString, ULONG ulLen, ULONG ulOffset,
          ulBlankPos = ulOffset;
       }
 
-      if( pszString[ ulOffset ] == HB_CHAR_HT )
-         ulCol += ulTabSize - ( ulCol % ulTabSize );
-      else if( pszString[ ulOffset ] == HB_CHAR_SOFT1 &&
-               pszString[ ulOffset + 1 ] == HB_CHAR_SOFT2 )
-      {
-         ulOffset++;
-         if( !fWordWrap )
-         {
-            ulOffset++;
-            * pulLen = ulCol;
-            break;
-         }
-      }
-      else
-         ulCol++;
-
-      ulOffset++;
       if( ulCol >= ulLineLength )
       {
          if( fWordWrap )
@@ -122,6 +127,9 @@ static ULONG hb_mlGetLine( char * pszString, ULONG ulLen, ULONG ulOffset,
                ulCol = ulLineLength;
                if( pszString[ ulOffset ] == ' ' )
                   ++ulOffset;
+               if( pszString[ ulOffset ] == HB_CHAR_SOFT1 &&
+                   pszString[ ulOffset + 1 ] == HB_CHAR_SOFT2 )
+                  ulOffset += 2;
             }
             else
             {
@@ -137,6 +145,10 @@ static ULONG hb_mlGetLine( char * pszString, ULONG ulLen, ULONG ulOffset,
          }
          break;
       }
+
+      ulCol += pszString[ ulOffset ] == HB_CHAR_HT ?
+               ulTabSize - ( ulCol % ulTabSize ) : 1;
+      ulOffset++;
    }
    * pulLen = ulCol;
 
@@ -423,6 +435,19 @@ HB_FUNC( MPOSTOLC )
                }
             }
             while( ulOffset < ulLen && ulOffset < ulPos );
+
+            if( ulLine && ulCol == ulLineLength && ulPos <= ulLen &&
+                ( hb_mlEol( pszString + ulPos, ulLen - ulPos, pEOLs, iEOLs ) >= 0 ||
+                  ( pszString[ ulPos ] == HB_CHAR_SOFT1 &&
+                    pszString[ ulPos + 1 ] == HB_CHAR_SOFT2 ) ||
+                  ( ulPos > 0 && pszString[ ulPos - 1 ] == HB_CHAR_SOFT1 &&
+                                 pszString[ ulPos ] == HB_CHAR_SOFT2 ) ||
+                  ( ulPos > 1 && pszString[ ulPos - 2 ] == HB_CHAR_SOFT1 &&
+                                 pszString[ ulPos - 1 ] == HB_CHAR_SOFT2 ) ) )
+            {
+               ulCol = 0;
+               ++ulLine;
+            }
          }
          else
             ++ulLine;

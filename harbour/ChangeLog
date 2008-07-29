@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-29 20:40 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/mlcfunc.c
+    ! skip SOFTCR when it's on the end of extracted line.
+    ; NOTE: MPOSTOLC() is not exactly CA-Cl*pper compatible
+            The returned value is intentionally updated to be
+            MLCTOPOS() so conversions are revertable. For me
+            it's a bug in CA-Cl*pper.
+
 2008-07-29 18:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/memoedit.prg
      ! Fixed so that "Abort (Y/N)" confirmation gets only popped 
