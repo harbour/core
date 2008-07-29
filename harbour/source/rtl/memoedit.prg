@@ -149,7 +149,7 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
 
    IF nKey == K_ESC
 
-      IF ::lDirty
+      IF ::lDirty .AND. Set( _SET_SCOREBOARD )
          cBackScr := SaveScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight )
          
          nRow := Row()

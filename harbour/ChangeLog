@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-29 18:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/memoedit.prg
+     ! Fixed so that "Abort (Y/N)" confirmation gets only popped 
+       up if _SET_SCOREBOARD is .T.. This way it's C5.x compatible.
+
 2008-07-29 17:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/make_b32_all.bat
    * contrib/make_vc_all.bat
