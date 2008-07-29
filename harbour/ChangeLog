@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-29 04:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/filesys.c
+    ! fixed casting in DOS builds
+
 2008-07-29 00:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbhpdf/Makefile
      ! Refixed to exclude hbhpdf from DOS builds.

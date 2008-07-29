@@ -989,7 +989,7 @@ HB_EXPORT BOOL hb_fsGetAttr( BYTE * pszFileName, ULONG * pulAttr )
 #elif defined( HB_OS_DOS )
    {
 #if defined( __DJGPP__ ) || defined(__BORLANDC__)
-      int attr = _chmod( pszFileName, 0, 0 );
+      int attr = _chmod( ( char * ) pszFileName, 0, 0 );
       if( attr != -1 )
 #else
       unsigned int attr = 0;
