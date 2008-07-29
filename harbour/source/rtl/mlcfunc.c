@@ -89,13 +89,9 @@ static ULONG hb_mlGetLine( char * pszString, ULONG ulLen, ULONG ulOffset,
       if( pszString[ ulOffset ] == HB_CHAR_SOFT1 &&
           pszString[ ulOffset + 1 ] == HB_CHAR_SOFT2 )
       {
-         if( !fWordWrap )
-         {
-            if( ulMaxPos == 0 )
-               ulOffset += 2;
-            break;
-         }
          ulOffset += 2;
+         if( !fWordWrap )
+            break;
          continue;
       }
 
