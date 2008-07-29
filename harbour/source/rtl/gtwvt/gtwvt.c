@@ -2172,7 +2172,11 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bResizable )
             {
-               HB_LONG style;
+#if defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) && !defined(HB_ARCH_64BIT)
+               LONG style;
+#else
+               LONG_PTR style;
+#endif
 
                pWVT->bResizable = bNewValue;
 
