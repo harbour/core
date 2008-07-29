@@ -38,25 +38,27 @@ fi
 
 #**************************************************************
 
-_HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit2 hbsqlit3 hbtpathy hbvpdf xhb"
+# hbsqlit2
+_HB_DIRS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbtip hbsqlit3 hbtpathy hbvpdf xhb"
 
 case "$HB_ARCHITECTURE" in
    w32|cyg|os2)
-        _HB_DIRS_ADD="gtwvg hbole hbodbc hbw32 hbw32ddr hbwhat32 hbziparch rddado"
+        # hbw32ddr hbwhat32 hbziparch
+        _HB_DIRS_ADD="gtwvg hbole hbodbc hbw32 rddado"
         ;;
    *)
         _HB_DIRS_ADD=;;
 esac
 
 if [ "${HB_INC_APOLLO}"    != "" ]; then _HB_DIRS="${_HB_DIRS} hbapollo"; fi;
+if [ "${HB_INC_CURL}"      != "" ]; then _HB_DIRS="${_HB_DIRS} hbcurl  "; fi;
 if [ "${HB_INC_FIREBIRD}"  != "" ]; then _HB_DIRS="${_HB_DIRS} hbfbird "; fi;
 if [ "${HB_INC_FREEIMAGE}" != "" ]; then _HB_DIRS="${_HB_DIRS} hbfimage"; fi;
 if [ "${HB_INC_GD}"        != "" ]; then _HB_DIRS="${_HB_DIRS} hbgd    "; fi;
+if [ "${HB_INC_LIBHARU}"   != "" ]; then _HB_DIRS="${_HB_DIRS} hbhpdf  "; fi;
 if [ "${HB_INC_MYSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbmysql "; fi;
 if [ "${HB_INC_PGSQL}"     != "" ]; then _HB_DIRS="${_HB_DIRS} hbpgsql "; fi;
 if [ "${HB_INC_ADS}"       != "" ]; then _HB_DIRS="${_HB_DIRS} rddads  "; fi;
-if [ "${HB_INC_LIBHARU}"   != "" ]; then _HB_DIRS="${_HB_DIRS} hbhpdf  "; fi;
-if [ "${HB_INC_CURL}"      != "" ]; then _HB_DIRS="${_HB_DIRS} hbcurl  "; fi;
 
 _HB_DIRS="${_HB_DIRS} ${_HB_DIRS_ADD}"
 

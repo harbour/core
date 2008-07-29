@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-29 17:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/make_b32_all.bat
+   * contrib/make_vc_all.bat
+   * contrib/make_gcc_all.sh
+     * Disabled following contribs, to be in sync with the default 
+       GNU-make setup:
+       hbsqlit2 - Too many warnings in unsupported foreign code. Replacement: hbsqlit3
+       hbw32ddr - C++, not maintained, incomplete, warnings.
+       hbwhat32 - Problems and warnings, non 64 bit compatible.
+       hbziparch - C++, foreign code not well portable, interface 
+                   code not Harbour quality. Replacement: hbmzip
+     ; NOTE: We should consider what to do with these contribs.
+
 2008-07-29 04:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/filesys.c
     ! fixed casting in DOS builds

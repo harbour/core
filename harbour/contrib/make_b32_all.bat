@@ -39,16 +39,18 @@ rem *******************************************************
 rem Compiling contrib dirs ...
 rem *******************************************************
 
+rem hbsqlit2 hbw32ddr hbwhat32 hbziparch
+
 set _HB_DIRS=gtwvg hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=hbmsql hbmzip hbnf hbodbc hbole hbsqlit2 hbsqlit3
+set _HB_DIRS=hbmsql hbmzip hbnf hbodbc hbole hbsqlit3
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=hbtip hbtpathy hbvpdf hbw32 hbw32ddr hbwhat32
+set _HB_DIRS=hbtip hbtpathy hbvpdf hbw32
 for %%n in ( %_HB_DIRS% ) do %COMSPEC% /c %_HB_BATWORKER% %%n %1 %2 %3 %4 %5 %6 %7 %8 %9
 
-set _HB_DIRS=hbziparch rddado xhb
+set _HB_DIRS=rddado xhb
 if not "%HB_INC_APOLLO%%HB_DIR_APOLLO%"       == "" set _HB_DIRS=%_HB_DIRS% hbapollo
 if not "%HB_INC_CURL%%HB_DIR_CURL%"           == "" set _HB_DIRS=%_HB_DIRS% hbcurl
 if not "%HB_INC_FIREBIRD%%HB_DIR_FIREBIRD%"   == "" set _HB_DIRS=%_HB_DIRS% hbfbird
