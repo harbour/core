@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "hbapifs.h"
 #include "hbzlib.h"
 #include "ioapi.h"
 
@@ -85,7 +86,7 @@ voidpf ZCALLBACK fopen_file_func (
         mode_fopen = "wb";
 
     if ((filename!=NULL) && (mode_fopen != NULL))
-        file = fopen(filename, mode_fopen);
+        file = hb_fopen(filename, mode_fopen);
     return file;
 }
 

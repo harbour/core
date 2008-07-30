@@ -77,7 +77,9 @@ FUNCTION DirectoryRecurse( cPath, cAttr )
 
    hb_FNameSplit( cPath, @cFilePath, @cMask, @cExt )
    cMask += cExt
-
+   IF !ValType( cAttr ) == "C"
+      cAttr := ""
+   ENDIF
    /* The trick with StrTran() below if for strict xHarbour
     * compatibility though it should be reverted when it will
     * be fixed in xHarbour

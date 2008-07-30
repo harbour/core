@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-30 11:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/xhb/dirrec.prg
+    ! initialize cAttr parameter
+
+  * harbour/contrib/hbmzip/ioapi.c
+    * use hb_fopen() instead of fopen() to respect filename conversions:
+      _SET_FILECASE, _SET_DIRCASE, _SET_DIRSEPARATOR, _SET_TRIMFILENAME
+
 2008-07-30 03:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      ! Fixed one MSVC 64 bit warning.
