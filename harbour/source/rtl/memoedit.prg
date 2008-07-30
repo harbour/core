@@ -147,31 +147,30 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
    LOCAL nRow
    LOCAL nCol
 
-   IF nKey == K_ESC
-
-      IF ::lDirty .AND. Set( _SET_SCOREBOARD )
-         cBackScr := SaveScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight )
-         
-         nRow := Row()
-         nCol := Col()
-         @ ::nTop, ::nRight - 18 SAY "Abort Edit? (Y/N)"
-         
-         nYesNoKey := Inkey( 0 )
-         
-         RestScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight, cBackScr )
-         SetPos( nRow, nCol )
-         
-         IF Upper( Chr( nYesNoKey ) ) == "Y"
-            ::lSaved := .F.
-            ::lExitEdit := .T.
-         ENDIF
-      ELSE
-         ::lExitEdit := .T.
-      ENDIF
-   ENDIF
-
    IF ISCHARACTER( ::xUserFunction )
       ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
+   ELSE
+      IF nKey == K_ESC
+         IF ::lDirty .AND. Set( _SET_SCOREBOARD )
+            cBackScr := SaveScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight )
+            
+            nRow := Row()
+            nCol := Col()
+            @ ::nTop, ::nRight - 18 SAY "Abort Edit? (Y/N)"
+            
+            nYesNoKey := Inkey( 0 )
+            
+            RestScreen( ::nTop, ::nRight - 18, ::nTop, ::nRight, cBackScr )
+            SetPos( nRow, nCol )
+            
+            IF Upper( Chr( nYesNoKey ) ) == "Y"
+               ::lSaved := .F.
+               ::lExitEdit := .T.
+            ENDIF
+         ELSE
+            ::lExitEdit := .T.
+         ENDIF
+      ENDIF
    ENDIF
 
    RETURN Self
