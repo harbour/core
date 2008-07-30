@@ -251,7 +251,8 @@ HB_FUNC( P_ISCTS )
       hb_retl( FALSE );
 }
 
-HB_FUNC( P_CTRLCTS ) {
+HB_FUNC( P_CTRLCTS )
+{
 #if !defined( CRTSCTS ) && defined( __WATCOMC__ )
 #  define CRTSCTS 020000000000
 #endif
@@ -278,7 +279,7 @@ HB_FUNC( P_CTRLCTS ) {
 #if 0
 
 /* Inline function moved here from telepath.prg */
-HB_FUNC( _P_CTRLDTR )
+HB_FUNC( P_CTRLDTR )
 {
    double nph = hb_parnd( 1 );
    double nnewval, noldval;

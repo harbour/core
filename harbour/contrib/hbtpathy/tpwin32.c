@@ -61,8 +61,8 @@
 
 #include <stdio.h>
 
-HB_FUNC( P_INITPORTSPEED ) {
-
+HB_FUNC( P_INITPORTSPEED )
+{
    DCB dcb;
    char values[ 20 ];
    LPTSTR lpValues;
@@ -117,7 +117,7 @@ HB_FUNC( P_WRITEPORT )
 
    memset( &Overlapped, 0, sizeof( OVERLAPPED ) );
    bRet = WriteFile( ( HANDLE ) hb_parnl( 1 ), hb_parcx( 2 ), hb_parclen( 2 ), &nWritten, &Overlapped );
-   hb_retnl( bRet ? (long) nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
+   hb_retnl( bRet ? ( long ) nWritten : -1 ); /* Put GetLastError() on error, or better a second byref param? */
 }
 
 #endif /* HB_OS_WIN_32 */

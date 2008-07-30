@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-30 11:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/dirstruc.txt
+     * Some (incomplete) updates to the dir structure layout.
+
+   * contrib/hbtpathy/tplinux.c
+   * contrib/hbtpathy/tpwin32.c
+     * Minor formatting.
+
+   * contrib/hbtpathy/telepath.prg
+     + Added TP_UNINSTALL() dummy compatibility function.
+
 2008-07-30 11:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/xhb/dirrec.prg
     ! initialize cAttr parameter

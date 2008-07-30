@@ -865,3 +865,7 @@ function tp_debug( nDebugLevel, cString )
    ? cString
 return nil
 */
+
+procedure tp_uninstall()
+   /* NOTE: dummy function, solely for compatibility. */
+   return

@@ -88,21 +88,19 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - Test program and sample images.
 |   |       |
-|   |       +-images_out- Output directory used by the test program.
+|   |       +-imgs_out  - Output directory used by the test program.
 |   |
 |   +---hbgd            - HBGD wrapper for gdLibrary.
 |   |   |
 |   |   +---doc         - Help and license files.
 |   |   |
-|   |   +---include     - gdLibrary c include files.
-|   |   |
 |   |   +---tests       - Test programs and samples.
 |   |       |
 |   |       +-digits    - Digits images for counter test program.
 |   |       |
-|   |       +-images_in - Sample images.
+|   |       +-imgs_in   - Sample images.
 |   |       |
-|   |       +-images_out- Output directory.
+|   |       +-imgs_out  - Output directory.
 |   |
 |   +---hbgf            - Harbour GUI framework.
 |   |   |
@@ -121,7 +119,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |       |
 |   |       +---en      - English documentation.
 |   |
-|   +---hbgtwvg         - GT subsystem for Win32 GUI using GDI functions.
+|   +---gtwvg           - GT subsystem for Win32 GUI using GDI functions.
 |   |   |
 |   |   +---tests       - Demo program and sample images.
 |   |
@@ -157,11 +155,11 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
-|   +---hbrddado        - ADORDD - RDD to automatically manage Microsoft ADO.
+|   +---rddado          - ADORDD - RDD to automatically manage Microsoft ADO.
 |   |   |
 |   |   +---tests       - Test programs.
 |   |
-|   +---hbrddads        - RDD for Advantage Database Server.
+|   +---rddads          - RDD for Advantage Database Server.
 |   |   |
 |   |   +---doc         - Documents for Advantage Database Server RDD.
 |   |   |   |
