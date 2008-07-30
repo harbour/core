@@ -2823,7 +2823,7 @@ void yyerror( HB_COMP_DECL, char * s )
 {
    if( !HB_COMP_PARAM->pLex->lasttok || HB_COMP_PARAM->pLex->lasttok[ 0 ] == '\n' )
    {
-      if( ! hb_pp_eof( HB_COMP_PARAM->pLex->pPP ) )
+      if( HB_COMP_PARAM->iErrorCount == 0 || !hb_pp_eof( HB_COMP_PARAM->pLex->pPP ) )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INCOMPLETE_STMT, NULL, NULL );
    }
    else
