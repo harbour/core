@@ -68,7 +68,7 @@ HB_UnzipFileGoto( hUnzip, nPosition ) --> nError
 HB_UnzipFileInfo( hUnzip, @cZipName, @dDate, @cTime,
                   @nInternalAttr, @nExternalAttr,
                   @nMethod, @nSize, @nCompressedSize,
-                  @cComment ) --> nError
+                  @lCrypted, @cComment ) --> nError
 HB_UnzipFileOpen( hUnzip, [ cPassword ] ) --> nError
 HB_UnzipFileRead( hUnzip, @cBuf [, nLen ] ) --> nRead
 HB_UnzipFileClose( hUnzip ) --> nError

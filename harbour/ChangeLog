@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-31 14:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/hbmzip.c
+  * harbour/contrib/hbmzip/readme.txt
+    * changed parameters of HB_UnzipFileInfo()
+      Now in 10-th parameter is @lCrypted and 11-th is @cComment
+
+  * harbour/contrib/hbmzip/tests/myunzip.prg
+    + show archive and file comment
+    + show encrypted files ('*' after file name)
+
 2008-07-31 14:07 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbmzip/zip.c
     ! set valid ZIP signature in header file (2.0)

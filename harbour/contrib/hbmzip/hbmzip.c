@@ -378,7 +378,7 @@ HB_FUNC( HB_UNZIPFILEGOTO )
 /*  HB_UnzipFileInfo( hUnzip, @cZipName, @dDate, @cTime,
                       @nInternalAttr, @nExternalAttr,
                       @nMethod, @nSize, @nCompressedSize,
-                      @cComment ) --> nError */
+                      @lCrypted, @cComment ) --> nError */
 HB_FUNC( HB_UNZIPFILEINFO )
 {
    unzFile hUnzip = hb_unzipfileParam( 1 );
@@ -414,8 +414,9 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_stornl( ufi.compression_method, 7 );
          hb_stornl( ufi.uncompressed_size, 8 );
          hb_stornl( ufi.compressed_size, 9 );
+         hb_storl( ( ufi.flag & 1 ) != 0, 10 );
 
-         if( ufi.size_file_comment > 0 && ISBYREF( 10 ) )
+         if( ufi.size_file_comment > 0 && ISBYREF( 11 ) )
          {
             char * pszComment = ( char * ) hb_xgrab( ufi.size_file_comment + 1 );
 
@@ -425,9 +426,9 @@ HB_FUNC( HB_UNZIPFILEINFO )
             if( iResult != UNZ_OK )
             {
                hb_xfree( pszComment );
-               hb_storc( NULL, 10 );
+               hb_storc( NULL, 11 );
             }
-            else if( !hb_storclen_buffer( pszComment, ufi.size_file_comment, 10 ) )
+            else if( !hb_storclen_buffer( pszComment, ufi.size_file_comment, 11 ) )
                hb_xfree( pszComment );
          }
       }
@@ -445,7 +446,8 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_stornl( 0, 7 );
          hb_stornl( 0, 8 );
          hb_stornl( 0, 9 );
-         hb_storc( NULL, 10 );
+         hb_storl( FALSE, 10 );
+         hb_storc( NULL, 11 );
       }
    }
 }
