@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-31 18:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbextern.ch
+     + EXTERNAL __OBJGETPROPERTIES
+
+   * doc/whatsnew.txt
+     + Updated with new functions.
+
+   * source/hbpcre/_hbconf.h
+     ! Silenced a #pragma warning for MSVC 12.x.
+     ; NOTE: Some notable MSVC 12.x warnings in Harbour code:
+       source\rdd\hbsix\sxcompr.c(532) : warning C4244: '=' : conversion from 'long ' to 'short ', possible loss of data
+       source\rdd\hbsix\sxcompr.c(533) : warning C4244: '=' : conversion from 'long ' to 'short ', possible loss of data
+       source\rdd\hbsix\sxcompr.c(539) : warning C4244: '=' : conversion from 'long ' to 'short ', possible loss of data
+       source\rdd\hbsix\sxcompr.c(540) : warning C4244: '=' : conversion from 'long ' to 'short ', possible loss of data
+       There are 3 more known warnings, the rest is common integer difference warning.
+
 2008-07-31 17:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/classes.c
     + adding 2-nd parameter to __clsGetProperties()

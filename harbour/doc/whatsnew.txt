@@ -39,6 +39,7 @@ Core
 - TCP/IP function (HB_INET*()) fixes.
 - Added HB_OSFILEMASK(), HB_DIRSCAN(), HB_FILEMATCH() Harbour level functions.
 - Fixed RTE in HBReportForm() class.
+- Added __OBJGETPROPERTIES(), extended __CLSGETPROPERTIES().
 
 Contrib
 =============================
