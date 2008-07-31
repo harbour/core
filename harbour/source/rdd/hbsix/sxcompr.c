@@ -529,15 +529,15 @@ static ULONG hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
          pCompr->ring_buffer[ s ] = ( BYTE ) c;
          if( s < MAXLENGTH - 1 )
             pCompr->ring_buffer[ s + RBUFLENGTH ] = ( BYTE ) c;
-         s = RBUFINDEX( s + 1 );
-         r = RBUFINDEX( r + 1 );
+         s = ( short int ) RBUFINDEX( s + 1 );
+         r = ( short int ) RBUFINDEX( r + 1 );
          hb_LZSSxNodeInsert( pCompr, r );
       }
       while( i++ < last_match_length )
       {
          hb_LZSSxNodeDelete( pCompr, s );
-         s = RBUFINDEX( s + 1 );
-         r = RBUFINDEX( r + 1 );
+         s = ( short int ) RBUFINDEX( s + 1 );
+         r = ( short int ) RBUFINDEX( r + 1 );
          if( --len )
             hb_LZSSxNodeInsert( pCompr, r );
       }
