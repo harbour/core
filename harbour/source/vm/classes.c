@@ -4383,10 +4383,13 @@ HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times *
    hb_stornl( 0, -1, 2 );
 }
 
-/* __ClsGetProperties( nClassHandle ) --> aPropertiesNames
+/* __ClsGetProperties( nClassHandle, [ lAllExported ] ) --> aPropertiesNames
  * Notice that this function works quite similar to __CLASSSEL()
  * except that just returns the name of the datas and methods
- * that have been declared as PROPERTY (or PERSISTENT) */
+ * that have been declared as PROPERTY (PERSISTENT) or also EXPORTED
+ * if second parameter <lAllExported> is true and message has corresponding
+ * assign message (with "_" prefix)
+ */
 
 HB_FUNC( __CLSGETPROPERTIES )
 {
@@ -4398,14 +4401,27 @@ HB_FUNC( __CLSGETPROPERTIES )
       PCLASS  pClass  = &s_pClasses[ uiClass ];
       PMETHOD pMethod;
       ULONG ulLimit, ulCount;
+      USHORT uiScope = HB_OO_CLSTP_PERSIST;
+
+      if( ISLOG( 2 ) && hb_parl( 2 ) )
+         uiScope |= HB_OO_CLSTP_EXPORTED;
 
       ulCount = 0;
       ulLimit = hb_clsMthNum( pClass );
       pMethod = pClass->pMethods;
       do
       {
-         if( pMethod->pMessage && ( pMethod->uiScope & HB_OO_CLSTP_PERSIST ) )
-            ++ulCount;
+         if( pMethod->pMessage && ( pMethod->uiScope & uiScope ) != 0 )
+         {
+            if( ( pMethod->uiScope & HB_OO_CLSTP_PERSIST ) != 0 )
+               ++ulCount;
+            else if( pMethod->pMessage->pSymbol->szName[ 0 ] == '_' )
+            {
+               PHB_DYNS pMsg = hb_dynsymFind( pMethod->pMessage->pSymbol->szName + 1 );
+               if( pMsg && hb_clsFindMsg( pClass, pMsg ) )
+                  ++ulCount;
+            }
+         }
          ++pMethod;
       }
       while( --ulLimit );
@@ -4417,8 +4433,17 @@ HB_FUNC( __CLSGETPROPERTIES )
       pMethod = pClass->pMethods;
       do
       {
-         if( pMethod->pMessage && ( pMethod->uiScope & HB_OO_CLSTP_PERSIST ) )
-            hb_arraySetC( pReturn, ++ulCount, pMethod->pMessage->pSymbol->szName );
+         if( pMethod->pMessage && ( pMethod->uiScope & uiScope ) != 0 )
+         {
+            if( ( pMethod->uiScope & HB_OO_CLSTP_PERSIST ) != 0 )
+               hb_arraySetC( pReturn, ++ulCount, pMethod->pMessage->pSymbol->szName );
+            else if( pMethod->pMessage->pSymbol->szName[ 0 ] == '_' )
+            {
+               PHB_DYNS pMsg = hb_dynsymFind( pMethod->pMessage->pSymbol->szName + 1 );
+               if( pMsg && hb_clsFindMsg( pClass, pMsg ) )
+                  hb_arraySetC( pReturn, ++ulCount, pMethod->pMessage->pSymbol->szName + 1 );
+            }
+         }
          ++pMethod;
       }
       while( --ulLimit );

@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-31 17:41 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/classes.c
+    + adding 2-nd parameter to __clsGetProperties()
+      When it's TRUE then __clsGetProperties() returns also exported
+      messages which have corresponding assign messages (with "_" prefix)
+
+  * harbour/source/rtl/objfunc.prg
+    + added __objGetProperties( oObject, [ lAllExported = .F. ] ) ->
+                  aMsgAndValues
+      This function returns list of PROPERTY message with their values,
+      when 2-nd parameter is true it also returns exported messages which
+      which have corresponding assign messages (with "_" prefix)
+      This function is designed to use in object inspectors.
+
 2008-07-31 14:50 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/hbmzip/hbmzip.c
   * harbour/contrib/hbmzip/readme.txt
