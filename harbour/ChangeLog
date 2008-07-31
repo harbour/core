@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-31 10:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/xhb/hbcompat.ch
+     + Added translations for WildMatch(), hb_DeserialNext(), 
+       hb_Checksum().
+
 2008-07-30 16:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/harbour-ce-spec
   * harbour/harbour-w32-spec

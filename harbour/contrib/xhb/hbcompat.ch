@@ -87,6 +87,9 @@
    #xtranslate hb_idleSleep([<x,...>]) => SecondsSleep(<x>)
    #xtranslate hb_UserName()           => NetName(1)
    #xtranslate hb_FSize(<x>)           => FileSize(<x>)
+   #xtranslate hb_WildMatch([<x,...>]) => WildMatch(<x>)
+   #xtranslate hb_Deserialize(<x>)     => hb_DeserialNext(<x>)
+   #xtranslate hb_Adler32([<x,...>])   => hb_Checksum(<x>)
 
    #xtranslate hb_HexToNum([<c,...>])  => HexToNum(<c>)
    #xtranslate hb_NumToHex([<n,...>])  => NumToHex(<n>)
@@ -154,6 +157,9 @@
    #xtranslate SecondsSleep([<x,...>]) => hb_idleSleep(<x>)
    #xtranslate NetName(<n>)            => iif( ValType( <n> ) == "N" .AND. <n> == 1, hb_UserName(), NetName() )
    #xtranslate FileSize(<x>)           => hb_FSize(<x>)
+   #xtranslate WildMatch([<x,...>])    => hb_WildMatch(<x>)
+   #xtranslate hb_DeserialNext(<x>)    => hb_Deserialize(<x>)
+   #xtranslate hb_Checksum([<x,...>])  => hb_Adler32(<x>)
 
    #xtranslate HexToNum([<c,...>])     => hb_HexToNum(<c>)
    #xtranslate NumToHex([<n,...>])     => hb_NumToHex(<n>)
