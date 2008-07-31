@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-07-31 14:07 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/hbmzip/zip.c
+    ! set valid ZIP signature in header file (2.0)
+
+  * harbour/contrib/hbmzip/hbmzip.c
+    ! fixed ZIP encryption header by adding CRC32 checksum
+      Now other tools should properly recognize password encrypted
+      archives created by HBMZIP library. Please test.
+    ! changed parameters of HB_ZipFileCreate() function to pass CRC32
+      for password encrypted files:
+         HB_ZipFileCreate( hZip, cZipName, dDate, cTime,
+                           nInternalAttr, nExternalAttr,
+                           [ nMethod = HB_ZLIB_METHOD_DEFLATE ], 
+                           [ nLevel = HB_ZLIB_COMPRESSION_DEFAULT ], 
+                           [ cPassword, ulFileCRC32 ], [ cComment ] ) ->
+                     nError
+    + added new function to calculate CRC32 value from file body:
+         HB_zipFileCRC32( cFileName ) -> nError
+    + added translation for file attributes when DOS archive is
+      decompressed in *nix environment
+
+  * harbour/contrib/hbmzip/readme.txt
+    * updated list of Harbour [UN]ZIP functions and parameters
+
 2008-07-31 10:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/xhb/hbcompat.ch
      + Added translations for WildMatch(), hb_DeserialNext(), 

@@ -177,7 +177,7 @@ HB_FUNC( HB_ZIPCLOSE )
 /* HB_ZipFileCreate( hZip, cZipName, dDate, cTime, nInternalAttr, nExternalAttr,
                      [ nMethod = HB_ZLIB_METHOD_DEFLATE ], 
                      [ nLevel = HB_ZLIB_COMPRESSION_DEFAULT ], 
-                     [ cPassword ], [ cComment ] ) --> nError */
+                     [ cPassword, ulFileCRC32 ], [ cComment ] ) --> nError */
 HB_FUNC( HB_ZIPFILECREATE )
 {
    const char* szZipName = hb_parc( 2 );
@@ -208,9 +208,9 @@ HB_FUNC( HB_ZIPFILECREATE )
 
          hb_retni( zipOpenNewFileInZip3( hZip, szZipName, &zfi,
                                          NULL, 0, NULL, 0,
-                                         hb_parc( 10 ), iMethod, iLevel, 0,
+                                         hb_parc( 11 ), iMethod, iLevel, 0,
                                          -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
-                                         hb_parc( 9 ), 0 ) );
+                                         hb_parc( 9 ), hb_parnl( 10 ) ) );
       }
    }
    else
@@ -509,6 +509,106 @@ HB_FUNC( HB_UNZIPFILECLOSE )
  *
  */
 
+static BOOL hb_zipGetFileInfo( const char* szFileName, ULONG * pulCRC, BOOL * pfText )
+{
+   FILE * file;
+   BOOL fText = pfText != NULL, fResult = FALSE;
+   ULONG ulCRC = 0;
+
+   file = hb_fopen( szFileName, "r" );
+   if( file )
+   {
+      unsigned char * pString = ( unsigned char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
+      ULONG ulRead, u;
+
+      do
+      {
+         ulRead = ( ULONG ) fread( pString, 1, HB_Z_IOBUF_SIZE, file );
+         if( ulRead > 0 )
+         {
+            ulCRC = crc32( ulCRC, pString, ulRead );
+            if( fText )
+            {
+               for( u = 0; u < ulRead; ++u )
+               {
+                  if( pString[ u ] < 0x20 ?
+                      ( pString[ u ] != HB_CHAR_HT &&
+                        pString[ u ] != HB_CHAR_LF &&
+                        pString[ u ] != HB_CHAR_CR &&
+                        pString[ u ] != HB_CHAR_EOF ) :
+                      ( pString[ u ] >= 0x7f && pString[ u ] < 0xA0 &&
+                        pString[ u ] != ( unsigned char ) HB_CHAR_SOFT1 ) )
+                  {
+                     fText = FALSE;
+                     break;
+                  }
+               }
+            }
+         }
+      }
+      while( ulRead == HB_Z_IOBUF_SIZE );
+
+      fResult = feof( file ) != 0;
+
+      hb_xfree( pString );
+      fclose( file );
+   }
+
+   if( pulCRC )
+      *pulCRC = ulCRC;
+   if( pfText )
+      *pfText = fText;
+
+   return fResult;
+}
+
+
+/*  HB_zipFileCRC32( cFileName ) --> nError */
+HB_FUNC( HB_ZIPFILECRC32 )
+{
+   const char * szFileName = hb_parc( 1 );
+
+   if( szFileName )
+   {
+      ULONG ulCRC = 0;
+      if( !hb_zipGetFileInfo( szFileName, &ulCRC, NULL ) )
+         ulCRC = 0;
+      hb_retnint( ulCRC );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+static ULONG hb_translateExtAttr( const char* szFileName, ULONG ulExtAttr )
+{
+   int iLen;
+
+   iLen = ( int ) strlen( szFileName );
+   if( iLen > 4 )
+   {
+      if( hb_stricmp( szFileName - 4, ".exe" ) == 0 ||
+          hb_stricmp( szFileName - 4, ".com" ) == 0 ||
+          hb_stricmp( szFileName - 4, ".bat" ) == 0 ||
+          hb_stricmp( szFileName - 4, ".cmd" ) == 0 ||
+          hb_stricmp( szFileName - 3, ".sh" ) == 0 )
+      {
+         ulExtAttr |= 0x00490000; /* --x--x--x */
+      }
+   }
+
+   if( ulExtAttr | HB_FA_READONLY )
+      ulExtAttr |= 0x01240000;  /* r--r--r-- */
+   else
+      ulExtAttr |= 0x01B60000;  /* rw-rw-rw- */
+
+   if( ulExtAttr & HB_FA_DIRECTORY )
+      ulExtAttr |= 0x40000000;
+   else
+      ulExtAttr |= 0x80000000;
+
+   return ulExtAttr;
+}
+
 static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* szName, const char* szPassword, const char* szComment )
 {
    char          * szZipName, * pString;
@@ -517,6 +617,8 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
    zip_fileinfo  zfi;
    int           iResult;
    BOOL          fError;
+   BOOL          fText;
+   ULONG         ulCRC;
 
    if( szName )
    {
@@ -562,28 +664,8 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
                      ( FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN |
                        FILE_ATTRIBUTE_SYSTEM   | FILE_ATTRIBUTE_DIRECTORY |
                        FILE_ATTRIBUTE_ARCHIVE );
-   
-         if( ulExtAttr | FILE_ATTRIBUTE_READONLY )
-            ulExtAttr |= 0x01240000;  /* r--r--r-- */
-         else
-            ulExtAttr |= 0x01B60000;  /* rw-rw-rw- */
 
-         if( ulExtAttr & FILE_ATTRIBUTE_DIRECTORY )
-            ulExtAttr |= 0x40000000;
-         else
-            ulExtAttr |= 0x80000000;
-   
-         ulLen = strlen( szZipName );
-         if( ulLen > 4 )
-         {
-            pString = &szZipName[ ulLen - 4 ];
-            if( hb_stricmp( pString, ".exe" ) == 0 || 
-                hb_stricmp( pString, ".com" ) == 0 ||
-                hb_stricmp( pString, ".bat" ) == 0 )
-            {
-               ulExtAttr |= 0x00490000; /* --x--x--x */
-            }
-         }
+         ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
       }
       else
          fError = TRUE;
@@ -650,27 +732,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
          ulExtAttr = attr & ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM |
                                HB_FA_DIRECTORY | HB_FA_ARCHIVE );
 
-         if( ulExtAttr | HB_FA_READONLY )
-            ulExtAttr |= 0x01240000;  /* r--r--r-- */
-         else
-            ulExtAttr |= 0x01B60000;  /* rw-rw-rw- */
-
-         if( ulExtAttr & HB_FA_DIRECTORY )
-            ulExtAttr |= 0x40000000;
-         else
-            ulExtAttr |= 0x80000000;
-
-         ulLen = strlen( szZipName );
-         if( ulLen > 4 )
-         {
-            pString = &szZipName[ ulLen - 4 ];
-            if( hb_stricmp( pString, ".exe" ) == 0 || 
-                hb_stricmp( pString, ".com" ) == 0 ||
-                hb_stricmp( pString, ".bat" ) == 0 )
-            {
-               ulExtAttr |= 0x00490000; /* --x--x--x */
-            }
-         }
+         ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
       }
       else
          fError = TRUE;
@@ -697,28 +759,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
             ulAttr |= HB_FA_ARCHIVE;
 
          ulExtAttr = ulAttr; 
-         if( ulExtAttr | HB_FA_READONLY )
-            ulExtAttr |= 0x01240000;  /* r--r--r-- */
-         else
-            ulExtAttr |= 0x01B60000;  /* rw-rw-rw- */
-
-         if( ulExtAttr & HB_FA_DIRECTORY )
-            ulExtAttr |= 0x40000000;
-         else
-            ulExtAttr |= 0x80000000;
-
-         ulLen = strlen( szZipName );
-         if( ulLen > 4 )
-         {
-            pString = &szZipName[ ulLen - 4 ];
-            if( hb_stricmp( pString, ".exe" ) == 0 || 
-                hb_stricmp( pString, ".com" ) == 0 ||
-                hb_stricmp( pString, ".cmd" ) == 0 ||
-                hb_stricmp( pString, ".bat" ) == 0 )
-            {
-               ulExtAttr |= 0x00490000; /* --x--x--x */
-            }
-         }
+         ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
 
          zfi.tmz_date.tm_sec = fs3.ftimeLastWrite.twosecs * 2;
          zfi.tmz_date.tm_min = fs3.ftimeLastWrite.minutes;
@@ -745,6 +786,9 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       return -200;
    }
 
+   fText = FALSE;
+   ulCRC = 0;
+
    zfi.external_fa = ulExtAttr;
    /* TODO: zip.exe test: 0 for binary file, 1 for text. Does not depend on
       extension. We should analyse content of file to determine this??? */
@@ -755,7 +799,7 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
       iResult = zipOpenNewFileInZip3( hZip, szZipName, &zfi, NULL, 0, NULL, 0, szComment,
                                       Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0,
                                       -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
-                                      szPassword, 0 );
+                                      szPassword, ulCRC );
       if( iResult == 0 )
          zipCloseFileInZip( hZip );
    }
@@ -783,10 +827,18 @@ static int hb_zipStoreFile( zipFile hZip, const char* szFileName, const char* sz
             }
          }
 #endif
+         if( szPassword )
+         {
+            if( hb_zipGetFileInfo( szFileName, &ulCRC, &fText ) )
+            {
+               zfi.internal_fa = fText ? 1 : 0;
+            }
+         }
+
          iResult = zipOpenNewFileInZip3( hZip, szZipName, &zfi, NULL, 0, NULL, 0, szComment,
                                          Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0,
                                          -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
-                                         szPassword, 0 );
+                                         szPassword, ulCRC );
          if( iResult == 0 )
          {
             pString = ( char* ) hb_xgrab( HB_Z_IOBUF_SIZE );
@@ -934,15 +986,20 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
 #  if defined( __DJGPP__ )
       _chmod( szName, 1, ufi.external_fa & 0xFF );
 #  else
-      chmod( szName, ( ( ufi.external_fa & 0x00010000 ) ? S_IXOTH : 0 ) |
-                     ( ( ufi.external_fa & 0x00020000 ) ? S_IWOTH : 0 ) |
-                     ( ( ufi.external_fa & 0x00040000 ) ? S_IROTH : 0 ) |
-                     ( ( ufi.external_fa & 0x00080000 ) ? S_IXGRP : 0 ) |
-                     ( ( ufi.external_fa & 0x00100000 ) ? S_IWGRP : 0 ) |
-                     ( ( ufi.external_fa & 0x00200000 ) ? S_IRGRP : 0 ) |
-                     ( ( ufi.external_fa & 0x00400000 ) ? S_IXUSR : 0 ) |
-                     ( ( ufi.external_fa & 0x00800000 ) ? S_IWUSR : 0 ) |
-                     ( ( ufi.external_fa & 0x01000000 ) ? S_IRUSR : 0 ) );
+      ULONG ulAttr = ufi.external_fa & 0xFFFF0000;
+
+      if( ( ulAttr & 0xFFFF0000 ) == 0 )
+         ulAttr = hb_translateExtAttr( szName, ulAttr );
+
+      chmod( szName, ( ( ulAttr & 0x00010000 ) ? S_IXOTH : 0 ) |
+                     ( ( ulAttr & 0x00020000 ) ? S_IWOTH : 0 ) |
+                     ( ( ulAttr & 0x00040000 ) ? S_IROTH : 0 ) |
+                     ( ( ulAttr & 0x00080000 ) ? S_IXGRP : 0 ) |
+                     ( ( ulAttr & 0x00100000 ) ? S_IWGRP : 0 ) |
+                     ( ( ulAttr & 0x00200000 ) ? S_IRGRP : 0 ) |
+                     ( ( ulAttr & 0x00400000 ) ? S_IXUSR : 0 ) |
+                     ( ( ulAttr & 0x00800000 ) ? S_IWUSR : 0 ) |
+                     ( ( ulAttr & 0x01000000 ) ? S_IRUSR : 0 ) );
 #  endif
       memset( &st, 0, sizeof( st ) );
 

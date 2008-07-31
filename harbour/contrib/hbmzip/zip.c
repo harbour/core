@@ -46,7 +46,7 @@
 #     define VERSIONMADEBY_HI 0x00
 #  endif
 
-#  define VERSIONMADEBY   (0x0|(VERSIONMADEBY_HI<<8)) /* platform depedent */
+#  define VERSIONMADEBY   (0x14|(VERSIONMADEBY_HI<<8)) /* platform depedent */
 #endif
 
 #ifndef Z_BUFSIZE
