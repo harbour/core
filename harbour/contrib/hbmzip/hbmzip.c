@@ -517,7 +517,7 @@ static BOOL hb_zipGetFileInfo( const char* szFileName, ULONG * pulCRC, BOOL * pf
    BOOL fText = pfText != NULL, fResult = FALSE;
    ULONG ulCRC = 0;
 
-   file = hb_fopen( szFileName, "r" );
+   file = hb_fopen( szFileName, "rb" );
    if( file )
    {
       unsigned char * pString = ( unsigned char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
@@ -550,7 +550,7 @@ static BOOL hb_zipGetFileInfo( const char* szFileName, ULONG * pulCRC, BOOL * pf
       }
       while( ulRead == HB_Z_IOBUF_SIZE );
 
-      fResult = feof( file ) != 0;
+      fResult = ferror( file ) == 0;
 
       hb_xfree( pString );
       fclose( file );
