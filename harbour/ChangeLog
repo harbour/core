@@ -13,7 +13,7 @@
    * doc/whatsnew.txt
      ! __PLATFORM__* macros now all #defined in full uppercase.
        F.e.:
-       __PLATFORM__Windows becomes __PLATFORM_WINDOWS
+       __PLATFORM__Windows becomes __PLATFORM__WINDOWS
        __PLATFORM__Linux   becomes __PLATFORM__LINUX
        INCOMPATIBLE.
 
