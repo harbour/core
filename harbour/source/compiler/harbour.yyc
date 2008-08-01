@@ -6293,62 +6293,62 @@ yyreduce:
 
   case 483:
 #line 1360 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(1) - (2)].string), HB_COMP_PARAM->cVarType ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(1) - (2)].string), ( BYTE ) ( HB_COMP_PARAM->cVarType ) ); ;}
     break;
 
   case 484:
 #line 1361 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(2) - (3)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(2) - (3)].string), ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ) ); ;}
     break;
 
   case 485:
 #line 1362 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(2) - (5)].string), 'F' ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(2) - (5)].string), ( BYTE ) 'F' ); ;}
     break;
 
   case 486:
 #line 1363 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(3) - (4)].string), HB_COMP_PARAM->cVarType ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(3) - (4)].string), ( BYTE ) ( HB_COMP_PARAM->cVarType ) ); ;}
     break;
 
   case 487:
 #line 1364 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(4) - (5)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(4) - (5)].string), ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ) ); ;}
     break;
 
   case 488:
 #line 1365 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(4) - (7)].string), 'F' ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(4) - (7)].string), ( BYTE ) 'F' ); ;}
     break;
 
   case 489:
 #line 1368 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(2) - (3)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(2) - (3)].string), ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ) ); ;}
     break;
 
   case 490:
 #line 1369 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(3) - (4)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(3) - (4)].string), ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); ;}
     break;
 
   case 491:
 #line 1370 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(3) - (6)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(3) - (6)].string), ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); ;}
     break;
 
   case 492:
 #line 1371 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(4) - (5)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(4) - (5)].string), ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ) ); ;}
     break;
 
   case 493:
 #line 1372 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(5) - (6)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(5) - (6)].string), ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); ;}
     break;
 
   case 494:
 #line 1373 "harbour.y"
-    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(5) - (8)].string), HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); ;}
+    { hb_compDeclaredParameterAdd( HB_COMP_PARAM, (yyvsp[(5) - (8)].string), ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); ;}
     break;
 
   case 503:
@@ -6630,7 +6630,7 @@ yyreduce:
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( (yyvsp[(7) - (12)].asExpr), HB_COMP_PARAM ) );   /* end */
                   if( iSign )
                   {
-                     hb_compGenPCode1( iSign > 0 ? HB_P_GREATER : HB_P_LESS, HB_COMP_PARAM );
+                     hb_compGenPCode1( ( BYTE ) ( iSign > 0 ? HB_P_GREATER : HB_P_LESS ), HB_COMP_PARAM );
                      if( (yyvsp[(8) - (12)].asExpr) )
                         HB_COMP_EXPR_DELETE( (yyvsp[(8) - (12)].asExpr) );
                   }
@@ -7872,9 +7872,7 @@ static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExpr
    }
    else
    {
-      BYTE Len;
-      Len = (BYTE) (ulLen & 0xFF);
-      hb_compGenPCode3( HB_P_ENUMSTART, Len, descend > 0 ? 1 : 0, HB_COMP_PARAM );
+      hb_compGenPCode3( HB_P_ENUMSTART, ( BYTE ) ( ulLen & 0xFF ), ( BYTE ) ( descend > 0 ? 1 : 0 ), HB_COMP_PARAM );
    }
 }
 

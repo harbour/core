@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-01 11:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/compiler/harbour.yyc
+    * updated for recent harbour.y modifications - thanks to Viktor
+      for remainder
+
 2008-08-01 03:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbpp.h
   * harbour/include/hbexprb.c
