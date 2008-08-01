@@ -5197,7 +5197,7 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
    while( pSrc[ 0 ] > ' ' && i < ( int ) sizeof( szDefine ) - 1 )
    {
       if( HB_PP_ISNEXTIDCHAR( pSrc[ 0 ] ) )
-         pDst[ i++ ] = pSrc[ 0 ];
+         pDst[ i++ ] = HB_PP_UPPER( pSrc[ 0 ] );
       pSrc++;
    }
    pDst[ i ] = '\0';

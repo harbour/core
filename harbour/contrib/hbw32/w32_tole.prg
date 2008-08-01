@@ -49,7 +49,7 @@
  *
  */
 
-#ifndef __PLATFORM__Windows
+#ifndef __PLATFORM__WINDOWS
   Function CreateObject()
   Return NIL
 

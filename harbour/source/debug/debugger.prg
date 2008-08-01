@@ -75,7 +75,7 @@
 #include "setcurs.ch"
 
 /* A macro to compare filenames on different platforms. */
-#if defined(__PLATFORM__DOS) || defined(__PLATFORM__OS2) || defined(__PLATFORM__Windows)
+#if defined(__PLATFORM__DOS) || defined(__PLATFORM__OS2) || defined(__PLATFORM__WINDOWS)
    #define FILENAME_EQUAL( s1, s2 ) ( Lower( s1 ) == Lower( s2 ) )
 #else
    #define FILENAME_EQUAL( s1, s2 ) ( s1 == s2 )

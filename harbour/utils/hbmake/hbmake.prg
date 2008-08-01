@@ -509,7 +509,7 @@ FUNCTION ParseMakeFile( cFile )
       RETURN .F.
    ENDIF
 
-   #IFndef __PLATFORM__Windows
+   #IFndef __PLATFORM__WINDOWS
       IF !FILE("hbtemp.c")
          CreateLink()
       ENDIF
@@ -1684,7 +1684,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
       LOCAL cExcludeExts       := PadR(".ch",40)
    #ENDIF
 
-   #ifndef __PLATFORM__Windows
+   #ifndef __PLATFORM__WINDOWS
        LOCAL lHashhso := File("/usr/lib/libharbour.so")
        LOCAL lusexhb := FILE("/usr/bin/hb-build")
    #ELSE
@@ -2007,7 +2007,7 @@ While .t.
 
    @ 03,47       SAY s_aLangMessages[ 66 ]
 
-#ifdef __PLATFORM__Windows
+#ifdef __PLATFORM__WINDOWS
    @ 03,68,07,77 GET s_cEditor;
                  LISTBOX { "edit", "notepad" };
                  MESSAGE s_aLangMessages[ 67 ];
@@ -4100,7 +4100,7 @@ FUNCTION CreateLibMakeFile( cFile )
 
    @ 02,47       SAY s_aLangMessages[ 66 ]
 
-#ifdef __PLATFORM__Windows
+#ifdef __PLATFORM__WINDOWS
    @ 02,68,06,77 GET s_cEditor;
                  LISTBOX { "edit", "notepad" };
                  MESSAGE s_aLangMessages[ 67 ];

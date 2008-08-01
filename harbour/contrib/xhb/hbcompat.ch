@@ -57,6 +57,13 @@
    #include "gtinfo.ch"
    #include "gfx.ch"
 
+   #if defined(__PLATFORM__Windows) && !defined(__PLATFORM__WINDOWS)
+      #define __PLATFORM__WINDOWS
+   #endif
+   #if defined(__PLATFORM__Linux) && !defined(__PLATFORM__LINUX)
+      #define __PLATFORM__LINUX
+   #endif
+
    #xtranslate hb_gtSys                => gtSys
    #xtranslate hb_gtInfo([<x,...>])    => gtInfo(<x>)
    #xtranslate hb_gtVersion([<x>])     => hb_gt_Version(<x>)
@@ -124,6 +131,13 @@
 
    #include "hbgtinfo.ch"
    #include "hbgfx.ch"
+
+   #if defined(__PLATFORM__WINDOWS) && !defined(__PLATFORM__Windows)
+      #define __PLATFORM__Windows
+   #endif
+   #if defined(__PLATFORM__LINUX) && !defined(__PLATFORM__Linux)
+      #define __PLATFORM__Linux
+   #endif
 
    /* these are used _by_ MaxRow()/MaxCol() */
    #define GTI_WINDOW         0  /* Maximum window size ('window' in CT terms) */

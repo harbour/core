@@ -190,7 +190,7 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
 
    local nRes, lPortExist
 
-   #ifdef __PLATFORM__Linux
+   #ifdef __PLATFORM__LINUX
    local nFileCase, nDirCase
    #endif
 
@@ -198,7 +198,7 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    default nBaud to 1200, nData to 8, cParity to "N", nStop to 1
 
    /* Serial ports name are made up of cPortName + nPort if nPort is not NIL */
-   #ifdef __PLATFORM__Linux
+   #ifdef __PLATFORM__LINUX
    default cPortName to "/dev/ttyS"
    #else
    default cPortName to "COM"          // Ok for Win32 and OS/2
@@ -208,18 +208,18 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
       should necessity arise, it is possible to simply pass a NIL on nPort and
       a full name on cPortName
    */
-   #ifdef __PLATFORM__Linux
+   #ifdef __PLATFORM__LINUX
    cPortname := AllTrim( cPortname ) + iif( ValType( nPort ) == "N", AllTrim( Str( nPort - 1 ) ), "" )
    #else
    cPortname := AllTrim( cPortname ) + iif( ValType( nPort ) == "N", AllTrim( Str( nPort ) ), "" )
    #endif
 
-   #ifdef __PLATFORM__Linux
+   #ifdef __PLATFORM__LINUX
    nFileCase := Set( _SET_FILECASE, 0 )
    nDirCase := Set( _SET_DIRCASE, 0 )
    #endif
    lPortExist := File( cPortname )
-   #ifdef __PLATFORM__Linux
+   #ifdef __PLATFORM__LINUX
    Set( _SET_FILECASE, nFileCase )
    Set( _SET_DIRCASE, nDirCase )
    #endif
@@ -241,7 +241,7 @@ function tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
    s_aPorts[ nPort, TPFP_INBUF  ] := ""
    s_aPorts[ nPort, TPFP_INBUF_SIZE ] := nInSize
 
-   #ifdef __PLATFORM__Linux
+   #ifdef __PLATFORM__LINUX
    // Maybe we should have a p_Open() on every platform
    s_aPorts[ nPort, TPFP_HANDLE ] := p_Open( cPortname )
    #else
@@ -688,7 +688,7 @@ return p_iscts( s_aPorts[ nPort, TPFP_HANDLE ] )
 
 
 
-#ifdef __PLATFORM__Linux
+#ifdef __PLATFORM__LINUX
 // NB: On linux i don't know how to make a drain with a timeout, so here
 //     I'll wait as long as it takes to drain the port.
 function tp_flush( nPort, nTimeout )

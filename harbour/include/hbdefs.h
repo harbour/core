@@ -70,8 +70,8 @@
 #   include <stdint.h>
     /* workaround for BCC 5.8 bug */
 #   if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 )
-#         undef INT32_MIN
-#         define INT32_MIN ((int32_t) (-INT32_MAX-1))
+#      undef INT32_MIN
+#      define INT32_MIN ((int32_t) (-INT32_MAX-1))
 #   endif
 #endif
 

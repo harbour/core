@@ -8,6 +8,45 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-01 14:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/pp/ppcore.c
+   * doc/whatsnew.txt
+     ! __PLATFORM__* macros now all #defined in full uppercase.
+       F.e.:
+       __PLATFORM__Windows becomes __PLATFORM_WINDOWS
+       __PLATFORM__Linux   becomes __PLATFORM__LINUX
+       INCOMPATIBLE.
+
+   * contrib/xhb/hbcompat.ch
+     + Added compatibility #defines for __PLATFORM__* macros.
+
+   * include/hbdefs.h
+     ! Minor formatting.
+
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * make_xmingw.sh
+   * make_xmingwce.sh
+   * source/debug/debugger.prg
+   * contrib/hbtpathy/telepath.prg
+   * contrib/hbw32/w32_tole.prg
+   * contrib/hbw32/w32_tprn.prg
+   * utils/hbdot/hbdot.prg
+   * utils/hbmake/hbmake.prg
+     * Changed __PLATFORM__* #define according to latest changes.
+     ; NOTE: I find this kind of compile-time platform dependency 
+             quite wrong in an normal application, and we should 
+             definitely avoid it in core Harbour.
+             In core Harbour there is one place where it would 
+             better be eliminated, and in order to do this, we'd 
+             need to have a filename equality comparison FS 
+             function. Maybe we already have one, I don't know.
+
+2008-08-01 14:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/pp/ppcore.c
+     * __PLATFORM__* macros now all #defined in full uppercase.
+       (f.e. __PLATFORM__Windows becomes __PLATFORM_WINDOWS)
+
 2008-08-01 11:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/harbour.yyc
     * updated for recent harbour.y modifications - thanks to Viktor

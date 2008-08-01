@@ -22,7 +22,7 @@ export HB_COMPILER=mingw32
 [ -z "$HB_INSTALL_PREFIX" ] && export HB_INSTALL_PREFIX=/usr/local/mingw32-harbour
 export CC_C_USR=""
 export C_USR="$CC_C_USR $C_USR"
-export CC_PRG_USR="-D__PLATFORM__Windows -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAME"
+export CC_PRG_USR="-D__PLATFORM__WINDOWS -undef:__PLATFORM__UNIX -undef:__PLATFORM__$UNAME"
 export PRG_USR="$CC_PRG_USR $PRG_USR"
 
 # try to detect MinGW cross-compiler location
