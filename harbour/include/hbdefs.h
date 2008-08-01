@@ -64,9 +64,15 @@
 #include "hbver.h"
 
 #if defined( __XCC__ ) || defined( __MINGW32__ ) || \
+    ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 ) || \
     ( defined( __GNUC__ ) && \
       ( defined( HB_OS_LINUX ) || defined( HB_OS_DARWIN ) ) )
-#  include <stdint.h>
+#   include <stdint.h>
+    /* workaround for BCC 5.8 bug */
+#   if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 )
+#         undef INT32_MIN
+#         define INT32_MIN ((int32_t) (-INT32_MAX-1))
+#   endif
 #endif
 
 /*

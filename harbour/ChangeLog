@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-01 02:09 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbdefs.h
+     ! Patch added to workaround following phoney warnings 
+       when using BCC 5.8 compiler (tested with 5.8.2):
+       Warning W8017 C:\devl\BCC58\Include\stdint.h 77: Redefinition of 'INT16_MIN' is not identical
+       Warning W8017 C:\devl\BCC58\Include\stdint.h 78: Redefinition of 'INT32_MIN' is not identical
+       Warning W8017 C:\devl\BCC58\Include\stdint.h 79: Redefinition of 'INT64_MIN' is not identical
+       Warning W8017 C:\devl\BCC58\Include\stdint.h 82: Redefinition of 'INT16_MAX' is not identical
+       Warning W8017 C:\devl\BCC58\Include\stdint.h 83: Redefinition of 'INT32_MAX' is not identical
+       Warning W8017 C:\devl\BCC58\Include\stdint.h 84: Redefinition of 'INT64_MAX' is not identical
+       Warning W8017 C:\devl\BCC58\Include\stdint.h 87: Redefinition of 'UINT16_MAX' is not identical
+       Warning W8017 C:\devl\BCC58\Include\stdint.h 88: Redefinition of 'UINT32_MAX' is not identical
+       Warning W8017 C:\devl\BCC58\Include\stdint.h 89: Redefinition of 'UINT64_MAX' is not identical
+
+       Many thanks to Przemek for this patch.
+
 2008-07-31 23:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rdd/hbsix/sxcompr.c
     * pacified warnings
