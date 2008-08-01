@@ -561,7 +561,7 @@ static void hb_pp_tokenAddNext( PHB_PP_STATE pState, const char * value, ULONG u
          pState->iBlockState = 0;
          pState->iNestedBlock--;
       }
-      else if( pState->iLastType == HB_PP_TOKEN_LEFT_CB &&
+      else if( pState->usLastType == HB_PP_TOKEN_LEFT_CB &&
                HB_PP_TOKEN_TYPE( type ) == HB_PP_TOKEN_PIPE )
       {
          pState->iBlockState = 1;
@@ -603,21 +603,21 @@ static void hb_pp_tokenAddNext( PHB_PP_STATE pState, const char * value, ULONG u
    pState->fNewStatement = FALSE;
 
    pState->iSpaces = pState->iSpacesMin = 0;
-   pState->iLastType = HB_PP_TOKEN_TYPE( type );
+   pState->usLastType = HB_PP_TOKEN_TYPE( type );
 
    if( pState->iInLineState != HB_PP_INLINE_OFF )
    {
       if( pState->iInLineState == HB_PP_INLINE_START &&
-          pState->iLastType == HB_PP_TOKEN_LEFT_PB )
+          pState->usLastType == HB_PP_TOKEN_LEFT_PB )
       {
          pState->iInLineState = HB_PP_INLINE_PARAM;
          pState->iInLineBraces = 1;
       }
       else if( pState->iInLineState == HB_PP_INLINE_PARAM )
       {
-         if( pState->iLastType == HB_PP_TOKEN_LEFT_PB )
+         if( pState->usLastType == HB_PP_TOKEN_LEFT_PB )
             pState->iInLineBraces++;
-         else if( pState->iLastType == HB_PP_TOKEN_RIGHT_PB )
+         else if( pState->usLastType == HB_PP_TOKEN_RIGHT_PB )
          {
             if( --pState->iInLineBraces == 0 )
                pState->iInLineState = HB_PP_INLINE_BODY;
@@ -867,7 +867,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
    pState->pFile->iTokens = pState->iSpaces = pState->iSpacesMin = 0;
    pState->fCanNextLine = pState->fDirective = FALSE;
    pState->fNewStatement = TRUE;
-   pState->iLastType = HB_PP_TOKEN_NUL;
+   pState->usLastType = HB_PP_TOKEN_NUL;
    pState->iInLineState = HB_PP_INLINE_OFF;
    pState->iInLineBraces = 0;
    pState->iBlockState = pState->iNestedBlock = 0;
@@ -1181,7 +1181,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          }
          else if( ch == '[' && !pState->fDirective &&
                   hb_pp_canQuote( pState->fCanNextLine ||
-                                  HB_PP_TOKEN_CANQUOTE( pState->iLastType ),
+                                  HB_PP_TOKEN_CANQUOTE( pState->usLastType ),
                                   pBuffer, ulLen, 1, &ul ) )
          {
             hb_pp_tokenAddNext( pState, pBuffer + 1, ul - 1, HB_PP_TOKEN_STRING );
@@ -5074,12 +5074,12 @@ PHB_PP_TOKEN hb_pp_tokenGet( PHB_PP_STATE pState )
       }
       pState->pFile->iLastLine = pState->pFile->iCurrentLine +
                hb_pp_tokenStr( pState->pTokenOut, pState->pBuffer, TRUE, TRUE,
-                               pState->iLastType );
+                               pState->usLastType );
 #else
       hb_pp_tokenStr( pState->pTokenOut, pState->pBuffer, TRUE, TRUE,
-                      pState->iLastType );
+                      pState->usLastType );
 #endif
-      pState->iLastType = HB_PP_TOKEN_TYPE( pState->pTokenOut->type );
+      pState->usLastType = HB_PP_TOKEN_TYPE( pState->pTokenOut->type );
       fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
               hb_membufLen( pState->pBuffer ), pState->file_out );
    }
@@ -5289,7 +5289,7 @@ void hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile )
    else
    {
       pState->iFiles++;
-      pState->iLastType = HB_PP_TOKEN_NUL;
+      pState->usLastType = HB_PP_TOKEN_NUL;
       while( hb_pp_tokenGet( pState ) )
       {
          if( pState->fError )
@@ -5577,7 +5577,7 @@ char * hb_pp_nextLine( PHB_PP_STATE pState, ULONG * pulLen )
       else
          hb_membufFlush( pState->pOutputBuffer );
 
-      pState->iLastType = ltype = HB_PP_TOKEN_NUL;
+      pState->usLastType = ltype = HB_PP_TOKEN_NUL;
       while( ( pToken = hb_pp_tokenGet( pState ) ) != NULL )
       {
          if( pState->fError )
@@ -5627,7 +5627,7 @@ char * hb_pp_parseLine( PHB_PP_STATE pState, const char * pLine, ULONG * pulLen 
    pState->pFile = pFile;
    pState->iFiles++;
 
-   pState->iLastType = ltype = HB_PP_TOKEN_NUL;
+   pState->usLastType = ltype = HB_PP_TOKEN_NUL;
    while( ( pToken = hb_pp_tokenGet( pState ) ) != NULL )
    {
       if( pState->fError )

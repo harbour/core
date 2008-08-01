@@ -900,7 +900,7 @@ char * hb_compStaticVariableName( HB_COMP_DECL, USHORT wVar )
 
    while( pTmp->pNext && pTmp->pNext->iStaticsBase < wVar )
       pTmp = pTmp->pNext;
-   pVar = hb_compVariableGetVar( pTmp->pStatics, wVar - pTmp->iStaticsBase );
+   pVar = hb_compVariableGetVar( pTmp->pStatics, ( USHORT ) ( wVar - pTmp->iStaticsBase ) );
 
    return pVar ? pVar->szName : NULL;
 }
@@ -3322,7 +3322,7 @@ void hb_compGenPushAliasedVar( char * szVarName,
 
 void hb_compGenPushLogical( int iTrueFalse, HB_COMP_DECL ) /* pushes a logical value on the virtual machine stack */
 {
-   hb_compGenPCode1( iTrueFalse ? HB_P_TRUE : HB_P_FALSE, HB_COMP_PARAM );
+   hb_compGenPCode1( ( BYTE ) ( iTrueFalse ? HB_P_TRUE : HB_P_FALSE ), HB_COMP_PARAM );
 }
 
 void hb_compGenPushNil( HB_COMP_DECL )

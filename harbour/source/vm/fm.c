@@ -992,7 +992,7 @@ ULONG hb_xquery( USHORT uiMode )
 
 HB_FUNC( MEMORY )
 {
-   hb_retnl( hb_xquery( hb_parni( 1 ) ) );
+   hb_retnint( hb_xquery( ( USHORT ) hb_parni( 1 ) ) );
 }
 
 #ifdef HB_FM_STATISTICS

@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-01 03:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbpp.h
+  * harbour/include/hbexprb.c
+  * harbour/source/pp/ppcore.c
+  * harbour/source/vm/evalhb.c
+  * harbour/source/vm/runner.c
+  * harbour/source/vm/hvm.c
+  * harbour/source/vm/fm.c
+  * harbour/source/vm/eval.c
+  * harbour/source/vm/dynlibhb.c
+  * harbour/source/vm/classes.c
+  * harbour/source/rdd/hbsix/sxord.c
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/harbour.y
+    * pacified warnings
+
 2008-08-01 02:09 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbdefs.h
      ! Patch added to workaround following phoney warnings 

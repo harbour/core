@@ -232,7 +232,7 @@ static void hb_hrbInit( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
                hb_vmPushNil();
                for( i = 0; i < iPCount; i++ )
                   hb_vmPush( pParams[ i ] );
-               hb_vmDo( iPCount );
+               hb_vmDo( ( USHORT ) iPCount );
                if( hb_vmRequestQuery() != 0 )
                   break;
             }
@@ -561,10 +561,10 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
 
        for( i = 0; i < ( hb_pcount() - 1 ); i++ )
        {
-          hb_vmPush( hb_param( i + 2, HB_IT_ANY ) ); /* Push other cmdline params*/
+          hb_vmPush( hb_param( i + 2, HB_IT_ANY ) );  /* Push other cmdline params*/
        }
 
-       hb_vmDo( hb_pcount() - 1 );                   /* Run the thing !!!        */
+       hb_vmDo( ( USHORT ) ( hb_pcount() - 1 ) );
 
        pRetVal = hb_itemNew( NULL );
        hb_itemMove( pRetVal, hb_stackReturnItem() );
@@ -778,7 +778,7 @@ HB_FUNC( __HRBDOFU )
       for( i = 0; i < iPCount; i++ )
          hb_vmPush( hb_stackItemFromBase( i + 2 ) );
 
-      hb_vmDo( iPCount );
+      hb_vmDo( ( USHORT ) iPCount );
    }
    else
       hb_errRT_BASE( EG_ARG, 6107, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

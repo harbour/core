@@ -331,7 +331,7 @@ void hb_evalBlock1( PHB_ITEM pCodeBlock, PHB_ITEM pParam )
 void hb_evalBlock( PHB_ITEM pCodeBlock, ... )
 {
    va_list args;
-   unsigned int uiParams = 0;
+   USHORT uiParams = 0;
    PHB_ITEM pParam;
 
    hb_vmPushSymbol( &hb_symEval );

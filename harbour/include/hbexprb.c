@@ -1519,7 +1519,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                HB_GEN_FUNC1( PCode1, HB_P_MACROPUSH );
 
             /* Always add byte to pcode indicating requested macro compiler flag. */
-            HB_GEN_FUNC1( PCode1, HB_MACRO_GENFLAGS );
+            HB_GEN_FUNC1( PCode1, ( BYTE ) HB_MACRO_GENFLAGS );
          }
 
          /* NOTE: pcode for alias context is generated in
@@ -1570,7 +1570,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             HB_GEN_FUNC1( PCode1, HB_P_MACROPOP );
 
             /* Always add byte to pcode indicating requested macro compiler flag. */
-            HB_GEN_FUNC1( PCode1, HB_MACRO_GENFLAGS );
+            HB_GEN_FUNC1( PCode1, ( BYTE ) HB_MACRO_GENFLAGS );
          }
          break;
 
@@ -4700,7 +4700,7 @@ static void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
 
          /* increase/decrease operation, leave unreferenced value on stack */
-         HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQ : HB_P_DECEQ );
+         HB_GEN_FUNC1( PCode1, ( BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQ : HB_P_DECEQ ) );
          return;
       }
 #ifdef HB_USE_ARRAYAT_REF
@@ -4714,7 +4714,7 @@ static void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
 
          /* increase/decrease operation, leave unreferenced value on stack */
-         HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQ : HB_P_DECEQ );
+         HB_GEN_FUNC1( PCode1, ( BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQ : HB_P_DECEQ ) );
          return;
       }
 #endif
@@ -4746,7 +4746,7 @@ static void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
                HB_EXPRTYPE iOldType = pSelf->value.asOperator.pLeft->ExprType;
                pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-               HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQ : HB_P_DECEQ );
+               HB_GEN_FUNC1( PCode1, ( BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQ : HB_P_DECEQ ) );
                pSelf->value.asOperator.pLeft->ExprType = iOldType;
             }
             return;
@@ -4814,7 +4814,7 @@ static void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
           */
          HB_GEN_FUNC1( PCode1, HB_P_DUPLUNREF );
          /* increase/decrease operation */
-         HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP );
+         HB_GEN_FUNC1( PCode1, ( BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQPOP : HB_P_DECEQPOP ) );
          return;
       }
 #ifdef HB_USE_ARRAYAT_REF
@@ -4832,7 +4832,7 @@ static void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
           */
          HB_GEN_FUNC1( PCode1, HB_P_DUPLUNREF );
          /* increase/decrease operation */
-         HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP );
+         HB_GEN_FUNC1( PCode1, ( BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQPOP : HB_P_DECEQPOP ) );
          return;
       }
 #endif
@@ -4849,7 +4849,7 @@ static void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
             {
                /* Push current value */
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-               HB_GEN_FUNC3( PCode3, ( bOper == HB_P_INC ) ? HB_P_LOCALINC : HB_P_LOCALDEC,
+               HB_GEN_FUNC3( PCode3, ( BYTE ) ( bOper == HB_P_INC ? HB_P_LOCALINC : HB_P_LOCALDEC ),
                              HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
             }
             else
@@ -4859,7 +4859,7 @@ static void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
                pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
                HB_GEN_FUNC1( PCode1, HB_P_DUPLUNREF );
-               HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP );
+               HB_GEN_FUNC1( PCode1, ( BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQPOP : HB_P_DECEQPOP ) );
                pSelf->value.asOperator.pLeft->ExprType = iOldType;
             }
             return;
@@ -4922,7 +4922,7 @@ static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          pSelf->value.asOperator.pLeft->value.asMacro.SubType = usType;
 
          /* increase/decrease operation */
-         HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP );
+         HB_GEN_FUNC1( PCode1, ( BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQPOP : HB_P_DECEQPOP ) );
          return;
       }
 #ifdef HB_USE_ARRAYAT_REF
@@ -4935,7 +4935,7 @@ static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
          pSelf->value.asOperator.pLeft->value.asList.reference = FALSE;
          /* increase/decrease operation */
-         HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP );
+         HB_GEN_FUNC1( PCode1, ( BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQPOP : HB_P_DECEQPOP ) );
          return;
       }
 #endif
@@ -4950,7 +4950,7 @@ static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
          {
             if( iScope == HB_VS_LOCAL_VAR )
             {
-               HB_GEN_FUNC3( PCode3, ( bOper == HB_P_INC ) ? HB_P_LOCALINC : HB_P_LOCALDEC,
+               HB_GEN_FUNC3( PCode3, ( BYTE ) ( bOper == HB_P_INC ? HB_P_LOCALINC : HB_P_LOCALDEC ),
                              HB_LOBYTE( iVar ), HB_HIBYTE( iVar ) );
             }
             else
@@ -4959,7 +4959,7 @@ static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, BYTE bOper, HB_COMP_DECL )
                HB_EXPRTYPE iOldType = pSelf->value.asOperator.pLeft->ExprType;
                pSelf->value.asOperator.pLeft->ExprType = HB_ET_VARREF;
                HB_EXPR_USE( pSelf->value.asOperator.pLeft, HB_EA_PUSH_PCODE );
-               HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP );
+               HB_GEN_FUNC1( PCode1, ( BYTE ) ( bOper == HB_P_INC ? HB_P_INCEQPOP : HB_P_DECEQPOP ) );
                pSelf->value.asOperator.pLeft->ExprType = iOldType;
             }
             return;
@@ -5027,7 +5027,7 @@ static void hb_compExprUseAliasMacro( HB_EXPR_PTR pAliasedVar, BYTE bAction, HB_
    }
 
    /* Always add byte to pcode indicating requested macro compiler flag. */
-   HB_GEN_FUNC1( PCode1, HB_MACRO_GENFLAGS );
+   HB_GEN_FUNC1( PCode1, ( BYTE ) HB_MACRO_GENFLAGS );
 }
 
 

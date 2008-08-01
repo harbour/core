@@ -2925,13 +2925,15 @@ HB_FUNC( __CLSADDMSG )
          if( nType == HB_OO_MSG_PROPERTY )
          {
             hb_clsAddMsg( uiClass, szAssign, HB_OO_MSG_ASSIGN,
-                          uiScope & ~HB_OO_CLSTP_PERSIST, pFunction, pInit );
+                          ( USHORT ) ( uiScope & ~HB_OO_CLSTP_PERSIST ),
+                          pFunction, pInit );
             nType = HB_OO_MSG_ACCESS;
          }
          else
          {
             hb_clsAddMsg( uiClass, szAssign, HB_OO_MSG_CLSASSIGN,
-                          uiScope & ~HB_OO_CLSTP_PERSIST, pFunction, pInit );
+                          ( USHORT ) ( uiScope & ~HB_OO_CLSTP_PERSIST ),
+                          pFunction, pInit );
             nType = HB_OO_MSG_CLSACCESS;
          }
       }
@@ -3780,7 +3782,7 @@ HB_FUNC( __GETMESSAGE )
 
 HB_FUNC( __CLSPARENT )
 {
-   hb_retl( hb_clsIsParent( hb_parni( 1 ) , hb_parc( 2 ) ) );
+   hb_retl( hb_clsIsParent( ( USHORT ) hb_parni( 1 ) , hb_parc( 2 ) ) );
 }
 
 HB_FUNC( __SENDER )
@@ -3973,7 +3975,7 @@ static HARBOUR hb___msgEvalInline( void )
       hb_vmPush( hb_stackItemFromBase( uiParam ) );
    }
 
-   hb_vmSend( uiPCount + 1 );
+   hb_vmSend( ( USHORT ) ( uiPCount + 1 ) );
 }
 
 static HARBOUR hb___msgPerform( void )
@@ -4006,7 +4008,7 @@ static HARBOUR hb___msgPerform( void )
          {
             hb_vmPush( hb_stackItemFromBase( uiParam ) );
          }
-         hb_vmSend( uiPCount - 1 );
+         hb_vmSend( ( USHORT ) ( uiPCount - 1 ) );
       }
    }
 }

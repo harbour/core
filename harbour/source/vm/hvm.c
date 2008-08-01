@@ -487,7 +487,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
          }
       }
 
-      hb_vmDo( iArgCount ); /* invoke it with number of supplied parameters */
+      hb_vmDo( ( USHORT ) iArgCount ); /* invoke it with number of supplied parameters */
    }
 
    hb_vmUnsetExceptionHandler();
@@ -6338,7 +6338,7 @@ void hb_vmInitSymbolGroup( void * hNewDynLib, int argc, char * argv[] )
                         {
                            hb_vmPushString( argv[i], strlen( argv[i] ) );
                         }
-                        hb_vmDo( argc );
+                        hb_vmDo( ( USHORT ) argc );
                      }
                   }
                }
@@ -6699,7 +6699,7 @@ static void hb_vmDoInitFunctions( void )
                   }
                }
 
-               hb_vmDo( iArgCount );
+               hb_vmDo( ( USHORT ) iArgCount );
             }
          }
       }

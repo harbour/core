@@ -1357,20 +1357,20 @@ DummyArgList : DummyArgument
 DummyArgument : EmptyExpression     { HB_COMP_EXPR_DELETE( $1 ); }
               ;
 
-FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $1, HB_COMP_PARAM->cVarType ); }
-           | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ); }
-           | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, 'F' ); }
-           | FormalList ',' IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType ); }
-           | FormalList ',' '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ); }
-           | FormalList ',' '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, 'F' ); }
+FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $1, ( BYTE ) ( HB_COMP_PARAM->cVarType ) ); }
+           | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ) ); }
+           | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, ( BYTE ) 'F' ); }
+           | FormalList ',' IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, ( BYTE ) ( HB_COMP_PARAM->cVarType ) ); }
+           | FormalList ',' '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_BYREF ) ); }
+           | FormalList ',' '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, ( BYTE ) 'F' ); }
            ;
 
-OptList    : OPTIONAL IdentName AsType                               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ); }
-           | OPTIONAL '@' IdentName AsType                           { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
-           | OPTIONAL '@' IdentName '(' DummyArgList ')'             { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
-           | OptList ',' OPTIONAL IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ); }
-           | OptList ',' OPTIONAL '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
-           | OptList ',' OPTIONAL '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ); }
+OptList    : OPTIONAL IdentName AsType                               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ) ); }
+           | OPTIONAL '@' IdentName AsType                           { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); }
+           | OPTIONAL '@' IdentName '(' DummyArgList ')'             { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); }
+           | OptList ',' OPTIONAL IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL ) ); }
+           | OptList ',' OPTIONAL '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); }
+           | OptList ',' OPTIONAL '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, ( BYTE ) ( HB_COMP_PARAM->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF ) ); }
            ;
 
 ExecFlow   : IfEndif
@@ -1590,7 +1590,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   HB_COMP_EXPR_DELETE( hb_compExprGenPush( $7, HB_COMP_PARAM ) );   /* end */
                   if( iSign )
                   {
-                     hb_compGenPCode1( iSign > 0 ? HB_P_GREATER : HB_P_LESS, HB_COMP_PARAM );
+                     hb_compGenPCode1( ( BYTE ) ( iSign > 0 ? HB_P_GREATER : HB_P_LESS ), HB_COMP_PARAM );
                      if( $<asExpr>8 )
                         HB_COMP_EXPR_DELETE( $<asExpr>8 );
                   }
@@ -2535,9 +2535,7 @@ static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExpr
    }
    else
    {
-      BYTE Len;
-      Len = (BYTE) (ulLen & 0xFF);
-      hb_compGenPCode3( HB_P_ENUMSTART, Len, descend > 0 ? 1 : 0, HB_COMP_PARAM );
+      hb_compGenPCode3( HB_P_ENUMSTART, ( BYTE ) ( ulLen & 0xFF ), ( BYTE ) ( descend > 0 ? 1 : 0 ), HB_COMP_PARAM );
    }
 }
 
