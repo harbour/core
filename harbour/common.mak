@@ -372,7 +372,6 @@ COMPILER_LIB_OBJS = \
     $(OBJ_DIR)\genc$(OBJEXT)     \
     $(OBJ_DIR)\gencc$(OBJEXT)    \
     $(OBJ_DIR)\gencobj$(OBJEXT)  \
-    $(OBJ_DIR)\genobj32$(OBJEXT) \
     $(OBJ_DIR)\genhrb$(OBJEXT)   \
     $(OBJ_DIR)\expropta$(OBJEXT) \
     $(OBJ_DIR)\exproptb$(OBJEXT) \

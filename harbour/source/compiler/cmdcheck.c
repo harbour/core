@@ -315,10 +315,12 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                      HB_COMP_PARAM->iLanguage = HB_LANG_PORT_OBJ;
                      break;
 
+#ifdef HB_GEN_W32_OBJ
                   case 'w':
                   case 'W':
                      HB_COMP_PARAM->iLanguage = HB_LANG_OBJ32;
                      break;
+#endif
 
                   default:
                      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_UNSUPPORTED_LANG, NULL, NULL );

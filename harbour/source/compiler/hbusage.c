@@ -74,7 +74,9 @@ void hb_compPrintUsage( HB_COMP_DECL, char * szSelf )
            "\n                           <type>: 0=compact 1=normal 2=verbose (default)",
            "\n                                   3=generate real C code",
            "\n          %cgo              output type: Platform dependant object module",
+#ifdef HB_GEN_W32_OBJ
            "\n          %cgw              output type: Windows/DOS OBJ32 (.obj)",
+#endif
            "\n          %cgh              output type: Harbour Portable Object (.hrb)",
            "\n          %ci<path>         #include file search path",
            "\n          %cj[<file>]       generate i18n gettex file (.pot)",

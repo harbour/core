@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 16:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/common.mak
+  * harbour/source/compiler/Makefile
+  * harbour/source/compiler/cmdcheck.c
+  * harbour/source/compiler/hbmain.c
+  * harbour/source/compiler/hbusage.c
+    * disabled support for unfinished -gw compiler switch in
+      default builds. It can be enabled by developers who will
+      want to work on this code by recompiling Harbour with
+      HB_GEN_W32_OBJ macro (f.e. by setting it in C_USR envvar)
+
 2008-08-04 15:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/debug/dbgentry.c
     ! fixed some possible memory leaks or GPFs when wrong parameters
