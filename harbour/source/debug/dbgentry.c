@@ -542,6 +542,24 @@ hb_dbgEntry( int nMode, int nLine, char *szName, int nIndex, int nFrame )
 }
 
 
+static char *
+hb_dbgStripModuleName( char * szName )
+{
+   char * ptr;
+
+   if( ( ptr = strrchr( szName, '/' ) ) != NULL )
+   {
+      szName = ptr + 1;
+   }
+   if( ( ptr = strrchr( szName, '\\' ) ) != NULL )
+   {
+      szName = ptr + 1;
+   }
+
+   return szName;
+}
+
+
 HB_EXPORT void
 hb_dbgAddBreak( void *handle, char *cModule, int nLine, char *szFunction )
 {
@@ -583,17 +601,8 @@ hb_dbgAddLocal( HB_DEBUGINFO *info, char *szName, int nIndex, int nFrame )
 static void
 hb_dbgAddModule( HB_DEBUGINFO *info, char *szName )
 {
-   char *ptr;
-
-   if ( NULL != ( ptr = strrchr( szName, '/' ) ) )
-   {
-      szName = ptr + 1;
-   }
-   if ( NULL != ( ptr = strrchr( szName, '\\' ) ) )
-   {
-      szName = ptr + 1;
-   }
-   if ( !info->nModules || strcmp( info->aModules[ info->nModules - 1 ].szModule, szName ) )
+   szName = hb_dbgStripModuleName( szName );
+   if( !info->nModules || strcmp( info->aModules[ info->nModules - 1 ].szModule, szName ) )
    {
       HB_MODULEINFO *pModule;
 
@@ -612,7 +621,6 @@ hb_dbgAddStack( HB_DEBUGINFO *info, char *szName, int nProcLevel )
    char szBuff[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
    HB_CALLSTACKINFO *top;
    char *szFunction = strrchr( szName, ':' );
-   char *tmp;
 
    if ( szFunction )
    {
@@ -638,12 +646,7 @@ hb_dbgAddStack( HB_DEBUGINFO *info, char *szName, int nProcLevel )
          top->szFunction = STRDUP( szBuff );
       }
    }
-   tmp = strrchr( szName, '/' );
-   if ( tmp )
-      szName = tmp + 1;
-   tmp = strrchr( szName, '\\' );
-   if ( tmp )
-      szName = tmp + 1;
+   szName = hb_dbgStripModuleName( szName );
    if ( szFunction )
    {
       STRNDUP( top->szModule, szName, szFunction - szName - 1 );
@@ -704,15 +707,9 @@ hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
       {
          PHB_ITEM pEntry = hb_arrayGetItemPtr( pItem, i );
          char *szModule = hb_arrayGetCPtr( pEntry, 1 );
-         char *p;
          BOOL bFound = FALSE;
 
-         if ( ( p = strrchr( szModule, '/' ) ) != NULL
-              || ( p = strrchr( szModule, '\\' ) ) != NULL )
-         {
-            szModule = p + 1;
-         }
-         
+         szModule = hb_dbgStripModuleName( szModule );
          for ( j = 1; j <= nLinesLen; j++ )
          {
             PHB_ITEM pLines = hb_arrayGetItemPtr( info->pStopLines, j );
@@ -740,7 +737,8 @@ hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
                   pBuffer[ nOrigMin / 8 + k - nMin / 8 ] |= pOrigBuffer[ k ];
                }
                hb_arraySetNL( pLines, 2, nMin );
-               hb_arraySetCPtr( pLines, 3, pBuffer, nLen - 1 );
+               if( !hb_arraySetCPtr( pLines, 3, pBuffer, nLen - 1 ) )
+                  hb_xfree( pBuffer );
                bFound = TRUE;
                break;
             }
@@ -756,13 +754,15 @@ hb_dbgAddStopLines( HB_DEBUGINFO *info, PHB_ITEM pItem )
    {
       PHB_ITEM pEntry = hb_arrayGetItemPtr( info->pStopLines, i );
       char *szModule = hb_arrayGetCPtr( pEntry, 1 );
-      char *p;
 
-      if ( ( p = strrchr( szModule, '/' ) ) != NULL
-           || ( p = strrchr( szModule, '\\' ) ) != NULL )
+      if( szModule )
       {
-         char *szName = hb_strdup( p + 1 );
-         hb_arraySetCPtr( pEntry, 1, szName, strlen( szName ) );
+         char *szName = hb_dbgStripModuleName( szModule );
+
+         if( szName != szModule )
+         {
+            hb_arraySetC( pEntry, 1, szName );
+         }
       }
    }
 }

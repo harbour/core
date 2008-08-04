@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 15:48 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/debug/dbgentry.c
+    ! fixed some possible memory leaks or GPFs when wrong parameters
+      are passed to debug functions
+    * moved module name conversions (path stripping) into one place
+      so in the future it will be easier to add automatic path detection
+
 2008-08-04 15:16 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/genhrb.c
     ; added TOFIX note
