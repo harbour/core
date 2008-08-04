@@ -286,9 +286,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 {$(COMPILER_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBPPTEST_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
-    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
-#*******************************************************
 {$(HBRUN_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
@@ -412,10 +409,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBPPTEST_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) $< -o$(OBJ_DIR)\\
-    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
-#*******************************************************
 {$(HBRUN_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
@@ -528,9 +521,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 #*******************************************************
 #{$(COMPILER_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
-#*******************************************************
-{$(HBPPTEST_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
-    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
 {$(HBRUN_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
@@ -659,10 +649,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 #{$(COMPILER_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
 #    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
-#*******************************************************
-{$(HBPPTEST_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
-    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBRUN_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
@@ -854,20 +840,6 @@ $(LDFLAGS)
 /OUT:$(HBTEST_EXE)
 $(**: = ^
 )
-$(STANDARD_STATIC_HBLIBS)
-coredll.lib corelibc.lib winsock.lib ws2.lib
-<<$(HB_KEEPSTATE)
-#**********************************************************
-# HBPPTEST build rule
-#**********************************************************
-$(HBPPTEST_EXE) : $(HBPPTEST_EXE_OBJS)
-    IF EXIST "$(HBPPTEST_EXE)" $(DEL) "$(HBPPTEST_EXE)" > nul
-    $(LINKER) @<<
-$(LDFLAGS)
-/OUT:$(HBPPTEST_EXE)
-$(**: = ^
-)
-$(PP_LIB)
 $(STANDARD_STATIC_HBLIBS)
 coredll.lib corelibc.lib winsock.lib ws2.lib
 <<$(HB_KEEPSTATE)

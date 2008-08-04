@@ -425,10 +425,6 @@ $(HBTEST_EXE)   :: $(StdLibs)
 $(HBTEST_EXE)   :: $(HBTEST_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBPPTEST_EXE) :: $(StdLibs)
-$(HBPPTEST_EXE) :: $(HBPPTEST_EXE_OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
-#**********************************************************
 $(HBDOC_EXE)    :: $(StdLibs)
 $(HBDOC_EXE)    :: $(HBDOC_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)

@@ -237,9 +237,6 @@ do
      $MAKE -r -i install)
 done
 
-# remove some unnecessary binaries
-rm -f $HB_BIN_INSTALL/hbpptest${hb_exesuf}
-
 # Keep the size of the binaries to a minimim.
 if [ -f $HB_BIN_INSTALL/harbour${hb_exesuf} ]; then
     ${CCPREFIX}strip $HB_BIN_INSTALL/harbour${hb_exesuf}

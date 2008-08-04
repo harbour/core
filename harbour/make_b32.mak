@@ -507,20 +507,6 @@ $(**: = ^
 $(STANDARD_STATIC_HBLIBS)
 !
 #**********************************************************
-# HBPPTEST build rule
-#**********************************************************
-$(HBPPTEST_EXE) :: BasicLibs BasicExes StdLibs
-$(HBPPTEST_EXE) :: $(HBPPTEST_EXE_OBJS)
-    IF EXIST "$(HBPPTEST_EXE)" $(DEL) "$(HBPPTEST_EXE)" > NUL
-    $(CC) @&&!
-$(CFLAGS)
--e$(HBPPTEST_EXE)
-$(**: = ^
-)
-$(STANDARD_STATIC_HBLIBS)
-$(PP_LIB)
-!
-#**********************************************************
 # HBDOC build rule
 #**********************************************************
 $(HBDOC_EXE)  :: BasicLibs BasicExes StdLibs

@@ -140,7 +140,6 @@ GTCRS_DIR    = source\rtl\gtcrs
 GTSLN_DIR    = source\rtl\gtsln
 GTXWC_DIR    = source\rtl\gtxwc
 
-HBPPTEST_DIR = utils\hbpptest
 HBRUN_DIR    = utils\hbrun
 HBDOT_DIR    = utils\hbdot
 HBTEST_DIR   = utils\hbtest
@@ -186,7 +185,6 @@ $(GTSLN_DIR);\
 $(GTXWC_DIR)\
 
 ALL_EXE_SRC_DIRS_TMP=\
-$(HBPPTEST_DIR);\
 $(HBRUN_DIR);\
 $(HBDOT_DIR);\
 $(HBTEST_DIR);\
@@ -247,7 +245,6 @@ HARBOUR_EXE  = $(BIN_DIR)\harbour$(EXEEXT)
 # required (intermediate) utility
 #     to generate pptable.c
 HBPP_EXE     = $(BIN_DIR)\hbpp$(EXEEXT)
-HBPPTEST_EXE = $(BIN_DIR)\hbpptest$(EXEEXT)
 HBRUN_EXE    = $(BIN_DIR)\hbrun$(EXEEXT)
 HBDOT_EXE    = $(BIN_DIR)\hbdot$(EXEEXT)
 HBTEST_EXE   = $(BIN_DIR)\hbtest$(EXEEXT)
@@ -1037,11 +1034,6 @@ HBPP_EXE_OBJS = \
 
 #**********************************************************
 
-HBPPTEST_EXE_OBJS = \
-    $(OBJ_DIR)\hbpptest$(OBJEXT)  \
-
-#**********************************************************
-
 HBRUN_EXE_OBJS = \
     $(OBJ_DIR)\hbrun$(OBJEXT)    \
     $(OBJ_DIR)\external$(OBJEXT) \
@@ -1200,7 +1192,6 @@ HB_BUILD_TARGETS = \
     $(HBRUN_EXE)            \
     $(HBDOT_EXE)            \
     $(HBTEST_EXE)           \
-    $(HBPPTEST_EXE)         \
     $(HBDOC_EXE)            \
     $(HBMAKE_EXE)           \
 
