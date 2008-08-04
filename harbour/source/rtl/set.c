@@ -221,11 +221,13 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
 
       if( hb_set.HB_SET_DEFEXTENSIONS && pFilename->szExtension == NULL && def_ext )
       {
-#if defined(HB_OS_OS2)
+#if defined(HB_OS_OS2) || defined(HB_OS_W32) || defined(HB_OS_DOS)
          if( pFilename->szName )
          {
             int iLen = ( int ) strlen( pFilename->szName );
-            if( ( iLen == 3 && hb_stricmp( pFilename->szName, "PRN" ) == 0 ) ||
+            if( ( iLen == 3 && 
+                  ( hb_stricmp( pFilename->szName, "PRN" ) == 0 ||
+                    hb_stricmp( pFilename->szName, "CON" ) == 0 ) ) ||
                 ( iLen == 4 &&
                   ( ( hb_strnicmp( pFilename->szName, "LPT", 3 ) == 0 &&
                       pFilename->szName[3] >= '1' && pFilename->szName[3] <= '3' ) ||
@@ -1006,7 +1008,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_PRINTFILE = hb_strdup( "|lpr" );
 #elif defined(HB_OS_DOS)
    hb_set.HB_SET_PRINTFILE = hb_strdup( "PRN" );
-#elif defined(HB_OS_WIN_32)
+#elif defined(HB_OS_WIN_32) || defined(HB_OS_OS2)
    hb_set.HB_SET_PRINTFILE = hb_strdup( "LPT1" );
 #else
    hb_set.HB_SET_PRINTFILE = hb_strdup( "PRN" ); /* TOFIX */

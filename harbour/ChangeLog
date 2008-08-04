@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 12:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/pp/ppcore.c
+    * cleaned warning
+
+  * harbour/source/rtl/set.c
+    * do not attach ".prn" extension to known device names also
+      in DOS and Windows builds
+    * recognize "CON" as device name in DOS, Win and OS2 builds
+
 2008-08-04 11:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/debug/debugger.prg
      ! Avoided __PLATFORM__* macros in core code by using 

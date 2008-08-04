@@ -1552,7 +1552,7 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
 
          hb_membufAddCh( pBuffer, ch );
          hb_membufAddData( pBuffer, pToken->value, pToken->len );
-         hb_membufAddCh( pBuffer, ch == '[' ? ']' : ch );
+         hb_membufAddCh( pBuffer, ( char ) ( ch == '[' ? ']' : ch ) );
       }
    }
    else
