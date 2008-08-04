@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 14:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_vcce.mak
+   * make_b32.mak
+   * make_vc.mak
+     ! Fixed to delete .dlls from 'bin' dir, too.
+
 2008-08-04 14:09 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_b32.mak
    * make_gcc.mak
