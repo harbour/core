@@ -557,7 +557,7 @@ doClean:
 	-$(DEL) $(OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(OBJ_DIR)/*.c
 	-$(DEL) $(OBJ_DIR)/*.h
-    -$(DEL) $(INCLUDE_DIR)/hbverbld.h
+	-$(DEL) $(INCLUDE_DIR)/hbverbld.h
 	-$(DEL) $(DLL_OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(DLL_OBJ_DIR)/*.c
 	-$(DEL) $(DLL_OBJ_DIR)/*.h
