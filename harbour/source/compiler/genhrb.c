@@ -102,7 +102,14 @@ void hb_compGenBufPortObj( HB_COMP_DECL, BYTE ** pBufPtr, ULONG * pulSize )
       ulLen = strlen( pSym->szName ) + 1;
       memcpy( ptr, pSym->szName, ulLen );
       ptr += ulLen;
-      *ptr++ = pSym->cScope;
+      /* TOFIX: this conversion strips upper byte from symbol scope
+       *        Now we added workaround for it by using some strict
+       *        bit order and restoring some others at runtime when
+       *        .hrb file is loaded but we should create new format
+       *        for .hrb files in which this field will have at least
+       *        16bit [druzus]
+       */
+      *ptr++ = ( BYTE ) pSym->cScope;
       /* symbol type */
       /* if( hb_compFunctionFind( HB_COMP_PARAM, pSym->szName ) ) */
       if( pSym->cScope & HB_FS_LOCAL )
