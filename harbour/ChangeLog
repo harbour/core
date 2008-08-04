@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 11:27 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/debug/debugger.prg
+     ! Avoided __PLATFORM__* macros in core code by using 
+       hb_FileMatch() instead of some local logic to make 
+       filename comparisons portable.
+       Someone please check me if this is right.
+
 2008-08-01 14:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/pp/ppcore.c
    * doc/whatsnew.txt

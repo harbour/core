@@ -74,13 +74,6 @@
 #include "set.ch"
 #include "setcurs.ch"
 
-/* A macro to compare filenames on different platforms. */
-#if defined(__PLATFORM__DOS) || defined(__PLATFORM__OS2) || defined(__PLATFORM__WINDOWS)
-   #define FILENAME_EQUAL( s1, s2 ) ( Lower( s1 ) == Lower( s2 ) )
-#else
-   #define FILENAME_EQUAL( s1, s2 ) ( s1 == s2 )
-#endif
-
 
 /* Information structure stored in DATA aCallStack */
 #define CSTACK_MODULE           1  // module name (.prg file)
@@ -1797,7 +1790,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
          cName := ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_MODULE ]
          FOR n := 1 TO Len( ::aModules )
             IF !::lShowAllGlobals
-               IF !FILENAME_EQUAL( ::aModules[ n ][ MODULE_NAME ], cName )
+               IF !hb_FileMatch( ::aModules[ n ][ MODULE_NAME ], cName )
                   LOOP
                ENDIF
             ENDIF
@@ -1816,7 +1809,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
 
       IF ::lShowStatics
          cName := ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_MODULE ]
-         n := AScan( ::aModules, { | a | FILENAME_EQUAL( a[ MODULE_NAME ], cName ) } )
+         n := AScan( ::aModules, { | a | hb_FileMatch( a[ MODULE_NAME ], cName ) } )
          IF n > 0
             aVars := ::aModules[ n ][ MODULE_STATICS ]
             FOR m := 1 TO Len( aVars )
@@ -1966,7 +1959,7 @@ METHOD Open() CLASS HBDebugger
    ENDIF
 
    IF !Empty( cFileName ) ;
-        .AND. ( ValType( ::cPrgName ) == "U" .OR. !FILENAME_EQUAL( cFileName, ::cPrgName ) )
+        .AND. ( ValType( ::cPrgName ) == "U" .OR. !hb_FileMatch( cFileName, ::cPrgName ) )
 
       IF ! File( cFileName ) .AND. ! Empty( ::cPathForFiles )
          cRealName := ::LocatePrgPath( cFileName )
@@ -2144,7 +2137,7 @@ METHOD RedisplayBreakPoints() CLASS HBDebugger
    LOCAL n
 
    FOR n := 1 TO Len( ::aBreakpoints )
-      IF FILENAME_EQUAL( ::aBreakpoints[ n ][ 2 ], strip_path( ::cPrgName ) )
+      IF hb_FileMatch( ::aBreakpoints[ n ][ 2 ], strip_path( ::cPrgName ) )
          ::oBrwText:ToggleBreakPoint( ::aBreakpoints[ n ][ 1 ], .T.)
       ENDIF
    NEXT
@@ -2563,7 +2556,7 @@ METHOD ShowCodeLine( nProc ) CLASS HBDebugger
 
       IF ! Empty( cPrgName )
 
-         IF !FILENAME_EQUAL( strip_path( cPrgName ), strip_path( ::cPrgName ) ) ;
+         IF !hb_FileMatch( strip_path( cPrgName ), strip_path( ::cPrgName ) ) ;
               .OR. ::oBrwText == NIL
 
             IF ! File( cPrgName ) .AND. !Empty( ::cPathForFiles )
@@ -2831,19 +2824,19 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
    ENDIF
 
    nAt := AScan( ::aBreakPoints, { | aBreak | aBreak[ 1 ] == nLine ;
-                                     .AND. FILENAME_EQUAL( aBreak[ 2 ], cFileName ) } )
+                                     .AND. hb_FileMatch( aBreak[ 2 ], cFileName ) } )
 
    IF nAt == 0
       AAdd( ::aBreakPoints, { nLine, cFileName } )     // it was nLine
       hb_DBG_AddBreak( ::pInfo, cFileName, nLine )
-      IF FILENAME_EQUAL( cFileName, strip_path( ::cPrgName ) )
+      IF hb_FileMatch( cFileName, strip_path( ::cPrgName ) )
          ::oBrwText:ToggleBreakPoint( nLine, .T. )
       ENDIF
    ELSE
       ADel( ::aBreakPoints, nAt )
       ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
       hb_DBG_DelBreak( ::pInfo, nAt - 1 )
-      IF FILENAME_EQUAL( cFileName, strip_path( ::cPrgName ) )
+      IF hb_FileMatch( cFileName, strip_path( ::cPrgName ) )
          ::oBrwText:ToggleBreakPoint( nLine, .F. )
       ENDIF
    ENDIF
