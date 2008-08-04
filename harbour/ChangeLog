@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 20:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbdefs.h
+     ! Fixed 4 remaining warnings in BCC 5.8.2 builds.
+       Many thanks to Przemek for the patch.
+       NOTE: Now BCC58 core is warning-free and there are 
+             two warnings in its own header files, exploited 
+             by contrib hbcurl/libcurl.
+
 2008-08-04 16:34 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * harbour-ce-spec
    * harbour-w32-spec
