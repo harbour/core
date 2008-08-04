@@ -304,9 +304,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 {$(HBMAKE_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBVER_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
-    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
-#*******************************************************
 
 #*******************************************************
 # General *.prg --> *.obj COMPILE rules for STATIC Libraries
@@ -439,10 +436,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBVER_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
-#*******************************************************
 
 #*******************************************************
 # General *.c --> *.obj COMPILE rules for SHARED Libraries
@@ -552,9 +545,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
 {$(HBMAKE_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
-    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
-#*******************************************************
-{$(HBVER_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
 
@@ -691,10 +681,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBMAKE_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
-    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
-#*******************************************************
-{$(HBVER_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #**********************************************************
@@ -912,20 +898,6 @@ $(**: = ^
 $(STANDARD_STATIC_HBLIBS)
 coredll.lib corelibc.lib winsock.lib ws2.lib
 <<$(HB_KEEPSTATE)
-#**********************************************************
-# HBVER build rule
-#**********************************************************
-$(HBVER_EXE)  : $(HBVER_EXE_OBJS)
-    IF EXIST "$(HBVER_EXE)" $(DEL) "$(HBVER_EXE)" > nul
-    $(LINKER) @<<
-$(LDFLAGS)
-/OUT:$(HBVER_EXE)
-$(**: = ^
-)
-$(STANDARD_STATIC_HBLIBS)
-coredll.lib corelibc.lib winsock.lib ws2.lib
-<<$(HB_KEEPSTATE)
-#**********************************************************
 
 #**********************************************************
 # DLL Targets

@@ -146,7 +146,6 @@ HBDOT_DIR    = utils\hbdot
 HBTEST_DIR   = utils\hbtest
 HBDOC_DIR    = utils\hbdoc
 HBMAKE_DIR   = utils\hbmake
-HBVER_DIR    = utils\hbver
 
 #**********************************************************
 
@@ -192,8 +191,7 @@ $(HBRUN_DIR);\
 $(HBDOT_DIR);\
 $(HBTEST_DIR);\
 $(HBDOC_DIR);\
-$(HBMAKE_DIR);\
-$(HBVER_DIR)\
+$(HBMAKE_DIR)\
 
 ALL_SRC_DIRS_TMP=\
 $(ALL_LIB_SRC_DIRS_TMP);\
@@ -255,7 +253,6 @@ HBDOT_EXE    = $(BIN_DIR)\hbdot$(EXEEXT)
 HBTEST_EXE   = $(BIN_DIR)\hbtest$(EXEEXT)
 HBDOC_EXE    = $(BIN_DIR)\hbdoc$(EXEEXT)
 HBMAKE_EXE   = $(BIN_DIR)\hbmake$(EXEEXT)
-HBVER_EXE    = $(BIN_DIR)\hbverfix$(EXEEXT)
 
 HARBOUR_DLL  = $(BIN_DIR)\$(LIBPREF)harbour-$(HB_CC_NAME)$(DLLEXT)
 HBTESTDLL_EXE= $(BIN_DIR)\hbtest-dll$(EXEEXT)
@@ -1112,11 +1109,6 @@ HBMAKE_EXE_OBJS = \
     $(OBJ_DIR)\tmake$(OBJEXT)    \
 
 #**********************************************************
-
-HBVER_EXE_OBJS = \
-    $(OBJ_DIR)\hbverfix$(OBJEXT) \
-
-#**********************************************************
 #**********************************************************
 #**********************************************************
 
@@ -1211,7 +1203,6 @@ HB_BUILD_TARGETS = \
     $(HBPPTEST_EXE)         \
     $(HBDOC_EXE)            \
     $(HBMAKE_EXE)           \
-    $(HBVER_EXE)            \
 
 # DLL Target is disabled by default
 # It can be enabled by setting env

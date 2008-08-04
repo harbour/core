@@ -437,10 +437,6 @@ $(HBMAKE_EXE)   :: $(StdLibs)
 $(HBMAKE_EXE)   :: $(HBMAKE_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBVER_EXE)    :: $(StdLibs)
-$(HBVER_EXE)    :: $(HBVER_EXE_OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(HB_OS_LIBS)
-#**********************************************************
 
 #**********************************************************
 # DLL Targets

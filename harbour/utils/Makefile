@@ -6,7 +6,6 @@ ROOT = ../
 
 DIRS=\
 	hbpptest \
-	hbver \
 	hbrun \
 	hbdot \
 	hbdoc \

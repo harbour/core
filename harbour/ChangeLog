@@ -8,6 +8,20 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 16:23 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * harbour.spec
+   * common.mak
+   * make_b32.mak
+   * make_gcc.mak
+   * make_vc.mak
+   * make_vcce.mak
+   * make_tgz.sh
+   * utils/Makefile
+   - utils/hbver
+     - Removed obsolete binary hbverfix.
+
 2008-08-04 16:02 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/common.mak
   * harbour/source/compiler/Makefile

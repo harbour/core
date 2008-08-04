@@ -547,19 +547,6 @@ $(**: = ^
 $(STANDARD_STATIC_HBLIBS)
 !
 #**********************************************************
-# HBVER build rule
-#**********************************************************
-$(HBVER_EXE)  :: BasicLibs BasicExes StdLibs
-$(HBVER_EXE)  :: $(HBVER_EXE_OBJS)
-    IF EXIST "$(HBVER_EXE)" $(DEL) "$(HBVER_EXE)" > NUL
-    $(CC) @&&!
-$(CFLAGS)
--e$(HBVER_EXE)
-$(**: = ^
-)
-$(STANDARD_STATIC_HBLIBS)
-!
-#**********************************************************
 
 #**********************************************************
 # DLL Targets
