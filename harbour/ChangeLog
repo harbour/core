@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 22:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * utils/hbdot/hbdot.prg
+     + hbdot is now able to run .hrb files too, by doing a check
+       on the extension, similar to hbrun.
+
 2008-08-04 22:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_gcc.mak
     ! fixed SPACEs used instead of TAB in clean command

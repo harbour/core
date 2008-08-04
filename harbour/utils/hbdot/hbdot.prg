@@ -69,6 +69,7 @@ PROCEDURE _APPMAIN( cFile, ... )
    LOCAL GetList, cLine, cCommand, cPath, nMaxRow, nMaxCol
    LOCAL aHistory, nHistIndex
    LOCAL bKeyUP, bKeyDown, bKeyIns
+   LOCAL cExt
 
 #ifdef _DEFAULT_INC_DIR
    AADD( s_aIncDir, "-I" + _DEFAULT_INC_DIR )
@@ -93,14 +94,21 @@ PROCEDURE _APPMAIN( cFile, ... )
             HB_DotUsage()
             EXIT
          OTHERWISE
-            cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n", "-w", "-es2", "-q0", ;
-                                    s_aIncDir, cFile )
-            IF cFile == NIL
-               ERRORLEVEL( 1 )
+
+            hb_FNameSplit( cFile, NIL, NIL, @cExt )
+
+            IF Lower( cExt ) == ".prg"
+               cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n", "-w", "-es2", "-q0", ;
+                                       s_aIncDir, cFile )
+               IF cFile == NIL
+                  ERRORLEVEL( 1 )
+               ELSE
+                  __hrbRun( cFile, ... )
+               ENDIF
             ELSE
                __hrbRun( cFile, ... )
             ENDIF
-      END
+      ENDSWITCH
    ELSE
 
       CLEAR SCREEN
