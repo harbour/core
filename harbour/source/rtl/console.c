@@ -420,7 +420,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
             {
                if( iPtr + s_iCrLfLen > ( int ) sizeof( buf ) )
                {
-                  hb_fsWrite( hb_set.hb_set_printhan, buf, iPtr );
+                  hb_fsWrite( hb_set.hb_set_printhan, buf, ( USHORT ) iPtr );
                   iPtr = 0;
                }
                memcpy( &buf[ iPtr ], s_szCrLf, s_iCrLfLen );
@@ -439,7 +439,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
          {
             if( iPtr == ( int ) sizeof( buf ) )
             {
-               hb_fsWrite( hb_set.hb_set_printhan, buf, iPtr );
+               hb_fsWrite( hb_set.hb_set_printhan, buf, ( USHORT ) iPtr );
                iPtr = 0;
             }
             buf[ iPtr++ ] = ' ';
@@ -447,7 +447,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
          }
 
          if( iPtr )
-            hb_fsWrite( hb_set.hb_set_printhan, buf, iPtr );
+            hb_fsWrite( hb_set.hb_set_printhan, buf, ( SHORT ) iPtr );
       }
    }
    else
@@ -459,7 +459,7 @@ static void hb_conDevPos( SHORT iRow, SHORT iCol )
 HB_FUNC( DEVPOS ) /* Sets the screen and/or printer position */
 {
    if( ISNUM( 1 ) && ISNUM( 2 ) )
-      hb_conDevPos( hb_parni( 1 ), hb_parni( 2 ) );
+      hb_conDevPos( ( SHORT ) hb_parni( 1 ), ( SHORT ) hb_parni( 2 ) );
 }
 
 HB_FUNC( SETPRC ) /* Sets the current printer row and column positions */
@@ -540,7 +540,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
 
       pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-      hb_gtWriteAt( hb_parni( 1 ), hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
+      hb_gtWriteAt( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
 
       if( bFreeReq )
          hb_xfree( pszString );
@@ -551,7 +551,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
    {
       pszString = hb_itemStringCon( hb_param( 3, HB_IT_ANY ), &ulLen, &bFreeReq );
 
-      hb_gtWriteAt( hb_parni( 1 ), hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
+      hb_gtWriteAt( ( USHORT ) hb_parni( 1 ), ( USHORT ) hb_parni( 2 ), ( BYTE * ) pszString, ulLen );
 
       if( bFreeReq )
          hb_xfree( pszString );

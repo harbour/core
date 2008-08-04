@@ -194,9 +194,9 @@ HB_FUNC_STATIC( _CANDEFAULT )
       BOOL fCan = hb_parl( 1 );
       
       if( fCan )
-         hb_errPutFlags( pError, hb_errGetFlags( pError ) | EF_CANDEFAULT );
+         hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) | EF_CANDEFAULT ) );
       else
-         hb_errPutFlags( pError, hb_errGetFlags( pError ) & ~EF_CANDEFAULT );
+         hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) & ~EF_CANDEFAULT ) );
 
       hb_retl( fCan );
    }
@@ -216,9 +216,9 @@ HB_FUNC_STATIC( _CANRETRY )
       BOOL fCan = hb_parl( 1 );
       
       if( fCan )
-         hb_errPutFlags( pError, hb_errGetFlags( pError ) | EF_CANRETRY );
+         hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) | EF_CANRETRY ) );
       else
-         hb_errPutFlags( pError, hb_errGetFlags( pError ) & ~EF_CANRETRY );
+         hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) & ~EF_CANRETRY ) );
 
       hb_retl( fCan );
    }
@@ -238,9 +238,9 @@ HB_FUNC_STATIC( _CANSUBST )
       BOOL fCan = hb_parl( 1 );
       
       if( fCan )
-         hb_errPutFlags( pError, hb_errGetFlags( pError ) | EF_CANSUBSTITUTE );
+         hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) | EF_CANSUBSTITUTE ) );
       else
-         hb_errPutFlags( pError, hb_errGetFlags( pError ) & ~EF_CANSUBSTITUTE );
+         hb_errPutFlags( pError, ( USHORT ) ( hb_errGetFlags( pError ) & ~EF_CANSUBSTITUTE ) );
 
       hb_retl( fCan );
    }
@@ -597,7 +597,7 @@ USHORT hb_errLaunch( PHB_ITEM pError )
          /* Add one try to the counter. */
 
          if( uiAction == E_RETRY )
-            hb_errPutTries( pError, hb_errGetTries( pError ) + 1 );
+            hb_errPutTries( pError, ( USHORT ) ( hb_errGetTries( pError ) + 1 ) );
       }
       else
          hb_errInternal( HB_EI_ERRRECFAILURE, NULL, NULL, NULL );
@@ -961,7 +961,7 @@ PHB_ITEM hb_errRT_New_Subst(
    hb_errPutDescription( pError, szDescription ? szDescription : ( const char * ) hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + ulGenCode ) );
    hb_errPutOperation( pError, szOperation ? szOperation : "" );
    hb_errPutOsCode( pError, uiOsCode );
-   hb_errPutFlags( pError, uiFlags | EF_CANSUBSTITUTE );
+   hb_errPutFlags( pError, ( USHORT ) ( uiFlags | EF_CANSUBSTITUTE ) );
 
    return pError;
 }

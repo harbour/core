@@ -2290,7 +2290,7 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
    {
       uiCurDrv = hb_fsCurDrv() + 1;
       if( uiDrive != uiCurDrv )
-         hb_fsChDrv( uiDrive - 1 );
+         hb_fsChDrv( ( USHORT ) ( uiDrive - 1 ) );
    }
 #endif
 
@@ -2325,7 +2325,7 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
 
    if( uiDrive != uiCurDrv )
    {
-      hb_fsChDrv( uiCurDrv - 1 );
+      hb_fsChDrv( ( USHORT ) ( uiCurDrv - 1 ) );
       hb_fsSetError( usError );
    }
 
@@ -2682,7 +2682,7 @@ HB_EXPORT FHANDLE hb_fsExtOpen( BYTE * pFilename, BYTE * pDefExt,
       if( hFile == FS_ERROR )
       {
          hb_errPutOsCode( pError, hb_fsError() );
-         hb_errPutGenCode( pError, ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN );
+         hb_errPutGenCode( pError, ( USHORT ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
       }
    }
 

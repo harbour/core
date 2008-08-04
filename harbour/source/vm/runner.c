@@ -556,18 +556,16 @@ static void hb_hrbDo( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
    /* May not have a startup symbol, if first symbol was an INIT Symbol (was executed already).*/
    if( pHrbBody->lSymStart >= 0 && hb_vmRequestQuery() == 0 )
    {
-       hb_vmPushSymbol( &pHrbBody->pSymRead[ pHrbBody->lSymStart ] );
-       hb_vmPushNil();
+      hb_vmPushSymbol( &pHrbBody->pSymRead[ pHrbBody->lSymStart ] );
+      hb_vmPushNil();
 
-       for( i = 0; i < ( hb_pcount() - 1 ); i++ )
-       {
-          hb_vmPush( hb_param( i + 2, HB_IT_ANY ) );  /* Push other cmdline params*/
-       }
+      for( i = 0; i < iPCount; i++ )
+         hb_vmPush( pParams[ i ] );
 
-       hb_vmDo( ( USHORT ) ( hb_pcount() - 1 ) );
+      hb_vmDo( ( USHORT ) iPCount );
 
-       pRetVal = hb_itemNew( NULL );
-       hb_itemMove( pRetVal, hb_stackReturnItem() );
+      pRetVal = hb_itemNew( NULL );
+      hb_itemMove( pRetVal, hb_stackReturnItem() );
    }
 
    hb_hrbExit( pHrbBody );
@@ -637,7 +635,7 @@ HB_FUNC( __HRBRUN )
          {
             pParams = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * iPCount );
             for( i = 0; i < iPCount; i++ )
-               pParams[ i ] = hb_param( i + 2, HB_IT_ANY );
+               pParams[ i ] = hb_stackItemFromBase( i + 2 );
          }
 
          hb_hrbDo( pHrbBody, iPCount, pParams );
@@ -680,7 +678,7 @@ HB_FUNC( __HRBLOAD )
             pParams = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * iPCount );
 
             for( i = 0; i < iPCount; i++ )
-               pParams[ i ] = hb_param( i + 2, HB_IT_ANY );
+               pParams[ i ] = hb_stackItemFromBase( i + 2 );
          }
 
          hb_hrbInit( pHrbBody, iPCount, pParams );
@@ -709,7 +707,7 @@ HB_FUNC( __HRBDO )
          pParams = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * iPCount );
 
          for( i = 0; i < iPCount; i++ )
-            pParams[ i ] = hb_param( i + 2, HB_IT_ANY );
+            pParams[ i ] = hb_stackItemFromBase( i + 2 );
       }
 
       hb_hrbDo( pHrbBody, iPCount, pParams );

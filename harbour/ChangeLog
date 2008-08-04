@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 13:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/rtl/console.c
+  * harbour/source/rtl/box.c
+  * harbour/source/rtl/errorapi.c
+  * harbour/source/rtl/do.c
+  * harbour/source/rtl/filesys.c
+    * cleaned warnings
+
+  * harbour/source/vm/runner.c
+    * respect references in parameters passed to init and startup
+      functions
+
 2008-08-04 12:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/pp/ppcore.c
     * cleaned warning

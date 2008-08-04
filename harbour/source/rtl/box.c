@@ -74,23 +74,23 @@ HB_FUNC( DISPBOX )
       }
 
       if( pszBox )
-         hb_gtBox( hb_itemGetNI( pTop ),
-                   hb_itemGetNI( pLeft),
-                   hb_itemGetNI( pBottom ),
-                   hb_itemGetNI( pRight ),
+         hb_gtBox( ( SHORT ) hb_itemGetNI( pTop ),
+                   ( SHORT ) hb_itemGetNI( pLeft),
+                   ( SHORT ) hb_itemGetNI( pBottom ),
+                   ( SHORT ) hb_itemGetNI( pRight ),
                    ( BYTE * ) ( *pszBox ? pszBox : "         " ) );
 
       else if( hb_parni( 5 ) == 2 )
-         hb_gtBoxD( hb_itemGetNI( pTop ),
-                    hb_itemGetNI( pLeft),
-                    hb_itemGetNI( pBottom ),
-                    hb_itemGetNI( pRight ) );
+         hb_gtBoxD( ( SHORT ) hb_itemGetNI( pTop ),
+                    ( SHORT ) hb_itemGetNI( pLeft),
+                    ( SHORT ) hb_itemGetNI( pBottom ),
+                    ( SHORT ) hb_itemGetNI( pRight ) );
 
       else
-         hb_gtBoxS( hb_itemGetNI( pTop ),
-                    hb_itemGetNI( pLeft),
-                    hb_itemGetNI( pBottom ),
-                    hb_itemGetNI( pRight ) );
+         hb_gtBoxS( ( SHORT ) hb_itemGetNI( pTop ),
+                    ( SHORT ) hb_itemGetNI( pLeft),
+                    ( SHORT ) hb_itemGetNI( pBottom ),
+                    ( SHORT ) hb_itemGetNI( pRight ) );
 
       if( pszColor )
          hb_gtSetColorStr( szOldColor );
