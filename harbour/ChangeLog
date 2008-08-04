@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 22:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/filesys.c
+     * Minor formatting. [ Thanks for the patches, they got 
+       merged with prev commit. ]
+
 2008-08-04 22:13 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/contrib/rddads/adsfunc.c
     ! fixed possibly unclosed AdsCloseSQLStatement()

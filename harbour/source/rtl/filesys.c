@@ -630,7 +630,7 @@ HB_EXPORT FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
    HB_SYMBOL_UNUSED( pFilename );
    HB_SYMBOL_UNUSED( pMode );
 
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -684,7 +684,7 @@ HB_EXPORT FHANDLE hb_fsOpen( BYTE * pFilename, USHORT uiFlags )
 #else
 
    hFileHandle = FS_ERROR;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -735,7 +735,7 @@ HB_EXPORT FHANDLE hb_fsCreate( BYTE * pFilename, ULONG ulAttr )
 #else
 
    hFileHandle = FS_ERROR;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -790,7 +790,7 @@ HB_EXPORT FHANDLE hb_fsCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags 
 #else
 
    hFileHandle = FS_ERROR;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -814,7 +814,7 @@ HB_EXPORT void hb_fsClose( FHANDLE hFileHandle )
 
 #else
 
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 }
@@ -1195,7 +1195,7 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
       int TODO; /* To force warning */
 
       fResult = FALSE;
-      hb_fsSetError( (USHORT) FS_ERROR );
+      hb_fsSetError( ( USHORT ) FS_ERROR );
    }
 #endif
 
@@ -1288,7 +1288,7 @@ HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
       int TODO; /* To force warning */
 
       fResult = FALSE;
-      hb_fsSetError( (USHORT) FS_ERROR );
+      hb_fsSetError( ( USHORT ) FS_ERROR );
    }
 #endif
 
@@ -1327,7 +1327,7 @@ HB_EXPORT USHORT hb_fsRead( FHANDLE hFileHandle, BYTE * pBuff, USHORT uiCount )
 #else
 
    uiRead = 0;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -1381,7 +1381,7 @@ HB_EXPORT USHORT hb_fsWrite( FHANDLE hFileHandle, const BYTE * pBuff, USHORT uiC
 #else
 
    uiWritten = 0;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -1453,7 +1453,7 @@ HB_EXPORT ULONG hb_fsReadLarge( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount
 #else
 
    ulRead = 0;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -1547,7 +1547,7 @@ HB_EXPORT ULONG hb_fsWriteLarge( FHANDLE hFileHandle, const BYTE * pBuff, ULONG 
 
 #else
 
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -1620,7 +1620,7 @@ HB_EXPORT void hb_fsCommit( FHANDLE hFileHandle )
 
 #else
 
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 }
@@ -1808,7 +1808,7 @@ HB_EXPORT BOOL hb_fsLock( FHANDLE hFileHandle, ULONG ulStart,
 #else
 
    bResult = FALSE;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -2105,7 +2105,7 @@ HB_EXPORT BOOL hb_fsDelete( BYTE * pFilename )
 #else
 
    bResult = FALSE;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -2138,7 +2138,7 @@ HB_EXPORT BOOL hb_fsRename( BYTE * pOldName, BYTE * pNewName )
 #else
 
    bResult = FALSE;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -2180,7 +2180,7 @@ HB_EXPORT BOOL hb_fsMkDir( BYTE * pDirname )
 #else
 
    bResult = FALSE;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -2212,7 +2212,7 @@ HB_EXPORT BOOL hb_fsChDir( BYTE * pDirname )
 #else
 
    bResult = FALSE;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -2244,7 +2244,7 @@ HB_EXPORT BOOL hb_fsRmDir( BYTE * pDirname )
 #else
 
    bResult = FALSE;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -2317,7 +2317,7 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
 #else
 
    fResult = FALSE;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
 
 #endif
 
@@ -2391,8 +2391,8 @@ HB_EXPORT USHORT hb_fsChDrv( BYTE nDrive )
       {
          HB_FS_SETDRIVE( uiSave );
 
-         uiResult = (USHORT) FS_ERROR;
-         hb_fsSetError( (USHORT) FS_ERROR );
+         uiResult = ( USHORT ) FS_ERROR;
+         hb_fsSetError( ( USHORT ) FS_ERROR );
       }
    }
 #else
@@ -2443,8 +2443,8 @@ HB_EXPORT USHORT hb_fsIsDrv( BYTE nDrive )
       HB_FS_GETDRIVE( uiNewDrive );
       if( ( UINT ) nDrive != uiNewDrive )
       {
-         uiResult = (USHORT) FS_ERROR;
-         hb_fsSetError( (USHORT) FS_ERROR );
+         uiResult = ( USHORT ) FS_ERROR;
+         hb_fsSetError( ( USHORT ) FS_ERROR );
       }
       else
       {
@@ -2487,7 +2487,7 @@ HB_EXPORT BOOL hb_fsIsDevice( FHANDLE hFileHandle )
 #else
 
    bResult = FALSE;
-   hb_fsSetError( (USHORT) FS_ERROR );
+   hb_fsSetError( ( USHORT ) FS_ERROR );
    HB_SYMBOL_UNUSED( hFileHandle );
 
 #endif
@@ -2845,3 +2845,4 @@ HB_EXPORT BOOL hb_fsDisableWaitLocks( int iSet )
 
    return fRetVal;
 }
+
