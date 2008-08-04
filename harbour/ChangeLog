@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-05 00:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   + utils/hbmake/bld_vc.bat
+   + utils/hbmake/bld_b32.bat
+     + Added non-GNU make batch files to build hbmake.
+     ; This is a step towards detaching hbmake from core.
+
+   + contrib/examples/dbu/bld_vc.bat
+   + contrib/examples/guestbk/bld_vc.bat
+   + contrib/examples/hscript/bld_vc.bat
+   + contrib/examples/pe/bld_vc.bat
+   + contrib/examples/pp/bld_vc.bat
+     + Added MSVC build scripts.
+
+2008-08-05 00:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   + utils/hbmake/bld_vc.bat
+   + utils/hbmake/bld_b32.bat
+     + Added non-GNU make batch files to build hbmake.
+     ; This is a step towards detaching hbmake from core.
+
 2008-08-04 22:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbdot/hbdot.prg
      + hbdot is now able to run .hrb files too, by doing a check
