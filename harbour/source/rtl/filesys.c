@@ -2290,7 +2290,7 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
    {
       uiCurDrv = hb_fsCurDrv() + 1;
       if( uiDrive != uiCurDrv )
-         hb_fsChDrv( ( USHORT ) ( uiDrive - 1 ) );
+         hb_fsChDrv( ( BYTE ) ( uiDrive - 1 ) );
    }
 #endif
 
@@ -2325,7 +2325,7 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
 
    if( uiDrive != uiCurDrv )
    {
-      hb_fsChDrv( ( USHORT ) ( uiCurDrv - 1 ) );
+      hb_fsChDrv( ( BYTE ) ( uiCurDrv - 1 ) );
       hb_fsSetError( usError );
    }
 

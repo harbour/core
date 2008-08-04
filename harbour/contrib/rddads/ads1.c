@@ -3356,7 +3356,7 @@ static ERRCODE adsOrderListAdd( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
                    ( char * ) hb_itemGetCPtr( pOrderInfo->atomBagName ), EF_CANDEFAULT );
       return FAILURE;
    }
-   if( !pArea->hOrdCurrent )
+   if( !pArea->hOrdCurrent && u16ArrayLen > 0 )
    {
       pArea->hOrdCurrent = ahIndex[ 0 ];
       return SELF_GOTOP( ( AREAP ) pArea );
@@ -3404,7 +3404,6 @@ static ERRCODE adsOrderListDelete( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
       }
    }
    return FAILURE;
-
 }
 
 static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
@@ -3452,6 +3451,9 @@ static ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
          }
          u32RetVal = AdsGetIndexHandleByOrder( pArea->hTable, u16Order, &hIndex );
       }
+      else
+         hIndex = pArea->hOrdCurrent;
+
       if( u32RetVal != AE_SUCCESS )
       {
          /* ntx compatibilty: keep current order if failed */
@@ -3593,16 +3595,16 @@ static ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
    if( fClose )
    {
       ADSHANDLE ahIndex[ 50 ];
-      UNSIGNED16 pusArrayLen = 50;
+      UNSIGNED16 usArrayLen = 50;
 
       u32RetVal = AdsOpenIndex( pArea->hTable,
-                     ( UNSIGNED8 * ) pOrderInfo->abBagName, ahIndex, &pusArrayLen );
+                     ( UNSIGNED8 * ) pOrderInfo->abBagName, ahIndex, &usArrayLen );
       if( u32RetVal != AE_SUCCESS  && u32RetVal != AE_INDEX_ALREADY_OPEN )
       {
          SELF_ORDSETCOND( ( AREAP ) pArea, NULL );
          return FAILURE;
       }
-      pArea->hOrdCurrent = ahIndex[ 0 ];
+      pArea->hOrdCurrent = usArrayLen ? ahIndex[ 0 ] : 0;
    }
 
    return SELF_GOTOP( ( AREAP ) pArea );

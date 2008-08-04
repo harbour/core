@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 22:13 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/contrib/rddads/adsfunc.c
+    ! fixed possibly unclosed AdsCloseSQLStatement()
+
+  * harbour/contrib/rddads/ads1.c
+    * minor cleanup and protection against possible strange results
+      caused by indexes without tags
+
+  * harbour/source/rtl/hbinet.c
+    ! added protection against using wrong handles
+    ! fixed possible resource leak (unclosed handle) when open handle is
+      passed to HB_INETCONNECT[IP]()
+
+  * harbour/source/rtl/filesys.c
+    * cleaned warnings
+
 2008-08-04 20:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbdefs.h
      ! Fixed 4 remaining warnings in BCC 5.8.2 builds.

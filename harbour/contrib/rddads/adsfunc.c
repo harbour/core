@@ -1183,16 +1183,10 @@ HB_FUNC( ADSCREATESQLSTATEMENT )
                   fResult = TRUE;
                }
                else
-                  /* QUESTION: Is this right? [vszakats] */
                   hb_rddReleaseCurrentArea();
             }
-#if 0
-            /* QUESTION: Shouldn't we call AdsCloseSQLStatement() if pArea was NULL? [vszakats] */
-            else
-               AdsCloseSQLStatement( adsStatementHandle );
-#endif
          }
-         else
+         if( !fResult )
             AdsCloseSQLStatement( adsStatementHandle );
       }
    }

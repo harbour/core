@@ -148,13 +148,12 @@
    #define HB_SOCKET_INIT( s, p ) \
       do { \
          s = ( HB_SOCKET_STRUCT *) hb_gcAlloc( sizeof( HB_SOCKET_STRUCT ), hb_inetSocketFinalize );\
-         p = hb_itemPutPtrGC( p, s );\
-         HB_SOCKET_ZERO_ERROR( s );\
+         memset( s, '\0', sizeof( HB_SOCKET_STRUCT ) );\
          s->com = ( HB_SOCKET_T ) -1;\
-         s->count = 0;\
          s->timeout = -1;\
          s->timelimit = -1;\
-         s->caPeriodic = NULL;\
+         s->errorDesc = "";\
+         p = hb_itemPutPtrGC( p, s );\
       } while( 0 )
 
    #ifndef MSG_NOSIGNAL
@@ -226,6 +225,16 @@ static void hb_inetLinuxSigusrHandle( int sig )
 
 /* JC1: we need it volatile to be minimally thread safe. */
 static volatile int s_iSessions = 0;
+
+static BOOL hb_inetIsOpen( HB_SOCKET_STRUCT *Socket )
+{
+   if( Socket->com == ( HB_SOCKET_T ) -1 )
+   {
+      HB_SOCKET_SET_ERROR2( Socket, -4, "Closed socket" );
+      return FALSE;
+   }
+   return TRUE;
+}
 
 /* Useful utility function to have a timeout; */
 
@@ -779,6 +788,8 @@ HB_FUNC( HB_INETGETSNDBUFSIZE )
 
    if( Socket == NULL )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else if( !hb_inetIsOpen( Socket ) )
+      hb_retni( -1 );
    else
    {
       int value;
@@ -788,7 +799,6 @@ HB_FUNC( HB_INETGETSNDBUFSIZE )
 #else
       getsockopt( Socket->com, SOL_SOCKET, SO_SNDBUF, ( void * ) &value, &len );
 #endif
-      hb_retni( value );
    }
 }
 
@@ -798,6 +808,8 @@ HB_FUNC( HB_INETGETRCVBUFSIZE )
 
    if( Socket == NULL )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else if( !hb_inetIsOpen( Socket ) )
+      hb_retni( -1 );
    else
    {
       int value;
@@ -817,6 +829,8 @@ HB_FUNC( HB_INETSETSNDBUFSIZE )
 
    if( Socket == NULL )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else if( !hb_inetIsOpen( Socket ) )
+      hb_retni( -1 );
    else
    {
       int value = hb_parni( 2 );
@@ -835,6 +849,8 @@ HB_FUNC( HB_INETSETRCVBUFSIZE )
 
    if( Socket == NULL )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   else if( !hb_inetIsOpen( Socket ) )
+      hb_retni( -1 );
    else
    {
       int value = hb_parni( 2 );
@@ -864,6 +880,11 @@ static void s_inetRecvInternal( int iMode )
    if( Socket == NULL || pBuffer == NULL || !ISBYREF( 2 ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      return;
+   }
+   else if( !hb_inetIsOpen( Socket ) )
+   {
+      hb_retni( 0 );
       return;
    }
 
@@ -973,6 +994,11 @@ static void s_inetRecvPattern( char *szPattern )
    if( Socket == NULL )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      return;
+   }
+   else if( !hb_inetIsOpen( Socket ) )
+   {
+      hb_retni( 0 );
       return;
    }
 
@@ -1129,6 +1155,13 @@ HB_FUNC( HB_INETRECVENDBLOCK )
    if( Socket == NULL )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      return;
+   }
+   else if( !hb_inetIsOpen( Socket ) )
+   {
+      if( pResult )
+         hb_itemPutNI( pResult, -1 );
+      hb_retc( NULL );
       return;
    }
 
@@ -1316,6 +1349,11 @@ HB_FUNC( HB_INETDATAREADY )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
+   else if( !hb_inetIsOpen( Socket ) )
+   {
+      hb_retl( FALSE );
+      return;
+   }
 
    HB_SOCKET_ZERO_ERROR( Socket );
 
@@ -1352,6 +1390,11 @@ static void s_inetSendInternal( int iMode )
    if( Socket == NULL || pBuffer == NULL )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      return;
+   }
+   else if( !hb_inetIsOpen( Socket ) )
+   {
+      hb_retni( 0 );
       return;
    }
 
@@ -1600,6 +1643,10 @@ HB_FUNC( HB_INETACCEPT )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
+   else if( !hb_inetIsOpen( Socket ) )
+   {
+      return;
+   }
 
    Len = sizeof( struct sockaddr_in );
 
@@ -1678,6 +1725,11 @@ HB_FUNC( HB_INETCONNECT )
 
    if( Socket != NULL )
    {
+      if( Socket->com != ( HB_SOCKET_T ) -1 )
+      {
+         HB_INET_CLOSE( Socket->com );
+         Socket->com = ( HB_SOCKET_T ) -1;
+      }
       HB_SOCKET_ZERO_ERROR( Socket );
    }
    else
@@ -1736,6 +1788,11 @@ HB_FUNC( HB_INETCONNECTIP )
 
    if( Socket != NULL )
    {
+      if( Socket->com != ( HB_SOCKET_T ) -1 )
+      {
+         HB_INET_CLOSE( Socket->com );
+         Socket->com = ( HB_SOCKET_T ) -1;
+      }
       HB_SOCKET_ZERO_ERROR( Socket );
    }
    else
@@ -1917,6 +1974,12 @@ HB_FUNC( HB_INETDGRAMSEND )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
    }
+   else if( !hb_inetIsOpen( Socket ) )
+   {
+      Socket->count = 0;
+      hb_retni( 0 );
+      return;
+   }
 
    Socket->remote.sin_family = AF_INET;
    Socket->remote.sin_port = htons( iPort );
@@ -1973,6 +2036,12 @@ HB_FUNC( HB_INETDGRAMRECV )
    if( Socket == NULL || pBuffer == NULL || !ISBYREF( 2 ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      return;
+   }
+   else if( !hb_inetIsOpen( Socket ) )
+   {
+      Socket->count = 0;
+      hb_retni( -1 );
       return;
    }
 
