@@ -593,13 +593,13 @@ $(DLL_OBJ_DIR)\mainstd$(OBJEXT) : $(VM_DIR)\mainstd.c
 $(OBJ_DIR)\pptable.obj     : $(OBJ_DIR)\pptable.c
 $(DLL_OBJ_DIR)\pptable.obj : $(DLL_OBJ_DIR)\pptable.c
 
-$(OBJ_DIR)\pptable.c     : include\hbstdgen.ch include\std.ch ChangeLog $(PP_DIR)\ppcore.c $(PP_DIR)\hbpp.c
+$(OBJ_DIR)\pptable.c     : $(INCLUDE_DIR)\hbstdgen.ch $(INCLUDE_DIR)\std.ch ChangeLog $(PP_DIR)\ppcore.c $(PP_DIR)\hbpp.c
     IF EXIST "$(OBJ_DIR)\pptable.c" $(DEL) "$(OBJ_DIR)\pptable.c" > nul
-    $(HBPP) include/hbstdgen.ch -o$(OBJ_DIR)/pptable.c -q -cChangeLog -vinclude/hbverbld.h
+    $(HBPP) $(INCLUDE_DIR)/hbstdgen.ch -o$(OBJ_DIR)/pptable.c -q -cChangeLog -v$(INCLUDE_DIR)/hbverbld.h
 
-$(DLL_OBJ_DIR)\pptable.c : include\hbstdgen.ch include\std.ch ChangeLog $(PP_DIR)\ppcore.c $(PP_DIR)\hbpp.c
+$(DLL_OBJ_DIR)\pptable.c : $(INCLUDE_DIR)\hbstdgen.ch $(INCLUDE_DIR)\std.ch ChangeLog $(PP_DIR)\ppcore.c $(PP_DIR)\hbpp.c
     IF EXIST "$(DLL_OBJ_DIR)\pptable.c" $(DEL) "$(DLL_OBJ_DIR)\pptable.c" > nul
-    $(HBPP) include/hbstdgen.ch -o$(DLL_OBJ_DIR)/pptable.c -q -cChangeLog -vinclude/hbverbld.h
+    $(HBPP) $(INCLUDE_DIR)/hbstdgen.ch -o$(DLL_OBJ_DIR)/pptable.c -q -cChangeLog -v$(INCLUDE_DIR)/hbverbld.h
 
 #**********************************************************
 
@@ -656,23 +656,24 @@ Clean: doClean
 CLEAN: doClean
 
 doClean:
-    -if exist $(BIN_DIR)\*.exe $(DEL) $(BIN_DIR)\*.exe > nul
-    -if exist $(BIN_DIR)\*.tds $(DEL) $(BIN_DIR)\*.tds > nul
-    -if exist $(BIN_DIR)\*.tr? $(DEL) $(BIN_DIR)\*.tr? > nul
-    -if exist $(BIN_DIR)\*.map $(DEL) $(BIN_DIR)\*.map > nul
-    -if exist $(BIN_DIR)\*.dll $(DEL) $(BIN_DIR)\*.dll > nul
-    -if exist $(BIN_DIR)\*.lib $(DEL) $(BIN_DIR)\*.lib > nul
-    -if exist $(LIB_DIR)\*.lib $(DEL) $(LIB_DIR)\*.lib > nul
-    -if exist $(LIB_DIR)\*.bak $(DEL) $(LIB_DIR)\*.bak > nul
-    -if exist $(OBJ_DIR)\*.obj $(DEL) $(OBJ_DIR)\*.obj > nul
-    -if exist $(OBJ_DIR)\*.c   $(DEL) $(OBJ_DIR)\*.c   > nul
-    -if exist $(OBJ_DIR)\*.h   $(DEL) $(OBJ_DIR)\*.h   > nul
-    -if exist $(DLL_OBJ_DIR)\*.obj   $(DEL) $(DLL_OBJ_DIR)\*.obj   > nul
-    -if exist $(DLL_OBJ_DIR)\*.c     $(DEL) $(DLL_OBJ_DIR)\*.c   > nul
-    -if exist $(DLL_OBJ_DIR)\*.h     $(DEL) $(DLL_OBJ_DIR)\*.h   > nul
-    -if exist inst_$(HB_CC_NAME).log $(DEL) inst_$(HB_CC_NAME).log > nul
-    -if exist bin\*.exe        $(DEL) bin\*.exe        > nul
-    -if exist lib\*.lib        $(DEL) lib\*.lib        > nul
+    -if exist $(BIN_DIR)\*.exe          $(DEL) $(BIN_DIR)\*.exe          > nul
+    -if exist $(BIN_DIR)\*.tds          $(DEL) $(BIN_DIR)\*.tds          > nul
+    -if exist $(BIN_DIR)\*.tr?          $(DEL) $(BIN_DIR)\*.tr?          > nul
+    -if exist $(BIN_DIR)\*.map          $(DEL) $(BIN_DIR)\*.map          > nul
+    -if exist $(BIN_DIR)\*.dll          $(DEL) $(BIN_DIR)\*.dll          > nul
+    -if exist $(BIN_DIR)\*.lib          $(DEL) $(BIN_DIR)\*.lib          > nul
+    -if exist $(LIB_DIR)\*.lib          $(DEL) $(LIB_DIR)\*.lib          > nul
+    -if exist $(LIB_DIR)\*.bak          $(DEL) $(LIB_DIR)\*.bak          > nul
+    -if exist $(OBJ_DIR)\*.obj          $(DEL) $(OBJ_DIR)\*.obj          > nul
+    -if exist $(OBJ_DIR)\*.c            $(DEL) $(OBJ_DIR)\*.c            > nul
+    -if exist $(OBJ_DIR)\*.h            $(DEL) $(OBJ_DIR)\*.h            > nul
+    -if exist $(INCLUDE_DIR)\hbverbld.h $(DEL) $(INCLUDE_DIR)\hbverbld.h > nul
+    -if exist $(DLL_OBJ_DIR)\*.obj      $(DEL) $(DLL_OBJ_DIR)\*.obj      > nul
+    -if exist $(DLL_OBJ_DIR)\*.c        $(DEL) $(DLL_OBJ_DIR)\*.c        > nul
+    -if exist $(DLL_OBJ_DIR)\*.h        $(DEL) $(DLL_OBJ_DIR)\*.h        > nul
+    -if exist inst_$(HB_CC_NAME).log    $(DEL) inst_$(HB_CC_NAME).log    > nul
+    -if exist bin\*.exe                 $(DEL) bin\*.exe                 > nul
+    -if exist lib\*.lib                 $(DEL) lib\*.lib                 > nul
 
 #**********************************************************
 # INSTALL rules
@@ -688,9 +689,9 @@ doInstall: $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL)
     -if exist $(HB_LIB_INSTALL)\nul if exist $(BIN_DIR)\*.lib   copy /B $(BIN_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(HB_CC_NAME).log
     -if exist $(HB_LIB_INSTALL)\nul if exist $(LIB_DIR)\*.lib   copy /B $(LIB_DIR)\*.lib $(HB_LIB_INSTALL) >> inst_$(HB_CC_NAME).log
 !if "$(HB_INSTALL_PREFIX)" != "."
-    -if exist $(HB_INC_INSTALL)\nul   copy /A include\*.api $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
-    -if exist $(HB_INC_INSTALL)\nul   copy /A include\*.ch  $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
-    -if exist $(HB_INC_INSTALL)\nul   copy /A include\*.h   $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
+    -if exist $(HB_INC_INSTALL)\nul   copy /A $(INCLUDE_DIR)\*.api $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
+    -if exist $(HB_INC_INSTALL)\nul   copy /A $(INCLUDE_DIR)\*.ch  $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
+    -if exist $(HB_INC_INSTALL)\nul   copy /A $(INCLUDE_DIR)\*.h   $(HB_INC_INSTALL) >> inst_$(HB_CC_NAME).log
 !endif
 
 #**********************************************************

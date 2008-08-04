@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-04 14:09 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_b32.mak
+   * make_gcc.mak
+   * make_vc.mak
+   * make_vcce.mak
+     ! Fixed to delete hbverbld.h from include dir on 'clean'.
+     ! Using INCLUDE_DIR instead of some hard-wired 'include' 
+       dir references.
+
 2008-08-04 13:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/console.c
   * harbour/source/rtl/box.c

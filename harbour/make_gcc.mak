@@ -469,11 +469,11 @@ $(DLL_OBJ_DIR)/mainstd$(OBJEXT) : $(VM_DIR)/mainstd.c
 $(OBJ_DIR)/pptable$(OBJEXT) : $(OBJ_DIR)/pptable.c
 $(DLL_OBJ_DIR)/pptable$(OBJEXT) : $(DLL_OBJ_DIR)/pptable.c
 
-$(OBJ_DIR)/pptable.c     : $(HBPP) include/hbstdgen.ch include/std.ch ChangeLog $(PP_DIR)/ppcore.c $(PP_DIR)/hbpp.c
-	$< include/hbstdgen.ch -o$@ -q -cChangeLog -vinclude/hbverbld.h
+$(OBJ_DIR)/pptable.c     : $(HBPP) $(INCLUDE_DIR)/hbstdgen.ch $(INCLUDE_DIR)/std.ch ChangeLog $(PP_DIR)/ppcore.c $(PP_DIR)/hbpp.c
+	$< $(INCLUDE_DIR)/hbstdgen.ch -o$@ -q -cChangeLog -v$(INCLUDE_DIR)/hbverbld.h
 
-$(DLL_OBJ_DIR)/pptable.c : $(HBPP) include/hbstdgen.ch include/std.ch ChangeLog $(PP_DIR)/ppcore.c $(PP_DIR)/hbpp.c
-	$< include/hbstdgen.ch -o$@ -q -cChangeLog -vinclude/hbverbld.h
+$(DLL_OBJ_DIR)/pptable.c : $(HBPP) $(INCLUDE_DIR)/hbstdgen.ch $(INCLUDE_DIR)/std.ch ChangeLog $(PP_DIR)/ppcore.c $(PP_DIR)/hbpp.c
+	$< $(INCLUDE_DIR)/hbstdgen.ch -o$@ -q -cChangeLog -v$(INCLUDE_DIR)/hbverbld.h
 
 #**********************************************************
 
@@ -565,6 +565,7 @@ doClean:
 	-$(DEL) $(OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(OBJ_DIR)/*.c
 	-$(DEL) $(OBJ_DIR)/*.h
+    -$(DEL) $(INCLUDE_DIR)/hbverbld.h
 	-$(DEL) $(DLL_OBJ_DIR)/*$(OBJEXT)
 	-$(DEL) $(DLL_OBJ_DIR)/*.c
 	-$(DEL) $(DLL_OBJ_DIR)/*.h
@@ -590,9 +591,9 @@ doInstall: $(HB_BIN_INSTALL) $(HB_LIB_INSTALL) $(HB_INC_INSTALL)
 	   esac \
 	 done
 ifneq  ("$(HB_INSTALL_PREFIX)",".")
-	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.api $(HB_INC_INSTALL)
-	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.ch  $(HB_INC_INSTALL)
-	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) include/*.h   $(HB_INC_INSTALL)
+	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) $(INCLUDE_DIR)/*.api $(HB_INC_INSTALL)
+	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) $(INCLUDE_DIR)/*.ch  $(HB_INC_INSTALL)
+	-[ ! -d "$(HB_INC_INSTALL)" ] || $(COPY) $(INCLUDE_DIR)/*.h   $(HB_INC_INSTALL)
 endif
 
 #**********************************************************
