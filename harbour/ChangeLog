@@ -179,11 +179,6 @@
              need to have a filename equality comparison FS 
              function. Maybe we already have one, I don't know.
 
-2008-08-01 14:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
-   * source/pp/ppcore.c
-     * __PLATFORM__* macros now all #defined in full uppercase.
-       (f.e. __PLATFORM__Windows becomes __PLATFORM_WINDOWS)
-
 2008-08-01 11:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/compiler/harbour.yyc
     * updated for recent harbour.y modifications - thanks to Viktor
