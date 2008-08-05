@@ -7,7 +7,9 @@ rem
 ..\..\..\bin\harbour /n editorhi /i..\..\..\include\
 
 echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
-echo pe.c editorhi.c editorlo.c >> build.tmp
+echo pe.c >> build.tmp
+echo editorhi.c >> build.tmp
+echo editorlo.c >> build.tmp
 echo hbdebug.lib >> build.tmp
 echo hbvm.lib >> build.tmp
 echo hbrtl.lib >> build.tmp
@@ -23,5 +25,10 @@ echo hbsix.lib >> build.tmp
 echo hbcommon.lib >> build.tmp
 bcc32 @build.tmp
 del build.tmp
+
+del *.obj
+
+del pe.c
+del editorhi.c
 
 pe

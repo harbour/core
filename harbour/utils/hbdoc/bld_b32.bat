@@ -61,3 +61,25 @@ echo hbcommon.lib >> build.tmp
 
 bcc32 @build.tmp
 del build.tmp
+
+del *.obj
+
+del hbdoc.c
+del fclass1.c
+del ffile1.c
+del ft_funcs.c
+del genasc.c
+del genchm.c
+del genhpc.c
+del genhtm.c
+del genng.c
+del genos2.c
+del genpdf1.c
+del genrtf.c
+del gentrf.c
+del html.c
+del ng.c
+del os2.c
+del rtf.c
+del teeasc.c
+del troff.c

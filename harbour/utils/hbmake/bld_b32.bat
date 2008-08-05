@@ -48,3 +48,17 @@ echo hbcommon.lib >> build.tmp
 
 bcc32 @build.tmp
 del build.tmp
+
+del *.obj
+
+del hbmake.c
+del checks.c
+del fclass1.c
+del ffile1.c
+del ft_funcs.c
+del hbmutils.c
+del pickarry.c
+del pickfile.c
+del prb_stak.c
+del radios.c
+del tmake.c

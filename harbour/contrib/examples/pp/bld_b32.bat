@@ -8,5 +8,6 @@ echo pp.c hbppcomp.c hbppcore.c hbpptbl.c hbpragma.c >> build.tmp
 echo hbcommon.lib >> build.tmp
 bcc32 @build.tmp
 del build.tmp
+del *.obj
 
 pp

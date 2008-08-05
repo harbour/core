@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-05 16:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/examples/pp/bld_b32.bat
+   * contrib/examples/pp/bld_vc.bat
+   * contrib/examples/guestbk/bld_b32.bat
+   * contrib/examples/guestbk/bld_vc.bat
+   * contrib/examples/pe/bld_b32.bat
+   * contrib/examples/pe/bld_vc.bat
+   * contrib/examples/dbu/bld_b32.bat
+   * contrib/examples/dbu/bld_vc.bat
+   * contrib/examples/hscript/bld_b32.bat
+   * contrib/examples/hscript/bld_vc.bat
+   * utils/hbdoc/bld_vc.bat
+   * utils/hbdoc/bld_b32.bat
+   * utils/hbmake/bld_vc.bat
+   * utils/hbmake/bld_b32.bat
+     + Cleaning .c and .obj files after the build process.
+     ! This is needed to not interfere with the GNU-make system, 
+       which would pickup and try to compiler those temp .c files.
+
 2008-08-05 15:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/postinst.sh
     * added workaround for wrongly detected harbour root path in some

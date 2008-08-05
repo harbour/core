@@ -24,3 +24,25 @@ rem
 ..\..\bin\harbour /n troff    /i..\..\include
 
 cl -D_CRT_SECURE_NO_DEPRECATE -nologo -O2 -TP -W3 -I..\..\include hbdoc.c fclass1.c ffile1.c ft_funcs.c genasc.c genchm.c genhpc.c genhtm.c genng.c genos2.c genpdf1.c genrtf.c gentrf.c html.c ng.c os2.c rtf.c teeasc.c troff.c /link /subsystem:CONSOLE /LIBPATH:..\..\lib hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib winspool.lib
+
+del *.obj
+
+del hbdoc.c
+del fclass1.c
+del ffile1.c
+del ft_funcs.c
+del genasc.c
+del genchm.c
+del genhpc.c
+del genhtm.c
+del genng.c
+del genos2.c
+del genpdf1.c
+del genrtf.c
+del gentrf.c
+del html.c
+del ng.c
+del os2.c
+del rtf.c
+del teeasc.c
+del troff.c

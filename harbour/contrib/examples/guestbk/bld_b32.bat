@@ -8,7 +8,9 @@ rem
 ..\..\..\bin\harbour /n testcgi  /i..\..\..\include\
 
 echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
-echo guestbk.c inifiles.c testcgi.c >> build.tmp
+echo guestbk.c >> build.tmp
+echo inifiles.c >> build.tmp
+echo testcgi.c >> build.tmp
 echo hbdebug.lib >> build.tmp
 echo hbvm.lib >> build.tmp
 echo hbrtl.lib >> build.tmp
@@ -24,5 +26,11 @@ echo hbsix.lib >> build.tmp
 echo hbcommon.lib >> build.tmp
 bcc32 @build.tmp
 del build.tmp
+
+del *.obj
+
+del guestbk.c
+del inifiles.c
+del testcgi.c
 
 guestbk

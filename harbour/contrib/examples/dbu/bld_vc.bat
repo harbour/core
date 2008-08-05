@@ -35,6 +35,18 @@ if exist hb_dbu.dif patch -N -i hb_dbu.dif
 
 cl -D_CRT_SECURE_NO_DEPRECATE -nologo -O2 -TP -W3 -I..\..\..\include dbu.c dbucopy.c dbuedit.c dbuhelp.c dbuindx.c dbunet.c dbustru.c dbuutil.c dbuview.c /link /subsystem:CONSOLE /LIBPATH:..\..\..\lib hbcpage.lib hbdebug.lib hbvm.lib hbrtl.lib gtwin.lib hblang.lib hbrdd.lib hbmacro.lib hbpp.lib rddntx.lib rddcdx.lib rddfpt.lib hbsix.lib hbcommon.lib hbpcre.lib hbzlib.lib user32.lib winspool.lib
 
+del *.obj
+
+del dbu.c
+del dbucopy.c
+del dbuedit.c
+del dbuhelp.c
+del dbuindx.c
+del dbunet.c
+del dbustru.c
+del dbuutil.c
+del dbuview.c
+
 dbu
 
 :EXIT

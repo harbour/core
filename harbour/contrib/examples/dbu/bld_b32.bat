@@ -34,6 +34,7 @@ if exist hb_dbu.dif patch -N -i hb_dbu.dif
 ..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUVIEW.PRG /i..\..\..\include\
 
 echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
+
 echo dbu.c     >> build.tmp
 echo dbucopy.c >> build.tmp
 echo dbuedit.c >> build.tmp
@@ -43,6 +44,7 @@ echo dbunet.c  >> build.tmp
 echo dbustru.c >> build.tmp
 echo dbuutil.c >> build.tmp
 echo dbuview.c >> build.tmp
+
 echo hbdebug.lib >> build.tmp
 echo hbvm.lib >> build.tmp
 echo hbrtl.lib >> build.tmp
@@ -56,8 +58,21 @@ echo rddcdx.lib >> build.tmp
 echo rddfpt.lib >> build.tmp
 echo hbsix.lib >> build.tmp
 echo hbcommon.lib >> build.tmp
+
 bcc32 @build.tmp
 del build.tmp
+
+del *.obj
+
+del dbu.c
+del dbucopy.c
+del dbuedit.c
+del dbuhelp.c
+del dbuindx.c
+del dbunet.c
+del dbustru.c
+del dbuutil.c
+del dbuview.c
 
 dbu
 
