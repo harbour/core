@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file common definition of HBDOc
+ * Header file common definition of hbdoc
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 #ifndef _HBDOCDEF_CH_
 #define _HBDOCDEF_CH_
 
@@ -90,10 +91,13 @@
 
 
 #xcommand IF <var> IS <type>          => if valtype(<var>) = <type>
-#xcommand IF <var> IS NOT <type>      => if valtype(<var>) != <type>
+#xcommand IF <var> IS NOT <type>      => if !( valtype(<var>) == <type> )
 #xcommand IF <ele> IS IN <array>      => if !(len( <array> ) \< <ele> )
 #xcommand IF <ele> IS NOT IN <array>  => if len( <array> ) \< <ele>
-#xtranslate (<var> IS <type> )     => (  valtype(<var>) = <type> )
-#xtranslate (<var> IS NOT <type>)  => (  valtype(<var>) != <type> )
+
+#xtranslate (<var> IS <type> )     => (  valtype(<var>) == <type> )
+#xtranslate (<var> IS NOT <type>)  => ( !( valtype(<var>) == <type> ) )
+
 #define pBUFFER_LENGTH 4096
+
 #endif

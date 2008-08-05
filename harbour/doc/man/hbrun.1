@@ -1,17 +1,19 @@
 .TH HBRUN 1
 
 .SH NAME
-hbrun \- Harbour Project Runner
+hbrun \- "DOt Prompt" Console / runner for the Harbour Language
 
 .SH SYNOPSIS
-\fBhbrun\fP \fB<file[.hrb|.prg]>\fP \fB[<parameters,...>]\fP
+\fBhbrun\fP \fB[<file[.prg|.hrb]>\fP \fB[<parameters,...>]]\fP
 
 .SH DESCRIPTION
-\fBhbrun\fP is the Harbour Project runner which can execute
-xBase/Clipper source code in .prg files or compiled Harbour
-Portable Objects - .hrb files. Type of file is recognized by
-extension used with \fB<file>\fP parameter. If not given
-then .hrb is used.
+\fBhbrun\fP is "DOt Prompt" console for the Harbour Language.
+It can work as interpreter when run without parameters
+or can execute xBase/Clipper source code in .prg file or compiled
+Harbour Portable Objects (.hrb) given as first parameter.
+Type of file is recognized by extension used with \fB<file>\fP
+parameter. If not given then .hrb is used.
+
 .PP
 \fBhbrun\fP can be also used to execute .prg files as scripts
 It's enough to add in the first line of .prg file:
@@ -21,12 +23,12 @@ It's enough to add in the first line of .prg file:
 and set executable attribute.
 
 .SH OPTIONS
-This program has no options. \fB<parameters,...>\fP are passed to
-startup function in executed code.
+.IP "\fB-h, -?, --help\fP" 10
+When given as first parameter display help
+.PP
+This program has no other options. \fB<parameters,...>\fP are passed to
+startup function in executed code coming from \fB<file[.prg|.hrb]>\fP.
 
 .SH AUTHOR
 
-Author of hbrun: The Harbour Project (http://www.harbour-project.org)
-
-This manual page was written by Luis Mayoral <mayoral@linuxadicto.org>,
-for the Debian GNU/Linux system (but may be used by others).
+Przemyslaw Czerpak, The Harbour Project (http://www.harbour-project.org)

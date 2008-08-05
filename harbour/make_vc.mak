@@ -263,9 +263,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 {$(HBRUN_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
-{$(HBDOT_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
-    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
-#*******************************************************
 {$(HBTEST_DIR)}.c{$(OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $<
 #*******************************************************
@@ -387,10 +384,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
 #*******************************************************
-{$(HBDOT_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
-    $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
-#*******************************************************
 {$(HBTEST_DIR)}.prg{$(OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGS) -o$(OBJ_DIR)\ $<
     $(CC) $(CLIBFLAGS) -Fo$(OBJ_DIR)\ $(OBJ_DIR)\$(*B).c
@@ -497,9 +490,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
 {$(HBRUN_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
-    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
-#*******************************************************
-{$(HBDOT_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $<
 #*******************************************************
 {$(HBTEST_DIR)}.c{$(DLL_OBJ_DIR)}$(OBJEXT)::
@@ -625,10 +615,6 @@ LDFLAGSDLL     = /DEBUG $(LDFLAGSDLL)
 #    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
 {$(HBRUN_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
-    $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
-    $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
-#*******************************************************
-{$(HBDOT_DIR)}.prg{$(DLL_OBJ_DIR)}$(OBJEXT):
     $(HB) $(HARBOURFLAGS) -o$(DLL_OBJ_DIR)\ $<
     $(CC) $(CEXEFLAGSDLL) -Fo$(DLL_OBJ_DIR)\ $(DLL_OBJ_DIR)\$(*B).c
 #*******************************************************
@@ -784,19 +770,6 @@ $(HBRUN_EXE)  : $(HBRUN_EXE_OBJS)
     $(LINKER) @<<
 $(LDFLAGS)
 /OUT:$(HBRUN_EXE)
-$(**: = ^
-)
-$(STANDARD_STATIC_HBLIBS)
-user32.lib winspool.lib wsock32.lib advapi32.lib
-<<$(HB_KEEPSTATE)
-#**********************************************************
-# HBDOT build rule
-#**********************************************************
-$(HBDOT_EXE)  : $(HBDOT_EXE_OBJS)
-    IF EXIST "$(HBDOT_EXE)" $(DEL) "$(HBDOT_EXE)" > nul
-    $(LINKER) @<<
-$(LDFLAGS)
-/OUT:$(HBDOT_EXE)
 $(**: = ^
 )
 $(STANDARD_STATIC_HBLIBS)

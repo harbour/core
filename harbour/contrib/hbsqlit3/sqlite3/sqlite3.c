@@ -23308,16 +23308,16 @@ void *winDlSym(sqlite3_vfs *pVfs, void *pHandle, const char *zSymbol){
   (void) pVfs;
 #if OS_WINCE
   /* The GetProcAddressA() routine is only available on wince. */
-  return GetProcAddressA((HANDLE)pHandle, zSymbol);
+  return GetProcAddressA((HMODULE)pHandle, zSymbol);
 #else
   /* All other windows platforms expect GetProcAddress() to take
   ** an Ansi string regardless of the _UNICODE setting */
-  return GetProcAddress((HANDLE)pHandle, zSymbol);
+  return GetProcAddress((HMODULE)pHandle, zSymbol);
 #endif
 }
 void winDlClose(sqlite3_vfs *pVfs, void *pHandle){
   (void) pVfs;
-  FreeLibrary((HANDLE)pHandle);
+  FreeLibrary((HMODULE)pHandle);
 }
 #else /* if SQLITE_OMIT_LOAD_EXTENSION is defined: */
   #define winDlOpen  0
@@ -87153,3 +87153,4 @@ SQLITE_PRIVATE void sqlite3Fts3SimpleTokenizerModule(
 #endif /* !defined(SQLITE_CORE) || defined(SQLITE_ENABLE_FTS3) */
 
 /************** End of fts3_tokenizer1.c *************************************/
+

@@ -417,10 +417,6 @@ $(HBRUN_EXE)    :: $(StdLibs)
 $(HBRUN_EXE)    :: $(HBRUN_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 #**********************************************************
-$(HBDOT_EXE)    :: $(StdLibs)
-$(HBDOT_EXE)    :: $(HBDOT_EXE_OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
-#**********************************************************
 $(HBTEST_EXE)   :: $(StdLibs)
 $(HBTEST_EXE)   :: $(HBTEST_EXE_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)

@@ -19,7 +19,7 @@ goto EXIT
 
 :DIR_OK_LOCAL
 
-if exist hb_dbu.dif patch -i hb_dbu.dif
+if exist hb_dbu.dif patch -N -i hb_dbu.dif
 
 :DIR_OK
 

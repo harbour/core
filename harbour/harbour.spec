@@ -409,7 +409,7 @@ then
     export L_USR="${CC_L_USR} -L${HB_LIB_INSTALL} -l%{name} -lncurses %{!?_without_gtsln:-lslang} %{!?_without_gpm:-lgpm} %{!?_without_x11:-L/usr/X11R6/%{_lib} -lX11}"
     export PRG_USR="\"-D_DEFAULT_INC_DIR='${_DEFAULT_INC_DIR}'\" ${PRG_USR}"
 
-    for utl in hbmake hbrun hbdot hbdoc
+    for utl in hbmake hbrun hbdoc
     do
         pushd utils/${utl}
         rm -fR "./${HB_ARCHITECTURE}/${HB_COMPILER}"
@@ -582,7 +582,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{hb_pref}mk
 #%{_bindir}/hbtest
 %{_bindir}/hbrun
-%{_bindir}/hbdot
 %{_bindir}/hbmake
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}
@@ -669,6 +668,10 @@ rm -rf $RPM_BUILD_ROOT
 ######################################################################
 
 %changelog
+* Thu Aug 05 2008 Viktor Szakats (harbour.01 syenar hu)
+- removed hbdot, hbverfix, hbpptest
+- hbrun now fully replaces hbdot.
+
 * Thu Aug 23 2007 Przemyslaw Czerpak <druzus@priv.onet.pl>
 + added hbdot
 - removed PP package

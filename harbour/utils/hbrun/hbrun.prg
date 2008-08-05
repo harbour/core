@@ -4,13 +4,10 @@
 
 /*
  * Harbour Project source code:
- * Standalone Harbour Portable Object file runner
- *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
- * www - http://www.harbour-project.org
+ *    "DOt Prompt" Console and .prg/.hrb runner for the Harbour Language
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *   added support for dynamic compilation and execution of .prg files
+ * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,61 +50,257 @@
  *
  */
 
-/*
- * Please remember that in *nixes if you copy compiled version
- * of this program to /usr/bin directory then you can add to your
- * .prg files as first line:
- *    #!/usr/bin/hbrun
- * and then after setting executable attribute you can directly execute
- * your .prg files
- * If you are using Linux then you can also chose default gt driver by
- * adding to above line: //gt<name>
- * F.e.
- *    #!/usr/bin/hbrun //gtstd
- */
-
+#include "inkey.ch"
+#include "setcurs.ch"
 #include "hbextern.ch"
 
-/* NOTE: Undocumented CA-Clipper _APPMAIN is used instead of Main to avoid
-         collision with user function in HRB file with that name. [ckedem]
-*/
-FUNCTION _APPMAIN( cHRBFile, ... )
-   LOCAL xRetVal, cPath, cName, cExt, cDrive, aIncDir
+#define HB_HISTORY_LEN 32
+#define HB_LINE_LEN    256
+#define HB_PROMPT      "."
 
-   IF Empty( cHRBFile )
-      OutStd( "Harbour Runner" + HB_OSNewLine() +;
-              "Copyright 1999-2008, http://www.harbour-project.org" + HB_OSNewLine() +;
-              HB_OSNewLine() +;
-              "Syntax:  hbrun <hrbfile[.hrb|.prg]> [parameters]" + HB_OSNewLine() + ;
-              HB_OSNewLine() +;
-              "Note:  Linked with " + Version() + HB_OSNewLine() )
-      ERRORLEVEL( 1 )
-   ELSE
-      HB_FNAMESPLIT( cHRBFile, @cPath, @cName, @cExt, @cDrive )
+STATIC s_nRow := 2, s_nCol := 0
+STATIC s_aIncDir := {}
 
-      IF LOWER( cExt ) == ".prg"
-         aIncDir := {}
+/* ********************************************************************** */
+
+PROCEDURE _APPMAIN( cFile, ... )
+   LOCAL GetList
+   LOCAL cLine, cCommand, cPath, cExt
+   LOCAL nMaxRow, nMaxCol
+   LOCAL aHistory, nHistIndex
+   LOCAL bKeyUP, bKeyDown, bKeyIns
+
 #ifdef _DEFAULT_INC_DIR
-         AADD( aIncDir, "-I" + _DEFAULT_INC_DIR )
+   AADD( s_aIncDir, "-I" + _DEFAULT_INC_DIR )
 #endif
-         cPath := getenv( "HB_INC_INSTALL" )
-         IF !EMPTY( cPath )
-            AADD( aIncDir, "-I" + cPath )
-         ENDIF
+   cPath := getenv( "HB_INC_INSTALL" )
+   IF !EMPTY( cPath )
+      AADD( s_aIncDir, "-I" + cPath )
+   ENDIF
 #ifdef __PLATFORM__UNIX
-         AADD( aIncDir, "-I/usr/include/harbour" )
-         AADD( aIncDir, "-I/usr/local/include/harbour" )
+   AADD( s_aIncDir, "-I/usr/include/harbour" )
+   AADD( s_aIncDir, "-I/usr/local/include/harbour" )
 #endif
-         cHRBFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n", "-w", "-es2", "-q0", ;
-                                    aIncDir, cHRBFile )
-         IF cHRBFile == NIL
-            ERRORLEVEL( 1 )
-         ELSE
-            xRetVal := __hrbRun( cHRBFile, ... )
+
+   IF PCount() > 0
+      SWITCH lower( cFile )
+         CASE "-?"
+         CASE "-h"
+         CASE "--help"
+         CASE "/?"
+         CASE "/h"
+            HB_DotUsage()
+            EXIT
+         OTHERWISE
+            hb_FNameSplit( cFile, NIL, NIL, @cExt )
+            IF Lower( cExt ) == ".prg"
+               cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n", "-w", "-es2", "-q0", ;
+                                       s_aIncDir, cFile )
+               IF cFile == NIL
+                  ERRORLEVEL( 1 )
+               ELSE
+                  __hrbRun( cFile, ... )
+               ENDIF
+            ELSE
+               __hrbRun( cFile, ... )
+            ENDIF
+      ENDSWITCH
+   ELSE
+
+      CLEAR SCREEN
+      SET SCOREBOARD OFF
+      GetList := {}
+      cCommand := ""
+      aHistory := { padr( "quit", HB_LINE_LEN ) }
+      nHistIndex := 2
+
+      DO WHILE .T.
+
+         IF cLine == NIL
+            cLine := Space( HB_LINE_LEN )
          ENDIF
-      ELSE
-         xRetVal := __hrbRun( cHRBFile, ... )
-      ENDIF
+
+         HB_DotInfo( cCommand )
+
+         nMaxRow := MaxRow()
+         nMaxCol := MaxCol()
+         @ nMaxRow, 0 SAY HB_PROMPT
+         @ nMaxRow, Col() GET cLine ;
+                          PICTURE "@KS" + LTrim( Str( nMaxCol - Col() + 1 ) )
+
+         SetCursor( IIF( ReadInsert(), SC_INSERT, SC_NORMAL ) )
+
+         bKeyIns  := SetKey( K_INS, ;
+            {|| SetCursor( IIF( ReadInsert( !ReadInsert() ), ;
+                             SC_NORMAL, SC_INSERT ) ) } )
+         bKeyUp   := SetKey( K_UP, ;
+            {|| IIF( nHistIndex >  1, ;
+                     cLine := aHistory[ --nHistIndex ], ) } )
+         bKeyDown := SetKey( K_DOWN, ;
+            {|| cLine := IIF( nHistIndex < LEN( aHistory ), ;
+                aHistory[ ++nHistIndex ], ;
+                ( nHistIndex := LEN( aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
+
+         READ
+
+         SetKey( K_DOWN, bKeyDown )
+         SetKey( K_UP,   bKeyUp   )
+         SetKey( K_INS,  bKeyIns  )
+
+         IF LastKey() == K_ESC .OR. EMPTY( cLine )
+            cLine := NIL
+            IF nMaxRow != MaxRow() .OR. nMaxCol != MaxCol()
+               @ nMaxRow, 0 CLEAR
+            ENDIF
+            LOOP
+         ENDIF
+
+         IF EMPTY( aHistory ) .OR. ! ATAIL( aHistory ) == cLine
+            IF LEN( aHistory ) < HB_HISTORY_LEN
+               AADD( aHistory, cLine )
+            ELSE
+               ADEL( aHistory, 1 )
+               aHistory[ LEN( aHistory ) ] := cLine
+            ENDIF
+         ENDIF
+         nHistIndex := LEN( aHistory ) + 1
+
+         cCommand := AllTrim( cLine, " " )
+         cLine := NIL
+         @ nMaxRow, 0 CLEAR
+         HB_DotInfo( cCommand )
+
+         HB_DotExec( cCommand )
+
+         IF s_nRow >= MaxRow()
+            Scroll( 2, 0, MaxRow(), MaxCol(), 1 )
+            s_nRow := MaxRow() - 1
+         ENDIF
+
+      ENDDO
    ENDIF
 
-   RETURN xRetVal
+RETURN
+
+/* ********************************************************************** */
+
+STATIC PROCEDURE HB_DotUsage()
+
+   OutStd( 'Harbour "DOt Prompt" Console / runner' + HB_OSNewLine() +;
+           'Copyright 1999-2008, Przemyslaw Czerpak' + HB_OSNewLine() + ;
+           'http://www.harbour-project.org' + HB_OSNewLine() +;
+           HB_OSNewLine() +;
+           'Syntax:  hbrun [<hrbfile[.prg|.hrb]> [<parameters,...>]]' + HB_OSNewLine() + ;
+           HB_OSNewLine() +;
+           "Note:  Linked with " + Version() + HB_OSNewLine() )
+
+RETURN
+
+/* ********************************************************************** */
+
+STATIC PROCEDURE HB_DotInfo( cCommand )
+
+   LOCAL r := Row(), c := Col()
+
+   IF cCommand != NIL
+      DispOutAt( 0, 0, "PP: " )
+      DispOutAt( 0, 4, PadR( cCommand, MaxCol() - 3 ), "N/R" )
+   ENDIF
+   IF Used()
+      DispOutAt( 1, 0, ;
+         PadR( "RDD: " + PadR( RddName(), 6 ) + ;
+               " | Area:" + Str( Select(), 3 ) + ;
+               " | Dbf: " + PadR( Alias(), 10 ) + ;
+               " | Index: " + PadR( OrdName( IndexOrd() ), 8 ) + ;
+               " | # " + Str( RecNo(), 7 ) + "/" + Str( RecCount(), 7 ), ;
+               MaxCol() + 1 ), "N/BG" )
+   ELSE
+      DispOutAt( 1, 0, ;
+         PadR( "RDD: " + Space( 6 ) + ;
+               " | Area:" + Space( 3 ) + ;
+               " | Dbf: " + Space( 10 ) + ;
+               " | Index: " + Space( 8 ) + ;
+               " | # " + Space( 7 ) + "/" + Space( 7 ), ;
+               MaxCol() + 1 ), "N/BG" )
+   ENDIF
+   SetPos( r, c )
+
+RETURN
+
+/* ********************************************************************** */
+
+STATIC PROCEDURE HB_DotErr( oErr, cCommand )
+
+   LOCAL xArg, cMessage
+
+   cMessage := "Sorry, could not execute:;;" + cCommand + ";;"
+   IF oErr:ClassName == "ERROR"
+      cMessage += oErr:Description
+      IF ValType( oErr:Args ) == 'A' .AND. Len( oErr:Args ) > 0
+         cMessage += ";Arguments:"
+         FOR EACH xArg IN oErr:Args
+            cMessage += ";" + HB_CStr( xArg )
+         NEXT
+      ENDIF
+   ELSEIF ValType( oErr ) == 'C'
+      cMessage += oErr
+   ENDIF
+   cMessage += ";;" + ProcName( 2 ) + '(' + LTrim( Str( ProcLine( 2 ) ) ) + ')'
+
+   Alert( cMessage )
+
+   BREAK( oErr )
+
+/* ********************************************************************** */
+
+STATIC PROCEDURE HB_DotExec( cCommand )
+   LOCAL pHRB, cHRB, cFunc, bBlock, cEol
+
+   cEol := hb_osNewLine()
+   cFunc := "STATIC FUNC __HBDOT()" + cEol + ;
+            "RETURN {||" + cEol + ;
+            "   " + cCommand + cEol + ;
+            "   RETURN __MVSETBASE()" + cEol + ;
+            "}" + cEol
+
+   BEGIN SEQUENCE WITH {|oErr| HB_DotErr( oErr, cCommand ) }
+
+      cHRB := HB_COMPILEFROMBUF( cFunc, HB_ARGV( 0 ), "-n", "-q2", s_aIncDir )
+      IF cHRB == NIL
+         EVAL( ErrorBlock(), "Syntax error." )
+      ELSE
+         pHRB := __hrbLoad( cHRB )
+         IF pHrb != NIL
+            bBlock := __hrbDo( pHRB )
+            DevPos( s_nRow, s_nCol )
+            Eval( bBlock )
+            s_nRow := Row()
+            s_nCol := Col()
+            IF s_nRow < 2
+               s_nRow := 2
+            ENDIF
+         ENDIF
+      ENDIF
+
+   ENDSEQUENCE
+
+   __MVSETBASE()
+
+RETURN
+
+/* ********************************************************************** */
+
+/* request for full screen GT driver */
+#if   defined( __PLATFORM__WINCE )
+REQUEST HB_GT_WVT_DEFAULT
+#elif defined( __PLATFORM__WINDOWS )
+REQUEST HB_GT_WIN_DEFAULT
+#elif defined( __PLATFORM__UNIX )
+REQUEST HB_GT_TRM_DEFAULT
+#elif defined( __PLATFORM__DOS )
+REQUEST HB_GT_DOS_DEFAULT
+#elif defined( __PLATFORM__OS2 )
+REQUEST HB_GT_OS2_DEFAULT
+#endif
+
+/* ********************************************************************** */
