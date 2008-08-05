@@ -216,9 +216,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
    return EXCEPTION_CONTINUE_SEARCH; /* EXCEPTION_EXECUTE_HANDLER; */
 }
 
-#endif
-
-#if defined(HB_OS_OS2)
+#elif defined(HB_OS_OS2)
 
 static EXCEPTIONREGISTRATIONRECORD s_regRec;    /* Exception Registration Record */
 

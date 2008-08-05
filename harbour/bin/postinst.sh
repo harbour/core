@@ -33,6 +33,11 @@ then
 else
     hb_root=`dirname "${hb_root}"`
 fi
+if [ ! -f ${hb_root}/bin/hb-func.sh ] && [ -f ./bin/hb-func.sh ]
+then
+   hb_root="."
+fi
+
 . ${hb_root}/bin/hb-func.sh
 
 if [ "$HB_COMPILER" = "gcc" ] || [ "$HB_COMPILER" = "gpp" ] || \

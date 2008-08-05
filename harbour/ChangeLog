@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-05 15:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/postinst.sh
+    * added workaround for wrongly detected harbour root path in some
+      environments
+
+  * harbour/source/vm/extrap.c
+    * minor modification
+
 2008-08-05 13:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
      + Added hbdot -> hbrun info.
