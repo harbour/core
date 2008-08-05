@@ -4,13 +4,16 @@
 hbdot \- "DOt Prompt" Console for the Harbour Language
 
 .SH SYNOPSIS
-\fBhbdot\fP \fB[<file[.prg]>\fP \fB[<parameters,...>]]\fP
+\fBhbdot\fP \fB[<file[.prg|.hrb]>\fP \fB[<parameters,...>]]\fP
 
 .SH DESCRIPTION
 \fBhbdot\fP is "DOt Prompt" console for the Harbour Language.
 It can work as interpreter when run without parameters
-or can execute xBase/Clipper source code in .prg file given
-as first parameter.
+or can execute xBase/Clipper source code in .prg file or compiled
+Harbour Portable Objects (.hrb) given as first parameter.
+Type of file is recognized by extension used with \fB<file>\fP
+parameter. If not given then .hrb is used.
+
 .PP
 \fBhbdot\fP can be also used to execute .prg files as scripts
 It's enough to add in the first line of .prg file:
@@ -20,8 +23,11 @@ It's enough to add in the first line of .prg file:
 and set executable attribute.
 
 .SH OPTIONS
-This program has no options. \fB<parameters,...>\fP are passed to
-startup function in executed code coming from \fB<file[.prg]>\fP.
+.IP "\fB-h, -?, --help\fP" 10
+When given as first parameter display help
+.PP
+This program has no other options. \fB<parameters,...>\fP are passed to
+startup function in executed code coming from \fB<file[.prg|.hrb]>\fP.
 
 .SH AUTHOR
 

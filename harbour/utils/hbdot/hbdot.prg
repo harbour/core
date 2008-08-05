@@ -54,8 +54,6 @@
 #include "setcurs.ch"
 #include "hbextern.ch"
 
-#include "hbclass.ch"
-
 #define HB_HISTORY_LEN 32
 #define HB_LINE_LEN    256
 #define HB_PROMPT      "."
@@ -66,10 +64,11 @@ STATIC s_aIncDir := {}
 /* ********************************************************************** */
 
 PROCEDURE _APPMAIN( cFile, ... )
-   LOCAL GetList, cLine, cCommand, cPath, nMaxRow, nMaxCol
+   LOCAL GetList
+   LOCAL cLine, cCommand, cPath, cExt
+   LOCAL nMaxRow, nMaxCol
    LOCAL aHistory, nHistIndex
    LOCAL bKeyUP, bKeyDown, bKeyIns
-   LOCAL cExt
 
 #ifdef _DEFAULT_INC_DIR
    AADD( s_aIncDir, "-I" + _DEFAULT_INC_DIR )
@@ -87,16 +86,13 @@ PROCEDURE _APPMAIN( cFile, ... )
       SWITCH lower( cFile )
          CASE "-?"
          CASE "-h"
-         CASE "-h"
          CASE "--help"
          CASE "/?"
          CASE "/h"
             HB_DotUsage()
             EXIT
          OTHERWISE
-
             hb_FNameSplit( cFile, NIL, NIL, @cExt )
-
             IF Lower( cExt ) == ".prg"
                cFile := HB_COMPILEBUF( HB_ARGV( 0 ), "-n", "-w", "-es2", "-q0", ;
                                        s_aIncDir, cFile )
@@ -194,7 +190,7 @@ STATIC PROCEDURE HB_DotUsage()
            'Copyright 1999-2008, Przemyslaw Czerpak' + HB_OSNewLine() + ;
            'http://www.harbour-project.org' + HB_OSNewLine() +;
            HB_OSNewLine() +;
-           'Syntax:  hbdot [<hrbfile[.prg]> [<parameters,...>]]' + HB_OSNewLine() + ;
+           'Syntax:  hbdot [<hrbfile[.prg|.hrb]> [<parameters,...>]]' + HB_OSNewLine() + ;
            HB_OSNewLine() +;
            "Note:  Linked with " + Version() + HB_OSNewLine() )
 
@@ -258,7 +254,7 @@ STATIC PROCEDURE HB_DotErr( oErr, cCommand )
 /* ********************************************************************** */
 
 STATIC PROCEDURE HB_DotExec( cCommand )
-   LOCAL oHRB, cHRB, cFunc, bBlock, cEol
+   LOCAL pHRB, cHRB, cFunc, bBlock, cEol
 
    cEol := hb_osNewLine()
    cFunc := "STATIC FUNC __HBDOT()" + cEol + ;
@@ -273,50 +269,23 @@ STATIC PROCEDURE HB_DotExec( cCommand )
       IF cHRB == NIL
          EVAL( ErrorBlock(), "Syntax error." )
       ELSE
-         oHRB := hrbHolder():New( cHRB )
-         bBlock := oHRB:do()
-
-         DevPos( s_nRow, s_nCol )
-         Eval( bBlock )
-         s_nRow := Row()
-         s_nCol := Col()
-         IF s_nRow < 2
-            s_nRow := 2
+         pHRB := __hrbLoad( cHRB )
+         IF pHrb != NIL
+            bBlock := __hrbDo( pHRB )
+            DevPos( s_nRow, s_nCol )
+            Eval( bBlock )
+            s_nRow := Row()
+            s_nCol := Col()
+            IF s_nRow < 2
+               s_nRow := 2
+            ENDIF
          ENDIF
-
       ENDIF
 
-   END SEQUENCE
-
-   oHRB := NIL
+   ENDSEQUENCE
 
    __MVSETBASE()
 
-RETURN
-
-/* ********************************************************************** */
-
-CREATE CLASS hrbHolder STATIC
-   VAR pHRB
-   METHOD init( cHRB )
-   METHOD do()
-   DESTRUCTOR hrbDestruct
-ENDCLASS
-
-METHOD init( cHRB )
-   ::pHRB := __hrbLoad( cHRB )
-RETURN Self
-
-METHOD do()
-   IF ::pHRB != NIL
-      RETURN __hrbDo( ::pHRB )
-   ENDIF
-RETURN NIL
-
-METHOD PROCEDURE hrbDestruct
-   IF ::pHRB != NIL
-      __hrbUnLoad( ::pHRB )
-   ENDIF
 RETURN
 
 /* ********************************************************************** */
