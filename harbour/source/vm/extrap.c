@@ -76,6 +76,7 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
 {
    char msg[ ( HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ) * 32 ];
    char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+   char file[ _POSIX_PATH_MAX + 1 ];
    char * ptr;
    USHORT uiLine;
    int iLevel;
@@ -189,10 +190,10 @@ LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInf
    ptr = msg;
    iLevel = 0;
 
-   while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
+   while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
    {
       snprintf( ptr, sizeof( msg ) - ( ptr - msg ), 
-                HB_I_("Called from %s(%hu)\n"), buffer, uiLine );
+                HB_I_("Called from %s(%hu)%s%s\n"), buffer, uiLine, *file ? HB_I_(" in ") : "", file );
 
       if( hLog )
          fwrite( ptr, sizeof( *ptr ), strlen( ptr ), hLog );
@@ -235,13 +236,14 @@ ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
    if( p1->ExceptionNum != XCPT_UNWIND && p1->ExceptionNum < XCPT_BREAKPOINT )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+      char file[ _POSIX_PATH_MAX + 1 ];
       USHORT uiLine;
       int iLevel = 0;
 
       fprintf( stderr, HB_I_("\nException %lx at address %p \n"), p1->ExceptionNum, p1->ExceptionAddress );
 
-      while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
-         fprintf( stderr, HB_I_("Called from %s(%hu)\n"), buffer, uiLine );
+      while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
+         fprintf( stderr, HB_I_("Called from %s(%hu)%s%s\n"), buffer, uiLine, *file ? HB_I_(" in ") : "", file );
    }
 
    return XCPT_CONTINUE_SEARCH;          /* Exception not resolved... */

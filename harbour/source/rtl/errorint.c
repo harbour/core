@@ -62,6 +62,7 @@
 void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, const char * szPar2 )
 {
    char buffer[ 1024 ];
+   char file[ _POSIX_PATH_MAX + 1 ];
    USHORT uiLine;
    int iLevel;
    FILE * hLog;
@@ -117,11 +118,11 @@ void hb_errInternal( ULONG ulIntCode, const char * szText, const char * szPar1, 
       fprintf( hLog, "%s\n", buffer );
 
    iLevel = 0;
-   while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
+   while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
    {
       char msg[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];
 
-      snprintf( msg, sizeof( msg ), HB_I_("Called from %s(%hu)\n"), buffer, uiLine );
+      snprintf( msg, sizeof( msg ), HB_I_("Called from %s(%hu)%s%s\n"), buffer, uiLine, *file ? HB_I_(" in ") : "", file );
 
       hb_conOutErr( msg, 0 );
       if( hLog )

@@ -588,6 +588,7 @@ void hb_stackDispLocal( void )
 void hb_stackDispCall( void )
 {
    char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
+   char file[ _POSIX_PATH_MAX + 1 ];
    USHORT uiLine;
    int iLevel;
 
@@ -595,10 +596,10 @@ void hb_stackDispCall( void )
 
    iLevel = 0;
 
-   while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
+   while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
    {
       int l = strlen( buffer );
-      snprintf( buffer + l, sizeof( buffer ) - l, "(%hu)", uiLine );
+      snprintf( buffer + l, sizeof( buffer ) - l, "(%hu)%s%s", uiLine, *file ? HB_I_(" in ") : "", file );
 
       hb_conOutErr( "Called from ", 0 );
       hb_conOutErr( buffer, 0 );

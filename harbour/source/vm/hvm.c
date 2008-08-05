@@ -7122,16 +7122,17 @@ void hb_vmRequestCancel( void )
    if( hb_set.HB_SET_CANCEL )
    {
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
+      char file[ _POSIX_PATH_MAX + 1 ];
       USHORT uiLine;
       int iLevel = 0, l;
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "Cancelled at: ", 0 );
 
-      while( hb_procinfo( iLevel++, buffer, &uiLine, NULL ) )
+      while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
       {
          l = strlen( buffer );
-         snprintf( buffer + l, sizeof( buffer ) - l, " (%hu)", uiLine );
+         snprintf( buffer + l, sizeof( buffer ) - l, " (%hu)%s%s", uiLine, *file ? HB_I_(" in ") : "", file );
 
          hb_conOutErr( buffer, 0 );
          hb_conOutErr( hb_conNewLine(), 0 );
