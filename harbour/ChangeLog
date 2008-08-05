@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-05 13:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/whatsnew.txt
+     + Added hbdot -> hbrun info.
+
+   * utils/Makefile
+     ! Missing change to previous commit.
+
+   * contrib/examples/pp/bld_b32.bat
+   * contrib/examples/guestbk/bld_b32.bat
+   * contrib/examples/pe/bld_b32.bat
+   * contrib/examples/dbu/bld_b32.bat
+   * contrib/examples/hscript/bld_b32.bat
+   * utils/hbdoc/bld_b32.bat
+   * utils/hbmake/bld_b32.bat
+     % -e switch removed from bcc32 command line.
+
 2008-08-05 08:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * harbour-ce-spec
    * harbour-w32-spec

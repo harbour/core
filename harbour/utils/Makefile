@@ -6,9 +6,8 @@ ROOT = ../
 
 DIRS=\
 	hbrun \
-	hbdot \
-	hbdoc \
 	hbtest \
+	hbdoc \
 	hbmake \
 	$(HB_UTILS) \
 

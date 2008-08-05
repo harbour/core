@@ -25,8 +25,6 @@ rem
 
 echo -O2 -I..\..\include -L..\..\lib > build.tmp
 
-echo -ehbdoc.exe >> build.tmp
-
 echo hbdoc.c      >> build.tmp
 echo fclass1.c    >> build.tmp
 echo ffile1.c     >> build.tmp

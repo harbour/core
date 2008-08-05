@@ -43,6 +43,7 @@ Core
 - Changed (incompatible):
   __PLATFORM__Windows -> __PLATFORM__WINDOWS
   __PLATFORM__Linux   -> __PLATFORM__LINUX
+- hbdot functionality merged into hbrun.
 
 Contrib
 =============================

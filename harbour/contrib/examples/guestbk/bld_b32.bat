@@ -8,7 +8,6 @@ rem
 ..\..\..\bin\harbour /n testcgi  /i..\..\..\include\
 
 echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
-echo -eguestbk.exe >> build.tmp
 echo guestbk.c inifiles.c testcgi.c >> build.tmp
 echo hbdebug.lib >> build.tmp
 echo hbvm.lib >> build.tmp

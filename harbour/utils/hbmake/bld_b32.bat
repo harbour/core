@@ -17,8 +17,6 @@ rem
 
 echo -O2 -I..\..\include -L..\..\lib > build.tmp
 
-echo -ehbmake.exe >> build.tmp
-
 echo hbmake.c     >> build.tmp
 echo checks.c     >> build.tmp
 echo fclass1.c    >> build.tmp

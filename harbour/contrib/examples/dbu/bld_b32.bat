@@ -34,7 +34,6 @@ if exist hb_dbu.dif patch -N -i hb_dbu.dif
 ..\..\..\bin\harbour /n %HB_DIR_DBU%\DBUVIEW.PRG /i..\..\..\include\
 
 echo -O2 -I..\..\..\include -L..\..\..\lib > build.tmp
-echo -edbu.exe >> build.tmp
 echo dbu.c     >> build.tmp
 echo dbucopy.c >> build.tmp
 echo dbuedit.c >> build.tmp
