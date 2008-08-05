@@ -5,7 +5,9 @@
 #ifndef HB_CONFIG_H
 #define HB_CONFIG_H
 
-#define PCRE_STATIC
+#if !defined(__EXPORT__)
+   #define PCRE_STATIC
+#endif
 
 #if defined( _MSC_VER )
    #pragma warning( push, 1 )

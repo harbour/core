@@ -8,6 +8,11 @@
 #ifndef ZCONF_H
 #define ZCONF_H
 
+/* Harbour addition */
+#if defined(__EXPORT__) && !defined(ZLIB_DLL)
+   #define ZLIB_DLL
+#endif
+
 /*
  * If you *really* need a unique prefix for all types and library functions,
  * compile with -DZ_PREFIX. The "standard" zlib should be compiled without it.

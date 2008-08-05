@@ -18,6 +18,10 @@
  *
  */
 
+2008-08-05 21:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * harbour/source/hbzlib/zconf.h
+     + Setting ZLIB_DLL if __EXPORT__ is defined.
+
 2008-05-28 18:42 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/hbzlib/zutil.c
   * harbour/source/hbzlib/gzio.c

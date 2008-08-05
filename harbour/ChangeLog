@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-05 21:39 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/hbpcre/_hbconf.h
+   * source/hbzlib/zconf.h
+   * source/hbzlib/ChangeLog
+     ! Fixed to pass down the Harbour DLL creation flag to 
+       integrated 3rd party sources.
+       After this, pcre and zlib public symbols should be 
+       properly exported on Windows platform.
+     ; NOTE: Harbour uses __EXPORT__ to signal DLL creation, 
+             which is not very ideal, so I'd suggest to 
+             switch to HB_DLL in future versions.
+
 2008-08-05 16:29 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/examples/pp/bld_b32.bat
    * contrib/examples/pp/bld_vc.bat
