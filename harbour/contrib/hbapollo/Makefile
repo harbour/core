@@ -6,6 +6,8 @@ ROOT = ../../
 
 LIBNAME=hbapollo
 
+ifneq ($(HB_ARCHITECTURE),dos)
+
 HB_INC_APOLLO_OK += $(foreach d, $(HB_INC_APOLLO), $(if $(wildcard $(d)/Sde61.h),$(d),))
 
 ifneq ($(strip $(HB_INC_APOLLO_OK)),)
@@ -28,6 +30,9 @@ include $(TOP)$(ROOT)config/lib.cf
 install::
 	$(INSTALL_RULE_HEADERS)
 
+else
+include $(TOP)$(ROOT)config/none.cf
+endif
 else
 include $(TOP)$(ROOT)config/none.cf
 endif
