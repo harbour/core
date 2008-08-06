@@ -78,18 +78,18 @@ then
        [ "$HB_COMPILER" = "mingw32" ] || [ "$HB_COMPILER" = "cemgw" ]; then
         mk_hblibso "${hb_root}"
     fi
-    # build fm lib with memory statistic
+    # build hbfm lib with memory statistic
     (cd ${hb_root}/source/vm
     C_USR=${C_USR//-DHB_FM_STATISTICS_OFF/}
     rm -f fm.o
     ${MAKE} -r fm.o
-    ${AR} ${HB_LIB_INSTALL}/libfm.a fm.o
-    [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libfm.a
+    ${AR} ${HB_LIB_INSTALL}/libhbfm.a fm.o
+    [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libhbfm.a
     rm -f fm.o
     if [ "${HB_MT}" = "MT" ]; then
         ${MAKE} -r fm.o 'HB_LIBCOMP_MT=YES'
-        ${AR} ${HB_LIB_INSTALL}/libfmmt.a fm.o
-        [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libfmmt.a
+        ${AR} ${HB_LIB_INSTALL}/libhbfmmt.a fm.o
+        [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libhbfmmt.a
         rm -f fm.o
     fi
     )

@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-06 17:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+  * harbour/bin/postinst.sh
+    * changed FM lib name to HBFM
+
+  * harbour/bin/hb-mkslib.sh
+    * respect L_USR also in Windows builds
+
 2008-08-06 16:14 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbapollo/Makefile
    * contrib/hbapollo/apollo.c

@@ -132,7 +132,7 @@ elif [ "${SLIB_EXT}" = ".dll" ]; then
         SYSLIBS="-luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32"
         SYSLIBS="${SYSLIBS} -loleaut32 -luuid -lmpr -lwsock32 -lws2_32 -lmapi32"
     fi
-    ${CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${SYSLIBS} ${HB_DLLIBS} && \
+    ${CCPREFIX}gcc -shared -o "${FULLNAME}" $OBJLST ${linker_options} ${L_USR} ${SYSLIBS} ${HB_DLLIBS} && \
         cd "${dir}" && \
         rm -f "${DSTDIR}${FULLNAME}" && \
         mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}"

@@ -488,7 +488,7 @@ l="mainwin"
 [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
 [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
 
-l="fm"
+l="hbfm"
 [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
 if [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && \\
    ( [ -n "\${HB_FM_REQ}" ] || [ "\${HB_STATIC}" = "yes" ] ) && \\
@@ -641,7 +641,7 @@ mk_hblibso()
     for l in ${hb_libs}
     do
         case $l in
-            hbdebug|profiler|fm|hbodbc|gtalleg|rddads) ;;
+            hbdebug|profiler|hbfm|hbodbc|gtalleg|rddads) ;;
             *)
                 ls="lib${l}.a"
                 if [ -f lib${l}mt.a ]
