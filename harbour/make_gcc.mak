@@ -342,6 +342,9 @@ $(PCRE_LIB)     : $(PCRE_LIB_OBJS)
 $(HBZLIB_LIB)   : $(HBZLIB_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************
+$(HBEXTERN_LIB) : $(HBEXTERN_LIB_OBJS)
+	$(MKLIB) $(ARFLAGS) $@ $^
+#**********************************************************
 $(RDD_LIB)      : $(RDD_LIB_OBJS)
 	$(MKLIB) $(ARFLAGS) $@ $^
 #**********************************************************

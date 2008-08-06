@@ -52,7 +52,14 @@
 
 #include "inkey.ch"
 #include "setcurs.ch"
-#include "hbextern.ch"
+
+/* NOTE: use hbextern library instead of #include "hbextern.ch"
+ *       in dynamic builds it will greatly reduce the size because
+ *       all function symbols will be registered by harbour shared
+ *       library (.dll, .so, .sl, .dyn, ...) not by this code
+ */
+
+REQUEST __HB_EXTERN__
 
 #define HB_HISTORY_LEN 32
 #define HB_LINE_LEN    256

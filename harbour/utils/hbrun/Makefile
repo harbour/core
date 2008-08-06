@@ -14,6 +14,7 @@ PRG_SOURCES=\
 PRG_MAIN=hbrun.prg
 
 LIBS=\
+	hbextern \
 	hbdebug \
 	hbvm \
 	hbrtl \

@@ -74,8 +74,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    BOOL fQuoted;
    int iErrorCode;
 
-   HB_SYMBOL_UNUSED( hPrevInstance );
-   HB_SYMBOL_UNUSED( iCmdShow );
+   /* HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow)); */
 
    GetModuleFileName( hInstance, s_lpAppName, MAX_PATH );
    HB_TCHAR_GETFROM( s_szAppName, s_lpAppName, MAX_PATH );
@@ -126,7 +125,18 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    HB_TCHAR_FREE( pFree );
 #endif
 
+#if defined( HB_VM_STARTUP )
+   hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
+   hb_cmdargInit( s_argc, s_argv );
+
+   hb_vmInit( TRUE );
+   iErrorCode = hb_vmQuit();
+#else
+   HB_SYMBOL_UNUSED( hPrevInstance );
+   HB_SYMBOL_UNUSED( iCmdShow );
+
    iErrorCode = main( s_argc, s_argv );
+#endif
 
    LocalFree( pArgs );
 

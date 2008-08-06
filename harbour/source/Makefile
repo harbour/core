@@ -31,6 +31,7 @@ DIRS=\
 	codepage \
 	lang \
 	rdd \
+	hbextern \
 	hbpcre \
 	hbzlib \
 	debug \

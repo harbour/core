@@ -87,6 +87,17 @@ static void hb_pp_Disp( void * cargo, const char * szMessage )
    HB_SYMBOL_UNUSED( szMessage );
 }
 
+static BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
+                                  int iValue )
+{
+   /* ignore all compiler switches */
+   HB_SYMBOL_UNUSED( cargo );
+   HB_SYMBOL_UNUSED( szSwitch );
+   HB_SYMBOL_UNUSED( iValue );
+
+   return FALSE;
+}
+
 /* PP destructor */
 static HB_GARBAGE_FUNC( hb_pp_Destructor )
 {
@@ -151,7 +162,8 @@ HB_FUNC( __PP_INIT )
       ppItem = hb_itemPutPtrGC( NULL, ( void * ) pStatePtr );
 
       hb_pp_init( pState, TRUE, 0, NULL, NULL, NULL,
-                  hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL, NULL );
+                  hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL,
+                  hb_pp_CompilerSwitch );
 
       if( szPath )
          hb_pp_addSearchPath( pState, szPath, TRUE );

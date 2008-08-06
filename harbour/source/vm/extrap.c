@@ -70,6 +70,16 @@
 #include "hbapierr.h"
 #include "hbset.h"
 
+#if defined( HB_OS_UNIX )
+#  include <unistd.h>
+#  include <signal.h>
+#  if defined( SIGSTKSZ ) && \
+      ( ( defined( _BSD_SOURCE ) && _BSD_SOURCE ) || \
+        ( defined( _XOPEN_SOURCE ) && _XOPEN_SOURCE >= 500 ) )
+#     define HB_SIGNAL_EXCEPTION_HANDLER
+#  endif
+#endif
+
 #if defined(HB_OS_WIN_32) && !defined(HB_WINCE)
 
 LONG WINAPI hb_win32ExceptionHandler( struct _EXCEPTION_POINTERS * pExceptionInfo )
@@ -249,6 +259,48 @@ ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       p1,
    return XCPT_CONTINUE_SEARCH;          /* Exception not resolved... */
 }
 
+#elif defined( HB_SIGNAL_EXCEPTION_HANDLER )
+
+static void hb_signalExceptionHandler( int sig, siginfo_t * si, void * ucp )
+{
+   char buffer[ 32 ];
+   char *signame;
+   char *sigaddr;
+
+   HB_SYMBOL_UNUSED( ucp );
+
+   switch( sig )
+   {
+      case SIGSEGV:
+         signame = "SIGSEGV";
+         snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+         sigaddr = buffer;
+         break;
+      case SIGILL:
+         signame = "SIGILL";
+         snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+         sigaddr = buffer;
+         break;
+      case SIGFPE:
+         signame = "SIGFPE";
+         snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+         sigaddr = buffer;
+         break;
+      case SIGBUS:
+         signame = "SIGBUS";
+         snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+         sigaddr = buffer;
+         break;
+      default:
+         snprintf( buffer, sizeof( buffer ), "sig:%d", sig );
+         signame = buffer;
+         sigaddr = "UNKNOWN";
+         break;
+   }
+
+   hb_errInternal( 6005, "Exception %s at address %s", signame, sigaddr );
+}
+
 #endif
 
 void hb_vmSetExceptionHandler( void )
@@ -267,6 +319,29 @@ void hb_vmSetExceptionHandler( void )
       rc = DosSetExceptionHandler( &s_regRec );
       if( rc != NO_ERROR )
          hb_errInternal( HB_EI_ERRUNRECOV, "Unable to setup exception handler (DosSetExceptionHandler())", NULL, NULL );
+   }
+#elif defined( HB_SIGNAL_EXCEPTION_HANDLER )
+   {
+      stack_t ss;
+      ss.ss_sp = ( void * ) malloc( SIGSTKSZ );
+      ss.ss_size = SIGSTKSZ;
+      ss.ss_flags = 0;
+      /* set alternative stack for SIGSEGV executed on stack overflow */
+      if( sigaltstack( &ss, NULL ) == 0 )
+      {
+         struct sigaction act;
+         int i, sigs[] = { SIGSEGV, SIGILL, SIGFPE, SIGBUS, 0 };
+
+         /* Ignore SIGPIPEs so they don't kill us. */
+         signal( SIGPIPE, SIG_IGN );
+         for( i = 0; sigs[ i ]; ++i )
+         {
+            sigaction( sigs[ i ], 0, &act );
+            act.sa_sigaction = hb_signalExceptionHandler;
+            act.sa_flags = SA_ONSTACK | SA_SIGINFO | SA_RESETHAND;
+            sigaction( sigs[ i ], &act, 0 );
+         }
+      }
    }
 #endif
 }

@@ -2996,19 +2996,19 @@ static HB_GT_FUNCS s_gtCoreFunc =
 static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 
 #if defined(HB_GT_DEFAULT)
-   const char * s_defaultGT = HB_GT_DRVNAME( HB_GT_DEFAULT );
+   HB_EXPORT const char * s_defaultGT = HB_GT_DRVNAME( HB_GT_DEFAULT );
 #elif defined(HB_GT_LIB)
-   const char * s_defaultGT = HB_GT_DRVNAME( HB_GT_LIB );
+   HB_EXPORT const char * s_defaultGT = HB_GT_DRVNAME( HB_GT_LIB );
 #elif defined(HB_OS_LINUX)
-   const char * s_defaultGT = "crs";
+   HB_EXPORT const char * s_defaultGT = "crs";
 #elif defined(HB_OS_WIN_32)
-   const char * s_defaultGT = "win";
+   HB_EXPORT const char * s_defaultGT = "win";
 #elif defined(HB_OS_DOS)
-   const char * s_defaultGT = "dos";
+   HB_EXPORT const char * s_defaultGT = "dos";
 #elif defined(HB_OS_OS2)
-   const char * s_defaultGT = "os2";
+   HB_EXPORT const char * s_defaultGT = "os2";
 #else
-   const char * s_defaultGT = "std";
+   HB_EXPORT const char * s_defaultGT = "std";
 #endif
 
 static const HB_GT_INIT * s_gtInit[ HB_GT_MAX_ ];

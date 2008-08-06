@@ -327,6 +327,13 @@ $(HBZLIB_LIB)   : $(HBZLIB_LIB_OBJS)
 +)
 !
 #**********************************************************
+$(HBEXTERN_LIB) : $(HBEXTERN_LIB_OBJS)
+    IF EXIST "$(HBEXTERN_LIB)" $(DEL) "$(HBEXTERN_LIB)" > NUL
+    $(MKLIB) "$(HBEXTERN_LIB)" $(ARFLAGS) @&&!
++$(**: = &^
++)
+!
+#**********************************************************
 $(RDD_LIB)      :: BasicExes
 $(RDD_LIB)      :: $(RDD_LIB_OBJS)
     IF EXIST "$(RDD_LIB)" $(DEL) "$(RDD_LIB)" > NUL

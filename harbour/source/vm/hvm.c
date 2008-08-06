@@ -228,9 +228,7 @@ static BOOL hb_bTracePrgCalls = FALSE; /* prg tracing is off */
 #  define HB_TRACE_PRG( _TRMSG_ ) if( hb_bTracePrgCalls ) HB_TRACE( HB_TR_ALWAYS, _TRMSG_ )
 #endif
 
-#ifdef HARBOUR_START_PROCEDURE
-   char *s_pszLinkedMain = NULL; /* name of starup function set by linker */
-#endif
+HB_EXPORT const char * s_pszLinkedMain = NULL; /* name of starup function set by linker */
 
 /* virtual machine state */
 
@@ -457,8 +455,14 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
             hb_errInternal( HB_EI_VMBADSTARTUP, NULL, HARBOUR_START_PROCEDURE, NULL );
       }
 #else
+      else if( s_pszLinkedMain )
+      {
+         pDynSym = hb_dynsymFind( s_pszLinkedMain + ( *s_pszLinkedMain == '@' ? 1 : 0 ) );
+         if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
+            s_pSymStart = pDynSym->pSymbol;
+      }
 #ifndef HB_C52_STRICT
-      else if( bStartMainProc && ! s_pSymStart )
+      if( bStartMainProc && ! s_pSymStart )
          hb_errInternal( HB_EI_VMNOSTARTUP, NULL, NULL, NULL );
 #endif
 #endif

@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * Windows applications entry point
+ *    library with all function binding available for .prg code
  *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,20 +50,12 @@
  *
  */
 
-#define HB_OS_WIN_32_USED
+/* NOTE: Please do not add __HB_EXTERN__ symbol to hbextern.ch
+ *       This symbol should be only declared by programmer who
+ *       prefer using hbextern library instead of including
+ *       hbextern.ch file
+ */
 
-#include "hbapi.h"
-#include "hbvm.h"
+ANNOUNCE __HB_EXTERN__
 
-#if defined(HB_OS_WIN_32)
-
-#define HB_VM_STARTUP
-#include "hbwmain.c"
-
-#if ( defined(__WATCOMC__) || defined(__MINGW32__) ) && !defined(__EXPORT__)
-HB_EXTERN_BEGIN
-HB_EXPORT void hb_forceLinkMainWin( void ) {}
-HB_EXTERN_END
-#endif
-
-#endif
+#include "hbextern.ch"

@@ -8,6 +8,50 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-06 13:09 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+  * harbour/source/vm/hvm.c
+  * harbour/source/rtl/hbgtcore.c
+    * added const to s_defaultGT and s_pszLinkedMain declarations
+    * make s_pszLinkedMain visible and functional for platforms
+      which does not use HARBOUR_START_PROCEDURE
+
+  * harbour/source/vm/extrap.c
+    + added exception trap for SIGSEGV, SIGILL, SIGFPE and SIGBUS
+      for *nixes which support sigaltstack()
+
+  * harbour/include/hbwmain.c
+  * harbour/source/vm/mainwin.c
+    * use of WinMain() from hbwmain.c
+
+  * harbour/source/pp/pplib.c
+    * ignore all #pragma directives setting compiler switches instead
+      of generating RT error when user uses PP in .prg code by __PP_*()
+      functions
+
+  * harbour/source/Makefile
+  + harbour/source/hbextern
+  + harbour/source/hbextern/hbextern.prg
+  + harbour/source/hbextern/Makefile
+  * harbour/common.mak
+  * harbour/make_b32.mak
+  * harbour/make_gcc.mak
+  * harbour/make_vc.mak
+  * harbour/make_vcce.mak
+  * harbour/bin/hb-func.sh
+    + added hbextern library
+    + added hbextern to harbour shared library. Now all functions
+      are registered and visible for dynamically linked applications
+      not only .prg ones and .c functions explicitly bound with some
+      .prg code
+
+  * harbour/utils/hbrun/Makefile
+  * harbour/utils/hbrun/hbrun.prg
+    * use hbextern library instead of #include "hbextern.ch"
+      It has no noticeable effect on static builds but greatly
+      reduce the size of dynamic builds, f.e. current hbrun
+      linked dynamically in my Linux box has 12KB.
+
 2008-08-06 12:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * common.mak
      - Excluded hbdebug.lib from non-GNU make made harbour*.dlls.

@@ -118,6 +118,7 @@ LANG_DIR     = source\lang
 CODEPAGE_DIR = source\codepage
 PCRE_DIR     = source\hbpcre
 HBZLIB_DIR   = source\hbzlib
+HBEXTERN_DIR = source\hbextern
 RDD_DIR      = source\rdd
 NULSYS_DIR   = source\rdd\nulsys
 DBFNTX_DIR   = source\rdd\dbfntx
@@ -162,6 +163,7 @@ $(LANG_DIR);\
 $(CODEPAGE_DIR);\
 $(PCRE_DIR);\
 $(HBZLIB_DIR);\
+$(HBEXTERN_DIR);\
 $(RDD_DIR);\
 $(NULSYS_DIR);\
 $(DBFNTX_DIR);\
@@ -216,6 +218,7 @@ LANG_LIB     = $(LIB_DIR)\$(LIBPREF)hblang$(LIBEXT)
 CODEPAGE_LIB = $(LIB_DIR)\$(LIBPREF)hbcpage$(LIBEXT)
 PCRE_LIB     = $(LIB_DIR)\$(LIBPREF)hbpcre$(LIBEXT)
 HBZLIB_LIB   = $(LIB_DIR)\$(LIBPREF)hbzlib$(LIBEXT)
+HBEXTERN_LIB = $(LIB_DIR)\$(LIBPREF)hbextern$(LIBEXT)
 RDD_LIB      = $(LIB_DIR)\$(LIBPREF)hbrdd$(LIBEXT)
 HBSIX_LIB    = $(LIB_DIR)\$(LIBPREF)hbsix$(LIBEXT)
 HSX_LIB      = $(LIB_DIR)\$(LIBPREF)hbhsx$(LIBEXT)
@@ -296,6 +299,7 @@ STANDARD_STATIC_HBLIBS = \
     $(CODEPAGE_LIB)      \
     $(PCRE_LIB)          \
     $(HBZLIB_LIB)        \
+    $(HBEXTERN_LIB)      \
     $(RDD_LIB)           \
     $(MACRO_LIB)         \
     $(DEBUG_LIB)         \
@@ -776,6 +780,11 @@ HBZLIB_LIB_OBJS = \
 
 #**********************************************************
 
+HBEXTERN_LIB_OBJS = \
+    $(OBJ_DIR)\hbextern$(OBJEXT)
+
+#**********************************************************
+
 CODEPAGE_LIB_OBJS = \
     $(OBJ_DIR)\cpbg866$(OBJEXT)  \
     $(OBJ_DIR)\cpbgiso$(OBJEXT)  \
@@ -1127,6 +1136,7 @@ TMP_DLL_OBJS = \
     $(CODEPAGE_LIB_OBJS)    \
     $(PCRE_LIB_OBJS)        \
     $(HBZLIB_LIB_OBJS)      \
+    $(HBEXTERN_LIB_OBJS)    \
     $(RDD_LIB_OBJS)         \
     $(DBFNTX_LIB_OBJS)      \
     $(DBFCDX_LIB_OBJS)      \
@@ -1170,6 +1180,7 @@ HB_BUILD_TARGETS = \
     $(CODEPAGE_LIB)         \
     $(PCRE_LIB)             \
     $(HBZLIB_LIB)           \
+    $(HBEXTERN_LIB)         \
     $(RDD_LIB)              \
     $(NULSYS_LIB)           \
     $(DBFNTX_LIB)           \
