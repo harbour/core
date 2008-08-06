@@ -1123,7 +1123,6 @@ TMP_DLL_OBJS = \
     $(VM_DLL_OBJS)          \
     $(RTL_LIB_OBJS)         \
     $(MACRO_LIB_OBJS)       \
-    $(DEBUG_LIB_OBJS)       \
     $(LANG_LIB_OBJS)        \
     $(CODEPAGE_LIB_OBJS)    \
     $(PCRE_LIB_OBJS)        \
@@ -1143,6 +1142,7 @@ TMP_DLL_OBJS = \
 #-------------------------
 
 DISABLED_SHARED_MODULES=    \
+    $(DEBUG_LIB_OBJS)       \
     $(NULSYS_LIB_OBJS)      \
     $(GTDOS_LIB_OBJS)       \
 
