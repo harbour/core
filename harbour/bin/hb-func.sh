@@ -441,8 +441,22 @@ else
         pref="lib"
         ext=".so"
     fi
-    [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}mt\${ext}" ] && l="\${l}mt"
-    [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}\${ext}" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
+    if [ "\${HB_MT}" = "MT" ]; then
+        if [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}mt\${ext}" ]; then
+            HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}mt"
+            l=""
+        elif [ -f "\${HB_BIN_INSTALL}/\${pref}\${l}mt\${ext}" ]; then
+            HARBOUR_LIBS="\${HARBOUR_LIBS} -L\${HB_BIN_INSTALL} -l\${l}mt"
+            l=""
+        fi
+    fi
+    if [ -n "\${l}" ]; then
+        if [ -f "\${HB_LIB_INSTALL}/\${pref}\${l}\${ext}" ]; then
+            HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
+        elif [ -f "\${HB_BIN_INSTALL}/\${pref}\${l}\${ext}" ]; then
+            HARBOUR_LIBS="\${HARBOUR_LIBS} -L\${HB_BIN_INSTALL} -l\${l}"
+        fi
+    fi
     libs="gtalleg hbdebug profiler ${hb_libsc}"
 fi
 for l in \${libs}
@@ -611,8 +625,9 @@ EOF
 
 mk_hblibso()
 {
-    local LIBS LIBSMT l lm ll hb_rootdir hb_ver hb_libs full_lib_name full_lib_name_mt linker_options
+    local LIBS LIBSMT l lm ll dir hb_rootdir hb_ver hb_libs full_lib_name full_lib_name_mt linker_options
 
+    dir=`pwd`
     name=`get_solibname`
     hb_rootdir="${1-.}"
 
@@ -688,15 +703,16 @@ mk_hblibso()
     do
         if [ -f $l ]
         then
-            if [ "${HB_ARCHITECTURE}" = "darwin" ]; then
-                ll=${l%.${hb_ver}${lib_ext}}${lib_ext}
-            elif [ "${HB_ARCHITECTURE}" = "w32" ]; then
-                ll=""
+            if [ "${HB_ARCHITECTURE}" = "w32" ]; then
+                (cd "$dir"
+                mv "${HB_LIB_INSTALL}/$l" "${HB_BIN_INSTALL}")
             else
-                ll=${l%-${hb_ver}${lib_ext}}${lib_ext}
-                ln -sf $l $ll
-            fi
-            if [ -n "$ll" ]; then
+                if [ "${HB_ARCHITECTURE}" = "darwin" ]; then
+                    ll=${l%.${hb_ver}${lib_ext}}${lib_ext}
+                else
+                    ll=${l%-${hb_ver}${lib_ext}}${lib_ext}
+                    ln -sf $l $ll
+                fi
                 case $HB_LIB_INSTALL in
                     */usr/lib/*|*/usr/lib64/*|*/usr/local/lib/*|*/usr/local/lib64/*)
                         ln -sf ${name}/$l ../$ll

@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-06 14:27 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * updated to create harbour.dll in HB_BIN_INSTALL instead of
+      HB_LIB_INSTALL
+    * added to library paths in hb* scripts HB_BIN_INSTALL directory
+      for shared linking when harbour shared library does not exist
+      in HB_LIB_INSTALL but it's present in HB_BIN_INSTALL
+
 2008-08-06 13:09 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
   * harbour/source/vm/hvm.c
