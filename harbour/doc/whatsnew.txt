@@ -2,7 +2,7 @@
  * $Id$
  */
 
-Version 1.0.0 (2008-08-01) tag: 1.0.0
+Version 1.0.0 (2008-08-10) tag: 1.0.0
 
 General
 =============================
@@ -15,6 +15,8 @@ General
 - Portability fixes (Unicode, 64 bit, Pelles C 32/64 bit, WinCE, eVC4, XCC, 
   Linux mouse detection, OpenWatcom).
 - Deployment fixes.
+- harbour.dll related fixes.
+- MinGW bash (msys) build related fixes.
 
 Core
 =============================
@@ -44,6 +46,8 @@ Core
   __PLATFORM__Windows -> __PLATFORM__WINDOWS
   __PLATFORM__Linux   -> __PLATFORM__LINUX
 - hbdot functionality merged into hbrun.
+- *nix exception handler added.
+- Source filename visible in stack traces.
 
 Contrib
 =============================
