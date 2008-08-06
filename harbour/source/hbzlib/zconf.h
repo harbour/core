@@ -9,8 +9,10 @@
 #define ZCONF_H
 
 /* Harbour addition */
-#if defined(__EXPORT__) && !defined(ZLIB_DLL)
-   #define ZLIB_DLL
+#if 0
+   #if defined(__EXPORT__) && !defined(ZLIB_DLL)
+      #define ZLIB_DLL
+   #endif
 #endif
 
 /*

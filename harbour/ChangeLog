@@ -8,6 +8,37 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-06 22:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/hbzlib/zconf.h
+     * Undone previous ZLIB_DLL related change, as it causes these 
+       warnings, when compiled with MSVS:
+       hbzlib.obj : warning LNK4217: locally defined symbol _inflateEnd imported in function _hb_zlibUncompressedSize
+       hbzlib.obj : warning LNK4217: locally defined symbol _inflate imported in function _hb_zlibUncompressedSize
+       hbzlib.obj : warning LNK4217: locally defined symbol _inflateInit_ imported in function _hb_zlibUncompressedSize
+       hbzlib.obj : warning LNK4217: locally defined symbol _zlibVersion imported in function _HB_FUN_HB_ZLIBVERSION
+       hbzlib.obj : warning LNK4217: locally defined symbol _compressBound imported in function _HB_FUN_HB_COMPRESSBOUND
+       hbzlib.obj : warning LNK4217: locally defined symbol _compress imported in function _HB_FUN_HB_COMPRESS
+       hbzlib.obj : warning LNK4217: locally defined symbol _compress2 imported in function _HB_FUN_HB_COMPRESS
+       hbzlib.obj : warning LNK4217: locally defined symbol _uncompress imported in function _HB_FUN_HB_UNCOMPRESS
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzclose imported in function _hb_gz_Destructor
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzopen imported in function _HB_FUN_HB_GZOPEN
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzdopen imported in function _HB_FUN_HB_GZDOPEN
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzsetparams imported in function _HB_FUN_HB_GZSETPARAMS
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzread imported in function _HB_FUN_HB_GZREAD
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzwrite imported in function _HB_FUN_HB_GZWRITE
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzgets imported in function _HB_FUN_HB_GZGETS
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzputs imported in function _HB_FUN_HB_GZPUTS
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzgetc imported in function _HB_FUN_HB_GZGETC
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzungetc imported in function _HB_FUN_HB_GZUNGETC
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzflush imported in function _HB_FUN_HB_GZFLUSH
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzseek imported in function _HB_FUN_HB_GZSEEK
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzrewind imported in function _HB_FUN_HB_GZREWIND
+       hbzlib.obj : warning LNK4217: locally defined symbol _gztell imported in function _HB_FUN_HB_GZTELL
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzeof imported in function _HB_FUN_HB_GZEOF
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzdirect imported in function _HB_FUN_HB_GZDIRECT
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzerror imported in function _HB_FUN_HB_GZERROR
+       hbzlib.obj : warning LNK4217: locally defined symbol _gzclearerr imported in function _HB_FUN_HB_GZCLEARERR
+
 2008-08-06 22:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/compiler/hbusage.c
      + Updated credit list based on contributors 
