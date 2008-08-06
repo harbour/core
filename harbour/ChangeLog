@@ -45,7 +45,7 @@
    * utils/hbmake/bld_b32.bat
      + Cleaning .c and .obj files after the build process.
      ! This is needed to not interfere with the GNU-make system, 
-       which would pickup and try to compiler those temp .c files.
+       which would pickup and try to compile those temp .c files.
 
 2008-08-05 15:23 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/postinst.sh
@@ -105,7 +105,7 @@
 
    + utils/hbdoc/bld_b32.bat
    + utils/hbdoc/bld_vc.bat
-     + Added non-GNU make batch files to build hbmake.
+     + Added non-GNU make batch files to build hbdoc.
      ; This is a step towards detaching hbdoc from core.
 
    * utils/hbdoc/hbdocdef.ch
