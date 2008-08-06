@@ -6,7 +6,7 @@ ROOT = ../../
 
 LIBNAME=hbapollo
 
-HB_INC_APOLLO_OK += $(foreach d, $(HB_INC_APOLLO), $(if $(wildcard $(d)/sde61.h),$(d),))
+HB_INC_APOLLO_OK += $(foreach d, $(HB_INC_APOLLO), $(if $(wildcard $(d)/Sde61.h),$(d),))
 
 ifneq ($(strip $(HB_INC_APOLLO_OK)),)
 

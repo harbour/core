@@ -55,7 +55,7 @@
  * --------------------------------------------------*/
 
 /* NOTE: This hack is needed to suppress 'non-ANSI 
-         keyword' warnings inside sde61.h. */
+         keyword' warnings inside Sde61.h. */
 #if defined( __BORLANDC__ )
    #define _declspec __declspec
 #endif
@@ -65,7 +65,7 @@
 #define MAX_STR_LEN 255
 
 #include "hbapi.h"
-#include "sde61.h"
+#include "Sde61.h"
 
 
 /* -----------------29/12/2001 19:21-----------------
