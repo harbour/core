@@ -368,11 +368,13 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                         break;
 
                      case 'h':
+                     case 'H':
                         /* default Harbour mode */
                         HB_COMP_PARAM->supported |= HB_COMPFLAG_HARBOUR;
                         break;
 
                      case 'c':
+                     case 'C':
                         /* clear all flags - minimal set of features */
                         HB_COMP_PARAM->supported &= HB_COMPFLAG_SHORTCUTS;
                         HB_COMP_PARAM->supported |= HB_COMPFLAG_OPTJUMP |
@@ -380,26 +382,32 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, char *szSwitch )
                         break;
 
                      case 'x':
+                     case 'X':
                         HB_COMP_PARAM->supported |= HB_COMPFLAG_XBASE;
                         break;
 
                      case 'i':
+                     case 'I':
                         HB_COMP_PARAM->supported |= HB_COMPFLAG_HB_INLINE;
                         break;
 
+                     case 'j':
                      case 'J':
                         HB_COMP_PARAM->supported &= ~HB_COMPFLAG_OPTJUMP;
                         break;
 
+                     case 'm':
                      case 'M':
                         HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
                         break;
 
                      case 'r':
+                     case 'R':
                         HB_COMP_PARAM->supported |= HB_COMPFLAG_RT_MACRO;
                         break;
 
                      case 's':
+                     case 'S':
                         HB_COMP_PARAM->supported |= HB_COMPFLAG_ARRSTR;
                         break;
 

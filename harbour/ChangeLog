@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-06 22:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/compiler/hbusage.c
+     + Updated credit list based on contributors 
+       committing ChangeLog entries.
+       If anyone has someone to recommend to add to the list, 
+       please do this on the devl-list.
+
+   * source/compiler/hbusage.c
+   * source/compiler/cmdcheck.c
+     + -k? switches made case-insensitive.
+
 2008-08-06 17:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
      + Updated with recent changes.

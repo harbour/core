@@ -135,8 +135,8 @@ void hb_compPrintModes( HB_COMP_DECL )
            "\n          r               runtime settings enabled",
            "\n          s               allow indexed assignment on all types",
            "\n          x               extended Xbase++ mode",
-           "\n          J               turn off jump optimization in pcode",
-           "\n          M               turn off macrotext substitution",
+           "\n          j               turn off jump optimization in pcode",
+           "\n          m               turn off macrotext substitution",
            "\n          ?               this info",
            "\n"
    };
@@ -154,7 +154,7 @@ void hb_compPrintModes( HB_COMP_DECL )
    int iLine;
 
    hb_compOutStd( HB_COMP_PARAM,
-                  "\nCompatibility flags (lowercase/uppercase significant): -k[options]\n" );
+                  "\nCompatibility flags: -k[options]\n" );
 
    for( iLine = 0; iLine < ( int ) ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
    {
@@ -176,12 +176,13 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Credits:  The Harbour Team at www.harbour-project.org\n"
          "          (replace space with @ in e-mail addresses)\n"
          "\n"
-         "April White <awhite mail.rosecom.ca>\n"
          "Alejandro de Garate <alex_degarate hotmail.com>\n"
+         "Alex Shashkov <shashkov ostu.ru>\n"
          "Alexander S. Kresin <alex belacy.belgorod.su>\n"
          "Andi Jahja <xharbour cbn.net.id>\n"
          "Antonio Carlos Pantaglione <toninho fwi.com.br>\n"
          "Antonio Linares <alinares fivetechsoft.com>\n"
+         "April White <awhite mail.rosecom.ca>\n"
          "Bil Simser <bsimser home.com>\n"
          "Brian Hays <bhays abacuslaw.com>\n"
          "Bruno Cantero <bruno issnet.net>\n"
@@ -194,14 +195,19 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Eddie Runia <eddie runia.com>\n"
          "Enrico Maria Giordano <e.m.giordano emagsoftware.it>\n"
          "Felipe G. Coury <fcoury creation.com.br>\n"
+         "Fernando Mancera <fmancera viaopen.com>\n"
          "Francesco Saverio Giudice <info fsgiudice.com>\n"
          "Giancarlo Niccolai <gc niccolai.ws>\n"
          "Gonzalo A. Diethelm <gonzalo.diethelm iname.com>\n"
+         "Gustavo Junior Alves <alves coslinux.com.br>\n"
          "Hannes Ziegler <hz knowleXbase.com>\n"
          "Horacio D. Roldan Kasimatis <harbour_ar yahoo.com.ar>\n"
          "Ignacio Ortiz de Zuniga <ignacio fivetech.com>\n"
+         "Ilias Lazaridis <ilias lazaridis.com>\n"
+         "Jacek Kubica <kubica wssk.wroc.pl>\n"
          "Janica Lubos <janica fornax.elf.stuba.sk>\n"
          "Jean-Francois Lefebvre (mafact) <jfl mafact.com>\n"
+         "Jorge A. Giraldo <jorgeagiraldo emtelsa.multi.net.co>\n"
          "Jose Lalin <dezac corevia.com>\n"
          "Leslee Griffith <les.griffith vantagesystems.ca>\n"
          "Lorenzo Fiorini <lorenzo_fiorini teamwork.it>\n"
@@ -210,12 +216,14 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Manuel Ruiz <mrt joca.es>\n"
          "Marek Paliwoda <paliwoda inetia.pl>\n"
          "Martin Vogel <vogel inttec.de>\n"
+         "Massimo Belgrano <mbelgrano deltain.it>\n"
          "Matteo Baccan <baccan isanet.it>\n"
          "Matthew Hamilton <mhamilton bunge.com.au>\n"
          "Mauricio Abre <maurifull datafull.com>\n"
          "Maurilio Longo <maurilio.longo libero.it>\n"
          "Miguel Angel Marchuet Frutos <miguelangel marchuet.net>\n"
          "Mindaugas Kavaliauskas <dbtopas dbtopas.lt>\n"
+         "Mitja Podgornik <Yamamoto rocketmail.com>\n"
          "Nicolas del Pozo <niko geroa.com>\n"
          "Patrick Mast <harbour winfakt.com>\n"
          "Paul Tucker <ptucker sympatico.ca>\n"
@@ -224,9 +232,12 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Peter Townsend <cephas tpgi.com.au>\n"
          "Phil Barnett <philb iag.net>\n"
          "Phil Krylov <phil newstar.rinet.ru>\n"
+         "Pritpal Bedi <pritpal vouchcac.com>\n"
          "Przemyslaw Czerpak <druzus priv.onet.pl>\n"
+         "Randy Portnoff <randy palmasdev.com>\n"
          "Ron Pinkas <ron profit-master.com>\n"
          "Ryszard Glab <rglab imid.med.pl>\n"
+         "Teo Fonrouge <teo windtelsoft.dot.com>\n"
          "Tim Stone <timstone mstrlink.com>\n"
          "Toma¾ Zupan <tomaz.zupan orpo.si>\n"
          "Viktor Szakats <harbour.01 syenar.hu>\n"
