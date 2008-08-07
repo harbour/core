@@ -507,7 +507,7 @@ HB_FUNC( SQLSETCONNECTOPTION ) /* hDbc, nOption, uOption */
    hb_retni( SQLSetConnectAttr( ( SQLHDBC ) hb_parptr( 1 ),
                                 ( SQLINTEGER ) hb_parnl( 2 ),
                                 ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnl( 3 ), 
-                                ( SQLINTEGER ) ISCHAR( 3 ) ? hb_parclen( 3 ) : SQL_IS_INTEGER ) );
+                                ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 }
 
 HB_FUNC( SQLSETSTMTOPTION ) /* hStmt, nOption, uOption )  --> nRetCode */
@@ -515,7 +515,7 @@ HB_FUNC( SQLSETSTMTOPTION ) /* hStmt, nOption, uOption )  --> nRetCode */
    hb_retni( SQLSetStmtAttr( ( SQLHSTMT ) hb_parptr( 1 ),
                              ( SQLINTEGER ) hb_parnl( 2 ),
                              ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnl( 3 ), 
-                             ( SQLINTEGER ) ISCHAR( 3 ) ? hb_parclen( 3 ) : SQL_IS_INTEGER ) );
+                             ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 }
 
 HB_FUNC( SQLGETCONNECTOPTION ) /* hDbc, nOption, @cOption */
