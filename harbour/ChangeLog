@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 14:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+    ! set HB_XBUILD evvar
+  * harbour/bin/hb-func.sh
+    ! do not move harbour.dll to HB_BIN_INSTALL directory when
+      HB_XBUILD envvar is set
+
+  * harbour/source/hbzlib/deflate.c
+    * pacified warning
+
 2008-08-07 14:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbver.h
      - Removed reference to hbverfix.

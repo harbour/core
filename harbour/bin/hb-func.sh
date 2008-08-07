@@ -704,8 +704,10 @@ mk_hblibso()
         if [ -f $l ]
         then
             if [ "${HB_ARCHITECTURE}" = "w32" ]; then
-                (cd "$dir"
-                mv "${HB_LIB_INSTALL}/$l" "${HB_BIN_INSTALL}")
+                if [ "${HB_XBUILD}" = "" ]; then
+                   (cd "$dir"
+                   mv "${HB_LIB_INSTALL}/$l" "${HB_BIN_INSTALL}")
+                fi
             else
                 if [ "${HB_ARCHITECTURE}" = "darwin" ]; then
                     ll=${l%.${hb_ver}${lib_ext}}${lib_ext}

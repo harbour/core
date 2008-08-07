@@ -353,7 +353,7 @@ int ZEXPORT deflateSetDictionary (
     for (n = 0; n <= length - MIN_MATCH; n++) {
         INSERT_STRING(s, n, hash_head);
     }
-    (void)(hash_head); /* to make compiler happy */
+    if (hash_head) {;}   /* to make compiler happy */
     return Z_OK;
 }
 

@@ -112,6 +112,7 @@ export CCPREFIX="%{hb_ccpref}"
 export PATH="$CCPATH$PATH"
 
 export HB_MT=no
+export HB_XBUILD=w32
 export HB_GT_LIB=gtwin
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
@@ -143,6 +144,7 @@ export HB_HOST_BUILD=lib
 export HB_ARCHITECTURE=w32
 export HB_COMPILER=mingw32
 export HB_MT=no
+export HB_XBUILD=w32
 export HB_GT_LIB=gtwin
 export HB_BIN_INSTALL=%{_bindir}
 export HB_INC_INSTALL=%{_includedir}/%{name}
