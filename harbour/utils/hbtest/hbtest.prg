@@ -102,7 +102,7 @@ STATIC s_nEndTime
 PROCEDURE Main( cPar1, cPar2 )
 
    OutStd( "Harbour Regression Test Suite" + HB_OSNewLine() +;
-           "Copyright 1999-2008, http://www.harbour-project.org" + HB_OSNewLine() )
+           "Copyright (c) 1999-2008, http://www.harbour-project.org/" + HB_OSNewLine() )
 
    IF cPar1 == NIL
       cPar1 := ""
@@ -119,9 +119,9 @@ PROCEDURE Main( cPar1, cPar2 )
       OutStd( HB_OSNewLine() +;
               "Syntax:  hbtest [options]" + HB_OSNewLine() +;
               HB_OSNewLine() +;
-              "Options:  /h, /?        Display this help." + HB_OSNewLine() +;
-              "          /all          Display all tests, not only the failures." + HB_OSNewLine() +;
-              "          /skip:<list>  Skip the listed test numbers." + HB_OSNewLine() )
+              "Options:  -h, -?        Display this help." + HB_OSNewLine() +;
+              "          -all          Display all tests, not only the failures." + HB_OSNewLine() +;
+              "          -skip:<list>  Skip the listed test numbers." + HB_OSNewLine() )
 
       RETURN
    ENDIF

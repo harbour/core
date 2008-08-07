@@ -5870,25 +5870,24 @@ FUNCTION ShowHelp()
       OutStd( HbMake_ID() + HB_OSNewLine() +;
               HbMake_Copyright() + HB_OSNewLine() +;
               HB_OSNewLine() +;
-              "Syntax:  hbmake <makefile> [switches]" + HB_OSNewLine() +;
+              "Syntax:  hbmake <makefile> [options]" + HB_OSNewLine() +;
               HB_OSNewLine() +;
-              "Switches:" + HB_OSNewLine() +;
-              "  -b   Use BCC as the C compiler. This options is default under Win32" + HB_OSNewLine() +;
-              "  -g   Use GCC as the C compiler. This options is default under OS/2" + HB_OSNewLine() +;
-              "  -gl  Use GCC as the C compiler on Linux" + HB_OSNewLine() +;
-              "  -v   Use MSVC as the C compiler" + HB_OSNewLine() +;
-              "  -D   Define a macro. Multiple macros can be used in a single line" + HB_OSNewLine() +;
-              "       Ex: -DOBJ=c.obj;d.obj" + HB_OSNewLine() +;
-              "           Multiple -D is also supported" + HB_OSNewLine() +;
-              "  -p   Print all commands and defines" + HB_OSNewLine() +;
-              "  -f   Force all files to be rebuilt" + HB_OSNewLine() +;
-              "  -e   Open the editor mode" + HB_OSNewLine() +;
-              "  -ec  create/edit and compile (only for a unique prg)" + HB_OSNewLine() +;
-              "  -ex  Open the editor mode in extended mode" + HB_OSNewLine() +;
-              "  -el  Open the editor mode for creating libraries" + HB_OSNewLine() +;
-              "  -elx Open the editor mode for creating libraries in extended mode" + HB_OSNewLine() +;
-              "  -i   Ignore errors returned by commands" + HB_OSNewLine() +;
-              "  -r   Recurse directories for source code" + HB_OSNewLine() +;
+              "Options:  -b   Use BCC as the C compiler. This options is default under Win32" + HB_OSNewLine() +;
+              "          -g   Use GCC as the C compiler. This options is default under OS/2" + HB_OSNewLine() +;
+              "          -gl  Use GCC as the C compiler on Linux" + HB_OSNewLine() +;
+              "          -v   Use MSVC as the C compiler" + HB_OSNewLine() +;
+              "          -D   Define a macro. Multiple macros can be used in a single line" + HB_OSNewLine() +;
+              "               Ex: -DOBJ=c.obj;d.obj" + HB_OSNewLine() +;
+              "                   Multiple -D is also supported" + HB_OSNewLine() +;
+              "          -p   Print all commands and defines" + HB_OSNewLine() +;
+              "          -f   Force all files to be rebuilt" + HB_OSNewLine() +;
+              "          -e   Open the editor mode" + HB_OSNewLine() +;
+              "          -ec  create/edit and compile (only for a unique prg)" + HB_OSNewLine() +;
+              "          -ex  Open the editor mode in extended mode" + HB_OSNewLine() +;
+              "          -el  Open the editor mode for creating libraries" + HB_OSNewLine() +;
+              "          -elx Open the editor mode for creating libraries in extended mode" + HB_OSNewLine() +;
+              "          -i   Ignore errors returned by commands" + HB_OSNewLine() +;
+              "          -r   Recurse directories for source code" + HB_OSNewLine() +;
               HB_OSNewLine() +;
               "Note:  Linked with " + Version() + HB_OSNewLine() )
 
@@ -5897,12 +5896,12 @@ RETURN NIL
 *-------------------
 FUNCTION HbMake_ID()
 *-------------------
-RETURN ( "HBMake v"+s_cHbMakeVersion+" - Harbour Make Utility")
+RETURN "Harbour Make Utility " + s_cHbMakeVersion
 
 *--------------------------
 FUNCTION HbMake_Copyright()
 *--------------------------
-RETURN ( "Copyright (C) 2000-2008 Harbour project - http://www.harbour-project.org")
+RETURN "Copyright (c) 2000-2008, http://www.harbour-project.org/"
 
 *---------------------
 FUNCTION ShowCredits()
