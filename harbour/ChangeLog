@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 12:23 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/source/rtl/achoice.prg
+    * Corrected behavior of K_LDBLCLK and K_LBUTTONDOWN.
+
 2008-08-07 18:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/achoice.prg
      * Minor changes to mouse support. TOFIX/TODO added.

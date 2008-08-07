@@ -44,6 +44,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
    LOCAL bAction
    LOCAL cKey
+   LOCAL nAux
 
    LOCAL bSelect   := { | x, y | iif( ISLOGICAL( x ), x, iif( !Empty( x ), ( y := &( x ), iif( ISLOGICAL( y ), y, .T. ) ), .T.) ) }
 
@@ -159,12 +160,18 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          nPos      := 0
          lFinished := .T.
 
-      CASE nKey == K_LBUTTONDOWN
-         /* TOFIX: Position to line under mouse cursor. */
-
-      CASE nKey == K_LDBLCLK
-         /* TOFIX: Position to line under mouse cursor and select it. */
-         Keyboard( Chr( K_ENTER ) )
+      CASE nKey == K_LDBLCLK .OR. nKey == K_LBUTTONDOWN
+         nAux := HitTest( nTop, nLeft, nBottom, nRight, MRow(), MCol() )
+         IF ( nAux != 0 ) .AND. ( ( nNewPos := nAtTop + nAux - 1 ) <= nItems ) 
+            IF Eval( bSelect, alSelect[ nNewPos ] )
+               DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, Eval( bSelect, alSelect[ nPos ] ), .F., nNumCols )
+               nPos := nNewPos
+               DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, Eval( bSelect, alSelect[ nPos ] ), .T., nNumCols )
+               IF nKey == K_LDBLCLK
+                  Keyboard( Chr( K_ENTER ) )
+               ENDIF
+            ENDIF
+         ENDIF
 
 #ifdef HB_C52_STRICT
       CASE nKey == K_UP
