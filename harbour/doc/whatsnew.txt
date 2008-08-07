@@ -48,6 +48,7 @@ Core
 - hbdot functionality merged into hbrun.
 - *nix exception handler added.
 - Source filename visible in stack traces.
+- ACHOICE() mouse support added.
 
 Contrib
 =============================
