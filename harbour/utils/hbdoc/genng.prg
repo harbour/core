@@ -210,7 +210,7 @@ FUNCTION ProcessiNg()
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          cBuffer := STRTRAN( cBuffer, CHR( 10 ), "" )
          nLineCnt ++
-         IF nLineCnt % 10 = 0
+         IF nLineCnt % 10 == 0
             @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
@@ -296,7 +296,7 @@ FUNCTION ProcessiNg()
                FOR j := 1 TO LEN( cTemp )
                   cChar := SUBSTR( cTemp, j, 1 )
                   IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
+                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar == "_"
                      cFileName += cChar
                   ENDIF
                NEXT
@@ -313,7 +313,7 @@ FUNCTION ProcessiNg()
                      //  This will break if there are more than 10 files with the same first
                      //  seven characters. We take our chances.
 
-                     IF LEN( cFileName ) = 21
+                     IF LEN( cFileName ) == 21
                         cFileName := STUFF( cFileName, 21, 1, STR( nCount, 1, 0 ) )
                      ELSE
                         cFileName += STR( nCount, 1, 0 )
@@ -497,7 +497,7 @@ FUNCTION ProcessiNg()
 
                      nMode     := D_EXAMPLE
                      lAddBlank := .T.
-                     lPar      := .t.
+                     lPar      := .T.
                   ENDIF
                ELSEIF AT( cStatus, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
@@ -514,7 +514,7 @@ FUNCTION ProcessiNg()
 
                      nMode     := D_COMPLIANCE
                      lAddBlank := .T.
-                     lPar      := .t.
+                     lPar      := .T.
                   ENDIF
                ELSEIF AT( cPlat, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
@@ -525,7 +525,7 @@ FUNCTION ProcessiNg()
 
                      nMode     := D_NORMAL
                      lAddBlank := .T.
-                     lPar      := .t.
+                     lPar      := .T.
                   ENDIF
                ELSEIF AT( cFiles, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
@@ -536,7 +536,7 @@ FUNCTION ProcessiNg()
 
                      nMode     := D_NORMAL
                      lAddBlank := .T.
-                     lPar      := .t.
+                     lPar      := .T.
                   ENDIF
                ELSEIF AT( cFunction, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
@@ -546,7 +546,7 @@ FUNCTION ProcessiNg()
                      //                  ENDIF
                      oNgi:WriteParBold( " Functions" )
 
-                     lPar      := .t.
+                     lPar      := .T.
                      nMode     := D_NORMAL
                      lAddBlank := .T.
                   ENDIF
@@ -563,7 +563,7 @@ FUNCTION ProcessiNg()
                ELSE
                   //  translate any \$ into $
                   cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
+                  IF nMode == D_SYNTAX
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "Syntax", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -576,7 +576,7 @@ FUNCTION ProcessiNg()
                         cbuFfer := '<par><b>' + cBuffer + '</b></par>'
                      ENDIF
                      procngdesc( cbuffer, oNgi, "Syntax" )
-                  ELSEIF nMode = D_ARG
+                  ELSEIF nMode == D_ARG
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -584,14 +584,14 @@ FUNCTION ProcessiNg()
                      lBlankLine := EMPTY( cBuffer )
 
                      procngdesc( cbuffer, oNgi, "Arguments" )
-                  ELSEIF nMode = D_EXAMPLE
+                  ELSEIF nMode == D_EXAMPLE
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      ProcNgDesc( cBuffer, oNgi, "Example" )
-                  ELSEIF nMode = D_DESCRIPTION
+                  ELSEIF nMode == D_DESCRIPTION
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -599,14 +599,14 @@ FUNCTION ProcessiNg()
                      lBlankLine := EMPTY( cBuffer )
                      ProcNgDesc( cBuffer, oNgi, "Description" )
 
-                  ELSEIF nMode = D_NORMAL
+                  ELSEIF nMode == D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      ProcNgDesc( cBuffer, oNgi )
-                  ELSEIF nMode = D_COMPLIANCE
+                  ELSEIF nMode == D_COMPLIANCE
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -614,13 +614,13 @@ FUNCTION ProcessiNg()
                      lBlankLine := EMPTY( cBuffer )
                      ProcNgDesc( cBuffer, oNgi, "Compliance" )
 
-                  ELSEIF nMode = D_SEEALSO
+                  ELSEIF nMode == D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
                         cSeeAlso := ProcNgiAlso( StripFiles( ALLTRIM( cBuffer ) ) )
                      ENDIF
-                  ELSEIF nMode = D_INCLUDE
+                  ELSEIF nMode == D_INCLUDE
                      //  read next line
-                  ELSEIF nMode = D_STATUS
+                  ELSEIF nMode == D_STATUS
                      IF !EMPTY( cBuffer )
                         oNgi:WriteParBold( "Status" )
                      ENDIF
@@ -695,7 +695,7 @@ FUNCTION ProcNgiInput()
    LOCAL nYhandle := FCREATE( 'ngi\funcn_.txt' )
    LOCAL xY       := "!Short:"
    LOCAL cSee     := "!seealso:"
-   LOCAL lEof     := .f.
+   LOCAL lEof     := .F.
    LOCAL cBuffer
    SET CONSOLE ON
    afiles := DIRECTORY( "ngi\*.*" )
@@ -726,7 +726,7 @@ FUNCTION ProcNgiInput()
             ENDIF
          ENDIF
       END
-      lEof := .f.
+      lEof := .F.
       FT_FUSE()
    NEXT
 
@@ -768,7 +768,7 @@ FUNCTION ProcNgiInput()
       //    cBuffer:=strtran(cBuffer,chr(10),"")
       FWRITE( nXhandle, cBuffer + pCRLF )
 
-      lEof  := .f.
+      lEof  := .F.
       aalso := {}
       FT_FUSE()
    NEXT
@@ -813,28 +813,28 @@ FUNCTION ProcNgiInput()
       //    cBuffer:=strtran(cBuffer,chr(10),"")
       FWRITE( nYhandle, cBuffer + pCRLF )
 
-      lEof  := .f.
+      lEof  := .F.
       aAlso := {}
 
-      lEof := .f.
+      lEof := .F.
       FT_FUSE()
    NEXT
 
    FCLOSE( nYhandle )
-   lEof := .f.
+   lEof := .F.
 
    y := FCREATE( 'ngi\comm.txt' )
    ASORT( acfiles )
    FOR x := 1 TO LEN( acfiles )
       cFile := acfiles[ x ]
-      IF UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "LICENSE" ;
-                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "OVERVIEW" ;
-                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "COMPILEROPTIONS" ;
-                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "GNULICENSE" ;
-                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "GNULICENSEPART2";
-                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "STRONGTYPING";
-                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "THEGARBAGECOLLECTOR" ;
-                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) <> "THEIDLESTATES"
+      IF UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) != "LICENSE" ;
+                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) != "OVERVIEW" ;
+                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) != "COMPILEROPTIONS" ;
+                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) != "GNULICENSE" ;
+                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) != "GNULICENSEPART2";
+                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) != "STRONGTYPING";
+                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) != "THEGARBAGECOLLECTOR" ;
+                .AND. UPPER( LEFT( cFile, AT( '.', cFile ) - 1 ) ) != "THEIDLESTATES"
          @ INFILELINE, 33 SAY PAD( cfile, 47 )         
 
          FT_FUSE( "ngi\" + acfiles[ x ] )
@@ -872,11 +872,11 @@ FUNCTION ProcNgiInput()
 
          ENDIF
       ENDIF
-      lEof  := .f.
+      lEof  := .F.
       aAlso := {}
       FT_FUSE()
    NEXT
-   lEof := .f.
+   lEof := .F.
    FCLOSE( y )
 RETURN NIL
 
@@ -906,7 +906,7 @@ FUNCTION procngialso2( cSeealso )
          nPos := AT( "()", xAlso[ hPos ] )
          IF nPos > 0
             AADD( aAlso, "funcam.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
-         ELSEIF nPos = 0 .AND. UPPER( xAlso[ hPos ] ) <> "LICENSE" .AND. UPPER( xAlso[ hPos ] ) <> "OVERVIEW" .AND. !EMPTY( xAlso[ hPos ] )
+         ELSEIF nPos == 0 .AND. UPPER( xAlso[ hPos ] ) != "LICENSE" .AND. UPPER( xAlso[ hPos ] ) != "OVERVIEW" .AND. !EMPTY( xAlso[ hPos ] )
             AADD( aAlso, "Comm.ngo:" + ALLTRIM( xAlso[ hPos ] ) + ' ' )
          ENDIF
       ENDIF
@@ -953,7 +953,7 @@ FUNCTION GenNgTable( oNgi )
    LOCAL x
    LOCAL nMax
    LOCAL nSpace
-   LOCAL lCar        := .f.
+   LOCAL lCar        := .F.
    LOCAL nMax2
    LOCAL nSpace2
    LOCAL nPos1
@@ -1288,7 +1288,7 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
    LOCAL lArgBold      := .F.
    DEFAULT cStyle TO "Default"
 
-   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle <> "Example"
+   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example"
       cBuffer := '<par>' + cBuffer
    ENDIF
 
@@ -1297,8 +1297,8 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
 
    ENDIF
 
-   IF cStyle <> "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) = 0
-      IF AT( "<par>", cBuffer ) >= 0 .OR. AT( "</par>", cBuffer ) = 0 .AND. !EMPTY( cbuffer )
+   IF cStyle != "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) == 0
+      IF AT( "<par>", cBuffer ) >= 0 .OR. AT( "</par>", cBuffer ) == 0 .AND. !EMPTY( cbuffer )
          IF AT( "<par>", cBuffer ) > 0 .AND. AT( "</par>", cBuffer ) > 0
             IF cStyle == "Arguments"
 
@@ -1313,7 +1313,7 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
                IF AT( "@", cOldLine ) > 0 .OR. AT( "()", cOldLine ) > 0 .OR. AT( "<", cOldLine ) > 0 .OR. AT( "_", cOldLine ) > 0
                   lArgBold := .T.
                ELSE
-                  lArgBold := .f.
+                  lArgBold := .F.
                ENDIF
 
                //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
@@ -1496,7 +1496,7 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
    ENDIF
 
    IF AT( '<fixed>', cBuffer ) > 0 .OR. cStyle = "Example"
-      IF AT( '<fixed>', cBuffer ) = 0 .OR. !EMPTY( cBuffer )
+      IF AT( '<fixed>', cBuffer ) == 0 .OR. !EMPTY( cBuffer )
          cBuffer := STRTRAN( cBuffer, "<par>", "" )
          cBuffer := STRTRAN( cBuffer, "<fixed>", "" )
 
@@ -1505,15 +1505,15 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
       DO WHILE !lendFixed
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</fixed>", cLine ) > 0
-            lendfixed := .t.
+            lendfixed := .T.
             cLine     := STRTRAN( cLine, "</fixed>", "" )
          ENDIF
-         IF AT( DELIM, cLine ) = 0
+         IF AT( DELIM, cLine ) == 0
             cReturn += ALLTRIM( cLine ) + ' '
          ENDIF
          IF AT( DELIM, cLine ) > 0
             FT_FSKIP( - 1 )
-            lEndfixed := .t.
+            lEndfixed := .T.
 
          ENDIF
          IF AT( DELIM, cLine ) == 0
@@ -1526,12 +1526,12 @@ FUNCTION ProcNGDesc( cBuffer, oNgi, cStyle )
       DO WHILE !lendTable
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</table>", cLine ) > 0 .or. AT( "</TABLE>", cLine ) > 0
-            lendTable := .t.
+            lendTable := .T.
          ELSE
             IF LFstTableItem
                nNumTableItems := GetNumberofTableItems( cLine )
                procngtable( cline, nNumTableItems )
-               LFstTableItem := .f.
+               LFstTableItem := .F.
             ELSE
                procngtable( cline, nNumTableItems )
             ENDIF
@@ -1626,11 +1626,11 @@ FUNCTION FormatNgBuff( cBuffer, cStyle )
    LOCAL cLine         := ''
    LOCAL cOldLine      := ''
    LOCAL cBuffEnd      := ''
-   LOCAL lEndBuffer    := .f.
+   LOCAL lEndBuffer    := .F.
    LOCAL nPos
 
-   LOCAL lArgBold      := .f.
-   LOCAL LFstTableItem := .t.
+   LOCAL lArgBold      := .F.
+   LOCAL LFstTableItem := .T.
    cReturn := cBuffer + ' '
    IF AT( '</par>', cReturn ) > 0 .OR. EMPTY( cBuffer )
       IF EMPTY( cbuffer )
@@ -1642,20 +1642,20 @@ FUNCTION FormatNgBuff( cBuffer, cStyle )
       DO WHILE !lEndBuffer
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( '</par>', cLine ) > 0
-            lEndBuffer := .t.
+            lEndBuffer := .T.
          ENDIF
 
          IF EMPTY( cLine )
-            lEndBuffer := .t.
+            lEndBuffer := .T.
 
             FT_FSKIP( - 1 )
          ENDIF
          IF AT( DELIM, cLine ) > 0
 
             FT_FSKIP( - 1 )
-            lEndBuffer := .t.
+            lEndBuffer := .T.
          ENDIF
-         IF AT( DELIM, cLine ) = 0
+         IF AT( DELIM, cLine ) == 0
             cReturn += ' ' + ALLTRIM( cLine ) + ' '
          ENDIF
       ENDDO
@@ -1686,19 +1686,19 @@ FUNCTION FormatNgBuff( cBuffer, cStyle )
 
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</par>", cLine ) > 0
-            lEndBuffer := .t.
+            lEndBuffer := .T.
          ENDIF
          IF EMPTY( cLine )
-            lEndBuffer := .t.
+            lEndBuffer := .T.
 
             FT_FSKIP( - 1 )
 
          ENDIF
          IF AT( DELIM, cLine ) > 0
             FT_FSKIP( - 1 )
-            lEndBuffer := .t.
+            lEndBuffer := .T.
          ENDIF
-         IF AT( DELIM, cLine ) = 0
+         IF AT( DELIM, cLine ) == 0
             cReturn += ' ' + ALLTRIM( cLine ) + ' '
          ENDIF
       ENDDO
@@ -1761,9 +1761,9 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
    IF nPos > 0
       cCuritem := xPos[ nPos ]
       IF AT( "$", xPos[ nPos + 1 ] ) > 0
-         lReturn := .f.
+         lReturn := .F.
       ELSE
-         lReturn := .t.
+         lReturn := .T.
       ENDIF
 
    ENDIF

@@ -204,7 +204,7 @@ FUNCTION ProcessFiles()
 
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
-         IF nLineCnt % 10 = 0
+         IF nLineCnt % 10 == 0
             @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
@@ -280,7 +280,7 @@ FUNCTION ProcessFiles()
                FOR j := 1 TO LEN( cTemp )
                   cChar := SUBSTR( cTemp, j, 1 )
                   IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
+                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar == "_"
                      cFileName += cChar
                   ENDIF
                NEXT
@@ -297,7 +297,7 @@ FUNCTION ProcessFiles()
                      //  This will break if there are more than 10 files with the same first
                      //  seven characters. We take our chances.
 
-                     IF LEN( cFileName ) = 8
+                     IF LEN( cFileName ) == 8
                         cFileName := STUFF( cFileName, 8, 1, STR( nCount, 1, 0 ) )
                      ELSE
                         cFileName += STR( nCount, 1, 0 )
@@ -457,7 +457,7 @@ FUNCTION ProcessFiles()
                ELSE
                   //  translate any \$ into $
                   cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
+                  IF nMode == D_SYNTAX
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "Syntax", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -468,7 +468,7 @@ FUNCTION ProcessFiles()
                         lAddBlank := .F.
                      ENDIF
                      FWRITE( nWriteHandle, cBuffer + CRLF )
-                  ELSEIF nMode = D_ARG
+                  ELSEIF nMode == D_ARG
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -481,7 +481,7 @@ FUNCTION ProcessFiles()
                      cBuffer := STRTRAN( cBuffer, "<", "<", 1 )
                      cBuffer := STRTRAN( cBuffer, ">", ">", 1 )
                      FWRITE( nWriteHandle, cBuffer + CRLF )
-                  ELSEIF nMode = D_NORMAL
+                  ELSEIF nMode == D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -492,11 +492,11 @@ FUNCTION ProcessFiles()
                         lAddBlank := .F.
                      ENDIF
                      FWRITE( nWriteHandle, StripNgControls( cBuffer ) + CRLF )
-                  ELSEIF nMode = D_SEEALSO
+                  ELSEIF nMode == D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
                         cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
                      ENDIF
-                  ELSEIF nMode = D_INCLUDE
+                  ELSEIF nMode == D_INCLUDE
                      //  read next line
                      IF .NOT. EMPTY( cBuffer )
                         IF !lBlankLine
@@ -505,14 +505,14 @@ FUNCTION ProcessFiles()
                         FWRITE( nWriteHandle, " Header File: " ;
                                 + ALLTRIM( cBuffer ) + CRLF )
                      ENDIF
-                  ELSEIF nMode = D_STATUS
+                  ELSEIF nMode == D_STATUS
                      IF !EMPTY( cBuffer )
                         FWRITE( nWriteHandle, ".par bold on" + CRLF )
                         FWRITE( nWriteHandle, " Status" + CRLF )
                         FWRITE( nWriteHandle, ".endpar" + CRLF )
                      ENDIF
                      ProcStatus( nWriteHandle, StripNgControls( cBuffer ) )
-                  ELSEIF nMode = D_TESTS
+                  ELSEIF nMode == D_TESTS
                      IF !EMPTY( cBuffer )
                         FWRITE( nWriteHandle, ".par bold on" + CRLF )
                         FWRITE( nWriteHandle, " Tests" + CRLF )
@@ -558,7 +558,7 @@ FUNCTION Proccalso( nWriteHandle, cSeeAlso )
    LOCAL xPos
    LOCAL tPos
    nLen := LEN( cSeeAlso )
-   WHILE .t.
+   WHILE .T.
       nPos := AT( ",", cSeeAlso )
 
       IF nPos > 0

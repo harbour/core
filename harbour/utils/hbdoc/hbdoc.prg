@@ -189,7 +189,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    LOCAL ppp
    LOCAL aMetaContents:={}
    Local aTemp:={}
-   LOCAL lAdded:=.f.
+   LOCAL lAdded:=.F.
    Local aRtfid
     
    LOCAL nCount_1 := 1
@@ -217,7 +217,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    PUBLIC lTee        := .F.
    PUBLIC aWWW        := {}
    PUBLIC aResult     := {}
-   PUBLIC lTroff      := .f.
+   PUBLIC lTroff      := .F.
 
    //  The following variables are used to allow one to change the delimiter
    //  around the keywords.
@@ -239,29 +239,29 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          IF ( cFlags := UPPER( RIGHT( cFlags, 3 ) ) ) == "TXT"
             lAscii      := .T.
             lContinuous := .F.
-         ELSEIF cFlags = "TEE"
+         ELSEIF cFlags == "TEE"
             lTee    := .T.
-         ELSEIF cFlags = "HPC"
+         ELSEIF cFlags == "HPC"
             lNorton := .T.
-         ELSEIF cFlags = "NGI"
+         ELSEIF cFlags == "NGI"
             lNgi := .T.
-         ELSEIF cFlags = "OS2"
+         ELSEIF cFlags == "OS2"
             lOs2 := .T.
-         ELSEIF cFlags = "RTF"
+         ELSEIF cFlags == "RTF"
             lRtf := .T.
-         ELSEIF cFlags = "HTM"
+         ELSEIF cFlags == "HTM"
             lWww := .T.
-         ELSEIF cFlags = "HT2"
+         ELSEIF cFlags == "HT2"
             lWww2 := .T.
-         ELSEIF cFlags = "PDF"
+         ELSEIF cFlags == "PDF"
             lPdf := .T.
-         ELSEIF cFlags = "CHM"
+         ELSEIF cFlags == "CHM"
             lChm := .T.
-         ELSEIF cFlags = "CH2"
+         ELSEIF cFlags == "CH2"
             lChm2 := .T.
-         ELSEIF cFlags = "TRF"
-            lTroff := .t.
-         ELSEIF cFlags = "DOC"
+         ELSEIF cFlags == "TRF"
+            lTroff := .T.
+         ELSEIF cFlags == "DOC"
             lAscii      := .T.
             lContinuous := .T.
             lAuthor     := .F.
@@ -274,7 +274,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
    //  Get the linkfile name and get the info in it
 
-   IF cLinkName = NIL
+   IF cLinkName == NIL
       outstd( "Harbour Doc Extractor"+ hb_osnewline() )
       outstd( "Copyright (c) 1999-2008, http://www.harbour-project.org/"+ hb_osnewline() )
       outstd( ""+ hb_osnewline() )
@@ -378,7 +378,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    cCompiler := fill_Link_info( cLinkName )
    endif
 
-   IF cAtFile = NIL                     // use all files in directory
+   IF cAtFile == NIL                     // use all files in directory
 
       //  Loop through each of the types of files
 
@@ -404,8 +404,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 //             tracelog(aRtfid,aRtfid[1])
 #ifdef HBDOC_PDF
             ELSEIF lPdf
-               ProcessPDF(.t.)
-               ProcessPDF(.f.)
+               ProcessPDF(.T.)
+               ProcessPDF(.F.)
 #endif
             ELSEIF lWww
                ProcessWww()
@@ -439,8 +439,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             ProcessFiles()
 #ifdef HBDOC_PDF
          ELSEIF lPdf
-            ProcessPDF(.t.)
-            ProcessPDF(.f.)
+            ProcessPDF(.T.)
+            ProcessPDF(.F.)
 #endif
          ELSEIF lRtf
              aRtfid := ProcessRtf()
@@ -519,16 +519,16 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          nItem := ASCAN( aLinkInfo, { | a | UPPER( ALLTRIM( a[ 1 ] ) ) == UPPER( ALLTRIM( aDocInfo[ i, 1 ] ) ) } )
          IF nItem > 0
 
-            IF i = 1 .OR. .NOT. ( ALLTRIM( aDocInfo[ i - 1, 1 ] ) == ALLTRIM( aDocInfo[ i, 1 ] ) )
+            IF i == 1 .OR. .NOT. ( ALLTRIM( aDocInfo[ i - 1, 1 ] ) == ALLTRIM( aDocInfo[ i, 1 ] ) )
                //  Make the first copy
                ? "ECHO Creating", aLinkinfo[ nItem, 2 ]
-               ? "COPY hdf\" + ALLTRIM( aDocInfo[ i, 4 ] ) + " HarDoc.hdf  > NUL"
+               ? "COPY hdf\" + ALLTRIM( aDocInfo[ i, 4 ] ) + " hardoc.hdf  > NUL"
 
             ELSE
                //  This may be slow but I don't have to worry about line length
-               ? "TYPE hdf\" + ALLTRIM( aDocInfo[ i, 4 ] ) + " >> HarDoc.hdf "
+               ? "TYPE hdf\" + ALLTRIM( aDocInfo[ i, 4 ] ) + " >> hardoc.hdf "
             ENDIF
-            aLinkInfo[ nItem, 3 ] = .T.
+            aLinkInfo[ nItem, 3 ] := .T.
          ELSE
             //  Write the error message
             SET ALTERNATE TO
@@ -594,7 +594,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, '1 Harbour Runtime functions and Commands by Name'+CRLF)
       asort(aWww,,,{|x,y| x[1]<y[1]})
       for ppp:=1 to len(aWww)
-          if aWww[ppp,3]<>'Run Time Errors' .and. aWww[ppp,3] <>"Document"  .and. aWww[ppp,3] <>"The garbage collector"  .and. aWww[ppp,3] <>"OOP Command" .and. aWww[ppp,3] <>"Command"  .and. aWww[ppp,3] <>"The idle states"
+          if aWww[ppp,3]!='Run Time Errors' .and. aWww[ppp,3] !="Document"  .and. aWww[ppp,3] !="The garbage collector"  .and. aWww[ppp,3] !="OOP Command" .and. aWww[ppp,3] !="Command"  .and. aWww[ppp,3] !="The idle states"
              fWrite( nHpj, '2 '+aWww[ppp,1]+"="+aWww[ppp,2]+">Funca"+CRLF)
           endif
       Next
@@ -637,7 +637,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
    ELSEIF lWWW
       ASORT( aDocWWWInfo,,, { | a, b | UPPER( a[ 1 ]  ) < UPPER( b[ 1 ]) } )
       asort(adocinfo,,,{|x,y| x[1]+x[2]<y[1]+y[2]})
-            do while .t.
+            do while .T.
           citem:=adocinfo[1,1]
           AADD(aMetaContents,{"GENERATOR","HBDOC Harbour document Extractor"})
           aadd(aMetaContents,{'Keywords',"Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin,"+cItem})
@@ -697,7 +697,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       for ppp:=1 to nItem
 
         cLast:=GetNextContent(ppp)
-        if (cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector" .and. cLast <>"The idle states") .and. (cLast !=  "Command" .and. clast !="OOP Command" .and. cLast !="Statement") .and. (! "CLASS" $ UPPER(cLast) .and. !"METHOD" $ UPPER(cLast))
+        if (cLast!='Run Time Errors' .and. cLast !="Document"  .and. cLast !="The garbage collector" .and. cLast !="The idle states") .and. (cLast !=  "Command" .and. clast !="OOP Command" .and. cLast !="Statement") .and. (! "CLASS" $ UPPER(cLast) .and. !"METHOD" $ UPPER(cLast))
             ohtm1:WriteLink('hb'+strtran(aResult[ppp]," ","")+'.htm',aResult[ppp])
 
         endif
@@ -847,7 +847,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
           ohtm:WriteText("<ul>")
           asort(aDocinfo,,,{|x,y|x[2]<y[2]})
           for ppp:=1 to len(aDocinfo)
-          if aDocInfo[ppp,1]<>'Run Time Errors' .and. aDocInfo[ppp,1] <>"Document"  .and. aDocInfo[ppp,1] <>"The garbage collector"  .and. aDocInfo[ppp,1] <>"OOP Command" .and. aDocInfo[ppp,1] <>"Command"  .and. aDocInfo[ppp,1] <>"The idle states"
+          if aDocInfo[ppp,1]!='Run Time Errors' .and. aDocInfo[ppp,1] !="Document"  .and. aDocInfo[ppp,1] !="The garbage collector"  .and. aDocInfo[ppp,1] !="OOP Command" .and. aDocInfo[ppp,1] !="Command"  .and. aDocInfo[ppp,1] !="The idle states"
                oHtm:Listitem()
                oHtm:AddObject("text/sitemap")
                oHtm:AddParam("Name",UpperLower(aDocinfo[ppp,2]))
@@ -871,7 +871,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       for ppp:=1 to nItem
 
         cLast:=GetNextContent(ppp)
-        if cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector"  .and. cLast <>"OOP Command" .and. cLast <>"Command"  .and. cLast <>"The idle states"
+        if cLast!='Run Time Errors' .and. cLast !="Document"  .and. cLast !="The garbage collector"  .and. cLast !="OOP Command" .and. cLast !="Command"  .and. cLast !="The idle states"
           ohtm:WriteText("<ul>")
           oHtm:ListItem()
           oHtm:AddObject("text/sitemap")
@@ -879,7 +879,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
           ohtm:EndObject()
           ohtm:WriteText("<ul>")
         endif
-        if cLast<>'Run Time Errors' .and. cLast <>"Document"  .and. cLast <>"The garbage collector"  .and. cLast <>"OOP Command" .and. cLast <>"Command"  .and. cLast <>"The idle states"
+        if cLast!='Run Time Errors' .and. cLast !="Document"  .and. cLast !="The garbage collector"  .and. cLast !="OOP Command" .and. cLast !="Command"  .and. cLast !="The idle states"
         //    oHtm:WriteText( "<UL>" )
             WriteChmContentFile(aDocinfo,cLast,oHtm)
             oHtm:WriteText( "</UL>" )
@@ -976,7 +976,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
       FWRITE( nHpj, 'Contents file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".hhc"+ CRLF )
       FWRITE( nHpj, 'Compiled file=.\'+ lower(substr(cLinkName,1,AT(".",cLinkName)-1)) +".chm"+ CRLF )
       FWRITE( nHpj, 'Display compile progress=No'+CRLF)
-      //nPos := aScan(aDocInfo, {|x| Upper(x[2] + ".HTM") = "OVERVIEW"})
+      //nPos := aScan(aDocInfo, {|x| Upper(x[2] + ".htm") = "OVERVIEW"})
       //if nPos > 0
          FWRITE( nHpj,'Default topic=index.htm' + CRLF)
       //Else
@@ -1226,7 +1226,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
          IF nLen > 1
             //  Middle initial
             cMI := aName[ 2 ]
-            IF !( LEN( cMi ) = 1 .OR. ( LEN( cMi ) = 2 .AND. RIGHT( cMi, 1 ) = "." ) )
+            IF !( LEN( cMi ) == 1 .OR. ( LEN( cMi ) == 2 .AND. RIGHT( cMi, 1 ) == "." ) )
                cMi := NIL
             ENDIF
             //  Last name
@@ -1239,7 +1239,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
          //  Add to array
 
-         aAuthorList[ i, 3 ] = cLName + "," + cFname + IIF( !EMPTY( cMi ), " " + cMi, " " )
+         aAuthorList[ i, 3 ] := cLName + "," + cFname + IIF( !EMPTY( cMi ), " " + cMi, " " )
 
       ENDIF
 
@@ -1262,7 +1262,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
             //  Remove duplicate names but capture a CIS ID if we don't have one
 
             IF EMPTY( aAuthorList[ i - 1, 2 ] ) .AND. !EMPTY( aAuthorList[ i, 2 ] )
-               aAuthorList[ i - 1, 2 ] = aAuthorList[ i, 2 ]
+               aAuthorList[ i - 1, 2 ] := aAuthorList[ i, 2 ]
             ENDIF
             ADEL( aAuthorList, i )
             ASIZE( aAuthorList, LEN( aAuthorList ) - 1 )
@@ -1292,7 +1292,8 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
 
 
-   @ MAXROW(), 0 SAY "Execute ASSEMBL.BAT to compile and link Guides"
+   /* TOFIX: Make this multiplatform. */
+   @ MAXROW(), 0 SAY "Execute assembl.bat to compile and link Guides"
 
    WAIT
 
@@ -1318,7 +1319,7 @@ FUNCTION ListAsArray2( cList, cDelimiter )
    LOCAL nPos
    LOCAL aList := {}   // Define an empty array
 
-   IF cDelimiter = NIL
+   IF cDelimiter == NIL
       cDelimiter := ","
    ENDIF
    //
@@ -1342,12 +1343,12 @@ RETURN aList        // Return the array
 FUNCTION StripNgControls( cString )
 
    LOCAL nPos
-   LOCAL lStriped := .f.
+   LOCAL lStriped := .F.
 
    nPos := AT( "^b", cString )
    IF nPos > 0
       cString  := SUBSTR( cString, nPos + 3 )
-      lStriped := .t.
+      lStriped := .T.
    ELSE
       IF !lStriped
          cString := cString
@@ -1357,7 +1358,7 @@ FUNCTION StripNgControls( cString )
    nPos := AT( "^b^", cString )
    IF nPos > 0
       cString  := SUBSTR( cString, 1, nPos - 1 )
-      lStriped := .t.
+      lStriped := .T.
    ELSE
       IF !lStriped
          cString := cString
@@ -1367,7 +1368,7 @@ FUNCTION StripNgControls( cString )
    nPos := AT( "^CFE", cString )
    IF nPos > 0
       cString  := SUBSTR( cString, nPos + 5 )
-      lStriped := .t.
+      lStriped := .T.
    ELSE
       IF !lStriped
          cString := cString
@@ -1377,7 +1378,7 @@ FUNCTION StripNgControls( cString )
    nPos := AT( "^a1f", cString )
    IF nPos > 0
       cString  := SUBSTR( cString, nPos + 5 )
-      lStriped := .t.
+      lStriped := .T.
    ELSE
       IF !lStriped
          cString := cString
@@ -1475,7 +1476,7 @@ FUNCTION FirstNB( cString )
    //
    i := 1
    IF !EMPTY( cString )
-      DO WHILE nReturn = 0 .AND. i < LEN( cString )
+      DO WHILE nReturn == 0 .AND. i < LEN( cString )
          IF SUBSTR( cString, i, 1 ) != " "
             nReturn := i
          ELSE
@@ -1510,7 +1511,7 @@ FUNCTION ListAsArray( cList, cDelimiter )
    LOCAL nPos
    LOCAL aList := {}   // Define an empty array
 
-   IF cDelimiter = NIL
+   IF cDelimiter == NIL
       cDelimiter := ","
    ENDIF
    //
@@ -1605,7 +1606,7 @@ FUNCTION ReadAtFile( cAtFile )
    //
    //  Entry Point
    //
-   IF FT_FUSE( cAtFile ) <> NIL
+   IF FT_FUSE( cAtFile ) != NIL
 
       //  Read each line
       lEof := .F.
@@ -1615,7 +1616,7 @@ FUNCTION ReadAtFile( cAtFile )
          IF .NOT. EMPTY( cBuffer )
             AADD( aDirList, ARRAY( F_LEN ) )
             nCount ++
-            aDirList[ nCount, F_NAME ] = UPPER( cBuffer )
+            aDirList[ nCount, F_NAME ] := cBuffer
          ENDIF
       ENDDO
    ENDIF
@@ -1653,7 +1654,7 @@ FUNCTION WRITE_ERROR( cDescrip, cBadLine, nLineCnt, nMax, cFile )
    SET ALTERNATE ON
 
    //  Send out the output
-   IF cBadLine = NIL
+   IF cBadLine == NIL
       ? cDescrip, "in file", cFile
       ? " "
    ELSE
@@ -1728,7 +1729,7 @@ FUNCTION fill_link_info( cLinkName )
       IF AT( "!MENU", cBuffer ) > 0
          lMenuMode := .T.
          cBuffer   := UPPER( ReadLN( @lEof ) )
-      ELSEIF LEFT( cBuffer, 1 ) = "!"
+      ELSEIF LEFT( cBuffer, 1 ) == "!"
          lMenuMode := .F.
       ENDIF
 

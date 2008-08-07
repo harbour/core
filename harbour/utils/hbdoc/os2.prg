@@ -94,7 +94,7 @@ METHOD New( cFile ) CLASS TOs2
       Self:nRef     := 1
    ENDIF
 
-   IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
+   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF
@@ -134,14 +134,14 @@ Endif
       For nPos:=1 to LEN(aLines)
         cLine:=aLines[nPos]
         If nPos==1
-            If !empty(cLine) .and. cStyle <>"Syntax"
+            If !empty(cLine) .and. !( cStyle =="Syntax")
                 FWRITE( Self:nHandle,cTag+  cLine  + CRLF)
             elseIf !empty(cLine) .and. cStyle =="Syntax"
                 FWRITE( Self:nHandle,cTag+ ":hp2."+ cLine  +":ehp2." +CRLF)
             Endif
         Else
 
-            If !empty(cLine) .and. cStyle <>"Syntax"
+            If !empty(cLine) .and. !( cStyle =="Syntax")
                 FWRITE( Self:nHandle, cLine  + CRLF)
             elseIf !empty(cLine) .and. cStyle =="Syntax"
                 FWRITE( Self:nHandle, ":hp2."+ cLine  +":ehp2." +CRLF)
@@ -159,7 +159,7 @@ endif
                IF nPos > 0                 
                   cLine := SUBSTR( cBuffer, 1, nPos )
                ENDIF
-            If !empty(cLine) .and. cStyle <>"Syntax"
+            If !empty(cLine) .and. !(cStyle =="Syntax")
                 FWRITE( Self:nHandle,cTag+  cLine  + CRLF)
             elseIf !empty(cLine) .and. cStyle =="Syntax"
                 FWRITE( Self:nHandle,cTag+ ":hp2."+ cLine  +":ehp2." +CRLF)
@@ -185,7 +185,7 @@ endif
                   ENDIF
 
             ENDIF
-            If !empty(cLine) .and. cStyle <>"Syntax"
+            If !empty(cLine) .and. !(cStyle =="Syntax")
                 FWRITE( Self:nHandle,cTag+  cLine  + CRLF)
             elseIf !empty(cLine) .and. cStyle =="Syntax"
                 FWRITE( Self:nHandle,cTag+ ":hp2."+ cLine  +":ehp2." +CRLF)
@@ -208,7 +208,7 @@ RETURN Self
 
 
 METHOD WriteParBold( cPar ,lMarg) CLASS TOs2
-DEFAULT lMarg to .t.
+DEFAULT lMarg to .T.
     IF lMarg
       FWRITE( Self:nHandle,".br"+CRLF+ ":hp2." + SELF:DosToOs2Text( cPar ) + ':ehp2.'+CRLF +".br" + CRLF +":p."+CRLF+':lm margin=6.' +CRLF )
     Else
@@ -284,7 +284,7 @@ METHOD WriteLink( cLink ) CLASS TOs2
 
    ENDIF
 
-   IF nItem = 0
+   IF nItem == 0
       nItem := Self:nRef
    ENDIF
 

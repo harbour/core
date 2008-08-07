@@ -132,7 +132,7 @@ FUNCTION ProcessRtf()
    LOCAL oRtf
    LOCAL nReadHandle
    LOCAL lPar
-   LOCAL lWrite         := .f.
+   LOCAL lWrite         := .F.
    LOCAL lWasLine       := .F.
    LOCAL lIsDataLink    := .F.
    LOCAL lIsMethodLink  := .F.
@@ -173,7 +173,7 @@ FUNCTION ProcessRtf()
    lIsDataLink   := .F.
    lIsMethodLink := .F.
 
-   lWrite := .f.
+   lWrite := .F.
    cTempx := ''
    //
    //  Entry Point
@@ -215,7 +215,7 @@ FUNCTION ProcessRtf()
 
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
-         IF nLineCnt % 10 = 0
+         IF nLineCnt % 10 == 0
             @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
@@ -258,7 +258,7 @@ FUNCTION ProcessRtf()
                   aAlso:=ListAsArray2(cSeeAlso,",")
 //                  if Len(aAlso) <3
 //                    ProcRtfalso( oRtf, cSeealso )
-//                    oRtf:WriteKLink(aAlso,.f.)
+//                    oRtf:WriteKLink(aAlso,.F.)
 //                  else
                   oRtf:WriteKLink(aAlso)
 //                  endif  
@@ -301,7 +301,7 @@ FUNCTION ProcessRtf()
                FOR j := 1 TO LEN( cTemp )
                   cChar := SUBSTR( cTemp, j, 1 )
                   IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
+                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar == "_"
                      cFileName += cChar
                   ENDIF
                NEXT
@@ -318,7 +318,7 @@ FUNCTION ProcessRtf()
                      //  This will break if there are more than 10 files with the same first
                      //  seven characters. We take our chances.
 
-                     IF LEN( cFileName ) = 40
+                     IF LEN( cFileName ) == 40
                         cFileName := STUFF( cFileName, 40, 1, STR( nCount, 1, 0 ) )
                      ELSE
                         cFileName += STR( nCount, 1, 0 )
@@ -425,7 +425,7 @@ FUNCTION ProcessRtf()
                      oRtf:WritePar( '' )                    //:endpar()
                      nMode     := D_ARG
                      lAddBlank := .T.
-                     lPar      := .t.
+                     lPar      := .T.
                   END
                ELSEIF AT( cRet, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
@@ -437,7 +437,7 @@ FUNCTION ProcessRtf()
                      oRtf:WritePar( "" )                    //:endpar()
                      nMode     := D_RETURN
                      lAddBlank := .T.
-                     lPar      := .t.
+                     lPar      := .T.
                   END
                ELSEIF AT( cDesc, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
@@ -593,7 +593,7 @@ oRtf:WritePar( "" )                 //:endpar()
                ELSE
                   //  translate any \$ into $
                   cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
+                  IF nMode == D_SYNTAX
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "Syntax", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -607,7 +607,7 @@ oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
                      procrtfdesc( cbuffer, oRtf, "Syntax" )
                      //                      oRtf:WritePar('') //:endpar()
-                  ELSEIF nMode = D_RETURN
+                  ELSEIF nMode == D_RETURN
 
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
@@ -617,7 +617,7 @@ oRtf:WritePar( "" )                 //:endpar()
 
                      procrtfdesc( cbuffer, oRtf, "Arguments" )
 
-                  ELSEIF nMode = D_ARG
+                  ELSEIF nMode == D_ARG
 
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
@@ -626,7 +626,7 @@ oRtf:WritePar( "" )                 //:endpar()
                      lBlankLine := EMPTY( cBuffer )
 
                      procrtfdesc( cbuffer, oRtf, "Arguments" )
-                  ELSEIF nMode = D_DATALINK
+                  ELSEIF nMode == D_DATALINK
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -638,7 +638,7 @@ oRtf:WritePar( "" )                 //:endpar()
                      cTemp   := SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 )
                      cBuffer := SUBSTR( cBuffer, AT( ":", cBuffer ) + 1 )
                      oRtf:WriteJumpLink1( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ), cTemp, cBuffer )
-                  ELSEIF nMode = D_METHODLINK
+                  ELSEIF nMode == D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -652,14 +652,14 @@ oRtf:WritePar( "" )                 //:endpar()
                      cBuffer := SUBSTR( cBuffer, AT( "()", cBuffer ) + 2 )
                      oRtf:WriteJumpLink( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ),ALLTRIM( cTemp ), cBuffer )
 
-                  ELSEIF nMode = D_NORMAL
+                  ELSEIF nMode == D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      procrtfdesc( cBuffer, oRtf )
-                  ELSEIF nMode = D_COMPLIANCE
+                  ELSEIF nMode == D_COMPLIANCE
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -667,7 +667,7 @@ oRtf:WritePar( "" )                 //:endpar()
                      lBlankLine := EMPTY( cBuffer )
                      procrtfdesc( cBuffer, oRtf, "Compliance" )
 
-                  ELSEIF nMode = D_DESCRIPTION
+                  ELSEIF nMode == D_DESCRIPTION
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -675,7 +675,7 @@ oRtf:WritePar( "" )                 //:endpar()
                      lBlankLine := EMPTY( cBuffer )
                      procrtfdesc( cBuffer, oRtf, "Description" )
 
-                  ELSEIF nMode = D_EXAMPLE
+                  ELSEIF nMode == D_EXAMPLE
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -688,18 +688,18 @@ oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
 
                      procrtfdesc( cBuffer, oRtf, "Example" )
-                  ELSEIF nMode = D_SEEALSO
+                  ELSEIF nMode == D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
                         cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
                      ENDIF
-                  ELSEIF nMode = D_INCLUDE
+                  ELSEIF nMode == D_INCLUDE
                      //  read next line
                      IF .NOT. EMPTY( cBuffer )
                         IF !lBlankLine
                            oRtf:WritePar( "" )              //:endpar()
                         ENDIF
                      ENDIF
-                  ELSEIF nMode = D_STATUS
+                  ELSEIF nMode == D_STATUS
                      IF !EMPTY( cBuffer )
                         oRtf:WritePar( '' )                 //:endpar()
                         oRtf:WriteParBold( "Status" )
@@ -852,9 +852,9 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
 
    LOCAL lEndFixed := .F.
    LOCAL lEndTable := .F.
-   LOCAL lArgBold  := .f.
+   LOCAL lArgBold  := .F.
    DEFAULT cStyle TO "Default"
-   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle <> "Example"
+   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example"
       cBuffer := '<par>' + cBuffer
    ENDIF
 
@@ -862,8 +862,8 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
       oRtf:WritePar( "" )
    ENDIF
 
-   IF cStyle <> "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) = 0
-      IF AT( "<par>", cBuffer ) >= 0 .OR. AT( "</par>", cBuffer ) = 0 .AND. !EMPTY( cbuffer )
+   IF cStyle != "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) == 0
+      IF AT( "<par>", cBuffer ) >= 0 .OR. AT( "</par>", cBuffer ) == 0 .AND. !EMPTY( cbuffer )
          IF AT( "<par>", cBuffer ) > 0 .AND. AT( "</par>", cBuffer ) > 0
 
             IF cStyle == "Arguments"
@@ -883,7 +883,7 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
                IF AT( "@", cOLine ) > 0 .OR. AT( "()", cOLine ) > 0 .OR. AT( "<", cOLine ) > 0 .OR. AT( "_", cOLine ) > 0
                   lArgBold := .T.
                ELSE
-                  lArgBold := .f.
+                  lArgBold := .F.
                ENDIF
 
                //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
@@ -966,7 +966,7 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
       ENDIF
    ENDIF
    IF AT( '<fixed>', cBuffer ) > 0 .OR. cStyle = "Example"
-      IF AT( '<fixed>', cBuffer ) = 0 .OR. !EMPTY( cBuffer )
+      IF AT( '<fixed>', cBuffer ) == 0 .OR. !EMPTY( cBuffer )
          cBuffer := STRTRAN( cBuffer, "<par>", "" )
          cBuffer := STRTRAN( cBuffer, "<fixed>", "" )
          oRtf:WriteParFixed( cBuffer )
@@ -974,12 +974,12 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
       DO WHILE !lendFixed
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</fixed>", cLine ) > 0
-            lendfixed := .t.
+            lendfixed := .T.
             cLine     := STRTRAN( cline, "</fixed>", "" )
          ENDIF
          IF AT( DELIM, cline ) > 0
             FT_FSKIP( - 1 )
-            lEndfixed := .t.
+            lEndfixed := .T.
 
          ENDIF
          IF AT( DELIM, cline ) == 0
@@ -992,7 +992,7 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
       DO WHILE !lendTable
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</table>", cBuffer ) > 0
-            lendTable := .t.
+            lendTable := .T.
          ELSE
             procrtftable( cBuffer )
          ENDIF
@@ -1040,7 +1040,7 @@ FUNCTION ProcRtfTable( cBuffer )
    ELSE
       cItem := ''
    ENDIF
-   IF ccolor <> NIL
+   IF ccolor != NIL
       AADD( afiTable, ccolor + cItem )
    ELSE
       AADD( afiTable, cItem )
@@ -1059,7 +1059,7 @@ RETURN Nil
 FUNCTION GenRtfTable( oRtf )
 
    LOCAL x
-   LOCAL lCar       := .f.
+   LOCAL lCar       := .F.
    LOCAL nMax2
    LOCAL nPos2 
    LOCAL nPos
@@ -1167,9 +1167,9 @@ FUNCTION FormatrtfBuff( cBuffer, cStyle )
    LOCAL cLine    := ''
    LOCAL cBuffend := ''
    LOCAL coline   := ''
-   LOCAL lEndBuff := .f.
+   LOCAL lEndBuff := .F.
    LOCAL nPos
-   LOCAL lArgBold := .f.
+   LOCAL lArgBold := .F.
    creturn := cBuffer + ' '
    IF AT( '</par>', creturn ) > 0 .OR. EMPTY( cBuffer )
       IF EMPTY( cbuffer )
@@ -1181,20 +1181,20 @@ FUNCTION FormatrtfBuff( cBuffer, cStyle )
       DO WHILE !lendBuff
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( '</par>', cLine ) > 0
-            lEndBuff := .t.
+            lEndBuff := .T.
          ENDIF
 
          IF EMPTY( cLine )
-            lEndBuff := .t.
+            lEndBuff := .T.
 
             FT_FSKIP( - 1 )
          ENDIF
          IF AT( DELIM, cline ) > 0
 
             FT_FSKIP( - 1 )
-            lEndBuff := .t.
+            lEndBuff := .T.
          ENDIF
-         IF AT( DELIM, cLine ) = 0
+         IF AT( DELIM, cLine ) == 0
             cReturn += ' ' + ALLTRIM( cLine ) + ' '
          ENDIF
       ENDDO
@@ -1220,7 +1220,7 @@ FUNCTION FormatrtfBuff( cBuffer, cStyle )
          IF AT( "@", cOLine ) > 0 .OR. AT( "()", cOLine ) > 0 .OR. AT( "<", cOLine ) > 0 .OR. AT( "_", cOLine ) > 0
             lArgBold := .T.
          ELSE
-            lArgBold := .f.
+            lArgBold := .F.
          ENDIF
 
       ENDIF
@@ -1228,19 +1228,19 @@ FUNCTION FormatrtfBuff( cBuffer, cStyle )
 
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</par>", cLine ) > 0
-            lEndBuff := .t.
+            lEndBuff := .T.
          ENDIF
          IF EMPTY( cLine )
-            lEndBuff := .t.
+            lEndBuff := .T.
 
             FT_FSKIP( - 1 )
 
          ENDIF
          IF AT( DELIM, cline ) > 0
             FT_FSKIP( - 1 )
-            lEndBuff := .t.
+            lEndBuff := .T.
          ENDIF
-         IF AT( DELIM, cline ) = 0
+         IF AT( DELIM, cline ) == 0
             cReturn += ' ' + ALLTRIM( cLine ) + ' '
          ENDIF
       ENDDO
@@ -1304,9 +1304,9 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
    IF nPos > 0
       cCuritem := xPos[ nPos ]
       IF AT( "$", xPos[ nPos + 1 ] ) > 0
-         lReturn := .f.
+         lReturn := .F.
       ELSE
-         lReturn := .t.
+         lReturn := .T.
       ENDIF
 
    ENDIF

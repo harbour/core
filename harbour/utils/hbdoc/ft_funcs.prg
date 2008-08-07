@@ -108,8 +108,8 @@ FUNCTION FT_FUSE( cFile AS STRING, nMode  AS NUMERIC)
    IF cFile == Nil
       theHandle:closefile()
    ENDIF
-   IF cFile <> Nil
-      IF nMode <> 0
+   IF cFile != Nil
+      IF nMode != 0
          theHandle := FileBase():new( cFile ):open()
       ELSE
          theHandle := FileBase():new( cFile ):open()
@@ -223,7 +223,7 @@ FUNCTION StrPos( cBuffer AS STRING)
       IF cChar >= CHR( 64 ) .AND. cChar <= CHR( 90 ) .OR. cChar >= CHR( 97 ) ;
                  .AND. cChar <= CHR( 122 ) .OR. cChar >= CHR( 48 ) .AND. cChar <= CHR( 57 ) ;
                  .OR. cChar == CHR( 60 ) .OR. cchar == CHR( ASC( "-" ) ) ;
-                 .OR. cchar == CHR( ASC( "(" ) ) .OR. cchar = CHR( ASC( "|" ) ) .OR. ;
+                 .OR. cchar == CHR( ASC( "(" ) ) .OR. cchar == CHR( ASC( "|" ) ) .OR. ;
                  cchar == CHR( ASC( '.' ) ) .OR. cchar == CHR( ASC( '*' ) ) .OR. ;
                  cchar == CHR( ASC( '#' ) ) .OR. cchar == CHR( ASC( '"' ) ) .OR. ;
                  cchar == CHR( ASC( '/' ) ) .OR. cchar == CHR( ASC( "@" ) ) ;

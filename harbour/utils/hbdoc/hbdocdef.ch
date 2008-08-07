@@ -83,8 +83,8 @@
 #define pMEMO      "M"
 #define pNUMERIC   "N"
 #define pOBJECT    "O"
-#define pTRUE .t.
-#define pFALSE .f.
+#define pTRUE .T.
+#define pFALSE .F.
 #define pCRLF HB_OSNEWLINE()
 
 #xtranslate DOSFILENAME(<c>) => substr( <c>, rat("\",<c>)+1 )

@@ -8,6 +8,33 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-08 01:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/genhtm.sh
+     ! Minor fix to previous commit.
+
+   * utils/hbdoc/rtf.prg
+   * utils/hbdoc/genos2.prg
+   * utils/hbdoc/genng.prg
+   * utils/hbdoc/genasc.prg
+   * utils/hbdoc/hbdocdef.ch
+   * utils/hbdoc/genchm.prg
+   * utils/hbdoc/os2.prg
+   * utils/hbdoc/ng.prg
+   * utils/hbdoc/genhpc.prg
+   * utils/hbdoc/html.prg
+   * utils/hbdoc/ft_funcs.prg
+   * utils/hbdoc/hbdoc.prg
+   * utils/hbdoc/troff.prg
+   * utils/hbdoc/genhtm.prg
+   * utils/hbdoc/genpdf1.prg
+   * utils/hbdoc/gentrf.prg
+   * utils/hbdoc/genrtf.prg
+     ! Fixed to not convert filenames to uppercase. (sf.net #1673895)
+     ! Formatting.
+     * <> -> !=, .f. -> .F., .t. -> .T.
+     ! = -> ==/:= (where the intent was clear)
+     ! Added newline to the end of files.
+
 2008-08-08 00:33 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    + doc/genhtm.sh
      + Added Linux/Unix make file for docs (sf.net #1673897)

@@ -90,7 +90,7 @@ ENDCLASS
 
 METHOD new( cFile ) CLASS TRTF
 
-   IF VALTYPE( cFile ) <> NIL .AND. VALTYPE( cFile ) == "C"
+   IF VALTYPE( cFile ) != NIL .AND. VALTYPE( cFile ) == "C"
       Self:cFile   := LOWER( cFile )
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF

@@ -83,7 +83,7 @@ STATIC atiTable       := {}
 STATIC nNumTableItems := 0
 STATIC aCurDoc        := {}
 STATIC nCurDoc := 1
-STATIC lWasTestExamples := .f.
+STATIC lWasTestExamples := .F.
 
 STATIC aColorTable := { 'aqua', 'black', 'fuchia', 'grey', 'green', 'lime', 'maroon', 'navy', 'olive', 'purple', 'red', 'silver', 'teal', 'white', 'yellow' }
 
@@ -226,7 +226,7 @@ FUNCTION ProcessChm()
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          cBuffer := STRTRAN( cBuffer, CHR( 10 ), '' )
          nLineCnt ++
-         IF nLineCnt % 10 = 0
+         IF nLineCnt % 10 == 0
             @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
@@ -298,11 +298,11 @@ FUNCTION ProcessChm()
                lClassDoc := .F.
 
                IF lEndReturns .AND. lClassDoc
-                  lEndReturns := .f.
+                  lEndReturns := .F.
                   oChm:WriteText( "</p></dd>" )
                ENDIF
                IF lEndArgs .AND. lClassDoc
-                  lEndArgs := .f.
+                  lEndArgs := .F.
                   oChm:WriteText( "</p></dd>" )
                ENDIF
 
@@ -340,7 +340,7 @@ FUNCTION ProcessChm()
                FOR j := 1 TO LEN( cTemp )
                   cChar := SUBSTR( cTemp, j, 1 )
                   IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_" 
+                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar == "_" 
                      cFileName += cChar
                   ENDIF
                NEXT
@@ -357,7 +357,7 @@ FUNCTION ProcessChm()
                      //  This will break if there are more than 10 files with the same first
                      //  seven characters. We take our chances.
 
-                     IF LEN( cFileName ) = 36
+                     IF LEN( cFileName ) == 36
                         cFileName := STUFF( cFileName, 36, 1, STR( nCount, 1, 0 ) )
                      ELSE
                         cFileName += STR( nCount, 1, 0 )
@@ -403,10 +403,10 @@ FUNCTION ProcessChm()
                   oChm:WriteText( "</pre>" )
                   else
                   oChm:WriteText( "</p></dd>" )
-                  lWasTestExamples:=.f.
+                  lWasTestExamples:=.F.
                   endif
 
-                  lEndDesc := .f.
+                  lEndDesc := .F.
 
                ENDIF
                oChm:WriteText( '<br>' )
@@ -456,7 +456,7 @@ FUNCTION ProcessChm()
 
                IF AT( cSyn, cBuffer ) > 0
                 if GetItem( cBuffer, nCurdoc ) 
-                  oChm:WriteParBold( " Syntax", .f., .f. )
+                  oChm:WriteParBold( " Syntax", .F., .F. )
                   oChm:WriteText( '<DD><P>' )
                   nMode      := D_SYNTAX
                   lAddBlank  := .T.
@@ -464,7 +464,7 @@ FUNCTION ProcessChm()
 end
                ELSEIF AT( cConstruct, cBuffer ) > 0
                if GetItem( cBuffer, nCurdoc ) 
-                  oChm:WriteParBold( " Constructor syntax", .F., .f. )
+                  oChm:WriteParBold( " Constructor syntax", .F., .F. )
                   oChm:WriteText( '<DD><P>' )
                   nMode      := D_SYNTAX
                   lAddBlank  := .T.
@@ -477,7 +477,7 @@ end
 
                   nMode     := D_ARG
                   lAddBlank := .T.
-                  lEndArgs  := .t.
+                  lEndArgs  := .T.
                   end
                ELSEIF AT( cRet, cBuffer ) > 0
                      if GetItem( cBuffer, nCurdoc ) 
@@ -489,7 +489,7 @@ end
                   oChm:WriteText( '<DD><P>' )
                   nMode       := D_ARG
                   lAddBlank   := .T.
-                  lEndReturns := .t.
+                  lEndReturns := .T.
                   end
                ELSEIF AT( cDesc, cBuffer ) > 0
                if GetItem( cBuffer, nCurdoc ) 
@@ -502,7 +502,7 @@ end
 
                   nMode     := D_DESCRIPTION
                   lAddBlank := .T.
-                  lEndDesc  := .t.
+                  lEndDesc  := .T.
                end
 
                ELSEIF AT( cdatalink, cBuffer ) > 0
@@ -562,18 +562,18 @@ oChm:writeText("<br>")  //:endpar()
                   nMode         := D_EXAMPLE
                   lAddBlank     := .T.
                   lAddEndPreTag := .T.
-                  lWasTestExamples:=.t.
+                  lWasTestExamples:=.T.
                   end
                ELSEIF AT( cTest, cBuffer ) > 0
                      if GetItem( cBuffer, nCurdoc ) 
                   IF !lBlankLine
                      //                     oChm:WritePar( "" )
                   ENDIF
-                  oChm:WriteParBold( " Tests", .t., .f. )
+                  oChm:WriteParBold( " Tests", .T., .F. )
                   oChm:WriteText( "<DD><P>" )
                   nMode     := D_EXAMPLE
                   lAddBlank := .T.
-                  lWasTestExamples:=.t.
+                  lWasTestExamples:=.T.
                      end
                ELSEIF AT( cStatus, cBuffer ) > 0
                         if GetItem( cBuffer, nCurdoc ) 
@@ -632,7 +632,7 @@ oChm:writeText("<br>")  //:endpar()
 
                   //  translate any \$ into $
                   cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
+                  IF nMode == D_SYNTAX
                      IF LEN( cBuffer ) > LONGLINE
 //                        WRITE_ERROR( "Syntax", cBuffer, nLineCnt, ;
  //                                    LONGLINE, aDirList[ i, F_NAME ] )
@@ -643,7 +643,7 @@ oChm:writeText("<br>")  //:endpar()
                      ENDIF
                      procChmdesc( cbuffer, oChm, "Syntax" )
 
-                  ELSEIF nMode = D_ARG
+                  ELSEIF nMode == D_ARG
                      IF LEN( cBuffer ) > LONGLINE
 //                        WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
   //                                   LONGLINE, aDirList[ i, F_NAME ] )
@@ -654,7 +654,7 @@ oChm:writeText("<br>")  //:endpar()
                      ENDIF
 
                      procChmdesc( cbuffer, oChm, "Arguments" )
-                  ELSEIF nMode = D_NORMAL
+                  ELSEIF nMode == D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE
 //                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
   //                                   LONGLINE, aDirList[ i, F_NAME ] )
@@ -667,14 +667,14 @@ oChm:writeText("<br>")  //:endpar()
                      ENDIF
 
                      ProcChmDesc( cBuffer, oChm )
-                  ELSEIF nMode = D_EXAMPLE
+                  ELSEIF nMode == D_EXAMPLE
                      IF LEN( cBuffer ) > LONGLINE
   //                      WRITE_ERROR( "General", cBuffer, nLineCnt, ;
 //                                     LONGLINE, aDirList[ i, F_NAME ] )
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      procChmdesc( cBuffer, oChm, "Example" )
-                  ELSEIF nMode = D_DESCRIPTION
+                  ELSEIF nMode == D_DESCRIPTION
                      IF LEN( cBuffer ) > LONGLINE
 //                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
   //                                   LONGLINE, aDirList[ i, F_NAME ] )
@@ -682,11 +682,11 @@ oChm:writeText("<br>")  //:endpar()
                      lBlankLine := EMPTY( cBuffer )
                      procChmdesc( cBuffer, oChm, "Description" )
 
-                  ELSEIF nMode = D_SEEALSO
+                  ELSEIF nMode == D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
                         cSeeAlso := StripFiles( ALLTRIM( cBuffer ) )
                      ENDIF
-                  ELSEIF nMode = D_DATALINK
+                  ELSEIF nMode == D_DATALINK
                      IF LEN( cBuffer ) > LONGLINE
 //                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
   //                                   LONGLINE, aDirList[ i, F_NAME ] )
@@ -698,7 +698,7 @@ oChm:writeText("<br>")  //:endpar()
                      cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 ) )
                      oChm:WriteText( "<dd><a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a></dd>' )
                      oChm:writetext('<dd><br></dd>')
-                  ELSEIF nMode = D_METHODLINK
+                  ELSEIF nMode == D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
 //                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
   //                                   LONGLINE, aDirList[ i, F_NAME ] )
@@ -713,13 +713,13 @@ oChm:writeText("<br>")  //:endpar()
                      oChm:writetext('<dd><br></dd>')
                     endif
 
-                  ELSEIF nMode = D_INCLUDE
+                  ELSEIF nMode == D_INCLUDE
                      //  read next line
                      IF .NOT. EMPTY( cBuffer )
                         IF !lBlankLine
                         ENDIF
                      ENDIF
-                  ELSEIF nMode = D_DATALINK
+                  ELSEIF nMode == D_DATALINK
                      IF LEN( cBuffer ) > LONGLINE
 //                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
   //                                   LONGLINE, aDirList[ i, F_NAME ] )
@@ -731,7 +731,7 @@ oChm:writeText("<br>")  //:endpar()
                      cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 ) )
                      oChm:WriteText( "<a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a>' )
 
-                  ELSEIF nMode = D_METHODLINK
+                  ELSEIF nMode == D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
 //                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
   //                                   LONGLINE, aDirList[ i, F_NAME ] )
@@ -743,7 +743,7 @@ oChm:writeText("<br>")  //:endpar()
                      cTemp := ALLTRIM( SUBSTR( cBuffer, 1, AT( "(", cBuffer ) - 1 ) )
                      oChm:WriteText( "<a href=" + cFileName + "#" +  cTemp  + ">" + cBuffer + '</a>' )
 
-                  ELSEIF nMode = D_COMPLIANCE
+                  ELSEIF nMode == D_COMPLIANCE
                      IF LEN( cBuffer ) > LONGLINE
 //                        WRITE_ERROR( "General", cBuffer, nLineCnt, ;
   //                                   LONGLINE, aDirList[ i, F_NAME ] )
@@ -751,15 +751,15 @@ oChm:writeText("<br>")  //:endpar()
                      lBlankLine := EMPTY( cBuffer )
                      procChmdesc( cBuffer, oChm, "Compliance" )
 
-                  ELSEIF nMode = D_STATUS
+                  ELSEIF nMode == D_STATUS
                      IF !EMPTY( cBuffer )
                         If lWasTestExamples
-                           oChm:WriteParBold( "Status",.t.,.f. )
+                           oChm:WriteParBold( "Status",.T.,.F. )
                         Else
                         oChm:WriteParBold( "Status" )
                         oChm:WriteText( "<DD>" )
                         Endif
-                        lWasTestExamples:=.f.
+                        lWasTestExamples:=.F.
                      ENDIF
 
                      ProcStatusChm( oChm, cBuffer )
@@ -872,7 +872,7 @@ FUNCTION ProcessChm2()
          cFileName := "" 
          FOR j := 1 TO LEN( cTemp ) 
             cChar := SUBSTR( cTemp, j, 1 )
-            IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_" 
+            IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar == "_" 
                cFileName += cChar
             ENDIF
          NEXT
@@ -884,10 +884,10 @@ FUNCTION ProcessChm2()
          DO WHILE nEnd > 0
             nEnd := ASCAN(aDocInfo, { | a | a[ 2 ] == cFileName + ".htm" })
             IF nEnd > 0
-               IF LEN( cFileName ) = 36
+               IF LEN( cFileName ) == 36
                   cFileName := STUFF( cFileName, 36, 1, STR( nCount, 1, 0 ) )
                ELSE
-                  cFileName = cFileName + STR( nCount, 1, 0 )
+                  cFileName := cFileName + STR( nCount, 1, 0 )
                ENDIF
                nCount ++
             ENDIF
@@ -921,12 +921,12 @@ FUNCTION ProcessChm2()
  
                   IF ASCAN(aCurDoc[nArrayItem], " $CLASS$") > 0
                      // Write class name 
-                     nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| "CLASS" $ UPPER(a)}, 2) + 1 
+                     nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "CLASS" $ UPPER(a)}, 2) + 1 
                      cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine])
          
-                     DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+                     DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
                         nArrayItemLine ++  
-                        cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+                        cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
                      ENDDO 
                      oHtmClass:WriteText("<title>" + cTempString + " - Class overview</title></head><body>")
                      oHtmClass:WriteText("<div class='classtitle'>Class " + cTempString + "</div>")
@@ -935,17 +935,17 @@ FUNCTION ProcessChm2()
                      AADD(aDocInfo, { cTempString, cFileName, "C1", {} })  
           
                      // Write oneliner 
-                     nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| "ONELINER" $ UPPER(a)}) + 1
+                     nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "ONELINER" $ UPPER(a)}) + 1
                      cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
-                     DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+                     DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
                         nArrayItemLine ++  
-                        cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+                        cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
                      ENDDO 
                      oHtmClass:WriteText("<div class='oneliner'>" + cTempString + "</div>")
 
                      // Write inheritance
-                     nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| "INHERITS" $ UPPER(a)}) + 1  
-                     IF nArrayItemLine - 1 <> 0 .AND. !EMPTY(aCurDoc[nArrayItem][nArrayItemLine]) //.AND. FILE(aCurDoc[nArrayItem][nArrayItemLine] + ".txt") 
+                     nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "INHERITS" $ UPPER(a)}) + 1  
+                     IF nArrayItemLine - 1 != 0 .AND. !EMPTY(aCurDoc[nArrayItem][nArrayItemLine]) //.AND. FILE(aCurDoc[nArrayItem][nArrayItemLine] + ".txt") 
                         cInherits := aCurDoc[nArrayItem][nArrayItemLine] 
                         cTempString := "<a href='" + cInherits + ".htm'>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) + "</a>" 
                      ELSE
@@ -986,11 +986,11 @@ FUNCTION ProcessChm2()
                            oHtmClassContent:WriteText("</style>")
           
                            // Write class name  
-                           nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| "CLASS" $ UPPER(a)}, 2) + 1 
+                           nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "CLASS" $ UPPER(a)}, 2) + 1 
                            cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
-                           DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+                           DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
                               nArrayItemLine ++  
-                              cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+                              cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
                            ENDDO 
                            oHtmClass:WriteText("<title>" + cTempString + " - Class details</title></head><body>") 
                            oHtmClassContent:WriteText("<div class='classtitle'>Class " + cTempString + "</div>")
@@ -999,16 +999,16 @@ FUNCTION ProcessChm2()
                   ELSEIF ASCAN(aCurDoc[nArrayItem], " $DATA$") > 0 
                      IF oHtmClassContent:nHandle > 0 
                         // Write property name  
-                        IF nPropertyListAnker = .F. 
+                        IF nPropertyListAnker == .F. 
                            oHtmClassContent:WriteText("<a name='propertylist'>")
-                           nPropertyListAnker = .t. 
+                           nPropertyListAnker := .T. 
                         ENDIF 
 
-                        nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| "DATA" $ UPPER(a)}, 2) + 1 
+                        nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "DATA" $ UPPER(a)}, 2) + 1 
                         cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
-                        DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+                        DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
                            nArrayItemLine ++  
-                           cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+                           cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
                         ENDDO 
                         oHtmClassContent:WriteText("<div class='title'><a name='" + cTempString + "'>Property " + cTempString + "</a></div>")
 
@@ -1019,11 +1019,11 @@ FUNCTION ProcessChm2()
                         AADD(aDocInfo[LEN(aDocInfo)][4], {"Data", cTempString}) 
           
                         // Write property oneliner 
-                        nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| "ONELINER" $ UPPER(a)}, 2) + 1 
+                        nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "ONELINER" $ UPPER(a)}, 2) + 1 
                         cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
-                        DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+                        DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
                            nArrayItemLine ++  
-                           cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+                           cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
                         ENDDO 
                         oHtmClassContent:WriteText("<div class='oneliner'>" + cTempString + "</div>")
           
@@ -1033,27 +1033,27 @@ FUNCTION ProcessChm2()
                   ELSEIF ASCAN(aCurDoc[nArrayItem], " $METHOD$") > 0  
                      IF oHtmClassContent:nHandle > 0  
                         // Write method name  
-                        IF nMethodListAnker = .F.  
+                        IF nMethodListAnker == .F.  
                            oHtmClassContent:WriteText("<a name='methodlist'>")
-                           nMethodListAnker = .t. 
+                           nMethodListAnker := .T. 
                         ENDIF 
 
-                        nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| "METHOD" $ UPPER(a)}, 2) + 1 
+                        nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "METHOD" $ UPPER(a)}, 2) + 1 
                         cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
-                        DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+                        DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
                            nArrayItemLine ++  
-                           cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+                           cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
                         ENDDO 
                         oHtmClassContent:WriteText("<div class='title'><a name='" + cTempString + "'>Method " + cTempString + "</a></div>")
 
                         AADD(aDocInfo[LEN(aDocInfo)][4], {"Method", cTempString}) 
 
                         // Write method oneliner 
-                        nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| "ONELINER" $ UPPER(a)}, 2) + 1 
+                        nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "ONELINER" $ UPPER(a)}, 2) + 1 
                         cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
-                        DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+                        DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
                            nArrayItemLine ++  
-                           cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+                           cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
                         ENDDO 
                         oHtmClassContent:WriteText("<div class='oneliner'>" + cTempString + "</div>")
           
@@ -1067,16 +1067,16 @@ FUNCTION ProcessChm2()
                   ENDIF  
                ELSE
                   // Write function name 
-                  nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| "FUNCNAME" $ UPPER(a)}, 2) + 1 
+                  nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "FUNCNAME" $ UPPER(a)}, 2) + 1 
                   cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
-                  DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+                  DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
                      nArrayItemLine ++  
-                     cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+                     cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
                   ENDDO 
                   oHtmClass:WriteText("<div class='classtitle'>Function " + cTempString + "</div>") 
           
                   // Add function name and filename to the docinfo array   
-                  nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| "CATEGORY" $ UPPER(a)}, 2) + 1
+                  nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "CATEGORY" $ UPPER(a)}, 2) + 1
                   cTempString2 := aCurDoc[nArrayItem][nArrayItemLine]
                   IF cTempString2 $ "WinAPI"
                      AADD( aDocInfo, { cTempString, cFileName, "F2" } )
@@ -1085,11 +1085,11 @@ FUNCTION ProcessChm2()
                   ENDIF  
           
                   // Write function oneliner 
-                  nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| "ONELINER" $ UPPER(a)}, 2) + 1 
+                  nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "ONELINER" $ UPPER(a)}, 2) + 1 
                   cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
-                  DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+                  DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
                      nArrayItemLine ++  
-                     cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+                     cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
                   ENDDO 
                   oHtmClass:WriteText("<div class='oneliner'>" + cTempString + "</div>")  
           
@@ -1140,15 +1140,15 @@ RETURN NIL
 FUNCTION WriteClass3(cItem, cTitle)
    LOCAL cTempString
  
-   nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| UPPER(cItem) $ UPPER(a)}) + 1  
-   IF nArrayItemLine - 1 <> 0 
+   nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| UPPER(cItem) $ UPPER(a)}) + 1  
+   IF nArrayItemLine - 1 != 0 
       cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine])
    ELSE
       cTempString := "-" 
    ENDIF 
-   DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+   DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
       nArrayItemLine ++  
-      cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+      cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
    ENDDO
    IF EMPTY(cTempString)
       cTempString := "-" 
@@ -1170,7 +1170,7 @@ FUNCTION WriteClassDataMethod3(cItem, cTitle, nArrayItem, nArrayItemLine)
    cTempString := "" 
    DO WHILE nArrayItem <= LEN(aCurDoc)
       nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| "$" + UPPER(cItem) + "$" $ UPPER(a)}) + 1
-      IF nArrayItemLine -1 <> 0 
+      IF nArrayItemLine -1 != 0 
          AADD(aTmpArray, {"&bull; <a href='" + LOWER(LEFT(cFileName, LEN(cFileName) - 4)) + "_content.htm#" + aCurDoc[nArrayItem][nArrayItemLine] + "' target=_self>" + aCurDoc[nArrayItem][nArrayItemLine] + "</a><br>", aCurDoc[nArrayItem][nArrayItemLine]}) 
          nTmpCount ++ 
       ENDIF 
@@ -1179,7 +1179,7 @@ FUNCTION WriteClassDataMethod3(cItem, cTitle, nArrayItem, nArrayItemLine)
 
    ASORT(aTmpArray,,, {|x, y| UPPER(x[2]) < UPPER(y[2])}) 
    FOR nTmpCount := 1 TO LEN(aTmpArray)
-      cTempString = cTempString + aTmpArray[nTmpCount][1] 
+      cTempString := cTempString + aTmpArray[nTmpCount][1] 
    NEXT 
    IF EMPTY(cTempString) 
       cTempString := "-" 
@@ -1188,8 +1188,8 @@ FUNCTION WriteClassDataMethod3(cItem, cTitle, nArrayItem, nArrayItemLine)
    oHtmClass:WriteText("<div class='itemtitle'>&raquo; " + cTitle + "</div>")  
    oHtmClass:WriteText("<div class='itemtext'>" + cTempString + "</div>")
 
-   nArrayItem = nPrevArrayItem
-   nArrayItemLine = nPrevArrayItemLine
+   nArrayItem := nPrevArrayItem
+   nArrayItemLine := nPrevArrayItemLine
 
    LinkInheritance3(cItem)  
 RETURN NIL
@@ -1199,7 +1199,7 @@ FUNCTION LinkInheritance3(cItem)
    LOCAL nTemp1 := 1  
 
    DO WHILE nTemp1 <= LEN(aDirList)
-      IF UPPER(aDirList[nTemp1][1]) = UPPER(cInherits + ".TXT")
+      IF UPPER(aDirList[nTemp1][1]) == UPPER(cInherits + ".txt")
          oHtmClass:WriteText("<div class='itemtext'>&bull; <a href='" + cInherits + "_content.htm#" + IIF(UPPER(cItem) = "DATA", "propertylist", "methodlist") + "' target=_self>" + IIF(cItem ="Data", "Properties", "Methods") + " inherited via " + cInherits + "</a></div>") 
       ENDIF
       nTemp1 ++
@@ -1210,11 +1210,11 @@ RETURN NIL
 FUNCTION WriteData3(cItem, cTitle)
    LOCAL cTempString 
 
-   nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| UPPER(cItem) $ UPPER(a)}) + 1  
+   nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| UPPER(cItem) $ UPPER(a)}) + 1  
    cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
-   DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+   DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
       nArrayItemLine ++  
-      cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+      cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
    ENDDO
    IF EMPTY(cTempString)
       cTempString := "-" 
@@ -1228,11 +1228,11 @@ RETURN NIL
 FUNCTION WriteMethod3(cItem, cTitle)
    LOCAL cTempString 
 
-   nArrayItemLine = ASCAN(aCurDoc[nArrayItem], {|a| UPPER(cItem) $ UPPER(a)}) + 1  
+   nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| UPPER(cItem) $ UPPER(a)}) + 1  
    cTempString := HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
-   DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+   DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
       nArrayItemLine ++  
-      cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+      cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
    ENDDO
    IF EMPTY(cTempString) 
       cTempString := "-" 
@@ -1248,9 +1248,9 @@ FUNCTION WriteFunction3(cItem, cTitle)
  
    nArrayItemLine := ASCAN(aCurDoc[nArrayItem], {|a| UPPER(cItem) $ UPPER(a)}) + 1  
    cTempString := aCurDoc[nArrayItem][nArrayItemLine]
-   DO WHILE "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] = .F.
+   DO WHILE !( "$" $ aCurDoc[nArrayItem][nArrayItemLine + 1] )
       nArrayItemLine ++  
-      cTempString = cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
+      cTempString := cTempString + "<br>" + HTMFormat3(aCurDoc[nArrayItem][nArrayItemLine]) 
    ENDDO
    IF EMPTY(cTempString) 
       cTempString := "-" 
@@ -1271,12 +1271,12 @@ FUNCTION HTMFormat3(cTempString)
       cTmpChar := SUBSTR(cTmpString1, nTmpCount, 1) 
 
       DO CASE
-      CASE cTmpChar = "<"
-         cTmpString2 = cTmpString2 + "&lt;"
-      CASE cTmpChar = ">"
-         cTmpString2 = cTmpString2 + "&gt;" 
+      CASE cTmpChar == "<"
+         cTmpString2 := cTmpString2 + "&lt;"
+      CASE cTmpChar == ">"
+         cTmpString2 := cTmpString2 + "&gt;" 
       OTHERWISE
-         cTmpString2 = cTmpString2 + cTmpChar
+         cTmpString2 := cTmpString2 + cTmpChar
       ENDCASE 
 
       nTmpCount ++ 
@@ -1321,7 +1321,7 @@ FUNCTION ProcChmAlso( nWriteHandle, cSeeAlso )
    LOCAL xPos
    LOCAL tPos
    nLen := LEN( cSeeAlso )
-   WHILE .t.
+   WHILE .T.
       nPos := AT( ",", cSeeAlso )
       IF nPos > 0
          xTemp := SUBSTR( ALLTRIM( cSeeAlso ), 1, nPos - 1 )
@@ -1417,8 +1417,8 @@ FUNCTION FormatChmBuff( cBuffer, cStyle )
    LOCAL cline      := ''
    LOCAL cOldLine   := ''
    LOCAL cBuffend   := ''
-   LOCAL lEndBuffer := .f.
-   LOCAL lArgBold   := .f.
+   LOCAL lEndBuffer := .F.
+   LOCAL lArgBold   := .F.
    LOCAL npos
    //LOCAL nposend    // Variable not used in fucntion, it may be deleted? 
    creturn := cBuffer + ' '
@@ -1432,20 +1432,20 @@ FUNCTION FormatChmBuff( cBuffer, cStyle )
       DO WHILE !lEndBuffer
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( '</par>', cLine ) > 0
-            lEndBuffer := .t.
+            lEndBuffer := .T.
          ENDIF
 
          IF EMPTY( cLine )
-            lEndBuffer := .t.
-            //            TheBlank   := .t.
+            lEndBuffer := .T.
+            //            TheBlank   := .T.
             FT_FSKIP( - 1 )
          ENDIF
          IF AT( DELIM, cLine ) > 0
 
             FT_FSKIP( - 1 )
-            lEndBuffer := .t.
+            lEndBuffer := .T.
          ENDIF
-         IF AT( DELIM, cLine ) = 0
+         IF AT( DELIM, cLine ) == 0
             cReturn += ' ' + ALLTRIM( cLine ) + ' '
          ENDIF
       ENDDO
@@ -1497,19 +1497,19 @@ FUNCTION FormatChmBuff( cBuffer, cStyle )
 
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</par>", cLine ) > 0
-            lEndBuffer := .t.
+            lEndBuffer := .T.
          ENDIF
          IF EMPTY( cLine )
-            lEndBuffer := .t.
-            //            TheBlank   := .t.
+            lEndBuffer := .T.
+            //            TheBlank   := .T.
             FT_FSKIP( - 1 )
 
          ENDIF
          IF AT( DELIM, cLine ) > 0
             FT_FSKIP( - 1 )
-            lEndBuffer := .t.
+            lEndBuffer := .T.
          ENDIF
-         IF AT( DELIM, cLine ) = 0
+         IF AT( DELIM, cLine ) == 0
             cReturn += ' ' + ALLTRIM( cLine ) + ' '
          ENDIF
       ENDDO
@@ -1589,13 +1589,13 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
    LOCAL lEndPar       := .F.
    LOCAL cLine         := ''
    LOCAL lEndFixed     := .F.
-   LOCAL lArgBold      := .f.
+   LOCAL lArgBold      := .F.
    LOCAL LFstTableItem := .T.
    LOCAL lEndTable     := .F.
-   LOCAL lEndBuffer    := .f.
+   LOCAL lEndBuffer    := .F.
    DEFAULT cStyle TO "Default"
 
-   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle <> "Example"
+   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example"
       cBuffer := '<par>' + cBuffer
    ENDIF
 
@@ -1603,8 +1603,8 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
       oChm:WriteText( "<dd><br></dd>" )
    ENDIF
 
-   IF cStyle <> "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) = 0
-      IF AT( "<par>", cBuffer ) >= 0 .OR. AT( "</par>", cBuffer ) = 0 .AND. !EMPTY( cbuffer )
+   IF cStyle != "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) == 0
+      IF AT( "<par>", cBuffer ) >= 0 .OR. AT( "</par>", cBuffer ) == 0 .AND. !EMPTY( cbuffer )
          IF AT( "<par>", cBuffer ) > 0 .AND. AT( "</par>", cBuffer ) > 0
             IF cStyle == "Arguments"
 
@@ -1698,7 +1698,7 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
       ENDIF
    ENDIF
    IF AT( '<fixed>', cBuffer ) > 0 .OR. cStyle = "Example"
-      IF AT( '<fixed>', cBuffer ) = 0 .OR. !EMPTY( cBuffer )
+      IF AT( '<fixed>', cBuffer ) == 0 .OR. !EMPTY( cBuffer )
          if AT( '<fixed>', cBuffer ) > 0
             lHasFixed:=.T.
          else
@@ -1715,15 +1715,15 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
       DO WHILE !lendFixed
          cOldLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</fixed>", cOldLine ) > 0
-            lendfixed := .t.
+            lendfixed := .T.
             cOldLine  := ALLTRIM(STRTRAN( cOldLine, "</fixed>", "" ))
          ENDIF
-         IF AT( DELIM, cOldLine ) = 0
+         IF AT( DELIM, cOldLine ) == 0
             cReturn += ALLTRIM( cOldLine ) + ' '
          ENDIF
          IF AT( DELIM, cOldLine ) > 0
             FT_FSKIP( - 1 )
-            lEndfixed := .t.
+            lEndfixed := .T.
 
          ENDIF
          IF AT( DELIM, cOldLine ) == 0 .and. !lendfixed
@@ -1737,12 +1737,12 @@ FUNCTION ProcChmDesc( cBuffer, oChm, cStyle )
       DO WHILE !lendTable
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</table>", cLine ) > 0
-            lendTable := .t.
+            lendTable := .T.
          ELSE
             IF LFstTableItem
                nNumTableItems := GetNumberofTableItems( cLine )
                procChmtable( cline, nNumTableItems )
-               LFstTableItem := .f.
+               LFstTableItem := .F.
             ELSE
                procChmtable( cline, nNumTableItems )
             ENDIF
@@ -1817,7 +1817,7 @@ FUNCTION ProcChmTable( cBuffer, nNum )
          cItem4  := SUBSTR( cBuffer, 1 )
       ENDIF
    ENDIF
-   IF cColor <> NIL
+   IF cColor != NIL
       AADD( afiTable, "<Font color=" + ccolor + ">" + RTRIM( LTRIM( cItem ) ) + '</font>' )
       AADD( asiTable, "<Font color=" + ccolor + ">" + cItem2 + '</font>' )
    ELSE
@@ -1825,12 +1825,12 @@ FUNCTION ProcChmTable( cBuffer, nNum )
       AADD( asiTable, cItem2 )
    ENDIF
 
-   IF cColor <> NIL
+   IF cColor != NIL
       AADD( atiTable, "<Font color=" + ccolor + ">" + cItem3 + '</font>' )
    ELSE
       AADD( atiTable, cItem3 )
    ENDIF
-   IF cColor <> NIL
+   IF cColor != NIL
       AADD( afoiTable, "<Font color=" + ccolor + ">" + cItem4 + '</font>' )
    ELSE
       AADD( afoiTable, cItem4 )
@@ -1920,9 +1920,9 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
    IF nPos > 0
       cCuritem := xPos[ nPos ]
       IF AT( "$", xPos[ nPos + 1 ] ) > 0
-         lReturn := .f.
+         lReturn := .F.
       ELSE
-         lReturn := .t.
+         lReturn := .T.
       ENDIF
 
    ENDIF

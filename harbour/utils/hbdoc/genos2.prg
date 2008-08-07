@@ -213,7 +213,7 @@ FUNCTION ProcessOs2()
 
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          nLineCnt ++
-         IF nLineCnt % 10 = 0
+         IF nLineCnt % 10 == 0
             @ LINELINE, 33 SAY STR( nLineCnt, 5, 0 )         
          ENDIF
          //  check to see if we are in doc mode or getting out of doc mode
@@ -301,7 +301,7 @@ FUNCTION ProcessOs2()
                FOR j := 1 TO LEN( cTemp )
                   cChar := SUBSTR( cTemp, j, 1 )
                   IF ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar = "_"
+                       ( cChar >= "A" .AND. cChar <= "Z" ) .OR. cChar == "_"
                      cFileName += cChar
                   ENDIF
                NEXT
@@ -318,7 +318,7 @@ FUNCTION ProcessOs2()
                      //  This will break if there are more than 10 files with the same first
                      //  seven characters. We take our chances.
 
-                     IF LEN( cFileName ) = 40
+                     IF LEN( cFileName ) == 40
                         cFileName := STUFF( cFileName, 40, 1, STR( nCount, 1, 0 ) )
                      ELSE
                         cFileName += STR( nCount, 1, 0 )
@@ -548,7 +548,7 @@ end
                ELSE
                   //  translate any \$ into $
                   cBuffer := STRTRAN( cBuffer, "\" + DELIM, DELIM )
-                  IF nMode = D_SYNTAX
+                  IF nMode == D_SYNTAX
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "Syntax", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -564,7 +564,7 @@ end
 
                      procos2desc( cbuffer, oOs2, "Syntax" )
 
-                  ELSEIF nMode = D_RETURN
+                  ELSEIF nMode == D_RETURN
 
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
@@ -574,7 +574,7 @@ end
 /*                     oOs2:dostoos2Text(cBuffer)*/
                      procos2desc( cbuffer, oOs2, "Arguments" )
 
-                  ELSEIF nMode = D_ARG
+                  ELSEIF nMode == D_ARG
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "Arguments", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -582,7 +582,7 @@ end
                      lBlankLine := EMPTY( cBuffer )
 //                     oOs2:DosToOs2Text(cBuffer)
                      procos2desc( cbuffer, oOs2, "Arguments" )
-                  ELSEIF nMode = D_NORMAL
+                  ELSEIF nMode == D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -590,7 +590,7 @@ end
                      lBlankLine := EMPTY( cBuffer )
 //                     oOs2:DosToOs2Text(cBuffer)
                      procos2desc( cBuffer, oOs2 )
-                  ELSEIF nMode = D_DATALINK
+                  ELSEIF nMode == D_DATALINK
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -602,7 +602,7 @@ end
                      cTemp   := SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 )
                      cBuffer := SUBSTR( cBuffer, AT( ":", cBuffer ) + 1 )
                      oOs2:WriteJumpLink( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ), cBuffer )
-                  ELSEIF nMode = D_METHODLINK
+                  ELSEIF nMode == D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -616,18 +616,18 @@ end
                      cBuffer := SUBSTR( cBuffer, AT( "()", cBuffer ) + 2 )
                      oOs2:WriteJumpLink( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ), cTemp, cBuffer )
 
-                  ELSEIF nMode = D_SEEALSO
+                  ELSEIF nMode == D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
                         cSeeAlso := ProcOs2Also( StripFiles( ALLTRIM( cBuffer ) ) )
                      ENDIF
-                  ELSEIF nMode = D_INCLUDE
+                  ELSEIF nMode == D_INCLUDE
                      //  read next line
                      IF .NOT. EMPTY( cBuffer )
                         IF !lBlankLine
                            oOs2:WriteText( ".br" )
                         ENDIF
                      ENDIF
-                  ELSEIF nMode = D_COMPLIANCE
+                  ELSEIF nMode == D_COMPLIANCE
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -636,7 +636,7 @@ end
 //      oOs2:DosToOs2Text(cBuffer)
                      procos2desc( cBuffer, oOs2, "Compliance" )
 
-                  ELSEIF nMode = D_DESCRIPTION
+                  ELSEIF nMode == D_DESCRIPTION
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -645,7 +645,7 @@ end
 //      oOs2:DosToOs2Text(cBuffer)
                      procos2desc( cBuffer, oOs2, "Description" )
 
-                  ELSEIF nMode = D_EXAMPLE
+                  ELSEIF nMode == D_EXAMPLE
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
                                      LONGLINE, aDirList[ i, F_NAME ] )
@@ -659,7 +659,7 @@ end
 //      oOs2:DosToOs2Text(cBuffer)
                      procos2desc( cBuffer, oOs2, "Example" )
 
-                  ELSEIF nMode = D_STATUS
+                  ELSEIF nMode == D_STATUS
                      IF !EMPTY( cBuffer )
                         oOs2:WriteParBold( "Status" )
                      ENDIF
@@ -738,10 +738,10 @@ FUNCTION Formatos2Buff( cBuffer, cStyle )
    LOCAL cLine    := ''
    LOCAL cBuffend := ''
    LOCAL coline   := ''
-   LOCAL lEndBuff := .f.
+   LOCAL lEndBuff := .F.
 
    LOCAL nPos
-   LOCAL lArgBold := .f.
+   LOCAL lArgBold := .F.
 
    cReturn := cBuffer + ' '
    IF AT( '</par>', cReturn ) > 0 .OR. EMPTY( cBuffer )
@@ -754,19 +754,19 @@ FUNCTION Formatos2Buff( cBuffer, cStyle )
       DO WHILE !lEndBuff
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( '</par>', cLine ) > 0
-            lEndBuff := .t.
+            lEndBuff := .T.
          ENDIF
          IF EMPTY( cLine )
-            lEndBuff := .t.
+            lEndBuff := .T.
 
             FT_FSKIP( - 1 )
          ENDIF
          IF AT( DELIM, cline ) > 0
 
             FT_FSKIP( - 1 )
-            lEndBuff := .t.
+            lEndBuff := .T.
          ENDIF
-         IF AT( DELIM, cLine ) = 0
+         IF AT( DELIM, cLine ) == 0
             cReturn += " "+ ALLTRIM( cLine ) + ' '
          ENDIF
       ENDDO
@@ -791,7 +791,7 @@ FUNCTION Formatos2Buff( cBuffer, cStyle )
          IF AT( "@", cOLine ) > 0 .OR. AT( "()", cOLine ) > 0 .OR. AT( "<", cOLine ) > 0 .OR. AT( "_", cOLine ) > 0
             lArgBold := .T.
          ELSE
-            lArgBold := .f.
+            lArgBold := .F.
          ENDIF
 
       ENDIF
@@ -799,17 +799,17 @@ FUNCTION Formatos2Buff( cBuffer, cStyle )
       DO WHILE !lEndBuff
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( '</par>', cLine ) > 0
-            lEndBuff := .t.
+            lEndBuff := .T.
          ENDIF
          IF EMPTY( cLine )
-            lEndBuff := .t.
+            lEndBuff := .T.
             FT_FSKIP( - 1 )
          ENDIF
          IF AT( DELIM, cline ) > 0
             FT_FSKIP( - 1 )
-            lEndBuff := .t.
+            lEndBuff := .T.
          ENDIF
-         IF AT( DELIM, cline ) = 0
+         IF AT( DELIM, cline ) == 0
             cReturn += ' ' + ALLTRIM( cLine ) + ' '
          ENDIF
       ENDDO
@@ -913,7 +913,7 @@ FUNCTION ProcOs2Table( cBuffer , nNum )
          cItem4  := SUBSTR( cBuffer, 1 )
       ENDIF
    ENDIF
-   IF cColor <> NIL
+   IF cColor != NIL
       AADD( afiTable, "<Font color=" + ccolor + ">" + RTRIM( LTRIM( cItem ) ) + '</font>' )
       AADD( asiTable, "<Font color=" + ccolor + ">" + cItem2 + '</font>' )
    ELSE
@@ -921,12 +921,12 @@ FUNCTION ProcOs2Table( cBuffer , nNum )
       AADD( asiTable, cItem2 )
    ENDIF
 
-   IF cColor <> NIL
+   IF cColor != NIL
       AADD( atiTable, "<Font color=" + ccolor + ">" + cItem3 + '</font>' )
    ELSE
       AADD( atiTable, cItem3 )
    ENDIF
-   IF cColor <> NIL
+   IF cColor != NIL
       AADD( afoiTable, "<Font color=" + ccolor + ">" + cItem4 + '</font>' )
    ELSE
       AADD( afoiTable, cItem4 )
@@ -1042,15 +1042,15 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 
    DEFAULT cStyle TO "Default"
    lendfixed := .F.
-   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle <> "Example" 
+   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example" 
       cBuffer := '<par>' + cBuffer
    ENDIF
    IF EMPTY( cBuffer )
       oOs2:WriteText( ".br" )
    ENDIF
 
-   IF cStyle <> "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) = 0
-      IF AT( "<par>", cBuffer ) >= 0 .OR. AT( "</par>", cBuffer ) = 0 .AND. !EMPTY( cbuffer )
+   IF cStyle != "Example" .AND. AT( "<table>", cBuffer ) == 0 .AND. AT( "<fixed>", cBuffer ) == 0
+      IF AT( "<par>", cBuffer ) >= 0 .OR. AT( "</par>", cBuffer ) == 0 .AND. !EMPTY( cbuffer )
          IF AT( "<par>", cBuffer ) > 0 .AND. AT( "</par>", cBuffer ) > 0
 
             IF cStyle == "Arguments"
@@ -1065,7 +1065,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
                IF AT( "@", cOLine ) > 0 .OR. AT( "()", cOLine ) > 0 .OR. AT( "<", cOLine ) > 0 .OR. AT( "_", cOLine ) > 0
                   lArgBold := .T.
                ELSE
-                  lArgBold := .f.
+                  lArgBold := .F.
                ENDIF
 
                //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
@@ -1137,7 +1137,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
                 if AT("<b>",cLine)>0 .or. AT("</b>",cLine)>0
                       cLine   := STRTRAN( cLine, '<b>', '' )
                       cLine   := STRTRAN( cLine, '</b>', '' )
-                      oOs2:WriteParBold(cLine,.f.)
+                      oOs2:WriteParBold(cLine,.F.)
                 Else
                       oos2:WriteText(SPACE(nidentLevel )+ cLine )
                 Endif
@@ -1190,7 +1190,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
          ENDIF*/
          IF !EMPTY( cBuffer )
 /*            cBuffer := SUBSTR( cBuffer, 2 )
-            oOs2:WriteParBold( cBuffer,.f.)
+            oOs2:WriteParBold( cBuffer,.F.)
             oOs2:writeText('.br')
             oOs2:writeText('.br')*/
 //            ? cBuffer
@@ -1210,7 +1210,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
    ENDIF
    IF AT( '<fixed>', cBuffer ) > 0 .OR. cStyle = "Example"
 
-      IF AT( '<fixed>', cBuffer ) = 0 .OR. !EMPTY( cBuffer )
+      IF AT( '<fixed>', cBuffer ) == 0 .OR. !EMPTY( cBuffer )
          if AT( '<fixed>', cBuffer ) > 0
             lHasFixed:=.T.
          else
@@ -1227,15 +1227,15 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
       DO WHILE !lendFixed
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</fixed>", cLine ) > 0
-            lendfixed := .t.
+            lendfixed := .T.
             cLine     := STRTRAN( cLine, "</fixed>", "" )
          ENDIF
-         IF AT( DELIM, cLine ) = 0
+         IF AT( DELIM, cLine ) == 0
             cReturn += ALLTRIM( cLine ) + ' '
          ENDIF
          IF AT( DELIM, cLine ) > 0
             FT_FSKIP( - 1 )
-            lEndfixed := .t.
+            lEndfixed := .T.
 
          ENDIF
          IF AT( DELIM, cLine ) == 0  .and. !lendfixed
@@ -1249,12 +1249,12 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
       DO WHILE !lendTable
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</table>", cLine ) > 0
-            lendTable := .t.
+            lendTable := .T.
          ELSE
             IF LFstTableItem
                nNumTableItems := GetNumberofTableItems( cLine )
                procos2table( cline, nNumTableItems )
-               LFstTableItem := .f.
+               LFstTableItem := .F.
             ELSE
                procos2table( cline, nNumTableItems )
             ENDIF
@@ -1309,9 +1309,9 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
    IF nPos > 0
       cCuritem := xPos[ nPos ]
       IF AT( "$", xPos[ nPos + 1 ] ) > 0
-         lReturn := .f.
+         lReturn := .F.
       ELSE
-         lReturn := .t.
+         lReturn := .T.
       ENDIF
 
    ENDIF
