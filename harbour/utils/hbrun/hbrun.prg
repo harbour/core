@@ -194,8 +194,8 @@ RETURN
 STATIC PROCEDURE HB_DotUsage()
 
    OutStd( 'Harbour "DOt Prompt" Console / runner' + HB_OSNewLine() +;
-           'Copyright 1999-2008, Przemyslaw Czerpak' + HB_OSNewLine() + ;
-           'http://www.harbour-project.org' + HB_OSNewLine() +;
+           'Copyright (c) 1999-2008, Przemyslaw Czerpak' + HB_OSNewLine() + ;
+           'http://www.harbour-project.org/' + HB_OSNewLine() +;
            HB_OSNewLine() +;
            'Syntax:  hbrun [<hrbfile[.prg|.hrb]> [<parameters,...>]]' + HB_OSNewLine() + ;
            HB_OSNewLine() +;

@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 11:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/pp/hbpp.c
+   * utils/hbrun/hbrun.prg
+     * Synced help screen, header and copyright layout.
+       (some more minor)
+
 2008-08-07 11:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/pp/hbpp.c
    * utils/hbdoc/hbdoc.prg

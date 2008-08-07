@@ -548,15 +548,16 @@ static void hb_pp_usage( char * szName )
 {
    printf( "\n" );
    printf( "Syntax:  %s <file[.prg]> [options]\n\n", szName );
-   printf( "Options: -d<id>[=<val>]\t#define <id>\n"
-           "         -i<path>      \tadd #include file search path\n"
-           "         -u[<file>]    \tuse command def set in <file> (or none)\n"
-           "         -c[<file>]    \tlook for ChangeLog file\n"
-           "         -o<file>      \tcreates .c file with PP rules\n"
-           "         -v<file>      \tcreates .h file with version information\n"
-           "         -w            \twrite preprocessed (.ppo) file\n"
-           "         -q            \tdisable information messages\n"
-           "if neither -o nor -v is specified then -w is default action\n\n" );
+   printf( "Options:  -d<id>[=<val>]\t#define <id>\n"
+           "          -i<path>      \tadd #include file search path\n"
+           "          -u[<file>]    \tuse command def set in <file> (or none)\n"
+           "          -c[<file>]    \tlook for ChangeLog file\n"
+           "          -o<file>      \tcreates .c file with PP rules\n"
+           "          -v<file>      \tcreates .h file with version information\n"
+           "          -w            \twrite preprocessed (.ppo) file\n"
+           "          -q            \tdisable information messages\n"
+           "\n"
+           "Note:  if neither -o nor -v is specified then -w is default action\n\n" );
 }
 
 int main( int argc, char * argv[] )
