@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 12:55 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbdefs.h
+     % Tamed latest HB_SYMBOL_UNUSED() change to only affect 
+       __POCC__, __XCC__.
+
 2008-08-07 13:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * excluded hbcplr library from harbour shared library
