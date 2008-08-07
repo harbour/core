@@ -1153,7 +1153,7 @@ METHOD EditSet( nSet, oBrwSets ) CLASS HBDebugger
    SetCursor( SC_NONE )
 #else
    cSet := getdbginput( Row(), Col() + 13, cSet, ;
-               { | cSet | iif( Type( cSet ) != cType,
+               { | cSet | iif( Type( cSet ) != cType, ;
                   ( Alert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, ;
                SubStr( ::ClrModal(), 5 ) )
 #endif
