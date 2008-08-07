@@ -290,6 +290,11 @@ HB_HWGUI=""
 HB_USRLIBS=""
 HB_USRLPATH=""
 HB_GEN=""
+HB_MODE=""
+LN_OPT="${CC_L_USR}"
+CC_OPT="${CC_C_USR}"
+HB_OPT="${CC_PRG_USR}"
+
 [ -n "\$TMPDIR" ] || TMPDIR="\$TMP"
 [ -n "\$TMPDIR" ] || TMPDIR="\$TEMP"
 [ -n "\$TMPDIR" ] || TMPDIR="/tmp"
@@ -325,6 +330,8 @@ while [ \$n -lt \${#P[@]} ]; do
         -nostrip)    HB_STRIP="no" ;;
         -l[^-]*)     HB_USRLIBS="\${HB_USRLIBS} \${v}" ;;
         -L[^-]*)     HB_USRLPATH="\${HB_USRLPATH} \${v}" ;;
+        -mwindows)   LN_OPT="\${LN_OPT} \${v}"; HB_MODE="gui" ;;
+        -mconsole)   LN_OPT="\${LN_OPT} \${v}"; HB_MODE="std" ;;
         -main=*)     HB_MAIN_FUNC="\${v#*=}" ;;
         -g[cohwij])  HB_GEN="\${v#-g}"; p="\${v}" ;;
         -gc[0-9])    HB_GEN="c"; p="\${v}" ;;
@@ -362,9 +369,6 @@ HB_MAIN_FUNC=\`echo \${HB_MAIN_FUNC}|tr '[a-z]' '[A-Z]'\`
 HB_PATHS="-I\${HB_INC_INSTALL}"
 GCC_PATHS="\${HB_PATHS} -L\${HB_LIB_INSTALL}"
 
-LN_OPT="${CC_L_USR}"
-CC_OPT="${CC_C_USR}"
-HB_OPT="${CC_PRG_USR}"
 [ "\${HB_GEN}" != "" ] || HB_OPT="\${HB_OPT} -gc0"
 
 HB_GPM_LIB=""
@@ -484,9 +488,21 @@ else
     HARBOUR_LIBS="-Wl,--start-group \${HARBOUR_LIBS} -Wl,--end-group"
 fi
 
-l="mainwin"
-[ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
-[ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
+l=""
+if [ "\${HB_COMPILER}" = "mingw32" ]; then
+    if [ -z "\${HB_MODE}" ]; then
+        LN_OPT="\${LN_OPT} -mwindows"
+        l="hbmainwin"
+    elif [ "\${HB_MODE}" = "gui" ]; then
+        l="hbmainwin"
+    elif [ "\${HB_MODE}" = "std" ]; then
+        l="hbmainstd"
+    fi
+fi
+if [ -n "\${l}" ]; then
+    [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
+    [ -f "\${HB_LIB_INSTALL}/lib\${l}.a" ] && HARBOUR_LIBS="\${HARBOUR_LIBS} -l\${l}"
+fi
 
 l="hbfm"
 [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"

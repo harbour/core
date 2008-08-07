@@ -1139,12 +1139,16 @@ static BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPA
                      hb_gt_wvt_AddCharToInputQueue( pWVT, K_ESC );
                      break;
                   default:
-#if defined(UNICODE)
                      if( pWVT->inCDP )
+                     {
+#if defined(UNICODE)
                         c = hb_cdpGetChar( pWVT->inCDP, FALSE, ( USHORT ) c );
-                     else
+#else
+                        if( c > 0 && c <= 255 && pWVT->keyTransTbl[ c ] )
+                           c = pWVT->keyTransTbl[ c ];
 #endif
-                     if( pWVT->CodePage == OEM_CHARSET )
+                     }
+                     else if( pWVT->CodePage == OEM_CHARSET )
                         c = hb_gt_wvt_key_ansi_to_oem( c );
                      hb_gt_wvt_AddCharToInputQueue( pWVT, c );
                      break;
@@ -1339,6 +1343,8 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT, RECT updateRect )
 
 #if defined(UNICODE)
          usChar = hb_cdpGetU16( pWVT->hostCDP, TRUE, ( BYTE ) usChar );
+#else
+         usChar = pWVT->chrTransTbl[ usChar & 0xff ];
 #endif
          if( len == 0 )
          {
@@ -1633,7 +1639,15 @@ static void hb_gt_wvt_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
 
 #ifndef HB_CDP_SUPPORT_OFF
    pWVT->hostCDP    = hb_cdp_page;
+#if defined(UNICODE)
    pWVT->inCDP      = hb_cdp_page;
+#else
+   {
+      int i;
+      for( i = 0; i < 256; ++i )
+         pWVT->chrTransTbl[ i ] = pWVT->keyTransTbl[ i ] = ( BYTE ) i;
+   }
+#endif
 #endif
 
    /* Set default window title */
@@ -2522,6 +2536,8 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
    HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox );
 
 #ifndef HB_CDP_SUPPORT_OFF
+
+#if defined(UNICODE)
    /*
     * We are displaying text in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
@@ -2540,6 +2556,39 @@ static BOOL hb_gt_wvt_SetDispCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCD
       if( cdpHost )
          HB_GTWVT_GET( pGT )->hostCDP = cdpHost;
    }
+
+#else
+
+   if( !pszHostCDP )
+      pszHostCDP = hb_cdp_page->id;
+   if( !pszTermCDP )
+      pszTermCDP = pszHostCDP;
+
+   if( pszTermCDP && pszHostCDP )
+   {
+      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
+                   cdpHost = hb_cdpFind( pszHostCDP );
+      int i;
+
+      for( i = 0; i < 256; ++i )
+         pWVT->chrTransTbl[ i ] = ( BYTE ) i;
+
+      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
+          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
+      {
+         for( i = 0; i < cdpHost->nChars; ++i )
+         {
+            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsUpper[ i ] ] = 
+                               ( BYTE ) cdpTerm->CharsUpper[ i ];
+            pWVT->chrTransTbl[ ( BYTE ) cdpHost->CharsLower[ i ] ] = 
+                               ( BYTE ) cdpTerm->CharsLower[ i ];
+         }
+      }
+   }
+
+#endif
+
 #endif
 
    return TRUE;
@@ -2550,6 +2599,8 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP
    HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP );
 
 #ifndef HB_CDP_SUPPORT_OFF
+
+#if defined(UNICODE)
    /*
     * We are receiving WM_CHAR events in U16 so pszTermCDP is unimportant.
     * We only have to know what is the internal application codepage
@@ -2568,6 +2619,40 @@ static BOOL hb_gt_wvt_SetKeyCP( PHB_GT pGT, char * pszTermCDP, char * pszHostCDP
       if( cdpHost )
          HB_GTWVT_GET( pGT )->inCDP = cdpHost;
    }
+
+#else
+
+   if( !pszHostCDP )
+      pszHostCDP = hb_cdp_page->id;
+   if( !pszTermCDP )
+      pszTermCDP = pszHostCDP;
+
+   if( pszTermCDP && pszHostCDP )
+   {
+      PHB_GTWVT pWVT = HB_GTWVT_GET( pGT );
+      PHB_CODEPAGE cdpTerm = hb_cdpFind( pszTermCDP ),
+                   cdpHost = hb_cdpFind( pszHostCDP );
+      int i;
+
+      for( i = 0; i < 256; ++i )
+         pWVT->keyTransTbl[ i ] = ( BYTE ) i;
+
+      if( cdpTerm && cdpHost && cdpTerm != cdpHost &&
+          cdpTerm->nChars && cdpTerm->nChars == cdpHost->nChars )
+      {
+         for( i = 0; i < cdpHost->nChars; ++i )
+         {
+            pWVT->keyTransTbl[ ( BYTE ) cdpTerm->CharsUpper[ i ] ] = 
+                               ( BYTE ) cdpHost->CharsUpper[ i ];
+            pWVT->keyTransTbl[ ( BYTE ) cdpTerm->CharsLower[ i ] ] = 
+                               ( BYTE ) cdpHost->CharsLower[ i ];
+         }
+      }
+
+      pWVT->inCDP = cdpTerm;
+   }
+#endif
+
 #endif
 
    return TRUE;
