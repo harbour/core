@@ -1,7 +1,7 @@
 /*
  * $Id$
 
-   Harbour Project source code - http://www.Harbour-Project.org
+   Harbour Project source code - http://www.harbour-project.org
 
    By: A White - awhite@mail.rosecom.ca
 

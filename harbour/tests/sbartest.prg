@@ -6,7 +6,7 @@
  *   ScrollBar class test
  *
  * Harbour Project source code
- * http://www.Harbour-Project.org/
+ * http://www.harbour-project.org/
  *
  *  Example donated to Harbour Project by Diego Pego, 
  *  modified by Alejandro de Garate

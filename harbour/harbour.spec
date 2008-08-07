@@ -481,8 +481,8 @@ function main()
 return nil
 
 druzus@uran:~/tmp$ %{hb_pref}cmp foo
-Harbour Compiler Alpha build 46.2 (Flex)
-Copyright 1999-2006, http://www.harbour-project.org/
+Harbour 1.0.0 Intl. (Rev. 9099)
+Copyright (c) 1999-2008, http://www.harbour-project.org/
 Compiling 'foo.prg'...
 Lines 5, Functions/Procedures 2
 Generating C source output to 'foo.c'... Done.
@@ -503,8 +503,8 @@ function main()
 return nil
 
 druzus@uran:~/tmp$ %{hb_pref}mk foo
-Harbour Compiler Alpha build 46.2 (Flex)
-Copyright 1999-2006, http://www.harbour-project.org/
+Harbour 1.0.0 Intl. (Rev. 9099)
+Copyright (c) 1999-2008, http://www.harbour-project.org/
 Compiling 'foo.prg'...
 Lines 5, Functions/Procedures 2
 Generating C source output to 'foo.c'... Done.

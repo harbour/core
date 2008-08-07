@@ -162,7 +162,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
       CASE nKey == K_LDBLCLK .OR. nKey == K_LBUTTONDOWN
          nAux := HitTest( nTop, nLeft, nBottom, nRight, MRow(), MCol() )
-         IF ( nAux != 0 ) .AND. ( ( nNewPos := nAtTop + nAux - 1 ) <= nItems ) 
+         IF nAux != 0 .AND. ( nNewPos := nAtTop + nAux - 1 ) <= nItems
             IF Eval( bSelect, alSelect[ nNewPos ] )
                DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, Eval( bSelect, alSelect[ nPos ] ), .F., nNumCols )
                nPos := nNewPos

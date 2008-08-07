@@ -41,7 +41,7 @@
  *      Harbour.
  *
  *      La p gina web del Proyecto Harbour es:
- *               <b>http://www.Harbour-Project.org/</b>
+ *               <b>http://www.harbour-project.org/</b>
  *
  *      El estado del proyecto y cualquier otra informaci¢n est  siempre
  *      disponible desde el sitio web.

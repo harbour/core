@@ -23,7 +23,7 @@
  * That means that if you've got some code that would compile using
  * CA-Clipper(r) then it should compile under Harbour. The Harbour-Project
  * web page is:   </par>
- *              <b>http://www.Harbour-Project.org/</b>   </par>
+ *              <b>http://www.harbour-project.org/</b>   </par>
  *
  *
  * Status and other information is always available from the web site.

@@ -8,6 +8,37 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 21:49 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * harbour-ce-spec
+   * harbour-w32-spec
+   * harbour.spec
+   * contrib/examples/pp/pp.c
+   * contrib/hbmisc/fileread.prg
+   * contrib/hbmisc/tests/readfile.prg
+   * contrib/hbmisc/tests/twirl.prg
+   * contrib/hbmisc/twirler.prg
+   * doc/en/readme.txt
+   * doc/es/readme.txt
+   * source/rtl/achoice.prg
+   * tests/boxtst2.prg
+   * tests/delimtst.prg
+   * tests/devtest.prg
+   * tests/disptest.prg
+   * tests/inkeytst.prg
+   * tests/longdev.prg
+   * tests/output.prg
+   * tests/round.prg
+   * tests/sbartest.prg
+   * tests/scroll.prg
+   * tests/sdf_test.prg
+   * tests/seconds.prg
+   * tests/setkeys.prg
+   * tests/testhtml.prg
+   * tests/version.prg
+   * utils/hbdoc/hbdoc.prg
+     * Minor formattings, cosmetic updates, 
+       homepage made lower case everywhere.
+
 2008-08-07 12:23 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/source/rtl/achoice.prg
     * Corrected behavior of K_LDBLCLK and K_LBUTTONDOWN.
