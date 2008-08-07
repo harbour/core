@@ -27,7 +27,7 @@ FUNCTION Main()
 
    WHILE .T.
 
-      @ 00, 00 SAY padc( "þ TODBC Demonstration þ", 80 ) COLOR "B/W"
+      @ 00, 00 SAY padc( "- TODBC Demonstration -", 80 ) COLOR "B/W"
 
       dsFunctions:SetSQL( "SELECT * FROM Functions" )
       dsFunctions:Open()

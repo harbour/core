@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 10:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbodbc/odbc.c
+     ! Replaced depracated ODBC API calls to new ones, thus 
+       solving some potential buffer overflow problems and 
+       64 bit warnings.
+
+   * contrib/hbodbc/tests/odbcdemo.prg
+     ! Fixed some non-ASCII chars.
+
 2008-08-07 09:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/achoice.prg
      * Minor formatting.

@@ -504,41 +504,45 @@ HB_FUNC( SQLGETINFO ) /* hDbc, nType, @cResult */
 
 HB_FUNC( SQLSETCONNECTOPTION ) /* hDbc, nOption, uOption */
 {
-   /* TOFIX: SQLSetConnectOption() deprecated. */
-   hb_retnl( ( LONG ) SQLSetConnectOption( ( HDBC ) hb_parptr( 1 ),
-                                           ( UWORD ) hb_parnl( 2 ),
-                                           ( UDWORD ) ISCHAR( 3 ) ? ( LONG ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
+   hb_retni( SQLSetConnectAttr( ( SQLHDBC ) hb_parptr( 1 ),
+                                ( SQLINTEGER ) hb_parnl( 2 ),
+                                ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnl( 3 ), 
+                                ( SQLINTEGER ) ISCHAR( 3 ) ? hb_parclen( 3 ) : SQL_IS_INTEGER ) );
 }
 
 HB_FUNC( SQLSETSTMTOPTION ) /* hStmt, nOption, uOption )  --> nRetCode */
 {
-   /* TOFIX: SQLSetStmtOption() deprecated. */
-   hb_retnl( ( LONG ) SQLSetStmtOption( ( SQLHSTMT ) hb_parptr( 1 ),
-                                        ( UWORD ) hb_parnl( 2 ),
-                                        ( UDWORD ) ISCHAR( 3 ) ? ( LONG ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
+   hb_retni( SQLSetStmtAttr( ( SQLHSTMT ) hb_parptr( 1 ),
+                             ( SQLINTEGER ) hb_parnl( 2 ),
+                             ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnl( 3 ), 
+                             ( SQLINTEGER ) ISCHAR( 3 ) ? hb_parclen( 3 ) : SQL_IS_INTEGER ) );
 }
 
 HB_FUNC( SQLGETCONNECTOPTION ) /* hDbc, nOption, @cOption */
 {
-   BYTE bBuffer[ 512 ];
-   /* TOFIX: SQLGetConnectOption() deprecated. */
-   WORD wResult = SQLGetConnectOption( ( HDBC ) hb_parptr( 1 ), hb_parni( 2 ), bBuffer );
-   if( wResult == SQL_SUCCESS )
-      hb_storclen( ( char * ) bBuffer, sizeof( bBuffer ), 3 );
-
-   hb_retni( wResult );
+   SQLPOINTER buffer[ 512 ];
+   SQLINTEGER len;
+   SQLRETURN result = SQLGetConnectAttr( ( SQLHDBC ) hb_parptr( 1 ), 
+                                         ( SQLINTEGER ) hb_parni( 2 ), 
+                                         buffer,
+                                         ( SQLINTEGER ) sizeof( buffer ),
+                                         &len );
+   hb_storclen( result == SQL_SUCCESS ? ( char * ) buffer : NULL, len, 3 );
+   hb_retni( result );
 }
 
 HB_FUNC( SQLGETSTMTOPTION ) /* hStmt, nOption, @cOption */
 {
-   BYTE bBuffer[ 512 ];
-   /* TOFIX: SQLGetStmtOption() deprecated. */
-   WORD wResult = SQLGetStmtOption( ( SQLHSTMT ) hb_parptr( 1 ), hb_parni( 2 ), bBuffer );
+   SQLPOINTER buffer[ 512 ];
+   SQLINTEGER len;
+   SQLRETURN result = SQLGetStmtAttr( ( SQLHSTMT ) hb_parptr( 1 ), 
+                                      ( SQLINTEGER ) hb_parni( 2 ), 
+                                      buffer,
+                                      ( SQLINTEGER ) sizeof( buffer ),
+                                      &len );
 
-   if( wResult == SQL_SUCCESS )
-      hb_storclen( ( char * ) bBuffer, sizeof( bBuffer ), 3 );
-
-   hb_retni( wResult );
+   hb_storclen( result == SQL_SUCCESS ? ( char * ) buffer : NULL, len, 3 );
+   hb_retni( result );
 }
 
 HB_FUNC( SQLCOMMIT ) /* hEnv, hDbc */
@@ -604,7 +608,6 @@ HB_FUNC( SQLEXECUTESCALAR )
    hb_retni( wResult );
 
    SQLFreeStmt( ( HSTMT ) hStmt, 0 );
-
 }
 
 HB_FUNC( SQLSTOD )
