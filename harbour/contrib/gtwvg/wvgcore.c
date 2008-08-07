@@ -362,7 +362,7 @@ HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM w
    long int lReturn = 0;
    PHB_ITEM pFunc = NULL;
 
-   iType = (int) NULL;
+   iType = 0;
 
    for ( iIndex = 0; iIndex < WVT_DLGML_MAX; iIndex++ )
    {
@@ -450,7 +450,7 @@ HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcMLess( HWND hDlg, UINT message, WPARAM w
          }
          _s->hDlgModeless[ iIndex ] = NULL;
          _s->pFunc[ iIndex ] = NULL;
-         _s->iType[ iIndex ] = (int) NULL;
+         _s->iType[ iIndex ] = 0;
          lReturn = 0;
          break;
    }
@@ -476,7 +476,7 @@ HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM w
       return lReturn;
    }
 
-   iType = ( int ) NULL;
+   iType = 0;
 
    for ( iIndex = 0; iIndex < WVT_DLGMD_MAX; iIndex++ )
    {
@@ -564,7 +564,7 @@ HB_EXPORT BOOL CALLBACK hb_wvt_gtDlgProcModal( HWND hDlg, UINT message, WPARAM w
          }
          _s->hDlgModal[ iIndex ]  = NULL;
          _s->pFuncModal[ iIndex ] = NULL;
-         _s->iTypeModal[ iIndex ] = ( int ) NULL;
+         _s->iTypeModal[ iIndex ] = 0;
          lReturn = 0;
          break;
    }
@@ -2828,7 +2828,6 @@ HB_FUNC( WVT_CREATEFONT )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    LOGFONT  logfont;// = { 0,0,0 };
-   HFONT    hFont;
 
    logfont.lfEscapement     = ( ISNIL( 10 ) ? 0 : ( hb_parni( 10 ) * 10 ) );
    logfont.lfOrientation    = 0;
@@ -2847,15 +2846,7 @@ HB_FUNC( WVT_CREATEFONT )
    //strcpy( logfont.lfFaceName, ( ISNIL( 1 ) ? _s->fontFace : hb_parcx( 1 ) ) );
    HB_TCHAR_CPTO( logfont.lfFaceName, ( ISNIL( 1 ) ? _s->fontFace : hb_parcx( 1 ) ), sizeof( logfont.lfFaceName )-1 );
 
-   hFont = CreateFontIndirect( &logfont );
-   if ( hFont )
-   {
-      hb_retnl( ( ULONG ) hFont );
-   }
-   else
-   {
-      hb_retnl( 0 );
-   }
+   hb_retnint( ( LONG_PTR ) CreateFontIndirect( &logfont ) );
 }
 
 //-------------------------------------------------------------------//
@@ -3013,7 +3004,7 @@ HB_FUNC( WVT_SAVESCREEN )
 
    hb_arraySetNI( info, 1, iWidth );
    hb_arraySetNI( info, 2, iHeight );
-   hb_arraySetNL( info, 3, ( ULONG ) hBmp );
+   hb_arraySetNInt( info, 3, ( LONG_PTR ) hBmp );
 
    hb_itemReturnRelease( info );
 }

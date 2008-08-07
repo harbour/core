@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 03:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/gtwvg/gtwvg.c
+   * contrib/gtwvg/wvgutils.c
+   * contrib/gtwvg/wvgcore.c
+     ! Fixed 64 bit (MSVS 2008 64 bit and Pelles C 5 64 bit) related 
+       problems shown as warnings.
+     ; Please review and test, especially WinCE and older MSVC builds.
+     ; NOTE: There are many other 64 bit related problems not 
+             shown as compiler warnings.
+
 2008-08-06 23:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbapollo/Makefile
      ! Excluded from DOS builds.

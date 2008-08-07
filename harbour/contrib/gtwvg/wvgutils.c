@@ -364,7 +364,7 @@ HB_FUNC( WVT_SETTOOLTIPWIDTH )
 #if !defined( __WINCE__ )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   int iTipWidth = SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 );
+   int iTipWidth = ( int ) SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 );
 
    if ( ISNUM( 1 ) )
    {
@@ -382,7 +382,7 @@ HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
 #if !defined( __WINCE__ )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   COLORREF cr = SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 );
+   COLORREF cr = ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 );
 
    if ( ISNUM( 1 ) )
    {
@@ -399,7 +399,7 @@ HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
 #if !defined( __WINCE__ )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   COLORREF cr = SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 );
+   COLORREF cr = ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 );
 
    if ( ISNUM( 1 ) )
    {
@@ -440,7 +440,7 @@ HB_FUNC( WVT_GETTOOLTIPWIDTH )
 #if !defined( __WINCE__ )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   hb_retni( SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 ) );
+   hb_retni( ( int ) SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 ) );
 #endif
 }
 
@@ -600,7 +600,7 @@ HB_FUNC( WVT_SETPOINTER )
       break;
    }
 
-   SetClassLong( _s->hWnd, GCLP_HCURSOR, ( DWORD ) hCursor );
+   SetClassLongPtr( _s->hWnd, GCLP_HCURSOR, ( LONG_PTR ) hCursor );
 }
 
 //-------------------------------------------------------------------//
@@ -700,7 +700,7 @@ HB_FUNC( WVT_SETPOPUPMENU )
    _s->hPopup = ( HMENU ) hb_parnl( 1 );
    if ( hPopup )
    {
-      hb_retnl( ( LONG ) hPopup );
+      hb_retnint( ( LONG_PTR ) hPopup );
    }
 }
 
@@ -708,14 +708,14 @@ HB_FUNC( WVT_SETPOPUPMENU )
 
 HB_FUNC( WVT_CREATEMENU )
 {
-  hb_retnl( ( LONG ) CreateMenu() ) ;
+  hb_retnint( ( LONG_PTR ) CreateMenu() );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_CREATEPOPUPMENU )
 {
-  hb_retnl( ( LONG ) CreatePopupMenu() ) ;
+  hb_retnint( ( LONG_PTR ) CreatePopupMenu() );
 }
 
 //-------------------------------------------------------------------//
@@ -921,7 +921,7 @@ HB_FUNC( WVT_GETMENU )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   hb_retnl( ( ULONG ) GetMenu( _s->hWnd ) );
+   hb_retnint( ( LONG_PTR ) GetMenu( _s->hWnd ) );
 }
 
 //-------------------------------------------------------------------//
@@ -958,7 +958,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
    if ( iIndex >= WVT_DLGML_MAX )
    {
       /* no more room */
-      hb_retnl( (ULONG) NULL );
+      hb_retnint( 0 );
       return;
    }
 
@@ -1063,7 +1063,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
       }
    }
 
-   hb_retnl( ( ULONG ) hDlg );
+   hb_retnint( ( LONG_PTR ) hDlg );
 }
 
 //-------------------------------------------------------------------//
@@ -1092,7 +1092,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
    if ( iIndex >= WVT_DLGMD_MAX )
    {
       /* no more room */
-      hb_retni( ( int ) NULL );
+      hb_retnint( 0 );
       return;
    }
 
@@ -1272,13 +1272,13 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
          }
 
       *p++ = 0x00 ;  // extras ( in array 12 )
-    } ;
+    };
 
-    p = lpwAlign( p )  ;
+    p = lpwAlign( p );
 
-    hb_retclen( ( LPSTR ) pdlgtemplate, ( ( ULONG ) p - ( ULONG ) pdlgtemplate ) ) ;
+    hb_retclen( ( LPSTR ) pdlgtemplate, ( ULONG ) ( p - pdlgtemplate ) );
 
-    LocalFree( LocalHandle( pdlgtemplate ) ) ;
+    LocalFree( LocalHandle( pdlgtemplate ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1288,12 +1288,11 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 //
 HB_EXPORT LPWORD lpwAlign( LPWORD lpIn )
 {
-   ULONG ul;
-   ul = ( ULONG ) lpIn;
+   LONG_PTR ul = ( LONG_PTR ) lpIn;
    ul += 3;
    ul >>=2;
    ul <<=2;
-  return ( LPWORD ) ul;
+   return ( LPWORD ) ul;
 }
 
 //-----------------------------------------------------------------------------
@@ -1325,7 +1324,7 @@ HB_FUNC( WVT_LBADDSTRING )
 
 HB_FUNC( WVT_LBGETCOUNT )
 {
-   hb_retnl( SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
+   hb_retnl( ( long ) SendMessage( GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1385,7 +1384,7 @@ HB_FUNC( WVT_DLGSETICON )
 
    if ( hIcon )
    {
-      hb_retnl( ( ULONG ) hIcon );
+      hb_retnint( ( LONG_PTR ) hIcon );
    }
 }
 
@@ -1498,21 +1497,21 @@ HB_FUNC( WIN_SETBKMODE )
 
 HB_FUNC( WIN_GETSTOCKOBJECT )
 {
-   hb_retnl( ( ULONG ) GetStockObject( hb_parnl( 1 ) ) );
+   hb_retnint( ( LONG_PTR ) GetStockObject( hb_parnl( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_DELETEOBJECT )
 {
-   hb_retl( DeleteObject( ( HGDIOBJ ) hb_parnl( 1 ) ) );
+   hb_retl( DeleteObject( ( HGDIOBJ ) hb_parnint( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_SELECTOBJECT )
 {
-   hb_retnl( ( ULONG ) SelectObject( ( HDC ) hb_parnl( 1 ), ( HGDIOBJ ) hb_parnl( 2 ) ) );
+   hb_retnint( ( LONG_PTR ) SelectObject( ( HDC ) hb_parnint( 1 ), ( HGDIOBJ ) hb_parnint( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1611,7 +1610,7 @@ HB_FUNC( WIN_CHECKRADIOBUTTON )
 
 HB_FUNC( WIN_GETDLGITEM )
 {
-   hb_retnl( ( ULONG ) GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ) );
+   hb_retnint( ( LONG_PTR ) GetDlgItem( ( HWND ) hb_parnint( 1 ), hb_parni( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1621,7 +1620,7 @@ HB_FUNC( WIN_MESSAGEBOX )
    LPTSTR lpBuffer = HB_TCHAR_CONVTO( hb_parc( 2 ) );
    LPTSTR lpBuffer2 = HB_TCHAR_CONVTO( hb_parc( 3 ) );
 
-   hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), lpBuffer, lpBuffer2, ISNIL( 4 ) ? MB_OK : hb_parni( 4 ) ) ) ;
+   hb_retni( MessageBox( ( HWND ) hb_parnint( 1 ), lpBuffer, lpBuffer2, ISNIL( 4 ) ? MB_OK : hb_parni( 4 ) ) ) ;
 
    HB_TCHAR_FREE( lpBuffer );
    HB_TCHAR_FREE( lpBuffer2 );
@@ -1653,7 +1652,7 @@ HB_FUNC( WIN_LOADICON )
       HB_TCHAR_FREE( lpBuffer );
    }
 
-   hb_retnl( ( ULONG ) hIcon ) ;
+   hb_retnint( ( LONG_PTR ) hIcon );
 }
 
 //-------------------------------------------------------------------//
@@ -1685,7 +1684,7 @@ HB_FUNC( WIN_LOADIMAGE )
    }
 
    HB_TCHAR_FREE( lpBuffer );
-   hb_retnl( ( ULONG ) hImage ) ;
+   hb_retnint( ( LONG_PTR ) hImage );
 }
 
 //-------------------------------------------------------------------//
@@ -1719,7 +1718,7 @@ HB_FUNC( WIN_DRAWIMAGE )
 
 HB_FUNC( WIN_GETDC )
 {
-   hb_retnl( ( ULONG ) GetDC( ( HWND ) hb_parnl( 1 )  ) );
+   hb_retnint( ( LONG_PTR ) GetDC( ( HWND ) hb_parnl( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1743,10 +1742,10 @@ HB_FUNC( WIN_CREATEBRUSH )
    LOGBRUSH lb = { 0,0,0 };
 
    lb.lbStyle = hb_parni( 1 );
-   lb.lbColor = ISNIL( 2 ) ? RGB( 0,0,0 ) : ( COLORREF ) hb_parnl( 2 ) ;
+   lb.lbColor = ISNIL( 2 ) ? RGB( 0, 0, 0 ) : ( COLORREF ) hb_parnl( 2 ) ;
    lb.lbHatch = ISNIL( 3 ) ? 0 : hb_parni( 3 );
 
-   hb_retnl( ( ULONG ) CreateBrushIndirect( &lb ) );
+   hb_retnint( ( LONG_PTR ) CreateBrushIndirect( &lb ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1774,7 +1773,7 @@ HB_FUNC( WIN_GETWINDOWRECT )
    RECT rc;
    PHB_ITEM info = hb_itemArrayNew( 4 );
 
-   GetWindowRect( ( HWND ) hb_parnl( 1 ), &rc );
+   GetWindowRect( ( HWND ) hb_parnint( 1 ), &rc );
 
    hb_arraySetNI( info, 1, rc.left   );
    hb_arraySetNI( info, 2, rc.top    );
@@ -1795,14 +1794,14 @@ HB_FUNC( WIN_MOVEWINDOW )
 
 HB_FUNC( WIN_SETPARENT )
 {
-   hb_retnl( ( long ) SetParent(  (HWND) hb_parnl( 1 ), (HWND) hb_parnl( 2 ) ) );
+   hb_retnint( ( LONG_PTR ) SetParent( (HWND) hb_parnint( 1 ), (HWND) hb_parnint( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_SETWINDOWLONG )
 {
-   hb_retnl( SetWindowLong( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ), hb_parnl( 3 ) ) );
+   hb_retnl( SetWindowLong( ( HWND ) hb_parnint( 1 ), hb_parni( 2 ), hb_parnl( 3 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1824,7 +1823,7 @@ HB_FUNC( WVT_GETFONTHANDLE )
    if ( iSlot >= 0 && iSlot < WVT_PICTURES_MAX )
       hFont = _s->hUserFonts[ iSlot ];
 
-   hb_retnl( ( ULONG ) hFont );
+   hb_retnint( ( LONG_PTR ) hFont );
 }
 
 //-------------------------------------------------------------------//
@@ -2162,11 +2161,11 @@ HB_FUNC( WIN_FINDWINDOW )
 
    if ( hwnd )
    {
-      hb_retnl( (LONG) hwnd );
+      hb_retnint( ( LONG_PTR ) hwnd );
    }
    else
    {
-      hb_retnl( -1 );
+      hb_retnint( -1 );
    }
 }
 
