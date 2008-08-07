@@ -308,7 +308,7 @@ rm -fR $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbcommon.a
 %{_libdir}/%{name}/libhbcplr.a
 %{_libdir}/%{name}/libhbdebug.a
-%{_libdir}/%{name}/libfm.a
+%{_libdir}/%{name}/libhbfm.a
 %{_libdir}/%{name}/librddfpt.a
 %{_libdir}/%{name}/librddcdx.a
 %{_libdir}/%{name}/librddntx.a

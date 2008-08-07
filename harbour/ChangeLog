@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 05:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbdefs.h
+    ! fixed default printf length modifier for long long integer values
+
+  * harbour/harbour.spec
+  * harbour/harbour-ce-spec
+  * harbour/harbour-w32-spec
+    ! fixed for new FM library name
+
 2008-08-07 03:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/gtwvg/gtwvg.c
    * contrib/gtwvg/wvgutils.c
