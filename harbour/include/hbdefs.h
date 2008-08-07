@@ -1139,7 +1139,7 @@ typedef unsigned long HB_COUNTER;
 #define HB_MACRO2STRING( macro )    HB_MACRO2STRING_( macro )
 #define HB_MACRO2STRING_( macro )   #macro
 
-#define HB_SYMBOL_UNUSED( symbol )  ( void ) symbol
+#define HB_SYMBOL_UNUSED( symbol )  do if( symbol ) {;} while( 0 )
 
 /* ***********************************************************************
  * The name of starting procedure

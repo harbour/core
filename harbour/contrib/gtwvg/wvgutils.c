@@ -1504,14 +1504,14 @@ HB_FUNC( WIN_GETSTOCKOBJECT )
 
 HB_FUNC( WIN_DELETEOBJECT )
 {
-   hb_retl( DeleteObject( ( HGDIOBJ ) hb_parnint( 1 ) ) );
+   hb_retl( DeleteObject( ( HGDIOBJ ) hb_parnl( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_SELECTOBJECT )
 {
-   hb_retnint( ( LONG_PTR ) SelectObject( ( HDC ) hb_parnint( 1 ), ( HGDIOBJ ) hb_parnint( 2 ) ) );
+   hb_retnint( ( LONG_PTR ) SelectObject( ( HDC ) hb_parnl( 1 ), ( HGDIOBJ ) hb_parnl( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1610,7 +1610,7 @@ HB_FUNC( WIN_CHECKRADIOBUTTON )
 
 HB_FUNC( WIN_GETDLGITEM )
 {
-   hb_retnint( ( LONG_PTR ) GetDlgItem( ( HWND ) hb_parnint( 1 ), hb_parni( 2 ) ) );
+   hb_retnint( ( LONG_PTR ) GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1620,7 +1620,7 @@ HB_FUNC( WIN_MESSAGEBOX )
    LPTSTR lpBuffer = HB_TCHAR_CONVTO( hb_parc( 2 ) );
    LPTSTR lpBuffer2 = HB_TCHAR_CONVTO( hb_parc( 3 ) );
 
-   hb_retni( MessageBox( ( HWND ) hb_parnint( 1 ), lpBuffer, lpBuffer2, ISNIL( 4 ) ? MB_OK : hb_parni( 4 ) ) ) ;
+   hb_retni( MessageBox( ( HWND ) hb_parnl( 1 ), lpBuffer, lpBuffer2, ISNIL( 4 ) ? MB_OK : hb_parni( 4 ) ) ) ;
 
    HB_TCHAR_FREE( lpBuffer );
    HB_TCHAR_FREE( lpBuffer2 );
@@ -1773,7 +1773,7 @@ HB_FUNC( WIN_GETWINDOWRECT )
    RECT rc;
    PHB_ITEM info = hb_itemArrayNew( 4 );
 
-   GetWindowRect( ( HWND ) hb_parnint( 1 ), &rc );
+   GetWindowRect( ( HWND ) hb_parnl( 1 ), &rc );
 
    hb_arraySetNI( info, 1, rc.left   );
    hb_arraySetNI( info, 2, rc.top    );
@@ -1794,14 +1794,14 @@ HB_FUNC( WIN_MOVEWINDOW )
 
 HB_FUNC( WIN_SETPARENT )
 {
-   hb_retnint( ( LONG_PTR ) SetParent( (HWND) hb_parnint( 1 ), (HWND) hb_parnint( 2 ) ) );
+   hb_retnint( ( LONG_PTR ) SetParent( (HWND) hb_parnl( 1 ), (HWND) hb_parnl( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WIN_SETWINDOWLONG )
 {
-   hb_retnl( SetWindowLong( ( HWND ) hb_parnint( 1 ), hb_parni( 2 ), hb_parnl( 3 ) ) );
+   hb_retnl( SetWindowLong( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ), hb_parnl( 3 ) ) );
 }
 
 //-------------------------------------------------------------------//

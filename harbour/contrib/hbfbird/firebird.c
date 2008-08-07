@@ -70,11 +70,7 @@
 #define ERREXIT( status ) { hb_retnl( isc_sqlcode( status ) ); return; }
 
 #ifndef ISC_INT64_FORMAT
-   #if (defined(_MSC_VER) && defined(WIN32)) || (defined(__BORLANDC__) && defined(__WIN32__))
-      #define ISC_INT64_FORMAT        "I64"
-   #else
-      #define ISC_INT64_FORMAT        "ll"
-   #endif
+   #define ISC_INT64_FORMAT PFLL
 #endif
 
 HB_FUNC( FBCREATEDB )

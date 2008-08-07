@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 09:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbdefs.h
+     ! Changed HB_SYMBOL_UNUSED() to better work for all 
+       compilers, notably Pelles C.
+     ! Fix to PFLL, although it didn't fix all GCC 4.3.1 warnings.
+       These remained:
+       ../../genc.c:1582: warning: unknown conversion type character 'l' in format
+       ../../genc.c:1582: warning: too many arguments for format
+       [ This changed got merged with existing commit. ]
+     ; Thanks to Przemek for these patches.
+
+   * contrib/hbfbird/firebird.c
+     % Using PFLL instead of local logic.
+
+   * contrib/gtwvg/wvgutils.c
+     ! Reverted some wrong fixes from previous commit.
+
 2008-08-06 22:30 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/source/rtl/achoice.prg
     + Implemented mouse operations as follows.
