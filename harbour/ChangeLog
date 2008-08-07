@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-06 22:30 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/source/rtl/achoice.prg
+    + Implemented mouse operations as follows.
+      CASE ( nKey == K_MWFORWARD )
+         Keyboard( Chr( K_UP ) )
+      CASE ( nKey == K_MWBACKWARD )
+         Keyboard( Chr( K_DOWN ) )
+      CASE nKey == K_LDBLCLK
+         Keyboard( Chr( K_ENTER ) )
+
 2008-08-07 05:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/include/hbdefs.h
     ! fixed default printf length modifier for long long integer values

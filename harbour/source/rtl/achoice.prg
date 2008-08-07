@@ -110,7 +110,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    DO WHILE !lFinished
 
       IF nMode != AC_GOTO .AND. nMode != AC_NOITEM
-         nKey  := Inkey( 0 )
+         nKey  := Inkey( 0 ) 
          nMode := AC_IDLE
       ENDIF
 
@@ -158,6 +158,15 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          nMode     := AC_ABORT
          nPos      := 0
          lFinished := .T.
+
+      CASE ( nKey == K_MWFORWARD )
+         Keyboard( Chr( K_UP ) )
+
+      CASE ( nKey == K_MWBACKWARD )
+         Keyboard( Chr( K_DOWN ) )
+
+      CASE nKey == K_LDBLCLK
+         Keyboard( Chr( K_ENTER ) )
 
       CASE nKey == K_UP
 
