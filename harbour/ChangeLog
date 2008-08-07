@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 16:35 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/source/rtl/achoice.prg
+    + Added functionality for K_MOUSEMOVE.
+      Now if the moouse is moved over the AChoice area,
+      prompt ready for selection will also change, just like
+      in Windows.
+
 2008-08-08 01:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/genhtm.sh
      ! Minor fix to previous commit.
