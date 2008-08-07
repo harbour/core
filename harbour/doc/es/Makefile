@@ -38,7 +38,6 @@ DOC_FILES=\
 	pragma.txt \
 	readme.txt \
 	setmode.txt \
-	simplex.txt \
 	statics.txt \
 	strotype.txt \
 	tracing.txt \

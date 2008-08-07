@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 23:04 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   - doc/es/simplex.txt
+   * doc/es/Makefile
+     - Obsolete file removed.
+
 2008-08-07 22:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
      * Updated.
