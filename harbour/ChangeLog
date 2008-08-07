@@ -33,7 +33,7 @@
      - Removed reference to hbverfix.
 
    * utils/hbmake/hbmake.prg
-     - Remove local version number. Full Harbour version 
+     - Removed local version number. Full Harbour version 
        number is shown.
 
 2008-08-07 13:32 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
@@ -76,7 +76,7 @@
 
 2008-08-07 10:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbodbc/odbc.c
-     ! Replaced depracated ODBC API calls to new ones, thus 
+     ! Replaced deprecated ODBC API calls to new ones, thus 
        solving some potential buffer overflow problems and 
        64 bit warnings.
 
@@ -95,7 +95,7 @@
        These remained:
        ../../genc.c:1582: warning: unknown conversion type character 'l' in format
        ../../genc.c:1582: warning: too many arguments for format
-       [ This changed got merged with existing commit. ]
+       [ This change got merged with existing commit. ]
      ; Thanks to Przemek for these patches.
 
    * contrib/hbfbird/firebird.c
