@@ -59,8 +59,6 @@
    #undef __HARBOUR__
 #endif
 
-/* NOTE: One of these next three fields can be incremented by the hbverfix program */
-
 #define HB_VER_MAJOR    1        /* Major version number */
 #define HB_VER_MINOR    0        /* Minor version number */
 #define HB_VER_REVISION 0        /* Revision number */

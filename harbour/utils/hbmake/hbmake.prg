@@ -81,7 +81,6 @@ Default Values for core variables are set here
 New Core vars should only be added on this section
 */
 
-STATIC s_cHbMakeVersion  := "1.20"
 STATIC s_lPrint          := .F.
 STATIC s_lEdit           := .F.
 STATIC s_aDefines        := {}
@@ -5896,7 +5895,7 @@ RETURN NIL
 *-------------------
 FUNCTION HbMake_ID()
 *-------------------
-RETURN "Harbour Make Utility " + s_cHbMakeVersion
+RETURN "Harbour Make"
 
 *--------------------------
 FUNCTION HbMake_Copyright()
