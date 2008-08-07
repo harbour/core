@@ -24,6 +24,7 @@
 # --without x11      - do not build GTXWC
 # --without gpm      - build GTSLN and GTCRS without GPM support
 # --without gtsln    - do not build GTSLN
+# --without gtcrs    - do not build GTCRS
 ######################################################################
 
 test_reqrpm()
@@ -51,7 +52,7 @@ get_rpmmacro()
     echo -n "${R}"
 }
 
-NEED_RPM="make gcc binutils bash ncurses ncurses-devel"
+NEED_RPM="make gcc binutils bash"
 
 FORCE=""
 BUGGY_RPM=""
@@ -122,6 +123,14 @@ fi
 if ! test_reqrpm "XFree86-devel"
 then
     INST_PARAM="${INST_PARAM} --without X11"
+fi
+if ! test_reqrpm ncurses || ! test_reqrpm ncurses-devel
+then 
+    INST_PARAM="${INST_PARAM} --without gtcrs"
+fi
+if ! test_reqrpm slang || ! test_reqrpm slang-devel
+then 
+    INST_PARAM="${INST_PARAM} --without gtsln"
 fi
 
 TOINST_LST=""

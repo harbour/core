@@ -317,6 +317,7 @@ rm -fR $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbmacro.a
 %{_libdir}/%{name}/libhbpcre.a
 %{_libdir}/%{name}/libhbzlib.a
+%{_libdir}/%{name}/libhbextern.a
 %{_libdir}/%{name}/libhbnulrdd.a
 %{_libdir}/%{name}/libhbpp.a
 %{_libdir}/%{name}/libhbrdd.a
