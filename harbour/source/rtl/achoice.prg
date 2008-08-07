@@ -159,10 +159,10 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
          nPos      := 0
          lFinished := .T.
 
-      CASE ( nKey == K_MWFORWARD )
+      CASE nKey == K_MWFORWARD
          Keyboard( Chr( K_UP ) )
 
-      CASE ( nKey == K_MWBACKWARD )
+      CASE nKey == K_MWBACKWARD
          Keyboard( Chr( K_DOWN ) )
 
       CASE nKey == K_LDBLCLK
