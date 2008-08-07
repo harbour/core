@@ -457,7 +457,7 @@ else
             HARBOUR_LIBS="\${HARBOUR_LIBS} -L\${HB_BIN_INSTALL} -l\${l}"
         fi
     fi
-    libs="gtalleg hbdebug profiler ${hb_libsc}"
+    libs="gtalleg hbdebug profiler hbcplr ${hb_libsc}"
 fi
 for l in \${libs}
 do
@@ -641,7 +641,7 @@ mk_hblibso()
     for l in ${hb_libs}
     do
         case $l in
-            hbdebug|profiler|hbfm|hbodbc|gtalleg|rddads) ;;
+            hbdebug|profiler|hbcplr|hbfm|hbodbc|gtalleg|rddads) ;;
             *)
                 ls="lib${l}.a"
                 if [ -f lib${l}mt.a ]
