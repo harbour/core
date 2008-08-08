@@ -19859,6 +19859,7 @@ static int full_fsync(int fd, int fullSync, int dataOnly){
   */
 #ifdef SQLITE_NO_SYNC
   rc = SQLITE_OK;
+  ( void ) dataOnly;
 #else
 
 #if HAVE_FULLFSYNC
@@ -19876,6 +19877,7 @@ static int full_fsync(int fd, int fullSync, int dataOnly){
    * the fcntl call every time sync is called.
    */
   if( rc ) rc = fsync(fd);
+  ( void ) dataOnly;
 
 #else 
   if( dataOnly ){
