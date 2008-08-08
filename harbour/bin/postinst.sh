@@ -47,13 +47,16 @@ then
     RANLIB=""
     MAKE=make
     AR="${CCPREFIX}ar -cr"
+    AR_OPT=""
     if [ "${HB_ARCHITECTURE}" = "bsd" ] || \
        [ "${HB_ARCHITECTURE}" = "hpux" ] || \
        [ `uname` = "FreeBSD" ]; then
         MAKE=gmake
     elif [ "${HB_ARCHITECTURE}" = "darwin" ]; then
         # We must build an archive index on Darwin
-        AR="${CCPREFIX}ar -crs"
+        #AR="${CCPREFIX}ar -crs"
+        AR="libtool"
+        AR_OPT="-static ${LIBTOOL_USR} -o "
     fi
 
     if [ -n "${HB_TOOLS_PREF}" ]; then
@@ -83,12 +86,12 @@ then
     C_USR=${C_USR//-DHB_FM_STATISTICS_OFF/}
     rm -f fm.o
     ${MAKE} -r fm.o
-    ${AR} ${HB_LIB_INSTALL}/libhbfm.a fm.o
+    ${AR} ${AR_OPT} ${HB_LIB_INSTALL}/libhbfm.a fm.o
     [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libhbfm.a
     rm -f fm.o
     if [ "${HB_MT}" = "MT" ]; then
         ${MAKE} -r fm.o 'HB_LIBCOMP_MT=YES'
-        ${AR} ${HB_LIB_INSTALL}/libhbfmmt.a fm.o
+        ${AR} ${AR_OPT} ${HB_LIB_INSTALL}/libhbfmmt.a fm.o
         [ -n "${RANLIB}" ] && ${RANLIB} ${HB_LIB_INSTALL}/libhbfmmt.a
         rm -f fm.o
     fi

@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-08 13:13 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/postinst.sh
+    * use libtool instead of ar to create library on Darwin
+
+  * harbour/make_tgz.sh
+    * disabled self extracting shell envelop
+
 2008-08-08 11:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * config/darwin/gcc.cf
      ! Added space after -o in CC_OUT to avoid a lot of 

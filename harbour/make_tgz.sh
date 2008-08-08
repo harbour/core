@@ -22,7 +22,8 @@ hb_platform=`get_hbplatform`
 [ "${hb_platform}" = "" ] || hb_platform="-${hb_platform}${HB_BUILDSUF}"
 [ "${HB_XBUILD}" = "" ] || hb_platform="-${HB_XBUILD}"
 hb_archfile="${name}-${hb_ver}${hb_platform}.bin.tar.gz"
-hb_instfile="${name}-${hb_ver}${hb_platform}.inst.sh"
+# disabled self extracting shell envelop
+# hb_instfile="${name}-${hb_ver}${hb_platform}.inst.sh"
 hb_lnkso="yes"
 hb_pref="hb"
 hb_contrib=""
