@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-07 17:20 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
+  * harbour/source/rtl/achoice.prg
+    - Removed K_MOUSEMOVE functionality.
+
 2008-08-07 16:35 UTC-0800 Pritpal Bedi (pritpal@vouchcac.com)
   * harbour/source/rtl/achoice.prg
     + Added functionality for K_MOUSEMOVE.
