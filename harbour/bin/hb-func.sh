@@ -36,7 +36,7 @@ get_hbplatform()
             *) ;;
         esac
     fi
-    echo -n "${id}"
+    echo "${id}"
 }
 
 get_hbver()
@@ -48,7 +48,7 @@ get_hbver()
     MAJOR=`sed -e '/HB_VER_MAJOR/    !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
     MINOR=`sed -e '/HB_VER_MINOR/    !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
     REVIS=`sed -e '/HB_VER_REVISION/ !d' -e 's/[^0-9]*\([^ ]*\).*/\1/g' "${FVER}"`
-    echo -n "${MAJOR}.${MINOR}.${REVIS}"
+    echo "${MAJOR}.${MINOR}.${REVIS}"
 }
 
 get_hbverstat()
@@ -58,7 +58,7 @@ get_hbverstat()
     hb_rootdir="${1-.}"
     FVER="${hb_rootdir}/include/hbver.h"
     VERSTAT=`sed -e '/HB_VER_STATUS/ !d' -e 's/[^\"]*\"\([^\"]*\).*/\1/g' "${FVER}"`
-    echo -n "${VERSTAT}"
+    echo "${VERSTAT}"
 }
 
 get_solibname()
@@ -67,7 +67,7 @@ get_solibname()
 
     name="${HB_SHAREDLIB_NAME}"
     [ -z "${name}" ] && name="harbour"
-    echo -n "${name}"
+    echo "${name}"
 }
 
 mk_hbgetlibs()
@@ -81,9 +81,9 @@ mk_hbgetlibs()
         then
             libs="$libs gtwin"
         fi
-        echo -n "hbextern hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddntx hbhsx hbsix hbusrrdd ${HB_DB_DRVEXT} hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre hbzlib"
+        echo "hbextern hbvm hbpp hbrtl hbrdd rddfpt rddcdx rddntx hbhsx hbsix hbusrrdd ${HB_DB_DRVEXT} hbmacro hbcommon hblang hbcpage gtcrs gtsln gtxvt gtxwc gtalleg gtcgi gtstd gtpca gttrm $libs gtwvt gtgui gtdos gtos2 hbdebug profiler hbcplr hbpcre hbzlib"
     else
-        echo -n "$@"
+        echo "$@"
     fi
 }
 
@@ -98,9 +98,9 @@ mk_hbgetlibsctb()
         then
             libs="$libs gtwin"
         fi
-        echo -n "$libs rddads hbct hbnf hbmzip hbtip xhb hbgd hbodbc hbpg hbmysql rddado hbw32 gtwvg $HB_USR_LIBS"
+        echo "$libs rddads hbct hbnf hbmzip hbtip xhb hbgd hbodbc hbpg hbmysql rddado hbw32 gtwvg $HB_USR_LIBS"
     else
-        echo -n "$@"
+        echo "$@"
     fi
 }
 
