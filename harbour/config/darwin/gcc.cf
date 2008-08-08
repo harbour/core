@@ -13,7 +13,8 @@ LIB_EXT = .a
 # but the system where I was testing it has GCC 2.95 named 'cc'
 CC = $(CCACHE) cc
 CC_IN = -c
-CC_OUT = -o
+# NOTE: The ending space after -o is important, please preserve it.
+CC_OUT = -o 
 
 # -no-cpp-precomp prevents from using buggy precompiled headers
 CPPFLAGS = -no-cpp-precomp -I. -I$(TOP)include -I$(HB_INC_COMPILE)

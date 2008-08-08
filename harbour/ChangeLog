@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-08 11:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * config/darwin/gcc.cf
+     ! Added space after -o in CC_OUT to avoid a lot of 
+       warning messages.
+       NOTE: Is there any way to add the ending space in a safer way?
+             Now an editor can easily truncate it by incident.
+
 2008-08-08 05:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/hbgtmk.sh
     * removed ncurses dependences
