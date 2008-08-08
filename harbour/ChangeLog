@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-08 05:00 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/hbgtmk.sh
+    * removed ncurses dependences
+
+  * harbour/source/rtl/hbmd5.c
+    * pacified warnings. Thanks to Xavi
+
 2008-08-08 03:05 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     * replaced all echo -n with echo - shells should remove trailing

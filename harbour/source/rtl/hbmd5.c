@@ -257,7 +257,7 @@ static void hb_md5val( UINT32 accum[], BYTE * md5val )
    for( i = 0; i < 4; i++ )
    {
       for( n = 0; n < 4; n++ )
-         *md5val++ = ( BYTE ) ( accum[ i ] >> ( n << 3 ) ) & 0xFF;
+         *md5val++ = ( BYTE ) ( ( accum[ i ] >> ( n << 3 ) ) & 0xFF );
    }
 }
 
@@ -268,9 +268,9 @@ static void hb_md5digest( BYTE * md5val, char * digest )
    for( i = 0; i < 16; i++ )
    {
       b = ( md5val[ i ] >> 4 ) & 0x0F;
-      *digest++ = b + ( b > 9 ? 'a' - 10 : '0' );
+      *digest++ = ( char ) ( b + ( b > 9 ? 'a' - 10 : '0' ) );
       b = md5val[ i ] & 0x0F;
-      *digest++ = b + ( b > 9 ? 'a' - 10 : '0' );
+      *digest++ = ( char ) ( b + ( b > 9 ? 'a' - 10 : '0' ) );
    }
 }
 
@@ -303,11 +303,11 @@ HB_EXPORT void hb_md5( BYTE * ucData, ULONG ulLen, BYTE * ucDigest )
       memcpy( md5.buf, buf, 64 );
       hb_md5go( &md5 );
    }
-   buf[ i++ ] = ( BYTE ) ( ulLen << 3 ) & 0xF8;
+   buf[ i++ ] = ( UCHAR ) ( ( ulLen << 3 ) & 0xF8 );
    ulLen >>= 5;
    for( n = 7; n; --n )
    {
-      buf[ i++ ] = ( BYTE ) ulLen & 0xFF;
+      buf[ i++ ] = ( UCHAR ) ( ulLen & 0xFF );
       ulLen >>= 8;
    }
    memcpy( md5.buf, buf + i - 64, 64 );
@@ -356,11 +356,11 @@ HB_EXPORT void hb_md5file( FHANDLE hFile, BYTE * ucDigest )
       memcpy( md5.buf, buf, 64 );
       hb_md5go( &md5 );
    }
-   buf[ i++ ] = ( BYTE ) ( flen << 3 ) & 0xF8;
+   buf[ i++ ] = ( UCHAR ) ( ( flen << 3 ) & 0xF8 );
    flen >>= 5;
    for( n = 7; n; --n )
    {
-      buf[ i++ ] = ( BYTE ) flen & 0xFF;
+      buf[ i++ ] = ( UCHAR ) ( flen & 0xFF );
       flen >>= 8;
    }
    memcpy( md5.buf, buf + i - 64, 64 );

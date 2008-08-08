@@ -21,7 +21,7 @@ test_reqrpm()
 }
 
 TOINST_LST=""
-for i in subversion make gcc binutils bash ncurses ncurses-devel
+for i in subversion make gcc binutils bash
 do
     test_reqrpm "$i" || TOINST_LST="${TOINST_LST} $i"
 done
