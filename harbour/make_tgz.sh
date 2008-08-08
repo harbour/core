@@ -1,4 +1,5 @@
 #!/bin/sh
+[ "$BASH" ] || exec bash `which $0` ${1+"$@"}
 #
 # $Id$
 #
@@ -308,6 +309,7 @@ if [ -n "${hb_instfile}" ]; then
    # if $TAR exists in the installation environment
    cat > "${hb_instfile}" <<EOF
 #!/bin/sh
+[ "\$BASH" ] || exec bash \`which \$0\` \${1+"\$@"}
 if [ "\$1" = "--extract" ]; then
     sed -e '1,/^HB_INST_EOF\$/ d' "\$0" > "${hb_archfile}"
     exit

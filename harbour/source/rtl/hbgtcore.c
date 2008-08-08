@@ -2243,6 +2243,26 @@ static void hb_gt_def_InkeyPut( PHB_GT pGT, int iKey )
       pGT->inkeyHead = iHead;
 }
 
+/* Inset the key into head of keyboard buffer */
+static void hb_gt_def_InkeyIns( PHB_GT pGT, int iKey )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_InkeyIns(%p,%d)", pGT, iKey));
+
+   if( --pGT->inkeyTail < 0 )
+      pGT->inkeyTail = pGT->inkeyBufferSize -1;
+
+   pGT->inkeyBuffer[ pGT->inkeyTail ] = iKey;
+
+   /* When the buffer is full new event overwrite the last one
+    * in the buffer. [druzus]
+    */
+   if( pGT->inkeyHead == pGT->inkeyTail )
+   {
+      if( --pGT->inkeyHead < 0 )
+         pGT->inkeyHead = pGT->inkeyBufferSize -1;
+   }
+}
+
 /* helper internal function */
 static BOOL hb_gt_def_InkeyNextCheck( PHB_GT pGT, int iEventMask, int * iKey )
 {
@@ -2836,15 +2856,16 @@ static HB_GT_FUNCS s_gtCoreFunc =
    SetDispCP                  : hb_gt_def_SetDispCP                     ,
    SetKeyCP                   : hb_gt_def_SetKeyCP                      ,
    ReadKey                    : hb_gt_def_ReadKey                       ,
-   InkeyGet                   : hb_gt_def_InkeyGet                     ,
-   InkeyPut                   : hb_gt_def_InkeyPut                     ,
-   InkeyLast                  : hb_gt_def_InkeyLast                    ,
-   InkeyNext                  : hb_gt_def_InkeyNext                    ,
-   InkeyPoll                  : hb_gt_def_InkeyPoll                    ,
-   InkeySetText               : hb_gt_def_InkeySetText                 ,
-   InkeySetLast               : hb_gt_def_InkeySetLast                 ,
-   InkeyReset                 : hb_gt_def_InkeyReset                   ,
-   InkeyExit                  : hb_gt_def_InkeyExit                    ,
+   InkeyGet                   : hb_gt_def_InkeyGet                      ,
+   InkeyPut                   : hb_gt_def_InkeyPut                      ,
+   InkeyIns                   : hb_gt_def_InkeyIns                      ,
+   InkeyLast                  : hb_gt_def_InkeyLast                     ,
+   InkeyNext                  : hb_gt_def_InkeyNext                     ,
+   InkeyPoll                  : hb_gt_def_InkeyPoll                     ,
+   InkeySetText               : hb_gt_def_InkeySetText                  ,
+   InkeySetLast               : hb_gt_def_InkeySetLast                  ,
+   InkeyReset                 : hb_gt_def_InkeyReset                    ,
+   InkeyExit                  : hb_gt_def_InkeyExit                     ,
    MouseInit                  : hb_gt_def_MouseInit                     ,
    MouseExit                  : hb_gt_def_MouseExit                     ,
    MouseIsPresent             : hb_gt_def_MouseIsPresent                ,
@@ -2955,6 +2976,7 @@ static HB_GT_FUNCS s_gtCoreFunc =
    hb_gt_def_ReadKey                      ,
    hb_gt_def_InkeyGet                     ,
    hb_gt_def_InkeyPut                     ,
+   hb_gt_def_InkeyIns                     ,
    hb_gt_def_InkeyLast                    ,
    hb_gt_def_InkeyNext                    ,
    hb_gt_def_InkeyPoll                    ,

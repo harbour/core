@@ -224,6 +224,38 @@ HB_FUNC( HB_KEYPUT )
    }
 }
 
+HB_FUNC( HB_KEYINS )
+{
+   if( ISNUM( 1 ) )
+   {
+      hb_inkeyIns( hb_parni( 1 ) );
+   }
+   else if( ISCHAR( 1 ) )
+   {
+      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
+   }
+   else if( ISARRAY( 1 ) )
+   {
+      PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+      ULONG ulIndex;
+      ULONG ulElements = hb_arrayLen( pArray );
+
+      for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
+      {
+         PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulIndex );
+
+         if( HB_IS_NUMBER( pItem ) )
+         {
+            hb_inkeyIns( hb_itemGetNI( pItem ) );
+         }
+         else if( HB_IS_STRING( pItem ) )
+         {
+            hb_inkeySetText( ( const char * ) hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
+         }
+      }
+   }
+}
+
 HB_FUNC( NEXTKEY )
 {
    hb_retni( hb_inkeyNext( ISNUM( 1 ) ? hb_parni( 1 ) : hb_set.HB_SET_EVENTMASK ) );

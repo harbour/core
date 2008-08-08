@@ -202,6 +202,7 @@ typedef struct
 
    int      (* InkeyGet) ( HB_GT_PTR, BOOL fWait, double dSeconds, int iEventMask );
    void     (* InkeyPut) ( HB_GT_PTR, int iKey );
+   void     (* InkeyIns) ( HB_GT_PTR, int iKey );
    int      (* InkeyLast) ( HB_GT_PTR, int iEventMask );
    int      (* InkeyNext) ( HB_GT_PTR, int iEventMask );
    void     (* InkeyPoll) ( HB_GT_PTR );
@@ -437,6 +438,7 @@ extern PHB_GT hb_gt_Base( void );
 #define HB_GTSELF_READKEY(g,m)                  (g)->pFuncTable->ReadKey(g,m)
 #define HB_GTSELF_INKEYGET(g,w,d,m)             (g)->pFuncTable->InkeyGet(g,w,d,m)
 #define HB_GTSELF_INKEYPUT(g,k)                 (g)->pFuncTable->InkeyPut(g,k)
+#define HB_GTSELF_INKEYINS(g,k)                 (g)->pFuncTable->InkeyIns(g,k)
 #define HB_GTSELF_INKEYLAST(g,m)                (g)->pFuncTable->InkeyLast(g,m)
 #define HB_GTSELF_INKEYNEXT(g,m)                (g)->pFuncTable->InkeyNext(g,m)
 #define HB_GTSELF_INKEYPOLL(g)                  (g)->pFuncTable->InkeyPoll(g)
@@ -551,6 +553,7 @@ extern PHB_GT hb_gt_Base( void );
 #define HB_GTSUPER_READKEY(g,m)                  (HB_GTSUPER)->ReadKey(g,m)
 #define HB_GTSUPER_INKEYGET(g,w,d,m)             (HB_GTSUPER)->InkeyGet(g,w,d,m)
 #define HB_GTSUPER_INKEYPUT(g,k)                 (HB_GTSUPER)->InkeyPut(g,k)
+#define HB_GTSUPER_INKEYINS(g,k)                 (HB_GTSUPER)->InkeyIns(g,k)
 #define HB_GTSUPER_INKEYLAST(g,m)                (HB_GTSUPER)->InkeyLast(g,m)
 #define HB_GTSUPER_INKEYNEXT(g,m)                (HB_GTSUPER)->InkeyNext(g,m)
 #define HB_GTSUPER_INKEYPOLL(g)                  (HB_GTSUPER)->InkeyPoll(g)

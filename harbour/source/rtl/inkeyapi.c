@@ -73,6 +73,17 @@ HB_EXPORT void hb_inkeyPut( int iKey )
       HB_GTSELF_INKEYPUT( pGT, iKey );
 }
 
+HB_EXPORT void hb_inkeyIns( int iKey )
+{
+   PHB_GT pGT;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_inkeyIns(%d)", iKey));
+
+   pGT = hb_gt_Base();
+   if( pGT )
+      HB_GTSELF_INKEYINS( pGT, iKey );
+}
+
 HB_EXPORT int  hb_inkeyLast( int iEventMask )
 {
    PHB_GT pGT;
