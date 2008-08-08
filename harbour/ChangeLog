@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-08 18:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * bin/hb-mkslib.sh
+     + Added $(L_USR) to Darwin dynamic lib creation command line.
+
+   * config/darwin/gcc.cf
+     * Changed '-o ' to a more robust expression.
+
 2008-08-08 13:18 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbsqlit3/sqlite3/sqlite3.c
      ! Pacified one OSX GCC unused var warning.

@@ -14,7 +14,8 @@ LIB_EXT = .a
 CC = $(CCACHE) cc
 CC_IN = -c
 # NOTE: The ending space after -o is important, please preserve it.
-CC_OUT = -o 
+#       Now solved with '$(subst x,x, )' expression.
+CC_OUT = -o$(subst x,x, )
 
 # -no-cpp-precomp prevents from using buggy precompiled headers
 CPPFLAGS = -no-cpp-precomp -I. -I$(TOP)include -I$(HB_INC_COMPILE)

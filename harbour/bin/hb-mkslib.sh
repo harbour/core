@@ -119,7 +119,7 @@ if [ "${SLIB_EXT}" = ".dylib" ]; then
     ${CCPREFIX}gcc -dynamiclib -install_name "${BASE}.${MAJOR}${SLIB_EXT}" \
         -compatibility_version ${MAJOR}.${MINOR} -current_version ${VERSION} \
         -flat_namespace -undefined warning -multiply_defined suppress -single_module \
-        -o "${FULLNAME}" "${FULLNAME}.o" ${linker_options} && \
+        -o "${FULLNAME}" "${FULLNAME}.o" ${linker_options} ${L_USR} && \
     cd "${dir}" && \
     mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}" && \
     ln -sf "${FULLNAME}" "${DSTDIR}${BASE}.${MAJOR}${SLIB_EXT}" && \
