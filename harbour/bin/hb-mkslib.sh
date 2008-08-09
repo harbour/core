@@ -22,6 +22,8 @@ else
     hb_arch=`uname -s | tr -d "[-]" | tr '[A-Z]' '[a-z]' 2>/dev/null`
 fi
 
+linker_options=""
+
 case "$hb_arch" in
     *windows*|*mingw32*|msys*)  hb_arch="w32" ;;
     *os/2*)                     hb_arch="os2" ;;
@@ -67,37 +69,35 @@ REVIS="${REVIS%%.*}"
 [ -n "${REVIS}" ] || REVIS=0
 VERSION="${MAJOR}.${MINOR}.${REVIS}"
 
-OTMPDIR="/tmp/hb-mkslib-$$"
+OTMPDIR=""
 dir=`pwd`
 
 cleanup()
 {
-    rm -fR "${OTMPDIR}"
+    [ -z "${OTMPDIR}" ] || rm -fR "${OTMPDIR}"
 }
 
 trap cleanup EXIT &>/dev/null
 
-rm -fR "${OTMPDIR}"
-mkdir -p "${OTMPDIR}"
-
 if [ "${SLIB_EXT}" != ".dylib" ]; then
 
+    OTMPDIR="/tmp/hb-mkslib-$$"
+    rm -fR "${OTMPDIR}"
+    mkdir -p "${OTMPDIR}"
     cd "${OTMPDIR}"
 
     for f in $*
     do
         case "${f}" in
             *.o)
-                if [ ! -r "${dir}/${f}" ]
-                then
+                if [ ! -r "${dir}/${f}" ]; then
                     echo "cannot read file: ${f}"
                     exit 1
                 fi
                 cp "${dir}/${f}" "${OTMPDIR}" || exit 1
                 ;;
             *.a)
-                if [ ! -r "${dir}/${f}" ]
-                then
+                if [ ! -r "${dir}/${f}" ]; then
                     echo "cannot read file: ${f}"
                     exit 1
                 fi
@@ -113,6 +113,7 @@ if [ "${SLIB_EXT}" != ".dylib" ]; then
                 ;;
         esac
     done
+    cd "${OTMPDIR}"
     OBJLST=`find . -name \*.o`
 fi
 
@@ -121,11 +122,9 @@ if [ "${SLIB_EXT}" = ".dylib" ]; then
     ${CCPREFIX}libtool -dynamic -install_name "${BASE}.${MAJOR}${SLIB_EXT}" \
         -compatibility_version ${MAJOR}.${MINOR} -current_version ${VERSION} \
         -flat_namespace -undefined warning -multiply_defined suppress -single_module \
-        -o "${OTMPDIR}/${FULLNAME}" $* && \
-    cd "${dir}" && \
-    mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}" && \
-    ln -sf "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${BASE}.${MAJOR}${SLIB_EXT}" && \
-    ln -sf "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${BASE}${SLIB_EXT}"
+        -o "${DSTDIR}/${FULLNAME}" "$@" && \
+    ln -sf "${FULLNAME}" "${DSTDIR}${BASE}.${MAJOR}${SLIB_EXT}" && \
+    ln -sf "${FULLNAME}" "${DSTDIR}${BASE}${SLIB_EXT}"
 elif [ "${SLIB_EXT}" = ".dll" ]; then
     FULLNAME="${LIB_NAME}${SLIB_EXT}"
     if [ "$HB_COMPILER" = "cemgw" ]; then
