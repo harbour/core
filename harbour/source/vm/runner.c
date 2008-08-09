@@ -739,22 +739,21 @@ HB_FUNC( HB_HRBUNLOAD )
 HB_FUNC( HB_HRBGETFUNSYM )
 {
    PHRB_BODY pHrbBody = hb_hrbParam( 1 );
+   char * szName = hb_parc( 2 );
 
-   if( pHrbBody && hb_parclen( 2 ) > 0 )
+   if( pHrbBody && szName )
    {
-      char * szName = hb_strupr( hb_strdup( hb_parc( 2 ) ) );
-      ULONG ulPos = 0;
+      PHB_SYMB pSym;
+      ULONG ulPos;
 
-      while( ulPos < pHrbBody->ulSymbols )
+      for( ulPos = 0, pSym = pHrbBody->pSymRead; ulPos < pHrbBody->ulSymbols; ++pSym, ++ulPos )
       {
-         if( !strcmp( szName, pHrbBody->pSymRead[ ulPos ].szName ) )
+         if( pSym->value.pFunPtr != NULL && hb_stricmp( szName, pSym->szName ) == 0 )
+         {
+            hb_itemPutSymbol( hb_stackReturnItem(), pSym );
             break;
-         ulPos++;
+         }
       }
-      hb_xfree( szName );
-
-      if( ulPos < pHrbBody->ulSymbols )
-         hb_itemPutSymbol( hb_stackReturnItem(), pHrbBody->pSymRead + ulPos );
    }
    else
       hb_errRT_BASE( EG_ARG, 6106, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
