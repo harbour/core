@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-09 21:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/whatsnew.txt
+     * Minor corrections.
+
+   * contrib/hbclipsm/Makefile
+   * contrib/hbclipsm/common.mak
+   * contrib/hbclipsm/num.c
+   + contrib/hbclipsm/numfloor.c
+   + contrib/hbclipsm/numceil.c
+     * Moved CEILING() and FLOOR() to separate source files 
+       to lessen the impact with colliding function names in 
+       hbct.lib.
+
 2008-08-09 18:07 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/vm/extrap.c
     * use static buffer for signal alternative stack so it will not
