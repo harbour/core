@@ -323,7 +323,7 @@ void hb_vmSetExceptionHandler( void )
 #elif defined( HB_SIGNAL_EXCEPTION_HANDLER )
    {
       stack_t ss;
-      ss.ss_sp = ( void * ) malloc( SIGSTKSZ );
+      ss.ss_sp = ( void * ) hb_xgrab( SIGSTKSZ );
       ss.ss_size = SIGSTKSZ;
       ss.ss_flags = 0;
       /* set alternative stack for SIGSEGV executed on stack overflow */
@@ -355,6 +355,19 @@ void hb_vmUnsetExceptionHandler( void )
       /* I don't do any check on return code since harbour is exiting in any case */
       rc = DosUnsetExceptionHandler( &s_regRec );
       HB_SYMBOL_UNUSED( rc );
+   }
+#elif defined( HB_SIGNAL_EXCEPTION_HANDLER )
+   {
+      stack_t ss, oss;
+      ss.ss_sp = NULL;
+      ss.ss_size = SIGSTKSZ;
+      ss.ss_flags = SS_DISABLE;
+      /* set alternative stack for SIGSEGV executed on stack overflow */
+      if( sigaltstack( &ss, &oss ) == 0 )
+      {
+         if( oss.ss_sp && SS_DISABLE )
+            hb_xfree( oss.ss_sp );
+      }
    }
 #endif
 }

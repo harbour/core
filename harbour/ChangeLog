@@ -8,6 +8,18 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-09 17:31 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/source/vm/extrap.c
+    * deallocate alternative signal stack on exit
+      TOFIX: hb_vmSetExceptionHandler() / hb_vmUnsetExceptionHandler()
+             cover only part of hb_vmInit() and not hb_vmQuit(). Their
+             calls should be moved to external places where both
+             hb_vmInit() and hb_vmQuit() are executed.
+
+  * harbour/source/rdd/dbfcdx/dbfcdx1.c
+    ! fixed to not respect bitmap filters when structural order
+      is scanned, f.e. in OrdListAdd() with active bitmap filter.
+
 2008-08-09 16:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbsetup.h
      * Refinement to HB_OS_DARWIN autodetection.
