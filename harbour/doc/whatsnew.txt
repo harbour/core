@@ -60,7 +60,7 @@ Core
   __HRBLOAD   -> HB_HRBLOAD
   __HRBUNLOAD -> HB_HRBUNLOAD
   __HRBDO     -> HB_HRBDO
-  __HRBDOFU   -> HB_HRBDO
+  __HRBDOFU   -> (deleted, please use DO())
   __HRBGETFU  -> HB_HRBGETFUNSYM
   (old function names still function)
 
