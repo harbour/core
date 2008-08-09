@@ -51,17 +51,17 @@ Core
 - Source filename visible in stack traces.
 - ACHOICE() mouse support added.
 - Core Harbour level ZLIB compression functions renamed as follows:
-  HB_COMPRESS      -> HB_ZCOMPRESS     
-  HB_COMPRESSBOUND -> HB_ZCOMPRESSBOUND
-  HB_UNCOMPRESS    -> HB_ZUNCOMPRESS   
-  HB_UNCOMPRESSLEN -> HB_ZUNCOMPRESSLEN
+  HB_COMPRESS()      -> HB_ZCOMPRESS()
+  HB_COMPRESSBOUND() -> HB_ZCOMPRESSBOUND()
+  HB_UNCOMPRESS()    -> HB_ZUNCOMPRESS()
+  HB_UNCOMPRESSLEN() -> HB_ZUNCOMPRESSLEN()
 - Harbour .hrb API moved to the documented namespace as follows:
-  __HRBRUN    -> HB_HRBRUN
-  __HRBLOAD   -> HB_HRBLOAD
-  __HRBUNLOAD -> HB_HRBUNLOAD
-  __HRBDO     -> HB_HRBDO
-  __HRBDOFU   -> (deleted, please use DO())
-  __HRBGETFU  -> HB_HRBGETFUNSYM
+  __HRBRUN()    -> HB_HRBRUN()
+  __HRBLOAD()   -> HB_HRBLOAD()
+  __HRBUNLOAD() -> HB_HRBUNLOAD()
+  __HRBDO()     -> HB_HRBDO()
+  __HRBDOFU()   -> (deleted, please use DO())
+  __HRBGETFU()  -> HB_HRBGETFUNSYM()
   (old function names still function)
 
 Contrib

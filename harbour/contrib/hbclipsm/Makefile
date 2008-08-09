@@ -9,6 +9,8 @@ C_SOURCES=\
 	environ.c \
 	gauge.c \
 	num.c \
+	numceil.c \
+	numfloor.c \
 	stack.c \
 	status.c \
 	time.c \

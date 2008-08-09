@@ -61,28 +61,12 @@
 #endif
 #define PI  ( 3.1415926535897932384626433 )
 
-/* Ceiling( <nNumber> ) --> nInteger
-   Return the smallest integer that is greater than or equal to <nNumber>
-*/
-HB_FUNC( CEILING )
-{
-   hb_retnl( (long) ceil( hb_parnd( 1 ) ) );
-}
-
 /* DtoR( <nDegrees> ) --> nRadians
    Convert an angle size specified in radians to degrees
 */
 HB_FUNC( DTOR )
 {
    hb_retndlen( ( hb_parnd( 1 ) / 180 ) * PI, 10, 9 );
-}
-
-/* Floor( <nNumber> ) --> nInteger
-   Return the largest integer that is less than or equal to <nNumber>
-*/
-HB_FUNC( FLOOR )
-{
-   hb_retnl( (long) floor( hb_parnd( 1 ) ) );
 }
 
 /* NumAsLog10( <nNumber> ) --> nLog10 
