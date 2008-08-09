@@ -17,6 +17,7 @@ General
 - Deployment fixes.
 - harbour.dll related fixes.
 - MinGW bash (msys) build related fixes.
+- Darwin universal build and OS X Leopard (10.5) compatibility fixes.
 
 Core
 =============================
@@ -49,6 +50,19 @@ Core
 - *nix exception handler added.
 - Source filename visible in stack traces.
 - ACHOICE() mouse support added.
+- Core Harbour level ZLIB compression functions renamed as follows:
+  HB_COMPRESS      -> HB_ZCOMPRESS     
+  HB_COMPRESSBOUND -> HB_ZCOMPRESSBOUND
+  HB_UNCOMPRESS    -> HB_ZUNCOMPRESS   
+  HB_UNCOMPRESSLEN -> HB_ZUNCOMPRESSLEN
+- Harbour .hrb API moved to the documented namespace as follows:
+  __HRBRUN    -> HB_HRBRUN
+  __HRBLOAD   -> HB_HRBLOAD
+  __HRBDO     -> HB_HRBDO
+  __HRBUNLOAD -> HB_HRBUNLOAD
+  __HRBGETFU  -> HB_HRBGETSYMBOL
+  __HRBDOFU   -> HB_HRBDOSYMBOL
+  (old function names still function)
 
 Contrib
 =============================

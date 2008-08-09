@@ -8,6 +8,72 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-09 11:43 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/whatsnew.txt
+   * bin/hb-mkslib.sh
+     ! Changed the way harbour.dylib is created on Darwin systems 
+       to support universal builds. Please review and test.
+     ! Fixed generating links for .dylibs on Darwin.
+     ! Removed one excessive 'cd "${OTMPDIR}"' command.
+       (I hope this is right)
+     ! Removed previously added $(L_USR) from Darwin dynamic 
+       lib creation command line, as the L_USR "-arch" flags 
+       (and probably others) cannot work here.
+     ; TOFIX: 'ld: library not found for -lharbour' is still 
+              present.
+
+   * include/hbsetup.h
+     + Added autodetection for HB_OS_DARWIN (based on __APPLE__).
+
+   * config/darwin/gcc.cf
+     ! Not forcing HB_OS_DARWIN from the command-line, 
+       we're relying on the autodetection.
+
+   * source/rtl/hbzlib.c
+   * include/hbextern.ch
+   * doc/whatsnew.txt
+     * Harbour level functions renamed:
+       HB_COMPRESS      -> HB_ZCOMPRESS     
+       HB_COMPRESSBOUND -> HB_ZCOMPRESSBOUND
+       HB_UNCOMPRESS    -> HB_ZUNCOMPRESS   
+       HB_UNCOMPRESSLEN -> HB_ZUNCOMPRESSLEN
+       This is to avoid collision with xhb functions 
+       with similar name but different parameter list.
+       Please modify your programs to use the new interface.
+       INCOMPATIBLE.
+
+   * utils/hbextern/hbextern.prg
+     * Disabled scanning C HB_FUNC functions in .prg files.
+     * Minor formatting.
+
+   * include/hbapigt.h
+     ! Minor cosmetic.
+
+   * source/vm/runner.c
+   * include/hbextern.ch
+   * doc/whatsnew.txt
+   * contrib/examples/hscript/hscript.prg
+   * utils/hbrun/hbrun.prg
+     * Harbour level functions renamed:
+       __HRBRUN    -> HB_HRBRUN
+       __HRBLOAD   -> HB_HRBLOAD
+       __HRBDO     -> HB_HRBDO
+       __HRBUNLOAD -> HB_HRBUNLOAD
+       __HRBGETFU  -> HB_HRBGETSYMBOL
+       __HRBDOFU   -> HB_HRBDOSYMBOL
+       .hrb API functions moved to the documented namespace.
+       Old function names still function, but are deprecated.
+       Please modify your programs to use the new interface.
+     ; NOTE: HB_DBG_*() function should I believe correctly 
+             named as __DBG*(), as they are indeed internal 
+             functions, not meant to guaranteed for final apps.
+             We should do this cleanup in the future.
+
+   * tests/Makefile
+   - tests/spawn.prg
+   - tests/spawn2.prg
+     ! Removed two obsolete tests.
+
 2008-08-08 18:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * bin/hb-mkslib.sh
      + Added $(L_USR) to Darwin dynamic lib creation command line.

@@ -27,8 +27,6 @@ CFLAGS = -fno-common -Wall -W
 # remove it if you have newer compiler version
 CFLAGS += -Wno-long-double
 
-CFLAGS += -DHB_OS_DARWIN
-
 LD = cc
 LD_OUT = -o
 

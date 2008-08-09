@@ -57,8 +57,8 @@
 #include "fileio.ch"
 
 // Remark this line when BEGINDUMP/ENDDUMP #pragma's
-// are not used anymore in Harbour core and RTL PRG files
-#define PRG_CAN_HAVE_HB_FUNC
+// are not used anymore in Harbour core and RTL .prg files:
+// #define PRG_CAN_HAVE_HB_FUNC
 
 #ifdef __HARBOUR__
    #define EOL  hb_OSNewLine()
@@ -75,8 +75,8 @@
 #endif
 
 // List of known files which does not contain any real public function.
-// (always write the UPPERCASE file name)
-STATIC aSkipList := { "PROFILER.PRG" }
+// (always write the LOWERCASE file name)
+STATIC s_aSkipList := { "profiler.prg" }
 
 PROCEDURE MAIN()
    LOCAL aDirs :={ BASE_DIR + "debug", ;
@@ -101,7 +101,7 @@ PROCEDURE MAIN()
                        "//       This output should be edited by hand after extraction." + EOL + EOL )
       FOR i := 1 TO LEN( aDirs )
          FWRITE( nOutput, EOL + "// " + REPLICATE( "-", 60 ) + EOL )
-         FWRITE( nOutput, "// Files from: " +aDirs[i] + EOL + EOL )
+         FWRITE( nOutput, "// Files from: " + aDirs[ i ] + EOL + EOL )
          ProcessDir( nOutput, aDirs[i] + PATH_SEPARATOR + "*.c"  , aDirs[ i ], .F. )
          ProcessDir( nOutput, aDirs[i] + PATH_SEPARATOR + "*.prg", aDirs[ i ], .T. )
       NEXT
@@ -129,7 +129,7 @@ STATIC PROCEDURE ProcessFile( nOutput, cFile, lPRG )
    LOCAL nH
 
    // Skip known files which does not contain any real public function
-   IF ASCAN( aSkipList, {|c| c $ upper( cFile ) } ) > 0
+   IF ASCAN( s_aSkipList, {|c| c $ lower( cFile ) } ) > 0
       RETURN
    ENDIF
 
@@ -217,15 +217,14 @@ STATIC FUNCTION FReadLn( nHandle, cBuffer, nMaxLine, cDelim )
 
 
 STATIC PROCEDURE WriteSymbol( nOutput, cLine )
-STATIC aNames := { "MAIN" }   // Init with names you want to skip
+STATIC s_aNames := { "MAIN" }   // Init with names you want to skip
 
    IF len( cLine ) > 0
       cLine := upper( cLine )
-      IF ASCAN( aNames, {|c| c == cLine } ) == 0
-         AADD( aNames, cLine )
-         FWRITE( nOutput, "EXTERNAL " +cLine + EOL )
+      IF ASCAN( s_aNames, {|c| c == cLine } ) == 0
+         AADD( s_aNames, cLine )
+         FWRITE( nOutput, "EXTERNAL " + cLine + EOL )
       ENDIF
    ENDIF
 
    RETURN
-

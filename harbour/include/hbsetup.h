@@ -312,9 +312,15 @@
    #endif
 #endif
 
+#ifndef HB_OS_DARWIN
+   #if defined(__APPLE__)
+      #define HB_OS_DARWIN
+   #endif
+#endif
+
 #ifndef HB_OS_BSD
    #if defined( __FreeBSD__ ) || defined( __NetBSD__ ) || defined( __OpenBSD__ ) || \
-       defined( __APPLE__ ) || defined( HB_OS_DARWIN )
+       defined( HB_OS_DARWIN )
       #define HB_OS_BSD
    #endif
 #endif

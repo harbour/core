@@ -178,8 +178,6 @@ BAD_PRG_SOURCES=\
 	objarr.prg \
 	objasign.prg \
 	rtfclass.prg \
-	spawn.prg \
-	spawn2.prg \
 	statics1.prg \
 	statics2.prg \
 	stripem.prg \

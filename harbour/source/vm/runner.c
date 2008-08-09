@@ -53,11 +53,11 @@
  * The following functions are added Feb 01,2002 by
  *       Alexander Kresin <alex@belacy.belgorod.su>
  *
- *  __HRBLOAD()
- *  __HRBDO()
- *  __HRBUNLOAD()
- *  __HRBGETFU()
- *  __HRBDOFU()
+ *  HB_HRBLOAD()
+ *  HB_HRBDO()
+ *  HB_HRBUNLOAD()
+ *  HB_HRBGETSYMBOL()
+ *  HB_HRBDOSYMBOL()
  */
 
 #include "hbvmopt.h"
@@ -604,7 +604,7 @@ static void hb_hrbReturn( PHRB_BODY pHrbBody )
 }
 
 /*
-   __HRBRUN( <cFile> [, xParam1 [, xParamN ] ] ) -> return value.
+   HB_HRBRUN( <cFile> [, xParam1 [, xParamN ] ] ) -> return value.
 
    This program will get the data from the .hrb file and run the p-code
    contained in it.
@@ -612,7 +612,7 @@ static void hb_hrbReturn( PHRB_BODY pHrbBody )
    In due time it should also be able to collect the data from the
    binary/executable itself
 */
-HB_FUNC( __HRBRUN )
+HB_FUNC( HB_HRBRUN )
 {
    ULONG ulLen = hb_parclen( 1 );
 
@@ -653,7 +653,7 @@ HB_FUNC( __HRBRUN )
       hb_errRT_BASE( EG_ARG, 6103, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( __HRBLOAD )
+HB_FUNC( HB_HRBLOAD )
 {
    ULONG ulLen = hb_parclen( 1 );
 
@@ -692,7 +692,7 @@ HB_FUNC( __HRBLOAD )
       hb_errRT_BASE( EG_ARG, 9998, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( __HRBDO )
+HB_FUNC( HB_HRBDO )
 {
    PHRB_BODY pHrbBody = hb_hrbParam( 1 );
 
@@ -719,7 +719,7 @@ HB_FUNC( __HRBDO )
       hb_errRT_BASE( EG_ARG, 6104, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( __HRBUNLOAD )
+HB_FUNC( HB_HRBUNLOAD )
 {
    PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_parptrGC( hb_hrb_Destructor, 1 );
 
@@ -737,7 +737,7 @@ HB_FUNC( __HRBUNLOAD )
       hb_errRT_BASE( EG_ARG, 6105, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( __HRBGETFU )
+HB_FUNC( HB_HRBGETSYMBOL )
 {
    PHRB_BODY pHrbBody = hb_hrbParam( 1 );
 
@@ -761,7 +761,7 @@ HB_FUNC( __HRBGETFU )
       hb_errRT_BASE( EG_ARG, 6106, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( __HRBDOFU )
+HB_FUNC( HB_HRBDOSYMBOL )
 {
    PHB_ITEM pSymItem = hb_param( 1, HB_IT_SYMBOL );
 
@@ -780,4 +780,36 @@ HB_FUNC( __HRBDOFU )
    }
    else
       hb_errRT_BASE( EG_ARG, 6107, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* NOTE: Deprecated compatibility functions. */
+
+HB_FUNC( __HRBRUN )
+{
+   HB_FUNC_EXEC( HB_HRBRUN );
+}
+
+HB_FUNC( __HRBLOAD )
+{
+   HB_FUNC_EXEC( HB_HRBLOAD );
+}
+
+HB_FUNC( __HRBDO )
+{
+   HB_FUNC_EXEC( HB_HRBDO );
+}
+
+HB_FUNC( __HRBUNLOAD )
+{
+   HB_FUNC_EXEC( HB_HRBUNLOAD );
+}
+
+HB_FUNC( __HRBGETFU )
+{
+   HB_FUNC_EXEC( HB_HRBGETSYMBOL );
+}
+
+HB_FUNC( __HRBDOFU )
+{
+   HB_FUNC_EXEC( HB_HRBDOSYMBOL );
 }

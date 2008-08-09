@@ -79,51 +79,53 @@ trap cleanup EXIT &>/dev/null
 
 rm -fR "${OTMPDIR}"
 mkdir -p "${OTMPDIR}"
-cd "${OTMPDIR}"
 
-for f in $*
-do
-    case "${f}" in
-        *.o)
-            if [ ! -r "${dir}/${f}" ]
-            then
-                echo "cannot read file: ${f}"
-                exit 1
-            fi
-            cp "${dir}/${f}" "${OTMPDIR}" || exit 1
-            ;;
-        *.a)
-            if [ ! -r "${dir}/${f}" ]
-            then
-                echo "cannot read file: ${f}"
-                exit 1
-            fi
-            d="${f%.a}"
-            d="${f##*/}"
-            mkdir $d
-            cd $d
-            ${CCPREFIX}ar -x "${dir}/${f}" || exit 1
-            cd ..
-            ;;
-        *)
-            linker_options="${linker_options} ${f}"
-            ;;
-    esac
-done
-OBJLST=`find . -name \*.o`
+if [ "${SLIB_EXT}" != ".dylib" ]; then
 
-cd "${OTMPDIR}"
+    cd "${OTMPDIR}"
+
+    for f in $*
+    do
+        case "${f}" in
+            *.o)
+                if [ ! -r "${dir}/${f}" ]
+                then
+                    echo "cannot read file: ${f}"
+                    exit 1
+                fi
+                cp "${dir}/${f}" "${OTMPDIR}" || exit 1
+                ;;
+            *.a)
+                if [ ! -r "${dir}/${f}" ]
+                then
+                    echo "cannot read file: ${f}"
+                    exit 1
+                fi
+                d="${f%.a}"
+                d="${f##*/}"
+                mkdir $d
+                cd $d
+                ${CCPREFIX}ar -x "${dir}/${f}" || exit 1
+                cd ..
+                ;;
+            *)
+                linker_options="${linker_options} ${f}"
+                ;;
+        esac
+    done
+    OBJLST=`find . -name \*.o`
+fi
+
 if [ "${SLIB_EXT}" = ".dylib" ]; then
     FULLNAME="${BASE}.${VERSION}${SLIB_EXT}"
-    ld -r -o "${FULLNAME}.o" $OBJLST && \
-    ${CCPREFIX}gcc -dynamiclib -install_name "${BASE}.${MAJOR}${SLIB_EXT}" \
+    ${CCPREFIX}libtool -dynamic -install_name "${BASE}.${MAJOR}${SLIB_EXT}" \
         -compatibility_version ${MAJOR}.${MINOR} -current_version ${VERSION} \
         -flat_namespace -undefined warning -multiply_defined suppress -single_module \
-        -o "${FULLNAME}" "${FULLNAME}.o" ${linker_options} ${L_USR} && \
+        -o "${OTMPDIR}/${FULLNAME}" $* && \
     cd "${dir}" && \
     mv -f "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${FULLNAME}" && \
-    ln -sf "${FULLNAME}" "${DSTDIR}${BASE}.${MAJOR}${SLIB_EXT}" && \
-    ln -sf "${FULLNAME}" "${DSTDIR}${BASE}${SLIB_EXT}"
+    ln -sf "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${BASE}.${MAJOR}${SLIB_EXT}" && \
+    ln -sf "${OTMPDIR}/${FULLNAME}" "${DSTDIR}${BASE}${SLIB_EXT}"
 elif [ "${SLIB_EXT}" = ".dll" ]; then
     FULLNAME="${LIB_NAME}${SLIB_EXT}"
     if [ "$HB_COMPILER" = "cemgw" ]; then

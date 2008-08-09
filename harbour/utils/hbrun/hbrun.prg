@@ -106,10 +106,10 @@ PROCEDURE _APPMAIN( cFile, ... )
                IF cFile == NIL
                   ERRORLEVEL( 1 )
                ELSE
-                  __hrbRun( cFile, ... )
+                  hb_hrbRun( cFile, ... )
                ENDIF
             ELSE
-               __hrbRun( cFile, ... )
+               hb_hrbRun( cFile, ... )
             ENDIF
       ENDSWITCH
    ELSE
@@ -276,9 +276,9 @@ STATIC PROCEDURE HB_DotExec( cCommand )
       IF cHRB == NIL
          EVAL( ErrorBlock(), "Syntax error." )
       ELSE
-         pHRB := __hrbLoad( cHRB )
+         pHRB := hb_hrbLoad( cHRB )
          IF pHrb != NIL
-            bBlock := __hrbDo( pHRB )
+            bBlock := hb_hrbDo( pHRB )
             DevPos( s_nRow, s_nCol )
             Eval( bBlock )
             s_nRow := Row()
@@ -311,3 +311,4 @@ REQUEST HB_GT_OS2_DEFAULT
 #endif
 
 /* ********************************************************************** */
+

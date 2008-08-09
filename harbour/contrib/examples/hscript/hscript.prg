@@ -188,7 +188,7 @@ FUNCTION Main( cScript )
 
       // Runs using Tugboat
       cFile := StrTran( Upper( cFile ), ".PRG", ".hrb" )
-      __hrbRun( cFile )
+      hb_hrbRun( cFile )
       // Erases the HRB file
       FErase( cFile )
 

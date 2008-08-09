@@ -72,6 +72,7 @@
 
 #ifndef HB_APIGT_H_
 #define HB_APIGT_H_
+
 #include "hbapi.h"
 
 HB_EXTERN_BEGIN

@@ -100,9 +100,9 @@ HB_FUNC( HB_ZLIBVERSION )
 }
 
 /*
- * HB_COMPRESSBOUND( <cData> | <nDataLen> ) -> <nMaxCompressLen>
+ * HB_ZCOMPRESSBOUND( <cData> | <nDataLen> ) -> <nMaxCompressLen>
  */
-HB_FUNC( HB_COMPRESSBOUND )
+HB_FUNC( HB_ZCOMPRESSBOUND )
 {
    if( ISCHAR( 1 ) )
       hb_retnint( compressBound( hb_parclen( 1 ) ) );
@@ -113,9 +113,9 @@ HB_FUNC( HB_COMPRESSBOUND )
 }
 
 /*
- * HB_UNCOMPRESSLEN( <cCompressedData> ) -> <nUnCompressedDataLen> or 0 on error
+ * HB_ZUNCOMPRESSLEN( <cCompressedData> ) -> <nUnCompressedDataLen> or 0 on error
  */
-HB_FUNC( HB_UNCOMPRESSLEN )
+HB_FUNC( HB_ZUNCOMPRESSLEN )
 {
    ULONG ulLen = hb_parclen( 1 );
 
@@ -123,10 +123,10 @@ HB_FUNC( HB_UNCOMPRESSLEN )
 }
 
 /*
- * HB_COMPRESS( <cData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>], [<nLevel>] )
+ * HB_ZCOMPRESS( <cData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>], [<nLevel>] )
  *    => <cCompressedData> or NIL on Error
  */
-HB_FUNC( HB_COMPRESS )
+HB_FUNC( HB_ZCOMPRESS )
 {
    char * szData = hb_parc( 1 );
    if( szData )
@@ -186,10 +186,10 @@ HB_FUNC( HB_COMPRESS )
 }
 
 /*
- * HB_UNCOMPRESS( <cCompressedData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>] )
+ * HB_ZUNCOMPRESS( <cCompressedData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>] )
  *    => <cUnCompressedData> or NIL on Error
  */
-HB_FUNC( HB_UNCOMPRESS )
+HB_FUNC( HB_ZUNCOMPRESS )
 {
    PHB_ITEM pBuffer = ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
    char * szData = hb_parc( 1 );
