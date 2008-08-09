@@ -313,7 +313,8 @@
 #endif
 
 #ifndef HB_OS_DARWIN
-   #if defined(__APPLE__)
+   #if defined(__APPLE__) && \
+       ( defined(unix) || defined(__unix) || defined(__unix__) )
       #define HB_OS_DARWIN
    #endif
 #endif

@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-09 16:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbsetup.h
+     * Refinement to HB_OS_DARWIN autodetection.
+       Thanks Przemek.
+
+   * doc/whatsnew.txt
+   * include/hbextern.ch
+   * source/vm/runner.c
+     * Refinements to previous commit.
+       HB_HRBGETSYMBOL() -> HB_HRBGETFUNSYM()
+       HB_HRBDOSYMBOL()  -> deleted
+     * __HRBDOFU() made equivalent to __HRBDO()
+
 2008-08-09 16:28 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-mkslib.sh
     * do not create temporary directory in MacOSX

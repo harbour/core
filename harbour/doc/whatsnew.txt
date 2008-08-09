@@ -58,10 +58,10 @@ Core
 - Harbour .hrb API moved to the documented namespace as follows:
   __HRBRUN    -> HB_HRBRUN
   __HRBLOAD   -> HB_HRBLOAD
-  __HRBDO     -> HB_HRBDO
   __HRBUNLOAD -> HB_HRBUNLOAD
-  __HRBGETFU  -> HB_HRBGETSYMBOL
-  __HRBDOFU   -> HB_HRBDOSYMBOL
+  __HRBDO     -> HB_HRBDO
+  __HRBDOFU   -> HB_HRBDO
+  __HRBGETFU  -> HB_HRBGETFUNSYM
   (old function names still function)
 
 Contrib

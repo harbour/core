@@ -56,8 +56,7 @@
  *  HB_HRBLOAD()
  *  HB_HRBDO()
  *  HB_HRBUNLOAD()
- *  HB_HRBGETSYMBOL()
- *  HB_HRBDOSYMBOL()
+ *  HB_HRBGETFUNSYM()
  */
 
 #include "hbvmopt.h"
@@ -737,7 +736,7 @@ HB_FUNC( HB_HRBUNLOAD )
       hb_errRT_BASE( EG_ARG, 6105, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_HRBGETSYMBOL )
+HB_FUNC( HB_HRBGETFUNSYM )
 {
    PHRB_BODY pHrbBody = hb_hrbParam( 1 );
 
@@ -761,27 +760,6 @@ HB_FUNC( HB_HRBGETSYMBOL )
       hb_errRT_BASE( EG_ARG, 6106, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_HRBDOSYMBOL )
-{
-   PHB_ITEM pSymItem = hb_param( 1, HB_IT_SYMBOL );
-
-   if( pSymItem )
-   {
-      int iPCount = hb_pcount() - 1;
-      int i;
-
-      hb_vmPushSymbol( hb_itemGetSymbol( pSymItem ) );
-      hb_vmPushNil();
-
-      for( i = 0; i < iPCount; i++ )
-         hb_vmPush( hb_stackItemFromBase( i + 2 ) );
-
-      hb_vmDo( ( USHORT ) iPCount );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 6107, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 /* NOTE: Deprecated compatibility functions. */
 
 HB_FUNC( __HRBRUN )
@@ -794,22 +772,22 @@ HB_FUNC( __HRBLOAD )
    HB_FUNC_EXEC( HB_HRBLOAD );
 }
 
-HB_FUNC( __HRBDO )
-{
-   HB_FUNC_EXEC( HB_HRBDO );
-}
-
 HB_FUNC( __HRBUNLOAD )
 {
    HB_FUNC_EXEC( HB_HRBUNLOAD );
 }
 
-HB_FUNC( __HRBGETFU )
+HB_FUNC( __HRBDO )
 {
-   HB_FUNC_EXEC( HB_HRBGETSYMBOL );
+   HB_FUNC_EXEC( HB_HRBDO );
 }
 
 HB_FUNC( __HRBDOFU )
 {
-   HB_FUNC_EXEC( HB_HRBDOSYMBOL );
+   HB_FUNC_EXEC( HB_HRBDO );
+}
+
+HB_FUNC( __HRBGETFU )
+{
+   HB_FUNC_EXEC( HB_HRBGETFUNSYM );
 }
