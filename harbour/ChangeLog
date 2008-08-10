@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-10 12:58 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/include/hbextern.ch
+    * include scalar classes only when HB_REQUEST_SCALLAR define is set
+
+  * harbour/source/rtl/tobject.prg
+    ! use <obj>:className instead of __objGetClsName( <obj> ) in error
+      message
+
 2008-08-09 21:44 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
      * Minor corrections.
