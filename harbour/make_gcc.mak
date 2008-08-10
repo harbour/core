@@ -204,7 +204,7 @@ endif
 # Harbour Compiler Flags
 #**********************************************************
 
-HBFLAGSCMN     := -i$(INCLUDE_DIR) -q0 -w3 -es2 -gc0 -kM $(PRG_USR)
+HBFLAGSCMN     := -i$(INCLUDE_DIR) -q0 -w3 -es2 -gc0 -km $(PRG_USR)
 HARBOURFLAGS   := -n $(HBFLAGSCMN) $(HARBOURFLAGS)
 HARBOURFLAGSDLL:= -D__EXPORT__ -n1 -l $(HBFLAGSCMN) $(HARBOURFLAGSDLL)
 

@@ -58,8 +58,8 @@ if [ -z "$CCPREFIX" ]; then
             export CCPREFIX="arm-mingw32ce-"
         else
             echo "cegcc compiler executable not found. Ensure you have cegcc package installed in"
-            echo "/opt/mingw32ce dir, or (alternativly) set environment variable CCPATH to a cegcc"
-            echo "instalation directory"
+            echo "/opt/mingw32ce dir, or (alternatively) set environment variable CCPATH to a cegcc"
+            echo "installation directory"
             exit 1
         fi
     fi
