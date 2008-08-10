@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-10 16:17 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/bin/hb-func.sh
+    * updated library list for wince harbour.dll linking
+
+  * harbour/source/common/hbwince.c
+    ! fixed compilation new MinGWCE
+
 2008-08-10 15:14 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/ChangeLog
   * harbour/include/hbextern.ch

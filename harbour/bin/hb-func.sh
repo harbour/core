@@ -498,6 +498,12 @@ if [ "\${HB_COMPILER}" = "mingw32" ]; then
     elif [ "\${HB_MODE}" = "std" ]; then
         l="hbmainstd"
     fi
+elif [ "\${HB_COMPILER}" = "cemgw" ]; then
+    if [ "\${HB_MODE}" = "std" ]; then
+        l="hbmainstd"
+    else
+        l="hbmainwin"
+    fi
 fi
 if [ -n "\${l}" ]; then
     [ "\${HB_MT}" = "MT" ] && [ -f "\${HB_LIB_INSTALL}/lib\${l}mt.a" ] && l="\${l}mt"
