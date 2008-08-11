@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-11 18:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * config/rules.cf
+     % Removed unnecessary -I option from Harbour command line.
+
+   * ChangeLog
+     + Added entry to signal the branching.
+
+2008-08-11 12:13 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * SVN
+     ; =========================================================
+     ; =========================================================
+     + New '/branches/harbour-1.0' branch created.
+       Any work involving 1.0.x versions should be done in this 
+       branch.
+     ; In the "normal" repository (= the trunk = this one), the 
+       development of next main version (1.1) of Harbour should 
+       continue.
+       To put it shortly:
+       - Don't commit here anything belonging to 1.0.x.
+       - Do commit everything belonging to 1.1.
+       - Do commit everything belonging to 1.0 to /branches/harbour-1.0
+     ; =========================================================
+     ; =========================================================
+
 2008-08-11 11:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_vcce.mak
      * Minor cosmetic sync with make_vc.mak
