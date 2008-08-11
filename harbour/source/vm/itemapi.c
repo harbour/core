@@ -85,13 +85,10 @@
  */
 
 #if !defined(__DJGPP__)
-#include <math.h> /* For log() */
+#  include <math.h> /* For log() */
 #endif
 #if defined(_MSC_VER) || defined(__IBMCPP__) || (__BORLANDC__ > 1040) || defined(__WATCOMC__) /* Use this only above Borland C++ 3.1 */
-#include <float.h>  /* for _finite() and _isnan() */
-#endif
-#if defined(HB_OS_SUNOS)
-#  include <ieeefp.h>
+#  include <float.h>  /* for _finite() and _isnan() */
 #endif
 
 #include "hbvmopt.h"
@@ -106,6 +103,10 @@
 #include "hbset.h"
 #include "hbmath.h"
 #include "hbapicdp.h"
+
+#if defined(HB_OS_SUNOS)
+#  include <ieeefp.h>
+#endif
 
 HB_EXPORT PHB_ITEM hb_itemNew( PHB_ITEM pNull )
 {

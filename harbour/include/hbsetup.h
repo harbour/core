@@ -301,7 +301,7 @@
 #endif
 
 #ifndef HB_OS_SUNOS
-   #if defined(sun) || defined(__sun)
+   #if defined(sun) || defined(__sun) || defined(__sun__)
       #define HB_OS_SUNOS
    #endif
 #endif
