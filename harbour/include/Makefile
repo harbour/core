@@ -75,7 +75,6 @@ PRG_HEADERS=\
 	fileio.ch    \
 	getexit.ch   \
 	hbclass.ch   \
-	hbcommon.ch  \
 	hbdebug.ch   \
 	hbextern.ch  \
 	hbgetcmt.ch  \

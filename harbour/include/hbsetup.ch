@@ -70,6 +70,4 @@
 /* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
 /* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
 
-/* #define HB_FILE_VER_STATIC */  /* Enable inclusion of file version strings */
-
 #endif /* HB_SETUP_CH_ */

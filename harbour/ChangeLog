@@ -8,6 +8,32 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-11 21:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbsetup.h
+   * config/hpux/gcc.cf
+   * config/linux/gcc.cf
+   * config/os2/gcc.cf
+   * config/bsd/gcc.cf
+     ! Never force the platform from the make files, rather 
+       rely on the autodetection in hbsetup.h.
+       Compiling default parts of the software should only rely 
+       on manually set macros if there is no reasonable chance to 
+       make the detection automatic.
+     ! HB_OS_LINUX, HB_OS_HPUX autodetection supposedly made more robust.
+
+   * include/hbsetup.ch
+   * include/hbapi.h
+   * source/rtl/hbffind.c
+     - Removed HB_FILE_VER stuff. It's lost it's importancy with SVN.
+
+   * include/Makefile
+   * include/hbcommon.ch
+     - Removed hbcommon.ch no longer needed. It only contained 
+       HB_FILE_VER related stuff.
+
+   * contrib/rddado/Makefile
+     ! Excluded from OS/2 builds.
+
 2008-08-11 20:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmisc/spd.c
      ! Fix to SQL_SPRINTF() by Xavi.

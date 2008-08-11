@@ -1015,13 +1015,6 @@ extern char * hb_getenv( const char * name );
 extern char * hb_netname( void );
 extern char * hb_username( void );
 
-/* Version tracking related things */
-#ifdef HB_FILE_VER_STATIC
-   #define HB_FILE_VER( id ) static char s_hb_file_ver[] = id;
-#else
-   #define HB_FILE_VER( id )
-#endif
-
 /* Translation related things */
 
 /* Dummy define for start */

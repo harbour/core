@@ -65,9 +65,6 @@
 #include "hbdate.h"
 #include "hb_io.h"
 
-
-HB_FILE_VER( "$Id$" )
-
 /* ------------------------------------------------------------- */
 
 #include <ctype.h>

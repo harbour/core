@@ -194,13 +194,6 @@
 /* #define HB_PP_MULTILINE_STRING */
 
 /* ***********************************************************************
- *  Detect GCC/OS2
- */
-#if defined(__EMX__) && ! defined(__RSXNT__)
-   #define HARBOUR_GCC_OS2
-#endif
-
-/* ***********************************************************************
  * Operating system specific definitions
  */
 #if ( defined(__GNUC__) && \
@@ -268,6 +261,13 @@
    #endif
 #endif
 
+/* ***********************************************************************
+ *  Detect GCC/OS2
+ */
+#if defined(__EMX__) && ! defined(__RSXNT__)
+   #define HARBOUR_GCC_OS2
+#endif
+
 #ifndef HB_OS_OS2
    #if defined(OS2) || defined(__OS2__) || defined(OS_2) || defined(HARBOUR_GCC_OS2)
       #define HB_OS_OS2
@@ -295,7 +295,7 @@
 #endif
 
 #ifndef HB_OS_LINUX
-   #if defined(linux) || defined(__linux) || defined(__linux__)
+   #if defined(linux) || defined(__linux) || defined(__linux__) || defined(__gnu_linux__)
       #define HB_OS_LINUX
    #endif
 #endif
@@ -307,7 +307,8 @@
 #endif
 
 #ifndef HB_OS_HPUX
-   #if defined(__hpux)
+   /* HP cc in ANSI mode defines __hpux. GCC defines __hpux__ */
+   #if defined(__hpux) || defined(__hpux__)
       #define HB_OS_HPUX
    #endif
 #endif
