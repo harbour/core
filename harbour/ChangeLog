@@ -24,7 +24,7 @@
    * include/hbsetup.ch
    * include/hbapi.h
    * source/rtl/hbffind.c
-     - Removed HB_FILE_VER stuff. It's lost it's importancy with SVN.
+     - Removed HB_FILE_VER stuff. It's lost its importancy with SVN.
 
    * include/Makefile
    * include/hbcommon.ch
