@@ -5,9 +5,10 @@
 
 # ---------------------------------------------------------------
 # Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>
+#
 # This script checks you have all tools to build Harbour binaries
 # installed then takes current Harbour sources from SourceForge SVN
-# repository and build binary RPMs at your local host
+# repository and builds binary RPMs at your local host.
 #
 # See doc/license.txt for licensing terms.
 # ---------------------------------------------------------------
@@ -37,9 +38,9 @@ then
     fi
 else
     echo "If you want to build Harbour compilers"
-    echo "you have to install the folowing RPM files:"
+    echo "you have to install the following RPM files:"
     echo "${TOINST_LST}"
     echo ""
-    echo "If you want to force installation run this script with --force paramter:"
+    echo "If you want to force installation run this script with --force parameter:"
     echo "$0 --force"
 fi

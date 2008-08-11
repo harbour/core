@@ -860,6 +860,7 @@ $(**: = ^
 $(STANDARD_STATIC_HBLIBS)
 coredll.lib corelibc.lib winsock.lib ws2.lib
 <<$(HB_KEEPSTATE)
+#**********************************************************
 
 #**********************************************************
 # DLL Targets

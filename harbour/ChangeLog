@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-11 11:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_vcce.mak
+     * Minor cosmetic sync with make_vc.mak
+
+   * hbgtmk.sh
+     ! Minor typos.
+
 2008-08-10 17:32 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_xmingwce.sh
    * make_xmingw.sh
