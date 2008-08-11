@@ -107,11 +107,23 @@ fi
 if [ -x "${HB_COMP_PATH}" ]; then
     ln -s "${HB_COMP_PATH}" ${HB_BIN_COMPILE}/harbour.exe
 else
-    echo "You must have a working Harbour executable for your platform on your PATH."
+    echo "You must have a working 'harbour' executable for your platform on your PATH."
     exit 1
 fi
 
-ln -s "$DIR/source/pp/$UNAMEL/gcc/hbpp" ${HB_BIN_COMPILE}/hbpp.exe
+if which hbpp > /dev/null 2>&1; then
+    HB_COMP_PATH=`which hbpp 2> /dev/null`
+else
+    HB_COMP_PATH="$DIR/source/pp/$UNAMEL/gcc/hbpp"
+fi
+
+if [ -x "${HB_COMP_PATH}" ]; then
+    ln -s "${HB_COMP_PATH}" ${HB_BIN_COMPILE}/hbpp.exe
+else
+    echo "You must have a working 'hbpp' executable for your platform on your PATH."
+    exit 1
+fi
+
 export HB_PPGEN_PATH=${HB_BIN_COMPILE}
 
 case "$1" in
