@@ -12,6 +12,11 @@
    * contrib/hbmisc/spd.c
      ! Fix to SQL_SPRINTF() by Xavi.
 
+2008-08-11 19:40 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_xmingw.sh
+     ! Fixed to look for hbpp in the path, like it does for 
+       harbour.
+
 2008-08-11 18:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * config/rules.cf
      % Removed unnecessary -I option from Harbour command line.
