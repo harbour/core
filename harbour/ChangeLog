@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-11 20:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmisc/spd.c
+     ! Fix to SQL_SPRINTF() by Xavi.
+
 2008-08-11 18:24 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * config/rules.cf
      % Removed unnecessary -I option from Harbour command line.

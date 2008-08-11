@@ -77,8 +77,8 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 {
    ULONG s;
 
-   /* NOTE: In DJGPP (4.2.3) snprintf() will be preprocessed to sprintf(), which 
-            makes ulMaxBuf unused, and this in turn causes a warning, so we're 
+   /* NOTE: In DJGPP (4.2.3) snprintf() will be preprocessed to sprintf(), which
+            makes ulMaxBuf unused, and this in turn causes a warning, so we're
             manually suppressing it. [vszakats] */
    #if defined(__DJGPP__)
       HB_SYMBOL_UNUSED( ulMaxBuf );
@@ -171,8 +171,6 @@ static ULONG SCItm( char *cBuffer, ULONG ulMaxBuf, char *cParFrm, int iCOut, int
 *
 * Print NULL if the parameter is NIL or HB_IT_NULL
 * Processing %% and n converter Position.
-* Accepts conversion inside if variable is passed by reference.
-*  Local xDate := Date(); Sql_sprintf('%s', @xDate) => xDate == '2008-05-19'
 *******************************************************************************/
 
 #define DK_INCRES 1024
@@ -195,7 +193,7 @@ HB_FUNC( SQL_SPRINTF )
       memcpy( cRes, cItmFrm, ulItmFrm + sizeof(char) );
       hb_retclen_buffer( cRes, ulItmFrm );
    }else{
-      PHB_ITEM pItmPar;
+      PHB_ITEM pItmPar, pItmCpy;
       char *cIntMod, *cBuffer, *cParFrm, *c;
       int p, arg, iCOut, IsType, IsIndW, IsIndP, iIndWidth, iIndPrec, iErrorPar = 0;
       ULONG s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes = DK_INCRES;
@@ -350,17 +348,23 @@ HB_FUNC( SQL_SPRINTF )
                   ulMaxBuf += f + DK_INCBUF;
                   cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
                }
-               hb_itemPutCL( pItmPar, "NULL", 4 );
-               s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmPar );
+               hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar );
+               hb_itemPutCL( pItmCpy, "NULL", 4 );
+               s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmCpy );
+               hb_itemRelease( pItmCpy );
 
             }else if( HB_IS_STRING( pItmPar ) && (iCOut == 's' || iCOut == 'S') ){
-               if( IsType ) STAItm( pItmPar );
+               if( IsType ){
+                  hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar ); pItmPar = pItmCpy;
+                  STAItm( pItmPar );
+               }
                f = hb_itemGetCLen( pItmPar );
                if( (f = i + HB_MAX(ulWidth, f)) > ulMaxBuf ){
                   ulMaxBuf += f + DK_INCBUF;
                   cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
                }
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmPar );
+               if( IsType ) hb_itemRelease( pItmPar );
 
             }else if( HB_IS_DATE( pItmPar ) && iCOut == 's' ){
                char cDTBuf[ 19 ], cDTFrm[ 28 ]; /* 26 + 2 if %t and change format time */
@@ -391,9 +395,11 @@ HB_FUNC( SQL_SPRINTF )
                   ulMaxBuf += f + DK_INCBUF;
                   cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
                }
-               hb_itemPutC( pItmPar, cDTFrm );
-               if( IsType ) STAItm( pItmPar );
-               s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmPar );
+               hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar );
+               hb_itemPutC( pItmCpy, cDTFrm );
+               if( IsType ) STAItm( pItmCpy );
+               s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmCpy );
+               hb_itemRelease( pItmCpy );
 
             }else if( HB_IS_LOGICAL( pItmPar ) ){
 
@@ -402,6 +408,7 @@ HB_FUNC( SQL_SPRINTF )
                   if( f != s ) cIntMod[f++] = '\0';   /* TRUE & FALSE */
                }
                if( iCOut == 's' ){
+                  hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar ); pItmPar = pItmCpy;
                   hb_itemPutC( pItmPar, (hb_itemGetL( pItmPar ) ? (s ? cIntMod : "TRUE") : (s ? cIntMod + f : "FALSE")) );
                }
                if( (f = i + (iCOut == 's' ? HB_MAX(ulWidth, (s ? s : 6)) : HB_MAX(ulWidth, DK_BLKBUF))) > ulMaxBuf ){
@@ -409,6 +416,7 @@ HB_FUNC( SQL_SPRINTF )
                   cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
                }
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmPar );
+               if( iCOut == 's' ) hb_itemRelease( pItmPar );
 
             }else if( iCOut == 's' ){
                char *cTrimStr, *cStr = hb_itemStr( pItmPar, NULL, NULL );
@@ -419,9 +427,10 @@ HB_FUNC( SQL_SPRINTF )
                      ulMaxBuf += f + DK_INCBUF;
                      cBuffer = (char *)hb_xrealloc( cBuffer, ulMaxBuf );
                   }
-                  hb_itemPutCL( pItmPar, cTrimStr, f );
-                  s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmPar );
-                  hb_xfree( cStr );
+                  hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar );
+                  hb_itemPutCL( pItmCpy, cTrimStr, f );
+                  s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec, pItmCpy );
+                  hb_itemRelease( pItmCpy ); hb_xfree( cStr );
                }else{
                   iErrorPar = p + 2; break;
                }
