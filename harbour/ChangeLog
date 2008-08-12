@@ -28,6 +28,7 @@
   * harbour/make_rpmw32.sh
   * harbour/make_rpmce.sh
     ! fixed release number setting for empty harbour release string
+      [1.0]
 
 2008-08-12 13:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbhpdf/Makefile
