@@ -9,6 +9,31 @@
 */
 
 2008-08-12 19:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   + config/w32/dm.cf
+     + Digital Mars .cf file added. Some cleanups done, and 
+       TOFIX added besides the following:
+     ; TOFIX: This file comes from xhb, and it needs to be updated 
+              to create core and contrib .lib files in central dir.
+              Until then it doesn't work. Ryszard, if you see 
+              this, could you take a look?
+
+   * config/dos/djgpp.cf
+   * config/w32/bcc32.cf
+   * config/w32/xcc.cf
+     % Unnecessary CPPFLAGS -I options deleted:
+       -I$(TOP)
+       -I$(TOP)include
+       -Iinclude
+       -I$(TOP)$(ROOT)
+
+   ; NOTE/TODO: CPPFLAGS -i usage should be cleaned for these files:
+     config/dos/owatcom.cf
+     config/linux/owatcom.cf
+     config/os2/gcc.cf
+     config/w32/owatcom.cf
+     config/w32/watcom.cf
+
+2008-08-12 19:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/linux1st.txt
      * Updated with hbgf package requirement information.
        [1.0]

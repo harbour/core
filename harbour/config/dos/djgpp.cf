@@ -12,10 +12,7 @@ LIB_EXT = .a
 CC = gcc
 CC_IN = -c
 CC_OUT = -o
-CPPFLAGS = -I. -I$(TOP)include -Iinclude
-ifneq ($(HB_INC_COMPILE),)
-   CPPFLAGS = -I. -I$(HB_INC_COMPILE)
-endif
+CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -Wall -W
 
 LD = gcc

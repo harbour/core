@@ -14,12 +14,8 @@ LIB_EXT = .lib
 CC = bcc32.exe
 CC_IN = -c
 CC_OUT = -o
-CPPFLAGS = -I. -I$(TOP) -I$(TOP)$(ROOT)
+CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 CFLAGS = -O2 -d -w -w-sig-
-
-ifneq ($(HB_INC_COMPILE),)
-CPPFLAGS += -I$(HB_INC_COMPILE)
-endif
 
 LD = bcc32.exe
 LDFLAGS = -O2

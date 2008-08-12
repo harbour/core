@@ -1,0 +1,98 @@
+#
+# $Id$
+#
+
+# GNU MAKE file for Digital Mars Compiler
+
+include $(TOP)$(ROOT)config/$(HB_ARCHITECTURE)/global.cf
+
+OBJ_EXT = .obj
+EXE_EXT = .exe
+LIB_PREF =
+LIB_EXT = .lib
+
+CC = dmc
+CC_IN = -c
+CC_OUT = -o
+CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+
+CFLAGS = -6 -cpp -mn -o+time
+# TOFIX: Remove this if not absolutely necessary
+CFLAGS += -D_MSC_VER
+
+# Add all libraries specified in CONTRIBS and LIBS.
+ifeq ($(HB_LIB_COMPILE),)
+LINKLIBS += $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)/contrib/$(lib)/$(ARCH_DIR)/$(subst lib,,$(lib))$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)/source/$(lib)/$(ARCH_DIR)/$(lib)$(LIB_EXT))
+else
+LINKPATHS += -L$(HB_LIB_COMPILE)
+LINKLIBS += $(foreach lib, $(CONTRIBS), $(subst lib,,$(lib))$(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
+endif
+
+# If LIBS specifies the rdd library, add all DB drivers.
+ifeq ($(findstring rdd,$(LIBS)),rdd)
+ifeq ($(HB_LIB_COMPILE),)
+LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(TOP)$(ROOT)/source/rdd/$(drv)/$(ARCH_DIR)/$(drv)$(LIB_EXT))
+else
+LINKPATHS += -L$(HB_LIB_COMPILE)
+LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))
+endif
+endif
+
+# Add the specified GT driver library
+ifeq ($(findstring rtl,$(LIBS)),rtl)
+LINKLIBS += $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH_DIR)/$(HB_GT_LIB)$(LIB_EXT)
+ifeq ($(HB_MULTI_GT),yes)
+LINKLIBS += $(TOP)$(ROOT)source/rtl/gtnul/$(ARCH_DIR)/gtnul$(LIB_EXT)
+endif
+endif
+
+ifneq ($(HB_SCREEN_LIB),)
+LINKLIBS += $(HB_SCREEN_LIB)
+endif
+
+# Add the optional user path(s)
+ifneq ($(LNK_USR_PATH),)
+LINKPATHS += $(foreach path, $(LNK_USR_PATH), -L$(path))
+endif
+
+# Add the optional user libarary (or libraries)
+ifneq ($(LNK_USR_LIB),)
+LINKLIBS += $(foreach lib, $(LNK_USR_LIB), $(lib)$(LIB_EXT))
+endif
+
+SYSLIBS = user32 winspool gdi32 comctl32 comdlg32 ole32 oleaut32 uuid wsock32 advapi32
+LINKLIBS += $(SYSLIBS)
+
+define link_exe_file
+echo $(subst /,\,$(^F)) > __link__.tmp
+echo $@ >> __link__.tmp
+echo. >> __link__.tmp
+echo $(subst /,\,$(LINKLIBS)) >> __link__.tmp
+$(LD) $(LDFLAGS) @__link__.tmp
+endef
+
+LD = link
+LDFLAGS = /NOMAP /EXETYPE:NT /SUBSYSTEM:CONSOLE $(LINKPATHS) $(L_USR)
+LDOBJS = $(foreach file, $(^F), $(file))
+LD_RULE = $(LD) $(LDFLAGS) $(subst /,\,$(LDOBJS)), $@,, $(subst /,\,$(LINKLIBS))
+
+define create_library
+echo $@ > __lib__.tmp
+echo $(^F) >> __lib__.tmp
+$(AR) $(ARFLAGS) @__lib__.tmp
+endef
+
+AR = lib
+ARFLAGS = -c $(A_USR)
+AROBJS = $(foreach file, $(^F), $(file))
+AR_RULE = $(AR) $(ARFLAGS) $@ $(AROBJS)
+
+ifeq ($(COMMAND_COM),yes)
+# workaround for command line size limit
+LD_RULE = $(link_exe_file)
+AR_RULE = $(create_library)
+endif
+
+include $(TOP)$(ROOT)config/rules.cf
