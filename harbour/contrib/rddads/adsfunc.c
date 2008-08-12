@@ -294,7 +294,7 @@ HB_FUNC( ADSISRECORDLOCKED )
 
    if( pArea )
    {
-      UNSIGNED32 ulRec;
+      ULONG ulRec;
       UNSIGNED16 pbLocked = 0;
 
       if( ISNUM( 1 ) )
@@ -302,7 +302,7 @@ HB_FUNC( ADSISRECORDLOCKED )
       else
          SELF_RECNO( ( AREAP ) pArea, &ulRec );
 
-      if( AdsIsRecordLocked( pArea->hTable, ulRec, &pbLocked ) == AE_SUCCESS )
+      if( AdsIsRecordLocked( pArea->hTable, ( UNSIGNED32 ) ulRec, &pbLocked ) == AE_SUCCESS )
          hb_retl( pbLocked != 0 );
       else
          hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );

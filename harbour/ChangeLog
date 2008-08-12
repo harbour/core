@@ -8,6 +8,26 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-12 12:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/rddads/adsfunc.c
+     ! Fixed GCC warning (Ubuntu/GCC422 + ACE 9.00.0.0)
+     ; TOFIX: These ones still remain:
+       ../../ads1.c: In function 'adsInfo':
+       ../../ads1.c:2792: warning: format '%ld' expects type 'long int', but argument 5 has type 'UNSIGNED32'
+       ../../ads1.c:2792: warning: format '%ld' expects type 'long int', but argument 6 has type 'UNSIGNED32'
+       ../../ads1.c:2792: warning: format '%ld' expects type 'long int', but argument 5 has type 'UNSIGNED32'
+       ../../ads1.c:2792: warning: format '%ld' expects type 'long int', but argument 6 has type 'UNSIGNED32'
+       ../../adsfunc.c: In function 'HB_FUN_ADSVERSION':
+       ../../adsfunc.c:1617: warning: format '%ld' expects type 'long int', but argument 4 has type 'UNSIGNED32'
+       ../../adsfunc.c:1617: warning: format '%ld' expects type 'long int', but argument 5 has type 'UNSIGNED32'
+       ../../adsfunc.c:1617: warning: format '%ld' expects type 'long int', but argument 4 has type 'UNSIGNED32'
+       ../../adsfunc.c:1617: warning: format '%ld' expects type 'long int', but argument 5 has type 'UNSIGNED32'
+       ../../adsfunc.c:1620: warning: format '%ld' expects type 'long int', but argument 5 has type 'UNSIGNED32'
+       ../../adsfunc.c:1620: warning: format '%ld' expects type 'long int', but argument 6 has type 'UNSIGNED32'
+       ../../adsfunc.c:1620: warning: format '%ld' expects type 'long int', but argument 5 has type 'UNSIGNED32'
+       ../../adsfunc.c:1620: warning: format '%ld' expects type 'long int', but argument 6 has type 'UNSIGNED32'
+       [1.0]
+
 2008-08-12 10:55 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/lang/msgcskam.c
    * source/lang/msgcs852.c
