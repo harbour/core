@@ -8,6 +8,45 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-12 22:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/config/w32/dm.cf
+    * updated for central library directory used by Harbour - not tested
+
+  * harbour/config/w32/xcc.cf
+    ! fixed include PATH in XCC builds - Viktor be carefull with
+      cleaning -I<path> parameter. Some compilers use different
+      rulles then the one you may expect using the most popular
+      ones and such operation will break compilation. F.e. XCC
+      seems to ignore source file location for releative paths
+      so in GNU make builds it's necessary to add "-I$(TOP)"
+      instead of "-I." and when included file starts with ".."
+      then it does not try to use it with paths set by -I option
+      so we need -I$(TOP)$(ROOT) and hard coded for this compiler
+      directories in include/hbregex.h and include/hbzip.h
+
+  * harbour/source/hbzlib/zutil.h
+    ! do not use fdopen() with XCC - it does not support it
+
+  * harbour/contrib/examples/pp/pp.c
+  * harbour/contrib/examples/pp/hbppcore.c
+  * harbour/source/common/hbfsapi.c
+  * harbour/source/rtl/fnsplit.c
+  * harbour/source/rtl/fstemp.c
+    ! always use _POSIX_PATH_MAX + 1 buffers
+
+  * harbour/source/compiler/gencobj.c
+    * extended line buffer size
+
+  * harbour/source/rtl/gtcrs/gtcrs.h
+    * removed unnecessary declaration for _POSIX_PATH_MAX
+      it's always defined in Harbour header files
+
+  * harbour/source/rtl/inkey.c
+  * harbour/source/rtl/hbinet.c
+  * harbour/source/rtl/gtwvt/gtwvt.c
+    * use hb_array[SG]et*() functions insteaf of
+      hb_item*( hb_arrayGetItemPtr, ... )
+
 2008-08-12 21:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/linux1st.txt
      * Some further updates.

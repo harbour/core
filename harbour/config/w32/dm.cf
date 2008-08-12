@@ -17,35 +17,25 @@ CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 CFLAGS = -6 -cpp -mn -o+time
-# TOFIX: Remove this if not absolutely necessary
-CFLAGS += -D_MSC_VER
 
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS += $(foreach lib, $(CONTRIBS), $(TOP)$(ROOT)/contrib/$(lib)/$(ARCH_DIR)/$(subst lib,,$(lib))$(LIB_EXT))
-LINKLIBS += $(foreach lib, $(LIBS), $(TOP)$(ROOT)/source/$(lib)/$(ARCH_DIR)/$(lib)$(LIB_EXT))
+LINKPATHS += -L$(LIB_DIR)
 else
 LINKPATHS += -L$(HB_LIB_COMPILE)
-LINKLIBS += $(foreach lib, $(CONTRIBS), $(subst lib,,$(lib))$(lib)$(LIB_EXT))
-LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 endif
+
+LINKLIBS += $(foreach lib, $(CONTRIBS), $(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-ifeq ($(HB_LIB_COMPILE),)
-LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(TOP)$(ROOT)/source/rdd/$(drv)/$(ARCH_DIR)/$(drv)$(LIB_EXT))
-else
-LINKPATHS += -L$(HB_LIB_COMPILE)
 LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))
 endif
-endif
 
-# Add the specified GT driver library
+# Add the specified GT driver library and other RTLs
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-LINKLIBS += $(TOP)$(ROOT)source/rtl/$(HB_GT_LIB)/$(ARCH_DIR)/$(HB_GT_LIB)$(LIB_EXT)
-ifeq ($(HB_MULTI_GT),yes)
-LINKLIBS += $(TOP)$(ROOT)source/rtl/gtnul/$(ARCH_DIR)/gtnul$(LIB_EXT)
-endif
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
 endif
 
 ifneq ($(HB_SCREEN_LIB),)

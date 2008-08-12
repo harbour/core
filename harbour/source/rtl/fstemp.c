@@ -62,7 +62,7 @@
 #include <unistd.h>  /* We need for mkstemp() on BSD */
 #endif
 
-/* NOTE: The buffer must be at least _POSIX_PATH_MAX chars long */
+/* NOTE: The buffer must be at least _POSIX_PATH_MAX + 1 chars long */
 #if !defined( HB_OS_UNIX )
 
 static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * pszPrefix )
@@ -75,11 +75,11 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
 
    if( pszDir != NULL && pszDir[0] != '\0' )
    {
-      strncpy( (char *) cTempDir, (const char *) pszDir, _POSIX_PATH_MAX );
+      strncpy( (char *) cTempDir, (const char *) pszDir, _POSIX_PATH_MAX + 1 );
    }
    else
    {
-      if( ! GetTempPathA( ( DWORD ) _POSIX_PATH_MAX, cTempDir ) )
+      if( ! GetTempPathA( ( DWORD ) _POSIX_PATH_MAX + 1, cTempDir ) )
       {
          hb_fsSetIOError( FALSE, 0 );
          return FALSE;
@@ -108,7 +108,7 @@ static BOOL hb_fsTempName( BYTE * pszBuffer, const BYTE * pszDir, const BYTE * p
    return fResult;
 }
 
-/* NOTE: The buffer must be at least _POSIX_PATH_MAX chars long */
+/* NOTE: The buffer must be at least _POSIX_PATH_MAX + 1 chars long */
 
 HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName )
 {
@@ -211,7 +211,7 @@ HB_EXPORT FHANDLE hb_fsCreateTemp( const BYTE * pszDir, const BYTE * pszPrefix, 
          hb_strncat( ( char * ) pszName, ( char * ) pszPrefix, _POSIX_PATH_MAX );
       }
 
-      iLen = strlen( ( char * ) pszName );
+      iLen = ( int ) strlen( ( char * ) pszName );
       if( iLen > _POSIX_PATH_MAX - 6 )
          return FS_ERROR;
 

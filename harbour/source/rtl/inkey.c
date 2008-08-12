@@ -210,15 +210,15 @@ HB_FUNC( HB_KEYPUT )
 
       for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
       {
-         PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulIndex );
+         HB_TYPE type = hb_arrayGetType( pArray, ulIndex );
 
-         if( HB_IS_NUMBER( pItem ) )
+         if( type & HB_IT_NUMERIC )
          {
-            hb_inkeyPut( hb_itemGetNI( pItem ) );
+            hb_inkeyPut( hb_arrayGetNI( pArray, ulIndex ) );
          }
-         else if( HB_IS_STRING( pItem ) )
+         else if( type & HB_IT_STRING )
          {
-            hb_inkeySetText( ( const char * ) hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
+            hb_inkeySetText( ( const char * ) hb_arrayGetCPtr( pArray, ulIndex ), hb_arrayGetCLen( pArray, ulIndex ) );
          }
       }
    }
@@ -242,15 +242,15 @@ HB_FUNC( HB_KEYINS )
 
       for( ulIndex = 1; ulIndex <= ulElements; ulIndex++ )
       {
-         PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, ulIndex );
+         HB_TYPE type = hb_arrayGetType( pArray, ulIndex );
 
-         if( HB_IS_NUMBER( pItem ) )
+         if( type & HB_IT_NUMERIC )
          {
-            hb_inkeyIns( hb_itemGetNI( pItem ) );
+            hb_inkeyIns( hb_arrayGetNI( pArray, ulIndex ) );
          }
-         else if( HB_IS_STRING( pItem ) )
+         else if( type & HB_IT_STRING )
          {
-            hb_inkeySetText( ( const char * ) hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
+            hb_inkeySetText( ( const char * ) hb_arrayGetCPtr( pArray, ulIndex ), hb_arrayGetCLen( pArray, ulIndex ) );
          }
       }
    }

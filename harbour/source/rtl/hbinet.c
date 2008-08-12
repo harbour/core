@@ -1181,9 +1181,8 @@ HB_FUNC( HB_INETRECVENDBLOCK )
 
          for( i = 0; i < iprotos; i++ )
          {
-            PHB_ITEM pItem  = hb_arrayGetItemPtr( pProto, i + 1 );
-            Proto[ i ]      = hb_itemGetCPtr( pItem );
-            iprotosize[ i ] = hb_itemGetCLen( pItem );
+            Proto[ i ]      = hb_arrayGetCPtr( pProto, i + 1 );
+            iprotosize[ i ] = hb_arrayGetCLen( pProto, i + 1 );
          }
       }
       else

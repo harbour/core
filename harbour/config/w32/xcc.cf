@@ -14,7 +14,7 @@ LIB_EXT = .lib
 CC = xcc.exe
 CC_IN = -c
 CC_OUT = -Fo
-CPPFLAGS = -I. -I$(HB_INC_COMPILE)
+CPPFLAGS = -I$(HB_INC_COMPILE) -I$(TOP) -I$(TOP)$(ROOT)
 # disabled - it produces bad code
 #CPPFLAGS += -Ot
 

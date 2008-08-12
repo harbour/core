@@ -223,7 +223,11 @@ HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
    return pFileName;
 }
 
-/* NOTE: szFileName buffer must be at least _POSIX_PATH_MAX long */
+/* NOTE: szFileName buffer must be at least _POSIX_PATH_MAX + 1 long.
+ *       Because some freign code may not be updated yet then
+ *       hb_fsFNameMerge() efectively uses only _POSIX_PATH_MAX buffer
+ *       but it will be changed in the future.
+ */
 
 /* This function joins path, name and extension into a string with a filename */
 HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )

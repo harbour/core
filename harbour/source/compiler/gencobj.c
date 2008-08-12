@@ -32,7 +32,7 @@
 #define HB_CFG_FILENAME    "harbour.cfg"
 
 /* QUESTION: Allocate buffer dynamically ? */
-#define HB_CFG_LINE_LEN    ( _POSIX_PATH_MAX )
+#define HB_CFG_LINE_LEN    ( _POSIX_PATH_MAX << 1 )
 
 #if defined( OS_UNIX_COMPATIBLE )
    #define HB_NULL_STR " > /dev/null"
@@ -89,7 +89,7 @@ static char * hb_searchpath( const char * pszFile, char * pszEnv, char * pszCfg 
 
 static void hb_substenvvar( char * szLine )
 {
-   char szBuf[ HB_CFG_LINE_LEN ], * szVar, * ptr;
+   char szBuf[ HB_CFG_LINE_LEN + 1 ], * szVar, * ptr;
 
    ptr = szLine;
    while( *ptr )
@@ -105,16 +105,16 @@ static void hb_substenvvar( char * szLine )
          {
             ptr[ 0 ] = 0;
             ptr[ i ] = 0;
-            hb_strncpy( szBuf, szLine, HB_CFG_LINE_LEN - 1 );
+            hb_strncpy( szBuf, szLine, HB_CFG_LINE_LEN );
             szVar = hb_getenv( ptr + 2 );
             if( szVar )
             {
-               hb_strncat( szBuf, szVar, HB_CFG_LINE_LEN - 1 );
+               hb_strncat( szBuf, szVar, HB_CFG_LINE_LEN );
                hb_xfree( szVar );
             }
             j = strlen( szBuf );
-            hb_strncat( szBuf, &ptr[ i + 1 ], HB_CFG_LINE_LEN - 1 );
-            hb_strncpy( szLine, szBuf, HB_CFG_LINE_LEN - 1 );
+            hb_strncat( szBuf, &ptr[ i + 1 ], HB_CFG_LINE_LEN );
+            hb_strncpy( szLine, szBuf, HB_CFG_LINE_LEN );
             ptr = szLine + j;
          }
       }
@@ -126,7 +126,7 @@ static void hb_substenvvar( char * szLine )
 void hb_compGenCObj( HB_COMP_DECL, PHB_FNAME pFileName )
 {
    char szFileName[ _POSIX_PATH_MAX + 1 ];
-   char szLine[ HB_CFG_LINE_LEN ];
+   char szLine[ HB_CFG_LINE_LEN + 1 ];
    char szCompiler[ HB_CFG_LINE_LEN + 1 ] = "";
    char szOptions[ HB_CFG_LINE_LEN + 1 ] = "";
    char szCommandLine[ HB_CFG_LINE_LEN * 2 + 1 ];
