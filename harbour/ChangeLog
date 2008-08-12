@@ -8,15 +8,34 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-12 13:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbhpdf/Makefile
+     ! Fixed to find libharu headers in its current default 
+       location. (tested on Ubuntu with .tar.gz package from 
+       libharu.org.)
+       [1.0]
+
+   ; Some more (albeit not new) errors from Ubuntu when compiled 
+     will all possible external packages installed:
+
+     In file included from ../../fi_winfu.c:74:
+     /usr/include/FreeImage.h:134: error: conflicting types for 'LONG'
+     ../../../../include/hbdefs.h:205: error: previous declaration of 'LONG' was here
+     In file included from ../../fi_wrp.c:74:
+     /usr/include/FreeImage.h:134: error: conflicting types for 'LONG'
+     ../../../../include/hbdefs.h:205: error: previous declaration of 'LONG' was here
+
 2008-08-12 13:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_xmingw.sh
   * harbour/make_xmingwce.sh
     ! cleanup and some minor fixes
     * synced behavior of both scripts in few places
+       [1.0]
 
   * harbour/contrib/rddads/ads1.c
   * harbour/contrib/rddads/adsfunc.c
     ! fixed casting of parameters passed to snprintf()
+       [1.0]
 
 2008-08-12 12:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/adsfunc.c
