@@ -60,7 +60,7 @@
 #define HB_VM_STARTUP
 #include "hbwmain.c"
 
-#if ( defined(__WATCOMC__) || defined(__MINGW32__) ) && !defined(__EXPORT__)
+#if ( defined(__DMC__) || defined(__WATCOMC__) || defined(__MINGW32__) ) && !defined(__EXPORT__)
 HB_EXTERN_BEGIN
 HB_EXPORT void hb_forceLinkMainWin( void ) {}
 HB_EXTERN_END

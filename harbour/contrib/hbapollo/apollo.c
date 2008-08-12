@@ -56,7 +56,7 @@
 
 /* NOTE: This hack is needed to suppress 'non-ANSI 
          keyword' warnings inside Sde61.h. */
-#if defined( __BORLANDC__ )
+#if defined( __BORLANDC__ ) || defined( __WATCOMC__ )
    #define _declspec __declspec
 #endif
 

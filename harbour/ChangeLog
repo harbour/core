@@ -8,6 +8,42 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-13 01:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/whatsnew.txt
+     * Extended releases notes/issues section.
+
+   * config/w32/dm.cf
+     ! Fixed to exclude "possible extraneous ';'" warnings 
+       for every for()/while()/etc constructs with an empty body.
+     ! Further fixes to link/lib rules.
+     ; TOFIX1: odbc.c, gtwvg.c still don't compile.
+     ; TOFIX2: Harbour executables won't run, by simply doing nothing.
+
+   * source/rtl/gtwvt/gtwvt.c
+     ! Fixed to compile with __DMC__.
+     ; NOTE: Przemek, could you please check these?
+
+   * include/hbsetup.h
+     ! snprintf() for __DMC__.
+     
+   * contrib/hbw32/dllcall.c
+     ! Fixed casting for __DMC__.
+
+   * contrib/hbsqlit3/hbsqlit3.c
+     ! Workaround for Pelles C 4.5 and Open Watcom, so that 
+       sqlite3.c won't be included for these compilers.
+       Pelles C 4.5 crashes, Open Watcom 1.7 goes into an 
+       infinite loop on this huge file. For thes compilers 
+       the sqlite3 library should be supplied by the users.
+
+   * contrib/hbapollo/apollo.c
+     ! Fixed to compile with Open Watcom.
+
+   * source/vm/mainwin.c
+   * source/vm/hvm.c
+     ! Fix for __DMC__ startup problem:
+       'OPTLINK : Warning 134: No Start Address'
+
 2008-08-12 22:49 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/w32/dm.cf
     * updated for central library directory used by Harbour - not tested

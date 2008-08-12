@@ -372,7 +372,7 @@
    #if ( __DJGPP__ < 2 || ( __DJGPP__ == 2 && __DJGPP_MINOR__ <= 3 ) )
       #define snprintf(s, len, args...) sprintf( (s), ##args )
    #endif
-#elif defined( _MSC_VER ) && !defined( __XCC__ )
+#elif defined( _MSC_VER ) || defined( __DMC__ ) && !defined( __XCC__ )
    #define snprintf _snprintf
 #elif defined( __WATCOMC__ )
    #if __WATCOMC__ < 1200

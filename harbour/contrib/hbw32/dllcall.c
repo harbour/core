@@ -768,10 +768,10 @@ HB_FUNC( DLLPREPARECALL )
       if( ISCHAR( 1 ) )
          FreeLibrary( xec->hDLL );
 
-      pszErrorText = ISCHAR( 3 ) ? "Invalid function name" : "Invalid function ordinal";
+      pszErrorText = ISCHAR( 3 ) ? ( char * ) "Invalid function name" : ( char * ) "Invalid function ordinal";
    }
    else
-      pszErrorText = ISCHAR( 1 ) ? "Invalid library name" : "Invalid library handle";
+      pszErrorText = ISCHAR( 1 ) ? ( char * ) "Invalid library name" : ( char * ) "Invalid library handle";
 
    hb_gcFree( xec );
 

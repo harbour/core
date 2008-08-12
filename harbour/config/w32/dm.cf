@@ -17,25 +17,26 @@ CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 CFLAGS = -6 -cpp -mn -o+time
+# Suppressing "possible extraneous ';'" warnings. [vszakats]
+CFLAGS += -w7
 
 # Add all libraries specified in CONTRIBS and LIBS.
 ifeq ($(HB_LIB_COMPILE),)
-LINKPATHS += -L$(LIB_DIR)
+LINKLIBS += $(foreach lib, $(CONTRIBS), $(LIB_DIR)\$(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(LIBS), $(LIB_DIR)\$(lib)$(LIB_EXT))
 else
-LINKPATHS += -L$(HB_LIB_COMPILE)
+LINKLIBS += $(foreach lib, $(CONTRIBS), $(HB_LIB_COMPILE)\$(lib)$(LIB_EXT))
+LINKLIBS += $(foreach lib, $(LIBS), $(HB_LIB_COMPILE)\$(lib)$(LIB_EXT))
 endif
-
-LINKLIBS += $(foreach lib, $(CONTRIBS), $(lib)$(LIB_EXT))
-LINKLIBS += $(foreach lib, $(LIBS), $(lib)$(LIB_EXT))
 
 # If LIBS specifies the rdd library, add all DB drivers.
 ifeq ($(findstring rdd,$(LIBS)),rdd)
-LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(drv)$(LIB_EXT))
+LINKLIBS += $(foreach drv, $(HB_DB_DRIVERS), $(LIB_DIR)/$(drv)$(LIB_EXT))
 endif
 
 # Add the specified GT driver library and other RTLs
 ifeq ($(findstring rtl,$(LIBS)),rtl)
-LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(gt)$(LIB_EXT))
+LINKLIBS += $(foreach gt, $(HB_GT_LIBS), $(LIB_DIR)/$(gt)$(LIB_EXT))
 endif
 
 ifneq ($(HB_SCREEN_LIB),)
@@ -43,9 +44,9 @@ LINKLIBS += $(HB_SCREEN_LIB)
 endif
 
 # Add the optional user path(s)
-ifneq ($(LNK_USR_PATH),)
-LINKPATHS += $(foreach path, $(LNK_USR_PATH), -L$(path))
-endif
+#ifneq ($(LNK_USR_PATH),)
+#LINKPATHS += $(foreach path, $(LNK_USR_PATH), -L$(path))
+#endif
 
 # Add the optional user libarary (or libraries)
 ifneq ($(LNK_USR_LIB),)
@@ -77,7 +78,7 @@ endef
 AR = lib
 ARFLAGS = -c $(A_USR)
 AROBJS = $(foreach file, $(^F), $(file))
-AR_RULE = $(AR) $(ARFLAGS) $@ $(AROBJS)
+AR_RULE = $(AR) $(ARFLAGS) $(LIB_DIR)/$@ $(AROBJS)
 
 ifeq ($(COMMAND_COM),yes)
 # workaround for command line size limit

@@ -1452,7 +1452,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             /* Enable "maximize" button */
 
-#if defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) && !defined(HB_ARCH_64BIT)
+#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
             SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
 #else
             SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX|WS_THICKFRAME );
@@ -1483,7 +1483,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                hb_gt_wvt_FitSize( pWVT );
 
                /* Disable "maximize" button */
-#if defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) && !defined(HB_ARCH_64BIT)
+#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
                SetWindowLong( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
 #else
                SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_THICKFRAME );
@@ -1856,17 +1856,17 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_INPUTFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                              ( UINT_PTR ) GetStdHandle( STD_INPUT_HANDLE ) );
+                              ( HB_LONG ) GetStdHandle( STD_INPUT_HANDLE ) );
          break;
 
       case HB_GTI_OUTPUTFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                              ( UINT_PTR ) GetStdHandle( STD_OUTPUT_HANDLE ) );
+                              ( HB_LONG ) GetStdHandle( STD_OUTPUT_HANDLE ) );
          break;
 
       case HB_GTI_ERRORFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                              ( UINT_PTR ) GetStdHandle( STD_ERROR_HANDLE ) );
+                              ( HB_LONG ) GetStdHandle( STD_ERROR_HANDLE ) );
          break;
 
       case HB_GTI_FONTSIZE:
@@ -2080,7 +2080,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                SendMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) hIcon ); /* Set Task List Icon */
             }
          }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( UINT_PTR ) hIcon );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_LONG ) hIcon );
          break;
       }
 
@@ -2096,7 +2096,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
             hIcon = LoadIcon( ( HINSTANCE ) s_hInstance,
-                              MAKEINTRESOURCE( ( UINT_PTR )
+                              MAKEINTRESOURCE( ( HB_LONG )
                                           hb_itemGetNInt( pInfo->pNewVal ) ) );
          }
          if( hIcon )
@@ -2104,7 +2104,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             SendMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); /* Set Title Bar Icon */
             SendMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) hIcon ); /* Set Task List Icon */
          }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( UINT_PTR ) hIcon );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_LONG ) hIcon );
          break;
       }
       case HB_GTI_VIEWMAXWIDTH:
@@ -2186,7 +2186,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
             if( bNewValue != pWVT->bResizable )
             {
-#if defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) && !defined(HB_ARCH_64BIT)
+#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
                LONG style;
 #else
                LONG_PTR style;
@@ -2199,7 +2199,7 @@ static BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                else
                   style = WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_BORDER;
 
-#if defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) && !defined(HB_ARCH_64BIT)
+#if (defined(_MSC_VER) && (_MSC_VER <= 1200 || defined(HB_WINCE)) || defined(__DMC__)) && !defined(HB_ARCH_64BIT)
                SetWindowLong( pWVT->hWnd, GWL_STYLE, style );
 #else
                SetWindowLongPtr( pWVT->hWnd, GWL_STYLE, style );

@@ -88,12 +88,22 @@ Contrib
 - hbsqlit3 warning fixes and error fixes for some compilers/modes.
 - Added DirectoryRecurse() to xhb.lib.
 
-Known issues
+Known build issues
 =============================
 - Harbour won't currently compile with MSVC in 64 bit C mode.
   Use C++ mode instead with commands 'set HB_BUILD_MODE=cpp' 
-  and 'make_vc.bat')
-- Contrib hbfimage won't currently compile on Linux systems.
+  and 'make_vc.bat'.
+- Contrib hbfimage won't currently compile on Linux systems 
+  and with Open Watcom compilers. This will be addressed in 
+  a future version.
+- Contrib hbsqlit3 will not include sqlite3 library code for 
+  Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems 
+  in foreign code. For these compilers you will have to supply 
+  sqlite3 library yourself. For other compilers, some warnings 
+  are expected and normal in non-Harbour code.
+- Windows 64 bit builds may generate an excessive amount of integer 
+  size conversion warnings. This is currently normal and will be 
+  addressed in a future version.
 
 
 Version 1.0.0 rc2 (2008-07-01) tag: 1.0.0rc2
