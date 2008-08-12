@@ -73,6 +73,7 @@ cd `dirname $0`
 . bin/hb-func.sh
 hb_ver=`get_hbver`
 hb_verstat=`get_hbverstat`
+[ -n "${hb_verstat}" ] || hb_verstat="0"
 
 NEED_RPM="make gcc binutils bash"
 
