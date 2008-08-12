@@ -28,6 +28,38 @@ sudo apt-get install libgpm-dev
 For contrib/hbodbc lib:
 sudo apt-get install unixodbc-dev
 
+For contrib/hbcurl lib:
+sudo apt-get install libcurl4-openssl-dev
+or
+sudo apt-get install libcurl4-gnutls-dev
+or
+sudo apt-get install libcurl4-dev
+
+For contrib/hbfbird lib:
+sudo apt-get install libfirebird2.0-dev
+
+For contrib/hbfimage lib:
+sudo apt-get install libfreeimage-dev
+
+For contrib/hbgd lib:
+sudo apt-get install libgd2-xpm-dev
+or
+sudo apt-get install libgd2-noxpm-dev
+
+For contrib/hbmysql lib:
+sudo apt-get install libmysqlclient15-dev
+
+For contrib/hbpgsql lib:
+sudo apt-get install libpq-dev
+
+For contrib/rddads lib:
+Download and install 'Advantage Client Engine for Linux' package 
+(f.e. aceapi-9.00.0.0.tar.gz)
+
+For contrib/hbhpdf lib:
+Download and configure/make install libharu from http://libharu.org/
+
+
 DEBIAN distro
 -------------
 

@@ -18,7 +18,6 @@ DOC_FILES=\
 	gmake.txt \
 	gtapi.txt \
 	hbmake.txt \
-	hbpplib.txt \
 	hdr_tpl.txt \
 	howtobsd.txt \
 	howtosvn.txt \

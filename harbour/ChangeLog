@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-12 16:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/Makefile
+   - doc/hbpplib.txt
+     - Removed obsolete file.
+       [1.0]
+
+   * doc/linux1st.txt
+     * Added required Ubuntu packages for all existing contribs 
+       (except hbgf).
+       [1.0]
+
+   * doc/whatsnew.txt
+     + Added "Known issues", with MSVC 64 bit C mode compilation 
+       and hbfimage compile failure in Linux.
+       [1.0]
+
 2008-08-12 14:06 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/make_rpmw32.sh
   * harbour/make_rpmce.sh
