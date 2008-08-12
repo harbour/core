@@ -8,7 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
-2008-08-12 19:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+2008-08-12 21:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/linux1st.txt
+     * Some further updates.
+       [1.0]
+
+2008-08-12 20:55 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    + config/w32/dm.cf
      + Digital Mars .cf file added. Some cleanups done, and 
        TOFIX added besides the following:

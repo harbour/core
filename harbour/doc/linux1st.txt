@@ -5,8 +5,8 @@
                           Linux primer
                           ============
 
-Ubuntu distro
--------------
+Ubuntu/Debian distro
+--------------------
 
 Packages needed to cleanly build Harbour:
 (Tested with Ubuntu 7.04 and 8.04)
@@ -20,10 +20,8 @@ sudo apt-get install libslang2-dev
 For GTXWC terminal lib:
 sudo apt-get install libx11-dev
 
-For mouse support:
+For console mouse support in GTTRM, GTSLN and GTCRS:
 sudo apt-get install libgpmg1-dev
-or
-sudo apt-get install libgpm-dev
 
 For contrib/hbodbc lib:
 sudo apt-get install unixodbc-dev
@@ -64,11 +62,8 @@ For contrib/hbhpdf lib:
 Download and './configure', 'make install' libharu 
 from http://libharu.org/
 
-
-DEBIAN distro
--------------
-
 Notes by Scott Johnson <scomps at purplewire.org>
+-------------------------------------------------
 
 Ok, I finally got something to run.  The code I compiled was standard
 Clipper 5.2 code pulled directly from a dos/win box and was working
