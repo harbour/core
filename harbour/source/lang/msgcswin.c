@@ -119,7 +119,7 @@ static HB_LANG s_lang =
       "Chyba mezí",
       "Pøeteèení øetìzce",
       "Pøeteèení èísla",
-      "Dìlìní nulou",
+      "Dìlení nulou",
       "Numerická chyba",
       "Chyba syntaxe",
       "Operace pøíliš komplexní",

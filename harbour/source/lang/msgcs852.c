@@ -118,7 +118,7 @@ static HB_LANG s_lang =
       "Chyba mez¡",
       "PýeteŸen¡ ýetØzce",
       "PýeteŸen¡ Ÿ¡sla",
-      "DØlØn¡ nulou",
+      "DØlen¡ nulou",
       "Numerick  chyba",
       "Chyba syntaxe",
       "Operace pý¡liç komplexn¡",

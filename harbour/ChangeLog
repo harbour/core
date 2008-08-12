@@ -8,6 +8,14 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-12 10:55 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/lang/msgcskam.c
+   * source/lang/msgcs852.c
+   * source/lang/msgcsiso.c
+   * source/lang/msgcswin.c
+     ! Typo fixed (by Vojtech Obrdlik).
+       [1.0]
+
 2008-08-11 21:20 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * config/hpux/gcc.cf
    * config/linux/gcc.cf
