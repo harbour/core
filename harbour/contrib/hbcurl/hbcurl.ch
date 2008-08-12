@@ -444,5 +444,6 @@
 #define HB_CURLE_REMOTE_FILE_NOT_FOUND        78 /* remote file not found */
 #define HB_CURLE_SSH                          79 /* error from the SSH layer, somewhat generic so the error message will be of interest when this has happened */
 #define HB_CURLE_SSL_SHUTDOWN_FAILED          80 /* Failed to shut down the SSL connection */
+#define HB_CURLE_AGAIN                        81 /* socket is not ready for send/recv, wait till it's ready and try again */
 
 #endif /* HBCURL_CH_ */

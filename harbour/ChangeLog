@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-12 19:31 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/linux1st.txt
+     * Updated with hbgf package requirement information.
+       [1.0]
+
+   * contrib/hbcurl/hbcurl.ch
+     * Minor update for libcurl 7.18.2
+       [1.0]
+
 2008-08-12 16:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/Makefile
    - doc/hbpplib.txt

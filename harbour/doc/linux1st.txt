@@ -9,7 +9,7 @@ Ubuntu distro
 -------------
 
 Packages needed to cleanly build Harbour:
-(Tested with Ubuntu 7.04 Server)
+(Tested with Ubuntu 7.04 and 8.04)
 
 For GTCRS terminal lib:
 sudo apt-get install libncurses-dev
@@ -52,12 +52,17 @@ sudo apt-get install libmysqlclient15-dev
 For contrib/hbpgsql lib:
 sudo apt-get install libpq-dev
 
+For contrib/hbgf/hbgfgtk lib:
+sudo apt-get install libglib2.0-dev
+sudo apt-get install libgtk2.0-dev
+
 For contrib/rddads lib:
-Download and install 'Advantage Client Engine for Linux' package 
+Download and install 'Advantage Client Engine API for Linux' package 
 (f.e. aceapi-9.00.0.0.tar.gz)
 
 For contrib/hbhpdf lib:
-Download and configure/make install libharu from http://libharu.org/
+Download and './configure', 'make install' libharu 
+from http://libharu.org/
 
 
 DEBIAN distro
