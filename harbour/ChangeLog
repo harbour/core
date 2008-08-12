@@ -8,6 +8,16 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-12 13:01 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
+  * harbour/make_xmingw.sh
+  * harbour/make_xmingwce.sh
+    ! cleanup and some minor fixes
+    * synced behavior of both scripts in few places
+
+  * harbour/contrib/rddads/ads1.c
+  * harbour/contrib/rddads/adsfunc.c
+    ! fixed casting of parameters passed to snprintf()
+
 2008-08-12 12:02 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/rddads/adsfunc.c
      ! Fixed GCC warning (Ubuntu/GCC422 + ACE 9.00.0.0)

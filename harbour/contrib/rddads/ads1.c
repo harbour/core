@@ -2789,7 +2789,8 @@ static ERRCODE adsInfo( ADSAREAP pArea, USHORT uiIndex, PHB_ITEM pItem )
 
          AdsGetVersion( &ulMajor, &ulMinor, &ucLetter, ucDesc, &usDescLen);
 
-         snprintf( ( char * ) ucVersion, sizeof( ucVersion ), "%s, v%ld.%ld%c", ucDesc, ulMajor, ulMinor, ucLetter );
+         snprintf( ( char * ) ucVersion, sizeof( ucVersion ), "%s, v%lu.%lu%c",
+                   ( char * ) ucDesc, ( ULONG ) ulMajor, ( ULONG ) ulMinor, ucLetter );
          hb_itemPutC( pItem, ( char * ) ucVersion );
          break;
       }

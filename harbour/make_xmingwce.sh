@@ -13,17 +13,18 @@ cleanup()
     rm -fR "${HB_BIN_COMPILE}"
 }
 
+UNAME=`uname`
+UNAMEL=`echo "$UNAME"|tr A-Z a-z`
+UNAMEU=`echo "$UNAME"|tr a-z A-Z`
+
 export HB_ARCHITECTURE=w32
 export HB_COMPILER=cemgw
-
-UNAME=`uname -s | tr -d "[-]" 2>/dev/null`
-UNAMEU=`echo "$UNAME"|tr a-z A-Z`
 
 if [ "$OSTYPE" = "msdosdjgpp" ]; then
     HB_HOST_ARCH="dos"
     HB_HOST_CC="djgpp"
 else
-    HB_HOST_ARCH=`echo "$UNAME"|tr '[A-Z]' '[a-z]'`
+    HB_HOST_ARCH="${UNAMEL}"
     HB_HOST_CC="gcc"
     case "$HB_HOST_ARCH" in
         *windows*|*mingw32*|msys*)  HB_HOST_ARCH="w32"; HB_HOST_CC="mingw32" ;;
@@ -74,17 +75,18 @@ export HB_GT_LIB="gtwvt"
 
 export HB_BIN_COMPILE="/tmp/hb-${CCPREFIX}-$$"
 rm -fR "${HB_BIN_COMPILE}"
-trap cleanup EXIT &>/dev/null
+trap cleanup EXIT >/dev/null 2>&1
 mkdir ${HB_BIN_COMPILE}
 
 DIR=`cd $(dirname $0);pwd`
 if [ -z "${HB_COMP_PATH}" ]; then
-    if which harbour &> /dev/null; then
+    if which harbour > /dev/null 2>&1; then
         HB_COMP_PATH=`which harbour 2> /dev/null`
     else
         HB_COMP_PATH="$DIR/source/main/$HB_HOST_ARCH/$HB_HOST_CC/harbour"
     fi
 fi
+
 if [ -x "${HB_COMP_PATH}" ]; then
     ln -s "${HB_COMP_PATH}" ${HB_BIN_COMPILE}/harbour.exe
 else
