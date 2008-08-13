@@ -272,7 +272,7 @@ static int hb_pp_preprocesfile( PHB_PP_STATE pState, char * szRuleFile )
    int iResult = 0;
    ULONG ulLen;
 
-   while( hb_pp_nextLine( pState, &ulLen ) != NULL && ulLen );
+   while( hb_pp_nextLine( pState, &ulLen ) != NULL && ulLen ) {};
 
    if( szRuleFile )
    {

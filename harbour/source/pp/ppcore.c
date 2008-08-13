@@ -1141,7 +1141,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          {
             if( ch == '`' )
                ch = '\'';
-            while( ++ul < ulLen && pBuffer[ ul ] != ch );
+            while( ++ul < ulLen && pBuffer[ ul ] != ch ) {};
 #ifdef HB_PP_MULTILINE_STRING
             while( ul == ulLen )
             {
@@ -1234,7 +1234,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          }
          else if( HB_PP_ISFIRSTIDCHAR( ch ) )
          {
-            while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) );
+            while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) ) {};
 
             /*
              * In Clipper note can be used only as 1-st token and after
@@ -1263,9 +1263,9 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                   while( ulLen - ul > 1 && pBuffer[ ul ] == '&' &&
                          HB_PP_ISFIRSTIDCHAR( pBuffer[ ul + 1 ] ) )
                   {
-                     while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) );
+                     while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) ) {};
                      if( ul < ulLen && pBuffer[ ul ] == '.' )
-                        while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) );
+                        while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) ) {};
                   }
                   if( ul < ulLen && pBuffer[ ul ] == '&' )
                      ++ul;
@@ -1291,7 +1291,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             to change HB_PP_ISILLEGAL() macro */
          else if( HB_PP_ISTEXTCHAR( ch ) )
          {
-            while( ++ul < ulLen && HB_PP_ISTEXTCHAR( pBuffer[ ul ] ) );
+            while( ++ul < ulLen && HB_PP_ISTEXTCHAR( pBuffer[ ul ] ) ) {};
 
             hb_pp_tokenAddNext( pState, pBuffer, ul, HB_PP_TOKEN_TEXT );
          }
@@ -1310,7 +1310,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                 HB_PP_ISHEX( pBuffer[ 2 ] ) )
             {
                ul = 2;
-               while( ++ul < ulLen && HB_PP_ISHEX( pBuffer[ ul ] ) );
+               while( ++ul < ulLen && HB_PP_ISHEX( pBuffer[ ul ] ) ) {};
 
                /* (LEX: mark token as hex?) */
                hb_pp_tokenAddNext( pState, pBuffer, ul, HB_PP_TOKEN_NUMBER );
@@ -1320,25 +1320,25 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                      HB_PP_ISDIGIT( pBuffer[ 2 ] ) )
             {
                ul = 2;
-               while( ++ul < ulLen && HB_PP_ISDIGIT( pBuffer[ ul ] ) );
+               while( ++ul < ulLen && HB_PP_ISDIGIT( pBuffer[ ul ] ) ) {};
 
                hb_pp_tokenAddNext( pState, pBuffer, ul, HB_PP_TOKEN_DATE );
             }
             else
             {
-               while( ++ul < ulLen && HB_PP_ISDIGIT( pBuffer[ ul ] ) );
+               while( ++ul < ulLen && HB_PP_ISDIGIT( pBuffer[ ul ] ) ) {};
                if( ulLen - ul > 1 && pBuffer[ ul ] == '.' &&
                                      HB_PP_ISDIGIT( pBuffer[ ul + 1 ] ) )
                {
                   ++ul;
-                  while( ++ul < ulLen && HB_PP_ISDIGIT( pBuffer[ ul ] ) );
+                  while( ++ul < ulLen && HB_PP_ISDIGIT( pBuffer[ ul ] ) ) {};
                }
                hb_pp_tokenAddNext( pState, pBuffer, ul, HB_PP_TOKEN_NUMBER );
             }
          }
          else if( ch == '.' && ulLen > 1 && HB_PP_ISDIGIT( pBuffer[ 1 ] ) )
          {
-            while( ++ul < ulLen && HB_PP_ISDIGIT( pBuffer[ ul ] ) );
+            while( ++ul < ulLen && HB_PP_ISDIGIT( pBuffer[ ul ] ) ) {};
 
             hb_pp_tokenAddNext( pState, pBuffer, ul, HB_PP_TOKEN_NUMBER );
          }
@@ -1362,7 +1362,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                    HB_PP_ISFIRSTIDCHAR( pBuffer[ ul + 1 ] ) )
             {
                ++iParts;
-               while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) );
+               while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) ) {};
                if( ul < ulLen && pBuffer[ ul ] == '.' )
                   while( ++ul < ulLen && HB_PP_ISNEXTIDCHAR( pBuffer[ ul ] ) )
                      ++iParts;

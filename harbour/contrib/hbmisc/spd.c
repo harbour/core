@@ -186,7 +186,7 @@ HB_FUNC( SQL_SPRINTF )
 
    if( !pItmFrm || (cItmFrm = hb_itemGetCPtr( pItmFrm )) == NULL ){
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
-   }else if( !(ulItmFrm = hb_itemGetCLen( pItmFrm )) ){
+   }else if( (ulItmFrm = hb_itemGetCLen( pItmFrm )) == 0 ){
       hb_retc( NULL );
    }else if( !argc ){
       cRes = (char *)hb_xgrab( ulItmFrm + sizeof(char) );
@@ -241,7 +241,7 @@ HB_FUNC( SQL_SPRINTF )
                }else{
                   f = 3; iErrorPar = 1;
                }
-               while( i && cParFrm[--i] != iCOut );
+               while( i && cParFrm[--i] != iCOut ) {};
                ++i; iCOut = 0;
             }else if( f && *c == '{' ){
                if( s ){
@@ -340,7 +340,7 @@ HB_FUNC( SQL_SPRINTF )
             if( HB_IS_NIL( pItmPar ) ){
 #        endif
                ulWidth = f; IsIndW = IsIndP = 0;
-               while( cParFrm[--f] != '%' );
+               while( cParFrm[--f] != '%' ) {};
                iCOut = cParFrm[f + 1] = 's'; /* Change format with %s */
                memcpy( cParFrm + f + 2, cParFrm + ulWidth, i - ulWidth + 1 );
                i -= ulWidth - f - 2;   /* i == strlen(cParFrm) */
@@ -370,7 +370,7 @@ HB_FUNC( SQL_SPRINTF )
                char cDTBuf[ 19 ], cDTFrm[ 28 ]; /* 26 + 2 if %t and change format time */
 
                if( s ){ /* Internal Modifier */
-                  for( f = 0; cIntMod[f] && cIntMod[f] != ' '; f++ );
+                  for( f = 0; cIntMod[f] && cIntMod[f] != ' '; f++ ) {};
                   if( f != s ) cIntMod[f++] = '\0';   /* Date & Time */
                }
 
@@ -404,7 +404,7 @@ HB_FUNC( SQL_SPRINTF )
             }else if( HB_IS_LOGICAL( pItmPar ) ){
 
                if( s ){ /* Internal Modifier */
-                  for( f = 0; cIntMod[f] && cIntMod[f] != ','; f++ );
+                  for( f = 0; cIntMod[f] && cIntMod[f] != ','; f++ ) {};
                   if( f != s ) cIntMod[f++] = '\0';   /* TRUE & FALSE */
                }
                if( iCOut == 's' ){

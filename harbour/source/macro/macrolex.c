@@ -397,7 +397,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
             {
                ULONG ul = pLex->ulSrc;
                while( ++ul < pLex->ulLen &&
-                      HB_LEX_ISDIGIT( pLex->pString[ ul ] ) );
+                      HB_LEX_ISDIGIT( pLex->pString[ ul ] ) ) {};
                ul -= --pLex->ulSrc;
                return hb_lexNumConv( yylval_ptr, pLex, ul );
             }
@@ -528,7 +528,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                   if( pLex->pString[ ul ] == 'd' || pLex->pString[ ul ] == 'D' )
                   {
                      while( ++ul < pLex->ulLen &&
-                            HB_LEX_ISDIGIT( pLex->pString[ ul ] ) );
+                            HB_LEX_ISDIGIT( pLex->pString[ ul ] ) ) {};
                      if( ul - pLex->ulSrc == 9 )
                      {
                         int year, month, day;
@@ -545,7 +545,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                            pLex->pString[ ul ] == 'X' )
                   {
                      while( ++ul < pLex->ulLen &&
-                            HB_LEX_ISHEXDIGIT( pLex->pString[ ul ] ) );
+                            HB_LEX_ISHEXDIGIT( pLex->pString[ ul ] ) ) {};
                      if( ul == pLex->ulSrc + 1 )
                         --ul;
                   }
@@ -558,7 +558,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                          HB_LEX_ISDIGIT( pLex->pString[ ul + 1 ] ) )
                      {
                         while( ++ul < pLex->ulLen &&
-                               HB_LEX_ISDIGIT( pLex->pString[ ul ] ) );
+                               HB_LEX_ISDIGIT( pLex->pString[ ul ] ) ) {};
                      }
                   }
                }
@@ -571,7 +571,7 @@ int hb_macrolex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
                       HB_LEX_ISDIGIT( pLex->pString[ ul + 1 ] ) )
                   {
                      while( ++ul < pLex->ulLen &&
-                            HB_LEX_ISDIGIT( pLex->pString[ ul ] ) );
+                            HB_LEX_ISDIGIT( pLex->pString[ ul ] ) ) {};
                   }
                }
                ul -= --pLex->ulSrc;

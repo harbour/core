@@ -64525,7 +64525,7 @@ static const char *columnType(
       int iCol = pExpr->iColumn;  /* Index of column in pTab */
       while( pNC && !pTab ){
         SrcList *pTabList = pNC->pSrcList;
-        for(j=0;j<pTabList->nSrc && pTabList->a[j].iCursor!=pExpr->iTable;j++);
+        for(j=0;j<pTabList->nSrc && pTabList->a[j].iCursor!=pExpr->iTable;j++){};
         if( j<pTabList->nSrc ){
           pTab = pTabList->a[j].pTab;
           pS = pTabList->a[j].pSelect;

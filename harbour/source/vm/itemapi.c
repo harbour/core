@@ -2535,7 +2535,7 @@ HB_EXPORT char * hb_itemPadConv( PHB_ITEM pItem, ULONG * pulSize, BOOL * bFreeRe
             /* remove leading spaces if any, a little bit redundant but
              * I don't want to complicate the API interface more. Druzus
              */
-            for( i = 0; buffer[i] == ' '; i++ );
+            for( i = 0; buffer[i] == ' '; i++ ) {};
 
             if( i > 0 )
             {

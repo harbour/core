@@ -1111,19 +1111,19 @@ HB_EXPORT void hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
             hb_vmLocalName( HB_PCODE_MKUSHORT( &( pCode[ w + 1 ] ) ),
                             ( char * ) pCode + w + 3 );
             w += 3;
-            while( pCode[ w++ ] );
+            while( pCode[ w++ ] ) {};
             break;
 
          case HB_P_STATICNAME:
             hb_vmStaticName( pCode[ w + 1 ], HB_PCODE_MKUSHORT( &( pCode[ w + 2 ] ) ),
                              ( char * ) pCode + w + 4 );
             w += 4;
-            while( pCode[ w++ ] );
+            while( pCode[ w++ ] ) {};
             break;
 
          case HB_P_MODULENAME:
             hb_vmModuleName( ( char * ) pCode + w + 1 );
-            while( pCode[ w++ ] );
+            while( pCode[ w++ ] ) {};
             break;
 
          case HB_P_ENDBLOCK:
