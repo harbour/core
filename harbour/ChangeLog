@@ -8,6 +8,40 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-13 03:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/rtl/gtwvt/gtwvt.c
+     ! Fixed one possible minor bug (synced from gtwvg.c), 
+       when pressing the mouse button for mark&select.
+
+   * contrib/hbodbc/odbc.c
+     ! Fixed some compile errors for __DMC__.
+     ; TOFIX: Some more remain.
+       ../../odbc.c(517) : Error: undefined identifier 'SQL_IS_INTEGER'
+       ../../odbc.c(525) : Error: undefined identifier 'SQLSetStmtAttr'
+       ../../odbc.c(536) : Error: undefined identifier 'SQLGetConnectAttr'
+       ../../odbc.c(549) : Error: undefined identifier 'SQLGetStmtAttr'
+
+   * contrib/gtwvg/gtwvg.c
+   * contrib/gtwvg/gtwvg.h
+     ! Synced (to some extent) with gtwvt.c, so that it now 
+       also compiles with __DMC__.
+     ! Fixed a some more compile errors for __DMC__.
+     ; TOFIX: Some more remain.
+       ../../wvgutils.c(356) : Error: undefined identifier 'TTM_SETMARGIN'
+       ../../wvgutils.c(367) : Error: undefined identifier 'TTM_GETMAXTIPWIDTH'
+       ../../wvgutils.c(371) : Error: undefined identifier 'TTM_SETMAXTIPWIDTH'
+       ../../wvgutils.c(385) : Error: undefined identifier 'TTM_GETTIPBKCOLOR'
+       ../../wvgutils.c(389) : Error: undefined identifier 'TTM_SETTIPBKCOLOR'
+       ../../wvgutils.c(402) : Error: undefined identifier 'TTM_GETTIPTEXTCOLOR'
+       ../../wvgutils.c(406) : Error: undefined identifier 'TTM_SETTIPTEXTCOLOR'
+       ../../wvgutils.c(761) : Error: undefined identifier 'UINT_PTR'
+       ../../wvgutils.c(1296) : Error: undefined identifier 'LONG_PTR'
+       ../../wvgutils.c(1297) : Error: undefined identifier 'ul'
+
+   * config/w32/dm.cf
+     ! Fix missed from previous commit added.
+     * Added -x C compiler switch.
+
 2008-08-13 03:24 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/source/rtl/gtwvt/gtwvt.c
     ! use HB_PTRDIFF for handle to number casting

@@ -177,6 +177,10 @@
          WINCOMMCTRLAPI BOOL WINAPI InitCommonControlsEx(LPINITCOMMONCONTROLSEX);
       #endif
    #endif
+   typedef struct _GRADIENT_RECT {
+       ULONG UpperLeft;
+       ULONG LowerRight;
+   } GRADIENT_RECT,*PGRADIENT_RECT,*LPGRADIENT_RECT;
 #endif
 
 #if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) )

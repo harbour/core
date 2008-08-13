@@ -103,6 +103,13 @@
       #define SQLLEN          SQLINTEGER
    #endif
 #endif
+#ifndef SQLULEN
+   #ifdef _WIN64
+      typedef UINT64          SQLULEN;
+   #else
+      #define SQLULEN         SQLUINTEGER
+   #endif
+#endif
 
 #if defined(__DMC__)
    #define SQL_NO_DATA SQL_NO_DATA_FOUND

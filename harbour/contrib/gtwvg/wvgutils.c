@@ -600,7 +600,7 @@ HB_FUNC( WVT_SETPOINTER )
       break;
    }
 
-#if !defined(HB_ARCH_64BIT) && ( defined( __WATCOMC__ ) || \
+#if !defined(HB_ARCH_64BIT) && ( defined( __WATCOMC__ ) || defined(__DMC__) || \
     ( defined(_MSC_VER) && ( _MSC_VER <= 1200 || defined(HB_WINCE) ) ) )
    SetClassLong( _s->hWnd, GCLP_HCURSOR, ( DWORD ) hCursor );
 #else
@@ -705,7 +705,7 @@ HB_FUNC( WVT_SETPOPUPMENU )
    _s->hPopup = ( HMENU ) hb_parnl( 1 );
    if ( hPopup )
    {
-      hb_retnint( ( LONG_PTR ) hPopup );
+      hb_retnint( ( HB_PTRDIFF ) hPopup );
    }
 }
 
@@ -713,14 +713,14 @@ HB_FUNC( WVT_SETPOPUPMENU )
 
 HB_FUNC( WVT_CREATEMENU )
 {
-  hb_retnint( ( LONG_PTR ) CreateMenu() );
+  hb_retnint( ( HB_PTRDIFF ) CreateMenu() );
 }
 
 //-------------------------------------------------------------------//
 
 HB_FUNC( WVT_CREATEPOPUPMENU )
 {
-  hb_retnint( ( LONG_PTR ) CreatePopupMenu() );
+  hb_retnint( ( HB_PTRDIFF ) CreatePopupMenu() );
 }
 
 //-------------------------------------------------------------------//
@@ -926,7 +926,7 @@ HB_FUNC( WVT_GETMENU )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   hb_retnint( ( LONG_PTR ) GetMenu( _s->hWnd ) );
+   hb_retnint( ( HB_PTRDIFF ) GetMenu( _s->hWnd ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1068,7 +1068,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
       }
    }
 
-   hb_retnint( ( LONG_PTR ) hDlg );
+   hb_retnint( ( HB_PTRDIFF ) hDlg );
 }
 
 //-------------------------------------------------------------------//
@@ -1389,7 +1389,7 @@ HB_FUNC( WVT_DLGSETICON )
 
    if ( hIcon )
    {
-      hb_retnint( ( LONG_PTR ) hIcon );
+      hb_retnint( ( HB_PTRDIFF ) hIcon );
    }
 }
 
@@ -1502,7 +1502,7 @@ HB_FUNC( WIN_SETBKMODE )
 
 HB_FUNC( WIN_GETSTOCKOBJECT )
 {
-   hb_retnint( ( LONG_PTR ) GetStockObject( hb_parnl( 1 ) ) );
+   hb_retnint( ( HB_PTRDIFF ) GetStockObject( hb_parnl( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1516,7 +1516,7 @@ HB_FUNC( WIN_DELETEOBJECT )
 
 HB_FUNC( WIN_SELECTOBJECT )
 {
-   hb_retnint( ( LONG_PTR ) SelectObject( ( HDC ) hb_parnl( 1 ), ( HGDIOBJ ) hb_parnl( 2 ) ) );
+   hb_retnint( ( HB_PTRDIFF ) SelectObject( ( HDC ) hb_parnl( 1 ), ( HGDIOBJ ) hb_parnl( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1615,7 +1615,7 @@ HB_FUNC( WIN_CHECKRADIOBUTTON )
 
 HB_FUNC( WIN_GETDLGITEM )
 {
-   hb_retnint( ( LONG_PTR ) GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ) );
+   hb_retnint( ( HB_PTRDIFF ) GetDlgItem( ( HWND ) hb_parnl( 1 ), hb_parni( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1657,7 +1657,7 @@ HB_FUNC( WIN_LOADICON )
       HB_TCHAR_FREE( lpBuffer );
    }
 
-   hb_retnint( ( LONG_PTR ) hIcon );
+   hb_retnint( ( HB_PTRDIFF ) hIcon );
 }
 
 //-------------------------------------------------------------------//
@@ -1689,7 +1689,7 @@ HB_FUNC( WIN_LOADIMAGE )
    }
 
    HB_TCHAR_FREE( lpBuffer );
-   hb_retnint( ( LONG_PTR ) hImage );
+   hb_retnint( ( HB_PTRDIFF ) hImage );
 }
 
 //-------------------------------------------------------------------//
@@ -1723,7 +1723,7 @@ HB_FUNC( WIN_DRAWIMAGE )
 
 HB_FUNC( WIN_GETDC )
 {
-   hb_retnint( ( LONG_PTR ) GetDC( ( HWND ) hb_parnl( 1 ) ) );
+   hb_retnint( ( HB_PTRDIFF ) GetDC( ( HWND ) hb_parnl( 1 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1750,7 +1750,7 @@ HB_FUNC( WIN_CREATEBRUSH )
    lb.lbColor = ISNIL( 2 ) ? RGB( 0, 0, 0 ) : ( COLORREF ) hb_parnl( 2 ) ;
    lb.lbHatch = ISNIL( 3 ) ? 0 : hb_parni( 3 );
 
-   hb_retnint( ( LONG_PTR ) CreateBrushIndirect( &lb ) );
+   hb_retnint( ( HB_PTRDIFF ) CreateBrushIndirect( &lb ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1799,7 +1799,7 @@ HB_FUNC( WIN_MOVEWINDOW )
 
 HB_FUNC( WIN_SETPARENT )
 {
-   hb_retnint( ( LONG_PTR ) SetParent( (HWND) hb_parnl( 1 ), (HWND) hb_parnl( 2 ) ) );
+   hb_retnint( ( HB_PTRDIFF ) SetParent( (HWND) hb_parnl( 1 ), (HWND) hb_parnl( 2 ) ) );
 }
 
 //-------------------------------------------------------------------//
@@ -1828,7 +1828,7 @@ HB_FUNC( WVT_GETFONTHANDLE )
    if ( iSlot >= 0 && iSlot < WVT_PICTURES_MAX )
       hFont = _s->hUserFonts[ iSlot ];
 
-   hb_retnint( ( LONG_PTR ) hFont );
+   hb_retnint( ( HB_PTRDIFF ) hFont );
 }
 
 //-------------------------------------------------------------------//
@@ -2166,7 +2166,7 @@ HB_FUNC( WIN_FINDWINDOW )
 
    if ( hwnd )
    {
-      hb_retnint( ( LONG_PTR ) hwnd );
+      hb_retnint( ( HB_PTRDIFF ) hwnd );
    }
    else
    {

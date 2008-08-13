@@ -2846,7 +2846,7 @@ HB_FUNC( WVT_CREATEFONT )
    //strcpy( logfont.lfFaceName, ( ISNIL( 1 ) ? _s->fontFace : hb_parcx( 1 ) ) );
    HB_TCHAR_CPTO( logfont.lfFaceName, ( ISNIL( 1 ) ? _s->fontFace : hb_parcx( 1 ) ), sizeof( logfont.lfFaceName )-1 );
 
-   hb_retnint( ( LONG_PTR ) CreateFontIndirect( &logfont ) );
+   hb_retnint( ( HB_PTRDIFF ) CreateFontIndirect( &logfont ) );
 }
 
 //-------------------------------------------------------------------//
@@ -3004,7 +3004,7 @@ HB_FUNC( WVT_SAVESCREEN )
 
    hb_arraySetNI( info, 1, iWidth );
    hb_arraySetNI( info, 2, iHeight );
-   hb_arraySetNInt( info, 3, ( LONG_PTR ) hBmp );
+   hb_arraySetNInt( info, 3, ( HB_PTRDIFF ) hBmp );
 
    hb_itemReturnRelease( info );
 }

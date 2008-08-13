@@ -789,6 +789,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
             s_rectOld.top    = 0;
             s_rectOld.right  = 0;
             s_rectOld.bottom = 0;
+
+            return;
          }
          else
          {
