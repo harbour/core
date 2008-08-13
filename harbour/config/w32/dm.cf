@@ -16,7 +16,9 @@ CC_IN = -c
 CC_OUT = -o
 CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
-CFLAGS = -6 -cpp -mn -o+time -x
+CFLAGS = -6 -cpp -mn -x
+# disabled - it causes that wrong code is generated
+#CFLAGS += -o+time
 # Suppressing "possible extraneous ';'" warnings. [vszakats]
 #CFLAGS += -w7
 

@@ -159,17 +159,21 @@ mk_hbtools()
     elif [ "${HB_COMPILER}" = "djgpp" ]; then
         HB_SYS_LIBS="${HB_SYS_LIBS}"
     else
+        HB_CRS_LIB=""
         if [ "${HB_ARCHITECTURE}" = "linux" ]; then
             HB_SYS_LIBS="${HB_SYS_LIBS} -ldl"
-        fi
-        if [ "${HB_ARCHITECTURE}" = "sunos" ]; then
+        elif [ "${HB_ARCHITECTURE}" = "sunos" ]; then
             HB_SYS_LIBS="${HB_SYS_LIBS} -lrt"
+            HB_SYS_LIBS="${HB_SYS_LIBS} -lsocket -lnsl -lresolv"
             HB_CRS_LIB="curses"
-        elif [ -n "${HB_CURSES_VER}" ]; then
+        elif [ "${HB_ARCHITECTURE}" = "hpux" ]; then
+            HB_SYS_LIBS="${HB_SYS_LIBS} -lrt"
+        fi
+        if [ -n "${HB_CURSES_VER}" ]; then
             HB_CRS_LIB="${HB_CURSES_VER}"
         elif [ "${HB_NCURSES_194}" = "yes" ]; then
             HB_CRS_LIB="ncur194"
-        else
+        elif [ -z "${HB_CRS_LIB}" ]; then
             HB_CRS_LIB="ncurses"
         fi
         HB_SLN_LIB="slang"
@@ -562,12 +566,10 @@ hb_cmp()
 
 hb_link()
 {
-    if [ "\${HB_COMPILER}" != "djgpp" ]; then
-        if [ -n "\${HB_MAIN_FUNC}" ]; then
-            HB_MAIN_FUNC="@\${HB_MAIN_FUNC}"
-        elif [ -f "\${FOUTO}" ]; then
-            HB_MAIN_FUNC=\`hb_lnk_main "\${FOUTO}"\`
-        fi
+    if [ -n "\${HB_MAIN_FUNC}" ]; then
+        HB_MAIN_FUNC="@\${HB_MAIN_FUNC}"
+    elif [ "\${HB_COMPILER}" != "djgpp" ] && [ -f "\${FOUTO}" ]; then
+        HB_MAIN_FUNC=\`hb_lnk_main "\${FOUTO}"\`
     fi
     if [ -n "\${HB_LNK_REQ}" ] || [ -n "\${HB_GT_REQ}" ] || [ -n "\${HB_MAIN_FUNC}" ]; then
         hb_lnk_request > \${_TMP_FILE_}

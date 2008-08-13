@@ -1156,7 +1156,7 @@ typedef unsigned long HB_COUNTER;
  *
  * By default we are using automatic lookup (symbol not defined)
 */
-#if defined(__WATCOMC__) || ( defined(__GNUC__) && !defined(__DJGPP__) && !defined(HARBOUR_GCC_OS2) )
+#if defined(__WATCOMC__) || defined(__DMC__) || ( defined(__GNUC__) && !defined(__DJGPP__) && !defined(HARBOUR_GCC_OS2) )
    #define HARBOUR_START_PROCEDURE "MAIN"
 #endif
 
