@@ -758,7 +758,7 @@ HB_FUNC( WVT_APPENDMENU )
     lpszCaption = ( LPCTSTR ) hb_parni( 4 ) ; // It is a SEPARATOR or Submenu
   }
 
-  hb_retl( AppendMenu( ( HMENU ) hb_parnl( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parni( 3 ), ( LPCTSTR ) lpszCaption ) ) ;
+  hb_retl( AppendMenu( ( HMENU ) hb_parnl( 1 ), ( UINT ) hb_parni( 2 ), ( HB_PTRDIFF ) hb_parni( 3 ), ( LPCTSTR ) lpszCaption ) ) ;
 }
 
 //-------------------------------------------------------------------//
@@ -1293,7 +1293,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 //
 HB_EXPORT LPWORD lpwAlign( LPWORD lpIn )
 {
-   LONG_PTR ul = ( LONG_PTR ) lpIn;
+   HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
    ul += 3;
    ul >>=2;
    ul <<=2;

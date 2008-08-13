@@ -177,10 +177,34 @@
          WINCOMMCTRLAPI BOOL WINAPI InitCommonControlsEx(LPINITCOMMONCONTROLSEX);
       #endif
    #endif
+
    typedef struct _GRADIENT_RECT {
        ULONG UpperLeft;
        ULONG LowerRight;
    } GRADIENT_RECT,*PGRADIENT_RECT,*LPGRADIENT_RECT;
+
+   #ifndef TTM_SETTIPBKCOLOR
+      #define TTM_SETTIPBKCOLOR     (WM_USER + 19)
+   #endif
+   #ifndef TTM_SETTIPTEXTCOLOR
+      #define TTM_SETTIPTEXTCOLOR   (WM_USER + 20)
+   #endif
+   #ifndef TTM_GETTIPBKCOLOR
+      #define TTM_GETTIPBKCOLOR     (WM_USER + 22)
+   #endif
+   #ifndef TTM_GETTIPTEXTCOLOR
+      #define TTM_GETTIPTEXTCOLOR   (WM_USER + 23)
+   #endif
+   #ifndef TTM_SETMAXTIPWIDTH
+      #define TTM_SETMAXTIPWIDTH    (WM_USER + 24)
+   #endif
+   #ifndef TTM_GETMAXTIPWIDTH
+      #define TTM_GETMAXTIPWIDTH    (WM_USER + 25)
+   #endif
+   #ifndef TTM_SETMARGIN
+      #define TTM_SETMARGIN         (WM_USER + 26)
+   #endif
+
 #endif
 
 #if defined( __cplusplus ) && ( defined( __BORLANDC__ ) || defined( _MSC_VER ) )
