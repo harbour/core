@@ -8,6 +8,11 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-13 02:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_b32.bat
+   * make_b32.mak
+     - Removed dummy option HB_BUILD_MODE.
+
 2008-08-13 01:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
      * Extended releases notes/issues section.

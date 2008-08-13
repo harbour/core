@@ -40,7 +40,6 @@
 #       HB_BUILD_ST       - If set to yes builds harbour in SingleThread mode
 #       HB_BUILD_DLL      - If set to yes enables building harbour VM+RTL
 #                           dll in addition to normal static build
-#       HB_BUILD_MODE     - If set to cpp causes to compile in C++ mode
 #       HB_BUILD_DEBUG    - If set to yes causes to compile with debug info
 #       HB_BUILD_VERBOSE  - enables echoing commands being executed
 #       HB_REBUILD_PARSER - If set to yes force preprocessing new rules by
