@@ -23,6 +23,8 @@
 
    * contrib/gtwvg/gtwvg.c
    * contrib/gtwvg/gtwvg.h
+   * contrib/gtwvg/wvgcore.c
+   * contrib/gtwvg/wvgutils.c
      ! Synced (to some extent) with gtwvt.c, so that it now 
        also compiles with __DMC__.
      ! Fixed a some more compile errors for __DMC__.
