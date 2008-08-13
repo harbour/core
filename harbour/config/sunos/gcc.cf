@@ -16,7 +16,7 @@ CPPFLAGS = -I. -I$(HB_INC_COMPILE)
 
 CFLAGS = -Wall -W
 
-# uncomment this if you want to farce relocateable code for .so libs
+# uncomment this if you want to force relocatable code for .so libs
 # it's necessary on some platforms but can reduce performance
 #CFLAGS += -fPIC
 
@@ -77,7 +77,8 @@ ifneq ($(findstring -DHB_EXT_ZLIB, $(C_USR)),)
 LINKLIBS += -lz
 endif
 
-LINKLIBS += -lm -lrt -lsocket -lnsl -lresolv
+LINKLIBS += -lm -lrt
+LINKLIBS += -lsocket -lnsl -lresolv
 
 LDFLAGS = $(LINKPATHS)
 

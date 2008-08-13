@@ -11,6 +11,14 @@ EXE_EXT = .exe
 LIB_PREF =
 LIB_EXT = .lib
 
+ifeq ($(SHLVL),)
+   ECHO=echo.
+   DSEP=$(subst /,\,\)
+else
+   ECHO=echo
+   DSEP=$(subst /,\,\\)
+endif
+
 $(HB_ARCHITECTURE)_$(HB_COMPILER)_GRANDP = $(subst /,\,$(GRANDP))
 
 CC = wpp386
@@ -39,23 +47,23 @@ CPPFLAGS =
 # Note: The empty line directly before 'endef' HAVE TO exist!
 # It causes that the 'echo' command is separated by LF
 define link_file
-echo. FILE $(file) >> __link__.tmp
+$(ECHO) FILE $(subst /,$(DSEP),$(subst \,/,$(file))) >> __link__.tmp
 
 endef
 
 #Note: The empty line directly before 'endef' HAVE TO exist!
 define link_lib
-echo. LIB $(lib) >> __link__.tmp
+$(ECHO) LIB $(subst /,$(DSEP),$(subst \,/,$(lib))) >> __link__.tmp
 
 endef
 
 define link_exe_file
-echo. $(LDFLAGS) NAME $@ > __link__.tmp
+$(ECHO) $(subst /,$(DSEP),$(subst \,/,$(LDFLAGS))) NAME $@ > __link__.tmp
 $(foreach file, $(^F), $(link_file))
 $(foreach lib, $(HB_USER_LIBS), $(link_lib))
-$(foreach lib, $(subst /,\,$(LINKLIBS)), $(link_lib))
-$(foreach lib, $(subst /,\,$(RDDLIBS)), $(link_lib))
-$(foreach lib, $(subst /,\,$(GTLIBS)), $(link_lib))
+$(foreach lib, $(LINKLIBS), $(link_lib))
+$(foreach lib, $(RDDLIBS), $(link_lib))
+$(foreach lib, $(GTLIBS), $(link_lib))
 -$(LD) @__link__.tmp
 endef
 
@@ -91,15 +99,16 @@ LD_RULE = $(link_exe_file)
 
 #Note: The empty line below HAVE TO exist!
 define lib_object
-echo. -+$(file) >> __lib__.tmp
+$(ECHO) -+$(subst /,$(DSEP),$(subst \,/,$(file))) >> __lib__.tmp
 
 endef
 
 define create_library
-echo. $(subst /,\,$(LIB_DIR))\$@ > __lib__.tmp
+$(ECHO) $(subst /,$(DSEP),$(subst \,/,$(LIB_DIR)))$(DSEP)$@ > __lib__.tmp
 $(foreach file, $(^F), $(lib_object))
 $(AR) $(ARFLAGS) @__lib__.tmp
 endef
+
 
 AR = wlib
 ARFLAGS = -p=32 -c -n $(A_USR)
@@ -107,8 +116,8 @@ AR_RULE = $(create_library)
 
 include $(TOP)$(ROOT)config/rules.cf
 
-HB := $(subst /,\,$(HB))
-HB_FLAGS := $(subst /,\,$(HB_FLAGS))
+HB := $(subst /,$(DSEP),$(subst \,/,$(HB)))
+HB_FLAGS := $(subst /,$(DSEP),$(subst \,/,$(HB_FLAGS)))
 
 # work arround to DOS command line size limit
 export HARBOURCMD := $(HB_FLAGS)
