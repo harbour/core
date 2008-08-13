@@ -8,6 +8,10 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-13 16:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/whatsnew.txt
+     * More minor adjustments.
+
 2008-08-13 15:30 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/config/hpux/gcc.cf
   * harbour/config/sunos/gcc.cf

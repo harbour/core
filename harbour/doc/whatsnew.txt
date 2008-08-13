@@ -90,9 +90,11 @@ Contrib
 
 Known build issues
 =============================
-- Harbour won't currently compile with MSVC in 64 bit C mode.
-  Use C++ mode instead, with commands 'set HB_BUILD_MODE=cpp' 
-  and 'make_vc.bat'.
+- Harbour with MSVC in 64 bit will only build in C++ mode.
+  Use 'set HB_BUILD_MODE=cpp' and 'make_vc.bat'.
+- Windows 64 bit builds may generate a large amount of type 
+  conversion warnings. This is currently normal and will be 
+  addressed in a future version.
 - Contrib hbfimage won't currently compile on Linux systems 
   and with Open Watcom compilers. This will be addressed in 
   a future version.
@@ -101,9 +103,9 @@ Known build issues
   For these compilers you will have to supply sqlite3 library 
   yourself. For other compilers, some warnings are expected and 
   normal in this non-Harbour code.
-- Windows 64 bit builds may generate a large amount of integer 
-  size conversion warnings. This is currently normal and will be 
-  addressed in a future version.
+- Digital Mars C compiler compiles properly, but linking Harbour 
+  executables doesn't currently work. This may be addressed in 
+  a future revision.
 
 
 Version 1.0.0 rc2 (2008-07-01) tag: 1.0.0rc2
