@@ -9,7 +9,7 @@ General
 - Internal errors are now logged to file.
 - Fixed -gc3 for doubly negated integers.
 - Changed hb_xrealloc() to be ANSI-C realloc() compatible.
-- Cleanup of MSVC C mode static initialisation code.
+- Cleanup of MSVC C mode static initialization code.
 - Changed internal representation for file attributes from USHORT to ULONG.
 - Fixed memory leak in -gw mode.
 - Portability fixes (Unicode, 64 bit, Pelles C 32/64 bit, WinCE, eVC4, XCC, 
@@ -26,8 +26,8 @@ Core
 - File handle usage cleanup and 64 bit compatibility.
 - Automatic destructors for .hrb modules.
 - Added passing non-string parameters to .hrb functions.
-- Fixed casting for indexes with key length greater then 196 bytes
-  created on tables with record number smaller then 256 in rddcdx.
+- Fixed casting for indexes with key length greater than 196 bytes
+  created on tables with record number smaller than 256 in rddcdx.
 - New FS API functions: hb_fsSetFileTime(), hb_fsGetFileTime(), hb_fsSetAttr(), 
   hb_fsGetAttr().
 - New date API function: hb_timeStampEncode().
@@ -83,25 +83,25 @@ Contrib
   when on EOF position.
 - Added OS version detection functions to hbw32.
 - Fixed HB_INC_* envvar usage in *_all.bat files.
-- Fixed casting for indexes with key length greater then 196 bytes
-  created on tables with record number smaller then 256 in hbbmcdx.
+- Fixed casting for indexes with key length greater than 196 bytes
+  created on tables with record number smaller than 256 in hbbmcdx.
 - hbsqlit3 warning fixes and error fixes for some compilers/modes.
 - Added DirectoryRecurse() to xhb.lib.
 
 Known build issues
 =============================
 - Harbour won't currently compile with MSVC in 64 bit C mode.
-  Use C++ mode instead with commands 'set HB_BUILD_MODE=cpp' 
+  Use C++ mode instead, with commands 'set HB_BUILD_MODE=cpp' 
   and 'make_vc.bat'.
 - Contrib hbfimage won't currently compile on Linux systems 
   and with Open Watcom compilers. This will be addressed in 
   a future version.
-- Contrib hbsqlit3 will not include sqlite3 library code for 
-  Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems 
-  in foreign code. For these compilers you will have to supply 
-  sqlite3 library yourself. For other compilers, some warnings 
-  are expected and normal in non-Harbour code.
-- Windows 64 bit builds may generate an excessive amount of integer 
+- Contrib hbsqlit3 will not embed foreign sqlite3 library code 
+  for Pelles C 4.5 and Open Watcom 1.7 due to fatal compile problems. 
+  For these compilers you will have to supply sqlite3 library 
+  yourself. For other compilers, some warnings are expected and 
+  normal in this non-Harbour code.
+- Windows 64 bit builds may generate a large amount of integer 
   size conversion warnings. This is currently normal and will be 
   addressed in a future version.
 
@@ -230,7 +230,7 @@ internals:
 - many other fixes for problems which can appears in nested extended
   codeblock definitions
 - fixed problems with line numbering in extended code blocks
-- fixed compiler -w3 warning when class has different name then class
+- fixed compiler -w3 warning when class has different name than class
   function.
 - optimizations in generated PCODE and extended compile time optimizations
 - added support for --version compiler switch for platforms which
@@ -617,7 +617,7 @@ internals:
 - Fixed registering of startup procedure name.
 - Changed code generated for double values to avoid limitation in some
   C compilers like MSC and possible differ conversion inside C RTL
-  then the one which uses Harbour RTL.
+  than the one which uses Harbour RTL.
 preprocessor:
 -------------
 - Fixed to release memory allocated with the preprocessor.
@@ -701,7 +701,7 @@ API
   missing functionality and long (64bit) file support for Windows.
 - hb_DiskSpace() changed to not give a runtime error in case of any
   error, but set the FError() value instead.
-- Added C -> OS file error translations - not perfect but better then
+- Added C -> OS file error translations - not perfect but better than
   the used hacks (borrowed from xHarbour).
 - Use hb_fileNameConv() instead of hb_filecase(), hb_fileNameConv()
   is the only one function to make file name conversions dependent on
@@ -771,7 +771,7 @@ RDD
   spaces compresion for SIX3 compatibility.
 - Added ordKeyRelPos([nNewPos])->nOldPos which works with all RDDs
   and returns relative (from 0.0 to 1.0) position in index file but
-  much faster then ordKeyPos()/ordKeyCount() combination. It works
+  much faster than ordKeyPos()/ordKeyCount() combination. It works
   like AdsGetRelKeyPos()/AdsSetRelKeyPos() and the results for CDX are
   the same. For NTX ADS implementation is broken, just simply Extended
   System uses the same algorithm as for CDX what is wrong.
@@ -1020,7 +1020,7 @@ The runtime modules
 - Fixed to release PUBLIC variables correctly
 - Fixed bug in Directory( "c:\*.*" ) that returned 0 when hidden files
   were present.
-- Alert() Fixed bug with messages longer then 60 bytes.
+- Alert() Fixed bug with messages longer than 60 bytes.
 - TGet:display() fixed to always evaluate the get block before
   displaying like in C52.
 - TBColumn - Added PreBlock and PostBlock instance variables for
