@@ -511,22 +511,35 @@ HB_FUNC( SQLGETINFO ) /* hDbc, nType, @cResult */
 
 HB_FUNC( SQLSETCONNECTOPTION ) /* hDbc, nOption, uOption */
 {
+#if (ODBCVER >= 0x0300)
    hb_retni( SQLSetConnectAttr( ( SQLHDBC ) hb_parptr( 1 ),
                                 ( SQLINTEGER ) hb_parnl( 2 ),
                                 ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnl( 3 ), 
                                 ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
+#else
+   hb_retni( SQLSetConnectOption( ( HDBC ) hb_parptr( 1 ),
+                                  ( UWORD ) hb_parnl( 2 ),
+                                  ( UDWORD ) ISCHAR( 3 ) ? ( LONG ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
+#endif
 }
 
 HB_FUNC( SQLSETSTMTOPTION ) /* hStmt, nOption, uOption )  --> nRetCode */
 {
+#if (ODBCVER >= 0x0300)
    hb_retni( SQLSetStmtAttr( ( SQLHSTMT ) hb_parptr( 1 ),
                              ( SQLINTEGER ) hb_parnl( 2 ),
                              ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parcx( 3 ) : ( SQLPOINTER ) hb_parnl( 3 ), 
                              ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
+#else
+   hb_retni( SQLSetStmtOption( ( SQLHSTMT ) hb_parptr( 1 ),
+                               ( UWORD ) hb_parnl( 2 ),
+                               ( UDWORD ) ISCHAR( 3 ) ? ( LONG ) hb_parcx( 3 ) : hb_parnl( 3 ) ) );
+#endif
 }
 
 HB_FUNC( SQLGETCONNECTOPTION ) /* hDbc, nOption, @cOption */
 {
+#if (ODBCVER >= 0x0300)
    SQLPOINTER buffer[ 512 ];
    SQLINTEGER len;
    SQLRETURN result = SQLGetConnectAttr( ( SQLHDBC ) hb_parptr( 1 ), 
@@ -536,10 +549,18 @@ HB_FUNC( SQLGETCONNECTOPTION ) /* hDbc, nOption, @cOption */
                                          &len );
    hb_storclen( result == SQL_SUCCESS ? ( char * ) buffer : NULL, len, 3 );
    hb_retni( result );
+#else
+   BYTE bBuffer[ 512 ];
+   WORD result = SQLGetConnectOption( ( HDBC ) hb_parptr( 1 ), hb_parni( 2 ), bBuffer );
+
+   hb_storclen( result == SQL_SUCCESS ? ( char * ) bBuffer : NULL, sizeof( bBuffer ), 3 );
+   hb_retni( result );
+#endif
 }
 
 HB_FUNC( SQLGETSTMTOPTION ) /* hStmt, nOption, @cOption */
 {
+#if (ODBCVER >= 0x0300)
    SQLPOINTER buffer[ 512 ];
    SQLINTEGER len;
    SQLRETURN result = SQLGetStmtAttr( ( SQLHSTMT ) hb_parptr( 1 ), 
@@ -550,6 +571,13 @@ HB_FUNC( SQLGETSTMTOPTION ) /* hStmt, nOption, @cOption */
 
    hb_storclen( result == SQL_SUCCESS ? ( char * ) buffer : NULL, len, 3 );
    hb_retni( result );
+#else
+   BYTE bBuffer[ 512 ];
+   WORD result = SQLGetStmtOption( ( SQLHSTMT ) hb_parptr( 1 ), hb_parni( 2 ), bBuffer );
+
+   hb_storclen( result == SQL_SUCCESS ? ( char * ) bBuffer : NULL, sizeof( bBuffer ), 3 );
+   hb_retni( result );
+#endif
 }
 
 HB_FUNC( SQLCOMMIT ) /* hEnv, hDbc */

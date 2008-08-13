@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-13 04:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbodbc/odbc.c
+     ! Some recently updated code now conditionally restored 
+       to pre-ODBC 3.0 versions to support compilers (namely 
+       __DMC__) with old ODBC headers. I couldn't find out 
+       how to point DMC to newer (SDK) ODBC headers, but as 
+       soon as we do, we can remove this workaround.
+       There is a similar problem with MSVC6.
+
 2008-08-13 03:08 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtwvt/gtwvt.c
      ! Fixed one possible minor bug (synced from gtwvg.c), 
