@@ -47,13 +47,51 @@ then
     export HB_WITHOUT_X11=yes
 fi
 
-export HB_CONTRIBLIBS="hbct hbmzip hbtip xhb hbbtree hbmisc hbvpdf hbgt hbbmcdx hbclipsm hbnf hbtpathy hbmsql hbsqlit2 hbsqlit3"
+export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbnf hbsqlit3 hbtip hbtpathy hbvpdf xhb"
+
+if [ ! -f "/usr/include/hpdf.h" ] && \
+   [ ! -f "/usr/local/include/hpdf.h" ]
+then
+   export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbhpdf"
+fi
 
 if [ -z "$HB_WITHOUT_ADS" ] && \
    [ ! -f "/usr/local/ads/acesdk/ace.h" ] && \
    [ ! -f "${HOME}/ads/acesdk/ace.h" ]
 then
    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} rddads"
+fi
+
+if test_reqpkg libcurl4-gnutls-dev || \
+   test_reqpkg libcurl4-openssl-dev
+then
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbcurl"
+fi
+
+if test_reqpkg firebird2.0-dev
+then
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbfbird"
+fi
+
+if test_reqpkg libfreeimage-dev
+then
+    # export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbfimage"
+fi
+
+if test_reqpkg libgd-xpm-dev || \
+   test_reqpkg libgd2-xpm-dev 
+then
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbgd"
+fi
+
+if test_reqpkg libgtk2.0-dev
+then
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbgf"
+fi
+
+if test_reqpkg libmysqlclient15-dev
+then
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbmysql"
 fi
 
 if [ -z "$HB_WITHOUT_ODBC" ] && test_reqpkg unixodbc-dev
@@ -64,33 +102,6 @@ fi
 if test_reqpkg libpq-dev
 then
     export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbpgsql"
-fi
-
-if test_reqpkg libmysqlclient15-dev
-then
-    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbmysql"
-fi
-
-if test_reqpkg libgd-xpm-dev || \
-   test_reqpkg libgd2-xpm-dev 
-then
-    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbgd"
-fi
-
-if test_reqpkg libcurl4-gnutls-dev || \
-   test_reqpkg libcurl4-openssl-dev
-then
-    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbcurl"
-fi
-
-if test_reqpkg libgtk2.0-dev
-then
-    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbgf"
-fi
-
-if test_reqpkg firebird2.0-dev
-then
-    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbfbird"
 fi
 
 if [ -z "${TOINST_LST}" ] || [ "$1" = "--force" ]

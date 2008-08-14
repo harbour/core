@@ -8,6 +8,22 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-14 18:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * ChangeLog
+     + Added entry for yesterday's syncing/tagging.
+
+   * make_deb.sh
+     ! Removed hbsqlit2 from contrib list.
+     + Added libharu detection.
+     + Added FreeImage detection (commented).
+     * Contrib list more or less ordered by alphabet.
+     ; [ QUESTION: Do we need to keep this logic duplicated here, 
+       if we now have the detection logic and contrib list 
+       embedded into the make system anyway? ]
+
+   * doc/linux1st.txt
+     * Synced with make_deb.sh.
+
 2008-08-14 00:08 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
   * harbour/bin/hb-func.sh
     ! updated SunOS and HPUX library list
@@ -20,6 +36,16 @@
   * harbour/config/w32/dm.cf
     ! disabled -o+time - with this switch wrong code is generated
       what can be seen in HBRUN
+
+2008-08-13 17:41 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * SVN
+     ; =========================================================
+     ; =========================================================
+     ; Fully synced /branches/harbour-1.0 with /trunk/harbour
+     ; Created /tags/harbour-1.0.0 based on /branches/harbour-1.0
+     ; (revision 9175)
+     ; =========================================================
+     ; =========================================================
 
 2008-08-13 16:35 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/whatsnew.txt
