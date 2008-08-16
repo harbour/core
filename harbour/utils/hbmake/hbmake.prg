@@ -2329,7 +2329,7 @@ Endif // Create and compile
       AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\BIN\bcc32 -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -o$* $**" } )
 
       IF s_lExtended
-         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -D__EXPORT__ -n"+if(s_lasdll,"1","")+" -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) ) )+IIF( lWhoo," -I$(WHOO)\include ","")+  IIF( lMediator," -I$(MEDIATOR)\include ","")+" -o$* $**" } )
+         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n"+if(s_lasdll,"1","")+" -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) ) )+IIF( lWhoo," -I$(WHOO)\include ","")+  IIF( lMediator," -I$(MEDIATOR)\include ","")+" -o$* $**" } )
       ELSE
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) )) + " -o$* $**" } )
       ENDIF
@@ -2344,7 +2344,7 @@ Endif // Create and compile
          AAdd( s_aCommands, { ".c.o:", "gcc -I/usr/include/harbour $(CFLAG1) $(CFLAG2) -I. -g -o$* $**" } )
 
          IF s_lExtended
-            AAdd( s_aCommands, { ".prg.o:", "harbour -D__EXPORT__  -n"+if(s_lasdll,"1","")+"  -go" + if(s_lGenCsource,"3","") + " -I/usr/include/harbour $(HARBOURFLAGS) -I.  -o$* $**" } )
+            AAdd( s_aCommands, { ".prg.o:", "harbour -n"+if(s_lasdll,"1","")+"  -go" + if(s_lGenCsource,"3","") + " -I/usr/include/harbour $(HARBOURFLAGS) -I.  -o$* $**" } )
          ELSE
             AAdd( s_aCommands, { ".prg.c:", "harbour -n -I/usr/include/harbour $(HARBOURFLAGS) -I.  -o$* $**" } )
          ENDIF
@@ -2354,7 +2354,7 @@ Endif // Create and compile
          AAdd( s_aCommands, { ".c.o:", "$(CC_DIR)\bin\gcc -I$(HB_DIR)/include $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
 
          IF s_lExtended
-            AAdd( s_aCommands, { ".prg.o:", "$(HB_DIR)\bin\harbour -D__EXPORT__  -n"+if(s_lasdll,"1","")+" -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)/include $(HARBOURFLAGS) " +IIF( lHwgui, " -I$(HWGUI)/include","" ) +" -o$* $**" } )
+            AAdd( s_aCommands, { ".prg.o:", "$(HB_DIR)\bin\harbour -n"+if(s_lasdll,"1","")+" -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)/include $(HARBOURFLAGS) " +IIF( lHwgui, " -I$(HWGUI)/include","" ) +" -o$* $**" } )
          ELSE
             AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)/include $(HARBOURFLAGS) " +IIF( lHwgui, " -I$(HWGUI)/include","" ) +"   -o$* $**" } )
          ENDIF
@@ -2367,7 +2367,7 @@ Endif // Create and compile
       AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\bin\cl -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
 
       IF s_lExtended
-         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -D__EXPORT__  -n -I$(HB_DIR)\include $(HARBOURFLAGS) -go" + if(s_lGenCsource,"3","") + "  -I$(C4W)\include" + IIF( lMediator," -I$(MEDIATOR)\include ","")+ "-o$* $**" } )
+         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS) -go" + if(s_lGenCsource,"3","") + "  -I$(C4W)\include" + IIF( lMediator," -I$(MEDIATOR)\include ","")+ "-o$* $**" } )
       ELSE
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(C4W)\include -o$* $**" } )
       ENDIF
@@ -2380,7 +2380,7 @@ Endif // Create and compile
       AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\BIN\pocc -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
 
       IF s_lExtended
-         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -D__EXPORT__ -n"+if(s_lasdll,"1","")+" -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) ) )+IIF( lWhoo," -I$(WHOO)\include ","")+  IIF( lMediator," -I$(MEDIATOR)\include ","")+" -o$** $**" } )
+         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n"+if(s_lasdll,"1","")+" -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) ) )+IIF( lWhoo," -I$(WHOO)\include ","")+  IIF( lMediator," -I$(MEDIATOR)\include ","")+" -o$** $**" } )
       ELSE
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) )) + " -o$** $**" } )
       ENDIF

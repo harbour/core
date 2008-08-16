@@ -8,6 +8,19 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-16 16:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * config/os2/gcc.cf
+     % Cleaned include path for OS/2/GCC.
+       David, please test it if it still builds successfully.
+
+   * make_b32.mak
+   * make_gcc.mak
+   * make_vc.mak
+   * make_vcce.mak
+   * utils/hbmake/hbmake.prg
+     % Removed using -D__EXPORT__ from any Harbour command lines, 
+       as this switch has no effect of the .prg level.
+
 2008-08-16 13:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/linux1st.txt
      + Added some quick openSUSE package requirement information.
