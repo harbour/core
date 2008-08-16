@@ -13,6 +13,9 @@
      ! Fixed potential GPF in executable type detection.
        Fixes GCC 4.3.1 warnings in openSUSE 11.
 
+   * dos/whatsnew.txt
+     ! Minor typos.
+
    * tests/debugtst.prg
    * tests/funcarr.prg
    * tests/inherit.prg
