@@ -139,7 +139,7 @@ CFLAGS      = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) -I$(OBJ_DIR)
 
 CLIBFLAGS      = -c -q -d -w -w-sig- $(CFLAGS) $(CLIBFLAGS)
 CLIBFLAGSxxx   =  $(BCCDLL_WITH_DYNRT) $(CLIBFLAGS: -tWM= )
-CLIBFLAGSDLL   = -D__EXPORT__ -tWM $(CLIBFLAGSxxx) $(CLIBFLAGSDLL)
+CLIBFLAGSDLL   = -DHB_DYNLIB -tWM $(CLIBFLAGSxxx) $(CLIBFLAGSDLL)
 CEXEFLAGSDLL   = -tWM $(CLIBFLAGSxxx) $(CEXEFLAGSDLL)
 
 #**********************************************************

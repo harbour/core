@@ -164,7 +164,7 @@ CFLAGS    = -D"HB_GT_LIB=$(HB_GT_LIB:gt=)" $(CFLAGS)
 #**********************************************************
 
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
-CLIBFLAGSDLL   = -D__EXPORT__ $(CLIBFLAGS) $(CLIBFLAGSDLL)
+CLIBFLAGSDLL   = -DHB_DYNLIB $(CLIBFLAGS) $(CLIBFLAGSDLL)
 CEXEFLAGSDLL   =  $(CLIBFLAGS) $(CEXEFLAGSDLL)
 
 #**********************************************************

@@ -4913,7 +4913,7 @@ LOCAL nCfg
 
       FWrite( nCfg, "CC=BCC32" + CRLF )
 //    FWrite( nCfg, "CFLAGS= -c " + ReplaceMacros( "-I$(HB_DIR)\include -OS $(CFLAGS) -d -L$(HB_DIR)\lib" ) + CRLF )
-      FWrite( nCfg, "CFLAGS= -c -D__EXPORT__ " + ReplaceMacros( "-I$(HB_DIR)\include $(CFLAGS) -d -L$(HB_DIR)\lib" ) + CRLF )
+      FWrite( nCfg, "CFLAGS= -c -DHB_DYNLIB " + ReplaceMacros( "-I$(HB_DIR)\include $(CFLAGS) -d -L$(HB_DIR)\lib" ) + CRLF )
       FWrite( nCfg, "VERBOSE=YES" + CRLF )
       FWrite( nCfg, "DELTMP=YES" + CRLF )
       FClose( nCfg )
@@ -4944,7 +4944,7 @@ FUNCTION BuildMscCfgFile()
       endif
 
       FWrite( nCfg, "CC=cl" + CRLF )
-      FWrite( nCfg, "CFLAGS= -c -D__EXPORT__" + ReplaceMacros( "-I$(HB_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)" ) + CRLF )
+      FWrite( nCfg, "CFLAGS= -c -DHB_DYNLIB" + ReplaceMacros( "-I$(HB_DIR) -TP -W3 -nologo $(C_USR) $(CFLAGS)" ) + CRLF )
       FWrite( nCfg, "VERBOSE=YES" + CRLF )
       FWrite( nCfg, "DELTMP=YES" + CRLF )
       FClose( nCfg )
@@ -4976,7 +4976,7 @@ FUNCTION BuildPccCfgFile()
       endif
 
       FWrite( nCfg, "CC=POCC" + CRLF )
-      FWrite( nCfg, "CFLAGS= /Ze /Go /Ot /Tx86-coff /D__EXPORT__ " + ReplaceMacros( "-I$(HB_DIR)\include $(C_USR) $(CFLAGS)" )  + CRLF )
+      FWrite( nCfg, "CFLAGS= /Ze /Go /Ot /Tx86-coff /DHB_DYNLIB " + ReplaceMacros( "-I$(HB_DIR)\include $(C_USR) $(CFLAGS)" )  + CRLF )
       FWrite( nCfg, "VERBOSE=YES" + CRLF )
       FWrite( nCfg, "DELTMP=YES" + CRLF )
       FClose( nCfg )
@@ -5016,7 +5016,7 @@ FUNCTION BuildGccCfgFile()
       endif
 
       FWrite( nCfg, "CC=gcc" + CRLF )
-      FWrite( nCfg, "CFLAGS= -c -D__EXPORT__ " + ReplaceMacros( "-I" + s_cHarbourDir + "/include $(C_USR)  -L" + s_cHarbourDir + "/lib" )  + if(s_lmingw ," -mno-cygwin ","" )+ CRLF )
+      FWrite( nCfg, "CFLAGS= -c -DHB_DYNLIB " + ReplaceMacros( "-I" + s_cHarbourDir + "/include $(C_USR)  -L" + s_cHarbourDir + "/lib" )  + if(s_lmingw ," -mno-cygwin ","" )+ CRLF )
       FWrite( nCfg, "VERBOSE=YES" + CRLF )
       FWrite( nCfg, "DELTMP=YES" + CRLF )
       FClose( nCfg )

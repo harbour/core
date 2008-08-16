@@ -9,6 +9,20 @@
 */
 
 2008-08-16 16:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_b32.mak
+   * make_gcc.mak
+   * make_vc.mak
+   * make_vcce.mak
+   * include/hbdefs.h
+   * source/vm/mainwin.c
+   * source/vm/hvm.c
+   * source/hbpcre/_hbconf.h
+   * source/hbzlib/ChangeLog
+   * source/hbzlib/zconf.h
+   * utils/hbmake/hbmake.prg
+     * __EXPORT__ -> HB_DYNLIB
+
+2008-08-16 16:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * config/os2/gcc.cf
      % Cleaned include path for OS/2/GCC.
        David, please test it if it still builds successfully.

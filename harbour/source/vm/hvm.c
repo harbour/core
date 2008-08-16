@@ -9781,7 +9781,7 @@ void hb_vmForceLink( void )
 
 #undef HB_FORCE_LINK_MAIN
 
-#if defined(HB_OS_WIN_32) && !defined(__EXPORT__) && \
+#if !defined(HB_DYNLIB) && defined(HB_OS_WIN_32) && \
     ( defined(__DMC__) || defined(__WATCOMC__) || defined(__MINGW32__) )
 
 #  define HB_FORCE_LINK_MAIN  hb_forceLinkMainWin

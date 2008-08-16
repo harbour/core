@@ -189,7 +189,7 @@ CFLAGS         += -DHB_GT_LIB=$(HB_GT_LIB:gt%=%)
 endif
 #-----------
 CLIBFLAGS      := -c $(CFLAGS) $(CLIBFLAGS)
-CLIBFLAGSDLL   := -D__EXPORT__ $(CLIBFLAGS) $(CLIBFLAGSDLL)
+CLIBFLAGSDLL   := -DHB_DYNLIB $(CLIBFLAGS) $(CLIBFLAGSDLL)
 CEXEFLAGSDLL   :=  $(CFLAGS) $(CEXEFLAGSDLL)
 
 # Under architectures other than "DOS based" add -fPIC

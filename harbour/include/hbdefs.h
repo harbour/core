@@ -1169,7 +1169,7 @@ typedef unsigned long HB_COUNTER;
 typedef HARBOUR ( * PHB_FUNC )( void );
 typedef PHB_FUNC HB_FUNC_PTR;
 
-#if defined( __EXPORT__ )
+#if defined( HB_DYNLIB )
    #if defined( __RSXNT__ )
       /* RSXNT does not support any type of export keyword.
          Exported (i.e., public) names can be obtained via
