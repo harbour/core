@@ -8,6 +8,13 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-16 03:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * make_rpm.sh
+   * harbour.spec
+     ! Added hbsqlit3, hbmsql to the contrib list.
+     ! Added hbhpdf (libharu) detection and build.
+     ; Untested
+
 2008-08-16 02:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/hbmzip/hbmzip.c
      ! Fixed potential GPF in executable type detection.

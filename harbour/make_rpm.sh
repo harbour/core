@@ -14,14 +14,14 @@
 ######################################################################
 # Conditional build:
 # --with static      - link all binaries with static libs
-# --with mysql       - build mysql lib
-# --with pgsql       - build pgsql lib
-# --with gd          - build gd lib
-# --with odbc        - build odbc lib
+# --with mysql       - build hbmysql lib
+# --with pgsql       - build hbpgsql lib
+# --with gd          - build hbgd lib
+# --with odbc        - build hbodbc lib
 # --with allegro     - build GTALLEG - Allegro based GT driver
-# --with ads         - build ADS RDD
+# --with ads         - build rddads RDD
 # --without gpllib   - do not build libs which needs GPL 3-rd party code
-# --without nf       - do not build nanforum lib
+# --without nf       - do not build hbnf lib (nanforum lib)
 # --without x11      - do not build GTXWC
 # --without gpm      - build GTSLN and GTCRS without GPM support
 # --without gtsln    - do not build GTSLN
@@ -112,6 +112,10 @@ fi
 if [ -f /usr/local/ads/acesdk/ace.h ] || [ -f ${HOME}/ads/acesdk/ace.h ]
 then
     INST_PARAM="${INST_PARAM} --with ads"
+fi
+if [ -f /usr/include/hpdf.h ] || [ -f /usr/local/include/hpdf.h ]
+then
+    INST_PARAM="${INST_PARAM} --with hbhpdf"
 fi
 if [ "${HB_COMMERCE}" = "yes" ]
 then

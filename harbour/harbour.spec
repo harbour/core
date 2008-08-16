@@ -13,13 +13,14 @@
 ######################################################################
 # Conditional build:
 # --with static      - link all binaries with static libs
-# --with mysql       - build mysql lib
-# --with pgsql       - build pgsql lib 
-# --with gd          - build gd lib 
+# --with mysql       - build hbmysql lib
+# --with pgsql       - build hbpgsql lib 
+# --with gd          - build hbgd lib 
 # --with allegro     - build GTALLEG - Allegro based GT driver
-# --with ads         - build ADS RDD
-# --with odbc        - build odbc lib
-# --with curl        - build CURL lib
+# --with ads         - build rddads RDD
+# --with odbc        - build hbodbc lib
+# --with curl        - build hbcurl lib
+# --with hbhpdf      - build hbhpdf lib
 # --without nf       - do not build nanforum lib
 # --without gpllib   - do not build libs which needs GPL 3-rd party code
 # --without x11      - do not build GTXWC
@@ -80,14 +81,13 @@
 %define hb_ldir  export HB_LIB_INSTALL=%{_libdir}/%{name}
 %define hb_opt   export HB_GTALLEG=%{?_with_allegro:yes}
 %define hb_cmrc  export HB_COMMERCE=%{?_without_gpllib:yes}
-%define hb_ctrb  export HB_CONTRIBLIBS="hbct hbmzip hbtip xhb hbbtree hbmisc hbvpdf hbgt hbbmcdx hbclipsm %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
+%define hb_ctrb  export HB_CONTRIBLIBS="hbbmcdx hbbtree hbclipsm hbct hbgt hbmisc hbmsql hbmzip hbsqlit3 hbtip hbtpathy hbvpdf xhb %{!?_without_nf:hbnf} %{?_with_odbc:hbodbc} %{?_with_curl:hbcurl} %{?_with_hbhpdf:hbhpdf} %{?_with_ads:rddads} %{?_with_gd:hbgd} %{?_with_pgsql:hbpgsql} %{?_with_mysql:hbmysql}"
 %define hb_env   %{hb_arch} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_mt} ; %{hb_gt} ; %{hb_defgt} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_opt} ; %{hb_ctrb} ; %{hb_cmrc}
 %define hb_host  www.harbour-project.org
 %define readme   README.RPM
 ######################################################################
 ## Preamble.
 ######################################################################
-
 Summary:        Free software Clipper compatible compiler
 Summary(pl):    Darmowy kompilator kompatybilny z jêzykiem Clipper.
 Summary(pt_BR): Um compilador Clipper compativel Gratis
@@ -273,6 +273,21 @@ statikus szerkesztéshez.
 %{?_with_curl:%description -l pl curl}
 %{?_with_curl:%{dname} to kompatybilny z jêzykiem CA-Clipper kompilator.}
 %{?_with_curl:Ten pakiet udostêpnia statyczn± biliotekê CURL dla kompilatora %{dname}.}
+
+## hbhpdf library
+%{?_with_hbhpdf:%package hbhpdf}
+%{?_with_hbhpdf:Summary:        hbhpdf libarary for %{dname} compiler}
+%{?_with_hbhpdf:Summary(pl):    Bilioteka hbhpdf dla kompilatora %{dname}}
+%{?_with_hbhpdf:Group:          Development/Languages}
+%{?_with_hbhpdf:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
+
+%{?_with_hbhpdf:%description hbhpdf}
+%{?_with_hbhpdf:%{dname} is a Clipper compatible compiler.}
+%{?_with_hbhpdf:This package provides %{dname} hbhpdf library for program linking.}
+
+%{?_with_hbhpdf:%description -l pl hbhpdf}
+%{?_with_hbhpdf:%{dname} to kompatybilny z jêzykiem CA-Clipper kompilator.}
+%{?_with_hbhpdf:Ten pakiet udostêpnia statyczn+ biliotekê hbhpdf dla kompilatora %{dname}.}
 
 ## ADS RDD
 %{?_with_ads:%package ads}
@@ -646,6 +661,11 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_curl:%defattr(644,root,root,755)}
 %{?_with_curl:%dir %{_libdir}/%{name}}
 %{?_with_curl:%{_libdir}/%{name}/libhbcurl.a}
+
+%{?_with_hbhpdf:%files hbhpdf}
+%{?_with_hbhpdf:%defattr(644,root,root,755)}
+%{?_with_hbhpdf:%dir %{_libdir}/%{name}}
+%{?_with_hbhpdf:%{_libdir}/%{name}/libhbhpdf.a}
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}
