@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-16 02:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmzip/hbmzip.c
+     ! Fixed potential GPF in executable type detection.
+       Fixes GCC 4.3.1 warnings in openSUSE 11.
+
+   * tests/debugtst.prg
+   * tests/funcarr.prg
+   * tests/inherit.prg
+   * tests/objarr.prg
+   * tests/objasign.prg
+   * doc/en/hvm.txt
+   * doc/es/hvm.txt
+   * include/hbextern.ch
+   * source/vm/debug.c
+   * source/vm/hvm.c
+   * source/debug/dbgtobj.prg
+   * source/debug/debugger.prg
+   * source/rtl/altd.prg
+     * Harbour level HB_DBG_*() functions renamed to __DBG*() to 
+       reflect their internal nature.
+     - Removed old __VM*() synonyms to Harbour level __DBG*() functions.
+       INCOMPATIBLE.
+     ! Fixed a few minor doc bugs along the way.
+
 2008-08-14 18:15 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * ChangeLog
      + Added entry for yesterday's syncing/tagging.

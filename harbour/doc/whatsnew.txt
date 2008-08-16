@@ -12,7 +12,7 @@ General
 - Cleanup of MSVC C mode static initialization code.
 - Changed internal representation for file attributes from USHORT to ULONG.
 - Fixed memory leak in -gw mode.
-- Portability fixes (Unicode, 64 bit, Pelles C 32/64 bit, WinCE, eVC4, XCC, 
+- Portability fixes (Unicode, 64-bit, Pelles C 32/64-bit, WinCE, eVC4, XCC, 
   Linux mouse detection, OpenWatcom).
 - Deployment fixes.
 - harbour.dll related fixes.
@@ -22,8 +22,8 @@ General
 Core
 =============================
 - Fixed __HARBOUR__ macro on .prg level, when compiled with -u switch.
-- HB_ARRAYID() moved to xhb.lib, synced with xhb and made 64 bit compatible.
-- File handle usage cleanup and 64 bit compatibility.
+- HB_ARRAYID() moved to xhb.lib, synced with xhb and made 64-bit compatible.
+- File handle usage cleanup and 64-bit compatibility.
 - Automatic destructors for .hrb modules.
 - Added passing non-string parameters to .hrb functions.
 - Fixed casting for indexes with key length greater than 196 bytes
@@ -74,11 +74,11 @@ Contrib
 - hbcurl fixes, now using Harbour memory allocation functions, 
   now older libcurl versions are supported as well, CURL_EASY_GETINFO() 
   fixed for unsupported info types.
-- 64bit compatibility fixes. hbmysql/SQLLISTF() function now 
+- 64-bit compatibility fixes. hbmysql/SQLLISTF() function now 
   uses pointer instead of numeric type.
 - Fixed adordd to be _SET_EXACT independent.
 - Fixed hbodbc tests to work out of the box.
-- hbw32, hbodbc 64 bit fixes.
+- hbw32, hbodbc 64-bit fixes.
 - Fixed rddads to behave Clipper-like when trying to write
   when on EOF position.
 - Added OS version detection functions to hbw32.
@@ -90,9 +90,9 @@ Contrib
 
 Known build issues
 =============================
-- Harbour with MSVC in 64 bit will only build in C++ mode.
+- Harbour with MSVC in 64-bit will only build in C++ mode.
   Use 'set HB_BUILD_MODE=cpp' and 'make_vc.bat'.
-- Windows 64 bit builds may generate a large amount of type 
+- Windows 64-bit builds may generate a large amount of type 
   conversion warnings. This is currently normal and will be 
   addressed in a future version.
 - Contrib hbfimage won't currently compile on Linux systems 
@@ -117,7 +117,7 @@ General
   other.
 - Reviewed and fixed platforms issues and compiler warnings 
   for the contrib area in most part.
-- Enhanced contrib 64bit Windows compatibility.
+- Enhanced contrib 64-bit Windows compatibility.
 
 Core
 =============================
@@ -150,7 +150,7 @@ Contrib
 - Added SQL_SPRINTF() to hbmisc contrib.
 - Enhanced STRFORMAT() in hbmisc contrib.
 - Enabled hbgf contrib for all (Linux, OS/2, Windows) platforms.
-- Due to fixing 64bit portability problems, some functions became 
+- Due to fixing 64-bit portability problems, some functions became 
   incompatible, because numeric addresses have been converted to 
   pointer types:
   - hbwhat32: wndproc/dlgproc parameters in related functions.
@@ -192,7 +192,7 @@ Portability
   WinCE.
 - added support for MS-Windows UNICDE builds.
 - added support for shared libraries (.sl) in HPUX builds
-- added large file support (64bit) in HPUX builds
+- added large file support (64-bit) in HPUX builds
 - disabled in default BSD* builds DOS/Windows DENY_* flags emulation
   implemented by BSD locks - tests on FreeBSD 6.2 and MacOSX shows
   that it badly interacts with POSIX locks and it's possible to create
@@ -339,7 +339,7 @@ RTL
 - added _SET_TRIMFILENAME - when enabled low level hb_fs*() functions strip
   trailing and leading spaces from file names to emulate DOS like behavior
 - added support for _SET_DEFEXTENSIONS to native all RDDs
-- many fixes in transform() function and fixed 64bit integer transformation.
+- many fixes in transform() function and fixed 64-bit integer transformation.
   Now transform() passes our all compatibility tests
 - added undocumented Clipper error functions
 - added functions to manage .ini files: HB_INI*()
@@ -700,7 +700,7 @@ API
 - Optimized __CLSADDMSG() to call hb_parc() only once instead of 25
   times for most cases.
 - Synced file IO with xHarbour, it fixed some problems, added some
-  missing functionality and long (64bit) file support for Windows.
+  missing functionality and long (64-bit) file support for Windows.
 - hb_DiskSpace() changed to not give a runtime error in case of any
   error, but set the FError() value instead.
 - Added C -> OS file error translations - not perfect but better than
@@ -780,7 +780,7 @@ RDD
 - Fixed ordKeyPos() for records out of scope.
 - Implemented RDD level transforms (COPY TO/APPEND FROM).
 - Long file support for all native RDDs. Now the maximum file size
-  is reduced only by its structure if OS/file system supports 64bit
+  is reduced only by its structure if OS/file system supports 64-bit
   file IO, f.e. for DBF it's 2^32 records. For memos it's:
   2^32 * MemoBlockSize, etc.
 - Synhronize RDD code with xHarbour.
@@ -870,7 +870,7 @@ The compiler
   Symbol of function name never share a symbol of variable
   Symbol for INIT/EXIT procedure has now '$' suffix - this means that
   such procedures cannot be called from user code (Clipper compatible)
-- Harbour now Run on 64 bits !
+- Harbour now Run on 64-bits !
 - Some small optimizations in harbour/source/vm/itemapi.c
 
 The runtime modules
@@ -911,7 +911,7 @@ The runtime modules
 - Add the missing Greek language and codepage files.
 - Added Spanish Modern codepage
 - Synced HB CDP API with xHarbour - added basic Unicode support
-- Added functions hb_fsLockLarge() and hb_fsSeekLarge() which uses 64bit
+- Added functions hb_fsLockLarge() and hb_fsSeekLarge() which uses 64-bit
   offsets in filesys.c for files larger than 2Gb
 
 RDD

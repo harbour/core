@@ -588,11 +588,11 @@ static ULONG hb_translateExtAttr( const char* szFileName, ULONG ulExtAttr )
    iLen = ( int ) strlen( szFileName );
    if( iLen > 4 )
    {
-      if( hb_stricmp( szFileName - 4, ".exe" ) == 0 ||
-          hb_stricmp( szFileName - 4, ".com" ) == 0 ||
-          hb_stricmp( szFileName - 4, ".bat" ) == 0 ||
-          hb_stricmp( szFileName - 4, ".cmd" ) == 0 ||
-          hb_stricmp( szFileName - 3, ".sh" ) == 0 )
+      if( hb_stricmp( szFileName + iLen - 4, ".exe" ) == 0 ||
+          hb_stricmp( szFileName + iLen - 4, ".com" ) == 0 ||
+          hb_stricmp( szFileName + iLen - 4, ".bat" ) == 0 ||
+          hb_stricmp( szFileName + iLen - 4, ".cmd" ) == 0 ||
+          hb_stricmp( szFileName + iLen - 3, ".sh" ) == 0 )
       {
          ulExtAttr |= 0x00490000; /* --x--x--x */
       }

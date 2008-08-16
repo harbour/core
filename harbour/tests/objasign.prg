@@ -47,9 +47,9 @@ Function Main
    QOut( "To the power 3   : ", o:x )
 
    QOut( "Global stack" )
-   Debug( hb_dbg_vmStkGList() )
+   Debug( __dbgvmStkGList() )
    QOut( "Statics")
-   Debug( hb_dbg_vmVarSList() )
+   Debug( __dbgvmVarSList() )
 return NIL
 
 Function TNumber()                              // Very simple class

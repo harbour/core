@@ -50,16 +50,16 @@ function Main()
 
    QOut( "-DEBUG Functions-")
    QOut( "-Statics-" )
-   Debug( hb_dbg_vmVarSList() )
+   Debug( __dbgvmVarSList() )
 
    QOut( "-Global Stack-" )
-   Debug ( hb_dbg_vmStkGList() )
+   Debug ( __dbgvmStkGList() )
 
    QOut( "-Local Stack-" )
-   Debug ( hb_dbg_vmStkLList() )
+   Debug ( __dbgvmStkLList() )
 
    QOut( "-Parameters-" )
-   Debug ( hb_dbg_vmParLList() )
+   Debug ( __dbgvmParLList() )
 
    Pause()
 
@@ -84,19 +84,19 @@ function FuncSecond( nParam, cParam, uParam )
    QOut()
 
    QOut( "-Statics-" )
-   Debug ( hb_dbg_vmVarSList() )
+   Debug ( __dbgvmVarSList() )
    QOut()
 
-   QOut( "-Global Stack- Len=", hb_dbg_vmStkGCount() )
-   Debug ( hb_dbg_vmStkGList() )
+   QOut( "-Global Stack- Len=", __dbgvmStkGCount() )
+   Debug ( __dbgvmStkGList() )
    QOut()
 
-   QOut( "-Local Stack- Len=", hb_dbg_vmStkLCount() )
-   xStack := Debug ( hb_dbg_vmStkLList() )
+   QOut( "-Local Stack- Len=", __dbgvmStkLCount() )
+   xStack := Debug ( __dbgvmStkLList() )
    QOut()
 
    QOut( "-Parameters-" )
-   xParam := Debug( hb_dbg_vmParLList() )
+   xParam := Debug( __dbgvmParLList() )
    if xParam[ xStack[ 7 ] ] == "Hello"
       QOut( ":-)" )
    endif
@@ -226,7 +226,7 @@ return nil
 static function Transfer( x1,x2,x3,x4,x5,x6,x7,x8,x9,x10 /* etc */ )
 
    local self   := QSelf()
-   local aParam := hb_dbg_vmParLList()
+   local aParam := __dbgvmParLList()
    local nLen   := PCount()
    local xRet
    local xData

@@ -10,7 +10,7 @@
  *    Documentation for: PROCLINE(),PROCFILE(),PROCNAME()
  *
  * Copyright 1999 Eddie Ruina
- *   Documentation for: __VMVARLGET()
+ *   Documentation for: __DBGVMVARLGET()
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: CLIPINIT(), __SETHELPK()
@@ -383,13 +383,13 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __VMVARLGET()
+ *      __DBGVMVARLGET()
  *  $CATEGORY$
  *      Variable Management
  *  $ONELINER$
  *      Retrive a local variable from a procedure level
  *  $SYNTAX$
- *      __VMVARLGET( <nProcLevel>, <nLocal> )
+ *      __DBGVMVARLGET( <nProcLevel>, <nLocal> )
  *  $ARGUMENTS$
  *      <nProcLevel> Is the procedure level, same as used in ProcName()
  *      and ProcLine(), from which a local variable containts is going to

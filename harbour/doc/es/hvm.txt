@@ -9,13 +9,13 @@
  * Copyright 2000 Alejandro de G rate <alex_degarate@hotmail.com>
  * Documentaci¢n en Espa¤ol de: 
  *      PROCNAME(), PROCLINE(), PROCFILE(), HB_PVALUE(), PCOUNT()
- *      __QUIT(), CLIPINIT(), __SetHelpK(), BREAK(), DO(), __VMVARLGET()
+ *      __QUIT(), CLIPINIT(), __SetHelpK(), BREAK(), DO(), __DBGVMVARLGET()
  *
  * Copyright 1999 Jose Lanin <dezac@corevia.com>
  * Documentaci¢n en Ingl‚s de: PROCLINE(),PROCFILE(),PROCNAME()
  *
  * Copyright 1999 Eddie Ruina
- * Documentaci¢n en Ingl‚s de: __VMVARLGET()
+ * Documentaci¢n en Ingl‚s de: __DBGVMVARLGET()
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  * Documentaci¢n en Ingl‚s de: CLIPINIT(), __SETHELPK()
@@ -417,13 +417,13 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      __VMVARLGET()
+ *      __DBGVMVARLGET()
  *  $CATEGORY$
  *      Variable Management
  *  $ONELINER$
  *      Obtiene una variable LOCAL de un nivel de procedimiento
  *  $SYNTAX$
- *      __VMVARLGET( <nProcLevel>, <nLocal> )
+ *      __DBGVMVARLGET( <nProcLevel>, <nLocal> )
  *  $ARGUMENTS$
  *      <nProcLevel> Es el nivel de procedimiento, el mismo que el usado 
  *                   en PROCNAME() y PROCLINE(), desde el cual una variable

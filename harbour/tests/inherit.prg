@@ -56,7 +56,7 @@ function Main()
    oFrom:Dispose()
    oTo:Dispose()
 
-//   Debug( hb_dbg_vmStkGList() )  // Stack is OK!
+//   Debug( __dbgvmStkGList() )  // Stack is OK!
 
 return nil
 

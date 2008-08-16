@@ -114,7 +114,7 @@ PROCEDURE __dbgAltDEntry()
       where ALTD() was called can have no debugger info - stop
       on first LINE with debugged info
     */
-   hb_DBG_INVOKEDEBUG( Set( _SET_DEBUG ) )
+   __dbgINVOKEDEBUG( Set( _SET_DEBUG ) )
 
    RETURN
 
@@ -126,7 +126,7 @@ PROCEDURE __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4, uParam5 )
    DO CASE
    CASE nMode == HB_DBG_GETENTRY
 
-      hb_DBG_SetEntry()
+      __dbgSetEntry()
 
    CASE nMode == HB_DBG_ACTIVATE
 
@@ -140,7 +140,7 @@ PROCEDURE __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4, uParam5 )
       s_oDebugger:aBreakPoints := uParam5
       IF lStartup
          IF s_oDebugger:lRunAtStartup
-            hb_DBG_SetGo( uParam1 )
+            __dbgSetGo( uParam1 )
             RETURN
          ENDIF
       ENDIF
@@ -648,7 +648,7 @@ METHOD CallStackProcessKey( nKey ) CLASS HBDebugger
 METHOD CodeblockTrace()
 
    ::oPullDown:GetItemByIdent( "CODEBLOCK" ):checked := ::lCBTrace := ! ::lCBTrace
-   hb_DBG_SetCBTrace( ::pInfo, ::lCBTrace )
+   __dbgSetCBTrace( ::pInfo, ::lCBTrace )
 
    RETURN NIL
 
@@ -1234,7 +1234,7 @@ METHOD GetExprValue( xExpr, lValid ) CLASS HBDebugger
    lValid := .F.
 
    BEGIN SEQUENCE
-      xResult := hb_DBG_GetExprValue( ::pInfo, xExpr, @lValid )
+      xResult := __dbgGetExprValue( ::pInfo, xExpr, @lValid )
       IF !lValid
          xResult := "Syntax error"
       ENDIF
@@ -1253,7 +1253,7 @@ METHOD GetExprValue( xExpr, lValid ) CLASS HBDebugger
 
 
 METHOD GetSourceFiles() CLASS HBDebugger
-   RETURN hb_DBG_GetSourceFiles( ::pInfo )
+   RETURN __dbgGetSourceFiles( ::pInfo )
 
 
 METHOD Global() CLASS HBDebugger
@@ -1270,7 +1270,7 @@ METHOD Go() CLASS HBDebugger
    ENDIF
    ::RestoreAppScreen()
    ::RestoreAppState()
-   hb_DBG_SetGo( ::pInfo )
+   __dbgSetGo( ::pInfo )
    ::Exit()
    RETURN NIL
 
@@ -1329,7 +1329,7 @@ METHOD HandleEvent() CLASS HBDebugger
       IF ::nSpeed != 0
          Inkey( ::nSpeed / 10 )
       ENDIF
-      IF hb_DBG_INVOKEDEBUG()  //NextKey() == K_ALT_D
+      IF __dbgINVOKEDEBUG()  //NextKey() == K_ALT_D
          ::lAnimate := .F.
       ELSE
          ::Step()
@@ -1654,7 +1654,7 @@ METHOD Inspect( uValue, cValueName ) CLASS HBDebugger
 
 
 METHOD IsValidStopLine( cName, nLine ) CLASS HBDebugger
-   RETURN hb_DBG_IsValidStopLine( ::pInfo, cName, nLine )
+   RETURN __dbgIsValidStopLine( ::pInfo, cName, nLine )
 
 
 METHOD LineNumbers( lLineNumbers ) CLASS HBDebugger
@@ -1716,7 +1716,7 @@ METHOD LoadCallStack() CLASS HBDebugger
 
    ::aProcStack := Array( ::nProcLevel )
 
-   nCurrLevel := hb_dbg_ProcLevel() - 1
+   nCurrLevel := __dbgProcLevel() - 1
    nDebugLevel := nCurrLevel - ::nProcLevel + 1
 
    FOR i := nDebugLevel TO nCurrLevel
@@ -1908,7 +1908,7 @@ METHOD MonoDisplay() CLASS HBDebugger
 METHOD NextRoutine() CLASS HBDebugger
    ::RestoreAppScreen()
    ::RestoreAppState()
-   hb_DBG_SetNextRoutine( ::pInfo )
+   __dbgSetNextRoutine( ::pInfo )
    ::Exit()
    RETURN Self
 
@@ -2070,7 +2070,7 @@ METHOD Quit() CLASS HBDebugger
 
    ::Exit()
    ::Hide()
-   hb_DBG_SetQuit( ::pInfo )
+   __dbgSetQuit( ::pInfo )
    s_oDebugger := NIL
 
    __QUIT()
@@ -2793,7 +2793,7 @@ METHOD Step() CLASS HBDebugger
 METHOD ToCursor() CLASS HBDebugger
 
    IF ::IsValidStopLine( strip_path( ::cPrgName ), ::oBrwText:RowPos() )
-      hb_DBG_SetToCursor( ::pInfo, strip_path( ::cPrgName ), ::oBrwText:RowPos() )
+      __dbgSetToCursor( ::pInfo, strip_path( ::cPrgName ), ::oBrwText:RowPos() )
       ::RestoreAppScreen()
       ::RestoreAppState()
       ::Exit()
@@ -2828,14 +2828,14 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
 
    IF nAt == 0
       AAdd( ::aBreakPoints, { nLine, cFileName } )     // it was nLine
-      hb_DBG_AddBreak( ::pInfo, cFileName, nLine )
+      __dbgAddBreak( ::pInfo, cFileName, nLine )
       IF hb_FileMatch( cFileName, strip_path( ::cPrgName ) )
          ::oBrwText:ToggleBreakPoint( nLine, .T. )
       ENDIF
    ELSE
       ADel( ::aBreakPoints, nAt )
       ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
-      hb_DBG_DelBreak( ::pInfo, nAt - 1 )
+      __dbgDelBreak( ::pInfo, nAt - 1 )
       IF hb_FileMatch( cFileName, strip_path( ::cPrgName ) )
          ::oBrwText:ToggleBreakPoint( nLine, .F. )
       ENDIF
@@ -2848,7 +2848,7 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
 
 METHOD Trace() CLASS HBDebugger
 
-   hb_DBG_SetTrace( ::pInfo )
+   __dbgSetTrace( ::pInfo )
    ::Step() //forces a Step()
 
    RETURN Self
@@ -2871,7 +2871,7 @@ METHOD TracepointAdd( cExpr ) CLASS HBDebugger
    ENDIF
    aWatch := { "tp", cExpr, NIL }
    ::RestoreAppState()
-   hb_DBG_AddWatch( ::pInfo, cExpr, .T. )
+   __dbgAddWatch( ::pInfo, cExpr, .T. )
    ::SaveAppState()
    AAdd( ::aWatch, aWatch )
    ::WatchpointsShow()
@@ -2901,9 +2901,9 @@ METHOD VarGetValue( aVar ) CLASS HBDebugger
    LOCAL cType := Left( aVar[ VAR_TYPE ], 1 )
 
    DO CASE
-   CASE cType == "G" ; RETURN hb_dbg_vmVarGGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
-   CASE cType == "L" ; RETURN hb_dbg_vmVarLGet( hb_dbg_procLevel() - aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
-   CASE cType == "S" ; RETURN hb_dbg_vmVarSGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
+   CASE cType == "G" ; RETURN __dbgvmVarGGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
+   CASE cType == "L" ; RETURN __dbgvmVarLGet( __dbgprocLevel() - aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
+   CASE cType == "S" ; RETURN __dbgvmVarSGet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ] )
    OTHERWISE         ; RETURN aVar[ VAR_POS ] // Public or Private
    ENDCASE
 
@@ -2918,14 +2918,14 @@ METHOD VarSetValue( aVar, uValue ) CLASS HBDebugger
    LOCAL cType := Left( aVar[ VAR_TYPE ], 1 )
 
    IF cType == "G"
-     hb_dbg_vmVarGSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
+     __dbgvmVarGSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
 
    ELSEIF cType == "L"
-     nProcLevel := hb_dbg_procLevel() - aVar[ VAR_LEVEL ]   //skip debugger stack
-     hb_dbg_vmVarLSet( nProcLevel, aVar[ VAR_POS ], uValue )
+     nProcLevel := __dbgprocLevel() - aVar[ VAR_LEVEL ]   //skip debugger stack
+     __dbgvmVarLSet( nProcLevel, aVar[ VAR_POS ], uValue )
 
    ELSEIF cType == "S"
-     hb_dbg_vmVarSSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
+     __dbgvmVarSSet( aVar[ VAR_LEVEL ], aVar[ VAR_POS ], uValue )
 
    ELSE
      // Public or Private
@@ -3025,7 +3025,7 @@ METHOD WatchpointAdd( cExpr ) CLASS HBDebugger
    ENDIF
 
    aWatch := { "wp", cExpr }
-   hb_DBG_AddWatch( ::pInfo, cExpr, .F. )
+   __dbgAddWatch( ::pInfo, cExpr, .F. )
    AAdd( ::aWatch, aWatch )
    ::WatchpointsShow()
 
@@ -3044,7 +3044,7 @@ METHOD WatchpointDel( nPos ) CLASS HBDebugger
       IF LastKey() != K_ESC
          IF nPos >=0 .AND. nPos < Len( ::aWatch )
             ::oBrwPnt:gotop()
-            hb_DBG_DelWatch( ::pInfo, nPos )
+            __dbgDelWatch( ::pInfo, nPos )
             ADel( ::aWatch, nPos + 1 )
             ASize( ::aWatch, Len( ::aWatch ) - 1 )
             IF Len( ::aWatch ) == 0
@@ -3079,7 +3079,7 @@ METHOD WatchpointEdit( nPos ) CLASS HBDebugger
 
    aWatch := { "wp", cExpr }
 
-   hb_DBG_SetWatch( ::pInfo, nPos - 1, cExpr, .F. )
+   __dbgSetWatch( ::pInfo, nPos - 1, cExpr, .F. )
    ::aWatch[ nPos ] := aWatch
    ::WatchpointsShow()
 

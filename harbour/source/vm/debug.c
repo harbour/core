@@ -83,19 +83,19 @@ static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, ULONG ulPos )
 }
 
 /* $Doc$
- * $FuncName$     <nVars> hb_dbg_vmStkGCount()
+ * $FuncName$     <nVars> __dbgvmStkGCount()
  * $Description$  Returns the length of the global stack
  * $End$ */
-HB_FUNC( HB_DBG_VMSTKGCOUNT )
+HB_FUNC( __DBGVMSTKGCOUNT )
 {
    hb_retnl( hb_stackTopOffset() );
 }
 
 /* $Doc$
- * $FuncName$     <aStack> hb_dbg_vmStkGList()
+ * $FuncName$     <aStack> __dbgvmStkGList()
  * $Description$  Returns the global stack
  * $End$ */
-HB_FUNC( HB_DBG_VMSTKGLIST )
+HB_FUNC( __DBGVMSTKGLIST )
 {
    PHB_ITEM pReturn;
    ULONG ulLen = hb_stackTopOffset();
@@ -111,7 +111,7 @@ HB_FUNC( HB_DBG_VMSTKGLIST )
 }
 
 /* $Doc$
- * $FuncName$     <nVars> __vmStkLCount( <nProcLevel> )
+ * $FuncName$     <nVars> hb_stackLen( <nProcLevel> )
  * $Description$  Returns params plus locals amount of the nProcLevel function
  * $End$ */
 static LONG hb_stackLen( int iLevel )
@@ -136,16 +136,16 @@ static LONG hb_stackLen( int iLevel )
 }
 
 /* $Doc$
- * $FuncName$     <nVars> hb_dbg_vmStkLCount( <nProcLevel> )
+ * $FuncName$     <nVars> __dbgvmStkLCount( <nProcLevel> )
  * $Description$  Returns params plus locals amount of the nProcLevel function
  * $End$ */
-HB_FUNC( HB_DBG_VMSTKLCOUNT )
+HB_FUNC( __DBGVMSTKLCOUNT )
 {
    hb_retnl( hb_stackLen( hb_parni( 1 ) + 1 ) );
 }
 
 /* $Doc$
- * $FuncName$     <aStack> hb_dbg_vmStkLList()
+ * $FuncName$     <aStack> __dbgvmStkLList()
  * $Description$  Returns the stack of the calling function
  *                "[<symbol>]"  Means symbol.
  *
@@ -155,7 +155,7 @@ HB_FUNC( HB_DBG_VMSTKLCOUNT )
  *                [x+1 .. y] Locals
  *                [y+1 ..]   Pushed data
  * $End$ */
-HB_FUNC( HB_DBG_VMSTKLLIST )
+HB_FUNC( __DBGVMSTKLLIST )
 {
    PHB_ITEM pReturn;
    ULONG ulLen, ul;
@@ -173,13 +173,13 @@ HB_FUNC( HB_DBG_VMSTKLLIST )
 }
 
 /* $Doc$
- * $FuncName$     <aParam> hb_dbg_vmParLGet()
+ * $FuncName$     <aParam> __dbgvmParLGet()
  * $Description$  Returns the passed parameters of the calling function
  * $End$ */
                /* TODO : put bLocals / bParams      */
                /* somewhere for declared parameters */
                /* and locals                        */
-HB_FUNC( HB_DBG_VMPARLLIST )
+HB_FUNC( __DBGVMPARLLIST )
 {
    hb_itemReturnRelease( hb_arrayFromParams( hb_parni( 1 ) + 1 ) );
 }
@@ -221,7 +221,7 @@ HB_EXPORT PHB_ITEM hb_dbg_vmVarLGet( int iLevel, int iLocal )
    return pLocal;
 }
 
-HB_FUNC( HB_DBG_VMVARLGET )
+HB_FUNC( __DBGVMVARLGET )
 {
    int iLevel = hb_parni( 1 ) + 1;
    int iLocal = hb_parni( 2 );
@@ -233,7 +233,7 @@ HB_FUNC( HB_DBG_VMVARLGET )
       hb_errRT_BASE( EG_ARG, 6005, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_DBG_VMVARLSET )
+HB_FUNC( __DBGVMVARLSET )
 {
    int iLevel = hb_parni( 1 ) + 1;
    int iLocal = hb_parni( 2 );
@@ -269,37 +269,41 @@ HB_FUNC( HB_DBG_VMVARLSET )
    }
 }
 
+#if 0
+
 HB_FUNC( __VMSTKLCOUNT )
 {
-   HB_FUNC_EXEC( HB_DBG_VMSTKLCOUNT );
+   HB_FUNC_EXEC( __DBGVMSTKLCOUNT );
 }
 
 HB_FUNC( __VMPARLLIST )
 {
-   HB_FUNC_EXEC( HB_DBG_VMPARLLIST );
+   HB_FUNC_EXEC( __DBGVMPARLLIST );
 }
 
 HB_FUNC( __VMSTKLLIST )
 {
-   HB_FUNC_EXEC( HB_DBG_VMSTKLLIST );
+   HB_FUNC_EXEC( __DBGVMSTKLLIST );
 }
 
 HB_FUNC( __VMVARLGET )
 {
-   HB_FUNC_EXEC( HB_DBG_VMVARLGET );
+   HB_FUNC_EXEC( __DBGVMVARLGET );
 }
 
 HB_FUNC( __VMVARLSET )
 {
-   HB_FUNC_EXEC( HB_DBG_VMVARLSET );
+   HB_FUNC_EXEC( __DBGVMVARLSET );
 }
 
 HB_FUNC( __VMSTKGLIST )
 {
-   HB_FUNC_EXEC( HB_DBG_VMSTKGLIST );
+   HB_FUNC_EXEC( __DBGVMSTKGLIST );
 }
 
 HB_FUNC( __VMSTKGCOUNT )
 {
-   HB_FUNC_EXEC( HB_DBG_VMSTKGCOUNT );
+   HB_FUNC_EXEC( __DBGVMSTKGCOUNT );
 }
+
+#endif

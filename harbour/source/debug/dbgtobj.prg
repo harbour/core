@@ -355,12 +355,12 @@ STATIC FUNCTION __dbgObjGetValue( oObject, cVar, lCanAcc )
    LOCAL oErr
 
    BEGIN SEQUENCE WITH {|| break() }
-      xResult := HB_DBG_SENDMSG( nProcLevel, oObject, cVar )
+      xResult := __dbgSENDMSG( nProcLevel, oObject, cVar )
       lCanAcc := .T.
    RECOVER
       BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
          /* Try to access variables using class code level */
-         xResult := HB_DBG_SENDMSG( 0, oObject, cVar )
+         xResult := __dbgSENDMSG( 0, oObject, cVar )
          lCanAcc := .T.
       RECOVER USING oErr
          xResult := oErr:description
@@ -376,11 +376,11 @@ STATIC FUNCTION __dbgObjSetValue( oObject, cVar, xValue )
    LOCAL oErr
 
    BEGIN SEQUENCE WITH {|| break() }
-      HB_DBG_SENDMSG( nProcLevel, oObject, "_" + cVar, xValue )
+      __dbgSENDMSG( nProcLevel, oObject, "_" + cVar, xValue )
    RECOVER
       BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
          /* Try to access variables using class code level */
-         HB_DBG_SENDMSG( 0, oObject, "_" + cVar, xValue )
+         __dbgSENDMSG( 0, oObject, "_" + cVar, xValue )
       RECOVER USING oErr
          Alert( oErr:description )
       END SEQUENCE

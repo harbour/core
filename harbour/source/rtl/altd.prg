@@ -66,7 +66,7 @@ PROCEDURE AltD( nAction )
          where ALTD() was called can have no debugger info - stop
          on first LINE with debugged info 
       */
-      HB_DBG_INVOKEDEBUG( SET( _SET_DEBUG ) )
+      __dbgINVOKEDEBUG( SET( _SET_DEBUG ) )
 
    ELSEIF HB_ISNUMERIC( nAction )
 

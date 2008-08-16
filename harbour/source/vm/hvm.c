@@ -59,8 +59,8 @@
  *    hb_vmPushDoubleConst()
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
- *    __VMVARSGET()
- *    __VMVARSLIST()
+ *    __DBGVMVARSGET()
+ *    __DBGVMVARSLIST()
  *
  * See doc/license.txt for licensing terms.
  *
@@ -9542,7 +9542,7 @@ HB_EXPORT ULONG hb_dbg_ProcLevel( void )
  * check if the debugger activation was requested or request the debugger
  * activation if .T. is passed
  */
-HB_FUNC( HB_DBG_INVOKEDEBUG )
+HB_FUNC( __DBGINVOKEDEBUG )
 {
    BOOL bRequest = s_bDebugRequest;
    if( hb_pcount() > 0 )
@@ -9553,10 +9553,10 @@ HB_FUNC( HB_DBG_INVOKEDEBUG )
 }
 
 /* $Doc$
- * $FuncName$     <aStat> __vmVarSList()
+ * $FuncName$     <aStat> __dbgvmVarSList()
  * $Description$  Return the statics array. Please aClone before assignments
  * $End$ */
-HB_FUNC( HB_DBG_VMVARSLIST )
+HB_FUNC( __DBGVMVARSLIST )
 {
    PHB_ITEM pStatics = hb_itemClone( &s_aStatics );
 
@@ -9564,35 +9564,35 @@ HB_FUNC( HB_DBG_VMVARSLIST )
 }
 
 /* $Doc$
- * $FuncName$     <nStatics> __vmVarSLen()
+ * $FuncName$     <nStatics> __dbgvmVarSLen()
  * $Description$  Return the statics array length.
  * $End$ */
-HB_FUNC( HB_DBG_VMVARSLEN )
+HB_FUNC( __DBGVMVARSLEN )
 {
    hb_retnl( hb_arrayLen( &s_aStatics ) );
 }
 
 /* $Doc$
- * $FuncName$     <xStat> __vmVarSGet(<nStatic>)
+ * $FuncName$     <xStat> __dbgvmVarSGet(<nStatic>)
  * $Description$  Return a specified statics
  * $End$ */
-HB_FUNC( HB_DBG_VMVARSGET )
+HB_FUNC( __DBGVMVARSGET )
 {
    hb_itemReturn( hb_dbg_vmVarSGet( hb_parni( 1 ), hb_parni( 2 ) ) );
 }
 
 /* $Doc$
- * $FuncName$     __vmVarSSet(<nStatic>,<uValue>)
+ * $FuncName$     __dbgvmVarSSet(<nStatic>,<uValue>)
  * $Description$  Sets the value of a specified statics
  * $End$ */
-HB_FUNC( HB_DBG_VMVARSSET )
+HB_FUNC( __DBGVMVARSSET )
 {
    PHB_ITEM pItem = hb_param( 3, HB_IT_ANY );
    if( pItem )
       hb_arraySet( &s_aStatics, hb_parni( 1 ) + hb_parni( 2 ), pItem );
 }
 
-HB_FUNC( HB_DBG_PROCLEVEL )
+HB_FUNC( __DBGPROCLEVEL )
 {
    hb_retnl( hb_dbg_ProcLevel() - 1 );   /* Don't count self */
 }
@@ -9623,10 +9623,10 @@ HB_EXPORT PHB_ITEM hb_dbg_vmVarGGet( int nGlobal, int nOffset )
 }
 
 /* $Doc$
- * $FuncName$     <aStat> __vmVarGList()
+ * $FuncName$     <aStat> __dbgvmVarGList()
  * $Description$  Return a clone of the globals array.
  * $End$ */
-HB_FUNC( HB_DBG_VMVARGLIST )
+HB_FUNC( __DBGVMVARGLIST )
 {
 #if 0
    PHB_ITEM pGlobals = hb_itemClone( &s_aGlobals );
@@ -9637,12 +9637,12 @@ HB_FUNC( HB_DBG_VMVARGLIST )
    hb_itemReturnRelease( pGlobals );
 }
 
-HB_FUNC( HB_DBG_VMVARGGET )
+HB_FUNC( __DBGVMVARGGET )
 {
    hb_itemReturn( hb_dbg_vmVarGGet( hb_parni( 1 ), hb_parni( 2 ) ) );
 }
 
-HB_FUNC( HB_DBG_VMVARGSET )
+HB_FUNC( __DBGVMVARGSET )
 {
 #if 0
    PHB_ITEM pItem = hb_param( 3, HB_IT_ANY );
@@ -9725,32 +9725,34 @@ HB_FUNC( __OPGETPRF ) /* profiler: It returns an array with an opcode called and
    }
 }
 
+#if 0
 
 HB_FUNC( __VMVARGLIST )
 {
-   HB_FUNC_EXEC( HB_DBG_VMVARGLIST );
+   HB_FUNC_EXEC( __DBGVMVARGLIST );
 }
 
 HB_FUNC( __VMVARSLIST )
 {
-   HB_FUNC_EXEC( HB_DBG_VMVARSLIST );
+   HB_FUNC_EXEC( __DBGVMVARSLIST );
 }
 
 HB_FUNC( __VMVARSLEN )
 {
-   HB_FUNC_EXEC( HB_DBG_VMVARSLEN );
+   HB_FUNC_EXEC( __DBGVMVARSLEN );
 }
 
 HB_FUNC( __VMVARSGET )
 {
-   HB_FUNC_EXEC( HB_DBG_VMVARSGET );
+   HB_FUNC_EXEC( __DBGVMVARSGET );
 }
 
 HB_FUNC( __VMVARSSET )
 {
-   HB_FUNC_EXEC( HB_DBG_VMVARSSET );
+   HB_FUNC_EXEC( __DBGVMVARSSET );
 }
 
+#endif
 
 HB_FUNC( ERRORLEVEL )
 {
