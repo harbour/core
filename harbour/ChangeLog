@@ -33,7 +33,7 @@
    * make_vcce.mak
    * utils/hbmake/hbmake.prg
      % Removed using -D__EXPORT__ from any Harbour command lines, 
-       as this switch has no effect of the .prg level.
+       as this switch has no effect on the .prg level.
 
 2008-08-16 13:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/linux1st.txt
