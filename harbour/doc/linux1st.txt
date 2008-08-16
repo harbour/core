@@ -60,6 +60,31 @@ For contrib/hbhpdf lib:
 Download and './configure', 'make install' libharu 
 from http://libharu.org/
 
+openSUSE distro
+---------------
+
+You'll need these packages to compile certain contribs and optional 
+Harbour modules:
+- xorg-x11-devel
+- postgresql-devel
+- gtk2-devel
+- ncurses-devel
+- slang-devel
+- unixodbc-devel
+- gd-devel
+- libmysqlclient-devel
+
+For contrib/rddads lib:
+Download and install 'Advantage Client Engine API for Linux' package 
+(f.e. aceapi-9.00.0.0.tar.gz)
+
+For contrib/libharu:
+- Download and './configure', 'make install' libharu 
+  from http://libharu.org/
+- libpng-devel
+- zlib-devel
+
+
 Notes by Scott Johnson <scomps at purplewire.org>
 -------------------------------------------------
 

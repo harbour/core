@@ -77,7 +77,7 @@ endif
 
 # Rule to generate a C file from a PRG file.
 %.c : $(GRANDP)%.prg
-	$(HB) $? $(PRG_USR) $(HB_FLAGS)
+	$(HB) $? $(HB_FLAGS) $(PRG_USR)
 
 ifeq ($(SHLVL),) # COMMAND.COM
 # Do nothing. the $(hb_architecture)/global.cf will handle clean up.

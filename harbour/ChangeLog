@@ -8,6 +8,15 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-16 13:19 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/linux1st.txt
+     + Added some quick openSUSE package requirement information.
+
+   * config/rules.cf
+     ! Fixed .prg rule to add PRG_USR after the built-in rules, 
+       to allow overriding them. This way it's also in sync with 
+       non-GNU make files.
+
 2008-08-16 03:10 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_rpm.sh
    * harbour.spec
