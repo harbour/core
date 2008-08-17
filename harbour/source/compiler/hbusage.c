@@ -117,7 +117,7 @@ void hb_compPrintUsage( HB_COMP_DECL, char * szSelf )
    for( iLine = 0; iLine < ( int ) ( sizeof( szOptions ) / sizeof( char * ) ); iLine++ )
    {
       snprintf( buffer, sizeof( buffer ),
-                szOptions[ iLine ], OS_OPT_DELIMITER_LIST[ 0 ] );
+                szOptions[ iLine ], HB_OS_OPT_DELIM_LIST[ 0 ] );
       hb_compOutStd( HB_COMP_PARAM, buffer );
    }
 }

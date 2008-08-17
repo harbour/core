@@ -58,7 +58,7 @@
 HB_EXTERN_BEGIN
 
 #if defined(HB_WINCE)
-#  undef  OS_HAS_DRIVE_LETTER
+#  undef  HB_OS_HAS_DRIVE_LETTER
 
 /* defined(__CEGCC__) || defined(__MINGW32CE__) */
 

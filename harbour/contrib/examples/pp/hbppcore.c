@@ -480,8 +480,8 @@ void hb_pp_Init( void )
 #endif
    }
 
-#ifdef HARBOUR_START_PROCEDURE
-   hb_pp_AddDefine_( "__HB_MAIN__", HARBOUR_START_PROCEDURE );
+#ifdef HB_START_PROCEDURE
+   hb_pp_AddDefine_( "__HB_MAIN__", HB_START_PROCEDURE );
 #endif
 }
 

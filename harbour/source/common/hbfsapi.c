@@ -99,7 +99,7 @@ HB_EXPORT void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchL
    }
 
    pPath = hb_strdup( szPath );
-   while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
+   while( ( pDelim = strchr( pPath, HB_OS_PATH_LIST_SEP_CHR ) ) != NULL )
    {
       *pDelim = '\0';
       *pSearchList = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
@@ -164,7 +164,7 @@ HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
    while( --iPos >= 0 )
    {
       if( pszFileName[ iPos ] == cDirSep ||
-          strchr( OS_PATH_DELIMITER_LIST, pszFileName[ iPos ] ) )
+          strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFileName[ iPos ] ) )
       {
          pFileName->szPath = pszPos;
          hb_strncpy( pszPos, pszFileName, iPos + 1 );
@@ -245,7 +245,7 @@ HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
    /* Strip preceding path separators from the filename */
    pszName = pFileName->szName;
    if( pszName && pszName[ 0 ] != '\0' && ( pszName[ 0 ] == cDirSep ||
-       strchr( OS_PATH_DELIMITER_LIST, pszName[ 0 ] ) != NULL ) )
+       strchr( HB_OS_PATH_DELIM_CHR_LIST, pszName[ 0 ] ) != NULL ) )
       pszName++;
 
    /* Add path if specified */
@@ -259,9 +259,9 @@ HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
       int iLen = strlen( pszFileName ) - 1;
 
       if( iLen < _POSIX_PATH_MAX - 2 && pszFileName[ iLen ] != cDirSep &&
-          strchr( OS_PATH_DELIMITER_LIST, pszFileName[ iLen ] ) == NULL )
+          strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFileName[ iLen ] ) == NULL )
       {
-         pszFileName[ iLen + 1 ] = OS_PATH_DELIMITER;
+         pszFileName[ iLen + 1 ] = HB_OS_PATH_DELIM_CHR;
          pszFileName[ iLen + 2 ] = '\0';
       }
    }

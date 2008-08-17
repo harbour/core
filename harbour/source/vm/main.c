@@ -55,9 +55,9 @@
 
 #include "hbsetup.h"
 
-#if   defined(HARBOUR_MAIN_STD)
+#if   defined(HB_MAIN_STD)
    #include "mainstd.c"
-#elif defined(HARBOUR_MAIN_WIN)
+#elif defined(HB_MAIN_WIN)
    #include "mainwin.c"
 #else
    #include "mainstd.c" /* Use the standard ANSI C entry point if not speficied */

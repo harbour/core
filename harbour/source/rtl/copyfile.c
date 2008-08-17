@@ -54,7 +54,7 @@
 #include "hbapierr.h"
 #include "hbapifs.h"
 
-#if defined(OS_UNIX_COMPATIBLE)
+#if defined(HB_OS_UNIX_COMPATIBLE)
    #include <sys/stat.h>
    #include <unistd.h>
 #endif
@@ -90,7 +90,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
 
       if( fhndDest != FS_ERROR )
       {
-#if defined(OS_UNIX_COMPATIBLE)
+#if defined(HB_OS_UNIX_COMPATIBLE)
          struct stat struFileInfo;
          int iSuccess = fstat( fhndSource, &struFileInfo );
 #endif
@@ -117,7 +117,7 @@ static BOOL hb_fsCopy( char * szSource, char * szDest )
 
          hb_xfree( buffer );
 
-#if defined(OS_UNIX_COMPATIBLE)
+#if defined(HB_OS_UNIX_COMPATIBLE)
          if( iSuccess == 0 )
             fchmod( fhndDest, struFileInfo.st_mode );
 #endif

@@ -207,7 +207,7 @@ static FHANDLE open_handle( char * file_name, BOOL bAppend, char * def_ext, HB_s
    HB_TRACE(HB_TR_DEBUG, ("open_handle(%s, %d, %s, %d)", file_name, (int) bAppend, def_ext, (int) set_specifier));
 
    /* Create full filename */
-#if defined(OS_UNIX_COMPATIBLE)
+#if defined(HB_OS_UNIX_COMPATIBLE)
    bPipe = set_specifier == HB_SET_PRINTFILE && file_name[ 0 ] == '|';
    if( bPipe )
    {
@@ -975,7 +975,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_DELIMCHARS = hb_strdup( "::" );
    hb_set.HB_SET_DELIMITERS = FALSE;
    hb_set.HB_SET_DEVICE = hb_strdup( "SCREEN" );
-#if defined(OS_UNIX_COMPATIBLE)
+#if defined(HB_OS_UNIX_COMPATIBLE)
    hb_set.HB_SET_EOF = FALSE;
 #else
    hb_set.HB_SET_EOF = TRUE;
@@ -1022,7 +1022,7 @@ void hb_setInitialize( void )
    hb_set.HB_SET_UNIQUE = FALSE;
    hb_set.HB_SET_FILECASE = HB_SET_CASE_MIXED;
    hb_set.HB_SET_DIRCASE = HB_SET_CASE_MIXED;
-   hb_set.HB_SET_DIRSEPARATOR = OS_PATH_DELIMITER;
+   hb_set.HB_SET_DIRSEPARATOR = HB_OS_PATH_DELIM_CHR;
    hb_set.HB_SET_VIDEOMODE = 0;
    hb_set.HB_SET_WRAP = FALSE;
    hb_set.HB_SET_DBFLOCKSCHEME = 0;

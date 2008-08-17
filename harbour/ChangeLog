@@ -8,6 +8,87 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-17 08:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/dirstruc.txt
+     * Updated to reflect current state. [Chen Kedem]
+
+   * contrib/examples/pp/hbppcore.c
+   * contrib/examples/pp/pp.c
+   * contrib/hbct/disk.c
+   * contrib/hbct/files.c
+   * contrib/hbnf/getenvrn.c
+   * contrib/hbw32/tprinter.c
+   * contrib/hbziparch/hbxdirec.c
+   * contrib/hbziparch/hbziparc.c
+   * contrib/rddads/ads1.c
+   * contrib/rddads/adsfunc.c
+   * doc/en/terminal.txt
+   * include/hb_io.h
+   * include/hbapifs.h
+   * include/hbapirdd.h
+   * include/hbdefs.h
+   * include/hbsetup.h
+   * include/hbwince.h
+   * source/common/hbfsapi.c
+   * source/compiler/gencobj.c
+   * source/compiler/hbcomp.c
+   * source/compiler/hbusage.c
+   * source/debug/dbgentry.c
+   * source/main/harbour.c
+   * source/pp/hbpp.c
+   * source/pp/ppcore.c
+   * source/rdd/dbcmd.c
+   * source/rdd/dbf1.c
+   * source/rdd/delim1.c
+   * source/rdd/sdf1.c
+   * source/rdd/usrrdd/usrrdd.c
+   * source/rdd/wacore.c
+   * source/rdd/wafunc.c
+   * source/rdd/workarea.c
+   * source/rtl/console.c
+   * source/rtl/copyfile.c
+   * source/rtl/defpath.c
+   * source/rtl/direct.c
+   * source/rtl/disksphb.c
+   * source/rtl/file.c
+   * source/rtl/filesys.c
+   * source/rtl/fssize.c
+   * source/rtl/fstemp.c
+   * source/rtl/gtos2/gtos2.c
+   * source/rtl/gtpca/gtpca.c
+   * source/rtl/gtstd/gtstd.c
+   * source/rtl/gttrm/gttrm.c
+   * source/rtl/hbffind.c
+   * source/rtl/hbinet.c
+   * source/rtl/memofile.c
+   * source/rtl/philes.c
+   * source/rtl/seconds.c
+   * source/rtl/set.c
+   * source/vm/hvm.c
+   * source/vm/main.c
+     * Changed some macros to be in the HB_ namespace, to be 
+       possibly shorter, more unified and clearer.
+       OS_UNIX_COMPATIBLE                -> HB_OS_UNIX_COMPATIBLE
+       OS_PATH_LIST_SEPARATOR            -> HB_OS_PATH_LIST_SEP_CHR
+       OS_PATH_DELIMITER                 -> HB_OS_PATH_DELIM_CHR
+       OS_PATH_DELIMITER_STRING          -> HB_OS_PATH_DELIM_STR
+       OS_PATH_DELIMITER_LIST            -> HB_OS_PATH_DELIM_LIST
+       OS_FILE_MASK                      -> HB_OS_ALLFILE_MASK
+       OS_DRIVE_DELIMITER                -> HB_OS_DRIVE_DELIM_CHR
+       OS_HAS_DRIVE_LETTER               -> HB_OS_HAS_DRIVE_LETTER
+       OS_OPT_DELIMITER_LIST             -> HB_OS_OPT_DELIM_LIST
+       OS_EOL_LEN                        -> HB_OS_EOL_LEN
+       HARBOUR_GCC_OS2                   -> HB_OS_OS2_GCC
+       HARBOUR_START_PROCEDURE           -> HB_START_PROCEDURE
+       HARBOUR_MAIN_STD                  -> HB_MAIN_STD
+       HARBOUR_MAIN_WIN                  -> HB_MAIN_WIN
+       HARBOUR_MAX_RDD_DRIVERNAME_LENGTH -> HB_RDD_MAX_DRIVERNAME_LEN
+       HARBOUR_MAX_RDD_ALIAS_LENGTH      -> HB_RDD_MAX_ALIAS_LEN
+       HARBOUR_MAX_RDD_AREA_NUM          -> HB_RDD_MAX_AREA_NUM
+     ; INCOMPATIBLE change, please update your sources, a simple 
+       case-sensitive search and replace on .c/.cpp/.h/.hpp files 
+       will be enough for most sources.
+
 2008-08-16 16:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_b32.mak
    * make_gcc.mak

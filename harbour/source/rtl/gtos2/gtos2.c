@@ -113,7 +113,7 @@
 /* convert 16:16 address to 0:32 */
 #define SELTOFLAT(ptr) (void *)(((((ULONG)(ptr))>>19)<<16)|(0xFFFF&((ULONG)(ptr))))
 
-#if defined(HARBOUR_GCC_OS2)
+#if defined(HB_OS_OS2_GCC)
    /* 25/03/2000 - maurilio.longo@libero.it
    OS/2 GCC hasn't got ToolKit headers available */
    #include <stdlib.h>

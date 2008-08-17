@@ -66,7 +66,7 @@ HB_FUNC( __DEFPATH )
    }
 
    HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: buffer is |%s|, size is %d, last char is |%c|", buffer, size, buffer[ size - 1]));
-   HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: OS_PATH_DELIMITER is |%c| and OS_PATH_LIST_SEPARATOR is |%c|", OS_PATH_DELIMITER, OS_PATH_LIST_SEPARATOR));
+   HB_TRACE(HB_TR_INFO, ("HB_DEFPATH: HB_OS_PATH_DELIM_CHR is |%c| and HB_OS_PATH_LIST_SEP_CHR is |%c|", HB_OS_PATH_DELIM_CHR, HB_OS_PATH_LIST_SEP_CHR));
 
    /* If the path is not empty and it doesn't end with a drive or path
       delimiter, then add the appropriate separator. Use ':' if the size
@@ -74,18 +74,18 @@ HB_FUNC( __DEFPATH )
       the path delimiter. This allows the use of a drive letter delimiter
       for DOS compatible operating systems while preventing it from being
       with a Unix compatible OS. */
-#ifdef OS_HAS_DRIVE_LETTER
-   if( size && buffer[ size - 1 ] != OS_PATH_DELIMITER &&
-               buffer[ size - 1 ] != OS_DRIVE_DELIMITER )
+#ifdef HB_OS_HAS_DRIVE_LETTER
+   if( size && buffer[ size - 1 ] != HB_OS_PATH_DELIM_CHR &&
+               buffer[ size - 1 ] != HB_OS_DRIVE_DELIM_CHR )
    {
       if( size == 1 )
-         buffer[ size++ ] = OS_DRIVE_DELIMITER;
+         buffer[ size++ ] = HB_OS_DRIVE_DELIM_CHR;
       else
-         buffer[ size++ ] = OS_PATH_DELIMITER;
+         buffer[ size++ ] = HB_OS_PATH_DELIM_CHR;
    }
 #else
-   if( size && buffer[ size - 1 ] != OS_PATH_DELIMITER )
-      buffer[ size++ ] = OS_PATH_DELIMITER;
+   if( size && buffer[ size - 1 ] != HB_OS_PATH_DELIM_CHR )
+      buffer[ size++ ] = HB_OS_PATH_DELIM_CHR;
 #endif
 
    hb_retclen( buffer, size );

@@ -60,14 +60,14 @@
 
 HB_EXTERN_BEGIN
 
-#define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH          32
+#define HB_RDD_MAX_DRIVERNAME_LEN          32
 
-#ifndef HARBOUR_MAX_RDD_ALIAS_LENGTH
-   #define HARBOUR_MAX_RDD_ALIAS_LENGTH            32
+#ifndef HB_RDD_MAX_ALIAS_LEN
+   #define HB_RDD_MAX_ALIAS_LEN            32
 #endif
 
 /* #define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        32 */
-#define HARBOUR_MAX_RDD_AREA_NUM                65535
+#define HB_RDD_MAX_AREA_NUM                65535
 
 /* DBCMD errors */
 
@@ -790,7 +790,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 /* RDD Node structure              */
 typedef struct _RDDNODE
 {
-   char szName[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ]; /* Name of RDD */
+   char szName[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ]; /* Name of RDD */
    USHORT   uiType;           /* Type of RDD */
    USHORT   rddID;            /* Type of RDD */
    RDDFUNCS pTable;           /* Table of functions */

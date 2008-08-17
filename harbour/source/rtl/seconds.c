@@ -62,7 +62,7 @@
 #elif !( defined( HB_WINCE ) && defined( _MSC_VER ) )
    #include <sys/timeb.h>
 #endif
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
    #include <sys/times.h>
    #include <unistd.h>
 #endif
@@ -246,14 +246,14 @@ HB_FUNC( HB_CLOCKS2SECS )
 HB_EXPORT double hb_secondsCPU( int n )
 {
    double d = 0.0;
-#if defined( HB_OS_WIN_32 ) && !defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_WIN_32 ) && !defined( HB_OS_UNIX_COMPATIBLE )
    FILETIME Create, Exit, Kernel, User;
 #endif
 
    if( ( n < 1 || n > 3 ) && ( n < 11 || n > 13 ) )
       n = 3;
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
    {
       struct tms tm;
 

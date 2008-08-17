@@ -357,11 +357,11 @@ char * hb_conNewLine( void )
 static int  s_iFileCase = HB_SET_CASE_MIXED;
 static int  s_iDirCase  = HB_SET_CASE_MIXED;
 static BOOL s_fFnTrim   = FALSE;
-static char s_cDirSep   = OS_PATH_DELIMITER;
+static char s_cDirSep   = HB_OS_PATH_DELIM_CHR;
 
 HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 {
-   if( s_fFnTrim || s_cDirSep != OS_PATH_DELIMITER ||
+   if( s_fFnTrim || s_cDirSep != HB_OS_PATH_DELIM_CHR ||
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
    {
       PHB_FNAME pFileName;
@@ -375,13 +375,13 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
          *pfFree = TRUE;
       }
 
-      if( s_cDirSep != OS_PATH_DELIMITER )
+      if( s_cDirSep != HB_OS_PATH_DELIM_CHR )
       {
          BYTE *p = szFileName;
          while( *p )
          {
             if( *p == s_cDirSep )
-               *p = OS_PATH_DELIMITER;
+               *p = HB_OS_PATH_DELIM_CHR;
             p++;
          }
       }
@@ -522,12 +522,12 @@ static void hb_compChkFileSwitches( int argc, char * argv[] )
             case 'p':
                if( !argv[i][3] )
                {
-                  s_cDirSep = OS_PATH_DELIMITER;
+                  s_cDirSep = HB_OS_PATH_DELIM_CHR;
                   n = 3;
                }
                else if( argv[i][3] == '-' )
                {
-                  s_cDirSep = OS_PATH_DELIMITER;
+                  s_cDirSep = HB_OS_PATH_DELIM_CHR;
                   n = 4;
                }
                else if( argv[i][3] == ':' && argv[i][4] )

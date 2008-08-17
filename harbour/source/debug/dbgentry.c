@@ -65,7 +65,7 @@
 /* dummy function declaration */
 static BOOL hb_clsSetScope( BOOL fScope ) { return fScope; }
 
-#if defined( HB_OS_UNIX_COMPATIBLE )
+#if defined( HB_HB_OS_UNIX_COMPATIBLE )
 #define FILENAME_EQUAL(s1, s2) ( !strcmp( (s1), (s2) ) )
 #else
 #define FILENAME_EQUAL(s1, s2) ( !hb_stricmp( (s1), (s2) ) )

@@ -71,7 +71,7 @@
 #include <ctype.h>
 #include <string.h>
 
-#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    #include <unistd.h>  /* read() function requires it */
    #include <termios.h>
    #include <sys/ioctl.h>
@@ -120,7 +120,7 @@ static int     s_iOutBufSize = 0;
 static int     s_iOutBufIndex = 0;
 static BYTE *  s_sOutBuf;
 
-#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
 
 static volatile BOOL s_fRestTTY = FALSE;
 static struct termios s_saved_TIO, s_curr_TIO;
@@ -233,7 +233,7 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
       hb_gt_pca_termOut( ( BYTE * ) "\x1B[6n", 4 );
       hb_gt_pca_termFlush();
 
-#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
       {
          char rdbuf[ 64 ];
          int i, n, y, x;
@@ -462,7 +462,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    HB_GTSUPER_INIT( pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr );
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
-#if ( defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ ) ) && \
+#if ( defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ ) ) && \
     defined( SA_NOCLDSTOP )
    s_fRestTTY = FALSE;
    if( s_bStdinConsole )
@@ -544,7 +544,7 @@ static void hb_gt_pca_Exit( PHB_GT pGT )
 
    HB_GTSUPER_EXIT( pGT );
 
-#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    if( s_fRestTTY )
       tcsetattr( s_hFilenoStdin, TCSANOW, &s_saved_TIO );
 #endif
@@ -570,7 +570,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
    HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iEventMask );
 
-#if defined( HARBOUR_GCC_OS2 )
+#if defined( HB_OS_OS2_GCC )
 
    /* Read from the keyboard with no echo, no wait, and no SIGSEV on Ctrl-C */
    ch = _read_kbd( 0, 0, 0 );
@@ -609,7 +609,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
       if( _read( s_hFilenoStdin, &bChar, 1 ) == 1 )
          ch = s_keyTransTbl[ bChar ];
    }
-#elif defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#elif defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    {
       BYTE bChar;
       if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
@@ -687,7 +687,7 @@ static BOOL hb_gt_pca_Suspend( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Suspend(%p)", pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
-#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    if( s_fRestTTY )
    {
       tcsetattr( s_hFilenoStdin, TCSANOW, &s_saved_TIO );
@@ -703,7 +703,7 @@ static BOOL hb_gt_pca_Resume( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Resume(%p)", pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
-#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
    if( s_fRestTTY )
    {
       tcsetattr( s_hFilenoStdin, TCSANOW, &s_curr_TIO );

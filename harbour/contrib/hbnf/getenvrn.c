@@ -98,7 +98,7 @@
 #define HB_OS_WIN_32_USED
 #include "hbapi.h"
 
-#if defined(OS_UNIX_COMPATIBLE)
+#if defined(HB_OS_UNIX_COMPATIBLE)
 #   include <unistd.h>
 #   if defined( HB_OS_DARWIN )
 #      include <crt_externs.h>
@@ -127,7 +127,7 @@ HB_FUNC( FT_GETE )
    /* INTERNALS WARNING: All references to 'environ', strlen(), ;
       strcpy(), and strcat() are undocumented Clipper 5.0 internals.
     */
-#if defined(HB_OS_DOS) || defined(OS_UNIX_COMPATIBLE)
+#if defined(HB_OS_DOS) || defined(HB_OS_UNIX_COMPATIBLE)
    {
 
       char *buffer = NULL;

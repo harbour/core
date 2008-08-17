@@ -65,7 +65,7 @@
 #include "hbapierr.h"
 
 /* Compile in Unix mode under Cygwin */
-#ifdef OS_UNIX_COMPATIBLE
+#ifdef HB_OS_UNIX_COMPATIBLE
   #undef HB_OS_WIN_32
 #endif
 
@@ -180,7 +180,7 @@
    #include <errno.h>
 #endif
 
-#if defined( HB_OS_UNIX ) || defined( OS_UNIX_COMPATIBLE ) || defined( HB_OS_BSD ) || defined(HB_OS_OS2)
+#if defined( HB_OS_UNIX ) || defined( HB_OS_UNIX_COMPATIBLE ) || defined( HB_OS_BSD ) || defined(HB_OS_OS2)
    #include <sys/time.h>
 #endif
 

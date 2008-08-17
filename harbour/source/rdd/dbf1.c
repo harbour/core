@@ -3575,7 +3575,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    LPDBFFIELD pField;
    DBFIELDINFO dbFieldInfo;
    BYTE szFileName[ _POSIX_PATH_MAX + 1 ];
-   char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
+   char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
 
    HB_TRACE(HB_TR_DEBUG, ("hb_dbfOpen(%p, %p)", pArea, pOpenInfo));
 
@@ -3669,7 +3669,7 @@ static ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Create default alias if necessary */
    if( !pOpenInfo->atomAlias && pFileName->szName )
    {
-      hb_strncpyUpperTrim( szAlias, pFileName->szName, HARBOUR_MAX_RDD_ALIAS_LENGTH );
+      hb_strncpyUpperTrim( szAlias, pFileName->szName, HB_RDD_MAX_ALIAS_LEN );
       pOpenInfo->atomAlias = ( BYTE * ) szAlias;
    }
    hb_xfree( pFileName );

@@ -431,19 +431,19 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
 
       if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
          s_pSymStart = pDynSym->pSymbol;
-#ifdef HARBOUR_START_PROCEDURE
+#ifdef HB_START_PROCEDURE
       else
       {
          /* if first char is '@' then start procedure were set by
             programmer explicitly and should have the highest priority
             in other case it's the name of first public function in
             first linked moudule which is used if there is no
-            HARBOUR_START_PROCEDURE in code */
+            HB_START_PROCEDURE in code */
          if( s_pszLinkedMain && *s_pszLinkedMain == '@' )
             pDynSym = hb_dynsymFind( s_pszLinkedMain + 1 );
          else
          {
-            pDynSym = hb_dynsymFind( HARBOUR_START_PROCEDURE );
+            pDynSym = hb_dynsymFind( HB_START_PROCEDURE );
 
             if( ! ( pDynSym && pDynSym->pSymbol->value.pFunPtr ) && s_pszLinkedMain )
                pDynSym = hb_dynsymFind( s_pszLinkedMain );
@@ -452,7 +452,7 @@ HB_EXPORT void hb_vmInit( BOOL bStartMainProc )
          if( pDynSym && pDynSym->pSymbol->value.pFunPtr )
             s_pSymStart = pDynSym->pSymbol;
          else
-            hb_errInternal( HB_EI_VMBADSTARTUP, NULL, HARBOUR_START_PROCEDURE, NULL );
+            hb_errInternal( HB_EI_VMBADSTARTUP, NULL, HB_START_PROCEDURE, NULL );
       }
 #else
       else if( s_pszLinkedMain )

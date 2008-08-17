@@ -145,22 +145,22 @@ HB_FUNC( DIRECTORY )
           * last character is directory or drive separator
           */
          int iLen = strlen( szDirSpec ) - 1;
-#ifdef OS_HAS_DRIVE_LETTER
-         if( szDirSpec[ iLen ] == OS_PATH_DELIMITER ||
-             szDirSpec[ iLen ] == OS_DRIVE_DELIMITER )
+#ifdef HB_OS_HAS_DRIVE_LETTER
+         if( szDirSpec[ iLen ] == HB_OS_PATH_DELIM_CHR ||
+             szDirSpec[ iLen ] == HB_OS_DRIVE_DELIM_CHR )
 #else
-         if( szDirSpec[ iLen ] == OS_PATH_DELIMITER )
+         if( szDirSpec[ iLen ] == HB_OS_PATH_DELIM_CHR )
 #endif
          {
             if( fFree )
             {
-               char * szTemp = hb_xstrcpy( NULL, szDirSpec, OS_FILE_MASK, NULL );
+               char * szTemp = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
                hb_xfree( szDirSpec );
                szDirSpec = szTemp;
             }
             else
             {
-               szDirSpec = hb_xstrcpy( NULL, szDirSpec, OS_FILE_MASK, NULL );
+               szDirSpec = hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
                fFree = TRUE;
             }
          }
@@ -172,11 +172,11 @@ HB_FUNC( DIRECTORY )
             hb_xfree( szDirSpec );
             fFree = FALSE;
          }
-         szDirSpec = ( char * ) OS_FILE_MASK;
+         szDirSpec = ( char * ) HB_OS_ALLFILE_MASK;
       }
    }
    else
-      szDirSpec = ( char * ) OS_FILE_MASK;
+      szDirSpec = ( char * ) HB_OS_ALLFILE_MASK;
 
    /* Get the file list */
 

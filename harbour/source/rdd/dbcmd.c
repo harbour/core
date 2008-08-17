@@ -179,7 +179,7 @@ HB_FUNC( ALIAS )
    pArea = ( AREAP ) hb_rddGetWorkAreaPointer( iArea );
    if( pArea )
    {
-      char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
+      char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
 
       if( SELF_ALIAS( pArea, ( BYTE * ) szAlias ) == SUCCESS )
       {
@@ -252,7 +252,7 @@ HB_FUNC( DBF )
 
    if( pArea )
    {
-      char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
+      char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
 
       if( SELF_ALIAS( pArea, ( BYTE * ) szAlias ) == SUCCESS )
       {
@@ -705,7 +705,7 @@ HB_FUNC( DBSELECTAREA )
    if( szAlias )
    {
       hb_rddSelectWorkAreaAlias( szAlias );
-      if( hb_rddGetCurrentWorkAreaNumber() == HARBOUR_MAX_RDD_AREA_NUM )
+      if( hb_rddGetCurrentWorkAreaNumber() == HB_RDD_MAX_AREA_NUM )
          hb_rddSelectFirstAvailable();
    }
    else
@@ -713,10 +713,10 @@ HB_FUNC( DBSELECTAREA )
       LONG lNewArea = hb_parnl( 1 );
 
       /*
-       * NOTE: lNewArea >= HARBOUR_MAX_RDD_AREA_NUM used intentionally
+       * NOTE: lNewArea >= HB_RDD_MAX_AREA_NUM used intentionally
        * In Clipper area 65535 is reserved for "M" alias [druzus]
        */
-      if( lNewArea < 1 || lNewArea >= HARBOUR_MAX_RDD_AREA_NUM )
+      if( lNewArea < 1 || lNewArea >= HB_RDD_MAX_AREA_NUM )
       {
          hb_rddSelectFirstAvailable();
       }
@@ -1491,7 +1491,7 @@ HB_FUNC( RDDNAME )
 
    if( pArea )
    {
-      char pBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
+      char pBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
       pBuffer[ 0 ] = '\0';
       SELF_SYSNAME( pArea, ( BYTE * ) pBuffer );
       hb_retc( pBuffer );
@@ -1503,13 +1503,13 @@ HB_FUNC( RDDNAME )
 HB_FUNC( RDDREGISTER )
 {
    USHORT uiLen;
-   char szDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
+   char szDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
 
    uiLen = ( USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
-      if( uiLen > HARBOUR_MAX_RDD_DRIVERNAME_LENGTH )
-         uiLen = HARBOUR_MAX_RDD_DRIVERNAME_LENGTH;
+      if( uiLen > HB_RDD_MAX_DRIVERNAME_LEN )
+         uiLen = HB_RDD_MAX_DRIVERNAME_LEN;
 
       hb_strncpyUpper( szDriver, hb_parc( 1 ), uiLen );
       /*
@@ -1991,7 +1991,7 @@ HB_FUNC( __DBCOPY )
 
 HB_FUNC( HB_RDDGETTEMPALIAS )
 {
-   char szAliasTmp[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
+   char szAliasTmp[ HB_RDD_MAX_ALIAS_LEN + 1 ];
 
    if( hb_rddGetTempAlias( szAliasTmp ) == SUCCESS )
       hb_retc( szAliasTmp );

@@ -249,7 +249,7 @@ HB_EXPORT USHORT hb_rddFieldExpIndex( AREAP pArea, const char * szField )
 
    if( strchr( szField, '>' ) != NULL )
    {
-      char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
+      char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
       int i, j, l;
 
       n = 0;
@@ -334,7 +334,7 @@ HB_EXPORT ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
    }
    else if( fOneLetter && c == 'M' )
    {
-      *iArea = HARBOUR_MAX_RDD_AREA_NUM;
+      *iArea = HB_RDD_MAX_AREA_NUM;
    }
    else
    {
@@ -385,7 +385,7 @@ HB_EXPORT ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
       }
       else if( szName[ 0 ] == 'M' || szName[ 0 ] == 'm' )
       {
-         hb_rddSelectWorkAreaNumber( HARBOUR_MAX_RDD_AREA_NUM );
+         hb_rddSelectWorkAreaNumber( HB_RDD_MAX_AREA_NUM );
          return SUCCESS;
       }
    }
@@ -449,7 +449,7 @@ HB_EXPORT ERRCODE hb_rddSelectWorkAreaAlias( const char * szAlias )
 
    if( errCode == SUCCESS )
    {
-      if( iArea < 1 || iArea > HARBOUR_MAX_RDD_AREA_NUM )
+      if( iArea < 1 || iArea > HB_RDD_MAX_AREA_NUM )
          errCode = hb_rddSelectFirstAvailable();
       else
          errCode = hb_rddSelectWorkAreaNumber( iArea );
@@ -588,7 +588,7 @@ ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
                          const char * szCpId, ULONG ulConnection,
                          PHB_ITEM pStruct, PHB_ITEM pDelim )
 {
-   char szDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
+   char szDriverBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
    DBOPENINFO pInfo;
    ERRCODE errCode;
    AREAP pArea;
@@ -619,7 +619,7 @@ ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
     */
    if( szDriver && szDriver[ 0 ] )
    {
-      hb_strncpyUpper( szDriverBuffer, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+      hb_strncpyUpper( szDriverBuffer, szDriver, HB_RDD_MAX_DRIVERNAME_LEN );
       szDriver = szDriverBuffer;
    }
    else
@@ -676,7 +676,7 @@ ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
                            const char * szCpId, ULONG ulConnection,
                            PHB_ITEM pStruct, PHB_ITEM pDelim )
 {
-   char szDriverBuffer[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
+   char szDriverBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
    DBOPENINFO pInfo;
    ERRCODE errCode;
    USHORT uiPrevArea;
@@ -690,7 +690,7 @@ ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
 
    if( szDriver && szDriver[ 0 ] )
    {
-      hb_strncpyUpper( szDriverBuffer, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+      hb_strncpyUpper( szDriverBuffer, szDriver, HB_RDD_MAX_DRIVERNAME_LEN );
       szDriver = szDriverBuffer;
    }
    else

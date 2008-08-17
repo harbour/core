@@ -113,7 +113,7 @@
 #include "hb_io.h"
 #include "hbset.h"
 
-#if defined(OS_UNIX_COMPATIBLE)
+#if defined(HB_OS_UNIX_COMPATIBLE)
    #include <unistd.h>
    #include <signal.h>
    #include <time.h>
@@ -206,7 +206,7 @@
    #include <sys/file.h>
 #endif
 
-#if !defined( HB_USE_LARGEFILE64 ) && defined( OS_UNIX_COMPATIBLE )
+#if !defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX_COMPATIBLE )
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
@@ -219,7 +219,7 @@
    #endif
 #endif
 
-#if defined(OS_HAS_DRIVE_LETTER)
+#if defined(HB_OS_HAS_DRIVE_LETTER)
 /* 27/08/2004 - <maurilio.longo@libero.it>
                 HB_FS_GETDRIVE() should return a number in the range 0..25 ('A'..'Z')
                 HB_FS_SETDRIVE() should accept a number inside same range.
@@ -257,7 +257,7 @@
    #define HB_FS_SETDRIVE(n)  _chdrive( ( n ) + 1 )
 
 #endif
-#endif /* OS_HAS_DRIVE_LETTER */
+#endif /* HB_OS_HAS_DRIVE_LETTER */
 
 #ifndef O_BINARY
    #define O_BINARY     0       /* O_BINARY not defined on Linux */
@@ -539,7 +539,7 @@ HB_EXPORT FHANDLE hb_fsPOpen( BYTE * pFilename, BYTE * pMode )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsPOpen(%p, %s)", pFilename, pMode));
 
-#if defined(OS_UNIX_COMPATIBLE)
+#if defined(HB_OS_UNIX_COMPATIBLE)
    {
       FHANDLE hPipeHandle[2], hNullHandle;
       pid_t pid;
@@ -1135,7 +1135,7 @@ HB_EXPORT BOOL hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillise
       if( fFree )
          hb_xfree( pszFileName );
    }
-#elif defined( OS_UNIX_COMPATIBLE ) || defined( HB_OS_DOS )
+#elif defined( HB_OS_UNIX_COMPATIBLE ) || defined( HB_OS_DOS )
    {
       BOOL fFree;
 
@@ -1261,7 +1261,7 @@ HB_EXPORT BOOL hb_fsSetAttr( BYTE * pszFileName, ULONG ulAttr )
 #  endif
    hb_fsSetIOError( fResult, 0 );
 
-#elif defined( OS_UNIX_COMPATIBLE )
+#elif defined( HB_OS_UNIX_COMPATIBLE )
    {
       int iAttr = HB_FA_POSIX_ATTR( ulAttr );
       if( iAttr == 0 )
@@ -2281,7 +2281,7 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
    pbyBuffer[ 0 ] = '\0';
 
    /*
-    * do not cover this code by OS_HAS_DRIVE_LETTER macro
+    * do not cover this code by HB_OS_HAS_DRIVE_LETTER macro
     * It will allow us to add drive emulation in hb_fsCurDrv()/hb_fsChDrv()
     * and hb_fsNameConv()
     */
@@ -2339,21 +2339,21 @@ HB_EXPORT USHORT hb_fsCurDirBuff( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen 
 
       ulLen = strlen( ( char * ) pbyBuffer );
 
-#if defined(OS_HAS_DRIVE_LETTER)
-      if( pbyStart[ 1 ] == OS_DRIVE_DELIMITER )
+#if defined(HB_OS_HAS_DRIVE_LETTER)
+      if( pbyStart[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
       {
          pbyStart += 2;
          ulLen -= 2;
       }
 #endif
-      if( strchr( OS_PATH_DELIMITER_LIST, pbyStart[ 0 ] ) )
+      if( strchr( HB_OS_PATH_DELIM_CHR_LIST, pbyStart[ 0 ] ) )
       {
          pbyStart++;
          ulLen--;
       }
 
       /* Strip the trailing (back)slash if there's one */
-      if( ulLen && strchr( OS_PATH_DELIMITER_LIST, pbyStart[ ulLen - 1 ] ) )
+      if( ulLen && strchr( HB_OS_PATH_DELIM_CHR_LIST, pbyStart[ ulLen - 1 ] ) )
          ulLen--;
 
       if( ulLen && pbyBuffer != pbyStart )
@@ -2373,7 +2373,7 @@ HB_EXPORT USHORT hb_fsChDrv( BYTE nDrive )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsChDrv(%d)", (int) nDrive));
 
-#if defined(OS_HAS_DRIVE_LETTER)
+#if defined(HB_OS_HAS_DRIVE_LETTER)
    {
       /* 'unsigned int' _have to_ be used in Watcom */
       UINT uiSave, uiNewDrive;
@@ -2432,7 +2432,7 @@ HB_EXPORT USHORT hb_fsIsDrv( BYTE nDrive )
       uiResult = ( type == DRIVE_UNKNOWN || type == DRIVE_NO_ROOT_DIR ) ? F_ERROR : 0;
       hb_fsSetError( 0 );
    }
-#elif defined(OS_HAS_DRIVE_LETTER)
+#elif defined(HB_OS_HAS_DRIVE_LETTER)
    {
       /* 'unsigned int' _have to_ be used in Watcom
        */
@@ -2503,7 +2503,7 @@ HB_EXPORT BYTE hb_fsCurDrv( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDrv()"));
 
-#if defined(OS_HAS_DRIVE_LETTER)
+#if defined(HB_OS_HAS_DRIVE_LETTER)
 
    HB_FS_GETDRIVE( uiResult );
 
@@ -2697,7 +2697,7 @@ HB_EXPORT BOOL hb_fsEof( FHANDLE hFileHandle )
 {
 #if defined(__DJGPP__) || defined(__CYGWIN__) || \
     defined(HB_WIN32_IO) || defined(HB_WINCE) || \
-    defined(OS_UNIX_COMPATIBLE)
+    defined(HB_OS_UNIX_COMPATIBLE)
    HB_FOFFSET curPos;
    HB_FOFFSET endPos;
    HB_FOFFSET newPos;
@@ -2738,7 +2738,7 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 */
 
    if( hb_set.HB_SET_TRIMFILENAME ||
-       hb_set.HB_SET_DIRSEPARATOR != OS_PATH_DELIMITER ||
+       hb_set.HB_SET_DIRSEPARATOR != HB_OS_PATH_DELIM_CHR ||
        hb_set.HB_SET_FILECASE != HB_SET_CASE_MIXED ||
        hb_set.HB_SET_DIRCASE != HB_SET_CASE_MIXED )
    {
@@ -2753,13 +2753,13 @@ HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
          *pfFree = TRUE;
       }
 
-      if( hb_set.HB_SET_DIRSEPARATOR != OS_PATH_DELIMITER )
+      if( hb_set.HB_SET_DIRSEPARATOR != HB_OS_PATH_DELIM_CHR )
       {
          BYTE *p = szFileName;
          while( *p )
          {
             if( *p == hb_set.HB_SET_DIRSEPARATOR )
-               *p = OS_PATH_DELIMITER;
+               *p = HB_OS_PATH_DELIM_CHR;
             p++;
          }
       }

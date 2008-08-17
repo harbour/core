@@ -2865,7 +2865,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* See adsGettValue() for why we don't use pArea->uiMaxFieldNameLength here */
    UNSIGNED16 pusBufLen, pusType, pusDecimals;
    DBFIELDINFO dbFieldInfo;
-   char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ], * szFile;
+   char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ], * szFile;
    BOOL fDictionary = FALSE;
 
    HB_TRACE(HB_TR_DEBUG, ("adsOpen(%p)", pArea));
@@ -2962,7 +2962,7 @@ static ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    /* Set default alias if necessary */
    if( !pOpenInfo->atomAlias )
    {
-      UNSIGNED16 uiAliasLen = HARBOUR_MAX_RDD_ALIAS_LENGTH;
+      UNSIGNED16 uiAliasLen = HB_RDD_MAX_ALIAS_LEN;
       if( AdsGetTableAlias( hTable, ( UNSIGNED8 * ) szAlias, &uiAliasLen ) == AE_SUCCESS )
          pOpenInfo->atomAlias = ( BYTE * ) szAlias;
       else
@@ -3167,18 +3167,18 @@ static ERRCODE adsSysName( ADSAREAP pArea, BYTE * pBuffer )
    switch( u16TableType )
    {
       case ADS_NTX:
-         hb_strncpy( ( char * ) pBuffer, "ADSNTX", HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+         hb_strncpy( ( char * ) pBuffer, "ADSNTX", HB_RDD_MAX_DRIVERNAME_LEN );
          break;
       case ADS_CDX:
-         hb_strncpy( ( char * ) pBuffer, "ADSCDX", HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+         hb_strncpy( ( char * ) pBuffer, "ADSCDX", HB_RDD_MAX_DRIVERNAME_LEN );
          break;
 #if ADS_LIB_VERSION >= 900
       case ADS_VFP:
-         hb_strncpy( ( char * ) pBuffer, "ADSVFP", HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+         hb_strncpy( ( char * ) pBuffer, "ADSVFP", HB_RDD_MAX_DRIVERNAME_LEN );
          break;
 #endif
       case ADS_ADT:
-         hb_strncpy( ( char * ) pBuffer, "ADSADT", HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+         hb_strncpy( ( char * ) pBuffer, "ADSADT", HB_RDD_MAX_DRIVERNAME_LEN );
          break;
    }
 

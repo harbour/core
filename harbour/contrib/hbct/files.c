@@ -83,7 +83,7 @@
 #  include <sys/farptr.h>
 #  include <sys/param.h>
 #endif
-#if defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#if defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
 #  include <sys/types.h>
 #  include <utime.h>
 #  include <unistd.h>
@@ -310,7 +310,7 @@ HB_FUNC( SETFDATI )
          hb_retl( ulrc == NO_ERROR );
          return;
       }
-#elif defined( OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
+#elif defined( HB_OS_UNIX_COMPATIBLE ) || defined( __DJGPP__ )
 
       if( !pDate && !pTime )
       {

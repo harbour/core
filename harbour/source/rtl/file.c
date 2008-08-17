@@ -87,7 +87,7 @@ HB_EXPORT BOOL hb_fsIsDirectory( BYTE * pFilename )
    pFilename = hb_fsNameConv( pFilename, &fFree );
 
    iLen = strlen( ( char * ) pFilename );
-   while( iLen && strchr( OS_PATH_DELIMITER_LIST, pFilename[ iLen - 1 ] ) )
+   while( iLen && strchr( HB_OS_PATH_DELIM_CHR_LIST, pFilename[ iLen - 1 ] ) )
       --iLen;
 
    if( pFilename[ iLen ] )

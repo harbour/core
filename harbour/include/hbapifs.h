@@ -206,7 +206,7 @@ extern HB_EXPORT BOOL       hb_fsDirExists  ( const char * pszDirName ); /* chec
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )
 
-#if defined( OS_UNIX_COMPATIBLE ) && !defined( HB_USE_SHARELOCKS_OFF )
+#if defined( HB_OS_UNIX_COMPATIBLE ) && !defined( HB_USE_SHARELOCKS_OFF )
 #  define HB_USE_SHARELOCKS
 #  define HB_SHARELOCK_POS          0x7fffffffUL
 #  define HB_SHARELOCK_SIZE         0x1UL

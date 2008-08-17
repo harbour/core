@@ -79,7 +79,7 @@
 #include <string.h>
 #include <fcntl.h>
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
 # include <errno.h>
 # include <time.h>
 # include <unistd.h>
@@ -150,7 +150,7 @@ static HB_GT_FUNCS   SuperTable;
 #define MOUSE_GPM       1
 #define MOUSE_XTERM     2
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
 
 #define TIMEVAL_GET(tv)             gettimeofday(&(tv), NULL)
 #define TIMEVAL_LESS(tv1, tv2)      (((tv1).tv_sec == (tv2).tv_sec ) ?  \
@@ -263,7 +263,7 @@ typedef struct {
    int mbup_row, mbup_col;
    int mbdn_row, mbdn_col;
    /* to analize DBLCLK on xterm */
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
    struct timeval BL_time;
    struct timeval BR_time;
    struct timeval BM_time;
@@ -339,7 +339,7 @@ typedef struct _HB_GTTRM
    int      terminal_type;
    int      terminal_ext;
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
    struct termios saved_TIO, curr_TIO;
    BOOL     fRestTTY;
 #endif
@@ -388,7 +388,7 @@ typedef struct _HB_GTTRM
 } HB_TERM_STATE, HB_GTTRM, * PHB_GTTRM;
 
 /* static variables use by signal handler */
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
    static volatile BOOL s_WinSizeChangeFlag = FALSE;
    static volatile BOOL s_fRestTTY = FALSE;
 #endif
@@ -596,7 +596,7 @@ static int getClipKey( int nKey )
 
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
-#if defined( OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
+#if defined( HB_OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
 
 static void sig_handler( int iSigNo )
 {
@@ -655,7 +655,7 @@ static int hb_gt_trm_getSize( PHB_GTTRM pTerm, int * piRows, int * piCols )
 {
    *piRows = *piCols = 0;
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
    if( pTerm->fOutTTY )
    {
       struct winsize win;
@@ -771,7 +771,7 @@ static int add_efds( PHB_GTTRM pTerm, int fd, int mode,
    if( eventFunc == NULL && mode != O_RDONLY )
       return -1;
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
    {
       int fl;
       if( ( fl = fcntl( fd, F_GETFL, 0 ) ) == -1 )
@@ -948,7 +948,7 @@ static void chk_mevtdblck( PHB_GTTRM pTerm )
 
    if( newbuttons != 0 )
    {
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
       struct timeval tv;
 #else
       double tv;
@@ -1220,7 +1220,7 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
                   {
                      unsigned char buf[STDIN_BUFLEN];
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
                      n = read( pTerm->event_fds[i]->fd, buf,
                                STDIN_BUFLEN - pTerm->stdin_inbuf );
 #else
@@ -1324,7 +1324,7 @@ static int wait_key( PHB_GTTRM pTerm, int milisec )
    int nKey, esc, n, i, ch, counter;
    keyTab *ptr;
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
    if( s_WinSizeChangeFlag )
    {
       s_WinSizeChangeFlag = FALSE;
@@ -1572,7 +1572,7 @@ static BOOL hb_gt_trm_XtermSetMode( PHB_GTTRM pTerm, int * piRows, int * piCols 
    hb_gt_trm_termOut( pTerm, ( BYTE * ) escseq, strlen( escseq ) );
    hb_gt_trm_termFlush( pTerm );
 
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
    /* dirty hack - wait for SIGWINCH */
    if( *piRows != iHeight || *piCols != iWidth )
       sleep( 3 );
@@ -1738,7 +1738,7 @@ static BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol,
       n = 0;
       pTerm->fPosAnswer = FALSE;
 
-#ifdef OS_UNIX_COMPATIBLE
+#ifdef HB_OS_UNIX_COMPATIBLE
       {
          struct timeval tv;
          fd_set rdfds;
@@ -2860,7 +2860,7 @@ static void hb_gt_trm_Init( PHB_GT pGT, FHANDLE hFilenoStdin, FHANDLE hFilenoStd
    hb_gt_trm_SetTerm( pTerm );
 
 /* SA_NOCLDSTOP in #if is a hack to detect POSIX compatible environment */
-#if defined( OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
+#if defined( HB_OS_UNIX_COMPATIBLE ) && defined( SA_NOCLDSTOP )
 
    if( pTerm->fStdinTTY )
    {
@@ -2955,7 +2955,7 @@ static void hb_gt_trm_Exit( PHB_GT pGT )
 
    if( pTerm )
    {
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
       if( pTerm->fRestTTY )
          tcsetattr( pTerm->hFilenoStdin, TCSANOW, &pTerm->saved_TIO );
 #endif
@@ -3121,7 +3121,7 @@ static BOOL hb_gt_trm_Suspend( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Suspend(%p)", pGT ) );
 
    pTerm = HB_GTTRM_GET( pGT );
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
    if( pTerm->fRestTTY )
       tcsetattr( pTerm->hFilenoStdin, TCSANOW, &pTerm->saved_TIO );
 #endif
@@ -3138,7 +3138,7 @@ static BOOL hb_gt_trm_Resume( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Resume(%p)", pGT ) );
 
    pTerm = HB_GTTRM_GET( pGT );
-#if defined( OS_UNIX_COMPATIBLE )
+#if defined( HB_OS_UNIX_COMPATIBLE )
    if( pTerm->fRestTTY )
       tcsetattr( pTerm->hFilenoStdin, TCSANOW, &pTerm->curr_TIO );
 #endif

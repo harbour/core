@@ -165,8 +165,8 @@
  *
  * By default the standard C main() function will be used.
  */
-/* #define HARBOUR_MAIN_STD */
-/* #define HARBOUR_MAIN_WIN */
+/* #define HB_MAIN_STD */
+/* #define HB_MAIN_WIN */
 
 /* ***********************************************************************
  * You can set here the maximum symbol name length handled by Harbour
@@ -200,35 +200,35 @@
       ! ( defined(__DJGPP__) || defined(__EMX__) || defined(__RSXNT__) || \
           defined(_Windows) || defined(_WIN32) || defined(_WINCE) ) ) || \
     ( defined(__WATCOMC__) && defined(__LINUX__) )
-   #define OS_UNIX_COMPATIBLE
-   #define OS_PATH_LIST_SEPARATOR    ':'
-   #define OS_PATH_DELIMITER         '/'
-   #define OS_PATH_DELIMITER_STRING  "/"
-   #define OS_PATH_DELIMITER_LIST    "/"
-   #define OS_FILE_MASK              "*"
-   #undef  OS_DRIVE_DELIMITER
-   #undef  OS_HAS_DRIVE_LETTER
-   #define OS_OPT_DELIMITER_LIST     "-"
-   #define OS_EOL_LEN                1
+   #define HB_OS_UNIX_COMPATIBLE
+   #define HB_OS_PATH_LIST_SEP_CHR      ':'
+   #define HB_OS_PATH_DELIM_CHR         '/'
+   #define HB_OS_PATH_DELIM_CHR_STRING  "/"
+   #define HB_OS_PATH_DELIM_CHR_LIST    "/"
+   #define HB_OS_ALLFILE_MASK           "*"
+   #undef  HB_OS_DRIVE_DELIM_CHR
+   #undef  HB_OS_HAS_DRIVE_LETTER
+   #define HB_OS_OPT_DELIM_LIST         "-"
+   #define HB_OS_EOL_LEN                1
 #else
    /* we are assuming here the DOS compatible OS */
    #define OS_DOS_COMPATIBLE
-   #define OS_PATH_LIST_SEPARATOR    ';'
-   #define OS_PATH_DELIMITER         '\\'
-   #define OS_PATH_DELIMITER_STRING  "\\"
-   #define OS_PATH_DELIMITER_LIST    "\\/:"
-   #define OS_FILE_MASK              "*.*"
-   #define OS_DRIVE_DELIMITER        ':'
-   #define OS_HAS_DRIVE_LETTER
-   #define OS_OPT_DELIMITER_LIST     "/-"
-   #define OS_EOL_LEN                2  /* # of bytes in End of Line marker */
+   #define HB_OS_PATH_LIST_SEP_CHR      ';'
+   #define HB_OS_PATH_DELIM_CHR         '\\'
+   #define HB_OS_PATH_DELIM_CHR_STRING  "\\"
+   #define HB_OS_PATH_DELIM_CHR_LIST    "\\/:"
+   #define HB_OS_ALLFILE_MASK           "*.*"
+   #define HB_OS_DRIVE_DELIM_CHR        ':'
+   #define HB_OS_HAS_DRIVE_LETTER
+   #define HB_OS_OPT_DELIM_LIST         "/-"
+   #define HB_OS_EOL_LEN                2  /* # of bytes in End of Line marker */
 #endif
 
 #ifndef _POSIX_PATH_MAX
    #define _POSIX_PATH_MAX    255
 #endif
 
-#define HB_ISOPTSEP( c ) ( strchr( OS_OPT_DELIMITER_LIST, ( c ) ) != NULL )
+#define HB_ISOPTSEP( c ) ( strchr( HB_OS_OPT_DELIM_LIST, ( c ) ) != NULL )
 
 /* ***********************************************************************
  * Platform detection
@@ -265,11 +265,11 @@
  *  Detect GCC/OS2
  */
 #if defined(__EMX__) && ! defined(__RSXNT__)
-   #define HARBOUR_GCC_OS2
+   #define HB_OS_OS2_GCC
 #endif
 
 #ifndef HB_OS_OS2
-   #if defined(OS2) || defined(__OS2__) || defined(OS_2) || defined(HARBOUR_GCC_OS2)
+   #if defined(OS2) || defined(__OS2__) || defined(OS_2) || defined(HB_OS_OS2_GCC)
       #define HB_OS_OS2
       #if defined(__EMX__)
          #define HB_OS_OS2_EMX
@@ -328,7 +328,7 @@
 #endif
 
 #ifndef HB_OS_UNIX
-   #if defined(OS_UNIX_COMPATIBLE) || defined(HB_OS_LINUX) || \
+   #if defined(HB_OS_UNIX_COMPATIBLE) || defined(HB_OS_LINUX) || \
        defined(HB_OS_BSD) || defined(HB_OS_SUNOS) || defined(HB_OS_HPUX)
       #define HB_OS_UNIX
    #endif
@@ -347,8 +347,8 @@
  */
 /* #define HB_EOL_CRLF */
 #ifdef HB_EOL_CRLF
-   #undef OS_EOL_LEN
-   #define OS_EOL_LEN 2
+   #undef HB_OS_EOL_LEN
+   #define HB_OS_EOL_LEN 2
 #endif
 
 /* ***********************************************************************

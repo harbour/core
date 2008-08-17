@@ -241,7 +241,7 @@ int main( int argc, char * argv[] )
         char * pDelim;
 
         pPath = szInclude;
-        while( ( pDelim = strchr( pPath, OS_PATH_LIST_SEPARATOR ) ) != NULL )
+        while( ( pDelim = strchr( pPath, HB_OS_PATH_LIST_SEP_CHR ) ) != NULL )
           {
             *pDelim = '\0';
             AddSearchPath( pPath, &hb_comp_pIncludePath );
@@ -530,7 +530,7 @@ BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree )
 
 int hb_setGetDirSeparator( void )
 {
-   return OS_PATH_DELIMITER;
+   return HB_OS_PATH_DELIM_CHR;
 }
 
 int hb_verSvnID( void )

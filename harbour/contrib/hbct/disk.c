@@ -102,7 +102,7 @@ HB_FUNC( DIRNAME )
 {
    BYTE *pbyBuffer = ( BYTE * ) hb_xgrab( _POSIX_PATH_MAX + 1 );
 
-   pbyBuffer[0] = OS_PATH_DELIMITER;
+   pbyBuffer[0] = HB_OS_PATH_DELIM_CHR;
    hb_fsCurDirBuff( hb_fsCurDrv(), pbyBuffer + 1, _POSIX_PATH_MAX );
 
    hb_retc_buffer( ( char * ) pbyBuffer );

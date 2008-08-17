@@ -97,7 +97,7 @@ HB_EXPORT ERRCODE hb_rddSelectFirstAvailable( void )
          break;
       uiArea++;
    }
-   if( uiArea >= HARBOUR_MAX_RDD_AREA_NUM )
+   if( uiArea >= HB_RDD_MAX_AREA_NUM )
       return FAILURE;
    HB_SET_WA( uiArea );
    return SUCCESS;
@@ -135,8 +135,8 @@ HB_EXPORT USHORT hb_rddInsertAreaNode( const char *szDriver )
    {
       int iSize = ( ( ( int ) s_uiCurrArea + 256 ) >> 8 ) << 8;
 
-      if( iSize > HARBOUR_MAX_RDD_AREA_NUM )
-         iSize = HARBOUR_MAX_RDD_AREA_NUM;
+      if( iSize > HB_RDD_MAX_AREA_NUM )
+         iSize = HB_RDD_MAX_AREA_NUM;
 
       if( s_uiWaNumMax == 0 )
       {
@@ -342,17 +342,17 @@ HB_EXPORT void hb_rddSetNetErr( BOOL fNetErr )
  */
 HB_EXPORT const char * hb_rddDefaultDrv( const char * szDriver )
 {
-   static char s_szDefDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ] = "";
+   static char s_szDefDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ] = "";
    static BOOL s_fInit = FALSE;
 
    if( szDriver && *szDriver )
    {
-      char szNewDriver[ HARBOUR_MAX_RDD_DRIVERNAME_LENGTH + 1 ];
+      char szNewDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
 
-      hb_strncpyUpper( szNewDriver, szDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+      hb_strncpyUpper( szNewDriver, szDriver, HB_RDD_MAX_DRIVERNAME_LEN );
       if( !hb_rddFindNode( szNewDriver, NULL ) )
          return NULL;
-      hb_strncpy( s_szDefDriver, szNewDriver, HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+      hb_strncpy( s_szDefDriver, szNewDriver, HB_RDD_MAX_DRIVERNAME_LEN );
    }
    else if( !s_fInit && !s_szDefDriver[ 0 ] && hb_rddGetNode( 0 ) )
    {
@@ -363,7 +363,7 @@ HB_EXPORT const char * hb_rddDefaultDrv( const char * szDriver )
       {
          if( hb_rddFindNode( szDrvTable[ i ], NULL ) )
          {
-            hb_strncpy( s_szDefDriver, szDrvTable[ i ], HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+            hb_strncpy( s_szDefDriver, szDrvTable[ i ], HB_RDD_MAX_DRIVERNAME_LEN );
             break;
          }
       }
@@ -415,7 +415,7 @@ HB_EXPORT ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_rddSelectWorkAreaNumber(%d)", iArea));
 
-   if( iArea < 1 || iArea > HARBOUR_MAX_RDD_AREA_NUM )
+   if( iArea < 1 || iArea > HB_RDD_MAX_AREA_NUM )
       HB_SET_WA( 0 );
    else
       HB_SET_WA( iArea );

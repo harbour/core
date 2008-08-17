@@ -895,7 +895,7 @@ static ERRCODE hb_usrSysName( AREAP pArea, BYTE * szSysName )
    {
       hb_stackPop();
       hb_strncpy( ( char * ) szSysName, SELF_RDDNODE( pArea )->szName,
-                  HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+                  HB_RDD_MAX_DRIVERNAME_LEN );
       return SUCCESS;
    }
 
@@ -904,7 +904,7 @@ static ERRCODE hb_usrSysName( AREAP pArea, BYTE * szSysName )
    hb_vmDo( 2 );
 
    hb_strncpy( ( char * ) szSysName, hb_itemGetCPtr( hb_stackItemFromBase( lOffset ) ),
-               HARBOUR_MAX_RDD_DRIVERNAME_LENGTH );
+               HB_RDD_MAX_DRIVERNAME_LEN );
    hb_stackPop();
 
    return hb_usrReturn();
@@ -1586,7 +1586,7 @@ static ERRCODE hb_usrAlias( AREAP pArea, BYTE * szAlias )
    hb_vmDo( 2 );
 
    hb_strncpy( ( char * ) szAlias, hb_itemGetCPtr( hb_stackItemFromBase( lOffset ) ),
-               HARBOUR_MAX_RDD_ALIAS_LENGTH );
+               HB_RDD_MAX_ALIAS_LEN );
    hb_stackPop();
 
    return hb_usrReturn();
@@ -3480,7 +3480,7 @@ HB_FUNC_UR_SUPER( ALIAS )
 
    if( pArea )
    {
-      char szAlias[ HARBOUR_MAX_RDD_ALIAS_LENGTH + 1 ];
+      char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
 
       hb_retni( SUPER_ALIAS( pArea, ( BYTE * ) szAlias ) );
       hb_storc( szAlias, 2 );

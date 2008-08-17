@@ -154,7 +154,7 @@ void HB_EXPORT hb_fsDirectory( PHB_ITEM pDir, char * szSkleton, char * szAttribu
    if ( szSkleton && strlen( szSkleton ) > 0 )
       szDirSpec = hb_fsNameConv( ( BYTE * ) szSkleton, &bAlloc );
    else
-      szDirSpec = ( BYTE * ) OS_FILE_MASK;
+      szDirSpec = ( BYTE * ) HB_OS_ALLFILE_MASK;
 
    if( bDirOnly || bFullPath )
    {

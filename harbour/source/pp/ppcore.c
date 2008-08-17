@@ -5258,8 +5258,8 @@ void hb_pp_initDynDefines( PHB_PP_STATE pState )
    hb_pp_addDefine( pState, "__PDP_ENDIAN__", szResult );
 #endif
 
-#ifdef HARBOUR_START_PROCEDURE
-   hb_pp_addDefine( pState, "__HB_MAIN__", HARBOUR_START_PROCEDURE );
+#ifdef HB_START_PROCEDURE
+   hb_pp_addDefine( pState, "__HB_MAIN__", HB_START_PROCEDURE );
 #endif
 }
 

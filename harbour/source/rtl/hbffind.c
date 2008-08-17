@@ -161,7 +161,7 @@
 
 #endif
 
-#if !defined( HB_USE_LARGEFILE64 ) && defined( OS_UNIX_COMPATIBLE )
+#if !defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX_COMPATIBLE )
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
@@ -665,7 +665,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          
          /* hb_strncpy( string, pszFileName, sizeof( string ) - 1 ); */
          hb_strncpy( string, ffind->pszFileMask, sizeof( string ) - 1 ); 
-         pos = strrchr( string, OS_PATH_DELIMITER );
+         pos = strrchr( string, HB_OS_PATH_DELIM_CHR );
          if( pos )
          {
             hb_strncpy( info->pattern, pos + 1, sizeof( info->pattern ) - 1 );
@@ -676,7 +676,7 @@ static BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          {
             hb_strncpy( info->pattern, string, sizeof( info->pattern ) - 1 );
             dirname[ 0 ] = '.';
-            dirname[ 1 ] = OS_PATH_DELIMITER;
+            dirname[ 1 ] = HB_OS_PATH_DELIM_CHR;
             dirname[ 2 ] = '\0';
          }
 

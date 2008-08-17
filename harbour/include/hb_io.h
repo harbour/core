@@ -53,7 +53,7 @@
 #ifndef HB__IO_H_
 #define HB__IO_H_
 
-#if defined(OS_UNIX_COMPATIBLE) || \
+#if defined(HB_OS_UNIX_COMPATIBLE) || \
     ( defined(__GNUC__) && ! defined(__MINGW32__) )
    #include <unistd.h>
    #if defined(__DJGPP__) || defined(__CYGWIN__) || defined(__EMX__)
