@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// What32.Lib
+// what32.lib
 // Rebar class
 
 #include "common.ch"

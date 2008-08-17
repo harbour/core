@@ -4024,7 +4024,7 @@ static HARBOUR hb___msgDelegate( void )
    if( pExecSym && pExecSym->value.pFunPtr )
    {
       if( pExecSym->scope.value & HB_FS_PCODEFUNC )
-         /* Running pCode dynamic function from .HRB */
+         /* Running pCode dynamic function from .hrb */
          hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
                     pExecSym->value.pCodeFunc->pSymbols );
       else

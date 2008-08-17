@@ -3,7 +3,7 @@
  */
 
 /*********************************************************************
-** SQLTYPES.CH - This file defines the types used in ODBC
+** sqltypes.ch - This file defines the types used in ODBC
 *********************************************************************/
 
 #ifndef __SQLTYPES

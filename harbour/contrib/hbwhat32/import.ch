@@ -4,7 +4,7 @@
 
 /*
 
-What32.Lib
+hbwhat32.lib
 AJ Wos: IMPORT syntax added
 
 Modified from:

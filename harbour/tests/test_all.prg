@@ -8,7 +8,7 @@
 // Compiler independent, but not platform independent (creates a DOS style batch file).
 // Specify the hbxxx batch file name to use to build with on the command line.
 // Defaults to "run_prg".
-// The TEST_ALL.BAT batch file has restart capability. For example, if there is an error
+// The test_all.bat batch file has restart capability. For example, if there is an error
 // in testgt.prg, find and fix the problem, then restart by running "TEST_ALL TESTGT".
 
 #include "directry.ch"

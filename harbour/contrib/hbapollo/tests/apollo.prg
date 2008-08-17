@@ -67,14 +67,14 @@ LOCAL nAlias,f
 
    ? ""
    ? "Cleaning up files.."
-   FErase( "TEST.DBF" )
-   FErase( "TEST.SMT" )
-   FErase( "TEST.NSX" )
+   FErase( "test.dbf" )
+   FErase( "test.smt" )
+   FErase( "test.nsx" )
    ? "OK!"
 
    ? ""
    ? "Creating a new database file.."
-   nAlias:=sx_CreateNew("TEST.DBF",;  // full path filename
+   nAlias:=sx_CreateNew("test.dbf",;  // full path filename
                         "test1",;     // Alias
                         SX_SDENSX,;   // rdeType
                         6)            // Maximum fields added by sx_CreateField
@@ -94,10 +94,10 @@ LOCAL nAlias,f
    sx_Close()
    ?? "OK!"
 
-   nAlias:=sx_Use("TEST.DBF","test2",SX_EXCLUSIVE,SX_SDENSX)
+   nAlias:=sx_Use("test.dbf","test2",SX_EXCLUSIVE,SX_SDENSX)
    sx_Zap()
    IF Valtype(nAlias)="N" .AND. nAlias # 0
-      ? "OK opening 'TEST.DBF'"
+      ? "OK opening 'test.dbf'"
 
 
       ? "Adding 1000 records..."
@@ -115,7 +115,7 @@ LOCAL nAlias,f
 
       ? "Creating Index..."
       sx_IndexTag(,"LAST","LAST+FIRST",0)
-      ? "Created a HiPer-Six index. See 'TEST.NSX'"
+      ? "Created a HiPer-Six index. See 'test.nsx'"
 
 
       sx_GoTop()
@@ -151,7 +151,7 @@ LOCAL nAlias,f
       sx_Close()
 
    ELSE
-      ? "ERROR Opening 'TEST.DBF'"
+      ? "ERROR Opening 'test.dbf'"
    ENDIF
 
 return

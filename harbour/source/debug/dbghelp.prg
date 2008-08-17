@@ -906,7 +906,7 @@ STATIC FUNCTION GetTopics()
       { "Script files contain debugger commands, in the same",;
         "form they would take as input in the Command window.",;
         "By default, script files use the extension CLD, as in",;
-        "'Myscript.CLD'.",;
+        "'myscript.cld'.",;
         "",;
         "",;
         "Creating a script file:",;
@@ -928,7 +928,7 @@ STATIC FUNCTION GetTopics()
         "",;
         "    CLD @<ScriptName> <ProgName>",;
         "",;
-        "In both of these, the extension '.CLD' will be assumed",;
+        "In both of these, the extension '.cld' will be assumed",;
         "if no extension is supplied.",;
         "",;
         "When reading a script file, the debugger will look",;
@@ -937,17 +937,17 @@ STATIC FUNCTION GetTopics()
         "all directories in the PATH environment variable.",;
         "",;
         "",;
-        "INIT.CLD:",;
+        "init.cld:",;
         "",;
         "On startup (or, if it is linked into a program, when",;
         "it is first invoked), the debugger will look for a",;
-        "script file called INIT.CLD, in the current directory",;
+        "script file called init.cld, in the current directory",;
         "and then, if not found, in the directories specified",;
         "by the PATH environment variable.",;
         "",;
-        "If INIT.CLD is found, the debugger will read it",;
+        "If init.cld is found, the debugger will read it",;
         "automatically. It is useful to place general",;
-        "preferences in INIT.CLD -- specifying colors,",;
+        "preferences in init.cld -- specifying colors,",;
         "turning on the CallStack window, and so on." }
 
    RETURN aTopics

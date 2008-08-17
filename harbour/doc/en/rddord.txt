@@ -375,10 +375,10 @@
  *  $DESCRIPTION$
  *      This function returns a string that tells what indexes are to be used
  *      or will be created in the compiled application.The default value is
- *      ".NTX". This is controled by the particular database driver that is
+ *      ".ntx". This is controled by the particular database driver that is
  *      linked with the application.
  *  $EXAMPLES$
- *      IF INDEXEXT()==".NTX"
+ *      IF INDEXEXT()==".ntx"
  *          ? "Current driver being used is DBFNTX"
  *      Endif
  *  $STATUS$

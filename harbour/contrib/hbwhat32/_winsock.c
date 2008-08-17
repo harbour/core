@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// What32.Lib
+// what32.lib
 // AJ Wos
 
 // Note: functions: SELECT and ACCEPT may collide with Clipper/xHarbour names

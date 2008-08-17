@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// WHAT32.LIB
+// what32.lib
 // Device Context functions
 
 // modified:

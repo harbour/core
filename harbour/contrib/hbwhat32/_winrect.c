@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// WHAT32.LIB
+// what32.lib
 // rectangle functions
 
 // Thanks Luiz

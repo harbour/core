@@ -46,7 +46,7 @@ GOTO END
 GOTO END
 :RTF
    hbdoc /RTF libmisc.lnk libmisc.rsp
-   HCW HARBOUR.HPJ
+   hcw harbour.hpj
 del libmisc.lnk
 ren libmisc.old libmisc.lnk
 
@@ -56,5 +56,3 @@ GOTO END
    GOTO END
 :END
 del ass*.bat
-
-

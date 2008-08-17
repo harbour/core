@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Preprocessor precompiled STD.CH and some additions ( mainly generated )
+ * Preprocessor precompiled std.ch and some additions ( mainly generated )
  *
  * Copyright 1999 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://www.harbour-project.org

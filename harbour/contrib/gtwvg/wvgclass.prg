@@ -3302,7 +3302,7 @@ METHOD Create( cCaption ) CLASS wvtMenu
    ::aItems := {}
 
    IF EMPTY( ::hMenu:= Wvt_CreateMenu() )
-      //Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Init()", "Create Menu Error", { cCaption, cCaption },"WVT.PRG" ) )
+      //Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Init()", "Create Menu Error", { cCaption, cCaption },"wvt.prg" ) )
    ENDIF
    ::Caption:= IIF( cCaption == NIL, "", cCaption )
 
@@ -3316,7 +3316,7 @@ METHOD Destroy() CLASS wvtMenu
       ::DelAllItems()
 
       IF !Wvt_DestroyMenu( ::hMenu )
-         //Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {},"WVT.PRG" ) )
+         //Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {},"wvt.prg" ) )
       ENDIF
       ::hMenu:= 0
    ENDIF
@@ -3337,11 +3337,11 @@ METHOD AddItem(cCaption, bAction) CLASS wvtMenu
       ELSEIF left( cCaption, 1 )=="-"
          aItem:= {MF_SEPARATOR,0,0,NIL}
       ELSE
-         //Throw( ErrorNew( "wvtMenu", 3101, "wvtMenu:AddItem()", "Argument Error", { cCaption, bAction },"WVT.PRG" ) )
+         //Throw( ErrorNew( "wvtMenu", 3101, "wvtMenu:AddItem()", "Argument Error", { cCaption, bAction },"wvt.prg" ) )
       ENDIF
 
       IF !Wvt_AppendMenu(::hMenu, aItem[WVT_MENU_TYPE],aItem[WVT_MENU_IDENTIFIER],aItem[WVT_MENU_CAPTION])
-         //Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:AddItem()", "Add menu item", { cCaption, bAction },"WVT.PRG" ) )
+         //Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:AddItem()", "Add menu item", { cCaption, bAction },"wvt.prg" ) )
       ENDIF
 
       AADD(::aItems, aItem)
@@ -3377,7 +3377,7 @@ METHOD DelItem( nItemNum ) CLASS wvtMenu
          ADEL( ::aItems, nItemNum )
          ASIZE( ::aItems, LEN( ::aItems ) - 1 )
       ELSE
-         //Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum },"WVT.PRG" ) )
+         //Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum },"wvt.prg" ) )
       ENDIF
    ENDIF
 

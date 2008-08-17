@@ -87,7 +87,7 @@
  *      is unusual, check the current code for this.
  *      
  *      - The CLIPPER, HARBOUR and Harbour application command line parsing
- *      is a different beast, see CMDARG.C for a NOTE.
+ *      is a different beast, see cmdarg.c for a NOTE.
  *
  *      Notes:
  *      

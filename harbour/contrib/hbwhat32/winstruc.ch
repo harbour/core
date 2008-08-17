@@ -3,7 +3,7 @@
  */
 
 
-// What32.Lib
+// what32.lib
 // structures
 
 

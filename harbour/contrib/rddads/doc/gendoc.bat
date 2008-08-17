@@ -28,7 +28,7 @@ GOTO END
 GOTO END
 :RTF
    ..\..\..\bin\hbdoc /RTF rddads.lnk rddads.rsp
-   HCW HARBOUR.HPJ
+   hcw harbour.hpj
 GOTO END
 :HTM
    ..\..\..\bin\hbdoc /HTM rddads.lnk rddads.rsp

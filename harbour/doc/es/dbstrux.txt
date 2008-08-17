@@ -58,14 +58,14 @@
  *  $EXAMPLES$
  *      // Crea un nuevo archivo que contiene la misma estructura.
  *      USE TEST
- *      __dbCopyStruct( "MyCopy.DBF" )
+ *      __dbCopyStruct( "mycopy.dbf" )
  *
  *      // Crea un nuevo archivo que contiene parte de la estructura
  *      // original
  *      LOCAL aLista
  *      USE TEST
  *      aLista := { "NOMBRE" }
- *      __dbCopyStruct( "nombre.DBF", aLista )
+ *      __dbCopyStruct( "nombre.dbf", aLista )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -745,4 +745,3 @@
  *      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__FLEDIT()*
  *  $END$
  */
-

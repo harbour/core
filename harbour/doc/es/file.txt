@@ -79,7 +79,7 @@
  *  $EXAMPLES$
  *      1) Abre un archivo para lectura/escritura y en modo compartido
  *
- *      nHandle := FOPEN('X.TXT', 66 )
+ *      nHandle := FOPEN('x.txt', 66 )
  *
  *      IF nHandle < 0 
  *         ? "El archivo no puede ser abierto"
@@ -87,7 +87,7 @@
  *
  *
  *      2) ¢ mejor a£n
- *      cFile   := "X.TXT" 
+ *      cFile   := "x.txt"
  *      nHandle := FOPEN( cFile, FO_SHARED + FO_READWRITE )
  *
  *      IF FERROR() != 0 
@@ -151,7 +151,7 @@
  *       4          FC_SYSTEM    Sistema, Excluido de la b£squeda normal DIR
  *      </table>
  *  $EXAMPLES$
- *      cFile := "TEST.TXT"
+ *      cFile := "test.txt"
  *      nHandle := FCREATE( cFile )
  *
  *      IF nHandle < 0
@@ -225,7 +225,7 @@
  *      nChunck := 500 
  *      cBuffer := SPACE( nChunck )
  *
- *      IF (nHandle := FOPEN('X.TXT) ) > 0
+ *      IF (nHandle := FOPEN('x.txt') ) > 0
  *         FREAD( nHandle, @cBuffer, nChunck )
  *      ENDIF
  *
@@ -442,7 +442,7 @@
  *      Nota: Cualquier archivo a ser removido por FERASE() debe estar
  *            previamente cerrado.
  *  $EXAMPLES$
- *      IF (FERASE("TEST.TXT") ==0)
+ *      IF FERASE("test.txt") == 0
  *          ? "El archivo fu‚ exitosamente borrado"
  *      ELSE
  *          ? "El archivo no puede ser borrado"
@@ -1088,7 +1088,7 @@
  *      valor devuelto por FERROR() a -1 (FS_ERROR), ¢ a un valor de error
  *      dependiente del compilador de lenguaje C (EBADF ¢ EINVAL).
  *  $EXAMPLES$
- *      nHandle := FOPEN('FILE.TXT')
+ *      nHandle := FOPEN('file.txt')
  *
  *      ? FREADSTR( nHandle, 80)
  *

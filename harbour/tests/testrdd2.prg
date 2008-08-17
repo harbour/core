@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#include "ORD.CH"
+#include "ord.ch"
 
 #define  CRLF            Chr(13)+Chr(10)
 #define  MAX_TEST_RECS   100
@@ -47,8 +47,8 @@ case Empty( cRDDType )
 
 case Left( cRDDType := Upper( AllTrim( cRDDType ) ), 3 ) == "ADS"
 
-    // Do not include ADS.CH as don't want unintended affects when not using
-    // ADS - If need behavior from ADS.CH, include defines and undefs in
+    // Do not include ads.ch as don't want unintended affects when not using
+    // ADS - If need behavior from ads.ch, include defines and undefs in
     // these areas.
 
     #define ADS_LOCAL_SERVER  1
@@ -102,33 +102,33 @@ otherwise
 
 endcase
 
-// Delete TEST.* since may be changing RDD flavors (avoid conflicts)
-AEval( Directory( "TEST.*"  ), { | a | FErase( a[1] ) } )
-AEval( Directory( "TEST?.*" ), { | a | FErase( a[1] ) } )
+// Delete test.* since may be changing RDD flavors (avoid conflicts)
+AEval( Directory( "test.*"  ), { | a | FErase( a[1] ) } )
+AEval( Directory( "test?.*" ), { | a | FErase( a[1] ) } )
 
-if File( "TEST.DBF" )
-    NotifyUser( "Cannot delete TEST.DBF" )
+if File( "test.dbf" )
+    NotifyUser( "Cannot delete test.dbf" )
 endif
 
 // TEST: DBCreate()
 
-DBCreate( "TEST.DBF", ;
+DBCreate( "test.dbf", ;
           aStruct := { { "CHAR", "C", 30, 0 }, ;
                        { "NUM",  "N", 15, 3 }, ;
                        { "DATE", "D",  8, 0 }, ;
                        { "LOG",  "L",  1, 0 }, ;
                        { "MEMO", "M", 10, 0 } } )
 
-if .not. File( "TEST.DBF" )
-    NotifyUser( "Failed to create TEST.DBF" )
+if .not. File( "test.dbf" )
+    NotifyUser( "Failed to create test.dbf" )
 endif
 
 // TEST: DBUseArea()/USE
 
-use TEST.DBF new shared alias MYTEST
+use test.dbf new shared alias MYTEST
 
 if .not. Alias() == "MYTEST"
-    NotifyUser( "Failed to open TEST.DBF" )
+    NotifyUser( "Failed to open test.dbf" )
 endif
 
 // TEST: RDDName()

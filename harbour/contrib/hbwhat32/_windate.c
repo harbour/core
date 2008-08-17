@@ -3,7 +3,7 @@
  */
 
 
-// What32.Lib
+// what32.lib
 // DateTimePicker functions
 
 #define HB_OS_WIN_32_USED

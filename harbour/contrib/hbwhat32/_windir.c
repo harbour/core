@@ -3,7 +3,7 @@
  */
 
 
-// WHAT32.LIB
+// what32.lib
 // disk, directory and file functions
 
 

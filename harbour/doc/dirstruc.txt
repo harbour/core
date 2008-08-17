@@ -355,7 +355,7 @@ track of all files (read the FAQ if you don't know what SVN is).
     |
     +---hbdoc           - Documentation generation tool.
     |
-    +---hbextern        - HBEXTERN.CH generator.
+    +---hbextern        - hbextern.ch generator.
     |
     +---hbmake          - Harbour Make utility.
     |

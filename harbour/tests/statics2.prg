@@ -10,7 +10,7 @@ static uA, uB
 
 function Test()
 
-   QOut( "INSIDE STATICS2.PRG" )
+   QOut( "INSIDE statics2.prg" )
    QOut( "   static uA, uB" )
    QOut( "" )
    QOut( "   ValType( uA ), ValType( uB ) =>", ValType( uA ), ",", ValType( uB ) )

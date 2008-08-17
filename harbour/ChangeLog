@@ -8,6 +8,73 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-17 17:00 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/examples/guestbk/guestbk.ini
+   * contrib/examples/guestbk/testcgi.prg
+   * contrib/examples/hscript/hscript.prg
+   * contrib/examples/pp/hbppdef.h
+   * contrib/examples/pp/hbpptbl.c
+   * contrib/gtwvg/tests/demowvg.prg
+   * contrib/gtwvg/wvgclass.prg
+   * contrib/hbapollo/tests/apollo.prg
+   * contrib/hbgd/ChangeLog
+   * contrib/hbgt/doc/gendoc.bat
+   * contrib/hbmisc/doc/gendoc.bat
+   * contrib/hbvpdf/hbvpdf.prg
+   * contrib/hbvpdf/hbvpdft.prg
+   * contrib/hbwhat32/_winclpb.c
+   * contrib/hbwhat32/_windate.c
+   * contrib/hbwhat32/_windc.c
+   * contrib/hbwhat32/_windir.c
+   * contrib/hbwhat32/_windraw.c
+   * contrib/hbwhat32/_wingdi.c
+   * contrib/hbwhat32/_winmisc.c
+   * contrib/hbwhat32/_winpen.c
+   * contrib/hbwhat32/_winprn.c
+   * contrib/hbwhat32/_winrect.c
+   * contrib/hbwhat32/_winrgn.c
+   * contrib/hbwhat32/_winsock.c
+   * contrib/hbwhat32/_wintbar.c
+   * contrib/hbwhat32/import.ch
+   * contrib/hbwhat32/sqltypes.ch
+   * contrib/hbwhat32/windebug.prg
+   * contrib/hbwhat32/winerror.prg
+   * contrib/hbwhat32/winini.prg
+   * contrib/hbwhat32/winrbar.prg
+   * contrib/hbwhat32/winstruc.ch
+   * contrib/hbwhat32/wintbar.prg
+   * contrib/hbziparch/hbziparc.c
+   * contrib/rddads/doc/gendoc.bat
+   * doc/cmdline.txt
+   * doc/dirstruc.txt
+   * doc/en/cmdline.txt
+   * doc/en/dbstrux.txt
+   * doc/en/dir.txt
+   * doc/en/file.txt
+   * doc/en/rddord.txt
+   * doc/es/dbstrux.txt
+   * doc/es/file.txt
+   * doc/es/hbpplib.txt
+   * doc/howtomak.txt
+   * doc/hrb_faq.txt
+   * doc/windll.txt
+   * include/dbinfo.ch
+   * source/debug/dbghelp.prg
+   * source/vm/classes.c
+   * source/vm/hvm.c
+   * tests/keywords.ch
+   * tests/output.prg
+   * tests/statics1.prg
+   * tests/statics2.prg
+   * tests/test_all.prg
+   * tests/testcgi.prg
+   * tests/testpre.prg
+   * tests/testrdd2.prg
+   * utils/hbmake/hbmake.prg
+   * utils/hbmake/hbmutils.prg
+     ! Some filename casing related fixes, cleanups.
+     * Some non-ASCII drawing chars in comments changed to ASCII ones.
+
 2008-08-17 09:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbapirdd.h
    * include/hbsetup.h

@@ -2,6 +2,6 @@
  * $Id$
  */
 
-//This is test file for KEYWORDS.PRG
+//This is test file for keywords.prg
 //
 //This file is needed to test #include keyword

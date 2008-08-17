@@ -3,7 +3,7 @@
  */
 
 /*
- * HScript.PRG
+ * hscript.prg
  * HarbourScript translation engine
  *
  *
@@ -187,9 +187,9 @@ FUNCTION Main( cScript )
       FErase( cFile )
 
       // Runs using Tugboat
-      cFile := StrTran( Upper( cFile ), ".PRG", ".hrb" )
+      cFile := StrTran( Lower( cFile ), ".prg", ".hrb" )
       hb_hrbRun( cFile )
-      // Erases the HRB file
+      // Erases the .hrb file
       FErase( cFile )
 
       // That's all, folks!

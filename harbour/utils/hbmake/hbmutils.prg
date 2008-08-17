@@ -115,14 +115,14 @@ FUNCTION GetSourceFiles( lSubDir, lGcc, cOs )
          nPadr := 12 // maximum Clipper/DOS source file name length with extension.
          // if this lenght is greater than 12, then reset nPadr.
          FOR y := 1 TO nDataLen
-             nPadr := Max( AT('.PRG', UPPER( aData[ y, 1 ] ) )+3 , nPadr )
-             nPadr := Max( AT('.C',   UPPER( aData[ y, 1 ] ) )+1 , nPadr )
-             nPadr := Max( AT('.CPP', UPPER( aData[ y, 1 ] ) )+3 , nPadr )
+             nPadr := Max( AT('.prg', Lower( aData[ y, 1 ] ) )+3 , nPadr )
+             nPadr := Max( AT('.c',   Lower( aData[ y, 1 ] ) )+1 , nPadr )
+             nPadr := Max( AT('.cpp', Lower( aData[ y, 1 ] ) )+3 , nPadr )
          NEXT
 
          FOR y := 1 TO nDataLen
 
-            IF AT( '.PRG', UPPER( aData[ y, 1 ] ) ) > 0 .OR. AT( '.C', UPPER( aData[ y, 1 ] ) ) > 0 .OR. AT( '.CPP', UPPER( aData[ y, 1 ] ) ) > 0
+            IF AT( '.PRG', UPPER( aData[ y, 1 ] ) ) > 0 .OR. AT( '.c', Lower( aData[ y, 1 ] ) ) > 0 .OR. AT( '.cpp', Lower( aData[ y, 1 ] ) ) > 0
 
                IF lSubDir
 
@@ -276,7 +276,7 @@ FUNCTION GetBccDir()
 
    FOR EACH cCurEnv IN aEnv
 
-      IF FILE( cCurEnv + '\bcc32.exe' ) .OR. FILE( UPPER( cCurEnv ) + '\BCC32.EXE' )
+      IF FILE( cCurEnv + '\bcc32.exe' ) .OR. FILE( Lower( cCurEnv ) + '\bcc32.exe' )
          cPath := cCurEnv
          cPath := LEFT( cPath, RAT( '\', cPath ) - 1 )
          EXIT
@@ -297,7 +297,7 @@ FUNCTION GetVccDir()
 
    FOR EACH cCurEnv IN aEnv
 
-      IF FILE( cCurEnv + '\cl.exe' ) .OR. FILE( UPPER( cCurEnv ) + '\cl.EXE' )
+      IF FILE( cCurEnv + '\cl.exe' ) .OR. FILE( Lower( cCurEnv ) + '\cl.exe' )
          cPath := cCurEnv
          cPath := LEFT( cPath, RAT( '\', cPath ) - 1 )
          EXIT
@@ -318,7 +318,7 @@ FUNCTION GetPoccDir()
 
    FOR EACH cCurEnv IN aEnv
 
-      IF FILE( cCurEnv + '\pocc.exe' ) .OR. FILE( UPPER( cCurEnv ) + '\POCC.EXE' )
+      IF FILE( cCurEnv + '\pocc.exe' ) .OR. FILE( Lower( cCurEnv ) + '\pocc.exe' )
          cPath := cCurEnv
          cPath := LEFT( cPath, RAT( '\', cPath ) - 1 )
          EXIT

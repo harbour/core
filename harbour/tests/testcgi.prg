@@ -4,7 +4,7 @@
 
 /*
  *
- * TestCGI.PRG
+ * testcgi.prg
  * Harbour Test of a CGI/HTML-Generator class.
  *
  * 1999/05/30  First implementation.

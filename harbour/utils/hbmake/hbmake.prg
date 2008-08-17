@@ -5154,7 +5154,7 @@ FUNCTION GetGccDir()
 
       FOR nPos := 1 TO Len( aEnv )
 
-         IF File( aEnv[ nPos ] + '\gcc.exe' ) .OR. File( Upper( aEnv[ nPos ] ) + '\GCC.EXE' )
+         IF File( aEnv[ nPos ] + '\gcc.exe' ) .OR. File( Lower( aEnv[ nPos ] ) + '\gcc.exe' )
             cPath := aEnv[ nPos ]
             cPath := Left( cPath, Rat( '\', cPath ) - 1 )
             EXIT

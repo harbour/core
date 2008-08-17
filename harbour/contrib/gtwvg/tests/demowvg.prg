@@ -636,8 +636,8 @@ FUNCTION WvtMyBrowse()
    STATIC nStyle := 0
 
    cRDD       := 'DBFCDX'
-   cFileDbf   := 'TEST.DBF'
-   cFileIndex := 'TEST.Z01'
+   cFileDbf   := 'test.dbf'
+   cFileIndex := 'test.z01'
 
    USE ( cFileDbf ) NEW SHARED VIA ( cRDD )
    if NetErr()

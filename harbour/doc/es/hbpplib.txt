@@ -20,7 +20,7 @@
 LIBRERIA DE PREPROCESAMIENTO DE HARBOUR EN TIEMPO DE EJECUCION
 ==============================================================
 
-C¢mo crear HBPP.LIB
+C¢mo crear hbpp.lib
 ===================
 
 Este archivo deber¡a contener prreproc.c, hbpplib32, bldhbpp.bat,
@@ -29,10 +29,10 @@ testpre.prg, bld32exe.bat y hbpplib.txt (este archivo).
 En orden de crear y testear esta librer¡a, Ud. deber¡a poner:
 (suponiendo que el directorio de trabajo sea HARBOUR)
 
-- preproc.c   en el directorio \HARBOUR\SOURCE\HBPP ;
-- hbpplib.b32 y bldhbpp.bat en el directorio \HARBOUR ;
-- testpre.prg y bld32exe.bat en el directorio \HARBOUR\TESTS\WORKING ;
-- hbpplib.txt en el directorio \HARBOUR\DOC ;
+- preproc.c   en el directorio \harbour\source\hbpp ;
+- hbpplib.b32 y bldhbpp.bat en el directorio \harbour ;
+- testpre.prg y bld32exe.bat en el directorio \harbour\tests\working ;
+- hbpplib.txt en el directorio \harbour\doc ;
 
 Entonces, Ud. necesita correr bldhbpp.bat para crear HBPP.LIB sobre
 el directorio \HARBOUR\LIBS\B32. Note que por ahora el £nico makefile 

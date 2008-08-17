@@ -180,7 +180,7 @@
  *  $EXAMPLES$
     <fixed>
  *      LOCAL aName, aSize, aDate, aTime, aAttr, nLen, i
- *      nLen := ADIR( "*.JPG" )     // Number of JPG files in this directory
+ *      nLen := ADIR( "*.jpg" )     // Number of JPG files in this directory
  *      IF nLen > 0
  *         aName := Array( nLen )   // make room to store the information
  *         aSize := Array( nLen )

@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// What32.Lib
+// what32.lib
 // Graphics  & Drawing
 
 #define HB_OS_WIN_32_USED

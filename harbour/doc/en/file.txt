@@ -65,7 +65,7 @@
  *      possible reasons for the error.
  *  $EXAMPLES$
  *
- *      IF (nH:=FOPEN('X.TXT',66) < 0
+ *      IF (nH:=FOPEN('x.txt',66) < 0
  *         ? 'File can't be opened'
  *      ENDIF
  *  </fixed>
@@ -121,7 +121,7 @@
  *       4              FC_SYSTEM     Create,Excluded from normal DIR search
  *  </table>
  *  $EXAMPLES$
- *      IF (nh:=FCREATE("TEST.TXT") <0
+ *      IF (nh:=FCREATE("test.txt") <0
  *          ? "Cannot create file"
  *      ENDIF
  *    </fixed>
@@ -179,7 +179,7 @@
  *      value in <nBytes> an end-of-file condition has been reached.
  *  $EXAMPLES$
  *      cBuffer:=SPACE(500)
- *      IF (nH:=FOPEN('X.TXT))>0
+ *      IF (nH:=FOPEN('x.txt'))>0
  *         FREAD(nH,@cBuffer,500)
  *         ? cbuffer
  *      ENDIF
@@ -373,7 +373,7 @@
  *      Note: Any file to be removed by FERASE() must still be closed.
  *
  *  $EXAMPLES$
- *      IF (FERASE("TEST.TXT")==0)
+ *      IF FERASE("test.txt")==0
  *          ? "File successfully erased"
  *      ELSE
  *          ? "File can not be deleted"
@@ -747,18 +747,18 @@
  *      __TYPEFILE() function is used in the preprocessing of the TYPE
  *      command.
  *  $EXAMPLES$
- *      The following examples assume a file name MyText.DAT exist in all
+ *      The following examples assume a file name mytext.dat exist in all
  *      specified paths, a run-time error would displayed if it does not
  *
- *      // display MyText.DAT file on screen
- *      __TYPEFILE( "MyText.DAT" )
+ *      // display mytext.dat file on screen
+ *      __TYPEFILE( "mytext.dat" )
  *
- *      // display MyText.DAT file on screen and printer
- *      __TYPEFILE( "MyText.DAT", .T. )
+ *      // display mytext.dat file on screen and printer
+ *      __TYPEFILE( "mytext.dat", .T. )
  *
- *      // display MyText.DAT file on printer only
+ *      // display mytext.dat file on printer only
  *      SET CONSOLE OFF
- *      __TYPEFILE( "MyText.DAT", .T. )
+ *      __TYPEFILE( "mytext.dat", .T. )
  *      SET CONSOLE ON
  *      </fixed>
  *  $STATUS$
@@ -810,22 +810,22 @@
  *      Use SET CONSOLE OFF to suppress screen output.
  *      You can pause the output using Ctrl-S, press any key to resume.
  *  $EXAMPLES$
- *      The following examples assume a file name MyText.DAT exist in all
+ *      The following examples assume a file name mytext.dat exist in all
  *      specified paths, a run-time error would displayed if it does not
  *
- *      // display MyText.DAT file on screen
- *      TYPE MyText.DAT
+ *      // display mytext.dat file on screen
+ *      TYPE mytext.dat
  *
- *      // display MyText.DAT file on screen and printer
- *      TYPE MyText.DAT TO PRINTER
+ *      // display mytext.dat file on screen and printer
+ *      TYPE mytext.dat TO PRINTER
  *
- *      // display MyText.DAT file on printer only
+ *      // display mytext.dat file on printer only
  *      SET CONSOLE OFF
- *      TYPE MyText.DAT TO PRINTER
+ *      TYPE mytext.dat TO PRINTER
  *      SET CONSOLE ON
  *
- *      // display MyText.DAT file on screen and into a file MyReport.txt
- *      TYPE MyText.DAT TO FILE MyReport
+ *      // display mytext.dat file on screen and into a file myreport.txt
+ *      TYPE mytext.dat TO FILE MyReport
  *  </fixed>
  *  $STATUS$
  *      R
@@ -896,8 +896,8 @@
  *      device (e.g. LPT1).This command does not obsert the SET PATH TO or
  *      SET DEFAULT TO settings.
  *  $EXAMPLES$
- *      COPY FILE C:\HARBOUR\TESTS\ADIRTEST.PRG to C:\TEMP\ADIRTEST.PRG
- *      COPY FILE c:\harbour\utils\hbdoc\gennf.prg to LPT1
+ *      COPY FILE C:\harbour\tests\adirtest.prg to C:\temp\adirtest.prg
+ *      COPY FILE C:\harbour\utils\hbdoc\gennf.prg to LPT1
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -927,7 +927,7 @@
  *      function returns .T. and sets the value returned by FERROR() to -1
  *      (FS_ERROR) or a C-compiler dependent errno value (EBADF or EINVAL).
  *  $EXAMPLES$
- *      nH:=FOPEN('FILE.TXT')
+ *      nH:=FOPEN('file.txt')
  *      ? FREADSTR(nH,80)
  *      IF HB_FEOF(nH)
  *         ? 'End-of-file reached.'

@@ -4808,7 +4808,7 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
       {
          HB_TRACE_PRG(("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
          if( pExecSym->scope.value & HB_FS_PCODEFUNC )
-            /* Running pCode dynamic function from .HRB */
+            /* Running pCode dynamic function from .hrb */
             hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
                           pExecSym->value.pCodeFunc->pSymbols );
          else
@@ -4835,7 +4835,7 @@ HB_EXPORT void hb_vmDo( USHORT uiParams )
          if( bProfiler && pSym->pDynSym )
             pSym->pDynSym->ulRecurse++;
 #endif
-         /* Running pCode dynamic function from .HRB? */
+         /* Running pCode dynamic function from .hrb? */
          if( pSym->scope.value & HB_FS_PCODEFUNC )
             hb_vmExecute( pSym->value.pCodeFunc->pCode,
                           pSym->value.pCodeFunc->pSymbols );
@@ -4907,7 +4907,7 @@ HB_EXPORT void hb_vmSend( USHORT uiParams )
       HB_TRACE_PRG(("Calling: %s:%s", hb_objGetClsName( pSelf ), pSym->szName));
 
       if( pExecSym->scope.value & HB_FS_PCODEFUNC )
-         /* Running pCode dynamic function from .HRB */
+         /* Running pCode dynamic function from .hrb */
          hb_vmExecute( pExecSym->value.pCodeFunc->pCode,
                     pExecSym->value.pCodeFunc->pSymbols );
       else

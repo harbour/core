@@ -80,7 +80,7 @@ Exceptions:
 
 - The CLIPPER, HARBOUR and Harbour application
   command line parsing is a different beast, 
-  see CMDARG.C for a NOTE.
+  see cmdarg.c for a NOTE.
 
   Just some examples for the various accepted forms:
   //F20 == /F20 == F20 == F:20 == F20X

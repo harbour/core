@@ -213,7 +213,7 @@
 
 2005-10-25 18:07 UTC+0200 Francesco Saverio Giudice <info@fsgiudice.com>
 
-  * contrib/gd/MAKE_B32.BAT
+  * contrib/gd/make_b32.bat
     * fixed bgd.dll name
       (thanks to Dener)
 
@@ -226,7 +226,7 @@
       to download it.
   * contrib/gd/README.txt
     * updated
-  * contrib/gd/MAKE_B32.BAT
+  * contrib/gd/make_b32.bat
     * check if bgd.dll exists
 
 2005-10-25 02:43 UTC+0200 Francesco Saverio Giudice <info@fsgiudice.com>
@@ -289,11 +289,11 @@
   + contrib/gd
 
     + /bgd.dll
-    + /Rules.make
+    + /rules.make
     + /Makefile
-    + /MAKE_B32.BAT
-    + /MAKEFILE.BC
-    + /README.txt
+    + /make_b32.bat
+    + /makefile.bc
+    + /readme.txt
     + /ChangeLog
     + /doc/entities.html
     + /doc/GD Graphics Library.url

@@ -5,7 +5,7 @@
 
 //  WHAT32 ErrorSys
 //  A.J. Wos 08/06/2002
-//  Scaled down and adapted for Harbour + What32.Lib
+//  Scaled down and adapted for Harbour + what32.lib
 
 #include "common.ch"
 
@@ -149,7 +149,7 @@ STATIC FUNCTION ErrorMessage( e )
    END
    cMessage += ';Called from ' + ProcFile(3) + "->" + procname( 3 ) + ' (' + AllTrim( Str( procline( 3 ) ) ) + '),  ' + ;
                + ProcFile(4) + "->" + procname( 4 ) + ' (' + AllTrim( Str( procline( 4 ) ) ) + ')'
-   cMessage += ';Error logged in file '+GetModuleFileName()+'\ERROR.LOG'
+   cMessage += ';Error logged in file '+GetModuleFileName()+'\error.log'
 
    RETURN ( cMessage )
 
@@ -167,7 +167,7 @@ STATIC FUNCTION LogError( e, cProcStack )
    cErr += ( CRLF + '------' )
    cErr += ( CRLF + 'Error date:' + dtoc( date( ) ) + ' time:' + time( ) )
    cErr += ( CRLF + 'Application: ' + GetModuleFileName( ) )
-   cErr += ( CRLF + 'What32.Lib ver.' + WhatVersion( @dVer ) + ", " + DTOC( dVer ) )
+   cErr += ( CRLF + 'hbwhat32 library ver.' + WhatVersion( @dVer ) + ", " + DTOC( dVer ) )
 
    // T.B.D.:
    // add here  Windows version, memory info, diskspace info, free resources info
@@ -196,7 +196,7 @@ STATIC FUNCTION LogError( e, cProcStack )
 
    cErr += cProcStack
 
-   SET PRINTER TO  "Error.Log" ADDITIVE
+   SET PRINTER TO  "error.log" ADDITIVE
    SET CONSOLE OFF
    SET PRINTER ON
 

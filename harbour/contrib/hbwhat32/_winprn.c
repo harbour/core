@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// What32.Lib
+// what32.lib
 // Printing
 
 #define _WIN32_WINNT   0x0400

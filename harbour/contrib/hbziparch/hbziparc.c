@@ -458,7 +458,7 @@ static void ZipCreateArray( PHB_ITEM pParam, BYTE *pCurDir, BOOL bFullPath )    
  *      <lCompress>  .t. if file was create, otherwise .f.
  * $DESCRIPTION$
  *      This function creates a zip file named <cFile>. If the extension
- *      is omitted, .ZIP will be assumed. If the second parameter is a
+ *      is omitted, .zip will be assumed. If the second parameter is a
  *      character string, this file will be added to the zip file. If the
  *      second parameter is an array, all file names contained in <aFiles>
  *      will be compressed.
@@ -489,24 +489,24 @@ static void ZipCreateArray( PHB_ITEM pParam, BYTE *pCurDir, BOOL bFullPath )    
  * $EXAMPLES$
  *      FUNCTION MAIN()
  *
- *      IF HB_ZIPFILE( "TEST.ZIP", "TEST.PRG" )
+ *      IF HB_ZIPFILE( "test.zip", "test.prg" )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILE( "TEST1.ZIP", { "TEST.PRG", "c:\windows\win.ini" } )
+ *      IF HB_ZIPFILE( "test1.zip", { "test.prg", "c:\windows\win.ini" } )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILE( "TEST2.ZIP", { "TEST.PRG", "c:\windows\win.ini" }, 9, {|cFile,nPos,| qout(cFile) } )
+ *      IF HB_ZIPFILE( "test2.zip", { "test.prg", "c:\windows\win.ini" }, 9, {|cFile,nPos,| qout(cFile) } )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      aFiles := { "TEST.PRG", "c:\windows\win.ini" }
+ *      aFiles := { "test.prg", "c:\windows\win.ini" }
  *      nLen   := Len( aFiles )
  *      aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B" , "²" )
  *      GaugeDisplay( aGauge )
  *      HB_ZIPFILE( "test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen ) },, "hello" )
- *      Return Nil
+ *      Return NIL
  * $STATUS$
  *      R
  * $COMPLIANCE$
@@ -684,7 +684,7 @@ HB_FUNC( HB_GETFILECOUNT )
  *      <lCompress>  .t. if file was create, otherwise .f.
  * $DESCRIPTION$
  *      This function creates a zip file named <cFile>. If the extension
- *      is omitted, .ZIP will be assumed. If the second parameter is a
+ *      is omitted, .zip will be assumed. If the second parameter is a
  *      character string, this file will be added to the zip file. If the
  *      second parameter is an array, all file names contained in <aFiles>
  *      will be compressed.
@@ -711,24 +711,24 @@ HB_FUNC( HB_GETFILECOUNT )
  * $EXAMPLES$
  *      FUNCTION MAIN()
  *
- *      IF HB_ZIPFILEBYTDSPAN( "TEST.ZIP", "TEST.PRG" )
+ *      IF HB_ZIPFILEBYTDSPAN( "test.zip", "test.prg" )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILEBYTDSPAN( "TEST1.ZIP", { "TEST.PRG", "c:\windows\win.ini" } )
+ *      IF HB_ZIPFILEBYTDSPAN( "test1.zip", { "test.prg", "c:\windows\win.ini" } )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILEBYTDSPAN( "TEST2.ZIP", { "TEST.PRG", "c:\windows\win.ini" }, 9, {|nPos,cFile| qout(cFile) }, "hello",, 521421 )
+ *      IF HB_ZIPFILEBYTDSPAN( "test2.zip", { "test.prg", "c:\windows\win.ini" }, 9, {|nPos,cFile| qout(cFile) }, "hello",, 521421 )
  *         qout("File was successfully created" )
  *      ENDIF
  *
- *      aFiles := { "TEST.PRG", "c:\windows\win.ini" }
+ *      aFiles := { "test.prg", "c:\windows\win.ini" }
  *      nLen   := Len( aFiles )
  *      aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "²" )
  *      GaugeDisplay( aGauge )
  *      HB_ZIPFILEBYTDSPAN( "test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen) },, "hello",, 6585452 )
- *      Return Nil
+ *      Return NIL
  * $STATUS$
  *      R
  * $COMPLIANCE$
@@ -850,7 +850,7 @@ HB_FUNC( HB_ZIPFILEBYTDSPAN )
  *      <lCompress>  .t. if file was create, otherwise .f.
  * $DESCRIPTION$
  *      This function creates a zip file named <cFile>. If the extension
- *      is omitted, .ZIP will be assumed. If the second parameter is a
+ *      is omitted, .zip will be assumed. If the second parameter is a
  *      character string, this file will be added to the zip file. If the
  *      second parameter is an array, all file names contained in <aFiles>
  *      will be compressed.  Also, the use of this function is for creating
@@ -886,25 +886,25 @@ HB_FUNC( HB_ZIPFILEBYTDSPAN )
  *
  *      hb_setdiskzip( {|nDisk| Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
  *
- *      IF HB_ZIPFILEBYPKSPAN( "a:\TEST.ZIP", "TEST.PRG" )
+ *      IF HB_ZIPFILEBYPKSPAN( "A:\test.zip", "test.prg" )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILEBYPKSPAN( "a:\TEST1.ZIP", { "TEST.PRG", "c:\windows\win.ini" } )
+ *      IF HB_ZIPFILEBYPKSPAN( "A:\test1.zip", { "test.prg", "c:\windows\win.ini" } )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_ZIPFILEBYPKSPAN( "TEST2.ZIP", { "TEST.PRG", "c:\windows\win.ini"}, 9, {|nPos,cFile| qout(cFile) } )
+ *      IF HB_ZIPFILEBYPKSPAN( "test2.zip", { "test.prg", "c:\windows\win.ini"}, 9, {|nPos,cFile| qout(cFile) } )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      aFiles := { "TEST.PRG", "c:\windows\win.ini" }
+ *      aFiles := { "test.prg", "c:\windows\win.ini" }
  *      nLen   := Len( aFiles )
  *      aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "²" )
  *      GaugeDisplay( aGauge )
  *      HB_ZIPFILEBYPKSPAN( "f:\test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos/nLen ) },, "hello" )
  *      // assuming f:\ is a Zip Drive
- *      Return Nil
+ *      Return NIL
  * $STATUS$
  *      R
  * $COMPLIANCE$
@@ -1018,7 +1018,7 @@ HB_FUNC( HB_ZIPFILEBYPKSPAN )
  *      <lCompress>  .t. if all file was successfully restored, otherwise .f.
  * $DESCRIPTION$
  *      This function restores all files contained inside the <cFile>.
- *      If the extension is omitted, .ZIP will be assumed. If a file already
+ *      If the extension is omitted, .zip will be assumed. If a file already
  *      exists, it will be overwritten.
  *
  *      If <bBlock> is used, every time the file is opened to compress it
@@ -1036,16 +1036,16 @@ HB_FUNC( HB_ZIPFILEBYPKSPAN )
  * $EXAMPLES$
  *      FUNCTION MAIN()
  *
- *      aExtract := hb_GetFilesInZip( "TEST.ZIP" )  // extract all files in zip
- *      IF HB_UNZIPFILE( "TEST.ZIP",,,, ".\", aExtract )
+ *      aExtract := hb_GetFilesInZip( "test.zip" )  // extract all files in zip
+ *      IF HB_UNZIPFILE( "test.zip",,,, ".\", aExtract )
  *         qout("File was successfully extracted")
  *      ENDIF
  *
- *      aExtract := hb_GetFilesInZip( "TEST2.ZIP" )  // extract all files in zip
- *      IF HB_UNZIPFILE( "TEST2.ZIP", {|cFile| qout( cFile ) },,, ".\", aExtract )
+ *      aExtract := hb_GetFilesInZip( "test2.zip" )  // extract all files in zip
+ *      IF HB_UNZIPFILE( "test2.zip", {|cFile| qout( cFile ) },,, ".\", aExtract )
  *         qout("File was successfully extracted")
  *      ENDIF
- *      Return Nil
+ *      Return NIL
  * $STATUS$
  *      R
  * $COMPLIANCE$
@@ -1364,7 +1364,7 @@ HB_FUNC( HB_ZIPTESTPK )
  * $ONELINER$
  *
  * $SYNTAX$
- *     HB_SETBUFFER( [<nWriteBuffer>], [<nExtractBuffer>], [<nReadBuffer>] ) --> Nil
+ *     HB_SETBUFFER( [<nWriteBuffer>], [<nExtractBuffer>], [<nReadBuffer>] ) --> NIL
  * $ARGUMENTS$
  *     <nWriteBuffer>   The size of the write buffer.
  *
@@ -1409,7 +1409,7 @@ HB_FUNC( HB_SETBUFFER )
  * $ONELINER$
  *     Set an Zip archive Comment
  * $SYNTAX$
- *     HB_SETZIPCOMMENT( <cComment> ) --> Nil
+ *     HB_SETZIPCOMMENT( <cComment> ) --> NIL
  * $ARGUMENTS$
  *     <cComment>   Comment to add to the zip archive
  * $RETURNS$
@@ -1499,7 +1499,7 @@ HB_FUNC( HB_GETZIPCOMMENT )
  *      <lCompress>  .t. if all file was successfully restored, otherwise .f.
  * $DESCRIPTION$
  *      This function restores all files contained inside the <cFile>.
- *      If the extension is omitted, .ZIP will be assumed. If a file already
+ *      If the extension is omitted, .zip will be assumed. If a file already
  *      exists, it will be overwritten.
  *
  *      If <bBlock> is used, every time the file is opened to compress it
@@ -1517,15 +1517,15 @@ HB_FUNC( HB_GETZIPCOMMENT )
  * $EXAMPLES$
  *      FUNCTION MAIN()
  *
- *      IF HB_UNZIPFILEINDEX( "TEST.ZIP",,,, ".\", 1 )
+ *      IF HB_UNZIPFILEINDEX( "test.zip",,,, ".\", 1 )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      IF HB_UNZIPFILEINDEX( "TEST2.ZIP", {|cFile|, qout(cFile) },,, ".\", { 1, 2 } )
+ *      IF HB_UNZIPFILEINDEX( "test2.zip", {|cFile|, qout(cFile) },,, ".\", { 1, 2 } )
  *         qout( "File was successfully created" )
  *      ENDIF
  *
- *      Return Nil
+ *      Return NIL
  * $STATUS$
  *      R
  * $COMPLIANCE$

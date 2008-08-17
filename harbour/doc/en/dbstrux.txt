@@ -47,13 +47,13 @@
  *  $EXAMPLES$
  *     // Create a new file that contain the same structure
  *      USE TEST
- *      __dbCopyStruct( "MyCopy.DBF" )
+ *      __dbCopyStruct( "mycopy.dbf" )
  *
  *      // Create a new file that contain part of the original structure
  *      LOCAL aList
  *      USE TEST
  *      aList := { "NAME" }
- *      __dbCopyStruct( "OnlyName.DBF", aList )
+ *      __dbCopyStruct( "onlyname.dbf", aList )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -574,7 +574,7 @@
  *      USE TEST
  *      aStruct := DBSTRUCT()
  *      aList := { "NAME" }
- *      DBCREATE( "OnlyName.DBF", __FLEDIT( aStruct, aList ) )
+ *      DBCREATE( "onlyname.dbf", __FLEDIT( aStruct, aList ) )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -661,7 +661,7 @@
  *      USE TEST
  *      aStruct := DBSTRUCT()
  *      aList := { "NAME" }
- *      DBCREATE( "OnlyName.DBF", __dbStructFilter( aStruct, aList ) )
+ *      DBCREATE( "onlyname.dbf", __dbStructFilter( aStruct, aList ) )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

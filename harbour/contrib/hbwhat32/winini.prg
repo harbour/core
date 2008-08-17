@@ -4,7 +4,7 @@
 
 // WHAT32
 
-* Useful .INI Interface enhancements
+* Useful .ini Interface enhancements
 
 
 // Get from private Ini
@@ -37,7 +37,7 @@ FUNCTION GetPrivateProfileDate( cSection, cEntry, dDefault, cFile )
   RETURN(STOD( cRet ))
 
 
-// Get from Win.Ini
+// Get from win.ini
 
 *-----------------------------------------------------------------------------*
 
@@ -95,7 +95,7 @@ FUNCTION WritePrivateProfileDate( cSection, cEntry, dData, cFile )
 
 
 
-// Write to Win.Ini
+// Write to win.ini
 
 *-----------------------------------------------------------------------------*
 
@@ -122,8 +122,3 @@ FUNCTION WriteProfileDate( cSection, cEntry, dData )
 FUNCTION WriteProfileInt( cSection, cEntry, nData )
 
   RETURN( WriteProfileString( cSection, cEntry, STR( INT(nData) ) ) )
-
-
-
-
-

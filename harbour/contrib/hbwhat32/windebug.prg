@@ -2,12 +2,9 @@
  * $Id$
  */
 
-#INCLUDE "SET.CH"
+#include "set.ch"
 
 #define CRLF chr(13)+chr(10)
-
-STATIC row_counter := 0
-
 
 
 *-----------------------------------------------------------------------------*

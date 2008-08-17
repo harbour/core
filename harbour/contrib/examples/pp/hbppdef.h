@@ -111,7 +111,7 @@ typedef struct
 
 #define HB_SKIPTABSPACES( sptr ) while( *( sptr ) == ' ' || *( sptr ) == '\t' ) ( sptr )++
 
-/* PPCORE.C exported functions and variables */
+/* ppcore.c exported functions and variables */
 
 #define HB_INCLUDE_FUNC_( hbFunc ) BOOL hbFunc( char *, HB_PATHNAMES * )
 typedef HB_INCLUDE_FUNC_( HB_INCLUDE_FUNC );
@@ -159,7 +159,7 @@ extern FILES  hb_comp_files;
 extern BOOL   hb_comp_bPPO;
 extern FILE * hb_comp_yyppo;
 
-/* PPCOMP.C exported functions */
+/* ppcomp.c exported functions */
 extern int    hb_pp_Internal_( FILE *, char * );
 extern void   hb_pp_InternalFree( void );
 
@@ -171,7 +171,7 @@ extern void   hb_pp_InternalFree( void );
 extern BOOL   hb_pp_StreamBlockBegin( char *, int );
 extern void   hb_pp_BlockEnd( void );
 
-/* PPTABLE.C exported functions and variables */
+/* pptable.c exported functions and variables */
 
 extern void   hb_pp_Table( void );
 
@@ -179,7 +179,7 @@ extern DEFINES *  hb_pp_topDefine;
 extern COMMANDS * hb_pp_topCommand;
 extern COMMANDS * hb_pp_topTranslate;
 
-/* PRAGMA.C exported functions */
+/* pragma.c exported functions */
 
 extern BOOL hb_pp_ParsePragma( char * szline );
 

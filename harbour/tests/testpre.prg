@@ -51,7 +51,7 @@ FUNCTION Main()
 
    CLS
 
-   aScript := { 'cMyDatabase := "DONTKNOW.DBF"', ;
+   aScript := { 'cMyDatabase := "dontknow.dbf"', ;
                 'USE (cMyDatabase)', ;
                 'GO TOP', ;
                 '', ;

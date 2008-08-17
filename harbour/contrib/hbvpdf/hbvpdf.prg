@@ -6,9 +6,9 @@
 
 memvar aReport
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                 */
+=============================================================                 */
 function pdfAtSay( cString, nRow, nCol, cUnits, lExact, cId )                 /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                 */
+=============================================================                 */
 local _nFont, lReverse, nAt
 
 DEFAULT nRow to aReport[ REPORTLINE ]
@@ -89,9 +89,9 @@ DEFAULT cId to ""
    ENDIF
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                            */
+==================                                                            */
 function pdfBold()                                                            /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                            */
+==================                                                            */
    IF pdfGetFontInfo("NAME") = "Times"
       aReport[ FONTNAME ] := 2
    ELSEIF pdfGetFontInfo("NAME") = "Helvetica"
@@ -105,9 +105,9 @@ function pdfBold()                                                            /*
    ENDIF
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                      */
+========================                                                      */
 function pdfBoldItalic()                                                      /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                      */
+========================                                                      */
    IF pdfGetFontInfo("NAME") = "Times"
       aReport[ FONTNAME ] := 4
    ELSEIF pdfGetFontInfo("NAME") = "Helvetica"
@@ -121,21 +121,21 @@ function pdfBoldItalic()                                                      /*
    ENDIF
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                           */
+===================================================                           */
 function pdfBookAdd( cTitle, nLevel, nPage, nLine )                           /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                           */
+===================================================                           */
    aadd( aReport[ BOOKMARK ], { nLevel, alltrim( cTitle ), 0, 0, 0, 0, 0, 0, nPage, IIF( nLevel == 1, aReport[ PAGEY ], aReport[ PAGEY ] - nLine * 72 / aReport[ LPI ] ) })
 return Nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                      */
+========================                                                      */
 function pdfBookClose( )                                                      /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                      */
+========================                                                      */
    aReport[ BOOKMARK ] := nil
 return Nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                             */
+=================================================                             */
 static function pdfBookCount( nRecno, nCurLevel )                             /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                             */
+=================================================                             */
 local nTempLevel := 0, nCount := 0, nLen := len( aReport[ BOOKMARK ] )
    ++nRecno
    while nRecno <= nLen
@@ -151,9 +151,9 @@ local nTempLevel := 0, nCount := 0, nLen := len( aReport[ BOOKMARK ] )
    enddo
 return -1 * nCount
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                       */
+=======================================================                       */
 static function pdfBookFirst( nRecno, nCurLevel, nObj )                       /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                       */
+=======================================================                       */
 local nFirst := 0, nLen := len( aReport[ BOOKMARK ] )
    ++nRecno
    IF nRecno <= nLen
@@ -163,9 +163,9 @@ local nFirst := 0, nLen := len( aReport[ BOOKMARK ] )
    ENDIF
 return IIF( nFirst == 0, nFirst, nObj + nFirst )
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                        */
+======================================================                        */
 static function pdfBookLast( nRecno, nCurLevel, nObj )                        /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                        */
+======================================================                        */
 local nLast := 0, nLen := len( aReport[ BOOKMARK ] )
    ++nRecno
    IF nRecno <= nLen
@@ -180,9 +180,9 @@ local nLast := 0, nLen := len( aReport[ BOOKMARK ] )
    ENDIF
 return IIF( nLast == 0, nLast, nObj + nLast )
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                        */
+======================================================                        */
 static function pdfBookNext( nRecno, nCurLevel, nObj )                        /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                        */
+======================================================                        */
 local nTempLevel := 0, nNext := 0, nLen := len( aReport[ BOOKMARK ] )
    ++nRecno
    while nRecno <= nLen
@@ -199,15 +199,15 @@ local nTempLevel := 0, nNext := 0, nLen := len( aReport[ BOOKMARK ] )
    enddo
 return IIF( nNext == 0, nNext, nObj + nNext )
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                       */
+=======================                                                       */
 function pdfBookOpen( )                                                       /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                       */
+=======================                                                       */
    aReport[ BOOKMARK ] := {}
 return Nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                      */
+========================================================                      */
 static function pdfBookParent( nRecno, nCurLevel, nObj )                      /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                      */
+========================================================                      */
 local nTempLevel := 0
 local nParent := 0
    --nRecno
@@ -221,9 +221,9 @@ local nParent := 0
    enddo
 return IIF( nParent == 0, nObj - 1, nObj + nParent )
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                        */
+======================================================                        */
 static function pdfBookPrev( nRecno, nCurLevel, nObj )                        /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                        */
+======================================================                        */
 local nTempLevel := 0
 local nPrev := 0
    --nRecno
@@ -241,9 +241,9 @@ local nPrev := 0
    enddo
 return IIF( nPrev == 0, nPrev, nObj + nPrev )
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹               */
+===============================================================               */
 function pdfBox( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )       /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹               */
+===============================================================               */
 local cBoxColor
 DEFAULT nBorder to 0
 DEFAULT nShade to 0
@@ -319,9 +319,9 @@ DEFAULT cColor to ""
 
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹               */
+===============================================================               */
 function pdfBox1( nTop, nLeft, nBottom, nRight, nBorderWidth, cBorderColor, cBoxColor )       /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹               */
+===============================================================               */
 DEFAULT nBorderWidth to 0.5
 DEFAULT cBorderColor to chr(0) + chr(0) + chr(0)
 DEFAULT cBoxColor to chr(255) + chr(255) + chr(255)
@@ -364,9 +364,9 @@ DEFAULT cBoxColor to chr(255) + chr(255) + chr(255)
                          CRLF + "B" )
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                */
+==============================================================                */
 function pdfCenter( cString, nRow, nCol, cUnits, lExact, cId )                /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                */
+==============================================================                */
 local nLen, nAt
 DEFAULT nRow to aReport[ REPORTLINE ]
 DEFAULT cUnits to "R"
@@ -391,9 +391,9 @@ DEFAULT nCol to IIF( cUnits == "R", aReport[ REPORTWIDTH ] / 2, aReport[ PAGEX ]
    pdfAtSay( cString, pdfR2M( nRow ), IIF( cUnits == "R", aReport[ PDFLEFT ] + ( aReport[ PAGEX ] / 72 * 25.4 - 2 * aReport[ PDFLEFT ] ) * nCol / aReport[ REPORTWIDTH ], nCol ) - nLen, "M", lExact )
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                          */
+====================================                                          */
 static function pdfCheckLine( nRow )                                          /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                          */
+====================================                                          */
    IF nRow + aReport[ PDFTOP ] > aReport[ PDFBOTTOM ]
       pdfNewPage()
       nRow := aReport[ REPORTLINE ]
@@ -401,9 +401,9 @@ static function pdfCheckLine( nRow )                                          /*
    aReport[ REPORTLINE ] := nRow
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                           */
+===================                                                           */
 function pdfClose()                                                           /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                           */
+===================                                                           */
 local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
 
    FIELD FIRST, PREV, NEXT, LAST, COUNT, PARENT, PAGE, COORD, TITLE, LEVEL
@@ -546,9 +546,9 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
 
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                */
+==============================                                                */
 static function pdfClosePage()                                                /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                */
+==============================                                                */
 local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
 local cImage, nTemp1, nLength
 
@@ -758,7 +758,7 @@ local cImage, nTemp1, nLength
          "/Type /XObject" + CRLF + ;
          "/Subtype /Image" + CRLF + ;
          "/Name /Image" + ltrim(str(nI)) + CRLF + ;
-         "/Filter [" + IIF( at( ".JPG", upper( aReport[ IMAGES ][ nI ][ 1 ]) ) > 0, " /DCTDecode", "" ) + " ]" + CRLF + ;
+         "/Filter [" + IIF( at( ".jpg", lower( aReport[ IMAGES ][ nI ][ 1 ]) ) > 0, " /DCTDecode", "" ) + " ]" + CRLF + ;
          "/Width " + ltrim(str( aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_WIDTH ] )) + CRLF + ;
          "/Height " + ltrim(str( aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_HEIGHT ] )) + CRLF + ;
          "/BitsPerComponent " + ltrim(str( aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] )) + CRLF + ;
@@ -809,9 +809,9 @@ local cImage, nTemp1, nLength
 
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                      */
+========================================                                      */
 static function pdfGetFontInfo( cParam )                                      /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                      */
+========================================                                      */
 local cRet
    IF cParam == "NAME"
       IF left( aReport[ TYPE1 ][ aReport[ FONTNAME ] ], 5 ) == "Times"
@@ -826,9 +826,9 @@ local cRet
    ENDIF
 return cRet
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹          */
+====================================================================          */
 function pdfImage( cFile, nRow, nCol, cUnits, nHeight, nWidth, cId )          /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹          */
+====================================================================          */
 
 DEFAULT nRow to aReport[ REPORTLINE ]
 DEFAULT nCol to 0
@@ -866,9 +866,9 @@ DEFAULT cId to ""
 
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                          */
+====================                                                          */
 function pdfItalic()                                                          /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                          */
+====================                                                          */
    IF pdfGetFontInfo("NAME") = "Times"
       aReport[ FONTNAME ] := 3
    ELSEIF pdfGetFontInfo("NAME") = "Helvetica"
@@ -882,9 +882,9 @@ function pdfItalic()                                                          /*
    ENDIF
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                    */
+==========================                                                    */
 function pdfLen( cString )                                                    /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                    */
+==========================                                                    */
 local nWidth := 0.00, nI, nLen, nArr, nAdd := ( aReport[ FONTNAME ] - 1 ) % 4
 
    nLen := len( cString )
@@ -903,24 +903,24 @@ local nWidth := 0.00, nI, nLen, nArr, nAdd := ( aReport[ FONTNAME ] - 1 ) % 4
    Next
 return nWidth
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                  */
+============================                                                  */
 static function pdfM2R( mm )                                                  /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                  */
+============================                                                  */
 return int( aReport[ LPI ] * mm / 25.4 )
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                   */
+===========================                                                   */
 static function pdfM2X( n )                                                   /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                   */
+===========================                                                   */
 return n * 72 / 25.4
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                   */
+===========================                                                   */
 static function pdfM2Y( n )                                                   /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                   */
+===========================                                                   */
 return aReport[ PAGEY ] -  n * 72 / 25.4
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                      */
+========================                                                      */
 function pdfNewLine( n )                                                      /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                      */
+========================                                                      */
 DEFAULT n to 1
    IF aReport[ REPORTLINE ] + n + aReport[ PDFTOP ] > aReport[ PDFBOTTOM ]
       pdfNewPage()
@@ -930,9 +930,9 @@ DEFAULT n to 1
    ENDIF
 return aReport[ REPORTLINE ]
                                                                                           /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹*/
+==========================================================================================*/
 function pdfNewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _nFontSize )/*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹*/
+==========================================================================================*/
 local nAdd := 76.2
 DEFAULT _cPageSize to aReport[ PAGESIZE ]
 DEFAULT _cPageOrient to aReport[ PAGEORIENT ]
@@ -966,9 +966,9 @@ DEFAULT _nFontSize to aReport[ FONTSIZE ]
    aReport[ PDFBOTTOM    ] := aReport[ PAGEY ] / 72 * aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                          */
+====================                                                          */
 function pdfNormal()                                                          /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                          */
+====================                                                          */
    IF pdfGetFontInfo("NAME") = "Times"
       aReport[ FONTNAME ] := 1
    ELSEIF pdfGetFontInfo("NAME") = "Helvetica"
@@ -982,9 +982,9 @@ function pdfNormal()                                                          /*
    ENDIF
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                    */
+==========================================                                    */
 function pdfOpen( cFile, nLen, lOptimize )                                    /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                    */
+==========================================                                    */
 local cTemp, nI, nJ, n1, n2 := 896, n12
 DEFAULT nLen to 200
 DEFAULT lOptimize to .f.
@@ -1060,9 +1060,9 @@ DEFAULT lOptimize to .f.
 
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                            */
+==================================                                            */
 function pdfPageSize( _cPageSize )                                            /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                            */
+==================================                                            */
 local nSize, aSize := { { "LETTER",    8.50, 11.00 }, ;
                         { "LEGAL" ,    8.50, 14.00 }, ;
                         { "LEDGER",   11.00, 17.00 }, ;
@@ -1101,42 +1101,42 @@ DEFAULT _cPageSize to "LETTER"
    aReport[ PDFBOTTOM    ] := aReport[ PAGEY ] / 72 * aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                        */
+======================================                                        */
 function pdfPageOrient( _cPageOrient )                                        /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                        */
+======================================                                        */
 DEFAULT _cPageOrient to "P"
 
    aReport[ PAGEORIENT ] := _cPageOrient
    pdfPageSize( aReport[ PAGESIZE ] )
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                */
+==============================                                                */
 static function pdfR2D( nRow )                                                /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                */
+==============================                                                */
 return aReport[ PAGEY ] - nRow * 72 / aReport[ LPI ]
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                */
+==============================                                                */
 static function pdfR2M( nRow )                                                /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                */
+==============================                                                */
 return 25.4 * nRow / aReport[ LPI ]
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                   */
+===========================                                                   */
 function pdfPageNumber( n )                                                   /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                   */
+===========================                                                   */
 DEFAULT n to 0
    IF n > 0
       aReport[ REPORTPAGE ] := n // NEW !!!
    ENDIF
 return aReport[ REPORTPAGE ]
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                */
+==============================                                                */
 function pdfReverse( cString )                                                /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                */
+==============================                                                */
 return cString + chr(255)
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                 */
+=============================================================                 */
 function pdfRJust( cString, nRow, nCol, cUnits, lExact, cId )                 /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                 */
+=============================================================                 */
 local nLen, nAdj := 1.0, nAt
 DEFAULT nRow to aReport[ REPORTLINE ]
 DEFAULT cUnits to "R"
@@ -1161,9 +1161,9 @@ DEFAULT lExact to .f.
    pdfAtSay( cString, pdfR2M( nRow ), IIF( cUnits == "R", aReport[ PDFLEFT ] + ( aReport[ PAGEX ] / 72 * 25.4 - 2 * aReport[ PDFLEFT ] ) * nCol / aReport[ REPORTWIDTH ] - nAdj, nCol ) - nLen, "M", lExact )
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                            */
+==================================================                            */
 function pdfSetFont( _cFont, _nType, _nSize, cId )                            /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                            */
+==================================================                            */
 
 DEFAULT _cFont to "Times"
 DEFAULT _nType to 0
@@ -1191,9 +1191,9 @@ DEFAULT _nSize to 10
    ENDIF
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                     */
+=========================                                                     */
 function pdfSetLPI(_nLpi)                                                     /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                     */
+=========================                                                     */
 local cLpi := alltrim(str(_nLpi))
 DEFAULT _nLpi to 6
 
@@ -1203,21 +1203,21 @@ DEFAULT _nLpi to 6
    pdfPageSize( aReport[ PAGESIZE ] )
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                */
+==============================                                                */
 function pdfStringB( cString )                                                /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                */
+==============================                                                */
    cString := strtran( cString, "(", "\(" )
    cString := strtran( cString, ")", "\)" )
 return cString
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹*/
+==============================================================================*/
 function pdfTextCount( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits )/*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹*/
+==============================================================================*/
 return pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, .f. )
                                                                                  /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹*/
+=================================================================================*/
 function pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor, lPrint )/*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹*/
+=================================================================================*/
 local cDelim := chr(0)+chr(9)+chr(10)+chr(13)+chr(26)+chr(32)+chr(138)+chr(141)
 local nI, cTemp, cToken, k, nL, nRow, nLines, nLineLen, nStart
 local lParagraph, nSpace, nNew, nTokenLen, nCRLF, nTokens, nLen
@@ -1407,9 +1407,9 @@ DEFAULT cColor to ""
 
 return nLines
                                                                                                                                          /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹*/
+=========================================================================================================================================*/
 static function pdfTextPrint( nI, nLeft, lParagraph, nJustify, nSpace, nNew, nLength, nLineLen, nLines, nStart, cString, cDelim, cColor, lPrint )/*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹*/
+=========================================================================================================================================*/
 local nFinish, nL, nB, nJ, cToken, nRow
 
    nFinish := nI
@@ -1453,9 +1453,9 @@ local nFinish, nL, nB, nJ, cToken, nRow
 
 return nil
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                        */
+======================================================                        */
 static function pdfTextNextPara( cString, cDelim, nI )                        /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                        */
+======================================================                        */
 local nAt, cAt, nCRLF, nNew, nRat, nRet := 0
    // check if next spaces paragraph(s)
    nAt := attoken( cString, cDelim, nI ) + len( token( cString, cDelim, nI ) )
@@ -1468,19 +1468,19 @@ local nAt, cAt, nCRLF, nNew, nRat, nRet := 0
    ENDIF
 return nRet
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                              */
+================================                                              */
 function pdfUnderLine( cString )                                              /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                              */
+================================                                              */
 return cString + chr(254)
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                   */
+===========================                                                   */
 static function pdfX2M( n )                                                   /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                                   */
+===========================                                                   */
 return n * 25.4 / 72
                                                                               /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                           */
+===================================                                           */
 static function TimeAsAMPM( cTime )                                           /*
-‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹                                           */
+===================================                                           */
    IF VAL(cTime) < 12
       cTime += " am"
    ELSEIF VAL(cTime) == 12

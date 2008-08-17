@@ -44,7 +44,7 @@ GOTO END
 GOTO END
 :RTF
    hbdoc /RTF libgt.lnk libgt.rsp
-   HCW HARBOUR.HPJ
+   HCW harbour.hpj
 GOTO END
 :HTM
     hbdoc /HTM libgt.lnk libgt.rsp
@@ -54,4 +54,3 @@ del ass*.bat
 
 del libgt.lnk
 ren libgt.old libgt.lnk
-
