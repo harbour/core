@@ -519,7 +519,7 @@ static int convert_seek_flags( USHORT uiFlags )
 
 
 /*
- * FILESYS.API FUNCTIONS --
+ * filesys.api functions:
  */
 
 HB_EXPORT FHANDLE hb_fsGetOsHandle( FHANDLE hFileHandle )

@@ -682,7 +682,7 @@ FUNCTION WvtMyBrowse()
 
    nStyle++
 
-   aAdd( aBlocks, {|| Wvt_SetIcon( 'DIA_EXCL.ico' ) } )
+   aAdd( aBlocks, {|| Wvt_SetIcon( 'dia_excl.ico' ) } )
    aAdd( aBlocks, {|| Wvt_SetTitle( 'WVT Gui TBrowse()' ) } )
    aAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLeft, nBottom, nRight ) } )
    aAdd( aBlocks, {|| Wvt_DrawBoxRecessed( nTop+3, nLeft+2, nBottom-1, nRight-2 ) } )
@@ -1834,7 +1834,7 @@ Function DynDialog_2()
    lOnTop      := .f.
    cDlgProc    := 'DynDlgProc_2'
    bDlgProc    := {|a,b,c,d| DYNDLGPROC_2(a,b,c,d) }
-   cDlgIcon    := 'V_Notes.Ico'
+   cDlgIcon    := 'v_notes.ico'
    nTimerTicks := 1000  // 1 second
 
    if nInfo % 2 == 1
@@ -1939,7 +1939,7 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
       endif
 
       if shIcon == nil
-         shIcon := Win_LoadIcon( 'Vr_1.ico' )
+         shIcon := Win_LoadIcon( 'vr_1.ico' )
       endif
       if shIcon != nil .or. shIcon != 0
          Win_SendMessage( Win_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, shIcon )
@@ -1947,7 +1947,7 @@ Function DynDlgProc_2( hDlg, nMsg, wParam, lParam )
 
       /*
       if shImage == nil
-         shImage := Win_LoadImage( 'Vouch1.bmp', 2 )
+         shImage := Win_LoadImage( 'vouch1.bmp', 2 )
       endif
       if shImage != nil .and. shImage != 0
          Win_SendMessage( Win_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, shImage )
@@ -2047,13 +2047,13 @@ EXIT PROCEDURE CleanHandles()
 FUNCTION DlgSlideShow()
    LOCAL hDlg, aDlg, nStyle
 
-   aSlides := { 'Vouch1.bmp', 'V_Notes.ico', '2000.gif', 'V_Lock.bmp', 'V_Help.ico' }
+   aSlides := { 'vouch1.bmp', 'v_notes.ico', '2000.gif', 'v_lock.bmp', 'v_help.ico' }
 
    nStyle  := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
 
    aDlg    := Wvt_MakeDlgTemplate( 0, 0, 20, 40, {}, 'Slide Show', nStyle )
 
-   hDlg    := Wvt_CreateDialog( aDlg, .f., 'DlgSlideShowProc', 'Vr_1.ico', 5000 )
+   hDlg    := Wvt_CreateDialog( aDlg, .f., 'DlgSlideShowProc', 'vr_1.ico', 5000 )
 
    Return hDlg
 

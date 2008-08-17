@@ -56,7 +56,7 @@
 #include <limits.h>
 
 /* ***********************************************************************
- * Include settings common for .PRG and .C files
+ * Include settings common for .prg and .c files
  */
 #include "hbsetup.ch"
 

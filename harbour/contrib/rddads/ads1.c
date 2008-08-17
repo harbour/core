@@ -787,7 +787,7 @@ static ERRCODE adsGoTo( ADSAREAP pArea, ULONG ulRecNo )
    HB_TRACE(HB_TR_DEBUG, ("adsGoTo(%p, %lu)", pArea, ulRecNo));
 
    /* -----------------7/19/2001 3:04PM-----------------
-     The following call is a necessary workaround for ACE32.DLL
+     The following call is a necessary workaround for ace32.dll
      prior to 6.1.  There were bugs where
      AdsGotoRecord() can FAIL to move the record pointer
      after some sequences of setting/clearing relations.

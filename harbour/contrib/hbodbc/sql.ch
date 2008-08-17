@@ -4,7 +4,7 @@
 
 /*
 *
-*  SQL.CH
+*  sql.ch
 *  (Not Ready) Headers for ODBC
 *
 **/

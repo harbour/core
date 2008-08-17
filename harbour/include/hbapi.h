@@ -53,7 +53,7 @@
 /* TOFIX: There are several things in this file which are not part of the
           standard Harbour API, in other words these things are not
           guaranteed to remain unchanged. To avoid confusion these should be
-          moved to somewhere else (like HBRTL.H). [vszakats] */
+          moved to somewhere else (like hbrtl.h). [vszakats] */
 
 #ifndef HB_APIEXT_H_
 #define HB_APIEXT_H_

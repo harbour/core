@@ -34,7 +34,7 @@
     + added sample to use barcode of the type 2 of 5
 
 2006-03-21 00:38 UTC+0100 Francesco Saverio Giudice <info/at/fsgiudice.com>
-  * contrib/gd/Rules.make
+  * contrib/gd/rules.make
   * contrib/gd/make_vc.bat
     * fixed make files
 
@@ -130,13 +130,13 @@
   * samples\barcode\bldtest.bat
   * samples\barcode\bldtestvc.bat
     + Added barcode sample
-  * README.txt
-  * MAKEFILE.BC
+  * readme.txt
+  * makefile.bc
     ! Updated with BarCode stuff
 
 2005-11-07 01:37 UTC+0100 Francesco Saverio Giudice <info@fsgiudice.com>
 
-  * contrib/gd/README.txt
+  * contrib/gd/readme.txt
     * updated
 
 2005-11-07 00:15 UTC+0100 Francesco Saverio Giudice <info@fsgiudice.com>
@@ -159,7 +159,7 @@
 
 2005-10-31 01:37 UTC+0100 Francesco Saverio Giudice <info@fsgiudice.com>
 
-  + contrib/gd/Rules.make
+  + contrib/gd/rules.make
     * reverted. file needed
 
 2005-10-31 01:20 UTC+0100 Francesco Saverio Giudice <info@fsgiudice.com>
@@ -179,7 +179,7 @@
       if your distribution is different please update header files
       this is needed because some functions are missing in 2.0.28
 
-  - contrib/gd/Rules.make
+  - contrib/gd/rules.make
   - contrib/gd/test/Makefile
   - contrib/gd/test/Makefile.linux
   - contrib/gd/test/Makefile.mingw32
@@ -307,7 +307,7 @@
     + /doc/zlib-license.txt
     + /env/makeb32.env
     + /env/makelib.b32
-    + /env/bccWin32.Mak
+    + /env/bccwin32.mak
     + /include/gd.h
     + /include/gdcache.h
     + /include/gdfontg.h
