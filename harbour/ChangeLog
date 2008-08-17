@@ -8,6 +8,17 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-17 09:48 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbapirdd.h
+   * include/hbsetup.h
+     + Added the most commonly used old #defines for compatibility:
+       - HARBOUR_MAX_RDD_DRIVERNAME_LENGTH
+       - HARBOUR_MAX_RDD_ALIAS_LENGTH
+       - OS_UNIX_COMPATIBLE
+       - OS_PATH_DELIMITER
+       Please try not to use these anymore, as they will be removed 
+       in version 1.1.
+
 2008-08-17 08:59 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/dirstruc.txt
      * Updated to reflect current state. [Chen Kedem]

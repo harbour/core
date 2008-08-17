@@ -66,8 +66,14 @@ HB_EXTERN_BEGIN
    #define HB_RDD_MAX_ALIAS_LEN            32
 #endif
 
-/* #define HARBOUR_MAX_RDD_FIELDNAME_LENGTH        32 */
+/* #define HB_MAX_RDD_FIELDNAME_LEN        32 */
 #define HB_RDD_MAX_AREA_NUM                65535
+
+/* Some compatibility #defines. This will be removed, 
+   please use the new names in your code. */
+#define HARBOUR_MAX_RDD_DRIVERNAME_LENGTH  HB_RDD_MAX_DRIVERNAME_LEN
+#define HARBOUR_MAX_RDD_ALIAS_LENGTH       HB_RDD_MAX_ALIAS_LEN
+
 
 /* DBCMD errors */
 
