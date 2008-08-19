@@ -41,11 +41,11 @@ MEMVAR lRet
                 {'Invoice 2', DATE(), 234.98, .F.},;
                 {'Invoice 3', DATE() + 1, 0, .T.}  }, aSave
  LOCAL nErrorCode := 0
- FT_SAVEARR(aArray,'INVOICE.DAT',@nErrorCode)
+ FT_SAVEARR(aArray,'invoice.dat',@nErrorCode)
  IF nErrorCode = 0
    CLS
    DispArray(aArray)
-   aSave := FT_RESTARR('INVOICE.DAT',@nErrorCode)
+   aSave := FT_RESTARR('invoice.dat',@nErrorCode)
    IF nErrorCode = 0
      DispArray(aSave)
    ELSE
@@ -113,9 +113,9 @@ MEMVAR lRet
  *                {'Invoice 2',DATE(),234.98,.F.},;
  *                {'Invoice 3',DATE() + 1,0,.T.}  }
  *    nErrorCode := 0
- *    FT_SAVEARR(aArray,'INVOICE.DAT',@nErrorCode)
+ *    FT_SAVEARR(aArray,'invoice.dat',@nErrorCode)
  *    IF nErrorCode = 0
- *      aSave := FT_RESTARR('INVOICE.DAT',@nErrorCode)
+ *      aSave := FT_RESTARR('invoice.dat',@nErrorCode)
  *      IF nErrorCode # 0
  *         ? 'Error restoring array'
  *      ENDIF
@@ -220,9 +220,9 @@ STATIC FUNCTION _ftsavesub(xMemVar, nHandle, nErrorCode)
  *                {'Invoice 2',DATE(),234.98,.F.},;
  *                {'Invoice 3',DATE() + 1,0,.T.}  }
  *    nErrorCode := 0
- *    FT_SAVEARR(aArray,'INVOICE.DAT',@nErrorCode)
+ *    FT_SAVEARR(aArray,'invoice.dat',@nErrorCode)
  *    IF nErrorCode = 0
- *      aSave := FT_RESTARR('INVOICE.DAT',@nErrorCode)
+ *      aSave := FT_RESTARR('invoice.dat',@nErrorCode)
  *      IF nErrorCode # 0
  *         ? 'Error restoring array'
  *      ENDIF

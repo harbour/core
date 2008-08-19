@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * checks.Prg checks gets for hbmake
+ * checks.prg checks gets for hbmake
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org

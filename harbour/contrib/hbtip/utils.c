@@ -287,7 +287,7 @@ static MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
    /* 43*/ { 0, "#! /usr/local/bin/python", "application/x-python", 0, 0, 0 },
    /* 44*/ { 0, "eval \"exec /usr/local/bin/python", "application/x-python", 0, 0, 0 },
 
-   /* Unix compress (.Z) */
+   /* Unix compress (.z) */
    /* 45*/ { 0, "\x1F\x9D", "application/x-compress", 0, 0, 0 },
 
    /* Unix gzip */

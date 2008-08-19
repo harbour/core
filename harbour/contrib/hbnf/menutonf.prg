@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: MENUTO.PRG
+ * File......: menuto.prg
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *     Define a menu item for use with FT_MenuTo()
  *  $SYNTAX$
- *     #include "FTMENUTO.CH"
+ *     #include "ftmenuto.ch"
  *
  *     @ <nRow>, <nCol> PROMPT <cPrompt>                     ;
  *                      [COLOR <cColor>]                     ;
@@ -145,14 +145,14 @@
  *     syntax.  See the entry for FT_PROMPT() for further details.
  *
  *     This enhanced version of @...PROMPT requires the inclusion of
- *     the header file FTMENUTO.CH in any source file that uses it.
+ *     the header file ftmenuto.ch in any source file that uses it.
  *     It is may be used in place of the standard Clipper @...PROMPT
  *     command.  However, in the interests of functionality it is NOT
  *     100% compatible.  No whining!  If compatibility is such a big
  *     deal then use the standard Clipper commands.
  *
  *  $EXAMPLES$
- *    #include "FTMENUTO.CH"
+ *    #include "ftmenuto.ch"
  *
  *    // Simple prompt
  *    @ 1, 1 PROMPT "Menu choice #1"
@@ -176,7 +176,7 @@
  *    // Prompt with right and left arrow keys disabled
  *    @15, 1 PROMPT "Menu Choice #8" RIGHT 8 LEFT 8
  *  $INCLUDE$
- *     FTMENUTO.CH
+ *     ftmenuto.ch
  *  $SEEALSO$
  *
  *  $END$
@@ -309,7 +309,7 @@ return NIL
  *  $ONELINER$
  *     Execute light bar menu using prompts created with @...PROMPT
  *  $SYNTAX$
- *     #include "FTMENUTO.CH"
+ *     #include "ftmenuto.ch"
  *
  *     MENU TO <var> [COLD]
  *  $ARGUMENTS$
@@ -321,7 +321,7 @@ return NIL
  *     to be selected it only causes the light bar to move to that selection.
  *  $DESCRIPTION$
  *     This enhanced version of MENU TO requires the inclusion of the header
- *     file FTMENUTO.CH in any source file that uses it.  It may be used in
+ *     file ftmenuto.ch in any source file that uses it.  It may be used in
  *     place of the standard Clipper MENU TO command.  However, in the
  *     interests of functionality it is NOT 100% compatible (in particular,
  *     you should make sure that the target memvar exists before executing
@@ -333,14 +333,14 @@ return NIL
  *     Note that this command can also be called using function-style
  *     syntax.  See the entry for FT_MENUTO() for further details.
  *  $EXAMPLES$
- *    #include "FTMENUTO.CH"
+ *    #include "ftmenuto.ch"
  *
  *    // Simple command
  *
  *    MENU TO memvar
  *
  *  $INCLUDE$
- *    FTMENUTO.CH
+ *    ftmenuto.ch
  *  $SEEALSO$
  *    FT_Prompt()
  *  $END$

@@ -53,7 +53,7 @@ HB_FUNC( CHOOSEFONT )
 
 //----------------------------------------------------------------------------
 
-// to be called called via FindText (in WinCDlg.Prg)
+// to be called called via FindText (in wincdlg.prg)
 
 HB_FUNC( _FINDTEXT )
 {
@@ -78,7 +78,7 @@ HB_FUNC( _FINDTEXT )
 
 //----------------------------------------------------------------------------
 
-// to be called called via FindText (in WinCDlg.Prg)
+// to be called called via FindText (in wincdlg.prg)
 
 HB_FUNC( _REPLACETEXT )
 {
@@ -192,7 +192,7 @@ HB_FUNC( CHOOSECOLOR )
 
 //----------------------------------------------------------------------------
 
-// to be called via GetOpenFileName in WinCDlg.Prg
+// to be called via GetOpenFileName in wincdlg.prg
 
 HB_FUNC( _GETOPENFILENAME )
 {
@@ -231,7 +231,7 @@ HB_FUNC( _GETOPENFILENAME )
 
 //----------------------------------------------------------------------------
 
-// to be called via GetSaveFileName in WinCDlg.Prg
+// to be called via GetSaveFileName in wincdlg.prg
 
 HB_FUNC( _GETSAVEFILENAME )
 {

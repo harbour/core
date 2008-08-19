@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: TEXT.C
+ * File......: text.c
  * Author....: Brice de Ganahl and Steve Larsen
  * CIS ID....: 76370,1532
  *
@@ -252,7 +252,7 @@ HB_FUNC( FT_FOFFSET )
  *
  *     ^b<nMode>^n is the open mode for the file.  Please refer to the
  *     discussion of open modes under FOPEN() in the Clipper manual
- *     and FILEIO.CH for a list of allowable open modes.  If not
+ *     and fileio.ch for a list of allowable open modes.  If not
  *     specified, the file will be opened with a mode of
  *     FO_READ + FO_SHARED (64).
  *
@@ -1482,7 +1482,7 @@ HB_FUNC( FT_FLASTRE )
  *
  *  $EXAMPLES$
  *
- *     FT_FUSE( "FTTEXT.C" )
+ *     FT_FUSE( "fttext.c" )
  *
  *     ? FT_FEOF()        // .F.
  *
@@ -1530,7 +1530,7 @@ HB_FUNC( FT_FEOF )
  *
  *  $EXAMPLES$
  *
- *     FT_FUSE( "FTTEXT.C" )
+ *     FT_FUSE( "fttext.c" )
  *
  *     FT_FGOTOP()
  *
@@ -1594,7 +1594,7 @@ HB_FUNC( FT_FBOF )
  *
  *     // read 5th line of text from file
  *
- *     ft_fUse( "FTTEXT.C" )
+ *     ft_fUse( "fttext.c" )
  *
  *     ft_fGoTo(5)
  *

@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/* File......: PUTKEY.ASM
+/* File......: putkey.asm
 * Author....: Ted Means
 * CIS ID....: 73067,3332
 *
@@ -16,7 +16,7 @@
 *  Just making sure we have Ted's latest revisions.
 *
 *     Rev 1.3   01 Jul 1992 01:07:02   GLENN
-*  PUTKEY.ASM now bypasses the BIOS completely and uses Clipper's
+*  putkey.asm now bypasses the BIOS completely and uses Clipper's
 *  internal event handler to stuff the keystroke.  Modifications by
 *  Ted Means.
 *

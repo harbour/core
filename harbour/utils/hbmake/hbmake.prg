@@ -3135,7 +3135,7 @@ Endif // Create and compile
 
       // C-sources: .c
       IF Len( s_aCFiles ) = Len( s_aObjsC )
-         Attention("Scanning .C sources...",19)
+         Attention("Scanning .c sources...",19)
          FOR nPos := 1 to Len(s_aCFiles)
             cIncl := ScanInclude( s_aCFiles[ nPos ], lScanIncRecursive, cExcludeExts )
             // Only add in list if dependencies exist

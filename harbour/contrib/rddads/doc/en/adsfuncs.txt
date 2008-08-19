@@ -34,7 +34,7 @@
  *  $RETURNS$
  *      <lSuccess>  True if the file is successfully written.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *      ADSBlob2File() is a wrapper for AdsBinaryToFile.
  *  $EXAMPLES$
  *  $TESTS$
@@ -73,7 +73,7 @@
  *  $RETURNS$
  *      <lSuccess>   True if the file is successfully written.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *      ADSFile2Blob() is a wrapper for AdsFileToBinary.
  *      Use of this function is illegal in an ADS transaction.
  *  $EXAMPLES$
@@ -106,7 +106,7 @@
  *  $RETURNS$
  *      NIL
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -175,7 +175,7 @@
  *      filter expressions ".T." and ".F." both result in fully optimized AOFs
  *      regardless of available indexes.
 
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -210,7 +210,7 @@
  *      IMPORTANT NOTE: These values are NOT the same as those returned
  *      by dbOrderInfo().
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -243,7 +243,7 @@
  *      Values are defined in ads.ch:
  *      ADS_OPTIMIZED_FULL, ADS_OPTIMIZED_PART, ADS_OPTIMIZED_NONE.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -274,7 +274,7 @@
  *  $RETURNS$
  *      <cFilter>  The filter expression used in the call to AdsSetAOF.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -306,7 +306,7 @@
  *      <cFilterFragment>  If an AOF filter expression is not fully optimizable,
  *      the non-optimizable part of the expression can be retrieved with this function.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -337,7 +337,7 @@
  *  $RETURNS$
  *      NIL
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *      If record updates occur after an AOF is set, the updated records may
  *      or may not be valid records for the filter. ADSRefreshAOF()
  *      re-evaluates the data to include or exclude changed records.
@@ -376,7 +376,7 @@
  *  $RETURNS$
  *      <lSuccess>   True if AOF is created.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -407,7 +407,7 @@
  *  $RETURNS$
  *      True if the record satisfies the filter criteria.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -446,7 +446,7 @@
  *
  *      This is the recommended function for positioning a scrollbar
  *      or other "coarse" position interface.
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -484,7 +484,7 @@
  *
  *      This is the recommended function for re-positioning in reaction to
  *      a dragged scrollbar thumb or other "coarse" navigation interface.
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -533,7 +533,7 @@
  *  $RETURNS$
  *      <nKeyCount>  The number of keys within the current index.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -581,7 +581,7 @@
  *  $RETURNS$
  *      <nKeyNo>   The logical key number of the current record in the given index.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.</par>
+ *      See ace.hlp for full details about the Advantage Database Server.</par>
  *      Wrapper for AdsGetKeyNum. </par>
  *      This function may be slow on a large database with
  *      ADS_RESPECTFILTERS set because it walks through the keys to get the
@@ -617,7 +617,7 @@
  *  $RETURNS$
  *      <lPriorSetting>   .T. if prior setting was for the proprietary mode.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *      The Advantage Database Server has a fast Proprietary locking mode that
  *      is more efficient than traditional network locking. It is only available
  *      when using the remote server (not the local server).
@@ -662,7 +662,7 @@
  *  $RETURNS$
  *      <lPriorSetting>
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *      ADSRightsCheck() is a Get/Set function for the "rights checking" mode.
  *      If the setting is .T. when a file is opened, then the Advantage
  *      Database Server will use the rights of the connected user when
@@ -707,8 +707,8 @@
  *  $RETURNS$
  *      <nil>
  *  $DESCRIPTION$
- *      See ACE.HLP for full details on AdsRegisterProgressCallback.
- *      ACE32.DLL does not support the EVAL/EVERY clauses. Remember, there
+ *      See ace.hlp for full details on AdsRegisterProgressCallback.
+ *      ace32.dll does not support the EVAL/EVERY clauses. Remember, there
  *      is an external process doing the indexing that knows nothing of
  *      Harbour expressions or codeblocks. Even with Local Server it's the
  *      DLLs doing all the indexing. So to do progress meters
@@ -946,7 +946,7 @@
  *  $RETURNS$
  *      <nPriorSetting>
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *      This sets the usCharType parameter used when ADS opens a table.
  *  $EXAMPLES$
  *  $TESTS$
@@ -1027,7 +1027,7 @@
  *      call, not a server request, and should be fast, it will be
  *      called for EACH FIELD as it is assigned a value.
 
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -1058,7 +1058,7 @@
  *  $RETURNS$
  *      The error code generated by the most recent ADS API call. Zero for success.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -1092,7 +1092,7 @@
  *      used in indexes, filters, scopes, etc. Unlike internal RDDs like DBFNTX,
  *      the server is independent of the applications code, so it cannot understand
  *      references to PUBLIC variables or User-Defined Functions (UDFs).
- *      (See ACE.HLP under Advantage Expression Engine for a list of functions
+ *      (See ace.hlp under Advantage Expression Engine for a list of functions
  *      allowed by ADS.)
  *      Call AdsIsExprValid() to determine if the server can process the expression.
 
@@ -1145,7 +1145,7 @@
  *      This function identifies the type of server used by a connection handle.
  *      Note that after a table is opened, the type of connection used for
  *      that workarea can be retrieved with AdsGetTableConType().
- *      See ACE.HLP for full details.
+ *      See ace.hlp for full details.
  *  $EXAMPLES$
  *  $TESTS$
  *  $STATUS$
@@ -1215,7 +1215,7 @@
  *  $RETURNS$
  *      <lSuccess> -> .T. if file was added, otherwise .F.
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *      AdsDDAddTable() adds a new table to an ADS data dictionary.
  *      To add the table you must be connected as ADSSYS user using the AdsConnect60() function
  *  $EXAMPLES$
@@ -1288,7 +1288,7 @@
  *      <lSuccess>   True if connected, otherwise False.
  *  $DESCRIPTION$
  *      Adsconnect60() makes the connection to an advantage database server.
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *  $EXAMPLES$
  *      IF adsConnect60("xharbour.add", 7/* All types of connection*/, "ADSSYS", "",)
  *         // Add one user
@@ -1439,7 +1439,7 @@
  *  $RETURNS$
  *      <lPriorSetting>
  *  $DESCRIPTION$
- *      See ACE.HLP for full details about the Advantage Database Server.
+ *      See ace.hlp for full details about the Advantage Database Server.
  *      ADSRightsCheck() is a Get/Set function for the "rights checking" mode.
  *  $EXAMPLES$
  *  $TESTS$

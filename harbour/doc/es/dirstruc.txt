@@ -38,9 +38,7 @@ busca de remover directorios vac¡os)
 |                        (cambios hist¢ricos)
 |
 +---bin                - Ejecutables y batch de construcci¢n
-|   |                    deber¡a contener HARBOUR.EXE y otros ejecutables (*)
-|   |
-|   +---b16            - aqui se construye los binarios 16 bits Borland
+|   |                    deber¡a contener harbour.exe y otros ejecutables (*)
 |   |
 |   +---b32            - aqui se construye los binarios 32 bits Borland
 |   |
@@ -235,7 +233,7 @@ busca de remover directorios vac¡os)
     |
     +---hbdoc          - Herramienta generadora de Documentaci¢n 
     |
-    +---hbextern       - generador de HBEXTERN.CH
+    +---hbextern       - generador de hbextern.ch
     |
     +---hbmake         - Utilidad Make de Harbour 
     |
@@ -260,7 +258,5 @@ directorio est  vac¡o ¢ no contiene todos los archivos.
      que se construyen los ejecutables y las librer¡as.
      si Ud. construye el compilador Harbour.
 
-(#3) (.HRB), Archivos de formato Harbour Portable Object 
+(#3) (.hrb), Archivos de formato Harbour Portable Object 
   
-
-

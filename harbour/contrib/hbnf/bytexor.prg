@@ -49,8 +49,8 @@
  *     bit-by-bit XOR operation.  Equivalent to XOR assembler instruction.
  *
  *     This function is presented to illustrate that bit-wise operations
- *     are possible with Clipper code.  For greater speed, write .C or
- *     .ASM versions and use the Clipper Extend system.
+ *     are possible with Clipper code.  For greater speed, write .c or
+ *     .asm versions and use the Clipper Extend system.
  *  $EXAMPLES$
  *     This code performs a bit-wise XOR on two bytes represented
  *     by CHR(32) and CHR(55):

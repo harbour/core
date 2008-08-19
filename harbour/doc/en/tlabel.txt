@@ -42,7 +42,7 @@
  *      If the TO FILE clause is specified, the name of the ASCII text file
  *      containing the generated labels will be <cFile>.   </par>
  *
- *      If no file extension is specified a .TXT extension is added.
+ *      If no file extension is specified a .txt extension is added.
  *      <cScope> is the scope condition for this command. Valid scopes
  *      include NEXT <expN> (number of records to be displayed, where <expN>
  *      is the number of records), RECORD <expN> (a specific record to be

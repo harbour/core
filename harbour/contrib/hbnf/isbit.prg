@@ -49,8 +49,8 @@
  *     one-byte character result of an expression.
  *
  *     This function is presented to illustrate that bit-wise operations
- *     are possible with Clipper code.  For greater speed, write .C or
- *     .ASM versions and use the Clipper Extend system.
+ *     are possible with Clipper code.  For greater speed, write .c or
+ *     .asm versions and use the Clipper Extend system.
  *  $EXAMPLES$
  *     This code tests whether bit 3 is set in the byte represented by
  *     CHR(107):

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FT_FUNCS.Prg File support Functions For hbdoc
+ * ft_funcs.prg File support Functions For hbdoc
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org

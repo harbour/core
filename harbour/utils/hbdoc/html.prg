@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  * HTML Support Code For HBDOC
- * HTML .CMH support code for HBDOC
+ * HTML .chm support code for HBDOC
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -76,7 +76,7 @@ CLASS THTML
    METHOD WriteText( cText )
    METHOD WriteMetaTag(cTag,cDescription)
    METHOD CLOSE()
-   // The Follow methods is for html source files for .CHM help
+   // The Follow methods is for html source files for .chm help
    METHOD NewChm( cFile ,aMetaContents,cFuncName)
    METHOD ADDoBJECT(cType,cClassid)
    METHOD ADDPARAM(cName,cValue)
@@ -211,7 +211,7 @@ METHOD WriteMetaTag(cTag,cDescription) Class THtml
     fWrite(Self:nHandle,'<META NAME="'+cTag+'" CONTENT="'+cDescription+'">'+CRLF)
 return Self
 
-/////////////////////Method for .CHM html source files support////////////////
+/////////////////////Method for .chm html source files support////////////////
 METHOD NewChm( cFile ,aMetaContents,cFuncName) CLASS THTML
     
    Local nCount

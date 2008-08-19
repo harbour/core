@@ -47,8 +47,8 @@
  *     and easy comparison to hexadecimal notation.
  *
  *     This function is presented to illustrate that bit-wise operations
- *     are possible with Clipper code.  For greater speed, write .C or
- *     .ASM versions and use the Clipper Extend system.
+ *     are possible with Clipper code.  For greater speed, write .c or
+ *     .asm versions and use the Clipper Extend system.
  *  $EXAMPLES$
  *     These three code lines perform a bitwise AND on bytes with values of
  *     CHR(20) and CHR(36), and deliver the result as a string in binary (bit)

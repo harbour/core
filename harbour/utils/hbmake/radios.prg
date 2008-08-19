@@ -3,7 +3,7 @@
  */
 /*
  * Harbour Project source code:
- * radios.Prg radios gets for hbmake
+ * radios.prg radios gets for hbmake
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org

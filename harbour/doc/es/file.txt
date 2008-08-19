@@ -873,19 +873,19 @@
  *      TYPE.
  *  $EXAMPLES$
  *      Los siguientes ejemplos asumen que un archivo con el nombre 
- *      MiTexto.DAT existe en todos los caminos especificados, un error de
+ *      mitexto.dat existe en todos los caminos especificados, un error de
  *      ejecuci¢n podr¡a ser visualizado de no ser as¡.
  *
- *      // Visualiza el archivo MiTexto.DAT en la pantalla
- *      __TYPEFILE( "MiTexto.DAT" )
+ *      // Visualiza el archivo mitexto.dat en la pantalla
+ *      __TYPEFILE( "mitexto.dat" )
  *
- *      // Visualiza el archivo MiTexto.DAT en la pantalla e impresora
- *      __TYPEFILE( "MiTexto.DAT", .T. )
+ *      // Visualiza el archivo mitexto.dat en la pantalla e impresora
+ *      __TYPEFILE( "mitexto.dat", .T. )
  *
- *      // Visualiza el archivo MiTexto.DAT en la impresora solamente
+ *      // Visualiza el archivo mitexto.dat en la impresora solamente
  *      SET CONSOLE OFF
  *
- *      __TYPEFILE( "MiTexto.DAT", .T. )
+ *      __TYPEFILE( "mitexto.dat", .T. )
  *
  *      SET CONSOLE ON
  *      </fixed>
@@ -947,25 +947,25 @@
  *      tecla para continuar.
  *  $EXAMPLES$
  *      Los siguientes ejemplos asumen que un archivo con el nombre 
- *      MiTexto.DAT existe en todos los caminos especificados, un error de
+ *      mitexto.dat existe en todos los caminos especificados, un error de
  *      ejecuci¢n podr¡a ser visualizado de no ser as¡.
  *
- *      // Visualiza el archivo MiTexto.DAT en la pantalla
- *      TYPE MiTexto.DAT
+ *      // Visualiza el archivo mitexto.dat en la pantalla
+ *      TYPE mitexto.dat
  *
- *      // Visualiza el archivo MiTexto.DAT en la pantalla e impresora
- *      TYPE MiTexto.DAT TO PRINTER
+ *      // Visualiza el archivo mitexto.dat en la pantalla e impresora
+ *      TYPE mitexto.dat TO PRINTER
  *
- *      // Visualiza el archivo MiTexto.DAT en la impresora solamente
+ *      // Visualiza el archivo mitexto.dat en la impresora solamente
  *      SET CONSOLE OFF
  *
- *      TYPE MiTexto.DAT TO PRINTER
+ *      TYPE mitexto.dat TO PRINTER
  *
  *      SET CONSOLE ON
  *
- *      // Visualiza el archivo MiTexto.DAT en la pantalla y lo env¡a al
+ *      // Visualiza el archivo mitexto.dat en la pantalla y lo env¡a al
  *      // archivo MiReporte.txt
- *      TYPE MiTexto.DAT TO FILE MiReporte
+ *      TYPE mitexto.dat TO FILE MiReporte
  *      </fixed>
  *  $STATUS$
  *      R

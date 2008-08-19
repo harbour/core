@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: ChangeLog 8851 2008-06-30 10:36:02Z vszakats $
  */
 
 /* Use this format for the entry headers:
@@ -13,7 +13,7 @@
    + contrib/apollo/test/apollo.ch
      + defines for function sx_SysProp
    * contrib/apollo/test/apollo.prg
-     Added define "Apollo.ch"
+     Added define "apollo.ch"
    * contrib/apollo/apollo1.prg
      + Added function sx_GetVal()
    * contrib/apollo/apollo.c
@@ -81,6 +81,6 @@
 
 2001-12-28 13:28 UTC+0100 Patrick Mast <email@patrickmast.com>
    + contrib/apollo
-     * Started Apollo SDE60.DLL connection for accessing
+     * Started Apollo sde60.dll connection for accessing
        SIXNSX database files
        Note: This is only the start.

@@ -24,7 +24,7 @@
   -----------------------------------------------------------------------------------
   0)._ What are supported, what coming soon
   1)._ What do you need for make/run the samples.
-  2)._ Files in this distribution. ( HDx01.zip )
+  2)._ Files in this distribution. ( hdx01.zip )
   3)._ Building the sample
   4)._ Reminder
   -----------------------------------------------------------------------------------
@@ -74,30 +74,30 @@
   2)._  Files in this distribution.
 
 
-        /DirectX/HB_DDraw.h             -> header file
+        /hbw32ddr/hb_ddraw.h             -> header file
 
-        /DirectX/HB_DDraw.cpp           -> Source file for DDraw
+        /hbw32ddr/hb_ddraw.cpp           -> Source file for DDraw
 
-        /DirectX/DirectX.lib            -> Lib for Harbour
+        /hbw32ddr/directx.lib            -> Lib for Harbour
 
-        /DirectX/lib/Ddraw.lib          -> Lib from MS for VC ( DirectX SDK )
+        /hbw32ddr/lib/ddraw.lib          -> Lib from MS for VC ( DirectX SDK )
 
-        /DirectX/BuVcDx.Bat             -> Bat file for Build the sample for MSVC 6.0
+        /hbw32ddr/buvcdx.bat             -> Bat file for Build the sample for MSVC 6.0
 
-        /DirectX/Samples/TestDX.Prg     -> a BreakOut like sample Game
+        /hbw32ddr/samples/testdx.prg     -> a BreakOut like sample Game
 
-        /DirectX/Media                  -> Media files for the sample ( .bmp files )
+        /hbw32ddr/media                  -> Media files for the sample ( .bmp files )
 
   3)._ Building the sample
 
-       copy TestDx.prg to /harbour/tests/working/
-       copy BuVcDx.bat ro /harbour/tests/working/
+       copy testdx.prg to /harbour/tests/working/
+       copy buvcdx.bat ro /harbour/tests/working/
 
        1) harbour testdx
-       2) BuVcDx testdx
+       2) buvcdx testdx
        3) copy .exe to a directory with media files
 
-       Run the EXE!
+       Run the .exe!
 
        Keys for the sample:
 

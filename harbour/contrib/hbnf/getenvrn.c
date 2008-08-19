@@ -83,7 +83,7 @@
  *
  *        cEnvBlock := ""
  *        FT_GETE(@cEnvBlock)
- *        MEMOWRIT("ENVIRON.TXT", cEnvBlock)
+ *        MEMOWRIT("environ.txt", cEnvBlock)
  *
  *     Get the environment in Array form:
  *

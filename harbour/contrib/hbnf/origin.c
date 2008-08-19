@@ -49,7 +49,7 @@
  * $EXAMPLES$
  *    cMyFile := FT_ORIGIN()
  *
- *    IF cMyFile <> "C:\APPDIR\MYFILE.EXE"
+ *    IF cMyFile <> "C:\appdir\myfile.exe"
  *       ?"Incorrect startup file.  Please remove/rename and start again"
  *       QUIT
  *    ENDIF

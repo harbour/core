@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: TBWHILE.PRG
+ * File......: tbwhile.prg
  * Author....: Jim Orlowski
  * CIS ID....: ?
  *
@@ -68,15 +68,15 @@
 #ifdef FT_TEST
 
   /*
-   *   THIS DEMO SHOWS TBNAMES.DBF CONSISTING OF LAST, FIRST, ADDR, CITY,
+   *   THIS DEMO SHOWS tbnames.dbf CONSISTING OF LAST, FIRST, ADDR, CITY,
    *   STATE, ZIP WITH ACTIVE INDEX ON LAST + FIRST.  IT SHOWS LAST NAME,
    *   FIRST NAME, CITY ONLY FOR THOSE LAST NAMES THAT BEGIN WITH LETTER
    *   THAT YOU INPUT FOR THE CKEY GET.
    *
-   *   TBNAMES.DBF/.NTX ARE AUTOMATICALLY CREATED BY THIS TEST PROGRAM
+   *   tbnames.dbf/.ntx ARE AUTOMATICALLY CREATED BY THIS TEST PROGRAM
    */
 
-  #INCLUDE "SETCURS.CH"
+  #include "setcurs.ch"
 
   FUNCTION TBWHILE()
      LOCAL aFields := {}, cKey := "O", cOldColor
@@ -86,13 +86,13 @@
      FIELD last, first
      MEMVAR GetList
 
-     IF ! FILE( "TBNAMES.DBF" )
+     IF ! FILE( "tbnames.dbf" )
         MAKE_DBF()
      ENDIF
 
      USE TBNames
 
-     IF ! FILE( "TBNAMES.NTX" )
+     IF ! FILE( "tbnames.ntx" )
         INDEX ON last + first TO TBNAMES
      ENDIF
 

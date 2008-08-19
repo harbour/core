@@ -50,8 +50,8 @@
  *     Note: Calls FT_ISBIT() which is also in this Library.
  *
  *     This function is presented to illustrate that bit-wise operations
- *     are possible with Clipper code.  For greater speed, write .C or
- *     .ASM versions and use the Clipper Extend system.
+ *     are possible with Clipper code.  For greater speed, write .c or
+ *     .asm versions and use the Clipper Extend system.
  *  $EXAMPLES$
  *     This code would set bit 4 in a byte represented by CHR(107):
  *

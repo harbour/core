@@ -320,7 +320,7 @@ HB_FUNC( HB_FREADANDSKIP )
 {
 /* ------------------------------------------------
    Warning: This is a rogue function! It is a first shot at adding the logic
-   to read .CSV records that respect CRLF embedded within quotes.
+   to read .csv records that respect CRLF embedded within quotes.
    It is very common, especially with Microsoft products, for
    comma-separated files to allow a field (usually an address field)
    to have hard returns within it. These records appear corrupted to any

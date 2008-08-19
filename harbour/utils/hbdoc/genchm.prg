@@ -199,7 +199,7 @@ FUNCTION ProcessChm()
 
       //  Open file for input
 
-      nCommentLen := IIF( AT( ".ASM", UPPER( aDirList[ i, F_NAME ] ) ) > 0, 2, 4 )
+      nCommentLen := IIF( AT( ".asm", Lower( aDirList[ i, F_NAME ] ) ) > 0, 2, 4 )
       nReadHandle := FT_FUSE( aDirList[ i, F_NAME ] )
       @ INFILELINE, 33 CLEAR TO INFILELINE, MAXCOL()
       @ INFILELINE, 33 SAY PAD( aDirList[ i, F_NAME ], 47 )         
@@ -827,7 +827,7 @@ FUNCTION ProcessChm2()
 
    FOR nTemp1 := 1 TO LEN(aDirList)  
       // Calculate the amount of characters the source files uses each line      
-      nCommentLen := IIF(AT(".ASM", UPPER(aDirList[nTemp1, F_NAME])) > 0, 2, 4)    
+      nCommentLen := IIF(AT(".asm", Lower(aDirList[nTemp1, F_NAME])) > 0, 2, 4)    
       // Select the file to read from  
       nReadHandle := FT_FUSE(aDirList[nTemp1, F_NAME])
 

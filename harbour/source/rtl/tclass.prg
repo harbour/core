@@ -146,7 +146,7 @@ FUNCTION HBClass()
 
 //----------------------------------------------------------------------------//
 
-// xSuper is used here as the new preprocessor file (HBCLASS.CH) send here
+// xSuper is used here as the new preprocessor file (hbclass.ch) send here
 // always an array (if no superclass, this will be an empty one)
 // In case of direct class creation (without the help of preprocessor) xSuper can be
 // either NIL or contain the name of the superclass.

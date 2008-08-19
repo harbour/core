@@ -10,9 +10,9 @@ the creation of the make file.
 
 Hbmake support the follow Switchs
 
--b Use Bcc as the C compiler.This options is default under Win32
--g Use Gcc as the C compiler.This options is default under OS/2
--gl Use Gcc as the C compiler on Linux
+-b Use BCC as the C compiler.This options is default under Win32
+-g Use GCC as the C compiler.This options is default under OS/2
+-gl Use GCC as the C compiler on Linux
 -v Use MSVC as the C compiler
 -D Define an macro. Multiple macros can be used in an single line
 Ex:
@@ -26,7 +26,7 @@ and also Multiple -D is also supported
 -elx Open the editor mode for creating librariesin extented mode.
 -i Ignore errors returned by commands
 -r Recurse directories for source code
-The hbmake dont support old styles .RMK/.Lnk Files. hbmake create it own when the editor mode is used with include both compile and link sections on the same file.
+The hbmake dont support old styles .rmk/.lnk Files. hbmake create it own when the editor mode is used with include both compile and link sections on the same file.
 
 Now How to use the editor mode
 
@@ -36,7 +36,7 @@ call hbmake <filename>.bc -e
 this will evoke hbmake editor mode.
 
 then select your OS,C Compiler
-If you need an Graphic library such as  FWH or C4W, select the appropiate box, if you also use rddads. also check this box.
+If you need an Graphic library such as FWH or C4W, select the appropiate box, if you also use rddads. also check this box.
 
 Select the harbour compiler options that you also what to use, along
 with
@@ -55,4 +55,3 @@ CC=gcc
 CFLAGS=-c -I/usr/include/harbour (this line must match your harbour include directory)
 VERBOSE=YES
 DELTMP=YES
-

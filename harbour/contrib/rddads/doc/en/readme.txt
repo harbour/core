@@ -19,12 +19,12 @@
 
  *      Your Harbour application can access a remote database server for a
  *      true client/server architecture, or it can use the "local server"
- *      ADSLOC32.DLL for stand-alone or even small network installations.
+ *      adsloc32.dll for stand-alone or even small network installations.
  *
  *      <b>For using this RDD you need to have:   </b></par>
- *      <b>ACE32.DLL    ( Advantage Client Engine ),   </b></par>
- *      <b>AXCWS32.DLL  ( communication layer for remote server ) or   </b></par>
- *      <b>ADSLOC32.DLL ( local server )   </b></par>
+ *      <b>ace32.dll    ( Advantage Client Engine ),   </b></par>
+ *      <b>axcws32.dll  ( communication layer for remote server ) or   </b></par>
+ *      <b>adsloc32.dll ( local server )   </b></par>
  *
  *      You need also to create ace32.lib with the help of implib.exe:
  *      implib ace32.lib ace32.dll
@@ -51,21 +51,21 @@
  *      SET FILETYPE TO CDX
  *
  *      or functions AdsSetServerType(), AdsSetFileType().
- *      See the header file ADS.CH for details.
+ *      See the header file ads.ch for details.
  *
- *      Note that the default local server (ADSLOC32.DLL) is useable for
+ *      Note that the default local server (adsloc32.dll) is useable for
  *      file sharing on a small network.  The default DLL is limited to
  *      5 users, but an unlimited version is available from Extended Systems.
  *
  *      MAX OPEN TABLES: The server (even local) has its own setting for
  *      Max Tables allowed open.  For the Local Server, it can be set in
- *      ADSLOCAL.CFG.  The default is only 50!
+ *      adslocal.cfg.  The default is only 50!
  *      For the Windows Remote Servers, use the Configuration Utility, or
  *      increase the setting for the TABLES configuration value in the Advantage
  *      Database Server configuration registry key using the Registry Editor.
- *      For NetWare, edit the configuration file ADS.CFG.
+ *      For NetWare, edit the configuration file ads.cfg.
 
- *      See ACE.HLP under ADSLOCAL.CFG, or the Advantage Error Guide for
+ *      See ace.hlp under adslocal.cfg, or the Advantage Error Guide for
  *      error 7005.
 
  *      SPEED AND PERFORMANCE ISSUES
@@ -120,7 +120,7 @@
  *      setting to match Harbour's.
 
  *      INDEXING and Progress Displays:
- *      ACE32.DLL does not support the EVAL/EVERY clauses. Remember, there
+ *      ace32.dll does not support the EVAL/EVERY clauses. Remember, there
  *      is an external process doing the indexing that knows nothing of
  *      Harbour expressions or codeblocks. Even with Local Server it's the
  *      DLLs doing all the indexing. So to do progress meters

@@ -81,7 +81,7 @@
  *      compiler called 'Harbour'.  This compiler is intended as a replacement </par>
  *      for a commercial product called 'Clipper' (Computer Associates).  If you </par>
  *      are interested in learning more about Harbour, please see </par>
- *      http://www.Harbour-Project.org/ </par>
+ *      http://www.harbour-project.org/ </par>
  *      </par>
  *      The Harbour project is governed by the GNU Public License [GPL] (please </par>
  *      see http://www.gnu.org/) with a caveat that applications produced by </par>

@@ -46,8 +46,8 @@
  *     bit-by-bit OR operation.  Equivalent to OR assembler instruction.
  *
  *     This function is presented to illustrate that bit-wise operations
- *     are possible with Clipper code.  For greater speed, write .C or
- *     .ASM versions and use the Clipper Extend system.
+ *     are possible with Clipper code.  For greater speed, write .c or
+ *     .asm versions and use the Clipper Extend system.
  *  $EXAMPLES$
  *          This code performs a bit-wise OR on two bytes represented
  *          by CHR(20) and CHR(10):

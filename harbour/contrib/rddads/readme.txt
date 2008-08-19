@@ -8,8 +8,8 @@
 
  For using this RDD you need to have:
    ace32.dll  ( Advantage Client Engine ),
-   AXCWS32.DLL ( communication layer for remote server ) or
-   ADSLOC32.DLL ( local server )
+   axcws32.dll ( communication layer for remote server ) or
+   adsloc32.dll ( local server )
 
    You need also to create ace32.lib with the help of implib.exe:
      implib ace32.lib ace32.dll

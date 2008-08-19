@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: FTMENUTO.CH
+ * File......: ftmenuto.ch
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *
@@ -15,7 +15,7 @@
  *
  *    Rev 1.3   13 Oct 1992 20:43:10   GLENN
  * Ted re-wrote the @ prompt / menu to replacement in Clipper and dumped
- * the assembler version; this .CH file was updated as well.
+ * the assembler version; this .ch file was updated as well.
  *
  *    Rev 1.2   15 Aug 1991 23:08:46   GLENN
  * Forest Belt proofread/edited/cleaned up doc

@@ -88,7 +88,7 @@
  *  $SEEALSO$
  *      RDDNAME()
  *  $INCLUDE$
- *      El archivo de cabecera es RDDSYS.CH
+ *      El archivo de cabecera es rddsys.ch
  *  $END$
  */
 

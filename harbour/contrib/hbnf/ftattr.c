@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: SAVEATT.ASM
+ * File......: saveatt.asm
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *
@@ -213,7 +213,7 @@ HB_FUNC( FT_SAVEATT )
 }
 
 /*
- * File......: RESTATT.ASM
+ * File......: restatt.asm
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *

@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: Popadder.prg
+ * File......: popadder.prg
  * Author....: Keith A. Wire
  * CIS ID....: 73760,2427
  *
@@ -18,7 +18,7 @@
  *
  *    Rev 1.3   19 Jan 1993 19:52:52   GLENN
  * Removed reference to K_SPACE, as this has been defined in Clipper
- * 5.2's INKEY.CH.
+ * 5.2's inkey.ch.
  *
  *    Rev 1.2   17 Aug 1991 15:44:30   GLENN
  * Don Caton fixed some spelling errors in the doc
@@ -107,7 +107,7 @@
  *  $SEEALSO$
  *
  *  $INCLUDE$
- *     INKEY.CH, SETCURS.CH, ACHOICE.CH
+ *     inkey.ch, setcurs.ch, achoice.ch
  *  $END$
  */
 

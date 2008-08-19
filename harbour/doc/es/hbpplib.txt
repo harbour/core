@@ -34,14 +34,11 @@ En orden de crear y testear esta librer¡a, Ud. deber¡a poner:
 - testpre.prg y bld32exe.bat en el directorio \harbour\tests\working ;
 - hbpplib.txt en el directorio \harbour\doc ;
 
-Entonces, Ud. necesita correr bldhbpp.bat para crear HBPP.LIB sobre
-el directorio \HARBOUR\LIBS\B32. Note que por ahora el £nico makefile 
+Entonces, Ud. necesita correr bldhbpp.bat para crear hbpp.lib sobre
+el directorio \harbour\libs\b32. Note que por ahora el £nico makefile 
 es para compilar con los compiladores de Borland. 
 Se solicita a quienes tienen otros compiladores/entornos colaboren
 escribiendo los makefiles faltantes. Gracias.
 
 Para testear testpre.prg Ud. s¢lo necesita ir al subdirectorio
-HARBOUR\TEST\WORKING y hacerlo usando TESTPRE.
-   
-
-
+harbour\test\working y hacerlo usando TESTPRE.

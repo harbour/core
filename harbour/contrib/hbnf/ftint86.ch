@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: FTINT86.CH - Header file for users of FT_INT86() function
+ * File......: ftint86.ch - Header file for users of FT_INT86() function
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *
@@ -33,7 +33,7 @@
  *
  *    Rev 1.1   27 May 1991 13:25:18   GLENN
  * Revised for new version of ft_int86() package, which is written in C
- * (CINT86.C), assembler (AINT86.ASM).
+ * (cint86.c), assembler (aint86.asm).
  *
  *    Rev 1.0   01 Apr 1991 01:02:38   GLENN
  * Nanforum Toolkit

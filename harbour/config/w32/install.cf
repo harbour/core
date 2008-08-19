@@ -8,12 +8,12 @@ INSTALL_RULE = @echo Done
 
 else
 
-ifeq ($(SHLVL),) # COMMAND.COM or CMD.EXE
+ifeq ($(SHLVL),) # command.com or cmd.exe
 
 INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
 
 ifeq ($(CMD_EXE),yes)
-# CMD.EXE no command line size limit
+# cmd.exe no command line size limit
 INSTALL_RULE = \
 	$(COMSPEC) /c for %f in ($(INSTALL_LIST)) do copy %f $(subst /,\,$(INSTALL_DIR))
 else

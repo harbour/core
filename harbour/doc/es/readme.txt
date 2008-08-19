@@ -96,7 +96,7 @@
  *      <b>--- LICENCIA ---</b>
  *
  *      Informaci¢n sobre la Licencia de uso de Harbour est  disponible en
- *      el archivo LICENSE.TXT
+ *      el archivo license.txt
  *
  *
  *      <b>--- RENUNCIA ---</b>

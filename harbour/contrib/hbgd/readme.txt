@@ -43,7 +43,7 @@ Actually platforms supported are:
 
 to build library on Win32 with BCC use:
    Download bgd.dll from this link:
-   http://www.libgd.org/Downloads (Windows.DLL)
+   http://www.libgd.org/Downloads (Windows DLL)
    and put a copy of it in this folder and in tests folder
 then
    make_b32.bat

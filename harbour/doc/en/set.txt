@@ -998,7 +998,7 @@
  *      This command toggles and output console information to the alternate
  *      file <cFile>,provided that the command is toggled on or the condition
  *      <lAlter> is set to a logical true (.T.). If <cFile> does not has a
- *      file extension, .TXT will be assumed.The file name may optionally
+ *      file extension, .txt will be assumed.The file name may optionally
  *      have a drive letter and/or directory path.If none is speficied, the
  *      current drive and directory will be used.
  *      If the ALTERNATE file is created but no ALTERNATE ON command is

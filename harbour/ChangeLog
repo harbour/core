@@ -8,6 +8,84 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-19 11:53 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * config/w32/install.cf
+   * doc/hbmake.txt
+   * doc/whatsnew.txt
+   * doc/man/hbdoc.1
+   * doc/en/tlabel.txt
+   * doc/en/set.txt
+   * doc/en/readme.txt
+   * doc/es/tlabel.txt
+   * doc/es/rdd.txt
+   * doc/es/hbpplib.txt
+   * doc/es/treport.txt
+   * doc/es/dirstruc.txt
+   * doc/es/dir.txt
+   * doc/es/file.txt
+   * doc/es/readme.txt
+   * source/rtl/setkey.c
+   * source/rtl/tclass.prg
+   * source/compiler/cmdcheck.c
+   * contrib/hbmysql/utils/dbf2mysq.prg
+   * contrib/hbw32ddr/readme.txt
+   * contrib/hbodbc/odbc.txt
+   * contrib/hbodbc/readme.txt
+   * contrib/hbwhat32/_wincdlg.c
+   * contrib/hbtpathy/ChangeLog
+   * contrib/hbsqlit2/tests/hbsqlite.prg
+   * contrib/hbapollo/ChangeLog
+   * contrib/hbnf/byteneg.prg
+   * contrib/hbnf/savearr.prg
+   * contrib/hbnf/fttext.c
+   * contrib/hbnf/restsets.prg
+   * contrib/hbnf/byt2bit.prg
+   * contrib/hbnf/byt2hex.prg
+   * contrib/hbnf/ftint86.ch
+   * contrib/hbnf/byteand.prg
+   * contrib/hbnf/bytexor.prg
+   * contrib/hbnf/byteor.prg
+   * contrib/hbnf/origin.c
+   * contrib/hbnf/bitset.prg
+   * contrib/hbnf/popadder.prg
+   * contrib/hbnf/menutonf.prg
+   * contrib/hbnf/ftattr.c
+   * contrib/hbnf/isbit.prg
+   * contrib/hbnf/putkey.c
+   * contrib/hbnf/getenvrn.c
+   * contrib/hbnf/bytenot.prg
+   * contrib/hbnf/savesets.prg
+   * contrib/hbnf/tbwhile.prg
+   * contrib/hbnf/ftmenuto.ch
+   * contrib/hbnf/bitclr.prg
+   * contrib/hbnf/readme.txt
+   * contrib/rddads/doc/en/adsfuncs.txt
+   * contrib/rddads/doc/en/readme.txt
+   * contrib/rddads/readme.txt
+   * contrib/hbgd/ChangeLog
+   * contrib/hbgd/readme.txt
+   * contrib/hbmisc/hb_f.c
+   * contrib/hbtip/utils.c
+   * contrib/hbbtree/doc/hb_btree.txt
+   * contrib/examples/guestbk/guestbk.txt
+   * contrib/examples/hscript/readme.txt
+   * utils/hbdoc/genos2.prg
+   * utils/hbdoc/genng.prg
+   * utils/hbdoc/genasc.prg
+   * utils/hbdoc/genchm.prg
+   * utils/hbdoc/genhpc.prg
+   * utils/hbdoc/html.prg
+   * utils/hbdoc/ft_funcs.prg
+   * utils/hbdoc/hbdoc.prg
+   * utils/hbdoc/genpdf1.prg
+   * utils/hbdoc/gentrf.prg
+   * utils/hbdoc/genrtf.prg
+   * utils/hbmake/checks.prg
+   * utils/hbmake/ft_funcs.prg
+   * utils/hbmake/radios.prg
+   * utils/hbmake/hbmake.prg
+     ! Some more filename casing related cleanups.
+
 2008-08-17 17:30 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbstack.h
    * include/hbsetup.h

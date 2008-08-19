@@ -46,7 +46,7 @@
  *  $EXAMPLES$
  *     FT_RESTSETS(aOldSets)
  *  $INCLUDE$
- *     SET.CH
+ *     set.ch
  *  $SEEALSO$
  *     FT_SAVESETS() FT_SETCENTURY()
  *  $END$

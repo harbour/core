@@ -44,7 +44,7 @@
      + added a bunch of functions, right now only to OS/2 build
 
 2004-08-31 16:45 UTC+0200 Maurilio Longo <maurilio.longo@libero.it>
-   * tp_/TELEPATH.CH
+   * tp_/telepath.ch
      - removed UPPERCASE file
      + added telepath.ch
 
@@ -74,7 +74,7 @@
      + bcc32 makefile
    + tp_/make_b32.bat
      + win32 makefile
-   + tp_/TELEPATH.CH
+   + tp_/telepath.ch
      + .prg level defines for telepathy compatibility
 
    /* At this time, on win32, I can ask to my modem its name :) */

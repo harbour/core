@@ -53,7 +53,7 @@
 /*
    Either way you have to clean up the memory on exit. The best way to
    do this is to add a hb_setkeyInit() and hb_setkeyExit() function
-   and call them from CONSOLE.C Init/Exit functions.
+   and call them from console.c Init/Exit functions.
 */
 
 #include "hbvm.h"

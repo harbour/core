@@ -9,11 +9,11 @@ I take no responsabilities for any misinformation in any form.
 HarbourScript Alfa Edition
 --------------------------
 
-Inside this zip file you will find HarbourScript package. This
-should be unzipped to TESTS\WORKING\HSCRIPT directory in order
+Inside this .zip file you will find HarbourScript package. This
+should be unzipped to /tests/working/hscript directory in order
 to work w/o any changes.
 
-To make the HarbourScript Translator, hscript.exe, use MAKEHS.BAT.
+To make the HarbourScript Translator, hscript.exe, use makehs.bat.
 If you are going to test offline, there's no need to make it,
 it will be done automatically for you (Batch Power<g>). To test it,
 you'll have the following options:
@@ -41,7 +41,7 @@ become more stable.
 Testing HarbourScript without a Web Server
 ------------------------------------------
 
-1. Make the sample scripts with MAKEHTM.
+1. Make the sample scripts with makehtm.
 
 2. Browse the resulting .htm files as reported on screen.
 

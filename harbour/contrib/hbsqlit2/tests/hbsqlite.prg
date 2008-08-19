@@ -227,8 +227,8 @@ RETURN // End Main
  cOldScreen := SAVESCREEN( 0, 0, MAXROW(), MAXCOL() )
  cOldColor  := SETCOLOR()
 
- IF VALTYPE( cTable ) != "C" .OR. EMPTY( cTable ) .OR. cTable == NIL
-    RETURN("")
+ IF !( VALTYPE( cTable ) == "C" ) .OR. EMPTY( cTable ) .OR. cTable == NIL
+    RETURN ""
  ENDIF
 
  aResult := SQLITE_SYSCOLUMNS( cTable )
@@ -369,7 +369,7 @@ LOCAL cField_Def
 LOCAL cHeader
 #include "dbstruct.ch"
 
-*COPY STRUCTURE EXTENDED TO struc //.DBF
+*COPY STRUCTURE EXTENDED TO struc //.dbf
 *USE struc NEW
 *LIST field_name, field_type, field_len ,field_dec
 aStruct := DBSTRUCT()
@@ -565,8 +565,8 @@ RETURN( IIF( nChoices > 0, aResult[ nChoices ], "") )
  cOldColor  := SETCOLOR()
 
   * Show all tables inside database
-  IF VALTYPE( cTable ) != "C" .OR. EMPTY( cTable ) .OR. cTable == NIL
-     RETURN("")
+  IF !( VALTYPE( cTable ) == "C" ) .OR. EMPTY( cTable ) .OR. cTable == NIL
+     RETURN ""
   ELSE
      aResult := SQLITE_FIELDS( cTable )
   ENDIF
@@ -638,7 +638,7 @@ DO CASE
         cData := VALTYPE( xData)
 ENDCASE
 
-IF nPad == NIL .OR. VALTYPE(nPad ) != "N"
+IF nPad == NIL .OR. !( VALTYPE( nPad ) == "N" )
 ELSE
    cData := PADL( LTRIM(cData), nPad, " ")
 ENDIF

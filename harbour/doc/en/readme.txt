@@ -74,7 +74,7 @@
  * <b>--- LICENCE ---</b>   </par>
  *
  * Information about the License for usage of Harbour is available in the
- * file LICENCE.TXT (when we have a license)   </par>
+ * file licence.txt (when we have a license)   </par>
  *
  * <b>--- DISCLAIMER ---</b>   </par>
  *

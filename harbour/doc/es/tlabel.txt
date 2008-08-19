@@ -48,7 +48,7 @@
  *      Si la cl usula TO FILE es especificada, el nombre del archivo de
  *      texto ASCII conteniendo las etiquetas generadas ser  <cArchivo>.
  *
- *      Si ninguna extensi¢n de archivo es especificada, la extensi¢n .TXT
+ *      Si ninguna extensi¢n de archivo es especificada, la extensi¢n .txt
  *      es agregada.
  *
  *      <cAlcance> es la condici¢n de alcance para este comando. Alcances

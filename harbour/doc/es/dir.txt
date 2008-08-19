@@ -35,7 +35,7 @@
  *      __Dir() siempre retorna NIL.
  *  $DESCRIPTION$
  *      Si ninguna <cFileMask> es dada, __Dir() muestra informaci¢n acerca de
- *      todos los *.DBF en la ruta SET DEFAULT. Esta informaci¢n contiene:
+ *      todos los *.dbf en la ruta SET DEFAULT. Esta informaci¢n contiene:
  *      - Nombre del archivo
  *      - Numero de registros
  *      - Fecha de la ultima actualizaci¢n
@@ -101,7 +101,7 @@
  *      entonces SET DEFAULT es usado para mostrar archivos en la m scara.
  *  $DESCRIPTION$
  *      Si ninguna <cFileMask> es dada, __Dir() muestra informaci¢n acerca de
- *      todos los *.DBF en la ruta SET DEFAULT. esta informaci¢n contiene:
+ *      todos los *.dbf en la ruta SET DEFAULT. esta informaci¢n contiene:
  *      - Nombre del archivo
  *      - N£mero de registros
  *      - Fecha de la ultima actualizaci¢n
@@ -212,7 +212,7 @@
  *  $EXAMPLES$
  *      <fixed>
  *      LOCAL aNombre, aTamano, aFecha, aHora, aAtrib, nLen, i
- *      nLen := ADIR( "*.JPG" )   // Nro de archivos JPG files en directorio
+ *      nLen := ADIR( "*.jpg" )   // Nro de archivos JPG files en directorio
  *
  *      IF nLen > 0
  *         aNombre := Array( nLen )  // hace lugar para guardar la informac.

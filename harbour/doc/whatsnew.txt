@@ -929,9 +929,9 @@ Contrib
 
 General
 -------
-- Updated build process for Debian Linux distribution (.DEB) packages.
+- Updated build process for Debian Linux distribution (.deb) packages.
   Now hb* scripts and shared libs are created by standard make install
-- Added support for Solaris (SunOS) and Darwin (Mac OS-X).
+- Added support for Solaris (SunOS) and Darwin (Mac OS X).
 - Added support for Hewlett Packard Unix (HP_UX) and ALPHA DEC.
 - Many adds and fix in compilation scripts on all platforms.
 - Fixed some error messages
@@ -1146,7 +1146,7 @@ Version 0.38 Alpha Build 38 (2001-12-15) tag: build38
 - New function __ClsGetProperties() added. Syntax:
   __ClsGetProperties( <nClassHandle> ) --> <aPropertiesNames>
 - Harbour Profiler foundation functions added
-- New Apollo.lib for SIXNSX database connection via SDE60.DLL
+- New apollo.lib for SIXNSX database connection via sde60.dll
 - RDD Scope handling was changed to handle non-character
   scopes correctly. Numeric scopes now work in RDDADS, but
   scopes are not yet supported in DBFCDX.
@@ -1173,9 +1173,9 @@ Version 0.38 Alpha Build 38 (2001-12-15) tag: build38
 - Some debugger fixes - it is now really usable.
 - Hbmake enhacements
 - On Win32 platforms, Harbour now supports the ability to create and
-  use .DLL files. These .DLL files can be used as pcode storage,
+  use .dll files. These .dll files can be used as pcode storage,
   Harbour Runtime storage, or both, and if both, can be made callable
-  from other languages that use .DLL's as fully functional standalone
+  from other languages that use .dll's as fully functional standalone
   modules
 - Extended run-time preprocessing possibilities
 
@@ -1221,8 +1221,8 @@ Version 0.35 Alpha Build 35 (2000-08-15)
 - New language modules: IT, DE, PL
 - Slang support enhanced
 - MemoEdit()/TEditor enhancements
-- .NTX support started (creation now works)
-- HBDOC .CHM output
+- .ntx support started (creation now works)
+- HBDOC .chm output
 - Garbage collector added
 - Compiler -u, -m support, support for automatically compiled files for
   DO, SET FORMAT TO, etc., memory usage optimizations
@@ -1507,7 +1507,7 @@ Version 0.26 Alpha Build 26 (1999-06-12)
 - Better support for different platforms and compilers.
 - New Inifiles class
 - Support for IBM C++ compiler for OS/2
-- Harb26.Zip includes Runner.exe now
+- harb26.zip includes runner.exe now
   So NO NEED for any external software to run Harbour PRG's!
 - Many resolved Bugs
 - Many new functions
@@ -1535,8 +1535,8 @@ Version 0.24 Alpha Build 24 (1999-06-03)
 Version 0.23 Alpha Build 23 (1999-05-19)
 
 - Harbour.exe for DOS/Windows is included now
-- The Windows libs are also included (HBW.BAT to build Windows EXE's)
-- HRB files! These files can be run with the Runner.exe (Source included)
+- The Windows libs are also included (hbw.bat to build Windows .exe's)
+- .hrb files! These files can be run with the runner.exe (Source included)
 - No need for a C compiler anymore to run Harbour source!
 - New MAKE and BUILD files for IBM C++ 3.0 for OS/2
 - Many fixes, Many enhancements (See ChangeLog in the Harbour directory)

@@ -97,14 +97,14 @@
  *
  *    V1.06
  *    2000/01/25 Fixed some error that was not generating a valid RTF File
- *    Removed Call TO HB_OEMTOANSI() on the rountines to generate the .Ngi
- *    and Rtf files.
- *    Added support to generate the Docs from .Txt files, See doc\Subcodes.txt
+ *    Removed Call TO HB_OEMTOANSI() on the rountines to generate the .ngi
+ *    and .rtf files.
+ *    Added support to generate the Docs from .txt files, See doc\subcodes.txt
  *    for header file.
  *
  *    V1.07
  *    Added back the "<" and ">" symbols
- *    Fixed the links on the Harbour.htm file           
+ *    Fixed the links on the harbour.htm file
  *    Fixed the help text when hbdoc is called with out any parameter
  */
 
@@ -1728,7 +1728,7 @@ FUNCTION fill_link_info( cLinkName )
 
       IF AT( "!MENU", cBuffer ) > 0
          lMenuMode := .T.
-         cBuffer   := UPPER( ReadLN( @lEof ) )
+         cBuffer   := ReadLN( @lEof )
       ELSEIF LEFT( cBuffer, 1 ) == "!"
          lMenuMode := .F.
       ENDIF
@@ -1740,12 +1740,13 @@ FUNCTION fill_link_info( cLinkName )
       IF .NOT. EMPTY( cBuffer ) .AND. lMenuMode
          cSpace    := AT( "  ", cBuffer )
          cCategory := UPPER( RTRIM( LEFT( cBuffer, cSpace - 1 ) ) )
-         cFile     := UPPER( LTRIM( SUBSTR( cBuffer, cSpace ) ) )
+         cFile     := LTRIM( SUBSTR( cBuffer, cSpace ) )
          IF lGetType
-            cCompiler := IIF( ".NGO" $ cFile, "NGXC", "EHC" )
-            lGetType  := .NOT. ( ".NGO" $ cFile .OR. "EHO" $ cFile )
+            cCompiler := IIF( ".ngo" $ Lower( cFile ), "NGXC", "EHC" )
+            lGetType  := .NOT. ( ".ngo" $ Lower( cFile ) .OR. ".eho" $ Lower( cFile ) )
          ENDIF
-         cFile := STRTRAN( cFile, IIF( cCompiler = "NGXC", ".NGO", ".EHO" ), ".TXT" )
+         cFile := STRTRAN( cFile, IIF( cCompiler == "NGXC", ".ngo", ".eho" ), ".txt" )
+         cFile := STRTRAN( cFile, IIF( cCompiler == "NGXC", ".NGO", ".EHO" ), ".txt" )
          AADD( aLinkInfo, { cCategory, cFile, .F. } )
       ENDIF
 
