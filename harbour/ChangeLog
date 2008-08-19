@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-19 17:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/en/string.txt
+   * doc/en/rddord.txt
+   * doc/hbmake.txt
+     * More cleanups, formatting (filename casing, CA-Cl*pper, etc).
+
 2008-08-19 17:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/en/string.txt
    * doc/en/rddord.txt

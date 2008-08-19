@@ -182,24 +182,24 @@
  *      both considered to be "optional" except that at least one of two
  *      must exist in order to create the order.
  *
- *      The parameter <cExpKey> is the index key expression;typically in
- *      a .DBF driver,the maximum length of the key is 255 characters.
+ *      The parameter <cExpKey> is the index key expression; typically in
+ *      a .dbf driver, the maximum length of the key is 255 characters.
  *
- *      If <bExpKey> is not specified,then the code block is create by
+ *      If <bExpKey> is not specified, then the code block is create by
  *      macro expanding the value of <cExpKey>.
  *
- *      If <lUnique> is not specified,then the current internal setting of
+ *      If <lUnique> is not specified, then the current internal setting of
  *      SET UNIQUE ON or OFF will be observed.
  *
  *      The active RDD driver determines the capacity in the order for a
  *      specific order bag.
  *
  *      If the name <cOrderBagName> is found in the order bag can contain
- *      a single order,the the name <cOrderBagName> is erased and a new
+ *      a single order, the the name <cOrderBagName> is erased and a new
  *      order is added to the order list in the current or specified work
  *      area.On the other hand, if it can contain multiples tags and if
- *      <cOrderBagName> does not already exist in the order list,then it is
- *      added. It is does exist,then the <cOrderBagName> replaces the former
+ *      <cOrderBagName> does not already exist in the order list, then it is
+ *      added. It is does exist, then the <cOrderBagName> replaces the former
  *      name in the order list in the current or specified work area.
  *  $EXAMPLES$
  *      USE TESTS VIA "DBFNDX" NEW
@@ -241,12 +241,12 @@
  *  $DESCRIPTION$
  *      This function attempts to remove the order named <cOrderName> from the
  *      file containing the order bag name <cOrderBagName>. If <cOrderBagName>
- *      is not specified,then the name of the file will be based on the value
+ *      is not specified, then the name of the file will be based on the value
  *      of the ORDNAME() function. If the extension is not included with the
- *      name of the order file,then the extension will be obtained from the
+ *      name of the order file, then the extension will be obtained from the
  *      default extension of the current and active RDD.
  *
- *      The DBFNTX driver do not support multiple order bags;therefore,there
+ *      The DBFNTX driver do not support multiple order bags; therefore, there
  *      cannot be an order to "destroy" from a bag. This function only works
  *      for those drivers with support multiple orders bags (e.q. DBFCDX
  *      and RDDADS drivers).

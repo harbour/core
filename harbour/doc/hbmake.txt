@@ -5,13 +5,13 @@
 Hbmake Readme
 
 
-Hbmake is an powerfull make system for Harbour.It include an Editor mode for
+Hbmake is an powerful make system for Harbour. It include an Editor mode for
 the creation of the make file.
 
 Hbmake support the follow Switchs
 
--b Use BCC as the C compiler.This options is default under Win32
--g Use GCC as the C compiler.This options is default under OS/2
+-b Use BCC as the C compiler. This options is default under Win32
+-g Use GCC as the C compiler. This options is default under OS/2
 -gl Use GCC as the C compiler on Linux
 -v Use MSVC as the C compiler
 -D Define an macro. Multiple macros can be used in an single line

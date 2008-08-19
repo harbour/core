@@ -254,7 +254,7 @@
  *      RAT() return the location of beginnig position.
  *  $DESCRIPTION$
  *      This function searches througt <cString> for the first existence
- *      of <cSearch>.The search operation is performed from the right side
+ *      of <cSearch>. The search operation is performed from the right side
  *      of <cString> to the left. If the function is unable to find any
  *      occurence of <cSearch> in <cString>, the return value is 0.
  *  $EXAMPLES$
@@ -270,7 +270,7 @@
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *      AT(),SUBSTR(),RIGHT()
+ *      AT(), SUBSTR(), RIGHT()
  *  $END$
  */
 
@@ -701,7 +701,7 @@
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *       INDEX,SEEK
+ *       INDEX, SEEK
  *  $END$
  */
 
@@ -858,9 +858,9 @@
  *  $RETURNS$
  *      <cReturn> Character expression of that ASCII value
  *  $DESCRIPTION$
- *      This function returns the ASCII character code for <nAsciiNum>.The
+ *      This function returns the ASCII character code for <nAsciiNum>. The
  *      number expressed must be an interger value within the range of 0 to
- *      255 inclusive.The CHR() function will send the character returned
+ *      255 inclusive. The CHR() function will send the character returned
  *      to whatever device is presently set.
  *
  *      The CHR() function may be used for printing special codes as well
@@ -877,7 +877,7 @@
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *      ASC(),INKEY()
+ *      ASC(), INKEY()
  *  $END$
  */
 
@@ -979,7 +979,7 @@
  *  $DESCRIPTION$
  *      This function takes an date,number,or character expression <xVal>
  *      and attempt to left-justify it within a string of a given width
- *      expressed as <nWidth>.The default character used to pad left side
+ *      expressed as <nWidth>. The default character used to pad left side
  *      of <xVal> will be an blank space; however, this character may be
  *      explicitly specified the value of <cFill>.
  *
@@ -1025,8 +1025,8 @@
  *  $DESCRIPTION$
  *      This function takes an date,number,or character expression <xVal>
  *      and attempt to right-justify it within a string of a given width
- *      expressed as <nWidth>.The default character used to pad right side
- *      of <xVal> will be an blank space;however, this character may be
+ *      expressed as <nWidth>. The default character used to pad right side
+ *      of <xVal> will be an blank space; however, this character may be
  *      explicitly specified the value of <cFill>.
  *
  *      If the lenght of <xVal> is longer then <nWidth>, this function will
@@ -1185,7 +1185,7 @@
  *      fill character.
  *  $DESCRIPTION$
  *      This function returns a string composed of <nSize> repetitions of
- *      <cString>.The lenght of the character string returned by this
+ *      <cString>. The lenght of the character string returned by this
  *      function is limited to the memory avaliable.
  *
  *      A value of 0 for <nSize> will return a NULL string.
@@ -1342,7 +1342,7 @@
  *      NULL byte will replace <cLocString>.
  *
  *      If <nPos> is used, its value defines the first occurence to be
- *      replaced.The default value is 1.Additionally, if used, the value of
+ *      replaced. The default value is 1. Additionally, if used, the value of
  *      <nOccurences> tell the function how many occurrences of <cLocString>
  *      in <cString> are to the replaced. The default of <nOccurences> is
  *      all occurrences.
@@ -1385,7 +1385,7 @@
  *
  *      Their are two components that can make up <cTemplate> : a function
  *      string and a template string.Function strings are those functions
- *      that globally tell what the format of <xExpression> should be.These
+ *      that globally tell what the format of <xExpression> should be. These
  *      functions are represented by a single character precede by the
  *      @ symbol.
  *
@@ -1397,7 +1397,7 @@
  *         one another.
  *
  *       - Second, if both components make up the value of <cTemplate>, the
- *         function string must precede the template string.Otherwise, the
+ *         function string must precede the template string. Otherwise, the
  *         function string may appear with out the template string and
  *         vice versa.
  *
