@@ -10,7 +10,7 @@
  *   Documentaci¢n en Ingl‚s de: __TYPEFILE(), TYPE
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *   Documentaci¢n en Ingl‚s de: 
+ *   Documentaci¢n en Ingl‚s de:
  *         FOPEN(), FCLOSE(), FWRITE(), FSEEK(), FREAD(), FILE(),
  *         FREADSTR(), FRENAME(), FERROR(), RENAME, ERASE, CURDIR(),
  *         DIRMAKE(),DIRCHANGE(),ISDISK(),DIRREMOVE(),DISKCHANGE(),
@@ -20,11 +20,11 @@
  *   Documentaci¢n en Ingl‚s de: HB_FEOF()
  *
  * Copyright 2003 Alejandro de G rate <alex_degarate@hotmail.com>
- *   Documentaci¢n en Espa¤ol de: 
- *         FOPEN(), FCREAT(), FREAD(), FWRITE(), FERROR(), FCLOSE(), 
- *         FERASE(), FRENAME(), FSEEK(), FILE(), FREADSTR(), RENAME, 
- *         ERASE, DELETE FILE, __TYPEFILE(), TYPE, CURDIR(), COPY FILE, 
- *         HB_FEOF(), DIRREMOVE(), DIRCHANGE(), MAKEDIR(), ISDISK(), 
+ *   Documentaci¢n en Espa¤ol de:
+ *         FOPEN(), FCREAT(), FREAD(), FWRITE(), FERROR(), FCLOSE(),
+ *         FERASE(), FRENAME(), FSEEK(), FILE(), FREADSTR(), RENAME,
+ *         ERASE, DELETE FILE, __TYPEFILE(), TYPE, CURDIR(), COPY FILE,
+ *         HB_FEOF(), DIRREMOVE(), DIRCHANGE(), MAKEDIR(), ISDISK(),
  *
  * Vea doc/license.txt por los t‚rminos de la licencia.
  *
@@ -40,17 +40,17 @@
  *  $SYNTAX$
  *      FOPEN( <cArchivo>, [<nModo>] ) --> nHandle
  *  $ARGUMENTS$
- *      <cArchivo> Es el Nombre del archivo a abrir 
+ *      <cArchivo> Es el Nombre del archivo a abrir
  *
  *      <nModo>    Modo de apertura del archivo
  *  $RETURNS$
  *      Devuelve <nHandle>, el manejador (handle) del archivo.
  *  $DESCRIPTION$
- *      Esta funci¢n abre el archivo binario indicado como <cArchivo> y 
- *      devuelve un manejador de archivo para ser usado por otras funciones 
+ *      Esta funci¢n abre el archivo binario indicado como <cArchivo> y
+ *      devuelve un manejador de archivo para ser usado por otras funciones
  *      de bajo nivel.
  *      El valor de <nModo> representa la forma de apertura del archivo, el
- *      valor por defecto es 0 (cero). 
+ *      valor por defecto es 0 (cero).
  *      Los modos de apertura son los siguientes:
  *
  *      <table>
@@ -60,28 +60,28 @@
  *         1     FO_WRITE       Solo Escritura (Write only)
  *         2     FO_READWRITE   Leer/Escribir  (Read/write)
  *        16     FO_EXCLUSIVE   Uso exclusivo, Solo Lectura
- *        32     FO_DENYWRITE   Evita escritura por otros 
- *        48     FO_DENYREAD    Evita Lectura por otros 
+ *        32     FO_DENYWRITE   Evita escritura por otros
+ *        48     FO_DENYREAD    Evita Lectura por otros
  *        64     FO_DENYNONE    No Evita nada, Otros pueden Leer/Escribir
  *        64     FO_SHARED      igual que FO_DENYNONE
  *      </table>
  *
  *      Si existe un error en la apertura del archivo, la funci¢n devolver 
- *      -1. El valor del manejador de archivo (handle) puede estar en el 
+ *      -1. El valor del manejador de archivo (handle) puede estar en el
  *      rango de cero a 65535.
  *      El estado de los comandos SET DEFAULT TO y SET PATH TO no tiene
- *      efecto sobre esta funci¢n.  
- *      Los nombres de directorios y la trayectoria a trav‚s de ellos (path) 
+ *      efecto sobre esta funci¢n.
+ *      Los nombres de directorios y la trayectoria a trav‚s de ellos (path)
  *      puede ser especificada junto con el nombre del archivo a ser abierto.
  *
- *      Si ocurre un error, consulte el valor que devuelve la funci¢n 
+ *      Si ocurre un error, consulte el valor que devuelve la funci¢n
  *      FERROR(), por las causas posibles del error.
  *  $EXAMPLES$
  *      1) Abre un archivo para lectura/escritura y en modo compartido
  *
  *      nHandle := FOPEN('x.txt', 66 )
  *
- *      IF nHandle < 0 
+ *      IF nHandle < 0
  *         ? "El archivo no puede ser abierto"
  *      ENDIF
  *
@@ -90,7 +90,7 @@
  *      cFile   := "x.txt"
  *      nHandle := FOPEN( cFile, FO_SHARED + FO_READWRITE )
  *
- *      IF FERROR() != 0 
+ *      IF FERROR() != 0
  *         ? "El archivo <" + cFile + "> no puede ser abierto, error: ", ;
  *            FERROR()
  *         // Tomar la acci¢n apropiada...
@@ -100,7 +100,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper.
+ *      Esta funci¢n es compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -121,24 +121,24 @@
  *  $SYNTAX$
  *      FCREATE( <cArchivo>, [<nAtributo>] ) --> nHandle
  *  $ARGUMENTS$
- *      <cArchivo>  Es el Nombre del archivo a abrir 
+ *      <cArchivo>  Es el Nombre del archivo a abrir
  *
  *      <nAtributo> C¢digo num‚rico con los atributos del archivo
  *  $RETURNS$
- *      Devuelve <nHandle> el manejador num‚rico (handle) del archivo para 
- *      ser usado en otras operaciones. 
+ *      Devuelve <nHandle> el manejador num‚rico (handle) del archivo para
+ *      ser usado en otras operaciones.
  *  $DESCRIPTION$
  *      Esta funci¢n crea un nuevo archivo binario con el nombre <cArchivo>.
- *      El valor por defecto de <nAtributo> es cero y es usado para 
+ *      El valor por defecto de <nAtributo> es cero y es usado para
  *      establecer el byte de atributo del archivo creado por esta funci¢n.
- *      El valor de retorno es un manejador de archivo (handle) que es  
+ *      El valor de retorno es un manejador de archivo (handle) que es
  *      asociado con el nuevo archivo. Este n£mero estar  entre cero y 65535
  *      Si ocurre un error, el valor de retorno de esta funci¢n ser  de -1.
  *
  *      Si el archivo <cArchivo> ya existe, ese archivo ser  truncado a una
  *      longitud de cero bytes.
  *
- *      Si <nAtributo> es especificado, la tabla siguiente muestra los 
+ *      Si <nAtributo> es especificado, la tabla siguiente muestra los
  *      valores que puede tomar y su relaci¢n con el archivo <cArchivo> que
  *      est  siendo creado por esta funci¢n.
  *
@@ -161,7 +161,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper.
+ *      Esta funci¢n es compatible con CA-Cl*pper.
  *  $FILES$
  *      La librer¡a asociada es rtl
  *      El archivo de cabecera es fileio.ch
@@ -180,16 +180,16 @@
  *  $SYNTAX$
  *      FREAD( <nHandle>, @<cBuffer>, <nBytes> ) --> nBytesLeidos
  *  $ARGUMENTS$
- *      <nHandle>    Manejador de archivo del sistema operativo 
+ *      <nHandle>    Manejador de archivo del sistema operativo
  *
- *      <cBuffer>    Cadena de caracteres usada como buffer temporal y 
+ *      <cBuffer>    Cadena de caracteres usada como buffer temporal y
  *                   pasada por referencia (n¢tese el operador '@' delante
  *                   del nombre de la variable).
  *
  *      <nBytes>     N£mero de bytes a leer
  *  $RETURNS$
- *      Devuelve <nBytesleidos>, el n£mero de bytes satisfactoriamente 
- *      le¡dos desde el archivo. 
+ *      Devuelve <nBytesleidos>, el n£mero de bytes satisfactoriamente
+ *      le¡dos desde el archivo.
  *  $DESCRIPTION$
  *      Esta funci¢n lee caracteres desde un archivo cuyo manejador es
  *      <nHandle> a una variable de memoria indicada como <cBuffer>.
@@ -204,25 +204,25 @@
  *      mismo ¢ mayor tama¤o que <nBytes>, caso contrario se producir  un
  *      error.
  *
- *      <nBytes> es el n£mero de bytes a leer, comenzando en la posici¢n 
+ *      <nBytes> es el n£mero de bytes a leer, comenzando en la posici¢n
  *      actual del puntero del archivo. Si esta funci¢n tiene ‚xito en la
  *      lectura de los caracteres del archivo, el n£mero real de caracteres
- *      le¡dos ser  igual a la longitud de <cBuffer>, igual al n£mero de 
- *      bytes especificado en <nBytes> y ese ser  el valor devuelto. 
+ *      le¡dos ser  igual a la longitud de <cBuffer>, igual al n£mero de
+ *      bytes especificado en <nBytes> y ese ser  el valor devuelto.
  *      El puntero actual del archivo avanza tantas posiciones como el n£mero
  *      de bytes le¡dos.
  *
  *      Esta funci¢n lee todos los caracteres ASCII de 0-255, incluyendo el
  *      car cter null / ASC(0) y los caracteres de control.
  *      Si esta funci¢n devuelve cero, ¢ si el n£mero de bytes le¡dos no
- *      coincide ni con la longitud de <cBuffer>, ni con el valor 
+ *      coincide ni con la longitud de <cBuffer>, ni con el valor
  *      especificado en <nBytes>, es porque se ha alcanzado la condici¢n
  *      end-of-file (EOF) ¢ fin de archivo.
  *
- *      Si ocurre un error, consulte el valor que devuelve la funci¢n 
+ *      Si ocurre un error, consulte el valor que devuelve la funci¢n
  *      FERROR(), por las causas posibles del error.
  *  $EXAMPLES$
- *      nChunck := 500 
+ *      nChunck := 500
  *      cBuffer := SPACE( nChunck )
  *
  *      IF (nHandle := FOPEN('x.txt') ) > 0
@@ -230,13 +230,13 @@
  *      ENDIF
  *
  *      FCLOSE( nHandle )
- *      
+ *
  *      ? cBuffer
  *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper, pero tambi‚n extiende el
+ *      Esta funci¢n es compatible con CA-Cl*pper, pero tambi‚n extiende el
  *      tama¤o del buffer a cadenas m s grandes que 64 Kb (dependiendo de la
  *      plataforma).
  *  $FILES$
@@ -256,7 +256,7 @@
  *  $SYNTAX$
  *      FWRITE( <nHandle>, <cBuffer>, [<nBytes>] ) --> nBytesEscritos
  *  $ARGUMENTS$
- *      <nHandle>  Manejador de archivo del sistema operativo 
+ *      <nHandle>  Manejador de archivo del sistema operativo
  *
  *      <cBuffer>  Cadena de caracteres a escribirse
  *
@@ -268,21 +268,21 @@
  *      a un archivo binario designado por su manejador de archivo <nHandle>.
  *
  *      El valor devuelto por esta funci¢n es el n£mero de bytes exitosamente
- *      escritos en el archivo. 
+ *      escritos en el archivo.
  *      Si el valor devuelto es cero, un error ha ocurrido, disco lleno, etc.
- *      
- *      Una escritura satisfactoria ocurre cuando el n£mero de bytes 
+ *
+ *      Una escritura satisfactoria ocurre cuando el n£mero de bytes
  *      retornados por FWRITE() es igual al LEN( <cBuffer>) ¢ <nBytes>.
  *
  *      El valor de <nBytes> es el n£mero de bytes a escribir al archivo.
  *      La escritura comienza en la posici¢n actual del puntero del archivo.
  *      Si <nBytes> es especificado, este es el n£mero de bytes en <cBuffer>
- *      que van a ser escritos. Si esta variable no es usada, el contenido 
+ *      que van a ser escritos. Si esta variable no es usada, el contenido
  *      completo del buffer  <cBuffer> es escrito al archivo.
- *      Para truncar un archivo, una llamada a FWRITE( nHandle, "", 0 ) es 
+ *      Para truncar un archivo, una llamada a FWRITE( nHandle, "", 0 ) es
  *      necesaria.
  *
- *      Si ocurre un error, consulte el valor que devuelve la funci¢n 
+ *      Si ocurre un error, consulte el valor que devuelve la funci¢n
  *      FERROR(), por las causas posibles del error.
  *  $EXAMPLES$
  *      nHandle := FCREATE('x.txt')
@@ -296,7 +296,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n no es compatible con CA-Clipper porque puede escribir 
+ *      Esta funci¢n no es compatible con CA-Cl*pper porque puede escribir
  *      cadenas de caracteres mayores a 64 Kb.
  *  $FILES$
  *      La librer¡a asociada es rtl
@@ -318,7 +318,7 @@
  *      <nCodigoError> Valor del £ltimo error del DOS encontrado por una
  *                     funci¢n de bajo nivel.
  *
- *      Valores de Retorno de FERROR() 
+ *      Valores de Retorno de FERROR()
  *
  *      <table>
  *       Error          Significado
@@ -335,19 +335,19 @@
  *       21             Drive no listo
  *       23             Error en CRC de datos
  *       29             Error de escritura
- *       30             Error de lectura 
+ *       30             Error de lectura
  *       32             Sharing violation
  *       33             Violaci¢n de bloqueo
  *      </table>
  *  $DESCRIPTION$
  *      Despu‚s de ejecutar una funci¢n de manipulaci¢n de archivos de bajo
- *      nivel , esta funci¢n retornar  un valor que provee informaci¢n 
+ *      nivel , esta funci¢n retornar  un valor que provee informaci¢n
  *      adicional sobre su funcionamiento.
- *      Si la funci¢n FERROR() devuelve cero, no se ha detectado ning£n 
+ *      Si la funci¢n FERROR() devuelve cero, no se ha detectado ning£n
  *      error.  Esta funci¢n mantiene su valor hasta la pr¢xima ejecuci¢n de
  *      una funci¢n de archivo de bajo nivel.
  *      M s arriba hay un tabla con algunos valores devueltos por la funci¢n
- *      FERROR().  
+ *      FERROR().
  *      Note que esos valores podr¡an ser distintos en otra plataforma
  *      (sistema operativo) distinta a DOS/Windows.
  *  $EXAMPLES$
@@ -362,7 +362,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper.
+ *      Esta funci¢n es compatible con CA-Cl*pper.
  *  $FILES$
  *      La librer¡a asociada es rtl
  *  $SEEALSO$
@@ -380,18 +380,18 @@
  *  $SYNTAX$
  *      FCLOSE( <nHandle> ) --> <lExito>
  *  $ARGUMENTS$
- *      <nHandle> Manejador de archivo del sistema operativo 
+ *      <nHandle> Manejador de archivo del sistema operativo
  *  $RETURNS$
- *      Devuelve un valor l¢gico, <lExito> es TRUE (.T.) si se cerr¢ con 
+ *      Devuelve un valor l¢gico, <lExito> es TRUE (.T.) si se cerr¢ con
  *      ‚xito ¢ FALSE (.F.) si no se pudo cerrar.
  *  $DESCRIPTION$
  *      Esta funci¢n cierra un archivo abierto identificado con el manejador
  *      de DOS <nHandle> y escribe el contenido del buffer DOS asociado hacia
- *      el disco.  
+ *      el disco.
  *      El valor <nHandle> es obtenido del llamado a alguna de las
  *      funciones FCREATE() ¢ FOPEN().
  *
- *      Si ocurre un error, consulte el valor que devuelve la funci¢n 
+ *      Si ocurre un error, consulte el valor que devuelve la funci¢n
  *      FERROR(), por las causas posibles del error.
  *  $EXAMPLES$
  *      nHandle := FOPEN('x.txt')
@@ -403,7 +403,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper.
+ *      Esta funci¢n es compatible con CA-Cl*pper.
  *  $FILES$
  *      La librer¡a asociada es rtl
  *  $SEEALSO$
@@ -427,10 +427,10 @@
  *  $DESCRIPTION$
  *      Esta funci¢n borra el archivo especificado en <cArchivo> del disco.
  *      Ninguna extensi¢n es asumida. El disco y el camino (path) pueden ser
- *      incluidos en <cArchivo>; 
+ *      incluidos en <cArchivo>;
  *      Ninguno de los comandos SET DEFAULT ni SET PATH afectan la ejecuci¢n
  *      de esta funci¢n.
- *      Si el disco ¢ el camino no son usados, esta funci¢n buscar  el 
+ *      Si el disco ¢ el camino no son usados, esta funci¢n buscar  el
  *      archivo solamente en el directorio actual del disco al cual se
  *      encuentra loggeado.
  *
@@ -451,7 +451,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper.
+ *      Esta funci¢n es compatible con CA-Cl*pper.
  *  $FILES$
  *      La librer¡a asociada es rtl
  *  $SEEALSO$
@@ -477,7 +477,7 @@
  *  $DESCRIPTION$
  *      Esta funci¢n renombra el archivo especificado en <cArchivoViejo>
  *      al nuevo nombre: <cArchivoNuevo>.
- *      El nombre del archivo junto con el del directorio puede ser 
+ *      El nombre del archivo junto con el del directorio puede ser
  *      especificado para cualquier par metro.
  *      Sin embargo, si el camino es aportado como parte de <cArchivoNuevo>
  *      y este camino es diferente del camino especificado en <cArchivoViejo>
@@ -492,11 +492,11 @@
  *      No buscar  en los directorios mencionados en los comandos SET PATH TO
  *      SET DEFAULT TO ¢ por la sentencia PATH del sistema operativo.
  *
- *      Si el archivo especificado en <cArchivoNuevo> existe ¢ el archivo 
+ *      Si el archivo especificado en <cArchivoNuevo> existe ¢ el archivo
  *      est  abierto, la funci¢n ser  incapaz de renombrar el archivo.
  *      Si la funci¢n es incapaz de completar su operaci¢n, esta devolver 
  *      el valor -1, y cero si la operaci¢n fue exitosa.
- *      Si ocurre un error, consulte el valor que devuelve la funci¢n 
+ *      Si ocurre un error, consulte el valor que devuelve la funci¢n
  *      FERROR(), por las causas posibles del error.
  *  $EXAMPLES$
  *      nResult := FRENAME("x.txt", "x1.txt")
@@ -508,7 +508,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper.
+ *      Esta funci¢n es compatible con CA-Cl*pper.
  *  $FILES$
  *      La librer¡a asociada es rtl
  *  $SEEALSO$
@@ -526,8 +526,8 @@
  *  $SYNTAX$
  *      FSEEK( <nHandle>, <nOffset>, [<nOrigen>] ) --> nPosicion
  *  $ARGUMENTS$
- *      <nHandle>  Manejador de archivo del sistema operativo 
- *                 El valor <nHandle> es obtenido del llamado a alguna de 
+ *      <nHandle>  Manejador de archivo del sistema operativo
+ *                 El valor <nHandle> es obtenido del llamado a alguna de
  *                 las funciones FCREATE() ¢ FOPEN().
  *
  *      <nOffset>  N£mero de bytes a mover el puntero del archivo
@@ -540,18 +540,18 @@
  *      Esta funci¢n mueve el puntero del archivo, cuyo manejador DOS es
  *      <nHandle> tantos bytes hacia delante ¢ atras seg£n el contenido de
  *      <nOffset>, desde la posici¢n establecida por <nOrigen>.
- *      
+ *
  *      El valor num‚rico retornado por la funci¢n es la posici¢n relativa
  *      del puntero del archivo al marcador de inicio de archivo una vez que
  *      la operaci¢n ha sido completada.
  *      Esta funci¢n no realiza ninguna lectura, simplemente mueve el puntero
  *      del archivo.
  *
- *      Si el valor de <nOffSet> es positivo el puntero se mover  hacia 
- *      delante, si el valor es negativo se mover  hacia atr s, desde la 
+ *      Si el valor de <nOffSet> es positivo el puntero se mover  hacia
+ *      delante, si el valor es negativo se mover  hacia atr s, desde la
  *      posici¢n establecida por <nOrigen>.
  *
- *      El valor de <nOrigen> establece el punto de inicio desde el cual el 
+ *      El valor de <nOrigen> establece el punto de inicio desde el cual el
  *      puntero del archivo va a ser movido, como se muestra en la tabla
  *      siguiente:
  *
@@ -563,11 +563,11 @@
  *         2         FS_END        Fin del archivo (EOF)
  *      </table>
  *
- *      Si un valor no es provisto para <nOrigen>, por defecto es cero y 
+ *      Si un valor no es provisto para <nOrigen>, por defecto es cero y
  *      el puntero del archivo se mueve desde el comienzo del archivo.
  *      El puntero del archivo no puede desplazarse m s alla de los l¡mites
  *      de inicio ¢ de fin de archivo, caso contrario ocurrir  un error.
- *      Si ocurre un error, consulte el valor que devuelve la funci¢n 
+ *      Si ocurre un error, consulte el valor que devuelve la funci¢n
  *      FERROR(), por las causas posibles del error.
  *  $EXAMPLES$
  *      // Funci¢n que lee una l¡nea de texto desde un archivo abierto
@@ -599,7 +599,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper.
+ *      Esta funci¢n es compatible con CA-Cl*pper.
  *  $FILES$
  *      La librer¡a asociada es rtl
  *      El archivo de cabecera es fileio.ch
@@ -614,7 +614,7 @@
  *  $CATEGORY$
  *      File management
  *  $ONELINER$
- *      Verifica la existencia de archivos 
+ *      Verifica la existencia de archivos
  *  $SYNTAX$
  *      FILE( <cEspecArchivo> ) --> lExiste
  *  $ARGUMENTS$
@@ -623,19 +623,19 @@
  *                      La extensi¢n debe ser especificada.
  *                      Sigue las reglas b sicas de archivos de DOS.
  *  $RETURNS$
- *      Retorna <lExiste> un valor l¢gico verdadero (.T.) si el archivo 
+ *      Retorna <lExiste> un valor l¢gico verdadero (.T.) si el archivo
  *      existe, ¢ falso (.F.) si no es encontrado.
  *  $DESCRIPTION$
  *      Esta funci¢n busca el archivo como es especificado en <cEspecArchivo>
  *
- *      Si el camino no es especificado, FILE() buscar  primero en la 
- *      ubicaci¢n indicada por SET DEFAULT, si no lo encuentra seguir  luego 
- *      con la/s ubicaci¢n/es contenidas en SET PATH, hasta que el archivo 
+ *      Si el camino no es especificado, FILE() buscar  primero en la
+ *      ubicaci¢n indicada por SET DEFAULT, si no lo encuentra seguir  luego
+ *      con la/s ubicaci¢n/es contenidas en SET PATH, hasta que el archivo
  *      sea encontrado ¢ hasta que no haya m s caminos para buscar.
- *      
+ *
  *      El PATH del DOS nunca es examinado y el actual disco y directorio
  *      es s¢lo examinado si SET DEFAULT est  en blanco.
- *      
+ *
  *      Nota: La utilizaci¢n de caracteres comodines '*' y '?' todav¡a no
  *            est  soportada comletamente.
  *  $EXAMPLES$
@@ -645,7 +645,7 @@
  *  $STATUS$
  *      S (el soporte de comodines todav¡a est  ausente)
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper.
+ *      Esta funci¢n es compatible con CA-Cl*pper.
  *  $FILES$
  *      La librer¡a asociada es rtl
  *  $SEEALSO$
@@ -663,21 +663,21 @@
  *  $SYNTAX$
  *      FREADSTR( <nHandle>, <nBytes>) --> cCadena
  *  $ARGUMENTS$
- *      <nHandle>  Manejador de archivo del sistema operativo 
- *                 El valor <nHandle> es obtenido del llamado a alguna de 
+ *      <nHandle>  Manejador de archivo del sistema operativo
+ *                 El valor <nHandle> es obtenido del llamado a alguna de
  *                 las funciones FCREATE() ¢ FOPEN().
  *
  *      <nBytes>   N£mero de bytes a leer
  *  $RETURNS$
- *      Devuelve la cadena de caracteres <cCadena>. 
+ *      Devuelve la cadena de caracteres <cCadena>.
  *  $DESCRIPTION$
- *      Esta es una funci¢n de bajo nivel que lee caracteres de un archivo 
- *      binario.  
+ *      Esta es una funci¢n de bajo nivel que lee caracteres de un archivo
+ *      binario.
  *      El valor de <nBytes> es el n£mero de bytes a leer desde el archivo.
- *      
- *      La cadena devuelta ser  el n£mero de caracteres especificado en 
- *      <nBytes> si no hubo error y el archivo todav¡a conten¡a esa cantidad 
- *      de caracteres. 
+ *
+ *      La cadena devuelta ser  el n£mero de caracteres especificado en
+ *      <nBytes> si no hubo error y el archivo todav¡a conten¡a esa cantidad
+ *      de caracteres.
  *      Si se encuentra los caracteres ASCII=cero ¢ ASCII=26 el tama¤o de la
  *      cadena devuelta ser  menor que <nBytes> e inclusive puede ser nula.
  *
@@ -691,7 +691,7 @@
  *  $EXAMPLES$
  *      - Este ejemplo lee y muestra los primeros 100 caracteres de un
  *        archivo de texto
- * 
+ *
  *      IF ( nHandle := FOPEN("x.txt") ) > 0
  *         cStr := FREADSTR( nHandle, 100)
  *         ? cStr
@@ -702,8 +702,8 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n no es compatible CA-Clipper dado que la versi¢n de 
- *      Harbour, puede leer cadenas mayores que 64 Kb, dependiendo de la 
+ *      Esta funci¢n no es compatible CA-Cl*pper dado que la versi¢n de
+ *      Harbour, puede leer cadenas mayores que 64 Kb, dependiendo de la
  *      plataforma.
  *  $FILES$
  *      La librer¡a asociada es rtl
@@ -730,19 +730,19 @@
  *      <xcArchivoNuevo>  Nuevo nombre que tomar  el archivo
  *  $DESCRIPTION$
  *      Este comando cambia el nombre de <xcArchivoViejo> a <xcArchivoNuevo>.
- *      Ambos archivos <xcArchivoViejo> y <xcArchivoNuevo> deben incluir la 
+ *      Ambos archivos <xcArchivoViejo> y <xcArchivoNuevo> deben incluir la
  *      extensi¢n del archivo y pueden opcionalmente incluir la unidad de
  *      disco y el camino, aunque deben especificarse si cualquier archivo
  *      est  en otro directorio distinto al disco y directorio por defecto.
  *      El nombre de cualquiera de los dos archivos puede ser especificado
- *      como una cadena literal, ¢ como una expresi¢n de caracteres 
- *      encerrada entre par‚ntesis. 
- *      Este comando no es afectado ni por el comando SET PATH TO, ni por el 
+ *      como una cadena literal, ¢ como una expresi¢n de caracteres
+ *      encerrada entre par‚ntesis.
+ *      Este comando no es afectado ni por el comando SET PATH TO, ni por el
  *      comando SET DEFAULT TO.
  *
  *      Si <xcArchivoNuevo> existe previamente ¢ si est  actualmente abierto
  *      este comando no realizar  la operaci¢n deseada.
- *      Si ocurre un error, consulte el valor que devuelve la funci¢n 
+ *      Si ocurre un error, consulte el valor que devuelve la funci¢n
  *      FERROR(), por las causas posibles del error.
  *  $EXAMPLES$
  *      RENAME c:\autoexec.bat TO c:\autoexec.old
@@ -750,7 +750,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este comando es compatible con CA-Clipper.
+ *      Este comando es compatible con CA-Cl*pper.
  *  $FILES$
  *      La librer¡a asociada es rtl
  *  $SEEALSO$
@@ -770,16 +770,16 @@
  *  $ARGUMENTS$
  *      <xcArchivo>   Nombre del archivo a remover
  *  $DESCRIPTION$
- *      Este comando borra ¢ remueve un archivo del disco. 
+ *      Este comando borra ¢ remueve un archivo del disco.
  *      El nombre de <xcArchivo> puede especificarse como una cadena literal,
- *      ¢ como una expresi¢n de caracteres.  Debe incluir la extensi¢n del 
+ *      ¢ como una expresi¢n de caracteres.  Debe incluir la extensi¢n del
  *      archivo y puede opcionalmente incluir la unidad de disco y el camino.
- *      
+ *
  *      El uso de los caracteres comodines '*' y '?' esta permitido.
  *
  *      Los comandos SET DEFAULT y SET PATH no afectan la operatoria de este
  *      comando.
- *      El archivo debe ser considerado cerrado por el sistema operativo, 
+ *      El archivo debe ser considerado cerrado por el sistema operativo,
  *      antes de que ‚ste pueda ser borrado.
  *  $EXAMPLES$
  *      ERASE c:\autoexec.bat     // s¢lo es una broma, no lo intente!
@@ -788,7 +788,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este comando es compatible con CA-Clipper.
+ *      Este comando es compatible con CA-Cl*pper.
  *  $SEEALSO$
  *      CURDIR(),FILE(),FERASE(),DELETE FILE
  *  $END$
@@ -806,16 +806,16 @@
  *  $ARGUMENTS$
  *      <xcArchivo>   Nombre del archivo a remover
  *  $DESCRIPTION$
- *      Este comando borra ¢ remueve un archivo del disco. 
+ *      Este comando borra ¢ remueve un archivo del disco.
  *      El nombre de <xcArchivo> puede especificarse como una cadena literal,
- *      ¢ como una expresi¢n de caracteres.  Debe incluir la extensi¢n del 
+ *      ¢ como una expresi¢n de caracteres.  Debe incluir la extensi¢n del
  *      archivo y puede opcionalmente incluir la unidad de disco y el camino.
- *      
+ *
  *      El uso de los caracteres comodines '*' y '?' esta permitido.
  *
  *      Los comandos SET DEFAULT y SET PATH no afectan la operatoria de este
  *      comando.
- *      El archivo debe ser considerado cerrado por el sistema operativo, 
+ *      El archivo debe ser considerado cerrado por el sistema operativo,
  *      antes de que ‚ste pueda ser borrado.
  *  $EXAMPLES$
  *      ERASE c:\autoexec.bat     // s¢lo es una broma, no lo intente!
@@ -824,7 +824,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este comando es compatible con CA-Clipper.
+ *      Este comando es compatible con CA-Cl*pper.
  *  $SEEALSO$
  *      CURDIR(),FILE(),FERASE(),ERASE
  *  $END$
@@ -840,29 +840,29 @@
  *  $SYNTAX$
  *      __TYPEFILE( <cArchivo>, [<lImprime>] ) --> NIL
  *  $ARGUMENTS$
- *      <cArchivo>   Es el nombre del archivo a visualizar. 
- *                   Si el archivo tiene una extensi¢n, esta debe ser 
+ *      <cArchivo>   Es el nombre del archivo a visualizar.
+ *                   Si el archivo tiene una extensi¢n, esta debe ser
  *                   especificada (no hay valor por defecto).
  *
- *      <lImprime>   Es un valor l¢gico opcional que especifica a donde 
- *                   deber¡a ir la salida: 
+ *      <lImprime>   Es un valor l¢gico opcional que especifica a donde
+ *                   deber¡a ir la salida:
  *                   (.F.) salida solamente a la pantalla
  *                   (.T.) salida a pantalla e impresora.
- *                   Por defecto es  (.F.).   
+ *                   Por defecto es  (.F.).
  *  $RETURNS$
- *      __TYPEFILE() siempre devuelve NIL.   
+ *      __TYPEFILE() siempre devuelve NIL.
  *  $DESCRIPTION$
  *      La funci¢n __TYPEFILE() muestra el contenido de un archivo de texto
  *      en la pantalla, con una opci¢n para enviar esta informaci¢n tambi‚n
  *      a la impresora.
- *      El archivo es visualizado tal como est  sin ning£n encabezado ¢ 
+ *      El archivo es visualizado tal como est  sin ning£n encabezado ¢
  *      formateo previo.
  *
  *      Si <cArchivo> no contiene ning£n camino ¢ path, __TYPEFILE() tratar 
- *      de encontrar primero el archivo en el directorio indicado por 
+ *      de encontrar primero el archivo en el directorio indicado por
  *      SET DEFAULT y luego entonces en todos los directorios indicados por
  *      SET PATH.
- *      Si el archivo <cArchivo>, no puede ser encontrado ocurrir  un error 
+ *      Si el archivo <cArchivo>, no puede ser encontrado ocurrir  un error
  *      en tiempo de ejecuci¢n.
  *
  *      Use SET CONSOLE OFF para suprimir la salida por pantalla.
@@ -872,7 +872,7 @@
  *      La funci¢n __TYPEFILE() es usada en el preprocesamiento del comando
  *      TYPE.
  *  $EXAMPLES$
- *      Los siguientes ejemplos asumen que un archivo con el nombre 
+ *      Los siguientes ejemplos asumen que un archivo con el nombre
  *      mitexto.dat existe en todos los caminos especificados, un error de
  *      ejecuci¢n podr¡a ser visualizado de no ser as¡.
  *
@@ -892,7 +892,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __TYPEFILE() trabaja exactamente como __TYPEFILE() de CA-Clipper
+ *      __TYPEFILE() trabaja exactamente como __TYPEFILE() de CA-Cl*pper
  *  $FILES$
  *      La librer¡a asociada es rtl
  *  $SEEALSO$
@@ -910,8 +910,8 @@
  *  $SYNTAX$
  *      TYPE <xcArchivo> [TO PRINTER] [TO FILE <xcArchivoDest>]
  *  $ARGUMENTS$
- *      <xcArchivo>  Es el nombre del archivo a visualizar. 
- *                   Si el archivo tiene una extensi¢n, esta debe ser 
+ *      <xcArchivo>  Es el nombre del archivo a visualizar.
+ *                   Si el archivo tiene una extensi¢n, esta debe ser
  *                   especificada (no hay valor por defecto). Esta puede ser
  *                   especificada como literal de nombre de archivo ¢ como
  *                   una expresi¢n de caracteres encerrada entre parentesis
@@ -922,21 +922,21 @@
  *      TO FILE <xcArchivoDest> Copia el archivo fuente <xcArchivo> tambi‚n
  *                   a un archivo.  Si ninguna extensi¢n es dada (.txt) es
  *                   agregada al archivo de salida.
- *                   <xcArchivoDest> puede ser especificado como literal de 
- *                   nombre de archivo ¢ como una expresi¢n de caracteres 
+ *                   <xcArchivoDest> puede ser especificado como literal de
+ *                   nombre de archivo ¢ como una expresi¢n de caracteres
  *                   encerrada entre par‚ntesis.
  *  $DESCRIPTION$
- *      El comando TYPE muestra el contenido de un archivo de texto en la 
+ *      El comando TYPE muestra el contenido de un archivo de texto en la
  *      pantalla, con una opci¢n para enviar esta informaci¢n tambi‚n
  *      a la impresora ¢ a un archivo alternativo.
- *      El archivo es visualizado tal como est  sin ning£n encabezado ¢ 
+ *      El archivo es visualizado tal como est  sin ning£n encabezado ¢
  *      formateo previo.
  *
  *      Si <xcArchivo> no contiene ning£n camino ¢ path,  TYPE tratar 
- *      de encontrar primero el archivo en el directorio indicado por 
+ *      de encontrar primero el archivo en el directorio indicado por
  *      SET DEFAULT y luego entonces en todos los directorios indicados por
  *      SET PATH.
- *      Si el archivo <xcArchivo>, no puede ser encontrado ocurrir  un error 
+ *      Si el archivo <xcArchivo>, no puede ser encontrado ocurrir  un error
  *      en tiempo de ejecuci¢n.
  *
  *      Si <xcDestFile> no contiene ning£n camino ¢ path, este es creado en
@@ -946,7 +946,7 @@
  *      Usted puede pausar la salida usando <Ctrl-S>, y pulsando cualquier
  *      tecla para continuar.
  *  $EXAMPLES$
- *      Los siguientes ejemplos asumen que un archivo con el nombre 
+ *      Los siguientes ejemplos asumen que un archivo con el nombre
  *      mitexto.dat existe en todos los caminos especificados, un error de
  *      ejecuci¢n podr¡a ser visualizado de no ser as¡.
  *
@@ -970,7 +970,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      TYPE trabaja exactamente como el comando TYPE de CA-Clipper
+ *      TYPE trabaja exactamente como el comando TYPE de CA-Cl*pper
  *  $SEEALSO$
  *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,__TYPEFILE()
  *  $END$
@@ -990,12 +990,12 @@
  *  $RETURNS$
  *      Devuelve <cPath>, el nombre del directorio actual
  *  $DESCRIPTION$
- *      Esta funci¢n devuelve el nombre del directorio actual del Sistema 
+ *      Esta funci¢n devuelve el nombre del directorio actual del Sistema
  *      Operativo para un drive especificado.
- *      Si <cDrive> no es especificado, el drive al que se encuentra 
+ *      Si <cDrive> no es especificado, el drive al que se encuentra
  *      actualmente loggeado ¢ conectado ser  usado.
  *
- *      Esta funci¢n no deber¡a devolver las barras de separaci¢n de 
+ *      Esta funci¢n no deber¡a devolver las barras de separaci¢n de
  *      directorio que se encuentren por delante y por detr s del directorio,
  *      sino s¢lo el nombre.
  *      Si un error ha sido detectado por la funci¢n, ¢ el directorio actual
@@ -1007,9 +1007,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper.
+ *      Esta funci¢n es compatible con CA-Cl*pper.
  *  $PLATFORMS$
- *      Todas   
+ *      Todas
  *  $FILES$
  *      La librer¡a asociada es rtl
  *  $SEEALSO$
@@ -1037,10 +1037,10 @@
  *  $DESCRIPTION$
  *      Este comando realiza una copia exacta del archivo <xcArchivoOrig> y
  *      le asigna el nombre <xcArchivoDest>.
- *      Ambos archivos deben tener la extensi¢n incluida, no se agrega 
+ *      Ambos archivos deben tener la extensi¢n incluida, no se agrega
  *      ninguna por defecto.  Ambos archivos pueden especificar tanto
  *      la unidad de disco como el camino.
- *      Tanto ambos archivos como el dispositivo pueden ser especificados 
+ *      Tanto ambos archivos como el dispositivo pueden ser especificados
  *      como literal de nombre de archivo ¢ como una expresi¢n de caracteres
  *      encerrada entre parentesis.
  *
@@ -1050,12 +1050,12 @@
  *      Los comandos SET DEFAULT y SET PATH no afectan la operatoria de este
  *      comando.
  *  $EXAMPLES$
- *      COPY FILE C:\HARBOUR\TESTS\ADIRTEST.PRG to C:\TEMP\ADIRTEST.PRG
- *      COPY FILE c:\harbour\utils\hbdoc\gennf.prg to LPT1
+ *      COPY FILE C:\harbour\tests\adirtest.prg TO C:\temp\adirtest.prg
+ *      COPY FILE C:\harbour\utils\hbdoc\gennf.prg TO LPT1
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este comando es compatible con CA-Clipper.
+ *      Este comando es compatible con CA-Cl*pper.
  *  $SEEALSO$
  *      ERASE,RENAME,FRENAME(),FERASE(),COPY TO
  *  $END$
@@ -1071,20 +1071,20 @@
  *  $SYNTAX$
  *      HB_FEOF( <nHandle> ) --> lEsEOF
  *  $ARGUMENTS$
- *      <nHandle>  Manejador de archivo del sistema operativo 
- *                 El valor <nHandle> es obtenido del llamado a alguna de 
+ *      <nHandle>  Manejador de archivo del sistema operativo
+ *                 El valor <nHandle> es obtenido del llamado a alguna de
  *                 las funciones FCREATE() ¢ FOPEN().
  *  $RETURNS$
- *      Devuelve <lEsEOF>, un valor l¢gico verdadero (.T.) si el puntero 
- *      del archivo de ese manejador est  al final del archivo (EOF), ¢ 
+ *      Devuelve <lEsEOF>, un valor l¢gico verdadero (.T.) si el puntero
+ *      del archivo de ese manejador est  al final del archivo (EOF), ¢
  *      falso (.F.) si a£n no lleg¢ al fin del archivo.
  *  $DESCRIPTION$
  *      Esta funci¢n testea si el archivo abierto correspondiente al
- *      manejador <nHandle> tiene el puntero del archivo al final del 
+ *      manejador <nHandle> tiene el puntero del archivo al final del
  *      archivo, E-O-F.
- * 
+ *
  *      Si el manejador de archivo falta, no es num‚rico, ¢ el archivo no
- *      est  abierto, entonces esta funci¢n devuelve .T. y establece el 
+ *      est  abierto, entonces esta funci¢n devuelve .T. y establece el
  *      valor devuelto por FERROR() a -1 (FS_ERROR), ¢ a un valor de error
  *      dependiente del compilador de lenguaje C (EBADF ¢ EINVAL).
  *  $EXAMPLES$
@@ -1120,13 +1120,13 @@
  *  $ARGUMENTS$
  *      <cDirectorio>   Es el nombre del directorio a remover
  *  $RETURNS$
- *      Devuelve un valor num‚rico, <nError> es cero si el directorio fu‚  
- *      exitosamente removido, de otro modo devuelve el n£mero del £ltimo 
+ *      Devuelve un valor num‚rico, <nError> es cero si el directorio fu‚
+ *      exitosamente removido, de otro modo devuelve el n£mero del £ltimo
  *      error ocurrido.
  *  $DESCRIPTION$
- *      Esta funci¢n intenta remover el directorio especificado en la 
+ *      Esta funci¢n intenta remover el directorio especificado en la
  *      variable <cDirectorio>.  Si esta funci¢n falla, devolver  el c¢digo
- *      num‚rico del sistema operativo correspondiente al £ltimo error 
+ *      num‚rico del sistema operativo correspondiente al £ltimo error
  *      ocurrido.
  *      Consulte la funci¢n FERROR() por una descripci¢n del error.
  *  $EXAMPLES$
@@ -1141,7 +1141,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper 5.3     
+ *      Esta funci¢n es compatible con CA-Cl*pper 5.3
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -1163,12 +1163,12 @@
  *  $ARGUMENTS$
  *      <cDirectorio> Es el nombre del directorio al cual Ud. desea cambiarse
  *  $RETURNS$
- *      Devuelve un valor num‚rico, <nError> es cero si el directorio fu‚  
- *      exitosamente cambiado, de otro modo devuelve el n£mero del £ltimo 
+ *      Devuelve un valor num‚rico, <nError> es cero si el directorio fu‚
+ *      exitosamente cambiado, de otro modo devuelve el n£mero del £ltimo
  *      error ocurrido.
  *  $DESCRIPTION$
  *      Esta funci¢n intenta cambiar el directorio actual a otro especificado
- *      en la variable <cDirectorio>.  Si esta funci¢n falla, devolver  el 
+ *      en la variable <cDirectorio>.  Si esta funci¢n falla, devolver  el
  *      c¢digo num‚rico del sistema operativo correspondiente al £ltimo error
  *      ocurrido.
  *      Consulte la funci¢n FERROR() por una descripci¢n del error.
@@ -1176,7 +1176,7 @@
  *      cDir   := "\temp"
  *      nError := DIRCHANGE( cDir )
  *
- *      IF nError == 0 
+ *      IF nError == 0
  *         ? "El cambio al directorio [" + cDir + "] fu‚ exitoso"
  *      ENDIF
  *  $TESTS$
@@ -1184,7 +1184,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper 5.3     
+ *      Esta funci¢n es compatible con CA-Cl*pper 5.3
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -1206,13 +1206,13 @@
  *  $ARGUMENTS$
  *      <cDirectorio>   Es el nombre del directorio que Ud. desea crear
  *  $RETURNS$
- *      Devuelve un valor num‚rico, <nError> es cero si el directorio fu‚  
- *      exitosamente creado, de otro modo devuelve el n£mero del £ltimo 
+ *      Devuelve un valor num‚rico, <nError> es cero si el directorio fu‚
+ *      exitosamente creado, de otro modo devuelve el n£mero del £ltimo
  *      error ocurrido.
  *  $DESCRIPTION$
- *      Esta funci¢n intenta crear un nuevo directorio con el nombre 
- *      especificado en la variable <cDirectorio>.  Si esta funci¢n falla, 
- *      devolver  el c¢digo num‚rico del sistema operativo correspondiente 
+ *      Esta funci¢n intenta crear un nuevo directorio con el nombre
+ *      especificado en la variable <cDirectorio>.  Si esta funci¢n falla,
+ *      devolver  el c¢digo num‚rico del sistema operativo correspondiente
  *      al £ltimo error ocurrido.
  *      Consulte la funci¢n FERROR() por una descripci¢n del error.
  *  $EXAMPLES$
@@ -1226,7 +1226,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper 5.3     
+ *      Esta funci¢n es compatible con CA-Cl*pper 5.3
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -1248,35 +1248,35 @@
  *  $ARGUMENTS$
  *      <cDrive>  Una letra de drive que sea v lida
  *  $RETURNS$
- *      Devuelve un valor l¢gico <lExito>, es verdadero (.T.) si el drive 
+ *      Devuelve un valor l¢gico <lExito>, es verdadero (.T.) si el drive
  *      est  listo, ¢ falso (.F.) si no est  listo.
  *  $DESCRIPTION$
  *      Esta funci¢n intenta acceder a un drive.  Si el aceso al drive fu‚
  *      Es £til para funcines de respaldo ¢ back-up, as¡ Ud. puede determinar
  *      si el drive que va a recibir los datos a resguardar est  listo ¢ no.
- *      Si esta funci¢n falla, devolver  el c¢digo num‚rico del sistema 
+ *      Si esta funci¢n falla, devolver  el c¢digo num‚rico del sistema
  *      operativo correspondiente al £ltimo error ocurrido.
  *      Consulte la funci¢n FERROR() por una descripci¢n del error.
  *  $EXAMPLES$
  *      1) Testea el drive A:
- * 
+ *
  *      IF ISDISK("A")
  *         ? "El Drive est  listo "
  *      ENDIF
  *
  *
- *      2) Testea el drive B: 
+ *      2) Testea el drive B:
  *      cDrive := "B"
  *
  *      IF ! ISDISK( cDrive )
  *         ? "El Drive [" + cDrive + ":] No est  disponible"
- *      ENDIF 
+ *      ENDIF
  *  $TESTS$
  *      Ver ejemplos
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper 5.3     
+ *      Esta funci¢n es compatible con CA-Cl*pper 5.3
  *  $PLATFORMS$
  *      Todas
  *  $FILES$

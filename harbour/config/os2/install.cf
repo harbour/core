@@ -5,14 +5,14 @@
 ifeq ($(SHLVL),) # An OS/2 command shell
 
 define inst_file
-ECHO $(CP) $(file) $(INSTALL_OS2_DIR) >> _NSTALL.CMD
+ECHO $(CP) $(file) $(INSTALL_OS2_DIR) >> _nstall.cmd
 
 endef
 
 INSTALL_LIST = $(subst /,\,$(INSTALL_OBJS))
 INSTALL_OS2_DIR = $(subst /,\,$(INSTALL_DIR))
 INSTALL_RULE = $(foreach file, $(INSTALL_LIST), $(inst_file)) \
-	$(COMSPEC) /c _NSTALL.CMD & $(RM) _NSTALL.CMD
+	$(COMSPEC) /c _nstall.cmd & $(RM) _nstall.cmd
 
 else  # bash
 

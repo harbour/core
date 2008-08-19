@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: BYTEXOR.PRG
+ * File......: bytexor.prg
  * Author....: Forest Belt, Computer Diagnostic Services, Inc.
  * CIS ID....: ?
  *
@@ -60,7 +60,7 @@
  *          ? cNewByte            // result: non-printable character
  *
  *     For a demonstration of Clipper bit manipulations, compile and
- *     link the program BITTEST.PRG in the Nanforum Toolkit source code.
+ *     link the program bittest.prg in the Nanforum Toolkit source code.
  *  $SEEALSO$
  *     FT_BYTEOR() FT_BYTENOT() FT_BYTENEG() FT_BYTEAND()
  *  $END$

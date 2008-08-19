@@ -936,7 +936,7 @@
  *      From ADS docs:
  *      Options are ADS_ANSI and ADS_OEM. This indicates the type of
  *      character data to be stored in the table. For compatibility with
- *      DOS-based CA-Clipper applications, ADS_OEM should be specified.
+ *      DOS-based CA-Cl*pper applications, ADS_OEM should be specified.
  *      When usTableType is ADS_ADT, this parameter is ignored and ANSI
  *      is always used.
  *      <lOEM> This parameter used for console mode applications, when

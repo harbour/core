@@ -216,7 +216,7 @@ static BOOL _hb_timeValid( char * szTime, ULONG ulLen, int * piDecode )
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
- *      This function is CA-Clipper Tools compatible.
+ *      This function is CA-Cl*pper Tools compatible.
  *  $PLATFORMS$
  *      Windows
  *  $FILES$
@@ -273,7 +273,7 @@ HB_FUNC( TIMEVALID )
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
- *      This function is CA-Clipper Tools compatible.
+ *      This function is CA-Cl*pper Tools compatible.
  *  $PLATFORMS$
  *      Windows
  *  $FILES$
@@ -355,7 +355,7 @@ HB_FUNC( SETTIME )
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
- *      This function is CA-Clipper Tools compatible.
+ *      This function is CA-Cl*pper Tools compatible.
  *  $PLATFORMS$
  *      Windows
  *  $FILES$

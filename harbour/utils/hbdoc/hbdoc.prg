@@ -51,7 +51,7 @@
  */
 
 /*
- * File......: HBDOC.PRG
+ * File......: hbdoc.prg
  * Author....: Luiz Rafael Culik
  * Date......: $Date$
  * Revision..: $Revision$
@@ -1759,8 +1759,6 @@ FUNCTION fill_link_info( cLinkName )
 
 RETURN cCompiler
 
-*+ EOF: HBDOC.PRG
-
 STATIC FUNCTION ReadLinkFile( cFile )
 
    LOCAL cBuffer   := ''
@@ -1857,4 +1855,3 @@ for nCount:=1 to Len(aTemp)
          Endif
 next
 return nil
-    

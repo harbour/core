@@ -145,7 +145,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Clipper array is limited to 4096 items, and therefor 4096 menu
+ *      CA-Cl*pper array is limited to 4096 items, and therefor 4096 menu
  *      items are the maximum that could be defined per one menu, Harbour
  *      does not have this limit (not that you'll ever need that).
  *  $FILES$
@@ -209,7 +209,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Clipper array is limited to 4096 items, and therefor 4096 menu
+ *      CA-Cl*pper array is limited to 4096 items, and therefor 4096 menu
  *      items are the maximum that could be defined per one menu, Harbour
  *      does not have this limit (not that you'll ever need that).
  *  $SEEALSO$
@@ -298,7 +298,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

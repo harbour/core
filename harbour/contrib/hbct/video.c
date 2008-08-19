@@ -115,7 +115,7 @@ HB_FUNC( CHARPIX )
  *      VGAPALETTE([<cColor|nColor>, [<nRedValue>, <nGreenValue>,
  *                                    <nBlueValue]]) --> lValid
  *  $ARGUMENTS$
- *      <cColor|nColor> - the color to change in CA-Clipper color notation or
+ *      <cColor|nColor> - the color to change in CA-Cl*pper color notation or
  *              as a number from 0 to 15.
  *      <nRedValue>, <nGreenValue>, and <nBlueValue> specify the palette
  *              settings for the respective portions in the range from 0 to 63.

@@ -4,7 +4,7 @@
 
 *+====================================================================
 *+
-*+    Source Module => E:\MULTI\AC_TEST.PRG
+*+    Source Module => ac_test.prg
 *+
 *+    Released to Public Domain.
 *+
@@ -221,5 +221,3 @@ case nMode == AC_EXCEPT                 // Key Exception
    endcase
 endcase
 return nRetVal
-
-*+ EOF: AC_TEST.PRG

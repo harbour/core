@@ -211,12 +211,12 @@
  *      <xFuncionUsuario> puede ser tambi‚n un bloque de c¢digo, esta es una
  *      extensi¢n de Harbour.
  *
- *      CA-Clipper lanzar  un error si no hay una base de datos abierta
+ *      CA-Cl*pper lanzar  un error si no hay una base de datos abierta
  *      Harbour puede retornar .F.
  *
  *      Clipper es inconsistente y lanzar  un error si el n£mero de columnas
  *      es cero. Harbour puede retornar .F.
- *      Las NG de CA-Clipper 5.2 indican que el valor devuelto es NIL,
+ *      Las NG de CA-Cl*pper 5.2 indican que el valor devuelto es NIL,
  *      esto es err¢neo y deber¡a ser un valor l¢gico.
  *
  *      Hay un c¢digo de retorno (3) indocumentado para las funciones
@@ -343,7 +343,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      TBrowseDB() funciona exactamente como la funci¢n de CA-Clipper
+ *      TBrowseDB() funciona exactamente como la funci¢n de CA-Cl*pper
  *       TBrowseDB().
  *  $FILES$
  *      La librer¡a es rtl
@@ -387,7 +387,7 @@
  *      R
  *  $COMPLIANCE$
  *      dbSkipper() es una funci¢n de compatibilidad con XBase++ y no existe
- *      como una funci¢n est ndar en CA-Clipper 5.x
+ *      como una funci¢n est ndar en CA-Cl*pper 5.x
  *      Esta funci¢n es solamente visible si el archivo:
  *       ../source/rtl/browdb.prg fue compilado con la bandera HB_COMPAT_XPP.
  *  $FILES$

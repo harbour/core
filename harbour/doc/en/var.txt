@@ -545,7 +545,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible
+ *      This function is CA-Cl*pper compatible
  *  $SEEALSO$
  *      __MVGET(),__MVPUT()
  *  $FILES$
@@ -595,7 +595,7 @@
  *      If the block is evaluate and there is no field with the name
  *      <cFieldName> in the current work area, the code block return NIL.
  *
- *      CA-Clipper would raise BASE/1003 error if the field does not exist.
+ *      CA-Cl*pper would raise BASE/1003 error if the field does not exist.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -655,7 +655,7 @@
  *      If the block is evaluate and there is no field with the name
  *      <cFieldName> in the given work area, the code block return NIL.
  *
- *      CA-Clipper would raise BASE/1003 error if the field does not exist.
+ *      CA-Cl*pper would raise BASE/1003 error if the field does not exist.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -700,7 +700,7 @@
  *      If there is a syntax error in passed expression then "UE" is returned.
  *      If there is a call for any non-reserved Harbour function then "UI"
  *      is returned (in other words there is no call for passed UDF function
- *      during a data type determination - this is CA-Clipper compatible
+ *      during a data type determination - this is CA-Cl*pper compatible
  *      behavior). Additionally if requested user defined function is not
  *      linked into executable then "U" is returned.
  *
@@ -739,20 +739,20 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      - Incompatibility with CA-Clipper:
+ *      - Incompatibility with CA-Cl*pper:
  *        In the following code:
  *
  *          PRIVATE lCond := 0
  *          ? TYPE( "IIF( lCond, 'true', MyUDF() )" )
  *
- *        CA-Clipper will print "UE" - in Harbour the output will be "UI"
+ *        CA-Cl*pper will print "UE" - in Harbour the output will be "UI"
  *
  *      - If "UI" is returned then the syntax of the expression is
  *        correct. However invalid arguments can be passed to
  *        function/procedure that will cause runtime errors during
  *        evaluation of expression.
  *      - Harbour supports two new types (Pointer and Symbol) which does
- *        not exists in CA-Clipper.
+ *        not exists in CA-Cl*pper.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -812,7 +812,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      VALTYPE() is CA-Clipper compliant, with the addition of the new
+ *      VALTYPE() is CA-Cl*pper compliant, with the addition of the new
  *      Harbour types: Pointer and Symbol.
  *  $FILES$
  *      Library is rtl

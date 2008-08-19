@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: NTOW.PRG
+ * File......: ntow.prg
  * Author....: Gary Baren
  * CIS ID....: 75470,1027
  *

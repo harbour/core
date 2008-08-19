@@ -7,7 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 Alejandro de G rate <alex_degarate@hotmail.com>
- * Documentaci¢n en Espa¤ol de: 
+ * Documentaci¢n en Espa¤ol de:
  *    BIN2W(), BIN2I(), BIN2L(), BIN2U(), I2BIN(),
  *    W2BIN(), L2BIN(), U2BIN()
  *
@@ -30,8 +30,8 @@
  *      BIN2W( <cBuffer> ) --> nNumero
  *  $ARGUMENTS$
  *      <cBuffer> es una cadena de caracteres que contiene un entero corto
- *                sin signo codificado en 16 bits (byte menos significativo 
- *                primero). Los primeros dos bytes son tenidos en cuenta, 
+ *                sin signo codificado en 16 bits (byte menos significativo
+ *                primero). Los primeros dos bytes son tenidos en cuenta,
  *                si hay m s son ignorados.
  *  $RETURNS$
  *      BIN2W() retorna un n£mero entero (¢ cero si <cBuffer> no es una
@@ -69,7 +69,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BIN2W() funciona exactamente como la funci¢n de CA-Clipper, BIN2W()
+ *      BIN2W() funciona exactamente como la funci¢n de CA-Cl*pper, BIN2W()
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
@@ -89,7 +89,7 @@
  *  $ARGUMENTS$
  *      <cBuffer> es una cadena de caracteres que contiene un entero corto
  *                con signo codificado en 16 bits (byte menos significativo
- *                primero). Los primeros dos bytes son tenidos en cuenta, 
+ *                primero). Los primeros dos bytes son tenidos en cuenta,
  *                si hay m s son ignorados.
  *  $RETURNS$
  *      BIN2I() retorna un n£mero entero (¢ cero si <cBuffer> no es una
@@ -132,7 +132,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BIN2I() funciona exactamente como la funci¢n de CA-Clipper, BIN2I()
+ *      BIN2I() funciona exactamente como la funci¢n de CA-Cl*pper, BIN2I()
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
@@ -151,8 +151,8 @@
  *      BIN2L( <cBuffer> ) --> nNumero
  *  $ARGUMENTS$
  *      <cBuffer> es una cadena de caracteres que contiene un entero largo
- *                con signo codificado en 32 bits (byte menos significativo 
- *                primero). Los primeros cuatro bytes son tenidos en cuenta, 
+ *                con signo codificado en 32 bits (byte menos significativo
+ *                primero). Los primeros cuatro bytes son tenidos en cuenta,
  *                si hay m s son ignorados.
  *  $RETURNS$
  *      BIN2L() retorna un n£mero entero (¢ cero si <cBuffer> no es una
@@ -191,7 +191,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BIN2L() funciona exactamente como la funci¢n de CA-Clipper, BIN2L()
+ *      BIN2L() funciona exactamente como la funci¢n de CA-Cl*pper, BIN2L()
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
@@ -210,8 +210,8 @@
  *      BIN2U( <cBuffer> ) --> nNumero
  *  $ARGUMENTS$
  *      <cBuffer> es una cadena de caracteres que contiene un entero largo
- *                sin signo codificado en 32 bits (byte menos significativo 
- *                primero). Los primeros cuatro bytes son tenidos en cuenta, 
+ *                sin signo codificado en 32 bits (byte menos significativo
+ *                primero). Los primeros cuatro bytes son tenidos en cuenta,
  *                si hay m s son ignorados.
  *  $RETURNS$
  *      BIN2U() retorna un n£mero entero (¢ cero si <cBuffer> no es una
@@ -251,7 +251,7 @@
  *      R
  *  $COMPLIANCE$
  *      BIN2U() es una funci¢n de compatibilidad con XBase++ y no existe como
- *      una funci¢n est ndar en CA-Clipper 5.x
+ *      una funci¢n est ndar en CA-Cl*pper 5.x
  *      Esta funci¢n es solamente visible si el archivo source/rtl/binnum.c
  *      fue compilado con la bandera HB_COMPAT_XPP.
  *  $FILES$
@@ -323,7 +323,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      I2BIN() funciona exactamente como la funci¢n de CA-Clipper, I2BIN()
+ *      I2BIN() funciona exactamente como la funci¢n de CA-Cl*pper, I2BIN()
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
@@ -364,7 +364,7 @@
  *      R
  *  $COMPLIANCE$
  *      W2BIN() es una funci¢n de compatibilidad con XBase++ y no existe como
- *      una funci¢n estandar en CA-Clipper 5.x
+ *      una funci¢n estandar en CA-Cl*pper 5.x
  *      Esta funci¢n es solamente visible si el archivo source/rtl/binnum.c
  *      fue compilado con la bandera HB_COMPAT_XPP.
  *  $FILES$
@@ -406,7 +406,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      L2BIN() funciona exactamente como la funci¢n de CA-Clipper, L2BIN()
+ *      L2BIN() funciona exactamente como la funci¢n de CA-Cl*pper, L2BIN()
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
@@ -447,7 +447,7 @@
  *      R
  *  $COMPLIANCE$
  *      U2BIN() es una funci¢n de compatibilidad con XBase++ y no existe como
- *      una funci¢n est ndar en CA-Clipper 5.x
+ *      una funci¢n est ndar en CA-Cl*pper 5.x
  *      Esta funci¢n es solamente visible si el archivo source/rtl/binnum.c
  *      fue compilado con la bandera HB_COMPAT_XPP.
  *  $FILES$
@@ -490,6 +490,6 @@
  *  $SEEALSO$
  *       CALL
  *  $END$
- */ 
+ */
 
 

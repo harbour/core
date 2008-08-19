@@ -69,7 +69,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __dbCopyStruct() trabaja exactamente como la funci¢n de CA-Clipper,
+ *      __dbCopyStruct() trabaja exactamente como la funci¢n de CA-Cl*pper,
  *      __dbCopyStruct().
  *  $PLATFORMS$
  *      Todas
@@ -123,7 +123,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      COPY STRUCTURE trabaja exactamente como en CA-Clipper
+ *      COPY STRUCTURE trabaja exactamente como en CA-Cl*pper
  *  $PLATFORMS$
  *      Todas
  *  $SEEALSO$
@@ -201,7 +201,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __dbCopyXStruct() trabaja exactamente como la funci¢n de CA-Clipper,
+ *      __dbCopyXStruct() trabaja exactamente como la funci¢n de CA-Cl*pper,
  *      __dbCopyXStruct().
  *  $PLATFORMS$
  *      Todas
@@ -282,7 +282,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      COPY STRUCTURE EXTENDED trabaja exactamente como en CA-Clipper.
+ *      COPY STRUCTURE EXTENDED trabaja exactamente como en CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $SEEALSO$
@@ -403,7 +403,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __dbCreate() trabaja exactamente como en CA-Clipper.
+ *      __dbCreate() trabaja exactamente como en CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -480,7 +480,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CREATE trabaja exactamente como en CA-Clipper.
+ *      CREATE trabaja exactamente como en CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $SEEALSO$
@@ -552,7 +552,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CREATE FROM trabaja exactamente como en CA-Clipper.
+ *      CREATE FROM trabaja exactamente como en CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $SEEALSO$
@@ -638,7 +638,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Clipper tiene una funci¢n interna no documentada llamada
+ *      CA-Cl*pper tiene una funci¢n interna no documentada llamada
  *      __FLEDIT(), en Harbour nosotros la llamamos  __dbStructFilter().
  *      El nuevo nombre da una mejor descripci¢n de qu‚ es lo que la funci¢n
  *      hace. En Harbour __FLEDIT(), simplemente llama a __dbStructFilter()
@@ -732,7 +732,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __dbStructFilter() es una extensi¢n de Harbour. CA-Clipper tiene
+ *      __dbStructFilter() es una extensi¢n de Harbour. CA-Cl*pper tiene
  *      una funci¢n interna no documentada llamada __FLEDIT(), que hace lo
  *      mismo. El nuevo nombre da una mejor descripci¢n de que es lo que
  *      la funci¢n hace.

@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: SLEEP.PRG
+ * File......: sleep.prg
  * Author....: Leo Letendre
  * CIS ID....: 73607,233
  *

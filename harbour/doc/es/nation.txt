@@ -45,7 +45,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
@@ -82,7 +82,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
@@ -107,7 +107,7 @@
  *      Si <nMsg> es NIL, retorna "Invalid Argument", y si <nMsg> no es de
  *      tipo NUMERIC esta retorna una cadena vacia.
  *  $DESCRIPTION$
- *      NATIONMSG() retorna las descripciones internacionales de mensajes.  
+ *      NATIONMSG() retorna las descripciones internacionales de mensajes.
  *      En Clipper el m¢dulo por defecto depende de la versi¢n usada, en
  *      Harbour el m¢dulo por defecto es el Ingl‚s.
  *  $EXAMPLES$
@@ -121,12 +121,12 @@
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
  *      ISAFFIRM(),ISNEGATIVE()
  *  $END$
- */ 
+ */
 
 

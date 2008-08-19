@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: DISPC.C
+ * File......: dispc.c
  * Author....: Mike Taylor
  * CIS ID....: ?
  *

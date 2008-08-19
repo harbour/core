@@ -19,9 +19,9 @@
  * <b>************************************************************************</b>   </par>
 
  * Harbour is a free implementation of an xBase language compiler. It is
- * designed to be source code compatible with the CA-Clipper(r) compiler.
+ * designed to be source code compatible with the CA-Cl*pper(r) compiler.
  * That means that if you've got some code that would compile using
- * CA-Clipper(r) then it should compile under Harbour. The Harbour-Project
+ * CA-Cl*pper(r) then it should compile under Harbour. The Harbour-Project
  * web page is:   </par>
  *              <b>http://www.harbour-project.org/</b>   </par>
  *

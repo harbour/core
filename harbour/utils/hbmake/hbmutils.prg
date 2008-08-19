@@ -688,5 +688,3 @@ RETURN NIL
 STATIC FUNCTION ISWIN()
 *-----------------------
 RETURN "WINDOWS" $ Upper( OS() )
-
-// EOF: HBMUTILS.PRG

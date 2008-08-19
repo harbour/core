@@ -94,11 +94,11 @@ STATIC TheHandle As Object
 *   Open a File
 */
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FT_FUSE()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FT_FUSE( cFile AS STRING, nMode  AS NUMERIC)
    Local nHandle as numeric
@@ -116,38 +116,38 @@ FUNCTION FT_FUSE( cFile AS STRING, nMode  AS NUMERIC)
    nHandle:= theHandle:nHan
 RETURN nHandle
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function ft_FEOF()
 *+
 *+    Called from ( hbdoc.prg    )   1 - function readln()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION ft_FEOF()
    LOCAL lRETURN as LOGICAL := theHandle:lAtBottom
 RETURN lRETURN
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FReadLn()
 *+
 *+    Called from ( ft_funcs.prg )   1 - function ft_freadln()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FReadLn(  cLine AS STRING)
 
    cLine := theHandle:retrieve()
 RETURN cLine
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FT_FReadLn()
 *+
 *+    Called from ( hbdoc.prg    )   1 - function readln()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FT_FReadLn()
 
@@ -159,38 +159,38 @@ FUNCTION FT_FReadLn()
 
 RETURN cBuffer
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FT_FGotop()
 *+
 *+    Called from ( genng.prg    )   1 - static function readfromtop()
 *+                ( genrtf.prg   )   1 - static function readfromtop()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FT_FGotop()
 
    theHandle:Gotop()
 RETURN NIL
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FT_FSKIP()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FT_FSKIP( n AS NUMERIC)
 
    TheHandle:Skip( n )
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FT_MKDIR()
 *+
 *+    Called from ( hbdoc.prg    )   6 - function main()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FT_MKDIR( CDIR AS STRING)
 
@@ -202,14 +202,14 @@ FUNCTION FT_MKDIR( CDIR AS STRING)
 
 RETURN nil
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function StrPos()
 *+
 *+    Called from ( genhtm1.prg  )   1 - function prochtmtable()
 *+                ( genhtm2.prg  )   1 - function prochtmtable()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION StrPos( cBuffer AS STRING)
 
@@ -238,7 +238,7 @@ FUNCTION StrPos( cBuffer AS STRING)
 
 RETURN nPos
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function GetNumberofTableItems()
 *+
@@ -246,7 +246,7 @@ RETURN nPos
 *+                ( genng.prg    )   1 - function procngdesc()
 *+                ( genng1.prg   )   1 - function procngdesc()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION GetNumberofTableItems( cBuffer )
 
@@ -269,14 +269,14 @@ FUNCTION GetNumberofTableItems( cBuffer )
 
 #define EOL hb_osnewline()
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function FREADline()
 *+
 *+    Called from ( genng.prg    )   1 - static function readfromtop()
 *+                ( genrtf.prg   )   1 - static function readfromtop()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 FUNCTION FREADline( nH as Numeric, cB AS STRING, nMaxLine as Numeric)
 
@@ -297,5 +297,3 @@ FUNCTION FREADline( nH as Numeric, cB AS STRING, nMaxLine as Numeric)
    ENDIF
     lReturn := (nNumRead != 0)
 RETURN lReturn
-
-*+ EOF: FT_FUNCS.PRG

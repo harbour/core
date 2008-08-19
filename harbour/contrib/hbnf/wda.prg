@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: WDA.PRG
+ * File......: wda.prg
  * Author....: Eric Splaver
  * CIS ID....: ?
  *

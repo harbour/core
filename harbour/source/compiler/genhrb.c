@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Compiler Harbour Portable Object (.HRB) generation
+ * Compiler Harbour Portable Object (.hrb) generation
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  * www - http://www.harbour-project.org

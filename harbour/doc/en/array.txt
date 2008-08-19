@@ -49,7 +49,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER Compliant in all Cases, except that
+ *      This function is CA-Cl*pper Compliant in all Cases, except that
  *      arrays in Harbour can have an unlimited number of dimensions, while
  *      Clipper has a limit of 4096 array elements.
  *  $FILES$
@@ -337,7 +337,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is not CA-Clipper compatible. Clipper ASCAN() is affected by the SET EXACT ON/OFF Condition
+ *      This function is not CA-Cl*pper compatible. Clipper ASCAN() is affected by the SET EXACT ON/OFF Condition
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$

@@ -51,7 +51,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MEMOTRAN() is fully CA-Clipper compliant.
+ *      MEMOTRAN() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -86,7 +86,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HARDCR() is fully CA-Clipper compliant.
+ *      HARDCR() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -105,37 +105,37 @@
  *      MEMOREAD( <cFileName> ) --> cString
  *  $ARGUMENTS$
  *      <cFileName> is the filename to read from disk.
- *                  It must include the file extension. If file to be read 
+ *                  It must include the file extension. If file to be read
  *                  lives in another directory, you must include the path.
- *  $RETURNS$ 
+ *  $RETURNS$
  *      Returns the contents of a text file as a character string.
- *      The maximum size of the file that can be read is the same as the 
- *      maximum size of a character string (more than 2 Mb). It has not the 
- *      64 Kb limit as in Clipper. 
- *      If <cFileName> cannot be found, nor read, function returns a null 
+ *      The maximum size of the file that can be read is the same as the
+ *      maximum size of a character string (more than 2 Mb). It has not the
+ *      64 Kb limit as in Clipper.
+ *      If <cFileName> cannot be found, nor read, function returns a null
  *      string ("").
  *  $DESCRIPTION$
  *      MEMOREAD() is a function that reads the content of a text file (till
- *      now) from disk (floppy, HD, CD-ROM, etc.) into a memory string. 
- *      In that way you can manipulate as any character string or assigned 
+ *      now) from disk (floppy, HD, CD-ROM, etc.) into a memory string.
+ *      In that way you can manipulate as any character string or assigned
  *      to a memo field to be saved in a database.
  *
  *      MEMOREAD() function is used together with MEMOEDIT() and MEMOWRIT()
- *      to get from disk text from several sources that would be edited, 
- *      searched, replaced, displayed, etc. 
- *      
+ *      to get from disk text from several sources that would be edited,
+ *      searched, replaced, displayed, etc.
+ *
  *      It is used to import data from other sources to our database.
  *
- *      Note:  
- *      MEMOREAD() does not use the settings SET DEFAULT or SET PATH to 
- *      search for <cFileName>. 
- *      It searches for <cFileName> in the current directory. 
- *      If the file is not found, then MEMOREAD() searches in the DOS path.  
+ *      Note:
+ *      MEMOREAD() does not use the settings SET DEFAULT or SET PATH to
+ *      search for <cFileName>.
+ *      It searches for <cFileName> in the current directory.
+ *      If the file is not found, then MEMOREAD() searches in the DOS path.
  *
  *      Over a network, MEMOREAD() attempts to open <cFileName> in read-only
- *      mode and shared.  If the file is used in mode exclusive by another 
+ *      mode and shared.  If the file is used in mode exclusive by another
  *      process, the function will returns a null string ("").
- *     
+ *
  *      Is one of the most useful Clipper functions!, it really makes simple
  *  $EXAMPLES$
  *      *  This example uses MEMOREAD() to assign the contents of a text
@@ -143,7 +143,7 @@
  *
  *         cFile   := "account.prg"
  *         cString := MEMOREAD( cFile )
- *                   
+ *
  *         IF AT( "Melina", cString) == 0             // check for copyright
  *            MEMOWRIT( cFile, cCopyright + cString ) // if not, add it!
  *         ENDIF
@@ -151,7 +151,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MEMOREAD() is fully CA-Clipper compliant.
+ *      MEMOREAD() is fully CA-Cl*pper compliant.
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -159,7 +159,7 @@
  *  $SEEALSO$
  *      MEMOEDIT(),MEMOWRIT(),REPLACE
  *  $END$
- */  
+ */
 
 
 /*  $DOC$
@@ -168,33 +168,33 @@
  *  $CATEGORY$
  *      Memo Field
  *  $ONELINER$
- *      Write a memo field or character string to a text file on disk 
+ *      Write a memo field or character string to a text file on disk
  *  $SYNTAX$
  *      MEMOWRIT( <cFileName>, <cString>, [<lWriteEof>] ) --> lSuccess
  *  $ARGUMENTS$
  *      <cFileName> is the filename to read from disk.
- *                  It must include the file extension. If file to be read 
+ *                  It must include the file extension. If file to be read
  *                  lives in another directory, you must include the path.
  *
- *      <cString>   Is the memo field or character string, to be write to 
+ *      <cString>   Is the memo field or character string, to be write to
  *                  <cFile>.
  *
- *      <lWriteEof> Is a logic variable that settle if the "end of file" 
+ *      <lWriteEof> Is a logic variable that settle if the "end of file"
  *                  character - CHR(26) - is written to disk.
  *                  This parameter is optional. By default is true (.T.)
- *  $RETURNS$ 
+ *  $RETURNS$
  *      Function returns true (.T.) if the writing operation was successful;
  *      otherwise, it returns false (.F.).
  *  $DESCRIPTION$
- *      This a function that writes a memo field or character string to a 
+ *      This a function that writes a memo field or character string to a
  *      text file on disk (floppy, HD, CD-ROM, etc.)
- *      If you not specified a path, MEMOWRIT() writes <cFileName> to the 
+ *      If you not specified a path, MEMOWRIT() writes <cFileName> to the
  *      current directory. If <cFileName> exists, it is overwritten.
  *
- *      Note:  
- *      There is a third parameter (optional), <lWriteEof>, (not found in 
- *      Clipper) which let to programmer change the default behavior of 
- *      - allways - to write the EOF character, CHR(26) as in Clipper. 
+ *      Note:
+ *      There is a third parameter (optional), <lWriteEof>, (not found in
+ *      Clipper) which let to programmer change the default behavior of
+ *      - allways - to write the EOF character, CHR(26) as in Clipper.
  *      If there is no third parameter, nothing change, EOF is written as
  *      in Clipper, the same occurs when <lWriteEof> is set to .T.
  *      But, if <lWriteEof> is set to .F., EOF char is Not written to the
@@ -202,11 +202,11 @@
  *
  *      MEMOWRIT() function is used together with MEMOREAD() and MEMOEDIT()
  *      to save to disk text from several sources that was edited, searched,
- *      replaced, displayed, etc. 
- *      
+ *      replaced, displayed, etc.
+ *
  *      It is used to export the database to another format.
  *
- *      Note:  
+ *      Note:
  *      MEMOWRIT() do not use the directory settings SET DEFAULT.
  *
  *      Is one of the most useful Clipper functions!, it really makes simple
@@ -216,7 +216,7 @@
  *
  *         cFile   := "account.prg"
  *         cString := MEMOREAD( cFile )
- *                   
+ *
  *         IF AT( "Melina", cString) == 0             // check for copyright
  *            MEMOWRIT( cFile, cCopyright + cString ) // if not, add it!
  *         ENDIF
@@ -224,7 +224,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MEMOWRIT() is fully CA-Clipper compliant.
+ *      MEMOWRIT() is fully CA-Cl*pper compliant.
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -232,7 +232,7 @@
  *  $SEEALSO$
  *      MEMOEDIT(),MEMOREAD()
  *  $END$
- */   
+ */
 
 
 

@@ -71,7 +71,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es 100 % compatible con CA-Clipper.
+ *      Esta funci¢n es 100 % compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -79,6 +79,6 @@
  *  $SEEALSO$
  *      AEVAL(),DBEVAL()
  *  $END$
- */  
+ */
 
 

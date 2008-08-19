@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: GCD.PRG
+ * File......: gcd.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

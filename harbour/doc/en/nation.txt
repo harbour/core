@@ -41,7 +41,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ISAFFIRM() is fully CA-Clipper compliant.   </par>
+ *      ISAFFIRM() is fully CA-Cl*pper compliant.   </par>
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -75,7 +75,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ISNEGATIVE() is fully CA-Clipper compliant.   </par>
+ *      ISNEGATIVE() is fully CA-Cl*pper compliant.   </par>
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -110,7 +110,7 @@
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
- *      NATIONMSG() is fully CA-Clipper compliant.   </par>
+ *      NATIONMSG() is fully CA-Cl*pper compliant.   </par>
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

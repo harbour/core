@@ -35,9 +35,9 @@
  *
  *       Harbour es una implementaci¢n libre (en todo sentido) de un
  *      compilador de lenguaje xBase. Este est  designado para ser compatible
- *      con el c¢digo fuente del compilador CA-Clipper (c).
+ *      con el c¢digo fuente del compilador CA-Cl*pper (c).
  *      Esto significa que si Ud. tiene alg£n c¢digo que deber¡a compilar
- *      usando CA-Clipper(c) entonces este deber¡a compilar tambi‚n bajo
+ *      usando CA-Cl*pper(c) entonces este deber¡a compilar tambi‚n bajo
  *      Harbour.
  *
  *      La p gina web del Proyecto Harbour es:
@@ -126,6 +126,6 @@
  *  $SEEALSO$
  *      Licencia
  *  $END$
- */ 
+ */
 
 

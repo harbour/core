@@ -423,4 +423,3 @@ IF nLen<=230
     aadd(aLine,ALLTRIM(cBuffer))
 ENDIF
 RETURN aLine
-*+ EOF: OS2.PRG

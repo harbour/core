@@ -69,9 +69,9 @@
  *      condici¢n.
  *
  *      Si la cl usula SAMPLE es especificada, etiquetas de prueba ser n
- *      generadas.   
+ *      generadas.
  *
- *      Si la cl usula NOCONSOLE es especificada, la salida a la consola ser  
+ *      Si la cl usula NOCONSOLE es especificada, la salida a la consola ser 
  *      desactivada mientras este comando este siendo ejecutado.
  *
  *      Este comando sigue el criterio de ambito establecido en el comando
@@ -87,7 +87,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este comando es totalmente compatible con CA-Clipper.
+ *      Este comando es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -95,6 +95,6 @@
  *  $SEEALSO$
  *      REPORT FORM
  *  $END$
- */ 
+ */
 
 

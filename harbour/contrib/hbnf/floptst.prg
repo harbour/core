@@ -3,7 +3,7 @@
  */
 
 /*
-* File......: FLOPTST.PRG
+* File......: floptst.prg
 * Author....: Gary Smith
 * CIS ID....: 70714,3015
 *

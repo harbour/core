@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: XBOX.PRG
+ * File......: xbox.prg
  * Author....: Don Opperthauser
  * CIS ID....: ?
  *
@@ -89,8 +89,8 @@
  *        The box is centered both vertically and horizontally.
  *
  *     WARNING:  Shadowing is achieved by a call to FT_SHADOW(), an assembly
- *               routine not found in this .PRG.  In order to use XBOX,
- *               SHADOW.OBJ must also be present somewhere (if you are using
+ *               routine not found in this .prg.  In order to use XBOX,
+ *               shadow.prg must also be present somewhere (if you are using
  *               NANFOR.LIB, then it is).
  *  $EXAMPLES$
  *     The following displays a two-line box with default settings:

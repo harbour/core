@@ -74,7 +74,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Clipper compliant.   </par>
+ *      This command is CA-Cl*pper compliant.   </par>
  *  $PLATFORMS$
  *      ALL   </par>
  *  $FILES$

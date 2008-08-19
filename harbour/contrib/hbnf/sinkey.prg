@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: SINKEY.PRG
+ * File......: sinkey.prg
  * Author....: Greg Lief
  * CIS ID....: 72460,1760
  *
@@ -43,7 +43,7 @@
  *     The INKEY() value of the key pressed.
  *  $DESCRIPTION$
  *     FT_SINKEY() is similar to the function provided by Nantucket in
- *     KEYBOARD.PRG, with one significant difference: you can pass NIL
+ *     keyboard.prg, with one significant difference: you can pass NIL
  *     to INKEY(), which will be treated as a zero (i.e., wait indefinitely
  *     for keypress).  Therefore, it is necessary to differentiate between
  *     an explicit NIL and one that is a result of a formal parameter NOT

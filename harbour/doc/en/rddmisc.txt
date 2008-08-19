@@ -83,7 +83,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      AFIELDS() is fully CA-Clipper compliant.
+ *      AFIELDS() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -121,7 +121,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      ALIAS() is fully CA-Clipper compliant.
+ *      ALIAS() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -143,7 +143,7 @@
  *  $DESCRIPTION$
  *      This function determines if the beggining of the file marker has been
  *      reached. If so, the function will return a logical true (.T.); otherwise,
- *      a logical false(.F.) will be returned.
+ *      a logical false (.F.) will be returned.
  *      By default, BOF() will apply to the currently selected database unless
  *      the function is preceded by an alias
  *  $EXAMPLES$
@@ -158,7 +158,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BOF() is fully CA-Clipper compliant.
+ *      BOF() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -177,10 +177,10 @@
  *      ZAP
  *  $DESCRIPTION$
  *      This command removes all of the records from the database in the
- *      current work area.This operation also updates any index file in
- *      use at the time of this operation.In addition, this command removes
+ *      current work area. This operation also updates any index file in
+ *      use at the time of this operation. In addition, this command removes
  *      all items within an associated memo file.
- *      In a network enviroment,any file that is about to be ZAPped must
+ *      In a network enviroment, any file that is about to be ZAPped must
  *      be used exclusively.
  *  $EXAMPLES$
  *      USE Tests NEW index Tests
@@ -208,7 +208,7 @@
  *      DELETED() return a logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
  *      This function returns a logical true (.T.) is the current record in the
- *      selected or designated work area ha ben marked for deletion.If not, the
+ *      selected or designated work area ha ben marked for deletion. If not, the
  *      function will return a logical false (.F.).
  *  $EXAMPLES$
  *      FUNCTION Main()
@@ -222,7 +222,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -257,7 +257,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      EOF() is fully CA-Clipper compliant.
+ *      EOF() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -278,7 +278,7 @@
  *      <nFields> Return the number of fields
  *  $DESCRIPTION$
  *      This function returns the number of fields in the current or designated
- *      work area.If no database is open in this work area, the function will
+ *      work area. If no database is open in this work area, the function will
  *      return 0.
  *  $EXAMPLES$
  *      FUNCTION Main()
@@ -289,7 +289,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -312,7 +312,7 @@
  *      <ValueField>  Any expression
  *  $DESCRIPTION$
  *      This function returns the value of the field at the <nField>th location
- *      in the selected or designed work area.If the value in <nField> does not
+ *      in the selected or designed work area. If the value in <nField> does not
  *      correspond to n avaliable field position in this work area, the function
  *      will return a NIL data type.
  *  $EXAMPLES$
@@ -324,7 +324,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper Compliant.
+ *      This function is CA-Cl*pper Compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -348,7 +348,7 @@
  *  $DESCRIPTION$
  *      This function return the name of the field at the <nPosition>th position.
  *      If the numeric value passed to this function does not correspond to an
- *      existing field in the designated or selected work area,this function
+ *      existing field in the designated or selected work area, this function
  *      will return a NULL byte.
  *  $EXAMPLES$
  *      FUNCTION Main()
@@ -362,7 +362,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible.
+ *      This function is CA-Cl*pper compatible.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -385,7 +385,7 @@
  *      <nFieldPos> is ordinal position of the field.
  *  $DESCRIPTION$
  *      This function return the ordinal position of the specified field <cField>
- *      in the current or aliased work areaIf there isn't  field under the name
+ *      in the current or aliased work areaIf there isn't field under the name
  *      of <cField> or of no database is open in the selected work area, the func-
  *      tion will return a 0.
  *  $EXAMPLES$
@@ -397,7 +397,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.
+ *      This function is CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -422,9 +422,9 @@
  *      <ValueAssigned> Any expression
  *  $DESCRIPTION$
  *      This function assings the value in <expAssing> to the <nField>th
- *      field in the current or designated work area.If the operation is
- *      successful,the return value of the function will be the same value
- *      assigned to the specified field.If the operation is not successful,
+ *      field in the current or designated work area. If the operation is
+ *      successful, the return value of the function will be the same value
+ *      assigned to the specified field. If the operation is not successful,
  *      the function will return a NIL data type
  *  $EXAMPLES$
  *      USE Tests New
@@ -433,7 +433,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible.
+ *      This function is CA-Cl*pper compatible.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -454,9 +454,9 @@
  *      <lSuccess> A true (.T.) value, if the lock was successful;otherwise
  *      false (.F.)
  *  $DESCRIPTION$
- *      This function returns a logical true (.T.0 if a file lock is
+ *      This function returns a logical true (.T.) if a file lock is
  *      attempted and is successfully placed on the current or designated
- *      database.This function will also unlock all records locks placed
+ *      database. This function will also unlock all records locks placed
  *      by the same network station.
  *  $EXAMPLES$
  *      USE Tests New
@@ -467,7 +467,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible
+ *      This function is CA-Cl*pper compatible
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -487,11 +487,11 @@
  *  $ARGUMENTS$
  *      None.
  *  $RETURNS$
- *      <lSuccess> A logical true (.T.) is successful;otherwise, false (.F.)
+ *      <lSuccess> A logical true (.T.) is successful; otherwise, false (.F.)
  *  $DESCRIPTION$
- *      This function is used to test if the previous SEEK,LOCATE,CONTINUE,
- *      or FIND operation was successful.Each wrk area has its own FOUND()
- *      flag,so that a FOUND() condition may be tested in unselected work
+ *      This function is used to test if the previous SEEK, LOCATE, CONTINUE,
+ *      or FIND operation was successful. Each wrk area has its own FOUND()
+ *      flag, so that a FOUND() condition may be tested in unselected work
  *      areas by using an alias.
  *  $EXAMPLES$
  *      nId:=100
@@ -504,7 +504,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible
+ *      This function is CA-Cl*pper compatible
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -527,8 +527,8 @@
  *      This function returns the number of bytes in the header of the
  *      selected database ot the database in the designated work area.
  *
- *      If used in conjunction with the LASTREC(),RECSIZE() and DISKSPACE()
- *      functions,this functions is capable of implementing a backup and
+ *      If used in conjunction with the LASTREC(), RECSIZE() and DISKSPACE()
+ *      functions, this functions is capable of implementing a backup and
  *      restore routine.
  *  $EXAMPLES$
  *      USE Tests New
@@ -536,7 +536,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible
+ *      This function is CA-Cl*pper compatible
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -557,9 +557,9 @@
  *      <nRecords > The number of records
  *  $DESCRIPTION$
  *      This function returns the number of records present in the database
- *      in the selected or designated work area.If no records are present
- *      the value of this function will be 0.Additionaly,if no database is
- *      in use in the selected or designated work area,this function will
+ *      in the selected or designated work area. If no records are present
+ *      the value of this function will be 0. Additionaly, if no database is
+ *      in use in the selected or designated work area, this function will
  *      return a 0 value as well.
  *  $EXAMPLES$
  *      USE Tests NEW
@@ -593,7 +593,7 @@
  *      <dModification>  The date of the last modification.
  *  $DESCRIPTION$
  *      This function returns the date recorded by the OS when the selected
- *      or designated database was last written to disk.This function will
+ *      or designated database was last written to disk. This function will
  *      only work for those database files in USE.
  *  $EXAMPLES$
  *      Function Main
@@ -631,11 +631,11 @@
  *      <lError> A value based on the success of a network operation or
  *      function.
  *  $DESCRIPTION$
- *      This function return a logical true (.T.) is a USE,APPEND BLANK, or
+ *      This function return a logical true (.T.) is a USE, APPEND BLANK, or
  *      a USE...EXCLUSIVE command is issue and fails in a network enviroment.
- *      In the case of USE and USE...EXCLUSIVE commands,a NETERR() value
+ *      In the case of USE and USE...EXCLUSIVE commands, a NETERR() value
  *      of .T. would be returned if another node of the network has the
- *      exclusive use of a file.And the case of the APPEND BLANK command,
+ *      exclusive use of a file. And the case of the APPEND BLANK command,
  *      NETERR() will return a logical true (.T.) if the file or record
  *      is locked by another node or the value of LASTREC() has been advanced
  *      The value of NETERR() may be changed via the value of <lNewError>.
@@ -676,9 +676,9 @@
  *      <nRecords>  The number of records
  *  $DESCRIPTION$*
  *      This function returns the number of records present in the database
- *      in the selected or designated work area.If no records are present
- *      the value of this function will be 0.Additionaly,if no database is
- *      in use in the selected or designated work area,this function will
+ *      in the selected or designated work area. If no records are present
+ *      the value of this function will be 0. Additionaly, if no database is
+ *      in use in the selected or designated work area, this function will
  *      return a 0 value as well.
  *  $EXAMPLES$
  *      Use Test NEW
@@ -690,7 +690,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -715,7 +715,7 @@
  *      This function returns the position of the record pointer in the
  *      currently selected ot designated work area.
  *      If the database file is empty and if the RDD is the traditional .DBF
- *      file,the value of this function will be 1.
+ *      file, the value of this function will be 1.
  *  $EXAMPLES$
  *      USE Tests NEW
  *      DBGOTOP()
@@ -726,7 +726,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -749,8 +749,8 @@
  *      <nBytes> The record size.
  *  $DESCRIPTION$
  *      This function returns the number os bytes used by a single record
- *      in the currently selected or designated database file.If no database
- *      is in use in this work area,the return value from this function
+ *      in the currently selected or designated database file. If no database
+ *      is in use in this work area, the return value from this function
  *      will be 0.
  *  $EXAMPLES$
  *      USE Tests NEW
@@ -762,7 +762,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -814,7 +814,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -837,7 +837,7 @@
  *      SELECT() returns the work area number.
  *  $DESCRIPTION$
  *      This function returns the work area number for the specified alias
- *      name <cAlias>.If no parameter is specified,the current work area will
+ *      name <cAlias>. If no parameter is specified, the current work area will
  *      be the return value of the function.
  *  $EXAMPLES$
  *      USE TESTS NEW
@@ -850,11 +850,11 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
- *      ALIAS(),USED()
+ *      ALIAS(), USED()
  *  $END$
  */
 
@@ -880,7 +880,7 @@
  *      Use TESTS NEW
  *      USE Names New
  *      ? USED()    // .T.
- *      ? TESTS->(USED()) //.t.
+ *      ? TESTS->(USED()) //.T.
  *      CLOSE
  *      ? USED()  // .F.
  *      Select TESTS
@@ -890,11 +890,11 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-clipper Compliant
+ *      This function is CA-Cl*pper Compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
- *      ALIAS(),SELECT()
+ *      ALIAS(), SELECT()
  *  $END$
  */
 
@@ -909,11 +909,11 @@
  *      PACK
  *  $DESCRIPTION$
  *      This command removes records that were marked for deletion from the
- *      currently selected database.This command does not pack the contents
- *      of a memo field;those files must be packed via low-level fuctions.
+ *      currently selected database. This command does not pack the contents
+ *      of a memo field; those files must be packed via low-level fuctions.
  *
  *      All open index files will be automatically reindexed once PACK command
- *      has completed its operation.On completion,the record pointer is placed
+ *      has completed its operation. On completion, the record pointer is placed
  *      on the first record in the database.
  *  $EXAMPLES$
  *      USE Tests NEW index Tests
@@ -926,7 +926,6 @@
  *  $COMPLIANCE$
  *      This command is CA Clipper compliant
  *  $SEEALSO$
- *      DBEVAL(),DELETE,DELETED(),ZAP,RECALL
+ *      DBEVAL(), DELETE, DELETED(), ZAP, RECALL
  *  $END$
  */
-

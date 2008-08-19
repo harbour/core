@@ -102,7 +102,7 @@
  *      solamente grupos, subgrupos e informaci¢n de totales. La informaci¢n
  *      detallada del elemento t¡tulo ser  ignorada.
  *
- *      Si la cl usula NOCONSOLE es especificada, la salida a la consola serÿ
+ *      Si la cl usula NOCONSOLE es especificada, la salida a la consola ser
  *      desactivada mientras este comando este siendo ejecutado.
  *  $EXAMPLES$
  *      FUNCTION() MAIN
@@ -113,7 +113,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este comando es totalmente compatible con CA-Clipper.
+ *      Este comando es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -121,6 +121,6 @@
  *  $SEEALSO$
  *      LABEL FORM
  *  $END$
- */ 
+ */
 
 

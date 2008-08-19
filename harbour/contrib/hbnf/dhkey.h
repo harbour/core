@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: DFKEY.H
+ * File......: dfkey.h
  * Author....: Mike Taylor
  * CIS ID....: ?
  *

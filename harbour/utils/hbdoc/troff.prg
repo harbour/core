@@ -156,5 +156,3 @@ METHOD WriteLink( cLink ) CLASS TTROFF
    FWRITE( Self:nHandle, ALLTRIM( cLink ) + CRLF )
 
 RETURN Self
-
-*+ EOF: TROFF.PRG

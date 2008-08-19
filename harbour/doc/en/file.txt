@@ -33,7 +33,7 @@
  *      FOPEN( <cFile>, [<nMode>] ) --> nHandle
  *  $ARGUMENTS$
  *      <cFile> Name of file to open.
- * 
+ *
  *      <nMode> Dos file open mode.
  *  $RETURNS$
  *      <nHandle> A file handle.
@@ -72,7 +72,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rtl
  *      Header  is fileio.ch
@@ -128,7 +128,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.
+ *      This function is CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rtl
  *      Header is fileio.ch
@@ -188,7 +188,7 @@
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compliant, but also extends the possible
+ *     This function is CA-Cl*pper compliant, but also extends the possible
  *     buffer size to strings greater than 65K (depending on platform).
  *  $FILES$
  *      Library is rtl
@@ -242,7 +242,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is not CA-Clipper compatile since
+ *      This function is not CA-Cl*pper compatile since
  *      it can writes strings greather the 64K
  *  $FILES$
  *      Library is rtl
@@ -302,7 +302,7 @@
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compatible
+ *     This function is CA-Cl*pper compatible
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -336,7 +336,7 @@
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compliant
+ *     This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -382,7 +382,7 @@
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper Compatible
+ *     This function is CA-Cl*pper Compatible
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -436,7 +436,7 @@
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
- *     This function is CA-Clipper compliant
+ *     This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -512,7 +512,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.
+ *      This function is CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rtl
  *      Header is fileio.ch
@@ -552,7 +552,7 @@
  *  $STATUS$
  *      S (wild card support is missing)
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible.
+ *      This function is CA-Cl*pper compatible.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -603,7 +603,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is not CA-Clipper compliant since may read
+ *      This function is not CA-Cl*pper compliant since may read
  *      strings greather the 65K depending of platform.
  *  $FILES$
  *      Library is rtl
@@ -642,7 +642,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Clipper compatible
+ *      This command is CA-Cl*pper compatible
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -676,7 +676,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Clipper compatible
+ *      This command is CA-Cl*pper compatible
  *  $SEEALSO$
  *      CURDIR(),FILE(),FERASE(),DELETE FILE
  *  $END$
@@ -708,7 +708,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA-Clipper compatible
+ *      This command is CA-Cl*pper compatible
  *  $SEEALSO$
  *      CURDIR(),FILE(),FERASE(),ERASE
  *  $END$
@@ -764,7 +764,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __TYPEFILE() works exactly like CA-Clipper's __TYPEFILE()
+ *      __TYPEFILE() works exactly like CA-Cl*pper's __TYPEFILE()
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -830,7 +830,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      TYPE works exactly like CA-Clipper's TYPE
+ *      TYPE works exactly like CA-Cl*pper's TYPE
  *  $SEEALSO$
  *      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,__TYPEFILE()
  *  $END$
@@ -866,7 +866,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper Compatible
+ *      This function is CA-Cl*pper Compatible
  *  $PLATFORMS$
  *      ALL
  *  $FILES$
@@ -901,7 +901,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *      ERASE,RENAME,FRENAME(),FERASE()
  *  $END$

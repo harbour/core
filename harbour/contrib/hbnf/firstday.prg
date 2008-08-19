@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: FIRSTDAY.PRG
+ * File......: firstday.prg
  * Author....: Jeff Bryant
  * CIS ID....: ?
  *

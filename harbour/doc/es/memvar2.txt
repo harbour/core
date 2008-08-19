@@ -33,16 +33,16 @@
  *      Nada
  *  $DESCRIPTION$
  *      Este comando declara los nombres de los campos <xField> y siguientes
- *      <xFieldn> con una identificador opcional de alias <cDatabase> para 
+ *      <xFieldn> con una identificador opcional de alias <cDatabase> para
  *      cada uno.
  *      Este comando le permite a Harbour resolver cualquier referencia a un
- *      campo especificado en la lista de campos, viéndolo como un campo 
+ *      campo especificado en la lista de campos, viéndolo como un campo
  *      cuando no es referenciado por un alias.
  *      Si un campo no está mencionado en la lista y no está explicitamente
  *      marcado con el identificador de alias, éste puede ser visto como una
  *      variable de memoria, lo cual puede causar errores de ejecución.
- *      
- *      Este comando no tiene efecto sobre variables de memoria ó sobre 
+ *
+ *      Este comando no tiene efecto sobre variables de memoria ó sobre
  *      referencias a campos metidos dentro de una macro-expresión.
  *  $EXAMPLES$
  *      FUNCTION MAIN
@@ -58,7 +58,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este comando trabaja exactamente como en CA-Clipper.
+ *      Este comando trabaja exactamente como en CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -88,14 +88,14 @@
  *  $DESCRIPTION$
  *      Este comando Crea una variable de memoria ó un array LOCAL
  *      El nombre de cualquiera es especificado en <xVar>.
- *      Si más de una variable está siendo inicializada con la sentencia 
+ *      Si más de una variable está siendo inicializada con la sentencia
  *      LOCAL, separe cada una de ellas con una coma.
  *      Si una variable ó un array le va a ser asignado un valor de inicio
  *      esa expresión puede ser especificada en <xInit>, usando el operador
  *      de asignación en línea <:=>
  *
  *      Nota:
- *      Si el modo de compilación "Fuertemente Tipeado" (Strong type) es 
+ *      Si el modo de compilación "Fuertemente Tipeado" (Strong type) es
  *      usado, el compilador chequeará si el valor recibido coincide con el
  *      tipo especificado en <xType>.
  *
@@ -112,9 +112,9 @@
  *      sentencia LOCAL (esto esta mal)
  *
  *      Las referencias a un array LOCAL pueden no ser inicializadas (por
- *      ej. asignarle un valor) en la misma línea de comando junto con la 
+ *      ej. asignarle un valor) en la misma línea de comando junto con la
  *      sentencia LOCAL. Esto puede ser hecho luego en el programa.
- *      
+ *
  *      Variables y arrays de tipo LOCAL no son afectadas por el comando
  *      RELEASE.
  *  $EXAMPLES$
@@ -132,7 +132,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este comando trabaja exactamente como en CA-Clipper.
+ *      Este comando trabaja exactamente como en CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -161,9 +161,9 @@
  *      un alias explícito con el prefijo "M->" ó bien "MEMVAR->"
  *      Solamente aquellas variables de memoria que no contengan ese prefijo
  *      son afectadas por este comando. Aquellas variables de memoria dentro
- *      de expansiones macro, no son afectadas por este comando. 
+ *      de expansiones macro, no son afectadas por este comando.
  *
- *      La declaración MEMVAR debe aparecer antes que cualquier comando 
+ *      La declaración MEMVAR debe aparecer antes que cualquier comando
  *      ejecutable; esta es similar a las sentencias LOCAL, STATIC, FIELD,
  *      PARAMETERS, FUNCTION y PROCEDURE
  *  $EXAMPLES$
@@ -184,7 +184,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este comando trabaja exactamente como en CA-Clipper.
+ *      Este comando trabaja exactamente como en CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -192,6 +192,6 @@
  *  $SEEALSO$
  *      LOCAL,STATIC,FIELD,PRIVATE,PUBLIC
  *  $END$
- */ 
+ */
 
 

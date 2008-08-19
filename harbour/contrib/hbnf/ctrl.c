@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: CTRL.C
+ * File......: ctrl.c
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *

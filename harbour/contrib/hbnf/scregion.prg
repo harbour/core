@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: SCREGION.PRG
+ * File......: scregion.prg
  * Author....: David A. Richardson
  * CIS ID....: ?
  *

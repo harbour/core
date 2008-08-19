@@ -55,7 +55,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCNAME() is fully CA-Clipper compliant.   </par>
+ *      PROCNAME() is fully CA-Cl*pper compliant.   </par>
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -93,7 +93,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCLINE() is fully CA-Clipper compliant.   </par>
+ *      PROCLINE() is fully CA-Cl*pper compliant.   </par>
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -130,7 +130,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCFILE() is fully CA-Clipper compliant.   </par>
+ *      PROCFILE() is fully CA-Cl*pper compliant.   </par>
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -167,7 +167,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HB_PVALUE() is a new function and hence not CA-Clipper compliant.   </par>
+ *      HB_PVALUE() is a new function and hence not CA-Cl*pper compliant.   </par>
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -207,7 +207,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PCOUNT() is fully CA-Clipper compliant.   </par>
+ *      PCOUNT() is fully CA-Cl*pper compliant.   </par>
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -244,7 +244,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __QUIT() is fully CA-Clipper compliant.   </par>
+ *      __QUIT() is fully CA-Cl*pper compliant.   </par>
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -275,7 +275,7 @@
  *      R
  *  $COMPLIANCE$
  *      It is said that CLIPINIT() should not call the function that sets
- *      the default help key since CA-Clipper does it in some other place.   </par>
+ *      the default help key since CA-Cl*pper does it in some other place.   </par>
  *  $PLATFORMS$
  *      All   </par>
  *  $SEEALSO$
@@ -302,7 +302,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __SetHelpK() works exactly like CA-Clipper's __SetHelpK()   </par>
+ *      __SetHelpK() works exactly like CA-Cl*pper's __SetHelpK()   </par>
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -333,7 +333,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BREAK() is fully CA-Clipper compliant.   </par>
+ *      BREAK() is fully CA-Cl*pper compliant.   </par>
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$

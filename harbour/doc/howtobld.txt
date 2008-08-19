@@ -22,7 +22,7 @@ executable. The executable will be given the basename of the first object
 file if not directly set by the "-o" command line switch.
 
 "hbmk" tries to produce an executable from your .prg file. It's a simple
-equivalent of cl.bat from the CA-Clipper distribution.
+equivalent of cl.bat from the CA-Cl*pper distribution.
 
 All these scripts accept command line switches:
 -o<outputfilename>      # output file name

@@ -68,14 +68,14 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Informaci¢n de DBF: CA-Clipper muestra nombres de archivos en el
+ *      Informaci¢n de DBF: CA-Cl*pper muestra nombres de archivos en el
  *      formato 8.3, Harbour muestra los primeros 15 caracteres si un nombre
  *      largo de archivo esta disponible.
  *
  *      Listado de archivos: para formatear los nombres mostrados usamos algo
  *      as¡ como:
  *      PADR( Nombre, 8 ) + " " + PADR( Ext, 3 )
- *      CA-Clipper usa nombres de archivo 8.3, con Harbour probablemente se
+ *      CA-Cl*pper usa nombres de archivo 8.3, con Harbour probablemente se
  *      podr¡a cortar los nombres largos de archivo para llenar este molde.
  *  $FILES$
  *      La librer¡a es rtl
@@ -134,14 +134,14 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Informaci¢n de DBF: CA-Clipper muestra nombres de archivos en el
+ *      Informaci¢n de DBF: CA-Cl*pper muestra nombres de archivos en el
  *      formato 8.3, Harbour muestra los primeros 15 caracteres si un nombre
  *      largo de archivo est  disponible.
  *
  *      Listado de archivos: para formatear los nombres mostrados usamos algo
  *      as¡ como:
  *      PADR( Nombre, 8 ) + " " + PADR( Ext, 3 )
- *      CA-Clipper usa nombres de archivo 8.3, con Harbour probablemente se
+ *      CA-Cl*pper usa nombres de archivo 8.3, con Harbour probablemente se
  *      podr¡a cortar los nombres largos de archivo para llenar este molde.
  *  $SEEALSO$
  *      ADIR()*,DIRECTORY(),SET DEFAULT,__DIR()*
@@ -238,6 +238,6 @@
  *  $SEEALSO$
  *      ARRAY(),DIRECTORY(),SET DEFAULT
  *  $END$
- */  
+ */
 
 

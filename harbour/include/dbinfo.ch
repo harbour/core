@@ -310,7 +310,7 @@
 #define DBI_BLOB_ROOT_LOCK      207
 #define DBI_BLOB_ROOT_UNLOCK    208
 
-/* CA-CLIPPER documented for public use */
+/* CA-Cl*pper documented for public use */
 #define DBI_BLOB_DIRECT_LEN     209
 #define DBI_BLOB_DIRECT_TYPE    210
 #define DBI_BLOB_INTEGRITY      211

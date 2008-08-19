@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: IDLE.C
+ * File......: idle.c
  * Author....: Ted Means (with much gratitude to Robert DiFalco)
  * CIS ID....: 73067,3332
  *
@@ -42,7 +42,7 @@
  *
  *     This function attempts to alleviate the problem by providing a
  *     mechanism by which an idle event can be artifically generated at
- *     will.  The idle event will cause the CA-Clipper runtime to perform
+ *     will.  The idle event will cause the CA-Cl*pper runtime to perform
  *     an incremental memory scavenge.
  *
  *     This function makes use of an undocumented interal routine.  If this

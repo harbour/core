@@ -61,7 +61,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      DBEVAL is fully CA-Clipper compliant.
+ *      DBEVAL is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -97,7 +97,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBF() is fully CA-Clipper compliant.
+ *      DBF() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -151,7 +151,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBAPPEND() is fully CA-Clipper compliant.
+ *      DBAPPEND() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -190,7 +190,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBCLEARFILTER() is fully CA-Clipper compliant.
+ *      DBCLEARFILTER() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -232,7 +232,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBCLOSEALL() is fully CA-Clipper compliant.
+ *      DBCLOSEALL() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -269,7 +269,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBCLOSEAREA() is fully CA-Clipper compliant.
+ *      DBCLOSEAREA() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -313,7 +313,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -361,7 +361,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.
+ *      This function is CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -452,7 +452,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Not CA-Clipper compliant
+ *      This function is Not CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *      Header  is dbstruct.ch
@@ -492,7 +492,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -527,7 +527,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -562,7 +562,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -611,7 +611,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.
+ *      This function is CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -646,7 +646,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -684,7 +684,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -725,7 +725,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -767,7 +767,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -806,7 +806,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -877,7 +877,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      DBSEEK() is  Compatible with CA-Clipper 5.3
+ *      DBSEEK() is  Compatible with CA-Cl*pper 5.3
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -924,7 +924,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER compatible.
+ *      This function is CA-Cl*pper compatible.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -956,7 +956,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible
+ *      This function is CA-Cl*pper compatible
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -996,7 +996,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER compatible
+ *      This function is CA-Cl*pper compatible
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -1035,7 +1035,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant.
+ *      This function is CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -1074,7 +1074,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *      Header  is dbstruct.ch
@@ -1112,7 +1112,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible.
+ *      This function is CA-Cl*pper compatible.
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -1210,7 +1210,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$

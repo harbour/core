@@ -589,7 +589,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es compatible con CA-Clipper
+ *      Esta funci¢n es compatible con CA-Cl*pper
  *  $FILES$
  *      La Librer¡a es rtl
  *  $SEEALSO$
@@ -643,7 +643,7 @@
  *      Si el bloque es evaluado y no hay ning£n campo con el nombre
  *      <cFieldName> en el  rea actual de trabajo, el codeblock devuelve NIL.
  *
- *      CA-Clipper produce un error BASE/1003 si el campo no existe.
+ *      CA-Cl*pper produce un error BASE/1003 si el campo no existe.
  *  $FILES$
  *      La Librer¡a es rtl
  *  $SEEALSO$
@@ -709,7 +709,7 @@
  *      Si el bloque es evaluado y no hay ning£n campo con el nombre
  *      <cFieldName> en el  rea de trabajo dada, el codeblock devuelve NIL.
  *
- *      CA-Clipper produce un error BASE/1003 si el campo no existe.
+ *      CA-Cl*pper produce un error BASE/1003 si el campo no existe.
  *  $FILES$
  *      La Librer¡a es rtl
  *  $SEEALSO$
@@ -730,8 +730,8 @@
  *      <cExp>  debe ser una expresi¢n de caracteres
  *  $RETURNS$
  *      Una cadena <cRetType> indicando el tipo de la expresi¢n pasada.
- *                         
- *      <table>  
+ *
+ *      <table>
  *      cRetType   Significado
  *
  *         "A"      Array
@@ -854,7 +854,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      VALTYPE() es totalmente compatible con CA-Clipper.
+ *      VALTYPE() es totalmente compatible con CA-Cl*pper.
  *  $FILES$
  *      La Librer¡a es rtl
  *  $SEEALSO$
@@ -915,6 +915,6 @@
  *  $SEEALSO$
  *      VALTYPE()
  *  $END$
- */ 
+ */
 
 

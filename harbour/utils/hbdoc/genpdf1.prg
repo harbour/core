@@ -1453,5 +1453,3 @@ endif
 Return nSize
 
 #endif
-
-*+ EOF: GENNG.PRG

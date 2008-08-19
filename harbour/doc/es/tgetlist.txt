@@ -61,7 +61,7 @@
  *  $COMPLIANCE$
  *      READVAR() trabaja exactamente como la funci¢n READKEY() de Clipper.
  *      Note sin embargo que el par metro <cVarName> no est  documentado
- *      y es usado internamente por CA-Clipper.
+ *      y es usado internamente por CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -69,6 +69,6 @@
  *  $SEEALSO$
  *      @...GET,@...PROMPT,MENU TO,READ,SET KEY,__AtPrompt(),__MenuTo()
  *  $END$
- */ 
+ */
 
 

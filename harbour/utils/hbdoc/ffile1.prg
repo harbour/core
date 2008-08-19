@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FFILE1.PRG Filebase class for hbdoc
+ * ffile1.prg Filebase class for hbdoc
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -54,11 +54,11 @@
 #include 'common.ch'
 #include 'hbdocdef.ch'
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Class FileBase
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 CLASS FileBase FROM FileMan
 
@@ -646,5 +646,3 @@ METHOD BufferGet( lForward ) CLASS FileBase
    ENDIF
 
 RETURN ( nLocation )
-
-*+ EOF: FFILE1.PRG

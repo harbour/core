@@ -125,7 +125,7 @@
  *  $ARGUMENTS$
  *      <cString> is the optional string to stuff into the Harbour keyboard
  *      buffer after clearing it first. Note: The character ";" is converted
- *      to CHR(13) (this is an undocumented CA-Clipper feature).
+ *      to CHR(13) (this is an undocumented CA-Cl*pper feature).
  *  $RETURNS$
  *      There is no return value.
  *  $DESCRIPTION$
@@ -145,7 +145,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __KEYBOARD() is compliant with CA-Clipper 5.3
+ *      __KEYBOARD() is compliant with CA-Cl*pper 5.3
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -233,7 +233,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      NEXTKEY() is compliant with CA-Clipper 5.3, but has been extended
+ *      NEXTKEY() is compliant with CA-Cl*pper 5.3, but has been extended
  *      for Harbour.
  *  $FILES$
  *      Library is rtl
@@ -276,7 +276,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      LASTKEY() is compliant with CA-Clipper 5.3, but has been extended
+ *      LASTKEY() is compliant with CA-Cl*pper 5.3, but has been extended
  *      for Harbour.
  *  $FILES$
  *      Library is rtl
@@ -319,7 +319,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __KEYBOARD() is compliant with CA-Clipper 5.3
+ *      __KEYBOARD() is compliant with CA-Cl*pper 5.3
  *  $SEEALSO$
  *       CLEAR TYPEAHEAD,__KEYBOARD()
  *  $END$
@@ -367,7 +367,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      READKEY() is compliant with CA-Clipper 5.3
+ *      READKEY() is compliant with CA-Cl*pper 5.3
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -401,7 +401,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MROW() is compliant with CA-Clipper 5.3, but has been extended
+ *      MROW() is compliant with CA-Cl*pper 5.3, but has been extended
  *      to work on graphical systems as well as character-based systems.
  *  $PLATFORMS$
  *  $FILES$
@@ -437,7 +437,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MROW() is compliant with CA-Clipper 5.3, but has been extended
+ *      MROW() is compliant with CA-Cl*pper 5.3, but has been extended
  *      to work on graphical systems as well as character-based systems.
  *  $PLATFORMS$
  *      All

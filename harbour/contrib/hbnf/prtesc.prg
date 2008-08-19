@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: PRTESC.PRG
+ * File......: prtesc.prg
  * Author....: Steven Tyrakowski
  * CIS ID....: ?
  *

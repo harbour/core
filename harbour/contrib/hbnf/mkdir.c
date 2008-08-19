@@ -2,7 +2,8 @@
  * $Id$
  */
 
-/*; File......: MKDIR.ASM
+/*
+; File......: mkdir.asm
 ; Author....: Ted Means
 ; CIS ID....: 73067,3332
 ;

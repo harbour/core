@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: ISBIT.PRG
+ * File......: isbit.prg
  * Author....: Forest Belt, Computer Diagnostic Services, Inc.
  * CIS ID....: ?
  *
@@ -64,7 +64,7 @@
  *      ? FT_ISBIT('A', 5)          // result: .F.
  *
  *     For a demonstration of Clipper bit manipulations, compile and
- *     link the program BITTEST.PRG in the Nanforum Toolkit source code.
+ *     link the program bittest.prg in the Nanforum Toolkit source code.
  *  $SEEALSO$
  *     FT_BITSET() FT_BITCLR()
  *  $END$

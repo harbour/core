@@ -4,7 +4,7 @@
 
 *+께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께
 *+
-*+    Source Module => D:\SRC\PBMAKE\PRB_STAK.PRG
+*+    Source Module => prb_stak.prg
 *+
 *+    PBMake is a Clipper, C, ASM, Xbase++ make engine.
 *+    
@@ -97,5 +97,3 @@ otherwise
 endcase
 
 return
-
-*+ EOF: PRB_STAK.PRG

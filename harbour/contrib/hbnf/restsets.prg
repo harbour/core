@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: RestSets.Prg
+ * File......: restsets.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

@@ -108,8 +108,8 @@
  *      this is an RDD call, not just a wrapper to the ADS call, which uses different numbers).
 
  *  $COMPLIANCE$
- *      Every attempt has been made to make the rdd compliant with the
- *      standard dbfcdx rdd at the .PRG level.
+ *      Every attempt has been made to make the RDD compliant with the
+ *      standard dbfcdx RDD at the .prg level.
  *      One important difference is the handling of structural indexes.
  *      ACE will <b>always</b> automatically open an index with the same
  *      name as the data file.  There is no way to turn this feature off.

@@ -296,4 +296,3 @@ METHOD WriteChmLink( cLink, cName ) CLASS THTML
    cTemp := STRTRAN( cTemp, " ", "" )
    FWRITE( Self:nHandle, "<a href=" + LOWER( cTemp ) + ">" + cLink + "</a><br>" + CRLF )
 Return Self
-*+ EOF: HTML.PRG

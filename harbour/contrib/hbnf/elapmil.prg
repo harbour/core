@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: ELAPMIL.PRG
+ * File......: elapmil.prg
  * Author....: Alexander B. Spencer
  * CIS ID....: 76276,1012
  *

@@ -47,7 +47,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -92,7 +92,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -164,7 +164,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -238,7 +238,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -246,7 +246,7 @@
  *  $SEEALSO$
  *      MEMOEDIT(),MEMOREAD()
  *  $END$
- */ 
+ */
 
 
 

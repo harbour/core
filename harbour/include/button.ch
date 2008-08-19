@@ -52,7 +52,7 @@
 
 #ifndef HB_BUTTON_CH_
 #define HB_BUTTON_CH_
-#define _BUTTON_DEFINED /* NOTE: For complete CA-Clipper compatibility */
+#define _BUTTON_DEFINED /* NOTE: For complete CA-Cl*pper compatibility */
 
 /* orientation modes for scrollbar class */
 #define SCROLL_VERTICAL          1

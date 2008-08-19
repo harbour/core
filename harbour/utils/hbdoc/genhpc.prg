@@ -657,5 +657,3 @@ FUNCTION CheckTop( cTop )
       cTemp := cTop
    ENDIF
 RETURN cTemp
-
-*+ EOF: GENHPC.PRG

@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: CALENDAR.PRG
+ * File......: calendar.prg
  * Author....: Isa Asudeh
  * CIS ID....: 76477,647
  *

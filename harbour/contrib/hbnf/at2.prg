@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: AT2.prg
+ * File......: at2.prg
  * Author....: Ralph Oliver,  TRANSCOM SYSTEMS
  * CIS ID....: 74030,703
  *

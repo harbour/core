@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: DATECNFG.PRG
+ * File......: datecnfg.prg
  * Author....: Jo W. French dba Practical Computing
  * CIS ID....: 74730,1751
  *
@@ -81,7 +81,7 @@
 *    SET DATE American                         // User's normal date format
      aTemp      := FT_DATECNFG()               // Get/Set cFY_Start & nDOW_Start.
 *    aTemp      := FT_DATECNFG("03/01/80", 1)  // Date string in user's format.
-     cFY_Start  := aTemp[1]                    // See FT_DATECNFG() in FT_DATE0.PRG
+     cFY_Start  := aTemp[1]                    // See FT_DATECNFG() in ft_date0.prg
      NDOW_START := ATEMP[2]                    // FOR PARAMETERS.
      DDATE      := DATE()
 *    dDate      := CTOD("02/29/88")            // Test date, in user's normal date format

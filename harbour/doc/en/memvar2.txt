@@ -43,7 +43,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command works exactaly as CA-Clipper.
+ *      This command works exactaly as CA-Cl*pper.
  *  $PLATFORMS$
  *      All.
  *  $FILES$
@@ -107,7 +107,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command works exactaly as CA-Clipper.
+ *      This command works exactaly as CA-Cl*pper.
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -159,7 +159,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command works exactaly as CA-Clipper.
+ *      This command works exactaly as CA-Cl*pper.
  *  $PLATFORMS$
  *      All
  *  $FILES$

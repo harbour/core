@@ -7,7 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 Alejandro de G rate <alex_degarate@hotmail.com>
- * Documentaci¢n en Espa¤ol de: 
+ * Documentaci¢n en Espa¤ol de:
  *      PROCNAME(), PROCLINE(), PROCFILE(), HB_PVALUE(), PCOUNT()
  *      __QUIT(), CLIPINIT(), __SetHelpK(), BREAK(), DO(), __DBGVMVARLGET()
  *
@@ -41,9 +41,9 @@
  *  $RETURNS$
  *      <cProcName> El nombre de la funci¢n que esta siendo ejecutada
  *  $DESCRIPTION$
- *      Esta funci¢n mira al tope de la pila y obtiene el nombre de la 
- *      funci¢n actual ejecutada si no se pasaron argumentos. De otra 
- *      manera esta retorna el nombre de la funci¢n ¢ procedimiento en el 
+ *      Esta funci¢n mira al tope de la pila y obtiene el nombre de la
+ *      funci¢n actual ejecutada si no se pasaron argumentos. De otra
+ *      manera esta retorna el nombre de la funci¢n ¢ procedimiento en el
  *      nivel <nLevel>.
  *  $EXAMPLES$
  *      Ver Test
@@ -62,7 +62,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCNAME() es totalmente compatible con CA-Clipper.
+ *      PROCNAME() es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas.
  *  $FILES$
@@ -86,9 +86,9 @@
  *  $RETURNS$
  *      <nLinea> el n£mero de l¡nea de la funci¢n que esta siendo ejecutada
  *  $DESCRIPTION$
- *      Esta funci¢n mira al tope de la pila y obtiene el n£mero de l¡nea 
- *      de la funci¢n actual ejecutada si no se pasaron argumentos. De otra 
- *      manera esta retorna el n£mero de l¡nea de la funci¢n ¢ procedimiento 
+ *      Esta funci¢n mira al tope de la pila y obtiene el n£mero de l¡nea
+ *      de la funci¢n actual ejecutada si no se pasaron argumentos. De otra
+ *      manera esta retorna el n£mero de l¡nea de la funci¢n ¢ procedimiento
  *      en el nivel <nLevel>.
  *  $EXAMPLES$
  *      Ver Test
@@ -102,7 +102,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCLINE() es totalmente compatible con CA-Clipper.
+ *      PROCLINE() es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas.
  *  $FILES$
@@ -141,7 +141,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PROCFILE() es totalmente compatible con CA-Clipper.
+ *      PROCFILE() es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas.
  *  $FILES$
@@ -165,7 +165,7 @@
  *  $RETURNS$
  *      <xExp> Retorna el valor almacenado en el argumento.
  *  $DESCRIPTION$
- *      Esta funci¢n es £til para chequear el valor almacenado en un 
+ *      Esta funci¢n es £til para chequear el valor almacenado en un
  *      argumento.
  *  $EXAMPLES$
  *      Ver Test
@@ -182,7 +182,7 @@
  *      R
  *  $COMPLIANCE$
  *      HB_PVALUE() es una nueva funci¢n y por tanto no es compatible con
- *      CA-Clipper.
+ *      CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas.
  *  $FILES$
@@ -224,7 +224,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      PCOUNT() es totalmente compatible con CA-Clipper.
+ *      PCOUNT() es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas.
  *  $FILES$
@@ -246,7 +246,7 @@
  *  $ARGUMENTS$
  *      Ninguno
  *  $RETURNS$
- *      NIL   
+ *      NIL
  *  $DESCRIPTION$
  *      Esta funci¢n termina la aplicaci¢n actual y retorna al sistema.
  *  $EXAMPLES$
@@ -262,7 +262,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __QUIT() es totalmente compatible con CA-Clipper.
+ *      __QUIT() es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas.
  *  $FILES$
@@ -288,15 +288,15 @@
  *  $DESCRIPTION$
  *      CLIPINIT() es uno de los INIT PROCEDURE predefinidos y es ejecutado
  *      cuando el programa arranca. Este declara un array MEMVAR PUBLIC vac¡o
- *      llamado GetList que va a ser usado por el sistema Get. 
+ *      llamado GetList que va a ser usado por el sistema Get.
  *      Este activa el manejador de error por defecto, y (al menos por el
- *      momento) llama a la funci¢n que establece la tecla de Ayuda por 
+ *      momento) llama a la funci¢n que establece la tecla de Ayuda por
  *      defecto (F1).
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      Se dice que CLIPINIT() no deber¡a llamar a la funci¢n que establece
- *      la tecla de Ayuda por defecto (F1) dado que CA-Clipper lo hace en 
+ *      la tecla de Ayuda por defecto (F1) dado que CA-Cl*pper lo hace en
  *      otro lugar.
  *  $PLATFORMS$
  *      Todas.
@@ -311,7 +311,7 @@
  *  $CATEGORY$
  *      Internal
  *  $ONELINER$
- *      Establece a <F1> como la tecla de Ayuda por defecto 
+ *      Establece a <F1> como la tecla de Ayuda por defecto
  *  $SYNTAX$
  *      __SetHelpK() --> NIL
  *  $ARGUMENTS$
@@ -324,8 +324,8 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __SetHelpK() trabaja exactamente como la funci¢n de CA-Clipper 
- *      llamada __SetHelpK() 
+ *      __SetHelpK() trabaja exactamente como la funci¢n de CA-Cl*pper
+ *      llamada __SetHelpK()
  *  $PLATFORMS$
  *      Todas.
  *  $FILES$
@@ -341,24 +341,24 @@
  *  $CATEGORY$
  *      Error recovery
  *  $ONELINER$
- *      Sale de un bloque BEGIN SEQUENCE 
+ *      Sale de un bloque BEGIN SEQUENCE
  *  $SYNTAX$
  *      BREAK( <xExp> ) --> NIL
  *  $ARGUMENTS$
- *      <xExp>  es cualquier expresi¢n v lida. Esta es requerida siempre 
+ *      <xExp>  es cualquier expresi¢n v lida. Esta es requerida siempre
  *              Si Ud. no desea pasarle ning£n argumento, s¢lo use NIL.
  *  $RETURNS$
- *      NIL   
+ *      NIL
  *  $DESCRIPTION$
  *      Esta funci¢n le pasa el control a la sentencia RECOVER en un bloque
- *      BEGIN SEQUENCE.   
+ *      BEGIN SEQUENCE.
  *  $EXAMPLES$
  *      Break( NIL )
  *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      BREAK() es totalmente compatible con CA-Clipper.
+ *      BREAK() es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas.
  *  $FILES$
@@ -378,16 +378,16 @@
  *  $SYNTAX$
  *      DO( <xFuncProc> [, <xArguments...>] )
  *  $ARGUMENTS$
- *      <xFuncProc>   es tanto una cadena con un nombre de funci¢n ¢ 
- *                    procedimiento a ser llamado, ¢ un codeblock a evaluar.   
- *      <xArguments>  argumentos pasados a la funci¢n ¢ procedimiento 
- *                    llamado ¢ a un codeblock.   
+ *      <xFuncProc>   es tanto una cadena con un nombre de funci¢n ¢
+ *                    procedimiento a ser llamado, ¢ un codeblock a evaluar.
+ *      <xArguments>  argumentos pasados a la funci¢n ¢ procedimiento
+ *                    llamado ¢ a un codeblock.
  *  $RETURNS$
- *      A value that was returned from called function.   
+ *      A value that was returned from called function.
  *  $DESCRIPTION$
  *      Esta funci¢n puede ser llamada ¢ bien por el compilador Harbour ¢
  *      por el usuario.
- *      El compilador siempre siempre pasa el item de tipo IT_SYMBOL que 
+ *      El compilador siempre siempre pasa el item de tipo IT_SYMBOL que
  *      almacena el nombre del procedimiento especificado en la sentencia
  *      DO <proc> WITH .
  *      Si el procedimiento/funci¢n no existe, entonces un error de tiempo
@@ -395,7 +395,7 @@
  *      Esta funci¢n puede ser usada como reemplazo del operador macro.
  *      Esta es tambi‚n usada internamente para implementar:
  *         DO <proc> WITH <args...>
- *      En este caso <xFuncProc> es del tipo HB_SYMB.   
+ *      En este caso <xFuncProc> es del tipo HB_SYMB.
  *  $EXAMPLES$
  *      cbCode ={|x| MyFunc( x )}
  *      DO( cbCode, 1 )
@@ -425,7 +425,7 @@
  *  $SYNTAX$
  *      __DBGVMVARLGET( <nProcLevel>, <nLocal> )
  *  $ARGUMENTS$
- *      <nProcLevel> Es el nivel de procedimiento, el mismo que el usado 
+ *      <nProcLevel> Es el nivel de procedimiento, el mismo que el usado
  *                   en PROCNAME() y PROCLINE(), desde el cual una variable
  *                   local va a ser obtenida.
  *      <nLocal>     Es la posici¢n ¢ ¡ndice de la variable local a recuperar
@@ -440,6 +440,6 @@
  *  $SEEALSO$
  *      PROCNAME()
  *  $END$
- */ 
+ */
 
 

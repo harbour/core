@@ -51,7 +51,7 @@
  */
 
 /*
- * NOTE: This file is meant to be included in CA-Clipper applications
+ * NOTE: This file is meant to be included in CA-Cl*pper applications
  *       that were written to take advantage of specific Harbour extensions
  *       or platform dependent features.
  */

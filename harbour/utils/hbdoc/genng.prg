@@ -1768,5 +1768,3 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
 
    ENDIF
 RETURN lReturn
-
-*+ EOF: GENNG.PRG

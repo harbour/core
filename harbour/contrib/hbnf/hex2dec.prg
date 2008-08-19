@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: HEX2DEC.PRG
+ * File......: hex2dec.prg
  * Author....: Robert A. DiFalco
  * CIS ID....: ?
  *

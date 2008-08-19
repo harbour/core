@@ -63,7 +63,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __XSaveScreen() works exactly like CA-Clipper's __XSaveScreen()
+ *      __XSaveScreen() works exactly like CA-Cl*pper's __XSaveScreen()
  *  $PLATFORMS$
  *      __XSaveScreen() is part of the GT API, and supported only by some
  *      platforms.
@@ -105,7 +105,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __XSaveScreen() works exactly like CA-Clipper's __XSaveScreen()
+ *      __XSaveScreen() works exactly like CA-Cl*pper's __XSaveScreen()
  *  $PLATFORMS$
  *      __XSaveScreen() is part of the GT API, and supported only by some
  *      platforms.
@@ -148,7 +148,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __XRestScreen() works exactly like CA-Clipper's __XRestScreen()
+ *      __XRestScreen() works exactly like CA-Cl*pper's __XRestScreen()
  *  $PLATFORMS$
  *      __XRestScreen() is part of the GT API, and supported only by some
  *      platforms.
@@ -190,7 +190,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Rest Screen() works exactly like CA-Clipper's Rest Screen
+ *      Rest Screen() works exactly like CA-Cl*pper's Rest Screen
  *  $PLATFORMS$
  *      Rest Screen is part of the GT API, and supported only by some
  *      platforms.
@@ -326,7 +326,7 @@
  *  $FILES$
  *      Library is rtl
  *  $COMPLIANCE$
- *      __NONOALERT() is an undocumented CA-Clipper function and exist only
+ *      __NONOALERT() is an undocumented CA-Cl*pper function and exist only
  *      if HB_C52_UNDOC was defined during the compilation of
  *      source/rtl/alert.prg
  *  $END$
@@ -408,7 +408,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Was not part of CA-Clipper.
+ *      Was not part of CA-Cl*pper.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -449,8 +449,8 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DEVOUTPICT() is mostly CA-Clipper compliant. Any differences are due
- *      to enhancements in the Harbour TRANSFORM() over CA-Clipper.
+ *      DEVOUTPICT() is mostly CA-Cl*pper compliant. Any differences are due
+ *      to enhancements in the Harbour TRANSFORM() over CA-Cl*pper.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -477,7 +477,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      __INPUT() is fully CA-Clipper compliant.
+ *      __INPUT() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -507,7 +507,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __TextSave() is an Undocumented CA-Clipper function
+ *      __TextSave() is an Undocumented CA-Cl*pper function
  *  $PLATFORMS$
  *      ALL
  *  $FILES$
@@ -537,7 +537,7 @@
  *  $STATUS$
  *       R
  *  $COMPLIANCE$
- *      __TextRestore() is an Undocumented CA-Clipper function
+ *      __TextRestore() is an Undocumented CA-Cl*pper function
  *  $PLATFORMS$
  *       All
  *  $FILES$
@@ -575,7 +575,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __WAIT() is fully CA-Clipper compliant.
+ *      __WAIT() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -620,7 +620,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      OUTSTD() works exactly as in CA-Clipper
+ *      OUTSTD() works exactly as in CA-Cl*pper
  *  $PLATFORMS$
  *  $FILES$
  *      Library is rtl
@@ -653,7 +653,7 @@
  *      take varying length when converted into string depending on its
  *      source (see STR() for detail).
  *
- *      There is an undocumented CA-Clipper command line switch //STDERR
+ *      There is an undocumented CA-Cl*pper command line switch //STDERR
  *      which can set the file handle to write output from OUTERR(). If not
  *      specified the default STDERR is used, //STDERR or //STDERR:0 set
  *      OUTERR() to output to the same file handle as OUTSTD(), //STDERR:n
@@ -667,7 +667,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      OUTERR() works exactly as in CA-Clipper
+ *      OUTERR() works exactly as in CA-Cl*pper
  *  $PLATFORMS$
  *  $FILES$
  *      Library is rtl
@@ -717,7 +717,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -746,7 +746,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Functions is Ca-Clipper compliant
+ *      This Functions is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -777,7 +777,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Functions is Ca-Clipper compliant
+ *      This Functions is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -809,7 +809,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Functions is Ca-Clipper compliant.
+ *      This Functions is CA-Cl*pper compliant.
  *  $PLATFORMS$
  *      It works in all platform with some remarks:Under Linux and OS/2 the
  *      number of columns avaliable depends of the current Terminal screen
@@ -844,7 +844,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This Functions is Ca-Clipper compliant
+ *      This Functions is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      It works in all platform with some remarks:Under Linux and OS/2 the
  *      number of columns avaliable depends of the current Terminal screen

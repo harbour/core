@@ -471,7 +471,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Harbour use 11 and 12 to represent F11 and F12, while CA-Clipper use
+ *      Harbour use 11 and 12 to represent F11 and F12, while CA-Cl*pper use
  *      11 and 12 to represent Shift-F1 and Shift-F2.
  *  $PLATFORMS$
  *      All
@@ -497,7 +497,7 @@
  *
  *      <cString> is a character string to set. If <cString> is not
  *      specified, the function key is going to be set to NIL releasing by
- *      that any previous  Set Function or SETKEY() for that function.
+ *      that any previous Set Function or SETKEY() for that function.
  *  $DESCRIPTION$
  *        Set Function assign a character string with a function key, when
  *      this function key is pressed, the keyboard is stuffed with this
@@ -526,7 +526,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Harbour use 11 and 12 to represent F11 and F12, while CA-Clipper use
+ *      Harbour use 11 and 12 to represent F11 and F12, while CA-Cl*pper use
  *      11 and 12 to represent Shift-F1 and Shift-F2.
  *  $PLATFORMS$
  *      All
@@ -578,7 +578,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      SETKEY() is mostly CA-Clipper compliant. The only difference is the
+ *      SETKEY() is mostly CA-Cl*pper compliant. The only difference is the
  *      addition of the condition code-block parameter, allowing set-keys to
  *      be conditionally turned off or on.  This condition-block cannot be
  *      returned once set - see SetKeyGet()
@@ -620,7 +620,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      HB_SETKEYGET() is a new function and hence not CA-Clipper compliant.
+ *      HB_SETKEYGET() is a new function and hence not CA-Cl*pper compliant.
  * $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -761,7 +761,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      SET KEY is mostly CA-Clipper compliant. The only difference is the
+ *      SET KEY is mostly CA-Cl*pper compliant. The only difference is the
  *      addition of the condition code-block parameter, allowing set-keys to
  *      be conditionally turned off or on.  This condition-block cannot be
  *      returned once set - see SetKeyGet()
@@ -793,7 +793,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      SETTYPEAHEAD() is fully CA-Clipper compliant.
+ *      SETTYPEAHEAD() is fully CA-Cl*pper compliant.
  * $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -822,7 +822,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __XHELP() is fully CA-Clipper compliant.
+ *      __XHELP() is fully CA-Cl*pper compliant.
  * $FILES$
  *      Library is rtl
  *  $END$
@@ -850,7 +850,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.
+ *      This command is CA-Cl*pper Compliant.
  *  $SEEALSO$
  *      SET PATH,CURDIR(),SET()
  *  $END$
@@ -878,7 +878,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.
+ *      This command is CA-Cl*pper Compliant.
  *  $SEEALSO$
  *      @...PROMPT,MENU TO
  *  $END$
@@ -897,15 +897,15 @@
  *      <nRow> Row number to display the message
  *  $DESCRIPTION$
  *      This command is designed to work in conjuntion with the MENU TO and
- *      @...PROMPT commands.With this command, a row number between 0 and
- *      MAXROW() may be specified in <nRow>.This establishes the row on
+ *      @...PROMPT commands. With this command, a row number between 0 and
+ *      MAXROW() may be specified in <nRow>. This establishes the row on
  *      witch any message associated with an @...PROMPT command will apear.
 
- *      If the value of <nRow> is 0,all messages will be supressed.
+ *      If the value of <nRow> is 0, all messages will be supressed.
  *      All messaged will be left-justifies unless the CENTER clause is
- *      used.In this case,the individual messages in each @...PROMPT command
- *      will be centered at the designated row (unless <nRow> is 0).All
- *      messages are independent;therefor,the screen area is cleared out
+ *      used. In this case, the individual messages in each @...PROMPT command
+ *      will be centered at the designated row (unless <nRow> is 0). All
+ *      messages are independent; therefore, the screen area is cleared out
  *      by the centered message will vary based on the length of each
  *      individual message.
 
@@ -918,7 +918,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.
+ *      This command is CA-Cl*pper Compliant.
  *  $SEEALSO$
  *      SET(),SET WRAP,@...PROMPT,MENU TO
  *  $END$
@@ -938,17 +938,17 @@
  *  $DESCRIPTION$
  *      This command specifies the search path for files required by most
  *      commands and functions not found in the current drive and directory.
- *      This pertains primarily,but not exclusively, to databases,indexes,
- *      and memo files,as well as to memory,labels,and reports files. The
- *      search hirarchy is: 1 Current drive and directory,2 The SET DEFAULT
- *      path;3 The SET PATH path.
+ *      This pertains primarily, but not exclusively, to databases, indexes,
+ *      and memo files, as well as to memory, labels and reports files. The
+ *      search hirarchy is: 1 Current drive and directory, 2 The SET DEFAULT
+ *      path; 3 The SET PATH path.
  *  $EXAMPLES$
- *      SET PATH TO c:\Harbour\Test
+ *      SET PATH TO C:\harbour\test
  *      </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.
+ *      This command is CA-Cl*pper Compliant.
  *  $SEEALSO$
  *      SET DEFAULT,CURDIR(),SET()
  *  $END$
@@ -974,7 +974,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.
+ *      This command is CA-Cl*pper Compliant.
  *  $SEEALSO$
  *      @...GET,@...PROMPT,@...SAY,SET()
  *  $END$
@@ -996,15 +996,15 @@
  *      <lAlter> Logical expression for toggle
  *  $DESCRIPTION$
  *      This command toggles and output console information to the alternate
- *      file <cFile>,provided that the command is toggled on or the condition
+ *      file <cFile>, provided that the command is toggled on or the condition
  *      <lAlter> is set to a logical true (.T.). If <cFile> does not has a
- *      file extension, .txt will be assumed.The file name may optionally
- *      have a drive letter and/or directory path.If none is speficied, the
+ *      file extension, .txt will be assumed. The file name may optionally
+ *      have a drive letter and/or directory path. If none is speficied, the
  *      current drive and directory will be used.
  *      If the ALTERNATE file is created but no ALTERNATE ON command is
- *      issued,nothing will be echoed to the file.
- *      If ADDITIVE clause is used,then the information will be appended
- *      to the existing alternate file.Otherwise,a new file will be created
+ *      issued, nothing will be echoed to the file.
+ *      If ADDITIVE clause is used, then the information will be appended
+ *      to the existing alternate file. Otherwise, a new file will be created
  *      with the specified name (or an existing one will be overwritten) and
  *      the information will be appended to the file.The default is to create
  *      a new file.
@@ -1020,7 +1020,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper Compliant.
+ *      This command is CA-Cl*pper Compliant.
  *  $SEEALSO$
  *      CLOSE,SET PRINTER,SET CONSOLE,SET()
  *  $END$
@@ -1039,9 +1039,9 @@
  *      <lCent> Logical expression for toggle
  *  $DESCRIPTION$
  *      This command allows the input and display of dates with the century
- *      prefix.It will be in the standart MM/DD/YYYY format unless specified
- *      by the SET DATE command or SET() function.If <lCent> is a logical
- *      true (.T.),the command will be set on;otherwise, the command will
+ *      prefix. It will be in the standart MM/DD/YYYY format unless specified
+ *      by the SET DATE command or SET() function. If <lCent> is a logical
+ *      true (.T.), the command will be set on; otherwise, the command will
  *      be set off
  *  $EXAMPLES$
  *      SET CENTURY ON
@@ -1050,7 +1050,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *      SET DATE,SET EPOCH,CTOD(),DATE(),DTOC(),SET()
  *  $END$
@@ -1071,10 +1071,10 @@
  *      <cFormat> Keyword for date format
  *  $DESCRIPTION$
  *      This command sets the date format for function display purposes.
- *      If specified,<cFormat> may be a customized date format in which the
- *      letters d,m and y may be used to desing a date format.The default
- *      is an AMERICAN date format;specifying no parameters will set the
- *      date format to AMERICAN.Below is a table of the varius predefined
+ *      If specified, <cFormat> may be a customized date format in which the
+ *      letters d, m and y may be used to desing a date format. The default
+ *      is an AMERICAN date format; specifying no parameters will set the
+ *      date format to AMERICAN. Below is a table of the varius predefined
  *      dates formats.
  *
  *      <table>
@@ -1098,7 +1098,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *      SET DATE,SET EPOCH,CTOD(),DATE(),DTOC(),SET()
  *  $END$
@@ -1117,14 +1117,14 @@
  *      <nEpoch> Base Century.
  *  $DESCRIPTION$
  *      This command sets the base year value for dates that have only two
- *      digits.The default setting is 1900.Dates between 01/01/0100 and
+ *      digits. The default setting is 1900. Dates between 01/01/0100 and
  *      12/31/2999 are fully supported.
  *  $EXAMPLES$
  *      SET EPOCH TO 2000
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *      SET DATE,SET CENTURY,CTOD(),DATE(),DTOC(),SET()
  *  $END$
@@ -1142,11 +1142,11 @@
  *      <lFixed> Logical expression for toggle
  *  $DESCRIPTION$
  *      This command activates a system wide fixed placement of decimals
- *      places shown for all numeric outputs.If the value of <lFixed> is
- *      a logical true (.T.),FIXED will be turned ON;otherwise it will be
+ *      places shown for all numeric outputs. If the value of <lFixed> is
+ *      a logical true (.T.), FIXED will be turned ON; otherwise it will be
  *      turned OFF.
  *
- *      When SET DECIMALS OFF is used, the follow rules aply to the number
+ *      When SET DECIMALS OFF is used, the follow rules apply to the number
  *      of decimal placed displayed.
  *
  *      <table>
@@ -1167,7 +1167,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *      SET DECIMALS,EXP(),LOG(),SQRT(),VAL(),SET()
  *  $END$
@@ -1190,24 +1190,24 @@
  *  $DESCRIPTION$
  *      This command can direct all output that is not controled by the
  *      @...SAY command and the DEVPOS() and DEVOUT() functions to the
- *      printer.If specified,the condition <lPrinter> toggles the printer
- *      ON if a logical true (.T.) and OFF if a logical false (.F.).If no
+ *      printer. If specified,the condition <lPrinter> toggles the printer
+ *      ON if a logical true (.T.) and OFF if a logical false (.F.). If no
  *      argument is specified in the command, the alternate file (if one
  *      is open) is closed, or the device is reselected and the PRINTER
  *      option is turned OFF.
  *
  *      If a device is specified in <cPrinter>, the outpur will be directed
- *      to that device instead of to the PRINTER.A specified device may be
+ *      to that device instead of to the PRINTER. A specified device may be
  *      a literal string or a variable, as long as the variable is enclosed
- *      in parentheses.For a network,do not use a trailing colon when
+ *      in parentheses. For a network, do not use a trailing colon when
  *      redirecting to a device.
  *
- *      If an alternate file is specified,<cPrinter> becomes the name of a
- *      file that will contain the output.If no file extension is specified
- *      an extension of.PRN will be defaulted to.
+ *      If an alternate file is specified, <cPrinter> becomes the name of a
+ *      file that will contain the output. If no file extension is specified
+ *      an extension of .prn will be defaulted to.
  *
- *      If the ADDITIVE clause is specified,the information will be appended
- *      to the end of the specified output file.Otherwise, a new file will
+ *      If the ADDITIVE clause is specified, the information will be appended
+ *      to the end of the specified output file. Otherwise, a new file will
  *      be created with the specified name (or an existing file will first
  *      be cleared) and the information will then be appended to the file.
  *      The default is to create a new file.
@@ -1219,9 +1219,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
- *      SET DEVICE,SET CONSOLE,DEVOUT(),SET()
+ *      SET DEVICE, SET CONSOLE, DEVOUT(), SET()
  *  $END$
 */
 
@@ -1241,7 +1241,7 @@
  *      screens display other then direct output via the @...SAY commands
  *      or the <-> DEVOUT() function.
  *
- *      If <lConsole > is a logical true (.T.),the console will be turned
+ *      If <lConsole> is a logical true (.T.),the console will be turned
  *      ON;otherwise, the console will be turned off.
  *  $EXAMPLES$
  *      SET console on
@@ -1251,7 +1251,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *      SET DEVICE,SET()
  *  $END$
@@ -1282,7 +1282,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *      SET FIXED,SET()
  *  $END$
@@ -1305,10 +1305,10 @@
  *      printer.
  *
  *      When the device is set to the PRINTER,the SET MARGIN value adjusts
- *      the position of the column values accordingly.Also,an automatic
+ *      the position of the column values accordingly. Also, an automatic
  *      page eject will be issued when the current printhead position is
- *      less than the last printed row.Finally,if used in conjunction with
- *      the @...GET commands,the values for the GETs will all be ignored.
+ *      less than the last printed row. Finally, if used in conjunction with
+ *      the @...GET commands, the values for the GETs will all be ignored.
  *  $EXAMPLES$
  *      SET DEVICE TO SCRENN
  *      ? 25141251/362
@@ -1320,7 +1320,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *      @...SAY,SET PRINTER,SETPRC(),SET()
  *  $END$
@@ -1339,10 +1339,10 @@
  *      <lBell> Logical expression for toggle command
  *  $DESCRIPTION$
  *      This command toggles the bell to sound whenever a character is
- *      entered into the last character positionof a GET,of if an invalid
+ *      entered into the last character positionof a GET, of if an invalid
  *      data type is entered into a GET.
  *
- *      If <lBell > is a logical true (.T.),the bell will be turned
+ *      If <lBell> is a logical true (.T.), the bell will be turned
  *      ON;otherwise, the belle will be turned off.
  *  $EXAMPLES$
  *      SET BEEL ON
@@ -1353,7 +1353,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *      SET()
  *  $END$

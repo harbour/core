@@ -40,7 +40,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant.
+ *      This function is CA-Cl*pper compliant.
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -76,7 +76,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -108,7 +108,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper Compliant
+ *      This function is CA-Cl*pper Compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -143,7 +143,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -175,7 +175,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -207,7 +207,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -239,7 +239,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -273,7 +273,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -305,7 +305,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -344,7 +344,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -377,7 +377,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -411,7 +411,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -443,7 +443,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -474,7 +474,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -510,7 +510,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$

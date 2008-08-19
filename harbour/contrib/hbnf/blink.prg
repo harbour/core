@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: BLINK.PRG
+ * File......: blink.prg
  * Author....: Terry Hackett
  * CIS ID....: 76662,2035
  *

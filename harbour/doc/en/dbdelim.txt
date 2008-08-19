@@ -62,11 +62,11 @@
  *      USE CUSTOMER NEW
  *      APPEND FROM customer DELIMITED
  *  $TESTS$
- *      
+ *
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      __dbDelim() is intended to be fully compliant with CA-Clipper's
+ *      __dbDelim() is intended to be fully compliant with CA-Cl*pper's
  *      function of the same name and is the underlying implementation
  *      of the APPEND FROM DELIMITED and COPY TO DELIMITED commands.
  *  $PLATFORMS$

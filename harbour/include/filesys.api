@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Compatibility header file for CA-Clipper Filesys API
+ * Compatibility header file for CA-Cl*pper Filesys API
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * www - http://www.harbour-project.org
@@ -73,9 +73,9 @@ typedef FHANDLE * FHANDLEP;
 #define STDERR                  2
 #define STDAUX                  3
 #define STDPRN                  4
-                                
-/* Functions */                 
-                                
+
+/* Functions */
+
 #define _fsChDir                hb_fsChDir
 #define _fsChDrv                hb_fsChDrv
 #define _fsClose                hb_fsClose

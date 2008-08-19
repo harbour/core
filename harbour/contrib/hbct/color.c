@@ -121,8 +121,8 @@ HB_FUNC( INVERTATTR )
  *      COLOR TO (N)umeric
  *      The function changes an alphanumeric color attribute from NN/NN or 
  *      CC/CC into a combined numeric attribute.  These combined attribute 
- *      values are useful with the CA-Clipper Tools functions STRSCREEN(), 
- *      SCREENMIX(), SCREENATTR(), and the CA-Clipper commands 
+ *      values are useful with the CA-Cl*pper Tools functions STRSCREEN(), 
+ *      SCREENMIX(), SCREENATTR(), and the CA-Cl*pper commands 
  *      SAVE/RESTORE SCREEN.
  *
  *      TODO: add documentation
@@ -166,7 +166,7 @@ HB_FUNC( COLORTON )
  *   <lColorCode>  If designated as .F. or if the parameter is omitted,
  *                 NTOCOLOR() returns a string with a numeric color code.
  *                 When designated as .T., NTOCOLOR() returns a string with 
- *                 the CA-Clipper alpha color coding.
+ *                 the CA-Cl*pper alpha color coding.
  *
  *  $RETURNS$
  *      NTOCOLOR() returns the designated color attribute in the NN/NN 
@@ -175,7 +175,7 @@ HB_FUNC( COLORTON )
  *  $DESCRIPTION$
  *      NTOCOLOR() converts a color attribute returned from another function 
  *      in numeric form, into the alphanumeric data format.  Use this 
- *      attribute in conjunction with the CA-Clipper SET COLOR TO command.
+ *      attribute in conjunction with the CA-Cl*pper SET COLOR TO command.
  *
  *      TODO: add documentation
  *  $EXAMPLES$

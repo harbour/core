@@ -32,7 +32,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible.
+ *      This function is CA-Cl*pper compatible.
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -63,7 +63,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compatible.
+ *      This function is CA-Cl*pper compatible.
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -104,7 +104,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant.
+ *      This command is CA-Cl*pper compliant.
  *      The <cDefaultValue> parameter is a Harbour extension.
  *  $PLATFORMS$
  *      All
@@ -142,7 +142,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant.
+ *      This function is CA-Cl*pper compliant.
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -199,7 +199,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      TONE() works exactly like CA-Clipper's TONE().
+ *      TONE() works exactly like CA-Cl*pper's TONE().
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -232,7 +232,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant.
+ *      This command is CA-Cl*pper compliant.
  *  $PLATFORMS$
  *      All
  *  $FILES$

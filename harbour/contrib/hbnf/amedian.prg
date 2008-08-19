@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: AMedian.Prg
+ * File......: amedian.prg
  * Author....: Ralph Oliver,  TRANSCOM SYSTEMS
  * CIS ID....: 74030,703
  *

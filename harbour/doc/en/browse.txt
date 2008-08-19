@@ -31,22 +31,22 @@
  *  $SYNTAX$
  *      DBEDIT( [<nTop>], [<nLeft>], [<nBottom>], [<nRight>], [<acColumns>], [<xUserFunc>], [<xColumnSayPictures>], [<xColumnHeaders>], [<xHeadingSeparators>], [<xColumnSeparators>], [<xFootingSeparators>], [<xColumnFootings>] ) --> lOk
  *  $ARGUMENTS$
- *      <nTop> coordinate for top row display. <nTop> could range from 0 
- *      to MAXROW(), default is 0.   
+ *      <nTop> coordinate for top row display. <nTop> could range from 0
+ *      to MAXROW(), default is 0.
  *
- *      <nLeft> coordinate for left column display. <nLeft> could range 
- *      from 0 to MAXCOL(), default is 0.          
+ *      <nLeft> coordinate for left column display. <nLeft> could range
+ *      from 0 to MAXCOL(), default is 0.
  *
  *      <nBottom> coordinate for bottom row display. <nBottom> could range
- *      from 0 to MAXROW(), default is MAXROW().   
+ *      from 0 to MAXROW(), default is MAXROW().
  *
  *      <nRight> coordinate for right column display. <nRight> could range
- *      from 0 to MAXCOL(), default is MAXCOL().   
+ *      from 0 to MAXCOL(), default is MAXCOL().
  *
  *      <acColumns> is an array of character expressions that contain
  *      database fields names or expressions to display in each column.
  *      If not specified, the default is to display all fields from the
- *      database in the current work area.   
+ *      database in the current work area.
  *
  *      <xUserFunc> is a name of a user defined function or a code block
  *      that would be called every time unrecognized key is been pressed or
@@ -56,14 +56,14 @@
  *      parentheses. Both the user define function or the code block should
  *      accept two parameters: nMode, nCurrentColumn. Both should return
  *      a numeric value that correspond to one of the expected return codes
- *      (see table below for a list of nMode and return codes).   
+ *      (see table below for a list of nMode and return codes).
  *
  *      <xColumnSayPictures> is an optional picture. If <xColumnSayPictures>
  *      is a character string, all columns would used this value as a
  *      picture string. If <xColumnSayPictures> is an array, each element
  *      should be a character string that correspond to a picture string
  *      for the column with the same index. Look at the help for @...SAY
- *      to get more information about picture values.   
+ *      to get more information about picture values.
  *
  *      <xColumnHeaders> contain the header titles for each column, if this
  *      is a character string, all columns would have that same header, if
@@ -71,41 +71,41 @@
  *      the header title for one column. Header may be split to more than
  *      one line by placing semicolon (;) in places where you want to break
  *      line. If omitted, the default value for each column header is taken
- *      from <acColumns> or field name if <acColumns> was not specified.   
+ *      from <acColumns> or field name if <acColumns> was not specified.
  *
  *      <xHeadingSeparators> is an array that contain characters that draw
  *      the lines separating the headers and the fields data. Instead of an
  *      array you can use a character string that would be used to display
- *      the same line for all fields. Default value is a double line.   
+ *      the same line for all fields. Default value is a double line.
  *
  *      <xColumnSeparators> is an array that contain characters that draw
  *      the lines separating displayed columns. Instead of an array you can
  *      use a character string that would be used to display the same line
- *      for all fields. Default value is a single line.   
+ *      for all fields. Default value is a single line.
  *
  *      <xFootingSeparators> is an array that contain characters that draw
  *      the lines separating the fields data area and the footing area.
  *      Instead of an array you can use a character string that would be
  *      used to display the same line for all footers. Default is to have to
- *      no footing separators.   
+ *      no footing separators.
  *
  *      <xColumnFootings> contain the footing to be displayed at the bottom
  *      of each column, if this is a character string, all columns would
  *      have that same footer, if this is an array, each element is a
  *      character string that contain the footer for one column. Footer may
  *      be split to more than one line by placing semicolon (;) in places
- *      where you want to break line. If omitted, no footer are displayed.   
+ *      where you want to break line. If omitted, no footer are displayed.
  *  $RETURNS$
  *      DBEDIT() return .F. if there is no database in use or if the number
- *      of columns to display is zero, else DBEDIT() return .T.   
+ *      of columns to display is zero, else DBEDIT() return .T.
  *  $DESCRIPTION$
  *      DBEDIT() display and edit records from one or more work areas in
  *      a grid on screen. Each column is defined by element from <acColumns>
  *      and is the equivalent of one field. Each row is equivalent of one
- *      database record.   
+ *      database record.
 
  *      Following are active keys that handled by DBEDIT():       </par>
- *      ---------------------------------------------------      
+ *      ---------------------------------------------------
  *
  *     <table>
  *       Key              Meaning
@@ -138,10 +138,10 @@
  *      When DBEDIT() execute <xUserFunc> it pass the following arguments:
  *      nMode and the index of current record in <acColumns>. If <acColumns>
  *      is omitted, the index number is the FIELD() number of the open
- *      database structure.   
+ *      database structure.
  *
  *      DBEDIT() nMode could be one of the following:    </par>
- *      ---------------------------------------------   
+ *      ---------------------------------------------
  *
  *      <table>
  *       Dbedit.ch      Meaning
@@ -167,13 +167,13 @@
  *       DE_REFRESH   2       Force reread/redisplay of all data rows.
  *      </table>
  *
- *      The user function is called once in each of the following cases:   
- *      - The database is empty.   
- *      - The user try to move past top of file or past bottom file.   
- *      - Key exception, the uses had pressed a key that is not handled by DBEDIT().   
- *      - The keyboard buffer is empty or a screen refresh had just occurred    
+ *      The user function is called once in each of the following cases:
+ *      - The database is empty.
+ *      - The user try to move past top of file or past bottom file.
+ *      - Key exception, the uses had pressed a key that is not handled by DBEDIT().
+ *      - The keyboard buffer is empty or a screen refresh had just occurred
  *      DBEDIT() is a compatibility function, it is superseded by the
- *      TBrowse class and there for not recommended for new applications.   
+ *      TBrowse class and there for not recommended for new applications.
  *  $EXAMPLES$
     <fixed>
  *      // Browse a file using default values
@@ -184,23 +184,23 @@
  *      S
  *  $COMPLIANCE$
  *      <xUserFunc> can take a code block value, this is a Harbour
- *      extension.   
+ *      extension.
 
- *      CA-Clipper will throw an error if there's no database open, Harbour
- *      would return .F.   
+ *      CA-Cl*pper will throw an error if there's no database open, Harbour
+ *      would return .F.
 
- *      CA-Clipper is buggy and will throw an error if the number of columns
- *      zero, Harbour would return .F.   
+ *      CA-Cl*pper is buggy and will throw an error if the number of columns
+ *      zero, Harbour would return .F.
 
- *      The CA-Clipper 5.2 NG state that the return value is NIL, this is
- *      wrong and should be read logical.   
+ *      The CA-Cl*pper 5.2 NG state that the return value is NIL, this is
+ *      wrong and should be read logical.
 
  *      There is an undocumented result code (3) from the user defined
  *      function in Clipper (both 87 and 5.x). This is an Append Mode which:
  *      "split the screen to allow data to be appended in windowed area".
- *      This mode is not supported by Harbour.   
+ *      This mode is not supported by Harbour.
  *  $FILES$
- *      Header files are dbedit.ch, inkey.ch   
+ *      Header files are dbedit.ch, inkey.ch
  *      Library is rtl
 
  *  $SEEALSO$
@@ -218,19 +218,19 @@
  *  $SYNTAX$
  *      BROWSE( [<nTop>, <nLeft>, <nBottom>, <nRight>] ) --> lOk
  *  $ARGUMENTS$
- *      <nTop> coordinate for top row display.   
+ *      <nTop> coordinate for top row display.
  *
- *      <nLeft> coordinate for left column display.    
+ *      <nLeft> coordinate for left column display.
  *
- *      <nBottom> coordinate for bottom row display.   
+ *      <nBottom> coordinate for bottom row display.
  *
- *      <nRight> coordinate for right column display.   
+ *      <nRight> coordinate for right column display.
  *  $RETURNS$
  *      BROWSE() return .F. if there is no database open in this work area,
- *      else it return .T.   
+ *      else it return .T.
  *  $DESCRIPTION$
  *      BROWSE() is a general purpose database browser, without any
- *      thinking you can browse a file using the following keys:   
+ *      thinking you can browse a file using the following keys:
  *
  *      <table>
  *       Key              Meaning
@@ -256,14 +256,14 @@
  *
  *       <table>
  *       Record ###/###   Current record number / Total number of records.
- *       <none>           There are no records, the file is empty.  
+ *       <none>           There are no records, the file is empty.
  *       <new>            You are in append mode at the bottom of file.
- *       <Deleted>        Current record is deleted. 
- *       <bof>            You are at the top of file. 
+ *       <Deleted>        Current record is deleted.
+ *       <bof>            You are at the top of file.
  *      </table>
  *      You should pass whole four valid coordinate, if less than four
  *      parameters are passed to BROWSE() the coordinate are default to:
- *      1, 0, MAXROW(), MAXCOL().   
+ *      1, 0, MAXROW(), MAXCOL().
  *  $EXAMPLES$
     <fixed>
  *      // this one shows you how to browse around
@@ -289,31 +289,31 @@
  *  $SYNTAX$
  *      TBrowseDB( [<nTop>], [<nLeft>], [<nBottom>], [<nRight>] ) --> oBrowse
  *  $ARGUMENTS$
- *      <nTop> coordinate for top row display.          
+ *      <nTop> coordinate for top row display.
  *
- *      <nLeft> coordinate for left column display.     
+ *      <nLeft> coordinate for left column display.
  *
- *      <nBottom> coordinate for bottom row display.    
+ *      <nBottom> coordinate for bottom row display.
  *
- *      <nRight> coordinate for right column display.   
+ *      <nRight> coordinate for right column display.
  *  $RETURNS$
  *      TBrowseDB() return new TBrowse object with the specified coordinate
  *      and a default :SkipBlock, :GoTopBlock and :GoBottomBlock to browse
- *      a database file.   
+ *      a database file.
  *  $DESCRIPTION$
  *      TBrowseDB() is a quick way to create a TBrowse object along with
  *      the minimal support needed to browse a database. Note that the
  *      returned TBrowse object contain no TBColumn objects and you need
- *      to add column for each field by your self.   
+ *      to add column for each field by your self.
  *  $EXAMPLES$
-        <fixed> 
+        <fixed>
  *      for a good example, look at the source code for BROWSE() function
  *      at source/rtl/browse.prg
-        </fixed> 
+        </fixed>
  *  $STATUS$
- *      S   
+ *      S
  *  $COMPLIANCE$
- *      TBrowseDB() works exactly like CA-Clipper's TBrowseDB().   
+ *      TBrowseDB() works exactly like CA-Cl*pper's TBrowseDB().
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -334,13 +334,13 @@
  *      <nRecs> is the number of records to skip relative to current record.
  *      Positive number would try to move the record pointer forward, while
  *      a negative number would try to move the record pointer back <nRecs>
- *      records.   
+ *      records.
  *  $RETURNS$
- *      dbSkipper() return the number of actual record skipped.   
+ *      dbSkipper() return the number of actual record skipped.
  *  $DESCRIPTION$
  *      dbSkipper() is a helper function used in browse mechanism to skip
  *      a number of records while giving the caller indication about the
- *      actual records skipped.     
+ *      actual records skipped.
  *  $EXAMPLES$
     <fixed>
  *      // open a file and find if we've got enough records in it
@@ -356,10 +356,10 @@
  *      R
  *  $COMPLIANCE$
  *      dbSkipper() is an XBase++ compatibility function and does not exist
- *      as a standard CA-Clipper 5.x function.   
+ *      as a standard CA-Cl*pper 5.x function.
 
  *      This function is only visible if source/rtl/browdb.prg was compiled
- *      with the HB_COMPAT_XPP flag.   
+ *      with the HB_COMPAT_XPP flag.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

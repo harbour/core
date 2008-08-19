@@ -21,23 +21,23 @@
  *  $ONELINER$
  *      HBClass() is used in the creation of all classes
  *  $SYNTAX$
- *      oClass := HBClass():New("TMyClass")   
- *        -or-   
+ *      oClass := HBClass():New("TMyClass")
+ *        -or-
  *      HBClass() is usually accessed by defining a class with the commands
- *      defined in hbclass.h:   
- *        CLASS HBGetList    // Calls HBClass() to create the HBGetList class   
- *           ...     
- *        ENDCLASS   
+ *      defined in hbclass.h:
+ *        CLASS HBGetList    // Calls HBClass() to create the HBGetList class
+ *           ...
+ *        ENDCLASS
  *  $ARGUMENTS$
- *      
+ *
  *  $RETURNS$
  *      An instance of the HBClass Class. This special object's :New()
- *      method can then create the classes you define.   
+ *      method can then create the classes you define.
  *  $DESCRIPTION$
- *      HBClass is a class that ...   
- *      The class methods are as follows:   
+ *      HBClass is a class that ...
+ *      The class methods are as follows:
  *
- *        New()                 Create a new instance of the class   
+ *        New()                 Create a new instance of the class
  *  $EXAMPLES$
  *      FUNCTION TestObject()
  *      local oObject
@@ -50,15 +50,15 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Object Oriented syntax in Harbour is compatible with CA-CLIPPER.
+ *      Object Oriented syntax in Harbour is compatible with CA-Cl*pper.
  *      But Clipper only allowed creation of objects from a few standard
  *      classes, and did not let the programmer create new classes.
  *      In Harbour, you can create your own classes--complete with
  *      Methods, Instance Variables, Class Variables and Inheritance.
  *      Entire applications can be designed and coded in Object Oriented
- *      style.   
+ *      style.
  *  $PLATFORMS$
- *      All   
+ *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$

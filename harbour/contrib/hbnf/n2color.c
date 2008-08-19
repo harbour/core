@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: N2COLOR.C
+ * File......: n2color.c
  * Author....: David Richardson
  * CIS ID....: 72271,53
  *

@@ -66,7 +66,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      CA-Clipper retorna un valor entero cuya utilidad esta limitada a
+ *      CA-Cl*pper retorna un valor entero cuya utilidad esta limitada a
  *      discos menores de 2 gigabytes. La versi¢n de Harbour retorna un valor
  *      de punto flotante con 0 decimales si el disco es > 2 gigabytes.
  *      <nTipo> es una extensi¢n de Harbour.
@@ -77,6 +77,6 @@
  *      La librer¡a asociada es rtl
  *      El archivo de cabecera es fileio.ch
  *  $END$
- */  
+ */
 
 

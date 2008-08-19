@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: NoOccur.Prg
+ * File......: nooccur.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

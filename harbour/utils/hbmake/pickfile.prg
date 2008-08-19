@@ -4,7 +4,7 @@
 
 *+께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께께
 *+
-*+    Source Module => D:\SRC\PBMAKE\PICKFILE.PRG
+*+    Source Module => pickfile.prg
 *+
 *+    PBMake is a Clipper, C, ASM, Xbase++ make engine.
 *+    
@@ -145,6 +145,3 @@ endif
 restscreen( 8, 19, 16, 61, cOldString )
 
 return cRetVal
-
-
-*+ EOF: PICKFILE.PRG

@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: ACCTWEEK.PRG
+ * File......: acctweek.prg
  * Author....: Jo W. French dba Practical Computing
  * CIS ID....: 74731,1751
  *

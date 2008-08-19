@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Compatibility header file for CA-Clipper Extend System
+ * Compatibility header file for CA-Cl*pper Extend System
  *
  * Copyright 1999-2001 Viktor Szakats <viktor.szakats@syenar.hu>
  * www - http://www.harbour-project.org

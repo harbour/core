@@ -44,7 +44,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   +---examples        - Sample files and small applications.
 |   |   |
-|   |   +---dbu         - Make files (without source) for CA-Clipper DBU.
+|   |   +---dbu         - Make files (without source) for CA-Cl*pper DBU.
 |   |   |
 |   |   +---guestbk     - Harbour Guests Book.
 |   |   |
@@ -68,7 +68,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   +---tests       - Test programs.
 |   |
 |   +---hbbmcdx         - DBFCDX RDD with bitmap filters compatible with
-|   |                     CA-Clipper 5.3
+|   |                     CA-Cl*pper 5.3
 |   |
 |   +---hbbtree         - BTree library.
 |   |   |
@@ -77,7 +77,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |   +---tests       - HB_BTree api test programs.
 |   |
 |   +---hbclip          - Harbour Compatibility Library (HCL) for
-|   |                     CA-Clipper 5.x
+|   |                     CA-Cl*pper 5.x
 |   |
 |   +---hbclipsm        - Miscellaneous contribution files.
 |   |   |

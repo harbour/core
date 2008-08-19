@@ -337,5 +337,3 @@ For nPos:=1 to nSize
 next
 endif
 RETURN Self
-
-*+ EOF: RTF.PRG

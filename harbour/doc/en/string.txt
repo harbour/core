@@ -44,7 +44,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -79,7 +79,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -114,7 +114,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -149,7 +149,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -181,7 +181,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This functions is CA-CLIPPER compatible
+ *      This functions is CA-Cl*pper compatible
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -385,8 +385,8 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This functions is CA-Clipper compatible with the execption that
- *      CA-Clipper will generate an error if the passed string is longer
+ *      This functions is CA-Cl*pper compatible with the execption that
+ *      CA-Cl*pper will generate an error if the passed string is longer
  *      than 64Kb, and Harbour on some plataform is not limit by this size.
  *  $PLATFORMS$
  *      All
@@ -463,7 +463,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Clipper compatible.
+ *      CA-Cl*pper compatible.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -539,7 +539,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Clipper compatible (it was part of the samples).
+ *      CA-Cl*pper compatible (it was part of the samples).
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -619,7 +619,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      LEN() is fully CA-Clipper compliant.
+ *      LEN() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -662,7 +662,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      EMPTY() is fully CA-Clipper compliant.
+ *      EMPTY() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -697,7 +697,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DESCEND() is fully CA-Clipper compliant.
+ *      DESCEND() is fully CA-Cl*pper compliant.
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
@@ -801,7 +801,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible
+ *      This function is CA-Cl*pper compatible
  *  $PLATFORMS$
  *      ALL
  *  $FILES$
@@ -834,7 +834,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-Clipper compatible
+ *      This function is CA-Cl*pper compatible
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -871,7 +871,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -903,7 +903,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -949,7 +949,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compilant
+ *      This function is CA-Cl*pper compilant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -995,7 +995,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compilant
+ *      This function is CA-Cl*pper compilant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -1041,7 +1041,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compilant
+ *      This function is CA-Cl*pper compilant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -1077,7 +1077,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compilant
+ *      This function is CA-Cl*pper compilant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -1117,7 +1117,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compilant
+ *      This function is CA-Cl*pper compilant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -1157,7 +1157,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compilant
+ *      This function is CA-Cl*pper compilant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -1197,7 +1197,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant in all aspects, with the
+ *      This function is CA-Cl*pper compliant in all aspects, with the
  *      exception don't have the Clipper 64Kb string length.
  *  $PLATFORMS$
  *      All
@@ -1268,7 +1268,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compliant in all aspects, with the
+ *      This function is CA-Cl*pper compliant in all aspects, with the
  *      exception don't have the Clipper 64Kb string length.
  *  $PLATFORMS$
  *      All
@@ -1304,7 +1304,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca-Clipper compatible
+ *      This function is CA-Cl*pper compatible
  *  $PLATFORMS$
  *      All
  *  $FILES$

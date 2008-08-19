@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: WOY.PRG
+ * File......: woy.prg
  * Author....: Forest Belt, Computer Diagnostic Services, Inc.
  * CIS ID....: ?
  *
@@ -116,7 +116,7 @@
  *     nWkNum := FT_WOY(CTOD("12/31/91"))    // result: 53
  *
  *     For a demonstration of this function, compile and link the
- *     program WOY.PRG in the Nanforum Toolkit source code.
+ *     program woy.prg in the Nanforum Toolkit source code.
  *  $END$
  */
 
@@ -200,7 +200,7 @@ RETURN (nWkNumber)
  *     nDayNum := FT_DOY(CTOD("12/31/91"))    // result: 365
  *
  *     For a demonstration of this function, compile and link the
- *     program WOY.PRG in the Nanforum Toolkit source code.
+ *     program woy.prg in the Nanforum Toolkit source code.
  *  $END$
  */
 

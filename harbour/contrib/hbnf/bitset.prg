@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: BITSET.PRG
+ * File......: bitset.prg
  * Author....: Forest Belt, Computer Diagnostic Services, Inc.
  * CIS ID....: ?
  *
@@ -66,7 +66,7 @@
  *                                        // bit 5 set
  *
  *     For a demonstration of Clipper bit manipulations, compile and
- *     link the program BITTEST.PRG in the Nanforum Toolkit source code.
+ *     link the program bittest.prg in the Nanforum Toolkit source code.
  *  $SEEALSO$
  *     FT_BITCLR() FT_ISBIT()
  *  $END$

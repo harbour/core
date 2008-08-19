@@ -67,39 +67,39 @@
  *      -39 a 386 para eventos de teclado ¢ en le rango de 1001 a 1007 para
  *      eventos de mouse.
  *      Los eventos de mouse y los eventos de teclado que no se pueden
- *      imprimir son representados por los valores K_<evento> listados en 
+ *      imprimir son representados por los valores K_<evento> listados en
  *      el archivo inkey.ch
  *      Los c¢digo de teclas de los eventos de teclado en el rango de 32 a
  *      127 son los equivalentes al set de caracteres ASCII. Los c¢digos de
  *      retorno de eventos de teclado en el rango de 128 a 255 son asumidos
  *      como imprimibles, pero los resultados pueden variar basados en el
  *      hardware del teclado y la nacionalidad de su seteo.
- *      
+ *
  *      Los codigos de tecla Extendidos para un teclado de PC consisten de
  *      scancode y uno o mas valores de desplazamiento (offset).
  *      Si ningun modificador de teclado fue usado entonces HB_INKEY_NONE
- *      es agregado. Las teclas <Alt> agregan HB_INKEY_ALT, las teclas 
+ *      es agregado. Las teclas <Alt> agregan HB_INKEY_ALT, las teclas
  *      <Ctrl> agregan HB_INKEY_CTRL, las teclas de desplazamiento (Shift),
- *      (que se simbolizan con una flecha hacia arriba) agregan  
- *      HB_INKEY_SHIFT, y las teclas adicionales del teclado numerico 
+ *      (que se simbolizan con una flecha hacia arriba) agregan
+ *      HB_INKEY_SHIFT, y las teclas adicionales del teclado numerico
  *      ubicadas a la derecha
  *      del teclado (teclas KeyPad y CursorPad ) agregan HB_INKEY_ENHANCED.
- *      
+ *
  *      Por ejemplo la tecla <F1> tiene un scancode de 59, asi que si solo
  *      se pulsa <F1> se obtiene el codigo 315, <Alt+F1> da 443, <Ctrl+F1>
  *      da 571, <Shift+F1> da 699. <>
- *      
+ *
  *      ??????        And NumPad+/ gives 1077, 1205, 1333, and 1461. At
  *      this time, the only value that can combine with other values is
  *      HB_INKEY_ENHANCED (i.e., there are no Alt+Ctl combinations, etc.)
  *
- *      Nota: El conjunto de codigos de teclas extendido es mayor que el 
- *      conjunto de codigo de tecla normal. Como resultante de esto, si 
+ *      Nota: El conjunto de codigos de teclas extendido es mayor que el
+ *      conjunto de codigo de tecla normal. Como resultante de esto, si
  *      Ud. cambia entre los modos normal y extendido, Ud. debe saber que
  *      algunos codigos son trasladados como cero en el modo normal (esto
  *      es debido a que existe el correspondiente codigo para esa tecla en
- *      modo normal) y que esos codigos seran removidos del buffer de 
- *      entrada del teclado en el modo normal y que Ud. no podr  volver 
+ *      modo normal) y que esos codigos seran removidos del buffer de
+ *      entrada del teclado en el modo normal y que Ud. no podr  volver
  *      atras y obtenerlos luego en modo extendido.
  *  $DESCRIPTION$
  *      INKEY() puede ser usada para detectar eventos de entrada, como la
@@ -145,7 +145,7 @@
  *      <cString>  es una cadena opcional para ser colocada en el buffer
  *                 de teclado de Harbour despu‚s de borrarlo.
  *                 Nota: El car cter ";" es convertido a CHR(13) (esta es
- *                       una caracter¡stica no documentada de CA-Clipper).
+ *                       una caracter¡stica no documentada de CA-Cl*pper).
  *  $RETURNS$
  *      No hay valor de retorno.
  *  $DESCRIPTION$
@@ -166,7 +166,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __KEYBOARD() es compatible con CA-Clipper 5.3
+ *      __KEYBOARD() es compatible con CA-Cl*pper 5.3
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
@@ -227,7 +227,7 @@
  *      <nInputMask> es un valor entero opcional compuesto por una o mas
  *                   constantes INKEY_ or HB_INKEY_
  *                   El solo proposito de este argumento es permitir cambiar
- *                   entre los codigos de tecla HB_INKEY_EXTENDED y usar 
+ *                   entre los codigos de tecla HB_INKEY_EXTENDED y usar
  *                   los codigos de tecla normales compatibles con Clipper.
  *  $RETURNS$
  *      <nTecla> el valor del pr¢ximo c¢digo de tecla del buffer de teclado.
@@ -260,7 +260,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      NEXTKEY() es compatible con CA-Clipper 5.3
+ *      NEXTKEY() es compatible con CA-Cl*pper 5.3
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
@@ -281,8 +281,8 @@
  *      <nInputMask> es un valor entero opcional compuesto por una o mas
  *                   constantes INKEY_ o HB_INKEY_
  *                   El solo proposito de este argumento es permitir cambiar
- *                   entre los codigos de tecla HB_INKEY_EXTENDED y usar 
- *                   los codigos de tecla normales compatibles con Clipper. 
+ *                   entre los codigos de tecla HB_INKEY_EXTENDED y usar
+ *                   los codigos de tecla normales compatibles con Clipper.
  *  $RETURNS$
  *      <nTecla> la £ltima tecla extraida desde el buffer de teclado.
  *  $DESCRIPTION$
@@ -306,7 +306,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      LASTKEY() es compatible con CA-Clipper 5.3
+ *      LASTKEY() es compatible con CA-Cl*pper 5.3
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
@@ -348,7 +348,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      __KEYBOARD() es compatible con CA-Clipper 5.3
+ *      __KEYBOARD() es compatible con CA-Cl*pper 5.3
  *  $SEEALSO$
  *       CLEAR TYPEAHEAD,__KEYBOARD()
  *  $END$
@@ -397,7 +397,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      READKEY() es compatible con CA-Clipper 5.3
+ *      READKEY() es compatible con CA-Cl*pper 5.3
  *  $FILES$
  *      La librer¡a es rtl
  *  $SEEALSO$
@@ -431,7 +431,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MROW() es compatible con CA-Clipper 5.3, pero ha sido extendido para
+ *      MROW() es compatible con CA-Cl*pper 5.3, pero ha sido extendido para
  *      trabajar sobre sistemas gr ficos tan bien como en sistemas basados
  *      en caracteres.
  *  $PLATFORMS$
@@ -469,7 +469,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      MCOL() es compatible con CA-Clipper 5.3, pero ha sido extendido para
+ *      MCOL() es compatible con CA-Cl*pper 5.3, pero ha sido extendido para
  *      trabajar sobre sistemas gr ficos tan bien como en sistemas basados
  *      en caracteres.
  *  $PLATFORMS$
@@ -479,6 +479,6 @@
  *  $SEEALSO$
  *      MROW()
  *  $END$
- */ 
+ */
 
 

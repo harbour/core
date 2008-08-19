@@ -55,7 +55,7 @@
  *      R
  *  $COMPLIANCE$
  *      La sintaxis Orientada a Objetos en Harbour es compatible con
- *      CA-CLIPPER.
+ *      CA-Cl*pper.
  *      Pero Clipper solamente permite la creaci¢n de objetos a partir
  *      de unas pocas clases estandares, y NO le permite al programador
  *      crear nuevas clases.
@@ -70,7 +70,7 @@
  *  $SEEALSO$
  *      __objHasData(),Programacion Orientada a Objeto,CLASS
  *  $END$
- */ 
+ */
 
 
 

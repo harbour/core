@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: DESCEND.C
+ * File......: descend.c
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *
@@ -36,7 +36,7 @@
  *  $RETURNS$
  *     The inverse of <exp>
  *  $DESCRIPTION$
- *     This function is a replacement for CA-Clipper's Descend() function,
+ *     This function is a replacement for CA-Cl*pper's Descend() function,
  *     which is known to produce memory corruption occassionally.
  *  $EXAMPLES$
  *     ? FT_Descend( 1 )      // Returns -1

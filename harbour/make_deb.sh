@@ -75,7 +75,7 @@ fi
 
 if test_reqpkg libfreeimage-dev
 then
-    # export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbfimage"
+    export HB_CONTRIBLIBS="${HB_CONTRIBLIBS} hbfimage"
 fi
 
 if test_reqpkg libgd-xpm-dev || \

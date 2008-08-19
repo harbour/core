@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: MOUSE1.PRG
+ * File......: mouse1.prg
  * Author....: Leo Letendre
  * CIS ID....: 73607,233
  *
@@ -44,7 +44,7 @@
  * Leo fixed a potential bug in ft_mcursor().
  *
  *    Rev 1.2   27 May 1991 13:40:30   GLENN
- * Leo Letendre sent me a revision of MOUSE1.PRG where he built in support
+ * Leo Letendre sent me a revision of mouse1.prg where he built in support
  * for a three-button mouse, and revised the "double click" detection
  * algorithm.
  *

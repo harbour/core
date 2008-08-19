@@ -4,7 +4,7 @@
 
 /*
 *
-*  TestHTML.PRG
+*  testhtml.prg
 *  Harbour Test of a HTML-Generator class.
 *
 *  1999/05/30  First implementation.

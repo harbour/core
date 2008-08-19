@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: ANoMatch.Prg
+ * File......: anomatch.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

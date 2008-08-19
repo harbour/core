@@ -110,7 +110,7 @@ BuildRoot:      /tmp/%{name}-%{version}-root
 %define         _noautoreq    'libharbour.*'
 
 %description
-%{dname} is a CA-Clipper compatible compiler for multiple platforms. This
+%{dname} is a CA-Cl*pper compatible compiler for multiple platforms. This
 package includes a compiler, pre-processor, header files, virtual machine
 and documentation.
 
@@ -118,7 +118,7 @@ See README.RPM in the documentation directory for information specific to
 this RPM distribution.
 
 %description -l pl
-%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator rozwijany na
+%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator rozwijany na
 wielu rС©nych platformach. Ten pakiet zawiera kompilator, preprocesor,
 zbiory nagЁСwkowe, wirtualn╠ maszynЙ oraz dokumentacjЙ.
 
@@ -128,12 +128,12 @@ Esse pacote contem um compilador, um prИ-processador, arquivos de cabeГalho
 uma maquina virtual e documentaГЦo.
 
 %description -l ru
-%{dname} - многоплатформенный компилятор, совместимый с языком CA-Clipper.
+%{dname} - многоплатформенный компилятор, совместимый с языком CA-Cl*pper.
 Этот пакет содержит компилятор, препроцессор, файлы заголовков, виртуальную
 машину и документацию.
 
 %description -l hu
-%{dname} egy tЖbb platformon is mШkЖdУ CA-Clipper kompatibilis 
+%{dname} egy tЖbb platformon is mШkЖdУ CA-Cl*pper kompatibilis 
 fordМtСprogram. A csomag rИsze a fordМtС maga, az elУfordМtС, fejlИc 
 АllomАnyok, a virtuАlis gИp Иs fЭggvИnykЖnyvtАrak, valamint a dokumentАciС.
 
@@ -155,7 +155,7 @@ This package provides %{dname} runtime shared libraries for programs
 linked dynamically.
 
 %description -l pl lib
-%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.
+%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.
 Ten pakiet udostЙpnia dzielone bilioteki kompilatora %{dname}
 dla programСw konsolidowanych dynamicznie.
 
@@ -165,7 +165,7 @@ Esse pacote %{dname} provem as bibliotecas compartilhadas para programas
 linkados dinamicamente.
 
 %description -l ru lib
-%{dname} - компилятор, совместимый с языком CA-Clipper.
+%{dname} - компилятор, совместимый с языком CA-Cl*pper.
 Этот пакет содержит совместно используемые библиотеки %{dname},
 необходимые для работы динамически скомпонованных программ.
 
@@ -192,7 +192,7 @@ This package provides %{dname} static runtime libraries for static
 program linking.
 
 %description -l pl static
-%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.
+%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.
 Ten pakiet udostЙpnia statyczne bilioteki dla kompilatora %{dname}
 niezbЙdne do statycznej konsolidacji programСw.
 
@@ -202,7 +202,7 @@ Esse pacote %{dname} provem as bibliotecas  de run time staticas para linkagem
 dos os programas
 
 %description -l ru static
-%{dname} - компилятор, совместимый с языком CA-Clipper.
+%{dname} - компилятор, совместимый с языком CA-Cl*pper.
 Этот пакет содержит статические библиотеки компилятора %{dname},
 необходимые для статической компоновки программ.
 
@@ -226,7 +226,7 @@ Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 This package provides %{dname} contrib libraries for program linking.
 
 %description -l pl contrib
-%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.
+%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.
 Ten pakiet udostЙpnia statyczne bilioteki z drzewa contrib dla
 kompilatora %{dname}.
 
@@ -236,7 +236,7 @@ Esse pacote %{dname} provem as bibliotecas contrib para linkagem
 dos programas.
 
 %description -l ru contrib
-%{dname} - компилятор, совместимый с языком CA-Clipper.
+%{dname} - компилятор, совместимый с языком CA-Cl*pper.
 Этот пакет содержит статические библиотеки %{dname} из дерева contrib.
 
 %description -l hu lib
@@ -256,7 +256,7 @@ statikus szerkesztИshez.
 %{?_with_odbc:This package provides %{dname} ODBC library for program linking.}
 
 %{?_with_odbc:%description -l pl odbc}
-%{?_with_odbc:%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.}
+%{?_with_odbc:%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.}
 %{?_with_odbc:Ten pakiet udostЙpnia statyczn╠ biliotekЙ ODBC dla kompilatora %{dname}.}
 
 ## CURL library
@@ -271,7 +271,7 @@ statikus szerkesztИshez.
 %{?_with_curl:This package provides %{dname} CURL library for program linking.}
 
 %{?_with_curl:%description -l pl curl}
-%{?_with_curl:%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.}
+%{?_with_curl:%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.}
 %{?_with_curl:Ten pakiet udostЙpnia statyczn╠ biliotekЙ CURL dla kompilatora %{dname}.}
 
 ## hbhpdf library
@@ -286,7 +286,7 @@ statikus szerkesztИshez.
 %{?_with_hbhpdf:This package provides %{dname} hbhpdf library for program linking.}
 
 %{?_with_hbhpdf:%description -l pl hbhpdf}
-%{?_with_hbhpdf:%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.}
+%{?_with_hbhpdf:%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.}
 %{?_with_hbhpdf:Ten pakiet udostЙpnia statyczn+ biliotekЙ hbhpdf dla kompilatora %{dname}.}
 
 ## ADS RDD
@@ -301,7 +301,7 @@ statikus szerkesztИshez.
 %{?_with_ads:This package provides %{dname} ADS RDDs for program linking.}
 
 %{?_with_ads:%description -l pl ads}
-%{?_with_ads:%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.}
+%{?_with_ads:%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.}
 %{?_with_ads:Ten pakiet udostЙpnia sterowniki (RDD) ADS dla kompilatora %{dname}.}
 
 ## mysql library
@@ -316,7 +316,7 @@ statikus szerkesztИshez.
 %{?_with_mysql:This package provides %{dname} MYSQL library for program linking.}
 
 %{?_with_mysql:%description -l pl mysql}
-%{?_with_mysql:%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.}
+%{?_with_mysql:%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.}
 %{?_with_mysql:Ten pakiet udostЙpnia statyczn╠ biliotekЙ MYSQL dla kompilatora %{dname}.}
 
 ## pgsql library
@@ -331,7 +331,7 @@ statikus szerkesztИshez.
 %{?_with_pgsql:This package provides %{dname} PGSQL library for program linking.}
 
 %{?_with_pgsql:%description -l pl pgsql}
-%{?_with_pgsql:%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.}
+%{?_with_pgsql:%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.}
 %{?_with_pgsql:Ten pakiet udostЙpnia statyczn╠ biliotekЙ PGSQL dla kompilatora %{dname}.}
 
 ## gd library
@@ -346,7 +346,7 @@ statikus szerkesztИshez.
 %{?_with_gd:This package provides %{dname} GD library for program linking.}
 
 %{?_with_gd:%description -l pl gd}
-%{?_with_gd:%{dname} to kompatybilny z jЙzykiem CA-Clipper kompilator.}
+%{?_with_gd:%{dname} to kompatybilny z jЙzykiem CA-Cl*pper kompilator.}
 %{?_with_gd:Ten pakiet udostЙpnia statyczn╠ biliotekЙ GD dla kompilatora %{dname}.}
 
 ######################################################################
@@ -461,7 +461,7 @@ executable. The executable will be given the basename of the first object
 file if not directly set by the "-o" command line switch.
 
 "%{hb_pref}mk" tries to produce an executable from your .prg file. It's a simple
-equivalent of cl.bat from the CA-Clipper distribution.
+equivalent of cl.bat from the CA-Cl*pper distribution.
 
 All these scripts accept command line switches:
 -o<outputfilename>      # output file name

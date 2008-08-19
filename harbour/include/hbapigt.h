@@ -240,7 +240,7 @@ typedef struct
 } HB_GT_CORD;
 typedef HB_GT_CORD * PHB_GT_CORD;
 
-/* Undocumented CA-Clipper 5.x GT API calls */
+/* Undocumented CA-Cl*pper 5.x GT API calls */
 
 #define HB_GT_WND void
 #define HB_GT_RGB void

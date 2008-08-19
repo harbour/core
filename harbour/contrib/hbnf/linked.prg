@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: Linked.PRG
+ * File......: linked.prg
  * Author....: Brian Loesgen
  * CIS ID....: 74326,1174
  *

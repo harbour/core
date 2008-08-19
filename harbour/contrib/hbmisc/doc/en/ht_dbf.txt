@@ -52,7 +52,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER tools compatible   
+ *      This function is CA-Cl*pper tools compatible   
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
@@ -89,7 +89,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER tools compatible   
+ *      This function is CA-Cl*pper tools compatible   
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
@@ -127,7 +127,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA-CLIPPER tools compatible
+ *      This function is CA-Cl*pper tools compatible
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$

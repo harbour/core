@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: ISBITON.PRG
+ * File......: isbiton.prg
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *

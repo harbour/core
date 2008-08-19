@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: NETPV.PRG
+ * File......: netpv.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

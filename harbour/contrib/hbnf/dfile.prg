@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: DFILE.PRG
+ * File......: dfile.prg
  * Author....: Mike Taylor
  * CIS ID....: ?
  *
@@ -37,7 +37,7 @@ static nHandle := 0
 
     @ 0,0 CLEAR
 
-    cInFile   := "FT_DFILE.PRG"
+    cInFile   := "ft_dfile.prg"
     CKEY      := ""
     NNCOLOR   := 7
     NHCOLOR   := 15
@@ -229,4 +229,3 @@ function FT_DFCLOSE()
   endif
 
   return (NIL)
-

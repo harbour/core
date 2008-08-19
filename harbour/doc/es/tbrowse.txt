@@ -7,7 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2002 Alejandro de G rate <alex_degarate@hotmail.com>
- * Documentaci¢n en Espa¤ol de: 
+ * Documentaci¢n en Espa¤ol de:
  *      TBrowseNew()
  *
  * Vea doc/license.txt por los t‚rminos de la licencia.
@@ -20,23 +20,23 @@
  *  $CATEGORY$
  *      Clase TBrowse
  *  $ONELINER$
- *      Crea un Objeto Browse 
+ *      Crea un Objeto Browse
  *  $CONSTRUCTOR$
  *      TBrowseNew( <nArriba>,<nIzq>,<nAbajo>,<nDerecha> ) --> <oBrowse>
  *  $ARGUMENTS$
  *      <nArriba>   Fila Superior
  *
- *      <nIzq>      Columna Superior Izquierda 
+ *      <nIzq>      Columna Superior Izquierda
  *
  *      <nAbajo>    Fila Inferior
  *
  *      <nDerecha>  Columna Inferior Derecha
  *  $RETURNS$
- *      <oBrowse>  Un nuevo Objeto Browse 
+ *      <oBrowse>  Un nuevo Objeto Browse
  *  $DESCRIPTION$
- *      Esta función establece una ventana de desplazamiento en las 
+ *      Esta función establece una ventana de desplazamiento en las
  *      coordenadas establecidas por <nArriba>, <nIzq>, <nAbajo>, <nDerecha>
- *      Para visualizar una base de datos use la función TBrowseDB() en 
+ *      Para visualizar una base de datos use la función TBrowseDB() en
  *      su lugar.
  *  $DATANOLINK$
  *      :aColumns       Array para guardar todas las columnas del browse
@@ -53,34 +53,34 @@
  *
  *      :footSep        Caracter separador de Notas al pie
  *
- *      :freeze         Número de columnas a Congelar 
+ *      :freeze         Número de columnas a Congelar
  *
  *      :goBottomBlock  Codeblock ejecutado por TBrowse:goBottom()
  *
  *      :goTopBlock     Codeblock ejecutado por TBrowse:goTop()
  *
  *      :headSep        Caracter separador de Encabezados
- * 
+ *
  *      :hitBottom      Indica el fin de los datos disponibles
  *
  *      :hitTop         Indica el comienzo de los datos disponibles
  *
- *      :leftVisible    Indica la posición de la columna no congelada 
+ *      :leftVisible    Indica la posición de la columna no congelada
  *                      más a la izquierda en la pantalla
  *
- *      :nBottom        Número de la Fila Inferior para la visualización 
+ *      :nBottom        Número de la Fila Inferior para la visualización
  *                      del objeto TBrowse
  *
- *      :nLeft          Columna más a la Izquierda para la visualización 
+ *      :nLeft          Columna más a la Izquierda para la visualización
  *                      del objeto TBrowse
  *
- *      :nRight         Columna más a la Derecha para la visualización 
+ *      :nRight         Columna más a la Derecha para la visualización
  *                      del objeto TBrowse
  *
- *      :nTop           Número de la Fila Superior para la visualización 
+ *      :nTop           Número de la Fila Superior para la visualización
  *                      del objeto TBrowse
  *
- *      :rightVisible   Indica la posición de la columna no congelada 
+ *      :rightVisible   Indica la posición de la columna no congelada
  *                      más a la Derecha en la pantalla
  *
  *      :rowCount       Número de filas de datos visibles en el TBrowse
@@ -90,17 +90,17 @@
  *      :skipBlock      Codeblock usado para la reposicion de datos
  *
  *      :stable         Indica si el objeto TBrowse es estable
- *   
+ *
  *      :aRedraw        Array de items lógicos indicando si es apropiado
  *                      cuales filas necesitan ser redibujadas
  *
- *      :RelativePos    Indica la posición del registro relativa a la 
+ *      :RelativePos    Indica la posición del registro relativa a la
  *                      posición del primer registro en la pantalla
  *
- *      :lHeaders       Variable interna que indica cuando hay cabeceras  
+ *      :lHeaders       Variable interna que indica cuando hay cabeceras
  *                      de columnas para dibujar
  *
- *      :lFooters       Variable interna que indica cuando hay pie de 
+ *      :lFooters       Variable interna que indica cuando hay pie de
  *                      columnas para dibujar
  *
  *      :aRect          El rectangulo especificado con ColorRect()
@@ -117,84 +117,84 @@
  *
  *      SetKey()        Agrega una nueva tecla al diccionario de teclado
  *  $METHODSNOLINK$
- *      New(nTop, nLeft, nBottom, nRight) 
- *                        Crea una nueva clase Browse y establece los 
+ *      New(nTop, nLeft, nBottom, nRight)
+ *                        Crea una nueva clase Browse y establece los
  *                        valores por defecto
  *
  *      Down()            Mueve el cursor una fila hacia abajo
- *  
- *      End()             Mueve el cursor a la columna de datos más hacia 
+ *
+ *      End()             Mueve el cursor a la columna de datos más hacia
  *                        la derecha que esté visible.
- *  
+ *
  *      GoBottom()        Reposiciona los datos fuentes al final del archivo
- *  
- *      GoTop()           Reposiciona los datos fuentes al inicio del 
+ *
+ *      GoTop()           Reposiciona los datos fuentes al inicio del
  *                        archivo
- *  
+ *
  *      Home()            Mueve el cursor a la columna visible más hacia la
  *                        izquierda
- *                
+ *
  *      Left()            Mueve el cursor una columna hacia la izquierda
- *  
+ *
  *      PageDown()        Reposiciona los datos fuentes hacia abajo
- *  
+ *
  *      PageUp()          Reposiciona los datos fuentes hacia arriba
- *  
- *      PanEnd()          Mueve el cursor a la columna de datos más a la 
- *                        derecha 
- *  
- *      PanHome()         Mueve el cursor a la columna de datos más a la 
+ *
+ *      PanEnd()          Mueve el cursor a la columna de datos más a la
+ *                        derecha
+ *
+ *      PanHome()         Mueve el cursor a la columna de datos más a la
  *                        izquierda
- *  
- *      PanLeft()         Se desplaza hacia la izquierda sin cambiar la  
+ *
+ *      PanLeft()         Se desplaza hacia la izquierda sin cambiar la
  *                        posición del cursor
- *  
- *      PanRight()        Se desplaza hacia la derecha sin cambiar la  
+ *
+ *      PanRight()        Se desplaza hacia la derecha sin cambiar la
  *                        posición del cursor
- *  
+ *
  *      Right()           Mueve el cursor una columna hacia la derecha
- *  
+ *
  *      Up()              Mueve el cursor una fila hacia arriba
- *  
+ *
  *      ColCount()        Retorna el número actual de columnas
- *  
+ *
  *      ColorRect()       Altera el color de un grupo rectangular de celdas
- *                          
+ *
  *      ColWidth(nCol)    Retorna el ancho de visualización de una columna
  *                        particular
- *                          
- *      Configure( nMode)      Reconfigura los seteos internos del objeto 
- *                             TBrowse. <nMode> es un parámetro no   
+ *
+ *      Configure( nMode)      Reconfigura los seteos internos del objeto
+ *                             TBrowse. <nMode> es un parámetro no
  *                             documentado en CA-Cl*pper
- *  
- *      LeftDetermine()        Determina la columna no congelada más a la 
+ *
+ *      LeftDetermine()        Determina la columna no congelada más a la
  *                             izquierda en la pantalla
- *  
+ *
  *      DeHilite()             Saca el color brillante a la celda actual
- *  
+ *
  *      DelColumn( nPos )      Borra un objeto Column de un Browse
- *  
+ *
  *      ForceStable()          Ejecuta una estabilización total
- *  
+ *
  *      GetColumn( nColumn )   Obtiene un objeto TBColumn específico
- *  
+ *
  *      Hilite()               Resalta la celda actual
- *  
+ *
  *      InsColumn( nPos, oCol) Inserta un objeto TBColumn de un Browse
- *  
- *      Invalidate()           Fuerza un redibujo completo durante la 
+ *
+ *      Invalidate()           Fuerza un redibujo completo durante la
  *                             próxima estabilización
- *  
- *      RefreshAll()           Causa que todos los datos sean recalculados 
+ *
+ *      RefreshAll()           Causa que todos los datos sean recalculados
  *                             durante la próxima estabilización
- *   
- *      RefreshCurrent()       Causa que la fila actual sea rellenada y 
+ *
+ *      RefreshCurrent()       Causa que la fila actual sea rellenada y
  *                             redibujada en la próxima estabilización
- *   
+ *
  *      SetColumn( nColumn, oCol) Reemplaza un objeto TBColumn con otro
- *   
+ *
  *      Stabilize()             Ejecuta una estabilización incremental
- *                           
+ *
  *      DispCell( nCol, cColor) Visualiza una sola celda en el color dado
  *
  *  $EXAMPLES$
@@ -204,7 +204,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      Estas funciones son compatibles con CA-Clipper 5.2
+ *      Estas funciones son compatibles con CA-Cl*pper 5.2
  *      Los métodos Applykey() y Setkey() solamente son visibles si la
  *      compatibilidad con Clipper 5.3 ( HB_COMPAT_C53 ) está definida.
  *  $PLATFORMS$
@@ -217,7 +217,7 @@
  */
 
 
-/*  $CLASSDOC$     
+/*  $CLASSDOC$
  *  $METHOD$
  *      SetKey()
  *  $CATEGORY$
@@ -232,10 +232,10 @@
  *      <bBlock>  Una ación opcional a asociar con el valor de la tecla
  *  $RETURNS$
  *      <bOldBlock>  Si al presionar una tecla, se cambia el codeblock
- *                   se devolverá el bloque previo, de otro modo este 
+ *                   se devolverá el bloque previo, de otro modo este
  *                   método devolverá el codeblock actual.
  *  $DESCRIPTION$
- *      Este método Obtiene y opcionalmente Establece un bloque de código 
+ *      Este método Obtiene y opcionalmente Establece un bloque de código
  *      que es asociado con el valor de una tecla.
  *      La tabla inferior muestra las definiciones de teclas/codeblocks
  *
@@ -259,27 +259,27 @@
  *      K_ESC          {|Ob, nKey| -1 }
  *      </table>
  *
- *      Los manejadores de tecla pueden ser consultados, agregados, 
+ *      Los manejadores de tecla pueden ser consultados, agregados,
  *      reemplazados y removidos del dicccionario interno de teclado.
  *      Por ejemplo
  *
  *      oTb:SETKEY( K_TAB, {|oTb, nKey| -1} )
  *
- *      Un manejador de teclas por defecto, puede ser declarado al 
+ *      Un manejador de teclas por defecto, puede ser declarado al
  *      especificar un valor de cero para <nKey>. esto asocia el codeblock
  *      que será evaluado cada vez que TBrowse:Applykey() sea llamado con
  *      un valor de tecla que no este contenida en el diccionario.
  *      Por ejemplo
  *
  *      oTb:SetKey( 0, {|oTb, nKey| DefKeyHandler( otb, nkey) })
- *      Esto llama a una función llamada DefKeyHandler() cuando nKey no 
+ *      Esto llama a una función llamada DefKeyHandler() cuando nKey no
  *      está contenida en el diccionario.
  *
  *      Para remover una definición presion de tecla/codeblock, especifique
  *      NIl para <bBlock>
  *      oTb:SetKey( K_ESC, NIL )
  *  $EXAMPLES$
- *      oTb:SeyKey( K_F10, {|otb,nkey| ShowListByname(otb) }       
+ *      oTb:SeyKey( K_F10, {|otb,nkey| ShowListByname(otb) }
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
@@ -291,10 +291,10 @@
  *      La librería asociada es rtl
  *  $SEEALSO$
  *      Applykey()
- *  $END$           
+ *  $END$
  */
 
-/*  $CLASSDOC$     
+/*  $CLASSDOC$
  *  $METHOD$
  *      Applykey()
  *  $CATEGORY$
@@ -317,7 +317,7 @@
  *               no fué procesada
  *      </table>
  *  $DESCRIPTION$
- *      Este método evalúa un bloque de código asociado con <nTecla> que 
+ *      Este método evalúa un bloque de código asociado con <nTecla> que
  *      está contenida en el diccionario TBrowse:setkey()
  *  $EXAMPLES$
  *      WHILE .T.
@@ -339,10 +339,10 @@
  *      La librería asociada es rtl
  *  $SEEALSO$
  *      SetKey()
- *  $END$           
+ *  $END$
  */
 
-/*  $CLASSDOC$     
+/*  $CLASSDOC$
  *  $METHOD$
  *      AddColumn()
  *  $CATEGORY$
@@ -352,7 +352,7 @@
  *  $SYNTAX$
  *      AddColumn( oCol ) --> Self
  *  $ARGUMENTS$
- *      <oCol>  Es un Objeto TBColumn 
+ *      <oCol>  Es un Objeto TBColumn
  *  $RETURNS$
  *      <Self>  El Objeto actual
  *  $DESCRIPTION$
@@ -361,14 +361,14 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta función es compatible con CA-Clipper 5.2
+ *      Esta función es compatible con CA-Cl*pper 5.2
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
  *      La librería asociada es rtl
  *  $SEEALSO$
  *      TBColumnNew()
- *  $END$           
- */ 
+ *  $END$
+ */
 
 

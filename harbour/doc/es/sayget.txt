@@ -124,7 +124,7 @@
  *                  espacios adelante
  *      </table>
  *      </fixed>
- *     
+ *
  *      <fixed>
  *      <table>
  *      Molde  Reglas de Formateo del GET
@@ -165,7 +165,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este comando es totalmente compatible con CA-Clipper.
+ *      Este comando es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -217,7 +217,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este comando es totalmente compatible con CA-Clipper.
+ *      Este comando es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -225,6 +225,6 @@
  *  $SEEALSO$
  *      @...GET,SET DEVICE,TRANSFORM()
  *  $END$
- */ 
+ */
 
 

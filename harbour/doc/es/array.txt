@@ -7,7 +7,7 @@
  * www - http://www.harbour-project.org
  *
  * Copyright 2000 Alejandro de G rate <alex_degarate@hotmail.com>
- * Documentaci¢n en Espa¤ol de: 
+ * Documentaci¢n en Espa¤ol de:
  *         ARRAY(), AADD(), ASIZE(), ATAIL(), ASIZE(),
  *         AINS(), ADEL(), ADEL(), AFILL(), ASCAN()
  *         AEVAL(), ACOPY(), ACLONE(), ASORT()
@@ -62,7 +62,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es CA-CLIPPER Compatible en todos los casos, excepto que
+ *      Esta funci¢n es CA-Cl*pper Compatible en todos los casos, excepto que
  *      los arrays en Harbour pueden tener un n£mero ilimitado de elementos
  *      mientras que Clipper tiene un l¡mite de 4096 elementos por dimensi¢n.
  *      Los arrays en Harbour pueden tener un n£mero ilimitado de dimensiones
@@ -119,7 +119,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas las plataformas
  *  $FILES$
@@ -200,7 +200,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $FILES$
  *      El c¢digo fuente est  en source\vm\arrays.c
  *      La librer¡a asociada es vm
@@ -248,7 +248,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $FILES$
  *      El c¢digo fuente est  en source\vm\arrays.c
  *      La librer¡a asociada es vm
@@ -294,7 +294,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $FILES$
  *      El c¢digo fuente est  en source\vm\arrays.c
  *      La librer¡a asociada es vm
@@ -345,7 +345,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $FILES$
  *      El c¢digo fuente est  en source\vm\arrays.c
  *      La librer¡a asociada es vm
@@ -406,7 +406,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n no es compatible con CA-Clipper . La funci¢n ASCAN() de
+ *      Esta funci¢n no es compatible con CA-Cl*pper . La funci¢n ASCAN() de
  *      Clipper es afectada por la condici¢n  SET EXACT ON/OFF
  *  $FILES$
  *      El c¢digo fuente est  en source\vm\arrays.c
@@ -457,7 +457,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $FILES$
  *      El c¢digo fuente est  en source\vm\arrays.c
  *      La librer¡a asociada es vm
@@ -517,7 +517,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $FILES$
  *      El c¢digo fuente est  en source\vm\arrays.c
  *      La librer¡a asociada es vm
@@ -599,10 +599,10 @@
  *      <nContador> es el n£mero de elementos a ordenar comenzando en la
  *                  posici¢n <nInicio>. Por defecto son todos los elementos
  *
- *      <bOrden>    es el bloque de c¢digo para el orden de ordenamiento, 
+ *      <bOrden>    es el bloque de c¢digo para el orden de ordenamiento,
  *                  por defecto es en orden ascendente {| x, y | x < y }.
- *                  El bloque de c¢digo debe recibir dos elementos del array 
- *                  como parametros y debe retornar .T. si el orden es el 
+ *                  El bloque de c¢digo debe recibir dos elementos del array
+ *                  como parametros y debe retornar .T. si el orden es el
  *                  correcto, .F. en caso contrario.
  *  $RETURNS$
  *      ASORT() retorna una referencia al reciente array ordenado <aDestino>
@@ -659,5 +659,5 @@
  *      ASCAN(),EVAL(),SORT
  *  $END$
  */
- 
+
 

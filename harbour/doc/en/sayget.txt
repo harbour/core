@@ -141,7 +141,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compatible
+ *      This command is CA-Cl*pper compatible
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
@@ -191,7 +191,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is Ca-Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$

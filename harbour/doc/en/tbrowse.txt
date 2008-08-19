@@ -74,7 +74,7 @@
  *      :skipBlock      Code block used to reposition data source
 
  *      :stable         Indicates if the TBrowse object is stable
- *   
+ *
  *      :aRedraw        Array of logical items indicating, is appropriate
  *      row need to be redraw
 
@@ -102,71 +102,71 @@
  *  $METHODSNOLINK$
  *      New(nTop, nLeft, nBottom, nRight) Create an new Browse class and set the
  *      default values
- *  
+ *
  *      Down()       Moves the cursor down one row
- *  
+ *
  *      End()        Moves the cursor to the rightmost visible data column
- *  
+ *
  *      GoBottom()   Repositions the data source to the bottom of file
- *  
+ *
  *      GoTop()      Repositions the data source to the top of file
- *  
+ *
  *      Home()       Moves the cursor to the leftmost visible data column
- *                
+ *
  *      Left()       Moves the cursor left one column
- *  
+ *
  *      PageDown()   Repositions the data source downward
- *  
+ *
  *      PageUp()     Repositions the data source upward
- *  
+ *
  *      PanEnd()     Moves the cursor to the rightmost data column
- *  
+ *
  *      PanHome()    Moves the cursor to the leftmost visible data column
- *  
+ *
  *      PanLeft()    Pans left without changing the cursor position
- *  
+ *
  *      PanRight()   Pans right without changing the cursor position
- *  
+ *
  *      Right()      Moves the cursor right one column
- *  
+ *
  *      Up()         Moves the cursor up one row
- *  
+ *
  *      ColCount()    Return the Current number of Columns
- *  
+ *
  *      ColorRect()   Alters the color of a rectangular group of cells
- *                          
+ *
  *      ColWidth( nColumn )  Returns the display width of a particular column
- *                          
+ *
  *      Configure( nMode )   Reconfigures the internal settings of the TBrowse
  *      object nMode is an undocumented parameter in CA-Cl*pper
- *  
+ *
  *      LeftDetermine()      Determine leftmost unfrozen column in display
- *  
+ *
  *      DeHilite()           Dehighlights the current cell
- *  
+ *
  *      DelColumn( nPos )    Delete a column object from a browse
- *  
+ *
  *      ForceStable()        Performs a full stabilization
- *  
+ *
  *      GetColumn( nColumn ) Gets a specific TBColumn object
- *  
+ *
  *      Hilite()             Highlights the current cell
- *  
+ *
  *      InsColumn( nPos, oCol )   Insert a column object in a browse
- *  
+ *
  *      Invalidate()        Forces entire redraw during next stabilization
- *  
+ *
  *      RefreshAll()        Causes all data to be recalculated during the next
  *      stabilize
- *   
+ *
  *      RefreshCurrent()    Causes the current row to be refilled and repainted
  *      on next stabilize
- *   
+ *
  *      SetColumn( nColumn, oCol )   Replaces one TBColumn object with another
- *   
+ *
  *      Stabilize()          Performs incremental stabilization
- *   
- *      DispCell( nColumn, cColor )  Displays a single cell   
+ *
+ *      DispCell( nColumn, cColor )  Displays a single cell
  *  $EXAMPLES$
  *      See tests/testbrw.prg
  *  $TESTS$
@@ -174,7 +174,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      This functions is Compatible with Ca-Clipper 5.2. The applykey() and
+ *      This functions is Compatible with CA-Cl*pper 5.2. The applykey() and
  *      Setkey() methods are only visible if HB_COMPAT_C53 is defined.
  *  $PLATFORMS$
  *      All
@@ -186,7 +186,7 @@
  */
 
 
-/*  $CLASSDOC$     
+/*  $CLASSDOC$
  *  $METHOD$
  *      SetKey()
  *  $CATEGORY$
@@ -244,17 +244,17 @@
  *      To remove an keypress/code block definition, specify NIL for <bBlock>
  *      oTb:SetKey(K_ESC,nil)
  *  $EXAMPLES$
- *      oTb:SeyKey(K_F10,{|otb,nkey| ShowListByname(otb)}       
- *  $END$           
+ *      oTb:SeyKey(K_F10,{|otb,nkey| ShowListByname(otb)}
+ *  $END$
  */
 
-/*  $CLASSDOC$     
+/*  $CLASSDOC$
  *  $METHOD$
  *      Applykey()
  *  $CATEGORY$
  *      TBrowse Method
  *  $ONELINER$
- *      Evaluates an code block associated with an specific key    
+ *      Evaluates an code block associated with an specific key
  *  $SYNTAX$
  *      ApplyKey(<nKey>) --> nResult
  *  $ARGUMENTS$
@@ -279,10 +279,10 @@
  *             exit
  *          endif
  *      enddo
- *  $END$           
+ *  $END$
  */
 
-/*  $CLASSDOC$     
+/*  $CLASSDOC$
  *  $METHOD$
  *      AddColumn()
  *  $CATEGORY$
@@ -298,5 +298,5 @@
  *  $DESCRIPTION$
  *      This method add an new column object specified as <oCol> to the
  *      assigned browsing object.
- *  $END$           
+ *  $END$
  */

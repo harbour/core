@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FCLASS.PRG Fileman class for hbdoc
+ * fclass.prg Fileman class for hbdoc
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -54,11 +54,11 @@
 #include 'common.ch'
 #include 'hbdocdef.ch'
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Class FileMan
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 CLASS FileMan
 
@@ -364,7 +364,3 @@ METHOD openfile( cFile, nMethod ) CLASS FileMan
    ENDIF
    ::nHan := nFileHandle
 RETURN ( nFileHandle )
-
-// End of File: FClass1.prg
-
-*+ EOF: FCLASS1.PRG

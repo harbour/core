@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: PVID.PRG
+ * File......: pvid.prg
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *

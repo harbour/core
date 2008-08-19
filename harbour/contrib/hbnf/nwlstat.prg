@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: NWLSTAT.PRG
+ * File......: nwlstat.prg
  * Author....: Glenn Scott
  * CIS ID....: ?
  *

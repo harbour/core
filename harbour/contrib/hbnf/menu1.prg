@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: MENU1.PRG
+ * File......: menu1.prg
  * Author....: Paul Ferrara
  * CIS ID....: 76702,556
  *

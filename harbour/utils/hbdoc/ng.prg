@@ -127,5 +127,3 @@ METHOD WriteLink( cLink ) CLASS TNortonGuide
    FWRITE( Self:nHandle, cLink )
 
 RETURN Self
-
-*+ EOF: NG.PRG

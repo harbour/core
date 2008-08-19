@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: ADesSort.Prg
+ * File......: adessort.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

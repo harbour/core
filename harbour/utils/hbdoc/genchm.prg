@@ -1879,7 +1879,6 @@ FUNCTION GenChmTable( oChm )
 
 RETURN Nil
 
-*+ EOF: GENChm.PRG
 STATIC FUNCTION ReadFromTop( nh )
 
    LOCAL cDoc      := DELIM + "DOC" + DELIM                    // DOC keyword
@@ -1927,5 +1926,3 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
 
    ENDIF
 RETURN lReturn
-
-*+ EOF: GENNG.PRG

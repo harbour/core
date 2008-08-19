@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: METAPH.PRG
+ * File......: metaph.prg
  * Author....: Dave Adams
  * CIS ID....: ?
  *

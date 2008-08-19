@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: E2D.PRG
+ * File......: e2d.prg
  * Author....: Gary Baren
  * CIS ID....: 75470,1027
  *

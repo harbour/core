@@ -34,8 +34,8 @@
  *      <SuperClase>  La clase padre para usar la herencia.
  *  $DESCRIPTION$
  *      CLASS crea una clase desde la cual se pueden crear objetos.
- *      Cada clase es definida en un archivo.PRG separado para este prop¢sito
- *      No se puede crear m s de una clase en un archivo.PRG
+ *      Cada clase es definida en un archivo.prg separado para este prop¢sito
+ *      No se puede crear m s de una clase en un archivo.prg
  *      Despu‚s del mandato CLASS comienza la definici¢n, luego los elementos
  *      DATA (tambien conocidos como variables de instancia) y luego
  *      los METHODS de la clase (el equivalente a las funciones en la
@@ -745,7 +745,7 @@
  *      R
  *  $COMPLIANCE$
  *      La sintaxis Orientada a Objetos en Harbour es compatible con
- *      CA-CLIPPER.
+ *      CA-Cl*pper.
  *      Pero Clipper solamente permite la creaci¢n de objetos a partir
  *      de unas pocas clases estandares, y NO le permite al programador
  *      crear nuevas clases.
@@ -759,7 +759,7 @@
  *  $SEEALSO$
  *      __objHasData(),CLASS,METHOD
  *  $END$
- */  
+ */
 
 
 

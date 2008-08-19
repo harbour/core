@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: LASTDAY.PRG
+ * File......: lastday.prg
  * Author....: Mike Schinkel
  * CIS ID....: ?
  *

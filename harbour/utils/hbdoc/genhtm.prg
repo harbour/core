@@ -1888,7 +1888,6 @@ FUNCTION GenhtmTable( oHtm )
 
 RETURN Nil
 
-*+ EOF: GENHTM.PRG
 STATIC FUNCTION ReadFromTop( nh )
 
    LOCAL cDoc      := DELIM + "DOC" + DELIM                    // DOC keyword
@@ -1941,4 +1940,3 @@ RETURN lReturn
 function CountDocs(aCurDoc)
 return len(aCurdoc)
 #endif
-*+ EOF: GENNG.PRG

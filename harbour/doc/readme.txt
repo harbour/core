@@ -7,8 +7,8 @@
 
 Harbour is a free software compiler for the xBase superset language often
 referred to as Clipper (the language that is implemented by the compiler
-CA-Clipper). The goal of the Harbour project is to produce a cross platform
-CA-Clipper compatible compiler.
+CA-Cl*pper). The goal of the Harbour project is to produce a cross platform
+CA-Cl*pper compatible compiler.
 
 The Harbour web site is at <URL:http://www.harbour-project.org/>. If you
 have any problems with this copy of Harbour please visit our web site and

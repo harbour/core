@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: BYT2BIT.PRG
+ * File......: byt2bit.prg
  * Author....: Forest Belt, Computer Diagnostic Services, Inc.
  * CIS ID....: ?
  *
@@ -61,7 +61,7 @@
  *                             // result: '0000 0100'
  *
  *     For a demonstration of Clipper bit manipulations, compile and
- *     link the program BITTEST.PRG in the Nanforum Toolkit source code.
+ *     link the program bittest.prg in the Nanforum Toolkit source code.
  *  $SEEALSO$
  *     FT_BYT2HEX()
  *  $END$

@@ -11,7 +11,7 @@ Depends: ${shlibs:Depends}
 Description: Compiler for the xBase superset language often referred to as Clipper
  Harbour is a free software compiler for the xBase superset language
  often referred to as Clipper (the language that is implemented by the
- compiler CA-Clipper).
+ compiler CA-Cl*pper).
  .
  Harbour is a cross platform compiler and is known to compile and run on
  MS-DOS, MS-Windows, OS/2 and GNU/Linux, *BSD systems, MAC-OSX, HP-UX and

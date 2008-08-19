@@ -47,7 +47,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -78,7 +78,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -114,7 +114,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -148,7 +148,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -188,7 +188,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -225,7 +225,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -259,7 +259,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -294,7 +294,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -331,7 +331,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -582,6 +582,6 @@
  *  $SEEALSO$
  *      hb_setMathHandlerStatus()
  *  $END$
- */  
+ */
 
 

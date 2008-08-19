@@ -2,7 +2,8 @@
  * $Id$
  */
 
-/* File......: KSPEED.ASM
+/* 
+* File......: kspeed.asm
 * Author....: James R. Zack
 * CIS ID....: 75410,1567
 *

@@ -58,12 +58,12 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBF information: CA-Clipper displays 8.3 file names, Harbour displays
+ *      DBF information: CA-Cl*pper displays 8.3 file names, Harbour displays
  *      the first 15 characters of a long file name if available.
  *
  *      File listing: To format file names displayed we use something like:
  *      PadR( Name, 8 ) + " " + PadR( Ext, 3 )
- *      CA-Clipper use 8.3 file name, with Harbour it would probably cut
+ *      CA-Cl*pper use 8.3 file name, with Harbour it would probably cut
  *      long file names to feet this template.
  *  $FILES$
  *      Library is rtl
@@ -115,12 +115,12 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      DBF information: CA-Clipper displays 8.3 file names, Harbour displays
+ *      DBF information: CA-Cl*pper displays 8.3 file names, Harbour displays
  *      the first 15 characters of a long file name if available.
  *
  *      File listing: To format file names displayed we use something like:
  *      PadR( Name, 8 ) + " " + PadR( Ext, 3 )
- *      CA-Clipper use 8.3 file name, with Harbour it would probably cut
+ *      CA-Cl*pper use 8.3 file name, with Harbour it would probably cut
  *      long file names to feet this template.
  *  $SEEALSO$
  *      ADIR(),DIRECTORY(),SET DEFAULT,__DIR()*

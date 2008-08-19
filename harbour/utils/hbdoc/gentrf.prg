@@ -542,5 +542,3 @@ FUNCTION ProcStatusTroff( nWriteHandle, cBuffer )
       nWriteHandle:WritePar( "   Not Started" )
    ENDIF
 RETURN nil
-
-*+ EOF: GENTRF.PRG

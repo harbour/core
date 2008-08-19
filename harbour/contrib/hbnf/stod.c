@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: STOD.C
+ * File......: stod.c
  * Author....: Clayton Neff
  * CIS ID....:
  *

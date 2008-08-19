@@ -1316,5 +1316,3 @@ STATIC FUNCTION GetItem( cItem, nCurdoc )
 
    ENDIF
 RETURN lReturn
-
-*+ EOF: GENOS2.PRG

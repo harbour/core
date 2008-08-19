@@ -58,11 +58,11 @@
  *      USE CUSTOMER NEW
  *      APPEND FROM customer SDF
  *  $TESTS$
- *      
+ *
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      __dbSDF() is intended to be fully compliant with CA-Clipper's
+ *      __dbSDF() is intended to be fully compliant with CA-Cl*pper's
  *      function of the same name and is the underlying implementation
  *      of the APPEND FROM SDF and COPY TO SDF commands.
  *  $PLATFORMS$

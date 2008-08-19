@@ -48,7 +48,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -87,7 +87,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -120,7 +120,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -156,7 +156,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -188,7 +188,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -221,9 +221,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *      Nota: No esta documentada en las NG, ni en el manual en espa¤ol de
- *            CA-Clipper
+ *            CA-Cl*pper
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -257,7 +257,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -293,7 +293,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -327,7 +327,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -369,7 +369,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -405,7 +405,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -446,7 +446,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -480,9 +480,9 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *      Nota: No esta documentada en las NG, ni en el manual en espa¤ol de
- *            CA-Clipper.
+ *            CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -515,7 +515,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -551,7 +551,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta funci¢n es totalmente compatible con CA-Clipper.
+ *      Esta funci¢n es totalmente compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -559,6 +559,6 @@
  *  $SEEALSO$
  *      DAY(),MONTH()
  *  $END$
- */  
- 
+ */
+
 

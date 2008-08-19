@@ -37,7 +37,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -68,7 +68,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -111,7 +111,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *      El par metro <cValorxDefecto> es una extensi¢n de Harbour.
  *  $PLATFORMS$
  *      Todas
@@ -150,7 +150,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -209,7 +209,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      Esta es una funci¢n compatible con CA-Clipper.
+ *      Esta es una funci¢n compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -243,7 +243,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      Este es un Comando compatible con CA-Clipper.
+ *      Este es un Comando compatible con CA-Cl*pper.
  *  $PLATFORMS$
  *      Todas
  *  $FILES$
@@ -252,6 +252,6 @@
  *  $SEEALSO$
  *      RUN
  *  $END$
- */ 
+ */
 
 
