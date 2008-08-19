@@ -85,5 +85,3 @@ FUNCTION Main()
    dsFunctions:Destroy()
 
 RETURN ( NIL )
-
-*+ EOF: ODBCDEMO.PRG

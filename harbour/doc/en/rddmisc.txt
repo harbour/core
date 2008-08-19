@@ -189,7 +189,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *      DELETE,PACK,USE
  *  $END$
@@ -568,7 +568,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compatible
+ *      This function is CA-Cl*pper compatible
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -606,7 +606,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -653,7 +653,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -924,7 +924,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *      DBEVAL(), DELETE, DELETED(), ZAP, RECALL
  *  $END$

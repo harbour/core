@@ -8,6 +8,25 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-19 16:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/en/diskspac.txt
+   * doc/en/string.txt
+   * doc/en/rddord.txt
+   * doc/en/terminal.txt
+   * doc/en/rddmisc.txt
+   * doc/en/datetime.txt
+   * doc/en/array.txt
+   * doc/en/rdddb.txt
+   * doc/en/menu.txt
+   * doc/en/file.txt
+   * doc/en/eval.txt
+   * ChangeLog
+   * contrib/hbodbc/todbc.prg
+   * contrib/hbodbc/tests/odbcdemo.prg
+   * contrib/hbtpathy/readme.txt
+   * utils/hbmake/pickfile.prg
+     * More cleanups, formatting (filename casing, CA-Cl*pper, etc).
+
 2008-08-19 14:58 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * make_deb.sh
      * Removed wrong comment recently added.
@@ -37156,7 +37175,7 @@ NOTE:
      + Added label support for Win32.
      ! Fix for Win32. It has been made compatible with the
        C RTL _dos_findfirst pattern matching, which is what
-       CA-Clipper is compatible with.
+       CA-Cl*pper is compatible with.
      * Adding space to the stringified attribute list on
        HB_FA_NORMAL removed, since it's not compatible, and it
        doesn't get executed anyway, since HB_FA_NORMAL == 0.
@@ -37429,7 +37448,7 @@ NOTE:
    * source/rtl/filesys.c
    * include/hbapifs.h
      + Added return value to hb_fsSetDevMode(), this way it's
-       fully compatible with the CA-Clipper _tdevraw() call.
+       fully compatible with the CA-Cl*pper _tdevraw() call.
 
    * source/rtl/philes53.c
      ! FSETDEVMOD() now returns a numeric instead of NIL. The
@@ -46247,7 +46266,7 @@ e.vc
 
    * include/hbapigt.h
      + Added some functions which have incompatible prototypes with
-       CA-Clipper Extend System.
+       CA-Cl*pper Extend System.
 
    * source/vm/extend.c
      * Some formatting.
@@ -49408,7 +49427,7 @@ e.vc
 2001-06-18 15:50 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * source/rdd/dbfntx/dbfntx1.c
      ! Bug fixed, related to Bof, Eof flags after seeking
-     ! Seek "" works now as in CA-Clipper
+     ! Seek "" works now as in CA-Cl*pper
      * Added processing of DBOI_NAME to ntxOrderInfo, so Ordname() works now.
 
 2001-06-17 22:50 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
@@ -52212,7 +52231,7 @@ NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
      + hb_ntxReadBuf()
        * read buffering
      * Index creating is fully rewritten.
-       Now DBFNTX creates good balanced B-trees ( as CA-Clipper )
+       Now DBFNTX creates good balanced B-trees ( as CA-Cl*pper )
        and works faster than before.
 
 2001-03-04 16:40 UTC-0800 Ron Pinkas <ron@profit-master.com>
@@ -52889,7 +52908,7 @@ NOTE: there is no hb_gcLockItem/hb_gcUnlockItem functions - please remove
 
 2001-02-06 12:00 GMT+3 Alexander Kresin <alex@belacy.belgorod.su>
    * harbour/source/rdd/dbfntx/dbfntx1.c
-     * fixed problem with correct movement via CA Clipper created ntx file
+     * fixed problem with correct movement via CA-Cl*pper created ntx file
 
 2001-02-05 16:15 UTC-0500 David G. Holm <dholm@jsd-llc.com>
   * source/compiler/harbour.l
@@ -55529,7 +55548,7 @@ tion/deletion
      + Added new header files.
 
    * source/compiler/hbusage.c
-     ! Made even more CA-Clipper like.
+     ! Made even more CA-Cl*pper like.
 
    * source/rdd/dbsort.prg
      % Minor opt.
@@ -58071,7 +58090,7 @@ NOTICE: static HB_ITEM structures cannot be initialized with hb_itemClear()
    * source/rtl/Makefile
    * makefile.bc
    * makefile.vc
-     * DISKSPACE() made 100% CA-Clipper compatible, so that the second optional
+     * DISKSPACE() made 100% CA-Cl*pper compatible, so that the second optional
        extension parameter was removed. The UNIX support has been removed
        since the first parameter should always be a numeric value.
      + HB_DISKSPACE() extension function added, with the optional second
@@ -58202,7 +58221,7 @@ NOTICE: static HB_ITEM structures cannot be initialized with hb_itemClear()
    * source/rtl/Makefile
    * makefile.bc
    * makefile.vc
-     + Added all the missing undocumented GT API calls found in CA-Clipper 5.x.
+     + Added all the missing undocumented GT API calls found in CA-Cl*pper 5.x.
        The implementation is still missing, but now there's a dummy skeleton
        for them.
 
@@ -63134,7 +63153,7 @@ NOTE:
 
    * source/rtl/gtapi.c
      + hb_gtGetColorStr() readded the previous version of colorspec generation
-       and put the CA-Clipper compatible one between STRICT guards.
+       and put the CA-Cl*pper compatible one between STRICT guards.
        (Talking about the "W+*/GR" vs. "W+/GR*" issue.)
 
 20000411-20:30 GMT -3 Luiz Rafael Culik <culik@sl.conex.net
@@ -63850,7 +63869,7 @@ NOTE:
        is equivalent to CA-Cl*pper.
      + TGetList class separated from the GETSYS procedural (compatibility)
        interface. This way it's possible to override the GETSYS, READVAR or
-       TGETLIST modules at link time just like in CA-Clipper.
+       TGETLIST modules at link time just like in CA-Cl*pper.
 
    * source/rtl/tgetlist.prg
      ! GetP*Validate() - Fixed.
@@ -63875,7 +63894,7 @@ NOTE:
 
        Platform        Filename      Size      Passes Failures Total Time
        --------------- ------------- --------- ------ -------- ----- ----
-       CA-Clipper 5.2e hbtest5x.exe    504.832   2976       25  3001 ~1 s
+       CA-Cl*pper 5.2e hbtest5x.exe    504.832   2976       25  3001 ~1 s
        Harbour (BCC55) hbtest.exe      566.272   3186       82  3268 ~4 s
        Xbase++ 1.10    hbtestxp.exe  1.375.232   1977      771  2748 ~2 s
 
@@ -65055,7 +65074,7 @@ NOTE:
    + contrib/hbclip/make_clp.bat
    + contrib/hbclip/readme.txt
 
-     + Harbour Compatibility Library for CA-Clipper 5.x/'87 contribution
+     + Harbour Compatibility Library for CA-Cl*pper 5.x/'87 contribution
        started.
      + STOD(), HB_VALTOSTR(), HB_KEYPUT(), HB_COLORINDEX() functions added.
      + Some functions from hbclip.ch also added to the library so that the
@@ -67252,7 +67271,7 @@ NOTE:
    * source/pp/hbppint.c
    * source/pp/hbpp.c
      * corrected .ppo output - removed empty lines in #include files, as
-       CA-Clipper does it
+       CA-Cl*pper does it
 
 20000220-14:30 GMT+1 Victor Szakats <info@szelvesz.hu>
    * ../FT_HELPC.PRG
@@ -68562,10 +68581,10 @@ NOTE:
 
 20000125-10:05 GMT+2 Chen Kedem <niki@synel.co.il>
   * source/rtl/arrays.c
-    - remove documentation stolen from CA-Clipper 5.2 NG from the following
+    - remove documentation stolen from CA-Cl*pper 5.2 NG from the following
       functions: ARRAY(), AADD(), ASIZE(), ATAIL(), AINS(), ADEL(), AFILL(),
                  ASCAN()
-    - remove $EXAMPLES$ stolen from CA-Clipper 5.2 NG from the following
+    - remove $EXAMPLES$ stolen from CA-Cl*pper 5.2 NG from the following
       function: ACOPY(), ACLONE()
     + ACLONE() : add $COMPLIANCE$ note
 
@@ -70160,7 +70179,7 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 
    * rt_misc.prg
      + Corrected comments regarding Nation functions to specify if they
-       apply to the US or International editions of CA-Clipper 5.2e.
+       apply to the US or International editions of CA-Cl*pper 5.2e.
 
 19991123-01:09 GMT+1 Victor Szel <info@szelvesz.hu>
   * source/rtl/math.c
@@ -70189,11 +70208,11 @@ Wed Nov 24 12:45:36 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991122-17:10 EDT David G. Holm <dholm@jsd-llc.com>
 
    * rt_misc.prg
-     + Added a comment that Nations functions don't exist in CA-Clipper 5.2e.
+     + Added a comment that Nations functions don't exist in CA-Cl*pper 5.2e.
      ! Added #infdef __CLIPPER__ around Nationmsg(200) test, which causes a
-       GPF with CA-Clipper 5.3b (with Exospace).
+       GPF with CA-Cl*pper 5.3b (with Exospace).
      + Changed comments to indicate IsAffirm() and IsNegative() GPF with
-       CA-Clipper 5.3b (with Exospace) (they don't even exist in 5.2e).
+       CA-Cl*pper 5.3b (with Exospace) (they don't even exist in 5.2e).
 
 19991122-16:45 EDT David G. Holm <dholm@jsd-llc.com>
 
@@ -71024,7 +71043,7 @@ Tue Nov 09 11:56:05 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991109-01:58 GMT+1 Victor Szel <info@szelvesz.hu>
   * samples/Makefile
     samples/cccppc/*.*
-    + Fully CA-Clipper 5.x compatible PP written in Clipper added to the
+    + Fully CA-Cl*pper 5.x compatible PP written in Clipper added to the
       samples directory. It also has a special object system (SmallTalk like
       if I'm not mistaken), and it's a good test for the Harbour compiler.
       Note that Harbour can't yet compile it, due to hangs in several .PRG.
@@ -73452,7 +73471,7 @@ Thu Oct 14 17:29:32 1999  Gonzalo A. Diethelm  <Gonzalo.Diethelm@jda.cl>
 19991005-23:20 EDT Paul Tucker <ptucker@sympatico.ca>
   + include/harbour.ch
     * This file is meant as a repository of defines or translations needed
-      to allow CA-Clipper to compile programs that take advantage of any
+      to allow CA-Cl*pper to compile programs that take advantage of any
       Harbour specific extensions or additions to the language.
       Currently, it only handles a substitute for HB_OsNewLine()
 
@@ -74285,7 +74304,7 @@ NOTE: You have to recompile all PRG sources!
 
   * source/rtl/extend.c
     ! Fixed hb_stor*() functions to handle arrays with the -1 parameter like
-      in CA-Clipper. Thanks to Janica Lubos <janica@fornax.elf.stuba.sk>
+      in CA-Cl*pper. Thanks to Janica Lubos <janica@fornax.elf.stuba.sk>
 
 19990923-10:55 GMT+1 Victor Szel <info@szelvesz.hu>
 
@@ -74548,7 +74567,7 @@ NOTE: You have to recompile all PRG sources!
 19990919-06:21 GMT+1 Victor Szel <info@szelvesz.hu>
 
   * source/vm/hvm.c
-    + Added support for CA-Clipper undocumented _APPMAIN starting function,
+    + Added support for CA-Cl*pper undocumented _APPMAIN starting function,
       if this is defined, Harbour will start it first, overriding the default
       starting proc.
     ! Fixed the case when no PUBLIC functions were declared with no
@@ -75752,7 +75771,7 @@ NOTE: You have to recompile all PRG sources!
 
 19990912-00:45 EDT David G. Holm <dholm@jsd-llc.com>
   * source/rtl/dir.c
-    ! Changed file size array element to numeric to match CA-Clipper.
+    ! Changed file size array element to numeric to match CA-Cl*pper.
   * tests/working/dirtest.prg
     + Added 'SET CENTURY ON'.
     - Removed padding from size array element.
@@ -76131,7 +76150,7 @@ NOTE: You have to recompile all PRG sources!
       allocated for the item pointer table. ASIZE({ "A", "B" }, 0) could
       show the problem.
     + ARRAY() now supprt multiple dimensions. Code based on hb_vmArrayNew().
-    ! Array functions error handling behaviour made completely CA-Clipper
+    ! Array functions error handling behaviour made completely CA-Cl*pper
       compatible.
     ! ARRAY() could GPF on an error condition.
     ! AADD() checks if the second parameter is not NULL.
@@ -76244,7 +76263,7 @@ NOTE: You have to recompile all PRG sources!
   * tests/working/rtl_test.prg
     ! Fixed the expected results of two math functions to the mathematically
       correct ones.
-    + Added some AllTrim() tests which brings CA-Clipper 5.2e to it's knees.
+    + Added some AllTrim() tests which brings CA-Cl*pper 5.2e to it's knees.
       Harbour handles them fine.
   * include/hbdefs.h
     source/rtl/filesys.c
@@ -76580,7 +76599,7 @@ NOTE: You have to recompile all PRG sources!
     ! hb_rddShutDown() fixed a possible GPF if there was no rddSetDefault()
       calls at all (when RDDSYS was overridden by a dummy one).
   * source/rtl/setkey.prg
-    * Not CA-Clipper compatible functions (extensions) renamed to avoid
+    * Not CA-Cl*pper compatible functions (extensions) renamed to avoid
       possible collision with existing code:
       SETKEYGET()   -> HB_SETKEYGET()
       SETKEYSAVE()  -> HB_SETKEYSAVE()
@@ -78032,7 +78051,7 @@ NOTE: You have to recompile all PRG sources!
     * Some reformatting.
 
   * tests/working/rtl_test.prg
-    + CA-Clipper bugs documented somewhat better.
+    + CA-Cl*pper bugs documented somewhat better.
 
   * source/rtl/dates.c
     source/rtl/dir.c
@@ -79055,8 +79074,8 @@ NOTE: You have to recompile all PRG code!
   * source/rtl/itemapi.c
     ! hb_evalNew() is no longer making a copy of the passed block/name
       parameters, so hb_evalRelease() will properly release that item.
-      Although not exactly defined in CA-Clipper NG, the example program
-      suggest that it works like this. CA-Clipper example generated unreleased
+      Although not exactly defined in CA-Cl*pper NG, the example program
+      suggest that it works like this. CA-Cl*pper example generated unreleased
       blocks in Harbour.
     % Some variable scopes optimized.
 

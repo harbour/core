@@ -2,7 +2,7 @@
  * $Id$
  */
 
-*+膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊
+*+--------------------------------------------------------------------
 *+
 *+    Source Module => pickfile.prg
 *+
@@ -39,10 +39,10 @@
 *+
 *+    Reformatted by Click! 2.03 on Mar-30-1999 at 11:19 pm
 *+
-*+膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊
+*+--------------------------------------------------------------------
 
 /*
-   PICKFILE.PRG
+   pickfile.prg
 
    Author     : Phil Barnett
 
@@ -77,14 +77,14 @@
 #endif
 #include "directry.ch"
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 *+    Function pickfile()
 *+
 *+    Called from ( makelink.prg )   1 - function makelink()
 *+                ( pbinit.prg   )   1 - procedure pbinit()
 *+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
+*+--------------------------------------------------------------------
 *+
 function pickfile( cFileSpec )
 
@@ -136,7 +136,7 @@ if len( aFiles ) > 0
 /*   aeval( aFiles, { | xx | aadd( aPickList, ;
           xx)} )*/
 
-   sel := achoice( 9, 20, 15, 60, aFiles )
+   sel := AChoice( 9, 20, 15, 60, aFiles )
 
    cRetVal := iif( lastkey() == 27, '', substr(aFiles[ sel ],1,at(' ',afiles[sel])-1) )
 

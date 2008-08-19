@@ -385,7 +385,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This command is CA Clipper compliant
+ *      This command is CA-Cl*pper compliant
  *  $SEEALSO$
  *   @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
  *  $END$

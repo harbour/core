@@ -12,7 +12,7 @@
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: FOPEN(), FCLOSE(), FWRITE(), FSEEK(), FREAD(), FILE(),
  *                       FREADSTR(), FRENAME(), FERROR(), RENAME, ERASE, CURDIR(),
- *                       DIRMAKE(),DIRCHANGE(),ISDISK(),DIRREMOVE(),DISKCHANGE(),
+ *                       DIRMAKE(), DIRCHANGE(), ISDISK(), DIRREMOVE(), DISKCHANGE(),
  *                       DIRCHANGE()
  *
  * Copyright 2000 David G. Holm <Harbour@SpaceMoose.com>
@@ -231,13 +231,13 @@
  *      The disk write begins with the current file position in <nHandle>. If
  *      this variable is not used, the entire contents of <cBuffer> is written
  *      to the file.
- *      To truncate a file. a call of FWRITE( nHandle, "", 0 ) is needed.
+ *      To truncate a file, a call of FWRITE( nHandle, "", 0 ) is needed.
  *  $EXAMPLES$
- *      nHandle:=FCREATE('x.txt')
- *      FOR X:=1 to 10
- *        FWRITE(nHandle,STR(x))
+ *      nHandle := FCREATE( "x.txt" )
+ *      FOR X := 1 TO 10
+ *        FWRITE( nHandle, STR( x ) )
  *      NEXT
- *      FCLOSE(nHandle)
+ *      FCLOSE( nHandle )
     </fixed>
  *  $STATUS$
  *      R
@@ -247,7 +247,7 @@
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *      FCLOSE(),FCREATE(),FERROR(),FOPEN(),I2BIN(),L2BIN()
+ *      FCLOSE(), FCREATE(), FERROR(), FOPEN(), I2BIN(), L2BIN()
  *  $END$
  */
 
@@ -288,13 +288,13 @@
  *  $DESCRIPTION$
  *      After every low-level file function,this function will return
  *      a value that provides additional informationon the status of
- *      the last low-level file functions's performance.If the FERROR()
- *      function returns a 0, no error was detected.Below is a table
+ *      the last low-level file functions's performance. If the FERROR()
+ *      function returns a 0, no error was detected. Below is a table
  *      of possibles values returned by the FERROR() function.
  *  $EXAMPLES$
- *      #include "Fileio.ch"
+ *      #include "fileio.ch"
  *      //
- *      nHandle := FCREATE("Temp.txt", FC_NORMAL)
+ *      nHandle := FCREATE( "temp.txt", FC_NORMAL )
  *      IF FERROR() != 0
  *         ? "Cannot create file, DOS error ", FERROR()
  *      ENDIF
@@ -361,13 +361,13 @@
  *      This function deletes the file specified in <cFile> from the disk.
  *      No extensions are assumed. The drive and path my be included in
  *      <cFile>; neither the SET DEFAULT not the SET PATH command controls
- *      the performance of this function.If the drive or path is not used,
+ *      the performance of this function. If the drive or path is not used,
  *      the function will look for the file only on the currently selected
  *      direcytory on the logged drive.
  *
  *      If the function is able to successfully delete the file from the
  *      disk, the value of the function will be 0; otherwise a -1 will
- *      be returned.If not successfu, aditional information may be
+ *      be returned. If not successfu, aditional information may be
  *      obtained by calling the FERROR() function.
  *
  *      Note: Any file to be removed by FERASE() must still be closed.
@@ -422,14 +422,14 @@
  *      or by the DOS PATH statement.
 
  *      If the file specified in <cNewFile> exists or the file is open,
- *      the function will be unable to rename the file.If the function
+ *      the function will be unable to rename the file. If the function
  *      is unable to complete its operation,it will return a value of -1.
  *      If it is able to rename the file, the return value for the function
- *      will be 0.A call to FERROR() function will give additional infor-
+ *      will be 0. A call to FERROR() function will give additional infor-
  *      mation about any error found.
  *  $EXAMPLES$
- *      nResult:=FRENAME("x.txt","x1.txt")
- *      IF nResult <0
+ *      nResult := FRENAME( "x.txt", "x1.txt" )
+ *      IF nResult < 0
  *         ? "File could not be renamed."
  *      ENDIF
  *      </fixed>
@@ -472,7 +472,7 @@
  *      or FCREATE() function.
 
  *      The value of <nOffSet> is the number of bytes to move the file pointer
- *      from the position determined by <nOrigin>.The value of <nOffset> may
+ *      from the position determined by <nOrigin>. The value of <nOffset> may
  *      be a negative number, suggesting backward movement.
 
  *      The value of <nOrigin> designates the starting point from which the
@@ -628,8 +628,8 @@
 
  *      <cNewFile> New Filename
  *  $DESCRIPTION$
- *      This command changes the name of <cOldFile> to <cNewFile>.Both
- *      <cOldFile> and <cNewFile> must include a file extension.This command
+ *      This command changes the name of <cOldFile> to <cNewFile>. Both
+ *      <cOldFile> and <cNewFile> must include a file extension. This command
  *      if not affected by the SET PATH TO or SET DEFAULT TO commands;drive
  *      and directoy designaters must be specified if either file is in a
  *      directory other then the default drive and directory.
@@ -637,7 +637,7 @@
  *      If <cNewFile> id currently open or if it previously exists, this
  *      command will not perform the desired operation.
  *  $EXAMPLES$
- *      RENAME c:\autoexec.bat to c:\autoexec.old
+ *      RENAME C:\autoexec.bat TO C:\autoexec.old
  *      </fixed>
  *  $STATUS$
  *      R
@@ -662,23 +662,23 @@
  *  $ARGUMENTS$
  *      <xcFile> Name of file to remove
  *  $DESCRIPTION$
- *      This command removes a file from the disk.The use of a drive,directo-
- *      ry,and wild-card skeleton operator is allowed for the root of the
- *      filename.The file extension is required.The SET DEFAULT and SET PATH
+ *      This command removes a file from the disk. The use of a drive,directo-
+ *      ry, and wild-card skeleton operator is allowed for the root of the
+ *      filename. The file extension is required. The SET DEFAULT and SET PATH
  *      commands do not affect this command.
 
  *      The file must be considered closed by the operating system before it
  *      may be deleted.
  *  $EXAMPLES$
- *      Erase c:\autoexec.bat
- *      Erase c:/temp/read.txt
+ *      ERASE C:\autoexec.bat
+ *      ERASE C:/temp/read.txt
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This command is CA-Cl*pper compatible
  *  $SEEALSO$
- *      CURDIR(),FILE(),FERASE(),DELETE FILE
+ *      CURDIR(), FILE(), FERASE(), DELETE FILE
  *  $END$
  */
 
@@ -694,23 +694,23 @@
  *  $ARGUMENTS$
  *      <xcFile> Name of file to remove
  *  $DESCRIPTION$
- *      This command removes a file from the disk.The use of a drive,directo-
+ *      This command removes a file from the disk. The use of a drive,directo-
  *      ry,and wild-card skeleton operator is allowed for the root of the
- *      filename.The file extension is required.The SET DEFAULT and SET PATH
+ *      filename. The file extension is required. The SET DEFAULT and SET PATH
  *      commands do not affect this command.
 
  *      The file must be considered closed by the operating system before it
  *      may be deleted.
  *  $EXAMPLES$
- *      Erase c:\autoexec.bat
- *      Erase c:/temp/read.txt
+ *      ERASE C:\autoexec.bat
+ *      ERASE C:/temp/read.txt
  *  </fixed>
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      This command is CA-Cl*pper compatible
  *  $SEEALSO$
- *      CURDIR(),FILE(),FERASE(),ERASE
+ *      CURDIR(), FILE(), FERASE(), ERASE
  *  $END$
  */
 
@@ -851,14 +851,14 @@
  *      <cPath> Name of directory
  *  $DESCRIPTION$
  *      This function yields the name of the current OS directory on a
- *      specified drive.If <cDrive> is not speficied,the currently logged
+ *      specified drive. If <cDrive> is not speficied, the currently logged
  *      drive will be used.
 
  *      This function should not return the leading and trailing
  *      (back)slashes.
 
- *      If an error has been detected by the function,or the current OS
- *      directory is the root,the value of the function will be a NULL
+ *      If an error has been detected by the function, or the current OS
+ *      directory is the root, the value of the function will be a NULL
  *      byte.
  *  $EXAMPLES$
  *      ? Curdir()
@@ -892,12 +892,12 @@
  *      This command makes an exact copy of <cFile> and names it <cFile1>.
  *      Both files must have the file extension included; the drive and the
  *      directory names must also be specified if they are different from
- *      the default drive and/or director.<cFile1> also can refer to a OS
- *      device (e.g. LPT1).This command does not obsert the SET PATH TO or
+ *      the default drive and/or director. <cFile1> also can refer to a OS
+ *      device (e.g. LPT1). This command does not obsert the SET PATH TO or
  *      SET DEFAULT TO settings.
  *  $EXAMPLES$
- *      COPY FILE C:\harbour\tests\adirtest.prg to C:\temp\adirtest.prg
- *      COPY FILE C:\harbour\utils\hbdoc\gennf.prg to LPT1
+ *      COPY FILE C:\harbour\tests\adirtest.prg TO C:\temp\adirtest.prg
+ *      COPY FILE C:\harbour\utils\hbdoc\gennf.prg TO LPT1
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -921,18 +921,18 @@
  *  $RETURNS$
  *      <lIsEof> .T. if the file handle is at end-of-file, otherwise .F.
  *  $DESCRIPTION$
- *      This function checks an open file handle to see if it is at E-O-F.
+ *      This function checks an open file handle to see if it is at EOF.
 
  *      If the file handle is missing, not numeric, or not open, then this
  *      function returns .T. and sets the value returned by FERROR() to -1
  *      (FS_ERROR) or a C-compiler dependent errno value (EBADF or EINVAL).
  *  $EXAMPLES$
- *      nH:=FOPEN('file.txt')
- *      ? FREADSTR(nH,80)
- *      IF HB_FEOF(nH)
- *         ? 'End-of-file reached.'
+ *      nH := FOPEN( "file.txt" )
+ *      ? FREADSTR( nH, 80 )
+ *      IF HB_FEOF( nH )
+ *         ? "End-of-file reached."
  *      ELSE
- *         ? FREADSTR(nH,80)
+ *         ? FREADSTR( nH, 80 )
  *      ENDIF
  *  $STATUS$
  *      R
@@ -964,22 +964,22 @@
  *      If this function fail, the it will return the last OS error code number.
  *      See FERROR() function for the description of the error.
  *  $EXAMPLES$
- *      cDir:= ".\Backup"
- *      if (DIRREMOVE(cDir)==0)
- *          ? "Remove of directory",cDir, "was successfull"
+ *      cDir:= ".\backup"
+ *      if DIRREMOVE( cDir ) == 0
+ *          ? "Remove of directory", cDir, "was successfull"
  *      endif
  *  $TESTS$
  *      See examples
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper 5.3 compliant
+ *      This function is CA-Cl*pper 5.3 compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *      MAKEDIR(),DIRCHANGE(),ISDISK(),DISKCHANGE(),DISKNAME(),FERROR()
+ *      MAKEDIR(), DIRCHANGE(), ISDISK(), DISKCHANGE(), DISKNAME(), FERROR()
  *  $END$
  */
 
@@ -999,11 +999,11 @@
  *      the number of the last error.
  *  $DESCRIPTION$
  *      This function attempt to change the current directory to the one
- *      specidied in <cDirectory>.If this function fail, the it will return
- *      the last OS error code number.See FERROR() function for the
+ *      specidied in <cDirectory>. If this function fail, the it will return
+ *      the last OS error code number. See FERROR() function for the
  *      description of the error.
  *  $EXAMPLES$
- *      if (DIRCHANGE("\temp")==0)
+ *      if DIRCHANGE( "\temp" ) == 0
  *          ? "Change to diretory was successfull"
  *      endif
  *  $TESTS$
@@ -1011,13 +1011,13 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper 5.3 compliant
+ *      This function is CA-Cl*pper 5.3 compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *      MAKEDIR(),DIRREMOVE(),ISDISK(),DISKCHANGE(),DISKNAME(),FERROR()
+ *      MAKEDIR(), DIRREMOVE(), ISDISK(), DISKCHANGE(), DISKNAME(), FERROR()
  *  $END$
  */
 
@@ -1037,26 +1037,26 @@
  *      the number of the last error.
  *  $DESCRIPTION$
  *      This function attempt to create a new directory with the name contained
- *      in <cDirectory>.If this function fail, the it will return the last OS
- *      error code number.See FERROR() function for the description of the
+ *      in <cDirectory>. If this function fail, the it will return the last OS
+ *      error code number. See FERROR() function for the description of the
  *      error
  *  $EXAMPLES$
- *      cDir:= "Temp"
- *      If (MAKEDIR( cDir)==0)
- *          ? "Directory ",cDir," successfully created
+ *      cDir := "temp"
+ *      If MAKEDIR( cDir ) == 0
+ *          ? "Directory ", cDir, " successfully created
  *      Endif
  *  $TESTS$
  *      See examples
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper 5.3 compliant
+ *      This function is CA-Cl*pper 5.3 compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *      DIRCHANGE(),DIRREMOVE(),ISDISK(),DISKCHANGE(),DISKNAME(),FERROR()
+ *      DIRCHANGE(), DIRREMOVE(), ISDISK(), DISKCHANGE(), DISKNAME(), FERROR()
  *  $END$
  */
 
@@ -1075,11 +1075,11 @@
  *      <lSuccess>  .T. is the drive is ready, otherwise .F.
  *  $DESCRIPTION$
  *      This function attempts to access a drive. If the access to the drive
- *      was successfull, it will return true (.T.), otherwise false(.F.).This
+ *      was successfull, it will return true (.T.), otherwise false(.F.). This
  *      function is usefull for backup function, so you can determine if the
  *      drive that will recieve the backup data is ready or not.
  *  $EXAMPLES$
- *      IF ISDISK("A")
+ *      IF ISDISK( "A" )
  *          ? "Drive is ready "
  *      Endif
  *  $TESTS$
@@ -1087,12 +1087,12 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper 5.3 compliant
+ *      This function is CA-Cl*pper 5.3 compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$
  *      Library is rtl
  *  $SEEALSO$
- *      DIRCHANGE(),MAKEDIR(),DIRREMOVE(),DISKCHANGE(),DISKNAME()
+ *      DIRCHANGE(), MAKEDIR(), DIRREMOVE(), DISKCHANGE(), DISKNAME()
  *  $END$
  */

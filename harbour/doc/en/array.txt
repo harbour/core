@@ -159,7 +159,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -199,7 +199,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -238,7 +238,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -284,7 +284,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -382,7 +382,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -445,7 +445,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is vm
  *  $SEEALSO$
@@ -469,7 +469,7 @@
  *      array values.
  *  $DESCRIPTION$
  *      This function makes a complete copy of the array expressed as
- *      <aSource> and return a cloned set of array values.This provides
+ *      <aSource> and return a cloned set of array values. This provides
  *      a complete set of arrays values for all dimensions within the
  *      original array <aSource>
  *  $EXAMPLES$

@@ -32,11 +32,11 @@
  *      <xExpression>  The result of the evaluated code block
  *  $DESCRIPTION$
  *      This function evaluates the code bloc expressed as <bBlock> and
- *      returns its evaluated value.If their are multiple expressions within
- *      the code block,the last expression will be value of this function.
+ *      returns its evaluated value. If their are multiple expressions within
+ *      the code block, the last expression will be value of this function.
  *
  *      If the code block requires parameters to be passed to it,they are
- *      specified in the parameter list <xVal> and following.Each parameter
+ *      specified in the parameter list <xVal> and following. Each parameter
  *      is separated by a comma within the expression list.
  *  $EXAMPLES$
  *      FUNC MAIN
@@ -44,16 +44,16 @@
  *      ?  Eval( 1 )
  *      ?  Eval( @sbBlock )
  *
- *      ? Eval( {|p1| p1 },"A","B")   
- *      ? Eval( {|p1,p2| p1+p2 },"A","B") 
- *      ? Eval( {|p1,p2,p3| p1 },"A","B") 
+ *      ? Eval( {|p1| p1 },"A","B")
+ *      ? Eval( {|p1,p2| p1+p2 },"A","B")
+ *      ? Eval( {|p1,p2,p3| p1 },"A","B")
  *      Return Nil
  *  $TESTS$
  *      See examples
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is Ca Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$

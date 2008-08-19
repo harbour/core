@@ -792,5 +792,3 @@ METHOD LoadData(nPos) CLASS TODBC
    
 
 RETURN NIL
-
-*+ EOF: TODBC.PRG

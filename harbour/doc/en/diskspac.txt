@@ -64,7 +64,7 @@
  *      <cDrive> The drive letter you are requesting info on. The default
  *      is A:
 
- *      <nType> The type of space being requested.The default is HB_DISK_AVAIL.
+ *      <nType> The type of space being requested. The default is HB_DISK_AVAIL.
  *  $RETURNS$
  *      <nDiskBytes> The number of bytes on the requested disk that match the
  *      requested type.
@@ -76,9 +76,9 @@
  *      There are 4 types of information available:
  *
  *       HB_FS_AVAIL    The amount of space available to the user making the
- *                      request.  This value could be less than HB_FS_FREE if
+ *                      request. This value could be less than HB_FS_FREE if
  *                      disk quotas are supported by the O/S in use at runtime,
- *                      and disk quotas are in effect.  Otherwise, the value
+ *                      and disk quotas are in effect. Otherwise, the value
  *                      will be equal to that returned for HB_FS_FREE.
 
  *       HB_FS_FREE     The actual amount of free diskspace on the drive.
@@ -92,15 +92,15 @@
  *      If information is requested on a disk that is not available, a runtime
  *      error 2018 will be raised.
  *  $EXAMPLES$
- *      ? "You can use : " +Str( HB_DiskSpace() ) + " bytes " +;
- *        "Out of a total of " + Str( HB_DiskSpace('C:',HB_FS_TOTAL) )
+ *      ? "You can use : " + Str( HB_DiskSpace() ) + " bytes " +;
+ *        "Out of a total of " + Str( HB_DiskSpace( "C:", HB_FS_TOTAL ) )
  *
  *      Note: See tests\tstdspac.prg for another example
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      CA-Cl*pper will return an integer value which limits it's usefulness to
- *      drives less than 2 gigabytes.  The Harbour version will return a
+ *      CA-Cl*pper will return an integer value which limits its usefulness to
+ *      drives less than 2 gigabytes. The Harbour version will return a
  *      floating point value with 0 decimals if the disk is > 2 gigabytes.
  *      <nType> is a Harbour extension.
  *  $PLATFORMS$

@@ -124,7 +124,7 @@
  *     database will be given empty data values - character fields
  *     will be filled with blank spaces,date fields with CTOD('//'),
  *     numeric fields with 0,logical fields with .F., and memo fields
- *     with NULL bytes.The header of the database is not updated until
+ *     with NULL bytes. The header of the database is not updated until
  *     the record is flushed from the buffer and the contents are
  *     written to the disk.
  *
@@ -290,7 +290,7 @@
  *      DBCOMMIT() always returns NIL.
  *  $DESCRIPTION$
  *      This function updates all of the information for a give,selected,
- *      or active workarea.This operation includes all database and index
+ *      or active workarea. This operation includes all database and index
  *      buffers for that work area only. This function does not update all
  *      open work areas.
  *  $EXAMPLES$
@@ -399,7 +399,7 @@
  *      DBCREATE() always returns NIL.
  *  $DESCRIPTION$
  *      This function creates the database file specified as <cDatabase> from the
- *      multidimensional array <aStruct>.If no file extension is use with <cDatabase>
+ *      multidimensional array <aStruct>. If no file extension is use with <cDatabase>
  *      the .DBF extension is assumed.
  *      The array specified in <aStruct> must follow a few guidelines when being
  *      built prior to a call to DBCREATE():
@@ -474,7 +474,7 @@
  *      DBDELETE() always returns NIL.
  *  $DESCRIPTION$
  *      This function marks a record for deletion in the selected
- *      or aliased work area.If the DELETED setting is on, the record
+ *      or aliased work area. If the DELETED setting is on, the record
  *      will still be visible until the record pointer in that work area
  *      is moved to another record.
  *
@@ -548,7 +548,7 @@
  *      DBGOBOTTOM() always returns NIL.
  *  $DESCRIPTION$
  *      This function moves the record pointer in the selected or aliased
- *      work area to the end of the file.The position of the record pointer
+ *      work area to the end of the file. The position of the record pointer
  *      is affected by the values in the index key or by an active FILTER
  *      condition.Otherwise,if no index is active or if no filter condition
  *      is present,the value of the record pointer will be LASTREC().
@@ -586,11 +586,11 @@
  *  $DESCRIPTION$
  *      This function places the record pointer,if working with a .DBF file,
  *      in selected or aliased work area at the record number specified by
- *      <xRecordNumber>.The position if not affected by an active index or
+ *      <xRecordNumber>. The position if not affected by an active index or
  *      by any enviromental SET condiction.
  *
  *      Issuing a DBGOTO(RECNO()) call in a network enviroment will refresh
- *      the database and index buffers.This is the same as a DBSKIP(0) call.
+ *      the database and index buffers. This is the same as a DBSKIP(0) call.
  *      The parameter <xRecordNumber> may be something other than a record
  *      number.In some data formats, for example, the value of <xRecordNumber>
  *      is a unique primary key while in other formats,<xRecordNumber> could
@@ -632,7 +632,7 @@
  *      DBGOTOP() always returns NIL.
  *  $DESCRIPTION$
  *      This function moves the record pointer in the selected or aliased
- *      work area to the top of the file.The position of the record pointer
+ *      work area to the top of the file. The position of the record pointer
  *      is affected by the values in the index key or by an active FILTER
  *      condition.Otherwise,if no index is active or if no filter condition
  *      is present,the value of RECNO() will be 1.
@@ -707,9 +707,9 @@
  *      DBRLOCK() returns a logical true (.T.) if lock was successful
  *  $DESCRIPTION$
  *      This function attempts to lock a record which is indentified
- *      by <xIdentity> in the active data set.If the lock is successful
+ *      by <xIdentity> in the active data set. If the lock is successful
  *      the function will return a logical true (.T.) value;otherwise
- *      a logical false (.F.) will be returned.If <xIdentity> is not
+ *      a logical false (.F.) will be returned. If <xIdentity> is not
  *      passed it will be assumed to lock the current active record/data
  *      item.
  *  $EXAMPLES$
@@ -746,7 +746,7 @@
  *      <aRecordList> is an array of lock records
  *  $DESCRIPTION$
  *      This function will return an array of locked records in a given
- *      and active work area.If the return array is an empty array
+ *      and active work area. If the return array is an empty array
  *      (meaning no elements in it),then there are no locked record in that
  *      work area.
  *  $EXAMPLES$
@@ -790,7 +790,7 @@
  *      DBRUNLOCK() always returns NIL.
  *  $DESCRIPTION$
  *      This function will attempt to unlock the record specified as
- *      <xIdentity>,which in a .DBF format is the record number.If not
+ *      <xIdentity>,which in a .DBF format is the record number. If not
  *      specified,them the current active record/data item will be
  *      unlocked
  *  $EXAMPLES$
@@ -949,7 +949,7 @@
  *      This function returns the name of the current database driver for the
  *      selected work area. The default will be "DBFNTX". If specified,
  *      <cDriver> contains the name of the database driver that should be
- *      used to activate and manage the work area.If the specified driver is
+ *      used to activate and manage the work area. If the specified driver is
  *      not avaliable,this function will have no effect.
  *  $EXAMPLES$
  *      DBSETDRIVER("ADS")
@@ -979,7 +979,7 @@
  *      DBSKIP() always returns NIL.
  *  $DESCRIPTION$
  *      This function moves the record pointer <nRecords> in the selected or
- *      aliased work area.The default value for <nRecords> will be 1.
+ *      aliased work area. The default value for <nRecords> will be 1.
  *      A DBSKIP(0) will flush and refresh the internal database bufer and
  *      make any changes made to the record visible without moving the record
  *      pointer in either direction.
@@ -1055,9 +1055,9 @@
  *  $RETURNS$
  *      DBSTRUCT() returns an array pointer to database structure
  *  $DESCRIPTION$
- *      This function returns a multidimensional array.This array has array
+ *      This function returns a multidimensional array. This array has array
  *      pointers to other arrays,each of which contains the characteristic
- *      of a field in the active work area.The lenght of this array is based
+ *      of a field in the active work area. The lenght of this array is based
  *      in the number of fields in that particular work area.In other words,
  *      LEN(DBSTRUCT()) is equal to the value obtained from FCOUNT().
  *      Each subscript position
@@ -1096,16 +1096,16 @@
  *      DBUNLOCK() always returns NIL.
  *  $DESCRIPTION$
  *      This function releases the file or record lock in the currently
- *      selected or aliased work area.It will not unlock an associated lock
+ *      selected or aliased work area. It will not unlock an associated lock
  *      in a related databases.
  *  $EXAMPLES$
- *      nId:=10
+ *      nId := 10
  *      USE TestId INDEX TestId NEW
  *      IF TestId->(DBSEEK(nId))
  *         IF TestId->(RLOCK())
  *            DBDELETE()
  *         ELSE
- *             DBUNLOCK()
+ *            DBUNLOCK()
  *         ENDIF
  *      ENDIF
  *      USE
@@ -1150,7 +1150,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $FILES$
  *      Library is rdd
  *  $SEEALSO$
@@ -1217,4 +1217,3 @@
  *      DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
  *  $END$
  */
-

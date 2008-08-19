@@ -45,7 +45,7 @@
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
- *      This function is CA Clipper compliant
+ *      This function is CA-Cl*pper compliant
  *  $PLATFORMS$
  *      All
  *  $FILES$

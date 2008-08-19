@@ -133,10 +133,10 @@
  *      <dDate> A date expression
  *  $DESCRIPTION$
  *      This function converts a date that has been entered as a character
- *      expression to a date expression.The character expression will be in
+ *      expression to a date expression. The character expression will be in
  *      the form "MM/DD/YY" (based on the default value in SET DATE) or in
  *      the appropriate format specified by the SET DATE TO command. If an
- *      improper character string is passed to the function,an empty date
+ *      improper character string is passed to the function, an empty date
  *      value will be returned.
  *  $EXAMPLES$
  *      ? CTOD('12/21/00')
@@ -403,8 +403,8 @@
  *  $DESCRIPTION$
  *      This function returns a numeric value representing the number of
  *      elapsed seconds based on the current system time.
- *      The system time is considered to start at 0 (midnight);it continues
- *      up to 86399 seconds.The value of the return expression is displayed
+ *      The system time is considered to start at 0 (midnight); it continues
+ *      up to 86399 seconds. The value of the return expression is displayed
  *      in both seconds and hundredths of seconds.
  *  $EXAMPLES$
  *      ? Seconds()
@@ -519,4 +519,3 @@
  *      DAY(),MONTH()
  *  $END$
  */
-

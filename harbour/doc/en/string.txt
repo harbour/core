@@ -301,7 +301,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This functions is CA CLIPPER compatible
+ *      This functions is CA-Cl*pper compatible
  *  $PLATFORMS$
  *      All
  *  $FILES$
@@ -339,7 +339,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This functions is CA CLIPPER compatible
+ *      This functions is CA-Cl*pper compatible
  *  $PLATFORMS$
  *      All
  *  $FILES$
