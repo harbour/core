@@ -35,7 +35,7 @@
  *      lAlpha Logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
  *      This function return a logical true (.T.) if the first character
- *      in <cString> is an alphabetic character.If not, the function will
+ *      in <cString> is an alphabetic character. If not, the function will
  *      return a logical false (.F.).
  *  $EXAMPLES$
  *      QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) )
@@ -69,8 +69,8 @@
  *      lDigit Logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
  *      This function takes the caracter string <cString> and checks to
- *      see if the leftmost character is a digit,from 1 to 9.If so, the
- *      function will return a logical true (.T.);otherwise, it will
+ *      see if the leftmost character is a digit, from 1 to 9. If so, the
+ *      function will return a logical true (.T.); otherwise, it will
  *      return a logical false (.F.).
  *  $EXAMPLES$
  *      ? ISDIGIT( '12345' )      // .T.
@@ -104,8 +104,8 @@
  *      lUpper Logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
  *      This function takes the caracter string <cString> and checks to
- *      see if the leftmost character is a uppercased letter.If so, the
- *      function will return a logical true (.T.);otherwise, it will
+ *      see if the leftmost character is a uppercased letter. If so, the
+ *      function will return a logical true (.T.); otherwise, it will
  *      return a logical false (.F.).
  *  $EXAMPLES$
  *      ? ISUPPER( 'Abcde' )    // .T.
@@ -139,8 +139,8 @@
  *      lLower Logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
  *      This function takes the caracter string <cString> and checks to
- *      see if the leftmost character is a lowercased letter.If so, the
- *      function will return a logical true (.T.);otherwise, it will
+ *      see if the leftmost character is a lowercased letter. If so, the
+ *      function will return a logical true (.T.); otherwise, it will
  *      return a logical false (.F.).
  *  $EXAMPLES$
  *      ? islower( 'ABCde' )      // .F.
@@ -214,7 +214,7 @@
  *  $DESCRIPTION$
  *      This function searches the string <cString> for the characters in
  *      the first string <cSearch>. If the substring is not contained within
- *      the second expression,the function will return 0. The third and fourth
+ *      the second expression, the function will return 0. The third and fourth
  *      parameters lets you indicate a starting and end offset to search in.
  *  $EXAMPLES$
  *      QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" +;
@@ -937,7 +937,7 @@
  *      of <xVal> will be a blank space. This character may be explicitly
  *      specified the value of <cFill>.
  *
- *      If the lenght of <xVal> is longer then <nWidth>,this function will
+ *      If the lenght of <xVal> is longer then <nWidth>, this function will
  *      truncate the string <xVal> from the leftmost side to the lenght of
  *      <nWidth>.
  *  $EXAMPLES$
@@ -980,10 +980,10 @@
  *      This function takes an date,number,or character expression <xVal>
  *      and attempt to left-justify it within a string of a given width
  *      expressed as <nWidth>.The default character used to pad left side
- *      of <xVal> will be an blank space;however,this character may be
+ *      of <xVal> will be an blank space; however, this character may be
  *      explicitly specified the value of <cFill>.
  *
- *      If the lenght of <xVal> is longer then <nWidth>,this function will
+ *      If the lenght of <xVal> is longer then <nWidth>, this function will
  *      truncate the string <xVal> from the leftmost side to the lenght of
  *      <nWidth>.
  *  $EXAMPLES$
@@ -1026,10 +1026,10 @@
  *      This function takes an date,number,or character expression <xVal>
  *      and attempt to right-justify it within a string of a given width
  *      expressed as <nWidth>.The default character used to pad right side
- *      of <xVal> will be an blank space;however,this character may be
+ *      of <xVal> will be an blank space;however, this character may be
  *      explicitly specified the value of <cFill>.
  *
- *      If the lenght of <xVal> is longer then <nWidth>,this function will
+ *      If the lenght of <xVal> is longer then <nWidth>, this function will
  *      truncate the string <xVal> from the leftmost side to the lenght of
  *      <nWidth>.
  *  $EXAMPLES$
@@ -1105,7 +1105,7 @@
  *      removed.
  *
  *      This function is indentical to RTRIM() and the opposite of LTRIM().
- *      Together with LTRIM(),this function equated to the ALLTRIM()
+ *      Together with LTRIM(), this function equated to the ALLTRIM()
  *      function.
  *  $EXAMPLES$
  *      ? RTRIM( "HELLO" )              //  "HELLO"
@@ -1145,7 +1145,7 @@
  *      removed.
  *
  *      This function is indentical to RTRIM() and the opposite of LTRIM().
- *      Together with LTRIM(),this function equated to the ALLTRIM()
+ *      Together with LTRIM(), this function equated to the ALLTRIM()
  *      function.
  *  $EXAMPLES$
  *      ? TRIM( "HELLO" )     //  "HELLO"
@@ -1338,13 +1338,13 @@
  *      <cReturn>  Formated string
  *  $DESCRIPTION$
  *      This function searches for any occurence of <cLocString> in <cString>
- *      and replacesit with <cRepString>.If <cRepString> is not specified, a
+ *      and replacesit with <cRepString>. If <cRepString> is not specified, a
  *      NULL byte will replace <cLocString>.
  *
- *      If <nPos> is used,its value defines the first occurence to be
- *      replaced.The default value is 1.Additionally,if used,the value of
+ *      If <nPos> is used, its value defines the first occurence to be
+ *      replaced.The default value is 1.Additionally, if used, the value of
  *      <nOccurences> tell the function how many occurrences of <cLocString>
- *      in <cString> are to the replaced.The default of <nOccurences> is
+ *      in <cString> are to the replaced. The default of <nOccurences> is
  *      all occurrences.
  *  $EXAMPLES$
  *      ? STRTRAN( "Harbour  Power", "  ", " " )   // Harbour Power
@@ -1396,8 +1396,8 @@
  *         and the template string if they are used in conjunction with
  *         one another.
  *
- *       - Second,if both components make up the value of <cTemplate>,the
- *         function string must precede the template string.Otherwise,the
+ *       - Second, if both components make up the value of <cTemplate>, the
+ *         function string must precede the template string.Otherwise, the
  *         function string may appear with out the template string and
  *         vice versa.
  *

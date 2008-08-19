@@ -46,7 +46,7 @@
  *  $DESCRIPTION$
  *      Este comando imprime un informe ¢ reporte llamado <cNombreReporte>,
  *      el cual es un archivo estandar FRM. La extensi¢n del archivo no es
- *      necesaria porque la extensi¢n .FRM es asumida por defecto.
+ *      necesaria porque la extensi¢n .frm es asumida por defecto.
  *      Los comandos SET PATH TO y SET DEFAULT TO afectan la b£squeda del
  *      archivo <cNombreReporte>; a menos que la unidad de disco y el path
  *      sean especificados en <cNombreReporte>, REPORT buscar  dentro del

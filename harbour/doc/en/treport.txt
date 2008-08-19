@@ -41,7 +41,7 @@
  *      NIL
  *  $DESCRIPTION$
  *      This command prints out the report named <cReportName>, which is a
- *      standard FRM file. The file extension is not required because FRM
+ *      standard FRM file. The file extension is not required because .frm
  *      will be assumed. The SET PATH TO and SET DEFAULT TO commands affect
  *      the search for the file <cReportName>; unless a drive and path are
  *      specified in <cReportName>, REPORT will search the path specified in

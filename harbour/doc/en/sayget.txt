@@ -79,7 +79,7 @@
  *      also be date data types; if <xVar> is a numeric data type <xStart>
  *      and <xEnd> must also be numeric data types. If a value fails the
  *      RANGE test ,a message of OUT OF RANGE will appear in the SCOREBOARD
- *      area (row = 0, col = 60).The RANGE message may be turned off it the
+ *      area (row = 0, col = 60). The RANGE message may be turned off it the
  *      SET SCOREBOARD command or SET() function appropriately toggled.
  *
  *      NOTE       GET functions/formatting rules:

@@ -714,7 +714,7 @@
  *  $DESCRIPTION$
  *      This function returns the position of the record pointer in the
  *      currently selected ot designated work area.
- *      If the database file is empty and if the RDD is the traditional .DBF
+ *      If the database file is empty and if the RDD is the traditional .dbf
  *      file, the value of this function will be 1.
  *  $EXAMPLES$
  *      USE Tests NEW

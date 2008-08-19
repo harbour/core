@@ -8,6 +8,23 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-19 17:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * doc/en/string.txt
+   * doc/en/rddord.txt
+   * doc/en/treport.txt
+   * doc/en/memvar2.txt
+   * doc/en/terminal.txt
+   * doc/en/rddmisc.txt
+   * doc/en/setmode.txt
+   * doc/en/rdddb.txt
+   * doc/en/tbrowse.txt
+   * doc/en/set.txt
+   * doc/en/sayget.txt
+   * doc/es/treport.txt
+   * ChangeLog
+   * utils/hbtest/rt_misc.prg
+     * More cleanups, formatting (filename casing, CA-Cl*pper, etc).
+
 2008-08-19 16:16 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/en/diskspac.txt
    * doc/en/string.txt
@@ -46973,13 +46990,13 @@ e.vc
  source/rtl/Makefile
   + Scrollbr.prg and Listbox.prg to dependecie list
 +source/rtl/listbox.prg
-  * Ca-Clipper 5.3 compatible listbox Class
+  * CA-Cl*pper 5.3 compatible listbox Class
 +source/rtl/scrollbr.prg
-   * Ca-Clipper 5.3 compatible scroll bar Class
+   * CA-Cl*pper 5.3 compatible scroll bar Class
 *source/rtl/checkbox.prg
    *small change to isdefcolor function
 * Todo.txt
-   Remove the Ca-clipper 5.3 classes entried
+   Remove the CA-Cl*pper 5.3 classes entried
 
 
 2001-09-09 21:00 MEST Martin Vogel <vogel@inttec.de>
@@ -47512,7 +47529,7 @@ e.vc
 
 2001-08-24 22:15 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +source/rtl/pushbtn.prg
-      *Push Button Class Compatible with Ca-Clipper 5.3
+      *Push Button Class Compatible with CA-Cl*pper 5.3
    *hb_slex.bc
     makefile.bc
     hb_slex.vc
@@ -47762,7 +47779,7 @@ e.vc
 
 2001-08-19 10:40 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +source/rdd/dbfuncs.prg
-     * Code for Ca-Clipper MApper DB function to 10 characters
+     * Code for CA-Cl*pper MApper DB function to 10 characters
      The follow functions were mapped:
      DBCLEARFIL(),DBSETDRIVE(),DBSETRELAT(),DBRLOCKLIS(),DBCLOSEARE()
      RDDSETDEFA(),DBSELECTAR(),DBUNLOCKAL(),DBCLEARREL(),DBSETFILTE()
@@ -48540,9 +48557,9 @@ e.vc
    +include/hbgetcmt.ch
       *Include file for Ca-Clippr 5.3 Get Compatible Controls
    +source/rtl/radiobtn.prg
-      *Radio Button Class Compatible with Ca-Clipper 5.3
+      *Radio Button Class Compatible with CA-Cl*pper 5.3
    +source/rtl/radiogrp.prg
-      *Radio Group Class Compatible with Ca-Clipper 5.3
+      *Radio Group Class Compatible with CA-Cl*pper 5.3
    *tests/tstchbx.prg
       *Updated to demostrate the work of RadioButton/RadioGroup Classes
    *hb_slex.bc
@@ -48604,9 +48621,9 @@ e.vc
 
 2001-07-20 20:00 GMT -3 Luiz Rafael Culik <culik@sl.conex.net>
    +source/rtl/checkbox.prg
-      *CheckBox Class Compatible with Ca-Clipper 5.3
+      *CheckBox Class Compatible with CA-Cl*pper 5.3
    *source/rtl/getsys.prg
-      +Added the follow function For compatibility with Ca-Clipper 5.3: GUIReader(),GuiApplyKey(),GuiGetPreValidate(),GuiGetPostValidate()
+      +Added the follow function For compatibility with CA-Cl*pper 5.3: GUIReader(),GuiApplyKey(),GuiGetPreValidate(),GuiGetPostValidate()
    *source/rtl/tget.prg
       +Control and Message Data
    *Source/rtl/tgetlist.prg

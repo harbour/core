@@ -841,7 +841,7 @@
  *      <cPath> Drive and/or path.
  *  $DESCRIPTION$
  *      This command changes the drive and directory used for reading and
- *      writting database,index,memory, and alternate files.Specifying no
+ *      writting database,index,memory, and alternate files. Specifying no
  *      parameters with this command will default the operation to the
  *      current logged drive and directory.
  *  $EXAMPLES$
@@ -869,7 +869,7 @@
  *      <lWrap> Logical expression for toggle
  *  $DESCRIPTION$
  *      This command toggles the highlighted bars in a @...PROMPT command
- *      to wrap around in a bottom-to-top and top-to-bottom manner.If the
+ *      to wrap around in a bottom-to-top and top-to-bottom manner. If the
  *      value of the logical expression <lWrap> is a logical false (.F.),
  *      the wrapping mode is set OFF;otherwise,it is set ON.
  *  $EXAMPLES$
@@ -1006,7 +1006,7 @@
  *      If ADDITIVE clause is used, then the information will be appended
  *      to the existing alternate file. Otherwise, a new file will be created
  *      with the specified name (or an existing one will be overwritten) and
- *      the information will be appended to the file.The default is to create
+ *      the information will be appended to the file. The default is to create
  *      a new file.
  *      A SET ALTERNATE TO command will close the alternate file
  *  $EXAMPLES$
@@ -1270,9 +1270,9 @@
  *      <nDecimal> Number of decimals places
  *  $DESCRIPTION$
  *      This command establishes the number of decimal places that Harbour
- *      will display in mathematical calculations,functions,memory variables,
- *      and fields.Issuing no parameter with this command will the default
- *      number of decimals to 0.For decimals to be seen,the SET FIXED ON
+ *      will display in mathematical calculations, functions, memory variables,
+ *      and fields. Issuing no parameter with this command will the default
+ *      number of decimals to 0. For decimals to be seen, the SET FIXED ON
  *      command must be activated.
  *  $EXAMPLES$
  *      SET FIXED ON

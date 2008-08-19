@@ -30,7 +30,7 @@
  *      columns specified.
  *      Note that there are only a real few combination or rows/cols pairs
  *      that produce the video mode change.
- *      The followings are availables for D.O.S:
+ *      The followings are availables for DOS:
  *
  *  <table>
  *      12 rows x 40 columns   12 rows x 80 columns

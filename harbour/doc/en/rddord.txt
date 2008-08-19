@@ -31,7 +31,7 @@
  *      <cBagExt> The Rdd extension name.
  *  $DESCRIPTION$
  *      This function return th character name of the RDD extension for
- *      the order bag.This is determined by the active RDD for the selected
+ *      the order bag. This is determined by the active RDD for the selected
  *      work area.
  *
  *      This function replaces the Indexord() function.
@@ -72,11 +72,11 @@
  *      ORDBAGNAME() returns the Order bag name
  *  $DESCRIPTION$
  *      This function returns the name of the order bag for the specified
- *      work area. If <nOrder> is specidied,it will represent the position
- *      in the order list of the target order.If <cOrderName> is specified,
- *      it will represent the name of the target order.In essence,it will
+ *      work area. If <nOrder> is specidied, it will represent the position
+ *      in the order list of the target order. If <cOrderName> is specified,
+ *      it will represent the name of the target order. In essence, it will
  *      tell the name of the database (if That Rdd is in use) for a given
- *      index name or index order number.If <cOrderName> is not specified
+ *      index name or index order number. If <cOrderName> is not specified
  *      or <nOrder> is 0, the Current active order will be used.
  *  $EXAMPLES$
  *      USE Tests VIA "DBFCDX" NEW
@@ -129,7 +129,7 @@
  *   order.
  *     <bForCondition> is a code block that defines a FOR condition that
  *   each record within the scope must meet in order to be processed. If
- *   a record does not meet the specified condition,it is ignored and the
+ *   a record does not meet the specified condition, it is ignored and the
  *   next  record is processed.Duplicate keys values are not added to the
  *   index file when a FOR condition is Used.
  *  $RETURNS$
@@ -175,9 +175,9 @@
  *  $RETURNS$
  *      ORDCREATE() always returns NIL.
  *  $DESCRIPTION$
- *      This function creates an order for the current work area.It is
+ *      This function creates an order for the current work area. It is
  *      similar to the DBCREATEINDEX() except that this function allows
- *      different orders based on the RDD in effect.The name of the file
+ *      different orders based on the RDD in effect. The name of the file
  *      <cOrderBagName> or the name of the order <cOrderName> are technically
  *      both considered to be "optional" except that at least one of two
  *      must exist in order to create the order.
@@ -197,9 +197,9 @@
  *      If the name <cOrderBagName> is found in the order bag can contain
  *      a single order,the the name <cOrderBagName> is erased and a new
  *      order is added to the order list in the current or specified work
- *      area.On the other hand,if it can contain multiples tags and if
+ *      area.On the other hand, if it can contain multiples tags and if
  *      <cOrderBagName> does not already exist in the order list,then it is
- *      added.It is does exist,then the <cOrderBagName> replaces the former
+ *      added. It is does exist,then the <cOrderBagName> replaces the former
  *      name in the order list in the current or specified work area.
  *  $EXAMPLES$
  *      USE TESTS VIA "DBFNDX" NEW
@@ -242,12 +242,12 @@
  *      This function attempts to remove the order named <cOrderName> from the
  *      file containing the order bag name <cOrderBagName>. If <cOrderBagName>
  *      is not specified,then the name of the file will be based on the value
- *      of the ORDNAME() function.If the extension is not included with the
+ *      of the ORDNAME() function. If the extension is not included with the
  *      name of the order file,then the extension will be obtained from the
  *      default extension of the current and active RDD.
  *
  *      The DBFNTX driver do not support multiple order bags;therefore,there
- *      cannot be an order to "destroy" from a bag.This function only works
+ *      cannot be an order to "destroy" from a bag. This function only works
  *      for those drivers with support multiple orders bags (e.q. DBFCDX
  *      and RDDADS drivers).
  *  $EXAMPLES$
@@ -288,7 +288,7 @@
  *      an order.
  *  $DESCRIPTION$
  *      This function returns a character string that is the expression for
- *      the FOR condition for the specified order.The order may be specified
+ *      the FOR condition for the specified order. The order may be specified
  *      if <xOrder> is the name of the order.However,<xOrder> may be an
  *      numeric which represent the position in the order list of the desired
  *      Order.
@@ -374,7 +374,7 @@
  *      <cExtension>   Current driver file extension
  *  $DESCRIPTION$
  *      This function returns a string that tells what indexes are to be used
- *      or will be created in the compiled application.The default value is
+ *      or will be created in the compiled application. The default value is
  *      ".ntx". This is controled by the particular database driver that is
  *      linked with the application.
  *  $EXAMPLES$
@@ -412,9 +412,9 @@
  *      index file
  *
  *      The index key is displayed for an index file that is designated by
- *      <nOrder>,its position in the USE...INDEX or SET INDEX TO command in
- *      the currently selected or designated work area.If there is no
- *      corresnponding index key at the specified order position,a NULL
+ *      <nOrder>, its position in the USE...INDEX or SET INDEX TO command in
+ *      the currently selected or designated work area. If there is no
+ *      corresnponding index key at the specified order position, a NULL
  *      byte will be returned.
  *  $EXAMPLES$
  *      USE TESTS NEW INDEX TEST1

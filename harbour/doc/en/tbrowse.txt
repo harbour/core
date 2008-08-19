@@ -233,7 +233,7 @@
  *      oTb:SETKEY( K_TAB,{|oTb,nKey| -1})
  *
  *      An default key handler can be declared by specifyin a value of 0
- *      for <nKey>.It associate code block will be evaluated each time
+ *      for <nKey>. It associate code block will be evaluated each time
  *      TBrowse:Applykey() is called  with an key value that is not contained
  *      in the dictionary. For example
  *

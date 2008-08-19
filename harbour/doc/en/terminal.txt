@@ -688,12 +688,12 @@
  *  $ARGUMENTS$
  *      None
  *  $DESCRIPTION$
- *      This command issue an form-feed command to the printer.If the printer
+ *      This command issue an form-feed command to the printer. If the printer
  *      is not properly hooked up to the computer,an error will not be
  *      generated and the command will be ignored.
  *
  *      Once completed,the values of PROW() and PCOL(),the row and column
- *      indicators to the printer,will be set to 0.Their values,however,may
+ *      indicators to the printer,will be set to 0. Their values,however,may
  *      be manipulated before or after ussuing an EJECT by using the DEVPOS()
  *      function.
  *
@@ -739,7 +739,7 @@
  *  $RETURNS$
  *      <nPosition>  Current column position
  *  $DESCRIPTION$
- *      This function returns the current cursor column position.The value
+ *      This function returns the current cursor column position. The value
  *      for this function can range between 0 and MAXCOL().
  *  $EXAMPLES$
  *      ? Col()
@@ -770,7 +770,7 @@
  *  $RETURNS$
  *      <nPosition>  Current screen row position
  *  $DESCRIPTION$
- *      This function returns the current cursor row location.The value
+ *      This function returns the current cursor row location. The value
  *      for this function can range between 0 and MAXCOL().
  *  $EXAMPLES$
  *      ? Row()
@@ -802,7 +802,7 @@
  *      <nPosition>  The maximun number of columns possible in current video
  *      mode
  *  $DESCRIPTION$
- *      This function returns the current cursor column position.The value
+ *      This function returns the current cursor column position. The value
  *      for this function can range between 0 and MAXCOL().
  *  $EXAMPLES$
  *      ? MAXCol()
@@ -837,7 +837,7 @@
  *      <nPosition>  The maximun number of rows possible in current video
  *      mode
  *  $DESCRIPTION$
- *      This function returns the current cursor row location.The value
+ *      This function returns the current cursor row location. The value
  *      for this function can range between 0 and MAXCOL().
  *  $EXAMPLES$
  *      ? MAXROW()
