@@ -8,6 +8,12 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-20 19:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * source/debug/dbgentry.c
+     ! HB_DBG_*() -> __DBG*().
+     ; I somehow completely missed this file from recent 
+       update, thanks Bill.
+
 2008-08-20 12:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * tests/longdev.prg
    * tests/hbpptest/hbpptest.prg
