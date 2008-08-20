@@ -225,9 +225,9 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
    s_cHarbourDir := GetHarbourDir()
 
    IF Empty( s_cHarbourDir )
-      IF s_nLang=1
+      IF s_nlang == 1
          s_cAlertMsg := "Hbmake necessita do harbour bin no path."
-      ELSEIF s_nLang=3
+      ELSEIF s_nlang == 3
          s_cAlertMsg := "Hbmake necessita de lo harbour bin en lo path."
       ELSE
          s_cAlertMsg := "Hbmake need of the harbour bin in the path."
@@ -241,7 +241,7 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
    //   s_cMakeFileName := "makefile.tmp"
    //ENDIF
 
-   IF s_nLang=1
+   IF s_nlang == 1
       SET DATE BRITISH
    ELSE
       SET DATE ANSI
@@ -295,9 +295,9 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
 
 
    IF Len( aFile ) > 1
-      IF s_nLang=1
+      IF s_nlang == 1
          s_cAlertMsg :="Arquivo definido mais que uma vez."
-      ELSEIF s_nLang=3
+      ELSEIF s_nlang == 3
          s_cAlertMsg:="Fichero definido m s que una vez."
       ELSE
          s_cAlertMsg:="File defined more than once."
@@ -313,9 +313,9 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
    ENDIF
 
    IF Empty(cFile)
-      IF s_nLang=1
+      IF s_nlang == 1
          s_cAlertMsg := "Nome de arquivo inv lido."
-      ELSEIF s_nLang=3
+      ELSEIF s_nlang == 3
          s_cAlertMsg := "Nombre de fichero invalido."
       ELSE
          s_cAlertMsg := "Invalid file name."
@@ -329,9 +329,9 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
    endif
 
    IF s_lForce .and. !File( cFile )
-      IF s_nLang=1
+      IF s_nlang == 1
          s_cAlertMsg := "Arquivo <"+cFile+"> nÆo encontrado."
-      ELSEIF s_nLang=3
+      ELSEIF s_nlang == 3
          s_cAlertMsg := "Fichero <"+cFile+"> no encontrado."
       ELSE
          s_cAlertMsg := "File <"+cFile+"> not found."
@@ -1811,9 +1811,9 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
 
             CLS
 
-            IF s_nLang=1 // PT-BR
+            IF s_nlang == 1 // PT-BR
                s_cAlertMsg := "NÆo h  nenhum prg na pasta "+CurDir()+". Use o modo recursivo -r" 
-            ELSEIF s_nLang=3 // Spanish
+            ELSEIF s_nlang == 3 // Spanish
                s_cAlertMsg := "No hay ning£n prg en la carpeta "+CurDir()+". Use lo modo recursivo -r"
             ELSE
                s_cAlertMsg := "Does not have any prg in "+CurDir()+" folder. Use the recursive mode -r"
@@ -1865,9 +1865,9 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
 
             CLS
 
-            IF s_nLang=1 // PT-BR
+            IF s_nlang == 1 // PT-BR
                s_cAlertMsg := "NÆo h  nenhum prg na pasta "+CurDir()+". Use o modo recursivo -r" 
-            ELSEIF s_nLang=3 // Spanish
+            ELSEIF s_nlang == 3 // Spanish
                s_cAlertMsg := "No hay ning£n prg en la carpeta "+CurDir()+". Use lo modo recursivo -r"
             ELSE
                s_cAlertMsg := "Does not have any prg in "+CurDir()+" folder. Use the recursive mode -r"
@@ -2397,9 +2397,9 @@ Endif // Create and compile
 
    IF nLenaSrc == 0 
 
-      IF s_nLang=1 // PT-BR
+      IF s_nlang == 1 // PT-BR
          s_cAlertMsg := "Nenhum prg foi encontrado." 
-      ELSEIF s_nLang=3 // Spanish
+      ELSEIF s_nlang == 3 // Spanish
          s_cAlertMsg := "Ning£n prg foi encontrado."
       ELSE
          s_cAlertMsg := "No one prg were found."
@@ -2423,9 +2423,9 @@ Endif // Create and compile
 
       Attention( s_aLangMessages[ 41 ], 22 )
 
-      if s_nLang=1
+      if s_nlang == 1
          s_cAlertMsg := "Selecione os PRGs a compilar"
-      elseif s_nLang=3
+      elseif s_nlang == 3
          s_cAlertMsg := "Seleccione los PRG a compilar"
       else
          s_cAlertMsg := "Select the PRG files to compile"
@@ -2464,9 +2464,9 @@ Endif // Create and compile
 
       cTopFile := ""
 
-      IF s_nLang=1 // PT
+      IF s_nlang == 1 // PT
          s_cAlertMsg := "Nenhum PRG foi selecionado."
-      ELSEIF s_nLang=3
+      ELSEIF s_nlang == 3
          s_cAlertMsg := "Ning£m PRG foi seleccionado."
       ELSE
          s_cAlertMsg := "No one PRG were selected."
@@ -2481,9 +2481,9 @@ Endif // Create and compile
 
      IF !lCreateAndCompile
 
-      IF s_nLang=1 // PT
+      IF s_nlang == 1 // PT
          s_cAlertMsg := "Informe o PRG principal da sua aplica‡Æo:"
-      ELSEIF s_nLang=3
+      ELSEIF s_nlang == 3
          s_cAlertMsg := "Informe o PRG principale de su aplicacion:"
       ELSE
          s_cAlertMsg := "Inform the main PRG of your application:"
@@ -2507,9 +2507,9 @@ Endif // Create and compile
 
       IF ! File( alltrim(cTopFile) )
 
-         IF s_nLang=1 // PT
+         IF s_nLang == 1 // PT
             s_cAlertMsg := "Arquivo "+alltrim(cTopFile)+" nÆo encontrado."+iif(s_lRecursive," O flag -r est  ativo. Informe o subdir tamb‚m se o PRG principal estiver dentro dele.","")
-         ELSEIF s_nLang=3
+         ELSEIF s_nLang == 3
             s_cAlertMsg := "Fichero "+alltrim(cTopFile)+" no encontrado."+iif(s_lRecursive," Lo flag -r esta activado. Informe lo subdir tambi‚n si lo PRG principale est s dentro dele.","")
          ELSE
             s_cAlertMsg := "File "+alltrim(cTopFile)+" not found."+iif(s_lRecursive," The flag -r is active. Inform the subdir also if the main PRG is within it.","")
@@ -2552,9 +2552,9 @@ Endif // Create and compile
       AEval( aLibs, { | x | AAdd( aLibsIn, x[ 1 ] ) } )
       AEval( aLibs, { | x | AAdd( aLibsOut, x[ 2 ] ) } )
 
-      if s_nLang=1
+      if s_nlang == 1
          s_cAlertMsg := "Selecione as LIBs externas a compilar"
-      elseif s_nLang=3
+      elseif s_nlang == 3
          s_cAlertMsg := "Seleccione las LIB externas a compilar"
       else
          s_cAlertMsg := "Select the external LIBs to compile"
@@ -3207,7 +3207,7 @@ Endif // Create and compile
       @ 20,5 SAY s_cAlertMsg;
              GET cBuild;
              PICT "!";
-             VALID cBuild $ iif(s_nLang=2,"YN","SN")
+             VALID cBuild $ iif(s_nlang == 2,"YN","SN")
       READ
 
       else
@@ -3231,13 +3231,13 @@ Endif // Create and compile
             @ 21,5 SAY s_cAlertMsg;
                    GET cBuildForced;
                    PICT "!";
-                   VALID cBuildForced $ iif(s_nLang=2,"YN","SN")
+                   VALID cBuildForced $ iif(s_nlang == 2,"YN","SN")
             READ
 
          ENDIF
 
          IF cBuildForced == "S" .or. cBuildForced == "Y"
-            cBuildParam := " -f " + iif(s_nLang=1,"-lPT",iif(s_nLang=3,"-lES","-lEN"))
+            cBuildParam := " -f " + iif(s_nlang == 1,"-lPT",iif(s_nlang == 3,"-lES","-lEN"))
          ENDIF
 
       ENDIF
@@ -3248,7 +3248,7 @@ Endif // Create and compile
          SetColor("W/N,N/W")
          Clear
          SetPos(9,0)
-//       Main( cFile, " -f "+iif(s_nLang=1,"-lPT",iif(s_nLang=3,"-lES","-lEN")) )
+//       Main( cFile, " -f "+iif(s_nlang == 1,"-lPT",iif(s_nlang == 3,"-lES","-lEN")) )
          if cBuildParam != NIL
             Main( cFile, cBuildParam )
          else
@@ -3943,9 +3943,9 @@ FUNCTION CreateLibMakeFile( cFile )
 
             CLS
 
-            IF s_nLang=1 // PT-BR
+            IF s_nlang == 1 // PT-BR
                s_cAlertMsg := "NÆo h  nenhum prg na pasta "+CurDir()+". Use o modo recursivo -r" 
-            ELSEIF s_nLang=3 // Spanish
+            ELSEIF s_nlang == 3 // Spanish
                s_cAlertMsg := "No hay ning£n prg en la carpeta "+CurDir()+". Use lo modo recursivo -r"
             ELSE
                s_cAlertMsg := "Does not have any prg in "+CurDir()+" folder. Use the recursive mode -r"
@@ -3997,9 +3997,9 @@ FUNCTION CreateLibMakeFile( cFile )
 
             CLS
 
-            IF s_nLang=1 // PT-BR
+            IF s_nlang == 1 // PT-BR
                s_cAlertMsg := "NÆo h  nenhum prg na pasta "+CurDir()+". Use o modo recursivo -r" 
-            ELSEIF s_nLang=3 // Spanish
+            ELSEIF s_nlang == 3 // Spanish
                s_cAlertMsg := "No hay ning£n prg en la carpeta "+CurDir()+". Use lo modo recursivo -r"
             ELSE
                s_cAlertMsg := "Does not have any prg in "+CurDir()+" folder. Use the recursive mode -r"
@@ -4309,9 +4309,9 @@ FUNCTION CreateLibMakeFile( cFile )
    ENDIF
 
 
-   if s_nLang=1
+   if s_nlang == 1
       s_cAlertMsg := "Selecione os PRGs a compilar"
-   elseif s_nLang=3
+   elseif s_nlang == 3
       s_cAlertMsg := "Seleccione los PRG a compilar"
    else
       s_cAlertMsg := "Select the PRG files to compile"
@@ -4617,7 +4617,7 @@ FUNCTION CreateLibMakeFile( cFile )
         s_cAlertMsg := "Build lib ? (Y/N) "
       ENDIF
 
-      @ 20,5 Say s_cAlertMsg Get cBuild PICT "!" Valid cBuild $ iif(s_nLang=2,"YN","SN")
+      @ 20,5 Say s_cAlertMsg Get cBuild PICT "!" Valid cBuild $ iif(s_nlang == 2,"YN","SN")
       READ
 
       IF cBuild == "S" .OR. cBuild == "Y"
@@ -4625,7 +4625,7 @@ FUNCTION CreateLibMakeFile( cFile )
          SetColor("W/N,N/W")
          Clear
          SetPos(9,0)
-         Main( cFile, " -f "+iif(s_nLang=1,"-lPT",iif(s_nLang=3,"-lES","-lEN")) )
+         Main( cFile, " -f "+iif(s_nlang == 1,"-lPT",iif(s_nlang == 3,"-lES","-lEN")) )
       ELSE
          set cursor on
          SetColor("W/N,N/W")

@@ -386,7 +386,7 @@ FUNCTION MAIN( cFlags, cLinkName, cAtFile )
 
          //  Get the list of
 
-         //                aDirList=DIRECTORY(&cDir+aExtensions[i])
+         //                aDirList := DIRECTORY(&cDir+aExtensions[i])
          aDirList := DIRECTORY( aExtensions[ i ] )
 
          //  If there are any files then process them

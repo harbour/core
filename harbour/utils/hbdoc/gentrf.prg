@@ -444,7 +444,7 @@ FUNCTION ProcessTroff
                         lAddBlank := .F.
                      ENDIF
                      /*    nNonBlank:=FirstNB(cBuffer)
-                        cBuffer=STUFF(cBuffer,nNonBlank,0,"^a1f ")*/
+                        cBuffer := STUFF(cBuffer,nNonBlank,0,"^a1f ")*/
                      otroff:WritePar( cBuffer )
                   ELSEIF nMode == D_ARG
                      IF LEN( cBuffer ) > LONGLINE
