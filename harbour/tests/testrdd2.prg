@@ -164,7 +164,7 @@ do while LastRec() < MAX_TEST_RECS
 
     // TEST: Direct field assigment
 
-    MYTEST->NUM  := ( if( RecNo() % 2 > 0, -1, 1 ) * RecNo() ) + ( RecNo() / 1000 )
+    MYTEST->NUM  := ( iif( RecNo() % 2 > 0, -1, 1 ) * RecNo() ) + ( RecNo() / 1000 )
     MYTEST->DATE := Date() + Int( FIELD->NUM )
     MYTEST->LOG  := ( FIELD->NUM < 0 )
     MYTEST->MEMO := Eval( bMemoText )
@@ -201,7 +201,7 @@ do while .not. EOF()
 
     if .not. Trim( FIELD->CHAR ) == Chr( 65 + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
                                     " RECORD " + LTrim( Str( RecNo() ) ) .or. ;
-       .not. FIELD->NUM == ( if( RecNo() % 2 > 0, -1, 1 ) * RecNo() ) + ( RecNo() / 1000 ) .or. ;
+       .not. FIELD->NUM == ( iif( RecNo() % 2 > 0, -1, 1 ) * RecNo() ) + ( RecNo() / 1000 ) .or. ;
        .not. FIELD->DATE == Date() + Int( FIELD->NUM ) .or. ;
        .not. FIELD->LOG == ( FIELD->NUM < 0 ) .or. ;
        .not. FIELD->MEMO == Eval( bMemoText )

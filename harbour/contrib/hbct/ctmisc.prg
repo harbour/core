@@ -62,7 +62,7 @@ FUNCTION CENTER( c, n, p, lMode )
    DEFAULT c TO ""
    DEFAULT lMode TO .F.
    cRet := PadC( AllTrim( c ), n, p )
-   RETURN if(lMode, cRet, RTrim( cRet ) )
+   RETURN iif(lMode, cRet, RTrim( cRet ) )
 
 FUNCTION CSETCURS( l )
 
@@ -91,7 +91,7 @@ FUNCTION DOSPARAM
    LOCAL nCount := HB_ARGC(), i
 
    FOR i := 1 TO nCount
-      cRet += if(i==1, "", " ") + HB_ARGV( i )
+      cRet += iif(i==1, "", " ") + HB_ARGV( i )
    NEXT
    RETURN cRet
 

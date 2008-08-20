@@ -27,16 +27,16 @@ FUNCTION Main()
    SET DEVICE TO SCREEN
 
    // Confirm the string length and that a copy is exactly identical.
-   ? "The length of the long string is", IF( LEN( cLong ) == 80 * 1024, "correct", "wrong" )
+   ? "The length of the long string is", iif( LEN( cLong ) == 80 * 1024, "correct", "wrong" )
    cBuffer := cLong
-   ? "The length of a copy of the long string is", IF( LEN( cLong ) == 80 * 1024, "correct", "wrong" )
-   ? "The copy of the long string is", IF( cLong == cBuffer, "equal", "not equal" ), "to the long string"
+   ? "The length of a copy of the long string is", iif( LEN( cLong ) == 80 * 1024, "correct", "wrong" )
+   ? "The copy of the long string is", iif( cLong == cBuffer, "equal", "not equal" ), "to the long string"
 
    // Read the string back in and compare it to the original.
    nHandle := FOPEN( "long_str.prn" )
    cBuffer := FREADSTR( nHandle, 90000 )
    ? "Original:", LEN( cLong )
    ? "From file:", LEN( cBuffer )
-   ? "The strings are", IF( cLong == cBuffer, "equal", "not equal" )
+   ? "The strings are", iif( cLong == cBuffer, "equal", "not equal" )
 
 return nil

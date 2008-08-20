@@ -240,7 +240,7 @@ METHOD SetAutocommit( lEnable ) CLASS TODBC
    DEFAULT lEnable TO .T.
 
    If lEnable != lOld
-      ::SetCnnOptions( SQL_AUTOCOMMIT, if( lEnable, SQL_AUTOCOMMIT_ON, SQL_AUTOCOMMIT_OFF ) )
+      ::SetCnnOptions( SQL_AUTOCOMMIT, iif( lEnable, SQL_AUTOCOMMIT_ON, SQL_AUTOCOMMIT_OFF ) )
       ::lAutoCommit := lEnable
    EndIf
 

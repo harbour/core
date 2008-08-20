@@ -68,13 +68,13 @@ FUNCTION FT_BLINK( cMsg, nRow, nCol )
   IF (cMsg == NIL) ; RETURN NIL; ENDIF
 
   * Set default row and col to current.
-  nRow := IF( nRow == NIL, ROW(), nRow )
-  nCol := IF( nCol == NIL, COL(), nCol )
+  nRow := iif( nRow == NIL, ROW(), nRow )
+  nCol := iif( nCol == NIL, COL(), nCol )
 
   cSavColor := SETCOLOR()                // Save colors to restore on exit.
 
   * IF blink colors not already set, add blink to current foreground color.
-  SETCOLOR( IF( ("*" $ LEFT(cSavColor,4)), cSavColor, "*" + cSavColor ) )
+  SETCOLOR( iif( ("*" $ LEFT(cSavColor,4)), cSavColor, "*" + cSavColor ) )
 
   @ nRow, nCol SAY cMsg                  // Say the dreaded blinking msg.
   SETCOLOR( cSavColor )                  // It's a wrap, restore colors & exit.

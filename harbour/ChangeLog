@@ -8,6 +8,87 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-20 12:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * tests/longdev.prg
+   * tests/hbpptest/hbpptest.prg
+   * tests/testcgi.prg
+   * tests/foreach.prg
+   * tests/onidle.prg
+   * tests/tstchbx.prg
+   * tests/codebl.prg
+   * tests/tstdbi.prg
+   * tests/vmasort.prg
+   * tests/tstasort.prg
+   * tests/testbrw.prg
+   * tests/inkeytst.prg
+   * tests/testrdd2.prg
+   * tests/keywords.prg
+   * tests/testhtml.prg
+   * tests/readhrb.prg
+   * tests/stripem.prg
+   * tests/wvtext.prg
+   * tests/testpre.prg
+   * tests/seconds.prg
+   * tests/fsplit.prg
+   * tests/mousetst.prg
+   * contrib/hbmysql/tmysql.prg
+   * contrib/hbct/numconv.prg
+   * contrib/hbct/ctmisc.prg
+   * contrib/hbodbc/todbc.prg
+   * contrib/hbapollo/tests/apollo.prg
+   * contrib/hbnf/acctyear.prg
+   * contrib/hbnf/acctadj.prg
+   * contrib/hbnf/nwsem.prg
+   * contrib/hbnf/week.prg
+   * contrib/hbnf/acctmnth.prg
+   * contrib/hbnf/savearr.prg
+   * contrib/hbnf/madd.prg
+   * contrib/hbnf/mouse1.prg
+   * contrib/hbnf/month.prg
+   * contrib/hbnf/findith.prg
+   * contrib/hbnf/acctweek.prg
+   * contrib/hbnf/pegs.prg
+   * contrib/hbnf/acctqtr.prg
+   * contrib/hbnf/nooccur.prg
+   * contrib/hbnf/dayofyr.prg
+   * contrib/hbnf/menu1.prg
+   * contrib/hbnf/sqzn.prg
+   * contrib/hbnf/asum.prg
+   * contrib/hbnf/aavg.prg
+   * contrib/hbnf/any2any.prg
+   * contrib/hbnf/adessort.prg
+   * contrib/hbnf/amedian.prg
+   * contrib/hbnf/blink.prg
+   * contrib/hbnf/qtr.prg
+   * contrib/hbnf/aredit.prg
+   * contrib/hbnf/xbox.prg
+   * contrib/hbnf/ftround.prg
+   * contrib/hbnf/invclr.prg
+   * contrib/hbnf/tempfile.prg
+   * contrib/hbnf/diskfunc.prg
+   * contrib/hbnf/mouse2.prg
+   * contrib/hbnf/daytobow.prg
+   * contrib/hbnf/anomatch.prg
+   * contrib/hbnf/datecnfg.prg
+   * contrib/hbnf/tbwhile.prg
+   * contrib/hbnf/year.prg
+   * contrib/hbnf/elapsed.prg
+   * contrib/hbnf/dfile.prg
+   * contrib/hbnf/clrsel.prg
+   * contrib/hbmisc/twirler.prg
+   * contrib/hbmisc/fileread.prg
+   * contrib/hbmisc/stringp.prg
+   * contrib/hbgf/hbgfw32/winctrl.prg
+   * contrib/hbgf/hbgfw32/form.prg
+   * contrib/hbgf/hbgfos2/winctrl.prg
+   * contrib/hbgf/hbgfos2/tform.prg
+   * contrib/hbtip/httpcln.prg
+   * contrib/hbvpdf/hbvpdf.prg
+   * contrib/hbvpdf/hbvpdft.prg
+   * contrib/examples/guestbk/guestbk.prg
+   * contrib/examples/pe/editorhi.prg
+     * Some more general code cleanups ( if() -> iif() ).
+
 2008-08-20 11:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * tests/onidle.prg
    * tests/codebloc.prg

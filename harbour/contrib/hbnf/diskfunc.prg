@@ -65,7 +65,7 @@
 
 FUNCTION FT_DSKSIZE( cDrive )
    local nDrive
-   nDrive := if( cDrive == NIL, 0, at( upper(cDrive), DRVTABLE ) )
+   nDrive := iif( cDrive == NIL, 0, at( upper(cDrive), DRVTABLE ) )
 
 Return DISKSPACE(nDrive,3)
 
@@ -98,7 +98,7 @@ Return DISKSPACE(nDrive,3)
 
 FUNCTION FT_DSKFREE( cDrive )
    local nDrive
-   nDrive := if( cDrive == NIL, 0, at( upper(cDrive), DRVTABLE ) )
+   nDrive := iif( cDrive == NIL, 0, at( upper(cDrive), DRVTABLE ) )
 
 
 RETURN    DISKSPACE(nDrive,1)

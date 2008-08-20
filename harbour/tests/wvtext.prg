@@ -174,9 +174,9 @@ FUNCTION SetPalette( nMode )
    static nG := 198
    static nB := 198
 
-   nR += if( nMode == 0, -5, 5 )
-   nG += if( nMode == 0, -5, 5 )
-   nB += if( nMode == 0, -5, 5 )
+   nR += iif( nMode == 0, -5, 5 )
+   nG += iif( nMode == 0, -5, 5 )
+   nB += iif( nMode == 0, -5, 5 )
 
    // Change "W" to slightly gray everytime you press F5
    //

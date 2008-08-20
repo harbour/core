@@ -244,8 +244,7 @@ STATIC FUNCTION f_error_msg( cText )
       ELSE
          nTemp := oSelf:nLastOp + 1
       ENDIF
-      cMessage := IF( EMPTY( cText ), "", cText ) + "Error " + ALLTRIM( STR( oSelf:nError ) ) + " " + s_cAction[ nTemp ] + " " + oSelf:cFile
+      cMessage := iif( EMPTY( cText ), "", cText ) + "Error " + ALLTRIM( STR( oSelf:nError ) ) + " " + s_cAction[ nTemp ] + " " + oSelf:cFile
    ENDIF
 
    RETURN cMessage
-

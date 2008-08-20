@@ -109,7 +109,7 @@ LOCAL f
          sx_Replace("NOTES"    , SX_R_MEMO   , "This is record " + LTrim( Str( f ) ) )
          sx_Replace("AGE"      , SX_R_DOUBLE , f )
          sx_Replace("BIRTDATE" , SX_R_DATESTR, DtoC( Date() ) )
-      // sx_Replace("MARRIED"  , SX_R_LOGICAL, If(f%5==2,1,0) ) /* Logical does not work yet.. */
+      // sx_Replace("MARRIED"  , SX_R_LOGICAL, iif(f%5==2,1,0) ) /* Logical does not work yet.. */
          sx_Commit()
       NEXT
 
@@ -125,7 +125,7 @@ LOCAL f
          ? "RecNo...... : " + LTrim( Str( sx_RecNo() ) )
          ? "Last name.. : " + sx_GetVariant( "LAST" )
          ? "Birth date. : " + sx_GetVariant( "BIRTDATE" )
-         ? "Married.... : " + If( sx_GetLogical( "MARRIED" ) , "Yes", "No, SINGLE!!")
+         ? "Married.... : " + iif( sx_GetLogical( "MARRIED" ) , "Yes", "No, SINGLE!!")
          sx_Skip(1)
       ENDDO
 

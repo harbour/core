@@ -60,14 +60,14 @@
 
 #command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
             => ;
-            <Param1> := IF(<Param1> == NIL,<Def1>,<Param1>) ;
-         [; <ParamN> := IF(<ParamN> == NIL,<DefN>,<ParamN>)]
+            <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
+         [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
 
 #command    DEFAULT <Param1> TO <Def1> IF NOT <Type1> ;
                  [, <ParamN> TO <DefN> IF NOT <TypeN> ] ;
             => ;
-            <Param1> := IF(VALTYPE(<Param1>) == <Type1>,<Param1>,<Def1>) ;
-         [; <ParamN> := IF(VALTYPE(<ParamN>) == <TypeN>,<ParamN>,<DefN>)]
+            <Param1> := iif(VALTYPE(<Param1>) == <Type1>,<Param1>,<Def1>) ;
+         [; <ParamN> := iif(VALTYPE(<ParamN>) == <TypeN>,<ParamN>,<DefN>)]
 
 
 #define FORCE_BETWEEN(x,y,z)         (y := MAX(MIN(y,z),x))

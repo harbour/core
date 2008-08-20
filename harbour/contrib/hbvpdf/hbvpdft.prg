@@ -2506,7 +2506,7 @@ local nBytes := 0
 local i
 local lOpen  := ( hFile != nil )
 
-nDepth := if( ISNUMBER( nDepth ), nDepth, 0 )
+nDepth := iif( ISNUMBER( nDepth ), nDepth, 0 )
 //if hFile == NIL
 if !lOpen
    if ( hFile := fCreate( cFile,FC_NORMAL ) ) == -1
@@ -2540,7 +2540,7 @@ local cData  := valtype(xData)
    elseif ISDATE( xData )
        cData += i2bin( 8 )+dtos(xData)
    elseif ISLOGICAL(xData)
-       cData += i2bin( 1 )+if( xData,"T","F" )
+       cData += i2bin( 1 )+iif( xData,"T","F" )
    elseif ISARRAY( xData )
        cData += i2bin( len( xData ) )
    else

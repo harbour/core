@@ -89,8 +89,8 @@
  *
  *     // fill color array
  *     // Box Border, Menu Options, Menu Bar, Current Selection, Unselected
- *     aColors := IF( lColor, {"W+/G", "N/G", "N/G", "N/W", "N+/G"}, ;
- *                            {"W+/N", "W+/N", "W/N", "N/W","W/N"} )
+ *     aColors := iif( lColor, {"W+/G", "N/G", "N/G", "N/W", "N+/G"}, ;
+ *                             {"W+/N", "W+/N", "W/N", "N/W","W/N"} )
  *
  *  // array for first pulldown menu
  *  FT_FILL( aOptions[1], 'A. Execute A Dummy Procedure' , {|| fubar()}, .t. )
@@ -200,13 +200,13 @@ STATIC NHPOS, NVPOS, NMAXROW, NMAXCOL
    LOCAL aOptions[ LEN( aBar ) ]
    AEVAL( aBar, { |x,i| aOptions[i] := { {},{},{} } } )
 
-   cCmdLine := IF( cCmdLine == NIL, "", cCmdLine )
+   cCmdLine := iif( cCmdLine == NIL, "", cCmdLine )
 
-   lColor := IF( "MONO" $ UPPER( cCmdLine ), .F., ISCOLOR() )
+   lColor := iif( "MONO" $ UPPER( cCmdLine ), .F., ISCOLOR() )
 
    * Border, Box, Bar, Current, Unselected
-   aColors := IF( lColor, {"W+/G", "N/G", "N/G", "N/W", "N+/G"}, ;
-                          {"W+/N", "W+/N", "W/N", "N/W", "W/N"} )
+   aColors := iif( lColor, {"W+/G", "N/G", "N/G", "N/W", "N+/G"}, ;
+                           {"W+/N", "W+/N", "W/N", "N/W", "W/N"} )
 
    FT_FILL( aOptions[1], 'A. Execute A Dummy Procedure'        , {|| fubar()}, .t. )
    FT_FILL( aOptions[1], 'B. Enter Daily Charge/Credit Slips'  , {|| .t.}, .t. )
@@ -247,15 +247,15 @@ STATIC NHPOS, NVPOS, NMAXROW, NMAXCOL
    // main routine starts here
    SET SCOREBOARD OFF
 
-   cNormH := IF( lColor, "W+/G", "W+/N" )
-   cNormN := IF( lColor, "N/G" , "W/N"  )
-   cNormE := IF( lColor, "N/W" , "N/W"  )
-   cWindH := IF( lColor, "W+/B", "W+/N" )
-   cWindN := IF( lColor, "W/B" , "W/N"  )
-   cWindE := IF( lColor, "N/W" , "N/W"  )
-   cErrH  := IF( lColor, "W+/R", "W+/N" )
-   cErrN  := IF( lColor, "W/R" , "W/N"  )
-   cErrE  := IF( lColor, "N/W" , "N/W"  )
+   cNormH := iif( lColor, "W+/G", "W+/N" )
+   cNormN := iif( lColor, "N/G" , "W/N"  )
+   cNormE := iif( lColor, "N/W" , "N/W"  )
+   cWindH := iif( lColor, "W+/B", "W+/N" )
+   cWindN := iif( lColor, "W/B" , "W/N"  )
+   cWindE := iif( lColor, "N/W" , "N/W"  )
+   cErrH  := iif( lColor, "W+/R", "W+/N" )
+   cErrN  := iif( lColor, "W/R" , "W/N"  )
+   cErrE  := iif( lColor, "N/W" , "N/W"  )
 
    SAVE SCREEN TO sDosScrn
    nDosRow := ROW()
@@ -346,7 +346,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
    nMaxCol := MAXCOL()
 
    // row for menu bar
-   nTopRow := IF( nTopRow == NIL, 0, nTopRow )
+   nTopRow := iif( nTopRow == NIL, 0, nTopRow )
 
    AFILL(aLastSel,1)
    aChoices := aOptions
@@ -404,9 +404,9 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
       nVpos := ACHOICE( nTopRow+2, aBoxLoc[nHpos]+2, LEN(aChoices[nHpos,1])+nTopRow+2, aBarWidth[nHpos]+1+aBoxLoc[nHpos], aChoices[nHpos,1], aChoices[nHpos,3], "__ftAcUdf", aLastSel[nHpos])
       DO CASE
       CASE LASTKEY() == RIGHTARROW .OR. LASTKEY() == TAB
-         IF( nHpos == LEN( aChoices ), nHpos := 1, nHpos := nHpos + 1 )
+         nHpos := iif( nHpos == LEN( aChoices ), 1, nHpos + 1 )
       CASE LASTKEY() == LEFTARROW .OR. LASTKEY() == SHIFTTAB
-         IF( nHpos == 1, nHpos := LEN( aChoices ), nHpos := nHpos - 1 )
+         nHpos := iif( nHpos == 1, LEN( aChoices ), nHpos - 1 )
       CASE LASTKEY() == ESCAPE
          lLooping := _ftBailOut( cBorder, cBox )
       CASE LASTKEY() == HOME
@@ -457,7 +457,7 @@ STATIC FUNCTION _ftWidest( i, aChoices, aBarWidth )
    RETURN NIL
 
 STATIC FUNCTION _ftLocat( i, aBarCol, aBarWidth, aBoxLoc, nMaxCol )
-   aBoxLoc[i] := IF( aBarCol[i] + aBarWidth[i] + 4 > nMaxCol + 1, ;
+   aBoxLoc[i] := iif( aBarCol[i] + aBarWidth[i] + 4 > nMaxCol + 1, ;
                  nMaxCol - 3 - aBarWidth[i], aBarCol[i] )
    RETURN NIL
 

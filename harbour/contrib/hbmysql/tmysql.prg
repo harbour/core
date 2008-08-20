@@ -1463,7 +1463,7 @@ METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLSer
    for i := 1 to Len(aStruct)
       do case
       case aStruct[i][DBS_TYPE] == "C"
-         ::cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i])+ if(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ ","
+         ::cCreateQuery += aStruct[i][DBS_NAME] + " char(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i])+ iif(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ ","
 
       case aStruct[i][DBS_TYPE] == "M"
          ::cCreateQuery += aStruct[i][DBS_NAME] + " text" + Eval(cNN, aStruct[i]) + ","
@@ -1471,7 +1471,7 @@ METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLSer
       case aStruct[i][DBS_TYPE] == "N"
          /*
          if aStruct[i][DBS_DEC] == 0
-            ::cCreateQuery += aStruct[i][DBS_NAME] + " int(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + if(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ if(aStruct[i][DBS_NAME]==cAuto," auto_increment ",'' ) + ","
+            ::cCreateQuery += aStruct[i][DBS_NAME] + " int(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")" + Eval(cNN, aStruct[i]) + iif(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ iif(aStruct[i][DBS_NAME]==cAuto," auto_increment ",'' ) + ","
          else
             ::cCreateQuery += aStruct[i][DBS_NAME] + " real(" + AllTrim(Str(aStruct[i][DBS_LEN])) + "," + AllTrim(Str(aStruct[i][DBS_DEC])) + ")" + Eval(cNN, aStruct[i]) + ","
          endif
@@ -1487,7 +1487,7 @@ METHOD CreateTable(cTable, aStruct,cPrimaryKey,cUniqueKey,cAuto) CLASS TMySQLSer
                otherwise
                   ::cCreateQuery += aStruct[i][DBS_NAME] + " bigint(" + AllTrim(Str(aStruct[i][DBS_LEN])) + ")"
             endcase
-            ::cCreateQuery += Eval(cNN, aStruct[i]) + if(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ if(aStruct[i][DBS_NAME]==cAuto," auto_increment ",'' ) + ","
+            ::cCreateQuery += Eval(cNN, aStruct[i]) + iif(aStruct[i][DBS_NAME]==cPrimaryKey," NOT NULL ",'' )+ iif(aStruct[i][DBS_NAME]==cAuto," auto_increment ",'' ) + ","
          else
             ::cCreateQuery += aStruct[i][DBS_NAME] + " real(" + AllTrim(Str(aStruct[i][DBS_LEN])) + "," + AllTrim(Str(aStruct[i][DBS_DEC])) + ")" + Eval(cNN, aStruct[i]) + ","
          endif

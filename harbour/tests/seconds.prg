@@ -12,17 +12,17 @@ function Main( cParam )
 local n, limit := 10
 local cNewLine := HB_OSNewLine()
 
-   IF( ! EMPTY( cParam ) )
+   IF ! EMPTY( cParam )
       limit := VAL( cParam )
-   END IF
+   ENDIF
    OUTSTD( cNewLine )
    OUTSTD( SECONDS() )
    FOR n := 1 TO limit
-      IF( EMPTY( cParam ) )
+      IF EMPTY( cParam )
          OUTSTD( cNewLine )
          OUTSTD( "Pause: " )
          INKEY(0)
-      END IF
+      ENDIF
       OUTSTD( cNewLine )
       OUTSTD( SECONDS() )
    NEXT

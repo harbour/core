@@ -38,7 +38,7 @@ static function aMkArray( nPass )
     aAdd( aData, NIL )
     aAdd( aData, nMid - n )
     aAdd( aData, Date() - n )
-    aAdd( aData, if( n % 2 == 0, .f., .t. ) )
+    aAdd( aData, iif( n % 2 == 0, .f., .t. ) )
     aAdd( aData, Replicate( Chr( 64 + ( n % 256 ) ) , nPass ) )
     aAdd( aData, {|| n } )
     aAdd( aData, Array( n ) )
@@ -71,7 +71,7 @@ function xToStr( xValue )
     case cType == "D"
       return DToC( xValue )
     case cType == "L"
-      return if( xValue, ".T.", ".F." )
+      return iif( xValue, ".T.", ".F." )
     case cType == "U"
       return "NIL"
     case cType == "A"

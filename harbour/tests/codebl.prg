@@ -56,7 +56,7 @@ LOCAL i
 
    a :=ARRAY( 100 )
    FOR i:=1 TO 100
-     IF( (i % 6) == 0 )
+     IF (i % 6) == 0
          a[ i-2 ] =NIL
          a[ i-4 ] =NIL
      ENDIF
@@ -69,7 +69,7 @@ PROCEDURE PrintArray( a )
 LOCAL i
 
    FOR i:=1 TO 100
-     IF( a[i] != NIL )
+     IF a[i] != NIL
        EVAL( a[ i ][ 2 ], i )
        mqout( i, EVAL( a[ i ][ 1 ] ) )
      ENDIF

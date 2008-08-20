@@ -51,7 +51,7 @@ function xToStr( xValue )
     case cType == "D"
       return DToC( xValue )
     case cType == "L"
-      return if( xValue, ".T.", ".F." )
+      return iif( xValue, ".T.", ".F." )
     case cType == "U"
       return "NIL"
     case cType == "A"

@@ -87,8 +87,8 @@ CLASS HBWinControl FROM HBPersistent
    ACCESS    Width()  INLINE WinGetWidth( ::hWnd )  PROPERTY
    ASSIGN    Width( nNewWidth ) INLINE WinSetWidth( ::hWnd, nNewWidth )
 
-   METHOD    GetNewId() INLINE ::nId := If( ::nInitId == nil, ::nInitId := 1,;
-                                            ++::nInitId )
+   METHOD    GetNewId() INLINE ::nId := iif( ::nInitId == NIL, ::nInitId := 1,;
+                                             ++::nInitId )
 
    METHOD    Show() INLINE ShowWindow( ::hWnd, .T. /*SW_SHOWNA*/ )
 

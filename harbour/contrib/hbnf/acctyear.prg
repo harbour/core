@@ -76,7 +76,9 @@ FUNCTION FT_ACCTYEAR(dGivenDate)
  
   LOCAL nYTemp, aRetVal
  
-  IF( VALTYPE(dGivenDate) != 'D', dGivenDate := DATE(), )
+  IF !( VALTYPE(dGivenDate) == "D" )
+    dGivenDate := DATE()
+  ENDIF
  
   aRetVal    := FT_YEAR(dGivenDate)
   nYTemp     := VAL(aRetVal[1])

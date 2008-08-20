@@ -148,24 +148,24 @@ function FT_DFSETUP(cInFile, nTop, nLeft, nBottom, nRight,;
   local rval := 0
 
   if File(cInFile)
-     nTop    := if(ValType(nTop)    == "N", nTop,           0)
-     nLeft   := if(ValType(nLeft)   == "N", nLeft,          0)
-     nBottom := if(ValType(nBottom) == "N", nBottom, MaxRow())
-     nRight  := if(ValType(nRight)  == "N", nRight,  MaxCol())
+     nTop    := iif(ValType(nTop)    == "N", nTop,           0)
+     nLeft   := iif(ValType(nLeft)   == "N", nLeft,          0)
+     nBottom := iif(ValType(nBottom) == "N", nBottom, MaxRow())
+     nRight  := iif(ValType(nRight)  == "N", nRight,  MaxCol())
 
-     nCNormal     := if(ValType(nCNormal)    == "N", nCNormal,     7)
-     nCHighlight := if(ValType(nCHighlight) == "N", nCHighlight, 15)
+     nCNormal    := iif(ValType(nCNormal)    == "N", nCNormal,     7)
+     nCHighlight := iif(ValType(nCHighlight) == "N", nCHighlight, 15)
 
-     nStart    := if(ValType(nStart)    == "N", nStart,      1)
-     nColSkip  := if(ValType(nColSkip)  == "N", nColSkip,    1)
-     lBrowse   := if(ValType(lBrowse)   == "L", lBrowse,   .F.)
+     nStart    := iif(ValType(nStart)    == "N", nStart,      1)
+     nColSkip  := iif(ValType(nColSkip)  == "N", nColSkip,    1)
+     lBrowse   := iif(ValType(lBrowse)   == "L", lBrowse,   .F.)
 
-     nRMargin  := if(ValType(nRMargin)  == "N", nRMargin,   255)
-     nBuffSize := if(ValType(nBuffSize) == "N", nBuffSize, 4096)
+     nRMargin  := iif(ValType(nRMargin)  == "N", nRMargin,   255)
+     nBuffSize := iif(ValType(nBuffSize) == "N", nBuffSize, 4096)
 
-     cExitKeys := if(ValType(cExitKeys) == "C", cExitKeys,  "")
+     cExitKeys := iif(ValType(cExitKeys) == "C", cExitKeys,  "")
 
-     cExitKeys := if(Len(cExitKeys) > 25, SubStr(cExitKeys, 1, 25), cExitKeys)
+     cExitKeys := iif(Len(cExitKeys) > 25, SubStr(cExitKeys, 1, 25), cExitKeys)
 
      nHandle := FOpen(cInFile)
 

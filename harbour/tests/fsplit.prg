@@ -43,10 +43,10 @@ if pcount() == 0
 endif
 
 // default destination name
-csplit := if( csplit == nil, "split.", csplit + "." )
+csplit := iif( csplit == nil, "split.", csplit + "." )
 
 // default size of each split file 360 x 1024 bytes
-nbufsize := if( empty( nbyte ), 360, nbyte )
+nbufsize := iif( empty( nbyte ), 360, nbyte )
 nbyte := nbufsize * 1024
 
 // open the source file

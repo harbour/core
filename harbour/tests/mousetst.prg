@@ -236,7 +236,7 @@ LOCAL cSkip := "", nKey, nPress := 0
          OTHERWISE
             @ MAXROW(),20 SAY "A keyboard key was pressed: "
             @ MAXROW(),48 SAY nKey
-            @ MAXROW(),58 SAY IF( nKey >= 32 .AND. nKey <= 255, CHR( nKey ), "" )
+            @ MAXROW(),58 SAY iif( nKey >= 32 .AND. nKey <= 255, CHR( nKey ), "" )
       END CASE
 
       IF nPress > 6

@@ -28,7 +28,7 @@ function Main()
    oBrowse:GoTopBlock    := { || n := 1 }
    oBrowse:GoBottomBlock := { || n := Len( aTest0 ) }
    oBrowse:SkipBlock     := { | nSkip, nPos | nPos := n,;
-                             n := If( nSkip > 0, Min( Len( aTest0 ), n + nSkip ),;
+                             n := iif( nSkip > 0, Min( Len( aTest0 ), n + nSkip ),;
                              Max( 1, n + nSkip )), n - nPos }
 
    oBrowse:AddColumn( TBColumnNew( "First",  { || n } ) )

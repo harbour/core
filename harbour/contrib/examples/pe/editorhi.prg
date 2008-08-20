@@ -14,8 +14,8 @@
 
 
 #define EXPORT
-#define IFANY( x ) IF( (x) != NIL )
-#define IFNIL( x ) IF( (x) == NIL )
+#define IFANY( x ) IIF( (x) != NIL )
+#define IFNIL( x ) IIF( (x) == NIL )
 #define IIFNIL( isnil, notnil ) IIF(notnil==NIL, isnil, notnil)
 
 #define EDIT_LOWER      0       // convert to lowercase
@@ -73,11 +73,11 @@ EXPORT FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
                            cFrame, cTitle, cColor, nSize, nEscape )
 LOCAL nEdit, oEdit
 
-    IF( nLength == NIL )
+    IF nLength == NIL
         nLength := 80
     ENDIF
     nEdit := ED_New( nLength, 4, IIFNIL(nESize, nSize), nEscape )
-    IF( nEdit >= 0 )
+    IF nEdit >= 0
         oEdit :=ARRAY( E_STRUCT_LEN )
         oEdit[E_EDIT]   := nEdit
 
@@ -274,17 +274,17 @@ EXPORT FUNCTION EditorFile( xInput, cOutput, nLineLen, nHelp, ;
 LOCAL nHandle, nLen, oEdit, bF2, bF8, oHelp, lSaved:=.F., lClose:=.F.
 LOCAL nSize
 
-    IF( lSave == NIL )
+    IF lSave == NIL
         lSave := .T.
     ENDIF
-    IF( VALTYPE(xInput) == "C" )
+    IF VALTYPE(xInput) == "C"
         nHandle := FOPEN( xInput )
         lClose := .T.
     ELSE
         nHandle := xInput
     ENDIF
 
-    IF( nHandle > 0 )
+    IF nHandle > 0
         nLen := MAX( FileLength( nHandle ), nESize )
     ELSE
         nLen := nESize
@@ -294,10 +294,10 @@ LOCAL nSize
     oEdit := EditorNew( 01,00,23,79, nLineLen, "---      ", cOutput, , ;
                       nSize, nEscape )
 
-    IF( nHandle > 0 )
+    IF nHandle > 0
         ED_ReadText( oEdit[E_EDIT], nHandle, 0, nLen, ;
                      IIF( lConv==NIL, .F., lConv ) )
-        IF( lClose )
+        IF lClose
             FCLOSE( nHandle )
         ENDIF
     ELSE
@@ -307,11 +307,11 @@ LOCAL nSize
     EditorCargo( oEdit, cOutput )
 
 //    SAVELINE 24 TO oHelp WITH 80, ColorHelp( ,COLOR_EXTEND )
-//    IF( lSave )
+//    IF lSave
 //        DisplayHelp( 73 )     //F2-save
 //        bF2 := SETKEY( K_F2, {|oE| lSaved:=EditorSave(oE)} )
 //    ENDIF
-//    IF( lPrint != NIL .AND. lPrint )
+//    IF lPrint != NIL .AND. lPrint
 //        DisplayHelp( 74 )      //F8-print
 //        bF8 := SETKEY( K_F8, {|oE| EditorPrint(oE)} )
 //    ENDIF
@@ -319,11 +319,11 @@ LOCAL nSize
     lSaved :=EditorEdit( oEdit, EDIT_EDIT, .F., nHelp )
     EditorKill( oEdit )
 
-    IF( lSave )
+    IF lSave
         SETKEY( K_F2, bF2 )
     ENDIF
 
-//    IF( lPrint != NIL .AND. lPrint )
+//    IF lPrint != NIL .AND. lPrint
 //        SETKEY( K_F8, bF8 )
 //    ENDIF
 //    RESTLINE FROM oHelp
@@ -377,7 +377,7 @@ LOCAL lSaveAllowed, lSaved:=.F.
         oEdit[E_MODE] := lEdit
     ENDIF
     lSaveAllowed :=( SETKEY(K_F2) == NIL )
-//    IF( lSaveAllowed )
+//    IF lSaveAllowed
 //        DisplayHelp( 73 )     //F2-save
 //    ENDIF
 
@@ -385,7 +385,7 @@ LOCAL lSaveAllowed, lSaved:=.F.
     nLeft   := oEdit[E_LEFT] +1
     nBottom := oEdit[E_BOTTOM] -1
     nRight  := oEdit[E_RIGHT] -1
-    IF( lFrame != NIL .AND. !lFrame )
+    IF lFrame != NIL .AND. !lFrame
         nLeft--
         nBottom++
         nRight++
@@ -413,11 +413,11 @@ LOCAL lSaveAllowed, lSaved:=.F.
         nRow := ED_Stabilize()    //displays all visible lines
         // It don't uses incremantal stabilization for performance reasons
 
-        IF( nRow != ED_Row() )
+        IF nRow != ED_Row()
             nRow := ED_Row()
             @ oEditor[E_TOP], nState SAY STRZERO( nRow,4 )
         ENDIF
-        IF( nCol != ED_Col() )
+        IF nCol != ED_Col()
             nCol := ED_Col()
             @ oEditor[E_TOP], nState+5 SAY STRZERO( nCol,3 )
         ENDIF
@@ -428,7 +428,7 @@ LOCAL lSaveAllowed, lSaved:=.F.
 
         DO CASE
         CASE( nKey>=32 .AND. nKey<256 )
-            IF( oEdit[E_MODE] )
+            IF oEdit[E_MODE]
                 ED_PutChar( nKey, lInsert )
             ENDIF
 
@@ -453,7 +453,7 @@ LOCAL lSaveAllowed, lSaved:=.F.
         OTHERWISE
             bKey := SETKEY( nKey )
             IFNIL( bKey )
-                IF( oEdit[E_MODE] )
+                IF oEdit[E_MODE]
                     EditorKeys( nKey )
                 ENDIF
             ELSE
@@ -598,20 +598,20 @@ STATIC FUNCTION EditorSave( oEdit )
 LOCAL nHandle, cFile, cNew
 
     cFile := EditorCargo(oEdit)
-    IF( EMPTY(cFile) )
+    IF EMPTY(cFile)
         cFile := "testfile.txt"     //GetFileName( 10, 10 )
     ENDIF
 
-    IF( EMPTY(cFile) )
+    IF EMPTY(cFile)
         RETURN( .F. )
     ENDIF
 /*
     WorkStart( 75 )
-    IF( FILE(cFile) )
+    IF FILE(cFile)
         cNew := FileExtension( cFile, "bak" )
         DELETEFILE( cNew )
         nHandle := RENAMEFILE( cFile, cNew )
-        IF( nHandle < 0 )
+        IF nHandle < 0
             FileError( cFile, -nHandle )
             WorkEnd()
 
@@ -620,7 +620,7 @@ LOCAL nHandle, cFile, cNew
     ENDIF
 */
     nHandle := FCREATE( cFile, FC_NORMAL )
-    IF( nHandle > 0 )
+    IF nHandle > 0
         FWRITE( nHandle, EditorGetText(oEdit) )
 
         FCLOSE( nHandle )
@@ -656,7 +656,7 @@ RETURN
 EXPORT FUNCTION SaveBox( top,left,bott,right, kolor, patt, head, shadow )
 LOCAL cBox, cClr, nBottom,nRight
 
-    IF( PCOUNT() > 4 )
+    IF PCOUNT() > 4
         cClr    := SETCOLOR(kolor)
         cBox    := SAVESCREEN(top,left,bott,right)
 //        cBox    := BoxShadow(top,left,bott,right, , patt, head, shadow)

@@ -97,9 +97,9 @@ FUNCTION FT_FINDITH(cCheckFor,cCheckIn,nWhichOccurrence,lIgnoreCase)
    ENDIF                                // IS_NOT_LOGICAL(lIgnoreCase) or
                                         // lIgnoreCase
 
-   RETURN (IF(nWhichOccurrence == 1, ;
+   RETURN (iif(nWhichOccurrence == 1, ;
               AT(cCheckFor, cCheckIn), ;
-              IF((nIthOccurrence := AT(cCheckFor, ;
+              iif((nIthOccurrence := AT(cCheckFor, ;
                                       STRTRAN(cCheckIn, cCheckFor, ;
                                               NULL, 1, ;
                                               nWhichOccurrence-1))) == 0, ;

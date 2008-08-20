@@ -65,7 +65,7 @@ MEMVAR lRet
      ?? '  '
      ?? STR(aTest[nk, 3])
      ?? '  '
-     ?? IF(aTest[nk, 4], 'true', 'false')
+     ?? iif(aTest[nk, 4], 'true', 'false')
    NEXT
  RETURN Nil
 #endif
@@ -174,7 +174,7 @@ STATIC FUNCTION _ftsavesub(xMemVar, nHandle, nErrorCode)
      CASE cValType = "L"
        nLen := 1
        FWrite(nHandle, L2Bin(nLen), 4)
-       FWrite(nHandle, IF(xMemVar, "T", "F") )
+       FWrite(nHandle, iif(xMemVar, "T", "F") )
      CASE cValType = "N"
        cString := STR(xMemVar)
        nLen := LEN(cString)

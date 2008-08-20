@@ -503,7 +503,7 @@ METHOD Boundary(nType) CLASS tIPClientHTTP
       NEXT
       ::cBoundary:=cBound
    endif
-   cBound:=iif(nType<2,"--","")+cBound+if(nType == 1,"--","")
+   cBound:=iif(nType<2,"--","")+cBound+iif(nType == 1,"--","")
    RETURN(cBound)
 
 METHOD Attach(cName,cFileName,cType) CLASS tIPClientHTTP

@@ -99,8 +99,8 @@ FUNCTION MAIN()
 
 #command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
             => ;
-            <Param1> := IF(<Param1> == NIL,<Def1>,<Param1>) ;
-         [; <ParamN> := IF(<ParamN> == NIL,<DefN>,<ParamN>)]
+            <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
+         [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
 
 
 FUNCTION FT_AMEDIAN( aArray, nStart, nEnd )

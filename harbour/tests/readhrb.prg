@@ -111,6 +111,4 @@ return HexDigit( int(nVal / 16) ) + HexDigit( int(nVal % 16) )
 
 function HexDigit( nDigit )
 
-return if(nDigit>=10, chr( 55 + nDigit ), chr( 48 + nDigit ) )
-
-
+return iif(nDigit>=10, chr( 55 + nDigit ), chr( 48 + nDigit ) )

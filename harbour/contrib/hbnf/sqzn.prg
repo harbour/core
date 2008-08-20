@@ -59,13 +59,13 @@
 function ft_sqzn(nValue,nSize,nDecimals)
   local tmpstr,cCompressed,k
 
-  nSize       := if(nSize    ==NIL,10,nSize )
-  nDecimals   := if(nDecimals==NIL, 0,nDecimals )
+  nSize       := iif(nSize    ==NIL,10,nSize )
+  nDecimals   := iif(nDecimals==NIL, 0,nDecimals )
   nValue      := nValue * (10**nDecimals)
-  nSize       := if(nSize/2!=int(nSize/2),nSize+1,nSize)
+  nSize       := iif(nSize/2!=int(nSize/2),nSize+1,nSize)
   tmpstr      := str( abs(nValue),nSize )
   tmpstr      := strtran(tmpstr," ","0")
-  cCompressed := chr( val(substr(tmpstr,1,2))+if(nValue<0,128,0) )
+  cCompressed := chr( val(substr(tmpstr,1,2))+iif(nValue<0,128,0) )
 
   for k := 3 to len(tmpstr) step 2
      cCompressed += chr(val(substr(tmpstr,k,2)))
@@ -117,10 +117,10 @@ function ft_sqzn(nValue,nSize,nDecimals)
 function ft_unsqzn(cCompressed,nSize,nDecimals)
   local tmp:="",k,cValue,multi:=1
 
-  nSize       := if(nSize    ==NIL,10,nSize )
-  nDecimals   := if(nDecimals==NIL, 0,nDecimals)
-  cCompressed := if(multi    ==-1,substr(cCompressed,2),cCompressed)
-  nSize       := if(nSize/2!=int(nSize/2),nSize+1,nSize)
+  nSize       := iif(nSize    ==NIL,10,nSize )
+  nDecimals   := iif(nDecimals==NIL, 0,nDecimals)
+  cCompressed := iif(multi    ==-1,substr(cCompressed,2),cCompressed)
+  nSize       := iif(nSize/2!=int(nSize/2),nSize+1,nSize)
   if asc(cCompressed) > 127
      tmp         := str(asc(cCompressed)-128,2)
      multi       := -1

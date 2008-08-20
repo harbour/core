@@ -50,8 +50,8 @@
 
 #Command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
             => ;
-            <Param1> := IF(<Param1> == NIL,<Def1>,<Param1>) ;
-         [; <ParamN> := IF(<ParamN> == NIL,<DefN>,<ParamN>)]
+            <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
+         [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
 
 #define     NULL    ""
 
@@ -66,8 +66,8 @@ FUNCTION FT_INVCLR(cDsrdColor)
    cDsrdColor := LEFT(cDsrdColor, AT(",", cDsrdColor+",")-1)
 
                                         // Get Any Modifiers
-   cModifiers := IF("*" $ cDsrdColor, "*", NULL) + ;
-                 IF("+" $ cDsrdColor, "+", NULL)
+   cModifiers := iif("*" $ cDsrdColor, "*", NULL) + ;
+                 iif("+" $ cDsrdColor, "+", NULL)
 
                                         // Separate the Fore/Background Colors
    cForeground := ALLTRIM(LEFT(cDsrdColor,   AT("/", cDsrdColor) - 1))

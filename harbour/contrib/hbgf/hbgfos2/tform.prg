@@ -127,7 +127,7 @@ METHOD Command( nNotifyCode, nId, hWndCtl ) CLASS HBForm
    do case
       case nNotifyCode == CMDSRC_MENU   // Menu command
          if ::Menu != nil
-            if( oMenuItem := ::Menu:FindItem( nId ) ) != nil
+            if ( oMenuItem := ::Menu:FindItem( nId ) ) != nil
                if oMenuItem:OnClick != nil
                   __ObjSendMsg( Self, oMenuItem:OnClick, oMenuItem )
                endif

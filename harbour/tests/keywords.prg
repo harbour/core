@@ -22,7 +22,7 @@ STATIC for, in, include, init, loop, local, using, static, return, recover
 Function Main()
 
 //just to prevent any disaster if someone will want to run it
-  IF( .T. )
+  IF .T.
     RETURN nil
   ENDIF
 

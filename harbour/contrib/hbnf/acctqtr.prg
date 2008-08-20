@@ -123,7 +123,9 @@ FUNCTION FT_ACCTQTR(dGivenDate,nQtrNum)
  
   lIsQtr     := ( VALTYPE(nQtrNum) == 'N' )
   IF lIsQtr
-    IF( nQtrNum < 1 .OR. nQtrNum > 4 , nQtrNum := 4, )
+    IF nQtrNum < 1 .OR. nQtrNum > 4
+      nQtrNum := 4
+    ENDIF
     aRetVal    := FT_QTR(dGivenDate, nQtrNum)
     nYTemp     := VAL(SUBSTR(aRetVal[1],1,4))
     nQTemp     := VAL(SUBSTR(aRetVal[1],5,2))

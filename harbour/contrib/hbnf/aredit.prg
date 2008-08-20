@@ -288,7 +288,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
                  ENDIF
                  EVAL(bGetFunc, b, ar, b:colPos, nElem )
                  * after get move to next field
-                 KEYBOARD IF(b:colPos < b:colCount, ;
+                 KEYBOARD iif(b:colPos < b:colCount, ;
                               CHR(K_RIGHT), CHR(K_HOME) + CHR(K_DOWN) )
 
               * Placing K_ENTER here below Edit Block (i.e. bGetFunc)
@@ -302,6 +302,6 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
    ENDDO // WHILE !exit_requested
    RestScreen(nTop, nLeft, nBot, nRight, cSaveWin)
    * if no bGetFunc then ESC returns 0, otherwise return value of last element
-RETURN IF( VALTYPE(bGetFunc) == NIL .AND. nKey == K_ESC, ;
-           0, ar[b:colPos, nElem] )
+RETURN iif( VALTYPE(bGetFunc) == NIL .AND. nKey == K_ESC, ;
+            0, ar[b:colPos, nElem] )
 * EOFcn FT_ArEdit()

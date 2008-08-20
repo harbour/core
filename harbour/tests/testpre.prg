@@ -62,12 +62,12 @@ FUNCTION Main()
                 'CLOSE ALL' }
 
    FOR j := 1 TO 2
-      qOut( if( j = 1, "Before", "After" ) + " __Preprocess()" )
+      qOut( iif( j = 1, "Before", "After" ) + " __Preprocess()" )
       qOut( "===================" )
       qOut( "" )
       FOR i := 1 TO len( aScript )
 
-         ? if( j = 1, aScript[i], __Preprocess( aScript[i] ) )
+         ? iif( j = 1, aScript[i], __Preprocess( aScript[i] ) )
 
       NEXT
       qOut( "" )

@@ -57,7 +57,7 @@
  * $Description$  If argument is not set, return default
  * $End$ */
 function Default( xArg, xDef )
-return if( ValType(xArg) != ValType(xDef), xDef, xArg )
+return iif( ValType(xArg) != ValType(xDef), xDef, xArg )
 
 
 /* $Doc$
@@ -96,22 +96,22 @@ function ToChar( xTxt, cSeparator, lDebug )
 
    do case
       case cValTxt=="C" .or. cValTxt=="M"       // Character
-         cOut := if( lDebug, '"'+xTxt+'"', xTxt )
+         cOut := iif( lDebug, '"'+xTxt+'"', xTxt )
 
       case cValTxt=="N"                         // Numeric
          cOut := Alltrim(Str(xTxt))
 
       case cValTxt=="U"                         // Nothing to write
-         cOut := if( lDebug, "NIL", "" )
+         cOut := iif( lDebug, "NIL", "" )
 
       case cValTxt=="D"                         // Date
          cOut := TransForm(xTxt, "")
 
       case cValTxt=="L"                         // Logical
          if lDebug
-            cOut := if( xTxt, ".T.", ".F." )
+            cOut := iif( xTxt, ".T.", ".F." )
          else
-            cOut := if( xTxt, "True", "False" )
+            cOut := iif( xTxt, "True", "False" )
          endif
 
       case cValTxt=="A"                         // Array

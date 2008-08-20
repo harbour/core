@@ -2678,7 +2678,7 @@ RETURN ( nLength )
 function Array2File(cFile,aRay,nDepth,hFile)
 local nBytes := 0
 local i
-nDepth := if(ISNUMBER(nDepth),nDepth,0)
+nDepth := iif(ISNUMBER(nDepth),nDepth,0)
 if hFile == NIL
    if (hFile := fCreate(cFile,FC_NORMAL)) == -1
       return(nBytes)
@@ -2706,7 +2706,7 @@ local cData  := valtype(xData)
    elseif ISDATE(xData)
        cData += i2bin(8)+dtos(xData)
    elseif ISLOGICAL(xData)
-       cData += i2bin(1)+if(xData,'T','F')
+       cData += i2bin(1)+iif(xData,'T','F')
    elseif ISARRAY(xData)
        cData += i2bin(len(xData))
    else

@@ -82,7 +82,7 @@ function TTextFile()                            // Parameter = dirty
       oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
 
       oFile:AddInline( "Run"    , ;             // Get/set data
-      {|self,xTxt,lCRLF|If( ::cMode == "R",::Read(),::WriteLn(xTxt, lCRLF)) } )
+      {|self,xTxt,lCRLF|iif( ::cMode == "R",::Read(),::WriteLn(xTxt, lCRLF)) } )
       oFile:AddInline( "Write"  , {|self, xTxt|::WriteLn( xTxt, .F. ) } )
                                                 // Write without CR
       oFile:AddInline( "EoF"    , {|self|::lEoF} )

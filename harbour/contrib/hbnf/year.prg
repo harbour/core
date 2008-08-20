@@ -82,9 +82,11 @@ FUNCTION FT_YEAR(dGivenDate)
 
   cFY_Start   := FT_DATECNFG()[1]
   cDateFormat := SET(_SET_DATEFORMAT, "yyyy.mm.dd")
-  IF( VALTYPE(dGivenDate) != 'D', dGivenDate := DATE(), )
+  IF !( VALTYPE(dGivenDate) == 'D' )
+    dGivenDate := DATE()
+  ENDIF
 
-  aRetVal[2]  := CTOD(STR( YEAR(dGivenDate) - IF(MONTH(dGivenDate) < ;
+  aRetVal[2]  := CTOD(STR( YEAR(dGivenDate) - iif(MONTH(dGivenDate) < ;
                     MONTH(CTOD(cFY_Start)), 1, 0), 4) + ;
                     SUBSTR(cFY_Start, 5, 6) )
   aRetval[3]  := FT_MADD(aRetVal[2], 12) - 1

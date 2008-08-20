@@ -21,7 +21,7 @@ Setcolor('w/b+,r/b,g+/r,b+/r+,bg/n+,w/bg,rb/bg')
 @ 9,3 Say "Singer"
 @ 9,12 Get ly CHECKBOX color 'w/b+,w/b,w+/r,w/g+' MESSAGE "Are You a  Singer"
 read MSG AT maxrow(), 0, maxcol() MSG Color "w/b+"
-? "Is the Person Married",if(lx," Yes ", " No ")
-? "Is the Person a Singer",if(ly," Yes ", " No ")
+? "Is the Person Married",iif(lx," Yes ", " No ")
+? "Is the Person a Singer",iif(ly," Yes ", " No ")
 ? "Your Os is ",cItem
 return Nil

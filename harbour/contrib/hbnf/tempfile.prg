@@ -152,7 +152,7 @@
 
   cPath = alltrim( cPath )
 
-  nHandle := HB_FTempCreate( cPath, nil, if( lHide, FC_HIDDEN, FC_NORMAL ), @cFile )
+  nHandle := HB_FTempCreate( cPath, nil, iif( lHide, FC_HIDDEN, FC_NORMAL ), @cFile )
 
   if !hb_isbyref( @nHandle )
      fclose( nHandle )

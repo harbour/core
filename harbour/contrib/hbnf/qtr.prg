@@ -99,12 +99,14 @@ LOCAL lIsQtr, nTemp, aRetVal
 
   lIsQtr  := ( VALTYPE(nQtrNum) == 'N' )
   IF lIsQtr
-     IF( nQtrNum < 1 .OR. nQtrNum > 4, nQtrNum := 4, )
+     IF nQtrNum < 1 .OR. nQtrNum > 4
+        nQtrNum := 4
+     ENDIF
      dGivenDate := FT_MADD(aRetVal[2], 3*(nQtrNum - 1) )
   ENDIF
 
   nTemp := MONTH( dGivenDate ) - MONTH( aRetVal[2] )
-  nTemp += IF( nTemp >= 0, 1, 13 )
+  nTemp += iif( nTemp >= 0, 1, 13 )
   nTemp := INT( (nTemp - 1) / 3 )
 
   aRetVal[1] += PADL(LTRIM(STR( nTemp + 1, 2)), 2, '0')

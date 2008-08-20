@@ -186,7 +186,7 @@
         dGivenDate := DATE()
      ENDIF
 
-     nType := IF(nType == NIL .OR. VALTYPE(nType) != 'N', 0, nType)
+     nType := iif(nType == NIL .OR. VALTYPE(nType) != 'N', 0, nType)
 
      IF nType == 0
         IF SUBSTR(cFY_Start,6,5) == "01.01"

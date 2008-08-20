@@ -218,7 +218,7 @@
   IF "EGA" $ UPPER( cVidMode )
      SETMODE( 43, 80 )
   ENDIF
-  lColour := IF( "MONO" $ UPPER( cVidMode ), .F., ISCOLOR() )
+  lColour := iif( "MONO" $ UPPER( cVidMode ), .F., ISCOLOR() )
 
   SET SCOREBOARD Off
   SETCURSOR( SC_NONE )

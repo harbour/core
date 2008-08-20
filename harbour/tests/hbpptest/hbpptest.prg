@@ -1237,7 +1237,7 @@ LOCAL i
 
   pCnt++
   pre:=strtran(pre," "); out:=strtran(out," ")
-  IF( pre == out )
+  IF pre == out
     RETURN 1
   ELSE
     OutStd( pre, hb_OSNewLine() )

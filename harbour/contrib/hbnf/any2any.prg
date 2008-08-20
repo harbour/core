@@ -81,19 +81,19 @@
 #Define XTOC(x)           CASE_AT(VALTYPE(x), "CNDLM", ;
                              { NULL, ;
                                x, ;
-                               IF(IS_NUMERIC(x),;
+                               iif(IS_NUMERIC(x),;
                                   TRIM_NUMBER(x), ;
                                   NULL), ;
-                               IF(IS_DATE(x),DTOC(x),NULL),;
-                               IF(IS_LOGICAL(x),;
-                                  IF(x,".T.",".F."), ;
+                               iif(IS_DATE(x),DTOC(x),NULL),;
+                               iif(IS_LOGICAL(x),;
+                                  iif(x,".T.",".F."), ;
                                   NULL), ;
                                x })
 
 #command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
             => ;
-            <Param1> := IF(<Param1> == NIL,<Def1>,<Param1>) ;
-         [; <ParamN> := IF(<ParamN> == NIL,<DefN>,<ParamN>)]
+            <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
+         [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
 
 
 FUNCTION FT_XTOY(xValueToConvert, cTypeToConvertTo, lWantYesNo)
@@ -111,15 +111,15 @@ FUNCTION FT_XTOY(xValueToConvert, cTypeToConvertTo, lWantYesNo)
            IS_NOT_DATE(xValueToConvert)
 
 
-         xValueToConvert := IF(IS_CHAR(xValueToConvert), ;
+         xValueToConvert := iif(IS_CHAR(xValueToConvert), ;
                                       ; // Convert from a Character
                                CTOD(xValueToConvert), ;
-                               IF(IS_NUMERIC(xValueToConvert), ;
+                               iif(IS_NUMERIC(xValueToConvert), ;
                                       ; // Convert from a Number
                                   xValueToConvert + EARLIEST_DATE, ;
-                                  IF(IS_LOGICAL(xValueToConvert), ;
+                                  iif(IS_LOGICAL(xValueToConvert), ;
                                       ; // Convert from a Logical
-                                     IF(xValueToConvert, DATE(), BLANK_DATE), ;
+                                     iif(xValueToConvert, DATE(), BLANK_DATE), ;
                                       ; // Unsupported Type
                                      BLANK_DATE)))
 
@@ -127,15 +127,15 @@ FUNCTION FT_XTOY(xValueToConvert, cTypeToConvertTo, lWantYesNo)
            IS_NOT_NUMERIC(xValueToConvert)
 
 
-         xValueToConvert := IF(IS_CHAR(xValueToConvert), ;
+         xValueToConvert := iif(IS_CHAR(xValueToConvert), ;
                                       ; // Convert from a Character
                                VAL(xValueToConvert), ;
-                               IF(IS_DATE(xValueToConvert), ;
+                               iif(IS_DATE(xValueToConvert), ;
                                       ; // Convert from a Date
                                   xValueToConvert - EARLIEST_DATE, ;
-                                  IF(IS_LOGICAL(xValueToConvert), ;
+                                  iif(IS_LOGICAL(xValueToConvert), ;
                                       ; // Convert from a Logical
-                                     IF(xValueToConvert, 1, 0), ;
+                                     iif(xValueToConvert, 1, 0), ;
                                       ; // Unsupported Type
                                      0)))
 
@@ -143,13 +143,13 @@ FUNCTION FT_XTOY(xValueToConvert, cTypeToConvertTo, lWantYesNo)
            IS_NOT_LOGICAL(xValueToConvert)
 
 
-         xValueToConvert := IF(IS_CHAR(xValueToConvert), ;
+         xValueToConvert := iif(IS_CHAR(xValueToConvert), ;
                                       ; // Convert from a Character
-                               UPPER(xValueToConvert) == IF(lWantYesNo,"Y",".T."), ;
-                               IF(IS_DATE(xValueToConvert), ;
+                               UPPER(xValueToConvert) == iif(lWantYesNo,"Y",".T."), ;
+                               iif(IS_DATE(xValueToConvert), ;
                                       ; // Convert from a Date
                                   ! EMPTY(xValueToConvert), ;
-                                  IF(IS_NUMERIC(xValueToConvert), ;
+                                  iif(IS_NUMERIC(xValueToConvert), ;
                                       ; // Convert from a Number
                                      xValueToConvert != 0, ;
                                       ; // Unsupported Type
@@ -170,4 +170,3 @@ FUNCTION FT_XTOY(xValueToConvert, cTypeToConvertTo, lWantYesNo)
    ENDCASE
 
    RETURN (xValueToConvert)             // XToY
-

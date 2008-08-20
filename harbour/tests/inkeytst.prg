@@ -244,7 +244,7 @@ LOCAL nKey, nMask, cText
             ? "The right mouse button was double-clicked."
          OTHERWISE
             ? "A keyboard key was pressed: ", nKey,;
-            IF( nKey >= 32 .AND. nKey <= 255, CHR( nKey ), "" )
+            IIF( nKey >= 32 .AND. nKey <= 255, CHR( nKey ), "" )
       END CASE
 
    END WHILE

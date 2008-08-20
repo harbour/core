@@ -543,8 +543,8 @@ RETURN NIL              // no output from function
 
 FUNCTION FT_MGETPOS( nX, nY )
 
-   nX := if( nX == NIL, 0, nX )
-   nY := if( nY == NIL, 0, nY )
+   nX := iif( nX == NIL, 0, nX )
+   nY := iif( nY == NIL, 0, nY )
 
    aReg[AX] := 3                // set mouse function call 3
    FT_INT86( 51, aReg )        // execute mouse interrupt
@@ -598,8 +598,8 @@ FUNCTION FT_MGETCOORD( nX, nY )
 
 * Duplicated code from FT_MGETPOS() for speed reasons
 
-   nX := if( nX == NIL, 0, nX )
-   nY := if( nY == NIL, 0, nY )
+   nX := iif( nX == NIL, 0, nX )
+   nY := iif( nY == NIL, 0, nY )
 
    aReg[AX] := 3                // set mouse function call 3
    FT_INT86( 51, aReg )         // execute mouse interrupt
@@ -913,7 +913,7 @@ RETURN aReg[AX]               // return button status
  *     This function returns the release status of the mouse buttons and the
  *     coordinates of the last release.
  *  $EXAMPLES$
- *     IF( FT_MBUTREL( 0 ) == 1 )
+ *     IF FT_MBUTREL( 0 ) == 1
  *        ? "Left button released"
  *     ENDIF
  *  $SEEALSO$

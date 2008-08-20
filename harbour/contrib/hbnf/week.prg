@@ -102,7 +102,9 @@ LOCAL lIsWeek, nTemp, aRetVal, dTemp
   lIsWeek := ( VALTYPE(nWeekNum) == 'N' )
   IF lIsWeek
      nTemp := INT( (aRetVal[3] - aRetVal[2]) / 7 ) + 1
-     IF(nWeekNum < 1 .OR. nWeekNum > nTemp , nWeekNum := nTemp, )
+     IF nWeekNum < 1 .OR. nWeekNum > nTemp
+        nWeekNum := nTemp
+     ENDIF
      dGivenDate := aRetVal[2] + (nWeekNum - 1) * 7
   ENDIF
 

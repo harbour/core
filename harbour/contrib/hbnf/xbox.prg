@@ -153,25 +153,25 @@ FUNCTION FT_XBOX(cJustType,; // "L" = left, otherwise centered
         aLines_[8]
 
   // validate parameters
-  cJustType := if(ValType(cJustType)='C',Upper(cJustType),'')
-  cRetWait  := if(ValType(cRetWait )='C',Upper(cRetWait), '')
-  cBorType  := if(ValType(cBorType )='C',Upper(cBorType), '')
-  cBorColor := if(ValType(cBoxColor)='C',cBorColor, 'N/W')
-  cBoxColor := if(ValType(cBoxColor)='C',cBoxColor, 'W/N')
-  nStartRow := if(ValType(nStartRow)='N',nStartRow,99)
-  nStartCol := if(ValType(nStartCol)='N',nStartCol,99)
+  cJustType := iif(ValType(cJustType)='C',Upper(cJustType),'')
+  cRetWait  := iif(ValType(cRetWait )='C',Upper(cRetWait), '')
+  cBorType  := iif(ValType(cBorType )='C',Upper(cBorType), '')
+  cBorColor := iif(ValType(cBoxColor)='C',cBorColor, 'N/W')
+  cBoxColor := iif(ValType(cBoxColor)='C',cBoxColor, 'W/N')
+  nStartRow := iif(ValType(nStartRow)='N',nStartRow,99)
+  nStartCol := iif(ValType(nStartCol)='N',nStartCol,99)
 
   nNumRows := Min(PCount()-7,8)
 
   //establish array of strings to be displayed
-  aLines_[1] := if(ValType(cLine1) = 'C',AllTrim(SubStr(cLine1,1,74)),'')
-  aLines_[2] := if(ValType(cLine2) = 'C',AllTrim(SubStr(cLine2,1,74)),'')
-  aLines_[3] := if(ValType(cLine3) = 'C',AllTrim(SubStr(cLine3,1,74)),'')
-  aLines_[4] := if(ValType(cLine4) = 'C',AllTrim(SubStr(cLine4,1,74)),'')
-  aLines_[5] := if(ValType(cLine5) = 'C',AllTrim(SubStr(cLine5,1,74)),'')
-  aLines_[6] := if(ValType(cLine6) = 'C',AllTrim(SubStr(cLine6,1,74)),'')
-  aLines_[7] := if(ValType(cLine7) = 'C',AllTrim(SubStr(cLine7,1,74)),'')
-  aLines_[8] := if(ValType(cLine8) = 'C',AllTrim(SubStr(cLine8,1,74)),'')
+  aLines_[1] := iif(ValType(cLine1) = 'C',AllTrim(SubStr(cLine1,1,74)),'')
+  aLines_[2] := iif(ValType(cLine2) = 'C',AllTrim(SubStr(cLine2,1,74)),'')
+  aLines_[3] := iif(ValType(cLine3) = 'C',AllTrim(SubStr(cLine3,1,74)),'')
+  aLines_[4] := iif(ValType(cLine4) = 'C',AllTrim(SubStr(cLine4,1,74)),'')
+  aLines_[5] := iif(ValType(cLine5) = 'C',AllTrim(SubStr(cLine5,1,74)),'')
+  aLines_[6] := iif(ValType(cLine6) = 'C',AllTrim(SubStr(cLine6,1,74)),'')
+  aLines_[7] := iif(ValType(cLine7) = 'C',AllTrim(SubStr(cLine7,1,74)),'')
+  aLines_[8] := iif(ValType(cLine8) = 'C',AllTrim(SubStr(cLine8,1,74)),'')
   ASize(aLines_,Min(nNumRows,8))
 
   // determine longest line
@@ -179,9 +179,9 @@ FUNCTION FT_XBOX(cJustType,; // "L" = left, otherwise centered
   AEVAL(aLines_,{|| nLLen:=Max(nLLen,Len(aLines_[nLoop])),nLoop++})
 
   // calculate corners
-  nLCol = if(nStartCol==99,Int((76-nLLen)/2),Min(nStartCol,74-nLLen))
+  nLCol = iif(nStartCol==99,Int((76-nLLen)/2),Min(nStartCol,74-nLLen))
   nRCol = nLCol+nLLen+3
-  nTRow = if(nStartRow==99,INT((24-nNumRows)/2),Min(nStartRow,22-nNumRows))
+  nTRow = iif(nStartRow==99,INT((24-nNumRows)/2),Min(nStartRow,22-nNumRows))
   nBRow = nTRow+nNumRows+1
 
   // form box and border
@@ -207,9 +207,9 @@ FUNCTION FT_XBOX(cJustType,; // "L" = left, otherwise centered
   nLoop :=1
   AEVAL(aLines_,{|cSayStr|;
                  nSayRow := nTRow+nLoop,;
-                 nSayCol := if(cJustType = 'L',;
-                               nLCol+2,;
-                               nLCol+2+(nLLen-Int(Len(aLines_[nLoop])))/2),;
+                 nSayCol := iif(cJustType = 'L',;
+                                nLCol+2,;
+                                nLCol+2+(nLLen-Int(Len(aLines_[nLoop])))/2),;
                  nLoop++,;
                  _FTSAY(nSayRow,nSayCol,cSayStr);
                 })

@@ -29,19 +29,19 @@ LOCAL nPrev:=SECONDS()
   ? VALTYPE(nH1), nH1, VALTYPE(nH2), nH2, VALTYPE(nH3), nH3, VALTYPE(nH4), nH4
   
   INKEY( 30 )
-  IF( !EMPTY(nH3) )
+  IF !EMPTY(nH3)
      @ 14,2 SAY "Delete task 3: " + HB_VALTOSTR(nH3)
      HB_IDLEDEL( nH3 )
   ENDIF
-  IF( !EMPTY(nH2) )
+  IF !EMPTY(nH2)
      @ 15,2 SAY "Delete task 2: " + HB_VALTOSTR(nH2)
      HB_IDLEDEL( nH2 )
   ENDIF
-  IF( !EMPTY(nH1) )
+  IF !EMPTY(nH1)
      @ 16,2 SAY "Delete task 1: " + HB_VALTOSTR(nH1)
      HB_IDLEDEL( nH1 )
   ENDIF
-  IF( !EMPTY(nH4) )
+  IF !EMPTY(nH4)
      @ 17,2 SAY "Delete task 4: " + HB_VALTOSTR(nH4)
      HB_IDLEDEL( nH4 )
   ENDIF

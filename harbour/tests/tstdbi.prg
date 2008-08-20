@@ -59,7 +59,7 @@ static function xToStr( xValue )
     case cType == "C" .or. cType == "M"
       cRet := xValue
     case cType == "L"
-      cRet := if( xValue, ".T.", ".F." )
+      cRet := iif( xValue, ".T.", ".F." )
     case cType == "A"
       cRet := "A" + AllTrim( Str( Len( xValue ) ) )
     case cType == "U"

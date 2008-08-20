@@ -129,7 +129,7 @@ FUNCTION Main()
       FOR i := 1 TO len( aEntries )
 
          cCode += "<TABLE WIDTH=100% CELLSPACING=0>" + chr(13) + chr(10)
-         cColor := if( Mod( i, 2 ) == 0, cEvenColor, cOddColor )
+         cColor := iif( Mod( i, 2 ) == 0, cEvenColor, cOddColor )
 
          FOR j := 1 TO oIni:ReadNumber( "Format", "FormatLines", 0 )
 

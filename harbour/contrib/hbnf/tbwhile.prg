@@ -311,7 +311,7 @@ FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       /* these are color setups from tbdemo.prg from Nantucket */
       * IF ( cType == "N" )
       *   column:defColor := {5, 6}
-      *   column:colorBlock := {|x| if( x < 0, {7, 8}, {5, 6} )}
+      *   column:colorBlock := {|x| iif( x < 0, {7, 8}, {5, 6} )}
       *ELSE
       *   column:defColor := {3, 4}
       *ENDIF
@@ -336,7 +336,7 @@ FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    cColorSave := SetColor()
 
    /* Background Color Is Based On First Color In Passed cColorList
-   cColorBack := IF(',' $ cColorList, ;
+   cColorBack := iif(',' $ cColorList, ;
       SUBSTR(cColorList, 1, AT(',', cColorList) - 1), cColorList )
 
    IF .NOT. lKeepScrn

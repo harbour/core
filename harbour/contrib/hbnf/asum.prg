@@ -65,8 +65,8 @@
 
 #command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
             => ;
-            <Param1> := IF(<Param1> == NIL,<Def1>,<Param1>) ;
-         [; <ParamN> := IF(<ParamN> == NIL,<DefN>,<ParamN>)]
+            <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
+         [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
 
 
 FUNCTION FT_ASUM(aArray, nStartIndex, nEndIndex)
@@ -84,7 +84,7 @@ FUNCTION FT_ASUM(aArray, nStartIndex, nEndIndex)
            nSumTotal += ;
               CASE_AT(VALTYPE(xElement), "NC", ;
                       { 0, xElement, ;
-                           IF(IS_CHAR(xElement),LEN(xElement),0) }) }, ;
+                           iif(IS_CHAR(xElement),LEN(xElement),0) }) }, ;
          nStartIndex, nEndIndex - nStartIndex + 1)
 
    RETURN (nSumTotal)                   // FT_ASum

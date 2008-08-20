@@ -65,8 +65,8 @@
 
 #command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
             => ;
-            <Param1> := IF(<Param1> == NIL,<Def1>,<Param1>) ;
-         [; <ParamN> := IF(<ParamN> == NIL,<DefN>,<ParamN>)]
+            <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
+         [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
 
 
          
@@ -80,7 +80,7 @@ FUNCTION FT_AAVG(aArray, nStartIndex, nEndIndex)
    FORCE_BETWEEN(1, nEndIndex,   LEN(aArray))
    FORCE_BETWEEN(1, nStartIndex, nEndIndex)
 
-   RETURN (IF(IS_NOT_ARRAY(aArray) .OR. LEN(aArray) == 0, ;
+   RETURN iif(IS_NOT_ARRAY(aArray) .OR. LEN(aArray) == 0, ;
               0, ;
               FT_ASUM(aArray, nStartIndex, nEndIndex) / ;
-                 (nEndIndex - nStartIndex + 1)))
+                 (nEndIndex - nStartIndex + 1))

@@ -20,7 +20,7 @@ LOCAL i
    ? 'before loop: a[1]=',a[1], 'a[2]=',a[2], 'a[3]=',a[3]
    FOR EACH enum IN A
       ? "start: ENUM=", ENUM
-      IF( ENUM = 'two' )
+      IF ENUM = 'two'
          ENUM := UPPER( ENUM )
       ENDIF
       ? "end:   ENUM=", ENUM, "| index:", ENUM:__enumIndex, "| value:", ENUM:__enumValue, "| base: ", VALTYPE(ENUM:__enumBase)
@@ -37,7 +37,7 @@ LOCAL i
    ? "before loop: ENUM=",ENUM
    ? 'after loop: a[1]=',a[1], 'a[2]=',a[2], 'a[3]=',a[3]
    FOR EACH ENUM IN A
-      IF( UPPER(ENUM) = 'TWO' )
+      IF UPPER(ENUM) = 'TWO'
          ENUM := UPPER( ENUM )
          ? "before passing by @ | ENUM=", ENUM, "| index:", ENUM:__enumIndex, "| value:", ENUM:__enumValue, "| base: ", VALTYPE(ENUM:__enumBase)
          testBYREF( @ENUM )
@@ -71,7 +71,7 @@ LOCAL i
    BEGIN SEQUENCE
       FOR EACH enum IN c
          ? "start: ENUM=", ENUM
-         IF( enum = 'd' )
+         IF enum = 'd'
             enum := UPPER( enum )
          ENDIF
          Testbreak( enum )
@@ -101,7 +101,7 @@ LOCAL i
 
    FOR EACH enum IN a
       BEGIN SEQUENCE
-      IF( enum = '2' )
+      IF enum = '2'
          BREAK
       ENDIF
       END SEQUENCE
@@ -109,7 +109,7 @@ LOCAL i
 
    FOR EACH enum IN a
       BEGIN SEQUENCE
-      IF( enum = '2' )
+      IF enum = '2'
          ? "Breaking... enum=", enum
          BREAK enum
       ENDIF
@@ -122,7 +122,7 @@ RETURN
 
 
 PROCEDURE TESTbreak( v )
-   IF( v = '2' .or. v = 'd' )
+   IF v = '2' .or. v = 'd'
       ? "issuing break"
       BREAK( v )
    ENDIF
