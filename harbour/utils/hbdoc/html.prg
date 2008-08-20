@@ -51,8 +51,8 @@
  *
  */
 
-#include 'hbclass.ch'
-#include 'common.ch'
+#include "hbclass.ch"
+#include "common.ch"
 #define CRLF HB_OSNewLine()
 STATIC nX := 0
 
@@ -110,7 +110,7 @@ RETURN Self
 
 METHOD WriteTitle( cTitle ) CLASS THTML
 
-   FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF + '</HEAD>' + CRLF  )
+   FWRITE( Self:nHandle, "<TITLE>" + CRLF + cTitle + CRLF + "</Title>" + CRLF + "</HEAD>" + CRLF  )
    FWRITE( Self:nHandle, "<BODY>" + CRLF )
 RETURN Self
 
@@ -118,7 +118,7 @@ METHOD WritePar( cPar ) CLASS THTML
 
    //   cPar:=STRTRAN(cPar,"<","&lt;")
    //   cPar:=STRTRAN(cPar,">","&gt;")
-   FWRITE( Self:nHandle, '<dd>' + ALLTRIM( cPar ) + '</dd>' + CRLF )
+   FWRITE( Self:nHandle, "<dd>" + ALLTRIM( cPar ) + "</dd>" + CRLF )
 
 RETURN Self
 METHOD WriteText( cPar ) CLASS THTML
@@ -132,13 +132,13 @@ METHOD WriteParBold( cPar, lEndDl, lPar ) CLASS THTML
    DEFAULT lEnddl TO .T.
    DEFAULT lPar TO .T.
    IF lEndDl .AND. lPar
-      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
+      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + "</b></dt><p>" + CRLF )
    ELSEIF !lPar .AND. !lEnddl
-      FWRITE( Self:nHandle, '<DL>' + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
+      FWRITE( Self:nHandle, "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + "</b></dt><p>" + CRLF )
    ELSEIF !lPar .AND. lEnddl
-      FWRITE( Self:nHandle, "</PRE>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
+      FWRITE( Self:nHandle, "</PRE>" + CRLF + "</DL>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + "</b></dt><p>" + CRLF )
    ELSEIF lPar .AND. !lEnddl
-      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + '</b></dt><p>' + CRLF )
+      FWRITE( Self:nHandle, "</P></dd>" + CRLF + "<DL>" + CRLF + "<dt><b>" + ALLTRIM( cPar ) + "</b></dt><p>" + CRLF )
 
    ENDIF
 RETURN Self
@@ -154,18 +154,18 @@ RETURN Self
 METHOD WriteLink( cLink, cName ) CLASS THTML
 
    LOCAL nPos
-   LOCAL cTemp := ''
+   LOCAL cTemp := ""
 
    nPos := AT( "()", cLink )
    IF nPos > 0
       if AT(".htm",cLink)=0
-      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + '.htm'
+      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + ".htm"
       else
       cTemp := SUBSTR( cLink, 1, nPos - 1 )
       endif
    ELSE
      if AT(".htm",cLink)=0
-      cTemp := ALLTRIM( cLink ) + '.htm'
+      cTemp := ALLTRIM( cLink ) + ".htm"
         else
      cTemp := ALLTRIM( cLink ) 
       endif
@@ -183,18 +183,18 @@ RETURN Self
 METHOD WriteLinkTable( cLink, cName,cInfo ) CLASS THTML
 
    LOCAL nPos
-   LOCAL cTemp := ''
+   LOCAL cTemp := ""
 
    nPos := AT( "()", cLink )
    IF nPos > 0
       if AT(".htm",cLink)=0
-      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + '.htm'
+      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + ".htm"
       else
       cTemp := SUBSTR( cLink, 1, nPos - 1 )
       endif
    ELSE
          if AT(".htm",cLink)=0
-      cTemp := ALLTRIM( cLink ) + '.htm'
+      cTemp := ALLTRIM( cLink ) + ".htm"
         else
      cTemp := ALLTRIM( cLink ) 
       endif
@@ -203,7 +203,7 @@ METHOD WriteLinkTable( cLink, cName,cInfo ) CLASS THTML
       cLink := cName
    ENDIF
    cTemp := STRTRAN( cTemp, " ", "" )
-   FWRITE( Self:nHandle, "<tr><td><a href=" + LOWER( cTemp ) + ">" + cLink + "</a></td><td>" +cinfo +'</td></tr>'+ CRLF )
+   FWRITE( Self:nHandle, "<tr><td><a href=" + LOWER( cTemp ) + ">" + cLink + "</a></td><td>" +cinfo +"</td></tr>"+ CRLF )
 
 RETURN Self
 
@@ -273,18 +273,18 @@ RETURN SELF
 METHOD WriteChmLink( cLink, cName ) CLASS THTML
 
    LOCAL nPos
-   LOCAL cTemp := ''
+   LOCAL cTemp := ""
 
    nPos := AT( "()", cLink )
    IF nPos > 0
       if AT(".htm",cLink)=0
-      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + '.htm'
+      cTemp := SUBSTR( cLink, 1, nPos - 1 ) + ".htm"
       else
       cTemp := SUBSTR( cLink, 1, nPos - 1 )
       endif
    ELSE
          if AT(".htm",cLink)=0
-      cTemp := ALLTRIM( cLink ) + '.htm'
+      cTemp := ALLTRIM( cLink ) + ".htm"
         else
      cTemp := ALLTRIM( cLink ) 
       endif

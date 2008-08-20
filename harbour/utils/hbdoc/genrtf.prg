@@ -57,8 +57,8 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-#include 'hbdocdef.ch'
-#include 'common.ch'
+#include "hbdocdef.ch"
+#include "common.ch"
 //  output lines on the screen
 
 #define INFILELINE   10
@@ -76,7 +76,7 @@ STATIC lEof
 STATIC aCurDoc     := {}
 STATIC nCurDoc     := 1
 
-STATIC aColorTable := { { 'aqua', '\cf2 ' }, { 'black', '\cf1 ' }, { 'fuchia', '\cf3 ' }, { 'grey', '\cf4 ' }, { 'green', '\cf5 ' }, { 'lime', '\cf6 ' }, { 'maroon', '\cf7 ' }, { 'navy', '\cf8 ' }, { 'olive', '\cf9 ' }, { 'purple', '\cf10 ' }, { 'red', '\cf11 ' }, { 'silver', '\cf12 ' }, { 'teal', '\cf13 ' }, { 'white', '\cf14 ' }, { 'yellow', '\cf15 ' } }
+STATIC aColorTable := { { "aqua", "\cf2 " }, { "black", "\cf1 " }, { "fuchia", "\cf3 " }, { "grey", "\cf4 " }, { "green", "\cf5 " }, { "lime", "\cf6 " }, { "maroon", "\cf7 " }, { "navy", "\cf8 " }, { "olive", "\cf9 " }, { "purple", "\cf10 " }, { "red", "\cf11 " }, { "silver", "\cf12 " }, { "teal", "\cf13 " }, { "white", "\cf14 " }, { "yellow", "\cf15 " } }
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -113,7 +113,7 @@ FUNCTION ProcessRtf()
    LOCAL xAddBlank
    LOCAL nNumTopics     := 0
    LOCAL nCurTopics     := 1
-   LOCAL cBar           := " " + replicate( ')', 80 )
+   LOCAL cBar           := " " + replicate( ")", 80 )
    LOCAL nMode
    LOCAL cFuncName
    LOCAL cOneLine
@@ -151,19 +151,19 @@ FUNCTION ProcessRtf()
    LOCAL cInc           := DELIM + "INCLUDE" + DELIM           // INCLUDE keyword
    LOCAL cComm          := DELIM + "COMMANDNAME" + DELIM       // COMMAND keyword
    LOCAL cCompl         := DELIM + "COMPLIANCE" + DELIM
-   LOCAL cTest          := DELIM + 'TESTS' + DELIM
-   LOCAL cStatus        := DELIM + 'STATUS' + DELIM
-   LOCAL cPlat          := DELIM + 'PLATFORMS' + DELIM
-   LOCAL cFiles         := DELIM + 'FILES' + DELIM
-   LOCAL cSubCode       := DELIM + 'SUBCODE' + DELIM
-   LOCAL cFunction      := DELIM + 'FUNCTION' + DELIM
-   LOCAL cConstruct     := DELIM + 'CONSTRUCTOR' + DELIM
-   LOCAL cDatalink      := DELIM + 'DATALINK' + DELIM
-   LOCAL cDatanolink    := DELIM + 'DATANOLINK' + DELIM
-   LOCAL cMethodslink   := DELIM + 'METHODSLINK' + DELIM
-   LOCAL cMethodsNolink := DELIM + 'METHODSNOLINK' + DELIM
+   LOCAL cTest          := DELIM + "TESTS" + DELIM
+   LOCAL cStatus        := DELIM + "STATUS" + DELIM
+   LOCAL cPlat          := DELIM + "PLATFORMS" + DELIM
+   LOCAL cFiles         := DELIM + "FILES" + DELIM
+   LOCAL cSubCode       := DELIM + "SUBCODE" + DELIM
+   LOCAL cFunction      := DELIM + "FUNCTION" + DELIM
+   LOCAL cConstruct     := DELIM + "CONSTRUCTOR" + DELIM
+   LOCAL cDatalink      := DELIM + "DATALINK" + DELIM
+   LOCAL cDatanolink    := DELIM + "DATANOLINK" + DELIM
+   LOCAL cMethodslink   := DELIM + "METHODSLINK" + DELIM
+   LOCAL cMethodsNolink := DELIM + "METHODSNOLINK" + DELIM
    LOCAL cData          := DELIM + "DATA" + DELIM
-   LOCAL cMethod        := DELIM + 'METHOD' + DELIM
+   LOCAL cMethod        := DELIM + "METHOD" + DELIM
    LOCAL cClassDoc      := DELIM + "CLASSDOC" + DELIM
    LOCAL cTable         := DELIM + "TABLE" + DELIM
    Local aAlso:={}
@@ -174,7 +174,7 @@ FUNCTION ProcessRtf()
    lIsMethodLink := .F.
 
    lWrite := .F.
-   cTempx := ''
+   cTempx := ""
    //
    //  Entry Point
    //
@@ -374,9 +374,9 @@ FUNCTION ProcessRtf()
                nMode := D_ONELINE
                //  Now start writing out what we know
                IF lData
-                  oRtf:WriteJumpTitle( LEFT( cFilename, AT( '.', cFilename ) - 1 ) + cFuncName, "Data " + cFuncName )
+                  oRtf:WriteJumpTitle( LEFT( cFilename, AT( ".", cFilename ) - 1 ) + cFuncName, "Data " + cFuncName )
                ELSEIF lMethod
-                  oRtf:WriteJumpTitle( LEFT( cFilename, AT( '.', cFilename ) - 1 ) + cFuncName, LEFT( cFilename, AT( '.', cFilename ) - 1 )  + ":"+cFuncName )
+                  oRtf:WriteJumpTitle( LEFT( cFilename, AT( ".", cFilename ) - 1 ) + cFuncName, LEFT( cFilename, AT( ".", cFilename ) - 1 )  + ":"+cFuncName )
                ELSE
                   oRtf:WriteTitle(  cFuncName, cFuncName, cOneLine,cCategory)
                   //               oRtf:WriteParBold( cOneLine )
@@ -395,9 +395,9 @@ FUNCTION ProcessRtf()
                      ENDIF
 
                      oRtf:WriteParBold( " Syntax" )
-                     oRtf:WritePar( '' )                    //:endpar()
+                     oRtf:WritePar( "" )                    //:endpar()
                      nMode := D_SYNTAX
-                     //                  oRtf:WritePar('') //:endpar()
+                     //                  oRtf:WritePar("") //:endpar()
                      lAddBlank := .T.
                   END
                ELSEIF AT( cConstruct, cBuffer ) > 0
@@ -422,7 +422,7 @@ FUNCTION ProcessRtf()
 
                      ENDIF
                      oRtf:WriteParBold( " Arguments" )
-                     oRtf:WritePar( '' )                    //:endpar()
+                     oRtf:WritePar( "" )                    //:endpar()
                      nMode     := D_ARG
                      lAddBlank := .T.
                      lPar      := .T.
@@ -441,9 +441,9 @@ FUNCTION ProcessRtf()
                   END
                ELSEIF AT( cDesc, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
-                     oRtf:WritePar( '' )                    //:endpar()
+                     oRtf:WritePar( "" )                    //:endpar()
                      oRtf:WriteParBold( " Description" )
-                     oRtf:WritePar( '' )                    //:endpar()
+                     oRtf:WritePar( "" )                    //:endpar()
                      nMode     := D_DESCRIPTION
                      lAddBlank := .T.
                      lPar      := .T.
@@ -507,7 +507,7 @@ oRtf:WritePar( "" )                 //:endpar()
 
                      IF !lBlankLine
                         //ortf:endpar()
-                        oRtf:WritePar('') //:endpar()
+                        oRtf:WritePar("") //:endpar()
                         oRtf:WriteParBold( " Examples" )
                      ENDIF
 
@@ -517,9 +517,9 @@ oRtf:WritePar( "" )                 //:endpar()
                ELSEIF AT( cTest, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
                      IF !lBlankLine
-                                                              oRtf:WritePar('') //:endpar()
+                                                              oRtf:WritePar("") //:endpar()
                        oRtf:WriteParBold( " Tests" )
-                        oRtf:WritePar( '' )                 //:endpar()
+                        oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
 
                      nMode     := D_EXAMPLE
@@ -534,9 +534,9 @@ oRtf:WritePar( "" )                 //:endpar()
                   IF GetItem( cBuffer, nCurdoc )
                      IF !lBlankLine
                         //ortf:endpar()
-                        oRtf:WritePar( '' )                 //:endpar()
+                        oRtf:WritePar( "" )                 //:endpar()
                         oRtf:WriteParBold( " Compliance" )
-                        oRtf:WritePar( '' )                 //:endpar()
+                        oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
 
                      nMode     := D_COMPLIANCE
@@ -547,9 +547,9 @@ oRtf:WritePar( "" )                 //:endpar()
                   IF GetItem( cBuffer, nCurdoc )
                      IF !lBlankLine
                         //ortf:endpar()
-                        oRtf:WritePar( '' )                 //:endpar()
+                        oRtf:WritePar( "" )                 //:endpar()
                         oRtf:WriteParBold( " Platforms" )
-                        oRtf:WritePar( '' )                 //:endpar()
+                        oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
 
                      nMode     := D_NORMAL
@@ -559,9 +559,9 @@ oRtf:WritePar( "" )                 //:endpar()
                ELSEIF AT( cFiles, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
                      IF !lBlankLine
-                        oRtf:WritePar( '' )                 //:endpar()
+                        oRtf:WritePar( "" )                 //:endpar()
                         oRtf:WriteParBold( " Files" )
-                        oRtf:WritePar( '' )                 //:endpar()
+                        oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
 
                      lPar      := .T.
@@ -571,9 +571,9 @@ oRtf:WritePar( "" )                 //:endpar()
                ELSEIF AT( cFunction, cBuffer ) > 0
                   IF GetItem( cBuffer, nCurdoc )
                      IF !lBlankLine
-                        oRtf:WritePar( '' )                 //:endpar()
+                        oRtf:WritePar( "" )                 //:endpar()
                         oRtf:WriteParBold( " Functions" )
-                        oRtf:WritePar( '' )                 //:endpar()
+                        oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
 
                      nMode     := D_NORMAL
@@ -600,13 +600,13 @@ oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF AT( "<par>", cBuffer ) > 0
-                        STRTRAN( cBuffer, "<par>", '' )
-                        STRTRAN( cBuffer, "</par>", '' )
+                        STRTRAN( cBuffer, "<par>", "" )
+                        STRTRAN( cBuffer, "</par>", "" )
                         cBuffer := ALLTRIM( cBuffer )
-                        cbuFfer := '<par><b>' + cBuffer + '</b></par>'
+                        cbuFfer := "<par><b>" + cBuffer + "</b></par>"
                      ENDIF
                      procrtfdesc( cbuffer, oRtf, "Syntax" )
-                     //                      oRtf:WritePar('') //:endpar()
+                     //                      oRtf:WritePar("") //:endpar()
                   ELSEIF nMode == D_RETURN
 
                      IF LEN( cBuffer ) > LONGLINE
@@ -637,7 +637,7 @@ oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
                      cTemp   := SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 )
                      cBuffer := SUBSTR( cBuffer, AT( ":", cBuffer ) + 1 )
-                     oRtf:WriteJumpLink1( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ), cTemp, cBuffer )
+                     oRtf:WriteJumpLink1( LEFT( cfilename, AT( ".", cFilename ) - 1 ) + ALLTRIM( cTemp ), cTemp, cBuffer )
                   ELSEIF nMode == D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
@@ -650,7 +650,7 @@ oRtf:WritePar( "" )                 //:endpar()
                      cTemp   := SUBSTR( cBuffer, 1, AT( "()", cBuffer ) + 1 )
                      cName   := SUBSTR( cBuffer, 1, AT( "()", cBuffer ) - 1 )
                      cBuffer := SUBSTR( cBuffer, AT( "()", cBuffer ) + 2 )
-                     oRtf:WriteJumpLink( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ),ALLTRIM( cTemp ), cBuffer )
+                     oRtf:WriteJumpLink( LEFT( cfilename, AT( ".", cFilename ) - 1 ) + ALLTRIM( cTemp ),ALLTRIM( cTemp ), cBuffer )
 
                   ELSEIF nMode == D_NORMAL
                      IF LEN( cBuffer ) > LONGLINE
@@ -701,9 +701,9 @@ oRtf:WritePar( "" )                 //:endpar()
                      ENDIF
                   ELSEIF nMode == D_STATUS
                      IF !EMPTY( cBuffer )
-                        oRtf:WritePar( '' )                 //:endpar()
+                        oRtf:WritePar( "" )                 //:endpar()
                         oRtf:WriteParBold( "Status" )
-                        oRtf:WritePar( '' )                 //:endpar()
+                        oRtf:WritePar( "" )                 //:endpar()
                         xaddblank := .T.
                      ELSE
                         oRtf:WritePar( "" )                 //:endpar()
@@ -747,7 +747,7 @@ RETURN oRtf:aIdh
 FUNCTION ProcRtfAlso( nWriteHandle, cSeeAlso )
 
    LOCAL nPos
-   LOCAL cTemp := ''
+   LOCAL cTemp := ""
    LOCAL nLen
    LOCAL xPos
    LOCAL xTemp
@@ -840,12 +840,12 @@ RETURN nil
 *+
 FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
 
-   LOCAL cLine       := ''
+   LOCAL cLine       := ""
    LOCAL npos
    LOCAL CurPos      := 0
    LOCAL nColorPos
-   LOCAL ccolor      := ''
-   LOCAL creturn     := ''
+   LOCAL ccolor      := ""
+   LOCAL creturn     := ""
    LOCAL NIDENTLEVEL
    LOCAL coline
    LOCAL lEndPar     := .F.
@@ -854,8 +854,8 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
    LOCAL lEndTable := .F.
    LOCAL lArgBold  := .F.
    DEFAULT cStyle TO "Default"
-   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example"
-      cBuffer := '<par>' + cBuffer
+   IF AT( "<par>", cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example"
+      cBuffer := "<par>" + cBuffer
    ENDIF
 
    IF EMPTY( cBuffer )
@@ -877,7 +877,7 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
                cOLine  := LEFT( cReturn, nPos - 1 )
                cReturn := STRTRAN( cReturn, coLine, "" )
                if "\" $ cReturn
-                  cReturn := Strtran( cReturn, '\', '\\')
+                  cReturn := Strtran( cReturn, "\", "\\")
 //                tracelog( cReturn )
                endif
                IF AT( "@", cOLine ) > 0 .OR. AT( "()", cOLine ) > 0 .OR. AT( "<", cOLine ) > 0 .OR. AT( "_", cOLine ) > 0
@@ -888,9 +888,9 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
 
                //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
                IF lArgBold
-                  cReturn := '       <par><b>' + cOLine + '</b> ' + cReturn + '    </par>'
+                  cReturn := "       <par><b>" + cOLine + "</b> " + cReturn + "    </par>"
                ELSE
-                  cReturn := '       <par>' + cOLine + ' ' + cReturn + '    </par>'
+                  cReturn := "       <par>" + cOLine + " " + cReturn + "    </par>"
                ENDIF
 
                cbuffer := cReturn
@@ -902,21 +902,21 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
       ENDIF
    ENDIF
 
-   IF AT( '<par>', cBuffer ) > 0 .AND. AT( '</par>', cBuffer ) > 0
+   IF AT( "<par>", cBuffer ) > 0 .AND. AT( "</par>", cBuffer ) > 0
       if "\" $ cBuffer
-                  cBuffer := Strtran(cBuffer, '\', '\\')
+                  cBuffer := Strtran(cBuffer, "\", "\\")
 //                tracelog( cBuffer )
                endif
 
-      cBuffer   := STRTRAN( cBuffer, '<par>', '' )
-      cBuffer   := STRTRAN( cBuffer, '<b>', '\b ' )
-      cBuffer   := STRTRAN( cBuffer, '</b>', '\b0 ' )
-      cBuffer   := STRTRAN( cBuffer, '<em>', '\b\i ' )
-      cBuffer   := STRTRAN( cBuffer, '</em>', '\b0\i0 ' )
-      cBuffer   := STRTRAN( cBuffer, '<i>', '\i ' )
-      cBuffer   := STRTRAN( cBuffer, '</i>', '\i0 ' )
-      cBuffer   := STRTRAN( cBuffer, '</color>', '\cf1 ' )
-      nColorPos := AT( '<color:', cBuffer )
+      cBuffer   := STRTRAN( cBuffer, "<par>", "" )
+      cBuffer   := STRTRAN( cBuffer, "<b>", "\b " )
+      cBuffer   := STRTRAN( cBuffer, "</b>", "\b0 " )
+      cBuffer   := STRTRAN( cBuffer, "<em>", "\b\i " )
+      cBuffer   := STRTRAN( cBuffer, "</em>", "\b0\i0 " )
+      cBuffer   := STRTRAN( cBuffer, "<i>", "\i " )
+      cBuffer   := STRTRAN( cBuffer, "</i>", "\i0 " )
+      cBuffer   := STRTRAN( cBuffer, "</color>", "\cf1 " )
+      nColorPos := AT( "<color:", cBuffer )
       IF ncolorpos > 0
          checkrtfcolor( @cbuffer, ncolorpos )
       ENDIF
@@ -924,49 +924,49 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
       IF cStyle == "Description" .OR. cStyle == "Compliance"
          nIdentLevel := 6
          nPos        := 0
-         IF AT( '</par>', cBuffer ) > 0
+         IF AT( "</par>", cBuffer ) > 0
             cBuffer := STRTRAN( cBuffer, "</par>", "" )
          ENDIF
          IF !EMPTY( cBuffer )
             //             cBuffer:=SUBSTR(cBuffer,2)
             cBuffeR := ALLTRIM( cBuffer )
-            oRtf:WritePar( "       " + cBuffer + ' ', '\fi-426\li426 ' )
+            oRtf:WritePar( "       " + cBuffer + " ", "\fi-426\li426 " )
          ENDIF
 
       ELSEIF cStyle == "Arguments"
 
-         IF AT( '</par>', cBuffer ) > 0
+         IF AT( "</par>", cBuffer ) > 0
             cBuffer := STRTRAN( cBuffer, "</par>", "" )
          ENDIF
          IF !EMPTY( cBuffer )
             cBuffeR := ALLTRIM( cBuffer )
-            oRtf:WritePar( "       " + cBuffer + ' ', '\fi-2272\li2272 ' )
+            oRtf:WritePar( "       " + cBuffer + " ", "\fi-2272\li2272 " )
          ENDIF
 
       ELSEIF cStyle == "Syntax"
-         IF AT( '</par>', cBuffer ) > 0
+         IF AT( "</par>", cBuffer ) > 0
             cBuffer := STRTRAN( cBuffer, "</par>", "" )
          ENDIF
          IF !EMPTY( cBuffer )
             //                    cBuffer:=SUBSTR(cBuffer,2)
             cBuffeR := ALLTRIM( cBuffer )
-            oRtf:WritePar( cBuffer + ' ', '\fi-426\li426  ' )
+            oRtf:WritePar( cBuffer + " ", "\fi-426\li426  " )
          ENDIF
 
       ELSEIF cStyle == "Default"
-         IF AT( '</par>', cBuffer ) > 0
+         IF AT( "</par>", cBuffer ) > 0
             cBuffer := STRTRAN( cBuffer, "</par>", "" )
          ENDIF
          IF !EMPTY( cBuffer )
             //                  cBuffer:=SUBSTR(cBuffer,2)
             cBuffeR := ALLTRIM( cBuffer )
-            oRtf:WritePar( "       " + cBuffer, '\fi-426\li426 ' )
+            oRtf:WritePar( "       " + cBuffer, "\fi-426\li426 " )
          ENDIF
 
       ENDIF
    ENDIF
-   IF AT( '<fixed>', cBuffer ) > 0 .OR. cStyle = "Example"
-      IF AT( '<fixed>', cBuffer ) == 0 .OR. !EMPTY( cBuffer )
+   IF AT( "<fixed>", cBuffer ) > 0 .OR. cStyle = "Example"
+      IF AT( "<fixed>", cBuffer ) == 0 .OR. !EMPTY( cBuffer )
          cBuffer := STRTRAN( cBuffer, "<par>", "" )
          cBuffer := STRTRAN( cBuffer, "<fixed>", "" )
          oRtf:WriteParFixed( cBuffer )
@@ -988,7 +988,7 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
       ENDDO
 
    END
-   IF AT( '<table>', cBuffer ) > 0
+   IF AT( "<table>", cBuffer ) > 0
       DO WHILE !lendTable
          cBuffer := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</table>", cBuffer ) > 0
@@ -1003,7 +1003,7 @@ FUNCTION ProcRTFDesc( cBuffer, oRtf, cStyle )
    ENDIF
 
    //      If cStyle=="Description" .or. cStyle=="Compliance"
-   //         oRtf:Writepar('')
+   //         oRtf:Writepar("")
    //      endif
 
 RETURN nil
@@ -1031,14 +1031,14 @@ FUNCTION ProcRtfTable( cBuffer )
       cBuffer   := STRTRAN( cbuffer, "</color>", "\cf1" )
       cBuffer   := STRTRAN( cbuffer, "<color:", "" )
       cBuffer   := STRTRAN( cbuffer, ">", "" )
-      cBuffer   := STRTRAN( cBuffer, ccolor, '' )
+      cBuffer   := STRTRAN( cBuffer, ccolor, "" )
       nColorpos := ASCAN( aColorTable, { | x | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
       cColor    := aColortable[ nColorPos, 2 ]
    ENDIF
    IF !EMPTY( cBuffer )
       cItem := cBuffer
    ELSE
-      cItem := ''
+      cItem := ""
    ENDIF
    IF ccolor != NIL
       AADD( afiTable, ccolor + cItem )
@@ -1083,7 +1083,7 @@ FUNCTION GenRtfTable( oRtf )
 
    oRtf:WriteParBox( "       " + replicate( CHR( 196 ), 80 ) )
    FOR x := 1 TO LEN( afiTable )
-      ortf:WriteParFixed( IF( AT( "|", afiTable[ x ] ) > 0, STRTRAN( afiTable[ x ], "|", " " ), afiTable[ x ] ), '\fi-426\li426' )
+      ortf:WriteParFixed( iif( AT( "|", afiTable[ x ] ) > 0, STRTRAN( afiTable[ x ], "|", " " ), afiTable[ x ] ), "\fi-426\li426" )
    NEXT
    oRtf:WriteParBox( "       " + replicate( CHR( 196 ), 80 ) )
 //   oRtf:WritePar( "" )
@@ -1148,7 +1148,7 @@ FUNC maxrtfelem( a )
       ELSE
          tam := LEN( a[ ncount ] )
       ENDIF
-      max := IF( tam > max, tam, max )
+      max := iif( tam > max, tam, max )
    NEXT
    nPos := ASCAN( a, { | x | LEN( x ) == max } )
 RETURN max
@@ -1163,24 +1163,24 @@ RETURN max
 *+
 FUNCTION FormatrtfBuff( cBuffer, cStyle )
 
-   LOCAL cReturn  := ''
-   LOCAL cLine    := ''
-   LOCAL cBuffend := ''
-   LOCAL coline   := ''
+   LOCAL cReturn  := ""
+   LOCAL cLine    := ""
+   LOCAL cBuffend := ""
+   LOCAL coline   := ""
    LOCAL lEndBuff := .F.
    LOCAL nPos
    LOCAL lArgBold := .F.
-   creturn := cBuffer + ' '
-   IF AT( '</par>', creturn ) > 0 .OR. EMPTY( cBuffer )
+   creturn := cBuffer + " "
+   IF AT( "</par>", creturn ) > 0 .OR. EMPTY( cBuffer )
       IF EMPTY( cbuffer )
-         creturn := ''
+         creturn := ""
       ENDIF
       RETURN creturn
    ENDIF
    IF cStyle != "Syntax" .AND. cStyle != "Arguments" .AND. cStyle != "Return"
       DO WHILE !lendBuff
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         IF AT( '</par>', cLine ) > 0
+         IF AT( "</par>", cLine ) > 0
             lEndBuff := .T.
          ENDIF
 
@@ -1195,21 +1195,21 @@ FUNCTION FormatrtfBuff( cBuffer, cStyle )
             lEndBuff := .T.
          ENDIF
          IF AT( DELIM, cLine ) == 0
-            cReturn += ' ' + ALLTRIM( cLine ) + ' '
+            cReturn += " " + ALLTRIM( cLine ) + " "
          ENDIF
       ENDDO
       creturn := STRTRAN( creturn, "<par>", "" )
       creturn := STRTRAN( creturn, "</par>", "" )
 
-      cReturn := '<par>' + creturn + '    </par>'
-   ELSEIF cStyle == 'Syntax'
+      cReturn := "<par>" + creturn + "    </par>"
+   ELSEIF cStyle == "Syntax"
 
-      cReturn := '<par><b>' + cReturn + ' </b></par>'
+      cReturn := "<par><b>" + cReturn + " </b></par>"
 
-   ELSEIF cStyle == 'Arguments' .OR. cStyle == "Return"
+   ELSEIF cStyle == "Arguments" .OR. cStyle == "Return"
 
       nPos    := 0
-      cReturn := '<par>' + creturn
+      cReturn := "<par>" + creturn
       IF AT( "<par>", cReturn ) > 0
          cReturn := STRTRAN( cReturn, "<par>", "" )
          cReturn := STRTRAN( cReturn, "</par>", "" )
@@ -1241,15 +1241,15 @@ FUNCTION FormatrtfBuff( cBuffer, cStyle )
             lEndBuff := .T.
          ENDIF
          IF AT( DELIM, cline ) == 0
-            cReturn += ' ' + ALLTRIM( cLine ) + ' '
+            cReturn += " " + ALLTRIM( cLine ) + " "
          ENDIF
       ENDDO
       creturn := STRTRAN( creturn, "<par>", "" )
       creturn := STRTRAN( creturn, "</par>", "" )
       IF lArgBold
-         cReturn := '       <par><b>' + cOLine + '</b> ' + cReturn + '    </par>'
+         cReturn := "       <par><b>" + cOLine + "</b> " + cReturn + "    </par>"
       ELSE
-         cReturn := '       <par>' + cOLine + ' ' + cReturn + '    </par>'
+         cReturn := "       <par>" + cOLine + " " + cReturn + "    </par>"
       ENDIF
       lArgBold := .F.
    ENDIF
@@ -1269,7 +1269,7 @@ STATIC FUNCTION ReadFromTop( nh )
    LOCAL cDoc      := DELIM + "DOC" + DELIM                    // DOC keyword
    LOCAL cEnd      := DELIM + "END" + DELIM                    // END keyword
    LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
-   LOCAL cBuffer   := ''
+   LOCAL cBuffer   := ""
    LOCAL NPOS      := 0
    LOCAL aLocDoc   := {}
    DO WHILE FREADline( nH, @cBuffer, 4096 )

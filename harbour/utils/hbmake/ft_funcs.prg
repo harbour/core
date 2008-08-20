@@ -52,8 +52,8 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-#include 'hbdocdef.ch'
-#include 'common.ch'
+#include "hbdocdef.ch"
+#include "common.ch"
 
 #define xReadBuffer 4096
 DECLARE  FT_FUSE(CFILE AS STRING,NMODE AS NUMERIC) AS NUMERIC
@@ -151,11 +151,11 @@ RETURN cLine
 *+
 FUNCTION FT_FReadLn()
 
-   LOCAL cBuffer AS STRING := ''
+   LOCAL cBuffer AS STRING := ""
 
    cBuffer := FReadLn( @cBuffer )
 
-   cBuffer := STRTRAN( cBuffer, CHR( 13 ), '' )
+   cBuffer := STRTRAN( cBuffer, CHR( 13 ), "" )
 
 RETURN cBuffer
 
@@ -221,14 +221,14 @@ FUNCTION StrPos( cBuffer AS STRING)
       IF cChar >= CHR( 64 ) .AND. cChar <= CHR( 90 ) .OR. cChar >= CHR( 97 ) ;
                  .AND. cChar <= CHR( 122 ) .OR. cChar >= CHR( 48 ) .AND. cChar <= CHR( 57 ) ;
                  .OR. cChar == CHR( 60 ) .OR. cchar == CHR( ASC( "-" ) ) ;
-                 .OR. cchar == CHR( ASC( "(" ) ) .OR. cchar = CHR( ASC( "|" ) ) .OR. ;
-                 cchar == CHR( ASC( '.' ) ) .OR. cchar == CHR( ASC( '*' ) ) .OR. ;
-                 cchar == CHR( ASC( '#' ) ) .OR. cchar == CHR( ASC( '"' ) ) .OR. ;
-                 cchar == CHR( ASC( '/' ) ) .OR. cchar == CHR( ASC( "@" ) ) ;
-                 .OR. cchar == CHR( ASC( "=" ) ) .OR. cchar == CHR( ASC( 'Ä' ) ) ;
-                 .OR. cchar == CHR( ASC( '?' ) ) .OR. cchar == CHR( ASC( '!' ) ) ;
-                 .OR. cchar == CHR( ASC( "<" ) ) .OR. cchar == CHR( ASC( '>' ) ) ;
-                 .OR. cchar == CHR( ASC( '!' ) ) .OR. cchar == CHR( ASC( '+' ) )
+                 .OR. cchar == CHR( ASC( "(" ) ) .OR. cchar == CHR( ASC( "|" ) ) .OR. ;
+                 cchar == CHR( ASC( "." ) ) .OR. cchar == CHR( ASC( "*" ) ) .OR. ;
+                 cchar == CHR( ASC( "#" ) ) .OR. cchar == CHR( ASC( '"' ) ) .OR. ;
+                 cchar == CHR( ASC( "/" ) ) .OR. cchar == CHR( ASC( "@" ) ) ;
+                 .OR. cchar == CHR( ASC( "=" ) ) .OR. cchar == CHR( ASC( "Ä" ) ) ;
+                 .OR. cchar == CHR( ASC( "?" ) ) .OR. cchar == CHR( ASC( "!" ) ) ;
+                 .OR. cchar == CHR( ASC( "<" ) ) .OR. cchar == CHR( ASC( ">" ) ) ;
+                 .OR. cchar == CHR( ASC( "!" ) ) .OR. cchar == CHR( ASC( "+" ) )
 
          nPos := x
 
@@ -260,7 +260,7 @@ FUNCTION GetNumberofTableItems( cBuffer )
       IF AT( SPACE( 3 ), cBuffer ) == 0
          nItem ++
       ELSE
-         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, '' ) )
+         cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
          nItem ++
       ENDIF
    ENDDO
@@ -286,7 +286,7 @@ FUNCTION FREADline( nH as Numeric, cB AS STRING, nMaxLine as Numeric)
    LOCAL nNumRead AS NUMERIC
    LOCAL lReturn as Logical
    cLine    := SPACE( nMaxLine )
-   cB       := ''
+   cB       := ""
    nSavePos := FSEEK( nH, 0, FS_RELATIVE )
    nNumRead := FREAD( nH, @cLine, nMaxLine )
    IF ( nEol := AT( EOL, SUBSTR( cLine, 1, nNumRead ) ) ) == 0

@@ -51,8 +51,8 @@
  */
 
 #include "hbclass.ch"
-#include 'common.ch'
-#include 'hbdocdef.ch'
+#include "common.ch"
+#include "hbdocdef.ch"
 
 *+--------------------------------------------------------------------
 *+
@@ -365,7 +365,7 @@ METHOD goBottom() CLASS HBMake_FileBase
          lWithCRLF := pTRUE
       ENDIF
       cBuffer       := SUBSTR( cBuffer, RAT( pCRLF, cBuffer ) + 2 )
-      ::nSkipLength := LEN( cBuffer ) + IF( lWithCRLF, 2, 0 )
+      ::nSkipLength := LEN( cBuffer ) + iif( lWithCRLF, 2, 0 )
       ::nposition   := FSEEK( Self:nDosHandle, - ( LEN( cBuffer ) ), 2 )
       IF lWithCRLF
          ::nposition := FSEEK( Self:nDosHandle, - 2, 1 )
@@ -449,7 +449,7 @@ METHOD Buffget( lForward ) CLASS HBMake_FileBase
    IF !lForward
 
       nRead := FSEEK( Self:nDosHandle, ;
-                      - ( IF( ::nposition < pBUFFER_LENGTH, ;
+                      - ( iif( ::nposition < pBUFFER_LENGTH, ;
                       ::nposition, ;
                       pBUFFER_LENGTH ) ), ;
                       1 )               // rewind backwards
@@ -466,7 +466,7 @@ METHOD Buffget( lForward ) CLASS HBMake_FileBase
    ELSE
       cBuffer := SPACE( pBUFFER_LENGTH )
       nRead   := FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
-      FSEEK( Self:nDosHandle, - ( IF( nRead < pBUFFER_LENGTH, nRead, ;
+      FSEEK( Self:nDosHandle, - ( iif( nRead < pBUFFER_LENGTH, nRead, ;
              pBUFFER_LENGTH ) ), 1 )    // Rewind
 
       // Now, parse the string. and file
@@ -614,7 +614,7 @@ METHOD BufferGet( lForward ) CLASS HBMake_FileBase
    IF !lForward
 
       nRead := FSEEK( Self:nDosHandle, ;
-                      - ( IF( ::nposition < pBUFFER_LENGTH, ;
+                      - ( iif( ::nposition < pBUFFER_LENGTH, ;
                       ::nposition, ;
                       pBUFFER_LENGTH ) ), ;
                       1 )               // rewind backwards
@@ -631,7 +631,7 @@ METHOD BufferGet( lForward ) CLASS HBMake_FileBase
    ELSE
       cBuffer := SPACE( pBUFFER_LENGTH )
       nRead   := FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
-      FSEEK( Self:nDosHandle, - ( IF( nRead < pBUFFER_LENGTH, nRead, ;
+      FSEEK( Self:nDosHandle, - ( iif( nRead < pBUFFER_LENGTH, nRead, ;
              pBUFFER_LENGTH ) ), 1 )    // Rewind
 
       // Now, parse the string. and file

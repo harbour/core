@@ -55,8 +55,8 @@
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
-#include 'common.ch'
-#include 'hbdocdef.ch'
+#include "common.ch"
+#include "hbdocdef.ch"
 //  output lines on the screen
 
 #define INFILELINE   10
@@ -83,7 +83,7 @@ STATIC aCurDoc        := {}
 
 STATIC nCurDoc := 1
 
-STATIC aColorTable := { { 'aqua', '1B' }, { 'black', '10' }, { 'fuchia', '1D' }, { 'grey', '18' }, { 'green', '12' }, { 'lime', '1A' }, { 'maroon', '16' }, { 'navy', '19' }, { 'olive', '12' }, { 'purple', '15' }, { 'red', '1C' }, { 'silver', '17' }, { 'teal', '13 ' }, { 'white', '1F' }, { 'yellow', '1E' } }
+STATIC aColorTable := { { "aqua", "1B" }, { "black", "10" }, { "fuchia", "1D" }, { "grey", "18" }, { "green", "12" }, { "lime", "1A" }, { "maroon", "16" }, { "navy", "19" }, { "olive", "12" }, { "purple", "15" }, { "red", "1C" }, { "silver", "17" }, { "teal", "13 " }, { "white", "1F" }, { "yellow", "1E" } }
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -156,19 +156,19 @@ FUNCTION ProcessPdf(lMemory)
    LOCAL cInc           := DELIM + "INCLUDE" + DELIM           // INCLUDE keyword
    LOCAL cComm          := DELIM + "COMMANDNAME" + DELIM       // COMMAND keyword
    LOCAL cCompl         := DELIM + "COMPLIANCE" + DELIM
-   LOCAL cTest          := DELIM + 'TESTS' + DELIM
-   LOCAL cStatus        := DELIM + 'STATUS' + DELIM
-   LOCAL cPlat          := DELIM + 'PLATFORMS' + DELIM
-   LOCAL cFiles         := DELIM + 'FILES' + DELIM
-   LOCAL cSubCode       := DELIM + 'SUBCODE' + DELIM
-   LOCAL cFunction      := DELIM + 'FUNCTION' + DELIM
-   LOCAL cConstruct     := DELIM + 'CONSTRUCTOR' + DELIM
-   LOCAL cDatalink      := DELIM + 'DATALINK' + DELIM
-   LOCAL cDatanolink    := DELIM + 'DATANOLINK' + DELIM
-   LOCAL cMethodslink   := DELIM + 'METHODSLINK' + DELIM
-   LOCAL cMethodsNolink := DELIM + 'METHODSNOLINK' + DELIM
+   LOCAL cTest          := DELIM + "TESTS" + DELIM
+   LOCAL cStatus        := DELIM + "STATUS" + DELIM
+   LOCAL cPlat          := DELIM + "PLATFORMS" + DELIM
+   LOCAL cFiles         := DELIM + "FILES" + DELIM
+   LOCAL cSubCode       := DELIM + "SUBCODE" + DELIM
+   LOCAL cFunction      := DELIM + "FUNCTION" + DELIM
+   LOCAL cConstruct     := DELIM + "CONSTRUCTOR" + DELIM
+   LOCAL cDatalink      := DELIM + "DATALINK" + DELIM
+   LOCAL cDatanolink    := DELIM + "DATANOLINK" + DELIM
+   LOCAL cMethodslink   := DELIM + "METHODSLINK" + DELIM
+   LOCAL cMethodsNolink := DELIM + "METHODSNOLINK" + DELIM
    LOCAL cData          := DELIM + "DATA" + DELIM
-   LOCAL cMethod        := DELIM + 'METHOD' + DELIM
+   LOCAL cMethod        := DELIM + "METHOD" + DELIM
    LOCAL cClassDoc      := DELIM + "CLASSDOC" + DELIM
 local hhh
    DEFAULT lMemory to .F.
@@ -191,15 +191,15 @@ local hhh
 //   oPdf := tPdf():new( "pdf\temp.pdf" )
 
    HB_PDFNEW("pdf\temp.pdf",,a4_height,a4_width)
-   hb_pdfnewpage("Harbour Guide",'Harbour Guide')
+   hb_pdfnewpage("Harbour Guide","Harbour Guide")
    hb_pdfendpage()
    else
-//   ? 'im here'
+//   ? "im here"
    HB_PDFNEW("pdf\harbour.pdf",,a4_height,a4_width)
-   hb_pdfnewpage("Harbour Guide",'Harbour Guide')
+   hb_pdfnewpage("Harbour Guide","Harbour Guide")
    hb_pdfinitbook(aResult)
    hb_pdfendpage()
-   hhh:=fcreate('ssss.sss')
+   hhh:=fcreate("ssss.sss")
    endif
 
    FOR i := 1 TO nFiles
@@ -644,10 +644,10 @@ local hhh
                      ENDIF
                      lBlankLine := EMPTY( cBuffer )
                      IF AT( "<par>", cBuffer ) > 0
-                        STRTRAN( cBuffer, "<par>", '' )
-                        STRTRAN( cBuffer, "</par>", '' )
+                        STRTRAN( cBuffer, "<par>", "" )
+                        STRTRAN( cBuffer, "</par>", "" )
                         cBuffer := STRTRAN( cBuffer, SPACE( 6 ), "" )
-                        cbuFfer := '<par><b>' + cBuffer + '</b></par>'
+                        cbuFfer := "<par><b>" + cBuffer + "</b></par>"
                      ENDIF
                      ProcPdfDesc( cbuffer, oPdf, "Syntax" )
                   ELSEIF nMode == D_ARG
@@ -696,9 +696,9 @@ local hhh
                      //  read next line
                   ELSEIF nMode == D_STATUS
                      IF !EMPTY( cBuffer )
-                        hb_pdfwritetext('')
+                        hb_pdfwritetext("")
                         hb_pdfwriteBoldtext1( " Status" )
-                        hb_pdfwritetext('')
+                        hb_pdfwritetext("")
                      ENDIF
                      ProcStatusPdf( oPdf, cBuffer )
 
@@ -725,7 +725,7 @@ local hhh
 /*   oPdf:Close()*/
 HB_PDFCLOSE()
    if lmemory
-//      ferase('pdf\temp.pdf')
+//      ferase("pdf\temp.pdf")
    endif
 fclose(hhh)
 
@@ -821,10 +821,10 @@ RETURN Nil
 FUNCTION ProcPdfTable( cBuffer, nNum )
 
    LOCAL nPos
-   LOCAL cItem     := ''
-   LOCAL cItem2    := ''
-   LOCAL cItem3    := ''
-   LOCAL cItem4    := ''
+   LOCAL cItem     := ""
+   LOCAL cItem2    := ""
+   LOCAL cItem3    := ""
+   LOCAL cItem4    := ""
    LOCAL nColorpos
    LOCAL cColor
    cBuffer := ALLTRIM( cBuffer )
@@ -838,7 +838,7 @@ FUNCTION ProcPdfTable( cBuffer, nNum )
       cBuffer   := STRTRAN( cbuffer, "</color>", "" )
       cBuffer   := STRTRAN( cbuffer, "<color:", "" )
       cBuffer   := STRTRAN( cbuffer, ">", "" )
-      cBuffer   := STRTRAN( cBuffer, ccolor, '' )
+      cBuffer   := STRTRAN( cBuffer, ccolor, "" )
       nColorpos := ASCAN( aColorTable, { | x | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
       cColor    := aColortable[ nColorPos, 2 ]
    ENDIF
@@ -846,14 +846,14 @@ FUNCTION ProcPdfTable( cBuffer, nNum )
       cItem   := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
       cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
    ELSE
-      citem := ''
+      citem := ""
    ENDIF
 
    IF nNum == 2
       IF !EMPTY( cBuffer )
          cItem2 := SUBSTR( cBuffer, 1 )
       ELSE
-         citem2 := ''
+         citem2 := ""
       ENDIF
    ELSEIF nNum == 3
       IF !EMPTY( cBuffer )
@@ -861,8 +861,8 @@ FUNCTION ProcPdfTable( cBuffer, nNum )
          cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem2, "" ) )
          cItem3  := SUBSTR( cBuffer, 1 )
       ELSE
-         citem2 := ''
-         citem3 := ''
+         citem2 := ""
+         citem3 := ""
       ENDIF
 
    ELSEIF nNum > 3
@@ -875,9 +875,9 @@ FUNCTION ProcPdfTable( cBuffer, nNum )
 
          cItem4 := SUBSTR( cBuffer, 1 )
       ELSE
-         citem2 := ''
-         citem3 := ''
-         citem4 := ''
+         citem2 := ""
+         citem3 := ""
+         citem4 := ""
       ENDIF
 
    ENDIF
@@ -898,14 +898,14 @@ RETURN Nil
 *+
 FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
 
-   LOCAL cLine       := ''
+   LOCAL cLine       := ""
    LOCAL nPos
-   LOCAL cBold       := ''
-   LOCAL cRemove     := ''
+   LOCAL cBold       := ""
+   LOCAL cRemove     := ""
    LOCAL CurPos      := 0
    LOCAL nColorPos
-   LOCAL ccolor      := ''
-   LOCAL cReturn     := ''
+   LOCAL ccolor      := ""
+   LOCAL cReturn     := ""
    LOCAL nIdentLevel
    LOCAL cOldLine
    LOCAL lEndPar     := .F.
@@ -916,8 +916,8 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
    LOCAL lArgBold      := .F.
    DEFAULT cStyle TO "Default"
 
-   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example"
-      cBuffer := '<par>' + cBuffer
+   IF AT( "<par>", cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example"
+      cBuffer := "<par>" + cBuffer
    ENDIF
 
    IF EMPTY( cBuffer )
@@ -946,9 +946,9 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
 
                //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
                IF lArgBold
-                  cReturn := '<par><b>' + cOldLine + '</b> ' + cReturn + '    </par>'
+                  cReturn := "<par><b>" + cOldLine + "</b> " + cReturn + "    </par>"
                ELSE
-                  cReturn := '<par>' + cOldLine + ' ' + cReturn + '    </par>'
+                  cReturn := "<par>" + cOldLine + " " + cReturn + "    </par>"
                ENDIF
 
                cbuffer := cReturn
@@ -959,8 +959,8 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
       ENDIF
    ENDIF
 
-   IF AT( '<par>', cBuffer ) > 0 .AND. AT( '</par>', cBuffer ) > 0
-      nColorPos := AT( '<color:', cBuffer )
+   IF AT( "<par>", cBuffer ) > 0 .AND. AT( "</par>", cBuffer ) > 0
+      nColorPos := AT( "<color:", cBuffer )
       IF ncolorpos > 0
          CheckPdfColor( @cbuffer, ncolorpos )
       ENDIF
@@ -968,7 +968,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
       IF cStyle == "Description" .OR. cStyle == "Compliance"
          nIdentLevel := 7
          nPos        := 0
-         cBuffer:=strtran(cbuffer,"<par>",'')
+         cBuffer:=strtran(cbuffer,"<par>","")
 
          DO WHILE !lendPar
             IF nPos == 0
@@ -982,7 +982,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
             ELSE
                cLine := SPACE( nidentLevel ) + SUBSTR( cBuffer, curPos, 85 )
 
-               IF AT( '</par>', cLine ) > 0
+               IF AT( "</par>", cLine ) > 0
                   lEndPar := .T.
                   cLine   := STRTRAN( cLine, " </par>", "" )
                ENDIF
@@ -992,7 +992,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
                   nPos  -= nIdentlevel
                ELSE
                   IF cLine == "</par>"
-                     cLine := ''
+                     cLine := ""
                   ENDIF
 
                ENDIF
@@ -1011,7 +1011,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
       ELSEIF cStyle == "Arguments"
          nIdentLevel := 7
          nPos        := 0
-         cBuffer:=strtran(cbuffer,"<par>",'')
+         cBuffer:=strtran(cbuffer,"<par>","")
          DO WHILE !lendPar
             IF nPos == 0
                cLine := SUBSTR( cBuffer, 1, 85 )
@@ -1032,7 +1032,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
             ELSE
                cLine := SPACE( nidentLevel ) + SUBSTR( cBuffer, curPos, 85 )    //60
 
-               IF AT( '</par>', cLine ) > 0
+               IF AT( "</par>", cLine ) > 0
                   lEndPar := .T.
                   cLine   := STRTRAN( cLine, " </par>", "" )
                ENDIF
@@ -1042,7 +1042,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
                   nPos  -= nIdentlevel
                ELSE
                   IF cLine == "</par>"
-                     cLine := ''
+                     cLine := ""
                   ENDIF
 
                ENDIF
@@ -1058,9 +1058,9 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
          nIdentLevel := 6
          nPos        := 0
 
-         cBuffer:=strtran(cbuffer,"<par>",'')
-         cBuffer:=strtran(cbuffer,"<b>",'')
-         cBuffer:=strtran(cbuffer,"</b>",'')
+         cBuffer:=strtran(cbuffer,"<par>","")
+         cBuffer:=strtran(cbuffer,"<b>","")
+         cBuffer:=strtran(cbuffer,"</b>","")
          cBuffer:=alltrim(cbuffer)
          DO WHILE !lendPar
             IF nPos == 0
@@ -1074,7 +1074,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
             ELSE
                cLine := SPACE( nidentLevel ) + SUBSTR( cBuffer, curPos, 85 )
 
-               IF AT( '</par>', cLine ) > 0
+               IF AT( "</par>", cLine ) > 0
                   lEndPar := .T.
                   cLine   := STRTRAN( cLine, " </par>", "" )
                ENDIF
@@ -1084,7 +1084,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
                   nPos  -= nIdentlevel
                ELSE
                   IF cLine == "</par>"
-                     cLine := ''
+                     cLine := ""
                   ENDIF
 
                ENDIF
@@ -1099,7 +1099,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
          nIdentLevel := 7
          nPos        := 0
 //         hb_pdfwritetext(cbuffer)
-       cBuffer:=strtran(cbuffer,"<par>",'')
+       cBuffer:=strtran(cbuffer,"<par>","")
          
          DO WHILE !lendPar
             IF nPos == 0
@@ -1113,7 +1113,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
             ELSE
                cLine := SPACE( nidentLevel ) + SUBSTR( cBuffer, curPos, 85 )
 
-               IF AT( '</par>', cLine ) > 0
+               IF AT( "</par>", cLine ) > 0
                   lEndPar := .T.
                   cLine   := STRTRAN( cLine, " </par>", "" )
                ENDIF
@@ -1123,7 +1123,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
                   nPos  -= nIdentlevel
                ELSE
                   IF cLine == "</par>"
-                     cLine := ''
+                     cLine := ""
                   ENDIF
 
                ENDIF
@@ -1138,8 +1138,8 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
       ENDIF
    ENDIF
 
-   IF AT( '<fixed>', cBuffer ) > 0 .OR. cStyle = "Example"
-      IF AT( '<fixed>', cBuffer ) == 0 .OR. !EMPTY( cBuffer )
+   IF AT( "<fixed>", cBuffer ) > 0 .OR. cStyle = "Example"
+      IF AT( "<fixed>", cBuffer ) == 0 .OR. !EMPTY( cBuffer )
          cBuffer := STRTRAN( cBuffer, "<par>", "" )
          cBuffer := STRTRAN( cBuffer, "<fixed>", "" )
                hb_pdfWriteText( cBuffer )
@@ -1151,7 +1151,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
             cLine     := STRTRAN( cLine, "</fixed>", "" )
          ENDIF
          IF AT( DELIM, cLine ) == 0
-            cReturn += ALLTRIM( cLine ) + ' '
+            cReturn += ALLTRIM( cLine ) + " "
          ENDIF
          IF AT( DELIM, cLine ) > 0
             FT_FSKIP( - 1 )
@@ -1164,7 +1164,7 @@ FUNCTION ProcPdfDesc( cBuffer, oPdf, cStyle )
       ENDDO
 
    END
-   IF AT( '<table>', cBuffer ) > 0
+   IF AT( "<table>", cBuffer ) > 0
       DO WHILE !lendTable
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</table>", cLine ) > 0 .or. AT( "</TABLE>", cLine ) > 0
@@ -1243,7 +1243,7 @@ FUNC MaxElemPdf( a )
    FOR nCount := 1 TO nSize
 
       tam := LEN( a[ nCount ] )
-      max := IF( tam > max, tam, max )
+      max := iif( tam > max, tam, max )
    NEXT
    nPos := ASCAN( a, { | x | LEN( x ) == max } )
 RETURN max
@@ -1261,10 +1261,10 @@ RETURN max
 *+
 FUNCTION FormatPdfBuff( cBuffer, cStyle, oPdf )
 
-   LOCAL cReturn       := ''
-   LOCAL cLine         := ''
-   LOCAL cOldLine      := ''
-   LOCAL cBuffEnd      := ''
+   LOCAL cReturn       := ""
+   LOCAL cLine         := ""
+   LOCAL cOldLine      := ""
+   LOCAL cBuffEnd      := ""
    LOCAL lEndBuffer    := .F.
    LOCAL nPos
    LOCAL lArgBold      := .F.
@@ -1272,18 +1272,18 @@ FUNCTION FormatPdfBuff( cBuffer, cStyle, oPdf )
 
    HB_SYMBOL_UNUSED( oPdf )
 
-   cReturn := cBuffer + ' '
+   cReturn := cBuffer + " "
 
-   IF AT( '</par>', cReturn ) > 0 .OR. EMPTY( cBuffer )
+   IF AT( "</par>", cReturn ) > 0 .OR. EMPTY( cBuffer )
       IF EMPTY( cbuffer )
-         cReturn := ''
+         cReturn := ""
       ENDIF
       RETURN cReturn
    ENDIF
    IF cStyle != "Syntax" .AND. cStyle != "Arguments" .AND. cStyle != "Return"
       DO WHILE !lEndBuffer
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         IF AT( '</par>', cLine ) > 0
+         IF AT( "</par>", cLine ) > 0
             lEndBuffer := .T.
          ENDIF
 
@@ -1298,21 +1298,21 @@ FUNCTION FormatPdfBuff( cBuffer, cStyle, oPdf )
             lEndBuffer := .T.
          ENDIF
          IF AT( DELIM, cLine ) == 0
-            cReturn += ' ' + ALLTRIM( cLine ) + ' '
+            cReturn += " " + ALLTRIM( cLine ) + " "
          ENDIF
       ENDDO
       cReturn := STRTRAN( cReturn, "<par>", "" )
       cReturn := STRTRAN( cReturn, "</par>", "" )
 
-      cReturn := '<par>' + cReturn + '    </par>'
-   ELSEIF cStyle == 'Syntax'
+      cReturn := "<par>" + cReturn + "    </par>"
+   ELSEIF cStyle == "Syntax"
       cReturn := STRTRAN( cReturn, SPACE( 4 ), "" )
-      cReturn := '<par><b>' + cReturn + ' </b></par>'
+      cReturn := "<par><b>" + cReturn + " </b></par>"
 
-   ELSEIF cStyle == 'Arguments' .OR. cStyle == "Return"
+   ELSEIF cStyle == "Arguments" .OR. cStyle == "Return"
 
       nPos    := 0
-      cReturn := '<par>' + cReturn
+      cReturn := "<par>" + cReturn
       IF AT( "<par>", cReturn ) > 0
          cReturn  := STRTRAN( cReturn, "<par>", "" )
          cReturn  := STRTRAN( cReturn, "</par>", "" )
@@ -1341,15 +1341,15 @@ FUNCTION FormatPdfBuff( cBuffer, cStyle, oPdf )
             lEndBuffer := .T.
          ENDIF
          IF AT( DELIM, cLine ) == 0
-            cReturn += ' ' + ALLTRIM( cLine ) + ' '
+            cReturn += " " + ALLTRIM( cLine ) + " "
          ENDIF
       ENDDO
       cReturn := STRTRAN( cReturn, "<par>", "" )
       cReturn := STRTRAN( cReturn, "</par>", "" )
       IF lArgBold
-         cReturn := '<par><b>' + cOldLine + '</b> ' + cReturn + '    </par>'
+         cReturn := "<par><b>" + cOldLine + "</b> " + cReturn + "    </par>"
       ELSE
-         cReturn := '<par>' + cOldLine + ' ' + cReturn + '    </par>'
+         cReturn := "<par>" + cOldLine + " " + cReturn + "    </par>"
       ENDIF
    ENDIF
    lArgBold := .F.
@@ -1369,7 +1369,7 @@ STATIC FUNCTION ReadFromTop( nh )
    LOCAL cDoc      := DELIM + "DOC" + DELIM                    // DOC keyword
    LOCAL cEnd      := DELIM + "END" + DELIM                    // END keyword
    LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
-   LOCAL cBuffer   := ''
+   LOCAL cBuffer   := ""
    LOCAL NPOS      := 0
    LOCAL aLocDoc   := {}
    DO WHILE FREADline( nH, @cBuffer, 4096 )

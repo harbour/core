@@ -52,8 +52,8 @@
 
 #define CRLF hb_osnewline()
 
-#include 'hbclass.ch'
-#include 'common.ch'
+#include "hbclass.ch"
+#include "common.ch"
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -99,14 +99,14 @@ METHOD New( cFile ) CLASS TOs2
       Self:nHandle := FCREATE( Self:cFile )
    ENDIF
 
-   FWRITE( Self:nHandle, ':userdoc.' + CRLF )
+   FWRITE( Self:nHandle, ":userdoc." + CRLF )
 
-   FWRITE( Self:nHandle, ':docprof toc=123456.' + CRLF )
-   FWRITE( Self:nHandle, ':title.' + "Harbour Reference Guide" + CRLF )
+   FWRITE( Self:nHandle, ":docprof toc=123456." + CRLF )
+   FWRITE( Self:nHandle, ":title." + "Harbour Reference Guide" + CRLF )
 
-   FWRITE( Self:nHandle, '.* HBDOC generated IPF Source File.' + CRLF )
+   FWRITE( Self:nHandle, ".* HBDOC generated IPF Source File." + CRLF )
 
-   FWRITE( Self:nHandle, '.* HBDOC Document Source Extractor, (c)1999-2000 Luiz Rafael Culik.' + CRLF )
+   FWRITE( Self:nHandle, ".* HBDOC Document Source Extractor, (c)1999-2000 Luiz Rafael Culik." + CRLF )
 
 RETURN Self
 
@@ -118,15 +118,15 @@ RETURN Self
 
 METHOD WritePar2( cBuffer,cTag,cStyle ) CLASS TOs2
    Local aLines:={} 
-   LOCAL nPos,cLine:=''
+   LOCAL nPos,cLine:=""
    Default cStyle to "Default"
 if at("-",cBuffer)>0
 
 Endif
-      cBuffer   := STRTRAN( cBuffer, '<b>', ':hp2.' )
-      cBuffer   := STRTRAN( cBuffer, '</b>', ':ehp2.' )
-      cBuffer   := STRTRAN( cBuffer, '<par>', '' )
-      cBuffer   := STRTRAN( cBuffer, '</par>', '' )
+      cBuffer   := STRTRAN( cBuffer, "<b>", ":hp2." )
+      cBuffer   := STRTRAN( cBuffer, "</b>", ":ehp2." )
+      cBuffer   := STRTRAN( cBuffer, "<par>", "" )
+      cBuffer   := STRTRAN( cBuffer, "</par>", "" )
       cBuffer   := self:DostoOs2Text(cBuffer)
 
       aLines:=FormatStringBuffer(cBuffer)
@@ -171,7 +171,7 @@ endif
             ELSE
                cLine :=  SUBSTR( cBuffer, curPos, 231 )
 
-               IF AT( '</par>', cLine ) > 0
+               IF AT( "</par>", cLine ) > 0
                   lEndPar := .T.
                   cLine   := STRTRAN( cLine, " </par>", "" )
                ENDIF
@@ -181,7 +181,7 @@ endif
                   nPos -= 1  
                ELSE
                   IF cLine == "</par>"
-                     cLine := ''
+                     cLine := ""
                   ENDIF
 
             ENDIF
@@ -210,9 +210,9 @@ RETURN Self
 METHOD WriteParBold( cPar ,lMarg) CLASS TOs2
 DEFAULT lMarg to .T.
     IF lMarg
-      FWRITE( Self:nHandle,".br"+CRLF+ ":hp2." + SELF:DosToOs2Text( cPar ) + ':ehp2.'+CRLF +".br" + CRLF +":p."+CRLF+':lm margin=6.' +CRLF )
+      FWRITE( Self:nHandle,".br"+CRLF+ ":hp2." + SELF:DosToOs2Text( cPar ) + ":ehp2."+CRLF +".br" + CRLF +":p."+CRLF+":lm margin=6." +CRLF )
     Else
-      FWRITE( Self:nHandle,":hp2." + SELF:DosToOs2Text( cPar ) + ':ehp2.'+CRLF +".br")
+      FWRITE( Self:nHandle,":hp2." + SELF:DosToOs2Text( cPar ) + ":ehp2."+CRLF +".br")
     Endif
 
 RETURN Self
@@ -233,30 +233,30 @@ METHOD WriteTitle( cTopic, cTitle ,cCategory) CLASS TOs2
    ELSE             // Just in case that nItem>0 so the Link is already referenced
       nItem := ASCAN( Self:aLinkRef, { | a | upper(a[ 1 ]) == upper(cTopic) } )
    ENDIF
-//   FWRITE( Self:nHandle, ':h1 res=' + ALLTRIM( STR( nItem ) ) + '.' + cTopic + CRLF )
+//   FWRITE( Self:nHandle, ":h1 res=" + ALLTRIM( STR( nItem ) ) + "." + cTopic + CRLF )
    If Self:ScanInd(cIndCateg)==0
       niItem := ASCAN( Self:aIndRef, { | a | upper(a) == upper(cIndCateg )} )
-      FWRITE( Self:nHandle, ':h1 ' + ::aIndRef[niItem] + "."+ UPPER( cCategory ) + CRLF)
+      FWRITE( Self:nHandle, ":h1 " + ::aIndRef[niItem] + "."+ UPPER( cCategory ) + CRLF)
       lHead := .T.  
    ELSE             // Just in case that nItem>0 so the Link is already referenced
       niItem := ASCAN( Self:aIndRef, { | a | upper(a) == upper(cIndCateg) } )
    ENDIF
    IF niItem>0 .AND.       lHead 
-      FWRITE( Self:nHandle, ':h2 '+ ' res=' + ALLTRIM( STR( nItem ) ) + '.' + cTopic  + CRLF  )
+      FWRITE( Self:nHandle, ":h2 "+ " res=" + ALLTRIM( STR( nItem ) ) + "." + cTopic  + CRLF  )
    elseIF     niItem>0 .AND.       !lHead
-      FWRITE( Self:nHandle, ':h2 id='+ ::aIndRef[niItem] + ' res=' + ALLTRIM( STR( nItem ) ) + '.' + cTopic  + CRLF  )
+      FWRITE( Self:nHandle, ":h2 id="+ ::aIndRef[niItem] + " res=" + ALLTRIM( STR( nItem ) ) + "." + cTopic  + CRLF  )
    Endif
          lHead:=.F.
    If Self:ScanRef(cRefCateg)==0
       nrItem := ASCAN( Self:aHeadRef, { | a | upper(a) == upper(cRefCateg )} )
-      FWRITE( Self:nHandle, ':i1 id=' + ::aHeadRef[nrItem] + "."+ UPPER( cCategory ) + CRLF)
+      FWRITE( Self:nHandle, ":i1 id=" + ::aHeadRef[nrItem] + "."+ UPPER( cCategory ) + CRLF)
    ELSE             // Just in case that nItem>0 so the Link is already referenced
       nrItem := ASCAN( Self:aHeadRef, { | a | upper(a) == upper(cRefCateg) } )
    ENDIF
 
    if nritem>0
 
-      FWRITE( Self:nHandle, ':i2 refid=' + ::aHeadRef[nrItem] + "." + UPPER( cTopic ) + CRLF )
+      FWRITE( Self:nHandle, ":i2 refid=" + ::aHeadRef[nrItem] + "." + UPPER( cTopic ) + CRLF )
    Endif
    cTopic := ::DosToOs2Text(cTopic)
    cTitle := ::DosToOs2Text(cTitle)
@@ -267,7 +267,7 @@ RETURN Self
 
 METHOD CLOSE() CLASS TOs2
 
-   FWRITE( Self:nHandle, ':euserdoc.' + CRLF )
+   FWRITE( Self:nHandle, ":euserdoc." + CRLF )
 
    FCLOSE( Self:nHandle )
 
@@ -334,29 +334,29 @@ METHOD DosToOs2Text( cText ) CLASS TOs2
 
    LOCAL cReturn
 
-   cReturn := STRTRAN( cText, '&', "&amp." )
+   cReturn := STRTRAN( cText, "&", "&amp." )
 
    cReturn := STRTRAN( cReturn, '"', "&cdq." )
    if at(":hp2.",cReturn)==0 .or. at(":ehp2.",cReturn)==0
-       cReturn := STRTRAN( cReturn, ':', "&colon." )
+       cReturn := STRTRAN( cReturn, ":", "&colon." )
     endif
-   cReturn := STRTRAN( cReturn, ',', "&comma." )
+   cReturn := STRTRAN( cReturn, ",", "&comma." )
 
-   cReturn := STRTRAN( cReturn, '_', "&us." )
-   cReturn := STRTRAN( cReturn, '~', "&tilde." )
-   cReturn := STRTRAN( cReturn, '|', "&splitvbar." )
+   cReturn := STRTRAN( cReturn, "_", "&us." )
+   cReturn := STRTRAN( cReturn, "~", "&tilde." )
+   cReturn := STRTRAN( cReturn, "|", "&splitvbar." )
 
-   cReturn := STRTRAN( cReturn, '/', "&slash." )
+   cReturn := STRTRAN( cReturn, "/", "&slash." )
    cReturn := STRTRAN( cReturn,"<&slash.par>","</par>")
-   cReturn := STRTRAN( cReturn, ';', "&semi." )
-   cReturn := STRTRAN( cReturn, ')', "&rpar." )
-   cReturn := STRTRAN( cReturn, ']', "&rbrk.." )
-   cReturn := STRTRAN( cReturn, '}', "&rbrc." )
-   cReturn := STRTRAN( cReturn, '(', "&lpar." )
-   cReturn := STRTRAN( cReturn, '[', "&lbrk." )
-   cReturn := STRTRAN( cReturn, '{', "&lbrc." )
-   cReturn := STRTRAN( cReturn, '=', "&eq." )
-   cReturn := STRTRAN( cReturn, '$', "&dollar." )
+   cReturn := STRTRAN( cReturn, ";", "&semi." )
+   cReturn := STRTRAN( cReturn, ")", "&rpar." )
+   cReturn := STRTRAN( cReturn, "]", "&rbrk.." )
+   cReturn := STRTRAN( cReturn, "}", "&rbrc." )
+   cReturn := STRTRAN( cReturn, "(", "&lpar." )
+   cReturn := STRTRAN( cReturn, "[", "&lbrk." )
+   cReturn := STRTRAN( cReturn, "{", "&lbrc." )
+   cReturn := STRTRAN( cReturn, "=", "&eq." )
+   cReturn := STRTRAN( cReturn, "$", "&dollar." )
    cReturn := STRTRAN( cReturn, "-", "&minus." )
 RETURN cReturn
 
@@ -369,7 +369,7 @@ METHOD WriteJumpTitle( cTitle, cTopic ) CLASS TOs2
 
    cTopic := ALLTRIM( HB_OEMTOANSI( cTopic ) )
 
-   cWrite := ':fn id=' + cTopic + '.'
+   cWrite := ":fn id=" + cTopic + "."
 
    FWRITE( Self:nHandle, cWrite )
 
@@ -395,7 +395,7 @@ Return cReturn
 
 Static FUNCTION FormatStringBuffer(cBuffer)
 Local nLen,nPos,aLine:={}
-Local cLine:=''
+Local cLine:=""
 nLen:=Len(cBuffer)
 
 WHILE nLen>230
@@ -408,7 +408,7 @@ WHILE nLen>230
             AADD(aLine,alltrim(cLine))
             nLen:=Len(cBuffer)
         Endif
-       if at('&minus.',cLine)>0 .or. at('&eq.',cLine)>0
+       if at("&minus.",cLine)>0 .or. at("&eq.",cLine)>0
         nPos:=RAT(".",cLine)
         IF nPos>0
             cLine:=Substr(cBuffer,1,nPos)

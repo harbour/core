@@ -1,6 +1,8 @@
 /*
  * $Id$
  */
+
+/*
  * xHarbour Project source code:
  * hbmake.prg xHarbour make utility main file
  *
@@ -51,10 +53,11 @@
 
 STATIC someitems
 STATIC lAdd := .F.
-STATIC cMarkChar := '*' // 'û' // character showed when <F5> is pressed to select prgs/libs.
+STATIC cMarkChar := "*" // "û" // character showed when <F5> is pressed to select prgs/libs.
 
-#include "common.ch"
 #include "achoice.ch"
+#include "common.ch"
+#include "inkey.ch"
 
 
 FUNCTION PICKARRY( T, L, b, r, IN_ARRAY, OUT_ARRAY, aDefault, lAllowAll, cTitle, lLib )
@@ -79,15 +82,15 @@ DEFAULT lLib to .F.
 
    PutScreen()
 
-   Setcolor( 'gr+/rb,b+/w,w+/b,w/b+,w/b,w+/b' )
+   Setcolor( "gr+/rb,b+/w,w+/b,w/b+,w/b,w+/b" )
 
    @ T - 2, L - 1 CLEAR TO b + 1, r + 1
    @ T - 2, L say cTitle
    @ T - 1, L - 1 TO b + 1, r + 1 double
 
    FOR x := 1 TO NUM_ELEMS
-      IN_ARRAY[ X ] := Padr( '   ' + IN_ARRAY[ X ], PAD_LEN )
-      OUT_ARRAY[ X ] := ' ' + OUT_ARRAY[ X ]
+      IN_ARRAY[ X ] := Padr( "   " + IN_ARRAY[ X ], PAD_LEN )
+      OUT_ARRAY[ X ] := " " + OUT_ARRAY[ X ]
    NEXT
 
    //aTemp :=GetFiles(aitems)
@@ -98,30 +101,30 @@ DEFAULT lLib to .F.
       FOR EACH cItem IN aDefault
 
          if !lLib
-            x := AScan( IN_ARRAY, { | a | SubStr( a, 4, At(' ', alltrim(a) ) - 1 ) == cItem } )
+            x := AScan( IN_ARRAY, { | a | SubStr( a, 4, At(" ", alltrim(a) ) - 1 ) == cItem } )
          else
             x := AScan( IN_ARRAY, { | a | alltrim(cItem) $ a } )
          endif
 
          IF x != 0
 
-            IN_ARRAY[ x ]  := Stuff( IN_ARRAY[ x ], 2, 1, If( lIsChecked, ' ', cMarkChar ) )
-            OUT_ARRAY[ x ] := Stuff( OUT_ARRAY[ x ], 1, 1, If( lIsChecked, ' ', cMarkChar ) )
+            IN_ARRAY[ x ]  := Stuff( IN_ARRAY[ x ], 2, 1, iif( lIsChecked, " ", cMarkChar ) )
+            OUT_ARRAY[ x ] := Stuff( OUT_ARRAY[ x ], 1, 1, iif( lIsChecked, " ", cMarkChar ) )
             SOMEITEMS ++
 
          ELSE
 
-            cItem := SubStr( cItem, Rat( '\', cItem ) - 1 )
+            cItem := SubStr( cItem, Rat( "\", cItem ) - 1 )
 
             if !lLib
-               x := AScan( aTemp, { | a | SubStr( a, 4, At( ' ', a ) - 1 ) == cItem } )
+               x := AScan( aTemp, { | a | SubStr( a, 4, At( " ", a ) - 1 ) == cItem } )
             else
                x := AScan( IN_ARRAY, { | a | alltrim(cItem) $ a } )
             endif
 
             IF x != 0
-               IN_ARRAY[ x ] := Stuff( IN_ARRAY[ x ], 2, 1, If( lIsChecked, ' ', cMarkChar ) )
-               OUT_ARRAY[ x ] := Stuff( OUT_ARRAY[ x ], 1, 1, If( lIsChecked, ' ', cMarkChar ) )
+               IN_ARRAY[ x ] := Stuff( IN_ARRAY[ x ], 2, 1, iif( lIsChecked, " ", cMarkChar ) )
+               OUT_ARRAY[ x ] := Stuff( OUT_ARRAY[ x ], 1, 1, iif( lIsChecked, " ", cMarkChar ) )
                SOMEITEMS ++
             ENDIF
 
@@ -137,7 +140,7 @@ DEFAULT lLib to .F.
 
       @T,L CLEAR TO b, r
 
-      nChoice := AChoice( T, L, b, r, IN_ARRAY,, 'keys', nChoice, 1 )
+      nChoice := AChoice( T, L, b, r, IN_ARRAY,, "keys", nChoice, 1 )
 
       IF nChoice > 0
 
@@ -149,8 +152,8 @@ DEFAULT lLib to .F.
 
                  lIsChecked := Substr( IN_ARRAY[ nChoice ], 2, 1 ) == cMarkChar
 
-                 IN_ARRAY[ nChoice ]  := Stuff( IN_ARRAY[ nChoice ], 2, 1, If( lIsChecked, ' ', cMarkChar ) )
-                 OUT_ARRAY[ nChoice ] := Stuff( OUT_ARRAY[ nChoice ], 1, 1, If( lIsChecked, ' ', cMarkChar ) )
+                 IN_ARRAY[ nChoice ]  := Stuff( IN_ARRAY[ nChoice ], 2, 1, iif( lIsChecked, " ", cMarkChar ) )
+                 OUT_ARRAY[ nChoice ] := Stuff( OUT_ARRAY[ nChoice ], 1, 1, iif( lIsChecked, " ", cMarkChar ) )
 
                  IF lIsChecked
                     SOMEITEMS --
@@ -164,8 +167,8 @@ DEFAULT lLib to .F.
 
               lIsChecked := Substr( IN_ARRAY[ nChoice ], 2, 1 ) == cMarkChar
 
-              IN_ARRAY[ nChoice ]  := Stuff( IN_ARRAY[ nChoice ], 2, 1, If( lIsChecked, ' ', cMarkChar ) )
-              OUT_ARRAY[ nChoice ] := Stuff( OUT_ARRAY[ nChoice ], 1, 1, If( lIsChecked, ' ', cMarkChar ) )
+              IN_ARRAY[ nChoice ]  := Stuff( IN_ARRAY[ nChoice ], 2, 1, iif( lIsChecked, " ", cMarkChar ) )
+              OUT_ARRAY[ nChoice ] := Stuff( OUT_ARRAY[ nChoice ], 1, 1, iif( lIsChecked, " ", cMarkChar ) )
 
               IF lIsChecked
                  SOMEITEMS --
@@ -181,8 +184,8 @@ DEFAULT lLib to .F.
 
             lIsChecked := Substr( IN_ARRAY[ nChoice ], 2, 1 ) == cMarkChar
 
-            IN_ARRAY[ nChoice ]  := Stuff( IN_ARRAY[ nChoice ], 2, 1, If( lIsChecked, ' ', cMarkChar ) )
-            OUT_ARRAY[ nChoice ] := Stuff( OUT_ARRAY[ nChoice ], 1, 1, If( lIsChecked, ' ', cMarkChar ) )
+            IN_ARRAY[ nChoice ]  := Stuff( IN_ARRAY[ nChoice ], 2, 1, iif( lIsChecked, " ", cMarkChar ) )
+            OUT_ARRAY[ nChoice ] := Stuff( OUT_ARRAY[ nChoice ], 1, 1, iif( lIsChecked, " ", cMarkChar ) )
 
             IF lIsChecked
                SOMEITEMS --
@@ -218,26 +221,26 @@ LOCAL RETVAL := AC_CONT
 LOCAL THEKEY := Lastkey()
 
 
-   IF MODE = AC_HITTOP 
-      KEYBOARD Chr( 30 )
+   IF MODE == AC_HITTOP 
+      KEYBOARD Chr( K_CTRL_PGDN )
 
-   ELSEIF MODE = AC_HITBOTTOM
-      KEYBOARD Chr( 31 )
+   ELSEIF MODE == AC_HITBOTTOM
+      KEYBOARD Chr( K_CTRL_PGUP )
 
-   ELSEIF MODE = AC_EXCEPT 
+   ELSEIF MODE == AC_EXCEPT 
 
-      IF THEKEY = 32       // space bar to select/unselect
+      IF THEKEY == K_SPACE // space bar to select/unselect
          RETVAL := AC_SELECT
-      ELSEIF THEKEY == -4  // F5 (select all itens)
+      ELSEIF THEKEY == K_F5  // (select all itens)
          lAdd := !lAdd
          RETVAL := AC_SELECT
-      ELSEIF THEKEY = 27
+      ELSEIF THEKEY == K_ESC
          RETVAL := AC_ABORT 
-      ELSEIF THEKEY = 13 .AND. SOMEITEMS < 1
+      ELSEIF THEKEY = K_ENTER .AND. SOMEITEMS < 1
          RETVAL := AC_ABORT 
-         KEYBOARD CHR( 13 )
-      ELSEIF THEKEY = 13
-         KEYBOARD CHR( 24 )
+         KEYBOARD CHR( K_ENTER )
+      ELSEIF THEKEY = K_ENTER
+         KEYBOARD CHR( K_DOWN )
          RETVAL := AC_ABORT
       ENDIF
 
@@ -254,9 +257,9 @@ LOCAL cItem := ""
 
    FOR EACH cItem IN aIn
 
-      cItem := Substr( cItem, 1, At( ' ', cItem ) - 1 )
+      cItem := Substr( cItem, 1, At( " ", cItem ) - 1 )
 
-      AAdd( aRet, Substr( cItem, 1, At( ' ', cItem ) ) )
+      AAdd( aRet, Substr( cItem, 1, At( " ", cItem ) ) )
    NEXT
 
 RETURN aRet

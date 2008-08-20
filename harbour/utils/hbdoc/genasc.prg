@@ -151,12 +151,12 @@ FUNCTION ASCIIFiles()
    LOCAL cInc        := DELIM + "INCLUDE" + DELIM              // INCLUDE keyword
    LOCAL cComm       := DELIM + "COMMANDNAME" + DELIM          // COMMAND keyword
    LOCAL cCompl      := DELIM + "COMPLIANCE" + DELIM
-   LOCAL cTest       := DELIM + 'TESTS' + DELIM
-   LOCAL cStatus     := DELIM + 'STATUS' + DELIM
-   LOCAL cPlat       := DELIM + 'PLATFORMS' + DELIM
-   LOCAL cFiles      := DELIM + 'FILES' + DELIM
-   LOCAL cSubCode    := DELIM + 'SUBCODE' + DELIM
-   LOCAL cFunction   := DELIM + 'FUNCTION' + DELIM
+   LOCAL cTest       := DELIM + "TESTS" + DELIM
+   LOCAL cStatus     := DELIM + "STATUS" + DELIM
+   LOCAL cPlat       := DELIM + "PLATFORMS" + DELIM
+   LOCAL cFiles      := DELIM + "FILES" + DELIM
+   LOCAL cSubCode    := DELIM + "SUBCODE" + DELIM
+   LOCAL cFunction   := DELIM + "FUNCTION" + DELIM
    LOCAL cFileNameOri
 
 #define D_NORMAL     1

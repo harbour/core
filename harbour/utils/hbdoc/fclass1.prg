@@ -51,8 +51,8 @@
  */
 
 #include "hbclass.ch"
-#include 'common.ch'
-#include 'hbdocdef.ch'
+#include "common.ch"
+#include "hbdocdef.ch"
 
 *+--------------------------------------------------------------------
 *+

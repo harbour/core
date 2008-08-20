@@ -58,7 +58,7 @@
 #include "fileio.ch"
 #include "inkey.ch"
 #include "hbdocdef.ch"
-#include 'common.ch'
+#include "common.ch"
 //  output lines on the screen
 
 #define INFILELINE   10
@@ -79,7 +79,7 @@ STATIC atiTable       := {}
 STATIC nNumTableItems := 0
 
 STATIC lIsTable    := .F.
-STATIC aColorTable := { { 'aqua', '' }, { 'black', '' }, { 'fuchia', '' }, { 'grey', '' }, { 'green', '' }, { 'lime', '' }, { 'maroon', '' }, { 'navy', '' }, { 'olive', '' }, { 'purple', '' }, { 'red', '' }, { 'silver', '' }, { 'teal', '' }, { 'white', '' }, { 'yellow', '' } }
+STATIC aColorTable := { { "aqua", "" }, { "black", "" }, { "fuchia", "" }, { "grey", "" }, { "green", "" }, { "lime", "" }, { "maroon", "" }, { "navy", "" }, { "olive", "" }, { "purple", "" }, { "red", "" }, { "silver", "" }, { "teal", "" }, { "white", "" }, { "yellow", "" } }
 STATIC aCurDoc        := {}
 STATIC nCurDoc := 1
 
@@ -154,19 +154,19 @@ FUNCTION ProcessOs2()
    LOCAL cInc           := DELIM + "INCLUDE" + DELIM           // INCLUDE keyword
    LOCAL cComm          := DELIM + "COMMANDNAME" + DELIM       // COMMAND keyword
    LOCAL cCompl         := DELIM + "COMPLIANCE" + DELIM
-   LOCAL cTest          := DELIM + 'TESTS' + DELIM
-   LOCAL cStatus        := DELIM + 'STATUS' + DELIM
-   LOCAL cPlat          := DELIM + 'PLATFORMS' + DELIM
-   LOCAL cFiles         := DELIM + 'FILES' + DELIM
-   LOCAL cSubCode       := DELIM + 'SUBCODE' + DELIM
-   LOCAL cFunction      := DELIM + 'FUNCTION' + DELIM
-   LOCAL cConstruct     := DELIM + 'CONSTRUCTOR' + DELIM
-   LOCAL cDatalink      := DELIM + 'DATALINK' + DELIM
-   LOCAL cDatanolink    := DELIM + 'DATANOLINK' + DELIM
-   LOCAL cMethodslink   := DELIM + 'METHODSLINK' + DELIM
-   LOCAL cMethodsNolink := DELIM + 'METHODSNOLINK' + DELIM
+   LOCAL cTest          := DELIM + "TESTS" + DELIM
+   LOCAL cStatus        := DELIM + "STATUS" + DELIM
+   LOCAL cPlat          := DELIM + "PLATFORMS" + DELIM
+   LOCAL cFiles         := DELIM + "FILES" + DELIM
+   LOCAL cSubCode       := DELIM + "SUBCODE" + DELIM
+   LOCAL cFunction      := DELIM + "FUNCTION" + DELIM
+   LOCAL cConstruct     := DELIM + "CONSTRUCTOR" + DELIM
+   LOCAL cDatalink      := DELIM + "DATALINK" + DELIM
+   LOCAL cDatanolink    := DELIM + "DATANOLINK" + DELIM
+   LOCAL cMethodslink   := DELIM + "METHODSLINK" + DELIM
+   LOCAL cMethodsNolink := DELIM + "METHODSNOLINK" + DELIM
    LOCAL cData          := DELIM + "DATA" + DELIM
-   LOCAL cMethod        := DELIM + 'METHOD' + DELIM
+   LOCAL cMethod        := DELIM + "METHOD" + DELIM
    LOCAL cClassDoc      := DELIM + "CLASSDOC" + DELIM
    LOCAL cTable         := DELIM + "TABLE" + DELIM
 
@@ -249,7 +249,7 @@ FUNCTION ProcessOs2()
                //  Now close down this little piece
                lDoc := .F.
                IF lData .OR. lmethod
-                  oos2:writeText( ':efn.' )
+                  oos2:writeText( ":efn." )
                ENDIF
                IF .NOT. EMPTY( cSeeAlso )
                   oOs2:WriteText( ".br")
@@ -372,9 +372,9 @@ FUNCTION ProcessOs2()
                nMode := D_ONELINE
                //  Now start writing out what we know
                IF lData
-                  oOs2:WriteJumpTitle( LEFT( cFilename, AT( '.', cFilename ) - 1 ) + cFuncName, "Data " + cFuncName )
+                  oOs2:WriteJumpTitle( LEFT( cFilename, AT( ".", cFilename ) - 1 ) + cFuncName, "Data " + cFuncName )
                ELSEIF lMethod
-                  oOs2:WriteJumpTitle( LEFT( cFilename, AT( '.', cFilename ) - 1 ) + cFuncName, "Method " + cFuncName )
+                  oOs2:WriteJumpTitle( LEFT( cFilename, AT( ".", cFilename ) - 1 ) + cFuncName, "Method " + cFuncName )
                ELSE
 
                   oOs2:WriteTitle( PAD( cFuncName, 40 ), cFuncName ,cCategory)
@@ -556,10 +556,10 @@ end
                      lBlankLine := EMPTY( cBuffer )
 //                   cBuffer := oOs2:DosToOs2Text(cBuffer)
                      IF AT( "<par>", cBuffer ) > 0
-                        STRTRAN( cBuffer, "<par>", '' )
-                        STRTRAN( cBuffer, "</par>", '' )
+                        STRTRAN( cBuffer, "<par>", "" )
+                        STRTRAN( cBuffer, "</par>", "" )
                         cBuffer := ALLTRIM( cBuffer )
-                        cbuFfer := '<par>' + cBuffer + '</par>'
+                        cbuFfer := "<par>" + cBuffer + "</par>"
                      ENDIF
 
                      procos2desc( cbuffer, oOs2, "Syntax" )
@@ -601,7 +601,7 @@ end
                      ENDIF
                      cTemp   := SUBSTR( cBuffer, 1, AT( ":", cBuffer ) - 1 )
                      cBuffer := SUBSTR( cBuffer, AT( ":", cBuffer ) + 1 )
-                     oOs2:WriteJumpLink( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ), cBuffer )
+                     oOs2:WriteJumpLink( LEFT( cfilename, AT( ".", cFilename ) - 1 ) + ALLTRIM( cTemp ), cBuffer )
                   ELSEIF nMode == D_METHODLINK
                      IF LEN( cBuffer ) > LONGLINE
                         WRITE_ERROR( "General", cBuffer, nLineCnt, ;
@@ -614,7 +614,7 @@ end
                      cTemp   := SUBSTR( cBuffer, 1, AT( "()", cBuffer ) + 1 )
                      cName   := SUBSTR( cBuffer, 1, AT( "()", cBuffer ) - 1 )
                      cBuffer := SUBSTR( cBuffer, AT( "()", cBuffer ) + 2 )
-                     oOs2:WriteJumpLink( LEFT( cfilename, AT( '.', cFilename ) - 1 ) + ALLTRIM( cTemp ), cTemp, cBuffer )
+                     oOs2:WriteJumpLink( LEFT( cfilename, AT( ".", cFilename ) - 1 ) + ALLTRIM( cTemp ), cTemp, cBuffer )
 
                   ELSEIF nMode == D_SEEALSO
                      IF .NOT. EMPTY( cBuffer )
@@ -734,26 +734,26 @@ RETURN aAlso
 *+
 FUNCTION Formatos2Buff( cBuffer, cStyle )
 
-   LOCAL cReturn  := ''
-   LOCAL cLine    := ''
-   LOCAL cBuffend := ''
-   LOCAL coline   := ''
+   LOCAL cReturn  := ""
+   LOCAL cLine    := ""
+   LOCAL cBuffend := ""
+   LOCAL coline   := ""
    LOCAL lEndBuff := .F.
 
    LOCAL nPos
    LOCAL lArgBold := .F.
 
-   cReturn := cBuffer + ' '
-   IF AT( '</par>', cReturn ) > 0 .OR. EMPTY( cBuffer )
+   cReturn := cBuffer + " "
+   IF AT( "</par>", cReturn ) > 0 .OR. EMPTY( cBuffer )
       IF EMPTY( cbuffer )
-         cReturn := ''
+         cReturn := ""
       ENDIF
       RETURN cReturn
    ENDIF
    IF cStyle != "Syntax" .AND. cStyle != "Arguments"
       DO WHILE !lEndBuff
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         IF AT( '</par>', cLine ) > 0
+         IF AT( "</par>", cLine ) > 0
             lEndBuff := .T.
          ENDIF
          IF EMPTY( cLine )
@@ -767,18 +767,18 @@ FUNCTION Formatos2Buff( cBuffer, cStyle )
             lEndBuff := .T.
          ENDIF
          IF AT( DELIM, cLine ) == 0
-            cReturn += " "+ ALLTRIM( cLine ) + ' '
+            cReturn += " "+ ALLTRIM( cLine ) + " "
          ENDIF
       ENDDO
       creturn := STRTRAN( creturn, "<par>", "" )
       creturn := STRTRAN( creturn, "</par>", "" )
 
-      cReturn := '<par>' + creturn + '    </par>'
+      cReturn := "<par>" + creturn + "    </par>"
 
-   ELSEIF cStyle == 'Syntax'
-      cReturn := '<par>' + Alltrim(cReturn) + '</par>'
+   ELSEIF cStyle == "Syntax"
+      cReturn := "<par>" + Alltrim(cReturn) + "</par>"
 
-   ELSEIF cStyle == 'Arguments'
+   ELSEIF cStyle == "Arguments"
       nPos := 0
 
       
@@ -798,7 +798,7 @@ FUNCTION Formatos2Buff( cBuffer, cStyle )
         
       DO WHILE !lEndBuff
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
-         IF AT( '</par>', cLine ) > 0
+         IF AT( "</par>", cLine ) > 0
             lEndBuff := .T.
          ENDIF
          IF EMPTY( cLine )
@@ -810,15 +810,15 @@ FUNCTION Formatos2Buff( cBuffer, cStyle )
             lEndBuff := .T.
          ENDIF
          IF AT( DELIM, cline ) == 0
-            cReturn += ' ' + ALLTRIM( cLine ) + ' '
+            cReturn += " " + ALLTRIM( cLine ) + " "
          ENDIF
       ENDDO
       creturn := STRTRAN( creturn, "<par>", "" )
       creturn := STRTRAN( creturn, "</par>", "" )
       IF lArgBold
-         cReturn := '<par><b>' + cOLine + '</b> ' + cReturn + '    </par>'
+         cReturn := "<par><b>" + cOLine + "</b> " + cReturn + "    </par>"
       ELSE
-         cReturn := '<par>' + cOLine + ' ' + cReturn + '    </par>'
+         cReturn := "<par>" + cOLine + " " + cReturn + "    </par>"
       ENDIF
       lArgBold := .F.
 
@@ -883,15 +883,15 @@ FUNCTION ProcOs2Table( cBuffer , nNum )
       cBuffer   := STRTRAN( cbuffer, "</color>", "" )
       cBuffer   := STRTRAN( cbuffer, "<color:", "" )
       cBuffer   := STRTRAN( cbuffer, ">", "" )
-      cBuffer   := STRTRAN( cBuffer, ccolor, '' )
+      cBuffer   := STRTRAN( cBuffer, ccolor, "" )
       nColorpos := ASCAN( aColorTable, { | x | UPPER( x[ 1 ] ) == UPPER( ccolor ) } )
       cColor    := aColortable[ nColorPos, 2 ]
    ENDIF
    IF EMPTY( cBuffer )
-      citem  := ''
-      citem2 := ''
-      citem3 := ''
-      citem4 := ''
+      citem  := ""
+      citem2 := ""
+      citem3 := ""
+      citem4 := ""
    ELSE
       cBuffer := STRTRAN( cBuffer, "<", "&lt." )
       cBuffer := STRTRAN( cBuffer, ">", "&gt." )
@@ -914,20 +914,20 @@ FUNCTION ProcOs2Table( cBuffer , nNum )
       ENDIF
    ENDIF
    IF cColor != NIL
-      AADD( afiTable, "<Font color=" + ccolor + ">" + RTRIM( LTRIM( cItem ) ) + '</font>' )
-      AADD( asiTable, "<Font color=" + ccolor + ">" + cItem2 + '</font>' )
+      AADD( afiTable, "<Font color=" + ccolor + ">" + RTRIM( LTRIM( cItem ) ) + "</font>" )
+      AADD( asiTable, "<Font color=" + ccolor + ">" + cItem2 + "</font>" )
    ELSE
       AADD( afiTable, RTRIM( LTRIM( cItem ) ) )
       AADD( asiTable, cItem2 )
    ENDIF
 
    IF cColor != NIL
-      AADD( atiTable, "<Font color=" + ccolor + ">" + cItem3 + '</font>' )
+      AADD( atiTable, "<Font color=" + ccolor + ">" + cItem3 + "</font>" )
    ELSE
       AADD( atiTable, cItem3 )
    ENDIF
    IF cColor != NIL
-      AADD( afoiTable, "<Font color=" + ccolor + ">" + cItem4 + '</font>' )
+      AADD( afoiTable, "<Font color=" + ccolor + ">" + cItem4 + "</font>" )
    ELSE
       AADD( afoiTable, cItem4 )
    ENDIF
@@ -950,7 +950,7 @@ FUNC maxos2elem( a )
    LOCAL ncount
    FOR ncount := 1 TO nsize
       tam := LEN( a[ ncount ] )
-      max := IF( tam > max, tam, max )
+      max := iif( tam > max, tam, max )
    NEXT
    nPos := ASCAN( a, { | x | LEN( x ) == max } )
 RETURN max
@@ -975,37 +975,37 @@ FUNCTION Genos2Table( oOs2 )
     elseif nNumTableItems == 3         
        oos2:writeText(":table cols="+"'"+str(maxos2elem(afitable),2) + " " + str(maxos2elem(asitable),2) +  " " +str(maxos2elem(atitable),2) +"'." )
     elseif nNumTableItems == 4
-       oos2:writeText(":table cols="+"'"+str(maxos2elem(afitable),2) + " " + str(maxos2elem(asitable),2) +  " " +str(maxos2elem(atitable),2) + ' ' +str(maxos2elem(afoitable),2)+"'." )
+       oos2:writeText(":table cols="+"'"+str(maxos2elem(afitable),2) + " " + str(maxos2elem(asitable),2) +  " " +str(maxos2elem(atitable),2) + " " +str(maxos2elem(afoitable),2)+"'." )
     endif
 
 
    FOR x := 1 TO LEN( asitable )
       IF !EMPTY( asitable[ x ] )
          IF nNumTableItems == 2
-            oos2:Writetext(':row.')
-            oos2:Writetext(':c.' + afitable[x])
-            oos2:Writetext(':c.' + asitable[x])
+            oos2:Writetext(":row.")
+            oos2:Writetext(":c." + afitable[x])
+            oos2:Writetext(":c." + asitable[x])
 
          ELSEIF nNumTableItems == 3
-            oos2:Writetext(':row.')
-            oos2:Writetext(':c.' + afitable[x])
-            oos2:Writetext(':c.' + asitable[x])
-            oos2:Writetext(':c.' + atitable[x])
+            oos2:Writetext(":row.")
+            oos2:Writetext(":c." + afitable[x])
+            oos2:Writetext(":c." + asitable[x])
+            oos2:Writetext(":c." + atitable[x])
          ELSEIF nNumTableItems == 4
-            oos2:Writetext(':row.')
-            oos2:Writetext(':c.' + afitable[x])
-            oos2:Writetext(':c.' + asitable[x])
-            oos2:Writetext(':c.' + atitable[x])
-            oos2:Writetext(':c.' + afoitable[x])
+            oos2:Writetext(":row.")
+            oos2:Writetext(":c." + afitable[x])
+            oos2:Writetext(":c." + asitable[x])
+            oos2:Writetext(":c." + atitable[x])
+            oos2:Writetext(":c." + afoitable[x])
          ENDIF
       ELSE
-            oos2:Writetext(':row.')
-            oos2:Writetext(':c.')
+            oos2:Writetext(":row.")
+            oos2:Writetext(":c.")
 
       ENDIF
    NEXT
 
-   oOs2:Writetext( ':etable.' )
+   oOs2:Writetext( ":etable." )
    oos2:WriteText( ".br" )
    afiTable  := {}
    asitable  := {}
@@ -1025,14 +1025,14 @@ RETURN Nil
 *+
 FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 
-   LOCAL cLine       := ''
+   LOCAL cLine       := ""
    LOCAL lArgBold    := .F.
    LOCAL lHasFixed   := .F.
    LOCAL npos
    LOCAL CurPos      := 0
    LOCAL nColorPos
-   LOCAL ccolor      := ''
-   LOCAL creturn     := ''
+   LOCAL ccolor      := ""
+   LOCAL creturn     := ""
    LOCAL NIDENTLEVEL
    LOCAL coline
    LOCAL lEndPar     := .F.
@@ -1042,8 +1042,8 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 
    DEFAULT cStyle TO "Default"
    lendfixed := .F.
-   IF AT( '<par>', cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example" 
-      cBuffer := '<par>' + cBuffer
+   IF AT( "<par>", cBuffer ) == 0 .AND. !EMPTY( cBuffer ) .AND. cstyle != "Example" 
+      cBuffer := "<par>" + cBuffer
    ENDIF
    IF EMPTY( cBuffer )
       oOs2:WriteText( ".br" )
@@ -1070,9 +1070,9 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 
                //            cBuffer:= strtran(cBuffer,"<par>","<par><b>")
                IF lArgBold
-                  cReturn := '<par><b>' + cOLine + '</b> ' + cReturn + '  </par>'
+                  cReturn := "<par><b>" + cOLine + "</b> " + cReturn + "  </par>"
                ELSE
-                  cReturn := '<par>' + cOLine + ' ' + cReturn + '  </par>'
+                  cReturn := "<par>" + cOLine + " " + cReturn + "  </par>"
                ENDIF
 
                cbuffer := cReturn
@@ -1085,16 +1085,16 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
       ENDIF
    ENDIF
 
-   IF AT( '<par>', cBuffer ) > 0 .AND. AT( '</par>', cBuffer ) > 0
+   IF AT( "<par>", cBuffer ) > 0 .AND. AT( "</par>", cBuffer ) > 0
 
-      cBuffer   := STRTRAN( cBuffer, '<par>', '' )
+      cBuffer   := STRTRAN( cBuffer, "<par>", "" )
 
-      cBuffer   := STRTRAN( cBuffer, '<em>', ':hp3. ' )
-      cBuffer   := STRTRAN( cBuffer, '</em>', ':ehp3. ' )
-      cBuffer   := STRTRAN( cBuffer, '<i>', ':hp1. ' )
-      cBuffer   := STRTRAN( cBuffer, '</i>', ':ehp1. ' )
-      cBuffer   := STRTRAN( cBuffer, '</color>', '' )
-      nColorPos := AT( '<color:', cBuffer )
+      cBuffer   := STRTRAN( cBuffer, "<em>", ":hp3. " )
+      cBuffer   := STRTRAN( cBuffer, "</em>", ":ehp3. " )
+      cBuffer   := STRTRAN( cBuffer, "<i>", ":hp1. " )
+      cBuffer   := STRTRAN( cBuffer, "</i>", ":ehp1. " )
+      cBuffer   := STRTRAN( cBuffer, "</color>", "" )
+      nColorPos := AT( "<color:", cBuffer )
       IF ncolorpos > 0
          checkos2color( @cbuffer, ncolorpos )
       ENDIF
@@ -1117,7 +1117,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
             ELSE
                cLine := SPACE( nidentLevel ) + SUBSTR( cBuffer, curPos, 220 )
 
-               IF AT( '</par>', cLine ) > 0
+               IF AT( "</par>", cLine ) > 0
                   lEndPar := .T.
                   cLine   := STRTRAN( cLine, " </par>", "" )
                ENDIF
@@ -1127,7 +1127,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
                   nPos  -= nIdentlevel
                ELSE
                   IF cLine == "</par>"
-                     cLine := ''
+                     cLine := ""
                   ENDIF
 
                ENDIF
@@ -1135,8 +1135,8 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 
             IF !EMPTY( cLine )
                 if AT("<b>",cLine)>0 .or. AT("</b>",cLine)>0
-                      cLine   := STRTRAN( cLine, '<b>', '' )
-                      cLine   := STRTRAN( cLine, '</b>', '' )
+                      cLine   := STRTRAN( cLine, "<b>", "" )
+                      cLine   := STRTRAN( cLine, "</b>", "" )
                       oOs2:WriteParBold(cLine,.F.)
                 Else
                       oos2:WriteText(SPACE(nidentLevel )+ cLine )
@@ -1148,7 +1148,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 */
          nIdentLevel := 6
          nPos        := 0
-/*         IF AT( '</par>', cBuffer ) > 0
+/*         IF AT( "</par>", cBuffer ) > 0
             cBuffer := STRTRAN( cBuffer, "</par>", "" )
          ENDIF*/
          IF !EMPTY( cBuffer )
@@ -1161,10 +1161,10 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
          ENDIF
 
       ELSEIF cStyle == "Arguments"
-/*      cBuffer   := STRTRAN( cBuffer, ':', "&colon." )
-      cBuffer   := STRTRAN( cBuffer, '<b>', 'hp2.' )
-      cBuffer   := STRTRAN( cBuffer, '</b>', 'ehp2.' )
-         IF AT( '</par>', cBuffer ) > 0
+/*      cBuffer   := STRTRAN( cBuffer, ":", "&colon." )
+      cBuffer   := STRTRAN( cBuffer, "<b>", "hp2." )
+      cBuffer   := STRTRAN( cBuffer, "</b>", "ehp2." )
+         IF AT( "</par>", cBuffer ) > 0
             cBuffer := STRTRAN( cBuffer, "</par>", "" )
          ENDIF
 
@@ -1172,7 +1172,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
          IF !EMPTY( cBuffer )
             cBuffer := SUBSTR( cBuffer, 2 )
 
-            oos2:writetext(cbuffer+CRLF+'.br')
+            oos2:writetext(cbuffer+CRLF+".br")
 
             oOs2:writeText( cBuffer+CRLF+".br") 
          ENDIF
@@ -1185,20 +1185,20 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 
 
       ELSEIF cStyle == "Syntax"
-/*         IF AT( '</par>', cBuffer ) > 0
+/*         IF AT( "</par>", cBuffer ) > 0
             cBuffer := STRTRAN( cBuffer, "</par>", "" )
          ENDIF*/
          IF !EMPTY( cBuffer )
 /*            cBuffer := SUBSTR( cBuffer, 2 )
             oOs2:WriteParBold( cBuffer,.F.)
-            oOs2:writeText('.br')
-            oOs2:writeText('.br')*/
+            oOs2:writeText(".br")
+            oOs2:writeText(".br")*/
 //            ? cBuffer
             cBuffer:=Alltrim(cBuffer)
             oos2:WritePar2( cBuffer,":p.","Syntax" )
          ENDIF
       ELSEIF cStyle == "Default"
-/*         IF AT( '</par>', cBuffer ) > 0
+/*         IF AT( "</par>", cBuffer ) > 0
             cBuffer := STRTRAN( cBuffer, "</par>", "" )
          ENDIF*/
          IF !EMPTY( cBuffer )
@@ -1208,10 +1208,10 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
 
       ENDIF
    ENDIF
-   IF AT( '<fixed>', cBuffer ) > 0 .OR. cStyle = "Example"
+   IF AT( "<fixed>", cBuffer ) > 0 .OR. cStyle = "Example"
 
-      IF AT( '<fixed>', cBuffer ) == 0 .OR. !EMPTY( cBuffer )
-         if AT( '<fixed>', cBuffer ) > 0
+      IF AT( "<fixed>", cBuffer ) == 0 .OR. !EMPTY( cBuffer )
+         if AT( "<fixed>", cBuffer ) > 0
             lHasFixed:=.T.
          else
             lHasFixed:=.F.
@@ -1231,7 +1231,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
             cLine     := STRTRAN( cLine, "</fixed>", "" )
          ENDIF
          IF AT( DELIM, cLine ) == 0
-            cReturn += ALLTRIM( cLine ) + ' '
+            cReturn += ALLTRIM( cLine ) + " "
          ENDIF
          IF AT( DELIM, cLine ) > 0
             FT_FSKIP( - 1 )
@@ -1245,7 +1245,7 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
       ENDDO
 
    END
-   IF AT( '<table>', cBuffer ) > 0
+   IF AT( "<table>", cBuffer ) > 0
       DO WHILE !lendTable
          cLine := TRIM( SUBSTR( ReadLN( @lEof ), nCommentLen ) )
          IF AT( "</table>", cLine ) > 0
@@ -1274,7 +1274,7 @@ STATIC FUNCTION ReadFromTop( nh )
    LOCAL cDoc      := DELIM + "DOC" + DELIM                    // DOC keyword
    LOCAL cEnd      := DELIM + "END" + DELIM                    // END keyword
    LOCAL cClassDoc := DELIM + "CLASSDOC" + DELIM
-   LOCAL cBuffer   := ''
+   LOCAL cBuffer   := ""
    LOCAL NPOS      := 0
    LOCAL aLocDoc   := {}
    DO WHILE FREADline( nH, @cBuffer, 4096 )

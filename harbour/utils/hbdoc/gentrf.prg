@@ -148,12 +148,12 @@ FUNCTION ProcessTroff
    LOCAL cInc        := DELIM + "INCLUDE" + DELIM              // INCLUDE keyword
    LOCAL cComm       := DELIM + "COMMANDNAME" + DELIM          // COMMAND keyword
    LOCAL cCompl      := DELIM + "COMPLIANCE" + DELIM
-   LOCAL cTest       := DELIM + 'TESTS' + DELIM
-   LOCAL cStatus     := DELIM + 'STATUS' + DELIM
-   LOCAL cPlat       := DELIM + 'PLATFORMS' + DELIM
-   LOCAL cFiles      := DELIM + 'FILES' + DELIM
-   LOCAL cSubCode    := DELIM + 'SUBCODE' + DELIM
-   LOCAL cFunction   := DELIM + 'FUNCTION' + DELIM
+   LOCAL cTest       := DELIM + "TESTS" + DELIM
+   LOCAL cStatus     := DELIM + "STATUS" + DELIM
+   LOCAL cPlat       := DELIM + "PLATFORMS" + DELIM
+   LOCAL cFiles      := DELIM + "FILES" + DELIM
+   LOCAL cSubCode    := DELIM + "SUBCODE" + DELIM
+   LOCAL cFunction   := DELIM + "FUNCTION" + DELIM
 
    //
    //  Entry Point
@@ -227,7 +227,7 @@ FUNCTION ProcessTroff
                //  Now close down this little piece
                lDoc := .F.
                IF .NOT. EMPTY( cSeeAlso )
-                  oTroff:WriteText( '.ft B' + CRLF + "See Also:" + CRLF + '.ft R' )
+                  oTroff:WriteText( ".ft B" + CRLF + "See Also:" + CRLF + ".ft R" )
                   FOR nAlso := 1 TO LEN( aAlso )
 
                      IF nAlso == 1

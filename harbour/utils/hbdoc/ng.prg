@@ -52,8 +52,8 @@
 
 #define CRLF HB_OSNewLine()
 
-#include 'hbclass.ch'
-#include 'common.ch'
+#include "hbclass.ch"
+#include "common.ch"
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -101,7 +101,7 @@ RETURN Self
 METHOD WriteParBold( cPar ) CLASS TNortonGuide
 
    Self:WritePar( "" )
-   FWRITE( Self:nHandle, '^b' + HB_OEMTOANSI( cPar ) + '^b^' + CRLF )
+   FWRITE( Self:nHandle, "^b" + HB_OEMTOANSI( cPar ) + "^b^" + CRLF )
    Self:WritePar( "" )
 RETURN Self
 

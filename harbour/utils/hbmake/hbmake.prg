@@ -204,7 +204,7 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
    s_lOS2   := ( "OS/2" $ OS() )
    s_lLinux := ( "LINUX" $ Upper( OS() ) )
    s_lWin32 := ( "WINDOWS" $ Upper( OS() ) )
-   s_lUnix  := IF( ( "UNIX" $ Upper( OS() ) ) .OR. ( "HP-UX" $ Upper( OS() ) ) , .T., .F. )
+   s_lUnix  := iif( ( "UNIX" $ Upper( OS() ) ) .OR. ( "HP-UX" $ Upper( OS() ) ) , .T., .F. )
    s_lLinux := ( "LINUX" $ Upper( OS() ) )
 
    IF PCount() == 0 .or.;
@@ -392,9 +392,9 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
 
    IF ! ParseMakeFile( cFile )
 
-      IF s_nLang = 1      // brazilian portuguese 
+      IF s_nLang == 1      // brazilian portuguese 
          s_cAlertMsg := "<"+cFile+ "> n∆o pode ser aberto. FERROR("+Ltrim(Str(FError()))+"). O HbMake ser† fechado."
-      ELSEIF s_nLang = 3  // spanish
+      ELSEIF s_nLang == 3  // spanish
          s_cAlertMsg := "<"+cFile + "> no pode ser abierto. FERROR("+Ltrim(Str(FError()))+"). Lo HbMake ser† cerrado."
       ELSE                // english
          s_cAlertMsg := "<"+cFile + "> cannot be openned. FERROR("+Ltrim(Str(FError()))+"). The HbMake will be closed."
@@ -442,7 +442,7 @@ FUNCTION MAIN( cFile, p1, p2, p3, p4, p5, p6 )
    ENDIF
    
 
-   IF s_lasdll .or. lower(right(s_cAppName,3)) == 'dll'
+   IF s_lasdll .or. lower(right(s_cAppName,3)) == "dll"
        __Run( ReplaceMacros("implib $(HB_DIR)\lib\" + left(s_cAppName,at(".",s_cAppName)-1)+".lib " +s_cAppName ))
    ENDIF
 
@@ -581,7 +581,7 @@ FUNCTION ParseMakeFile( cFile )
 
       IF lmacrosec
 
-         IF Alltrim( Left( cTemp, 7 ) ) <> '!ifndef' .AND. Alltrim( Left( cTemp, 6 ) ) <> "!endif" .AND. Alltrim( Left( cTemp, 7 ) ) <> '!IFfile' .AND. Alltrim( Left( cTemp, 7 ) ) <> '!stdout' .AND. Alltrim( Left( cTemp, 6 ) ) <> '!ifdef'
+         IF Alltrim( Left( cTemp, 7 ) ) <> "!ifndef" .AND. Alltrim( Left( cTemp, 6 ) ) <> "!endif" .AND. Alltrim( Left( cTemp, 7 ) ) <> "!IFfile" .AND. Alltrim( Left( cTemp, 7 ) ) <> "!stdout" .AND. Alltrim( Left( cTemp, 6 ) ) <> "!ifdef"
 
             IF Len( aTemp ) > 1
 
@@ -599,11 +599,11 @@ FUNCTION ParseMakeFile( cFile )
 
                      IF aTemp[ 1 ] == "LIBFILES" .AND. ! s_lMt
 
-                        aLib := ListAsArray2( aTemp[ 2 ], ' ' )
+                        aLib := ListAsArray2( aTemp[ 2 ], " " )
 
                         FOR each aLibx in aLib
 
-                           IF At( 'mt.lib', Lower( aLibx ) ) > 0
+                           IF At( "mt.lib", Lower( aLibx ) ) > 0
                               s_lMt := .T.
                            ENDIF
 
@@ -639,11 +639,11 @@ FUNCTION ParseMakeFile( cFile )
                   ELSE
                      IF aTemp[ 1 ] == "LIBFILES" .AND. ! s_lMt
 
-                        aLib := ListAsArray2( aTemp[ 2 ], ' ' )
+                        aLib := ListAsArray2( aTemp[ 2 ], " " )
 
                         FOR each aLibx in aLib
 
-                           IF At( 'mt.lib', Lower( aLibx ) ) > 0
+                           IF At( "mt.lib", Lower( aLibx ) ) > 0
                               s_lMt := .T.
                            ENDIF
 
@@ -693,11 +693,11 @@ FUNCTION ParseMakeFile( cFile )
 
             IF aTemp[ 1 ] == "PROJECT"
 
-               IF At( '.lib', aTemp[ 2 ] ) > 0 .OR. At( '.a', aTemp[ 2 ] ) > 0
+               IF At( ".lib", aTemp[ 2 ] ) > 0 .OR. At( ".a", aTemp[ 2 ] ) > 0
                   s_lLibrary := .T.
                ENDIF
 
-               s_cAppName := SubStr( aTemp[ 2 ], 1, AT( ' ', aTemp[ 2 ] ) -1 )
+               s_cAppName := SubStr( aTemp[ 2 ], 1, AT( " ", aTemp[ 2 ] ) -1 )
 
             ENDIF
 
@@ -767,13 +767,13 @@ FUNCTION ParseMakeFile( cFile )
 
          ELSE
 
-            IF '!ifndef' $ cTemp
+            IF "!ifndef" $ cTemp
                CheckDefine( cTemp )
-            ELSEIF  '!ifdef' $ cTemp
+            ELSEIF  "!ifdef" $ cTemp
                CheckIFdef( cTemp )
-            ELSEIF '!iffile' $ cTemp
+            ELSEIF "!iffile" $ cTemp
                CheckIFFile( cTemp )
-            ELSEIF  '!stdout' $ cTemp
+            ELSEIF  "!stdout" $ cTemp
                CheckStdOut( cTemp )
             ENDIF
 
@@ -879,7 +879,7 @@ FUNCTION Checkdefine( cTemp )
    aSet := ListAsArray2( cTemp, "=" )
    nPos := AScan( s_aDefines, { | x | x[ 1 ] == aSet[ 1 ] } )
 
-   IF nPos = 0
+   IF nPos == 0
       cRead    := Alltrim( Strtran( aSet[ 2 ], "$(", "" ) )
       cRead    := Strtran( cRead, ")", "" )
       nMakePos := AScan( s_aDefines, { | x | x[ 1 ] == cRead } )
@@ -958,7 +958,7 @@ FUNCTION Findmacro( cMacro, cRead )
 
    nPos := AScan( s_aMacros, { | x | "$(" + Alltrim( x[ 1 ] ) + ")" == cMacro } )
 
-   IF nPos = 0
+   IF nPos == 0
       cTemp := Strtran( cMacro, "$(", "" )
       cTemp := Strtran( cTemp, ")", "" )
 
@@ -1028,7 +1028,7 @@ FUNCTION SetBuild()
    LOCAL nPos
    LOCAL aMacro
    LOCAL aTemp
-   LOCAL cCurrentRead := ''
+   LOCAL cCurrentRead := ""
    LOCAL cMacro
    LOCAL xInfo
    LOCAL xItem
@@ -1044,7 +1044,7 @@ FUNCTION SetBuild()
 
    AAdd( s_aBuildOrder, aMacro[ 1 ] )
    cRead := Strtran( cRead, "@&&!", "" )
-   aMacro := ListAsArray2( cRead, '\' )
+   aMacro := ListAsArray2( cRead, "\" )
 
    AEval( aMacro, { | xMacro |  IIF(  "$" $ xMacro , FindMacro( xMacro, @cRead ), ) } )
 
@@ -1053,10 +1053,10 @@ FUNCTION SetBuild()
       s_cLinkCommands   := cRead + "  @" + s_cMakeFileName
       s_nMakeFileHandle := FCreate( s_cMakeFileName )
 
-      IF s_nMakeFileHandle = F_ERROR
-         IF s_nLang = 1      // brazilian portuguese 
+      IF s_nMakeFileHandle == F_ERROR
+         IF s_nLang == 1      // brazilian portuguese 
             s_cAlertMsg := "<"+s_cMakeFileName + "> n∆o pode ser criado."
-         ELSEIF s_nLang = 3  // spanish
+         ELSEIF s_nLang == 3  // spanish
             s_cAlertMsg := "<"+s_cMakeFileName + "> no pode ser criado."
          ELSE                // english
             s_cAlertMsg := "<"+s_cMakeFileName + "> cannot be created."
@@ -1081,7 +1081,7 @@ FUNCTION SetBuild()
 
              FindMacro( cMacro , @cRead )
 
-             IF At( '$(PROJECT)', cCurrentRead ) > 0
+             IF At( "$(PROJECT)", cCurrentRead ) > 0
 
                 IF ! s_lGcc
 
@@ -1099,7 +1099,7 @@ FUNCTION SetBuild()
                 ELSEIF s_lGcc .AND. s_lLinux .OR. ( s_lGcc .AND. s_lMinGW)
                   s_cLinkCommands += "-o " + cRead + " "
 
-                ELSEIF s_lGcc .AND. ! s_lLinux .AND. At( '.exe', cRead ) > 0
+                ELSEIF s_lGcc .AND. ! s_lLinux .AND. At( ".exe", cRead ) > 0
                   FWrite( s_nMakeFileHandle, "-o " + cRead + CRLF )
 
                 ENDIF
@@ -1153,7 +1153,7 @@ FUNCTION SetBuild()
    qout( HbMake_Copyright() )
 
    IF s_lBcc .OR. s_lPocc .OR. s_lMSVcc
-      qout( version() + ' / '+HB_Compiler() )
+      qout( version() + " / "+HB_Compiler() )
    ELSE
       qout(s_cLinkCommands)
    ENDIF
@@ -1175,10 +1175,10 @@ FUNCTION CompileFiles()
    LOCAL lEnd     := .F.
    LOCAL xItem
    LOCAL lLinux   :=  s_lLinux
-   LOCAL cPrg     := ''
+   LOCAL cPrg     := ""
    LOCAL cOrder   := ""
    LOCAL nFile    := 1
-   LOCAL aGauge   := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", '≤' )
+   LOCAL aGauge   := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "≤" )
 
 
    @  4,  5 SAY "Compiling :"
@@ -1205,9 +1205,9 @@ FUNCTION CompileFiles()
 
             FOR EACH cPrg IN s_aPrgs
 
-               xItem := Substr( cPrg, Rat( IIF( s_lGcc, '/', '\' ), ;
+               xItem := Substr( cPrg, Rat( IIF( s_lGcc, "/", "\" ), ;
                                 cPrg ) + 1 )
-               nPos := AScan( s_aCFiles, { | x | x := Substr( x, Rat( IIF( s_lGcc, '/', '\' ), x ) + 1 ), ;
+               nPos := AScan( s_aCFiles, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), ;
                   Left( x, At( ".", x ) ) == Left( xItem, At( ".", xItem ) ) } )
 
                IF nPos > 0
@@ -1223,7 +1223,7 @@ FUNCTION CompileFiles()
                   setpos(9,0)
                   __RUN( (cComm) )
                   cErrText := Memoread( (s_cLog) )
-                  lEnd     := 'C2006' $ cErrText .OR. 'No code generated' $ cErrText
+                  lEnd     := "C2006" $ cErrText .OR. "No code generated" $ cErrText
 
                   IF ! s_lIgnoreErrors .AND. lEnd
                      __run( s_cEditor +" "+(s_cLog) )
@@ -1276,9 +1276,9 @@ FUNCTION CompileFiles()
 
             FOR nFiles := 1 TO Len( s_aCFiles )
 
-               xItem := Substr( s_aCFiles[ nFiles ], Rat( IIF( s_lGcc, '/', '\' ), ;
+               xItem := Substr( s_aCFiles[ nFiles ], Rat( IIF( s_lGcc, "/", "\" ), ;
                                 s_aCFiles[ nFiles ] ) + 1 )
-               nPos := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, '/', '\' ), x ) + 1 ), ;
+               nPos := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), ;
                        Left( x, At( ".", x ) ) == Left( xItem, At( ".", xItem ) ) } )
 
                IF nPos > 0
@@ -1287,9 +1287,9 @@ FUNCTION CompileFiles()
                      cComm := Strtran( cComm, "o$*", "o" + s_aObjs[ nPos ] )
                   ELSE
                       IF s_lMSVcc //.OR. s_lPocc
-                         cComm := Strtran( cComm, "-Fo$*", "-Fo" + Strtran( s_aObjs[ nPos ], '/', '\' ) )
+                         cComm := Strtran( cComm, "-Fo$*", "-Fo" + Strtran( s_aObjs[ nPos ], "/", "\" ) )
                       ELSE
-                         cComm := Strtran( cComm, "o$*", "o" + Strtran( s_aObjs[ nPos ], '/', '\' ) )
+                         cComm := Strtran( cComm, "o$*", "o" + Strtran( s_aObjs[ nPos ], "/", "\" ) )
                       ENDIF
                   ENDIF
 
@@ -1337,9 +1337,9 @@ FUNCTION CompileFiles()
 
                FOR nFiles := 1 TO Len( s_aCFiles )
                   @  4, 16 SAY Space( 50 )
-                  xItem := Substr( s_aCFiles[ nFiles ], Rat( IIF( s_lGcc, '/', '\' ), ;
+                  xItem := Substr( s_aCFiles[ nFiles ], Rat( IIF( s_lGcc, "/", "\" ), ;
                                    s_aCFiles[ nFiles ] ) + 1 )
-                  nPos := AScan( s_aObjsC, { | x | x := Substr( x, Rat( IIF( s_lGcc, '/', '\' ), x ) + 1 ), ;
+                  nPos := AScan( s_aObjsC, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), ;
                           Left( x, At( ".", x ) ) == Left( xitem, At( ".", xitem ) ) } )
 
                   IF nPos > 0
@@ -1348,9 +1348,9 @@ FUNCTION CompileFiles()
                         cComm := Strtran( cComm, "o$*", "o" + s_aObjsC[ nPos ] )
                      ELSE
                         IF s_lMSVcc //.OR. s_lPocc
-                           cComm := Strtran( cComm, "-Fo$*", "-Fo" + Strtran( s_aObjsC[ nPos ], '/', '\' ) )
+                           cComm := Strtran( cComm, "-Fo$*", "-Fo" + Strtran( s_aObjsC[ nPos ], "/", "\" ) )
                         ELSE
-                           cComm := Strtran( cComm, "o$*", "o" + Strtran( s_aObjsC[ nPos ], '/', '\' ) )
+                           cComm := Strtran( cComm, "o$*", "o" + Strtran( s_aObjsC[ nPos ], "/", "\" ) )
                         ENDIF
                      ENDIF
 
@@ -1368,7 +1368,7 @@ FUNCTION CompileFiles()
                      endif
                      __RUN( (cComm) )
                      cErrText := Memoread( (s_cLog) )
-                     lEnd     := 'Error E' $   cErrText
+                     lEnd     := "Error E" $   cErrText
                      IF ! s_lIgnoreErrors .AND. lEnd
                         __run( s_cEditor + " "+(s_cLog) )
                         SET CURSOR ON
@@ -1376,7 +1376,7 @@ FUNCTION CompileFiles()
                      ELSE
                         // FErase( s_cLog )
                      ENDIF
-                     lEnd := 'Error F' $   cErrText
+                     lEnd := "Error F" $   cErrText
 
                      cComm := cOld
 
@@ -1415,9 +1415,9 @@ FUNCTION CompileFiles()
             FOR EACH cPrg IN s_aPrgs
 
                @  4, 16 SAY Space( 50 )
-               xItem := Substr( cPrg, Rat( IIF( s_lGcc, '/', '\' ), ;
+               xItem := Substr( cPrg, Rat( IIF( s_lGcc, "/", "\" ), ;
                                 cPrg ) + 1 )
-               nPos := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, '/', '\' ), x ) + 1 ), ;
+               nPos := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), ;
                        Left( x, At( ".", x ) ) == Left( xItem, At( ".", xitem ) ) } )
 
                IF nPos > 0
@@ -1426,9 +1426,9 @@ FUNCTION CompileFiles()
                      cComm := Strtran( cComm, "o$*", "o" + s_aObjs[ nPos ] )
                   ELSE
                      IF s_lMSVcc //.OR. s_lPocc
-                        cComm := Strtran( cComm, "-Fo$*", "-Fo" + Strtran( s_aObjs[ nPos ], '/', '\' ) )
+                        cComm := Strtran( cComm, "-Fo$*", "-Fo" + Strtran( s_aObjs[ nPos ], "/", "\" ) )
                      ELSE
-                        cComm := Strtran( cComm, "o$*", "o" + Strtran( s_aObjs[ nPos ], '/', '\' ) )
+                        cComm := Strtran( cComm, "o$*", "o" + Strtran( s_aObjs[ nPos ], "/", "\" ) )
                      ENDIF
                   ENDIF
 
@@ -1442,7 +1442,7 @@ FUNCTION CompileFiles()
                   setpos(9,0)
                   __RUN( (cComm) )
                   cErrText := Memoread( (s_cLog) )
-                  lEnd     := 'C2006' $ cErrText .OR. 'No code generated' $ cErrText .or. "Error E" $ cErrText .or. "Error F" $ cErrText
+                  lEnd     := "C2006" $ cErrText .OR. "No code generated" $ cErrText .or. "Error E" $ cErrText .or. "Error F" $ cErrText
 
                   IF ! s_lIgnoreErrors .AND. lEnd
                      __run( s_cEditor + " "+(s_cLog) )
@@ -1515,11 +1515,11 @@ FUNCTION GetParaDefines( cTemp )
       cRead    := Strtran( cRead, ")", "" )
       nMakePos := AScan( s_aDefines, { | x | x[ 1 ] == cRead } )
 
-      IF nMakePos = 0
-         if(aSet[1] == "MYDEFINES")
-         ASet[ 2 ] := Strtran( aSet[ 2 ], ",", ";" )
+      IF nMakePos == 0
+         if aSet[1] == "MYDEFINES"
+            ASet[ 2 ] := Strtran( aSet[ 2 ], ",", ";" )
          else
-         ASet[ 2 ] := Strtran( aSet[ 2 ], ",", " " )
+            ASet[ 2 ] := Strtran( aSet[ 2 ], ",", " " )
          endif
          AAdd( s_aDefines, { aSet[ 1 ], aSet[ 2 ] } )
          AAdd( s_aMacros, { aSet[ 1 ], aSet[ 2 ] } )
@@ -1633,7 +1633,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
    LOCAL cDefLibGccLibsMt := "-lvmmt -lrtlmt -lhbpcre -lgtsln -llang -lrddmt -lrtlmt -lvmmt -lmacromt -lppmt -ldbfntxmt -ldbfcdxmt -ldbffptmt -lhsxmt -lhbsixmt -lcommon -lcodepage"
    LOCAL cHarbDll         := "harbour.lib"
    LOCAL cHARso           := "-lharbour -lncurses -lgpm -lslang -lpthread -lm"
-   LOCAL cSystemLibs      := If( s_lUnix, "", "-lncurses " ) + "-lslang " + If( s_lUnix, "", "-lgpm " ) + " -lpthread -lm"
+   LOCAL cSystemLibs      := iif( s_lUnix, "", "-lncurses " ) + "-lslang " + iif( s_lUnix, "", "-lgpm " ) + " -lpthread -lm"
 
    LOCAL cLibs        := ""
    LOCAL citem        := ""
@@ -1712,19 +1712,19 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
       ENDIF
 
 
-      IF nOption = 1 // edit makefile
+      IF nOption == 1 // edit makefile
 
          // Verify if "cFile" can be openned to write mode.
 
          s_nMakeFileHandle := FOpen( cFile, FO_WRITE )
 
-         IF s_nMakeFileHandle = F_ERROR
+         IF s_nMakeFileHandle == F_ERROR
 
             CLS
 
-            IF s_nLang = 1      // brazilian portuguese
+            IF s_nLang == 1      // brazilian portuguese
                s_cAlertMsg := "<"+cFile + "> n∆o pode ser aberto para ediá∆o."
-            ELSEIF s_nLang = 3  // spanish
+            ELSEIF s_nLang == 3  // spanish
                s_cAlertMsg := "<"+cFile + "> no pode ser abierto para edici¢n."
             ELSE                // english
                s_cAlertMsg := "<"+cFile + "> cannot be openned for edition."
@@ -1835,13 +1835,13 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
          // after oMake read, recreate other clean makefile to edit.
          s_nMakeFileHandle := FCreate(cFile)
 
-         if s_nMakeFileHandle = F_ERROR
+         if s_nMakeFileHandle == F_ERROR
 
             CLS
 
-            IF s_nLang = 1      // brazilian portuguese
+            IF s_nLang == 1      // brazilian portuguese
                s_cAlertMsg := "<"+cFile + "> n∆o pode ser aberto para ediá∆o."
-            ELSEIF s_nLang = 3  // spanish
+            ELSEIF s_nLang == 3  // spanish
                s_cAlertMsg := "<"+cFile + "> no pode ser abierto para edici¢n."
             ELSE                // english
                s_cAlertMsg := "<"+cFile + "> cannot be openned for edition."
@@ -1858,7 +1858,7 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
          s_lEditMake := .T.
 
 
-      ELSEIF nOption = 2 // create a new makefile
+      ELSEIF nOption == 2 // create a new makefile
 
 
          IF nLenaSrc == 0 .and. !s_lRecursive 
@@ -1885,13 +1885,13 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
 
          s_nMakeFileHandle := FCreate( cFile )
 
-         if s_nMakeFileHandle = F_ERROR
+         if s_nMakeFileHandle == F_ERROR
 
             CLS
 
-            IF s_nLang = 1      // brazilian portuguese
+            IF s_nLang == 1      // brazilian portuguese
                s_cAlertMsg := "<"+cFile + "> n∆o pode ser criado."
-            ELSEIF s_nLang = 3  // spanish
+            ELSEIF s_nLang == 3  // spanish
                s_cAlertMsg := "<"+cFile + "> no pode ser criado."
             ELSE                // english
                s_cAlertMsg := "<"+cFile + "> cannot be created."
@@ -1918,13 +1918,13 @@ FUNCTION CreateMakeFile( cFile, lCreateAndCompile )
 
       s_nMakeFileHandle := FCreate( cFile )
 
-      if s_nMakeFileHandle = F_ERROR
+      if s_nMakeFileHandle == F_ERROR
 
          CLS
 
-         IF s_nLang = 1      // brazilian portuguese
+         IF s_nLang == 1      // brazilian portuguese
             s_cAlertMsg := "<"+cFile + "> n∆o pode ser criado."
-         ELSEIF s_nLang = 3  // spanish
+         ELSEIF s_nLang == 3  // spanish
             s_cAlertMsg := "<"+cFile + "> no pode ser criado."
          ELSE                // english
             s_cAlertMsg := "<"+cFile + "> cannot be created."
@@ -1947,7 +1947,7 @@ IF ! lCreateAndCompile
 While .t.
 
    CLS
-   Setcolor( 'w/b+,b+/w,w+/b,w/b+,w/b,w+/b' )
+   Setcolor( "w/b+,b+/w,w+/b,w/b+,w/b,w+/b" )
    @  0,  0, Maxrow(), Maxcol() BOX( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) + Space( 1 ) )
 
    Attention( HbMake_Id() + space(10)+s_aLangMessages[ 27 ], 0 )
@@ -2096,7 +2096,7 @@ While .t.
                PICT "@S25"
    ENDIF
 
-   IF nOption = 2 // create a new makefile
+   IF nOption == 2 // create a new makefile
       cResName := PadR(alltrim(cResName)+iIF(!empty(cResName)," ","")+alltrim(cAllRes),200 )
    ENDIF
 
@@ -2260,7 +2260,7 @@ Endif // Create and compile
       cObjDir := Alltrim( cObjDir )
 
       IF ! Empty( cObjDir )
-         cObjDir += '/'
+         cObjDir += "/"
       ENDIF
 
       cTest := cObjDir
@@ -2268,13 +2268,13 @@ Endif // Create and compile
       cObjDir := Alltrim( cObjDir )
 
       IF ! Empty( cObjDir )
-         cObjDir += '\'
+         cObjDir += "\"
       ENDIF
 
-      cTest := Upper( cObjDir ) + '\'
+      cTest := Upper( cObjDir ) + "\"
    ENDIF
 
-   AEval( s_aMacros, { | x, y | cItem := Substr( x[ 2 ], 1, Len( x[ 2 ] ) ), IIF( At( citem, cTest ) > 0, ( s_aMacros[ y, 1 ] := 'OBJ', s_aMacros[ y, 2 ] := cObjDir ), ) } )
+   AEval( s_aMacros, { | x, y | cItem := Substr( x[ 2 ], 1, Len( x[ 2 ] ) ), IIF( At( citem, cTest ) > 0, ( s_aMacros[ y, 1 ] := "OBJ", s_aMacros[ y, 2 ] := cObjDir ), ) } )
 
    IF lAutomemvar
       cHarbourFlags += " -a "
@@ -2287,18 +2287,18 @@ Endif // Create and compile
 
    IF lDebug
       cHarbourFlags    += " -b "
-      cDefaultLibs     += " debug.lib "
-      cDefGccLibs      += " -ldebug "
-      cDefGccLibsw     += " -ldebug "
-      cGccLibsOs2      += " -ldebug "
-      cDefLibGccLibs   += " -ldebug "
-      cDefGccLibsUnix  += " -ldebug "
-      cDefGccLibsUnixMt+= " -ldebug "
-      cDefaultLibsMt   += " debug.lib "
-      cDefGccLibsMt    += " -ldebug "
-      cDefGccLibsMtw   += " -ldebug "
-      cGccLibsOs2Mt    += " -ldebug "
-      cDefLibGccLibsMt += " -ldebug "
+      cDefaultLibs     += " hbdebug.lib "
+      cDefGccLibs      += " -lhbdebug "
+      cDefGccLibsw     += " -lhbdebug "
+      cGccLibsOs2      += " -lhbdebug "
+      cDefLibGccLibs   += " -lhbdebug "
+      cDefGccLibsUnix  += " -lhbdebug "
+      cDefGccLibsUnixMt+= " -lhbdebug "
+      cDefaultLibsMt   += " hbdebug.lib "
+      cDefGccLibsMt    += " -lhbdebug "
+      cDefGccLibsMtw   += " -lhbdebug "
+      cGccLibsOs2Mt    += " -lhbdebug "
+      cDefLibGccLibsMt += " -lhbdebug "
    ENDIF
 
    IF lSupressline
@@ -2314,7 +2314,7 @@ Endif // Create and compile
    ENDIF
 
    if lMWvw
-      cHarbourFlags += ' -u+mwvw.ch '
+      cHarbourFlags += " -u+mwvw.ch "
    endif
 
 
@@ -2329,7 +2329,7 @@ Endif // Create and compile
       AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\BIN\bcc32 -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -o$* $**" } )
 
       IF s_lExtended
-         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n"+if(s_lasdll,"1","")+" -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) ) )+IIF( lWhoo," -I$(WHOO)\include ","")+  IIF( lMediator," -I$(MEDIATOR)\include ","")+" -o$* $**" } )
+         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n"+iif(s_lasdll,"1","")+" -go" + iif(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) ) )+IIF( lWhoo," -I$(WHOO)\include ","")+  IIF( lMediator," -I$(MEDIATOR)\include ","")+" -o$* $**" } )
       ELSE
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) )) + " -o$* $**" } )
       ENDIF
@@ -2344,7 +2344,7 @@ Endif // Create and compile
          AAdd( s_aCommands, { ".c.o:", "gcc -I/usr/include/harbour $(CFLAG1) $(CFLAG2) -I. -g -o$* $**" } )
 
          IF s_lExtended
-            AAdd( s_aCommands, { ".prg.o:", "harbour -n"+if(s_lasdll,"1","")+"  -go" + if(s_lGenCsource,"3","") + " -I/usr/include/harbour $(HARBOURFLAGS) -I.  -o$* $**" } )
+            AAdd( s_aCommands, { ".prg.o:", "harbour -n"+iif(s_lasdll,"1","")+"  -go" + iif(s_lGenCsource,"3","") + " -I/usr/include/harbour $(HARBOURFLAGS) -I.  -o$* $**" } )
          ELSE
             AAdd( s_aCommands, { ".prg.c:", "harbour -n -I/usr/include/harbour $(HARBOURFLAGS) -I.  -o$* $**" } )
          ENDIF
@@ -2354,7 +2354,7 @@ Endif // Create and compile
          AAdd( s_aCommands, { ".c.o:", "$(CC_DIR)\bin\gcc -I$(HB_DIR)/include $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
 
          IF s_lExtended
-            AAdd( s_aCommands, { ".prg.o:", "$(HB_DIR)\bin\harbour -n"+if(s_lasdll,"1","")+" -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)/include $(HARBOURFLAGS) " +IIF( lHwgui, " -I$(HWGUI)/include","" ) +" -o$* $**" } )
+            AAdd( s_aCommands, { ".prg.o:", "$(HB_DIR)\bin\harbour -n"+iif(s_lasdll,"1","")+" -go" + iif(s_lGenCsource,"3","") + " -I$(HB_DIR)/include $(HARBOURFLAGS) " +IIF( lHwgui, " -I$(HWGUI)/include","" ) +" -o$* $**" } )
          ELSE
             AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)/include $(HARBOURFLAGS) " +IIF( lHwgui, " -I$(HWGUI)/include","" ) +"   -o$* $**" } )
          ENDIF
@@ -2367,7 +2367,7 @@ Endif // Create and compile
       AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\bin\cl -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
 
       IF s_lExtended
-         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS) -go" + if(s_lGenCsource,"3","") + "  -I$(C4W)\include" + IIF( lMediator," -I$(MEDIATOR)\include ","")+ "-o$* $**" } )
+         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS) -go" + iif(s_lGenCsource,"3","") + "  -I$(C4W)\include" + IIF( lMediator," -I$(MEDIATOR)\include ","")+ "-o$* $**" } )
       ELSE
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(C4W)\include -o$* $**" } )
       ENDIF
@@ -2380,7 +2380,7 @@ Endif // Create and compile
       AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\BIN\pocc -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
 
       IF s_lExtended
-         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n"+if(s_lasdll,"1","")+" -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) ) )+IIF( lWhoo," -I$(WHOO)\include ","")+  IIF( lMediator," -I$(MEDIATOR)\include ","")+" -o$** $**" } )
+         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n"+iif(s_lasdll,"1","")+" -go" + iif(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) ) )+IIF( lWhoo," -I$(WHOO)\include ","")+  IIF( lMediator," -I$(MEDIATOR)\include ","")+" -o$** $**" } )
       ELSE
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS)" + IIF( lFwh, " -I$(FWH)\include", IIF( lMinigui, " -I$(MINIGUI)\include",IIF( lHwgui, " -I$(HWGUI)\include","" ) )) + " -o$** $**" } )
       ENDIF
@@ -2439,7 +2439,7 @@ Endif // Create and compile
       ENDIF
 
 
-      AEval( aOutFiles, { | x, y | HB_SYMBOL_UNUSED( x ), aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( ' ', aOutFiles[ y ] ) ) ) } )
+      AEval( aOutFiles, { | x, y | HB_SYMBOL_UNUSED( x ), aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( " ", aOutFiles[ y ] ) ) ) } )
 
       aOutFiles := ASort( aOutFiles )
 
@@ -2450,17 +2450,17 @@ Endif // Create and compile
       ASort( aSelFiles )
 
    else
-       AEval( aOutFiles, { | x, y | HB_SYMBOL_UNUSED( x ), aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( ' ', aOutFiles[ y ] ) ) ) } )
+       AEval( aOutFiles, { | x, y | HB_SYMBOL_UNUSED( x ), aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( " ", aOutFiles[ y ] ) ) ) } )
        aSelFiles := aOutFiles
    endif
 
 
-   if Len( aSelFiles ) = 1
+   if Len( aSelFiles ) == 1
 
       cTopFile := aSelFiles[1]
       cTopFile := PadR( Left(cTopfile,At(Upper(".prg"),Upper(cTopFile))+4 ), 50)
 
-   elseif Len( aSelFiles ) = 0
+   elseif Len( aSelFiles ) == 0
 
       cTopFile := ""
 
@@ -2492,7 +2492,7 @@ Endif // Create and compile
       @ 15,01 say s_cAlertMsg Get cTopFile pict "@S35" valid !empty(cTopFile)
       READ
 
-      if LastKey() = K_ESC
+      if LastKey() == K_ESC
          Exit
       endif
 
@@ -2540,11 +2540,11 @@ Endif // Create and compile
       endif
 
       IF s_nLang == 1 // PT
-         s_cAlertMsg := '<Espaáo> para selecionar. <Enter> para continuar o processo.'
+         s_cAlertMsg := "<Espaáo> para selecionar. <Enter> para continuar o processo."
       ELSEIF s_nLang == 2
-         s_cAlertMsg := '<Spacebar> to select. <Enter> to continue process'
+         s_cAlertMsg := "<Spacebar> to select. <Enter> to continue process"
       ELSEIF s_nLang == 3
-         s_cAlertMsg := '<Espacio> para seleccionar. <Enter> para continuar o proceso.'
+         s_cAlertMsg := "<Espacio> para seleccionar. <Enter> para continuar o proceso."
       ENDIF
 
       Attention( s_cAlertMsg, 22 )
@@ -2596,7 +2596,7 @@ Endif // Create and compile
 
    if ! lCreateAndCompile
 
-   AEval( aOutFiles, { | xItem | IIF(  '.c' $ xItem  .OR.  '.C' $ xItem , AAdd( aOutc, xItem ), ) } )
+   AEval( aOutFiles, { | xItem | IIF(  ".c" $ xItem  .OR.  ".C" $ xItem , AAdd( aOutc, xItem ), ) } )
    AEval( aOutc, { | x, z | cItem := x, z := AScan( aOutFiles, { | t | t = cItem } ), IIF( z > 0, aSize( aDel( aOutFiles, z ), Len( aOutFiles ) - 1 ), ) } )
 
    @ 22,01 say space(78)
@@ -2644,7 +2644,7 @@ Endif // Create and compile
       AEval( aOutFiles, { | xItem | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cExt := Substr( cExt, 2 ), AAdd( s_aCFiles, cObjDir + cTest + "." + Exte( cExt, 1 ) ) } )
    ELSE
       s_aObjsC := aClone( aOutc )
-      AEval( aOutc, { | xItem, x | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cext := Substr( cExt, 2 ), IIF( ! s_lGcc, s_aObjsC[ x ] := IIF( ! Empty( cObjDir ), cObjDir, '' ) + cTest + "." + Exten( cExt, 2 ), s_aObjsC[ x ] := IIF( ! Empty( cObjDir ), cObjDir, '' ) + cTest + "." + Exten( cExt, 1 ) ) } )
+      AEval( aOutc, { | xItem, x | hb_FNAMESPLIT( xiTem, @cPath, @cTest, @cExt, @cDrive ), cext := Substr( cExt, 2 ), IIF( ! s_lGcc, s_aObjsC[ x ] := IIF( ! Empty( cObjDir ), cObjDir, "" ) + cTest + "." + Exten( cExt, 2 ), s_aObjsC[ x ] := IIF( ! Empty( cObjDir ), cObjDir, "" ) + cTest + "." + Exten( cExt, 1 ) ) } )
    ENDIF
 
    FWrite( s_nMakeFileHandle, "RECURSE=" + IIF( s_lRecursive, " YES ", " NO " ) + CRLF )
@@ -2667,7 +2667,7 @@ Endif // Create and compile
    ELSEIF lMiniGui
       FWrite( s_nMakeFileHandle, "MINIGUI = " + alltrim(cMiniPath) + CRLF )
    ELSEIF lHwGui
-      FWrite( s_nMakeFileHandle, "HWGUI = " + if(!s_lMinGW,alltrim(cHwPath),strtran(alltrim(cHwPath),"\","/")) + CRLF )
+      FWrite( s_nMakeFileHandle, "HWGUI = " + iif(!s_lMinGW,alltrim(cHwPath),strtran(alltrim(cHwPath),"\","/")) + CRLF )
    ELSEIF lGtwvt
       FWrite( s_nMakeFileHandle, "GTWVT = " + CRLF )
    ELSEIF lGtwvw
@@ -2706,10 +2706,10 @@ Endif // Create and compile
          nPos  := AScan( s_aPrgs, { | z | hb_FNAMESPLIT( z, @cPath, @cTest, @cExt, @cDrive ), cPath == citem } )
 
          IF nPos > 0
-            AEval( s_aPrgs, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aPrgs[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ')/', ')\' ) ), ) } )
+            AEval( s_aPrgs, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aPrgs[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ")\" ) ), ) } )
 
             IF ! s_aMacros[ x, 3 ]
-               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + ' = ' + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
+               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + " = " + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
                s_aMacros[ x, 3 ] := .T.
             ENDIF
 
@@ -2720,8 +2720,8 @@ Endif // Create and compile
          IF nPos > 0
 
             IF ! s_aMacros[ x, 3 ]
-               AEval( s_aCFiles, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aCFiles[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ')\' ) ), ) } )
-               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + ' = ' + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
+               AEval( s_aCFiles, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aCFiles[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ")\" ) ), ) } )
+               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + " = " + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
                s_aMacros[ x, 3 ] := .T.
             ENDIF
 
@@ -2732,8 +2732,8 @@ Endif // Create and compile
          IF nPos > 0
 
             IF ! Empty( cObjDir )
-               AEval( s_aObjs, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aObjs[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ')\' ) ), ) } )
-               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + ' = ' + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
+               AEval( s_aObjs, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aObjs[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ")\" ) ), ) } )
+               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + " = " + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
             ENDIF
 
          ENDIF
@@ -2744,7 +2744,7 @@ Endif // Create and compile
             IF nPos > 0
 
                IF ! Empty( cObjDir )
-                  AEval( s_aObjsC, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aObjsC[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ')\' ) ), ) } )
+                  AEval( s_aObjsC, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aObjsC[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ")\" ) ), ) } )
                ENDIF
 
             ENDIF
@@ -2763,7 +2763,7 @@ Endif // Create and compile
          FWrite( s_nMakeFileHandle, "PROJECT = " + Alltrim( Lower( cAppName ) ) + ".exe"   + " $(PR) " + CRLF )
       ENDIF
    ELSE
-      FWrite( s_nMakeFileHandle, "PROJECT = " + Alltrim( Lower( cAppName ) ) + if(s_lasdll,".dll",".exe" ) + " $(PR) " + CRLF )
+      FWrite( s_nMakeFileHandle, "PROJECT = " + Alltrim( Lower( cAppName ) ) + iif(s_lasdll,".dll",".exe" ) + " $(PR) " + CRLF )
    ENDIF
 
 
@@ -2774,7 +2774,7 @@ Endif // Create and compile
       IF Len( s_aObjs ) < 1
          FWrite( s_nMakeFileHandle, + " $(OB) " + CRLF )
       ELSE
-         AEval( s_aObjs, { | x, i | IIF( ( i <> Len( s_aObjs ) .AND. x <> alltrim(cTopfile)  ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) ), FWrite( s_nMakeFileHandle, " " + " " + Alltrim( x ) + " $(OB) " + CRLF ) ) } )
+         AEval( s_aObjs, { | x, i | IIF( ( i <> Len( s_aObjs ) .AND. x <> alltrim(cTopfile)  ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) ), FWrite( s_nMakeFileHandle, " " + " " + Alltrim( x ) + " $(OB) " + CRLF ) ) } )
       ENDIF
 
       FWrite( s_nMakeFileHandle, "CFILES =" )
@@ -2782,7 +2782,7 @@ Endif // Create and compile
       IF Len( s_aCFiles ) < 1
          FWrite( s_nMakeFileHandle, + " $(CF)" + CRLF )
       ELSE
-         AEval( s_aCFiles, { | x, i | IIF( ( i <> Len( s_aCFiles ) .AND. x <> alltrim(cTopfile)  ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(CF) " + CRLF ) ) } )
+         AEval( s_aCFiles, { | x, i | IIF( ( i <> Len( s_aCFiles ) .AND. x <> alltrim(cTopfile)  ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(CF) " + CRLF ) ) } )
       ENDIF
 
       FWrite( s_nMakeFileHandle, "PRGFILE =" )
@@ -2790,7 +2790,7 @@ Endif // Create and compile
       IF Len( s_aPrgs ) < 1
          FWrite( s_nMakeFileHandle, + " $(PS)" + CRLF )
       ELSE
-         AEval( s_aPrgs, { | x, i | IIF( i <> Len( s_aPrgs) .AND. x <> alltrim(cTopfile) , FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(PS) " + CRLF ) ) } )
+         AEval( s_aPrgs, { | x, i | IIF( i <> Len( s_aPrgs) .AND. x <> alltrim(cTopfile) , FWrite( s_nMakeFileHandle, " " + Alltrim( x ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(PS) " + CRLF ) ) } )
       ENDIF
 
    ELSE
@@ -2800,7 +2800,7 @@ Endif // Create and compile
       IF Len( s_aObjs ) < 1
          FWrite( s_nMakeFileHandle, + " $(OB) " + CRLF )
       ELSE
-         AEval( s_aObjs, { | x, i | nWriteFiles ++, IIF( ( i <> Len( s_aObjs ) .AND. x <> alltrim(cTopfile)  ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) + IIF( nWriteFiles % s_nFilestoAdd == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OB) " + CRLF ) ) } )
+         AEval( s_aObjs, { | x, i | nWriteFiles ++, IIF( ( i <> Len( s_aObjs ) .AND. x <> alltrim(cTopfile)  ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + IIF( nWriteFiles % s_nFilestoAdd == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OB) " + CRLF ) ) } )
       ENDIF
 
       nWriteFiles := 0
@@ -2809,7 +2809,7 @@ Endif // Create and compile
       IF Len( s_aPrgs ) < 1
          FWrite( s_nMakeFileHandle, + " $(PS)" + CRLF )
       ELSE
-         AEval( s_aPrgs, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aPrgs ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) + IIF( nWriteFiles % s_nFilestoAdd == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(PS) " + CRLF ) ) } )
+         AEval( s_aPrgs, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aPrgs ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + IIF( nWriteFiles % s_nFilestoAdd == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(PS) " + CRLF ) ) } )
       ENDIF
 
       nWriteFiles := 0
@@ -2818,7 +2818,7 @@ Endif // Create and compile
       IF Len( s_aObjsC ) < 1
          FWrite( s_nMakeFileHandle, + " $(OBC) " + CRLF )
       ELSE
-         AEval( s_aObjsC, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aObjsC ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) + IIF( nWriteFiles % s_nFilestoAdd == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OBC) " + CRLF ) ) } )
+         AEval( s_aObjsC, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aObjsC ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + IIF( nWriteFiles % s_nFilestoAdd == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OBC) " + CRLF ) ) } )
       ENDIF
 
       nWriteFiles := 0
@@ -2827,7 +2827,7 @@ Endif // Create and compile
       IF Len( s_aCFiles ) < 1
          FWrite( s_nMakeFileHandle, + " $(CF)" + CRLF )
       ELSE
-         AEval( s_aCFiles, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aCFiles ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) + IIF( nWriteFiles % s_nFilestoAdd == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OB) " + CRLF ) ) } )
+         AEval( s_aCFiles, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aCFiles ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + IIF( nWriteFiles % s_nFilestoAdd == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OB) " + CRLF ) ) } )
       ENDIF
 
 
@@ -2906,12 +2906,12 @@ Endif // Create and compile
          nPos := AScan( aLibsOut, { | z | At( "html", Lower( z ) ) > 0 } )
 
          IF nPos > 0
-            cHtmlLib += "-l" + Strtran( aLibsOut[ nPos ], '.a', "" )
+            cHtmlLib += "-l" + Strtran( aLibsOut[ nPos ], ".a", "" )
             aDel( aLibsOut, nPos )
             aSize( aLibsOut, Len( aLibsOut ) - 1 )
          ENDIF
 
-         AEval( aLibsOut, { | cLib | iif( Len(aTempLibs :=ListAsArray2( cLib, " ") )> 0 ,cLibs += SetthisLibs(AtempLibs) ,cLibs += " -l" + Strtran( cLib, '.a', "" ))} )
+         AEval( aLibsOut, { | cLib | iif( Len(aTempLibs :=ListAsArray2( cLib, " ") )> 0 ,cLibs += SetthisLibs(AtempLibs) ,cLibs += " -l" + Strtran( cLib, ".a", "" ))} )
 
          nPos := AScan( aLibsOut, { | z | At( "mysql", Lower( z ) ) > 0 } )
 
@@ -3013,8 +3013,8 @@ Endif // Create and compile
             cDefaultLibs   := strtran(cDefaultLibs,"gtwin.lib","gtwvt.lib")
             cDefaultLibsMt := strtran(cDefaultLibsMt,"gtwin.lib","gtwvt.lib")
          elseif lGtwvw
-            cDefaultLibs   := if(lMWvW,'mwvw.lib ', '') + strtran(cDefaultLibs,"gtwin.lib","gtwvw.lib ")
-            cDefaultLibsMt := if(lMWvW,'mwvw.lib ', '') + strtran(cDefaultLibsMt,"gtwin.lib","gtwvw.lib ")
+            cDefaultLibs   := iif(lMWvW,"mwvw.lib ", "") + strtran(cDefaultLibs,"gtwin.lib","gtwvw.lib ")
+            cDefaultLibsMt := iif(lMWvW,"mwvw.lib ", "") + strtran(cDefaultLibsMt,"gtwin.lib","gtwvw.lib ")
 
          endif
 
@@ -3064,11 +3064,11 @@ Endif // Create and compile
 
       FWrite( s_nMakeFileHandle, "RFLAGS = " + CRLF )
 /* added "-x" flag to LFLAGS statment to suppress creation of map file and speed up link. */
-      FWrite( s_nMakeFileHandle, "LFLAGS = -L$(CC_DIR)\lib\obj;$(CC_DIR)\lib;$(HB_DIR)\lib -Gn -M -m -s -Tp"+ if(s_lasdll,"d","e") + " -x" + IIF( lFWH .or. lMiniGui .or. lWhoo .or. lHwgui .or. lGtWvt .or. lGtWvw ," -aa"," -ap") + IIF( lMinigui, " -L$(MINIGUI)\lib",IIF( lFwh, " -L$(FWH)\lib",IIF( lHwgui, " -L$(HWGUI)\lib","" ))) + CRLF )
+      FWrite( s_nMakeFileHandle, "LFLAGS = -L$(CC_DIR)\lib\obj;$(CC_DIR)\lib;$(HB_DIR)\lib -Gn -M -m -s -Tp"+ iif(s_lasdll,"d","e") + " -x" + IIF( lFWH .or. lMiniGui .or. lWhoo .or. lHwgui .or. lGtWvt .or. lGtWvw ," -aa"," -ap") + IIF( lMinigui, " -L$(MINIGUI)\lib",IIF( lFwh, " -L$(FWH)\lib",IIF( lHwgui, " -L$(HWGUI)\lib","" ))) + CRLF )
       FWrite( s_nMakeFileHandle, "IFLAGS = " + CRLF )
       FWrite( s_nMakeFileHandle, "LINKER = ilink32" + CRLF )
       FWrite( s_nMakeFileHandle, " " + CRLF )
-      FWrite( s_nMakeFileHandle, "ALLOBJ = " + IIF( ( lWhoo .OR. lWhat32 .OR. lFwh .OR. lMinigui .OR. lHwgui .or. lGtWvt .or. lGtWvw .or. lXwt .or. lxHGtk ), "c0w32.obj", if(s_lAsDll,"c0d32.obj","c0x32.obj" )) + " $(OBJFILES)" + IIF( s_lExtended, " $(OBJCFILES)", " " ) + CRLF )
+      FWrite( s_nMakeFileHandle, "ALLOBJ = " + IIF( ( lWhoo .OR. lWhat32 .OR. lFwh .OR. lMinigui .OR. lHwgui .or. lGtWvt .or. lGtWvw .or. lXwt .or. lxHGtk ), "c0w32.obj", iif(s_lAsDll,"c0d32.obj","c0x32.obj" )) + " $(OBJFILES)" + IIF( s_lExtended, " $(OBJCFILES)", " " ) + CRLF )
       FWrite( s_nMakeFileHandle, "ALLRES = $(RESDEPEN)" + CRLF )
       FWrite( s_nMakeFileHandle, "ALLLIB = $(USERLIBS) $(LIBFILES) import32.lib " + IIF( s_lMt,"cw32mt.lib", "cw32.lib" )+ CRLF )
       FWrite( s_nMakeFileHandle, ".autodepend" + CRLF )
@@ -3101,16 +3101,16 @@ Endif // Create and compile
 
    ELSEIF s_lGcc
 
-      FWrite( s_nMakeFileHandle, "CFLAG1 = $(SHELL) " +IIF( !EMPTY(s_cUserInclude ) ," -I" + Alltrim( s_cUserInclude )  ,"") + IIF( "Unix" $ cOs , " -I/usr/include/harbour ", "" ) + IIF(  "Linux" $ cOS, "-I/usr/include/harbour", " -I$(HB_DIR)/include" ) + " -c -Wall" + IIF( s_lMt, " -DHB_THREAD_SUPPORT " , "" )  + if(s_lmingw, " -mno-cygwin "," " )+ CRLF )
+      FWrite( s_nMakeFileHandle, "CFLAG1 = $(SHELL) " +IIF( !EMPTY(s_cUserInclude ) ," -I" + Alltrim( s_cUserInclude )  ,"") + IIF( "Unix" $ cOs , " -I/usr/include/harbour ", "" ) + IIF(  "Linux" $ cOS, "-I/usr/include/harbour", " -I$(HB_DIR)/include" ) + " -c -Wall" + IIF( s_lMt, " -DHB_THREAD_SUPPORT " , "" )  + iif(s_lmingw, " -mno-cygwin "," " )+ CRLF )
       FWrite( s_nMakeFileHandle, "CFLAG2 = " + IIF(  "Linux" $ cOS, "-L$(HB_LIB_INSTALL)", " -L$(HB_DIR)/lib  -L$(CC_DIR)/lib" ) +  IIF( "Unix" $ cOs , " -L/usr/lib/harbour ", "" ) + IIF( lHwgui, " -L$(HWGUI)\lib","" ) + CRLF )
       FWrite( s_nMakeFileHandle, "RFLAGS = " + CRLF )
-      FWrite( s_nMakeFileHandle, "LFLAGS = " + if(!s_lLinux," ","-Wl,--noinhibit-exec ") + IIF(lUseXhb ,IIF(lUseharbourDll,"","-static ") + if(lXwt .or. lhwgui ,"-gtcgi " , "-gtcrs "), "$(CFLAG2)") + iif(lXwt,"`pkg-config --libs gtk+-2.0` -lxwt -lxwt_gtk -lxwt","") + iif( lxHGtk, "`pkg-config --libs gtk+-2.0 libglade-2.0` -lxhgtk ","") + iif( lhwgui .and. !s_lMinGW, " `pkg-config --libs gtk+-2.0 libglade-2.0 libgnomeprint-2.2` -hwgui ","")  + iif(lhwgui .and. s_lMinGW," -mwindows " ,"" )+  iif(s_lLinux .and. s_lmt ," -mt "," "  ) +CRLF )
+      FWrite( s_nMakeFileHandle, "LFLAGS = " + iif(!s_lLinux," ","-Wl,--noinhibit-exec ") + IIF(lUseXhb ,IIF(lUseharbourDll,"","-static ") + iif(lXwt .or. lhwgui ,"-gtcgi " , "-gtcrs "), "$(CFLAG2)") + iif(lXwt,"`pkg-config --libs gtk+-2.0` -lxwt -lxwt_gtk -lxwt","") + iif( lxHGtk, "`pkg-config --libs gtk+-2.0 libglade-2.0` -lxhgtk ","") + iif( lhwgui .and. !s_lMinGW, " `pkg-config --libs gtk+-2.0 libglade-2.0 libgnomeprint-2.2` -hwgui ","")  + iif(lhwgui .and. s_lMinGW," -mwindows " ,"" )+  iif(s_lLinux .and. s_lmt ," -mt "," "  ) +CRLF )
       FWrite( s_nMakeFileHandle, "IFLAGS = " + CRLF )
       FWrite( s_nMakeFileHandle, "LINKER = "+ IIF(lusexhb,"hblnk","gcc") + CRLF )
       FWrite( s_nMakeFileHandle, " " + CRLF )
       FWrite( s_nMakeFileHandle, "ALLOBJ = $(OBJFILES) " + IIF( s_lExtended, " $(OBJCFILES)", " " ) + CRLF )
       FWrite( s_nMakeFileHandle, "ALLRES = $(RESDEPEN) " + CRLF )
-      FWrite( s_nMakeFileHandle, "ALLLIB = $(USERLIBS) $(LIBFILES) " +if(s_lMinGW," -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lmpr -lwsock32 -lws2_32 -lmapi32","") + CRLF )
+      FWrite( s_nMakeFileHandle, "ALLLIB = $(USERLIBS) $(LIBFILES) " +iif(s_lMinGW," -luser32 -lwinspool -lgdi32 -lcomctl32 -lcomdlg32 -lole32 -loleaut32 -luuid -lmpr -lwsock32 -lws2_32 -lmapi32","") + CRLF )
       FWrite( s_nMakeFileHandle, ".autodepend" + CRLF )
 
    ENDIF
@@ -3122,25 +3122,25 @@ Endif // Create and compile
 
    IF lScanIncludes
       // Clipper/(x)Harbour sources: .prg
-      IF Len( s_aPrgs ) = Len( s_aObjs )
-         Attention("Scanning .PRG sources...",19)
+      IF Len( s_aPrgs ) == Len( s_aObjs )
+         Attention("Scanning .prg sources...",19)
          FOR nPos := 1 to Len(s_aPrgs)
             cIncl := ScanInclude( ReplaceMacros( s_aPrgs[ nPos ] ), lScanIncRecursive, cExcludeExts )
             // Only add in list if dependencies exist
             IF ! Empty(cIncl)
-               FWrite( s_nMakeFileHandle, s_aObjs[ nPos ] + ': ' + Alltrim( cIncl ) + CRLF, "" )
+               FWrite( s_nMakeFileHandle, s_aObjs[ nPos ] + ": " + Alltrim( cIncl ) + CRLF, "" )
             ENDIF
          NEXT
       ENDIF
 
       // C-sources: .c
-      IF Len( s_aCFiles ) = Len( s_aObjsC )
+      IF Len( s_aCFiles ) == Len( s_aObjsC )
          Attention("Scanning .c sources...",19)
          FOR nPos := 1 to Len(s_aCFiles)
             cIncl := ScanInclude( s_aCFiles[ nPos ], lScanIncRecursive, cExcludeExts )
             // Only add in list if dependencies exist
             IF ! Empty(cIncl)
-               FWrite( s_nMakeFileHandle, s_aObjsC[ nPos ] + ': ' + Alltrim( cIncl ) + CRLF, "" )
+               FWrite( s_nMakeFileHandle, s_aObjsC[ nPos ] + ": " + Alltrim( cIncl ) + CRLF, "" )
             ENDIF
          NEXT
       ENDIF
@@ -3176,9 +3176,9 @@ Endif // Create and compile
       FWrite( s_nMakeFileHandle, " " + CRLF )
       FWrite( s_nMakeFileHandle, "$(PROJECT): $(CFILES) $(OBJFILES) $(RESDEPEN) $(DEFFILE)" + CRLF )
 
-      IF 'Linux' $ cOS
+      IF "Linux" $ cOS
          FWrite( s_nMakeFileHandle, "    $(LINKER) @&&!" + CRLF )
-      ELSEIF 'Unix' $ cOS .or. "HP-UX" $ cOS
+      ELSEIF "Unix" $ cOS .or. "HP-UX" $ cOS
          FWrite( s_nMakeFileHandle, "    $(LINKER) @&&!" + CRLF )
       ELSE
          FWrite( s_nMakeFileHandle, "    $(CC_DIR)\bin\$(LINKER) @&&!" + CRLF )
@@ -3314,16 +3314,16 @@ FUNCTION ScanInclude( cFile, lRecursive, cExclExtent, aFiles)
            // Add current file to list, making it by default the first in the list
 
            IF s_lWin32
-               IF AScan(aFiles, {| x | Lower( x ) == Lower( cFnam + cExt ) } ) = 0       // Case IN-sensitive!
+               IF AScan(aFiles, {| x | Lower( x ) == Lower( cFnam + cExt ) } ) == 0       // Case IN-sensitive!
                    AAdd(aFiles,  cFnam + cExt)
                ENDIF
            ELSE
-               IF AScan(aFiles, cFnam + cExt ) = 0       // Case Sensitive!
+               IF AScan(aFiles, cFnam + cExt ) == 0       // Case Sensitive!
                    AAdd(aFiles,  cFnam + cExt)
                ENDIF
            ENDIF
 
-           lEof := (HB_FReadLine(nHandle,@cTemp,{chr(13)+chr(10), chr(10)}) = -1)
+           lEof := (HB_FReadLine(nHandle,@cTemp,{chr(13)+chr(10), chr(10)}) == -1)
            cTemp := LTrim( cTemp )
            // Loop reading file
            WHILE !lEof
@@ -3332,7 +3332,7 @@ FUNCTION ScanInclude( cFile, lRecursive, cExclExtent, aFiles)
 
                        cTemp := Left( cTemp , Len( cTemp ) - 1)
                        IF !lEof
-                          lEof := (HB_FReadLine(nHandle,@cBuffer,{chr(13)+chr(10), chr(10)}) = -1)
+                          lEof := (HB_FReadLine(nHandle,@cBuffer,{chr(13)+chr(10), chr(10)}) == -1)
                           cTemp += LTrim( cBuffer)
                        ENDIF
 
@@ -3365,7 +3365,7 @@ FUNCTION ScanInclude( cFile, lRecursive, cExclExtent, aFiles)
                   ENDIF
                   IF Len(cInclude) > 0 .and. Len(Alltrim(cExclExtent)) > 0
                       HB_FNAMESPLIT( cInclude, @cPath, @cFnam, @cExt, @cDrive )
-                      IF lPrg .AND. Len(cExt) = 0
+                      IF lPrg .AND. Len(cExt) == 0
                           cInclude := cInclude + ".prg"        // Handle set procedure to, using default extension
                       ENDIF
                       IF AT(Lower(cExt), Lower(cExclExtent)) > 0
@@ -3375,7 +3375,7 @@ FUNCTION ScanInclude( cFile, lRecursive, cExclExtent, aFiles)
                   IF Len(cInclude) > 0
                       // Still Ok, add to list?
                       IF s_lWin32
-                          IF AScan(aFiles, {| x | Lower( x ) == Lower( cInclude ) } ) = 0       // Case IN-sensitive!
+                          IF AScan(aFiles, {| x | Lower( x ) == Lower( cInclude ) } ) == 0       // Case IN-sensitive!
                               AAdd(aFiles, (cInclude) )
                               // recursive scanning
                               IF lRecursive
@@ -3383,7 +3383,7 @@ FUNCTION ScanInclude( cFile, lRecursive, cExclExtent, aFiles)
                               ENDIF
                           ENDIF
                       ELSE
-                          IF AScan(aFiles, cInclude ) = 0       // Case Sensitive!
+                          IF AScan(aFiles, cInclude ) == 0       // Case Sensitive!
                               AAdd(aFiles, (cInclude) )
                               // recursive scanning
                               IF lRecursive
@@ -3394,7 +3394,7 @@ FUNCTION ScanInclude( cFile, lRecursive, cExclExtent, aFiles)
                   ENDIF
                ENDIF
                IF !lEof
-                   lEof := (HB_FReadLine(nHandle,@cTemp,{chr(13)+chr(10), chr(10)}) = -1)
+                   lEof := (HB_FReadLine(nHandle,@cTemp,{chr(13)+chr(10), chr(10)}) == -1)
                    cTemp := LTrim( cTemp)
                ENDIF
            ENDDO
@@ -3434,7 +3434,7 @@ FUNCTION CompileUpdatedFiles()
    LOCAL nPos1       := 0
    LOCAL cDepSrc     := ""
 #Endif
-   LOCAL aGauge      := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", '≤' )
+   LOCAL aGauge      := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "≤" )
 
    @ 4,5 SAY "Compiling :"
 
@@ -3450,9 +3450,9 @@ FUNCTION CompileUpdatedFiles()
             ENDIF
 
             FOR nFiles := 1 TO Len( s_aPrgs )
-               xItem   := Substr( s_aPrgs[ nFiles ], Rat( IIF( s_lGcc, '/', '\' ), s_aPrgs[ nFiles ] ) + 1 )
-               nPos    := AScan( s_aCFiles, { | x | x := Substr( x, Rat( IIF( s_lGcc, '/', '\' ), x ) + 1 ), Left( x, At( ".", x ) ) == Left( xItem, At( ".", xItem ) ) } )
-               nObjPos := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, '/', '\' ), x ) + 1 ), Left( x, At( ".", x ) ) == Left( xItem, At( ".", xItem ) ) } )
+               xItem   := Substr( s_aPrgs[ nFiles ], Rat( IIF( s_lGcc, "/", "\" ), s_aPrgs[ nFiles ] ) + 1 )
+               nPos    := AScan( s_aCFiles, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), Left( x, At( ".", x ) ) == Left( xItem, At( ".", xItem ) ) } )
+               nObjPos := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), Left( x, At( ".", x ) ) == Left( xItem, At( ".", xItem ) ) } )
 
 #IfDef HBM_USE_DEPENDS
                lNewer := .F.
@@ -3481,7 +3481,7 @@ FUNCTION CompileUpdatedFiles()
                      setpos(9,0)
                      __RUN( (cComm) )
                      cErrText := Memoread( (s_cLog) )
-                     lEnd     := 'C2006' $ cErrText .OR. 'No code generated' $ cErrText
+                     lEnd     := "C2006" $ cErrText .OR. "No code generated" $ cErrText
 
                      IF ! s_lIgnoreErrors .AND. lEnd
                         __run( s_cEditor +" "+ (s_cLog) )
@@ -3528,8 +3528,8 @@ FUNCTION CompileUpdatedFiles()
             ENDIF
 
             FOR nFiles := 1 TO Len( aCtocompile )
-               xItem := Substr( aCtocompile[ nFiles ], Rat( IIF( s_lGcc, '/', '\' ), aCtocompile[ nFiles ] ) + 1 )
-               nPos  := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, '/', '\' ), x ) + 1 ), Left( x, At( ".", x ) ) == Left( aCtocompile[ nFiles ], At( ".", xItem ) ) } )
+               xItem := Substr( aCtocompile[ nFiles ], Rat( IIF( s_lGcc, "/", "\" ), aCtocompile[ nFiles ] ) + 1 )
+               nPos  := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), Left( x, At( ".", x ) ) == Left( aCtocompile[ nFiles ], At( ".", xItem ) ) } )
 
                IF nPos > 0
                   IF s_lMSVcc //.OR. s_lPocc
@@ -3574,8 +3574,8 @@ FUNCTION CompileUpdatedFiles()
 
             FOR nFiles := 1 TO Len( s_aCFiles )
                @  4, 16 SAY Space( 50 )
-               xItem := Substr( s_aCFiles[ nFiles ], Rat( IIF( s_lGcc, '/', '\' ), s_aCFiles[ nFiles ] ) + 1 )
-               nPos  := AScan( s_aObjsC, { | x | x := Substr( x, Rat( IIF( s_lGcc, '/', '\' ), x ) + 1 ), Left( x, At( ".", x ) ) == Left( xitem, At( ".", xitem ) ) } )
+               xItem := Substr( s_aCFiles[ nFiles ], Rat( IIF( s_lGcc, "/", "\" ), s_aCFiles[ nFiles ] ) + 1 )
+               nPos  := AScan( s_aObjsC, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), Left( x, At( ".", x ) ) == Left( xitem, At( ".", xitem ) ) } )
 
 #IfDef HBM_USE_DEPENDS
                lNewer := .F.
@@ -3604,7 +3604,7 @@ FUNCTION CompileUpdatedFiles()
                      setpos(9,0)
                      __RUN( (cComm) )
                      cErrText := Memoread( (s_cLog) )
-                     lEnd     := 'Error E' $ cErrText
+                     lEnd     := "Error E" $ cErrText
 
                      IF ! s_lIgnoreErrors .AND. lEnd
                         __run( s_cEditor +" "+ (s_cLog) )
@@ -3650,8 +3650,8 @@ FUNCTION CompileUpdatedFiles()
 
             FOR EACH cPrg IN s_aPrgs
                @  4, 16 SAY Space( 50 )
-               xItem := Substr( cPrg, Rat( IIF( s_lGcc, '/', '\' ), cPrg ) + 1 )
-               nPos  := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, '/', '\' ), x ) + 1 ), Left( x, At( ".", x ) ) == Left( xItem, At( ".", xitem ) ) } )
+               xItem := Substr( cPrg, Rat( IIF( s_lGcc, "/", "\" ), cPrg ) + 1 )
+               nPos  := AScan( s_aObjs, { | x | x := Substr( x, Rat( IIF( s_lGcc, "/", "\" ), x ) + 1 ), Left( x, At( ".", x ) ) == Left( xItem, At( ".", xitem ) ) } )
 
 #IfDef HBM_USE_DEPENDS
                lNewer := .F.
@@ -3675,12 +3675,12 @@ FUNCTION CompileUpdatedFiles()
                      cComm += IIF( s_lLinux ,  " > "+ (s_cLog)," >>"+ (s_cLog))
                      @4,16 SAY cPrg
                      GaugeUpdate( aGauge, nFile / Len( s_aPrgs ) )
-                     nFile ++     // moved from outside 'FOR EACH', Ath 2004-06-08
+                     nFile ++     // moved from outside "FOR EACH", Ath 2004-06-08
 
                      setpos(9,0)
                      __RUN( (cComm) )
                      cErrText := Memoread( (s_cLog) )
-                     lEnd     := 'C2006' $ cErrText .OR. 'No code generated' $ cErrText .or. "Error E" $ cErrText .or. "Error F" $ cErrText
+                     lEnd     := "C2006" $ cErrText .OR. "No code generated" $ cErrText .or. "Error E" $ cErrText .or. "Error F" $ cErrText
 
                      IF ! s_lIgnoreErrors .AND. lEnd
                         __run( s_cEditor +" "+ (s_cLog) )
@@ -3780,7 +3780,7 @@ FUNCTION FileInIncludePath(cFile)
  LOCAL cFilePath := ""
  LOCAL cSrcPath  := ""
 
-    IF Len(s_aSrcPaths) = 0
+    IF Len(s_aSrcPaths) == 0
         s_aSrcPaths := ListAsArray2( GetEnv( "INCLUDE" ) , HB_OSPATHLISTSEPARATOR() )
     ENDIF
     IF ! File(cFile)
@@ -3810,7 +3810,7 @@ FUNCTION CreateLibMakeFile( cFile )
    LOCAL aSrcC     := Directory( "*.c" )
    LOCAL cOS       := IIF( s_lLinux, "Linux", "Win32")
    LOCAL cCompiler := IIF( s_lLinux, "GCC",IIF(s_lMSVcc,"MSVC",IIF(s_lPocc,"POCC","BCC")))
-   LOCAL cLibName  := Padr( Left( cFile, At( '.', cFile ) - 1 ) ,40)
+   LOCAL cLibName  := Padr( Left( cFile, At( ".", cFile ) - 1 ) ,40)
 
    LOCAL lAutomemvar     := .F.
    LOCAL lVarIsMemvar    := .F.
@@ -3829,7 +3829,7 @@ FUNCTION CreateLibMakeFile( cFile )
    LOCAL cDrive          := ""
    LOCAL cPath           := ""
    LOCAL cTest           := ""
-   LOCAL cLast           := ''
+   LOCAL cLast           := ""
    LOCAL nWriteFiles     := 0
    LOCAL aUserDefs
    LOCAL cCurrentDef     := ""
@@ -3870,20 +3870,20 @@ FUNCTION CreateLibMakeFile( cFile )
       ENDIF
 
 
-      IF nOption = 1 // edit makefile
+      IF nOption == 1 // edit makefile
 
 
          // Verify if "cFile" can be openned to write mode.
 
          s_nMakeFileHandle := FOpen( cFile, FO_WRITE )
 
-         if s_nMakeFileHandle = F_ERROR
+         if s_nMakeFileHandle == F_ERROR
 
             CLS
 
-            IF s_nLang = 1      // brazilian portuguese
+            IF s_nLang == 1      // brazilian portuguese
                s_cAlertMsg := "<"+cFile + "> n∆o pode ser aberto para ediá∆o."
-            ELSEIF s_nLang = 3  // spanish
+            ELSEIF s_nLang == 3  // spanish
                s_cAlertMsg := "<"+cFile + "> no pode ser abierto para edici¢n."
             ELSE                // english
                s_cAlertMsg := "<"+cFile + "> cannot be openned for edition."
@@ -3967,13 +3967,13 @@ FUNCTION CreateLibMakeFile( cFile )
          // after oMake read, recreate other clean makefile to edit.
          s_nMakeFileHandle := FCreate(cFile)
 
-         if s_nMakeFileHandle = F_ERROR
+         if s_nMakeFileHandle == F_ERROR
 
             CLS
 
-            IF s_nLang = 1      // brazilian portuguese
+            IF s_nLang == 1      // brazilian portuguese
                s_cAlertMsg := "<"+cFile + "> n∆o pode ser aberto para ediá∆o."
-            ELSEIF s_nLang = 3  // spanish
+            ELSEIF s_nLang == 3  // spanish
                s_cAlertMsg := "<"+cFile + "> no pode ser abierto para edici¢n."
             ELSE                // english
                s_cAlertMsg := "<"+cFile + "> cannot be openned for edition."
@@ -3990,7 +3990,7 @@ FUNCTION CreateLibMakeFile( cFile )
          s_lEditMake := .T.
 
 
-      ELSEIF nOption = 2 // create a new makefile
+      ELSEIF nOption == 2 // create a new makefile
 
 
          IF nLenaSrc == 0 .and. !s_lRecursive 
@@ -4017,13 +4017,13 @@ FUNCTION CreateLibMakeFile( cFile )
 
          s_nMakeFileHandle := FCreate( cFile )
 
-         if s_nMakeFileHandle = F_ERROR
+         if s_nMakeFileHandle == F_ERROR
 
             CLS
 
-            IF s_nLang = 1      // brazilian portuguese
+            IF s_nLang == 1      // brazilian portuguese
                s_cAlertMsg := "<"+cFile + "> n∆o pode ser criado."
-            ELSEIF s_nLang = 3  // spanish
+            ELSEIF s_nLang == 3  // spanish
                s_cAlertMsg := "<"+cFile + "> no pode ser criado."
             ELSE                // english
                s_cAlertMsg := "<"+cFile + "> cannot be created."
@@ -4049,13 +4049,13 @@ FUNCTION CreateLibMakeFile( cFile )
 
       s_nMakeFileHandle := FCreate( cFile )
 
-      if s_nMakeFileHandle = F_ERROR
+      if s_nMakeFileHandle == F_ERROR
 
          CLS
 
-         IF s_nLang = 1      // brazilian portuguese
+         IF s_nLang == 1      // brazilian portuguese
             s_cAlertMsg := "<"+cFile + "> n∆o pode ser criado."
-         ELSEIF s_nLang = 3  // spanish
+         ELSEIF s_nLang == 3  // spanish
             s_cAlertMsg := "<"+cFile + "> no pode ser criado."
          ELSE                // english
             s_cAlertMsg := "<"+cFile + "> cannot be created."
@@ -4074,7 +4074,7 @@ FUNCTION CreateLibMakeFile( cFile )
    ENDIF
 
    CLS
-   Setcolor( 'w/b+,b+/w,w+/b,w/b+,w/b,w+/b' )
+   Setcolor( "w/b+,b+/w,w+/b,w/b+,w/b,w+/b" )
    @  0,  0, Maxrow(), Maxcol() BOX( Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 ) + Space( 1 ) )
 
    Attention( HbMake_Id() + space(10)+s_aLangMessages[ 27 ], 0 )
@@ -4206,21 +4206,21 @@ FUNCTION CreateLibMakeFile( cFile )
       cObjDir := Alltrim( cObjDir )
 
       IF ! Empty( cObjDir )
-         cObjDir += '/'
+         cObjDir += "/"
       ENDIF
 
-      cTest := cObjDir + '/'
+      cTest := cObjDir + "/"
    ELSE
       cObjDir := Alltrim( cObjDir )
 
       IF ! Empty( cObjDir )
-         cObjDir += '\'
+         cObjDir += "\"
       ENDIF
 
-      cTest := cObjDir + '\'
+      cTest := cObjDir + "\"
    ENDIF
 
-   AEval( s_aMacros, { | x, y | cItem := Substr( x[ 2 ], 1, Len( x[ 2 ] ) ), IIF( At( citem, cTest ) > 0, ( s_aMacros[ y, 1 ] := 'OBJ', s_aMacros[ y, 2 ] := cObjDir ), ) } )
+   AEval( s_aMacros, { | x, y | cItem := Substr( x[ 2 ], 1, Len( x[ 2 ] ) ), IIF( At( citem, cTest ) > 0, ( s_aMacros[ y, 1 ] := "OBJ", s_aMacros[ y, 2 ] := cObjDir ), ) } )
 
    IF lAutoMemvar
       cHarbourFlags += " -a "
@@ -4251,7 +4251,7 @@ FUNCTION CreateLibMakeFile( cFile )
       AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\BIN\bcc32 -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -o$* $**" } )
 
       IF s_lExtended
-         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(FWH)\include -o$* $**" } )
+         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n -go" + iif(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(FWH)\include -o$* $**" } )
       ELSE
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(FWH)\include -o$* $**" } )
       ENDIF
@@ -4265,7 +4265,7 @@ FUNCTION CreateLibMakeFile( cFile )
          AAdd( s_aCommands, { ".c.o:", "gcc -I/usr/include/harbour $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
 
          IF s_lExtended
-            AAdd( s_aCommands, { ".prg.o:", "harbour -n $(HARBOURFLAGS) -I/usr/include/harbour -I. -go" + if(s_lGenCsource,"3","") + "  -o$* $**" } )
+            AAdd( s_aCommands, { ".prg.o:", "harbour -n $(HARBOURFLAGS) -I/usr/include/harbour -I. -go" + iif(s_lGenCsource,"3","") + "  -o$* $**" } )
          ELSE
             AAdd( s_aCommands, { ".prg.c:", "harbour -n $(HARBOURFLAGS) -I/usr/include/harbour -I.  -o$* $**" } )
          ENDIF
@@ -4275,7 +4275,7 @@ FUNCTION CreateLibMakeFile( cFile )
          AAdd( s_aCommands, { ".c.o:", "$(CC_DIR)\bin\gcc -I$(HB_DIR)/include $(CFLAG1) $(CFLAG2) -I. -o$* $**" } )
 
          IF s_lExtended
-            AAdd( s_aCommands, { ".prg.o:", "$(HB_DIR)\bin\harbour -n -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)/include $(HARBOURFLAGS)  -o$* $**" } )
+            AAdd( s_aCommands, { ".prg.o:", "$(HB_DIR)\bin\harbour -n -go" + iif(s_lGenCsource,"3","") + " -I$(HB_DIR)/include $(HARBOURFLAGS)  -o$* $**" } )
          ELSE
             AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)/include $(HARBOURFLAGS)  -o$* $**" } )
          ENDIF
@@ -4287,7 +4287,7 @@ FUNCTION CreateLibMakeFile( cFile )
       AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\bin\cl -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
 
       IF s_lExtended
-         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -go" + if(s_lGenCsource,"3","") + " -n -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(C4W)\include -o$* $**" } )
+         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -go" + iif(s_lGenCsource,"3","") + " -n -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(C4W)\include -o$* $**" } )
       ELSE
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(C4W)\include -o$* $**" } )
       ENDIF
@@ -4299,7 +4299,7 @@ FUNCTION CreateLibMakeFile( cFile )
       AAdd( s_aCommands, { ".c.obj:", "$(CC_DIR)\BIN\pocc -I$(HB_DIR)\include $(CFLAG1) $(CFLAG2) -Fo$* $**" } )
 
       IF s_lExtended
-         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n -go" + if(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(FWH)\include -o$** $**" } )
+         AAdd( s_aCommands, { ".prg.obj:", "$(HB_DIR)\bin\harbour -n -go" + iif(s_lGenCsource,"3","") + " -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(FWH)\include -o$** $**" } )
       ELSE
          AAdd( s_aCommands, { ".prg.c:", "$(HB_DIR)\bin\harbour -n -I$(HB_DIR)\include $(HARBOURFLAGS) -I$(FWH)\include -o$** $**" } )
       ENDIF
@@ -4331,8 +4331,8 @@ FUNCTION CreateLibMakeFile( cFile )
    ENDIF
 
 
-   AEval( aOutFiles, { | x, y | HB_SYMBOL_UNUSED( x ), aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( ' ', aOutFiles[ y ] ) ) ) } )
-   AEval( aOutFiles, { | xItem | IIF( At( '.c', xItem ) > 0 .OR. At( '.C', xItem ) > 0 .OR. At( '.cpp', xItem ) > 0 .OR. At( '.CPP', xItem ) > 0, AAdd( aOutc, xitem ), ) } )
+   AEval( aOutFiles, { | x, y | HB_SYMBOL_UNUSED( x ), aOutFiles[ y ] := Trim( Substr( aOutFiles[ y ], 1, At( " ", aOutFiles[ y ] ) ) ) } )
+   AEval( aOutFiles, { | xItem | IIF( At( ".c", xItem ) > 0 .OR. At( ".C", xItem ) > 0 .OR. At( ".cpp", xItem ) > 0 .OR. At( ".CPP", xItem ) > 0, AAdd( aOutc, xitem ), ) } )
    AEval( aOutc, { | x, z | citem := x, z := AScan( aOutFiles, { | t | t = citem } ), IIF( z > 0, aSize( aDel( aOutFiles, z ), Len( aOutFiles ) - 1 ), ) } )
 
    aOutFiles  := aSort( aOutFiles )
@@ -4357,10 +4357,10 @@ FUNCTION CreateLibMakeFile( cFile )
          nPos  := AScan( s_aPrgs, { | z | hb_FNAMESPLIT( z, @cPath, @cTest, @cExt, @cDrive ), cPath == citem } )
 
          IF nPos > 0
-            AEval( s_aPrgs, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aPrgs[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ')\' ) ), ) } )
+            AEval( s_aPrgs, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aPrgs[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ")\" ) ), ) } )
 
             IF ! s_aMacros[ x, 3 ]
-               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + ' = ' + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
+               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + " = " + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
                s_aMacros[ x, 3 ] := .T.
             ENDIF
 
@@ -4369,10 +4369,10 @@ FUNCTION CreateLibMakeFile( cFile )
          nPos := AScan( s_aCFiles, { | z | hb_FNAMESPLIT( z, @cPath, @cTest, @cExt, @cDrive ), cPath == citem } )
 
          IF nPos > 0
-            AEval( s_aCFiles, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aCFiles[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ')\' ) ), ) } )
+            AEval( s_aCFiles, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aCFiles[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ")\" ) ), ) } )
 
             IF ! s_aMacros[ x, 3 ]
-               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + ' = ' + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
+               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + " = " + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
                s_aMacros[ x, 3 ] := .T.
             ENDIF
 
@@ -4383,8 +4383,8 @@ FUNCTION CreateLibMakeFile( cFile )
          IF nPos > 0
 
             IF ! Empty( cObjDir )
-               AEval( s_aObjs, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aObjs[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ')\' ) ), ) } )
-               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + ' = ' + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
+               AEval( s_aObjs, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aObjs[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ")\" ) ), ) } )
+               FWrite( s_nMakeFileHandle, s_aMacros[ x, 1 ] + " = " + Left( s_aMacros[ x, 2 ], Len( s_aMacros[ x, 2 ] ) - 1 ) + " " + CRLF )
             ENDIF
 
          ENDIF
@@ -4395,7 +4395,7 @@ FUNCTION CreateLibMakeFile( cFile )
             IF nPos > 0
 
                IF ! Empty( cObjDir )
-                  AEval( s_aObjsC, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aObjsC[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ')\' ) ), ) } )
+                  AEval( s_aObjsC, { | a, b | hb_FNAMESPLIT( a, @cPath, @cTest, @cExt, @cDrive ), IIF( cPath == citem, s_aObjsC[ b ] := Strtran( a, cPath, "$(" + s_aMacros[ x, 1 ] + IIF( s_lGcc, ")/", ")\" ) ), ) } )
                ENDIF
 
             ENDIF
@@ -4426,7 +4426,7 @@ FUNCTION CreateLibMakeFile( cFile )
          FWrite( s_nMakeFileHandle, + " $(OB) " + CRLF )
       ELSE
          nWriteFiles := 0
-         AEval( s_aObjs, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aObjs ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OB) " + CRLF ) ) } )
+         AEval( s_aObjs, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aObjs ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OB) " + CRLF ) ) } )
       ENDIF
 
       nWriteFiles := 0
@@ -4435,7 +4435,7 @@ FUNCTION CreateLibMakeFile( cFile )
       IF Len( s_aCFiles ) < 1
          FWrite( s_nMakeFileHandle, + " $(CF)" + CRLF )
       ELSE
-         AEval( s_aCFiles, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aCFiles ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(CF) " + CRLF ) ) } )
+         AEval( s_aCFiles, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aCFiles ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(CF) " + CRLF ) ) } )
       ENDIF
 
       FWrite( s_nMakeFileHandle, "PRGFILE =" )
@@ -4444,7 +4444,7 @@ FUNCTION CreateLibMakeFile( cFile )
       IF Len( s_aPrgs ) < 1
          FWrite( s_nMakeFileHandle, + " $(PS)" + CRLF )
       ELSE
-         AEval( s_aPrgs, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aPrgs ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(PS) " + CRLF ) ) } )
+         AEval( s_aPrgs, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aPrgs ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(PS) " + CRLF ) ) } )
       ENDIF
 
    ELSE /****extended moded ****/
@@ -4454,7 +4454,7 @@ FUNCTION CreateLibMakeFile( cFile )
       IF Len( s_aObjs ) < 1
          FWrite( s_nMakeFileHandle, + " $(OB) " + CRLF )
       ELSE
-         AEval( s_aObjs, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aObjs ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OB) " + CRLF ) ) } )
+         AEval( s_aObjs, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aObjs ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OB) " + CRLF ) ) } )
       ENDIF
 
       FWrite( s_nMakeFileHandle, "PRGFILES =" )
@@ -4463,7 +4463,7 @@ FUNCTION CreateLibMakeFile( cFile )
       IF Len( s_aPrgs ) < 1
          FWrite( s_nMakeFileHandle, + " $(PS)" + CRLF )
       ELSE
-         AEval( s_aPrgs, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aPrgs ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(PS) " + CRLF ) ) } )
+         AEval( s_aPrgs, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aPrgs ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(PS) " + CRLF ) ) } )
       ENDIF
 
       nWriteFiles := 0
@@ -4474,7 +4474,7 @@ FUNCTION CreateLibMakeFile( cFile )
          IF Len( s_aObjsC ) < 1
             FWrite( s_nMakeFileHandle, + " $(OBC) " + CRLF )
          ELSE
-            AEval( s_aObjsC, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aObjsC ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OBC) " + CRLF ) ) } )
+            AEval( s_aObjsC, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aObjsC ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(OBC) " + CRLF ) ) } )
          ENDIF
 
       ENDIF
@@ -4487,7 +4487,7 @@ FUNCTION CreateLibMakeFile( cFile )
          IF Len( s_aCFiles ) < 1
             FWrite( s_nMakeFileHandle, + " $(CF)" + CRLF )
          ELSE
-            AEval( s_aCFiles, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aCFiles ), FWrite( s_nMakeFileHandle, ' ' + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(CF) " + CRLF ) ) } )
+            AEval( s_aCFiles, { | x, i | nWriteFiles ++, IIF( i <> Len( s_aCFiles ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + IIF( nWriteFiles % 10 == 0, " //" + CRLF, "" ) ), FWrite( s_nMakeFileHandle, " " + Alltrim( x ) + " $(CF) " + CRLF ) ) } )
          ENDIF
 
       ENDIF
@@ -4658,11 +4658,11 @@ FUNCTION SetBuildLib()
    s_nMakeFileHandle := FCreate( s_cMakeFileName )
 
 
-   IF s_nMakeFileHandle = F_ERROR
+   IF s_nMakeFileHandle == F_ERROR
 
-      IF s_nLang = 1      // brazilian portuguese
+      IF s_nLang == 1      // brazilian portuguese
          s_cAlertMsg := "<"+s_cMakeFileName + "> n∆o pode ser criado."
-      ELSEIF s_nLang = 3  // spanish
+      ELSEIF s_nLang == 3  // spanish
          s_cAlertMsg := "<"+s_cMakeFileName + "> no pode ser criado."
       ELSE                // english
          s_cAlertMsg := "<"+s_cMakeFileName + "> cannot be created."
@@ -4683,7 +4683,7 @@ FUNCTION SetBuildLib()
 
    AAdd( s_aBuildOrder, aMacro[ 1 ] )
    cRead  := Strtran( cRead, "@&&!", "" )
-   aMacro := ListAsArray2( cRead, '\' )
+   aMacro := ListAsArray2( cRead, "\" )
    AEval( aMacro, { | xMacro | Findmacro( xMacro, @cRead ) } )
 
    IF s_lBcc .OR. s_lMSVcc .OR. s_lPocc
@@ -4784,8 +4784,8 @@ FUNCTION CRLF
 FUNCTION CheckIFfile( cFile )
 *----------------------------
 
-   LOCAL cNextLine := ''
-   LOCAL cCommand  := ''
+   LOCAL cNextLine := ""
+   LOCAL cCommand  := ""
    LOCAL cTemp
 
    cTemp := Substr( cFile, At( " ", cFile ) + 1 )
@@ -4794,7 +4794,7 @@ FUNCTION CheckIFfile( cFile )
       cNextLine := Trim( Substr( ReadLN( @s_lEof ), 1 ) )
 
       IF  "!" $ cNextLine
-         cCommand := Substr( cNextLine, At( ' ', cNextLine ) + 1 )
+         cCommand := Substr( cNextLine, At( " ", cNextLine ) + 1 )
          RUN( cCommand )
       ENDIF
 
@@ -4836,7 +4836,7 @@ FUNCTION CheckIFdef( cTemp )
 
       cTemp := Strtran( cTemp, "!ifdef ", "" )
 
-        IF  '=' $ cRead
+        IF  "=" $ cRead
 
          IF  "\.." $ cRead
             cRead := Substr( cRead, 1, At( "\..", cRead ) - 1 )
@@ -4881,7 +4881,7 @@ FUNCTION CheckIFdef( cTemp )
 
          ENDIF
 
-      ELSEIF '!stdout' $ cRead
+      ELSEIF "!stdout" $ cRead
          Checkstdout( cRead )
       ENDIF
 
@@ -4892,17 +4892,17 @@ RETURN NIL
 *-------------------------
 FUNCTION BuildBccCfgFile()
 *-------------------------
-LOCAL cCfg := s_cHarbourDir + '\bin\'+s_cHarbourCFG
+LOCAL cCfg := s_cHarbourDir + "\bin\"+s_cHarbourCFG
 LOCAL nCfg
 
    IF !File( cCfg ) .or. s_lForce 
 
       nCfg := FCreate( cCfg )
 
-      if nCfg = F_ERROR
-         IF s_nLang = 1      // brazilian portuguese 
+      if nCfg == F_ERROR
+         IF s_nLang == 1      // brazilian portuguese 
             s_cAlertMsg := cCfg + " n∆o pode ser criado."
-         ELSEIF s_nLang = 3  // spanish
+         ELSEIF s_nLang == 3  // spanish
             s_cAlertMsg := cCfg + " no pode ser criado."
          ELSE                // english
             s_cAlertMsg := cCfg + " cannot be created."
@@ -4924,17 +4924,17 @@ RETURN NIL
 *-------------------------
 FUNCTION BuildMscCfgFile()
 *-------------------------
-   LOCAL cCfg := s_cHarbourDir + '\bin\'+s_cHarbourCFG
+   LOCAL cCfg := s_cHarbourDir + "\bin\"+s_cHarbourCFG
    LOCAL nCfg
 
    IF !File( cCfg )  .or. s_lForce
 
       nCfg := FCreate( cCfg )
 
-      if nCfg = F_ERROR
-         IF s_nLang = 1      // brazilian portuguese 
+      if nCfg == F_ERROR
+         IF s_nLang == 1      // brazilian portuguese 
             s_cAlertMsg := cCfg + " n∆o pode ser criado."
-         ELSEIF s_nLang = 3  // spanish
+         ELSEIF s_nLang == 3  // spanish
             s_cAlertMsg := cCfg + " no pode ser criado."
          ELSE                // english
             s_cAlertMsg := cCfg + " cannot be created."
@@ -4956,17 +4956,17 @@ RETURN NIL
 *-------------------------
 FUNCTION BuildPccCfgFile()
 *-------------------------
-   LOCAL cCfg := s_cHarbourDir + '\bin\'+s_cHarbourCFG
+   LOCAL cCfg := s_cHarbourDir + "\bin\"+s_cHarbourCFG
    LOCAL nCfg
 
    IF !File( cCfg )  .or. s_lForce
 
       nCfg := FCreate( cCfg )
 
-      if nCfg = F_ERROR
-         IF s_nLang = 1      // brazilian portuguese 
+      if nCfg == F_ERROR
+         IF s_nLang == 1      // brazilian portuguese 
             s_cAlertMsg := cCfg + " n∆o pode ser criado."
-         ELSEIF s_nLang = 3  // spanish
+         ELSEIF s_nLang == 3  // spanish
             s_cAlertMsg := cCfg + " no pode ser criado."
          ELSE                // english
             s_cAlertMsg := cCfg + " cannot be created."
@@ -4993,20 +4993,20 @@ FUNCTION BuildGccCfgFile()
    LOCAL cCfg 
    LOCAL nCfg
    LOCAL cDir := s_cHarbourDir
-//   LOCAL cBhc := Alltrim( Strtran( ReplaceMacros( '$(HB_DIR)' ), '\', '/' ) )
+//   LOCAL cBhc := Alltrim( Strtran( ReplaceMacros( "$(HB_DIR)" ), "\", "/" ) )
 
-//   cDir := Strtran( cDir, '/', '\' )
+//   cDir := Strtran( cDir, "/", "\" )
 
-   cCfg := s_cHarbourDir + '\bin\'+s_cHarbourCFG
+   cCfg := s_cHarbourDir + "\bin\"+s_cHarbourCFG
 
    IF !File( cCfg ) .or. s_lForce
 
       nCfg := FCreate( cCfg )
 
-      if nCfg = F_ERROR
-         IF s_nLang = 1      // brazilian portuguese 
+      if nCfg == F_ERROR
+         IF s_nLang == 1      // brazilian portuguese 
             s_cAlertMsg := cCfg + " n∆o pode ser criado."
-         ELSEIF s_nLang = 3  // spanish
+         ELSEIF s_nLang == 3  // spanish
             s_cAlertMsg := cCfg + " no pode ser criado."
          ELSE                // english
             s_cAlertMsg := cCfg + " cannot be created."
@@ -5016,7 +5016,7 @@ FUNCTION BuildGccCfgFile()
       endif
 
       FWrite( nCfg, "CC=gcc" + CRLF )
-      FWrite( nCfg, "CFLAGS= -c -DHB_DYNLIB " + ReplaceMacros( "-I" + s_cHarbourDir + "/include $(C_USR)  -L" + s_cHarbourDir + "/lib" )  + if(s_lmingw ," -mno-cygwin ","" )+ CRLF )
+      FWrite( nCfg, "CFLAGS= -c -DHB_DYNLIB " + ReplaceMacros( "-I" + s_cHarbourDir + "/include $(C_USR)  -L" + s_cHarbourDir + "/lib" )  + iif(s_lmingw ," -mno-cygwin ","" )+ CRLF )
       FWrite( nCfg, "VERBOSE=YES" + CRLF )
       FWrite( nCfg, "DELTMP=YES" + CRLF )
       FClose( nCfg )
@@ -5027,17 +5027,17 @@ RETURN NIL
 *--------------------------
 FUNCTION BuildGccCfgFileL()
 *--------------------------
-   LOCAL cCfg := '/etc/'+s_cHarbourCFG
+   LOCAL cCfg := "/etc/"+s_cHarbourCFG
    LOCAL nCfg
 
    IF !File( cCfg )  .or. s_lForce
 
       nCfg := FCreate( cCfg )
 
-      if nCfg = F_ERROR
-         IF s_nLang = 1      // brazilian portuguese 
+      if nCfg == F_ERROR
+         IF s_nLang == 1      // brazilian portuguese 
             s_cAlertMsg := cCfg + " n∆o pode ser criado."
-         ELSEIF s_nLang = 3  // spanish
+         ELSEIF s_nLang == 3  // spanish
             s_cAlertMsg := cCfg + " no pode ser criado."
          ELSE                // english
             s_cAlertMsg := cCfg + " cannot be created."
@@ -5059,7 +5059,7 @@ RETURN NIL
 FUNCTION FindHarbourCfg( cCfg )
 *------------------------------
 
-   LOCAL cPath AS STRING := ''
+   LOCAL cPath AS STRING := ""
    LOCAL lFound AS LOGICAL := .F.
    LOCAL cEnv AS STRING
    LOCAL aEnv as Array of String
@@ -5072,7 +5072,7 @@ FUNCTION FindHarbourCfg( cCfg )
 
       FOR nPos := 1 TO Len( aEnv )
 
-         IF File( aEnv[ nPos ] + '\'+s_cHarbourCFG )
+         IF File( aEnv[ nPos ] + "\"+s_cHarbourCFG )
             cPath  := aEnv[ nPos ]
             lFound := .T.
             EXIT
@@ -5082,16 +5082,16 @@ FUNCTION FindHarbourCfg( cCfg )
 
    ELSE
 
-      IF File( '/etc/'+s_cHarbourCFG )
+      IF File( "/etc/"+s_cHarbourCFG )
          lFound := .T.
-         cPath  := '/etc/'+s_cHarbourCFG
+         cPath  := "/etc/"+s_cHarbourCFG
       ENDIF
 
       IF !lFound
 
-         IF File( '/usr/local/etc/'+s_cHarbourCFG )
+         IF File( "/usr/local/etc/"+s_cHarbourCFG )
             lFound := .T.
-            cPath  := '/usr/local/etc/'+s_cHarbourCFG
+            cPath  := "/usr/local/etc/"+s_cHarbourCFG
          ENDIF
 
       ENDIF
@@ -5107,7 +5107,7 @@ FUNCTION TestforPrg( cFile )
 *---------------------------
 
    LOCAL aFiles AS ARRAY  := {}
-   LOCAL cPath AS STRING  := ''
+   LOCAL cPath AS STRING  := ""
    LOCAL cTest AS STRING  := ""
    LOCAL cDrive AS STRING := ""
    LOCAL cExt AS STRING   := ""
@@ -5119,7 +5119,7 @@ FUNCTION TestforPrg( cFile )
    hb_FNAMESPLIT( cFile, @cPath, @cTest, @cExt, @cDrive )
 
    cExt := Substr( cExt, 2 )
-   aDir := Directory( cTest + '.*' )
+   aDir := Directory( cTest + ".*" )
 
    FOR nPos := 1 TO 7
       cItem := cTest + "." + Extenprg( cExt, nPos )
@@ -5141,7 +5141,7 @@ RETURN NIL
 FUNCTION GetGccDir()
 *-------------------
 
-   LOCAL cPath AS STRING := ''
+   LOCAL cPath AS STRING := ""
    LOCAL cEnv AS STRING
    LOCAL aEnv AS Array of string
    LOCAL nPos as Numeric
@@ -5154,9 +5154,9 @@ FUNCTION GetGccDir()
 
       FOR nPos := 1 TO Len( aEnv )
 
-         IF File( aEnv[ nPos ] + '\gcc.exe' ) .OR. File( Lower( aEnv[ nPos ] ) + '\gcc.exe' )
+         IF File( aEnv[ nPos ] + "\gcc.exe" ) .OR. File( Lower( aEnv[ nPos ] ) + "\gcc.exe" )
             cPath := aEnv[ nPos ]
-            cPath := Left( cPath, Rat( '\', cPath ) - 1 )
+            cPath := Left( cPath, Rat( "\", cPath ) - 1 )
             EXIT
          ENDIF
 
@@ -5385,7 +5385,7 @@ FUNCTION ProcessParameters( cParams )
       cParams := "-D" + Strtran( cParams, "-D", ";" )
       cParams := Strtran( cParams, "-D;", "-D" )
       aDef    := ListAsArray2( Alltrim( Substr( cParams, 3 ) ), ";" )
-      AEval( aDef, { | xDef | IIF( At( '=', xDef ) > 0, GetParaDefines( xDef ), ) } )
+      AEval( aDef, { | xDef | IIF( At( "=", xDef ) > 0, GetParaDefines( xDef ), ) } )
    ENDIF
 
    // Build a Library
@@ -5704,7 +5704,7 @@ FUNCTION GetSelFiles( aInFiles, aOutFiles )
 
    FOR EACH cItem IN aInFiles
 
-      nPos := AScan( aOutFiles, { | x | x == Left( cItem, At( ' ', citem ) - 1 ) } )
+      nPos := AScan( aOutFiles, { | x | x == Left( cItem, At( " ", citem ) - 1 ) } )
 
       IF nPos > 0
          AAdd( aRet, cItem )
@@ -5791,7 +5791,7 @@ Local n
 
 for Each n In aTempLibs
      c += "-l"
-     c += StrTran( n, '.a', "" )
+     c += StrTran( n, ".a", "" )
      c+= " "
 next
 

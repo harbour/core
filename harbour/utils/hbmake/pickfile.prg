@@ -58,12 +58,12 @@
 
    Returns    : Character file name of selected file or "" if nothing picked.
 
-   Example    : yourfile := pickfile( '*.dbf' )
+   Example    : yourfile := pickfile( "*.dbf" )
 
                 if empty(yourfile)
-                  ? 'You pressed Escape or No Matching File'
+                  ? "You pressed Escape or No Matching File"
                 else
-                  ? 'The file you selected is: '+yourfile
+                  ? "The file you selected is: "+yourfile
                 endif
 
    Released to Public Domain by Author.             
@@ -73,7 +73,7 @@
 #include "common.ch"
 #include "box.ch"
 #ifndef __HARBOUR__
-#include 'hbclip.ch'
+#include "hbclip.ch"
 #endif
 #include "directry.ch"
 
@@ -91,10 +91,10 @@ function pickfile( cFileSpec )
 local cOldString := savescreen( 8, 19, 16, 61 )
 local aFiles   as array  := directory( cFileSpec )
 local aPickList := {}
-local cRetVal    := ''
+local cRetVal    := ""
 local sel
 
-default cFileSpec to '*.*'
+default cFileSpec to "*.*"
 
 dispbox( 8, 19, 16, 61, B_SINGLE + " ", "+W/R" )
 
@@ -102,13 +102,13 @@ if len( aFiles ) > 0
 
    aeval( aFiles, { | xx | aadd( aPickList, ;
                     pad( xx[ F_NAME ], 13 ) + ;
-                    str( xx[ F_SIZE ], 8 ) + '  ' + ;
-                    dtoc( xx[ F_DATE ] ) + '  ' + ;
+                    str( xx[ F_SIZE ], 8 ) + "  " + ;
+                    dtoc( xx[ F_DATE ] ) + "  " + ;
                     xx[ F_TIME ] ) } )
 
    sel := achoice( 9, 20, 15, 60, aPickList )
 
-   cRetVal := iif( lastkey() == 27, '', aFiles[ sel, 1 ] )
+   cRetVal := iif( lastkey() == 27, "", aFiles[ sel, 1 ] )
 
 else
 
@@ -124,7 +124,7 @@ function pickafile( afiles )
 
 local cOldString := savescreen( 8, 19, 16, 61 )
 local aPickList  := {}
-local cRetVal    := ''
+local cRetVal    := ""
 local sel
 
 /*default cFileSpec to '*.*'*/
@@ -138,7 +138,7 @@ if len( aFiles ) > 0
 
    sel := AChoice( 9, 20, 15, 60, aFiles )
 
-   cRetVal := iif( lastkey() == 27, '', substr(aFiles[ sel ],1,at(' ',afiles[sel])-1) )
+   cRetVal := iif( lastkey() == 27, "", substr(aFiles[ sel ],1,at(" ",afiles[sel])-1) )
 
 endif
 

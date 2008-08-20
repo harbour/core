@@ -50,8 +50,9 @@
  */
 
 #include "common.ch"
+#include "directry.ch"
 #ifndef __HARBOUR__
-    #include 'hbclip.ch'
+    #include "hbclip.ch"
 #else
     DECLARE ExtenPrg( cExt AS STRING, nType AS NUMERIC ) AS STRING
     DECLARE Exten( cExt as string, nType as numeric ) as string
@@ -73,8 +74,8 @@ FUNCTION GetSourceFiles( lSubDir, lGcc, cOs )
 
    LOCAL aDirs
    LOCAL aRet      := {}
-   LOCAL lLinux    := AT( 'linux', LOWER( cOs ) ) > 0 .OR. lGcc
-   LOCAL cDir      := IIF( ! lLinux, '\' + CURDIR() + '\', '/' + CURDIR() + '/' )
+   LOCAL lLinux    := AT( "linux", LOWER( cOs ) ) > 0 .OR. lGcc
+   LOCAL cDir      := IIF( ! lLinux, "\" + CURDIR() + "\", "/" + CURDIR() + "/" )
    LOCAL aStru     := { cDir }
    LOCAL aData
    LOCAL nCounter  := 0
@@ -115,30 +116,30 @@ FUNCTION GetSourceFiles( lSubDir, lGcc, cOs )
          nPadr := 12 // maximum Clipper/DOS source file name length with extension.
          // if this lenght is greater than 12, then reset nPadr.
          FOR y := 1 TO nDataLen
-             nPadr := Max( AT('.prg', Lower( aData[ y, 1 ] ) )+3 , nPadr )
-             nPadr := Max( AT('.c',   Lower( aData[ y, 1 ] ) )+1 , nPadr )
-             nPadr := Max( AT('.cpp', Lower( aData[ y, 1 ] ) )+3 , nPadr )
+             nPadr := Max( AT(".prg", Lower( aData[ y, 1 ] ) )+3 , nPadr )
+             nPadr := Max( AT(".c",   Lower( aData[ y, 1 ] ) )+1 , nPadr )
+             nPadr := Max( AT(".cpp", Lower( aData[ y, 1 ] ) )+3 , nPadr )
          NEXT
 
          FOR y := 1 TO nDataLen
 
-            IF AT( '.PRG', UPPER( aData[ y, 1 ] ) ) > 0 .OR. AT( '.c', Lower( aData[ y, 1 ] ) ) > 0 .OR. AT( '.cpp', Lower( aData[ y, 1 ] ) ) > 0
+            IF AT( ".prg", Lower( aData[ y, 1 ] ) ) > 0 .OR. AT( ".c", Lower( aData[ y, 1 ] ) ) > 0 .OR. AT( ".cpp", Lower( aData[ y, 1 ] ) ) > 0
 
                IF lSubDir
 
                   nLen := AT( " ", aData[ y, 1 ] ) + 1
 
-                  AADD( aRet, STRTRAN( aStru[ nCounter ], cDir, '' ) +;
+                  AADD( aRet, STRTRAN( aStru[ nCounter ], cDir, "" ) +;
                         PadR(aData[ y,1 ] ,nPadr) + ;         // prg name
-                        STR(aData[ y, 2 ] , 8 ) + '  ' + ;    // prg size
-                        DTOC(aData[ y, 3 ] ) + '  ' + ;       // prg date
+                        STR(aData[ y, 2 ] , 8 ) + "  " + ;    // prg size
+                        DTOC(aData[ y, 3 ] ) + "  " + ;       // prg date
                         aData[ y, 4 ] )                       // prg time
 
-               ELSEIF ! lSubDir .AND. AT( IIF( lLinux, "/", "\" ), STRTRAN( aStru[ nCounter ], cDir, '' ) ) == 0
+               ELSEIF ! lSubDir .AND. AT( IIF( lLinux, "/", "\" ), STRTRAN( aStru[ nCounter ], cDir, "" ) ) == 0
 
                   AADD( aRet, PadR(aData[ y, 1 ],nPadr) + ;   // prg name
-                        STR( aData[ y, 2 ], 8 ) + '  ' + ;    // prg size
-                        DTOC( aData[ y, 3 ] ) + '  ' + ;      // prg date
+                        STR( aData[ y, 2 ], 8 ) + "  " + ;    // prg size
+                        DTOC( aData[ y, 3 ] ) + "  " + ;      // prg date
                         aData[ y, 4 ] )                       // prg time
 
                ENDIF
@@ -154,8 +155,8 @@ FUNCTION GetSourceFiles( lSubDir, lGcc, cOs )
    //     For nCounter := 1 To Len( aRet )
    FOR EACH cFile IN aRet
 
-      xItem := SUBSTR( cFile, RAT( IIF( lLinux, "/", '\' ), cFile ) + 1 )
-      nPos  := ASCAN( aStru, { | x | x := SUBSTR( x, RAT( IIF( lLinux, "/", '\' ), x ) + 1 ), LEFT( x, AT( ".", x ) ) == LEFT( xitem, AT( ".", xitem ) ) } )
+      xItem := SUBSTR( cFile, RAT( IIF( lLinux, "/", "\" ), cFile ) + 1 )
+      nPos  := ASCAN( aStru, { | x | x := SUBSTR( x, RAT( IIF( lLinux, "/", "\" ), x ) + 1 ), LEFT( x, AT( ".", x ) ) == LEFT( xitem, AT( ".", xitem ) ) } )
 
       IF nPos > 0
          ADEL( aStru, nPos )
@@ -166,9 +167,9 @@ FUNCTION GetSourceFiles( lSubDir, lGcc, cOs )
 
    FOR EACH cFile IN aStru
 
-      HB_FNAMESPLIT( LEFT( cFile, AT( ' ', cFile ) - 1 ), @cPath, @cItem, @cExt, @cDrive )
+      HB_FNAMESPLIT( LEFT( cFile, AT( " ", cFile ) - 1 ), @cPath, @cItem, @cExt, @cDrive )
 
-      IF ( cExt == '.C' ) .OR. ( cExt == ".c" ) .OR. ( cExt == '.CPP' ) .OR. ( cExt == ".cpp" )
+      IF ( cExt == ".C" ) .OR. ( cExt == ".c" ) .OR. ( cExt == ".CPP" ) .OR. ( cExt == ".cpp" )
          AADD( aRet, cFile )
       ENDIF
 
@@ -188,25 +189,25 @@ FUNCTION ExtenPrg( cExt, nType )
    IF nPos > 0
       SWITCH nType
       CASE 1
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'prg' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "prg" )
          EXIT
       CASE  2
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'prG' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "prG" )
          EXIT
       CASE  3
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'pRg' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "pRg" )
          EXIT
       CASE  4
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'Prg' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "Prg" )
          EXIT
       CASE  5
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'PRg' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "PRg" )
          EXIT
       CASE  6
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'PrG' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "PrG" )
          EXIT
       CASE  7
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'PRG' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "PRG" )
          EXIT
       END
    ENDIF
@@ -218,24 +219,24 @@ STATIC FUNCTION GetDirs( cPattern, lGcc )
 *----------------------------------------
 
    LOCAL aDir   := {}
-   LOCAL lLinux := AT( 'linux', LOWER( OS() ) ) > 0 .OR. lGcc
+   LOCAL lLinux := AT( "linux", LOWER( OS() ) ) > 0 .OR. lGcc
 
    AEVAL( DIRECTORY( cPattern + IIF( lLinux, "*", "*.*" ), "D" ), ;
-          { | xItem | IIF( xItem[ 5 ] = "D" .AND. ;
-          ( xItem[ 1 ] != "." .AND. xItem[ 1 ] != ".." ), ;
-          AADD( aDir, cPattern + xItem[ 1 ] + IIF( lLinux, "/", '\' ) ), ;
+          { | xItem | IIF( xItem[ F_ATTR ] == "D" .AND. ;
+          ( !( xItem[ F_NAME ] == "." ) .AND. !( xItem[ F_NAME ] == ".." ) ), ;
+          AADD( aDir, cPattern + xItem[ F_NAME ] + IIF( lLinux, "/", "\" ) ), ;
           ) } )
 
-RETURN ( aDir )
+RETURN aDir
 
 *-----------------------
 FUNCTION GetHarbourDir()
 *-----------------------
 
-    LOCAL cPath   := ''
+    LOCAL cPath   := ""
     LOCAL cEnv    := GETE( "PATH" )
     LOCAL lLinux  := "LINUX" $ upper(OS())
-    LOCAL lUnix   := If( "UNIX" $ upper(OS()) .OR. "HP-UX" $ upper(OS()), .T., .F. )
+    LOCAL lUnix   := iif( "UNIX" $ upper(OS()) .OR. "HP-UX" $ upper(OS()), .T., .F. )
     LOCAL aEnv     
     LOCAL cCurEnv := ""
     LOCAL cBar    := iif( lLinux .or. lUnix, "/" , "\" )
@@ -269,16 +270,16 @@ RETURN cPath
 FUNCTION GetBccDir()
 *-------------------
 
-   LOCAL cPath   := ''
+   LOCAL cPath   := ""
    LOCAL cEnv    := GETE( "PATH" )
    LOCAL aEnv    := HB_ATokens( cEnv, ";" )
    LOCAL cCurEnv := ""
 
    FOR EACH cCurEnv IN aEnv
 
-      IF FILE( cCurEnv + '\bcc32.exe' ) .OR. FILE( Lower( cCurEnv ) + '\bcc32.exe' )
+      IF FILE( cCurEnv + "\bcc32.exe" ) .OR. FILE( Lower( cCurEnv ) + "\bcc32.exe" )
          cPath := cCurEnv
-         cPath := LEFT( cPath, RAT( '\', cPath ) - 1 )
+         cPath := LEFT( cPath, RAT( "\", cPath ) - 1 )
          EXIT
       ENDIF
 
@@ -290,16 +291,16 @@ RETURN cPath
 FUNCTION GetVccDir()
 *-------------------
 
-   LOCAL cPath   := ''
+   LOCAL cPath   := ""
    LOCAL cEnv    := GETE( "PATH" )
    LOCAL aEnv    := HB_ATokens( cEnv, ";" )
    LOCAL cCurEnv := ""
 
    FOR EACH cCurEnv IN aEnv
 
-      IF FILE( cCurEnv + '\cl.exe' ) .OR. FILE( Lower( cCurEnv ) + '\cl.exe' )
+      IF FILE( cCurEnv + "\cl.exe" ) .OR. FILE( Lower( cCurEnv ) + "\cl.exe" )
          cPath := cCurEnv
-         cPath := LEFT( cPath, RAT( '\', cPath ) - 1 )
+         cPath := LEFT( cPath, RAT( "\", cPath ) - 1 )
          EXIT
       ENDIF
 
@@ -311,16 +312,16 @@ RETURN cPath
 FUNCTION GetPoccDir()
 *--------------------
 
-   LOCAL cPath   := ''
+   LOCAL cPath   := ""
    LOCAL cEnv    := GETE( "PATH" )
    LOCAL aEnv    := HB_ATokens( cEnv, ";" )
    LOCAL cCurEnv := ""
 
    FOR EACH cCurEnv IN aEnv
 
-      IF FILE( cCurEnv + '\pocc.exe' ) .OR. FILE( Lower( cCurEnv ) + '\pocc.exe' )
+      IF FILE( cCurEnv + "\pocc.exe" ) .OR. FILE( Lower( cCurEnv ) + "\pocc.exe" )
          cPath := cCurEnv
-         cPath := LEFT( cPath, RAT( '\', cPath ) - 1 )
+         cPath := LEFT( cPath, RAT( "\", cPath ) - 1 )
          EXIT
       ENDIF
 
@@ -332,7 +333,7 @@ RETURN cPath
 FUNCTION Exten( cExt, nType )
 *----------------------------
 
-   LOCAL aExt    := { 'C', 'c', "CPP", "cpp" }
+   LOCAL aExt    := { "C", "c", "CPP", "cpp" }
    LOCAL nPos
    LOCAL cTemp   := ""
 
@@ -341,11 +342,11 @@ FUNCTION Exten( cExt, nType )
 
       SWITCH  nType
       CASE 1
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'o' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "o" )
          EXIT
 
       CASE 2
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'obj' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "obj" )
          EXIT
 
       END
@@ -372,8 +373,8 @@ FUNCTION GetSourceDirMacros()
 *----------------------------
 
    LOCAL aDirs
-   LOCAL lLinux    := AT( 'linux', LOWER( OS() ) ) > 0
-   LOCAL cDir      := IIF( lLinux, '/' + CURDIR() + '/', '\' + CURDIR() + '\' )
+   LOCAL lLinux    := AT( "linux", LOWER( OS() ) ) > 0
+   LOCAL cDir      := IIF( lLinux, "/" + CURDIR() + "/", "\" + CURDIR() + "\" )
    LOCAL aStru     := { cDir }
 
    LOCAL nCounter  := 0
@@ -388,7 +389,7 @@ FUNCTION GetSourceDirMacros()
    ENDDO
 
    FOR nCounter := 1 TO LEN( aStru )
-      AADD( aMacros, { "SRC" + STRZERO( nCounter, 2, 0 ), STRTRAN( aStru[ nCounter ], cDir, '' ), .f. } )
+      AADD( aMacros, { "SRC" + STRZERO( nCounter, 2, 0 ), STRTRAN( aStru[ nCounter ], cDir, "" ), .f. } )
    NEXT
 
 RETURN aMacros
@@ -399,7 +400,7 @@ FUNCTION HbMake_FileDate( cFileName )
 
    LOCAL aFiles := DIRECTORY( cFileName )
 
-RETURN IIF( LEN( aFiles ) == 1, aFiles[ 1, 3 ], CTOD( '' ) )
+RETURN IIF( LEN( aFiles ) == 1, aFiles[ 1, 3 ], CTOD( "" ) )
 
 *------------------------------------
 FUNCTION HbMake_FileTime( cFileName )
@@ -407,12 +408,12 @@ FUNCTION HbMake_FileTime( cFileName )
 
    LOCAL aFiles := DIRECTORY( cFileName )
 
-RETURN IIF( LEN( aFiles ) == 1, aFiles[ 1, 4 ], '' )
+RETURN IIF( LEN( aFiles ) == 1, aFiles[ 1, 4 ], "" )
 
 *------------------------------
 FUNCTION TD2JUL( CTIME, DDATE )
 *------------------------------
-RETURN DDATE - CTOD( '01/01/1900' ) + ( PRB_INT( TTOS( CTIME ) / 100000,, 5 ) )
+RETURN DDATE - CTOD( "01/01/1900" ) + ( PRB_INT( TTOS( CTIME ) / 100000,, 5 ) )
 
 *---------------------
 STATIC FUNCTION TTOS( CTIME )
@@ -441,7 +442,7 @@ FUNCTION PRB_INT( SOMENUMBER, length, NUM_DECIMALS )
 
    SOMESTRING := ALLTRIM( STR( SOMENUMBER ) )
 
-   dotat := AT( '.', somestring )
+   dotat := AT( ".", somestring )
 
    DO CASE
       CASE NUM_DECIMALS == 0
@@ -457,7 +458,7 @@ FUNCTION PRB_INT( SOMENUMBER, length, NUM_DECIMALS )
    ENDCASE
 
    IF NEGATIVE
-      SOMESTRING := '-' + SOMESTRING
+      SOMESTRING := "-" + SOMESTRING
    ENDIF
 
 RETURN VAL( SOMESTRING )
@@ -466,18 +467,18 @@ RETURN VAL( SOMESTRING )
 FUNCTION Exte( cExt, nType )
 *---------------------------
 
-   LOCAL aExt  := { 'prg', 'prG', 'pRg', 'Prg', 'PRg', 'PrG', 'PRG' }
+   LOCAL aExt  := { "prg", "prG", "pRg", "Prg", "PRg", "PrG", "PRG" }
    LOCAL nPos
    LOCAL cTemp := ""
 
    nPos := ASCAN( aExt, { | a | a == cExt } )
    IF nPos > 0
       IF nType == 1
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'c' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "c" )
       ELSEIF nType == 2
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'obj' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "obj" )
       ELSEIF nType == 3
-         cTemp := STRTRAN( cExt, aExt[ nPos ], 'o' )
+         cTemp := STRTRAN( cExt, aExt[ nPos ], "o" )
       ENDIF
 
    ENDIF
@@ -491,11 +492,11 @@ PROCEDURE ATTENTION( CSTRING, NLINENUM, CCOLOR )
    LOCAL COLDCOLOR
 
    DEFAULT NLINENUM TO 24
-   DEFAULT CCOLOR TO 'GR+/R'
+   DEFAULT CCOLOR TO "GR+/R"
 
    COLDCOLOR := SETCOLOR( CCOLOR )
 
-   CSTRING := '  ' + ALLTRIM( CSTRING ) + '  '
+   CSTRING := "  " + ALLTRIM( CSTRING ) + "  "
 
    DEVPOS( NLINENUM, c( CSTRING ) )
 
@@ -517,8 +518,8 @@ FUNCTION ReadLN( lEof )
 
    LOCAL cBuffer := ""
    cBuffer := FT_FREADLN()
-   cBuffer := STRTRAN( cBuffer, CHR( 13 ), '' )
-   cBuffer := STRTRAN( cBuffer, CHR( 10 ), '' )
+   cBuffer := STRTRAN( cBuffer, CHR( 13 ), "" )
+   cBuffer := STRTRAN( cBuffer, CHR( 10 ), "" )
    FT_FSKIP( 1 )
    lEof := ft_FEOF()
 
@@ -537,41 +538,41 @@ FUNCTION GetInstaledLibs( clibs, lGcc )
    LOCAL aDefLib := {}
 
 
-   aadd(aDefLib,'ace32'+ cSuffix)
-   aadd(aDefLib,'hbcpage'+ cSuffix)
-   aadd(aDefLib,'hbcommon'+ cSuffix)
-   aadd(aDefLib,'hbct'+cSuffix)
-   aadd(aDefLib,'rdddbt'+ cSuffix)
-   aadd(aDefLib,'rddcdx'+ cSuffix)
-   aadd(aDefLib,'rddfpt'+ cSuffix)
-   aadd(aDefLib,'rddntx'+ cSuffix)
-   aadd(aDefLib,'hbdebug'+ cSuffix)
-   aadd(aDefLib,'gtcgi'+ cSuffix)
-   aadd(aDefLib,'gtdos'+ cSuffix)
-   aadd(aDefLib,'gtpca'+ cSuffix)
-   aadd(aDefLib,'gtsln'+ cSuffix)
-   aadd(aDefLib,'gtstd'+ cSuffix)
-   aadd(aDefLib,'gttrm'+ cSuffix)
-   aadd(aDefLib,'gtwin'+ cSuffix)
-   aadd(aDefLib,'gtwvt'+ cSuffix)
-   aadd(aDefLib,'hbodbc'+ cSuffix)
-   aadd(aDefLib,'hbpgsql'+ cSuffix)
-   aadd(aDefLib,'hblang'+ cSuffix)
-   aadd(aDefLib,'hbmisc'+ cSuffix)
-   aadd(aDefLib,'hbnf'+ cSuffix)
-   aadd(aDefLib,'hbgt'+ cSuffix)
-   aadd(aDefLib,'hbmysql'+ cSuffix)
-   aadd(aDefLib,'hbmacro'+ cSuffix)
-   aadd(aDefLib,'hbnulrdd'+ cSuffix)
-   aadd(aDefLib,'hbpp'+ cSuffix)
-   aadd(aDefLib,'hbrdd'+ cSuffix)
-   aadd(aDefLib,'rddads'+ cSuffix)
-   aadd(aDefLib,'hbrtl'+ cSuffix)
-   aadd(aDefLib,'hbclipsm'+ cSuffix)
-   aadd(aDefLib,'hbtip'+cSuffix)
-   aadd(aDefLib,'hbw32'+cSuffix)
-   aadd(aDefLib,'hbvm'+ cSuffix)
-   aadd(aDefLib,'hbziparch'+ cSuffix)
+   aadd(aDefLib,"ace32"+ cSuffix)
+   aadd(aDefLib,"hbcpage"+ cSuffix)
+   aadd(aDefLib,"hbcommon"+ cSuffix)
+   aadd(aDefLib,"hbct"+cSuffix)
+   aadd(aDefLib,"rdddbt"+ cSuffix)
+   aadd(aDefLib,"rddcdx"+ cSuffix)
+   aadd(aDefLib,"rddfpt"+ cSuffix)
+   aadd(aDefLib,"rddntx"+ cSuffix)
+   aadd(aDefLib,"hbdebug"+ cSuffix)
+   aadd(aDefLib,"gtcgi"+ cSuffix)
+   aadd(aDefLib,"gtdos"+ cSuffix)
+   aadd(aDefLib,"gtpca"+ cSuffix)
+   aadd(aDefLib,"gtsln"+ cSuffix)
+   aadd(aDefLib,"gtstd"+ cSuffix)
+   aadd(aDefLib,"gttrm"+ cSuffix)
+   aadd(aDefLib,"gtwin"+ cSuffix)
+   aadd(aDefLib,"gtwvt"+ cSuffix)
+   aadd(aDefLib,"hbodbc"+ cSuffix)
+   aadd(aDefLib,"hbpgsql"+ cSuffix)
+   aadd(aDefLib,"hblang"+ cSuffix)
+   aadd(aDefLib,"hbmisc"+ cSuffix)
+   aadd(aDefLib,"hbnf"+ cSuffix)
+   aadd(aDefLib,"hbgt"+ cSuffix)
+   aadd(aDefLib,"hbmysql"+ cSuffix)
+   aadd(aDefLib,"hbmacro"+ cSuffix)
+   aadd(aDefLib,"hbnulrdd"+ cSuffix)
+   aadd(aDefLib,"hbpp"+ cSuffix)
+   aadd(aDefLib,"hbrdd"+ cSuffix)
+   aadd(aDefLib,"rddads"+ cSuffix)
+   aadd(aDefLib,"hbrtl"+ cSuffix)
+   aadd(aDefLib,"hbclipsm"+ cSuffix)
+   aadd(aDefLib,"hbtip"+cSuffix)
+   aadd(aDefLib,"hbw32"+cSuffix)
+   aadd(aDefLib,"hbvm"+ cSuffix)
+   aadd(aDefLib,"hbziparch"+ cSuffix)
 
 
    IF lGcc
@@ -595,20 +596,20 @@ RETURN aReturnLibs
 FUNCTION GetLibs( lGcc, cDir )
 *-----------------------------
 
-   LOCAL lLinux        := AT( 'linux', LOWER( OS() ) ) > 0
+   LOCAL lLinux        := AT( "linux", LOWER( OS() ) ) > 0
    LOCAL cEnv          := GETENV( "HB_LIB_INSTALL" )
-   LOCAL aInstaledLibs := GetInstaledLibs( IIF( ! lLinux, IIF( ! lGcc, cDir + "\*.lib", cDir + "\*.a" ),  '/usr/lib/harbour/*.a' ), lGcc )
+   LOCAL aInstaledLibs := GetInstaledLibs( IIF( ! lLinux, IIF( ! lGcc, cDir + "\*.lib", cDir + "\*.a" ),  "/usr/lib/harbour/*.a" ), lGcc )
    LOCAL cExt := iif(lGcc,".a",".lib")
 
                             /* 1234567890123456789 */
-   LOCAL aLibsDesc     := { { "Harbour hbmisc      lib - hbmisc" + cExt                         , 'hbmisc' + cExt },;
-                            { "Harbour NanFor Lib  lib - hbnf" + cExt                           , 'hbnf' + cExt },;
-                            { "Harbour GT Lib      lib - hbgt"+cExt                             , 'hbgt' + cExt },;
-                            { "Harbour ZipArch     lib - hbziparch"+cExt                        , 'hbziparch' + cExt + iif( lLinux, ' stdc++.a z.a', ' ' ) },;
-                            { "Harbour ole (old)   lib - hbole"+ cExt                           , 'hbole' + cExt + ' ole2' + cExt },;
-                            { "Harbour MySQL       lib - hbmysql" + cExt                        , 'hbmysql' + cExt },;
-                            { "Harbour PostgreSQL  lib - hbpgsql"+cExt                          , 'hbpgsql' + cExt },;
-                            { "Harbour samples     lib - hbclipsm"+cExt                         , 'hbclipsm' + cExt }  }
+   LOCAL aLibsDesc     := { { "Harbour hbmisc      lib - hbmisc" + cExt                         , "hbmisc" + cExt },;
+                            { "Harbour NanFor Lib  lib - hbnf" + cExt                           , "hbnf" + cExt },;
+                            { "Harbour GT Lib      lib - hbgt"+cExt                             , "hbgt" + cExt },;
+                            { "Harbour ZipArch     lib - hbziparch"+cExt                        , "hbziparch" + cExt + iif( lLinux, " stdc++.a z.a", " " ) },;
+                            { "Harbour ole (old)   lib - hbole"+ cExt                           , "hbole" + cExt + " ole2" + cExt },;
+                            { "Harbour MySQL       lib - hbmysql" + cExt                        , "hbmysql" + cExt },;
+                            { "Harbour PostgreSQL  lib - hbpgsql"+cExt                          , "hbpgsql" + cExt },;
+                            { "Harbour samples     lib - hbclipsm"+cExt                         , "hbclipsm" + cExt }  }
 
 
    AEVAL( aInstaledLibs, { | x | AAdd( aLibsDesc, { padr("Harbour contrib",19)+" lib - " + padr(x,15), x } ) } )
@@ -654,7 +655,7 @@ FUNCTION ListAsArray2( cList, cDelimiter )
    LOCAL nPos
    LOCAL aList  := {}              // Define an empty array
 
-   IF cDelimiter = NIL
+   IF cDelimiter == NIL
       cDelimiter := ","
    ENDIF
    //
@@ -674,11 +675,11 @@ FUNCTION CreateLink()
     LOCAL nHandle := FCreate("hbtemp.c")
     
     FWrite( nHandle, '#include "hbapi.h"' + HB_OsNewLine())
-    FWrite( nHandle, 'extern HB_FUNC( HB_GT_CRS );' + HB_OsNewLine())
-    FWrite( nHandle, 'void hb_lnk_ForceLink_build( void )' + HB_OsNewLine())
-    FWrite( nHandle, '{' + HB_OsNewLine())
-    FWrite( nHandle, '   HB_FUNCNAME( HB_GT_CRS )();' + HB_OsNewLine())
-    FWrite( nHandle, '}' + HB_OsNewLine())
+    FWrite( nHandle, "extern HB_FUNC( HB_GT_CRS );" + HB_OsNewLine())
+    FWrite( nHandle, "void hb_lnk_ForceLink_build( void )" + HB_OsNewLine())
+    FWrite( nHandle, "{" + HB_OsNewLine())
+    FWrite( nHandle, "   HB_FUNCNAME( HB_GT_CRS )();" + HB_OsNewLine())
+    FWrite( nHandle, "}" + HB_OsNewLine())
     FClose( nHandle )
     
 

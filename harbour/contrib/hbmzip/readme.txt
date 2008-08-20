@@ -72,7 +72,7 @@ HB_UnzipFileInfo( hUnzip, @cZipName, @dDate, @cTime,
 HB_UnzipFileOpen( hUnzip, [ cPassword ] ) --> nError
 HB_UnzipFileRead( hUnzip, @cBuf [, nLen ] ) --> nRead
 HB_UnzipFileClose( hUnzip ) --> nError
-HB_UnzipExtractCurrentFile( hZip, [ cFileName ], [ cPassword ] ) --> nError
+HB_UnzipExtractCurrentFile( hUnzip, [ cFileName ], [ cPassword ] ) --> nError
 
 
 HB_ZipDeleteFile( cZipFile, cFileMask ) --> nError

@@ -72,7 +72,7 @@ DATA  aObjs          Init  {}
 DATA  aObjsc         Init  {}
 DATA  aRes           Init  {}
 DATA  nLinkHandle 
-DATA  cLinkcomm      Init  ''
+DATA  cLinkcomm      Init  ""
 DATA  lCompress      Init .F.
 DATA  lForce         Init .F.
 DATA  lLinux         Init .F.
@@ -165,7 +165,7 @@ METHOD ReadMakefile(cFile) CLASS THbMake
     LOCAL cCom        := "#COMMANDS"
     LOCAL cBuild      := "#BUILD"
     LOCAL cTemp       := ""
-    LOCAL cTemp1      := ''
+    LOCAL cTemp1      := ""
     LOCAL aTemp       := {}
     LOCAL lMacrosec   := .f.
     LOCAL lBuildSec   := .f.
@@ -178,7 +178,7 @@ METHOD ReadMakefile(cFile) CLASS THbMake
     Local cObjitem
     Local cRes        := ""
     Local cItem
-    LOCAL lLinux      := At( 'linux', Lower( Os() ) ) > 0
+    LOCAL lLinux      := At( "linux", Lower( Os() ) ) > 0
     Local lExtended   := .T., szProject
     LOCAL lPrgObjRule := .F.
 
@@ -235,7 +235,7 @@ METHOD ReadMakefile(cFile) CLASS THbMake
 
         IF lmacrosec
 
-            IF Alltrim( Left( ctemp, 7 ) ) <> '!ifndef' .and. Alltrim( Left( ctemp, 6 ) ) <> "!endif" .and. Alltrim( Left( ctemp, 7 ) ) <> '!iffile' .and. Alltrim( Left( ctemp, 7 ) ) <> '!stdout' .and. Alltrim( Left( ctemp, 6 ) ) <> '!ifdef'
+            IF Alltrim( Left( ctemp, 7 ) ) <> "!ifndef" .and. Alltrim( Left( ctemp, 6 ) ) <> "!endif" .and. Alltrim( Left( ctemp, 7 ) ) <> "!iffile" .and. Alltrim( Left( ctemp, 7 ) ) <> "!stdout" .and. Alltrim( Left( ctemp, 6 ) ) <> "!ifdef"
 
                 IF Len( aTemp ) > 1
 
@@ -545,8 +545,8 @@ METHOD ReplaceMacros( cMacros ) CLass THBMAKE
 
     aTempMacros := Listasarray2( cMacros, " " )
 
-    AEval( aTempMacros, { | xMacro | If( At( "$", xMacro ) > 0, ;
-                          IF( At( ";", xMacro ) > 0, ( aLocalMacros := Listasarray2( xMacro, ";" ), ;
+    AEval( aTempMacros, { | xMacro | iif( At( "$", xMacro ) > 0, ;
+                          iif( At( ";", xMacro ) > 0, ( aLocalMacros := Listasarray2( xMacro, ";" ), ;
                           Aeval( aLocalMacros, { | x | ::FindMacro( x, @cMacros ) } ) ), ;
                           ::FindMacro( xMacro, @cMacros ) ), ) } )
 
@@ -576,7 +576,7 @@ METHOD FindMacro( cMacro, cRead ) CLASS THBMAKE
 
     nPos := Ascan( ::aMacros, { | x | "$(" + Alltrim( x[ 1 ] ) + ")" == cMacro } )
 
-    IF nPos = 0
+    IF nPos == 0
 
         cTemp := Strtran( cMacro, "$(", "" )
         cTemp := Strtran( cTemp, ")", "" )

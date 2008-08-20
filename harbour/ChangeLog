@@ -8,6 +8,40 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-20 10:09 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/hbmzip/hbmzip.c
+   * contrib/hbmzip/readme.txt
+     ! Typos.
+
+   * utils/hbdoc/rtf.prg
+   * utils/hbdoc/fclass1.prg
+   * utils/hbdoc/genos2.prg
+   * utils/hbdoc/genng.prg
+   * utils/hbdoc/genasc.prg
+   * utils/hbdoc/genchm.prg
+   * utils/hbdoc/os2.prg
+   * utils/hbdoc/html.prg
+   * utils/hbdoc/genhpc.prg
+   * utils/hbdoc/ng.prg
+   * utils/hbdoc/ffile1.prg
+   * utils/hbdoc/ft_funcs.prg
+   * utils/hbdoc/hbdoc.prg
+   * utils/hbdoc/troff.prg
+   * utils/hbdoc/genhtm.prg
+   * utils/hbdoc/genpdf1.prg
+   * utils/hbdoc/gentrf.prg
+   * utils/hbdoc/genrtf.prg
+   * utils/hbmake/fclass1.prg
+   * utils/hbmake/tmake.prg
+   * utils/hbmake/ffile1.prg
+   * utils/hbmake/ft_funcs.prg
+   * utils/hbmake/pickarry.prg
+   * utils/hbmake/pickfile.prg
+   * utils/hbmake/hbmutils.prg
+   * utils/hbmake/hbmake.prg
+     ! Fixed problems reported by Bill Robertson. (Thanks)
+     * Some general code cleanups.
+
 2008-08-19 17:17 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * doc/en/string.txt
    * doc/en/rddord.txt

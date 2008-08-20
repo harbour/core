@@ -908,7 +908,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char* szFileName, c
    ulLen = strlen( szName );
 
    /* Test shows that files in subfolders can be stored to zip file without 
-      explicitly adding folder. So, let's create a requred path */
+      explicitly adding folder. So, let's create a required path */
 
    ulPos = 1;
    while( ulPos < ulLen )

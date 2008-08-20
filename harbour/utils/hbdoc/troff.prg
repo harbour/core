@@ -52,7 +52,7 @@
 
 #define CRLF HB_OSNewLine()
 
-#include 'hbclass.ch'
+#include "hbclass.ch"
 
 *+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
 *+
@@ -83,29 +83,29 @@ RETURN Self
 
 METHOD WriteTitle( cTopic, cTitle ) CLASS TTROFF
 
-   LOCAL cWriteTitle := '.br' + CRLF + ;
-           '.ta' + CRLF + ;
-           '.in 0.08i' + CRLF + ;
-           '.ps -3' + CRLF + ;
-           '.vs -3' + CRLF + ;
-           '.sp 2' + CRLF + ;
-           '\fB' + cTitle + CRLF
-   LOCAL cWriteTopic := '.de }n' + CRLF + ;
-           '.bp' + CRLF + ;
-           '.sp .5i' + CRLF + ;
-           '..' + CRLF + ;
-           '.wh -.8i }n' + CRLF + ;
-           '.sp .5i' + CRLF + ;
-           '.po -.4i' + CRLF + ;
-           '.ll 7.5i' + CRLF + ;
-           '.ps 9' + CRLF + ;
-           '.vs 9' + CRLF + ;
-           '.in 0i' + CRLF + ;
-           '.ta 1.63265i' + CRLF + ;
-           '.sp 2' + CRLF + ;
-           '.ne 20' + CRLF + ;
-           '.ps +3' + CRLF + ;
-           '.vs +3' + CRLF + ;
+   LOCAL cWriteTitle := ".br" + CRLF + ;
+           ".ta" + CRLF + ;
+           ".in 0.08i" + CRLF + ;
+           ".ps -3" + CRLF + ;
+           ".vs -3" + CRLF + ;
+           ".sp 2" + CRLF + ;
+           "\fB" + cTitle + CRLF
+   LOCAL cWriteTopic := ".de }n" + CRLF + ;
+           ".bp" + CRLF + ;
+           ".sp .5i" + CRLF + ;
+           ".." + CRLF + ;
+           ".wh -.8i }n" + CRLF + ;
+           ".sp .5i" + CRLF + ;
+           ".po -.4i" + CRLF + ;
+           ".ll 7.5i" + CRLF + ;
+           ".ps 9" + CRLF + ;
+           ".vs 9" + CRLF + ;
+           ".in 0i" + CRLF + ;
+           ".ta 1.63265i" + CRLF + ;
+           ".sp 2" + CRLF + ;
+           ".ne 20" + CRLF + ;
+           ".ps +3" + CRLF + ;
+           ".vs +3" + CRLF + ;
            cTopic + CRLF
    LOCAL cTemp
    LOCAL Npos
@@ -117,10 +117,10 @@ METHOD WriteTitle( cTopic, cTitle ) CLASS TTROFF
       cTemp := SUBSTR( cTopic, 21 )
    ENDIF
    cWriteTemp := cTemp + CRLF + ;
-                 '.in 0i' + CRLF + ;
-                 '.br' + CRLF + ;
+                 ".in 0i" + CRLF + ;
+                 ".br" + CRLF + ;
                  "\l'6.24i" + CRLF + ;
-                 '.br' + CRLF
+                 ".br" + CRLF
    FWRITE( Self:nHandle, cWriteTopic )
    FWRITE( Self:nHandle, cWriteTitle )
    FWRITE( Self:nHandle, cWriteTemp )
@@ -138,11 +138,11 @@ RETURN Self
 
 METHOD WriteParBold( cPar ) CLASS TTROFF
 
-   LOCAL cWriteBold := '.sp' + CRLF + ;
-           '.in 0.08i' + CRLF + ;
-           '\fB' + cPar + CRLF + ;
-           '.sp' + CRLF + ;
-           '.in 0.4i' + CRLF
+   LOCAL cWriteBold := ".sp" + CRLF + ;
+           ".in 0.08i" + CRLF + ;
+           "\fB" + cPar + CRLF + ;
+           ".sp" + CRLF + ;
+           ".in 0.4i" + CRLF
    FWRITE( Self:nHandle, cWriteBold )
 RETURN Self
 
