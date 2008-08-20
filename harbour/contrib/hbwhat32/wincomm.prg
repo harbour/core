@@ -6,9 +6,9 @@
 
 // common controls and common dialogs
 
-#Include "winuser.ch"
-#include 'commctrl.ch'
-#include 'what32.ch'
+#include "winuser.ch"
+#include "commctrl.ch"
+#include "what32.ch"
 
 
 *------------------------------------------------------------------------------

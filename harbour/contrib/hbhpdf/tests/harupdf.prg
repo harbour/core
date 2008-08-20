@@ -59,23 +59,23 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
-#include 'harupdf.ch'
+#include "harupdf.ch"
 #ifdef __oHARBOUR__
-#include 'xhb.ch'
+#include "xhb.ch"
 #endif
 //----------------------------------------------------------------------//
 
 Function Main( cFileToSave )
 
    if empty( cFileToSave )
-      cFileToSave := 'myharu.pdf'
+      cFileToSave := "myharu.pdf"
    endif
 
    if DesignHaruPDF( cFileToSave )
-      Alert( 'PDF File <'+cFileToSave+'> is Created!' )
+      Alert( "PDF File <"+cFileToSave+"> is Created!" )
 
    else
-      Alert( 'Some problems in creating the PDF!' )
+      Alert( "Some problems in creating the PDF!" )
 
    endif
 
@@ -85,7 +85,7 @@ Function Main( cFileToSave )
 
 Function DesignHaruPDF( cFileToSave )
    Local i, page, height, width, def_font, tw,  samp_text, font
-   Local page_title := 'Vouch'
+   Local page_title := "Vouch"
    Local font_list  := { ;
                         "Courier",                  ;
                         "Courier-Bold",             ;
@@ -106,7 +106,7 @@ Function DesignHaruPDF( cFileToSave )
    Local pdf := HPDF_New()
 
    if pdf == NIL
-      alert( ' Pdf could not been created!' )
+      alert( " Pdf could not been created!" )
       return nil
    endif
 
@@ -116,7 +116,7 @@ Function DesignHaruPDF( cFileToSave )
    /*
    // Passwords and Permissions
    //
-   HPDF_SetPassword(pdf, 'owner','user' )
+   HPDF_SetPassword(pdf, "owner","user" )
    HPDF_SetPermission(pdf, HPDF_ENABLE_READ)  // cannot print
    HPDF_SetEncryptionMode(pdf, HPDF_ENCRYPT_R3, 16)
    */
@@ -672,7 +672,7 @@ Static Function PrintText( page)
    static no := 0
    no++
 
-   buf := ltrim( str( no ) )+ ' '+ltrim(str(pos[1]))+' '+ltrim(str(pos[2]))
+   buf := ltrim( str( no ) )+ " "+ltrim(str(pos[1]))+" "+ltrim(str(pos[2]))
 
    HPDF_Page_ShowText(page, buf)
    Return nil

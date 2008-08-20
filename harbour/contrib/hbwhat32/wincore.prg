@@ -23,8 +23,8 @@
 
 #include "common.ch"
 
-#Include "winuser.ch"
-#Include "hboo.ch"
+#include "winuser.ch"
+#include "hboo.ch"
 
 //PUBLIC lPrevInstance
 //PUBLIC hThisInstance
@@ -42,7 +42,7 @@ Static aProc       // array of possible windows procedures (10)
 INIT PROCEDURE _CheckMultiInst
 
 
-   lPrevInstance:=(empty(CreateMutex( , .T., strtran(GetModuleFileName(),'\','_') )) ;
+   lPrevInstance:=(empty(CreateMutex( , .T., strtran(GetModuleFileName(),"\","_") )) ;
                    .or. (GetLastError() > 0) )
 
    hThisInstance:=_getinstance()

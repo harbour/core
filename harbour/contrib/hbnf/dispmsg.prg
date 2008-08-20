@@ -156,8 +156,8 @@ PROCEDURE Main( cCmdLine )
    cErrE  := IIF( lColor, "N/W" , "N/W"  )
 
    cDosScrn := SAVESCREEN()
-   nDosRow=ROW()
-   nDosCol=COL()
+   nDosRow := ROW()
+   nDosCol := COL()
    SETCOLOR( "W/N" )
    CLS
    nMaxRow := MAXROW()

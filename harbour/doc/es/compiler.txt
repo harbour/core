@@ -77,7 +77,7 @@
  *          /gp          tipo de salida: fuente de Pascal (.pas)
  *          /gr          tipo de salida: recursos de Windows (.rc)
  *
- *      /i<ruta>         Agrega la ruta de búsqueda de archivos #Include
+ *      /i<ruta>         Agrega la ruta de búsqueda de archivos #include
  *      ----------------
  *
  *      /l               Suprime la informaci¢n del número de L¡nea

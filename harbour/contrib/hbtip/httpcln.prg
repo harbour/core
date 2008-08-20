@@ -365,7 +365,7 @@ METHOD ReadAll() CLASS tIPClientHTTP
    ENDIF
    IF ::bChunked
       cChunk:=::read()
-      while cChunk!=nil
+      while cChunk != nil
          cOut+=cChunk
       // ::nLength:=-1
          cChunk:=::read()
@@ -393,8 +393,8 @@ METHOD setCookie(cLine) CLASS tIPClientHTTP
    y:=len(aParam)
    FOR x:=1 to y
       aElements := HB_RegexSplit( "=", aParam[x], 1)
-      IF len(aElements)==2
-         IF x=1
+      IF len(aElements) == 2
+         IF x == 1
             cName:=alltrim(aElements[1])
             cValue:=alltrim(aElements[2])
          else
@@ -425,10 +425,10 @@ return NIL
 METHOD getcookies(cHost,cPath) CLASS tIPClientHTTP
    local x,y,aDomKeys:={},aKeys,z,cKey,aPathKeys,nPath
    local a, b, cOut := "", c, d
-   IF cHost=nil
+   IF cHost == nil
       cHost:=::oUrl:cServer
    ENDIF
-   IF cPath=nil
+   IF cPath == nil
       cPath:=::oUrl:cPath
       IF empty(cPath)
          cPath:="/"
@@ -493,8 +493,8 @@ METHOD Boundary(nType) CLASS tIPClientHTTP
 
    local cBound:=::cBoundary
    LOCAL i
-   IF nType=nil
-      nType=0
+   IF nType == nil
+      nType := 0
    ENDIF
    IF empty(cBound)
       cBound:=replicate("-",27)+space(11)
@@ -503,7 +503,7 @@ METHOD Boundary(nType) CLASS tIPClientHTTP
       NEXT
       ::cBoundary:=cBound
    endif
-   cBound:=iif(nType<2,"--","")+cBound+if(nType=1,"--","")
+   cBound:=iif(nType<2,"--","")+cBound+if(nType == 1,"--","")
    RETURN(cBound)
 
 METHOD Attach(cName,cFileName,cType) CLASS tIPClientHTTP
@@ -571,8 +571,8 @@ METHOD PostMultiPart( cPostData, cQuery ) CLASS tIPClientHTTP
       nbuf:=8192
       nRead:=nBuf
       cBuf:=space(nBuf)
-      while nRead=nBuf
-         //nRead=FRead( nFile,@cBuf,nBuf)
+      while nRead == nBuf
+         //nRead := FRead( nFile,@cBuf,nBuf)
          cBuf:=FReadstr( nFile,nBuf)
          nRead:=len(cBuf)
 /*         IF nRead<nBuf

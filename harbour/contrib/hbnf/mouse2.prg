@@ -87,16 +87,16 @@ static lMinit:=.F.
      local nHoriz, nVert, nDouble
      local nTime
 
-     IF nRow=NIL
-         nRow=MAXROW()+1
+     IF nRow==NIL
+         nRow:=MAXROW()+1
      ELSE
-         nRow=VAL(nRow)
+         nRow:=VAL(nRow)
      ENDIF
 
-     IF nCol=NIL
-         nCol=MAXCOL()+1
+     IF nCol==NIL
+         nCol:=MAXCOL()+1
      ELSE
-         nCol=VAL(nCol)
+         nCol:=VAL(nCol)
      ENDIF
 
      IF .NOT.SETMODE(nRow,nCol)
@@ -170,14 +170,14 @@ static lMinit:=.F.
 * to a "normal" CLIPPER program so some of these examples are a bit out of
 * the ordinary.
 
-        DO WHILE nX=0.AND.nY=0
+        DO WHILE nX==0.AND.nY==0
              FT_MMICKEYS( @nX, @nY )
         ENDDO
 * tell the mouse driver where updates will be taking place so it can hide
 * the cursor when necessary.
 
         FT_MCONOFF( 9, 23, 16, 53 )
-        nTime=-1
+        nTime:=-1
 
         devpos( 9, 23 )
         devout( nX )

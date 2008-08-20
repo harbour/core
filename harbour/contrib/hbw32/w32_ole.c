@@ -77,7 +77,7 @@
 
 #ifndef __MINGW32__
    // Missing in Mingw V 2.
-   //#include <OleDB.h>
+   //#include <oledb.h>
 #endif
 
 #include <shlobj.h>

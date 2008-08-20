@@ -20,16 +20,16 @@ static s_lMinit:=.F.
      local nHoriz, nVert, nDouble
      local nTime
 
-     IF nRow=NIL
-        nRow=MAXROW()+1
+     IF nRow == NIL
+        nRow := MAXROW()+1
      ELSE
-        nRow=VAL(nRow)
+        nRow := VAL(nRow)
      ENDIF
 
-     IF nCol=NIL
-        nCol=MAXCOL()+1
+     IF nCol == NIL
+        nCol := MAXCOL()+1
      ELSE
-        nCol=VAL(nCol)
+        nCol := VAL(nCol)
      ENDIF
 
      if  !FT_MINIT() 
@@ -97,14 +97,14 @@ static s_lMinit:=.F.
 * to a "normal" CLIPPER program so some of these examples are a bit out of
 * the ordinary.
 
-        DO WHILE nX=0.AND.nY=0
+        DO WHILE nX == 0 .AND. nY == 0
              FT_MMICKEYS( @nX, @nY )
         ENDDO
 * tell the mouse driver where updates will be taking place so it can hide
 * the cursor when necessary.
 
         FT_MCONOFF( 9, 23, 16, 53 )
-        nTime=-1
+        nTime := -1
 
         devpos( 9, 23 )
         devout( nX )
@@ -306,32 +306,32 @@ LOCAL nPrs           // number of presses which occurred
 
 * Initialize any empty arguments
 
-   if nClick=NIL
-      nClick=1
+   if nClick==NIL
+      nClick:=1
    endif
 
-   if nButton=NIL
-        nButton=0
+   if nButton==NIL
+        nButton:=0
    endif
 
-   if nRow=NIL
-       nRow=FT_MGETX()
+   if nRow==NIL
+       nRow:=FT_MGETX()
    endif
 
-   if nCol=NIL
-       nCol=FT_MGETY()
+   if nCol==NIL
+       nCol:=FT_MGETY()
    endif
 
-   if nInterval=NIL
-       nInterval=0.5
+   if nInterval==NIL
+       nInterval:=0.5
    endif
 
-   if nStart=NIL
-       nStart=seconds()
+   if nStart==NIL
+       nStart:=seconds()
    endif
 
-   nVert=nRow
-   nHorz=nCol
+   nVert:=nRow
+   nHorz:=nCol
    lDouble:=lDone:=nClick==0
 
    // Wait for first press if requested
@@ -339,24 +339,24 @@ LOCAL nPrs           // number of presses which occurred
    do while !lDone
 
            FT_MBUTPRS( nButton, @nPrs, @nVert, @nHorz )
-           nVert=INT(nVert/8)
-           nHorz=INT(nHorz/8)
+           nVert:=INT(nVert/8)
+           nHorz:=INT(nHorz/8)
 
-           lDouble=(nPrs>0)
-           ldone= seconds() - nStart >= nInterval .or. lDouble
+           lDouble:=(nPrs>0)
+           ldone:= seconds() - nStart >= nInterval .or. lDouble
 
    enddo
 
    // if we have not moved then keep the preliminary double click setting
 
-   lDouble=lDouble.and.(nVert=nRow.and.nHorz=nCol)
+   lDouble:=lDouble.and.(nVert==nRow.and.nHorz==nCol)
 
    // change start time if we waited for first click. nInterval is the
    // maximum time between clicks not the total time for two clicks if
    // requested.
 
    if nClick>0
-      nStart=seconds()
+      nStart:=seconds()
    endif
 
    // If we have fulfilled all of the requirements then wait for second click
@@ -368,17 +368,17 @@ LOCAL nPrs           // number of presses which occurred
       do while !lDone
 
            FT_MBUTPRS( nButton, @nPrs, @nVert, @nHorz )
-           nVert=INT(nVert/8)
-           nHorz=INT(nHorz/8)
+           nVert:=INT(nVert/8)
+           nHorz:=INT(nHorz/8)
 
-           lDouble=(nPrs>0)
-           lDone= seconds() - nStart >= nInterval .or. lDouble
+           lDouble:=(nPrs>0)
+           lDone:= seconds() - nStart >= nInterval .or. lDouble
 
       enddo
 
   // make sure we haven't moved
 
-      lDouble=lDouble.and.(nVert=nRow.and.nHorz=nCol)
+      lDouble:=lDouble.and.(nVert==nRow.and.nHorz==nCol)
 
    endif
 
@@ -532,16 +532,16 @@ FT_MGETSENS(@nCurHoriz, @nCurVert, @nCurDouble)
 
 // Set defaults if necessary
 
-IF VALTYPE(nHoriz)!="N"
-    nHoriz=nCurHoriz
+IF !( VALTYPE( nHoriz ) == "N" )
+    nHoriz := nCurHoriz
 ENDIF
 
-IF VALTYPE(nVert)!="N"
-    nVert=nCurVert
+IF !( VALTYPE( nVert ) == "N" )
+    nVert := nCurVert
 ENDIF
 
-IF VALTYPE(nDouble)!="N"
-    nDouble=nCurDouble
+IF !( VALTYPE( nDouble ) == "N" )
+    nDouble := nCurDouble
 ENDIF
 
 * Fill the registers
@@ -586,7 +586,7 @@ FUNCTION FT_MGETSENS(nHoriz, nVert, nDouble)
 /*
 * Fill the register
 
-aReg[AX]=27
+aReg[AX]:=27
 
 * Execute interupt
 
@@ -595,9 +595,9 @@ FT_INT86( 51, aReg )        // execute mouse interrupt
 */                           
 // Set the return values
 
-nHoriz = _mget_horispeed()
-nVert  = _mget_verspeed()
-nDouble= _mget_doublespeed()
+nHoriz := _mget_horispeed()
+nVert  := _mget_verspeed()
+nDouble:= _mget_doublespeed()
 
 RETURN NIL
 
@@ -636,7 +636,7 @@ RETURN NIL
  *    my screen showed 6.24 but this routine returned 30 for the minor version
  *    number!
  * $EXAMPLES$
- *    nMajor=FT_MVERSION( @nMinor )
+ *    nMajor:=FT_MVERSION( @nMinor )
  *    IF (nMajor+nMinor/100)<7.2
  *         ? "Sorry mouse driver version too old"
  *         RETURN
@@ -650,7 +650,7 @@ FUNCTION FT_MVERSION(nMinor, nType, nIRQ)
 Local aReturn:={}
 // Set up register
 /*
-aReg[AX] = 36
+aReg[AX] := 36
 
 // Call interupt
 
@@ -659,9 +659,9 @@ FT_INT86( 51, aReg)
 // decode out of half registers
 areturn:=_mget_mversion()
 
-nMinor=areturn[1]
-nType=areturn[2]
-nIRQ=areturn[3]
+nMinor := areturn[1]
+nType  := areturn[2]
+nIRQ   := areturn[3]
 
 // Return
 
@@ -697,8 +697,8 @@ FUNCTION FT_MSETPAGE(nPage)
 
 // Set up register
 /*
-aReg[AX] = 29
-aReg[BX]=nPage
+aReg[AX] := 29
+aReg[BX] := nPage
 
 // Call interupt
 
@@ -737,7 +737,7 @@ FUNCTION FT_MGETPAGE()
 
 // Set up register
 /*
-aReg[AX] = 30
+aReg[AX] := 30
 
 // Call interupt
 
@@ -803,7 +803,7 @@ LOCAL lStatus
    aReg[AX] := 0          // set mouse function call 0
    FT_INT86( 51, aReg )  // execute mouse interrupt
    */
-   s_lCrsState=.F.         // Cursor is off after reset
+   s_lCrsState:=.F.         // Cursor is off after reset
 lStatus:=_m_reset()
 * Reset maximum x and y limits
 
@@ -842,7 +842,7 @@ RETURN lStatus          // return status code
 FUNCTION FT_MCURSOR( lState )
    local lSavState := s_lCrsState
 
-   if VALTYPE(lState)="L"
+   if VALTYPE(lState)=="L"
       if ( s_lCrsState := lState )
          FT_MSHOWCRS()
       else
@@ -1181,9 +1181,9 @@ RETURN NIL                     // no function output
 
 FUNCTION FT_MXLIMIT( nXMin, nXMax )   // set vertical minimum and maximum coordinates
 /*
-   aReg[AX] = 7                        // set mouse function call 7
-   aReg[CX] = nXMin                    // load vertical minimum parameter
-   aReg[DX] = nXMax                    // load vertical maximum parameter
+   aReg[AX] := 7                        // set mouse function call 7
+   aReg[CX] := nXMin                    // load vertical minimum parameter
+   aReg[DX] := nXMax                    // load vertical maximum parameter
    FT_INT86( 51, aReg )               // execute mouse interrupt
    */
     _m_mxlimit(nXMin,nXMAX)
@@ -1216,9 +1216,9 @@ RETURN NIL
 
 FUNCTION FT_MYLIMIT( nYMin, nYMax )  // set horizontal minimum and maximum coordinates
 /*
-   aReg[AX] = 8                       // set mouse function call 8
-   aReg[CX] = nYMin                   // load horz minimum parameter
-   aReg[DX] = nYMax                   // load horz maximum parameter
+   aReg[AX] := 8                       // set mouse function call 8
+   aReg[CX] := nYMin                   // load horz minimum parameter
+   aReg[DX] := nYMax                   // load horz maximum parameter
    FT_INT86( 51, aReg )              // execute mouse interrupt
    */
   _m_mYlimit(nYMin,nYMAX)
@@ -1401,10 +1401,10 @@ RETURN iButton
 
 FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type and masks
 /*
-   aReg[AX] = 10         // set mouse function call 10
-   aReg[BX] = nCurType   // load cursor type parameter
-   aReg[CX] = nScrMask   // load screen mask value
-   aReg[DX] = nCurMask   // load cursor mask value
+   aReg[AX] := 10         // set mouse function call 10
+   aReg[BX] := nCurType   // load cursor type parameter
+   aReg[CX] := nScrMask   // load screen mask value
+   aReg[DX] := nCurMask   // load cursor mask value
    FT_INT86( 51, aReg )  // execute mouse interrupt
    */
 _m_mdefcrs(nCurType, nScrMask, nCurMask ) 

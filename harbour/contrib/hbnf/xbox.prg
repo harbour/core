@@ -179,9 +179,9 @@ FUNCTION FT_XBOX(cJustType,; // "L" = left, otherwise centered
   AEVAL(aLines_,{|| nLLen:=Max(nLLen,Len(aLines_[nLoop])),nLoop++})
 
   // calculate corners
-  nLCol = if(nStartCol=99,Int((76-nLLen)/2),Min(nStartCol,74-nLLen))
+  nLCol = if(nStartCol==99,Int((76-nLLen)/2),Min(nStartCol,74-nLLen))
   nRCol = nLCol+nLLen+3
-  nTRow = if(nStartRow=99,INT((24-nNumRows)/2),Min(nStartRow,22-nNumRows))
+  nTRow = if(nStartRow==99,INT((24-nNumRows)/2),Min(nStartRow,22-nNumRows))
   nBRow = nTRow+nNumRows+1
 
   // form box and border

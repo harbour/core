@@ -258,8 +258,8 @@ STATIC NHPOS, NVPOS, NMAXROW, NMAXCOL
    cErrE  := IF( lColor, "N/W" , "N/W"  )
 
    SAVE SCREEN TO sDosScrn
-   nDosRow=ROW()
-   nDosCol=COL()
+   nDosRow := ROW()
+   nDosCol := COL()
    SETCOLOR( "w/n" )
    CLS
    NOSNOW( ( "NOSNOW" $ UPPER( cCmdLine ) ) )

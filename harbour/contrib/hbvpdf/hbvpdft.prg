@@ -20,7 +20,7 @@
 
 
 #ifdef __HARBOUR__             //  Harbour and xHarbour
-   #include      'hbclass.ch'
+   #include      "hbclass.ch"
 #endif
 
 #ifdef __XPP__             //  xBase++
@@ -30,12 +30,12 @@
 #endif
 
 #ifdef __CLP__             //  Clipper
-   #include     'class(y).ch'
+   #include     "class(y).ch"
 #endif
 
 //-------------------------\\
 
-#include             'hbvpdf.ch'
+#include             "hbvpdf.ch"
 
 //-------------------------\\
 
@@ -325,7 +325,7 @@ local cName := ::GetFontInfo( "NAME" )
       ::aReport[ FONTNAME ] := 2
    ELSEIF cName == "Helvetica"
       ::aReport[ FONTNAME ] := 6
-   ELSEIF cName == 'Courier'
+   ELSEIF cName == "Courier"
       ::aReport[ FONTNAME ] := 10    // Courier // 0.04
    ENDIF
 
@@ -349,7 +349,7 @@ IF     cName == "Times"
    ::aReport[ FONTNAME ] := 4
 ELSEIF cName == "Helvetica"
    ::aReport[ FONTNAME ] := 8
-ELSEIF cName == 'Courier'
+ELSEIF cName == "Courier"
    ::aReport[ FONTNAME ] := 12 // 0.04
 ENDIF
 
@@ -1000,7 +1000,7 @@ local nI, cTemp, cToken, k, nL, nRow, nLines, nLineLen, nStart
 local lParagraph, nSpace, nNew, nTokenLen, nCRLF, nTokens, nLen
 
 DEFAULT nTab     TO -1
-DEFAULT cUnits   TO 'R'
+DEFAULT cUnits   TO "R"
 DEFAULT nJustify TO 4 
 DEFAULT lPrint   TO .t.
 DEFAULT cColor   TO ""
@@ -1126,14 +1126,14 @@ METHOD OpenHeader( cFile )
 
 local nErrorCode := 0, nAt, cCmd 
 
-DEFAULT cFile TO ''
+DEFAULT cFile TO ""
 
    IF !empty( cFile )
       cFile := alltrim( cFile )
       IF len( cFile ) > 12 .or. ;
-         at( ' ', cFile ) > 0 .or. ;
-         ( at( ' ', cFile ) == 0 .and. len( cFile ) > 8 ) .or. ;
-         ( ( nAt := at( '.', cFile )) > 0 .and. len( substr( cFile, nAt + 1 )) > 3 )
+         at( " ", cFile ) > 0 .or. ;
+         ( at( " ", cFile ) == 0 .and. len( cFile ) > 8 ) .or. ;
+         ( ( nAt := at( ".", cFile )) > 0 .and. len( substr( cFile, nAt + 1 )) > 3 )
          
          cCmd := "copy " + cFile + " temp.tmp > nul"
          RunExternal( cCmd )
@@ -1250,7 +1250,7 @@ METHOD SaveHeader( cFile )
 
 local nErrorCode := 0, cCmd
 
-Array2File( 'temp.tmp', ::aReport[ HEADER ] )
+Array2File( "temp.tmp", ::aReport[ HEADER ] )
 
 cCmd := "copy temp.tmp " + cFile + " > nul"
 RunExternal( cCmd )
@@ -1643,7 +1643,7 @@ METHOD tPdf:ImageInfo( cFile )
 METHOD ImageInfo( cFile ) 
 #endif
 
-local cTemp := upper(substr( cFile, rat('.', cFile) + 1 )), aTemp := {}
+local cTemp := upper(substr( cFile, rat(".", cFile) + 1 )), aTemp := {}
    do case
    case cTemp == "TIF"
       aTemp := ::TIFFInfo( cFile )
@@ -1670,11 +1670,11 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
 
    nHandle := fopen( cFile )
 
-   c2 := '  '
+   c2 := "  "
    fread( nHandle, @c2, 2 )
    fread( nHandle, @c2, 2 )
 
-   cIFDNext := '    '
+   cIFDNext := "    "
    fread( nHandle, @cIFDNext, 4 )
 
    cTemp  := space(12)
@@ -1712,10 +1712,10 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
          IF nFieldType ==  ASCII
             --nCount
          ENDIF
-         cTag := ''
+         cTag := ""
          do case
          case nTag == 256
-            cTag := 'ImageWidth'
+            cTag := "ImageWidth"
 
             IF nFieldType ==  SHORT
                nWidth := bin2w( substr( cValues, 1, 2 ))
@@ -1724,7 +1724,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
             ENDIF
 
          case nTag == 257
-            cTag := 'ImageLength'
+            cTag := "ImageLength"
             IF nFieldType ==  SHORT
                nHeight := bin2w(substr( cValues, 1, 2 ))
             ELSEIF nFieldType ==  LONG
@@ -1732,32 +1732,32 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
             ENDIF
 
          case nTag == 258
-            cTag := 'BitsPerSample'
+            cTag := "BitsPerSample"
             nTemp := 0
             IF nFieldType == SHORT
                nTemp := bin2w( cValues )
             ENDIF
             nBits := nTemp
          case nTag == 259
-            cTag := 'Compression'
+            cTag := "Compression"
             nTemp := 0
             IF nFieldType == SHORT
                nTemp := bin2w( cValues )
             ENDIF
          case nTag == 262
-            cTag := 'PhotometricInterpretation'
+            cTag := "PhotometricInterpretation"
             nTemp := -1
             IF nFieldType == SHORT
                nTemp := bin2w( cValues )
             ENDIF
          case nTag == 264
-            cTag := 'CellWidth'
+            cTag := "CellWidth"
          case nTag == 265
-            cTag := 'CellLength'
+            cTag := "CellLength"
          case nTag == 266
-            cTag := 'FillOrder'
+            cTag := "FillOrder"
          case nTag == 273
-            cTag := 'StripOffsets'
+            cTag := "StripOffsets"
             IF nFieldType ==  SHORT
                nFrom := bin2w(substr( cValues, 1, 2 ))
             ELSEIF nFieldType ==  LONG
@@ -1765,11 +1765,11 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
             ENDIF
 
          case nTag == 277
-            cTag := 'SamplesPerPixel'
+            cTag := "SamplesPerPixel"
          case nTag == 278
-            cTag := 'RowsPerStrip'
+            cTag := "RowsPerStrip"
          case nTag == 279
-            cTag := 'StripByteCounts'
+            cTag := "StripByteCounts"
             IF nFieldType ==  SHORT
                nLength := bin2w(substr( cValues, 1, 2 ))
             ELSEIF nFieldType ==  LONG
@@ -1779,37 +1779,37 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
             nLength *= nCount // Count all strips !!!
 
          case nTag == 282
-            cTag := 'XResolution'
+            cTag := "XResolution"
             xRes := bin2l(substr( cValues, 1, 4 ))
          case nTag == 283
-            cTag := 'YResolution'
+            cTag := "YResolution"
             yRes := bin2l(substr( cValues, 1, 4 ))
          case nTag == 284
-            cTag := 'PlanarConfiguration'
+            cTag := "PlanarConfiguration"
          case nTag == 288
-            cTag := 'FreeOffsets'
+            cTag := "FreeOffsets"
          case nTag == 289
-            cTag := 'FreeByteCounts'
+            cTag := "FreeByteCounts"
          case nTag == 296
-            cTag := 'ResolutionUnit'
+            cTag := "ResolutionUnit"
             nTemp := 0
             IF nFieldType == SHORT
                nTemp := bin2w( cValues )
             ENDIF
          case nTag == 305
-            cTag := 'Software'
+            cTag := "Software"
          case nTag == 306
-            cTag := 'DateTime'
+            cTag := "DateTime"
          case nTag == 315
-            cTag := 'Artist'
+            cTag := "Artist"
          case nTag == 320
-            cTag := 'ColorMap'
+            cTag := "ColorMap"
          case nTag == 338
-            cTag := 'ExtraSamples'
+            cTag := "ExtraSamples"
          case nTag == 33432
-            cTag := 'Copyright'
+            cTag := "Copyright"
          otherwise
-            cTag := 'Unknown'
+            cTag := "Unknown"
          endcase
       next
       fread( nHandle, @cIFDNext, 4 )
@@ -2367,7 +2367,7 @@ local cRun := cPathAcro + "\AcroRd32.exe /t " + cFile + " " + ;
             chr(34) + "HP LaserJet 5/5M PostScript" + chr(34) + " " + ;
             chr(34) + "LPT1" + chr(34)
 
-IF ( ! RunExternal( cRun, 'print' ) )
+IF ( ! RunExternal( cRun, "print" ) )
    alert( "Error printing to PDF reader." )
    break
 ENDIF
@@ -2385,7 +2385,7 @@ METHOD Execute( cFile )
 local cPathAcro := "c:\progra~1\Adobe\Acroba~1.0\Reader"
 local cRun := cPathAcro + "\AcroRd32.exe /t " + cFile + " " + chr(34) + "HP LaserJet 5/5M PostScript" + chr(34) + " " + chr(34) + "LPT1" + chr(34)
 
-IF (! RunExternal( cRun, 'open', cFile ) )
+IF (! RunExternal( cRun, "open", cFile ) )
    alert("Error printing to PDF reader.")
    break
 ENDIF
@@ -2540,7 +2540,7 @@ local cData  := valtype(xData)
    elseif ISDATE( xData )
        cData += i2bin( 8 )+dtos(xData)
    elseif ISLOGICAL(xData)
-       cData += i2bin( 1 )+if( xData,'T','F' )
+       cData += i2bin( 1 )+if( xData,"T","F" )
    elseif ISARRAY( xData )
        cData += i2bin( len( xData ) )
    else
@@ -2563,7 +2563,7 @@ if hFile == NIL        // First Timer
    endif
    cData := space( 3 )
    fRead( hFile, @cData, 3 )
-   if left( cData,1 ) != 'A'     //  If format of file != array
+   if !( left( cData,1 ) == "A" )     //  If format of file != array
       fClose( hFile )            //////////
       return( aRay )
    endif
@@ -2578,7 +2578,7 @@ do while nDepth < nLen
     endif
     cType    := padl( cData,1 )
     nDataLen := bin2i( right( cData,2 ) )
-    if cType != 'A'
+    if !( cType == "A" )
        cData := space( nDataLen )
        nBytes:= fRead( hFile, @cData, nDataLen )
        if nBytes < nDataLen
@@ -2587,15 +2587,15 @@ do while nDepth < nLen
     endif
     nDepth++
     aadd( aRay,NIL )
-    if cType=='C'
+    if cType=="C"
         aRay[ nDepth ] := cData
-    elseif cType=='N'
+    elseif cType=="N"
         aRay[ nDepth ] := val(cData)
-    elseif cType=='D'
+    elseif cType=="D"
         aRay[ nDepth ] := ctod( left( cData, 4 ) + "/" + substr( cData, 5, 2 ) + "/" + substr( cData, 7, 2 )) //stod(cData)
-    elseif cType=='L'
-        aRay[ nDepth ] := ( cData=='T' )
-    elseif cType=='A'
+    elseif cType=="L"
+        aRay[ nDepth ] := ( cData=="T" )
+    elseif cType=="A"
         aRay[ nDepth ] := File2Array( , nDataLen, hFile )
     endif
 enddo
@@ -2624,7 +2624,7 @@ static function RunExternal( cCmd, cVerb, cFile )
 local lRet := .t.
 
 #ifdef __CLP__
-   lRet := SwpRunCmd( cCmd, 0, '', '' )
+   lRet := SwpRunCmd( cCmd, 0, "", "" )
 #endif
 
 #ifdef __HARBOUR__

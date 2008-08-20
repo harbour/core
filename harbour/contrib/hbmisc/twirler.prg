@@ -8,7 +8,7 @@
    Donated to the public domain on 2001-03-15 by David G. Holm <dholm@jsd-llc.com>
 */
 
-#include <hbclass.ch>
+#include "hbclass.ch"
 
 class Twirler
    var n_Row

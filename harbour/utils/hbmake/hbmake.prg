@@ -3273,7 +3273,7 @@ RETURN NIL
 *------------------------------------------------------------
 FUNCTION ScanInclude( cFile, lRecursive, cExclExtent, aFiles)
 *------------------------------------------------------------
-// Search for #Include & Set Procedure To & Set Proc To
+// Search for #include & Set Procedure To & Set Proc To
 
    LOCAL cFileList := ""
    LOCAL nHandle   := -1
@@ -3339,7 +3339,7 @@ FUNCTION ScanInclude( cFile, lRecursive, cExclExtent, aFiles)
                    ENDDO
                ENDIF
                // Dependencies
-               IF Upper(Left( cTemp ,8)) == "#INCLUDE"
+               IF Lower(Left( cTemp ,8)) == "#include"
                    cTemp := AllTrim(SubStr( cTemp, 9))
                Else
                    IF lPrg .and. Upper(Left( cTemp, 16)) == "SET PROCEDURE TO"

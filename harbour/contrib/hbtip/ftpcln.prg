@@ -630,7 +630,7 @@ METHOD MGET( cSpec,cLocalPath ) CLASS tIPClientFTP
    IF cSpec == nil
       cSpec := ""
    ENDIF
-   IF cLocalPath=nil
+   IF cLocalPath == nil
       cLocalPath:=""
    ENDIF
    IF ::bUsePasv

@@ -8,6 +8,54 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-20 11:50 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * tests/onidle.prg
+   * tests/codebloc.prg
+   * tests/keywords.prg
+   * tests/wvtext.prg
+   * tests/test_all.prg
+   * tests/ainstest.prg
+   * doc/es/compiler.txt
+   * doc/es/file.txt
+   * contrib/hbct/numconv.prg
+   * contrib/hbct/tests/expomant.prg
+   * contrib/hbwhat32/whatutil.prg
+   * contrib/hbwhat32/winrbar.prg
+   * contrib/hbwhat32/wintabs.prg
+   * contrib/hbwhat32/wincomm.prg
+   * contrib/hbwhat32/wincdlg.prg
+   * contrib/hbwhat32/wintbar.prg
+   * contrib/hbwhat32/_wininet.c
+   * contrib/hbwhat32/wincore.prg
+   * contrib/hbw32/w32_ole.c
+   * contrib/hbapollo/tests/apollo.prg
+   * contrib/hbnf/dispmsg.prg
+   * contrib/hbnf/fttext.c
+   * contrib/hbnf/mouse1.prg
+   * contrib/hbnf/menu1.prg
+   * contrib/hbnf/sleep.prg
+   * contrib/hbnf/xbox.prg
+   * contrib/hbnf/popadder.prg
+   * contrib/hbnf/mouse2.prg
+   * contrib/hbnf/pchr.prg
+   * contrib/hbhpdf/tests/harupdf.prg
+   * contrib/gtwvg/wvgclass.prg
+   * contrib/gtwvg/tests/demowvg.prg
+   * contrib/gtwvg/wvgpaint.prg
+   * contrib/rddads/tests/testmg.prg
+   * contrib/hbclipsm/tests/testgaug.prg
+   * contrib/hbfimage/tests/fitest.prg
+   * contrib/hbmisc/twirler.prg
+   * contrib/hbtip/httpcln.prg
+   * contrib/hbtip/ftpcln.prg
+   * contrib/hbvpdf/hbvpdft.prg
+   * utils/hbmake/hbmake.prg
+     * Some more general code cleanups.
+     * iif(), quote char, #include, filename-casing, = usage cleanups, 
+       hardcoded absolute paths, non-ASCII drawing chars in source.
+       Using mixed-case filenames to #include .ch files breaks on 
+       non-WinDOS platforms.
+
 2008-08-20 10:22 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbdoc/hbdoc.prg
    * utils/hbdoc/gentrf.prg

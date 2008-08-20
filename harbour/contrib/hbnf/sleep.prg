@@ -74,8 +74,8 @@
  *     Example 1:
  *         FT_SLEEP(10.0)    && Sleep for 10.0 seconds
  *     Example 2:
- *         nTime=SECONDS()   && usually after some interupt from mouse or
- *                           && keyboard
+ *         nTime := SECONDS()   && usually after some interupt from mouse or
+ *                              && keyboard
  *
  *         ... intervening code ...
  *

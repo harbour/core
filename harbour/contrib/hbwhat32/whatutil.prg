@@ -7,12 +7,12 @@
 #include "common.ch"
 
 #include "winuser.ch"
-#include "What32.ch"
-#include 'debug.ch'
-#include 'wingdi.ch'
+#include "what32.ch"
+#include "debug.ch"
+#include "wingdi.ch"
 
-#include 'wintypes.ch'
-#include 'cstruct.ch'
+#include "wintypes.ch"
+#include "cstruct.ch"
 
 #define CTYPE_BOOL 5
 
@@ -96,7 +96,7 @@ Function Alert( cMsg, aChoices )
       Endif
    EndIf
 
-   cTitle := 'Alert'
+   cTitle := "Alert"
 
    If aChoices == NIL
       aChoices := { "&Ok" }
@@ -158,7 +158,7 @@ Function Alert( cMsg, aChoices )
 
    aDlg := MakeDlgTemplate( cTitle, ;
                            WS_CAPTION + DS_MODALFRAME + WS_VISIBLE + 4 + WS_POPUP + DS_SETFONT, ;
-                           0, 0, w, h, 8, 'MS Sans Serif' )
+                           0, 0, w, h, 8, "MS Sans Serif" )
 
    For i := 1 To n
       aDlg := AddDlgItem( aDlg, i, "BUTTON", ;
@@ -244,8 +244,8 @@ Function WrapText(cText,nMaxSize,hFont)
   For i:=1 To Len(a)
     c:=""
     Do While UnMapDialogRect(a[i],hFont)[1] > nMaxSize
-      If (n:=rat(' ',a[i])) > 0
-        c:=SubStr(a[i],n+1)+' '+c
+      If (n:=rat(" ",a[i])) > 0
+        c:=SubStr(a[i],n+1)+" "+c
         a[i]:=Left(a[i],n-1)
       Else
         Exit
@@ -267,7 +267,7 @@ Function UnMapDialogRect(cText,hfont)
   Local hDC := GetDC(0)
   Local hOldFont:=SelectObject(hDC,hFont)
   Local aTextExt:=GetTextExtentPoint32(hDC,;
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
 
   Local arect:={0,0,100,100}
 
@@ -392,7 +392,7 @@ Function str2a ( string, parser )
    Local commapos := 0
 
    If parser == NIL
-      parser := ','
+      parser := ","
    EndIf
 
    Do While Len( string ) > 0
@@ -402,7 +402,7 @@ Function str2a ( string, parser )
          string := SubStr( string, commapos + Len( parser ) )
       Else
          aAdd( retar, string )
-         string := ''
+         string := ""
       EndIf
    EndDo
 
@@ -411,11 +411,11 @@ Function str2a ( string, parser )
 *-----------------------------------------------------------------------------*
 FUNCTION a2str( a, parser )
 
-  LOCAL retstr := ''
+  LOCAL retstr := ""
   LOCAL i
 
   IF parser == NIL
-    parser := ','
+    parser := ","
   ENDIF
 
   FOR i := 1 TO Len( a )
@@ -708,33 +708,33 @@ Function Bin2Array( cBin, aTypes )
 FUNCTION WinColors( nfg, nbg )
 
   LOCAL acolors := { ; // valueas below are PROBABLY (!) correct.
-  { 'N' , RGB( 0, 0, 0 ) } , ;
-  { 'B' , RGB( 0, 0, 128 ) } , ;
-  { 'G' , RGB( 0, 128, 0 ) } , ;
-  { 'BG' , RGB( 0, 128, 128 ) } , ;
-  { 'GB' , RGB( 0, 128, 128 ) } , ;
-  { 'R' , RGB( 128, 0, 0 ) } , ;
-  { 'RB' , RGB( 128, 0, 128 ) } , ;
-  { 'BR' , RGB( 128, 0, 128 ) } , ;
-  { 'GR' , RGB( 128, 128, 0 ) } , ;
-  { 'RG' , RGB( 128, 128, 0 ) } , ;
-  { 'W' , RGB( 192, 192, 192 ) } , ;
-  { 'N+' , RGB( 128, 128, 128 ) } , ;
-  { 'B+' , RGB( 0, 0, 255 ) } , ;
-  { 'G+' , RGB( 0, 255, 0 ) } , ;
-  { 'BG+', RGB( 0, 255, 255 ) } , ;
-  { 'GB+', RGB( 0, 255, 255 ) } , ;
-  { 'R+' , RGB( 255, 0, 0 ) } , ;
-  { 'RB+', RGB( 255, 0, 255 ) } , ;
-  { 'BR+', RGB( 255, 0, 255 ) } , ;
-  { 'GR+', RGB( 255, 255, 0 ) } , ;
-  { 'RG+', RGB( 255, 255, 0 ) } , ;
-  { 'W+' , RGB( 255, 255, 255 ) } }
+  { "N" , RGB( 0, 0, 0 ) } , ;
+  { "B" , RGB( 0, 0, 128 ) } , ;
+  { "G" , RGB( 0, 128, 0 ) } , ;
+  { "BG" , RGB( 0, 128, 128 ) } , ;
+  { "GB" , RGB( 0, 128, 128 ) } , ;
+  { "R" , RGB( 128, 0, 0 ) } , ;
+  { "RB" , RGB( 128, 0, 128 ) } , ;
+  { "BR" , RGB( 128, 0, 128 ) } , ;
+  { "GR" , RGB( 128, 128, 0 ) } , ;
+  { "RG" , RGB( 128, 128, 0 ) } , ;
+  { "W" , RGB( 192, 192, 192 ) } , ;
+  { "N+" , RGB( 128, 128, 128 ) } , ;
+  { "B+" , RGB( 0, 0, 255 ) } , ;
+  { "G+" , RGB( 0, 255, 0 ) } , ;
+  { "BG+", RGB( 0, 255, 255 ) } , ;
+  { "GB+", RGB( 0, 255, 255 ) } , ;
+  { "R+" , RGB( 255, 0, 0 ) } , ;
+  { "RB+", RGB( 255, 0, 255 ) } , ;
+  { "BR+", RGB( 255, 0, 255 ) } , ;
+  { "GR+", RGB( 255, 255, 0 ) } , ;
+  { "RG+", RGB( 255, 255, 0 ) } , ;
+  { "W+" , RGB( 255, 255, 255 ) } }
 
-  LOCAL ccolor := Left( setcolor( ) , at( ',', setcolor( ) ) - 1 )
-  LOCAL ishibg := ( '*' $ ccolor )
-  LOCAL cfg := Upper(StrTran( Left( ccolor, at( '/', ccolor ) - 1 ) , '*', '' ))
-  LOCAL cbg := Upper(StrTran(SubStr( ccolor, at( '/', ccolor ) + 1 ),'*','')) + iif( ishibg, '+', '' )
+  LOCAL ccolor := Left( setcolor( ) , at( ",", setcolor( ) ) - 1 )
+  LOCAL ishibg := ( "*" $ ccolor )
+  LOCAL cfg := Upper(StrTran( Left( ccolor, at( "/", ccolor ) - 1 ) , "*", "" ))
+  LOCAL cbg := Upper(StrTran(SubStr( ccolor, at( "/", ccolor ) + 1 ),"*","")) + iif( ishibg, "+", "" )
   LOCAL npos := 0
 
   nfg := RGB( 255, 255, 255 )

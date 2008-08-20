@@ -7,20 +7,20 @@
 
 #include "common.ch"
 
-#Include "winuser.ch"
+#include "winuser.ch"
 #include "hbclass.ch"
 
-#Include "wintypes.ch"
-#Include "cstruct.ch"
+#include "wintypes.ch"
+#include "cstruct.ch"
 
 pragma pack(4)
 
-#Include "winstruc.ch"
+#include "winstruc.ch"
 
-#Include 'what32.ch'
-#Include "commctrl.ch"
+#include 'what32.ch'
+#include "commctrl.ch"
 
-#Include 'debug.ch'
+#include 'debug.ch'
 
 typedef struct tagREBARINFO;
 {;

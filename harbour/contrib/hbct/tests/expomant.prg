@@ -61,7 +61,7 @@ local n
 
  SET DECIMALS TO 15
 
- for n=1 to 1000
+ for n := 1 to 1000
    outstd (str(n,20,15)+": "+str(mantissa(n),20,15)+" "+str(exponent(n),4) + hb_osnewline())
    outstd (str(sqrt(n),20,15)+": "+str(mantissa(sqrt(n)),20,15)+" "+str(exponent(sqrt(n)),4) + hb_osnewline())
  next n

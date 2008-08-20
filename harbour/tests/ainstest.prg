@@ -69,7 +69,7 @@ function aDump( aShow )
 
    QQOut( "Len=", ALLTRIM( STR( len( aShow ) ) ) )
    QQOut( ": " )
-   for n=1 to len(aShow)
+   for n := 1 to len(aShow)
 
       QQOut( "[" )
       QQOut( ALLTRIM (STR (n)) )

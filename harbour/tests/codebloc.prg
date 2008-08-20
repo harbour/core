@@ -39,7 +39,7 @@ function Main()
    AnotherTest( a, "==> Another " )
    OutStd( crlf )
 
-   a ={|c| IIF( c=NIL, {|a| "First "+a}, {|a| "Second "+a}) }
+   a ={|c| IIF( c==NIL, {|a| "First "+a}, {|a| "Second "+a}) }
    a =EVAL( a )
    OutStd( crlf )
    OutStd( EVAL( a, "codeblock created in a codeblock" ) )

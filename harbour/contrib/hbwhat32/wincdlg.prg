@@ -4,13 +4,13 @@
 
 // WHAT32
 // Common Dialog interface
-#Define WT_DIALOG     0      // used internally (user custom dialog class - advanced option)
-#Include "commdlg.ch"
-#Include "winuser.ch"
+#define WT_DIALOG     0      // used internally (user custom dialog class - advanced option)
+#include "commdlg.ch"
+#include "winuser.ch"
 /*
 pragma(4)
-#Include "ctruct.ch"
-#Include "WinStruc.ch"
+#include "ctruct.ch"
+#include "winstruc.ch"
 */
 
 // Under development !!!

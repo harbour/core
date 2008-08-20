@@ -351,9 +351,9 @@
  *      Note que esos valores podr¡an ser distintos en otra plataforma
  *      (sistema operativo) distinta a DOS/Windows.
  *  $EXAMPLES$
- *      #include "Fileio.ch"
+ *      #include "fileio.ch"
  *      //
- *      nHandle := FCREATE("Temp.txt", FC_NORMAL)
+ *      nHandle := FCREATE("temp.txt", FC_NORMAL)
  *
  *      IF FERROR() != 0
  *         ? "No se puede crear el archivo, DOS error ", FERROR()
@@ -639,8 +639,8 @@
  *      Nota: La utilizaci¢n de caracteres comodines '*' y '?' todav¡a no
  *            est  soportada comletamente.
  *  $EXAMPLES$
- *      ? FILE( "c:\harbour\doc\compiler.txt")
- *      ? FILE( "c:\harbour\doc\subcodes.txt")
+ *      ? FILE( "C:\harbour\doc\compiler.txt")
+ *      ? FILE( "C:\harbour\doc\subcodes.txt")
  *  </fixed>
  *  $STATUS$
  *      S (el soporte de comodines todav¡a est  ausente)
@@ -964,7 +964,7 @@
  *      SET CONSOLE ON
  *
  *      // Visualiza el archivo mitexto.dat en la pantalla y lo env¡a al
- *      // archivo MiReporte.txt
+ *      // archivo mireporte.txt
  *      TYPE mitexto.dat TO FILE MiReporte
  *      </fixed>
  *  $STATUS$

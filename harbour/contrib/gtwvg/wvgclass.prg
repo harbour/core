@@ -66,13 +66,13 @@
 //-------------------------------------------------------------------//
 //-------------------------------------------------------------------//
 
-#include                 'hbclass.ch'
-#include                   'inkey.ch'
-#include                  'common.ch'
-#include                 'setcurs.ch'
+#include                 "hbclass.ch"
+#include                   "inkey.ch"
+#include                  "common.ch"
+#include                 "setcurs.ch"
 
-#include                  'wvtwin.ch'
-//#include                     'xhb.ch'
+#include                  "wvtwin.ch"
+//#include                     "xhb.ch"
 
 //-------------------------------------------------------------------//
 

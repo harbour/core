@@ -50,18 +50,19 @@
  *
  */
 
-#include "Apollo.ch"
+#include "apollo.ch"
 
 
-Function Main()
-LOCAL nAlias,f
+FUNCTION Main()
+LOCAL nAlias
+LOCAL f
 
    SET DATE FRENCH
    SET CENTURY ON
 
    sx_SetMemoBlockSize( 32 )
    sx_SetDateFormat( SX_FRENCH )
-   sx_SetCentury( .t. )
+   sx_SetCentury( .T. )
 
    ? "Apollo version " + sx_Version()
 
@@ -74,11 +75,11 @@ LOCAL nAlias,f
 
    ? ""
    ? "Creating a new database file.."
-   nAlias:=sx_CreateNew("test.dbf",;  // full path filename
-                        "test1",;     // Alias
-                        SX_SDENSX,;   // rdeType
-                        6)            // Maximum fields added by sx_CreateField
-   IF nAlias=0
+   nAlias := sx_CreateNew("test.dbf",;  // full path filename
+                          "test1",;     // Alias
+                          SX_SDENSX,;   // rdeType
+                          6)            // Maximum fields added by sx_CreateField
+   IF nAlias == 0
       ? "Error creating database"
       RETU NIL
    ENDIF
@@ -94,21 +95,21 @@ LOCAL nAlias,f
    sx_Close()
    ?? "OK!"
 
-   nAlias:=sx_Use("test.dbf","test2",SX_EXCLUSIVE,SX_SDENSX)
+   nAlias := sx_Use("test.dbf","test2",SX_EXCLUSIVE,SX_SDENSX)
    sx_Zap()
-   IF Valtype(nAlias)="N" .AND. nAlias # 0
+   IF Valtype(nAlias) == "N" .AND. nAlias != 0
       ? "OK opening 'test.dbf'"
 
 
       ? "Adding 1000 records..."
-      FOR f=1 to 1000
+      FOR f := 1 to 1000
          sx_AppendBlank()
          sx_Replace("FIRST"    , SX_R_CHAR   , "Patrick " + Str( f ) )
          sx_Replace("LAST"     , SX_R_CHAR   , LTrim( Str( f ) ) + " Mast" )
          sx_Replace("NOTES"    , SX_R_MEMO   , "This is record " + LTrim( Str( f ) ) )
          sx_Replace("AGE"      , SX_R_DOUBLE , f )
          sx_Replace("BIRTDATE" , SX_R_DATESTR, DtoC( Date() ) )
-        *sx_Replace("MARRIED"  , SX_R_LOGICAL, If(f%5=2,1,0) ) /* Logical does not work yet.. */
+      // sx_Replace("MARRIED"  , SX_R_LOGICAL, If(f%5==2,1,0) ) /* Logical does not work yet.. */
          sx_Commit()
       NEXT
 
@@ -131,7 +132,7 @@ LOCAL nAlias,f
 
       ? ""
       sx_GoTop()
-      sx_SetSoftSeek( .f. ) // SetSoftSeek OFF
+      sx_SetSoftSeek( .F. ) // SetSoftSeek OFF
       IF sx_Seek( "928 Mast" )
          ? "String '928 Mast' found in record number "+ LTrim( Str( sx_RecNo() ) )
       ELSE

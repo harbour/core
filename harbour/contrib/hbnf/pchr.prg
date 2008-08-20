@@ -119,7 +119,7 @@ Function FT_PCHR(c_nums)
   Local c_ret:='', c_st:=0,c_part,c_st2,c_hex:="0123456789ABCDEF"
   Local c_upper,c_t1,c_t2
 
-   If Substr(c_nums,1,1)=','.or.Trim(c_nums)==''
+   If Substr(c_nums,1,1)==','.or.Trim(c_nums)==''
       Return ""
    Endif
 
@@ -128,32 +128,32 @@ Function FT_PCHR(c_nums)
 
    Do While .not.(c_part=="~".or.c_part=="")
 
-      If Substr(c_part,1,1)=Chr(34)
+      If Substr(c_part,1,1)==Chr(34)
 
          c_st2:=At(Chr(34),Substr(c_part,2))+1
          c_ret:=c_ret+Substr(c_part,2,c_st2-2)
 
-      Elseif Substr(c_part,1,1)="&"
+      Elseif Substr(c_part,1,1)=="&"
 
-         c_upper=Upper(c_part)
-         c_t1=At(Substr(c_upper,2,1),c_hex)-1
+         c_upper:=Upper(c_part)
+         c_t1:=At(Substr(c_upper,2,1),c_hex)-1
          If c_t1>-1
-            c_t2=At(Substr(c_upper,3,1),c_hex)-1
+            c_t2:=At(Substr(c_upper,3,1),c_hex)-1
             If c_t2>-1
-               c_t1=c_t1*16+c_t2
+               c_t1:=c_t1*16+c_t2
             Endif
-            c_ret=c_ret+Chr(c_t1)
+            c_ret:=c_ret+Chr(c_t1)
          Endif
 
-      ElseIf (Val(c_part)>0.and.Val(c_part)<256).or.c_part="0"
+      ElseIf (Val(c_part)>0.and.Val(c_part)<256).or.c_part=="0"
 
-         c_ret=c_ret+Chr(Val(c_part))
+         c_ret:=c_ret+Chr(Val(c_part))
 
       Else
 
-         If Substr(c_part,1,1)="/"
+         If Substr(c_part,1,1)=="/"
 
-            c_upper=Upper(c_part)
+            c_upper:=Upper(c_part)
 
             Do Case
                Case c_upper = '/GRAPHIC'

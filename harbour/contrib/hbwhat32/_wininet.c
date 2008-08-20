@@ -26,7 +26,7 @@
 #include   <windows.h>
 #include   <commctrl.h>
 #include   <shlobj.h>
-#include   <shellApi.h>
+#include   <shellapi.h>
 #include   <wininet.h>
 
 #include   "hbapi.h"
@@ -288,8 +288,8 @@ HB_FUNC( FTPCOMMAND )
    );
 */
 //
-//   #include  'WinTypes.ch'
-//   #include  'cStruct.ch'
+//   #include  "wintypes.ch"
+//   #include  "cstruct.ch"
 //
 //
 //   pragma pack(4)

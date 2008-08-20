@@ -208,7 +208,7 @@ static int  isEof[   TEXT_WORKAREAS];
 static int  error[   TEXT_WORKAREAS];
 
 /* for debugging purposes */
-static int doInt=0;
+static int doInt = 0;
 
 HB_FUNC_EXTERN( FT_GOBOT );
 

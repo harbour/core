@@ -8,13 +8,13 @@
 
 #include "common.ch"
 
-#Include "winuser.ch"
+#include "winuser.ch"
 #include "hbclass.ch"
-#Include "commctrl.ch"
-#Include 'debug.ch'
-#Include "wintypes.ch"
-#Include "cstruct.ch"
-#Include 'what32.ch'
+#include "commctrl.ch"
+#include "debug.ch"
+#include "wintypes.ch"
+#include "cstruct.ch"
+#include "what32.ch"
 
 pragma pack(4)
 

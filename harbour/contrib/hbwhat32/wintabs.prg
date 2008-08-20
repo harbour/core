@@ -2,14 +2,14 @@
  * $Id$
  */
 
-#Define WIN_WANT_VER4
+#define WIN_WANT_VER4
 #define WIN_WANT_ALL
-#Include "winuser.ch"
+#include "winuser.ch"
 #include "hbclass.ch"
-//#Include 'debug.ch'
-#Include "commctrl.ch"
-#Include "wintypes.ch"
-#Include "cstruct.ch"
+//#include "debug.ch"
+#include "commctrl.ch"
+#include "wintypes.ch"
+#include "cstruct.ch"
 #include "wingdi.ch"
 
 

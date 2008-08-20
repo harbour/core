@@ -53,7 +53,7 @@
 
 #include "ord.ch"
 #include "set.ch"
-#include "Ads.ch"
+#include "ads.ch"
 
 function Main()
 

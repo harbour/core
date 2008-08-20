@@ -8,7 +8,7 @@
  * FreeImage API test file
  */
 
-#include "FreeImage.ch"
+#include "freeimage.ch"
 
 #include "common.ch"
 #include "fileio.ch"

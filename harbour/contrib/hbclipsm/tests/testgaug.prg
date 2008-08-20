@@ -4,8 +4,8 @@
 
 /* Testing Harbour's Gauge */
 
-#include "Inkey.ch"
-#include "SetCurs.ch"
+#include "inkey.ch"
+#include "setcurs.ch"
 
 function Test()
 

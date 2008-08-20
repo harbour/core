@@ -148,7 +148,7 @@ IF ISCHARACTER(xNum) .and. nBase >= 2 .and. nBase <= 36
 
    xNum := UPPER( ALLTRIM( xNum) )
 
-   FOR i=1 TO LEN( xNum )
+   FOR i := 1 TO LEN( xNum )
       nPos := AT( SUBSTR( xNum, i, 1 ), WORLD )
       IF nPos == 0 .or. nPos > nBase
          EXIT
