@@ -140,7 +140,7 @@ CFLAGS = -I$(INCLUDE_DIR) $(C_USR) $(CFLAGS) $(HB_BUILD_MODE)
 #**********************************************************
 
 CLIBFLAGS      = -c -q -d -w -w-sig- $(CFLAGS) $(CLIBFLAGS)
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -gc0 -km $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        =  $(LDFLAGS)
 
 #**********************************************************

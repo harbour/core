@@ -49,251 +49,118 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
+#include "common.ch"
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
+
 #include "hbdocdef.ch"
-#include "common.ch"
 
-#define xReadBuffer 4096
-DECLARE  FT_FUSE(CFILE AS STRING,NMODE AS NUMERIC) AS NUMERIC
-DECLARE  ft_FEOF() AS LOGICAL
-DECLARE  FReadLn(  cLine ) AS STRING
-DECLARE  FT_FReadLn() AS STRING
-DECLARE  FT_FGotop()  //AS USUAL
-DECLARE  FT_FSKIP(n AS NUMERIC) //AS USUAL
-DECLARE  FT_MKDIR( CDIR AS STRING ) //AS USUAL
-DECLARE  StrPos( cBuffer AS STRING ) AS NUMERIC
-DECLARE  GetNumberofTableItems( cBuffer AS STRING ) AS NUMERIC
-DECLARE  FREADline( nH AS NUMERIC, @cB AS STRING, nMaxLine AS NUMERIC )
-//DECLARE  HBMAKE_FILEBASE() AS OBJECT
-DECLARE  HBMAKE_FILEBASE ;
-    New( cname AS STRING) AS CLASS HBMAKE_FILEBASE;
-    FOPEN()   AS OBJECT;
-    closefile() AS OBJECT;
-    fskip( OPTIONAL n  AS NUMERIC)  AS OBJECT;
-    FWRITE( c AS STRING) AS OBJECT;
-    retrieve() AS STRING;
-    fgoTop()      AS OBJECT;
-    fgoBottom()     AS OBJECT;
-    fgoto()    AS NUMERIC;
-    create() AS OBJECT;
-    fappendByte( cByte )    AS OBJECT;
-    BuffGet METHOD BufferGet( OPTIONAL lDirection AS LOGICAL ) AS NUMERIC;
-    SKIP( OPTIONAL nRecord AS NUMERIC )                  AS OBJECT;
-    WRITE( cChar AS STRING )                   AS OBJECT;
-    goTop()                          AS OBJECT;
-    goBottom()                       AS OBJECT;
-    GOTO( OPTIONAL nValue AS NUMERIC)                   AS NUMERIC;
-    OPEN()                           AS OBJECT;
-    append(OPTIONAL cline AS STRING) AS OBJECT
+STATIC s_TheHandle
 
-STATIC TheHandle As Object
 /****
-*   FT_FUSE(cFile,nMode)   ---> nHandle
+*   FT_FUSE( cFile, nMode ) ---> nHandle
 *   Open a File
 */
+FUNCTION FT_FUSE( cFile, nMode )
 
-*+--------------------------------------------------------------------
-*+
-*+    Function FT_FUSE()
-*+
-*+--------------------------------------------------------------------
-*+
-FUNCTION FT_FUSE( cFile AS STRING, nMode  AS NUMERIC)
-   Local nHandle as numeric
-   IF nMode == nil
-      nMode := 2
-   ENDIF
-   IF cFile == Nil
-      theHandle:closefile()
-   ENDIF
-   IF cFile <> Nil
-      theHandle := HBMake_FileBase():new( cFile )
-      theHandle:nOpenMode := nMode
-      theHandle:open()
-   ENDIF
-   nHandle:= theHandle:nHan
-RETURN nHandle
+   DEFAULT cFile TO s_TheHandle:closefile()
 
-*+--------------------------------------------------------------------
-*+
-*+    Function ft_FEOF()
-*+
-*+    Called from ( hbdoc.prg    )   1 - function readln()
-*+
-*+--------------------------------------------------------------------
-*+
+   IF cFile != NIL
+
+      s_TheHandle := FileBase():new( cFile )
+      IF nMode != NIL
+         s_TheHandle:nOpenMode := nMode
+      ENDIF
+      s_TheHandle:open()
+   ENDIF
+
+   RETURN s_TheHandle:nHan
+
 FUNCTION ft_FEOF()
-   LOCAL lRETURN as LOGICAL := theHandle:lAtBottom
-RETURN lRETURN
+   RETURN s_TheHandle:lAtBottom
 
-*+--------------------------------------------------------------------
-*+
-*+    Function FReadLn()
-*+
-*+    Called from ( ft_funcs.prg )   1 - function ft_freadln()
-*+
-*+--------------------------------------------------------------------
-*+
-FUNCTION FReadLn(  cLine AS STRING)
+FUNCTION FReadLn()
+   RETURN s_TheHandle:retrieve()
 
-   cLine := theHandle:retrieve()
-RETURN cLine
-
-*+--------------------------------------------------------------------
-*+
-*+    Function FT_FReadLn()
-*+
-*+    Called from ( hbdoc.prg    )   1 - function readln()
-*+
-*+--------------------------------------------------------------------
-*+
 FUNCTION FT_FReadLn()
+   RETURN StrTran( FReadLn(), Chr( 13 ), "" )
 
-   LOCAL cBuffer AS STRING := ""
+PROCEDURE FT_FGotop()
+   s_TheHandle:Gotop()
+   RETURN
 
-   cBuffer := FReadLn( @cBuffer )
+PROCEDURE FT_FSKIP( n )
+   s_TheHandle:Skip( n )
+   RETURN
 
-   cBuffer := STRTRAN( cBuffer, CHR( 13 ), "" )
-
-RETURN cBuffer
-
-*+--------------------------------------------------------------------
-*+
-*+    Function FT_FGotop()
-*+
-*+    Called from ( genng.prg    )   1 - static function readfromtop()
-*+                ( genrtf.prg   )   1 - static function readfromtop()
-*+
-*+--------------------------------------------------------------------
-*+
-FUNCTION FT_FGotop()
-
-   theHandle:Gotop()
-RETURN NIL
-
-*+--------------------------------------------------------------------
-*+
-*+    Function FT_FSKIP()
-*+
-*+--------------------------------------------------------------------
-*+
-FUNCTION FT_FSKIP( n AS NUMERIC)
-
-   TheHandle:Skip( n )
-RETURN nil
-
-*+--------------------------------------------------------------------
-*+
-*+    Function FT_MKDIR()
-*+
-*+    Called from ( hbdoc.prg    )   6 - function main()
-*+
-*+--------------------------------------------------------------------
-*+
-FUNCTION FT_MKDIR( CDIR AS STRING)
+PROCEDURE FT_MKDIR( cDir )
 
 #ifdef HB_COMPAT_C53
-   MAKEDIR( cdir )
+   MakeDir( cDir )
 #else
    HB_SYMBOL_UNUSED( cDir ) // TOFIX
 #endif
 
-RETURN nil
+   RETURN
 
-*+--------------------------------------------------------------------
-*+
-*+    Function StrPos()
-*+
-*+    Called from ( genhtm1.prg  )   1 - function prochtmtable()
-*+                ( genhtm2.prg  )   1 - function prochtmtable()
-*+
-*+--------------------------------------------------------------------
-*+
-FUNCTION StrPos( cBuffer AS STRING)
+FUNCTION StrPos( cBuffer )
 
-   LOCAL nPos AS NUMERIC :=0
-   LOCAL x   AS NUMERIC
-   LOCAL cChar AS STRING
+   LOCAL x
+   LOCAL cChar
+
    FOR x := 1 TO LEN( cBuffer )
+
       cChar := SUBSTR( cBuffer, x, 1 )
-      IF cChar >= CHR( 64 ) .AND. cChar <= CHR( 90 ) .OR. cChar >= CHR( 97 ) ;
-                 .AND. cChar <= CHR( 122 ) .OR. cChar >= CHR( 48 ) .AND. cChar <= CHR( 57 ) ;
-                 .OR. cChar == CHR( 60 ) .OR. cchar == CHR( ASC( "-" ) ) ;
-                 .OR. cchar == CHR( ASC( "(" ) ) .OR. cchar == CHR( ASC( "|" ) ) .OR. ;
-                 cchar == CHR( ASC( "." ) ) .OR. cchar == CHR( ASC( "*" ) ) .OR. ;
-                 cchar == CHR( ASC( "#" ) ) .OR. cchar == CHR( ASC( '"' ) ) .OR. ;
-                 cchar == CHR( ASC( "/" ) ) .OR. cchar == CHR( ASC( "@" ) ) ;
-                 .OR. cchar == CHR( ASC( "=" ) ) .OR. cchar == CHR( ASC( "Ä" ) ) ;
-                 .OR. cchar == CHR( ASC( "?" ) ) .OR. cchar == CHR( ASC( "!" ) ) ;
-                 .OR. cchar == CHR( ASC( "<" ) ) .OR. cchar == CHR( ASC( ">" ) ) ;
-                 .OR. cchar == CHR( ASC( "!" ) ) .OR. cchar == CHR( ASC( "+" ) )
 
-         nPos := x
+      IF cChar >= "A" .AND. cChar <= "Z" .OR. ;
+         cChar >= "a" .AND. cChar <= "z" .OR. ;
+         cChar >= "0" .AND. cChar <= "9" .OR. ;
+         cChar $ "@-(|.*#/=?!<>+" .OR. ;
+         cChar == '"'
 
-         EXIT
+         RETURN x
       ENDIF
    NEXT
 
-RETURN nPos
+   RETURN 0
 
-*+--------------------------------------------------------------------
-*+
-*+    Function GetNumberofTableItems()
-*+
-*+    Called from ( genhtm.prg   )   1 - function prochtmdesc()
-*+                ( genng.prg    )   1 - function procngdesc()
-*+                ( genng1.prg   )   1 - function procngdesc()
-*+
-*+--------------------------------------------------------------------
-*+
 FUNCTION GetNumberofTableItems( cBuffer )
 
-   LOCAL cItem AS STRING
-   LOCAL nItem AS NUMERIC := 0
+   LOCAL cItem
+   LOCAL nItem := 0
 
    cBuffer := ALLTRIM( cBuffer )
 
    DO WHILE AT( SPACE( 3 ), cBuffer ) > 0
       cItem := SUBSTR( cBuffer, 1, AT( SPACE( 3 ), cBuffer ) - 1 )
       IF AT( SPACE( 3 ), cBuffer ) == 0
-         nItem ++
+         nItem++
       ELSE
          cBuffer := ALLTRIM( STRTRAN( cBuffer, cItem, "" ) )
-         nItem ++
+         nItem++
       ENDIF
    ENDDO
-   nItem ++
+   nItem++
+
    RETURN nItem
 
-#define EOL hb_osnewline()
+FUNCTION FREADline( nH, cB, nMaxLine )
 
-*+--------------------------------------------------------------------
-*+
-*+    Function FREADline()
-*+
-*+    Called from ( genng.prg    )   1 - static function readfromtop()
-*+                ( genrtf.prg   )   1 - static function readfromtop()
-*+
-*+--------------------------------------------------------------------
-*+
-FUNCTION FREADline( nH as Numeric, cB AS STRING, nMaxLine as Numeric)
+   LOCAL cLine := SPACE( nMaxLine )
+   LOCAL nSavePos
+   LOCAL nEol
+   LOCAL nNumRead
 
-   LOCAL cLine AS STRING
-   LOCAL nSavePos AS NUMERIC
-   LOCAL nEol AS NUMERIC
-   LOCAL nNumRead AS NUMERIC
-   LOCAL lReturn as Logical
-   cLine    := SPACE( nMaxLine )
    cB       := ""
    nSavePos := FSEEK( nH, 0, FS_RELATIVE )
    nNumRead := FREAD( nH, @cLine, nMaxLine )
-   IF ( nEol := AT( EOL, SUBSTR( cLine, 1, nNumRead ) ) ) == 0
+   IF ( nEol := AT( hb_OSNewLine(), SUBSTR( cLine, 1, nNumRead ) ) ) == 0
       cB := cLine
    ELSE
       cB := SUBSTR( cLine, 1, nEol - 1 )
       FSEEK( nH, nSavePos + nEol + 1, FS_SET )
    ENDIF
-    lReturn := (nNumRead != 0)
-RETURN lReturn
+
+   RETURN nNumRead != 0

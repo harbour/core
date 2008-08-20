@@ -8,6 +8,30 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-20 23:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/mtpl_b32.mak
+   * contrib/mtpl_gcc.mak
+   * contrib/mtpl_vc.mak
+     ! Added -km switch to contribs by default.
+       This way it's synced with the GNU-make system, too.
+
+   * utils/hbdoc/hbdocdef.ch
+   * utils/hbdoc/fclass1.prg
+   * utils/hbdoc/ffile1.prg
+   * utils/hbdoc/ft_funcs.prg
+   * utils/hbmake/hbdocdef.ch
+   * utils/hbmake/fclass1.prg
+   * utils/hbmake/ffile1.prg
+   * utils/hbmake/ft_funcs.prg
+     * Cleanups, optimizations (in ft_funcs.prg)
+     ! Synced these for common files to be completely 
+       identical. In fact this is a fix, as their name 
+       is common so they were "randomly" interchanged 
+       along the non-GNU build process even before.
+       There was only one very small functional difference, 
+       though.
+     ; Please test.
+
 2008-08-20 19:07 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/debug/dbgentry.c
      ! HB_DBG_*() -> __DBG*().

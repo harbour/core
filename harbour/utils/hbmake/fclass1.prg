@@ -47,7 +47,7 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
+
  */
 
 #include "hbclass.ch"
@@ -102,7 +102,7 @@ METHOD new() CLASS FileMan
       ::nLastDosMessage := 0
    ENDIF
 
-   RETURN ( self )
+   RETURN self
 
    // The following are global operations that need to be performed by all
    // files regardless of their format
@@ -123,7 +123,7 @@ METHOD closeAll() CLASS FileMan
       AEVAL( ::aDosHandles, { | aFile | FCLOSE( aFile[ pDOS_HANDLE ] ) } )
    ENDIF
 
-   RETURN ( self )
+   RETURN self
 
    /* Method:  ::rewindAll()
    Params:  N/A
@@ -141,7 +141,7 @@ METHOD rewindAll() CLASS FileMan
       AEVAL( ::aDosHandles, { | aFile | FSEEK( aFile[ pDOS_HANDLE ], 0, 0 ) } )
    ENDIF
 
-   RETURN ( self )
+   RETURN self
 
    /* Method:  ::writeAll()
    Params:  N/A
@@ -158,7 +158,7 @@ METHOD writeAll() CLASS FileMan
       AEVAL( ::aDosHandles, { | aFile | FWRITE( aFile[ pDOS_HANDLE ], "", 0 ) } )
    ENDIF
 
-   RETURN ( self )
+   RETURN self
 
    /* Method:  ::getFileName( <nId> )
    Params:  <nId>           DOS File handle / ID
@@ -181,7 +181,7 @@ METHOD getFileName( nId ) CLASS FileMan                     // Obtains the name 
       ENDIF
    ENDIF
 
-   RETURN ( cName )
+   RETURN cName
 
    /* Method:  ::getFileId( <cName> )
    Params:  <cName>         File names used to store item to stack
@@ -204,7 +204,7 @@ METHOD getFileId( cName ) CLASS FileMan                     // Obtains the ID ba
       ENDIF
    ENDIF
 
-   RETURN ( nId )
+   RETURN nId
 
    /* Method:  ::getFilePath( <xItem> )
    Params:  <xItem>         DOS File handle / ID or stored file name
@@ -238,7 +238,7 @@ METHOD getFilePath( xItem ) CLASS FileMan                   // Obtains file path
       ENDCASE
    ENDIF
 
-   RETURN ( cPath )
+   RETURN cPath
 
    // The following two methods are for the sole purpose of manipulating the
    // array of DOS file handles
@@ -262,7 +262,7 @@ METHOD addItem( nDos, cFile, cPath ) CLASS FileMan
       AADD( ::aDosHandles, { nDos, cFile, cPath } )
    ENDIF
 
-   RETURN ( self )
+   RETURN self
 
    /* Method:  ::delItem( <xItem> )
    Params:  <xItem>         DOS file handle or file name
@@ -323,7 +323,7 @@ METHOD delItem( xItem ) CLASS FileMan
 
    ENDIF
 
-   RETURN ( lSuccess )
+   RETURN lSuccess
 
    /* Method:  noDosError()
    Params:  N/A
@@ -363,4 +363,4 @@ METHOD openfile( cFile, nMethod ) CLASS FileMan
       ::addItem( nFileHandle, cFileName, cPath )
    ENDIF
    ::nHan := nFileHandle
-RETURN ( nFileHandle )
+RETURN nFileHandle

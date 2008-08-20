@@ -140,7 +140,7 @@ CFLAGS         = -MT$(DBGMARKER) $(CFLAGS)
 #**********************************************************
 
 CLIBFLAGS      = -c $(CFLAGS) $(CLIBFLAGS)
-HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -gc0 $(PRG_USR) $(HARBOURFLAGS)
+HARBOURFLAGS   = -i$(INCLUDE_DIR) -n -q0 -w3 -es2 -gc0 -km $(PRG_USR) $(HARBOURFLAGS)
 LDFLAGS        =  $(LDFLAGS)
 
 #**********************************************************

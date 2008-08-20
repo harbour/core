@@ -51,7 +51,10 @@
  */
 
 #include "hbclass.ch"
+
 #include "common.ch"
+#include "fileio.ch"
+
 #include "hbdocdef.ch"
 
 *+--------------------------------------------------------------------
@@ -106,7 +109,7 @@ METHOD new( cName ) CLASS FileBase
    // first thing to do is check to see if there is a valid file
 
    ::nSkipLength := 1
-   ::nOpenMode   := 2                   // Mode for which to open the file
+   ::nOpenMode   := FO_READWRITE        // Mode for which to open the file
    ::nCreateMode := 0                   // Mode for which to create the file
 
    ::cName := cName
