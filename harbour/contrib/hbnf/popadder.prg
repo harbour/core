@@ -454,21 +454,21 @@ STATIC FUNCTION _ftAddScreen(aAdder)
   _ftPushWin(2+nTopOS,2+nAddSpace,22+nTopOS,30+nAddSpace,"   Adder   ",      ;
           "<F-1> for Help",,B_DOUBLE)
   nCol := 5+nAddSpace
-  @  7+nTopOS, nCol SAY "      +---+ +---+ +---+"
-  @  8+nTopOS, nCol SAY "      |   | |   | |   |"
-  @  9+nTopOS, nCol SAY "      +---+ +---+ +---+"
-  @ 10+nTopOS, nCol SAY "+---+ +---+ +---+ +---+"
-  @ 11+nTopOS, nCol SAY "|   | |   | |   | |   |"
-  @ 12+nTopOS, nCol SAY "+---+ +---+ +---+ |   |"
-  @ 13+nTopOS, nCol SAY "+---+ +---+ +---+ |   |"
-  @ 14+nTopOS, nCol SAY "|   | |   | |   | |   |"
-  @ 15+nTopOS, nCol SAY "+---+ +---+ +---+ +---+"
-  @ 16+nTopOS, nCol SAY "+---+ +---+ +---+ +---+"
-  @ 17+nTopOS, nCol SAY "|   | |   | |   | |   |"
-  @ 18+nTopOS, nCol SAY "+---+ +---+ +---+ |   |"
-  @ 19+nTopOS, nCol SAY "+---------+ +---+ |   |"
-  @ 20+nTopOS, nCol SAY "|         | |   | |   |"
-  @ 21+nTopOS, nCol SAY "+---------+ +---+ +---+"
+  @  7+nTopOS, nCol SAY '      зддд© зддд© зддд©'
+  @  8+nTopOS, nCol SAY '      Ё   Ё Ё   Ё Ё   Ё'
+  @  9+nTopOS, nCol SAY '      юддды юддды юддды'
+  @ 10+nTopOS, nCol SAY 'зддд© зддд© зддд© зддд©'
+  @ 11+nTopOS, nCol SAY 'Ё   Ё Ё   Ё Ё   Ё Ё   Ё'
+  @ 12+nTopOS, nCol SAY 'юддды юддды юддды Ё   Ё'
+  @ 13+nTopOS, nCol SAY 'зддд© зддд© зддд© Ё   Ё'
+  @ 14+nTopOS, nCol SAY 'Ё   Ё Ё   Ё Ё   Ё Ё   Ё'
+  @ 15+nTopOS, nCol SAY 'юддды юддды юддды юддды'
+  @ 16+nTopOS, nCol SAY 'зддд© зддд© зддд© зддд©'
+  @ 17+nTopOS, nCol SAY 'Ё   Ё Ё   Ё Ё   Ё Ё   Ё'
+  @ 18+nTopOS, nCol SAY 'юддды юддды юддды Ё   Ё'
+  @ 19+nTopOS, nCol SAY 'зддддддддд© зддд© Ё   Ё'
+  @ 20+nTopOS, nCol SAY 'Ё         Ё Ё   Ё Ё   Ё'
+  @ 21+nTopOS, nCol SAY 'юддддддддды юддды юддды'
   _ftSetWinColor(W_CURR,W_TITLE)
   nCol := 7+nAddSpace
   @ 11+nTopOS, nCol SAY "7"
