@@ -55,8 +55,10 @@
 #include "inkey.ch"
 #include "common.ch"
 #include "hbdocdef.ch"
-//  output lines on the screen
 
+#define DELIM   "$"                 // keyword delimiter
+
+//  output lines on the screen
 #define INFILELINE   10
 #define MODULELINE   12
 #define LINELINE     14
@@ -256,7 +258,7 @@ FUNCTION ProcessiNg()
                      ENDIF
                   NEXT
 
-                  oNgi:WritePar( CRLF )
+                  oNgi:WritePar( hb_OSNewLine() )
                ENDIF
 
                oNgi:Close()
@@ -756,7 +758,7 @@ FUNCTION ProcNgiInput()
             cBuffer := ""
          ENDIF
 
-         FWRITE( nXhandle, cBuffer + pCRLF )
+         FWRITE( nXhandle, cBuffer + hb_OSNewLine() )
 
       ENDDO
       IF LEN( aAlso ) > 0
@@ -766,7 +768,7 @@ FUNCTION ProcNgiInput()
          NEXT
       ENDIF
       //    cBuffer:=strtran(cBuffer,chr(10),"")
-      FWRITE( nXhandle, cBuffer + pCRLF )
+      FWRITE( nXhandle, cBuffer + hb_OSNewLine() )
 
       lEof  := .F.
       aalso := {}
@@ -800,7 +802,7 @@ FUNCTION ProcNgiInput()
             cBuffer := ""
          ENDIF
          //    cBuffer:=strtran(cBuffer,chr(10),"")
-         FWRITE( nYhandle, cBuffer + pCRLF )
+         FWRITE( nYhandle, cBuffer + hb_OSNewLine() )
 
       ENDDO
 
@@ -811,7 +813,7 @@ FUNCTION ProcNgiInput()
          NEXT
       ENDIF
       //    cBuffer:=strtran(cBuffer,chr(10),"")
-      FWRITE( nYhandle, cBuffer + pCRLF )
+      FWRITE( nYhandle, cBuffer + hb_OSNewLine() )
 
       lEof  := .F.
       aAlso := {}
@@ -859,7 +861,7 @@ FUNCTION ProcNgiInput()
                cBuffer := ""
             ENDIF
             //            cBuffer:=strtran(cBuffer,chr(10),"")
-            FWRITE( y, cBuffer + pCRLF )
+            FWRITE( y, cBuffer + hb_OSNewLine() )
 
          ENDDO
 
@@ -868,7 +870,7 @@ FUNCTION ProcNgiInput()
             FOR nAlso := 1 TO LEN( aAlso )
                cBuffer += aAlso[ nalso ]
             NEXT
-            FWRITE( y, cBuffer + pCRLF )
+            FWRITE( y, cBuffer + hb_OSNewLine() )
 
          ENDIF
       ENDIF

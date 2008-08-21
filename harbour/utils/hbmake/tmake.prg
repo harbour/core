@@ -52,9 +52,7 @@
 #include "hbclass.ch"
 #include "common.ch"
 
-#define EOL  hb_osnewline()
-#define CRLF hb_osnewline()
-Static  lEof :=  .F.
+STATIC lEof := .F.
 
 *------------
 CLASS THBMAKE
@@ -192,29 +190,21 @@ METHOD ReadMakefile(cFile) CLASS THbMake
     WHILE !leof
 
         IF At( cMacro, cBuffer ) > 0
-
             lMacroSec := .T.
             lBuildSec := .f.
             lComSec   := .f.
-
         ELSEIF At( cBuild, cBuffer ) > 0
-
             lMacroSec := .f.
             lBuildSec := .T.
             lComSec   := .f.
-
         ELSEIF At( cCom, cBuffer ) > 0
-
             lBuildSec := .f.
             lComSec   := .t.
             lMacroSec := .f.
-
         ELSE
-
             ? "Invalid Make File"
             Fclose( nHandle )
             RETURN Nil
-
         ENDIF
 
         cTemp := Trim( Substr( ReadLN( @lEof ), 1 ) )
@@ -222,15 +212,13 @@ METHOD ReadMakefile(cFile) CLASS THbMake
         IF At( "//", ctemp ) > 0
 
             WHILE At( "//", ctemp ) > 0
-
                 ctemp := Strtran( ctemp, " //", "" )
                 cTemp += Trim( Substr( ReadLN( @lEof ), 1 ) )
-
             ENDDO
 
             ctemp := Strtran( ctemp, " //", "" )
+        ENDIF
 
-        ENDIF       
         aTemp := ListasArray2( Alltrim( cTemp ), "=" )
 
         IF lmacrosec
@@ -240,16 +228,11 @@ METHOD ReadMakefile(cFile) CLASS THbMake
                 IF Len( aTemp ) > 1
 
                     IF At( "$", aTemp[ 2 ] ) > 0
-
                        Aadd( ::aMacros, { aTemp[ 1 ], ::replacemacros( aTemp[ 2 ] ) } )
-
                     ELSE
-
                       Aadd( ::aMacros, { aTemp[ 1 ], aTemp[ 2 ] } )
 //                    tracelog(aTemp[ 1 ], aTemp[ 2 ])
-
                     ENDIF
-
                 ENDIF
 
                 IF aTemp[ 1 ] == "PROJECT"
@@ -264,63 +247,63 @@ METHOD ReadMakefile(cFile) CLASS THbMake
                 ENDIF
 
                 IF aTemp[ 1 ] == "C4W"
-                   ::cFMC:= aTemp[2]
-                   ::lCw :=.t.
+                   ::cFMC := aTemp[2]
+                   ::lCw := .t.
                 endif
 
                 IF aTemp[ 1 ] == "FWH"
-                   ::cFMC:= aTemp[2]
-                   ::lFwh           :=.t.
+                   ::cFMC := aTemp[2]
+                   ::lFwh := .t.
                 endif
 
                 IF aTemp[ 1 ] == "MINIGUI"
-                   ::cFMC:= aTemp[2]
-                   ::lmini :=.t.
+                   ::cFMC := aTemp[2]
+                   ::lmini := .t.
                 endif
 
                 IF aTemp[ 1 ] == "HWGUI"
-                   ::cFMC:= aTemp[2]
-                   ::lHwGui :=.t.
+                   ::cFMC := aTemp[2]
+                   ::lHwGui := .t.
                 endif
 
                 IF aTemp[ 1 ] == "GTWVT"
-                   ::cFMC:= ""
-                   ::lGtwvt :=.t.
+                   ::cFMC := ""
+                   ::lGtwvt := .t.
                 endif
 
                 IF aTemp[ 1 ] == "GTWVW"
-                   ::cFMC:= ""
-                   ::lGtwvw :=.t.
+                   ::cFMC := ""
+                   ::lGtwvw := .t.
                 endif
                 IF aTemp[ 1 ] == "MWVW"
-                   ::cFMC:= ""
-                   ::lGtwvw :=.t.
-                   ::lMWvW  :=.t.
+                   ::cFMC := ""
+                   ::lGtwvw := .t.
+                   ::lMWvW  := .t.
                 endif
 
                 IF aTemp[ 1 ] == "XWT"
-                   ::cFMC:= ""
-                   ::lXWT :=.t.
+                   ::cFMC := ""
+                   ::lXWT := .t.
                 endif
 
                 IF aTemp[ 1 ] == "WHOO"
-                   ::cFMC:= aTemp[2]
-                   ::lWhoo  :=.t.
+                   ::cFMC := aTemp[2]
+                   ::lWhoo := .t.
                 endif
 
                 IF aTemp[ 1 ] == "WHAT32"
-                   ::cFMC:= aTemp[2]
-                   ::lWhat32  :=.t.
+                   ::cFMC := aTemp[2]
+                   ::lWhat32 := .t.
                 endif
 
                 IF aTemp[ 1 ] == "XHGTK"
-                   ::cFMC:= aTemp[2]
-                   ::lxHGtk  :=.t.
+                   ::cFMC := aTemp[2]
+                   ::lxHGtk := .t.
                 endif
 
                 IF aTemp[ 1 ] == "MEDIATOR"
-                   ::cMedpath:= aTemp[2]
-                   ::lmEDIATOR :=.t.
+                   ::cMedpath := aTemp[2]
+                   ::lmEDIATOR := .t.
                 endif
 
                 IF aTemp[ 1 ] == "COMPRESS"
@@ -355,14 +338,11 @@ METHOD ReadMakefile(cFile) CLASS THbMake
                    ::cWarningLevel := Val( aTemp[ 2 ] )
                 endif
 
-
                 IF aTemp[ 1 ] == "OBJFILES"
                      cObjitem := substr( atemp[ 2 ],1,at(")",atemp[ 2 ]))
       
                     ::cObj := ::replacemacros(cObjItem)
-      
                     ::aObjs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-
                 ENDIF
 
                 IF aTemp[ 1 ] == "OBJCFILES"
@@ -372,28 +352,20 @@ METHOD ReadMakefile(cFile) CLASS THbMake
                     IF Len( atemp1 ) == 1
 
                         IF !Empty( atemp[ 1 ] )
-
                             ::aObjsC := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-
                         ENDIF
                     ELSE
                         ::aObjsC := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-
                     ENDIF
-
                 ENDIF
 
                 IF aTemp[ 1 ] == "PRGFILES"
-
                     ::aPrgs     := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
                     lExtended := .T.
-
                 ENDIF
 
                 IF aTemp[ 1 ] == "PRGFILE"
-
                     ::aPrgs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-
                 ENDIF
 
                 IF atemp[ 1 ] == "CFILES"
@@ -405,23 +377,14 @@ METHOD ReadMakefile(cFile) CLASS THbMake
                         IF ( Len( aTempCFiles ) == 1 )
 
                             IF !Empty( aTempCFiles[ 1 ] )
-
                                 ::aCs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-
                             ENDIF
-
                         ELSE
-
                             ::aCs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-
                         ENDIF
-
                     ELSE
-
                         ::aCs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-
                     ENDIF
-
                 ENDIF
 
                 IF aTemp[ 1 ] == "EXTLIBFILES"
@@ -436,25 +399,18 @@ METHOD ReadMakefile(cFile) CLASS THbMake
                     FOR EACH cItem in :: aRes
                        ::cRes += cItem +" "
                     NEXT
-
                 ENDIF
 
                 IF aTemp[ 1 ] == "RECURSE"
-
                    ::lRecurse := AT( "YES" , aTemp[ 2 ] ) > 0
-
                 ENDIF
 
                 IF aTemp[ 1 ] == "LIBRARY"
-
                    ::lLibrary := AT( "YES", aTemp[ 2 ] ) > 0
-
                 ENDIF  
 
                 IF aTemp[ 1 ] == "INSTALLLIB"
-
                    ::lInstallLib := AT( "YES", aTemp[ 2 ] ) > 0
-
                 ENDIF  
 
                 IF aTemp[ 1 ] ==  "HARBOURFLAGS"
@@ -494,17 +450,12 @@ METHOD ReadMakefile(cFile) CLASS THbMake
                 IF aTemp[ 1 ] == "EDITOR"
                    ::cEditor := aTemp[ 2 ]
                 endif
-
             ENDIF
-
         ENDIF
 
         IF lbuildSec
-
             szProject   := cTemp
             ::aBuildOrder := Listasarray2( cTemp, ":" )
-
-
         ENDIF
 
         IF lComSec        // Ath added 31-05-2006
@@ -516,19 +467,13 @@ METHOD ReadMakefile(cFile) CLASS THbMake
             IF aTemp[ 1 ] == ".prg.obj:" .OR. aTemp[ 1 ] == ".prg.o:"
                 lPrgObjRule := .T.
             ENDIF
-
         ENDIF               // end Ath added 31-05-2006
         
         IF cTemp = "#BUILD"
-
             cBuffer := cTemp
-
         ELSEIF cTemp == "#COMMANDS"
-
             cbuffer := cTemp
-
         ENDIF
-
     ENDDO
 
     qout( nhandle)
@@ -563,15 +508,11 @@ METHOD FindMacro( cMacro, cRead ) CLASS THBMAKE
     cMacro := Substr( cMacro, 1, At( ")", cMacro ) )
 
     IF At( "-", cMacro ) > 0
-
         cMacro := Substr( cMacro, 3 )
-
     ENDIF
 
     IF At( ";", cMacro ) > 0
-
         cMacro := Substr( cMacro, At( ";", cMacro ) + 1 )
-
     ENDIF
 
     nPos := Ascan( ::aMacros, { | x | "$(" + Alltrim( x[ 1 ] ) + ")" == cMacro } )
@@ -582,15 +523,10 @@ METHOD FindMacro( cMacro, cRead ) CLASS THBMAKE
         cTemp := Strtran( cTemp, ")", "" )
 
         IF !Empty( cTemp )
-
             cRead := Alltrim( Strtran( cRead, cMacro, Gete( cTemp ) ) )
-
         ENDIF
-
     ELSE
-
         cRead := Alltrim( Strtran( cRead, cMacro, ::aMacros[ nPos, 2 ] ) )
-
     ENDIF
 
 RETURN cRead

@@ -50,17 +50,15 @@
  *
  */
 
-#ifdef __HARBOUR__
-#define NANFOR
-#endif
-
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
 #include "hbdocdef.ch"
 #include "common.ch"
-//  output lines on the screen
 
+#define DELIM   "$"                 // keyword delimiter
+
+//  output lines on the screen
 #define INFILELINE   10
 #define MODULELINE   12
 #define LINELINE     14
@@ -129,7 +127,7 @@ FUNCTION ProcessWww()
    LOCAL nEnd
    LOCAL nCount
 
-   LOCAL cBar          := REPLICATE( "-", 80 ) + CRLF
+   LOCAL cBar          := REPLICATE( "-", 80 ) + hb_OSNewLine()
    LOCAL nMode
    LOCAL cFuncName
    LOCAL cOneLine

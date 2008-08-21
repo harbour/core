@@ -47,20 +47,17 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
-
  */
-
-#ifdef __HARBOUR__
-#define NANFOR
-#endif
 
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
 #include "hbdocdef.ch"
 #include "common.ch"
-//  output lines on the screen
 
+#define DELIM   "$"                 // keyword delimiter
+
+//  output lines on the screen
 #define INFILELINE   10
 #define MODULELINE   12
 #define LINELINE     14
@@ -1172,9 +1169,9 @@ FUNCTION Procos2Desc( cBuffer, oOs2, cStyle )
          IF !EMPTY( cBuffer )
             cBuffer := SUBSTR( cBuffer, 2 )
 
-            oos2:writetext(cbuffer+CRLF+".br")
+            oos2:writetext(cbuffer + hb_OSNewLine() + ".br")
 
-            oOs2:writeText( cBuffer+CRLF+".br") 
+            oOs2:writeText( cBuffer + hb_OSNewLine() + ".br") 
          ENDIF
          */
          IF !EMPTY( cBuffer )

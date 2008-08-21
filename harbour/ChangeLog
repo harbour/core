@@ -8,6 +8,59 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-21 14:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/hbcomp.h
+     * Minor formatting (alignment).
+
+   * ChangeLog
+     ! Added missing file from previous entry.
+
+   * contrib/hbclipsm/gauge.c
+     ! Fixed very old bug (too small buffer for snprintf()).
+     * Minor adjustment to Harbour percentage var retrieval.
+
+   * common.mak
+   * utils/hbmake/Makefile
+   * utils/hbmake/bld_b32.bat
+   * utils/hbmake/bld_vc.bat
+   - utils/hbmake/checkdef.ch
+   - utils/hbmake/checks.ch
+   - utils/hbmake/checks.prg
+   * utils/hbmake/fclass1.prg
+   * utils/hbmake/ffile1.prg
+   * utils/hbmake/ft_funcs.prg
+   - utils/hbmake/hbdocdef.ch
+   * utils/hbmake/hbmake.prg
+   * utils/hbmake/hbmlang.c
+   * utils/hbmake/hbmutils.prg
+   * utils/hbmake/Makefile
+   * utils/hbmake/pickfile.prg
+   * utils/hbmake/prb_stak.prg
+   - utils/hbmake/radiodef.ch
+   - utils/hbmake/radios.ch
+   - utils/hbmake/radios.prg
+   * utils/hbmake/readline.c
+   * utils/hbmake/tmake.prg
+   * utils/hbdoc/fclass1.prg
+   * utils/hbdoc/ffile1.prg
+   * utils/hbdoc/ft_funcs.prg
+   * utils/hbdoc/genasc.prg
+   * utils/hbdoc/genchm.prg
+   * utils/hbdoc/genhpc.prg
+   * utils/hbdoc/genhtm.prg
+   * utils/hbdoc/genng.prg
+   * utils/hbdoc/genos2.prg
+   * utils/hbdoc/genpdf1.prg
+   * utils/hbdoc/genrtf.prg
+   * utils/hbdoc/gentrf.prg
+   * utils/hbdoc/hbdoc.prg
+   * utils/hbdoc/hbdocdef.ch
+     * Cleanups.
+     % Removed unused parts.
+     ! GAUGE*() functions synced with hbclipsm.lib.
+     * Removed hbclip.ch requirement when compiled 
+       with CA-Cl*pper. (not tested)
+
 2008-08-21 10:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/dbinfo.ch
    * include/dbstruct.ch
@@ -17,6 +70,7 @@
      ! Added "also used from C code" comments.
 
    * utils/hbmake/ffile1.prg
+   * utils/hbdoc/ffile1.prg
      ! Minor cleanup.
 
    * include/hbgfxdef.ch

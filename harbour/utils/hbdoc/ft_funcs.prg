@@ -55,8 +55,6 @@
 #include "fileio.ch"
 #include "inkey.ch"
 
-#include "hbdocdef.ch"
-
 STATIC s_TheHandle
 
 /****

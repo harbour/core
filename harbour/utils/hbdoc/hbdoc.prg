@@ -108,16 +108,16 @@
  *    Fixed the help text when hbdoc is called with out any parameter
  */
 
-#ifdef __HARBOUR__
-#define NANFOR
-#endif
-
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
 #include "hbdocdef.ch"
-//  output lines on the screen
 
+#define CRLF HB_OSNewLine()
+
+#xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
+
+//  output lines on the screen
 #define INFILELINE   10
 #define MODULELINE   12
 #define LINELINE     14

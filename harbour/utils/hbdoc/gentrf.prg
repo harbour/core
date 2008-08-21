@@ -50,10 +50,6 @@
  *
  */
 
-#ifdef __HARBOUR__
-#define NANFOR
-#endif
-
 #include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
@@ -70,7 +66,6 @@
 //  The delimiter
 #define DELIM   "$"                 // keyword delimiter
 
-#xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
 MEMVAR aDirlist
 MEMVAR aDocInfo
 STATIC aAlso

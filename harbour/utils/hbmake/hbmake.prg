@@ -49,25 +49,19 @@
  * If you do not wish that, delete this exception notice.
  *
  */
- /*
-  * Modified By Sandro Freire sandrorrfreire at yahoo.com.br
-  * added suport to OS Unix
-  *
-  */
+
+/*
+ * Modified By Sandro Freire sandrorrfreire at yahoo.com.br
+ * added suport to OS Unix
+ */
+
 #include "fileio.ch"
 #include "common.ch"
-#include "radios.ch"
 #include "inkey.ch"
-
-//#pragma -w1
-
-//#include "wvtgui.ch"
 
 #define EOL Hb_OsNewLine()
 #define CRLF Hb_OsNewLine()
 #xtranslate TimeToSec(<x>) => ( ( Val( Substr( <x>, 1, 2 ) ) * 3600 ) +( Val( Substr( <x>, 4, 2 ) ) * 60 ) + ( Val( Substr( <x>, 7, 2 ) ) ) )
-
-//REQUEST HB_NOMOUSE
 
 #translate DateDiff(<x>,<y>) => (<x>-<y>)
 

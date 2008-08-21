@@ -57,8 +57,10 @@
 #include "inkey.ch"
 #include "common.ch"
 #include "hbdocdef.ch"
-//  output lines on the screen
 
+#define DELIM   "$"                 // keyword delimiter
+
+//  output lines on the screen
 #define INFILELINE   10
 #define MODULELINE   12
 #define LINELINE     14

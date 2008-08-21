@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /*
  * xHarbour Project source code:
  * hbmutils.prg - utils for hbmake.
@@ -51,22 +52,6 @@
 
 #include "common.ch"
 #include "directry.ch"
-#ifndef __HARBOUR__
-    #include "hbclip.ch"
-#else
-    DECLARE ExtenPrg( cExt AS STRING, nType AS NUMERIC ) AS STRING
-    DECLARE Exten( cExt as string, nType as numeric ) as string
-    DECLARE GetSourceFiles( lSubDir as logical ) as ARRAY
-    DECLARE GetDirs( cPat as USUAL ) as Array
-    DECLARE GetHarbourDir() as String
-    DECLARE GetBccDir() as String
-    DECLARE GetVccDir() as String
-    DECLARE GetMakeDir() as String
-    DECLARE HB_ARGV( n as numeric ) as string
-    DECLARE HbMake_FileDate( c as String ) as string
-    DECLARE GetPoccDir() as String
-
-#endif
 
 *--------------------------------------------
 FUNCTION GetSourceFiles( lSubDir, lGcc, cOs )

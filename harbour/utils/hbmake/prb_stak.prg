@@ -2,7 +2,7 @@
  * $Id$
  */
 
-*+膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊
+*+--------------------------------------------------------------------
 *+
 *+    Source Module => prb_stak.prg
 *+
@@ -40,21 +40,13 @@
 *+
 *+    Reformatted by Click! 2.03 on Mar-30-1999 at 11:19 pm
 *+
-*+膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊膊
+*+--------------------------------------------------------------------
 
 #include "common.ch"
+
 static SCR := {}
 static CNT := 0
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Procedure PUTSCREEN()
-*+
-*+    Called from ( pbinit.prg   )   4 - procedure pbinit()
-*+                ( pickarry.prg )   1 - function pickarry()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
 procedure PUTSCREEN( T, L, b, r )
 
 default T to 0
@@ -63,19 +55,10 @@ default b to maxrow()
 default r to maxcol()
 
 aadd( SCR, { T, L, b, r, savescreen( T, L, b, r ), row(), col(), set( _SET_CURSOR ), setcolor() } )
-CNT ++
+CNT++
 
 return
 
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
-*+    Procedure GETSCREEN()
-*+
-*+    Called from ( pbinit.prg   )   4 - procedure pbinit()
-*+                ( pickarry.prg )   1 - function pickarry()
-*+
-*+北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北北
-*+
 procedure GETSCREEN( OPTION )
 
 default OPTION to 1

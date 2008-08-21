@@ -112,17 +112,17 @@ extern int hb_compVariableScope( HB_COMP_DECL, char * );
 #define HB_VS_STATIC_VAR     16
 #define HB_VS_FILEWIDE       32
 /* variables declared outside of a current function/procedure */
-#define HB_VS_GLOBAL_MEMVAR   (HB_VS_FILEWIDE | HB_VS_LOCAL_MEMVAR)
-#define HB_VS_GLOBAL_FIELD    (HB_VS_FILEWIDE | HB_VS_LOCAL_FIELD)
-#define HB_VS_GLOBAL_STATIC   (HB_VS_FILEWIDE | HB_VS_STATIC_VAR)
+#define HB_VS_GLOBAL_MEMVAR   ( HB_VS_FILEWIDE | HB_VS_LOCAL_MEMVAR )
+#define HB_VS_GLOBAL_FIELD    ( HB_VS_FILEWIDE | HB_VS_LOCAL_FIELD )
+#define HB_VS_GLOBAL_STATIC   ( HB_VS_FILEWIDE | HB_VS_STATIC_VAR )
 
-#define VU_NOT_USED    0
-#define VU_INITIALIZED 1
-#define VU_USED        2
+#define VU_NOT_USED           0
+#define VU_INITIALIZED        1
+#define VU_USED               2
 
-#define VT_OFFSET_BYREF             60
-#define VT_OFFSET_VARIANT           90
-#define VT_OFFSET_OPTIONAL          90
+#define VT_OFFSET_BYREF       60
+#define VT_OFFSET_VARIANT     90
+#define VT_OFFSET_OPTIONAL    90
 
 /*
  * flags for bFlags member

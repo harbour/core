@@ -16,7 +16,6 @@ PRG_SOURCES=\
 	ffile1.prg \
 	ft_funcs.prg \
 	radios.prg \
-	checks.prg \
 	pickarry.prg \
 	pickfile.prg \
 	prb_stak.prg \

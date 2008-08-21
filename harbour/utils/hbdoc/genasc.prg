@@ -47,13 +47,8 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
-
  *
  */
-
-#ifdef __HARBOUR__
-#define NANFOR
-#endif
 
 #include "directry.ch"
 #include "fileio.ch"
@@ -71,7 +66,6 @@
 //  The delimiter
 #define DELIM   "$"                 // keyword delimiter
 
-#xtranslate UPPERLOWER(<exp>) => (UPPER(SUBSTR(<exp>,1,1))+LOWER(SUBSTR(<exp>,2)))
 MEMVAR aDirList
 MEMVAR aDocInfo
 MEMVAR aWww

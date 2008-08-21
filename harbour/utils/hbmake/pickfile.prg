@@ -72,9 +72,6 @@
 
 #include "common.ch"
 #include "box.ch"
-#ifndef __HARBOUR__
-#include "hbclip.ch"
-#endif
 #include "directry.ch"
 
 *+--------------------------------------------------------------------

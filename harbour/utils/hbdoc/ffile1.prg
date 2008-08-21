@@ -55,7 +55,7 @@
 #include "common.ch"
 #include "fileio.ch"
 
-#include "hbdocdef.ch"
+#define pBUFFER_LENGTH 4096
 
 *+--------------------------------------------------------------------
 *+
@@ -134,13 +134,13 @@ METHOD fskip( nRecords ) CLASS FileBase
       ::nPosition       := FSEEK( ::nDosHandle, 0, 1 )
       DO CASE
          CASE ::nPosition == ::nEndOfFile
-            ::lAtBottom := pTRUE
-            ::lAtTop    := pFALSE
+            ::lAtBottom := .T.
+            ::lAtTop    := .F.
          CASE ::nPosition <= 1
-            ::lAtTop    := pTRUE
-            ::lAtBottom := pFALSE
+            ::lAtTop    := .T.
+            ::lAtBottom := .F.
          OTHERWISE
-            ::lAtBottom := ::lAtTop := pFALSE
+            ::lAtBottom := ::lAtTop := .F.
       ENDCASE
    ENDIF
 
@@ -156,8 +156,8 @@ METHOD fgotop() CLASS FileBase
    IF ::noDosError() .AND. ::nDosHandle > 0
       ::nPosition       := FSEEK( ::nDosHandle, 0, 0 )
       ::nLastDosMessage := FERROR()
-      ::lAtTop          := pTRUE
-      ::lAtBottom       := pFALSE
+      ::lAtTop          := .T.
+      ::lAtBottom       := .F.
    ENDIF
 
    RETURN Self
@@ -172,8 +172,8 @@ METHOD fgoBottom() CLASS FileBase
    IF ::noDosError() .AND. ::nDosHandle > 0
       ::nPosition       := FSEEK( ::nDosHandle, 0, 2 )
       ::nLastDosMessage := FERROR()
-      ::lAtTop          := pFALSE
-      ::lAtBottom       := pTRUE
+      ::lAtTop          := .F.
+      ::lAtBottom       := .T.
    ENDIF
 
    RETURN Self
@@ -189,7 +189,7 @@ METHOD closefile() CLASS FileBase
       FCLOSE( ::nDosHandle )
       ::nLastDosMessage := FERROR()
       ::delItem( ::nDosHandle )
-      ::lAtTop    := ::lAtBottom := pFALSE
+      ::lAtTop    := ::lAtBottom := .F.
       ::nPosition := 0
    ENDIF
 
@@ -213,7 +213,7 @@ METHOD retrieve() CLASS FileBase
       FSEEK( ::nDosHandle, - ( nMoved ), 1 )                // Re-position the pointer
    ENDIF
 
-   RETURN ( cReturn )
+   RETURN cReturn
 
 /* Method:  write(<cChar>)
    Params:  <cChar>
@@ -224,7 +224,7 @@ METHOD retrieve() CLASS FileBase
 METHOD FWRITE( cChar ) CLASS FileBase
 
    IF ::noDosError() .AND. ::nDosHandle > 0
-      IF cChar IS pCHARACTER
+      IF ISCHARACTER( cChar )
          FWRITE( ::nDosHandle, cChar, 1 )
          ::nLastDosMessage := FERROR()
          IF ::noDosError()
@@ -245,7 +245,7 @@ METHOD FWRITE( cChar ) CLASS FileBase
 METHOD fgoto( nValue ) CLASS FileBase
 
    IF ::noDosError() .AND. ::nDosHandle > 0
-      IF nValue IS pNUMERIC
+      IF ISNUMBER( nValue )
          IF nValue > 0 .AND. ;
                     ( nValue * ::nSkipLength ) <= ::nEndOfFile
             FSEEK( ::nDosHandle, ( nValue * ::nSkipLength ), 0 )
@@ -253,19 +253,19 @@ METHOD fgoto( nValue ) CLASS FileBase
             ::nPosition       := FSEEK( ::nDosHandle, 0, 1 )
             DO CASE
                CASE ::nPosition == ::nEndOfFile
-                  ::lAtBottom := pTRUE
-                  ::lAtTop    := pFALSE
+                  ::lAtBottom := .T.
+                  ::lAtTop    := .F.
                CASE ::nPosition <= 1
-                  ::lAtTop    := pTRUE
-                  ::lAtBottom := pFALSE
+                  ::lAtTop    := .T.
+                  ::lAtBottom := .F.
                OTHERWISE
-                  ::lAtBottom := ::lAtTop := pFALSE
+                  ::lAtBottom := ::lAtTop := .F.
             ENDCASE
          ENDIF
       ENDIF
    ENDIF
 
-   RETURN ( ::nPosition )
+   RETURN ::nPosition
 
 /* Method:  create()
    Params:  N/A
@@ -298,8 +298,8 @@ METHOD FOPEN() CLASS FileBase
       ::nDosHandle :=::openfile( ::cName, ::nOpenMode )
       ::nEndOfFile := FSEEK( ::nDosHandle, 0, 2 )
       ::nPosition  := FSEEK( ::nDosHandle, 0, 0 )
-      ::lAtTop     := pTRUE
-      ::lAtBottom  := pFALSE
+      ::lAtTop     := .T.
+      ::lAtBottom  := .F.
    ENDIF
 
 RETURN Self
@@ -315,7 +315,7 @@ METHOD fappendByte( cByte ) CLASS FileBase
          ::nEndOfFile  := FSEEK( ::nDosHandle, 0, 2 )
          ::nPosition   := FSEEK( ::nDosHandle, - ( LEN( cByte ) ), 2 )
          ::nSkipLength := LEN( cByte )
-         ::lAtBottom   := ::lAtTop := pFALSE
+         ::lAtBottom   := ::lAtTop := .F.
       ENDIF
    ENDIF
 
@@ -327,8 +327,8 @@ METHOD OPEN() CLASS FileBase
    ::nEndOfFile    := FSEEK( Self:nDosHandle, 0, 2 )
    FSEEK( Self:nDosHandle, 0, 0 )
    ::nSkipLength := Self:Buffget()
-   ::lAtTop      := pTRUE
-   ::lAtBottom   := pFALSE
+   ::lAtTop      := .T.
+   ::lAtBottom   := .F.
    ::nHan        := Self:nDosHandle
    RETURN Self
 
@@ -354,7 +354,7 @@ METHOD gotop() CLASS FileBase
 METHOD goBottom() CLASS FileBase
 
    LOCAL cBuffer       // as char
-   LOCAL lWithCRLF := pFALSE               // as logical
+   LOCAL lWithCRLF := .F.               // as logical
 
    IF Self:noDosError() .AND. Self:nDosHandle > 0
       ::fgobottom()
@@ -362,11 +362,11 @@ METHOD goBottom() CLASS FileBase
       cBuffer := SPACE( pBUFFER_LENGTH )
       FSEEK( Self:nDosHandle, - ( pBUFFER_LENGTH ), 2 )
       FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
-      IF RIGHT( cBuffer, 2 ) == pCRLF   // We need to remove this extra one!
+      IF RIGHT( cBuffer, 2 ) == hb_OSNewLine()   // We need to remove this extra one!
          cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - 2 )
-         lWithCRLF := pTRUE
+         lWithCRLF := .T.
       ENDIF
-      cBuffer       := SUBSTR( cBuffer, RAT( pCRLF, cBuffer ) + 2 )
+      cBuffer       := SUBSTR( cBuffer, RAT( hb_OSNewLine(), cBuffer ) + 2 )
       ::nSkipLength := LEN( cBuffer ) + iif( lWithCRLF, 2, 0 )
       ::nposition   := FSEEK( Self:nDosHandle, - ( LEN( cBuffer ) ), 2 )
       IF lWithCRLF
@@ -390,7 +390,7 @@ METHOD goBottom() CLASS FileBase
       FCLOSE( Self:nDosHandle )
       Self:nLastDosMessage := FERROR()
       Self:delItem( Self:nDosHandle )
-      Self:lAtTop    := Self:lAtBottom := pFALSE
+      Self:lAtTop    := Self:lAtBottom := .F.
       Self:nPosition := 0
    ENDIF
 
@@ -406,7 +406,7 @@ METHOD goBottom() CLASS FileBase
 METHOD WRITE( cChar ) CLASS FileBase
 
    IF Self:noDosError() .AND. Self:nDosHandle > 0
-      IF cChar IS pCHARACTER
+      IF ISCHARACTER( cChar )
          IF cChar > Self:nSkipLength    // we are going to truncate for now...
             FWRITE( Self:nDosHandle, cChar, Self:nSkipLength )
          ELSE
@@ -440,9 +440,9 @@ METHOD WRITE( cChar ) CLASS FileBase
    LOCAL cBuffer       // as char
    LOCAL nLocation     // as int
    LOCAL nRead         // as int
-   LOCAL lWithCRLF := pFALSE               // as logical
+   LOCAL lWithCRLF := .F.               // as logical
 
-   DEFAULT lForward TO pTRUE
+   DEFAULT lForward TO .T.
 
    IF !lForward
 
@@ -455,11 +455,11 @@ METHOD WRITE( cChar ) CLASS FileBase
       cBuffer := SPACE( ::nposition - nRead )
       FREAD( Self:nDosHandle, @cBuffer, ( ::nposition - nRead ) )
 
-      IF RIGHT( cBuffer, 2 ) == pCRLF   // with line already
+      IF RIGHT( cBuffer, 2 ) == hb_OSNewLine()   // with line already
          cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - 2 )
-         lWithCRLF := pTRUE
+         lWithCRLF := .T.
       ENDIF
-      nLocation := LEN( cBuffer ) - ( RAT( pCRLF, cBuffer ) )
+      nLocation := LEN( cBuffer ) - ( RAT( hb_OSNewLine(), cBuffer ) )
 
    ELSE
       cBuffer := SPACE( pBUFFER_LENGTH )
@@ -469,19 +469,19 @@ METHOD WRITE( cChar ) CLASS FileBase
 
       // Now, parse the string. and file
 
-      nLocation := AT( pCRLF, cBuffer )
+      nLocation := AT( hb_OSNewLine(), cBuffer )
 
       // Now, if there is NO CRLF in the buffer and if the value of the
       // number of bytes read is less than the buffer length, then we
       // have an end of file condition.
       IF nLocation == 0 .AND. ( nRead < pBUFFER_LENGTH )
          // If so, then set the appropriate flags accordingly.
-         ::lAtBottom := pTRUE
-         ::lAtTop    := pFALSE
+         ::lAtBottom := .T.
+         ::lAtTop    := .F.
       ENDIF
    ENDIF
 
-   RETURN ( nLocation )
+   RETURN nLocation
 #endif
 
 /* Method:  appendLine( <cLine )
@@ -497,15 +497,15 @@ METHOD appendLine( cLine ) CLASS FileBase
 
    IF LEN( cLine ) == 0                 // Valid line
       IF Self:noDosError() .AND. Self:nDosHandle > 0        // No error
-         IF !( pCRLF $ cLine )          // No CRLF, so add
-            cLIne += pCRLF
+         IF !( hb_OSNewLine() $ cLine )          // No CRLF, so add
+            cLIne += hb_OSNewLine()
          ENDIF
          FSEEK( Self:nDosHandle, 0, 2 )
          FWRITE( Self:nDosHandle, cLine )
          ::nEndOfFile  := FSEEK( Self:nDosHandle, 0, 2 )
          ::nposition   := FSEEK( Self:nDosHandle, - ( LEN( cLine ) ), 2 )
          ::nSkipLength := LEN( cLine )
-         ::lAtBottom   := ::lAtTop := pFALSE
+         ::lAtBottom   := ::lAtTop := .F.
       ENDIF
    ENDIF
 
@@ -540,7 +540,7 @@ METHOD SKIP( nRecords ) CLASS FileBase
 
          CASE nRecords < 0              // It's negative movement
             WHILE nCount -- != nRecords
-               ::nSkipLength := Self:Buffget( pFALSE )
+               ::nSkipLength := Self:Buffget( .F. )
                ::fskip( - 1 )
             ENDDO
 
@@ -560,13 +560,13 @@ METHOD GOTO( nValue ) CLASS FileBase
 
    LOCAL cLine     := ""                   // as char
    LOCAL nCount    := 0                    // as int
-   LOCAL lContinue := pTRUE                // as logical
+   LOCAL lContinue := .T.                // as logical
    LOCAL cBuffer       // as char
 
    DEFAULT nValue TO 0
 
    IF Self:noDosError() .AND. Self:nDosHandle > 0
-      IF nValue IS pNUMERIC
+      IF ISNUMBER( nValue )
          IF nValue > 0                  // o.k. so far
             FSEEK( Self:nDosHandle, 0, 0 )                  // start at the top
             WHILE lContinue
@@ -574,12 +574,12 @@ METHOD GOTO( nValue ) CLASS FileBase
                lContinue := ( FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH ) == ;
                               pBUFFER_LENGTH )
                cBuffer := cLine + cBuffer
-               WHILE pCRLF $ cBuffer
+               WHILE hb_OSNewLine() $ cBuffer
                   IF ++ nCount == nValue
-                     lContinue := pFALSE
+                     lContinue := .F.
                      EXIT
                   ENDIF
-                  cBuffer := SUBSTR( cBuffer, AT( pCRLF, cBuffer ) + 2 )
+                  cBuffer := SUBSTR( cBuffer, AT( hb_OSNewLine(), cBuffer ) + 2 )
                ENDDO
                cLine := cBuffer
             ENDDO
@@ -597,18 +597,16 @@ METHOD GOTO( nValue ) CLASS FileBase
       ENDIF
    ENDIF
 
-RETURN ( nCount )
-
-// End of File: FFile2.prg
+RETURN nCount
 
 METHOD BufferGet( lForward ) CLASS FileBase
 
    LOCAL cBuffer       // as char
    LOCAL nLocation     // as int
    LOCAL nRead         // as int
-   LOCAL lWithCRLF := pFALSE               // as logical
+   LOCAL lWithCRLF := .F.               // as logical
 
-   DEFAULT lForward TO pTRUE
+   DEFAULT lForward TO .T.
 
    IF !lForward
 
@@ -621,11 +619,11 @@ METHOD BufferGet( lForward ) CLASS FileBase
       cBuffer := SPACE( ::nposition - nRead )
       FREAD( Self:nDosHandle, @cBuffer, ( ::nposition - nRead ) )
 
-      IF RIGHT( cBuffer, 2 ) == pCRLF   // with line already
+      IF RIGHT( cBuffer, 2 ) == hb_OSNewLine()   // with line already
          cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - 2 )
-         lWithCRLF := pTRUE
+         lWithCRLF := .T.
       ENDIF
-      nLocation := LEN( cBuffer ) - ( RAT( pCRLF, cBuffer ) )
+      nLocation := LEN( cBuffer ) - ( RAT( hb_OSNewLine(), cBuffer ) )
 
    ELSE
       cBuffer := SPACE( pBUFFER_LENGTH )
@@ -635,16 +633,16 @@ METHOD BufferGet( lForward ) CLASS FileBase
 
       // Now, parse the string. and file
 
-      nLocation := AT( pCRLF, cBuffer )
+      nLocation := AT( hb_OSNewLine(), cBuffer )
 
       // Now, if there is NO CRLF in the buffer and if the value of the
       // number of bytes read is less than the buffer length, then we
       // have an end of file condition.
       IF nLocation == 0 .AND. ( nRead < pBUFFER_LENGTH )
          // If so, then set the appropriate flags accordingly.
-         ::lAtBottom := pTRUE
-         ::lAtTop    := pFALSE
+         ::lAtBottom := .T.
+         ::lAtTop    := .F.
       ENDIF
    ENDIF
 
-RETURN ( nLocation )
+RETURN nLocation

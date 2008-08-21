@@ -77,7 +77,7 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
    int iMax;
    char szOldColor[ HB_CLRSTR_LEN ];
    char * szStr = "        ";
-   char szPct[ 4 ];
+   char szPct[ 5 ];
 
    hb_gtGetColorStr( szOldColor );
    hb_gtSetColorStr( hb_arrayGetCPtr( pArray, B_BARCOLOR ) );
@@ -87,7 +87,6 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
 
    if( hb_arrayGetL( pArray, B_DISPLAYNUM ) )
    {
-      /* sprintf( szPct, "%3.0f\%", fPercent * 100 ); */
       snprintf( szPct, sizeof( szPct ), "%3.0f%%", fPercent * 100 );
       hb_gtWriteAt( (USHORT) hb_arrayGetNL( pArray, B_TOP ),
                     (USHORT) iCenter + 2, (BYTE *) szPct, 4 );
@@ -172,7 +171,7 @@ HB_FUNC( GAUGEDISPLAY )
 
       hb_gtSetColorStr( szOldColor );
 
-      hb_gaugeUpdate( pArray, (float) hb_arrayGetNL( pArray, B_PERCENT ) );
+      hb_gaugeUpdate( pArray, ( float ) hb_arrayGetND( pArray, B_PERCENT ) );
 
       hb_itemReturn( pArray );
    }
@@ -186,7 +185,7 @@ HB_FUNC( GAUGEUPDATE )
 
    if( pArray )
    {
-      hb_gaugeUpdate( pArray, ISNUM( 2 ) ? (float) hb_parnd( 2 ) : 0 );
+      hb_gaugeUpdate( pArray, ISNUM( 2 ) ? ( float ) hb_parnd( 2 ) : 0 );
 
       hb_itemReturn( pArray );
    }

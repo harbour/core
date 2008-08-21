@@ -1088,11 +1088,9 @@ HBDOC_EXE_OBJS = \
 HBMAKE_EXE_OBJS = \
     $(OBJ_DIR)\hbmake$(OBJEXT)   \
     $(OBJ_DIR)\hbmutils$(OBJEXT) \
-    $(OBJ_DIR)\checks$(OBJEXT)   \
     $(OBJ_DIR)\pickarry$(OBJEXT) \
     $(OBJ_DIR)\pickfile$(OBJEXT) \
     $(OBJ_DIR)\prb_stak$(OBJEXT) \
-    $(OBJ_DIR)\radios$(OBJEXT)   \
     $(OBJ_DIR)\fclass1$(OBJEXT)  \
     $(OBJ_DIR)\ffile1$(OBJEXT)   \
     $(OBJ_DIR)\ft_funcs$(OBJEXT) \
