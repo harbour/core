@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * tmake.prg file generator for hbmake
+ * File generator for hbmake
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -52,93 +52,90 @@
 #include "hbclass.ch"
 #include "common.ch"
 
-STATIC lEof := .F.
+STATIC s_lEof := .F.
 
-*------------
 CLASS THBMAKE
-*------------
 
-EXPORT:
-DATA  aDefines       Init  {}
-DATA  aBuildOrder    Init  {}
-DATA  aCommands      Init  {}
-DATA  aMacros        Init  {}
-DATA  aPrgs          Init  {}
-DATA  aExtLibs       Init  {}
-DATA  aCs            Init  {}
-DATA  aObjs          Init  {}
-DATA  aObjsc         Init  {}
-DATA  aRes           Init  {}
-DATA  nLinkHandle 
-DATA  cLinkcomm      Init  ""
-DATA  lCompress      Init .F.
-DATA  lForce         Init .F.
-DATA  lLinux         Init .F.
-DATA  szProject      Init ""
-DATA  lLibrary       Init .F.
-DATA  lInstallLib    Init .F.
-DATA  lIgnoreErrors  Init .F.
-DATA  lExtended      Init .T.
-DATA  lOs2           Init .F.
-DATA  lRecurse       Init .F.
-DATA  lEditMode      Init .F.
-DATA  aDir
-DATA  aLangMessages  init {}
-DATA  cDefLang
-DATA  lFwh           init .F.
-DATA  lxFwh          init .F.
-DATA  lCw            init .F.
-DATA  lMini          init .F.
-DATA  lHwgui         init .F.
-DATA  lGui           Init .F.
-DATA  lGtwvt         init .F.
-DATA  lGtwvw         init .F.
-DATA  lMWvW          init .F.
-DATA  lXWT           init .F.
-DATA  lxHGtk         init .F.
-DATA  lWhoo          init .F.
-DATA  lWhat32        init .F.
-DATA  lRddAds        init .F.
-DATA  lMediator      init .F.
-DATA  cMakefile      init ""
-DATA  lExternalLib   init .F.
-DATA  cObj           init ""
-DATA  cUserdef       init ""
-DATA  cUserInclude   init ""
-DATA  cUserLib       init ""
-DATA  lGenppo        init .f.
-DATA  lCompMod       init .f.
-DATA  lAutomemvar    init .f.
-DATA  lvarismemvar   init .f.
-DATA  ldebug         init .f.
-DATA  lSupressline   init .f.
-DATA  StartPath      init ""
-DATA  cFmc           init ""
-DATA  cMedpath       init ""
-DATA  cAppLibName    init ""
-DATA  cOs            init ""
-DATA  cTopfile       init ""
-DATA  aOut           init {}
-DATA  cFilesToAdd    init 5
-DATA  lMT            init .F.
-DATA  cWarningLevel  init 0
-DATA  cTopModule     init ""
-DATA  cRes           init ""
-DATA  cMacro         init ""
-DATA  lGenCsource    init .f.      // Ath added 31-05-2006
-DATA  cShell         init ""
-DATA  cEditor        init ""
+   EXPORTED:
 
-METHOD New()
-METHOD ReadMakefile(cFile)
-METHOD ReplaceMacros( cMacros )
-METHOD FindMacro( cMacro, cRead ) 
+   DATA  aDefines       Init  {}
+   DATA  aBuildOrder    Init  {}
+   DATA  aCommands      Init  {}
+   DATA  aMacros        Init  {}
+   DATA  aPrgs          Init  {}
+   DATA  aExtLibs       Init  {}
+   DATA  aCs            Init  {}
+   DATA  aObjs          Init  {}
+   DATA  aObjsc         Init  {}
+   DATA  aRes           Init  {}
+   DATA  nLinkHandle 
+   DATA  cLinkcomm      Init  ""
+   DATA  lCompress      Init .F.
+   DATA  lForce         Init .F.
+   DATA  lLinux         Init .F.
+   DATA  szProject      Init ""
+   DATA  lLibrary       Init .F.
+   DATA  lInstallLib    Init .F.
+   DATA  lIgnoreErrors  Init .F.
+   DATA  lExtended      Init .T.
+   DATA  lOs2           Init .F.
+   DATA  lRecurse       Init .F.
+   DATA  lEditMode      Init .F.
+   DATA  aDir
+   DATA  aLangMessages  init {}
+   DATA  cDefLang
+   DATA  lFwh           init .F.
+   DATA  lxFwh          init .F.
+   DATA  lCw            init .F.
+   DATA  lMini          init .F.
+   DATA  lHwgui         init .F.
+   DATA  lGui           Init .F.
+   DATA  lGtwvt         init .F.
+   DATA  lGtwvw         init .F.
+   DATA  lMWvW          init .F.
+   DATA  lXWT           init .F.
+   DATA  lxHGtk         init .F.
+   DATA  lWhoo          init .F.
+   DATA  lWhat32        init .F.
+   DATA  lRddAds        init .F.
+   DATA  lMediator      init .F.
+   DATA  cMakefile      init ""
+   DATA  lExternalLib   init .F.
+   DATA  cObj           init ""
+   DATA  cUserdef       init ""
+   DATA  cUserInclude   init ""
+   DATA  cUserLib       init ""
+   DATA  lGenppo        init .F.
+   DATA  lCompMod       init .F.
+   DATA  lAutomemvar    init .F.
+   DATA  lvarismemvar   init .F.
+   DATA  ldebug         init .F.
+   DATA  lSupressline   init .F.
+   DATA  StartPath      init ""
+   DATA  cFmc           init ""
+   DATA  cMedpath       init ""
+   DATA  cAppLibName    init ""
+   DATA  cOs            init ""
+   DATA  cTopfile       init ""
+   DATA  aOut           init {}
+   DATA  cFilesToAdd    init 5
+   DATA  lMT            init .F.
+   DATA  cWarningLevel  init 0
+   DATA  cTopModule     init ""
+   DATA  cRes           init ""
+   DATA  cMacro         init ""
+   DATA  lGenCsource    init .F.      // Ath added 31-05-2006
+   DATA  cShell         init ""
+   DATA  cEditor        init ""
+
+   METHOD New()
+   METHOD ReadMakefile(cFile)
+   METHOD ReplaceMacros( cMacros )
+   METHOD FindMacro( cMacro, cRead ) 
 
 ENDCLASS
 
-*-------------------------
 METHOD New() CLASS THbMake
-*-------------------------
 
    ::cObj           := "obj" + Space( 40 )
    ::cUserdef       := Space( 200 )
@@ -149,384 +146,375 @@ METHOD New() CLASS THbMake
    ::cTopModule     := Space( 20 )
    ::cEditor        := ""
 
-return self
+   return self
 
 
-*---------------------------------------
 METHOD ReadMakefile(cFile) CLASS THbMake
-*---------------------------------------
 
-    LOCAL cBuffer     := {}
-    LOCAL cMacro      := ::cMacro
-    LOCAL cDep        := "#DEPENDS"
-    LOCAL cOpt        := "#OPTS"
-    LOCAL cCom        := "#COMMANDS"
-    LOCAL cBuild      := "#BUILD"
-    LOCAL cTemp       := ""
-    LOCAL cTemp1      := ""
-    LOCAL aTemp       := {}
-    LOCAL lMacrosec   := .f.
-    LOCAL lBuildSec   := .f.
-    LOCAL lComSec     := .f.
-    LOCAL aTemp1      := {}
-    LOCAL cCfg        := ""
-    LOCAL lCfgFound   := .F.
-    LOCAL aTempCFiles := {}
-    Local nHandle
-    Local cObjitem
-    Local cRes        := ""
-    Local cItem
-    LOCAL lLinux      := At( "linux", Lower( Os() ) ) > 0
-    Local lExtended   := .T., szProject
-    LOCAL lPrgObjRule := .F.
+   LOCAL cBuffer     := {}
+   LOCAL cMacro      := ::cMacro
+   LOCAL cDep        := "#DEPENDS"
+   LOCAL cOpt        := "#OPTS"
+   LOCAL cCom        := "#COMMANDS"
+   LOCAL cBuild      := "#BUILD"
+   LOCAL cTemp       := ""
+   LOCAL cTemp1      := ""
+   LOCAL aTemp       := {}
+   LOCAL lMacrosec   := .F.
+   LOCAL lBuildSec   := .F.
+   LOCAL lComSec     := .F.
+   LOCAL aTemp1      := {}
+   LOCAL cCfg        := ""
+   LOCAL lCfgFound   := .F.
+   LOCAL aTempCFiles := {}
+   Local nHandle
+   Local cObjitem
+   Local cRes        := ""
+   Local cItem
+   LOCAL lLinux      := At( "linux", Lower( Os() ) ) > 0
+   Local lExtended   := .T., szProject
+   LOCAL lPrgObjRule := .F.
 
-    nHandle := FT_FUSE( cFile )
-    IF nHandle < 0
-        RETURN self
-    ENDIF
-    cBuffer := Trim( Substr( ReadLN( @lEof ), 1 ) )
-    ::lLibrary :=.f.
+   nHandle := FT_FUSE( cFile )
+   IF nHandle < 0
+      RETURN self
+   ENDIF
+   cBuffer := Trim( ReadLN( @s_lEof ) )
+   ::lLibrary :=.F.
 
-    WHILE !leof
+   WHILE !s_lEof
 
-        IF At( cMacro, cBuffer ) > 0
-            lMacroSec := .T.
-            lBuildSec := .f.
-            lComSec   := .f.
-        ELSEIF At( cBuild, cBuffer ) > 0
-            lMacroSec := .f.
-            lBuildSec := .T.
-            lComSec   := .f.
-        ELSEIF At( cCom, cBuffer ) > 0
-            lBuildSec := .f.
-            lComSec   := .t.
-            lMacroSec := .f.
-        ELSE
-            ? "Invalid Make File"
-            Fclose( nHandle )
-            RETURN Nil
-        ENDIF
+      IF At( cMacro, cBuffer ) > 0
+         lMacroSec := .T.
+         lBuildSec := .F.
+         lComSec   := .F.
+      ELSEIF At( cBuild, cBuffer ) > 0
+         lMacroSec := .F.
+         lBuildSec := .T.
+         lComSec   := .F.
+      ELSEIF At( cCom, cBuffer ) > 0
+         lBuildSec := .F.
+         lComSec   := .T.
+         lMacroSec := .F.
+      ELSE
+         ? "Invalid Make File"
+         Fclose( nHandle )
+         RETURN Nil
+      ENDIF
 
-        cTemp := Trim( Substr( ReadLN( @lEof ), 1 ) )
+      cTemp := Trim( ReadLN( @s_lEof ) )
 
-        IF At( "//", ctemp ) > 0
+      IF At( "//", ctemp ) > 0
 
-            WHILE At( "//", ctemp ) > 0
-                ctemp := Strtran( ctemp, " //", "" )
-                cTemp += Trim( Substr( ReadLN( @lEof ), 1 ) )
-            ENDDO
-
+         WHILE At( "//", ctemp ) > 0
             ctemp := Strtran( ctemp, " //", "" )
-        ENDIF
+            cTemp += Trim( ReadLN( @s_lEof ) )
+         ENDDO
 
-        aTemp := ListasArray2( Alltrim( cTemp ), "=" )
+         ctemp := Strtran( ctemp, " //", "" )
+      ENDIF
 
-        IF lmacrosec
+      aTemp := ListasArray2( Alltrim( cTemp ), "=" )
 
-            IF Alltrim( Left( ctemp, 7 ) ) <> "!ifndef" .and. Alltrim( Left( ctemp, 6 ) ) <> "!endif" .and. Alltrim( Left( ctemp, 7 ) ) <> "!iffile" .and. Alltrim( Left( ctemp, 7 ) ) <> "!stdout" .and. Alltrim( Left( ctemp, 6 ) ) <> "!ifdef"
+      IF lmacrosec
 
-                IF Len( aTemp ) > 1
+         IF Alltrim( Left( ctemp, 7 ) ) <> "!ifndef" .and. Alltrim( Left( ctemp, 6 ) ) <> "!endif" .and. Alltrim( Left( ctemp, 7 ) ) <> "!iffile" .and. Alltrim( Left( ctemp, 7 ) ) <> "!stdout" .and. Alltrim( Left( ctemp, 6 ) ) <> "!ifdef"
 
-                    IF At( "$", aTemp[ 2 ] ) > 0
-                       Aadd( ::aMacros, { aTemp[ 1 ], ::replacemacros( aTemp[ 2 ] ) } )
-                    ELSE
-                      Aadd( ::aMacros, { aTemp[ 1 ], aTemp[ 2 ] } )
-//                    tracelog(aTemp[ 1 ], aTemp[ 2 ])
-                    ENDIF
-                ENDIF
+            IF Len( aTemp ) > 1
 
-                IF aTemp[ 1 ] == "PROJECT"
-                    ::cAppLibName := aTemp[ 2 ]
-                    ::cAppLibName := strtran(::cAppLibName ,"$(PR)","")
-                    ::cAppLibName := strtran(::cAppLibName ,".exe","")
-                    ::cAppLibName := strtran(::cAppLibName ,".lib","")
-                ENDIF
+               IF At( "$", aTemp[ 2 ] ) > 0
+                  Aadd( ::aMacros, { aTemp[ 1 ], ::replacemacros( aTemp[ 2 ] ) } )
+               ELSE
+                  Aadd( ::aMacros, { aTemp[ 1 ], aTemp[ 2 ] } )
+//                tracelog(aTemp[ 1 ], aTemp[ 2 ])
+               ENDIF
+            ENDIF
 
-                IF aTemp[ 1 ] == "LIBFILES"
-                   ::lRddAds :=  "rddads" $ aTemp[ 2 ]
-                ENDIF
+            IF aTemp[ 1 ] == "PROJECT"
+               ::cAppLibName := aTemp[ 2 ]
+               ::cAppLibName := strtran(::cAppLibName ,"$(PR)","")
+               ::cAppLibName := strtran(::cAppLibName ,".exe","")
+               ::cAppLibName := strtran(::cAppLibName ,".lib","")
+            ENDIF
 
-                IF aTemp[ 1 ] == "C4W"
-                   ::cFMC := aTemp[2]
-                   ::lCw := .t.
-                endif
+            IF aTemp[ 1 ] == "LIBFILES"
+               ::lRddAds :=  "rddads" $ aTemp[ 2 ]
+            ENDIF
 
-                IF aTemp[ 1 ] == "FWH"
-                   ::cFMC := aTemp[2]
-                   ::lFwh := .t.
-                endif
+            IF aTemp[ 1 ] == "C4W"
+               ::cFMC := aTemp[2]
+               ::lCw := .T.
+            endif
 
-                IF aTemp[ 1 ] == "MINIGUI"
-                   ::cFMC := aTemp[2]
-                   ::lmini := .t.
-                endif
+            IF aTemp[ 1 ] == "FWH"
+               ::cFMC := aTemp[2]
+               ::lFwh := .T.
+            endif
 
-                IF aTemp[ 1 ] == "HWGUI"
-                   ::cFMC := aTemp[2]
-                   ::lHwGui := .t.
-                endif
+            IF aTemp[ 1 ] == "MINIGUI"
+               ::cFMC := aTemp[2]
+               ::lmini := .T.
+            endif
 
-                IF aTemp[ 1 ] == "GTWVT"
-                   ::cFMC := ""
-                   ::lGtwvt := .t.
-                endif
+            IF aTemp[ 1 ] == "HWGUI"
+               ::cFMC := aTemp[2]
+               ::lHwGui := .T.
+            endif
 
-                IF aTemp[ 1 ] == "GTWVW"
-                   ::cFMC := ""
-                   ::lGtwvw := .t.
-                endif
-                IF aTemp[ 1 ] == "MWVW"
-                   ::cFMC := ""
-                   ::lGtwvw := .t.
-                   ::lMWvW  := .t.
-                endif
+            IF aTemp[ 1 ] == "GTWVT"
+               ::cFMC := ""
+               ::lGtwvt := .T.
+            endif
 
-                IF aTemp[ 1 ] == "XWT"
-                   ::cFMC := ""
-                   ::lXWT := .t.
-                endif
+            IF aTemp[ 1 ] == "GTWVW"
+               ::cFMC := ""
+               ::lGtwvw := .T.
+            endif
+            IF aTemp[ 1 ] == "MWVW"
+               ::cFMC := ""
+               ::lGtwvw := .T.
+               ::lMWvW  := .T.
+            endif
 
-                IF aTemp[ 1 ] == "WHOO"
-                   ::cFMC := aTemp[2]
-                   ::lWhoo := .t.
-                endif
+            IF aTemp[ 1 ] == "XWT"
+               ::cFMC := ""
+               ::lXWT := .T.
+            endif
 
-                IF aTemp[ 1 ] == "WHAT32"
-                   ::cFMC := aTemp[2]
-                   ::lWhat32 := .t.
-                endif
+            IF aTemp[ 1 ] == "WHOO"
+               ::cFMC := aTemp[2]
+               ::lWhoo := .T.
+            endif
 
-                IF aTemp[ 1 ] == "XHGTK"
-                   ::cFMC := aTemp[2]
-                   ::lxHGtk := .t.
-                endif
+            IF aTemp[ 1 ] == "WHAT32"
+               ::cFMC := aTemp[2]
+               ::lWhat32 := .T.
+            endif
 
-                IF aTemp[ 1 ] == "MEDIATOR"
-                   ::cMedpath := aTemp[2]
-                   ::lmEDIATOR := .t.
-                endif
+            IF aTemp[ 1 ] == "XHGTK"
+               ::cFMC := aTemp[2]
+               ::lxHGtk := .T.
+            endif
 
-                IF aTemp[ 1 ] == "COMPRESS"
-                   ::lCompress := "YES" $ aTemp[ 2 ]
-                endif
+            IF aTemp[ 1 ] == "MEDIATOR"
+               ::cMedpath := aTemp[2]
+               ::lmEDIATOR := .T.
+            endif
 
-                IF aTemp[ 1 ] == "SHELL"
-                   ::cShell := aTemp[ 2 ]
-                endif
+            IF aTemp[ 1 ] == "COMPRESS"
+               ::lCompress := "YES" $ aTemp[ 2 ]
+            endif
 
-                IF aTemp[ 1 ] == "EXTERNALLIB"
-                   ::lExternalLib := "YES" $ aTemp[ 2 ]
-                endif
+            IF aTemp[ 1 ] == "SHELL"
+               ::cShell := aTemp[ 2 ]
+            endif
 
-                IF aTemp[ 1 ] == "XFWH"
-                   ::lxFwh := "YES" $ aTemp[ 2 ]
-                endif
+            IF aTemp[ 1 ] == "EXTERNALLIB"
+               ::lExternalLib := "YES" $ aTemp[ 2 ]
+            endif
 
-                IF aTemp[ 1 ] == "FILESTOADD"
-                   ::cFilesToAdd := Val( aTemp[ 2 ] )
-                endif
+            IF aTemp[ 1 ] == "XFWH"
+               ::lxFwh := "YES" $ aTemp[ 2 ]
+            endif
 
-                IF aTemp[ 1 ] == "MT"
-                   ::lMt := "YES" $ aTemp[ 2 ]
-                endif
+            IF aTemp[ 1 ] == "FILESTOADD"
+               ::cFilesToAdd := Val( aTemp[ 2 ] )
+            endif
 
-                IF aTemp[ 1 ] == "GUI"
-                   ::lGUI := "YES" $ aTemp[ 2 ]
-                endif
+            IF aTemp[ 1 ] == "MT"
+               ::lMt := "YES" $ aTemp[ 2 ]
+            endif
 
-                IF aTemp[ 1 ] == "WARNINGLEVEL"
-                   ::cWarningLevel := Val( aTemp[ 2 ] )
-                endif
+            IF aTemp[ 1 ] == "GUI"
+               ::lGUI := "YES" $ aTemp[ 2 ]
+            endif
 
-                IF aTemp[ 1 ] == "OBJFILES"
-                     cObjitem := substr( atemp[ 2 ],1,at(")",atemp[ 2 ]))
-      
-                    ::cObj := ::replacemacros(cObjItem)
-                    ::aObjs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-                ENDIF
+            IF aTemp[ 1 ] == "WARNINGLEVEL"
+               ::cWarningLevel := Val( aTemp[ 2 ] )
+            endif
 
-                IF aTemp[ 1 ] == "OBJCFILES"
+            IF aTemp[ 1 ] == "OBJFILES"
+                cObjitem := Left( atemp[ 2 ], at(")",atemp[ 2 ]))
+    
+               ::cObj := ::replacemacros(cObjItem)
+               ::aObjs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
+            ENDIF
 
-                    aTemp1 := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
+            IF aTemp[ 1 ] == "OBJCFILES"
 
-                    IF Len( atemp1 ) == 1
+               aTemp1 := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
 
-                        IF !Empty( atemp[ 1 ] )
-                            ::aObjsC := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-                        ENDIF
-                    ELSE
-                        ::aObjsC := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-                    ENDIF
-                ENDIF
+               IF Len( atemp1 ) == 1
 
-                IF aTemp[ 1 ] == "PRGFILES"
-                    ::aPrgs     := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-                    lExtended := .T.
-                ENDIF
+                  IF !Empty( atemp[ 1 ] )
+                     ::aObjsC := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
+                  ENDIF
+               ELSE
+                  ::aObjsC := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
+               ENDIF
+            ENDIF
 
-                IF aTemp[ 1 ] == "PRGFILE"
-                    ::aPrgs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-                ENDIF
+            IF aTemp[ 1 ] == "PRGFILES"
+               ::aPrgs     := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
+               lExtended := .T.
+            ENDIF
 
-                IF atemp[ 1 ] == "CFILES"
+            IF aTemp[ 1 ] == "PRGFILE"
+                ::aPrgs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
+            ENDIF
 
-                    IF lExtended
+            IF atemp[ 1 ] == "CFILES"
 
-                        aTempCFiles := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
+               IF lExtended
 
-                        IF ( Len( aTempCFiles ) == 1 )
+                  aTempCFiles := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
 
-                            IF !Empty( aTempCFiles[ 1 ] )
-                                ::aCs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-                            ENDIF
-                        ELSE
-                            ::aCs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-                        ENDIF
-                    ELSE
+                  IF ( Len( aTempCFiles ) == 1 )
+
+                     IF !Empty( aTempCFiles[ 1 ] )
                         ::aCs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-                    ENDIF
-                ENDIF
-
-                IF aTemp[ 1 ] == "EXTLIBFILES"
-                   ::aExtLibs  := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-                ENDIF
-
-
-                IF atemp[ 1 ] == "RESFILES"
-
-                    ::aRes := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
-
-                    FOR EACH cItem in :: aRes
-                       ::cRes += cItem +" "
-                    NEXT
-                ENDIF
-
-                IF aTemp[ 1 ] == "RECURSE"
-                   ::lRecurse := AT( "YES" , aTemp[ 2 ] ) > 0
-                ENDIF
-
-                IF aTemp[ 1 ] == "LIBRARY"
-                   ::lLibrary := AT( "YES", aTemp[ 2 ] ) > 0
-                ENDIF  
-
-                IF aTemp[ 1 ] == "INSTALLLIB"
-                   ::lInstallLib := AT( "YES", aTemp[ 2 ] ) > 0
-                ENDIF  
-
-                IF aTemp[ 1 ] ==  "HARBOURFLAGS"
-
-                     ::lGenppo        := AT( "-p" , aTemp[ 2 ] ) > 0
-                     ::lCompMod       := AT( "-m" , aTemp[ 2 ] ) > 0
-                     ::lAutomemvar    := AT( "-a" , aTemp[ 2 ] ) > 0
-                     ::lvarismemvar   := AT( "-v" , aTemp[ 2 ] ) > 0
-                     ::ldebug         := AT( "-b" , aTemp[ 2 ] ) > 0
-                     ::lSupressline   := AT( "-l" , aTemp[ 2 ] ) > 0
-                     aTemp[ 2 ] := strtran(aTemp[ 2 ],"-p","")
-                     aTemp[ 2 ] := strtran(aTemp[ 2 ],"-m","")
-                     aTemp[ 2 ] := strtran(aTemp[ 2 ],"-a","")
-                     aTemp[ 2 ] := strtran(aTemp[ 2 ],"-v","")
-                     aTemp[ 2 ] := strtran(aTemp[ 2 ],"-b","")
-                     aTemp[ 2 ] := strtran(aTemp[ 2 ],"-l","")
-                     aTemp[ 2 ] := Alltrim( aTemp[ 2 ] )
-
-                endif
-                  
-                IF aTemp[ 1 ] == "USERDEFINE"
-                   ::cUserDef := aTemp[ 2 ]
-                endif
-           
-                IF aTemp[ 1 ] == "USERINCLUDE"
-                   ::cUserInclude := aTemp[ 2 ]
-                endif
-
-                IF aTemp[ 1 ] == "USERLIBS"
-                   ::cUserLib := aTemp[ 2 ]
-                endif
-
-                IF aTemp[ 1 ] == "TOPMODULE"
-                   ::cTopModule := aTemp[ 2 ]
-                endif
-
-                IF aTemp[ 1 ] == "EDITOR"
-                   ::cEditor := aTemp[ 2 ]
-                endif
+                     ENDIF
+                  ELSE
+                     ::aCs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
+                  ENDIF
+               ELSE
+                  ::aCs := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
+               ENDIF
             ENDIF
-        ENDIF
 
-        IF lbuildSec
-            szProject   := cTemp
-            ::aBuildOrder := Listasarray2( cTemp, ":" )
-        ENDIF
-
-        IF lComSec        // Ath added 31-05-2006
-
-            IF lPrgObjRule
-                ::lGenCsource := "-go3" $ LOWER(cTemp)
-                lPrgObjRule := .F.
+            IF aTemp[ 1 ] == "EXTLIBFILES"
+               ::aExtLibs  := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
             ENDIF
-            IF aTemp[ 1 ] == ".prg.obj:" .OR. aTemp[ 1 ] == ".prg.o:"
-                lPrgObjRule := .T.
+
+
+            IF atemp[ 1 ] == "RESFILES"
+
+               ::aRes := Listasarray2( ::replacemacros( atemp[ 2 ] ), " " )
+
+               FOR EACH cItem in :: aRes
+                  ::cRes += cItem +" "
+               NEXT
             ENDIF
-        ENDIF               // end Ath added 31-05-2006
+
+            IF aTemp[ 1 ] == "RECURSE"
+               ::lRecurse := AT( "YES" , aTemp[ 2 ] ) > 0
+            ENDIF
+
+            IF aTemp[ 1 ] == "LIBRARY"
+               ::lLibrary := AT( "YES", aTemp[ 2 ] ) > 0
+            ENDIF  
+
+            IF aTemp[ 1 ] == "INSTALLLIB"
+               ::lInstallLib := AT( "YES", aTemp[ 2 ] ) > 0
+            ENDIF  
+
+            IF aTemp[ 1 ] ==  "HARBOURFLAGS"
+
+               ::lGenppo        := AT( "-p" , aTemp[ 2 ] ) > 0
+               ::lCompMod       := AT( "-m" , aTemp[ 2 ] ) > 0
+               ::lAutomemvar    := AT( "-a" , aTemp[ 2 ] ) > 0
+               ::lvarismemvar   := AT( "-v" , aTemp[ 2 ] ) > 0
+               ::ldebug         := AT( "-b" , aTemp[ 2 ] ) > 0
+               ::lSupressline   := AT( "-l" , aTemp[ 2 ] ) > 0
+               aTemp[ 2 ] := strtran(aTemp[ 2 ],"-p","")
+               aTemp[ 2 ] := strtran(aTemp[ 2 ],"-m","")
+               aTemp[ 2 ] := strtran(aTemp[ 2 ],"-a","")
+               aTemp[ 2 ] := strtran(aTemp[ 2 ],"-v","")
+               aTemp[ 2 ] := strtran(aTemp[ 2 ],"-b","")
+               aTemp[ 2 ] := strtran(aTemp[ 2 ],"-l","")
+               aTemp[ 2 ] := Alltrim( aTemp[ 2 ] )
+
+            endif
+              
+            IF aTemp[ 1 ] == "USERDEFINE"
+               ::cUserDef := aTemp[ 2 ]
+            endif
         
-        IF cTemp = "#BUILD"
-            cBuffer := cTemp
-        ELSEIF cTemp == "#COMMANDS"
-            cbuffer := cTemp
-        ENDIF
-    ENDDO
+            IF aTemp[ 1 ] == "USERINCLUDE"
+               ::cUserInclude := aTemp[ 2 ]
+            endif
 
-    qout( nhandle)
-    Fclose( nHandle )
-RETURN self
+            IF aTemp[ 1 ] == "USERLIBS"
+               ::cUserLib := aTemp[ 2 ]
+            endif
 
-*--------------------------------------------
+            IF aTemp[ 1 ] == "TOPMODULE"
+               ::cTopModule := aTemp[ 2 ]
+            endif
+
+            IF aTemp[ 1 ] == "EDITOR"
+               ::cEditor := aTemp[ 2 ]
+            endif
+         ENDIF
+      ENDIF
+
+      IF lbuildSec
+         szProject := cTemp
+         ::aBuildOrder := Listasarray2( cTemp, ":" )
+      ENDIF
+
+      IF lComSec        // Ath added 31-05-2006
+
+         IF lPrgObjRule
+            ::lGenCsource := "-go3" $ LOWER(cTemp)
+            lPrgObjRule := .F.
+         ENDIF
+         IF aTemp[ 1 ] == ".prg.obj:" .OR. aTemp[ 1 ] == ".prg.o:"
+            lPrgObjRule := .T.
+         ENDIF
+      ENDIF               // end Ath added 31-05-2006
+      
+      IF cTemp == "#BUILD" .OR. cTemp == "#COMMANDS"
+         cBuffer := cTemp
+      ENDIF
+   ENDDO
+
+   qout( nhandle)
+   Fclose( nHandle )
+   RETURN self
+
 METHOD ReplaceMacros( cMacros ) CLass THBMAKE
-*--------------------------------------------
 
-    LOCAL nCount       := 0
-    LOCAL aTempMacros  := {}
-    LOCAL aLocalMacros := {}
+   LOCAL nCount       := 0
+   LOCAL aTempMacros  := {}
+   LOCAL aLocalMacros := {}
 
-    aTempMacros := Listasarray2( cMacros, " " )
+   aTempMacros := Listasarray2( cMacros, " " )
 
-    AEval( aTempMacros, { | xMacro | iif( At( "$", xMacro ) > 0, ;
-                          iif( At( ";", xMacro ) > 0, ( aLocalMacros := Listasarray2( xMacro, ";" ), ;
-                          Aeval( aLocalMacros, { | x | ::FindMacro( x, @cMacros ) } ) ), ;
-                          ::FindMacro( xMacro, @cMacros ) ), ) } )
+   AEval( aTempMacros, { | xMacro | iif( At( "$", xMacro ) > 0, ;
+                         iif( At( ";", xMacro ) > 0, ( aLocalMacros := Listasarray2( xMacro, ";" ), ;
+                         Aeval( aLocalMacros, { | x | ::FindMacro( x, @cMacros ) } ) ), ;
+                         ::FindMacro( xMacro, @cMacros ) ), ) } )
 
-RETURN cMacros
+   RETURN cMacros
 
-*----------------------------------------------
 METHOD FindMacro( cMacro, cRead ) CLASS THBMAKE
-*----------------------------------------------
+   LOCAL nPos
+   LOCAL cTemp
+   LOCAL aLocalMacros := {}
 
-    LOCAL nPos
-    LOCAL cTemp
-    LOCAL aLocalMacros := {}
+   cMacro := Left( cMacro, At( ")", cMacro ) )
 
-    cMacro := Substr( cMacro, 1, At( ")", cMacro ) )
+   IF At( "-", cMacro ) > 0
+      cMacro := Substr( cMacro, 3 )
+   ENDIF
 
-    IF At( "-", cMacro ) > 0
-        cMacro := Substr( cMacro, 3 )
-    ENDIF
+   IF At( ";", cMacro ) > 0
+      cMacro := Substr( cMacro, At( ";", cMacro ) + 1 )
+   ENDIF
 
-    IF At( ";", cMacro ) > 0
-        cMacro := Substr( cMacro, At( ";", cMacro ) + 1 )
-    ENDIF
+   nPos := Ascan( ::aMacros, { | x | "$(" + Alltrim( x[ 1 ] ) + ")" == cMacro } )
 
-    nPos := Ascan( ::aMacros, { | x | "$(" + Alltrim( x[ 1 ] ) + ")" == cMacro } )
+   IF nPos == 0
 
-    IF nPos == 0
+      cTemp := Strtran( cMacro, "$(", "" )
+      cTemp := Strtran( cTemp, ")", "" )
 
-        cTemp := Strtran( cMacro, "$(", "" )
-        cTemp := Strtran( cTemp, ")", "" )
+      IF !Empty( cTemp )
+         cRead := Alltrim( Strtran( cRead, cMacro, Gete( cTemp ) ) )
+      ENDIF
+   ELSE
+      cRead := Alltrim( Strtran( cRead, cMacro, ::aMacros[ nPos, 2 ] ) )
+   ENDIF
 
-        IF !Empty( cTemp )
-            cRead := Alltrim( Strtran( cRead, cMacro, Gete( cTemp ) ) )
-        ENDIF
-    ELSE
-        cRead := Alltrim( Strtran( cRead, cMacro, ::aMacros[ nPos, 2 ] ) )
-    ENDIF
-
-RETURN cRead
+   RETURN cRead

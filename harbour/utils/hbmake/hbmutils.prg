@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * hbmutils.prg - utils for hbmake.
+ * Utils for hbmake.
  *
  * Copyright 2000,2001,2002,2003,2004 Luiz Rafael Culik <culikr@uol.com.br>
  * www - http://www.xharbour.org

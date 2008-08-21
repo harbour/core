@@ -1094,8 +1094,9 @@ HBMAKE_EXE_OBJS = \
     $(OBJ_DIR)\fclass1$(OBJEXT)  \
     $(OBJ_DIR)\ffile1$(OBJEXT)   \
     $(OBJ_DIR)\ft_funcs$(OBJEXT) \
+    $(OBJ_DIR)\hbmfrdln$(OBJEXT) \
+    $(OBJ_DIR)\hbmgauge$(OBJEXT) \
     $(OBJ_DIR)\hbmlang$(OBJEXT)  \
-    $(OBJ_DIR)\readline$(OBJEXT) \
     $(OBJ_DIR)\tmake$(OBJEXT)    \
 
 #**********************************************************

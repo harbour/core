@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * fclass.prg Fileman class for hbdoc
+ * Fileman class for hbdoc
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -367,5 +367,7 @@ METHOD openfile( cFile, nMethod ) CLASS FileMan
       cPath     := STRTRAN( cFile, cFileName, "" )
       ::addItem( nFileHandle, cFileName, cPath )
    ENDIF
+
    ::nHan := nFileHandle
-RETURN nFileHandle
+
+   RETURN nFileHandle

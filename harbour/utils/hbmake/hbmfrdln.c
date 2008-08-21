@@ -54,7 +54,6 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
-#include "hb_io.h"
 #include "hbset.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -174,7 +173,6 @@ BYTE * hb_fsReadLine( FHANDLE hFileHandle, LONG *plBuffLen, char ** Term, int * 
 HB_FUNC( HB_FREADLINE )
 {
    PHB_ITEM pTerm1;
-   PHB_ITEM Opt = hb_itemNew( NULL );
    FHANDLE hFileHandle  = (FHANDLE) hb_parnl( 1 );
    char ** Term;
    BYTE * pBuffer;
@@ -194,7 +192,7 @@ HB_FUNC( HB_FREADLINE )
       if( ISARRAY( 3 ) )
       {
          pTerm1  = hb_param( 3, HB_IT_ARRAY );
-         iTerms = (int) hb_arrayLen(pTerm1);
+         iTerms = (int) hb_arrayLen( pTerm1 );
 
          if( iTerms <= 0 )
          {
@@ -207,13 +205,10 @@ HB_FUNC( HB_FREADLINE )
          Term   = (char**) hb_xgrab( sizeof(char*) * iTerms );
          iTermSizes = (int *) hb_xgrab( sizeof(int) * iTerms );
 
-         hb_itemClear( Opt );
-
          for(i=0;i<iTerms;i++)
          {
-            hb_arrayGet( pTerm1, i + 1, Opt );
-            Term[i]       = (char *) hb_itemGetCPtr(Opt);
-            iTermSizes[i] = hb_itemGetCLen(Opt);
+            Term[i]       = hb_arrayGetCPtr( pTerm1, i + 1 );
+            iTermSizes[i] = hb_arrayGetCLen( pTerm1, i + 1 );
          }
       }
       else
@@ -221,8 +216,8 @@ HB_FUNC( HB_FREADLINE )
          pTerm1        = hb_param( 3, HB_IT_STRING );
          Term          = (char**) hb_xgrab( sizeof(char*) );
          iTermSizes    = (int *) hb_xgrab( sizeof(int) );
-         Term[0]       = (char *) hb_itemGetCPtr(pTerm1);
-         iTermSizes[0] = hb_itemGetCLen(pTerm1);
+         Term[0]       = (char *) hb_itemGetCPtr( pTerm1 );
+         iTermSizes[0] = hb_itemGetCLen( pTerm1 );
          iTerms        = 1;
       }
    }
@@ -244,10 +239,7 @@ HB_FUNC( HB_FREADLINE )
 
    if( ! hb_storclen_buffer( (char*) pBuffer, lSize, 2 ) )
       hb_xfree( pBuffer );
-
    hb_retnl( bEOF ? -1 : 0 );
    hb_xfree( Term );
    hb_xfree( iTermSizes );
-
-   hb_itemRelease( Opt );
 }

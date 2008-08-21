@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ffile1.prg Filebase class for hbdoc
+ * Filebase class for hbdoc
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -178,7 +178,7 @@ METHOD fgoBottom() CLASS FileBase
 
    RETURN Self
 
-/* Method:  close()
+/* Method:  closefile()
    Params:  N/A
    Returns: Self
    Purpose: To close the file
@@ -376,27 +376,6 @@ METHOD goBottom() CLASS FileBase
 
    RETURN Self
 
-/* Method:  close()
-   Params:  N/A
-   Returns: Self
-   Purpose: To close the file
-*/
-
-/* Not declared in class creation, which means the super version is used. */
-#ifdef BUG
-  METHOD FCLOSE() CLASS FileBase
-
-   IF Self:noDosError() .AND. Self:nDosHandle > 0
-      FCLOSE( Self:nDosHandle )
-      Self:nLastDosMessage := FERROR()
-      Self:delItem( Self:nDosHandle )
-      Self:lAtTop    := Self:lAtBottom := .F.
-      Self:nPosition := 0
-   ENDIF
-
-   RETURN Self
-#endif
-
 /* Method:  write(<cChar>)
    Params:  <cChar>
    Returns: Self
@@ -421,68 +400,6 @@ METHOD WRITE( cChar ) CLASS FileBase
    ENDIF
 
    RETURN Self
-
-/* Method:  getBuffer( <lDirection> )
-   Params:  <lDirection>    Logical toggle for direction
-   Returns: <nBytes>
-   Purpose: To return the number of bytes either forward or backward from
-            the present file pointer position in which the next CRLF char
-            appears.  If <lDirection> is a logical false (.F.) value, them
-            the operation will go in reverse order; otherwise, it will go
-            in a forward direction.  The default value is a logical true
-            (.T.) value.
-*/
-
-/* Class declaration send message BuffGet to BufferGet. */
-#ifdef BUG
-  METHOD Buffget( lForward ) CLASS FileBase
-
-   LOCAL cBuffer       // as char
-   LOCAL nLocation     // as int
-   LOCAL nRead         // as int
-   LOCAL lWithCRLF := .F.               // as logical
-
-   DEFAULT lForward TO .T.
-
-   IF !lForward
-
-      nRead := FSEEK( Self:nDosHandle, ;
-                      - ( iif( ::nposition < pBUFFER_LENGTH, ;
-                      ::nposition, ;
-                      pBUFFER_LENGTH ) ), ;
-                      1 )               // rewind backwards
-
-      cBuffer := SPACE( ::nposition - nRead )
-      FREAD( Self:nDosHandle, @cBuffer, ( ::nposition - nRead ) )
-
-      IF RIGHT( cBuffer, 2 ) == hb_OSNewLine()   // with line already
-         cBuffer   := LEFT( cBuffer, LEN( cBuffer ) - 2 )
-         lWithCRLF := .T.
-      ENDIF
-      nLocation := LEN( cBuffer ) - ( RAT( hb_OSNewLine(), cBuffer ) )
-
-   ELSE
-      cBuffer := SPACE( pBUFFER_LENGTH )
-      nRead   := FREAD( Self:nDosHandle, @cBuffer, pBUFFER_LENGTH )
-      FSEEK( Self:nDosHandle, - ( iif( nRead < pBUFFER_LENGTH, nRead, ;
-             pBUFFER_LENGTH ) ), 1 )    // Rewind
-
-      // Now, parse the string. and file
-
-      nLocation := AT( hb_OSNewLine(), cBuffer )
-
-      // Now, if there is NO CRLF in the buffer and if the value of the
-      // number of bytes read is less than the buffer length, then we
-      // have an end of file condition.
-      IF nLocation == 0 .AND. ( nRead < pBUFFER_LENGTH )
-         // If so, then set the appropriate flags accordingly.
-         ::lAtBottom := .T.
-         ::lAtTop    := .F.
-      ENDIF
-   ENDIF
-
-   RETURN nLocation
-#endif
 
 /* Method:  appendLine( <cLine )
    Params:  <cLine>         Character line to append
@@ -597,7 +514,7 @@ METHOD GOTO( nValue ) CLASS FileBase
       ENDIF
    ENDIF
 
-RETURN nCount
+   RETURN nCount
 
 METHOD BufferGet( lForward ) CLASS FileBase
 
@@ -645,4 +562,4 @@ METHOD BufferGet( lForward ) CLASS FileBase
       ENDIF
    ENDIF
 
-RETURN nLocation
+   RETURN nLocation

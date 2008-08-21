@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * hbmake.prg xHarbour make utility main file
+ * xHarbour make utility main file
  *
  * Copyright 2000,2001,2002,2003,2004 Luiz Rafael Culik <culikr@uol.com.br>
  * www - http://www.xharbour.org

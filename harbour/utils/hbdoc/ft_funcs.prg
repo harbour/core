@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ft_funcs.prg File support Functions For hbdoc
+ * File support Functions For hbdoc
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -55,7 +55,7 @@
 #include "fileio.ch"
 #include "inkey.ch"
 
-STATIC s_TheHandle
+STATIC s_oFileBase
 
 /****
 *   FT_FUSE( cFile, nMode ) ---> nHandle
@@ -63,34 +63,33 @@ STATIC s_TheHandle
 */
 FUNCTION FT_FUSE( cFile, nMode )
 
-   DEFAULT cFile TO s_TheHandle:closefile()
-
-   IF cFile != NIL
-
-      s_TheHandle := FileBase():new( cFile )
+   IF cFile == NIL
+      s_oFileBase:closefile()
+   ELSE
+      s_oFileBase := FileBase():new( cFile )
       IF nMode != NIL
-         s_TheHandle:nOpenMode := nMode
+         s_oFileBase:nOpenMode := nMode
       ENDIF
-      s_TheHandle:open()
+      s_oFileBase:open()
    ENDIF
 
-   RETURN s_TheHandle:nHan
+   RETURN s_oFileBase:nHan
 
-FUNCTION ft_FEOF()
-   RETURN s_TheHandle:lAtBottom
+FUNCTION FT_FEOF()
+   RETURN s_oFileBase:lAtBottom
 
 FUNCTION FReadLn()
-   RETURN s_TheHandle:retrieve()
+   RETURN s_oFileBase:retrieve()
 
 FUNCTION FT_FReadLn()
    RETURN StrTran( FReadLn(), Chr( 13 ), "" )
 
 PROCEDURE FT_FGotop()
-   s_TheHandle:Gotop()
+   s_oFileBase:Gotop()
    RETURN
 
 PROCEDURE FT_FSKIP( n )
-   s_TheHandle:Skip( n )
+   s_oFileBase:Skip( n )
    RETURN
 
 PROCEDURE FT_MKDIR( cDir )

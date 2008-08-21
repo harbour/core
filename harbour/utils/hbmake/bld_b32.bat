@@ -25,8 +25,9 @@ echo pickfile.c   >> build.tmp
 echo prb_stak.c   >> build.tmp
 echo tmake.c      >> build.tmp
 
+echo hbmfrdln.c   >> build.tmp
+echo hbmgauge.c   >> build.tmp
 echo hbmlang.c    >> build.tmp
-echo readline.c   >> build.tmp
 
 echo hbdebug.lib  >> build.tmp
 echo hbvm.lib     >> build.tmp

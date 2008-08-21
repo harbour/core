@@ -8,6 +8,35 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-21 18:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * utils/hbdoc/fclass1.prg
+   * utils/hbdoc/ffile1.prg
+   * utils/hbdoc/ft_funcs.prg
+   * utils/hbmake/fclass1.prg
+   * utils/hbmake/tmake.prg
+   * utils/hbmake/ffile1.prg
+   * utils/hbmake/ft_funcs.prg
+   * utils/hbmake/pickarry.prg
+   * utils/hbmake/pickfile.prg
+   * utils/hbmake/hbmutils.prg
+   * utils/hbmake/hbmake.prg
+     * Cleanups.
+     ! Fixed open bug from previous commit (hopefully).
+
+   * common.mak
+   * utils/hbmake/Makefile
+   * utils/hbmake/bld_b32.bat
+   * utils/hbmake/bld_vc.bat
+   - utils/hbmake/readline.c
+   + utils/hbmake/hbmfrdln.c
+   * utils/hbmake/hbmlang.c
+   + utils/hbmake/hbmgauge.c
+     * readline.c -> hbmfrdln.c
+       (made fully identical to /contrib/xhb/freadlin.c)
+     * GAUGE*() stuff moved into separate file.
+       (separate file is fully identical to /contrib/hbclipsm/gauge.c)
+     ! GAUGE*() function copyright restored to original.
+
 2008-08-21 14:11 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * include/hbcomp.h
      * Minor formatting (alignment).

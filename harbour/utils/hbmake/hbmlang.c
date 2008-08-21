@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * hbmlang.c Hbmake detection language function
+ * Hbmake detection language function
  *
  * Copyright 2000,2001 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://www.harbour-project.org
@@ -53,8 +53,6 @@
 #define HB_OS_WIN_32_USED
 
 #include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapigt.h"
 
 HB_FUNC( GETUSERLANG )
 {
@@ -62,207 +60,56 @@ HB_FUNC( GETUSERLANG )
 
 #if defined(HB_OS_WIN_32) && (!defined(__RSXNT__)) && (!defined(__CYGWIN__))
 
+   switch( GetSystemDefaultLangID() )
    {
-      LANGID pLang = GetSystemDefaultLangID();
+   case 0x0416:
+   case 0x0816:
+      lRet = 1;
+      break;
 
-      switch(pLang) {
+   case 0x0409:
+   case 0x0809:
+   case 0x0C09:
+   case 0x1009:
+   case 0x1409:
+   case 0x1809:
+   case 0x1C09:
+   case 0x2009:
+   case 0x2409:
+   case 0x2809:
+   case 0x2C09:
+      lRet = 2;
+      break;
 
-         case 0x0416:
-         case 0x0816:
-         {
-            lRet=1;
-         }
+   case 0x040A:
+   case 0x080A:
+   case 0x0C0A:
+   case 0x100A:
+   case 0x140A:
+   case 0x180A:
+   case 0x1C0A:
+   case 0x200A:
+   case 0x240A:
+   case 0x280A:
+   case 0x2C0A:
+   case 0x300A:
+   case 0x340A:
+   case 0x380A:
+   case 0x3C0A:
+   case 0x400A:
+   case 0x440A:
+   case 0x480A:
+   case 0x4C0A:
+   case 0x500A:
+      lRet = 3;
+      break;
 
-         break;
-
-         case 0x0409 :
-         case 0x0809 :
-         case 0x0c09 :
-         case 0x1009 :
-         case 0x1409 :
-         case 0x1809 :
-         case 0x1c09 :
-         case 0x2009 :
-         case 0x2409 :
-         case 0x2809 :
-         case 0x2c09 :
-         {
-            lRet=2;
-         }
-
-         break;
-
-         case 0x040a :
-         case 0x080a :
-         case 0x0c0a :
-         case 0x100a :
-         case 0x140a :
-         case 0x180a :
-         case 0x1c0a :
-         case 0x200a :
-         case 0x240a :
-         case 0x280a :
-         case 0x2c0a :
-         case 0x300a :
-         case 0x340a :
-         case 0x380a :
-         case 0x3c0a :
-         case 0x400a :
-         case 0x440a :
-         case 0x480a :
-         case 0x4c0a :
-         case 0x500a :
-         {
-            lRet = 3;
-         }
-         break;
-
-      default:
-
-         lRet = 2;
-         break;
-      }
+   default:
+      lRet = 2;
+      break;
    }
 #else
    lRet = 2;
 #endif
    hb_retnl( lRet );
-}
-
-
-/* Box array definitions */
-#define B_TOP           1
-#define B_LEFT          2
-#define B_BOTTOM        3
-#define B_RIGHT         4
-#define B_BACKCOLOR     5
-#define B_BARCOLOR      6
-#define B_DISPLAYNUM    8
-#define B_BARCHAR       7
-#define B_PERCENT       9
-#define B_LEN           B_PERCENT
-
-#define B_BOXLINES      "ÚÄ¿³ÙÄÀ³"
-
-static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
-{
-   int iCenter = ( ( hb_arrayGetNL( pArray, B_RIGHT ) - hb_arrayGetNL( pArray, B_LEFT ) ) / 2 ) + 1;
-   int iRatio = hb_arrayGetNL( pArray, B_RIGHT ) - hb_arrayGetNL( pArray, B_LEFT ) - 1;
-   int iRow;
-   int iCols;
-   int iMax;
-   char szOldColor[ HB_CLRSTR_LEN ];
-   char * szStr = "        ";
-   char szPct[ 5 ];
-
-   hb_gtGetColorStr( szOldColor );
-   hb_gtSetColorStr( hb_arrayGetCPtr( pArray, B_BARCOLOR ) );
-
-   fPercent = ( fPercent < 0 ? 0 : ( fPercent > 1 ? 1 : fPercent ) );
-   iCols    = (int) (fPercent * iRatio);
-
-   if( hb_arrayGetL( pArray, B_DISPLAYNUM ) )
-   {
-      snprintf( szPct, sizeof( szPct ), "%3.0f%%", fPercent * 100 );
-      hb_gtWriteAt( (USHORT) hb_arrayGetNL( pArray, B_TOP ),
-                    (USHORT) iCenter + 2, (BYTE *) szPct, 4 );
-   }
-
-   hb_gtBox( hb_arrayGetNI( pArray, B_TOP ) + 1, hb_arrayGetNI( pArray, B_LEFT ) + 1,
-             hb_arrayGetNI( pArray, B_BOTTOM ) - 1, hb_arrayGetNI( pArray, B_RIGHT ) - 1,
-             ( BYTE * ) szStr );
-
-   iMax = hb_arrayGetNL( pArray, B_BOTTOM ) - hb_arrayGetNL( pArray, B_TOP ) - 1;
-   for( iRow = 1; iRow <= iMax; iRow++ )
-   {
-      hb_gtRepChar( (USHORT) (iRow + hb_arrayGetNL( pArray, B_TOP )),
-                    (USHORT) (hb_arrayGetNL( pArray, B_LEFT ) + 1),
-                    ( BYTE ) * hb_arrayGetCPtr( pArray, B_BARCHAR ), iCols );
-   }
-
-   hb_gtSetColorStr( szOldColor );
-}
-
-/* GaugeNew( <nRowTop>, <nColumnTop>, <nRowBottom>, <nColumnBottom>,
-      [<cBackgroundColor>],
-      [<cGaugeColor>],
-      [<cGaugeCharacter>] ) --> aGauge
-*/
-HB_FUNC( GAUGENEW )
-{
-   PHB_ITEM pReturn = hb_itemArrayNew( B_LEN );   /* Create array */
-
-   hb_arraySetNL( pReturn, B_TOP, hb_parni( B_TOP ) );
-   hb_arraySetNL( pReturn, B_LEFT, hb_parni( B_LEFT ) );
-   hb_arraySetNL( pReturn, B_BOTTOM,
-              ISNUM( B_BOTTOM ) ?
-               ( hb_parni( B_BOTTOM ) < hb_parni( B_TOP ) + 2 ?
-                   hb_parni( B_TOP ) + 2 : hb_parni( B_BOTTOM ) ) : 0 );
-   hb_arraySetNL( pReturn, B_RIGHT,
-              ISNUM( B_RIGHT ) ?
-               ( hb_parni( B_RIGHT ) < hb_parni( B_LEFT ) + 4 ?
-                  hb_parni( B_LEFT ) + 4 : hb_parni( B_RIGHT ) ) : 0 );
-   hb_arraySetC( pReturn, B_BACKCOLOR, ISCHAR( B_BACKCOLOR ) ? hb_parc( B_BACKCOLOR ) : "W/N" );
-   hb_arraySetC( pReturn, B_BARCOLOR, ISCHAR( B_BARCOLOR ) ? hb_parc( B_BARCOLOR ) : "W+/N" );
-   hb_arraySetL( pReturn, B_DISPLAYNUM, 
-              !( ISNUM( B_RIGHT ) && 
-                 ISNUM( B_LEFT ) && 
-                 ( hb_parni( B_RIGHT ) < hb_parni( B_LEFT ) + 9 ) ) );
-   hb_arraySetC( pReturn, B_BARCHAR, ISCHAR( B_BARCHAR ) ? hb_parc( B_BARCHAR ) : "\xdb" );
-   hb_arraySetNL( pReturn, B_PERCENT, 0 );
-
-   hb_itemReturnRelease( pReturn );
-}
-
-/* GaugeDisplay( aGauge ) --> aGauge
-*/
-HB_FUNC( GAUGEDISPLAY )
-{
-   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-
-   if( pArray )
-   {
-      int iCenter = ( ( hb_arrayGetNL( pArray, B_RIGHT ) - hb_arrayGetNL( pArray, B_LEFT ) ) / 2 ) + 1;
-      char szOldColor[ HB_CLRSTR_LEN ];
-      char * szStr = "        ";
-
-      hb_gtGetColorStr( szOldColor );
-      hb_gtSetColorStr( hb_arrayGetCPtr( pArray, B_BACKCOLOR ) );
-
-      hb_gtBox( (SHORT)  hb_arrayGetNL( pArray, B_TOP ),
-                (SHORT)  hb_arrayGetNL( pArray, B_LEFT ),
-                (SHORT)  hb_arrayGetNL( pArray, B_BOTTOM ),
-                (SHORT)  hb_arrayGetNL( pArray, B_RIGHT ),
-                (BYTE *) szStr );
-
-      hb_gtBox( (SHORT)  hb_arrayGetNL( pArray, B_TOP ),
-                (SHORT)  hb_arrayGetNL( pArray, B_LEFT ),
-                (SHORT)  hb_arrayGetNL( pArray, B_BOTTOM ),
-                (SHORT)  hb_arrayGetNL( pArray, B_RIGHT ),
-                (BYTE *) B_BOXLINES );
-
-      if( hb_arrayGetL( pArray, B_DISPLAYNUM ) )
-         hb_gtWriteAt( (USHORT) hb_arrayGetNL( pArray, B_TOP ),
-                       iCenter, ( BYTE * ) "[      ]", 8 );
-
-      hb_gtSetColorStr( szOldColor );
-
-      hb_gaugeUpdate( pArray, ( float ) hb_arrayGetND( pArray, B_PERCENT ) );
-
-      hb_itemReturn( pArray );
-   }
-}
-
-/* GaugeUpdate( aGauge, nPercent ) --> aGauge
-*/
-HB_FUNC( GAUGEUPDATE )
-{
-   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-
-   if( pArray )
-   {
-      hb_gaugeUpdate( pArray, ISNUM( 2 ) ? ( float ) hb_parnd( 2 ) : 0 );
-
-      hb_itemReturn( pArray );
-   }
 }

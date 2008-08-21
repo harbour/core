@@ -74,15 +74,6 @@
 #include "box.ch"
 #include "directry.ch"
 
-*+--------------------------------------------------------------------
-*+
-*+    Function pickfile()
-*+
-*+    Called from ( makelink.prg )   1 - function makelink()
-*+                ( pbinit.prg   )   1 - procedure pbinit()
-*+
-*+--------------------------------------------------------------------
-*+
 function pickfile( cFileSpec )
 
 local cOldString := savescreen( 8, 19, 16, 61 )
