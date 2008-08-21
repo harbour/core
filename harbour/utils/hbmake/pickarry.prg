@@ -62,25 +62,26 @@ STATIC cMarkChar := "*" // "û" // character showed when <F5> is pressed to selec
 
 FUNCTION PICKARRY( T, L, b, r, IN_ARRAY, OUT_ARRAY, aDefault, lAllowAll, cTitle, lLib )
 
-LOCAL nChoice    := 1
-LOCAL x
-LOCAL NEW_ARRAY  := {}
-LOCAL NUM_ELEMS  := Len( IN_ARRAY )
-LOCAL PAD_LEN    := ( r - 1 ) - ( L + 1 )
-LOCAL lIsChecked := .f.
-LOCAL aItems     := IN_ARRAY
-LOCAL aTemp
-LOCAL cItem
-LOCAL cOldColor  := Setcolor()
+   LOCAL nChoice    := 1
+   LOCAL x
+   LOCAL NEW_ARRAY  := {}
+   LOCAL NUM_ELEMS  := Len( IN_ARRAY )
+   LOCAL PAD_LEN    := ( r - 1 ) - ( L + 1 )
+   LOCAL lIsChecked := .f.
+   LOCAL aItems     := IN_ARRAY
+   LOCAL aTemp
+   LOCAL cItem
+   LOCAL cOldColor  := Setcolor()
 
-DEFAULT lAllowAll TO .F.
-DEFAULT cTitle to ""
-DEFAULT lLib to .F.
+   LOCAL cOldScreen
 
+   DEFAULT lAllowAll TO .F.
+   DEFAULT cTitle to ""
+   DEFAULT lLib to .F.
 
    SOMEITEMS := 0
 
-   PutScreen()
+   cOldScreen := SaveScreen()
 
    Setcolor( "gr+/rb,b+/w,w+/b,w/b+,w/b,w+/b" )
 
@@ -96,7 +97,6 @@ DEFAULT lLib to .F.
    //aTemp :=GetFiles(aitems)
 
    IF Len( aDefault ) > 0
-
 
       FOR EACH cItem IN aDefault
 
@@ -209,17 +209,15 @@ DEFAULT lLib to .F.
    ASize( OUT_ARRAY, Len( NEW_ARRAY ) )
    ACopy( NEW_ARRAY, OUT_ARRAY )
 
-   GetScreen()
+   RestScreen(,,,,cOldScreen)
    SetColor( coldColor )
 
-RETURN Len( NEW_ARRAY )
+   RETURN Len( NEW_ARRAY )
 
-*--------------------
 FUNCTION Keys( MODE )
-*--------------------
-LOCAL RETVAL := AC_CONT
-LOCAL THEKEY := Lastkey()
 
+   LOCAL RETVAL := AC_CONT
+   LOCAL THEKEY := Lastkey()
 
    IF MODE == AC_HITTOP 
       KEYBOARD Chr( K_CTRL_PGDN )
@@ -246,14 +244,12 @@ LOCAL THEKEY := Lastkey()
 
    ENDIF
 
-RETURN ( RETVAL )
+   RETURN RETVAL
 
-*------------------------------
 STATIC FUNCTION GetFiles( aIn )
-*-------------------------------
 
-LOCAL aRet  := {}
-LOCAL cItem := ""
+   LOCAL aRet  := {}
+   LOCAL cItem := ""
 
    FOR EACH cItem IN aIn
 
@@ -262,4 +258,4 @@ LOCAL cItem := ""
       AAdd( aRet, Substr( cItem, 1, At( " ", cItem ) ) )
    NEXT
 
-RETURN aRet
+   RETURN aRet

@@ -4,8 +4,6 @@ rem $Id$
 rem
 
 ..\..\bin\harbour /n hbdoc    /i..\..\include
-..\..\bin\harbour /n fclass1  /i..\..\include
-..\..\bin\harbour /n ffile1   /i..\..\include
 ..\..\bin\harbour /n ft_funcs /i..\..\include
 ..\..\bin\harbour /n genasc   /i..\..\include
 ..\..\bin\harbour /n genchm   /i..\..\include
@@ -26,8 +24,6 @@ rem
 echo -O2 -I..\..\include -L..\..\lib > build.tmp
 
 echo hbdoc.c      >> build.tmp
-echo fclass1.c    >> build.tmp
-echo ffile1.c     >> build.tmp
 echo ft_funcs.c   >> build.tmp
 echo genasc.c     >> build.tmp
 echo genchm.c     >> build.tmp
@@ -65,8 +61,6 @@ del build.tmp
 del *.obj
 
 del hbdoc.c
-del fclass1.c
-del ffile1.c
 del ft_funcs.c
 del genasc.c
 del genchm.c

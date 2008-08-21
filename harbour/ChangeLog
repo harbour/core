@@ -8,6 +8,28 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-21 18:52 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * common.mak
+   * utils/hbdoc/Makefile
+   * utils/hbdoc/bld_b32.bat
+   * utils/hbdoc/bld_vc.bat
+   - utils/hbdoc/fclass1.prg
+   - utils/hbdoc/ffile1.prg
+   * utils/hbdoc/ft_funcs.prg
+   * utils/hbmake/Makefile
+   * utils/hbmake/bld_vc.bat
+   * utils/hbmake/bld_b32.bat
+   - utils/hbmake/fclass1.prg
+   - utils/hbmake/ffile1.prg
+   * utils/hbmake/ft_funcs.prg
+   * utils/hbmake/pickarry.prg
+   - utils/hbmake/prb_stak.prg
+   - utils/hbmake/pickfile.prg
+     % Removed unused modules.
+     % Replaced module with simple constructs.
+     * Merged file handling classes and functions into 
+       one file, for easier syncing.
+
 2008-08-21 18:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * utils/hbdoc/fclass1.prg
    * utils/hbdoc/ffile1.prg

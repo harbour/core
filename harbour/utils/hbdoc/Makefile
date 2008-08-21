@@ -25,8 +25,6 @@ PRG_SOURCES=\
 	os2.prg \
 	rtf.prg \
 	troff.prg \
-	fclass1.prg \
-	ffile1.prg \
 	ft_funcs.prg \
 
 PRG_MAIN=hbdoc.prg
