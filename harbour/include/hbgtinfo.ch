@@ -51,6 +51,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef HB_GTINFO_CH_
 #define HB_GTINFO_CH_
 
@@ -165,7 +167,7 @@
    These codes are deprecated, _don't use them_. Please upgrade to the above versions.
    For developers: Don't add any more new codes to this section. */
 
-#ifndef HB_GT_NO_XHB
+#ifdef HB_LEGACY_LEVEL
 
 #define GTI_ISGRAPHIC           HB_GTI_ISGRAPHIC
 #define GTI_SCREENWIDTH         HB_GTI_SCREENWIDTH

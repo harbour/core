@@ -948,8 +948,8 @@ void hb_setInitialize( void )
    hb_set.HB_SET_BELL = FALSE;
    hb_set.HB_SET_CANCEL = TRUE;
    hb_set.hb_set_century = FALSE;
-   hb_set.HB_SET_COLOR = ( char * ) hb_xgrab( CLR_STRLEN + 1 );
-   hb_strncpy( hb_set.HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", CLR_STRLEN );
+   hb_set.HB_SET_COLOR = ( char * ) hb_xgrab( HB_CLRSTR_LEN + 1 );
+   hb_strncpy( hb_set.HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", HB_CLRSTR_LEN );
    hb_set.HB_SET_CONFIRM = FALSE;
    hb_set.HB_SET_CONSOLE = TRUE;
    hb_set.HB_SET_DATEFORMAT = hb_strdup( "mm/dd/yy" );

@@ -87,7 +87,7 @@ HB_FUNC( STATUSUPDATE )
    {
       char * szDisplay  = "|/-\\";
       long lCurrent = hb_arrayGetNL( pArray, ST_CURRENT );
-      char * szOldColor[ CLR_STRLEN ];
+      char * szOldColor[ HB_CLRSTR_LEN ];
       PHB_ITEM pCurrent = hb_itemNew( NULL );
 
       lCurrent = ( ++lCurrent > 4 ? 1 : lCurrent );

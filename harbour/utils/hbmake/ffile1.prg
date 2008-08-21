@@ -98,7 +98,7 @@ CLASS FileBase FROM FileMan
 
 ENDCLASS
 
-   /* Method:  Init/New
+/* Method:  Init/New
    Params:  N/A
    Returns: Self
    Purpose: Constructor
@@ -110,13 +110,13 @@ METHOD new( cName ) CLASS FileBase
 
    ::nSkipLength := 1
    ::nOpenMode   := FO_READWRITE        // Mode for which to open the file
-   ::nCreateMode := 0                   // Mode for which to create the file
+   ::nCreateMode := FC_NORMAL           // Mode for which to create the file
 
    ::cName := cName
 
-   RETURN ( self )
+   RETURN self
 
-   /* Method:  skip( <nRecords> )
+/* Method:  skip( <nRecords> )
    Params:  <nRecords>
    Returns: Self
    Purpose: This method moves the file's byte pointer <nRecords> position
@@ -144,9 +144,9 @@ METHOD fskip( nRecords ) CLASS FileBase
       ENDCASE
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  gotop()
+/* Method:  gotop()
    Params:  N/A
    Returns: Self
    Purpose: Move the byte pointer to the top of the file
@@ -160,9 +160,9 @@ METHOD fgotop() CLASS FileBase
       ::lAtBottom       := pFALSE
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  gobottom()
+/* Method:  gobottom()
    Params:  N/A
    Returns: Self
    Purpose: Move hte byte pointer of the file to tbe bottom.
@@ -176,9 +176,9 @@ METHOD fgoBottom() CLASS FileBase
       ::lAtBottom       := pTRUE
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  close()
+/* Method:  close()
    Params:  N/A
    Returns: Self
    Purpose: To close the file
@@ -193,9 +193,9 @@ METHOD closefile() CLASS FileBase
       ::nPosition := 0
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  retrieve
+/* Method:  retrieve
    Params:  N/A
    Returns: <cChar>
    Purpose: To return the contents of the file at the current position based
@@ -215,7 +215,7 @@ METHOD retrieve() CLASS FileBase
 
    RETURN ( cReturn )
 
-   /* Method:  write(<cChar>)
+/* Method:  write(<cChar>)
    Params:  <cChar>
    Returns: Self
    Purpose: To write out to the contents of the file the value in the
@@ -233,9 +233,9 @@ METHOD FWRITE( cChar ) CLASS FileBase
       ENDIF
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  goto(<nRecord>)
+/* Method:  goto(<nRecord>)
    Params:  <nRecord>       The record byte to move to
    Returns: Self
    Purpose: This method moves the byte marker to the <nRecord> position
@@ -267,7 +267,7 @@ METHOD fgoto( nValue ) CLASS FileBase
 
    RETURN ( ::nPosition )
 
-   /* Method:  create()
+/* Method:  create()
    Params:  N/A
    Returns: Self
    Purpose: Creates the specified file with the proper access code
@@ -285,9 +285,9 @@ METHOD Create() CLASS FileBase
       ENDIF
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  open()
+/* Method:  open()
    Params:  N/A
    Returns: Self
    Purpose: Opens the file with the proper access code
@@ -302,7 +302,7 @@ METHOD FOPEN() CLASS FileBase
       ::lAtBottom  := pFALSE
    ENDIF
 
-RETURN ( self )
+RETURN Self
 
 METHOD fappendByte( cByte ) CLASS FileBase
 
@@ -319,9 +319,8 @@ METHOD fappendByte( cByte ) CLASS FileBase
       ENDIF
    ENDIF
 
-RETURN ( self )
+RETURN Self
 
-// End of File: FFile1.prg
 METHOD OPEN() CLASS FileBase
 
    Self:nDosHandle := Self:openfile( ::cName, ::nOpenMode )
@@ -331,9 +330,9 @@ METHOD OPEN() CLASS FileBase
    ::lAtTop      := pTRUE
    ::lAtBottom   := pFALSE
    ::nHan        := Self:nDosHandle
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  gotop()
+/* Method:  gotop()
    Params:  N/A
    Returns: Self
    Purpose: Move the byte pointer to the top of the file
@@ -345,9 +344,9 @@ METHOD gotop() CLASS FileBase
       ::nSkipLength := Self:Buffget()
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  gobottom()
+/* Method:  gobottom()
    Params:  N/A
    Returns: Self
    Purpose: Move hte byte pointer of the file to tbe bottom.
@@ -375,9 +374,9 @@ METHOD goBottom() CLASS FileBase
       ENDIF
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  close()
+/* Method:  close()
    Params:  N/A
    Returns: Self
    Purpose: To close the file
@@ -395,10 +394,10 @@ METHOD goBottom() CLASS FileBase
       Self:nPosition := 0
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 #endif
 
-   /* Method:  write(<cChar>)
+/* Method:  write(<cChar>)
    Params:  <cChar>
    Returns: Self
    Purpose: To write out to the contents of the file the value in the
@@ -421,9 +420,9 @@ METHOD WRITE( cChar ) CLASS FileBase
       ENDIF
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  getBuffer( <lDirection> )
+/* Method:  getBuffer( <lDirection> )
    Params:  <lDirection>    Logical toggle for direction
    Returns: <nBytes>
    Purpose: To return the number of bytes either forward or backward from
@@ -485,7 +484,7 @@ METHOD WRITE( cChar ) CLASS FileBase
    RETURN ( nLocation )
 #endif
 
-   /* Method:  appendLine( <cLine )
+/* Method:  appendLine( <cLine )
    Params:  <cLine>         Character line to append
    Returns: Self
    Purpose: To append a blank CRLF delimited line at the end of the file.
@@ -510,9 +509,9 @@ METHOD appendLine( cLine ) CLASS FileBase
       ENDIF
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  skip( <nRecords> )
+/* Method:  skip( <nRecords> )
    Params:  <nRecords>
    Returns: Self
    Purpose: This method moves the file's byte pointer <nRecords> position
@@ -548,9 +547,9 @@ METHOD SKIP( nRecords ) CLASS FileBase
       ENDCASE
    ENDIF
 
-   RETURN ( self )
+   RETURN Self
 
-   /* Method:  goto(<nRecord>)
+/* Method:  goto(<nRecord>)
    Params:  <nRecord>       The record byte to move to
    Returns: Self
    Purpose: This method moves the byte marker to the <nRecord> position

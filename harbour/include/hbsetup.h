@@ -230,13 +230,11 @@
 
 #define HB_ISOPTSEP( c ) ( strchr( HB_OS_OPT_DELIM_LIST, ( c ) ) != NULL )
 
-/* Some compatibility #defines. This will be removed, 
+/* Compatibility #defines. These will be removed, so 
    please use the new names in your code. */
-#ifndef OS_UNIX_COMPATIBLE
-#define OS_UNIX_COMPATIBLE              HB_OS_UNIX_COMPATIBLE
-#endif
-#ifndef OS_PATH_DELIMITER
-#define OS_PATH_DELIMITER               HB_OS_PATH_DELIM_CHR
+#ifdef HB_LEGACY_LEVEL
+   #define OS_UNIX_COMPATIBLE           HB_OS_UNIX_COMPATIBLE
+   #define OS_PATH_DELIMITER            HB_OS_PATH_DELIM_CHR
 #endif
 
 /* ***********************************************************************

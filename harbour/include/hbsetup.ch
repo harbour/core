@@ -70,4 +70,15 @@
 /* #define HB_COMPAT_DBASE */     /* Enable dBase extensions */
 /* #define HB_COMPAT_CLIP */      /* Enable CLIP extensions */
 
+/* ***********************************************************************
+ * Leave this #define if you want to allow usage of legacy Harbour 1.0.0/Clipper 
+ * #defines/types/functions in your 3rd party C code. In later Harbour 
+ * versions this macro will be first disabled by default, then completely 
+ * removed, leaving the only default the strict Harbour namespace without 
+ * legacy stuff. 
+ * You should modify your 3rd party code to compile without this macro ASAP.
+ * NOTE: C code using legacy Clipper (.api) headers is unaffected.
+ */
+#define HB_LEGACY_LEVEL     1
+
 #endif /* HB_SETUP_CH_ */

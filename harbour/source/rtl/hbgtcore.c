@@ -231,7 +231,7 @@ static BOOL hb_gt_def_IsColor( PHB_GT pGT )
    return pGT->fIsColor;
 }
 
-/* NOTE: szColorString must be at least CLR_STRLEN wide by the NG. It seems
+/* NOTE: szColorString must be at least HB_CLRSTR_LEN wide by the NG. It seems
          that CA-Cl*pper SETCOLOR() will return string lengths up to 131+EOF.
          That seems like a 127+1 buffer size, plus lazy overflow checking.
          [vszakats] */
@@ -240,7 +240,7 @@ static void hb_gt_def_GetColorStr( PHB_GT pGT, char * pszColorString )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_def_GetColorStr(%p,%s)", pGT, pszColorString));
 
    HB_GTSELF_COLORSTOSTRING( pGT, pGT->pColor, pGT->iColorCount,
-                             pszColorString, CLR_STRLEN );
+                             pszColorString, HB_CLRSTR_LEN );
 }
 
 static void hb_gt_def_SetColorStr( PHB_GT pGT, const char * szColorString )

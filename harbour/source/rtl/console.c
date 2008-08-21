@@ -475,7 +475,7 @@ HB_FUNC( DEVOUT ) /* writes a single value to the current device (screen or prin
 {
    if( ISCHAR( 2 ) )
    {
-      char szOldColor[ CLR_STRLEN ];
+      char szOldColor[ HB_CLRSTR_LEN ];
 
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 2 ) );
@@ -496,7 +496,7 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
 
    if( ISCHAR( 2 ) )
    {
-      char szOldColor[ CLR_STRLEN ];
+      char szOldColor[ HB_CLRSTR_LEN ];
 
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 2 ) );
@@ -533,7 +533,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
 
    if( ISCHAR( 4 ) )
    {
-      char szOldColor[ CLR_STRLEN ];
+      char szOldColor[ HB_CLRSTR_LEN ];
 
       hb_gtGetColorStr( szOldColor );
       hb_gtSetColorStr( hb_parc( 4 ) );

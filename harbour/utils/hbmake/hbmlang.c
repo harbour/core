@@ -1,6 +1,7 @@
 /*
  * $Id$
  */
+
 /*
  * Harbour Project source code:
  * hbmlang.c Hbmake detection language function
@@ -217,7 +218,7 @@ HB_FUNC( GAUGEDISPLAY )
    if( pArray )
    {
       int iCenter = ( ( hb_arrayGetNL( pArray, B_RIGHT ) - hb_arrayGetNL( pArray, B_LEFT ) ) / 2 ) + 1;
-      char szOldColor[ CLR_STRLEN ];
+      char szOldColor[ HB_CLRSTR_LEN ];
       char * szStr = "        ";
 
       hb_gtGetColorStr( szOldColor );
@@ -268,7 +269,7 @@ static void hb_gaugeUpdate( PHB_ITEM pArray, float fPercent )
    int iRow;
    int iCols;
    int iMax;
-   char szOldColor[ CLR_STRLEN ];
+   char szOldColor[ HB_CLRSTR_LEN ];
    char * szStr = "        ";
    char szPct[ 5 ];
 

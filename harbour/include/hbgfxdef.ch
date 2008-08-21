@@ -100,7 +100,7 @@
    These codes are deprecated, _don't use them_. Please upgrade to the above versions. 
    For developers: Don't add any more new codes to this section. */
 
-#ifndef HB_GT_NO_XHB
+#ifdef HB_LEGACY_LEVEL
 
 #define GFX_ACQUIRESCREEN   HB_GFX_ACQUIRESCREEN
 #define GFX_RELEASESCREEN   HB_GFX_RELEASESCREEN
@@ -127,4 +127,4 @@
 
 #endif
 
-#endif  /* _HBGFXDEF_CH_ */
+#endif /* _HBGFXDEF_CH_ */

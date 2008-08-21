@@ -50,6 +50,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef HB_DBINFO_CH_
 #define HB_DBINFO_CH_
 

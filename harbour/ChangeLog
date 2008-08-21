@@ -8,6 +8,151 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-21 10:28 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * include/dbinfo.ch
+   * include/dbstruct.ch
+   * include/hbgtinfo.ch
+   * include/hblang.ch
+   * include/setcurs.ch
+     ! Added "also used from C code" comments.
+
+   * utils/hbmake/ffile1.prg
+     ! Minor cleanup.
+
+   * include/hbgfxdef.ch
+   * include/hbgtinfo.ch
+     * Marked old GTI_*, GFX_* macros with HB_LEGACY_LEVEL.
+       (Old macro HB_GT_NO_XHB no longer works)
+
+   * include/hbsetup.ch
+     + Added HB_LEGACY_LEVEL macro. Currently turned on.
+       Will be turned off later, and completely removed 
+       as a final step. Times are not defined for these 
+       yet. Please prepare to modify your code to not 
+       use old legacy stuff.
+       NOTE: C code using legacy Clipper (.api) headers are
+             unaffected.
+
+   * include/hbapirdd.h
+     * Marked HARBOUR_* macros with HB_LEGACY_LEVEL
+
+   * include/hbsetup.h
+     * Marked OS_UNIX_COMPATIBLE, OS_PATH_DELIMITER 
+       macros with HB_LEGACY_LEVEL.
+
+   * include/hbapifs.h
+   * source/rtl/filesys.c
+     * Marked hb_fileNameConv() as HB_LEGACY_LEVEL.
+     ; 3rd party and app developers should switch to 
+       hb_fsNameConv().
+
+   * source/rtl/box.c
+   * source/rtl/console.c
+   * source/rtl/filesys.c
+   * source/rtl/gtapi.c
+   * source/rtl/hbgtcore.c
+   * contrib/hbclipsm/gauge.c
+   * contrib/hbclipsm/status.c
+   * contrib/hbct/ctwin.c
+   * source/rtl/set.c
+   * utils/hbmake/hbmlang.c
+     * Updated core/contrib sources to use non-legacy names:
+       HB_CLRSTR_LEN, HB_EVALINFO, PHB_EVALINFO, HB_FHANDLE
+     ; TODO: FHANDLE -> HB_FHANDLE is incomplete yet.
+
+   * include/hbdefs.h
+     * Minor formatting.
+
+   * include/hbmath.h
+     ! #include <hbmath.ch> -> #include "hbmath.ch"
+
+   * contrib/hbmysql/mysql.c
+     + function SQLFETCHR() updated to allow fetching binary (BLOB) 
+       fields. [Thanks to Mitja Podgornik]
+
+   * include/hbapifs.h
+   * include/hbapigt.h
+   * include/hbapiitm.h
+   * include/hbdefs.h
+   * include/item.api
+   * include/filesys.api
+   * include/gt.api
+     * FHANDLE      -> HB_FHANDLE
+     * EVALINFO     -> HB_EVALINFO
+     * PEVALINFO    -> PHB_EVALINFO
+     * EVALINFO_PTR -> marked as legacy
+     * CLR_STRLEN   -> HB_CLRSTR_LEN
+     ; Old names are still working if HB_LEGACY_LEVEL 
+       is #defined, and by default now it is.
+     ; It's highly recommended to change all 3rd party and 
+       app C code to use the new #defines/types/functions.
+     ; NOTE1: There are some more names which are still 
+              in the legacy "namespace", and gradually 
+              I'd like to clean some of these as well. The most 
+              important would be the type names, as these 
+              are currently colliding with multiple external 
+              packages, like windows.h, and it also makes it 
+              impossible to compile hbfimage on certain systems.
+     ; NOTE2: I'd also like to move the *_PTR (like HB_ITEM_PTR) 
+              names to legacy status as we don't really use 
+              them except in a few VM files, and we have PHB_* 
+              as a wide-spread (and shorter) replacement.
+     ; NOTE3: We may also use HB_LEGACY_LEVEL to obolete other 
+              legacy or unsafe functions, with better new 
+              alternatives.
+     ; NOTE4: Here's a more or less complete list of names 
+              that _may_ cause such problems:
+              ; Type related stuff
+                - TRUE, FALSE
+                - BOOL, BYTE, SCHAR, UINT, USHORT
+                - INT_MAX, INT_MIN
+                - INT16, INT16_MAX, INT16_MIN
+                - INT24_MAX, INT24_MIN
+                - INT32, INT32_MAX, INT32_MIN
+                - INT64, INT64_MAX, INT64_MIN
+                - LONG, LONG_MAX, LONG_MIN
+                - LONGLONG, LONGLONG_MAX, LONGLONG_MIN
+                - SHORT, SHRT_MAX, SHRT_MIN
+                - UCHAR, UCHAR_MAX
+                - UINT16, UINT16_MAX
+                - UINT24_MAX
+                - UINT32, UINT32_MAX
+                - UINT64, UINT64_MAX
+                - ULONG, ULONG_MAX
+                - ULONGLONG, ULONGLONG_MAX
+                - assert()
+              ; Some hacks currently used:
+                - HB_DONT_DEFINE_BASIC_TYPES
+                - HB_DONT_DEFINE_BOOL
+                - HB_OS_WIN_32_USED ->
+                  (include <windows.h> locally where needed)
+              ; Compiler related stuff:
+                - VS_*, VU_*, VT_*, FUN_*
+                - *COMDECLARED, *COMCLASS, *COMSYMBOL
+                - VAR, PVAR
+                - _FUNC, PFUNCTION
+                - _INLINE, PINLINE
+                - _FUNCALL, PFUNCALL
+                - _EXTERN, PEXTERN
+                - AUTOOPEN, PAUTOOPEN
+                - FUNCTIONS
+                - INLINES
+                - FUNCALLS
+                - SYMBOLS
+              ; Clipper compatibility #defines,
+                better be moved behind a compatibility layer:
+                - F_ERROR, FS_ERROR
+                - IS*()
+                - E_*, EF_*
+                - FL_*, FLX_*, FO_*, FXO_*
+                - _B_*
+                - FC_*, FS_*, FD_*
+                - INKEY_*, K_*
+                - ES_*, EG_*
+                - SC_*
+                - DBS_*
+              ; + All RDD related stuff, including "dbinfo.ch" constants.
+
 2008-08-20 23:06 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * contrib/mtpl_b32.mak
    * contrib/mtpl_gcc.mak

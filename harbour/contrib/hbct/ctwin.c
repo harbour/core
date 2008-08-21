@@ -1150,7 +1150,7 @@ static void hb_ctw_gt_GetColorStr( PHB_GT pGT, char * pszColorString )
    if( s_iCurrWindow > 0 )
    {
       PHB_CT_WND pWnd = s_windows[ s_iCurrWindow ];
-      HB_GTSUPER_COLORSTOSTRING( pGT, pWnd->piColors, pWnd->iColorCount, pszColorString, CLR_STRLEN );
+      HB_GTSUPER_COLORSTOSTRING( pGT, pWnd->piColors, pWnd->iColorCount, pszColorString, HB_CLRSTR_LEN );
    }
    else
       HB_GTSUPER_GETCOLORSTR( pGT, pszColorString );

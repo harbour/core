@@ -183,9 +183,10 @@ HB_FUNC( SQLFETCHR ) /* MYSQL_ROW *mysql_fetch_row(MYSQL_RES *) */
 
    if( mrow )
    {
+      unsigned long * lengths = mysql_fetch_lengths( mresult );
       int i;
       for( i = 0; i < num_fields; i++ )
-         hb_arraySetC( aRow, i + 1, mrow[ i ] );
+         hb_arraySetCL( aRow, i + 1, mrow[ i ], lengths[ i ] );
    }
 
    hb_itemReturnRelease( aRow );

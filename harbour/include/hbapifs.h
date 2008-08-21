@@ -58,7 +58,7 @@
 
 HB_EXTERN_BEGIN
 
-#define FS_ERROR ( FHANDLE ) F_ERROR
+#define FS_ERROR ( HB_FHANDLE ) F_ERROR
 
 /* File locking flags */
 #define FL_LOCK       0x0000   /* Lock a region   */
@@ -156,48 +156,48 @@ HB_EXTERN_BEGIN
 
 extern HB_EXPORT BOOL       hb_fsChDir      ( BYTE * pszDirName ); /* change working directory */
 extern HB_EXPORT USHORT     hb_fsChDrv      ( BYTE nDrive ); /* change working drive */
-extern HB_EXPORT void       hb_fsClose      ( FHANDLE hFileHandle ); /* close a file */
-extern HB_EXPORT void       hb_fsCommit     ( FHANDLE hFileHandle ); /* commit updates of a file */
-extern HB_EXPORT FHANDLE    hb_fsCreate     ( BYTE * pszFileName, ULONG ulAttr ); /* create a file */
-extern HB_EXPORT FHANDLE    hb_fsCreateEx   ( BYTE * pszFilename, ULONG ulAttr, USHORT uiFlags ); /* create a file, with specific open mode */
-extern HB_EXPORT FHANDLE    hb_fsCreateTemp ( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName ); /* create a temporary file from components */
+extern HB_EXPORT void       hb_fsClose      ( HB_FHANDLE hFileHandle ); /* close a file */
+extern HB_EXPORT void       hb_fsCommit     ( HB_FHANDLE hFileHandle ); /* commit updates of a file */
+extern HB_EXPORT HB_FHANDLE hb_fsCreate     ( BYTE * pszFileName, ULONG ulAttr ); /* create a file */
+extern HB_EXPORT HB_FHANDLE hb_fsCreateEx   ( BYTE * pszFilename, ULONG ulAttr, USHORT uiFlags ); /* create a file, with specific open mode */
+extern HB_EXPORT HB_FHANDLE hb_fsCreateTemp ( const BYTE * pszDir, const BYTE * pszPrefix, ULONG ulAttr, BYTE * pszName ); /* create a temporary file from components */
 extern HB_EXPORT BYTE *     hb_fsCurDir     ( USHORT uiDrive ); /* retrieve a static pointer containing current directory for specified drive */
 extern HB_EXPORT USHORT     hb_fsCurDirBuff ( USHORT uiDrive, BYTE * pbyBuffer, ULONG ulLen ); /* copy current directory for given drive into a buffer */
 extern HB_EXPORT BYTE       hb_fsCurDrv     ( void ); /* retrieve current drive number */
 extern HB_EXPORT BOOL       hb_fsDelete     ( BYTE * pszFileName ); /* delete a file */
-extern HB_EXPORT BOOL       hb_fsEof        ( FHANDLE hFileHandle ); /* determine if an open file is position at end-of-file */
+extern HB_EXPORT BOOL       hb_fsEof        ( HB_FHANDLE hFileHandle ); /* determine if an open file is position at end-of-file */
 extern HB_EXPORT USHORT     hb_fsError      ( void ); /* retrieve file system error */
 extern HB_EXPORT USHORT     hb_fsOsError    ( void ); /* retrieve system dependant file system error */
 extern HB_EXPORT BOOL       hb_fsFile       ( BYTE * pszFileName ); /* determine if a file exists */
 extern HB_EXPORT BOOL       hb_fsIsDirectory( BYTE * pFilename );
 extern HB_EXPORT HB_FOFFSET hb_fsFSize      ( BYTE * pszFileName, BOOL bUseDirEntry ); /* determine the size of a file */
-extern HB_EXPORT FHANDLE    hb_fsExtOpen    ( BYTE * pszFileName, BYTE * pDefExt,
+extern HB_EXPORT HB_FHANDLE hb_fsExtOpen    ( BYTE * pszFileName, BYTE * pDefExt,
                                               USHORT uiFlags, BYTE * pPaths, PHB_ITEM pError ); /* open a file using default extension and a list of paths */
 extern HB_EXPORT USHORT     hb_fsIsDrv      ( BYTE nDrive ); /* determine if a drive number is a valid drive */
-extern HB_EXPORT BOOL       hb_fsIsDevice   ( FHANDLE hFileHandle ); /* determine if a file is attached to a device (console?) */
-extern HB_EXPORT BOOL       hb_fsLock       ( FHANDLE hFileHandle, ULONG ulStart, ULONG ulLength, USHORT uiMode ); /* request a lock on a portion of a file */
-extern HB_EXPORT BOOL       hb_fsLockLarge  ( FHANDLE hFileHandle, HB_FOFFSET ulStart,
+extern HB_EXPORT BOOL       hb_fsIsDevice   ( HB_FHANDLE hFileHandle ); /* determine if a file is attached to a device (console?) */
+extern HB_EXPORT BOOL       hb_fsLock       ( HB_FHANDLE hFileHandle, ULONG ulStart, ULONG ulLength, USHORT uiMode ); /* request a lock on a portion of a file */
+extern HB_EXPORT BOOL       hb_fsLockLarge  ( HB_FHANDLE hFileHandle, HB_FOFFSET ulStart,
                                               HB_FOFFSET ulLength, USHORT uiMode ); /* request a lock on a portion of a file using 64bit API */
 extern HB_EXPORT BOOL       hb_fsMkDir      ( BYTE * pszDirName ); /* create a directory */
-extern HB_EXPORT FHANDLE    hb_fsOpen       ( BYTE * pszFileName, USHORT uiFlags ); /* open a file */
-extern HB_EXPORT USHORT     hb_fsRead       ( FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount ); /* read contents of a file into a buffer (<=64K) */
-extern HB_EXPORT ULONG      hb_fsReadLarge  ( FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount ); /* read contents of a file into a buffer (>64K) */
+extern HB_EXPORT HB_FHANDLE hb_fsOpen       ( BYTE * pszFileName, USHORT uiFlags ); /* open a file */
+extern HB_EXPORT USHORT     hb_fsRead       ( HB_FHANDLE hFileHandle, BYTE * pBuff, USHORT ulCount ); /* read contents of a file into a buffer (<=64K) */
+extern HB_EXPORT ULONG      hb_fsReadLarge  ( HB_FHANDLE hFileHandle, BYTE * pBuff, ULONG ulCount ); /* read contents of a file into a buffer (>64K) */
 extern HB_EXPORT BOOL       hb_fsRmDir      ( BYTE * pszDirName ); /* remove a directory */
 extern HB_EXPORT BOOL       hb_fsRename     ( BYTE * pszOldName, BYTE * pszNewName ); /* rename a file */
-extern HB_EXPORT ULONG      hb_fsSeek       ( FHANDLE hFileHandle, LONG lOffset, USHORT uiMode ); /* reposition an open file */
-extern HB_EXPORT HB_FOFFSET hb_fsSeekLarge  ( FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT uiFlags ); /* reposition an open file using 64bit API */
-extern HB_EXPORT ULONG      hb_fsTell       ( FHANDLE hFileHandle ); /* retrieve the current position of a file */
-extern HB_EXPORT BOOL       hb_fsSetDevMode ( FHANDLE hFileHandle, USHORT uiDevMode ); /* change the device mode of a file (text/binary) */
+extern HB_EXPORT ULONG      hb_fsSeek       ( HB_FHANDLE hFileHandle, LONG lOffset, USHORT uiMode ); /* reposition an open file */
+extern HB_EXPORT HB_FOFFSET hb_fsSeekLarge  ( HB_FHANDLE hFileHandle, HB_FOFFSET llOffset, USHORT uiFlags ); /* reposition an open file using 64bit API */
+extern HB_EXPORT ULONG      hb_fsTell       ( HB_FHANDLE hFileHandle ); /* retrieve the current position of a file */
+extern HB_EXPORT BOOL       hb_fsSetDevMode ( HB_FHANDLE hFileHandle, USHORT uiDevMode ); /* change the device mode of a file (text/binary) */
 extern HB_EXPORT BOOL       hb_fsGetFileTime( BYTE * pszFileName, LONG * plJulian, LONG * plMillisec );
 extern HB_EXPORT BOOL       hb_fsSetFileTime( BYTE * pszFileName, LONG lJulian, LONG lMillisec );
 extern HB_EXPORT BOOL       hb_fsGetAttr    ( BYTE * pszFileName, ULONG * pulAttr );
 extern HB_EXPORT BOOL       hb_fsSetAttr    ( BYTE * pszFileName, ULONG ulAttr );
 extern HB_EXPORT void       hb_fsSetError   ( USHORT uiError ); /* set the file system DOS error number */
 extern HB_EXPORT void       hb_fsSetIOError ( BOOL fResult, USHORT uiOperation ); /* set the file system error number after IO operation */
-extern HB_EXPORT USHORT     hb_fsWrite      ( FHANDLE hFileHandle, const BYTE * pBuff, USHORT ulCount ); /* write to an open file from a buffer (<=64K) */
-extern HB_EXPORT ULONG      hb_fsWriteLarge ( FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount ); /* write to an open file from a buffer (>64K) */
-extern HB_EXPORT FHANDLE    hb_fsPOpen      ( BYTE * pFilename, BYTE * pMode );
-extern HB_EXPORT FHANDLE    hb_fsGetOsHandle( FHANDLE hFileHandle );
+extern HB_EXPORT USHORT     hb_fsWrite      ( HB_FHANDLE hFileHandle, const BYTE * pBuff, USHORT ulCount ); /* write to an open file from a buffer (<=64K) */
+extern HB_EXPORT ULONG      hb_fsWriteLarge ( HB_FHANDLE hFileHandle, const BYTE * pBuff, ULONG ulCount ); /* write to an open file from a buffer (>64K) */
+extern HB_EXPORT HB_FHANDLE hb_fsPOpen      ( BYTE * pFilename, BYTE * pMode );
+extern HB_EXPORT HB_FHANDLE hb_fsGetOsHandle( HB_FHANDLE hFileHandle );
 extern HB_EXPORT USHORT     hb_fsGetFError  ( void ); /* get FERROR() flag */
 extern HB_EXPORT void       hb_fsSetFError  ( USHORT uiError ); /* set FERROR() flag */
 extern HB_EXPORT BOOL       hb_fsFileExists ( const char * pszFileName ); /* check if a file exists (wildcard chars not accepted). */
@@ -238,8 +238,8 @@ typedef struct
    char   szBuffer[ _POSIX_PATH_MAX + HB_MAX_DRIVE_LENGTH + 4 ];
 } HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
 
-extern HB_EXPORT PHB_FNAME hb_fsFNameSplit( const char * pszFileName ); /* Split given filename into path, name and extension */
-extern HB_EXPORT char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
+extern HB_EXPORT PHB_FNAME  hb_fsFNameSplit( const char * pszFileName ); /* Split given filename into path, name and extension */
+extern HB_EXPORT char *     hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
 
 /* Searchable path support */
 typedef struct _HB_PATHNAMES
@@ -249,13 +249,13 @@ typedef struct _HB_PATHNAMES
    BOOL   fFree;
 } HB_PATHNAMES;
 
-extern HB_EXPORT void    hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList );
-extern HB_EXPORT void    hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList );
+extern HB_EXPORT void       hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList );
+extern HB_EXPORT void       hb_fsFreeSearchPath( HB_PATHNAMES * pSearchList );
        
-extern HB_EXPORT BOOL    hb_spFile( BYTE * pFilename, BYTE * pRetPath );
-extern HB_EXPORT FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags );
-extern HB_EXPORT FHANDLE hb_spCreate( BYTE * pFilename, ULONG ulAttr );
-extern HB_EXPORT FHANDLE hb_spCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags );
+extern HB_EXPORT BOOL       hb_spFile( BYTE * pFilename, BYTE * pRetPath );
+extern HB_EXPORT HB_FHANDLE hb_spOpen( BYTE * pFilename, USHORT uiFlags );
+extern HB_EXPORT HB_FHANDLE hb_spCreate( BYTE * pFilename, ULONG ulAttr );
+extern HB_EXPORT HB_FHANDLE hb_spCreateEx( BYTE * pFilename, ULONG ulAttr, USHORT uiFlags );
 
 /* File Find API structure */
 typedef struct
@@ -283,13 +283,17 @@ extern HB_EXPORT BOOL      hb_fsFindNext( PHB_FFIND ffind );
 extern HB_EXPORT void      hb_fsFindClose( PHB_FFIND ffind );
 
 /* Misc helper functions */
-extern ULONG     hb_fsAttrFromRaw( ULONG raw_attr );
-extern ULONG     hb_fsAttrToRaw( ULONG  ulAttr );
-extern ULONG     hb_fsAttrEncode( const char * szAttr );
-extern char *    hb_fsAttrDecode( ULONG  ulAttr, char * szAttr );
-extern HB_EXPORT BYTE * hb_fsNameConv( BYTE * szFileName, BOOL * pfFree );
-extern HB_EXPORT BYTE * hb_fileNameConv( char *str );
-extern HB_EXPORT BOOL   hb_fsMaxFilesError( void );
+extern ULONG               hb_fsAttrFromRaw( ULONG raw_attr );
+extern ULONG               hb_fsAttrToRaw( ULONG  ulAttr );
+extern ULONG               hb_fsAttrEncode( const char * szAttr );
+extern char *              hb_fsAttrDecode( ULONG  ulAttr, char * szAttr );
+extern HB_EXPORT BYTE *    hb_fsNameConv( BYTE * szFileName, BOOL * pfFree );
+extern HB_EXPORT BOOL      hb_fsMaxFilesError( void );
+
+#ifdef HB_LEGACY_LEVEL
+/* Compatibility. Obsolete. */
+extern HB_EXPORT BYTE *    hb_fileNameConv( char * str );
+#endif
 
 /* wrapper to fopen() which calls hb_fsNameConv() */
 extern FILE * hb_fopen( const char *path, const char *mode );

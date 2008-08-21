@@ -61,6 +61,10 @@
 
 /* Compatible types */
 
+#ifndef HB_LEGACY_LEVEL
+#define FHANDLE HB_FHANDLE
+#endif
+
 typedef FHANDLE fhandle;
 typedef FHANDLE * FHANDLEP;
 

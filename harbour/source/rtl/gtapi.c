@@ -287,7 +287,7 @@ HB_EXPORT ERRCODE hb_gtPostExt( void )
    return FAILURE;
 }
 
-/* NOTE: szColorString must be at least CLR_STRLEN wide by the NG. It seems
+/* NOTE: szColorString must be at least HB_CLRSTR_LEN wide by the NG. It seems
          that CA-Cl*pper SETCOLOR() will return string lengths up to 131+EOF.
          That seems like a 127+1 buffer size, plus lazy overflow checking.
          [vszakats] */
