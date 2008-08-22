@@ -8,6 +8,31 @@
    2008-12-31 13:59 UTC+0100 Foo Bar <foo.bar@foobar.org>
 */
 
+2008-08-22 17:03 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
+   * contrib/make_gcc_all.sh
+     + Added darwin autodetection.
+
+   * contrib/Makefile
+     + Added HB_CONTRIB_ADDONS envvar which enables building 
+       local custom contribs stored in the contrib dir.
+       A separate dir may be better, but we will see.
+
+   * utils/hbtest/hbtest.prg
+     * Changed test .dbf filename casing to lowercase.
+
+   + tests/rddtest
+   + tests/rddtest/rddmktst.prg
+   + tests/rddtest/adscl52.prg
+   + tests/rddtest/adscl53.prg
+   + tests/rddtest/ntxcl52.prg
+   + tests/rddtest/ntxcl53.prg
+   + tests/rddtest/cdxcl52.prg
+   + tests/rddtest/rddtst.prg
+   + tests/rddtest/make_c52.bat
+   + tests/rddtest/cdxcl53.prg
+   + tests/rddtest/make_c53.bat
+     + Added RDD tests from xhb.
+
 2008-08-22 14:56 UTC+0200 Viktor Szakats (harbour.01 syenar hu)
    * source/rtl/gtalleg/ssf.h
      ! Fixed to compile with BCC.

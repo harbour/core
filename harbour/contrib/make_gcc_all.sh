@@ -20,6 +20,7 @@ if [ -z "$HB_ARCHITECTURE" ]; then
          *cygwin*)                    hb_arch="cyg" ;;
          *dos)                        hb_arch="dos" ;;
          *bsd)                        hb_arch="bsd" ;;
+         *darwin)                     hb_arch="darwin" ;;
       esac
    fi
    export HB_ARCHITECTURE="$hb_arch" _HB_ARCH_SAVED=1

@@ -286,7 +286,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    //rddSetDefault( "DBFCDX" )
 #endif
 
-   dbCreate( "!TEMP!.dbf",;
+   dbCreate( "_hbtmp_.dbf",;
       { { "TYPE_C"   , "C", 15, 0 } ,;
         { "TYPE_C_E" , "C", 15, 0 } ,;
         { "TYPE_D"   , "D",  8, 0 } ,;
@@ -300,7 +300,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
         { "TYPE_L"   , "L",  1, 0 } ,;
         { "TYPE_L_E" , "L",  1, 0 } } )
 
-   USE ( "!TEMP!.dbf" ) NEW ALIAS w_TEST EXCLUSIVE
+   USE ( "_hbtmp_.dbf" ) NEW ALIAS w_TEST EXCLUSIVE
 
    dbAppend()
 
@@ -407,8 +407,8 @@ STATIC PROCEDURE TEST_END()
 
    dbSelectArea( "w_TEST" )
    dbCloseArea()
-   FErase( "!TEMP!.dbf" )
-   FErase( "!TEMP!.dbt" )
+   FErase( "_hbtmp_.dbf" )
+   FErase( "_hbtmp_.dbt" )
 
    s_nEndTime := Seconds()
 

@@ -52,6 +52,8 @@ DIRS = $(HB_CONTRIBLIBS)
 
 endif
 
+DIRS += $(HB_CONTRIB_ADDONS)
+
 # DIRS += examples
 
 include $(ROOT)config/dir.cf
